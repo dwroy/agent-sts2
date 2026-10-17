@@ -14,11 +14,11 @@ export function withRolloutFixtureClock<T>(run: () => T, step = 3): T {
 }
 
 /** Ranking transport replays keep the production budget and bound work across all logged boards. */
-export function withRolloutRankingFixture<T>(run: () => T): T {
+export function withRolloutRankingFixture<T>(run: () => T, workStep = 3): T {
   const budget = rolloutLiveOptions.budgetMs;
   rolloutLiveOptions.budgetMs = ROLLOUT_BUDGET_MS;
   try {
-    return withPotionWorkFixture(() => withRolloutFixtureClock(run));
+    return withPotionWorkFixture(() => withRolloutFixtureClock(run, workStep));
   } finally {
     rolloutLiveOptions.budgetMs = budget;
   }

@@ -1,3 +1,5 @@
+import { currentDecisionBudget, shadowBudgetAvailable } from "../core/decision-budget.js";
+import { binomialInterval } from "./quantitative-stats.js";
 /**
  * B2 (Roy 2026-09-30, docs/boss-sim.md §11): in a boss fight, every line Jev is shown (plan lines, potion lines, the
  * random potions' "drink now" lines) is played to the fight's end by the whole-fight simulator (boss-sim.ts), all on the
@@ -314,6 +316,10 @@ export class BossLinesPool {
   run(input: RolloutInput, pairs: LinesPair[], samples: number, seed: number, deadlineMs: number, now: () => number = () => performance.now(), onProgress?: SimProgress, work?: PairWork): PairsRun {
     const started = now();
     const schedule = sampleSchedule(samples, pairs.length, work?.range, work?.activePairs);
+    if (currentDecisionBudget() && deadlineMs <= 0) return {
+      outcomes: pairs.map(() => new Array<FightSampleResult | undefined>(samples)), complete: [], timedOut: true,
+      elapsedMs: Math.round(now() - started), workers: 0, done: 0,
+    };
     if (!schedule.indices.length || schedule.from === schedule.to) return {
       outcomes: pairs.map(() => new Array<FightSampleResult | undefined>(samples)), complete: [], timedOut: false,
       elapsedMs: Math.round(now() - started), workers: 0, done: 0,
@@ -323,7 +329,7 @@ export class BossLinesPool {
     Atomics.store(this.flag, 1, job);
     const tasks: [number, number, number][] = [];
     for (let i = schedule.from; i < schedule.to; i += 1) for (const pair of schedule.indices) tasks.push([pair, i, sampleSeed(seed, i)]);
-    const chunk = Number.isFinite(deadlineMs) ? Math.max(1, Math.ceil(tasks.length / (workers.length * 8))) : 8;
+    const chunk = currentDecisionBudget() ? 1 : Number.isFinite(deadlineMs) ? Math.max(1, Math.ceil(tasks.length / (workers.length * 8))) : 8;
     const chunks: [number, number, number][][] = [];
     for (let k = 0; k < tasks.length; k += chunk) chunks.push(tasks.slice(k, k + chunk));
     const outcomes: (FightSampleResult | undefined)[][] = pairs.map(() => new Array<FightSampleResult | undefined>(samples));
@@ -380,6 +386,7 @@ export class BossLinesPool {
     // Done or given up: the workers skip what is left of this job (they check the job slot between samples).
     Atomics.store(this.flag, 1, 0);
     for (const w of workers) w.worker.postMessage({ type: "drop", job } satisfies LinesWorkerRequest);
+    if (timedOut && currentDecisionBudget()) void this.close();
     if (error !== null) {
       const message = `boss-lines worker: ${error}`;
       throw failure ? new ContinuationSampleError(message, failure) : new Error(message);
@@ -504,32 +511,42 @@ export function runLines(
   let ownSamples: number[] | null = null;
   let run: PairsRun;
   if (opts.adaptive?.mode === "on") {
-    if (Number.isFinite(opts.deadlineMs)) throw new Error("adaptive B2 requires the complete-computation path");
+    const budgeted = currentDecisionBudget() !== undefined;
+    if (Number.isFinite(opts.deadlineMs) && !budgeted) throw new Error("adaptive B2 requires the complete-computation path");
     const began = now();
     const sampler = new AdaptiveSampler(lines.map((_, i) => ({ key: `line:${i}` })),
       { lane: "b2", requested: opts.samples, allowS: opts.adaptive.allowS });
     const outcomes: PairsRun["outcomes"] = pairs.map(() => new Array<FightSampleResult | undefined>(opts.samples));
-    let done = 0, workers = 0;
+    let done = 0, workers = 0, cut = false;
     for (let request = sampler.next(); request; request = sampler.next()) {
+      const left = opts.deadlineMs - (now() - began);
+      if (budgeted && left <= 0) { cut = true; break; }
       const indices = request.active.map((key) => Number(key.slice("line:".length)));
       const activePairs = indices.flatMap((i) => Array.from({ length: per }, (_, order) => i * per + order));
       const work: PairWork = { range: { from: request.from, to: request.to }, activePairs };
       const progress: SimProgress = (completed) => opts.onProgress?.(done + completed, opts.samples * pairs.length);
-      const round = opts.serial ? runPairsSerial(slim, pairs, opts.samples, opts.seed, Infinity, now, progress, work)
-        : bossLinesPool().run(slim, pairs, opts.samples, opts.seed, Infinity, now, progress, work);
-      if (round.timedOut || round.complete.length !== request.to - request.from
-          || round.complete.some((sample, i) => sample !== request!.from + i)) throw new Error("adaptive B2 round incomplete");
-      for (const pair of activePairs) for (const sample of round.complete) outcomes[pair]![sample] = round.outcomes[pair]![sample]!;
+      const round = opts.serial ? runPairsSerial(slim, pairs, opts.samples, opts.seed, budgeted ? left : Infinity, now, progress, work)
+        : bossLinesPool().run(slim, pairs, opts.samples, opts.seed, budgeted ? left : Infinity, now, progress, work);
+      if (!budgeted && (round.timedOut || round.complete.length !== request.to - request.from
+          || round.complete.some((sample, i) => sample !== request!.from + i))) throw new Error("adaptive B2 round incomplete");
+      let end = request.from;
+      const returned = new Set(round.complete);
+      while (end < request.to && returned.has(end)) end++;
+      const complete = budgeted ? Array.from({ length: end - request.from }, (_, i) => request!.from + i) : round.complete;
+      for (const pair of activePairs) for (const sample of complete) outcomes[pair]![sample] = round.outcomes[pair]![sample]!;
       done += round.done;
       workers = Math.max(workers, round.workers);
-      sampler.observe(indices.map((i) => ({ key: `line:${i}`,
-        samples: outcomes[i * per]!.slice(0, request!.to) as FightSampleResult[],
-        orders: Array.from({ length: per }, (_, k) => outcomes[i * per + k]!.slice(0, request!.to) as FightSampleResult[]) })));
+      const to = budgeted ? end : request.to;
+      const prefixes = indices.map((i) => ({ key: `line:${i}`,
+        samples: outcomes[i * per]!.slice(0, to) as FightSampleResult[],
+        orders: Array.from({ length: per }, (_, k) => outcomes[i * per + k]!.slice(0, to) as FightSampleResult[]) }));
+      if (budgeted && (round.timedOut || end < request.to)) { sampler.observePartial(prefixes, to); cut = true; break; }
+      sampler.observe(prefixes);
     }
-    actualAdaptive = sampler.result();
+    actualAdaptive = sampler.result(budgeted);
     ownSamples = actualAdaptive.candidates.map((candidate) => candidate.samples);
     const common = Math.min(...ownSamples);
-    run = { outcomes, complete: Array.from({ length: common }, (_, i) => i), timedOut: false,
+    run = { outcomes, complete: Array.from({ length: common }, (_, i) => i), timedOut: cut,
       elapsedMs: Math.round(now() - began), workers, done };
     actualAdaptive.work.full *= per;
     actualAdaptive.work.actual *= per;
@@ -546,7 +563,7 @@ export function runLines(
     }
     return pick!;
   });
-  const adaptive = !actualAdaptive && opts.adaptive && !run.timedOut && run.complete.length === opts.samples ? safeAdaptiveShadow(
+  const adaptive = !actualAdaptive && opts.adaptive && !run.timedOut && run.complete.length === opts.samples && shadowBudgetAvailable("C2_sampling_shadow") ? safeAdaptiveShadow(
     out.map((line, i) => ({ key: `line:${i}`, samples: line.outcomes,
       orders: Array.from({ length: per }, (_, k) => run.complete.map((id) => run.outcomes[i * per + k]![id]!)) })),
     { lane: "b2", requested: opts.samples, allowS: opts.adaptive.allowS }) : null;
@@ -556,7 +573,7 @@ export function runLines(
     adaptive.work.unit = "fight-sample-outcomes";
   }
   let productionComparison: JsonValue | undefined;
-  if (adaptive && "candidates" in adaptive) {
+  if (adaptive && "candidates" in adaptive && shadowBudgetAvailable("C2_ranking_counterfactual")) {
     try {
       const prefix = adaptive.candidates.map((candidate, li) => {
         let pick: BossSimLineResult | null = null;
@@ -648,7 +665,7 @@ function modeOf(counts: Record<number, number>): number | null {
 /** One line's whole-fight fact, e.g. "win 62% (vs the best line −3 ± 2 pts), HP lost when won median 18, ~6 turns to win; ...; 600 samples". */
 export function lineSimText(line: BossSimLineResult, calibrated: number, vs: LineComparison | null, run: Pick<LinesResult, "samples" | "requested" | "timedOut" | "adaptive">, turnNow: number, flags: { best: boolean; winTied: boolean; lowTrust: string | null }): string {
   if (line.sequence) return `低可信连战模拟：F48→F49连续通关 ${pct(line.winProb)}%（原始、未校准）；胜F48 ${line.sequence.firstWins}/${line.samples}，其中死F49 ${line.sequence.firstWinSecondDeaths}、未完成F49 ${line.sequence.secondUnfinished}；每条样本传递实际剩余HP/药水，${line.samples}样本；不是必死或SL判据。`;
-  const vsText = vs === null ? (flags.lowTrust ? "the simulation's best line" : "the best line") : `vs the ${flags.lowTrust ? "simulation's " : ""}best line ${pts(vs.winDiff)} ± ${Math.max(1, Math.round(vs.winSe * 100))} pts${flags.winTied ? ", tied on win rate" : ""}`;
+  const vsText = vs === null ? (flags.lowTrust ? "the simulation's best line" : "the best line") : `vs the ${flags.lowTrust ? "simulation's " : ""}best line ${pts(vs.winDiff)}${currentDecisionBudget() && line.samples < 2 ? ", uncertainty unknown (n<2)" : ` ± ${Math.max(1, Math.round(vs.winSe * 100))} pts`}${flags.winTied ? ", tied on win rate" : ""}`;
   const won = line.hpLossWon ? `HP lost when won median ${Math.round(line.hpLossWon.median)}` : "no winning sample";
   const turns = line.turnsWon ? `, ~${Math.round(line.turnsWon.median)} turn${Math.round(line.turnsWon.median) === 1 ? "" : "s"} to win (this one included)` : "";
   const death = modeOf(line.deathTurns);
@@ -796,11 +813,12 @@ export function bossLineSim(args: BossLineSimArgs): BossLineSim {
   let attempt: SimAttempt | undefined;
   let wait: ReturnType<SimWait["start"]> | undefined;
   let sampled = 0;
-  const samples = args.samples ?? bossLinesOptions.samples;
+  const pace = currentDecisionBudget();
+  let samples = args.samples ?? bossLinesOptions.samples;
   const jointScope = f48JointScope(args.state);
-  const unavailable = (reason: string): BossLineSim => ({ available: false, reason, ms: ms(),
+  const unavailable = (reason: string, budgetStop = false): BossLineSim => ({ available: false, reason, ms: ms(),
     ...(jointScope ? { f48JointShadow: f48JointShadow(jointScope, [], undefined, { reason }) } : {}),
-    ...(attempt ? { completion: attempt.finish(sampled, samples, reason) } : {}) });
+    ...(attempt ? { completion: budgetStop ? attempt.finishBudget(sampled, samples, true) : attempt.finish(sampled, samples, reason) } : {}) });
   try {
     if (args.lines.length === 0) return unavailable("no line");
     // The turn's budget over its questions (a re-plan after a draw asks again).
@@ -809,15 +827,17 @@ export function bossLineSim(args: BossLineSimArgs): BossLineSim {
     const turnKey = `${fight}:${args.turn ?? "?"}`;
     const memo = args.memory.bossLines?.turn === turnKey ? args.memory.bossLines : { turn: turnKey, spentMs: 0 };
     let left = required ? Infinity : Math.min(bossLinesOptions.deadlineMs, bossLinesOptions.turnBudgetMs - memo.spentMs);
-    if (left < bossLinesOptions.minMs) return unavailable(`this turn's ${Math.round(bossLinesOptions.turnBudgetMs / 1000)} s for the simulation is spent`);
+    if (pace) left = Math.max(0, pace.remaining() - 1000);
+    if (!pace && left < bossLinesOptions.minMs) return unavailable(`this turn's ${Math.round(bossLinesOptions.turnBudgetMs / 1000)} s for the simulation is spent`);
     const input = bossSimInput(args);
     const boss = bossKeyOf(input.enemies.map((e) => e.id));
     const lowTrust = input.continuation?.limitation ?? (boss ? bossTrustReason(boss, "b2", args.state.run?.ascension, args.state.run?.floor) : null);
+    if (pace && lowTrust) samples = Math.min(samples, 200);
     const adaptiveMode = simAdaptivePolicy(String(args.state.run?.raw["character_id"] ?? "")).mode;
     const configuredAdaptive = required && adaptiveMode !== "off" ? { mode: adaptiveMode, allowS: !lowTrust, rankS: sCombatRankEnabled(String(args.state.run?.raw["character_id"] ?? "")) } : undefined;
     if (required) {
       attempt = beginComputation(args.memory, args.state, "boss-lines", linesMemoKey(input, args.lines, samples, linesWhere() ?? "unknown", configuredAdaptive));
-      if (attempt.degraded) left = bossLinesOptions.deadlineMs;
+      if (attempt.degraded) left = Math.min(left, bossLinesOptions.deadlineMs);
       wait = args.simWait?.start({ run: String(args.state.raw["run_id"] ?? ""), floor: args.state.run?.floor ?? null, label: "boss-lines" });
     }
     const adaptive = attempt?.degraded ? undefined : configuredAdaptive;
@@ -826,7 +846,7 @@ export function bossLineSim(args: BossLineSimArgs): BossLineSim {
     if (memoed) run = { ...memoed, memo: { wallMs: ms() } };
     else {
       try {
-        run = runLines(input, args.lines, { samples, seed: bossLinesOptions.seed, deadlineMs: left, serial: bossLinesOptions.serial, now, ...(wait ? { onProgress: wait.progress } : {}), ...(adaptive ? { adaptive } : {}) });
+        run = runLines(input, args.lines, { samples, seed: bossLinesOptions.seed, deadlineMs: pace ? Math.max(0, Math.min(left, pace.remaining() - 1000)) : left, serial: bossLinesOptions.serial, now, ...(wait ? { onProgress: wait.progress } : {}), ...(adaptive ? { adaptive } : {}) });
       } catch (error) {
         // A worker's error: the next question starts a new pool.
         releaseBossLinesPool();
@@ -835,19 +855,19 @@ export function bossLineSim(args: BossLineSimArgs): BossLineSim {
       }
       if (args.memo) storeLines(args.memo, input, args.lines, samples, run, adaptive);
     }
-    args.memory.bossLines = { turn: turnKey, spentMs: memo.spentMs + run.elapsedMs };
+    args.memory.bossLines = { turn: turnKey, spentMs: memo.spentMs + (pace && run.memo ? run.memo.wallMs : run.elapsedMs) };
     sampled = run.samples;
     const adaptiveComplete = completeAdaptiveLines(run);
-    if (required && !attempt?.degraded && (run.timedOut || (run.samples !== samples && !adaptiveComplete))) return unavailable(`required paired computation incomplete: ${run.samples}/${samples}`);
+    if (required && !pace && !attempt?.degraded && (run.timedOut || (run.samples !== samples && !adaptiveComplete))) return unavailable(`required paired computation incomplete: ${run.samples}/${samples}`);
     if (run.samples === 0) {
       releaseBossLinesPool();
       failed = { fight, count: failed.fight === fight ? failed.count + 1 : 1 };
-      return unavailable(`no sample finished within ${Math.round(left / 1000)} s`);
+      return unavailable(pace ? "时间预算内无完整配对样本；估计/误差unknown，使用现有候选" : `no sample finished within ${Math.round(left / 1000)} s`, !!pace);
     }
-    if (attempt?.degraded && run.samples < 300) return unavailable(`不完整（故障降级，n=${run.samples}）；不足 300 次，不给数字，按原 rollout 继续`);
+    if (!pace && attempt?.degraded && run.samples < 300) return unavailable(`不完整（故障降级，n=${run.samples}）；不足 300 次，不给数字，按原 rollout 继续`);
     failed = { fight, count: 0 };
     const eligible = (i: number) => (args.eligible ? args.eligible(args.lines[i]!) : true);
-    const sPolicy = sCombatRankMode(String(args.state.run?.raw["character_id"] ?? "")) === "shadow"
+    const sPolicy = shadowBudgetAvailable("b2_S_counterfactual") && sCombatRankMode(String(args.state.run?.raw["character_id"] ?? "")) === "shadow"
       ? { lowTrust, allowPrefixes: adaptiveComplete, mode: "shadow" as const } : undefined;
     const rank = rankLines(run.lines, BOSS_LINES_TIE_SE, eligible, wonLoss, sPolicy);
     const dryRank = rankLines(run.lines, BOSS_LINES_TIE_SE, (i) => eligible(i) && !args.drinks(args.lines[i]!), wonLoss, sPolicy);
@@ -855,14 +875,17 @@ export function bossLineSim(args: BossLineSimArgs): BossLineSim {
     const start = turnNow <= 1 ? "start" : "mid";
     const byPlan = new Map<Plan, LineSim>();
     run.lines.forEach((line, i) => {
+      const interval = binomialInterval(line.wins, line.samples);
       const calibrated = line.sequence ? line.winProb : calibratedWinProb(line.winProb, line.samples, start, args.state.run?.ascension ?? 0);
       const vsBest = rank.vsBest[i] ?? null;
       const winTied = rank.winTied[i] ?? false;
       const reference = run.lines[rank.best >= 0 ? rank.best : 0]!;
-      const margin = input.captureBossMargin ? summarizeBossMargin(line.outcomes, reference.outcomes, line.outcomes.map((_, at) => at), ...(adaptiveComplete ? [reference.outcomes.map((_, at) => at)] : [])) : null;
+      // A budget cut after elimination also leaves unequal, independently identified seed prefixes.
+      const explicitReference = adaptiveComplete || line.outcomes.length !== reference.outcomes.length;
+      const margin = input.captureBossMargin && shadowBudgetAvailable("b2_margin_shadow") ? summarizeBossMargin(line.outcomes, reference.outcomes, line.outcomes.map((_, at) => at), ...(explicitReference ? [reference.outcomes.map((_, at) => at)] : [])) : null;
       byPlan.set(args.lines[i]!, { result: line, calibrated, vsBest, winTied,
         ...(margin ? { bossMargin: { ...margin, rankingEligible: margin.rankingEligible && !lowTrust && (!sPolicy || auditSigns(line.outcomes).rankingEligible) } } : {}),
-        text: (attempt?.degraded ? `不完整（故障降级，n=${run.samples}）；` : "") + lineSimText(line, calibrated, rank.best === i ? null : vsBest, run, turnNow, { best: rank.best === i, winTied, lowTrust }) });
+        text: (pace ? `限时${run.timedOut ? "未完整" : "完成"}；n=${line.samples}/${run.requested}，原始胜率MC95%区间${interval ? interval.map(pct).join("–") + "%" : "unknown"}（不含模型偏差）；${lowTrust ? "低可信、未完整；" : ""}${line.samples < 2 ? "误差unknown；" : "误差见±配对标准误；"}` : "") + (attempt?.degraded ? `不完整（故障降级，n=${run.samples}）；` : "") + lineSimText(line, calibrated, rank.best === i ? null : vsBest, run, turnNow, { best: rank.best === i, winTied, lowTrust }) });
     });
     // P3 supplies its complete anchored order; the legacy path keeps its exact original comparator.
     const key = (i: number): [number, number, number] => (rank.winTied[i] ? [0, wonLoss(run.lines[i]!), -run.lines[i]!.winProb] : [1, -run.lines[i]!.winProb, wonLoss(run.lines[i]!)]);
@@ -874,7 +897,7 @@ export function bossLineSim(args: BossLineSimArgs): BossLineSim {
       ...(jointScope ? { f48JointShadow: f48JointShadow(jointScope, run.lines.map((line, i) => ({
         key: `line:${i}`, input: args.lines[i], outcomes: line.outcomes, requested: samples, order: line.order,
       })), input) } : {}),
-      ...(attempt ? { completion: attempt.finish(run.samples, samples, undefined, adaptiveComplete) } : {}),
+      ...(attempt ? { completion: pace ? attempt.finishBudget(run.samples, run.requested, run.timedOut || run.samples < run.requested && !adaptiveComplete) : attempt.finish(run.samples, samples, undefined, adaptiveComplete) } : {}),
       available: true,
       byPlan,
       best: lowTrust || rank.best < 0 || rank.tied.length > 0 ? null : args.lines[rank.best]!,
@@ -925,7 +948,7 @@ function linesWhere(): string | null {
 
 /** The memo key of a B2 run: everything runLines reads (the input, the lines, samples, seed, hold values, turns) and where it ran. */
 function linesMemoKey(input: RolloutInput, lines: Plan[], samples: number, where: string, adaptive?: { allowS: boolean; mode?: "shadow" | "on"; rankS?: boolean }): string | null {
-  return memoKey("b2", { input, lines, samples, seed: bossLinesOptions.seed, holdHp: identityToken(bossLinesOptions.holdHp ?? tableHoldHp), maxTurns: BOSS_SIM_MAX_TURNS, where, ...(adaptive ? { adaptive: { ...ADAPTIVE_RULE, ...adaptive } } : {}) });
+  return memoKey(currentDecisionBudget() ? "human-pace-b2-v1" : "b2", { input, lines, samples: currentDecisionBudget() ? null : samples, seed: bossLinesOptions.seed, holdHp: identityToken(bossLinesOptions.holdHp ?? tableHoldHp), maxTurns: BOSS_SIM_MAX_TURNS, where, ...(adaptive ? { adaptive: { ...ADAPTIVE_RULE, ...adaptive } } : {}) });
 }
 
 /** A stored run of this input that finished every sample, when `left` (this question's deadline) is at least its time; else null. */
@@ -934,6 +957,7 @@ function recallLines(memo: ComputeMemo, input: RolloutInput, lines: Plan[], samp
     const where = linesWhere();
     const key = where ? linesMemoKey(input, lines, samples, where, adaptive) : null;
     const hit = key ? memo.get<LinesResult, { elapsedMs: number }>(key) : null;
+    if (hit && currentDecisionBudget() && hit.value.samples > 0) { memo.took(); return hit.value; }
     if (!hit || hit.value.timedOut || hit.meta.elapsedMs > left
         || (hit.value.samples !== samples && !completeAdaptiveLines(hit.value))) return null;
     memo.took();
@@ -946,7 +970,7 @@ function recallLines(memo: ComputeMemo, input: RolloutInput, lines: Plan[], samp
 /** Keeps a run that finished every sample (none cut by the deadline). */
 function storeLines(memo: ComputeMemo, input: RolloutInput, lines: Plan[], samples: number, run: LinesResult, adaptive?: { allowS: boolean; mode?: "shadow" | "on"; rankS?: boolean }): void {
   try {
-    if (run.timedOut || (run.samples < samples && !completeAdaptiveLines(run)) || run.samples === 0) return;
+    if (run.samples === 0 || (!currentDecisionBudget() && (run.timedOut || (run.samples < samples && !completeAdaptiveLines(run))))) return;
     const where = linesWhere();
     const key = where ? linesMemoKey(input, lines, samples, where, adaptive) : null;
     if (key) memo.set(key, run, { elapsedMs: run.elapsedMs });
@@ -983,6 +1007,7 @@ export function simNote(sim: BossLineSim): string {
 
 /** The decision log's record (log.boss_sim). */
 export function simLog(sim: BossLineSim, keyOf: (plan: Plan) => string | null, extra: Record<string, JsonValue> = {}): Record<string, JsonValue> {
+  const budgeted = !!currentDecisionBudget() || sim.completion?.budgeted === true;
   const completion: Record<string, JsonValue> = { ...(sim.completion ? { completion: { ...sim.completion } } : {}),
     ...(sim.f48JointShadow ? { f48_joint_shadow: toJsonValue(sim.f48JointShadow) } : {}) };
   if (!sim.available) return { available: false, reason: sim.reason, ms: sim.ms, ...completion,
@@ -996,8 +1021,9 @@ export function simLog(sim: BossLineSim, keyOf: (plan: Plan) => string | null, e
       win: Math.round(line.result.winProb * 1000) / 1000,
       cal: Math.round(line.calibrated * 1000) / 1000,
       d: line.vsBest ? Math.round(line.vsBest.winDiff * 1000) / 1000 : 0,
-      se: line.vsBest ? Math.round(line.vsBest.winSe * 1000) / 1000 : 0,
-      ...(completeAdaptiveLines(sim.run) ? { samples: line.result.samples, paired_samples: line.vsBest?.samples ?? line.result.samples } : {}),
+      se: budgeted && line.result.samples < 2 ? null : line.vsBest ? Math.round(line.vsBest.winSe * 1000) / 1000 : 0,
+      ...(budgeted ? { raw_win_mc_interval95: binomialInterval(line.result.wins, line.result.samples) } : {}),
+      ...(completeAdaptiveLines(sim.run) || budgeted ? { samples: line.result.samples, paired_samples: line.vsBest?.samples ?? line.result.samples } : {}),
       loss: line.result.hpLoss.mean,
       won_loss: line.result.hpLossWon?.median ?? null,
       order: line.result.order,

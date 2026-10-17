@@ -1,0 +1,7 @@
+{
+  "stage": "First compiler-equivalence adapter attempt before any source mutation",
+  "error": "TypeError: Cannot read properties of undefined (reading 'ESNext')",
+  "cause": "Installed TypeScript7.0.2 package top-level exports only version metadata, not legacy transpileModule/ModuleKind API",
+  "source_frozen_bytes_unchanged": true,
+  "repair": "Use the existing native TypeScript7 CLI emit-only mode plus esbuild and compare exact JS; no package installation or source/test assertion change"
+}

@@ -1,0 +1,322 @@
+{
+  "at": "2026-10-17 13:58:25 CST",
+  "batch": "20261017-124302-fix-batch",
+  "source": "a473263eb35ce5bea8e06f1ee94f4da1ba880bc3",
+  "source_parent": "ed6d77cea7b5c7a4980888e9f5877b6e00be3d7e",
+  "source_tree": "8fa73d0e11d53f228338fc6d74ba146475176c45",
+  "paths": [
+    "agent/src/hand/loop.ts",
+    "agent/src/hand/screens/selection.ts",
+    "agent/src/memory/types.ts",
+    "agent/src/reflex/combat-plan.ts",
+    "agent/tests/silent-hidden-daggers-selection-evidence.json",
+    "agent/tests/silent-hidden-daggers-selection.test.ts"
+  ],
+  "files": [
+    {
+      "path": "agent/src/hand/loop.ts",
+      "sha256": "da712eb360462f830232962c3bfb5768d3642d6232efd9c349243ec75f96f21d"
+    },
+    {
+      "path": "agent/src/hand/screens/selection.ts",
+      "sha256": "c4432b5fdf8c352ad4d834a87340a3ee69d69606ea705420e4b113db4228c647"
+    },
+    {
+      "path": "agent/src/memory/types.ts",
+      "sha256": "27a78bcf0a04355e2476cae4f1e271f2ce5eb22ed60015cb4c3c8f0f387ad227"
+    },
+    {
+      "path": "agent/src/reflex/combat-plan.ts",
+      "sha256": "41a6ecc014c5d614ccbcf6a12e0e30412518f70e8a27295e0a85f15c1c38e0b4"
+    },
+    {
+      "path": "agent/tests/silent-hidden-daggers-selection-evidence.json",
+      "sha256": "067f71b789d50279e36b61abdb7d9b0ee919d918ff4112c7ac8f9aa26739ba45"
+    },
+    {
+      "path": "agent/tests/silent-hidden-daggers-selection.test.ts",
+      "sha256": "f008e8d70a696705d13988f337f7f8670214549d874d2c12731cae91195e8343"
+    }
+  ],
+  "patch_sha256": "f19cb6b705a2eb6d2aab75aa30f281952d923fc078bed68ed859b8f51d51f9af",
+  "canonical_original_state": "failed",
+  "canonical_original_rc": 0,
+  "canonical_original_merged": null,
+  "original_report": {
+    "task": "fix-batch",
+    "base": "ed6d77cea7b5c7a4980888e9f5877b6e00be3d7e",
+    "fixes": [
+      {
+        "item": "selection-hidden-daggers-conditional-followup-readback",
+        "commit": "a473263eb35ce5bea8e06f1ee94f4da1ba880bc3",
+        "test": "agent/tests/silent-hidden-daggers-selection.test.ts",
+        "fails_without_fix": true
+      }
+    ],
+    "skipped": [
+      {
+        "item": "其他出牌、药水、SL、终局、路线及机制条目",
+        "reason": "策略类，保留原独立 strategy-proposal 链。"
+      },
+      {
+        "item": "silent-0332 实际资源契约根因",
+        "reason": "证据不足，沿原专用 owner 接续。"
+      },
+      {
+        "item": "sandbox-glob-startup-race 与磁盘压力宽项",
+        "reason": "证据不足，已修窄项不代表整体根因解决。"
+      },
+      {
+        "item": "漏斗、统一资源价值、学习优先级及调度公平性",
+        "reason": "独立架构、策略或归因任务。"
+      },
+      {
+        "item": "core-build-notify-222802-rc2 旧通知恢复",
+        "reason": "缺少 stderr，无法确认未送达，未重发。"
+      },
+      {
+        "item": "缓存实测、DPR/B2 性能及历史超时根因",
+        "reason": "证据不足或独立性能任务。"
+      }
+    ],
+    "merged": null,
+    "tests": {
+      "tsc": 0,
+      "vitest": 0,
+      "cases": 4358
+    },
+    "code_proposals": [
+      "silent-proposal-59b2e430bb7521d4"
+    ],
+    "implementation_domains": [
+      "combat"
+    ],
+    "report": "/home/dw/Projects/agent-sts2/learner/runs/20261017-124306-184875aa-20b9-43b8-a357-62d884ee908d-fix-batch/report.md"
+  },
+  "original_source_validation": {
+    "tsc": 0,
+    "vitest": 0,
+    "files": 473,
+    "cases": 4358,
+    "summaries": {
+      "files": [
+        472,
+        1
+      ],
+      "cases": [
+        4347,
+        11
+      ]
+    },
+    "gitleaks": 0,
+    "patch_sha256": "f19cb6b705a2eb6d2aab75aa30f281952d923fc078bed68ed859b8f51d51f9af",
+    "source_log_sha256": "acdf476c4bd5ab392f87426eb03ba903be321ae85f6f84cb8f950cc086c6ad25",
+    "negative_exit": 1,
+    "negative_failed_cases": 4,
+    "fixed_targeted_cases": 24
+  },
+  "checks": {
+    "tsc": 0,
+    "vitest": 0,
+    "files": 473,
+    "cases": 4358,
+    "summaries": {
+      "files": [
+        472,
+        1
+      ],
+      "cases": [
+        4347,
+        11
+      ]
+    },
+    "gitleaks": 0,
+    "patch_sha256": "f19cb6b705a2eb6d2aab75aa30f281952d923fc078bed68ed859b8f51d51f9af",
+    "source_log_sha256": "acdf476c4bd5ab392f87426eb03ba903be321ae85f6f84cb8f950cc086c6ad25",
+    "negative_exit": 1,
+    "negative_failed_cases": 4,
+    "fixed_targeted_cases": 24
+  },
+  "native": {
+    "batch": "20261017-124302-fix-batch",
+    "thread": "01a1482b-d195-7050-95a4-f8ac429fadf2",
+    "cwd": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261017-124302",
+    "event_log": "learner/runs/20261017-124306-184875aa-20b9-43b8-a357-62d884ee908d-fix-batch.jsonl",
+    "registered_launch_batch": "20261017-124302-fix-batch",
+    "original_lease": "bff2f2d94809cbc6553b9302862327451ec69adbab4d84bcad72027ea3cb1db9",
+    "native_context": {
+      "source": "ops/codex-ops/accounts/codex1/learner/sessions/2026/10/17/rollout-2026-10-17T12-43-13-01a1482b-d195-7050-95a4-f8ac429fadf2.jsonl",
+      "offset": 50304,
+      "bytes": 5152,
+      "sha256": "00f3ed225d85291704ca9bc1dc6c9021cfb7b4fe683eebb76a3a038494b318b0",
+      "model": "gpt-6.1-sol",
+      "effort": "xhigh",
+      "sandbox": {
+        "type": "workspace-write",
+        "writable_roots": [
+          "/home/dw/Projects/agent-sts2",
+          "/home/dw/Projects/agent-sts2/.git",
+          "/home/dw/Projects/agent-sts2/.git/worktrees/codex-fix-silent-20261017-124302"
+        ],
+        "network_access": false,
+        "exclude_tmpdir_env_var": false,
+        "exclude_slash_tmp": false
+      },
+      "approval_policy": "never"
+    },
+    "native_user_input": {
+      "offset": 58299,
+      "bytes": 13081,
+      "sha256": "9555002f07c46e3c2090d803701037fb9758ff7e9d1b348be0db04ed98cd8f4f",
+      "input_sha256": "0484d7e29fadbb36b579f964fefadbe73cd01532e12ceff606d7681dfa39095d"
+    },
+    "original_header_events": [
+      {
+        "offset": 0,
+        "bytes": 14892,
+        "sha256": "f224e67e5b1fd6184dbffb4508f2410363e2284314cce185f1782fd7b19a5a59",
+        "type": "learner_launch",
+        "attempt": null,
+        "code": null
+      },
+      {
+        "offset": 14892,
+        "bytes": 370,
+        "sha256": "efd56207f34818f428c950eaedc34b762f21918444c02e1881d79fb75e298648",
+        "type": "learner_startup_attempt",
+        "attempt": 1,
+        "code": null
+      },
+      {
+        "offset": 18275,
+        "bytes": 77,
+        "sha256": "d04c4d5f75a9e1ab59bb5cc55821d944493b5dac82bc6e73d528015080e953ea",
+        "type": "thread.started",
+        "attempt": null,
+        "code": null
+      }
+    ],
+    "startup_attempts": 1,
+    "failed_startups_preserved": 0,
+    "no_model_or_manual_restart": true
+  },
+  "original_live_attempt": {
+    "status": "merge_conflicts",
+    "locked": true,
+    "source": "a473263eb35ce5bea8e06f1ee94f4da1ba880bc3",
+    "base_live": "6fbbd82abd6d407dbaf93f82639b7f927efa54a0",
+    "live_after": "6fbbd82abd6d407dbaf93f82639b7f927efa54a0",
+    "merged": null,
+    "own_changed_paths": [
+      "agent/src/hand/loop.ts",
+      "agent/src/hand/screens/selection.ts",
+      "agent/src/memory/types.ts",
+      "agent/src/reflex/combat-plan.ts",
+      "agent/tests/silent-hidden-daggers-selection-evidence.json",
+      "agent/tests/silent-hidden-daggers-selection.test.ts"
+    ],
+    "own_knowledge_changes": [],
+    "knowledge_refresh_status": [
+      " M knowledge/characters/silent/boss-damage.json",
+      " M knowledge/characters/silent/construction-opportunities.json",
+      " M knowledge/characters/silent/fight-value-gates.json",
+      " M knowledge/characters/silent/fight-value.json",
+      " M knowledge/characters/silent/monster-records.json",
+      " M knowledge/characters/silent/outcome-stats.json",
+      " M knowledge/characters/silent/room-costs.json",
+      " M knowledge/common/card-upgrades.json",
+      " M knowledge/common/monster-db.json",
+      " M knowledge/common/move-model.json"
+    ],
+    "preexisting_index": [],
+    "previews": {
+      "default": {
+        "rc": 1,
+        "conflicts": [
+          "CONFLICT (modify/delete): docs/human-pace-plan.md deleted in 6fbbd82abd6d407dbaf93f82639b7f927efa54a0 and modified in a473263eb35ce5bea8e06f1ee94f4da1ba880bc3.  Version a473263eb35ce5bea8e06f1ee94f4da1ba880bc3 of docs/human-pace-plan.md left in tree.",
+          "CONFLICT (content): Merge conflict in notes/fix-queue-v4.md",
+          "CONFLICT (content): Merge conflict in notes/for-roy.md",
+          "CONFLICT (content): Merge conflict in notes/ops-handoff.md",
+          "CONFLICT (content): Merge conflict in ops/inbox-dev.md",
+          "CONFLICT (modify/delete): paper/materials/20261017-human-pace-control/checkpoint.json deleted in 6fbbd82abd6d407dbaf93f82639b7f927efa54a0 and modified in a473263eb35ce5bea8e06f1ee94f4da1ba880bc3.  Version a473263eb35ce5bea8e06f1ee94f4da1ba880bc3 of paper/materials/20261017-human-pace-control/checkpoint.json left in tree.",
+          "CONFLICT (modify/delete): paper/materials/20261017-human-pace-control/requirements.json deleted in 6fbbd82abd6d407dbaf93f82639b7f927efa54a0 and modified in a473263eb35ce5bea8e06f1ee94f4da1ba880bc3.  Version a473263eb35ce5bea8e06f1ee94f4da1ba880bc3 of paper/materials/20261017-human-pace-control/requirements.json left in tree.",
+          "CONFLICT (modify/delete): paper/materials/20261017-human-pace-h1/checkpoint.json deleted in 6fbbd82abd6d407dbaf93f82639b7f927efa54a0 and modified in a473263eb35ce5bea8e06f1ee94f4da1ba880bc3.  Version a473263eb35ce5bea8e06f1ee94f4da1ba880bc3 of paper/materials/20261017-human-pace-h1/checkpoint.json left in tree.",
+          "CONFLICT (modify/delete): paper/materials/20261017-human-pace-h1/completion.md deleted in 6fbbd82abd6d407dbaf93f82639b7f927efa54a0 and modified in a473263eb35ce5bea8e06f1ee94f4da1ba880bc3.  Version a473263eb35ce5bea8e06f1ee94f4da1ba880bc3 of paper/materials/20261017-human-pace-h1/completion.md left in tree.",
+          "CONFLICT (modify/delete): paper/materials/20261017-human-pace-h1/natural/analyze.py deleted in 6fbbd82abd6d407dbaf93f82639b7f927efa54a0 and modified in a473263eb35ce5bea8e06f1ee94f4da1ba880bc3.  Version a473263eb35ce5bea8e06f1ee94f4da1ba880bc3 of paper/materials/20261017-human-pace-h1/natural/analyze.py left in tree.",
+          "CONFLICT (modify/delete): paper/materials/20261017-human-pace-h1/natural/checkpoint.json deleted in 6fbbd82abd6d407dbaf93f82639b7f927efa54a0 and modified in a473263eb35ce5bea8e06f1ee94f4da1ba880bc3.  Version a473263eb35ce5bea8e06f1ee94f4da1ba880bc3 of paper/materials/20261017-human-pace-h1/natural/checkpoint.json left in tree.",
+          "CONFLICT (modify/delete): paper/materials/20261017-human-pace-h1/natural/render-report.py deleted in 6fbbd82abd6d407dbaf93f82639b7f927efa54a0 and modified in a473263eb35ce5bea8e06f1ee94f4da1ba880bc3.  Version a473263eb35ce5bea8e06f1ee94f4da1ba880bc3 of paper/materials/20261017-human-pace-h1/natural/render-report.py left in tree.",
+          "CONFLICT (modify/delete): paper/materials/20261017-human-pace-h1/natural/requirements.json deleted in 6fbbd82abd6d407dbaf93f82639b7f927efa54a0 and modified in a473263eb35ce5bea8e06f1ee94f4da1ba880bc3.  Version a473263eb35ce5bea8e06f1ee94f4da1ba880bc3 of paper/materials/20261017-human-pace-h1/natural/requirements.json left in tree.",
+          "CONFLICT (modify/delete): paper/materials/20261017-human-pace-h1/requirements.json deleted in 6fbbd82abd6d407dbaf93f82639b7f927efa54a0 and modified in a473263eb35ce5bea8e06f1ee94f4da1ba880bc3.  Version a473263eb35ce5bea8e06f1ee94f4da1ba880bc3 of paper/materials/20261017-human-pace-h1/requirements.json left in tree.",
+          "CONFLICT (content): Merge conflict in paper/materials/decision-log.md",
+          "CONFLICT (file location): paper/materials/20261017-human-pace-h1/natural/5H83F3J0XSTE/over90-autoplay-tail.raw added in a473263eb35ce5bea8e06f1ee94f4da1ba880bc3 inside a directory that was renamed in 6fbbd82abd6d407dbaf93f82639b7f927efa54a0, suggesting it should perhaps be moved to paper/materials/silent/20261011-001303-boss-calibration-closeout/5H83F3J0XSTE/over90-autoplay-tail.raw.",
+          "CONFLICT (file location): paper/materials/20261017-human-pace-h1/natural/5H83F3J0XSTE/over90-console-binding.json added in a473263eb35ce5bea8e06f1ee94f4da1ba880bc3 inside a directory that was renamed in 6fbbd82abd6d407dbaf93f82639b7f927efa54a0, suggesting it should perhaps be moved to paper/materials/silent/20261011-001303-boss-calibration-closeout/5H83F3J0XSTE/over90-console-binding.json.",
+          "CONFLICT (file location): paper/materials/20261017-human-pace-h1/natural/5H83F3J0XSTE/over90-console-tail.raw added in a473263eb35ce5bea8e06f1ee94f4da1ba880bc3 inside a directory that was renamed in 6fbbd82abd6d407dbaf93f82639b7f927efa54a0, suggesting it should perhaps be moved to paper/materials/silent/20261011-001303-boss-calibration-closeout/5H83F3J0XSTE/over90-console-tail.raw.",
+          "CONFLICT (file location): paper/materials/20261017-human-pace-h1/natural/5H83F3J0XSTE/over90-last-jev-row.json added in a473263eb35ce5bea8e06f1ee94f4da1ba880bc3 inside a directory that was renamed in 6fbbd82abd6d407dbaf93f82639b7f927efa54a0, suggesting it should perhaps be moved to paper/materials/silent/20261011-001303-boss-calibration-closeout/5H83F3J0XSTE/over90-last-jev-row.json.",
+          "CONFLICT (file location): paper/materials/20261017-human-pace-h1/natural/5H83F3J0XSTE/over90-readback.json added in a473263eb35ce5bea8e06f1ee94f4da1ba880bc3 inside a directory that was renamed in 6fbbd82abd6d407dbaf93f82639b7f927efa54a0, suggesting it should perhaps be moved to paper/materials/silent/20261011-001303-boss-calibration-closeout/5H83F3J0XSTE/over90-readback.json.",
+          "CONFLICT (file location): paper/materials/20261017-human-pace-h1/natural/5H83F3J0XSTE/source-client.ts.txt added in a473263eb35ce5bea8e06f1ee94f4da1ba880bc3 inside a directory that was renamed in 6fbbd82abd6d407dbaf93f82639b7f927efa54a0, suggesting it should perhaps be moved to paper/materials/silent/20261011-001303-boss-calibration-closeout/5H83F3J0XSTE/source-client.ts.txt.",
+          "CONFLICT (file location): paper/materials/20261017-human-pace-h1/natural/5H83F3J0XSTE/source-decision-budget.ts.txt added in a473263eb35ce5bea8e06f1ee94f4da1ba880bc3 inside a directory that was renamed in 6fbbd82abd6d407dbaf93f82639b7f927efa54a0, suggesting it should perhaps be moved to paper/materials/silent/20261011-001303-boss-calibration-closeout/5H83F3J0XSTE/source-decision-budget.ts.txt.",
+          "CONFLICT (file location): paper/materials/20261017-human-pace-h1/natural/5H83F3J0XSTE/source-loop.ts.txt added in a473263eb35ce5bea8e06f1ee94f4da1ba880bc3 inside a directory that was renamed in 6fbbd82abd6d407dbaf93f82639b7f927efa54a0, suggesting it should perhaps be moved to paper/materials/silent/20261011-001303-boss-calibration-closeout/5H83F3J0XSTE/source-loop.ts.txt.",
+          "CONFLICT (file location): paper/materials/20261017-human-pace-h1/natural/5H83F3J0XSTE/source-pick.ts.txt added in a473263eb35ce5bea8e06f1ee94f4da1ba880bc3 inside a directory that was renamed in 6fbbd82abd6d407dbaf93f82639b7f927efa54a0, suggesting it should perhaps be moved to paper/materials/silent/20261011-001303-boss-calibration-closeout/5H83F3J0XSTE/source-pick.ts.txt.",
+          "CONFLICT (file location): paper/materials/20261017-human-pace-h1/natural/5H83F3J0XSTE/stuck-source-readback.json added in a473263eb35ce5bea8e06f1ee94f4da1ba880bc3 inside a directory that was renamed in 6fbbd82abd6d407dbaf93f82639b7f927efa54a0, suggesting it should perhaps be moved to paper/materials/silent/20261011-001303-boss-calibration-closeout/5H83F3J0XSTE/stuck-source-readback.json.",
+          "CONFLICT (file location): paper/materials/20261017-human-pace-h1/natural/artifact-manifest.json added in a473263eb35ce5bea8e06f1ee94f4da1ba880bc3 inside a directory that was renamed in 6fbbd82abd6d407dbaf93f82639b7f927efa54a0, suggesting it should perhaps be moved to paper/materials/silent/20261011-001303-boss-calibration-closeout/artifact-manifest.json.",
+          "CONFLICT (file location): paper/materials/20261017-human-pace-h1/natural/diagnostic-analysis-open-r2.json added in a473263eb35ce5bea8e06f1ee94f4da1ba880bc3 inside a directory that was renamed in 6fbbd82abd6d407dbaf93f82639b7f927efa54a0, suggesting it should perhaps be moved to paper/materials/silent/20261011-001303-boss-calibration-closeout/diagnostic-analysis-open-r2.json.",
+          "CONFLICT (file location): paper/materials/20261017-human-pace-h1/natural/diagnostic-analysis-open.json added in a473263eb35ce5bea8e06f1ee94f4da1ba880bc3 inside a directory that was renamed in 6fbbd82abd6d407dbaf93f82639b7f927efa54a0, suggesting it should perhaps be moved to paper/materials/silent/20261011-001303-boss-calibration-closeout/diagnostic-analysis-open.json.",
+          "CONFLICT (file location): paper/materials/20261017-human-pace-h1/natural/diagnostic-analysis-r2.log added in a473263eb35ce5bea8e06f1ee94f4da1ba880bc3 inside a directory that was renamed in 6fbbd82abd6d407dbaf93f82639b7f927efa54a0, suggesting it should perhaps be moved to paper/materials/silent/20261011-001303-boss-calibration-closeout/diagnostic-analysis-r2.log.",
+          "CONFLICT (file location): paper/materials/20261017-human-pace-h1/natural/diagnostic-analysis.log added in a473263eb35ce5bea8e06f1ee94f4da1ba880bc3 inside a directory that was renamed in 6fbbd82abd6d407dbaf93f82639b7f927efa54a0, suggesting it should perhaps be moved to paper/materials/silent/20261011-001303-boss-calibration-closeout/diagnostic-analysis.log.",
+          "CONFLICT (file location): paper/materials/20261017-human-pace-h1/natural/freeze-partial-5H83.log added in a473263eb35ce5bea8e06f1ee94f4da1ba880bc3 inside a directory that was renamed in 6fbbd82abd6d407dbaf93f82639b7f927efa54a0, suggesting it should perhaps be moved to paper/materials/silent/20261011-001303-boss-calibration-closeout/freeze-partial-5H83.log.",
+          "CONFLICT (file location): paper/materials/20261017-human-pace-h1/natural/gitleaks-final-r2.json added in a473263eb35ce5bea8e06f1ee94f4da1ba880bc3 inside a directory that was renamed in 6fbbd82abd6d407dbaf93f82639b7f927efa54a0, suggesting it should perhaps be moved to paper/materials/silent/20261011-001303-boss-calibration-closeout/gitleaks-final-r2.json.",
+          "CONFLICT (file location): paper/materials/20261017-human-pace-h1/natural/gitleaks-final-r2.log added in a473263eb35ce5bea8e06f1ee94f4da1ba880bc3 inside a directory that was renamed in 6fbbd82abd6d407dbaf93f82639b7f927efa54a0, suggesting it should perhaps be moved to paper/materials/silent/20261011-001303-boss-calibration-closeout/gitleaks-final-r2.log.",
+          "CONFLICT (file location): paper/materials/20261017-human-pace-h1/natural/gitleaks-final.json added in a473263eb35ce5bea8e06f1ee94f4da1ba880bc3 inside a directory that was renamed in 6fbbd82abd6d407dbaf93f82639b7f927efa54a0, suggesting it should perhaps be moved to paper/materials/silent/20261011-001303-boss-calibration-closeout/gitleaks-final.json.",
+          "CONFLICT (file location): paper/materials/20261017-human-pace-h1/natural/gitleaks-final.log added in a473263eb35ce5bea8e06f1ee94f4da1ba880bc3 inside a directory that was renamed in 6fbbd82abd6d407dbaf93f82639b7f927efa54a0, suggesting it should perhaps be moved to paper/materials/silent/20261011-001303-boss-calibration-closeout/gitleaks-final.log.",
+          "CONFLICT (file location): paper/materials/20261017-human-pace-h1/natural/handoff.md added in a473263eb35ce5bea8e06f1ee94f4da1ba880bc3 inside a directory that was renamed in 6fbbd82abd6d407dbaf93f82639b7f927efa54a0, suggesting it should perhaps be moved to paper/materials/silent/20261011-001303-boss-calibration-closeout/handoff.md.",
+          "CONFLICT (file location): paper/materials/20261017-human-pace-h1/natural/host-readback.json added in a473263eb35ce5bea8e06f1ee94f4da1ba880bc3 inside a directory that was renamed in 6fbbd82abd6d407dbaf93f82639b7f927efa54a0, suggesting it should perhaps be moved to paper/materials/silent/20261011-001303-boss-calibration-closeout/host-readback.json.",
+          "CONFLICT (file location): paper/materials/20261017-human-pace-h1/natural/initial-record-commit.log added in a473263eb35ce5bea8e06f1ee94f4da1ba880bc3 inside a directory that was renamed in 6fbbd82abd6d407dbaf93f82639b7f927efa54a0, suggesting it should perhaps be moved to paper/materials/silent/20261011-001303-boss-calibration-closeout/initial-record-commit.log.",
+          "CONFLICT (file location): paper/materials/20261017-human-pace-h1/natural/listener-blocked-snapshot.json added in a473263eb35ce5bea8e06f1ee94f4da1ba880bc3 inside a directory that was renamed in 6fbbd82abd6d407dbaf93f82639b7f927efa54a0, suggesting it should perhaps be moved to paper/materials/silent/20261011-001303-boss-calibration-closeout/listener-blocked-snapshot.json.",
+          "CONFLICT (file location): paper/materials/20261017-human-pace-h1/natural/partial-5H83F3J0XSTE/brain.jsonl.gz added in a473263eb35ce5bea8e06f1ee94f4da1ba880bc3 inside a directory that was renamed in 6fbbd82abd6d407dbaf93f82639b7f927efa54a0, suggesting it should perhaps be moved to paper/materials/silent/20261011-001303-boss-calibration-closeout/partial-5H83F3J0XSTE/brain.jsonl.gz.",
+          "CONFLICT (file location): paper/materials/20261017-human-pace-h1/natural/partial-5H83F3J0XSTE/codex-calls.jsonl.gz added in a473263eb35ce5bea8e06f1ee94f4da1ba880bc3 inside a directory that was renamed in 6fbbd82abd6d407dbaf93f82639b7f927efa54a0, suggesting it should perhaps be moved to paper/materials/silent/20261011-001303-boss-calibration-closeout/partial-5H83F3J0XSTE/codex-calls.jsonl.gz.",
+          "CONFLICT (file location): paper/materials/20261017-human-pace-h1/natural/partial-5H83F3J0XSTE/decisions.jsonl.gz added in a473263eb35ce5bea8e06f1ee94f4da1ba880bc3 inside a directory that was renamed in 6fbbd82abd6d407dbaf93f82639b7f927efa54a0, suggesting it should perhaps be moved to paper/materials/silent/20261011-001303-boss-calibration-closeout/partial-5H83F3J0XSTE/decisions.jsonl.gz.",
+          "CONFLICT (file location): paper/materials/20261017-human-pace-h1/natural/partial-5H83F3J0XSTE/manifest.json added in a473263eb35ce5bea8e06f1ee94f4da1ba880bc3 inside a directory that was renamed in 6fbbd82abd6d407dbaf93f82639b7f927efa54a0, suggesting it should perhaps be moved to paper/materials/silent/20261011-001303-boss-calibration-closeout/partial-5H83F3J0XSTE/manifest.json.",
+          "CONFLICT (file location): paper/materials/20261017-human-pace-h1/natural/partial-5H83F3J0XSTE/provenance-verification.json added in a473263eb35ce5bea8e06f1ee94f4da1ba880bc3 inside a directory that was renamed in 6fbbd82abd6d407dbaf93f82639b7f927efa54a0, suggesting it should perhaps be moved to paper/materials/silent/20261011-001303-boss-calibration-closeout/partial-5H83F3J0XSTE/provenance-verification.json.",
+          "CONFLICT (file location): paper/materials/20261017-human-pace-h1/natural/partial-5H83F3J0XSTE/run-config.jsonl.gz added in a473263eb35ce5bea8e06f1ee94f4da1ba880bc3 inside a directory that was renamed in 6fbbd82abd6d407dbaf93f82639b7f927efa54a0, suggesting it should perhaps be moved to paper/materials/silent/20261011-001303-boss-calibration-closeout/partial-5H83F3J0XSTE/run-config.jsonl.gz.",
+          "CONFLICT (file location): paper/materials/20261017-human-pace-h1/natural/partial-5H83F3J0XSTE/runs.jsonl.gz added in a473263eb35ce5bea8e06f1ee94f4da1ba880bc3 inside a directory that was renamed in 6fbbd82abd6d407dbaf93f82639b7f927efa54a0, suggesting it should perhaps be moved to paper/materials/silent/20261011-001303-boss-calibration-closeout/partial-5H83F3J0XSTE/runs.jsonl.gz.",
+          "CONFLICT (file location): paper/materials/20261017-human-pace-h1/natural/partial-5H83F3J0XSTE/sl-attempts.jsonl.gz added in a473263eb35ce5bea8e06f1ee94f4da1ba880bc3 inside a directory that was renamed in 6fbbd82abd6d407dbaf93f82639b7f927efa54a0, suggesting it should perhaps be moved to paper/materials/silent/20261011-001303-boss-calibration-closeout/partial-5H83F3J0XSTE/sl-attempts.jsonl.gz.",
+          "CONFLICT (file location): paper/materials/20261017-human-pace-h1/natural/partial-5H83F3J0XSTE/states.jsonl.gz added in a473263eb35ce5bea8e06f1ee94f4da1ba880bc3 inside a directory that was renamed in 6fbbd82abd6d407dbaf93f82639b7f927efa54a0, suggesting it should perhaps be moved to paper/materials/silent/20261011-001303-boss-calibration-closeout/partial-5H83F3J0XSTE/states.jsonl.gz.",
+          "CONFLICT (file location): paper/materials/20261017-human-pace-h1/natural/relay-stop.json added in a473263eb35ce5bea8e06f1ee94f4da1ba880bc3 inside a directory that was renamed in 6fbbd82abd6d407dbaf93f82639b7f927efa54a0, suggesting it should perhaps be moved to paper/materials/silent/20261011-001303-boss-calibration-closeout/relay-stop.json.",
+          "CONFLICT (file location): paper/materials/20261017-human-pace-h1/natural/report.md added in a473263eb35ce5bea8e06f1ee94f4da1ba880bc3 inside a directory that was renamed in 6fbbd82abd6d407dbaf93f82639b7f927efa54a0, suggesting it should perhaps be moved to paper/materials/silent/20261011-001303-boss-calibration-closeout/report.md.",
+          "CONFLICT (add/add): Merge conflict in paper/materials/silent/20261011-001303-boss-calibration-closeout/report.md",
+          "CONFLICT (file location): paper/materials/20261017-human-pace-h1/natural/verify-partial.log added in a473263eb35ce5bea8e06f1ee94f4da1ba880bc3 inside a directory that was renamed in 6fbbd82abd6d407dbaf93f82639b7f927efa54a0, suggesting it should perhaps be moved to paper/materials/silent/20261011-001303-boss-calibration-closeout/verify-partial.log.",
+          "CONFLICT (file location): paper/materials/20261017-human-pace-h1/natural/watcher-blocked-record.md added in a473263eb35ce5bea8e06f1ee94f4da1ba880bc3 inside a directory that was renamed in 6fbbd82abd6d407dbaf93f82639b7f927efa54a0, suggesting it should perhaps be moved to paper/materials/silent/20261011-001303-boss-calibration-closeout/watcher-blocked-record.md."
+        ]
+      },
+      "no_directory_renames": {
+        "rc": 1,
+        "conflicts": [
+          "CONFLICT (modify/delete): docs/human-pace-plan.md deleted in 6fbbd82abd6d407dbaf93f82639b7f927efa54a0 and modified in a473263eb35ce5bea8e06f1ee94f4da1ba880bc3.  Version a473263eb35ce5bea8e06f1ee94f4da1ba880bc3 of docs/human-pace-plan.md left in tree.",
+          "CONFLICT (content): Merge conflict in notes/fix-queue-v4.md",
+          "CONFLICT (content): Merge conflict in notes/for-roy.md",
+          "CONFLICT (content): Merge conflict in notes/ops-handoff.md",
+          "CONFLICT (content): Merge conflict in ops/inbox-dev.md",
+          "CONFLICT (modify/delete): paper/materials/20261017-human-pace-control/checkpoint.json deleted in 6fbbd82abd6d407dbaf93f82639b7f927efa54a0 and modified in a473263eb35ce5bea8e06f1ee94f4da1ba880bc3.  Version a473263eb35ce5bea8e06f1ee94f4da1ba880bc3 of paper/materials/20261017-human-pace-control/checkpoint.json left in tree.",
+          "CONFLICT (modify/delete): paper/materials/20261017-human-pace-control/requirements.json deleted in 6fbbd82abd6d407dbaf93f82639b7f927efa54a0 and modified in a473263eb35ce5bea8e06f1ee94f4da1ba880bc3.  Version a473263eb35ce5bea8e06f1ee94f4da1ba880bc3 of paper/materials/20261017-human-pace-control/requirements.json left in tree.",
+          "CONFLICT (modify/delete): paper/materials/20261017-human-pace-h1/checkpoint.json deleted in 6fbbd82abd6d407dbaf93f82639b7f927efa54a0 and modified in a473263eb35ce5bea8e06f1ee94f4da1ba880bc3.  Version a473263eb35ce5bea8e06f1ee94f4da1ba880bc3 of paper/materials/20261017-human-pace-h1/checkpoint.json left in tree.",
+          "CONFLICT (modify/delete): paper/materials/20261017-human-pace-h1/completion.md deleted in 6fbbd82abd6d407dbaf93f82639b7f927efa54a0 and modified in a473263eb35ce5bea8e06f1ee94f4da1ba880bc3.  Version a473263eb35ce5bea8e06f1ee94f4da1ba880bc3 of paper/materials/20261017-human-pace-h1/completion.md left in tree.",
+          "CONFLICT (modify/delete): paper/materials/20261017-human-pace-h1/natural/analyze.py deleted in 6fbbd82abd6d407dbaf93f82639b7f927efa54a0 and modified in a473263eb35ce5bea8e06f1ee94f4da1ba880bc3.  Version a473263eb35ce5bea8e06f1ee94f4da1ba880bc3 of paper/materials/20261017-human-pace-h1/natural/analyze.py left in tree.",
+          "CONFLICT (modify/delete): paper/materials/20261017-human-pace-h1/natural/checkpoint.json deleted in 6fbbd82abd6d407dbaf93f82639b7f927efa54a0 and modified in a473263eb35ce5bea8e06f1ee94f4da1ba880bc3.  Version a473263eb35ce5bea8e06f1ee94f4da1ba880bc3 of paper/materials/20261017-human-pace-h1/natural/checkpoint.json left in tree.",
+          "CONFLICT (modify/delete): paper/materials/20261017-human-pace-h1/natural/render-report.py deleted in 6fbbd82abd6d407dbaf93f82639b7f927efa54a0 and modified in a473263eb35ce5bea8e06f1ee94f4da1ba880bc3.  Version a473263eb35ce5bea8e06f1ee94f4da1ba880bc3 of paper/materials/20261017-human-pace-h1/natural/render-report.py left in tree.",
+          "CONFLICT (modify/delete): paper/materials/20261017-human-pace-h1/natural/requirements.json deleted in 6fbbd82abd6d407dbaf93f82639b7f927efa54a0 and modified in a473263eb35ce5bea8e06f1ee94f4da1ba880bc3.  Version a473263eb35ce5bea8e06f1ee94f4da1ba880bc3 of paper/materials/20261017-human-pace-h1/natural/requirements.json left in tree.",
+          "CONFLICT (modify/delete): paper/materials/20261017-human-pace-h1/requirements.json deleted in 6fbbd82abd6d407dbaf93f82639b7f927efa54a0 and modified in a473263eb35ce5bea8e06f1ee94f4da1ba880bc3.  Version a473263eb35ce5bea8e06f1ee94f4da1ba880bc3 of paper/materials/20261017-human-pace-h1/requirements.json left in tree.",
+          "CONFLICT (content): Merge conflict in paper/materials/decision-log.md"
+        ]
+      }
+    },
+    "boundary": "Read-only preflight under live-merge.lock; no live index, tracked file, refresh commit or branch update performed. The requested builder wait is namespace-local, not a host process absence proof."
+  },
+  "actual_source_received": true,
+  "accepted_for_narrow_integration": true,
+  "classification": "Silent A10 ordinary HiddenDaggers double-discard read-only conditional followup facts; changes decision input, independent V5 behavior release required",
+  "original_module_health_alerts_preserved": true,
+  "root_0332_fixed": false,
+  "no_source_full_repeated": true,
+  "original_failed_canonical_and_merge_conflicts_not_rewritten": true,
+  "no_other_role_ACK": true
+}

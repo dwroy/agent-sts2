@@ -5,7 +5,7 @@ from collections import Counter
 def adaptive_health(config, records):
     mode = (config.get('loop') or {}).get('sim_adaptive', 'off')
     admission_state = (config.get('loop') or {}).get('sim_adaptive_admission', 'unknown')
-    counts = Counter(observed=0, produced=0, errors=0, evaluable=0, matched=0, unknown=0, complete_adaptive=0,
+    counts = Counter(observed=0, produced=0, errors=0, evaluable=0, matched=0, unknown=0, complete_adaptive=0, budgeted_partial=0,
                      production_evaluable=0, production_matched=0)
     mismatches, saved, seen = [], [], set()
     actual_saved, sample_counts, rounds = [], [], []
@@ -24,6 +24,24 @@ def adaptive_health(config, records):
         counts['observed'] += 1
         if value.get('mode') == 'on':
             candidates = value.get('candidates') or []
+            completion = sim.get('completion')
+            completion = completion if isinstance(completion, dict) else {}
+            # A normal H1 deadline preserves a prefix, not an adaptive completion or a C1 failure.
+            budgeted_partial = (value.get('status') == 'partial'
+                                and completion.get('budgeted') is True and completion.get('failure') is False
+                                and completion.get('status') == 'partial' and completion.get('required') is True
+                                and not sim.get('error') and not value.get('error'))
+            if budgeted_partial and isinstance(candidates, list) and candidates and all(
+                    isinstance(c, dict) and type(c.get('samples')) is int and c['samples'] >= 0
+                    and c.get('stop') in ('budget', 'eliminated', 'leader', 'max') for c in candidates):
+                counts['produced'] += 1
+                counts['budgeted_partial'] += 1
+                counts['unknown'] += 1
+                for candidate in candidates:
+                    sample_counts.append(candidate['samples'])
+                    rounds.append(candidate.get('rounds'))
+                    stops[candidate['stop']] += 1
+                continue
             if (value.get('status') != 'complete_adaptive' or not candidates
                     or any(not isinstance(c, dict) or type(c.get('samples')) is not int or c['samples'] < 1
                            or c.get('stop') not in ('eliminated', 'leader', 'max') for c in candidates)):

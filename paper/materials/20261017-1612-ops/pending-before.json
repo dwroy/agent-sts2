@@ -1,0 +1,55 @@
+{
+  "source": "660b194c950f017e356a4b3da952e127c7e5c768",
+  "source_commit": "660b194c950f017e356a4b3da952e127c7e5c768",
+  "source_parent": "5bd559de30f6a23739f3748426ab5be2321ecd0c",
+  "source_tree": "a3a172184c4cdbd18493665b99a15e4bb2b30342",
+  "paths": [
+    "agent/src/sim/boss-lines.ts",
+    "agent/tests/human-pace-sampling.test.ts"
+  ],
+  "source_sha256": {
+    "agent/src/sim/boss-lines.ts": "bd3174609f2f71de360ea686a57659f9ba7a136b63bad6fbd9c69f05ff4ccdd4",
+    "agent/tests/human-pace-sampling.test.ts": "eb4793d2a725988ff4516fa36c04e6c9b9738c992d23f98fcc8aaf95c643d076"
+  },
+  "received_at": "2026-10-17 15:33:24 CST",
+  "source_receipt": "paper/materials/20261017-1531-ops/ops-source-received.json",
+  "state": "Narrowly integrated; exact new-combination host pending original batch channel",
+  "published": true,
+  "release_id": "V5-R384",
+  "host_complete": false,
+  "restoration_command": [
+    "git",
+    "show",
+    "660b194c950f017e356a4b3da952e127c7e5c768:<exact-source-path>"
+  ],
+  "original_source_full_not_repeated": true,
+  "no_other_role_ACK": true,
+  "last_blocked": {
+    "at": "2026-10-17 15:46:04 CST",
+    "source": "660b194c950f017e356a4b3da952e127c7e5c768",
+    "source_commit": "660b194c950f017e356a4b3da952e127c7e5c768",
+    "published": false,
+    "release_id": null,
+    "lock_rows": [
+      "16: FLOCK  ADVISORY  WRITE 112032 08:30:372157 0 EOF"
+    ],
+    "gate": "Existing original live publication/check lock; retain exact source and original check owner, no lock steal.",
+    "live_observed": "7b61eaa636148221cbfc166067662e481ac7e0a7",
+    "main_live_source_index_versions_untouched_by_this_attempt": true,
+    "controller_restarted": false,
+    "no_other_role_ACK": true
+  },
+  "recovery_script": "ops/codex-ops/record-staging/20261017-1531/publish.py",
+  "host_script": "ops/codex-ops/record-staging/20261017-1531/start-host.py",
+  "next_step": "Only the original151301 exact-tree host completion event remains for this pure bug. Preserve original failed/rc0/mergednull; no repeat source full or duplicate check. Budget60 and H2 wait their original watcher exact sources separately.",
+  "published_at": "2026-10-17 15:46:27 CST",
+  "main": "91f222500fd3b23f981545ea14883524d80de394",
+  "actual_live": "19988d1118ca43c1409fe900fc8c94f9f6ac32cc",
+  "tree": "03415d6df563fcc75a528920f1bda91444bf633b",
+  "authorization_receipt": "paper/materials/20261017-1544-ops/roy-1544-authorization-received.json",
+  "host_request_receipt": "paper/materials/20261017-1544-ops/host-request-readback.json",
+  "host_request_submitted": true,
+  "host_actual_worker_verified": true,
+  "first_effective_run": null,
+  "prior_builder_and_live_lock_block_records_retained": true
+}

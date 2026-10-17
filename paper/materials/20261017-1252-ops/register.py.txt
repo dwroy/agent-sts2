@@ -1,0 +1,113 @@
+from pathlib import Path
+import collections, hashlib, json, subprocess
+
+r = Path.cwd(); p = r / 'ops/codex-ops/record-staging/20261017-1252'
+pub = r / 'paper/materials/20261017-1252-ops'
+sha = lambda raw: hashlib.sha256(raw).hexdigest()
+load = lambda f: json.loads(f.read_bytes())
+def write(f, v): f.write_text(json.dumps(v, ensure_ascii=False, indent=2) + '\n')
+def git(*a): return subprocess.check_output(['git', *a], stderr=subprocess.PIPE)
+
+assert not (pub / 'ops-ledger-cli.json').exists()
+sync = load(pub / 'main-source-sync.json')
+host = load(pub / 'combined-host-terminal.json')
+for where in [r, r / '.worktrees/live']:
+    git('-C', str(where), 'merge-base', '--is-ancestor', sync['source'], 'HEAD')
+ledger_path = 'paper/materials/learning/ledger.jsonl'
+ledger = r / ledger_path
+before = ledger.read_bytes()
+head_rows = collections.Counter(git('show', 'HEAD:' + ledger_path).splitlines(keepends=True))
+own_rows = []; proof = []; offset = 0
+for line in before.splitlines(keepends=True):
+    row = json.loads(line)
+    if row.get('id') in ['silent-0500', 'silent-0501']:
+        assert row.get('by') in ['learner:roy-20261017-human-pace-h0/r1',
+            'learner:experience-update', 'learner:strategy-proposal']
+        if head_rows[line]:
+            head_rows[line] -= 1
+        else:
+            own_rows.append(line)
+            proof.append(dict(id=row['id'], op=row['op'], by=row['by'], offset=offset,
+                              bytes=len(line), sha256=sha(line)))
+    offset += len(line)
+assert len(own_rows) == 12
+assert sum(json.loads(x)['op'] == 'add' for x in own_rows) == 2
+assert any(json.loads(x).get('claim', '').startswith('H0冻结六目标923尝试/178本角色已结束局；24诊断战203') for x in own_rows)
+write(pub / 'original-h0-ledger-rows-readback.json', dict(prefix_bytes=len(before),
+      prefix_sha256=sha(before), preserved_original_rows=proof,
+      initial_wrong_counts_and_later_correction_preserved=True,
+      no_support_prior_or_evidence_added_by_ops=True))
+(p / 'own-ledger-rows.jsonl').write_bytes(b''.join(own_rows))
+
+queue_path = 'paper/materials/learning/code-proposals.jsonl'
+queue = (r / queue_path).read_bytes()
+ids = ['silent-proposal-6ddd086196022f15', 'silent-proposal-71c8161a58c36c11',
+       'silent-proposal-a6cf9f726a971b59', 'silent-proposal-7b0badc658e4fb1b']
+have = collections.Counter(git('show', 'HEAD:' + queue_path).splitlines(keepends=True))
+original_queue = []; queue_proof = []; offset = 0
+for line in queue.splitlines(keepends=True):
+    row = json.loads(line)
+    if row.get('id') in ids:
+        assert row['op'] == 'add'
+        f = Path(row['proposal'])
+        assert f.resolve().is_relative_to(r / '.worktrees/silent-boss-calibration/learner/runs/20261017-human-pace-h0-r1')
+        raw = f.read_bytes(); assert sha(raw) == row['proposal_sha256']
+        dst = pub / 'original-proposals' / (row['id'] + '.md')
+        dst.parent.mkdir(exist_ok=True); dst.write_bytes(raw)
+        if have[line]: have[line] -= 1
+        else: original_queue.append(line)
+        queue_proof.append(dict(id=row['id'], offset=offset, bytes=len(line), sha256=sha(line),
+             state=row['state'], original_proposal=str(f), proposal_sha256=sha(raw),
+             implemented_commit=row.get('implemented_commit')))
+    offset += len(line)
+assert len(queue_proof) == 4
+assert next(x for x in queue_proof if x['id'] == ids[1])['implemented_commit'] == sync['source']
+appends = load(p / 'own-appends.json')
+if original_queue:
+    appends.append(dict(path=queue_path, text=b''.join(original_queue).decode()))
+write(p / 'own-appends.json', appends)
+write(pub / 'original-h0-proposal-registration.json', dict(prefix_bytes=len(queue),
+      prefix_sha256=sha(queue), original_cli_rows=queue_proof,
+      missing_main_rows=len(original_queue), original_queue_status_not_rewritten=True,
+      narrow_corrected_registration_implemented=True, broad_calibration_still_waiting=True,
+      no_proposal_dispatch_or_new_model=True))
+
+at = subprocess.check_output(['date', '+%Y-%m-%d %H:%M:%S %Z'], text=True).strip()
+results = []
+for ident in ['silent-0500', 'silent-0501']:
+    scope = ('only observed Silent A2 Paper Krane existing-Weak source and exact observed contexts; '
+             'one independent run, no A10 or new-Weak extrapolation'
+             if ident == 'silent-0500' else
+             'only eight actual published measurement/calibration-boundary experience objects; '
+             'the original wrong-count row and correction both retained, not a completed model recalibration')
+    update = dict(id=ident, by='ops', status='shipped', version='S1.silent-h0-boss-model1',
+          where=dict(commits=[sync['source'], '086f17c016a64bf5c06bdc3e101832c60a21fcdb',
+                host['actual_live'], sync['main_after']],
+                changelog=['paper/materials/20261017-1252-ops/main-source-sync.json',
+                           'paper/materials/20261017-1252-ops/h0-consumer-readback.json']),
+          note='V5-R381 source/experience phase shipped: ' + scope +
+               '. Exact original combined R381/R382 live tree ddb2ddfbb0934a8b0e70d9f0ebabddd935d78294 '
+               'host tsc0/Vitest523files5156passed2skipped/798.55s; nine production loader/render/query '
+               'objects retain their actual consumer SHA. Original canonical failed/rc0/mergednull remains; '
+               '481 validation keys, six-target quality gates, H1 partial/natural effects, F49 joint and '
+               '0332 root/wider parents remain unclosed. No new support sample or game conclusion by ops.')
+    prefix = ledger.read_bytes()
+    done = subprocess.run(['python3', 'learner/ledger.py', 'update'],
+            input=json.dumps(update, ensure_ascii=False) + '\n', capture_output=True, text=True)
+    after = ledger.read_bytes(); assert after.startswith(prefix)
+    tail = after[len(prefix):]
+    receipt = dict(at=at, argv=['python3', 'learner/ledger.py', 'update'], input=update,
+                   rc=done.returncode, stdout=done.stdout, stderr=done.stderr,
+                   prefix_bytes=len(prefix), prefix_sha256=sha(prefix),
+                   appended_bytes=len(tail), appended_sha256=sha(tail))
+    results.append(receipt)
+    write(pub / 'ops-ledger-cli.json', results)
+    assert done.returncode == 0, done.stderr
+    rows = tail.splitlines(keepends=True); assert len(rows) == 1
+    actual = json.loads(rows[0]); assert all(actual.get(k) == v for k, v in update.items())
+    with (p / 'own-ledger-rows.jsonl').open('ab') as f: f.write(tail)
+
+assert len((p / 'own-ledger-rows.jsonl').read_bytes().splitlines()) == 14
+print(json.dumps(dict(ledger_cli=[x['rc'] for x in results], original_h0_rows=12,
+      original_queue_rows_preserved=len(original_queue), new_ship_rows=2,
+      parent_complete=False, narrow_release='V5-R381')), flush=True)

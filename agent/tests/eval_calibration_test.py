@@ -16,9 +16,11 @@ import sys
 import tempfile
 import unittest
 from pathlib import Path
+from unittest.mock import patch
 
 ROOT = str(Path(__file__).resolve().parents[2])  # the project root (docs/layout.md)
 DATA = os.path.join(ROOT, "agent", "tests", "calibration-data")
+VERSIONS = os.path.join(ROOT, "agent", "tests", "eval-data", "versions.json")
 sys.path.insert(0, os.path.join(ROOT, "eval"))
 sys.path.insert(0, os.path.join(ROOT, "agent", "tools", "logdb"))
 
@@ -292,7 +294,9 @@ class FixtureTest(unittest.TestCase):
     def test_cli_and_the_metrics_columns(self):
         import metrics
 
-        args = ["--db", self.db, "--logs", DATA, "--no-sync", "--boss-clocks", os.path.join(DATA, "boss-clocks.jsonl"), "--group-by", "commit"]
+        # These historical samples need two fixed releases, not the growing live Git ancestry table.
+        args = ["--db", self.db, "--logs", DATA, "--no-sync", "--boss-clocks", os.path.join(DATA, "boss-clocks.jsonl"),
+                "--versions", VERSIONS, "--group-by", "commit"]
         out = io.StringIO()
         with contextlib.redirect_stdout(out):
             self.assertEqual(cal.main(args + ["--json", "--rows"]), 0)
@@ -316,7 +320,8 @@ class FixtureTest(unittest.TestCase):
             self.assertEqual(json.loads(out.getvalue())["groups"], {"V3 · 未记录配置": ["RUNE00000005"], "V3.oneshot · 未记录配置": ["RUNF00000006"]})
         # The metrics table carries the three calibration rows (and leaves them out on request).
         margs = ["--db", self.db, "--logs", DATA, "--no-sync", "--strength-sets", os.path.join(ROOT, "agent", "tests", "eval-data", "strength-sets.json"),
-                 "--boss-clocks", os.path.join(DATA, "boss-clocks.jsonl"), "--group-by", "ascension", "--md", "--include-non-codex"]
+                 "--boss-clocks", os.path.join(DATA, "boss-clocks.jsonl"), "--versions", VERSIONS,
+                 "--group-by", "ascension", "--md", "--include-non-codex"]
         out = io.StringIO()
         with contextlib.redirect_stdout(out):
             self.assertEqual(metrics.main(margs), 0)
@@ -329,6 +334,22 @@ class FixtureTest(unittest.TestCase):
         with contextlib.redirect_stdout(out):
             self.assertEqual(metrics.main(margs + ["--no-calibration"]), 0)
         self.assertIn("| 校准：boss 时钟 实打/估值 中位 | — | — |", out.getvalue())
+
+    def test_cli_does_not_read_the_live_release_table(self):
+        import metrics
+
+        load = metrics.load_versions
+
+        def frozen_versions(path=metrics.VERSIONS_FILE):
+            self.assertEqual(path, VERSIONS,
+                             "fixed calibration samples must not traverse unrelated live releases")
+            return load(path)
+
+        # Preserve every original CLI and calibration assertion with the live table unavailable.
+        with patch.object(metrics, "load_versions", side_effect=frozen_versions) as loads:
+            self.test_cli_and_the_metrics_columns()
+        if None not in metrics.Git().resolve(["17ac095", "0c93138"]).values():
+            self.assertEqual(loads.call_count, 1)
 
 
 if __name__ == "__main__":

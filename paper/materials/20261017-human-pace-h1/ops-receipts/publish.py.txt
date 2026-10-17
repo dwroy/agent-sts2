@@ -1,0 +1,177 @@
+from pathlib import Path
+import fcntl, hashlib, json, os, re, subprocess
+
+r = Path.cwd()
+exec((r / 'ops/codex-ops/record-staging/20261016-2003/publish.py').read_text().split('phase=r/')[0])
+p = r / 'ops/codex-ops/record-staging/20261017-human-pace-h1'
+phase = r / 'paper/materials/20261017-human-pace-h1'; pub = phase / 'ops-receipts'
+load = lambda f: json.loads(f.read_bytes())
+def write(f, v): f.write_text(json.dumps(v, ensure_ascii=False, indent=2) + '\n')
+info = load(pub / 'ops-source-received.json')
+source, base = info['source'], info['source_parent']
+paths = [x['path'] for x in info['exact_source_files']]
+pending_path = r / 'ops/codex-ops/pending-integrations/20261017-human-pace-h1.json'
+assert len(paths) == 28 and load(pub / 'ops-source-disposition.json')['accepted']
+assert not (pub / 'ops-publication.json').exists()
+assert load(phase / 'source-before-full-r2.json')['files'] == load(phase / 'source-manifest.json')['files']
+patch = (phase / 'source-staged.patch').read_bytes()
+assert sha(patch) == info['patch_sha256']
+def builder_active():
+    return subprocess.run(['pgrep', '-f', 'knowledge/builders/buil[d]-'], capture_output=True).returncode != 1
+
+with (r / 'ops/live-merge.lock').open('a') as lock:
+    try: fcntl.flock(lock, fcntl.LOCK_EX | fcntl.LOCK_NB)
+    except BlockingIOError:
+        at = subprocess.check_output(['date', '+%Y-%m-%d %H:%M:%S %Z'], text=True).strip()
+        v = load(pending_path); v.update(status='Exact source received; existing live lock busy, integration not started', blocked_at=at)
+        write(pending_path, v)
+        write(pub / 'ops-publication-lock-blocked.json', dict(at=at, source_received=True, source=source, publication_started=False))
+        raise SystemExit(75)
+    at = subprocess.check_output(['date', '+%Y-%m-%d %H:%M:%S %Z'], text=True).strip()
+    print(at, flush=True)
+    assert not builder_active()
+    mh = git('rev-parse', 'HEAD').decode().strip()
+    lh = git('rev-parse', 'HEAD', cwd=live).decode().strip()
+    assert lh == '1c8d6d2bd731514e5613ca63f46dc44fef2e59d5'
+    snapshots, indexes, datasets, physical_before = {}, {}, {}, {}
+    for cwd in [r, live]:
+        assert not git('ls-files', '-u', cwd=cwd).strip()
+        snapshots[str(cwd)] = git('ls-files', '--stage', '-z', cwd=cwd)
+        index = Path(git('rev-parse', '--git-path', 'index', cwd=cwd).decode().strip())
+        indexes[str(cwd)] = (index if index.is_absolute() else cwd / index).read_bytes()
+        for path in paths + ['eval/versions.json']:
+            old = blob('HEAD', path, cwd)
+            assert blob('', path, cwd) == old
+            assert ((cwd / path).read_bytes() if (cwd / path).exists() else None) == old
+            physical_before[(str(cwd), path)] = old
+        datasets[str(cwd)] = json.loads(blob('HEAD', 'eval/versions.json', cwd))
+    releases = datasets[str(r)]['release_numbering']['releases']
+    assert releases == datasets[str(live)]['release_numbering']['releases']
+    nums = [int(re.fullmatch(r'V\d+-R(\d+)', x['release_id'])[1]) for x in releases]
+    assert nums == list(range(max(nums) + 1)) and max(nums) == 379
+    rid, name = f'V5-R{max(nums) + 1:03d}', 'V5.silent-human-pace-h1'
+    values, leaves, envs = {}, [], {}
+    for lane, cwd, head in [('main', r, mh), ('live', live, lh)]:
+        env = {**os.environ, 'GIT_INDEX_FILE': str(p / (lane + '.index'))}
+        git('read-tree', head, env=env, cwd=cwd)
+        applied = subprocess.run(['git', '-C', str(cwd), 'apply', '--cached', '--3way', '--whitespace=nowarn', '-'],
+                                 input=patch, env=env, capture_output=True)
+        (p / (lane + '-apply.log')).write_bytes(applied.stdout + applied.stderr)
+        assert applied.returncode == 0, applied.stderr.decode()
+        assert not git('ls-files', '-u', env=env, cwd=cwd).strip()
+        combined = git('write-tree', env=env, cwd=cwd).decode().strip()
+        assert set(git('diff', '--name-only', head, combined, cwd=cwd).decode().splitlines()) == set(paths)
+        envs[lane] = env; values[lane] = {}
+        for path in paths:
+            before, old, desired = blob(base, path), blob(head, path, cwd), blob(source, path)
+            merged = blob(combined, path, cwd)
+            if old == before:
+                assert merged == desired
+            else:
+                assert before is not None and old is not None and desired is not None
+                folder = p / 'merge-inputs' / lane / path.replace('/', '__')
+                folder.mkdir(parents=True, exist_ok=True)
+                for key, raw in [('current', old), ('base', before), ('source', desired)]:
+                    (folder / key).write_bytes(raw)
+                check = subprocess.run(['git', 'merge-file', '--stdout', str(folder / 'current'), str(folder / 'base'), str(folder / 'source')], capture_output=True)
+                assert check.returncode == 0 and check.stdout == merged
+            values[lane][path] = merged
+            leaves.append(dict(lane=lane, path=path, old_sha256=sha(old) if old is not None else None,
+                source_sha256=sha(desired), composed_sha256=sha(merged),
+                overlapping_current_change_preserved=old != before, exact_source_bytes=merged == desired))
+    refresh = {path: (live / path).read_bytes() for path in git('diff', '--name-only', 'HEAD', '--', 'knowledge', cwd=live).decode().splitlines()}
+    for lane, data in {**values, 'preserved-live-refresh': refresh}.items():
+        for path, raw in data.items():
+            f = p / 'composition-scan' / lane / path
+            f.parent.mkdir(parents=True, exist_ok=True); f.write_bytes(raw)
+    with (pub / 'ops-composition-gitleaks.log').open('wb') as out:
+        scan = subprocess.run(['nice', '-n', '19', 'gitleaks', 'dir', str(p / 'composition-scan'), '--redact', '--no-banner',
+            '--report-format', 'json', '--report-path', str(p / 'composition-gitleaks.json')], stdout=out, stderr=subprocess.STDOUT,
+            env={**os.environ, 'GOMAXPROCS': '1'})
+    assert scan.returncode == 0 and load(p / 'composition-gitleaks.json') == []
+    le = envs['live']
+    if refresh:
+        reenv = {**os.environ, 'GIT_INDEX_FILE': str(p / 'knowledge.index')}
+        git('read-tree', lh, env=reenv, cwd=live)
+        for path, raw in refresh.items(): stage(path, raw, reenv, live)
+        rt = git('write-tree', env=reenv, cwd=live).decode().strip()
+        fresh = commit(rt, [lh], 'Preserve refreshed live knowledge before human pace H1', live)
+        for path, raw in refresh.items(): stage(path, raw, le, live)
+    else:
+        fresh = lh; rt = git('rev-parse', lh + '^{tree}', cwd=live).decode().strip()
+    bt = git('write-tree', env=le, cwd=live).decode().strip()
+    assert set(git('diff', '--name-only', rt, bt, cwd=live).decode().splitlines()) == set(paths)
+    behavior = commit(bt, [fresh, source], 'Publish authorized Silent human pace H1 computation budgets', live)
+    note = (at + '; Roy09:49 approved roy-20261017-human-pace H1, plan54e36d083, exact source ' + source +
+        '. Old R341 waited for required complete B2/B3 and unbounded same-question brain outages; shadow lacked a shared hard deadline. '
+        'New Silent-only shared computation budgets ordinary10s/elite15s/Boss30s, exact SL reuse+10s, routineL1 5s, cumulativeL2 90s/xhigh; '
+        'finite B2/B3 with actual common-seed prefix/n/MC95/pairedSE and partial/complete_budget, n<2 error unknown; low-trust target cap200 before earlier deadline. '
+        'Normal deadline uses existing L1 fallback and is not C1 failure or complete death proof; actual C1 faults/C2 full-batch elimination, legal execution, SL/potion policy and other roles unchanged. '
+        'Observed-input precompute/exact reuse only; missing future input unknown. P1/P2/S and G2 stay shadow, all shadows share remaining budget. '
+        'Source tsc0/sandbox467files4285+paths11=4296 entry0/gitleaks0, original interrupted143 and early failures retained; no repeated source full. '
+        'R379/concurrent source/history/knowledge/index preserved through exact patch three-way integration. V6 generation pending Roy, keep V5. '
+        'Expected bounded waits and auditable precision/fallback tradeoff; no proven45-60minute target or victory benefit. '
+        'Exact final-tree host pending only original075726 learner-recheck; no source/old-tree green borrowed. '
+        'Rollback inverse only H1 patch in current context, preserving R379/knowledge/other releases, separate behavior number if actually reverted. '
+        'Current game/account/home/model/prompt/env unchanged; first natural effect unknown, two natural runs/H2+ wait separate assignment. '
+        'H0/0332 cohighest and frozen inputs remain, no recalibration/mechanism/model/new research. Evidence paper/materials/20261017-human-pace-h1/ops-receipts/.')
+    entry = dict(name=name, family='V5', character='SILENT', commit=behavior, release_id=rid,
+                 release_status='registered-primary-ops', source=note)
+    versions = {}
+    for key, data in datasets.items():
+        old = json.loads(json.dumps(data)); assert not any(x['name'] == name for x in data['versions'])
+        data['versions'].append(entry)
+        data['release_numbering']['releases'].append(dict(release_id=rid, commit=behavior, aliases=[name]))
+        assert data['versions'][:-1] == old['versions']
+        assert data['release_numbering']['releases'][:-1] == old['release_numbering']['releases']
+        versions[key] = (json.dumps(data, ensure_ascii=False, indent=2) + '\n').encode()
+    stage('eval/versions.json', versions[str(live)], le, live)
+    ft = git('write-tree', env=le, cwd=live).decode().strip()
+    final = commit(ft, [behavior], f'Register authorized human pace H1 as {rid}', live)
+    me = envs['main']; stage('eval/versions.json', versions[str(r)], me, r)
+    mt = git('write-tree', env=me).decode().strip()
+    main = commit(mt, [mh, source], f'Integrate exact human pace H1 source and register {rid}', r)
+    rec = dict(at=at, request='roy-20261017-human-pace', phase='H1', owner='watcher-codex1',
+        source=source, source_parent=base, source_tree=info['source_tree'], old_main=mh, main=main,
+        old_live=lh, knowledge_refresh_commit=fresh, knowledge_refresh=[dict(path=k, sha256=sha(v)) for k, v in refresh.items()],
+        behavior_commit=behavior, actual_live=final, tree=ft, release_id=rid, name=name, leaves=leaves,
+        source_full_rc=0, source_full_tests=4296, composition_gitleaks=0, concurrent_changes_preserved=True,
+        host_batch='20261016-075726-strategy-proposal', host='pending original unique full host channel',
+        current_game_restarted=False, first_effective_natural_run=None, natural_acceptance=False,
+        root_0332_fixed=False, H0_fixed=False, no_other_role_ACK=True)
+    write(p / 'intended-publication.json', rec)
+    preserved = []
+    for cwd, lane in [(r, 'main'), (live, 'live')]:
+        f = p / (lane + '-preserved.index'); f.write_bytes(indexes[str(cwd)])
+        env = {**os.environ, 'GIT_INDEX_FILE': str(f)}
+        for path, raw in {**values[lane], **(refresh if lane == 'live' else {})}.items(): stage(path, raw, env, cwd)
+        stage('eval/versions.json', versions[str(cwd)], env, cwd); preserved.append((cwd, env))
+    locks = locks_for(preserved)
+    try:
+        assert git('rev-parse', 'HEAD').decode().strip() == mh and git('rev-parse', 'HEAD', cwd=live).decode().strip() == lh
+        assert not builder_active()
+        for cwd in [r, live]:
+            assert git('ls-files', '--stage', '-z', cwd=cwd) == snapshots[str(cwd)]
+            for path in paths + ['eval/versions.json']:
+                assert ((cwd / path).read_bytes() if (cwd / path).exists() else None) == physical_before[(str(cwd), path)]
+        for path, raw in refresh.items(): assert (live / path).read_bytes() == raw
+        git('update-ref', '-m', 'ops: publish authorized Silent human pace H1', 'HEAD', final, lh, cwd=live)
+        for path, raw in values['live'].items(): install(live, path, raw)
+        install(live, 'eval/versions.json', versions[str(live)])
+        git('update-ref', '-m', 'ops: narrow integrate exact human pace H1', 'HEAD', main, mh)
+        for path, raw in values['main'].items(): install(r, path, raw)
+        install(r, 'eval/versions.json', versions[str(r)])
+        for idx, lp in locks: os.replace(lp, idx)
+    finally:
+        for _, lp in locks:
+            if lp.exists(): lp.unlink()
+    for cwd in [r, live]: git('merge-base', '--is-ancestor', source, 'HEAD', cwd=cwd)
+    assert set(git('diff', '--name-only', fresh, final, cwd=live).decode().splitlines()) == set(paths) | {'eval/versions.json'}
+    for path, raw in refresh.items(): assert (live / path).read_bytes() == raw
+    for f in [pub / 'ops-publication.json', phase / 'ops-publication.json']: write(f, rec)
+    pending = load(pending_path)
+    pending.update(rec, status='Published; exact final-tree original host pending', source_received=True,
+                   source_commit=source, host_requested=False, release_id=rid)
+    write(pending_path, pending)
+    print(json.dumps(dict(release=rid, main=main, live=final, tree=ft, leaves=28,
+        knowledge_refresh=len(refresh), overlapping_leaves=sum(x['overlapping_current_change_preserved'] for x in leaves), host='pending')), flush=True)

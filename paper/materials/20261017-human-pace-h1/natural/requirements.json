@@ -1,0 +1,94 @@
+{
+  "request": "roy-20261017-human-pace",
+  "phase": "H1 natural acceptance",
+  "owner_session": "01a13dcd-83d4-7c63-b233-f93cf878ecf4",
+  "state": "two_run_observation_complete_pacing_target_not_met",
+  "requirements": [
+    "original run-config admission, pre-release running game excluded",
+    "two complete natural runs, one inotify listener, no polling/restart",
+    "duration, per-kind p50/p90/max, budget/fallback/B2/B3 samples/L2 calls",
+    "compare five finished pre-release runs, G1c funnel/Boss outcomes",
+    "separate >90min or stuck reasons",
+    "read original ops exact host closure, no duplicate checks",
+    "report then stop, no next stage"
+  ],
+  "baseline_cut": "data-cut.json",
+  "scripts": [
+    "wait-two-natural.py",
+    "freeze-inputs.py",
+    "analyze.py"
+  ],
+  "result": {
+    "state": "blocked_0_of_2_complete_natural_runs",
+    "accepted_complete_runs": 0,
+    "partial_run": "5H83F3J0XSTE",
+    "observed_at": "2026-10-17T12:31:34.803789+08:00",
+    "elapsed_at_observation_minutes": 90.76086315,
+    "stuck_since": "2026-10-17T04:04:00.039Z",
+    "cause": "H1 deadline resolves empty answers through strictJev selection parser -> null intent -> exhausted same-turn budget -> no re-ask and no progress",
+    "report": "paper/materials/20261017-human-pace-h1/natural/report.md",
+    "need": "Claude must separately assign minimal deadline fallback repair; original ops decides controlled run recovery. No implementation/restart authorized by read-only task."
+  },
+  "current_result": {
+    "at": "2026-10-17T15:33:51.443171+08:00",
+    "state": "two_run_observation_complete_pacing_target_not_met",
+    "accepted_complete_runs": 2,
+    "admitted": [
+      "25MFNPAE37R2",
+      "2PQK67ULZY90"
+    ],
+    "excluded_mixed": [
+      "5H83F3J0XSTE"
+    ],
+    "duration_minutes": [
+      77.34541666666668,
+      67.22121666666666
+    ],
+    "baseline_median_minutes": 138.68576666666667,
+    "post_median_minutes": 72.28331666666666,
+    "report": "paper/materials/20261017-human-pace-h1/natural/completed-report.md",
+    "final_data_cut": "paper/materials/20261017-human-pace-h1/natural/resume-25mf-2pqk/final-admission-and-data-cut.json",
+    "R383_comparable_for_budget_observation": true,
+    "causal_fixed_policy_comparison": false,
+    "budget_fields_covered": 1863,
+    "budget_fallbacks": 33,
+    "overbudget_entry_counts": [
+      42,
+      46
+    ],
+    "overbudget_continuous_segments": [
+      11,
+      14
+    ],
+    "max_budget_overshoot_ms": [
+      1312,
+      1618
+    ],
+    "L2_question_counts": [
+      58,
+      45
+    ],
+    "budget_B2_partial_fractions": [
+      "20/51",
+      "29/49"
+    ],
+    "budget_B3_partial_fractions": [
+      "13/51",
+      "18/39"
+    ],
+    "C1_issue": "2PQK F33 T3 one sample identity mismatch episode: 2 pending, 1 degraded, progressed; cause unknown",
+    "no_current_task_blocker": true,
+    "health_all_green": false,
+    "pacing_45_to_60_goal_met": false,
+    "listener": {
+      "pid": 4166741,
+      "birth": "111218685",
+      "exec_session": 21508,
+      "exit_code": 0,
+      "finished_at": "2026-10-17T15:29:09.114169+08:00",
+      "new_observer_started_after_completion": false
+    },
+    "next": "Stop after report delivery. Claude may separately assign C1 sample-identity diagnosis or H2; no automatic next phase or budget/config change.",
+    "delivery_complete": true
+  }
+}

@@ -1,0 +1,466 @@
+{
+  "at": "2026-10-17 10:33:26 CST",
+  "batch": "20261017-101302",
+  "run": "2Q6ZYZ6JHM0M",
+  "report": {
+    "task": "postmortem",
+    "appended": [
+      "2Q6ZYZ6JHM0M"
+    ],
+    "skipped": [],
+    "bugs": [
+      {
+        "run": "2Q6ZYZ6JHM0M",
+        "where": "agent/src/hand/screens/selection.ts:394",
+        "what": "隐秘匕首双弃题未读取已保存的条件后继，错误显示无已选方案",
+        "new": true
+      }
+    ],
+    "ledger": {
+      "added": [
+        "silent-0499"
+      ],
+      "updated": [
+        "silent-0205",
+        "silent-0021",
+        "silent-0307"
+      ],
+      "repeats": [
+        "silent-0205"
+      ],
+      "check": 0
+    },
+    "code_proposals": [
+      "silent-proposal-59b2e430bb7521d4",
+      "silent-proposal-c8eb787720634577"
+    ],
+    "implementation_domains": [
+      "combat"
+    ],
+    "report": "/home/dw/Projects/agent-sts2/learner/runs/20261017-101312-0503db53-7108-4416-9f48-d469b5fe5830-postmortem/report.md"
+  },
+  "runtime": {
+    "batch": "20261017-101302",
+    "thread": "01a147a2-9193-7161-bd33-1afa1295cfd2",
+    "cwd": "/home/dw/Projects/agent-sts2",
+    "event_log": "learner/runs/20261017-101312-0503db53-7108-4416-9f48-d469b5fe5830-postmortem.jsonl",
+    "registered_launch_batch": "20261017-101302",
+    "original_lease": "c7659080cfd1984b588e2c821c7b1d2d90a9296c7495499251e253eb0fb67308",
+    "native_context": {
+      "source": "ops/codex-ops/accounts/codex1/learner/sessions/2026/10/17/rollout-2026-10-17T10-13-18-01a147a2-9193-7161-bd33-1afa1295cfd2.jsonl",
+      "offset": 49292,
+      "bytes": 4654,
+      "sha256": "df10ca6526fe1962927120a694c7fdaa8054f5a97d6f66e29b49a9b668413416",
+      "model": "gpt-6.1-sol",
+      "effort": "xhigh",
+      "sandbox": {
+        "type": "workspace-write",
+        "writable_roots": [
+          "/home/dw/Projects/agent-sts2/.git"
+        ],
+        "network_access": false,
+        "exclude_tmpdir_env_var": false,
+        "exclude_slash_tmp": false
+      },
+      "approval_policy": "never"
+    },
+    "native_user_input": {
+      "offset": 56529,
+      "bytes": 15345,
+      "sha256": "1e2beb5a12c6319168b20f64b736735556df5713c5dd1c5085f27eb1a1170b8f",
+      "input_sha256": "af2cb274766b524162ed9d25d9cc3bece3480755b641844dadf401c1b7029726"
+    },
+    "original_header_events": [
+      {
+        "offset": 0,
+        "bytes": 16866,
+        "sha256": "430ee34ef5d3ac69ceb5d9e6c6c39dc15dae5d4f7100b823e8bbf2e3aa68de83",
+        "type": "learner_launch",
+        "attempt": null,
+        "code": null
+      },
+      {
+        "offset": 16866,
+        "bytes": 360,
+        "sha256": "9ee0ee69d99238a80075081be3c2ce9603edc81dd1e6cffa67f72018813e28c9",
+        "type": "learner_startup_attempt",
+        "attempt": 1,
+        "code": null
+      },
+      {
+        "offset": 20239,
+        "bytes": 77,
+        "sha256": "0130e1a8c0c31dbc5c8d13e8c8dc118eb9af03263a91984a2ee7c5777ae5e908",
+        "type": "thread.started",
+        "attempt": null,
+        "code": null
+      }
+    ],
+    "startup_attempts": 1,
+    "failed_startups_preserved": 0,
+    "no_model_or_manual_restart": true
+  },
+  "source_reference": {
+    "run": "2Q6ZYZ6JHM0M",
+    "live_commit": "1c8d6d2bd731514e5613ca63f46dc44fef2e59d5",
+    "run_config_commit": "99737be9fdb9c2ea92089d768947c49b49b62382",
+    "runs_code": "current",
+    "files": [
+      {
+        "path": "agent/src/hand/screens/selection.ts",
+        "sha256": "ebfdcddc76ba3380b123706bdb496b9d66bbfd712b1eaf0d74f7ad8d7fd30c44"
+      },
+      {
+        "path": "agent/src/reflex/combat-plan.ts",
+        "sha256": "6700bb88808395ed8c46854b3cfd1f0354e8ebf3887dfdab000c0c27e33883fa"
+      },
+      {
+        "path": "agent/src/hand/loop.ts",
+        "sha256": "46145b219fff847095b13e8866888f41b776f245a31f4b5c93402ecf3aa604df"
+      }
+    ]
+  },
+  "exact_original_raw_refs_verified": 38,
+  "extracted_streams": [
+    {
+      "file": "run-plans-selected.jsonl",
+      "bytes": 5653,
+      "sha256": "9fe6fdbad01d162e1295e4d5c563ab5439bab22aba09b78e5e21e988d5c7e1a7"
+    },
+    {
+      "file": "sl-attempts-selected.jsonl",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "file": "decisions-selected.jsonl",
+      "bytes": 2127304,
+      "sha256": "20ab38be4d1720534a6b785b9410bd727e1f027adb6c06dfd04d6aaf5a376d3b"
+    },
+    {
+      "file": "brain-selected.jsonl",
+      "bytes": 665996,
+      "sha256": "9a3c139202a3724da531daf7ca9cbeda69da78c5797f77cc845c39b676600a7f"
+    },
+    {
+      "file": "jev-prompts-selected.jsonl",
+      "bytes": 1141954,
+      "sha256": "9956cdc4baabf6f27b5c93febe6c520a7e134fd725bb44ed097fa653fe70dd3c"
+    },
+    {
+      "file": "deepseek-window-selected.jsonl",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "file": "run-config-selected.jsonl",
+      "bytes": 6008,
+      "sha256": "dd427b6deeb48d51fe25b9ffc844cda01d45e606e6d473edd6962c8b221dc67c"
+    },
+    {
+      "file": "states-selected.jsonl",
+      "bytes": 3935802,
+      "sha256": "45d1a4bbbe7421c1011845aa8965e8adaa9cfba47629bac73185c5b023b7f9ec"
+    }
+  ],
+  "original_ledger_rows": [
+    {
+      "offset": 22445108,
+      "bytes": 2186,
+      "sha256": "6f13a8afb6bd82760f4069b4f4b8e930e6bc6df5148f326ea880ebab7c6221e9",
+      "row": {
+        "op": "add",
+        "id": "silent-0499",
+        "ts": "2026-10-17T10:25:14+08:00",
+        "character": "silent",
+        "kind": "bug-infra",
+        "claim": "静默A10普通隐秘匕首的双弃边界已撤销执行memo，plannedAfter仍留原方案后继，弃牌事实读取却只查pausedCombatPlan／combatPlan，故题面错误地只报没有本回合已选方案；T1两打击、T5生存者的承诺均未暴露。应保留独立的条件后继事实并在真实弃牌后重算，不能恢复旧执行memo或强制保牌。此为提示传递缺口，区别于已修普通版Cards误读抽牌的0153；不把整战失败归为单因。",
+        "evidence": [
+          {
+            "run": "2Q6ZYZ6JHM0M",
+            "floor": 8,
+            "turn": 1,
+            "role": "support",
+            "note": "d418505原线44伤／零损；418506继续隐秘匕首，j64690／64691的discard_plan均unknown，理由没有本回合可核对的已选方案，所有后继标记null；两打击被弃，d418509重问29伤，s432592—432603实扣29。live selection.ts:394／396未读取combat-plan.ts:3117仍保存的plannedAfter，:3123清除执行memo。"
+          },
+          {
+            "run": "2Q6ZYZ6JHM0M",
+            "floor": 8,
+            "turn": 5,
+            "role": "support",
+            "note": "d418529以隐秘匕首起手、原17挡损8伤9；j64696／64697同样无已选方案，d418531弃生存者后改14挡损11伤10并兑现。首步双弃另由combat-plan.ts:1901／1916撤销执行memo，plannedAfter于:1906独立保存。"
+          },
+          {
+            "run": "2Q6ZYZ6JHM0M",
+            "floor": 5,
+            "turn": 1,
+            "role": "support",
+            "note": "d418463原翻越撑击／隐秘匕首／打击／两刀21伤；418465弃计划打击，实15伤；供本局同类边界固定回放，不以缺少后继提示解释所有弃牌选择。"
+          }
+        ],
+        "first_run": "2Q6ZYZ6JHM0M",
+        "prior": "unknown",
+        "prior_runs": [],
+        "prior_note": "已检索静默账本plannedAfter、后继提示、隐秘匕首、弃牌及更早静默复盘。0205有其他弃后继现象，0153为旧卡模型；较早页面既见true也见null，未核到同一普通隐秘匕首plannedAfter旁路的处理证据，不把别牌提示正确或未知当成本项已做对。first_run取本次首次核到此具体读回根因的本局。",
+        "status": "observed",
+        "by": "learner:postmortem",
+        "where": {
+          "lessons": [
+            "2Q6ZYZ6JHM0M"
+          ]
+        },
+        "asc": 10
+      }
+    },
+    {
+      "offset": 22447294,
+      "bytes": 903,
+      "sha256": "f8259cfacfb1c9fcdf6899ce8efae9881bc630af72b868dc949f3a57f489b51e",
+      "row": {
+        "op": "update",
+        "id": "silent-0205",
+        "ts": "2026-10-17T10:25:15+08:00",
+        "by": "learner:postmortem",
+        "evidence": [
+          {
+            "run": "2Q6ZYZ6JHM0M",
+            "floor": 8,
+            "turn": 5,
+            "role": "repeat",
+            "note": "d418529原隐秘匕首／防御／两刀／生存者线17挡、9伤、损8；d418530弃打击，418531以0.27弃生存者。重算实际两防御两刀，14挡10伤，s432617—432625由26→15实损11，相对原条件预测少3挡多损3、多打1。旧后继承诺落空的同类重复，独立新提示根因另建条目；无保留生存者后的整战对照。"
+          },
+          {
+            "run": "2Q6ZYZ6JHM0M",
+            "floor": 5,
+            "turn": 1,
+            "role": "repeat",
+            "note": "d418463原21伤线需隐秘匕首后的打击，418465实际弃掉打击，最终翻越撑击7与两刀8共15；s432549—432557敌70→55，少6伤、零当轮血价。两回合来自同一局，不算两个独立重复局。"
+          }
+        ],
+        "where": {
+          "lessons": [
+            "2Q6ZYZ6JHM0M"
+          ]
+        }
+      }
+    },
+    {
+      "offset": 22448197,
+      "bytes": 586,
+      "sha256": "635476fff9d859cd1564b1856d1b860b3c63b6415ae5aaa91f794e390471cd6b",
+      "row": {
+        "op": "update",
+        "id": "silent-0021",
+        "ts": "2026-10-17T10:25:15+08:00",
+        "by": "learner:postmortem",
+        "evidence": [
+          {
+            "run": "2Q6ZYZ6JHM0M",
+            "floor": 8,
+            "turn": 7,
+            "role": "support",
+            "note": "轰鸣海螺实盘首轮9手4能量、步法T1建立2敏捷，匕首雨F6锋利2附魔；前三轮实扣29+19+21=69、后四轮53，全战122仍缺10。前序F5赢战净损19并用唯一技能药，F7回血21至48仍败。只支持开场与长战兑现分列，不把休息、拿牌或路线认成错误，不用同族boss模拟替代该精英实战。"
+          }
+        ],
+        "where": {
+          "lessons": [
+            "2Q6ZYZ6JHM0M"
+          ]
+        }
+      }
+    },
+    {
+      "offset": 22448783,
+      "bytes": 534,
+      "sha256": "cbec59cb4c83190cb0550d59737da22285a4b5580a63ba6549dcf570375b4563",
+      "row": {
+        "op": "update",
+        "id": "silent-0307",
+        "ts": "2026-10-17T10:25:15+08:00",
+        "by": "learner:postmortem",
+        "evidence": [
+          {
+            "run": "2Q6ZYZ6JHM0M",
+            "floor": 8,
+            "turn": 4,
+            "role": "support",
+            "note": "s432592起T1沉睡、T2苏醒无攻，T3 s432608出现力量10、SLASHES_MOVE25，T2中和的1虚弱已消失；s432612—432617中和当轮25→18、两7挡后30→26损4。前两轮14／7挡均未跨轮，支持既有苏醒／力量／虚弱时点；不拟合缓慢公式或新增机制优先级。"
+          }
+        ],
+        "where": {
+          "lessons": [
+            "2Q6ZYZ6JHM0M"
+          ]
+        }
+      }
+    },
+    {
+      "offset": 22474172,
+      "bytes": 376,
+      "sha256": "17af73d12238df30f9726e965853c4f41fe026cf0d241f773224c10cf4d6a3fe",
+      "row": {
+        "op": "update",
+        "id": "silent-0499",
+        "ts": "2026-10-17T10:26:37+08:00",
+        "by": "learner:postmortem",
+        "where": {
+          "proposal": [
+            "/home/dw/Projects/agent-sts2/learner/runs/20261017-101312-0503db53-7108-4416-9f48-d469b5fe5830-postmortem/proposal-discard-commitment.md"
+          ]
+        },
+        "note": "代码提案 silent-proposal-59b2e430bb7521d4 → task=strategy-proposal；Roy-2026-10-07-learning"
+      }
+    },
+    {
+      "offset": 22474548,
+      "bytes": 376,
+      "sha256": "f79de6170595cbca2809da346095dfde6e5840ecf8f5074695b4e92fe7c941e0",
+      "row": {
+        "op": "update",
+        "id": "silent-0205",
+        "ts": "2026-10-17T10:26:37+08:00",
+        "by": "learner:postmortem",
+        "where": {
+          "proposal": [
+            "/home/dw/Projects/agent-sts2/learner/runs/20261017-101312-0503db53-7108-4416-9f48-d469b5fe5830-postmortem/proposal-discard-commitment.md"
+          ]
+        },
+        "note": "代码提案 silent-proposal-59b2e430bb7521d4 → task=strategy-proposal；Roy-2026-10-07-learning"
+      }
+    },
+    {
+      "offset": 22474924,
+      "bytes": 373,
+      "sha256": "9778d9a974d8ace85abdce583561446a7fa93bc2fa9dbaf75c3ef1f54a71f315",
+      "row": {
+        "op": "update",
+        "id": "silent-0021",
+        "ts": "2026-10-17T10:26:40+08:00",
+        "by": "learner:postmortem",
+        "where": {
+          "proposal": [
+            "/home/dw/Projects/agent-sts2/learner/runs/20261017-101312-0503db53-7108-4416-9f48-d469b5fe5830-postmortem/proposal-realized-output.md"
+          ]
+        },
+        "note": "代码提案 silent-proposal-c8eb787720634577 → task=strategy-proposal；Roy-2026-10-07-learning"
+      }
+    },
+    {
+      "offset": 22475297,
+      "bytes": 373,
+      "sha256": "1be65581d5bebeae07368675f0dfaff9a35399df24488325c4736a350c3bac16",
+      "row": {
+        "op": "update",
+        "id": "silent-0307",
+        "ts": "2026-10-17T10:26:40+08:00",
+        "by": "learner:postmortem",
+        "where": {
+          "proposal": [
+            "/home/dw/Projects/agent-sts2/learner/runs/20261017-101312-0503db53-7108-4416-9f48-d469b5fe5830-postmortem/proposal-realized-output.md"
+          ]
+        },
+        "note": "代码提案 silent-proposal-c8eb787720634577 → task=strategy-proposal；Roy-2026-10-07-learning"
+      }
+    }
+  ],
+  "original_ledger_roles": [
+    {
+      "id": "silent-0205",
+      "added_roles": [
+        "repeat",
+        "repeat"
+      ],
+      "one_run": true
+    },
+    {
+      "id": "silent-0021",
+      "added_roles": [
+        "support"
+      ],
+      "one_run": true
+    },
+    {
+      "id": "silent-0307",
+      "added_roles": [
+        "support"
+      ],
+      "one_run": true
+    }
+  ],
+  "original_ledger_fields_preserved": true,
+  "source_run_current_boundary": "Only selection and loop source leaves equal run-config commit; full dirty knowledge/runtime unknown.",
+  "lesson_before": {
+    "bytes": 9400130,
+    "sha256": "0ef84a167dbe1ca9e47034fd3c184cdfcb7c346fb52b95e38182313fb3d93ea1"
+  },
+  "lesson_append": {
+    "old_prefix_sha256": "0ef84a167dbe1ca9e47034fd3c184cdfcb7c346fb52b95e38182313fb3d93ea1",
+    "old_prefix_bytes": 9400130,
+    "section_bytes": 16063,
+    "section_sha256": "98a69baf78239a9b67eb4de48b004b050c780842a55b451fe60b2aaa46c0ab8a",
+    "prefix_unchanged": true,
+    "single_heading": true
+  },
+  "lesson_owned_bytes": 16064,
+  "actual_original_proposal_rows": [
+    {
+      "op": "add",
+      "id": "silent-proposal-59b2e430bb7521d4",
+      "ts": "2026-10-17T10:26:37+08:00",
+      "character": "silent",
+      "ledger": [
+        "silent-0499",
+        "silent-0205"
+      ],
+      "runs": [
+        "2Q6ZYZ6JHM0M"
+      ],
+      "source_task": "postmortem",
+      "target_task": "strategy-proposal",
+      "domains": [
+        "combat"
+      ],
+      "summary": "A10普通隐秘匕首撤销执行memo后仍需向双弃题只读交付plannedAfter条件后继；保留真实手牌重算，不自动保牌或恢复旧执行计划。",
+      "proposal": "/home/dw/Projects/agent-sts2/learner/runs/20261017-101312-0503db53-7108-4416-9f48-d469b5fe5830-postmortem/proposal-discard-commitment.md",
+      "rule_changes": false,
+      "authorization": "Roy-2026-10-07-learning",
+      "proposal_sha256": "ec6182ef3b9cedf691d774a4972eedd9c17c6aa9911951332c78fc8002033b38",
+      "state": "pending"
+    },
+    {
+      "op": "add",
+      "id": "silent-proposal-c8eb787720634577",
+      "ts": "2026-10-17T10:26:40+08:00",
+      "character": "silent",
+      "ledger": [
+        "silent-0021",
+        "silent-0307"
+      ],
+      "runs": [
+        "2Q6ZYZ6JHM0M"
+      ],
+      "source_task": "postmortem",
+      "target_task": "strategy-proposal",
+      "domains": [
+        "combat"
+      ],
+      "summary": "将本局海螺开场、步法／苏醒时点、弃牌后重问与逐轮实扣接入既有兑现审计；不同boss模拟不作本战时钟误差，缺受控后继时保留原排序并waiting。",
+      "proposal": "/home/dw/Projects/agent-sts2/learner/runs/20261017-101312-0503db53-7108-4416-9f48-d469b5fe5830-postmortem/proposal-realized-output.md",
+      "rule_changes": false,
+      "authorization": "Roy-2026-10-07-learning",
+      "proposal_sha256": "eab612bfebe115eab2fdf5f83eeb0f452077aafebd16db2ab317509d23793e0d",
+      "state": "pending"
+    }
+  ],
+  "original_pending_proposals_not_implemented": true,
+  "new_pure_bug": {
+    "id": "selection-hidden-daggers-conditional-followup-readback",
+    "blocking": false,
+    "action": "queued with original proposal ownership; no duplicate dispatch or runtime fix"
+  },
+  "no_ops_added_game_knowledge": true,
+  "ops_did_not_replay_game_or_consumer_or_simulation": true,
+  "original_actual_billed_service_tier_not_claimed": true,
+  "source_production_tests_not_run": true,
+  "original_lesson_prefix_and_history_preserved": true
+}

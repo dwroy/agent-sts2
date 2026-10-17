@@ -1,0 +1,1 @@
+H1自然验收阻塞，0/2；报告report.md与checkpoint.json已落。原listener PID3307923/birth109774449、exec77455仍阻塞inotify，无分钟轮询/模型/游戏调用。当前game/controller PID3319441不动。显示relay92638将停止，不是终局listener。不要重开observer、补终局或把mixed版本复苏局充门槛。Claude另派同H1最小修复和ops受控恢复决定后，再沿原run/owner/session判定验收窗口。原H0/0332/宽父保持。

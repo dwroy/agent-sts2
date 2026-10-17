@@ -1,0 +1,8 @@
+  if (request.engine === "codex" && deps.checkKeys) {
+    const keys = await deps.checkKeys(binary, request, codexChildEnv(deps.env, binary));
+    if (!keys.ok) {
+      deps.err(`codex 的权限配置没能挡住 key 文件，不运行：${keys.readable.length > 0 ? `读得到 ${keys.readable.join("、")}` : ""}${keys.error ? `（检查失败：${keys.error}）` : ""}\n`);
+      return 3;
+    }
+  }
+

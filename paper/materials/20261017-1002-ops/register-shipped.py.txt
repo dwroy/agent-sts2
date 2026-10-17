@@ -1,0 +1,32 @@
+from pathlib import Path
+import hashlib,importlib.util,json,subprocess,sys
+r=Path.cwd();p=r/'ops/codex-ops/record-staging/20261017-1002';pub=r/'paper/materials/20261017-1002-ops'
+sha=lambda b:hashlib.sha256(b).hexdigest()
+load=lambda f:json.loads(f.read_bytes())
+def write(f,v):f.write_text(json.dumps(v,ensure_ascii=False,indent=2)+'\n')
+assert not (pub/'ops-ledger-cli.json').exists()
+v=load(pub/'publication.json');state=load(r/'ops/codex-ops/learn.json');batch=state['batches'][v['batch']]
+report=json.loads(json.dumps(batch['report']))
+row=next(x for x in report['proposal_results'] if x['id']=='silent-proposal-9c3554ff02a3119c')
+row.update(state='implemented',commit=v['source'],reason='Original self-tested exact seven-leaf source now actual main/live ancestor, independently published '+v['release_id']+'; original report/canonical failed-rc0-mergednull and nine other waiting reasons preserved; exact final host pending.')
+write(pub/'ops-resolution-report.json',report)
+queue=r/'paper/materials/learning/code-proposals.jsonl';before=queue.read_bytes()
+sys.path.insert(0,str(r/'ops'));import proposal_dispatch
+at=subprocess.check_output(['date','+%Y-%m-%d %H:%M:%S %Z'],text=True).strip();print(at,flush=True)
+proposal_dispatch.resolve(report,batch,str(r),str(r/'ops'))
+after=queue.read_bytes();assert after.startswith(before)
+tail=after[len(before):];rows=[json.loads(x) for x in tail.splitlines()]
+assert len(rows)==10 and sum(x['state']=='implemented' for x in rows)==1 and sum(x['state']=='waiting' for x in rows)==9
+chunks=load(p/'own-appends.json');chunks.append(dict(path=str(queue.relative_to(r)),text=tail.decode()));write(p/'own-appends.json',chunks)
+write(pub/'ops-proposal-resolution.json',dict(at=at,original_canonical_batch_unchanged=True,queue_prefix_bytes=len(before),queue_prefix_sha256=sha(before),appended_sha256=sha(tail),rows=rows))
+ledger=r/'paper/materials/learning/ledger.jsonl';before=ledger.read_bytes()
+update=dict(id='silent-0293',by='ops',status='shipped',version=v['name'],where=dict(commits=[v['source'],v['behavior_commit'],v['actual_live']],changelog=['paper/materials/20261017-1002-ops/publication.json']),note=v['release_id']+' original091302-s2 exact learner source actually main/live ancestor; only observed Silent A10 Helical Dart explicit-Shiv temporary Dexterity scope shipped. Source sandbox0/4286 and ablation retained; final combined host pending, no whole-fight win benefit or H0/0332 closure.')
+write(pub/'ops-ledger-cli-input.json',update)
+result=subprocess.run(['python3','learner/ledger.py','update'],input=json.dumps(update,ensure_ascii=False)+'\n',capture_output=True,text=True)
+after=ledger.read_bytes();assert after.startswith(before)
+tail=after[len(before):]
+write(pub/'ops-ledger-cli.json',dict(at=at,rc=result.returncode,stdout=result.stdout,stderr=result.stderr,prefix_bytes=len(before),prefix_sha256=sha(before),appended_bytes=len(tail),appended_sha256=sha(tail),status_guard_not_bypassed=True))
+assert result.returncode==0,result.stderr
+rows=[json.loads(x) for x in tail.splitlines()];assert len(rows)==1 and all(rows[0].get(k)==value for k,value in update.items())
+with (p/'own-ledger-rows.jsonl').open('ab') as f:f.write(tail)
+print(json.dumps(dict(proposals_implemented=1,proposals_waiting=9,ledger_shipped='silent-0293',release=v['release_id'],ledger_cli=0,canonical_preserved=True)),flush=True)

@@ -1,3 +1,5 @@
+import { PreparedSolverDone } from "./pace-solver-cache.js";
+import { currentDecisionBudget } from "../core/decision-budget.js";
 import { completeAdaptiveLines } from "../sim/boss-lines.js";
 /**
  * Combat, turn-planned (phase 2). Division of labour:
@@ -62,6 +64,7 @@ import { planCombat as planCombatPerCard } from "./combat.js";
 import { fightKey, fightPlanJson, planFit, planOffersPotion, type FightPlan } from "../memory/fight-plan.js";
 import { permafrostBlock } from "./permafrost.js";
 import { silentKunai } from "./silent-kunai.js";
+import { silentHelicalDart } from "./silent-helical-dart.js";
 import { observedSlothReplay, recordStateFightPlays } from "./fight-plays.js";
 import { RELIC_VALUES } from "../knowledge/relic-values.js";
 import { forcedEliteWithin } from "../hand/screens/rest.js";
@@ -1891,6 +1894,27 @@ function handAfterPlay(played: CardModel | undefined, hand: CardModel[], musicBo
   return left.map((card) => (card.type === "Attack" ? { ...card, cardId: "GIANT_ROCK", upgraded: played.upgraded } : card));
 }
 
+/** 2Q6ZYZ6JHM0M F5 T1 / F8 T1,T5: preserve facts when generated cards invalidate execution indices. */
+function discardReference(env: DecisionEnv, step: Step | undefined, hand: CardModel[], remaining: Step[],
+  prediction: CombatPlanMemo["selectionReference"], originDecisionId?: string | null): Pick<NonNullable<ScreenMemory["plannedAfter"]>, "discardReference"> {
+  const played = step && cardFor(step, hand);
+  if (!played || played.cardId !== "HIDDEN_DAGGERS" || played.upgraded || played.discardCount !== 2 ||
+    !str(env.state.raw["run_id"]) || str(env.state.raw["run_id"]) === "run_unknown" ||
+    env.state.turn === null || env.state.run?.floor === null ||
+    str(asRecord(env.state.run?.raw)["character_id"]).toLowerCase() !== "silent" || env.state.run?.ascension !== 10 ||
+    asArray(asRecord(env.state.raw["combat"])["enemies"]).filter((enemy) => asRecord(enemy)["is_alive"] !== false).length !== 1) return {};
+  const pool = hand.filter((card) => card !== played);
+  const held: Step[] = [];
+  // Match distinct, already observed copies. Missing/generated steps remain conditional, never real hand cards.
+  for (const next of [...remaining].sort((a, b) => Number(b.cost !== undefined) - Number(a.cost !== undefined))) {
+    const at = pool.findIndex((card) => card.cardId === next.cardId && card.upgraded === next.upgraded &&
+      (next.cost === undefined || card.cost === next.cost));
+    if (at >= 0) { held.push(next); pool.splice(at, 1); }
+  }
+  return { discardReference: { fight: facingFightOf(env.state), cardIndex: played.index, held,
+    assumedDiscards: step!.discards ?? null, prediction: prediction ?? null, originDecisionId } };
+}
+
 function commit(env: DecisionEnv, turn: number | null, plan: Plan, hand: CardModel[], via: CombatPlanMemo["via"]): void {
   // SL_RETRY_EXPLORE: code's own line of this decision (planCombatTurn notes it; nothing else reads it).
   slCommitted = plan;
@@ -1902,7 +1926,9 @@ function commit(env: DecisionEnv, turn: number | null, plan: Plan, hand: CardMod
   // A one-step line Jev (or the escalator) chose is kept too, with nothing left: its end is "stop here"
   // (lineDone), not a fresh plan (9Q7V F17 T14: after Jev's "One-Two Punch" alone, code re-planned and
   // played the Sword Boomerang Jev had turned down, killing the Giant into its blast).
-  env.screenMemory.plannedAfter = { turn, steps: plan.steps.slice(1), lethal: plan.outcome.winsFight };
+  env.screenMemory.plannedAfter = { turn, steps: plan.steps.slice(1), lethal: plan.outcome.winsFight,
+    ...discardReference(env, first, hand, plan.steps.slice(1),
+      { hp_lost: plan.outcome.hpLoss, damage_dealt: plan.outcome.damageDealt, block_gained: plan.outcome.blockGained }) };
   // A line's later drinks go with the rest of the line: when it is cut short (a draw, a random exhaust, a
   // hand the plan did not expect) the re-plan offers the potion again beside the new hand, and whoever
   // decides that turn decides the drink (XMK1 F33 T3: Battle Trance drew three cards, the stale Blood
@@ -2328,7 +2354,8 @@ export function withSlRetryFallback<T>(env: DecisionEnv, plan: (env: DecisionEnv
   if (!sl || (sl.knownDraws === undefined && sl.compute === undefined)) return plan(env);
   try {
     return plan(env);
-  } catch {
+  } catch (error) {
+    if (error instanceof PreparedSolverDone) throw error;
     const { knownDraws: _known, compute: _compute, ...plain } = sl;
     return plan({ ...env, sl: plain });
   }
@@ -2836,19 +2863,22 @@ export function withMechFallback<T>(env: DecisionEnv, plan: (env: DecisionEnv) =
   if (env.mechRules === false) return plan(env);
   try {
     return plan(env);
-  } catch {
+  } catch (error) {
+    if (error instanceof PreparedSolverDone) throw error;
     // MECH_DEATH_MOVE on: first without the death rules (the other learned rules kept).
     if (env.mechDeathMove !== false) {
       try {
         return plan({ ...env, mechDeathMove: false });
-      } catch {
+      } catch (error) {
+    if (error instanceof PreparedSolverDone) throw error;
         // as with the move rules off too, below
       }
     }
     if (env.mechMoveRules !== false) {
       try {
         return plan({ ...env, mechMoveRules: false, mechDeathMove: false });
-      } catch {
+      } catch (error) {
+    if (error instanceof PreparedSolverDone) throw error;
         // as with both off, below
       }
     }
@@ -2947,6 +2977,7 @@ function planTurn(env: DecisionEnv): Decision | null {
   const legionPreview = paelsLegionPreview(state.run?.raw, combat);
   const firstPowerBlock = permafrostBlock(env.screenMemory, state);
   const kunai = silentKunai(state);
+  const helicalDart = silentHelicalDart(state);
   const razorSnakebiteScope = observedRazorSnakebiteScope(state.run?.raw, combat, state.run?.ascension ?? null);
   const playerSim: PlayerSim = {
     ...(str(asRecord(state.run?.raw)["character_id"]).toLowerCase() === "silent" && (ascension === 0 || ascension === 10) &&
@@ -2973,6 +3004,7 @@ function planTurn(env: DecisionEnv): Decision | null {
     frail: powerAmount(player, "FRAIL_POWER") > 0,
     dexterityNow: powerAmount(player, "DEXTERITY_POWER"),
     ...(kunai !== undefined ? { kunai } : {}),
+    ...(helicalDart !== undefined ? { helicalDart } : {}),
     intangible: powerAmount(player, "INTANGIBLE_POWER") > 0,
     // -1 on us, never above 0: `> 0` never turned it on (XC4TNGZU4KT9 F9 T3 planned 16 and a kill, dealt 14).
     shrunk,
@@ -3111,7 +3143,8 @@ function planTurn(env: DecisionEnv): Decision | null {
       noteIntent(env, intent, nextCard);
       if (next.discards) env.screenMemory.gambleDiscards = { turn: memo.turn, cardIds: next.discards };
       notePotionTake(env, memo.turn, next);
-      env.screenMemory.plannedAfter = { turn: memo.turn, steps: memo.remaining.slice(1), lethal: memo.lethal };
+      env.screenMemory.plannedAfter = { turn: memo.turn, steps: memo.remaining.slice(1), lethal: memo.lethal,
+        ...discardReference(env, next, hand, memo.remaining.slice(1), memo.selectionReference, memo.selectionDecisionId ?? null) };
       // The last step of a chosen line leaves a memo with nothing left: its end is "stop here" (lineDone).
       // A potion step keeps the hand and is checked on the belt (beltAfter), a card step on the hand.
       const { potions: _checked, afterSelection: _resumed, upgradeAll: _forged, take: _taken, ...kept } = memo;
@@ -3340,6 +3373,11 @@ function planTurn(env: DecisionEnv): Decision | null {
     });
   const best = solved.plans[0];
   if (!best) return planCombatPerCard(env);
+  if (currentDecisionBudget() && solved.timedOut && best.outcome.dies) {
+    // A deadline is no proof that every legal continuation dies. Keep the existing per-card/SL gates.
+    currentDecisionBudget()!.useFallback("partial_solver_existing_card_layer_no_death_proof");
+    return planCombatPerCard(env);
+  }
 
   const endNow = solved.plans.find((plan) => plan.steps.length === 0);
   const modSaysLethal = bool(combat["end_turn_will_kill_player"]);
@@ -3760,8 +3798,8 @@ function planTurn(env: DecisionEnv): Decision | null {
   const costsOn = potionCostOptions.enabled && potionsAll.length > 0;
   // The SL retry compute memo (src/sim/compute-memo.ts): a retried fight's rollouts and B2 runs on a board an earlier
   // attempt planned come back from it, the same numbers; any other fight has none.
-  const computeMemo: ComputeMemo | null = env.sl ? computeMemoFor(`${String(state.raw["run_id"] ?? "")}:${fightKey(state)}`) : null;
-  if (!env.sl) dropComputeMemo();
+  const computeMemo: ComputeMemo | null = env.sl || currentDecisionBudget() ? computeMemoFor(`${String(state.raw["run_id"] ?? "")}:${fightKey(state)}`) : null;
+  if (!env.sl && !currentDecisionBudget()) dropComputeMemo();
   const noPotionBase = costsOn && kind !== "boss" && allDie === null ? options.find((plan) => !drinksPotion(plan)) : undefined;
   const noPotionCopy: Plan | undefined = noPotionBase ? { ...noPotionBase } : undefined;
   const runRollout = (escapes: boolean): LiveRollout | null =>
@@ -3880,7 +3918,7 @@ function planTurn(env: DecisionEnv): Decision | null {
         : { available: false, reason: "no draw/discard piles in the state", ms: 0 }
       : null;
   if (requiredBossComputation && bossSim) env.screenMemory.bossEvaluationRecord = simLog(bossSim, () => null);
-  if (requiredBossComputation && bossSim?.completion?.status !== "degraded" && (!bossSim?.available || bossSim.run.timedOut || (bossSim.run.samples !== bossSim.run.requested && !(bossSim.completion?.status === "complete_adaptive" && completeAdaptiveLines(bossSim.run))))) {
+  if (requiredBossComputation && (!currentDecisionBudget() || bossSim?.completion?.status === "pending") && bossSim?.completion?.status !== "degraded" && (!bossSim?.available || bossSim.run.timedOut || (bossSim.run.samples !== bossSim.run.requested && !(bossSim.completion?.status === "complete_adaptive" && completeAdaptiveLines(bossSim.run))))) {
     env.screenMemory.bossEvaluationWait = `required boss evaluation pending: ${bossSim && !bossSim.available ? bossSim.reason : "complete paired samples unavailable"}`;
     return null;
   }
@@ -4747,9 +4785,9 @@ export function runRandomPotions(sources: PotionMcSource[], solver: SolverInput 
   const out: PotionMc[] = [];
   let spent = 0;
   // SL_RETRY_COMPUTE: a retried fight's budget and samples (potionMcOptions' otherwise).
-  const total = opts.budgetMs ?? potionMcOptions.budgetMs;
+  const total = Math.min(opts.budgetMs ?? potionMcOptions.budgetMs, currentDecisionBudget()?.remaining() ?? Infinity);
   sources.forEach((source, index) => {
-    const budget = Math.max(0, (total - spent) / (sources.length - index));
+    const budget = Math.max(0, Math.min((total - spent) / (sources.length - index), currentDecisionBudget()?.remaining() ?? Infinity));
     const mc = opts.samples !== undefined ? runPotionMc(dry, source, dryBest, seedOf(`${boardKey}:${source.potionId}:${source.slot}`), budget, opts.samples) : runPotionMc(dry, source, dryBest, seedOf(`${boardKey}:${source.potionId}:${source.slot}`), budget);
     spent += mc.ms;
     out.push(mc);

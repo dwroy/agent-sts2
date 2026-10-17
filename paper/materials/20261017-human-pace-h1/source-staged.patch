@@ -1,0 +1,1944 @@
+diff --git a/agent/src/brain/router.ts b/agent/src/brain/router.ts
+index 42e66e139..77a677565 100644
+--- a/agent/src/brain/router.ts
++++ b/agent/src/brain/router.ts
+@@ -1,3 +1,4 @@
++import { currentDecisionBudget, withinDecisionBudget, DecisionBudgetExpired } from "../core/decision-budget.js";
+ /**
+  * Production createRouter selects the Codex-only path: outages wait on the same question and faults propagate.
+  * The configurable fallback path below remains for historical engine adapters and fixed regression fixtures.
+@@ -386,6 +387,12 @@ export class BrainRouter {
+    * an answer failure as the engine threw it.
+    */
+   async decide(request: BrainRequest): Promise<BrainAnswer> {
++    const pace = currentDecisionBudget();
++    if (pace && !request.budgetSignal) {
++      pace.promoteBrain();
++      return withinDecisionBudget("L2_brain", (signal) => this.decide({ ...request, budgetSignal: signal, effort: "xhigh", timeoutMs: Math.max(1, pace.remaining(90_000)) }), 90_000);
++    }
++    if (request.budgetSignal?.aborted) throw new DecisionBudgetExpired(request.label);
+     request.questionId ??= this.nextQuestionId();
+     const req = request;
+     if (this.codexOnly) return this.decideCodex(req);
+@@ -472,6 +479,11 @@ export class BrainRouter {
+         if (retrying) this.wait.finish("resumed");
+         return result;
+       } catch (error) {
++        if (error instanceof DecisionBudgetExpired || req.budgetSignal?.aborted) {
++          this.write("codex", req, null, new DecisionBudgetExpired(req.label), undefined, this.spent(error, began));
++          this.wait.finish("budget", req, "H1 hard deadline; existing L1 fallback");
++          throw new DecisionBudgetExpired(req.label);
++        }
+         if (error instanceof BrainBlockedError) {
+           this.wait.finish(error.state, req, error.message);
+           throw error;
+@@ -495,6 +507,10 @@ export class BrainRouter {
+         if (Number.isFinite(cooldown) && cooldown > 0 && !resting) this.resting.set("codex", { until: this.now() + cooldown, reason: message(error), kind });
+         try { await this.wait.retry(Math.max(cooldown, resting ? resting.until - this.now() : 0)); }
+         catch (cancelled) {
++          if (cancelled instanceof DecisionBudgetExpired || req.budgetSignal?.aborted) {
++            this.wait.finish("budget", req, "H1 hard deadline during outage wait; existing L1 fallback");
++            throw new DecisionBudgetExpired(req.label);
++          }
+           const state = cancelled instanceof BrainBlockedError ? cancelled.state : "fault";
+           this.wait.finish(state, req, message(cancelled));
+           throw cancelled instanceof BrainBlockedError ? cancelled : new BrainBlockedError("fault", "Codex retry timer failed", cancelled);
+@@ -596,15 +612,18 @@ export class BrainRouter {
+       this.deps.fallbackBudget.spend(engine.name);
+     }
+     this.calls.set(engine.name, this.callsMade(engine.name) + 1);
+-    const ms = req.timeoutMs ?? this.deps.config.engines[engine.name].timeoutMs;
++    const pace = currentDecisionBudget();
++    const ms = pace ? Math.min(req.timeoutMs ?? Infinity, pace.remaining()) : req.timeoutMs ?? this.deps.config.engines[engine.name].timeoutMs;
++    if (pace && (ms ?? 0) <= 0) throw new DecisionBudgetExpired(req.label);
+     if (!ms && !this.codexOnly) return engine.decide(req);
+     const controller = new AbortController();
+     const outer = this.codexOnly ? this.wait.signal : undefined;
+-    let rejectCancel: ((error: BrainBlockedError) => void) | undefined;
++    let rejectCancel: ((error: BrainBlockedError | DecisionBudgetExpired) => void) | undefined;
+     const cancellation = new Promise<never>((_, reject) => { rejectCancel = reject; });
+-    const cancel = (): void => { controller.abort(); rejectCancel?.(new BrainBlockedError("cancelled", "Codex brain call cancelled")); };
++    const cancel = (): void => { controller.abort(); rejectCancel?.(req.budgetSignal?.aborted ? new DecisionBudgetExpired(req.label) : new BrainBlockedError("cancelled", "Codex brain call cancelled")); };
+     outer?.addEventListener("abort", cancel, { once: true });
+-    if (outer?.aborted) cancel();
++    req.budgetSignal?.addEventListener("abort", cancel, { once: true });
++    if (outer?.aborted || req.budgetSignal?.aborted) cancel();
+     let timer: NodeJS.Timeout | undefined;
+     const stopPoll = this.codexOnly ? setInterval(() => {
+       try { this.wait.check(); }
+@@ -632,6 +651,7 @@ export class BrainRouter {
+       clearTimeout(timer);
+       clearInterval(stopPoll);
+       outer?.removeEventListener("abort", cancel);
++      req.budgetSignal?.removeEventListener("abort", cancel);
+     }
+   }
+ 
+diff --git a/agent/src/brain/types.ts b/agent/src/brain/types.ts
+index e4a0ba00d..a86df5606 100644
+--- a/agent/src/brain/types.ts
++++ b/agent/src/brain/types.ts
+@@ -75,6 +75,8 @@ export interface BrainRequest {
+   reask?: { answer: string; problems: string[] };
+   effort?: Effort;
+   timeoutMs?: number;
++  /** H1 internal cancellation; never model input or persistent configuration. */
++  budgetSignal?: AbortSignal;
+   /** What the system prompt carries when KNOWLEDGE_PREFIX is set (brain/knowledge.ts); logged in brain.jsonl. */
+   knowledge?: KnowledgeNote;
+   /** The run the question belongs to (the state's run_id, as decisions.jsonl logs it); logged in brain.jsonl. */
+diff --git a/agent/src/brain/wait.ts b/agent/src/brain/wait.ts
+index 17f185a84..4c37bd38c 100644
+--- a/agent/src/brain/wait.ts
++++ b/agent/src/brain/wait.ts
+@@ -1,10 +1,11 @@
++import { DecisionBudgetExpired } from "../core/decision-budget.js";
+ /** A model outage suspends the current question, never the game's saved run. */
+ import { appendFileSync, existsSync, mkdirSync, renameSync, writeFileSync } from "node:fs";
+ import { dirname, join } from "node:path";
+ import { appendJsonLine } from "../core/util/jsonl.js";
+ import type { BrainRequest } from "./types.js";
+ 
+-export type WaitState = "paused" | "heartbeat" | "resumed" | "cancelled" | "fault";
++export type WaitState = "paused" | "heartbeat" | "resumed" | "cancelled" | "fault" | "budget";
+ export interface BrainWaitEvent {
+   ts: string;
+   state: WaitState;
+@@ -17,7 +18,7 @@ export interface BrainWaitEvent {
+   retries: number;
+   next_retry: string | null;
+   suspended_ms: number;
+-  budget_policy: "outage_time_excluded";
++  budget_policy: "human_pace_hard_deadline" | "outage_time_excluded";
+   original_budget_ms: number | null;
+ }
+ 
+@@ -62,9 +63,10 @@ export class BrainWait {
+   constructor(private readonly options: BrainWaitOptions = {}) {}
+   get signal(): AbortSignal | undefined { return this.options.signal; }
+   now(): number { return this.options.now?.() ?? Date.now(); }
+-  get suspendedMs(): number { return this.completedMs + (this.active ? Math.max(0, this.now() - this.active.began) : 0); }
++  get suspendedMs(): number { return this.completedMs + (this.active && !this.active.req.budgetSignal ? Math.max(0, this.now() - this.active.began) : 0); }
+ 
+   check(): void {
++    if (this.active?.req.budgetSignal?.aborted) throw new DecisionBudgetExpired(this.active.req.label);
+     if (this.heartbeatFailure) throw new BrainBlockedError("fault", "Codex wait heartbeat could not be recorded", this.heartbeatFailure);
+     if (this.signal?.aborted || this.options.stop?.()) throw new BrainBlockedError("cancelled", "brain wait cancelled by stop signal/ops STOP; saved decision left untouched");
+   }
+@@ -77,7 +79,7 @@ export class BrainWait {
+       run_id: a.req.runId ?? null, question_id: a.req.questionId ?? "", decision_type: a.req.label,
+       reason: a.reason, since: new Date(a.began).toISOString(), retries: a.retries,
+       next_retry: a.next === null ? null : new Date(a.next).toISOString(), suspended_ms: this.suspendedMs,
+-      budget_policy: "outage_time_excluded", original_budget_ms: this.options.originalBudgetMs ?? null,
++      budget_policy: a.req.budgetSignal ? "human_pace_hard_deadline" : "outage_time_excluded", original_budget_ms: a.req.budgetSignal ? a.req.timeoutMs ?? 90_000 : this.options.originalBudgetMs ?? null,
+     };
+     try {
+       this.options.event?.(event);
+@@ -92,7 +94,7 @@ export class BrainWait {
+     this.active = { req, began, reason, retries: 0, next: null };
+     try { this.emit("paused"); }
+     catch (error) {
+-      this.completedMs += Math.max(0, this.now() - this.active.began);
++      if (!this.active.req.budgetSignal) this.completedMs += Math.max(0, this.now() - this.active.began);
+       this.active = null;
+       throw error;
+     }
+@@ -119,13 +121,13 @@ export class BrainWait {
+     a.next = null;
+   }
+ 
+-  finish(state: "resumed" | "cancelled" | "fault", req?: BrainRequest, reason?: string): void {
++  finish(state: "resumed" | "cancelled" | "fault" | "budget", req?: BrainRequest, reason?: string): void {
+     if (!this.active && req) this.active = { req, began: this.now(), reason: reason ?? state, retries: 0, next: null };
+     if (reason && this.active) this.active.reason = reason;
+     clearInterval(this.timer);
+     try { this.emit(state); }
+     finally {
+-      if (this.active) this.completedMs += Math.max(0, this.now() - this.active.began);
++      if (this.active && !this.active.req.budgetSignal) this.completedMs += Math.max(0, this.now() - this.active.began);
+       this.active = null;
+     }
+   }
+@@ -148,7 +150,7 @@ export function fileBrainWait(logDir: string, opsDir: string, options: BrainWait
+     notify: (event) => {
+       const inbox = join(opsDir, "inbox-dev.md");
+       mkdirSync(dirname(inbox), { recursive: true });
+-      appendFileSync(inbox, `\n- ${event.ts} Codex 大脑 ${event.state}；局 ${event.run_id ?? "未知"}；题 ${event.question_id} / ${event.decision_type}；原因 ${event.reason}；暂停时间不计原预算，恢复后回答同题。\n`);
++      appendFileSync(inbox, `\n- ${event.ts} Codex 大脑 ${event.state}；局 ${event.run_id ?? "未知"}；题 ${event.question_id} / ${event.decision_type}；原因 ${event.reason}；${event.budget_policy === "human_pace_hard_deadline" ? "等待计入H1硬预算，到时使用原L1兜底。" : "暂停时间不计原预算，恢复后回答同题。"}\n`);
+       options.notify?.(event);
+     },
+   });
+diff --git a/agent/src/core/decision-budget.ts b/agent/src/core/decision-budget.ts
+new file mode 100644
+index 000000000..3ea158d38
+--- /dev/null
++++ b/agent/src/core/decision-budget.ts
+@@ -0,0 +1,88 @@
++/** H1: Silent computation time, excluding action/animation waits. No game-value rules live here. */
++import { AsyncLocalStorage } from "node:async_hooks";
++
++export const HUMAN_PACE_BUDGETS = Object.freeze({ ordinary: 10_000, elite: 15_000, boss: 30_000,
++  retry: 10_000, routine: 5_000, brain: 90_000, direction: 60_000 });
++export type BudgetKind = keyof typeof HUMAN_PACE_BUDGETS;
++export class DecisionBudgetExpired extends Error {
++  constructor(readonly stage: string) { super(`human-pace budget exhausted: ${stage}`); this.name = "DecisionBudgetExpired"; }
++}
++export class DecisionBudget {
++  private since: number | null;
++  private spent = 0;
++  private limit: number;
++  private entryStart = 0;
++  private entryAllowance: number;
++  private entryStage = 0;
++  private fallback: string | null = null;
++  readonly skipped: string[] = [];
++  readonly stages: { stage: string; budget_ms: number; actual_ms: number; timed_out: boolean }[] = [];
++  constructor(readonly key: string, public kind: BudgetKind, readonly now = () => performance.now(), milliseconds?: number) {
++    this.limit = milliseconds ?? HUMAN_PACE_BUDGETS[kind]; this.entryAllowance = this.limit; this.since = now();
++  }
++  elapsed(): number { return this.spent + (this.since === null ? 0 : Math.max(0, this.now() - this.since)); }
++  remaining(cap = Infinity): number { return Math.max(0, Math.min(cap, this.limit - this.elapsed())); }
++  pause(): void { if (this.since !== null) { this.spent = this.elapsed(); this.since = null; } }
++  resume(): void { this.since ??= this.now(); }
++  get running(): boolean { return this.since !== null; }
++  beginEntry(): void { this.entryStart = this.elapsed(); this.entryAllowance = this.remaining(); this.entryStage = this.stages.length; this.fallback = null; }
++  charge(milliseconds: number): void { this.spent += Math.max(0, milliseconds); }
++  promoteBrain(): void { this.kind = "brain"; this.limit = Math.max(this.limit, HUMAN_PACE_BUDGETS.brain); }
++  useFallback(reason: string): void { this.fallback = reason; }
++  skip(stage: string): void { if (!this.skipped.includes(stage)) this.skipped.push(stage); }
++  record() { return { schema: "decision-budget-v1", kind: this.kind, key: this.key, budget_ms: this.limit,
++    entry_budget_ms: this.entryAllowance, actual_ms: Math.round(this.elapsed() - this.entryStart),
++    turn_actual_ms: Math.round(this.elapsed()), timed_out: this.remaining() <= 0, fallback: this.fallback,
++    shadow_unknown: [...this.skipped], stages: this.stages.slice(this.entryStage).map((s) => ({ ...s })), animation_time_included: false }; }
++}
++
++const storage = new AsyncLocalStorage<DecisionBudget | undefined>();
++export const currentDecisionBudget = (): DecisionBudget | undefined => storage.getStore();
++export const withDecisionBudget = <T>(value: DecisionBudget | undefined, work: () => T): T => storage.run(value, work);
++/** Called only inside runLoop's isolated async scope, after the actual role has been checked. */
++export const enterDecisionBudget = (value: DecisionBudget | undefined): void => storage.enterWith(value);
++
++/** Each fight turn shares one allowance across re-asks and card-by-card decisions. */
++export class DecisionBudgetLedger {
++  private last: DecisionBudget | undefined;
++  constructor(private readonly now = () => performance.now()) {}
++  open(key: string, kind: BudgetKind): DecisionBudget {
++    if (this.last?.key !== key) this.last = new DecisionBudget(key, kind, this.now);
++    this.last!.resume(); this.last!.beginEntry(); return this.last!;
++  }
++}
++
++/** Transport/animation waits are outside our computation allowance. */
++export async function outsideDecisionBudget<T>(work: () => Promise<T>): Promise<T> {
++  const budget = currentDecisionBudget(), running = budget?.running;
++  budget?.pause();
++  try { return await work(); } finally { if (running) budget?.resume(); }
++}
++
++export function shadowBudgetAvailable(stage: string): boolean {
++  const budget = currentDecisionBudget();
++  if (!budget || budget.remaining() > 0) return true;
++  budget.skip(stage); return false;
++}
++export const budgetUnknown = (stage: string) => ({ status: "unknown", reason: "decision_budget_exhausted", stage });
++
++/** Timers abort the actual caller; a late result is never accepted by this decision. */
++export async function withinDecisionBudget<T>(stage: string, work: (signal?: AbortSignal) => Promise<T>, cap = Infinity): Promise<T> {
++  const budget = currentDecisionBudget();
++  if (!budget) return work();
++  const ms = budget.remaining(cap), started = budget.now();
++  if (ms <= 0) throw new DecisionBudgetExpired(stage);
++  const controller = new AbortController(); let timer: ReturnType<typeof setTimeout> | undefined;
++  const expires = new Promise<never>((_, reject) => { timer = setTimeout(() => {
++    controller.abort(); reject(new DecisionBudgetExpired(stage));
++  }, ms); });
++  let timedOut = false;
++  try {
++    const result = await Promise.race([work(controller.signal), expires]);
++    if (budget.remaining() <= 0) { controller.abort(); throw new DecisionBudgetExpired(stage); }
++    return result;
++  }
++  catch (error) { timedOut = error instanceof DecisionBudgetExpired; throw error; }
++  finally { clearTimeout(timer); budget.stages.push({ stage, budget_ms: ms,
++    actual_ms: Math.round(budget.now() - started), timed_out: timedOut }); }
++}
+diff --git a/agent/src/eye/decision-log.ts b/agent/src/eye/decision-log.ts
+index ff76f93f2..af1ec3cf9 100644
+--- a/agent/src/eye/decision-log.ts
++++ b/agent/src/eye/decision-log.ts
+@@ -12,6 +12,7 @@ import type { BrainDecider } from "../brain/types.js";
+ import type { JsonValue } from "../core/util/json.js";
+ 
+ export interface DecisionRecord {
++  time_budget?: ReturnType<import("../core/decision-budget.js").DecisionBudget["record"]>;
+   ts: string;
+   mode: string;
+   screen: string;
+diff --git a/agent/src/eye/run-config.ts b/agent/src/eye/run-config.ts
+index b7fd5839f..13a43c8cc 100644
+--- a/agent/src/eye/run-config.ts
++++ b/agent/src/eye/run-config.ts
+@@ -1,3 +1,4 @@
++import { HUMAN_PACE_BUDGETS } from "../core/decision-budget.js";
+ /**
+  * The configuration each run was played with (V4 M4, docs/eval.md §2 and §8): one JSONL row per run in
+  * logs/run-config.jsonl (RUN_CONFIG_LOG; "off" writes nothing), written when the loop first sees a new run id.
+@@ -139,6 +140,7 @@ export interface RunConfigRow {
+       max_answer_blanks: number | null;
+     };
+   };
++  human_pace?: { schema: string; budgets: typeof HUMAN_PACE_BUDGETS; model_effort: string; required_full_replaced: boolean };
+   knowledge: {
+     prefix: "off" | "full";
+     /** The ascension the prompt was rendered for (the run's). */
+@@ -481,6 +483,7 @@ export function runConfigRow(
+       strict: config.strictJev,
+       prompt_log: resolveJevPromptLog(config.log),
+     },
++    ...(characterKey(run.character) === "silent" ? { human_pace: { schema: "human-pace-h1-v1", budgets: HUMAN_PACE_BUDGETS, model_effort: "xhigh", required_full_replaced: true } } : {}),
+     loop: {
+       mode: opts.mode,
+       combat_planner: config.combatPlanner,
+diff --git a/agent/src/hand/loop.ts b/agent/src/hand/loop.ts
+index 75de9f951..aaf2def3b 100644
+--- a/agent/src/hand/loop.ts
++++ b/agent/src/hand/loop.ts
+@@ -1,3 +1,6 @@
++import { prepareObservedCandidates } from "./pace-precompute.js";
++import { setPaceSolverScope } from "../reflex/pace-solver-cache.js";
++import { currentDecisionBudget, withDecisionBudget, enterDecisionBudget, DecisionBudgetLedger, DecisionBudgetExpired, outsideDecisionBudget, shadowBudgetAvailable, budgetUnknown, type BudgetKind } from "../core/decision-budget.js";
+ /**
+  * The decision loop (PLAN.md §7).
+  *
+@@ -265,6 +268,11 @@ function noteForAction(state: GameState, resolved: ResolvedAction, label: string
+ }
+ 
+ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
++  return withDecisionBudget(undefined, () => runLoopWithBudgets(options));
++}
++
++async function runLoopWithBudgets(options: LoopOptions): Promise<LoopStats> {
++  const paceLedger = new DecisionBudgetLedger();
+   const { config, mode, client, knowledge } = options;
+   // PASSIVE_PIECES as configured (.env read after the modules loaded: their process.env default may predate it).
+   passivePiecesOptions.enabled = config.passivePieces;
+@@ -285,7 +293,11 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
+   const maxDecisions = options.maxDecisions ?? 2_000;
+   const maxRuns = options.maxRuns ?? 1;
+   const maxMinutes = options.maxMinutes ?? 60;
+-  const log = createDecisionLog(config.log.decisionLog);
++  const rawLog = createDecisionLog(config.log.decisionLog);
++  const log = { path: rawLog.path, close: () => rawLog.close(), write(row: DecisionRecord) {
++    const budget = currentDecisionBudget(); budget?.pause();
++    rawLog.write(budget ? { ...row, time_budget: budget.record() } : row);
++  } };
+   const statesPath = stateLogPath(config.log.decisionLog);
+   const stateLog = createStateLog(statesPath);
+   // Every request to Jev, verbatim (V4 M3): joins the decision rows by decision_id.
+@@ -509,6 +521,8 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
+   });
+ 
+   for (;;) {
++    currentDecisionBudget()?.pause();
++    enterDecisionBudget(undefined);
+     const budget = budgetReason();
+     if (budget) {
+       stop(budget);
+@@ -517,7 +531,7 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
+ 
+     let state: GameState;
+     try {
+-      state = await client.state();
++      state = await outsideDecisionBudget(() => client.state());
+     } catch (error) {
+       const failure = classifyFailure(error);
+       stats.errors += 1;
+@@ -756,6 +770,14 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
+       // Who made a one-shot plan, as its steps' decider (below) and their rationales name it.
+       planMaker: (ref, label) => deciderLabel(planDeciders.get(ref) ?? (brain ? brain.engineFor(label) : "deepseek")),
+     };
++    if (str(asRecord(state.run?.raw)["character_id"]).toLowerCase() === "silent") {
++      const combat = asRecord(state.raw["combat"]);
++      const fight = fightKind(combat, env);
++      const kind: BudgetKind = state.in_combat ? slEnv ? "retry" : fight === "boss" ? "boss" : fight === "elite" ? "elite" : "ordinary" : "routine";
++      const key = state.in_combat ? `${runId}:${state.run?.floor}:${state.turn}:${slEnv?.attempt ?? 1}` : `${runId}:${observedFp}`;
++      setPaceSolverScope(`${runId}:${state.run?.floor}:${config.cardConditions}:${config.passivePieces}:${config.mechRules}:${config.mechMoveRules}:${config.mechDeathMove}`);
++      enterDecisionBudget(paceLedger.open(key, kind));
++    }
+     // FIGHT_PLAN=v1: DeepSeek plans an elite/boss fight once, before its first decision.
+     // RUN_PLAN=v1: DeepSeek's run strategy, renewed at the map screen when a checkpoint is due.
+     if (!planned && config.runPlan === "v1" && !state.in_combat && state.screen === "MAP") {
+@@ -833,6 +855,8 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
+     plannerFailures = 0;
+ 
+     if (planned.kind === "wait") {
++      const prepared = prepareObservedCandidates(env, pollIntervalMs);
++      if (prepared) onEvent({ type: "note", message: `H1 idle preparation: ${JSON.stringify(prepared)}` });
+       if (screenMemory.bossEvaluationWait && screenMemory.bossEvaluationRecord) {
+         const row: DecisionRecord = {
+           ts: new Date().toISOString(), mode, screen: state.screen, session: `${state.session.mode}/${state.session.phase}`,
+@@ -892,6 +916,7 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
+     /** DeepSeek answered but the answer was unusable (not a transport failure): a one-shot question then goes step by step. */
+     let deepseekAnswerUnusable: string | null = null;
+     let deepseekAsked: Record<string, JsonValue> | undefined;
++    let budgetFallback = false;
+     let deepseekFallback: string | undefined;
+     /** What DeepSeek said before its answer failed (reason, reasoning conclusion): passed on to Jev. */
+     let deepseekNote: Record<string, string> | undefined;
+@@ -903,6 +928,7 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
+     let runPlanRide: { trigger: RunPlanTrigger } | null = null;
+     let runPlanRideLog: JsonValue | undefined;
+     if (decision.kind === "ask" && decision.deepseek && !codeBaseline) {
++      currentDecisionBudget()?.promoteBrain();
+       const spec = decision.deepseek;
+       let question = decision.questions[spec.question];
+       const memoKey = `${stateFingerprint}|${decision.label}|${JSON.stringify(decision.state)}|${JSON.stringify(question ?? null)}`;
+@@ -914,7 +940,7 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
+         // The board may have moved while planning: never pay ~10 s for a position that no longer exists.
+         let stale = false;
+         try {
+-          stale = fingerprint(await client.state()) !== stateFingerprint;
++          stale = fingerprint(await outsideDecisionBudget(() => client.state())) !== stateFingerprint;
+         } catch {
+           // let the ask go ahead; the dispatch re-read catches a broken mod
+         }
+@@ -958,7 +984,7 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
+         if (env.requiredBossEvaluation && bossSimRecord && !asRecord(bossSimRecord)["skipped"]) {
+           // Complete computation may outlive the old latency target. Re-read before spending a model call.
+           let changed = true;
+-          try { changed = fingerprint(await client.state()) !== stateFingerprint; } catch { /* retry without dispatch */ }
++          try { changed = fingerprint(await outsideDecisionBudget(() => client.state())) !== stateFingerprint; } catch { /* retry without dispatch */ }
+           if (changed) {
+             stats.staleSkips += 1;
+             onEvent({ type: "note", message: "state changed or unavailable after required boss evaluation; re-planning" });
+@@ -968,13 +994,13 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
+         }
+         // V5 runs through the actual consumer in shadow mode before its predictions may guide choices.
+         try {
+-          const construction = withConstruction(decision, env, { simulation: {
++          const construction = !shadowBudgetAvailable("construction_shadow") ? { decision, record: budgetUnknown("construction_shadow") as Record<string, JsonValue> } : withConstruction(decision, env, { simulation: {
+             run: str(state.raw["run_id"]), floor: state.run?.floor ?? 0, label: decision.label,
+             minimumShown: BUILD_SIM_MIN_SHOWN,
+             record: asRecord(bossSimRecord) as Record<string, JsonValue>,
+           } });
+           const probabilityAttached = construction.decision !== decision;
+-          decision = withConstructionEvaluation(construction.decision, env, construction.record);
++          decision = shadowBudgetAvailable("construction_evaluation_shadow") ? withConstructionEvaluation(construction.decision, env, construction.record) : construction.decision;
+           if (construction.record) bossSimRecord = { ...asRecord(bossSimRecord), construction: { ...construction.record,
+             evaluation_delivery: decision !== construction.decision ? "attached" : "not_attached",
+             probability_delivery: probabilityAttached ? "attached" : "not_attached",
+@@ -1190,7 +1216,8 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
+             if (!accept(answer, null)) deepseekFailed = true;
+           }
+         } catch (error) {
+-          if (brain?.router.codexOnly) {
++          if (error instanceof DecisionBudgetExpired) { budgetFallback = true; currentDecisionBudget()?.useFallback("L2_deadline_existing_L1"); }
++          if (brain?.router.codexOnly && !budgetFallback) {
+             if (isBrainBlocked(error)) throw error;
+             brainFault(brain, decision.label, runId, `Brain decision resolution failed: ${error instanceof Error ? error.message : String(error)}`, error);
+           }
+@@ -1239,7 +1266,7 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
+         const spent = `(${stats.deepseekCalls}/${config.deepseek?.maxCalls ?? 0})`;
+         onEvent({ type: "note", message: `${engine === "deepseek" ? `DeepSeek budget used up ${spent}` : `${engineLabel(engine)} call budget used up, and DeepSeek's as its fallback ${spent}`}; ${decision.label} goes to Jev/code` });
+       }
+-      if (!deepseekResolved && brain?.router.codexOnly) {
++      if (!deepseekResolved && brain?.router.codexOnly && !budgetFallback) {
+         const reason = `Codex brain decision did not resolve on ${decision.label}: ${deepseekAnswerUnusable ?? "no usable brain question"}`;
+         brain.router.wait.finish("fault", { label: decision.label, runId, questionId: decisionId, system: "", question: "", payload: {}, spec: { label: decision.label, kind: "plan", schema: {}, validate: () => [] } }, reason);
+         throw new BrainBlockedError("fault", reason);
+@@ -1315,10 +1342,11 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
+       resolved = { intent: decision.intent, rationale: decision.rationale, confidence: null, fallback: false, ...(decision.apply ? { apply: decision.apply } : {}), ...(decision.log ? { log: decision.log } : {}), ...(decision.journal ? { journal: decision.journal } : {}) };
+       // A step of a DeepSeek one-shot plan, played by code: DeepSeek's decision, no call made (reused).
+       if (decision.plan) deepseekRecord = { by: "deepseek", direct: true, reused: true, plan_ref: decision.plan.ref, plan_step: decision.plan.step, choice: decision.plan.choice };
+-    } else if (!jev || codeBaseline) {
++    } else if (!jev || codeBaseline || currentDecisionBudget()?.remaining() === 0) {
+       // No-Jev mode, or a board the gate kept refusing: the resolver sees an empty answer set and takes its
+       // deterministic path.
+       resolved = decision.resolve({});
++      if (currentDecisionBudget()?.remaining() === 0) { currentDecisionBudget()?.useFallback("deadline_current_code_candidate"); resolved = { ...resolved, fallback: true }; }
+       if (codeBaseline) resolved = { ...resolved, fallback: true, rationale: `code baseline after ${gateRejections} gate refusals on this board: ${resolved.rationale}` };
+     } else {
+       if (stats.jevCalls >= config.budgets.maxRequests) {
+@@ -1341,7 +1369,7 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
+         // The board may have moved while we were planning. Re-read before spending a call on a
+         // position that no longer exists.
+         try {
+-          const fresh = await client.state();
++          const fresh = await outsideDecisionBudget(() => client.state());
+           if (fingerprint(fresh) !== stateFingerprint) {
+             stats.staleSkips += 1;
+             onEvent({
+@@ -1496,6 +1524,10 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
+           }
+         }
+       } catch (error) {
++        if (error instanceof DecisionBudgetExpired) {
++          currentDecisionBudget()?.useFallback("Jev_deadline_current_candidate");
++          resolved = { ...decision.resolve(firstAnswers), fallback: true };
++        } else {
+         if (isBrainBlocked(error)) throw error;
+         const failure = classifyFailure(error);
+         stats.errors += 1;
+@@ -1508,6 +1540,7 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
+         await sleep(pollIntervalMs);
+         continue;
+       }
++        }
+       // Memoise the finished resolution (including any shortlist re-ask that ran above).
+       answerMemo = { key: memoKey, resolved, answers: firstAnswers };
+       }
+@@ -1527,6 +1560,7 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
+     // step keeps the card, enemy and potion its line chose), checked here and again on the state it is sent to
+     // (act/identity.ts). A memo's answer keeps the identity of the board it was given on.
+     resolved.intent = withExpect(state, resolved.intent);
++    currentDecisionBudget()?.pause();
+     let gated = gate(state, resolved.intent);
+     if (endTurnInstead && resolved.intent.action !== "end_turn") {
+       // The same illegal play kept coming back (a card whose cost rose above our energy, 2026-09-25:
+@@ -1763,7 +1797,7 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
+     // Re-read before touching the game: actions are not idempotent (PLAN.md §8.1).
+     let fresh: GameState;
+     try {
+-      fresh = await client.state();
++      fresh = await outsideDecisionBudget(() => client.state());
+     } catch (error) {
+       onEvent({ type: "note", message: `pre-dispatch state re-read failed: ${classifyFailure(error).detail}` });
+       logUndispatched(`pre-dispatch state re-read failed: ${classifyFailure(error).detail}`.slice(0, 300), "state_read_failed");
+@@ -2093,7 +2127,8 @@ async function ensureFightPlan(
+     onEvent({ type: "note", message: `fight plan (${memoryChars(memory)} context chars, ${(meta.latencyMs / 1000).toFixed(0)} s): ${plan.approach}; setup ${plan.setup.join(", ") || "-"}; kill first ${plan.focus ?? "-"}; ${plan.summary}` });
+   } catch (error) {
+     if (isBrainBlocked(error)) throw error;
+-    if (deepseek instanceof Brain && deepseek.router.codexOnly) brainFault(deepseek, "fight-plan", runId, `Fight-plan resolution failed: ${error instanceof Error ? error.message : String(error)}`, error);
++    if (error instanceof DecisionBudgetExpired) currentDecisionBudget()?.useFallback("fight_plan_deadline_existing_L1");
++    if (!(error instanceof DecisionBudgetExpired) && deepseek instanceof Brain && deepseek.router.codexOnly) brainFault(deepseek, "fight-plan", runId, `Fight-plan resolution failed: ${error instanceof Error ? error.message : String(error)}`, error);
+     screenMemory.fightPlanFailed = fight;
+     const message = error instanceof Error ? error.message : String(error);
+     // An unparseable reply was still paid for: its usage and raw reply are logged with the error.
+@@ -2163,7 +2198,8 @@ async function ensureRunPlan(
+     onEvent({ type: "note", message: `run plan (${memoryChars(memory)} context chars, ${(meta.latencyMs / 1000).toFixed(0)} s, ${trigger}): ${plan.archetype}; want ${plan.want.join(", ") || "-"}; elites ${plan.elites}; rest ${plan.rest}` });
+   } catch (error) {
+     if (isBrainBlocked(error)) throw error;
+-    if (deepseek instanceof Brain && deepseek.router.codexOnly) brainFault(deepseek, "run-plan", runId, `Run-plan resolution failed: ${error instanceof Error ? error.message : String(error)}`, error);
++    if (error instanceof DecisionBudgetExpired) currentDecisionBudget()?.useFallback("run_plan_deadline_existing_L1");
++    if (!(error instanceof DecisionBudgetExpired) && deepseek instanceof Brain && deepseek.router.codexOnly) brainFault(deepseek, "run-plan", runId, `Run-plan resolution failed: ${error instanceof Error ? error.message : String(error)}`, error);
+     screenMemory.runPlanFailed = failKey;
+     const message = error instanceof Error ? error.message : String(error);
+     if (error instanceof DeepSeekAnswerError) count(error.meta.inputTokens + error.meta.outputTokens, (error.meta as BrainMetaUsage).brain);
+diff --git a/agent/src/hand/pace-precompute.ts b/agent/src/hand/pace-precompute.ts
+new file mode 100644
+index 000000000..62eab6d0b
+--- /dev/null
++++ b/agent/src/hand/pace-precompute.ts
+@@ -0,0 +1,31 @@
++/** Use an existing animation/poll interval only when the next candidate input is already observed. */
++import { DecisionBudget, currentDecisionBudget, withDecisionBudget } from "../core/decision-budget.js";
++import { planCombatTurn, plannerTiming } from "../reflex/combat-plan.js";
++import { PreparedSolverDone, preparingCandidates } from "../reflex/pace-solver-cache.js";
++import type { DecisionEnv } from "../memory/types.js";
++
++export function prepareObservedCandidates(env: DecisionEnv, idleMs: number): Record<string, unknown> | null {
++  const parent = currentDecisionBudget();
++  if (!parent || env.state.screen !== "COMBAT" || !env.state.in_combat) return null;
++  const allowance = Math.max(0, Math.min(idleMs, parent.remaining()));
++  if (allowance <= 0) { parent.skip("idle_candidates"); return { status: "unknown", reason: "decision_budget_exhausted" }; }
++  parent.pause();
++  const started = parent.now(), previousTiming = plannerTiming.last;
++  const child = new DecisionBudget(`${parent.key}:idle`, parent.kind, parent.now, allowance);
++  try {
++    // Only scratch memory is copied. No speculative legal actions, turn, hand, energy or enemy state is invented.
++    withDecisionBudget(child, () => preparingCandidates(() => planCombatTurn({ ...env,
++      screenMemory: structuredClone(env.screenMemory), sl: undefined, slRecord: undefined })));
++    return { status: "unknown", reason: "next_solver_input_not_observed_or_not_ready", budget_ms: allowance };
++  } catch (error) {
++    if (!(error instanceof PreparedSolverDone)) return { status: "unknown", reason: "preparation_unavailable", budget_ms: allowance };
++    return { status: "prepared", basis: "exact_observed_input_only", nodes: error.result.nodes,
++      partial: error.result.truncated, reused: error.reused, budget_ms: allowance };
++  } finally {
++    child.pause();
++    const actual = Math.max(0, parent.now() - started);
++    parent.charge(actual);
++    parent.stages.push({ stage: "idle_observed_candidates", budget_ms: allowance, actual_ms: Math.round(actual), timed_out: child.remaining() === 0 });
++    plannerTiming.last = previousTiming;
++  }
++}
+diff --git a/agent/src/reflex/combat-plan.ts b/agent/src/reflex/combat-plan.ts
+index 8be736e46..8c2415027 100644
+--- a/agent/src/reflex/combat-plan.ts
++++ b/agent/src/reflex/combat-plan.ts
+@@ -1,3 +1,5 @@
++import { PreparedSolverDone } from "./pace-solver-cache.js";
++import { currentDecisionBudget } from "../core/decision-budget.js";
+ import { completeAdaptiveLines } from "../sim/boss-lines.js";
+ /**
+  * Combat, turn-planned (phase 2). Division of labour:
+@@ -2328,7 +2330,8 @@ export function withSlRetryFallback<T>(env: DecisionEnv, plan: (env: DecisionEnv
+   if (!sl || (sl.knownDraws === undefined && sl.compute === undefined)) return plan(env);
+   try {
+     return plan(env);
+-  } catch {
++  } catch (error) {
++    if (error instanceof PreparedSolverDone) throw error;
+     const { knownDraws: _known, compute: _compute, ...plain } = sl;
+     return plan({ ...env, sl: plain });
+   }
+@@ -2836,19 +2839,22 @@ export function withMechFallback<T>(env: DecisionEnv, plan: (env: DecisionEnv) =
+   if (env.mechRules === false) return plan(env);
+   try {
+     return plan(env);
+-  } catch {
++  } catch (error) {
++    if (error instanceof PreparedSolverDone) throw error;
+     // MECH_DEATH_MOVE on: first without the death rules (the other learned rules kept).
+     if (env.mechDeathMove !== false) {
+       try {
+         return plan({ ...env, mechDeathMove: false });
+-      } catch {
++      } catch (error) {
++    if (error instanceof PreparedSolverDone) throw error;
+         // as with the move rules off too, below
+       }
+     }
+     if (env.mechMoveRules !== false) {
+       try {
+         return plan({ ...env, mechMoveRules: false, mechDeathMove: false });
+-      } catch {
++      } catch (error) {
++    if (error instanceof PreparedSolverDone) throw error;
+         // as with both off, below
+       }
+     }
+@@ -3340,6 +3346,11 @@ function planTurn(env: DecisionEnv): Decision | null {
+     });
+   const best = solved.plans[0];
+   if (!best) return planCombatPerCard(env);
++  if (currentDecisionBudget() && solved.timedOut && best.outcome.dies) {
++    // A deadline is no proof that every legal continuation dies. Keep the existing per-card/SL gates.
++    currentDecisionBudget()!.useFallback("partial_solver_existing_card_layer_no_death_proof");
++    return planCombatPerCard(env);
++  }
+ 
+   const endNow = solved.plans.find((plan) => plan.steps.length === 0);
+   const modSaysLethal = bool(combat["end_turn_will_kill_player"]);
+@@ -3760,8 +3771,8 @@ function planTurn(env: DecisionEnv): Decision | null {
+   const costsOn = potionCostOptions.enabled && potionsAll.length > 0;
+   // The SL retry compute memo (src/sim/compute-memo.ts): a retried fight's rollouts and B2 runs on a board an earlier
+   // attempt planned come back from it, the same numbers; any other fight has none.
+-  const computeMemo: ComputeMemo | null = env.sl ? computeMemoFor(`${String(state.raw["run_id"] ?? "")}:${fightKey(state)}`) : null;
+-  if (!env.sl) dropComputeMemo();
++  const computeMemo: ComputeMemo | null = env.sl || currentDecisionBudget() ? computeMemoFor(`${String(state.raw["run_id"] ?? "")}:${fightKey(state)}`) : null;
++  if (!env.sl && !currentDecisionBudget()) dropComputeMemo();
+   const noPotionBase = costsOn && kind !== "boss" && allDie === null ? options.find((plan) => !drinksPotion(plan)) : undefined;
+   const noPotionCopy: Plan | undefined = noPotionBase ? { ...noPotionBase } : undefined;
+   const runRollout = (escapes: boolean): LiveRollout | null =>
+@@ -3880,7 +3891,7 @@ function planTurn(env: DecisionEnv): Decision | null {
+         : { available: false, reason: "no draw/discard piles in the state", ms: 0 }
+       : null;
+   if (requiredBossComputation && bossSim) env.screenMemory.bossEvaluationRecord = simLog(bossSim, () => null);
+-  if (requiredBossComputation && bossSim?.completion?.status !== "degraded" && (!bossSim?.available || bossSim.run.timedOut || (bossSim.run.samples !== bossSim.run.requested && !(bossSim.completion?.status === "complete_adaptive" && completeAdaptiveLines(bossSim.run))))) {
++  if (requiredBossComputation && (!currentDecisionBudget() || bossSim?.completion?.status === "pending") && bossSim?.completion?.status !== "degraded" && (!bossSim?.available || bossSim.run.timedOut || (bossSim.run.samples !== bossSim.run.requested && !(bossSim.completion?.status === "complete_adaptive" && completeAdaptiveLines(bossSim.run))))) {
+     env.screenMemory.bossEvaluationWait = `required boss evaluation pending: ${bossSim && !bossSim.available ? bossSim.reason : "complete paired samples unavailable"}`;
+     return null;
+   }
+@@ -4747,9 +4758,9 @@ export function runRandomPotions(sources: PotionMcSource[], solver: SolverInput
+   const out: PotionMc[] = [];
+   let spent = 0;
+   // SL_RETRY_COMPUTE: a retried fight's budget and samples (potionMcOptions' otherwise).
+-  const total = opts.budgetMs ?? potionMcOptions.budgetMs;
++  const total = Math.min(opts.budgetMs ?? potionMcOptions.budgetMs, currentDecisionBudget()?.remaining() ?? Infinity);
+   sources.forEach((source, index) => {
+-    const budget = Math.max(0, (total - spent) / (sources.length - index));
++    const budget = Math.max(0, Math.min((total - spent) / (sources.length - index), currentDecisionBudget()?.remaining() ?? Infinity));
+     const mc = opts.samples !== undefined ? runPotionMc(dry, source, dryBest, seedOf(`${boardKey}:${source.potionId}:${source.slot}`), budget, opts.samples) : runPotionMc(dry, source, dryBest, seedOf(`${boardKey}:${source.potionId}:${source.slot}`), budget);
+     spent += mc.ms;
+     out.push(mc);
+diff --git a/agent/src/reflex/jev/client.ts b/agent/src/reflex/jev/client.ts
+index cea7f47c3..b693f6b32 100644
+--- a/agent/src/reflex/jev/client.ts
++++ b/agent/src/reflex/jev/client.ts
+@@ -1,3 +1,4 @@
++import { currentDecisionBudget, withinDecisionBudget, DecisionBudgetExpired } from "../../core/decision-budget.js";
+ /**
+  * Thin wrapper around `@typesafe-ai/sdk` (PLAN.md §2.2).
+  *
+@@ -127,13 +128,14 @@ export async function withJevRetry<T>(fn: () => Promise<T>, options: JevRetryOpt
+   const delays = options.delaysMs ?? JEV_RETRY_DELAYS_MS;
+   const sleep = options.sleep ?? ((ms: number) => new Promise<void>((resolve) => setTimeout(resolve, ms)));
+   for (let attempt = 0; ; attempt += 1) {
++    if (currentDecisionBudget()?.remaining() === 0) throw new DecisionBudgetExpired("Jev_retry");
+     try {
+       return await fn();
+     } catch (error) {
+       const delayMs = delays[attempt];
+       if (delayMs === undefined || !isTransientJevError(error)) throw error;
+       options.onRetry?.({ attempt: attempt + 1, of: delays.length, delayMs, error: classifyJevError(error) });
+-      await sleep(delayMs);
++      await withinDecisionBudget("Jev_retry_wait", () => sleep(delayMs));
+     }
+   }
+ }
+@@ -221,6 +223,11 @@ export class JevClient {
+    * alter what we send (and the exact request body is what gets written to the decision log).
+    */
+   async ask(state: unknown, questions: QuestionSet, timeoutMs?: number): Promise<JevAskResult> {
++    const pace = currentDecisionBudget();
++    return withinDecisionBudget("Jev", (signal) => this.askBounded(state, questions, pace ? Math.max(1, pace.remaining(timeoutMs)) : timeoutMs, signal));
++  }
++
++  private async askBounded(state: unknown, questions: QuestionSet, timeoutMs?: number, signal?: AbortSignal): Promise<JevAskResult> {
+     interface RawResult {
+       answers?: unknown;
+       model?: string;
+@@ -230,12 +237,12 @@ export class JevClient {
+     // not both await the parsed result and read the body, so everything comes from this one promise.
+     const call = this.client.systemOne.bind(this.client) as unknown as (
+       request: { model?: string; state: unknown; questions: QuestionSet },
+-      options?: { timeout?: number },
++      options?: { timeout?: number; signal?: AbortSignal },
+     ) => { withResponse(): Promise<{ data: RawResult; requestId?: string }> };
+ 
+     const started = Date.now();
+     const { data: result, requestId } = await this.call(() =>
+-      call({ model: this.model, state, questions }, timeoutMs === undefined ? {} : { timeout: timeoutMs }).withResponse(),
++      call({ model: this.model, state, questions }, { ...(timeoutMs === undefined ? {} : { timeout: timeoutMs }), ...(signal ? { signal } : {}) }).withResponse(),
+     );
+     const usage = readTokens(result.usage);
+     return {
+diff --git a/agent/src/reflex/pace-solver-cache.ts b/agent/src/reflex/pace-solver-cache.ts
+new file mode 100644
+index 000000000..f4ca05b04
+--- /dev/null
++++ b/agent/src/reflex/pace-solver-cache.ts
+@@ -0,0 +1,44 @@
++/** Same-process, exact-input candidate reuse. Never assumes a hidden next hand or bypasses dispatch gates. */
++import { AsyncLocalStorage } from "node:async_hooks";
++import { deserialize, serialize } from "node:v8";
++import { memoKey } from "../sim/compute-memo.js";
++import { currentDecisionBudget } from "../core/decision-budget.js";
++import type { SolverInput, SolveResult } from "./turn-solver.js";
++
++let scope = "";
++const entries = new Map<string, Buffer>();
++const MAX_BYTES = 16 * 1024 * 1024;
++let storedBytes = 0;
++const preparing = new AsyncLocalStorage<boolean>();
++export class PreparedSolverDone extends Error {
++  constructor(readonly result: SolveResult, readonly reused: boolean) { super("observed candidate preparation complete"); }
++}
++export function setPaceSolverScope(value: string): void {
++  if (scope !== value) { scope = value; entries.clear(); storedBytes = 0; }
++}
++function keyOf(input: SolverInput): string | null {
++  try {
++    const { deadline: _deadline, deadlineNow: _clock, ...semantic } = input;
++    return memoKey("human-pace-solver-v1", { scope, input: semantic });
++  } catch { return null; }
++}
++export function preparingCandidates<T>(work: () => T): T { return preparing.run(true, work); }
++export function budgetedSolve(input: SolverInput, compute: () => SolveResult, onReused?: (result: SolveResult) => void): SolveResult {
++  if (!currentDecisionBudget()) return compute();
++  const key = keyOf(input), stored = key ? entries.get(key) : undefined;
++  const result: SolveResult = stored ? deserialize(stored) : compute();
++  if (stored) onReused?.(result);
++  if (key && !stored) {
++    const bytes = serialize(result);
++    if (bytes.length <= MAX_BYTES) {
++      while (entries.size && (entries.size >= 16 || storedBytes + bytes.length > MAX_BYTES)) {
++        const oldest = entries.keys().next().value!;
++        storedBytes -= entries.get(oldest)!.length; entries.delete(oldest);
++      }
++      entries.set(key, bytes); storedBytes += bytes.length;
++    }
++  }
++  if (preparing.getStore()) throw new PreparedSolverDone(result, !!stored);
++  if (stored) currentDecisionBudget()!.stages.push({ stage: "exact_observed_solver_cache", budget_ms: 0, actual_ms: 0, timed_out: false });
++  return result;
++}
+diff --git a/agent/src/reflex/rollout-live.ts b/agent/src/reflex/rollout-live.ts
+index 50b5fb892..b5cc616aa 100644
+--- a/agent/src/reflex/rollout-live.ts
++++ b/agent/src/reflex/rollout-live.ts
+@@ -1,3 +1,4 @@
++import { currentDecisionBudget } from "../core/decision-budget.js";
+ /**
+  * The 5-turn rollout (rollout.ts) on the live board, as FACTS for Jev's combat question (combat-plan.ts).
+  *
+@@ -893,7 +894,7 @@ export function liveRollout(args: LiveRolloutArgs): LiveRollout {
+     const board = boardRolloutInput(state, knowledge, args.solver, meta.asc);
+     const model = args.model !== undefined ? args.model : loadFightValueModel();
+     const gates = args.gates !== undefined ? args.gates : loadFightValueGates();
+-    const budgetMs = Math.max(0, (args.budgetMs ?? rolloutLiveOptions.budgetMs) - ROLLOUT_MARGIN_MS - (args.spentMs ?? 0) - elapsed());
++    const budgetMs = Math.max(0, Math.min(args.budgetMs ?? rolloutLiveOptions.budgetMs, currentDecisionBudget()?.remaining() ?? Infinity) - ROLLOUT_MARGIN_MS - (args.spentMs ?? 0) - elapsed());
+     const { handBase, ...boardInput } = board;
+     const input: RolloutInput = {
+       ...boardInput,
+@@ -999,7 +1000,7 @@ function rolloutRefs(input: RolloutInput): Plan[] {
+ function rolloutMemoKey(input: RolloutInput): string | null {
+   try {
+     const { now: _now, budgetMs: _budget, ...options } = input.options ?? {};
+-    return memoKey("rollout", { ...input, model: identityToken(input.model), gates: identityToken(input.gates), mm: identityToken(input.mm), options });
++    return memoKey(currentDecisionBudget() ? "human-pace-rollout-v1" : "rollout", { ...input, model: identityToken(input.model), gates: identityToken(input.gates), mm: identityToken(input.mm), options });
+   } catch {
+     return null;
+   }
+@@ -1015,7 +1016,7 @@ interface StoredRollout {
+ function recallRollout(memo: ComputeMemo, key: string, input: RolloutInput, budgetMs: number): RolloutResult | null {
+   try {
+     const hit = memo.get<Omit<RolloutResult, "lines"> & { lines: (Omit<LineEstimate, "plan"> & { plan: number })[] }, StoredRollout>(key);
+-    if (!hit || budgetMs < hit.meta.needMs) return null;
++    if (!hit || !currentDecisionBudget() && budgetMs < hit.meta.needMs) return null;
+     const refs = rolloutRefs(input);
+     if (hit.value.lines.some((line) => refs[line.plan] === undefined)) return null;
+     memo.took();
+@@ -1028,14 +1029,14 @@ function recallRollout(memo: ComputeMemo, key: string, input: RolloutInput, budg
+ /** Keeps a result no clock cut (nothing degraded), its lines' plans by index into rolloutRefs. */
+ function storeRollout(memo: ComputeMemo, key: string, input: RolloutInput, result: RolloutResult): void {
+   try {
+-    if (result.degraded.length > 0 || result.budgetNeedMs === undefined) return;
++    if (!currentDecisionBudget() && (result.degraded.length > 0 || result.budgetNeedMs === undefined)) return;
+     const refs = rolloutRefs(input);
+     const index = new Map<Plan, number>();
+     refs.forEach((plan, i) => {
+       if (!index.has(plan)) index.set(plan, i);
+     });
+     if (result.lines.some((line) => !index.has(line.plan))) return;
+-    memo.set<StoredRollout>(key, { ...result, lines: result.lines.map((line) => ({ ...line, plan: index.get(line.plan)! })) }, { needMs: result.budgetNeedMs, ms: result.elapsedMs });
++    memo.set<StoredRollout>(key, { ...result, lines: result.lines.map((line) => ({ ...line, plan: index.get(line.plan)! })) }, { needMs: result.budgetNeedMs ?? 0, ms: result.elapsedMs });
+   } catch {
+     // not kept
+   }
+diff --git a/agent/src/reflex/turn-solver.ts b/agent/src/reflex/turn-solver.ts
+index c019f31a4..35a0ad802 100644
+--- a/agent/src/reflex/turn-solver.ts
++++ b/agent/src/reflex/turn-solver.ts
+@@ -1,3 +1,5 @@
++import { budgetedSolve } from "./pace-solver-cache.js";
++import { currentDecisionBudget } from "../core/decision-budget.js";
+ /**
+  * Turn-level combat search: every legal order of the cards in hand (energy permitting), simulated
+  * to the end of the turn, then scored. This replaces the single-card lookahead that missed a
+@@ -4134,6 +4136,11 @@ export function replaySteps(input: SolverInput, steps: Step[]): Plan | null {
+ 
+ /** Returns every distinct end-of-turn outcome's best plan, best first. */
+ export function solveTurn(input: SolverInput): SolveResult {
++  return budgetedSolve(input, () => solveTurnCurrent(input), (result) => solveTap.onSolve?.(input, result));
++}
++
++function solveTurnCurrent(input: SolverInput): SolveResult {
++  const pace = currentDecisionBudget();
+   const maxNodes = input.maxNodes ?? 60_000;
+   const weights = weightsFor(input);
+   const root = rootSim(input, weights);
+@@ -4188,7 +4195,8 @@ export function solveTurn(input: SolverInput): SolveResult {
+       truncated = true;
+       return;
+     }
+-    if (input.deadline !== undefined && nodes % 64 === 0 && (input.deadlineNow ?? Date.now)() > input.deadline) {
++    if ((nodes === 1 || nodes % 16 === 0) && pace?.remaining() === 0
++        || nodes % 64 === 0 && input.deadline !== undefined && (input.deadlineNow ?? Date.now)() > input.deadline) {
+       truncated = true;
+       timedOut = true;
+       return;
+diff --git a/agent/src/sim/adaptive-decks.ts b/agent/src/sim/adaptive-decks.ts
+index 3dc4a9204..73a962006 100644
+--- a/agent/src/sim/adaptive-decks.ts
++++ b/agent/src/sim/adaptive-decks.ts
+@@ -1,4 +1,5 @@
+ /** Execute B3 absolute ranges while retaining all candidate prefixes and shared-deck identities. */
++import { currentDecisionBudget } from "../core/decision-budget.js";
+ import { AdaptiveSampler } from "./adaptive-sampler.js";
+ import type { DeckRunRequest, DeckRunResult, DeckSimRunner } from "./build-sim-pool.js";
+ import type { FightSampleResult } from "./boss-sim.js";
+@@ -12,16 +13,25 @@ export async function runAdaptiveDecks(runner: DeckSimRunner, request: DeckRunRe
+     { lane: "b3", requested: request.samples, allowS });
+   const outcomes: DeckRunResult["outcomes"] = request.decks.map(() => request.orders.map(() => new Array<FightSampleResult | undefined>(request.samples)));
+   let workers = 0, elapsedMs = 0, done = 0;
++  const budgeted = currentDecisionBudget() !== undefined;
++  const now = request.now ?? (() => performance.now()), began = now();
++  let cut = false;
+   let diagnostics: DeckRunResult["diagnostics"];
+   for (let next = sampler.next(); next; next = sampler.next()) {
++    const left = request.deadlineMs === undefined ? Infinity : Math.max(0, request.deadlineMs - (now() - began));
++    if (budgeted && left <= 0) { cut = true; break; }
+     const activeDecks = [...new Set(next.active.flatMap((key) => [...keys.get(key)!]))];
+     const range = { from: next.from, to: next.to };
+-    const round = await runner.run({ ...request, range, activeDecks,
++    const round = await runner.run({ ...request, range, activeDecks, ...(budgeted ? { deadlineMs: left } : {}),
+       onProgress: (completed) => request.onProgress?.(done + completed, request.samples * new Set([...keys.values()].map((ids) => ids.join(","))).size) });
+-    if (round.timedOut || round.complete.length !== range.to - range.from || round.complete.some((id, i) => id !== range.from + i)) {
++    if (!budgeted && (round.timedOut || round.complete.length !== range.to - range.from || round.complete.some((id, i) => id !== range.from + i))) {
+       throw new Error("adaptive B3 round incomplete");
+     }
+-    for (const deck of activeDecks) for (let order = 0; order < request.orders.length; order++) for (const id of round.complete) {
++    const common = new Set(round.complete);
++    let end = range.from;
++    while (end < range.to && common.has(end)) end++;
++    const completed = budgeted ? Array.from({ length: end - range.from }, (_, i) => range.from + i) : round.complete;
++    for (const deck of activeDecks) for (let order = 0; order < request.orders.length; order++) for (const id of completed) {
+       const stripe = request.stripes?.[deck];
+       if (stripe && id % stripe.of !== stripe.at) continue;
+       const value = round.outcomes[deck]?.[order]?.[id];
+@@ -41,15 +51,17 @@ export async function runAdaptiveDecks(runner: DeckSimRunner, request: DeckRunRe
+         chunksCompleted: diagnostics.chunksCompleted + value.chunksCompleted,
+         outcomesCompleted: diagnostics.outcomesCompleted + value.outcomesCompleted } : { ...value };
+     }
+-    const n = range.to;
+-    sampler.observe(next.active.map((key) => {
++    const n = budgeted ? end : range.to;
++    const prefixes = next.active.map((key) => {
+       const ids = keys.get(key)!;
+       return { key, samples: Array.from({ length: n }, (_, i) => outcomes[ids[i % ids.length]!]![0]![i]!) };
+-    }));
++    });
++    if (budgeted && (round.timedOut || end < range.to)) { sampler.observePartial(prefixes, n); cut = true; break; }
++    sampler.observe(prefixes);
+   }
+-  const adaptive = sampler.result(), counts = new Map(adaptive.candidates.map((candidate) => [candidate.key, candidate]));
++  const adaptive = sampler.result(budgeted), counts = new Map(adaptive.candidates.map((candidate) => [candidate.key, candidate]));
+   const n = counts.get("@current")!.samples;
+-  const run: DeckRunResult = { outcomes, complete: Array.from({ length: n }, (_, i) => i), timedOut: false, workers, elapsedMs,
++  const run: DeckRunResult = { outcomes, complete: Array.from({ length: n }, (_, i) => i), timedOut: cut, workers, elapsedMs,
+     ...(diagnostics ? { diagnostics } : {}) };
+   return { run, adaptive, counts };
+ }
+diff --git a/agent/src/sim/adaptive-sampler.ts b/agent/src/sim/adaptive-sampler.ts
+index e6485b6ed..f95812d7d 100644
+--- a/agent/src/sim/adaptive-sampler.ts
++++ b/agent/src/sim/adaptive-sampler.ts
+@@ -80,16 +80,30 @@ export class AdaptiveSampler {
+     if (this.finished) for (const key of this.active) this.used.get(key)!.stop = this.n === this.options.requested ? "max" : "leader";
+   }
+ 
+-  result() {
+-    if (!this.finished || !this.final) throw new Error("adaptive computation not complete");
++  /** A deadline may stop within a batch. Keep only its actual common prefix; never eliminate from it. */
++  observePartial(prefixes: readonly AdaptiveCandidate[], to: number): void {
++    const request = this.next();
++    if (!request || !Number.isSafeInteger(to) || to < request.from || to > request.to) throw new Error("invalid budget prefix");
++    for (const key of request.active) {
++      const row = prefixes.find((p) => p.key === key);
++      if (!row || row.samples.length !== to) throw new Error("missing budget prefix");
++      const used = this.used.get(key)!;
++      if (to > used.samples) { used.samples = to; used.rounds++; }
++    }
++    this.n = to;
++  }
++
++  result(allowPartial = false) {
++    if ((!this.finished || !this.final) && !allowPartial) throw new Error("adaptive computation not complete");
+     const work = new Map<string, number>();
+     for (const candidate of this.candidates) work.set(candidate.workGroup ?? candidate.key,
+       Math.max(work.get(candidate.workGroup ?? candidate.key) ?? 0, this.used.get(candidate.key)!.samples));
+     const full = work.size * this.options.requested, actual = [...work.values()].reduce((a, b) => a + b, 0);
+-    return { schema: "sim-adaptive-v1", mode: "on", status: "complete_adaptive", lane: this.options.lane,
++    return { schema: "sim-adaptive-v1", mode: "on", status: this.finished ? "complete_adaptive" : "partial", lane: this.options.lane,
+       rule: { ...ADAPTIVE_RULE, first: this.options.first ?? (this.options.lane === "b3" ? ADAPTIVE_RULE.b3First : ADAPTIVE_RULE.b2First),
+         zElim: this.options.zElim ?? ADAPTIVE_RULE.zElim, requested: this.options.requested },
+-      candidates: this.candidates.map((candidate) => ({ key: candidate.key, ...this.used.get(candidate.key)!, baseline: candidate.baseline === true })),
++      candidates: this.candidates.map((candidate) => ({ key: candidate.key, ...this.used.get(candidate.key)!,
++        ...(!this.finished && this.active.has(candidate.key) ? { stop: "budget" } : {}), baseline: candidate.baseline === true })),
+       final: this.final, rounds: this.history, evaluable: this.evaluable,
+       work: { full, actual, savedFraction: 1 - actual / full, unit: "unique-option-sample-equivalents" },
+       limits: "Actual prefixes only. All candidates remain available with their own sample count. Full-run agreement is an independent admission result, not observed during an early-stopped question." };
+diff --git a/agent/src/sim/boss-lines.ts b/agent/src/sim/boss-lines.ts
+index e3bd04c2c..52310e3d9 100644
+--- a/agent/src/sim/boss-lines.ts
++++ b/agent/src/sim/boss-lines.ts
+@@ -1,3 +1,5 @@
++import { currentDecisionBudget, shadowBudgetAvailable } from "../core/decision-budget.js";
++import { binomialInterval } from "./quantitative-stats.js";
+ /**
+  * B2 (Roy 2026-09-30, docs/boss-sim.md §11): in a boss fight, every line Jev is shown (plan lines, potion lines, the
+  * random potions' "drink now" lines) is played to the fight's end by the whole-fight simulator (boss-sim.ts), all on the
+@@ -314,6 +316,10 @@ export class BossLinesPool {
+   run(input: RolloutInput, pairs: LinesPair[], samples: number, seed: number, deadlineMs: number, now: () => number = () => performance.now(), onProgress?: SimProgress, work?: PairWork): PairsRun {
+     const started = now();
+     const schedule = sampleSchedule(samples, pairs.length, work?.range, work?.activePairs);
++    if (currentDecisionBudget() && deadlineMs <= 0) return {
++      outcomes: pairs.map(() => new Array<FightSampleResult | undefined>(samples)), complete: [], timedOut: true,
++      elapsedMs: Math.round(now() - started), workers: 0, done: 0,
++    };
+     if (!schedule.indices.length || schedule.from === schedule.to) return {
+       outcomes: pairs.map(() => new Array<FightSampleResult | undefined>(samples)), complete: [], timedOut: false,
+       elapsedMs: Math.round(now() - started), workers: 0, done: 0,
+@@ -323,7 +329,7 @@ export class BossLinesPool {
+     Atomics.store(this.flag, 1, job);
+     const tasks: [number, number, number][] = [];
+     for (let i = schedule.from; i < schedule.to; i += 1) for (const pair of schedule.indices) tasks.push([pair, i, sampleSeed(seed, i)]);
+-    const chunk = Number.isFinite(deadlineMs) ? Math.max(1, Math.ceil(tasks.length / (workers.length * 8))) : 8;
++    const chunk = currentDecisionBudget() ? 1 : Number.isFinite(deadlineMs) ? Math.max(1, Math.ceil(tasks.length / (workers.length * 8))) : 8;
+     const chunks: [number, number, number][][] = [];
+     for (let k = 0; k < tasks.length; k += chunk) chunks.push(tasks.slice(k, k + chunk));
+     const outcomes: (FightSampleResult | undefined)[][] = pairs.map(() => new Array<FightSampleResult | undefined>(samples));
+@@ -380,6 +386,7 @@ export class BossLinesPool {
+     // Done or given up: the workers skip what is left of this job (they check the job slot between samples).
+     Atomics.store(this.flag, 1, 0);
+     for (const w of workers) w.worker.postMessage({ type: "drop", job } satisfies LinesWorkerRequest);
++    if (timedOut && currentDecisionBudget()) void this.close();
+     if (error !== null) {
+       const message = `boss-lines worker: ${error}`;
+       throw failure ? new ContinuationSampleError(message, failure) : new Error(message);
+@@ -504,32 +511,42 @@ export function runLines(
+   let ownSamples: number[] | null = null;
+   let run: PairsRun;
+   if (opts.adaptive?.mode === "on") {
+-    if (Number.isFinite(opts.deadlineMs)) throw new Error("adaptive B2 requires the complete-computation path");
++    const budgeted = currentDecisionBudget() !== undefined;
++    if (Number.isFinite(opts.deadlineMs) && !budgeted) throw new Error("adaptive B2 requires the complete-computation path");
+     const began = now();
+     const sampler = new AdaptiveSampler(lines.map((_, i) => ({ key: `line:${i}` })),
+       { lane: "b2", requested: opts.samples, allowS: opts.adaptive.allowS });
+     const outcomes: PairsRun["outcomes"] = pairs.map(() => new Array<FightSampleResult | undefined>(opts.samples));
+-    let done = 0, workers = 0;
++    let done = 0, workers = 0, cut = false;
+     for (let request = sampler.next(); request; request = sampler.next()) {
++      const left = opts.deadlineMs - (now() - began);
++      if (budgeted && left <= 0) { cut = true; break; }
+       const indices = request.active.map((key) => Number(key.slice("line:".length)));
+       const activePairs = indices.flatMap((i) => Array.from({ length: per }, (_, order) => i * per + order));
+       const work: PairWork = { range: { from: request.from, to: request.to }, activePairs };
+       const progress: SimProgress = (completed) => opts.onProgress?.(done + completed, opts.samples * pairs.length);
+-      const round = opts.serial ? runPairsSerial(slim, pairs, opts.samples, opts.seed, Infinity, now, progress, work)
+-        : bossLinesPool().run(slim, pairs, opts.samples, opts.seed, Infinity, now, progress, work);
+-      if (round.timedOut || round.complete.length !== request.to - request.from
+-          || round.complete.some((sample, i) => sample !== request!.from + i)) throw new Error("adaptive B2 round incomplete");
+-      for (const pair of activePairs) for (const sample of round.complete) outcomes[pair]![sample] = round.outcomes[pair]![sample]!;
++      const round = opts.serial ? runPairsSerial(slim, pairs, opts.samples, opts.seed, budgeted ? left : Infinity, now, progress, work)
++        : bossLinesPool().run(slim, pairs, opts.samples, opts.seed, budgeted ? left : Infinity, now, progress, work);
++      if (!budgeted && (round.timedOut || round.complete.length !== request.to - request.from
++          || round.complete.some((sample, i) => sample !== request!.from + i))) throw new Error("adaptive B2 round incomplete");
++      let end = request.from;
++      const returned = new Set(round.complete);
++      while (end < request.to && returned.has(end)) end++;
++      const complete = budgeted ? Array.from({ length: end - request.from }, (_, i) => request!.from + i) : round.complete;
++      for (const pair of activePairs) for (const sample of complete) outcomes[pair]![sample] = round.outcomes[pair]![sample]!;
+       done += round.done;
+       workers = Math.max(workers, round.workers);
+-      sampler.observe(indices.map((i) => ({ key: `line:${i}`,
+-        samples: outcomes[i * per]!.slice(0, request!.to) as FightSampleResult[],
+-        orders: Array.from({ length: per }, (_, k) => outcomes[i * per + k]!.slice(0, request!.to) as FightSampleResult[]) })));
++      const to = budgeted ? end : request.to;
++      const prefixes = indices.map((i) => ({ key: `line:${i}`,
++        samples: outcomes[i * per]!.slice(0, to) as FightSampleResult[],
++        orders: Array.from({ length: per }, (_, k) => outcomes[i * per + k]!.slice(0, to) as FightSampleResult[]) }));
++      if (budgeted && (round.timedOut || end < request.to)) { sampler.observePartial(prefixes, to); cut = true; break; }
++      sampler.observe(prefixes);
+     }
+-    actualAdaptive = sampler.result();
++    actualAdaptive = sampler.result(budgeted);
+     ownSamples = actualAdaptive.candidates.map((candidate) => candidate.samples);
+     const common = Math.min(...ownSamples);
+-    run = { outcomes, complete: Array.from({ length: common }, (_, i) => i), timedOut: false,
++    run = { outcomes, complete: Array.from({ length: common }, (_, i) => i), timedOut: cut,
+       elapsedMs: Math.round(now() - began), workers, done };
+     actualAdaptive.work.full *= per;
+     actualAdaptive.work.actual *= per;
+@@ -546,7 +563,7 @@ export function runLines(
+     }
+     return pick!;
+   });
+-  const adaptive = !actualAdaptive && opts.adaptive && !run.timedOut && run.complete.length === opts.samples ? safeAdaptiveShadow(
++  const adaptive = !actualAdaptive && opts.adaptive && !run.timedOut && run.complete.length === opts.samples && shadowBudgetAvailable("C2_sampling_shadow") ? safeAdaptiveShadow(
+     out.map((line, i) => ({ key: `line:${i}`, samples: line.outcomes,
+       orders: Array.from({ length: per }, (_, k) => run.complete.map((id) => run.outcomes[i * per + k]![id]!)) })),
+     { lane: "b2", requested: opts.samples, allowS: opts.adaptive.allowS }) : null;
+@@ -556,7 +573,7 @@ export function runLines(
+     adaptive.work.unit = "fight-sample-outcomes";
+   }
+   let productionComparison: JsonValue | undefined;
+-  if (adaptive && "candidates" in adaptive) {
++  if (adaptive && "candidates" in adaptive && shadowBudgetAvailable("C2_ranking_counterfactual")) {
+     try {
+       const prefix = adaptive.candidates.map((candidate, li) => {
+         let pick: BossSimLineResult | null = null;
+@@ -648,7 +665,7 @@ function modeOf(counts: Record<number, number>): number | null {
+ /** One line's whole-fight fact, e.g. "win 62% (vs the best line −3 ± 2 pts), HP lost when won median 18, ~6 turns to win; ...; 600 samples". */
+ export function lineSimText(line: BossSimLineResult, calibrated: number, vs: LineComparison | null, run: Pick<LinesResult, "samples" | "requested" | "timedOut" | "adaptive">, turnNow: number, flags: { best: boolean; winTied: boolean; lowTrust: string | null }): string {
+   if (line.sequence) return `低可信连战模拟：F48→F49连续通关 ${pct(line.winProb)}%（原始、未校准）；胜F48 ${line.sequence.firstWins}/${line.samples}，其中死F49 ${line.sequence.firstWinSecondDeaths}、未完成F49 ${line.sequence.secondUnfinished}；每条样本传递实际剩余HP/药水，${line.samples}样本；不是必死或SL判据。`;
+-  const vsText = vs === null ? (flags.lowTrust ? "the simulation's best line" : "the best line") : `vs the ${flags.lowTrust ? "simulation's " : ""}best line ${pts(vs.winDiff)} ± ${Math.max(1, Math.round(vs.winSe * 100))} pts${flags.winTied ? ", tied on win rate" : ""}`;
++  const vsText = vs === null ? (flags.lowTrust ? "the simulation's best line" : "the best line") : `vs the ${flags.lowTrust ? "simulation's " : ""}best line ${pts(vs.winDiff)}${currentDecisionBudget() && line.samples < 2 ? ", uncertainty unknown (n<2)" : ` ± ${Math.max(1, Math.round(vs.winSe * 100))} pts`}${flags.winTied ? ", tied on win rate" : ""}`;
+   const won = line.hpLossWon ? `HP lost when won median ${Math.round(line.hpLossWon.median)}` : "no winning sample";
+   const turns = line.turnsWon ? `, ~${Math.round(line.turnsWon.median)} turn${Math.round(line.turnsWon.median) === 1 ? "" : "s"} to win (this one included)` : "";
+   const death = modeOf(line.deathTurns);
+@@ -796,11 +813,12 @@ export function bossLineSim(args: BossLineSimArgs): BossLineSim {
+   let attempt: SimAttempt | undefined;
+   let wait: ReturnType<SimWait["start"]> | undefined;
+   let sampled = 0;
+-  const samples = args.samples ?? bossLinesOptions.samples;
++  const pace = currentDecisionBudget();
++  let samples = args.samples ?? bossLinesOptions.samples;
+   const jointScope = f48JointScope(args.state);
+-  const unavailable = (reason: string): BossLineSim => ({ available: false, reason, ms: ms(),
++  const unavailable = (reason: string, budgetStop = false): BossLineSim => ({ available: false, reason, ms: ms(),
+     ...(jointScope ? { f48JointShadow: f48JointShadow(jointScope, [], undefined, { reason }) } : {}),
+-    ...(attempt ? { completion: attempt.finish(sampled, samples, reason) } : {}) });
++    ...(attempt ? { completion: budgetStop ? attempt.finishBudget(sampled, samples, true) : attempt.finish(sampled, samples, reason) } : {}) });
+   try {
+     if (args.lines.length === 0) return unavailable("no line");
+     // The turn's budget over its questions (a re-plan after a draw asks again).
+@@ -809,15 +827,17 @@ export function bossLineSim(args: BossLineSimArgs): BossLineSim {
+     const turnKey = `${fight}:${args.turn ?? "?"}`;
+     const memo = args.memory.bossLines?.turn === turnKey ? args.memory.bossLines : { turn: turnKey, spentMs: 0 };
+     let left = required ? Infinity : Math.min(bossLinesOptions.deadlineMs, bossLinesOptions.turnBudgetMs - memo.spentMs);
+-    if (left < bossLinesOptions.minMs) return unavailable(`this turn's ${Math.round(bossLinesOptions.turnBudgetMs / 1000)} s for the simulation is spent`);
++    if (pace) left = Math.max(0, pace.remaining() - 1000);
++    if (!pace && left < bossLinesOptions.minMs) return unavailable(`this turn's ${Math.round(bossLinesOptions.turnBudgetMs / 1000)} s for the simulation is spent`);
+     const input = bossSimInput(args);
+     const boss = bossKeyOf(input.enemies.map((e) => e.id));
+     const lowTrust = input.continuation?.limitation ?? (boss ? bossTrustReason(boss, "b2", args.state.run?.ascension, args.state.run?.floor) : null);
++    if (pace && lowTrust) samples = Math.min(samples, 200);
+     const adaptiveMode = simAdaptivePolicy(String(args.state.run?.raw["character_id"] ?? "")).mode;
+     const configuredAdaptive = required && adaptiveMode !== "off" ? { mode: adaptiveMode, allowS: !lowTrust, rankS: sCombatRankEnabled(String(args.state.run?.raw["character_id"] ?? "")) } : undefined;
+     if (required) {
+       attempt = beginComputation(args.memory, args.state, "boss-lines", linesMemoKey(input, args.lines, samples, linesWhere() ?? "unknown", configuredAdaptive));
+-      if (attempt.degraded) left = bossLinesOptions.deadlineMs;
++      if (attempt.degraded) left = Math.min(left, bossLinesOptions.deadlineMs);
+       wait = args.simWait?.start({ run: String(args.state.raw["run_id"] ?? ""), floor: args.state.run?.floor ?? null, label: "boss-lines" });
+     }
+     const adaptive = attempt?.degraded ? undefined : configuredAdaptive;
+@@ -826,7 +846,7 @@ export function bossLineSim(args: BossLineSimArgs): BossLineSim {
+     if (memoed) run = { ...memoed, memo: { wallMs: ms() } };
+     else {
+       try {
+-        run = runLines(input, args.lines, { samples, seed: bossLinesOptions.seed, deadlineMs: left, serial: bossLinesOptions.serial, now, ...(wait ? { onProgress: wait.progress } : {}), ...(adaptive ? { adaptive } : {}) });
++        run = runLines(input, args.lines, { samples, seed: bossLinesOptions.seed, deadlineMs: pace ? Math.max(0, Math.min(left, pace.remaining() - 1000)) : left, serial: bossLinesOptions.serial, now, ...(wait ? { onProgress: wait.progress } : {}), ...(adaptive ? { adaptive } : {}) });
+       } catch (error) {
+         // A worker's error: the next question starts a new pool.
+         releaseBossLinesPool();
+@@ -835,19 +855,19 @@ export function bossLineSim(args: BossLineSimArgs): BossLineSim {
+       }
+       if (args.memo) storeLines(args.memo, input, args.lines, samples, run, adaptive);
+     }
+-    args.memory.bossLines = { turn: turnKey, spentMs: memo.spentMs + run.elapsedMs };
++    args.memory.bossLines = { turn: turnKey, spentMs: memo.spentMs + (pace && run.memo ? run.memo.wallMs : run.elapsedMs) };
+     sampled = run.samples;
+     const adaptiveComplete = completeAdaptiveLines(run);
+-    if (required && !attempt?.degraded && (run.timedOut || (run.samples !== samples && !adaptiveComplete))) return unavailable(`required paired computation incomplete: ${run.samples}/${samples}`);
++    if (required && !pace && !attempt?.degraded && (run.timedOut || (run.samples !== samples && !adaptiveComplete))) return unavailable(`required paired computation incomplete: ${run.samples}/${samples}`);
+     if (run.samples === 0) {
+       releaseBossLinesPool();
+       failed = { fight, count: failed.fight === fight ? failed.count + 1 : 1 };
+-      return unavailable(`no sample finished within ${Math.round(left / 1000)} s`);
++      return unavailable(pace ? "时间预算内无完整配对样本；估计/误差unknown，使用现有候选" : `no sample finished within ${Math.round(left / 1000)} s`, !!pace);
+     }
+-    if (attempt?.degraded && run.samples < 300) return unavailable(`不完整（故障降级，n=${run.samples}）；不足 300 次，不给数字，按原 rollout 继续`);
++    if (!pace && attempt?.degraded && run.samples < 300) return unavailable(`不完整（故障降级，n=${run.samples}）；不足 300 次，不给数字，按原 rollout 继续`);
+     failed = { fight, count: 0 };
+     const eligible = (i: number) => (args.eligible ? args.eligible(args.lines[i]!) : true);
+-    const sPolicy = sCombatRankMode(String(args.state.run?.raw["character_id"] ?? "")) === "shadow"
++    const sPolicy = shadowBudgetAvailable("b2_S_counterfactual") && sCombatRankMode(String(args.state.run?.raw["character_id"] ?? "")) === "shadow"
+       ? { lowTrust, allowPrefixes: adaptiveComplete, mode: "shadow" as const } : undefined;
+     const rank = rankLines(run.lines, BOSS_LINES_TIE_SE, eligible, wonLoss, sPolicy);
+     const dryRank = rankLines(run.lines, BOSS_LINES_TIE_SE, (i) => eligible(i) && !args.drinks(args.lines[i]!), wonLoss, sPolicy);
+@@ -855,14 +875,15 @@ export function bossLineSim(args: BossLineSimArgs): BossLineSim {
+     const start = turnNow <= 1 ? "start" : "mid";
+     const byPlan = new Map<Plan, LineSim>();
+     run.lines.forEach((line, i) => {
++      const interval = binomialInterval(line.wins, line.samples);
+       const calibrated = line.sequence ? line.winProb : calibratedWinProb(line.winProb, line.samples, start, args.state.run?.ascension ?? 0);
+       const vsBest = rank.vsBest[i] ?? null;
+       const winTied = rank.winTied[i] ?? false;
+       const reference = run.lines[rank.best >= 0 ? rank.best : 0]!;
+-      const margin = input.captureBossMargin ? summarizeBossMargin(line.outcomes, reference.outcomes, line.outcomes.map((_, at) => at), ...(adaptiveComplete ? [reference.outcomes.map((_, at) => at)] : [])) : null;
++      const margin = input.captureBossMargin && shadowBudgetAvailable("b2_margin_shadow") ? summarizeBossMargin(line.outcomes, reference.outcomes, line.outcomes.map((_, at) => at), ...(adaptiveComplete ? [reference.outcomes.map((_, at) => at)] : [])) : null;
+       byPlan.set(args.lines[i]!, { result: line, calibrated, vsBest, winTied,
+         ...(margin ? { bossMargin: { ...margin, rankingEligible: margin.rankingEligible && !lowTrust && (!sPolicy || auditSigns(line.outcomes).rankingEligible) } } : {}),
+-        text: (attempt?.degraded ? `不完整（故障降级，n=${run.samples}）；` : "") + lineSimText(line, calibrated, rank.best === i ? null : vsBest, run, turnNow, { best: rank.best === i, winTied, lowTrust }) });
++        text: (pace ? `限时${run.timedOut ? "未完整" : "完成"}；n=${line.samples}/${run.requested}，原始胜率MC95%区间${interval ? interval.map(pct).join("–") + "%" : "unknown"}（不含模型偏差）；${lowTrust ? "低可信、未完整；" : ""}${line.samples < 2 ? "误差unknown；" : "误差见±配对标准误；"}` : "") + (attempt?.degraded ? `不完整（故障降级，n=${run.samples}）；` : "") + lineSimText(line, calibrated, rank.best === i ? null : vsBest, run, turnNow, { best: rank.best === i, winTied, lowTrust }) });
+     });
+     // P3 supplies its complete anchored order; the legacy path keeps its exact original comparator.
+     const key = (i: number): [number, number, number] => (rank.winTied[i] ? [0, wonLoss(run.lines[i]!), -run.lines[i]!.winProb] : [1, -run.lines[i]!.winProb, wonLoss(run.lines[i]!)]);
+@@ -874,7 +895,7 @@ export function bossLineSim(args: BossLineSimArgs): BossLineSim {
+       ...(jointScope ? { f48JointShadow: f48JointShadow(jointScope, run.lines.map((line, i) => ({
+         key: `line:${i}`, input: args.lines[i], outcomes: line.outcomes, requested: samples, order: line.order,
+       })), input) } : {}),
+-      ...(attempt ? { completion: attempt.finish(run.samples, samples, undefined, adaptiveComplete) } : {}),
++      ...(attempt ? { completion: pace ? attempt.finishBudget(run.samples, run.requested, run.timedOut || run.samples < run.requested && !adaptiveComplete) : attempt.finish(run.samples, samples, undefined, adaptiveComplete) } : {}),
+       available: true,
+       byPlan,
+       best: lowTrust || rank.best < 0 || rank.tied.length > 0 ? null : args.lines[rank.best]!,
+@@ -925,7 +946,7 @@ function linesWhere(): string | null {
+ 
+ /** The memo key of a B2 run: everything runLines reads (the input, the lines, samples, seed, hold values, turns) and where it ran. */
+ function linesMemoKey(input: RolloutInput, lines: Plan[], samples: number, where: string, adaptive?: { allowS: boolean; mode?: "shadow" | "on"; rankS?: boolean }): string | null {
+-  return memoKey("b2", { input, lines, samples, seed: bossLinesOptions.seed, holdHp: identityToken(bossLinesOptions.holdHp ?? tableHoldHp), maxTurns: BOSS_SIM_MAX_TURNS, where, ...(adaptive ? { adaptive: { ...ADAPTIVE_RULE, ...adaptive } } : {}) });
++  return memoKey(currentDecisionBudget() ? "human-pace-b2-v1" : "b2", { input, lines, samples: currentDecisionBudget() ? null : samples, seed: bossLinesOptions.seed, holdHp: identityToken(bossLinesOptions.holdHp ?? tableHoldHp), maxTurns: BOSS_SIM_MAX_TURNS, where, ...(adaptive ? { adaptive: { ...ADAPTIVE_RULE, ...adaptive } } : {}) });
+ }
+ 
+ /** A stored run of this input that finished every sample, when `left` (this question's deadline) is at least its time; else null. */
+@@ -934,6 +955,7 @@ function recallLines(memo: ComputeMemo, input: RolloutInput, lines: Plan[], samp
+     const where = linesWhere();
+     const key = where ? linesMemoKey(input, lines, samples, where, adaptive) : null;
+     const hit = key ? memo.get<LinesResult, { elapsedMs: number }>(key) : null;
++    if (hit && currentDecisionBudget() && hit.value.samples > 0) { memo.took(); return hit.value; }
+     if (!hit || hit.value.timedOut || hit.meta.elapsedMs > left
+         || (hit.value.samples !== samples && !completeAdaptiveLines(hit.value))) return null;
+     memo.took();
+@@ -946,7 +968,7 @@ function recallLines(memo: ComputeMemo, input: RolloutInput, lines: Plan[], samp
+ /** Keeps a run that finished every sample (none cut by the deadline). */
+ function storeLines(memo: ComputeMemo, input: RolloutInput, lines: Plan[], samples: number, run: LinesResult, adaptive?: { allowS: boolean; mode?: "shadow" | "on"; rankS?: boolean }): void {
+   try {
+-    if (run.timedOut || (run.samples < samples && !completeAdaptiveLines(run)) || run.samples === 0) return;
++    if (run.samples === 0 || (!currentDecisionBudget() && (run.timedOut || (run.samples < samples && !completeAdaptiveLines(run))))) return;
+     const where = linesWhere();
+     const key = where ? linesMemoKey(input, lines, samples, where, adaptive) : null;
+     if (key) memo.set(key, run, { elapsedMs: run.elapsedMs });
+@@ -983,6 +1005,7 @@ export function simNote(sim: BossLineSim): string {
+ 
+ /** The decision log's record (log.boss_sim). */
+ export function simLog(sim: BossLineSim, keyOf: (plan: Plan) => string | null, extra: Record<string, JsonValue> = {}): Record<string, JsonValue> {
++  const budgeted = !!currentDecisionBudget() || sim.completion?.budgeted === true;
+   const completion: Record<string, JsonValue> = { ...(sim.completion ? { completion: { ...sim.completion } } : {}),
+     ...(sim.f48JointShadow ? { f48_joint_shadow: toJsonValue(sim.f48JointShadow) } : {}) };
+   if (!sim.available) return { available: false, reason: sim.reason, ms: sim.ms, ...completion,
+@@ -996,8 +1019,9 @@ export function simLog(sim: BossLineSim, keyOf: (plan: Plan) => string | null, e
+       win: Math.round(line.result.winProb * 1000) / 1000,
+       cal: Math.round(line.calibrated * 1000) / 1000,
+       d: line.vsBest ? Math.round(line.vsBest.winDiff * 1000) / 1000 : 0,
+-      se: line.vsBest ? Math.round(line.vsBest.winSe * 1000) / 1000 : 0,
+-      ...(completeAdaptiveLines(sim.run) ? { samples: line.result.samples, paired_samples: line.vsBest?.samples ?? line.result.samples } : {}),
++      se: budgeted && line.result.samples < 2 ? null : line.vsBest ? Math.round(line.vsBest.winSe * 1000) / 1000 : 0,
++      ...(budgeted ? { raw_win_mc_interval95: binomialInterval(line.result.wins, line.result.samples) } : {}),
++      ...(completeAdaptiveLines(sim.run) || budgeted ? { samples: line.result.samples, paired_samples: line.vsBest?.samples ?? line.result.samples } : {}),
+       loss: line.result.hpLoss.mean,
+       won_loss: line.result.hpLossWon?.median ?? null,
+       order: line.result.order,
+diff --git a/agent/src/sim/build-sim-facts.ts b/agent/src/sim/build-sim-facts.ts
+index 57b38c516..c4c73c9c6 100644
+--- a/agent/src/sim/build-sim-facts.ts
++++ b/agent/src/sim/build-sim-facts.ts
+@@ -1,3 +1,4 @@
++import { currentDecisionBudget, shadowBudgetAvailable, budgetUnknown } from "../core/decision-budget.js";
+ import { isAdaptiveComplete } from "./adaptive-sampler.js";
+ import { completeAdaptiveBuild } from "./build-sim.js";
+ import { beginComputation, type SimAttempt } from "./computation-failure.js";
+@@ -78,6 +79,7 @@ export function bossEvaluationPending(decision: Decision, state: GameState, reco
+   if (value["skipped"] && actBossDefeated(state)) return null;
+   const completion = asRecord(value["completion"]);
+   if (completion["status"] === "degraded") return null;
++  if (currentDecisionBudget() && ["complete_budget", "partial"].includes(String(completion["status"])) && completion["failure"] === false) return null;
+   if (completion["status"] === "complete_adaptive" && value["timed_out"] !== true
+       && isAdaptiveComplete(value["adaptive"], "b3", Number(value["requested"]), new Map([
+         ["@current", Number(asRecord(value["base"])["samples"])],
+@@ -440,9 +442,10 @@ function knownRelic(id: string): boolean {
+ 
+ /** The line of one option. */
+ function simLine(head: string, base: OptionSim, sim: OptionSim, samples: number, lowWin: boolean): string {
++  if (currentDecisionBudget() && sim.samples < 2) return `${head}限时估计${pct(sim.winCal)}，n=${sim.samples}，误差unknown；未完整`;
+   // The current deck mostly loses: the boss's HP left (0 in a won sample) still tells the options apart.
+   const left = lowWin ? `；boss 平均剩血 ${Math.round(sim.bossLeft)}${sim.diff ? `（当前牌组 ${Math.round(sim.pairedReference?.bossLeft ?? base.bossLeft)}，${signed(sim.diff.bossLeft / 100)} ± ${one(sim.diff.bossLeftSe)}）` : ""}` : "";
+-  const sampling = sim.sampling ? `；${sim.sampling.stop === "eliminated" ? "提前淘汰" : sim.sampling.stop === "leader" ? "领先停止" : "达到上限"}，n=${sim.samples}；差值对同前缀基准` : "";
++  const sampling = sim.sampling ? `；${sim.sampling.stop === "eliminated" ? "提前淘汰" : sim.sampling.stop === "leader" ? "领先停止" : sim.sampling.stop === "budget" ? "预算截止" : "达到上限"}，n=${sim.samples}；差值对同前缀基准` : "";
+   const tail = `赢局掉血中位 ${sim.hpLossWon ?? "—"}，约 ${sim.turns ?? "—"} 回合${left}（${sim.sampling ? sim.samples : samples} 次模拟，校准后${lowWin ? "；当前牌组胜率很低，胜率的差信息少" : ""}${sampling}）`;
+   if (!sim.diff) return `${head}不改变牌组：胜率 ${pct(base.winCal)}，${tail}`;
+   const hp = sim.hp !== base.hp ? `（进场 ${sim.hp} 血）` : "";
+@@ -452,6 +455,7 @@ function simLine(head: string, base: OptionSim, sim: OptionSim, samples: number,
+ /** A per-card line (a removal, a smith): shorter, the head is on the option. */
+ function cardLine(verb: string, name: string, sim: OptionSim, lowWin: boolean): string {
+   const left = lowWin && sim.diff ? `，boss 平均剩血 ${Math.round(sim.bossLeft)}（${signed(sim.diff.bossLeft / 100)} ± ${one(sim.diff.bossLeftSe)}）` : "";
++  if (currentDecisionBudget() && sim.samples < 2) return `${verb} ${name}：限时估计${pct(sim.winCal)}，n=${sim.samples}，误差unknown；未完整`;
+   return `${verb} ${name}：${pct(sim.winCal)}（${sim.diff ? `${signed(sim.diff.cal)} ± ${one(sim.diff.calSe * 100)}` : "±0"}），赢局掉血中位 ${sim.hpLossWon ?? "—"}${left}${sim.sampling ? `；${sim.sampling.stop === "eliminated" ? "提前淘汰" : "完成"} n=${sim.samples}，同前缀配对` : ""}`;
+ }
+ 
+@@ -525,14 +529,18 @@ export async function withBossSim(decision: Decision, env: DecisionEnv, setup: B
+   let attempt: SimAttempt | undefined;
+   let wait: ReturnType<NonNullable<DecisionEnv["simWait"]>["start"]> | undefined;
+   let sampled = 0;
+-  const requested = setup.samples ?? BUILD_SIM_SAMPLES;
++  const pace = currentDecisionBudget();
++  let requested = setup.samples ?? BUILD_SIM_SAMPLES;
+   const jointScope = f48JointScope(state);
+   const fail = (why: string, code = "simulation_error"): BossSimOutcome => {
+-    const completion = attempt?.finish(sampled, requested, code);
++    if (required && !attempt) attempt = beginComputation(env.screenMemory, state, ask.label, memoKey("b3-preparation-failure", { raw: state.raw, label: ask.label }));
++    const budgetStop = !!pace && ["zero_paired_samples", "below_minimum_samples", "incomplete_required_samples", "decision_budget_exhausted"].includes(code);
++    const completion = budgetStop ? attempt?.finishBudget(sampled, requested, true) : attempt?.finish(sampled, requested, code);
+     const global = globalBuildFailure(env, required, "current_B3_failed");
+     return {
+       decision: { ...ask, state: { ...ask.state, facts: withSimFacts(facts, attempt?.degraded
+         ? `不完整（故障降级，n=${sampled}）：${why}；本题不给模拟数字，按现有其他证据继续决策`
++        : pace ? `限时boss评估unknown（${why}）；按当前已有证据继续，不能当必死或资源结论`
+         : required ? `必需的boss评估未完成（${why}）；等待完整计算，不允许用空指标作选择`
+         : `boss 模拟没有结果（${why}）：act_boss_clock 仍是 boss 时钟的估计`, true) } },
+       record: { error: why, ms: Math.round(now() - started),
+@@ -543,6 +551,7 @@ export async function withBossSim(decision: Decision, env: DecisionEnv, setup: B
+     };
+   };
+   try {
++    if (pace?.remaining() === 0) return fail("计算预算耗尽；样本和误差unknown", "decision_budget_exhausted");
+     if (!bossId) return fail("不知道本幕 boss", "unknown_boss");
+     // Right after the boss fight boss_id is still the boss just killed (fix-queue-v4: the card reward after every act
+     // boss was simulated against it, 7PWU4CD3QCP3 F17 and 5DFX/VNKN/THR/GBBB F17; the brain quoted those deltas), and the
+@@ -568,6 +577,7 @@ export async function withBossSim(decision: Decision, env: DecisionEnv, setup: B
+     const entryHp = Math.max(1, Math.round(projected));
+     const start = syntheticBossStart(state, knowledge, bossId, entryHp, { ...(setup.db ? { db: setup.db } : {}), ...(setup.mm ? { mm: setup.mm } : {}) });
+     const continuation = doubleBossPreparation(state);
++    if (pace && (continuation || bossTrustReason(bossKey(bossId), "b3", state.run?.ascension, state.run?.floor))) requested = Math.min(requested, 200);
+     const startOpts = { ...(setup.db ? { db: setup.db } : {}), ...(setup.mm ? { mm: setup.mm } : {}) };
+     if (continuation) start.input = withDoubleBossStart(state, knowledge, start.input, continuation, startOpts);
+     const rebuild = (edit: (run: Record<string, unknown>) => void): RolloutInput => {
+@@ -590,7 +600,7 @@ export async function withBossSim(decision: Decision, env: DecisionEnv, setup: B
+       wait = env.simWait?.start({ run: str(state.raw["run_id"]), floor: state.run?.floor ?? null, label: ask.label });
+     }
+     const adaptive = required && !attempt?.degraded && adaptiveMode !== "off";
+-    const result: CompareResult = await compareOptions(setup.runner, start.input, deckOptions, { samples: setup.samples ?? BUILD_SIM_SAMPLES, seed: setup.seed ?? BUILD_SIM_SEED, deadlineMs: Math.max(0, budget), ...(setup.now ? { now: setup.now } : {}), ...(diagnosticEnabled ? { quantitative: true, diagnostics: true } : {}), ...(required && !attempt?.degraded ? { requireComplete: true } : {}), ...(wait ? { onProgress: wait.progress } : {}), ...(adaptive ? { adaptive: { mode: adaptiveMode as "shadow" | "on", allowS: !continuation && !bossTrustReason(bossKey(bossId), "b3", state.run?.ascension, state.run?.floor) } } : {}), ...(readinessMode !== "off" ? { readiness: true } : {}),
++    const result: CompareResult = await compareOptions(setup.runner, start.input, deckOptions, { samples: requested, seed: setup.seed ?? BUILD_SIM_SEED, deadlineMs: Math.max(0, budget), ...(setup.now ? { now: setup.now } : {}), ...(diagnosticEnabled ? { quantitative: true, diagnostics: true } : {}), ...(required && !attempt?.degraded ? { requireComplete: true } : {}), ...(wait ? { onProgress: wait.progress } : {}), ...(adaptive ? { adaptive: { mode: adaptiveMode as "shadow" | "on", allowS: !continuation && !bossTrustReason(bossKey(bossId), "b3", state.run?.ascension, state.run?.floor) } } : {}), ...(readinessMode !== "off" ? { readiness: true } : {}),
+       ...(jointScope ? { f48JointScope: jointScope } : {}),
+       ...(rankingMode !== "off" ? { buildRank: { lowTrust: continuation?.limitation ?? bossTrustReason(bossKey(bossId), "b3", state.run?.ascension, state.run?.floor), calibratedFloor: calibratedFloor(state.run?.ascension ?? 0), tieSe: BOSS_LINES_TIE_SE, sSort: "shadow" } } : {}) });
+     const adaptiveComplete = completeAdaptiveBuild(result);
+@@ -602,9 +612,9 @@ export async function withBossSim(decision: Decision, env: DecisionEnv, setup: B
+     // Too few samples to tell the options apart (Roy 2026-10-02): R6V3 F22 n=24 and 5DFX F27-F29 n=24 put "+11.6" style
+     // deltas in front of the brain, which quoted them. Cut short by the clock under BUILD_SIM_MIN_SHOWN (or under what was
+     // asked for, when less), no numbers, as a failed simulation.
+-    const minShown = attempt?.degraded ? BUILD_SIM_MIN_SHOWN : Math.min(BUILD_SIM_MIN_SHOWN, result.requested);
++    const minShown = pace ? 1 : attempt?.degraded ? BUILD_SIM_MIN_SHOWN : Math.min(BUILD_SIM_MIN_SHOWN, result.requested);
+     if (result.samples < minShown) return fail(`只跑完 ${result.samples} 次模拟（不足 ${minShown} 次），选项之间的差噪声太大，不给数字`, "below_minimum_samples");
+-    if (required && !attempt?.degraded && (result.timedOut || (result.samples !== result.requested && !adaptiveComplete))) return fail("必需的配对样本尚未全部完成", "incomplete_required_samples");
++    if (required && !pace && !attempt?.degraded && (result.timedOut || (result.samples !== result.requested && !adaptiveComplete))) return fail("必需的配对样本尚未全部完成", "incomplete_required_samples");
+     if (required && !attempt?.degraded && [result.base, ...result.options].some((sim) => {
+       const dpr = asRecord(asRecord(sim.quantitative)["effective_damage_per_turn"]);
+       return typeof dpr["n"] !== "number" || dpr["n"] <= 0 || typeof dpr["mean"] !== "number" || !Number.isFinite(dpr["mean"]);
+@@ -697,7 +707,7 @@ export async function withBossSim(decision: Decision, env: DecisionEnv, setup: B
+       boss: `${boss}：${start.boss.parts.map((p) => `${p.name} ${p.hp} 血`).join("、")}${start.boss.exact ? "" : `（A${state.run?.ascension ?? "?"} 没有这个 boss 的日志：数值取最近的 A${start.boss.asc}，伤害、增益和格挡按实测的进阶变化估算）`}`,
+       entry_hp: `${start.entryHp}/${start.maxHp}：${entry.source}${projected < 1 ? "（中位投影在 boss 前血量耗尽，按 1 血算）" : ""}`,
+       current_deck: `胜率 ${pct(b.winCal)}（校准后；原始 ${pct(b.win)}），赢局掉血中位 ${b.hpLossWon ?? "—"}，赢局约 ${b.turns ?? "—"} 回合${b.deathTurn !== null ? `，输的样本中位死在第 ${b.deathTurn} 回合` : ""}`,
+-      samples: adaptiveComplete ? `按需采样：基准n=${result.base.samples}，候选各用自身n，差值仅用共同种子前缀；上限${result.requested}；用时 ${(ms / 1000).toFixed(1)} 秒` : `每个选项 ${result.samples} 次${result.samples < result.requested ? `（目标 ${result.requested}，到时间只跑完这些）` : ""}；所有选项同一组随机种子，按样本配对比较；用时 ${(ms / 1000).toFixed(1)} 秒`,
++      samples: pace ? `限时${result.timedOut ? "未完整" : "完成"}：基准n=${b.samples}，原始胜率MC95%区间${asArray(asRecord(b.quantitative)["raw_win_mc_interval95"]).length ? asArray(asRecord(b.quantitative)["raw_win_mc_interval95"]).map((x) => Math.round(Number(x) * 100)).join("–") + "%" : "unknown"}（不含模型偏差）；候选各用实际n/共同前缀，目标${result.requested}；误差为配对标准误，n<2时unknown；${low ? "低可信、未完整；" : ""}用时 ${(ms / 1000).toFixed(1)} 秒` : adaptiveComplete ? `按需采样：基准n=${result.base.samples}，候选各用自身n，差值仅用共同种子前缀；上限${result.requested}；用时 ${(ms / 1000).toFixed(1)} 秒` : `每个选项 ${result.samples} 次${result.samples < result.requested ? `（目标 ${result.requested}，到时间只跑完这些）` : ""}；所有选项同一组随机种子，按样本配对比较；用时 ${(ms / 1000).toFixed(1)} 秒`,
+       method:
+         "整场模拟（docs/boss-sim.md）：boss 的血量、首招、开场能力和出招按怪物库和出招模型（本进阶），我方按现在的牌组、遗物和药水，每个样本洗牌后由求解器逐回合出牌，打到一方死亡；" +
+         "胜率经日志 boss 战验证集校准；选项的差 = 两个校准胜率之差，± 是配对标准误（差在两个标准误以内，模拟分不出高低）",
+@@ -710,7 +720,7 @@ export async function withBossSim(decision: Decision, env: DecisionEnv, setup: B
+       ...(lowWin ? { low_win_rate: `当前牌组在模拟里多半打不过（原始胜率 ${pct(b.win)}，校准后的数不会低于 ${(calibratedFloor(state.run?.ascension ?? 0) * 100).toFixed(1)}%，0 胜的读数）：胜率的差信息少，各选项另给 boss 平均剩血（赢的样本算 0）和它的配对差；离 boss 还远时现在的牌组和到 boss 时的牌组差得多` } : {}),
+     };
+     if (attempt?.degraded) simFacts["completion"] = `不完整（故障降级，n=${result.samples}）`;
+-    const completion = attempt?.finish(result.samples, result.requested, undefined, adaptiveComplete);
++    const completion = pace ? attempt?.finishBudget(result.samples, result.requested, result.timedOut || result.samples < result.requested && !adaptiveComplete) : attempt?.finish(result.samples, result.requested, undefined, adaptiveComplete);
+     const record: Record<string, JsonValue> = {
+       ...(result.f48JointShadow ? { f48_joint_shadow: toJsonValue(result.f48JointShadow) } : {}),
+       ...(result.buildRanking ? { build_ranking: toJsonValue({ ...ranking, mode: rankingMode, delivered: rankingOn, candidates: candidateIdentity }) } : {}),
+@@ -733,8 +743,8 @@ export async function withBossSim(decision: Decision, env: DecisionEnv, setup: B
+       orders: result.orders,
+       sim_ms: result.elapsedMs,
+       ms,
+-      base: { ...(adaptiveComplete ? { samples: b.samples } : {}), win: b.win, win_cal: b.winCal, hp_loss_won: b.hpLossWon, turns: b.turns, boss_left: b.bossLeft },
+-      options: Object.fromEntries(result.options.map((sim) => [sim.key, { ...(adaptiveComplete ? { samples: sim.samples, sampling: toJsonValue(sim.sampling), paired_reference: toJsonValue(sim.pairedReference) } : {}), win: sim.win, win_cal: sim.winCal, diff_cal: sim.diff?.cal ?? 0, se_cal: sim.diff?.calSe ?? 0, diff_raw: sim.diff?.raw ?? 0, se_raw: sim.diff?.se ?? 0, hp_loss_won: sim.hpLossWon, turns: sim.turns, hp: sim.hp, boss_left: sim.bossLeft, boss_left_diff: sim.diff?.bossLeft ?? 0, boss_left_se: sim.diff?.bossLeftSe ?? 0 }])),
++      base: { ...(adaptiveComplete || pace ? { samples: b.samples } : {}), win: b.win, win_cal: b.winCal, hp_loss_won: b.hpLossWon, turns: b.turns, boss_left: b.bossLeft },
++      options: Object.fromEntries(result.options.map((sim) => [sim.key, { ...(adaptiveComplete || pace ? { samples: sim.samples, sampling: toJsonValue(sim.sampling), paired_reference: toJsonValue(sim.pairedReference) } : {}), win: sim.win, win_cal: sim.winCal, diff_cal: sim.diff?.cal ?? 0, se_cal: pace && sim.samples < 2 ? null : sim.diff?.calSe ?? 0, diff_raw: sim.diff?.raw ?? 0, se_raw: pace && sim.samples < 2 ? null : sim.diff?.se ?? 0, hp_loss_won: sim.hpLossWon, turns: sim.turns, hp: sim.hp, boss_left: sim.bossLeft, boss_left_diff: sim.diff?.bossLeft ?? 0, boss_left_se: pace && sim.samples < 2 ? null : sim.diff?.bossLeftSe ?? 0 }])),
+       not_simulated: Object.fromEntries(plans.filter((p) => p.none).map((p) => [p.key, p.none!])),
+     };
+     if (continuation) {
+@@ -749,7 +759,7 @@ export async function withBossSim(decision: Decision, env: DecisionEnv, setup: B
+       record["continuous"] = toJsonValue({ base: b.continuous ?? null,
+         options: Object.fromEntries(result.options.map((sim) => [sim.key, sim.continuous ?? null])) });
+     }
+-    const global = await globalBuildForB3({ env, required, degraded: attempt?.degraded === true,
++    const global = !shadowBudgetAvailable("G2_global_shadow") ? budgetUnknown("G2_global_shadow") : await globalBuildForB3({ env, required, degraded: attempt?.degraded === true,
+       label: ask.label, bossId, input: start.input, options: deckOptions, current: result,
+       keys: ["@current", ...plans.flatMap((plan) => plan.group ? plan.group.map((g) => `${plan.key}|${g.key}`) : [plan.key])],
+       setup, ...(wait ? { progress: wait.progress } : {}), makeComparison: (target) => {
+diff --git a/agent/src/sim/build-sim-pool.ts b/agent/src/sim/build-sim-pool.ts
+index a626d5d98..426d3c43f 100644
+--- a/agent/src/sim/build-sim-pool.ts
++++ b/agent/src/sim/build-sim-pool.ts
+@@ -1,3 +1,4 @@
++import { currentDecisionBudget } from "../core/decision-budget.js";
+ /**
+  * Whole boss fights for many decks at once, with a deadline (milestone B3, docs/boss-sim.md §11): a deck-building
+  * question compares every option's deck (and HP) against the current one on the same seeds, within its time budget.
+@@ -323,6 +324,7 @@ export class BuildSimPool implements DeckSimRunner {
+       if (req.progressTimeoutMs !== undefined) await this.close();
+       throw error;
+     });
++    if (timedOut && currentDecisionBudget()) void this.close();
+     return { outcomes, complete: completeSamples(req, outcomes), timedOut, elapsedMs: Math.round(now() - started), workers: used.length, ...(req.diagnostics ? { diagnostics } : {}) };
+   }
+ 
+diff --git a/agent/src/sim/build-sim.ts b/agent/src/sim/build-sim.ts
+index 17b0efff3..f40c2ac9f 100644
+--- a/agent/src/sim/build-sim.ts
++++ b/agent/src/sim/build-sim.ts
+@@ -1,3 +1,4 @@
++import { currentDecisionBudget, shadowBudgetAvailable, budgetUnknown } from "../core/decision-budget.js";
+ /**
+  * B3 (Roy 2026-09-30): each option of a deck-building question against the act boss, by whole fight simulation. The
+  * current deck and every option's deck (and HP) run on the same seeds (common random numbers) from the synthetic
+@@ -162,7 +163,9 @@ export async function compareOptions(
+     ...(base.meta.asc === 10 ? { captureCore: true, captureResources: true } : {}) };
+   const samples = opts.samples ?? BUILD_SIM_SAMPLES;
+   const required = opts.requireComplete === true;
+-  const cacheKey = required ? memoKey("required-b3-v1", { base, options, samples, seed: opts.seed ?? BUILD_SIM_SEED,
++  const pace = currentDecisionBudget();
++  if (pace) opts = { ...opts, deadlineMs: Math.max(0, Math.min(opts.deadlineMs ?? Infinity, pace.remaining() - 1000)) };
++  const cacheKey = required ? memoKey(pace ? "human-pace-b3-v1" : "required-b3-v1", { base, options, samples, seed: opts.seed ?? BUILD_SIM_SEED,
+     quantitative: opts.quantitative, diagnostics: opts.diagnostics, readiness: opts.readiness, buildRank: opts.buildRank,
+     ...(opts.adaptive ? { adaptive: { ...ADAPTIVE_RULE, ...opts.adaptive } } : {}), policy: { BOSS_POLICY_THREAT, BOSS_SIM_LOOKAHEAD } }) : null;
+   const cached = cacheKey ? completeComparisons.get(runner) : undefined;
+@@ -219,20 +222,21 @@ export async function compareOptions(
+   let orderSearch: Record<string, JsonValue> | null = null;
+   let order = allOrders[0]!;
+   if (allOrders.length > 1) {
+-    const first = await runner.run({ ...(opts.onProgress ? { onProgress: opts.onProgress } : {}), base, decks: [{}], orders: allOrders, samples: Math.min(samples, BUILD_SIM_ORDER_SAMPLES), seed, ...(required ? { progressTimeoutMs: 120_000 } : {}), ...(opts.diagnostics ? { diagnostics: true } : {}), ...(!required && opts.deadlineMs !== undefined ? { deadlineMs: opts.deadlineMs / 4 } : {}), ...(opts.now ? { now: opts.now } : {}) });
+-    if (required && (first.timedOut || first.complete.length !== Math.min(samples, BUILD_SIM_ORDER_SAMPLES) || first.complete.some((id, i) => id !== i))) throw new Error("required boss order search incomplete");
+-    if (opts.diagnostics) orderSearch = phase(first, required || opts.deadlineMs === undefined ? undefined : opts.deadlineMs / 4);
++    const first = await runner.run({ ...(opts.onProgress ? { onProgress: opts.onProgress } : {}), base, decks: [{}], orders: allOrders, samples: Math.min(samples, BUILD_SIM_ORDER_SAMPLES), seed, ...(required && !pace ? { progressTimeoutMs: 120_000 } : {}), ...(opts.diagnostics ? { diagnostics: true } : {}), ...((!required || pace) && opts.deadlineMs !== undefined ? { deadlineMs: Math.max(0, Math.min(opts.deadlineMs / 4, pace?.remaining() ?? Infinity)) } : {}), ...(opts.now ? { now: opts.now } : {}) });
++    if (required && !pace && (first.timedOut || first.complete.length !== Math.min(samples, BUILD_SIM_ORDER_SAMPLES) || first.complete.some((id, i) => id !== i))) throw new Error("required boss order search incomplete");
++    if (opts.diagnostics) orderSearch = { ...phase(first, required && !pace || opts.deadlineMs === undefined ? undefined : opts.deadlineMs / 4),
++      ...(pace ? { status: first.complete.length ? "measured" : "unknown", basis: first.complete.length ? "completed_paired_samples" : "existing_default_order_no_samples" } : {}) };
+     const lines = allOrders.map((_, o) => summarizeLine(0, lineOf(first.outcomes, [0], o, first.complete)));
+-    order = allOrders[bestOrder(lines)]!;
++    if (first.complete.length > 0 || !pace) order = allOrders[bestOrder(lines)]!;
+   }
+   const orders = [order];
+-  const left = !required && opts.deadlineMs !== undefined ? Math.max(0, opts.deadlineMs - (now() - started)) : undefined;
+-  const request = { ...(opts.onProgress ? { onProgress: opts.onProgress } : {}), base, decks, stripes, orders, samples, seed, ...(required ? { progressTimeoutMs: 120_000 } : {}), ...(opts.diagnostics ? { diagnostics: true } : {}), ...(left !== undefined ? { deadlineMs: left } : {}), ...(opts.now ? { now: opts.now } : {}) };
+-  if (opts.adaptive?.mode === "on" && !required) throw new Error("adaptive B3 requires complete computation");
++  const left = (!required || pace) && opts.deadlineMs !== undefined ? Math.max(0, Math.min(opts.deadlineMs - (now() - started), pace ? pace.remaining() - 1000 : Infinity)) : undefined;
++  const request = { ...(opts.onProgress ? { onProgress: opts.onProgress } : {}), base, decks, stripes, orders, samples, seed, ...(required && !pace ? { progressTimeoutMs: 120_000 } : {}), ...(opts.diagnostics ? { diagnostics: true } : {}), ...(left !== undefined ? { deadlineMs: left } : {}), ...(opts.now ? { now: opts.now } : {}) };
++  if (opts.adaptive?.mode === "on" && !required && !pace) throw new Error("adaptive B3 requires complete computation");
+   const actual = opts.adaptive?.mode === "on" && options.length ? await runAdaptiveDecks(runner, request, deckOf, opts.adaptive.allowS) : null;
+   const run = actual?.run ?? await runner.run(request);
+   const complete = run.complete;
+-  if (required && (run.timedOut || (!actual && complete.length !== samples) || complete.some((id, i) => id !== i))) {
++  if (required && !pace && (run.timedOut || (!actual && complete.length !== samples) || complete.some((id, i) => id !== i))) {
+     throw new Error(`required boss comparison incomplete: ${complete.length}/${samples}`);
+   }
+   const summarize = (ids: number[], count = complete.length): BossSimLineResult & { order: string | null } => ({ ...summarizeLine(0, lineOf(run.outcomes, ids, 0, complete.slice(0, count))), order: order?.label ?? null });
+@@ -285,12 +289,12 @@ export async function compareOptions(
+     return actual ? { ...value, sampling: actual.counts.get(option.key) } : value;
+   });
+   const readinessStart = performance.now();
+-  const readiness = opts.readiness && opts.quantitative ? bossReadiness(baseLine.outcomes, {
++  const readiness = opts.readiness && opts.quantitative && shadowBudgetAvailable("P1_readiness_shadow") ? bossReadiness(baseLine.outcomes, {
+     calibratedWin: base.continuation ? baseLine.winProb : calibratedWinProb(baseLine.winProb, BUILD_SIM_CALIBRATION_SAMPLES, "pre", base.meta.asc),
+     ...(base.continuation ? {} : { calibrate: (raw: number) => calibratedWinProb(raw, BUILD_SIM_CALIBRATION_SAMPLES, "pre", base.meta.asc) }),
+   }) : undefined;
+   const readinessMs = readiness ? performance.now() - readinessStart : undefined;
+-  const adaptive = !actual && required && opts.adaptive && options.length && n === samples ? safeAdaptiveShadow([
++  const adaptive = !actual && required && opts.adaptive && options.length && n === samples && shadowBudgetAvailable("C2_sampling_shadow") ? safeAdaptiveShadow([
+     { key: "@current", samples: baseLine.outcomes, baseline: true, workGroup: "0" },
+     ...options.map((option) => ({ key: option.key, samples: summarize(deckOf.get(option.key)!).outcomes, workGroup: deckOf.get(option.key)!.join(",") })),
+   ], { lane: "b3", requested: samples, allowS: opts.adaptive.allowS }) : null;
+@@ -301,7 +305,8 @@ export async function compareOptions(
+     adaptive.work.savedFraction = 1 - adaptive.work.shadow / adaptive.work.full;
+   }
+   let buildRanking: JsonValue | undefined;
+-  if (opts.buildRank) {
++  if (opts.buildRank && !shadowBudgetAvailable("P2_S_build_counterfactual")) buildRanking = budgetUnknown("P2_S_build_counterfactual");
++  if (opts.buildRank && shadowBudgetAvailable("P2_S_build_counterfactual")) {
+     try {
+       buildRanking = toJsonValue(buildRank(simOf("current", baseLine, base.solver.player.hp, true), out,
+         { base: baseLine.outcomes, options: new Map(options.map((option) => [option.key, optionLines.get(option.key)!.outcomes])) },
+@@ -313,7 +318,7 @@ export async function compareOptions(
+     }
+   }
+   let productionComparison: JsonValue | undefined;
+-  if (adaptive && "candidates" in adaptive && opts.buildRank && asRecord(buildRanking)["status"] === "produced") {
++  if (adaptive && "candidates" in adaptive && shadowBudgetAvailable("C2_ranking_counterfactual") && opts.buildRank && asRecord(buildRanking)["status"] === "produced") {
+     try {
+       const counts = new Map(adaptive.candidates.map((candidate) => [candidate.key, candidate.samples]));
+       const prefixBase = summarize([0], counts.get("@current")!);
+@@ -363,6 +368,6 @@ export async function compareOptions(
+     orders: allOrders.length,
+     order: order?.label ?? null,
+   };
+-  if (required && cacheKey) completeComparisons.set(runner, { key: cacheKey, result: structuredClone(result) });
++  if (required && cacheKey && (!pace || n > 0)) completeComparisons.set(runner, { key: cacheKey, result: structuredClone(result) });
+   return result;
+ }
+diff --git a/agent/src/sim/computation-failure.ts b/agent/src/sim/computation-failure.ts
+index 5e74463a7..51e4da0af 100644
+--- a/agent/src/sim/computation-failure.ts
++++ b/agent/src/sim/computation-failure.ts
+@@ -7,9 +7,10 @@ import type { ScreenMemory } from "../memory/types.js";
+ import { memoKey } from "./compute-memo.js";
+ 
+ export interface SimCompletion {
++  budgeted?: true;
+   required: true;
+   attempt_id: string;
+-  status: "complete" | "complete_adaptive" | "pending" | "degraded";
++  status: "complete" | "complete_adaptive" | "complete_budget" | "partial" | "pending" | "degraded";
+   attempts: number;
+   reasons: string[];
+   samples: number;
+@@ -41,4 +42,8 @@ export class SimAttempt {
+     return { required: true, attempt_id: this.id, status: this.degraded ? "degraded" : reason ? "pending" : adaptive ? "complete_adaptive" : "complete",
+       attempts, reasons, samples, requested, failure: reason !== undefined, key: this.key };
+   }
++  /** A normal deadline is not a C1 engine fault and does not increment the failure streak. */
++  finishBudget(samples: number, requested: number, partial: boolean): SimCompletion {
++    return { ...this.finish(samples, requested), budgeted: true, status: this.degraded ? "degraded" : partial ? "partial" : "complete_budget" };
++  }
+ }
+diff --git a/agent/src/sim/f48-joint-shadow.ts b/agent/src/sim/f48-joint-shadow.ts
+index 3afe6f9d2..d7f81a4f9 100644
+--- a/agent/src/sim/f48-joint-shadow.ts
++++ b/agent/src/sim/f48-joint-shadow.ts
+@@ -1,3 +1,4 @@
++import { currentDecisionBudget, shadowBudgetAvailable, DecisionBudgetExpired } from "../core/decision-budget.js";
+ /** Log-only summaries of existing continuous samples. Never schedules or scores a fight. */
+ import { createHash } from "node:crypto";
+ import { serialize } from "node:v8";
+@@ -59,6 +60,7 @@ function same(a: unknown, b: unknown): boolean { return digest(a) === digest(b);
+ 
+ /** Invalid resources never acquire a numeric probability or an invented fresh resource state. */
+ function sampleStatus(o: FightSampleResult): { reason: string | null; joint: number | null } {
++  if (currentDecisionBudget()?.remaining() === 0) throw new DecisionBudgetExpired("F48_joint_shadow");
+   const s = o.sequence;
+   if (!s) return { reason: "missing_continuous_sample", joint: null };
+   if (!Number.isInteger(s.seed) || s.seed! < 0 || s.seed! > 0xffffffff) return { reason: "missing_sample_seed", joint: null };
+@@ -103,6 +105,7 @@ export function f48JointShadow(scope: F48JointScope | undefined, candidates: F48
+     runtime_binding: "enclosing_run_config_and_decision_record; no retrospective_identity_fill",
+     actual_run_result: "unknown" };
+   try {
++    if (!shadowBudgetAvailable("F48_joint_shadow")) return { ...header, status: "unknown", reason: "decision_budget_exhausted", candidates: [], continuous: null };
+     if (failure || !input?.continuation || !candidates.length) return { ...header, status: "unknown",
+       reason: failure?.reason ?? "existing_continuous_computation_unavailable", candidates: [],
+       failure: failure ?? null, paired_comparison: null, continuous: null };
+@@ -178,7 +181,8 @@ export function f48JointShadow(scope: F48JointScope | undefined, candidates: F48
+     return { ...header, status: records.every((r) => r.status === "produced" && r.paired_comparison.status === "produced") ? "produced" : "unknown",
+       input_sha256: inputHash, variant_distribution_sha256: digest(input.continuation.variants.map((v) => ({ boss: v.boss, count: v.count }))),
+       source: input.continuation.source, limitations: input.continuation.limitation, candidates: records, failure: null };
+-  } catch {
+-    return { ...header, status: "unknown", reason: "shadow_aggregation_failed", candidates: [], continuous: null, paired_comparison: null };
++  } catch (error) {
++    if (error instanceof DecisionBudgetExpired) currentDecisionBudget()?.skip("F48_joint_shadow");
++    return { ...header, status: "unknown", reason: error instanceof DecisionBudgetExpired ? "decision_budget_exhausted" : "shadow_aggregation_failed", candidates: [], continuous: null, paired_comparison: null };
+   }
+ }
+diff --git a/agent/src/sim/global-build-b3.ts b/agent/src/sim/global-build-b3.ts
+index 19acf285b..82eafe1d3 100644
+--- a/agent/src/sim/global-build-b3.ts
++++ b/agent/src/sim/global-build-b3.ts
+@@ -1,3 +1,4 @@
++import { currentDecisionBudget, shadowBudgetAvailable, DecisionBudgetExpired } from "../core/decision-budget.js";
+ /** Silent's supplementary G2 shadow path never changes the current B3 question or its completion gate. */
+ import { globalBuildPolicy } from "../core/global-build-config.js";
+ import { asRecord, str, toJsonValue, type JsonValue } from "../core/util/json.js";
+@@ -47,10 +48,12 @@ export async function globalBuildForB3(args: {
+       ...(args.degraded ? { unavailableReason: "current_C1_degraded_global_not_requested" }
+         : (setup.db || setup.mm) && !setup.globalPool ? { unavailableReason: "custom_inputs_need_matching_observed_silent_pool" } : {}),
+       evaluate: async (target, runner) => {
++        if (!shadowBudgetAvailable("G2_global_shadow")) throw new DecisionBudgetExpired("G2_global_shadow");
+         const next = args.makeComparison(target);
+         const result = await compareOptions(runner, next.input, next.options, {
+           samples: setup.samples ?? BUILD_SIM_SAMPLES, seed: setup.seed ?? BUILD_SIM_SEED,
+           quantitative: true, diagnostics: true, requireComplete: true,
++          ...(currentDecisionBudget() ? { deadlineMs: Math.max(0, currentDecisionBudget()!.remaining() - 1000) } : {}),
+           ...(setup.now ? { now: setup.now } : {}), ...(args.progress ? { onProgress: args.progress } : {}),
+           // Only the new future-Boss lane is win-only; current B3's existing C2 policy is untouched.
+           ...(adaptiveMode !== "off" ? { adaptive: { mode: adaptiveMode, allowS: false } } : {}),
+diff --git a/agent/tests/computation-failure-loop.test.ts b/agent/tests/computation-failure-loop.test.ts
+index 5940fcdf9..bdbf6561f 100644
+--- a/agent/tests/computation-failure-loop.test.ts
++++ b/agent/tests/computation-failure-loop.test.ts
+@@ -51,7 +51,9 @@ it("dispatches exactly once after two required runner failures and a failed degr
+       maxDecisions: 1, maxMinutes: 1, pollIntervalMs: 1, restoreRun: false, signal: controller.signal,
+       buildSim: { db: FIXTURE_DB, mm: FIXTURE_MM, runner: { run: async (req) => {
+         called++;
+-        expect(req.deadlineMs).toBe(called < 3 ? undefined : 11_000);
++        expect(req.deadlineMs).toBeGreaterThan(0);
++        expect(req.deadlineMs).toBeLessThanOrEqual(11_000);
++        expect(req.progressTimeoutMs).toBeUndefined();
+         throw new Error("fixed worker failure");
+       } }, now: () => 0 },
+     });
+diff --git a/agent/tests/human-pace-budget.test.ts b/agent/tests/human-pace-budget.test.ts
+new file mode 100644
+index 000000000..44ec9f71a
+--- /dev/null
++++ b/agent/tests/human-pace-budget.test.ts
+@@ -0,0 +1,79 @@
++/** Fixed clocks and in-memory engines only. No game, network, or model invocation. */
++import { afterEach, expect, it, vi } from "vitest";
++import { DecisionBudget, DecisionBudgetExpired, DecisionBudgetLedger, HUMAN_PACE_BUDGETS, outsideDecisionBudget,
++  shadowBudgetAvailable, withinDecisionBudget, withDecisionBudget } from "../src/core/decision-budget.js";
++import { BrainRouter, EngineFailure, type BrainLogRow } from "../src/brain/router.js";
++import { BrainWait, type BrainWaitEvent } from "../src/brain/wait.js";
++import { pickSpec } from "../src/brain/specs.js";
++import type { BrainEngine, BrainRequest } from "../src/brain/types.js";
++import { loadConfig } from "../src/core/config.js";
++import { withJevRetry } from "../src/reflex/jev/client.js";
++
++afterEach(() => vi.useRealTimers());
++it("shares a turn allowance across re-asks, excludes animation/transport, and logs each entry separately", async () => {
++  let time = 0;
++  const ledger = new DecisionBudgetLedger(() => time), first = ledger.open("run:48:1:1", "boss");
++  expect(HUMAN_PACE_BUDGETS).toEqual({ ordinary: 10000, elite: 15000, boss: 30000, retry: 10000,
++    routine: 5000, brain: 90000, direction: 60000 });
++  time += 2000;
++  await withDecisionBudget(first, () => outsideDecisionBudget(async () => { time += 50000; }));
++  time += 3000; first.pause();
++  expect(first.record()).toMatchObject({ budget_ms: 30000, actual_ms: 5000, turn_actual_ms: 5000, timed_out: false });
++  time += 90000;
++  const again = ledger.open("run:48:1:1", "boss");
++  expect(again).toBe(first); expect(again.remaining()).toBe(25000);
++  time += 25000; again.useFallback("current_candidate");
++  expect(again.record()).toMatchObject({ entry_budget_ms: 25000, actual_ms: 25000, turn_actual_ms: 30000,
++    timed_out: true, fallback: "current_candidate", animation_time_included: false });
++  expect(withDecisionBudget(again, () => shadowBudgetAvailable("F48_joint"))).toBe(false);
++  expect(again.record().shadow_unknown).toContain("F48_joint");
++  expect(ledger.open("run:48:1:2", "retry").remaining()).toBe(10000);
++});
++
++it("does not accept work that returned after a synchronous overrun or start work with no time left", async () => {
++  let time = 0, calls = 0;
++  const budget = new DecisionBudget("fixed", "ordinary", () => time);
++  await expect(withDecisionBudget(budget, () => withinDecisionBudget("fixed", async (signal) => {
++    calls++; time = 10001; expect(signal?.aborted).toBe(false); return "late";
++  }))).rejects.toBeInstanceOf(DecisionBudgetExpired);
++  await expect(withDecisionBudget(budget, () => withinDecisionBudget("expired", async () => { calls++; return "never"; })))
++    .rejects.toBeInstanceOf(DecisionBudgetExpired);
++  expect(calls).toBe(1); expect(budget.record().stages[0]?.timed_out).toBe(true);
++});
++
++const choices = { a: "fixed A", b: "fixed B" };
++const request = (): BrainRequest => ({ label: "rest/plan", system: "fixture", question: "fixed", options: choices,
++  payload: {}, spec: pickSpec("rest/plan", choices, {}) });
++
++it.each(["hang", "quota"])("hard-stops a %s L2 call at 90 seconds with xhigh, abort, no fallback engine or late retries", async (mode) => {
++  vi.useFakeTimers();
++  const rows: BrainLogRow[] = [], events: BrainWaitEvent[] = [];
++  let calls = 0, aborted = 0;
++  const engine: BrainEngine = { name: "codex", model: "fixture-only", decide: async (req, signal) => {
++    calls++; expect(req.effort).toBe("xhigh"); expect(req.timeoutMs).toBeLessThanOrEqual(90000);
++    if (mode === "quota") throw new EngineFailure("fixed quota", "quota", 3600000);
++    return new Promise((_, reject) => signal?.addEventListener("abort", () => { aborted++; reject(new Error("fixed aborted")); }));
++  } };
++  const wait = new BrainWait({ event: (e) => events.push(e) });
++  const router = new BrainRouter({ config: loadConfig({ BRAIN_LOG: "off" }).brain, codexOnly: true,
++    engine: () => engine, wait, log: (row) => rows.push(row) });
++  const budget = new DecisionBudget("fixed-L2", "routine", () => Date.now());
++  const rejection = expect(withDecisionBudget(budget, () => router.decide(request()))).rejects.toBeInstanceOf(DecisionBudgetExpired);
++  await vi.advanceTimersByTimeAsync(90000); await rejection;
++  await vi.advanceTimersByTimeAsync(2000);
++  expect(calls).toBe(1); expect(aborted).toBe(mode === "hang" ? 1 : 0);
++  expect(wait.suspendedMs).toBe(0);
++  expect(events.at(-1)).toMatchObject({ state: "budget", budget_policy: "human_pace_hard_deadline" });
++  expect(rows.some((row) => row.answer === null)).toBe(true);
++});
++
++it("bounds Jev retry backoff by the same allowance and never launches the next request after expiry", async () => {
++  vi.useFakeTimers();
++  let calls = 0;
++  const budget = new DecisionBudget("fixed-Jev", "routine", () => Date.now(), 500);
++  const rejection = expect(withDecisionBudget(budget, () => withJevRetry(async () => {
++    calls++; throw Object.assign(new Error("fixed busy"), { status: 503 });
++  }))).rejects.toBeInstanceOf(DecisionBudgetExpired);
++  await vi.advanceTimersByTimeAsync(500); await rejection;
++  await vi.advanceTimersByTimeAsync(3000); expect(calls).toBe(1);
++});
+diff --git a/agent/tests/human-pace-jev.test.ts b/agent/tests/human-pace-jev.test.ts
+new file mode 100644
+index 000000000..419cd62ba
+--- /dev/null
++++ b/agent/tests/human-pace-jev.test.ts
+@@ -0,0 +1,24 @@
++/** An SDK fixture verifies cancellation of the real JevClient path, without HTTP. */
++import { afterEach, expect, it, vi } from "vitest";
++import { DecisionBudget, DecisionBudgetExpired, withDecisionBudget } from "../src/core/decision-budget.js";
++import { JevClient } from "../src/reflex/jev/client.js";
++const fixture = vi.hoisted(() => ({ calls: 0, aborted: 0, options: undefined as { timeout?: number; signal?: AbortSignal } | undefined }));
++vi.mock("@typesafe-ai/sdk", async (original) => ({ ...await original<object>(), TypeSafeClient: class {
++  systemOne(_request: unknown, options: typeof fixture.options) {
++    fixture.calls++; fixture.options = options;
++    return { withResponse: () => new Promise((_, reject) => options?.signal?.addEventListener("abort", () => {
++      fixture.aborted++; reject(new Error("fixed abort"));
++    })) };
++  }
++} }));
++afterEach(() => vi.useRealTimers());
++it("passes the remaining allowance and abort signal to the SDK and rejects the late result at the deadline", async () => {
++  vi.useFakeTimers();
++  const budget = new DecisionBudget("Jev-SDK", "routine", () => Date.now(), 700);
++  const client = new JevClient({ apiKey: "fixed-not-a-credential", model: "fixed", baseUrl: "http://fixture.invalid" });
++  const rejection = expect(withDecisionBudget(budget, () => client.ask({}, {}, 20000))).rejects.toBeInstanceOf(DecisionBudgetExpired);
++  expect(fixture.options?.timeout).toBe(700); expect(fixture.options?.signal).toBeInstanceOf(AbortSignal);
++  await vi.advanceTimersByTimeAsync(700); await rejection;
++  await vi.advanceTimersByTimeAsync(4000);
++  expect(fixture.calls).toBe(1); expect(fixture.aborted).toBe(1);
++});
+diff --git a/agent/tests/human-pace-loop.test.ts b/agent/tests/human-pace-loop.test.ts
+new file mode 100644
+index 000000000..6938145da
+--- /dev/null
++++ b/agent/tests/human-pace-loop.test.ts
+@@ -0,0 +1,62 @@
++/** In-memory mod/brain fixtures exercise the production loop and both dispatch gates. */
++import { mkdtempSync, readFileSync, rmSync } from "node:fs";
++import { tmpdir } from "node:os";
++import { join } from "node:path";
++import { afterEach, expect, it, vi } from "vitest";
++import { Brain } from "../src/brain/brain.js";
++import { BrainRouter } from "../src/brain/router.js";
++import { loadConfig } from "../src/core/config.js";
++import { runLoop } from "../src/hand/loop.js";
++import { ModClient } from "../src/hand/mod/client.js";
++import { setKnowledgeCharacter } from "../src/knowledge/files.js";
++import { board } from "./oneshot-support.js";
++import { loggedKnowledge } from "./logged.js";
++import { envelope } from "./support.js";
++import { FIXTURE_DB, FIXTURE_MM } from "./boss-sim-build-fixture.js";
++import { fightSample, slimInput } from "../src/sim/boss-sim.js";
++import { board as fightBoard } from "./boss-sim-fixture.js";
++import { setMonsterDbForTests } from "../src/knowledge/monster-db.js";
++import { mainMenuPayload } from "./scenarios.js";
++
++afterEach(() => { vi.useRealTimers(); vi.unstubAllEnvs(); setKnowledgeCharacter(null); setMonsterDbForTests(null); });
++it.each(["silent", "ironclad"])("activates H1 only for %s and dispatches exactly once through the existing gates", async (character) => {
++  const dir = mkdtempSync(join(tmpdir(), "h1-loop-fixed-"));
++  const raw = board("xljq-f5-reward", "reward"); (raw.run as any).character_id = character.toUpperCase();
++  let current = raw, asks = 0, aborts = 0; const actions: unknown[] = [];
++  vi.useFakeTimers(); setKnowledgeCharacter(character); setMonsterDbForTests(FIXTURE_DB);
++  const sample = fightSample(slimInput(fightBoard({ bossHp: 12 })), null, 7);
++  vi.stubEnv("CONSTRUCTION_MODE", "off");
++  const cfg = loadConfig({ CHARACTER: character, BRAIN_LOG: "off", RUN_PLAN: "off", FIGHT_PLAN: "off", BUILD_ONESHOT: "off" });
++  cfg.log.decisionLog = join(dir, "decisions.jsonl"); cfg.runPlanLog = join(dir, "run-plans.jsonl"); cfg.fightPlanLog = join(dir, "fight-plans.jsonl");
++  const router = new BrainRouter({ config: cfg.brain, codexOnly: true, engine: () => ({ name: "codex", model: "fixed", decide: async (req, signal) => {
++    asks++;
++    if (character === "silent") {
++      expect(req.effort).toBe("xhigh"); expect(req.timeoutMs).toBeLessThanOrEqual(90000);
++      return new Promise((_, reject) => signal?.addEventListener("abort", () => { aborts++; reject(new Error("fixed deadline")); }));
++    }
++    return { engine: "codex", model: "fixed", answer: { choice: Object.keys(req.options ?? {})[0], reason: "fixed" },
++      problems: [], attempts: 1, latencyMs: 1, usage: { inputTokens: 1, outputTokens: 1 }, toolCalls: [] };
++  } }) });
++  const client = new ModClient({ baseUrl: "http://fixture.invalid", fetchImpl: (async (url, options) => {
++    if (String(url).endsWith("/state")) return Response.json(envelope(current));
++    const intent = JSON.parse(String(options?.body)); actions.push(intent); current = mainMenuPayload();
++    return Response.json(envelope({ action: intent.action, status: "completed", stable: true, message: "fixed", state: current }));
++  }) as typeof fetch });
++  const controller = new AbortController();
++  try {
++    const pending = runLoop({ config: cfg, mode: "play", client, jev: null, brain: new Brain(router, { systemPrompt: "fixed" }),
++      buildSim: { db: FIXTURE_DB, mm: FIXTURE_MM, samples: 2, now: () => 0, runner: { run: async (r) => ({
++        outcomes: r.decks.map(() => r.orders.map(() => Array.from({ length: r.samples }, () => sample))),
++        complete: Array.from({ length: r.samples }, (_, i) => i), timedOut: false, elapsedMs: 0, workers: 0 }) } },
++      knowledge: loggedKnowledge, maxDecisions: 1, maxMinutes: 3, pollIntervalMs: 1, restoreRun: false, signal: controller.signal });
++    await vi.advanceTimersByTimeAsync(91000);
++    const result = await pending;
++    expect(result.acts).toBe(1); expect(actions).toHaveLength(1); expect(asks).toBe(1);
++    const rows = readFileSync(cfg.log.decisionLog, "utf8").trim().split("\n").map((s) => JSON.parse(s));
++    const row = rows.find((r) => !r.result.startsWith("not dispatched"));
++    if (character === "silent") {
++      expect(aborts).toBe(1); expect(row).toMatchObject({ fallback: true,
++        time_budget: { kind: "brain", budget_ms: 90000, timed_out: true, fallback: expect.any(String) } });
++    } else { expect(aborts).toBe(0); expect(row).not.toHaveProperty("time_budget"); expect(row.fallback).toBe(false); }
++  } finally { controller.abort(); rmSync(dir, { recursive: true, force: true }); }
++});
+diff --git a/agent/tests/human-pace-reuse.test.ts b/agent/tests/human-pace-reuse.test.ts
+new file mode 100644
+index 000000000..7de0ea20d
+--- /dev/null
++++ b/agent/tests/human-pace-reuse.test.ts
+@@ -0,0 +1,73 @@
++/** Fixed observed inputs: cache identity, partial honesty, preparation isolation and execution gates. */
++import { afterEach, expect, it, vi } from "vitest";
++import { DecisionBudget, withDecisionBudget } from "../src/core/decision-budget.js";
++import { bumpDataVersion } from "../src/core/util/data-version.js";
++import { budgetedSolve, PreparedSolverDone, preparingCandidates, setPaceSolverScope } from "../src/reflex/pace-solver-cache.js";
++import { solveTap, solveTurn } from "../src/reflex/turn-solver.js";
++import { planCombatTurn } from "../src/reflex/combat-plan.js";
++import { prepareObservedCandidates } from "../src/hand/pace-precompute.js";
++import { gate } from "../src/hand/act/gate.js";
++import { board } from "./boss-sim-fixture.js";
++import { env } from "./oneshot-support.js";
++import { combatPayload, testKnowledge } from "./scenarios.js";
++
++afterEach(() => { setPaceSolverScope("cleared"); solveTap.onSolve = undefined; vi.restoreAllMocks(); });
++it("prepares a pure candidate result and reuses it after a changed clock, but never after changed resources, policy, data or fight", () => {
++  const input = board().solver;
++  let computes = 0;
++  const compute = () => { computes++; return { plans: [], nodes: 17, truncated: true, timedOut: true as const }; };
++  setPaceSolverScope("run:48:policy1");
++  const budget = new DecisionBudget("first", "boss", () => 0);
++  expect(() => withDecisionBudget(budget, () => preparingCandidates(() => budgetedSolve(input, compute)))).toThrow(PreparedSolverDone);
++  const clone = structuredClone(input);
++  const reused = withDecisionBudget(new DecisionBudget("retry", "retry", () => 10), () => budgetedSolve({ ...clone, deadline: 50, deadlineNow: () => 10 }, compute));
++  expect(reused).toMatchObject({ nodes: 17, truncated: true, timedOut: true }); expect(computes).toBe(1);
++  reused.nodes = 99;
++  expect(withDecisionBudget(budget, () => budgetedSolve(input, compute)).nodes).toBe(17);
++  withDecisionBudget(budget, () => budgetedSolve({ ...input, player: { ...input.player, hp: 9 } }, compute)); expect(computes).toBe(2);
++  bumpDataVersion(); withDecisionBudget(budget, () => budgetedSolve(input, compute)); expect(computes).toBe(3);
++  setPaceSolverScope("run:48:policy2"); withDecisionBudget(budget, () => budgetedSolve(input, compute)); expect(computes).toBe(4);
++  setPaceSolverScope("run:49:policy2"); withDecisionBudget(budget, () => budgetedSolve(input, compute)); expect(computes).toBe(5);
++  // No H1 context: historical and other-role computations retain their exact original path.
++  budgetedSolve(input, compute); budgetedSolve(input, compute); expect(computes).toBe(7);
++});
++
++it("a clock-cut solver preserves an explicitly partial result rather than inventing a complete lethal proof", () => {
++  const input = board().solver, budget = new DecisionBudget("expired", "boss", () => 0, 0);
++  setPaceSolverScope("expired-proof");
++  const result = withDecisionBudget(budget, () => solveTurn(input));
++  expect(result).toMatchObject({ truncated: true, timedOut: true, nodes: 1 });
++  expect(result.plans.length).toBeGreaterThan(0);
++});
++
++it("prepares only the exact observed candidate input in scratch memory and leaves the actual legality gate in control", () => {
++  const raw = combatPayload(); (raw.run as Record<string, unknown>).character_id = "SILENT";
++  const e = env(raw, undefined, { knowledge: testKnowledge, strictJev: false });
++  const snapshot = structuredClone({ state: e.state, memory: e.screenMemory });
++  const budget = new DecisionBudget("observed", "ordinary", () => 0);
++  let solves = 0; solveTap.onSolve = () => { solves++; };
++  const prepared = withDecisionBudget(budget, () => prepareObservedCandidates(e, 500));
++  expect(prepared).toMatchObject({ status: "prepared", basis: "exact_observed_input_only", reused: false });
++  expect({ state: e.state, memory: e.screenMemory }).toEqual(snapshot);
++  expect(solves).toBe(1);
++  const again = withDecisionBudget(budget, () => prepareObservedCandidates(e, 500));
++  expect(again).toMatchObject({ status: "prepared", reused: true }); expect(solves).toBe(2);
++  const next = withDecisionBudget(budget, () => planCombatTurn(e));
++  expect(next).not.toBeNull();
++  expect(budget.record().stages).toEqual(expect.arrayContaining([expect.objectContaining({ stage: "exact_observed_solver_cache" })]));
++  expect(gate(e.state, { action: "play_card", card_index: 999, target_index: 0 }).ok).toBe(false);
++  const unknown = env(structuredClone(raw), undefined, { knowledge: testKnowledge });
++  (unknown.state.raw.combat as any).action_readiness.can_use_combat_actions = false;
++  expect(withDecisionBudget(budget, () => prepareObservedCandidates(unknown, 500))).toMatchObject({ status: "unknown" });
++});
++
++it("does not turn a budget-cut root death into the least-loss label used by the existing early-SL proof gate", () => {
++  const raw = combatPayload({ lethalEndTurn: true }); (raw.run as any).character_id = "SILENT";
++  (raw.run as any).current_hp = 1; (raw.combat as any).player.current_hp = 1;
++  const e = env(raw, undefined, { knowledge: testKnowledge, strictJev: false });
++  setPaceSolverScope("partial-death-no-proof");
++  const budget = new DecisionBudget("expired-death", "ordinary", () => 0, 0);
++  const next = withDecisionBudget(budget, () => planCombatTurn(e));
++  expect(next).not.toBeNull(); expect(next?.label).not.toBe("combat/least-loss");
++  expect(budget.record().fallback).toBe("partial_solver_existing_card_layer_no_death_proof");
++});
+diff --git a/agent/tests/human-pace-sampling.test.ts b/agent/tests/human-pace-sampling.test.ts
+new file mode 100644
+index 000000000..95b56e278
+--- /dev/null
++++ b/agent/tests/human-pace-sampling.test.ts
+@@ -0,0 +1,132 @@
++/** Fixed returned sample prefixes; these tests never start workers or invoke a model. */
++import { afterAll, afterEach, beforeAll, beforeEach, expect, it, vi } from "vitest";
++import { DecisionBudget, withDecisionBudget } from "../src/core/decision-budget.js";
++import { bossLineSim, simLog, bossLinesOptions, BossLinesPool, releaseBossLinesPool, type BossLineSimArgs } from "../src/sim/boss-lines.js";
++import { compareOptions } from "../src/sim/build-sim.js";
++import { bossEvaluationPending, withBossSim } from "../src/sim/build-sim-facts.js";
++import type { DeckRunRequest, DeckSimRunner } from "../src/sim/build-sim-pool.js";
++import { ComputeMemo } from "../src/sim/compute-memo.js";
++import { createScreenMemory } from "../src/memory/types.js";
++import { setMonsterDbForTests } from "../src/knowledge/monster-db.js";
++import { fightSample, sampleSeed, slimInput } from "../src/sim/boss-sim.js";
++import { board as fightBoard } from "./boss-sim-fixture.js";
++import { board, decide, env, setupOneshotTests } from "./oneshot-support.js";
++import { FIXTURE_DB, FIXTURE_MM } from "./boss-sim-build-fixture.js";
++import { f48JointShadow } from "../src/sim/f48-joint-shadow.js";
++import { jointInput, scope, candidate, sample } from "./f48-joint-fixture.js";
++
++const trust = vi.hoisted(() => ({ reason: null as string | null }));
++vi.mock("../src/reflex/rollout-live.js", async (original) => ({
++  ...await original<typeof import("../src/reflex/rollout-live.js")>(),
++  boardRolloutInput: (_state: unknown, _knowledge: unknown, solver: unknown) => ({ ...fightBoard({ bossHp: 12 }), solver, enemies: [{ index: 0, id: "SOUL_FYSH", move: "HIT", strength: 0, powers: {} }], handBase: [] }),
++  fightMetaOf: () => fightBoard({ bossHp: 12 }).meta, fightRelicsOf: () => ({}),
++}));
++vi.mock("../src/sim/boss-trust.js", async (original) => ({ ...await original<object>(), bossTrustReason: () => trust.reason }));
++vi.mock("node:os", async (original) => ({ ...await original<object>(), loadavg: () => [1, 1, 1] }));
++setupOneshotTests();
++const original = { ...bossLinesOptions };
++let returned: ReturnType<typeof fightSample>;
++beforeAll(() => { setMonsterDbForTests(FIXTURE_DB); returned = fightSample(slimInput(fightBoard({ bossHp: 12 })), null, 7); });
++afterAll(() => setMonsterDbForTests(null));
++beforeEach(() => {
++  vi.spyOn(performance, "now").mockReturnValue(0);
++  vi.stubEnv("GLOBAL_BUILD_EVAL", "shadow"); vi.stubEnv("SIM_ADAPTIVE", "on");
++  vi.stubEnv("S_READINESS", "shadow"); vi.stubEnv("S_BUILD_RANK", "shadow");
++  Object.assign(bossLinesOptions, { serial: false, now: () => 0 }); trust.reason = null;
++});
++afterEach(() => { Object.assign(bossLinesOptions, original); vi.restoreAllMocks(); vi.unstubAllEnvs(); releaseBossLinesPool(); });
++function b2Args(): BossLineSimArgs {
++  const input = fightBoard({ bossHp: 12 });
++  return { state: { raw: { run_id: "H1-fixed" }, turn: 1, run: { floor: 17, ascension: 10, raw: { character_id: "SILENT" } } },
++    knowledge: {}, memory: createScreenMemory("COMBAT"), solver: input.solver, piles: input.piles, randomPotions: [],
++    lines: input.plans.slice(0, 2), turn: 1, drinks: () => false, samples: 1000, requiredComplete: true } as unknown as BossLineSimArgs;
++}
++function prefixRunner(n: number, expired?: () => void) {
++  const calls: DeckRunRequest[] = [];
++  const runner: DeckSimRunner = { run: async (r) => {
++    calls.push(r); const from = r.range?.from ?? 0, to = Math.min(r.range?.to ?? r.samples, from + n);
++    const complete = Array.from({ length: to - from }, (_, i) => from + i);
++    const outcomes = r.decks.map(() => r.orders.map(() => Array.from({ length: r.samples }, (_, i) => complete.includes(i) ? returned : undefined)));
++    expired?.();
++    return { outcomes, complete, timedOut: to < (r.range?.to ?? r.samples), elapsedMs: 1, workers: 0 };
++  } };
++  return { runner, calls };
++}
++
++it("B2 retains only completed paired prefixes on a mid-C2 deadline and reuses the first attempt with no extra work", () => {
++  const args = b2Args(), memo = new ComputeMemo("fixed");
++  const pool = vi.spyOn(BossLinesPool.prototype, "run").mockImplementation((_input, pairs, count, _seed, ms, _now, _progress, work) => {
++    expect(ms).toBeGreaterThan(0); expect(ms).toBeLessThanOrEqual(29000);
++    const from = work?.range.from ?? 0, end = from + 47;
++    return { outcomes: pairs.map(() => Array.from({ length: count }, (_, i) => i < end ? returned : undefined)),
++      complete: [...Array.from({ length: 47 }, (_, i) => from + i), 49], timedOut: true, elapsedMs: 1200, workers: 0, done: 47 * pairs.length };
++  });
++  const first = withDecisionBudget(new DecisionBudget("first", "boss", () => 0), () => bossLineSim({ ...args, memo }));
++  expect(first).toMatchObject({ available: true, completion: { status: "partial", failure: false, samples: 47, requested: 1000 } });
++  if (!first.available) throw new Error(first.reason);
++  expect(first.run.lines.every((line) => line.samples === 47 && line.outcomes.length === 47)).toBe(true);
++  expect(first.run.adaptive).toMatchObject({ status: "partial", rounds: [] });
++  expect(args.memory.simFailure).toBeUndefined();
++  const log = simLog(first, (plan) => `p${args.lines.indexOf(plan)}`);
++  expect(Object.values((log as any).lines).every((line: any) => line.samples === 47 && line.raw_win_mc_interval95.length === 2)).toBe(true);
++  const retry = withDecisionBudget(new DecisionBudget("retry", "retry", () => 0), () => bossLineSim({ ...args, memo, samples: 600 }));
++  expect(retry).toMatchObject({ available: true, completion: { status: "partial", samples: 47, requested: 1000 } });
++  expect(pool).toHaveBeenCalledTimes(1); expect(memo.hits).toBe(1);
++  const changed = { ...args, solver: { ...args.solver, player: { ...args.solver.player, hp: args.solver.player.hp - 1 } }, memo };
++  withDecisionBudget(new DecisionBudget("changed", "boss", () => 0), () => bossLineSim(changed));
++  expect(pool).toHaveBeenCalledTimes(2);
++});
++
++it("B3 passes finite total deadlines, keeps real candidate counts, and does not eliminate from a partial first batch", async () => {
++  const input = fightBoard({ bossHp: 12 }), { runner, calls } = prefixRunner(47);
++  const options = [{ key: "skip", change: null }, { key: "change", change: { solver: { ...input.solver, player: { ...input.solver.player, hp: 65 } } } }];
++  const opts = { samples: 1000, requireComplete: true, quantitative: true, adaptive: { mode: "on" as const, allowS: true }, deadlineMs: 11000 };
++  const first = await withDecisionBudget(new DecisionBudget("first", "brain", () => 0), () => compareOptions(runner, input, options, opts));
++  expect(calls).toHaveLength(1); expect(calls[0]?.deadlineMs).toBe(11000); expect(calls[0]?.progressTimeoutMs).toBeUndefined();
++  expect(first).toMatchObject({ samples: 47, timedOut: true, adaptive: { status: "partial", rounds: [] } });
++  expect(first.options.every((o) => o.samples === 47 && o.pairedReference?.samples === 47)).toBe(true);
++  const reused = await withDecisionBudget(new DecisionBudget("retry", "retry", () => 0), () => compareOptions(runner, input, options, opts));
++  expect(reused.completion?.memoHit).toBe(true); expect(calls).toHaveLength(1);
++});
++
++it("the live B3 adapter releases normal partials, leaves n<2 uncertainty unknown, and preserves C1 for an actual worker fault", async () => {
++  const e = env(board("xljq-f5-reward", "reward"), undefined, { requiredBossEvaluation: true });
++  const decision = decide(e); e.state.run!.raw["character_id"] = "SILENT";
++  const { runner } = prefixRunner(1);
++  const result = await withDecisionBudget(new DecisionBudget("B3", "brain", () => 0), () => withBossSim(decision, e,
++    { runner, samples: 1000, db: FIXTURE_DB, mm: FIXTURE_MM, now: () => 0 }));
++  expect(result.record).toMatchObject({ completion: { status: "partial", samples: 1, failure: false }, global_build: { final_sequence: { status: "unknown" } } });
++  expect(withDecisionBudget(new DecisionBudget("pending-gate", "brain", () => 0), () => bossEvaluationPending(result.decision, e.state, result.record))).toBeNull();
++  expect(JSON.stringify(result.decision)).toContain("误差unknown");
++  expect(Object.values((result.record as any).options).every((o: any) => o.se_cal === null && o.samples === 1)).toBe(true);
++  const bad = await withDecisionBudget(new DecisionBudget("fault", "brain", () => 0), () => withBossSim(decision, e,
++    { runner: { run: async () => { throw new Error("fixed worker failure"); } }, samples: 1000, db: FIXTURE_DB, mm: FIXTURE_MM, now: () => 0 }));
++  expect(bad.record).toMatchObject({ completion: { status: "pending", failure: true, samples: 0 } });
++  expect(bossEvaluationPending(bad.decision, e.state, bad.record)).toBeTruthy();
++});
++
++it("caps low-trust B2 sampling within the same budget and labels it without changing death/potion rules", () => {
++  trust.reason = "fixed learner low-trust boundary";
++  const pool = vi.spyOn(BossLinesPool.prototype, "run").mockImplementation((_input, pairs, count) => ({
++    outcomes: pairs.map(() => Array.from({ length: count }, () => returned)), complete: Array.from({ length: count }, (_, i) => i),
++    timedOut: false, elapsedMs: 0, workers: 0, done: count * pairs.length,
++  }));
++  const result = withDecisionBudget(new DecisionBudget("low-trust", "boss", () => 0), () => bossLineSim(b2Args()));
++  expect(pool.mock.calls[0]?.[2]).toBe(200);
++  expect(result).toMatchObject({ available: true, completion: { status: "complete_budget", samples: 200 }, best: null, tied: [], bestDry: null });
++  if (result.available) expect([...result.byPlan.values()][0]?.text).toContain("低可信、未完整");
++});
++
++it("skips F48, P1/P2, G2 and S shadow extensions after expiry while preserving the partial primary computation", async () => {
++  let time = 0; const budget = new DecisionBudget("expired", "brain", () => time, 3000);
++  const e = env(board("xljq-f5-reward", "reward"), undefined, { requiredBossEvaluation: true });
++  const decision = decide(e); e.state.run!.raw["character_id"] = "SILENT";
++  const { runner } = prefixRunner(3, () => { time = 3000; });
++  const result = await withDecisionBudget(budget, () => withBossSim(decision, e,
++    { runner, samples: 1000, db: FIXTURE_DB, mm: FIXTURE_MM, now: () => 0 }));
++  expect(result.record).toMatchObject({ completion: { status: "partial", samples: 3, failure: false }, build_ranking: { status: "unknown" },
++    global_build: { status: "unknown", reason: "decision_budget_exhausted" } });
++  expect(budget.record().shadow_unknown).toEqual(expect.arrayContaining(["P1_readiness_shadow", "P2_S_build_counterfactual", "G2_global_shadow"]));
++  const joint = withDecisionBudget(budget, () => f48JointShadow(scope, [candidate("a", [sample(sampleSeed(7, 0), 8, true)])], jointInput()));
++  expect(joint).toMatchObject({ status: "unknown", reason: "decision_budget_exhausted", candidates: [] });
++});

@@ -1,0 +1,36 @@
+from pathlib import Path
+import csv,hashlib,json,re,subprocess
+r=Path.cwd();p=r/'ops/codex-ops/record-staging/20261017-1427';pub=r/'paper/materials/20261017-1427-ops';load=lambda f:json.loads(f.read_bytes());sha=lambda b:hashlib.sha256(b).hexdigest()
+def write(f,v):f.write_text(json.dumps(v,ensure_ascii=False,indent=2)+'\n')
+assert not (pub/'ops-closure.json').exists()
+result=load(pub/'paper-dataset-result.json');assert result['actual_exit_code']==0 and result['calls']==1
+log=(pub/'paper-dataset.log').read_text();assert 'key scan: CLEAN (no sk-<key> patterns)' in log
+before={x['path']:x for x in load(p/'paper-before.json')};outputs=[]
+for ref in load(p/'paper-after.json'):
+ raw=(p/'paper-after'/ref['path']).read_bytes();assert sha(raw)==ref['sha256'] and len(raw)==ref['bytes']
+ if ref['path'] not in before or before[ref['path']]['sha256']!=ref['sha256']:outputs.append(ref)
+frozen=lambda path:(p/'paper-after'/path).read_bytes()
+summary=json.loads(frozen('paper/data/summary.json'));verified=json.loads(frozen('paper/data/verification.json'));checks={k:v for k,v in verified['checks'].items() if isinstance(v,bool)}
+assert len(checks)==5 and all(checks.values()) and summary['source_checks_passed'] is True
+cut=re.match(r'^cut at (\S+): ',log).group(1);assert summary['generated_at']==cut
+runs=list(csv.DictReader(frozen('paper/data/runs.csv').decode().splitlines()));run='25MFNPAE37R2';row=next(x for x in runs if x['run_id']==run)
+expected=dict(character='SILENT',ascension='10',outcome='defeat',floor_max='48',has_postmortem='1',n_decisions='1006');assert all(row[k]==v for k,v in expected.items()),{k:row.get(k) for k in expected}
+selected={k:row.get(k) for k in ['run_id','character','ascension','outcome','floor_max','n_decisions','has_postmortem','performance_included','brain_source']}
+write(pub/'paper-snapshot-readback.json',dict(request=result,generated_at=cut,source_cut_bytes=summary['source_cut_bytes'],five_checks=checks,source_checks_passed=True,row_counts=verified['row_counts'],original_count_warnings=verified['checks']['runs.jsonl decision-count mismatches'],selected_run=selected,changed_outputs=outputs,raw_snapshot=False,before_after_frozen_bytes_preserved=True,cost_boundary='Immutable component cuts and estimates, not billed cost.',experiment_boundary='Startup6fbbd82+dirty; later disk publication R383 does not prove loaded behavior or first effective run. No new natural or calibration acceptance claim.'))
+post=load(pub/'postmortem-readback.json');assert len(post['original_ledger_rows'])==6 and post['new_pure_bugs']==[]
+assert sum(len(x['new_evidence']) for x in post['original_ledger_new_support'])==4
+live=r/'.worktrees/live';head,tree=subprocess.check_output(['git','-C',str(live),'rev-parse','HEAD','HEAD^{tree}'],text=True).splitlines();release=json.loads(subprocess.check_output(['git','-C',str(live),'show','HEAD:eval/versions.json']))['release_numbering']['releases'][-1]['release_id']
+state=load(r/'ops/codex-ops/learn.json');h0=state['learning_requests']['roy-20261017-human-pace-h0'];at=subprocess.check_output(['date','+%Y-%m-%d %H:%M:%S %Z'],text=True).strip();print(at,flush=True)
+text=f'''\n- {at} 运维codex处理1427原141302复盘完成：done0/done齐/missing空/audit空，25MFNPAE37R2为Silent A10/F48败；原报告bugs=[]，无新纯bug，不重复追加fix队列或重启/派修复。原24860字节复盘逐字核已在9481165字节旧前缀SHA b4ffb5647676d3e5f408a714e5603c3841f1b8614f4f08ff83ede34be831f01d后仅追加一次；六流2147原引用按offset/len/SHA机械读回，ops不重游戏分析/求解/消费者。原三条增证CLI含四端点（0020一、0385一、0418两），三条提案追溯，共六行逐原行核；同局六SL不增独立分母，原claim/首证/prior/进阶/status/version/shipped与已有evidence前缀保持。\n  原提案silent-proposal-20332373fe0ab68b/Markdown SHA da15f378417cf9d42b83a29cd0d3b317ca7f7a6053bf51af44e214ab8158a542已CLI pending，关联F28T6、F45T6、F48T1—T4及0020/0385/0418/combat+potion；缺替代实战对照，原动作/药水规则保持，既有策略队列接续，本wake不另派模型、不冒implemented/live经验/shipped/新行为号。原首次校验将SL前last7血误作GAME_OVER零血导致断言失败，学习者修脚本后原关键入口/死亡校验及ledger502项0问题通过；原失败说明与原件保持，不冒产品bug或改旧数字。33小原件已压缩逐SHA读回，原大帧/资源/日志/经验/账本不删。原生session01a1487e/gpt-6.1-sol/xhigh/workspace-write/禁网/never实际context已核，不读凭据或扩大权限。\n  唯一nice19 python3 ops/paper_dataset.py --no-raw实rc0，PID{result['pid']}/cut{cut}、{len(runs)}局，本局决策1006/has_postmortem1；五一致性和keyscan CLEAN，原计数警告/费用独立cut及估计边界保留。{len(outputs)}个变化输出按本次前后冻结原字节提交，原.before快照保留，不重复制原日志。运行来源以原run-config的6fbbd82+dirty为准，runs.code=current不作固定提交，启动脏知识原字节未恢复；后续R383磁盘发布不证明已加载/首个生效局或纯同版本自然验收，原watcher H1自然审计与G1c固定漏斗职责不重派。\n  本wakelive读回{head}/tree{tree}/{release}只是当前发布元数据，不改live/当前局/home账号模型promptenv，无game API/重启、源码/tsc/vitest/源full/新发布/号/模拟/监听。H0原130158/r1/thread仍{h0['state']}与0332同优先，481验证/六目标质量/0332根缺口及宽父保持，H2+未派；既有R383宿主0不借作这些门槛。仅本局lessons/六CLI行/一个原提案及本次生成表、自有ops追加/归档经gitleaks私有index提交，保并行修改和普通index；结束不sleep或轮询未来事件。证据paper/materials/20261017-1427-ops/；不代其他角色ACK。\n'''
+appends=load(p/'lesson-appends.json')
+for path in ['paper/materials/decision-log.md','notes/ops-handoff.md','ops/inbox-dev.md','notes/for-roy.md']:
+ with (r/path).open('a') as f:f.write(text)
+ appends.append(dict(path=path,text=text))
+write(p/'own-appends.json',appends);write(p/'paper-owned-manifest.json',outputs)
+write(pub/'ops-closure.json',dict(at=at,events=1,run=run,original_batch_rc=0,new_pure_bugs=[],original_ledger_rows=6,support_rows=3,support_endpoints=4,lesson_owned_bytes=24860,original_proposal='silent-proposal-20332373fe0ab68b',proposal_state='pending',paper_rc=0,changed_outputs=len(outputs),selected_run=selected,actual_live=head,tree=tree,release=release,source_or_runtime_mutation=False,production_tests_or_new_release=False,natural_or_H0_or_0332_acceptance_claim=False,no_other_role_ACK=True))
+for name in ['audit.py','paper.py','finish.py']:(pub/(name+'.txt')).write_bytes((p/name).read_bytes())
+seal=(r/'ops/codex-ops/record-staging/20261017-1340/seal.py').read_text().replace('20261017-1340','20261017-1427').replace('len(ownrows.splitlines()) == 30','len(ownrows.splitlines()) == 6').replace('owned_ledger_rows=30','owned_ledger_rows=6')
+seal=seal.replace('Archive bounded consumer report and waiting proposal dispositions','Archive25MF postmortem and refresh no-raw paper dataset').replace('ops: archive132758 report and preserve original waiting scopes','ops: archive25MF postmortem and one no-raw paper refresh')
+a=seal.index("              host='One unchanged-source strategy batch:");b=seal.index('              wider_parents=',a);seal=seal[:a]+"              host='One completed25MF postmortem,3 support rows containing4 endpoints and3 proposal trace links,1 pending proposal. One fixed-cut no-raw paper refresh0 with frozen outputs. No pure bug/source/test/live publication/game action; startupdirty/R383 first-effective unknown and H0/0332/H1 wider gaps preserved.',\n"+seal[b:]
+(p/'seal.py').write_text(seal)
+print(json.dumps(dict(postmortem=run,new_pure_bugs=0,ledger_rows=6,paper_rc=0,changed_outputs=len(outputs),source_changed=False)))

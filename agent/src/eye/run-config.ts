@@ -1,3 +1,5 @@
+import { HUMAN_PACE_BUDGETS } from "../core/decision-budget.js";
+import { humanPaceH2Policy } from "../core/human-pace-shadow-config.js";
 /**
  * The configuration each run was played with (V4 M4, docs/eval.md §2 and §8): one JSONL row per run in
  * logs/run-config.jsonl (RUN_CONFIG_LOG; "off" writes nothing), written when the loop first sees a new run id.
@@ -139,6 +141,9 @@ export interface RunConfigRow {
       max_answer_blanks: number | null;
     };
   };
+  human_pace?: { schema: string; budgets: typeof HUMAN_PACE_BUDGETS; model_effort: string; required_full_replaced: boolean };
+  human_pace_h2?: { schema: string; mode: string; requested: string; delivered: false;
+    direction_budget_ms: number; card_budget_ms: number; jev_budget_ms: number; actual_selector: string };
   knowledge: {
     prefix: "off" | "full";
     /** The ascension the prompt was rendered for (the run's). */
@@ -481,6 +486,11 @@ export function runConfigRow(
       strict: config.strictJev,
       prompt_log: resolveJevPromptLog(config.log),
     },
+    ...(characterKey(run.character) === "silent" ? { human_pace: { schema: "human-pace-h1-v1", budgets: HUMAN_PACE_BUDGETS, model_effort: "xhigh", required_full_replaced: true } } : {}),
+    ...(humanPaceH2Policy(characterKey(run.character), env).mode !== "off" ? { human_pace_h2: {
+      schema: "human-pace-h2-shadow-v1", mode: "shadow", requested: humanPaceH2Policy(characterKey(run.character), env).requested,
+      delivered: false as const, direction_budget_ms: 60000, card_budget_ms: 5000, jev_budget_ms: 1000,
+      actual_selector: "existing_brain_and_gates_unchanged" } } : {}),
     loop: {
       mode: opts.mode,
       combat_planner: config.combatPlanner,

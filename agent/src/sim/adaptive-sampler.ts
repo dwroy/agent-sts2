@@ -80,16 +80,30 @@ export class AdaptiveSampler {
     if (this.finished) for (const key of this.active) this.used.get(key)!.stop = this.n === this.options.requested ? "max" : "leader";
   }
 
-  result() {
-    if (!this.finished || !this.final) throw new Error("adaptive computation not complete");
+  /** A deadline may stop within a batch. Keep only its actual common prefix; never eliminate from it. */
+  observePartial(prefixes: readonly AdaptiveCandidate[], to: number): void {
+    const request = this.next();
+    if (!request || !Number.isSafeInteger(to) || to < request.from || to > request.to) throw new Error("invalid budget prefix");
+    for (const key of request.active) {
+      const row = prefixes.find((p) => p.key === key);
+      if (!row || row.samples.length !== to) throw new Error("missing budget prefix");
+      const used = this.used.get(key)!;
+      if (to > used.samples) { used.samples = to; used.rounds++; }
+    }
+    this.n = to;
+  }
+
+  result(allowPartial = false) {
+    if ((!this.finished || !this.final) && !allowPartial) throw new Error("adaptive computation not complete");
     const work = new Map<string, number>();
     for (const candidate of this.candidates) work.set(candidate.workGroup ?? candidate.key,
       Math.max(work.get(candidate.workGroup ?? candidate.key) ?? 0, this.used.get(candidate.key)!.samples));
     const full = work.size * this.options.requested, actual = [...work.values()].reduce((a, b) => a + b, 0);
-    return { schema: "sim-adaptive-v1", mode: "on", status: "complete_adaptive", lane: this.options.lane,
+    return { schema: "sim-adaptive-v1", mode: "on", status: this.finished ? "complete_adaptive" : "partial", lane: this.options.lane,
       rule: { ...ADAPTIVE_RULE, first: this.options.first ?? (this.options.lane === "b3" ? ADAPTIVE_RULE.b3First : ADAPTIVE_RULE.b2First),
         zElim: this.options.zElim ?? ADAPTIVE_RULE.zElim, requested: this.options.requested },
-      candidates: this.candidates.map((candidate) => ({ key: candidate.key, ...this.used.get(candidate.key)!, baseline: candidate.baseline === true })),
+      candidates: this.candidates.map((candidate) => ({ key: candidate.key, ...this.used.get(candidate.key)!,
+        ...(!this.finished && this.active.has(candidate.key) ? { stop: "budget" } : {}), baseline: candidate.baseline === true })),
       final: this.final, rounds: this.history, evaluable: this.evaluable,
       work: { full, actual, savedFraction: 1 - actual / full, unit: "unique-option-sample-equivalents" },
       limits: "Actual prefixes only. All candidates remain available with their own sample count. Full-run agreement is an independent admission result, not observed during an early-stopped question." };

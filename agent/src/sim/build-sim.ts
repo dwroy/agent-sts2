@@ -1,3 +1,4 @@
+import { currentDecisionBudget, shadowBudgetAvailable, budgetUnknown } from "../core/decision-budget.js";
 /**
  * B3 (Roy 2026-09-30): each option of a deck-building question against the act boss, by whole fight simulation. The
  * current deck and every option's deck (and HP) run on the same seeds (common random numbers) from the synthetic
@@ -83,7 +84,8 @@ export interface CompareResult {
   adaptive?: JsonValue;
   readiness?: BossReadiness;
   readinessMs?: number;
-  completion?: { required: true; uniqueDecks: number; originalDecks: number; memoHit: boolean; originalComputeMs?: number };
+  completion?: { required: true; uniqueDecks: number; originalDecks: number; memoHit: boolean; originalComputeMs?: number;
+    budgeted?: true; status?: "partial" | "complete_budget"; failure?: false; samples?: number; requested?: number };
   diagnostics?: { decks: number; options: number; deckCards: number; deadlineMs: number | null; orderSearch: Record<string, JsonValue> | null; comparison: Record<string, JsonValue> };
   base: OptionSim;
   options: OptionSim[];
@@ -162,7 +164,9 @@ export async function compareOptions(
     ...(base.meta.asc === 10 ? { captureCore: true, captureResources: true } : {}) };
   const samples = opts.samples ?? BUILD_SIM_SAMPLES;
   const required = opts.requireComplete === true;
-  const cacheKey = required ? memoKey("required-b3-v1", { base, options, samples, seed: opts.seed ?? BUILD_SIM_SEED,
+  const pace = currentDecisionBudget();
+  if (pace) opts = { ...opts, deadlineMs: Math.max(0, Math.min(opts.deadlineMs ?? Infinity, pace.remaining() - 1000)) };
+  const cacheKey = required ? memoKey(pace ? "human-pace-b3-v1" : "required-b3-v1", { base, options, samples, seed: opts.seed ?? BUILD_SIM_SEED,
     quantitative: opts.quantitative, diagnostics: opts.diagnostics, readiness: opts.readiness, buildRank: opts.buildRank,
     ...(opts.adaptive ? { adaptive: { ...ADAPTIVE_RULE, ...opts.adaptive } } : {}), policy: { BOSS_POLICY_THREAT, BOSS_SIM_LOOKAHEAD } }) : null;
   const cached = cacheKey ? completeComparisons.get(runner) : undefined;
@@ -219,20 +223,21 @@ export async function compareOptions(
   let orderSearch: Record<string, JsonValue> | null = null;
   let order = allOrders[0]!;
   if (allOrders.length > 1) {
-    const first = await runner.run({ ...(opts.onProgress ? { onProgress: opts.onProgress } : {}), base, decks: [{}], orders: allOrders, samples: Math.min(samples, BUILD_SIM_ORDER_SAMPLES), seed, ...(required ? { progressTimeoutMs: 120_000 } : {}), ...(opts.diagnostics ? { diagnostics: true } : {}), ...(!required && opts.deadlineMs !== undefined ? { deadlineMs: opts.deadlineMs / 4 } : {}), ...(opts.now ? { now: opts.now } : {}) });
-    if (required && (first.timedOut || first.complete.length !== Math.min(samples, BUILD_SIM_ORDER_SAMPLES) || first.complete.some((id, i) => id !== i))) throw new Error("required boss order search incomplete");
-    if (opts.diagnostics) orderSearch = phase(first, required || opts.deadlineMs === undefined ? undefined : opts.deadlineMs / 4);
+    const first = await runner.run({ ...(opts.onProgress ? { onProgress: opts.onProgress } : {}), base, decks: [{}], orders: allOrders, samples: Math.min(samples, BUILD_SIM_ORDER_SAMPLES), seed, ...(required && !pace ? { progressTimeoutMs: 120_000 } : {}), ...(opts.diagnostics ? { diagnostics: true } : {}), ...((!required || pace) && opts.deadlineMs !== undefined ? { deadlineMs: Math.max(0, Math.min(opts.deadlineMs / 4, pace?.remaining() ?? Infinity)) } : {}), ...(opts.now ? { now: opts.now } : {}) });
+    if (required && !pace && (first.timedOut || first.complete.length !== Math.min(samples, BUILD_SIM_ORDER_SAMPLES) || first.complete.some((id, i) => id !== i))) throw new Error("required boss order search incomplete");
+    if (opts.diagnostics) orderSearch = { ...phase(first, required && !pace || opts.deadlineMs === undefined ? undefined : opts.deadlineMs / 4),
+      ...(pace ? { status: first.complete.length ? "measured" : "unknown", basis: first.complete.length ? "completed_paired_samples" : "existing_default_order_no_samples" } : {}) };
     const lines = allOrders.map((_, o) => summarizeLine(0, lineOf(first.outcomes, [0], o, first.complete)));
-    order = allOrders[bestOrder(lines)]!;
+    if (first.complete.length > 0 || !pace) order = allOrders[bestOrder(lines)]!;
   }
   const orders = [order];
-  const left = !required && opts.deadlineMs !== undefined ? Math.max(0, opts.deadlineMs - (now() - started)) : undefined;
-  const request = { ...(opts.onProgress ? { onProgress: opts.onProgress } : {}), base, decks, stripes, orders, samples, seed, ...(required ? { progressTimeoutMs: 120_000 } : {}), ...(opts.diagnostics ? { diagnostics: true } : {}), ...(left !== undefined ? { deadlineMs: left } : {}), ...(opts.now ? { now: opts.now } : {}) };
-  if (opts.adaptive?.mode === "on" && !required) throw new Error("adaptive B3 requires complete computation");
+  const left = (!required || pace) && opts.deadlineMs !== undefined ? Math.max(0, Math.min(opts.deadlineMs - (now() - started), pace ? pace.remaining() - 1000 : Infinity)) : undefined;
+  const request = { ...(opts.onProgress ? { onProgress: opts.onProgress } : {}), base, decks, stripes, orders, samples, seed, ...(required && !pace ? { progressTimeoutMs: 120_000 } : {}), ...(opts.diagnostics ? { diagnostics: true } : {}), ...(left !== undefined ? { deadlineMs: left } : {}), ...(opts.now ? { now: opts.now } : {}) };
+  if (opts.adaptive?.mode === "on" && !required && !pace) throw new Error("adaptive B3 requires complete computation");
   const actual = opts.adaptive?.mode === "on" && options.length ? await runAdaptiveDecks(runner, request, deckOf, opts.adaptive.allowS) : null;
   const run = actual?.run ?? await runner.run(request);
   const complete = run.complete;
-  if (required && (run.timedOut || (!actual && complete.length !== samples) || complete.some((id, i) => id !== i))) {
+  if (required && !pace && (run.timedOut || (!actual && complete.length !== samples) || complete.some((id, i) => id !== i))) {
     throw new Error(`required boss comparison incomplete: ${complete.length}/${samples}`);
   }
   const summarize = (ids: number[], count = complete.length): BossSimLineResult & { order: string | null } => ({ ...summarizeLine(0, lineOf(run.outcomes, ids, 0, complete.slice(0, count))), order: order?.label ?? null });
@@ -285,12 +290,12 @@ export async function compareOptions(
     return actual ? { ...value, sampling: actual.counts.get(option.key) } : value;
   });
   const readinessStart = performance.now();
-  const readiness = opts.readiness && opts.quantitative ? bossReadiness(baseLine.outcomes, {
+  const readiness = opts.readiness && opts.quantitative && shadowBudgetAvailable("P1_readiness_shadow") ? bossReadiness(baseLine.outcomes, {
     calibratedWin: base.continuation ? baseLine.winProb : calibratedWinProb(baseLine.winProb, BUILD_SIM_CALIBRATION_SAMPLES, "pre", base.meta.asc),
     ...(base.continuation ? {} : { calibrate: (raw: number) => calibratedWinProb(raw, BUILD_SIM_CALIBRATION_SAMPLES, "pre", base.meta.asc) }),
   }) : undefined;
   const readinessMs = readiness ? performance.now() - readinessStart : undefined;
-  const adaptive = !actual && required && opts.adaptive && options.length && n === samples ? safeAdaptiveShadow([
+  const adaptive = !actual && required && opts.adaptive && options.length && n === samples && shadowBudgetAvailable("C2_sampling_shadow") ? safeAdaptiveShadow([
     { key: "@current", samples: baseLine.outcomes, baseline: true, workGroup: "0" },
     ...options.map((option) => ({ key: option.key, samples: summarize(deckOf.get(option.key)!).outcomes, workGroup: deckOf.get(option.key)!.join(",") })),
   ], { lane: "b3", requested: samples, allowS: opts.adaptive.allowS }) : null;
@@ -301,7 +306,8 @@ export async function compareOptions(
     adaptive.work.savedFraction = 1 - adaptive.work.shadow / adaptive.work.full;
   }
   let buildRanking: JsonValue | undefined;
-  if (opts.buildRank) {
+  if (opts.buildRank && !shadowBudgetAvailable("P2_S_build_counterfactual")) buildRanking = budgetUnknown("P2_S_build_counterfactual");
+  if (opts.buildRank && shadowBudgetAvailable("P2_S_build_counterfactual")) {
     try {
       buildRanking = toJsonValue(buildRank(simOf("current", baseLine, base.solver.player.hp, true), out,
         { base: baseLine.outcomes, options: new Map(options.map((option) => [option.key, optionLines.get(option.key)!.outcomes])) },
@@ -313,7 +319,7 @@ export async function compareOptions(
     }
   }
   let productionComparison: JsonValue | undefined;
-  if (adaptive && "candidates" in adaptive && opts.buildRank && asRecord(buildRanking)["status"] === "produced") {
+  if (adaptive && "candidates" in adaptive && shadowBudgetAvailable("C2_ranking_counterfactual") && opts.buildRank && asRecord(buildRanking)["status"] === "produced") {
     try {
       const counts = new Map(adaptive.candidates.map((candidate) => [candidate.key, candidate.samples]));
       const prefixBase = summarize([0], counts.get("@current")!);
@@ -350,7 +356,9 @@ export async function compareOptions(
     ...(adaptive ? { adaptive: toJsonValue({ ...adaptive, ...(productionComparison ? { production_comparison: productionComparison } : {}),
       input_key: cacheKey, fixed_order_search_in_work: true }) } : {}),
     ...(readiness ? { readiness, readinessMs } : {}),
-    ...(required ? { completion: { required: true as const, uniqueDecks: decks.length, originalDecks, memoHit: false } } : {}),
+    ...(required ? { completion: { required: true as const, uniqueDecks: decks.length, originalDecks, memoHit: false,
+      ...(pace ? { budgeted: true as const, status: run.timedOut || n < samples && actual?.adaptive.status !== "complete_adaptive"
+        ? "partial" as const : "complete_budget" as const, failure: false as const, samples: n, requested: samples } : {}) } } : {}),
     ...(opts.diagnostics ? { diagnostics: { decks: decks.length, options: options.length, deckCards: base.piles.draw.length,
       deadlineMs: opts.deadlineMs ?? null, orderSearch, comparison: phase(run, left) } } : {}),
     base: simOf("current", baseLine, base.solver.player.hp, true),
@@ -363,6 +371,6 @@ export async function compareOptions(
     orders: allOrders.length,
     order: order?.label ?? null,
   };
-  if (required && cacheKey) completeComparisons.set(runner, { key: cacheKey, result: structuredClone(result) });
+  if (required && cacheKey && (!pace || n > 0)) completeComparisons.set(runner, { key: cacheKey, result: structuredClone(result) });
   return result;
 }

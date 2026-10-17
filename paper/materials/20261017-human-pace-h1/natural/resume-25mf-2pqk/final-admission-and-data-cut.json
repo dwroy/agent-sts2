@@ -1,0 +1,502 @@
+{
+  "at": "2026-10-17T15:32:54.199557+08:00",
+  "state": "two_complete_H1_observations_delivered_pacing_target_not_met",
+  "admitted": [
+    {
+      "run_id": "25MFNPAE37R2",
+      "startup": {
+        "ts": "2026-10-17T04:53:29.820Z",
+        "code": {
+          "commit": "6fbbd82abd6d407dbaf93f82639b7f927efa54a0",
+          "code": "6fbbd82+dirty",
+          "dirty": true,
+          "dirty_files": [
+            "knowledge/characters/silent/boss-damage.json",
+            "knowledge/characters/silent/construction-opportunities.json",
+            "knowledge/characters/silent/monster-records.json",
+            "knowledge/characters/silent/outcome-stats.json",
+            "knowledge/characters/silent/room-costs.json",
+            "knowledge/common/card-upgrades.json",
+            "knowledge/common/monster-db.json",
+            "knowledge/common/move-model.json",
+            "notes/monster-db-check.md"
+          ],
+          "branch": "live",
+          "worktree": "live"
+        },
+        "human_pace": {
+          "schema": "human-pace-h1-v1",
+          "budgets": {
+            "ordinary": 10000,
+            "elite": 15000,
+            "boss": 30000,
+            "retry": 10000,
+            "routine": 5000,
+            "brain": 90000,
+            "direction": 60000
+          },
+          "model_effort": "xhigh",
+          "required_full_replaced": true
+        },
+        "restart": false,
+        "source": {
+          "path": "logs/run-config.jsonl",
+          "off": 1939174,
+          "len": 5752,
+          "sha256": "1c2e31ad8392a0c31d658b83454235e4f1872648d7239f27e1e9b59c0e2a97fc"
+        }
+      },
+      "terminal": {
+        "path": "logs/runs.jsonl",
+        "off": 356728,
+        "len": 794,
+        "sha256": "4dc4a5d84e3f03a44847dd4a428fdba82b4489e259cf2043f1e3113d19b585bf"
+      },
+      "ended": "2026-10-17T06:10:50.545Z",
+      "duration_minutes": 77.34541666666668,
+      "budget_rows": 1006,
+      "native_L2_model_effort": {
+        "gpt-6.1-sol/xhigh": 58
+      },
+      "over_90": false
+    },
+    {
+      "run_id": "2PQK67ULZY90",
+      "startup": {
+        "ts": "2026-10-17T06:20:02.733Z",
+        "code": {
+          "commit": "5782a41c4b1db735e3eba8e769e0ad52c356f136",
+          "code": "5782a41+dirty",
+          "dirty": true,
+          "dirty_files": [
+            "knowledge/characters/silent/boss-damage.json",
+            "knowledge/characters/silent/construction-opportunities.json",
+            "knowledge/characters/silent/monster-records.json",
+            "knowledge/characters/silent/outcome-stats.json",
+            "knowledge/characters/silent/room-costs.json",
+            "knowledge/common/card-upgrades.json",
+            "knowledge/common/monster-db.json",
+            "knowledge/common/move-model.json",
+            "notes/fight-value-backtest-silent.md",
+            "notes/monster-db-check.md"
+          ],
+          "branch": "live",
+          "worktree": "live"
+        },
+        "human_pace": {
+          "schema": "human-pace-h1-v1",
+          "budgets": {
+            "ordinary": 10000,
+            "elite": 15000,
+            "boss": 30000,
+            "retry": 10000,
+            "routine": 5000,
+            "brain": 90000,
+            "direction": 60000
+          },
+          "model_effort": "xhigh",
+          "required_full_replaced": true
+        },
+        "restart": false,
+        "source": {
+          "path": "logs/run-config.jsonl",
+          "off": 1944926,
+          "len": 5791,
+          "sha256": "3b690716138eb79b84f4b250f29120127cfa6f58d0a17bbda7560a43181492ec"
+        }
+      },
+      "terminal": {
+        "path": "logs/runs.jsonl",
+        "off": 357522,
+        "len": 823,
+        "sha256": "a4c664884e368a4d6cf69304c22f53808c2cf0e166350fa7d8e49d509e165972"
+      },
+      "ended": "2026-10-17T07:27:16.006Z",
+      "duration_minutes": 67.22121666666666,
+      "budget_rows": 857,
+      "native_L2_model_effort": {
+        "gpt-6.1-sol/xhigh": 45
+      },
+      "over_90": false
+    }
+  ],
+  "excluded_mixed": [
+    "5H83F3J0XSTE"
+  ],
+  "unchanged_baseline_ids": [
+    "YZWV37N2MU6N",
+    "N9GKED3PMEV3",
+    "CVJ4MLQF4CSY",
+    "DC32RW0A80V1",
+    "2Q6ZYZ6JHM0M"
+  ],
+  "selected_valid_original_ranges": 15489,
+  "frozen_inputs": [
+    {
+      "manifest": {
+        "path": "baseline-r2/manifest.json",
+        "bytes": 5752,
+        "sha256": "d63a58148f12cc0ba4fe7e621413f028b5b0a472b65a108c2ef3022aa8f8ea85"
+      },
+      "original_range_verification": {
+        "path": "baseline-r2/provenance-verification.json",
+        "bytes": 434,
+        "sha256": "f5b50aea03ba67bb8a7de061b9c014bb6d782390d04f52c4b96c103fe0ff86db"
+      },
+      "counts": {
+        "brain": 237,
+        "codex-calls": 240,
+        "decisions": 5239,
+        "run-config": 7,
+        "runs": 6,
+        "sl-attempts": 45,
+        "states": 5678
+      },
+      "complete_source_bounds": {
+        "run-config": {
+          "path": "logs/run-config.jsonl",
+          "inode": 153607,
+          "reused_exact_projection": "baseline/run-config.jsonl.gz",
+          "max_selected_row_end": 1928062,
+          "whole_initial_cut_immutability": "not inferred; every selected row has offset/length/SHA"
+        },
+        "runs": {
+          "path": "logs/runs.jsonl",
+          "inode": 58822,
+          "reused_exact_projection": "baseline/runs.jsonl.gz",
+          "max_selected_row_end": 355966,
+          "whole_initial_cut_immutability": "not inferred; every selected row has offset/length/SHA"
+        },
+        "decisions": {
+          "path": "logs/decisions.jsonl",
+          "inode": 58857,
+          "reused_exact_projection": "baseline/decisions.jsonl.gz",
+          "max_selected_row_end": 2172022321,
+          "whole_initial_cut_immutability": "not inferred; every selected row has offset/length/SHA"
+        },
+        "states": {
+          "path": "logs/states.jsonl",
+          "inode": 58886,
+          "reused_exact_projection": "baseline/states.jsonl.gz",
+          "max_selected_row_end": 13823228863,
+          "whole_initial_cut_immutability": "not inferred; every selected row has offset/length/SHA"
+        },
+        "brain": {
+          "path": "logs/brain.jsonl",
+          "inode": 153608,
+          "complete_prefix_bytes": 724791850,
+          "scan_start": 685635821,
+          "mtime_ns": 1792204887954469157,
+          "prefix_hash": "per selected raw row SHA256; whole historical source not reread for hashing"
+        },
+        "codex-calls": {
+          "path": "logs/codex-calls.jsonl",
+          "inode": 298602,
+          "complete_prefix_bytes": 42567483,
+          "scan_start": 41526283,
+          "mtime_ns": 1792204887946469158,
+          "prefix_hash": "per selected raw row SHA256; whole historical source not reread for hashing"
+        },
+        "sl-attempts": {
+          "path": "logs/sl-attempts.jsonl",
+          "inode": 2158,
+          "complete_prefix_bytes": 44993904,
+          "scan_start": 43865613,
+          "mtime_ns": 1792205487262416013,
+          "prefix_hash": "per selected raw row SHA256; whole historical source not reread for hashing"
+        }
+      },
+      "invalid_original_rows": [
+        {
+          "path": "logs/brain.jsonl",
+          "off": 702777369,
+          "len": 2024,
+          "sha256": "8d2058eda3f0631ff736f05185fc4b1a7968296601746aada1ce5a1d87da9472",
+          "matched_run_strings": [
+            "CVJ4MLQF4CSY"
+          ],
+          "error": "Invalid control character at: line 1 column 1322 (char 1321)",
+          "row_identity": "unknown; do not assign using embedded historical run strings"
+        },
+        {
+          "path": "logs/codex-calls.jsonl",
+          "off": 41981201,
+          "len": 2800,
+          "sha256": "c3c7fe09b9fc8a1f0f043686eabd4ead47daca46b74134336bd1521ba7c1814a",
+          "matched_run_strings": [
+            "CVJ4MLQF4CSY"
+          ],
+          "error": "Invalid control character at: line 1 column 2800 (char 2799)",
+          "row_identity": "unknown; do not assign using embedded historical run strings"
+        }
+      ]
+    },
+    {
+      "manifest": {
+        "path": "inputs-25MFNPAE37R2/manifest.json",
+        "bytes": 4028,
+        "sha256": "c3e977726de2f4dbd7f2fa9b65f86ab55a3948d5a1b46b23668e53b7f44f46e9"
+      },
+      "original_range_verification": {
+        "path": "inputs-25MFNPAE37R2/provenance-verification.json",
+        "bytes": 432,
+        "sha256": "0ba015676dc3c6e3b0ee50baf7b486fe818c09aec13033b159a7720bc8d95898"
+      },
+      "counts": {
+        "brain": 58,
+        "codex-calls": 58,
+        "decisions": 1006,
+        "run-config": 1,
+        "runs": 1,
+        "sl-attempts": 10,
+        "states": 1056
+      },
+      "complete_source_bounds": {
+        "run-config": {
+          "path": "logs/run-config.jsonl",
+          "inode": 153607,
+          "complete_prefix_bytes": 1950717,
+          "scan_start": 1939174,
+          "mtime_ns": 1792218007985305265,
+          "prefix_hash": "per selected raw row SHA256; whole historical source not reread for hashing"
+        },
+        "runs": {
+          "path": "logs/runs.jsonl",
+          "inode": 58822,
+          "complete_prefix_bytes": 357522,
+          "scan_start": 356728,
+          "mtime_ns": 1792217564985343450,
+          "prefix_hash": "per selected raw row SHA256; whole historical source not reread for hashing"
+        },
+        "decisions": {
+          "path": "logs/decisions.jsonl",
+          "inode": 58857,
+          "complete_prefix_bytes": 2243505602,
+          "scan_start": 2202310338,
+          "mtime_ns": 1792220215405107898,
+          "prefix_hash": "per selected raw row SHA256; whole historical source not reread for hashing"
+        },
+        "states": {
+          "path": "logs/states.jsonl",
+          "inode": 58886,
+          "complete_prefix_bytes": 13911786830,
+          "scan_start": 13860627902,
+          "mtime_ns": 1792220215405107898,
+          "prefix_hash": "per selected raw row SHA256; whole historical source not reread for hashing"
+        },
+        "brain": {
+          "path": "logs/brain.jsonl",
+          "inode": 153608,
+          "complete_prefix_bytes": 744249950,
+          "scan_start": 732394150,
+          "mtime_ns": 1792220135393115306,
+          "prefix_hash": "per selected raw row SHA256; whole historical source not reread for hashing"
+        },
+        "codex-calls": {
+          "path": "logs/codex-calls.jsonl",
+          "inode": 298602,
+          "complete_prefix_bytes": 43173495,
+          "scan_start": 42783914,
+          "mtime_ns": 1792220135389115308,
+          "prefix_hash": "per selected raw row SHA256; whole historical source not reread for hashing"
+        },
+        "sl-attempts": {
+          "path": "logs/sl-attempts.jsonl",
+          "inode": 2158,
+          "complete_prefix_bytes": 45349924,
+          "scan_start": 45176181,
+          "mtime_ns": 1792219208693199536,
+          "prefix_hash": "per selected raw row SHA256; whole historical source not reread for hashing"
+        }
+      },
+      "invalid_original_rows": []
+    },
+    {
+      "manifest": {
+        "path": "inputs-2PQK67ULZY90/manifest.json",
+        "bytes": 4026,
+        "sha256": "386b0850d24a9799db2b37b028103e0e51689d5176e0f2f0353d1b71ea454cd9"
+      },
+      "original_range_verification": {
+        "path": "inputs-2PQK67ULZY90/provenance-verification.json",
+        "bytes": 430,
+        "sha256": "65d70c75e65447f4410cb60bf3d9896981b12033ec36bb07f35ef6afe7eed77d"
+      },
+      "counts": {
+        "brain": 45,
+        "codex-calls": 45,
+        "decisions": 857,
+        "run-config": 1,
+        "runs": 1,
+        "sl-attempts": 11,
+        "states": 887
+      },
+      "complete_source_bounds": {
+        "run-config": {
+          "path": "logs/run-config.jsonl",
+          "inode": 153607,
+          "complete_prefix_bytes": 1950717,
+          "scan_start": 1944926,
+          "mtime_ns": 1792218007985305265,
+          "prefix_hash": "per selected raw row SHA256; whole historical source not reread for hashing"
+        },
+        "runs": {
+          "path": "logs/runs.jsonl",
+          "inode": 58822,
+          "complete_prefix_bytes": 358345,
+          "scan_start": 357522,
+          "mtime_ns": 1792222149108939669,
+          "prefix_hash": "per selected raw row SHA256; whole historical source not reread for hashing"
+        },
+        "decisions": {
+          "path": "logs/decisions.jsonl",
+          "inode": 58857,
+          "complete_prefix_bytes": 2253385091,
+          "scan_start": 2229930090,
+          "mtime_ns": 1792222041024947814,
+          "prefix_hash": "per selected raw row SHA256; whole historical source not reread for hashing"
+        },
+        "states": {
+          "path": "logs/states.jsonl",
+          "inode": 58886,
+          "complete_prefix_bytes": 13930793305,
+          "scan_start": 13898247133,
+          "mtime_ns": 1792222041024947814,
+          "prefix_hash": "per selected raw row SHA256; whole historical source not reread for hashing"
+        },
+        "brain": {
+          "path": "logs/brain.jsonl",
+          "inode": 153608,
+          "complete_prefix_bytes": 746002292,
+          "scan_start": 740319576,
+          "mtime_ns": 1792221826208964984,
+          "prefix_hash": "per selected raw row SHA256; whole historical source not reread for hashing"
+        },
+        "codex-calls": {
+          "path": "logs/codex-calls.jsonl",
+          "inode": 298602,
+          "complete_prefix_bytes": 43230927,
+          "scan_start": 43034637,
+          "mtime_ns": 1792221826208964984,
+          "prefix_hash": "per selected raw row SHA256; whole historical source not reread for hashing"
+        },
+        "sl-attempts": {
+          "path": "logs/sl-attempts.jsonl",
+          "inode": 2158,
+          "complete_prefix_bytes": 45534986,
+          "scan_start": 45328307,
+          "mtime_ns": 1792222036000948199,
+          "prefix_hash": "per selected raw row SHA256; whole historical source not reread for hashing"
+        }
+      },
+      "invalid_original_rows": []
+    }
+  ],
+  "source_comparability": {
+    "path": "resume-25mf-2pqk/admission-and-R383-comparability.json",
+    "bytes": 4810,
+    "sha256": "f657847d8bcf48c667c15e08504688b103f7d7952c02caab21199c1e0bee6ac7"
+  },
+  "original_ops_host_readback": {
+    "path": "resume-25mf-2pqk/original-ops-host-readback.json",
+    "bytes": 1796,
+    "sha256": "1b06c53d565b1b8aff82a4b9bf9359a68c8dd3147fd41cdd2663029f657f411c"
+  },
+  "second_one_shot_terminal": {
+    "path": "resume-25mf-2pqk/terminal-event.json",
+    "bytes": 787,
+    "sha256": "fa7939f021a9c31a2e9df40e1caee86d4647bb50eae613aded533a2b02620906"
+  },
+  "lane_mismatches": 0,
+  "explicit_lane_counts": {
+    "b3": 269,
+    "b2": 621
+  },
+  "latency_audit_outliers": [
+    {
+      "run_id": "N9GKED3PMEV3",
+      "label": "map/route-change",
+      "wall_ms": 70929.0,
+      "logged_current_compute_ms": 0,
+      "source": {
+        "path": "logs/decisions.jsonl",
+        "off": 2057147738,
+        "len": 4456,
+        "sha256": "63746370e876adcc4cae488de270c87b16ed79257e48602e08f242bd18f062fa"
+      },
+      "limit": "route carry row retains older observed timestamp; do not substitute ts-observed as current compute"
+    },
+    {
+      "run_id": "CVJ4MLQF4CSY",
+      "label": "map/route-change",
+      "wall_ms": 206501.0,
+      "logged_current_compute_ms": 0,
+      "source": {
+        "path": "logs/decisions.jsonl",
+        "off": 2099893463,
+        "len": 4687,
+        "sha256": "b22fb8963d4742302a85c7588565ebd124d48604adb06f1c4676dbc724105427"
+      },
+      "limit": "route carry row retains older observed timestamp; do not substitute ts-observed as current compute"
+    },
+    {
+      "run_id": "DC32RW0A80V1",
+      "label": "map/route-change",
+      "wall_ms": 75342.0,
+      "logged_current_compute_ms": 0,
+      "source": {
+        "path": "logs/decisions.jsonl",
+        "off": 2113438771,
+        "len": 5782,
+        "sha256": "c885c81f24da2e2c3d75f99bbcaff5f3c373520d360bff43186be1407d87470d"
+      },
+      "limit": "route carry row retains older observed timestamp; do not substitute ts-observed as current compute"
+    },
+    {
+      "run_id": "2PQK67ULZY90",
+      "label": "map/route-change",
+      "wall_ms": 65990.0,
+      "logged_current_compute_ms": 0,
+      "source": {
+        "path": "logs/decisions.jsonl",
+        "off": 2233608651,
+        "len": 4593,
+        "sha256": "1cbadc4a6eb5d060fbd3f1426ab73a790d0c7d32cfb6c8353c7438abe62d0f6c"
+      },
+      "limit": "route carry row retains older observed timestamp; do not substitute ts-observed as current compute"
+    },
+    {
+      "run_id": "2PQK67ULZY90",
+      "label": "map/route-change",
+      "wall_ms": 57658.0,
+      "logged_current_compute_ms": 0,
+      "source": {
+        "path": "logs/decisions.jsonl",
+        "off": 2249660856,
+        "len": 6482,
+        "sha256": "638f1de68921ecf7d48d09a471bfe569d2704c4c980452118d132b7b94f5131a"
+      },
+      "limit": "route carry row retains older observed timestamp; do not substitute ts-observed as current compute"
+    }
+  ],
+  "analysis": {
+    "path": "resume-25mf-2pqk/analysis-final.json",
+    "bytes": 223296,
+    "sha256": "7aa9cb93e235152afae00a1ccf0d7f00aeaf892c73f78bea6dfa41e547772f6e"
+  },
+  "report": {
+    "path": "completed-report.md",
+    "bytes": 18177,
+    "sha256": "9ca188172e3438225170b73d6f55b697733919ee8e6e5b13deb8d6d759713a83"
+  },
+  "CSV": {
+    "path": "resume-25mf-2pqk/latencies-final.csv",
+    "bytes": 11291,
+    "sha256": "b27b8cb71e309cf621036887edeb6471fd348122749c8deb5cba29f86df76a7e"
+  },
+  "health_limits": "2PQK F33 one sample-identity mismatch episode, two pending then one C1 degraded; root cause unknown; no new stage or fix",
+  "all_budgets_strictly_met": false,
+  "45_to_60_minute_goal_met": false,
+  "victory_or_calibration_improvement_claim": false,
+  "no_game_or_model_calls": true
+}

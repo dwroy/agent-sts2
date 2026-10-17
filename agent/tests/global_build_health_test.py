@@ -39,6 +39,20 @@ class Health(unittest.TestCase):
         self.assertTrue(value['alert'])
         self.assertEqual(h.global_build_health({'loop': {'global_build_eval': 'off'}}, missing, LABELS)['expected'], 0)
 
+    def test_budget_prefixes_remain_incomplete_without_hiding_real_worker_errors(self):
+        target = {'status': 'budgeted_partial', 'reused_current': False, 'wall_ms': 12,
+                  'completion': {'budgeted': True, 'failure': False, 'status': 'partial', 'samples': 260},
+                  'rows': [{'samples': 260, 'delta_win': {'mean': .1, 'se': .02}, 'unknown': 'budgeted_prefix_incomplete'}]}
+        value = h.global_build_health(CONFIG, [row(i, targets=[target]) for i in range(4)], LABELS)
+        self.assertEqual((value['covered'], value['budgeted_partial'], value['service_failures']), (4, 4, 0))
+        self.assertEqual(value['unknown_reasons'], {'budgeted_prefix_incomplete': 4})
+        self.assertEqual(value['future_target_wall_ms']['n'], 4)
+        self.assertFalse(value['alert'])
+        failed = {'status': 'unknown', 'rows': [{'unknown': 'global_computation_failed:fixed resource'}]}
+        mixed = h.global_build_health(CONFIG, [row(i, targets=[target, failed]) for i in range(3)], LABELS)
+        self.assertEqual((mixed['budgeted_partial'], mixed['service_failures']), (3, 3))
+        self.assertTrue(mixed['alert'])
+
     def test_service_failures_stay_distinct_from_quality_gaps(self):
         failed = [{'status': 'unknown', 'rows': [{'unknown': 'global_computation_failed:fixed worker'}]}]
         value = h.global_build_health(CONFIG, [row(i, targets=failed) for i in range(3)], LABELS)

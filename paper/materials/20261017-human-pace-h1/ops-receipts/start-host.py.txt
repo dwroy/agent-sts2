@@ -1,0 +1,32 @@
+from pathlib import Path
+import json, subprocess
+
+r = Path.cwd(); phase = r / 'paper/materials/20261017-human-pace-h1'
+pub = phase / 'ops-receipts'
+load = lambda f: json.loads(f.read_bytes())
+def write(f, v): f.write_text(json.dumps(v, ensure_ascii=False, indent=2) + '\n')
+v = load(pub / 'ops-publication.json'); bid = v['host_batch']
+assert bid == '20261016-075726-strategy-proposal'
+assert not (pub / 'ops-host-request.json').exists()
+assert subprocess.check_output(['git', '-C', str(r / '.worktrees/live'), 'rev-parse', 'HEAD'], text=True).strip() == v['actual_live']
+b = load(r / 'ops/codex-ops/learn.json')['batches'][bid]
+assert v['tree'] not in json.dumps(b.get('fallback_checks', []))
+inode = str((r / 'ops/live-merge.lock').stat().st_ino)
+assert not [x for x in Path('/proc/locks').read_text().splitlines()
+            if x.split()[5].split(':')[-1] == inode and x.split()[1] == 'FLOCK']
+at = subprocess.check_output(['date', '+%Y-%m-%d %H:%M:%S %Z'], text=True).strip()
+argv = ['nice', '-n', '19', 'bash', 'ops/codex-ops-do.sh', 'learner-recheck', bid]
+with (pub / 'ops-host-broker.log').open('xb') as out:
+    child = subprocess.Popen(argv, cwd=r, stdout=out, stderr=subprocess.STDOUT,
+                             stdin=subprocess.DEVNULL, start_new_session=True)
+rec = dict(at=at, batch=bid, request_pid=child.pid, argv=argv,
+    source=v['source'], live=v['actual_live'], tree=v['tree'], request_count=1,
+    scope='Original075726 unique host channel; new actual final combination, not a repeated source full',
+    status='Request process started; actual host start and completion require separate readback',
+    host_rc=None, source_full_rc=0, no_previous_green_borrowed=True)
+write(pub / 'ops-host-request.json', rec)
+pending = r / 'ops/codex-ops/pending-integrations/20261017-human-pace-h1.json'
+q = load(pending); q.update(status='V5-R380 published; unique original host requested, actual start pending readback',
+    host_requested=True, host_request=rec, host_rc=None)
+write(pending, q)
+print(json.dumps(dict(at=at, request_pid=child.pid, batch=bid, tree=v['tree'], host_result='pending')), flush=True)

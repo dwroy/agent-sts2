@@ -1,0 +1,479 @@
+{
+  "at": "2026-10-17 12:01:51 CST",
+  "batch": "20261017-113243-fix-batch",
+  "source": "c40e43fd25c200a01f4da94a4dac8db1b34664a8",
+  "source_parent": "d675d48f6f81d39ec1354e244dd69569b8be33ec",
+  "source_tree": "90b5df862af3d3378135edf22aa3b7569219333c",
+  "paths": [
+    "agent/src/sim/build-sim.ts",
+    "agent/src/sim/global-build-observer.ts",
+    "agent/src/sim/global-build.ts",
+    "agent/tests/adaptive_health_test.py",
+    "agent/tests/fixtures/h1-budget-completion.json",
+    "agent/tests/global-build-observer.test.ts",
+    "agent/tests/global-build.test.ts",
+    "agent/tests/global_build_health_test.py",
+    "agent/tests/human-pace-sampling.test.ts",
+    "ops/adaptive_health.py",
+    "ops/global_build_health.py"
+  ],
+  "files": [
+    {
+      "path": "agent/src/sim/build-sim.ts",
+      "sha256": "b95f81596b11bd7015b77ea08f2fd31b2e3d76d9ec24d5912d268147a9c2fd34"
+    },
+    {
+      "path": "agent/src/sim/global-build-observer.ts",
+      "sha256": "02fd7bc8d58ef0a55baa6a1f46d8760d42fd410d1f21f55eb76621eb52e3994e"
+    },
+    {
+      "path": "agent/src/sim/global-build.ts",
+      "sha256": "90150f4ccf3432b9045217fc47b4adef33279584de3baade64f94b0385922043"
+    },
+    {
+      "path": "agent/tests/adaptive_health_test.py",
+      "sha256": "6c1a065e51deeb076e29249b090bdaa5ac505e85000d42d73e0fa0302a5a8214"
+    },
+    {
+      "path": "agent/tests/fixtures/h1-budget-completion.json",
+      "sha256": "5a69eda1ec70c4c70bc3465d025c5ad87bffcb21ffeeff59e77aff8992255e8d"
+    },
+    {
+      "path": "agent/tests/global-build-observer.test.ts",
+      "sha256": "35d3d6492475d48af99cc5e8ba27da758d548ee6aa4535fb152491db9b930ed0"
+    },
+    {
+      "path": "agent/tests/global-build.test.ts",
+      "sha256": "70070aaf09dd968e14ca457716feb5b86e3bf9c243d7851120062143809d3622"
+    },
+    {
+      "path": "agent/tests/global_build_health_test.py",
+      "sha256": "ac6c1b1d51cd325a6de96e8a9fec76bcb782482a13f13d26d7624e8a8bf42b14"
+    },
+    {
+      "path": "agent/tests/human-pace-sampling.test.ts",
+      "sha256": "dbc7bc31dd702bc0778cb4fa9d17aa5ef626ba78f46982a544c7f86e15df163b"
+    },
+    {
+      "path": "ops/adaptive_health.py",
+      "sha256": "49dd06ac9ab1a8cc4e1ff0b3c44a2c6f9e1cf6d5976c506d4a276a8c2fb9fe43"
+    },
+    {
+      "path": "ops/global_build_health.py",
+      "sha256": "c156fae120daa48b455981d85c40a8fbc9d59061ff355a8b59fa36ce679f0983"
+    }
+  ],
+  "patch_sha256": "3d290c9d8220d07644db06b82722d1a6173a1ef4785466598c2cdb244a1c6a36",
+  "canonical_original_state": "failed",
+  "canonical_original_rc": 0,
+  "canonical_original_merged": null,
+  "original_report": {
+    "task": "fix-batch",
+    "base": "d675d48f6f81d39ec1354e244dd69569b8be33ec",
+    "fixes": [
+      {
+        "item": "h1-budget-completion-health-contract：限时前缀被C2/G2误报为错误及缓存完成身份混用",
+        "commit": "c40e43fd25c200a01f4da94a4dac8db1b34664a8",
+        "test": "agent/tests/global-build.test.ts",
+        "fails_without_fix": true
+      }
+    ],
+    "skipped": [
+      {
+        "item": "sandbox-glob-startup-race目录生命周期与磁盘压力宽项",
+        "reason": "证据不足，保留原链。"
+      },
+      {
+        "item": "selection-hidden-daggers-conditional-followup-readback",
+        "reason": "已有独立strategy-proposal，沿原策略链处理。"
+      },
+      {
+        "item": "出牌、药水、SL、终局、路线及角色机制条目",
+        "reason": "策略类，沿既有strategy-proposal链。"
+      },
+      {
+        "item": "silent-0332实际nonpositive-hp资源契约根因",
+        "reason": "证据不足，沿原owner处理。"
+      },
+      {
+        "item": "arch-funnel-guard/arch-learning-priority/arch-unified-resource-value/inv-f33-regression及调度公平性调查",
+        "reason": "独立策略、架构及归因任务。"
+      },
+      {
+        "item": "core-build-notify-222802-rc2原生通知恢复",
+        "reason": "旧回执缺stderr，无法确认未送达，未重发。"
+      },
+      {
+        "item": "codex缓存实测、DPR性能及历史宿主超时根因",
+        "reason": "证据不足或独立性能调查。"
+      }
+    ],
+    "merged": null,
+    "tests": {
+      "tsc": 0,
+      "vitest": 0,
+      "cases": 4311
+    },
+    "code_proposals": [],
+    "implementation_domains": [],
+    "report": "/home/dw/Projects/agent-sts2/learner/runs/20261017-113248-21eed063-e1c9-46ab-b098-5360b36adf9b-fix-batch/report.md"
+  },
+  "original_source_validation": {
+    "source": "c40e43fd25c200a01f4da94a4dac8db1b34664a8",
+    "base": "d675d48f6f81d39ec1354e244dd69569b8be33ec",
+    "tsc": 0,
+    "vitest": 0,
+    "files": 469,
+    "cases": 4311,
+    "targeted": {
+      "files": 5,
+      "cases": 29,
+      "exit": 0
+    },
+    "without_primary_fix": {
+      "failed_files": 4,
+      "failed": 9,
+      "passed": 15,
+      "exit": 1
+    },
+    "without_memo_fix": {
+      "failed": 1,
+      "passed": 4,
+      "exit": 1
+    },
+    "first_sandbox_before_memo": {
+      "tsc": 0,
+      "vitest": 0,
+      "files": 469,
+      "cases": 4310
+    },
+    "final_sandbox": {
+      "tsc": 0,
+      "vitest": 0,
+      "files": 469,
+      "cases": 4311
+    },
+    "gitleaks": 0,
+    "live_refresh_gitleaks": 0,
+    "live_merged": false,
+    "live_post_merge_tests": "未执行实际合并，故未运行合后检查",
+    "log_sha256": {
+      "gitleaks.log": "487e3cad16ac3dd44ed9cc1550aea6e15d6c000ca8413a8bd177205223dcf013",
+      "final-targeted.log": "eb7e01c276fa138bd291af9e339e3b63cc7881f30fb321fe3336cc23d00d83d5",
+      "final-sandbox.log": "3e6ced518acbd7817af32a6128f2e819d2f2455e30b57a2a255109ca2502f62f",
+      "memo-without-fix.log": "40c24dedfd5af03ebf9d714caa0523e3e16c93e6353de08ddbae052109a99789",
+      "targeted-without-fix.log": "5ac9d90224bf2f78db88603f2153df229b48db5ef79f2ad578b5797ec65974a6",
+      "targeted-restored.log": "120c810adc728e28b32ea0976fce851640294ba3f861eb99ca88e41879db19a1",
+      "targeted-fixed.log": "28880b06570553432fa757f63d490f14cfa2669e6c3a92f8c915d619e9710832",
+      "gitleaks-final.log": "629637304b68acaee2a538e4ce24434274936a424a71acc6f4c4ff948d4b2bc1",
+      "locked-live-merge-preview.log": "32b51ac7999ede56d41cbc421901cd0a8b6fc0fd733a08090d220bb8f1416e7e",
+      "live-refresh-gitleaks.log": "3cc35e744fb13465d01f0ca4886f333e59b11ff9da5cb675a27acd22717f082e",
+      "source-sandbox.log": "3b6a55d06225f505668e5d4ac47ee1a93ff0cdb461833f09094060876414715c"
+    }
+  },
+  "native": {
+    "batch": "20261017-113243-fix-batch",
+    "thread": "01a147eb-6776-7831-bde5-478e1425f721",
+    "cwd": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261017-113243",
+    "event_log": "learner/runs/20261017-113248-21eed063-e1c9-46ab-b098-5360b36adf9b-fix-batch.jsonl",
+    "registered_launch_batch": "20261017-113243-fix-batch",
+    "original_lease": "5323da1af1b16d253b42e17e3160c81b75d608d4a13899267848f4c9e6522b24",
+    "native_context": {
+      "source": "ops/codex-ops/accounts/codex1/learner/sessions/2026/10/17/rollout-2026-10-17T11-32-52-01a147eb-6776-7831-bde5-478e1425f721.jsonl",
+      "offset": 50303,
+      "bytes": 5152,
+      "sha256": "549afe502c822ceef25c87aee24bb5a0d36f8677d14dfc733882134c0b7b2bf8",
+      "model": "gpt-6.1-sol",
+      "effort": "xhigh",
+      "sandbox": {
+        "type": "workspace-write",
+        "writable_roots": [
+          "/home/dw/Projects/agent-sts2",
+          "/home/dw/Projects/agent-sts2/.git",
+          "/home/dw/Projects/agent-sts2/.git/worktrees/codex-fix-silent-20261017-113243"
+        ],
+        "network_access": false,
+        "exclude_tmpdir_env_var": false,
+        "exclude_slash_tmp": false
+      },
+      "approval_policy": "never"
+    },
+    "native_user_input": {
+      "offset": 58298,
+      "bytes": 13081,
+      "sha256": "3e76de545e63dc88f14527a07ca2f5beaf1ee1bea7dfa61985669dec473afc4b",
+      "input_sha256": "0fd83f3cbf16c5b60b03102f97fcc7e3fd97e3e798d1d68a8de8749c6d12604c"
+    },
+    "original_header_events": [
+      {
+        "offset": 0,
+        "bytes": 14892,
+        "sha256": "0c8dc18037f132e019fd241d0bf7adaeae59dd07c72167db3f1589e8115000ac",
+        "type": "learner_launch",
+        "attempt": null,
+        "code": null
+      },
+      {
+        "offset": 14892,
+        "bytes": 370,
+        "sha256": "d7e957d591942d5c85fa79fd855e988d16ab99f3e287f08e645d3bebece74e02",
+        "type": "learner_startup_attempt",
+        "attempt": 1,
+        "code": null
+      },
+      {
+        "offset": 18274,
+        "bytes": 77,
+        "sha256": "6895ccdbdeeecce9dac68edf042f65dea84fcab84f68fecccec79036d51237b4",
+        "type": "thread.started",
+        "attempt": null,
+        "code": null
+      }
+    ],
+    "startup_attempts": 1,
+    "failed_startups_preserved": 0,
+    "no_model_or_manual_restart": true
+  },
+  "original_live_attempt": {
+    "source": "c40e43fd25c200a01f4da94a4dac8db1b34664a8",
+    "branch": "codex-fix-silent-20261017-113243",
+    "merged": null,
+    "lock_held_by_flock": true,
+    "before_refresh": "f88c3ccde0fdb5019b117da9d8421e5c04d95518",
+    "status_before_refresh": "M knowledge/characters/silent/fight-value.json\n M notes/fight-value-backtest-silent.md\n M notes/monster-db-check.md",
+    "refresh_gitleaks": 0,
+    "before_merge": "53f2217cc83c4f31f43af0ecec7035e874c84028",
+    "source_files": [
+      "agent/src/sim/build-sim.ts",
+      "agent/src/sim/global-build-observer.ts",
+      "agent/src/sim/global-build.ts",
+      "agent/tests/adaptive_health_test.py",
+      "agent/tests/fixtures/h1-budget-completion.json",
+      "agent/tests/global-build-observer.test.ts",
+      "agent/tests/global-build.test.ts",
+      "agent/tests/global_build_health_test.py",
+      "agent/tests/human-pace-sampling.test.ts",
+      "ops/adaptive_health.py",
+      "ops/global_build_health.py"
+    ],
+    "refreshed_files": [
+      "knowledge/characters/silent/fight-value.json"
+    ],
+    "source_refresh_overlap": [],
+    "preview_exit": 1,
+    "conflicts": [
+      "docs/human-pace-plan.md",
+      "notes/fix-queue-v4.md",
+      "notes/for-roy.md",
+      "notes/lessons.md",
+      "notes/ops-handoff.md",
+      "ops/inbox-dev.md",
+      "paper/data/README.md",
+      "paper/data/commits.csv",
+      "paper/data/cost-curve-silent.csv",
+      "paper/data/cost-silent.csv",
+      "paper/data/cost-sources.json",
+      "paper/data/cost-unattributed.csv",
+      "paper/data/decisions_by_label.csv",
+      "paper/data/learning-curve-silent.csv",
+      "paper/data/runs.csv",
+      "paper/data/summary.json",
+      "paper/data/verification.json",
+      "paper/materials/decision-log.md",
+      "paper/materials/learning/code-proposals.jsonl",
+      "paper/materials/learning/ledger.jsonl",
+      "paper/materials/silent/cost.md"
+    ],
+    "blocked": "live_history_merge_conflicts",
+    "final_live": "53f2217cc83c4f31f43af0ecec7035e874c84028",
+    "final_status": "M notes/fight-value-backtest-silent.md\n M notes/monster-db-check.md"
+  },
+  "original_prefix_readback": {
+    "run_id": "5H83F3J0XSTE",
+    "cases": [
+      {
+        "floor": 8,
+        "turn": null,
+        "decision_id": "d9d657c0-e995-4f29-8947-59d0a1822d50",
+        "source": {
+          "offset": 2173795818,
+          "length": 636898,
+          "sha256": "2b5001167caae9d909ff41560ba1908ce6bd108d5278c44c2bc19d78c8a7bd45"
+        }
+      },
+      {
+        "floor": 12,
+        "turn": null,
+        "decision_id": "b8dd26ea-671c-4d52-a077-0494552ebfbd",
+        "source": {
+          "offset": 2175035064,
+          "length": 956890,
+          "sha256": "1667eacc5a61ba0eb194ba5a0e888cbc4151520b68fa320a143334867224ee6b"
+        }
+      },
+      {
+        "floor": 19,
+        "turn": 3,
+        "decision_id": "96a05bf0-7a6a-4e01-9afe-f6e984bdec8c",
+        "source": {
+          "offset": 2178956986,
+          "length": 226286,
+          "sha256": "a45cac384c71e65bd08fbf675e1e01156eda8fed7dd01912c408da42e17b4ba3"
+        }
+      },
+      {
+        "floor": 20,
+        "turn": 5,
+        "decision_id": "6f871d4a-ab8e-4bbf-9e46-4229d18e96b6",
+        "source": {
+          "offset": 2179363533,
+          "length": 241912,
+          "sha256": "c814b7b2669147bf8c033c109df54d0f0e04840d15c03de3650f3afb7a59d298"
+        }
+      }
+    ],
+    "fixed_fixture_sha256": "5a69eda1ec70c4c70bc3465d025c5ad87bffcb21ffeeff59e77aff8992255e8d",
+    "adaptive_health": {
+      "mode": "on",
+      "observed": 4,
+      "produced": 4,
+      "errors": 0,
+      "evaluable": 0,
+      "matched": 0,
+      "unknown": 4,
+      "complete_adaptive": 0,
+      "budgeted_partial": 4,
+      "production_evaluable": 0,
+      "production_matched": 0,
+      "agreement": null,
+      "production_agreement": null,
+      "saved_fraction": {
+        "p50": null,
+        "p90": null
+      },
+      "mismatches": [],
+      "actual_saved_fraction": {
+        "p50": null,
+        "p90": null
+      },
+      "candidate_samples": [
+        838,
+        838,
+        300,
+        300,
+        838,
+        300,
+        300,
+        838,
+        500,
+        838,
+        300,
+        400,
+        500,
+        260,
+        260,
+        260,
+        260,
+        260,
+        260,
+        260,
+        260,
+        260,
+        260,
+        260,
+        260,
+        260,
+        260,
+        260,
+        260,
+        260,
+        260,
+        260,
+        260,
+        260,
+        260,
+        260,
+        260,
+        103,
+        103,
+        103,
+        103,
+        103,
+        103,
+        504,
+        504,
+        300,
+        300,
+        504
+      ],
+      "candidate_rounds": [
+        7,
+        7,
+        1,
+        1,
+        7,
+        1,
+        1,
+        7,
+        3,
+        7,
+        1,
+        2,
+        3,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        4,
+        4,
+        1,
+        1,
+        4
+      ],
+      "stop_counts": {
+        "budget": 38,
+        "eliminated": 10
+      },
+      "alert": false,
+      "admission_state": "unknown",
+      "admission": "pending offline coverage and at least two completed natural shadow runs; never auto-enable",
+      "limits": "Shadow estimates and actual on-mode sample work are separate. On-mode cannot observe full-run agreement; no elapsed-time saving or game benefit inferred."
+    },
+    "scope": "只复核原日志完成状态，未运行模拟或模型；旧告警保持原件"
+  },
+  "original_raw_cases_verified": 4,
+  "actual_source_received": true,
+  "accepted_for_narrow_integration": true,
+  "classification": "Diagnostic completion/health protocol and shadow-only memo provenance; no game sampling, admission, decision, behavior release or rule notice change",
+  "original_module_health_alerts_preserved": true,
+  "root_0332_fixed": false,
+  "no_source_full_repeated": true,
+  "original_failed_canonical_and_merge_conflicts_not_rewritten": true,
+  "no_other_role_ACK": true
+}

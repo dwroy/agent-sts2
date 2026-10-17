@@ -1,0 +1,199 @@
+{
+  "at": "2026-10-17 10:53:59 CST",
+  "batch": "20261016-075726-strategy-proposal",
+  "pid": 3300696,
+  "birth_ticks": "109752320",
+  "actual_live": "dbd41616420f62e6502e9cb6c5827e852a6b4949",
+  "tree": "d68e817428a59b28dfd53c3d9dfb34819f711e56",
+  "lock_fds": [
+    {
+      "fd": "3",
+      "target": "/home/dw/Projects/agent-sts2/ops/codex-ops/20261016-075726-strategy-proposal.checks.lock"
+    },
+    {
+      "fd": "4",
+      "target": "/home/dw/Projects/agent-sts2/ops/live-merge.lock"
+    }
+  ],
+  "status": "Original exact final-tree full host RUN; result pending original learner-checks event",
+  "log": "ops/codex-ops/learner/20261016-075726-strategy-proposal.fallback-d68e817428a59b28dfd53c3d9dfb34819f711e56.checks.log",
+  "observed_log_prefix_bytes": 67,
+  "observed_log_prefix_sha256": "206bb1334fc905a29c9d845090272e7767b924d8cb7f2a307f33a42e183ebee0",
+  "actual_FULL_CHECK_COMMAND": "export PATH=\"$HOME/.local/node/bin:$PATH\"; nice -n 19 npx tsc -p tsconfig.json --noEmit; a=$?; nice -n 19 npx vitest run --maxWorkers=2; b=$?; [ \"$a\" = 0 ] && [ \"$b\" = 0 ]",
+  "original_action_direct_handoff": {
+    "at": "2026-10-17 10:52:43 CST",
+    "original_request": {
+      "at": "2026-10-17 10:51:49 CST",
+      "batch": "20261016-075726-strategy-proposal",
+      "request_pid": 3299167,
+      "argv": [
+        "nice",
+        "-n",
+        "19",
+        "bash",
+        "ops/codex-ops-do.sh",
+        "learner-recheck",
+        "20261016-075726-strategy-proposal"
+      ],
+      "source": "7af803c06e82e2aafe6a595fab7a23e0f3f44fb3",
+      "live": "dbd41616420f62e6502e9cb6c5827e852a6b4949",
+      "tree": "d68e817428a59b28dfd53c3d9dfb34819f711e56",
+      "request_count": 1,
+      "scope": "Original075726 unique host channel; new actual final combination, not a repeated source full",
+      "status": "Request process started; actual host start and completion require separate readback",
+      "host_rc": null,
+      "source_full_rc": 0,
+      "no_previous_green_borrowed": true
+    },
+    "unclaimed_broker_request": "ops/codex-ops/broker/1792205509381574003-3299167.cancelled-before-dispatch",
+    "original_request_sha256": "0be5212f53dfe2314868612c54d2f3db15167b6b2d6af637ed180760759d170d",
+    "atomic_broker_claim_withdrawal_succeeded": true,
+    "original_request_process_stopped_by_exact_pid": 3299167,
+    "runner_pid": 3300696,
+    "argv": [
+      "nice",
+      "-n",
+      "19",
+      "bash",
+      "ops/codex-ops-actions.sh",
+      "learner-recheck",
+      "20261016-075726-strategy-proposal"
+    ],
+    "status": "Existing allow-listed action called directly on authorized host; actual start separately verified",
+    "batch": "20261016-075726-strategy-proposal",
+    "expected_live": "dbd41616420f62e6502e9cb6c5827e852a6b4949",
+    "expected_tree": "d68e817428a59b28dfd53c3d9dfb34819f711e56",
+    "same_existing_action_checks_lock_and_live_lock_and_canonical_event": true,
+    "no_new_pipeline_or_source_full": true,
+    "no_learner_permissions_expanded": true,
+    "host_rc": null
+  },
+  "checks_rc": null,
+  "source_full_not_repeated": true,
+  "old_green_not_borrowed": true,
+  "checked_executable_physical_paths_equal_pinned_HEAD_at_readback": true,
+  "knowledge_observations": [
+    {
+      "path": "knowledge/characters/silent/boss-damage.json",
+      "bytes": 36756,
+      "sha256": "4c8daa11ef7c4b580e0c571b3c6c54c3a38ab36d532358165e657a63e2eb9e25",
+      "mtime_ns": 1792202102951766012,
+      "ctime_ns": 1792202102951766012
+    },
+    {
+      "path": "knowledge/characters/silent/boss-trust.json",
+      "bytes": 96864,
+      "sha256": "8afbe6dbbf68f2a7ca73a7d0d43fa702b1061ba16fa10db1a10fb3f8d0e502c5",
+      "mtime_ns": 1792150914063265640,
+      "ctime_ns": 1792150914063265640
+    },
+    {
+      "path": "knowledge/characters/silent/construction-opportunities.json",
+      "bytes": 2352621,
+      "sha256": "d0a2428f2b0f3493b5916bef532a335eb2cd0aa29f7d6c1355b20f6f51412477",
+      "mtime_ns": 1792202030962716662,
+      "ctime_ns": 1792202030966716659
+    },
+    {
+      "path": "knowledge/characters/silent/construction-templates.json",
+      "bytes": 10636,
+      "sha256": "fa2bbf98407f9898ee8fcbcd76d8de731a3a2228c23f8b01a63384b53e12b500",
+      "mtime_ns": 1791889263706504855,
+      "ctime_ns": 1791889263706504855
+    },
+    {
+      "path": "knowledge/characters/silent/double-boss.json",
+      "bytes": 8032,
+      "sha256": "dfea492a4b941bf72813518e59ceb6cb0cca2d1420bdeb9c2fb9cc726797e83b",
+      "mtime_ns": 1791363031306077614,
+      "ctime_ns": 1791363031306077614
+    },
+    {
+      "path": "knowledge/characters/silent/experience.json",
+      "bytes": 332036,
+      "sha256": "d6d924fe0abf371f3b9bc2e595f7e5dc2985d4c78c907eefb36f21eadbcef29f",
+      "mtime_ns": 1792161919954291177,
+      "ctime_ns": 1792161919954291177
+    },
+    {
+      "path": "knowledge/characters/silent/fight-value-gates.json",
+      "bytes": 59218,
+      "sha256": "27b7b057bc0655a74b6d7a85692f3369125c0d34b9481d09d82139215c537874",
+      "mtime_ns": 1792202326526698782,
+      "ctime_ns": 1792202326530698782
+    },
+    {
+      "path": "knowledge/characters/silent/fight-value.json",
+      "bytes": 147188,
+      "sha256": "18eb9344d1cf2bb7dbf34ace24ac4cdb85c513213624386ec3b4c2e27427d9a1",
+      "mtime_ns": 1792202578866671112,
+      "ctime_ns": 1792202578866671112
+    },
+    {
+      "path": "knowledge/characters/silent/monster-records.json",
+      "bytes": 625526,
+      "sha256": "ffbee0c8f0cb62e7482b4958bf351eb2f3a22eb86f4095eeba899bcc4ce417fe",
+      "mtime_ns": 1792201889654737507,
+      "ctime_ns": 1792201889654737507
+    },
+    {
+      "path": "knowledge/characters/silent/outcome-stats.json",
+      "bytes": 291630,
+      "sha256": "8f6e1d3d90352462c2c872ba441a6db036945d54bec59dc24b0f8bbe5c1820a0",
+      "mtime_ns": 1792202023594722531,
+      "ctime_ns": 1792202023594722531
+    },
+    {
+      "path": "knowledge/characters/silent/potion-equivalents.json",
+      "bytes": 180332,
+      "sha256": "4f304e7a9438483f80effbd0606c135ff24106f2994f6558f1a159f41a950c17",
+      "mtime_ns": 1792191464300099865,
+      "ctime_ns": 1792191464300099865
+    },
+    {
+      "path": "knowledge/characters/silent/room-costs.json",
+      "bytes": 33359,
+      "sha256": "40c0f043f9d949bc950e8fc528081c3a2411acec7636c86ff97b83ff1c37452c",
+      "mtime_ns": 1792202048434715821,
+      "ctime_ns": 1792202048434715821
+    },
+    {
+      "path": "knowledge/common/card-upgrades.json",
+      "bytes": 20473,
+      "sha256": "63fe314b6b73289b045e1ad9e2a56a5b4c015966d627ae3ba106b0f6b18019d5",
+      "mtime_ns": 1792201957390181005,
+      "ctime_ns": 1792201957390181005
+    },
+    {
+      "path": "knowledge/common/event-pages.json",
+      "bytes": 13929,
+      "sha256": "e7370a71a8fb446b160c7d19120229237dee4775dc443b7cf92e18d6a02936d5",
+      "mtime_ns": 1791110645919628237,
+      "ctime_ns": 1791110645919628237
+    },
+    {
+      "path": "knowledge/common/monster-db.json",
+      "bytes": 2377261,
+      "sha256": "d804082eb55ab68906bdfd5767bd7d307bb503cb38f49e3d1cc7fa7aadabd5ee",
+      "mtime_ns": 1792201889562737519,
+      "ctime_ns": 1792201889562737519
+    },
+    {
+      "path": "knowledge/common/move-model.json",
+      "bytes": 37340,
+      "sha256": "9831b60fe0270c6997c1691940a244dee76362d23615799419847c5ce53a984e",
+      "mtime_ns": 1792201889658737506,
+      "ctime_ns": 1792201889658737506
+    },
+    {
+      "path": "knowledge/common/shared-experience.json",
+      "bytes": 226,
+      "sha256": "f0dc10884c7773ae248480aedfb05e15351372cb9d0684bf99df355d4bd187c8",
+      "mtime_ns": 1791886881874146517,
+      "ctime_ns": 1791886881874146517
+    }
+  ],
+  "knowledge_observation_is_not_full_run_immutable_input_proof": true,
+  "no_model_or_game_invocation": true,
+  "no_learner_permissions_expanded": true
+}

@@ -1,3 +1,4 @@
+import { currentDecisionBudget } from "../core/decision-budget.js";
 /**
  * Whole boss fights for many decks at once, with a deadline (milestone B3, docs/boss-sim.md §11): a deck-building
  * question compares every option's deck (and HP) against the current one on the same seeds, within its time budget.
@@ -323,6 +324,7 @@ export class BuildSimPool implements DeckSimRunner {
       if (req.progressTimeoutMs !== undefined) await this.close();
       throw error;
     });
+    if (timedOut && currentDecisionBudget()) void this.close();
     return { outcomes, complete: completeSamples(req, outcomes), timedOut, elapsedMs: Math.round(now() - started), workers: used.length, ...(req.diagnostics ? { diagnostics } : {}) };
   }
 

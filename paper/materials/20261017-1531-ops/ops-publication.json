@@ -1,0 +1,200 @@
+{
+  "at": "2026-10-17 15:46:27 CST",
+  "batch": "20261017-151301-fix-batch",
+  "source": "660b194c950f017e356a4b3da952e127c7e5c768",
+  "source_parent": "5bd559de30f6a23739f3748426ab5be2321ecd0c",
+  "source_tree": "a3a172184c4cdbd18493665b99a15e4bb2b30342",
+  "old_main": "790c762698b503076fbdf99fc8a2f87468be178e",
+  "main": "91f222500fd3b23f981545ea14883524d80de394",
+  "old_live": "7b61eaa636148221cbfc166067662e481ac7e0a7",
+  "actual_live": "19988d1118ca43c1409fe900fc8c94f9f6ac32cc",
+  "tree": "03415d6df563fcc75a528920f1bda91444bf633b",
+  "knowledge_refresh_commit": "6f3a83ad4d0fa6c0affeeeae4fbdeede5dfc0e60",
+  "refreshed_files": [
+    {
+      "path": "knowledge/characters/silent/boss-damage.json",
+      "sha256": "1e249ae4830341bf54e1301a482357964b8e985835a2e3fbd3f31550ce1eac31"
+    },
+    {
+      "path": "knowledge/characters/silent/construction-opportunities.json",
+      "sha256": "bf3da8469edbeb67b0d5e77e686307028a41a6f3776c70ecfce2454973c726c0"
+    },
+    {
+      "path": "knowledge/characters/silent/fight-value-gates.json",
+      "sha256": "8ed53c48c5fc706c7704845f1b39014711dc6dbbf471bb04844282e2cdcc8758"
+    },
+    {
+      "path": "knowledge/characters/silent/fight-value.json",
+      "sha256": "19eae2c6f456feea7d4ca50ba9f5081c1be9054b1bbb43fe1735cb961a45237c"
+    },
+    {
+      "path": "knowledge/characters/silent/monster-records.json",
+      "sha256": "74a74b88f7197a483af6183dca70a2cd22c6620468a58ee87f918ca908fc4ff9"
+    },
+    {
+      "path": "knowledge/characters/silent/outcome-stats.json",
+      "sha256": "5afe9c29f67b12d3789784c992e50e009ce2743e206320f56020088f47c80d4a"
+    },
+    {
+      "path": "knowledge/characters/silent/room-costs.json",
+      "sha256": "4e217ac9b7cdf5732a68c056f00f1b565d960ed7000c8eff121d7c0cc66d75f3"
+    },
+    {
+      "path": "knowledge/common/card-upgrades.json",
+      "sha256": "911933ceda3ecb1c448bcd232479a8b146cf3728ba4b2a83da268427d5a07ffa"
+    },
+    {
+      "path": "knowledge/common/monster-db.json",
+      "sha256": "2e5de3a69e1a0f190157d5f269bc1d2d546262c8632fdba60f7978c108e5a405"
+    },
+    {
+      "path": "knowledge/common/move-model.json",
+      "sha256": "03fd04477bf4867e0d1564ef790332e04a135bb298df88186e1b503be4efc883"
+    }
+  ],
+  "leaves": [
+    {
+      "lane": "main",
+      "path": "agent/src/sim/boss-lines.ts",
+      "old_sha256": "510033feed1fb9429d5979fb3032dac306cccbd03517441d60a1b407cdf11a75",
+      "source_sha256": "bd3174609f2f71de360ea686a57659f9ba7a136b63bad6fbd9c69f05ff4ccdd4",
+      "composed_sha256": "bd3174609f2f71de360ea686a57659f9ba7a136b63bad6fbd9c69f05ff4ccdd4",
+      "source_equal": true,
+      "concurrent_overlap_preserved": false
+    },
+    {
+      "lane": "main",
+      "path": "agent/tests/human-pace-sampling.test.ts",
+      "old_sha256": "dbc7bc31dd702bc0778cb4fa9d17aa5ef626ba78f46982a544c7f86e15df163b",
+      "source_sha256": "eb4793d2a725988ff4516fa36c04e6c9b9738c992d23f98fcc8aaf95c643d076",
+      "composed_sha256": "eb4793d2a725988ff4516fa36c04e6c9b9738c992d23f98fcc8aaf95c643d076",
+      "source_equal": true,
+      "concurrent_overlap_preserved": false
+    },
+    {
+      "lane": "live",
+      "path": "agent/src/sim/boss-lines.ts",
+      "old_sha256": "510033feed1fb9429d5979fb3032dac306cccbd03517441d60a1b407cdf11a75",
+      "source_sha256": "bd3174609f2f71de360ea686a57659f9ba7a136b63bad6fbd9c69f05ff4ccdd4",
+      "composed_sha256": "bd3174609f2f71de360ea686a57659f9ba7a136b63bad6fbd9c69f05ff4ccdd4",
+      "source_equal": true,
+      "concurrent_overlap_preserved": false
+    },
+    {
+      "lane": "live",
+      "path": "agent/tests/human-pace-sampling.test.ts",
+      "old_sha256": "dbc7bc31dd702bc0778cb4fa9d17aa5ef626ba78f46982a544c7f86e15df163b",
+      "source_sha256": "eb4793d2a725988ff4516fa36c04e6c9b9738c992d23f98fcc8aaf95c643d076",
+      "composed_sha256": "eb4793d2a725988ff4516fa36c04e6c9b9738c992d23f98fcc8aaf95c643d076",
+      "source_equal": true,
+      "concurrent_overlap_preserved": false
+    }
+  ],
+  "classification": "Pure engineering B2 sample identity repair changing required-computation service behavior; independently numbered V5 behavior release.",
+  "release_id": "V5-R384",
+  "previous_behavior_release": "V5-R383",
+  "new_behavior_release": true,
+  "behavior_commit": "75b13680c4573207e18d4ff23427ac3da3a6592b",
+  "behavior_tree": "8612407e9098542394ba3eda629d628c27d970d3",
+  "name": "V5.h1-b2-margin-prefix1",
+  "composition_gitleaks": 0,
+  "original_source_checks": {
+    "original_validation": {
+      "base": "5bd559de30f6a23739f3748426ab5be2321ecd0c",
+      "source": "660b194c950f017e356a4b3da952e127c7e5c768",
+      "source_worktree_clean": true,
+      "source_sandbox": {
+        "exit": 0,
+        "tsc": 0,
+        "vitest": 0,
+        "files": 474,
+        "cases": 4373,
+        "segments": [
+          {
+            "files": 473,
+            "cases": 4362
+          },
+          {
+            "files": 1,
+            "cases": 11
+          }
+        ]
+      },
+      "negative_control": {
+        "only_source_stashed": "agent/src/sim/boss-lines.ts",
+        "exit": 1,
+        "failed": 1,
+        "passed": 11,
+        "total": 12
+      },
+      "restored": {
+        "exit": 0,
+        "files": 1,
+        "cases": 12
+      },
+      "reruns_due_to_timeouts": [],
+      "live": {
+        "lock": "/home/dw/Projects/agent-sts2/ops/live-merge.lock",
+        "preflight_exit": 42,
+        "merge_tree_exit": 1,
+        "refresh_commit": "7b61eaa636148221cbfc166067662e481ac7e0a7",
+        "conflicts": [
+          "CONFLICT (modify/delete): docs/human-pace-plan.md deleted in HEAD and modified in codex-fix-silent-20261017-151301.  Version codex-fix-silent-20261017-151301 of docs/human-pace-plan.md left in tree.",
+          "CONFLICT (content): Merge conflict in notes/fix-queue-v4.md",
+          "CONFLICT (content): Merge conflict in notes/for-roy.md",
+          "CONFLICT (content): Merge conflict in notes/lessons.md",
+          "CONFLICT (content): Merge conflict in notes/ops-handoff.md",
+          "CONFLICT (content): Merge conflict in ops/inbox-dev.md",
+          "CONFLICT (content): Merge conflict in paper/data/README.md",
+          "CONFLICT (content): Merge conflict in paper/data/commits.csv",
+          "CONFLICT (content): Merge conflict in paper/data/cost-curve-silent.csv",
+          "CONFLICT (content): Merge conflict in paper/data/cost-silent.csv",
+          "CONFLICT (content): Merge conflict in paper/data/cost-sources.json",
+          "CONFLICT (content): Merge conflict in paper/data/cost-unattributed.csv",
+          "CONFLICT (content): Merge conflict in paper/data/decisions_by_label.csv",
+          "CONFLICT (content): Merge conflict in paper/data/learning-curve-silent.csv",
+          "CONFLICT (content): Merge conflict in paper/data/runs.csv",
+          "CONFLICT (content): Merge conflict in paper/data/summary.json",
+          "CONFLICT (content): Merge conflict in paper/data/verification.json",
+          "CONFLICT (modify/delete): paper/materials/20261017-human-pace-control/checkpoint.json deleted in HEAD and modified in codex-fix-silent-20261017-151301.  Version codex-fix-silent-20261017-151301 of paper/materials/20261017-human-pace-control/checkpoint.json left in tree.",
+          "CONFLICT (modify/delete): paper/materials/20261017-human-pace-h1/checkpoint.json deleted in HEAD and modified in codex-fix-silent-20261017-151301.  Version codex-fix-silent-20261017-151301 of paper/materials/20261017-human-pace-h1/checkpoint.json left in tree.",
+          "CONFLICT (modify/delete): paper/materials/20261017-human-pace-h1/natural/checkpoint.json deleted in HEAD and modified in codex-fix-silent-20261017-151301.  Version codex-fix-silent-20261017-151301 of paper/materials/20261017-human-pace-h1/natural/checkpoint.json left in tree.",
+          "CONFLICT (modify/delete): paper/materials/20261017-human-pace-h1/natural/report.md deleted in HEAD and modified in codex-fix-silent-20261017-151301.  Version codex-fix-silent-20261017-151301 of paper/materials/20261017-human-pace-h1/natural/report.md left in tree.",
+          "CONFLICT (content): Merge conflict in paper/materials/decision-log.md",
+          "CONFLICT (modify/delete): paper/materials/learning/code-proposals.jsonl deleted in HEAD and modified in codex-fix-silent-20261017-151301.  Version codex-fix-silent-20261017-151301 of paper/materials/learning/code-proposals.jsonl left in tree.",
+          "CONFLICT (content): Merge conflict in paper/materials/learning/ledger.jsonl",
+          "CONFLICT (content): Merge conflict in paper/materials/silent/cost.md"
+        ],
+        "merged": null,
+        "source_merged": false,
+        "post_merge_tests": null,
+        "release_id": null
+      },
+      "ledger": {
+        "bug_infra_matches": 0,
+        "appends": 0,
+        "shipped": false
+      },
+      "secret_scans": {
+        "source_patch": 0,
+        "refresh_patch": 0
+      },
+      "limits": [
+        "Original failure rows omit both sample arrays; fixed results reproduce the caller path, not the complete dirty runtime.",
+        "The production edit changes only independent reference IDs for unequal prefixes; no sample allocation, ordering, S use, thresholds, budget, potion or SL policy change.",
+        "Ironclad does not enable quantitativeEnabled/captureBossMargin; equal-length and completed-adaptive paths preserve their existing identity behavior."
+      ]
+    },
+    "source_full_log_sha256": "f668b316fb3d748632f8336317a7234371d754ec170d7842105d8dfa322fd49b",
+    "source_full_repeated": false,
+    "prior_original_failure_cases": 3,
+    "prior_fixes_verified_ancestors": 40
+  },
+  "source_full_repeated": false,
+  "host_batch": "20261017-151301-fix-batch",
+  "host": "pending original unique learner-recheck channel",
+  "current_game_restarted": false,
+  "natural_acceptance": false,
+  "root_0332_fixed": false,
+  "no_other_role_ACK": true
+}

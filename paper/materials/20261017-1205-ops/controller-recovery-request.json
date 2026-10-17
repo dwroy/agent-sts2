@@ -1,0 +1,55 @@
+{
+  "at": "2026-10-17 12:37:58 CST",
+  "old_controller": {
+    "pid": 3319441,
+    "args": [
+      "/home/dw/.local/node/bin/node",
+      "--require",
+      "/home/dw/Projects/agent-sts2/agent/node_modules/tsx/dist/preflight.cjs",
+      "--import",
+      "file:///home/dw/Projects/agent-sts2/agent/node_modules/tsx/dist/loader.mjs",
+      "src/index.ts",
+      "play",
+      "--max-runs",
+      "1",
+      "--max-minutes",
+      "240"
+    ],
+    "birth_ticks": "109799522",
+    "state": "S",
+    "cwd": "/home/dw/Projects/agent-sts2/.worktrees/live/agent"
+  },
+  "existing_autoplay": {
+    "pid": 1283810,
+    "args": [
+      "bash",
+      "/home/dw/Projects/agent-sts2/ops/autoplay.sh",
+      "--tail-console"
+    ],
+    "birth_ticks": "105732387",
+    "state": "S",
+    "cwd": "/home/dw/Projects/agent-sts2"
+  },
+  "run": "5H83F3J0XSTE",
+  "floor": 48,
+  "screen": "CARD_SELECTION",
+  "actual_live": "6fbbd82abd6d407dbaf93f82639b7f927efa54a0",
+  "release_id": "V5-R382",
+  "basis": "ops/ops-session-silent-codex-prompt.md blocking pure bug workflow: fix/test/live then PID-only controller stop, original autoplay resumes same saved run",
+  "game_process_restarted": false,
+  "manual_game_action_sent": false,
+  "new_run_requested": false,
+  "new_SL_requested": false,
+  "config_home_account_model_prompt_changed": false,
+  "natural_acceptance": false,
+  "recovery_complete": false,
+  "no_other_role_ACK": true,
+  "stop_command": [
+    "bash",
+    "ops/codex-ops-do.sh",
+    "kill",
+    "3319441"
+  ],
+  "stop_rc": 0,
+  "stop_output_sha256": "82a332438c19f9b5da44b52d81cc6e5ebe36131f1327d96d174ccc50f0040ff5"
+}

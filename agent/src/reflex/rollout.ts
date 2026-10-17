@@ -2220,6 +2220,11 @@ function applyPlan(
     player.dexterity += o.kunaiDexterityGained;
     playerPowers["DEXTERITY_POWER"] = (playerPowers["DEXTERITY_POWER"] ?? 0) + o.kunaiDexterityGained;
   }
+  if (o.helicalDexterityGained) {
+    player.dexterity += o.helicalDexterityGained;
+    player.tempDexterity += o.helicalDexterityGained;
+    playerPowers["HELICAL_DART_POWER"] = (playerPowers["HELICAL_DART_POWER"] ?? 0) + o.helicalDexterityGained;
+  }
   player.freeAttacks = o.freeAttacksLeft ?? 0;
   if (player.penNib !== undefined) player.penNib = (player.penNib + (o.attackPlays ?? 0)) % PEN_NIB_EVERY;
   if (o.tuningForkCount !== undefined) player.tuningForkCount = o.tuningForkCount;
@@ -2329,6 +2334,7 @@ function applyPlan(
   player.tempStrength = 0;
   player.tempDexterity = 0;
   delete playerPowers["ANTICIPATE_POWER"];
+  if (input.solver.player.helicalDart) delete playerPowers["HELICAL_DART_POWER"];
   // The observed Shadow Step bonus starts after this turn and lasts through the next one only.
   player.doubleDamage = player.doubleDamageNext;
   player.doubleDamageNext = false;
@@ -2730,7 +2736,7 @@ function simulate(
     constrict: input.playerPowers["CONSTRICT_POWER"] ?? 0,
     // Tender's -1 a card played so far this turn is temporary too (logged Strength 6, 5, 4, 3 over a turn, 6 again next).
     tempStrength: sumOf(input.playerPowers, TEMP_STRENGTH_POWERS) - (base.tender ?? 0) * (s.cardsPlayedThisTurn ?? 0),
-    tempDexterity: sumOf(input.playerPowers, TEMP_DEXTERITY_POWERS) - (base.tender ?? 0) * (s.cardsPlayedThisTurn ?? 0),
+    tempDexterity: sumOf(input.playerPowers, TEMP_DEXTERITY_POWERS) + (base.helicalDart?.temporary ?? 0) - (base.tender ?? 0) * (s.cardsPlayedThisTurn ?? 0),
     tender: input.playerPowers["TENDER_POWER"] ?? base.tender ?? 0,
     smoggy: (input.playerPowers["SMOGGY_POWER"] ?? 0) > 0,
     tangledNext: 0,
@@ -3061,6 +3067,7 @@ function simulate(
       // Shuriken: a new turn, the count starts again (the Strength it gave is in player.strength already).
       ...(base.shuriken ? { shuriken: { ...base.shuriken, count: 0 } } : {}),
       ...(base.kunai ? { kunai: { count: 0 } } : {}),
+      ...(base.helicalDart ? { helicalDart: { temporary: 0 } } : {}),
       // Music Box: a new turn, its first Attack card makes a copy again.
       ...(base.musicBox ? { musicBox: { count: 0 } } : {}),
       // Throwing Axe: the fight's first card was the decision turn's.

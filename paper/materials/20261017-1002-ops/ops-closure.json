@@ -1,0 +1,233 @@
+{
+  "at": "2026-10-17 10:07:50 CST",
+  "events": 3,
+  "release_id": "V5-R379",
+  "source": "b831407a8ed13bcb9b5359b0d3e1ae84624d5571",
+  "main": "c21ca9338423b657605064ef6ea44885e8ed4880",
+  "actual_live": "1c8d6d2bd731514e5613ca63f46dc44fef2e59d5",
+  "tree": "d24cc99e30c745fb76b5b142b388419277fa9dfe",
+  "source_tests": "original tsc0/sandbox4286/target7/withdrawn5fail/restored7/gitleaks0",
+  "source_and_behavior_ancestors_verified": true,
+  "root_rule_dual_notice": true,
+  "knowledge_refresh_preserved": 10,
+  "original_shared_merge_conflicts_preserved": 9,
+  "ledger_original_trace_rows": 65,
+  "ledger_ops_shipped_rows": 1,
+  "ledger_shipped": "silent-0293",
+  "proposal_implemented": 1,
+  "other_proposals_waiting": 19,
+  "host": {
+    "at": "2026-10-17 10:07:50 CST",
+    "batch": "20261017-091302-s2-strategy-proposal",
+    "pid": 3154750,
+    "birth": "109472875",
+    "state": "RUN; outcome pending original learner-checks event",
+    "actual_live": "1c8d6d2bd731514e5613ca63f46dc44fef2e59d5",
+    "tree": "d24cc99e30c745fb76b5b142b388419277fa9dfe",
+    "lock_fds": [
+      {
+        "fd": "3",
+        "target": "/home/dw/Projects/agent-sts2/ops/codex-ops/20261017-091302-s2-strategy-proposal.checks.lock"
+      },
+      {
+        "fd": "4",
+        "target": "/home/dw/Projects/agent-sts2/ops/live-merge.lock"
+      }
+    ],
+    "log": "ops/codex-ops/learner/20261017-091302-s2-strategy-proposal.fallback-d24cc99e30c745fb76b5b142b388419277fa9dfe.checks.log",
+    "observed_log_prefix_bytes": 116,
+    "observed_log_prefix_sha256": "69d9459d27587a47222c3a5b8795434a199a2711f5b1ce0e5e2ef34772e4fcaa",
+    "original_FULL_CHECK_COMMAND": "export PATH=\"$HOME/.local/node/bin:$PATH\"; nice -n 19 npx tsc -p tsconfig.json --noEmit; a=$?; nice -n 19 npx vitest run --maxWorkers=2; b=$?; [ \"$a\" = 0 ] && [ \"$b\" = 0 ]",
+    "source_full_not_repeated": true,
+    "original_broker_request": {
+      "at": "2026-10-17 10:06:09 CST",
+      "argv": [
+        "bash",
+        "ops/codex-ops-do.sh",
+        "learner-recheck",
+        "20261017-091302-s2-strategy-proposal"
+      ],
+      "pid": 3154712,
+      "birth": "109472852",
+      "channel": "original broker learner-recheck, no new full pipeline",
+      "state": "submitted; actual host RUN not yet verified",
+      "expected_publication": {
+        "at": "2026-10-17 10:04:48 CST",
+        "batch": "20261017-091302-s2-strategy-proposal",
+        "source": "b831407a8ed13bcb9b5359b0d3e1ae84624d5571",
+        "source_parent": "1fcbbfa59ac00e9bf04552d376ba693969f54e9f",
+        "source_tree": "2d0e4fa39c6c16360430432ebb6e3ca3fad46a19",
+        "old_main": "015b2df4cc6809bb8658488c730b7e5e8d7b7739",
+        "main": "c21ca9338423b657605064ef6ea44885e8ed4880",
+        "old_live": "99737be9fdb9c2ea92089d768947c49b49b62382",
+        "knowledge_refresh_commit": "b745609457c9ec653c08c59d9943eb4f44bf349f",
+        "knowledge_refresh": [
+          {
+            "path": "knowledge/characters/silent/boss-damage.json",
+            "sha256": "4c8daa11ef7c4b580e0c571b3c6c54c3a38ab36d532358165e657a63e2eb9e25"
+          },
+          {
+            "path": "knowledge/characters/silent/construction-opportunities.json",
+            "sha256": "d0a2428f2b0f3493b5916bef532a335eb2cd0aa29f7d6c1355b20f6f51412477"
+          },
+          {
+            "path": "knowledge/characters/silent/fight-value-gates.json",
+            "sha256": "27b7b057bc0655a74b6d7a85692f3369125c0d34b9481d09d82139215c537874"
+          },
+          {
+            "path": "knowledge/characters/silent/fight-value.json",
+            "sha256": "18eb9344d1cf2bb7dbf34ace24ac4cdb85c513213624386ec3b4c2e27427d9a1"
+          },
+          {
+            "path": "knowledge/characters/silent/monster-records.json",
+            "sha256": "ffbee0c8f0cb62e7482b4958bf351eb2f3a22eb86f4095eeba899bcc4ce417fe"
+          },
+          {
+            "path": "knowledge/characters/silent/outcome-stats.json",
+            "sha256": "8f6e1d3d90352462c2c872ba441a6db036945d54bec59dc24b0f8bbe5c1820a0"
+          },
+          {
+            "path": "knowledge/characters/silent/room-costs.json",
+            "sha256": "40c0f043f9d949bc950e8fc528081c3a2411acec7636c86ff97b83ff1c37452c"
+          },
+          {
+            "path": "knowledge/common/card-upgrades.json",
+            "sha256": "63fe314b6b73289b045e1ad9e2a56a5b4c015966d627ae3ba106b0f6b18019d5"
+          },
+          {
+            "path": "knowledge/common/monster-db.json",
+            "sha256": "d804082eb55ab68906bdfd5767bd7d307bb503cb38f49e3d1cc7fa7aadabd5ee"
+          },
+          {
+            "path": "knowledge/common/move-model.json",
+            "sha256": "9831b60fe0270c6997c1691940a244dee76362d23615799419847c5ce53a984e"
+          }
+        ],
+        "behavior_commit": "649f820249874f42d6035091ed8de2e709ebb8da",
+        "actual_live": "1c8d6d2bd731514e5613ca63f46dc44fef2e59d5",
+        "tree": "d24cc99e30c745fb76b5b142b388419277fa9dfe",
+        "release_id": "V5-R379",
+        "name": "S1.silent-helical-dart1",
+        "leaves": [
+          {
+            "lane": "main",
+            "path": "agent/src/reflex/card-model.ts",
+            "sha256": "442ca2d50bc3d8fefe70b50a6451c0b746362312d7be4f1d47b94daa3cbdb64d",
+            "source_sha256": "442ca2d50bc3d8fefe70b50a6451c0b746362312d7be4f1d47b94daa3cbdb64d",
+            "historical_attribution_only": false
+          },
+          {
+            "lane": "main",
+            "path": "agent/src/reflex/combat-plan.ts",
+            "sha256": "6700bb88808395ed8c46854b3cfd1f0354e8ebf3887dfdab000c0c27e33883fa",
+            "source_sha256": "6700bb88808395ed8c46854b3cfd1f0354e8ebf3887dfdab000c0c27e33883fa",
+            "historical_attribution_only": false
+          },
+          {
+            "lane": "main",
+            "path": "agent/src/reflex/rollout.ts",
+            "sha256": "059ec877572dc1b913c0651129f51bf54f9d97aebe80efacffe418d3c59989c1",
+            "source_sha256": "059ec877572dc1b913c0651129f51bf54f9d97aebe80efacffe418d3c59989c1",
+            "historical_attribution_only": false
+          },
+          {
+            "lane": "main",
+            "path": "agent/src/reflex/silent-helical-dart.ts",
+            "sha256": "f85311d1a78dbb100b1e82b1d817264a87bd40aa6b9ec81d238c4d9bec70965e",
+            "source_sha256": "f85311d1a78dbb100b1e82b1d817264a87bd40aa6b9ec81d238c4d9bec70965e",
+            "historical_attribution_only": false
+          },
+          {
+            "lane": "main",
+            "path": "agent/src/reflex/turn-solver.ts",
+            "sha256": "a99ed9eb1ca7613512b823bd079e1e1bb31bdc48a60fd818323f49e4825b8840",
+            "source_sha256": "a99ed9eb1ca7613512b823bd079e1e1bb31bdc48a60fd818323f49e4825b8840",
+            "historical_attribution_only": false
+          },
+          {
+            "lane": "main",
+            "path": "agent/tests/silent-helical-dart-evidence.json",
+            "sha256": "2b39f3cb11df3706f0d888423e1d2dde2c2547eb44c96db2092f79c18ad51a1a",
+            "source_sha256": "2b39f3cb11df3706f0d888423e1d2dde2c2547eb44c96db2092f79c18ad51a1a",
+            "historical_attribution_only": false
+          },
+          {
+            "lane": "main",
+            "path": "agent/tests/silent-helical-dart.test.ts",
+            "sha256": "900f17ca49d74a6f03f17ff29e29aa3a5162b32374b6afacfa9b6319f50e871a",
+            "source_sha256": "900f17ca49d74a6f03f17ff29e29aa3a5162b32374b6afacfa9b6319f50e871a",
+            "historical_attribution_only": false
+          },
+          {
+            "lane": "live",
+            "path": "agent/src/reflex/card-model.ts",
+            "sha256": "c6ee633f5e7e2b2e6569dc678e7e48972edb22211a0ed92c0266381b4b6449d0",
+            "source_sha256": "442ca2d50bc3d8fefe70b50a6451c0b746362312d7be4f1d47b94daa3cbdb64d",
+            "historical_attribution_only": true
+          },
+          {
+            "lane": "live",
+            "path": "agent/src/reflex/combat-plan.ts",
+            "sha256": "6700bb88808395ed8c46854b3cfd1f0354e8ebf3887dfdab000c0c27e33883fa",
+            "source_sha256": "6700bb88808395ed8c46854b3cfd1f0354e8ebf3887dfdab000c0c27e33883fa",
+            "historical_attribution_only": false
+          },
+          {
+            "lane": "live",
+            "path": "agent/src/reflex/rollout.ts",
+            "sha256": "059ec877572dc1b913c0651129f51bf54f9d97aebe80efacffe418d3c59989c1",
+            "source_sha256": "059ec877572dc1b913c0651129f51bf54f9d97aebe80efacffe418d3c59989c1",
+            "historical_attribution_only": false
+          },
+          {
+            "lane": "live",
+            "path": "agent/src/reflex/silent-helical-dart.ts",
+            "sha256": "f85311d1a78dbb100b1e82b1d817264a87bd40aa6b9ec81d238c4d9bec70965e",
+            "source_sha256": "f85311d1a78dbb100b1e82b1d817264a87bd40aa6b9ec81d238c4d9bec70965e",
+            "historical_attribution_only": false
+          },
+          {
+            "lane": "live",
+            "path": "agent/src/reflex/turn-solver.ts",
+            "sha256": "a99ed9eb1ca7613512b823bd079e1e1bb31bdc48a60fd818323f49e4825b8840",
+            "source_sha256": "a99ed9eb1ca7613512b823bd079e1e1bb31bdc48a60fd818323f49e4825b8840",
+            "historical_attribution_only": false
+          },
+          {
+            "lane": "live",
+            "path": "agent/tests/silent-helical-dart-evidence.json",
+            "sha256": "2b39f3cb11df3706f0d888423e1d2dde2c2547eb44c96db2092f79c18ad51a1a",
+            "source_sha256": "2b39f3cb11df3706f0d888423e1d2dde2c2547eb44c96db2092f79c18ad51a1a",
+            "historical_attribution_only": false
+          },
+          {
+            "lane": "live",
+            "path": "agent/tests/silent-helical-dart.test.ts",
+            "sha256": "900f17ca49d74a6f03f17ff29e29aa3a5162b32374b6afacfa9b6319f50e871a",
+            "source_sha256": "900f17ca49d74a6f03f17ff29e29aa3a5162b32374b6afacfa9b6319f50e871a",
+            "historical_attribution_only": false
+          }
+        ],
+        "source_full_rc": 0,
+        "source_host_supplement_rc": null,
+        "host": "pending original batch exact final-tree full",
+        "original_report_failed_rc0_retained": true,
+        "no_other_role_ACK": true,
+        "no_current_game_home_model_prompt_change": true
+      }
+    },
+    "checks_rc": null,
+    "no_earlier_green_borrowed": true
+  },
+  "no_paper_refresh_without_learner_done": true,
+  "H0_actual_request_state": "running",
+  "H0_old_failed_batch_preserved": true,
+  "H0_no_repeat_dispatch": true,
+  "H0_original_watcher_actual_send": true,
+  "other_role_ACK_filled_by_ops": false,
+  "H0_H1_0332_original_scopes_preserved": true,
+  "no_current_game_home_model_prompt_env_change": true,
+  "no_new_mechanism_or_model_experiment_by_ops": true,
+  "natural_first_effective_run": null,
+  "original_reports_and_canonical_states_not_rewritten": true
+}

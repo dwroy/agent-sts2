@@ -1,0 +1,110 @@
+
+ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/human-pace-h2-shadow-20261017/agent
+
+ ❯ tests/human-pace-card-shadow.test.ts (8 tests | 8 failed) 41ms
+   × reuses only this question's paired cache, uses win rather than S, and records dilution as inventory only 10ms
+   × does not manufacture support membership or a preferred core when the plan is uncommitted 3ms
+   × keeps unknown scores null, and identifies its stable skip fallback as lacking a known comparison 2ms
+   × bounds the actual shared B3 request by5s and records a hanging result as unknown 15ms
+   × asks one short English facts-only shadow question and keeps its choice separate from the brain 3ms
+   × falls back only in the shadow record after Jev throw, without re-asks 4ms
+   × falls back only in the shadow record after Jev invalid, without re-asks 2ms
+   × falls back only in the shadow record after Jev timeout, without re-asks 2ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 8 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/human-pace-card-shadow.test.ts > reuses only this question's paired cache, uses win rather than S, and records dilution as inventory only
+Error: expected a decision, got blocked: the run on screen is Silent (silent) but this process plays Ironclad (CHARACTER unset) and reads its knowledge: abandon or finish that run by hand, or set CHARACTER to it
+ ❯ Module.decide tests/oneshot-support.ts:67:42
+     65| export function decide(e: DecisionEnv): Decision {
+     66|   const outcome = planDecision(e);
+     67|   if (outcome.kind !== "decision") throw new Error(`expected a decisio…
+       |                                          ^
+     68|   return outcome.decision;
+     69| }
+ ❯ fixture tests/human-pace-card-shadow.test.ts:19:48
+ ❯ tests/human-pace-card-shadow.test.ts:34:13
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/8]⎯
+
+ FAIL  tests/human-pace-card-shadow.test.ts > does not manufacture support membership or a preferred core when the plan is uncommitted
+Error: expected a decision, got blocked: the run on screen is Silent (silent) but this process plays Ironclad (CHARACTER unset) and reads its knowledge: abandon or finish that run by hand, or set CHARACTER to it
+ ❯ Module.decide tests/oneshot-support.ts:67:42
+     65| export function decide(e: DecisionEnv): Decision {
+     66|   const outcome = planDecision(e);
+     67|   if (outcome.kind !== "decision") throw new Error(`expected a decisio…
+       |                                          ^
+     68|   return outcome.decision;
+     69| }
+ ❯ fixture tests/human-pace-card-shadow.test.ts:19:48
+ ❯ facts tests/human-pace-card-shadow.test.ts:29:13
+ ❯ tests/human-pace-card-shadow.test.ts:47:24
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/8]⎯
+
+ FAIL  tests/human-pace-card-shadow.test.ts > keeps unknown scores null, and identifies its stable skip fallback as lacking a known comparison
+Error: expected a decision, got blocked: the run on screen is Silent (silent) but this process plays Ironclad (CHARACTER unset) and reads its knowledge: abandon or finish that run by hand, or set CHARACTER to it
+ ❯ Module.decide tests/oneshot-support.ts:67:42
+     65| export function decide(e: DecisionEnv): Decision {
+     66|   const outcome = planDecision(e);
+     67|   if (outcome.kind !== "decision") throw new Error(`expected a decisio…
+       |                                          ^
+     68|   return outcome.decision;
+     69| }
+ ❯ fixture tests/human-pace-card-shadow.test.ts:19:48
+ ❯ tests/human-pace-card-shadow.test.ts:55:13
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/8]⎯
+
+ FAIL  tests/human-pace-card-shadow.test.ts > bounds the actual shared B3 request by5s and records a hanging result as unknown
+Error: expected a decision, got blocked: the run on screen is Silent (silent) but this process plays Ironclad (CHARACTER unset) and reads its knowledge: abandon or finish that run by hand, or set CHARACTER to it
+ ❯ Module.decide tests/oneshot-support.ts:67:42
+     65| export function decide(e: DecisionEnv): Decision {
+     66|   const outcome = planDecision(e);
+     67|   if (outcome.kind !== "decision") throw new Error(`expected a decisio…
+       |                                          ^
+     68|   return outcome.decision;
+     69| }
+ ❯ fixture tests/human-pace-card-shadow.test.ts:19:48
+ ❯ tests/human-pace-card-shadow.test.ts:64:13
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/8]⎯
+
+ FAIL  tests/human-pace-card-shadow.test.ts > asks one short English facts-only shadow question and keeps its choice separate from the brain
+Error: expected a decision, got blocked: the run on screen is Silent (silent) but this process plays Ironclad (CHARACTER unset) and reads its knowledge: abandon or finish that run by hand, or set CHARACTER to it
+ ❯ Module.decide tests/oneshot-support.ts:67:42
+     65| export function decide(e: DecisionEnv): Decision {
+     66|   const outcome = planDecision(e);
+     67|   if (outcome.kind !== "decision") throw new Error(`expected a decisio…
+       |                                          ^
+     68|   return outcome.decision;
+     69| }
+ ❯ fixture tests/human-pace-card-shadow.test.ts:19:48
+ ❯ facts tests/human-pace-card-shadow.test.ts:29:13
+ ❯ tests/human-pace-card-shadow.test.ts:80:19
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/8]⎯
+
+ FAIL  tests/human-pace-card-shadow.test.ts > falls back only in the shadow record after Jev throw, without re-asks
+ FAIL  tests/human-pace-card-shadow.test.ts > falls back only in the shadow record after Jev invalid, without re-asks
+ FAIL  tests/human-pace-card-shadow.test.ts > falls back only in the shadow record after Jev timeout, without re-asks
+Error: expected a decision, got blocked: the run on screen is Silent (silent) but this process plays Ironclad (CHARACTER unset) and reads its knowledge: abandon or finish that run by hand, or set CHARACTER to it
+ ❯ Module.decide tests/oneshot-support.ts:67:42
+     65| export function decide(e: DecisionEnv): Decision {
+     66|   const outcome = planDecision(e);
+     67|   if (outcome.kind !== "decision") throw new Error(`expected a decisio…
+       |                                          ^
+     68|   return outcome.decision;
+     69| }
+ ❯ fixture tests/human-pace-card-shadow.test.ts:19:48
+ ❯ facts tests/human-pace-card-shadow.test.ts:29:13
+ ❯ tests/human-pace-card-shadow.test.ts:88:39
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/8]⎯
+
+
+ Test Files  1 failed | 1 passed (2)
+      Tests  8 failed | 5 passed (13)
+   Start at  16:09:00
+   Duration  3.63s (transform 2.47s, setup 464ms, import 2.82s, tests 59ms, environment 0ms)
+

@@ -1,0 +1,101 @@
+[
+  {
+    "run_id": "2PQK67ULZY90",
+    "floor": 33,
+    "turn": 3,
+    "screen": "COMBAT",
+    "label": "combat/plan",
+    "ts": "2026-10-17T07:03:09.635Z",
+    "sl_attempt": null,
+    "_source": {
+      "path": "logs/decisions.jsonl",
+      "off": 2246606757,
+      "len": 2052,
+      "sha256": "bc59f4f2d9bb2e52d6ab1e2238d7e0b41cbbd6b0e7315f85390687ed1170fd6f"
+    },
+    "completion": {
+      "required": true,
+      "attempt_id": "01ce9a52-61b1-450e-b5d8-88abac830dd1",
+      "status": "pending",
+      "attempts": 1,
+      "reasons": [
+        "error: Error: boss margin sample identity mismatch"
+      ],
+      "samples": 200,
+      "requested": 600,
+      "failure": true,
+      "key": "sim-failure-v1:39094bb8018321609201619e66d9148a4373ff27461ce23fb9b45e2520321202"
+    },
+    "failure_fields": {
+      "reason": "error: Error: boss margin sample identity mismatch",
+      "ms": 28059
+    }
+  },
+  {
+    "run_id": "2PQK67ULZY90",
+    "floor": 33,
+    "turn": 3,
+    "screen": "COMBAT",
+    "label": "combat/plan",
+    "ts": "2026-10-17T07:03:10.140Z",
+    "sl_attempt": null,
+    "_source": {
+      "path": "logs/decisions.jsonl",
+      "off": 2246608809,
+      "len": 2094,
+      "sha256": "83e355f5010b1048cafabb442493ab792484989f8cd1a3851e492a210081c514"
+    },
+    "completion": {
+      "required": true,
+      "attempt_id": "11c122e1-bb8b-40e9-b705-b52a2c4d23d2",
+      "status": "pending",
+      "attempts": 2,
+      "reasons": [
+        "error: Error: boss margin sample identity mismatch",
+        "error: Error: boss margin sample identity mismatch"
+      ],
+      "samples": 200,
+      "requested": 600,
+      "failure": true,
+      "key": "sim-failure-v1:39094bb8018321609201619e66d9148a4373ff27461ce23fb9b45e2520321202"
+    },
+    "failure_fields": {
+      "reason": "error: Error: boss margin sample identity mismatch",
+      "ms": 34
+    }
+  },
+  {
+    "run_id": "2PQK67ULZY90",
+    "floor": 33,
+    "turn": 3,
+    "screen": "COMBAT",
+    "label": "combat/plan-choice",
+    "ts": "2026-10-17T07:03:11.345Z",
+    "sl_attempt": 1,
+    "_source": {
+      "path": "logs/decisions.jsonl",
+      "off": 2246610903,
+      "len": 58640,
+      "sha256": "a6a8e5dc512d3145eb5040ca52144726af2cda1a351a5c7c3e9d04c12d0dce8d"
+    },
+    "completion": {
+      "required": true,
+      "attempt_id": "984d5129-b969-4521-9aa8-912faaea8f7b",
+      "status": "degraded",
+      "attempts": 3,
+      "reasons": [
+        "error: Error: boss margin sample identity mismatch",
+        "error: Error: boss margin sample identity mismatch"
+      ],
+      "samples": 0,
+      "requested": 600,
+      "failure": false,
+      "key": "sim-failure-v1:39094bb8018321609201619e66d9148a4373ff27461ce23fb9b45e2520321202",
+      "budgeted": true
+    },
+    "failure_fields": {
+      "reason": "时间预算内无完整配对样本；估计/误差unknown，使用现有候选",
+      "ms": 15
+    }
+  }
+]

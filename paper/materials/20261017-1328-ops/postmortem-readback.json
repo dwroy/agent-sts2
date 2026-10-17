@@ -1,0 +1,352 @@
+{
+  "at": "2026-10-17 13:29:39 CST",
+  "batch": "20261017-131302",
+  "run": "5H83F3J0XSTE",
+  "canonical": {
+    "runs": [
+      "5H83F3J0XSTE"
+    ],
+    "pid": 3776049,
+    "started": "2026-10-17 13:13",
+    "state": "done",
+    "reason": "tick",
+    "character": "silent",
+    "proposal_policy": "Roy-2026-10-07-learning",
+    "pane": "wJ:p1A9",
+    "rc": 0,
+    "finished": "2026-10-17 13:27",
+    "done": [
+      "5H83F3J0XSTE"
+    ],
+    "missing": [],
+    "proposal_audit_errors": [],
+    "proposal_audit_skipped": false
+  },
+  "report": {
+    "task": "postmortem",
+    "appended": [
+      "5H83F3J0XSTE"
+    ],
+    "skipped": [],
+    "bugs": [],
+    "ledger": {
+      "added": [],
+      "updated": [
+        "silent-0028",
+        "silent-0046",
+        "silent-0020"
+      ],
+      "repeats": [],
+      "check": 0
+    },
+    "code_proposals": [
+      "silent-proposal-62dcbda7e1e8aa08"
+    ],
+    "implementation_domains": [
+      "combat"
+    ],
+    "report": "/home/dw/Projects/agent-sts2/learner/runs/20261017-131306-29269aa4-d283-4cd3-a229-87ca4e530f2c-postmortem/report.md"
+  },
+  "runtime": {
+    "batch": "20261017-131302",
+    "thread": "01a14847-41b9-7950-90ad-1ae53388acd9",
+    "cwd": "/home/dw/Projects/agent-sts2",
+    "event_log": "learner/runs/20261017-131306-29269aa4-d283-4cd3-a229-87ca4e530f2c-postmortem.jsonl",
+    "registered_launch_batch": "20261017-131302",
+    "original_lease": "43b363b25df8ff54a51d703bb65d7215d4979ff8cb9009ded1d0f00b20a151b1",
+    "native_context": {
+      "source": "ops/codex-ops/accounts/codex1/learner/sessions/2026/10/17/rollout-2026-10-17T13-13-12-01a14847-41b9-7950-90ad-1ae53388acd9.jsonl",
+      "offset": 49292,
+      "bytes": 4654,
+      "sha256": "0944047fd70862149844930f2d84958ee2862011a9a32b704d6427a52764bd7e",
+      "model": "gpt-6.1-sol",
+      "effort": "xhigh",
+      "sandbox": {
+        "type": "workspace-write",
+        "writable_roots": [
+          "/home/dw/Projects/agent-sts2/.git"
+        ],
+        "network_access": false,
+        "exclude_tmpdir_env_var": false,
+        "exclude_slash_tmp": false
+      },
+      "approval_policy": "never"
+    },
+    "native_user_input": {
+      "offset": 56529,
+      "bytes": 15345,
+      "sha256": "1c5210c3579b3ab8206b881f536cc52774fa386b519e8ab3fa12c2b139a22da4",
+      "input_sha256": "51de6c410b8b90ab0775d8f2e5c0723d3c7d81542fc214667e14adc25d712679"
+    },
+    "original_header_events": [
+      {
+        "offset": 0,
+        "bytes": 16866,
+        "sha256": "d59ad2ed155b74aeb37a6385f1075e309f823956e27f73bf044929ab91b37085",
+        "type": "learner_launch",
+        "attempt": null,
+        "code": null
+      },
+      {
+        "offset": 16866,
+        "bytes": 360,
+        "sha256": "1f6be2fdbd5f7c5e1a8774adafc2835042e73048332ddeec8ff8bcfda5082ab6",
+        "type": "learner_startup_attempt",
+        "attempt": 1,
+        "code": null
+      },
+      {
+        "offset": 20239,
+        "bytes": 77,
+        "sha256": "38bdd3ad2ff7ba506947d98df8e8767619326bb2f4cd72fa900143936d7ad257",
+        "type": "thread.started",
+        "attempt": null,
+        "code": null
+      }
+    ],
+    "startup_attempts": 1,
+    "failed_startups_preserved": 0,
+    "no_model_or_manual_restart": true
+  },
+  "new_pure_bugs": [],
+  "original_lesson_prefix": {
+    "bytes": 9456486,
+    "sha256": "4cb60c9cd5cc8fbbab19888fab59445c72d74df2159c26920612781c9082826d"
+  },
+  "lesson_append_bytes": 24679,
+  "lesson_append_sha256": "47a6b38860a43ec9a3b3924283b98a517610d7817dc1895fcb615de51464c6a4",
+  "original_material_verification": {
+    "raw_offset_readback": {
+      "decisions": 840,
+      "states": 893,
+      "brain": 50,
+      "run-plans": 16,
+      "run-config": 2,
+      "sl-attempts": 10
+    },
+    "key_assertions": "passed",
+    "lesson_bytes": 24679,
+    "lesson_sha256": "47a6b38860a43ec9a3b3924283b98a517610d7817dc1895fcb615de51464c6a4"
+  },
+  "derived_evidence_fingerprints": [
+    {
+      "path": "learner/runs/20261017-131306-29269aa4-d283-4cd3-a229-87ca4e530f2c-postmortem/decisions.jsonl",
+      "bytes": 32554598,
+      "sha256": "405d1a97fa8bd1c0d2e2e02442f4ee903b0047b9df142c3391699cc18e5d0fdf",
+      "original_verified_envelopes": 840
+    },
+    {
+      "path": "learner/runs/20261017-131306-29269aa4-d283-4cd3-a229-87ca4e530f2c-postmortem/states.jsonl",
+      "bytes": 40340836,
+      "sha256": "8fac534b3a3e83cbb9a77f184410156daf2a17bf93e480bd00524f0d922aa964",
+      "original_verified_envelopes": 893
+    },
+    {
+      "path": "learner/runs/20261017-131306-29269aa4-d283-4cd3-a229-87ca4e530f2c-postmortem/brain.jsonl",
+      "bytes": 7828488,
+      "sha256": "3cd3a81827ce54c3f59d829749b990a983915eb537f65164f75ddca40cbb7a43",
+      "original_verified_envelopes": 50
+    },
+    {
+      "path": "learner/runs/20261017-131306-29269aa4-d283-4cd3-a229-87ca4e530f2c-postmortem/run-plans.jsonl",
+      "bytes": 50448,
+      "sha256": "829ec8b4a95f0fca31837efcfbcbe2f0000c760371851def06fa206c36cf46b3",
+      "original_verified_envelopes": 16
+    },
+    {
+      "path": "learner/runs/20261017-131306-29269aa4-d283-4cd3-a229-87ca4e530f2c-postmortem/run-config.jsonl",
+      "bytes": 12079,
+      "sha256": "c62c2e3ae1236cc9a8ccbc7743bb7df4e29b635b465f30f172f4a0a5015bf827",
+      "original_verified_envelopes": 2
+    },
+    {
+      "path": "learner/runs/20261017-131306-29269aa4-d283-4cd3-a229-87ca4e530f2c-postmortem/sl-attempts.jsonl",
+      "bytes": 190683,
+      "sha256": "e3f4f15cbea8a05fc5373f43a29fed3ca74de1545efff0e0e7e9bc7e0361272b",
+      "original_verified_envelopes": 10
+    }
+  ],
+  "no_repeat_original_raw_frame_or_solver_or_consumer_by_ops": true,
+  "original_ledger_rows": [
+    {
+      "offset": 22692174,
+      "bytes": 741,
+      "sha256": "bbed138512c2102cf0969bb0bc7b9a8c91a29035e28fc068ad7375881a631788",
+      "row": {
+        "op": "update",
+        "id": "silent-0028",
+        "ts": "2026-10-17T13:26:37+08:00",
+        "by": "learner:postmortem",
+        "evidence": [
+          {
+            "run": "5H83F3J0XSTE",
+            "floor": 48,
+            "turn": 1,
+            "role": "support",
+            "note": "末试A10激怒3：s434285神气制胜能力不加力，防御及早有准备使敌0→3→6力、同一啃咬22→25→28，10挡后60→42；T2战略大师、偏折、致命毒药再至15力，虚弱后仍23攻/4挡、42→23；T3刀刃之舞加至18后清相，T4旧激怒/正力消失。仅补已有A10条件，不把技能使用或SL执行视作新bug，无禁技能受控胜线。"
+          }
+        ],
+        "where": {
+          "lessons": [
+            "5H83F3J0XSTE"
+          ]
+        },
+        "note": "本局为条件support；已追加复盘，不改claim/prior/首证/状态/版本，不登记老错重犯。"
+      }
+    },
+    {
+      "offset": 22692915,
+      "bytes": 791,
+      "sha256": "ed3e3b467e9ce2b59662a6304ae24ee8a411bc1c664f9db5002a1f4e19ca6eff",
+      "row": {
+        "op": "update",
+        "id": "silent-0046",
+        "ts": "2026-10-17T13:26:38+08:00",
+        "by": "learner:postmortem",
+        "evidence": [
+          {
+            "run": "5H83F3J0XSTE",
+            "floor": 48,
+            "turn": 4,
+            "role": "support",
+            "note": "末试s434307→434308尖啸使敌0→−6力，11×3=33降5×3=15，零挡23→8。T5负力消失恢复11×4=44，扫腿+虚弱后8×4=32，逃脱计划4挡+扫腿15挡共19，完整需损13而仅8血，存活差6；结19毒后敌157/212。d420141预计−5与实际一致。T4手中步法未施放，替代三线均24/24死亡并无同后继实胜，不定固定出牌顺序。"
+          }
+        ],
+        "where": {
+          "lessons": [
+            "5H83F3J0XSTE"
+          ]
+        },
+        "note": "仅补临时减力当轮收益及到期的support；没有新机制或已证的旧错重犯。出牌提案通过独立strategy-proposal核验，当前行为保持。"
+      }
+    },
+    {
+      "offset": 22693706,
+      "bytes": 774,
+      "sha256": "03b6eafb669219c8fe72d420907b94007695c04b6cc01f7b9864e90a45fe4aff",
+      "row": {
+        "op": "update",
+        "id": "silent-0020",
+        "ts": "2026-10-17T13:26:38+08:00",
+        "by": "learner:postmortem",
+        "evidence": [
+          {
+            "run": "5H83F3J0XSTE",
+            "floor": 47,
+            "role": "support",
+            "note": "F42回满68/68，F44/F45/F46赢后57/48/14，三战净耗54且上限68→60；F47皇家枕头休息实回33到47，小邮箱仅补空槽易伤，F48缩放仪再回13满60。F45能量、F46铜液已消费，F43毒留到王前。F40/F42所选回血投影王入口68，实60；F47更新投影60实60。九营火八回血一锻造，八次实回合199。没有另一休息/保药实胜对照，不把回血判错或SL恢复当治疗。"
+          }
+        ],
+        "where": {
+          "lessons": [
+            "5H83F3J0XSTE"
+          ]
+        },
+        "note": "本局路线资源链support，全部赢战与SL截断已列；保留原claim/prior/首证/状态/版本。"
+      }
+    },
+    {
+      "offset": 22694480,
+      "bytes": 364,
+      "sha256": "881e925666a602e9b73cefd27502c365eab81a752d3b7286824845f307c50983",
+      "row": {
+        "op": "update",
+        "id": "silent-0028",
+        "ts": "2026-10-17T13:26:40+08:00",
+        "by": "learner:postmortem",
+        "where": {
+          "proposal": [
+            "/home/dw/Projects/agent-sts2/learner/runs/20261017-131306-29269aa4-d283-4cd3-a229-87ca4e530f2c-postmortem/combat-proposal.md"
+          ]
+        },
+        "note": "代码提案 silent-proposal-62dcbda7e1e8aa08 → task=strategy-proposal；Roy-2026-10-07-learning"
+      }
+    },
+    {
+      "offset": 22694844,
+      "bytes": 364,
+      "sha256": "6a472047a7ed70537a2bf7e40ec9c49955488ba4faa034b6b15db6155ef31c87",
+      "row": {
+        "op": "update",
+        "id": "silent-0046",
+        "ts": "2026-10-17T13:26:40+08:00",
+        "by": "learner:postmortem",
+        "where": {
+          "proposal": [
+            "/home/dw/Projects/agent-sts2/learner/runs/20261017-131306-29269aa4-d283-4cd3-a229-87ca4e530f2c-postmortem/combat-proposal.md"
+          ]
+        },
+        "note": "代码提案 silent-proposal-62dcbda7e1e8aa08 → task=strategy-proposal；Roy-2026-10-07-learning"
+      }
+    }
+  ],
+  "original_ledger_new_support": [
+    {
+      "id": "silent-0046",
+      "new_evidence": [
+        {
+          "run": "5H83F3J0XSTE",
+          "floor": 48,
+          "turn": 4,
+          "role": "support",
+          "note": "末试s434307→434308尖啸使敌0→−6力，11×3=33降5×3=15，零挡23→8。T5负力消失恢复11×4=44，扫腿+虚弱后8×4=32，逃脱计划4挡+扫腿15挡共19，完整需损13而仅8血，存活差6；结19毒后敌157/212。d420141预计−5与实际一致。T4手中步法未施放，替代三线均24/24死亡并无同后继实胜，不定固定出牌顺序。",
+          "added": "2026-10-17T13:26:38+08:00"
+        }
+      ]
+    },
+    {
+      "id": "silent-0020",
+      "new_evidence": [
+        {
+          "run": "5H83F3J0XSTE",
+          "floor": 47,
+          "role": "support",
+          "note": "F42回满68/68，F44/F45/F46赢后57/48/14，三战净耗54且上限68→60；F47皇家枕头休息实回33到47，小邮箱仅补空槽易伤，F48缩放仪再回13满60。F45能量、F46铜液已消费，F43毒留到王前。F40/F42所选回血投影王入口68，实60；F47更新投影60实60。九营火八回血一锻造，八次实回合199。没有另一休息/保药实胜对照，不把回血判错或SL恢复当治疗。",
+          "added": "2026-10-17T13:26:38+08:00"
+        }
+      ]
+    },
+    {
+      "id": "silent-0028",
+      "new_evidence": [
+        {
+          "run": "5H83F3J0XSTE",
+          "floor": 48,
+          "turn": 1,
+          "role": "support",
+          "note": "末试A10激怒3：s434285神气制胜能力不加力，防御及早有准备使敌0→3→6力、同一啃咬22→25→28，10挡后60→42；T2战略大师、偏折、致命毒药再至15力，虚弱后仍23攻/4挡、42→23；T3刀刃之舞加至18后清相，T4旧激怒/正力消失。仅补已有A10条件，不把技能使用或SL执行视作新bug，无禁技能受控胜线。",
+          "added": "2026-10-17T13:26:37+08:00"
+        }
+      ]
+    }
+  ],
+  "protected_fields_and_old_evidence_preserved": true,
+  "original_proposal_add": {
+    "op": "add",
+    "id": "silent-proposal-62dcbda7e1e8aa08",
+    "ts": "2026-10-17T13:26:41+08:00",
+    "character": "silent",
+    "ledger": [
+      "silent-0028",
+      "silent-0046"
+    ],
+    "runs": [
+      "5H83F3J0XSTE"
+    ],
+    "source_task": "postmortem",
+    "target_task": "strategy-proposal",
+    "domains": [
+      "combat"
+    ],
+    "summary": "核验A10实验体已执行前缀中的技能激怒、尖啸到期及能力建立在候选与消费者间是否一致；本局末轮即时判死正确，先查确定性接线缺口，缺同后继对照保留原行为。",
+    "proposal": "/home/dw/Projects/agent-sts2/learner/runs/20261017-131306-29269aa4-d283-4cd3-a229-87ca4e530f2c-postmortem/combat-proposal.md",
+    "rule_changes": false,
+    "authorization": "Roy-2026-10-07-learning",
+    "proposal_sha256": "470e8f7a3c4257b70882090813976b27e6006bc47953e8e770f86c8f2c5bc0c6",
+    "state": "pending"
+  },
+  "no_new_dispatch_by_ops": true,
+  "mixed_R380_R382_runtime_not_pure_R380_natural_acceptance": true,
+  "new_live_experience_or_game_behavior_not_claimed": true,
+  "complete_dirty_runtime_missing_and_scientific_gaps_preserved": true
+}

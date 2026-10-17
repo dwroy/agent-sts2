@@ -1,0 +1,45 @@
+--- a/agent/tests/human-pace-card-shadow.test.ts
++++ b/agent/tests/human-pace-card-shadow.test.ts
+@@ -4,11 +4,12 @@
+ import { board, env, decide, ask } from "./oneshot-support.js";
+ import type { GlobalBossPool } from "../src/sim/global-build-pool.js";
+ import type { CoreTemplate } from "../src/construction/types.js";
+-import type { JevAskResult } from "../src/reflex/jev/client.js";
++import type { JevAskResult, JevClient } from "../src/reflex/jev/client.js";
+ import { DecisionBudget, currentDecisionBudget, withDecisionBudget } from "../src/core/decision-budget.js";
+ import * as comparisons from "../src/sim/human-pace-comparison.js";
+ import { slimInput } from "../src/sim/boss-sim.js";
+ import { board as fightBoard } from "./boss-sim-fixture.js";
++import type { DeckSimRunner } from "../src/sim/build-sim-pool.js";
+ import { setKnowledgeCharacter } from "../src/knowledge/files.js";
+ vi.mock("../src/sim/boss-trust.js", async (original) => ({ ...await original<object>(), bossTrustReason: () => null }));
+ afterEach(() => { vi.restoreAllMocks(); vi.useRealTimers(); vi.unstubAllEnvs(); setKnowledgeCharacter(null); });
+@@ -63,7 +64,7 @@
+ it("bounds the actual shared B3 request by5s and records a hanging result as unknown", async () => {
+   vi.useFakeTimers();
+   vi.spyOn(comparisons, "directionStart").mockReturnValue(slimInput(fightBoard({ bossHp: 12 })));
+-  const f = fixture(), run = vi.fn(async () => new Promise<never>(() => {}));
++  const f = fixture(), run = vi.fn<DeckSimRunner["run"]>(async () => new Promise<never>(() => {}));
+   const pending = evaluateCardShadow({ input: f.input, env: f.environment, cores: [], plan: null, pool, originalB3: {},
+     setup: { runner: { run }, samples: 2 }, now: () => Date.now() });
+   await vi.advanceTimersByTimeAsync(5001);
+@@ -79,7 +80,7 @@
+     latencyMs: 1, inputTokens: 1, outputTokens: 1, requestId: "FIXED" };
+ }
+ it("asks one short English facts-only shadow question and keeps its choice separate from the brain", async () => {
+-  const f = await facts(), ask = vi.fn(async () => response("skip"));
++  const f = await facts(), ask = vi.fn<JevClient["ask"]>(async () => response("skip"));
+   const result = await askCardShadow(f, { ask }, f.module_first);
+   expect(ask).toHaveBeenCalledTimes(1);
+   expect(ask.mock.calls[0]?.[1]).toHaveProperty("card.instructions", expect.stringContaining("do not calculate"));
+--- a/agent/tests/human-pace-direction.test.ts
++++ b/agent/tests/human-pace-direction.test.ts
+@@ -66,7 +66,7 @@
+   let time = 0;
+   const targets = ["X", "Y"].map((boss) => ({ boss, act: 2, count: 1, frequency: 0.5, evidence: ["FIXTURE"],
+     source: "observed_silent_pool" as const, unknown: null }));
+-  const batch = vi.fn(async (_target, variants, _budget, cap: number) => {
++  const batch = vi.fn<NonNullable<Parameters<typeof evaluateDirections>[0]["evaluateBatch"]>>(async (_target, variants, _budget, cap: number) => {
+     expect(variants).toHaveLength(3); expect(cap).toBe(30000); time += 30000;
+     return new Map(variants.map((v: { key: string }) => [v.key, { status: "computed" as const, reason: null,
+       win: 0.5, win_se: 0.1, s: null, samples: 2, requested: 2 }]));

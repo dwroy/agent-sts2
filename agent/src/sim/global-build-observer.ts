@@ -75,7 +75,13 @@ export async function observeGlobalBuild(args: {
     input: args.input, options: args.options, sampling: args.sampling,
     current: { base: args.current.base, options: args.current.options, samples: args.current.samples,
       requested: args.current.requested, timedOut: args.current.timedOut, adaptive: args.current.adaptive,
-      buildRanking: args.current.buildRanking }, pool, targets, keys: args.keys });
+      buildRanking: args.current.buildRanking,
+      // Completion provenance affects whether the same numeric prefix is a normal budget stop.
+      budgetCompletion: args.current.completion?.budgeted === true ? {
+        required: args.current.completion.required, status: args.current.completion.status,
+        failure: args.current.completion.failure, samples: args.current.completion.samples,
+        requested: args.current.completion.requested,
+      } : null }, pool, targets, keys: args.keys });
   const cached = key ? completed.get(args.runner) : undefined;
   const hit = !!cached && cached.key === key;
   const result = hit ? structuredClone(cached.result) : await evaluateGlobalBuild({ pool, currentAct: args.currentAct,

@@ -1,0 +1,132 @@
+{
+  "at": "2026-10-17T14:58:32.593746+08:00",
+  "request": "roy-20261017-human-pace",
+  "owner_session": "01a13dcd-83d4-7c63-b233-f93cf878ecf4",
+  "admitted_complete": [
+    "25MFNPAE37R2"
+  ],
+  "candidate": "2PQK67ULZY90",
+  "startup_configs": [
+    {
+      "run_id": "25MFNPAE37R2",
+      "ts": "2026-10-17T04:53:29.820Z",
+      "floor": 1,
+      "restart": false,
+      "code": {
+        "commit": "6fbbd82abd6d407dbaf93f82639b7f927efa54a0",
+        "code": "6fbbd82+dirty",
+        "dirty": true,
+        "dirty_files": [
+          "knowledge/characters/silent/boss-damage.json",
+          "knowledge/characters/silent/construction-opportunities.json",
+          "knowledge/characters/silent/monster-records.json",
+          "knowledge/characters/silent/outcome-stats.json",
+          "knowledge/characters/silent/room-costs.json",
+          "knowledge/common/card-upgrades.json",
+          "knowledge/common/monster-db.json",
+          "knowledge/common/move-model.json",
+          "notes/monster-db-check.md"
+        ],
+        "branch": "live",
+        "worktree": "live"
+      },
+      "human_pace": {
+        "schema": "human-pace-h1-v1",
+        "budgets": {
+          "ordinary": 10000,
+          "elite": 15000,
+          "boss": 30000,
+          "retry": 10000,
+          "routine": 5000,
+          "brain": 90000,
+          "direction": 60000
+        },
+        "model_effort": "xhigh",
+        "required_full_replaced": true
+      }
+    },
+    {
+      "run_id": "2PQK67ULZY90",
+      "ts": "2026-10-17T06:20:02.733Z",
+      "floor": 1,
+      "restart": false,
+      "code": {
+        "commit": "5782a41c4b1db735e3eba8e769e0ad52c356f136",
+        "code": "5782a41+dirty",
+        "dirty": true,
+        "dirty_files": [
+          "knowledge/characters/silent/boss-damage.json",
+          "knowledge/characters/silent/construction-opportunities.json",
+          "knowledge/characters/silent/monster-records.json",
+          "knowledge/characters/silent/outcome-stats.json",
+          "knowledge/characters/silent/room-costs.json",
+          "knowledge/common/card-upgrades.json",
+          "knowledge/common/monster-db.json",
+          "knowledge/common/move-model.json",
+          "notes/fight-value-backtest-silent.md",
+          "notes/monster-db-check.md"
+        ],
+        "branch": "live",
+        "worktree": "live"
+      },
+      "human_pace": {
+        "schema": "human-pace-h1-v1",
+        "budgets": {
+          "ordinary": 10000,
+          "elite": 15000,
+          "boss": 30000,
+          "retry": 10000,
+          "routine": 5000,
+          "brain": 90000,
+          "direction": 60000
+        },
+        "model_effort": "xhigh",
+        "required_full_replaced": true
+      }
+    }
+  ],
+  "R380_and_R382_real_ancestors": true,
+  "identical_budget_configuration": true,
+  "R383": {
+    "source": "a473263eb35ce5bea8e06f1ee94f4da1ba880bc3",
+    "actual_runtime_production_diff": [
+      "agent/src/hand/loop.ts",
+      "agent/src/hand/screens/selection.ts",
+      "agent/src/memory/types.ts",
+      "agent/src/reflex/combat-plan.ts"
+    ],
+    "diff": {
+      "path": "paper/materials/20261017-human-pace-h1/natural/resume-25mf-2pqk/R383-runtime-source.patch",
+      "bytes": 12426,
+      "sha256": "7154683459b431ff9c605c5f697a51e506fa848a0aae6dfc124e10d0bd7ef663"
+    },
+    "identical_budget_and_sampler_blobs": [
+      {
+        "path": "agent/src/core/decision-budget.ts",
+        "both_sha256": "73a71277eb18e7f582ff58e012b9b990c49382a5ef996d9dac3608d088fa7f7d"
+      },
+      {
+        "path": "agent/src/sim/boss-lines.ts",
+        "both_sha256": "510033feed1fb9429d5979fb3032dac306cccbd03517441d60a1b407cdf11a75"
+      },
+      {
+        "path": "agent/src/sim/build-sim-facts.ts",
+        "both_sha256": "adddfd6b7f5be7cda29ce78480b8cab77bf5391f7ac5573de2483b17b51b9c49"
+      },
+      {
+        "path": "agent/src/sim/adaptive-sampler.ts",
+        "both_sha256": "2a532bcc74220c2558e0ab678343bf0ac516b583de698e53cd507f4ad2554dab"
+      },
+      {
+        "path": "agent/src/sim/adaptive-decks.ts",
+        "both_sha256": "33b20bd80bf230319bcdcd41e36f248688e6fc885d00639b56f69dbbb5e2455e"
+      }
+    ],
+    "personally_read_entire_four_production_leaf_diff": true,
+    "assessment": "可计入H1预算速度的观察性验收。R383保留隐秘匕首双弃边界后的只读条件后继，未修改计时、采样、预算档位、C1/C2、SL或药水；loop唯一改动是把decisionId传入noteCardSource。但选择题信息变化可能改变Jev选择及后继工作量，且有知识刷新，不能当相同策略/固定知识的纯因果对照。",
+    "naturally_started_at_R383_is_not_proof_of_win_or_production_calibration": true
+  },
+  "excluded_mixed_run": "5H83F3J0XSTE",
+  "old_listener_collection_not_scientific_admission": true,
+  "online_changed": false
+}

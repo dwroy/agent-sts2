@@ -1,0 +1,166 @@
+{
+  "at": "2026-10-17 11:12:58 CST",
+  "request": "roy-20261017-human-pace",
+  "phase": "H1",
+  "release_id": "V5-R380",
+  "source": "7af803c06e82e2aafe6a595fab7a23e0f3f44fb3",
+  "source_parent": "54e36d0830ab640130557b62a078b25954912ff4",
+  "source_tree": "42b64e288ab34b51bfa1a4f15f8c6abd731fd139",
+  "behavior_commit": "0e2f10cc7cc043035eafc1785667b630eb335a35",
+  "checked_live": "dbd41616420f62e6502e9cb6c5827e852a6b4949",
+  "checked_tree": "d68e817428a59b28dfd53c3d9dfb34819f711e56",
+  "original_batch": "20261016-075726-strategy-proposal",
+  "original_fallback_check": {
+    "rc": 0,
+    "log": "/home/dw/Projects/agent-sts2/ops/codex-ops/learner/20261016-075726-strategy-proposal.fallback-d68e817428a59b28dfd53c3d9dfb34819f711e56.checks.log",
+    "merged": "dbd41616420f62e6502e9cb6c5827e852a6b4949",
+    "tree": "d68e817428a59b28dfd53c3d9dfb34819f711e56",
+    "commits": [
+      "28161b2d2a31e95587999fc6e5028acd727cecb2",
+      "b2bdb0b1dbc7ec9a39909595238b00efbb718321"
+    ]
+  },
+  "original_action_terminal_rc": 0,
+  "log": {
+    "path": "ops/codex-ops/learner/20261016-075726-strategy-proposal.fallback-d68e817428a59b28dfd53c3d9dfb34819f711e56.checks.log",
+    "bytes": 269,
+    "sha256": "9d4ec8c223d152031f7f3a75292a2243b784cbd58089a663d6302e587adee20d"
+  },
+  "actual_full_check_command": "export PATH=\"$HOME/.local/node/bin:$PATH\"; nice -n 19 npx tsc -p tsconfig.json --noEmit; a=$?; nice -n 19 npx vitest run --maxWorkers=2; b=$?; [ \"$a\" = 0 ] && [ \"$b\" = 0 ]",
+  "tsc_rc": 0,
+  "vitest_rc": 0,
+  "aggregate_rc": 0,
+  "tsc_zero_basis": "Original aggregate0 requires both saved tsc status and saved Vitest status0",
+  "files_passed": 519,
+  "tests_passed": 5108,
+  "tests_skipped": 2,
+  "vitest_duration_seconds": 919.81,
+  "vitest_start_cst": "2026-10-17 10:52:46 CST",
+  "exact28_composed_leaves_verified": true,
+  "source_and_R379_actual_ancestors_verified": true,
+  "current_observed_refs": {
+    "main": {
+      "head": "f6f33b98814e6245a7ac86352b0107e1ebda80ba",
+      "tree": "b8a4f11f2c6d759e739c11b59b4344a50380a48b"
+    },
+    "live": {
+      "head": "7907ca1af8f88d2adbe6b137ff8b6b8ceb082a23",
+      "tree": "9ee84a7592a8e986324b9bb0364d17f616b78209"
+    }
+  },
+  "later_live_delta_from_checked_commit": [
+    "A\tagent/tests/boss-sim-consumer-fixture.ts",
+    "A\tagent/tests/build-facts-audit-fixture.test.ts",
+    "M\tagent/tests/build-facts-audit.test.ts",
+    "M\tagent/tests/eval_calibration_test.py",
+    "M\tagent/tests/potions-jev-call.test.ts",
+    "M\tagent/tests/rollout-clock-fixture.ts",
+    "A\tagent/tests/rollout-ties-fixture.test.ts",
+    "M\tagent/tests/rollout-ties.test.ts",
+    "M\tagent/tests/target-options.test.ts",
+    "M\tknowledge/characters/silent/boss-damage.json",
+    "M\tknowledge/characters/silent/construction-opportunities.json",
+    "M\tknowledge/characters/silent/fight-value-gates.json",
+    "M\tknowledge/characters/silent/monster-records.json",
+    "M\tknowledge/characters/silent/outcome-stats.json",
+    "M\tknowledge/characters/silent/room-costs.json",
+    "M\tknowledge/common/card-upgrades.json",
+    "M\tknowledge/common/monster-db.json",
+    "M\tknowledge/common/move-model.json"
+  ],
+  "later_current_tree_is_not_claimed_as_this_host_pass": true,
+  "original_knowledge_start_observation_not_full_immutable_input_proof": true,
+  "current_knowledge_changes_from_start_observation": [
+    {
+      "path": "knowledge/characters/silent/boss-damage.json",
+      "start_sha256": "4c8daa11ef7c4b580e0c571b3c6c54c3a38ab36d532358165e657a63e2eb9e25",
+      "observed_current_sha256": "84451297cb321d7d446292fbdd43e9954f2060186cbbbb1a4cdf04c9c139a20c",
+      "observed_current_mtime_ns": 1792206023410759548,
+      "observed_current_ctime_ns": 1792206023410759548
+    },
+    {
+      "path": "knowledge/characters/silent/construction-opportunities.json",
+      "start_sha256": "d0a2428f2b0f3493b5916bef532a335eb2cd0aa29f7d6c1355b20f6f51412477",
+      "observed_current_sha256": "857225b9e929d9203572f30b4f95ab9620db4780ce1379ca969b915d38bb698a",
+      "observed_current_mtime_ns": 1792205941194375366,
+      "observed_current_ctime_ns": 1792205941194375366
+    },
+    {
+      "path": "knowledge/characters/silent/fight-value-gates.json",
+      "start_sha256": "27b7b057bc0655a74b6d7a85692f3369125c0d34b9481d09d82139215c537874",
+      "observed_current_sha256": "be3a407cfc277c249d219d4210b4fceeff258b6ad7245847efd4ca9fc0d1f821",
+      "observed_current_mtime_ns": 1792206362790334102,
+      "observed_current_ctime_ns": 1792206362794334102
+    },
+    {
+      "path": "knowledge/characters/silent/fight-value.json",
+      "start_sha256": "18eb9344d1cf2bb7dbf34ace24ac4cdb85c513213624386ec3b4c2e27427d9a1",
+      "observed_current_sha256": "3fcfda5dd9de6042d0a723de98b34654950bad959dee9d650432e918ffe9e6e0",
+      "observed_current_mtime_ns": 1792206590382322552,
+      "observed_current_ctime_ns": 1792206590382322552
+    },
+    {
+      "path": "knowledge/characters/silent/monster-records.json",
+      "start_sha256": "ffbee0c8f0cb62e7482b4958bf351eb2f3a22eb86f4095eeba899bcc4ce417fe",
+      "observed_current_sha256": "4b6a62a79411cc3fceff78a664b44a78b54060a895265cbfa289b4ad918814d6",
+      "observed_current_mtime_ns": 1792205774250390290,
+      "observed_current_ctime_ns": 1792205774250390290
+    },
+    {
+      "path": "knowledge/characters/silent/outcome-stats.json",
+      "start_sha256": "8f6e1d3d90352462c2c872ba441a6db036945d54bec59dc24b0f8bbe5c1820a0",
+      "observed_current_sha256": "2f5d08b29b82c48b32281b33be1bddb3da174207a8d2bf843e6c03cfedc52508",
+      "observed_current_mtime_ns": 1792205933702375331,
+      "observed_current_ctime_ns": 1792205933702375331
+    },
+    {
+      "path": "knowledge/characters/silent/room-costs.json",
+      "start_sha256": "40c0f043f9d949bc950e8fc528081c3a2411acec7636c86ff97b83ff1c37452c",
+      "observed_current_sha256": "d74bd2ef1f3614354ba0a8b6d8fcac58617a110adbb2346120ab3f94f33c8b22",
+      "observed_current_mtime_ns": 1792205962074601546,
+      "observed_current_ctime_ns": 1792205962074601546
+    },
+    {
+      "path": "knowledge/common/card-upgrades.json",
+      "start_sha256": "63fe314b6b73289b045e1ad9e2a56a5b4c015966d627ae3ba106b0f6b18019d5",
+      "observed_current_sha256": "89821101988fa6713937ea0620c3c8e780f9a0a817347765638f6073db2c56bd",
+      "observed_current_mtime_ns": 1792205856922382597,
+      "observed_current_ctime_ns": 1792205856922382597
+    },
+    {
+      "path": "knowledge/common/monster-db.json",
+      "start_sha256": "d804082eb55ab68906bdfd5767bd7d307bb503cb38f49e3d1cc7fa7aadabd5ee",
+      "observed_current_sha256": "927a9928564b0f4d89a1530989279febd6102ba2d0078890e197eb818325f496",
+      "observed_current_mtime_ns": 1792205774110390303,
+      "observed_current_ctime_ns": 1792205774110390303
+    },
+    {
+      "path": "knowledge/common/move-model.json",
+      "start_sha256": "9831b60fe0270c6997c1691940a244dee76362d23615799419847c5ce53a984e",
+      "observed_current_sha256": "1ef3dfb414a2b4741079b0b6b2984c30713a58e549b5255a2882612dda9ed9f7",
+      "observed_current_mtime_ns": 1792205774258390289,
+      "observed_current_ctime_ns": 1792205774258390289
+    }
+  ],
+  "source_original_entry0_and_interrupted143_history_preserved": true,
+  "original_canonical_state_preserved": {
+    "state": "failed",
+    "rc": 0,
+    "merged_field_present": false,
+    "merged": null
+  },
+  "release_already_registered_no_renumbering": true,
+  "no_duplicate_source_or_host_full": true,
+  "versions_sha256_by_checkout": {
+    "/home/dw/Projects/agent-sts2": "c74c87298eefdf2ca948a8bad6a4de6f693719d733cbeb9cecf0a7da7efdb0ae",
+    "/home/dw/Projects/agent-sts2/.worktrees/live": "ed762622dd283116d32fdb134340d0bc686e14a6367b959a9b191696597fac1c"
+  },
+  "first_effective_natural_run": "5H83F3J0XSTE",
+  "first_effective_run_receipt": "paper/materials/20261017-human-pace-h1/ops-receipts/host-completion-20261017-1110/first-effective-run-readback.json",
+  "natural_two_run_acceptance": false,
+  "parent_completed": false,
+  "H0_and_silent0332_scientific_roots_open": true,
+  "H2_plus_unassigned": true,
+  "current_game_restarted_or_hot_changed": false,
+  "no_other_role_ACK": true
+}

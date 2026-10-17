@@ -1,0 +1,96 @@
+{
+  "batch": "20261017-151301-fix-batch",
+  "actual_live": "19988d1118ca43c1409fe900fc8c94f9f6ac32cc",
+  "tree": "03415d6df563fcc75a528920f1bda91444bf633b",
+  "request": {
+    "at": "2026-10-17 15:46:35 CST",
+    "batch": "20261017-151301-fix-batch",
+    "command": [
+      "nice",
+      "-n",
+      "19",
+      "bash",
+      "ops/codex-ops-do.sh",
+      "learner-recheck",
+      "20261017-151301-fix-batch"
+    ],
+    "pid": 143343,
+    "birth_ticks": "111515475",
+    "actual_live": "19988d1118ca43c1409fe900fc8c94f9f6ac32cc",
+    "tree": "03415d6df563fcc75a528920f1bda91444bf633b",
+    "canonical_log": "ops/codex-ops/learner/20261017-151301-fix-batch.fallback-03415d6df563fcc75a528920f1bda91444bf633b.checks.log",
+    "action_output": "ops/codex-ops/record-staging/20261017-1531/host-action.log",
+    "route": "Original allow-listed broker learner-recheck request; queued is not started, verify actual original worker and live/check locks before claiming RUN",
+    "action_script_sha256": "fd675787d10607e8c301ddf0e01db4c2df45c4544f647a783a441cf975bf52ba",
+    "actual_subprocess_started": true,
+    "full_result": null,
+    "original_source_full_not_repeated": true,
+    "no_other_role_ACK": true
+  },
+  "direct_action": {
+    "at": "2026-10-17 15:48:50 CST",
+    "batch": "20261017-151301-fix-batch",
+    "command": [
+      "nice",
+      "-n",
+      "19",
+      "bash",
+      "ops/codex-ops-actions.sh",
+      "learner-recheck",
+      "20261017-151301-fix-batch"
+    ],
+    "pid": 148491,
+    "birth_ticks": "111529045",
+    "actual_live": "19988d1118ca43c1409fe900fc8c94f9f6ac32cc",
+    "tree": "03415d6df563fcc75a528920f1bda91444bf633b",
+    "canonical_log": "ops/codex-ops/learner/20261017-151301-fix-batch.fallback-03415d6df563fcc75a528920f1bda91444bf633b.checks.log",
+    "action_output": "ops/codex-ops/record-staging/20261017-1544/host-action.log",
+    "route": "Authorized primary host, same existing allow-listed learner-recheck action, original151301 batch/check/live locks and canonical completion event; original unclaimed broker request atomically cancelled first.",
+    "action_script_sha256": "a49d54356a4b94d764a4da62ac387d712464b1d3ca8d9942e3264728de2418e0",
+    "actual_subprocess_started": true,
+    "full_result": null,
+    "original_source_full_not_repeated": true,
+    "no_other_role_ACK": true
+  },
+  "original_broker_cancellation": {
+    "at": "2026-10-17 15:48:50 CST",
+    "batch": "20261017-151301-fix-batch",
+    "request": "ops/codex-ops/broker/1792223195515385941-143343.req",
+    "cancelled": "ops/codex-ops/broker/1792223195515385941-143343.cancelled-by-original-ops",
+    "payload_sha256": "091a2db57b85b94d10e3100f36feaf97e470381ca97ea3a5e8f03be3ac10b4bc",
+    "atomic_queued_request_rename_won": true,
+    "original_request_never_observed_claimed": true,
+    "terminated_only_owned_request_pid": 143343,
+    "birth_ticks_verified": "111515475",
+    "no_check_worker_or_log_existed": true,
+    "next": "Authorized primary host invokes the same allow-listed original action, not another pipeline or source check."
+  },
+  "original_worker_observation": [
+    {
+      "pid": 148491,
+      "ppid": 1,
+      "start_ticks": "111529045",
+      "args": [
+        "python3",
+        "/home/dw/Projects/agent-sts2/ops/codex-ops-learn.py",
+        "recheck",
+        "--batch",
+        "20261017-151301-fix-batch"
+      ],
+      "lock_or_log_fds": [
+        "/home/dw/Projects/agent-sts2/ops/codex-ops/20261017-151301-fix-batch.checks.lock",
+        "/home/dw/Projects/agent-sts2/ops/live-merge.lock",
+        "/home/dw/Projects/agent-sts2/ops/codex-ops/learner/20261017-151301-fix-batch.fallback-03415d6df563fcc75a528920f1bda91444bf633b.checks.log"
+      ]
+    }
+  ],
+  "canonical_log": "ops/codex-ops/learner/20261017-151301-fix-batch.fallback-03415d6df563fcc75a528920f1bda91444bf633b.checks.log",
+  "log_present": true,
+  "log_head": "\n RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/live/agent\n\n",
+  "actual_check_worker_observed": true,
+  "state": "RUN: original check worker holds both original checks and live locks; terminal result pending",
+  "result": null,
+  "no_source_full_rerun": true,
+  "no_borrowed_green": true,
+  "no_duplicate_channel": true
+}

@@ -1,0 +1,458 @@
+{
+  "batch": "20261017-154303-fix-batch",
+  "report": {
+    "task": "fix-batch",
+    "base": "91f222500fd3b23f981545ea14883524d80de394",
+    "fixes": [],
+    "skipped": [
+      {
+        "item": "出牌、药水、SL、终局、路线及角色机制条目",
+        "reason": "策略类；保留既有独立strategy-proposal链"
+      },
+      {
+        "item": "silent-0332资源契约根因",
+        "reason": "证据不足；原专用owner接续"
+      },
+      {
+        "item": "目录生命周期与磁盘压力宽项",
+        "reason": "证据不足；已有窄修不关闭根因"
+      },
+      {
+        "item": "架构调整及调度公平性调查",
+        "reason": "独立任务，超出普通纯bug批次"
+      },
+      {
+        "item": "旧原生通知恢复",
+        "reason": "缺stderr，无法确认是否送达"
+      },
+      {
+        "item": "缓存、DPR/B2性能及历史超时根因",
+        "reason": "证据不足或属于独立性能调查"
+      }
+    ],
+    "merged": null,
+    "tests": {
+      "tsc": null,
+      "vitest": null,
+      "cases": 0
+    },
+    "code_proposals": [],
+    "implementation_domains": [],
+    "report": "/home/dw/Projects/agent-sts2/learner/runs/20261017-154310-48c80065-1a40-4d8d-9d07-cf15ffd9e2d0-fix-batch/report.md"
+  },
+  "canonical_state": "failed",
+  "canonical_rc": 0,
+  "canonical_merged": null,
+  "original_audit": {
+    "initial_base": "5d31b4f1bedd2117aba1389f97a988f878e271c6",
+    "base": "91f222500fd3b23f981545ea14883524d80de394",
+    "actual_main": "91f222500fd3b23f981545ea14883524d80de394",
+    "actual_live": "19988d1118ca43c1409fe900fc8c94f9f6ac32cc",
+    "previous_audit_base": "5bd559de30f6a23739f3748426ab5be2321ecd0c",
+    "changes_in_implementation_trees_since_previous_audit": [
+      "agent/src/sim/boss-lines.ts",
+      "agent/tests/human-pace-sampling.test.ts",
+      "ops/inbox-dev.md"
+    ],
+    "queue_sha256": "82833ce7c9b615aac6d8f4a960ffb9e52b8f88999abd139394fd2bc3facf59c5",
+    "queue_delta": "queue-since-previous.diff",
+    "already_fixed": [
+      {
+        "item": "额度恢复基线与实际进阶通知",
+        "commit": "5b56a452bb9be14d620b368ec46974c1b57901ca",
+        "base_ancestor": true,
+        "main_ancestor": true,
+        "live_ancestor": true
+      },
+      {
+        "item": "核心通知stdout/stderr持久化（不等于旧原生通知已安全恢复）",
+        "commit": "5c92f2aaf0b758a1a5e7d591745694004664f83a",
+        "base_ancestor": true,
+        "main_ancestor": true,
+        "live_ancestor": true
+      },
+      {
+        "item": "知识工作线程签名固定输入",
+        "commit": "8fbb441eb61eef226eb7366f9612003480c83988",
+        "base_ancestor": true,
+        "main_ancestor": true,
+        "live_ancestor": true
+      },
+      {
+        "item": "rollout最佳候选固定输入",
+        "commit": "bbc5b993a7524bbb8e80a975f204f8d193657b46",
+        "base_ancestor": true,
+        "main_ancestor": true,
+        "live_ancestor": true
+      },
+      {
+        "item": "空产出补链误派",
+        "commit": "84366ad06ee4f978394c1b9489a82c83ea12bd36",
+        "base_ancestor": true,
+        "main_ancestor": true,
+        "live_ancestor": true
+      },
+      {
+        "item": "多角色药水表测试隔离",
+        "commit": "5ef3c4612bd2673c19968c5a2d24bf62af519ee1",
+        "base_ancestor": true,
+        "main_ancestor": true,
+        "live_ancestor": true
+      },
+      {
+        "item": "未派发提案结果登记",
+        "commit": "3a98e213a826e94f9708af4b1a265e1892659f4e",
+        "base_ancestor": true,
+        "main_ancestor": true,
+        "live_ancestor": true
+      },
+      {
+        "item": "事件流同秒碰撞",
+        "commit": "b6ee3f8c29cc10d4652a67d14f0e0e394aa6ce6f",
+        "base_ancestor": true,
+        "main_ancestor": true,
+        "live_ancestor": true
+      },
+      {
+        "item": "纸鹤夹具",
+        "commit": "befc39e5ca0105f8ff96d47f817df44f0b2760f1",
+        "base_ancestor": true,
+        "main_ancestor": true,
+        "live_ancestor": true
+      },
+      {
+        "item": "账本状态分叉前缀",
+        "commit": "dd478f0b3e5a0f234f082972d21b203dbf8229d7",
+        "base_ancestor": true,
+        "main_ancestor": true,
+        "live_ancestor": true
+      },
+      {
+        "item": "共享main启动冲突",
+        "commit": "22efae55484bc2bdcc54e847a8dc40bb4888c4e2",
+        "base_ancestor": true,
+        "main_ancestor": true,
+        "live_ancestor": true
+      },
+      {
+        "item": "根事件通知路径",
+        "commit": "577f0bc424b7287910735cfdc86c253cc7ee8057",
+        "base_ancestor": true,
+        "main_ancestor": true,
+        "live_ancestor": true
+      },
+      {
+        "item": "global-build宿主loadavg",
+        "commit": "5bc8f025fe043cb8738cce57870354fa23fa84a1",
+        "base_ancestor": true,
+        "main_ancestor": true,
+        "live_ancestor": true
+      },
+      {
+        "item": "局间quiet误报",
+        "commit": "21a9c52484f04d510bd397959c958ec9767f1d2d",
+        "base_ancestor": true,
+        "main_ancestor": true,
+        "live_ancestor": true
+      },
+      {
+        "item": "global-health异步测试",
+        "commit": "d27df54f0651c4af84c6c12ceceec82a016f1142",
+        "base_ancestor": true,
+        "main_ancestor": true,
+        "live_ancestor": true
+      },
+      {
+        "item": "target-options此前两个标注回放的固定预算（默认路径本批另补）",
+        "commit": "83a7f796c24eea8f16eb317bc70bfd832251ad27",
+        "base_ancestor": true,
+        "main_ancestor": true,
+        "live_ancestor": true
+      },
+      {
+        "item": "retention数字UUID",
+        "commit": "d91236326bc1af7a5417ce016c1a182f8084e7a3",
+        "base_ancestor": true,
+        "main_ancestor": true,
+        "live_ancestor": true
+      },
+      {
+        "item": "retention旧根scratch",
+        "commit": "0699b05c436d3d51d00ee92f153d16d16e64bea4",
+        "base_ancestor": true,
+        "main_ancestor": true,
+        "live_ancestor": true
+      },
+      {
+        "item": "无COMBAT决策死亡漏记",
+        "commit": "3b48088dec5fc6eafe576a1296bbdadde43432ee",
+        "base_ancestor": true,
+        "main_ancestor": true,
+        "live_ancestor": true
+      },
+      {
+        "item": "broker请求写失败立即退出",
+        "commit": "eaa118c1d72f11b2b6b68c98c1d7bab10d138f5b",
+        "base_ancestor": true,
+        "main_ancestor": true,
+        "live_ancestor": true
+      },
+      {
+        "item": "broker回执保留与队列错误隔离",
+        "commit": "6eb38508ceeb81d534159b3516458521ad09bbed",
+        "base_ancestor": true,
+        "main_ancestor": true,
+        "live_ancestor": true
+      },
+      {
+        "item": "JSONL残尾边界恢复",
+        "commit": "3daf122a5168d1a8cb456aed1c926b2d1b6c4488",
+        "base_ancestor": true,
+        "main_ancestor": true,
+        "live_ancestor": true
+      },
+      {
+        "item": "宿主定向续验入口",
+        "commit": "24c2e3a75b5db6bac76d6c924f86b7fcd9438316",
+        "base_ancestor": true,
+        "main_ancestor": true,
+        "live_ancestor": true
+      },
+      {
+        "item": "会话启动租约保存屏障",
+        "commit": "798af209b9a268b7dafab1440150f1b39cd5595d",
+        "base_ancestor": true,
+        "main_ancestor": true,
+        "live_ancestor": true
+      },
+      {
+        "item": "prompt-dump倒序按偏移读取状态日志",
+        "commit": "6ee8e2a2c1edc31492962137b96af8c6e1d12093",
+        "base_ancestor": true,
+        "main_ancestor": true,
+        "live_ancestor": true
+      },
+      {
+        "item": "知识前缀房间回血说明角色中立",
+        "commit": "6d2de57ceae3def4caf073951ed9d2f9d1544cd7",
+        "base_ancestor": true,
+        "main_ancestor": true,
+        "live_ancestor": true
+      },
+      {
+        "item": "fix-batch默认队列与live模板",
+        "commit": "5805dd187b7913a53b9e2645f40db1657eb5213c",
+        "base_ancestor": true,
+        "main_ancestor": true,
+        "live_ancestor": true
+      },
+      {
+        "item": "experience-update使用live合入流程",
+        "commit": "16ebc4aecb12a1d4b2f34ee767bb2816a3a0b466",
+        "base_ancestor": true,
+        "main_ancestor": true,
+        "live_ancestor": true
+      },
+      {
+        "item": "outcome-stats按mtime与大小重新加载",
+        "commit": "2650aed8baa84b8cf26e1e98b975582a6d5ab537",
+        "base_ancestor": true,
+        "main_ancestor": true,
+        "live_ancestor": true
+      },
+      {
+        "item": "021302宿主eval校准固定夹具超时（误遍历线上发布表）",
+        "commit": "d8748f2e70bfb2a91138ede0e1f6046927c116a4",
+        "base_ancestor": true,
+        "main_ancestor": true,
+        "live_ancestor": true
+      },
+      {
+        "item": "021302宿主potions-jev-call全部局面扫描超时",
+        "commit": "c5fd30d8d369ea6c56bba2e4c3daa6e01e3bf420",
+        "base_ancestor": true,
+        "main_ancestor": true,
+        "live_ancestor": true
+      },
+      {
+        "item": "infra-target-options-fixed-fixture-timeout（默认EZ2L路径）",
+        "commit": "c57105ca66bd75c6d6952772dcf712399eda828b",
+        "base_ancestor": true,
+        "main_ancestor": true,
+        "live_ancestor": true
+      },
+      {
+        "item": "infra-test-rollout-ties-host-timeout-15000",
+        "commit": "da08fcead2025c293140f1ba103d8efdbd39a4c3",
+        "base_ancestor": true,
+        "main_ancestor": true,
+        "live_ancestor": true
+      },
+      {
+        "item": "infra-test-build-facts-selection-remove-latency",
+        "commit": "e2c1d8a2d29f1cbaf8e5620e4bb912d6f05965f0",
+        "base_ancestor": true,
+        "main_ancestor": true,
+        "live_ancestor": true
+      },
+      {
+        "item": "h1-budget-completion-health-contract",
+        "commit": "c40e43fd25c200a01f4da94a4dac8db1b34664a8",
+        "base_ancestor": true,
+        "main_ancestor": true,
+        "live_ancestor": true
+      },
+      {
+        "item": "h1-strict-pick-deadline-stall",
+        "commit": "b3b9734d85defbdbd1b73ab85fab9ea2f636affd",
+        "base_ancestor": true,
+        "main_ancestor": true,
+        "live_ancestor": true
+      },
+      {
+        "item": "selection-hidden-daggers-conditional-followup-readback",
+        "commit": "a473263eb35ce5bea8e06f1ee94f4da1ba880bc3",
+        "base_ancestor": true,
+        "main_ancestor": true,
+        "live_ancestor": true
+      },
+      {
+        "item": "silent-0338：末挡诊断漏列既有奥利哈钢",
+        "commit": "c1d84804956bedbd29a7f0e81294114e18415b9d",
+        "base_ancestor": true,
+        "main_ancestor": true,
+        "live_ancestor": true
+      },
+      {
+        "item": "silent-0272：商店移除预判误报不可选",
+        "commit": "db20ec3cc6cd0e47ac014d0c523dd4ed1c781d26",
+        "base_ancestor": true,
+        "main_ancestor": true,
+        "live_ancestor": true
+      },
+      {
+        "item": "silent-0367：构筑事实未传已用尾巴状态",
+        "commit": "5baf663d7e6678efa3690e5a48329c4f8baee109",
+        "base_ancestor": true,
+        "main_ancestor": true,
+        "live_ancestor": true
+      },
+      {
+        "item": "h1-b2-margin-sample-identity（本轮期间由原ops发布V5-R384，宿主检查待完成）",
+        "commit": "660b194c950f017e356a4b3da952e127c7e5c768",
+        "base_ancestor": true,
+        "main_ancestor": true,
+        "live_ancestor": true
+      }
+    ],
+    "source_leaves": [
+      {
+        "path": "agent/src/sim/boss-lines.ts",
+        "sha256": {
+          "source": "bd3174609f2f71de360ea686a57659f9ba7a136b63bad6fbd9c69f05ff4ccdd4",
+          "base": "bd3174609f2f71de360ea686a57659f9ba7a136b63bad6fbd9c69f05ff4ccdd4",
+          "live": "bd3174609f2f71de360ea686a57659f9ba7a136b63bad6fbd9c69f05ff4ccdd4"
+        },
+        "all_match_received": true
+      },
+      {
+        "path": "agent/tests/human-pace-sampling.test.ts",
+        "sha256": {
+          "source": "eb4793d2a725988ff4516fa36c04e6c9b9738c992d23f98fcc8aaf95c643d076",
+          "base": "eb4793d2a725988ff4516fa36c04e6c9b9738c992d23f98fcc8aaf95c643d076",
+          "live": "eb4793d2a725988ff4516fa36c04e6c9b9738c992d23f98fcc8aaf95c643d076"
+        },
+        "all_match_received": true
+      }
+    ],
+    "original_ops_publication": {
+      "source": "660b194c950f017e356a4b3da952e127c7e5c768",
+      "state": "Narrowly integrated; exact new-combination host pending original batch channel",
+      "published": true,
+      "release_id": "V5-R384",
+      "host_complete": false,
+      "actual_live": "19988d1118ca43c1409fe900fc8c94f9f6ac32cc"
+    },
+    "pending_registry": "/home/dw/Projects/agent-sts2/ops/codex-ops/pending-integrations/20261017-151301-fix-batch.json",
+    "pending_registry_sha256": "c1f93e1f3d4dc44811a2b5c4a710afd6748b6d5fe9995c39938e33fe1d1f022e",
+    "previous_report": "/home/dw/Projects/agent-sts2/learner/runs/20261017-151306-e74fd652-df89-413a-9647-2736a8aeed79-fix-batch/report.md",
+    "previous_report_sha256": "ce519623ad076e3aa2402d1621b38a1f94690c3d3df693ee395bf8395af3e636",
+    "previous_source_test_results_are_not_current_batch_results": true,
+    "current_batch_production_tests_not_run": true,
+    "current_batch_own_source_changes": []
+  },
+  "actual_ancestor_commits_verified": 41,
+  "two_source_leaf_sha_verified": true,
+  "source_worktree_clean": true,
+  "native": {
+    "batch": "20261017-154303-fix-batch",
+    "thread": "01a148d0-aeaa-7e11-9eef-bc4b1ae336e6",
+    "cwd": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261017-154303",
+    "event_log": "learner/runs/20261017-154310-48c80065-1a40-4d8d-9d07-cf15ffd9e2d0-fix-batch.jsonl",
+    "registered_launch_batch": "20261017-154303-fix-batch",
+    "original_lease": "f1d0850a2b4a1777ec7d61365e1d32021488ba70d02c132a70bffe10ce998dbf",
+    "native_context": {
+      "source": "ops/codex-ops/accounts/codex1/learner/sessions/2026/10/17/rollout-2026-10-17T15-43-18-01a148d0-aeaa-7e11-9eef-bc4b1ae336e6.jsonl",
+      "offset": 50303,
+      "bytes": 5152,
+      "sha256": "ba6d19aae733faf9b1353dd2a4e0849fece96d30fa593a249539ef84c56015bd",
+      "model": "gpt-6.1-sol",
+      "effort": "xhigh",
+      "sandbox": {
+        "type": "workspace-write",
+        "writable_roots": [
+          "/home/dw/Projects/agent-sts2",
+          "/home/dw/Projects/agent-sts2/.git",
+          "/home/dw/Projects/agent-sts2/.git/worktrees/codex-fix-silent-20261017-154303"
+        ],
+        "network_access": false,
+        "exclude_tmpdir_env_var": false,
+        "exclude_slash_tmp": false
+      },
+      "approval_policy": "never"
+    },
+    "native_user_input": {
+      "offset": 58298,
+      "bytes": 13080,
+      "sha256": "618bf6a8ca9b3c83e17abdd32886cc7a10c575849e3ad3b422e703704fca2119",
+      "input_sha256": "e01a1b120330eb3dcfe33016814e85626bb9e3a0c2651882ee03ad02bb163ec7"
+    },
+    "original_header_events": [
+      {
+        "offset": 0,
+        "bytes": 14892,
+        "sha256": "7b6ec8e3165289439ce4f27f9abff2be769b9eb3ed337d936c02253a7f5db678",
+        "type": "learner_launch",
+        "attempt": null,
+        "code": null
+      },
+      {
+        "offset": 14892,
+        "bytes": 369,
+        "sha256": "0bcc4a5c7388a5545da007748f4a25567a6c11df7a448b2721fd5c136108fb02",
+        "type": "learner_startup_attempt",
+        "attempt": 1,
+        "code": null
+      },
+      {
+        "offset": 18274,
+        "bytes": 77,
+        "sha256": "c3b034ce436ecaf22e304708a5732e0b775e2d98bfb4a3b9283881837712a862",
+        "type": "thread.started",
+        "attempt": null,
+        "code": null
+      }
+    ],
+    "startup_attempts": 1,
+    "failed_startups_preserved": 0,
+    "no_model_or_manual_restart": true
+  },
+  "queue_snapshot_hashes": {
+    "fix-queue-input.md": "a932fe792806f539212337dc05a9593724f0506e1fa8ce96a979e66d867240ee",
+    "fix-queue-final.md": "82833ce7c9b615aac6d8f4a960ffb9e52b8f88999abd139394fd2bc3facf59c5"
+  },
+  "original_interleaving_note": "首次只读审计假设原151301源仍未发布；检查期间原运维实际发布，旧未发布断言失败（AssertionError），未写源码、未执行测试或合入。随后独立核原pending published=true及实际main/live祖先、两源码SHA，并将main快进到新发布基线；旧失败不算产品源码测试失败。原初始快照和队列差异保留。\n",
+  "no_new_source_or_merge_blocker": true,
+  "no_current_batch_product_test": true,
+  "no_original_failure_rewrite": true
+}

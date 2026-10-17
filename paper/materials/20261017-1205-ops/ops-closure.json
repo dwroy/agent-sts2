@@ -1,0 +1,118 @@
+{
+  "at": "2026-10-17 12:38:59 CST",
+  "release_id": "V5-R382",
+  "source": "b3b9734d85defbdbd1b73ab85fab9ea2f636affd",
+  "actual_live": "6fbbd82abd6d407dbaf93f82639b7f927efa54a0",
+  "tree": "ddb2ddfbb0934a8b0e70d9f0ebabddd935d78294",
+  "host": {
+    "at": "2026-10-17 12:38:45 CST",
+    "batch": "20261017-095852-strategy-proposal",
+    "command": [
+      "nice",
+      "-n",
+      "19",
+      "bash",
+      "ops/codex-ops-actions.sh",
+      "learner-recheck",
+      "20261017-095852-strategy-proposal"
+    ],
+    "pid": 3646544,
+    "birth_ticks": "110388491",
+    "actual_live": "6fbbd82abd6d407dbaf93f82639b7f927efa54a0",
+    "tree": "ddb2ddfbb0934a8b0e70d9f0ebabddd935d78294",
+    "canonical_log": "ops/codex-ops/learner/20261017-095852-strategy-proposal.fallback-ddb2ddfbb0934a8b0e70d9f0ebabddd935d78294.checks.log",
+    "action_output": "ops/codex-ops/record-staging/20261017-1205/host-action.log",
+    "route": "Authorized primary host invokes the same existing allow-listed action and original batch lock, no additional test pipeline",
+    "action_script_sha256": "a49d54356a4b94d764a4da62ac387d712464b1d3ca8d9942e3264728de2418e0",
+    "actual_subprocess_started": true,
+    "full_result": null,
+    "original_source_full_not_repeated": true,
+    "no_other_role_ACK": true,
+    "original_checks_and_live_locks": [
+      "/home/dw/Projects/agent-sts2/ops/codex-ops/20261017-095852-strategy-proposal.checks.lock",
+      "/home/dw/Projects/agent-sts2/ops/live-merge.lock"
+    ],
+    "log_prefix_bytes": 67,
+    "log_prefix_sha256": "206bb1334fc905a29c9d845090272e7767b924d8cb7f2a307f33a42e183ebee0",
+    "state": "Actual original unique exact-tree full host RUN, terminal result pending event",
+    "full_rc": null
+  },
+  "recovery": {
+    "at": "2026-10-17 12:38:46 CST",
+    "status": "Same saved run resumed by original autoplay; new runtime code and actual selection action received",
+    "run": "5H83F3J0XSTE",
+    "release_id": "V5-R382",
+    "actual_live": "6fbbd82abd6d407dbaf93f82639b7f927efa54a0",
+    "runtime_restart": true,
+    "config_ref": {
+      "path": "logs/run-config.jsonl",
+      "offset": 1933815,
+      "bytes": 5359,
+      "sha256": "4275d8103871da1628c2442b5d7547f3eb1d4fcd9b5e74ba3cc1a4931e42f081"
+    },
+    "unchanged_runtime_config_sha": false,
+    "parsed_brain_sl_config_unchanged": true,
+    "processes": [
+      {
+        "pid": 3646137,
+        "birth_ticks": "110386736",
+        "args": [
+          "node",
+          "/home/dw/Projects/agent-sts2/.worktrees/live/agent/node_modules/.bin/tsx",
+          "src/index.ts",
+          "play",
+          "--max-runs",
+          "1",
+          "--max-minutes",
+          "240"
+        ],
+        "state": "S"
+      },
+      {
+        "pid": 3646148,
+        "birth_ticks": "110386741",
+        "args": [
+          "/home/dw/.local/node/bin/node",
+          "--require",
+          "/home/dw/Projects/agent-sts2/agent/node_modules/tsx/dist/preflight.cjs",
+          "--import",
+          "file:///home/dw/Projects/agent-sts2/agent/node_modules/tsx/dist/loader.mjs",
+          "src/index.ts",
+          "play",
+          "--max-runs",
+          "1",
+          "--max-minutes",
+          "240"
+        ],
+        "state": "S"
+      }
+    ],
+    "first_action_ref": {
+      "path": "logs/decisions.jsonl",
+      "offset": 2199663114,
+      "bytes": 3113,
+      "sha256": "382a99381ef079898098a532d86c210963f50b2cd2d866a64bda09db8be857ee"
+    },
+    "first_action": {
+      "ts": "2026-10-17T04:38:37.927Z",
+      "screen": "CARD_SELECTION",
+      "floor": 48,
+      "turn": 1,
+      "label": "selection/choose",
+      "action": {
+        "action": "select_deck_card",
+        "option_index": 4
+      },
+      "result": "completed: Action completed.",
+      "fallback": false
+    },
+    "recovery_complete": true,
+    "natural_acceptance": false,
+    "game_process_restarted": false,
+    "manual_game_action_sent": false,
+    "no_other_role_ACK": true
+  },
+  "ledger_rows": 0,
+  "natural_acceptance": false,
+  "other_role_ACK": false
+}
