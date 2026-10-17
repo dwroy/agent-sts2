@@ -1,0 +1,193 @@
+"""Incremental fixed-split calibration for the explicit Test Subject source delta."""
+import copy
+import hashlib
+import json
+from pathlib import Path
+import shutil
+import sys
+
+sys.dont_write_bytecode = True
+HERE = Path(__file__).resolve().parent
+OUT = HERE.parent
+WORK = OUT.parents[2]
+PHASE = OUT / 'validation-phase-2'
+OLD = WORK / 'experiments/boss-sim/silent/995fbdbd421116fc5aff5c375c35623cb939dcdb1f72a5877b6c03b8e91f3a7b'
+sys.path.insert(0, str(OUT / 'frozen-model/agent/tools/boss-sim'))
+import silent_calibration as calibration
+from calib import block, turns_of
+from trust import BOSS_KEYS
+
+
+def sha(path):
+    return hashlib.sha256(path.read_bytes()).hexdigest()
+
+
+def rows(path):
+    return [json.loads(line) for line in path.read_text().splitlines() if line.strip()]
+
+
+def save(path, value):
+    assert not path.exists(), 'Preserve earlier output: ' + str(path)
+    path.write_text(json.dumps(value, ensure_ascii=False, indent=2) + '\n')
+
+
+def write_rows(path, values):
+    assert not path.exists(), path
+    path.write_text(''.join(json.dumps(r, ensure_ascii=False) + '\n' for r in values))
+
+
+def valid_guard(path, model):
+    for read in json.loads(path.read_text()):
+        assert '/knowledge/characters/' not in read['path'] or '/knowledge/characters/silent/' in read['path']
+        if read['status'] == 'read':
+            rel = str(Path(read['path']).relative_to(HERE / 'compiled'))
+            assert read['sha256'] == model['frozen_inputs'][rel], read
+
+
+def main():
+    model = json.loads((HERE / 'model-plan.json').read_text())
+    assert len(model['frozen_inputs']) == 276
+    assert hashlib.sha256(json.dumps(model['frozen_inputs'], sort_keys=True).encode()).hexdigest() == model['model_sha256']
+    baseline = Path(model['baseline_complete']['archive'])
+    base = rows(baseline / 'results.jsonl')
+    fights = rows(OLD / 'fights.jsonl')
+    split = json.loads((baseline / 'split.json').read_text())
+    turns = turns_of(str(baseline / 'turns-original.jsonl'))
+    tune_keys = json.loads((HERE / 'tune-keys.json').read_text())
+    val_keys = json.loads((HERE / 'val-keys.json').read_text())
+    assert len(tune_keys) == 2 and len(val_keys) == 29
+    assert set(tune_keys) <= set(split['tune']) and set(val_keys) <= set(split['val'])
+    predicate = {r['key'] for r in fights if r['character'] == 'silent' and r['asc'] == 10 and r['encounter'] == 'TEST_SUBJECT'}
+    assert set(tune_keys) | set(val_keys) == predicate
+    index = {r['key']: i for i, r in enumerate(fights)}
+    ordered = lambda values: sorted(values, key=lambda r: (index[r['key']], r['start'] != 't1'))
+    lookup = {(r['key'], r['start']): r for r in base}
+    new_tune = []
+    for i, key in enumerate(tune_keys):
+        assert json.loads((HERE / f'tune-exit-{i}.json').read_text())['exit_code'] == 0
+        mine = rows(HERE / f'tune-key-{i}/results-0.jsonl')
+        assert len(mine) == 2 and {(r['key'], r['start']) for r in mine} == {(key, 't1'), (key, 'pre')}
+        valid_guard(HERE / f'tune-read-guard-{i}.json', model)
+        new_tune.extend(mine)
+    assert all(r['character'] == 'silent' for r in new_tune)
+    lookup.update({(r['key'], r['start']): r for r in new_tune})
+    tuning = ordered([r for r in lookup.values() if r['key'] in split['tune']])
+    assert len(tuning) == 214
+    if sys.argv[1] == 'tune':
+        assert json.loads((HERE / 'phase-probe-output.json').read_text())['status'] == 'passed'
+        assert json.loads((HERE / 'adapter-probe-output.json').read_text())['status'] == 'passed'
+        fit = {}
+        for start in ('t1', 'pre'):
+            mine = [r for r in tuning if r['start'] == start and r.get('sim')]
+            parameters, selection = calibration.select_model(mine, turns)
+            fit[start] = {'platt': parameters, 'selection': selection, 'successful': len(mine),
+                          'tuning_residuals': calibration.residuals(mine, parameters, turns) if parameters else None,
+                          'validation_used': False}
+        write_rows(HERE / 'tuning-results.jsonl', tuning)
+        save(HERE / 'tuning-fit.json', fit)
+        save(HERE / 'fit-freeze.json', {'model_sha256': model['model_sha256'], 'fit_sha256': sha(HERE / 'tuning-fit.json'),
+                                       'tuning_results_sha256': sha(HERE / 'tuning-results.jsonl'), 'tuning_keys': 107,
+                                       'new_tuning_rows': 4, 'reused_tuning_rows': 210, 'validation_used': False,
+                                       'rule': 'Same select_model algorithm; original fixed tuning keys only. Validation starts after this file exists.'})
+        print(json.dumps({'status': 'tune-frozen', 'model': model['model_sha256'], 'fit': fit}, ensure_ascii=False))
+        return
+    assert sys.argv[1] == 'final'
+    fit = json.loads((HERE / 'tuning-fit.json').read_text())
+    freeze = json.loads((HERE / 'fit-freeze.json').read_text())
+    assert sha(HERE / 'tuning-fit.json') == freeze['fit_sha256']
+    assert sha(HERE / 'tuning-results.jsonl') == freeze['tuning_results_sha256']
+    assert tuning == rows(HERE / 'tuning-results.jsonl')
+    new_val = []
+    for shard in range(4):
+        assert json.loads((HERE / f'val-exit-{shard}.json').read_text())['exit_code'] == 0
+        mine = rows(HERE / f'validation/results-{shard}.jsonl')
+        expected = {(r['key'], start) for i, r in enumerate(fights) if i % 4 == shard and r['key'] in val_keys for start in ('t1', 'pre')}
+        assert len(mine) == len(expected) and {(r['key'], r['start']) for r in mine} == expected
+        valid_guard(HERE / f'val-read-guard-{shard}.json', model)
+        new_val.extend(mine)
+    assert len(new_val) == 58
+    lookup.update({(r['key'], r['start']): r for r in new_val})
+    results = ordered(list(lookup.values()))
+    assert len(results) == 1176 and all(r['character'] == 'silent' for r in results)
+    assert all(r['sim']['samples'] == 200 for r in results if r.get('sim'))
+    base_lookup = {(r['key'], r['start']): r for r in base}
+    unchanged = [r for r in results if r['key'] not in predicate]
+    assert len(unchanged) == 1114 and all(r == base_lookup[(r['key'], r['start'])] for r in unchanged)
+    for path, digest in model['frozen_inputs'].items():
+        file = HERE / 'source-repair' / Path(path).name if path in ['agent/src/reflex/rollout.ts', 'agent/src/reflex/rollout-live.ts'] else OUT / 'frozen-model' / path
+        assert sha(file) == digest, path
+    for row in json.loads((HERE / 'compiled-manifest.json').read_text())['files']:
+        assert sha(HERE / 'compiled' / row['path']) == row['sha256']
+
+    def forbidden(*args, **kwargs):
+        raise AssertionError('No new fit during validation aggregation')
+
+    def frozen_model(values, _turns):
+        start = values[0]['start']
+        assert values == [r for r in tuning if r['start'] == start and r.get('sim')]
+        return copy.deepcopy(fit[start]['platt']), copy.deepcopy(fit[start]['selection'])
+
+    calibration.select_model = frozen_model
+    calibration.fit = forbidden
+    calibration.fit_platt = forbidden
+    provenance = json.loads((baseline / 'model-provenance.json').read_text())
+    provenance['paper_krane_repair_source_commit'] = provenance.pop('repair_source_commit', None)
+    provenance.update(model_sha256=model['model_sha256'], input_files=model['frozen_inputs'],
+                      status='test-subject-phase-delta-calibration-complete',
+                      source_composition='Same frozen 276-input object as v2, two snapshotted source overlays add the observed Silent A10 Test Subject phase-power transition. Source/live ancestry recorded separately after actual publication.',
+                      baseline_fixed_artifact=model['baseline_complete']['artifact'],
+                      compiled_manifest_sha256=sha(HERE / 'compiled-manifest.json'),
+                      tuning_fit_sha256=freeze['fit_sha256'], validation_fit_performed=False,
+                      repair_scope='Single Test Subject, actual Silent A10, observed111/Enrage3/Adaptable1 ->212/PainfulStabs1 ->313 power sets; whole-fight only. F48/F49 signatures have direct frozen evidence. Other roles/ascensions/unknown signatures/short rollout unchanged. No new Wound-pile settlement rule.',
+                      reuse='1114 raw prediction rows outside31 exact input-predicate keys reused from completed v2; four new tuning rows and58 new validation rows. Compiled numeric isolation and actual adapter probes saved. Never old7e1193 as this baseline.')
+    metrics = calibration.calibrate(results, fights, turns, split, provenance)
+    for start in ('t1', 'pre'):
+        assert metrics['overall'][start]['platt'] == fit[start]['platt']
+    v2 = json.loads((baseline / 'boss-trust-candidate.json').read_text())
+    original = json.loads((WORK / 'paper/materials/20261017-human-pace-h0/inputs-r1/live-boss-trust.json').read_text())
+    comparison = {}
+    for enc, boss in BOSS_KEYS.items():
+        comparison[boss] = {}
+        for start in ('t1', 'pre'):
+            mine = [r for r in results if r['start'] == start and r['enc'] == enc and r['key'] in split['val'] and r.get('sim')]
+            common = [r for r in mine if base_lookup[(r['key'], start)].get('sim')]
+            before = [base_lookup[(r['key'], start)] for r in common]
+            assert len(mine) == len({r['run'] for r in mine})
+            comparison[boss][start] = {'historical_7e1193': original['bosses'][boss][start], 'before_v2': v2['bosses'][boss][start],
+                                       'after_phase_repair': metrics['bosses'][boss][start], 'independent_runs': len({r['run'] for r in mine}),
+                                       'candidate_runs': len({r['run_id'] for r in fights if r['key'] in split['val'] and r['encounter'] == enc}),
+                                       'common_keys': {'n': len(common), 'before': block(calibration.mapped(before, v2['overall'][start]['platt']), turns),
+                                                       'after': block(calibration.mapped(common, fit[start]['platt'] or {'a': 0, 'b': 1, 'c': 0}), turns)}}
+    identity_payload = {'model_sha256': model['model_sha256'], 'dataset_sha256': model['dataset_sha256'],
+                        'split_sha256': model['split_sha256'], 'tuning_fit_sha256': freeze['fit_sha256'],
+                        'results_sha256': hashlib.sha256(''.join(json.dumps(r, ensure_ascii=False) + '\n' for r in results).encode()).hexdigest(),
+                        'stage': 'H0-r1-TestSubject-phase-state-complete'}
+    identity = hashlib.sha256(json.dumps(identity_payload, sort_keys=True).encode()).hexdigest()
+    archive = WORK / 'experiments/boss-sim/silent' / identity
+    assert not archive.exists()
+    archive.mkdir()
+    write_rows(archive / 'results.jsonl', results)
+    for name in ['tuning-fit.json', 'tuning-results.jsonl', 'fit-freeze.json', 'model-plan.json', 'compiled-manifest.json',
+                 'phase-probe-output.json', 'adapter-probe-output.json', 'evidence.json', 'f49-phase-evidence.json']:
+        shutil.copyfile(HERE / name, archive / name)
+    for name in ['split.json', 'turns-original.jsonl']:
+        shutil.copyfile(baseline / name, archive / name)
+    shutil.copytree(HERE / 'source-repair', archive / 'source-repair')
+    save(archive / 'identity.json', identity_payload)
+    save(archive / 'model-provenance.json', provenance)
+    save(archive / 'boss-trust-candidate.json', metrics)
+    save(archive / 'before-after.json', comparison)
+    receipt = {'request_id': 'roy-20261017-human-pace-h0', 'revision': 1, 'status': 'fixed-calibration-complete',
+               'artifact': identity, 'model_sha256': model['model_sha256'], 'tuning_keys': 107, 'validation_keys': 481,
+               'new_prediction_rows': 62, 'reused_prediction_rows': 1114, 'validation_fit_performed': False,
+               'trusted_b2_fixed_only': metrics['trusted_b2'], 'trusted_b3_fixed_only': metrics['trusted_b3'],
+               'errors': metrics['errors'], 'production_trust_replaced': False,
+               'files_sha256': {str(f.relative_to(archive)): sha(f) for f in archive.rglob('*') if f.is_file()}}
+    save(archive / 'completed.json', receipt)
+    save(HERE / 'calibration-completed.json', {'archive': str(archive), 'artifact': identity, 'receipt_sha256': sha(archive / 'completed.json'), 'receipt': receipt})
+    print(json.dumps({'status': receipt['status'], 'artifact': identity, 'model': model['model_sha256'],
+                      'trusted_b2_fixed_only': metrics['trusted_b2'], 'trusted_b3_fixed_only': metrics['trusted_b3']}, ensure_ascii=False))
+
+
+if __name__ == '__main__':
+    main()

@@ -1,0 +1,282 @@
+{
+  "request_id": "roy-20261017-human-pace-h0",
+  "revision": 1,
+  "diagnosis_sha256": "4ea824038bb8fb80e6cd9c47c6a7e4f23fef0e0b70bbe71b50042b474dcfef8a",
+  "sequence_summary_sha256": "9b3bba9e74a29e48731e1eca7f1c119cdbd4b379a38c55ffa802b9685f49cc3c",
+  "bosses": [
+    {
+      "boss": "TEST_SUBJECT",
+      "same_action_windows": 42,
+      "same_action_replayed": 38,
+      "same_action_hp_matches": 37,
+      "same_action_unavailable": 4,
+      "first_same_action_net_divergence": {
+        "key": "UJ0K3G10609Y:48:6:7604962158",
+        "boss": "TEST_SUBJECT",
+        "run": "UJ0K3G10609Y",
+        "asc": 10,
+        "turn": 2,
+        "attempt": 6,
+        "pre": {
+          "path": "/home/dw/Projects/agent-sts2/logs/states.jsonl",
+          "offset": 7605463751,
+          "len": 44267,
+          "sha256": "2d6586985d78fb2c3365a238d22e5f6ea0d2c7f37c3943889b60133327585ba3",
+          "frozen_path": "/home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration/learner/runs/20261017-human-pace-h0-r1/windows/UJ0K3G10609Y-F48-a6-T2-pre.json"
+        },
+        "next": {
+          "path": "/home/dw/Projects/agent-sts2/logs/states.jsonl",
+          "offset": 7605508018,
+          "len": 47081,
+          "sha256": "cf2e765aad659b8f9dff1a52ba71b3b2d1103f36ce833a16235a6610b246a565",
+          "frozen_path": "/home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration/learner/runs/20261017-human-pace-h0-r1/windows/UJ0K3G10609Y-F48-a6-T2-next.json"
+        },
+        "command": {
+          "path": "/home/dw/Projects/agent-sts2/logs/decisions.jsonl",
+          "offset": 587082356,
+          "len": 6162,
+          "sha256": "a2b18a5e2d2e4fc5cf8db528eb75513a375cde11ff525155db49f9cfd0b863b1",
+          "frozen_path": "/home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration/learner/runs/20261017-human-pace-h0-r1/windows/UJ0K3G10609Y-F48-a6-T2-command.json"
+        },
+        "status": "replayed",
+        "actual_net_loss": 5,
+        "old_leak": 5,
+        "predicted_net_loss": 11,
+        "predicted_enemy_part": 11,
+        "solver_end_turn": {
+          "winsFight": false,
+          "hpLoss": 11,
+          "hpAfter": 59,
+          "dies": false,
+          "blockGained": 0,
+          "damageDealt": 15,
+          "serpentFormAfter": 0,
+          "kills": [],
+          "restocked": [],
+          "enemyHpAfter": [
+            {
+              "index": 0,
+              "name": "实验体 #C61",
+              "hp": 46,
+              "vulnerable": 0,
+              "weak": 1,
+              "poison": 3,
+              "block": 0,
+              "artifact": 0,
+              "slippery": 0,
+              "curlUp": 0,
+              "flutter": 0,
+              "strengthGained": 0,
+              "shrink": 0
+            }
+          ],
+          "incomingAfterBlock": 11,
+          "receivedHpDamage": 11,
+          "energyLeft": 1,
+          "vulnerableApplied": 0,
+          "weakApplied": 0,
+          "strengthGained": 0,
+          "cardsDrawn": 0,
+          "unknownCards": [],
+          "sandpitAfter": null,
+          "startTurnKills": [],
+          "withersAdded": 0,
+          "endTurnGuards": [
+            {
+              "what": "Cloak Clasp block for the cards held",
+              "amount": 2
+            }
+          ],
+          "sleepCost": 0,
+          "lasting": 0,
+          "blockWasted": 0
+        },
+        "record": {
+          "loss": 11,
+          "resources": {
+            "hp": 59,
+            "revives": [],
+            "drunkKeys": []
+          },
+          "enemyPart": 11,
+          "dmg": 15,
+          "snap": {
+            "hp": 70,
+            "mhp": 81,
+            "blk": 0,
+            "en": 1,
+            "pw": {
+              "DEXTERITY_POWER": 2,
+              "STRENGTH_POWER": 1,
+              "ACCELERANT_POWER": 2
+            },
+            "hand": 2,
+            "pots": 0,
+            "E": [
+              [
+                0,
+                "TEST_SUBJECT",
+                46,
+                111,
+                0,
+                true,
+                false,
+                14,
+                "SKULL_BASH_MOVE",
+                {
+                  "ADAPTABLE_POWER": 1,
+                  "ENRAGE_POWER": 3,
+                  "POISON_POWER": 3,
+                  "STRENGTH_POWER": 3,
+                  "WEAK_POWER": 1
+                }
+              ]
+            ]
+          },
+          "won": false,
+          "died": false,
+          "hpLeft": {
+            "0": 571
+          },
+          "powers": [],
+          "blockGained": 0
+        },
+        "net_loss_error": 6,
+        "claim": "Same observed end-turn action; net loss includes enemy and held/start effects. No policy or next-move damage equivalence claim."
+      },
+      "raw_successor_membership": {
+        "windows": 42,
+        "independent_runs": 4,
+        "raw_move_model_supported": 42,
+        "raw_move_model_not_supported": 0,
+        "enemy_absent_next_frame": 0
+      },
+      "phase_hp_transitions": 7,
+      "model_repair": null,
+      "specific_missing_evidence": [
+        "No resolved per-hit target/event trace is exposed in these retained frames.",
+        "Missing solver/import contexts for the listed unavailable windows; no zero-loss substitution.",
+        "No controlled same-action multi-turn trajectory separating policy/draw/resource effects from enemy-script effects."
+      ],
+      "meaning": "Observed subset only; successor-table support and matching scalar net HP are necessary checks, not full-script probability/resource equivalence."
+    },
+    {
+      "boss": "AEONGLASS",
+      "same_action_windows": 31,
+      "same_action_replayed": 30,
+      "same_action_hp_matches": 30,
+      "same_action_unavailable": 1,
+      "first_same_action_net_divergence": null,
+      "raw_successor_membership": {
+        "windows": 31,
+        "independent_runs": 4,
+        "raw_move_model_supported": 31,
+        "raw_move_model_not_supported": 0,
+        "enemy_absent_next_frame": 0
+      },
+      "phase_hp_transitions": 0,
+      "model_repair": null,
+      "specific_missing_evidence": [
+        "No resolved per-hit target/event trace is exposed in these retained frames.",
+        "Missing solver/import contexts for the listed unavailable windows; no zero-loss substitution.",
+        "No controlled same-action multi-turn trajectory separating policy/draw/resource effects from enemy-script effects."
+      ],
+      "meaning": "Observed subset only; successor-table support and matching scalar net HP are necessary checks, not full-script probability/resource equivalence."
+    },
+    {
+      "boss": "QUEEN",
+      "same_action_windows": 27,
+      "same_action_replayed": 22,
+      "same_action_hp_matches": 22,
+      "same_action_unavailable": 5,
+      "first_same_action_net_divergence": null,
+      "raw_successor_membership": {
+        "windows": 27,
+        "independent_runs": 4,
+        "raw_move_model_supported": 53,
+        "raw_move_model_not_supported": 0,
+        "enemy_absent_next_frame": 0
+      },
+      "phase_hp_transitions": 0,
+      "model_repair": "Silent A2 Paper Krane Amalgam only; nine frozen intent endpoints / one tuning run",
+      "specific_missing_evidence": [
+        "No resolved per-hit target/event trace is exposed in these retained frames.",
+        "Missing solver/import contexts for the listed unavailable windows; no zero-loss substitution.",
+        "No controlled same-action multi-turn trajectory separating policy/draw/resource effects from enemy-script effects."
+      ],
+      "meaning": "Observed subset only; successor-table support and matching scalar net HP are necessary checks, not full-script probability/resource equivalence."
+    },
+    {
+      "boss": "KAISER_CRAB",
+      "same_action_windows": 38,
+      "same_action_replayed": 36,
+      "same_action_hp_matches": 36,
+      "same_action_unavailable": 2,
+      "first_same_action_net_divergence": null,
+      "raw_successor_membership": {
+        "windows": 38,
+        "independent_runs": 4,
+        "raw_move_model_supported": 71,
+        "raw_move_model_not_supported": 0,
+        "enemy_absent_next_frame": 2
+      },
+      "phase_hp_transitions": 0,
+      "model_repair": null,
+      "specific_missing_evidence": [
+        "No resolved per-hit target/event trace is exposed in these retained frames.",
+        "Missing solver/import contexts for the listed unavailable windows; no zero-loss substitution.",
+        "No controlled same-action multi-turn trajectory separating policy/draw/resource effects from enemy-script effects."
+      ],
+      "meaning": "Observed subset only; successor-table support and matching scalar net HP are necessary checks, not full-script probability/resource equivalence."
+    },
+    {
+      "boss": "KNOWLEDGE_DEMON",
+      "same_action_windows": 37,
+      "same_action_replayed": 26,
+      "same_action_hp_matches": 26,
+      "same_action_unavailable": 11,
+      "first_same_action_net_divergence": null,
+      "raw_successor_membership": {
+        "windows": 37,
+        "independent_runs": 4,
+        "raw_move_model_supported": 37,
+        "raw_move_model_not_supported": 0,
+        "enemy_absent_next_frame": 0
+      },
+      "phase_hp_transitions": 0,
+      "model_repair": null,
+      "specific_missing_evidence": [
+        "No resolved per-hit target/event trace is exposed in these retained frames.",
+        "Missing solver/import contexts for the listed unavailable windows; no zero-loss substitution.",
+        "No controlled same-action multi-turn trajectory separating policy/draw/resource effects from enemy-script effects."
+      ],
+      "meaning": "Observed subset only; successor-table support and matching scalar net HP are necessary checks, not full-script probability/resource equivalence."
+    },
+    {
+      "boss": "THE_INSATIABLE",
+      "same_action_windows": 28,
+      "same_action_replayed": 27,
+      "same_action_hp_matches": 27,
+      "same_action_unavailable": 1,
+      "first_same_action_net_divergence": null,
+      "raw_successor_membership": {
+        "windows": 28,
+        "independent_runs": 4,
+        "raw_move_model_supported": 28,
+        "raw_move_model_not_supported": 0,
+        "enemy_absent_next_frame": 0
+      },
+      "phase_hp_transitions": 0,
+      "model_repair": null,
+      "specific_missing_evidence": [
+        "No resolved per-hit target/event trace is exposed in these retained frames.",
+        "Missing solver/import contexts for the listed unavailable windows; no zero-loss substitution.",
+        "No controlled same-action multi-turn trajectory separating policy/draw/resource effects from enemy-script effects."
+      ],
+      "meaning": "Observed subset only; successor-table support and matching scalar net HP are necessary checks, not full-script probability/resource equivalence."
+    }
+  ],
+  "repair_source": "fe7952b44911a65c0c50c39f48be2e28ef5a38ff",
+  "new_causal_repairs_in_phase_2": 0,
+  "scope": "Reuses original frozen 24 fights. No new source/model, full replay, fitting or independent run; remaining numerical validation is a new object, not replay of old 7e1193."
+}

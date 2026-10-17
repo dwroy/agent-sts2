@@ -1,0 +1,970 @@
+{
+  "esbuild": "0.28.2",
+  "files": [
+    {
+      "path": "agent/src/brain/brain.js",
+      "sha256": "16b3042b93c4ca3b0b3c9eb2b5ef271e657dc271a4ed462ed316a5556c0d2b4e"
+    },
+    {
+      "path": "agent/src/brain/build-facts.js",
+      "sha256": "1c867996d3f8255edff8e07583e4d93c17e55eef6c3de90b6cfc8294f4179a19"
+    },
+    {
+      "path": "agent/src/brain/engines/claude.js",
+      "sha256": "d9622c6d635e8c93628efde0c44d6f040ff8ae24868bc61ef881e105ef5deaa8"
+    },
+    {
+      "path": "agent/src/brain/engines/codex-cache.js",
+      "sha256": "018ef751a4873d9d13299cbd06e8f358dda011fbdc21ae77a9e700498ca5faed"
+    },
+    {
+      "path": "agent/src/brain/engines/codex-credit-policy.js",
+      "sha256": "8ded024e1ec78c4636947cbbf143f2f36321ff6e626437461f9ea328c79f5bcb"
+    },
+    {
+      "path": "agent/src/brain/engines/codex-session.js",
+      "sha256": "5b57936c02277cba0819a7edf2b597230bd58aedb044d3e077d2fe6f6080573e"
+    },
+    {
+      "path": "agent/src/brain/engines/codex-usage.js",
+      "sha256": "62376395aa27ea0e6d20776c1495252e0e649ac6af23a329e8681547067c6d07"
+    },
+    {
+      "path": "agent/src/brain/engines/codex.js",
+      "sha256": "df07f24a4243ddc5991e9c59b279b36149736b0a06aaedb7594030502fb1cb04"
+    },
+    {
+      "path": "agent/src/brain/engines/deepseek.js",
+      "sha256": "3cf5e79ac9d3dbe8cadb772f92709b3c32a4d6e5af535112f14d33b2d5fc608f"
+    },
+    {
+      "path": "agent/src/brain/engines/process.js",
+      "sha256": "b60bf8b95248b42b0ace6cd20ab283b721ca2b7017d5461bcde0f98985968f4d"
+    },
+    {
+      "path": "agent/src/brain/knowledge.js",
+      "sha256": "11b1bcaac1a16b796bd963078b2be4b5142b21409a1cf04ffeb5cec2e30bde1d"
+    },
+    {
+      "path": "agent/src/brain/labels.js",
+      "sha256": "4d6449373506fad7d67fb5c7620825fef9bfabc3a55a24d5130d72192eedbd83"
+    },
+    {
+      "path": "agent/src/brain/llm/consistency.js",
+      "sha256": "66b9483a7e3b9d68c847dbe6afcaa7da470f2e31002acc950fd91c8f368428e0"
+    },
+    {
+      "path": "agent/src/brain/llm/deepseek-message.js",
+      "sha256": "5be6294e850bb83b776764e77b814f672eb98aa29ed6325333bc3944ab5e6598"
+    },
+    {
+      "path": "agent/src/brain/llm/deepseek.js",
+      "sha256": "ebfcedfcd2faa83e4afcdf0b507d50d905f321b3f324a7441ac93818d94b7a03"
+    },
+    {
+      "path": "agent/src/brain/llm/file-escalation.js",
+      "sha256": "3945794341de9ca3d5255eaeda39b0ae1dd732399541b6c3e0b87d423e9bab57"
+    },
+    {
+      "path": "agent/src/brain/message.js",
+      "sha256": "b284eaf55b30855d8ed33e83572c130afea277644069443ed6499b03a64460c4"
+    },
+    {
+      "path": "agent/src/brain/router.js",
+      "sha256": "cbbc2bcd23cc666ce50eb7e8d886702f175ffca7cfd805010e73de512956a13d"
+    },
+    {
+      "path": "agent/src/brain/source.js",
+      "sha256": "73bac2c629cd7bd8d716c0ef75752d86f67144d4219bace3a4e5e8b90d222ea5"
+    },
+    {
+      "path": "agent/src/brain/specs.js",
+      "sha256": "e567fb621368f9868f21a08bc7c65eaed9d9f21a1f7207848bdbb26039ab63dc"
+    },
+    {
+      "path": "agent/src/brain/tools/kb-tools.js",
+      "sha256": "606302317dd0615936b20d7089375f892b49e5fb9fd255e5748b17b83e156d84"
+    },
+    {
+      "path": "agent/src/brain/tools/logs-query.js",
+      "sha256": "56b44b0e2d2018d0070d58fe6a00bfb3584420dba7876d5aa9fa0e4c1a34fde4"
+    },
+    {
+      "path": "agent/src/brain/tools/mcp-launch.js",
+      "sha256": "f2b1466e13ea5a326fa0e6958c21091b1d9e5758787c36921d5f3413a7a618e0"
+    },
+    {
+      "path": "agent/src/brain/tools/mcp-server.js",
+      "sha256": "bb1622580802424b2c457f0fd72d9ffc2d214ee3645168a1cf80300c482c4f7e"
+    },
+    {
+      "path": "agent/src/brain/tools/registry.js",
+      "sha256": "89de4bccde0748d09d69a8b7145d734fc1acc3e8c6b837b6020599fc229778f5"
+    },
+    {
+      "path": "agent/src/brain/tools/types.js",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "agent/src/brain/tools/validate.js",
+      "sha256": "b9d0cb9236162a172be02aedf441c09b45d7251e767c589c6e8afef35e87424b"
+    },
+    {
+      "path": "agent/src/brain/types.js",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "agent/src/brain/wait.js",
+      "sha256": "d0f80bab974424bd97911311d21c1160a58e3e604c369ec0a7d45b9ed57f582a"
+    },
+    {
+      "path": "agent/src/construction/adapter.js",
+      "sha256": "2ccdea5a64bccf5d9d10c073f3c7e1ba0f8c8ca10ef63774653fe064970c1095"
+    },
+    {
+      "path": "agent/src/construction/admission.js",
+      "sha256": "eddd14ca97616de44c266e836a676a12e5e21679c3ed2b4c5d47e7fd145dd513"
+    },
+    {
+      "path": "agent/src/construction/consumer.js",
+      "sha256": "01f93b6b800b75f3378c63c1d178ace00934feb5340e75023a81d631bcb81e84"
+    },
+    {
+      "path": "agent/src/construction/data.js",
+      "sha256": "ce632e95ebc1ec419a22fb38f4b7c948e638d7d8b2f6816767992b58c60ce490"
+    },
+    {
+      "path": "agent/src/construction/evaluation.js",
+      "sha256": "d5ecf2aefe08b7a7cfc5bc005113b86b4f0ed3c73583eecdf152b364cc900467"
+    },
+    {
+      "path": "agent/src/construction/planner.js",
+      "sha256": "c540984c9d7ab131f43cec4b5f7c7874739ad500c58ba309c2ced5b63c653c20"
+    },
+    {
+      "path": "agent/src/construction/types.js",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "agent/src/core/cli/doctor.js",
+      "sha256": "b747726288fa313b088ffe86a4b1cc48d880c0873086c84be592a73776f1ff61"
+    },
+    {
+      "path": "agent/src/core/cli/reporter.js",
+      "sha256": "1ae24180a164ef0fa7b02d03289b621d49875ccea8b37588d98dc6caec25a693"
+    },
+    {
+      "path": "agent/src/core/cli/runtime.js",
+      "sha256": "116d252b6544c39aadf3937209fac5e01da1b09b94c4bdbf9ce1b81d4d645aad"
+    },
+    {
+      "path": "agent/src/core/config.js",
+      "sha256": "55168a069b22e89e9a62cc8284b14343fe6f0ab92fac2ef9ea26b2ad45a3a518"
+    },
+    {
+      "path": "agent/src/core/global-build-config.js",
+      "sha256": "38ff14f857dfdf40767029396cd5cd2b6b36ec3472ffbb12133ab65c65c1d674"
+    },
+    {
+      "path": "agent/src/core/index.js",
+      "sha256": "66108d138d6adb9bf2bb25f7e27fd1863c14555f6fe24ed67cb2aee61797fc7b"
+    },
+    {
+      "path": "agent/src/core/jev-settings.js",
+      "sha256": "04af03e118b8def7f50249be90b37daada97a4a2a429bf375ef518566537d19f"
+    },
+    {
+      "path": "agent/src/core/paths.js",
+      "sha256": "f2939c55fc6def55e0ffed2502ae3798e7688892a24e52a69300859baa52bb2f"
+    },
+    {
+      "path": "agent/src/core/util/data-version.js",
+      "sha256": "c520ceab0804a462ea0cee681cd2d3941380c582ac7de750377d8226aaf35e86"
+    },
+    {
+      "path": "agent/src/core/util/format.js",
+      "sha256": "895dffcef40b4ad52137c3ac9915aae5d05af63ebb3831d3d563d549fdbb748e"
+    },
+    {
+      "path": "agent/src/core/util/json.js",
+      "sha256": "fe9c116227e2c55469af94b46076ec84ecf87b0149c8d03cbbad4caa6a606931"
+    },
+    {
+      "path": "agent/src/core/util/jsonl.js",
+      "sha256": "576935d54f6b76246d545971a0450d3efe62568d93382150bf48325b8217a978"
+    },
+    {
+      "path": "agent/src/core/util/lock.js",
+      "sha256": "6a9c523a60a74e6fe04eb966434e675e9fe9cf7163d2d85669bc1ff65b34b05a"
+    },
+    {
+      "path": "agent/src/eye/decision-log.js",
+      "sha256": "9b6f3af6d9b56b789a13eb7e75bb6e221848d61520eb07edcf98b9162d0c7871"
+    },
+    {
+      "path": "agent/src/eye/jev-prompt-log.js",
+      "sha256": "f11b8217631311ad3412d06e8193f184e6916eba036c40e025be8d8dd40b8321"
+    },
+    {
+      "path": "agent/src/eye/replay/record.js",
+      "sha256": "a596d9c691678ffd212df815d8b86304fe72eb44680ca0ea56c9da8cd2134b98"
+    },
+    {
+      "path": "agent/src/eye/replay/replay.js",
+      "sha256": "ffe86171c3cb1569490a3028fab74c3d282fa1fdc13554b308137b40bde2783e"
+    },
+    {
+      "path": "agent/src/eye/run-config.js",
+      "sha256": "3f359d0e51c7b433c60dd5ada069b314fde383a55eb56858fc0878cc2807aa2a"
+    },
+    {
+      "path": "agent/src/hand/act/dispatch.js",
+      "sha256": "e28f0ba3549987b5febe4bc241df59b1b21e606ea6f5a913c0f1e23cd22dd56e"
+    },
+    {
+      "path": "agent/src/hand/act/gate.js",
+      "sha256": "49b12946ae810174fa67d84b4029017ddb78624739b64eb5be72a722c9717a64"
+    },
+    {
+      "path": "agent/src/hand/act/identity.js",
+      "sha256": "fb69fd133fed8e112c789704ac2facc4630bdcbfd3653c6ef4f9828ed2afd988"
+    },
+    {
+      "path": "agent/src/hand/act/turn-start.js",
+      "sha256": "041031390fbe9d6ad6ff11da5ee8b2069b3a76489d388a8f386f71dbdf982afe"
+    },
+    {
+      "path": "agent/src/hand/loop.js",
+      "sha256": "8fe758920ec8fc0a7f04780c5c92b3a89658571b54cfcafd956b2838a5f9ffb7"
+    },
+    {
+      "path": "agent/src/hand/mod/client.js",
+      "sha256": "1d254d4bef27522a280a41413188f83b16ae3f2039e2dc122c9c83acfa35b644"
+    },
+    {
+      "path": "agent/src/hand/mod/discovery.js",
+      "sha256": "89eab48d9285d9e2cdb0706333b96534758710616b6dff264ee73e00b8d226e9"
+    },
+    {
+      "path": "agent/src/hand/mod/instance.js",
+      "sha256": "2eacba32cb86da42c8788df51dc909879c0e50af7db91435759a86905ae9b935"
+    },
+    {
+      "path": "agent/src/hand/mod/schema.js",
+      "sha256": "d1e64c5046781b0f48d775d87f9b452edb3514ee5f0513a259cd02231fb5ed5c"
+    },
+    {
+      "path": "agent/src/hand/screens/act-start.js",
+      "sha256": "65076586dd3473152e3d1adf38eb0aeaa5088395807e70cd1e9f181d51e5ec82"
+    },
+    {
+      "path": "agent/src/hand/screens/card-value.js",
+      "sha256": "d9f9d8d62a3759234d809ca94c1813e836d9041b9852ac67b4c05f68f5ecbea8"
+    },
+    {
+      "path": "agent/src/hand/screens/chest.js",
+      "sha256": "bad4825a81cae463470a9f45c0b0267face58efaba6240370c4baf5599e66050"
+    },
+    {
+      "path": "agent/src/hand/screens/event.js",
+      "sha256": "3abcc50996daca10cc1de65ba0a02bdd0eadb6bd63ab0fcd86c1f6fcdce0e4df"
+    },
+    {
+      "path": "agent/src/hand/screens/index.js",
+      "sha256": "a431db944827dabd0fe94b6f71883ddd6c1b8a4f720231c6ca56ecc35a158e9a"
+    },
+    {
+      "path": "agent/src/hand/screens/map.js",
+      "sha256": "d5f0d30c51fe5c0b40a904b15dac52f12408b679df9a45756e1926d9e420d1e1"
+    },
+    {
+      "path": "agent/src/hand/screens/misc.js",
+      "sha256": "0498cc0c5336dc37aa9a99ecf21feaaaa7a9878588d9de4751c5c89929207497"
+    },
+    {
+      "path": "agent/src/hand/screens/oneshot.js",
+      "sha256": "25009a22aec933fb7ba841777ceefd5bac439d3b0acfcfa8afbaa7665d995067"
+    },
+    {
+      "path": "agent/src/hand/screens/pick.js",
+      "sha256": "c7750d284e7e330dffc72497dbc3c7c462576e5cf0ace44927f496b17ac5b769"
+    },
+    {
+      "path": "agent/src/hand/screens/potion-discard.js",
+      "sha256": "8522e3d3631e580551bfe97a008eb12aaaaed3cf5bc881de3decfd4f10138916"
+    },
+    {
+      "path": "agent/src/hand/screens/rest.js",
+      "sha256": "fff02ad98d372cc9d6fefd82869d89df8d10ef093cd94198deb6be3b9933fd51"
+    },
+    {
+      "path": "agent/src/hand/screens/reward.js",
+      "sha256": "b6bdc9d90c12e1eb0b974fd4de9b92857d174c98688de0fdc78a042ac2ed58b6"
+    },
+    {
+      "path": "agent/src/hand/screens/route-plan.js",
+      "sha256": "95da5c9a228932ae7e49bdeb41acd195545196cb6d7c22171d6299252adc4874"
+    },
+    {
+      "path": "agent/src/hand/screens/route-review.js",
+      "sha256": "411f8e717a27903eb3a76f8097d276663f1149c28d28c6e533ab47041222e408"
+    },
+    {
+      "path": "agent/src/hand/screens/selection.js",
+      "sha256": "d5abeee1913960209d41704c99d1d5219fab2d2280a54d3461942c53f6edc6ed"
+    },
+    {
+      "path": "agent/src/hand/screens/shop.js",
+      "sha256": "9320ba2f5d80ae1c19a889622cf466ac5ac35c4ec4feb8824ba12de608fdf4b2"
+    },
+    {
+      "path": "agent/src/hand/screens/silent-discard-facts.js",
+      "sha256": "121c30e1d2d9609b640f985560dadc261804ab38898a473c58112e651c03740a"
+    },
+    {
+      "path": "agent/src/hand/screens/silent-hand-trick-facts.js",
+      "sha256": "ab1f3ca87aad97012fb50cf21b8bcd889bedb85a7ee59c98e35d27d935ea7f59"
+    },
+    {
+      "path": "agent/src/hand/screens/silent-reward-addition.js",
+      "sha256": "26dc743f3ba36fc4ebc43020b30c5b27c95879fa94e137f524d3bc6323bcc21d"
+    },
+    {
+      "path": "agent/src/hand/screens/silent-sandpit-discard.js",
+      "sha256": "edfe9b45f67ad9337f7c466506ec2a66ac4581809428ad769b0db239480d414f"
+    },
+    {
+      "path": "agent/src/hand/screens/silent-smoggy-selection.js",
+      "sha256": "9dbe6d252ff07ac9ffc50d7b188a6d1e34249be54e85d4790e386f789400c574"
+    },
+    {
+      "path": "agent/src/hand/screens/silent-snakebite-discard.js",
+      "sha256": "90ff3eb3e45e8869e2e809722582a97a672d19b39a82c3d779b93578852e683e"
+    },
+    {
+      "path": "agent/src/index.js",
+      "sha256": "3cc9a7d5c6db3bf79f20fde78c978964960ee73424560b165a2526cd568a5b1e"
+    },
+    {
+      "path": "agent/src/knowledge/boss-phase.js",
+      "sha256": "312b3f582eb5520474fbcb50598cddff6015aab8d15aebd31257cf272a57282e"
+    },
+    {
+      "path": "agent/src/knowledge/card-references.js",
+      "sha256": "f83ba7fc71c3811c036d28904849e5e9ba446c614cccb87ccde92d9434c6db8f"
+    },
+    {
+      "path": "agent/src/knowledge/card-upgrades.js",
+      "sha256": "b02dd5d14044b55bbfdaa90f73e6d0f48b5e3c183cc7d4319f27be525c1bfbb8"
+    },
+    {
+      "path": "agent/src/knowledge/double-boss.js",
+      "sha256": "f8f33750722ffea5b001d9ec8efbaa49eecec8175bef57ccc6d1eb8524c1bba3"
+    },
+    {
+      "path": "agent/src/knowledge/enchant-text.js",
+      "sha256": "a40e4c91e639f427d6d8bd9700816144c463dcfb9e617e71ccc5e750f75852cf"
+    },
+    {
+      "path": "agent/src/knowledge/event-pages.js",
+      "sha256": "6216fe31bce720b3604e1b053c7ae60d333234e93baafc4597bfadbb6c6d7fea"
+    },
+    {
+      "path": "agent/src/knowledge/experience.js",
+      "sha256": "0496c52b272b693c2d04ffdcd2d86ed8757fe344966dcf65aea81992dc58a904"
+    },
+    {
+      "path": "agent/src/knowledge/files.js",
+      "sha256": "b87a6b8b515e57b74b0f60c9cc29da3b1df5993b884c276d02b1d8c45b625626"
+    },
+    {
+      "path": "agent/src/knowledge/index.js",
+      "sha256": "ee703adf6ad67af4aadbc3cfc60cc0eaa74be35e7291c7849eb80f4175648a20"
+    },
+    {
+      "path": "agent/src/knowledge/jev-hints.js",
+      "sha256": "3c11f12d09b16f38c62aac26cb3db2a8490a2f5601ca5c1da524c9d77cbb1daa"
+    },
+    {
+      "path": "agent/src/knowledge/mechanics.js",
+      "sha256": "8d8d741a808152ca3c5f977b6ffc7535427c8c94564da6993940190d6554ecc4"
+    },
+    {
+      "path": "agent/src/knowledge/monster-db.js",
+      "sha256": "ed99a4addc24c44e843f43292c8d5be353665fc1a242ede567749f753c932c52"
+    },
+    {
+      "path": "agent/src/knowledge/move-model.js",
+      "sha256": "80fa373072ad9bf6eb2181623bbbe0a0e670a7a1b122cc10d2060d747669ad9e"
+    },
+    {
+      "path": "agent/src/knowledge/outcome-facts.js",
+      "sha256": "dabb2b6d553803725cec16299899c117e66147618054ba8289bf281d05a83eda"
+    },
+    {
+      "path": "agent/src/knowledge/outcome-tables.js",
+      "sha256": "c6675b51b682b65d7a8ec875b976d17a5490d018cbfb705085685a8018b6c8f4"
+    },
+    {
+      "path": "agent/src/knowledge/potion-equivalents.js",
+      "sha256": "996210d0da54383e652a7ad80532709d0640c0f883aecbaff17a9bccb4ccd46a"
+    },
+    {
+      "path": "agent/src/knowledge/potion-values.js",
+      "sha256": "fd27b2ea702e6f2142d3d806998f82dc8df6b0fe1c20234e977776092cbd92e6"
+    },
+    {
+      "path": "agent/src/knowledge/relic-values.js",
+      "sha256": "24408c570f452855b4150ab8d9940f55393336c880fc4748a52b77c3202e65c9"
+    },
+    {
+      "path": "agent/src/knowledge/render/data.js",
+      "sha256": "c596d15c37dee1b397a6aa443973e45923950c04f02a8ce6e11cb5a2ab7b36c9"
+    },
+    {
+      "path": "agent/src/knowledge/render/experience-text.js",
+      "sha256": "ef56352832a5c52b3e4b74f4ec9b9d1ba2f1ded7bd2f53c7aa6fe2bbcb57997d"
+    },
+    {
+      "path": "agent/src/knowledge/render/facts.js",
+      "sha256": "d6b1f103d3d5ce0e9bd8f470381d747616979e07a6a84b7d766d1f290d48619f"
+    },
+    {
+      "path": "agent/src/knowledge/render/format.js",
+      "sha256": "b59c54d73360e3593227b10f946d4d674589236011258d3d90f8e888deff8dc9"
+    },
+    {
+      "path": "agent/src/knowledge/render/knowledge-prefix.js",
+      "sha256": "8b455529e5ba607eb6dd9a61ef8e0e51cc766a1d9536ab63c1b1efe061f9852b"
+    },
+    {
+      "path": "agent/src/knowledge/render/monster-text.js",
+      "sha256": "1e4791d35e3abb6dfbd406479d802977616b2d65e9706609a772a9592cba5027"
+    },
+    {
+      "path": "agent/src/knowledge/render/old-knowledge.js",
+      "sha256": "8b33468a57a4f87a657f308a595600816a6e0c905e26e070a8a0dd063135cb91"
+    },
+    {
+      "path": "agent/src/knowledge/render/potion-text.js",
+      "sha256": "137addb105d1418de020cf69a5e1917df2104382b74254609a44921cfc2a854b"
+    },
+    {
+      "path": "agent/src/knowledge/render/stats-text.js",
+      "sha256": "4f468ed27a2a6b952382eacab9a6c47005da4daf6a5eea8ad1c5d1e4f2c28b0c"
+    },
+    {
+      "path": "agent/src/knowledge/room-costs.js",
+      "sha256": "a10c350334b180d781175be13bfb8f36fc843b786a6548a80f1d703e44569b2c"
+    },
+    {
+      "path": "agent/src/knowledge/shared-experience.js",
+      "sha256": "3b1990173fcea41339c1e0b22cd0dde576388ef7afc9cfc347b6a9c47dde380e"
+    },
+    {
+      "path": "agent/src/memory/ascension-target.js",
+      "sha256": "1c500197ec69df75abca64f5103db23faf41b77f19f8d0656616617a701581f1"
+    },
+    {
+      "path": "agent/src/memory/deck-profile.js",
+      "sha256": "80e546dfc7f275604dfa0278e937134c93117c28230d2979415991c0b6872a27"
+    },
+    {
+      "path": "agent/src/memory/deck.js",
+      "sha256": "0d5fc7348b493b0cd0aba00f0c469dd95255ad65d5030e6588ae47da2fda39dd"
+    },
+    {
+      "path": "agent/src/memory/fight-plan.js",
+      "sha256": "9b8626a7b3003ebaea921993d6e2b313adb351a4b530005e14128c512167d187"
+    },
+    {
+      "path": "agent/src/memory/journal-replay.js",
+      "sha256": "ed7acce300e2f3072ec5c79fa5bad377394fef8e9fa0b56a8d42bdf5aa8ceb00"
+    },
+    {
+      "path": "agent/src/memory/narrow.js",
+      "sha256": "ae1e5a8d5fbb82c1a94084245bbe786f0b8211b3e89056dade873a21e917bc99"
+    },
+    {
+      "path": "agent/src/memory/relic-resources.js",
+      "sha256": "8f57e07862b720216cb26d1e2bf61a12ee2928e6e3ba7010bacc24e1d34bab46"
+    },
+    {
+      "path": "agent/src/memory/run-brief.js",
+      "sha256": "e29a6bea6dfd6a7f281ef67e878dccd4dc369cc9d0f88576627b93982cded4c5"
+    },
+    {
+      "path": "agent/src/memory/run-constraints.js",
+      "sha256": "b864f08601e4e1fb845d3a6c791632ca4c3c645e1ca9b3c5ff384be57167ceb2"
+    },
+    {
+      "path": "agent/src/memory/run-journal.js",
+      "sha256": "6074f05863d6700c5cf6d33daa46edba8f1810d96fbeff370de51df675b055fa"
+    },
+    {
+      "path": "agent/src/memory/run-plan-merge.js",
+      "sha256": "d0efdbd4731539d4552c9beb7d3bd5c02c46d2f058a77a0694a80df5318ec6ce"
+    },
+    {
+      "path": "agent/src/memory/run-plan.js",
+      "sha256": "25210ab1f3b087d64659fdc75774ac70cace5151800a7b3aa89fed4dc0250e69"
+    },
+    {
+      "path": "agent/src/memory/types.js",
+      "sha256": "c88587e4f455093ae094bf33718ce2997f79eeddf88f89d2739d405c20f25e76"
+    },
+    {
+      "path": "agent/src/reflex/card-model.js",
+      "sha256": "2de1ec6205d01b601db6945337ad85dbec877887474a16262beb35e0ef0a982a"
+    },
+    {
+      "path": "agent/src/reflex/combat-plan.js",
+      "sha256": "0dadd78f8d2dfa36f899b6a67d8da4819e4d6ca6de6e8cec4b074afa1feb4acb"
+    },
+    {
+      "path": "agent/src/reflex/combat.js",
+      "sha256": "a0bd07d3e8aa5777816ae7433ac68db82273f73f641289fe6effa06e03ffdfb9"
+    },
+    {
+      "path": "agent/src/reflex/continuation-value.js",
+      "sha256": "a033230057b9055dc1ab61e5f88983371c6e3507331b6b589be156a7ed6f047d"
+    },
+    {
+      "path": "agent/src/reflex/damage.js",
+      "sha256": "f4869a421aa3f2b85c860761bc3d326a66d504a29b2ffcced9824012aa7a7a95"
+    },
+    {
+      "path": "agent/src/reflex/fight-plays.js",
+      "sha256": "c39f4b42b268c858199ad035c1e74607ec9104c1a5875f706557059a85e434a5"
+    },
+    {
+      "path": "agent/src/reflex/fight-value.js",
+      "sha256": "c25a3419a64e52196919391b6bc618b35029c3d35e4f52bb9796e41810fc727e"
+    },
+    {
+      "path": "agent/src/reflex/jev-experience.js",
+      "sha256": "0563dffd030d439bc40b06e47cb8dac5fbbbc4e575354c982aa0117428e6d6d3"
+    },
+    {
+      "path": "agent/src/reflex/jev/answers.js",
+      "sha256": "a896387e560f0b39f17deb1d375226c20e67a14cb2181e9d8c9520f5d98a7db7"
+    },
+    {
+      "path": "agent/src/reflex/jev/client.js",
+      "sha256": "ea433d15489422bdd12cf7795f7bce49eff78ddfa69d1e979dd0d6f8f25fde47"
+    },
+    {
+      "path": "agent/src/reflex/jev/compact-request.js",
+      "sha256": "767e9d17fbe3df6605f2c7dc71eb4f49fc1c9e0c87a95d61fa1a33150c39e922"
+    },
+    {
+      "path": "agent/src/reflex/jev/decision-projection.js",
+      "sha256": "e030b37151aeac0e4652ed3bde6584813d242f7f430817099d3138bf6469fcd1"
+    },
+    {
+      "path": "agent/src/reflex/jev/pricing.js",
+      "sha256": "8ad7cee75e355cf53932ebd4ea7a03b3b8a2d2efe452d189d2d7077e45a305aa"
+    },
+    {
+      "path": "agent/src/reflex/jev/questions.js",
+      "sha256": "34be88bac5be218b60c7dc52e45b4bb13fe225ff831365b32ad779766f779aa9"
+    },
+    {
+      "path": "agent/src/reflex/passive-pieces.js",
+      "sha256": "3320466780ef0aa33fe9d68616dcf58a010b60c6373959a7406f43c40d8fa24c"
+    },
+    {
+      "path": "agent/src/reflex/permafrost.js",
+      "sha256": "c4ea8c5754feabb1a4b539da3008a6c57082b092a90bbd878c560e7753f46f7f"
+    },
+    {
+      "path": "agent/src/reflex/potion-cost.js",
+      "sha256": "f506e1768df431c8f4ffda1daaca40cc9da59608357d63246ef224d62c96cc37"
+    },
+    {
+      "path": "agent/src/reflex/potion-mc.js",
+      "sha256": "2b67e0b7b3de6e093194b3c71a2eb493750ab73766083737e35412cbe258c8e1"
+    },
+    {
+      "path": "agent/src/reflex/potion-value.js",
+      "sha256": "ddeabce23498ca41723b3547059e969cc451b0415aebad7872d1dfa35e068ddd"
+    },
+    {
+      "path": "agent/src/reflex/rollout-live.js",
+      "sha256": "4e639e32ea02f661a3b90fdae41b4f07ba52c3c0a090e0a10387c1cad92899d9"
+    },
+    {
+      "path": "agent/src/reflex/rollout.js",
+      "sha256": "94a8094a4e6882c7052f4a8feadb5d0f93f7cfe9bc594477137e6c2b64aeac23"
+    },
+    {
+      "path": "agent/src/reflex/silent-apotheosis-reference.js",
+      "sha256": "c4ae37128ce7bd89b55893b841095df2644ea573b61af8db9a9d6b1bc40b4a98"
+    },
+    {
+      "path": "agent/src/reflex/silent-apotheosis.js",
+      "sha256": "6f576e83601f3df21b7d1e8199c2721d2faedfa4fe2c52dda1c538c2205cfc8f"
+    },
+    {
+      "path": "agent/src/reflex/silent-crab-potion.js",
+      "sha256": "152bd41702758f89a4a5b670ff123ba26b2d154a59a5e488a221e03da410036d"
+    },
+    {
+      "path": "agent/src/reflex/silent-crusher-facing.js",
+      "sha256": "63dc1d3afa8844046213ba89da5b47cc91a9d236d586a7a69e4a2edbf4d4ce41"
+    },
+    {
+      "path": "agent/src/reflex/silent-demon-potion.js",
+      "sha256": "1bbdc5e4909193126a349330ccecd9cfa6c7457fb3b8a5c78803171637ca9aed"
+    },
+    {
+      "path": "agent/src/reflex/silent-giant-potion.js",
+      "sha256": "3b6e5744477681158451f054f1c7f691b05ed5c01650bd91fdd56942eb9d1df1"
+    },
+    {
+      "path": "agent/src/reflex/silent-held-loss.js",
+      "sha256": "654d1887e1f0a242b9718d92e79acf68a48b3edd076b5b3075fb53d423f8bdc6"
+    },
+    {
+      "path": "agent/src/reflex/silent-hp-guard-audit.js",
+      "sha256": "8901342347374371e1a79ad519073a63c20ca3c73bd5f7610d3ec0e8a9d92001"
+    },
+    {
+      "path": "agent/src/reflex/silent-kin-progress.js",
+      "sha256": "4c1afade6afe12c06ec49e7053e0f60039fa2a6488cd79d0faafec1ef05fb4f9"
+    },
+    {
+      "path": "agent/src/reflex/silent-kunai.js",
+      "sha256": "9314919f057cae15e677dd0a45e0ee59f8d76e108cfaf12e806fdf0575ba3a46"
+    },
+    {
+      "path": "agent/src/reflex/silent-loss-reference.js",
+      "sha256": "592a65450107233b6c32b5cf71dfd1f2d7d806b65630b2d5779b4c293f8a2120"
+    },
+    {
+      "path": "agent/src/reflex/silent-phase-current.js",
+      "sha256": "b684888f8cd2ed8c9a50e11d4ddc616018b9106261e2b76a0bcf37f15e02e51f"
+    },
+    {
+      "path": "agent/src/reflex/silent-phase-reference.js",
+      "sha256": "5e7b64bc593903cf561cee66f9b979d259d4e3b5498cb6a994ac843b40148a87"
+    },
+    {
+      "path": "agent/src/reflex/silent-potion-reference.js",
+      "sha256": "2d70fe3c306f66ee73c79194798c2b121a4c2a354410b47b84212806bd45e378"
+    },
+    {
+      "path": "agent/src/reflex/silent-razor-snakebite.js",
+      "sha256": "25015050151a6ec5ae69362c6bae6e904de33076dd091cee7950663e1b9802e7"
+    },
+    {
+      "path": "agent/src/reflex/silent-selection-audit.js",
+      "sha256": "a9a0dd2ac766d9cc9633c2f4b807a0e949307b7dfa257a65affc4163b7daddea"
+    },
+    {
+      "path": "agent/src/reflex/silent-selection-dispatch.js",
+      "sha256": "1d3b2752fcef70e94646f67d421d9aeb0e0893894b13813cff1b2e7a25618405"
+    },
+    {
+      "path": "agent/src/reflex/silent-simulation-reference.js",
+      "sha256": "733a27268bdf11f675b243960a170b45c36c14a7b009e9f1ba549a4b2fa97f02"
+    },
+    {
+      "path": "agent/src/reflex/silent-skittish.js",
+      "sha256": "096e57d9eb96716026a7d0d45db4516b5dad2d95c82ef8325801c56bd059da5e"
+    },
+    {
+      "path": "agent/src/reflex/silent-sl-comparison.js",
+      "sha256": "0188bb7ac46e7bc2e0671e115f13294454400f22bf1dcc14950c8ddc1ac648e0"
+    },
+    {
+      "path": "agent/src/reflex/silent-sl-resource-comparison.js",
+      "sha256": "6e43ec88b425ec98798585cd1fc66e421c846f7a6573297e385a8d60a3166f76"
+    },
+    {
+      "path": "agent/src/reflex/silent-summon-coverage.js",
+      "sha256": "73a4bc8a433fd1c7c1d781cbbaf3005b219134672e153aa53f942485ba3aa4d3"
+    },
+    {
+      "path": "agent/src/reflex/start-loss.js",
+      "sha256": "a223c446fd80f823f9e60fc378d3eaa7d2e65d0bc796c9f145f5564c509875c4"
+    },
+    {
+      "path": "agent/src/reflex/thief.js",
+      "sha256": "26d489b68083aa77c88044a6910871bb7b080f1a4f72263bf88043d64ba88f4c"
+    },
+    {
+      "path": "agent/src/reflex/turn-solver.js",
+      "sha256": "8203b8f09d0d48b7374c22259c24cc104279b7692c5bab9724cc602c3b21f072"
+    },
+    {
+      "path": "agent/src/sim/adaptive-decks.js",
+      "sha256": "9db2fd14045a7ecff8fbed080dc84e52de5aac029e5a9a217e032fa642e86b43"
+    },
+    {
+      "path": "agent/src/sim/adaptive-sampler.js",
+      "sha256": "c09554702228b9327623986d55b839402bd6cc28ddfbc3de5a6f156fac8a1684"
+    },
+    {
+      "path": "agent/src/sim/adaptive-shadow.js",
+      "sha256": "3e6cf68edfd1be3b5463c68946eba0d6a982d8007fab787599f0b924bdeeee6b"
+    },
+    {
+      "path": "agent/src/sim/boss-clock.js",
+      "sha256": "ecbd86a732691682174b4af895a84dbb64638e938322ddf4b0ba711cd10d47bd"
+    },
+    {
+      "path": "agent/src/sim/boss-lines-worker.js",
+      "sha256": "c0c6b41164ed310d39fcc1d18c66e9b262b8fdbfe52d071504625a804fa3d32b"
+    },
+    {
+      "path": "agent/src/sim/boss-lines.js",
+      "sha256": "3a55385baa3dc8f912f2f676c43d1322e46d39b54b4a245a7fcced2804897b96"
+    },
+    {
+      "path": "agent/src/sim/boss-margin.js",
+      "sha256": "9bf1d9296e114c65b729cb2c08a61a6ba2d272824db679c5c2b628f365e3f927"
+    },
+    {
+      "path": "agent/src/sim/boss-readiness.js",
+      "sha256": "d79f464ba112e4916b5ba7172fe075d451f73f2e61ed260cf80247edd44be8ca"
+    },
+    {
+      "path": "agent/src/sim/boss-sim-worker.js",
+      "sha256": "b3b023ec2060aa40def0241ec65a175cc9ab49e8e28680b4e15a2d7cf3908c25"
+    },
+    {
+      "path": "agent/src/sim/boss-sim.js",
+      "sha256": "5b1b15da5b8e706e6a8e36164649851a5c5798eb2b5702b560f2aa1308e60fe7"
+    },
+    {
+      "path": "agent/src/sim/boss-start.js",
+      "sha256": "62a88f5f49d860fb8e8ea04faa76c35876f8ae80e8c5d1c2773adf30799dd853"
+    },
+    {
+      "path": "agent/src/sim/boss-trust.js",
+      "sha256": "a0cb9aa495b245ddb76695b237f4ce1a5ca5f34835d71cb550bd2025e68015c4"
+    },
+    {
+      "path": "agent/src/sim/build-rank.js",
+      "sha256": "73da24a4ee909b60b86e4843df31d9a2874517454491b74d4a5d30163463a927"
+    },
+    {
+      "path": "agent/src/sim/build-ranking-choice.js",
+      "sha256": "d8262a55b7bb6e8485b655a6f74389bd305495335a4e7e977050d2a65435584d"
+    },
+    {
+      "path": "agent/src/sim/build-sim-facts.js",
+      "sha256": "e04a182ba22af65f7b6a1f2e380b9d4c9bce2c9bc1f108a23dc7d903aa6db392"
+    },
+    {
+      "path": "agent/src/sim/build-sim-pool.js",
+      "sha256": "12aa3c50a6e8388f77e16230903c9cf5e77bcdd60541b5dbd8e8ba45f00694c3"
+    },
+    {
+      "path": "agent/src/sim/build-sim-worker.js",
+      "sha256": "c0c408e9149545301bfe678c15eaae785bd3536f6c9243c2321d637c6c08a8ca"
+    },
+    {
+      "path": "agent/src/sim/build-sim.js",
+      "sha256": "c0fc17dddebe325d80e16a222467a26c31b127538e7fe3ee7b08c3b2bca357d6"
+    },
+    {
+      "path": "agent/src/sim/computation-failure.js",
+      "sha256": "3647c9b9386cf1497558d8ac46d34f11dd8dbf2e0de222d38583e6de39bc6808"
+    },
+    {
+      "path": "agent/src/sim/computation-wait.js",
+      "sha256": "e2b5c9604802c647aa149b7f105a3f6dcf72bcbc23b199f04c0eb8709131c9b5"
+    },
+    {
+      "path": "agent/src/sim/compute-memo.js",
+      "sha256": "77c23702374c6bca23c4202c3744d84f30f2be5b19779418fa9cfb30715a8ad2"
+    },
+    {
+      "path": "agent/src/sim/continuation-failure.js",
+      "sha256": "c8559ae8ddd632766a0204a554555ef3bc971cee7e5d9ce5ee32bc2aeb7c6e8e"
+    },
+    {
+      "path": "agent/src/sim/continuous-boss-result.js",
+      "sha256": "52a6e4a8cb5ee45dcaa7922dce0f97785407156286d1111feb303b6ea40fa9b0"
+    },
+    {
+      "path": "agent/src/sim/core-realization.js",
+      "sha256": "fa5f9a4ff0ab759714271f9c48169256674379a7c52617b7646d547b34305eca"
+    },
+    {
+      "path": "agent/src/sim/core-window.js",
+      "sha256": "4ff304b1931d54d79af95f3edbbf7510b7eb1d12ea3aca52783afa78656de88f"
+    },
+    {
+      "path": "agent/src/sim/double-boss-start.js",
+      "sha256": "148b82caff6049d79bc5d94f7e81f5c939dd6501743a963d6d0fbacfa2e15a5f"
+    },
+    {
+      "path": "agent/src/sim/f48-joint-shadow.js",
+      "sha256": "42a39b32a1b189604e97b01b5ef910be1155f08cc29b98c65811c1904fd6fb71"
+    },
+    {
+      "path": "agent/src/sim/global-build-b3.js",
+      "sha256": "5826ca4127fbdc13c1691324406c73e0d407ad8eadc3800575e5c40983d17185"
+    },
+    {
+      "path": "agent/src/sim/global-build-observer.js",
+      "sha256": "06e759ee6fee7967c5084778f133ee48f01b94de2997003ee2a575ac36b531bc"
+    },
+    {
+      "path": "agent/src/sim/global-build-pool.js",
+      "sha256": "238b6233a4dd58b8db60daf3104b938fcca9547bb6250008a8f5d060394a8cdd"
+    },
+    {
+      "path": "agent/src/sim/global-build.js",
+      "sha256": "372eb7ebfd68065bf4aee26ace39ddfea4ee49326495d17edbae294cbcbc331b"
+    },
+    {
+      "path": "agent/src/sim/quantitative-facts.js",
+      "sha256": "f09718c9967b00e0ce4ce41bd0e8363a10221db6792ead1c6a4db0b74009f25a"
+    },
+    {
+      "path": "agent/src/sim/quantitative-stats.js",
+      "sha256": "09b0f7926c5f2227016c3cf76dd2102f073e8627caf2d48dcdd9d4b6671ff8ca"
+    },
+    {
+      "path": "agent/src/sim/route-map.js",
+      "sha256": "285309bb6c02ff4913bf40c738cb34ee9b687930cc70d89e7d3cf3ba2fbe1b27"
+    },
+    {
+      "path": "agent/src/sim/route-projection.js",
+      "sha256": "5a75182a9b88131c0d678a855e532f4633915bc78c988b1868e96168b74b124e"
+    },
+    {
+      "path": "agent/src/sim/s-combat-rank.js",
+      "sha256": "8fd9a90b7a63ab0fc3d13f69dd513147a3f64232e986aac2bfe682a10e7de6ba"
+    },
+    {
+      "path": "agent/src/sim/s-sign.js",
+      "sha256": "306d62c4283e42b5def88be2f68d4df5aaacfefaee7a79a693b9eabdc7a0a3f6"
+    },
+    {
+      "path": "agent/src/sim/sample-range.js",
+      "sha256": "6cbd58fbc69f328294beec8879bb238324ae8b03cb1f2af5d0c91a3935da434a"
+    },
+    {
+      "path": "agent/src/sim/silent-build-win-ties.js",
+      "sha256": "0b72549dc80f7e8c899812460fbe19d3f5d2dd75513509cd217d1a301c9a5f5e"
+    },
+    {
+      "path": "agent/src/sim/silent-opening.js",
+      "sha256": "27b13bb2a0b4f2ccd7ad7db8e918f436023405b526a8eb0f6a6d0b3a9711757a"
+    },
+    {
+      "path": "agent/src/sim/sim-pools.js",
+      "sha256": "28a24168f43925a445f148aa43eb829d36f9fca8efe4e2fb13890d1d58657fe2"
+    },
+    {
+      "path": "agent/src/sim/thief-card-hp.js",
+      "sha256": "5cc0727a68a60ac518d454bd1a3bd3b9077bae309b9cb3fbac895dd6fd57a37c"
+    },
+    {
+      "path": "agent/src/sim/thief-card-value.js",
+      "sha256": "f4256c3159d4418e7d05c6ed981d7c3b5042962eb814eac6e37f2c475efcbe25"
+    },
+    {
+      "path": "agent/src/sl/attempts.js",
+      "sha256": "64e5b5d22589856f52ddd407883cf17f6b9828dc006a5cce019b15558f04ddd6"
+    },
+    {
+      "path": "agent/src/sl/controller.js",
+      "sha256": "5538d3c32df1ebe2f11a1d666e39bc32db17bd23dcdc46a9fb149ce2a6463921"
+    },
+    {
+      "path": "agent/src/sl/draws.js",
+      "sha256": "48142778c23d19818bb9cb8ff1a5a64c51a0d49d366a69d87c9b114ecde8a05e"
+    },
+    {
+      "path": "agent/src/sl/elites.js",
+      "sha256": "73c538c0a12e9851319a140aebbfd214ed81ffff40c21ee0f32b55fee577b5df"
+    },
+    {
+      "path": "agent/src/sl/explore.js",
+      "sha256": "63a0b5caa9f21d4067b78506086b7ef24938a058b69b79d9b47ba6333881ddbe"
+    },
+    {
+      "path": "agent/src/sl/judge.js",
+      "sha256": "5ea1ba5489b7007cb105645814796e20ac17359842881904b6e155c221728095"
+    },
+    {
+      "path": "agent/src/sl/random-target.js",
+      "sha256": "962f3e5f7f1c8897d3330f31c2dd587f101c5d92f9293d3bdebf136320d86c77"
+    },
+    {
+      "path": "agent/src/sl/reload.js",
+      "sha256": "ac314ee34e9c4c706de640b2de37c11e9b9674440754599f6c6ba9a0c41814d2"
+    },
+    {
+      "path": "agent/tools/boss-sim/audit-calibration-board.js",
+      "sha256": "8af6b7d8024b48c55cfc57f0e76022629c5ec97cccae7225139a65791ac8c496"
+    },
+    {
+      "path": "agent/tools/boss-sim/b2-lines.js",
+      "sha256": "518ff070328197b8022a9e5e01ceba64cb5e17b6b1d0f6dd207e5692052d1348"
+    },
+    {
+      "path": "agent/tools/boss-sim/b5-lines.js",
+      "sha256": "2ee102bddf8e295761e2e4919fb3ff578144d6c8901376a53b0c2806ff523f42"
+    },
+    {
+      "path": "agent/tools/boss-sim/backtest-board.js",
+      "sha256": "0e9ce29874e5142b6910d55458c48344fdced05a62fb06d967b52477fa93f0f3"
+    },
+    {
+      "path": "agent/tools/boss-sim/backtest-runner.js",
+      "sha256": "c275f97211c999007556ced085dc02da94fb6be2249d0dbc7c94aed36edec711"
+    },
+    {
+      "path": "agent/tools/boss-sim/backtest.js",
+      "sha256": "85b279687e52e47c9cfb3384e52271c9808b5e1f30a150c0c2cfb39b449dc04c"
+    },
+    {
+      "path": "agent/tools/boss-sim/bench.js",
+      "sha256": "1fb5b6da4d91fd4e921033d26f0316029040259cec079daf937f492c2e94f5cf"
+    },
+    {
+      "path": "agent/tools/boss-sim/build-replay.js",
+      "sha256": "1fe1eaa0f6f146fcdbd06709de8f1325af040fb0102543f72ef435b974b20e05"
+    },
+    {
+      "path": "agent/tools/boss-sim/calibration-board.js",
+      "sha256": "78fdcad786cfd643d2af12075bdf435bab53f15ccc9b875a0ab1cf380b643120"
+    },
+    {
+      "path": "agent/tools/boss-sim/isolation.js",
+      "sha256": "254480a28d88a9e96f961d4b62fa1b66d0d8a5362cc92e4fe3fc96957c9c7072"
+    },
+    {
+      "path": "agent/tools/boss-sim/lines.js",
+      "sha256": "fb16cadf7f1a432ba750c295bb4cc80ba5025bb488137aaa06a97e708dff146c"
+    },
+    {
+      "path": "agent/tools/boss-sim/pairs.js",
+      "sha256": "2b59507679d16e1971e370fdb5b78de9c3504bef0c43bf6e4689bacbeeee2d31"
+    },
+    {
+      "path": "agent/tools/boss-sim/pre-fight.js",
+      "sha256": "d0205fe9d520aab23a0c08e9eb7d7fa20d5110826039a12d1c1c35a41bb42acb"
+    },
+    {
+      "path": "agent/tools/boss-sim/synthetic-check.js",
+      "sha256": "17eb97f15c90d275f5238f7adc58c22af18947b5ffe445c82a9d198700d66ee0"
+    },
+    {
+      "path": "agent/tools/boss-sim/trace.js",
+      "sha256": "8114b1394444709b0c5cb08b16bb0b4cb709b4012c37bcf8076c7190f80f56dc"
+    },
+    {
+      "path": "agent/tools/boss-sim/turn-replay.js",
+      "sha256": "c0a995ed6a0b33cc314b1cc4a1f0dc29a0811f7508da86ad595734fe66175a75"
+    }
+  ],
+  "scope": "Two source overlays over the unchanged explicit compiled closure; no new dependencies or model call."
+}

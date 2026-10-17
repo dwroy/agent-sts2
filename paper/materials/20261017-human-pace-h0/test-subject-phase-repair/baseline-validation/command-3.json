@@ -1,0 +1,37 @@
+{
+  "shard": 3,
+  "cwd": "/home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration/learner/runs/20261017-human-pace-h0-r1",
+  "env": {
+    "CHARACTER": "silent",
+    "TMPDIR": "/home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration/learner/runs/20261017-human-pace-h0-r1",
+    "H0_READ_GUARD_OUT": "/home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration/learner/runs/20261017-human-pace-h0-r1/validation-read-guard-3.json"
+  },
+  "argv": [
+    "nice",
+    "-n",
+    "19",
+    "node",
+    "--import",
+    "/home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration/learner/runs/20261017-human-pace-h0-r1/input-read-guard.mjs",
+    "/home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration/learner/runs/20261017-human-pace-h0-r1/repaired-v2-compiled/agent/tools/boss-sim/backtest.js",
+    "--character",
+    "silent",
+    "--in",
+    "/home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration/experiments/boss-sim/silent/995fbdbd421116fc5aff5c375c35623cb939dcdb1f72a5877b6c03b8e91f3a7b/fights.jsonl",
+    "--keys",
+    "/home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration/learner/runs/20261017-human-pace-h0-r1/validation-keys.json",
+    "--out-dir",
+    "/home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration/learner/runs/20261017-human-pace-h0-r1/new-object-validation",
+    "--samples",
+    "200",
+    "--seed",
+    "1",
+    "--starts",
+    "t1,pre",
+    "--no-rollout",
+    "--shard",
+    "3",
+    "--shards",
+    "4"
+  ]
+}
