@@ -1,0 +1,52 @@
+{
+  "at": "2026-10-18 00:11:49 CST",
+  "old_session": "01a12bec-c83f-7c21-b76f-eb8e5304eb8f",
+  "new_session": "01a14a9f-38e7-78e2-95d0-ba274d4b3e19",
+  "cross_account_resume": false,
+  "rollout": "ops/codex-ops/accounts/codex3/learner/sessions/2026/10/18/rollout-2026-10-18T00-08-31-01a14a9f-38e7-78e2-95d0-ba274d4b3e19.jsonl",
+  "native_records": [
+    {
+      "line": 1,
+      "offset": 0,
+      "bytes": 22869,
+      "sha256": "0ace766ce5f5e0e668d1ea72d70a7ba330208f00a1a929184194b364c0758652",
+      "type": "session_meta",
+      "payload": {
+        "id": "01a14a9f-38e7-78e2-95d0-ba274d4b3e19",
+        "cwd": "/home/dw/Projects/agent-sts2",
+        "model_provider": "openai",
+        "originator": "codex_exec",
+        "cli_version": "0.163.0"
+      }
+    },
+    {
+      "line": 8,
+      "offset": 45025,
+      "bytes": 686,
+      "sha256": "291886b282dd2ec8d4ce0c46437dd58ec5e3d60d8b36973a22b2015097b7ac4c",
+      "type": "turn_context",
+      "payload": {
+        "cwd": "/home/dw/Projects/agent-sts2",
+        "model": "gpt-6.1-sol",
+        "effort": "xhigh",
+        "approval_policy": "never",
+        "sandbox_policy": {
+          "type": "danger-full-access"
+        }
+      }
+    }
+  ],
+  "configured_account": "codex3",
+  "target_policy": {
+    "engine": "codex",
+    "account": "codex3",
+    "model": "gpt-6.1-sol",
+    "effort": "xhigh",
+    "service_tier": "default",
+    "learner_home": "/home/dw/Projects/agent-sts2/ops/codex-ops/accounts/codex3/learner",
+    "brain_home": "/home/dw/Projects/agent-sts2/ops/codex-ops/accounts/codex3/brain",
+    "handoff": "notes/codex3-drain-ops-handoff.md"
+  },
+  "account_auth_not_read": true,
+  "actual_new_brain_and_learner_consumption": "awaiting normal dispatch"
+}

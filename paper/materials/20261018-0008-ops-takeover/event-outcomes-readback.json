@@ -1,0 +1,334 @@
+{
+  "at": "2026-10-18 00:11:49 CST",
+  "events": [
+    {
+      "batch": "20261017-201043-fix-batch",
+      "state": "rejected",
+      "rc": 0,
+      "merged": null,
+      "rejection": [
+        "t1 leak worsened",
+        "pre leak worsened",
+        "no bias entered/approached its fixed standard"
+      ],
+      "worktree": "/home/dw/Projects/agent-sts2/.worktrees/boss-sim-silent-queen-20261017-201043",
+      "report": {
+        "task": "fix-batch",
+        "base": "3d691cff96dedd19855b00f4e9d448c43fe1d219",
+        "fixes": [
+          {
+            "item": "Roy 已授权独立功能：silent/QUEEN B4 校正",
+            "commit": "c7ddc554f3a5fefe56f4a38408a8d9a366f883b1",
+            "test": "/home/dw/Projects/agent-sts2/learner/runs/20261017-201052-8ff9f5ab-d6ed-4da1-9248-8ce5de312fa8-boss-sim-batch/sandbox-source.log；/home/dw/Projects/agent-sts2/learner/runs/20261017-201052-8ff9f5ab-d6ed-4da1-9248-8ce5de312fa8-boss-sim-batch/focused-without-fix.log；/home/dw/Projects/agent-sts2/learner/runs/20261017-201052-8ff9f5ab-d6ed-4da1-9248-8ce5de312fa8-boss-sim-batch/acceptance.json",
+            "fails_without_fix": true
+          }
+        ],
+        "skipped": [],
+        "merged": null,
+        "tests": {
+          "tsc": 0,
+          "vitest": 0,
+          "cases": 10
+        },
+        "boss_sim": {
+          "outcome": "rejected",
+          "acceptance": "/home/dw/Projects/agent-sts2/learner/runs/20261017-201052-8ff9f5ab-d6ed-4da1-9248-8ce5de312fa8-boss-sim-batch/acceptance.json",
+          "ledger_ids": [
+            "silent-0346"
+          ],
+          "evidence_sha256": "77cb34463c09fa8907e878856ae3a5ec057ef40379cefe09fb3d2302aae9d586"
+        },
+        "version": "",
+        "reports": [
+          "/home/dw/Projects/agent-sts2/.worktrees/boss-sim-silent-queen-20261017-201043/paper/materials/silent/boss-sim-b4-QUEEN-20261017-201043-fix-batch.md",
+          "/home/dw/Projects/agent-sts2/learner/runs/20261017-201052-8ff9f5ab-d6ed-4da1-9248-8ce5de312fa8-boss-sim-batch/report.md",
+          "/home/dw/Projects/agent-sts2/.worktrees/boss-sim-silent-queen-20261017-201043/paper/materials/silent/ascension-boss-sim-review-20261017-201043.md"
+        ]
+      },
+      "report_source": {
+        "path": "ops/codex-ops/learner/20261017-201043-fix-batch.out",
+        "bytes": 2857,
+        "sha256": "fe0e63e5280dd05a3d680129bcfece754947d34e24e0006d43d66a09d6bdafa3"
+      },
+      "candidate": "c7ddc554f3a5fefe56f4a38408a8d9a366f883b1",
+      "candidate_is_live_ancestor": false,
+      "acceptance": {
+        "accepted": false,
+        "reasons": [
+          "t1 leak worsened",
+          "pre leak worsened",
+          "no bias entered/approached its fixed standard"
+        ],
+        "improved": [],
+        "near_rule": "excess reduced >=20% and remaining excess <=10% of fixed limit (leak <=0.03)",
+        "isolation": {
+          "passed": true,
+          "base": "3d691cff96dedd19855b00f4e9d448c43fe1d219",
+          "head": "c7ddc554f3a5fefe56f4a38408a8d9a366f883b1",
+          "output_sha256": "1bce9c63060eb08d4225bb1facb368d0f52c6b9e1fc3ff80ca35350ad08d6bc0",
+          "candidate_sha256": "1bce9c63060eb08d4225bb1facb368d0f52c6b9e1fc3ff80ca35350ad08d6bc0",
+          "shared_changes": [
+            "agent/src/reflex/rollout.ts",
+            "agent/src/sim/boss-sim.ts",
+            "agent/tests/fixtures/boss-sim-silent-queen-burn-20261017.json",
+            "agent/tests/silent-queen-burn.test.ts"
+          ],
+          "runner": "/home/dw/Projects/agent-sts2/learner/runs/20261017-201052-8ff9f5ab-d6ed-4da1-9248-8ce5de312fa8-boss-sim-batch/scheduler-isolation/source-3d691cff96dedd19855b00f4e9d448c43fe1d219/agent/tools/boss-sim/isolation.ts",
+          "outputs": [
+            "/home/dw/Projects/agent-sts2/learner/runs/20261017-201052-8ff9f5ab-d6ed-4da1-9248-8ce5de312fa8-boss-sim-batch/scheduler-isolation/before.isolation.json",
+            "/home/dw/Projects/agent-sts2/learner/runs/20261017-201052-8ff9f5ab-d6ed-4da1-9248-8ce5de312fa8-boss-sim-batch/scheduler-isolation/after.isolation.json"
+          ]
+        },
+        "published_validation": "5571af628004f4a2f25650bdc263f36b4431f14948789d13c4c49122ccd04885"
+      }
+    },
+    {
+      "batch": "20261017-232844-strategy-proposal",
+      "state": "done",
+      "rc": 0,
+      "merged": null,
+      "rejection": null,
+      "worktree": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261017-232844",
+      "report": {
+        "task": "strategy-proposal",
+        "character": "silent",
+        "batch": "20261017-232844-strategy-proposal",
+        "base": "bc8470169ae4194a7250047f9b0f8155c7d7cd5b",
+        "runs": [
+          "NHA2KW0RB7VP",
+          "P74C04AEPL1F",
+          "G33HU22H2543",
+          "RC61MFQM63Y6",
+          "BTSRF7JL1W1Y"
+        ],
+        "fixes": [],
+        "skipped": [],
+        "merged": null,
+        "tests": {
+          "tsc": null,
+          "vitest": null,
+          "cases": null
+        },
+        "code_proposals": [
+          "silent-proposal-9952ee8e8df9a0fe",
+          "silent-proposal-47be799a87af03be",
+          "silent-proposal-3a5274da3c42672a",
+          "silent-proposal-bc4b92d590f2c4ce",
+          "silent-proposal-f52fbbab4dccc3b4",
+          "silent-proposal-10f37c0edd3d24a6",
+          "silent-proposal-3f82387e2e179703",
+          "silent-proposal-aee21084c991abd3",
+          "silent-proposal-df37594e9b12debf",
+          "silent-proposal-42e81c83b2e1e56b"
+        ],
+        "implementation_domains": [],
+        "proposal_results": [
+          {
+            "id": "silent-proposal-9952ee8e8df9a0fe",
+            "state": "waiting",
+            "reason": "当轮资源差额已有实现；缺同抽序、同预算整战后继及受控路线、休息和留药对照。"
+          },
+          {
+            "id": "silent-proposal-47be799a87af03be",
+            "state": "waiting",
+            "reason": "计划提示和手牌快照已有实现；缺全部合法弃牌分支的动态牌面、触发、目标及续步剩血核证。"
+          },
+          {
+            "id": "silent-proposal-3a5274da3c42672a",
+            "state": "waiting",
+            "reason": "缺F22主怪最后归零中间帧，以及药水、复活、逐敌结算接下一战的联合消费者验证。"
+          },
+          {
+            "id": "silent-proposal-bc4b92d590f2c4ce",
+            "state": "waiting",
+            "reason": "投斧首牌身份已有live祖先修复；跨重规划完整实线归属、余像累计兑现与动态弃牌联合验证仍缺。"
+          },
+          {
+            "id": "silent-proposal-f52fbbab4dccc3b4",
+            "state": "waiting",
+            "reason": "缺逐来源连续资源账的联合在线消费者验收，以及路线、休息、SL和留药的受控后继。"
+          },
+          {
+            "id": "silent-proposal-10f37c0edd3d24a6",
+            "state": "waiting",
+            "reason": "启动源码提交已知，但当时dirty知识及移动表字节未完整恢复；缺多组件联合回放和独立校准。"
+          },
+          {
+            "id": "silent-proposal-3f82387e2e179703",
+            "state": "waiting",
+            "reason": "同指纹即时差额成立，但首末推演预算不同；缺同预算整战、累计能力收益及独立验证。"
+          },
+          {
+            "id": "silent-proposal-aee21084c991abd3",
+            "state": "waiting",
+            "reason": "抽弃后已换线；缺最终执行线逐样本轨迹和独立校准，单次75%预测下死亡不足修改概率权重。"
+          },
+          {
+            "id": "silent-proposal-df37594e9b12debf",
+            "state": "waiting",
+            "reason": "普通生存者唯一后继取消已有实现；跨选择整线归属、累计能力与呼唤自损的联合消费者未验收。"
+          },
+          {
+            "id": "silent-proposal-42e81c83b2e1e56b",
+            "state": "waiting",
+            "reason": "二幕三次实休合63及52HP入口已核；缺同条件路线、休息、后战对照和逐来源消费者验收。"
+          }
+        ],
+        "report": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261017-232844/learner/runs/20261017-232849-cb092604-96e2-473f-988d-37532c4916a9-strategy-proposal/report.md"
+      },
+      "report_source": {
+        "path": "ops/codex-ops/learner/20261017-232844-strategy-proposal.out",
+        "bytes": 4860,
+        "sha256": "b24b84f592e6bbe05e007d95f1d6075d66ac2780cdb663184f3216a6336f60a1"
+      }
+    },
+    {
+      "batch": "20261017-232844-s2-strategy-proposal",
+      "state": "done",
+      "rc": 0,
+      "merged": null,
+      "rejection": null,
+      "worktree": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261017-232844-s2",
+      "report": {
+        "task": "strategy-proposal",
+        "character": "silent",
+        "batch": "20261017-232844-s2-strategy-proposal",
+        "base": "bc8470169ae4194a7250047f9b0f8155c7d7cd5b",
+        "runs": [
+          "RC61MFQM63Y6",
+          "XTSV1U9JD34T",
+          "BTSRF7JL1W1Y",
+          "9Z9H2EXKLF3T",
+          "HMVJKM56S4Q8",
+          "F4QKG4J1AJJZ",
+          "G403VCZ3BH1B",
+          "25226ZFLNR1J",
+          "JLN5SK17W4FQ",
+          "JMH5C51RLN4E"
+        ],
+        "fixes": [],
+        "skipped": [
+          "silent-proposal-03754e1265894000",
+          "silent-proposal-ab055ef7dfbb44e5",
+          "silent-proposal-0129c465c6f5bd79",
+          "silent-proposal-abe9d5d0be109a9f",
+          "silent-proposal-f16527e59b5cc1e0",
+          "silent-proposal-7a8e9ccb7e646538",
+          "silent-proposal-cd9f76184de6e29a",
+          "silent-proposal-292f6731bdb9b669",
+          "silent-proposal-0802f69b28d25079",
+          "silent-proposal-763a4b9d9f17b815"
+        ],
+        "merged": null,
+        "tests": {
+          "tsc": null,
+          "vitest": null,
+          "cases": null
+        },
+        "code_proposals": [
+          "silent-proposal-03754e1265894000",
+          "silent-proposal-ab055ef7dfbb44e5",
+          "silent-proposal-0129c465c6f5bd79",
+          "silent-proposal-abe9d5d0be109a9f",
+          "silent-proposal-f16527e59b5cc1e0",
+          "silent-proposal-7a8e9ccb7e646538",
+          "silent-proposal-cd9f76184de6e29a",
+          "silent-proposal-292f6731bdb9b669",
+          "silent-proposal-0802f69b28d25079",
+          "silent-proposal-763a4b9d9f17b815"
+        ],
+        "implementation_domains": [],
+        "proposal_results": [
+          {
+            "id": "silent-proposal-03754e1265894000",
+            "state": "waiting",
+            "reason": "RC局部逐牌属性与折扇已核；八组件完整消费者回放及未见倍率/首刀组合仍未认证，未确认新的可实施源码失配。"
+          },
+          {
+            "id": "silent-proposal-ab055ef7dfbb44e5",
+            "state": "waiting",
+            "reason": "幽灵单层已有真实live实现；缺复制对象变更或延后饮药的同条件完整后继，不能关闭整项或重定时点和药价。"
+          },
+          {
+            "id": "silent-proposal-0129c465c6f5bd79",
+            "state": "waiting",
+            "reason": "普通单弃和毒胜保血子项已有live实现；接管内部动作、夜魇后继及跨抽弃候选完整执行归属仍缺。"
+          },
+          {
+            "id": "silent-proposal-abe9d5d0be109a9f",
+            "state": "waiting",
+            "reason": "局部入血接续有支持；缺原115局完整分源输入、路线/休息消费者校准及同条件后继和独立留出，不能拟新阈值。"
+          },
+          {
+            "id": "silent-proposal-f16527e59b5cc1e0",
+            "state": "waiting",
+            "reason": "局部留挡、减力、毒结算有支持；共同输入下临时属性撤回、留挡上限、毒触发和敌成长的联合消费者结果仍未齐。"
+          },
+          {
+            "id": "silent-proposal-7a8e9ccb7e646538",
+            "state": "waiting",
+            "reason": "末轮77毒加3反伤已核；死亡截断处逐击毛伤、完整候选执行归属和同条件整战后继仍缺，不据净差改SL血价。"
+          },
+          {
+            "id": "silent-proposal-cd9f76184de6e29a",
+            "state": "waiting",
+            "reason": "原十局16对回复公式已核；缺原116局完整资源输入、逐来源路线/休息消费者校准与独立收益验证，不能认证整个资源模型。"
+          },
+          {
+            "id": "silent-proposal-292f6731bdb9b669",
+            "state": "waiting",
+            "reason": "仅零毒后段实加7有实帧；其他目标、叠毒/接续组合与持有价/时点缺可比数据，现有单数observedPoison入口不能据此给全体目标赋7。"
+          },
+          {
+            "id": "silent-proposal-0802f69b28d25079",
+            "state": "waiting",
+            "reason": "同盘少防御多损8血、多伤6已核，审计已有live实现；缺独立A10留出和固定抽弃/药时点的完整后继，不拟新排序阈值。"
+          },
+          {
+            "id": "silent-proposal-763a4b9d9f17b815",
+            "state": "waiting",
+            "reason": "局部属性、持牌伤和能力时点已核；十四项完整联合生产消费者结果及部分能力/昏眩后继仍未齐，不能以文字或窄组件认证整包完成。"
+          }
+        ],
+        "report": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261017-232844-s2/learner/runs/20261017-232849-ceb26e65-d1be-4d04-b111-2781d903ebe5-strategy-proposal/report.md"
+      },
+      "report_source": {
+        "path": "ops/codex-ops/learner/20261017-232844-s2-strategy-proposal.out",
+        "bytes": 5744,
+        "sha256": "f0919b8a9b28c1427d7402aee3169a6e704208b46a1fd538476cac9388aa373f"
+      }
+    }
+  ],
+  "exact_h2_host": {
+    "batch": "20261016-075726-strategy-proposal",
+    "fallback_check": {
+      "rc": 0,
+      "log": "/home/dw/Projects/agent-sts2/ops/codex-ops/learner/20261016-075726-strategy-proposal.fallback-f53b07d7ed22b7c25d72c9c3965ad742ad8e889e.checks.log",
+      "merged": "017453260488d82709423fe76dbd1152d22de2c7",
+      "tree": "f53b07d7ed22b7c25d72c9c3965ad742ad8e889e",
+      "commits": [
+        "28161b2d2a31e95587999fc6e5028acd727cecb2",
+        "b2bdb0b1dbc7ec9a39909595238b00efbb718321"
+      ]
+    },
+    "log": {
+      "path": "ops/codex-ops/learner/20261016-075726-strategy-proposal.fallback-f53b07d7ed22b7c25d72c9c3965ad742ad8e889e.checks.log",
+      "bytes": 267,
+      "sha256": "76fc8877368b62c82783dbbeebb2e7b1c6bb9ae9efea6139853e349305b23583"
+    },
+    "test_files_passed": 532,
+    "tests_passed": 5229,
+    "tests_skipped": 2,
+    "source": "89bec47ab4ef678b01ff8487762e125599a757fa",
+    "source_is_main_and_live_ancestor": true,
+    "host_rerun": false,
+    "retention_registration": "deferred to normal post-takeover handling; not executed in takeover-only round",
+    "original_pending_integration_unmodified": true
+  },
+  "new_merge_release_ledger_shipment_or_test": false,
+  "snapshot_field_mapping": {
+    "original_field_name": "evidence_key",
+    "snapshot_field_name": "evidence_sha256",
+    "reason": "Public scheduler evidence digest; generic-api-key name heuristic false positive. Original batch/report bytes unmodified."
+  }
+}
