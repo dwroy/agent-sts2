@@ -2405,3 +2405,8 @@ H0原交接source68bc2492本轮一次原锁发布成功，保10知识刷新，ma
 原64c1f88c同tree414ea8定向host终局0：tsc0、仅两原失败题各1过2168/2155ms/原30s，原完整full1/5246过2败2跳保留，不冒full0。保R392，当前live090b64eb/treef2e88仅四统计刷新；原三代码/测试叶和九对象canonical不变，原live锁内实际新当前九对象production消费者读回0，17原件归档SHA全核，非自然采用或质量改善。
 根CLI已仅0507 shipped+eval专题S1.silent-h0-aeonglass-intensity1，claim/原证据/prior/首证/effect及六目标低可信/校准变差反证保持；无新行为号或源码、原source68bc在main/live、behaviorab4c/发布523在live的完整谱系及main d8窄源集成均已核。原7b宽提案及bb机械状态待原协议，不伪造原blocked完成/coverage/lease。
 合入/consumer技术阻塞解除后已用原learning_requests retry回原H0 r3优先队列（仅pending，非dispatched/首回复）；原已核codex3 same-thread01a14ac8/home/input/科学cut/缓存/WT保持，无新owner/跨号/扩权限/新监听。后续原槽位负责余下原要求和真实消费回执；本次窄交付不关闭H0六Boss/0332真实失败封套/human-pace/main-push，研究WT不complete/删除。根双通知和现有watcher按本人独立实际回执交付，ops不代下游ACK。证据paper/materials/20261018-0300-ops/，普通fixture稳定性依原队列继续、不重相同检查或强派模型。
+
+### 2026-10-18 03:14:33 CST 原021301-fix格式子项三叶窄合，原批宿主待终局
+source4c16dab0（parent9ed8ac27）仅ops/learner_checks.py、ops/tests/test_learner_report_fixes_shape.py和Vitest包装，原源码沙箱486文件4441项0/有效消融1恢复0与两旧失败保留；原整体19冲突由ops只按该三叶窄整合main3e7f8d904a167541f07e15472572a23208fb7720/livef7abb0e13d3ee0943637be2146ca52ee25486289/tree2671b608a2f181f41e2c31bf9d2d00c429b85a69，保六知识刷新与所有并行记录/index/版本。纯ops格式，非游戏行为，不编号/ledger shipped/重启游戏。
+合后原sandbox入口固定选择tsc0，4文件8项0、原paths合流5文件19项0，非新树完整suite0。仅原021301-fix通道一次完整host请求PID2757761，真实pin/终局以后续learner-checks为准，不重复源码full或新建检查链；源WT codex-fix-silent-20261018-021301/HEAD4c16本批完成验收待定，host0后再原complete登记，canonicalfailed/rc0原完成报告保持。
+原描述fixes格式已兼容但9ae→dddad历史祖先仍rc1，011241原recheck2及048d/code-proposal窄cherry-pick协议继续pending，不以本源入live造成的新current祖先追认旧publication或重跑原full。原45旧修复不重复；0332/H0/性能/目录/策略/宽架构和全部父保持，H0当前原r3队列及0507已ship不改。本轮51原件归档/源码组合gitleaks0、原数据/记录单独封存；见paper/materials/20261018-0307-ops/，无新游戏知识/通知ACK。

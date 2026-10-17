@@ -1,0 +1,64 @@
+{
+  "at": "2026-10-18 03:14:33 CST",
+  "batch": "20261018-021301-fix-batch",
+  "source": "4c16dab0457a61e22ef06b27e367d146cb99bab3",
+  "source_parent": "9ed8ac27c45992bf48e6526c38bd77c8bbfa8132",
+  "source_workspace": "codex-fix-silent-20261018-021301",
+  "source_worktree": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261018-021301",
+  "source_head": "4c16dab0457a61e22ef06b27e367d146cb99bab3",
+  "paths": [
+    {
+      "path": "agent/tests/learner-report-fixes-shape.test.ts",
+      "blob": "bf414387c6ee46db8e0368852d59f063585b5a53",
+      "sha256": "6e46a0a801d731401b411bfe5674fd327205a0bf20671068543ce3bc4ea6d65e"
+    },
+    {
+      "path": "ops/learner_checks.py",
+      "blob": "b6b1bab5c6348898787b1ca74ec7836d189728a5",
+      "sha256": "cbdea748ca8796d53df48ec616850c4c522fdd0ee3cfaeac0383f8be92fb633b"
+    },
+    {
+      "path": "ops/tests/test_learner_report_fixes_shape.py",
+      "blob": "00bdc1555e38a91c1cffdad3b28f331c201d5b6b",
+      "sha256": "f4ebe4913cde0de98452020f7f60c44ccff970f2b2419e2094838bc7f163cc81"
+    }
+  ],
+  "published": true,
+  "main": "3e7f8d904a167541f07e15472572a23208fb7720",
+  "actual_live": "f7abb0e13d3ee0943637be2146ca52ee25486289",
+  "intended_tree": "2671b608a2f181f41e2c31bf9d2d00c429b85a69",
+  "source_sandbox_rc": 0,
+  "source_full_not_repeated": true,
+  "merged_selected_entry_rc": 0,
+  "host": {
+    "at": "2026-10-18 03:12:28 CST",
+    "batch": "20261018-021301-fix-batch",
+    "command": [
+      "nice",
+      "-n",
+      "19",
+      "bash",
+      "ops/codex-ops-actions.sh",
+      "learner-recheck",
+      "20261018-021301-fix-batch"
+    ],
+    "pid": 2757761,
+    "birth": "115629109",
+    "actual_subprocess_started": true,
+    "intended_live": "f7abb0e13d3ee0943637be2146ca52ee25486289",
+    "intended_tree": "2671b608a2f181f41e2c31bf9d2d00c429b85a69",
+    "actual_checked_tree": null,
+    "full_result": null,
+    "source_full_not_repeated": true,
+    "original_completion_failed_rc0_not_rewritten": true,
+    "expected_log": "ops/codex-ops/learner/20261018-021301-fix-batch.fallback-2671b608a2f181f41e2c31bf9d2d00c429b85a69.checks.log",
+    "route": "one original fix-batch learner-recheck action; future event owns terminal result"
+  },
+  "host_complete": false,
+  "source_worktree_complete": false,
+  "original_state_failed_rc0_preserved": true,
+  "gameplay_version_unchanged": true,
+  "ledger_entry_required": false,
+  "broader_support_protocol_pending": true,
+  "next": "On original learner-checks terminal only: verify actual pinned tree and three source leaves, keep failure/scope if any. If accepted full result, finish original source WT via worktree_retention complete, not direct deletion. No duplicate full/source tests, no new game/model/config, do not rewrite original failed rc0 completion or old011241 report/ancestry/proposal state."
+}
