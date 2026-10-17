@@ -4317,3 +4317,5 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
 - 2026-10-17 21:48:17 CST 运维codex：原211302-fix精确0b1807六叶/source tsc0/sandbox481/4417过、撤修3败/恢复55过已实收，31历史冲突/canonical failed0null保留。ops窄合被原retention PID1469852的live锁75阻止，尚未改源/号/开宿主；同一pending已绑定六SHA和publisher/start-host具体恢复，下一原wake守锁接续，不等待/重源full/派模型。仅G2 shadow诊断/缓存，F15/F16原数组与0332未知不关。证据paper/materials/20261017-2141-ops/。
 
 - 2026-10-17 22:06:52 CST 运维codex：214302策略十waiting/26追溯，68产物6995原行、16源码/六窄祖先核回，原知识结论和整战缺口保持，账本0。接续原211302 G2六叶0b1807守锁窄合main179ed/live deb9135/tree42a4f7，纯shadow诊断不加号、R388及versions不变；原source481/4417全0与canonical failed0null/31冲突保留，新组合原批次宿主已RUN且结果pending，不重源full/派模型/动当前局。证据paper/materials/20261017-2200-ops/。
+
+- 2026-10-17 22:31:58 CST 运维codex：2220五事件三策略30waiting/92追溯、U5复盘9证据4提案链接及唯一paper --no-raw0入库，205产物40749原行核回。原211302 G2 deb9135/tree42a4f7精确宿主全0（531文件5222过2跳），仅诊断交付闭环/无新号，原canonical failed0null及宽父保留；WT登记锁忙rc1暂缓不手删/重测。证据paper/materials/20261017-2220-ops/。
