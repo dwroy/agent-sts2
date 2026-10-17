@@ -2846,3 +2846,5 @@ selector于2026-10-15 13:15:58 CST从/home/dw/.codex-brain原子改为/home/dw/P
 - 2026-10-17 10:53:59 CST H1已实收并发布V5-R380，source7af803c06e/livedbd41616420f62e6502e9cb6c5827e852a6b4949/treed68e817428a59b28dfd53c3d9dfb34819f711e56；根规则双通知已写。唯一原075726精确宿主PID3300696已实际RUN，结果pending；收到终局事件后另写验收结果。首个实际生效局未知，后续由原run-config证明，当前局未重启/热改。H0/0332优先及所有科学/自然门槛保持，不重派模型、源full或新增观察。回执paper/materials/20261017-human-pace-h1/ops-receipts/ops-closure.json。
 
 - 2026-10-17 11:02:01 CST 原104302策略批已读回：十项保留waiting，无源码提交或合入阻塞；31行原CLI追溯、71产物及62小原件归档。原30项为纠正后的材料核验，不是生产测试；16局进阶及完整候选/整战后继缺口保持。未改live/V5-R380、当前局或H1原唯一宿主，不新补测/分号/派发。回执paper/materials/20261017-1059-ops/strategy-readback.json。
+
+- 2026-10-17 11:12:58 CST H1/V5-R380精确宿主验收通过：treed68e817428a59b28dfd53c3d9dfb34819f711e56、tsc0＋完整Vitest519文件5108过2跳/919.81s，原log SHA9d4ec8c223d152031f7f3a75292a2243b784cbd58089a663d6302e587adee20d。首实际生效局5H83F3J0XSTE于11:00:49.152 CST启动（dbd4161+dirty，仅生成知识/notes），原run-config的H1配置及决策time_budget已按原字节核；这是运行切换点，不是2局自然质量/速度验收。当前live随后已有081302夹具/知识新组合，不把本通过结论借给该新树；H0/0332科学根缺陷和自然门槛保持，不重检查/派模型或重启现局。回执paper/materials/20261017-human-pace-h1/ops-receipts/host-completion-20261017-1110/host-acceptance.json。
