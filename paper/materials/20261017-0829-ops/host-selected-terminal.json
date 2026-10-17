@@ -1,0 +1,187 @@
+{
+  "manifest_sha256": "23cd0a6267918e32a26bb9601c6843c302a267011bcea75bf1711558e7ee182f",
+  "batch": "20261017-034302-fix-batch",
+  "state": "completed",
+  "environment": "host",
+  "scope": "selected tests only",
+  "full_suite": false,
+  "live": {
+    "commit": "08e9a15b79882302eb7bfe38e7ddddc2e40b2dbd",
+    "tree": "ac60f339b13dfd5a6ca71efbe8c8d5ec3b80a462"
+  },
+  "original": {
+    "merged": "08e9a15b79882302eb7bfe38e7ddddc2e40b2dbd",
+    "tree": "ac60f339b13dfd5a6ca71efbe8c8d5ec3b80a462",
+    "log_sha256": "676a783f3800910b9331d18bbe4d92b1875e83e00e843acf40c91ae9f8df1810",
+    "coverage": {
+      "passed": [],
+      "failed": [
+        "tests/batch-i.test.ts",
+        "tests/brain-codex.test.ts",
+        "tests/learner-check-continuation.test.ts",
+        "tests/silent-apotheosis-reference.test.ts"
+      ],
+      "skipped": [],
+      "summary": {
+        "files": {
+          "failed": 4,
+          "passed": 509
+        },
+        "tests": {
+          "failed": 7,
+          "passed": 5077,
+          "skipped": 2
+        }
+      },
+      "failed_tests": {
+        "tests/batch-i.test.ts": [
+          "2. Red Skull (+3 Strength at or below half HP) and Self-Forming Clay (3 block next turn per HP loss) in the solver and the rollout (VTREB5A9XWS7 F33, V6TW9MJ385P2 F33) logged boards: the relics reach the solver (VTRE F33 T5 at 46/80: Offering then Strike gets Red Skull's 3; V6TW F33 T2: Clay's owed 3)"
+        ],
+        "tests/brain-codex.test.ts": [
+          "codex runs watched: retries, stalls, timeouts and their trace a retry notice is not a failure: the answer after it is taken, and the trace keeps the notice",
+          "codex runs watched: retries, stalls, timeouts and their trace after the first token, a stream silent for BRAIN_CODEX_STALL_MS is killed and asked once more; the second run's answer is taken",
+          "codex runs watched: retries, stalls, timeouts and their trace stalled twice: the question fails as a timeout and the fallback answers it",
+          "codex runs watched: retries, stalls, timeouts and their trace the router's timeout leaves the evidence: what the stream had sent, and its stderr with credentials masked"
+        ],
+        "tests/learner-check-continuation.test.ts": [
+          "retains long parameterized failure names in an exact bounded host supplement"
+        ],
+        "tests/silent-apotheosis-reference.test.ts": [
+          "bounds F45's real potion forecast work with 0 ms host pauses"
+        ]
+      }
+    }
+  },
+  "original_log": "/home/dw/Projects/agent-sts2/ops/codex-ops/learner/20261017-034302-fix-batch.fallback-ac60f339b13dfd5a6ca71efbe8c8d5ec3b80a462.checks.log",
+  "sources": [
+    "d27df54f0651c4af84c6c12ceceec82a016f1142",
+    "83a7f796c24eea8f16eb317bc70bfd832251ad27",
+    "d91236326bc1af7a5417ce016c1a182f8084e7a3",
+    "0699b05c436d3d51d00ee92f153d16d16e64bea4",
+    "08e9a15b79882302eb7bfe38e7ddddc2e40b2dbd"
+  ],
+  "inputs": [
+    {
+      "path": "agent/tests/batch-i.test.ts",
+      "source": "08e9a15b79882302eb7bfe38e7ddddc2e40b2dbd"
+    },
+    {
+      "path": "agent/tests/brain-codex.test.ts",
+      "source": "08e9a15b79882302eb7bfe38e7ddddc2e40b2dbd"
+    },
+    {
+      "path": "agent/tests/learner-check-continuation.test.ts",
+      "source": "08e9a15b79882302eb7bfe38e7ddddc2e40b2dbd"
+    },
+    {
+      "path": "agent/tests/silent-apotheosis-reference.test.ts",
+      "source": "08e9a15b79882302eb7bfe38e7ddddc2e40b2dbd"
+    }
+  ],
+  "selection": [
+    {
+      "file": "tests/batch-i.test.ts",
+      "tests": [
+        "2. Red Skull (+3 Strength at or below half HP) and Self-Forming Clay (3 block next turn per HP loss) in the solver and the rollout (VTREB5A9XWS7 F33, V6TW9MJ385P2 F33) logged boards: the relics reach the solver (VTRE F33 T5 at 46/80: Offering then Strike gets Red Skull's 3; V6TW F33 T2: Clay's owed 3)"
+      ],
+      "reason": "failed"
+    },
+    {
+      "file": "tests/brain-codex.test.ts",
+      "tests": [
+        "codex runs watched: retries, stalls, timeouts and their trace a retry notice is not a failure: the answer after it is taken, and the trace keeps the notice",
+        "codex runs watched: retries, stalls, timeouts and their trace after the first token, a stream silent for BRAIN_CODEX_STALL_MS is killed and asked once more; the second run's answer is taken",
+        "codex runs watched: retries, stalls, timeouts and their trace stalled twice: the question fails as a timeout and the fallback answers it",
+        "codex runs watched: retries, stalls, timeouts and their trace the router's timeout leaves the evidence: what the stream had sent, and its stderr with credentials masked"
+      ],
+      "reason": "failed"
+    },
+    {
+      "file": "tests/learner-check-continuation.test.ts",
+      "tests": [
+        "retains long parameterized failure names in an exact bounded host supplement"
+      ],
+      "reason": "failed"
+    },
+    {
+      "file": "tests/silent-apotheosis-reference.test.ts",
+      "tests": [
+        "bounds F45's real potion forecast work with 0 ms host pauses"
+      ],
+      "reason": "failed"
+    }
+  ],
+  "evidence": [
+    {
+      "path": "paper/materials/20261017-0829-ops/host-failure-disposition.json",
+      "sha256": "9a8ebedc80dd98fb5a74509c10170d392a3a5e6bb2d49e7e8df5a9ada78ae2ce"
+    }
+  ],
+  "results": [
+    {
+      "name": "tsc",
+      "rc": 0,
+      "process_rc": 0,
+      "status": "passed"
+    },
+    {
+      "name": "tests/batch-i.test.ts",
+      "rc": 0,
+      "process_rc": 0,
+      "status": "passed",
+      "report_sha256": "6534ec230f0efbc90ab57456dfee7f64f8e3eb84a0351a406db19ee0d35c1778",
+      "counts": {
+        "numTotalTests": 19,
+        "numPassedTests": 1,
+        "numFailedTests": 0,
+        "numPendingTests": 18
+      },
+      "report": "/home/dw/Projects/agent-sts2/ops/codex-ops/learner/20261017-034302-fix-batch.supplement-23cd0a6267918e32a26bb9601c6843c302a267011bcea75bf1711558e7ee182f.0.vitest.json"
+    },
+    {
+      "name": "tests/brain-codex.test.ts",
+      "rc": 0,
+      "process_rc": 0,
+      "status": "passed",
+      "report_sha256": "879df8a479a02d3c8a95e7bf515b10e15f23199809c17bf070391532c26253e0",
+      "counts": {
+        "numTotalTests": 31,
+        "numPassedTests": 4,
+        "numFailedTests": 0,
+        "numPendingTests": 27
+      },
+      "report": "/home/dw/Projects/agent-sts2/ops/codex-ops/learner/20261017-034302-fix-batch.supplement-23cd0a6267918e32a26bb9601c6843c302a267011bcea75bf1711558e7ee182f.1.vitest.json"
+    },
+    {
+      "name": "tests/learner-check-continuation.test.ts",
+      "rc": 0,
+      "process_rc": 0,
+      "status": "passed",
+      "report_sha256": "9d547a0b7642316888e734dd9fb794a2a3cc05d5846d8145565dd329d2450f7e",
+      "counts": {
+        "numTotalTests": 3,
+        "numPassedTests": 1,
+        "numFailedTests": 0,
+        "numPendingTests": 2
+      },
+      "report": "/home/dw/Projects/agent-sts2/ops/codex-ops/learner/20261017-034302-fix-batch.supplement-23cd0a6267918e32a26bb9601c6843c302a267011bcea75bf1711558e7ee182f.2.vitest.json"
+    },
+    {
+      "name": "tests/silent-apotheosis-reference.test.ts",
+      "rc": 0,
+      "process_rc": 0,
+      "status": "passed",
+      "report_sha256": "58040309b984875374de531ae7f6716171dbec6758b20f47c74caf3af57096e0",
+      "counts": {
+        "numTotalTests": 7,
+        "numPassedTests": 1,
+        "numFailedTests": 0,
+        "numPendingTests": 6
+      },
+      "report": "/home/dw/Projects/agent-sts2/ops/codex-ops/learner/20261017-034302-fix-batch.supplement-23cd0a6267918e32a26bb9601c6843c302a267011bcea75bf1711558e7ee182f.3.vitest.json"
+    }
+  ],
+  "rc": 0,
+  "log": "/home/dw/Projects/agent-sts2/ops/codex-ops/learner/20261017-034302-fix-batch.supplement-23cd0a6267918e32a26bb9601c6843c302a267011bcea75bf1711558e7ee182f.log",
+  "log_sha256": "13651f88301916d422bc215229aca56675256e64b166ed137fe1ec59dad9432b"
+}

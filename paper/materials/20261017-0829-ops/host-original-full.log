@@ -1,0 +1,147 @@
+
+ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/live/agent
+
+ ❯ tests/silent-apotheosis-reference.test.ts (7 tests | 1 failed) 38622ms
+   × bounds F45's real potion forecast work with 0 ms host pauses 31064ms
+ ❯ tests/brain-codex.test.ts (31 tests | 4 failed) 51930ms
+     × a retry notice is not a failure: the answer after it is taken, and the trace keeps the notice 16362ms
+     × after the first token, a stream silent for BRAIN_CODEX_STALL_MS is killed and asked once more; the second run's answer is taken 8701ms
+     × stalled twice: the question fails as a timeout and the fallback answers it 9600ms
+     × the router's timeout leaves the evidence: what the stream had sent, and its stderr with credentials masked 2391ms
+ ❯ tests/batch-i.test.ts (19 tests | 1 failed) 43673ms
+     × logged boards: the relics reach the solver (VTRE F33 T5 at 46/80: Offering then Strike gets Red Skull's 3; V6TW F33 T2: Clay's owed 3) 33065ms
+ ❯ tests/learner-check-continuation.test.ts (3 tests | 1 failed) 8621ms
+   × retains long parameterized failure names in an exact bounded host supplement 5644ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 7 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/batch-i.test.ts > 2. Red Skull (+3 Strength at or below half HP) and Self-Forming Clay (3 block next turn per HP loss) in the solver and the rollout (VTREB5A9XWS7 F33, V6TW9MJ385P2 F33) > logged boards: the relics reach the solver (VTRE F33 T5 at 46/80: Offering then Strike gets Red Skull's 3; V6TW F33 T2: Clay's owed 3)
+Error: Test timed out in 30000ms.
+If this is a long-running test, pass a timeout value as the last argument or configure it globally with "testTimeout".
+ ❯ tests/batch-i.test.ts:212:3
+    210|   });
+    211|
+    212|   it("logged boards: the relics reach the solver (VTRE F33 T5 at 46/80…
+       |   ^
+    213|     rolloutLiveOptions.budgetMs = 1e9;
+    214|     potionMcOptions.now = () => 0;
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/7]⎯
+
+ FAIL  tests/brain-codex.test.ts > codex runs watched: retries, stalls, timeouts and their trace > a retry notice is not a failure: the answer after it is taken, and the trace keeps the notice
+Error: Test timed out in 15000ms.
+If this is a long-running test, pass a timeout value as the last argument or configure it globally with "testTimeout".
+ ❯ tests/brain-codex.test.ts:296:3
+    294|   }
+    295|
+    296|   it("a retry notice is not a failure: the answer after it is taken, a…
+       |   ^
+    297|     const notice = "Reconnecting... 1/5 (stream disconnected before co…
+    298|     const fake = fakeCodex("retry", [[...started, { type: "error", mes…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/7]⎯
+
+ FAIL  tests/brain-codex.test.ts > codex runs watched: retries, stalls, timeouts and their trace > after the first token, a stream silent for BRAIN_CODEX_STALL_MS is killed and asked once more; the second run's answer is taken
+AssertionError: expected { …(23) } to match object { ttft_ms: Any<Number>, …(1) }
+(29 matching properties omitted from actual)
+
+- Expected
++ Received
+
+  {
+-   "stall": StringMatching /^no stream event for 2 s after the first token at 0 s \(last: turn\.started at 0 s\)$/,
++   "stall": "no stream event for 2 s after the first token at 2 s (last: turn.started at 2 s)",
+    "ttft_ms": 2068,
+  }
+
+ ❯ tests/brain-codex.test.ts:332:24
+    330|     ]);
+    331|     expect(trace()[0]!["max_gap_ms"]).toBeGreaterThanOrEqual(1_500);
+    332|     expect(trace()[0]).toMatchObject({ ttft_ms: expect.any(Number), st…
+       |                        ^
+    333|     expect(fake.seen()[0]!.env["RUST_LOG"]).toBe(CODEX_RUST_LOG);
+    334|   }, 30_000);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/7]⎯
+
+ FAIL  tests/brain-codex.test.ts > codex runs watched: retries, stalls, timeouts and their trace > stalled twice: the question fails as a timeout and the fallback answers it
+AssertionError: expected { choice: 'a', …(5) } to match object { choice: 'a', brain: { …(2) } }
+(9 matching properties omitted from actual)
+
+- Expected
++ Received
+
+  {
+    "brain": {
+      "engine": "deepseek",
+      "fell_back_from": {
+        "engine": "codex",
+-       "error": StringMatching /^codex stalled \[timeout\]: no stream event for 1 s after the first token at 0 s \(last: turn\.started at 0 s\) \(2 run\(s\)\)/,
++       "error": "codex stalled [timeout]: no stream event for 1 s after the first token at 1 s (last: turn.started at 1 s) (2 run(s))",
+      },
+    },
+    "choice": "a",
+  }
+
+ ❯ tests/brain-codex.test.ts:371:20
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/7]⎯
+
+ FAIL  tests/brain-codex.test.ts > codex runs watched: retries, stalls, timeouts and their trace > the router's timeout leaves the evidence: what the stream had sent, and its stderr with credentials masked
+AssertionError: expected [Function] to throw error matching /aborted after/ but got '/tmp/fake-codex-IVwFaA/abort.mjs abor…'
+
+- Expected:
+/aborted after/
+
++ Received:
+"/tmp/fake-codex-IVwFaA/abort.mjs aborted before start"
+
+ ❯ tests/brain-codex.test.ts:391:57
+    389|     const controller = new AbortController();
+    390|     setTimeout(() => controller.abort(), 1_500);
+    391|     await expect(e.decide(request(), controller.signal)).rejects.toThr…
+       |                                                         ^
+    392|     const [row] = trace();
+    393|     expect(row).toMatchObject({ outcome: "aborted", thread_id: "t-stal…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/7]⎯
+
+ FAIL  tests/learner-check-continuation.test.ts > retains long parameterized failure names in an exact bounded host supplement
+AssertionError: {"status":null,"signal":"SIGTERM","error":"spawnSync nice ETIMEDOUT","stdout":"","stderr":""}: expected null to be +0 // Object.is equality
+
+- Expected:
+0
+
++ Received:
+null
+
+ ❯ tests/learner-check-continuation.test.ts:11:54
+      9|   });
+     10|   expect(result.status, JSON.stringify({ status: result.status, signal…
+     11|     stdout: result.stdout, stderr: result.stderr })).toBe(0);
+       |                                                      ^
+     12|   expect(result.stderr).toContain("OK");
+     13| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/7]⎯
+
+ FAIL  tests/silent-apotheosis-reference.test.ts > bounds F45's real potion forecast work with 0 ms host pauses
+Error: Test timed out in 15000ms.
+If this is a long-running test, pass a timeout value as the last argument or configure it globally with "testTimeout".
+ ❯ tests/silent-apotheosis-reference.test.ts:129:21
+    127| });
+    128|
+    129| it.each([0, 10_000])("bounds F45's real potion forecast work with %i m…
+       |                     ^
+    130|   let wall = 0;
+    131|   vi.spyOn(performance, "now").mockImplementation(() => (wall += pause…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[7/7]⎯
+
+
+ Test Files  4 failed | 509 passed (513)
+      Tests  7 failed | 5077 passed | 2 skipped (5086)
+   Start at  07:59:54
+   Duration  1741.39s (transform 67.45s, setup 142.67s, import 346.78s, tests 2760.45s, environment 137ms)
+

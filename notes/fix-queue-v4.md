@@ -1391,3 +1391,5 @@ Roy：「上线后进 F48 反而降低一半，这才是关键，要找问题。
 - 2026-10-17 04:52:14 CST [原021302宿主超时项限定补验终局，沿同队列/下一既有fix槽] manifest44189163完成rc1：tsc0；Herdr5713.619ms通过，不重派此题。eval校准封套172327.606ms/原120000ms及药水logged boards64944.527ms/原60000ms仍超时，非明确断言回归；保原full1/supplement1和不完整验证，不重复未改题或加时限凑绿。原034302-fix仍running，下一普通槽接续此纯验证稳定性定位，不热改其输入/扩大权限/另开研究。未定位产品因果，保R376，原游戏规则/药价/SL不改。见host-checks-closure.json、existing-fix-slot-pending.json。
 
 - 2026-10-17 08:02:38 CST 原034302-fix收尾（四窄源已实际live，宿主pending）：d27df54f异步global-health测试封装、83a7f796 target-options两处固定生产预算、d9123632合法数字UUID scratch、0699b05c旧experience原根产物归属，源各自完整沙箱0/撤源失败恢复0已核；live08e9a15b7/main2fc6274897。outer124/无最终回报及原合后沙箱中断保留，ops仅接原batch精确组合host，不重复派修这四窄项；原完整宿主结果仍pending，不假称已通过或关闭磁盘/学习连续性宽父，0332仍沿原owner。证据paper/materials/20261017-0754-ops/。
+
+- 2026-10-17 08:42:35 CST 原034302-fix有限检查终局：原live08e9a15b/treeac60f339完整宿主1的七旧时序失败，经原manifest23cd0a62同树未变原七题+tsc补验0；ops保留四已发布工具修复，不重复派修/整套、不改时限/断言或把所选0称full0。原outer124/canonical failed-null/失效沙箱及历史归属/磁盘宽父保持。F48默认off源已按Claude08:40撤回，精确恢复该原live tree，联合shadow继续，不列为B2修复，0332根链与B2速度决定分别保持原owner/待Roy。证据paper/materials/20261017-0829-ops/host-final-disposition.json及shadow-withdrawal.json。

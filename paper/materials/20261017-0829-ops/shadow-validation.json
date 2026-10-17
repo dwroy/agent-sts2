@@ -1,0 +1,114 @@
+{
+  "at": "2026-10-17T08:22:48.458135+08:00",
+  "worktree": ".worktrees/codex-f48-shadow-pause-20261017",
+  "base": "f2534f90f846e80521779fe3da38d184fd24eb32",
+  "staged_tree": "67e7a5d5b75345fcd3408fdc23ab3ce82f43ae28",
+  "leaves": 2,
+  "tsc": {
+    "exit_code": 0,
+    "log": "tsc-r2.log"
+  },
+  "fixed": {
+    "exit_code": 0,
+    "files": 2,
+    "tests": 34,
+    "seconds": 15.1,
+    "log": "fixed-r2.log"
+  },
+  "gitleaks_source": 0,
+  "full": {
+    "at": "2026-10-17T08:36:03.509643+08:00",
+    "source_tree": "67e7a5d5b75345fcd3408fdc23ab3ce82f43ae28",
+    "exit_code": 1,
+    "files": {
+      "total": 462,
+      "passed": 460,
+      "failed": 2
+    },
+    "tests": {
+      "total": 4273,
+      "passed": 4271,
+      "failed": 2
+    },
+    "duration_seconds": 890.03,
+    "log": "source-full.log",
+    "log_sha256": "586ec96a9e1ffeaea7f4429bbf70c179bb0a247bf5a812960eec543b65b85de7",
+    "failures": [
+      {
+        "file": "agent/tests/boss-lines-planner.test.ts",
+        "case": "P3 leaves every frozen Ironclad question and every answer resolution byte-equivalent",
+        "reason": "original 120000ms timeout; observed128028ms",
+        "supplement": {
+          "exit_code": 0,
+          "passed": 1,
+          "not_selected": 7,
+          "seconds": 50.93,
+          "test_seconds": 43.47,
+          "log": "p3-supplement.log"
+        }
+      },
+      {
+        "file": "agent/tests/component-usage.test.ts",
+        "case": "syncs component logs, derives counter deltas and refreshes paper costs on fixed fixtures",
+        "reason": "existing root data/logdb-venv absent in new WT; child127/ENOENT; not production failure",
+        "supplement": {
+          "exit_code": 0,
+          "passed": 1,
+          "inner_python_tests": 9,
+          "seconds": 6.25,
+          "log": "component-supplement.log",
+          "environment_correction": "link existing root data/logdb-venv only after unique full ended; no install/no source edit"
+        }
+      }
+    ],
+    "not_reached_paths": {
+      "exit_code": 0,
+      "passed": 11,
+      "seconds": 10.5,
+      "log": "paths.log"
+    },
+    "source_leaves_unchanged": true,
+    "old_test_sha256": {
+      "agent/tests/boss-lines-planner.test.ts": "1910890fa3b5356a790202bd8b189790b7ab01eebd3a833d194a85878df024ff",
+      "agent/tests/component-usage.test.ts": "4e43252fa2a4f1050a1ae8d01c907ace49d90b4287a56623ab6fd2937127e6f8",
+      "agent/tests/paths.test.ts": "b49d67953b25e2944037fa87f61d5563768a2b571dc28e7cf924b3df4ed6e02b"
+    },
+    "assertions_limits_and_production_rules_unchanged": true,
+    "source_full_repeated": false,
+    "boundary": "Original full1 retained; supplement passes do not turn it into full0.",
+    "three_original_tests_match_frozen_base_git_objects": true,
+    "supplement_logs_sha256": {
+      "p3-supplement.log": "60193f1418853c8ea9c2dfa53d1a9190db5d3d8829a8bd37d08bd7b6ee714156",
+      "component-supplement.log": "c711e6ad495d0d06a4b0ad9791f10d32832422f345ab9cae9646793032ed8fbf",
+      "paths.log": "bd014738727a9bb247861910c360582fd47f20352551ce2ace85223289773da6"
+    }
+  },
+  "initial_tooling_failures": {
+    "tsc.log": "new worktree lacked node_modules; npx resolved unrelated tsc package; rc1, no production type result",
+    "fixed.log": "new worktree lacked node_modules; npx attempted vitest resolution, stopped exact owned PID2899645 before tests; not a test result",
+    "correction": "linked repository existing node_modules and used npm_config_offline=true; no npm install or dependency change"
+  },
+  "source_patch_sha256": "bcbdcb7cd5509a31678e8040e1d0290e4f65f3c0269ef9d00f46be1ff4df7759",
+  "p3_supplement": {
+    "exit_code": 0,
+    "passed": 1,
+    "not_selected": 7,
+    "seconds": 50.93,
+    "test_seconds": 43.47,
+    "log": "p3-supplement.log"
+  },
+  "paths": {
+    "exit_code": 0,
+    "passed": 11,
+    "seconds": 10.5,
+    "log": "paths.log"
+  },
+  "component_supplement": {
+    "exit_code": 0,
+    "passed": 1,
+    "inner_python_tests": 9,
+    "seconds": 6.25,
+    "log": "component-supplement.log",
+    "environment_correction": "link existing root data/logdb-venv only after unique full ended; no install/no source edit"
+  }
+}

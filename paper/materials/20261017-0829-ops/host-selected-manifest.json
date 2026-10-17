@@ -1,0 +1,117 @@
+{
+  "schema": 1,
+  "batch": "20261017-034302-fix-batch",
+  "task": "fix-batch",
+  "worktree": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261017-034302",
+  "original": {
+    "merged": "08e9a15b79882302eb7bfe38e7ddddc2e40b2dbd",
+    "tree": "ac60f339b13dfd5a6ca71efbe8c8d5ec3b80a462",
+    "log_sha256": "676a783f3800910b9331d18bbe4d92b1875e83e00e843acf40c91ae9f8df1810",
+    "coverage": {
+      "passed": [],
+      "failed": [
+        "tests/batch-i.test.ts",
+        "tests/brain-codex.test.ts",
+        "tests/learner-check-continuation.test.ts",
+        "tests/silent-apotheosis-reference.test.ts"
+      ],
+      "skipped": [],
+      "summary": {
+        "files": {
+          "failed": 4,
+          "passed": 509
+        },
+        "tests": {
+          "failed": 7,
+          "passed": 5077,
+          "skipped": 2
+        }
+      },
+      "failed_tests": {
+        "tests/batch-i.test.ts": [
+          "2. Red Skull (+3 Strength at or below half HP) and Self-Forming Clay (3 block next turn per HP loss) in the solver and the rollout (VTREB5A9XWS7 F33, V6TW9MJ385P2 F33) logged boards: the relics reach the solver (VTRE F33 T5 at 46/80: Offering then Strike gets Red Skull's 3; V6TW F33 T2: Clay's owed 3)"
+        ],
+        "tests/brain-codex.test.ts": [
+          "codex runs watched: retries, stalls, timeouts and their trace a retry notice is not a failure: the answer after it is taken, and the trace keeps the notice",
+          "codex runs watched: retries, stalls, timeouts and their trace after the first token, a stream silent for BRAIN_CODEX_STALL_MS is killed and asked once more; the second run's answer is taken",
+          "codex runs watched: retries, stalls, timeouts and their trace stalled twice: the question fails as a timeout and the fallback answers it",
+          "codex runs watched: retries, stalls, timeouts and their trace the router's timeout leaves the evidence: what the stream had sent, and its stderr with credentials masked"
+        ],
+        "tests/learner-check-continuation.test.ts": [
+          "retains long parameterized failure names in an exact bounded host supplement"
+        ],
+        "tests/silent-apotheosis-reference.test.ts": [
+          "bounds F45's real potion forecast work with 0 ms host pauses"
+        ]
+      }
+    }
+  },
+  "live": {
+    "commit": "08e9a15b79882302eb7bfe38e7ddddc2e40b2dbd",
+    "tree": "ac60f339b13dfd5a6ca71efbe8c8d5ec3b80a462"
+  },
+  "sources": [
+    "d27df54f0651c4af84c6c12ceceec82a016f1142",
+    "83a7f796c24eea8f16eb317bc70bfd832251ad27",
+    "d91236326bc1af7a5417ce016c1a182f8084e7a3",
+    "0699b05c436d3d51d00ee92f153d16d16e64bea4",
+    "08e9a15b79882302eb7bfe38e7ddddc2e40b2dbd"
+  ],
+  "inputs": [
+    {
+      "path": "agent/tests/batch-i.test.ts",
+      "source": "08e9a15b79882302eb7bfe38e7ddddc2e40b2dbd"
+    },
+    {
+      "path": "agent/tests/brain-codex.test.ts",
+      "source": "08e9a15b79882302eb7bfe38e7ddddc2e40b2dbd"
+    },
+    {
+      "path": "agent/tests/learner-check-continuation.test.ts",
+      "source": "08e9a15b79882302eb7bfe38e7ddddc2e40b2dbd"
+    },
+    {
+      "path": "agent/tests/silent-apotheosis-reference.test.ts",
+      "source": "08e9a15b79882302eb7bfe38e7ddddc2e40b2dbd"
+    }
+  ],
+  "selection": [
+    {
+      "file": "tests/batch-i.test.ts",
+      "tests": [
+        "2. Red Skull (+3 Strength at or below half HP) and Self-Forming Clay (3 block next turn per HP loss) in the solver and the rollout (VTREB5A9XWS7 F33, V6TW9MJ385P2 F33) logged boards: the relics reach the solver (VTRE F33 T5 at 46/80: Offering then Strike gets Red Skull's 3; V6TW F33 T2: Clay's owed 3)"
+      ],
+      "reason": "failed"
+    },
+    {
+      "file": "tests/brain-codex.test.ts",
+      "tests": [
+        "codex runs watched: retries, stalls, timeouts and their trace a retry notice is not a failure: the answer after it is taken, and the trace keeps the notice",
+        "codex runs watched: retries, stalls, timeouts and their trace after the first token, a stream silent for BRAIN_CODEX_STALL_MS is killed and asked once more; the second run's answer is taken",
+        "codex runs watched: retries, stalls, timeouts and their trace stalled twice: the question fails as a timeout and the fallback answers it",
+        "codex runs watched: retries, stalls, timeouts and their trace the router's timeout leaves the evidence: what the stream had sent, and its stderr with credentials masked"
+      ],
+      "reason": "failed"
+    },
+    {
+      "file": "tests/learner-check-continuation.test.ts",
+      "tests": [
+        "retains long parameterized failure names in an exact bounded host supplement"
+      ],
+      "reason": "failed"
+    },
+    {
+      "file": "tests/silent-apotheosis-reference.test.ts",
+      "tests": [
+        "bounds F45's real potion forecast work with 0 ms host pauses"
+      ],
+      "reason": "failed"
+    }
+  ],
+  "receipts": [
+    {
+      "path": "paper/materials/20261017-0829-ops/host-failure-disposition.json",
+      "sha256": "9a8ebedc80dd98fb5a74509c10170d392a3a5e6bb2d49e7e8df5a9ada78ae2ce"
+    }
+  ]
+}
