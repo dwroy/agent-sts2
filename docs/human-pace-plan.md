@@ -182,3 +182,6 @@ Claude已单独指派两局自然验收。R380实际live `dbd41616420f62e6502e9c
 ### 2026-10-17T12:35:47.821601+08:00 H1自然验收实际阻塞（0/2）
 
 首个R380自然局5H83F3J0XSTE在F48第3试进入CARD_SELECTION后耗尽Jev预算；空答案经strict解析得到null intent，既无动作又无重问预算，真实控制台自12:04:10已报卡住。12:31:34一次性90分钟节点核回后冻结原源码/失败prompt/console与729条预算决策，尚无终局，第二局未启动。见`paper/materials/20261017-human-pace-h1/natural/report.md`、requirements/checkpoint。本轮只读，未实现修复/重启/新阶段；两自然局及G1c效果未验收，原listener保留，需Claude单独指派超时出口最小修复并由原ops决定受控恢复后再继续。原R380精确宿主0仅工程检查，不冲销本实际缺陷；计划仍V5。
+
+
+后续原ops处置/真实终局边界读回（2026-10-17T12:54:42.945449+08:00）：原一次性listener收到同局5H83F3J0XSTE的restart配置（12:38:31.818，code6fbbd82/R381+R382，经验2026-10-17.h0-r1）和12:43:37.219 F48败的原终局。原ops已独立发布严格选择到期出口R382；本watcher未实现或重启。该局是受控恢复后的混合版本，pure R380 admitted=false，合格计数仍0/2；不能用listener机械completed一局冒自然准入。原12:31阻塞截点、指标和失败全保。新组合ddb2原宿主终局未由本轮核成通过；只完成H0两条原通知职责，不启动后续自然/科学阶段，也不新增观察器。原始引用见paper/materials/20261017-watcher-h0-notices/mixed-5H83-boundary.json。

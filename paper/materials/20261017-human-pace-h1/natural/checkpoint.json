@@ -2,7 +2,7 @@
   "at": "2026-10-17T12:35:47.821601+08:00",
   "request": "roy-20261017-human-pace",
   "owner_session": "01a13dcd-83d4-7c63-b233-f93cf878ecf4",
-  "state": "blocked_0_of_2_complete_natural_runs",
+  "state": "0_of_2_pending_scope_after_ops_recovery",
   "first_qualified_candidate": "5H83F3J0XSTE",
   "completed": [],
   "needed": 2,
@@ -17,7 +17,7 @@
   },
   "baseline": "baseline-r2/manifest.json",
   "analysis": "baseline-analysis.json",
-  "next": "Claude must separately assign minimal deadline fallback repair; original ops decides controlled run recovery. No implementation/restart authorized by read-only task.",
+  "next": "Stop after original H0 notice duty. No new observer/model/stage. Original acceptance 0/2; mixed recovery excluded, later scope awaits Claude.",
   "prepared_scripts": [
     "wait-two-natural.py",
     "freeze-inputs.py",
@@ -58,5 +58,27 @@
     "cause": "H1 deadline resolves empty answers through strictJev selection parser -> null intent -> exhausted same-turn budget -> no re-ask and no progress",
     "report": "paper/materials/20261017-human-pace-h1/natural/report.md",
     "need": "Claude must separately assign minimal deadline fallback repair; original ops decides controlled run recovery. No implementation/restart authorized by read-only task."
-  }
+  },
+  "ops_recovery_and_mixed_terminal_readback": {
+    "at": "2026-10-17T12:54:42.945449+08:00",
+    "run_id": "5H83F3J0XSTE",
+    "ended": "2026-10-17T04:43:37.219Z",
+    "floor": 48,
+    "victory": false,
+    "pure_R380_admitted": false,
+    "accepted_complete_natural_runs": 0,
+    "R382_fix_published_by_original_ops": true,
+    "evidence": "paper/materials/20261017-watcher-h0-notices/mixed-5H83-boundary.json"
+  },
+  "H0_notice_delivery": {
+    "notice_ids": [
+      "26d0e3c374537273810f6808",
+      "c0bfa0409caf81100261c2d1"
+    ],
+    "four_CLI_exit0": true,
+    "Roy_ACK": false,
+    "evidence": "paper/materials/20261017-watcher-h0-notices/formal-readback.json",
+    "scientific_completion": false
+  },
+  "phase": "Original H0 two-notice duty delivered; R382 mixed recovery excluded from pure R380 acceptance"
 }

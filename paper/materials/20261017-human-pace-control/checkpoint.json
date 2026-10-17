@@ -5,14 +5,14 @@
   "original_owner": "01a13dcd-83d4-7c63-b233-f93cf878ecf4",
   "account": "codex1",
   "at": "2026-10-17T12:35:47.821601+08:00",
-  "phase": "H1 natural acceptance blocked by verified strict selection deadline wait; 0/2",
+  "phase": "Original H0 two-notice duty delivered; R382 mixed recovery excluded from pure R380 acceptance",
   "worktree": ".worktrees/human-pace-h1-20261017",
   "base": "54e36d0830ab640130557b62a078b25954912ff4",
   "source": "7af803c06e82e2aafe6a595fab7a23e0f3f44fb3",
   "published": true,
   "native_model": "gpt-6.1-sol/xhigh; no model/account/home/prompt changes",
   "H1_evidence": "paper/materials/20261017-human-pace-h1",
-  "next": "Claude must separately assign minimal deadline fallback repair; original ops decides controlled run recovery. No implementation/restart authorized by read-only task.",
+  "next": "Stop after original H0 notice duty. No new observer/model/stage. Original acceptance 0/2; mixed recovery excluded, later scope awaits Claude.",
   "goal_status": "cancelled; do not create a goal",
   "H0": {
     "status": "running",
@@ -23,7 +23,7 @@
     "science_result": "pending"
   },
   "natural_acceptance": {
-    "state": "blocked_0_of_2_complete_natural_runs",
+    "state": "0_of_2_incomplete_mixed_5H83_excluded",
     "accepted_complete_runs": 0,
     "partial_run": "5H83F3J0XSTE",
     "observed_at": "2026-10-17T12:31:34.803789+08:00",
@@ -31,7 +31,8 @@
     "stuck_since": "2026-10-17T04:04:00.039Z",
     "cause": "H1 deadline resolves empty answers through strictJev selection parser -> null intent -> exhausted same-turn budget -> no re-ask and no progress",
     "report": "paper/materials/20261017-human-pace-h1/natural/report.md",
-    "need": "Claude must separately assign minimal deadline fallback repair; original ops decides controlled run recovery. No implementation/restart authorized by read-only task."
+    "need": "Claude must separately assign minimal deadline fallback repair; original ops decides controlled run recovery. No implementation/restart authorized by read-only task.",
+    "original_R380_blocker_now_historical_after_R382": true
   },
   "source_staged_tree": "42b64e288ab34b51bfa1a4f15f8c6abd731fd139",
   "active_check": null,
@@ -75,5 +76,27 @@
     "skipped": 2,
     "evidence": "paper/materials/20261017-human-pace-h1/natural/host-readback.json",
     "natural_acceptance_inferred": false
-  }
+  },
+  "ops_recovery_and_mixed_terminal_readback": {
+    "at": "2026-10-17T12:54:42.945449+08:00",
+    "run_id": "5H83F3J0XSTE",
+    "ended": "2026-10-17T04:43:37.219Z",
+    "floor": 48,
+    "victory": false,
+    "pure_R380_admitted": false,
+    "accepted_complete_natural_runs": 0,
+    "R382_fix_published_by_original_ops": true,
+    "evidence": "paper/materials/20261017-watcher-h0-notices/mixed-5H83-boundary.json"
+  },
+  "H0_notice_delivery": {
+    "notice_ids": [
+      "26d0e3c374537273810f6808",
+      "c0bfa0409caf81100261c2d1"
+    ],
+    "four_CLI_exit0": true,
+    "Roy_ACK": false,
+    "evidence": "paper/materials/20261017-watcher-h0-notices/formal-readback.json",
+    "scientific_completion": false
+  },
+  "state": "0_of_2_pending_scope_after_ops_recovery"
 }
