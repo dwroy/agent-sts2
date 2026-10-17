@@ -15,3 +15,6 @@ B2/B3 分别列 completion 状态、budgeted partial 数/比例、根样本分�
 G1c 沿原 V5 root/exclusion、Silent A10 描述性口径，不冒原生身份门槛；初始58局/旧归档50局，首候选预期为第59局，必须终局后才登记完成。Boss 首试与含SL最终分开；首试漏斗在第一次实际/预测死亡停止，不能纳入之后SL才到达的Boss。两局不能证明总体过关率不下降。
 
 复现：先按 data-cut.json 冻结边界运行 freeze-inputs.py；analyze.py 只读冻结 projection。baseline-r2 复用第一轮已完成四流，原初稿因历史坏行失败保留，不重扫四流；所有有效引用逐行带 SHA，原帧不改。
+
+
+后续实际接续（2026-10-17T15:33:51.443171+08:00）：旧监听在机械收到5H83和25MF两个终局后已退出，完成集合不等自然准入。Claude本次明确指定25MF与2PQK；后者只启一次新阻塞inotify（PID4166741/birth111218685）并已收到终局退出0，没有与旧监听重叠。25MF终局原ended为14:10:50，不是转达的14:19；2PQK原ended15:27:16，15:29:09才观察到落行，按原ended计算67.221分钟。G1c实际60边界包括混合5H83，第60是25MF，原终局尾段仅2PQK后继为61；未重建归档。两局预算字段1863/1863、全部103原生题Sol6.1/xhigh，R383不改预算但选择信息/知识并非固定因果对照。final-admission-and-data-cut.json核15489有效范围（旧11452+新4037），另保两历史坏行。原host SHA本人核回，无重复测试。最终可复现脚本analyze.py、render-completed-report.py、audit-completed.py；原0/2稿和原中间结果保留。完成观察不等45–60目标达成、全健康或H0/0332完成；本任务停止。

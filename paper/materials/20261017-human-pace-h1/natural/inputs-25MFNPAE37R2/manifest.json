@@ -1,0 +1,130 @@
+{
+  "at": "2026-10-17T14:57:15.111384+08:00",
+  "runs": [
+    "25MFNPAE37R2"
+  ],
+  "sources": {
+    "run-config": {
+      "path": "logs/run-config.jsonl",
+      "inode": 153607,
+      "complete_prefix_bytes": 1950717,
+      "scan_start": 1939174,
+      "mtime_ns": 1792218007985305265,
+      "prefix_hash": "per selected raw row SHA256; whole historical source not reread for hashing"
+    },
+    "runs": {
+      "path": "logs/runs.jsonl",
+      "inode": 58822,
+      "complete_prefix_bytes": 357522,
+      "scan_start": 356728,
+      "mtime_ns": 1792217564985343450,
+      "prefix_hash": "per selected raw row SHA256; whole historical source not reread for hashing"
+    },
+    "decisions": {
+      "path": "logs/decisions.jsonl",
+      "inode": 58857,
+      "complete_prefix_bytes": 2243505602,
+      "scan_start": 2202310338,
+      "mtime_ns": 1792220215405107898,
+      "prefix_hash": "per selected raw row SHA256; whole historical source not reread for hashing"
+    },
+    "states": {
+      "path": "logs/states.jsonl",
+      "inode": 58886,
+      "complete_prefix_bytes": 13911786830,
+      "scan_start": 13860627902,
+      "mtime_ns": 1792220215405107898,
+      "prefix_hash": "per selected raw row SHA256; whole historical source not reread for hashing"
+    },
+    "brain": {
+      "path": "logs/brain.jsonl",
+      "inode": 153608,
+      "complete_prefix_bytes": 744249950,
+      "scan_start": 732394150,
+      "mtime_ns": 1792220135393115306,
+      "prefix_hash": "per selected raw row SHA256; whole historical source not reread for hashing"
+    },
+    "codex-calls": {
+      "path": "logs/codex-calls.jsonl",
+      "inode": 298602,
+      "complete_prefix_bytes": 43173495,
+      "scan_start": 42783914,
+      "mtime_ns": 1792220135389115308,
+      "prefix_hash": "per selected raw row SHA256; whole historical source not reread for hashing"
+    },
+    "sl-attempts": {
+      "path": "logs/sl-attempts.jsonl",
+      "inode": 2158,
+      "complete_prefix_bytes": 45349924,
+      "scan_start": 45176181,
+      "mtime_ns": 1792219208693199536,
+      "prefix_hash": "per selected raw row SHA256; whole historical source not reread for hashing"
+    }
+  },
+  "counts": {
+    "run-config": {
+      "25MFNPAE37R2": 1
+    },
+    "runs": {
+      "25MFNPAE37R2": 1
+    },
+    "decisions": {
+      "25MFNPAE37R2": 1006
+    },
+    "states": {
+      "25MFNPAE37R2": 1056
+    },
+    "brain": {
+      "25MFNPAE37R2": 58
+    },
+    "codex-calls": {
+      "25MFNPAE37R2": 58
+    },
+    "sl-attempts": {
+      "25MFNPAE37R2": 10
+    }
+  },
+  "files": [
+    {
+      "path": "inputs-25MFNPAE37R2/brain.jsonl.gz",
+      "bytes": 4326,
+      "sha256": "4dd5a34deef8b4f48e1229c381fef6f77ca4a37644162e125ecc50c5ff8fd269"
+    },
+    {
+      "path": "inputs-25MFNPAE37R2/codex-calls.jsonl.gz",
+      "bytes": 5886,
+      "sha256": "dd028eff874d0034fdde3c05c2c37bc72ea9ce07cfa6ef2e18bea2632f9ac182"
+    },
+    {
+      "path": "inputs-25MFNPAE37R2/decisions.jsonl.gz",
+      "bytes": 1410369,
+      "sha256": "abe2e8da4d3d01111bcae337bed8474fb3eb9a8147d7f678f00989e2900da6e7"
+    },
+    {
+      "path": "inputs-25MFNPAE37R2/run-config.jsonl.gz",
+      "bytes": 2294,
+      "sha256": "5927e5732c496e56eda483d156612a3d5ce4375107e4d63430b71afd798dbf4b"
+    },
+    {
+      "path": "inputs-25MFNPAE37R2/runs.jsonl.gz",
+      "bytes": 590,
+      "sha256": "a4501169718ec974f44258dd9d0284a7086f5e4943307e5745b848d317c0f734"
+    },
+    {
+      "path": "inputs-25MFNPAE37R2/sl-attempts.jsonl.gz",
+      "bytes": 1361,
+      "sha256": "ab8dc8bd1c5143e4df7c1052b5f8ec4676d0d407ff1ee28015dd22109aec05bc"
+    },
+    {
+      "path": "inputs-25MFNPAE37R2/states.jsonl.gz",
+      "bytes": 85380,
+      "sha256": "ee4f66f4d4af8b742de894b8358f34cf8b03253de94a761e773412a539006166"
+    }
+  ],
+  "invalid_rows": [],
+  "frame_extractor": {
+    "path": "agent/tools/logdb/extract.py",
+    "sha256": "57fd2d330e4c5ac9d5b284bb4addda240eab246d15abf9ba48e7a5e1b4304545"
+  },
+  "scope": "raw append logs, original offsets/bytes/SHA; no SQL sync, simulation or model calls"
+}
