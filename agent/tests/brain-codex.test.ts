@@ -24,6 +24,8 @@ import { buildRouteMap, routeView } from "../src/sim/route-map.js";
 import { input as routeInput } from "./route-fixture.js";
 import { DeepSeekClient, type DeepSeekAnswer } from "../src/brain/llm/deepseek.js";
 import type { JsonValue } from "../src/core/util/json.js";
+import { expectCodexStall } from "./codex-stall-fixture.js";
+import type { CodexTraceRow } from "../src/brain/engines/codex.js";
 
 const dir = mkdtempSync(join(tmpdir(), "fake-codex-"));
 
@@ -329,7 +331,7 @@ describe("codex runs watched: retries, stalls, timeouts and their trace", () => 
       [2, "answered", "thread.started,turn.started,item.completed,item.completed,turn.completed"],
     ]);
     expect(trace()[0]!["max_gap_ms"]).toBeGreaterThanOrEqual(1_500);
-    expect(trace()[0]).toMatchObject({ ttft_ms: expect.any(Number), stall: expect.stringMatching(/^no stream event for 2 s after the first token at 0 s \(last: turn\.started at 0 s\)$/) });
+    expectCodexStall(trace()[0] as unknown as CodexTraceRow, 1500);
     expect(fake.seen()[0]!.env["RUST_LOG"]).toBe(CODEX_RUST_LOG);
   }, 30_000);
 
@@ -368,7 +370,7 @@ describe("codex runs watched: retries, stalls, timeouts and their trace", () => 
     }
     const answer = await createBrain(cfg, new Stub()).choose({ hp: 20 }, "Heal or smith?", options, { label: "rest/plan" });
     expect(fake.calls()).toBe(2);
-    expect(answer).toMatchObject({ choice: "a", brain: { engine: "deepseek", fell_back_from: { engine: "codex", error: expect.stringMatching(/^codex stalled \[timeout\]: no stream event for 1 s after the first token at 0 s \(last: turn\.started at 0 s\) \(2 run\(s\)\)/) } } });
+    expect(answer).toMatchObject({ choice: "a", brain: { engine: "deepseek", fell_back_from: { engine: "codex", error: expect.stringMatching(/^codex stalled \[timeout\]: no stream event for 1 s after the first token at \d+ s \(last: turn\.started at \d+ s\) \(2 run\(s\)\)/) } } });
     const row = JSON.parse(readFileSync(log, "utf8").trim().split("\n")[0]!) as BrainLogRow;
     expect(row.fell_back_from).toMatchObject({ engine: "codex", kind: "timeout" });
     const trace = traceOf(join(dir, "codex-calls.jsonl"));
@@ -377,6 +379,8 @@ describe("codex runs watched: retries, stalls, timeouts and their trace", () => 
     // runs are found by the row's question id.
     const runs = trace.filter((t) => t["question_id"] === row.question_id);
     expect(runs.map((t) => t["outcome"])).toEqual(["stalled", "stalled"]);
+    for (const run of runs) expectCodexStall(run as unknown as CodexTraceRow, 1000);
+    expect(answer.brain?.fell_back_from?.error).toMatch(`codex stalled [timeout]: ${runs[1]!["stall"]} (2 run(s))`);
     expect(row.primary_ms).toBeGreaterThanOrEqual(runs[0]!["ms"] + runs[1]!["ms"]);
     expect(row.primary_ms).toBeLessThan(runs[0]!["ms"] + runs[1]!["ms"] + 5_000);
     expect(answer.brain?.fell_back_from?.ms).toBe(row.primary_ms);
