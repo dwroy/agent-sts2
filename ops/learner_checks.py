@@ -234,9 +234,24 @@ def recheck_write_batch(batch_id, batch, root, out_dir, enqueue, inbox, *, conti
     # Every reported source must be present; a merged=null report alone proves nothing.
     commits = [report["commit"]] if report.get("commit") else []
     fixes = report.get("fixes", [])
-    if not isinstance(fixes, list) or any(not isinstance(fix, dict) or not fix.get("commit") for fix in fixes):
+    if not isinstance(fixes, list):
         return 2
-    commits.extend(fix["commit"] for fix in fixes)
+    descriptive_fixes = bool(fixes) and all(isinstance(fix, str) and fix.strip() for fix in fixes)
+    if descriptive_fixes:
+        # Older strategy completions name their single source separately from the descriptions.
+        if (report.get("task") != "strategy-proposal" or not isinstance(batch.get("character"), str)
+                or not batch["character"] or report.get("character") != batch["character"]
+                or not isinstance(report.get("source_commit"), str)
+                or not re.fullmatch(r"[0-9a-f]{40}", report["source_commit"])
+                or not isinstance(report.get("merged"), str)
+                or not re.fullmatch(r"[0-9a-f]{40}", report["merged"])):
+            return 2
+    elif any(not isinstance(fix, dict) or not fix.get("commit") for fix in fixes):
+        return 2
+    else:
+        commits.extend(fix["commit"] for fix in fixes)
+    if "source_commit" in report:
+        commits.append(report["source_commit"])
     if report.get("merged"):
         commits.append(report["merged"])
     if not commits or any(not isinstance(commit, str) or not re.fullmatch(r"[0-9a-f]{7,40}", commit) for commit in commits):
@@ -250,6 +265,21 @@ def recheck_write_batch(batch_id, batch, root, out_dir, enqueue, inbox, *, conti
             if subprocess.run(["git", "-C", live, "merge-base", "--is-ancestor", commit, "HEAD"],
                               stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL).returncode:
                 return 2
+        if descriptive_fixes:
+            source = report["source_commit"]
+            if subprocess.run(["git", "-C", live, "merge-base", "--is-ancestor", source, report["merged"]],
+                              stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL).returncode:
+                return 2
+            changed = subprocess.run(["git", "-C", live, "diff-tree", "--no-commit-id", "--name-only", "-r", "-z", source],
+                                     capture_output=True, text=True)
+            paths = [path for path in changed.stdout.split("\0") if path]
+            if changed.returncode or not paths:
+                return 2
+            # A descriptive report cannot substitute ancestry for the actual published leaves.
+            for args in [(source, report["merged"]), (source, "HEAD"), ("HEAD",)]:
+                if subprocess.run(["git", "-C", live, "diff", "--quiet", *args, "--", *paths],
+                                  stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL).returncode:
+                    return 2
         if report_proof:
             publication = subprocess.run(["git", "-C", live, "rev-parse", report["published_commit"] + "^{tree}"],
                                          capture_output=True, text=True)
