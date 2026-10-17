@@ -2358,3 +2358,6 @@
 - 2026-10-18 00:11:49 CST codex3新ops 01a14a9f-38e7-78e2-95d0-ba274d4b3e19已接管；本轮仅接管、原事务verifying/两owned闸不动。完整接续清单见notes/codex3-ops-takeover-20261018.md与paper/materials/20261018-0008-ops-takeover/：三最高优先原revision/owner/失败保留，真实新账号provenance后沿两原槽恢复；H2 f53b07精确host0已实收、原pending/retention机械收尾待正常轮，未重测/发布/标宽父完成。旧733通知已是alias，canonical b07三回执SHA核回，不重复通知或代ACK。regent暂停及原main/push未完成条件保持；本轮未动进程、队列、准入、模型权限或原知识账本。
 
 - 2026-10-18 00:45:39 CST codex3恢复轮已完成ops接续入口窄发布及真实普通brain/learner账号消费回填，具体见notes/codex3-ops-resume-20261018.md。H0原r2→r3、0332原r3→r4仅账号来源，Roy00:32指定两项先占槽，支撑r1等两项真实开跑后首槽释放；当前两普通003109在途占原槽，H0/0332 pending无新批/原生UUID/首回复，不跨号resume、不抢占或以旧批号冒新派发。下一原完成事件按primary-learning-startup-watch.json核实际启动/首答并回填收件箱。源码完整0、合后超时1及同树35补验0分列；新WT登记锁忙1留同pending，H2旧WT已accepted。科学父/main-push/regent原边界保持；不重工程检查、起第二调度/清理模型或手删。
+
+### 2026-10-18 00:57 codex3原ops接续实际启动与H1独立额度
+H0/0332已实际占原两槽：20261018-005332-strategy-proposal / 20261018-005345-strategy-proposal，新线程与首回复见paper/materials/20261018-0013-ops-resume/priority-first-replies.json，不能再当pending或重复领活。支撑映射r1仍等上述首个槽释放再做显式账号revision及原派发；不关科学父。H1八叶source ef092f1c9189bdbb549e46fd604eb342cb025bdf实际窄合main/live并登记V5-R389，唯一精确树8ba5f0a7d1359cdcff832d647d1c639ee5f956ff宿主检查PID2221959已运行、结果待原learner-checks事件，retention仅host0后complete（命令已在pending-integrations/20261018-h1-l2-budget-fix.json）；不重源full/不重启当前局、不以总actual_ms对比共享90秒、不记知识shipped或父完成。
