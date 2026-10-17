@@ -1,0 +1,98 @@
+from pathlib import Path
+import hashlib, json, os, subprocess, sys, tarfile
+
+r=Path.cwd(); p=r/'ops/codex-ops/record-staging/20261017-1002'; pub=r/'paper/materials/20261017-1002-ops'
+pub.mkdir(parents=True,exist_ok=True)
+sha=lambda b:hashlib.sha256(b).hexdigest()
+def load(f):return json.loads(f.read_bytes())
+def write(f,v):f.write_text(json.dumps(v,ensure_ascii=False,indent=2)+'\n')
+def git(*a):return subprocess.check_output(['git',*a],stderr=subprocess.PIPE)
+state=load(r/'ops/codex-ops/learn.json'); physical=(r/'paper/materials/learning/ledger.jsonl').read_bytes()
+ownrows=[]; records=[]; archivefiles=set()
+for bid in ['20261017-091302-s2-strategy-proposal','20261017-094303-strategy-proposal']:
+    b=state['batches'][bid]; report=b['report']; wt=Path(b['worktree']); scratch=Path(report['report']).parent
+    assert b['rc']==0 and b['merged'] is None and not b['proposal_audit_errors']
+    assert len(report['proposal_results'])==10 and all(x['state']=='waiting' for x in report['proposal_results'])
+    assert (wt/'.git').is_file() and git('-C',str(wt),'rev-parse','--show-toplevel').decode().strip()==str(wt)
+    assert not git('-C',str(wt),'status','--porcelain','--untracked-files=all').strip()
+    head=git('-C',str(wt),'rev-parse','HEAD').decode().strip()
+    if report['fixes']:
+        source=report['fixes'][0]['commit']; assert len(report['fixes'])==1 and head==source
+        assert source=='b831407a8ed13bcb9b5359b0d3e1ae84624d5571'
+        assert git('rev-parse',source+'^').decode().strip()==report['base']
+        info=load(scratch/'source-commit.json');assert info['commit']==source and info['tests']['sandbox']==0
+        assert (scratch/'sandbox-full.exit.txt').read_text().strip()=='0'
+        full=(scratch/'sandbox-full.log').read_text()
+        assert '463 passed (463)' in full and '4275 passed (4275)' in full and '11 passed (11)' in full
+        sourcefiles=git('diff','--name-only',report['base'],source).decode().splitlines();assert len(sourcefiles)==7
+        sourceinfo=dict(source=source,base=report['base'],tree=git('rev-parse',source+'^{tree}').decode().strip(),
+                        files={path:sha(git('show',source+':'+path)) for path in sourcefiles})
+        write(pub/'source-commit.json',sourceinfo)
+        write(pub/'ops-source-disposition.json',dict(accepted=True,source=source,source_full_rc=0,
+              source_tsc_rc=0,source_sandbox_main_files=463,source_sandbox_main_cases=4275,source_paths_cases=11,
+              source_total_cases=4286,source_target_cases=7,withdrawn_failed=5,restored_passed=7,gitleaks=0,
+              no_new_review_gate=True,no_unchanged_source_full_repeat=True,final_combined_host='required after actual narrow publication on original091302-s2 chain',
+              original_canonical_failed_rc0_null_preserved=True,game_knowledge_owner='original learner, T0DGVABPV60U A10 F48 T2/T4 / silent-0293'))
+        receipt=load(scratch/'ledger-cli-verification.json');cut=receipt['old_prefix_bytes'];expected=39
+        assert sha(physical[:cut])==receipt['old_prefix_sha256']
+        count_artifacts=0
+        for item in load(scratch/'artifacts.json')['artifacts']:
+            f=scratch/item['path'];raw=f.read_bytes();assert len(raw)==item['bytes'] and sha(raw)==item['sha256'];count_artifacts+=1
+        native=load(scratch/'native-model-binding.json');f=Path(native['source'])
+        with f.open('rb') as h:h.seek(native['offset']);raw=h.read(native['bytes'])
+        assert sha(raw)==native['sha256']; context=json.loads(raw)['payload']
+        assert context['model']=='gpt-6.1-sol' and context['effort']=='xhigh' and context['sandbox_policy']['network_access'] is False
+        write(pub/'source-native-model-binding.json',native)
+    else:
+        assert b['state']=='done' and head==report['base'] and report['implementation_domains']==[]
+        assert all(v is None for v in report['tests'].values())
+        final=load(scratch/'final-checks.json');assert final['waiting_count']==10 and final['ledger_trace_updates']==26 and final['material_checks_passed']==37
+        assert all(x['passed'] for x in load(scratch/'fact-checks.json'))
+        receipt=load(scratch/'ledger-cli-receipt.json');cut=receipt['prefix_bytes'];expected=26
+        assert sha(physical[:cut])==receipt['prefix_sha256'];count_artifacts=None
+    rows=[];offset=cut
+    for raw in physical[cut:].splitlines(keepends=True):
+        row=json.loads(raw)
+        if bid in json.dumps(row,ensure_ascii=False) or str(scratch) in json.dumps(row,ensure_ascii=False):
+            assert row['op']=='update' and row['by']=='learner:strategy-proposal'
+            assert set(row)<={'op','id','ts','by','where','note'}
+            rows.append(dict(offset=offset,bytes=len(raw),sha256=sha(raw),row=row));ownrows.append(raw)
+        offset+=len(raw)
+    assert len(rows)==expected,(bid,len(rows),expected)
+    originals=[]
+    for f in sorted(scratch.glob('silent-proposal-*.original.md')):
+        originals.append(dict(path=str(f.relative_to(r)),sha256=sha(f.read_bytes())))
+    for f in scratch.rglob('*'):
+        if f.is_file() and f.stat().st_size<800000 and f.suffix in ['.json','.md','.py','.txt','.patch','.log','.stderr','.stdout']:
+            archivefiles.add(f)
+    for suffix in ['out','err']:archivefiles.add(r/'ops/codex-ops/learner'/(bid+'.'+suffix))
+    records.append(dict(batch=bid,canonical_state=b['state'],rc=0,merged=None,report=report,original_head=head,
+                        checkout_clean=True,verified_artifacts=count_artifacts,ledger_receipt=receipt,ledger_rows=rows,
+                        original_proposals=originals,tests_boundary='source sandbox0, not combined host0' if report['fixes'] else 'material facts only; no production tests or source changes',
+                        no_ops_scientific_replay=True))
+(p/'own-ledger-rows.jsonl').write_bytes(b''.join(dict.fromkeys(ownrows)))
+manifest=[]
+with tarfile.open(pub/'original-small-reports.tar.gz','w:gz',compresslevel=6) as ar:
+    for f in sorted(archivefiles):
+        raw=f.read_bytes();rel=str(f.relative_to(r));ar.add(f,arcname=rel,recursive=False);manifest.append(dict(path=rel,bytes=len(raw),sha256=sha(raw)))
+with tarfile.open(pub/'original-small-reports.tar.gz') as ar:
+    for item in manifest:assert sha(ar.extractfile(item['path']).read())==item['sha256']
+write(pub/'original-small-reports-manifest.json',dict(files=manifest,sha256=sha((pub/'original-small-reports.tar.gz').read_bytes()),originals_deleted=False,archive_readback=True))
+write(pub/'strategy-readback.json',records)
+notice=load(r/'ops/codex-ops/learning-notices/36fcbd1a06d722f1a1e9a8c7.json')
+ack=load(r/'paper/materials/20261017-human-pace-h0/ops-actual-receipt.json')
+assert state['learning_requests']['roy-20261017-human-pace-h0']['batch']==ack['batch']
+assert state['batches']['20261017-095740-strategy-proposal']['state']=='failed'
+assert state['batches']['20261017-095740-strategy-proposal']['consumed'] is False
+assert state['batches'][ack['batch']]['state']=='running'
+os.kill(state['batches'][ack['batch']]['pid'],0)
+for ref in [ack['original_event_prefix'],ack['actual_native_context']]:
+    f=r/ref['path']
+    with f.open('rb') as h:h.seek(ref.get('offset',0));raw=h.read(ref.get('prefix_bytes',ref.get('bytes')))
+    assert sha(raw)==ref['sha256']
+write(pub/'h0-old-startup-notice-dedup.json',dict(original_notice=notice,actual_recovered_batch=ack['batch'],
+    actual_first_reply=ack['actual_receipt'],actual_native_context=ack['actual_native_context'],original_failed_batch_preserved=True,
+    current_running=True,no_new_dispatch=True,no_new_revision=True,request_state=state['learning_requests']['roy-20261017-human-pace-h0'],
+    watcher_received_or_roy_notified_not_claimed=True))
+write(p/'paper-owned-manifest.json',[]);write(p/'extra-owned-paths.json',[]);write(p/'own-appends.json',[])
+print(json.dumps(dict(source='b831407a8',source_full=0,source_cases=4286,other_batch_waiting=10,trace_rows=len(ownrows),archive_files=len(manifest),H0='old failure deduplicated; original recovered batch running'),ensure_ascii=False),flush=True)

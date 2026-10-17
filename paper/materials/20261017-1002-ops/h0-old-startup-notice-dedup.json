@@ -1,0 +1,86 @@
+{
+  "original_notice": {
+    "id": "36fcbd1a06d722f1a1e9a8c7",
+    "kind": "blocked",
+    "request_id": "roy-20261017-human-pace-h0",
+    "message": "学习者exit 1；沿原thread核查恢复，保留原失败",
+    "request_sha256": "d3da188a5151a8dc57274ad4d48431b1253ccc677406a48f005bdb38ecef0680",
+    "created_at": 1792202282.3500774,
+    "route": [
+      "learner",
+      "ops",
+      "watcher",
+      "Roy"
+    ],
+    "ops_forwarded": {
+      "path": "/home/dw/Projects/agent-sts2/ops/codex-ops/learning-notices/receipts/36fcbd1a06d722f1a1e9a8c7.ops-forwarded.json",
+      "sha256": "bd3c3ff91ad94a4a0db45eb75157b74949e082f17d1f786c6046b3623b9e443d",
+      "at": 1792202282.3579967
+    },
+    "watcher_received": false,
+    "roy_notified": false,
+    "last_queued_at": 1792202282.3583672,
+    "last_queue": "/home/dw/Projects/agent-sts2/ops/codex-ops/queue/1792202282358262070-learning-attention.md"
+  },
+  "actual_recovered_batch": "20261017-095852-strategy-proposal",
+  "actual_first_reply": {
+    "type": "learner_resume_ack",
+    "ts": "2026-10-17T01:59:27.353Z",
+    "thread_id": "01a1415e-a511-7131-be7c-a2dc691c847f",
+    "input_sha256": "cc4ddd9059064289029935e57e73f3516664b8cad14580f6bd60f4207d95810c",
+    "command_sha256": "86218c8a7fac026b6f93a065ccf3d9bc26e53d81ff0996e67361edacfb71d895",
+    "batch": "20261017-095852-strategy-proposal",
+    "first_message_sha256": "6c8c5b7747dd43dcd039874d0b47f89b42e37cf8b227b37fab4043eb68a0ccbb"
+  },
+  "actual_native_context": {
+    "path": "ops/codex-ops/accounts/codex1/learner/sessions/2026/10/16/rollout-2026-10-16T05-01-24-01a1415e-a511-7131-be7c-a2dc691c847f.jsonl",
+    "offset": 6767825,
+    "bytes": 5101,
+    "sha256": "82d2dd45f39d88afcfc4e9ac9d3cc5cb65dc93d8d52b7480efd078cff747baca",
+    "timestamp": "2026-10-17T01:59:21.791Z",
+    "model": "gpt-6.1-sol",
+    "effort": "xhigh",
+    "cwd": "/home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration",
+    "approval_policy": "never",
+    "sandbox_policy": {
+      "type": "workspace-write",
+      "writable_roots": [
+        "/home/dw/Projects/agent-sts2",
+        "/home/dw/Projects/agent-sts2/.git",
+        "/home/dw/Projects/agent-sts2/.git/worktrees/silent-boss-calibration"
+      ],
+      "network_access": false,
+      "exclude_tmpdir_env_var": false,
+      "exclude_slash_tmp": false
+    }
+  },
+  "original_failed_batch_preserved": true,
+  "current_running": true,
+  "no_new_dispatch": true,
+  "no_new_revision": true,
+  "request_state": {
+    "id": "roy-20261017-human-pace-h0",
+    "state": "running",
+    "attempts": [
+      "20261017-095740-strategy-proposal",
+      "20261017-095852-strategy-proposal"
+    ],
+    "pending_since": 1792202331.5590768,
+    "request_sha256": "d3da188a5151a8dc57274ad4d48431b1253ccc677406a48f005bdb38ecef0680",
+    "revision": 1,
+    "request_path": "/home/dw/Projects/agent-sts2/notes/learning-requests/roy-20261017-human-pace-h0.json",
+    "batch": "20261017-095852-strategy-proposal",
+    "started_at": 1792202333.5333025,
+    "reason": "学习者exit 1；沿原thread核查恢复，保留原失败",
+    "notices": [
+      "36fcbd1a06d722f1a1e9a8c7"
+    ],
+    "retry_receipt": {
+      "path": "/home/dw/Projects/agent-sts2/paper/materials/20261017-human-pace-h0/ops-startup-recovery-receipt.json",
+      "sha256": "07e8ac9b88897455a54a9cb8c08146fdaaaf942656d0651959729b65b471c0d5",
+      "at": 1792202331.4208345
+    },
+    "retry_at": 0
+  },
+  "watcher_received_or_roy_notified_not_claimed": true
+}

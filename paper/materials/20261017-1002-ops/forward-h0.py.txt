@@ -1,0 +1,31 @@
+from pathlib import Path
+import hashlib,json,subprocess
+r=Path.cwd();pub=r/'paper/materials/20261017-1002-ops'
+sha=lambda b:hashlib.sha256(b).hexdigest()
+def write(f,v):f.write_text(json.dumps(v,ensure_ascii=False,indent=2)+'\n')
+ident='36fcbd1a06d722f1a1e9a8c7'
+notice=json.loads((r/'ops/codex-ops/learning-notices'/f'{ident}.json').read_bytes())
+actual=json.loads((r/'paper/materials/20261017-human-pace-h0/ops-actual-receipt.json').read_bytes())
+at=subprocess.check_output(['date','+%Y-%m-%d %H:%M:%S %Z'],text=True).strip();print(at,flush=True)
+message=(f'原human-pace/H0同链状态回报，非新派活/实现/源检查。原notice {ident} 原文：'+notice['message']+
+    '\n本ops已本人核首095740真实失败：加载AGENTS时沙箱rg扫并行081308-fix临时paper路径ENOENT，未thread.started/首回复/0token；原failed1/consumedfalse、完整原件保持。按docs/learning-requests.md原retry CLI一次有界恢复，未改r1输入/权限/账号/线程；现095852原校准thread01a1415e-a511-7131-be7c-a2dc691c847f已于09:59:27真实首回复，learner_resume_ack及原生Sol6.1/xhigh/workspace-write/networkfalse/never逐字节绑定。H0当前running，不应因旧queued blocked再派模型或倒写旧批成功；仅原始报告/科学结果仍待终局。不存在本通知新增游戏机制/旧知识差异。'+
+    '\n请你本人读原失败/恢复回执，并沿这同一notice真实登记watcher_received和告知Roy后的roy_notified；本发送不代表你已读或Roy已知，不代ACK。原件paper/materials/20261017-human-pace-h0/{ops-startup-recovery-receipt,ops-actual-receipt}.json及paper/materials/20261017-1002-ops/h0-old-startup-notice-dedup.json。H0与0332同列最高优先，原0332owner/rev3保持；无活动写入/槽冲突，后续实际冲突再报。H1仍你原WT原任务，H2以后未派，撤回0e4f不带入，不新增goal/研究/自然监听/对局改动。')
+(pub/'watcher-h0-message.txt').write_text(message+'\n')
+target=subprocess.run(['herdr','agent','get','wJ:pJT'],capture_output=True,text=True,timeout=20)
+assert target.returncode==0
+info=json.loads(target.stdout);assert info['result']['agent']['agent_session']['value']=='01a13dcd-83d4-7c63-b233-f93cf878ecf4'
+write(pub/'watcher-native-target.json',info)
+sent=subprocess.run(['herdr','agent','prompt','wJ:pJT',message],capture_output=True,text=True,timeout=30)
+(pub/'watcher-native-send.stdout').write_text(sent.stdout);(pub/'watcher-native-send.stderr').write_text(sent.stderr)
+result=dict(at=at,rc=sent.returncode,stdout=sent.stdout,stderr=sent.stderr,original_target_thread='01a13dcd-83d4-7c63-b233-f93cf878ecf4',watcher_or_roy_ACK=False)
+if sent.returncode==0:
+    data=json.loads(sent.stdout);assert data['result']['type']=='agent_prompted';result['actual_native_send']=data
+write(pub/'watcher-native-send.json',result)
+if sent.returncode==0:
+    proof=dict(at=at,notice_id=ident,stage='ops_forwarded',actor='ops',status='delivered',evidence=dict(path=str((pub/'watcher-native-send.json').relative_to(r)),sha256=sha((pub/'watcher-native-send.json').read_bytes())),meaning='Actual native prompt submitted to original watcher; no watcher read or Roy notification claimed')
+    f=pub/(ident+'.ops-forwarded-receipt.json');write(f,proof)
+    argv=['python3','ops/learning_requests.py','ack','--notice',ident,'--stage','ops_forwarded','--receipt',str(f.relative_to(r))]
+    ack=subprocess.run(argv,capture_output=True,text=True)
+    write(pub/'ops-forwarded-cli.json',dict(argv=argv,rc=ack.returncode,stdout=ack.stdout,stderr=ack.stderr))
+    assert ack.returncode==0,ack.stderr
+print(json.dumps(dict(native_send_rc=sent.returncode,ops_forwarded_cli=0 if sent.returncode==0 else None,other_role_ACK=False)),flush=True)
