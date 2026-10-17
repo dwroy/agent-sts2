@@ -1,0 +1,246 @@
+{
+  "at": "2026-10-18 05:46:20 CST",
+  "batch": "20261018-052912-fix-batch",
+  "source": "a6913706952661afe1de38f290cd9434cbb91621",
+  "first_commit": "a6913706952661afe1de38f290cd9434cbb91621",
+  "parent": "ce6daae16bbeec859d4031f7204b79f661387220",
+  "base": "ce6daae16bbeec859d4031f7204b79f661387220",
+  "paths": [
+    {
+      "path": "agent/tests/brain-codex.test.ts",
+      "sha256": "aa4490b5719799bdf801b94c5f66080404918b78da9c1df9219fdd04013c1320"
+    },
+    {
+      "path": "agent/tests/codex-abort-fixture.test.ts",
+      "sha256": "8f16a245d9610e7faaf9c5505b0fa88b94a6c62e8f9f5dfd5f7ce4545a95c852"
+    },
+    {
+      "path": "agent/tests/codex-stall-fixture.ts",
+      "sha256": "557b2387de75dff4e4864a0a6e1870c56f71e31359cabdabae1daebf1923015c"
+    }
+  ],
+  "source_sandbox_rc": 0,
+  "source_files": 490,
+  "source_cases": 4447,
+  "native": {
+    "batch": "20261018-052912-fix-batch",
+    "thread": "01a14bc4-e72d-7343-9e74-463446e84a24",
+    "cwd": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261018-052912",
+    "event_log": "learner/runs/20261018-052915-c759eb68-e3f8-411d-abdd-c614cf965d31-fix-batch.jsonl",
+    "registered_launch_batch": "20261018-052912-fix-batch",
+    "original_lease": "91f8cd0bf8f1f6b118608b7f0308eaeb266312552bc886515462b28bb529bbb4",
+    "native_context": {
+      "source": "ops/codex-ops/accounts/codex3/learner/sessions/2026/10/18/rollout-2026-10-18T05-29-17-01a14bc4-e72d-7343-9e74-463446e84a24.jsonl",
+      "offset": 50304,
+      "bytes": 5152,
+      "sha256": "d066248ae8be2ad8c123a28fa3636c75066d6d62ce7a255f12e5a8f69a37b39f",
+      "model": "gpt-6.1-sol",
+      "effort": "xhigh",
+      "sandbox": {
+        "type": "workspace-write",
+        "writable_roots": [
+          "/home/dw/Projects/agent-sts2",
+          "/home/dw/Projects/agent-sts2/.git",
+          "/home/dw/Projects/agent-sts2/.git/worktrees/codex-fix-silent-20261018-052912"
+        ],
+        "network_access": false,
+        "exclude_tmpdir_env_var": false,
+        "exclude_slash_tmp": false
+      },
+      "approval_policy": "never"
+    },
+    "native_user_input": {
+      "offset": 58299,
+      "bytes": 13080,
+      "sha256": "3659fd8bb39bf771ec65711dab6bb608a721328f4235a628a7c1d4ba51c882d6",
+      "input_sha256": "87b350e96ae860cc25f8fcc8dd727dcd184dd21b5ddd443c16fb6218a762e0a0"
+    },
+    "original_header_events": [
+      {
+        "offset": 0,
+        "bytes": 14892,
+        "sha256": "d786471bb929b4eaefd41a63b39a09c111c078d764af137933422388af923178",
+        "type": "learner_launch",
+        "attempt": null,
+        "code": null
+      },
+      {
+        "offset": 14892,
+        "bytes": 370,
+        "sha256": "39857c24b3202999411dcc35ee3531953a4eed08c205f7ccae2776d67db46ae2",
+        "type": "learner_startup_attempt",
+        "attempt": 1,
+        "code": null
+      },
+      {
+        "offset": 18274,
+        "bytes": 77,
+        "sha256": "f588f0c77040f1425056c6945cf6588719a2a7a58321c023bf11d5c1ab85e002",
+        "type": "thread.started",
+        "attempt": null,
+        "code": null
+      }
+    ],
+    "startup_attempts": 1,
+    "failed_startups_preserved": 0,
+    "no_model_or_manual_restart": true
+  },
+  "first_reply_receipt": "paper/materials/20261018-0524-ops/new-fix-runtime-receipt.json",
+  "original_report": {
+    "task": "fix-batch",
+    "base": "ce6daae16bbeec859d4031f7204b79f661387220",
+    "fixes": [
+      {
+        "item": "infra-h0-414-host-fixed-test-stability-20261018 / router-timeout-max-gap-76fe29f3：超时夹具按记录时间精确验最大静默间隔",
+        "commit": "a6913706952661afe1de38f290cd9434cbb91621",
+        "test": "agent/tests/codex-abort-fixture.test.ts",
+        "fails_without_fix": true
+      }
+    ],
+    "skipped": [
+      {
+        "item": "出牌、药水、SL、终局、路线及角色机制条目（0256/0260/0263/0266/0308/0311/0317/0319/0320/0322/0324/0329/0334/0339/0344/0347/0349/0362/0365/0481/0487，另含XTSV1U9JD34T终局与GXNKW8X1XYJP抽牌身份）",
+        "reason": "策略类；沿已有独立strategy-proposal链处理，不重复派发或补入开发者游戏知识。"
+      },
+      {
+        "item": "silent-0339续证：BXU0CKWKH2RU尾巴误核销",
+        "reason": "策略类；已有58ab473f6c814061/c232010cd405fe44原提案链，保留当前行为和原证据。"
+      },
+      {
+        "item": "silent-0332 nonpositive-hp实际资源契约根因",
+        "reason": "证据不足；原专用owner链仍未闭环，诊断及样本身份窄修不等于根因修复。"
+      },
+      {
+        "item": "U5W7NUE925NK F15/F16两次原G2缺DPR告警的完整根因",
+        "reason": "证据不足；原未来样本数组及配对DPR分母未保存，此前窄修只覆盖有固定复现的严格零前缀边界，不将其冒作两次实盘根因。"
+      },
+      {
+        "item": "sandbox-glob-startup-race目录生命周期与磁盘压力宽项",
+        "reason": "证据不足；已有启动恢复/租约/回收窄修，目录删除归属与上游时序未确定。"
+      },
+      {
+        "item": "arch-funnel-guard / arch-learning-priority / arch-unified-resource-value / inv-f33-regression及调度公平性调查",
+        "reason": "独立架构、策略或归因任务，范围太大，超出普通纯bug批次。"
+      },
+      {
+        "item": "core-build-notify-222802-rc2旧原生通知恢复",
+        "reason": "证据不足；stderr持久化已修，旧送达状态未证，不重发可能已送达的通知。"
+      },
+      {
+        "item": "Codex缓存实测、DPR/B2性能及历史宿主超时根因",
+        "reason": "证据不足或独立性能调查；固定测试确定性子项已修，不代表自然性能根因已解决。"
+      },
+      {
+        "item": "原20261018-011241报告的recheck接续",
+        "reason": "证据不足：固定原报告的9ae48941源码不是所报dddad5d67发布提交祖先；六叶相同不代替祖先证明。原报告/状态/recheck2保留，未重复075726已验宿主，格式修复不冒称原批full0。"
+      },
+      {
+        "item": "ops-learner-recheck-report-fixes-shape-20261018补证：窄cherry-pick提案验收",
+        "reason": "太大：原Markdown没有机器JSON、原输出缺runs/base；独立原注册/原报告/六叶源码及发布/真实宿主回执协议超出本批格式修复。不造祖先、不改原报告/提案ID/seen_runs/租约或ACK，保留pending。"
+      },
+      {
+        "item": "infra-h0-414-host-fixed-test-stability-20261018 的生产性能及原full1归因",
+        "reason": "证据不足；已合入的固定测试修复不证明CPU或产品性能根因已解决，保留原失败历史。"
+      },
+      {
+        "item": "silent-0461：9W38TRGPJW9Q F17T10普通斗篷及0511/0512药水窗口补证",
+        "reason": "策略类；先前批次已收到05:16:47追加的旧项证据，沿既有f4eb/7338、c440ae480782dca0和c734f60b55906bae独立策略链，不重复实现或添加机制。"
+      },
+      {
+        "item": "infra-paper-dataset-concurrent-gzip-keyscan-20261018",
+        "reason": "已有原owner源码dee6386621e8122d123a3cd0017c3e4c199f524e并完成自测，当前基线未含；队列明确禁止重复实现，保留原运输链。"
+      }
+    ],
+    "merged": null,
+    "tests": {
+      "tsc": 0,
+      "vitest": 0,
+      "files": 490,
+      "cases": 4447
+    },
+    "code_proposals": [],
+    "implementation_domains": [],
+    "report": "/home/dw/Projects/agent-sts2/learner/runs/20261018-052915-c759eb68-e3f8-411d-abdd-c614cf965d31-fix-batch/report.md"
+  },
+  "validation": {
+    "source_commit": "a6913706952661afe1de38f290cd9434cbb91621",
+    "source_worktree_clean": true,
+    "source_sandbox_exit": 0,
+    "withdrawal_exit": 1,
+    "restored_target_files": 2,
+    "restored_target_cases": 2,
+    "restored_target_exit": 0,
+    "original_cli_probe_exit": 1,
+    "gitleaks_source_exit": 0,
+    "ledger_searches": {
+      "router": [],
+      "76fe29f3": [],
+      "max_gap": [],
+      "brain-codex": [],
+      "router-timeout": []
+    },
+    "ledger_updated": false,
+    "merge_receipt": "merge-receipt.json",
+    "report_sha256": "c30f333e127664c7d2902e2c71b6e16d37e549b39242020c4b7175d1c4c0acec",
+    "source_diff_sha256": "93c9e6877a113824be33fdfc707155e98a75df48d7e36c4bde8c26131bfb87ba",
+    "gitleaks_live_refresh_exit": 0,
+    "live_merge_head_absent": true
+  },
+  "merge_receipt": {
+    "branch": "codex-fix-silent-20261018-052912",
+    "merged": null,
+    "initial_live": "58eaab9e8062c466efff21cbc1cd18662d75896b",
+    "initial_status": " M knowledge/characters/silent/boss-damage.json\n M knowledge/characters/silent/construction-opportunities.json\n M knowledge/characters/silent/fight-value-gates.json\n M knowledge/characters/silent/monster-records.json\n M knowledge/characters/silent/outcome-stats.json\n M knowledge/characters/silent/room-costs.json\n M knowledge/common/card-upgrades.json\n M knowledge/common/monster-db.json\n M knowledge/common/move-model.json\n M notes/fight-value-backtest-silent.md\n M notes/monster-db-check.md\n",
+    "source": "a6913706952661afe1de38f290cd9434cbb91621",
+    "refresh_paths": [
+      "knowledge/characters/silent/boss-damage.json",
+      "knowledge/characters/silent/construction-opportunities.json",
+      "knowledge/characters/silent/fight-value-gates.json",
+      "knowledge/characters/silent/monster-records.json",
+      "knowledge/characters/silent/outcome-stats.json",
+      "knowledge/characters/silent/room-costs.json",
+      "knowledge/common/card-upgrades.json",
+      "knowledge/common/monster-db.json",
+      "knowledge/common/move-model.json"
+    ],
+    "refresh_overlap": [],
+    "pre_merge": "3252ff2799759d0c6e605c78498b4d503d0c8ee8",
+    "merge_exit": 1,
+    "conflicts": [
+      "notes/fix-queue-v4.md",
+      "notes/for-roy.md",
+      "notes/lessons.md",
+      "notes/ops-handoff.md",
+      "ops/inbox-dev.md",
+      "paper/data/README.md",
+      "paper/data/commits.csv",
+      "paper/data/cost-curve-silent.csv",
+      "paper/data/cost-silent.csv",
+      "paper/data/cost-sources.json",
+      "paper/data/cost-unattributed.csv",
+      "paper/data/decisions_by_label.csv",
+      "paper/data/learning-curve-silent.csv",
+      "paper/data/runs.csv",
+      "paper/data/summary.json",
+      "paper/data/verification.json",
+      "paper/materials/decision-log.md",
+      "paper/materials/ironclad/cost.md",
+      "paper/materials/learning/code-proposals.jsonl",
+      "paper/materials/learning/ledger.jsonl",
+      "paper/materials/none/cost.md",
+      "paper/materials/silent/cost.md",
+      "paper/materials/unattributed/cost.md"
+    ],
+    "abort_exit": 0,
+    "final_live": "3252ff2799759d0c6e605c78498b4d503d0c8ee8",
+    "final_status": " M notes/fight-value-backtest-silent.md\n M notes/monster-db-check.md\n"
+  },
+  "archived_files": 32,
+  "source_full_not_repeated": true,
+  "original_canonical_failed_rc0_preserved": true,
+  "published": false,
+  "test_only": true,
+  "native_cli_probe_failed_before_timeout_assertion": true,
+  "new_gameplay_release": false,
+  "new_ledger_shipped": false
+}
