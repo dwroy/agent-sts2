@@ -30,12 +30,54 @@ def process(pid):
         stat = (p / "stat").read_text().rsplit(")", 1)[1].split()
         if stat[0] == "Z": return None
         argv = (p / "cmdline").read_bytes().replace(b"\0", b" ").decode(errors="replace")
-        return {"pid": int(pid), "start_ticks": stat[19], "argv": argv}
+        return {"pid": int(pid), "ppid": int(stat[1]), "start_ticks": stat[19], "argv": argv}
     except (OSError, ValueError, TypeError): return None
+
+
+def ops_descendant(pid, ops_pids):
+    """An idle source TUI's persistent tool host exits with that TUI, after readiness, not before it."""
+    seen = set()
+    while pid and pid not in seen and len(seen) < 64:
+        if pid in ops_pids:
+            return True
+        seen.add(pid)
+        p = process(pid)
+        if not p:
+            return False
+        pid = p.get("ppid")
+    return False
+
+
+def instance_root(environment):
+    """Use explicit instance selectors, never an account home shared by independent instances."""
+    values = {}
+    for item in environment:
+        if item.startswith((b"CODEX_OPS_ROOT=", b"STS2_WORKSPACE=")):
+            name, value = item.decode().split("=", 1)
+            if value:
+                values[name] = str(Path(value).resolve())
+    roots = set(values.values())
+    if len(roots) > 1:
+        raise ValueError("conflicting instance identity")
+    return next(iter(roots), None)
+
+
+def private_instance_cwd(cwd):
+    """Older Herdr TUIs may lack selectors; require a private instance runtime and binding."""
+    cwd = Path(cwd).resolve()
+    for candidate in (cwd, *cwd.parents):
+        if candidate == ROOT:
+            break
+        runtime = candidate / "ops/codex-ops"
+        if candidate.parent == ROOT / ".worktrees" and (candidate / "ops/instance-binding.json").is_file() \
+                and (runtime / "session-id").is_file() and runtime.resolve() != RUNTIME.resolve():
+            return str(candidate)
+    return None
 
 
 def snapshot(state):
     active = []
+    excluded = []
     ops_identity = []
     ops_pane = None
     complete = True
@@ -61,15 +103,29 @@ def snapshot(state):
             p = process(entry.name)
             if not p: continue
             argv = p["argv"]
+            play_or_loop = any(x in argv for x in ("index.ts play", "ops/autoplay.sh", "ops/report.py", "ops/ops_assist.py worker"))
+            if "codex" not in argv and not play_or_loop:
+                continue
+            persistent_ops_host = Path(argv.split()[0]).name == "codex-code-mode-host" and ops_descendant(p["pid"], ops_pids)
+            if p["pid"] in ops_pids or persistent_ops_host:
+                excluded.append({"kind": "source_ops_process", "pid": p["pid"], "start_ticks": p["start_ticks"]})
+                continue
+            try:
+                environment = (entry / "environ").read_bytes().split(b"\0")
+                owner = instance_root(environment) or private_instance_cwd(entry / "cwd")
+            except (OSError, UnicodeError):
+                environment, owner = [], None
+            if owner and owner != str(ROOT):
+                excluded.append({"kind": "other_instance", "pid": p["pid"], "start_ticks": p["start_ticks"], "root": owner})
+                continue
             if "codex" in argv and p["pid"] not in ops_pids:
                 try:
-                    environment = (entry / "environ").read_bytes().split(b"\0")
                     home = next((v.split(b"=", 1)[1].decode() for v in environment if v.startswith(b"CODEX_HOME=")), "")
                     if home == state["source"]["learner_home"] or home == state["source"].get("brain_home"):
                         active.append({"kind": "old_account_engine", "pid": p["pid"], "start_ticks": p["start_ticks"]})
                 except (OSError, UnicodeError):
                     pass
-            if not any(x in argv for x in ("index.ts play", "ops/autoplay.sh", "ops/report.py", "ops/ops_assist.py worker")):
+            if not play_or_loop:
                 continue
             try: cwd = (entry / "cwd").resolve()
             except OSError: complete = False; continue
@@ -82,7 +138,7 @@ def snapshot(state):
     handoff = ROOT / state["target"]["handoff"]
     checkpoint = handoff.read_text() if handoff.is_file() else ""
     ready = "ready_to_drain" in checkpoint and state["source"]["session"] in checkpoint
-    return {"at": stamp(), "active_workers": active, "ops_idle": idle,
+    return {"at": stamp(), "active_workers": active, "excluded_workers": excluded, "ops_idle": idle,
             "checkpoint_ready": ready, "inventory_complete": complete,
             "ops_pane": ops_pane,
             "ops_identity": [{k: p[k] for k in ("pid", "start_ticks")} for p in ops_identity]}
