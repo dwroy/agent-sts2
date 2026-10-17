@@ -4271,3 +4271,5 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
   **H0已实际上线的限定规则通知（统一编号待锁内补登，不能借R385当新号）**：旧whole-fight跨相仍继承第一相enrage/woundsPerHit；新仅学习者原证据所限Silent A10单实验体111/Enrage3→212/Painful1→313签名同步清/设阶段能力。实际源e8e028720c150f8456789546e1a9f5da89e33686、行为29f146292892704f618cda8f4db733f21f9cdb1f、原专题S1.silent-h0-test-subject-phase1；账本0502/0503、JMH5/UJ0K/YZWV及原R1内F49能力端点、source465/4290与live sandbox474/4374、10对象消费者读回及107/481固定增量62行均见原1659证据。预期消除已证阶段静态能力残留；不承诺胜率改善，完整Wound入堆/资源、六目标质量/H1前缀/生产trust/F49联合与0332仍未认证。回退只撤三叶阶段补丁并保H2、知识及历史，实际回退再按新行为编号；其他角色/阶/未知签名/短rollout及SL药水不动。本轮不重源full/校准/消费者、不改当前局/home账号模型promptenv。只自有记录/归档、原lessons和16CLI行、两原提案及本次论文输出经gitleaks私有index提交，保普通index/并行工作；结束不sleep/轮询未来事件。证据paper/materials/20261017-1706-ops/。
 
 - 2026-10-17 17:25:06 CST 运维codex：1719两批170116策略20项waiting、46追溯及20调度处置核回，171302修复无新源/阻塞且原failed0null保持；H0实收源仍等原builder门禁，H2精确host0不重测，不重启现局。证据paper/materials/20261017-1719-ops/。
+
+- 2026-10-17 17:42:13 CST 运维codex：S5GZG328S1LN复盘/10CLI行/两原提案入库、无新纯bug，paper --no-raw rc0；H0已沿原锁补登V5-R386并main窄同步，原130158新组合宿主动作已启动待终局、首个生效局未知，不认0332或六目标质量通过。证据paper/materials/20261017-1729-ops/。
