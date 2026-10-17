@@ -1,7 +1,7 @@
 import { prepareObservedCandidates } from "./pace-precompute.js";
 import { HumanPaceShadow } from "../sim/human-pace-observer.js";
 import { setPaceSolverScope } from "../reflex/pace-solver-cache.js";
-import { currentDecisionBudget, withDecisionBudget, enterDecisionBudget, DecisionBudgetLedger, DecisionBudgetExpired, outsideDecisionBudget, shadowBudgetAvailable, budgetUnknown, type BudgetKind } from "../core/decision-budget.js";
+import { currentDecisionBudget, withDecisionBudget, enterDecisionBudget, DecisionBudgetLedger, DecisionBudgetExpired, outsideDecisionBudget, shadowBudgetAvailable, withShadowDecisionBudget, measureDecisionBudgetStage, budgetUnknown, type BudgetKind } from "../core/decision-budget.js";
 /**
  * The decision loop (PLAN.md §7).
  *
@@ -955,8 +955,8 @@ async function runLoopWithBudgets(options: LoopOptions): Promise<LoopStats> {
         }
         // B3 (BOSS_SIM_BUILD=on): each option of a deck-building question with the act boss simulated on its deck.
         if (options.buildSim) {
-          const simmed = await withBossSim(decision, env, { ...options.buildSim,
-            failureDirectory: join(dirname(config.log.decisionLog), "sim-failures") });
+          const simmed = await measureDecisionBudgetStage("B3_current", () => withBossSim(decision, env, { ...options.buildSim!,
+            failureDirectory: join(dirname(config.log.decisionLog), "sim-failures") }));
           if (simmed.record) {
             decision = simmed.decision;
             question = decision.kind === "ask" ? decision.questions[spec.question] : question;
@@ -997,13 +997,13 @@ async function runLoopWithBudgets(options: LoopOptions): Promise<LoopStats> {
         }
         // V5 runs through the actual consumer in shadow mode before its predictions may guide choices.
         try {
-          const construction = !shadowBudgetAvailable("construction_shadow") ? { decision, record: budgetUnknown("construction_shadow") as Record<string, JsonValue> } : withConstruction(decision, env, { simulation: {
+          const construction = withShadowDecisionBudget("construction_shadow", () => !shadowBudgetAvailable("construction_shadow") ? { decision, record: budgetUnknown("construction_shadow") as Record<string, JsonValue> } : withConstruction(decision, env, { simulation: {
             run: str(state.raw["run_id"]), floor: state.run?.floor ?? 0, label: decision.label,
             minimumShown: BUILD_SIM_MIN_SHOWN,
             record: asRecord(bossSimRecord) as Record<string, JsonValue>,
-          } });
+          } }));
           const probabilityAttached = construction.decision !== decision;
-          decision = shadowBudgetAvailable("construction_evaluation_shadow") ? withConstructionEvaluation(construction.decision, env, construction.record) : construction.decision;
+          decision = withShadowDecisionBudget("construction_evaluation_shadow", () => shadowBudgetAvailable("construction_evaluation_shadow") ? withConstructionEvaluation(construction.decision, env, construction.record) : construction.decision);
           if (construction.record) bossSimRecord = { ...asRecord(bossSimRecord), construction: { ...construction.record,
             evaluation_delivery: decision !== construction.decision ? "attached" : "not_attached",
             probability_delivery: probabilityAttached ? "attached" : "not_attached",

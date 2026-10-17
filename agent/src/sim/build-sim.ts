@@ -1,4 +1,4 @@
-import { currentDecisionBudget, shadowBudgetAvailable, budgetUnknown } from "../core/decision-budget.js";
+import { currentDecisionBudget, shadowBudgetAvailable, withShadowDecisionBudget, budgetUnknown } from "../core/decision-budget.js";
 /**
  * B3 (Roy 2026-09-30): each option of a deck-building question against the act boss, by whole fight simulation. The
  * current deck and every option's deck (and HP) run on the same seeds (common random numbers) from the synthetic
@@ -156,7 +156,7 @@ export async function compareOptions(
   runner: DeckSimRunner,
   base: RolloutInput,
   options: DeckOption[],
-  opts: { samples?: number; seed?: number; deadlineMs?: number; now?: () => number; quantitative?: boolean; diagnostics?: boolean; requireComplete?: boolean; adaptive?: { allowS: boolean; mode?: "shadow" | "on" }; onProgress?: import("./computation-wait.js").SimProgress; readiness?: boolean;
+  opts: { samples?: number; seed?: number; deadlineMs?: number; now?: () => number; quantitative?: boolean; diagnostics?: boolean; requireComplete?: boolean; adaptive?: { allowS: boolean; mode?: "shadow" | "on" }; onProgress?: import("./computation-wait.js").SimProgress; readiness?: boolean; readinessShadow?: boolean; buildRankShadow?: boolean;
     f48JointScope?: F48JointScope;
     buildRank?: { lowTrust: string | null; calibratedFloor: number; tieSe: number; sSort?: "on" | "shadow" } } = {},
 ): Promise<CompareResult> {
@@ -290,21 +290,22 @@ export async function compareOptions(
     return actual ? { ...value, sampling: actual.counts.get(option.key) } : value;
   });
   const readinessStart = performance.now();
-  const readiness = opts.readiness && opts.quantitative && shadowBudgetAvailable("P1_readiness_shadow") ? bossReadiness(baseLine.outcomes, {
+  const readiness = withShadowDecisionBudget("P1_readiness_shadow", () => opts.readiness && opts.quantitative && shadowBudgetAvailable("P1_readiness_shadow") ? bossReadiness(baseLine.outcomes, {
     calibratedWin: base.continuation ? baseLine.winProb : calibratedWinProb(baseLine.winProb, BUILD_SIM_CALIBRATION_SAMPLES, "pre", base.meta.asc),
     ...(base.continuation ? {} : { calibrate: (raw: number) => calibratedWinProb(raw, BUILD_SIM_CALIBRATION_SAMPLES, "pre", base.meta.asc) }),
-  }) : undefined;
+  }) : undefined, opts.readinessShadow === true);
   const readinessMs = readiness ? performance.now() - readinessStart : undefined;
-  const adaptive = !actual && required && opts.adaptive && options.length && n === samples && shadowBudgetAvailable("C2_sampling_shadow") ? safeAdaptiveShadow([
+  const adaptive = withShadowDecisionBudget("C2_sampling_shadow", () => !actual && required && opts.adaptive && options.length && n === samples && shadowBudgetAvailable("C2_sampling_shadow") ? safeAdaptiveShadow([
     { key: "@current", samples: baseLine.outcomes, baseline: true, workGroup: "0" },
     ...options.map((option) => ({ key: option.key, samples: summarize(deckOf.get(option.key)!).outcomes, workGroup: deckOf.get(option.key)!.join(",") })),
-  ], { lane: "b3", requested: samples, allowS: opts.adaptive.allowS }) : null;
+  ], { lane: "b3", requested: samples, allowS: opts.adaptive.allowS }) : null);
   if (adaptive && "work" in adaptive) {
     const orderWork = allOrders.length > 1 ? Math.min(samples, BUILD_SIM_ORDER_SAMPLES) * allOrders.length : 0;
     adaptive.work.full += orderWork;
     adaptive.work.shadow += orderWork;
     adaptive.work.savedFraction = 1 - adaptive.work.shadow / adaptive.work.full;
   }
+  const buildRanking = withShadowDecisionBudget("P2_S_build_counterfactual", () => {
   let buildRanking: JsonValue | undefined;
   if (opts.buildRank && !shadowBudgetAvailable("P2_S_build_counterfactual")) buildRanking = budgetUnknown("P2_S_build_counterfactual");
   if (opts.buildRank && shadowBudgetAvailable("P2_S_build_counterfactual")) {
@@ -318,6 +319,9 @@ export async function compareOptions(
       buildRanking = { schema: "build-ranking-v1", status: "unavailable", reason: String(error).slice(0, 180) };
     }
   }
+  return buildRanking;
+  }, opts.buildRankShadow === true);
+  const productionComparison = withShadowDecisionBudget("C2_ranking_counterfactual", () => {
   let productionComparison: JsonValue | undefined;
   if (adaptive && "candidates" in adaptive && shadowBudgetAvailable("C2_ranking_counterfactual") && opts.buildRank && asRecord(buildRanking)["status"] === "produced") {
     try {
@@ -340,12 +344,14 @@ export async function compareOptions(
         agreement: JSON.stringify([...full].sort()) === JSON.stringify([...shortened.best_group].sort()) };
     } catch (error) { productionComparison = { metric: "deployed-ranking-first-group", agreement: null, error: String(error).slice(0, 180) }; }
   }
+  return productionComparison;
+  });
   const result: CompareResult = {
-    ...(opts.f48JointScope ? { f48JointShadow: f48JointShadow(opts.f48JointScope, [
+    ...(opts.f48JointScope ? { f48JointShadow: withShadowDecisionBudget("F48_joint_shadow", () => f48JointShadow(opts.f48JointScope!, [
       { key: "@current", outcomes: baseLine.outcomes, requested: samples, order: order?.label ?? null, input: base },
       ...options.map((option) => ({ key: option.key, outcomes: optionLines.get(option.key)!.outcomes,
         requested: samples, order: order?.label ?? null, input: option })),
-    ], base) } : {}),
+    ], base)) } : {}),
     ...(actual ? { adaptive: toJsonValue({ ...actual.adaptive, input_key: cacheKey, fixed_order_search_in_work: true,
       work: { ...actual.adaptive.work,
         full: actual.adaptive.work.full + (allOrders.length > 1 ? Math.min(samples, BUILD_SIM_ORDER_SAMPLES) * allOrders.length : 0),
