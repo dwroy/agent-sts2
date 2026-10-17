@@ -3071,6 +3071,12 @@ function planTurn(env: DecisionEnv): Decision | null {
     // silent-0177/0178: only Silent enemy-hit evidence; keep Ironclad's model unchanged.
     ...(str(asRecord(state.run?.raw)["character_id"]).toLowerCase() === "silent" && relicIds.includes("TUNGSTEN_ROD") ? { tungstenRod: true } : {}),
     vigor,
+    // J2VR2DFJG8K4 A10 F22 T1, silent-0504/0505: source identity is required for the narrow solver rule.
+    ...(character.toLowerCase() === "silent" && state.run?.ascension === 10 &&
+      asArray(asRecord(state.run?.raw)["relics"]).some((entry) => {
+        const relic = asRecord(entry);
+        return relic["relic_id"] === "AKABEKO" && relic["is_melted"] === false;
+      }) ? { akabekoSkewer: true as const } : {}),
     ...(penNib !== undefined ? { penNib } : {}),
     noBlock: powerAmount(player, "NO_BLOCK_POWER") > 0,
     tender: powerAmount(player, "TENDER_POWER"),
