@@ -1,0 +1,103 @@
+{
+  "at": "2026-10-18T00:16:01.849448+08:00",
+  "id": "codex3-20261017",
+  "phase": "complete",
+  "source": {
+    "session": "01a12bec-c83f-7c21-b76f-eb8e5304eb8f",
+    "learner_home": "/home/dw/Projects/agent-sts2/ops/codex-ops/accounts/codex1/learner",
+    "brain_home": "/home/dw/Projects/agent-sts2/ops/codex-ops/accounts/codex1/brain"
+  },
+  "target": {
+    "engine": "codex",
+    "account": "codex3",
+    "model": "gpt-6.1-sol",
+    "effort": "xhigh",
+    "service_tier": "default",
+    "learner_home": "/home/dw/Projects/agent-sts2/ops/codex-ops/accounts/codex3/learner",
+    "brain_home": "/home/dw/Projects/agent-sts2/ops/codex-ops/accounts/codex3/brain",
+    "handoff": "notes/codex3-drain-ops-handoff.md"
+  },
+  "target_digest": "5aae1a71d8ab640cb4cbc77db7e4ae1666a01d1f1b808ecb624d1ef48915b411",
+  "activation": {
+    "at": "2026-10-18T00:08:29+08:00",
+    "learner_home": "/home/dw/Projects/agent-sts2/ops/codex-ops/accounts/codex3/learner",
+    "brain_home": "/home/dw/Projects/agent-sts2/ops/codex-ops/accounts/codex3/brain",
+    "old_session": "01a12bec-c83f-7c21-b76f-eb8e5304eb8f",
+    "cross_account_resume": false,
+    "pane_environment": "/home/dw/Projects/agent-sts2/ops/codex-ops/llm-switches/codex3-20261017/target-pane-home"
+  },
+  "verification": {
+    "ok": true,
+    "target_digest": "5aae1a71d8ab640cb4cbc77db7e4ae1666a01d1f1b808ecb624d1ef48915b411",
+    "new_session": "01a14a9f-38e7-78e2-95d0-ba274d4b3e19",
+    "bootstrap_exit": 0,
+    "rollout": "/home/dw/Projects/agent-sts2/ops/codex-ops/accounts/codex3/learner/sessions/2026/10/18/rollout-2026-10-18T00-08-31-01a14a9f-38e7-78e2-95d0-ba274d4b3e19.jsonl",
+    "runtime_play_and_learning": "awaiting normal dispatch"
+  },
+  "selectors": {
+    "codex-home": "/home/dw/Projects/agent-sts2/ops/codex-ops/accounts/codex3/learner",
+    "brain-home": "/home/dw/Projects/agent-sts2/ops/codex-ops/accounts/codex3/brain",
+    "session-id": "01a14a9f-38e7-78e2-95d0-ba274d4b3e19"
+  },
+  "cron_main_learner_selector_verified": true,
+  "released_owned_flags": [
+    {
+      "path": "ops/codex-ops/LLM_DRAIN",
+      "released": true
+    },
+    {
+      "path": "ops/codex-ops/PAUSE",
+      "released": true
+    }
+  ],
+  "regent_original_flags_homes_session": [
+    {
+      "path": ".worktrees/regent-climb/ops/STOP",
+      "exists": true,
+      "sha256": "1df3fcbc93e77d5d1ee203b161e9f4b151cf533b375c38eae4d7e71b9302f08c",
+      "unchanged": true
+    },
+    {
+      "path": ".worktrees/regent-climb/ops/codex-ops/PAUSE",
+      "exists": true,
+      "sha256": "1df3fcbc93e77d5d1ee203b161e9f4b151cf533b375c38eae4d7e71b9302f08c",
+      "unchanged": true
+    },
+    {
+      "path": ".worktrees/regent-climb/ops/codex-ops/codex-home",
+      "exists": true,
+      "sha256": "d9f41d9fae88fb9798cdf4e0c424d1e665350f8d3aa44dc5daef91ad76ef4762",
+      "unchanged": true
+    },
+    {
+      "path": ".worktrees/regent-climb/ops/codex-ops/brain-home",
+      "exists": true,
+      "sha256": "7f21ec96dc15c3fa23dad4233b024b9ffec5223413879070dc2ca033cc6ad9fa",
+      "unchanged": true
+    },
+    {
+      "path": ".worktrees/regent-climb/ops/codex-ops/session-id",
+      "exists": true,
+      "sha256": "4e614261befb42f32721bc7d7991ec2bbad4fe4444b96f610b74ce4754fea94e",
+      "unchanged": true
+    }
+  ],
+  "watcher_codex_home": "/home/dw/.codex1",
+  "watcher_original_session": "01a13dcd-83d4-7c63-b233-f93cf878ecf4",
+  "watcher_not_switched": true,
+  "auth_contents_not_read_or_copied": true,
+  "auth_symlinks_and_global_instruction_absence_verified": true,
+  "actual_native_context": [
+    {
+      "path": "/home/dw/Projects/agent-sts2/ops/codex-ops/accounts/codex3/learner/sessions/2026/10/18/rollout-2026-10-18T00-08-31-01a14a9f-38e7-78e2-95d0-ba274d4b3e19.jsonl",
+      "off": 45025,
+      "len": 686,
+      "sha256": "291886b282dd2ec8d4ce0c46437dd58ec5e3d60d8b36973a22b2015097b7ac4c",
+      "project_copy": "paper/materials/20261017-codex3-switch/new-ops-native-turn-context.jsonl",
+      "model": "gpt-6.1-sol",
+      "effort": "xhigh"
+    }
+  ],
+  "default_service_tier_command_verified": true,
+  "new_brain_and_learner_runtime": "awaiting original normal dispatch; not artificially launched for acceptance"
+}

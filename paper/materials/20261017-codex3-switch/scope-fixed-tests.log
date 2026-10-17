@@ -1,0 +1,17 @@
+...F................
+======================================================================
+FAIL: test_snapshot_preserves_main_workers_and_excludes_only_proven_ops_and_instance (ops.tests.test_llm_switch_scope.ScopeTest.test_snapshot_preserves_main_workers_and_excludes_only_proven_ops_and_instance)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/dw/Projects/agent-sts2/.worktrees/llm-switch-scope-20261017/ops/tests/test_llm_switch_scope.py", line 72, in test_snapshot_preserves_main_workers_and_excludes_only_proven_ops_and_instance
+    self.assertEqual({r["pid"] for r in result["active_workers"]},{30,40,50,60})
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Items in the second set but not the first:
+40
+50
+30
+
+----------------------------------------------------------------------
+Ran 20 tests in 0.396s
+
+FAILED (failures=1)

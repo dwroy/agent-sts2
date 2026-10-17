@@ -1,0 +1,27 @@
+{
+  "at": "2026-10-18T00:03:53.506121+08:00",
+  "old_controller": {
+    "pid": 1889073,
+    "birth": "114302040",
+    "argv": [
+      "python3",
+      "/home/dw/Projects/agent-sts2/ops/llm_switch.py",
+      "run",
+      "--id",
+      "codex3-20261017"
+    ]
+  },
+  "phase_before": "draining",
+  "target_digest": "5aae1a71d8ab640cb4cbc77db7e4ae1666a01d1f1b808ecb624d1ef48915b411",
+  "owned_flags": [
+    "ops/codex-ops/LLM_DRAIN",
+    "ops/codex-ops/PAUSE"
+  ],
+  "signal": "SIGINT",
+  "only_original_one_shot_controller": true,
+  "no_model_play_learner_or_host_check_signals": true,
+  "source_main": "bb7f17d00989f142bb495cb63cada2eab9351eda",
+  "old_controller_exited": true,
+  "phase_after": "draining",
+  "flags_and_target_preserved": true
+}

@@ -235,3 +235,11 @@ Claude已明确指派：等3局从开局实际加载3910f41或后继且H2 shadow
 - 2026-10-17T20:16:30.647321+08:00 watcher/codex1完成Claude原H2三自然只读观察：4JS3/WQB3/BXU0原run-config3910/6f2/6f2及终局完整，30.109/32.255/91.689分、F22/F24/F48败，原单次listener458217退出0。42题Jev成功、与大脑18/37一致（拿11/28、跳7/9），4fallback/1code分列；目标比较42/42 unknown、模块全为skip工程兜底，计划外叫醒42/42，原计划完整19/23/投影23，1超时无plan单列。H2增量工作6.549/6.682/12.279秒无超预算；BXU51L2/两Boss各6试，不归因H2慢。首试B2截断0/47对旧4/44、SL10s仍截，Boss/知识/R384混杂不称因果收益。4451原引用SHA及投影核回、解压输入gitleaks0、原精确77dd宿主0已读；不建议任何题转Jev on，不开后续阶段，H0/0332/宽父保持，交报告后停止。证据paper/materials/20261017-human-pace-h2/natural/。
 
 观察报告完成不等于on准入。原始输出/投影、unknown/工程兜底与数值模块分别列；未新增游戏机制或取消闸门。建议Claude/Roy先决定真实inventory数值覆盖与计划外叫醒范围，再明确指派；本watcher已停止，不自动启用Jev或H3/H4。
+
+## 15. 2026-10-18T00:08:00.658341+08:00 H2 A/B/C影子修正与主线codex3排空
+
+Roy23:29明确指派：H2只改shadow。source89bec47ab4/tree2f3fb0e已在独立WT固定验证并由原ops接受source full1（仅新WT缺既有解释器）＋同源12题补验0，原full1保留；实际窄合live0174532604/treef53b07d7，R388不变。模块不再无数据默认skip，改用同题下Boss配对胜率及模板归属，无依据交大脑；未定方向单列，原样持有的未建模遗物仅带限制做第二幕部分模型基准，不提可信度、不填S。整幕计划仅具体化既有接受输出，不改实际题面/RunPlan。42题历史回放：38有next数据、27有首选、15defer，9明确计划外/33待定；Jev42全成功仍18/37一致，不支持on。详见paper/materials/20261017-human-pace-h2-fix/。
+
+同次主线codex3-20261017事务已两home模型/key隔离预检通过并draining，原全部对局/学习者自然收尾，当前仅等原H2精确宿主。已修独立实例/ops常驻工具host误纳入，只重启本一次性控制器并同ID续跑，原旗/target/历史保持，regent暂停和watcher账号/home不动。实际新ops UUID/原生模型/home与释放由原事务完成后读回，不能预填。未开goal/其他阶段/自然监听。
+
+接续终局：2026-10-18T00:17:58.463510+08:00 watcher完成Roy23:29两项：codex3-20261017实际complete/new native ops 01a14a9f-38e7-78e2-95d0-ba274d4b3e19，Sol6.1/xhigh及命令default、两home/cron/owner旗释放和regent五项原字节核同，watcher仍codex1。scope纯bugsourcee4a07e30f8/mainbb7f17d009只修实例及ops常驻host盘点，原130/full1/所选0分列；原同id控制器接续无停模型/局/learner。H2 A/B/C source89bec47ab4实际live0174532604/tree f53b07d7，原唯一精确宿主532文件5229过2跳/0已核原logSHA；source full1/环境补验12题0不改写。42历史题38有next差、27首选/15defer、9明确计划外/33待定，Jev42成功仍18/37，不转on；具体计划只读投影，不强造方向。H0/0332/宽父和正常消费者身份待原ops队列，本线程交接已写、停止，无新阶段/goal/自然监听。证据paper/materials/20261017-codex3-switch/与20261017-human-pace-h2-fix/。
