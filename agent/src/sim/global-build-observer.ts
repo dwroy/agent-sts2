@@ -87,7 +87,8 @@ export async function observeGlobalBuild(args: {
   const result = hit ? structuredClone(cached.result) : await evaluateGlobalBuild({ pool, currentAct: args.currentAct,
     visible: args.visible, currentBoss: args.currentBoss, current: args.current, keys: args.keys, trustReason, now,
     evaluate: (target) => args.evaluate(target, globalBuildRunner(args.runner)) });
-  if (key && !hit && !unavailable && !result.targets.some((target) => target.rows.some((row) => row.unknown?.startsWith("global_computation_failed:"))))
+  if (key && !hit && !unavailable && !result.targets.some((target) => target.rows.some((row) =>
+    row.unknown?.startsWith("global_computation_failed:") || row.unknown?.startsWith("decision_budget_exhausted:"))))
     completed.set(args.runner, { key, result: structuredClone(result) });
   const index = rememberGlobalBuild(args.memory, args.runId, args.floor, args.label, key, result);
   return { ...result, observation_id: `${process.pid}:g2:${++observation}`, input_key: key, memo_hit: hit, history_index: index,
