@@ -1,0 +1,3468 @@
+{
+  "batch": "20261017-073111-s2-strategy-proposal",
+  "report": {
+    "task": "strategy-proposal",
+    "character": "silent",
+    "batch": "20261017-073111-s2-strategy-proposal",
+    "base": "6c3a776b741276285beb422d2f9be98c6112851a",
+    "runs": [
+      "KEN58SH9SLZ6",
+      "TXZ6RVMQA09D",
+      "WQZVENQ7DTRP",
+      "02HB4L0C3C67",
+      "4D4J8USKCPAV",
+      "F4QKG4J1AJJZ",
+      "JLN5SK17W4FQ",
+      "LS8035TB32P3",
+      "NB8KCF6HRGVF",
+      "S9UZAK0JP0C0"
+    ],
+    "fixes": [],
+    "skipped": [],
+    "merged": null,
+    "tests": {
+      "tsc": null,
+      "vitest": null,
+      "cases": null
+    },
+    "code_proposals": [
+      "silent-proposal-08eaa60bcc449852",
+      "silent-proposal-92920295a648b540",
+      "silent-proposal-a327449c331efbc1",
+      "silent-proposal-a099e89437e942bb",
+      "silent-proposal-47910f82a1fdd98f",
+      "silent-proposal-f1374df72d8e6a25",
+      "silent-proposal-38a49e6c97f31eea",
+      "silent-proposal-ef0e38a5dbd3bc07",
+      "silent-proposal-7f820c02d39bfaea",
+      "silent-proposal-04b6b430759815ed"
+    ],
+    "implementation_domains": [
+      "combat",
+      "potion",
+      "sl",
+      "terminal"
+    ],
+    "proposal_results": [
+      {
+        "id": "silent-proposal-08eaa60bcc449852",
+        "state": "waiting",
+        "reason": "缺KEN F15不饮用及同入口、同后继下留药至Boss的完整成对结果；7次实饮与零净损窗口只核资源结转，不足校准持药价格。"
+      },
+      {
+        "id": "silent-proposal-92920295a648b540",
+        "state": "waiting",
+        "reason": "缺保持抽序、生成牌、药栏及后续选择一致的两战替线和联合资源校准；少损3同时少伤9不能证明连续通关改善。"
+      },
+      {
+        "id": "silent-proposal-a327449c331efbc1",
+        "state": "waiting",
+        "reason": "缺同时约束攻击、格挡、毒与沙坑两条截止线的受控整战后继和独立验证，不能把9血换15伤拟成固定交换率或修改SL准入。"
+      },
+      {
+        "id": "silent-proposal-a099e89437e942bb",
+        "state": "waiting",
+        "reason": "狡诈生成、手位截断和穿插子模型已有实际live源码祖先；原请求的计划妥当保留容量、跨重问完整派发及SL恢复联合消费者仍未核齐。"
+      },
+      {
+        "id": "silent-proposal-47910f82a1fdd98f",
+        "state": "waiting",
+        "reason": "王室猛毒受限开场和同样本连战传递已有实际live祖先；缺未知回血/复活组合顺序及留药、路线、SL整战后继的联合校准。"
+      },
+      {
+        "id": "silent-proposal-f1374df72d8e6a25",
+        "state": "waiting",
+        "reason": "缺隔离机制误差后的同入口、同预算不用/早用/留药整战及下一战成对结果；低信心答选和局部候选不能校准新药价或终局权重。"
+      },
+      {
+        "id": "silent-proposal-38a49e6c97f31eea",
+        "state": "waiting",
+        "reason": "普通紧勒已观察子公式已有实际live祖先；缺弃磨蚀、增益分源、再生/自动触发及SL恢复的联合消费者校准与受控整战后继。"
+      },
+      {
+        "id": "silent-proposal-ef0e38a5dbd3bc07",
+        "state": "waiting",
+        "reason": "缺另一营火动作、事件、路线和用药时机的受控完整结果；两条观察性失败链不足校准路线或终局权重。"
+      },
+      {
+        "id": "silent-proposal-7f820c02d39bfaea",
+        "state": "waiting",
+        "reason": "缺同预算饱和排序校准、跨弃牌完整候选执行归属及成对整战后继；同一局六败不能作为六个独立验证局或新血价门槛。"
+      },
+      {
+        "id": "silent-proposal-04b6b430759815ed",
+        "state": "waiting",
+        "reason": "蟹朝向受限取整已有实际live祖先；缺油灯首次消费跨动作、新战/SL恢复的联合输入，以及未覆盖X值/升级组合与能力整战后继。"
+      }
+    ],
+    "report": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261017-073111-s2/learner/runs/20261017-073124-c1008299-f794-4a4f-8d15-297c0d88de4a-strategy-proposal/report.md"
+  },
+  "original_canonical_state": "done",
+  "engine_rc": 0,
+  "runtime": {
+    "batch": "20261017-073111-s2-strategy-proposal",
+    "thread": "01a1470f-2e85-7fb0-acb5-e78a528d34c4",
+    "cwd": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261017-073111-s2",
+    "event_log": "learner/runs/20261017-073124-c1008299-f794-4a4f-8d15-297c0d88de4a-strategy-proposal.jsonl",
+    "registered_launch_batch": "20261017-073111-s2-strategy-proposal",
+    "original_lease": "c21657473ea53583df20df0981cc051df25b8ac16c3f9c3904d9da554fd787df",
+    "native_context": {
+      "source": "ops/codex-ops/accounts/codex1/learner/sessions/2026/10/17/rollout-2026-10-17T07-32-19-01a1470f-2e85-7fb0-acb5-e78a528d34c4.jsonl",
+      "offset": 50423,
+      "bytes": 5200,
+      "sha256": "b9bdec260a822ace337fb4074f2d0fedc01465f3e95e8c203df46b7b9420290d",
+      "model": "gpt-6.1-sol",
+      "effort": "xhigh",
+      "sandbox": {
+        "type": "workspace-write",
+        "writable_roots": [
+          "/home/dw/Projects/agent-sts2",
+          "/home/dw/Projects/agent-sts2/.git",
+          "/home/dw/Projects/agent-sts2/.git/worktrees/codex-strategy-silent-20261017-073111-s2"
+        ],
+        "network_access": false,
+        "exclude_tmpdir_env_var": false,
+        "exclude_slash_tmp": false
+      },
+      "approval_policy": "never"
+    },
+    "native_user_input": {
+      "offset": 58498,
+      "bytes": 21571,
+      "sha256": "1867ed379498c54de38d20783f12426ac521a6f0b0e12d64d79190dcf3da1365",
+      "input_sha256": "af43fd895b430fbf0e82c1e0767638397ed8960d20a5a08b852d9cbd10a47ccb"
+    },
+    "original_header_events": [
+      {
+        "offset": 0,
+        "bytes": 23653,
+        "sha256": "2e4a03afbb2688006a4875c693098c72f4ca8a04e6c6684e9f87263e3ea8ab58",
+        "type": "learner_launch",
+        "attempt": null,
+        "code": null
+      },
+      {
+        "offset": 23653,
+        "bytes": 381,
+        "sha256": "8359fa665557289bfcc2c82161fb021e6ccb85029b2ae8d8d98a852901875269",
+        "type": "learner_startup_attempt",
+        "attempt": 1,
+        "code": null
+      },
+      {
+        "offset": 26323,
+        "bytes": 459,
+        "sha256": "5bdce790079790ad2d637e00a0e660bcd531ee379715a6f43540dd88940efbea",
+        "type": "learner_startup_exit",
+        "attempt": 1,
+        "code": null
+      },
+      {
+        "offset": 26782,
+        "bytes": 382,
+        "sha256": "60a2308b753b64ee16419cf1cc0b0da92591ed96e6de4c0cc3d976d021486633",
+        "type": "learner_startup_retry",
+        "attempt": 1,
+        "code": null
+      },
+      {
+        "offset": 27164,
+        "bytes": 381,
+        "sha256": "9e61cc5ea91c3252672b40cd1dfd1b5c27d9541dd12a06cba35d985dccaafd77",
+        "type": "learner_startup_attempt",
+        "attempt": 2,
+        "code": null
+      },
+      {
+        "offset": 30560,
+        "bytes": 77,
+        "sha256": "2e4290a2b485a8d120d52af1c56f511b4172284c8c0b8e7fc7a06b4d00a47b57",
+        "type": "thread.started",
+        "attempt": null,
+        "code": null
+      }
+    ],
+    "startup_attempts": 2,
+    "failed_startups_preserved": 1,
+    "no_model_or_manual_restart": true
+  },
+  "verified_artifacts": [
+    {
+      "original": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261017-073111-s2/learner/runs/20261017-073124-c1008299-f794-4a4f-8d15-297c0d88de4a-strategy-proposal/evidence/brain.evidence.jsonl",
+      "archive": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261017-073111-s2/learner/runs/20261017-073124-c1008299-f794-4a4f-8d15-297c0d88de4a-strategy-proposal/evidence/brain.evidence.jsonl.gz",
+      "original_size": 16526415,
+      "original_sha256": "8a9ef14ceb58bd904d1d22a4a85d5085c1cc658d443735083b5aae2923a6e1e0",
+      "archive_size": 3466403,
+      "archive_sha256": "e9e44847b88457376394582cfd73dd36ecb3994cbc0de5e45014c3ffae92c57a",
+      "roundtrip_verified": true
+    },
+    {
+      "original": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261017-073111-s2/learner/runs/20261017-073124-c1008299-f794-4a4f-8d15-297c0d88de4a-strategy-proposal/evidence/decisions.evidence.jsonl",
+      "archive": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261017-073111-s2/learner/runs/20261017-073124-c1008299-f794-4a4f-8d15-297c0d88de4a-strategy-proposal/evidence/decisions.evidence.jsonl.gz",
+      "original_size": 37101599,
+      "original_sha256": "941f52538526de5320a48427b650ada30645f46a4d9d5e01a490434eedefdf2a",
+      "archive_size": 4321267,
+      "archive_sha256": "e3a8bbcb6d6ed6e7d613a779b1be8fbcacb737a8751573ac0c77a18c065cc4a0",
+      "roundtrip_verified": true
+    },
+    {
+      "original": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261017-073111-s2/learner/runs/20261017-073124-c1008299-f794-4a4f-8d15-297c0d88de4a-strategy-proposal/evidence/fight-plans.evidence.jsonl",
+      "archive": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261017-073111-s2/learner/runs/20261017-073124-c1008299-f794-4a4f-8d15-297c0d88de4a-strategy-proposal/evidence/fight-plans.evidence.jsonl.gz",
+      "original_size": 0,
+      "original_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "archive_size": 20,
+      "archive_sha256": "ac73670af3abed54ac6fb4695131f4099be9fbe39d6076c5d0264a6bbdae9d83",
+      "roundtrip_verified": true
+    },
+    {
+      "original": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261017-073111-s2/learner/runs/20261017-073124-c1008299-f794-4a4f-8d15-297c0d88de4a-strategy-proposal/evidence/run-config.evidence.jsonl",
+      "archive": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261017-073111-s2/learner/runs/20261017-073124-c1008299-f794-4a4f-8d15-297c0d88de4a-strategy-proposal/evidence/run-config.evidence.jsonl.gz",
+      "original_size": 77905,
+      "original_sha256": "282db183096bf2b0ab3c53362d30ca8a99517bf34a019094f8295856ed29edf6",
+      "archive_size": 5682,
+      "archive_sha256": "cf4e038c4f3b21e37b32c5c8f637f89d3dfd7b4cb6f39a5b6ae80732c257fb31",
+      "roundtrip_verified": true
+    },
+    {
+      "original": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261017-073111-s2/learner/runs/20261017-073124-c1008299-f794-4a4f-8d15-297c0d88de4a-strategy-proposal/evidence/run-plans.evidence.jsonl",
+      "archive": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261017-073111-s2/learner/runs/20261017-073124-c1008299-f794-4a4f-8d15-297c0d88de4a-strategy-proposal/evidence/run-plans.evidence.jsonl.gz",
+      "original_size": 166598,
+      "original_sha256": "ccd0198a8b5903ef6734c0b106ab9eb494398452ee6ffdcc1c0f7feedb71ad21",
+      "archive_size": 25499,
+      "archive_sha256": "ee47a57825e2b1199a31f07d95385ef3977a5231e926432ca4933551df5d6a9d",
+      "roundtrip_verified": true
+    },
+    {
+      "original": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261017-073111-s2/learner/runs/20261017-073124-c1008299-f794-4a4f-8d15-297c0d88de4a-strategy-proposal/evidence/runs.evidence.jsonl",
+      "archive": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261017-073111-s2/learner/runs/20261017-073124-c1008299-f794-4a4f-8d15-297c0d88de4a-strategy-proposal/evidence/runs.evidence.jsonl.gz",
+      "original_size": 9722,
+      "original_sha256": "07abed128ee0a384dd4c1dd4860c79febc82d38d2cbde4a8550fdf0e52b5ab5f",
+      "archive_size": 2620,
+      "archive_sha256": "f0f80a10d944580a2dee56f5b871131ea4e9adfb1c16ff41211d46f6832455c0",
+      "roundtrip_verified": true
+    },
+    {
+      "original": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261017-073111-s2/learner/runs/20261017-073124-c1008299-f794-4a4f-8d15-297c0d88de4a-strategy-proposal/evidence/sl-attempts.evidence.jsonl",
+      "archive": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261017-073111-s2/learner/runs/20261017-073124-c1008299-f794-4a4f-8d15-297c0d88de4a-strategy-proposal/evidence/sl-attempts.evidence.jsonl.gz",
+      "original_size": 1878052,
+      "original_sha256": "d9e4657e1b6731f0414ceb4e689231af18383bc5c764d4fee7d7c53b02dc8183",
+      "archive_size": 173215,
+      "archive_sha256": "9628a7d5255a80794b40a0c54893b9f81959896386993d2cd0dc8fe7ebb27e9f",
+      "roundtrip_verified": true
+    },
+    {
+      "original": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261017-073111-s2/learner/runs/20261017-073124-c1008299-f794-4a4f-8d15-297c0d88de4a-strategy-proposal/evidence/states.evidence.jsonl",
+      "archive": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261017-073111-s2/learner/runs/20261017-073124-c1008299-f794-4a4f-8d15-297c0d88de4a-strategy-proposal/evidence/states.evidence.jsonl.gz",
+      "original_size": 352659607,
+      "original_sha256": "f7dc0333beb2289b31d6906b1fda6bc2cfef9adbe1890baad18f580bc4016d2d",
+      "archive_size": 22416502,
+      "archive_sha256": "5d4df7e20703920c600c44a5ac1cbe74c4735b0aa43e991b460854b049ea63f1",
+      "roundtrip_verified": true
+    }
+  ],
+  "actual_original_ledger_rows": [
+    {
+      "offset": 22228316,
+      "bytes": 703,
+      "sha256": "269d6d3684812157c3e5a8f376097626514f07a66fae3d55828587dffba27957",
+      "row": {
+        "op": "update",
+        "id": "silent-0005",
+        "ts": "2026-10-17T07:46:55+08:00",
+        "by": "learner:strategy-proposal",
+        "where": {
+          "proposal": [
+            "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261017-073111-s2/learner/runs/20261017-073124-c1008299-f794-4a4f-8d15-297c0d88de4a-strategy-proposal/proposal.md"
+          ]
+        },
+        "note": "20261017-073111-s2策略复核：关联silent-proposal-04b6b430759815ed；15个本角色原局/8流19929行字节核验、150项固定观察通过，原窄实现live祖先见本批材料。各原宽项仍waiting，具体缺完整后继/联合消费者见proposal.md。本次仅追溯链接，不追加独立support/repeat，不改原claim/首证/prior/evidence/status/version。"
+      }
+    },
+    {
+      "offset": 22229019,
+      "bytes": 736,
+      "sha256": "9589a8d765274f4c70371baf0ebd8a5e6ef4205a414c04832fff1f075b3db946",
+      "row": {
+        "op": "update",
+        "id": "silent-0006",
+        "ts": "2026-10-17T07:46:55+08:00",
+        "by": "learner:strategy-proposal",
+        "where": {
+          "proposal": [
+            "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261017-073111-s2/learner/runs/20261017-073124-c1008299-f794-4a4f-8d15-297c0d88de4a-strategy-proposal/proposal.md"
+          ]
+        },
+        "note": "20261017-073111-s2策略复核：关联silent-proposal-38a49e6c97f31eea,silent-proposal-04b6b430759815ed；15个本角色原局/8流19929行字节核验、150项固定观察通过，原窄实现live祖先见本批材料。各原宽项仍waiting，具体缺完整后继/联合消费者见proposal.md。本次仅追溯链接，不追加独立support/repeat，不改原claim/首证/prior/evidence/status/version。"
+      }
+    },
+    {
+      "offset": 22229755,
+      "bytes": 736,
+      "sha256": "6ee09b0463552024e10ebe1d3ba5789f48802fbab6d55031c9e4f03e807792e2",
+      "row": {
+        "op": "update",
+        "id": "silent-0011",
+        "ts": "2026-10-17T07:46:55+08:00",
+        "by": "learner:strategy-proposal",
+        "where": {
+          "proposal": [
+            "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261017-073111-s2/learner/runs/20261017-073124-c1008299-f794-4a4f-8d15-297c0d88de4a-strategy-proposal/proposal.md"
+          ]
+        },
+        "note": "20261017-073111-s2策略复核：关联silent-proposal-38a49e6c97f31eea,silent-proposal-04b6b430759815ed；15个本角色原局/8流19929行字节核验、150项固定观察通过，原窄实现live祖先见本批材料。各原宽项仍waiting，具体缺完整后继/联合消费者见proposal.md。本次仅追溯链接，不追加独立support/repeat，不改原claim/首证/prior/evidence/status/version。"
+      }
+    },
+    {
+      "offset": 22230491,
+      "bytes": 703,
+      "sha256": "cc304c90f2d443e1e914b7045e80612d8143168063820241e48afbf662aa84b4",
+      "row": {
+        "op": "update",
+        "id": "silent-0013",
+        "ts": "2026-10-17T07:46:55+08:00",
+        "by": "learner:strategy-proposal",
+        "where": {
+          "proposal": [
+            "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261017-073111-s2/learner/runs/20261017-073124-c1008299-f794-4a4f-8d15-297c0d88de4a-strategy-proposal/proposal.md"
+          ]
+        },
+        "note": "20261017-073111-s2策略复核：关联silent-proposal-04b6b430759815ed；15个本角色原局/8流19929行字节核验、150项固定观察通过，原窄实现live祖先见本批材料。各原宽项仍waiting，具体缺完整后继/联合消费者见proposal.md。本次仅追溯链接，不追加独立support/repeat，不改原claim/首证/prior/evidence/status/version。"
+      }
+    },
+    {
+      "offset": 22231194,
+      "bytes": 736,
+      "sha256": "299b4193b3560dac7a26078a613a36610b69fb0ce28112939fc1c961f52483f6",
+      "row": {
+        "op": "update",
+        "id": "silent-0018",
+        "ts": "2026-10-17T07:46:55+08:00",
+        "by": "learner:strategy-proposal",
+        "where": {
+          "proposal": [
+            "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261017-073111-s2/learner/runs/20261017-073124-c1008299-f794-4a4f-8d15-297c0d88de4a-strategy-proposal/proposal.md"
+          ]
+        },
+        "note": "20261017-073111-s2策略复核：关联silent-proposal-a327449c331efbc1,silent-proposal-47910f82a1fdd98f；15个本角色原局/8流19929行字节核验、150项固定观察通过，原窄实现live祖先见本批材料。各原宽项仍waiting，具体缺完整后继/联合消费者见proposal.md。本次仅追溯链接，不追加独立support/repeat，不改原claim/首证/prior/evidence/status/version。"
+      }
+    },
+    {
+      "offset": 22231930,
+      "bytes": 802,
+      "sha256": "38705b439d83519ef766735ee7077d79a6855edcfd3ea522c73048253fa9596c",
+      "row": {
+        "op": "update",
+        "id": "silent-0019",
+        "ts": "2026-10-17T07:46:55+08:00",
+        "by": "learner:strategy-proposal",
+        "where": {
+          "proposal": [
+            "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261017-073111-s2/learner/runs/20261017-073124-c1008299-f794-4a4f-8d15-297c0d88de4a-strategy-proposal/proposal.md"
+          ]
+        },
+        "note": "20261017-073111-s2策略复核：关联silent-proposal-08eaa60bcc449852,silent-proposal-47910f82a1fdd98f,silent-proposal-f1374df72d8e6a25,silent-proposal-ef0e38a5dbd3bc07；15个本角色原局/8流19929行字节核验、150项固定观察通过，原窄实现live祖先见本批材料。各原宽项仍waiting，具体缺完整后继/联合消费者见proposal.md。本次仅追溯链接，不追加独立support/repeat，不改原claim/首证/prior/evidence/status/version。"
+      }
+    },
+    {
+      "offset": 22232732,
+      "bytes": 802,
+      "sha256": "5bfe7d93601ef973ad63651bebefe9b60f3c8e05f9c4e08e478e1bc9d2dd2703",
+      "row": {
+        "op": "update",
+        "id": "silent-0020",
+        "ts": "2026-10-17T07:46:55+08:00",
+        "by": "learner:strategy-proposal",
+        "where": {
+          "proposal": [
+            "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261017-073111-s2/learner/runs/20261017-073124-c1008299-f794-4a4f-8d15-297c0d88de4a-strategy-proposal/proposal.md"
+          ]
+        },
+        "note": "20261017-073111-s2策略复核：关联silent-proposal-08eaa60bcc449852,silent-proposal-47910f82a1fdd98f,silent-proposal-f1374df72d8e6a25,silent-proposal-ef0e38a5dbd3bc07；15个本角色原局/8流19929行字节核验、150项固定观察通过，原窄实现live祖先见本批材料。各原宽项仍waiting，具体缺完整后继/联合消费者见proposal.md。本次仅追溯链接，不追加独立support/repeat，不改原claim/首证/prior/evidence/status/version。"
+      }
+    },
+    {
+      "offset": 22233534,
+      "bytes": 769,
+      "sha256": "9b4cd9867695bac26b84a216d1a90f3884270307b59cfc51b938968d11589cf8",
+      "row": {
+        "op": "update",
+        "id": "silent-0021",
+        "ts": "2026-10-17T07:46:55+08:00",
+        "by": "learner:strategy-proposal",
+        "where": {
+          "proposal": [
+            "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261017-073111-s2/learner/runs/20261017-073124-c1008299-f794-4a4f-8d15-297c0d88de4a-strategy-proposal/proposal.md"
+          ]
+        },
+        "note": "20261017-073111-s2策略复核：关联silent-proposal-47910f82a1fdd98f,silent-proposal-ef0e38a5dbd3bc07,silent-proposal-04b6b430759815ed；15个本角色原局/8流19929行字节核验、150项固定观察通过，原窄实现live祖先见本批材料。各原宽项仍waiting，具体缺完整后继/联合消费者见proposal.md。本次仅追溯链接，不追加独立support/repeat，不改原claim/首证/prior/evidence/status/version。"
+      }
+    },
+    {
+      "offset": 22234303,
+      "bytes": 736,
+      "sha256": "ac1f3265c43e8d67c60f4bc50307a7949605b0c9f5beac12d5f8fae1ae81011f",
+      "row": {
+        "op": "update",
+        "id": "silent-0025",
+        "ts": "2026-10-17T07:46:55+08:00",
+        "by": "learner:strategy-proposal",
+        "where": {
+          "proposal": [
+            "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261017-073111-s2/learner/runs/20261017-073124-c1008299-f794-4a4f-8d15-297c0d88de4a-strategy-proposal/proposal.md"
+          ]
+        },
+        "note": "20261017-073111-s2策略复核：关联silent-proposal-47910f82a1fdd98f,silent-proposal-38a49e6c97f31eea；15个本角色原局/8流19929行字节核验、150项固定观察通过，原窄实现live祖先见本批材料。各原宽项仍waiting，具体缺完整后继/联合消费者见proposal.md。本次仅追溯链接，不追加独立support/repeat，不改原claim/首证/prior/evidence/status/version。"
+      }
+    },
+    {
+      "offset": 22235039,
+      "bytes": 703,
+      "sha256": "79e6a6bd1118b895cd937765a7b8bf4fb781073b8471a287bcb8942d9a3c9460",
+      "row": {
+        "op": "update",
+        "id": "silent-0030",
+        "ts": "2026-10-17T07:46:55+08:00",
+        "by": "learner:strategy-proposal",
+        "where": {
+          "proposal": [
+            "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261017-073111-s2/learner/runs/20261017-073124-c1008299-f794-4a4f-8d15-297c0d88de4a-strategy-proposal/proposal.md"
+          ]
+        },
+        "note": "20261017-073111-s2策略复核：关联silent-proposal-a099e89437e942bb；15个本角色原局/8流19929行字节核验、150项固定观察通过，原窄实现live祖先见本批材料。各原宽项仍waiting，具体缺完整后继/联合消费者见proposal.md。本次仅追溯链接，不追加独立support/repeat，不改原claim/首证/prior/evidence/status/version。"
+      }
+    },
+    {
+      "offset": 22235742,
+      "bytes": 703,
+      "sha256": "6a18b2b56eb5e3cbb69960461c7662f9d13bf1423579d19df73cd8e3489fd559",
+      "row": {
+        "op": "update",
+        "id": "silent-0044",
+        "ts": "2026-10-17T07:46:55+08:00",
+        "by": "learner:strategy-proposal",
+        "where": {
+          "proposal": [
+            "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261017-073111-s2/learner/runs/20261017-073124-c1008299-f794-4a4f-8d15-297c0d88de4a-strategy-proposal/proposal.md"
+          ]
+        },
+        "note": "20261017-073111-s2策略复核：关联silent-proposal-38a49e6c97f31eea；15个本角色原局/8流19929行字节核验、150项固定观察通过，原窄实现live祖先见本批材料。各原宽项仍waiting，具体缺完整后继/联合消费者见proposal.md。本次仅追溯链接，不追加独立support/repeat，不改原claim/首证/prior/evidence/status/version。"
+      }
+    },
+    {
+      "offset": 22236445,
+      "bytes": 736,
+      "sha256": "7ad4a3316d3ed8c056172a583b43f0ef5f7a1606ad5740539b030a336bfa3bac",
+      "row": {
+        "op": "update",
+        "id": "silent-0050",
+        "ts": "2026-10-17T07:46:55+08:00",
+        "by": "learner:strategy-proposal",
+        "where": {
+          "proposal": [
+            "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261017-073111-s2/learner/runs/20261017-073124-c1008299-f794-4a4f-8d15-297c0d88de4a-strategy-proposal/proposal.md"
+          ]
+        },
+        "note": "20261017-073111-s2策略复核：关联silent-proposal-f1374df72d8e6a25,silent-proposal-38a49e6c97f31eea；15个本角色原局/8流19929行字节核验、150项固定观察通过，原窄实现live祖先见本批材料。各原宽项仍waiting，具体缺完整后继/联合消费者见proposal.md。本次仅追溯链接，不追加独立support/repeat，不改原claim/首证/prior/evidence/status/version。"
+      }
+    },
+    {
+      "offset": 22237181,
+      "bytes": 703,
+      "sha256": "883265c48ef28670b16e99c1488442d84fd6be224d2f18ab10c61de01d098091",
+      "row": {
+        "op": "update",
+        "id": "silent-0053",
+        "ts": "2026-10-17T07:46:55+08:00",
+        "by": "learner:strategy-proposal",
+        "where": {
+          "proposal": [
+            "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261017-073111-s2/learner/runs/20261017-073124-c1008299-f794-4a4f-8d15-297c0d88de4a-strategy-proposal/proposal.md"
+          ]
+        },
+        "note": "20261017-073111-s2策略复核：关联silent-proposal-04b6b430759815ed；15个本角色原局/8流19929行字节核验、150项固定观察通过，原窄实现live祖先见本批材料。各原宽项仍waiting，具体缺完整后继/联合消费者见proposal.md。本次仅追溯链接，不追加独立support/repeat，不改原claim/首证/prior/evidence/status/version。"
+      }
+    },
+    {
+      "offset": 22237884,
+      "bytes": 703,
+      "sha256": "f847c158d026f73f10881d284fbdaa0616d4cf5be132d8651a96b40abf5d22c7",
+      "row": {
+        "op": "update",
+        "id": "silent-0064",
+        "ts": "2026-10-17T07:46:55+08:00",
+        "by": "learner:strategy-proposal",
+        "where": {
+          "proposal": [
+            "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261017-073111-s2/learner/runs/20261017-073124-c1008299-f794-4a4f-8d15-297c0d88de4a-strategy-proposal/proposal.md"
+          ]
+        },
+        "note": "20261017-073111-s2策略复核：关联silent-proposal-38a49e6c97f31eea；15个本角色原局/8流19929行字节核验、150项固定观察通过，原窄实现live祖先见本批材料。各原宽项仍waiting，具体缺完整后继/联合消费者见proposal.md。本次仅追溯链接，不追加独立support/repeat，不改原claim/首证/prior/evidence/status/version。"
+      }
+    },
+    {
+      "offset": 22238587,
+      "bytes": 703,
+      "sha256": "a3e43af3b2ff077c0d565eccbd427cce23aa29055bbedb9522b0ee9d1ad4cd5e",
+      "row": {
+        "op": "update",
+        "id": "silent-0065",
+        "ts": "2026-10-17T07:46:55+08:00",
+        "by": "learner:strategy-proposal",
+        "where": {
+          "proposal": [
+            "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261017-073111-s2/learner/runs/20261017-073124-c1008299-f794-4a4f-8d15-297c0d88de4a-strategy-proposal/proposal.md"
+          ]
+        },
+        "note": "20261017-073111-s2策略复核：关联silent-proposal-04b6b430759815ed；15个本角色原局/8流19929行字节核验、150项固定观察通过，原窄实现live祖先见本批材料。各原宽项仍waiting，具体缺完整后继/联合消费者见proposal.md。本次仅追溯链接，不追加独立support/repeat，不改原claim/首证/prior/evidence/status/version。"
+      }
+    },
+    {
+      "offset": 22239290,
+      "bytes": 802,
+      "sha256": "af0757674d14bacbb1219c7dfef656079f135db161d715b2dbc00fdfb2c951e7",
+      "row": {
+        "op": "update",
+        "id": "silent-0079",
+        "ts": "2026-10-17T07:46:55+08:00",
+        "by": "learner:strategy-proposal",
+        "where": {
+          "proposal": [
+            "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261017-073111-s2/learner/runs/20261017-073124-c1008299-f794-4a4f-8d15-297c0d88de4a-strategy-proposal/proposal.md"
+          ]
+        },
+        "note": "20261017-073111-s2策略复核：关联silent-proposal-a327449c331efbc1,silent-proposal-47910f82a1fdd98f,silent-proposal-7f820c02d39bfaea,silent-proposal-04b6b430759815ed；15个本角色原局/8流19929行字节核验、150项固定观察通过，原窄实现live祖先见本批材料。各原宽项仍waiting，具体缺完整后继/联合消费者见proposal.md。本次仅追溯链接，不追加独立support/repeat，不改原claim/首证/prior/evidence/status/version。"
+      }
+    },
+    {
+      "offset": 22240092,
+      "bytes": 736,
+      "sha256": "0e06924735686010b47f9b97304539ad8163724d0bba96fc15eaca9f528c4589",
+      "row": {
+        "op": "update",
+        "id": "silent-0133",
+        "ts": "2026-10-17T07:46:55+08:00",
+        "by": "learner:strategy-proposal",
+        "where": {
+          "proposal": [
+            "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261017-073111-s2/learner/runs/20261017-073124-c1008299-f794-4a4f-8d15-297c0d88de4a-strategy-proposal/proposal.md"
+          ]
+        },
+        "note": "20261017-073111-s2策略复核：关联silent-proposal-38a49e6c97f31eea,silent-proposal-04b6b430759815ed；15个本角色原局/8流19929行字节核验、150项固定观察通过，原窄实现live祖先见本批材料。各原宽项仍waiting，具体缺完整后继/联合消费者见proposal.md。本次仅追溯链接，不追加独立support/repeat，不改原claim/首证/prior/evidence/status/version。"
+      }
+    },
+    {
+      "offset": 22240828,
+      "bytes": 703,
+      "sha256": "ee75ee7b58050664119bdaca04be7e623c2acf69f8929f3384c5b53f93fc0e06",
+      "row": {
+        "op": "update",
+        "id": "silent-0162",
+        "ts": "2026-10-17T07:46:55+08:00",
+        "by": "learner:strategy-proposal",
+        "where": {
+          "proposal": [
+            "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261017-073111-s2/learner/runs/20261017-073124-c1008299-f794-4a4f-8d15-297c0d88de4a-strategy-proposal/proposal.md"
+          ]
+        },
+        "note": "20261017-073111-s2策略复核：关联silent-proposal-04b6b430759815ed；15个本角色原局/8流19929行字节核验、150项固定观察通过，原窄实现live祖先见本批材料。各原宽项仍waiting，具体缺完整后继/联合消费者见proposal.md。本次仅追溯链接，不追加独立support/repeat，不改原claim/首证/prior/evidence/status/version。"
+      }
+    },
+    {
+      "offset": 22241531,
+      "bytes": 703,
+      "sha256": "90b3e021989178159f14d5e62af6bf42e20ad54aa0d5a1584c2d7a994bee108b",
+      "row": {
+        "op": "update",
+        "id": "silent-0169",
+        "ts": "2026-10-17T07:46:55+08:00",
+        "by": "learner:strategy-proposal",
+        "where": {
+          "proposal": [
+            "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261017-073111-s2/learner/runs/20261017-073124-c1008299-f794-4a4f-8d15-297c0d88de4a-strategy-proposal/proposal.md"
+          ]
+        },
+        "note": "20261017-073111-s2策略复核：关联silent-proposal-04b6b430759815ed；15个本角色原局/8流19929行字节核验、150项固定观察通过，原窄实现live祖先见本批材料。各原宽项仍waiting，具体缺完整后继/联合消费者见proposal.md。本次仅追溯链接，不追加独立support/repeat，不改原claim/首证/prior/evidence/status/version。"
+      }
+    },
+    {
+      "offset": 22242234,
+      "bytes": 703,
+      "sha256": "b628e080a7bb038b44b0d0c2e1529f82ff7e2ee89e15b0b7be16bc8e7dcb22b3",
+      "row": {
+        "op": "update",
+        "id": "silent-0189",
+        "ts": "2026-10-17T07:46:55+08:00",
+        "by": "learner:strategy-proposal",
+        "where": {
+          "proposal": [
+            "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261017-073111-s2/learner/runs/20261017-073124-c1008299-f794-4a4f-8d15-297c0d88de4a-strategy-proposal/proposal.md"
+          ]
+        },
+        "note": "20261017-073111-s2策略复核：关联silent-proposal-04b6b430759815ed；15个本角色原局/8流19929行字节核验、150项固定观察通过，原窄实现live祖先见本批材料。各原宽项仍waiting，具体缺完整后继/联合消费者见proposal.md。本次仅追溯链接，不追加独立support/repeat，不改原claim/首证/prior/evidence/status/version。"
+      }
+    },
+    {
+      "offset": 22242937,
+      "bytes": 703,
+      "sha256": "f67f872d8ad59db3a9d7d57361cf00ea0cc035c83587ad0770110f83b805de66",
+      "row": {
+        "op": "update",
+        "id": "silent-0198",
+        "ts": "2026-10-17T07:46:55+08:00",
+        "by": "learner:strategy-proposal",
+        "where": {
+          "proposal": [
+            "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261017-073111-s2/learner/runs/20261017-073124-c1008299-f794-4a4f-8d15-297c0d88de4a-strategy-proposal/proposal.md"
+          ]
+        },
+        "note": "20261017-073111-s2策略复核：关联silent-proposal-47910f82a1fdd98f；15个本角色原局/8流19929行字节核验、150项固定观察通过，原窄实现live祖先见本批材料。各原宽项仍waiting，具体缺完整后继/联合消费者见proposal.md。本次仅追溯链接，不追加独立support/repeat，不改原claim/首证/prior/evidence/status/version。"
+      }
+    },
+    {
+      "offset": 22243640,
+      "bytes": 736,
+      "sha256": "f1abe0b64b27dd6c8e4cb3bf3d6b13b51d0f8f2063a0435b50f52bdb112a1e2a",
+      "row": {
+        "op": "update",
+        "id": "silent-0228",
+        "ts": "2026-10-17T07:46:55+08:00",
+        "by": "learner:strategy-proposal",
+        "where": {
+          "proposal": [
+            "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261017-073111-s2/learner/runs/20261017-073124-c1008299-f794-4a4f-8d15-297c0d88de4a-strategy-proposal/proposal.md"
+          ]
+        },
+        "note": "20261017-073111-s2策略复核：关联silent-proposal-92920295a648b540,silent-proposal-47910f82a1fdd98f；15个本角色原局/8流19929行字节核验、150项固定观察通过，原窄实现live祖先见本批材料。各原宽项仍waiting，具体缺完整后继/联合消费者见proposal.md。本次仅追溯链接，不追加独立support/repeat，不改原claim/首证/prior/evidence/status/version。"
+      }
+    },
+    {
+      "offset": 22244376,
+      "bytes": 736,
+      "sha256": "da7c04f71cc9d3405cfe4bd75ed7d9ee459fcd9ced3308de5bc6bfe544f37827",
+      "row": {
+        "op": "update",
+        "id": "silent-0253",
+        "ts": "2026-10-17T07:46:55+08:00",
+        "by": "learner:strategy-proposal",
+        "where": {
+          "proposal": [
+            "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261017-073111-s2/learner/runs/20261017-073124-c1008299-f794-4a4f-8d15-297c0d88de4a-strategy-proposal/proposal.md"
+          ]
+        },
+        "note": "20261017-073111-s2策略复核：关联silent-proposal-f1374df72d8e6a25,silent-proposal-38a49e6c97f31eea；15个本角色原局/8流19929行字节核验、150项固定观察通过，原窄实现live祖先见本批材料。各原宽项仍waiting，具体缺完整后继/联合消费者见proposal.md。本次仅追溯链接，不追加独立support/repeat，不改原claim/首证/prior/evidence/status/version。"
+      }
+    },
+    {
+      "offset": 22245112,
+      "bytes": 736,
+      "sha256": "1321f36f2515b920ed1fb92cb562680881ddbf892e8fa0110f446c6010b946db",
+      "row": {
+        "op": "update",
+        "id": "silent-0255",
+        "ts": "2026-10-17T07:46:55+08:00",
+        "by": "learner:strategy-proposal",
+        "where": {
+          "proposal": [
+            "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261017-073111-s2/learner/runs/20261017-073124-c1008299-f794-4a4f-8d15-297c0d88de4a-strategy-proposal/proposal.md"
+          ]
+        },
+        "note": "20261017-073111-s2策略复核：关联silent-proposal-92920295a648b540,silent-proposal-47910f82a1fdd98f；15个本角色原局/8流19929行字节核验、150项固定观察通过，原窄实现live祖先见本批材料。各原宽项仍waiting，具体缺完整后继/联合消费者见proposal.md。本次仅追溯链接，不追加独立support/repeat，不改原claim/首证/prior/evidence/status/version。"
+      }
+    },
+    {
+      "offset": 22245848,
+      "bytes": 703,
+      "sha256": "13a6e6e5727f43c945c3695248156b9b9dbcf4569837844a839764d41d64ca2b",
+      "row": {
+        "op": "update",
+        "id": "silent-0257",
+        "ts": "2026-10-17T07:46:55+08:00",
+        "by": "learner:strategy-proposal",
+        "where": {
+          "proposal": [
+            "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261017-073111-s2/learner/runs/20261017-073124-c1008299-f794-4a4f-8d15-297c0d88de4a-strategy-proposal/proposal.md"
+          ]
+        },
+        "note": "20261017-073111-s2策略复核：关联silent-proposal-a099e89437e942bb；15个本角色原局/8流19929行字节核验、150项固定观察通过，原窄实现live祖先见本批材料。各原宽项仍waiting，具体缺完整后继/联合消费者见proposal.md。本次仅追溯链接，不追加独立support/repeat，不改原claim/首证/prior/evidence/status/version。"
+      }
+    },
+    {
+      "offset": 22246551,
+      "bytes": 703,
+      "sha256": "d7f5e9d86ca7daf16dfe8e3427f2b63809f6410e2070c1aa7bb7b8aa4f1768c0",
+      "row": {
+        "op": "update",
+        "id": "silent-0258",
+        "ts": "2026-10-17T07:46:55+08:00",
+        "by": "learner:strategy-proposal",
+        "where": {
+          "proposal": [
+            "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261017-073111-s2/learner/runs/20261017-073124-c1008299-f794-4a4f-8d15-297c0d88de4a-strategy-proposal/proposal.md"
+          ]
+        },
+        "note": "20261017-073111-s2策略复核：关联silent-proposal-a099e89437e942bb；15个本角色原局/8流19929行字节核验、150项固定观察通过，原窄实现live祖先见本批材料。各原宽项仍waiting，具体缺完整后继/联合消费者见proposal.md。本次仅追溯链接，不追加独立support/repeat，不改原claim/首证/prior/evidence/status/version。"
+      }
+    },
+    {
+      "offset": 22247254,
+      "bytes": 703,
+      "sha256": "6da1c043486829d2bc7f82d501e3afb24bdc220a7ab17fece17328e9e9780c33",
+      "row": {
+        "op": "update",
+        "id": "silent-0259",
+        "ts": "2026-10-17T07:46:55+08:00",
+        "by": "learner:strategy-proposal",
+        "where": {
+          "proposal": [
+            "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261017-073111-s2/learner/runs/20261017-073124-c1008299-f794-4a4f-8d15-297c0d88de4a-strategy-proposal/proposal.md"
+          ]
+        },
+        "note": "20261017-073111-s2策略复核：关联silent-proposal-38a49e6c97f31eea；15个本角色原局/8流19929行字节核验、150项固定观察通过，原窄实现live祖先见本批材料。各原宽项仍waiting，具体缺完整后继/联合消费者见proposal.md。本次仅追溯链接，不追加独立support/repeat，不改原claim/首证/prior/evidence/status/version。"
+      }
+    },
+    {
+      "offset": 22247957,
+      "bytes": 703,
+      "sha256": "88711e4b89392e91c8383bfd7cf9d5f6cea52692017f35c81126efb204627444",
+      "row": {
+        "op": "update",
+        "id": "silent-0261",
+        "ts": "2026-10-17T07:46:55+08:00",
+        "by": "learner:strategy-proposal",
+        "where": {
+          "proposal": [
+            "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261017-073111-s2/learner/runs/20261017-073124-c1008299-f794-4a4f-8d15-297c0d88de4a-strategy-proposal/proposal.md"
+          ]
+        },
+        "note": "20261017-073111-s2策略复核：关联silent-proposal-38a49e6c97f31eea；15个本角色原局/8流19929行字节核验、150项固定观察通过，原窄实现live祖先见本批材料。各原宽项仍waiting，具体缺完整后继/联合消费者见proposal.md。本次仅追溯链接，不追加独立support/repeat，不改原claim/首证/prior/evidence/status/version。"
+      }
+    },
+    {
+      "offset": 22248660,
+      "bytes": 703,
+      "sha256": "60c084d5160a81cec00d981474dfbf61a9ab7d97f6058ecec987c8de5c10bbc4",
+      "row": {
+        "op": "update",
+        "id": "silent-0262",
+        "ts": "2026-10-17T07:46:55+08:00",
+        "by": "learner:strategy-proposal",
+        "where": {
+          "proposal": [
+            "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261017-073111-s2/learner/runs/20261017-073124-c1008299-f794-4a4f-8d15-297c0d88de4a-strategy-proposal/proposal.md"
+          ]
+        },
+        "note": "20261017-073111-s2策略复核：关联silent-proposal-38a49e6c97f31eea；15个本角色原局/8流19929行字节核验、150项固定观察通过，原窄实现live祖先见本批材料。各原宽项仍waiting，具体缺完整后继/联合消费者见proposal.md。本次仅追溯链接，不追加独立support/repeat，不改原claim/首证/prior/evidence/status/version。"
+      }
+    },
+    {
+      "offset": 22249363,
+      "bytes": 703,
+      "sha256": "f2c57266fc7e52c1f10259e4e3522af10723140820a1d4eac76638c9dc428a5e",
+      "row": {
+        "op": "update",
+        "id": "silent-0264",
+        "ts": "2026-10-17T07:46:55+08:00",
+        "by": "learner:strategy-proposal",
+        "where": {
+          "proposal": [
+            "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261017-073111-s2/learner/runs/20261017-073124-c1008299-f794-4a4f-8d15-297c0d88de4a-strategy-proposal/proposal.md"
+          ]
+        },
+        "note": "20261017-073111-s2策略复核：关联silent-proposal-04b6b430759815ed；15个本角色原局/8流19929行字节核验、150项固定观察通过，原窄实现live祖先见本批材料。各原宽项仍waiting，具体缺完整后继/联合消费者见proposal.md。本次仅追溯链接，不追加独立support/repeat，不改原claim/首证/prior/evidence/status/version。"
+      }
+    },
+    {
+      "offset": 22250066,
+      "bytes": 703,
+      "sha256": "319e8d3df22f843c3b387846b8924aa19431e086b98ca02d00d0df827402b0b8",
+      "row": {
+        "op": "update",
+        "id": "silent-0265",
+        "ts": "2026-10-17T07:46:55+08:00",
+        "by": "learner:strategy-proposal",
+        "where": {
+          "proposal": [
+            "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261017-073111-s2/learner/runs/20261017-073124-c1008299-f794-4a4f-8d15-297c0d88de4a-strategy-proposal/proposal.md"
+          ]
+        },
+        "note": "20261017-073111-s2策略复核：关联silent-proposal-04b6b430759815ed；15个本角色原局/8流19929行字节核验、150项固定观察通过，原窄实现live祖先见本批材料。各原宽项仍waiting，具体缺完整后继/联合消费者见proposal.md。本次仅追溯链接，不追加独立support/repeat，不改原claim/首证/prior/evidence/status/version。"
+      }
+    }
+  ],
+  "source": {
+    "base": "6c3a776b741276285beb422d2f9be98c6112851a",
+    "files": {
+      "agent/src/reflex/card-model.ts": {
+        "sha256": "b94e5748ec3f5792120408dd06f6c8e2d00516bd0a05ce1a70882c4c7419fc75",
+        "bytes": 128390
+      },
+      "agent/src/reflex/combat-plan.ts": {
+        "sha256": "c63343769d53e1244f9efec4d247bb78c62ed54e6b16f79e4645196f71e2ba18",
+        "bytes": 365177
+      },
+      "agent/src/reflex/turn-solver.ts": {
+        "sha256": "86403224078a7e9d8402c2a487424548923ad7abbd4c65a8544e5be538857a09",
+        "bytes": 262996
+      },
+      "agent/src/reflex/rollout.ts": {
+        "sha256": "f845fbe3666c7bb52701367e1f02984f8774937c63c24307c814539670dcd86c",
+        "bytes": 215823
+      },
+      "agent/src/reflex/rollout-live.ts": {
+        "sha256": "30ff27d414592f8e111be4a709a6c7595165f1e4d0684d72bb8c5d9bf933d978",
+        "bytes": 76124
+      },
+      "agent/src/sl/explore.ts": {
+        "sha256": "2f37e85cc1c1c31e96a0d1b90db850893ec75b6cf5b4b84bf07bbb8de4e3ec43",
+        "bytes": 100630
+      },
+      "agent/src/sim/silent-opening.ts": {
+        "sha256": "f3baa27bfac07d9f60995e37b7bbe31f7fa5baa63f18dd4fda3bc8d2c09bf502",
+        "bytes": 2092
+      },
+      "agent/src/sim/boss-start.ts": {
+        "sha256": "01ef66ce210a3d022f1e28e34188b7005c7a88aa2b020e6f242f4030a95aee02",
+        "bytes": 29836
+      },
+      "agent/src/sim/double-boss-start.ts": {
+        "sha256": "3241dedb92ff1ff9803df3786f15e65e669e7371756cca8668fb8c57771e97eb",
+        "bytes": 4663
+      },
+      "agent/src/sim/boss-sim.ts": {
+        "sha256": "f30a0c5bdd66d63b7ccd962947735ca2dfded2eaec76dd364f5e90fec0aafac6",
+        "bytes": 42833
+      },
+      "agent/src/reflex/continuation-value.ts": {
+        "sha256": "002277b50728ab8fd405799c0a3345e5dcb788ba8f37d5489b5fbcd9623029bb",
+        "bytes": 1144
+      },
+      "agent/src/reflex/silent-crusher-facing.ts": {
+        "sha256": "78a90e120c688a8bae4ed80077ef12a862efa29b1d423160cca4cf72a13eed8e",
+        "bytes": 2581
+      }
+    }
+  },
+  "existing_material_checks": {
+    "checks": [
+      {
+        "observation": "TXZ F48 attempt2 T6 through next turn: HP cost and enemy loss",
+        "actual": [
+          3,
+          36
+        ],
+        "expected": [
+          3,
+          36
+        ]
+      },
+      {
+        "observation": "TXZ F48 attempt3 T6 through next turn: HP cost and enemy loss",
+        "actual": [
+          0,
+          27
+        ],
+        "expected": [
+          0,
+          27
+        ]
+      },
+      {
+        "observation": "TXZ first-boss reward HP then second-fight pre-action death",
+        "actual": [
+          4,
+          4,
+          4,
+          0
+        ],
+        "expected": [
+          4,
+          4,
+          4,
+          0
+        ]
+      },
+      {
+        "observation": "TXZ second enemy never took damage at this opening",
+        "actual": [
+          111,
+          111
+        ],
+        "expected": [
+          111,
+          111
+        ]
+      },
+      {
+        "observation": "WQ F33 attempt2 T9",
+        "actual": [
+          13,
+          24
+        ],
+        "expected": [
+          13,
+          24
+        ]
+      },
+      {
+        "observation": "WQ F33 attempt3 T9",
+        "actual": [
+          22,
+          39
+        ],
+        "expected": [
+          22,
+          39
+        ]
+      },
+      {
+        "observation": "WQ F33 attempt2 T7",
+        "actual": [
+          0,
+          24
+        ],
+        "expected": [
+          0,
+          24
+        ]
+      },
+      {
+        "observation": "WQ F33 attempt6 T7",
+        "actual": [
+          4,
+          24
+        ],
+        "expected": [
+          4,
+          24
+        ]
+      },
+      {
+        "observation": "WQ F33 T7 sandpit after cards, before decrement",
+        "actual": [
+          4,
+          5
+        ],
+        "expected": [
+          4,
+          5
+        ]
+      },
+      {
+        "observation": "NHA F33 attempt2 T1 through next turn",
+        "actual": [
+          1,
+          8
+        ],
+        "expected": [
+          1,
+          8
+        ]
+      },
+      {
+        "observation": "NHA F33 attempt5 T1 through next turn",
+        "actual": [
+          7,
+          24
+        ],
+        "expected": [
+          7,
+          24
+        ]
+      },
+      {
+        "observation": "NHA F33 attempt6 T1 replay",
+        "actual": [
+          7,
+          24
+        ],
+        "expected": [
+          7,
+          24
+        ]
+      },
+      {
+        "observation": "NHA original versus replacement block",
+        "actual": [
+          14,
+          8
+        ],
+        "expected": [
+          14,
+          8
+        ]
+      },
+      {
+        "observation": "NHA first X1 Malaise observed debuffs",
+        "actual": [
+          -2,
+          2
+        ],
+        "expected": [
+          -2,
+          2
+        ]
+      },
+      {
+        "observation": "Q6 ordinary Strangle establishment followed by attack, pending discard and completion",
+        "actual": [
+          103,
+          95,
+          85,
+          85,
+          83,
+          80
+        ],
+        "expected": [
+          103,
+          95,
+          85,
+          85,
+          83,
+          80
+        ]
+      },
+      {
+        "observation": "Q6 completed discard readiness",
+        "actual": [
+          false,
+          true
+        ],
+        "expected": [
+          false,
+          true
+        ]
+      },
+      {
+        "observation": "1913 Abrasive discard energy and gained powers",
+        "actual": [
+          3,
+          3,
+          1,
+          4
+        ],
+        "expected": [
+          3,
+          3,
+          1,
+          4
+        ]
+      },
+      {
+        "observation": "all observed Cunning drinks",
+        "actual": 42,
+        "expected": 42
+      },
+      {
+        "observation": "SADL3CGYTGSR:231885: capacity",
+        "actual": 3,
+        "expected": 3
+      },
+      {
+        "observation": "SADL3CGYTGSR:231885: HP and energy unchanged",
+        "actual": [
+          true,
+          true
+        ],
+        "expected": [
+          true,
+          true
+        ]
+      },
+      {
+        "observation": "SADL3CGYTGSR:231885: appended upgraded six-base Shivs",
+        "actual": [
+          [
+            "SHIV",
+            true,
+            6
+          ],
+          [
+            "SHIV",
+            true,
+            6
+          ],
+          [
+            "SHIV",
+            true,
+            6
+          ]
+        ],
+        "expected": [
+          [
+            "SHIV",
+            true,
+            6
+          ],
+          [
+            "SHIV",
+            true,
+            6
+          ],
+          [
+            "SHIV",
+            true,
+            6
+          ]
+        ]
+      },
+      {
+        "observation": "F4QKG4J1AJJZ:239622: capacity",
+        "actual": 3,
+        "expected": 3
+      },
+      {
+        "observation": "F4QKG4J1AJJZ:239622: HP and energy unchanged",
+        "actual": [
+          true,
+          true
+        ],
+        "expected": [
+          true,
+          true
+        ]
+      },
+      {
+        "observation": "F4QKG4J1AJJZ:239622: appended upgraded six-base Shivs",
+        "actual": [
+          [
+            "SHIV",
+            true,
+            6
+          ],
+          [
+            "SHIV",
+            true,
+            6
+          ],
+          [
+            "SHIV",
+            true,
+            6
+          ]
+        ],
+        "expected": [
+          [
+            "SHIV",
+            true,
+            6
+          ],
+          [
+            "SHIV",
+            true,
+            6
+          ],
+          [
+            "SHIV",
+            true,
+            6
+          ]
+        ]
+      },
+      {
+        "observation": "F4QKG4J1AJJZ:239688: capacity",
+        "actual": 3,
+        "expected": 3
+      },
+      {
+        "observation": "F4QKG4J1AJJZ:239688: HP and energy unchanged",
+        "actual": [
+          true,
+          true
+        ],
+        "expected": [
+          true,
+          true
+        ]
+      },
+      {
+        "observation": "F4QKG4J1AJJZ:239688: appended upgraded six-base Shivs",
+        "actual": [
+          [
+            "SHIV",
+            true,
+            6
+          ],
+          [
+            "SHIV",
+            true,
+            6
+          ],
+          [
+            "SHIV",
+            true,
+            6
+          ]
+        ],
+        "expected": [
+          [
+            "SHIV",
+            true,
+            6
+          ],
+          [
+            "SHIV",
+            true,
+            6
+          ],
+          [
+            "SHIV",
+            true,
+            6
+          ]
+        ]
+      },
+      {
+        "observation": "JLN5SK17W4FQ:242409: capacity",
+        "actual": 3,
+        "expected": 3
+      },
+      {
+        "observation": "JLN5SK17W4FQ:242409: HP and energy unchanged",
+        "actual": [
+          true,
+          true
+        ],
+        "expected": [
+          true,
+          true
+        ]
+      },
+      {
+        "observation": "JLN5SK17W4FQ:242409: appended upgraded six-base Shivs",
+        "actual": [
+          [
+            "SHIV",
+            true,
+            6
+          ],
+          [
+            "SHIV",
+            true,
+            6
+          ],
+          [
+            "SHIV",
+            true,
+            6
+          ]
+        ],
+        "expected": [
+          [
+            "SHIV",
+            true,
+            6
+          ],
+          [
+            "SHIV",
+            true,
+            6
+          ],
+          [
+            "SHIV",
+            true,
+            6
+          ]
+        ]
+      },
+      {
+        "observation": "JLN5SK17W4FQ:242448: capacity",
+        "actual": 3,
+        "expected": 3
+      },
+      {
+        "observation": "JLN5SK17W4FQ:242448: HP and energy unchanged",
+        "actual": [
+          true,
+          true
+        ],
+        "expected": [
+          true,
+          true
+        ]
+      },
+      {
+        "observation": "JLN5SK17W4FQ:242448: appended upgraded six-base Shivs",
+        "actual": [
+          [
+            "SHIV",
+            true,
+            6
+          ],
+          [
+            "SHIV",
+            true,
+            6
+          ],
+          [
+            "SHIV",
+            true,
+            6
+          ]
+        ],
+        "expected": [
+          [
+            "SHIV",
+            true,
+            6
+          ],
+          [
+            "SHIV",
+            true,
+            6
+          ],
+          [
+            "SHIV",
+            true,
+            6
+          ]
+        ]
+      },
+      {
+        "observation": "JLN5SK17W4FQ:242489: capacity",
+        "actual": 3,
+        "expected": 3
+      },
+      {
+        "observation": "JLN5SK17W4FQ:242489: HP and energy unchanged",
+        "actual": [
+          true,
+          true
+        ],
+        "expected": [
+          true,
+          true
+        ]
+      },
+      {
+        "observation": "JLN5SK17W4FQ:242489: appended upgraded six-base Shivs",
+        "actual": [
+          [
+            "SHIV",
+            true,
+            6
+          ],
+          [
+            "SHIV",
+            true,
+            6
+          ],
+          [
+            "SHIV",
+            true,
+            6
+          ]
+        ],
+        "expected": [
+          [
+            "SHIV",
+            true,
+            6
+          ],
+          [
+            "SHIV",
+            true,
+            6
+          ],
+          [
+            "SHIV",
+            true,
+            6
+          ]
+        ]
+      },
+      {
+        "observation": "JLN5SK17W4FQ:242531: capacity",
+        "actual": 3,
+        "expected": 3
+      },
+      {
+        "observation": "JLN5SK17W4FQ:242531: HP and energy unchanged",
+        "actual": [
+          true,
+          true
+        ],
+        "expected": [
+          true,
+          true
+        ]
+      },
+      {
+        "observation": "JLN5SK17W4FQ:242531: appended upgraded six-base Shivs",
+        "actual": [
+          [
+            "SHIV",
+            true,
+            6
+          ],
+          [
+            "SHIV",
+            true,
+            6
+          ],
+          [
+            "SHIV",
+            true,
+            6
+          ]
+        ],
+        "expected": [
+          [
+            "SHIV",
+            true,
+            6
+          ],
+          [
+            "SHIV",
+            true,
+            6
+          ],
+          [
+            "SHIV",
+            true,
+            6
+          ]
+        ]
+      },
+      {
+        "observation": "JLN5SK17W4FQ:242574: capacity",
+        "actual": 3,
+        "expected": 3
+      },
+      {
+        "observation": "JLN5SK17W4FQ:242574: HP and energy unchanged",
+        "actual": [
+          true,
+          true
+        ],
+        "expected": [
+          true,
+          true
+        ]
+      },
+      {
+        "observation": "JLN5SK17W4FQ:242574: appended upgraded six-base Shivs",
+        "actual": [
+          [
+            "SHIV",
+            true,
+            6
+          ],
+          [
+            "SHIV",
+            true,
+            6
+          ],
+          [
+            "SHIV",
+            true,
+            6
+          ]
+        ],
+        "expected": [
+          [
+            "SHIV",
+            true,
+            6
+          ],
+          [
+            "SHIV",
+            true,
+            6
+          ],
+          [
+            "SHIV",
+            true,
+            6
+          ]
+        ]
+      },
+      {
+        "observation": "JLN5SK17W4FQ:242613: capacity",
+        "actual": 3,
+        "expected": 3
+      },
+      {
+        "observation": "JLN5SK17W4FQ:242613: HP and energy unchanged",
+        "actual": [
+          true,
+          true
+        ],
+        "expected": [
+          true,
+          true
+        ]
+      },
+      {
+        "observation": "JLN5SK17W4FQ:242613: appended upgraded six-base Shivs",
+        "actual": [
+          [
+            "SHIV",
+            true,
+            6
+          ],
+          [
+            "SHIV",
+            true,
+            6
+          ],
+          [
+            "SHIV",
+            true,
+            6
+          ]
+        ],
+        "expected": [
+          [
+            "SHIV",
+            true,
+            6
+          ],
+          [
+            "SHIV",
+            true,
+            6
+          ],
+          [
+            "SHIV",
+            true,
+            6
+          ]
+        ]
+      },
+      {
+        "observation": "4D4J8USKCPAV:245346: capacity",
+        "actual": 3,
+        "expected": 3
+      },
+      {
+        "observation": "4D4J8USKCPAV:245346: HP and energy unchanged",
+        "actual": [
+          true,
+          true
+        ],
+        "expected": [
+          true,
+          true
+        ]
+      },
+      {
+        "observation": "4D4J8USKCPAV:245346: appended upgraded six-base Shivs",
+        "actual": [
+          [
+            "SHIV",
+            true,
+            6
+          ],
+          [
+            "SHIV",
+            true,
+            6
+          ],
+          [
+            "SHIV",
+            true,
+            6
+          ]
+        ],
+        "expected": [
+          [
+            "SHIV",
+            true,
+            6
+          ],
+          [
+            "SHIV",
+            true,
+            6
+          ],
+          [
+            "SHIV",
+            true,
+            6
+          ]
+        ]
+      },
+      {
+        "observation": "4D4J8USKCPAV:245375: capacity",
+        "actual": 3,
+        "expected": 3
+      },
+      {
+        "observation": "4D4J8USKCPAV:245375: HP and energy unchanged",
+        "actual": [
+          true,
+          true
+        ],
+        "expected": [
+          true,
+          true
+        ]
+      },
+      {
+        "observation": "4D4J8USKCPAV:245375: appended upgraded six-base Shivs",
+        "actual": [
+          [
+            "SHIV",
+            true,
+            6
+          ],
+          [
+            "SHIV",
+            true,
+            6
+          ],
+          [
+            "SHIV",
+            true,
+            6
+          ]
+        ],
+        "expected": [
+          [
+            "SHIV",
+            true,
+            6
+          ],
+          [
+            "SHIV",
+            true,
+            6
+          ],
+          [
+            "SHIV",
+            true,
+            6
+          ]
+        ]
+      },
+      {
+        "observation": "4D4J8USKCPAV:245415: capacity",
+        "actual": 3,
+        "expected": 3
+      },
+      {
+        "observation": "4D4J8USKCPAV:245415: HP and energy unchanged",
+        "actual": [
+          true,
+          true
+        ],
+        "expected": [
+          true,
+          true
+        ]
+      },
+      {
+        "observation": "4D4J8USKCPAV:245415: appended upgraded six-base Shivs",
+        "actual": [
+          [
+            "SHIV",
+            true,
+            6
+          ],
+          [
+            "SHIV",
+            true,
+            6
+          ],
+          [
+            "SHIV",
+            true,
+            6
+          ]
+        ],
+        "expected": [
+          [
+            "SHIV",
+            true,
+            6
+          ],
+          [
+            "SHIV",
+            true,
+            6
+          ],
+          [
+            "SHIV",
+            true,
+            6
+          ]
+        ]
+      },
+      {
+        "observation": "4D4J8USKCPAV:245448: capacity",
+        "actual": 3,
+        "expected": 3
+      },
+      {
+        "observation": "4D4J8USKCPAV:245448: HP and energy unchanged",
+        "actual": [
+          true,
+          true
+        ],
+        "expected": [
+          true,
+          true
+        ]
+      },
+      {
+        "observation": "4D4J8USKCPAV:245448: appended upgraded six-base Shivs",
+        "actual": [
+          [
+            "SHIV",
+            true,
+            6
+          ],
+          [
+            "SHIV",
+            true,
+            6
+          ],
+          [
+            "SHIV",
+            true,
+            6
+          ]
+        ],
+        "expected": [
+          [
+            "SHIV",
+            true,
+            6
+          ],
+          [
+            "SHIV",
+            true,
+            6
+          ],
+          [
+            "SHIV",
+            true,
+            6
+          ]
+        ]
+      },
+      {
+        "observation": "4D4J8USKCPAV:245482: capacity",
+        "actual": 3,
+        "expected": 3
+      },
+      {
+        "observation": "4D4J8USKCPAV:245482: HP and energy unchanged",
+        "actual": [
+          true,
+          true
+        ],
+        "expected": [
+          true,
+          true
+        ]
+      },
+      {
+        "observation": "4D4J8USKCPAV:245482: appended upgraded six-base Shivs",
+        "actual": [
+          [
+            "SHIV",
+            true,
+            6
+          ],
+          [
+            "SHIV",
+            true,
+            6
+          ],
+          [
+            "SHIV",
+            true,
+            6
+          ]
+        ],
+        "expected": [
+          [
+            "SHIV",
+            true,
+            6
+          ],
+          [
+            "SHIV",
+            true,
+            6
+          ],
+          [
+            "SHIV",
+            true,
+            6
+          ]
+        ]
+      },
+      {
+        "observation": "4D4J8USKCPAV:245513: capacity",
+        "actual": 3,
+        "expected": 3
+      },
+      {
+        "observation": "4D4J8USKCPAV:245513: HP and energy unchanged",
+        "actual": [
+          true,
+          true
+        ],
+        "expected": [
+          true,
+          true
+        ]
+      },
+      {
+        "observation": "4D4J8USKCPAV:245513: appended upgraded six-base Shivs",
+        "actual": [
+          [
+            "SHIV",
+            true,
+            6
+          ],
+          [
+            "SHIV",
+            true,
+            6
+          ],
+          [
+            "SHIV",
+            true,
+            6
+          ]
+        ],
+        "expected": [
+          [
+            "SHIV",
+            true,
+            6
+          ],
+          [
+            "SHIV",
+            true,
+            6
+          ],
+          [
+            "SHIV",
+            true,
+            6
+          ]
+        ]
+      },
+      {
+        "observation": "S9UZAK0JP0C0:247115: capacity",
+        "actual": 3,
+        "expected": 3
+      },
+      {
+        "observation": "S9UZAK0JP0C0:247115: HP and energy unchanged",
+        "actual": [
+          true,
+          true
+        ],
+        "expected": [
+          true,
+          true
+        ]
+      },
+      {
+        "observation": "S9UZAK0JP0C0:247115: appended upgraded six-base Shivs",
+        "actual": [
+          [
+            "SHIV",
+            true,
+            6
+          ],
+          [
+            "SHIV",
+            true,
+            6
+          ],
+          [
+            "SHIV",
+            true,
+            6
+          ]
+        ],
+        "expected": [
+          [
+            "SHIV",
+            true,
+            6
+          ],
+          [
+            "SHIV",
+            true,
+            6
+          ],
+          [
+            "SHIV",
+            true,
+            6
+          ]
+        ]
+      },
+      {
+        "observation": "S9UZAK0JP0C0:247172: capacity",
+        "actual": 3,
+        "expected": 3
+      },
+      {
+        "observation": "S9UZAK0JP0C0:247172: HP and energy unchanged",
+        "actual": [
+          true,
+          true
+        ],
+        "expected": [
+          true,
+          true
+        ]
+      },
+      {
+        "observation": "S9UZAK0JP0C0:247172: appended upgraded six-base Shivs",
+        "actual": [
+          [
+            "SHIV",
+            true,
+            6
+          ],
+          [
+            "SHIV",
+            true,
+            6
+          ],
+          [
+            "SHIV",
+            true,
+            6
+          ]
+        ],
+        "expected": [
+          [
+            "SHIV",
+            true,
+            6
+          ],
+          [
+            "SHIV",
+            true,
+            6
+          ],
+          [
+            "SHIV",
+            true,
+            6
+          ]
+        ]
+      },
+      {
+        "observation": "S9UZAK0JP0C0:247229: capacity",
+        "actual": 3,
+        "expected": 3
+      },
+      {
+        "observation": "S9UZAK0JP0C0:247229: HP and energy unchanged",
+        "actual": [
+          true,
+          true
+        ],
+        "expected": [
+          true,
+          true
+        ]
+      },
+      {
+        "observation": "S9UZAK0JP0C0:247229: appended upgraded six-base Shivs",
+        "actual": [
+          [
+            "SHIV",
+            true,
+            6
+          ],
+          [
+            "SHIV",
+            true,
+            6
+          ],
+          [
+            "SHIV",
+            true,
+            6
+          ]
+        ],
+        "expected": [
+          [
+            "SHIV",
+            true,
+            6
+          ],
+          [
+            "SHIV",
+            true,
+            6
+          ],
+          [
+            "SHIV",
+            true,
+            6
+          ]
+        ]
+      },
+      {
+        "observation": "S9UZAK0JP0C0:247284: capacity",
+        "actual": 3,
+        "expected": 3
+      },
+      {
+        "observation": "S9UZAK0JP0C0:247284: HP and energy unchanged",
+        "actual": [
+          true,
+          true
+        ],
+        "expected": [
+          true,
+          true
+        ]
+      },
+      {
+        "observation": "S9UZAK0JP0C0:247284: appended upgraded six-base Shivs",
+        "actual": [
+          [
+            "SHIV",
+            true,
+            6
+          ],
+          [
+            "SHIV",
+            true,
+            6
+          ],
+          [
+            "SHIV",
+            true,
+            6
+          ]
+        ],
+        "expected": [
+          [
+            "SHIV",
+            true,
+            6
+          ],
+          [
+            "SHIV",
+            true,
+            6
+          ],
+          [
+            "SHIV",
+            true,
+            6
+          ]
+        ]
+      },
+      {
+        "observation": "S9UZAK0JP0C0:247328: capacity",
+        "actual": 3,
+        "expected": 3
+      },
+      {
+        "observation": "S9UZAK0JP0C0:247328: HP and energy unchanged",
+        "actual": [
+          true,
+          true
+        ],
+        "expected": [
+          true,
+          true
+        ]
+      },
+      {
+        "observation": "S9UZAK0JP0C0:247328: appended upgraded six-base Shivs",
+        "actual": [
+          [
+            "SHIV",
+            true,
+            6
+          ],
+          [
+            "SHIV",
+            true,
+            6
+          ],
+          [
+            "SHIV",
+            true,
+            6
+          ]
+        ],
+        "expected": [
+          [
+            "SHIV",
+            true,
+            6
+          ],
+          [
+            "SHIV",
+            true,
+            6
+          ],
+          [
+            "SHIV",
+            true,
+            6
+          ]
+        ]
+      },
+      {
+        "observation": "S9UZAK0JP0C0:247372: capacity",
+        "actual": 3,
+        "expected": 3
+      },
+      {
+        "observation": "S9UZAK0JP0C0:247372: HP and energy unchanged",
+        "actual": [
+          true,
+          true
+        ],
+        "expected": [
+          true,
+          true
+        ]
+      },
+      {
+        "observation": "S9UZAK0JP0C0:247372: appended upgraded six-base Shivs",
+        "actual": [
+          [
+            "SHIV",
+            true,
+            6
+          ],
+          [
+            "SHIV",
+            true,
+            6
+          ],
+          [
+            "SHIV",
+            true,
+            6
+          ]
+        ],
+        "expected": [
+          [
+            "SHIV",
+            true,
+            6
+          ],
+          [
+            "SHIV",
+            true,
+            6
+          ],
+          [
+            "SHIV",
+            true,
+            6
+          ]
+        ]
+      },
+      {
+        "observation": "NB8KCF6HRGVF:253286: capacity",
+        "actual": 3,
+        "expected": 3
+      },
+      {
+        "observation": "NB8KCF6HRGVF:253286: HP and energy unchanged",
+        "actual": [
+          true,
+          true
+        ],
+        "expected": [
+          true,
+          true
+        ]
+      },
+      {
+        "observation": "NB8KCF6HRGVF:253286: appended upgraded six-base Shivs",
+        "actual": [
+          [
+            "SHIV",
+            true,
+            6
+          ],
+          [
+            "SHIV",
+            true,
+            6
+          ],
+          [
+            "SHIV",
+            true,
+            6
+          ]
+        ],
+        "expected": [
+          [
+            "SHIV",
+            true,
+            6
+          ],
+          [
+            "SHIV",
+            true,
+            6
+          ],
+          [
+            "SHIV",
+            true,
+            6
+          ]
+        ]
+      },
+      {
+        "observation": "LS8035TB32P3:255222: capacity",
+        "actual": 3,
+        "expected": 3
+      },
+      {
+        "observation": "LS8035TB32P3:255222: HP and energy unchanged",
+        "actual": [
+          true,
+          true
+        ],
+        "expected": [
+          true,
+          true
+        ]
+      },
+      {
+        "observation": "LS8035TB32P3:255222: appended upgraded six-base Shivs",
+        "actual": [
+          [
+            "SHIV",
+            true,
+            6
+          ],
+          [
+            "SHIV",
+            true,
+            6
+          ],
+          [
+            "SHIV",
+            true,
+            6
+          ]
+        ],
+        "expected": [
+          [
+            "SHIV",
+            true,
+            6
+          ],
+          [
+            "SHIV",
+            true,
+            6
+          ],
+          [
+            "SHIV",
+            true,
+            6
+          ]
+        ]
+      },
+      {
+        "observation": "02HB4L0C3C67:266260: capacity",
+        "actual": 3,
+        "expected": 3
+      },
+      {
+        "observation": "02HB4L0C3C67:266260: HP and energy unchanged",
+        "actual": [
+          true,
+          true
+        ],
+        "expected": [
+          true,
+          true
+        ]
+      },
+      {
+        "observation": "02HB4L0C3C67:266260: appended upgraded six-base Shivs",
+        "actual": [
+          [
+            "SHIV",
+            true,
+            6
+          ],
+          [
+            "SHIV",
+            true,
+            6
+          ],
+          [
+            "SHIV",
+            true,
+            6
+          ]
+        ],
+        "expected": [
+          [
+            "SHIV",
+            true,
+            6
+          ],
+          [
+            "SHIV",
+            true,
+            6
+          ],
+          [
+            "SHIV",
+            true,
+            6
+          ]
+        ]
+      },
+      {
+        "observation": "WQZVENQ7DTRP:282021: capacity",
+        "actual": 3,
+        "expected": 3
+      },
+      {
+        "observation": "WQZVENQ7DTRP:282021: HP and energy unchanged",
+        "actual": [
+          true,
+          true
+        ],
+        "expected": [
+          true,
+          true
+        ]
+      },
+      {
+        "observation": "WQZVENQ7DTRP:282021: appended upgraded six-base Shivs",
+        "actual": [
+          [
+            "SHIV",
+            true,
+            6
+          ],
+          [
+            "SHIV",
+            true,
+            6
+          ],
+          [
+            "SHIV",
+            true,
+            6
+          ]
+        ],
+        "expected": [
+          [
+            "SHIV",
+            true,
+            6
+          ],
+          [
+            "SHIV",
+            true,
+            6
+          ],
+          [
+            "SHIV",
+            true,
+            6
+          ]
+        ]
+      },
+      {
+        "observation": "WQZVENQ7DTRP:282026: capacity",
+        "actual": 3,
+        "expected": 3
+      },
+      {
+        "observation": "WQZVENQ7DTRP:282026: HP and energy unchanged",
+        "actual": [
+          true,
+          true
+        ],
+        "expected": [
+          true,
+          true
+        ]
+      },
+      {
+        "observation": "WQZVENQ7DTRP:282026: appended upgraded six-base Shivs",
+        "actual": [
+          [
+            "SHIV",
+            true,
+            6
+          ],
+          [
+            "SHIV",
+            true,
+            6
+          ],
+          [
+            "SHIV",
+            true,
+            6
+          ]
+        ],
+        "expected": [
+          [
+            "SHIV",
+            true,
+            6
+          ],
+          [
+            "SHIV",
+            true,
+            6
+          ],
+          [
+            "SHIV",
+            true,
+            6
+          ]
+        ]
+      },
+      {
+        "observation": "WQZVENQ7DTRP:282030: capacity",
+        "actual": 3,
+        "expected": 3
+      },
+      {
+        "observation": "WQZVENQ7DTRP:282030: HP and energy unchanged",
+        "actual": [
+          true,
+          true
+        ],
+        "expected": [
+          true,
+          true
+        ]
+      },
+      {
+        "observation": "WQZVENQ7DTRP:282030: appended upgraded six-base Shivs",
+        "actual": [
+          [
+            "SHIV",
+            true,
+            6
+          ],
+          [
+            "SHIV",
+            true,
+            6
+          ],
+          [
+            "SHIV",
+            true,
+            6
+          ]
+        ],
+        "expected": [
+          [
+            "SHIV",
+            true,
+            6
+          ],
+          [
+            "SHIV",
+            true,
+            6
+          ],
+          [
+            "SHIV",
+            true,
+            6
+          ]
+        ]
+      },
+      {
+        "observation": "WQZVENQ7DTRP:282090: capacity",
+        "actual": 3,
+        "expected": 3
+      },
+      {
+        "observation": "WQZVENQ7DTRP:282090: HP and energy unchanged",
+        "actual": [
+          true,
+          true
+        ],
+        "expected": [
+          true,
+          true
+        ]
+      },
+      {
+        "observation": "WQZVENQ7DTRP:282090: appended upgraded six-base Shivs",
+        "actual": [
+          [
+            "SHIV",
+            true,
+            6
+          ],
+          [
+            "SHIV",
+            true,
+            6
+          ],
+          [
+            "SHIV",
+            true,
+            6
+          ]
+        ],
+        "expected": [
+          [
+            "SHIV",
+            true,
+            6
+          ],
+          [
+            "SHIV",
+            true,
+            6
+          ],
+          [
+            "SHIV",
+            true,
+            6
+          ]
+        ]
+      },
+      {
+        "observation": "WQZVENQ7DTRP:282095: capacity",
+        "actual": 3,
+        "expected": 3
+      },
+      {
+        "observation": "WQZVENQ7DTRP:282095: HP and energy unchanged",
+        "actual": [
+          true,
+          true
+        ],
+        "expected": [
+          true,
+          true
+        ]
+      },
+      {
+        "observation": "WQZVENQ7DTRP:282095: appended upgraded six-base Shivs",
+        "actual": [
+          [
+            "SHIV",
+            true,
+            6
+          ],
+          [
+            "SHIV",
+            true,
+            6
+          ],
+          [
+            "SHIV",
+            true,
+            6
+          ]
+        ],
+        "expected": [
+          [
+            "SHIV",
+            true,
+            6
+          ],
+          [
+            "SHIV",
+            true,
+            6
+          ],
+          [
+            "SHIV",
+            true,
+            6
+          ]
+        ]
+      },
+      {
+        "observation": "WQZVENQ7DTRP:282097: capacity",
+        "actual": 3,
+        "expected": 3
+      },
+      {
+        "observation": "WQZVENQ7DTRP:282097: HP and energy unchanged",
+        "actual": [
+          true,
+          true
+        ],
+        "expected": [
+          true,
+          true
+        ]
+      },
+      {
+        "observation": "WQZVENQ7DTRP:282097: appended upgraded six-base Shivs",
+        "actual": [
+          [
+            "SHIV",
+            true,
+            6
+          ],
+          [
+            "SHIV",
+            true,
+            6
+          ],
+          [
+            "SHIV",
+            true,
+            6
+          ]
+        ],
+        "expected": [
+          [
+            "SHIV",
+            true,
+            6
+          ],
+          [
+            "SHIV",
+            true,
+            6
+          ],
+          [
+            "SHIV",
+            true,
+            6
+          ]
+        ]
+      },
+      {
+        "observation": "WQZVENQ7DTRP:282159: capacity",
+        "actual": 3,
+        "expected": 3
+      },
+      {
+        "observation": "WQZVENQ7DTRP:282159: HP and energy unchanged",
+        "actual": [
+          true,
+          true
+        ],
+        "expected": [
+          true,
+          true
+        ]
+      },
+      {
+        "observation": "WQZVENQ7DTRP:282159: appended upgraded six-base Shivs",
+        "actual": [
+          [
+            "SHIV",
+            true,
+            6
+          ],
+          [
+            "SHIV",
+            true,
+            6
+          ],
+          [
+            "SHIV",
+            true,
+            6
+          ]
+        ],
+        "expected": [
+          [
+            "SHIV",
+            true,
+            6
+          ],
+          [
+            "SHIV",
+            true,
+            6
+          ],
+          [
+            "SHIV",
+            true,
+            6
+          ]
+        ]
+      },
+      {
+        "observation": "WQZVENQ7DTRP:282164: capacity",
+        "actual": 3,
+        "expected": 3
+      },
+      {
+        "observation": "WQZVENQ7DTRP:282164: HP and energy unchanged",
+        "actual": [
+          true,
+          true
+        ],
+        "expected": [
+          true,
+          true
+        ]
+      },
+      {
+        "observation": "WQZVENQ7DTRP:282164: appended upgraded six-base Shivs",
+        "actual": [
+          [
+            "SHIV",
+            true,
+            6
+          ],
+          [
+            "SHIV",
+            true,
+            6
+          ],
+          [
+            "SHIV",
+            true,
+            6
+          ]
+        ],
+        "expected": [
+          [
+            "SHIV",
+            true,
+            6
+          ],
+          [
+            "SHIV",
+            true,
+            6
+          ],
+          [
+            "SHIV",
+            true,
+            6
+          ]
+        ]
+      },
+      {
+        "observation": "WQZVENQ7DTRP:282169: capacity",
+        "actual": 3,
+        "expected": 3
+      },
+      {
+        "observation": "WQZVENQ7DTRP:282169: HP and energy unchanged",
+        "actual": [
+          true,
+          true
+        ],
+        "expected": [
+          true,
+          true
+        ]
+      },
+      {
+        "observation": "WQZVENQ7DTRP:282169: appended upgraded six-base Shivs",
+        "actual": [
+          [
+            "SHIV",
+            true,
+            6
+          ],
+          [
+            "SHIV",
+            true,
+            6
+          ],
+          [
+            "SHIV",
+            true,
+            6
+          ]
+        ],
+        "expected": [
+          [
+            "SHIV",
+            true,
+            6
+          ],
+          [
+            "SHIV",
+            true,
+            6
+          ],
+          [
+            "SHIV",
+            true,
+            6
+          ]
+        ]
+      },
+      {
+        "observation": "WQZVENQ7DTRP:282227: capacity",
+        "actual": 3,
+        "expected": 3
+      },
+      {
+        "observation": "WQZVENQ7DTRP:282227: HP and energy unchanged",
+        "actual": [
+          true,
+          true
+        ],
+        "expected": [
+          true,
+          true
+        ]
+      },
+      {
+        "observation": "WQZVENQ7DTRP:282227: appended upgraded six-base Shivs",
+        "actual": [
+          [
+            "SHIV",
+            true,
+            6
+          ],
+          [
+            "SHIV",
+            true,
+            6
+          ],
+          [
+            "SHIV",
+            true,
+            6
+          ]
+        ],
+        "expected": [
+          [
+            "SHIV",
+            true,
+            6
+          ],
+          [
+            "SHIV",
+            true,
+            6
+          ],
+          [
+            "SHIV",
+            true,
+            6
+          ]
+        ]
+      },
+      {
+        "observation": "WQZVENQ7DTRP:282232: capacity",
+        "actual": 3,
+        "expected": 3
+      },
+      {
+        "observation": "WQZVENQ7DTRP:282232: HP and energy unchanged",
+        "actual": [
+          true,
+          true
+        ],
+        "expected": [
+          true,
+          true
+        ]
+      },
+      {
+        "observation": "WQZVENQ7DTRP:282232: appended upgraded six-base Shivs",
+        "actual": [
+          [
+            "SHIV",
+            true,
+            6
+          ],
+          [
+            "SHIV",
+            true,
+            6
+          ],
+          [
+            "SHIV",
+            true,
+            6
+          ]
+        ],
+        "expected": [
+          [
+            "SHIV",
+            true,
+            6
+          ],
+          [
+            "SHIV",
+            true,
+            6
+          ],
+          [
+            "SHIV",
+            true,
+            6
+          ]
+        ]
+      },
+      {
+        "observation": "WQZVENQ7DTRP:282234: capacity",
+        "actual": 3,
+        "expected": 3
+      },
+      {
+        "observation": "WQZVENQ7DTRP:282234: HP and energy unchanged",
+        "actual": [
+          true,
+          true
+        ],
+        "expected": [
+          true,
+          true
+        ]
+      },
+      {
+        "observation": "WQZVENQ7DTRP:282234: appended upgraded six-base Shivs",
+        "actual": [
+          [
+            "SHIV",
+            true,
+            6
+          ],
+          [
+            "SHIV",
+            true,
+            6
+          ],
+          [
+            "SHIV",
+            true,
+            6
+          ]
+        ],
+        "expected": [
+          [
+            "SHIV",
+            true,
+            6
+          ],
+          [
+            "SHIV",
+            true,
+            6
+          ],
+          [
+            "SHIV",
+            true,
+            6
+          ]
+        ]
+      },
+      {
+        "observation": "WQZVENQ7DTRP:282293: capacity",
+        "actual": 2,
+        "expected": 2
+      },
+      {
+        "observation": "WQZVENQ7DTRP:282293: HP and energy unchanged",
+        "actual": [
+          true,
+          true
+        ],
+        "expected": [
+          true,
+          true
+        ]
+      },
+      {
+        "observation": "WQZVENQ7DTRP:282293: appended upgraded six-base Shivs",
+        "actual": [
+          [
+            "SHIV",
+            true,
+            6
+          ],
+          [
+            "SHIV",
+            true,
+            6
+          ]
+        ],
+        "expected": [
+          [
+            "SHIV",
+            true,
+            6
+          ],
+          [
+            "SHIV",
+            true,
+            6
+          ]
+        ]
+      },
+      {
+        "observation": "WQZVENQ7DTRP:282295: capacity",
+        "actual": 0,
+        "expected": 0
+      },
+      {
+        "observation": "WQZVENQ7DTRP:282295: HP and energy unchanged",
+        "actual": [
+          true,
+          true
+        ],
+        "expected": [
+          true,
+          true
+        ]
+      },
+      {
+        "observation": "WQZVENQ7DTRP:282295: appended upgraded six-base Shivs",
+        "actual": [],
+        "expected": []
+      },
+      {
+        "observation": "WQZVENQ7DTRP:282296: capacity",
+        "actual": 0,
+        "expected": 0
+      },
+      {
+        "observation": "WQZVENQ7DTRP:282296: HP and energy unchanged",
+        "actual": [
+          true,
+          true
+        ],
+        "expected": [
+          true,
+          true
+        ]
+      },
+      {
+        "observation": "WQZVENQ7DTRP:282296: appended upgraded six-base Shivs",
+        "actual": [],
+        "expected": []
+      },
+      {
+        "observation": "WQZVENQ7DTRP:282353: capacity",
+        "actual": 3,
+        "expected": 3
+      },
+      {
+        "observation": "WQZVENQ7DTRP:282353: HP and energy unchanged",
+        "actual": [
+          true,
+          true
+        ],
+        "expected": [
+          true,
+          true
+        ]
+      },
+      {
+        "observation": "WQZVENQ7DTRP:282353: appended upgraded six-base Shivs",
+        "actual": [
+          [
+            "SHIV",
+            true,
+            6
+          ],
+          [
+            "SHIV",
+            true,
+            6
+          ],
+          [
+            "SHIV",
+            true,
+            6
+          ]
+        ],
+        "expected": [
+          [
+            "SHIV",
+            true,
+            6
+          ],
+          [
+            "SHIV",
+            true,
+            6
+          ],
+          [
+            "SHIV",
+            true,
+            6
+          ]
+        ]
+      },
+      {
+        "observation": "WQZVENQ7DTRP:282355: capacity",
+        "actual": 2,
+        "expected": 2
+      },
+      {
+        "observation": "WQZVENQ7DTRP:282355: HP and energy unchanged",
+        "actual": [
+          true,
+          true
+        ],
+        "expected": [
+          true,
+          true
+        ]
+      },
+      {
+        "observation": "WQZVENQ7DTRP:282355: appended upgraded six-base Shivs",
+        "actual": [
+          [
+            "SHIV",
+            true,
+            6
+          ],
+          [
+            "SHIV",
+            true,
+            6
+          ]
+        ],
+        "expected": [
+          [
+            "SHIV",
+            true,
+            6
+          ],
+          [
+            "SHIV",
+            true,
+            6
+          ]
+        ]
+      },
+      {
+        "observation": "WQZVENQ7DTRP:282357: capacity",
+        "actual": 0,
+        "expected": 0
+      },
+      {
+        "observation": "WQZVENQ7DTRP:282357: HP and energy unchanged",
+        "actual": [
+          true,
+          true
+        ],
+        "expected": [
+          true,
+          true
+        ]
+      },
+      {
+        "observation": "WQZVENQ7DTRP:282357: appended upgraded six-base Shivs",
+        "actual": [],
+        "expected": []
+      },
+      {
+        "observation": "Cunning distinct runs",
+        "actual": 9,
+        "expected": 9
+      },
+      {
+        "observation": "Cunning capacity counts",
+        "actual": {
+          "3": 37,
+          "2": 2,
+          "0": 3
+        },
+        "expected": {
+          "3": 37,
+          "2": 2,
+          "0": 3
+        }
+      },
+      {
+        "observation": "KEN actual seven drinks",
+        "actual": [
+          [
+            3,
+            2,
+            "ATTACK_POTION"
+          ],
+          [
+            4,
+            1,
+            "STABLE_SERUM"
+          ],
+          [
+            5,
+            2,
+            "SPEED_POTION"
+          ],
+          [
+            11,
+            1,
+            "WEAK_POTION"
+          ],
+          [
+            11,
+            2,
+            "ATTACK_POTION"
+          ],
+          [
+            15,
+            1,
+            "GLOWWATER_POTION"
+          ],
+          [
+            15,
+            1,
+            "SKILL_POTION"
+          ]
+        ],
+        "expected": [
+          [
+            3,
+            2,
+            "ATTACK_POTION"
+          ],
+          [
+            4,
+            1,
+            "STABLE_SERUM"
+          ],
+          [
+            5,
+            2,
+            "SPEED_POTION"
+          ],
+          [
+            11,
+            1,
+            "WEAK_POTION"
+          ],
+          [
+            11,
+            2,
+            "ATTACK_POTION"
+          ],
+          [
+            15,
+            1,
+            "GLOWWATER_POTION"
+          ],
+          [
+            15,
+            1,
+            "SKILL_POTION"
+          ]
+        ]
+      },
+      {
+        "observation": "KEN F15 net loss despite two drinks",
+        "actual": [
+          46,
+          46
+        ],
+        "expected": [
+          46,
+          46
+        ]
+      },
+      {
+        "observation": "Q6 elite exit two then next-fight death",
+        "actual": [
+          2,
+          2,
+          0
+        ],
+        "expected": [
+          2,
+          2,
+          0
+        ]
+      },
+      {
+        "observation": "1913 F29 win carries 46 into F31, which ends dead",
+        "actual": [
+          46,
+          46,
+          0
+        ],
+        "expected": [
+          46,
+          46,
+          0
+        ]
+      }
+    ],
+    "count": 150,
+    "exit_code": 0,
+    "production_tests": null,
+    "complete_candidate_execution_certification": null
+  },
+  "evidence_readback": {
+    "states": {
+      "source_size": 13743413801,
+      "rows": 9815,
+      "counts": {
+        "K3676LU8B0UH": 830,
+        "SADL3CGYTGSR": 1151,
+        "F4QKG4J1AJJZ": 728,
+        "JLN5SK17W4FQ": 810,
+        "4D4J8USKCPAV": 546,
+        "S9UZAK0JP0C0": 861,
+        "NB8KCF6HRGVF": 484,
+        "LS8035TB32P3": 838,
+        "02HB4L0C3C67": 221,
+        "KEN58SH9SLZ6": 558,
+        "TXZ6RVMQA09D": 840,
+        "WQZVENQ7DTRP": 798,
+        "1913SE84AXQF": 413,
+        "Q6M2Y34MWKRE": 135,
+        "NHA2KW0RB7VP": 602
+      },
+      "sha256": "f7dc0333beb2289b31d6906b1fda6bc2cfef9adbe1890baad18f580bc4016d2d"
+    },
+    "decisions": {
+      "source_size": 2120635618,
+      "rows": 9448,
+      "counts": {
+        "K3676LU8B0UH": 805,
+        "SADL3CGYTGSR": 1115,
+        "F4QKG4J1AJJZ": 703,
+        "JLN5SK17W4FQ": 790,
+        "4D4J8USKCPAV": 527,
+        "S9UZAK0JP0C0": 826,
+        "NB8KCF6HRGVF": 466,
+        "LS8035TB32P3": 816,
+        "02HB4L0C3C67": 211,
+        "KEN58SH9SLZ6": 548,
+        "TXZ6RVMQA09D": 762,
+        "WQZVENQ7DTRP": 766,
+        "1913SE84AXQF": 398,
+        "Q6M2Y34MWKRE": 131,
+        "NHA2KW0RB7VP": 584
+      },
+      "sha256": "941f52538526de5320a48427b650ada30645f46a4d9d5e01a490434eedefdf2a"
+    },
+    "sl-attempts": {
+      "source_size": 44571890,
+      "rows": 78,
+      "counts": {
+        "K3676LU8B0UH": 4,
+        "SADL3CGYTGSR": 10,
+        "F4QKG4J1AJJZ": 4,
+        "JLN5SK17W4FQ": 8,
+        "4D4J8USKCPAV": 6,
+        "S9UZAK0JP0C0": 10,
+        "NB8KCF6HRGVF": 1,
+        "LS8035TB32P3": 6,
+        "KEN58SH9SLZ6": 6,
+        "TXZ6RVMQA09D": 6,
+        "WQZVENQ7DTRP": 9,
+        "1913SE84AXQF": 1,
+        "NHA2KW0RB7VP": 7
+      },
+      "sha256": "d9e4657e1b6731f0414ceb4e689231af18383bc5c764d4fee7d7c53b02dc8183"
+    },
+    "run-config": {
+      "source_size": 1916880,
+      "rows": 15,
+      "counts": {
+        "K3676LU8B0UH": 1,
+        "SADL3CGYTGSR": 1,
+        "F4QKG4J1AJJZ": 1,
+        "JLN5SK17W4FQ": 1,
+        "4D4J8USKCPAV": 1,
+        "S9UZAK0JP0C0": 1,
+        "NB8KCF6HRGVF": 1,
+        "LS8035TB32P3": 1,
+        "02HB4L0C3C67": 1,
+        "KEN58SH9SLZ6": 1,
+        "TXZ6RVMQA09D": 1,
+        "WQZVENQ7DTRP": 1,
+        "1913SE84AXQF": 1,
+        "Q6M2Y34MWKRE": 1,
+        "NHA2KW0RB7VP": 1
+      },
+      "sha256": "282db183096bf2b0ab3c53362d30ca8a99517bf34a019094f8295856ed29edf6"
+    },
+    "run-plans": {
+      "source_size": 8742760,
+      "rows": 77,
+      "counts": {
+        "K3676LU8B0UH": 7,
+        "SADL3CGYTGSR": 9,
+        "F4QKG4J1AJJZ": 7,
+        "JLN5SK17W4FQ": 5,
+        "4D4J8USKCPAV": 3,
+        "S9UZAK0JP0C0": 6,
+        "NB8KCF6HRGVF": 6,
+        "LS8035TB32P3": 6,
+        "02HB4L0C3C67": 2,
+        "KEN58SH9SLZ6": 3,
+        "TXZ6RVMQA09D": 9,
+        "WQZVENQ7DTRP": 4,
+        "1913SE84AXQF": 4,
+        "Q6M2Y34MWKRE": 1,
+        "NHA2KW0RB7VP": 5
+      },
+      "sha256": "ccd0198a8b5903ef6734c0b106ab9eb494398452ee6ffdcc1c0f7feedb71ad21"
+    },
+    "brain": {
+      "source_size": 711841479,
+      "rows": 481,
+      "counts": {
+        "K3676LU8B0UH": 48,
+        "SADL3CGYTGSR": 54,
+        "F4QKG4J1AJJZ": 37,
+        "JLN5SK17W4FQ": 37,
+        "4D4J8USKCPAV": 16,
+        "S9UZAK0JP0C0": 33,
+        "NB8KCF6HRGVF": 31,
+        "LS8035TB32P3": 41,
+        "02HB4L0C3C67": 12,
+        "KEN58SH9SLZ6": 18,
+        "TXZ6RVMQA09D": 48,
+        "WQZVENQ7DTRP": 31,
+        "1913SE84AXQF": 31,
+        "Q6M2Y34MWKRE": 10,
+        "NHA2KW0RB7VP": 34
+      },
+      "sha256": "8a9ef14ceb58bd904d1d22a4a85d5085c1cc658d443735083b5aae2923a6e1e0"
+    },
+    "runs": {
+      "source_size": 354231,
+      "rows": 15,
+      "counts": {
+        "K3676LU8B0UH": 1,
+        "SADL3CGYTGSR": 1,
+        "F4QKG4J1AJJZ": 1,
+        "JLN5SK17W4FQ": 1,
+        "4D4J8USKCPAV": 1,
+        "S9UZAK0JP0C0": 1,
+        "NB8KCF6HRGVF": 1,
+        "LS8035TB32P3": 1,
+        "02HB4L0C3C67": 1,
+        "KEN58SH9SLZ6": 1,
+        "TXZ6RVMQA09D": 1,
+        "WQZVENQ7DTRP": 1,
+        "1913SE84AXQF": 1,
+        "Q6M2Y34MWKRE": 1,
+        "NHA2KW0RB7VP": 1
+      },
+      "sha256": "07abed128ee0a384dd4c1dd4860c79febc82d38d2cbde4a8550fdf0e52b5ab5f"
+    },
+    "fight-plans": {
+      "source_size": 2233957,
+      "rows": 0,
+      "counts": {},
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  },
+  "no_source_patch_or_commit_or_merge_block": true,
+  "implementation_domains_are_declared_scope_not_implemented_change": true,
+  "no_full_tests_or_new_consumer_or_model_requested": true,
+  "ledger_trace_only": true,
+  "wider_parents_unchanged": true
+}
