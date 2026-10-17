@@ -1,0 +1,86 @@
+{
+  "at": "2026-10-17 13:58:25 CST",
+  "batch": "20261017-124302-fix-batch",
+  "source": "a473263eb35ce5bea8e06f1ee94f4da1ba880bc3",
+  "source_received": true,
+  "receipt": "paper/materials/20261017-1354-ops/ops-source-received.json",
+  "state": "Published V5-R383; original124302 precise new-combination host RUN, result pending",
+  "host_complete": false,
+  "host_batch": "20261017-124302-fix-batch",
+  "new_behavior_release": true,
+  "last_blocked": {
+    "at": "2026-10-17 13:58:39 CST",
+    "source": "a473263eb35ce5bea8e06f1ee94f4da1ba880bc3",
+    "source_commit": "a473263eb35ce5bea8e06f1ee94f4da1ba880bc3",
+    "published": false,
+    "release_id": null,
+    "lock_rows": [
+      "26: FLOCK  ADVISORY  WRITE 3997983 08:30:372157 0 EOF"
+    ],
+    "gate": "Existing original live publication/check lock; retain exact source and original check owner, no lock steal.",
+    "live_observed": "6fbbd82abd6d407dbaf93f82639b7f927efa54a0",
+    "main_live_source_index_versions_untouched_by_this_attempt": true,
+    "controller_restarted": false,
+    "no_other_role_ACK": true
+  },
+  "published": true,
+  "release_id": "V5-R383",
+  "source_commit": "a473263eb35ce5bea8e06f1ee94f4da1ba880bc3",
+  "source_tree": "8fa73d0e11d53f228338fc6d74ba146475176c45",
+  "source_parent": "ed6d77cea7b5c7a4980888e9f5877b6e00be3d7e",
+  "files": [
+    {
+      "path": "agent/src/hand/loop.ts",
+      "sha256": "da712eb360462f830232962c3bfb5768d3642d6232efd9c349243ec75f96f21d"
+    },
+    {
+      "path": "agent/src/hand/screens/selection.ts",
+      "sha256": "c4432b5fdf8c352ad4d834a87340a3ee69d69606ea705420e4b113db4228c647"
+    },
+    {
+      "path": "agent/src/memory/types.ts",
+      "sha256": "27a78bcf0a04355e2476cae4f1e271f2ce5eb22ed60015cb4c3c8f0f387ad227"
+    },
+    {
+      "path": "agent/src/reflex/combat-plan.ts",
+      "sha256": "41a6ecc014c5d614ccbcf6a12e0e30412518f70e8a27295e0a85f15c1c38e0b4"
+    },
+    {
+      "path": "agent/tests/silent-hidden-daggers-selection-evidence.json",
+      "sha256": "067f71b789d50279e36b61abdb7d9b0ee919d918ff4112c7ac8f9aa26739ba45"
+    },
+    {
+      "path": "agent/tests/silent-hidden-daggers-selection.test.ts",
+      "sha256": "f008e8d70a696705d13988f337f7f8670214549d874d2c12731cae91195e8343"
+    }
+  ],
+  "lock_owner": {
+    "pid": 3997983,
+    "comm": "python3",
+    "cwd": "/home/dw/Projects/agent-sts2",
+    "known_action_arguments": [],
+    "lock_fds": [
+      "/home/dw/Projects/agent-sts2/ops/codex-ops/retention.lock",
+      "/home/dw/Projects/agent-sts2/.git/worktrees/codex-fix-silent-20261016-171301/info/storage.lock",
+      "/home/dw/Projects/agent-sts2/ops/codex-ops/learn.lock",
+      "/home/dw/Projects/agent-sts2/ops/codex-ops/learner/codex-fix-silent-20261016-171301.lock",
+      "/home/dw/Projects/agent-sts2/ops/live-merge.lock"
+    ]
+  },
+  "host_started": true,
+  "recovery": [
+    "nice",
+    "-n",
+    "19",
+    "python3",
+    "ops/codex-ops/record-staging/20261017-1354/publish.py"
+  ],
+  "recovery_script_sha256": "a5089027f694295b2c3dc617f5a5023ff6971aa3d7ab5bc810813b734c2869c5",
+  "published_at": "2026-10-17 14:00:05 CST",
+  "main": "82b10dbb6cf7f69549e794132049b32b3feb1089",
+  "actual_live": "5782a41c4b1db735e3eba8e769e0ad52c356f136",
+  "tree": "da7ee233d8095aaadc5746e58a93aea812f5a244",
+  "host_worker_pid": 4022309,
+  "host_receipt": "paper/materials/20261017-1359-ops/host-running-readback.json",
+  "publication_receipt": "paper/materials/20261017-1359-ops/ops-publication.json"
+}
