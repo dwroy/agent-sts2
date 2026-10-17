@@ -1,0 +1,138 @@
+{
+  "at": "2026-10-17 12:51:17 CST",
+  "events": 5,
+  "old_host_complete": {
+    "batch": "20261017-113243-fix-batch",
+    "original_canonical_state": "failed",
+    "original_rc": 0,
+    "original_merged": null,
+    "fallback": {
+      "rc": 0,
+      "log": "/home/dw/Projects/agent-sts2/ops/codex-ops/learner/20261017-113243-fix-batch.fallback-e5dec40a64950bfd7c3746c388b2250c3b10bfe0.checks.log",
+      "merged": "fd3f1a223d2515b5d458c9eb334f83b38045f4a3",
+      "tree": "e5dec40a64950bfd7c3746c388b2250c3b10bfe0",
+      "commits": [
+        "c40e43fd25c200a01f4da94a4dac8db1b34664a8"
+      ]
+    },
+    "full_tsc_rc": 0,
+    "full_vitest_rc": 0,
+    "files": 521,
+    "passed": 5145,
+    "skipped": 2,
+    "duration_s": 654.62,
+    "log_sha256": "17cdeda79a2b3e654dc8b4c8ea73c467145e4ea9fea57a1c01f38fa142a2cdde",
+    "scope": "Only exact old e5 diagnostic tree; not R381/R382 combined host or H1 natural acceptance; no repeated checks"
+  },
+  "fix_source_changes": 0,
+  "strategy_waiting": 10,
+  "own_trace_rows": 16,
+  "archived_small_files": 65,
+  "stale_stall": {
+    "at": "2026-10-17 12:49:53 CST",
+    "old_event_console": "logs/console/20261017-110031-dbd416164+dirty.log",
+    "recovered_console": "logs/console/20261017-123827-6fbbd82ab.log",
+    "recovery_receipt": "paper/materials/20261017-1205-ops/controller-recovery-readback.json",
+    "terminal": {
+      "run_id": "5H83F3J0XSTE",
+      "ended": "2026-10-17T04:43:37.219Z",
+      "victory": false,
+      "floor": 48,
+      "character": "SILENT",
+      "ascension": 10,
+      "code": "current",
+      "decisions": 840,
+      "jev_calls": 184,
+      "deepseek_calls": 50,
+      "claude_calls": 0,
+      "tokens": 1641772,
+      "ds_tokens_in": 9503564,
+      "ds_tokens_out": 63622,
+      "ds_cache_hit": 5724288,
+      "brain_cost_accounting": {
+        "source": "brain.jsonl:run-plan",
+        "calls": 2,
+        "input_tokens": 296700,
+        "output_tokens": 3558,
+        "cache_hit_tokens": 0,
+        "by_engine": {
+          "codex": 2
+        },
+        "question_ids": [
+          "mvbt78de-3319441-18",
+          "mvbt78de-3319441-36"
+        ],
+        "unresolved": []
+      },
+      "deciders": {
+        "codex": 66,
+        "code": 366,
+        "jev": 184,
+        "jev-plan": 215,
+        "code-fallback": 9
+      },
+      "death_fight": [
+        "实验体 #C93"
+      ],
+      "death_fight_floor": 48,
+      "death_enemy_ids": [
+        "TEST_SUBJECT"
+      ]
+    },
+    "old_controller3319441_and_recovered3646148_exited": true,
+    "guard_history": "First current-process guard saw recovered PID already exited naturally; read actual terminal console/run record rather than treating absence as a new stall.",
+    "console_tail_ref": {
+      "path": "logs/console/20261017-123827-6fbbd82ab.log",
+      "offset": 59222,
+      "bytes": 18000,
+      "sha256": "3dccdc8203b2c8b93a129cdd1149fe0e404764a8c330c69a8c0f7c5ae7e2bf56"
+    },
+    "stale_duplicate_alert": true,
+    "new_manual_game_action_or_restart": false,
+    "scope": "5H83 continued after R382 and ended defeat F48 12:43:37.219; mixed runtime/intervention boundary is not a pure R380 natural pass; no learner-done processing or paper regeneration in this wake"
+  },
+  "H0_recovery_receipt": "h0-protocol-recovery.json",
+  "H0_actual_state": "pending",
+  "H0_new_dispatch": false,
+  "H0_actual_send": 0,
+  "forwarded_notices": [
+    "26d0e3c374537273810f6808",
+    "c0bfa0409caf81100261c2d1"
+  ],
+  "watcher_Roy_ACK_filled_by_ops": false,
+  "later_combined_host_pending": {
+    "at": "2026-10-17 12:38:45 CST",
+    "batch": "20261017-095852-strategy-proposal",
+    "command": [
+      "nice",
+      "-n",
+      "19",
+      "bash",
+      "ops/codex-ops-actions.sh",
+      "learner-recheck",
+      "20261017-095852-strategy-proposal"
+    ],
+    "pid": 3646544,
+    "birth_ticks": "110388491",
+    "actual_live": "6fbbd82abd6d407dbaf93f82639b7f927efa54a0",
+    "tree": "ddb2ddfbb0934a8b0e70d9f0ebabddd935d78294",
+    "canonical_log": "ops/codex-ops/learner/20261017-095852-strategy-proposal.fallback-ddb2ddfbb0934a8b0e70d9f0ebabddd935d78294.checks.log",
+    "action_output": "ops/codex-ops/record-staging/20261017-1205/host-action.log",
+    "route": "Authorized primary host invokes the same existing allow-listed action and original batch lock, no additional test pipeline",
+    "action_script_sha256": "a49d54356a4b94d764a4da62ac387d712464b1d3ca8d9942e3264728de2418e0",
+    "actual_subprocess_started": true,
+    "full_result": null,
+    "original_source_full_not_repeated": true,
+    "no_other_role_ACK": true,
+    "original_checks_and_live_locks": [
+      "/home/dw/Projects/agent-sts2/ops/codex-ops/20261017-095852-strategy-proposal.checks.lock",
+      "/home/dw/Projects/agent-sts2/ops/live-merge.lock"
+    ],
+    "log_prefix_bytes": 67,
+    "log_prefix_sha256": "206bb1334fc905a29c9d845090272e7767b924d8cb7f2a307f33a42e183ebee0",
+    "state": "Actual original unique exact-tree full host RUN, terminal result pending event",
+    "full_rc": null
+  },
+  "no_source_tests_or_game_actions_by_ops": true,
+  "paper_refresh": false
+}
