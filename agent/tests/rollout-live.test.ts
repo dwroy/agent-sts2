@@ -20,6 +20,7 @@ import type { LineEstimate } from "../src/reflex/rollout.js";
 import { logged, loggedEnv } from "./logged.js";
 import { knowledgeFile } from "../src/knowledge/files.js";
 import { withRolloutFixtureClock, withRolloutRankingFixture } from "./rollout-clock-fixture.js";
+import { withFullRolloutFacts } from "./full-rollout-facts-fixture.js";
 
 const DIR = join(dirname(fileURLToPath(import.meta.url)), "logged-states");
 const BOARDS = readdirSync(DIR)
@@ -54,8 +55,8 @@ function fakeClock(step: number): () => number {
 }
 
 describe("rollout facts on Jev's combat question", () => {
-  it("every option of a logged board carries the rollout and history facts; the decision log gets the rollout", () => {
-    // The format at full size (5 x 8): no time budget (the kill orders can make this board degrade under load).
+  it("every option of a logged board carries the rollout and history facts; the decision log gets the rollout", () => withFullRolloutFacts(() => {
+    // Full-size (5 x 8) format receipts retain every assertion without repeated future-turn searches.
     rolloutLiveOptions.budgetMs = 1e9;
     for (const context of ["v1", "off"] as const) {
       const decision = plan("g8yy-f30-t3", true, context) as AskDecision;
@@ -81,7 +82,7 @@ describe("rollout facts on Jev's combat question", () => {
       expect(decision.resolve(pick(other)).log?.rollout_best_chosen).toBe(false);
       expect(decision.resolve({} as AnswerSet).log?.rollout_best_chosen).toBeNull();
     }
-  }, 30_000);
+  }), 30_000);
 
   it("a drink-first potion option says it is not rolled out", () => {
     // Its Stable Serum is simulated since batch J (a line of its own): an unsimulated potion in that slot instead.
