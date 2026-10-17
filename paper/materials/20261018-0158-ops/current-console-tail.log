@@ -1,0 +1,195 @@
+tatus":"unknown","reason":"next_solver_input_not_observed_or_not_ready","budget_ms":400}
+01:57:19 note H1 idle preparation: {"status":"unknown","reason":"next_solver_input_not_observed_or_not_ready","budget_ms":400}
+01:57:19 note H1 idle preparation: {"status":"unknown","reason":"next_solver_input_not_observed_or_not_ready","budget_ms":400}
+01:57:19 note H1 idle preparation: {"status":"unknown","reason":"next_solver_input_not_observed_or_not_ready","budget_ms":400}
+01:57:20 note H1 idle preparation: {"status":"unknown","reason":"next_solver_input_not_observed_or_not_ready","budget_ms":400}
+01:57:20 note H1 idle preparation: {"status":"unknown","reason":"next_solver_input_not_observed_or_not_ready","budget_ms":400}
+01:57:21 note H1 idle preparation: {"status":"unknown","reason":"next_solver_input_not_observed_or_not_ready","budget_ms":400}
+01:57:21 note H1 idle preparation: {"status":"unknown","reason":"next_solver_input_not_observed_or_not_ready","budget_ms":400}
+01:57:22 note H1 idle preparation: {"status":"prepared","basis":"exact_observed_input_only","nodes":136,"partial":false,"reused":false,"budget_ms":400}
+01:57:23 note action came back pending; waited for the board to settle
+01:57:23 COMBAT          combat/play          -> play_card (card_index=3) conf 0.74 jev 522 ms | 4449 in
+         Jev chose c3 (Play 生存者) with confidence 0.74
+01:57:24 CARD_SELECTION  selection/choose     -> select_deck_card (option_index=1) conf 0.55 jev 416 ms | 5584 in
+         Jev chose 打击 with confidence 0.55
+01:57:25 COMBAT          combat/play          -> play_card (card_index=1) conf 0.80 jev 312 ms | 4011 in
+         Jev chose c1 (Play 防御) with confidence 0.80
+01:57:25 note H1 idle preparation: {"status":"unknown","reason":"next_solver_input_not_observed_or_not_ready","budget_ms":400}
+01:57:25 wait COMBAT: waiting on COMBAT (transition, animation, or nothing legal yet)
+01:57:26 COMBAT          combat/play          -> play_card (card_index=0, target_index=0) conf 0.23 jev 294 ms | 3895 in
+         Jev chose c0->e0 (Play 带毒刺击 on 同族信徒) with confidence 0.23
+01:57:27 note H1 idle preparation: {"status":"unknown","reason":"next_solver_input_not_observed_or_not_ready","budget_ms":400}
+01:57:27 wait COMBAT: waiting on COMBAT (transition, animation, or nothing legal yet)
+01:57:28 COMBAT          combat/play          -> use_potion (target_index=0, option_index=1) conf 0.36 jev 295 ms | 3361 in
+         Jev chose p1->e0 (Drink 毒药水 on 同族信徒) with confidence 0.36
+01:57:30 COMBAT          combat/play          -> use_potion (target_index=0, option_index=2) conf 0.29 jev 388 ms | 3058 in
+         Jev chose p2->e0 (Drink 毒药水 on 同族信徒) with confidence 0.29
+01:57:30 note SL: certain death foreseen at F17 T6 attempt 2/6 (rules: nothing left to play or drink; 28 incoming vs 4 HP + 12 block + 0 end-of-turn block); reloading the fight: save_and_quit, then continue_run
+01:57:31 note SL: save_and_quit -> completed (Action completed.)
+01:57:34 note SL: continue_run -> completed (Action completed.)
+01:57:37 note SL: attempt 3 knows the first 24 draws of the fight (attempt 1)
+01:57:37 note SL: attempt 3 deviates at T2, the 15th latest question before attempt 1's death on T9: not 突然一拳 -> 同族神官, 打击 -> 同族神官, 带毒刺击 -> 同族神官 again there; 1 turn through it not again (1 line shown there never played on that board; where the failed attempts lost their HP: T2 weighs 20.5 (18 lost on it on average, the later turns' losses at 0.5 a turn), the most of the turns deviated at the fewest times (none); every line loses in every sample here (the rollout's horizon: it does not order the turns); the other turns: T1 10.3, T5 6.3, T3 5.1, T4 4.1, T8 4, T7 2; attempt 1's path, not attempt 2's: it lived longest (attempt 1 T9 (enemy HP 217), attempt 2 T6 (enemy HP 262)))
+01:57:37 note SL: back in the fight at F17 T1 (7 s); attempt 3/6 begins, Jev is told how the earlier attempt(s) went
+01:57:37 COMBAT          combat/least-loss    -> end_turn jev 0 ms | 0 in
+         every simulated line dies; playing the one that keeps the most HP (-12): end turn
+01:57:37 note H1 idle preparation: {"status":"prepared","basis":"exact_observed_input_only","nodes":360,"partial":false,"reused":false,"budget_ms":400}
+01:57:37 wait COMBAT: waiting on COMBAT (transition, animation, or nothing legal yet)
+01:57:37 note H1 idle preparation: {"status":"prepared","basis":"exact_observed_input_only","nodes":360,"partial":false,"reused":true,"budget_ms":400}
+01:57:48 COMBAT          combat/plan-choice+potion -> play_card (card_index=0, target_index=2) fallback no-jev jev 0 ms | 0 in
+         no usable answer from Jev; using the whole-fight simulation's best potion-free plan; SL explore: replaying attempt 1's plays from this board, 背刺 -> 同族神官, 灵动步法, 防御, 防御, instead of 背刺 -> 同族神官, 灵动步法, 后空翻, 突然一拳 -> 同族神官 before T2 (its line 背刺 -> 同族神官, 灵动步法, 防御, 防御 is not among the options)
+01:57:48 note H1 idle preparation: {"status":"unknown","reason":"decision_budget_exhausted"}
+01:57:48 wait COMBAT: waiting on COMBAT (transition, animation, or nothing legal yet)
+01:57:49 COMBAT          combat/plan-continue -> play_card (card_index=0) jev 0 ms | 0 in
+         continuing the code-chosen plan: 灵动步法
+01:57:50 note H1 idle preparation: {"status":"unknown","reason":"decision_budget_exhausted"}
+01:57:50 wait COMBAT: waiting on COMBAT (transition, animation, or nothing legal yet)
+01:57:50 COMBAT          combat/plan-continue -> play_card (card_index=0) jev 0 ms | 0 in
+         continuing the code-chosen plan: 防御
+01:57:50 note H1 idle preparation: {"status":"unknown","reason":"decision_budget_exhausted"}
+01:57:50 wait COMBAT: waiting on COMBAT (transition, animation, or nothing legal yet)
+01:57:51 COMBAT          combat/plan-continue -> play_card (card_index=3) jev 0 ms | 0 in
+         continuing the code-chosen plan: 防御
+         completed: Action completed.
+         progress: 24 decisions | 13 Jev calls | 75,362 in / 2,260 out tokens | ≈ $0.0032 | 96.77 s
+01:57:51 note H1 idle preparation: {"status":"unknown","reason":"decision_budget_exhausted"}
+01:57:51 wait COMBAT: waiting on COMBAT (transition, animation, or nothing legal yet)
+01:57:53 COMBAT          combat/plan-choice+potion -> end_turn fallback no-jev jev 0 ms | 0 in
+         no usable answer from Jev; using the code-best plan
+01:57:53 note H1 idle preparation: {"status":"unknown","reason":"decision_budget_exhausted"}
+01:57:53 wait COMBAT: waiting on COMBAT (transition, animation, or nothing legal yet)
+01:57:53 note H1 idle preparation: {"status":"unknown","reason":"decision_budget_exhausted"}
+01:57:54 note H1 idle preparation: {"status":"unknown","reason":"decision_budget_exhausted"}
+01:57:54 note H1 idle preparation: {"status":"unknown","reason":"decision_budget_exhausted"}
+01:57:54 note H1 idle preparation: {"status":"unknown","reason":"decision_budget_exhausted"}
+01:57:55 note H1 idle preparation: {"status":"unknown","reason":"decision_budget_exhausted"}
+01:57:55 note H1 idle preparation: {"status":"unknown","reason":"decision_budget_exhausted"}
+01:57:56 note H1 idle preparation: {"status":"unknown","reason":"decision_budget_exhausted"}
+01:57:56 note H1 idle preparation: {"status":"unknown","reason":"decision_budget_exhausted"}
+01:57:57 note H1 idle preparation: {"status":"unknown","reason":"next_solver_input_not_observed_or_not_ready","budget_ms":400}
+01:57:57 note H1 idle preparation: {"status":"unknown","reason":"next_solver_input_not_observed_or_not_ready","budget_ms":400}
+01:57:57 note H1 idle preparation: {"status":"unknown","reason":"next_solver_input_not_observed_or_not_ready","budget_ms":400}
+01:57:58 note H1 idle preparation: {"status":"unknown","reason":"next_solver_input_not_observed_or_not_ready","budget_ms":400}
+01:57:58 note H1 idle preparation: {"status":"prepared","basis":"exact_observed_input_only","nodes":259,"partial":false,"reused":false,"budget_ms":400}
+01:58:09 note SL: explored at F17 T2 attempt 3/6: 突然一拳 -> 同族信徒 #1, 打击 -> 同族信徒 #1, 带毒刺击 -> 同族信徒 #1 instead of 突然一拳 -> 同族神官, 打击 -> 同族神官, 带毒刺击 -> 同族神官 (the best untried line by the question's ranking, among those B2 rates no worse (win rate at most 2 paired standard errors below the pick's))
+01:58:09 COMBAT          combat/plan-choice+potion -> play_card (card_index=1, target_index=0) conf 0.89 jev 684 ms | 10957 in
+         Jev chose plan 1/2 (突然一拳 -> 同族神官, 打击 -> 同族神官, 带毒刺击 -> 同族神官) with confidence 0.89; code rank 1; SL explore (T2, the 15th latest question before attempt 1's death on T9): playing 突然一拳 -> 同族信徒 #1, 打击 -> 同族信徒 #1, 带毒刺击 -> 同族信徒 #1 instead of 突然一拳 -> 同族神官, 打击 -> 同族神官, 带毒刺击 -> 同族神官, played on this board in attempt 1 (the best untried line by the question's ranking, among those B2 rates no worse (win rate at most 2 paired standard errors below the pick's))
+01:58:09 note H1 idle preparation: {"status":"unknown","reason":"next_solver_input_not_observed_or_not_ready","budget_ms":267.2637800000084}
+01:58:09 wait COMBAT: waiting on COMBAT (transition, animation, or nothing legal yet)
+01:58:10 COMBAT          combat/plan-continue -> play_card (card_index=1, target_index=0) jev 0 ms | 0 in
+         continuing the Jev-chosen plan: 打击 -> 同族信徒 #1
+01:58:10 note H1 idle preparation: {"status":"unknown","reason":"next_solver_input_not_observed_or_not_ready","budget_ms":264.8225830000156}
+01:58:10 wait COMBAT: waiting on COMBAT (transition, animation, or nothing legal yet)
+01:58:11 COMBAT          combat/plan-continue -> play_card (card_index=2, target_index=0) jev 0 ms | 0 in
+         continuing the Jev-chosen plan: 带毒刺击 -> 同族信徒 #1
+01:58:11 note H1 idle preparation: {"status":"unknown","reason":"next_solver_input_not_observed_or_not_ready","budget_ms":262.5064950000087}
+01:58:11 wait COMBAT: waiting on COMBAT (transition, animation, or nothing legal yet)
+01:58:13 COMBAT          combat/plan-choice+potion -> end_turn fallback no-jev jev 0 ms | 0 in
+         no usable answer from Jev; using the code-best plan
+01:58:13 note H1 idle preparation: {"status":"unknown","reason":"decision_budget_exhausted"}
+01:58:13 wait COMBAT: waiting on COMBAT (transition, animation, or nothing legal yet)
+01:58:13 note H1 idle preparation: {"status":"unknown","reason":"decision_budget_exhausted"}
+01:58:14 note H1 idle preparation: {"status":"unknown","reason":"decision_budget_exhausted"}
+01:58:14 note H1 idle preparation: {"status":"unknown","reason":"decision_budget_exhausted"}
+01:58:14 note H1 idle preparation: {"status":"unknown","reason":"decision_budget_exhausted"}
+01:58:15 note H1 idle preparation: {"status":"unknown","reason":"decision_budget_exhausted"}
+01:58:15 note H1 idle preparation: {"status":"unknown","reason":"decision_budget_exhausted"}
+01:58:16 note H1 idle preparation: {"status":"unknown","reason":"decision_budget_exhausted"}
+01:58:16 note H1 idle preparation: {"status":"unknown","reason":"decision_budget_exhausted"}
+01:58:17 note H1 idle preparation: {"status":"unknown","reason":"decision_budget_exhausted"}
+01:58:17 note H1 idle preparation: {"status":"unknown","reason":"decision_budget_exhausted"}
+01:58:18 note H1 idle preparation: {"status":"unknown","reason":"decision_budget_exhausted"}
+01:58:18 note H1 idle preparation: {"status":"unknown","reason":"next_solver_input_not_observed_or_not_ready","budget_ms":400}
+01:58:18 note H1 idle preparation: {"status":"unknown","reason":"next_solver_input_not_observed_or_not_ready","budget_ms":400}
+01:58:19 note H1 idle preparation: {"status":"unknown","reason":"next_solver_input_not_observed_or_not_ready","budget_ms":400}
+01:58:19 note H1 idle preparation: {"status":"prepared","basis":"exact_observed_input_only","nodes":264,"partial":false,"reused":false,"budget_ms":400}
+01:58:30 COMBAT          combat/plan-choice+potion -> play_card (card_index=1) conf 0.93 jev 668 ms | 17492 in
+         Jev chose plan 5/5 (防御, 投掷匕首 -> 同族信徒 #1, 中和 -> 同族信徒 #1, 防御) with confidence 0.93; code rank - (rollout's best line, added)
+01:58:30 note H1 idle preparation: {"status":"unknown","reason":"next_solver_input_not_observed_or_not_ready","budget_ms":271.9314270000614}
+01:58:30 wait COMBAT: waiting on COMBAT (transition, animation, or nothing legal yet)
+01:58:31 note action came back pending; waited for the board to settle
+01:58:31 COMBAT          combat/plan-continue -> play_card (card_index=1, target_index=0) jev 0 ms | 0 in
+         continuing the Jev-chosen plan: 投掷匕首 -> 同族信徒 #1
+01:58:32 CARD_SELECTION  selection/choose     -> select_deck_card (option_index=0) fallback no-jev jev 0 ms | 0 in
+         human-pace deadline without a usable Jev answer; deterministic fallback chose 打击
+01:58:33 COMBAT          combat/plan-choice+potion -> end_turn fallback no-jev jev 0 ms | 0 in
+         no usable answer from Jev; using the code-best plan
+01:58:33 note H1 idle preparation: {"status":"unknown","reason":"decision_budget_exhausted"}
+01:58:33 wait COMBAT: waiting on COMBAT (transition, animation, or nothing legal yet)
+01:58:34 note H1 idle preparation: {"status":"unknown","reason":"decision_budget_exhausted"}
+01:58:34 note H1 idle preparation: {"status":"unknown","reason":"decision_budget_exhausted"}
+01:58:34 note H1 idle preparation: {"status":"unknown","reason":"decision_budget_exhausted"}
+01:58:35 note H1 idle preparation: {"status":"unknown","reason":"decision_budget_exhausted"}
+01:58:35 note H1 idle preparation: {"status":"unknown","reason":"decision_budget_exhausted"}
+01:58:36 note H1 idle preparation: {"status":"unknown","reason":"decision_budget_exhausted"}
+01:58:36 note H1 idle preparation: {"status":"unknown","reason":"decision_budget_exhausted"}
+01:58:37 note H1 idle preparation: {"status":"unknown","reason":"decision_budget_exhausted"}
+01:58:37 note H1 idle preparation: {"status":"unknown","reason":"decision_budget_exhausted"}
+01:58:37 note H1 idle preparation: {"status":"unknown","reason":"next_solver_input_not_observed_or_not_ready","budget_ms":400}
+01:58:38 note H1 idle preparation: {"status":"unknown","reason":"next_solver_input_not_observed_or_not_ready","budget_ms":400}
+01:58:38 note H1 idle preparation: {"status":"unknown","reason":"next_solver_input_not_observed_or_not_ready","budget_ms":400}
+01:58:39 note H1 idle preparation: {"status":"prepared","basis":"exact_observed_input_only","nodes":12,"partial":false,"reused":false,"budget_ms":400}
+01:58:49 COMBAT          combat/plan-choice+potion -> play_card (card_index=0) conf 0.75 jev 668 ms | 15335 in
+         Jev chose plan 1/4 (防御, 匕首雨, 尖啸) with confidence 0.75; code rank 1
+01:58:49 note H1 idle preparation: {"status":"unknown","reason":"next_solver_input_not_observed_or_not_ready","budget_ms":269.05669399994076}
+01:58:49 wait COMBAT: waiting on COMBAT (transition, animation, or nothing legal yet)
+01:58:50 COMBAT          combat/plan-continue -> play_card (card_index=0) jev 0 ms | 0 in
+         continuing the Jev-chosen plan: 匕首雨
+01:58:50 note H1 idle preparation: {"status":"unknown","reason":"next_solver_input_not_observed_or_not_ready","budget_ms":267.23667099993327}
+01:58:50 wait COMBAT: waiting on COMBAT (transition, animation, or nothing legal yet)
+01:58:52 COMBAT          combat/plan-continue -> play_card (card_index=0) jev 0 ms | 0 in
+         continuing the Jev-chosen plan: 尖啸
+01:58:52 note H1 idle preparation: {"status":"unknown","reason":"next_solver_input_not_observed_or_not_ready","budget_ms":265.39647799995146}
+01:58:52 wait COMBAT: waiting on COMBAT (transition, animation, or nothing legal yet)
+01:58:54 COMBAT          combat/plan-choice+potion -> end_turn fallback no-jev jev 0 ms | 0 in
+         no usable answer from Jev; using the code-best plan
+01:58:54 note H1 idle preparation: {"status":"unknown","reason":"decision_budget_exhausted"}
+01:58:54 wait COMBAT: waiting on COMBAT (transition, animation, or nothing legal yet)
+01:58:54 note H1 idle preparation: {"status":"unknown","reason":"decision_budget_exhausted"}
+01:58:55 note H1 idle preparation: {"status":"unknown","reason":"decision_budget_exhausted"}
+01:58:55 note H1 idle preparation: {"status":"unknown","reason":"decision_budget_exhausted"}
+01:58:55 note H1 idle preparation: {"status":"unknown","reason":"decision_budget_exhausted"}
+01:58:56 note H1 idle preparation: {"status":"unknown","reason":"decision_budget_exhausted"}
+01:58:56 note H1 idle preparation: {"status":"unknown","reason":"decision_budget_exhausted"}
+01:58:57 note H1 idle preparation: {"status":"unknown","reason":"decision_budget_exhausted"}
+01:58:57 note H1 idle preparation: {"status":"unknown","reason":"decision_budget_exhausted"}
+01:58:58 note H1 idle preparation: {"status":"unknown","reason":"decision_budget_exhausted"}
+01:58:58 note H1 idle preparation: {"status":"unknown","reason":"decision_budget_exhausted"}
+01:58:58 note H1 idle preparation: {"status":"unknown","reason":"decision_budget_exhausted"}
+01:58:59 note H1 idle preparation: {"status":"unknown","reason":"next_solver_input_not_observed_or_not_ready","budget_ms":400}
+01:58:59 note SL: the draws left the order attempt 1 saw (F17 T5 attempt 3): T5: reshuffle (the discard pile shuffled into the draw pile); random draws from here
+01:58:59 note H1 idle preparation: {"status":"unknown","reason":"next_solver_input_not_observed_or_not_ready","budget_ms":400}
+01:59:00 note H1 idle preparation: {"status":"unknown","reason":"next_solver_input_not_observed_or_not_ready","budget_ms":400}
+01:59:00 note H1 idle preparation: {"status":"unknown","reason":"next_solver_input_not_observed_or_not_ready","budget_ms":400}
+01:59:01 note H1 idle preparation: {"status":"unknown","reason":"next_solver_input_not_observed_or_not_ready","budget_ms":400}
+01:59:01 note H1 idle preparation: {"status":"unknown","reason":"next_solver_input_not_observed_or_not_ready","budget_ms":400}
+01:59:02 note H1 idle preparation: {"status":"prepared","basis":"exact_observed_input_only","nodes":461,"partial":false,"reused":false,"budget_ms":400}
+01:59:04 COMBAT          combat/plan-choice+potion -> play_card (card_index=0, target_index=1) conf 0.46 jev 650 ms | 17922 in
+         Jev chose plan 2/5 (中和 -> 同族信徒 #2, 突然一拳 -> 同族神官, 弹跳药瓶) with confidence 0.46; code rank 2
+01:59:04 note H1 idle preparation: {"status":"unknown","reason":"next_solver_input_not_observed_or_not_ready","budget_ms":400}
+01:59:04 wait COMBAT: waiting on COMBAT (transition, animation, or nothing legal yet)
+01:59:05 COMBAT          combat/plan-continue -> play_card (card_index=3, target_index=2) jev 0 ms | 0 in
+         continuing the Jev-chosen plan: 突然一拳 -> 同族神官
+01:59:05 note H1 idle preparation: {"status":"unknown","reason":"next_solver_input_not_observed_or_not_ready","budget_ms":400}
+01:59:05 wait COMBAT: waiting on COMBAT (transition, animation, or nothing legal yet)
+01:59:08 COMBAT          combat/plan-continue -> play_card (card_index=0) jev 0 ms | 0 in
+         continuing the Jev-chosen plan: 弹跳药瓶
+01:59:08 note H1 idle preparation: {"status":"unknown","reason":"next_solver_input_not_observed_or_not_ready","budget_ms":400}
+01:59:08 wait COMBAT: waiting on COMBAT (transition, animation, or nothing legal yet)
+01:59:10 COMBAT          combat/play          -> use_potion (option_index=0) conf 0.76 jev 498 ms | 4232 in
+         Jev chose p0 (Drink 混沌药水) with confidence 0.76
+01:59:11 COMBAT          combat/play          -> use_potion (option_index=0) conf 0.99 jev 303 ms | 4203 in
+         Jev chose p0 (Drink 格挡药水) with confidence 0.99
+01:59:12 COMBAT          combat/play          -> use_potion (target_index=0, option_index=1) conf 0.19 jev 300 ms | 4079 in
+         Jev chose p1->e0 (Drink 毒药水 on 同族信徒) with confidence 0.19
+01:59:13 COMBAT          combat/play          -> use_potion (target_index=0, option_index=2) conf 0.21 jev 301 ms | 3819 in
+         Jev chose p2->e0 (Drink 毒药水 on 同族信徒) with confidence 0.21
+01:59:14 note SL: certain death foreseen at F17 T5 attempt 3/6 (rules: nothing left to play or drink; 26 incoming vs 3 HP + 12 block + 0 end-of-turn block); reloading the fight: save_and_quit, then continue_run
+01:59:15 note SL: save_and_quit -> completed (Action completed.)
+01:59:18 note SL: continue_run -> completed (Action completed.)
+01:59:21 note SL: attempt 4 knows the first 24 draws of the fight (attempt 1, 3)
+01:59:21 note SL: attempt 4 deviates at T1, the 16th latest question before attempt 1's death on T9: not 背刺 -> 同族神官, 灵动步法, 防御, 防御 again there; 1 turn through it not again (5 lines shown there never played on that board; where the failed attempts lost their HP: T1 weighs 11.2 (0 lost on it on average, the later turns' losses at 0.5 a turn), the most of the turns deviated at the fewest times (none); every line loses in every sample here (the rollout's horizon: it does not order the turns); the other turns: T3 7.8, T5 5.8, T8 4, T4 3.5, T7 2; attempt 1's path, not attempt 2's: it lived longest (attempt 1 T9 (enemy HP 217), attempt 2 T6 (enemy HP 262), attempt 3 T5 (enemy HP 257)))
+01:59:21 note SL: back in the fight at F17 T1 (8 s); attempt 4/6 begins, Jev is told how the earlier attempt(s) went
+01:59:21 COMBAT          combat/least-loss    -> end_turn jev 0 ms | 0 in
+         every simulated line dies; playing the one that keeps the most HP (-11): end turn
+01:59:21 note H1 idle preparation: {"status":"prepared","basis":"exact_observed_input_only","nodes":360,"partial":false,"reused":false,"budget_ms":400}
+01:59:21 wait COMBAT: waiting on COMBAT (transition, animation, or nothing legal yet)

@@ -1,0 +1,37 @@
+{
+  "at": "2026-10-18 02:02:07 CST",
+  "commands": [
+    {
+      "command": [
+        "nice",
+        "-n",
+        "19",
+        "npx",
+        "tsc",
+        "-p",
+        "tsconfig.json",
+        "--noEmit"
+      ],
+      "rc": 0
+    },
+    {
+      "command": [
+        "nice",
+        "-n",
+        "19",
+        "npx",
+        "vitest",
+        "run",
+        "tests/construction-support.test.ts",
+        "tests/human-pace-card-shadow.test.ts",
+        "--pool=threads",
+        "--maxWorkers=2"
+      ],
+      "rc": 0
+    }
+  ],
+  "rc": 0,
+  "main": "58f813b4df9caa85e282c1b0db01c1e9ca103f74",
+  "full": false,
+  "log_sha256": "4074924c321f56967720426d2867444de96ace3bd988f19f755be9b865707f3e"
+}
