@@ -1,0 +1,145 @@
+from pathlib import Path
+import hashlib, json, subprocess, tarfile
+
+r = Path.cwd(); p = r / 'ops/codex-ops/record-staging/20261017-1340'
+pub = r / 'paper/materials/20261017-1340-ops'
+p.mkdir(parents=True, exist_ok=True); pub.mkdir(exist_ok=True)
+load = lambda f: json.loads(f.read_bytes())
+sha = lambda raw: hashlib.sha256(raw).hexdigest()
+def write(f, v): f.write_text(json.dumps(v, ensure_ascii=False, indent=2) + '\n')
+def git(*a, cwd=r): return subprocess.check_output(['git', '-C', str(cwd), *a], stderr=subprocess.PIPE)
+def fingerprint(f):
+    h = hashlib.sha256()
+    with f.open('rb') as stream:
+        for chunk in iter(lambda: stream.read(1024 * 1024), b''): h.update(chunk)
+    return h.hexdigest()
+
+assert not (pub / 'ops-closure.json').exists()
+bid = '20261017-132758-strategy-proposal'
+state = load(r / 'ops/codex-ops/learn.json'); b = state['batches'][bid]; report = b['report']
+scratch = Path(report['report']).parent; wt = Path(b['worktree'])
+assert b['state'] == 'done' and b['rc'] == 0 and b.get('merged') is None
+assert b['proposal_audit_errors'] == [] and report['fixes'] == []
+assert report['implementation_domains'] == [] and all(v is None for v in report['tests'].values())
+assert len(report['proposal_results']) == 10 and all(x['state'] == 'waiting' for x in report['proposal_results'])
+final = load(scratch / 'final-verification.json')
+assert final['exit_code'] == 0 and final['head'] == report['base'] and final['worktree_clean']
+assert final['ledger_links'] == 30 and final['gitleaks'] == 0
+assert final['consumer_exit_codes'] == [0] * 6 and final['source_tests'] is None
+old_worktree = load(scratch / 'worktree-final.json')
+assert old_worktree['head'] == report['base'] and old_worktree['status_porcelain'] == ''
+assert old_worktree['tracked_diff_bytes'] == 0 and old_worktree['no_new_commit'] and old_worktree['no_merge']
+if (wt / '.git').is_file():
+    assert git('rev-parse', 'HEAD', cwd=wt).decode().strip() == report['base']
+    assert not git('status', '--porcelain', '--untracked-files=all', cwd=wt).strip()
+    lifecycle = dict(current_git_checkout=True, actual_head=report['base'], clean=True)
+else:
+    assert [x.name for x in wt.iterdir()] == ['learner']
+    lifecycle = dict(current_git_checkout=False, original_scratch_retained=True,
+         original_final_worktree=old_worktree,
+         retention_request=load(r / 'ops/codex-ops/retention/requests' / (bid + '.json')),
+         no_restore_or_delete_by_ops=True)
+artifacts = load(scratch / 'artifact-manifest.json')
+assert len(artifacts) == final['artifacts'] == 103
+for ref in artifacts:
+    f = scratch / ref['path']; assert f.resolve().is_relative_to(scratch.resolve())
+    assert f.stat().st_size == ref['bytes'] and fingerprint(f) == ref['sha256'], ref['path']
+material = load(scratch / 'material-verification.json')
+assert material['checks'] == 52 and material['failures'] == 0
+assert len(material['results']) == 52 and all(x['pass'] for x in material['results'])
+envelopes = load(scratch / 'envelope-readback.json')
+assert len(envelopes) == 8 and sum(x['verified'] for x in envelopes) == 8274
+identities = load(scratch / 'run-identities.json')['runs']
+assert len(identities) == 6 and set(identities) == set(report['runs'])
+source = load(scratch / 'source-snapshot.json')
+assert source['base'] == report['base'] and len(source['files']) == 18
+for row in source['files']:
+    assert sha(git('show', source['base'] + ':' + row['path'])) == row['base_sha256']
+    assert sha(git('show', source['live_observed'] + ':' + row['path'])) == row['live_sha256']
+    actual = subprocess.run(['git', 'merge-base', '--is-ancestor', row['last_commit'], source['live_observed']], capture_output=True).returncode
+    assert (actual == 0) == row['live_ancestor']
+consumers = load(scratch / 'consumer-receipts.json')
+assert len(consumers) == 6 and all(x['exit_code'] == 0 for x in consumers)
+assert load(scratch / 'consumer-exclusions.json') == []
+
+physical = (r / 'paper/materials/learning/ledger.jsonl').read_bytes()
+ledger = load(scratch / 'ledger-link-receipt.json')
+assert ledger['exit_code'] == 0 and ledger['updates'] == 30
+assert ledger['prefix_preserved'] and ledger['protected_differences'] == []
+assert sha(physical[:ledger['prefix_size']]) == ledger['prefix_sha256']
+owned = []
+for ref in ledger['rows']:
+    raw = physical[ref['offset']:ref['offset'] + ref['bytes']]
+    assert sha(raw) == ref['sha256'] and json.loads(raw) == ref['row']
+    row = ref['row']; assert row['op'] == 'update' and row['by'] == 'learner:strategy-proposal'
+    assert set(row) <= {'op', 'id', 'ts', 'by', 'where', 'note'}
+    assert all(str(scratch) in path for path in row['where']['proposal'])
+    owned.append(raw)
+assert len(owned) == 30
+(p / 'own-ledger-rows.jsonl').write_bytes(b''.join(owned))
+
+appends = []; queue_proofs = []; offset = 0
+for raw in (r / 'paper/materials/learning/code-proposals.jsonl').read_bytes().splitlines(keepends=True):
+    row = json.loads(raw)
+    if row.get('batch') == b['key']:
+        expected = next(x for x in report['proposal_results'] if x['id'] == row['id'])
+        assert row['op'] == 'update' and row['state'] == expected['state'] == 'waiting'
+        assert row['reason'] == expected['reason'] and row['commit'] is None
+        queue_proofs.append(dict(id=row['id'], dispatch_key=row['batch'], offset=offset,
+                                  bytes=len(raw), sha256=sha(raw)))
+        appends.append(dict(path='paper/materials/learning/code-proposals.jsonl', text=raw.decode()))
+    offset += len(raw)
+assert len(queue_proofs) == 10 and {x['id'] for x in queue_proofs} == set(b['proposal_ids'])
+
+files = {f for f in scratch.rglob('*') if f.is_file() and f.stat().st_size < 800000 and
+         f.suffix in ['.json', '.jsonl', '.md', '.py', '.txt', '.patch', '.log', '.err', '.out']}
+files.update(r / 'ops/codex-ops/learner' / (bid + '.' + suffix) for suffix in ['out', 'err'])
+manifest = []
+with tarfile.open(pub / 'original-small-reports.tar.gz', 'w:gz', compresslevel=6) as tar:
+    for f in sorted(files):
+        raw = f.read_bytes(); name = str(f.relative_to(r)); tar.add(f, arcname=name, recursive=False)
+        manifest.append(dict(path=name, bytes=len(raw), sha256=sha(raw)))
+with tarfile.open(pub / 'original-small-reports.tar.gz') as tar:
+    for ref in manifest: assert sha(tar.extractfile(ref['path']).read()) == ref['sha256']
+write(pub / 'original-small-reports-manifest.json', dict(files=manifest,
+      archive_sha256=fingerprint(pub / 'original-small-reports.tar.gz'),
+      actual_readback_verified=True, originals_deleted=False,
+      large_consumer_inputs_outputs_and_raw_snapshots_retained=True))
+write(pub / 'batch-readback.json', dict(batch=bid, canonical_state=b['state'], report=report,
+      original_final=final, lifecycle=lifecycle, artifact_fingerprints_verified=103,
+      material_checks=52, original_verified_envelopes=8274, source_snapshot=source,
+      original_consumer_receipts=consumers, no_consumer_or_simulation_rerun_by_ops=True,
+      ledger_prefix_size=ledger['prefix_size'], ledger_prefix_sha256=ledger['prefix_sha256'],
+      original_ledger_rows=ledger['rows'], trace_only_fields=['where', 'note'],
+      original_queue_resolutions=queue_proofs,
+      original_tool_and_path_errors_preserved=load(scratch / 'process-notes.json')))
+
+at = subprocess.check_output(['date', '+%Y-%m-%d %H:%M:%S %Z'], text=True).strip()
+print(at, flush=True)
+h0 = state['learning_requests']['roy-20261017-human-pace-h0']
+text = (f'\n- {at} 运维codex处理1340原132758-strategy-proposal：engine0/canonical done、mergednull/提案audit空，base451534b025ad6c837a8d66fafbaa78443dfe649d/工作树tracked/index干净，fixes=[]、implementation_domains=[]、生产tests三项null。十项仍waiting，原调度器10条resolution逐dispatch key/ID/理由/offset/bytes/SHA核同，不重写或造implemented/duplicate/源码合入/号/补测。本批没有新的机制反证/科学异议，旧限制不重发通知或代任何角色ACK。\n'
+ '  机械实收：六局Silent A10的原8274封套读回结果、52材料核验0、103产物SHA核，当前18源码叶base/live指纹及last_commit祖先布尔逐核；main c6e6不是live祖先的原边界保留，不把相同字节或多个窄功能合成宽项上线。原六次有界离线消费者退出0、无删行排除；仅指定房间/输入和端点，228片段actual_full_candidate_result均null表示未认证，不作从未执行或完整执行结论。136个可核轮窗端点不充整战/策略收益校准；开场/SL身份未知的原拒绝边界仍保留。ops未重消费者、求解、模拟、原帧或生产测试。\n'
+ f'  30条根CLI where/note追溯逐物理offset/len/SHA读回，旧{ledger["prefix_size"]}字节前缀SHA{ledger["prefix_sha256"]}保持，全部保护字段无差；不添support/repeat/claim/首证/prior/evidence/status/version/effect，不降级旧shipped或冒本批shipped。归档{len(manifest)}份小原报告/提案/脚本/材料回执/out/err且压缩包逐SHA实读通过；大消费者输入输出/原封套/账本快照仍在原scratch，全部原件和旧失败保留。原两次执行前JS语法错误和路径探索错误保原process-notes，不误报产品缺陷或源码红绿。原retention门禁继续处理完成普通WT，本ops不手删。\n'
+ f'  H0原130158/thread/r1仍{h0["state"]}，本wake不再派发/热改或重算原107/源full；481验证、六目标质量、0332根缺口与H1自然验收/所有宽父继续分列，H2+未派。不因本普通批报告或现有宿主绿色推进这些闸。无learner-done，不重复刚完成的paper_dataset；零game API/重启/现局/home/账号/模型/prompt/env改动。仅30原账本行、10原resolution、自有追加与归档经gitleaks后私有index提交，保并行知识/记录/普通index；结束不sleep/轮询等新事件。证据paper/materials/20261017-1340-ops/。\n')
+for path in ['ops/inbox-dev.md', 'notes/for-roy.md', 'paper/materials/decision-log.md', 'notes/ops-handoff.md']:
+    with (r / path).open('ab') as f: f.write(text.encode())
+    appends.append(dict(path=path, text=text))
+write(p / 'own-appends.json', appends)
+write(p / 'paper-owned-manifest.json', [])
+write(p / 'extra-owned-paths.json', [])
+write(pub / 'ops-closure.json', dict(at=at, events=1, batch=bid, waiting=10,
+      trace_ledger_rows=30, original_resolution_rows=10, archived_files=len(manifest),
+      source_or_knowledge_change=False, new_merge_version_tests_shipped=False,
+      new_consumer_simulation_model_or_game_action=False,
+      H0_original_batch=h0.get('batch'), H0_current_state=h0['state'],
+      parent_closure_or_other_role_ACK=False))
+(pub / 'record.py.txt').write_bytes(Path(__file__).read_bytes())
+seal = (r / 'ops/codex-ops/record-staging/20261017-1325/seal.py').read_text()
+seal = seal.replace('20261017-1325', '20261017-1340').replace('== 26', '== 30').replace('owned_ledger_rows=26', 'owned_ledger_rows=30')
+seal = seal.replace('Record unchanged-source strategy report and original trace links', 'Archive bounded consumer report and waiting proposal dispositions')
+seal = seal.replace('ops: archive131302 unchanged-source strategy and waiting dispositions', 'ops: archive132758 report and preserve original waiting scopes')
+seal = seal.replace('One unchanged-source strategy batch:10waiting,26 original trace-only ledger rows,10 mechanical queue resolutions. Original artifacts and consumer rejection history preserved; no new source/test/consumer/simulation/model/game action. H0 existing130158 continuation and wider gaps remain separate.',
+    'One unchanged-source strategy batch:10waiting,30 original trace-only ledger rows,10 mechanical queue resolutions. Original six bounded-consumer receipts,52 material checks and103 artifact hashes verified; no ops rerun or product test. H0 original130158 and wider acceptance gaps remain separate.')
+(p / 'seal.py').write_text(seal)
+print(json.dumps(dict(waiting=10, trace_rows=30, original_artifacts=103,
+      archived_files=len(manifest), new_code_or_tests=False)), flush=True)
