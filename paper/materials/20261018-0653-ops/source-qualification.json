@@ -1,0 +1,311 @@
+{
+  "at": "2026-10-18 06:54:33 CST",
+  "batch": "20261018-061301-fix-batch",
+  "source": "2a778b13ac1ead79afef957d4708c1df5dfd3757",
+  "first_commit": "2a778b13ac1ead79afef957d4708c1df5dfd3757",
+  "parent": "3b5e041041f7f8f4a786afa1b9eb020182b29a54",
+  "base": "3b5e041041f7f8f4a786afa1b9eb020182b29a54",
+  "paths": [
+    {
+      "path": "agent/tests/build-decider.test.ts",
+      "sha256": "9a1a117beb83873d1f3048b1109443f3524368ab4ec641a711fa542cc84699e9"
+    },
+    {
+      "path": "agent/tests/fixture-http.test.ts",
+      "sha256": "19128891c406ca21680eb62589bb931a7243780ca987213acd8572cd32dd3331"
+    },
+    {
+      "path": "agent/tests/fixture-http.ts",
+      "sha256": "811b1e7cc0d1859a0a64eea59e9f77463a964b1c9164f6d8ad526eb1fef7353e"
+    },
+    {
+      "path": "agent/tests/global-build-fixed-inputs.test.ts",
+      "sha256": "31bef53c02c5b714ed55d98ed79f5e26a015c838e091dc2f589527000320e8dc"
+    },
+    {
+      "path": "agent/tests/global-build-integration.test.ts",
+      "sha256": "841da1f6e1be134449eda538be58f22e7ca845ae0641f356274c90cce76aaafe"
+    },
+    {
+      "path": "agent/tests/journal-replay.test.ts",
+      "sha256": "cfe307e372917af034fd34af44bc0df5c5b75da4f2c0703dbc3d8244799b1ea2"
+    },
+    {
+      "path": "agent/tests/learner-retention-fixture.test.ts",
+      "sha256": "d99c2389881020117fdd5b245354f3f80d5170288ecf61b939170e89ec27cf71"
+    },
+    {
+      "path": "agent/tests/learner-retention.test.ts",
+      "sha256": "473a64f6c48adf093521656373fc22bfe028dcf43814b015e5a48c34004fae9d"
+    },
+    {
+      "path": "agent/tests/loop-consumer-fixed-transport.test.ts",
+      "sha256": "be412087e1a59601b85f3d4e213cf5a06eb284525574dcf8dac58cd5d65fd4f4"
+    },
+    {
+      "path": "agent/tests/oneshot-support.ts",
+      "sha256": "ef87da9dfdb69cabc5fbb4c60ce654f0acd927ae8fc4c3516ed52daded11e1de"
+    },
+    {
+      "path": "agent/tests/synthetic-board-fixture.ts",
+      "sha256": "4535bfd0a01b04479bb09bb2ac486ebef00908e23b49e3157ec05a2ab1e70f68"
+    }
+  ],
+  "source_sandbox_rc": 0,
+  "source_files": 494,
+  "source_cases": 4496,
+  "native": {
+    "batch": "20261018-061301-fix-batch",
+    "thread": "01a14bed-08a8-71c2-9f45-c11701eb2c20",
+    "cwd": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261018-061301",
+    "event_log": "learner/runs/20261018-061305-c0d37521-5de3-4afc-a90a-08f82a8357cb-fix-batch.jsonl",
+    "registered_launch_batch": "20261018-061301-fix-batch",
+    "original_lease": "936f4f37e1b4eeea863df4ddf261accd864c892530de77af1ad7eb8e58c881f4",
+    "native_context": {
+      "source": "ops/codex-ops/accounts/codex3/learner/sessions/2026/10/18/rollout-2026-10-18T06-13-07-01a14bed-08a8-71c2-9f45-c11701eb2c20.jsonl",
+      "offset": 50304,
+      "bytes": 5152,
+      "sha256": "f70d0c3e250486a15f48a2921d3fb5983c1d0a7c9e1be24f37bec5d9c231f659",
+      "model": "gpt-6.1-sol",
+      "effort": "xhigh",
+      "sandbox": {
+        "type": "workspace-write",
+        "writable_roots": [
+          "/home/dw/Projects/agent-sts2",
+          "/home/dw/Projects/agent-sts2/.git",
+          "/home/dw/Projects/agent-sts2/.git/worktrees/codex-fix-silent-20261018-061301"
+        ],
+        "network_access": false,
+        "exclude_tmpdir_env_var": false,
+        "exclude_slash_tmp": false
+      },
+      "approval_policy": "never"
+    },
+    "native_user_input": {
+      "offset": 58299,
+      "bytes": 13081,
+      "sha256": "e3c1893b4ab3f317c4f610d56dc4c224108d76bbddc686d22b48add9182e9727",
+      "input_sha256": "2c918e6857d9456350cefbf630e5703ce4915b53fe0aaa7acbe80080e7d81d56"
+    },
+    "original_header_events": [
+      {
+        "offset": 0,
+        "bytes": 14892,
+        "sha256": "afad5f278341c85c7f99679b8feb33c4cd40d0b317875859cc3856bed2b5b9f7",
+        "type": "learner_launch",
+        "attempt": null,
+        "code": null
+      },
+      {
+        "offset": 14892,
+        "bytes": 370,
+        "sha256": "23e1332288b2ac18956d8d7d26349c66d1cc5fb31f70a4236eefcfbb24fa27fe",
+        "type": "learner_startup_attempt",
+        "attempt": 1,
+        "code": null
+      },
+      {
+        "offset": 17840,
+        "bytes": 77,
+        "sha256": "2bcc7cae226433b6afa9aad57669ed80098df3dec219b4d789c2f57c32b09591",
+        "type": "thread.started",
+        "attempt": null,
+        "code": null
+      }
+    ],
+    "startup_attempts": 1,
+    "failed_startups_preserved": 0,
+    "no_model_or_manual_restart": true
+  },
+  "original_report": {
+    "task": "fix-batch",
+    "base": "3b5e041041f7f8f4a786afa1b9eb020182b29a54",
+    "fixes": [
+      {
+        "item": "infra-h0-414-host-fixed-test-stability-20261018 / a406-fixed-deadlines：固定五处消费/回收夹具的执行边界",
+        "commit": "2a778b13ac1ead79afef957d4708c1df5dfd3757",
+        "test": "agent/tests/loop-consumer-fixed-transport.test.ts",
+        "fails_without_fix": true
+      }
+    ],
+    "skipped": [
+      {
+        "item": "出牌、药水、SL、终局、路线及角色机制条目（0256/0260/0263/0266/0308/0311/0317/0319/0320/0322/0324/0329/0334/0339/0344/0347/0349/0362/0365/0481/0487，另含XTSV1U9JD34T终局与GXNKW8X1XYJP抽牌身份）",
+        "reason": "策略类；沿已有独立strategy-proposal链处理，不重复派发或补入开发者游戏知识。"
+      },
+      {
+        "item": "silent-0339续证：BXU0CKWKH2RU尾巴误核销",
+        "reason": "策略类；已有58ab473f6c814061/c232010cd405fe44原提案链，保留当前行为和原证据。"
+      },
+      {
+        "item": "silent-0332 nonpositive-hp实际资源契约根因",
+        "reason": "证据不足；原专用owner链仍未闭环，诊断及样本身份窄修不等于根因修复。"
+      },
+      {
+        "item": "U5W7NUE925NK F15/F16两次原G2缺DPR告警的完整根因",
+        "reason": "证据不足；原未来样本数组及配对DPR分母未保存，此前窄修只覆盖有固定复现的严格零前缀边界，不将其冒作两次实盘根因。"
+      },
+      {
+        "item": "sandbox-glob-startup-race目录生命周期与磁盘压力宽项",
+        "reason": "证据不足；已有启动恢复/租约/回收窄修，目录删除归属与上游时序未确定。"
+      },
+      {
+        "item": "arch-funnel-guard / arch-learning-priority / arch-unified-resource-value / inv-f33-regression及调度公平性调查",
+        "reason": "独立架构、策略或归因任务，范围太大，超出普通纯bug批次。"
+      },
+      {
+        "item": "core-build-notify-222802-rc2旧原生通知恢复",
+        "reason": "证据不足；stderr持久化已修，旧送达状态未证，不重发可能已送达的通知。"
+      },
+      {
+        "item": "Codex缓存实测、DPR/B2性能及历史宿主超时根因",
+        "reason": "证据不足或独立性能调查；固定测试确定性子项已修，不代表自然性能根因已解决。"
+      },
+      {
+        "item": "原20261018-011241报告的recheck接续",
+        "reason": "证据不足：固定原报告的9ae48941源码不是所报dddad5d67发布提交祖先；六叶相同不代替祖先证明。原报告/状态/recheck2保留，未重复075726已验宿主，格式修复不冒称原批full0。"
+      },
+      {
+        "item": "ops-learner-recheck-report-fixes-shape-20261018补证：窄cherry-pick提案验收",
+        "reason": "太大：原Markdown没有机器JSON、原输出缺runs/base；独立原注册/原报告/六叶源码及发布/真实宿主回执协议超出本批格式修复。不造祖先、不改原报告/提案ID/seen_runs/租约或ACK，保留pending。"
+      },
+      {
+        "item": "infra-h0-414-host-fixed-test-stability-20261018 的生产性能及原full1归因",
+        "reason": "证据不足；已合入的固定测试修复不证明CPU或产品性能根因已解决，保留原失败历史。"
+      },
+      {
+        "item": "silent-0461：9W38TRGPJW9Q F17T10普通斗篷及0511/0512药水窗口补证",
+        "reason": "策略类；先前批次已收到05:16:47追加的旧项证据，沿既有f4eb/7338、c440ae480782dca0和c734f60b55906bae独立策略链，不重复实现或添加机制。"
+      },
+      {
+        "item": "infra-paper-dataset-concurrent-gzip-keyscan-20261018",
+        "reason": "已有原owner源码dee6386621e8122d123a3cd0017c3e4c199f524e并完成自测，当前基线未含；队列明确禁止重复实现，保留原运输链。"
+      }
+    ],
+    "merged": null,
+    "tests": {
+      "tsc": 0,
+      "vitest": 0,
+      "files": 494,
+      "cases": 4496
+    },
+    "code_proposals": [],
+    "implementation_domains": [],
+    "report": "/home/dw/Projects/agent-sts2/learner/runs/20261018-061305-c0d37521-5de3-4afc-a90a-08f82a8357cb-fix-batch/report.md"
+  },
+  "source_checks": {
+    "tsc": 0,
+    "vitest": 0,
+    "files": 494,
+    "cases": 4496,
+    "phases": [
+      {
+        "files": 493,
+        "cases": 4485
+      },
+      {
+        "files": 1,
+        "cases": 11
+      }
+    ],
+    "sandbox_workers": 1,
+    "source_log": "sandbox-final.log",
+    "negative_exit": 1,
+    "restored_regression_cases": 34,
+    "exact_original_target_cases": 20,
+    "gitleaks": 0,
+    "type_only_correction": "type-only-correction.json"
+  },
+  "validation": {
+    "queue_item": "infra-h0-414-host-fixed-test-stability-20261018 / a406-fixed-deadlines",
+    "host_tree": "a406c0fa6d35f720696c4e29c5617367da042287",
+    "negative": {
+      "files": 3,
+      "failed": 5,
+      "passed": 12,
+      "exit": 1
+    },
+    "restored": {
+      "files": 4,
+      "cases": 34,
+      "exit": 0
+    },
+    "original_failed_locations": {
+      "files": 5,
+      "cases": 20,
+      "not_selected": 73,
+      "exit": 0,
+      "log": "five-exact-targets.log"
+    },
+    "extra_all_five_files": {
+      "files_passed": 4,
+      "files_failed": 1,
+      "passed": 92,
+      "failed": 1,
+      "exit": 1,
+      "limitation": "original route-review fake Claude CLI is excluded by sandbox entry; stderr native process limitations retained in five-files.log"
+    },
+    "root_cwd_command": {
+      "exit": 1,
+      "limitation": "incorrect root cwd; npx registry lookup rejected with EAI_AGAIN; corrected to agent cwd and npm_config_offline=true, no dependency installed"
+    },
+    "patch_sha256": "fcfcfc2bf6d8bcba3901c41fced259f15bac2dec3c073cf1df7b9a42eeca0e45",
+    "ledger": "No matching bug-infra fixture entry; silent-0446 is a separate gameplay route-application issue and was not updated.",
+    "scientific_limit": "Original host timeouts and performance causes remain unproven; fixed consumers preserve questions, parsing, actions, records and deadlines. No gameplay rules or trust changed.",
+    "initial_target_selection_note": "Initial journal target was the adjacent never-stopped memory case; five-files.log also passed the actual relaunch case, then five-exact-targets.log rechecked its original title.",
+    "source_fixture_identity": "Three exact fixture blobs; build-decider and route-review differ only in preserved Dai/Roy attribution comments. No claim of byte identity for these two source leaves.",
+    "type_only_correction": {
+      "proof": "type-only-correction.json",
+      "during_sandbox_run": true,
+      "runtime_javascript_identical": true,
+      "optional_test_type_check_exit": 1,
+      "new_diagnostics_after_correction": [],
+      "note": "The initial TypeScript JS-API proof failed because installed TypeScript 7 has no lib/typescript.js; Vite transformWithOxc supplied the successful byte equality proof."
+    }
+  },
+  "merge_receipt": {
+    "source": "2a778b13ac1ead79afef957d4708c1df5dfd3757",
+    "base": "3b5e041041f7f8f4a786afa1b9eb020182b29a54",
+    "merged": null,
+    "before_refresh": "0bfadd7aa3dd650ac9a1678d139607e6f095b224",
+    "live_status_before": "M knowledge/characters/silent/boss-damage.json\n M knowledge/characters/silent/construction-opportunities.json\n M knowledge/characters/silent/fight-value-gates.json\n M knowledge/characters/silent/fight-value.json\n M knowledge/characters/silent/monster-records.json\n M knowledge/characters/silent/outcome-stats.json\n M knowledge/characters/silent/room-costs.json\n M knowledge/common/card-upgrades.json\n M knowledge/common/monster-db.json\n M knowledge/common/move-model.json\n M notes/fight-value-backtest-silent.md\n M notes/monster-db-check.md",
+    "refresh_paths": [
+      "knowledge/characters/silent/boss-damage.json",
+      "knowledge/characters/silent/construction-opportunities.json",
+      "knowledge/characters/silent/fight-value-gates.json",
+      "knowledge/characters/silent/fight-value.json",
+      "knowledge/characters/silent/monster-records.json",
+      "knowledge/characters/silent/outcome-stats.json",
+      "knowledge/characters/silent/room-costs.json",
+      "knowledge/common/card-upgrades.json",
+      "knowledge/common/monster-db.json",
+      "knowledge/common/move-model.json"
+    ],
+    "overlap": [],
+    "before_merge": "adbdcb0a92e98a64a3f96bfe7faddf60642ab05a",
+    "merge_exit": 1,
+    "conflicts": [
+      "notes/fix-queue-v4.md",
+      "notes/lessons.md",
+      "notes/ops-handoff.md",
+      "ops/inbox-dev.md",
+      "paper/materials/decision-log.md",
+      "paper/materials/learning/code-proposals.jsonl",
+      "paper/materials/learning/ledger.jsonl"
+    ],
+    "abort_exit": 0,
+    "blocked": "whole-branch merge failed; no manual conflict resolution",
+    "live_head": "adbdcb0a92e98a64a3f96bfe7faddf60642ab05a",
+    "live_status_after": "M notes/fight-value-backtest-silent.md\n M notes/monster-db-check.md"
+  },
+  "artifact_manifest_items": 24,
+  "archived_files": 131,
+  "source_full_not_repeated": true,
+  "original_canonical_failed_rc0_preserved": true,
+  "published": false,
+  "test_only": true,
+  "extra_original_excluded_CLI_failure_rc1_retained": true,
+  "optional_test_type_errors_retained": true,
+  "new_gameplay_release": false,
+  "new_ledger_shipped": false
+}
