@@ -1,0 +1,606 @@
+{
+  "at": "2026-10-17 11:44:53 CST",
+  "batch": "20261017-111302",
+  "runs": [
+    "DC32RW0A80V1",
+    "JKDUL0AL0TW6"
+  ],
+  "canonical": {
+    "runs": [
+      "DC32RW0A80V1",
+      "JKDUL0AL0TW6"
+    ],
+    "pid": 3355558,
+    "started": "2026-10-17 11:13",
+    "state": "done",
+    "reason": "tick",
+    "character": "silent",
+    "proposal_policy": "Roy-2026-10-07-learning",
+    "pane": "wJ:p19Z",
+    "rc": 0,
+    "finished": "2026-10-17 11:32",
+    "done": [
+      "DC32RW0A80V1",
+      "JKDUL0AL0TW6"
+    ],
+    "missing": [],
+    "proposal_audit_errors": [],
+    "proposal_audit_skipped": false
+  },
+  "report": {
+    "task": "postmortem",
+    "appended": [
+      "DC32RW0A80V1",
+      "JKDUL0AL0TW6"
+    ],
+    "skipped": [],
+    "bugs": [],
+    "ledger": {
+      "added": [],
+      "updated": [
+        "silent-0024",
+        "silent-0125",
+        "silent-0019",
+        "silent-0079",
+        "silent-0102",
+        "silent-0020"
+      ],
+      "repeats": [
+        "silent-0079"
+      ],
+      "check": 0
+    },
+    "code_proposals": [
+      "silent-proposal-8d4d103568855b65",
+      "silent-proposal-acf2a6e8a86736f5"
+    ],
+    "implementation_domains": [
+      "combat",
+      "sl",
+      "structure"
+    ],
+    "report": "/home/dw/Projects/agent-sts2/learner/runs/20261017-111308-2194261f-de11-4afd-bd5d-a7842439673c-postmortem/report.md"
+  },
+  "runtime": {
+    "batch": "20261017-111302",
+    "thread": "01a147d9-69e3-7190-9801-75570bf99d96",
+    "cwd": "/home/dw/Projects/agent-sts2",
+    "event_log": "learner/runs/20261017-111308-2194261f-de11-4afd-bd5d-a7842439673c-postmortem.jsonl",
+    "registered_launch_batch": "20261017-111302",
+    "original_lease": "b84dd9b2ba8f5fd4bbb2e59dcd36239c4f43f67fd2b764823218e2e989ff8b2e",
+    "native_context": {
+      "source": "ops/codex-ops/accounts/codex1/learner/sessions/2026/10/17/rollout-2026-10-17T11-13-13-01a147d9-69e3-7190-9801-75570bf99d96.jsonl",
+      "offset": 49290,
+      "bytes": 4654,
+      "sha256": "26f65b915ea2f4e2792fdda7f95cc879a5768f114773c126dbbb3a87cd6c5ef1",
+      "model": "gpt-6.1-sol",
+      "effort": "xhigh",
+      "sandbox": {
+        "type": "workspace-write",
+        "writable_roots": [
+          "/home/dw/Projects/agent-sts2/.git"
+        ],
+        "network_access": false,
+        "exclude_tmpdir_env_var": false,
+        "exclude_slash_tmp": false
+      },
+      "approval_policy": "never"
+    },
+    "native_user_input": {
+      "offset": 56527,
+      "bytes": 15371,
+      "sha256": "0ef0f12a67ca822aca658f789bd2c1503acde327fca0076c1fc29ff4f9fd9e26",
+      "input_sha256": "f7bdd1a411e3b8cd52f35b71cee7afbaa7241e355866d754ab9ac5a43bdeabaf"
+    },
+    "original_header_events": [
+      {
+        "offset": 0,
+        "bytes": 16905,
+        "sha256": "17619568ac8a3ec1586d3a62177fc9c901d790c12e298fc8053ad0d4a6366961",
+        "type": "learner_launch",
+        "attempt": null,
+        "code": null
+      },
+      {
+        "offset": 16905,
+        "bytes": 360,
+        "sha256": "3de975fb65fd37291f3913eabf3fbd4c82325a89ce7166f213826c7deb1dd363",
+        "type": "learner_startup_attempt",
+        "attempt": 1,
+        "code": null
+      },
+      {
+        "offset": 20277,
+        "bytes": 77,
+        "sha256": "1f6042432017d7af2c4324b00e85785f73f1fd88407f97f910668f0bf299a72e",
+        "type": "thread.started",
+        "attempt": null,
+        "code": null
+      }
+    ],
+    "startup_attempts": 1,
+    "failed_startups_preserved": 0,
+    "no_model_or_manual_restart": true
+  },
+  "original_lesson_prefix": {
+    "size": 9416194,
+    "sha256": "de4b8dbc31f3b5fcbbd690a94e7db660aca56b711a1544ceee165a4aa73da98c"
+  },
+  "lesson_append_bytes": 40292,
+  "original_raw_refs_verified": 4214,
+  "original_counts": {
+    "DC32RW0A80V1:decisions": 1216,
+    "DC32RW0A80V1:states": 1340,
+    "DC32RW0A80V1:run-plans": 14,
+    "DC32RW0A80V1:sl-attempts": 9,
+    "DC32RW0A80V1:brain": 49,
+    "DC32RW0A80V1:run-config": 1,
+    "JKDUL0AL0TW6:decisions": 750,
+    "JKDUL0AL0TW6:states": 782,
+    "JKDUL0AL0TW6:run-plans": 8,
+    "JKDUL0AL0TW6:sl-attempts": 10,
+    "JKDUL0AL0TW6:brain": 34,
+    "JKDUL0AL0TW6:run-config": 1
+  },
+  "raw_binding_file": {
+    "path": "learner/runs/20261017-111308-2194261f-de11-4afd-bd5d-a7842439673c-postmortem/input-bindings.jsonl",
+    "bytes": 764926,
+    "sha256": "839dd814f87cf9f750cbb3795e9293d43899f48ad5eb5b00fc7b4d02678bf1aa"
+  },
+  "original_material_checks": 16,
+  "source_reference": {
+    "live_head": "7907ca1af8f88d2adbe6b137ff8b6b8ceb082a23",
+    "files": {
+      "agent/src/reflex/combat-plan.ts": "e2187b64c415fc530bfc7c8a8607f41eca280a48c3b125647eecc83733def0ce",
+      "agent/src/sl/explore.ts": "89875b8d7fa6470bf2fea69188c16125992f9736a6fa048123c26f7ae6c0d312",
+      "agent/src/hand/screens/selection.ts": "ebfdcddc76ba3380b123706bdb496b9d66bbfd712b1eaf0d74f7ad8d7fd30c44"
+    },
+    "limit": "当前live源码对照；两局启动dirty数据的完整原始字节未记录，不能重建原运行整树。"
+  },
+  "dirty_runtime_not_reconstructed": true,
+  "original_ledger_rows": [
+    {
+      "offset": 22554691,
+      "bytes": 576,
+      "sha256": "1f364cc48891ff80f70790869f965257d79967cece2b2b76b6105c71ed46641b",
+      "row": {
+        "op": "update",
+        "id": "silent-0024",
+        "ts": "2026-10-17T11:29:41+08:00",
+        "by": "learner:postmortem",
+        "evidence": [
+          {
+            "run": "DC32RW0A80V1",
+            "floor": 48,
+            "turn": 10,
+            "role": "support",
+            "note": "末试s432467→432468：3血49挡，41攻加三张各12伤凋萎，完整需损28，死亡截断仅损3、敌结13毒余246。T8两张9伤与30攻、28挡实损20，T9一张9伤被11挡覆盖。不宣称新漏算或另一线必胜。"
+          }
+        ],
+        "where": {
+          "lessons": [
+            "DC32RW0A80V1"
+          ]
+        },
+        "note": "本批第一条support；保留claim/first_run/prior/status/version，不因死亡计repeat。"
+      }
+    },
+    {
+      "offset": 22555267,
+      "bytes": 732,
+      "sha256": "9215a3e03ba773e13450fb27f36be8a87a835ed5df6d97d0275c5f9e1eda61a7",
+      "row": {
+        "op": "update",
+        "id": "silent-0125",
+        "ts": "2026-10-17T11:29:41+08:00",
+        "by": "learner:postmortem",
+        "evidence": [
+          {
+            "run": "DC32RW0A80V1",
+            "floor": 12,
+            "turn": 1,
+            "role": "support",
+            "note": "d417312护栏候选省5血少6伤；F31T5 d417658省12少9，并移去本线6毒；actual_outcome空，F31抽弃重问，不将候选省血认实回血。"
+          },
+          {
+            "run": "DC32RW0A80V1",
+            "floor": 48,
+            "turn": 9,
+            "role": "support",
+            "note": "第2/5试d418171/418315护栏各预测省9、少6/2；两线五轮均24/24死亡、两试仍T10判死。全局四题候选省35/少23不是同一实盘资源收益，无原线胜局，不判纯bug。"
+          }
+        ],
+        "where": {
+          "lessons": [
+            "DC32RW0A80V1"
+          ]
+        },
+        "note": "本批第二条support，保留原状态和版本。"
+      }
+    },
+    {
+      "offset": 22555999,
+      "bytes": 580,
+      "sha256": "a87685f5fa88c1b1df6a918564f1aa27a9ffa2aee8a41bd75f62b9d2dc38e226",
+      "row": {
+        "op": "update",
+        "id": "silent-0019",
+        "ts": "2026-10-17T11:29:41+08:00",
+        "by": "learner:postmortem",
+        "evidence": [
+          {
+            "run": "DC32RW0A80V1",
+            "floor": 43,
+            "role": "support",
+            "note": "b15558所选回血投影F48为85/85；F43实回60→85，F44赢后75/86、F45赢后52/87、F46标记1血敌赢后53/88，F47回26至79/88实入王。HP低投影6且max改变，全链含赢战和实留槽1毒药，无另一线/留药获胜反事实。"
+          }
+        ],
+        "where": {
+          "lessons": [
+            "DC32RW0A80V1"
+          ]
+        },
+        "note": "本批第三条support；不加新血线/路线规则，保留原claim/prior/status/version。"
+      }
+    },
+    {
+      "offset": 22556579,
+      "bytes": 797,
+      "sha256": "7fbeec84390fa63e61c6cc64c6a3c341e8485550e42e10837eb403241329c7a0",
+      "row": {
+        "op": "update",
+        "id": "silent-0079",
+        "ts": "2026-10-17T11:29:41+08:00",
+        "by": "learner:postmortem",
+        "evidence": [
+          {
+            "run": "JKDUL0AL0TW6",
+            "floor": 33,
+            "turn": 5,
+            "role": "repeat",
+            "note": "第4/6试d419230/419291指纹相同，1血敌333；Jev中和+猛扑，SL只猛扑并在d419292阻止补中和。预测与实打38/34、都零损，五轮均24/24死、B2各200样本0胜。T6同19挡，原线有虚弱来袭15零损；替线无虚弱来袭21、完整需损2，1血死亡。属于全败饱和下删除防守效果的后继血价，本例没有换更多输出；第4试T7也判死，不证转胜或纯bug。"
+          }
+        ],
+        "where": {
+          "lessons": [
+            "JKDUL0AL0TW6"
+          ]
+        },
+        "note": "本批第一条为低胜率饱和下忽视防守血价的同类repeat；不改原claim，不把本例写成少挡换更多输出。"
+      }
+    },
+    {
+      "offset": 22557376,
+      "bytes": 594,
+      "sha256": "db6e2394c13240df7fc835cca428b6a3beda250c5b9d9c45112a0117576b3145",
+      "row": {
+        "op": "update",
+        "id": "silent-0102",
+        "ts": "2026-10-17T11:29:41+08:00",
+        "by": "learner:postmortem",
+        "evidence": [
+          {
+            "run": "JKDUL0AL0TW6",
+            "floor": 33,
+            "turn": 4,
+            "role": "support",
+            "note": "末试恶魔T4敌328→317扣11，结14毒并回30，T5敌333；净推进−5而实际敌HP下降25。六轮33/23/15/25/34/27合157，回30后净推进127、敌余272，本次清场最低需429。A10本局回30独立核，不照搬旧A6回27，不证明早建能力可赢。"
+          }
+        ],
+        "where": {
+          "lessons": [
+            "JKDUL0AL0TW6"
+          ]
+        },
+        "note": "本批第二条support；保留原claim/first_run/prior/status/version。"
+      }
+    },
+    {
+      "offset": 22557970,
+      "bytes": 592,
+      "sha256": "e090672570f930d23dd0311ed60ab1dd4413ea7d4437d86720e5a0bef4fc87ce",
+      "row": {
+        "op": "update",
+        "id": "silent-0020",
+        "ts": "2026-10-17T11:29:41+08:00",
+        "by": "learner:postmortem",
+        "evidence": [
+          {
+            "run": "JKDUL0AL0TW6",
+            "floor": 32,
+            "role": "support",
+            "note": "F23以5血赢，F25/F27各回21至26/47，F30后35、F31后12、F32再回21至33入恶魔；F27所选投影50实33。F31槽1虚弱T4喝掉，王前只补石头；全局六次各回21，F8孵化不治疗。实际回血增加缓冲非错误，无换休息/留药受控胜线，不省略赢战35血消耗。"
+          }
+        ],
+        "where": {
+          "lessons": [
+            "JKDUL0AL0TW6"
+          ]
+        },
+        "note": "本批第三条support，保留原状态和版本。"
+      }
+    },
+    {
+      "offset": 22558562,
+      "bytes": 376,
+      "sha256": "593728df6a1b74129c9c4611c69bc9a0053b4719bfabfad1377754ae98b67b12",
+      "row": {
+        "op": "update",
+        "id": "silent-0024",
+        "ts": "2026-10-17T11:30:43+08:00",
+        "by": "learner:postmortem",
+        "where": {
+          "proposal": [
+            "/home/dw/Projects/agent-sts2/learner/runs/20261017-111308-2194261f-de11-4afd-bd5d-a7842439673c-postmortem/proposal-dc-resources-guard.md"
+          ]
+        },
+        "note": "代码提案 silent-proposal-8d4d103568855b65 → task=strategy-proposal；Roy-2026-10-07-learning"
+      }
+    },
+    {
+      "offset": 22558938,
+      "bytes": 376,
+      "sha256": "3370fb8006090ad8fa8883d9a57b6f67a3b5155dce7984eeab21f50ca06f1b52",
+      "row": {
+        "op": "update",
+        "id": "silent-0125",
+        "ts": "2026-10-17T11:30:43+08:00",
+        "by": "learner:postmortem",
+        "where": {
+          "proposal": [
+            "/home/dw/Projects/agent-sts2/learner/runs/20261017-111308-2194261f-de11-4afd-bd5d-a7842439673c-postmortem/proposal-dc-resources-guard.md"
+          ]
+        },
+        "note": "代码提案 silent-proposal-8d4d103568855b65 → task=strategy-proposal；Roy-2026-10-07-learning"
+      }
+    },
+    {
+      "offset": 22559314,
+      "bytes": 376,
+      "sha256": "30340e42d26670aa03473ce2997f3df35f700c0e7b19d1f6d6022027784dc7f1",
+      "row": {
+        "op": "update",
+        "id": "silent-0019",
+        "ts": "2026-10-17T11:30:43+08:00",
+        "by": "learner:postmortem",
+        "where": {
+          "proposal": [
+            "/home/dw/Projects/agent-sts2/learner/runs/20261017-111308-2194261f-de11-4afd-bd5d-a7842439673c-postmortem/proposal-dc-resources-guard.md"
+          ]
+        },
+        "note": "代码提案 silent-proposal-8d4d103568855b65 → task=strategy-proposal；Roy-2026-10-07-learning"
+      }
+    },
+    {
+      "offset": 22559690,
+      "bytes": 375,
+      "sha256": "3ba60a84a1beab8b06512e28e16783163ca2023b305c2a16dcf9491f8668bbbe",
+      "row": {
+        "op": "update",
+        "id": "silent-0079",
+        "ts": "2026-10-17T11:30:44+08:00",
+        "by": "learner:postmortem",
+        "where": {
+          "proposal": [
+            "/home/dw/Projects/agent-sts2/learner/runs/20261017-111308-2194261f-de11-4afd-bd5d-a7842439673c-postmortem/proposal-jk-sl-weak-window.md"
+          ]
+        },
+        "note": "代码提案 silent-proposal-acf2a6e8a86736f5 → task=strategy-proposal；Roy-2026-10-07-learning"
+      }
+    },
+    {
+      "offset": 22560065,
+      "bytes": 375,
+      "sha256": "7679c4a64a46a64299055ed61716b2cf7d52e27894fe11a03a8e5e0ca7a3f142",
+      "row": {
+        "op": "update",
+        "id": "silent-0102",
+        "ts": "2026-10-17T11:30:44+08:00",
+        "by": "learner:postmortem",
+        "where": {
+          "proposal": [
+            "/home/dw/Projects/agent-sts2/learner/runs/20261017-111308-2194261f-de11-4afd-bd5d-a7842439673c-postmortem/proposal-jk-sl-weak-window.md"
+          ]
+        },
+        "note": "代码提案 silent-proposal-acf2a6e8a86736f5 → task=strategy-proposal；Roy-2026-10-07-learning"
+      }
+    },
+    {
+      "offset": 22560440,
+      "bytes": 375,
+      "sha256": "8bdce7ec20f821d127d72bffb9daefd54a858dfbcd2724c94f572a230963fd7a",
+      "row": {
+        "op": "update",
+        "id": "silent-0020",
+        "ts": "2026-10-17T11:30:44+08:00",
+        "by": "learner:postmortem",
+        "where": {
+          "proposal": [
+            "/home/dw/Projects/agent-sts2/learner/runs/20261017-111308-2194261f-de11-4afd-bd5d-a7842439673c-postmortem/proposal-jk-sl-weak-window.md"
+          ]
+        },
+        "note": "代码提案 silent-proposal-acf2a6e8a86736f5 → task=strategy-proposal；Roy-2026-10-07-learning"
+      }
+    }
+  ],
+  "original_ledger_roles": [
+    {
+      "id": "silent-0125",
+      "new_evidence": [
+        {
+          "run": "DC32RW0A80V1",
+          "role": "support"
+        },
+        {
+          "run": "DC32RW0A80V1",
+          "role": "support"
+        }
+      ]
+    },
+    {
+      "id": "silent-0020",
+      "new_evidence": [
+        {
+          "run": "JKDUL0AL0TW6",
+          "role": "support"
+        }
+      ]
+    },
+    {
+      "id": "silent-0102",
+      "new_evidence": [
+        {
+          "run": "JKDUL0AL0TW6",
+          "role": "support"
+        }
+      ]
+    },
+    {
+      "id": "silent-0019",
+      "new_evidence": [
+        {
+          "run": "DC32RW0A80V1",
+          "role": "support"
+        }
+      ]
+    },
+    {
+      "id": "silent-0024",
+      "new_evidence": [
+        {
+          "run": "DC32RW0A80V1",
+          "role": "support"
+        }
+      ]
+    },
+    {
+      "id": "silent-0079",
+      "new_evidence": [
+        {
+          "run": "JKDUL0AL0TW6",
+          "role": "repeat"
+        }
+      ]
+    }
+  ],
+  "protected_fields_and_old_evidence_preserved": true,
+  "only_twelve_original_owned_rows_staged": true,
+  "unrelated_silent_0501_not_created_or_staged_by_this_report": true,
+  "original_proposal_adds": [
+    {
+      "op": "add",
+      "id": "silent-proposal-8d4d103568855b65",
+      "ts": "2026-10-17T11:30:43+08:00",
+      "character": "silent",
+      "ledger": [
+        "silent-0024",
+        "silent-0125",
+        "silent-0019"
+      ],
+      "runs": [
+        "DC32RW0A80V1"
+      ],
+      "source_task": "postmortem",
+      "target_task": "strategy-proposal",
+      "domains": [
+        "combat",
+        "structure"
+      ],
+      "summary": "核护栏候选到实际动作/资源归属与凋萎终局结算；抽弃重问和SL分段，原规则保持，缺完整同盘胜负不改阈值。",
+      "proposal": "/home/dw/Projects/agent-sts2/learner/runs/20261017-111308-2194261f-de11-4afd-bd5d-a7842439673c-postmortem/proposal-dc-resources-guard.md",
+      "rule_changes": false,
+      "authorization": "Roy-2026-10-07-learning",
+      "proposal_sha256": "c873cceb1e629215f06fae0b976631f14f3e370e10aaed780cf56cf8fad67aaa",
+      "state": "pending"
+    },
+    {
+      "op": "add",
+      "id": "silent-proposal-acf2a6e8a86736f5",
+      "ts": "2026-10-17T11:30:44+08:00",
+      "character": "silent",
+      "ledger": [
+        "silent-0079",
+        "silent-0102",
+        "silent-0020"
+      ],
+      "runs": [
+        "JKDUL0AL0TW6"
+      ],
+      "source_task": "postmortem",
+      "target_task": "strategy-proposal",
+      "domains": [
+        "combat",
+        "sl",
+        "structure"
+      ],
+      "summary": "核SL连续删中和的同盘后继虚弱15/21来袭与38/34输出代价，保留原线也败反例；先实际读回，不从全败并列制定禁探索规则。",
+      "proposal": "/home/dw/Projects/agent-sts2/learner/runs/20261017-111308-2194261f-de11-4afd-bd5d-a7842439673c-postmortem/proposal-jk-sl-weak-window.md",
+      "rule_changes": false,
+      "authorization": "Roy-2026-10-07-learning",
+      "proposal_sha256": "64b3de042eba73b6df8165ccff20140ec4f9bb994545da646505784257eccc02",
+      "state": "pending"
+    }
+  ],
+  "proposal_lifecycle_at_read_cut": [
+    {
+      "op": "add",
+      "id": "silent-proposal-8d4d103568855b65",
+      "ts": "2026-10-17T11:30:43+08:00",
+      "character": "silent",
+      "ledger": [
+        "silent-0024",
+        "silent-0125",
+        "silent-0019"
+      ],
+      "runs": [
+        "DC32RW0A80V1"
+      ],
+      "source_task": "postmortem",
+      "target_task": "strategy-proposal",
+      "domains": [
+        "combat",
+        "structure"
+      ],
+      "summary": "核护栏候选到实际动作/资源归属与凋萎终局结算；抽弃重问和SL分段，原规则保持，缺完整同盘胜负不改阈值。",
+      "proposal": "/home/dw/Projects/agent-sts2/learner/runs/20261017-111308-2194261f-de11-4afd-bd5d-a7842439673c-postmortem/proposal-dc-resources-guard.md",
+      "rule_changes": false,
+      "authorization": "Roy-2026-10-07-learning",
+      "proposal_sha256": "c873cceb1e629215f06fae0b976631f14f3e370e10aaed780cf56cf8fad67aaa",
+      "state": "pending"
+    },
+    {
+      "op": "add",
+      "id": "silent-proposal-acf2a6e8a86736f5",
+      "ts": "2026-10-17T11:30:44+08:00",
+      "character": "silent",
+      "ledger": [
+        "silent-0079",
+        "silent-0102",
+        "silent-0020"
+      ],
+      "runs": [
+        "JKDUL0AL0TW6"
+      ],
+      "source_task": "postmortem",
+      "target_task": "strategy-proposal",
+      "domains": [
+        "combat",
+        "sl",
+        "structure"
+      ],
+      "summary": "核SL连续删中和的同盘后继虚弱15/21来袭与38/34输出代价，保留原线也败反例；先实际读回，不从全败并列制定禁探索规则。",
+      "proposal": "/home/dw/Projects/agent-sts2/learner/runs/20261017-111308-2194261f-de11-4afd-bd5d-a7842439673c-postmortem/proposal-jk-sl-weak-window.md",
+      "rule_changes": false,
+      "authorization": "Roy-2026-10-07-learning",
+      "proposal_sha256": "64b3de042eba73b6df8165ccff20140ec4f9bb994545da646505784257eccc02",
+      "state": "pending"
+    }
+  ],
+  "no_new_dispatch_or_game_rule": true,
+  "original_first_ledger_CLI_exit2_and_analysis_draft_failures_preserved": true,
+  "new_pure_bugs": [],
+  "original_094302_exit3_not_overwritten": true,
+  "source_production_tests_not_run": true,
+  "no_game_or_model_or_simulation_or_consumer_call": true,
+  "no_other_role_ACK": true
+}
