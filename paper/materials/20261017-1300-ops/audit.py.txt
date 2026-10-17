@@ -1,0 +1,165 @@
+from pathlib import Path
+import collections, hashlib, json, subprocess, tarfile
+
+r = Path.cwd(); p = r / 'ops/codex-ops/record-staging/20261017-1300'
+pub = r / 'paper/materials/20261017-1300-ops'
+load = lambda f: json.loads(f.read_bytes())
+sha = lambda raw: hashlib.sha256(raw).hexdigest()
+def file_sha(f):
+    digest = hashlib.sha256()
+    with f.open('rb') as stream:
+        for chunk in iter(lambda: stream.read(1024 * 1024), b''): digest.update(chunk)
+    return digest.hexdigest()
+def write(f, v): f.write_text(json.dumps(v, ensure_ascii=False, indent=2) + '\n')
+def git(*a, cwd=r): return subprocess.check_output(['git', '-C', str(cwd), *a], stderr=subprocess.PIPE)
+
+state = load(r / 'ops/codex-ops/learn.json')
+ledger = (r / 'paper/materials/learning/ledger.jsonl').read_bytes()
+queue = (r / 'paper/materials/learning/code-proposals.jsonl').read_bytes()
+records = []; archive = set(); ledger_owned = []; appends = []
+bids = ['20261017-124302-s2-strategy-proposal', '20261017-124302-strategy-proposal']
+dispatch_keys = {state['batches'][bid]['key']: bid for bid in bids}
+queue_rows = []
+queue_proof = []; offset = 0
+for line in queue.splitlines(keepends=True):
+    row = json.loads(line)
+    if row.get('batch') in dispatch_keys:
+        assert row['op'] == 'update' and row['state'] == 'waiting' and row['commit'] is None
+        queue_rows.append((row, line))
+        queue_proof.append(dict(batch=dispatch_keys[row['batch']], original_dispatch_key=row['batch'], id=row['id'], offset=offset,
+                                bytes=len(line), sha256=sha(line)))
+        appends.append(dict(path='paper/materials/learning/code-proposals.jsonl', text=line.decode()))
+    offset += len(line)
+assert len(queue_rows) == 20 and len({x[0]['id'] for x in queue_rows}) == 20
+
+for bid in bids:
+    b = state['batches'][bid]; report = b['report']
+    scratch = Path(report['report']).parent; wt = Path(b['worktree'])
+    assert b['state'] == 'done' and b['rc'] == 0 and b.get('merged') is None
+    assert b['proposal_audit_errors'] == [] and report['fixes'] == []
+    assert report['implementation_domains'] == [] and all(v is None for v in report['tests'].values())
+    assert len(report['proposal_results']) == 10 and all(x['state'] == 'waiting' for x in report['proposal_results'])
+    assert set(b['proposal_ids']) == {x['id'] for x in report['proposal_results']}
+    assert {x[0]['id'] for x in queue_rows if x[0]['batch'] == b['key']} == set(b['proposal_ids'])
+    for row, _ in queue_rows:
+        if row['batch'] == b['key']:
+            expected = next(x for x in report['proposal_results'] if x['id'] == row['id'])
+            assert row['state'] == expected['state'] and row['reason'] == expected['reason']
+    if (wt / '.git').is_file():
+        assert git('rev-parse', 'HEAD', cwd=wt).decode().strip() == report['base']
+        assert not git('status', '--porcelain', '--untracked-files=all', cwd=wt).strip()
+        lifecycle = dict(current_git_checkout=True, head=report['base'], clean=True)
+    else:
+        assert [x.name for x in wt.iterdir()] == ['learner']
+        request = load(r / 'ops/codex-ops/retention/requests' / (bid + '.json'))
+        lifecycle = dict(current_git_checkout=False, original_learner_only_retained=True,
+                          existing_retention_request=request, no_restore_or_delete_by_ops=True)
+
+    if '-s2-' in bid:
+        final = load(scratch / 'final-audit.json')
+        assert final['base'] == report['base'] and final['tracked_and_visible_untracked_clean']
+        assert final['workspace_diff_bytes'] == 0 and final['root_ledger_rows'] == 46
+        assert final['root_ledger_cli_exit'] == 0
+        material = load(scratch / 'material-validation.json')
+        assert material['case_count'] == 48 and material['failed_cases'] == []
+        assert all(x['passed'] for x in material['cases'])
+        assert material['physical_count'] == 124 and material['physical_failures'] == 0
+        corrected = load(scratch / 'ledger-readback-audit.json')
+        assert corrected['read_only'] and corrected['cli_invocations'] == 1 and corrected['cli_exit'] == 0
+        assert corrected['expected_fold_equals_saved_after'] and corrected['all_protected_fields_equal']
+        assert corrected['all_old_history_notes_where_preserved']
+        audit = load(scratch / 'ledger-write-audit.json')
+        prefix_size = audit['prefix_size']; prefix_sha = audit['prefix_sha256']; own = audit['own_rows']
+        assert len(own) == 46
+        artifact_refs = []
+        for name, ref in final['artifacts'].items():
+            candidates = [scratch / name, scratch / 'evidence' / name]
+            actual = [f for f in candidates if f.is_file() and f.stat().st_size == ref['bytes'] and file_sha(f) == ref['sha256']]
+            assert len(actual) == 1, name
+            artifact_refs.append(dict(path=str(actual[0].relative_to(scratch)), **ref))
+        source_audit = load(scratch / 'source-audit.json')
+        source_rows = source_audit['paths']
+        for x in source_rows:
+            assert sha(git('show', source_audit['base'] + ':' + x['path'])) == x['base_sha256']
+            assert sha(git('show', source_audit['live_snapshot'] + ':' + x['path'])) == x['live_sha256']
+        identities = load(scratch / 'all-verified-runs.json')
+        assert len(identities) == 15
+        summary = dict(material_checks=48, raw_refs_previously_verified=124,
+                       run_identities=15, source_audit_leaves=16,
+                       earlier_append_audit_failure_retained=True,
+                       corrected_read_only_audit=corrected,
+                       no_repeat_ledger_CLI_or_product_test_by_ops=True)
+    else:
+        final = load(scratch / 'final-validation.json')
+        assert final['head'] == report['base'] and final['git_status_short'] == ''
+        assert final['source_changed'] is False and final['knowledge_changed'] is False
+        assert final['new_commits'] == [] and final['ledger_trace_rows'] == 32
+        material = load(scratch / 'material-checks.json')
+        assert len(material) == 37 and all(x['passed'] for x in material)
+        assert load(scratch / 'raw-readback-audit.json')['total'] == 6606
+        prefix = load(scratch / 'ledger-prefix-before.json')
+        prefix_size = prefix['bytes']; prefix_sha = prefix['sha256']
+        audit = load(scratch / 'ledger-append-audit.json')
+        assert audit['count'] == 32 and audit['protected_fields_unchanged'] and audit['prefix_unchanged']
+        own = audit['rows']; assert len(own) == 32
+        artifact_refs = load(scratch / 'artifact-manifest.json')
+        for ref in artifact_refs:
+            f = scratch / ref['path']
+            assert f.stat().st_size == ref['bytes'] and file_sha(f) == ref['sha256'], ref['path']
+        source_audit = load(scratch / 'source-audit.json')
+        for x in source_audit['files']:
+            assert sha(git('show', source_audit['base'] + ':' + x['path'])) == x['sha256']
+            assert sha(git('show', source_audit['live_snapshot'] + ':' + x['path'])) == x['live_sha256']
+        assert len(load(scratch / 'runs-verified.json')) == 5
+        summary = dict(material_checks=37, raw_rows_previously_verified=6606,
+                       run_identities=5, source_audit_leaves=14,
+                       preliminary_null_combat_material_error_retained=True,
+                       no_repeat_raw_frame_solver_or_product_test_by_ops=True)
+    assert sha(ledger[:prefix_size]) == prefix_sha
+    own_refs = []
+    for ref in own:
+        raw = ledger[ref['offset']:ref['offset'] + ref['bytes']]
+        assert sha(raw) == ref['sha256'] and json.loads(raw) == ref['row']
+        row = ref['row']
+        assert row['op'] == 'update' and row['by'] == 'learner:strategy-proposal'
+        assert set(row) <= {'op', 'id', 'ts', 'by', 'where', 'note'}
+        assert all(str(scratch) in path for path in row['where']['proposal'])
+        ledger_owned.append((ref['offset'], raw))
+        own_refs.append({k: v for k, v in ref.items() if k != 'row'})
+    for f in scratch.rglob('*'):
+        if f.is_file() and f.stat().st_size < 800000 and f.suffix in [
+            '.json', '.jsonl', '.md', '.py', '.txt', '.patch', '.log', '.stdout', '.stderr', '.exit']:
+            archive.add(f)
+    for suffix in ['out', 'err']: archive.add(r / 'ops/codex-ops/learner' / (bid + '.' + suffix))
+    records.append(dict(batch=bid, report=report, worktree_lifecycle=lifecycle,
+        original_final_validation=final, artifact_fingerprints_verified=len(artifact_refs),
+        summary=summary, ledger_prefix=dict(bytes=prefix_size, sha256=prefix_sha),
+        own_trace_rows=own_refs, production_tests=report['tests'],
+        new_code_merge_version_rule_notification_or_shipped=False))
+
+ledger_owned.sort()
+assert len(ledger_owned) == 78 and len({x[0] for x in ledger_owned}) == 78
+(p / 'own-ledger-rows.jsonl').write_bytes(b''.join(raw for _, raw in ledger_owned))
+write(p / 'own-appends.json', appends)
+write(p / 'extra-owned-paths.json', [])
+write(p / 'paper-owned-manifest.json', [])
+manifest = []
+with tarfile.open(pub / 'original-small-reports.tar.gz', 'w:gz', compresslevel=6) as tar:
+    for f in sorted(archive):
+        raw = f.read_bytes(); name = str(f.relative_to(r))
+        tar.add(f, arcname=name, recursive=False)
+        manifest.append(dict(path=name, bytes=len(raw), sha256=sha(raw)))
+with tarfile.open(pub / 'original-small-reports.tar.gz') as tar:
+    for ref in manifest:
+        actual = tar.extractfile(ref['path']).read()
+        assert len(actual) == ref['bytes'] and sha(actual) == ref['sha256']
+write(pub / 'original-small-reports-manifest.json', dict(files=manifest,
+      archive_sha256=file_sha(pub / 'original-small-reports.tar.gz'),
+      actual_archive_readback_verified=True, originals_deleted=False,
+      larger_raw_and_ledger_snapshots_retained_in_original_scratch=True))
+write(pub / 'batch-readback.json', records)
+write(pub / 'original-proposal-resolutions.json', dict(rows=queue_proof,
+      existing_scheduler_resolution_verified=True, disposition_count=20,
+      all_waiting=True, no_new_resolution_written_by_ops=True))
+print(json.dumps(dict(batches=2, waiting_proposals=20, original_ledger_trace_rows=78,
+      artifact_files_archived=len(manifest), new_source_or_tests=False)), flush=True)

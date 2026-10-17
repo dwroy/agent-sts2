@@ -1,0 +1,66 @@
+from pathlib import Path
+import datetime, hashlib, json, os, subprocess, sys
+
+r = Path.cwd(); state_dir = r / 'ops/codex-ops'
+p = state_dir / 'record-staging/20261017-1300'
+pub = r / 'paper/materials/20261017-1300-ops'
+p.mkdir(parents=True, exist_ok=True); pub.mkdir(exist_ok=True)
+sys.path.insert(0, str(r / 'ops'))
+import learning_requests as flow
+from learner_jobs import start_learner, STRATEGY_WORKERS
+
+def load(f): return json.loads(f.read_bytes())
+def write(f, v): f.write_text(json.dumps(v, ensure_ascii=False, indent=2) + '\n')
+def alive(pid):
+    try: os.kill(int(pid), 0); return True
+    except (OSError, ValueError, TypeError): return False
+sha = lambda raw: hashlib.sha256(raw).hexdigest()
+ident = 'roy-20261017-human-pace-h0'
+req_path = r / 'notes/learning-requests' / (ident + '.json')
+req_raw = req_path.read_bytes(); req = json.loads(req_raw)
+assert sha(req_raw) == 'd3da188a5151a8dc57274ad4d48431b1253ccc677406a48f005bdb38ecef0680'
+assert req['revision'] == 1 and req['thread_id'] == '01a1415e-a511-7131-be7c-a2dc691c847f'
+assert req['input']['sha256'] == '982c4264158fe5426423cf02477f22822d1a2b5e8bff058c7575a52bd6f7da54'
+assert not (state_dir / 'LLM_DRAIN').exists() and not (state_dir / 'ACCOUNT_DRAIN').exists()
+assert not (pub / 'h0-continuation-registration.json').exists()
+at = subprocess.check_output(['date', '+%Y-%m-%d %H:%M:%S %Z'], text=True).strip()
+with flow.locked(state_dir) as state:
+    prior = json.loads(json.dumps(state['learning_requests'][ident]))
+    occupied = [k for k, v in state['batches'].items() if v.get('task') == 'strategy-proposal'
+                and v.get('state') == 'running' and alive(v.get('pid'))]
+    for bid in ['20261017-124302-strategy-proposal', '20261017-124302-s2-strategy-proposal']:
+        b = state['batches'][bid]
+        assert b['state'] == 'done' and b['rc'] == 0 and b.get('merged') is None
+    if prior['state'] == 'pending':
+        pending = [k for k, v in state['learning_requests'].items() if v['state'] == 'pending']
+        assert pending == [ident] and len(occupied) < STRATEGY_WORKERS
+        assert isinstance(prior['checkpoint'], str) and json.loads(prior['checkpoint'])['no_new_trust_published']
+        stamp = datetime.datetime.now().strftime('%Y%m%d-%H%M%S')
+        result = flow.reconcile(state, str(r), str(r / 'ops'), 'silent', alive,
+                                stamp, start_learner, STRATEGY_WORKERS)
+    else:
+        assert prior['state'] == 'running'
+        result = None
+    current = state['learning_requests'][ident]
+    actual = state['batches'].get(current.get('batch'), {})
+    if current['state'] == 'running':
+        assert actual['learning_request'] == ident and actual['learning_revision'] == 1
+        assert actual['worktree'] == str(r / req['worktree'])
+        assert actual['learning_request_sha256'] == sha(req_raw)
+        assert alive(actual['pid'])
+        assert current['checkpoint'] == prior['checkpoint']
+    old = state['batches']['20261017-095852-strategy-proposal']
+    assert old['state'] == 'failed' and old['rc'] == 0 and old.get('merged') is None
+    receipt = dict(at=at, request_id=ident, revision=1, thread=req['thread_id'],
+       input=req['input'], original_request_sha256=sha(req_raw),
+       before_state=prior['state'], slots_before=occupied, existing_slot_limit=STRATEGY_WORKERS,
+       reconcile_result=result, actual_state=current['state'], actual_batch=current.get('batch'),
+       actual_registration=actual, original_checkpoint_unchanged=True,
+       old_failed_rc0_mergednull_preserved=True, new_thread_or_request_or_revision=False,
+       original_learner_sandbox_and_account_unchanged=True,
+       first_real_model_reply_claim=False,
+       scope='Only original remaining481 validation keys and original evidence gaps; reuse107 tuning214 rows, input/module closure and original gates. No source full or unrelated experiment.')
+    write(pub / 'h0-continuation-registration.json', receipt)
+assert req_path.read_bytes() == req_raw
+print(json.dumps(dict(original_H0_state=receipt['actual_state'],
+    batch=receipt['actual_batch'], result=result, first_reply_not_yet_claimed=True)), flush=True)
