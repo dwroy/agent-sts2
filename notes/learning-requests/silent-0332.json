@@ -13,7 +13,7 @@
     "path": "learner/runs/20261016-183403-64766a9a-6fde-4c7f-b500-daf047c80fd1-fix-batch.jsonl",
     "sha256": "b616ba657680f6173eb597c59e26db46461c86ecf4b6e25506db0e9177214642"
   },
-  "revision": 3,
+  "revision": 4,
   "authorization": "Roy 2026-10-16 19:16 CST 决定（经 Claude 转达）：针对 V5-S 上线后的连败，不做 A/B 对照实验。watcher 将 Silent P1（S_READINESS）与 P2（S_BUILD_RANK）退回 shadow，交原 ops 单独发布、编号、双通知与精确树宿主检查；之后沿已部署固定分段漏斗每 10 局观察。silent-0332 连续 Boss 资源记账缺陷的学习者修复链提到优先，按学习要求闭环；诊断后组 F49 入口 HP 中位数 6、SL 救回率 11/19→3/16 是排查信号，不构成根因或机制证明。其他运行安排不变，游戏知识仍由学习者从证据得出。",
   "input": {
     "path": "paper/materials/20261016-2029-ops/learner-input-r3.md",
@@ -38,5 +38,20 @@
   "linked_parent_requests": [
     "roy-20261016-global-build"
   ],
-  "watcher_owner": "01a13dcd-83d4-7c63-b233-f93cf878ecf4"
+  "watcher_owner": "01a13dcd-83d4-7c63-b233-f93cf878ecf4",
+  "account_transition": {
+    "mode": "new-account-continuation",
+    "transaction": "codex3-20261017",
+    "source_home": "/home/dw/Projects/agent-sts2/ops/codex-ops/accounts/codex1/learner",
+    "target_home": "/home/dw/Projects/agent-sts2/ops/codex-ops/accounts/codex3/learner",
+    "receipt": {
+      "path": "/home/dw/Projects/agent-sts2/paper/materials/20261018-0013-ops-resume/silent-0332-account-recovery.json",
+      "sha256": "3099d2e30242d48489676c74e3fa0645ad85d9ac9dffc6518bdbd40e9847f82f",
+      "at": 1792255306.5624526
+    },
+    "original_request": {
+      "path": "/home/dw/Projects/agent-sts2/ops/codex-ops/learning-request-history/silent-0332/ee77376d07d0cec3b0a8ea3f144ae26891afe4029ad3521a35226d5d656a98cc.json",
+      "sha256": "ee77376d07d0cec3b0a8ea3f144ae26891afe4029ad3521a35226d5d656a98cc"
+    }
+  }
 }

@@ -1,0 +1,27 @@
+
+ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/live/agent
+
+ ❯ tests/target-options.test.ts (24 tests | 1 failed) 98260ms
+     × rolls every shown line out under both kill orders, the Amalgam first among them, and reports and logs them 27717ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/target-options.test.ts > per-target options (EZ2L F48 T2: Queen + Torch Head Amalgam) > rolls every shown line out under both kill orders, the Amalgam first among them, and reports and logs them
+Error: Test timed out in 20000ms.
+If this is a long-running test, pass a timeout value as the last argument or configure it globally with "testTimeout".
+ ❯ tests/target-options.test.ts:165:3
+    163|   });
+    164|
+    165|   it("rolls every shown line out under both kill orders, the Amalgam f…
+       |   ^
+    166|     // This numeric contract requires all eight samples; keep its orig…
+    167|     const decision = ez2l({ budgetMs: 1e9 }) as AskDecision;
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed | 479 passed (480)
+      Tests  1 failed | 4410 passed (4411)
+   Start at  00:29:27
+   Duration  487.48s (transform 35.03s, setup 51.45s, import 136.74s, tests 1644.27s, environment 64ms)
+

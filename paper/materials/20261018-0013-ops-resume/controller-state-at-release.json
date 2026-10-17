@@ -1,0 +1,172 @@
+{
+  "id": "codex3-20261017",
+  "source": {
+    "session": "01a12bec-c83f-7c21-b76f-eb8e5304eb8f",
+    "learner_home": "/home/dw/Projects/agent-sts2/ops/codex-ops/accounts/codex1/learner",
+    "brain_home": "/home/dw/Projects/agent-sts2/ops/codex-ops/accounts/codex1/brain"
+  },
+  "target": {
+    "engine": "codex",
+    "account": "codex3",
+    "model": "gpt-6.1-sol",
+    "effort": "xhigh",
+    "service_tier": "default",
+    "learner_home": "/home/dw/Projects/agent-sts2/ops/codex-ops/accounts/codex3/learner",
+    "brain_home": "/home/dw/Projects/agent-sts2/ops/codex-ops/accounts/codex3/brain",
+    "handoff": "notes/codex3-drain-ops-handoff.md"
+  },
+  "target_digest": "5aae1a71d8ab640cb4cbc77db7e4ae1666a01d1f1b808ecb624d1ef48915b411",
+  "preflight": {
+    "ok": true,
+    "checks": [
+      {
+        "role": "learner",
+        "home": "/home/dw/Projects/agent-sts2/ops/codex-ops/accounts/codex3/learner",
+        "check": {
+          "ok": true,
+          "version": "codex-cli 0.163.0"
+        },
+        "key_check": {
+          "ok": true,
+          "checked": 9
+        }
+      },
+      {
+        "role": "brain",
+        "home": "/home/dw/Projects/agent-sts2/ops/codex-ops/accounts/codex3/brain",
+        "check": {
+          "ok": true,
+          "version": "codex-cli 0.163.0"
+        },
+        "key_check": {
+          "ok": true,
+          "checked": 9
+        }
+      }
+    ],
+    "at": "2026-10-17T23:31:16+08:00"
+  },
+  "created_at": "2026-10-17T23:31:16+08:00",
+  "phase": "complete",
+  "receipts": {
+    "backup": {
+      "pane": "wJ:p5",
+      "selector": "/home/dw/Projects/agent-sts2/ops/codex-ops/accounts/codex1/learner\n",
+      "brain_selector": "/home/dw/Projects/agent-sts2/ops/codex-ops/accounts/codex1/brain\n",
+      "cron": "*/15 * * * * /usr/bin/env python3 /home/dw/agent-memory/bin/mem sync --agent timer >>/home/dw/.local/state/agent-memory/timer.log 2>&1\n# BEGIN agent-sts2 codex-ops (ops/codex-ops.sh start/stop; docs/codex-ops.md)\nLEARNER_CODEX_HOME=/home/dw/Projects/agent-sts2/ops/codex-ops/accounts/codex1/learner\nCODEX_OPS_EFFORT=xhigh\n*/5 * * * * /bin/bash /home/dw/Projects/agent-sts2/ops/codex-ops.sh tick stall >/dev/null 2>&1\n13,43 * * * * /bin/bash /home/dw/Projects/agent-sts2/ops/codex-ops.sh tick learn >/dev/null 2>&1\n7 4 * * * /bin/bash /home/dw/Projects/agent-sts2/ops/codex-ops.sh tick snapshot >/dev/null 2>&1\n# END agent-sts2 codex-ops\n",
+      "session": "01a12bec-c83f-7c21-b76f-eb8e5304eb8f\n",
+      "herdr_ops": "{\"pane\":\"wJ:p5\",\"session\":\"01a12bec-c83f-7c21-b76f-eb8e5304eb8f\",\"args_hash\":\"9d527f3e194f45ef\",\"started\":\"2026-10-12T16:18:22.244Z\"}\n"
+    },
+    "activation": {
+      "at": "2026-10-18T00:08:29+08:00",
+      "learner_home": "/home/dw/Projects/agent-sts2/ops/codex-ops/accounts/codex3/learner",
+      "brain_home": "/home/dw/Projects/agent-sts2/ops/codex-ops/accounts/codex3/brain",
+      "old_session": "01a12bec-c83f-7c21-b76f-eb8e5304eb8f",
+      "cross_account_resume": false,
+      "pane_environment": "/home/dw/Projects/agent-sts2/ops/codex-ops/llm-switches/codex3-20261017/target-pane-home"
+    },
+    "verification": {
+      "ok": true,
+      "target_digest": "5aae1a71d8ab640cb4cbc77db7e4ae1666a01d1f1b808ecb624d1ef48915b411",
+      "new_session": "01a14a9f-38e7-78e2-95d0-ba274d4b3e19",
+      "bootstrap_exit": 0,
+      "rollout": "/home/dw/Projects/agent-sts2/ops/codex-ops/accounts/codex3/learner/sessions/2026/10/18/rollout-2026-10-18T00-08-31-01a14a9f-38e7-78e2-95d0-ba274d4b3e19.jsonl",
+      "runtime_play_and_learning": "awaiting normal dispatch"
+    }
+  },
+  "owned_flags": [
+    "ops/codex-ops/LLM_DRAIN",
+    "ops/codex-ops/PAUSE"
+  ],
+  "preserved_flags": [],
+  "updated_at": "2026-10-18T00:13:34+08:00",
+  "snapshot": {
+    "at": "2026-10-18T00:08:26+08:00",
+    "active_workers": [],
+    "excluded_workers": [
+      {
+        "kind": "source_ops_process",
+        "pid": 922264,
+        "start_ticks": "71386378"
+      },
+      {
+        "kind": "source_ops_process",
+        "pid": 922271,
+        "start_ticks": "71386382"
+      },
+      {
+        "kind": "source_ops_process",
+        "pid": 922551,
+        "start_ticks": "71387666"
+      },
+      {
+        "kind": "other_instance",
+        "pid": 1060064,
+        "start_ticks": "99998599",
+        "root": "/home/dw/Projects/agent-sts2/.worktrees/regent-climb"
+      },
+      {
+        "kind": "other_instance",
+        "pid": 1060071,
+        "start_ticks": "99998606",
+        "root": "/home/dw/Projects/agent-sts2/.worktrees/regent-climb"
+      },
+      {
+        "kind": "other_instance",
+        "pid": 1063031,
+        "start_ticks": "100002832",
+        "root": "/home/dw/Projects/agent-sts2/.worktrees/regent-climb"
+      },
+      {
+        "kind": "other_instance",
+        "pid": 1303571,
+        "start_ticks": "100219367",
+        "root": "/home/dw/Projects/agent-sts2/.worktrees/regent-climb"
+      },
+      {
+        "kind": "other_instance",
+        "pid": 1303572,
+        "start_ticks": "100219367",
+        "root": "/home/dw/Projects/agent-sts2/.worktrees/regent-climb"
+      },
+      {
+        "kind": "other_instance",
+        "pid": 1306749,
+        "start_ticks": "100224739",
+        "root": "/home/dw/Projects/agent-sts2/.worktrees/regent-climb"
+      },
+      {
+        "kind": "other_instance",
+        "pid": 1843187,
+        "start_ticks": "100587949",
+        "root": "/home/dw/Projects/agent-sts2/.worktrees/regent-climb"
+      },
+      {
+        "kind": "other_instance",
+        "pid": 1843224,
+        "start_ticks": "100587959",
+        "root": "/home/dw/Projects/agent-sts2/.worktrees/regent-climb"
+      },
+      {
+        "kind": "other_instance",
+        "pid": 1849145,
+        "start_ticks": "100590334",
+        "root": "/home/dw/Projects/agent-sts2/.worktrees/regent-climb"
+      }
+    ],
+    "ops_idle": true,
+    "checkpoint_ready": true,
+    "inventory_complete": true,
+    "ops_pane": "wJ:p5",
+    "ops_identity": [
+      {
+        "pid": 922264,
+        "start_ticks": "71386378"
+      },
+      {
+        "pid": 922271,
+        "start_ticks": "71386382"
+      }
+    ]
+  }
+}
