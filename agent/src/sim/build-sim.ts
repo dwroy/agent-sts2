@@ -84,7 +84,8 @@ export interface CompareResult {
   adaptive?: JsonValue;
   readiness?: BossReadiness;
   readinessMs?: number;
-  completion?: { required: true; uniqueDecks: number; originalDecks: number; memoHit: boolean; originalComputeMs?: number };
+  completion?: { required: true; uniqueDecks: number; originalDecks: number; memoHit: boolean; originalComputeMs?: number;
+    budgeted?: true; status?: "partial" | "complete_budget"; failure?: false; samples?: number; requested?: number };
   diagnostics?: { decks: number; options: number; deckCards: number; deadlineMs: number | null; orderSearch: Record<string, JsonValue> | null; comparison: Record<string, JsonValue> };
   base: OptionSim;
   options: OptionSim[];
@@ -355,7 +356,9 @@ export async function compareOptions(
     ...(adaptive ? { adaptive: toJsonValue({ ...adaptive, ...(productionComparison ? { production_comparison: productionComparison } : {}),
       input_key: cacheKey, fixed_order_search_in_work: true }) } : {}),
     ...(readiness ? { readiness, readinessMs } : {}),
-    ...(required ? { completion: { required: true as const, uniqueDecks: decks.length, originalDecks, memoHit: false } } : {}),
+    ...(required ? { completion: { required: true as const, uniqueDecks: decks.length, originalDecks, memoHit: false,
+      ...(pace ? { budgeted: true as const, status: run.timedOut || n < samples && actual?.adaptive.status !== "complete_adaptive"
+        ? "partial" as const : "complete_budget" as const, failure: false as const, samples: n, requested: samples } : {}) } } : {}),
     ...(opts.diagnostics ? { diagnostics: { decks: decks.length, options: options.length, deckCards: base.piles.draw.length,
       deadlineMs: opts.deadlineMs ?? null, orderSearch, comparison: phase(run, left) } } : {}),
     base: simOf("current", baseLine, base.solver.player.hp, true),

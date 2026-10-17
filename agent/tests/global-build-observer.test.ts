@@ -71,3 +71,24 @@ it("does not cache service failures or borrow a pool from another ascension", as
   expect(value.summaries.every((summary) => summary.known_acts.length === 0)).toBe(true);
   expect(value.targets[0]!.rows[0]!.unknown).toBe("observed_pool_character_or_ascension_mismatch");
 });
+
+// H1 prefixes must never mask a later non-budget or failed completion with identical numeric data.
+it("keys a budgeted prefix by completion provenance while ignoring only memo timing", async () => {
+  const args = request();
+  Object.assign(args.current, { requested: 1000, timedOut: true,
+    completion: { required: true, uniqueDecks: 1, originalDecks: 1, memoHit: false,
+      budgeted: true, status: "partial", failure: false, samples: 100, requested: 1000 } });
+  const first = await observeGlobalBuild(args);
+  expect(first.targets[0]!.status).toBe("budgeted_partial");
+  const same = await observeGlobalBuild({ ...args, current: { ...args.current,
+    completion: { ...args.current.completion!, memoHit: true, originalComputeMs: 50 } } });
+  expect(same.memo_hit).toBe(true);
+  for (const completion of [undefined, { ...args.current.completion!, budgeted: undefined },
+    { ...args.current.completion!, failure: true } as unknown as CompareResult["completion"]]) {
+    const rejected = await observeGlobalBuild({ ...args, current: { ...args.current, completion } });
+    expect(rejected.memo_hit).toBe(false);
+    expect(rejected.targets[0]!.status).toBe("unknown");
+    expect(rejected.targets[0]!.rows[0]!.unknown).toContain("global_computation_failed:");
+  }
+  expect(args.runner.run).not.toHaveBeenCalled();
+});
