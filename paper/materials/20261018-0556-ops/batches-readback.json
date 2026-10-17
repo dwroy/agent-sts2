@@ -1,0 +1,418 @@
+[
+  {
+    "batch": "20261018-054302",
+    "canonical_state": "done",
+    "canonical_rc": 0,
+    "report": {
+      "task": "postmortem",
+      "appended": [
+        "NRZAYVRMM7M0"
+      ],
+      "skipped": [],
+      "bugs": [],
+      "ledger": {
+        "added": [],
+        "updated": [
+          "silent-0020",
+          "silent-0079",
+          "silent-0418",
+          "silent-0005",
+          "silent-0012"
+        ],
+        "repeats": [],
+        "check": 0
+      },
+      "code_proposals": [
+        "silent-proposal-2af7d556b544aeab"
+      ],
+      "implementation_domains": [
+        "combat",
+        "potion",
+        "sl"
+      ],
+      "report": "/home/dw/Projects/agent-sts2/learner/runs/20261018-054305-f82aeda8-5c29-4fd0-979e-7c40df2c017d-postmortem/report.md"
+    },
+    "native": {
+      "batch": "20261018-054302",
+      "thread": "01a14bd1-930d-7b60-8641-aa23046f1a65",
+      "cwd": "/home/dw/Projects/agent-sts2",
+      "event_log": "learner/runs/20261018-054305-f82aeda8-5c29-4fd0-979e-7c40df2c017d-postmortem.jsonl",
+      "registered_launch_batch": "20261018-054302",
+      "original_lease": "8ab9c3e9a7ced6aba6e122ff2e04c169c2f8722a1b104faee67b2698a7e44d69",
+      "native_context": {
+        "source": "ops/codex-ops/accounts/codex3/learner/sessions/2026/10/18/rollout-2026-10-18T05-43-08-01a14bd1-930d-7b60-8641-aa23046f1a65.jsonl",
+        "offset": 49292,
+        "bytes": 4654,
+        "sha256": "854797f61e1b7ba3f8f443c90354c326d207086ee79b5c58ade223c493a8fb45",
+        "model": "gpt-6.1-sol",
+        "effort": "xhigh",
+        "sandbox": {
+          "type": "workspace-write",
+          "writable_roots": [
+            "/home/dw/Projects/agent-sts2/.git"
+          ],
+          "network_access": false,
+          "exclude_tmpdir_env_var": false,
+          "exclude_slash_tmp": false
+        },
+        "approval_policy": "never"
+      },
+      "native_user_input": {
+        "offset": 56529,
+        "bytes": 15345,
+        "sha256": "df250aad0caf0e098857594653684b4e218005d1c23dedced1346f3c53acb1c5",
+        "input_sha256": "73dffec66fb9fa758e8060bd3c2da37c798e2e9a976be31e297fad6da5b50f02"
+      },
+      "original_header_events": [
+        {
+          "offset": 0,
+          "bytes": 16866,
+          "sha256": "715a8448e202d820694283b078283a2fae44140589615847e247dc5002510831",
+          "type": "learner_launch",
+          "attempt": null,
+          "code": null
+        },
+        {
+          "offset": 16866,
+          "bytes": 360,
+          "sha256": "c85b59bdd88e4493ade69b8abfec46c3f0eb53c1dcdfb62924d84bb9c1da0bb8",
+          "type": "learner_startup_attempt",
+          "attempt": 1,
+          "code": null
+        },
+        {
+          "offset": 20238,
+          "bytes": 77,
+          "sha256": "0a3ec31bfbd857330cb199adf1916a3bc71e522c307dd47328b402f4a0312b63",
+          "type": "thread.started",
+          "attempt": null,
+          "code": null
+        }
+      ],
+      "startup_attempts": 1,
+      "failed_startups_preserved": 0,
+      "no_model_or_manual_restart": true
+    },
+    "source_files": {
+      "live_commit": "0bfadd7aa3dd650ac9a1678d139607e6f095b224",
+      "files": [
+        {
+          "path": "agent/src/reflex/combat-plan.ts",
+          "blob": "661e51d448af4ed0baa1112088e7a880ec452611",
+          "sha256": "d2ce972bcfcfe1f558a32b1212f506734feeaadb7da3a26230bf9568702c3106"
+        },
+        {
+          "path": "agent/src/reflex/silent-selection-audit.ts",
+          "blob": "cfe8132edd3112c78c004d21b9544678140e85c9",
+          "sha256": "2de2533b477546682ef601d0613bd1adb805e03b894f64347475bfa4e222e4db"
+        },
+        {
+          "path": "agent/src/reflex/silent-selection-dispatch.ts",
+          "blob": "0cddf2bacfd3696c88f2bf07096e1c38e74ec7c7",
+          "sha256": "9301b47f0f6a2589ce210d7f3b9fd232854575154e1f77e471d164070003e6d6"
+        },
+        {
+          "path": "agent/src/reflex/silent-sl-comparison.ts",
+          "blob": "df4382a6414fc29d1f8db1e061281be4607d311d",
+          "sha256": "2fbb427662af78dd5428c70e0af9bb82dfe312d4ccffb33201da3c26dfdfc760"
+        },
+        {
+          "path": "agent/src/sl/judge.ts",
+          "blob": "ef2427589dba32f253862ba54a7162738a7ac3f7",
+          "sha256": "382ac4f7c69a51b3492f163523a0b346d5570f935d31c41109b98664542f4223"
+        },
+        {
+          "path": "agent/src/sl/explore.ts",
+          "blob": "ddaacde8ed9f73fd035c145f82ea99a51ed48172",
+          "sha256": "89875b8d7fa6470bf2fea69188c16125992f9736a6fa048123c26f7ae6c0d312"
+        }
+      ]
+    },
+    "source_stream_counts": {
+      "decisions": 422,
+      "states": 437,
+      "run-plans": 5,
+      "run-config": 1,
+      "brain": 16,
+      "sl-attempts": 6,
+      "fight-plans": 0
+    },
+    "original_ledger_rows": [
+      {
+        "offset": 23969647,
+        "bytes": 777,
+        "sha256": "846b57a5774d484d1c3d20eb6f7a1581fda514d9d675928e9e73ced3bcf34bad",
+        "row": {
+          "op": "update",
+          "id": "silent-0020",
+          "ts": "2026-10-18T05:53:52+08:00",
+          "by": "learner:postmortem",
+          "evidence": [
+            {
+              "run": "NRZAYVRMM7M0",
+              "floor": 9,
+              "note": "d429283、s443975→443976：休息40→61；F11雕像61→17、芝士补18。F13休息12→34、F15胜后24、F16再补46/76；六次同族仍败。三次实际回血65，不以失败判回血错误，无锻造或换线受控实胜。",
+              "role": "support"
+            },
+            {
+              "run": "NRZAYVRMM7M0",
+              "floor": 16,
+              "note": "d429398/b16148：回血24→46/76且boss_sim_hp_reference入口46，实入46一致；22模拟均败不等于与24血升级同安全。",
+              "role": "support"
+            }
+          ],
+          "where": {
+            "lessons": [
+              "NRZAYVRMM7M0"
+            ]
+          },
+          "note": "本局支持已有限定的资源／休息结论，不改claim、first_run、prior、status或version。"
+        }
+      },
+      {
+        "offset": 23970424,
+        "bytes": 957,
+        "sha256": "16ec91ce0ab0ba74187f410cdfafc296ea195ebb2a13a8224caaeb5e03c8db2e",
+        "row": {
+          "op": "update",
+          "id": "silent-0079",
+          "ts": "2026-10-18T05:53:52+08:00",
+          "by": "learner:postmortem",
+          "evidence": [
+            {
+              "run": "NRZAYVRMM7M0",
+              "floor": 17,
+              "turn": 4,
+              "note": "第4试d429498：Jev原选饮攻击药后重问，随机中位预测损0/扣28；SL重放第3试打击→蛇咬，预测损7/扣14；s444199→444202实HP28→21、敌血池242→228，药仍在。候选差+7血/-14伤，但原为随机中位，非同确定牌序受控支配；只support血价与重放边界，不认定探索本身为重犯或纯bug。",
+              "role": "support"
+            },
+            {
+              "run": "NRZAYVRMM7M0",
+              "floor": 17,
+              "turn": 2,
+              "note": "末试d429574原答打信徒，SL改神官，候选损16→15、伤害27保持，随后攻击药飞镖另打5；整轮实扣32/损15，不是同一原候选低报5。",
+              "role": "support"
+            }
+          ],
+          "where": {
+            "lessons": [
+              "NRZAYVRMM7M0"
+            ]
+          },
+          "note": "本局只支持候选代价须与实线分列，不据随机中位和未执行原线认定应改变SL门槛。"
+        }
+      },
+      {
+        "offset": 23971381,
+        "bytes": 911,
+        "sha256": "696f2bb24c2d42ed24f0e807112d3eb00370ba2f4b4eacb05795748997d89d89",
+        "row": {
+          "op": "update",
+          "id": "silent-0418",
+          "ts": "2026-10-18T05:53:52+08:00",
+          "by": "learner:postmortem",
+          "evidence": [
+            {
+              "run": "NRZAYVRMM7M0",
+              "floor": 17,
+              "turn": 5,
+              "note": "首试d429423实饮攻击药、d429424选飞镖；s444126飞镖0费可打、1击5伤，神官132。d429425 chosen飞镖但result=not dispatched: SL reloaded before its line，不能记已打5或药中位猎杀者25伤。",
+              "role": "support"
+            },
+            {
+              "run": "NRZAYVRMM7M0",
+              "floor": 17,
+              "turn": 2,
+              "note": "末试d429577饮药、后继s444280→444281飞镖实使神官159→154，后毒至149；生成、派发、实际伤害分账。第4试T5药中位41、选终结技后重问，整轮实际45，不能直接作同线误差。",
+              "role": "support"
+            }
+          ],
+          "where": {
+            "lessons": [
+              "NRZAYVRMM7M0"
+            ]
+          },
+          "note": "单动作回执与actual_turn未知的既有边界正确，本局不新增纯bug；提案仅交独立strategy-proposal核离线归因消费。"
+        }
+      },
+      {
+        "offset": 23972292,
+        "bytes": 571,
+        "sha256": "e6f7e973cb19fde8c098587070e00450281b6ba62223e497d8a5816de1ccf2d3",
+        "row": {
+          "op": "update",
+          "id": "silent-0005",
+          "ts": "2026-10-18T05:53:52+08:00",
+          "by": "learner:postmortem",
+          "evidence": [
+            {
+              "run": "NRZAYVRMM7M0",
+              "floor": 17,
+              "turn": 3,
+              "note": "末试T1 s444268→444269步法建2敏捷；T3 s444283/s444285防御实7、生存者实10合17，较基础5+8多4，另有2覆甲；来袭5x2+2x3=16，HP29保持。T5同2敏捷的防御7挡仍对33实损26；T6脆弱时只5挡。",
+              "role": "support"
+            }
+          ],
+          "where": {
+            "lessons": [
+              "NRZAYVRMM7M0"
+            ]
+          },
+          "note": "已知敏捷须在后继格挡兑现的本局补证；不新增机制、不改prior及首证。"
+        }
+      },
+      {
+        "offset": 23972863,
+        "bytes": 576,
+        "sha256": "6768057e4961ebaf7209886fdee5a15fcc03a2afdd2524248dc07c379a39743e",
+        "row": {
+          "op": "update",
+          "id": "silent-0012",
+          "ts": "2026-10-18T05:53:52+08:00",
+          "by": "learner:postmortem",
+          "evidence": [
+            {
+              "run": "NRZAYVRMM7M0",
+              "floor": 17,
+              "turn": 6,
+              "note": "末试同信徒#1无虚弱BOOMERANG_MOVE：s444282 T3力量3为5x2，s444298 T6力量6为8x2，力量+3逐击体现使总威胁+6；另神官3力量单击12。末3血5挡对28完整需损23，实死后敌49/54/68，未减员。",
+              "role": "support"
+            }
+          ],
+          "where": {
+            "lessons": [
+              "NRZAYVRMM7M0"
+            ]
+          },
+          "note": "只补本局同族已观察增力与多击数值，未指定固定击杀顺序或外推其他敌人。"
+        }
+      },
+      {
+        "offset": 23973439,
+        "bytes": 389,
+        "sha256": "087e8ca32ace977bdf89d8ee60edf49eff8d75f7693b6e44f79fd1336aae7383",
+        "row": {
+          "op": "update",
+          "id": "silent-0020",
+          "ts": "2026-10-18T05:54:49+08:00",
+          "by": "learner:postmortem",
+          "where": {
+            "proposal": [
+              "/home/dw/Projects/agent-sts2/learner/runs/20261018-054305-f82aeda8-5c29-4fd0-979e-7c40df2c017d-postmortem/proposal-resource-and-action-attribution.md"
+            ]
+          },
+          "note": "代码提案 silent-proposal-2af7d556b544aeab → task=strategy-proposal；Roy-2026-10-07-learning"
+        }
+      },
+      {
+        "offset": 23973828,
+        "bytes": 389,
+        "sha256": "211d06a6394fa0333ee9b9db784d0008411befd72da5f65a42a7c1e350674f0a",
+        "row": {
+          "op": "update",
+          "id": "silent-0079",
+          "ts": "2026-10-18T05:54:49+08:00",
+          "by": "learner:postmortem",
+          "where": {
+            "proposal": [
+              "/home/dw/Projects/agent-sts2/learner/runs/20261018-054305-f82aeda8-5c29-4fd0-979e-7c40df2c017d-postmortem/proposal-resource-and-action-attribution.md"
+            ]
+          },
+          "note": "代码提案 silent-proposal-2af7d556b544aeab → task=strategy-proposal；Roy-2026-10-07-learning"
+        }
+      },
+      {
+        "offset": 23974217,
+        "bytes": 389,
+        "sha256": "ab698632a62c2ae997dcf2d7703bebec83095a9ea39dc9a7b65b70a8fdc4a94d",
+        "row": {
+          "op": "update",
+          "id": "silent-0418",
+          "ts": "2026-10-18T05:54:49+08:00",
+          "by": "learner:postmortem",
+          "where": {
+            "proposal": [
+              "/home/dw/Projects/agent-sts2/learner/runs/20261018-054305-f82aeda8-5c29-4fd0-979e-7c40df2c017d-postmortem/proposal-resource-and-action-attribution.md"
+            ]
+          },
+          "note": "代码提案 silent-proposal-2af7d556b544aeab → task=strategy-proposal；Roy-2026-10-07-learning"
+        }
+      },
+      {
+        "offset": 23974606,
+        "bytes": 389,
+        "sha256": "a28563e636d4947387ac5a24b821b57c916d7d2ef6a044b441e03d0662c4def4",
+        "row": {
+          "op": "update",
+          "id": "silent-0005",
+          "ts": "2026-10-18T05:54:49+08:00",
+          "by": "learner:postmortem",
+          "where": {
+            "proposal": [
+              "/home/dw/Projects/agent-sts2/learner/runs/20261018-054305-f82aeda8-5c29-4fd0-979e-7c40df2c017d-postmortem/proposal-resource-and-action-attribution.md"
+            ]
+          },
+          "note": "代码提案 silent-proposal-2af7d556b544aeab → task=strategy-proposal；Roy-2026-10-07-learning"
+        }
+      },
+      {
+        "offset": 23974995,
+        "bytes": 389,
+        "sha256": "a1b6859ec2c13ee1f0ec6b54c58057f635bf3a71836feed136e833de9211d83f",
+        "row": {
+          "op": "update",
+          "id": "silent-0012",
+          "ts": "2026-10-18T05:54:49+08:00",
+          "by": "learner:postmortem",
+          "where": {
+            "proposal": [
+              "/home/dw/Projects/agent-sts2/learner/runs/20261018-054305-f82aeda8-5c29-4fd0-979e-7c40df2c017d-postmortem/proposal-resource-and-action-attribution.md"
+            ]
+          },
+          "note": "代码提案 silent-proposal-2af7d556b544aeab → task=strategy-proposal；Roy-2026-10-07-learning"
+        }
+      }
+    ],
+    "original_queue_rows": [
+      {
+        "offset": 4518278,
+        "bytes": 924,
+        "sha256": "3cb53e8cb27b1716bbc27fd391e7d287830c3d2c9692ff9a05fdb694ce75f212",
+        "row": {
+          "op": "add",
+          "id": "silent-proposal-2af7d556b544aeab",
+          "ts": "2026-10-18T05:54:50+08:00",
+          "character": "silent",
+          "ledger": [
+            "silent-0020",
+            "silent-0079",
+            "silent-0418",
+            "silent-0005",
+            "silent-0012"
+          ],
+          "runs": [
+            "NRZAYVRMM7M0"
+          ],
+          "source_task": "postmortem",
+          "target_task": "strategy-proposal",
+          "domains": [
+            "combat",
+            "potion",
+            "sl"
+          ],
+          "summary": "NRZAYVRMM7M0 A10：核SL随机药中位／确定重放、生成牌未派发与重问后追加输出的离线归因消费；已有运行时边界保留，只在独立任务确认缺口后补有界审计，不改排序或药水／SL规则。",
+          "proposal": "/home/dw/Projects/agent-sts2/learner/runs/20261018-054305-f82aeda8-5c29-4fd0-979e-7c40df2c017d-postmortem/proposal-resource-and-action-attribution.md",
+          "rule_changes": false,
+          "authorization": "Roy-2026-10-07-learning",
+          "proposal_sha256": "919af4081146cf485f2c75801046deaed298490d187f21e2dbc63114803b2862",
+          "state": "pending"
+        }
+      }
+    ],
+    "postmortem_chunk_sha256": "6836aa9a2f838a451d4e2ddf15e3f9914320d6472909d14081822d389fbe9212",
+    "new_pure_bug": false,
+    "existing_0332_capture_available": false,
+    "no_model_game_simulation_or_observer": true,
+    "source_dirty_snapshot_limit_preserved": true
+  }
+]
