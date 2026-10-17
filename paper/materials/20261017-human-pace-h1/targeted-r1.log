@@ -1,0 +1,118 @@
+
+ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/human-pace-h1-20261017/agent
+
+ ❯ tests/human-pace-sampling.test.ts (0 test)
+(node:3164157) PromiseRejectionHandledWarning: Promise rejection was handled asynchronously (rejection id: 3)
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ❯ tests/computation-failure-loop.test.ts (1 test | 1 failed) 301ms
+   × dispatches exactly once after two required runner failures and a failed degraded attempt 300ms
+
+⎯⎯⎯⎯⎯⎯ Failed Suites 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/human-pace-sampling.test.ts [ tests/human-pace-sampling.test.ts ]
+Error: [vitest] No "LOW_TRUST_B2" export is defined on the "../src/sim/boss-trust.js" mock. Did you forget to return it from "vi.mock"?
+If you need to partially mock a module, you can use "importOriginal" helper inside:
+
+vi.mock(import("../src/sim/boss-trust.js"), async (importOriginal) => {
+  const actual = await importOriginal()
+  return {
+    ...actual,
+    // your mocked methods
+  }
+})
+
+ ❯ src/sim/boss-lines.ts:154:57
+    152|  * the data file knowledge/characters/ironclad/boss-trust.json that to…
+    153|  */
+    154| export const LOW_TRUST_BOSSES: Record<string, string> = LOW_TRUST_B2;
+       |                                                         ^
+    155|
+    156| /** The boss of a fight by its enemies' ids (the encounter's key in LO…
+ ❯ tests/human-pace-sampling.test.ts:4:1
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/computation-failure-loop.test.ts > dispatches exactly once after two required runner failures and a failed degraded attempt
+BrainBlockedError: Codex brain program failure on reward/card: expected 1 to be 3 // Object.is equality
+ ❯ BrainRouter.decideCodex src/brain/router.ts:497:17
+    495|           this.wait.finish("fault", req, message(error).slice(0, 300));
+    496|           this.write("codex", req, null, error, undefined, this.spent(…
+    497|           throw new BrainBlockedError("fault", `Codex brain program fa…
+       |                 ^
+    498|         }
+    499|         this.wait.pause(req, `${kind}: ${message(error).slice(0, 300)}…
+ ❯ withinDecisionBudget src/core/decision-budget.ts:81:20
+ ❯ Brain.decide src/brain/brain.ts:310:14
+ ❯ Brain.choose src/brain/brain.ts:383:20
+ ❯ runLoopWithBudgets src/hand/loop.ts:1205:28
+
+Caused by: AssertionError: expected 1 to be 3 // Object.is equality
+
+- Expected
++ Received
+
+- 3
++ 1
+
+ ❯ Object.decide tests/computation-failure-loop.test.ts:35:20
+ ❯ BrainRouter.call src/brain/router.ts:642:49
+ ❯ BrainRouter.attempt src/brain/router.ts:557:30
+ ❯ BrainRouter.decideCodex src/brain/router.ts:474:35
+ ❯ BrainRouter.decide src/brain/router.ts:398:37
+ ❯ src/brain/router.ts:393:64
+ ❯ withinDecisionBudget src/core/decision-budget.ts:81:40
+ ❯ BrainRouter.decide src/brain/router.ts:393:14
+ ❯ Brain.decide src/brain/brain.ts:310:32
+ ❯ Brain.choose src/brain/brain.ts:383:31
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+⎯⎯⎯⎯⎯⎯ Unhandled Errors ⎯⎯⎯⎯⎯⎯
+
+Vitest caught 1 unhandled error during the test run.
+This might cause false positive tests. Resolve unhandled errors to make sure your tests are not affected.
+
+⎯⎯⎯⎯ Unhandled Rejection ⎯⎯⎯⎯⎯
+BrainBlockedError: Codex brain program failure on reward/card: expected 1 to be 3 // Object.is equality
+ ❯ BrainRouter.decideCodex src/brain/router.ts:497:17
+    495|           this.wait.finish("fault", req, message(error).slice(0, 300));
+    496|           this.write("codex", req, null, error, undefined, this.spent(…
+    497|           throw new BrainBlockedError("fault", `Codex brain program fa…
+       |                 ^
+    498|         }
+    499|         this.wait.pause(req, `${kind}: ${message(error).slice(0, 300)}…
+ ❯ withinDecisionBudget src/core/decision-budget.ts:81:20
+ ❯ Brain.decide src/brain/brain.ts:310:14
+ ❯ Brain.choose src/brain/brain.ts:383:20
+ ❯ runLoopWithBudgets src/hand/loop.ts:1205:28
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
+Serialized Error: { state: 'fault' }
+This error originated in "tests/computation-failure-loop.test.ts" test file. It doesn't mean the error was thrown inside the file itself, but while it was running.
+The latest test that might've caused the error is "dispatches exactly once after two required runner failures and a failed degraded attempt". It might mean one of the following:
+- The error was thrown, while Vitest was running this test.
+- If the error occurred after the test had been completed, this was the last documented test before it was thrown.
+Caused by: AssertionError: expected 1 to be 3 // Object.is equality
+ ❯ Object.decide tests/computation-failure-loop.test.ts:35:20
+ ❯ BrainRouter.call src/brain/router.ts:642:49
+ ❯ BrainRouter.attempt src/brain/router.ts:557:30
+ ❯ BrainRouter.decideCodex src/brain/router.ts:474:35
+ ❯ BrainRouter.decide src/brain/router.ts:398:37
+ ❯ src/brain/router.ts:393:64
+ ❯ withinDecisionBudget src/core/decision-budget.ts:81:40
+ ❯ BrainRouter.decide src/brain/router.ts:393:14
+ ❯ Brain.decide src/brain/brain.ts:310:32
+ ❯ Brain.choose src/brain/brain.ts:383:31
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
+
+
+ Test Files  2 failed | 1 passed (3)
+      Tests  1 failed | 5 passed (6)
+     Errors  1 error
+   Start at  10:12:09
+   Duration  3.57s (transform 3.96s, setup 1.12s, import 2.27s, tests 341ms, environment 0ms)
+

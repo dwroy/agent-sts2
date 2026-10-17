@@ -1,0 +1,66 @@
+{
+  "at": "2026-10-17T10:29:30.910971+08:00",
+  "evidence": [
+    {
+      "path": ".worktrees/human-pace-h1-20261017/agent/node_modules/@typesafe-ai/sdk/dist/index.mjs",
+      "sha256": "bbb851dfe375c586c5bee3c082a04ab71882813dde39df0e95eaa23f30ec7012",
+      "selected_lines": [
+        548,
+        559,
+        566,
+        627,
+        630,
+        643
+      ]
+    },
+    {
+      "path": ".worktrees/human-pace-h1-20261017/agent/node_modules/@typesafe-ai/sdk/dist/index.d.mts",
+      "sha256": "e54673ef76353afcaea6f422cd80df658a7852c321ed3d5084ce4d0e063833a4",
+      "selected_lines": [
+        183
+      ]
+    },
+    {
+      "path": ".worktrees/human-pace-h1-20261017/agent/src/brain/engines/codex.ts",
+      "sha256": "dbd9d890def41f5903375f328279e46ee48661e84c9867a05cf9a4d76bc4672d",
+      "selected_lines": [
+        907,
+        909
+      ]
+    },
+    {
+      "path": ".worktrees/human-pace-h1-20261017/agent/src/brain/engines/process.ts",
+      "sha256": "5ec8fb3437222f9f9e6ac5e39487526ed133dd611520f4aaf33f6ba167f0e226",
+      "selected_lines": [
+        108,
+        171,
+        173
+      ]
+    },
+    {
+      "path": ".worktrees/human-pace-h1-20261017/agent/src/sim/build-sim-pool.ts",
+      "sha256": "174141ecd95a3f4c6113b6f599b4d0f8d62a29476de8e305110002042d9ce500",
+      "selected_lines": [
+        245,
+        247,
+        326
+      ]
+    },
+    {
+      "path": ".worktrees/human-pace-h1-20261017/agent/src/sim/boss-lines.ts",
+      "sha256": "510033feed1fb9429d5979fb3032dac306cccbd03517441d60a1b407cdf11a75",
+      "selected_lines": [
+        386,
+        387
+      ]
+    }
+  ],
+  "findings": [
+    "installed TypeSafe SDK0.6.0 accepts RequestOptions.signal and forwards it to the actual fetch abort controller",
+    "Codex engine forwards the router abort signal into its process runner",
+    "existing process cleanup uses SIGTERM then3s SIGKILL grace; decision deadline rejects late answers without waiting for process exit",
+    "H1 timed-out B2/B3 requests signal/drop and terminate unfinished worker threads; no new pool quota"
+  ],
+  "verification": "local installed code readback + fixed injected-client/engine tests; no HTTP/model/game request",
+  "no_current_run_action": true
+}

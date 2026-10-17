@@ -1,0 +1,33 @@
+
+ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/human-pace-h1-20261017/agent
+
+ ❯ tests/human-pace-reuse.test.ts (3 tests | 1 failed) 272ms
+   × prepares only the exact observed candidate input in scratch memory and leaves the actual legality gate in control 237ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/human-pace-reuse.test.ts > prepares only the exact observed candidate input in scratch memory and leaves the actual legality gate in control
+AssertionError: expected undefined to be false // Object.is equality
+
+- Expected:
+false
+
++ Received:
+undefined
+
+ ❯ tests/human-pace-reuse.test.ts:58:92
+     56|   expect(next).not.toBeNull();
+     57|   expect(budget.record().stages).toEqual(expect.arrayContaining([expec…
+     58|   expect(gate(e.state, { action: "play_card", card_index: 999, target_…
+       |                                                                                            ^
+     59|   const unknown = env(structuredClone(raw), undefined, { knowledge: te…
+     60|   (unknown.state.raw.combat as any).action_readiness.can_use_combat_ac…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed | 7 passed (8)
+      Tests  1 failed | 44 passed (45)
+   Start at  10:15:28
+   Duration  119.87s (transform 10.63s, setup 2.55s, import 14.50s, tests 113.42s, environment 1ms)
+

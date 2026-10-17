@@ -1,0 +1,97 @@
+{
+  "id": "H1",
+  "owner": "watcher-codex1",
+  "state": "active",
+  "requirements": [
+    "budget_and_fallback_telemetry",
+    "finite_B2_B3_actual_prefixes_SE",
+    "C1_C2_preserved",
+    "low_trust_budgeted_label",
+    "bounded_observed_state_precompute",
+    "SL_exact_input_reuse",
+    "shadow_unknown_at_deadline",
+    "Silent_only_Ironclad_equivalence",
+    "fixed_tests_and_exact_ops_release"
+  ],
+  "coverage": {
+    "budget_and_fallback_telemetry": {
+      "state": "fixed_passed",
+      "evidence": [
+        "agent/tests/human-pace-budget.test.ts",
+        "agent/tests/human-pace-loop.test.ts",
+        "targeted-r8.log"
+      ]
+    },
+    "finite_B2_B3_actual_prefixes_SE": {
+      "state": "fixed_passed",
+      "evidence": [
+        "agent/tests/human-pace-sampling.test.ts",
+        "targeted-r8.log"
+      ],
+      "limits": "conditional MC intervals only; no production calibration"
+    },
+    "C1_C2_preserved": {
+      "state": "fixed_passed",
+      "evidence": [
+        "agent/tests/computation-failure-loop.test.ts",
+        "agent/tests/adaptive-wiring.test.ts",
+        "targeted-r7.log",
+        "targeted-r8.log"
+      ]
+    },
+    "low_trust_budgeted_label": {
+      "state": "fixed_passed",
+      "evidence": [
+        "agent/tests/human-pace-sampling.test.ts",
+        "targeted-r8.log"
+      ]
+    },
+    "bounded_observed_state_precompute": {
+      "state": "fixed_passed",
+      "evidence": [
+        "agent/tests/human-pace-reuse.test.ts",
+        "targeted-r8.log"
+      ],
+      "limits": "only exact observed inputs; hidden future remains unknown"
+    },
+    "SL_exact_input_reuse": {
+      "state": "fixed_passed",
+      "evidence": [
+        "agent/tests/human-pace-reuse.test.ts",
+        "agent/tests/human-pace-sampling.test.ts",
+        "targeted-r8.log"
+      ],
+      "limits": "changed semantic input or policy/data misses cache"
+    },
+    "shadow_unknown_at_deadline": {
+      "state": "fixed_passed",
+      "evidence": [
+        "agent/tests/human-pace-sampling.test.ts",
+        "targeted-r8.log"
+      ]
+    },
+    "Silent_only_Ironclad_equivalence": {
+      "state": "fixed_passed",
+      "evidence": [
+        "agent/tests/human-pace-loop.test.ts",
+        "targeted-r8.log"
+      ],
+      "limits": "fixed production-loop scope/equivalence only, not a natural-run result"
+    },
+    "fixed_tests_and_exact_ops_release": {
+      "state": "source_entry_running_then_original_ops",
+      "evidence": [
+        "source-before-full-r2.json",
+        "source-sandbox-full-r2.log",
+        "source-full-r2-start-readback.json",
+        "gitleaks-source.json"
+      ],
+      "host_and_release": "pending"
+    },
+    "plan_two_natural_runs_and_funnel": {
+      "state": "unstarted",
+      "run_count": 0,
+      "owner": "await Claude subsequent assignment; not started by source task"
+    }
+  }
+}

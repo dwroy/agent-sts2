@@ -1,0 +1,69 @@
+
+ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/human-pace-h1-20261017/agent
+
+ ❯ tests/human-pace-sampling.test.ts (5 tests | 1 failed) 781ms
+   × skips F48, P1/P2, G2 and S shadow extensions after expiry while preserving the partial primary computation 124ms
+ ❯ tests/human-pace-reuse.test.ts (3 tests | 1 failed) 261ms
+   × prepares only the exact observed candidate input in scratch memory and leaves the actual legality gate in control 224ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/human-pace-reuse.test.ts > prepares only the exact observed candidate input in scratch memory and leaves the actual legality gate in control
+AssertionError: expected 2 to be 1 // Object.is equality
+
+- Expected
++ Received
+
+- 1
++ 2
+
+ ❯ tests/human-pace-reuse.test.ts:54:85
+     52|   expect(solves).toBe(1);
+     53|   const again = withDecisionBudget(budget, () => prepareObservedCandid…
+     54|   expect(again).toMatchObject({ status: "prepared", reused: true }); e…
+       |                                                                                     ^
+     55|   const next = withDecisionBudget(budget, () => planCombatTurn(e));
+     56|   expect(next).not.toBeNull(); expect(solves).toBe(1);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  tests/human-pace-sampling.test.ts > skips F48, P1/P2, G2 and S shadow extensions after expiry while preserving the partial primary computation
+AssertionError: expected { error: '0 ms 内没有跑完一个样本', …(4) } to match object { completion: { …(3) }, …(2) }
+(35 matching properties omitted from actual)
+
+- Expected
++ Received
+
+  {
+-   "build_ranking": {
+-     "status": "unknown",
+-   },
+    "completion": {
+      "failure": false,
+-     "samples": 3,
++     "samples": 0,
+      "status": "partial",
+    },
+    "global_build": {
+-     "reason": "decision_budget_exhausted",
++     "reason": "current_B3_failed",
+      "status": "unknown",
+    },
+  }
+
+ ❯ tests/human-pace-sampling.test.ts:125:25
+    123|   const result = await withDecisionBudget(budget, () => withBossSim(de…
+    124|     { runner, samples: 1000, db: FIXTURE_DB, mm: FIXTURE_MM, now: () =…
+    125|   expect(result.record).toMatchObject({ completion: { status: "partial…
+       |                         ^
+    126|     global_build: { status: "unknown", reason: "decision_budget_exhaus…
+    127|   expect(budget.record().shadow_unknown).toEqual(expect.arrayContainin…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+
+ Test Files  2 failed | 2 passed (4)
+      Tests  2 failed | 12 passed (14)
+   Start at  10:14:45
+   Duration  13.23s (transform 14.76s, setup 10.60s, import 11.83s, tests 1.75s, environment 1ms)
+

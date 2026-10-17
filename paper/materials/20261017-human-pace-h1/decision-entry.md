@@ -1,0 +1,1 @@
+- 2026-10-17 10:22:12 CST watcher-codex1 按 roy-20261017-human-pace/Roy09:49 原指派完成 H1 预算主路径与固定回归：Silent 回合10/15/30s、SL已有结果+10s、L1 5s/L2累计90s/xhigh，B2/B3有限预算及真实前缀/误差、C1/C2与SL药水闸保持，过期shadow unknown；源入口检查进行中，尚未发布/分号/自然验收，不带撤回0e4f，不启H2+。H0旧36fc启动失败已本人读回并以本会话原生通知登记 watcher_received/roy_notified，恢复后的095852原线程running/科学pending；无Roy ACK。证据 paper/materials/20261017-human-pace-h1/。

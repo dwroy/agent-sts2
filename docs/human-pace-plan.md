@@ -160,3 +160,11 @@ V5 偏差分析（详见讨论记录）：
 已定（Roy 2026-10-17）：单局 45–60 分钟；大脑保持 xhigh；按 Claude 的建议推进，第 2 节预算取初值；低可信 Boss 在预算内少量采样并标注；L2 软上限 12–15 次；watcher 为 owner，学习者部分经 ops，由 Claude 逐项指派。
 
 待定：是否记为新的架构代数（V6）。
+
+## 9. H1 接续记录（2026-10-17，原 watcher）
+
+依 Roy 09:49 经 Claude 的原指派，只实现 H1。独立工作树 `.worktrees/human-pace-h1-20261017`，原 owner/session 保留；控制档在 `paper/materials/20261017-human-pace-control/{requirements,checkpoint}.json`，阶段材料在 `paper/materials/20261017-human-pace-h1/`。
+
+Silent 的预算按第 2 节初值接入主循环、Jev、大脑、求解器和 B2/B3；取代 R341 必需完整计算，正常截断保留真实共同种子前缀、n、误差和 `partial/complete_budget`，不记 C1 故障。原 C1/C2、SL/药水及执行闸保留；partial 死亡线不能充完整必死证明。低可信采样仍明确标注，不改可信门槛。已有输入的空档预计算和首试/SL 精确缓存可复用；未观察未来保持 unknown。所有 shadow 都受同一预算约束，不延长大脑等待；P1/P2/S 仍 shadow。
+
+固定工程回归和源码入口检查见阶段 `verification.json`，精确发布/编号/双通知/最终组合宿主检查由原 ops 在同链完成。源码检查不能替代 live 的精确树检查。2 局自然验收及用时/延迟 p50/p90/max、G1c 漏斗仍待后续授权，本轮不启动自然观察或 H2+。大脑调用数的软上限与全局方向模块属于 H2，没有借 H1 提前实现；45–60 分钟目标尚未获自然局证明。阶段交付后停止。
