@@ -1,0 +1,856 @@
+{
+  "batches": [
+    {
+      "batch": "20261017-211302-strategy-proposal",
+      "canonical_state": "done",
+      "canonical_rc": 0,
+      "canonical_merged": null,
+      "report": {
+        "task": "strategy-proposal",
+        "character": "silent",
+        "batch": "20261017-211302-strategy-proposal",
+        "base": "ee90797b418e628fcda95dd759e692ccfbac9145",
+        "runs": [
+          "KEN58SH9SLZ6",
+          "TXZ6RVMQA09D",
+          "WQZVENQ7DTRP",
+          "02HB4L0C3C67",
+          "4D4J8USKCPAV",
+          "F4QKG4J1AJJZ",
+          "JLN5SK17W4FQ",
+          "LS8035TB32P3",
+          "NB8KCF6HRGVF",
+          "S9UZAK0JP0C0"
+        ],
+        "fixes": [],
+        "skipped": [],
+        "merged": null,
+        "tests": {
+          "tsc": null,
+          "vitest": null,
+          "cases": null
+        },
+        "code_proposals": [
+          "silent-proposal-08eaa60bcc449852",
+          "silent-proposal-92920295a648b540",
+          "silent-proposal-a327449c331efbc1",
+          "silent-proposal-a099e89437e942bb",
+          "silent-proposal-47910f82a1fdd98f",
+          "silent-proposal-f1374df72d8e6a25",
+          "silent-proposal-38a49e6c97f31eea",
+          "silent-proposal-ef0e38a5dbd3bc07",
+          "silent-proposal-7f820c02d39bfaea",
+          "silent-proposal-04b6b430759815ed"
+        ],
+        "implementation_domains": [],
+        "proposal_results": [
+          {
+            "id": "silent-proposal-08eaa60bcc449852",
+            "state": "waiting",
+            "reason": "七次实际用药已核；缺同入口、牌组及后续动作下不用、早用或留药到Boss的成对整战结果，不能拟合持药价。"
+          },
+          {
+            "id": "silent-proposal-92920295a648b540",
+            "state": "waiting",
+            "reason": "TXZ替线少损3血也少伤9，首胜4血后开场死亡；缺保持后续抽序、生成、选择及药栏的两战对照。"
+          },
+          {
+            "id": "silent-proposal-a327449c331efbc1",
+            "state": "waiting",
+            "reason": "沙坑差额日志0e4fe4df89a06682468e0e4716c12126e76369d5已核为live祖先；仍缺血量、毒与沙坑双边界的受控整战后继和独立验证，不能拟合排序阈值。"
+          },
+          {
+            "id": "silent-proposal-a099e89437e942bb",
+            "state": "waiting",
+            "reason": "生成容量已有实现；缺计划妥当保留、跨抽牌重问、SL恢复及穿插用药完整候选到执行的联合验证，不能整项duplicate。"
+          },
+          {
+            "id": "silent-proposal-47910f82a1fdd98f",
+            "state": "waiting",
+            "reason": "限定开场失血和连战资源传递已有实现；缺未知回血/复活组合时序、留药及SL成对后继和两战联合校准。"
+          },
+          {
+            "id": "silent-proposal-f1374df72d8e6a25",
+            "state": "waiting",
+            "reason": "缺隔离机制误差后同入口同预算的不用、早用、留药整战及下一战成对结果，不能由局部候选推导药价或终局权重。"
+          },
+          {
+            "id": "silent-proposal-38a49e6c97f31eea",
+            "state": "waiting",
+            "reason": "普通紧勒、普通磨蚀出牌属性等已有子实现；缺弃磨蚀、常驻/临时增益、再生/自动触发与SL恢复的联合消费者和完整后继验证。"
+          },
+          {
+            "id": "silent-proposal-ef0e38a5dbd3bc07",
+            "state": "waiting",
+            "reason": "缺另一营火动作、事件/路线和用药时点的受控完整结果；条件变化及敌人、构筑混杂不能支持路线或终局参数拟合。"
+          },
+          {
+            "id": "silent-proposal-7f820c02d39bfaea",
+            "state": "waiting",
+            "reason": "NHA两线实损1/7已核；缺同预算饱和排序校准、跨弃牌完整候选执行归属和成对整战后继，不能由同局六败确定SL门槛。"
+          },
+          {
+            "id": "silent-proposal-04b6b430759815ed",
+            "state": "waiting",
+            "reason": "蟹朝向和普通精确切击已有受限实现；油灯窗口stack均为null，缺首次消费跨动作、新战/SL恢复的联合输入与消费者，以及未覆盖X值、升级、叠层和能力完整后继。"
+          }
+        ],
+        "report": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261017-211302/learner/runs/20261017-211308-92f2db1c-bfa0-4ab3-accf-0a3217952678-strategy-proposal/report.md"
+      },
+      "native": {
+        "batch": "20261017-211302-strategy-proposal",
+        "thread": "01a149fe-baa6-7663-9d37-18acd5d3361e",
+        "cwd": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261017-211302",
+        "event_log": "learner/runs/20261017-211308-92f2db1c-bfa0-4ab3-accf-0a3217952678-strategy-proposal.jsonl",
+        "registered_launch_batch": "20261017-211302-strategy-proposal",
+        "original_lease": "09f4ab16d9f8a7915a198c1c8d1bb95553bea0ea3c6b820c65cde586709ac7cb",
+        "native_context": {
+          "source": "ops/codex-ops/accounts/codex1/learner/sessions/2026/10/17/rollout-2026-10-17T21-13-13-01a149fe-baa6-7663-9d37-18acd5d3361e.jsonl",
+          "offset": 50380,
+          "bytes": 5182,
+          "sha256": "78c183313471d153c652b48dda4b31ec55a2cf0f8fc0cbdccf72447d581f1d9d",
+          "model": "gpt-6.1-sol",
+          "effort": "xhigh",
+          "sandbox": {
+            "type": "workspace-write",
+            "writable_roots": [
+              "/home/dw/Projects/agent-sts2",
+              "/home/dw/Projects/agent-sts2/.git",
+              "/home/dw/Projects/agent-sts2/.git/worktrees/codex-strategy-silent-20261017-211302"
+            ],
+            "network_access": false,
+            "exclude_tmpdir_env_var": false,
+            "exclude_slash_tmp": false
+          },
+          "approval_policy": "never"
+        },
+        "native_user_input": {
+          "offset": 58425,
+          "bytes": 21499,
+          "sha256": "8d7c465e3ec070b91cdece1a530c5372ed808f76a93727f28d39ab0aa70491c9",
+          "input_sha256": "e9d849d9df905c344113523eb6ba37fa806c1d7c58320947879fe9bdb4022843"
+        },
+        "original_header_events": [
+          {
+            "offset": 0,
+            "bytes": 23563,
+            "sha256": "d6727f334cafc2f15e285c716cbbb8056442fabc28c5acb4977857314413db67",
+            "type": "learner_launch",
+            "attempt": null,
+            "code": null
+          },
+          {
+            "offset": 23563,
+            "bytes": 378,
+            "sha256": "d9a562a083ebd4111f605a9603618d70fcd875f529b90b58810a627ddfabc548",
+            "type": "learner_startup_attempt",
+            "attempt": 1,
+            "code": null
+          },
+          {
+            "offset": 26953,
+            "bytes": 77,
+            "sha256": "cffe442a5ac8f6c5ed3cd8f81b2d592c0b93e8da9409280bf52c5f314e48fb75",
+            "type": "thread.started",
+            "attempt": null,
+            "code": null
+          }
+        ],
+        "startup_attempts": 1,
+        "failed_startups_preserved": 0,
+        "no_model_or_manual_restart": true
+      },
+      "artifact_checks": [
+        {
+          "path": ".worktrees/codex-strategy-silent-20261017-211302/learner/runs/20261017-211308-92f2db1c-bfa0-4ab3-accf-0a3217952678-strategy-proposal/artifact-manifest.json",
+          "files": 36,
+          "bytes": 9481128,
+          "all_SHA_verified": true
+        }
+      ],
+      "raw_checks": [
+        {
+          "projected": ".worktrees/codex-strategy-silent-20261017-211302/learner/runs/20261017-211308-92f2db1c-bfa0-4ab3-accf-0a3217952678-strategy-proposal/evidence/sl-attempts.evidence.jsonl",
+          "rows": 78
+        },
+        {
+          "projected": ".worktrees/codex-strategy-silent-20261017-211302/learner/runs/20261017-211308-92f2db1c-bfa0-4ab3-accf-0a3217952678-strategy-proposal/evidence/runs.evidence.jsonl",
+          "rows": 15
+        },
+        {
+          "projected": ".worktrees/codex-strategy-silent-20261017-211302/learner/runs/20261017-211308-92f2db1c-bfa0-4ab3-accf-0a3217952678-strategy-proposal/evidence/brain.evidence.jsonl",
+          "rows": 481
+        },
+        {
+          "projected": ".worktrees/codex-strategy-silent-20261017-211302/learner/runs/20261017-211308-92f2db1c-bfa0-4ab3-accf-0a3217952678-strategy-proposal/evidence/run-plans.evidence.jsonl",
+          "rows": 77
+        },
+        {
+          "projected": ".worktrees/codex-strategy-silent-20261017-211302/learner/runs/20261017-211308-92f2db1c-bfa0-4ab3-accf-0a3217952678-strategy-proposal/evidence/decisions.evidence.jsonl",
+          "rows": 9448
+        },
+        {
+          "projected": ".worktrees/codex-strategy-silent-20261017-211302/learner/runs/20261017-211308-92f2db1c-bfa0-4ab3-accf-0a3217952678-strategy-proposal/evidence/run-config.evidence.jsonl",
+          "rows": 15
+        },
+        {
+          "projected": ".worktrees/codex-strategy-silent-20261017-211302/learner/runs/20261017-211308-92f2db1c-bfa0-4ab3-accf-0a3217952678-strategy-proposal/evidence/states.evidence.jsonl",
+          "rows": 9815
+        },
+        {
+          "projected": ".worktrees/codex-strategy-silent-20261017-211302/learner/runs/20261017-211308-92f2db1c-bfa0-4ab3-accf-0a3217952678-strategy-proposal/evidence-retry/sl-attempts.evidence.jsonl",
+          "rows": 78
+        },
+        {
+          "projected": ".worktrees/codex-strategy-silent-20261017-211302/learner/runs/20261017-211308-92f2db1c-bfa0-4ab3-accf-0a3217952678-strategy-proposal/evidence-retry/runs.evidence.jsonl",
+          "rows": 15
+        },
+        {
+          "projected": ".worktrees/codex-strategy-silent-20261017-211302/learner/runs/20261017-211308-92f2db1c-bfa0-4ab3-accf-0a3217952678-strategy-proposal/evidence-retry/brain.evidence.jsonl",
+          "rows": 481
+        },
+        {
+          "projected": ".worktrees/codex-strategy-silent-20261017-211302/learner/runs/20261017-211308-92f2db1c-bfa0-4ab3-accf-0a3217952678-strategy-proposal/evidence-retry/run-plans.evidence.jsonl",
+          "rows": 77
+        },
+        {
+          "projected": ".worktrees/codex-strategy-silent-20261017-211302/learner/runs/20261017-211308-92f2db1c-bfa0-4ab3-accf-0a3217952678-strategy-proposal/evidence-retry/decisions.evidence.jsonl",
+          "rows": 9448
+        },
+        {
+          "projected": ".worktrees/codex-strategy-silent-20261017-211302/learner/runs/20261017-211308-92f2db1c-bfa0-4ab3-accf-0a3217952678-strategy-proposal/evidence-retry/run-config.evidence.jsonl",
+          "rows": 15
+        },
+        {
+          "projected": ".worktrees/codex-strategy-silent-20261017-211302/learner/runs/20261017-211308-92f2db1c-bfa0-4ab3-accf-0a3217952678-strategy-proposal/evidence-retry/states.evidence.jsonl",
+          "rows": 9815
+        }
+      ],
+      "ledger_rows": [
+        {
+          "offset": 23254607,
+          "bytes": 705,
+          "sha256": "75a46c0792759818de570566308ad52cd8859642545631441595567f382096a4",
+          "row": {
+            "op": "update",
+            "id": "silent-0005",
+            "ts": "2026-10-17T21:26:35+08:00",
+            "by": "learner:strategy-proposal",
+            "where": {
+              "proposal": [
+                "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261017-211302/learner/runs/20261017-211308-92f2db1c-bfa0-4ab3-accf-0a3217952678-strategy-proposal/proposal.md",
+                "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261017-211302/learner/runs/20261017-211308-92f2db1c-bfa0-4ab3-accf-0a3217952678-strategy-proposal/report.md"
+              ]
+            },
+            "note": "20261017-211302-strategy-proposal：仅追加消费复核追溯；silent-proposal-04b6b430759815ed均waiting，具体缺口见本批报告。无新claim/evidence/计数/status/version/effect或源码上线。"
+          }
+        },
+        {
+          "offset": 23255312,
+          "bytes": 738,
+          "sha256": "e8ac1737a69d0d3ac63488c1ead6ba9144c3a55ca9d6538f7b0bf2ee209a1931",
+          "row": {
+            "op": "update",
+            "id": "silent-0006",
+            "ts": "2026-10-17T21:26:35+08:00",
+            "by": "learner:strategy-proposal",
+            "where": {
+              "proposal": [
+                "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261017-211302/learner/runs/20261017-211308-92f2db1c-bfa0-4ab3-accf-0a3217952678-strategy-proposal/proposal.md",
+                "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261017-211302/learner/runs/20261017-211308-92f2db1c-bfa0-4ab3-accf-0a3217952678-strategy-proposal/report.md"
+              ]
+            },
+            "note": "20261017-211302-strategy-proposal：仅追加消费复核追溯；silent-proposal-38a49e6c97f31eea,silent-proposal-04b6b430759815ed均waiting，具体缺口见本批报告。无新claim/evidence/计数/status/version/effect或源码上线。"
+          }
+        },
+        {
+          "offset": 23256050,
+          "bytes": 738,
+          "sha256": "814ff30b03ef39a12390b545a41ae3125479cde8f3d92e5ab98ddfe4fc29444c",
+          "row": {
+            "op": "update",
+            "id": "silent-0011",
+            "ts": "2026-10-17T21:26:35+08:00",
+            "by": "learner:strategy-proposal",
+            "where": {
+              "proposal": [
+                "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261017-211302/learner/runs/20261017-211308-92f2db1c-bfa0-4ab3-accf-0a3217952678-strategy-proposal/proposal.md",
+                "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261017-211302/learner/runs/20261017-211308-92f2db1c-bfa0-4ab3-accf-0a3217952678-strategy-proposal/report.md"
+              ]
+            },
+            "note": "20261017-211302-strategy-proposal：仅追加消费复核追溯；silent-proposal-38a49e6c97f31eea,silent-proposal-04b6b430759815ed均waiting，具体缺口见本批报告。无新claim/evidence/计数/status/version/effect或源码上线。"
+          }
+        },
+        {
+          "offset": 23256788,
+          "bytes": 705,
+          "sha256": "c672e73b090e482838be21efbdaaa53ff27ba241fc54dbfaaca618000ce7e873",
+          "row": {
+            "op": "update",
+            "id": "silent-0013",
+            "ts": "2026-10-17T21:26:35+08:00",
+            "by": "learner:strategy-proposal",
+            "where": {
+              "proposal": [
+                "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261017-211302/learner/runs/20261017-211308-92f2db1c-bfa0-4ab3-accf-0a3217952678-strategy-proposal/proposal.md",
+                "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261017-211302/learner/runs/20261017-211308-92f2db1c-bfa0-4ab3-accf-0a3217952678-strategy-proposal/report.md"
+              ]
+            },
+            "note": "20261017-211302-strategy-proposal：仅追加消费复核追溯；silent-proposal-04b6b430759815ed均waiting，具体缺口见本批报告。无新claim/evidence/计数/status/version/effect或源码上线。"
+          }
+        },
+        {
+          "offset": 23257493,
+          "bytes": 738,
+          "sha256": "0dd96d7899b8adafe50b512969014deedc10490be7c058d16486950aeb76fcda",
+          "row": {
+            "op": "update",
+            "id": "silent-0018",
+            "ts": "2026-10-17T21:26:35+08:00",
+            "by": "learner:strategy-proposal",
+            "where": {
+              "proposal": [
+                "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261017-211302/learner/runs/20261017-211308-92f2db1c-bfa0-4ab3-accf-0a3217952678-strategy-proposal/proposal.md",
+                "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261017-211302/learner/runs/20261017-211308-92f2db1c-bfa0-4ab3-accf-0a3217952678-strategy-proposal/report.md"
+              ]
+            },
+            "note": "20261017-211302-strategy-proposal：仅追加消费复核追溯；silent-proposal-a327449c331efbc1,silent-proposal-47910f82a1fdd98f均waiting，具体缺口见本批报告。无新claim/evidence/计数/status/version/effect或源码上线。"
+          }
+        },
+        {
+          "offset": 23258231,
+          "bytes": 804,
+          "sha256": "06fc02a508de4869515d6dc8de6599327e3b224c2c3a606a1b340136a90e55cd",
+          "row": {
+            "op": "update",
+            "id": "silent-0019",
+            "ts": "2026-10-17T21:26:35+08:00",
+            "by": "learner:strategy-proposal",
+            "where": {
+              "proposal": [
+                "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261017-211302/learner/runs/20261017-211308-92f2db1c-bfa0-4ab3-accf-0a3217952678-strategy-proposal/proposal.md",
+                "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261017-211302/learner/runs/20261017-211308-92f2db1c-bfa0-4ab3-accf-0a3217952678-strategy-proposal/report.md"
+              ]
+            },
+            "note": "20261017-211302-strategy-proposal：仅追加消费复核追溯；silent-proposal-08eaa60bcc449852,silent-proposal-47910f82a1fdd98f,silent-proposal-f1374df72d8e6a25,silent-proposal-ef0e38a5dbd3bc07均waiting，具体缺口见本批报告。无新claim/evidence/计数/status/version/effect或源码上线。"
+          }
+        },
+        {
+          "offset": 23259035,
+          "bytes": 804,
+          "sha256": "7dd90f401e0e5aae71f6bfd6531a14fa77b9f6b19560588a65f00ba60648615f",
+          "row": {
+            "op": "update",
+            "id": "silent-0020",
+            "ts": "2026-10-17T21:26:35+08:00",
+            "by": "learner:strategy-proposal",
+            "where": {
+              "proposal": [
+                "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261017-211302/learner/runs/20261017-211308-92f2db1c-bfa0-4ab3-accf-0a3217952678-strategy-proposal/proposal.md",
+                "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261017-211302/learner/runs/20261017-211308-92f2db1c-bfa0-4ab3-accf-0a3217952678-strategy-proposal/report.md"
+              ]
+            },
+            "note": "20261017-211302-strategy-proposal：仅追加消费复核追溯；silent-proposal-08eaa60bcc449852,silent-proposal-47910f82a1fdd98f,silent-proposal-f1374df72d8e6a25,silent-proposal-ef0e38a5dbd3bc07均waiting，具体缺口见本批报告。无新claim/evidence/计数/status/version/effect或源码上线。"
+          }
+        },
+        {
+          "offset": 23259839,
+          "bytes": 771,
+          "sha256": "eeb8407d95394571493fbd5e54e464774e077443d8275f2a980b23acb512260c",
+          "row": {
+            "op": "update",
+            "id": "silent-0021",
+            "ts": "2026-10-17T21:26:35+08:00",
+            "by": "learner:strategy-proposal",
+            "where": {
+              "proposal": [
+                "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261017-211302/learner/runs/20261017-211308-92f2db1c-bfa0-4ab3-accf-0a3217952678-strategy-proposal/proposal.md",
+                "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261017-211302/learner/runs/20261017-211308-92f2db1c-bfa0-4ab3-accf-0a3217952678-strategy-proposal/report.md"
+              ]
+            },
+            "note": "20261017-211302-strategy-proposal：仅追加消费复核追溯；silent-proposal-47910f82a1fdd98f,silent-proposal-ef0e38a5dbd3bc07,silent-proposal-04b6b430759815ed均waiting，具体缺口见本批报告。无新claim/evidence/计数/status/version/effect或源码上线。"
+          }
+        },
+        {
+          "offset": 23260610,
+          "bytes": 738,
+          "sha256": "f025bd2c05b302d27cfdd21c71bbcf440b1f11087e438e56a6840ff506b0e7e5",
+          "row": {
+            "op": "update",
+            "id": "silent-0025",
+            "ts": "2026-10-17T21:26:35+08:00",
+            "by": "learner:strategy-proposal",
+            "where": {
+              "proposal": [
+                "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261017-211302/learner/runs/20261017-211308-92f2db1c-bfa0-4ab3-accf-0a3217952678-strategy-proposal/proposal.md",
+                "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261017-211302/learner/runs/20261017-211308-92f2db1c-bfa0-4ab3-accf-0a3217952678-strategy-proposal/report.md"
+              ]
+            },
+            "note": "20261017-211302-strategy-proposal：仅追加消费复核追溯；silent-proposal-47910f82a1fdd98f,silent-proposal-38a49e6c97f31eea均waiting，具体缺口见本批报告。无新claim/evidence/计数/status/version/effect或源码上线。"
+          }
+        },
+        {
+          "offset": 23261348,
+          "bytes": 705,
+          "sha256": "e45439011b4598594436475372233cf79a3bea055fa3b08e38e067509abfabde",
+          "row": {
+            "op": "update",
+            "id": "silent-0030",
+            "ts": "2026-10-17T21:26:35+08:00",
+            "by": "learner:strategy-proposal",
+            "where": {
+              "proposal": [
+                "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261017-211302/learner/runs/20261017-211308-92f2db1c-bfa0-4ab3-accf-0a3217952678-strategy-proposal/proposal.md",
+                "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261017-211302/learner/runs/20261017-211308-92f2db1c-bfa0-4ab3-accf-0a3217952678-strategy-proposal/report.md"
+              ]
+            },
+            "note": "20261017-211302-strategy-proposal：仅追加消费复核追溯；silent-proposal-a099e89437e942bb均waiting，具体缺口见本批报告。无新claim/evidence/计数/status/version/effect或源码上线。"
+          }
+        },
+        {
+          "offset": 23262053,
+          "bytes": 705,
+          "sha256": "402d15eed1f85e149ffe38d7c14d5e9e37a7a2d499a7e84b0e0ba5efde89a271",
+          "row": {
+            "op": "update",
+            "id": "silent-0044",
+            "ts": "2026-10-17T21:26:35+08:00",
+            "by": "learner:strategy-proposal",
+            "where": {
+              "proposal": [
+                "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261017-211302/learner/runs/20261017-211308-92f2db1c-bfa0-4ab3-accf-0a3217952678-strategy-proposal/proposal.md",
+                "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261017-211302/learner/runs/20261017-211308-92f2db1c-bfa0-4ab3-accf-0a3217952678-strategy-proposal/report.md"
+              ]
+            },
+            "note": "20261017-211302-strategy-proposal：仅追加消费复核追溯；silent-proposal-38a49e6c97f31eea均waiting，具体缺口见本批报告。无新claim/evidence/计数/status/version/effect或源码上线。"
+          }
+        },
+        {
+          "offset": 23262758,
+          "bytes": 738,
+          "sha256": "825275956b5e12b13e7dcdbb6b3b7750fb2606ee8d7e59ed4554c6af2574d338",
+          "row": {
+            "op": "update",
+            "id": "silent-0050",
+            "ts": "2026-10-17T21:26:35+08:00",
+            "by": "learner:strategy-proposal",
+            "where": {
+              "proposal": [
+                "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261017-211302/learner/runs/20261017-211308-92f2db1c-bfa0-4ab3-accf-0a3217952678-strategy-proposal/proposal.md",
+                "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261017-211302/learner/runs/20261017-211308-92f2db1c-bfa0-4ab3-accf-0a3217952678-strategy-proposal/report.md"
+              ]
+            },
+            "note": "20261017-211302-strategy-proposal：仅追加消费复核追溯；silent-proposal-f1374df72d8e6a25,silent-proposal-38a49e6c97f31eea均waiting，具体缺口见本批报告。无新claim/evidence/计数/status/version/effect或源码上线。"
+          }
+        },
+        {
+          "offset": 23263496,
+          "bytes": 705,
+          "sha256": "0f561c6efa47868a07509f15ea874eb3bf4ea635c6d0def121396fef300d6219",
+          "row": {
+            "op": "update",
+            "id": "silent-0053",
+            "ts": "2026-10-17T21:26:35+08:00",
+            "by": "learner:strategy-proposal",
+            "where": {
+              "proposal": [
+                "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261017-211302/learner/runs/20261017-211308-92f2db1c-bfa0-4ab3-accf-0a3217952678-strategy-proposal/proposal.md",
+                "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261017-211302/learner/runs/20261017-211308-92f2db1c-bfa0-4ab3-accf-0a3217952678-strategy-proposal/report.md"
+              ]
+            },
+            "note": "20261017-211302-strategy-proposal：仅追加消费复核追溯；silent-proposal-04b6b430759815ed均waiting，具体缺口见本批报告。无新claim/evidence/计数/status/version/effect或源码上线。"
+          }
+        },
+        {
+          "offset": 23264201,
+          "bytes": 705,
+          "sha256": "a07595c2d37b0f6418add842de1d12b8f1df70d0e9981374e5f696e9808d3b8e",
+          "row": {
+            "op": "update",
+            "id": "silent-0064",
+            "ts": "2026-10-17T21:26:35+08:00",
+            "by": "learner:strategy-proposal",
+            "where": {
+              "proposal": [
+                "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261017-211302/learner/runs/20261017-211308-92f2db1c-bfa0-4ab3-accf-0a3217952678-strategy-proposal/proposal.md",
+                "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261017-211302/learner/runs/20261017-211308-92f2db1c-bfa0-4ab3-accf-0a3217952678-strategy-proposal/report.md"
+              ]
+            },
+            "note": "20261017-211302-strategy-proposal：仅追加消费复核追溯；silent-proposal-38a49e6c97f31eea均waiting，具体缺口见本批报告。无新claim/evidence/计数/status/version/effect或源码上线。"
+          }
+        },
+        {
+          "offset": 23264906,
+          "bytes": 705,
+          "sha256": "52e2df8e9d713d1d775ee307420f06a1a2acdf8e525270eab798bcfc4e26bf98",
+          "row": {
+            "op": "update",
+            "id": "silent-0065",
+            "ts": "2026-10-17T21:26:35+08:00",
+            "by": "learner:strategy-proposal",
+            "where": {
+              "proposal": [
+                "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261017-211302/learner/runs/20261017-211308-92f2db1c-bfa0-4ab3-accf-0a3217952678-strategy-proposal/proposal.md",
+                "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261017-211302/learner/runs/20261017-211308-92f2db1c-bfa0-4ab3-accf-0a3217952678-strategy-proposal/report.md"
+              ]
+            },
+            "note": "20261017-211302-strategy-proposal：仅追加消费复核追溯；silent-proposal-04b6b430759815ed均waiting，具体缺口见本批报告。无新claim/evidence/计数/status/version/effect或源码上线。"
+          }
+        },
+        {
+          "offset": 23265611,
+          "bytes": 804,
+          "sha256": "888b7517022c7cab681c6dd7868490bb2d5632f5654c4e883742fb10db356651",
+          "row": {
+            "op": "update",
+            "id": "silent-0079",
+            "ts": "2026-10-17T21:26:35+08:00",
+            "by": "learner:strategy-proposal",
+            "where": {
+              "proposal": [
+                "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261017-211302/learner/runs/20261017-211308-92f2db1c-bfa0-4ab3-accf-0a3217952678-strategy-proposal/proposal.md",
+                "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261017-211302/learner/runs/20261017-211308-92f2db1c-bfa0-4ab3-accf-0a3217952678-strategy-proposal/report.md"
+              ]
+            },
+            "note": "20261017-211302-strategy-proposal：仅追加消费复核追溯；silent-proposal-a327449c331efbc1,silent-proposal-47910f82a1fdd98f,silent-proposal-7f820c02d39bfaea,silent-proposal-04b6b430759815ed均waiting，具体缺口见本批报告。无新claim/evidence/计数/status/version/effect或源码上线。"
+          }
+        },
+        {
+          "offset": 23266415,
+          "bytes": 738,
+          "sha256": "cc6a957337b9c1ee5883db032e4c70e0f1bd4fe675a94268eb166f4980443903",
+          "row": {
+            "op": "update",
+            "id": "silent-0133",
+            "ts": "2026-10-17T21:26:35+08:00",
+            "by": "learner:strategy-proposal",
+            "where": {
+              "proposal": [
+                "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261017-211302/learner/runs/20261017-211308-92f2db1c-bfa0-4ab3-accf-0a3217952678-strategy-proposal/proposal.md",
+                "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261017-211302/learner/runs/20261017-211308-92f2db1c-bfa0-4ab3-accf-0a3217952678-strategy-proposal/report.md"
+              ]
+            },
+            "note": "20261017-211302-strategy-proposal：仅追加消费复核追溯；silent-proposal-38a49e6c97f31eea,silent-proposal-04b6b430759815ed均waiting，具体缺口见本批报告。无新claim/evidence/计数/status/version/effect或源码上线。"
+          }
+        },
+        {
+          "offset": 23267153,
+          "bytes": 705,
+          "sha256": "449f6dcb7f5998e53ba4b9ec4c5b16309e6dfb3cf8ac24b68b01135c17aa045b",
+          "row": {
+            "op": "update",
+            "id": "silent-0162",
+            "ts": "2026-10-17T21:26:35+08:00",
+            "by": "learner:strategy-proposal",
+            "where": {
+              "proposal": [
+                "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261017-211302/learner/runs/20261017-211308-92f2db1c-bfa0-4ab3-accf-0a3217952678-strategy-proposal/proposal.md",
+                "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261017-211302/learner/runs/20261017-211308-92f2db1c-bfa0-4ab3-accf-0a3217952678-strategy-proposal/report.md"
+              ]
+            },
+            "note": "20261017-211302-strategy-proposal：仅追加消费复核追溯；silent-proposal-04b6b430759815ed均waiting，具体缺口见本批报告。无新claim/evidence/计数/status/version/effect或源码上线。"
+          }
+        },
+        {
+          "offset": 23267858,
+          "bytes": 705,
+          "sha256": "a0d623f253f430aa3e233c432c729d3cc67466911e40df98553e125f5a9e7773",
+          "row": {
+            "op": "update",
+            "id": "silent-0169",
+            "ts": "2026-10-17T21:26:35+08:00",
+            "by": "learner:strategy-proposal",
+            "where": {
+              "proposal": [
+                "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261017-211302/learner/runs/20261017-211308-92f2db1c-bfa0-4ab3-accf-0a3217952678-strategy-proposal/proposal.md",
+                "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261017-211302/learner/runs/20261017-211308-92f2db1c-bfa0-4ab3-accf-0a3217952678-strategy-proposal/report.md"
+              ]
+            },
+            "note": "20261017-211302-strategy-proposal：仅追加消费复核追溯；silent-proposal-04b6b430759815ed均waiting，具体缺口见本批报告。无新claim/evidence/计数/status/version/effect或源码上线。"
+          }
+        },
+        {
+          "offset": 23268563,
+          "bytes": 705,
+          "sha256": "c0d76bd69af37fea014fab1bed9cbd927b5a60cd01a67af14410814f81862ec0",
+          "row": {
+            "op": "update",
+            "id": "silent-0189",
+            "ts": "2026-10-17T21:26:35+08:00",
+            "by": "learner:strategy-proposal",
+            "where": {
+              "proposal": [
+                "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261017-211302/learner/runs/20261017-211308-92f2db1c-bfa0-4ab3-accf-0a3217952678-strategy-proposal/proposal.md",
+                "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261017-211302/learner/runs/20261017-211308-92f2db1c-bfa0-4ab3-accf-0a3217952678-strategy-proposal/report.md"
+              ]
+            },
+            "note": "20261017-211302-strategy-proposal：仅追加消费复核追溯；silent-proposal-04b6b430759815ed均waiting，具体缺口见本批报告。无新claim/evidence/计数/status/version/effect或源码上线。"
+          }
+        },
+        {
+          "offset": 23269268,
+          "bytes": 705,
+          "sha256": "7440892f83fbbd02abeb9131d261402dc3803a20a4adcf102f1e9ebd153e1e77",
+          "row": {
+            "op": "update",
+            "id": "silent-0198",
+            "ts": "2026-10-17T21:26:35+08:00",
+            "by": "learner:strategy-proposal",
+            "where": {
+              "proposal": [
+                "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261017-211302/learner/runs/20261017-211308-92f2db1c-bfa0-4ab3-accf-0a3217952678-strategy-proposal/proposal.md",
+                "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261017-211302/learner/runs/20261017-211308-92f2db1c-bfa0-4ab3-accf-0a3217952678-strategy-proposal/report.md"
+              ]
+            },
+            "note": "20261017-211302-strategy-proposal：仅追加消费复核追溯；silent-proposal-47910f82a1fdd98f均waiting，具体缺口见本批报告。无新claim/evidence/计数/status/version/effect或源码上线。"
+          }
+        },
+        {
+          "offset": 23269973,
+          "bytes": 738,
+          "sha256": "f4349ab949a57cb26e3544c1c8f137cf31d40b004a41b00f07d3dfc18f936e7c",
+          "row": {
+            "op": "update",
+            "id": "silent-0228",
+            "ts": "2026-10-17T21:26:35+08:00",
+            "by": "learner:strategy-proposal",
+            "where": {
+              "proposal": [
+                "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261017-211302/learner/runs/20261017-211308-92f2db1c-bfa0-4ab3-accf-0a3217952678-strategy-proposal/proposal.md",
+                "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261017-211302/learner/runs/20261017-211308-92f2db1c-bfa0-4ab3-accf-0a3217952678-strategy-proposal/report.md"
+              ]
+            },
+            "note": "20261017-211302-strategy-proposal：仅追加消费复核追溯；silent-proposal-92920295a648b540,silent-proposal-47910f82a1fdd98f均waiting，具体缺口见本批报告。无新claim/evidence/计数/status/version/effect或源码上线。"
+          }
+        },
+        {
+          "offset": 23270711,
+          "bytes": 738,
+          "sha256": "36071a8017d275032d21dde1c6436f6c8ec3a7ecccaeb6ce25cf8b997e063924",
+          "row": {
+            "op": "update",
+            "id": "silent-0253",
+            "ts": "2026-10-17T21:26:35+08:00",
+            "by": "learner:strategy-proposal",
+            "where": {
+              "proposal": [
+                "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261017-211302/learner/runs/20261017-211308-92f2db1c-bfa0-4ab3-accf-0a3217952678-strategy-proposal/proposal.md",
+                "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261017-211302/learner/runs/20261017-211308-92f2db1c-bfa0-4ab3-accf-0a3217952678-strategy-proposal/report.md"
+              ]
+            },
+            "note": "20261017-211302-strategy-proposal：仅追加消费复核追溯；silent-proposal-f1374df72d8e6a25,silent-proposal-38a49e6c97f31eea均waiting，具体缺口见本批报告。无新claim/evidence/计数/status/version/effect或源码上线。"
+          }
+        },
+        {
+          "offset": 23271449,
+          "bytes": 738,
+          "sha256": "273f2151f4fe076d7c23af6c6d8e96973161433955867560bc3ff59f1b94a833",
+          "row": {
+            "op": "update",
+            "id": "silent-0255",
+            "ts": "2026-10-17T21:26:35+08:00",
+            "by": "learner:strategy-proposal",
+            "where": {
+              "proposal": [
+                "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261017-211302/learner/runs/20261017-211308-92f2db1c-bfa0-4ab3-accf-0a3217952678-strategy-proposal/proposal.md",
+                "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261017-211302/learner/runs/20261017-211308-92f2db1c-bfa0-4ab3-accf-0a3217952678-strategy-proposal/report.md"
+              ]
+            },
+            "note": "20261017-211302-strategy-proposal：仅追加消费复核追溯；silent-proposal-92920295a648b540,silent-proposal-47910f82a1fdd98f均waiting，具体缺口见本批报告。无新claim/evidence/计数/status/version/effect或源码上线。"
+          }
+        },
+        {
+          "offset": 23272187,
+          "bytes": 705,
+          "sha256": "0235e4da1f3b457a8c9c08c77b3db7630e3952fe1e1c99fe35ead30cae3019cd",
+          "row": {
+            "op": "update",
+            "id": "silent-0257",
+            "ts": "2026-10-17T21:26:35+08:00",
+            "by": "learner:strategy-proposal",
+            "where": {
+              "proposal": [
+                "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261017-211302/learner/runs/20261017-211308-92f2db1c-bfa0-4ab3-accf-0a3217952678-strategy-proposal/proposal.md",
+                "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261017-211302/learner/runs/20261017-211308-92f2db1c-bfa0-4ab3-accf-0a3217952678-strategy-proposal/report.md"
+              ]
+            },
+            "note": "20261017-211302-strategy-proposal：仅追加消费复核追溯；silent-proposal-a099e89437e942bb均waiting，具体缺口见本批报告。无新claim/evidence/计数/status/version/effect或源码上线。"
+          }
+        },
+        {
+          "offset": 23272892,
+          "bytes": 705,
+          "sha256": "4546206c32c9947b7ec4d54b78ef12ff7c5df5d226c771902db493cc8ccc6aba",
+          "row": {
+            "op": "update",
+            "id": "silent-0258",
+            "ts": "2026-10-17T21:26:35+08:00",
+            "by": "learner:strategy-proposal",
+            "where": {
+              "proposal": [
+                "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261017-211302/learner/runs/20261017-211308-92f2db1c-bfa0-4ab3-accf-0a3217952678-strategy-proposal/proposal.md",
+                "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261017-211302/learner/runs/20261017-211308-92f2db1c-bfa0-4ab3-accf-0a3217952678-strategy-proposal/report.md"
+              ]
+            },
+            "note": "20261017-211302-strategy-proposal：仅追加消费复核追溯；silent-proposal-a099e89437e942bb均waiting，具体缺口见本批报告。无新claim/evidence/计数/status/version/effect或源码上线。"
+          }
+        },
+        {
+          "offset": 23273597,
+          "bytes": 705,
+          "sha256": "3e41abc1235a57ecda7ab514cc3b93a071353edf350bc1431e222cded8ac8671",
+          "row": {
+            "op": "update",
+            "id": "silent-0259",
+            "ts": "2026-10-17T21:26:35+08:00",
+            "by": "learner:strategy-proposal",
+            "where": {
+              "proposal": [
+                "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261017-211302/learner/runs/20261017-211308-92f2db1c-bfa0-4ab3-accf-0a3217952678-strategy-proposal/proposal.md",
+                "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261017-211302/learner/runs/20261017-211308-92f2db1c-bfa0-4ab3-accf-0a3217952678-strategy-proposal/report.md"
+              ]
+            },
+            "note": "20261017-211302-strategy-proposal：仅追加消费复核追溯；silent-proposal-38a49e6c97f31eea均waiting，具体缺口见本批报告。无新claim/evidence/计数/status/version/effect或源码上线。"
+          }
+        },
+        {
+          "offset": 23274302,
+          "bytes": 705,
+          "sha256": "adc41fb47c20f40c4fea624fe64e7edb9a643be0e9c572d8917866146530a183",
+          "row": {
+            "op": "update",
+            "id": "silent-0261",
+            "ts": "2026-10-17T21:26:35+08:00",
+            "by": "learner:strategy-proposal",
+            "where": {
+              "proposal": [
+                "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261017-211302/learner/runs/20261017-211308-92f2db1c-bfa0-4ab3-accf-0a3217952678-strategy-proposal/proposal.md",
+                "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261017-211302/learner/runs/20261017-211308-92f2db1c-bfa0-4ab3-accf-0a3217952678-strategy-proposal/report.md"
+              ]
+            },
+            "note": "20261017-211302-strategy-proposal：仅追加消费复核追溯；silent-proposal-38a49e6c97f31eea均waiting，具体缺口见本批报告。无新claim/evidence/计数/status/version/effect或源码上线。"
+          }
+        },
+        {
+          "offset": 23275007,
+          "bytes": 705,
+          "sha256": "af50cbfd943d8a00837c8859b663b1be890da1dc3964616358f3c56108e8acad",
+          "row": {
+            "op": "update",
+            "id": "silent-0262",
+            "ts": "2026-10-17T21:26:35+08:00",
+            "by": "learner:strategy-proposal",
+            "where": {
+              "proposal": [
+                "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261017-211302/learner/runs/20261017-211308-92f2db1c-bfa0-4ab3-accf-0a3217952678-strategy-proposal/proposal.md",
+                "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261017-211302/learner/runs/20261017-211308-92f2db1c-bfa0-4ab3-accf-0a3217952678-strategy-proposal/report.md"
+              ]
+            },
+            "note": "20261017-211302-strategy-proposal：仅追加消费复核追溯；silent-proposal-38a49e6c97f31eea均waiting，具体缺口见本批报告。无新claim/evidence/计数/status/version/effect或源码上线。"
+          }
+        },
+        {
+          "offset": 23275712,
+          "bytes": 705,
+          "sha256": "8fa50829c830916c967c9b9bcbd9abcc25dabffad78c6957a14fac0258f10749",
+          "row": {
+            "op": "update",
+            "id": "silent-0264",
+            "ts": "2026-10-17T21:26:35+08:00",
+            "by": "learner:strategy-proposal",
+            "where": {
+              "proposal": [
+                "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261017-211302/learner/runs/20261017-211308-92f2db1c-bfa0-4ab3-accf-0a3217952678-strategy-proposal/proposal.md",
+                "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261017-211302/learner/runs/20261017-211308-92f2db1c-bfa0-4ab3-accf-0a3217952678-strategy-proposal/report.md"
+              ]
+            },
+            "note": "20261017-211302-strategy-proposal：仅追加消费复核追溯；silent-proposal-04b6b430759815ed均waiting，具体缺口见本批报告。无新claim/evidence/计数/status/version/effect或源码上线。"
+          }
+        },
+        {
+          "offset": 23276417,
+          "bytes": 705,
+          "sha256": "6f07fa63feccdb103980cdcefecda6b58704d02a6d47aef281b1167ebfbef232",
+          "row": {
+            "op": "update",
+            "id": "silent-0265",
+            "ts": "2026-10-17T21:26:35+08:00",
+            "by": "learner:strategy-proposal",
+            "where": {
+              "proposal": [
+                "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261017-211302/learner/runs/20261017-211308-92f2db1c-bfa0-4ab3-accf-0a3217952678-strategy-proposal/proposal.md",
+                "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261017-211302/learner/runs/20261017-211308-92f2db1c-bfa0-4ab3-accf-0a3217952678-strategy-proposal/report.md"
+              ]
+            },
+            "note": "20261017-211302-strategy-proposal：仅追加消费复核追溯；silent-proposal-04b6b430759815ed均waiting，具体缺口见本批报告。无新claim/evidence/计数/status/version/effect或源码上线。"
+          }
+        }
+      ],
+      "proposal_dispositions": [
+        {
+          "id": "silent-proposal-08eaa60bcc449852",
+          "offset": 4344089,
+          "bytes": 668,
+          "sha256": "51ce553fbbf52d21d04608753f931fe5e42c4966842c7ac4bd660f19e3b09df9"
+        },
+        {
+          "id": "silent-proposal-92920295a648b540",
+          "offset": 4344757,
+          "bytes": 649,
+          "sha256": "54033f973bd90d98625132e30853f393a90492554773e6ee6cd0386a9b651c5f"
+        },
+        {
+          "id": "silent-proposal-a327449c331efbc1",
+          "offset": 4345406,
+          "bytes": 705,
+          "sha256": "94800b92cc919ea526743dd1d6853aa12f4904342ed6ec25cda24f9af506e8ed"
+        },
+        {
+          "id": "silent-proposal-a099e89437e942bb",
+          "offset": 4346111,
+          "bytes": 678,
+          "sha256": "79e55372700cf43e83a9a5b6bd58524ef75b93ade471a67bb5096c73e7ea4826"
+        },
+        {
+          "id": "silent-proposal-47910f82a1fdd98f",
+          "offset": 4346789,
+          "bytes": 661,
+          "sha256": "7b52706ff6ece9bf46bbcc2bbab48b2df903ac7ddff8db6c5ca73d9296cacdd6"
+        },
+        {
+          "id": "silent-proposal-f1374df72d8e6a25",
+          "offset": 4347450,
+          "bytes": 676,
+          "sha256": "d98853c806a6359fe360a11c0e2634d32d1bb6761b9ed602fe9d81bd972f8fa5"
+        },
+        {
+          "id": "silent-proposal-38a49e6c97f31eea",
+          "offset": 4348126,
+          "bytes": 692,
+          "sha256": "aaf765a236834b8f596fbae1c94d3fc61bed00ec815b9feacaa797bfa90f364d"
+        },
+        {
+          "id": "silent-proposal-ef0e38a5dbd3bc07",
+          "offset": 4348818,
+          "bytes": 677,
+          "sha256": "73cfd97c450a5b3a0ce6b951a889f47e1b0c7463c0dd3dd88d4a261d2723aa90"
+        },
+        {
+          "id": "silent-proposal-7f820c02d39bfaea",
+          "offset": 4349495,
+          "bytes": 678,
+          "sha256": "407dcf9d420165ec0f55f7aed3a5df982716c87648cf0a2bdca512d97a1e9983"
+        },
+        {
+          "id": "silent-proposal-04b6b430759815ed",
+          "offset": 4350173,
+          "bytes": 737,
+          "sha256": "daa552928233bdf194f3f99bca043bb31370d8ed973f65c5129e193d466a9630"
+        }
+      ],
+      "no_ops_model_simulation_consumer_or_source_test": true
+    }
+  ],
+  "unique_original_log_references_verified": 19929,
+  "original_failure_history_and_scopes_retained": true
+}
