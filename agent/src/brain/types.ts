@@ -75,6 +75,8 @@ export interface BrainRequest {
   reask?: { answer: string; problems: string[] };
   effort?: Effort;
   timeoutMs?: number;
+  /** H1 internal cancellation; never model input or persistent configuration. */
+  budgetSignal?: AbortSignal;
   /** What the system prompt carries when KNOWLEDGE_PREFIX is set (brain/knowledge.ts); logged in brain.jsonl. */
   knowledge?: KnowledgeNote;
   /** The run the question belongs to (the state's run_id, as decisions.jsonl logs it); logged in brain.jsonl. */
