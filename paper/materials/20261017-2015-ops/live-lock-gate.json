@@ -1,0 +1,35 @@
+{
+  "at": "2026-10-17 20:22:27 CST",
+  "nonblocking": true,
+  "acquired": false,
+  "lock_denial": 75,
+  "initial_helper_exit": 1,
+  "owner_identification_corrected": true,
+  "actual_delivery_registered_before_gate": true,
+  "lock": "ops/live-merge.lock",
+  "original_lock_lines": [
+    "113: FLOCK  ADVISORY  WRITE 1119268 08:30:372157 0 EOF"
+  ],
+  "holder": {
+    "pid": 1119268,
+    "birth_ticks": "113118142",
+    "command": [
+      "python3",
+      "/home/dw/Projects/agent-sts2/ops/codex-ops-learn.py",
+      "finish",
+      "--batch",
+      "20261017-170116-fix-batch",
+      "--rc",
+      "0",
+      "--character",
+      "silent"
+    ],
+    "original_batch": true,
+    "route": "scheduler finish original exact-tree full"
+  },
+  "main_live_unmodified": true,
+  "tests_or_new_model_not_started": true,
+  "original_host_tree": "24be6da5dcc38e9ff9145233b23a0fa475c5ff51",
+  "original_host_result": null,
+  "no_second_gate_attempt_or_completion_poll": true
+}

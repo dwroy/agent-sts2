@@ -1,0 +1,78 @@
+from pathlib import Path
+import hashlib
+import json
+import subprocess
+
+r = Path.cwd()
+p = r / 'ops/codex-ops/record-staging/20261017-2015'
+pub = r / 'paper/materials/20261017-2015-ops'
+load = lambda path: json.loads(path.read_bytes())
+def write(path, value):
+    path.write_text(json.dumps(value, ensure_ascii=False, indent=2) + '\n')
+
+bid = '20261017-170116-fix-batch'
+pending_path = r / f'ops/codex-ops/pending-integrations/{bid}.json'
+pending = load(pending_path)
+assert pending['source_received'] if 'source_received' in pending else pending['source_commit'] == '71ad52c19c884365ec42d3300bc1a3c7a035c7e0'
+assert not (p / 'own-appends.json').exists()
+# The first gate already denied the lock. Complete its owner identification;
+# the scheduler executes this original check inside finish, not a recheck argv.
+proc = Path('/proc/1119268')
+args = [x.decode() for x in (proc / 'cmdline').read_bytes().split(b'\0') if x]
+assert args == ['python3', str(r / 'ops/codex-ops-learn.py'), 'finish', '--batch', bid, '--rc', '0', '--character', 'silent']
+birth = (proc / 'stat').read_text().split(') ', 1)[1].split()[19]
+inode = str((r / 'ops/live-merge.lock').stat().st_ino)
+lines = [x for x in Path('/proc/locks').read_text().splitlines()
+         if len(x.split()) > 5 and x.split()[5].split(':')[-1] == inode]
+assert any(x.split()[4] == '1119268' for x in lines)
+write(pub / 'ops-gate-identification-failure.json', dict(exit=1, phase='ops owner identification after nonblocking lock denial',
+    reason='Original allow-listed check is executing inside finish --batch, not a separate recheck argv.',
+    actual_finish_owner_verified=True, product_test_or_learner_result_changed=False,
+    actual_source_receipt_created_before_gate=True, second_lock_attempt=False))
+receipt = dict(at=pending['at'], nonblocking=True, acquired=False, lock_denial=75,
+    initial_helper_exit=1, owner_identification_corrected=True, actual_delivery_registered_before_gate=True,
+    lock='ops/live-merge.lock', original_lock_lines=lines,
+    holder=dict(pid=1119268, birth_ticks=birth, command=args, original_batch=True, route='scheduler finish original exact-tree full'),
+    main_live_unmodified=True, tests_or_new_model_not_started=True,
+    original_host_tree=pending['original_host_tree'], original_host_result=None,
+    no_second_gate_attempt_or_completion_poll=True)
+write(pub / 'live-lock-gate.json', receipt)
+pending.update(status='actual delivery received; main sync and official number blocked by original exact24be host live lock',
+               source_received=True, gate_receipt=str((pub / 'live-lock-gate.json').relative_to(r)),
+               initial_ops_helper_failures_preserved=True)
+write(pending_path, pending)
+write(pub / 'pending-readback.json', pending)
+
+own_appends = []
+notices = load(pub / 'originals/root-rule-notifications.json')
+for path, entry in notices['notices'].items():
+    with (r / path).open('rb') as f:
+        f.seek(entry['offset'])
+        raw = f.read(entry['bytes'])
+    assert hashlib.sha256(raw).hexdigest() == entry['sha256']
+    own_appends.append(dict(path=path, text=raw.decode()))
+
+at = subprocess.check_output(['date', '+%Y-%m-%d %H:%M:%S %Z'], text=True).strip()
+print(at, flush=True)
+notice = f'''\n\n- {at} 运维codex处理2015原170116-fix-batch：原任务silent-boss-calibration、done/rc0/merged3d691cff96dedd19855b00f4e9d448c43fe1d219/audit空。精确source71ad52c19c884365ec42d3300bc1a3c7a035c7e0、行为40676b554916d88ea006a2e76cf03a9e3e106840、发布tree24be6da5dcc38e9ff9145233b23a0fa475c5ff51已实收，十任务路径展开逐叶核源/WT/live；仅docs旧Roy/Dai署名差异保留，其他角色知识与H0/H1/H2/R384–387原源码保持。原source首轮full1、修正忽略过程副本后的source480文件4398项0、实际live sandbox480文件4410项0及Python16固定0分别保留；12Boss B2/B3实际离线消费者原回执0与trust SHA74b6060523f67ba620a434e45a6ad29e3945b7248926e313788610fbe82dc2a5核同，未重full/校准/模拟/消费者。原SHA256误报扫描1和精确指纹核清后0均留存，未改全局规则。
+  这是原固定7e1193c模型的周期刷新：338完局/1498尝试/614可用实际结局，615实际结束事件中一场缺首回合；新26战18胜8实死仅扩验证至507，107调参keys/原切点/Platt保持，SL截断不当死亡。完整精度准入修正避免取整误放行，不降低原门槛；六目标Boss和F49质量仍失败，A0–4/A5–9独立验证各0/缺10，不替代当前H0模型/H1有限前缀或F48→F49联合校准，也不证明自然胜率提升或0332根修复。
+  已在原pending先登记实际source/tree/消费者/原规则双通知，再核原live锁：本批finish PID1119268/birth{birth}正在原24be宿主全检，尚无终局；未抢锁、未预分号、未同步main源或再开full，0506仍proposed。原内部名S1.silent-boss-calibration-refresh-20261017-ccee3b62/正式release_id仍null，不能以R387代称新刷新。源/发布字节核对和finish/recheck参数误判的两次本ops只读helper1各自留证、改正后读回分列，不改产品/学习者结果。下一原learner-checks事件保本树结果，再守原锁/builder门禁窄同步main及补实际V5号/根规则双通知；如元数据改变最终树，仅沿同170116唯一串行宿主核新组合，之后CLI核0506限定shipped。具体路径和恢复合同已冻结，无新线程/父/模型/计时器或观察器。
+  原学习者20:04根规则双通知逐offset/len/SHA核回并保留，当前本ops记录也写根双收件；只是实际记录，不代watcher/Roy ACK。没有新游戏机制结论或需转达异议。当前局未重启/热改，H0/0332及宽父不关闭；仅自有记录/0506三原CLI行经gitleaks私有index提交，保普通index和并行材料，结束不sleep/轮询未来事件。证据paper/materials/20261017-2015-ops/及ops/codex-ops/pending-integrations/{bid}.json。\n'''
+for path in ['ops/inbox-dev.md', 'notes/for-roy.md', 'notes/ops-handoff.md']:
+    with (r / path).open('a') as f:
+        f.write(notice)
+    own_appends.append(dict(path=path, text=notice))
+decision = f'\n- {at} 运维codex：2015原170116校准刷新source71ad52/实际live3d691cff/tree24be实收，固定模型验证507/六目标及F49仍low；源/组合自测和原消费者0已核，原finish宿主锁仍占用，main同步/正式号/0506shipped留同链pending，不重测或改现局。证据paper/materials/20261017-2015-ops/。\n'
+with (r / 'paper/materials/decision-log.md').open('a') as f:
+    f.write(decision)
+own_appends.append(dict(path='paper/materials/decision-log.md', text=decision))
+write(p / 'own-appends.json', own_appends)
+write(p / 'extra-owned-paths.json', [])
+write(p / 'paper-owned-manifest.json', [])
+write(pub / 'ops-completion.json', dict(at=at, batch=bid, actual_source_received=True,
+    live_publication_verified=True, pending_path=str(pending_path.relative_to(r)), host_terminal=None,
+    source_sync_and_numbering_blocked_by_original_host_lock=True, no_duplicate_check_or_wait=True,
+    ledger_original_rows=3, ledger_status='proposed', other_roles_ACK_not_assumed=True,
+    current_game_unchanged=True, original_failures_retained=True))
+print(json.dumps(dict(source_received=True, original_host_running=True, numbered=False,
+                     main_sync=False, new_checks=0, ledger_rows=3), ensure_ascii=False))

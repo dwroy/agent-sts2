@@ -1,0 +1,20 @@
+{
+  "id": "silent-0506",
+  "by": "Codex gpt-6.1-sol/xhigh",
+  "status": "proposed",
+  "claim": "静默结束338局1498次boss尝试中614次有实际结局和首回合（449胜165死）；新增26次18胜8死只扩验证，固定已发布7e1193c模型、原107调参keys和切点，验证507/模拟成功505，B2/B3各6项达标。无厌沙虫B2未取整Brier0.146397165734超过整体×1.25的0.146342600，保持低可信。F49实际34/验证32，数量缺口0，但Brier/胜率差/打穿比均失败；A0–4和A5–9独立验证均0，各距10场还差10。结论限定固定模型、实际结局SL条件，未验证当前H0/H1有限前缀或联合通关/自然收益。",
+  "where": {
+    "knowledge": [
+      "knowledge/characters/silent/boss-trust.json"
+    ],
+    "changelog": [
+      "paper/materials/silent/boss-sim-calibration.md",
+      "docs/boss-sim.md",
+      "paper/materials/decision-log.md"
+    ],
+    "commits": [
+      "71ad52c19c884365ec42d3300bc1a3c7a035c7e0"
+    ]
+  },
+  "note": "Roy授权架构：角色隔离/整体Platt/固定切分与模型/原门槛/定期事件。统计结论来自本角色证据；自动旧模型恢复+历史/控制/SHA校验及准入完整精度是本任务实现，不新增游戏机制/打法。source sandbox tsc0/Vitest480文件4398题0/Python16项0；旧精度夹具1项确实失败。仅proposed与来源提交，实际live核实后由ops登记shipped。报告experiments/boss-sim/silent/ccee3b625e95d6a275b5b58ad94739983ae208954dc66ba7fa03deb5b5b5e33b/。"
+}
