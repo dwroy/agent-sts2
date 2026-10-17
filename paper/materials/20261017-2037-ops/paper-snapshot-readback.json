@@ -1,0 +1,128 @@
+{
+  "request": {
+    "at": "2026-10-17 20:37:50 CST",
+    "command": [
+      "nice",
+      "-n",
+      "19",
+      "python3",
+      "ops/paper_dataset.py",
+      "--no-raw"
+    ],
+    "pid": 1208713,
+    "birth": "113262936",
+    "calls": 1,
+    "raw_snapshot": false,
+    "previous_outputs_preserved": "ops/codex-ops/record-staging/20261017-2037/paper-before",
+    "actual_exit_code": 0
+  },
+  "generated_at": "2026-10-17T12:37:50.731Z",
+  "five_checks": {
+    "decisions attributed + unattributed == play records": true,
+    "decisions_by_label sum == attributed decisions": true,
+    "escalations rows == records with escalation": true,
+    "every runs.jsonl id present in runs.csv": true,
+    "commits == git rev-list --all --count": true
+  },
+  "source_cut_bytes": {
+    "decisions.jsonl": 2332014540,
+    "deepseek-reasoning.jsonl": 377746518,
+    "runs.jsonl": 362114,
+    "states.jsonl": 14037321594,
+    "fight-plans.jsonl": 2233957,
+    "run-plans.jsonl": 9038612,
+    "brain.jsonl": 767421859,
+    "sl-attempts.jsonl": 46033678,
+    "run-config.jsonl": 1986443
+  },
+  "row_counts": {
+    "runs.csv": 828,
+    "decisions_by_label.csv": 27635,
+    "escalations.csv": 3600,
+    "fight_plans.csv": 1461,
+    "commits.csv": 6835
+  },
+  "selected_run": {
+    "run_id": "BXU0CKWKH2RU",
+    "character": "SILENT",
+    "ascension": "10",
+    "outcome": "defeat",
+    "floor_max": "48",
+    "n_decisions": "1231",
+    "has_postmortem": "1",
+    "brain_source": "{\"basis\": \"brain.jsonl accepted verdict; legacy answer != null, no error/problems; unique question_id+engine\", \"brain_rows\": 51, \"coverage\": \"missing_or_unresolved_logged_questions\", \"eligible\": false, \"embedded_answers\": {\"map/route\": 23, \"run-plan\": 9}, \"exclusion_reason\": \"unresolved_brain_questions\", \"failed_or_unaccepted_rows\": 8, \"first_success\": \"2026-10-17T10:33:30.382Z\", \"last_success\": \"2026-10-17T11:50:24.955Z\", \"policy\": \"codex-successful-brain-v1\", \"source\": \"unknown\", \"successful_answers\": {\"codex\": 43}, \"successful_by_label\": {\"event/act-plan\": {\"codex\": 1}, \"event/choose\": {\"codex\": 6}, \"event/plan\": {\"codex\": 2}, \"map/route-plan\": {\"codex\": 2}, \"rest/plan\": {\"codex\": 7}, \"reward/card\": {\"codex\": 16}, \"run-plan\": {\"codex\": 3}, \"selection/upgrade\": {\"codex\": 2}, \"shop/plan\": {\"codex\": 4}}, \"unknown_successes\": 0, \"unresolved_questions\": 8}",
+    "performance_included": "0"
+  },
+  "original_count_warnings": [
+    [
+      "KF9HMZKTFC3V",
+      879,
+      880
+    ]
+  ],
+  "changed_outputs": [
+    {
+      "path": "paper/data/README.md",
+      "bytes": 14189,
+      "sha256": "84329ffd92409b5291d314f9d0bee3e7aeab14d590bdf624e6febbf0de27f2e8"
+    },
+    {
+      "path": "paper/data/commits.csv",
+      "bytes": 1028804,
+      "sha256": "77e74b6a30debf89d31b4a462b0a4cd6c0718354f290353b93f9a7529cd56c19"
+    },
+    {
+      "path": "paper/data/cost-curve-silent.csv",
+      "bytes": 14827,
+      "sha256": "45bc55b30a211f6330d278be185d38bdba590fb4d2dfaf362936566d09e057ca"
+    },
+    {
+      "path": "paper/data/cost-silent.csv",
+      "bytes": 895733,
+      "sha256": "266739a4c98a2cb3bc83f454addcd6ec7f3c773637128d1ec902a5683bd2ad56"
+    },
+    {
+      "path": "paper/data/cost-sources.json",
+      "bytes": 246682,
+      "sha256": "d7b194ceb0b82c24c022cd39e89210e8a8face90769f512195633f55bc4bb9df"
+    },
+    {
+      "path": "paper/data/cost-unattributed.csv",
+      "bytes": 19377,
+      "sha256": "b830e3d03b68bf84cd1ece1737e1a4347f5d58dca1ca07c15f793b1a01af090d"
+    },
+    {
+      "path": "paper/data/decisions_by_label.csv",
+      "bytes": 1194164,
+      "sha256": "0f72c69199b33e0a03a8906d5567a64e5e64a77f90ebb4e1348e0bb164dcc361"
+    },
+    {
+      "path": "paper/data/learning-curve-silent.csv",
+      "bytes": 71641,
+      "sha256": "93ce4236db481a2820f9abbde1ef41788f256ae86febaaa7c7b4f1c0136c9f22"
+    },
+    {
+      "path": "paper/data/runs.csv",
+      "bytes": 1351921,
+      "sha256": "40cd8f58b8e2bda14292c5250f65a6c6296761a152a7c7359f38d52d8e8b3777"
+    },
+    {
+      "path": "paper/data/summary.json",
+      "bytes": 555993,
+      "sha256": "ab8828cd4e6425b13232b28a1a34e7021b695d9d9a7bdb08a98038a6cea5366d"
+    },
+    {
+      "path": "paper/data/verification.json",
+      "bytes": 587,
+      "sha256": "167a7f971e4742c5a6e3cd92f1905c696e78d2596a4952883f9540f1edf6972a"
+    },
+    {
+      "path": "paper/materials/silent/cost.md",
+      "bytes": 4200,
+      "sha256": "54a50e4fead77aae905bbfc4494c9597d2cd6e1d4deddcae0c2873371953ebb7"
+    }
+  ],
+  "raw_snapshot": false,
+  "frozen_before_after_bytes_preserved": true,
+  "costs_are_estimates_not_actual_bills": true
+}

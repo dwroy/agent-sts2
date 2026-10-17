@@ -1,0 +1,8 @@
+{
+  "initial_ops_helper_exit": 1,
+  "phase": "read-only canonical completion shape verification",
+  "reason": "Postmortem batches keep done/missing and audit fields but do not require a duplicated report object in canonical state.",
+  "correction": "Verify the actual original report and canonical done/rc0/done-run/missing/audit fields without inventing a report field.",
+  "original_canonical_report_or_product_modified": false,
+  "product_test_or_learner_failure": false
+}
