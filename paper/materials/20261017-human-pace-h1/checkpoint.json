@@ -4,15 +4,15 @@
   "owner_session": "01a13dcd-83d4-7c63-b233-f93cf878ecf4",
   "original_owner": "01a13dcd-83d4-7c63-b233-f93cf878ecf4",
   "account": "codex1",
-  "at": "2026-10-17T10:23:40.841486+08:00",
-  "phase": "H1 final source staged; source full r2 running",
+  "at": "2026-10-17T10:50:04.268338+08:00",
+  "phase": "H1 source complete and sent; original ops native source examination observed; formal release/host pending",
   "worktree": ".worktrees/human-pace-h1-20261017",
   "base": "54e36d0830ab640130557b62a078b25954912ff4",
-  "source": null,
+  "source": "7af803c06e82e2aafe6a595fab7a23e0f3f44fb3",
   "published": false,
   "native_model": "gpt-6.1-sol/xhigh; no model/account/home/prompt changes",
   "H1_evidence": "paper/materials/20261017-human-pace-h1",
-  "next": "Wait only on existing source full r2 exec session65296; do not rerun. Then commit exact unchanged28 leaves and hand to original ops wJ:p5.",
+  "next": "Owner stops after this H1 source delivery. Original ops owns actual receipt/publication/host event closure. Claude must separately assign2 natural acceptance runs/H2+.",
   "goal_status": "cancelled; do not create a goal",
   "H0": {
     "status": "running",
@@ -24,20 +24,28 @@
   },
   "natural_acceptance": "unstarted; await Claude assignment after H1 source delivery",
   "source_staged_tree": "42b64e288ab34b51bfa1a4f15f8c6abd731fd139",
-  "active_check": {
-    "at": "2026-10-17T10:23:40.841486+08:00",
-    "exec_session": 65296,
-    "source_staged_tree": "42b64e288ab34b51bfa1a4f15f8c6abd731fd139",
-    "manifest": "source-before-full-r2.json",
-    "worker_processes": [
-      {
-        "pid": 3204301,
-        "birth_ticks": 109563733,
-        "cwd": "/home/dw/Projects/agent-sts2/.worktrees/human-pace-h1-20261017/agent",
-        "nice": 19,
-        "command_sha256": "3658e117b4c9b532ae7b08b81d688976b41af58d1f276ced722feeff5fe03ead"
-      }
-    ],
-    "status": "RUN"
-  }
+  "active_check": null,
+  "source_tree": "42b64e288ab34b51bfa1a4f15f8c6abd731fd139",
+  "source_verification": "tsc0; sandbox467files4285+paths11=4296;gitleaks0",
+  "completed_source_check": {
+    "status": "passed",
+    "exit_code": 0,
+    "tsc_exit": 0,
+    "vitest_main_files": 467,
+    "vitest_main_tests": 4285,
+    "paths_files": 1,
+    "paths_tests": 11,
+    "total_tests": 4296,
+    "log": "source-sandbox-full-r2.log",
+    "log_sha256": "ce54c4cc2532cfa2808256ef78552a0787bb2f063d8f69bc74cc751bdbf84c0f",
+    "source_commit": "7af803c06e82e2aafe6a595fab7a23e0f3f44fb3",
+    "source_tree": "42b64e288ab34b51bfa1a4f15f8c6abd731fd139",
+    "full_main_duration_seconds": 1568.23,
+    "paths_duration_seconds": 2.81,
+    "worker_limit": 1,
+    "nice": 19
+  },
+  "transport": "paper/materials/20261017-human-pace-h1/ops-source-transport.json",
+  "native_ops_read_observation": "paper/materials/20261017-human-pace-h1/watcher-ops-native-readback.json",
+  "owner_delivery": "source_complete_and_sent"
 }

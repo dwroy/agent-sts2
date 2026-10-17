@@ -39,3 +39,7 @@ C2 的完整批次淘汰规则不变，提前停止只停止采样，不剔除�
 原 ops 负责串行锁内窄集成、独立行为编号、规则旧新/依据/预期/回退的根双通知及精确最终树的宿主全检。实际发布提交、树和首生效局只能据原 ops/原始 run-config 追加，源码绿不能借给 live 或旧树。当前 H1 自然验收（2 局、延迟分布、G1c 漏斗）尚未开始；本次源码交付后停止，等 Claude 后续指派。
 
 取消路径的本地代码读回见 `cancellation-path-readback.json`：已安装 SDK0.6.0 将调用者 signal 传到 fetch；Codex 沿原进程退出通道取消，原 SIGTERM→3秒 SIGKILL 清理宽限保留。决策在截止拒绝迟到答案，不等同于宣称所有子进程在同一毫秒退出；没有以真实请求探针验证或改变运行配置。
+
+## 2026-10-17 10:49:10 CST 精确源码交付
+
+源码 `7af803c06e82e2aafe6a595fab7a23e0f3f44fb3` / tree `42b64e288ab34b51bfa1a4f15f8c6abd731fd139` 已提交，28叶与最终入口所测SHA一致。source入口tsc0、467文件4285项加paths11项共4296全过，gitleaks0；原ops运输成功，实际接收/发布/宿主待其本人回执。完整原件见 `completion.md`、`source-commit-receipt.json`、`verification.json`。H1自然门槛/H2+仍未启动。

@@ -1,7 +1,7 @@
 {
   "id": "H1",
   "owner": "watcher-codex1",
-  "state": "active",
+  "state": "source_sent_pending_actual_ops_receipt_release_host",
   "requirements": [
     "budget_and_fallback_telemetry",
     "finite_B2_B3_actual_prefixes_SE",
@@ -79,7 +79,7 @@
       "limits": "fixed production-loop scope/equivalence only, not a natural-run result"
     },
     "fixed_tests_and_exact_ops_release": {
-      "state": "source_entry_running_then_original_ops",
+      "state": "source_entry0; actual release and host pending",
       "evidence": [
         "source-before-full-r2.json",
         "source-sandbox-full-r2.log",
@@ -93,5 +93,6 @@
       "run_count": 0,
       "owner": "await Claude subsequent assignment; not started by source task"
     }
-  }
+  },
+  "source_commit": "7af803c06e82e2aafe6a595fab7a23e0f3f44fb3"
 }
