@@ -38,7 +38,7 @@ def turns_of(path):
     return out
 
 
-def leak(rows, turns):
+def leak(rows, turns, *, exact=False):
     """Sums over (fight, turn) of the sim's mean per-turn numbers and the log's, turns LEAK_TURNS from the start."""
     s_enemy = a_enemy = s_loss = a_loss = 0.0
     n = 0
@@ -59,7 +59,7 @@ def leak(rows, turns):
             a_loss += here[3]
             n += 1
     return {"n": n, "sim_enemy": round(s_enemy / n, 2) if n else None, "actual_enemy": round(a_enemy / n, 2) if n else None,
-            "enemy_ratio": round(s_enemy / a_enemy, 3) if a_enemy else None,
+            "enemy_ratio": (s_enemy / a_enemy if exact else round(s_enemy / a_enemy, 3)) if a_enemy else None,
             "sim_loss": round(s_loss / n, 2) if n else None, "actual_loss": round(a_loss / n, 2) if n else None,
             "loss_ratio": round(s_loss / a_loss, 3) if a_loss else None}
 
@@ -116,7 +116,7 @@ def platt(rows, ab):
     return out
 
 
-def block(rows, turns):
+def block(rows, turns, *, exact=False):
     rows = [r for r in rows if r.get("sim")]
     if not rows:
         return None
@@ -126,15 +126,15 @@ def block(rows, turns):
     worst = max((abs(b["pred"] - b["actual"]) for b in bk if b["n"] >= 20), default=None)
     return {
         "n": len(rows),
-        "actual_win": round(statistics.fmean(y for _, y in pairs), 3),
-        "mean_pred": round(statistics.fmean(p for p, _ in pairs), 3),
-        "brier": round(brier(pairs), 4),
+        "actual_win": statistics.fmean(y for _, y in pairs) if exact else round(statistics.fmean(y for _, y in pairs), 3),
+        "mean_pred": statistics.fmean(p for p, _ in pairs) if exact else round(statistics.fmean(p for p, _ in pairs), 3),
+        "brier": brier(pairs) if exact else round(brier(pairs), 4),
         "auc": round(auc(pairs), 3) if auc(pairs) is not None else None,
         "const_brier": round(brier([(statistics.fmean(y for _, y in pairs), y) for _, y in pairs]), 4),
         "buckets": bk,
         "worst_bucket_n20": round(worst, 3) if worst is not None else None,
         "won_loss_err": errs([r["sim"]["hpLossWon"]["median"] - r["actual"]["hpLoss"] for r in won]),
-        "leak": leak(rows, turns),
+        "leak": leak(rows, turns, exact=exact),
     }
 
 

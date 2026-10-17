@@ -63,16 +63,17 @@ NAMES = {
 }
 
 
-def judge(b, overall_brier):
+def judge(b, overall_brier, *, exact=False):
     """The criteria a boss's block fails, as (key, English, Chinese) reasons; [] when trusted."""
     fails = []
     n = b["n"]
     if n < MIN_FIGHTS:
         fails.append(("n", f"only {n} validation fights (at least {MIN_FIGHTS} needed)", f"验证集只有 {n} 场（至少要 {MIN_FIGHTS} 场）"))
-    limit = round(BRIER_RATIO * overall_brier, 4)
+    limit = BRIER_RATIO * overall_brier if exact else round(BRIER_RATIO * overall_brier, 4)
     if b["brier"] > limit:
-        fails.append(("brier", f"calibrated Brier {b['brier']:.3f} over {limit:.3f} ({BRIER_RATIO}x the overall {overall_brier:.3f})",
-                      f"校准 Brier {b['brier']:.3f}，高于整体 {overall_brier:.3f} 的 {BRIER_RATIO} 倍 {limit:.3f}"))
+        digits = 6 if exact else 3
+        fails.append(("brier", f"calibrated Brier {b['brier']:.{digits}f} over {limit:.{digits}f} ({BRIER_RATIO}x the overall {overall_brier:.{digits}f})",
+                      f"校准 Brier {b['brier']:.{digits}f}，高于整体 {overall_brier:.{digits}f} 的 {BRIER_RATIO} 倍 {limit:.{digits}f}"))
     gap = b["mean_pred"] - b["actual_win"]
     if abs(gap) > MAX_GAP:
         side = "too optimistic" if gap > 0 else "too pessimistic"

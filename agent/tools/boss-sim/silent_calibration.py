@@ -165,16 +165,21 @@ def calibrate(results, fights, turns, split_data, provenance):
         m = model or {"a": 0, "b": 1, "c": 0}
         mapped_val = mapped(val, m)
         overall = block(mapped_val, turns)
+        # Display rounding must never admit a boss that exceeds an original threshold.
+        exact_overall = block(mapped_val, turns, exact=True)
+        overall_brier = exact_overall["brier"] if exact_overall else 0
         out["overall"][start] = {**(overall or {"n": 0, "brier": None}), "platt": model, "tune_n": len(tune)}
         residual = {side: residuals(rows, m, turns) for side, rows in (("tune", tune), ("val", val))}
         out["residuals"][start] = residual
         a10 = residual["val"]["A10"]
-        if a10["n"] < 10 or a10["gap"] is None or abs(a10["gap"]) > 0.15:
+        exact_a10 = block([r for r in mapped_val if r["asc"] == 10], turns, exact=True)
+        a10_gap = exact_a10["mean_pred"] - exact_a10["actual_win"] if exact_a10 else None
+        if a10["n"] < 10 or a10_gap is None or abs(a10_gap) > 0.15:
             out["ascension_low"][use]["10"] = f"A10验证 n={a10['n']}，残差={a10['gap']}；F49为独立战，不是整局通关"
         max_asc = max(provenance.get("completed_max_asc", 10), max((r["asc"] for r in fights), default=10))
         for asc in range(11, max_asc + 1):
             scope = [r for r in mapped_val if r["asc"] == asc]
-            metrics = block(scope, turns)
+            metrics = block(scope, turns, exact=True)
             gap = metrics["mean_pred"] - metrics["actual_win"] if metrics else None
             if len(scope) < 10 or gap is None or abs(gap) > 0.15:
                 out["ascension_low"][use][str(asc)] = f"A{asc}验证 n={len(scope)}，残差={gap}；新进阶验证不足或偏差超标，保持低信度"
@@ -182,22 +187,28 @@ def calibrate(results, fights, turns, split_data, provenance):
                   for side, rows in (("tune", tune), ("val", val))}
         out["stage_metrics"][start] = {"F49": stages}
         f49 = stages["val"] or {"n": 0, "brier": 1, "mean_pred": 0, "actual_win": 0, "leak": {"enemy_ratio": None}}
-        stage_fails = judge(f49, overall["brier"] if overall else 0)
+        exact_f49 = block([r for r in mapped_val if r.get("floor") == 49], turns, exact=True) or f49
+        stage_fails = judge(exact_f49, overall_brier, exact=True)
         if f49["leak"].get("enemy_ratio") is None:
             stage_fails.append(("leak_missing", "missing leak", "打穿比无记录"))
         if stage_fails:
             out["stage_low"][use]["49"] = "F49独立战：" + "; ".join(f[2] for f in stage_fails)
         for enc, key in BOSS_KEYS.items():
-            b = block([r for r in mapped_val if r["enc"] == enc], turns)
+            boss_rows = [r for r in mapped_val if r["enc"] == enc]
+            b = block(boss_rows, turns)
             b = b or {"n": 0, "brier": 1.0, "mean_pred": 0.0, "actual_win": 0.0, "leak": {"enemy_ratio": None, "n": 0}}
-            fails = judge(b, overall["brier"] if overall else 0)
+            exact_boss = block(boss_rows, turns, exact=True) or b
+            fails = judge(exact_boss, overall_brier, exact=True)
             if b["leak"].get("enemy_ratio") is None:
                 fails.append(("leak_missing", "HP-through-block ratio unavailable", "被打穿的血比值不足，不能准入"))
             if model is None:
                 fails.append(("calibration", "global calibration unavailable", "整体校准不足"))
             item = {"n": b["n"], "missing": max(0, 10 - b["n"]), "brier": b["brier"], "mean_pred": b["mean_pred"],
                     "actual_win": b["actual_win"], "leak_ratio": b["leak"].get("enemy_ratio"), "leak_turns": b["leak"].get("n", 0),
-                    "failed": [f[0] for f in fails]}
+                    "failed": [f[0] for f in fails],
+                    "admission": {"brier": exact_boss["brier"], "brier_limit": out["criteria"]["brier_ratio"] * overall_brier,
+                                  "gap": exact_boss["mean_pred"] - exact_boss["actual_win"],
+                                  "leak_ratio": exact_boss["leak"].get("enemy_ratio")}}
             out["bosses"].setdefault(key, {"name": NAMES[enc]})[start] = item
             if fails:
                 out["low_trust_b2" if use == "b2" else "low_confidence_b3"][key] = "; ".join(f[2] for f in fails)
@@ -236,10 +247,12 @@ def render(data, sources, extraction):
             for group, b in groups.items():
                 lines.append(f"| {side} | {group} | {b['n']} | {b.get('mean_pred')} | {b.get('actual_win')} | {b['gap']} | {b.get('brier')} | {b.get('leak_ratio')} |")
         lines += ["", "原准入标准：验证≥10、Brier≤整体1.25倍、胜率差≤15个百分点、打穿比0.7–1.3；缺指标也保持低可信。", "",
-                  "| boss | 验证 n | 还差 | Brier | 预测/实际 | 打穿比 | 失败指标 | 可信 |", "|---|---|---|---|---|---|---|---|"]
+                  "准入比较使用未取整指标；显示取整不能放宽门槛。JSON的admission保留完整精度。", "",
+                  "| boss | 验证 n | 还差 | Brier/门槛（显示6位） | 预测/实际 | 打穿比 | 失败指标 | 可信 |", "|---|---|---|---|---|---|---|---|"]
         for key, entry in sorted(data["bosses"].items()):
             b = entry[start]
-            lines.append(f"| {entry['name']} ({key}) | {b['n']} | {b['missing']} | {b['brier']} | {b['mean_pred']}/{b['actual_win']} | {b['leak_ratio']} | {','.join(b['failed']) or '无'} | {'低' if b['failed'] else '达标'} |")
+            exact = b["admission"]
+            lines.append(f"| {entry['name']} ({key}) | {b['n']} | {b['missing']} | {exact['brier']:.6f}/{exact['brier_limit']:.6f} | {b['mean_pred']}/{b['actual_win']} | {b['leak_ratio']} | {','.join(b['failed']) or '无'} | {'低' if b['failed'] else '达标'} |")
         lines += ["", f"A10 附加限制：`{json.dumps(data['ascension_low'][use], ensure_ascii=False)}`。", ""]
         lines += [f"F49单独调参/验证指标（同一整体映射）：`{json.dumps(data['stage_metrics'][start], ensure_ascii=False)}`。验证还差 {max(0, 10 - ((data['stage_metrics'][start]['F49']['val'] or {}).get('n', 0)))} 场；范围限制：`{json.dumps(data['stage_low'][use], ensure_ascii=False)}`。", ""]
     lines += ["## 定期刷新", "", "运维调度 tick（每小时 :13/:43，另在学习批次完成事件检查）读取已完成的静默局和 boss 尝试；升阶或新增20次实际结局 boss尝试时启动独占校准任务。SL截断不凑20场。入口 agent/tools/boss-sim/refresh-silent.py；旧切点/调参keys固定，新局只进验证；生成独立内容指纹目录，重复输入跳过，旧报告和来源留存。达标名单由 trust.py --character silent 自动生成，仍由学习者依锁内测试/合入流程发布和增加唯一版本，运维核实际后登记shipped。只写静默 boss-trust，不刷新其他角色数据。", "",
