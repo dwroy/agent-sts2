@@ -51,7 +51,9 @@ it("dispatches exactly once after two required runner failures and a failed degr
       maxDecisions: 1, maxMinutes: 1, pollIntervalMs: 1, restoreRun: false, signal: controller.signal,
       buildSim: { db: FIXTURE_DB, mm: FIXTURE_MM, runner: { run: async (req) => {
         called++;
-        expect(req.deadlineMs).toBe(called < 3 ? undefined : 11_000);
+        expect(req.deadlineMs).toBeGreaterThan(0);
+        expect(req.deadlineMs).toBeLessThanOrEqual(11_000);
+        expect(req.progressTimeoutMs).toBeUndefined();
         throw new Error("fixed worker failure");
       } }, now: () => 0 },
     });

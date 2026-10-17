@@ -1,3 +1,4 @@
+import { currentDecisionBudget } from "../core/decision-budget.js";
 /**
  * The 5-turn rollout (rollout.ts) on the live board, as FACTS for Jev's combat question (combat-plan.ts).
  *
@@ -893,7 +894,7 @@ export function liveRollout(args: LiveRolloutArgs): LiveRollout {
     const board = boardRolloutInput(state, knowledge, args.solver, meta.asc);
     const model = args.model !== undefined ? args.model : loadFightValueModel();
     const gates = args.gates !== undefined ? args.gates : loadFightValueGates();
-    const budgetMs = Math.max(0, (args.budgetMs ?? rolloutLiveOptions.budgetMs) - ROLLOUT_MARGIN_MS - (args.spentMs ?? 0) - elapsed());
+    const budgetMs = Math.max(0, Math.min(args.budgetMs ?? rolloutLiveOptions.budgetMs, currentDecisionBudget()?.remaining() ?? Infinity) - ROLLOUT_MARGIN_MS - (args.spentMs ?? 0) - elapsed());
     const { handBase, ...boardInput } = board;
     const input: RolloutInput = {
       ...boardInput,
@@ -999,7 +1000,7 @@ function rolloutRefs(input: RolloutInput): Plan[] {
 function rolloutMemoKey(input: RolloutInput): string | null {
   try {
     const { now: _now, budgetMs: _budget, ...options } = input.options ?? {};
-    return memoKey("rollout", { ...input, model: identityToken(input.model), gates: identityToken(input.gates), mm: identityToken(input.mm), options });
+    return memoKey(currentDecisionBudget() ? "human-pace-rollout-v1" : "rollout", { ...input, model: identityToken(input.model), gates: identityToken(input.gates), mm: identityToken(input.mm), options });
   } catch {
     return null;
   }
@@ -1015,7 +1016,7 @@ interface StoredRollout {
 function recallRollout(memo: ComputeMemo, key: string, input: RolloutInput, budgetMs: number): RolloutResult | null {
   try {
     const hit = memo.get<Omit<RolloutResult, "lines"> & { lines: (Omit<LineEstimate, "plan"> & { plan: number })[] }, StoredRollout>(key);
-    if (!hit || budgetMs < hit.meta.needMs) return null;
+    if (!hit || !currentDecisionBudget() && budgetMs < hit.meta.needMs) return null;
     const refs = rolloutRefs(input);
     if (hit.value.lines.some((line) => refs[line.plan] === undefined)) return null;
     memo.took();
@@ -1028,14 +1029,14 @@ function recallRollout(memo: ComputeMemo, key: string, input: RolloutInput, budg
 /** Keeps a result no clock cut (nothing degraded), its lines' plans by index into rolloutRefs. */
 function storeRollout(memo: ComputeMemo, key: string, input: RolloutInput, result: RolloutResult): void {
   try {
-    if (result.degraded.length > 0 || result.budgetNeedMs === undefined) return;
+    if (!currentDecisionBudget() && (result.degraded.length > 0 || result.budgetNeedMs === undefined)) return;
     const refs = rolloutRefs(input);
     const index = new Map<Plan, number>();
     refs.forEach((plan, i) => {
       if (!index.has(plan)) index.set(plan, i);
     });
     if (result.lines.some((line) => !index.has(line.plan))) return;
-    memo.set<StoredRollout>(key, { ...result, lines: result.lines.map((line) => ({ ...line, plan: index.get(line.plan)! })) }, { needMs: result.budgetNeedMs, ms: result.elapsedMs });
+    memo.set<StoredRollout>(key, { ...result, lines: result.lines.map((line) => ({ ...line, plan: index.get(line.plan)! })) }, { needMs: result.budgetNeedMs ?? 0, ms: result.elapsedMs });
   } catch {
     // not kept
   }

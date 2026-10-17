@@ -1,10 +1,11 @@
+import { DecisionBudgetExpired } from "../core/decision-budget.js";
 /** A model outage suspends the current question, never the game's saved run. */
 import { appendFileSync, existsSync, mkdirSync, renameSync, writeFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { appendJsonLine } from "../core/util/jsonl.js";
 import type { BrainRequest } from "./types.js";
 
-export type WaitState = "paused" | "heartbeat" | "resumed" | "cancelled" | "fault";
+export type WaitState = "paused" | "heartbeat" | "resumed" | "cancelled" | "fault" | "budget";
 export interface BrainWaitEvent {
   ts: string;
   state: WaitState;
@@ -17,7 +18,7 @@ export interface BrainWaitEvent {
   retries: number;
   next_retry: string | null;
   suspended_ms: number;
-  budget_policy: "outage_time_excluded";
+  budget_policy: "human_pace_hard_deadline" | "outage_time_excluded";
   original_budget_ms: number | null;
 }
 
@@ -62,9 +63,10 @@ export class BrainWait {
   constructor(private readonly options: BrainWaitOptions = {}) {}
   get signal(): AbortSignal | undefined { return this.options.signal; }
   now(): number { return this.options.now?.() ?? Date.now(); }
-  get suspendedMs(): number { return this.completedMs + (this.active ? Math.max(0, this.now() - this.active.began) : 0); }
+  get suspendedMs(): number { return this.completedMs + (this.active && !this.active.req.budgetSignal ? Math.max(0, this.now() - this.active.began) : 0); }
 
   check(): void {
+    if (this.active?.req.budgetSignal?.aborted) throw new DecisionBudgetExpired(this.active.req.label);
     if (this.heartbeatFailure) throw new BrainBlockedError("fault", "Codex wait heartbeat could not be recorded", this.heartbeatFailure);
     if (this.signal?.aborted || this.options.stop?.()) throw new BrainBlockedError("cancelled", "brain wait cancelled by stop signal/ops STOP; saved decision left untouched");
   }
@@ -77,7 +79,7 @@ export class BrainWait {
       run_id: a.req.runId ?? null, question_id: a.req.questionId ?? "", decision_type: a.req.label,
       reason: a.reason, since: new Date(a.began).toISOString(), retries: a.retries,
       next_retry: a.next === null ? null : new Date(a.next).toISOString(), suspended_ms: this.suspendedMs,
-      budget_policy: "outage_time_excluded", original_budget_ms: this.options.originalBudgetMs ?? null,
+      budget_policy: a.req.budgetSignal ? "human_pace_hard_deadline" : "outage_time_excluded", original_budget_ms: a.req.budgetSignal ? a.req.timeoutMs ?? 90_000 : this.options.originalBudgetMs ?? null,
     };
     try {
       this.options.event?.(event);
@@ -92,7 +94,7 @@ export class BrainWait {
     this.active = { req, began, reason, retries: 0, next: null };
     try { this.emit("paused"); }
     catch (error) {
-      this.completedMs += Math.max(0, this.now() - this.active.began);
+      if (!this.active.req.budgetSignal) this.completedMs += Math.max(0, this.now() - this.active.began);
       this.active = null;
       throw error;
     }
@@ -119,13 +121,13 @@ export class BrainWait {
     a.next = null;
   }
 
-  finish(state: "resumed" | "cancelled" | "fault", req?: BrainRequest, reason?: string): void {
+  finish(state: "resumed" | "cancelled" | "fault" | "budget", req?: BrainRequest, reason?: string): void {
     if (!this.active && req) this.active = { req, began: this.now(), reason: reason ?? state, retries: 0, next: null };
     if (reason && this.active) this.active.reason = reason;
     clearInterval(this.timer);
     try { this.emit(state); }
     finally {
-      if (this.active) this.completedMs += Math.max(0, this.now() - this.active.began);
+      if (this.active && !this.active.req.budgetSignal) this.completedMs += Math.max(0, this.now() - this.active.began);
       this.active = null;
     }
   }
@@ -148,7 +150,7 @@ export function fileBrainWait(logDir: string, opsDir: string, options: BrainWait
     notify: (event) => {
       const inbox = join(opsDir, "inbox-dev.md");
       mkdirSync(dirname(inbox), { recursive: true });
-      appendFileSync(inbox, `\n- ${event.ts} Codex 大脑 ${event.state}；局 ${event.run_id ?? "未知"}；题 ${event.question_id} / ${event.decision_type}；原因 ${event.reason}；暂停时间不计原预算，恢复后回答同题。\n`);
+      appendFileSync(inbox, `\n- ${event.ts} Codex 大脑 ${event.state}；局 ${event.run_id ?? "未知"}；题 ${event.question_id} / ${event.decision_type}；原因 ${event.reason}；${event.budget_policy === "human_pace_hard_deadline" ? "等待计入H1硬预算，到时使用原L1兜底。" : "暂停时间不计原预算，恢复后回答同题。"}\n`);
       options.notify?.(event);
     },
   });
