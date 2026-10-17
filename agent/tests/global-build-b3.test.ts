@@ -6,6 +6,7 @@ import type { CompareResult, OptionSim } from "../src/sim/build-sim.js";
 import type { DeckSimRunner } from "../src/sim/build-sim-pool.js";
 import type { FightSampleResult } from "../src/sim/boss-sim.js";
 import type { GlobalBossPool } from "../src/sim/global-build-pool.js";
+import { DecisionBudget, withDecisionBudget } from "../src/core/decision-budget.js";
 
 vi.mock("../src/sim/boss-trust.js", async (original) => ({ ...await original<object>(), bossTrustReason: () => null }));
 setupOneshotTests();
@@ -70,4 +71,45 @@ it("retains a future worker failure as unknown without replacing the completed c
   expect(value).toMatchObject({ mode: "shadow", delivered: false, status: "partial" });
   expect(JSON.stringify(value)).toContain("fixed supplemental worker failure");
   expect(globalBuildFailure(args.env, true, "current_C1_failure")).toMatchObject({ status: "unknown", reason: "current_C1_failure" });
+});
+
+// U5W7NUE925NK F15/F16 lost the future sample arrays; this covers the reproducible zero-prefix boundary only.
+it("preserves an empty future H1 prefix without claiming DPR, probability or full completion", async () => {
+  vi.stubEnv("GLOBAL_BUILD_EVAL", "shadow");
+  vi.stubEnv("SIM_ADAPTIVE", "on");
+  const args = request(), before = structuredClone(args.current);
+  vi.mocked(args.setup.runner.run).mockImplementation(async (request) => ({
+    outcomes: request.decks.map(() => request.orders.map(() => Array.from({ length: request.samples }))),
+    complete: [], timedOut: true, elapsedMs: 1, workers: 0,
+  }));
+  const value = await withDecisionBudget(new DecisionBudget("fixed-zero-prefix", "brain", () => 0),
+    () => globalBuildForB3(args)) as any;
+  const future = value.targets.find((row: any) => row.target.act === 2);
+  expect(future).toMatchObject({ status: "budgeted_partial", reused_current: false,
+    completion: { budgeted: true, status: "partial", failure: false, samples: 0, requested: 2 } });
+  expect(future.rows).toHaveLength(2);
+  for (const row of future.rows) expect(row).toMatchObject({ samples: 0, base: null, option: null,
+    delta_win: null, delta_s: null, unknown: "paired_probability_or_reference_missing" });
+  expect(value.summaries[0]).toMatchObject({ known_acts: [1], unknown_acts: [2, 3], conditional_snapshot_product: null });
+  expect(value).toMatchObject({ delivered: false, s_sort: false });
+  expect(args.current).toEqual(before);
+});
+
+it.each([1, 2])("retains missing future DPR as a service error for %i nonempty outcomes without completed fights", async (count) => {
+  vi.stubEnv("GLOBAL_BUILD_EVAL", "shadow");
+  vi.stubEnv("SIM_ADAPTIVE", "off");
+  const args = request(), run = vi.mocked(args.setup.runner.run).getMockImplementation()!;
+  vi.mocked(args.setup.runner.run).mockImplementation(async (request) => {
+    const value = await run(request);
+    value.complete = value.complete.slice(0, count);
+    value.timedOut = count < request.samples;
+    for (const deck of value.outcomes) for (const order of deck) for (const [index, sample] of order.entries()) {
+      if (index >= count) order[index] = undefined;
+      else if (sample) Object.assign(sample, { won: false, died: false, capped: true });
+    }
+    return value;
+  });
+  const value = await withDecisionBudget(new DecisionBudget("fixed-nonempty-prefix", "brain", () => 0),
+    () => globalBuildForB3(args));
+  expect(JSON.stringify(value)).toContain("global_computation_failed:global_required_paired_DPR_missing");
 });

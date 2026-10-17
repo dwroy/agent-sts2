@@ -1,5 +1,6 @@
 /** G2 shadow aggregation: paired model predictions, explicit coverage and no S sort key. */
 import { asArray, asRecord, type JsonValue } from "../core/util/json.js";
+import { DecisionBudgetExpired } from "../core/decision-budget.js";
 import type { CompareResult, OptionSim } from "./build-sim.js";
 import { completeAdaptiveBuild } from "./build-sim.js";
 import type { GlobalBossCandidate, GlobalBossPool } from "./global-build-pool.js";
@@ -74,6 +75,17 @@ export function globalBossTargets(pool: GlobalBossPool, currentAct: number, visi
 
 function unknownRows(keys: readonly string[], reason: string): GlobalOptionPrediction[] {
   return keys.map((key) => ({ key, base: null, option: null, delta_win: null, delta_s: null, samples: null, unknown: reason }));
+}
+
+/** Require the original matching H1 completion provenance, including an empty returned prefix. */
+export function isBudgetedGlobalPrefix(result: CompareResult): boolean {
+  const completion = result.completion;
+  return completion?.required === true && completion.budgeted === true
+    && completion.failure === false && completion.status === "partial"
+    && completion.samples === result.samples && completion.requested === result.requested
+    && Number.isSafeInteger(result.samples) && result.samples >= 0
+    && Number.isSafeInteger(result.requested) && result.requested > 0 && result.samples <= result.requested
+    && (result.timedOut || result.samples < result.requested);
 }
 
 function predictionRows(result: CompareResult, keys: readonly string[]): GlobalOptionPrediction[] {
@@ -156,13 +168,7 @@ export async function evaluateGlobalBuild(args: {
       const result = reused ? args.current : await args.evaluate(target);
       const completion = result.completion;
       // H1 prefixes remain unknown for G2's full-result aggregation, without inventing a worker failure.
-      const budgetedPartial = completion?.required === true && completion.budgeted === true
-        && completion.failure === false && completion.status === "partial"
-        && completion.samples === result.samples && completion.requested === result.requested
-        && Number.isSafeInteger(result.samples) && result.samples >= 0
-        && Number.isSafeInteger(result.requested) && result.requested > 0 && result.samples <= result.requested
-        && (result.timedOut || result.samples < result.requested);
-      if (budgetedPartial) {
+      if (isBudgetedGlobalPrefix(result)) {
         const rows = predictionRows(result, args.keys).map((row) => {
           const option = row.key === "@current" ? result.base : result.options.find((option) => option.key === row.key);
           return { ...row, samples: option ? Math.min(option.samples, option.pairedReference?.samples ?? result.base.samples) : null,
@@ -180,7 +186,10 @@ export async function evaluateGlobalBuild(args: {
         completion: result.completion ? result.completion as unknown as JsonValue : null,
         adaptive: result.adaptive ?? null, production_calibration: "unknown" });
     } catch (error) {
-      const reason = `global_computation_failed:${String(error instanceof Error ? error.message : error).slice(0, 300)}`;
+      // Only this stage's typed budget stop is an expected missing observation; worker errors stay errors.
+      const reason = error instanceof DecisionBudgetExpired && error.stage === "G2_global_shadow"
+        ? "decision_budget_exhausted:G2_global_shadow"
+        : `global_computation_failed:${String(error instanceof Error ? error.message : error).slice(0, 300)}`;
       targets.push({ target, status: "unknown", rows: unknownRows(args.keys, reason), wall_ms: Math.max(0, Math.round(now() - began)),
         reported_sim_ms: null, completion: null, adaptive: null, production_calibration: "unknown" });
     }
