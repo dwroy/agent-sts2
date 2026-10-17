@@ -33,6 +33,7 @@ const fixedNow = () => 0;
 beforeEach(() => {
   vi.spyOn(performance, "now").mockReturnValue(0);
   vi.stubEnv("GLOBAL_BUILD_EVAL", "off"); vi.stubEnv("SIM_ADAPTIVE", "off");
+  vi.stubEnv("F48_JOINT_SHADOW", "shadow");
   Object.assign(bossLinesOptions, { serial: false, now: () => 0 });
 });
 afterEach(() => { Object.assign(bossLinesOptions, original); vi.restoreAllMocks(); vi.unstubAllEnvs(); releaseBossLinesPool(); });
@@ -43,6 +44,19 @@ function runner(): DeckSimRunner {
     complete: Array.from({ length: req.samples }, (_, i) => i), timedOut: false, elapsedMs: 0, workers: 0,
   })) };
 }
+
+it.each([undefined, "off", "on", "invalid"])("keeps the joint logger paused for %s without reading the board", (value) => {
+  vi.stubEnv("F48_JOINT_SHADOW", value);
+  const state = { get run(): never { throw new Error("disabled logger must not inspect inputs"); } };
+  expect(shadow.f48JointScope(state as never)).toBeUndefined();
+});
+
+it("requires explicit shadow opt-in and still excludes other roles and floors", () => {
+  const state = (character: string, floor: number) => ({ run: { raw: { character_id: character }, floor, ascension: 10 } });
+  expect(shadow.f48JointScope(state("SILENT", 48) as never)).toEqual(scope);
+  expect(shadow.f48JointScope(state("IRONCLAD", 48) as never)).toBeUndefined();
+  expect(shadow.f48JointScope(state("SILENT", 49) as never)).toBeUndefined();
+});
 
 it("B3 aggregates existing returned outcomes and reuses its original memo with no extra worker call", async () => {
   const worker = runner(), input = jointInput();
@@ -94,8 +108,8 @@ it.each(["SILENT", "IRONCLAD", "REGENT", "DEFECT", "NECROBINDER"])("keeps the ac
       { runner: worker, samples: 2, db: FIXTURE_DB, mm: FIXTURE_MM, now: fixedNow });
     return { ...outcome, calls: vi.mocked(worker.run).mock.calls };
   };
-  const disabled = vi.spyOn(shadow, "f48JointScope").mockReturnValue(undefined);
-  const baseline = await question(); disabled.mockRestore();
+  vi.stubEnv("F48_JOINT_SHADOW", undefined);
+  const baseline = await question(); vi.stubEnv("F48_JOINT_SHADOW", "shadow");
   const actual = await question();
   expect(actual.record).not.toHaveProperty("error");
   expect(JSON.stringify(actual.decision)).toBe(JSON.stringify(baseline.decision)); expect(actual.calls).toEqual(baseline.calls);
@@ -117,8 +131,8 @@ it.each(["SILENT", "IRONCLAD", "REGENT"])("keeps %s F48 B2 text, order and pool 
     outcomes: pairs.map(() => Array.from({ length: count }, (_, i) => sample(sampleSeed(seed, i), 8 + i, true))),
     complete: Array.from({ length: count }, (_, i) => i), timedOut: false, elapsedMs: 0, workers: 0, done: count * pairs.length,
   }));
-  const disabled = vi.spyOn(shadow, "f48JointScope").mockReturnValue(undefined);
-  const baseline = bossLineSim(b2Args(character)); disabled.mockRestore();
+  vi.stubEnv("F48_JOINT_SHADOW", undefined);
+  const baseline = bossLineSim(b2Args(character)); vi.stubEnv("F48_JOINT_SHADOW", "shadow");
   const actual = bossLineSim(b2Args(character)); expect(actual.available).toBe(true); expect(baseline.available).toBe(true);
   const { f48JointShadow: joint, ...rest } = actual;
   expect(rest).toEqual(baseline); expect(pool.mock.calls[1]).toEqual(pool.mock.calls[0]);
