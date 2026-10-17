@@ -1,0 +1,74 @@
+
+ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration/agent
+
+ ❯ tests/target-options.test.ts (23 tests | 1 failed) 94811ms
+     × rolls every shown line out under both kill orders, the Amalgam first among them, and reports and logs them 21375ms
+ ❯ tests/check-imports.test.ts (1 test | 1 failed) 2773ms
+     × all resolve 2772ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/check-imports.test.ts > relative imports > all resolve
+AssertionError: expected [ …(25) ] to deeply equal []
+
+- Expected
++ Received
+
+- []
++ [
++   "learner/runs/20261017-human-pace-h0-r1/test-subject-phase-repair/source-repair/rollout-live.ts: ../knowledge/index.js",
++   "learner/runs/20261017-human-pace-h0-r1/test-subject-phase-repair/source-repair/rollout-live.ts: ../sim/compute-memo.js",
++   "learner/runs/20261017-human-pace-h0-r1/test-subject-phase-repair/source-repair/rollout-live.ts: ../knowledge/monster-db.js",
++   "learner/runs/20261017-human-pace-h0-r1/test-subject-phase-repair/source-repair/rollout-live.ts: ../hand/mod/schema.js",
++   "learner/runs/20261017-human-pace-h0-r1/test-subject-phase-repair/source-repair/rollout-live.ts: ../memory/types.js",
++   "learner/runs/20261017-human-pace-h0-r1/test-subject-phase-repair/source-repair/rollout-live.ts: ../core/util/json.js",
++   "learner/runs/20261017-human-pace-h0-r1/test-subject-phase-repair/source-repair/rollout-live.ts: ../sim/boss-clock.js",
++   "learner/runs/20261017-human-pace-h0-r1/test-subject-phase-repair/source-repair/rollout-live.ts: ./card-model.js",
++   "learner/runs/20261017-human-pace-h0-r1/test-subject-phase-repair/source-repair/rollout-live.ts: ./fight-value.js",
++   "learner/runs/20261017-human-pace-h0-r1/test-subject-phase-repair/source-repair/rollout-live.ts: ./passive-pieces.js",
++   "learner/runs/20261017-human-pace-h0-r1/test-subject-phase-repair/source-repair/rollout-live.ts: ./thief.js",
++   "learner/runs/20261017-human-pace-h0-r1/test-subject-phase-repair/source-repair/rollout-live.ts: ./turn-solver.js",
++   "learner/runs/20261017-human-pace-h0-r1/test-subject-phase-repair/source-repair/rollout-live.ts: ../knowledge/files.js",
++   "learner/runs/20261017-human-pace-h0-r1/test-subject-phase-repair/source-repair/rollout.ts: ../sim/core-window.js",
++   "learner/runs/20261017-human-pace-h0-r1/test-subject-phase-repair/source-repair/rollout.ts: ../sim/boss-margin.js",
++   "learner/runs/20261017-human-pace-h0-r1/test-subject-phase-repair/source-repair/rollout.ts: ./continuation-value.js",
++   "learner/runs/20261017-human-pace-h0-r1/test-subject-phase-repair/source-repair/rollout.ts: ../knowledge/move-model.js",
++   "learner/runs/20261017-human-pace-h0-r1/test-subject-phase-repair/source-repair/rollout.ts: ../sl/draws.js",
++   "learner/runs/20261017-human-pace-h0-r1/test-subject-phase-repair/source-repair/rollout.ts: ./card-model.js",
++   "learner/runs/20261017-human-pace-h0-r1/test-subject-phase-repair/source-repair/rollout.ts: ../sim/boss-clock.js",
++   "learner/runs/20261017-human-pace-h0-r1/test-subject-phase-repair/source-repair/rollout.ts: ./fight-value.js",
++   "learner/runs/20261017-human-pace-h0-r1/test-subject-phase-repair/source-repair/rollout.ts: ./passive-pieces.js",
++   "learner/runs/20261017-human-pace-h0-r1/test-subject-phase-repair/source-repair/rollout.ts: ./potion-mc.js",
++   "learner/runs/20261017-human-pace-h0-r1/test-subject-phase-repair/source-repair/rollout.ts: ./turn-solver.js",
++   "learner/runs/20261017-human-pace-h0-r1/test-subject-phase-repair/source-repair/rollout.ts: ../knowledge/files.js",
++ ]
+
+ ❯ tests/check-imports.test.ts:11:33
+      9| describe("relative imports", () => {
+     10|   it("all resolve", () => {
+     11|     expect(unresolvedImports()).toEqual([]);
+       |                                 ^
+     12|   });
+     13| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  tests/target-options.test.ts > per-target options (EZ2L F48 T2: Queen + Torch Head Amalgam) > rolls every shown line out under both kill orders, the Amalgam first among them, and reports and logs them
+Error: Test timed out in 20000ms.
+If this is a long-running test, pass a timeout value as the last argument or configure it globally with "testTimeout".
+ ❯ tests/target-options.test.ts:163:3
+    161|   });
+    162|
+    163|   it("rolls every shown line out under both kill orders, the Amalgam f…
+       |   ^
+    164|     const decision = ez2l() as AskDecision;
+    165|     const criteria = criteriaOf(decision);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+
+ Test Files  2 failed | 462 passed (464)
+      Tests  2 failed | 4277 passed (4279)
+   Start at  15:42:15
+   Duration  1745.44s (transform 16.32s, setup 27.37s, import 77.40s, tests 1568.55s, environment 59ms)
+

@@ -1,0 +1,3843 @@
+{
+  "KAISER_CRAB": {
+    "t1": {
+      "historical_7e1193": {
+        "n": 46,
+        "missing": 0,
+        "brier": 0.1595,
+        "mean_pred": 0.695,
+        "actual_win": 0.63,
+        "leak_ratio": 1.308,
+        "leak_turns": 240,
+        "failed": [
+          "brier",
+          "leak"
+        ]
+      },
+      "before_v2": {
+        "n": 46,
+        "missing": 0,
+        "brier": 0.1583,
+        "mean_pred": 0.698,
+        "actual_win": 0.63,
+        "leak_ratio": 1.321,
+        "leak_turns": 240,
+        "failed": [
+          "brier",
+          "leak"
+        ]
+      },
+      "after_phase_repair": {
+        "n": 46,
+        "missing": 0,
+        "brier": 0.1556,
+        "mean_pred": 0.69,
+        "actual_win": 0.63,
+        "leak_ratio": 1.321,
+        "leak_turns": 240,
+        "failed": [
+          "brier",
+          "leak"
+        ]
+      },
+      "independent_runs": 46,
+      "candidate_runs": 46,
+      "common_keys": {
+        "n": 46,
+        "before": {
+          "n": 46,
+          "actual_win": 0.63,
+          "mean_pred": 0.698,
+          "brier": 0.1583,
+          "auc": 0.848,
+          "const_brier": 0.233,
+          "buckets": [
+            {
+              "bucket": "0–20%",
+              "n": 0,
+              "pred": null,
+              "actual": null
+            },
+            {
+              "bucket": "20–40%",
+              "n": 11,
+              "pred": 0.366,
+              "actual": 0.273
+            },
+            {
+              "bucket": "40–60%",
+              "n": 4,
+              "pred": 0.532,
+              "actual": 0.0
+            },
+            {
+              "bucket": "60–80%",
+              "n": 12,
+              "pred": 0.728,
+              "actual": 0.75
+            },
+            {
+              "bucket": "80–100%",
+              "n": 19,
+              "pred": 0.906,
+              "actual": 0.895
+            }
+          ],
+          "worst_bucket_n20": null,
+          "won_loss_err": {
+            "n": 26,
+            "median": 9.8,
+            "mean": 10.7,
+            "mae": 14.3,
+            "p10": -7,
+            "p90": 29,
+            "within5": 0.192
+          },
+          "leak": {
+            "n": 240,
+            "sim_enemy": 8.65,
+            "actual_enemy": 6.55,
+            "enemy_ratio": 1.321,
+            "sim_loss": 8.5,
+            "actual_loss": 7.1,
+            "loss_ratio": 1.198
+          }
+        },
+        "after": {
+          "n": 46,
+          "actual_win": 0.63,
+          "mean_pred": 0.69,
+          "brier": 0.1556,
+          "auc": 0.848,
+          "const_brier": 0.233,
+          "buckets": [
+            {
+              "bucket": "0–20%",
+              "n": 0,
+              "pred": null,
+              "actual": null
+            },
+            {
+              "bucket": "20–40%",
+              "n": 11,
+              "pred": 0.339,
+              "actual": 0.273
+            },
+            {
+              "bucket": "40–60%",
+              "n": 4,
+              "pred": 0.512,
+              "actual": 0.0
+            },
+            {
+              "bucket": "60–80%",
+              "n": 12,
+              "pred": 0.723,
+              "actual": 0.75
+            },
+            {
+              "bucket": "80–100%",
+              "n": 19,
+              "pred": 0.909,
+              "actual": 0.895
+            }
+          ],
+          "worst_bucket_n20": null,
+          "won_loss_err": {
+            "n": 26,
+            "median": 9.8,
+            "mean": 10.7,
+            "mae": 14.3,
+            "p10": -7,
+            "p90": 29,
+            "within5": 0.192
+          },
+          "leak": {
+            "n": 240,
+            "sim_enemy": 8.65,
+            "actual_enemy": 6.55,
+            "enemy_ratio": 1.321,
+            "sim_loss": 8.5,
+            "actual_loss": 7.1,
+            "loss_ratio": 1.198
+          }
+        }
+      }
+    },
+    "pre": {
+      "historical_7e1193": {
+        "n": 46,
+        "missing": 0,
+        "brier": 0.1848,
+        "mean_pred": 0.71,
+        "actual_win": 0.63,
+        "leak_ratio": 1.327,
+        "leak_turns": 240,
+        "failed": [
+          "brier",
+          "leak"
+        ]
+      },
+      "before_v2": {
+        "n": 46,
+        "missing": 0,
+        "brier": 0.1803,
+        "mean_pred": 0.717,
+        "actual_win": 0.63,
+        "leak_ratio": 1.345,
+        "leak_turns": 240,
+        "failed": [
+          "brier",
+          "leak"
+        ]
+      },
+      "after_phase_repair": {
+        "n": 46,
+        "missing": 0,
+        "brier": 0.1791,
+        "mean_pred": 0.71,
+        "actual_win": 0.63,
+        "leak_ratio": 1.345,
+        "leak_turns": 240,
+        "failed": [
+          "brier",
+          "leak"
+        ]
+      },
+      "independent_runs": 46,
+      "candidate_runs": 46,
+      "common_keys": {
+        "n": 46,
+        "before": {
+          "n": 46,
+          "actual_win": 0.63,
+          "mean_pred": 0.717,
+          "brier": 0.1803,
+          "auc": 0.813,
+          "const_brier": 0.233,
+          "buckets": [
+            {
+              "bucket": "0–20%",
+              "n": 0,
+              "pred": null,
+              "actual": null
+            },
+            {
+              "bucket": "20–40%",
+              "n": 11,
+              "pred": 0.341,
+              "actual": 0.273
+            },
+            {
+              "bucket": "40–60%",
+              "n": 1,
+              "pred": 0.587,
+              "actual": 1.0
+            },
+            {
+              "bucket": "60–80%",
+              "n": 11,
+              "pred": 0.724,
+              "actual": 0.545
+            },
+            {
+              "bucket": "80–100%",
+              "n": 23,
+              "pred": 0.9,
+              "actual": 0.826
+            }
+          ],
+          "worst_bucket_n20": 0.074,
+          "won_loss_err": {
+            "n": 26,
+            "median": 14.0,
+            "mean": 10.3,
+            "mae": 14.7,
+            "p10": -8,
+            "p90": 28,
+            "within5": 0.308
+          },
+          "leak": {
+            "n": 240,
+            "sim_enemy": 8.81,
+            "actual_enemy": 6.55,
+            "enemy_ratio": 1.345,
+            "sim_loss": 8.64,
+            "actual_loss": 7.1,
+            "loss_ratio": 1.218
+          }
+        },
+        "after": {
+          "n": 46,
+          "actual_win": 0.63,
+          "mean_pred": 0.71,
+          "brier": 0.1791,
+          "auc": 0.813,
+          "const_brier": 0.233,
+          "buckets": [
+            {
+              "bucket": "0–20%",
+              "n": 0,
+              "pred": null,
+              "actual": null
+            },
+            {
+              "bucket": "20–40%",
+              "n": 11,
+              "pred": 0.311,
+              "actual": 0.273
+            },
+            {
+              "bucket": "40–60%",
+              "n": 1,
+              "pred": 0.57,
+              "actual": 1.0
+            },
+            {
+              "bucket": "60–80%",
+              "n": 11,
+              "pred": 0.718,
+              "actual": 0.545
+            },
+            {
+              "bucket": "80–100%",
+              "n": 23,
+              "pred": 0.904,
+              "actual": 0.826
+            }
+          ],
+          "worst_bucket_n20": 0.078,
+          "won_loss_err": {
+            "n": 26,
+            "median": 14.0,
+            "mean": 10.3,
+            "mae": 14.7,
+            "p10": -8,
+            "p90": 28,
+            "within5": 0.308
+          },
+          "leak": {
+            "n": 240,
+            "sim_enemy": 8.81,
+            "actual_enemy": 6.55,
+            "enemy_ratio": 1.345,
+            "sim_loss": 8.64,
+            "actual_loss": 7.1,
+            "loss_ratio": 1.218
+          }
+        }
+      }
+    }
+  },
+  "THE_KIN": {
+    "t1": {
+      "historical_7e1193": {
+        "n": 42,
+        "missing": 0,
+        "brier": 0.069,
+        "mean_pred": 0.838,
+        "actual_win": 0.881,
+        "leak_ratio": 1.194,
+        "leak_turns": 247,
+        "failed": []
+      },
+      "before_v2": {
+        "n": 42,
+        "missing": 0,
+        "brier": 0.0808,
+        "mean_pred": 0.856,
+        "actual_win": 0.881,
+        "leak_ratio": 1.099,
+        "leak_turns": 247,
+        "failed": []
+      },
+      "after_phase_repair": {
+        "n": 42,
+        "missing": 0,
+        "brier": 0.0804,
+        "mean_pred": 0.855,
+        "actual_win": 0.881,
+        "leak_ratio": 1.099,
+        "leak_turns": 247,
+        "failed": []
+      },
+      "independent_runs": 42,
+      "candidate_runs": 42,
+      "common_keys": {
+        "n": 42,
+        "before": {
+          "n": 42,
+          "actual_win": 0.881,
+          "mean_pred": 0.856,
+          "brier": 0.0808,
+          "auc": 0.865,
+          "const_brier": 0.1049,
+          "buckets": [
+            {
+              "bucket": "0–20%",
+              "n": 0,
+              "pred": null,
+              "actual": null
+            },
+            {
+              "bucket": "20–40%",
+              "n": 1,
+              "pred": 0.366,
+              "actual": 1.0
+            },
+            {
+              "bucket": "40–60%",
+              "n": 3,
+              "pred": 0.538,
+              "actual": 0.0
+            },
+            {
+              "bucket": "60–80%",
+              "n": 5,
+              "pred": 0.736,
+              "actual": 1.0
+            },
+            {
+              "bucket": "80–100%",
+              "n": 33,
+              "pred": 0.917,
+              "actual": 0.939
+            }
+          ],
+          "worst_bucket_n20": 0.022,
+          "won_loss_err": {
+            "n": 36,
+            "median": 2.0,
+            "mean": 0.3,
+            "mae": 11.2,
+            "p10": -19,
+            "p90": 20,
+            "within5": 0.361
+          },
+          "leak": {
+            "n": 247,
+            "sim_enemy": 6.77,
+            "actual_enemy": 6.16,
+            "enemy_ratio": 1.099,
+            "sim_loss": 6.75,
+            "actual_loss": 6.24,
+            "loss_ratio": 1.082
+          }
+        },
+        "after": {
+          "n": 42,
+          "actual_win": 0.881,
+          "mean_pred": 0.855,
+          "brier": 0.0804,
+          "auc": 0.865,
+          "const_brier": 0.1049,
+          "buckets": [
+            {
+              "bucket": "0–20%",
+              "n": 0,
+              "pred": null,
+              "actual": null
+            },
+            {
+              "bucket": "20–40%",
+              "n": 1,
+              "pred": 0.339,
+              "actual": 1.0
+            },
+            {
+              "bucket": "40–60%",
+              "n": 3,
+              "pred": 0.519,
+              "actual": 0.0
+            },
+            {
+              "bucket": "60–80%",
+              "n": 5,
+              "pred": 0.732,
+              "actual": 1.0
+            },
+            {
+              "bucket": "80–100%",
+              "n": 33,
+              "pred": 0.92,
+              "actual": 0.939
+            }
+          ],
+          "worst_bucket_n20": 0.019,
+          "won_loss_err": {
+            "n": 36,
+            "median": 2.0,
+            "mean": 0.3,
+            "mae": 11.2,
+            "p10": -19,
+            "p90": 20,
+            "within5": 0.361
+          },
+          "leak": {
+            "n": 247,
+            "sim_enemy": 6.77,
+            "actual_enemy": 6.16,
+            "enemy_ratio": 1.099,
+            "sim_loss": 6.75,
+            "actual_loss": 6.24,
+            "loss_ratio": 1.082
+          }
+        }
+      }
+    },
+    "pre": {
+      "historical_7e1193": {
+        "n": 42,
+        "missing": 0,
+        "brier": 0.0757,
+        "mean_pred": 0.851,
+        "actual_win": 0.881,
+        "leak_ratio": 1.171,
+        "leak_turns": 247,
+        "failed": []
+      },
+      "before_v2": {
+        "n": 42,
+        "missing": 0,
+        "brier": 0.0872,
+        "mean_pred": 0.866,
+        "actual_win": 0.881,
+        "leak_ratio": 1.068,
+        "leak_turns": 247,
+        "failed": []
+      },
+      "after_phase_repair": {
+        "n": 42,
+        "missing": 0,
+        "brier": 0.0875,
+        "mean_pred": 0.866,
+        "actual_win": 0.881,
+        "leak_ratio": 1.068,
+        "leak_turns": 247,
+        "failed": []
+      },
+      "independent_runs": 42,
+      "candidate_runs": 42,
+      "common_keys": {
+        "n": 42,
+        "before": {
+          "n": 42,
+          "actual_win": 0.881,
+          "mean_pred": 0.866,
+          "brier": 0.0872,
+          "auc": 0.878,
+          "const_brier": 0.1049,
+          "buckets": [
+            {
+              "bucket": "0–20%",
+              "n": 0,
+              "pred": null,
+              "actual": null
+            },
+            {
+              "bucket": "20–40%",
+              "n": 1,
+              "pred": 0.341,
+              "actual": 1.0
+            },
+            {
+              "bucket": "40–60%",
+              "n": 2,
+              "pred": 0.545,
+              "actual": 0.5
+            },
+            {
+              "bucket": "60–80%",
+              "n": 6,
+              "pred": 0.703,
+              "actual": 0.667
+            },
+            {
+              "bucket": "80–100%",
+              "n": 33,
+              "pred": 0.931,
+              "actual": 0.939
+            }
+          ],
+          "worst_bucket_n20": 0.008,
+          "won_loss_err": {
+            "n": 36,
+            "median": -0.5,
+            "mean": -1.6,
+            "mae": 10.9,
+            "p10": -17,
+            "p90": 11.5,
+            "within5": 0.278
+          },
+          "leak": {
+            "n": 247,
+            "sim_enemy": 6.58,
+            "actual_enemy": 6.16,
+            "enemy_ratio": 1.068,
+            "sim_loss": 6.54,
+            "actual_loss": 6.24,
+            "loss_ratio": 1.049
+          }
+        },
+        "after": {
+          "n": 42,
+          "actual_win": 0.881,
+          "mean_pred": 0.866,
+          "brier": 0.0875,
+          "auc": 0.878,
+          "const_brier": 0.1049,
+          "buckets": [
+            {
+              "bucket": "0–20%",
+              "n": 0,
+              "pred": null,
+              "actual": null
+            },
+            {
+              "bucket": "20–40%",
+              "n": 1,
+              "pred": 0.311,
+              "actual": 1.0
+            },
+            {
+              "bucket": "40–60%",
+              "n": 2,
+              "pred": 0.525,
+              "actual": 0.5
+            },
+            {
+              "bucket": "60–80%",
+              "n": 6,
+              "pred": 0.696,
+              "actual": 0.667
+            },
+            {
+              "bucket": "80–100%",
+              "n": 33,
+              "pred": 0.934,
+              "actual": 0.939
+            }
+          ],
+          "worst_bucket_n20": 0.005,
+          "won_loss_err": {
+            "n": 36,
+            "median": -0.5,
+            "mean": -1.6,
+            "mae": 10.9,
+            "p10": -17,
+            "p90": 11.5,
+            "within5": 0.278
+          },
+          "leak": {
+            "n": 247,
+            "sim_enemy": 6.58,
+            "actual_enemy": 6.16,
+            "enemy_ratio": 1.068,
+            "sim_loss": 6.54,
+            "actual_loss": 6.24,
+            "loss_ratio": 1.049
+          }
+        }
+      }
+    }
+  },
+  "QUEEN": {
+    "t1": {
+      "historical_7e1193": {
+        "n": 31,
+        "missing": 0,
+        "brier": 0.2294,
+        "mean_pred": 0.719,
+        "actual_win": 0.419,
+        "leak_ratio": 1.048,
+        "leak_turns": 131,
+        "failed": [
+          "brier",
+          "gap"
+        ]
+      },
+      "before_v2": {
+        "n": 31,
+        "missing": 0,
+        "brier": 0.2252,
+        "mean_pred": 0.716,
+        "actual_win": 0.419,
+        "leak_ratio": 1.065,
+        "leak_turns": 131,
+        "failed": [
+          "brier",
+          "gap"
+        ]
+      },
+      "after_phase_repair": {
+        "n": 31,
+        "missing": 0,
+        "brier": 0.2186,
+        "mean_pred": 0.708,
+        "actual_win": 0.419,
+        "leak_ratio": 1.065,
+        "leak_turns": 131,
+        "failed": [
+          "brier",
+          "gap"
+        ]
+      },
+      "independent_runs": 31,
+      "candidate_runs": 32,
+      "common_keys": {
+        "n": 31,
+        "before": {
+          "n": 31,
+          "actual_win": 0.419,
+          "mean_pred": 0.716,
+          "brier": 0.2252,
+          "auc": 0.908,
+          "const_brier": 0.2435,
+          "buckets": [
+            {
+              "bucket": "0–20%",
+              "n": 0,
+              "pred": null,
+              "actual": null
+            },
+            {
+              "bucket": "20–40%",
+              "n": 9,
+              "pred": 0.366,
+              "actual": 0.0
+            },
+            {
+              "bucket": "40–60%",
+              "n": 2,
+              "pred": 0.551,
+              "actual": 0.0
+            },
+            {
+              "bucket": "60–80%",
+              "n": 3,
+              "pred": 0.763,
+              "actual": 0.333
+            },
+            {
+              "bucket": "80–100%",
+              "n": 17,
+              "pred": 0.912,
+              "actual": 0.706
+            }
+          ],
+          "worst_bucket_n20": null,
+          "won_loss_err": {
+            "n": 13,
+            "median": -1,
+            "mean": -2.5,
+            "mae": 15.7,
+            "p10": -24,
+            "p90": 22,
+            "within5": 0.385
+          },
+          "leak": {
+            "n": 131,
+            "sim_enemy": 7.37,
+            "actual_enemy": 6.92,
+            "enemy_ratio": 1.065,
+            "sim_loss": 7.05,
+            "actual_loss": 7.16,
+            "loss_ratio": 0.985
+          }
+        },
+        "after": {
+          "n": 31,
+          "actual_win": 0.419,
+          "mean_pred": 0.708,
+          "brier": 0.2186,
+          "auc": 0.908,
+          "const_brier": 0.2435,
+          "buckets": [
+            {
+              "bucket": "0–20%",
+              "n": 0,
+              "pred": null,
+              "actual": null
+            },
+            {
+              "bucket": "20–40%",
+              "n": 9,
+              "pred": 0.339,
+              "actual": 0.0
+            },
+            {
+              "bucket": "40–60%",
+              "n": 2,
+              "pred": 0.532,
+              "actual": 0.0
+            },
+            {
+              "bucket": "60–80%",
+              "n": 3,
+              "pred": 0.761,
+              "actual": 0.333
+            },
+            {
+              "bucket": "80–100%",
+              "n": 17,
+              "pred": 0.915,
+              "actual": 0.706
+            }
+          ],
+          "worst_bucket_n20": null,
+          "won_loss_err": {
+            "n": 13,
+            "median": -1,
+            "mean": -2.5,
+            "mae": 15.7,
+            "p10": -24,
+            "p90": 22,
+            "within5": 0.385
+          },
+          "leak": {
+            "n": 131,
+            "sim_enemy": 7.37,
+            "actual_enemy": 6.92,
+            "enemy_ratio": 1.065,
+            "sim_loss": 7.05,
+            "actual_loss": 7.16,
+            "loss_ratio": 0.985
+          }
+        }
+      }
+    },
+    "pre": {
+      "historical_7e1193": {
+        "n": 31,
+        "missing": 0,
+        "brier": 0.2183,
+        "mean_pred": 0.689,
+        "actual_win": 0.419,
+        "leak_ratio": 1.165,
+        "leak_turns": 131,
+        "failed": [
+          "brier",
+          "gap"
+        ]
+      },
+      "before_v2": {
+        "n": 31,
+        "missing": 0,
+        "brier": 0.2265,
+        "mean_pred": 0.698,
+        "actual_win": 0.419,
+        "leak_ratio": 1.176,
+        "leak_turns": 131,
+        "failed": [
+          "brier",
+          "gap"
+        ]
+      },
+      "after_phase_repair": {
+        "n": 31,
+        "missing": 0,
+        "brier": 0.2204,
+        "mean_pred": 0.689,
+        "actual_win": 0.419,
+        "leak_ratio": 1.176,
+        "leak_turns": 131,
+        "failed": [
+          "brier",
+          "gap"
+        ]
+      },
+      "independent_runs": 31,
+      "candidate_runs": 32,
+      "common_keys": {
+        "n": 31,
+        "before": {
+          "n": 31,
+          "actual_win": 0.419,
+          "mean_pred": 0.698,
+          "brier": 0.2265,
+          "auc": 0.848,
+          "const_brier": 0.2435,
+          "buckets": [
+            {
+              "bucket": "0–20%",
+              "n": 0,
+              "pred": null,
+              "actual": null
+            },
+            {
+              "bucket": "20–40%",
+              "n": 9,
+              "pred": 0.341,
+              "actual": 0.0
+            },
+            {
+              "bucket": "40–60%",
+              "n": 1,
+              "pred": 0.503,
+              "actual": 0.0
+            },
+            {
+              "bucket": "60–80%",
+              "n": 6,
+              "pred": 0.739,
+              "actual": 0.5
+            },
+            {
+              "bucket": "80–100%",
+              "n": 15,
+              "pred": 0.909,
+              "actual": 0.667
+            }
+          ],
+          "worst_bucket_n20": null,
+          "won_loss_err": {
+            "n": 13,
+            "median": 2,
+            "mean": -0.0,
+            "mae": 10.7,
+            "p10": -10,
+            "p90": 13.5,
+            "within5": 0.231
+          },
+          "leak": {
+            "n": 131,
+            "sim_enemy": 8.14,
+            "actual_enemy": 6.92,
+            "enemy_ratio": 1.176,
+            "sim_loss": 7.83,
+            "actual_loss": 7.16,
+            "loss_ratio": 1.093
+          }
+        },
+        "after": {
+          "n": 31,
+          "actual_win": 0.419,
+          "mean_pred": 0.689,
+          "brier": 0.2204,
+          "auc": 0.848,
+          "const_brier": 0.2435,
+          "buckets": [
+            {
+              "bucket": "0–20%",
+              "n": 0,
+              "pred": null,
+              "actual": null
+            },
+            {
+              "bucket": "20–40%",
+              "n": 9,
+              "pred": 0.311,
+              "actual": 0.0
+            },
+            {
+              "bucket": "40–60%",
+              "n": 1,
+              "pred": 0.48,
+              "actual": 0.0
+            },
+            {
+              "bucket": "60–80%",
+              "n": 6,
+              "pred": 0.735,
+              "actual": 0.5
+            },
+            {
+              "bucket": "80–100%",
+              "n": 15,
+              "pred": 0.912,
+              "actual": 0.667
+            }
+          ],
+          "worst_bucket_n20": null,
+          "won_loss_err": {
+            "n": 13,
+            "median": 2,
+            "mean": -0.0,
+            "mae": 10.7,
+            "p10": -10,
+            "p90": 13.5,
+            "within5": 0.231
+          },
+          "leak": {
+            "n": 131,
+            "sim_enemy": 8.14,
+            "actual_enemy": 6.92,
+            "enemy_ratio": 1.176,
+            "sim_loss": 7.83,
+            "actual_loss": 7.16,
+            "loss_ratio": 1.093
+          }
+        }
+      }
+    }
+  },
+  "AEONGLASS": {
+    "t1": {
+      "historical_7e1193": {
+        "n": 35,
+        "missing": 0,
+        "brier": 0.1879,
+        "mean_pred": 0.692,
+        "actual_win": 0.514,
+        "leak_ratio": 3.979,
+        "leak_turns": 182,
+        "failed": [
+          "brier",
+          "gap",
+          "leak"
+        ]
+      },
+      "before_v2": {
+        "n": 35,
+        "missing": 0,
+        "brier": 0.179,
+        "mean_pred": 0.681,
+        "actual_win": 0.514,
+        "leak_ratio": 4.078,
+        "leak_turns": 182,
+        "failed": [
+          "brier",
+          "gap",
+          "leak"
+        ]
+      },
+      "after_phase_repair": {
+        "n": 35,
+        "missing": 0,
+        "brier": 0.1731,
+        "mean_pred": 0.673,
+        "actual_win": 0.514,
+        "leak_ratio": 4.078,
+        "leak_turns": 182,
+        "failed": [
+          "brier",
+          "gap",
+          "leak"
+        ]
+      },
+      "independent_runs": 35,
+      "candidate_runs": 35,
+      "common_keys": {
+        "n": 35,
+        "before": {
+          "n": 35,
+          "actual_win": 0.514,
+          "mean_pred": 0.681,
+          "brier": 0.179,
+          "auc": 0.828,
+          "const_brier": 0.2498,
+          "buckets": [
+            {
+              "bucket": "0–20%",
+              "n": 0,
+              "pred": null,
+              "actual": null
+            },
+            {
+              "bucket": "20–40%",
+              "n": 10,
+              "pred": 0.366,
+              "actual": 0.0
+            },
+            {
+              "bucket": "40–60%",
+              "n": 1,
+              "pred": 0.513,
+              "actual": 0.0
+            },
+            {
+              "bucket": "60–80%",
+              "n": 9,
+              "pred": 0.751,
+              "actual": 0.667
+            },
+            {
+              "bucket": "80–100%",
+              "n": 15,
+              "pred": 0.86,
+              "actual": 0.8
+            }
+          ],
+          "worst_bucket_n20": null,
+          "won_loss_err": {
+            "n": 18,
+            "median": 8.5,
+            "mean": 16.9,
+            "mae": 19.2,
+            "p10": -5,
+            "p90": 44,
+            "within5": 0.333
+          },
+          "leak": {
+            "n": 182,
+            "sim_enemy": 6.7,
+            "actual_enemy": 1.64,
+            "enemy_ratio": 4.078,
+            "sim_loss": 6.5,
+            "actual_loss": 5.77,
+            "loss_ratio": 1.126
+          }
+        },
+        "after": {
+          "n": 35,
+          "actual_win": 0.514,
+          "mean_pred": 0.673,
+          "brier": 0.1731,
+          "auc": 0.828,
+          "const_brier": 0.2498,
+          "buckets": [
+            {
+              "bucket": "0–20%",
+              "n": 0,
+              "pred": null,
+              "actual": null
+            },
+            {
+              "bucket": "20–40%",
+              "n": 10,
+              "pred": 0.339,
+              "actual": 0.0
+            },
+            {
+              "bucket": "40–60%",
+              "n": 1,
+              "pred": 0.492,
+              "actual": 0.0
+            },
+            {
+              "bucket": "60–80%",
+              "n": 9,
+              "pred": 0.747,
+              "actual": 0.667
+            },
+            {
+              "bucket": "80–100%",
+              "n": 15,
+              "pred": 0.863,
+              "actual": 0.8
+            }
+          ],
+          "worst_bucket_n20": null,
+          "won_loss_err": {
+            "n": 18,
+            "median": 8.5,
+            "mean": 16.9,
+            "mae": 19.2,
+            "p10": -5,
+            "p90": 44,
+            "within5": 0.333
+          },
+          "leak": {
+            "n": 182,
+            "sim_enemy": 6.7,
+            "actual_enemy": 1.64,
+            "enemy_ratio": 4.078,
+            "sim_loss": 6.5,
+            "actual_loss": 5.77,
+            "loss_ratio": 1.126
+          }
+        }
+      }
+    },
+    "pre": {
+      "historical_7e1193": {
+        "n": 35,
+        "missing": 0,
+        "brier": 0.2001,
+        "mean_pred": 0.693,
+        "actual_win": 0.514,
+        "leak_ratio": 4.078,
+        "leak_turns": 182,
+        "failed": [
+          "brier",
+          "gap",
+          "leak"
+        ]
+      },
+      "before_v2": {
+        "n": 35,
+        "missing": 0,
+        "brier": 0.1895,
+        "mean_pred": 0.698,
+        "actual_win": 0.514,
+        "leak_ratio": 4.204,
+        "leak_turns": 182,
+        "failed": [
+          "brier",
+          "gap",
+          "leak"
+        ]
+      },
+      "after_phase_repair": {
+        "n": 35,
+        "missing": 0,
+        "brier": 0.1841,
+        "mean_pred": 0.691,
+        "actual_win": 0.514,
+        "leak_ratio": 4.204,
+        "leak_turns": 182,
+        "failed": [
+          "brier",
+          "gap",
+          "leak"
+        ]
+      },
+      "independent_runs": 35,
+      "candidate_runs": 35,
+      "common_keys": {
+        "n": 35,
+        "before": {
+          "n": 35,
+          "actual_win": 0.514,
+          "mean_pred": 0.698,
+          "brier": 0.1895,
+          "auc": 0.82,
+          "const_brier": 0.2498,
+          "buckets": [
+            {
+              "bucket": "0–20%",
+              "n": 0,
+              "pred": null,
+              "actual": null
+            },
+            {
+              "bucket": "20–40%",
+              "n": 9,
+              "pred": 0.341,
+              "actual": 0.0
+            },
+            {
+              "bucket": "40–60%",
+              "n": 1,
+              "pred": 0.503,
+              "actual": 0.0
+            },
+            {
+              "bucket": "60–80%",
+              "n": 7,
+              "pred": 0.76,
+              "actual": 0.714
+            },
+            {
+              "bucket": "80–100%",
+              "n": 18,
+              "pred": 0.864,
+              "actual": 0.722
+            }
+          ],
+          "worst_bucket_n20": null,
+          "won_loss_err": {
+            "n": 18,
+            "median": 6.5,
+            "mean": 15.4,
+            "mae": 18.2,
+            "p10": -4,
+            "p90": 44,
+            "within5": 0.333
+          },
+          "leak": {
+            "n": 182,
+            "sim_enemy": 6.91,
+            "actual_enemy": 1.64,
+            "enemy_ratio": 4.204,
+            "sim_loss": 6.68,
+            "actual_loss": 5.77,
+            "loss_ratio": 1.157
+          }
+        },
+        "after": {
+          "n": 35,
+          "actual_win": 0.514,
+          "mean_pred": 0.691,
+          "brier": 0.1841,
+          "auc": 0.82,
+          "const_brier": 0.2498,
+          "buckets": [
+            {
+              "bucket": "0–20%",
+              "n": 0,
+              "pred": null,
+              "actual": null
+            },
+            {
+              "bucket": "20–40%",
+              "n": 9,
+              "pred": 0.311,
+              "actual": 0.0
+            },
+            {
+              "bucket": "40–60%",
+              "n": 1,
+              "pred": 0.48,
+              "actual": 0.0
+            },
+            {
+              "bucket": "60–80%",
+              "n": 7,
+              "pred": 0.757,
+              "actual": 0.714
+            },
+            {
+              "bucket": "80–100%",
+              "n": 18,
+              "pred": 0.867,
+              "actual": 0.722
+            }
+          ],
+          "worst_bucket_n20": null,
+          "won_loss_err": {
+            "n": 18,
+            "median": 6.5,
+            "mean": 15.4,
+            "mae": 18.2,
+            "p10": -4,
+            "p90": 44,
+            "within5": 0.333
+          },
+          "leak": {
+            "n": 182,
+            "sim_enemy": 6.91,
+            "actual_enemy": 1.64,
+            "enemy_ratio": 4.204,
+            "sim_loss": 6.68,
+            "actual_loss": 5.77,
+            "loss_ratio": 1.157
+          }
+        }
+      }
+    }
+  },
+  "CEREMONIAL_BEAST": {
+    "t1": {
+      "historical_7e1193": {
+        "n": 40,
+        "missing": 0,
+        "brier": 0.0606,
+        "mean_pred": 0.773,
+        "actual_win": 0.775,
+        "leak_ratio": 1.155,
+        "leak_turns": 228,
+        "failed": []
+      },
+      "before_v2": {
+        "n": 40,
+        "missing": 0,
+        "brier": 0.0647,
+        "mean_pred": 0.773,
+        "actual_win": 0.775,
+        "leak_ratio": 1.145,
+        "leak_turns": 228,
+        "failed": []
+      },
+      "after_phase_repair": {
+        "n": 40,
+        "missing": 0,
+        "brier": 0.0617,
+        "mean_pred": 0.768,
+        "actual_win": 0.775,
+        "leak_ratio": 1.145,
+        "leak_turns": 228,
+        "failed": []
+      },
+      "independent_runs": 40,
+      "candidate_runs": 40,
+      "common_keys": {
+        "n": 40,
+        "before": {
+          "n": 40,
+          "actual_win": 0.775,
+          "mean_pred": 0.773,
+          "brier": 0.0647,
+          "auc": 0.961,
+          "const_brier": 0.1744,
+          "buckets": [
+            {
+              "bucket": "0–20%",
+              "n": 0,
+              "pred": null,
+              "actual": null
+            },
+            {
+              "bucket": "20–40%",
+              "n": 9,
+              "pred": 0.366,
+              "actual": 0.222
+            },
+            {
+              "bucket": "40–60%",
+              "n": 2,
+              "pred": 0.513,
+              "actual": 0.0
+            },
+            {
+              "bucket": "60–80%",
+              "n": 2,
+              "pred": 0.759,
+              "actual": 1.0
+            },
+            {
+              "bucket": "80–100%",
+              "n": 27,
+              "pred": 0.93,
+              "actual": 1.0
+            }
+          ],
+          "worst_bucket_n20": 0.07,
+          "won_loss_err": {
+            "n": 29,
+            "median": 9,
+            "mean": 7.7,
+            "mae": 12.2,
+            "p10": -8,
+            "p90": 20,
+            "within5": 0.31
+          },
+          "leak": {
+            "n": 228,
+            "sim_enemy": 5.8,
+            "actual_enemy": 5.06,
+            "enemy_ratio": 1.145,
+            "sim_loss": 5.7,
+            "actual_loss": 4.9,
+            "loss_ratio": 1.163
+          }
+        },
+        "after": {
+          "n": 40,
+          "actual_win": 0.775,
+          "mean_pred": 0.768,
+          "brier": 0.0617,
+          "auc": 0.961,
+          "const_brier": 0.1744,
+          "buckets": [
+            {
+              "bucket": "0–20%",
+              "n": 0,
+              "pred": null,
+              "actual": null
+            },
+            {
+              "bucket": "20–40%",
+              "n": 9,
+              "pred": 0.339,
+              "actual": 0.222
+            },
+            {
+              "bucket": "40–60%",
+              "n": 2,
+              "pred": 0.492,
+              "actual": 0.0
+            },
+            {
+              "bucket": "60–80%",
+              "n": 2,
+              "pred": 0.756,
+              "actual": 1.0
+            },
+            {
+              "bucket": "80–100%",
+              "n": 27,
+              "pred": 0.933,
+              "actual": 1.0
+            }
+          ],
+          "worst_bucket_n20": 0.067,
+          "won_loss_err": {
+            "n": 29,
+            "median": 9,
+            "mean": 7.7,
+            "mae": 12.2,
+            "p10": -8,
+            "p90": 20,
+            "within5": 0.31
+          },
+          "leak": {
+            "n": 228,
+            "sim_enemy": 5.8,
+            "actual_enemy": 5.06,
+            "enemy_ratio": 1.145,
+            "sim_loss": 5.7,
+            "actual_loss": 4.9,
+            "loss_ratio": 1.163
+          }
+        }
+      }
+    },
+    "pre": {
+      "historical_7e1193": {
+        "n": 40,
+        "missing": 0,
+        "brier": 0.0534,
+        "mean_pred": 0.785,
+        "actual_win": 0.775,
+        "leak_ratio": 1.176,
+        "leak_turns": 228,
+        "failed": []
+      },
+      "before_v2": {
+        "n": 40,
+        "missing": 0,
+        "brier": 0.0535,
+        "mean_pred": 0.792,
+        "actual_win": 0.775,
+        "leak_ratio": 1.168,
+        "leak_turns": 228,
+        "failed": []
+      },
+      "after_phase_repair": {
+        "n": 40,
+        "missing": 0,
+        "brier": 0.0497,
+        "mean_pred": 0.788,
+        "actual_win": 0.775,
+        "leak_ratio": 1.168,
+        "leak_turns": 228,
+        "failed": []
+      },
+      "independent_runs": 40,
+      "candidate_runs": 40,
+      "common_keys": {
+        "n": 40,
+        "before": {
+          "n": 40,
+          "actual_win": 0.775,
+          "mean_pred": 0.792,
+          "brier": 0.0535,
+          "auc": 0.975,
+          "const_brier": 0.1744,
+          "buckets": [
+            {
+              "bucket": "0–20%",
+              "n": 0,
+              "pred": null,
+              "actual": null
+            },
+            {
+              "bucket": "20–40%",
+              "n": 8,
+              "pred": 0.341,
+              "actual": 0.0
+            },
+            {
+              "bucket": "40–60%",
+              "n": 0,
+              "pred": null,
+              "actual": null
+            },
+            {
+              "bucket": "60–80%",
+              "n": 5,
+              "pred": 0.752,
+              "actual": 1.0
+            },
+            {
+              "bucket": "80–100%",
+              "n": 27,
+              "pred": 0.934,
+              "actual": 0.963
+            }
+          ],
+          "worst_bucket_n20": 0.029,
+          "won_loss_err": {
+            "n": 31,
+            "median": 10.5,
+            "mean": 6.9,
+            "mae": 13.7,
+            "p10": -10,
+            "p90": 21,
+            "within5": 0.194
+          },
+          "leak": {
+            "n": 228,
+            "sim_enemy": 5.91,
+            "actual_enemy": 5.06,
+            "enemy_ratio": 1.168,
+            "sim_loss": 5.82,
+            "actual_loss": 4.9,
+            "loss_ratio": 1.187
+          }
+        },
+        "after": {
+          "n": 40,
+          "actual_win": 0.775,
+          "mean_pred": 0.788,
+          "brier": 0.0497,
+          "auc": 0.975,
+          "const_brier": 0.1744,
+          "buckets": [
+            {
+              "bucket": "0–20%",
+              "n": 0,
+              "pred": null,
+              "actual": null
+            },
+            {
+              "bucket": "20–40%",
+              "n": 8,
+              "pred": 0.311,
+              "actual": 0.0
+            },
+            {
+              "bucket": "40–60%",
+              "n": 0,
+              "pred": null,
+              "actual": null
+            },
+            {
+              "bucket": "60–80%",
+              "n": 5,
+              "pred": 0.748,
+              "actual": 1.0
+            },
+            {
+              "bucket": "80–100%",
+              "n": 27,
+              "pred": 0.937,
+              "actual": 0.963
+            }
+          ],
+          "worst_bucket_n20": 0.026,
+          "won_loss_err": {
+            "n": 31,
+            "median": 10.5,
+            "mean": 6.9,
+            "mae": 13.7,
+            "p10": -10,
+            "p90": 21,
+            "within5": 0.194
+          },
+          "leak": {
+            "n": 228,
+            "sim_enemy": 5.91,
+            "actual_enemy": 5.06,
+            "enemy_ratio": 1.168,
+            "sim_loss": 5.82,
+            "actual_loss": 4.9,
+            "loss_ratio": 1.187
+          }
+        }
+      }
+    }
+  },
+  "KNOWLEDGE_DEMON": {
+    "t1": {
+      "historical_7e1193": {
+        "n": 45,
+        "missing": 0,
+        "brier": 0.1022,
+        "mean_pred": 0.746,
+        "actual_win": 0.844,
+        "leak_ratio": 1.337,
+        "leak_turns": 261,
+        "failed": [
+          "leak"
+        ]
+      },
+      "before_v2": {
+        "n": 45,
+        "missing": 0,
+        "brier": 0.0752,
+        "mean_pred": 0.833,
+        "actual_win": 0.844,
+        "leak_ratio": 1.378,
+        "leak_turns": 261,
+        "failed": [
+          "leak"
+        ]
+      },
+      "after_phase_repair": {
+        "n": 45,
+        "missing": 0,
+        "brier": 0.0735,
+        "mean_pred": 0.832,
+        "actual_win": 0.844,
+        "leak_ratio": 1.378,
+        "leak_turns": 261,
+        "failed": [
+          "leak"
+        ]
+      },
+      "independent_runs": 45,
+      "candidate_runs": 46,
+      "common_keys": {
+        "n": 45,
+        "before": {
+          "n": 45,
+          "actual_win": 0.844,
+          "mean_pred": 0.833,
+          "brier": 0.0752,
+          "auc": 0.959,
+          "const_brier": 0.1314,
+          "buckets": [
+            {
+              "bucket": "0–20%",
+              "n": 0,
+              "pred": null,
+              "actual": null
+            },
+            {
+              "bucket": "20–40%",
+              "n": 3,
+              "pred": 0.366,
+              "actual": 0.333
+            },
+            {
+              "bucket": "40–60%",
+              "n": 2,
+              "pred": 0.513,
+              "actual": 0.0
+            },
+            {
+              "bucket": "60–80%",
+              "n": 7,
+              "pred": 0.729,
+              "actual": 0.571
+            },
+            {
+              "bucket": "80–100%",
+              "n": 33,
+              "pred": 0.917,
+              "actual": 1.0
+            }
+          ],
+          "worst_bucket_n20": 0.083,
+          "won_loss_err": {
+            "n": 37,
+            "median": 6,
+            "mean": 7.4,
+            "mae": 13.4,
+            "p10": -11.5,
+            "p90": 22,
+            "within5": 0.243
+          },
+          "leak": {
+            "n": 261,
+            "sim_enemy": 5.29,
+            "actual_enemy": 3.84,
+            "enemy_ratio": 1.378,
+            "sim_loss": 5.2,
+            "actual_loss": 4.64,
+            "loss_ratio": 1.119
+          }
+        },
+        "after": {
+          "n": 45,
+          "actual_win": 0.844,
+          "mean_pred": 0.832,
+          "brier": 0.0735,
+          "auc": 0.959,
+          "const_brier": 0.1314,
+          "buckets": [
+            {
+              "bucket": "0–20%",
+              "n": 0,
+              "pred": null,
+              "actual": null
+            },
+            {
+              "bucket": "20–40%",
+              "n": 3,
+              "pred": 0.339,
+              "actual": 0.333
+            },
+            {
+              "bucket": "40–60%",
+              "n": 2,
+              "pred": 0.492,
+              "actual": 0.0
+            },
+            {
+              "bucket": "60–80%",
+              "n": 7,
+              "pred": 0.724,
+              "actual": 0.571
+            },
+            {
+              "bucket": "80–100%",
+              "n": 33,
+              "pred": 0.921,
+              "actual": 1.0
+            }
+          ],
+          "worst_bucket_n20": 0.079,
+          "won_loss_err": {
+            "n": 37,
+            "median": 6,
+            "mean": 7.4,
+            "mae": 13.4,
+            "p10": -11.5,
+            "p90": 22,
+            "within5": 0.243
+          },
+          "leak": {
+            "n": 261,
+            "sim_enemy": 5.29,
+            "actual_enemy": 3.84,
+            "enemy_ratio": 1.378,
+            "sim_loss": 5.2,
+            "actual_loss": 4.64,
+            "loss_ratio": 1.119
+          }
+        }
+      }
+    },
+    "pre": {
+      "historical_7e1193": {
+        "n": 45,
+        "missing": 0,
+        "brier": 0.0898,
+        "mean_pred": 0.757,
+        "actual_win": 0.844,
+        "leak_ratio": 1.375,
+        "leak_turns": 261,
+        "failed": [
+          "leak"
+        ]
+      },
+      "before_v2": {
+        "n": 45,
+        "missing": 0,
+        "brier": 0.0675,
+        "mean_pred": 0.854,
+        "actual_win": 0.844,
+        "leak_ratio": 1.414,
+        "leak_turns": 261,
+        "failed": [
+          "leak"
+        ]
+      },
+      "after_phase_repair": {
+        "n": 45,
+        "missing": 0,
+        "brier": 0.0651,
+        "mean_pred": 0.854,
+        "actual_win": 0.844,
+        "leak_ratio": 1.414,
+        "leak_turns": 261,
+        "failed": [
+          "leak"
+        ]
+      },
+      "independent_runs": 45,
+      "candidate_runs": 46,
+      "common_keys": {
+        "n": 45,
+        "before": {
+          "n": 45,
+          "actual_win": 0.844,
+          "mean_pred": 0.854,
+          "brier": 0.0675,
+          "auc": 0.964,
+          "const_brier": 0.1314,
+          "buckets": [
+            {
+              "bucket": "0–20%",
+              "n": 0,
+              "pred": null,
+              "actual": null
+            },
+            {
+              "bucket": "20–40%",
+              "n": 2,
+              "pred": 0.341,
+              "actual": 0.0
+            },
+            {
+              "bucket": "40–60%",
+              "n": 2,
+              "pred": 0.545,
+              "actual": 0.0
+            },
+            {
+              "bucket": "60–80%",
+              "n": 4,
+              "pred": 0.716,
+              "actual": 0.5
+            },
+            {
+              "bucket": "80–100%",
+              "n": 37,
+              "pred": 0.913,
+              "actual": 0.973
+            }
+          ],
+          "worst_bucket_n20": 0.06,
+          "won_loss_err": {
+            "n": 38,
+            "median": 7.5,
+            "mean": 7.3,
+            "mae": 14.9,
+            "p10": -14,
+            "p90": 32,
+            "within5": 0.158
+          },
+          "leak": {
+            "n": 261,
+            "sim_enemy": 5.43,
+            "actual_enemy": 3.84,
+            "enemy_ratio": 1.414,
+            "sim_loss": 5.33,
+            "actual_loss": 4.64,
+            "loss_ratio": 1.148
+          }
+        },
+        "after": {
+          "n": 45,
+          "actual_win": 0.844,
+          "mean_pred": 0.854,
+          "brier": 0.0651,
+          "auc": 0.964,
+          "const_brier": 0.1314,
+          "buckets": [
+            {
+              "bucket": "0–20%",
+              "n": 0,
+              "pred": null,
+              "actual": null
+            },
+            {
+              "bucket": "20–40%",
+              "n": 2,
+              "pred": 0.311,
+              "actual": 0.0
+            },
+            {
+              "bucket": "40–60%",
+              "n": 2,
+              "pred": 0.525,
+              "actual": 0.0
+            },
+            {
+              "bucket": "60–80%",
+              "n": 4,
+              "pred": 0.71,
+              "actual": 0.5
+            },
+            {
+              "bucket": "80–100%",
+              "n": 37,
+              "pred": 0.916,
+              "actual": 0.973
+            }
+          ],
+          "worst_bucket_n20": 0.057,
+          "won_loss_err": {
+            "n": 38,
+            "median": 7.5,
+            "mean": 7.3,
+            "mae": 14.9,
+            "p10": -14,
+            "p90": 32,
+            "within5": 0.158
+          },
+          "leak": {
+            "n": 261,
+            "sim_enemy": 5.43,
+            "actual_enemy": 3.84,
+            "enemy_ratio": 1.414,
+            "sim_loss": 5.33,
+            "actual_loss": 4.64,
+            "loss_ratio": 1.148
+          }
+        }
+      }
+    }
+  },
+  "LAGAVULIN_MATRIARCH": {
+    "t1": {
+      "historical_7e1193": {
+        "n": 40,
+        "missing": 0,
+        "brier": 0.0612,
+        "mean_pred": 0.843,
+        "actual_win": 0.85,
+        "leak_ratio": 0.961,
+        "leak_turns": 229,
+        "failed": []
+      },
+      "before_v2": {
+        "n": 40,
+        "missing": 0,
+        "brier": 0.0578,
+        "mean_pred": 0.846,
+        "actual_win": 0.85,
+        "leak_ratio": 1.003,
+        "leak_turns": 229,
+        "failed": []
+      },
+      "after_phase_repair": {
+        "n": 40,
+        "missing": 0,
+        "brier": 0.0565,
+        "mean_pred": 0.844,
+        "actual_win": 0.85,
+        "leak_ratio": 1.003,
+        "leak_turns": 229,
+        "failed": []
+      },
+      "independent_runs": 40,
+      "candidate_runs": 40,
+      "common_keys": {
+        "n": 40,
+        "before": {
+          "n": 40,
+          "actual_win": 0.85,
+          "mean_pred": 0.846,
+          "brier": 0.0578,
+          "auc": 0.971,
+          "const_brier": 0.1275,
+          "buckets": [
+            {
+              "bucket": "0–20%",
+              "n": 0,
+              "pred": null,
+              "actual": null
+            },
+            {
+              "bucket": "20–40%",
+              "n": 4,
+              "pred": 0.366,
+              "actual": 0.0
+            },
+            {
+              "bucket": "40–60%",
+              "n": 3,
+              "pred": 0.513,
+              "actual": 0.667
+            },
+            {
+              "bucket": "60–80%",
+              "n": 3,
+              "pred": 0.723,
+              "actual": 1.0
+            },
+            {
+              "bucket": "80–100%",
+              "n": 30,
+              "pred": 0.956,
+              "actual": 0.967
+            }
+          ],
+          "worst_bucket_n20": 0.011,
+          "won_loss_err": {
+            "n": 34,
+            "median": 1.2,
+            "mean": 3.5,
+            "mae": 10.9,
+            "p10": -12,
+            "p90": 21,
+            "within5": 0.353
+          },
+          "leak": {
+            "n": 229,
+            "sim_enemy": 3.57,
+            "actual_enemy": 3.56,
+            "enemy_ratio": 1.003,
+            "sim_loss": 3.53,
+            "actual_loss": 3.56,
+            "loss_ratio": 0.99
+          }
+        },
+        "after": {
+          "n": 40,
+          "actual_win": 0.85,
+          "mean_pred": 0.844,
+          "brier": 0.0565,
+          "auc": 0.971,
+          "const_brier": 0.1275,
+          "buckets": [
+            {
+              "bucket": "0–20%",
+              "n": 0,
+              "pred": null,
+              "actual": null
+            },
+            {
+              "bucket": "20–40%",
+              "n": 4,
+              "pred": 0.339,
+              "actual": 0.0
+            },
+            {
+              "bucket": "40–60%",
+              "n": 3,
+              "pred": 0.492,
+              "actual": 0.667
+            },
+            {
+              "bucket": "60–80%",
+              "n": 3,
+              "pred": 0.717,
+              "actual": 1.0
+            },
+            {
+              "bucket": "80–100%",
+              "n": 30,
+              "pred": 0.96,
+              "actual": 0.967
+            }
+          ],
+          "worst_bucket_n20": 0.007,
+          "won_loss_err": {
+            "n": 34,
+            "median": 1.2,
+            "mean": 3.5,
+            "mae": 10.9,
+            "p10": -12,
+            "p90": 21,
+            "within5": 0.353
+          },
+          "leak": {
+            "n": 229,
+            "sim_enemy": 3.57,
+            "actual_enemy": 3.56,
+            "enemy_ratio": 1.003,
+            "sim_loss": 3.53,
+            "actual_loss": 3.56,
+            "loss_ratio": 0.99
+          }
+        }
+      }
+    },
+    "pre": {
+      "historical_7e1193": {
+        "n": 40,
+        "missing": 0,
+        "brier": 0.0592,
+        "mean_pred": 0.835,
+        "actual_win": 0.85,
+        "leak_ratio": 1.011,
+        "leak_turns": 229,
+        "failed": []
+      },
+      "before_v2": {
+        "n": 40,
+        "missing": 0,
+        "brier": 0.0678,
+        "mean_pred": 0.843,
+        "actual_win": 0.85,
+        "leak_ratio": 1.017,
+        "leak_turns": 229,
+        "failed": []
+      },
+      "after_phase_repair": {
+        "n": 40,
+        "missing": 0,
+        "brier": 0.0674,
+        "mean_pred": 0.841,
+        "actual_win": 0.85,
+        "leak_ratio": 1.017,
+        "leak_turns": 229,
+        "failed": []
+      },
+      "independent_runs": 40,
+      "candidate_runs": 40,
+      "common_keys": {
+        "n": 40,
+        "before": {
+          "n": 40,
+          "actual_win": 0.85,
+          "mean_pred": 0.843,
+          "brier": 0.0678,
+          "auc": 0.941,
+          "const_brier": 0.1275,
+          "buckets": [
+            {
+              "bucket": "0–20%",
+              "n": 0,
+              "pred": null,
+              "actual": null
+            },
+            {
+              "bucket": "20–40%",
+              "n": 5,
+              "pred": 0.341,
+              "actual": 0.2
+            },
+            {
+              "bucket": "40–60%",
+              "n": 2,
+              "pred": 0.545,
+              "actual": 1.0
+            },
+            {
+              "bucket": "60–80%",
+              "n": 2,
+              "pred": 0.68,
+              "actual": 0.5
+            },
+            {
+              "bucket": "80–100%",
+              "n": 31,
+              "pred": 0.954,
+              "actual": 0.968
+            }
+          ],
+          "worst_bucket_n20": 0.014,
+          "won_loss_err": {
+            "n": 33,
+            "median": 4,
+            "mean": 4.1,
+            "mae": 11.0,
+            "p10": -12,
+            "p90": 20,
+            "within5": 0.303
+          },
+          "leak": {
+            "n": 229,
+            "sim_enemy": 3.62,
+            "actual_enemy": 3.56,
+            "enemy_ratio": 1.017,
+            "sim_loss": 3.58,
+            "actual_loss": 3.56,
+            "loss_ratio": 1.005
+          }
+        },
+        "after": {
+          "n": 40,
+          "actual_win": 0.85,
+          "mean_pred": 0.841,
+          "brier": 0.0674,
+          "auc": 0.941,
+          "const_brier": 0.1275,
+          "buckets": [
+            {
+              "bucket": "0–20%",
+              "n": 0,
+              "pred": null,
+              "actual": null
+            },
+            {
+              "bucket": "20–40%",
+              "n": 5,
+              "pred": 0.311,
+              "actual": 0.2
+            },
+            {
+              "bucket": "40–60%",
+              "n": 2,
+              "pred": 0.525,
+              "actual": 1.0
+            },
+            {
+              "bucket": "60–80%",
+              "n": 2,
+              "pred": 0.671,
+              "actual": 0.5
+            },
+            {
+              "bucket": "80–100%",
+              "n": 31,
+              "pred": 0.957,
+              "actual": 0.968
+            }
+          ],
+          "worst_bucket_n20": 0.011,
+          "won_loss_err": {
+            "n": 33,
+            "median": 4,
+            "mean": 4.1,
+            "mae": 11.0,
+            "p10": -12,
+            "p90": 20,
+            "within5": 0.303
+          },
+          "leak": {
+            "n": 229,
+            "sim_enemy": 3.62,
+            "actual_enemy": 3.56,
+            "enemy_ratio": 1.017,
+            "sim_loss": 3.58,
+            "actual_loss": 3.56,
+            "loss_ratio": 1.005
+          }
+        }
+      }
+    }
+  },
+  "SOUL_FYSH": {
+    "t1": {
+      "historical_7e1193": {
+        "n": 37,
+        "missing": 0,
+        "brier": 0.0339,
+        "mean_pred": 0.934,
+        "actual_win": 0.919,
+        "leak_ratio": 0.846,
+        "leak_turns": 221,
+        "failed": []
+      },
+      "before_v2": {
+        "n": 37,
+        "missing": 0,
+        "brier": 0.0372,
+        "mean_pred": 0.934,
+        "actual_win": 0.919,
+        "leak_ratio": 0.861,
+        "leak_turns": 221,
+        "failed": []
+      },
+      "after_phase_repair": {
+        "n": 37,
+        "missing": 0,
+        "brier": 0.0361,
+        "mean_pred": 0.936,
+        "actual_win": 0.919,
+        "leak_ratio": 0.861,
+        "leak_turns": 221,
+        "failed": []
+      },
+      "independent_runs": 37,
+      "candidate_runs": 37,
+      "common_keys": {
+        "n": 37,
+        "before": {
+          "n": 37,
+          "actual_win": 0.919,
+          "mean_pred": 0.934,
+          "brier": 0.0372,
+          "auc": 0.971,
+          "const_brier": 0.0745,
+          "buckets": [
+            {
+              "bucket": "0–20%",
+              "n": 0,
+              "pred": null,
+              "actual": null
+            },
+            {
+              "bucket": "20–40%",
+              "n": 1,
+              "pred": 0.366,
+              "actual": 0.0
+            },
+            {
+              "bucket": "40–60%",
+              "n": 1,
+              "pred": 0.588,
+              "actual": 0.0
+            },
+            {
+              "bucket": "60–80%",
+              "n": 0,
+              "pred": null,
+              "actual": null
+            },
+            {
+              "bucket": "80–100%",
+              "n": 35,
+              "pred": 0.96,
+              "actual": 0.971
+            }
+          ],
+          "worst_bucket_n20": 0.011,
+          "won_loss_err": {
+            "n": 34,
+            "median": 0.0,
+            "mean": -1.1,
+            "mae": 10.2,
+            "p10": -19,
+            "p90": 15,
+            "within5": 0.382
+          },
+          "leak": {
+            "n": 221,
+            "sim_enemy": 2.99,
+            "actual_enemy": 3.47,
+            "enemy_ratio": 0.861,
+            "sim_loss": 3.07,
+            "actual_loss": 3.49,
+            "loss_ratio": 0.879
+          }
+        },
+        "after": {
+          "n": 37,
+          "actual_win": 0.919,
+          "mean_pred": 0.936,
+          "brier": 0.0361,
+          "auc": 0.971,
+          "const_brier": 0.0745,
+          "buckets": [
+            {
+              "bucket": "0–20%",
+              "n": 0,
+              "pred": null,
+              "actual": null
+            },
+            {
+              "bucket": "20–40%",
+              "n": 1,
+              "pred": 0.339,
+              "actual": 0.0
+            },
+            {
+              "bucket": "40–60%",
+              "n": 1,
+              "pred": 0.572,
+              "actual": 0.0
+            },
+            {
+              "bucket": "60–80%",
+              "n": 0,
+              "pred": null,
+              "actual": null
+            },
+            {
+              "bucket": "80–100%",
+              "n": 35,
+              "pred": 0.963,
+              "actual": 0.971
+            }
+          ],
+          "worst_bucket_n20": 0.008,
+          "won_loss_err": {
+            "n": 34,
+            "median": 0.0,
+            "mean": -1.1,
+            "mae": 10.2,
+            "p10": -19,
+            "p90": 15,
+            "within5": 0.382
+          },
+          "leak": {
+            "n": 221,
+            "sim_enemy": 2.99,
+            "actual_enemy": 3.47,
+            "enemy_ratio": 0.861,
+            "sim_loss": 3.07,
+            "actual_loss": 3.49,
+            "loss_ratio": 0.879
+          }
+        }
+      }
+    },
+    "pre": {
+      "historical_7e1193": {
+        "n": 37,
+        "missing": 0,
+        "brier": 0.0365,
+        "mean_pred": 0.943,
+        "actual_win": 0.919,
+        "leak_ratio": 0.856,
+        "leak_turns": 221,
+        "failed": []
+      },
+      "before_v2": {
+        "n": 37,
+        "missing": 0,
+        "brier": 0.0408,
+        "mean_pred": 0.945,
+        "actual_win": 0.919,
+        "leak_ratio": 0.86,
+        "leak_turns": 221,
+        "failed": []
+      },
+      "after_phase_repair": {
+        "n": 37,
+        "missing": 0,
+        "brier": 0.04,
+        "mean_pred": 0.947,
+        "actual_win": 0.919,
+        "leak_ratio": 0.86,
+        "leak_turns": 221,
+        "failed": []
+      },
+      "independent_runs": 37,
+      "candidate_runs": 37,
+      "common_keys": {
+        "n": 37,
+        "before": {
+          "n": 37,
+          "actual_win": 0.919,
+          "mean_pred": 0.945,
+          "brier": 0.0408,
+          "auc": 0.961,
+          "const_brier": 0.0745,
+          "buckets": [
+            {
+              "bucket": "0–20%",
+              "n": 0,
+              "pred": null,
+              "actual": null
+            },
+            {
+              "bucket": "20–40%",
+              "n": 1,
+              "pred": 0.341,
+              "actual": 0.0
+            },
+            {
+              "bucket": "40–60%",
+              "n": 0,
+              "pred": null,
+              "actual": null
+            },
+            {
+              "bucket": "60–80%",
+              "n": 1,
+              "pred": 0.691,
+              "actual": 0.0
+            },
+            {
+              "bucket": "80–100%",
+              "n": 35,
+              "pred": 0.97,
+              "actual": 0.971
+            }
+          ],
+          "worst_bucket_n20": 0.001,
+          "won_loss_err": {
+            "n": 34,
+            "median": -1.5,
+            "mean": -1.7,
+            "mae": 10.6,
+            "p10": -20,
+            "p90": 14,
+            "within5": 0.324
+          },
+          "leak": {
+            "n": 221,
+            "sim_enemy": 2.98,
+            "actual_enemy": 3.47,
+            "enemy_ratio": 0.86,
+            "sim_loss": 3.05,
+            "actual_loss": 3.49,
+            "loss_ratio": 0.874
+          }
+        },
+        "after": {
+          "n": 37,
+          "actual_win": 0.919,
+          "mean_pred": 0.947,
+          "brier": 0.04,
+          "auc": 0.961,
+          "const_brier": 0.0745,
+          "buckets": [
+            {
+              "bucket": "0–20%",
+              "n": 0,
+              "pred": null,
+              "actual": null
+            },
+            {
+              "bucket": "20–40%",
+              "n": 1,
+              "pred": 0.311,
+              "actual": 0.0
+            },
+            {
+              "bucket": "40–60%",
+              "n": 0,
+              "pred": null,
+              "actual": null
+            },
+            {
+              "bucket": "60–80%",
+              "n": 1,
+              "pred": 0.683,
+              "actual": 0.0
+            },
+            {
+              "bucket": "80–100%",
+              "n": 35,
+              "pred": 0.973,
+              "actual": 0.971
+            }
+          ],
+          "worst_bucket_n20": 0.002,
+          "won_loss_err": {
+            "n": 34,
+            "median": -1.5,
+            "mean": -1.7,
+            "mae": 10.6,
+            "p10": -20,
+            "p90": 14,
+            "within5": 0.324
+          },
+          "leak": {
+            "n": 221,
+            "sim_enemy": 2.98,
+            "actual_enemy": 3.47,
+            "enemy_ratio": 0.86,
+            "sim_loss": 3.05,
+            "actual_loss": 3.49,
+            "loss_ratio": 0.874
+          }
+        }
+      }
+    }
+  },
+  "TEST_SUBJECT": {
+    "t1": {
+      "historical_7e1193": {
+        "n": 29,
+        "missing": 0,
+        "brier": 0.1849,
+        "mean_pred": 0.351,
+        "actual_win": 0.207,
+        "leak_ratio": 3.669,
+        "leak_turns": 109,
+        "failed": [
+          "brier",
+          "leak"
+        ]
+      },
+      "before_v2": {
+        "n": 29,
+        "missing": 0,
+        "brier": 0.1894,
+        "mean_pred": 0.366,
+        "actual_win": 0.207,
+        "leak_ratio": 3.721,
+        "leak_turns": 109,
+        "failed": [
+          "brier",
+          "gap",
+          "leak"
+        ]
+      },
+      "after_phase_repair": {
+        "n": 29,
+        "missing": 0,
+        "brier": 0.1352,
+        "mean_pred": 0.404,
+        "actual_win": 0.207,
+        "leak_ratio": 2.394,
+        "leak_turns": 114,
+        "failed": [
+          "brier",
+          "gap",
+          "leak"
+        ]
+      },
+      "independent_runs": 29,
+      "candidate_runs": 29,
+      "common_keys": {
+        "n": 29,
+        "before": {
+          "n": 29,
+          "actual_win": 0.207,
+          "mean_pred": 0.366,
+          "brier": 0.1894,
+          "auc": 0.5,
+          "const_brier": 0.1641,
+          "buckets": [
+            {
+              "bucket": "0–20%",
+              "n": 0,
+              "pred": null,
+              "actual": null
+            },
+            {
+              "bucket": "20–40%",
+              "n": 29,
+              "pred": 0.366,
+              "actual": 0.207
+            },
+            {
+              "bucket": "40–60%",
+              "n": 0,
+              "pred": null,
+              "actual": null
+            },
+            {
+              "bucket": "60–80%",
+              "n": 0,
+              "pred": null,
+              "actual": null
+            },
+            {
+              "bucket": "80–100%",
+              "n": 0,
+              "pred": null,
+              "actual": null
+            }
+          ],
+          "worst_bucket_n20": 0.159,
+          "won_loss_err": {
+            "n": 0
+          },
+          "leak": {
+            "n": 109,
+            "sim_enemy": 19.97,
+            "actual_enemy": 5.37,
+            "enemy_ratio": 3.721,
+            "sim_loss": 19.51,
+            "actual_loss": 5.47,
+            "loss_ratio": 3.568
+          }
+        },
+        "after": {
+          "n": 29,
+          "actual_win": 0.207,
+          "mean_pred": 0.404,
+          "brier": 0.1352,
+          "auc": 0.826,
+          "const_brier": 0.1641,
+          "buckets": [
+            {
+              "bucket": "0–20%",
+              "n": 0,
+              "pred": null,
+              "actual": null
+            },
+            {
+              "bucket": "20–40%",
+              "n": 24,
+              "pred": 0.339,
+              "actual": 0.083
+            },
+            {
+              "bucket": "40–60%",
+              "n": 2,
+              "pred": 0.532,
+              "actual": 0.5
+            },
+            {
+              "bucket": "60–80%",
+              "n": 1,
+              "pred": 0.722,
+              "actual": 1.0
+            },
+            {
+              "bucket": "80–100%",
+              "n": 2,
+              "pred": 0.899,
+              "actual": 1.0
+            }
+          ],
+          "worst_bucket_n20": 0.256,
+          "won_loss_err": {
+            "n": 4,
+            "median": 22.5,
+            "mean": 29.2,
+            "mae": 29.2,
+            "p10": 8.5,
+            "p90": 63.5,
+            "within5": 0.0
+          },
+          "leak": {
+            "n": 114,
+            "sim_enemy": 12.98,
+            "actual_enemy": 5.42,
+            "enemy_ratio": 2.394,
+            "sim_loss": 12.62,
+            "actual_loss": 5.52,
+            "loss_ratio": 2.287
+          }
+        }
+      }
+    },
+    "pre": {
+      "historical_7e1193": {
+        "n": 29,
+        "missing": 0,
+        "brier": 0.1771,
+        "mean_pred": 0.321,
+        "actual_win": 0.207,
+        "leak_ratio": 3.538,
+        "leak_turns": 113,
+        "failed": [
+          "brier",
+          "leak"
+        ]
+      },
+      "before_v2": {
+        "n": 29,
+        "missing": 0,
+        "brier": 0.1821,
+        "mean_pred": 0.341,
+        "actual_win": 0.207,
+        "leak_ratio": 3.598,
+        "leak_turns": 113,
+        "failed": [
+          "brier",
+          "leak"
+        ]
+      },
+      "after_phase_repair": {
+        "n": 29,
+        "missing": 0,
+        "brier": 0.1306,
+        "mean_pred": 0.364,
+        "actual_win": 0.207,
+        "leak_ratio": 2.322,
+        "leak_turns": 114,
+        "failed": [
+          "gap",
+          "leak"
+        ]
+      },
+      "independent_runs": 29,
+      "candidate_runs": 29,
+      "common_keys": {
+        "n": 29,
+        "before": {
+          "n": 29,
+          "actual_win": 0.207,
+          "mean_pred": 0.341,
+          "brier": 0.1821,
+          "auc": 0.5,
+          "const_brier": 0.1641,
+          "buckets": [
+            {
+              "bucket": "0–20%",
+              "n": 0,
+              "pred": null,
+              "actual": null
+            },
+            {
+              "bucket": "20–40%",
+              "n": 29,
+              "pred": 0.341,
+              "actual": 0.207
+            },
+            {
+              "bucket": "40–60%",
+              "n": 0,
+              "pred": null,
+              "actual": null
+            },
+            {
+              "bucket": "60–80%",
+              "n": 0,
+              "pred": null,
+              "actual": null
+            },
+            {
+              "bucket": "80–100%",
+              "n": 0,
+              "pred": null,
+              "actual": null
+            }
+          ],
+          "worst_bucket_n20": 0.134,
+          "won_loss_err": {
+            "n": 0
+          },
+          "leak": {
+            "n": 113,
+            "sim_enemy": 19.1,
+            "actual_enemy": 5.31,
+            "enemy_ratio": 3.598,
+            "sim_loss": 18.74,
+            "actual_loss": 5.41,
+            "loss_ratio": 3.465
+          }
+        },
+        "after": {
+          "n": 29,
+          "actual_win": 0.207,
+          "mean_pred": 0.364,
+          "brier": 0.1306,
+          "auc": 0.75,
+          "const_brier": 0.1641,
+          "buckets": [
+            {
+              "bucket": "0–20%",
+              "n": 0,
+              "pred": null,
+              "actual": null
+            },
+            {
+              "bucket": "20–40%",
+              "n": 26,
+              "pred": 0.311,
+              "actual": 0.115
+            },
+            {
+              "bucket": "40–60%",
+              "n": 0,
+              "pred": null,
+              "actual": null
+            },
+            {
+              "bucket": "60–80%",
+              "n": 1,
+              "pred": 0.656,
+              "actual": 1.0
+            },
+            {
+              "bucket": "80–100%",
+              "n": 2,
+              "pred": 0.908,
+              "actual": 1.0
+            }
+          ],
+          "worst_bucket_n20": 0.196,
+          "won_loss_err": {
+            "n": 3,
+            "median": 22.5,
+            "mean": 22.3,
+            "mae": 22.3,
+            "p10": 4,
+            "p90": 40.5,
+            "within5": 0.333
+          },
+          "leak": {
+            "n": 114,
+            "sim_enemy": 12.59,
+            "actual_enemy": 5.42,
+            "enemy_ratio": 2.322,
+            "sim_loss": 12.28,
+            "actual_loss": 5.52,
+            "loss_ratio": 2.226
+          }
+        }
+      }
+    }
+  },
+  "THE_INSATIABLE": {
+    "t1": {
+      "historical_7e1193": {
+        "n": 46,
+        "missing": 0,
+        "brier": 0.1381,
+        "mean_pred": 0.706,
+        "actual_win": 0.674,
+        "leak_ratio": 1.303,
+        "leak_turns": 245,
+        "failed": [
+          "leak"
+        ]
+      },
+      "before_v2": {
+        "n": 46,
+        "missing": 0,
+        "brier": 0.1396,
+        "mean_pred": 0.735,
+        "actual_win": 0.674,
+        "leak_ratio": 1.32,
+        "leak_turns": 245,
+        "failed": [
+          "brier",
+          "leak"
+        ]
+      },
+      "after_phase_repair": {
+        "n": 46,
+        "missing": 0,
+        "brier": 0.1367,
+        "mean_pred": 0.729,
+        "actual_win": 0.674,
+        "leak_ratio": 1.32,
+        "leak_turns": 245,
+        "failed": [
+          "brier",
+          "leak"
+        ]
+      },
+      "independent_runs": 46,
+      "candidate_runs": 46,
+      "common_keys": {
+        "n": 46,
+        "before": {
+          "n": 46,
+          "actual_win": 0.674,
+          "mean_pred": 0.735,
+          "brier": 0.1396,
+          "auc": 0.831,
+          "const_brier": 0.2198,
+          "buckets": [
+            {
+              "bucket": "0–20%",
+              "n": 0,
+              "pred": null,
+              "actual": null
+            },
+            {
+              "bucket": "20–40%",
+              "n": 9,
+              "pred": 0.366,
+              "actual": 0.111
+            },
+            {
+              "bucket": "40–60%",
+              "n": 4,
+              "pred": 0.532,
+              "actual": 0.25
+            },
+            {
+              "bucket": "60–80%",
+              "n": 7,
+              "pred": 0.737,
+              "actual": 1.0
+            },
+            {
+              "bucket": "80–100%",
+              "n": 26,
+              "pred": 0.893,
+              "actual": 0.846
+            }
+          ],
+          "worst_bucket_n20": 0.047,
+          "won_loss_err": {
+            "n": 30,
+            "median": 3.0,
+            "mean": 6.2,
+            "mae": 11.2,
+            "p10": -6,
+            "p90": 25,
+            "within5": 0.433
+          },
+          "leak": {
+            "n": 245,
+            "sim_enemy": 7.37,
+            "actual_enemy": 5.59,
+            "enemy_ratio": 1.32,
+            "sim_loss": 7.36,
+            "actual_loss": 6.28,
+            "loss_ratio": 1.171
+          }
+        },
+        "after": {
+          "n": 46,
+          "actual_win": 0.674,
+          "mean_pred": 0.729,
+          "brier": 0.1367,
+          "auc": 0.831,
+          "const_brier": 0.2198,
+          "buckets": [
+            {
+              "bucket": "0–20%",
+              "n": 0,
+              "pred": null,
+              "actual": null
+            },
+            {
+              "bucket": "20–40%",
+              "n": 9,
+              "pred": 0.339,
+              "actual": 0.111
+            },
+            {
+              "bucket": "40–60%",
+              "n": 4,
+              "pred": 0.512,
+              "actual": 0.25
+            },
+            {
+              "bucket": "60–80%",
+              "n": 7,
+              "pred": 0.733,
+              "actual": 1.0
+            },
+            {
+              "bucket": "80–100%",
+              "n": 26,
+              "pred": 0.897,
+              "actual": 0.846
+            }
+          ],
+          "worst_bucket_n20": 0.051,
+          "won_loss_err": {
+            "n": 30,
+            "median": 3.0,
+            "mean": 6.2,
+            "mae": 11.2,
+            "p10": -6,
+            "p90": 25,
+            "within5": 0.433
+          },
+          "leak": {
+            "n": 245,
+            "sim_enemy": 7.37,
+            "actual_enemy": 5.59,
+            "enemy_ratio": 1.32,
+            "sim_loss": 7.36,
+            "actual_loss": 6.28,
+            "loss_ratio": 1.171
+          }
+        }
+      }
+    },
+    "pre": {
+      "historical_7e1193": {
+        "n": 46,
+        "missing": 0,
+        "brier": 0.1609,
+        "mean_pred": 0.706,
+        "actual_win": 0.674,
+        "leak_ratio": 1.348,
+        "leak_turns": 245,
+        "failed": [
+          "brier",
+          "leak"
+        ]
+      },
+      "before_v2": {
+        "n": 46,
+        "missing": 0,
+        "brier": 0.1478,
+        "mean_pred": 0.736,
+        "actual_win": 0.674,
+        "leak_ratio": 1.364,
+        "leak_turns": 245,
+        "failed": [
+          "brier",
+          "leak"
+        ]
+      },
+      "after_phase_repair": {
+        "n": 46,
+        "missing": 0,
+        "brier": 0.1456,
+        "mean_pred": 0.73,
+        "actual_win": 0.674,
+        "leak_ratio": 1.364,
+        "leak_turns": 245,
+        "failed": [
+          "brier",
+          "leak"
+        ]
+      },
+      "independent_runs": 46,
+      "candidate_runs": 46,
+      "common_keys": {
+        "n": 46,
+        "before": {
+          "n": 46,
+          "actual_win": 0.674,
+          "mean_pred": 0.736,
+          "brier": 0.1478,
+          "auc": 0.791,
+          "const_brier": 0.2198,
+          "buckets": [
+            {
+              "bucket": "0–20%",
+              "n": 0,
+              "pred": null,
+              "actual": null
+            },
+            {
+              "bucket": "20–40%",
+              "n": 8,
+              "pred": 0.341,
+              "actual": 0.0
+            },
+            {
+              "bucket": "40–60%",
+              "n": 5,
+              "pred": 0.52,
+              "actual": 0.6
+            },
+            {
+              "bucket": "60–80%",
+              "n": 7,
+              "pred": 0.726,
+              "actual": 0.857
+            },
+            {
+              "bucket": "80–100%",
+              "n": 26,
+              "pred": 0.901,
+              "actual": 0.846
+            }
+          ],
+          "worst_bucket_n20": 0.055,
+          "won_loss_err": {
+            "n": 31,
+            "median": 5,
+            "mean": 5.8,
+            "mae": 10.9,
+            "p10": -11,
+            "p90": 28,
+            "within5": 0.419
+          },
+          "leak": {
+            "n": 245,
+            "sim_enemy": 7.62,
+            "actual_enemy": 5.59,
+            "enemy_ratio": 1.364,
+            "sim_loss": 7.58,
+            "actual_loss": 6.28,
+            "loss_ratio": 1.207
+          }
+        },
+        "after": {
+          "n": 46,
+          "actual_win": 0.674,
+          "mean_pred": 0.73,
+          "brier": 0.1456,
+          "auc": 0.791,
+          "const_brier": 0.2198,
+          "buckets": [
+            {
+              "bucket": "0–20%",
+              "n": 0,
+              "pred": null,
+              "actual": null
+            },
+            {
+              "bucket": "20–40%",
+              "n": 8,
+              "pred": 0.311,
+              "actual": 0.0
+            },
+            {
+              "bucket": "40–60%",
+              "n": 5,
+              "pred": 0.498,
+              "actual": 0.6
+            },
+            {
+              "bucket": "60–80%",
+              "n": 7,
+              "pred": 0.721,
+              "actual": 0.857
+            },
+            {
+              "bucket": "80–100%",
+              "n": 26,
+              "pred": 0.905,
+              "actual": 0.846
+            }
+          ],
+          "worst_bucket_n20": 0.059,
+          "won_loss_err": {
+            "n": 31,
+            "median": 5,
+            "mean": 5.8,
+            "mae": 10.9,
+            "p10": -11,
+            "p90": 28,
+            "within5": 0.419
+          },
+          "leak": {
+            "n": 245,
+            "sim_enemy": 7.62,
+            "actual_enemy": 5.59,
+            "enemy_ratio": 1.364,
+            "sim_loss": 7.58,
+            "actual_loss": 6.28,
+            "loss_ratio": 1.207
+          }
+        }
+      }
+    }
+  },
+  "VANTOM": {
+    "t1": {
+      "historical_7e1193": {
+        "n": 48,
+        "missing": 0,
+        "brier": 0.0567,
+        "mean_pred": 0.901,
+        "actual_win": 0.938,
+        "leak_ratio": 0.947,
+        "leak_turns": 273,
+        "failed": []
+      },
+      "before_v2": {
+        "n": 48,
+        "missing": 0,
+        "brier": 0.0481,
+        "mean_pred": 0.906,
+        "actual_win": 0.938,
+        "leak_ratio": 0.965,
+        "leak_turns": 273,
+        "failed": []
+      },
+      "after_phase_repair": {
+        "n": 48,
+        "missing": 0,
+        "brier": 0.0481,
+        "mean_pred": 0.908,
+        "actual_win": 0.938,
+        "leak_ratio": 0.965,
+        "leak_turns": 273,
+        "failed": []
+      },
+      "independent_runs": 48,
+      "candidate_runs": 48,
+      "common_keys": {
+        "n": 48,
+        "before": {
+          "n": 48,
+          "actual_win": 0.938,
+          "mean_pred": 0.906,
+          "brier": 0.0481,
+          "auc": 0.937,
+          "const_brier": 0.0586,
+          "buckets": [
+            {
+              "bucket": "0–20%",
+              "n": 0,
+              "pred": null,
+              "actual": null
+            },
+            {
+              "bucket": "20–40%",
+              "n": 0,
+              "pred": null,
+              "actual": null
+            },
+            {
+              "bucket": "40–60%",
+              "n": 2,
+              "pred": 0.513,
+              "actual": 0.5
+            },
+            {
+              "bucket": "60–80%",
+              "n": 3,
+              "pred": 0.713,
+              "actual": 1.0
+            },
+            {
+              "bucket": "80–100%",
+              "n": 43,
+              "pred": 0.938,
+              "actual": 0.953
+            }
+          ],
+          "worst_bucket_n20": 0.015,
+          "won_loss_err": {
+            "n": 45,
+            "median": 0,
+            "mean": 0.8,
+            "mae": 8.8,
+            "p10": -17,
+            "p90": 16,
+            "within5": 0.422
+          },
+          "leak": {
+            "n": 273,
+            "sim_enemy": 5.22,
+            "actual_enemy": 5.4,
+            "enemy_ratio": 0.965,
+            "sim_loss": 5.22,
+            "actual_loss": 5.49,
+            "loss_ratio": 0.95
+          }
+        },
+        "after": {
+          "n": 48,
+          "actual_win": 0.938,
+          "mean_pred": 0.908,
+          "brier": 0.0481,
+          "auc": 0.937,
+          "const_brier": 0.0586,
+          "buckets": [
+            {
+              "bucket": "0–20%",
+              "n": 0,
+              "pred": null,
+              "actual": null
+            },
+            {
+              "bucket": "20–40%",
+              "n": 0,
+              "pred": null,
+              "actual": null
+            },
+            {
+              "bucket": "40–60%",
+              "n": 2,
+              "pred": 0.492,
+              "actual": 0.5
+            },
+            {
+              "bucket": "60–80%",
+              "n": 3,
+              "pred": 0.706,
+              "actual": 1.0
+            },
+            {
+              "bucket": "80–100%",
+              "n": 43,
+              "pred": 0.941,
+              "actual": 0.953
+            }
+          ],
+          "worst_bucket_n20": 0.012,
+          "won_loss_err": {
+            "n": 45,
+            "median": 0,
+            "mean": 0.8,
+            "mae": 8.8,
+            "p10": -17,
+            "p90": 16,
+            "within5": 0.422
+          },
+          "leak": {
+            "n": 273,
+            "sim_enemy": 5.22,
+            "actual_enemy": 5.4,
+            "enemy_ratio": 0.965,
+            "sim_loss": 5.22,
+            "actual_loss": 5.49,
+            "loss_ratio": 0.95
+          }
+        }
+      }
+    },
+    "pre": {
+      "historical_7e1193": {
+        "n": 48,
+        "missing": 0,
+        "brier": 0.0519,
+        "mean_pred": 0.906,
+        "actual_win": 0.938,
+        "leak_ratio": 0.934,
+        "leak_turns": 273,
+        "failed": []
+      },
+      "before_v2": {
+        "n": 48,
+        "missing": 0,
+        "brier": 0.0492,
+        "mean_pred": 0.911,
+        "actual_win": 0.938,
+        "leak_ratio": 0.946,
+        "leak_turns": 273,
+        "failed": []
+      },
+      "after_phase_repair": {
+        "n": 48,
+        "missing": 0,
+        "brier": 0.0497,
+        "mean_pred": 0.913,
+        "actual_win": 0.938,
+        "leak_ratio": 0.946,
+        "leak_turns": 273,
+        "failed": []
+      },
+      "independent_runs": 48,
+      "candidate_runs": 48,
+      "common_keys": {
+        "n": 48,
+        "before": {
+          "n": 48,
+          "actual_win": 0.938,
+          "mean_pred": 0.911,
+          "brier": 0.0492,
+          "auc": 0.911,
+          "const_brier": 0.0586,
+          "buckets": [
+            {
+              "bucket": "0–20%",
+              "n": 0,
+              "pred": null,
+              "actual": null
+            },
+            {
+              "bucket": "20–40%",
+              "n": 2,
+              "pred": 0.341,
+              "actual": 0.5
+            },
+            {
+              "bucket": "40–60%",
+              "n": 0,
+              "pred": null,
+              "actual": null
+            },
+            {
+              "bucket": "60–80%",
+              "n": 3,
+              "pred": 0.764,
+              "actual": 1.0
+            },
+            {
+              "bucket": "80–100%",
+              "n": 43,
+              "pred": 0.948,
+              "actual": 0.953
+            }
+          ],
+          "worst_bucket_n20": 0.005,
+          "won_loss_err": {
+            "n": 44,
+            "median": 1.0,
+            "mean": 0.6,
+            "mae": 8.9,
+            "p10": -13,
+            "p90": 18,
+            "within5": 0.364
+          },
+          "leak": {
+            "n": 273,
+            "sim_enemy": 5.11,
+            "actual_enemy": 5.4,
+            "enemy_ratio": 0.946,
+            "sim_loss": 5.11,
+            "actual_loss": 5.49,
+            "loss_ratio": 0.931
+          }
+        },
+        "after": {
+          "n": 48,
+          "actual_win": 0.938,
+          "mean_pred": 0.913,
+          "brier": 0.0497,
+          "auc": 0.911,
+          "const_brier": 0.0586,
+          "buckets": [
+            {
+              "bucket": "0–20%",
+              "n": 0,
+              "pred": null,
+              "actual": null
+            },
+            {
+              "bucket": "20–40%",
+              "n": 2,
+              "pred": 0.311,
+              "actual": 0.5
+            },
+            {
+              "bucket": "40–60%",
+              "n": 0,
+              "pred": null,
+              "actual": null
+            },
+            {
+              "bucket": "60–80%",
+              "n": 3,
+              "pred": 0.762,
+              "actual": 1.0
+            },
+            {
+              "bucket": "80–100%",
+              "n": 43,
+              "pred": 0.952,
+              "actual": 0.953
+            }
+          ],
+          "worst_bucket_n20": 0.001,
+          "won_loss_err": {
+            "n": 44,
+            "median": 1.0,
+            "mean": 0.6,
+            "mae": 8.9,
+            "p10": -13,
+            "p90": 18,
+            "within5": 0.364
+          },
+          "leak": {
+            "n": 273,
+            "sim_enemy": 5.11,
+            "actual_enemy": 5.4,
+            "enemy_ratio": 0.946,
+            "sim_loss": 5.11,
+            "actual_loss": 5.49,
+            "loss_ratio": 0.931
+          }
+        }
+      }
+    }
+  },
+  "WATERFALL_GIANT": {
+    "t1": {
+      "historical_7e1193": {
+        "n": 40,
+        "missing": 0,
+        "brier": 0.1137,
+        "mean_pred": 0.839,
+        "actual_win": 0.8,
+        "leak_ratio": 0.926,
+        "leak_turns": 238,
+        "failed": []
+      },
+      "before_v2": {
+        "n": 40,
+        "missing": 0,
+        "brier": 0.1139,
+        "mean_pred": 0.836,
+        "actual_win": 0.8,
+        "leak_ratio": 0.934,
+        "leak_turns": 238,
+        "failed": []
+      },
+      "after_phase_repair": {
+        "n": 40,
+        "missing": 0,
+        "brier": 0.113,
+        "mean_pred": 0.835,
+        "actual_win": 0.8,
+        "leak_ratio": 0.934,
+        "leak_turns": 238,
+        "failed": []
+      },
+      "independent_runs": 40,
+      "candidate_runs": 40,
+      "common_keys": {
+        "n": 40,
+        "before": {
+          "n": 40,
+          "actual_win": 0.8,
+          "mean_pred": 0.836,
+          "brier": 0.1139,
+          "auc": 0.807,
+          "const_brier": 0.16,
+          "buckets": [
+            {
+              "bucket": "0–20%",
+              "n": 0,
+              "pred": null,
+              "actual": null
+            },
+            {
+              "bucket": "20–40%",
+              "n": 4,
+              "pred": 0.366,
+              "actual": 0.25
+            },
+            {
+              "bucket": "40–60%",
+              "n": 1,
+              "pred": 0.513,
+              "actual": 0.0
+            },
+            {
+              "bucket": "60–80%",
+              "n": 3,
+              "pred": 0.767,
+              "actual": 0.667
+            },
+            {
+              "bucket": "80–100%",
+              "n": 32,
+              "pred": 0.912,
+              "actual": 0.906
+            }
+          ],
+          "worst_bucket_n20": 0.006,
+          "won_loss_err": {
+            "n": 31,
+            "median": 6,
+            "mean": 6.4,
+            "mae": 10.1,
+            "p10": -6,
+            "p90": 18,
+            "within5": 0.355
+          },
+          "leak": {
+            "n": 238,
+            "sim_enemy": 3.25,
+            "actual_enemy": 3.48,
+            "enemy_ratio": 0.934,
+            "sim_loss": 3.17,
+            "actual_loss": 3.38,
+            "loss_ratio": 0.939
+          }
+        },
+        "after": {
+          "n": 40,
+          "actual_win": 0.8,
+          "mean_pred": 0.835,
+          "brier": 0.113,
+          "auc": 0.807,
+          "const_brier": 0.16,
+          "buckets": [
+            {
+              "bucket": "0–20%",
+              "n": 0,
+              "pred": null,
+              "actual": null
+            },
+            {
+              "bucket": "20–40%",
+              "n": 4,
+              "pred": 0.339,
+              "actual": 0.25
+            },
+            {
+              "bucket": "40–60%",
+              "n": 1,
+              "pred": 0.492,
+              "actual": 0.0
+            },
+            {
+              "bucket": "60–80%",
+              "n": 3,
+              "pred": 0.764,
+              "actual": 0.667
+            },
+            {
+              "bucket": "80–100%",
+              "n": 32,
+              "pred": 0.915,
+              "actual": 0.906
+            }
+          ],
+          "worst_bucket_n20": 0.009,
+          "won_loss_err": {
+            "n": 31,
+            "median": 6,
+            "mean": 6.4,
+            "mae": 10.1,
+            "p10": -6,
+            "p90": 18,
+            "within5": 0.355
+          },
+          "leak": {
+            "n": 238,
+            "sim_enemy": 3.25,
+            "actual_enemy": 3.48,
+            "enemy_ratio": 0.934,
+            "sim_loss": 3.17,
+            "actual_loss": 3.38,
+            "loss_ratio": 0.939
+          }
+        }
+      }
+    },
+    "pre": {
+      "historical_7e1193": {
+        "n": 40,
+        "missing": 0,
+        "brier": 0.1135,
+        "mean_pred": 0.856,
+        "actual_win": 0.8,
+        "leak_ratio": 0.898,
+        "leak_turns": 238,
+        "failed": []
+      },
+      "before_v2": {
+        "n": 40,
+        "missing": 0,
+        "brier": 0.114,
+        "mean_pred": 0.853,
+        "actual_win": 0.8,
+        "leak_ratio": 0.9,
+        "leak_turns": 238,
+        "failed": []
+      },
+      "after_phase_repair": {
+        "n": 40,
+        "missing": 0,
+        "brier": 0.1134,
+        "mean_pred": 0.853,
+        "actual_win": 0.8,
+        "leak_ratio": 0.9,
+        "leak_turns": 238,
+        "failed": []
+      },
+      "independent_runs": 40,
+      "candidate_runs": 40,
+      "common_keys": {
+        "n": 40,
+        "before": {
+          "n": 40,
+          "actual_win": 0.8,
+          "mean_pred": 0.853,
+          "brier": 0.114,
+          "auc": 0.828,
+          "const_brier": 0.16,
+          "buckets": [
+            {
+              "bucket": "0–20%",
+              "n": 0,
+              "pred": null,
+              "actual": null
+            },
+            {
+              "bucket": "20–40%",
+              "n": 4,
+              "pred": 0.341,
+              "actual": 0.25
+            },
+            {
+              "bucket": "40–60%",
+              "n": 1,
+              "pred": 0.587,
+              "actual": 0.0
+            },
+            {
+              "bucket": "60–80%",
+              "n": 1,
+              "pred": 0.779,
+              "actual": 1.0
+            },
+            {
+              "bucket": "80–100%",
+              "n": 34,
+              "pred": 0.924,
+              "actual": 0.882
+            }
+          ],
+          "worst_bucket_n20": 0.042,
+          "won_loss_err": {
+            "n": 31,
+            "median": 7,
+            "mean": 5.6,
+            "mae": 9.9,
+            "p10": -7,
+            "p90": 17,
+            "within5": 0.226
+          },
+          "leak": {
+            "n": 238,
+            "sim_enemy": 3.14,
+            "actual_enemy": 3.48,
+            "enemy_ratio": 0.9,
+            "sim_loss": 3.05,
+            "actual_loss": 3.38,
+            "loss_ratio": 0.903
+          }
+        },
+        "after": {
+          "n": 40,
+          "actual_win": 0.8,
+          "mean_pred": 0.853,
+          "brier": 0.1134,
+          "auc": 0.828,
+          "const_brier": 0.16,
+          "buckets": [
+            {
+              "bucket": "0–20%",
+              "n": 0,
+              "pred": null,
+              "actual": null
+            },
+            {
+              "bucket": "20–40%",
+              "n": 4,
+              "pred": 0.311,
+              "actual": 0.25
+            },
+            {
+              "bucket": "40–60%",
+              "n": 1,
+              "pred": 0.57,
+              "actual": 0.0
+            },
+            {
+              "bucket": "60–80%",
+              "n": 1,
+              "pred": 0.778,
+              "actual": 1.0
+            },
+            {
+              "bucket": "80–100%",
+              "n": 34,
+              "pred": 0.927,
+              "actual": 0.882
+            }
+          ],
+          "worst_bucket_n20": 0.045,
+          "won_loss_err": {
+            "n": 31,
+            "median": 7,
+            "mean": 5.6,
+            "mae": 9.9,
+            "p10": -7,
+            "p90": 17,
+            "within5": 0.226
+          },
+          "leak": {
+            "n": 238,
+            "sim_enemy": 3.14,
+            "actual_enemy": 3.48,
+            "enemy_ratio": 0.9,
+            "sim_loss": 3.05,
+            "actual_loss": 3.38,
+            "loss_ratio": 0.903
+          }
+        }
+      }
+    }
+  }
+}

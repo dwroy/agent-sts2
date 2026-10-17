@@ -1,0 +1,1009 @@
+{
+  "request_id": "roy-20261017-human-pace-h0",
+  "revision": 1,
+  "source_windows_sha256": "f99c1fe94c03855daf7774c3574503b37f6b89da4b33750870d48ecb2f08e69d",
+  "trajectory": {
+    "path": "/home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration/learner/runs/20261017-human-pace-h0-r1/validation-phase-2/observed-sequences.json",
+    "sha256": "d3142e09fc6ac208c4ab3e3e5eeb01e71a9a83fdb3d9ab6653d1adeafc9571ae"
+  },
+  "summary": {
+    "AEONGLASS": {
+      "windows": 31,
+      "independent_runs": 4,
+      "raw_move_model_supported": 31,
+      "raw_move_model_not_supported": 0,
+      "enemy_absent_next_frame": 0,
+      "phase_or_alive_changes": [],
+      "first_raw_unsupported_transition": null,
+      "independent_causal_repair_claim": false
+    },
+    "KAISER_CRAB": {
+      "windows": 38,
+      "independent_runs": 4,
+      "raw_move_model_supported": 71,
+      "raw_move_model_not_supported": 0,
+      "enemy_absent_next_frame": 2,
+      "phase_or_alive_changes": [],
+      "first_raw_unsupported_transition": null,
+      "independent_causal_repair_claim": false
+    },
+    "KNOWLEDGE_DEMON": {
+      "windows": 37,
+      "independent_runs": 4,
+      "raw_move_model_supported": 37,
+      "raw_move_model_not_supported": 0,
+      "enemy_absent_next_frame": 0,
+      "phase_or_alive_changes": [],
+      "first_raw_unsupported_transition": null,
+      "independent_causal_repair_claim": false
+    },
+    "QUEEN": {
+      "windows": 27,
+      "independent_runs": 4,
+      "raw_move_model_supported": 53,
+      "raw_move_model_not_supported": 0,
+      "enemy_absent_next_frame": 0,
+      "phase_or_alive_changes": [],
+      "first_raw_unsupported_transition": null,
+      "independent_causal_repair_claim": false
+    },
+    "TEST_SUBJECT": {
+      "windows": 42,
+      "independent_runs": 4,
+      "raw_move_model_supported": 42,
+      "raw_move_model_not_supported": 0,
+      "enemy_absent_next_frame": 0,
+      "phase_or_alive_changes": [
+        {
+          "key": "T082DRCUHRRD:48:6:6373274535",
+          "turn": 5,
+          "pre": {
+            "path": "/home/dw/Projects/agent-sts2/logs/states.jsonl",
+            "offset": 6374135198,
+            "len": 43870,
+            "sha256": "e0d41dd89e48d9422a3898bacef1c65cbcddfe51d0aec0eef6074339442584ac",
+            "frozen_path": "/home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration/learner/runs/20261017-human-pace-h0-r1/windows/T082DRCUHRRD-F48-a6-T5-pre.json"
+          },
+          "next": {
+            "path": "/home/dw/Projects/agent-sts2/logs/states.jsonl",
+            "offset": 6374179068,
+            "len": 50249,
+            "sha256": "5dbf9dffd9ed58f4b380dca211397e40d81eb734ebe16538ab57477e53177263",
+            "frozen_path": "/home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration/learner/runs/20261017-human-pace-h0-r1/windows/T082DRCUHRRD-F48-a6-T5-next.json"
+          },
+          "enemy": {
+            "index": 0,
+            "id": "TEST_SUBJECT",
+            "before": {
+              "index": 0,
+              "enemy_id": "TEST_SUBJECT",
+              "name": "实验体 #C48",
+              "current_hp": 23,
+              "max_hp": 100,
+              "base_max_hp": 100,
+              "block": 0,
+              "is_alive": true,
+              "is_hittable": true,
+              "powers": [
+                {
+                  "index": 0,
+                  "power_id": "ADAPTABLE_POWER",
+                  "name": "适者生存",
+                  "amount": 1,
+                  "is_debuff": false
+                },
+                {
+                  "index": 1,
+                  "power_id": "ENRAGE_POWER",
+                  "name": "激怒",
+                  "amount": 2,
+                  "is_debuff": false
+                },
+                {
+                  "index": 2,
+                  "power_id": "POISON_POWER",
+                  "name": "中毒",
+                  "amount": 23,
+                  "is_debuff": true
+                },
+                {
+                  "index": 3,
+                  "power_id": "STRENGTH_POWER",
+                  "name": "力量",
+                  "amount": 6,
+                  "is_debuff": false
+                },
+                {
+                  "index": 4,
+                  "power_id": "WEAK_POWER",
+                  "name": "虚弱",
+                  "amount": 1,
+                  "is_debuff": true
+                }
+              ],
+              "intent": "BITE_MOVE",
+              "move_id": "BITE_MOVE",
+              "intents": [
+                {
+                  "index": 0,
+                  "intent_type": "Attack",
+                  "label": "29",
+                  "damage": 29,
+                  "hits": 1,
+                  "total_damage": 29,
+                  "status_card_count": null
+                }
+              ]
+            },
+            "after": {
+              "index": 0,
+              "enemy_id": "TEST_SUBJECT",
+              "name": "实验体 #C48",
+              "current_hp": 200,
+              "max_hp": 200,
+              "base_max_hp": 100,
+              "block": 0,
+              "is_alive": true,
+              "is_hittable": true,
+              "powers": [
+                {
+                  "index": 0,
+                  "power_id": "ADAPTABLE_POWER",
+                  "name": "适者生存",
+                  "amount": 1,
+                  "is_debuff": false
+                },
+                {
+                  "index": 1,
+                  "power_id": "PAINFUL_STABS_POWER",
+                  "name": "疼痛戳刺",
+                  "amount": 1,
+                  "is_debuff": false
+                },
+                {
+                  "index": 2,
+                  "power_id": "POISON_POWER",
+                  "name": "中毒",
+                  "amount": 2,
+                  "is_debuff": true
+                }
+              ],
+              "intent": "MULTI_CLAW_MOVE",
+              "move_id": "MULTI_CLAW_MOVE",
+              "intents": [
+                {
+                  "index": 0,
+                  "intent_type": "Attack",
+                  "label": "10[font_size=18]×3[/font_size]",
+                  "damage": 10,
+                  "hits": 3,
+                  "total_damage": 30,
+                  "status_card_count": null
+                }
+              ]
+            },
+            "raw_move_model_successors": {
+              "MULTI_CLAW_MOVE": 40,
+              "RESPAWN_MOVE": 1,
+              "SKULL_BASH_MOVE": 74
+            },
+            "successor_status": "supported",
+            "raw_successor_supported": true,
+            "hp_max_changed": true,
+            "alive_changed": false,
+            "target": "unknown: retained intent schema does not identify a resolved target",
+            "scope": "Raw successor membership only. Full scripts also condition on phase, death, summons, stun and powers; membership does not certify those conditions or probabilities."
+          }
+        },
+        {
+          "key": "T082DRCUHRRD:48:6:6373274535",
+          "turn": 9,
+          "pre": {
+            "path": "/home/dw/Projects/agent-sts2/logs/states.jsonl",
+            "offset": 6375187694,
+            "len": 43469,
+            "sha256": "72bba4c373799ecc374341e692c154708f19202435998b7832dbd6b5445e2358",
+            "frozen_path": "/home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration/learner/runs/20261017-human-pace-h0-r1/windows/T082DRCUHRRD-F48-a6-T9-pre.json"
+          },
+          "next": {
+            "path": "/home/dw/Projects/agent-sts2/logs/states.jsonl",
+            "offset": 6375231163,
+            "len": 51399,
+            "sha256": "e2daa71e90a2d985cd22fad4677fe5824ca82eaf90a86ef18ea20ad71839e4ca",
+            "frozen_path": "/home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration/learner/runs/20261017-human-pace-h0-r1/windows/T082DRCUHRRD-F48-a6-T9-next.json"
+          },
+          "enemy": {
+            "index": 0,
+            "id": "TEST_SUBJECT",
+            "before": {
+              "index": 0,
+              "enemy_id": "TEST_SUBJECT",
+              "name": "实验体 #C48",
+              "current_hp": 7,
+              "max_hp": 200,
+              "base_max_hp": 100,
+              "block": 0,
+              "is_alive": true,
+              "is_hittable": true,
+              "powers": [
+                {
+                  "index": 0,
+                  "power_id": "ADAPTABLE_POWER",
+                  "name": "适者生存",
+                  "amount": 1,
+                  "is_debuff": false
+                },
+                {
+                  "index": 1,
+                  "power_id": "PAINFUL_STABS_POWER",
+                  "name": "疼痛戳刺",
+                  "amount": 1,
+                  "is_debuff": false
+                },
+                {
+                  "index": 2,
+                  "power_id": "POISON_POWER",
+                  "name": "中毒",
+                  "amount": 22,
+                  "is_debuff": true
+                },
+                {
+                  "index": 3,
+                  "power_id": "WEAK_POWER",
+                  "name": "虚弱",
+                  "amount": 1,
+                  "is_debuff": true
+                }
+              ],
+              "intent": "MULTI_CLAW_MOVE",
+              "move_id": "MULTI_CLAW_MOVE",
+              "intents": [
+                {
+                  "index": 0,
+                  "intent_type": "Attack",
+                  "label": "7[font_size=18]×6[/font_size]",
+                  "damage": 7,
+                  "hits": 6,
+                  "total_damage": 42,
+                  "status_card_count": null
+                }
+              ]
+            },
+            "after": {
+              "index": 0,
+              "enemy_id": "TEST_SUBJECT",
+              "name": "实验体 #C48",
+              "current_hp": 300,
+              "max_hp": 300,
+              "base_max_hp": 100,
+              "block": 0,
+              "is_alive": true,
+              "is_hittable": true,
+              "powers": [
+                {
+                  "index": 0,
+                  "power_id": "NEMESIS_POWER",
+                  "name": "天罚",
+                  "amount": 1,
+                  "is_debuff": false
+                },
+                {
+                  "index": 1,
+                  "power_id": "INTANGIBLE_POWER",
+                  "name": "无实体",
+                  "amount": 1,
+                  "is_debuff": false
+                },
+                {
+                  "index": 2,
+                  "power_id": "POISON_POWER",
+                  "name": "中毒",
+                  "amount": 2,
+                  "is_debuff": true
+                }
+              ],
+              "intent": "PHASE3_LACERATE_MOVE",
+              "move_id": "PHASE3_LACERATE_MOVE",
+              "intents": [
+                {
+                  "index": 0,
+                  "intent_type": "Attack",
+                  "label": "10[font_size=18]×3[/font_size]",
+                  "damage": 10,
+                  "hits": 3,
+                  "total_damage": 30,
+                  "status_card_count": null
+                }
+              ]
+            },
+            "raw_move_model_successors": {
+              "BIG_POUNCE": 2,
+              "MULTI_CLAW_MOVE": 147,
+              "PHASE3_LACERATE_MOVE": 27,
+              "RESPAWN_MOVE": 4
+            },
+            "successor_status": "supported",
+            "raw_successor_supported": true,
+            "hp_max_changed": true,
+            "alive_changed": false,
+            "target": "unknown: retained intent schema does not identify a resolved target",
+            "scope": "Raw successor membership only. Full scripts also condition on phase, death, summons, stun and powers; membership does not certify those conditions or probabilities."
+          }
+        },
+        {
+          "key": "JMH5C51RLN4E:48:5:7439906621",
+          "turn": 4,
+          "pre": {
+            "path": "/home/dw/Projects/agent-sts2/logs/states.jsonl",
+            "offset": 7440853835,
+            "len": 44243,
+            "sha256": "b990c847b416b3faba9b597cb2d2c05614750d076647f09d9e96f24b31ca568a",
+            "frozen_path": "/home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration/learner/runs/20261017-human-pace-h0-r1/windows/JMH5C51RLN4E-F48-a5-T4-pre.json"
+          },
+          "next": {
+            "path": "/home/dw/Projects/agent-sts2/logs/states.jsonl",
+            "offset": 7440898078,
+            "len": 48712,
+            "sha256": "a96e8b616aad4f80fc1f1e7ad3da4f299d22b47e37530d2591f0b70bae0b187c",
+            "frozen_path": "/home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration/learner/runs/20261017-human-pace-h0-r1/windows/JMH5C51RLN4E-F48-a5-T4-next.json"
+          },
+          "enemy": {
+            "index": 0,
+            "id": "TEST_SUBJECT",
+            "before": {
+              "index": 0,
+              "enemy_id": "TEST_SUBJECT",
+              "name": "实验体 #C57",
+              "current_hp": 7,
+              "max_hp": 111,
+              "base_max_hp": 111,
+              "block": 0,
+              "is_alive": true,
+              "is_hittable": true,
+              "powers": [
+                {
+                  "index": 0,
+                  "power_id": "ADAPTABLE_POWER",
+                  "name": "适者生存",
+                  "amount": 1,
+                  "is_debuff": false
+                },
+                {
+                  "index": 1,
+                  "power_id": "ENRAGE_POWER",
+                  "name": "激怒",
+                  "amount": 3,
+                  "is_debuff": false
+                },
+                {
+                  "index": 2,
+                  "power_id": "STRENGTH_POWER",
+                  "name": "力量",
+                  "amount": 27,
+                  "is_debuff": false
+                },
+                {
+                  "index": 3,
+                  "power_id": "POISON_POWER",
+                  "name": "中毒",
+                  "amount": 9,
+                  "is_debuff": true
+                },
+                {
+                  "index": 4,
+                  "power_id": "WEAK_POWER",
+                  "name": "虚弱",
+                  "amount": 1,
+                  "is_debuff": true
+                }
+              ],
+              "intent": "SKULL_BASH_MOVE",
+              "move_id": "SKULL_BASH_MOVE",
+              "intents": [
+                {
+                  "index": 0,
+                  "intent_type": "Attack",
+                  "label": "32",
+                  "damage": 32,
+                  "hits": 1,
+                  "total_damage": 32,
+                  "status_card_count": null
+                },
+                {
+                  "index": 1,
+                  "intent_type": "Debuff",
+                  "label": null,
+                  "damage": null,
+                  "hits": null,
+                  "total_damage": null,
+                  "status_card_count": null
+                }
+              ]
+            },
+            "after": {
+              "index": 0,
+              "enemy_id": "TEST_SUBJECT",
+              "name": "实验体 #C57",
+              "current_hp": 212,
+              "max_hp": 212,
+              "base_max_hp": 111,
+              "block": 0,
+              "is_alive": true,
+              "is_hittable": true,
+              "powers": [
+                {
+                  "index": 0,
+                  "power_id": "ADAPTABLE_POWER",
+                  "name": "适者生存",
+                  "amount": 1,
+                  "is_debuff": false
+                },
+                {
+                  "index": 1,
+                  "power_id": "PAINFUL_STABS_POWER",
+                  "name": "疼痛戳刺",
+                  "amount": 1,
+                  "is_debuff": false
+                },
+                {
+                  "index": 2,
+                  "power_id": "POISON_POWER",
+                  "name": "中毒",
+                  "amount": 6,
+                  "is_debuff": true
+                }
+              ],
+              "intent": "MULTI_CLAW_MOVE",
+              "move_id": "MULTI_CLAW_MOVE",
+              "intents": [
+                {
+                  "index": 0,
+                  "intent_type": "Attack",
+                  "label": "11[font_size=18]×3[/font_size]",
+                  "damage": 11,
+                  "hits": 3,
+                  "total_damage": 33,
+                  "status_card_count": null
+                }
+              ]
+            },
+            "raw_move_model_successors": {
+              "BITE_MOVE": 59,
+              "MULTI_CLAW_MOVE": 12,
+              "RESPAWN_MOVE": 1
+            },
+            "successor_status": "supported",
+            "raw_successor_supported": true,
+            "hp_max_changed": true,
+            "alive_changed": false,
+            "target": "unknown: retained intent schema does not identify a resolved target",
+            "scope": "Raw successor membership only. Full scripts also condition on phase, death, summons, stun and powers; membership does not certify those conditions or probabilities."
+          }
+        },
+        {
+          "key": "JMH5C51RLN4E:48:5:7439906621",
+          "turn": 7,
+          "pre": {
+            "path": "/home/dw/Projects/agent-sts2/logs/states.jsonl",
+            "offset": 7441675823,
+            "len": 43512,
+            "sha256": "95e3aff327dcad70279002c8fd079755cdd90aefa129b3f719a3a2cd5d4ec351",
+            "frozen_path": "/home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration/learner/runs/20261017-human-pace-h0-r1/windows/JMH5C51RLN4E-F48-a5-T7-pre.json"
+          },
+          "next": {
+            "path": "/home/dw/Projects/agent-sts2/logs/states.jsonl",
+            "offset": 7441719335,
+            "len": 48229,
+            "sha256": "789149dfa6d0c5b732d23e9cd3520bca37f4041994156138663435a1a078907a",
+            "frozen_path": "/home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration/learner/runs/20261017-human-pace-h0-r1/windows/JMH5C51RLN4E-F48-a5-T7-next.json"
+          },
+          "enemy": {
+            "index": 0,
+            "id": "TEST_SUBJECT",
+            "before": {
+              "index": 0,
+              "enemy_id": "TEST_SUBJECT",
+              "name": "实验体 #C57",
+              "current_hp": 36,
+              "max_hp": 212,
+              "base_max_hp": 111,
+              "block": 0,
+              "is_alive": true,
+              "is_hittable": true,
+              "powers": [
+                {
+                  "index": 0,
+                  "power_id": "ADAPTABLE_POWER",
+                  "name": "适者生存",
+                  "amount": 1,
+                  "is_debuff": false
+                },
+                {
+                  "index": 1,
+                  "power_id": "PAINFUL_STABS_POWER",
+                  "name": "疼痛戳刺",
+                  "amount": 1,
+                  "is_debuff": false
+                },
+                {
+                  "index": 2,
+                  "power_id": "POISON_POWER",
+                  "name": "中毒",
+                  "amount": 17,
+                  "is_debuff": true
+                },
+                {
+                  "index": 3,
+                  "power_id": "WEAK_POWER",
+                  "name": "虚弱",
+                  "amount": 5,
+                  "is_debuff": true
+                }
+              ],
+              "intent": "MULTI_CLAW_MOVE",
+              "move_id": "MULTI_CLAW_MOVE",
+              "intents": [
+                {
+                  "index": 0,
+                  "intent_type": "Attack",
+                  "label": "8[font_size=18]×5[/font_size]",
+                  "damage": 8,
+                  "hits": 5,
+                  "total_damage": 40,
+                  "status_card_count": null
+                }
+              ]
+            },
+            "after": {
+              "index": 0,
+              "enemy_id": "TEST_SUBJECT",
+              "name": "实验体 #C57",
+              "current_hp": 313,
+              "max_hp": 313,
+              "base_max_hp": 111,
+              "block": 0,
+              "is_alive": true,
+              "is_hittable": true,
+              "powers": [
+                {
+                  "index": 0,
+                  "power_id": "NEMESIS_POWER",
+                  "name": "天罚",
+                  "amount": 1,
+                  "is_debuff": false
+                },
+                {
+                  "index": 1,
+                  "power_id": "INTANGIBLE_POWER",
+                  "name": "无实体",
+                  "amount": 1,
+                  "is_debuff": false
+                },
+                {
+                  "index": 2,
+                  "power_id": "POISON_POWER",
+                  "name": "中毒",
+                  "amount": 6,
+                  "is_debuff": true
+                }
+              ],
+              "intent": "PHASE3_LACERATE_MOVE",
+              "move_id": "PHASE3_LACERATE_MOVE",
+              "intents": [
+                {
+                  "index": 0,
+                  "intent_type": "Attack",
+                  "label": "11[font_size=18]×3[/font_size]",
+                  "damage": 11,
+                  "hits": 3,
+                  "total_damage": 33,
+                  "status_card_count": null
+                }
+              ]
+            },
+            "raw_move_model_successors": {
+              "BIG_POUNCE": 2,
+              "MULTI_CLAW_MOVE": 147,
+              "PHASE3_LACERATE_MOVE": 27,
+              "RESPAWN_MOVE": 4
+            },
+            "successor_status": "supported",
+            "raw_successor_supported": true,
+            "hp_max_changed": true,
+            "alive_changed": false,
+            "target": "unknown: retained intent schema does not identify a resolved target",
+            "scope": "Raw successor membership only. Full scripts also condition on phase, death, summons, stun and powers; membership does not certify those conditions or probabilities."
+          }
+        },
+        {
+          "key": "UJ0K3G10609Y:48:6:7604962158",
+          "turn": 5,
+          "pre": {
+            "path": "/home/dw/Projects/agent-sts2/logs/states.jsonl",
+            "offset": 7606105449,
+            "len": 44831,
+            "sha256": "609ac67ce9fe5200940baa9e0a19b28c00ccbddd83636045ad574100eeb01d59",
+            "frozen_path": "/home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration/learner/runs/20261017-human-pace-h0-r1/windows/UJ0K3G10609Y-F48-a6-T5-pre.json"
+          },
+          "next": {
+            "path": "/home/dw/Projects/agent-sts2/logs/states.jsonl",
+            "offset": 7606150280,
+            "len": 46553,
+            "sha256": "c911de9dec5ed109daaa9ea7f4a69d40c1ca59c8e7d8e8f6bfde648356f6c279",
+            "frozen_path": "/home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration/learner/runs/20261017-human-pace-h0-r1/windows/UJ0K3G10609Y-F48-a6-T5-next.json"
+          },
+          "enemy": {
+            "index": 0,
+            "id": "TEST_SUBJECT",
+            "before": {
+              "index": 0,
+              "enemy_id": "TEST_SUBJECT",
+              "name": "实验体 #C61",
+              "current_hp": 0,
+              "max_hp": 111,
+              "base_max_hp": 111,
+              "block": 0,
+              "is_alive": false,
+              "is_hittable": false,
+              "powers": [
+                {
+                  "index": 0,
+                  "power_id": "ADAPTABLE_POWER",
+                  "name": "适者生存",
+                  "amount": 1,
+                  "is_debuff": false
+                }
+              ],
+              "intent": "RESPAWN_MOVE",
+              "move_id": "RESPAWN_MOVE",
+              "intents": [
+                {
+                  "index": 0,
+                  "intent_type": "Heal",
+                  "label": null,
+                  "damage": null,
+                  "hits": null,
+                  "total_damage": null,
+                  "status_card_count": null
+                },
+                {
+                  "index": 1,
+                  "intent_type": "Buff",
+                  "label": null,
+                  "damage": null,
+                  "hits": null,
+                  "total_damage": null,
+                  "status_card_count": null
+                }
+              ]
+            },
+            "after": {
+              "index": 0,
+              "enemy_id": "TEST_SUBJECT",
+              "name": "实验体 #C61",
+              "current_hp": 212,
+              "max_hp": 212,
+              "base_max_hp": 111,
+              "block": 0,
+              "is_alive": true,
+              "is_hittable": true,
+              "powers": [
+                {
+                  "index": 0,
+                  "power_id": "ADAPTABLE_POWER",
+                  "name": "适者生存",
+                  "amount": 1,
+                  "is_debuff": false
+                },
+                {
+                  "index": 1,
+                  "power_id": "PAINFUL_STABS_POWER",
+                  "name": "疼痛戳刺",
+                  "amount": 1,
+                  "is_debuff": false
+                }
+              ],
+              "intent": "MULTI_CLAW_MOVE",
+              "move_id": "MULTI_CLAW_MOVE",
+              "intents": [
+                {
+                  "index": 0,
+                  "intent_type": "Attack",
+                  "label": "11[font_size=18]×3[/font_size]",
+                  "damage": 11,
+                  "hits": 3,
+                  "total_damage": 33,
+                  "status_card_count": null
+                }
+              ]
+            },
+            "raw_move_model_successors": {
+              "MULTI_CLAW_MOVE": 2,
+              "PHASE3_LACERATE_MOVE": 4
+            },
+            "successor_status": "supported",
+            "raw_successor_supported": true,
+            "hp_max_changed": true,
+            "alive_changed": true,
+            "target": "unknown: retained intent schema does not identify a resolved target",
+            "scope": "Raw successor membership only. Full scripts also condition on phase, death, summons, stun and powers; membership does not certify those conditions or probabilities."
+          }
+        },
+        {
+          "key": "YZWV37N2MU6N:48:1:13639002370",
+          "turn": 5,
+          "pre": {
+            "path": "/home/dw/Projects/agent-sts2/logs/states.jsonl",
+            "offset": 13640616360,
+            "len": 48058,
+            "sha256": "5cad0dd5f052a40d6ea2b9eb23a5a0f13edfb394f861808f8e49fe9b2156094e",
+            "frozen_path": "/home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration/learner/runs/20261017-human-pace-h0-r1/windows/YZWV37N2MU6N-F48-a1-T5-pre.json"
+          },
+          "next": {
+            "path": "/home/dw/Projects/agent-sts2/logs/states.jsonl",
+            "offset": 13640664418,
+            "len": 54348,
+            "sha256": "8bc50bbd4a33751390babc255b05d1aac2a8fc42896a80889c958c388ebfc3f0",
+            "frozen_path": "/home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration/learner/runs/20261017-human-pace-h0-r1/windows/YZWV37N2MU6N-F48-a1-T5-next.json"
+          },
+          "enemy": {
+            "index": 0,
+            "id": "TEST_SUBJECT",
+            "before": {
+              "index": 0,
+              "enemy_id": "TEST_SUBJECT",
+              "name": "实验体 #C91",
+              "current_hp": 0,
+              "max_hp": 111,
+              "base_max_hp": 111,
+              "block": 0,
+              "is_alive": false,
+              "is_hittable": false,
+              "powers": [
+                {
+                  "index": 0,
+                  "power_id": "ADAPTABLE_POWER",
+                  "name": "适者生存",
+                  "amount": 1,
+                  "is_debuff": false
+                }
+              ],
+              "intent": "RESPAWN_MOVE",
+              "move_id": "RESPAWN_MOVE",
+              "intents": [
+                {
+                  "index": 0,
+                  "intent_type": "Heal",
+                  "label": null,
+                  "damage": null,
+                  "hits": null,
+                  "total_damage": null,
+                  "status_card_count": null
+                },
+                {
+                  "index": 1,
+                  "intent_type": "Buff",
+                  "label": null,
+                  "damage": null,
+                  "hits": null,
+                  "total_damage": null,
+                  "status_card_count": null
+                }
+              ]
+            },
+            "after": {
+              "index": 0,
+              "enemy_id": "TEST_SUBJECT",
+              "name": "实验体 #C91",
+              "current_hp": 212,
+              "max_hp": 212,
+              "base_max_hp": 111,
+              "block": 0,
+              "is_alive": true,
+              "is_hittable": true,
+              "powers": [
+                {
+                  "index": 0,
+                  "power_id": "ADAPTABLE_POWER",
+                  "name": "适者生存",
+                  "amount": 1,
+                  "is_debuff": false
+                },
+                {
+                  "index": 1,
+                  "power_id": "PAINFUL_STABS_POWER",
+                  "name": "疼痛戳刺",
+                  "amount": 1,
+                  "is_debuff": false
+                },
+                {
+                  "index": 2,
+                  "power_id": "POISON_POWER",
+                  "name": "中毒",
+                  "amount": 6,
+                  "is_debuff": true
+                }
+              ],
+              "intent": "MULTI_CLAW_MOVE",
+              "move_id": "MULTI_CLAW_MOVE",
+              "intents": [
+                {
+                  "index": 0,
+                  "intent_type": "Attack",
+                  "label": "11[font_size=18]×3[/font_size]",
+                  "damage": 11,
+                  "hits": 3,
+                  "total_damage": 33,
+                  "status_card_count": null
+                }
+              ]
+            },
+            "raw_move_model_successors": {
+              "MULTI_CLAW_MOVE": 2,
+              "PHASE3_LACERATE_MOVE": 4
+            },
+            "successor_status": "supported",
+            "raw_successor_supported": true,
+            "hp_max_changed": true,
+            "alive_changed": true,
+            "target": "unknown: retained intent schema does not identify a resolved target",
+            "scope": "Raw successor membership only. Full scripts also condition on phase, death, summons, stun and powers; membership does not certify those conditions or probabilities."
+          }
+        },
+        {
+          "key": "YZWV37N2MU6N:48:1:13639002370",
+          "turn": 8,
+          "pre": {
+            "path": "/home/dw/Projects/agent-sts2/logs/states.jsonl",
+            "offset": 13642039031,
+            "len": 45446,
+            "sha256": "ea408cffbd869c3917bf30dd1dea1c74288b8bb440a84843b5e9473d9b88666b",
+            "frozen_path": "/home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration/learner/runs/20261017-human-pace-h0-r1/windows/YZWV37N2MU6N-F48-a1-T8-pre.json"
+          },
+          "next": {
+            "path": "/home/dw/Projects/agent-sts2/logs/states.jsonl",
+            "offset": 13642084477,
+            "len": 53925,
+            "sha256": "c66cfaea3c7fe6481ad7f40a005752ab7261035101ae383cca74136ac87a035f",
+            "frozen_path": "/home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration/learner/runs/20261017-human-pace-h0-r1/windows/YZWV37N2MU6N-F48-a1-T8-next.json"
+          },
+          "enemy": {
+            "index": 0,
+            "id": "TEST_SUBJECT",
+            "before": {
+              "index": 0,
+              "enemy_id": "TEST_SUBJECT",
+              "name": "实验体 #C91",
+              "current_hp": 72,
+              "max_hp": 212,
+              "base_max_hp": 111,
+              "block": 0,
+              "is_alive": true,
+              "is_hittable": true,
+              "powers": [
+                {
+                  "index": 0,
+                  "power_id": "ADAPTABLE_POWER",
+                  "name": "适者生存",
+                  "amount": 1,
+                  "is_debuff": false
+                },
+                {
+                  "index": 1,
+                  "power_id": "PAINFUL_STABS_POWER",
+                  "name": "疼痛戳刺",
+                  "amount": 1,
+                  "is_debuff": false
+                },
+                {
+                  "index": 2,
+                  "power_id": "POISON_POWER",
+                  "name": "中毒",
+                  "amount": 17,
+                  "is_debuff": true
+                },
+                {
+                  "index": 3,
+                  "power_id": "WEAK_POWER",
+                  "name": "虚弱",
+                  "amount": 3,
+                  "is_debuff": true
+                }
+              ],
+              "intent": "MULTI_CLAW_MOVE",
+              "move_id": "MULTI_CLAW_MOVE",
+              "intents": [
+                {
+                  "index": 0,
+                  "intent_type": "Attack",
+                  "label": "8[font_size=18]×5[/font_size]",
+                  "damage": 8,
+                  "hits": 5,
+                  "total_damage": 40,
+                  "status_card_count": null
+                }
+              ]
+            },
+            "after": {
+              "index": 0,
+              "enemy_id": "TEST_SUBJECT",
+              "name": "实验体 #C91",
+              "current_hp": 313,
+              "max_hp": 313,
+              "base_max_hp": 111,
+              "block": 0,
+              "is_alive": true,
+              "is_hittable": true,
+              "powers": [
+                {
+                  "index": 0,
+                  "power_id": "NEMESIS_POWER",
+                  "name": "天罚",
+                  "amount": 1,
+                  "is_debuff": false
+                },
+                {
+                  "index": 1,
+                  "power_id": "INTANGIBLE_POWER",
+                  "name": "无实体",
+                  "amount": 1,
+                  "is_debuff": false
+                },
+                {
+                  "index": 2,
+                  "power_id": "POISON_POWER",
+                  "name": "中毒",
+                  "amount": 6,
+                  "is_debuff": true
+                }
+              ],
+              "intent": "PHASE3_LACERATE_MOVE",
+              "move_id": "PHASE3_LACERATE_MOVE",
+              "intents": [
+                {
+                  "index": 0,
+                  "intent_type": "Attack",
+                  "label": "11[font_size=18]×3[/font_size]",
+                  "damage": 11,
+                  "hits": 3,
+                  "total_damage": 33,
+                  "status_card_count": null
+                }
+              ]
+            },
+            "raw_move_model_successors": {
+              "BIG_POUNCE": 2,
+              "MULTI_CLAW_MOVE": 147,
+              "PHASE3_LACERATE_MOVE": 27,
+              "RESPAWN_MOVE": 4
+            },
+            "successor_status": "supported",
+            "raw_successor_supported": true,
+            "hp_max_changed": true,
+            "alive_changed": false,
+            "target": "unknown: retained intent schema does not identify a resolved target",
+            "scope": "Raw successor membership only. Full scripts also condition on phase, death, summons, stun and powers; membership does not certify those conditions or probabilities."
+          }
+        }
+      ],
+      "first_raw_unsupported_transition": null,
+      "independent_causal_repair_claim": false
+    },
+    "THE_INSATIABLE": {
+      "windows": 28,
+      "independent_runs": 4,
+      "raw_move_model_supported": 28,
+      "raw_move_model_not_supported": 0,
+      "enemy_absent_next_frame": 0,
+      "phase_or_alive_changes": [],
+      "first_raw_unsupported_transition": null,
+      "independent_causal_repair_claim": false
+    }
+  },
+  "limitations": [
+    "Same 24 diagnostic fights, not new independent data or a random sample.",
+    "No simulator or old full replay rerun; no change to labels, criteria, coefficients or frozen model.",
+    "An absent raw successor may reflect phase, death, stun, intermediate animation, or missing evidence, not a proven next-move defect.",
+    "Resolved per-hit targets and event-level resource settlement remain unknown when absent in the raw schema."
+  ]
+}

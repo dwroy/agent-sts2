@@ -1,0 +1,45 @@
+{
+  "character": "silent",
+  "kind": "mechanic",
+  "claim": "H0原帧核SILENT A10实验体111→212→313换相能力：3局第一换相后激怒3消失、痛苦刺击1出现；2局有第二换相后继，痛苦刺击消失并入Nemesis。旧silent-test-subject-phase-reset游戏事实与冻结/current-live full模拟不一致：enemyDown继承base.enrage/woundsPerHit，laterTurnSim继续带到下一回合。只拟修已观察A10 HP/能力签名和whole-fight路径；不由高leak猜倍率，不承诺整战改善或Wound完整入堆。",
+  "evidence": [
+    {
+      "run": "JMH5C51RLN4E",
+      "floor": 48,
+      "turn": 4,
+      "role": "support",
+      "note": "A10 attempt5 T4→5、T7→8，原帧能力集合及phase plan source refs；两次换相完整后继。"
+    },
+    {
+      "run": "UJ0K3G10609Y",
+      "floor": 48,
+      "turn": 5,
+      "role": "support",
+      "note": "A10 attempt6 T5→6；第一相结束已清ENRAGE，下一相PAINFUL1；第二换相未观察，不补造。"
+    },
+    {
+      "run": "YZWV37N2MU6N",
+      "floor": 48,
+      "turn": 5,
+      "role": "support",
+      "note": "A10 attempt1 T5→6、T8→9；与原帧绑定，不把同局两窗口当两局。"
+    }
+  ],
+  "first_run": "JMH5C51RLN4E",
+  "asc": 10,
+  "prior": "partly",
+  "prior_note": "复用已有phase-reset事实；新发现是该事实未被full模型阶段静态字段消费，固定集/高leak不能单独证明该缺口对胜负的因果贡献。",
+  "status": "proposed",
+  "by": "learner:strategy-proposal",
+  "where": {
+    "experience": [
+      "silent-test-subject-phase-reset",
+      "silent-g1a-test-subject-calibration-boundary",
+      "silent-g1a-fixed-production-boundary"
+    ],
+    "proposal": [
+      "/home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration/learner/runs/20261017-human-pace-h0-r1/test-subject-phase-repair/proposal.md"
+    ]
+  },
+  "note": "来源原H0/r1；当前481验证模块保持不可变。新源尚未测试/发布，不冒implemented/shipped；完整数据计划SHA 52dd71170e1fe8c58cda373899d69447c27e6fd4f479a9c4462364890f1ee55b"
+}
