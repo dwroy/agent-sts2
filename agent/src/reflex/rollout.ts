@@ -636,6 +636,8 @@ export interface RolloutInput {
   observedGardenerSkittish?: boolean;
   /** Observed Silent A10 Test Subject phase power sets; whole-fight scripts only. */
   observedSilentTestSubjectPhasePowers?: boolean;
+  /** Observed Silent A10 Aeonglass Intensity buff turns; whole-fight scripts only. */
+  observedSilentAeonglassIntensity?: boolean;
   /** Fresh second-fight starts from observed identities, weighted without revealing this run's future boss. */
   continuation?: {
     variants: { boss: string; count: number; input: RolloutInput }[];
@@ -1502,6 +1504,11 @@ export const PHASE_MOVES: Record<string, readonly (readonly string[])[]> = {
 
 /** Moves that gain a hit each use (Multi Claw: logged 10x3, 10x4, … 10x7 in one phase 2): the move and its enemy. */
 export const GROWING_HITS: Record<string, string> = { TEST_SUBJECT: "MULTI_CLAW_MOVE" };
+
+// Silent A10 command windows: T3/T6/T9/T12 gained 4/5/6/7 Strength (36/30/13/2 clean windows).
+// 25226ZFLNR1J, UMVLWER4CD98 and RMNXHZKV716Y anchor the frozen H0/r3 evidence.
+// Later buff turns have no verified transition here and retain the existing table value.
+const OBSERVED_SILENT_AEONGLASS_STRENGTH: Readonly<Record<number, number>> = { 3: 4, 6: 5, 9: 6, 12: 7 };
 
 /**
  * The Knowledge Demon's Curse of Knowledge: 3 uses a fight (logged on turns 1, 5 and 9 only, 132 uses in 52 fights; after
@@ -2396,7 +2403,11 @@ function applyPlan(
         // An attack spends the Vigor it had (its hits carried it); the move's own Vigor is for the next one.
         if (e.base.attacks.some((attack) => attack.damage * attack.hits > 0)) e.vigor = 0;
         e.vigor += m?.vigor ?? 0;
-        e.strength += m?.strength ?? 0;
+        const observedIntensity = fullFight && input.observedSilentAeonglassIntensity === true && input.meta.asc === 10 &&
+          e.id === "AEONGLASS" && e.maxHp === 535 && e.powers["WITHERING_PRESENCE_POWER"] === 6 &&
+          e.move === "INCREASING_INTENSITY_MOVE" && m?.strength === 4
+          ? OBSERVED_SILENT_AEONGLASS_STRENGTH[(input.solver.turn ?? input.meta.t) + turn] : undefined;
+        e.strength += observedIntensity ?? m?.strength ?? 0;
         // Ritual, Territorial, High Voltage: Strength at the end of its turn (Cultists' T2 loss was short
         // 1.3 a turn, Byrdonis 2); a Ritual this move gives starts on its next turn (Incantation gains none).
         e.strength += e.growth;
