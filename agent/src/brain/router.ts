@@ -1,4 +1,4 @@
-import { currentDecisionBudget, withinDecisionBudget, DecisionBudgetExpired } from "../core/decision-budget.js";
+import { currentDecisionBudget, withinDecisionBudget, withIndependentDecisionBudget, HUMAN_PACE_BUDGETS, DecisionBudgetExpired } from "../core/decision-budget.js";
 /**
  * Production createRouter selects the Codex-only path: outages wait on the same question and faults propagate.
  * The configurable fallback path below remains for historical engine adapters and fixed regression fixtures.
@@ -390,7 +390,9 @@ export class BrainRouter {
     const pace = currentDecisionBudget();
     if (pace && !request.budgetSignal) {
       pace.promoteBrain();
-      return withinDecisionBudget("L2_brain", (signal) => this.decide({ ...request, budgetSignal: signal, effort: "xhigh", timeoutMs: Math.max(1, pace.remaining(90_000)) }), 90_000);
+      return withIndependentDecisionBudget("L2_brain", "brain", HUMAN_PACE_BUDGETS.brain, "L2", () =>
+        withinDecisionBudget("L2_brain", (signal) => this.decide({ ...request, budgetSignal: signal,
+          effort: "xhigh", timeoutMs: HUMAN_PACE_BUDGETS.brain }), HUMAN_PACE_BUDGETS.brain));
     }
     if (request.budgetSignal?.aborted) throw new DecisionBudgetExpired(request.label);
     request.questionId ??= this.nextQuestionId();

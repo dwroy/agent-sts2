@@ -1,7 +1,8 @@
 /** Fixed clocks and in-memory engines only. No game, network, or model invocation. */
 import { afterEach, expect, it, vi } from "vitest";
 import { DecisionBudget, DecisionBudgetExpired, DecisionBudgetLedger, HUMAN_PACE_BUDGETS, outsideDecisionBudget,
-  shadowBudgetAvailable, withinDecisionBudget, withDecisionBudget } from "../src/core/decision-budget.js";
+  shadowBudgetAvailable, withinDecisionBudget, withDecisionBudget, currentDecisionBudget,
+  withShadowDecisionBudget, measureDecisionBudgetStage } from "../src/core/decision-budget.js";
 import { BrainRouter, EngineFailure, type BrainLogRow } from "../src/brain/router.js";
 import { BrainWait, type BrainWaitEvent } from "../src/brain/wait.js";
 import { pickSpec } from "../src/brain/specs.js";
@@ -76,4 +77,68 @@ it("bounds Jev retry backoff by the same allowance and never launches the next r
   }))).rejects.toBeInstanceOf(DecisionBudgetExpired);
   await vi.advanceTimersByTimeAsync(500); await rejection;
   await vi.advanceTimersByTimeAsync(3000); expect(calls).toBe(1);
+});
+
+it("gives each L2 question its own 90 seconds after real computation and observers, without debiting either allowance", async () => {
+  let time = 0;
+  const budget = new DecisionBudget("fixed-L2-preparation", "brain", () => time);
+  const requests: BrainRequest[] = [];
+  const engine: BrainEngine = { name: "codex", model: "fixed", decide: async (req) => {
+    requests.push(req); expect(req.timeoutMs).toBe(90000); time += 80000;
+    return { engine: "codex", model: "fixed", answer: { choice: "a", reason: "fixed" }, problems: [],
+      attempts: 1, latencyMs: 80000, usage: { inputTokens: 0, outputTokens: 0 }, toolCalls: [] };
+  } };
+  const router = new BrainRouter({ config: loadConfig({ BRAIN_LOG: "off" }).brain, codexOnly: true,
+    engine: () => engine, log: () => {} });
+  await withDecisionBudget(budget, async () => {
+    await measureDecisionBudgetStage("B3_current", async () => {
+      time += 11000;
+      await withShadowDecisionBudget("G2_global_shadow", async () => {
+        expect(currentDecisionBudget()).not.toBe(budget); time += 70000;
+      });
+    });
+    expect(budget.remaining()).toBe(79000);
+    for (let i = 0; i < 2; i++) {
+      expect((await router.decide(request())).answer).toEqual({ choice: "a", reason: "fixed" });
+      expect(currentDecisionBudget()).toBe(budget); expect(budget.remaining()).toBe(79000);
+    }
+  });
+  expect(requests).toHaveLength(2);
+  expect(budget.record()).toMatchObject({ actual_ms: 241000, shared_actual_ms: 11000,
+    independent_actual_ms: 230000, timed_out: false });
+  expect(budget.record().stages).toEqual(expect.arrayContaining([
+    expect.objectContaining({ stage: "G2_global_shadow", scope: "shadow", actual_ms: 70000 }),
+    expect.objectContaining({ stage: "B3_current", actual_ms: 11000 }),
+    expect.objectContaining({ stage: "L2_brain", scope: "L2", budget_ms: 90000, actual_ms: 80000 }),
+  ]));
+});
+
+it("keeps the L2 deadline and abort after the shared real budget is already exhausted", async () => {
+  vi.useFakeTimers();
+  const budget = new DecisionBudget("fixed-exhausted-real", "brain", () => Date.now());
+  budget.charge(95000);
+  let aborts = 0;
+  const router = new BrainRouter({ config: loadConfig({ BRAIN_LOG: "off" }).brain, codexOnly: true, log: () => {},
+    engine: () => ({ name: "codex", model: "fixed", decide: async (req, signal) => {
+      expect(req.timeoutMs).toBe(90000);
+      return new Promise((_, reject) => signal?.addEventListener("abort", () => { aborts++; reject(new Error("fixed abort")); }));
+    } }) });
+  const pending = expect(withDecisionBudget(budget, () => router.decide(request()))).rejects.toBeInstanceOf(DecisionBudgetExpired);
+  await vi.advanceTimersByTimeAsync(89999); expect(aborts).toBe(0);
+  await vi.advanceTimersByTimeAsync(1); await pending; expect(aborts).toBe(1);
+  expect(budget.elapsed()).toBe(95000);
+  expect(budget.record().stages.at(-1)).toMatchObject({ stage: "L2_brain", budget_ms: 90000, actual_ms: 90000, timed_out: true });
+});
+
+it("restores the parent after synchronous and asynchronous observer failures and keeps its original deadline", async () => {
+  let time = 0;
+  const budget = new DecisionBudget("fixed-shadow-failure", "ordinary", () => time);
+  await withDecisionBudget(budget, async () => {
+    time += 2000;
+    expect(() => withShadowDecisionBudget("P1_readiness_shadow", () => { time += 1000; throw new Error("fixed sync"); })).toThrow("fixed sync");
+    await expect(withShadowDecisionBudget("G2_global_shadow", async () => { time += 3000; throw new Error("fixed async"); })).rejects.toThrow("fixed async");
+    expect(currentDecisionBudget()).toBe(budget); expect(budget.running).toBe(true); expect(budget.remaining()).toBe(8000);
+    time += 8000; expect(budget.remaining()).toBe(0);
+  });
+  expect(budget.record()).toMatchObject({ shared_actual_ms: 10000, independent_actual_ms: 4000, actual_ms: 14000 });
 });

@@ -1,4 +1,4 @@
-import { currentDecisionBudget, shadowBudgetAvailable, DecisionBudgetExpired } from "../core/decision-budget.js";
+import { currentDecisionBudget, shadowBudgetAvailable, withShadowDecisionBudget, DecisionBudgetExpired } from "../core/decision-budget.js";
 /** Silent's supplementary G2 shadow path never changes the current B3 question or its completion gate. */
 import { globalBuildPolicy } from "../core/global-build-config.js";
 import { asRecord, str, toJsonValue, type JsonValue } from "../core/util/json.js";
@@ -37,7 +37,7 @@ export async function globalBuildForB3(args: {
   const adaptiveMode = simAdaptivePolicy("silent").mode;
   const ascension = env.state.run?.ascension ?? 0;
   try {
-    const observed = await observeGlobalBuild({ runner: setup.runner, memory: env.screenMemory as GlobalBuildMemory,
+    const observed = await withShadowDecisionBudget("G2_global_shadow", () => observeGlobalBuild({ runner: setup.runner, memory: env.screenMemory as GlobalBuildMemory,
       runId: str(env.state.raw["run_id"]), floor: env.state.run?.floor ?? null, label: args.label, ascension,
       currentAct: mapActOf(env.state), currentBoss: bossKey(args.bossId), input: args.input,
       options: args.options, keys: args.keys, current: args.current,
@@ -58,7 +58,7 @@ export async function globalBuildForB3(args: {
           // Only the new future-Boss lane is win-only; current B3's existing C2 policy is untouched.
           ...(adaptiveMode !== "off" ? { adaptive: { mode: adaptiveMode, allowS: false } } : {}),
           // This table supplies paired S diagnostics only. G2 never consumes its ordering.
-          buildRank: { sSort: "shadow", lowTrust: bossTrustReason(target.boss, "b3", ascension),
+          buildRankShadow: true, buildRank: { sSort: "shadow", lowTrust: bossTrustReason(target.boss, "b3", ascension),
             calibratedFloor: Math.round(calibratedWinProb(0, BUILD_SIM_CALIBRATION_SAMPLES, "pre", ascension) * 100) / 100,
             tieSe: BOSS_LINES_TIE_SE },
         });
@@ -75,7 +75,7 @@ export async function globalBuildForB3(args: {
         })) throw new Error("global_required_paired_DPR_missing");
         return result;
       },
-    });
+    }));
     return toJsonValue({ ...observed, requested_mode: policy.requested, admission: policy.admission,
       future_entry_basis: "fixed_current_HP_deck_resources; future_route_rewards_and_actual_entry_unknown" });
   } catch (error) {
