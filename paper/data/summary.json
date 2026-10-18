@@ -1,7 +1,7 @@
 {
   "performance_policy": "codex-successful-brain-v1",
   "include_non_codex": false,
-  "previous_snapshot": "/home/dw/Projects/agent-sts2/paper/data/history/20261018T102624750152Z",
+  "previous_snapshot": "/home/dw/Projects/agent-sts2/paper/data/history/20261018T104331523607Z",
   "performance": {
     "runs": 344,
     "finished": 343,
@@ -2632,16 +2632,16 @@
       "run_ids": []
     }
   },
-  "generated_at": "2026-10-18T10:26:24.551Z",
+  "generated_at": "2026-10-18T10:43:31.117Z",
   "source_cut_bytes": {
-    "decisions.jsonl": 2621191827,
+    "decisions.jsonl": 2627169560,
     "deepseek-reasoning.jsonl": 377746518,
     "runs.jsonl": 376250,
-    "states.jsonl": 14432369866,
+    "states.jsonl": 14439407126,
     "fight-plans.jsonl": 2233957,
-    "run-plans.jsonl": 9445870,
-    "brain.jsonl": 836225436,
-    "sl-attempts.jsonl": 48490643,
+    "run-plans.jsonl": 9451639,
+    "brain.jsonl": 837631178,
+    "sl-attempts.jsonl": 48526569,
     "run-config.jsonl": 2122127
   },
   "runs_total": 850,
@@ -2935,13 +2935,14 @@
     "6": 2,
     "7": 8,
     "8": 10,
-    "9": 12,
+    "9": 11,
     "11": 7,
     "12": 5,
     "13": 5,
     "14": 5,
     "15": 6,
     "17": 149,
+    "18": 1,
     "20": 1,
     "21": 9,
     "22": 20,
@@ -11564,10 +11565,10 @@
   },
   "api": {
     "jev": {
-      "calls": 112703,
-      "in_tokens": 2759660535,
-      "out_tokens": 44986395,
-      "cost_usd": 117.7952,
+      "calls": 112779,
+      "in_tokens": 2761833124,
+      "out_tokens": 44997008,
+      "cost_usd": 117.8869,
       "price_per_m_tokens_usd": 0.042
     },
     "deepseek": {
@@ -11593,19 +11594,19 @@
       "note": "answered by the interactive Claude Code session via file escalation; no per-call token accounting"
     }
   },
-  "api_cost_total_usd": 133.061,
+  "api_cost_total_usd": 133.1527,
   "decisions": {
-    "play_total": 436827,
-    "attributed_to_runs": 433543,
+    "play_total": 437026,
+    "attributed_to_runs": 433742,
     "unattributed_menu_timeline": 3284,
     "shadow": 20,
     "by_layer": {
-      "code": 221610,
-      "jev": 89228,
+      "code": 221670,
+      "jev": 89296,
       "deepseek": 12400,
       "claude": 186,
       "code-fallback": 1967,
-      "jev-plan": 90600,
+      "jev-plan": 90659,
       "deepseek-plan": 847,
       "claude-plan": 73
     },
@@ -11627,12 +11628,12 @@
       "deepseek-flash": 13468
     }
   },
-  "states_lines_scanned": 451879,
+  "states_lines_scanned": 452098,
   "console_logs": 1313,
   "commits": {
-    "total": 7096,
+    "total": 7097,
     "ref_snapshot": {
-      "HEAD": "c2663150e319ece1fcf740ad8f8a08e6ad1f1186",
+      "HEAD": "38a1cfd82af01a1d53ede9537287829892883e63",
       "refs/heads/ascension-audit-regent-a1-1": "4ab5e9f4b13eaa5b96c969ceebe79e2562222ce0",
       "refs/heads/ascension-audit-regent-a1-2": "4ab5e9f4b13eaa5b96c969ceebe79e2562222ce0",
       "refs/heads/ascension-audit-regent-a1-3": "aece9cb8e946404a9bd26552dce4fbbda5b4232a",
@@ -12568,6 +12569,8 @@
       "refs/heads/codex-strategy-silent-20261018-174302-s2": "e36f1e3a61edff3aa4241a4d415937806d7d3a75",
       "refs/heads/codex-strategy-silent-20261018-181302": "a7e98d337226b1616ceb5f31072d97c9ef422d5a",
       "refs/heads/codex-strategy-silent-20261018-181302-s2": "a7e98d337226b1616ceb5f31072d97c9ef422d5a",
+      "refs/heads/codex-strategy-silent-20261018-184301": "38a1cfd82af01a1d53ede9537287829892883e63",
+      "refs/heads/codex-strategy-silent-20261018-184301-s2": "38a1cfd82af01a1d53ede9537287829892883e63",
       "refs/heads/codex-v5s-p1p2-shadow-20261016": "70c61acfb118ab284bb950b32495177458a76b2d",
       "refs/heads/core-decklists-entry-20261012": "d1bcd028d05f022f51c0d3b71cbff62a1d3f51ad",
       "refs/heads/dev-regent-main-sync-20261014": "a5467387402ef61c26d37720c56e72e6e5dbbcfe",
@@ -12617,7 +12620,7 @@
       "refs/heads/lifecycle-cleanup-20261013": "309b3bbc97bd55d08affee4cf8184d9a6794f41e",
       "refs/heads/live": "3fb989e95d294fad9f772ed970ffe26e437bd1ca",
       "refs/heads/llm-switch-scope-20261017": "e4a07e30f86c6bb639fb4e43cc808e9d599220f3",
-      "refs/heads/main": "c2663150e319ece1fcf740ad8f8a08e6ad1f1186",
+      "refs/heads/main": "38a1cfd82af01a1d53ede9537287829892883e63",
       "refs/heads/model-sol61-20261012": "c06d1019b8dee0110c3627a012bdb865bd7e7a80",
       "refs/heads/multi-instance-climb-20261013": "84300293795474c4ea3b13e210d2a1222854d115",
       "refs/heads/ops-0010-experience111": "7954390da3772efc72b159173f6be81f7c89e5cd",
@@ -13685,6 +13688,7 @@
       "all-tip:5fb77ee10bc97e99e607f96e5dbd24aaed8c9b47": "5fb77ee10bc97e99e607f96e5dbd24aaed8c9b47",
       "all-tip:e36f1e3a61edff3aa4241a4d415937806d7d3a75": "e36f1e3a61edff3aa4241a4d415937806d7d3a75",
       "all-tip:a7e98d337226b1616ceb5f31072d97c9ef422d5a": "a7e98d337226b1616ceb5f31072d97c9ef422d5a",
+      "all-tip:38a1cfd82af01a1d53ede9537287829892883e63": "38a1cfd82af01a1d53ede9537287829892883e63",
       "all-tip:70c61acfb118ab284bb950b32495177458a76b2d": "70c61acfb118ab284bb950b32495177458a76b2d",
       "all-tip:d1bcd028d05f022f51c0d3b71cbff62a1d3f51ad": "d1bcd028d05f022f51c0d3b71cbff62a1d3f51ad",
       "all-tip:a5467387402ef61c26d37720c56e72e6e5dbbcfe": "a5467387402ef61c26d37720c56e72e6e5dbbcfe",
@@ -13731,7 +13735,6 @@
       "all-tip:309b3bbc97bd55d08affee4cf8184d9a6794f41e": "309b3bbc97bd55d08affee4cf8184d9a6794f41e",
       "all-tip:3fb989e95d294fad9f772ed970ffe26e437bd1ca": "3fb989e95d294fad9f772ed970ffe26e437bd1ca",
       "all-tip:e4a07e30f86c6bb639fb4e43cc808e9d599220f3": "e4a07e30f86c6bb639fb4e43cc808e9d599220f3",
-      "all-tip:c2663150e319ece1fcf740ad8f8a08e6ad1f1186": "c2663150e319ece1fcf740ad8f8a08e6ad1f1186",
       "all-tip:c06d1019b8dee0110c3627a012bdb865bd7e7a80": "c06d1019b8dee0110c3627a012bdb865bd7e7a80",
       "all-tip:84300293795474c4ea3b13e210d2a1222854d115": "84300293795474c4ea3b13e210d2a1222854d115",
       "all-tip:7954390da3772efc72b159173f6be81f7c89e5cd": "7954390da3772efc72b159173f6be81f7c89e5cd",
@@ -13991,7 +13994,7 @@
       "all-tip:d2dda4b75d6eacf5c5fcdf6f5f1da8a28c1c6ede": "d2dda4b75d6eacf5c5fcdf6f5f1da8a28c1c6ede"
     },
     "upstream": 19,
-    "experiment": 7077
+    "experiment": 7078
   },
   "postmortems": {
     "runs_with_heading": 821,
