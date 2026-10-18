@@ -1,0 +1,107 @@
+from pathlib import Path
+import hashlib
+import json
+import os
+import subprocess
+import tarfile
+
+r = Path.cwd()
+exec((r / 'ops/codex-ops/record-staging/20261016-2003/publish.py').read_text().split('phase=r/')[0])
+p = r / 'ops/codex-ops/record-staging/20261018-2212'
+pub = r / 'paper/materials/20261018-2212-ops'
+assert not (p / 'commit-readback.json').exists()
+at = subprocess.check_output(['date', '+%Y-%m-%d %H:%M:%S %Z'], text=True).strip()
+appends = json.loads((p / 'own-appends.json').read_bytes())
+owned = {str(f.relative_to(r)): f.read_bytes() for f in pub.rglob('*') if f.is_file() and f.name not in ['host-recheck-action.log','host-recheck-action-result.json']}
+extra_owned=['notes/codex1-drain-ops-handoff-20261018.md','paper/materials/20261018-codex-token-saving/account-return-codex1/ops-watcher-transition-verified.json','paper/materials/20261018-codex-token-saving/account-return-codex1/ops-role-cutover-status.json','paper/materials/20261018-disk-and-regent/implementation/knowledge-catalog/ops-received.json']
+for path in extra_owned: owned[path]=(r/path).read_bytes()
+assert not any(f.endswith(('records-gitleaks.log', 'secret-scan-receipt.json')) for f in owned)
+scan = p / 'record-scan'
+scan.mkdir(exist_ok=True)
+for path, raw in owned.items():
+    target = scan / path
+    target.parent.mkdir(parents=True, exist_ok=True)
+    target.write_bytes(raw)
+    if path.endswith('.tar.gz'):
+        unpacked = target.with_name(target.name + '.unpacked')
+        unpacked.mkdir(exist_ok=True)
+        with tarfile.open(target) as archive:
+            archive.extractall(unpacked, filter='data')
+        manifest = json.loads((pub / 'original-manifest.json').read_bytes())
+        for item in manifest['files']:
+            assert hashlib.sha256((unpacked / item['path']).read_bytes()).hexdigest() == item['sha256']
+for number, item in enumerate(appends):
+    (scan / f'own-append-{number}.txt').write_text(item['text'])
+with (pub / 'records-gitleaks.log').open('wb') as out:
+    check = subprocess.run(['nice', '-n', '19', 'gitleaks', 'dir', str(scan), '--redact', '--no-banner', '--report-format', 'json', '--report-path', str(p / 'records-gitleaks.json')], stdout=out, stderr=subprocess.STDOUT, env={**os.environ, 'GOMAXPROCS': '1'})
+assert check.returncode == 0 and json.loads((p / 'records-gitleaks.json').read_bytes()) == []
+receipt = dict(at=at, rc=0, scope='Record actual watcher codex1 migration, preserved live generated data, verified new catalog combination and its one original-channel host request; no main/live feature publication claimed.', credentials_or_env_files_not_read=True, this_record_commit_changes_source_or_versions=False, new_source_to_integrate=False, tests_run_by_record_seal=False, candidate_tsc_and_105_plus_5_tests_already_passed=True, new_host_request_from_this_wake=True, original_failed_host_request_preserved=True)
+(pub / 'secret-scan-receipt.json').write_text(json.dumps(receipt, ensure_ascii=False, indent=2) + '\n')
+for name in ['records-gitleaks.log', 'secret-scan-receipt.json']:
+    owned[str((pub / name).relative_to(r))] = (pub / name).read_bytes()
+head = git('rev-parse', 'HEAD').decode().strip()
+assert git('symbolic-ref', '--short', 'HEAD').decode().strip() == 'main'
+assert not git('ls-files', '-u').strip()
+snapshot = git('ls-files', '--stage', '-z')
+index = Path(git('rev-parse', '--git-path', 'index').decode().strip())
+index = index if index.is_absolute() else r / index
+old_index = index.read_bytes()
+values = {}
+grouped = {}
+for item in appends:
+    grouped.setdefault(item['path'], []).append(item['text'].encode())
+for path, chunks in grouped.items():
+    physical = (r / path).read_bytes()
+    assert all(physical.count(chunk) == 1 for chunk in chunks)
+    old = blob(head, path) or b''
+    extra = b''.join(chunk for chunk in sorted(chunks, key=physical.index) if chunk not in old)
+    if extra:
+        values[path] = old + extra
+for path, raw in owned.items():
+    assert (r / path).read_bytes() == raw
+    if blob(head, path) != raw:
+        values[path] = raw
+env = {**os.environ, 'GIT_INDEX_FILE': str(p / 'records.index')}
+git('read-tree', head, env=env)
+for path, raw in values.items():
+    stage(path, raw, env, r)
+tree = git('write-tree', env=env).decode().strip()
+changed = git('diff', '--name-only', head, tree).decode().splitlines()
+assert set(changed) == set(values)
+assert all(path in grouped or path in extra_owned or path.startswith('paper/materials/20261018-2212-ops/') for path in changed)
+new = commit(tree, [head], 'Record actual watcher cutover and exact two-group storage composition', r)
+saved = p / 'normal-records-preserved.index'
+saved.write_bytes(old_index)
+normal = {**os.environ, 'GIT_INDEX_FILE': str(saved)}
+foreign = []
+for path, raw in values.items():
+    current = blob('', path)
+    parent = blob(head, path)
+    if path in grouped:
+        before = current if current is not None else (parent or b'')
+        physical = (r / path).read_bytes()
+        for chunk in sorted(grouped[path], key=physical.index):
+            if chunk not in before:
+                before += chunk
+        stage(path, before, normal, r)
+    elif current is None or current in [parent, raw]:
+        stage(path, raw, normal, r)
+    else:
+        foreign.append(path)
+locks = locks_for([(r, normal)])
+try:
+    assert git('rev-parse', 'HEAD').decode().strip() == head
+    assert git('ls-files', '--stage', '-z') == snapshot
+    assert all((r / path).read_bytes() == raw for path, raw in owned.items())
+    git('update-ref', '-m', 'ops: record actual watcher cutover and pending exact composition', 'HEAD', new, head)
+    for target, lock in locks:
+        os.replace(lock, target)
+finally:
+    for _, lock in locks:
+        if lock.exists():
+            lock.unlink()
+for path, raw in values.items():
+    assert blob('HEAD', path) == raw
+readback = dict(at=at, commit=new, parent=head, tree=tree, paths=changed, files=len(changed), gitleaks_rc=0, foreign_index_preserved=True, foreign_staging_on_owned_paths=foreign, shared_physical_records_rewritten=False, this_record_commit_changes_source=False, new_source_from_this_event=True, existing_disk_integration_pending=True, publication_started=False, release_id=None, tests_added=0, candidate_checks_before_seal_verified=True, new_host_request_from_this_wake=True, original_failed_host_request_preserved=True, authorized_watcher_migration_bootstraps=1, new_probe_model_or_game_requests=0, source_or_versions_changed=False, other_role_ack=False, parent_requests_closed=False)
+(p / 'commit-readback.json').write_text(json.dumps(readback, ensure_ascii=False, indent=2) + '\n')
+print(json.dumps(dict(commit=new, files=len(changed), gitleaks=0, main_live_features_published=False, candidate_source_composed=True, live_generated_data_saved=True, record_seal_runs_source_tests=False, tests_added=0, candidate_checks_before_seal_verified=True, actual_watcher_native_and_first_reply_verified=True, new_host_request_from_this_wake=True, original_failed_host_request_preserved=True), ensure_ascii=False))

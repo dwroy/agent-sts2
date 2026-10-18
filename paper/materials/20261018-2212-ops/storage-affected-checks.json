@@ -1,0 +1,66 @@
+[
+  {
+    "at": "2026-10-18T22:27:51+08:00",
+    "label": "tsc",
+    "command": [
+      "nice",
+      "-n",
+      "19",
+      "npx",
+      "tsc",
+      "-p",
+      "tsconfig.json",
+      "--noEmit"
+    ],
+    "rc": 0,
+    "log": "ops/codex-ops/record-staging/20261018-2212/storage-tsc.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "at": "2026-10-18T22:27:52+08:00",
+    "label": "affected",
+    "command": [
+      "nice",
+      "-n",
+      "19",
+      "npx",
+      "vitest",
+      "run",
+      "--maxWorkers=2",
+      "tests/brain-loop.test.ts",
+      "tests/jev-retry.test.ts",
+      "tests/run-config.test.ts",
+      "tests/sl-loop.test.ts",
+      "tests/strategy-concurrency.test.ts",
+      "tests/strategy-implementation-continuation.test.ts",
+      "tests/strategy-implementation.test.ts",
+      "tests/strategy-research-scheduling.test.ts",
+      "tests/worktree-retention.test.ts",
+      "tests/knowledge-catalog.test.ts",
+      "tests/brain-knowledge.test.ts",
+      "tests/monster-db.test.ts",
+      "tests/monster-db-context.test.ts",
+      "tests/move-model-damage.test.ts",
+      "tests/pinned-shared-experience.test.ts",
+      "tests/paths.test.ts"
+    ],
+    "rc": 0,
+    "log": "ops/codex-ops/record-staging/20261018-2212/storage-affected.log",
+    "sha256": "847af12966fec7612ca63c837b5d2e6ce958d2423ea2b2be7e0e7574c7054bef"
+  },
+  {
+    "at": "2026-10-18T22:28:17+08:00",
+    "label": "catalog-python",
+    "command": [
+      "nice",
+      "-n",
+      "19",
+      "python3",
+      "-B",
+      "/home/dw/Projects/agent-sts2/.worktrees/ops-storage-group1-20261018-2220/knowledge/builders/test_catalog.py"
+    ],
+    "rc": 0,
+    "log": "ops/codex-ops/record-staging/20261018-2212/storage-catalog-python.log",
+    "sha256": "4c979c0d06f0e9e2109df48cae7f69ac5d403754045b4cfe404fe744e7390b47"
+  }
+]

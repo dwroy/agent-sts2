@@ -1,0 +1,12 @@
+import { execFileSync } from "node:child_process";
+import { writeFileSync } from "node:fs";
+import { composerState } from "/home/dw/Projects/agent-sts2/ops/codex/herdr.ts";
+const root="/home/dw/Projects/agent-sts2";
+const at=execFileSync("date",["--iso-8601=seconds"],{encoding:"utf8"}).trim();
+const agent=JSON.parse(execFileSync("herdr",["agent","get","wJ:pJT"],{encoding:"utf8"})).result.agent;
+const ansi=execFileSync("herdr",["pane","read","wJ:pJT","--source","visible","--format","ansi","--raw"],{encoding:"utf8"});
+const state=composerState(ansi);
+const result={at,pane:agent.pane_id,session:agent.agent_session?.value,status:agent.agent_status,composer:state,terminal_body_exported:false};
+writeFileSync(root+"/ops/codex-ops/record-staging/20261018-2212/watcher-boundary.json",JSON.stringify(result,null,2)+"\n");
+console.log(JSON.stringify(result));
+if(!["idle","done"].includes(agent.agent_status)||agent.agent_session?.value!=="01a14aae-4b03-7cf1-9185-34dc3bed786f"||state!=="empty")process.exitCode=3;

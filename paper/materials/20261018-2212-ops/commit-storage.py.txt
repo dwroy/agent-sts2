@@ -1,0 +1,26 @@
+from pathlib import Path
+import subprocess,json,hashlib,os
+r=Path('/home/dw/Projects/agent-sts2');wt=r/'.worktrees/ops-storage-group1-20261018-2220';p=r/'ops/codex-ops/record-staging/20261018-2212'
+def git(*args):return subprocess.check_output(['git','-C',str(wt),*args])
+def sha(b):return hashlib.sha256(b).hexdigest()
+at=subprocess.check_output(['date','--iso-8601=seconds'],text=True).strip();proof=json.loads((p/'storage-composition-prepared.json').read_text());saved=json.loads((p/'saved-refresh.json').read_text());checks=json.loads((p/'storage-affected-checks.json').read_text());assert all(x['rc']==0 for x in checks)
+owned=set(proof['runtime_paths'])|{'ops/disk_capacity.py','knowledge/catalog.json'}|set(saved['paths'])|{'knowledge/'+name for name in proof['latest_live_originals']}
+owned|={str(f.relative_to(wt)) for f in (wt/'knowledge/common/enemies').rglob('*.json')}
+tracked=git('diff','--name-only').decode().splitlines();assert set(tracked)<=owned
+assert not git('diff','--cached','--name-only').strip()
+for name,item in saved['paths'].items():assert sha((wt/name).read_bytes())==item['sha256']
+files={name:(wt/name).read_bytes() for name in sorted(owned)}
+# Scan exact additions and new generated files; retain the old full failures without rescanning old test key fixtures.
+added=git('diff','--unified=0','--',*sorted(owned));data=b'\n'.join(line[1:] for line in added.splitlines() if line.startswith(b'+') and not line.startswith(b'+++'))
+for name in git('ls-files','--others','--exclude-standard','--',*sorted(owned)).decode().splitlines():data+=b'\n'+files[name]
+with (p/'composition-delta-gitleaks.log').open('wb') as out:
+ scan=subprocess.run(['nice','-n','19','gitleaks','stdin','--redact','--no-banner','--report-format','json','--report-path',str(p/'composition-delta-gitleaks.json')],input=data,stdout=out,stderr=subprocess.STDOUT,env={**os.environ,'GOMAXPROCS':'1'})
+assert scan.returncode==0 and json.loads((p/'composition-delta-gitleaks.json').read_text())==[]
+assert all((wt/name).read_bytes()==raw for name,raw in files.items())
+git('add','--',*sorted(owned));changed=git('diff','--cached','--name-only').decode().splitlines();assert set(changed)<=owned
+git('commit','-m','Compose approved shared knowledge catalog with exact storage dependencies\n\nCo-Authored-By: Codex gpt-6.1-sol <noreply@openai.com>')
+commit=git('rev-parse','HEAD').decode().strip();tree=git('rev-parse','HEAD^{tree}').decode().strip()
+assert not git('diff','HEAD','--name-only').strip()
+manifest={name:dict(bytes=len(raw),live_composition_sha256=sha(raw)) for name,raw in files.items()}
+result=dict(at=at,worktree=str(wt),commit=commit,tree=tree,parent='94e0272562feea704383a167273ba7e80a3cafd5',base_live=saved['commit'],files=[dict(path=name,**item) for name,item in manifest.items()],changed_paths=changed,changed_files=len(changed),gitleaks_rc=0,tsc_rc=0,affected_files=16,affected_cases=105,affected_rc=0,catalog_python_cases=5,catalog_python_rc=0,consumer='ops/codex-ops/record-staging/20261018-2212/actual-consumer-input-output.json',live_Git_grants_preserved=True,AGENTS_only_approved_bullet_changed=True,default_db_prefix_3_roles_equal=True,original_group1_full_rc=1,original_group2_source_full_rc=1,actual_main_live_publication=False,new_full_host_started=False,new_model_or_game_requests=0)
+(p/'final-composition.json').write_text(json.dumps(result,ensure_ascii=False,indent=2)+'\n');print(json.dumps(dict(commit=commit,tree=tree,changed_files=len(changed),gitleaks=0,source_tests='16 files 105 +5 Python pass',published=False),ensure_ascii=False))

@@ -1,3 +1,12 @@
+## 最新接续：两组组合与watcher实际切号
+
+更新 2026-10-18 22:43:44 CST。以下覆盖早期第一组在途描述，旧失败原件保留。
+- watcher已在原wJ:pJT正常quit后换codex1，新UUID01a14f5d-da55-7831-959e-53727796115e，gpt-6.1-sol/high、home/首回复/native done均已核，原owner保留，停等Claude。实际回执account-return-codex1/ops-watcher-transition-verified.json；其成功不代表所有角色切完。默认home共享app-server账号/客户所有权仍未知，不杀共享daemon。详见ops-role-cutover-status.json。
+- 两组实际组合 d5f0704ffae5f94254c6ef79124bde808ec63fcf / 树5ec85e44129df7686b4a9e7213cb23ad94a57e22，原单次宿主PID3392092/record-staging/20261018-2212/host-result.json。已准入，不重复full或重跑未变源。原第一次5b522761完整1保留：keep依赖现精确采用main既有SHA；其余四loop因旧载体名字触发既有密钥形状守卫，原live对照32过，原守卫/断言/时限/排除均未改，新storage载体补验16文件105+5 Python0。
+- 已在原锁先保存live自动刷新12叶b69c5f58，不改代码。知识目录已基于当前live32原件生成，维护层只创建不覆盖；三角色旧live默认db/prefix逐SHA等价，显式外角色reference_only，0模型/游戏动作。main也按自己的32原件另生成目录，不能拿live目录覆盖main差异。
+- 主待办ops/codex-ops/pending-integrations/20261018-disk-groups1-2.json；原source434已全部核SHA，旧源full1/路径假设失败保留。main505叶预备树ecd867562d5af8787570e2ae1e20fe419c11d399仅预备：需新HEAD/index/物理数据核对后在原live锁窄集成，保所有并行记录。两组尚未发布；终局成功后实际main/live消费者、双记录及原retention仍待，不分新游戏号/shipped。
+- 校准201302原宿主0照旧有效但只认旧精确树；正式编号/main同步/ledger.py shipped仍待新组合终局，不能因目录交付关闭H0/0332/human-pace/main-push或任何宽父。regent保持暂停及200GiB+48h+Claude条件。
+
 # codex1 自然停点精简交接
 
 ready_to_drain: true

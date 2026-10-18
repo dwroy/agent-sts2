@@ -1,0 +1,109 @@
+from pathlib import Path
+import hashlib
+import json
+import os
+import subprocess
+
+r = Path.cwd()
+exec((r / 'ops/codex-ops/record-staging/20261016-2003/publish.py').read_text().split('phase=r/')[0])
+p = r / 'ops/codex-ops/record-staging/20261018-2212'
+pub = r / 'paper/materials/20261018-2212-ops'
+at = subprocess.check_output(['date', '--iso-8601=seconds'], text=True).strip()
+source = '6c7a3558a3a84cf206e6ea997a21d36ac2b65a2f'
+saved = '1214300d6d320b2e1d0ed996493ccfa711574060'
+publication = 'b69c5f58d8651b164e54bcb4e6dbcd2e708ac058'
+name = 'S1.silent-boss-calibration-refresh-20261018-314824d6'
+head = git('rev-parse', 'main').decode().strip()
+live_head = git('rev-parse', 'live').decode().strip()
+assert live_head == publication
+source_paths = git('diff-tree', '--no-commit-id', '--name-only', '-r', source).decode().splitlines()
+saved_paths = git('diff-tree', '--no-commit-id', '--name-only', '-r', saved).decode().splitlines()
+assert len(source_paths) == 23 and len(saved_paths) == 12
+values = {}
+origins = {}
+for path in source_paths + saved_paths:
+    if path == 'paper/materials/decision-log.md':
+        continue
+    values[path] = blob(live_head, path)
+    origins[path] = 'actual-live-leaf'
+    if path in source_paths:
+        assert values[path] == blob(source, path)
+    if path in saved_paths:
+        assert path.startswith('knowledge/') or path in ['notes/fight-value-backtest-silent.md', 'notes/monster-db-check.md']
+
+# Preserve the main registry and every historical alias; stage the learner's new entry without allocating a number.
+versions = json.loads(blob(head, 'eval/versions.json'))
+live_versions = json.loads(blob(live_head, 'eval/versions.json'))
+entries = [v for v in live_versions['versions'] if v.get('name') == name]
+assert len(entries) == 1 and entries[0]['commit'] == '085b94e6fd710d81bf1235a480a6bcfb3fb470d8'
+assert not any(v.get('name') == name for v in versions['versions'])
+old = json.loads(json.dumps(versions))
+versions['versions'].append(entries[0])
+assert versions['versions'][:-1] == old['versions'] and versions['release_numbering'] == old['release_numbering']
+values['eval/versions.json'] = (json.dumps(versions, ensure_ascii=False, indent=2) + '\n').encode()
+origins['eval/versions.json'] = 'main-history-plus-original-pending-live-entry'
+
+# Preserve original learner CLI rows, without importing unrelated live ledger history or assigning shipped.
+ledger_path = 'paper/materials/learning/ledger.jsonl'
+ledger = blob(head, ledger_path)
+physical = (r / ledger_path).read_bytes()
+assert physical.startswith(ledger)
+rows = [line for line in physical.splitlines(keepends=True) if json.loads(line).get('id') == 'silent-0518' and line not in ledger]
+assert all(json.loads(line).get('status') != 'shipped' for line in rows)
+assert any(json.loads(line).get('id') == 'silent-0518' for line in ledger.splitlines() + [value.rstrip(b'\n') for value in rows])
+values[ledger_path] = ledger + b''.join(rows)
+origins[ledger_path] = 'exact-own-silent-0518-learner-CLI-rows-proposed'
+
+decision_path = 'paper/materials/decision-log.md'
+decision = blob(head, decision_path)
+for c in [source, 'dadb3a7df5ae81972a9f65d2bc6adfde0091e5cd']:
+    before = blob(c + '^', decision_path)
+    after = blob(c, decision_path)
+    assert after.startswith(before)
+    for line in after[len(before):].splitlines(keepends=True):
+        if line.strip() and line not in decision:
+            decision += b'\n' + line
+values[decision_path] = decision
+origins[decision_path] = 'main-history-plus-original-source-and-publication-appends'
+
+
+# Prepare only. No public lock acquisition, branch publication, role ACK, release or shipped status.
+import tempfile
+bundle=json.loads((r/'paper/materials/20261018-disk-and-regent/implementation/bundle.json').read_bytes())
+for feature in bundle['features']:
+    for item in feature['files']:
+        raw=blob(feature['source_commit'],item['path'])
+        assert hashlib.sha256(raw).hexdigest()==item['sha256']
+        values[item['path']]=raw;origins[item['path']]='original-main-storage-source'
+kg=json.loads((r/'paper/materials/20261018-disk-and-regent/implementation/knowledge-catalog/source.json').read_bytes())
+for item in kg['files']:
+    path=item['path']
+    if path.startswith('knowledge/common/enemies/') or path=='knowledge/catalog.json':continue
+    assert blob(head,path)==blob(kg['base'],path),'parallel main runtime change: '+path
+    values[path]=blob(kg['source_commit'],path);origins[path]='original-knowledge-runtime-source'
+private={**os.environ,'GIT_INDEX_FILE':str(p/'candidate-main.index')}
+git('read-tree',head,env=private)
+for path,raw in values.items():stage(path,raw,private,r)
+before_catalog=git('write-tree',env=private).decode().strip()
+knowledge_paths=git('ls-tree','-r','--name-only',before_catalog,'--','knowledge/common/','knowledge/characters/').decode().splitlines()
+with tempfile.TemporaryDirectory(prefix='sts2-main-catalog-') as scratch:
+    root=Path(scratch)/'knowledge';root.mkdir()
+    originals={}
+    for path in knowledge_paths:
+        if not path.endswith(('.json','.md')):continue
+        rel=path[len('knowledge/'):];raw=blob(before_catalog,path)
+        dest=root/rel;dest.parent.mkdir(parents=True,exist_ok=True);dest.write_bytes(raw);originals[rel]=raw
+    run=subprocess.check_output(['nice','-n','19','python3',str(r/'.worktrees/ops-storage-group1-20261018-2220/knowledge/builders/build-catalog.py'),'--knowledge-root',str(root)])
+    for rel,raw in originals.items():assert (root/rel).read_bytes()==raw
+    generated=[root/'catalog.json',*(root/'common/enemies').rglob('*.json')]
+    for path in generated:
+        name='knowledge/'+path.relative_to(root).as_posix();raw=path.read_bytes()
+        values[name]=raw;origins[name]='regenerated-from-proposed-main-originals-maintenance-preserved';stage(name,raw,private,r)
+    catalog_result=json.loads(run)
+tree=git('write-tree',env=private).decode().strip();changed=git('diff','--name-only',head,tree).decode().splitlines()
+assert not any(path.startswith('paper/data/') or path in ['paper/materials/ordinary-completions.jsonl','paper/materials/learning/code-proposals.jsonl'] for path in changed)
+assert git('rev-parse','main').decode().strip()==head and git('rev-parse','live').decode().strip()==publication
+git('update-ref','refs/ops-integration-candidates/20261018-2212-main-tree',tree)
+plan=dict(at=at,state='prepared-not-published',main=head,live=publication,private_tree=tree,ref='refs/ops-integration-candidates/20261018-2212-main-tree',changed_paths=changed,changed_files=len(changed),files={path:dict(sha256=hashlib.sha256(raw).hexdigest(),bytes=len(raw),origin=origins[path]) for path,raw in values.items()},main_registry_history_preserved=True,main_paper_data_and_parallel_records_preserved=True,main_originals_for_catalog=len(originals),main_catalog_builder=catalog_result,source_or_knowledge_physical_files_rewritten=False,official_number_or_shipped_allocated=False,publication_requires_fresh_lock_HEAD_index_physical_revalidation=True,existing_exact_host_request='paper/materials/20261018-2212-ops/host-request.json',source_full_not_repeated=True)
+(pub/'prepared-main-sync-groups.json').write_text(json.dumps(plan,ensure_ascii=False,indent=2)+'\n')
+print(json.dumps(dict(tree=tree,changed_files=len(changed),main_originals=len(originals),catalog=catalog_result,published=False),ensure_ascii=False))

@@ -1,0 +1,45 @@
+from pathlib import Path
+import hashlib,json,subprocess,fcntl,os
+r=Path('/home/dw/Projects/agent-sts2');wt=r/'.worktrees/ops-storage-group1-20261018-2220';phase=r/'ops/codex-ops/record-staging/20261018-2212'
+def git(*args,repo=r):return subprocess.check_output(['git','-C',str(repo),*args])
+def sha(b):return hashlib.sha256(b).hexdigest()
+at=subprocess.check_output(['date','--iso-8601=seconds'],text=True).strip()
+assert git('rev-parse','HEAD',repo=wt).decode().strip()=='94e0272562feea704383a167273ba7e80a3cafd5'
+assert not git('status','--porcelain','--untracked-files=no',repo=wt).strip()
+meta=json.loads((r/'paper/materials/20261018-disk-and-regent/implementation/knowledge-catalog/source.json').read_text());source=meta['source_commit']
+runtime=[x['path'] for x in meta['files'] if not x['path'].startswith('knowledge/common/enemies/') and x['path']!='knowledge/catalog.json'];assert len(runtime)==12
+patch=git('diff','--binary',meta['base'],source,'--',*[x for x in runtime if x!='AGENTS.md']);(phase/'knowledge-runtime.patch').write_bytes(patch)
+subprocess.run(['git','-C',str(wt),'apply','--check',str(phase/'knowledge-runtime.patch')],check=True)
+with (r/'ops/live-merge.lock').open('a+') as lock:
+ fcntl.flock(lock,fcntl.LOCK_EX|fcntl.LOCK_NB)
+ live=git('rev-parse','live').decode().strip();main=git('rev-parse','main').decode().strip();assert live=='dadb3a7df5ae81972a9f65d2bc6adfde0091e5cd'
+ # Do not read credentials or modify any original source. Only project game-knowledge JSON/Markdown is snapshotted.
+ origin=r/'.worktrees/live/knowledge';files=[]
+ for folder in ['common','characters']:
+  for f in (origin/folder).rglob('*'):
+   if f.is_file() and f.suffix in ['.json','.md']:
+    assert not any(x.is_symlink() for x in [f,*f.parents]);files.append(f)
+ observed={str(f.relative_to(origin)):f.read_bytes() for f in sorted(files)}
+ for rel,b in observed.items():
+  dest=wt/'knowledge'/rel;dest.parent.mkdir(parents=True,exist_ok=True);assert not dest.is_symlink();dest.write_bytes(b)
+ dep=git('show','main:ops/disk_capacity.py');assert sha(dep)=='6a9d349a5214ce75c9c39e253d6e4607d60c042c8be5028060561e90a4f24a1e';(wt/'ops/disk_capacity.py').write_bytes(dep)
+ subprocess.run(['git','-C',str(wt),'apply',str(phase/'knowledge-runtime.patch')],check=True)
+ agents=(wt/'AGENTS.md').read_bytes()
+ old_lines=[x for x in agents.splitlines(keepends=True) if x.startswith('- 角色专属数据'.encode())]
+ new_lines=[x for x in git('show',source+':AGENTS.md').splitlines(keepends=True) if x.startswith('- 游戏知识库对各角色开放'.encode())]
+ assert len(old_lines)==len(new_lines)==1
+ (wt/'AGENTS.md').write_bytes(agents.replace(old_lines[0],new_lines[0]))
+ for local,target in [(wt/'agent/node_modules',r/'agent/node_modules'),(wt/'logs',r/'logs'),(wt/'data',r/'data')]:
+  if local.is_symlink():assert local.resolve()==target.resolve()
+  elif local.exists():assert local.is_dir() and not any(local.iterdir());local.rmdir();local.symlink_to(target,target_is_directory=True)
+  else:local.symlink_to(target,target_is_directory=True)
+ before_maintenance={rel:sha(b) for rel,b in observed.items() if rel.startswith('common/enemies/') and not rel.endswith(('/mechanics-observed.json','/model-observed.json','/_legacy-meta.json'))}
+ generated=subprocess.check_output(['nice','-n','19','python3',str(wt/'knowledge/builders/build-catalog.py'),'--knowledge-root',str(wt/'knowledge')],cwd=wt)
+ for rel,b in observed.items():
+  assert (origin/rel).read_bytes()==b,'original changed during build: '+rel
+  assert (wt/'knowledge'/rel).read_bytes()==b,'original snapshot overwritten: '+rel
+ for rel,digest in before_maintenance.items():assert sha((wt/'knowledge'/rel).read_bytes())==digest
+ assert git('rev-parse','live').decode().strip()==live and git('rev-parse','main').decode().strip()==main
+ proof=dict(at=at,live_at_snapshot=live,main_at_snapshot=main,integration_carrier=str(wt),carrier_base='94e0272562feea704383a167273ba7e80a3cafd5',old_failed_carrier_kept=str(r/'.worktrees/ops-disk-group1-20261018-2120'),source=source,source_tree=meta['tree'],all_434_source_leaves_previously_verified=True,runtime_paths=runtime,runtime_patch_sha256=sha(patch),latest_live_originals={rel:dict(sha256=sha(b),bytes=len(b)) for rel,b in observed.items()},maintenance_preserved=before_maintenance,builder_result=json.loads(generated),source_full_failures_retained=True,new_model_calls=0,game_actions=0,actual_main_live_modified=False,host_full_started=False)
+ (phase/'storage-composition-prepared.json').write_text(json.dumps(proof,ensure_ascii=False,indent=2)+'\n')
+ print(json.dumps(dict(runtime_paths=len(runtime),latest_originals=len(observed),maintenance_preserved=len(before_maintenance),generated=proof['builder_result'],published=False),ensure_ascii=False))

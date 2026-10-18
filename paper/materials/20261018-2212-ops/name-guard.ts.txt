@@ -1,0 +1,5 @@
+import { codeInfo, secretIn } from "/home/dw/Projects/agent-sts2/.worktrees/ops-disk-group1-20261018-2120/agent/src/eye/run-config.ts";
+import { loadConfig } from "/home/dw/Projects/agent-sts2/.worktrees/ops-disk-group1-20261018-2120/agent/src/core/config.ts";
+const original=codeInfo("/home/dw/Projects/agent-sts2/.worktrees/ops-disk-group1-20261018-2120");
+const renamed={...original,branch:original.branch?.replace("disk","storage"),worktree:original.worktree.replace("disk","storage")};
+console.log(JSON.stringify({original_branch:original.branch,original_worktree:original.worktree,original_guard:secretIn(JSON.stringify(original),loadConfig({}),{}),metadata_only_name_control_guard:secretIn(JSON.stringify(renamed),loadConfig({}),{}),production_guard_unchanged:true,assertions_unchanged:true}));

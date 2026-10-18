@@ -1,0 +1,33 @@
+from pathlib import Path
+import subprocess,json,hashlib,fcntl,os
+r=Path('/home/dw/Projects/agent-sts2');live=r/'.worktrees/live';wt=r/'.worktrees/ops-storage-group1-20261018-2220';p=r/'ops/codex-ops/record-staging/20261018-2212'
+def git(*args,repo=live):return subprocess.check_output(['git','-C',str(repo),*args])
+def sha(b):return hashlib.sha256(b).hexdigest()
+at=subprocess.check_output(['date','--iso-8601=seconds'],text=True).strip()
+expected=git('diff-tree','--no-commit-id','--name-only','-r','1214300d6d320b2e1d0ed996493ccfa711574060',repo=r).decode().splitlines();assert len(expected)==12
+with (r/'ops/live-merge.lock').open('a+') as f:
+ fcntl.flock(f,fcntl.LOCK_EX|fcntl.LOCK_NB)
+ assert git('rev-parse','HEAD').decode().strip()=='dadb3a7df5ae81972a9f65d2bc6adfde0091e5cd'
+ assert not git('diff','--cached','--name-only').strip()
+ actual=git('diff','--name-only').decode().splitlines();assert set(actual)==set(expected),(actual,expected)
+ for proc in Path('/proc').iterdir():
+  if not proc.name.isdigit():continue
+  try:a=(proc/'cmdline').read_bytes().split(b'\0')
+  except OSError:continue
+  assert not any(x==b'ops/report.py' or x.endswith(b'/ops/report.py') for x in a), 'report refresh still active'
+ originals={name:(live/name).read_bytes() for name in expected}
+ payload=b'\n'.join(originals.values())
+ with (p/'refresh-gitleaks.log').open('wb') as out:
+  scan=subprocess.run(['nice','-n','19','gitleaks','stdin','--redact','--no-banner','--report-format','json','--report-path',str(p/'refresh-gitleaks.json')],input=payload,stdout=out,stderr=subprocess.STDOUT,env={**os.environ,'GOMAXPROCS':'1'})
+ assert scan.returncode==0 and json.loads((p/'refresh-gitleaks.json').read_text())==[]
+ for name,raw in originals.items():
+  assert (live/name).read_bytes()==raw
+  if name.startswith('knowledge/'):assert (wt/name).read_bytes()==raw,'snapshot changed: '+name
+  else:(wt/name).write_bytes(raw)
+ git('add','--',*expected)
+ assert set(git('diff','--cached','--name-only').decode().splitlines())==set(expected)
+ git('commit','-m','Preserve completed Silent report refresh before storage integration\n\nCo-Authored-By: Codex gpt-6.1-sol <noreply@openai.com>')
+ commit=git('rev-parse','HEAD').decode().strip();tree=git('rev-parse','HEAD^{tree}').decode().strip()
+ proof=dict(at=at,commit=commit,tree=tree,parent='dadb3a7df5ae81972a9f65d2bc6adfde0091e5cd',paths={name:dict(bytes=len(raw),sha256=sha(raw)) for name,raw in originals.items()},source='original completed report refresh; original public lock held, no report.py active',physical_originals_unchanged=True,candidate_originals_match=True,gitleaks_rc=0,gameplay_code_changed=False,release_id_added=False,new_model_or_game_requests=0)
+ for name,raw in originals.items():assert (live/name).read_bytes()==raw and git('show',commit+':'+name)==raw
+ (p/'saved-refresh.json').write_text(json.dumps(proof,ensure_ascii=False,indent=2)+'\n');print(json.dumps(dict(at=at,commit=commit,files=len(expected),gitleaks=0,code_changed=False),ensure_ascii=False))

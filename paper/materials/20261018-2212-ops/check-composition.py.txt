@@ -1,0 +1,11 @@
+from pathlib import Path
+import subprocess,json,os,hashlib
+r=Path('/home/dw/Projects/agent-sts2');wt=r/'.worktrees/ops-storage-group1-20261018-2220';p=r/'ops/codex-ops/record-staging/20261018-2212';env={**os.environ,'PATH':'/home/dw/.local/node/bin:'+os.environ.get('PATH','')}
+tests=['brain-loop','jev-retry','run-config','sl-loop','strategy-concurrency','strategy-implementation-continuation','strategy-implementation','strategy-research-scheduling','worktree-retention','knowledge-catalog','brain-knowledge','monster-db','monster-db-context','move-model-damage','pinned-shared-experience','paths']
+steps=[('tsc',['nice','-n','19','npx','tsc','-p','tsconfig.json','--noEmit']),('affected',['nice','-n','19','npx','vitest','run','--maxWorkers=2',*['tests/'+x+'.test.ts' for x in tests]]),('catalog-python',['nice','-n','19','python3','-B',str(wt/'knowledge/builders/test_catalog.py')])]
+result=[]
+for label,command in steps:
+ at=subprocess.check_output(['date','--iso-8601=seconds'],text=True).strip();log=p/('storage-'+label+'.log')
+ with log.open('wb') as f:run=subprocess.run(command,cwd=wt/'agent',env=env,stdout=f,stderr=subprocess.STDOUT)
+ result.append(dict(at=at,label=label,command=command,rc=run.returncode,log=str(log.relative_to(r)),sha256=hashlib.sha256(log.read_bytes()).hexdigest()))
+(p/'storage-affected-checks.json').write_text(json.dumps(result,ensure_ascii=False,indent=2)+'\n');print(json.dumps(result,ensure_ascii=False));raise SystemExit(any(x['rc'] for x in result))
