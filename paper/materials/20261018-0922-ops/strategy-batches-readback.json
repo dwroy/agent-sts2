@@ -1,0 +1,918 @@
+[
+  {
+    "batch": "20261018-090531-strategy-proposal",
+    "report": {
+      "task": "strategy-proposal",
+      "character": "silent",
+      "batch": "20261018-090531-strategy-proposal",
+      "base": "34a42921086a92925dc55d1608e06760440e55d2",
+      "runs": [
+        "KEN58SH9SLZ6",
+        "TXZ6RVMQA09D",
+        "WQZVENQ7DTRP",
+        "02HB4L0C3C67",
+        "4D4J8USKCPAV",
+        "F4QKG4J1AJJZ",
+        "JLN5SK17W4FQ",
+        "LS8035TB32P3",
+        "NB8KCF6HRGVF",
+        "S9UZAK0JP0C0"
+      ],
+      "fixes": [],
+      "skipped": [],
+      "merged": null,
+      "tests": {
+        "tsc": null,
+        "vitest": null,
+        "cases": null
+      },
+      "code_proposals": [
+        "silent-proposal-08eaa60bcc449852",
+        "silent-proposal-92920295a648b540",
+        "silent-proposal-a327449c331efbc1",
+        "silent-proposal-a099e89437e942bb",
+        "silent-proposal-47910f82a1fdd98f",
+        "silent-proposal-f1374df72d8e6a25",
+        "silent-proposal-38a49e6c97f31eea",
+        "silent-proposal-ef0e38a5dbd3bc07",
+        "silent-proposal-7f820c02d39bfaea",
+        "silent-proposal-04b6b430759815ed"
+      ],
+      "implementation_domains": [],
+      "proposal_results": [
+        {
+          "id": "silent-proposal-08eaa60bcc449852",
+          "state": "waiting",
+          "reason": "缺同入口、牌组、后续动作和预算下不用、早用或留至Boss的成对整战结果；七次饮用和两次真实休息不能校准持药价。"
+        },
+        {
+          "id": "silent-proposal-92920295a648b540",
+          "state": "waiting",
+          "reason": "缺固定后续抽牌、生成、选择、药栏及复活资源的两战成对结果；少损3且少伤9、首胜4血后开场死不能证明新SL线或终局权重更优。"
+        },
+        {
+          "id": "silent-proposal-a327449c331efbc1",
+          "state": "waiting",
+          "reason": "当轮血伤、毒及沙坑差额诊断已有live子实现；缺固定后继、同预算整战胜负和独立验证，不能拟合血伤或延时排序阈值。"
+        },
+        {
+          "id": "silent-proposal-a099e89437e942bb",
+          "state": "waiting",
+          "reason": "生成、手位截断和剩余小刀结转已有live子实现；仍缺计划妥当保留、跨抽牌重问、SL恢复与完整穿插实际派发的联合验证。"
+        },
+        {
+          "id": "silent-proposal-47910f82a1fdd98f",
+          "state": "waiting",
+          "reason": "受限王室猛毒开场和同样本资源接续已有live子实现；未知回血或复活组合时序、留药及SL完整后继和两战联合校准仍缺证。"
+        },
+        {
+          "id": "silent-proposal-f1374df72d8e6a25",
+          "state": "waiting",
+          "reason": "缺隔离机制误差后、同入口同预算的不用、早用或留药整战及下一战成对结果；局部药水候选不足修改药价或终局权重。"
+        },
+        {
+          "id": "silent-proposal-38a49e6c97f31eea",
+          "state": "waiting",
+          "reason": "普通紧勒及普通磨蚀付费出牌已有live子实现；弃磨蚀、增益分源、再生或自动触发与SL恢复的联合消费者及完整后继未齐。"
+        },
+        {
+          "id": "silent-proposal-ef0e38a5dbd3bc07",
+          "state": "waiting",
+          "reason": "缺另一营火动作、事件或路线及用药时点的受控完整结果；敌人、构筑、上限和实际动作条件混杂，不能支持路线或终局参数拟合。"
+        },
+        {
+          "id": "silent-proposal-7f820c02d39bfaea",
+          "state": "waiting",
+          "reason": "饱和SL的资源差额诊断已有live子实现；缺同预算排序校准、跨弃牌完整执行归属和成对整战后继，不能由同局六败确定新SL门槛。"
+        },
+        {
+          "id": "silent-proposal-04b6b430759815ed",
+          "state": "waiting",
+          "reason": "蟹朝向和普通精确切击已有live子实现；油灯对象stack在首次消费前后均为空，跨动作、新战及SL恢复缺可验证消费状态与联合消费者；未观察组合仍未覆盖。"
+        }
+      ],
+      "report": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261018-090531/learner/runs/20261018-090541-7e935630-c373-426c-af1a-7b3be48b28d5-strategy-proposal/report.md"
+    },
+    "native": {
+      "batch": "20261018-090531-strategy-proposal",
+      "thread": "01a14c8b-1c92-7f33-857b-6456e4c163c8",
+      "cwd": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261018-090531",
+      "event_log": "learner/runs/20261018-090541-7e935630-c373-426c-af1a-7b3be48b28d5-strategy-proposal.jsonl",
+      "registered_launch_batch": "20261018-090531-strategy-proposal",
+      "original_lease": "0db9990072ac8ccfdd99442d9bd47cbf3514787805dc2353e10e87c2ba1e98be",
+      "native_context": {
+        "source": "ops/codex-ops/accounts/codex3/learner/sessions/2026/10/18/rollout-2026-10-18T09-05-47-01a14c8b-1c92-7f33-857b-6456e4c163c8.jsonl",
+        "offset": 50379,
+        "bytes": 5182,
+        "sha256": "14d6f81b56b05fe17aea2ea8deca5dcd27d48bf46135a37450d656f3f0a666d9",
+        "model": "gpt-6.1-sol",
+        "effort": "xhigh",
+        "sandbox": {
+          "type": "workspace-write",
+          "writable_roots": [
+            "/home/dw/Projects/agent-sts2",
+            "/home/dw/Projects/agent-sts2/.git",
+            "/home/dw/Projects/agent-sts2/.git/worktrees/codex-strategy-silent-20261018-090531"
+          ],
+          "network_access": false,
+          "exclude_tmpdir_env_var": false,
+          "exclude_slash_tmp": false
+        },
+        "approval_policy": "never"
+      },
+      "native_user_input": {
+        "offset": 58424,
+        "bytes": 21499,
+        "sha256": "d9cb5b3125fa60969b05a17ab11351ae1e3c24af816ec38433e2d9725c1538b8",
+        "input_sha256": "7c63a55c323bfcfcd5e09f76c91e240ab53f8db18829864cb7d727da6abdd26a"
+      },
+      "original_header_events": [
+        {
+          "offset": 0,
+          "bytes": 23563,
+          "sha256": "35e19ca35729ae374d9febba7298152eeb0ce3bd5c7b189535503e8f01fbf319",
+          "type": "learner_launch",
+          "attempt": null,
+          "code": null
+        },
+        {
+          "offset": 23563,
+          "bytes": 378,
+          "sha256": "7c9c507ecbc1c9841d3392b8529270eb355d900ff06ffee241986566aa33af1c",
+          "type": "learner_startup_attempt",
+          "attempt": 1,
+          "code": null
+        },
+        {
+          "offset": 26954,
+          "bytes": 77,
+          "sha256": "9ab362dda79f07b89ea80a7bf9ac690b36264f9610fc59cd94b07fcf96979ca5",
+          "type": "thread.started",
+          "attempt": null,
+          "code": null
+        }
+      ],
+      "startup_attempts": 1,
+      "failed_startups_preserved": 0,
+      "no_model_or_manual_restart": true
+    },
+    "canonical_state": "done",
+    "canonical_rc": 0,
+    "original_ledger_rows": [
+      {
+        "offset": 24306352,
+        "bytes": 878,
+        "sha256": "0164e99acfb0243c1be60169222122484daa84f4cc1b213f631ffdb5973bac5c",
+        "row": {
+          "op": "update",
+          "id": "silent-0005",
+          "ts": "2026-10-18T09:21:10+08:00",
+          "by": "learner:strategy-proposal",
+          "where": {
+            "proposal": [
+              "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261018-090531/learner/runs/20261018-090541-7e935630-c373-426c-af1a-7b3be48b28d5-strategy-proposal/proposal.md",
+              "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261018-090531/learner/runs/20261018-090541-7e935630-c373-426c-af1a-7b3be48b28d5-strategy-proposal/report.md"
+            ]
+          },
+          "note": "20261018-090531-strategy-proposal：本批复核旧证，不增加support/repeat或独立局数；未改源码/知识、未合入。silent-proposal-04b6b430759815ed waiting：蟹朝向和普通精确切击已有live子实现；油灯对象stack在首次消费前后均为空，跨动作、新战及SL恢复缺可验证消费状态与联合消费者；未观察组合仍未覆盖。"
+        }
+      },
+      {
+        "offset": 24307230,
+        "bytes": 1086,
+        "sha256": "533230943605fb6e31dbea7d01c82884a643da287e5e7eabbe512a1fb2433715",
+        "row": {
+          "op": "update",
+          "id": "silent-0006",
+          "ts": "2026-10-18T09:21:10+08:00",
+          "by": "learner:strategy-proposal",
+          "where": {
+            "proposal": [
+              "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261018-090531/learner/runs/20261018-090541-7e935630-c373-426c-af1a-7b3be48b28d5-strategy-proposal/proposal.md",
+              "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261018-090531/learner/runs/20261018-090541-7e935630-c373-426c-af1a-7b3be48b28d5-strategy-proposal/report.md"
+            ]
+          },
+          "note": "20261018-090531-strategy-proposal：本批复核旧证，不增加support/repeat或独立局数；未改源码/知识、未合入。silent-proposal-38a49e6c97f31eea waiting：普通紧勒及普通磨蚀付费出牌已有live子实现；弃磨蚀、增益分源、再生或自动触发与SL恢复的联合消费者及完整后继未齐。；silent-proposal-04b6b430759815ed waiting：蟹朝向和普通精确切击已有live子实现；油灯对象stack在首次消费前后均为空，跨动作、新战及SL恢复缺可验证消费状态与联合消费者；未观察组合仍未覆盖。"
+        }
+      },
+      {
+        "offset": 24308316,
+        "bytes": 1086,
+        "sha256": "58bf27589c41161101da0ef63bf03cf95ea1346ac0e8777d41b2e0614a4ffceb",
+        "row": {
+          "op": "update",
+          "id": "silent-0011",
+          "ts": "2026-10-18T09:21:10+08:00",
+          "by": "learner:strategy-proposal",
+          "where": {
+            "proposal": [
+              "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261018-090531/learner/runs/20261018-090541-7e935630-c373-426c-af1a-7b3be48b28d5-strategy-proposal/proposal.md",
+              "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261018-090531/learner/runs/20261018-090541-7e935630-c373-426c-af1a-7b3be48b28d5-strategy-proposal/report.md"
+            ]
+          },
+          "note": "20261018-090531-strategy-proposal：本批复核旧证，不增加support/repeat或独立局数；未改源码/知识、未合入。silent-proposal-38a49e6c97f31eea waiting：普通紧勒及普通磨蚀付费出牌已有live子实现；弃磨蚀、增益分源、再生或自动触发与SL恢复的联合消费者及完整后继未齐。；silent-proposal-04b6b430759815ed waiting：蟹朝向和普通精确切击已有live子实现；油灯对象stack在首次消费前后均为空，跨动作、新战及SL恢复缺可验证消费状态与联合消费者；未观察组合仍未覆盖。"
+        }
+      },
+      {
+        "offset": 24309402,
+        "bytes": 878,
+        "sha256": "98e1ad3be1486b74aff04d44f4c43d15855f30c439a2e59a5b389597ea64fa55",
+        "row": {
+          "op": "update",
+          "id": "silent-0013",
+          "ts": "2026-10-18T09:21:10+08:00",
+          "by": "learner:strategy-proposal",
+          "where": {
+            "proposal": [
+              "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261018-090531/learner/runs/20261018-090541-7e935630-c373-426c-af1a-7b3be48b28d5-strategy-proposal/proposal.md",
+              "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261018-090531/learner/runs/20261018-090541-7e935630-c373-426c-af1a-7b3be48b28d5-strategy-proposal/report.md"
+            ]
+          },
+          "note": "20261018-090531-strategy-proposal：本批复核旧证，不增加support/repeat或独立局数；未改源码/知识、未合入。silent-proposal-04b6b430759815ed waiting：蟹朝向和普通精确切击已有live子实现；油灯对象stack在首次消费前后均为空，跨动作、新战及SL恢复缺可验证消费状态与联合消费者；未观察组合仍未覆盖。"
+        }
+      },
+      {
+        "offset": 24310280,
+        "bytes": 1040,
+        "sha256": "c625dc880aee4e4d5f4430242cb025b19e2803eb02df82e8425f01d2c797a260",
+        "row": {
+          "op": "update",
+          "id": "silent-0018",
+          "ts": "2026-10-18T09:21:10+08:00",
+          "by": "learner:strategy-proposal",
+          "where": {
+            "proposal": [
+              "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261018-090531/learner/runs/20261018-090541-7e935630-c373-426c-af1a-7b3be48b28d5-strategy-proposal/proposal.md",
+              "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261018-090531/learner/runs/20261018-090541-7e935630-c373-426c-af1a-7b3be48b28d5-strategy-proposal/report.md"
+            ]
+          },
+          "note": "20261018-090531-strategy-proposal：本批复核旧证，不增加support/repeat或独立局数；未改源码/知识、未合入。silent-proposal-a327449c331efbc1 waiting：当轮血伤、毒及沙坑差额诊断已有live子实现；缺固定后继、同预算整战胜负和独立验证，不能拟合血伤或延时排序阈值。；silent-proposal-47910f82a1fdd98f waiting：受限王室猛毒开场和同样本资源接续已有live子实现；未知回血或复活组合时序、留药及SL完整后继和两战联合校准仍缺证。"
+        }
+      },
+      {
+        "offset": 24311320,
+        "bytes": 1462,
+        "sha256": "e3337fc61aef2c6e9e85280048588c6133c5fb8b6cb53c6cf7e46e3a4447e401",
+        "row": {
+          "op": "update",
+          "id": "silent-0019",
+          "ts": "2026-10-18T09:21:10+08:00",
+          "by": "learner:strategy-proposal",
+          "where": {
+            "proposal": [
+              "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261018-090531/learner/runs/20261018-090541-7e935630-c373-426c-af1a-7b3be48b28d5-strategy-proposal/proposal.md",
+              "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261018-090531/learner/runs/20261018-090541-7e935630-c373-426c-af1a-7b3be48b28d5-strategy-proposal/report.md"
+            ]
+          },
+          "note": "20261018-090531-strategy-proposal：本批复核旧证，不增加support/repeat或独立局数；未改源码/知识、未合入。silent-proposal-08eaa60bcc449852 waiting：缺同入口、牌组、后续动作和预算下不用、早用或留至Boss的成对整战结果；七次饮用和两次真实休息不能校准持药价。；silent-proposal-47910f82a1fdd98f waiting：受限王室猛毒开场和同样本资源接续已有live子实现；未知回血或复活组合时序、留药及SL完整后继和两战联合校准仍缺证。；silent-proposal-f1374df72d8e6a25 waiting：缺隔离机制误差后、同入口同预算的不用、早用或留药整战及下一战成对结果；局部药水候选不足修改药价或终局权重。；silent-proposal-ef0e38a5dbd3bc07 waiting：缺另一营火动作、事件或路线及用药时点的受控完整结果；敌人、构筑、上限和实际动作条件混杂，不能支持路线或终局参数拟合。"
+        }
+      },
+      {
+        "offset": 24312782,
+        "bytes": 1462,
+        "sha256": "25db89eda3991e22ef1c9be12209d0669debe91a4c1448989eaca8ff06897d9a",
+        "row": {
+          "op": "update",
+          "id": "silent-0020",
+          "ts": "2026-10-18T09:21:10+08:00",
+          "by": "learner:strategy-proposal",
+          "where": {
+            "proposal": [
+              "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261018-090531/learner/runs/20261018-090541-7e935630-c373-426c-af1a-7b3be48b28d5-strategy-proposal/proposal.md",
+              "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261018-090531/learner/runs/20261018-090541-7e935630-c373-426c-af1a-7b3be48b28d5-strategy-proposal/report.md"
+            ]
+          },
+          "note": "20261018-090531-strategy-proposal：本批复核旧证，不增加support/repeat或独立局数；未改源码/知识、未合入。silent-proposal-08eaa60bcc449852 waiting：缺同入口、牌组、后续动作和预算下不用、早用或留至Boss的成对整战结果；七次饮用和两次真实休息不能校准持药价。；silent-proposal-47910f82a1fdd98f waiting：受限王室猛毒开场和同样本资源接续已有live子实现；未知回血或复活组合时序、留药及SL完整后继和两战联合校准仍缺证。；silent-proposal-f1374df72d8e6a25 waiting：缺隔离机制误差后、同入口同预算的不用、早用或留药整战及下一战成对结果；局部药水候选不足修改药价或终局权重。；silent-proposal-ef0e38a5dbd3bc07 waiting：缺另一营火动作、事件或路线及用药时点的受控完整结果；敌人、构筑、上限和实际动作条件混杂，不能支持路线或终局参数拟合。"
+        }
+      },
+      {
+        "offset": 24314244,
+        "bytes": 1306,
+        "sha256": "3ac13415e8ea78de7cb69339837439b4160b78a5f69ec519c0654710f5869171",
+        "row": {
+          "op": "update",
+          "id": "silent-0021",
+          "ts": "2026-10-18T09:21:10+08:00",
+          "by": "learner:strategy-proposal",
+          "where": {
+            "proposal": [
+              "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261018-090531/learner/runs/20261018-090541-7e935630-c373-426c-af1a-7b3be48b28d5-strategy-proposal/proposal.md",
+              "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261018-090531/learner/runs/20261018-090541-7e935630-c373-426c-af1a-7b3be48b28d5-strategy-proposal/report.md"
+            ]
+          },
+          "note": "20261018-090531-strategy-proposal：本批复核旧证，不增加support/repeat或独立局数；未改源码/知识、未合入。silent-proposal-47910f82a1fdd98f waiting：受限王室猛毒开场和同样本资源接续已有live子实现；未知回血或复活组合时序、留药及SL完整后继和两战联合校准仍缺证。；silent-proposal-ef0e38a5dbd3bc07 waiting：缺另一营火动作、事件或路线及用药时点的受控完整结果；敌人、构筑、上限和实际动作条件混杂，不能支持路线或终局参数拟合。；silent-proposal-04b6b430759815ed waiting：蟹朝向和普通精确切击已有live子实现；油灯对象stack在首次消费前后均为空，跨动作、新战及SL恢复缺可验证消费状态与联合消费者；未观察组合仍未覆盖。"
+        }
+      },
+      {
+        "offset": 24315550,
+        "bytes": 1042,
+        "sha256": "666fe8f0325bd72dde83a1d9951f60c10a4afbf014b9e618e1709456bb818194",
+        "row": {
+          "op": "update",
+          "id": "silent-0025",
+          "ts": "2026-10-18T09:21:10+08:00",
+          "by": "learner:strategy-proposal",
+          "where": {
+            "proposal": [
+              "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261018-090531/learner/runs/20261018-090541-7e935630-c373-426c-af1a-7b3be48b28d5-strategy-proposal/proposal.md",
+              "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261018-090531/learner/runs/20261018-090541-7e935630-c373-426c-af1a-7b3be48b28d5-strategy-proposal/report.md"
+            ]
+          },
+          "note": "20261018-090531-strategy-proposal：本批复核旧证，不增加support/repeat或独立局数；未改源码/知识、未合入。silent-proposal-47910f82a1fdd98f waiting：受限王室猛毒开场和同样本资源接续已有live子实现；未知回血或复活组合时序、留药及SL完整后继和两战联合校准仍缺证。；silent-proposal-38a49e6c97f31eea waiting：普通紧勒及普通磨蚀付费出牌已有live子实现；弃磨蚀、增益分源、再生或自动触发与SL恢复的联合消费者及完整后继未齐。"
+        }
+      },
+      {
+        "offset": 24316592,
+        "bytes": 834,
+        "sha256": "076752bd267ed4108e149e338711612b8893d4dc1aa6897fb140dc1bb71d1c07",
+        "row": {
+          "op": "update",
+          "id": "silent-0030",
+          "ts": "2026-10-18T09:21:10+08:00",
+          "by": "learner:strategy-proposal",
+          "where": {
+            "proposal": [
+              "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261018-090531/learner/runs/20261018-090541-7e935630-c373-426c-af1a-7b3be48b28d5-strategy-proposal/proposal.md",
+              "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261018-090531/learner/runs/20261018-090541-7e935630-c373-426c-af1a-7b3be48b28d5-strategy-proposal/report.md"
+            ]
+          },
+          "note": "20261018-090531-strategy-proposal：本批复核旧证，不增加support/repeat或独立局数；未改源码/知识、未合入。silent-proposal-a099e89437e942bb waiting：生成、手位截断和剩余小刀结转已有live子实现；仍缺计划妥当保留、跨抽牌重问、SL恢复与完整穿插实际派发的联合验证。"
+        }
+      },
+      {
+        "offset": 24317426,
+        "bytes": 834,
+        "sha256": "929868a3d325c7238285ca464bb9eb66e70663e76eff1059805ecb999e644f56",
+        "row": {
+          "op": "update",
+          "id": "silent-0044",
+          "ts": "2026-10-18T09:21:10+08:00",
+          "by": "learner:strategy-proposal",
+          "where": {
+            "proposal": [
+              "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261018-090531/learner/runs/20261018-090541-7e935630-c373-426c-af1a-7b3be48b28d5-strategy-proposal/proposal.md",
+              "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261018-090531/learner/runs/20261018-090541-7e935630-c373-426c-af1a-7b3be48b28d5-strategy-proposal/report.md"
+            ]
+          },
+          "note": "20261018-090531-strategy-proposal：本批复核旧证，不增加support/repeat或独立局数；未改源码/知识、未合入。silent-proposal-38a49e6c97f31eea waiting：普通紧勒及普通磨蚀付费出牌已有live子实现；弃磨蚀、增益分源、再生或自动触发与SL恢复的联合消费者及完整后继未齐。"
+        }
+      },
+      {
+        "offset": 24318260,
+        "bytes": 1039,
+        "sha256": "83fbe1d767d6d1a9dc596e3851662eb6d6e8f7a59b98adfdeff4b0fc48ef3f7e",
+        "row": {
+          "op": "update",
+          "id": "silent-0050",
+          "ts": "2026-10-18T09:21:10+08:00",
+          "by": "learner:strategy-proposal",
+          "where": {
+            "proposal": [
+              "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261018-090531/learner/runs/20261018-090541-7e935630-c373-426c-af1a-7b3be48b28d5-strategy-proposal/proposal.md",
+              "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261018-090531/learner/runs/20261018-090541-7e935630-c373-426c-af1a-7b3be48b28d5-strategy-proposal/report.md"
+            ]
+          },
+          "note": "20261018-090531-strategy-proposal：本批复核旧证，不增加support/repeat或独立局数；未改源码/知识、未合入。silent-proposal-f1374df72d8e6a25 waiting：缺隔离机制误差后、同入口同预算的不用、早用或留药整战及下一战成对结果；局部药水候选不足修改药价或终局权重。；silent-proposal-38a49e6c97f31eea waiting：普通紧勒及普通磨蚀付费出牌已有live子实现；弃磨蚀、增益分源、再生或自动触发与SL恢复的联合消费者及完整后继未齐。"
+        }
+      },
+      {
+        "offset": 24319299,
+        "bytes": 878,
+        "sha256": "4fd0cf676737b74832d6e12eef476d3d6ff424f9a5604d4f3bb1862dd5750e71",
+        "row": {
+          "op": "update",
+          "id": "silent-0053",
+          "ts": "2026-10-18T09:21:10+08:00",
+          "by": "learner:strategy-proposal",
+          "where": {
+            "proposal": [
+              "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261018-090531/learner/runs/20261018-090541-7e935630-c373-426c-af1a-7b3be48b28d5-strategy-proposal/proposal.md",
+              "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261018-090531/learner/runs/20261018-090541-7e935630-c373-426c-af1a-7b3be48b28d5-strategy-proposal/report.md"
+            ]
+          },
+          "note": "20261018-090531-strategy-proposal：本批复核旧证，不增加support/repeat或独立局数；未改源码/知识、未合入。silent-proposal-04b6b430759815ed waiting：蟹朝向和普通精确切击已有live子实现；油灯对象stack在首次消费前后均为空，跨动作、新战及SL恢复缺可验证消费状态与联合消费者；未观察组合仍未覆盖。"
+        }
+      },
+      {
+        "offset": 24320177,
+        "bytes": 834,
+        "sha256": "ffce07c54f183c9c47d4e670feec212e38725ceb4dae70bfada6ff887a6c08c4",
+        "row": {
+          "op": "update",
+          "id": "silent-0064",
+          "ts": "2026-10-18T09:21:10+08:00",
+          "by": "learner:strategy-proposal",
+          "where": {
+            "proposal": [
+              "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261018-090531/learner/runs/20261018-090541-7e935630-c373-426c-af1a-7b3be48b28d5-strategy-proposal/proposal.md",
+              "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261018-090531/learner/runs/20261018-090541-7e935630-c373-426c-af1a-7b3be48b28d5-strategy-proposal/report.md"
+            ]
+          },
+          "note": "20261018-090531-strategy-proposal：本批复核旧证，不增加support/repeat或独立局数；未改源码/知识、未合入。silent-proposal-38a49e6c97f31eea waiting：普通紧勒及普通磨蚀付费出牌已有live子实现；弃磨蚀、增益分源、再生或自动触发与SL恢复的联合消费者及完整后继未齐。"
+        }
+      },
+      {
+        "offset": 24321011,
+        "bytes": 878,
+        "sha256": "7c5bb88007a8d0d30e7563c20214a0283428d31a202bfa007dfb661a8cc3e01e",
+        "row": {
+          "op": "update",
+          "id": "silent-0065",
+          "ts": "2026-10-18T09:21:10+08:00",
+          "by": "learner:strategy-proposal",
+          "where": {
+            "proposal": [
+              "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261018-090531/learner/runs/20261018-090541-7e935630-c373-426c-af1a-7b3be48b28d5-strategy-proposal/proposal.md",
+              "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261018-090531/learner/runs/20261018-090541-7e935630-c373-426c-af1a-7b3be48b28d5-strategy-proposal/report.md"
+            ]
+          },
+          "note": "20261018-090531-strategy-proposal：本批复核旧证，不增加support/repeat或独立局数；未改源码/知识、未合入。silent-proposal-04b6b430759815ed waiting：蟹朝向和普通精确切击已有live子实现；油灯对象stack在首次消费前后均为空，跨动作、新战及SL恢复缺可验证消费状态与联合消费者；未观察组合仍未覆盖。"
+        }
+      },
+      {
+        "offset": 24321889,
+        "bytes": 1508,
+        "sha256": "407e8d2200ff3315f24dca9c99d91046271d87514e7a513b06e72a2c773d8bae",
+        "row": {
+          "op": "update",
+          "id": "silent-0079",
+          "ts": "2026-10-18T09:21:10+08:00",
+          "by": "learner:strategy-proposal",
+          "where": {
+            "proposal": [
+              "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261018-090531/learner/runs/20261018-090541-7e935630-c373-426c-af1a-7b3be48b28d5-strategy-proposal/proposal.md",
+              "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261018-090531/learner/runs/20261018-090541-7e935630-c373-426c-af1a-7b3be48b28d5-strategy-proposal/report.md"
+            ]
+          },
+          "note": "20261018-090531-strategy-proposal：本批复核旧证，不增加support/repeat或独立局数；未改源码/知识、未合入。silent-proposal-a327449c331efbc1 waiting：当轮血伤、毒及沙坑差额诊断已有live子实现；缺固定后继、同预算整战胜负和独立验证，不能拟合血伤或延时排序阈值。；silent-proposal-47910f82a1fdd98f waiting：受限王室猛毒开场和同样本资源接续已有live子实现；未知回血或复活组合时序、留药及SL完整后继和两战联合校准仍缺证。；silent-proposal-7f820c02d39bfaea waiting：饱和SL的资源差额诊断已有live子实现；缺同预算排序校准、跨弃牌完整执行归属和成对整战后继，不能由同局六败确定新SL门槛。；silent-proposal-04b6b430759815ed waiting：蟹朝向和普通精确切击已有live子实现；油灯对象stack在首次消费前后均为空，跨动作、新战及SL恢复缺可验证消费状态与联合消费者；未观察组合仍未覆盖。"
+        }
+      },
+      {
+        "offset": 24323397,
+        "bytes": 1086,
+        "sha256": "4f8786a500eb2177ce8108970198bd0f3f0a66bbcd91b53673634439f897dbef",
+        "row": {
+          "op": "update",
+          "id": "silent-0133",
+          "ts": "2026-10-18T09:21:10+08:00",
+          "by": "learner:strategy-proposal",
+          "where": {
+            "proposal": [
+              "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261018-090531/learner/runs/20261018-090541-7e935630-c373-426c-af1a-7b3be48b28d5-strategy-proposal/proposal.md",
+              "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261018-090531/learner/runs/20261018-090541-7e935630-c373-426c-af1a-7b3be48b28d5-strategy-proposal/report.md"
+            ]
+          },
+          "note": "20261018-090531-strategy-proposal：本批复核旧证，不增加support/repeat或独立局数；未改源码/知识、未合入。silent-proposal-38a49e6c97f31eea waiting：普通紧勒及普通磨蚀付费出牌已有live子实现；弃磨蚀、增益分源、再生或自动触发与SL恢复的联合消费者及完整后继未齐。；silent-proposal-04b6b430759815ed waiting：蟹朝向和普通精确切击已有live子实现；油灯对象stack在首次消费前后均为空，跨动作、新战及SL恢复缺可验证消费状态与联合消费者；未观察组合仍未覆盖。"
+        }
+      },
+      {
+        "offset": 24324483,
+        "bytes": 878,
+        "sha256": "9d7df4cdc360a89c5397c0e6c712ced9ce54c70b98fbad5d5427d7f18a1a81bc",
+        "row": {
+          "op": "update",
+          "id": "silent-0162",
+          "ts": "2026-10-18T09:21:10+08:00",
+          "by": "learner:strategy-proposal",
+          "where": {
+            "proposal": [
+              "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261018-090531/learner/runs/20261018-090541-7e935630-c373-426c-af1a-7b3be48b28d5-strategy-proposal/proposal.md",
+              "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261018-090531/learner/runs/20261018-090541-7e935630-c373-426c-af1a-7b3be48b28d5-strategy-proposal/report.md"
+            ]
+          },
+          "note": "20261018-090531-strategy-proposal：本批复核旧证，不增加support/repeat或独立局数；未改源码/知识、未合入。silent-proposal-04b6b430759815ed waiting：蟹朝向和普通精确切击已有live子实现；油灯对象stack在首次消费前后均为空，跨动作、新战及SL恢复缺可验证消费状态与联合消费者；未观察组合仍未覆盖。"
+        }
+      },
+      {
+        "offset": 24325361,
+        "bytes": 878,
+        "sha256": "b41143f012ea1a5a483b9cc8dcce114668b820248b06d94cc005e7ea800ed852",
+        "row": {
+          "op": "update",
+          "id": "silent-0169",
+          "ts": "2026-10-18T09:21:10+08:00",
+          "by": "learner:strategy-proposal",
+          "where": {
+            "proposal": [
+              "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261018-090531/learner/runs/20261018-090541-7e935630-c373-426c-af1a-7b3be48b28d5-strategy-proposal/proposal.md",
+              "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261018-090531/learner/runs/20261018-090541-7e935630-c373-426c-af1a-7b3be48b28d5-strategy-proposal/report.md"
+            ]
+          },
+          "note": "20261018-090531-strategy-proposal：本批复核旧证，不增加support/repeat或独立局数；未改源码/知识、未合入。silent-proposal-04b6b430759815ed waiting：蟹朝向和普通精确切击已有live子实现；油灯对象stack在首次消费前后均为空，跨动作、新战及SL恢复缺可验证消费状态与联合消费者；未观察组合仍未覆盖。"
+        }
+      },
+      {
+        "offset": 24326239,
+        "bytes": 878,
+        "sha256": "3497345608ab5e684fce4f79c302435ab009092f39b9573ca91539ef4bc46052",
+        "row": {
+          "op": "update",
+          "id": "silent-0189",
+          "ts": "2026-10-18T09:21:10+08:00",
+          "by": "learner:strategy-proposal",
+          "where": {
+            "proposal": [
+              "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261018-090531/learner/runs/20261018-090541-7e935630-c373-426c-af1a-7b3be48b28d5-strategy-proposal/proposal.md",
+              "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261018-090531/learner/runs/20261018-090541-7e935630-c373-426c-af1a-7b3be48b28d5-strategy-proposal/report.md"
+            ]
+          },
+          "note": "20261018-090531-strategy-proposal：本批复核旧证，不增加support/repeat或独立局数；未改源码/知识、未合入。silent-proposal-04b6b430759815ed waiting：蟹朝向和普通精确切击已有live子实现；油灯对象stack在首次消费前后均为空，跨动作、新战及SL恢复缺可验证消费状态与联合消费者；未观察组合仍未覆盖。"
+        }
+      },
+      {
+        "offset": 24327117,
+        "bytes": 834,
+        "sha256": "1f4602800e28084f35bfcc80effe179b8a98016625c37863adef080afaf28f5b",
+        "row": {
+          "op": "update",
+          "id": "silent-0198",
+          "ts": "2026-10-18T09:21:10+08:00",
+          "by": "learner:strategy-proposal",
+          "where": {
+            "proposal": [
+              "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261018-090531/learner/runs/20261018-090541-7e935630-c373-426c-af1a-7b3be48b28d5-strategy-proposal/proposal.md",
+              "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261018-090531/learner/runs/20261018-090541-7e935630-c373-426c-af1a-7b3be48b28d5-strategy-proposal/report.md"
+            ]
+          },
+          "note": "20261018-090531-strategy-proposal：本批复核旧证，不增加support/repeat或独立局数；未改源码/知识、未合入。silent-proposal-47910f82a1fdd98f waiting：受限王室猛毒开场和同样本资源接续已有live子实现；未知回血或复活组合时序、留药及SL完整后继和两战联合校准仍缺证。"
+        }
+      },
+      {
+        "offset": 24327951,
+        "bytes": 1053,
+        "sha256": "0b756aeeaf9cb61c7b1ca4527b5ae23d8b394c92570a908a83f739ed38b8385e",
+        "row": {
+          "op": "update",
+          "id": "silent-0228",
+          "ts": "2026-10-18T09:21:10+08:00",
+          "by": "learner:strategy-proposal",
+          "where": {
+            "proposal": [
+              "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261018-090531/learner/runs/20261018-090541-7e935630-c373-426c-af1a-7b3be48b28d5-strategy-proposal/proposal.md",
+              "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261018-090531/learner/runs/20261018-090541-7e935630-c373-426c-af1a-7b3be48b28d5-strategy-proposal/report.md"
+            ]
+          },
+          "note": "20261018-090531-strategy-proposal：本批复核旧证，不增加support/repeat或独立局数；未改源码/知识、未合入。silent-proposal-92920295a648b540 waiting：缺固定后续抽牌、生成、选择、药栏及复活资源的两战成对结果；少损3且少伤9、首胜4血后开场死不能证明新SL线或终局权重更优。；silent-proposal-47910f82a1fdd98f waiting：受限王室猛毒开场和同样本资源接续已有live子实现；未知回血或复活组合时序、留药及SL完整后继和两战联合校准仍缺证。"
+        }
+      },
+      {
+        "offset": 24329004,
+        "bytes": 1039,
+        "sha256": "1fb68ee89c2f2251e40dc2bb339447e65cd55f70b8010641a8be52cbdc11dbbf",
+        "row": {
+          "op": "update",
+          "id": "silent-0253",
+          "ts": "2026-10-18T09:21:10+08:00",
+          "by": "learner:strategy-proposal",
+          "where": {
+            "proposal": [
+              "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261018-090531/learner/runs/20261018-090541-7e935630-c373-426c-af1a-7b3be48b28d5-strategy-proposal/proposal.md",
+              "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261018-090531/learner/runs/20261018-090541-7e935630-c373-426c-af1a-7b3be48b28d5-strategy-proposal/report.md"
+            ]
+          },
+          "note": "20261018-090531-strategy-proposal：本批复核旧证，不增加support/repeat或独立局数；未改源码/知识、未合入。silent-proposal-f1374df72d8e6a25 waiting：缺隔离机制误差后、同入口同预算的不用、早用或留药整战及下一战成对结果；局部药水候选不足修改药价或终局权重。；silent-proposal-38a49e6c97f31eea waiting：普通紧勒及普通磨蚀付费出牌已有live子实现；弃磨蚀、增益分源、再生或自动触发与SL恢复的联合消费者及完整后继未齐。"
+        }
+      },
+      {
+        "offset": 24330043,
+        "bytes": 1053,
+        "sha256": "44f84d48526a36f69c8d7c9abc1f6a3cbc688a48d9ce4b490a53dbc5d05f9b4e",
+        "row": {
+          "op": "update",
+          "id": "silent-0255",
+          "ts": "2026-10-18T09:21:10+08:00",
+          "by": "learner:strategy-proposal",
+          "where": {
+            "proposal": [
+              "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261018-090531/learner/runs/20261018-090541-7e935630-c373-426c-af1a-7b3be48b28d5-strategy-proposal/proposal.md",
+              "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261018-090531/learner/runs/20261018-090541-7e935630-c373-426c-af1a-7b3be48b28d5-strategy-proposal/report.md"
+            ]
+          },
+          "note": "20261018-090531-strategy-proposal：本批复核旧证，不增加support/repeat或独立局数；未改源码/知识、未合入。silent-proposal-92920295a648b540 waiting：缺固定后续抽牌、生成、选择、药栏及复活资源的两战成对结果；少损3且少伤9、首胜4血后开场死不能证明新SL线或终局权重更优。；silent-proposal-47910f82a1fdd98f waiting：受限王室猛毒开场和同样本资源接续已有live子实现；未知回血或复活组合时序、留药及SL完整后继和两战联合校准仍缺证。"
+        }
+      },
+      {
+        "offset": 24331096,
+        "bytes": 834,
+        "sha256": "4cd281c1467d3000d27ae389cb2f80fbe782b36d3f04c314bf281fa69f286fd3",
+        "row": {
+          "op": "update",
+          "id": "silent-0257",
+          "ts": "2026-10-18T09:21:10+08:00",
+          "by": "learner:strategy-proposal",
+          "where": {
+            "proposal": [
+              "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261018-090531/learner/runs/20261018-090541-7e935630-c373-426c-af1a-7b3be48b28d5-strategy-proposal/proposal.md",
+              "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261018-090531/learner/runs/20261018-090541-7e935630-c373-426c-af1a-7b3be48b28d5-strategy-proposal/report.md"
+            ]
+          },
+          "note": "20261018-090531-strategy-proposal：本批复核旧证，不增加support/repeat或独立局数；未改源码/知识、未合入。silent-proposal-a099e89437e942bb waiting：生成、手位截断和剩余小刀结转已有live子实现；仍缺计划妥当保留、跨抽牌重问、SL恢复与完整穿插实际派发的联合验证。"
+        }
+      },
+      {
+        "offset": 24331930,
+        "bytes": 834,
+        "sha256": "0156a2374245c4c19982f1c82cac7bb94b386528f67f314f451ef9b90eea2d7b",
+        "row": {
+          "op": "update",
+          "id": "silent-0258",
+          "ts": "2026-10-18T09:21:10+08:00",
+          "by": "learner:strategy-proposal",
+          "where": {
+            "proposal": [
+              "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261018-090531/learner/runs/20261018-090541-7e935630-c373-426c-af1a-7b3be48b28d5-strategy-proposal/proposal.md",
+              "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261018-090531/learner/runs/20261018-090541-7e935630-c373-426c-af1a-7b3be48b28d5-strategy-proposal/report.md"
+            ]
+          },
+          "note": "20261018-090531-strategy-proposal：本批复核旧证，不增加support/repeat或独立局数；未改源码/知识、未合入。silent-proposal-a099e89437e942bb waiting：生成、手位截断和剩余小刀结转已有live子实现；仍缺计划妥当保留、跨抽牌重问、SL恢复与完整穿插实际派发的联合验证。"
+        }
+      },
+      {
+        "offset": 24332764,
+        "bytes": 834,
+        "sha256": "5288ae7165fe85b5d1c2e2c157cd23b746953c91f4d38e0e7b4bac9ba5a0fe4c",
+        "row": {
+          "op": "update",
+          "id": "silent-0259",
+          "ts": "2026-10-18T09:21:10+08:00",
+          "by": "learner:strategy-proposal",
+          "where": {
+            "proposal": [
+              "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261018-090531/learner/runs/20261018-090541-7e935630-c373-426c-af1a-7b3be48b28d5-strategy-proposal/proposal.md",
+              "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261018-090531/learner/runs/20261018-090541-7e935630-c373-426c-af1a-7b3be48b28d5-strategy-proposal/report.md"
+            ]
+          },
+          "note": "20261018-090531-strategy-proposal：本批复核旧证，不增加support/repeat或独立局数；未改源码/知识、未合入。silent-proposal-38a49e6c97f31eea waiting：普通紧勒及普通磨蚀付费出牌已有live子实现；弃磨蚀、增益分源、再生或自动触发与SL恢复的联合消费者及完整后继未齐。"
+        }
+      },
+      {
+        "offset": 24333598,
+        "bytes": 834,
+        "sha256": "3ecab495f277505987eefb2bd67a0728e21b35c9d14c9419c5648ee172f6846f",
+        "row": {
+          "op": "update",
+          "id": "silent-0261",
+          "ts": "2026-10-18T09:21:10+08:00",
+          "by": "learner:strategy-proposal",
+          "where": {
+            "proposal": [
+              "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261018-090531/learner/runs/20261018-090541-7e935630-c373-426c-af1a-7b3be48b28d5-strategy-proposal/proposal.md",
+              "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261018-090531/learner/runs/20261018-090541-7e935630-c373-426c-af1a-7b3be48b28d5-strategy-proposal/report.md"
+            ]
+          },
+          "note": "20261018-090531-strategy-proposal：本批复核旧证，不增加support/repeat或独立局数；未改源码/知识、未合入。silent-proposal-38a49e6c97f31eea waiting：普通紧勒及普通磨蚀付费出牌已有live子实现；弃磨蚀、增益分源、再生或自动触发与SL恢复的联合消费者及完整后继未齐。"
+        }
+      },
+      {
+        "offset": 24334432,
+        "bytes": 834,
+        "sha256": "cbe7e4807af239ee6fcccb91099003750a21db7efb486fd82a3449436bba3d2c",
+        "row": {
+          "op": "update",
+          "id": "silent-0262",
+          "ts": "2026-10-18T09:21:10+08:00",
+          "by": "learner:strategy-proposal",
+          "where": {
+            "proposal": [
+              "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261018-090531/learner/runs/20261018-090541-7e935630-c373-426c-af1a-7b3be48b28d5-strategy-proposal/proposal.md",
+              "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261018-090531/learner/runs/20261018-090541-7e935630-c373-426c-af1a-7b3be48b28d5-strategy-proposal/report.md"
+            ]
+          },
+          "note": "20261018-090531-strategy-proposal：本批复核旧证，不增加support/repeat或独立局数；未改源码/知识、未合入。silent-proposal-38a49e6c97f31eea waiting：普通紧勒及普通磨蚀付费出牌已有live子实现；弃磨蚀、增益分源、再生或自动触发与SL恢复的联合消费者及完整后继未齐。"
+        }
+      },
+      {
+        "offset": 24335266,
+        "bytes": 878,
+        "sha256": "62c3f6a3865d21450f1c1dff16b0c902718336d5279f37d987064b4d35ca367a",
+        "row": {
+          "op": "update",
+          "id": "silent-0264",
+          "ts": "2026-10-18T09:21:10+08:00",
+          "by": "learner:strategy-proposal",
+          "where": {
+            "proposal": [
+              "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261018-090531/learner/runs/20261018-090541-7e935630-c373-426c-af1a-7b3be48b28d5-strategy-proposal/proposal.md",
+              "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261018-090531/learner/runs/20261018-090541-7e935630-c373-426c-af1a-7b3be48b28d5-strategy-proposal/report.md"
+            ]
+          },
+          "note": "20261018-090531-strategy-proposal：本批复核旧证，不增加support/repeat或独立局数；未改源码/知识、未合入。silent-proposal-04b6b430759815ed waiting：蟹朝向和普通精确切击已有live子实现；油灯对象stack在首次消费前后均为空，跨动作、新战及SL恢复缺可验证消费状态与联合消费者；未观察组合仍未覆盖。"
+        }
+      },
+      {
+        "offset": 24336144,
+        "bytes": 878,
+        "sha256": "060b61da96c5f30202fa52e5571d27f15fe3ebda94338d4f37d8c11ea6774d90",
+        "row": {
+          "op": "update",
+          "id": "silent-0265",
+          "ts": "2026-10-18T09:21:10+08:00",
+          "by": "learner:strategy-proposal",
+          "where": {
+            "proposal": [
+              "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261018-090531/learner/runs/20261018-090541-7e935630-c373-426c-af1a-7b3be48b28d5-strategy-proposal/proposal.md",
+              "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261018-090531/learner/runs/20261018-090541-7e935630-c373-426c-af1a-7b3be48b28d5-strategy-proposal/report.md"
+            ]
+          },
+          "note": "20261018-090531-strategy-proposal：本批复核旧证，不增加support/repeat或独立局数；未改源码/知识、未合入。silent-proposal-04b6b430759815ed waiting：蟹朝向和普通精确切击已有live子实现；油灯对象stack在首次消费前后均为空，跨动作、新战及SL恢复缺可验证消费状态与联合消费者；未观察组合仍未覆盖。"
+        }
+      }
+    ],
+    "original_queue_rows": [
+      {
+        "offset": 4600954,
+        "bytes": 680,
+        "sha256": "a2ab6040375fc4ff2a1ce45076655882c8602577e6c23918f80e150d5039d6ed",
+        "row": {
+          "op": "update",
+          "id": "silent-proposal-08eaa60bcc449852",
+          "ts": "2026-10-18T09:22:34+08:00",
+          "state": "waiting",
+          "reason": "缺同入口、牌组、后续动作和预算下不用、早用或留至Boss的成对整战结果；七次饮用和两次真实休息不能校准持药价。",
+          "commit": null,
+          "seen_runs": 356,
+          "batch": "code-proposals:silent-proposal-08eaa60bcc449852,silent-proposal-92920295a648b540,silent-proposal-a327449c331efbc1,silent-proposal-a099e89437e942bb,silent-proposal-47910f82a1fdd98f,silent-proposal-f1374df72d8e6a25,silent-proposal-38a49e6c97f31eea,silent-proposal-ef0e38a5dbd3bc07,silent-proposal-7f820c02d39bfaea,silent-proposal-04b6b430759815ed:356"
+        }
+      },
+      {
+        "offset": 4601634,
+        "bytes": 696,
+        "sha256": "5371fd95481f69165d6b368ba2fd59d90be30d5a3d6dbd6ebf625b7bba439c12",
+        "row": {
+          "op": "update",
+          "id": "silent-proposal-92920295a648b540",
+          "ts": "2026-10-18T09:22:34+08:00",
+          "state": "waiting",
+          "reason": "缺固定后续抽牌、生成、选择、药栏及复活资源的两战成对结果；少损3且少伤9、首胜4血后开场死不能证明新SL线或终局权重更优。",
+          "commit": null,
+          "seen_runs": 356,
+          "batch": "code-proposals:silent-proposal-08eaa60bcc449852,silent-proposal-92920295a648b540,silent-proposal-a327449c331efbc1,silent-proposal-a099e89437e942bb,silent-proposal-47910f82a1fdd98f,silent-proposal-f1374df72d8e6a25,silent-proposal-38a49e6c97f31eea,silent-proposal-ef0e38a5dbd3bc07,silent-proposal-7f820c02d39bfaea,silent-proposal-04b6b430759815ed:356"
+        }
+      },
+      {
+        "offset": 4602330,
+        "bytes": 683,
+        "sha256": "10792a269f9d325c9496802ae4bfc95d407c2fee7a4e9df831d4ec6aac433bf9",
+        "row": {
+          "op": "update",
+          "id": "silent-proposal-a327449c331efbc1",
+          "ts": "2026-10-18T09:22:34+08:00",
+          "state": "waiting",
+          "reason": "当轮血伤、毒及沙坑差额诊断已有live子实现；缺固定后继、同预算整战胜负和独立验证，不能拟合血伤或延时排序阈值。",
+          "commit": null,
+          "seen_runs": 356,
+          "batch": "code-proposals:silent-proposal-08eaa60bcc449852,silent-proposal-92920295a648b540,silent-proposal-a327449c331efbc1,silent-proposal-a099e89437e942bb,silent-proposal-47910f82a1fdd98f,silent-proposal-f1374df72d8e6a25,silent-proposal-38a49e6c97f31eea,silent-proposal-ef0e38a5dbd3bc07,silent-proposal-7f820c02d39bfaea,silent-proposal-04b6b430759815ed:356"
+        }
+      },
+      {
+        "offset": 4603013,
+        "bytes": 685,
+        "sha256": "97e90f1ae0ca8fb2ef115a516aeb44e25e42064deb46243f9635fa145389f8d5",
+        "row": {
+          "op": "update",
+          "id": "silent-proposal-a099e89437e942bb",
+          "ts": "2026-10-18T09:22:34+08:00",
+          "state": "waiting",
+          "reason": "生成、手位截断和剩余小刀结转已有live子实现；仍缺计划妥当保留、跨抽牌重问、SL恢复与完整穿插实际派发的联合验证。",
+          "commit": null,
+          "seen_runs": 356,
+          "batch": "code-proposals:silent-proposal-08eaa60bcc449852,silent-proposal-92920295a648b540,silent-proposal-a327449c331efbc1,silent-proposal-a099e89437e942bb,silent-proposal-47910f82a1fdd98f,silent-proposal-f1374df72d8e6a25,silent-proposal-38a49e6c97f31eea,silent-proposal-ef0e38a5dbd3bc07,silent-proposal-7f820c02d39bfaea,silent-proposal-04b6b430759815ed:356"
+        }
+      },
+      {
+        "offset": 4603698,
+        "bytes": 685,
+        "sha256": "8c5fc40342aa2d6de70c7db7652b8fbac53156a1b2ce4ec5f36a8c99f96c15b1",
+        "row": {
+          "op": "update",
+          "id": "silent-proposal-47910f82a1fdd98f",
+          "ts": "2026-10-18T09:22:34+08:00",
+          "state": "waiting",
+          "reason": "受限王室猛毒开场和同样本资源接续已有live子实现；未知回血或复活组合时序、留药及SL完整后继和两战联合校准仍缺证。",
+          "commit": null,
+          "seen_runs": 356,
+          "batch": "code-proposals:silent-proposal-08eaa60bcc449852,silent-proposal-92920295a648b540,silent-proposal-a327449c331efbc1,silent-proposal-a099e89437e942bb,silent-proposal-47910f82a1fdd98f,silent-proposal-f1374df72d8e6a25,silent-proposal-38a49e6c97f31eea,silent-proposal-ef0e38a5dbd3bc07,silent-proposal-7f820c02d39bfaea,silent-proposal-04b6b430759815ed:356"
+        }
+      },
+      {
+        "offset": 4604383,
+        "bytes": 682,
+        "sha256": "24ee7fb593f8adc38b41c44487dce93b1b65dbf63688f9524cf480576fabebc4",
+        "row": {
+          "op": "update",
+          "id": "silent-proposal-f1374df72d8e6a25",
+          "ts": "2026-10-18T09:22:34+08:00",
+          "state": "waiting",
+          "reason": "缺隔离机制误差后、同入口同预算的不用、早用或留药整战及下一战成对结果；局部药水候选不足修改药价或终局权重。",
+          "commit": null,
+          "seen_runs": 356,
+          "batch": "code-proposals:silent-proposal-08eaa60bcc449852,silent-proposal-92920295a648b540,silent-proposal-a327449c331efbc1,silent-proposal-a099e89437e942bb,silent-proposal-47910f82a1fdd98f,silent-proposal-f1374df72d8e6a25,silent-proposal-38a49e6c97f31eea,silent-proposal-ef0e38a5dbd3bc07,silent-proposal-7f820c02d39bfaea,silent-proposal-04b6b430759815ed:356"
+        }
+      },
+      {
+        "offset": 4605065,
+        "bytes": 685,
+        "sha256": "6b65d3ae7554caa3bd72c9a26e24d8f9ae3c9da006f65c6ac955ab9d7edfa4d9",
+        "row": {
+          "op": "update",
+          "id": "silent-proposal-38a49e6c97f31eea",
+          "ts": "2026-10-18T09:22:34+08:00",
+          "state": "waiting",
+          "reason": "普通紧勒及普通磨蚀付费出牌已有live子实现；弃磨蚀、增益分源、再生或自动触发与SL恢复的联合消费者及完整后继未齐。",
+          "commit": null,
+          "seen_runs": 356,
+          "batch": "code-proposals:silent-proposal-08eaa60bcc449852,silent-proposal-92920295a648b540,silent-proposal-a327449c331efbc1,silent-proposal-a099e89437e942bb,silent-proposal-47910f82a1fdd98f,silent-proposal-f1374df72d8e6a25,silent-proposal-38a49e6c97f31eea,silent-proposal-ef0e38a5dbd3bc07,silent-proposal-7f820c02d39bfaea,silent-proposal-04b6b430759815ed:356"
+        }
+      },
+      {
+        "offset": 4605750,
+        "bytes": 697,
+        "sha256": "50b74809bb1ee4bde10e8fda8c1b1971f0db71908622f339af5d527b7e87971e",
+        "row": {
+          "op": "update",
+          "id": "silent-proposal-ef0e38a5dbd3bc07",
+          "ts": "2026-10-18T09:22:34+08:00",
+          "state": "waiting",
+          "reason": "缺另一营火动作、事件或路线及用药时点的受控完整结果；敌人、构筑、上限和实际动作条件混杂，不能支持路线或终局参数拟合。",
+          "commit": null,
+          "seen_runs": 356,
+          "batch": "code-proposals:silent-proposal-08eaa60bcc449852,silent-proposal-92920295a648b540,silent-proposal-a327449c331efbc1,silent-proposal-a099e89437e942bb,silent-proposal-47910f82a1fdd98f,silent-proposal-f1374df72d8e6a25,silent-proposal-38a49e6c97f31eea,silent-proposal-ef0e38a5dbd3bc07,silent-proposal-7f820c02d39bfaea,silent-proposal-04b6b430759815ed:356"
+        }
+      },
+      {
+        "offset": 4606447,
+        "bytes": 693,
+        "sha256": "ed3e68c4945d614d4ad65db1b908faf87be739b6a8ab5f16b23052bf8ac023e2",
+        "row": {
+          "op": "update",
+          "id": "silent-proposal-7f820c02d39bfaea",
+          "ts": "2026-10-18T09:22:34+08:00",
+          "state": "waiting",
+          "reason": "饱和SL的资源差额诊断已有live子实现；缺同预算排序校准、跨弃牌完整执行归属和成对整战后继，不能由同局六败确定新SL门槛。",
+          "commit": null,
+          "seen_runs": 356,
+          "batch": "code-proposals:silent-proposal-08eaa60bcc449852,silent-proposal-92920295a648b540,silent-proposal-a327449c331efbc1,silent-proposal-a099e89437e942bb,silent-proposal-47910f82a1fdd98f,silent-proposal-f1374df72d8e6a25,silent-proposal-38a49e6c97f31eea,silent-proposal-ef0e38a5dbd3bc07,silent-proposal-7f820c02d39bfaea,silent-proposal-04b6b430759815ed:356"
+        }
+      },
+      {
+        "offset": 4607140,
+        "bytes": 729,
+        "sha256": "7377fe53a258291d7bd8e92ebb59445ab919c567dba27823f827037c8c92668d",
+        "row": {
+          "op": "update",
+          "id": "silent-proposal-04b6b430759815ed",
+          "ts": "2026-10-18T09:22:34+08:00",
+          "state": "waiting",
+          "reason": "蟹朝向和普通精确切击已有live子实现；油灯对象stack在首次消费前后均为空，跨动作、新战及SL恢复缺可验证消费状态与联合消费者；未观察组合仍未覆盖。",
+          "commit": null,
+          "seen_runs": 356,
+          "batch": "code-proposals:silent-proposal-08eaa60bcc449852,silent-proposal-92920295a648b540,silent-proposal-a327449c331efbc1,silent-proposal-a099e89437e942bb,silent-proposal-47910f82a1fdd98f,silent-proposal-f1374df72d8e6a25,silent-proposal-38a49e6c97f31eea,silent-proposal-ef0e38a5dbd3bc07,silent-proposal-7f820c02d39bfaea,silent-proposal-04b6b430759815ed:356"
+        }
+      }
+    ],
+    "verified_original_rows": 19929,
+    "stream_counts": {
+      "evidence/states": 6684,
+      "evidence/decisions": 6415,
+      "evidence/sl-attempts": 56,
+      "evidence/run-config": 10,
+      "evidence/run-plans": 51,
+      "evidence/brain": 304,
+      "evidence/runs": 10,
+      "evidence/fight-plans": 0,
+      "supplemental-evidence/states": 3131,
+      "supplemental-evidence/decisions": 3033,
+      "supplemental-evidence/sl-attempts": 22,
+      "supplemental-evidence/run-config": 5,
+      "supplemental-evidence/run-plans": 26,
+      "supplemental-evidence/brain": 177,
+      "supplemental-evidence/runs": 5,
+      "supplemental-evidence/fight-plans": 0
+    },
+    "selected_runs": [
+      "KEN58SH9SLZ6",
+      "TXZ6RVMQA09D",
+      "WQZVENQ7DTRP",
+      "02HB4L0C3C67",
+      "4D4J8USKCPAV",
+      "F4QKG4J1AJJZ",
+      "JLN5SK17W4FQ",
+      "LS8035TB32P3",
+      "NB8KCF6HRGVF",
+      "S9UZAK0JP0C0"
+    ],
+    "five_directly_linked_supplemental_runs": [
+      "1913SE84AXQF",
+      "K3676LU8B0UH",
+      "NHA2KW0RB7VP",
+      "Q6M2Y34MWKRE",
+      "SADL3CGYTGSR"
+    ],
+    "source_pins": 11,
+    "base_live_snapshots": 22,
+    "additional_source_references": 3,
+    "verified_artifacts": 92,
+    "production_tests_ran": false,
+    "old_runs_and_SL_not_new_independent_support": true
+  }
+]
