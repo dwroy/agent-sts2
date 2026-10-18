@@ -4545,3 +4545,5 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
 - 2026-10-18 16:16:38 CST [运维 codex] 接收用量节省首批63e53c111a9d的原唯一宿主检查：live080c347c35df/tree0e9cc1ad5f19与原请求、fallback台账及实际26叶一致，main发布b8072ee0271b仍在集成历史；tsc0，完整vitest548文件、5294过/2跳过，721.49秒，日志SHA及验收见paper/materials/20261018-1615-ops/host-acceptance.json。保源端原full1及13文件99项补验，不重源full或另请求宿主。发布锁忙，仅只读核固定提交和前后HEAD稳定的现有叶，不写live。原retention complete只执行一次rc1，历史live署名/通知路径与源不同而保留工作树；不改基线或强删。新批原生high及6小时节省仍待真实回执，宽父保持；纯ops不加行为号、不写shipped，不重启当局或worker。
 
 - 2026-10-18 16:17:02 CST [运维 codex] 更正本轮上一条retention原因：实际唯一complete调用因retention.lock忙返回rc1，尚未进入源码叶相等门禁；历史live上下文差异是预先识别的后续验收限制，不是本次返回原因。保留原命令、stdout及工作树，后续正常事件接续，不本轮循环。
+
+- 2026-10-18 16:18:45 CST [运维 codex] 实收watcher接续Roy16:13三项授权：独占.worktrees/ops-context-events-20261018，基线8f11ecfb，负责短清单生成、严格普通无源码批次自动收尾及四份prompt/AGENTS修改；原ops不重复实现，待固定源码及测试回执再集成。新prompt仅下一自然停点生效，不热切当前处理中会话，不停止现有工作。交付后的验收沿一次自然真实事件，保留原生实际读取notes/ops-current.md的记录，历史仅事件必要引用；同时保留干净普通批次由调度器自动结案、未入队及未唤醒ops的完成回执。当前仅登记owner和验收边界，不冒称源码已交、已发布或真实效果通过；不为验证另开模型、对局、计时器或制造样本，不关闭原宽父，当前在途宿主检查和原队列保持。
