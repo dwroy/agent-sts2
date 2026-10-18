@@ -1,0 +1,43 @@
+{
+  "started_at": "2026-10-18 16:24:53 CST",
+  "ended_at": "2026-10-18 16:40:22 CST",
+  "tree": "a22221885f1bb93bc4dedfcc29d555150efaf3a2",
+  "worktree": "/home/dw/Projects/agent-sts2/.worktrees/ops-main-sync-20261018-1620",
+  "scope": "One full check of the actual merged main composition, preserving main-only infrastructure. Original live full result and source failures remain separate.",
+  "results": [
+    {
+      "name": "tsc",
+      "command": [
+        "nice",
+        "-n",
+        "19",
+        "npx",
+        "tsc",
+        "-p",
+        "tsconfig.json",
+        "--noEmit"
+      ],
+      "rc": 0,
+      "seconds": 1.079,
+      "log": "ops/codex-ops/record-staging/20261018-1620/tsc.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "vitest",
+      "command": [
+        "nice",
+        "-n",
+        "19",
+        "npx",
+        "vitest",
+        "run",
+        "--maxWorkers=2"
+      ],
+      "rc": 0,
+      "seconds": 927.086,
+      "log": "ops/codex-ops/record-staging/20261018-1620/vitest.log",
+      "sha256": "a5130f96ba2cafc0fd2d2ea463a8748463a0b52ca8226dfc06f3a182b6177f03"
+    }
+  ],
+  "rc": 0
+}

@@ -1,0 +1,81 @@
+{
+  "at": "2026-10-18 16:40:22 CST",
+  "main_before": "77fa76d1e1c23f8f6858f7109607f723730a04ba",
+  "main_merge_commit": "1f0f40c950c43ef2eaab97b11d777db7b3df8a87",
+  "main_tree": "a22221885f1bb93bc4dedfcc29d555150efaf3a2",
+  "live_commit": "080c347c35df3e2c42d4caf3a02dc4bd3930895f",
+  "live_tree": "0e9cc1ad5f196e7bee06e61fc6a26fa663de63d4",
+  "incoming_commits": [
+    "bc375c779f917b3d8d8a5ea25f3630ae07e4fb61",
+    "c991a68490f1887585b9f8c81de3ce41139ed0ed",
+    "6053836a07276d86306dc2258ffe7aa6c69f7719",
+    "875500bb5e1f87c0635ea9c909cd70ed1f8c192d",
+    "e713f211362f23e21102c63cd9a5e0195833021c",
+    "efd308ad4aa8ce78c590b8168edb2748163bb5fb",
+    "acfd63aaa8f664ca6f81a025cf8ebf25883531a9",
+    "8a0f3f2a28ce5c6d8abe56771fd71d06854a72e6",
+    "080c347c35df3e2c42d4caf3a02dc4bd3930895f"
+  ],
+  "incoming_commits_now_main_ancestors": true,
+  "live_commits_missing_from_main": 0,
+  "all_gameplay_source_equal_live_modulo_existing_attribution": true,
+  "silent_and_common_knowledge_exact_live": true,
+  "whole_trees_identical": false,
+  "remaining_tree_differences": "Main-only infrastructure, histories, records and existing attribution; no whole-tree replacement.",
+  "preserved_main_dirty_notes": [
+    {
+      "path": "notes/monster-db-check.md",
+      "sha256": "983ec60c859b09f49c798385ca5c6c71b0350b1d80a43a7e734f0d151eca25ae"
+    }
+  ],
+  "normal_index_preserved": true,
+  "live_branch_index_worktree_not_modified": true,
+  "checks": {
+    "started_at": "2026-10-18 16:24:53 CST",
+    "ended_at": "2026-10-18 16:40:22 CST",
+    "tree": "a22221885f1bb93bc4dedfcc29d555150efaf3a2",
+    "worktree": "/home/dw/Projects/agent-sts2/.worktrees/ops-main-sync-20261018-1620",
+    "scope": "One full check of the actual merged main composition, preserving main-only infrastructure. Original live full result and source failures remain separate.",
+    "results": [
+      {
+        "name": "tsc",
+        "command": [
+          "nice",
+          "-n",
+          "19",
+          "npx",
+          "tsc",
+          "-p",
+          "tsconfig.json",
+          "--noEmit"
+        ],
+        "rc": 0,
+        "seconds": 1.079,
+        "log": "ops/codex-ops/record-staging/20261018-1620/tsc.log",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "name": "vitest",
+        "command": [
+          "nice",
+          "-n",
+          "19",
+          "npx",
+          "vitest",
+          "run",
+          "--maxWorkers=2"
+        ],
+        "rc": 0,
+        "seconds": 927.086,
+        "log": "ops/codex-ops/record-staging/20261018-1620/vitest.log",
+        "sha256": "a5130f96ba2cafc0fd2d2ea463a8748463a0b52ca8226dfc06f3a182b6177f03"
+      }
+    ],
+    "rc": 0
+  },
+  "gitleaks_rc": 0,
+  "release_id": null,
+  "new_shipped_entries": [],
+  "regent": "paused; watcher drafts adaptation and Roy reviews before execution",
+  "new_game_or_model_requests": 0
+}
