@@ -1,0 +1,651 @@
+[
+  {
+    "batch": "20261018-120018-strategy-proposal",
+    "report": {
+      "task": "strategy-proposal",
+      "character": "silent",
+      "batch": "20261018-120018-strategy-proposal",
+      "base": "e123a5ee49c21d5560e7533418fb5eeb32339bd2",
+      "runs": [
+        "751FN9QM9MHQ",
+        "KV0JHNJCKXLS",
+        "YQL8RZ8BWN1E",
+        "L9SGRBB5R698",
+        "PU80F84P6HPN",
+        "KEN58SH9SLZ6"
+      ],
+      "fixes": [],
+      "skipped": [],
+      "merged": null,
+      "tests": {
+        "tsc": null,
+        "vitest": null,
+        "cases": null
+      },
+      "code_proposals": [
+        "silent-proposal-366288801d9150d9",
+        "silent-proposal-85929bdfc8a3fc1b",
+        "silent-proposal-efd9f83ee9e1a6dc",
+        "silent-proposal-131042659448ae74",
+        "silent-proposal-990f054036609447",
+        "silent-proposal-e18d3f18e6cac2a0",
+        "silent-proposal-9733bb80f445aeae",
+        "silent-proposal-c51468c5e8ba6668",
+        "silent-proposal-86a7db08d1a31976",
+        "silent-proposal-e282a9131b99129a"
+      ],
+      "implementation_domains": [],
+      "proposal_results": [
+        {
+          "id": "silent-proposal-366288801d9150d9",
+          "state": "waiting",
+          "reason": "缺候选逐源实际结算、同后继完整重放及独立验证；现有预测对照不足关闭整项SL成本审计。"
+        },
+        {
+          "id": "silent-proposal-85929bdfc8a3fc1b",
+          "state": "waiting",
+          "reason": "缺确定弃牌后完整逐源结算与无药/留到后战的实际整战对照；保守模型和未知持有值说明虽已实现，原验证范围仍未闭合。"
+        },
+        {
+          "id": "silent-proposal-efd9f83ee9e1a6dc",
+          "state": "waiting",
+          "reason": "缺完整实际成本归属、受控整战及后期独立验证；同源经验与局部诊断不证明整项完成。"
+        },
+        {
+          "id": "silent-proposal-131042659448ae74",
+          "state": "waiting",
+          "reason": "缺九类经验联合的实际消费者结算和跨战留药对照；不能以几个已有组件登记整项duplicate。"
+        },
+        {
+          "id": "silent-proposal-990f054036609447",
+          "state": "waiting",
+          "reason": "缺毛伤/回血/成长完整归属、同后继整战及独立验证；同零损删输出不构成保血收益。"
+        },
+        {
+          "id": "silent-proposal-e18d3f18e6cac2a0",
+          "state": "waiting",
+          "reason": "缺改序后的受控整战、完整最终资源及提前饮药结果；归零占位HP会改变同轮排序，阶段说明不等于整项指标/排序修复。"
+        },
+        {
+          "id": "silent-proposal-9733bb80f445aeae",
+          "state": "waiting",
+          "reason": "缺阶段改序、提前用药及路线的受控验证；已有阶段/药水说明不能登记整项duplicate。"
+        },
+        {
+          "id": "silent-proposal-c51468c5e8ba6668",
+          "state": "waiting",
+          "reason": "缺随机选牌/发光水重问后的完整收益归属及未饮用或留至Boss的整战分支；七次实耗不能推出持有价值。"
+        },
+        {
+          "id": "silent-proposal-86a7db08d1a31976",
+          "state": "waiting",
+          "reason": "缺能力后继、逐源实际归属、同后轮整战及独立验证；不能拟统一6血/2伤门槛或仅保血排序。"
+        },
+        {
+          "id": "silent-proposal-e282a9131b99129a",
+          "state": "waiting",
+          "reason": "缺续问后完整执行归属、受控整战及后期独立验证；不足关闭探索或改变HP护栏。"
+        }
+      ],
+      "report": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261018-120018/learner/runs/20261018-120022-6edb31de-4305-4e22-a452-f2706cd5611c-strategy-proposal/report.md"
+    },
+    "native": {
+      "batch": "20261018-120018-strategy-proposal",
+      "thread": "01a14d2a-fbf4-79c2-b19c-5223ea98fc07",
+      "cwd": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261018-120018",
+      "event_log": "learner/runs/20261018-120022-6edb31de-4305-4e22-a452-f2706cd5611c-strategy-proposal.jsonl",
+      "registered_launch_batch": "20261018-120018-strategy-proposal",
+      "original_lease": "17e5c52555abcbf990f494498afe3a894ace86124ce9ed91284d61660cb3347d",
+      "native_context": {
+        "source": "ops/codex-ops/accounts/codex3/learner/sessions/2026/10/18/rollout-2026-10-18T12-00-25-01a14d2a-fbf4-79c2-b19c-5223ea98fc07.jsonl",
+        "offset": 64274,
+        "bytes": 5182,
+        "sha256": "4a73911c3400bc3eaee4dc1d0a0d99f2315b3cf0d00f5ccff5c7353319661bfa",
+        "model": "gpt-6.1-sol",
+        "effort": "xhigh",
+        "sandbox": {
+          "type": "workspace-write",
+          "writable_roots": [
+            "/home/dw/Projects/agent-sts2",
+            "/home/dw/Projects/agent-sts2/.git",
+            "/home/dw/Projects/agent-sts2/.git/worktrees/codex-strategy-silent-20261018-120018"
+          ],
+          "network_access": false,
+          "exclude_tmpdir_env_var": false,
+          "exclude_slash_tmp": false
+        },
+        "approval_policy": "never"
+      },
+      "native_user_input": {
+        "offset": 72319,
+        "bytes": 21447,
+        "sha256": "9b133595be6294f846f1a800bda0ca7b5b3fae60797d855e6072ae7bff697ccf",
+        "input_sha256": "4fd5f7dcf03c5a0dbb989e5ea63794f1fab1d654a9e246fda699c0e0c0aa2e14"
+      },
+      "original_header_events": [
+        {
+          "offset": 0,
+          "bytes": 23459,
+          "sha256": "762dfa31b825009b34b35e4acfe6367a5da87e9a66c2e2f3d19b059e7d173c1d",
+          "type": "learner_launch",
+          "attempt": null,
+          "code": null
+        },
+        {
+          "offset": 23459,
+          "bytes": 377,
+          "sha256": "21cc7ac6dcda419d119475227ee27db3d9b1c7a294a05af3244ecd9c05ea7e43",
+          "type": "learner_startup_attempt",
+          "attempt": 1,
+          "code": null
+        },
+        {
+          "offset": 26848,
+          "bytes": 77,
+          "sha256": "29076780d5be339f1e63d9dfc99ff4c34e9b184bea12d061b5f93a3fc1fcf014",
+          "type": "thread.started",
+          "attempt": null,
+          "code": null
+        }
+      ],
+      "startup_attempts": 1,
+      "failed_startups_preserved": 0,
+      "no_model_or_manual_restart": true
+    },
+    "canonical_state": "done",
+    "canonical_rc": 0,
+    "original_ledger_rows": [
+      {
+        "offset": 24606769,
+        "bytes": 1468,
+        "sha256": "4754500c9e7a6cdd4ecc01808dcee63bb0a96f5d94abcafaeecc2dd18a5f635d",
+        "row": {
+          "op": "update",
+          "id": "silent-0005",
+          "ts": "2026-10-18T12:12:23+08:00",
+          "by": "learner:strategy-proposal",
+          "where": {
+            "proposal": [
+              "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261018-120018/learner/runs/20261018-120022-6edb31de-4305-4e22-a452-f2706cd5611c-strategy-proposal/proposal.md#silent-proposal-85929bdfc8a3fc1b",
+              "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261018-120018/learner/runs/20261018-120022-6edb31de-4305-4e22-a452-f2706cd5611c-strategy-proposal/proposal.md#silent-proposal-131042659448ae74",
+              "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261018-120018/learner/runs/20261018-120022-6edb31de-4305-4e22-a452-f2706cd5611c-strategy-proposal/proposal.md#silent-proposal-86a7db08d1a31976"
+            ]
+          },
+          "note": "20261018-120018-strategy-proposal：仅复核本批六个Silent A10旧局；8流8444引用及5组同指纹、7次耗药、12份夹具来源已核回。原提案整项waiting，具体缺数据和已有局部源码祖先见 /home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261018-120018/learner/runs/20261018-120022-6edb31de-4305-4e22-a452-f2706cd5611c-strategy-proposal/proposal.md。本次不新增独立支持N、不改claim/首证/prior/evidence/status/version/effect，不把材料核验当生产消费者通过；未改源码/知识、未提交/合入/shipped。关联原id：silent-proposal-85929bdfc8a3fc1b,silent-proposal-131042659448ae74,silent-proposal-86a7db08d1a31976"
+        }
+      },
+      {
+        "offset": 24608237,
+        "bytes": 982,
+        "sha256": "6c37a77bff1e914082e1edb424e8752f76b030ca9d3efebdd3ccd993419f949c",
+        "row": {
+          "op": "update",
+          "id": "silent-0006",
+          "ts": "2026-10-18T12:12:23+08:00",
+          "by": "learner:strategy-proposal",
+          "where": {
+            "proposal": [
+              "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261018-120018/learner/runs/20261018-120022-6edb31de-4305-4e22-a452-f2706cd5611c-strategy-proposal/proposal.md#silent-proposal-131042659448ae74"
+            ]
+          },
+          "note": "20261018-120018-strategy-proposal：仅复核本批六个Silent A10旧局；8流8444引用及5组同指纹、7次耗药、12份夹具来源已核回。原提案整项waiting，具体缺数据和已有局部源码祖先见 /home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261018-120018/learner/runs/20261018-120022-6edb31de-4305-4e22-a452-f2706cd5611c-strategy-proposal/proposal.md。本次不新增独立支持N、不改claim/首证/prior/evidence/status/version/effect，不把材料核验当生产消费者通过；未改源码/知识、未提交/合入/shipped。关联原id：silent-proposal-131042659448ae74"
+        }
+      },
+      {
+        "offset": 24609219,
+        "bytes": 1225,
+        "sha256": "fc4a0a924c4d7e5ed3187e4eed86adc6e090eaa7cceecd181548e2188fe16564",
+        "row": {
+          "op": "update",
+          "id": "silent-0007",
+          "ts": "2026-10-18T12:12:23+08:00",
+          "by": "learner:strategy-proposal",
+          "where": {
+            "proposal": [
+              "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261018-120018/learner/runs/20261018-120022-6edb31de-4305-4e22-a452-f2706cd5611c-strategy-proposal/proposal.md#silent-proposal-85929bdfc8a3fc1b",
+              "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261018-120018/learner/runs/20261018-120022-6edb31de-4305-4e22-a452-f2706cd5611c-strategy-proposal/proposal.md#silent-proposal-131042659448ae74"
+            ]
+          },
+          "note": "20261018-120018-strategy-proposal：仅复核本批六个Silent A10旧局；8流8444引用及5组同指纹、7次耗药、12份夹具来源已核回。原提案整项waiting，具体缺数据和已有局部源码祖先见 /home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261018-120018/learner/runs/20261018-120022-6edb31de-4305-4e22-a452-f2706cd5611c-strategy-proposal/proposal.md。本次不新增独立支持N、不改claim/首证/prior/evidence/status/version/effect，不把材料核验当生产消费者通过；未改源码/知识、未提交/合入/shipped。关联原id：silent-proposal-85929bdfc8a3fc1b,silent-proposal-131042659448ae74"
+        }
+      },
+      {
+        "offset": 24610444,
+        "bytes": 982,
+        "sha256": "47ee5a45bdddcd2dcfa952979e96570d1c62fb048de2a902526eb6b5e9f4e177",
+        "row": {
+          "op": "update",
+          "id": "silent-0011",
+          "ts": "2026-10-18T12:12:23+08:00",
+          "by": "learner:strategy-proposal",
+          "where": {
+            "proposal": [
+              "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261018-120018/learner/runs/20261018-120022-6edb31de-4305-4e22-a452-f2706cd5611c-strategy-proposal/proposal.md#silent-proposal-e18d3f18e6cac2a0"
+            ]
+          },
+          "note": "20261018-120018-strategy-proposal：仅复核本批六个Silent A10旧局；8流8444引用及5组同指纹、7次耗药、12份夹具来源已核回。原提案整项waiting，具体缺数据和已有局部源码祖先见 /home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261018-120018/learner/runs/20261018-120022-6edb31de-4305-4e22-a452-f2706cd5611c-strategy-proposal/proposal.md。本次不新增独立支持N、不改claim/首证/prior/evidence/status/version/effect，不把材料核验当生产消费者通过；未改源码/知识、未提交/合入/shipped。关联原id：silent-proposal-e18d3f18e6cac2a0"
+        }
+      },
+      {
+        "offset": 24611426,
+        "bytes": 1225,
+        "sha256": "1052ab4525beaf57fbbab1ab50b3b3a1aa5a7b2d1546066954173420a6fe98e4",
+        "row": {
+          "op": "update",
+          "id": "silent-0017",
+          "ts": "2026-10-18T12:12:23+08:00",
+          "by": "learner:strategy-proposal",
+          "where": {
+            "proposal": [
+              "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261018-120018/learner/runs/20261018-120022-6edb31de-4305-4e22-a452-f2706cd5611c-strategy-proposal/proposal.md#silent-proposal-e18d3f18e6cac2a0",
+              "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261018-120018/learner/runs/20261018-120022-6edb31de-4305-4e22-a452-f2706cd5611c-strategy-proposal/proposal.md#silent-proposal-9733bb80f445aeae"
+            ]
+          },
+          "note": "20261018-120018-strategy-proposal：仅复核本批六个Silent A10旧局；8流8444引用及5组同指纹、7次耗药、12份夹具来源已核回。原提案整项waiting，具体缺数据和已有局部源码祖先见 /home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261018-120018/learner/runs/20261018-120022-6edb31de-4305-4e22-a452-f2706cd5611c-strategy-proposal/proposal.md。本次不新增独立支持N、不改claim/首证/prior/evidence/status/version/effect，不把材料核验当生产消费者通过；未改源码/知识、未提交/合入/shipped。关联原id：silent-proposal-e18d3f18e6cac2a0,silent-proposal-9733bb80f445aeae"
+        }
+      },
+      {
+        "offset": 24612651,
+        "bytes": 1954,
+        "sha256": "4af31d4454ee6b17efbb75b7e57163e225db7924c52afaa03c50217a52e044e3",
+        "row": {
+          "op": "update",
+          "id": "silent-0019",
+          "ts": "2026-10-18T12:12:23+08:00",
+          "by": "learner:strategy-proposal",
+          "where": {
+            "proposal": [
+              "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261018-120018/learner/runs/20261018-120022-6edb31de-4305-4e22-a452-f2706cd5611c-strategy-proposal/proposal.md#silent-proposal-85929bdfc8a3fc1b",
+              "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261018-120018/learner/runs/20261018-120022-6edb31de-4305-4e22-a452-f2706cd5611c-strategy-proposal/proposal.md#silent-proposal-131042659448ae74",
+              "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261018-120018/learner/runs/20261018-120022-6edb31de-4305-4e22-a452-f2706cd5611c-strategy-proposal/proposal.md#silent-proposal-990f054036609447",
+              "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261018-120018/learner/runs/20261018-120022-6edb31de-4305-4e22-a452-f2706cd5611c-strategy-proposal/proposal.md#silent-proposal-9733bb80f445aeae",
+              "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261018-120018/learner/runs/20261018-120022-6edb31de-4305-4e22-a452-f2706cd5611c-strategy-proposal/proposal.md#silent-proposal-c51468c5e8ba6668"
+            ]
+          },
+          "note": "20261018-120018-strategy-proposal：仅复核本批六个Silent A10旧局；8流8444引用及5组同指纹、7次耗药、12份夹具来源已核回。原提案整项waiting，具体缺数据和已有局部源码祖先见 /home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261018-120018/learner/runs/20261018-120022-6edb31de-4305-4e22-a452-f2706cd5611c-strategy-proposal/proposal.md。本次不新增独立支持N、不改claim/首证/prior/evidence/status/version/effect，不把材料核验当生产消费者通过；未改源码/知识、未提交/合入/shipped。关联原id：silent-proposal-85929bdfc8a3fc1b,silent-proposal-131042659448ae74,silent-proposal-990f054036609447,silent-proposal-9733bb80f445aeae,silent-proposal-c51468c5e8ba6668"
+        }
+      },
+      {
+        "offset": 24614605,
+        "bytes": 1468,
+        "sha256": "48b65412b1b566ac27066a8116695d4165bc76222dcbcdd23ce830855482cff4",
+        "row": {
+          "op": "update",
+          "id": "silent-0020",
+          "ts": "2026-10-18T12:12:23+08:00",
+          "by": "learner:strategy-proposal",
+          "where": {
+            "proposal": [
+              "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261018-120018/learner/runs/20261018-120022-6edb31de-4305-4e22-a452-f2706cd5611c-strategy-proposal/proposal.md#silent-proposal-131042659448ae74",
+              "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261018-120018/learner/runs/20261018-120022-6edb31de-4305-4e22-a452-f2706cd5611c-strategy-proposal/proposal.md#silent-proposal-990f054036609447",
+              "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261018-120018/learner/runs/20261018-120022-6edb31de-4305-4e22-a452-f2706cd5611c-strategy-proposal/proposal.md#silent-proposal-9733bb80f445aeae"
+            ]
+          },
+          "note": "20261018-120018-strategy-proposal：仅复核本批六个Silent A10旧局；8流8444引用及5组同指纹、7次耗药、12份夹具来源已核回。原提案整项waiting，具体缺数据和已有局部源码祖先见 /home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261018-120018/learner/runs/20261018-120022-6edb31de-4305-4e22-a452-f2706cd5611c-strategy-proposal/proposal.md。本次不新增独立支持N、不改claim/首证/prior/evidence/status/version/effect，不把材料核验当生产消费者通过；未改源码/知识、未提交/合入/shipped。关联原id：silent-proposal-131042659448ae74,silent-proposal-990f054036609447,silent-proposal-9733bb80f445aeae"
+        }
+      },
+      {
+        "offset": 24616073,
+        "bytes": 1711,
+        "sha256": "d5e270b2c4dc7642bad51da8c11d82a6ec2797aa13f395c3960090e211fe362a",
+        "row": {
+          "op": "update",
+          "id": "silent-0021",
+          "ts": "2026-10-18T12:12:23+08:00",
+          "by": "learner:strategy-proposal",
+          "where": {
+            "proposal": [
+              "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261018-120018/learner/runs/20261018-120022-6edb31de-4305-4e22-a452-f2706cd5611c-strategy-proposal/proposal.md#silent-proposal-85929bdfc8a3fc1b",
+              "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261018-120018/learner/runs/20261018-120022-6edb31de-4305-4e22-a452-f2706cd5611c-strategy-proposal/proposal.md#silent-proposal-131042659448ae74",
+              "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261018-120018/learner/runs/20261018-120022-6edb31de-4305-4e22-a452-f2706cd5611c-strategy-proposal/proposal.md#silent-proposal-86a7db08d1a31976",
+              "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261018-120018/learner/runs/20261018-120022-6edb31de-4305-4e22-a452-f2706cd5611c-strategy-proposal/proposal.md#silent-proposal-e282a9131b99129a"
+            ]
+          },
+          "note": "20261018-120018-strategy-proposal：仅复核本批六个Silent A10旧局；8流8444引用及5组同指纹、7次耗药、12份夹具来源已核回。原提案整项waiting，具体缺数据和已有局部源码祖先见 /home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261018-120018/learner/runs/20261018-120022-6edb31de-4305-4e22-a452-f2706cd5611c-strategy-proposal/proposal.md。本次不新增独立支持N、不改claim/首证/prior/evidence/status/version/effect，不把材料核验当生产消费者通过；未改源码/知识、未提交/合入/shipped。关联原id：silent-proposal-85929bdfc8a3fc1b,silent-proposal-131042659448ae74,silent-proposal-86a7db08d1a31976,silent-proposal-e282a9131b99129a"
+        }
+      },
+      {
+        "offset": 24617784,
+        "bytes": 982,
+        "sha256": "7f1a5ba7694f2f6f8c4ca2ac9199db6c75fbc62693c5ad95b1f1725e5c373324",
+        "row": {
+          "op": "update",
+          "id": "silent-0027",
+          "ts": "2026-10-18T12:12:23+08:00",
+          "by": "learner:strategy-proposal",
+          "where": {
+            "proposal": [
+              "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261018-120018/learner/runs/20261018-120022-6edb31de-4305-4e22-a452-f2706cd5611c-strategy-proposal/proposal.md#silent-proposal-e18d3f18e6cac2a0"
+            ]
+          },
+          "note": "20261018-120018-strategy-proposal：仅复核本批六个Silent A10旧局；8流8444引用及5组同指纹、7次耗药、12份夹具来源已核回。原提案整项waiting，具体缺数据和已有局部源码祖先见 /home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261018-120018/learner/runs/20261018-120022-6edb31de-4305-4e22-a452-f2706cd5611c-strategy-proposal/proposal.md。本次不新增独立支持N、不改claim/首证/prior/evidence/status/version/effect，不把材料核验当生产消费者通过；未改源码/知识、未提交/合入/shipped。关联原id：silent-proposal-e18d3f18e6cac2a0"
+        }
+      },
+      {
+        "offset": 24618766,
+        "bytes": 1225,
+        "sha256": "7580c38cc42875f5ff2862810ac53d8ef255c000eab6b214a6742c84ccef1a54",
+        "row": {
+          "op": "update",
+          "id": "silent-0046",
+          "ts": "2026-10-18T12:12:23+08:00",
+          "by": "learner:strategy-proposal",
+          "where": {
+            "proposal": [
+              "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261018-120018/learner/runs/20261018-120022-6edb31de-4305-4e22-a452-f2706cd5611c-strategy-proposal/proposal.md#silent-proposal-131042659448ae74",
+              "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261018-120018/learner/runs/20261018-120022-6edb31de-4305-4e22-a452-f2706cd5611c-strategy-proposal/proposal.md#silent-proposal-e18d3f18e6cac2a0"
+            ]
+          },
+          "note": "20261018-120018-strategy-proposal：仅复核本批六个Silent A10旧局；8流8444引用及5组同指纹、7次耗药、12份夹具来源已核回。原提案整项waiting，具体缺数据和已有局部源码祖先见 /home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261018-120018/learner/runs/20261018-120022-6edb31de-4305-4e22-a452-f2706cd5611c-strategy-proposal/proposal.md。本次不新增独立支持N、不改claim/首证/prior/evidence/status/version/effect，不把材料核验当生产消费者通过；未改源码/知识、未提交/合入/shipped。关联原id：silent-proposal-131042659448ae74,silent-proposal-e18d3f18e6cac2a0"
+        }
+      },
+      {
+        "offset": 24619991,
+        "bytes": 1711,
+        "sha256": "5d6b4fd5d36e22d6fcfe92139d980f8f38ff95139b230f55f46641c5d27aeb0f",
+        "row": {
+          "op": "update",
+          "id": "silent-0079",
+          "ts": "2026-10-18T12:12:23+08:00",
+          "by": "learner:strategy-proposal",
+          "where": {
+            "proposal": [
+              "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261018-120018/learner/runs/20261018-120022-6edb31de-4305-4e22-a452-f2706cd5611c-strategy-proposal/proposal.md#silent-proposal-366288801d9150d9",
+              "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261018-120018/learner/runs/20261018-120022-6edb31de-4305-4e22-a452-f2706cd5611c-strategy-proposal/proposal.md#silent-proposal-efd9f83ee9e1a6dc",
+              "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261018-120018/learner/runs/20261018-120022-6edb31de-4305-4e22-a452-f2706cd5611c-strategy-proposal/proposal.md#silent-proposal-86a7db08d1a31976",
+              "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261018-120018/learner/runs/20261018-120022-6edb31de-4305-4e22-a452-f2706cd5611c-strategy-proposal/proposal.md#silent-proposal-e282a9131b99129a"
+            ]
+          },
+          "note": "20261018-120018-strategy-proposal：仅复核本批六个Silent A10旧局；8流8444引用及5组同指纹、7次耗药、12份夹具来源已核回。原提案整项waiting，具体缺数据和已有局部源码祖先见 /home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261018-120018/learner/runs/20261018-120022-6edb31de-4305-4e22-a452-f2706cd5611c-strategy-proposal/proposal.md。本次不新增独立支持N、不改claim/首证/prior/evidence/status/version/effect，不把材料核验当生产消费者通过；未改源码/知识、未提交/合入/shipped。关联原id：silent-proposal-366288801d9150d9,silent-proposal-efd9f83ee9e1a6dc,silent-proposal-86a7db08d1a31976,silent-proposal-e282a9131b99129a"
+        }
+      },
+      {
+        "offset": 24621702,
+        "bytes": 982,
+        "sha256": "20eae24f58a528e6a73affa162780d839f67b30469ce8dddf29a09579cc9b686",
+        "row": {
+          "op": "update",
+          "id": "silent-0102",
+          "ts": "2026-10-18T12:12:23+08:00",
+          "by": "learner:strategy-proposal",
+          "where": {
+            "proposal": [
+              "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261018-120018/learner/runs/20261018-120022-6edb31de-4305-4e22-a452-f2706cd5611c-strategy-proposal/proposal.md#silent-proposal-990f054036609447"
+            ]
+          },
+          "note": "20261018-120018-strategy-proposal：仅复核本批六个Silent A10旧局；8流8444引用及5组同指纹、7次耗药、12份夹具来源已核回。原提案整项waiting，具体缺数据和已有局部源码祖先见 /home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261018-120018/learner/runs/20261018-120022-6edb31de-4305-4e22-a452-f2706cd5611c-strategy-proposal/proposal.md。本次不新增独立支持N、不改claim/首证/prior/evidence/status/version/effect，不把材料核验当生产消费者通过；未改源码/知识、未提交/合入/shipped。关联原id：silent-proposal-990f054036609447"
+        }
+      },
+      {
+        "offset": 24622684,
+        "bytes": 1225,
+        "sha256": "c7a47eb66336af1508793129d4aec2cf40ef98e9dad98e82de45284f285aac3c",
+        "row": {
+          "op": "update",
+          "id": "silent-0125",
+          "ts": "2026-10-18T12:12:23+08:00",
+          "by": "learner:strategy-proposal",
+          "where": {
+            "proposal": [
+              "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261018-120018/learner/runs/20261018-120022-6edb31de-4305-4e22-a452-f2706cd5611c-strategy-proposal/proposal.md#silent-proposal-86a7db08d1a31976",
+              "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261018-120018/learner/runs/20261018-120022-6edb31de-4305-4e22-a452-f2706cd5611c-strategy-proposal/proposal.md#silent-proposal-e282a9131b99129a"
+            ]
+          },
+          "note": "20261018-120018-strategy-proposal：仅复核本批六个Silent A10旧局；8流8444引用及5组同指纹、7次耗药、12份夹具来源已核回。原提案整项waiting，具体缺数据和已有局部源码祖先见 /home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261018-120018/learner/runs/20261018-120022-6edb31de-4305-4e22-a452-f2706cd5611c-strategy-proposal/proposal.md。本次不新增独立支持N、不改claim/首证/prior/evidence/status/version/effect，不把材料核验当生产消费者通过；未改源码/知识、未提交/合入/shipped。关联原id：silent-proposal-86a7db08d1a31976,silent-proposal-e282a9131b99129a"
+        }
+      },
+      {
+        "offset": 24623909,
+        "bytes": 1225,
+        "sha256": "89577f027a6e4f94a46452b5e5ec0694dc78d195fd9387cb3b3d9306480a9ff1",
+        "row": {
+          "op": "update",
+          "id": "silent-0129",
+          "ts": "2026-10-18T12:12:23+08:00",
+          "by": "learner:strategy-proposal",
+          "where": {
+            "proposal": [
+              "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261018-120018/learner/runs/20261018-120022-6edb31de-4305-4e22-a452-f2706cd5611c-strategy-proposal/proposal.md#silent-proposal-85929bdfc8a3fc1b",
+              "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261018-120018/learner/runs/20261018-120022-6edb31de-4305-4e22-a452-f2706cd5611c-strategy-proposal/proposal.md#silent-proposal-131042659448ae74"
+            ]
+          },
+          "note": "20261018-120018-strategy-proposal：仅复核本批六个Silent A10旧局；8流8444引用及5组同指纹、7次耗药、12份夹具来源已核回。原提案整项waiting，具体缺数据和已有局部源码祖先见 /home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261018-120018/learner/runs/20261018-120022-6edb31de-4305-4e22-a452-f2706cd5611c-strategy-proposal/proposal.md。本次不新增独立支持N、不改claim/首证/prior/evidence/status/version/effect，不把材料核验当生产消费者通过；未改源码/知识、未提交/合入/shipped。关联原id：silent-proposal-85929bdfc8a3fc1b,silent-proposal-131042659448ae74"
+        }
+      },
+      {
+        "offset": 24625134,
+        "bytes": 2197,
+        "sha256": "1b1331d3d61917e908e726a4e83115d5a6b53f5773823a79895064af70034851",
+        "row": {
+          "op": "update",
+          "id": "silent-0176",
+          "ts": "2026-10-18T12:12:23+08:00",
+          "by": "learner:strategy-proposal",
+          "where": {
+            "proposal": [
+              "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261018-120018/learner/runs/20261018-120022-6edb31de-4305-4e22-a452-f2706cd5611c-strategy-proposal/proposal.md#silent-proposal-366288801d9150d9",
+              "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261018-120018/learner/runs/20261018-120022-6edb31de-4305-4e22-a452-f2706cd5611c-strategy-proposal/proposal.md#silent-proposal-85929bdfc8a3fc1b",
+              "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261018-120018/learner/runs/20261018-120022-6edb31de-4305-4e22-a452-f2706cd5611c-strategy-proposal/proposal.md#silent-proposal-efd9f83ee9e1a6dc",
+              "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261018-120018/learner/runs/20261018-120022-6edb31de-4305-4e22-a452-f2706cd5611c-strategy-proposal/proposal.md#silent-proposal-131042659448ae74",
+              "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261018-120018/learner/runs/20261018-120022-6edb31de-4305-4e22-a452-f2706cd5611c-strategy-proposal/proposal.md#silent-proposal-86a7db08d1a31976",
+              "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261018-120018/learner/runs/20261018-120022-6edb31de-4305-4e22-a452-f2706cd5611c-strategy-proposal/proposal.md#silent-proposal-e282a9131b99129a"
+            ]
+          },
+          "note": "20261018-120018-strategy-proposal：仅复核本批六个Silent A10旧局；8流8444引用及5组同指纹、7次耗药、12份夹具来源已核回。原提案整项waiting，具体缺数据和已有局部源码祖先见 /home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261018-120018/learner/runs/20261018-120022-6edb31de-4305-4e22-a452-f2706cd5611c-strategy-proposal/proposal.md。本次不新增独立支持N、不改claim/首证/prior/evidence/status/version/effect，不把材料核验当生产消费者通过；未改源码/知识、未提交/合入/shipped。关联原id：silent-proposal-366288801d9150d9,silent-proposal-85929bdfc8a3fc1b,silent-proposal-efd9f83ee9e1a6dc,silent-proposal-131042659448ae74,silent-proposal-86a7db08d1a31976,silent-proposal-e282a9131b99129a"
+        }
+      },
+      {
+        "offset": 24627331,
+        "bytes": 1225,
+        "sha256": "4419735584dec886832cba64d1359db86f8858081a1d624d8767f69fba99f48a",
+        "row": {
+          "op": "update",
+          "id": "silent-0250",
+          "ts": "2026-10-18T12:12:23+08:00",
+          "by": "learner:strategy-proposal",
+          "where": {
+            "proposal": [
+              "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261018-120018/learner/runs/20261018-120022-6edb31de-4305-4e22-a452-f2706cd5611c-strategy-proposal/proposal.md#silent-proposal-e18d3f18e6cac2a0",
+              "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261018-120018/learner/runs/20261018-120022-6edb31de-4305-4e22-a452-f2706cd5611c-strategy-proposal/proposal.md#silent-proposal-9733bb80f445aeae"
+            ]
+          },
+          "note": "20261018-120018-strategy-proposal：仅复核本批六个Silent A10旧局；8流8444引用及5组同指纹、7次耗药、12份夹具来源已核回。原提案整项waiting，具体缺数据和已有局部源码祖先见 /home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261018-120018/learner/runs/20261018-120022-6edb31de-4305-4e22-a452-f2706cd5611c-strategy-proposal/proposal.md。本次不新增独立支持N、不改claim/首证/prior/evidence/status/version/effect，不把材料核验当生产消费者通过；未改源码/知识、未提交/合入/shipped。关联原id：silent-proposal-e18d3f18e6cac2a0,silent-proposal-9733bb80f445aeae"
+        }
+      }
+    ],
+    "original_queue_rows": [
+      {
+        "offset": 4683459,
+        "bytes": 645,
+        "sha256": "479cd6c89ee8a3a054abda837f47033366b13c25610eb4f460e1202f41ab99ac",
+        "row": {
+          "op": "update",
+          "id": "silent-proposal-366288801d9150d9",
+          "ts": "2026-10-18T12:18:42+08:00",
+          "state": "waiting",
+          "reason": "缺候选逐源实际结算、同后继完整重放及独立验证；现有预测对照不足关闭整项SL成本审计。",
+          "commit": null,
+          "seen_runs": 358,
+          "batch": "code-proposals:silent-proposal-366288801d9150d9,silent-proposal-85929bdfc8a3fc1b,silent-proposal-efd9f83ee9e1a6dc,silent-proposal-131042659448ae74,silent-proposal-990f054036609447,silent-proposal-e18d3f18e6cac2a0,silent-proposal-9733bb80f445aeae,silent-proposal-c51468c5e8ba6668,silent-proposal-86a7db08d1a31976,silent-proposal-e282a9131b99129a:358"
+        }
+      },
+      {
+        "offset": 4684104,
+        "bytes": 686,
+        "sha256": "33a64f5c002478be75e1edecfbeec47706950c10a87581fd3c186a818933c21e",
+        "row": {
+          "op": "update",
+          "id": "silent-proposal-85929bdfc8a3fc1b",
+          "ts": "2026-10-18T12:18:42+08:00",
+          "state": "waiting",
+          "reason": "缺确定弃牌后完整逐源结算与无药/留到后战的实际整战对照；保守模型和未知持有值说明虽已实现，原验证范围仍未闭合。",
+          "commit": null,
+          "seen_runs": 358,
+          "batch": "code-proposals:silent-proposal-366288801d9150d9,silent-proposal-85929bdfc8a3fc1b,silent-proposal-efd9f83ee9e1a6dc,silent-proposal-131042659448ae74,silent-proposal-990f054036609447,silent-proposal-e18d3f18e6cac2a0,silent-proposal-9733bb80f445aeae,silent-proposal-c51468c5e8ba6668,silent-proposal-86a7db08d1a31976,silent-proposal-e282a9131b99129a:358"
+        }
+      },
+      {
+        "offset": 4684790,
+        "bytes": 640,
+        "sha256": "f88a29c9e9d6529334d1a395a681c30892830bc57bd7ac7a880cae95006ddfdf",
+        "row": {
+          "op": "update",
+          "id": "silent-proposal-efd9f83ee9e1a6dc",
+          "ts": "2026-10-18T12:18:42+08:00",
+          "state": "waiting",
+          "reason": "缺完整实际成本归属、受控整战及后期独立验证；同源经验与局部诊断不证明整项完成。",
+          "commit": null,
+          "seen_runs": 358,
+          "batch": "code-proposals:silent-proposal-366288801d9150d9,silent-proposal-85929bdfc8a3fc1b,silent-proposal-efd9f83ee9e1a6dc,silent-proposal-131042659448ae74,silent-proposal-990f054036609447,silent-proposal-e18d3f18e6cac2a0,silent-proposal-9733bb80f445aeae,silent-proposal-c51468c5e8ba6668,silent-proposal-86a7db08d1a31976,silent-proposal-e282a9131b99129a:358"
+        }
+      },
+      {
+        "offset": 4685430,
+        "bytes": 643,
+        "sha256": "18c3af72db67150c22da13224a6f7276c41e8533ecca0da1a0f02eb3fb0d04b7",
+        "row": {
+          "op": "update",
+          "id": "silent-proposal-131042659448ae74",
+          "ts": "2026-10-18T12:18:42+08:00",
+          "state": "waiting",
+          "reason": "缺九类经验联合的实际消费者结算和跨战留药对照；不能以几个已有组件登记整项duplicate。",
+          "commit": null,
+          "seen_runs": 358,
+          "batch": "code-proposals:silent-proposal-366288801d9150d9,silent-proposal-85929bdfc8a3fc1b,silent-proposal-efd9f83ee9e1a6dc,silent-proposal-131042659448ae74,silent-proposal-990f054036609447,silent-proposal-e18d3f18e6cac2a0,silent-proposal-9733bb80f445aeae,silent-proposal-c51468c5e8ba6668,silent-proposal-86a7db08d1a31976,silent-proposal-e282a9131b99129a:358"
+        }
+      },
+      {
+        "offset": 4686073,
+        "bytes": 636,
+        "sha256": "700e324a978307a3bc9d340a3c7ed7f98486ea0a4798cb01099ae605075b3308",
+        "row": {
+          "op": "update",
+          "id": "silent-proposal-990f054036609447",
+          "ts": "2026-10-18T12:18:42+08:00",
+          "state": "waiting",
+          "reason": "缺毛伤/回血/成长完整归属、同后继整战及独立验证；同零损删输出不构成保血收益。",
+          "commit": null,
+          "seen_runs": 358,
+          "batch": "code-proposals:silent-proposal-366288801d9150d9,silent-proposal-85929bdfc8a3fc1b,silent-proposal-efd9f83ee9e1a6dc,silent-proposal-131042659448ae74,silent-proposal-990f054036609447,silent-proposal-e18d3f18e6cac2a0,silent-proposal-9733bb80f445aeae,silent-proposal-c51468c5e8ba6668,silent-proposal-86a7db08d1a31976,silent-proposal-e282a9131b99129a:358"
+        }
+      },
+      {
+        "offset": 4686709,
+        "bytes": 682,
+        "sha256": "a395275c83f1e4345dc30f2f91c7276d7fdc90405d022091942267565c2cace6",
+        "row": {
+          "op": "update",
+          "id": "silent-proposal-e18d3f18e6cac2a0",
+          "ts": "2026-10-18T12:18:42+08:00",
+          "state": "waiting",
+          "reason": "缺改序后的受控整战、完整最终资源及提前饮药结果；归零占位HP会改变同轮排序，阶段说明不等于整项指标/排序修复。",
+          "commit": null,
+          "seen_runs": 358,
+          "batch": "code-proposals:silent-proposal-366288801d9150d9,silent-proposal-85929bdfc8a3fc1b,silent-proposal-efd9f83ee9e1a6dc,silent-proposal-131042659448ae74,silent-proposal-990f054036609447,silent-proposal-e18d3f18e6cac2a0,silent-proposal-9733bb80f445aeae,silent-proposal-c51468c5e8ba6668,silent-proposal-86a7db08d1a31976,silent-proposal-e282a9131b99129a:358"
+        }
+      },
+      {
+        "offset": 4687391,
+        "bytes": 635,
+        "sha256": "6e6ae46a58f5c539bb1520e2a4400b4fb3e0c968c8aac7d798d2e055aae769c9",
+        "row": {
+          "op": "update",
+          "id": "silent-proposal-9733bb80f445aeae",
+          "ts": "2026-10-18T12:18:42+08:00",
+          "state": "waiting",
+          "reason": "缺阶段改序、提前用药及路线的受控验证；已有阶段/药水说明不能登记整项duplicate。",
+          "commit": null,
+          "seen_runs": 358,
+          "batch": "code-proposals:silent-proposal-366288801d9150d9,silent-proposal-85929bdfc8a3fc1b,silent-proposal-efd9f83ee9e1a6dc,silent-proposal-131042659448ae74,silent-proposal-990f054036609447,silent-proposal-e18d3f18e6cac2a0,silent-proposal-9733bb80f445aeae,silent-proposal-c51468c5e8ba6668,silent-proposal-86a7db08d1a31976,silent-proposal-e282a9131b99129a:358"
+        }
+      },
+      {
+        "offset": 4688026,
+        "bytes": 660,
+        "sha256": "aa5f5b989ad5cf57e1a965c922e06c4d711b6415160068539d2286e145d9dbc8",
+        "row": {
+          "op": "update",
+          "id": "silent-proposal-c51468c5e8ba6668",
+          "ts": "2026-10-18T12:18:42+08:00",
+          "state": "waiting",
+          "reason": "缺随机选牌/发光水重问后的完整收益归属及未饮用或留至Boss的整战分支；七次实耗不能推出持有价值。",
+          "commit": null,
+          "seen_runs": 358,
+          "batch": "code-proposals:silent-proposal-366288801d9150d9,silent-proposal-85929bdfc8a3fc1b,silent-proposal-efd9f83ee9e1a6dc,silent-proposal-131042659448ae74,silent-proposal-990f054036609447,silent-proposal-e18d3f18e6cac2a0,silent-proposal-9733bb80f445aeae,silent-proposal-c51468c5e8ba6668,silent-proposal-86a7db08d1a31976,silent-proposal-e282a9131b99129a:358"
+        }
+      },
+      {
+        "offset": 4688686,
+        "bytes": 646,
+        "sha256": "d51d866f2997a06b3acc38cc4e1f817f8ceb7c1e1723b6654d98ee400a060559",
+        "row": {
+          "op": "update",
+          "id": "silent-proposal-86a7db08d1a31976",
+          "ts": "2026-10-18T12:18:42+08:00",
+          "state": "waiting",
+          "reason": "缺能力后继、逐源实际归属、同后轮整战及独立验证；不能拟统一6血/2伤门槛或仅保血排序。",
+          "commit": null,
+          "seen_runs": 358,
+          "batch": "code-proposals:silent-proposal-366288801d9150d9,silent-proposal-85929bdfc8a3fc1b,silent-proposal-efd9f83ee9e1a6dc,silent-proposal-131042659448ae74,silent-proposal-990f054036609447,silent-proposal-e18d3f18e6cac2a0,silent-proposal-9733bb80f445aeae,silent-proposal-c51468c5e8ba6668,silent-proposal-86a7db08d1a31976,silent-proposal-e282a9131b99129a:358"
+        }
+      },
+      {
+        "offset": 4689332,
+        "bytes": 630,
+        "sha256": "1b4198ef648d0bcd843527efaaba678675db9fea9b5c630f648f93aa7d99ac71",
+        "row": {
+          "op": "update",
+          "id": "silent-proposal-e282a9131b99129a",
+          "ts": "2026-10-18T12:18:42+08:00",
+          "state": "waiting",
+          "reason": "缺续问后完整执行归属、受控整战及后期独立验证；不足关闭探索或改变HP护栏。",
+          "commit": null,
+          "seen_runs": 358,
+          "batch": "code-proposals:silent-proposal-366288801d9150d9,silent-proposal-85929bdfc8a3fc1b,silent-proposal-efd9f83ee9e1a6dc,silent-proposal-131042659448ae74,silent-proposal-990f054036609447,silent-proposal-e18d3f18e6cac2a0,silent-proposal-9733bb80f445aeae,silent-proposal-c51468c5e8ba6668,silent-proposal-86a7db08d1a31976,silent-proposal-e282a9131b99129a:358"
+        }
+      }
+    ],
+    "verified_original_rows": 8444,
+    "stream_counts": {
+      "states": 4167,
+      "decisions": 4071,
+      "sl-attempts": 43,
+      "run-config": 6,
+      "run-plans": 21,
+      "brain": 130,
+      "runs": 6,
+      "fight-plans": 0
+    },
+    "runs_by_ascension": {
+      "10": [
+        "751FN9QM9MHQ",
+        "KEN58SH9SLZ6",
+        "KV0JHNJCKXLS",
+        "L9SGRBB5R698",
+        "PU80F84P6HPN",
+        "YQL8RZ8BWN1E"
+      ]
+    },
+    "source_pins": 19,
+    "source_snapshots": 38,
+    "source_differences": [
+      "agent/src/sl/explore.ts",
+      "agent/src/sl/controller.ts"
+    ],
+    "original_base_ancestor_false_preserved": [
+      {
+        "path": "agent/src/sl/controller.ts",
+        "commit": "64f7a8d28769028d6a9cbebfc55a14bfe951e984"
+      }
+    ],
+    "original_observed_live_ancestors_passed": 19,
+    "same_fingerprint_pairs": 5,
+    "fixture_material_checks": 12,
+    "original_artifact_sha_verified": 91,
+    "root_learner_check_count_at_its_cut": 516,
+    "production_tests_ran": false,
+    "source_consumer_or_game_simulations_ran": false,
+    "old_runs_and_SL_not_new_independent_support": true,
+    "whole_historical_dirty_or_current_tree_equivalence_claimed": false
+  }
+]
