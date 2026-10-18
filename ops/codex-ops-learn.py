@@ -39,6 +39,8 @@ import ascension_audit  # noqa: E402
 import proposal_dispatch  # noqa: E402
 import core_build_jobs  # noqa: E402
 import learner_retention  # noqa: E402
+import ordinary_close  # noqa: E402
+import ops_current  # noqa: E402
 from learner_checks import read_report  # noqa: E402
 
 ROOT = os.environ.get("CODEX_OPS_ROOT") or paths.ROOT
@@ -167,7 +169,7 @@ def dispatch(state, runs, character, reason):
     pid, pane = start_learner(["bash", os.path.join(SCRIPTS, "codex-ops-learner.sh"), batch_id, ",".join(runs), character],
                               ROOT, SCRIPTS, DIR, f"learner-{batch_id}-postmortem")
     state["batches"][batch_id] = {"runs": runs, "pid": pid, "started": now_local(), "state": "running", "reason": reason, "character": character,
-                                 "proposal_policy": "Roy-2026-10-07-learning"}
+                                 "proposal_policy": "Roy-2026-10-07-learning", "ordinary_baseline": ordinary_close.baseline(ROOT, DIR)}
     if pane:
         state["batches"][batch_id]["pane"] = pane
     for run in runs:
@@ -404,6 +406,8 @@ def cmd_finish(args):
 
         save_state(state)
         return 0
+    if batch.get("state") in ("done", "failed") and "rc" in batch:
+        return 0
     have = postmortem_ids()
     done = [run for run in batch["runs"] if run in have]
     missing = [run for run in batch["runs"] if run not in have]
@@ -447,7 +451,8 @@ def cmd_finish(args):
         lines.append("exit 3：引擎检查或 key 隔离自检没过。写进 ops/inbox-dev.md 报给开发会话，不要绕过。")
     elif args.rc != 0:
         lines.append("如果 stderr 或回报里是额度或登录错误：decision-log 记一行，复盘往后顺延，对局照常。")
-    enqueue("learner-done", "\n".join(lines))
+    if not ordinary_close.offer(ROOT, DIR, args.batch, batch, report, "learner-done", "\n".join(lines)):
+        enqueue("learner-done", "\n".join(lines))
     if not account_draining():
         check_jobs(state, ROOT, SCRIPTS, batch.get("character", args.character), alive, dt.datetime.now().strftime("%Y%m%d-%H%M%S"))
         check_ascension_audits(state, batch.get("character", args.character))
@@ -625,6 +630,14 @@ def main():
         checks_pending = args.command == "finish" and load_state()["batches"].get(args.batch, {}).get("checks_pending")
     if checks_pending:
         cmd_recheck(args)
+    if args.command in ("finish", "tick"):
+        ordinary_close.close_pending(ROOT, DIR, enqueue)
+        # Missing fixture roots cannot produce a checklist; never hide a real generation failure.
+        if os.path.isdir(os.path.join(ROOT, ".git")) and os.path.isdir(os.path.join(ROOT, ".worktrees/live")):
+            try:
+                ops_current.generate(ROOT, DIR)
+            except (OSError, ValueError, subprocess.SubprocessError) as error:
+                enqueue("current-checklist-failed", f"当前清单生成失败：{error}。保留旧清单，不把旧值当新现场。")
     return result
 
 

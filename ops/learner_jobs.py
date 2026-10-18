@@ -270,10 +270,12 @@ def dispatch_write(state, root, scripts, task, character, runs, key, reason, ali
         argv += [task, research_request]
     elif implementation_request:
         argv += [task, implementation_request]
+    from ordinary_close import baseline
+    ordinary_baseline = baseline(root, state_dir)
     pid, pane = start_learner(argv, root, scripts, state_dir, "learner-" + batch_id)
     state["batches"][batch_id] = {"task": task, "character": character, "runs": runs, "key": key,
                                  "pid": pid, "state": "running", "reason": reason, "worktree": worktree,
-                                 "proposal_policy": "Roy-2026-10-07-learning"}
+                                 "proposal_policy": "Roy-2026-10-07-learning", "ordinary_baseline": ordinary_baseline}
     if pane:
         state["batches"][batch_id]["pane"] = pane
     if research_request:

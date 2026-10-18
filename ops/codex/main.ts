@@ -17,7 +17,7 @@
  * Wakes after the first go to an interactive TUI in herdr instead of `codex exec resume` when CODEX_OPS_MODE=herdr or
  * ops/codex-ops/hosting has `ops=herdr` (herdr.ts; docs/codex-ops.md「herdr 托管」).
  */
-import { spawn } from "node:child_process";
+import { spawn, spawnSync } from "node:child_process";
 import { appendFileSync, existsSync, mkdirSync, readdirSync, readFileSync, renameSync, rmSync, writeFileSync } from "node:fs";
 import { homedir, tmpdir } from "node:os";
 import { join } from "node:path";
@@ -143,6 +143,14 @@ async function wake(dryRun: boolean): Promise<number> {
     return 1;
   }
   if (session && events.length === 0) return 0;
+  // Refresh only at an original wake boundary; do not interrupt an active TUI turn.
+  if (!dryRun) {
+    const current = spawnSync("python3", [join(ROOT, "ops/ops_current.py"), ROOT, paths.dir], { env, encoding: "utf8", timeout: 30_000 });
+    if (current.status !== 0) {
+      log(`current checklist unavailable; original events retained: ${current.stderr}`);
+      return 1;
+    }
+  }
   const now = new Date();
   const request = opsRequest(ROOT, env);
   const executionNotice = request.opsExecution === "host"
