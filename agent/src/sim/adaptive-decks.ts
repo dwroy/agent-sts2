@@ -1,16 +1,17 @@
 /** Execute B3 absolute ranges while retaining all candidate prefixes and shared-deck identities. */
 import { currentDecisionBudget } from "../core/decision-budget.js";
 import { AdaptiveSampler } from "./adaptive-sampler.js";
+import type { AdaptiveTuning } from "./adaptive-shadow.js";
 import type { DeckRunRequest, DeckRunResult, DeckSimRunner } from "./build-sim-pool.js";
 import type { FightSampleResult } from "./boss-sim.js";
 
 export async function runAdaptiveDecks(runner: DeckSimRunner, request: DeckRunRequest,
-  choices: ReadonlyMap<string, readonly number[]>, allowS: boolean) {
+  choices: ReadonlyMap<string, readonly number[]>, allowS: boolean, tuning: AdaptiveTuning = {}) {
   if (request.orders.length !== 1) throw new Error("adaptive B3 requires the separately selected fixed order");
   const keys = new Map<string, readonly number[]>([["@current", [0]], ...choices]);
   if (choices.has("@current")) throw new Error("reserved adaptive baseline identity");
   const sampler = new AdaptiveSampler([...keys].map(([key, ids]) => ({ key, baseline: key === "@current", workGroup: ids.join(",") })),
-    { lane: "b3", requested: request.samples, allowS });
+    { ...tuning, lane: "b3", requested: request.samples, allowS });
   const outcomes: DeckRunResult["outcomes"] = request.decks.map(() => request.orders.map(() => new Array<FightSampleResult | undefined>(request.samples)));
   let workers = 0, elapsedMs = 0, done = 0;
   const budgeted = currentDecisionBudget() !== undefined;

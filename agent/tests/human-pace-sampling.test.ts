@@ -63,7 +63,7 @@ it("B2 retains only completed paired prefixes on a mid-C2 deadline and reuses th
       complete: [...Array.from({ length: 47 }, (_, i) => from + i), 49], timedOut: true, elapsedMs: 1200, workers: 0, done: 47 * pairs.length };
   });
   const first = withDecisionBudget(new DecisionBudget("first", "boss", () => 0), () => bossLineSim({ ...args, memo }));
-  expect(first).toMatchObject({ available: true, completion: { status: "partial", failure: false, samples: 47, requested: 1000 } });
+  expect(first).toMatchObject({ available: true, completion: { status: "partial", failure: false, samples: 47, requested: 200 } });
   if (!first.available) throw new Error(first.reason);
   expect(first.run.lines.every((line) => line.samples === 47 && line.outcomes.length === 47)).toBe(true);
   expect(first.run.adaptive).toMatchObject({ status: "partial", rounds: [] });
@@ -71,7 +71,7 @@ it("B2 retains only completed paired prefixes on a mid-C2 deadline and reuses th
   const log = simLog(first, (plan) => `p${args.lines.indexOf(plan)}`);
   expect(Object.values((log as any).lines).every((line: any) => line.samples === 47 && line.raw_win_mc_interval95.length === 2)).toBe(true);
   const retry = withDecisionBudget(new DecisionBudget("retry", "retry", () => 0), () => bossLineSim({ ...args, memo, samples: 600 }));
-  expect(retry).toMatchObject({ available: true, completion: { status: "partial", samples: 47, requested: 1000 } });
+  expect(retry).toMatchObject({ available: true, completion: { status: "partial", samples: 47, requested: 200 } });
   expect(pool).toHaveBeenCalledTimes(1); expect(memo.hits).toBe(1);
   const changed = { ...args, solver: { ...args.solver, player: { ...args.solver.player, hp: args.solver.player.hp - 1 } }, memo };
   withDecisionBudget(new DecisionBudget("changed", "boss", () => 0), () => bossLineSim(changed));
@@ -89,27 +89,28 @@ it("B2 pairs an eliminated prefix with a longer reference after a later C2 deadl
     const active = new Set(work!.activePairs);
     return { outcomes: pairs.map((pair, index) => Array.from({ length: count }, (_, id) => {
       if (!active.has(index) || id < from || id >= to) return undefined;
-      const won = pair.lineIndex !== 0 && id % 100 < 80;
+      // Keep two contenders outside the new 3-point indifference band, but inside 3 SE at n=50.
+      const won = pair.lineIndex === 1 ? id % 10 < 8 : pair.lineIndex === 2 && id % 10 < 7;
       return { ...returned, won, died: !won, capped: false, timeUp: false, turns: 2, hpLoss: won ? 1 : 70,
         bossMargin: { reference: { bossHp: 100, myHp: 70, enemyIds: ["fixture"], unknown: [] }, outgoingHp: won ? 100 : 20, receivedHp: won ? 1 : 70 } };
     })), complete: Array.from({ length: to - from }, (_, i) => from + i), timedOut: from > 0,
       elapsedMs: 1, workers: 0, done: (to - from) * active.size };
   });
   const result = withDecisionBudget(new DecisionBudget("unequal-prefix", "boss", () => 0), () => bossLineSim(args));
-  expect(result).toMatchObject({ available: true, completion: { status: "partial", budgeted: true, failure: false, samples: 200, requested: 600 } });
+  expect(result).toMatchObject({ available: true, completion: { status: "partial", budgeted: true, failure: false, samples: 50, requested: 200 } });
   if (!result.available) throw new Error(result.reason);
   expect(pool).toHaveBeenCalledTimes(2);
   expect(result.run.adaptive).toMatchObject({ status: "partial", candidates: [
-    { key: "line:0", samples: 200, stop: "eliminated" },
-    { key: "line:1", samples: 214, stop: "budget" }, { key: "line:2", samples: 214, stop: "budget" },
+    { key: "line:0", samples: 50, stop: "eliminated" },
+    { key: "line:1", samples: 64, stop: "budget" }, { key: "line:2", samples: 64, stop: "budget" },
   ] });
-  expect(result.run.lines.map((line) => line.samples)).toEqual([200, 214, 214]);
+  expect(result.run.lines.map((line) => line.samples)).toEqual([50, 64, 64]);
   const margin = result.byPlan.get(args.lines[0]!)!.bossMargin!;
-  expect(margin).toMatchObject({ samples: 200, referenceSamples: 214, pairedIdentity: "explicit_sample_indices",
-    paired: { difference: { n: 200 }, unmatchedBase: 14, unmatchedOption: 0 } });
+  expect(margin).toMatchObject({ samples: 50, referenceSamples: 64, pairedIdentity: "explicit_sample_indices",
+    paired: { difference: { n: 50 }, unmatchedBase: 14, unmatchedOption: 0 } });
   // Independently recompute from the returned prefixes; neither side is padded or truncated.
   expect(margin).toEqual(summarizeBossMargin(result.run.lines[0]!.outcomes, result.run.lines[1]!.outcomes,
-    Array.from({ length: 200 }, (_, i) => i), Array.from({ length: 214 }, (_, i) => i)));
+    Array.from({ length: 50 }, (_, i) => i), Array.from({ length: 64 }, (_, i) => i)));
   expect(args.memory.simFailure).toBeUndefined();
 });
 
@@ -175,8 +176,8 @@ it("caps low-trust B2 sampling within the same budget and labels it without chan
     timedOut: false, elapsedMs: 0, workers: 0, done: count * pairs.length,
   }));
   const result = withDecisionBudget(new DecisionBudget("low-trust", "boss", () => 0), () => bossLineSim(b2Args()));
-  expect(pool.mock.calls[0]?.[2]).toBe(200);
-  expect(result).toMatchObject({ available: true, completion: { status: "complete_budget", samples: 200 }, best: null, tied: [], bestDry: null });
+  expect(pool.mock.calls[0]?.[2]).toBe(100);
+  expect(result).toMatchObject({ available: true, completion: { status: "complete_budget", samples: 50 }, best: null, tied: [], bestDry: null });
   if (result.available) {
     expect([...result.byPlan.values()][0]?.text).toContain("低可信、未完整");
     expect([...result.byPlan.values()].every((line) => line.bossMargin?.rankingEligible === false)).toBe(true);
@@ -195,4 +196,28 @@ it("skips F48, P1/P2, G2 and S shadow extensions after expiry while preserving t
   expect(budget.record().shadow_unknown).toEqual(expect.arrayContaining(["P1_readiness_shadow", "P2_S_build_counterfactual", "G2_global_shadow"]));
   const joint = withDecisionBudget(budget, () => f48JointShadow(scope, [candidate("a", [sample(sampleSeed(7, 0), 8, true)])], jointInput()));
   expect(joint).toMatchObject({ status: "unknown", reason: "decision_budget_exhausted", candidates: [] });
+});
+
+it.each([false, true])("the actual Silent B3 adapter uses the approved first round and cap (low trust %s)", async (low) => {
+  vi.stubEnv("GLOBAL_BUILD_EVAL", "off");
+  trust.reason = low ? "fixed low trust" : null;
+  const e = env(board("xljq-f5-reward", "reward"), undefined, { requiredBossEvaluation: true });
+  const decision = decide(e); e.state.run!.raw["character_id"] = "SILENT";
+  const { runner, calls } = prefixRunner(1000);
+  const out = await withDecisionBudget(new DecisionBudget("new-B3", "routine", () => 0), () => withBossSim(decision, e,
+    { runner, samples: 1000, db: FIXTURE_DB, mm: FIXTURE_MM, now: () => 0 }));
+  expect(calls[0]).toMatchObject({ samples: low ? 100 : 300, range: { from: 0, to: low ? 50 : 100 } });
+  expect(out.record).toMatchObject({ adaptive: { stop_reason: "indifferent", rule: {
+    profile: "silent-human-pace-v2", first: low ? 50 : 100, batch: low ? 50 : 100, requested: low ? 100 : 300,
+  } } });
+});
+
+it.each(["IRONCLAD", "REGENT"])("keeps the ordinary %s B3 adapter on its original 1000-sample path", async (role) => {
+  vi.stubEnv("GLOBAL_BUILD_EVAL", "off");
+  const e = env(board("xljq-f5-reward", "reward"), undefined, { requiredBossEvaluation: true });
+  const decision = decide(e); e.state.run!.raw["character_id"] = role;
+  const { runner, calls } = prefixRunner(1000);
+  await withBossSim(decision, e, { runner, samples: 1000, db: FIXTURE_DB, mm: FIXTURE_MM, now: () => 0 });
+  expect(calls[0]?.samples).toBe(1000);
+  expect(calls[0]?.range).toBeUndefined();
 });
