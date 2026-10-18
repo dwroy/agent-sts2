@@ -1,0 +1,952 @@
+{
+  "at": "2026-10-18 12:16:04 CST",
+  "batch": "20261018-120018-fix-batch",
+  "report": {
+    "task": "fix-batch",
+    "base": "e123a5ee49c21d5560e7533418fb5eeb32339bd2",
+    "fixes": [],
+    "skipped": [
+      {
+        "item": "剩余出牌、药水、SL、终局及角色机制条目",
+        "reason": "策略类，沿已有独立strategy-proposal链处理。"
+      },
+      {
+        "item": "silent-0339续证",
+        "reason": "策略类，已有原提案链。"
+      },
+      {
+        "item": "silent-0332资源契约根因",
+        "reason": "证据不足，原专用链继续。"
+      },
+      {
+        "item": "U5W7NUE925NK F15/F16原G2告警完整根因",
+        "reason": "原样本及配对分母缺失，证据不足。"
+      },
+      {
+        "item": "sandbox-glob-startup-race目录生命周期",
+        "reason": "删除归属与上游时序未确定。"
+      },
+      {
+        "item": "架构三项、F33回退及调度公平性调查",
+        "reason": "独立架构或调查任务，范围太大。"
+      },
+      {
+        "item": "core-build-notify旧通知恢复",
+        "reason": "原送达状态未证。"
+      },
+      {
+        "item": "Codex缓存、DPR/B2性能及历史宿主超时归因",
+        "reason": "证据不足或独立性能调查。"
+      },
+      {
+        "item": "原20261018-011241报告recheck接续",
+        "reason": "缺base/runs及Markdown机器JSON，源码不是所报发布提交祖先。"
+      },
+      {
+        "item": "窄cherry-pick提案验收协议",
+        "reason": "跨原注册、源码、发布及宿主回执的独立协议，范围太大。"
+      },
+      {
+        "item": "infra-h0-414原完整失败性能归因",
+        "reason": "固定测试修复不能证明自然性能根因。"
+      },
+      {
+        "item": "silent-0461及0511/0512补证",
+        "reason": "策略类，沿已有提案链处理。"
+      },
+      {
+        "item": "infra-paper-dataset-concurrent-gzip-keyscan-20261018",
+        "reason": "已有已测源码dee6386621e8122d123a3cd0017c3e4c199f524e，四叶指纹核同，待原运维链集成。"
+      },
+      {
+        "item": "a406-fixed-deadlines消费夹具边界",
+        "reason": "已有已测源码2a778b13ac1ead79afef957d4708c1df5dfd3757，十一叶指纹核同，待原运维链集成。"
+      },
+      {
+        "item": "21bf-fake-herdr原宿主超时根因",
+        "reason": "退出进程误判已修，原15秒超时完整因果仍未知。"
+      },
+      {
+        "item": "infra-chest-claimed-action-conflict-0516",
+        "reason": "缺领取请求响应和有界确认契约，沿原结构提案链核实。"
+      }
+    ],
+    "merged": null,
+    "tests": {
+      "tsc": 0,
+      "vitest": 0,
+      "cases": 4477
+    },
+    "code_proposals": [],
+    "implementation_domains": [],
+    "report": "/home/dw/Projects/agent-sts2/learner/runs/20261018-120022-5db683bb-2054-4b63-b008-b69a5f9a0ed5-fix-batch/report.md"
+  },
+  "detailed_original_report": {
+    "task": "fix-batch",
+    "base": "e123a5ee49c21d5560e7533418fb5eeb32339bd2",
+    "fixes": [],
+    "skipped": [
+      {
+        "item": "出牌、药水、SL、终局、路线及角色机制条目（0256/0260/0263/0266/0308/0311/0317/0319/0320/0322/0324/0329/0334/0339/0344/0347/0349/0362/0365/0481/0487，另含XTSV1U9JD34T终局与GXNKW8X1XYJP抽牌身份）",
+        "reason": "策略类；沿已有独立strategy-proposal链处理，不重复派发或补入开发者游戏知识。"
+      },
+      {
+        "item": "silent-0339续证：BXU0CKWKH2RU尾巴误核销",
+        "reason": "策略类；已有58ab473f6c814061/c232010cd405fe44原提案链，保留当前行为和原证据。"
+      },
+      {
+        "item": "silent-0332 nonpositive-hp实际资源契约根因",
+        "reason": "证据不足；原专用owner链仍未闭环，诊断及样本身份窄修不等于根因修复。"
+      },
+      {
+        "item": "U5W7NUE925NK F15/F16两次原G2缺DPR告警的完整根因",
+        "reason": "证据不足；原未来样本数组及配对DPR分母未保存，此前窄修只覆盖有固定复现的严格零前缀边界，不将其冒作两次实盘根因。"
+      },
+      {
+        "item": "sandbox-glob-startup-race目录生命周期与磁盘压力宽项",
+        "reason": "证据不足；已有启动恢复/租约/回收窄修，目录删除归属与上游时序未确定。"
+      },
+      {
+        "item": "arch-funnel-guard / arch-learning-priority / arch-unified-resource-value / inv-f33-regression及调度公平性调查",
+        "reason": "独立架构、策略或归因任务，范围太大，超出普通纯bug批次。"
+      },
+      {
+        "item": "core-build-notify-222802-rc2旧原生通知恢复",
+        "reason": "证据不足；stderr持久化已修，旧送达状态未证，不重发可能已送达的通知。"
+      },
+      {
+        "item": "Codex缓存实测、DPR/B2性能及历史宿主超时根因",
+        "reason": "证据不足或独立性能调查；固定测试确定性子项已修，不代表自然性能根因已解决。"
+      },
+      {
+        "item": "原20261018-011241报告的recheck接续",
+        "reason": "证据不足；本批独立复核原输出SHA80db955e17d8091dba170c45152d49d5129e6f894fd9920260783afea0a2cf5d，缺base/runs、Markdown无机器JSON；9ae48941不是所报dddad5d67祖先。保留原报告和身份守卫。"
+      },
+      {
+        "item": "ops-learner-recheck-report-fixes-shape-20261018补证：窄cherry-pick提案验收",
+        "reason": "太大：原Markdown没有机器JSON、原输出缺runs/base；独立原注册/原报告/六叶源码及发布/真实宿主回执协议超出本批格式修复。不造祖先、不改原报告/提案ID/seen_runs/租约或ACK，保留pending。"
+      },
+      {
+        "item": "infra-h0-414-host-fixed-test-stability-20261018 的生产性能及原full1归因",
+        "reason": "证据不足；已合入的固定测试修复不证明CPU或产品性能根因已解决，保留原失败历史。"
+      },
+      {
+        "item": "silent-0461：9W38TRGPJW9Q F17T10普通斗篷及0511/0512药水窗口补证",
+        "reason": "策略类；先前批次已收到05:16:47追加的旧项证据，沿既有f4eb/7338、c440ae480782dca0和c734f60b55906bae独立策略链，不重复实现或添加机制。"
+      },
+      {
+        "item": "infra-paper-dataset-concurrent-gzip-keyscan-20261018",
+        "reason": "已有原owner已测源码dee6386621e8122d123a3cd0017c3e4c199f524e；本批核四叶SHA与原待集成回执一致，当前基线/live均未包含，沿原ops运输链接续，不重复实现。"
+      },
+      {
+        "item": "infra-h0-414-host-fixed-test-stability-20261018 / a406-fixed-deadlines 五处消费夹具边界",
+        "reason": "已有原owner已测源码2a778b13ac1ead79afef957d4708c1df5dfd3757；本批核十一叶SHA与原待集成回执一致，当前基线/live均未包含，不叠加同题。文件关闭子项9aec57cd7已在基线。"
+      },
+      {
+        "item": "21bf-fake-herdr-workspace-deadline及原完整宿主超时根因",
+        "reason": "证据不足；未回收退出进程误判由707702873705b81219a23915f4981060cfafff2e修复，当前fake-herdr.py及回归测试与源提交逐字相同。原15秒宿主超时因果仍未知。"
+      },
+      {
+        "item": "infra-chest-claimed-action-conflict-0516：claimed与领取动作矛盾",
+        "reason": "证据不足；原三局未发领取请求，缺接口响应及有界确认契约。已有结构提案silent-proposal-cf77920511042e9c沿原strategy-proposal链处理。"
+      }
+    ],
+    "merged": null,
+    "tests": {
+      "tsc": 0,
+      "vitest": 0,
+      "cases": 4477
+    },
+    "code_proposals": [],
+    "implementation_domains": [],
+    "report": "/home/dw/Projects/agent-sts2/learner/runs/20261018-120022-5db683bb-2054-4b63-b008-b69a5f9a0ed5-fix-batch/report.md"
+  },
+  "compact_skipped_descriptions_not_rewritten": true,
+  "native": {
+    "batch": "20261018-120018-fix-batch",
+    "thread": "01a14d2b-057b-71c0-83d7-53e857d445ac",
+    "cwd": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261018-120018",
+    "event_log": "learner/runs/20261018-120022-5db683bb-2054-4b63-b008-b69a5f9a0ed5-fix-batch.jsonl",
+    "registered_launch_batch": "20261018-120018-fix-batch",
+    "original_lease": "0f161ae4b33d42db3031f7b01eb32fd57a7c2290c573fb7a5f1f6e6b3d227340",
+    "native_context": {
+      "source": "ops/codex-ops/accounts/codex3/learner/sessions/2026/10/18/rollout-2026-10-18T12-00-27-01a14d2b-057b-71c0-83d7-53e857d445ac.jsonl",
+      "offset": 50305,
+      "bytes": 5152,
+      "sha256": "2ec87766ca44e7623b8d038c651c4c3e44f889fa9a34939d0ab670f80674ed78",
+      "model": "gpt-6.1-sol",
+      "effort": "xhigh",
+      "sandbox": {
+        "type": "workspace-write",
+        "writable_roots": [
+          "/home/dw/Projects/agent-sts2",
+          "/home/dw/Projects/agent-sts2/.git",
+          "/home/dw/Projects/agent-sts2/.git/worktrees/codex-fix-silent-20261018-120018"
+        ],
+        "network_access": false,
+        "exclude_tmpdir_env_var": false,
+        "exclude_slash_tmp": false
+      },
+      "approval_policy": "never"
+    },
+    "native_user_input": {
+      "offset": 58300,
+      "bytes": 13081,
+      "sha256": "e7be941a032429a54adc128248fffb58fec28edb5dcbb7fffd7cc23f938cbb61",
+      "input_sha256": "6e7308bc7f586d130abc5dfdef97569e6de7e2a8a9060b0059bb7432e433b408"
+    },
+    "original_header_events": [
+      {
+        "offset": 0,
+        "bytes": 14892,
+        "sha256": "5a01b4d481084aaa318e5d8531db29567cd6f87be4c31b5591c2898ae90a77ab",
+        "type": "learner_launch",
+        "attempt": null,
+        "code": null
+      },
+      {
+        "offset": 14892,
+        "bytes": 369,
+        "sha256": "a283eae67712475c7c99c474229ece2e035105250d3482487d20f409434caca1",
+        "type": "learner_startup_attempt",
+        "attempt": 1,
+        "code": null
+      },
+      {
+        "offset": 18274,
+        "bytes": 77,
+        "sha256": "4d15cced308494f080c10719e7401a7410cc173af50174a896116d617a780d46",
+        "type": "thread.started",
+        "attempt": null,
+        "code": null
+      }
+    ],
+    "startup_attempts": 1,
+    "failed_startups_preserved": 0,
+    "no_model_or_manual_restart": true
+  },
+  "canonical_state": "failed",
+  "canonical_rc": 0,
+  "canonical_failed_and_no_changes_null_preserved": true,
+  "original_tests": {
+    "command": "bash tools/test-sandbox.sh",
+    "tsc": 0,
+    "vitest": 0,
+    "files": 495,
+    "cases": 4477,
+    "phases": [
+      {
+        "files": 494,
+        "cases": 4466
+      },
+      {
+        "files": 1,
+        "cases": 11
+      }
+    ],
+    "exit": 0,
+    "retries": [],
+    "log_sha256": "47e800972d12f426d290a60521c483090c3d0bec63ab9d21f0054d5050672814"
+  },
+  "new_source_commits": [],
+  "source_worktree_clean": true,
+  "task_diff_empty": true,
+  "source_verification": {
+    "base": "e123a5ee49c21d5560e7533418fb5eeb32339bd2",
+    "current_head": "e123a5ee49c21d5560e7533418fb5eeb32339bd2",
+    "tracked_and_untracked_clean": true,
+    "source_diff_bytes": 0,
+    "new_commits": [],
+    "merged": null,
+    "already_fixed": 61,
+    "fixed_commit_ancestry_verified_in_base_and_observed_live": true,
+    "observed_live": "e713f211362f23e21102c63cd9a5e0195833021c",
+    "tests": {
+      "command": "bash tools/test-sandbox.sh",
+      "tsc": 0,
+      "vitest": 0,
+      "files": 495,
+      "cases": 4477,
+      "phases": [
+        {
+          "files": 494,
+          "cases": 4466
+        },
+        {
+          "files": 1,
+          "cases": 11
+        }
+      ],
+      "exit": 0,
+      "retries": [],
+      "log_sha256": "47e800972d12f426d290a60521c483090c3d0bec63ab9d21f0054d5050672814"
+    },
+    "regression_removal": {
+      "applicable": false,
+      "reason": "无新增源码修复"
+    },
+    "ledger_updates": [],
+    "code_proposals": [],
+    "implementation_domains": [],
+    "gitleaks": {
+      "exit": 0,
+      "scope": "本批Markdown、JSON及空源码diff，stdin扫描",
+      "redacted": true,
+      "log_sha256": "43754965a79fbef6db565059717ff77127a15bfb1fe247c9c34a38a6d26dbc30"
+    }
+  },
+  "empty_fix_guard_result": null,
+  "strict_guard_reason": "Source tree differs between unchanged main-based fixture baseline and live; no per-batch source changes or test failure. Existing differences are retained, not normalized away or mislabeled equivalent.",
+  "existing_source_path_differences": [
+    "M\tagent/src/brain/build-facts.ts",
+    "M\tagent/src/brain/engines/claude.ts",
+    "M\tagent/src/brain/engines/codex-session.ts",
+    "M\tagent/src/brain/engines/codex-usage.ts",
+    "M\tagent/src/brain/llm/deepseek-message.ts",
+    "M\tagent/src/brain/llm/deepseek.ts",
+    "M\tagent/src/brain/types.ts",
+    "M\tagent/src/core/config.ts",
+    "M\tagent/src/hand/screens/act-start.ts",
+    "M\tagent/src/hand/screens/card-value.ts",
+    "M\tagent/src/hand/screens/event.ts",
+    "M\tagent/src/hand/screens/map.ts",
+    "M\tagent/src/hand/screens/misc.ts",
+    "M\tagent/src/hand/screens/oneshot.ts",
+    "M\tagent/src/hand/screens/potion-discard.ts",
+    "M\tagent/src/hand/screens/route-review.ts",
+    "M\tagent/src/knowledge/mechanics.ts",
+    "M\tagent/src/knowledge/move-model.ts",
+    "M\tagent/src/knowledge/outcome-facts.ts",
+    "M\tagent/src/knowledge/outcome-tables.ts",
+    "M\tagent/src/knowledge/potion-equivalents.ts",
+    "M\tagent/src/knowledge/relic-values.ts",
+    "M\tagent/src/knowledge/render/potion-text.ts",
+    "M\tagent/src/memory/ascension-target.ts",
+    "M\tagent/src/memory/fight-plan.ts",
+    "M\tagent/src/memory/run-journal.ts",
+    "M\tagent/src/reflex/card-model.ts",
+    "M\tagent/src/reflex/combat.ts",
+    "M\tagent/src/reflex/jev-experience.ts",
+    "M\tagent/src/reflex/passive-pieces.ts",
+    "M\tagent/src/reflex/potion-cost.ts",
+    "M\tagent/src/reflex/potion-mc.ts",
+    "M\tagent/src/reflex/rollout-live.ts",
+    "M\tagent/src/reflex/rollout.ts",
+    "M\tagent/src/reflex/thief.ts",
+    "M\tagent/src/sim/boss-clock.ts",
+    "M\tagent/src/sim/boss-start.ts",
+    "M\tagent/src/sim/route-map.ts",
+    "M\tagent/src/sim/thief-card-hp.ts",
+    "M\tagent/src/sim/thief-card-value.ts",
+    "M\tagent/src/sl/controller.ts",
+    "M\tagent/src/sl/draws.ts",
+    "M\tagent/src/sl/elites.ts",
+    "M\tagent/src/sl/explore.ts",
+    "M\tagent/src/sl/judge.ts",
+    "M\tagent/src/sl/random-target.ts",
+    "M\tagent/src/sl/reload.ts",
+    "M\tagent/tests/act-route-candidates.test.ts",
+    "M\tagent/tests/asc-band-facts.test.ts",
+    "M\tagent/tests/batch-j.test.ts",
+    "M\tagent/tests/batch-k.test.ts",
+    "M\tagent/tests/boss-sim-build.test.ts",
+    "M\tagent/tests/brain-codex-usage.test.ts",
+    "M\tagent/tests/build-decider.test.ts",
+    "M\tagent/tests/combat-jev.test.ts",
+    "M\tagent/tests/death-move-data/pinned-knowledge.json",
+    "M\tagent/tests/deepseek-cache-layout.test.ts",
+    "M\tagent/tests/experience.test.ts",
+    "M\tagent/tests/fight-plan.test.ts",
+    "M\tagent/tests/fix-queue-v4-fix3.test.ts",
+    "D\tagent/tests/git_push_main_test.py",
+    "M\tagent/tests/inferno-planner-data/pinned-knowledge.json",
+    "M\tagent/tests/knowledge-check-a8w-builder.test.ts",
+    "M\tagent/tests/knowledge-check-a8w-cards.test.ts",
+    "M\tagent/tests/knowledge-check-a8w-experience.test.ts",
+    "M\tagent/tests/knowledge-check-a8w-facts.test.ts",
+    "M\tagent/tests/knowledge-check-a8w-guides.test.ts",
+    "M\tagent/tests/knowledge-check-cards.test.ts",
+    "M\tagent/tests/knowledge-check-facts.test.ts",
+    "M\tagent/tests/knowledge-check-guides.test.ts",
+    "M\tagent/tests/learner-learning-flow.test.ts",
+    "M\tagent/tests/learner-strategy.test.ts",
+    "M\tagent/tests/learner.test.ts",
+    "M\tagent/tests/learning-roles.test.ts",
+    "M\tagent/tests/logged-states/batch-n/boss-clock-self-damage.json",
+    "M\tagent/tests/mech-move-data/pinned-knowledge.json",
+    "M\tagent/tests/move-model-damage.test.ts",
+    "M\tagent/tests/oneshot-act-start.test.ts",
+    "M\tagent/tests/oneshot-rest-event.test.ts",
+    "M\tagent/tests/oneshot-shop.test.ts",
+    "M\tagent/tests/ops-codex.test.ts",
+    "M\tagent/tests/outcome-asc.test.ts",
+    "M\tagent/tests/potion-equivalents.test.ts",
+    "M\tagent/tests/potion-mc.test.ts",
+    "M\tagent/tests/potions-jev-call.test.ts",
+    "M\tagent/tests/rest-pantograph.test.ts",
+    "M\tagent/tests/rollout-ties.test.ts",
+    "M\tagent/tests/rollout.test.ts",
+    "M\tagent/tests/route-chain.test.ts",
+    "M\tagent/tests/route-next-rest.test.ts",
+    "M\tagent/tests/route-review.test.ts",
+    "M\tagent/tests/run-plan-merge.test.ts",
+    "M\tagent/tests/screens.test.ts",
+    "A\tagent/tests/silent-queen-ally-strength.test.ts",
+    "M\tagent/tests/sl-any-draw-data/pinned-knowledge.json",
+    "M\tagent/tests/sl-any-draw.test.ts",
+    "M\tagent/tests/sl-early-data/pinned-knowledge.json",
+    "M\tagent/tests/sl-early.test.ts",
+    "M\tagent/tests/sl-explore-canon-data/pinned-knowledge.json",
+    "M\tagent/tests/sl-explore-gaps-data/pinned-knowledge.json",
+    "M\tagent/tests/sl-explore-potion-data/pinned-knowledge.json",
+    "M\tagent/tests/sl-explore-whole-data/pinned-knowledge.json",
+    "M\tagent/tests/sl-replay-data/pinned-knowledge.json",
+    "M\tagent/tests/sl-retry-data/pinned-knowledge.json",
+    "M\tagent/tests/sl.test.ts",
+    "M\tagent/tests/target-options.test.ts",
+    "M\tagent/tests/template-target-data/pinned-knowledge.json",
+    "M\tagent/tests/thief-card-value.test.ts",
+    "M\tagent/tests/turn-solver.test.ts",
+    "M\tagent/tests/v1mf-bugfix.test.ts",
+    "D\tagent/tests/worktree-storage.test.ts",
+    "M\tagent/tools/act-route-candidates-replay.ts",
+    "M\tagent/tools/potion-cost-replay.ts",
+    "M\tagent/tools/potion-drink-audit.py",
+    "M\tagent/tools/route-review-next-rest-replay.ts",
+    "M\teval/route-projection-split.py",
+    "M\tknowledge/builders/build-monster-db.py",
+    "M\tknowledge/builders/build-outcome-stats.py",
+    "M\tknowledge/builders/build-potion-equivalents.py",
+    "M\tknowledge/builders/characters.py",
+    "M\tknowledge/builders/refresh-potion-equivalents.sh",
+    "M\tlearner/lib/engines.ts",
+    "M\tlearner/lib/launcher.ts",
+    "M\tlearner/lib/runs.ts",
+    "M\tlearner/lib/task.ts",
+    "M\tlearner/tasks/boss-sim-automation.md",
+    "D\tlearner/tasks/codex-brain-cache.md",
+    "M\tlearner/tasks/codex-only-brain.md",
+    "M\tlearner/tasks/experience-asc-audit.md",
+    "M\tlearner/tasks/experience-update.md",
+    "M\tlearner/tasks/fix-batch.md",
+    "M\tlearner/tasks/mechanics-audit.md",
+    "M\tlearner/tasks/postmortem.md",
+    "D\tlearner/tasks/silent-a10-regression.md",
+    "M\tlearner/tasks/silent-boss-calibration.md",
+    "M\tlearner/tasks/silent-double-boss.md",
+    "M\tlearner/tasks/strategy-proposal.md",
+    "M\tops/auto-relaunch.sh",
+    "M\tops/brain-latency.py",
+    "M\tops/codex-ops-actions.sh",
+    "M\tops/codex/lib.ts",
+    "M\tops/codex/main.ts",
+    "M\tops/disk_capacity.py",
+    "M\tops/experience-pending.py",
+    "M\tops/learner_retention.py",
+    "M\tops/llm_switch.py",
+    "M\tops/run.sh",
+    "M\tops/stop-after-a8.sh",
+    "M\tops/stop-after.sh",
+    "D\tops/tests/test_llm_switch_scope.py",
+    "M\tops/tests/test_silent_calibration_dispatch.py",
+    "D\tops/tests/test_worktree_storage.py",
+    "M\tops/worktree_checkout.py",
+    "M\tops/worktree_retention.py",
+    "D\tops/worktree_storage.py"
+  ],
+  "existing_source_diff_raw_sha256": "062c8dd5de9ee500006b262f76d452fed52f4724d7afd9a2bd0f9baa1b9e6061",
+  "base": "e123a5ee49c21d5560e7533418fb5eeb32339bd2",
+  "actual_live": "e713f211362f23e21102c63cd9a5e0195833021c",
+  "already_fixed_commit_ancestry": [
+    {
+      "item": "额度恢复基线与实际进阶通知",
+      "commit": "5b56a452bb9be14d620b368ec46974c1b57901ca",
+      "base_ancestor": true,
+      "observed_live_ancestor": true
+    },
+    {
+      "item": "核心通知stdout/stderr持久化（不等于旧原生通知已安全恢复）",
+      "commit": "5c92f2aaf0b758a1a5e7d591745694004664f83a",
+      "base_ancestor": true,
+      "observed_live_ancestor": true
+    },
+    {
+      "item": "知识工作线程签名固定输入",
+      "commit": "8fbb441eb61eef226eb7366f9612003480c83988",
+      "base_ancestor": true,
+      "observed_live_ancestor": true
+    },
+    {
+      "item": "rollout最佳候选固定输入",
+      "commit": "bbc5b993a7524bbb8e80a975f204f8d193657b46",
+      "base_ancestor": true,
+      "observed_live_ancestor": true
+    },
+    {
+      "item": "空产出补链误派",
+      "commit": "84366ad06ee4f978394c1b9489a82c83ea12bd36",
+      "base_ancestor": true,
+      "observed_live_ancestor": true
+    },
+    {
+      "item": "多角色药水表测试隔离",
+      "commit": "5ef3c4612bd2673c19968c5a2d24bf62af519ee1",
+      "base_ancestor": true,
+      "observed_live_ancestor": true
+    },
+    {
+      "item": "未派发提案结果登记",
+      "commit": "3a98e213a826e94f9708af4b1a265e1892659f4e",
+      "base_ancestor": true,
+      "observed_live_ancestor": true
+    },
+    {
+      "item": "事件流同秒碰撞",
+      "commit": "b6ee3f8c29cc10d4652a67d14f0e0e394aa6ce6f",
+      "base_ancestor": true,
+      "observed_live_ancestor": true
+    },
+    {
+      "item": "纸鹤夹具",
+      "commit": "befc39e5ca0105f8ff96d47f817df44f0b2760f1",
+      "base_ancestor": true,
+      "observed_live_ancestor": true
+    },
+    {
+      "item": "账本状态分叉前缀",
+      "commit": "dd478f0b3e5a0f234f082972d21b203dbf8229d7",
+      "base_ancestor": true,
+      "observed_live_ancestor": true
+    },
+    {
+      "item": "共享main启动冲突",
+      "commit": "22efae55484bc2bdcc54e847a8dc40bb4888c4e2",
+      "base_ancestor": true,
+      "observed_live_ancestor": true
+    },
+    {
+      "item": "根事件通知路径",
+      "commit": "577f0bc424b7287910735cfdc86c253cc7ee8057",
+      "base_ancestor": true,
+      "observed_live_ancestor": true
+    },
+    {
+      "item": "global-build宿主loadavg",
+      "commit": "5bc8f025fe043cb8738cce57870354fa23fa84a1",
+      "base_ancestor": true,
+      "observed_live_ancestor": true
+    },
+    {
+      "item": "局间quiet误报",
+      "commit": "21a9c52484f04d510bd397959c958ec9767f1d2d",
+      "base_ancestor": true,
+      "observed_live_ancestor": true
+    },
+    {
+      "item": "global-health异步测试",
+      "commit": "d27df54f0651c4af84c6c12ceceec82a016f1142",
+      "base_ancestor": true,
+      "observed_live_ancestor": true
+    },
+    {
+      "item": "target-options此前两个标注回放的固定预算（默认路径已另修）",
+      "commit": "83a7f796c24eea8f16eb317bc70bfd832251ad27",
+      "base_ancestor": true,
+      "observed_live_ancestor": true
+    },
+    {
+      "item": "retention数字UUID",
+      "commit": "d91236326bc1af7a5417ce016c1a182f8084e7a3",
+      "base_ancestor": true,
+      "observed_live_ancestor": true
+    },
+    {
+      "item": "retention旧根scratch",
+      "commit": "0699b05c436d3d51d00ee92f153d16d16e64bea4",
+      "base_ancestor": true,
+      "observed_live_ancestor": true
+    },
+    {
+      "item": "无COMBAT决策死亡漏记",
+      "commit": "3b48088dec5fc6eafe576a1296bbdadde43432ee",
+      "base_ancestor": true,
+      "observed_live_ancestor": true
+    },
+    {
+      "item": "broker请求写失败立即退出",
+      "commit": "eaa118c1d72f11b2b6b68c98c1d7bab10d138f5b",
+      "base_ancestor": true,
+      "observed_live_ancestor": true
+    },
+    {
+      "item": "broker回执保留与队列错误隔离",
+      "commit": "6eb38508ceeb81d534159b3516458521ad09bbed",
+      "base_ancestor": true,
+      "observed_live_ancestor": true
+    },
+    {
+      "item": "JSONL残尾边界恢复",
+      "commit": "3daf122a5168d1a8cb456aed1c926b2d1b6c4488",
+      "base_ancestor": true,
+      "observed_live_ancestor": true
+    },
+    {
+      "item": "宿主定向续验入口",
+      "commit": "24c2e3a75b5db6bac76d6c924f86b7fcd9438316",
+      "base_ancestor": true,
+      "observed_live_ancestor": true
+    },
+    {
+      "item": "会话启动租约保存屏障",
+      "commit": "798af209b9a268b7dafab1440150f1b39cd5595d",
+      "base_ancestor": true,
+      "observed_live_ancestor": true
+    },
+    {
+      "item": "prompt-dump倒序按偏移读取状态日志",
+      "commit": "6ee8e2a2c1edc31492962137b96af8c6e1d12093",
+      "base_ancestor": true,
+      "observed_live_ancestor": true
+    },
+    {
+      "item": "知识前缀房间回血说明角色中立",
+      "commit": "6d2de57ceae3def4caf073951ed9d2f9d1544cd7",
+      "base_ancestor": true,
+      "observed_live_ancestor": true
+    },
+    {
+      "item": "fix-batch默认队列与live模板",
+      "commit": "5805dd187b7913a53b9e2645f40db1657eb5213c",
+      "base_ancestor": true,
+      "observed_live_ancestor": true
+    },
+    {
+      "item": "experience-update使用live合入流程",
+      "commit": "16ebc4aecb12a1d4b2f34ee767bb2816a3a0b466",
+      "base_ancestor": true,
+      "observed_live_ancestor": true
+    },
+    {
+      "item": "outcome-stats按mtime与大小重新加载",
+      "commit": "2650aed8baa84b8cf26e1e98b975582a6d5ab537",
+      "base_ancestor": true,
+      "observed_live_ancestor": true
+    },
+    {
+      "item": "021302宿主eval校准固定夹具超时（误遍历线上发布表）",
+      "commit": "d8748f2e70bfb2a91138ede0e1f6046927c116a4",
+      "base_ancestor": true,
+      "observed_live_ancestor": true
+    },
+    {
+      "item": "021302宿主potions-jev-call全部局面扫描超时",
+      "commit": "c5fd30d8d369ea6c56bba2e4c3daa6e01e3bf420",
+      "base_ancestor": true,
+      "observed_live_ancestor": true
+    },
+    {
+      "item": "infra-target-options-fixed-fixture-timeout（默认EZ2L路径）",
+      "commit": "c57105ca66bd75c6d6952772dcf712399eda828b",
+      "base_ancestor": true,
+      "observed_live_ancestor": true
+    },
+    {
+      "item": "infra-test-rollout-ties-host-timeout-15000",
+      "commit": "da08fcead2025c293140f1ba103d8efdbd39a4c3",
+      "base_ancestor": true,
+      "observed_live_ancestor": true
+    },
+    {
+      "item": "infra-test-build-facts-selection-remove-latency",
+      "commit": "e2c1d8a2d29f1cbaf8e5620e4bb912d6f05965f0",
+      "base_ancestor": true,
+      "observed_live_ancestor": true
+    },
+    {
+      "item": "h1-budget-completion-health-contract",
+      "commit": "c40e43fd25c200a01f4da94a4dac8db1b34664a8",
+      "base_ancestor": true,
+      "observed_live_ancestor": true
+    },
+    {
+      "item": "h1-strict-pick-deadline-stall",
+      "commit": "b3b9734d85defbdbd1b73ab85fab9ea2f636affd",
+      "base_ancestor": true,
+      "observed_live_ancestor": true
+    },
+    {
+      "item": "selection-hidden-daggers-conditional-followup-readback",
+      "commit": "a473263eb35ce5bea8e06f1ee94f4da1ba880bc3",
+      "base_ancestor": true,
+      "observed_live_ancestor": true
+    },
+    {
+      "item": "silent-0338：末挡诊断漏列既有奥利哈钢",
+      "commit": "c1d84804956bedbd29a7f0e81294114e18415b9d",
+      "base_ancestor": true,
+      "observed_live_ancestor": true
+    },
+    {
+      "item": "silent-0272：商店移除预判误报不可选",
+      "commit": "db20ec3cc6cd0e47ac014d0c523dd4ed1c781d26",
+      "base_ancestor": true,
+      "observed_live_ancestor": true
+    },
+    {
+      "item": "silent-0367：构筑事实未传已用尾巴状态",
+      "commit": "5baf663d7e6678efa3690e5a48329c4f8baee109",
+      "base_ancestor": true,
+      "observed_live_ancestor": true
+    },
+    {
+      "item": "h1-b2-margin-sample-identity（已发布V5-R384）",
+      "commit": "660b194c950f017e356a4b3da952e127c7e5c768",
+      "base_ancestor": true,
+      "observed_live_ancestor": true
+    },
+    {
+      "item": "silent-vigor-skewer-J2VR：赤牛活力与串刺两段伤害（J2VR2DFJG8K4 A10 F22第2/3试T1，silent-0504/0505，V5-R387）",
+      "commit": "d959e176af7338ea2bca6f4ff9a39673b80e5fdf",
+      "base_ancestor": true,
+      "observed_live_ancestor": true
+    },
+    {
+      "item": "U5W7NUE925NK/H1/G2预算到期诊断及零样本前缀（已实际合入；原F15/F16完整根因仍未知）",
+      "commit": "0b1807b159a1e3d7fc09aad541ea6f97be627a91",
+      "base_ancestor": true,
+      "observed_live_ancestor": true
+    },
+    {
+      "item": "host-fixed-test-timeouts-010547：eval固定历史发布表夹具",
+      "commit": "d9881ba593b0b8d701ebbe1c95626c0ebdd554c7",
+      "base_ancestor": true,
+      "observed_live_ancestor": true
+    },
+    {
+      "item": "host-fixed-test-timeouts-010547：F45固定工作时钟与采样夹具",
+      "commit": "9e8c93555131c3347f9e809d9722a848a75c2692",
+      "base_ancestor": true,
+      "observed_live_ancestor": true
+    },
+    {
+      "item": "ops-learner-recheck-report-fixes-shape-20261018：描述型fixes格式兼容子项",
+      "commit": "4c16dab0457a61e22ef06b27e367d146cb99bab3",
+      "base_ancestor": true,
+      "observed_live_ancestor": true
+    },
+    {
+      "item": "infra-h0-414-host-fixed-test-stability-20261018：Codex stall固定时间/rollout固定回执（main已集成原031302六测试叶）",
+      "commit": "738433d865d943e80b7726588fa2bbeb3a1980da",
+      "base_ancestor": true,
+      "observed_live_ancestor": true
+    },
+    {
+      "item": "router-timeout-max-gap-76fe29f3：按实际事件及结束时间精确验证最大间隔",
+      "commit": "a6913706952661afe1de38f290cd9434cbb91621",
+      "base_ancestor": true,
+      "observed_live_ancestor": true
+    },
+    {
+      "item": "read_report文件句柄释放",
+      "commit": "9aec57cd7bf8d6c5f67bdaa6b5b9bc115df73239",
+      "base_ancestor": true,
+      "observed_live_ancestor": true
+    },
+    {
+      "item": "learning-notice-ordinary-ack-registry-20261013：普通通知ACK不再误查学习父要求",
+      "commit": "672e198a4730012330f599068a0ef1efadb02002",
+      "base_ancestor": true,
+      "observed_live_ancestor": true
+    },
+    {
+      "item": "infra-legacy-continuation-notice-ack-identity：原续跑通知身份桥",
+      "commit": "368fccabd42eb72ffcea9a2fe6cbbb7c149326be",
+      "base_ancestor": true,
+      "observed_live_ancestor": true
+    },
+    {
+      "item": "strategy-proposal无源码报告scratch归属",
+      "commit": "5f04139cefe5c651dd5bf62f7e164014dbf5f23b",
+      "base_ancestor": true,
+      "observed_live_ancestor": true
+    },
+    {
+      "item": "silent-0459：独立run-plan请求费用归集",
+      "commit": "799a5cd0caf9329b43c32376079218a9bd0c3e9e",
+      "base_ancestor": true,
+      "observed_live_ancestor": true
+    },
+    {
+      "item": "postmortem-capacity-failure-proposal-repair-20261013：无输出失败不误派补链",
+      "commit": "3fdcd77927f01b35c20c6c5c1fcfd790676032d2",
+      "base_ancestor": true,
+      "observed_live_ancestor": true
+    },
+    {
+      "item": "codex-brain-cache-probe固定工具使用隔离home",
+      "commit": "548b53ca211231ab5f1079a16fe9ad65f62b3c6c",
+      "base_ancestor": true,
+      "observed_live_ancestor": true
+    },
+    {
+      "item": "TMPDIR未设置时的订阅采样固定测试",
+      "commit": "6bfbe3d2e2aa6e5e8c1969d5ee1cca08671ae02a",
+      "base_ancestor": true,
+      "observed_live_ancestor": true
+    },
+    {
+      "item": "21bf固定测试链：fake herdr未回收的已退出进程误判忙碌",
+      "commit": "707702873705b81219a23915f4981060cfafff2e",
+      "base_ancestor": true,
+      "observed_live_ancestor": true
+    },
+    {
+      "item": "silent-0040：boss统计按最终SL尝试分组",
+      "commit": "3f40af6fffbb37a06e258c0e4b314a9fe8faaede",
+      "base_ancestor": true,
+      "observed_live_ancestor": true
+    },
+    {
+      "item": "学习账本追加式来源元数据更正",
+      "commit": "87c89b7aea90c7275e0fbb04b1e4148a4209630c",
+      "base_ancestor": true,
+      "observed_live_ancestor": true
+    },
+    {
+      "item": "单次mod超时恢复后的stall误报",
+      "commit": "a4f4ec868d122dc92af510862c6240cf2eaff2b6",
+      "base_ancestor": true,
+      "observed_live_ancestor": true
+    },
+    {
+      "item": "h1-budget-completion-health-contract：R394 indifferent监控兼容",
+      "commit": "5011b4cbda9a9056a1fd146e375e3cd67b60c0a9",
+      "base_ancestor": true,
+      "observed_live_ancestor": true
+    }
+  ],
+  "old_pending_sources": [
+    {
+      "path": "/home/dw/Projects/agent-sts2/ops/codex-ops/pending-integrations/20261018-045726-fix-batch.json",
+      "sha256": "1205cf803e759da1449374b1a9bff1c855967f888c3d96763fa2d205ad647fbe",
+      "source": "dee6386621e8122d123a3cd0017c3e4c199f524e",
+      "qualified": true,
+      "rows": [
+        {
+          "path": ".gitignore",
+          "source_sha256": "f2c92140ec4040bdc2b3b06409f463b4670986b6befdc72d45f1a5618590fbef",
+          "current_sha256": "c638fd1e7bd9bc8b0a01de9953fac17038791b36f8bd4eb2334da7477bf91d1e"
+        },
+        {
+          "path": "agent/tests/paper-dataset-publication.test.ts",
+          "source_sha256": "2e3ac502898988042516f4293f428bf9c480ea3c5bca7ae7233deffb9aca0142",
+          "current_sha256": null
+        },
+        {
+          "path": "ops/paper_dataset.py",
+          "source_sha256": "b815619f0870cdfa73f2be861b94db49b62a30d9198d4d09e2ba58a5ab6c9d7b",
+          "current_sha256": "a96ca456a1ee5bb62846ae04f41f18d5ebd6463dc03fe0580dbb177933dbae5d"
+        },
+        {
+          "path": "ops/tests/test_paper_dataset_publication.py",
+          "source_sha256": "c2afbd88edf487bcf40dc363e702d60142988520a33323ca6aac49a795a574b9",
+          "current_sha256": null
+        }
+      ],
+      "next": "At a later normal event, once the original report/builders and live lock allow, narrow-integrate only the qualified four leaves (three executable source/test files and the dataset-lock gitignore line) from dee638, preserving current knowledge, source and records. Use the prepared publisher once, then original sandbox targeted paper test and a single new exact-combination host through original 20261018-045726-fix-batch. Do not rerun unchanged source full, the whole paper dataset, or original 031302 full; do not modify original failed reports or close broader parents."
+    },
+    {
+      "path": "/home/dw/Projects/agent-sts2/ops/codex-ops/pending-integrations/20261018-061301-fix-batch.json",
+      "sha256": "7f2105d6e7d82f8396156cb6647a282418e28318e97025e24c6ece66ff2817af",
+      "source": "2a778b13ac1ead79afef957d4708c1df5dfd3757",
+      "qualified": true,
+      "rows": [
+        {
+          "path": "agent/tests/build-decider.test.ts",
+          "source_sha256": "9a1a117beb83873d1f3048b1109443f3524368ab4ec641a711fa542cc84699e9",
+          "current_sha256": "b41686d009437601ec4054483fcec82931d5dfd1177b398570fa3dec8ed83929"
+        },
+        {
+          "path": "agent/tests/fixture-http.test.ts",
+          "source_sha256": "19128891c406ca21680eb62589bb931a7243780ca987213acd8572cd32dd3331",
+          "current_sha256": null
+        },
+        {
+          "path": "agent/tests/fixture-http.ts",
+          "source_sha256": "811b1e7cc0d1859a0a64eea59e9f77463a964b1c9164f6d8ad526eb1fef7353e",
+          "current_sha256": null
+        },
+        {
+          "path": "agent/tests/global-build-fixed-inputs.test.ts",
+          "source_sha256": "31bef53c02c5b714ed55d98ed79f5e26a015c838e091dc2f589527000320e8dc",
+          "current_sha256": null
+        },
+        {
+          "path": "agent/tests/global-build-integration.test.ts",
+          "source_sha256": "841da1f6e1be134449eda538be58f22e7ca845ae0641f356274c90cce76aaafe",
+          "current_sha256": "f173e3c8be375e89661d7fb089785c276d4642f74969feedf891127c3262d8c4"
+        },
+        {
+          "path": "agent/tests/journal-replay.test.ts",
+          "source_sha256": "cfe307e372917af034fd34af44bc0df5c5b75da4f2c0703dbc3d8244799b1ea2",
+          "current_sha256": "19579f44a2fcdd3ddc5514d2b0bda1e6cdbe396ee1a0f2dbe827656d8e3bb41c"
+        },
+        {
+          "path": "agent/tests/learner-retention-fixture.test.ts",
+          "source_sha256": "d99c2389881020117fdd5b245354f3f80d5170288ecf61b939170e89ec27cf71",
+          "current_sha256": null
+        },
+        {
+          "path": "agent/tests/learner-retention.test.ts",
+          "source_sha256": "473a64f6c48adf093521656373fc22bfe028dcf43814b015e5a48c34004fae9d",
+          "current_sha256": "6043f7da1df45db8492850cf0814dbf5bacff68242d1107d6b1c613edaa217ca"
+        },
+        {
+          "path": "agent/tests/loop-consumer-fixed-transport.test.ts",
+          "source_sha256": "be412087e1a59601b85f3d4e213cf5a06eb284525574dcf8dac58cd5d65fd4f4",
+          "current_sha256": null
+        },
+        {
+          "path": "agent/tests/oneshot-support.ts",
+          "source_sha256": "ef87da9dfdb69cabc5fbb4c60ce654f0acd927ae8fc4c3516ed52daded11e1de",
+          "current_sha256": "6bb8aa5163cf544ab73c451a67216aef5d0ba756415b740643622ea73b1b0f93"
+        },
+        {
+          "path": "agent/tests/synthetic-board-fixture.ts",
+          "source_sha256": "4535bfd0a01b04479bb09bb2ac486ebef00908e23b49e3157ec05a2ab1e70f68",
+          "current_sha256": null
+        }
+      ],
+      "next": "At a later normal scheduler event, attempt the original live lock/report guard once. Rebind the prepared private-index publisher to a fresh evidence directory with this immutable qualification; narrow-integrate only eleven test leaves from2a778, preserving all knowledge/records and existing live attribution comments (merge-file only for proven comment-only Dai/Roy divergence). Do not stage full historical branches or pending shared files. After actual merge, run original sandbox entry selected fixed-consumer regression tests and retain its real scope, then request one new exact-combination host on original20261018-061301-fix-batch. No unchanged source full rerun, old-full overwrite, game rule/model change, new release/shipped or source-retention completion before actual acceptance."
+    }
+  ],
+  "original_011241_report_restrictions": {
+    "original": "/home/dw/Projects/agent-sts2/ops/codex-ops/learner/20261018-011241-strategy-proposal.out",
+    "sha256": "80db955e17d8091dba170c45152d49d5129e6f894fd9920260783afea0a2cf5d",
+    "report_keys": [
+      "task",
+      "character",
+      "source_commit",
+      "fixes",
+      "merged",
+      "tests",
+      "code_proposals",
+      "implementation_domains",
+      "proposal_results",
+      "report",
+      "learning_result"
+    ],
+    "source_commit": "9ae48941c8d1495b2d4048aa40feee9713d54784",
+    "merged": "dddad5d67b673b6fb157bf1b73c5e32e45c3c676",
+    "has_base": false,
+    "has_runs": false,
+    "descriptive_fixes": true,
+    "markdown": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261012-140741/learner/runs/20261018-support-mapping-r2/report.md",
+    "markdown_has_machine_json": false
+  },
+  "source_or_rules_changed": false,
+  "source_tests_or_full_host_not_repeated": true,
+  "ledger_or_proposals_changed": false,
+  "no_new_models_games_observers_or_other_role_ack": true,
+  "scientific_parents_closed": false
+}
