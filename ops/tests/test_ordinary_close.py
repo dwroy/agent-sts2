@@ -261,7 +261,15 @@ class OrdinaryClose(unittest.TestCase):
         self.git("worktree", "add", "-qb", "live", str(live))
         state = {"batches": {"original": {"state": "running", "pid": 42, "task": "fix-batch", "worktree": str(self.root / ".worktrees/fix")}}, "learning_requests": {"h0": {"state": "blocked", "owner": "original"}}}
         ops_current.save(self.directory / "learn.json", state)
+        state["batches"]["historical"] = {"state": "lost", "pid": 99}
+        ops_current.save(self.directory / "learn.json", state)
         ops_current.save(self.directory / "herdr-ops.json", {"pane": "wJ:p5", "session": "fixed-original"})
+        ops_current.atomic(self.directory / "queue/.123-stall.md", b"abandoned temporary")
+        ops_current.atomic(self.directory / "queue/124-stall.md", b"actual original event")
+        ops_current.atomic(self.root / "ops/inbox-dev.md", "- 2026-10-18 17:00:00 CST [Roy] 固定新指令原件\n".encode())
+        ops_current.save(self.directory / "pending-integrations/closed.json", {"completed": True})
+        ops_current.save(self.directory / "pending-integrations/open.json", {"completed": False, "phase": "fixed pending"})
+        ops_current.save(self.root / "paper/materials/20261017-human-pace-control/checkpoint.json", {"request": "roy-20261017-human-pace", "owner_session": "continued", "original_owner": "original"})
         for n in range(100):
             ops_current.save(self.directory / f"learning-notices/{n:024}.json", {"id": str(n), "kind": "disagreement", "watcher_received": False, "roy_notified": False})
         current = ops_current.generate(self.root, self.directory)
@@ -270,6 +278,12 @@ class OrdinaryClose(unittest.TestCase):
         self.assertEqual(current["main"], self.head)
         self.assertEqual(current["release"], "V5-R1")
         self.assertEqual(len(current["pending_notices"]), 100)
+        self.assertEqual(len(current["queued_events"]), 1)
+        self.assertEqual(len(current["active_batches"]), 1)
+        self.assertEqual(len(current["historical_lost"]), 1)
+        self.assertEqual(len(current["not_marked_completed_transactions"]), 1)
+        self.assertEqual(current["human_pace"]["original_owner"], "original")
+        self.assertIn("固定新指令", text)
         self.assertEqual(json.loads((self.directory / "learn.json").read_text()), state)
         self.assertFalse(json.loads((self.directory / "learning-notices/000000000000000000000000.json").read_text())["roy_notified"])
         self.assertIn("current.json SHA256", text)

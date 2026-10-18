@@ -6,6 +6,7 @@ import hashlib
 import json
 import os
 from pathlib import Path
+import re
 import subprocess
 
 
@@ -64,7 +65,8 @@ def generate(root, directory):
         execution = (read(directory / "execution-mode", b"sandbox") or b"").decode().strip()
         active = {k: {name: v.get(name) for name in ("task", "learner_task", "character", "state", "pid", "worktree", "feature_request", "research_request", "resume_thread", "checks_pending") if v.get(name) is not None}
                   for k, v in state.get("batches", {}).items()
-                  if v.get("state") in ("running", "pending", "blocked", "awaiting_delivery", "lost") or v.get("checks_pending")}
+                  if v.get("state") in ("running", "pending", "blocked", "awaiting_delivery") or v.get("checks_pending")}
+        lost = {k: v for k, v in state.get("batches", {}).items() if v.get("state") == "lost"}
         requests = {k: {name: v.get(name) for name in ("state", "revision", "owner", "batch", "checkpoint", "next") if v.get(name) is not None}
                     for k, v in state.get("learning_requests", {}).items() if v.get("state") != "completed"}
         notices = []
@@ -75,24 +77,49 @@ def generate(root, directory):
                 notices.append({"id": notice.get("id"), "kind": notice.get("kind"), "request": notice.get("request_id"), "pending": pending, "path": str(path)})
         queue = []
         for path in sorted((directory / "queue").glob("*-*.md")):
+            # Match readQueue exactly; abandoned dot-prefixed atomic temporaries are not events.
+            if not re.fullmatch(r"[0-9]+-[a-z][a-z0-9-]*\.md", path.name):
+                continue
             raw = read(path, b"")
             queue.append({"path": str(path), "preview": raw.decode()[:220]})
         transactions = {}
+        unfinished = []
         for name in ("pending-integrations", "pending-deliveries", "pending-records", "pending-continuations", "publications"):
             transactions[name] = [str(p) for p in sorted((directory / name).glob("*.json"))]
+            for source in transactions[name]:
+                try:
+                    value = obj(source, {})
+                    if isinstance(value, dict) and value.get("completed") is not True:
+                        unfinished.append({"path": source, "mtime": Path(source).stat().st_mtime,
+                                           **{key: value.get(key) for key in ("phase", "state", "completed", "source", "live", "host_checks_requested", "next")}})
+                except (OSError, ValueError):
+                    unfinished.append({"path": source, "mtime": 0, "state": "unreadable; inspect original"})
+        unfinished.sort(key=lambda row: row["mtime"], reverse=True)
+        checkpoint_path = root / "paper/materials/20261017-human-pace-control/checkpoint.json"
+        checkpoint = obj(checkpoint_path, {})
+        human_pace = {key: checkpoint.get(key) for key in ("request", "owner_session", "original_owner", "phase", "state", "next")}
         # The original inbox is an instruction source; retain offsets instead of copying reports.
         inbox = root / "ops/inbox-dev.md"
         with inbox.open("rb") as handle:
             handle.seek(0, 2)
             size = handle.tell()
-            offset = max(0, size - 4096)
+            offset = max(0, size - 8192)
             handle.seek(offset)
             tail = handle.read()
         sources[str(inbox)] = {"offset": offset, "bytes": len(tail), "sha256": hashlib.sha256(tail).hexdigest()}
+        directives = []
+        position = offset
+        for line in tail.splitlines(keepends=True):
+            if re.match(rb"- [0-9]{4}-[0-9]{2}-[0-9]{2} ", line):
+                directives.append({"path": str(inbox), "offset": position, "bytes": len(line),
+                                   "sha256": hashlib.sha256(line).hexdigest(), "preview": line.decode(errors="replace").strip()[:220]})
+            position += len(line)
         current = {"schema": "ops-current-v1", "at": stamp(), "main": main_head, "live": live_head,
                    "release": release.get("release_id"), "release_record": release,
                    "identity": identity, "home_selector": home, "execution": execution,
                    "active_batches": active, "open_requests": requests, "pending_notices": notices,
+                   "historical_lost": lost, "not_marked_completed_transactions": unfinished,
+                   "human_pace": human_pace, "recent_directives": directives[-2:],
                    "queued_events": queue, "transactions": transactions, "sources": sources, "missing": missing,
                    "inbox_tail": {"path": str(inbox), "offset": offset, "bytes": len(tail)}}
         receipt = directory / "current.json"
@@ -107,14 +134,23 @@ def generate(root, directory):
                  f"在途批次 {len(active)}（完整 owner/租约与路径见 current.json）："]
         for key, row in list(active.items())[-8:]:
             lines.append(f"- {key} {row.get('state')} {row.get('task')} PID={row.get('pid')}；{row.get('worktree', '')}")
+        lines.append(f"历史 lost {len(lost)} 项另存索引，不能视为活进程，不按旧PID操作或自行关闭。")
         lines.append(f"开放父要求 {len(requests)}：" + ", ".join(requests)[:650] + "；不因本轮结束关闭。")
+        if checkpoint:
+            lines.append(f"human-pace 原owner={str(human_pace['original_owner'])[:120]}，接续={str(human_pace['owner_session'])[:120]}；原件 {checkpoint_path}。不据阶段状态关闭宽父。")
         lines.append(f"未确认通知 {len(notices)}；不得代其他角色 ACK。前8项：")
         for row in notices[:8]:
             lines.append(f"- {row['id']} {row['kind']} {','.join(row['pending'])}；{row['path']}")
         lines.append(f"队列 {len(queue)}，只按本轮已提交事件处理；前4项：")
         for row in queue[:4]:
             lines.append(f"- {row['path']}：{row['preview'][:160]}")
-        lines.extend(["在途原事务文件数：" + "；".join(f"{key}={len(value)}" for key, value in transactions.items()) + "；完整路径见 current.json，不从文件存在推定运行。",
+        lines.append(f"原事务未标 completed 共{len(unfinished)}（含未知，非活进程数），最近4项：")
+        for row in unfinished[:4]:
+            lines.append(f"- {row['path']}；phase={str(row.get('phase') or row.get('state') or '未知')[:100]}")
+        lines.append("最新指令短引用（完整行按offset核）：")
+        for row in directives[-2:]:
+            lines.append(f"- offset={row['offset']}：{row['preview']}")
+        lines.extend(["原事务文件索引数（含历史）：" + "；".join(f"{key}={len(value)}" for key, value in transactions.items()) + "；完整路径见 current.json，不从文件存在推定未完成/运行。",
                       f"新指令原件：ops/inbox-dev.md 当前尾段 offset={offset}, bytes={len(tail)}；本轮新授权必须由事件引用，漏项查此段，勿整份重读。",
                       "current.json 仅按本事件 batch/request/notice id 用程序筛字段，不全文读；动态源变化后核新清单，不用旧值冒当前。",
                       "H0/0332等科学边界、精确宿主树、未完成发布/兼容及 retention 仅沿原报告和事务回执；清单不代验收、shipped、覆盖率或消费。",
