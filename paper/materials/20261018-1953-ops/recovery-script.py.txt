@@ -1,0 +1,163 @@
+from pathlib import Path
+import hashlib
+import json
+import os
+import subprocess
+import sys
+
+r = Path.cwd()
+sys.dont_write_bytecode = True
+exec((r / 'ops/codex-ops/record-staging/20261016-2003/publish.py').read_text().split('phase=r/')[0])
+sys.path.insert(0, str(r / 'ops'))
+import ordinary_close as ordinary
+
+p = r / 'ops/codex-ops/record-staging/20261018-1953'
+pub = r / 'paper/materials/20261018-1953-ops'
+assert not (p / 'commit-readback.json').exists()
+at = subprocess.check_output(['date', '--iso-8601=seconds'], text=True).strip()
+stamp = subprocess.check_output(['date', '+%Y-%m-%d %H:%M'], text=True).strip()
+base = '45311d731aa0c83b6d8990d58a6f59bf9def0266'
+cut = '7a02cc07482a575cae0c6f242a6a08b0aa70648e'
+batches = ['20261018-191301', '20261018-191315-strategy-proposal', '20261018-191315-s2-strategy-proposal']
+head = git('rev-parse', 'HEAD').decode().strip()
+assert git('symbolic-ref', '--short', 'HEAD').decode().strip() == 'main'
+assert not git('ls-files', '-u').strip()
+assert not git('diff', '--cached', '--name-only').strip()
+paths = git('diff-tree', '--no-commit-id', '--name-only', '-r', base, cut).decode().splitlines()
+records = set(ordinary.RECORDS) | {'paper/materials/ordinary-completions.jsonl'}
+assert len(paths) == 15
+assert all(name in records or (name.startswith('paper/data/') and not name.startswith('paper/data/history/'))
+           or name == 'paper/materials/silent/cost.md' for name in paths)
+frozen = {name: blob(cut, name) for name in paths}
+assert all(raw is not None and blob(head, name) == blob(base, name) for name, raw in frozen.items())
+for name in records:
+    assert frozen[name].startswith(blob(base, name))
+    assert (r / name).read_bytes().startswith(frozen[name])
+
+receipts = []
+candidates = []
+for batch in batches:
+    path = r / 'ops/codex-ops/ordinary-close' / (batch + '.json')
+    raw = path.read_bytes()
+    row = json.loads(raw)
+    assert row['state'] == 'attention' and row['dataset_attempts'] == 1
+    assert row['reason'] == 'parallel record change; retain evidence and wake ops'
+    assert hashlib.sha256(Path(row['proof']['report']).read_bytes()).hexdigest() == row['proof']['report_sha256']
+    ordinary.eligible(r, r / 'ops/codex-ops', row['original_batch'], row['report'])
+    candidates.append(row)
+    log = r / 'ops/codex-ops/ordinary-close' / (
+        ('20261018-191315-s2-strategy-proposal' if 's2-' in batch else '20261018-191301') + '.dataset.log')
+    assert 'key scan: CLEAN' in log.read_text()
+    receipts.append({'batch': batch, 'receipt': str(path.relative_to(r)), 'receipt_sha256': hashlib.sha256(raw).hexdigest(),
+                     'original_state': row['state'], 'dataset_attempts': 1, 'dataset_log': str(log.relative_to(r)),
+                     'dataset_log_sha256': hashlib.sha256(log.read_bytes()).hexdigest(), 'report': row['proof'],
+                     'runs': row['runs'], 'task': row['task']})
+audit = ordinary.ledger_check(r, candidates)
+assert audit['problems'] == 0
+completion_rows = [json.loads(line) for line in frozen['paper/materials/ordinary-completions.jsonl'].splitlines()]
+assert {row['batch'] for row in completion_rows if row['batch'] in batches} == set(batches)
+assert all(sum(row['batch'] == batch for row in completion_rows) == 1 for batch in batches)
+verification = json.loads(blob(cut, 'paper/data/verification.json'))
+assert all(value is True for key, value in verification['checks'].items()
+           if key != 'runs.jsonl decision-count mismatches')
+summary = json.loads(blob(cut, 'paper/data/summary.json'))
+assert summary['source_checks_passed'] is True
+assert summary['generated_at'] == '2026-10-18T11:39:00.958Z'
+
+manifest = {name: {'git_blob': git('rev-parse', cut + ':' + name).decode().strip(),
+                   'bytes': len(raw), 'sha256': hashlib.sha256(raw).hexdigest()}
+            for name, raw in frozen.items()}
+plan = {'at': at, 'source_base': base, 'recovered_tree': cut,
+        'pinned_original_trees': ['refs/ops-record-cuts/20261018-1953-first', 'refs/ops-record-cuts/20261018-1953-shared'],
+        'current_parent': head, 'receipts': receipts, 'ledger_check': audit, 'frozen_files': manifest,
+        'generated_at': summary['generated_at'], 'verification': verification,
+        'record_paths_append_only_and_frozen_prefix_of_current': True,
+        'original_receipts_reports_failures_and_parent_states_unchanged': True,
+        'new_dataset_runs': 0, 'source_merges': 0, 'new_model_or_game_requests': 0,
+        'physical_generated_outputs_not_rewritten': True, 'no_new_behavior_version_or_shipped': True}
+(pub / 'recovery-plan.json').write_text(json.dumps(plan, ensure_ascii=False, indent=2) + '\n')
+
+message = ('本轮处理191301复盘及191315策略两条自动收尾冲突，并接续上一轮191315-s2待办。'
+           '两次失败前write-tree已把完整冻结记录留在Git，已固定原树引用；恢复较新树的15个记录/生成表叶，'
+           '不重dataset、不合源码。三局复盘与账本、20项waiting及3项pending提案和三批完成记录均有原件，'
+           '账本检查0问题；四个追加日志均是当前工作区前缀，后续并行追加和正在生成的新导出不写回、不覆盖。'
+           '生成表明确保留19:39截点及1条历史决策数差异，不能冒作当前实盘或最新提交数。'
+           '原attention、单次导出日志、原报告/失败与宽父状态保留，实际记录提交另存独立处置回执；'
+           '无新游戏知识、shipped、行为号、模型或对局，live不变。证据paper/materials/20261018-1953-ops/recovery-plan.json。')
+assert 300 <= len(message) <= 500
+line = '\n- ' + stamp + ' [运维 codex] ' + message + '\n'
+with (r / 'paper/materials/decision-log.md').open('a') as handle:
+    handle.write(line)
+(p / 'own-appends.json').write_text(json.dumps([{'path': 'paper/materials/decision-log.md', 'text': line}], ensure_ascii=False, indent=2) + '\n')
+
+(pub / 'recovery-script.py.txt').write_bytes(Path(__file__).read_bytes())
+owned = {str(path.relative_to(r)): path.read_bytes() for path in [pub / 'recovery-plan.json', pub / 'recovery-script.py.txt']}
+scan = p / 'record-scan'
+scan.mkdir()
+for name, raw in {**frozen, **owned, 'owned-decision.txt': line.encode()}.items():
+    target = scan / name
+    target.parent.mkdir(parents=True, exist_ok=True)
+    target.write_bytes(raw)
+with (pub / 'records-gitleaks.log').open('wb') as handle:
+    result = subprocess.run(['nice', '-n', '19', 'gitleaks', 'dir', str(scan), '--no-banner', '--redact',
+                             '--report-format', 'json', '--report-path', str(p / 'records-gitleaks.json')],
+                            stdout=handle, stderr=subprocess.STDOUT, env={**os.environ, 'GOMAXPROCS': '1'})
+assert result.returncode == 0 and json.loads((p / 'records-gitleaks.json').read_bytes()) == []
+owned[str((pub / 'records-gitleaks.log').relative_to(r))] = (pub / 'records-gitleaks.log').read_bytes()
+
+values = {**frozen, **owned}
+decision = 'paper/materials/decision-log.md'
+assert (r / decision).read_bytes().count(line.encode()) == 1
+values[decision] = blob(head, decision) + line.encode()
+snapshot = git('ls-files', '--stage', '-z')
+idx = Path(git('rev-parse', '--path-format=absolute', '--git-path', 'index').decode().strip())
+old_index = idx.read_bytes()
+private = {**os.environ, 'GIT_INDEX_FILE': str(p / 'records.index')}
+git('read-tree', head, env=private)
+for name, raw in values.items():
+    stage(name, raw, private, r)
+tree = git('write-tree', env=private).decode().strip()
+changed = git('diff', '--name-only', head, tree).decode().splitlines()
+assert set(changed) == set(values)
+new = commit(tree, [head], 'Recover frozen ordinary records without rerunning datasets', r)
+saved = p / 'normal-records-preserved.index'
+saved.write_bytes(old_index)
+normal = {**os.environ, 'GIT_INDEX_FILE': str(saved)}
+for name, raw in values.items():
+    assert blob('', name) == blob(head, name)
+    stage(name, raw, normal, r)
+locks = locks_for([(r, normal)])
+try:
+    assert git('rev-parse', 'HEAD').decode().strip() == head
+    assert git('ls-files', '--stage', '-z') == snapshot
+    for name in records:
+        assert (r / name).read_bytes().startswith(frozen[name])
+    for entry in receipts:
+        assert hashlib.sha256((r / entry['receipt']).read_bytes()).hexdigest() == entry['receipt_sha256']
+    git('update-ref', '-m', 'ops: recover verified frozen ordinary records', 'HEAD', new, head)
+    for target, lock in locks:
+        os.replace(lock, target)
+finally:
+    for _, lock in locks:
+        lock.unlink(missing_ok=True)
+assert all(blob(new, name) == raw for name, raw in values.items())
+readback = {'at': at, 'commit': new, 'parent': head, 'tree': tree, 'paths': changed,
+            'gitleaks_rc': 0, 'frozen_tree': cut, 'batches': batches, 'physical_files_rewritten': False,
+            'index_and_HEAD_CAS_verified': True, 'new_dataset_runs': 0, 'source_merges': 0,
+            'original_failures_unchanged': True, 'parent_requests_closed': False}
+(p / 'commit-readback.json').write_text(json.dumps(readback, ensure_ascii=False, indent=2) + '\n')
+out = r / 'ops/codex-ops/ordinary-close-resolutions'
+out.mkdir(exist_ok=True)
+for entry in receipts:
+    row = {**entry, 'at': at, 'state': 'records-recovered-from-original-frozen-tree',
+           'commit': new, 'tree': tree, 'frozen_source_tree': cut, 'ledger_check': audit,
+           'dataset_rerun': False, 'source_merge': False, 'original_attention_unchanged': True,
+           'no_scientific_parent_closed': True}
+    (out / (entry['batch'] + '.json')).write_text(json.dumps(row, ensure_ascii=False, indent=2) + '\n')
+pending = r / 'ops/codex-ops/pending/20261018-191315-s2-strategy-proposal-record-conflict.json'
+if pending.exists():
+    row = json.loads(pending.read_bytes())
+    row.update(state='records-recovered-from-original-frozen-tree', completed=True, record_commit=new, updated_at=at)
+    pending.write_text(json.dumps(row, ensure_ascii=False, indent=2) + '\n')
+print(json.dumps({'commit': new, 'files': len(changed), 'batches': batches, 'ledger': audit,
+                  'gitleaks': 0, 'dataset_reruns': 0, 'source_merges': 0}, ensure_ascii=False), flush=True)
