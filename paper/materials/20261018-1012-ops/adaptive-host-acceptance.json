@@ -1,0 +1,126 @@
+{
+  "at": "2026-10-18 10:14:23 CST",
+  "batch": "20261016-075726-strategy-proposal",
+  "canonical_check": {
+    "rc": 0,
+    "log": "/home/dw/Projects/agent-sts2/ops/codex-ops/learner/20261016-075726-strategy-proposal.fallback-184868e76c9b64366dd75796475cda97cef6eb69.checks.log",
+    "merged": "b155d00a36080418149e63d2f21b491d34d7f40a",
+    "tree": "184868e76c9b64366dd75796475cda97cef6eb69",
+    "commits": [
+      "28161b2d2a31e95587999fc6e5028acd727cecb2",
+      "b2bdb0b1dbc7ec9a39909595238b00efbb718321"
+    ]
+  },
+  "original_log": "ops/codex-ops/learner/20261016-075726-strategy-proposal.fallback-184868e76c9b64366dd75796475cda97cef6eb69.checks.log",
+  "original_log_sha256": "b97f59d0608196eea73575360a0a4170bae8919abbd238350430b317d94b0b9c",
+  "actual_checked_commit": "b155d00a36080418149e63d2f21b491d34d7f40a",
+  "actual_checked_tree": "184868e76c9b64366dd75796475cda97cef6eb69",
+  "tsc_exit": 0,
+  "tsc_scope": "Original full checker success includes silent tsc exit0.",
+  "vitest_exit": 0,
+  "files_passed": 544,
+  "cases_passed": 5271,
+  "cases_skipped": 2,
+  "duration_seconds": 645.3,
+  "adaptive_source": "03bec265b5ba885c82853cf76908d06d90e2dec7",
+  "adaptive_main": "84d37ee0947517411a9825460cfa4f3952ab35d8",
+  "adaptive_original_publication": "53c9d61749abd51ed1727ac0c22dc5d52a8a7965",
+  "adaptive_original_requested_tree": "cfd9053aa7519f68dc1cfb877723ada6ee36f331",
+  "original_requested_tree_full0_not_claimed": true,
+  "acceptance_scope": "R394 eight original source leaves present in actually checked newer live composition; no full0 claim for original cfd9053 request tree.",
+  "source_paths_between_request_and_check_unchanged": true,
+  "source_paths": [
+    "agent/src",
+    "agent/tools",
+    "agent/tests",
+    "agent/package*.json",
+    "agent/tsconfig*.json",
+    "agent/vitest*",
+    "learner/*.ts",
+    "learner/*.py",
+    "learner/lib",
+    "learner/tasks",
+    "ops/*.sh",
+    "ops/*.py",
+    "ops/codex",
+    "eval/*.py",
+    "eval/*.ts",
+    "eval/cost-config.json",
+    "knowledge/builders"
+  ],
+  "verified_eight_leaves": [
+    {
+      "path": "agent/src/sim/adaptive-shadow.ts",
+      "sha256": "e0e19ef375ddf8334c9c20d4d1cd892a0f21b76e4e0e77bd4810f6e08d64572e",
+      "mode": "100644"
+    },
+    {
+      "path": "agent/src/sim/adaptive-sampler.ts",
+      "sha256": "ed75873222ef5bd212dff7ea885036ce985e3e7e4ddf95b1c5d17f56888b5f84",
+      "mode": "100644"
+    },
+    {
+      "path": "agent/src/sim/adaptive-decks.ts",
+      "sha256": "6b1cc4fe7fbaf8298c30b4deb9eeb93e6a80c3eb533504b2c1b2612b5fbd34c8",
+      "mode": "100644"
+    },
+    {
+      "path": "agent/src/sim/build-sim.ts",
+      "sha256": "e1384889748cf42f31aaab5be173e9dde4227c3a0b34a919026068ef34c9a115",
+      "mode": "100644"
+    },
+    {
+      "path": "agent/src/sim/build-sim-facts.ts",
+      "sha256": "c86879476796b8f49dde0078923e6ba5e46e725210d23acf14a0195b6bcb652e",
+      "mode": "100644"
+    },
+    {
+      "path": "agent/src/sim/boss-lines.ts",
+      "sha256": "ee25326b2f01c82cea39b4b09a78340080784b4c30527fa2b17c3e2a971e0837",
+      "mode": "100644"
+    },
+    {
+      "path": "agent/tests/human-pace-sampling.test.ts",
+      "sha256": "b1474e21dfff9e3e7aa042a938d600d5ebe460021d35b265a846c9dbbba168d3",
+      "mode": "100644"
+    },
+    {
+      "path": "agent/tests/human-pace-adaptive.test.ts",
+      "sha256": "92ec19182171ebb472781b7adafb1607f7c48a3c78a0355e5ded99eea6c52322",
+      "mode": "100644"
+    }
+  ],
+  "intervening_paths": [
+    "eval/versions.json",
+    "experiments/boss-sim/silent/da07348370065202d28758637df38f299ad22f74b8a2c112934a197fb564d404/boss-trust.json",
+    "experiments/boss-sim/silent/da07348370065202d28758637df38f299ad22f74b8a2c112934a197fb564d404/completed.json",
+    "experiments/boss-sim/silent/da07348370065202d28758637df38f299ad22f74b8a2c112934a197fb564d404/corrected-opening-keys.json",
+    "experiments/boss-sim/silent/da07348370065202d28758637df38f299ad22f74b8a2c112934a197fb564d404/extraction.json",
+    "experiments/boss-sim/silent/da07348370065202d28758637df38f299ad22f74b8a2c112934a197fb564d404/fights.jsonl",
+    "experiments/boss-sim/silent/da07348370065202d28758637df38f299ad22f74b8a2c112934a197fb564d404/model-input-audit.json",
+    "experiments/boss-sim/silent/da07348370065202d28758637df38f299ad22f74b8a2c112934a197fb564d404/opening-audit.json",
+    "experiments/boss-sim/silent/da07348370065202d28758637df38f299ad22f74b8a2c112934a197fb564d404/provenance.json",
+    "experiments/boss-sim/silent/da07348370065202d28758637df38f299ad22f74b8a2c112934a197fb564d404/replay-keys.json",
+    "experiments/boss-sim/silent/da07348370065202d28758637df38f299ad22f74b8a2c112934a197fb564d404/report.md",
+    "experiments/boss-sim/silent/da07348370065202d28758637df38f299ad22f74b8a2c112934a197fb564d404/results.jsonl",
+    "experiments/boss-sim/silent/da07348370065202d28758637df38f299ad22f74b8a2c112934a197fb564d404/runs-snapshot.jsonl",
+    "experiments/boss-sim/silent/da07348370065202d28758637df38f299ad22f74b8a2c112934a197fb564d404/runtime-source-audit.json",
+    "experiments/boss-sim/silent/da07348370065202d28758637df38f299ad22f74b8a2c112934a197fb564d404/sl-snapshot.jsonl",
+    "experiments/boss-sim/silent/da07348370065202d28758637df38f299ad22f74b8a2c112934a197fb564d404/sources.jsonl",
+    "experiments/boss-sim/silent/da07348370065202d28758637df38f299ad22f74b8a2c112934a197fb564d404/split.json",
+    "experiments/boss-sim/silent/da07348370065202d28758637df38f299ad22f74b8a2c112934a197fb564d404/turns.jsonl",
+    "knowledge/characters/silent/boss-trust.json",
+    "notes/fight-value-backtest-silent.md",
+    "notes/monster-db-check.md",
+    "paper/materials/decision-log.md",
+    "paper/materials/silent/boss-sim-calibration.md"
+  ],
+  "intervening_calibration_commit": "8c7657bac63f42830854b069a7da894fb295ba62",
+  "intervening_calibration_not_this_strategy_batch_output": true,
+  "canonical_failed_rc0_mergednull_and_old_failures_preserved": true,
+  "source_original_full_rc": 1,
+  "source_original_supplement_rc": 0,
+  "new_test_calls": 0,
+  "new_release_or_ledger_ship": false,
+  "parent_requirements_closed": false
+}
