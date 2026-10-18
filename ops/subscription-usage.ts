@@ -23,6 +23,13 @@ export function quotaSnapshot(usage: CodexUsage | null, capturedAt: Date) {
     source: "account/rateLimits/read", sample_observed_at: Number.isFinite(observed) ? new Date(observed).toISOString() : null,
     freshness: usage ? (windows.length > 0 && windows.every((w) => !w.stale) ? "fresh" : "stale_or_unknown") : "failed",
     error_code: usage ? null : "usage_read_failed", windows,
+    // Reuse the existing scheduler read; missing credits are unknown, never a zero balance.
+    credits: usage?.credits ? {
+      has_credits: usage.credits.hasCredits,
+      unlimited: usage.credits.unlimited,
+      balance: Number.isFinite(usage.credits.balance) ? usage.credits.balance : null,
+      stale: !Number.isFinite(observed) || age < 0 || age > 600_000,
+    } : null,
   };
 }
 

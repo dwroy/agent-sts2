@@ -57,6 +57,7 @@ sys.path.insert(0, os.path.join(os.path.dirname(SCRIPTS), "knowledge", "builders
 from characters import NAMES_ZH, character_key, run_character  # noqa: E402
 
 BATCH_MAX = 5
+SILENT_BATCH_WAIT_S = 2 * 3600
 RETRY_AFTER_S = 3600
 MAX_ATTEMPTS = 3
 RUN_ID = re.compile(r"^[0-9A-Z]{12}$")
@@ -238,6 +239,7 @@ def check_postmortems(state, character):
     have = postmortem_ids()
     now = time.time()
     todo = []
+    retry_ready = False
     for row in finished_runs(character):
         run = row["run_id"]
         if run in have or run in todo:
@@ -248,9 +250,33 @@ def check_postmortems(state, character):
                 continue
             if info.get("retry_at") is None or info["retry_at"] > now:
                 continue
+        if info:
+            retry_ready = True
         todo.append(run)
     if not todo:
+        state.setdefault("postmortem_wait", {}).pop(character, None)
         return None
+    if character == "silent" and len(todo) < BATCH_MAX and not retry_ready:
+        # Bound latency even if play stops before five runs. Manual dispatch bypasses this gate.
+        waiting = state.setdefault("postmortem_wait", {})
+        prior = waiting.get(character, {})
+        anchor = todo[0]
+        since = prior.get("since") if prior.get("anchor") == anchor else None
+        if not isinstance(since, (float, int)) or since > now:
+            since = now
+            # An old unreviewed run should not wait another two hours after deployment.
+            for row in finished_runs(character):
+                if row.get("run_id") == anchor and isinstance(row.get("ended"), str):
+                    try:
+                        ended = dt.datetime.fromisoformat(row["ended"].replace("Z", "+00:00"))
+                        if ended.tzinfo is not None:
+                            since = min(since, ended.timestamp())
+                    except ValueError:
+                        pass
+        waiting[character] = {"anchor": anchor, "since": since, "runs": todo}
+        if now - since < SILENT_BATCH_WAIT_S:
+            return None
+    state.setdefault("postmortem_wait", {}).pop(character, None)
     return dispatch(state, todo[:BATCH_MAX], character, "tick")
 
 

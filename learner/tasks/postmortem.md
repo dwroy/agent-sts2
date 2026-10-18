@@ -1,6 +1,6 @@
 ---
 title: 复盘
-effort.codex: xhigh
+effort.codex: high
 tools: Read, Grep, Glob, Bash
 timeout_min: 120
 max_turns: 400
@@ -23,6 +23,9 @@ default.code_dir: {{project_root}}/.worktrees/live
 {{^is_ironclad}}
 3. 这次复盘的是{{character_name}}（{{character}}）的局：每个 run id 在 runs.jsonl 里的 `character` 要是 {{character}}（不分大小写；没有这个字段的旧局是铁甲战士的）。不是的跳过，并在回报里写明。
 {{/is_ironclad}}
+
+## 摘要优先（Roy 2026-10-18 用量节省）
+先运行 `nice -n 19 python3 {{project_root}}/learner/evidence_summary.py --logs "{{logs_dir}}" --runs "{{runs}}" --out "{{scratch}}/evidence-summary.json"`，只把该摘要及本批提案/已有复盘作为初始材料。摘要是事实索引，不提供游戏结论；需要验证的机制、资源、关键决定仍须按原始 offset/bytes/SHA 定位读取原文，并保留反例和缺失。不要把整份 `states.evidence.jsonl` 或本局所有 state 灌进上下文；脚本可完整流式分析，模型只读所需窗口和结构化结果。冻结专项输入/原请求若规定额外完整证据，仍全部覆盖，不能用摘要替代科学验收。
 
 ## 2. 读哪些材料
 - `{{project_root}}/notes/run-*-<run id>.md`（一局可能有好几个文件，是中途重启留下的，都要看）。

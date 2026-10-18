@@ -37,14 +37,14 @@ describe("Shared Codex defaults across session entry points", () => {
     }
   });
 
-  it("shares learner GPT-6.1 Sol/xhigh/normal with gameplay and ops", () => {
-    expect(engineDefaults("codex")).toEqual({ model: "gpt-6.1-sol", effort: "xhigh" });
+  it("uses high for offline defaults while preserving explicit gameplay effort", () => {
+    expect(engineDefaults("codex")).toEqual({ model: "gpt-6.1-sol", effort: "high" });
     const opsArgs = initCommand({ ...request, model: undefined, effort: undefined }, "TASK", "codex").args;
     expect(opsArgs).toContain("gpt-6.1-sol");
     expect(opsArgs).toContain('service_tier="default"');
     const args = codexCommand({ ...request, model: undefined, effort: undefined }, "TASK", "codex").args;
     expect(args).toContain("gpt-6.1-sol");
-    expect(args).toContain('model_reasoning_effort="xhigh"');
+    expect(args).toContain('model_reasoning_effort="high"');
     expect(args).toContain("--ignore-user-config");
     expect(args).toContain("model_context_window=512000");
     expect(args).toContain("model_auto_compact_token_limit=460800");

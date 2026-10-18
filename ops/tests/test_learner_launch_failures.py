@@ -15,7 +15,7 @@ checks = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(checks)
 
 
-POLICY = ["-c", 'model="gpt-6.1-sol"', "-c", 'model_reasoning_effort="xhigh"',
+POLICY = ["-c", 'model="gpt-6.1-sol"', "-c", 'model_reasoning_effort="high"',
           "-c", 'service_tier="default"', "-c", 'model_context_window=512000',
           "-c", 'model_auto_compact_token_limit=460800']
 
@@ -37,7 +37,7 @@ class LearnerLauncher(unittest.TestCase):
         self.write_executable(self.root / "agent/node_modules/.bin/tsx",
                               "#!/bin/bash\nprintf '%s\\n' \"$@\" > \"$CODEX_OPS_ROOT/launcher-args\"\n"
                               "exec \"$LEARNER_CODEX_BIN\" sandbox -c 'model=\"fixture\"' "
-                              "-c 'model_reasoning_effort=\"xhigh\"' -c 'service_tier=\"priority\"' -- /fixture/check\n")
+                              "-c 'model_reasoning_effort=\"high\"' -c 'service_tier=\"priority\"' -- /fixture/check\n")
         (self.root / "ops/codex-ops-learn.py").write_text("# Fixed completion stub; no dispatch or production state.\n")
         self.env = {"HOME": str(self.root / "home"), "PATH": str(self.root / "bin") + ":/usr/bin:/bin",
                     "CODEX_OPS_ROOT": str(self.root), "CODEX_OPS_NO_DRAIN": "1"}
@@ -57,11 +57,11 @@ class LearnerLauncher(unittest.TestCase):
         self.assertIn('service_tier="default"', args)
         self.assertIn("model_context_window=512000", args)
         self.assertIn('model="gpt-6.1-sol"', args)
-        self.assertIn('model_reasoning_effort="xhigh"', args)
+        self.assertIn('model_reasoning_effort="high"', args)
         self.assertEqual(args[-2:], ["--", "/fixture/check"])
         launcher = (self.root / "launcher-args").read_text().splitlines()
         self.assertEqual(launcher[launcher.index("--model") + 1], "gpt-6.1-sol")
-        self.assertEqual(launcher[launcher.index("--effort") + 1], "xhigh")
+        self.assertEqual(launcher[launcher.index("--effort") + 1], "high")
 
     def test_explicit_native_override_is_kept(self):
         self.launch(LEARNER_CODEX_BIN=str(self.native), STS2_CODEX_LEARNER_BIN="/unselected/codex")
@@ -139,7 +139,7 @@ class LearnerLauncher(unittest.TestCase):
                                          "-c", 'model="old-model"', "--config=model_reasoning_effort=high", "-"])
             self.assertNotIn('service_tier="priority"', args)
             self.assertIn('model="gpt-6.1-sol"', args)
-            self.assertIn('model_reasoning_effort="xhigh"', args)
+            self.assertIn('model_reasoning_effort="high"', args)
             self.assertEqual(err, "")
         child = ["--", "/fixture/check", "--model", "child-model", "-c", 'service_tier="child-tier"']
         for profile in (["-P", "learner"], ["--permission-profile", "learner"], ["--permission-profile=learner"]):

@@ -192,3 +192,9 @@ Roy要求将DPR供给检查固定到框架。现有五分钟 `tick stall` 在卡
 - 快照和唯一异常证据在 `ops/codex-ops/module-health/`，属于小型正式验收记录；不复制全量日志，不创建学习WT。离线性能探针 `agent/tools/profile-build-health.ts` 只读冻结输入，最多4线程，须 `nice`；显式HP/当前模型重算不能称原历史胜率重放。开发WT按标准验收、合入及回收流程处理。
 
 只读手工核查（不投递异常）：`python3 ops/module_health.py --run <局号> --no-notify`。
+
+## Roy 2026-10-18 用量节省
+
+Silent 的例行复盘按 5 局批处理；不足 5 局从最早未复盘局结束起最多等待 2 小时，缺结束时间则从首次看到积压起计。下一次原 :13/:43 tick 到期派发，不增加 timer 或模型轮询。失败的原重试、逐局复盘/账本和手动立即 dispatch 保留；其他角色原节奏保持。普通策略原 10 份复盘/进阶触发保留，waiting 提案的相关证据去重由原独立任务处理。
+
+下一自然启动点普通分析/开发/ops 显式 high，困难专项及已绑定科学请求保留 xhigh；局内大脑 xhigh 不变，不改共用账号 config 或在途进程。新批先读 evidence_summary.py 生成的有限索引，再按 offset/bytes/SHA 读取需要的原文；摘要不替代资源链、全部冻结局覆盖或科学四闸。实际生效以新原生 turn_context 回执为准。

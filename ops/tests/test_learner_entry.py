@@ -181,7 +181,7 @@ class Entry(unittest.TestCase):
         self.assertEqual(args[0], str(f.root / "learner/run.ts"))
         self.assertEqual(args[args.index("--cwd") + 1], str(f.root))
         self.assertEqual(args[args.index("--model") + 1], "gpt-6.1-sol")
-        self.assertEqual(args[args.index("--effort") + 1], "xhigh")
+        self.assertEqual(args[args.index("--effort") + 1], "high")
         self.assertEqual((state.parent / "learner" / (batch + ".err")).read_bytes(), diagnostic(f.root))
         self.assertEqual(json.loads(state.read_text())["batches"][batch], registration)
 

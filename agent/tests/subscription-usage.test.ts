@@ -19,6 +19,16 @@ const usage = (reset = "2026-10-10T09:00:00Z"): CodexUsage => ({ readAt: now.toI
     { name: "codex/secondary", usedPct: 21, windowMins: 10080, resetsAt: reset }], credits: null,
   ordinaryUsageAllowed: true, reachedType: null, spendControlReached: null });
 
+it("preserves numeric account credits and keeps missing/stale balances distinct", () => {
+  const observed = { ...usage(), credits: { hasCredits: true, unlimited: false, balance: 35426.468553 } };
+  expect(quotaSnapshot(observed, now).credits).toEqual({ has_credits: true, unlimited: false, balance: 35426.468553, stale: false });
+  expect(quotaSnapshot(null, now).credits).toBeNull();
+  expect(quotaSnapshot(usage(), now).credits).toBeNull();
+  expect(quotaSnapshot({ ...observed, readAt: "2026-10-05T12:00:00Z" }, now).credits?.stale).toBe(true);
+  expect(quotaSnapshot({ ...observed, credits: { hasCredits: false, unlimited: false, balance: 0 } }, now).credits?.balance).toBe(0);
+  expect(quotaSnapshot({ ...observed, credits: { hasCredits: true, unlimited: false, balance: NaN } }, now).credits?.balance).toBeNull();
+});
+
 it("maps the cached primary 43% observation to 5h and secondary to weekly by duration", () => {
   const g = sessionGrowth(JSON.stringify({ type: "event_msg", payload: { type: "token_count", rate_limits: {
     primary: { used_percent: 43, window_minutes: 300 }, secondary: { used_percent: 21, window_minutes: 10080 },
