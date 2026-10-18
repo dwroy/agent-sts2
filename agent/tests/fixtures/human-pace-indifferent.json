@@ -1,0 +1,1108 @@
+{
+  "run_id": "ET1QAZCV8GUP",
+  "source": "paper/materials/20261018-1055-ops/module-health-readback.json",
+  "cases": [
+    {
+      "run_id": "ET1QAZCV8GUP",
+      "ts": "2026-10-18T02:30:58.083Z",
+      "floor": 4,
+      "turn": 4,
+      "label": "reward/card",
+      "decision_id": "3cf7b740-bcb0-4569-a910-e8fc4c151f14",
+      "source": {
+        "offset": 2498047369,
+        "length": 175112,
+        "sha256": "72e178fde43952d6181d4408fa166e0bd95fc7fc7b6378191be60ea1d3ff599f"
+      },
+      "boss_sim": {
+        "samples": 100,
+        "requested": 300,
+        "timed_out": false,
+        "adaptive": {
+          "schema": "sim-adaptive-v1",
+          "mode": "on",
+          "status": "complete_adaptive",
+          "lane": "b3",
+          "stop_reason": "indifferent",
+          "indifference_spread": 0,
+          "rule": {
+            "version": "adaptive-v1",
+            "b3First": 300,
+            "b2First": 200,
+            "batch": 100,
+            "zElim": 3,
+            "zTie": 2,
+            "profile": "silent-human-pace-v2",
+            "lowTrust": false,
+            "indifference": 0.03,
+            "first": 100,
+            "requested": 300
+          },
+          "candidates": [
+            {
+              "key": "@current",
+              "samples": 100,
+              "rounds": 1,
+              "stop": "indifferent",
+              "baseline": true
+            },
+            {
+              "key": "card0",
+              "samples": 100,
+              "rounds": 1,
+              "stop": "eliminated",
+              "baseline": false
+            },
+            {
+              "key": "card1",
+              "samples": 100,
+              "rounds": 1,
+              "stop": "eliminated",
+              "baseline": false
+            },
+            {
+              "key": "card2",
+              "samples": 100,
+              "rounds": 1,
+              "stop": "indifferent",
+              "baseline": false
+            },
+            {
+              "key": "skip",
+              "samples": 100,
+              "rounds": 1,
+              "stop": "indifferent",
+              "baseline": false
+            }
+          ],
+          "final": {
+            "leader": "card2",
+            "group": [
+              "card2",
+              "skip"
+            ]
+          },
+          "rounds": [
+            {
+              "n": 100,
+              "leader": "card2",
+              "eliminated": [
+                {
+                  "key": "card0",
+                  "metric": {
+                    "key": "boss_left",
+                    "difference": -21.5,
+                    "se": 2.9185405235971604
+                  }
+                },
+                {
+                  "key": "card1",
+                  "metric": {
+                    "key": "boss_left",
+                    "difference": -6.45,
+                    "se": 2.0932491297482767
+                  }
+                }
+              ]
+            }
+          ],
+          "evaluable": true,
+          "work": {
+            "full": 1500,
+            "actual": 700,
+            "savedFraction": 0.5333333333333333,
+            "unit": "unique-option-sample-equivalents"
+          },
+          "limits": "Actual prefixes only. All candidates remain available with their own sample count. Full-run agreement is an independent admission result, not observed during an early-stopped question.",
+          "input_key": "human-pace-b3-v1:fcad5c4ef038c4faffe80abf676dc4f7c643c212b201c7c65b6ce269ec037dd9",
+          "fixed_order_search_in_work": true
+        },
+        "completion": {
+          "required": true,
+          "uniqueDecks": 4,
+          "originalDecks": 4,
+          "memoHit": false,
+          "budgeted": true,
+          "status": "complete_budget",
+          "failure": false,
+          "samples": 100,
+          "requested": 300,
+          "attempt_id": "c3952e30-1e63-4251-9b4d-91f60344a410",
+          "attempts": 1,
+          "reasons": [],
+          "key": "sim-failure-v1:0600706e3b82f828ada3375ea65d2b91f1e75d606b7585b83f21d6cdc9c334c5",
+          "latencyTargetMs": 11000,
+          "latencyTargetExceeded": false
+        }
+      }
+    },
+    {
+      "run_id": "ET1QAZCV8GUP",
+      "ts": "2026-10-18T02:51:01.191Z",
+      "floor": 17,
+      "turn": 2,
+      "label": "combat/plan-choice",
+      "decision_id": "0fb866c7-e9fe-4691-b5d0-fbe12a623004",
+      "source": {
+        "offset": 2503211345,
+        "length": 70255,
+        "sha256": "a733aadae56ced2375d7730f316851d42bbf922f454d2af60faf857f72c5c289"
+      },
+      "boss_sim": {
+        "samples": 100,
+        "requested": 200,
+        "timed_out": false,
+        "adaptive": {
+          "schema": "sim-adaptive-v1",
+          "mode": "on",
+          "status": "complete_adaptive",
+          "lane": "b2",
+          "stop_reason": "indifferent",
+          "indifference_spread": 0.015,
+          "rule": {
+            "version": "adaptive-v1",
+            "b3First": 300,
+            "b2First": 200,
+            "batch": 50,
+            "zElim": 3,
+            "zTie": 2,
+            "profile": "silent-human-pace-v2",
+            "lowTrust": false,
+            "indifference": 0.03,
+            "first": 50,
+            "requested": 200
+          },
+          "candidates": [
+            {
+              "key": "line:0",
+              "samples": 150,
+              "rounds": 3,
+              "stop": "eliminated",
+              "baseline": false
+            },
+            {
+              "key": "line:1",
+              "samples": 100,
+              "rounds": 2,
+              "stop": "eliminated",
+              "baseline": false
+            },
+            {
+              "key": "line:2",
+              "samples": 200,
+              "rounds": 4,
+              "stop": "indifferent",
+              "baseline": false
+            },
+            {
+              "key": "line:3",
+              "samples": 200,
+              "rounds": 4,
+              "stop": "eliminated",
+              "baseline": false
+            },
+            {
+              "key": "line:4",
+              "samples": 100,
+              "rounds": 2,
+              "stop": "eliminated",
+              "baseline": false
+            },
+            {
+              "key": "line:5",
+              "samples": 200,
+              "rounds": 4,
+              "stop": "indifferent",
+              "baseline": false
+            }
+          ],
+          "final": {
+            "leader": "line:5",
+            "group": [
+              "line:2",
+              "line:5"
+            ]
+          },
+          "rounds": [
+            {
+              "n": 50,
+              "leader": "line:5",
+              "eliminated": []
+            },
+            {
+              "n": 100,
+              "leader": "line:5",
+              "eliminated": [
+                {
+                  "key": "line:1",
+                  "metric": {
+                    "key": "win",
+                    "difference": -0.12,
+                    "se": 0.03265986323710905
+                  }
+                },
+                {
+                  "key": "line:4",
+                  "metric": {
+                    "key": "win",
+                    "difference": -0.11,
+                    "se": 0.03450955072018603
+                  }
+                }
+              ]
+            },
+            {
+              "n": 150,
+              "leader": "line:5",
+              "eliminated": [
+                {
+                  "key": "line:0",
+                  "metric": {
+                    "key": "win",
+                    "difference": -0.07333333333333333,
+                    "se": 0.023357290353915316
+                  }
+                }
+              ]
+            },
+            {
+              "n": 200,
+              "leader": "line:5",
+              "eliminated": [
+                {
+                  "key": "line:3",
+                  "metric": {
+                    "key": "win",
+                    "difference": -0.06,
+                    "se": 0.01683499585468128
+                  }
+                }
+              ]
+            }
+          ],
+          "evaluable": true,
+          "work": {
+            "full": 3600,
+            "actual": 2850,
+            "savedFraction": 0.20833333333333337,
+            "unit": "fight-sample-outcomes"
+          },
+          "limits": "Actual prefixes only. All candidates remain available with their own sample count. Full-run agreement is an independent admission result, not observed during an early-stopped question.",
+          "input_key": "human-pace-b2-v1:6c3ea65bdaf81569fcf9b9cd866fd30c3c9434f3b961db4dfce1a028472aedc7",
+          "candidate_keys": {
+            "line:0": "plan1",
+            "line:1": "plan2",
+            "line:2": "plan3",
+            "line:3": "plan4",
+            "line:4": "plan5",
+            "line:5": "plan6"
+          }
+        },
+        "completion": {
+          "required": true,
+          "attempt_id": "3c8e2fb6-fd8f-4986-9343-cbb6ee5adc8d",
+          "status": "complete_budget",
+          "attempts": 1,
+          "reasons": [],
+          "samples": 100,
+          "requested": 200,
+          "failure": false,
+          "key": "sim-failure-v1:5e343dd652df9762fdbb55ba16bc39447e95af024db2972b5edce3d9bbe878ad",
+          "budgeted": true
+        }
+      }
+    },
+    {
+      "run_id": "ET1QAZCV8GUP",
+      "ts": "2026-10-18T02:51:38.469Z",
+      "floor": 17,
+      "turn": 3,
+      "label": "combat/plan-choice",
+      "decision_id": "f022719c-80b6-4fa9-856f-28b121f1da2c",
+      "source": {
+        "offset": 2503323072,
+        "length": 62315,
+        "sha256": "4119d6d8cff0632b7c05fa0c7ed7c0349be5dfd2bbeb72b839aa1c25fd370bfe"
+      },
+      "boss_sim": {
+        "samples": 50,
+        "requested": 200,
+        "timed_out": false,
+        "adaptive": {
+          "schema": "sim-adaptive-v1",
+          "mode": "on",
+          "status": "complete_adaptive",
+          "lane": "b2",
+          "stop_reason": "indifferent",
+          "indifference_spread": 0,
+          "rule": {
+            "version": "adaptive-v1",
+            "b3First": 300,
+            "b2First": 200,
+            "batch": 50,
+            "zElim": 3,
+            "zTie": 2,
+            "profile": "silent-human-pace-v2",
+            "lowTrust": false,
+            "indifference": 0.03,
+            "first": 50,
+            "requested": 200
+          },
+          "candidates": [
+            {
+              "key": "line:0",
+              "samples": 50,
+              "rounds": 1,
+              "stop": "indifferent",
+              "baseline": false
+            },
+            {
+              "key": "line:1",
+              "samples": 50,
+              "rounds": 1,
+              "stop": "indifferent",
+              "baseline": false
+            },
+            {
+              "key": "line:2",
+              "samples": 50,
+              "rounds": 1,
+              "stop": "indifferent",
+              "baseline": false
+            },
+            {
+              "key": "line:3",
+              "samples": 50,
+              "rounds": 1,
+              "stop": "indifferent",
+              "baseline": false
+            },
+            {
+              "key": "line:4",
+              "samples": 50,
+              "rounds": 1,
+              "stop": "indifferent",
+              "baseline": false
+            }
+          ],
+          "final": {
+            "leader": "line:0",
+            "group": [
+              "line:0"
+            ]
+          },
+          "rounds": [
+            {
+              "n": 50,
+              "leader": "line:0",
+              "eliminated": []
+            }
+          ],
+          "evaluable": true,
+          "work": {
+            "full": 3000,
+            "actual": 750,
+            "savedFraction": 0.75,
+            "unit": "fight-sample-outcomes"
+          },
+          "limits": "Actual prefixes only. All candidates remain available with their own sample count. Full-run agreement is an independent admission result, not observed during an early-stopped question.",
+          "input_key": "human-pace-b2-v1:5a98eb9b41ca62ea6189779b6de5d7adcc345467972026458e0dcb25b455718c",
+          "candidate_keys": {
+            "line:0": "plan1",
+            "line:1": "plan2",
+            "line:2": "plan3",
+            "line:3": "plan4",
+            "line:4": "plan5"
+          }
+        },
+        "completion": {
+          "required": true,
+          "attempt_id": "3b258a3b-ac7a-4250-a3e6-e7c33fa51746",
+          "status": "complete_budget",
+          "attempts": 1,
+          "reasons": [],
+          "samples": 50,
+          "requested": 200,
+          "failure": false,
+          "key": "sim-failure-v1:b7b68293b6c67817c4e730b88c060496042f76d1302b976509c922493fe6ae0c",
+          "budgeted": true
+        }
+      }
+    },
+    {
+      "run_id": "ET1QAZCV8GUP",
+      "ts": "2026-10-18T02:52:01.861Z",
+      "floor": 17,
+      "turn": 4,
+      "label": "combat/plan-choice",
+      "decision_id": "2464121c-e989-4270-a89e-8abb74b9d967",
+      "source": {
+        "offset": 2503389026,
+        "length": 99621,
+        "sha256": "f98314cfd544210d6af398fe94f11215af0817d9d3d9ca42be63797a46bf87f0"
+      },
+      "boss_sim": {
+        "samples": 50,
+        "requested": 200,
+        "timed_out": false,
+        "adaptive": {
+          "schema": "sim-adaptive-v1",
+          "mode": "on",
+          "status": "complete_adaptive",
+          "lane": "b2",
+          "stop_reason": "indifferent",
+          "indifference_spread": 0,
+          "rule": {
+            "version": "adaptive-v1",
+            "b3First": 300,
+            "b2First": 200,
+            "batch": 50,
+            "zElim": 3,
+            "zTie": 2,
+            "profile": "silent-human-pace-v2",
+            "lowTrust": false,
+            "indifference": 0.03,
+            "first": 50,
+            "requested": 200
+          },
+          "candidates": [
+            {
+              "key": "line:0",
+              "samples": 50,
+              "rounds": 1,
+              "stop": "indifferent",
+              "baseline": false
+            },
+            {
+              "key": "line:1",
+              "samples": 50,
+              "rounds": 1,
+              "stop": "indifferent",
+              "baseline": false
+            },
+            {
+              "key": "line:2",
+              "samples": 50,
+              "rounds": 1,
+              "stop": "indifferent",
+              "baseline": false
+            },
+            {
+              "key": "line:3",
+              "samples": 50,
+              "rounds": 1,
+              "stop": "indifferent",
+              "baseline": false
+            },
+            {
+              "key": "line:4",
+              "samples": 50,
+              "rounds": 1,
+              "stop": "indifferent",
+              "baseline": false
+            },
+            {
+              "key": "line:5",
+              "samples": 50,
+              "rounds": 1,
+              "stop": "indifferent",
+              "baseline": false
+            },
+            {
+              "key": "line:6",
+              "samples": 50,
+              "rounds": 1,
+              "stop": "indifferent",
+              "baseline": false
+            },
+            {
+              "key": "line:7",
+              "samples": 50,
+              "rounds": 1,
+              "stop": "indifferent",
+              "baseline": false
+            }
+          ],
+          "final": {
+            "leader": "line:1",
+            "group": [
+              "line:1"
+            ]
+          },
+          "rounds": [
+            {
+              "n": 50,
+              "leader": "line:1",
+              "eliminated": []
+            }
+          ],
+          "evaluable": true,
+          "work": {
+            "full": 4800,
+            "actual": 1200,
+            "savedFraction": 0.75,
+            "unit": "fight-sample-outcomes"
+          },
+          "limits": "Actual prefixes only. All candidates remain available with their own sample count. Full-run agreement is an independent admission result, not observed during an early-stopped question.",
+          "input_key": "human-pace-b2-v1:0ccbfd609145dd50c92acf9c2232e2818197f14bc52a04c9948fefb7973b521c",
+          "candidate_keys": {
+            "line:0": "plan1",
+            "line:1": "plan2",
+            "line:2": "plan3",
+            "line:3": "plan4",
+            "line:4": "plan5",
+            "line:5": "plan6",
+            "line:6": "plan7",
+            "line:7": "plan8"
+          }
+        },
+        "completion": {
+          "required": true,
+          "attempt_id": "ab16a562-8ecf-4ef8-a5e9-c348fe0aee0e",
+          "status": "complete_budget",
+          "attempts": 1,
+          "reasons": [],
+          "samples": 50,
+          "requested": 200,
+          "failure": false,
+          "key": "sim-failure-v1:927dd3afc947bace80324c5bce0da8d12770786218ae18dbc9f92d7614072e1f",
+          "budgeted": true
+        }
+      }
+    },
+    {
+      "run_id": "ET1QAZCV8GUP",
+      "ts": "2026-10-18T02:52:24.100Z",
+      "floor": 17,
+      "turn": 5,
+      "label": "combat/plan-choice",
+      "decision_id": "82789d0b-9b5b-4930-b819-7f92f8354843",
+      "source": {
+        "offset": 2503499856,
+        "length": 92427,
+        "sha256": "9f6fc24ee2ac1571dded0d0afe36d8d6ee70d7342bb0cda23c5e8bb2e2840147"
+      },
+      "boss_sim": {
+        "samples": 50,
+        "requested": 200,
+        "timed_out": false,
+        "adaptive": {
+          "schema": "sim-adaptive-v1",
+          "mode": "on",
+          "status": "complete_adaptive",
+          "lane": "b2",
+          "stop_reason": "indifferent",
+          "indifference_spread": 0,
+          "rule": {
+            "version": "adaptive-v1",
+            "b3First": 300,
+            "b2First": 200,
+            "batch": 50,
+            "zElim": 3,
+            "zTie": 2,
+            "profile": "silent-human-pace-v2",
+            "lowTrust": false,
+            "indifference": 0.03,
+            "first": 50,
+            "requested": 200
+          },
+          "candidates": [
+            {
+              "key": "line:0",
+              "samples": 50,
+              "rounds": 1,
+              "stop": "indifferent",
+              "baseline": false
+            },
+            {
+              "key": "line:1",
+              "samples": 50,
+              "rounds": 1,
+              "stop": "indifferent",
+              "baseline": false
+            },
+            {
+              "key": "line:2",
+              "samples": 50,
+              "rounds": 1,
+              "stop": "indifferent",
+              "baseline": false
+            },
+            {
+              "key": "line:3",
+              "samples": 50,
+              "rounds": 1,
+              "stop": "indifferent",
+              "baseline": false
+            },
+            {
+              "key": "line:4",
+              "samples": 50,
+              "rounds": 1,
+              "stop": "indifferent",
+              "baseline": false
+            },
+            {
+              "key": "line:5",
+              "samples": 50,
+              "rounds": 1,
+              "stop": "indifferent",
+              "baseline": false
+            },
+            {
+              "key": "line:6",
+              "samples": 50,
+              "rounds": 1,
+              "stop": "indifferent",
+              "baseline": false
+            }
+          ],
+          "final": {
+            "leader": "line:6",
+            "group": [
+              "line:6"
+            ]
+          },
+          "rounds": [
+            {
+              "n": 50,
+              "leader": "line:6",
+              "eliminated": []
+            }
+          ],
+          "evaluable": true,
+          "work": {
+            "full": 4200,
+            "actual": 1050,
+            "savedFraction": 0.75,
+            "unit": "fight-sample-outcomes"
+          },
+          "limits": "Actual prefixes only. All candidates remain available with their own sample count. Full-run agreement is an independent admission result, not observed during an early-stopped question.",
+          "input_key": "human-pace-b2-v1:6017857ec1b0d428b123a82e11ceb589b05d460b8405767d71380853774933e4",
+          "candidate_keys": {
+            "line:0": "plan1",
+            "line:1": "plan2",
+            "line:2": "plan3",
+            "line:3": "plan4",
+            "line:4": "plan5",
+            "line:5": "plan6",
+            "line:6": "plan7"
+          }
+        },
+        "completion": {
+          "required": true,
+          "attempt_id": "f11ccbac-3be9-4809-ae4a-4a38528052c8",
+          "status": "complete_budget",
+          "attempts": 1,
+          "reasons": [],
+          "samples": 50,
+          "requested": 200,
+          "failure": false,
+          "key": "sim-failure-v1:8ca4825bc45b5778576c521434b191480646faf1499bde94a565b3191166de09",
+          "budgeted": true
+        }
+      }
+    },
+    {
+      "run_id": "ET1QAZCV8GUP",
+      "ts": "2026-10-18T02:52:39.948Z",
+      "floor": 17,
+      "turn": 6,
+      "label": "combat/plan-choice",
+      "decision_id": "cca7f6d9-aff2-40ef-a9b4-941f60c245b9",
+      "source": {
+        "offset": 2503599667,
+        "length": 108323,
+        "sha256": "f2ad354e83519e60669db1859fc8cafd9515af7be51046eeb8a9cb23ed310689"
+      },
+      "boss_sim": {
+        "samples": 50,
+        "requested": 200,
+        "timed_out": false,
+        "adaptive": {
+          "schema": "sim-adaptive-v1",
+          "mode": "on",
+          "status": "complete_adaptive",
+          "lane": "b2",
+          "stop_reason": "indifferent",
+          "indifference_spread": 0,
+          "rule": {
+            "version": "adaptive-v1",
+            "b3First": 300,
+            "b2First": 200,
+            "batch": 50,
+            "zElim": 3,
+            "zTie": 2,
+            "profile": "silent-human-pace-v2",
+            "lowTrust": false,
+            "indifference": 0.03,
+            "first": 50,
+            "requested": 200
+          },
+          "candidates": [
+            {
+              "key": "line:0",
+              "samples": 50,
+              "rounds": 1,
+              "stop": "indifferent",
+              "baseline": false
+            },
+            {
+              "key": "line:1",
+              "samples": 50,
+              "rounds": 1,
+              "stop": "indifferent",
+              "baseline": false
+            },
+            {
+              "key": "line:2",
+              "samples": 50,
+              "rounds": 1,
+              "stop": "indifferent",
+              "baseline": false
+            },
+            {
+              "key": "line:3",
+              "samples": 50,
+              "rounds": 1,
+              "stop": "indifferent",
+              "baseline": false
+            },
+            {
+              "key": "line:4",
+              "samples": 50,
+              "rounds": 1,
+              "stop": "indifferent",
+              "baseline": false
+            },
+            {
+              "key": "line:5",
+              "samples": 50,
+              "rounds": 1,
+              "stop": "indifferent",
+              "baseline": false
+            },
+            {
+              "key": "line:6",
+              "samples": 50,
+              "rounds": 1,
+              "stop": "indifferent",
+              "baseline": false
+            },
+            {
+              "key": "line:7",
+              "samples": 50,
+              "rounds": 1,
+              "stop": "indifferent",
+              "baseline": false
+            }
+          ],
+          "final": {
+            "leader": "line:0",
+            "group": [
+              "line:0",
+              "line:3",
+              "line:7"
+            ]
+          },
+          "rounds": [
+            {
+              "n": 50,
+              "leader": "line:0",
+              "eliminated": []
+            }
+          ],
+          "evaluable": true,
+          "work": {
+            "full": 4800,
+            "actual": 1200,
+            "savedFraction": 0.75,
+            "unit": "fight-sample-outcomes"
+          },
+          "limits": "Actual prefixes only. All candidates remain available with their own sample count. Full-run agreement is an independent admission result, not observed during an early-stopped question.",
+          "input_key": "human-pace-b2-v1:33cbde8e09f668fa82f2aafb02d6209a5ec1c34ea4b4f92e0e736817bcaa03d0",
+          "candidate_keys": {
+            "line:0": "plan1",
+            "line:1": "plan2",
+            "line:2": "plan3",
+            "line:3": "plan4",
+            "line:4": "plan5",
+            "line:5": "plan6",
+            "line:6": "plan7",
+            "line:7": "plan8"
+          }
+        },
+        "completion": {
+          "required": true,
+          "attempt_id": "da249c94-54e5-439a-9bd8-bd87692494a2",
+          "status": "complete_budget",
+          "attempts": 1,
+          "reasons": [],
+          "samples": 50,
+          "requested": 200,
+          "failure": false,
+          "key": "sim-failure-v1:9317be1e2729a49c768dba2fdc2f6320fea161a34aaa78136058c0543af9f6de",
+          "budgeted": true
+        }
+      }
+    },
+    {
+      "run_id": "ET1QAZCV8GUP",
+      "ts": "2026-10-18T02:52:43.950Z",
+      "floor": 17,
+      "turn": 6,
+      "label": "combat/plan-choice",
+      "decision_id": "9d2b09f7-753f-4128-b84a-8ad4e650e31f",
+      "source": {
+        "offset": 2503707990,
+        "length": 130760,
+        "sha256": "6f0d27888d6d3a425ba966529fce166a32504e8038ea2e46d2a3276383f5cdef"
+      },
+      "boss_sim": {
+        "samples": 50,
+        "requested": 200,
+        "timed_out": false,
+        "adaptive": {
+          "schema": "sim-adaptive-v1",
+          "mode": "on",
+          "status": "complete_adaptive",
+          "lane": "b2",
+          "stop_reason": "indifferent",
+          "indifference_spread": 0,
+          "rule": {
+            "version": "adaptive-v1",
+            "b3First": 300,
+            "b2First": 200,
+            "batch": 50,
+            "zElim": 3,
+            "zTie": 2,
+            "profile": "silent-human-pace-v2",
+            "lowTrust": false,
+            "indifference": 0.03,
+            "first": 50,
+            "requested": 200
+          },
+          "candidates": [
+            {
+              "key": "line:0",
+              "samples": 50,
+              "rounds": 1,
+              "stop": "indifferent",
+              "baseline": false
+            },
+            {
+              "key": "line:1",
+              "samples": 50,
+              "rounds": 1,
+              "stop": "indifferent",
+              "baseline": false
+            },
+            {
+              "key": "line:2",
+              "samples": 50,
+              "rounds": 1,
+              "stop": "indifferent",
+              "baseline": false
+            },
+            {
+              "key": "line:3",
+              "samples": 50,
+              "rounds": 1,
+              "stop": "indifferent",
+              "baseline": false
+            },
+            {
+              "key": "line:4",
+              "samples": 50,
+              "rounds": 1,
+              "stop": "indifferent",
+              "baseline": false
+            },
+            {
+              "key": "line:5",
+              "samples": 50,
+              "rounds": 1,
+              "stop": "indifferent",
+              "baseline": false
+            },
+            {
+              "key": "line:6",
+              "samples": 50,
+              "rounds": 1,
+              "stop": "indifferent",
+              "baseline": false
+            },
+            {
+              "key": "line:7",
+              "samples": 50,
+              "rounds": 1,
+              "stop": "indifferent",
+              "baseline": false
+            },
+            {
+              "key": "line:8",
+              "samples": 50,
+              "rounds": 1,
+              "stop": "indifferent",
+              "baseline": false
+            },
+            {
+              "key": "line:9",
+              "samples": 50,
+              "rounds": 1,
+              "stop": "indifferent",
+              "baseline": false
+            }
+          ],
+          "final": {
+            "leader": "line:7",
+            "group": [
+              "line:7"
+            ]
+          },
+          "rounds": [
+            {
+              "n": 50,
+              "leader": "line:7",
+              "eliminated": []
+            }
+          ],
+          "evaluable": true,
+          "work": {
+            "full": 6000,
+            "actual": 1500,
+            "savedFraction": 0.75,
+            "unit": "fight-sample-outcomes"
+          },
+          "limits": "Actual prefixes only. All candidates remain available with their own sample count. Full-run agreement is an independent admission result, not observed during an early-stopped question.",
+          "input_key": "human-pace-b2-v1:d0583c2e0db5d5018c0de8a1738dc5074b3bc82aa0e55424676d19ee158b3c8d",
+          "candidate_keys": {
+            "line:0": "plan1",
+            "line:1": "plan2",
+            "line:2": "plan3",
+            "line:3": "plan4",
+            "line:4": "plan5",
+            "line:5": "plan6",
+            "line:6": "plan7",
+            "line:7": "plan8",
+            "line:8": "plan9",
+            "line:9": "plan10"
+          }
+        },
+        "completion": {
+          "required": true,
+          "attempt_id": "30d3420a-ddc5-4811-a5d5-3e810146b28c",
+          "status": "complete_budget",
+          "attempts": 1,
+          "reasons": [],
+          "samples": 50,
+          "requested": 200,
+          "failure": false,
+          "key": "sim-failure-v1:ee02d451f69a65f349a8b2f65850f4f83d3db51db9b2e792123872aa003c421f",
+          "budgeted": true
+        }
+      }
+    },
+    {
+      "run_id": "ET1QAZCV8GUP",
+      "ts": "2026-10-18T02:52:56.277Z",
+      "floor": 17,
+      "turn": 7,
+      "label": "combat/plan-choice",
+      "decision_id": "51abb75c-3a5e-4b56-ad18-4ea121270170",
+      "source": {
+        "offset": 2503849131,
+        "length": 44613,
+        "sha256": "fbc574db4d8590022e809064b5624ce822c2c2424364b19c64a0be0b17f60204"
+      },
+      "boss_sim": {
+        "samples": 50,
+        "requested": 200,
+        "timed_out": false,
+        "adaptive": {
+          "schema": "sim-adaptive-v1",
+          "mode": "on",
+          "status": "complete_adaptive",
+          "lane": "b2",
+          "stop_reason": "indifferent",
+          "indifference_spread": 0,
+          "rule": {
+            "version": "adaptive-v1",
+            "b3First": 300,
+            "b2First": 200,
+            "batch": 50,
+            "zElim": 3,
+            "zTie": 2,
+            "profile": "silent-human-pace-v2",
+            "lowTrust": false,
+            "indifference": 0.03,
+            "first": 50,
+            "requested": 200
+          },
+          "candidates": [
+            {
+              "key": "line:0",
+              "samples": 50,
+              "rounds": 1,
+              "stop": "indifferent",
+              "baseline": false
+            },
+            {
+              "key": "line:1",
+              "samples": 50,
+              "rounds": 1,
+              "stop": "indifferent",
+              "baseline": false
+            },
+            {
+              "key": "line:2",
+              "samples": 50,
+              "rounds": 1,
+              "stop": "indifferent",
+              "baseline": false
+            }
+          ],
+          "final": {
+            "leader": "line:0",
+            "group": [
+              "line:0"
+            ]
+          },
+          "rounds": [
+            {
+              "n": 50,
+              "leader": "line:0",
+              "eliminated": []
+            }
+          ],
+          "evaluable": true,
+          "work": {
+            "full": 1800,
+            "actual": 450,
+            "savedFraction": 0.75,
+            "unit": "fight-sample-outcomes"
+          },
+          "limits": "Actual prefixes only. All candidates remain available with their own sample count. Full-run agreement is an independent admission result, not observed during an early-stopped question.",
+          "input_key": "human-pace-b2-v1:36d778a0eb8b5c5fbd3a18fb4047b5dc047ce2a477d3d4db093459754d91a562",
+          "candidate_keys": {
+            "line:0": "plan1",
+            "line:1": "plan2",
+            "line:2": "plan3"
+          }
+        },
+        "completion": {
+          "required": true,
+          "attempt_id": "e12be364-1912-4caf-b809-c85cd4e408ee",
+          "status": "complete_budget",
+          "attempts": 1,
+          "reasons": [],
+          "samples": 50,
+          "requested": 200,
+          "failure": false,
+          "key": "sim-failure-v1:86a0798b0e0d0fa720a34f96c42ea25d4d317d14ed169c1a296eebb5a774b4e3",
+          "budgeted": true
+        }
+      }
+    }
+  ]
+}
