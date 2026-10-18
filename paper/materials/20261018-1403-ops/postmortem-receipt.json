@@ -1,0 +1,84 @@
+{
+  "at": "2026-10-18 14:05:39 CST",
+  "batch": "20261018-134301",
+  "run": "0QDRNCRMC8BU",
+  "native_thread": "01a14d89-0e8d-7e50-ac46-00579f37a1ca",
+  "postmortem_sections": 1,
+  "lesson_bytes": 20817,
+  "lesson_sha256": "fd0c2fba0bf135317620a7f4d75aa9333a10478dcce4fe22dc73f826ec15abc7",
+  "ledger_items": [
+    "silent-0005",
+    "silent-0016",
+    "silent-0020",
+    "silent-0027",
+    "silent-0083",
+    "silent-0162",
+    "silent-0352",
+    "silent-0498",
+    "silent-0517"
+  ],
+  "original_learner_cli_rows": 18,
+  "evidence_rows": 9,
+  "metadata_rows": 9,
+  "added": [
+    "silent-0517"
+  ],
+  "bugs": [],
+  "new_repeat_entries": 0,
+  "proposals": [
+    "silent-proposal-ee9848b0d4b99cd0",
+    "silent-proposal-b828602deee44c91"
+  ],
+  "original_proposal_rows": 2,
+  "ledger_check": {
+    "exit": 0,
+    "items": 517,
+    "problems": 0
+  },
+  "source_changed": false,
+  "merged": null,
+  "new_shipped": false,
+  "new_release_id": null,
+  "originals": [
+    {
+      "path": "/home/dw/Projects/agent-sts2/ops/codex-ops/learner/20261018-134301.out",
+      "bytes": 2304,
+      "sha256": "42b13fd4779337f2366beff5d1bb13fa7012285a3b02e23925a66b2f9803e8c3"
+    },
+    {
+      "path": "/home/dw/Projects/agent-sts2/learner/runs/20261018-134306-ee2f4094-1d2f-4fab-91eb-855784b76239-postmortem/report.md",
+      "bytes": 1702,
+      "sha256": "07ba00c7fac79444447b399e8c9e009ef80e3284b26af8d826a42647c065658e"
+    },
+    {
+      "path": "/home/dw/Projects/agent-sts2/learner/runs/20261018-134306-ee2f4094-1d2f-4fab-91eb-855784b76239-postmortem/proposal-startup.md",
+      "bytes": 4035,
+      "sha256": "bf063cf13181b8454de3bc79825d8e4bb40a8efd08c4c3ae84c1089169804219"
+    },
+    {
+      "path": "/home/dw/Projects/agent-sts2/learner/runs/20261018-134306-ee2f4094-1d2f-4fab-91eb-855784b76239-postmortem/proposal-sl-potions.md",
+      "bytes": 3335,
+      "sha256": "391a39006e58ca1e0b0c34cb426589602a511169355ed22086ad42add17c7d78"
+    }
+  ],
+  "paper_request": {
+    "at": "2026-10-18 14:05:04 CST",
+    "command": [
+      "nice",
+      "-n",
+      "19",
+      "python3",
+      "ops/paper_dataset.py",
+      "--no-raw"
+    ],
+    "pid": 1330558,
+    "birth": "119544798",
+    "calls": 1,
+    "raw_snapshot": false,
+    "previous_outputs_preserved": "ops/codex-ops/record-staging/20261018-1403/paper-before"
+  },
+  "paper_actual_exit_not_accepted": true,
+  "ops_collection_corrections": [
+    "Initial ledger physical-prefix assertion was invalid because existing main contains selected independent records; no write made. Collection now selects only original learner rows for this run/task. Overbroad historical delta diagnostic was limited to own-row metadata; no game conclusions derived or history rewritten."
+  ]
+}
