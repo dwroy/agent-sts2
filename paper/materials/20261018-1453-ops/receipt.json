@@ -1,0 +1,104 @@
+{
+  "at": "2026-10-18 14:55:16 CST",
+  "batch": "20261018-144302-fix-batch",
+  "native_thread": "01a14dc0-ff92-7ff0-8aa8-4de2a1af992f",
+  "base": "a446cd7314563191942a7454790d4e8f859d2655",
+  "observed_live": "acfd63aaa8f664ca6f81a025cf8ebf25883531a9",
+  "worktree_clean_head_equals_base": true,
+  "source_pin_objects_and_bytes_verified": 208,
+  "prior_fix_ancestors_verified": 62,
+  "canonical_state": "failed",
+  "canonical_rc": 0,
+  "canonical_merged": null,
+  "canonical_no_changes": null,
+  "tests": {
+    "tsc": null,
+    "vitest": null,
+    "cases": 0
+  },
+  "new_source_commits": [],
+  "new_test_runs": [],
+  "pending_original_sources": [
+    {
+      "item": "infra-paper-dataset-concurrent-gzip-keyscan-20261018",
+      "source_commit": "dee6386621e8122d123a3cd0017c3e4c199f524e",
+      "in_base": false,
+      "in_observed_live": false,
+      "changed_paths": [
+        ".gitignore",
+        "agent/tests/paper-dataset-publication.test.ts",
+        "ops/paper_dataset.py",
+        "ops/tests/test_paper_dataset_publication.py"
+      ],
+      "disposition": "已有原owner源码；按队列保留原ops运输链，不重复实现或叠合候选"
+    },
+    {
+      "item": "a406-fixed-deadlines五处消费夹具",
+      "source_commit": "2a778b13ac1ead79afef957d4708c1df5dfd3757",
+      "in_base": false,
+      "in_observed_live": false,
+      "changed_paths": [
+        "agent/tests/build-decider.test.ts",
+        "agent/tests/fixture-http.test.ts",
+        "agent/tests/fixture-http.ts",
+        "agent/tests/global-build-fixed-inputs.test.ts",
+        "agent/tests/global-build-integration.test.ts",
+        "agent/tests/journal-replay.test.ts",
+        "agent/tests/learner-retention-fixture.test.ts",
+        "agent/tests/learner-retention.test.ts",
+        "agent/tests/loop-consumer-fixed-transport.test.ts",
+        "agent/tests/oneshot-support.ts",
+        "agent/tests/synthetic-board-fixture.ts"
+      ],
+      "disposition": "已有原owner源码；按队列保留原ops运输链，不重复实现或叠合候选"
+    }
+  ],
+  "source_not_merged_by_this_batch": true,
+  "new_release_id": null,
+  "new_shipped_entries": [],
+  "new_model_game_requests": 0,
+  "parents_closed": false,
+  "originals": [
+    {
+      "path": "/home/dw/Projects/agent-sts2/ops/codex-ops/learner/20261018-144302-fix-batch.out",
+      "bytes": 5201,
+      "sha256": "9c9199b4a9c80b34a8065fd2b387e3261589cf6d006adcb552138223871df604"
+    },
+    {
+      "path": "/home/dw/Projects/agent-sts2/learner/runs/20261018-144312-a3e8c205-8ca2-460d-9f3d-41e36bf76999-fix-batch/report.md",
+      "bytes": 13157,
+      "sha256": "ae4800fbae0d65cf94a0af9b7e365b85377bb16df820b84d9f56ca321e4b0b4a"
+    },
+    {
+      "path": "/home/dw/Projects/agent-sts2/learner/runs/20261018-144312-a3e8c205-8ca2-460d-9f3d-41e36bf76999-fix-batch/result.json",
+      "bytes": 2826,
+      "sha256": "0a3e5fd04f6b30eb488965b7012cce5f17a581bb80a3592ade80b09a15d0718a"
+    },
+    {
+      "path": "/home/dw/Projects/agent-sts2/learner/runs/20261018-144312-a3e8c205-8ca2-460d-9f3d-41e36bf76999-fix-batch/final-readback.json",
+      "bytes": 567,
+      "sha256": "7008fd2e0dc7546dfe57f71ca1cf317b56fd1e5bff8036c09501243135236b75"
+    },
+    {
+      "path": "/home/dw/Projects/agent-sts2/learner/runs/20261018-144312-a3e8c205-8ca2-460d-9f3d-41e36bf76999-fix-batch/audit-summary.json",
+      "bytes": 665,
+      "sha256": "f98e05679a95964f37703cf656dfbe18c7b4deca26a0480cba73709b7e70b012"
+    },
+    {
+      "path": "/home/dw/Projects/agent-sts2/learner/runs/20261018-144312-a3e8c205-8ca2-460d-9f3d-41e36bf76999-fix-batch/source-pins.json",
+      "bytes": 53173,
+      "sha256": "f209e2e3c907a6b3861e9ab68ed2fef5852b70553425ef0a890e44a34ca337d6"
+    },
+    {
+      "path": "/home/dw/Projects/agent-sts2/learner/runs/20261018-144312-a3e8c205-8ca2-460d-9f3d-41e36bf76999-fix-batch/already-fixed-readback.json",
+      "bytes": 11173,
+      "sha256": "feaee4a4318161888162a5dbe8780a01c8c25786afeb27c840beb0e1e1013266"
+    },
+    {
+      "path": "/home/dw/Projects/agent-sts2/learner/runs/20261018-144312-a3e8c205-8ca2-460d-9f3d-41e36bf76999-fix-batch/pending-sources.json",
+      "bytes": 1335,
+      "sha256": "69cb24adec6926875a4bd49b0dd81b233736f88b1b5104a9bc899e61f8f257c3"
+    }
+  ],
+  "disposition": "No new implementation or blocked new commit in this batch. Preserve existing failed/rc0/no_changes=null and unrun tests; prior ready source owners and integration queues remain, without stacking candidates or duplicating implementations."
+}
