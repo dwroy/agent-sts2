@@ -4,6 +4,13 @@ import { auditSigns } from "./s-sign.js";
 export type AdaptiveSample = MarginSample & { enemyHpLeft?: number; hpLoss?: number; revived?: number };
 
 export const ADAPTIVE_RULE = { version: "adaptive-v1", b3First: 300, b2First: 200, batch: 100, zElim: 3, zTie: 2 } as const;
+export interface AdaptiveTuning { first?: number; batch?: number; indifference?: number; profile?: "silent-human-pace-v2"; lowTrust?: boolean }
+/** Roy 2026-10-18: opt-in at the Silent budgeted production entry points only. */
+export function humanPaceSampling(lane: "b2" | "b3", lowTrust: boolean) {
+  const first = lowTrust || lane === "b2" ? 50 : 100;
+  return { cap: lowTrust ? 100 : lane === "b3" ? 300 : 200,
+    adaptive: { profile: "silent-human-pace-v2" as const, lowTrust, first, batch: first, indifference: .03 } };
+}
 export interface AdaptiveCandidate {
   key: string;
   samples: readonly AdaptiveSample[];
@@ -30,13 +37,15 @@ function paired(key: Metric["key"], a: readonly number[], b: readonly number[]):
   return { key, difference, se: Math.sqrt(variance / diffs.length) };
 }
 
-export function adaptiveShadow(candidates: readonly AdaptiveCandidate[], options: {
+export function adaptiveShadow(candidates: readonly AdaptiveCandidate[], options: AdaptiveTuning & {
   lane: "b2" | "b3"; requested: number; allowS: boolean; zElim?: number; first?: number;
 }) {
   const { lane, requested } = options;
   const first = options.first ?? (lane === "b3" ? ADAPTIVE_RULE.b3First : ADAPTIVE_RULE.b2First);
   const zElim = options.zElim ?? ADAPTIVE_RULE.zElim;
+  const batch = options.batch ?? ADAPTIVE_RULE.batch;
   if (!Number.isSafeInteger(requested) || requested <= 0 || !Number.isSafeInteger(first) || first < 1 || !Number.isFinite(zElim) || zElim < 3
+      || !Number.isSafeInteger(batch) || batch < 1 || (options.indifference !== undefined && (!Number.isFinite(options.indifference) || options.indifference <= 0))
       || !candidates.length || candidates.some((c) => c.samples.length !== requested || c.orders?.some((order) => order.length !== requested))
       || new Set(candidates.map((c) => c.key)).size !== candidates.length) throw new Error("adaptive shadow requires complete identified paired samples");
   const prefix = new Map<number, { rows: readonly AdaptiveSample[]; wins: number[]; margin: number[] | null; loss: number }[]>();
@@ -96,11 +105,13 @@ export function adaptiveShadow(candidates: readonly AdaptiveCandidate[], options
   };
   const used = candidates.map(() => 0);
   const rounds = candidates.map(() => 0);
-  const stop = candidates.map(() => "max" as "eliminated" | "leader" | "max");
+  const stop = candidates.map(() => "max" as "eliminated" | "leader" | "max" | "indifferent");
   const active = new Set(candidates.map((_, i) => i));
   const history: { n: number; leader: string; eliminated: { key: string; metric: Metric }[] }[] = [];
   let n = Math.min(first, requested);
   let final = ranking(selected, n);
+  let stopReason: "leader" | "max" | "indifferent" = "max";
+  let indifferenceSpread: number | null = null;
   for (;;) {
     for (const i of active) { used[i] = n; rounds[i]! += 1; }
     const selectable = selected.filter((i) => active.has(i));
@@ -118,11 +129,17 @@ export function adaptiveShadow(candidates: readonly AdaptiveCandidate[], options
     history.push({ n, leader: candidates[final.leader]!.key, eliminated });
     const remaining = selected.filter((i) => active.has(i));
     final = ranking(remaining, n);
-    if (remaining.length === 1 || n === requested) {
-      for (const i of active) stop[i] = n === requested ? "max" : "leader";
+    const wins = remaining.map((i) => at(n)[i]!.wins.reduce((sum, win) => sum + win, 0));
+    const spread = (Math.max(...wins) - Math.min(...wins)) / n;
+    const indifferent = remaining.length > 1 && options.indifference !== undefined
+      && Math.max(...wins) - Math.min(...wins) < options.indifference * n;
+    if (remaining.length === 1 || indifferent || n === requested) {
+      stopReason = indifferent ? "indifferent" : n === requested ? "max" : "leader";
+      indifferenceSpread = indifferent ? spread : null;
+      for (const i of active) stop[i] = stopReason;
       break;
     }
-    n = Math.min(requested, n + ADAPTIVE_RULE.batch);
+    n = Math.min(requested, n + batch);
   }
   const complete = ranking(selected, requested);
   const keys = (ids: number[]) => ids.map((i) => candidates[i]!.key).sort();
@@ -132,7 +149,8 @@ export function adaptiveShadow(candidates: readonly AdaptiveCandidate[], options
   const fullWork = groups.size * requested, shadowWork = [...groups.values()].reduce((a, b) => a + b, 0);
   return {
     schema: "sim-adaptive-shadow-v1", mode: "shadow", lane,
-    rule: { ...ADAPTIVE_RULE, first, zElim, requested },
+    rule: { ...ADAPTIVE_RULE, ...(options.profile ? { profile: options.profile, lowTrust: options.lowTrust, indifference: options.indifference } : {}), first, batch, zElim, requested },
+    stop_reason: stopReason, indifference_spread: indifferenceSpread,
     candidates: candidates.map((c, i) => ({ key: c.key, samples: used[i]!, stop: stop[i]!, rounds: rounds[i]!, baseline: c.baseline === true })),
     full: { leader: candidates[complete.leader]!.key, group: fullGroup },
     shadow: { leader: candidates[final.leader]!.key, group: shadowGroup },

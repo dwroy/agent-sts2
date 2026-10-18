@@ -8,7 +8,7 @@ import { currentDecisionBudget, shadowBudgetAvailable, withShadowDecisionBudget,
  * samples and the median turns. Facts, not a verdict: no option is scored, ranked or dropped.
  */
 
-import { ADAPTIVE_RULE, safeAdaptiveShadow } from "./adaptive-shadow.js";
+import { ADAPTIVE_RULE, safeAdaptiveShadow, type AdaptiveTuning } from "./adaptive-shadow.js";
 import { asRecord, toJsonValue } from "../core/util/json.js";
 import type { RolloutInput } from "../reflex/rollout.js";
 import { BOSS_POLICY_THREAT, BOSS_SIM_LOOKAHEAD, calibratedWinProb, compareLines, fightOrders, summarizeLine, type BossSimLineResult, type FightSampleResult } from "./boss-sim.js";
@@ -156,7 +156,7 @@ export async function compareOptions(
   runner: DeckSimRunner,
   base: RolloutInput,
   options: DeckOption[],
-  opts: { samples?: number; seed?: number; deadlineMs?: number; now?: () => number; quantitative?: boolean; diagnostics?: boolean; requireComplete?: boolean; adaptive?: { allowS: boolean; mode?: "shadow" | "on" }; onProgress?: import("./computation-wait.js").SimProgress; readiness?: boolean; readinessShadow?: boolean; buildRankShadow?: boolean;
+  opts: { samples?: number; seed?: number; deadlineMs?: number; now?: () => number; quantitative?: boolean; diagnostics?: boolean; requireComplete?: boolean; adaptive?: AdaptiveTuning & { allowS: boolean; mode?: "shadow" | "on" }; onProgress?: import("./computation-wait.js").SimProgress; readiness?: boolean; readinessShadow?: boolean; buildRankShadow?: boolean;
     f48JointScope?: F48JointScope;
     buildRank?: { lowTrust: string | null; calibratedFloor: number; tieSe: number; sSort?: "on" | "shadow" } } = {},
 ): Promise<CompareResult> {
@@ -222,9 +222,11 @@ export async function compareOptions(
   });
   let orderSearch: Record<string, JsonValue> | null = null;
   let order = allOrders[0]!;
+  const orderSamples = Math.min(samples, BUILD_SIM_ORDER_SAMPLES,
+    opts.adaptive?.profile === "silent-human-pace-v2" ? opts.adaptive.first ?? BUILD_SIM_ORDER_SAMPLES : BUILD_SIM_ORDER_SAMPLES);
   if (allOrders.length > 1) {
-    const first = await runner.run({ ...(opts.onProgress ? { onProgress: opts.onProgress } : {}), base, decks: [{}], orders: allOrders, samples: Math.min(samples, BUILD_SIM_ORDER_SAMPLES), seed, ...(required && !pace ? { progressTimeoutMs: 120_000 } : {}), ...(opts.diagnostics ? { diagnostics: true } : {}), ...((!required || pace) && opts.deadlineMs !== undefined ? { deadlineMs: Math.max(0, Math.min(opts.deadlineMs / 4, pace?.remaining() ?? Infinity)) } : {}), ...(opts.now ? { now: opts.now } : {}) });
-    if (required && !pace && (first.timedOut || first.complete.length !== Math.min(samples, BUILD_SIM_ORDER_SAMPLES) || first.complete.some((id, i) => id !== i))) throw new Error("required boss order search incomplete");
+    const first = await runner.run({ ...(opts.onProgress ? { onProgress: opts.onProgress } : {}), base, decks: [{}], orders: allOrders, samples: orderSamples, seed, ...(required && !pace ? { progressTimeoutMs: 120_000 } : {}), ...(opts.diagnostics ? { diagnostics: true } : {}), ...((!required || pace) && opts.deadlineMs !== undefined ? { deadlineMs: Math.max(0, Math.min(opts.deadlineMs / 4, pace?.remaining() ?? Infinity)) } : {}), ...(opts.now ? { now: opts.now } : {}) });
+    if (required && !pace && (first.timedOut || first.complete.length !== orderSamples || first.complete.some((id, i) => id !== i))) throw new Error("required boss order search incomplete");
     if (opts.diagnostics) orderSearch = { ...phase(first, required && !pace || opts.deadlineMs === undefined ? undefined : opts.deadlineMs / 4),
       ...(pace ? { status: first.complete.length ? "measured" : "unknown", basis: first.complete.length ? "completed_paired_samples" : "existing_default_order_no_samples" } : {}) };
     const lines = allOrders.map((_, o) => summarizeLine(0, lineOf(first.outcomes, [0], o, first.complete)));
@@ -234,7 +236,7 @@ export async function compareOptions(
   const left = (!required || pace) && opts.deadlineMs !== undefined ? Math.max(0, Math.min(opts.deadlineMs - (now() - started), pace ? pace.remaining() - 1000 : Infinity)) : undefined;
   const request = { ...(opts.onProgress ? { onProgress: opts.onProgress } : {}), base, decks, stripes, orders, samples, seed, ...(required && !pace ? { progressTimeoutMs: 120_000 } : {}), ...(opts.diagnostics ? { diagnostics: true } : {}), ...(left !== undefined ? { deadlineMs: left } : {}), ...(opts.now ? { now: opts.now } : {}) };
   if (opts.adaptive?.mode === "on" && !required && !pace) throw new Error("adaptive B3 requires complete computation");
-  const actual = opts.adaptive?.mode === "on" && options.length ? await runAdaptiveDecks(runner, request, deckOf, opts.adaptive.allowS) : null;
+  const actual = opts.adaptive?.mode === "on" && options.length ? await runAdaptiveDecks(runner, request, deckOf, opts.adaptive.allowS, opts.adaptive) : null;
   const run = actual?.run ?? await runner.run(request);
   const complete = run.complete;
   if (required && !pace && (run.timedOut || (!actual && complete.length !== samples) || complete.some((id, i) => id !== i))) {
@@ -298,9 +300,9 @@ export async function compareOptions(
   const adaptive = withShadowDecisionBudget("C2_sampling_shadow", () => !actual && required && opts.adaptive && options.length && n === samples && shadowBudgetAvailable("C2_sampling_shadow") ? safeAdaptiveShadow([
     { key: "@current", samples: baseLine.outcomes, baseline: true, workGroup: "0" },
     ...options.map((option) => ({ key: option.key, samples: summarize(deckOf.get(option.key)!).outcomes, workGroup: deckOf.get(option.key)!.join(",") })),
-  ], { lane: "b3", requested: samples, allowS: opts.adaptive.allowS }) : null);
+  ], { ...opts.adaptive, lane: "b3", requested: samples, allowS: opts.adaptive.allowS }) : null);
   if (adaptive && "work" in adaptive) {
-    const orderWork = allOrders.length > 1 ? Math.min(samples, BUILD_SIM_ORDER_SAMPLES) * allOrders.length : 0;
+    const orderWork = allOrders.length > 1 ? orderSamples * allOrders.length : 0;
     adaptive.work.full += orderWork;
     adaptive.work.shadow += orderWork;
     adaptive.work.savedFraction = 1 - adaptive.work.shadow / adaptive.work.full;
@@ -354,10 +356,10 @@ export async function compareOptions(
     ], base)) } : {}),
     ...(actual ? { adaptive: toJsonValue({ ...actual.adaptive, input_key: cacheKey, fixed_order_search_in_work: true,
       work: { ...actual.adaptive.work,
-        full: actual.adaptive.work.full + (allOrders.length > 1 ? Math.min(samples, BUILD_SIM_ORDER_SAMPLES) * allOrders.length : 0),
-        actual: actual.adaptive.work.actual + (allOrders.length > 1 ? Math.min(samples, BUILD_SIM_ORDER_SAMPLES) * allOrders.length : 0),
+        full: actual.adaptive.work.full + (allOrders.length > 1 ? orderSamples * allOrders.length : 0),
+        actual: actual.adaptive.work.actual + (allOrders.length > 1 ? orderSamples * allOrders.length : 0),
         savedFraction: (actual.adaptive.work.full - actual.adaptive.work.actual) /
-          (actual.adaptive.work.full + (allOrders.length > 1 ? Math.min(samples, BUILD_SIM_ORDER_SAMPLES) * allOrders.length : 0)) } }) } : {}),
+          (actual.adaptive.work.full + (allOrders.length > 1 ? orderSamples * allOrders.length : 0)) } }) } : {}),
     ...(buildRanking ? { buildRanking } : {}),
     ...(adaptive ? { adaptive: toJsonValue({ ...adaptive, ...(productionComparison ? { production_comparison: productionComparison } : {}),
       input_key: cacheKey, fixed_order_search_in_work: true }) } : {}),
