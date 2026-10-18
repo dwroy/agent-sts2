@@ -1,0 +1,107 @@
+{
+  "schema": "ops-scoped-source-deferral-v1",
+  "at": "2026-10-19 00:36:55 CST",
+  "decision_at": "2026-10-19 00:32 CST",
+  "decision_authority": "Roy via Claude; current user instruction",
+  "request_id": "roy-20261018-regent-adapt",
+  "scope_id": "regent-dev-three-adaptation-groups-only",
+  "phase": "regent-dev-three-groups-deferred-by-roy-20261019-0032",
+  "state": "deferred",
+  "completed": false,
+  "reason": "Quota and disk; Regent climb remains stopped and paused.",
+  "sources": [
+    {
+      "name": "resources",
+      "source": "0a3e0bffa5df11b6e37c87ce8ed31a019aa92d32",
+      "source_tree": "a8f828ed18d60bd3a17e2d46b54fa71a3d46ed9d",
+      "worktree": ".worktrees/regent-adapt-resources-20261018",
+      "retained_head": "2ff1158edddacf5d981cc0041f4e3e90ff9674f5",
+      "source_commit_ancestry": {
+        "main": false,
+        "live": false
+      },
+      "tracked_status": "",
+      "merge_allowed": false,
+      "host_check_allowed": false,
+      "retention_complete_allowed": false
+    },
+    {
+      "name": "budget",
+      "source": "76fb9b38682aced194e7f42b047ce65844ae40e2",
+      "source_tree": "38e244eef0802ad8b5953e658c77503e708839c9",
+      "worktree": ".worktrees/regent-adapt-budget-20261018",
+      "retained_head": "9c34f5fb8db9083eb49bfc8969a2f1c596336193",
+      "source_commit_ancestry": {
+        "main": false,
+        "live": false
+      },
+      "tracked_status": "",
+      "merge_allowed": false,
+      "host_check_allowed": false,
+      "retention_complete_allowed": false
+    },
+    {
+      "name": "compute",
+      "source": "4e96d06f90d8fb7651a06fd43ba4967fbbbd7bc0",
+      "source_tree": "55fe3f48f34114f60457a853e72da1123f698344",
+      "worktree": ".worktrees/regent-adapt-compute-20261018",
+      "retained_head": "ef5dd95be002480f77f6a8baa20f8969587268b7",
+      "source_commit_ancestry": {
+        "main": false,
+        "live": false
+      },
+      "tracked_status": "",
+      "merge_allowed": false,
+      "host_check_allowed": false,
+      "retention_complete_allowed": false
+    }
+  ],
+  "budget_carrier": "e8b2315e6f3030802506d1c43f58f2e84ff21cf7",
+  "pause_markers": {
+    ".worktrees/regent-climb/ops/STOP": {
+      "bytes": 174,
+      "sha256": "1df3fcbc93e77d5d1ee203b161e9f4b151cf533b375c38eae4d7e71b9302f08c"
+    },
+    ".worktrees/regent-climb/ops/codex-ops/PAUSE": {
+      "bytes": 174,
+      "sha256": "1df3fcbc93e77d5d1ee203b161e9f4b151cf533b375c38eae4d7e71b9302f08c"
+    },
+    ".worktrees/regent-climb/ops/codex-ops/LLM_DRAIN": {
+      "bytes": 174,
+      "sha256": "1df3fcbc93e77d5d1ee203b161e9f4b151cf533b375c38eae4d7e71b9302f08c"
+    }
+  },
+  "pause_markers_modified": false,
+  "merge_main_live_allowed": false,
+  "host_checks_allowed": false,
+  "source_worktrees_and_commits_retained": true,
+  "retention_complete_allowed": false,
+  "source_receipt": {
+    "path": ".worktrees/regent-adapt-compute-20261018/paper/materials/20261018-regent-adapt/compute/receipt.json",
+    "sha256": "0a9db7874f42c5b686f59bc7ffd736e545cd38f26052abc4710fbf37c44de336"
+  },
+  "observed_main": "19230c1c7be0c822a513e6e2fa6c324a20bd2874",
+  "observed_live": "b69c5f58d8651b164e54bcb4e6dbcd2e708ac058",
+  "next": "Retain original source worktrees, commits and evidence; no integration or host check until explicit future Regent instruction. Regent STOP/PAUSE stay.",
+  "resume_requires_new_instruction": true,
+  "existing_regent_restore_prerequisites": {
+    "available_gib_at_least": 200,
+    "buffer_hours_from_measured_net_write_at_least": 48,
+    "claude_explicit_instruction": true,
+    "not_evaluated_as_satisfied": true
+  },
+  "unaffected": {
+    "silent_mainline": "continue original flow",
+    "disk_reclamation": "continue original retention/SHA flow",
+    "watcher_disk_group1": "continue original integration flow",
+    "existing_disk_groups_transaction": "ops/codex-ops/pending-integrations/20261018-disk-groups1-2.json",
+    "existing_disk_groups_transaction_sha256": "75bbc963de38bbd4ecae74f167411c7114d736bf9b9aceb4fc19b030feabf842",
+    "disk_groups_transaction_untouched": true
+  },
+  "new_host_requests": 0,
+  "new_model_or_game_requests": 0,
+  "release_id_assigned": null,
+  "learning_shipped_written": false,
+  "parent_requests_closed": false,
+  "other_role_ack_written": false
+}

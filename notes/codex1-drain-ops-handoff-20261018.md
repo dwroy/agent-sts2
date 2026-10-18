@@ -1,3 +1,7 @@
+## 最新决定：Regent 三组适配搁置
+
+更新 2026-10-19 00:36:55 CST；Roy 2026-10-19 00:32 经 Claude 决定。Regent 继续 STOP/PAUSE，regent-dev resources 0a3e0bff、budget 76fb9b38、compute 4e96d06f 三组仅保留原工作树、源码提交和历史，不合 main/live、不派宿主检查、不登记完成回收，等以后明确恢复指派再处理。原三闸 SHA 已核保持；宽父不关闭。此决定只限 Regent 适配，Silent、磁盘回收及 watcher 第一组磁盘改动继续原流程；不要因共用 request_id 将磁盘事务一并暂停。精确源/WT/闸及原件见 paper/materials/20261019-0032-ops/regent-deferred.json；运行待办 ops/codex-ops/pending-integrations/20261019-regent-dev-three-groups-deferred.json。下文早期上线/恢复待办以本决定为准。
+
 ## 最新接续：两组组合与watcher实际切号
 
 更新 2026-10-18 22:43:44 CST。以下覆盖早期第一组在途描述，旧失败原件保留。
