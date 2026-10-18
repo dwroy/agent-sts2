@@ -198,3 +198,10 @@ Roy要求将DPR供给检查固定到框架。现有五分钟 `tick stall` 在卡
 Silent 的例行复盘按 5 局批处理；不足 5 局从最早未复盘局结束起最多等待 2 小时，缺结束时间则从首次看到积压起计。下一次原 :13/:43 tick 到期派发，不增加 timer 或模型轮询。失败的原重试、逐局复盘/账本和手动立即 dispatch 保留；其他角色原节奏保持。普通策略原 10 份复盘/进阶触发保留，waiting 提案的相关证据去重由原独立任务处理。
 
 下一自然启动点普通分析/开发/ops 显式 high，困难专项及已绑定科学请求保留 xhigh；局内大脑 xhigh 不变，不改共用账号 config 或在途进程。新批先读 evidence_summary.py 生成的有限索引，再按 offset/bytes/SHA 读取需要的原文；摘要不替代资源链、全部冻结局覆盖或科学四闸。实际生效以新原生 turn_context 回执为准。
+
+
+## Roy 2026-10-18：短清单与普通批次自动收尾
+
+原调度器在 finish/tick 和每次原自然 wake 前生成 notes/ops-current.md（≤12KB），current.json 保存来源字节/SHA 与溢出索引。首次仍读 README/AGENTS/STATE/学习协议，后续仅清单与事件原件；历史 handoff/decision-log 保留按需定位。新 prompt 只在自然边界生效，不重启当前 turn。普通记录300–500字以内并附原件。
+
+ordinary_close.py 仅接原完成协议核过的普通无源码成功；dispatch 记录源码/通知基线，完成再核严格 Git、报告及问题附件。专项请求、失败、缺证/新通知/异议不自动隐藏。账本独立检查，每局证据覆盖核实后，由原 finish/tick 在 learn.lock 外执行一份 dataset 作业；所有 paper_dataset.py CLI 共用 paper-dataset.lock。受控提交只取授权账本/复盘/当前生成表/固定完成记录，排除历史快照、知识、源码、运维提示；有暂存内容/并行改动/index锁就保留现场转原事件。用独立 index、HEAD CAS 与文件字节守卫，不清理工作区。成功固定回执 closed、dataset rc、日志 SHA 和实际记录 commit；无 learner-done/strategy-done/fix-done 入队，不单独唤醒模型。异常 ordinary-close-attention 保留原报告、原失败、空检查和所有父要求。自动过程不新增模型/对局/定时器，通关/升级原通知不变。

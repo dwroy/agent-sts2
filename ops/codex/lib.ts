@@ -250,7 +250,8 @@ export function localStamp(date: Date): string {
 
 /** The message of one wake: every queued event, numbered, and the reminder of how a wake ends. */
 export function wakeMessage(events: QueuedEvent[], now: Date): string {
-  const lines = [`【调度器事件】${localStamp(now)}（CST），共 ${events.length} 件：`, ""];
+  const lines = [`【调度器事件】${localStamp(now)}（CST），共 ${events.length} 件：`,
+    "Roy 2026-10-18 16:13 已批准：本轮先读 notes/ops-current.md，再沿事件引用核必要原件；不重读完整 ops-handoff/decision-log。普通记录300–500字并附路径。此规则从本次自然唤醒边界生效，不热切正在处理的会话。", ""];
   events.forEach((event, i) => lines.push(`${i + 1}. [${event.kind}] ${event.text}`, ""));
   lines.push(
     "按 prompt 处理这些事件。沙箱外的操作用 `bash ops/codex-ops-do.sh <动作> [参数]`。要汇报的写进 ops/inbox-dev.md（给 Roy 定的同时写 notes/for-roy.md），写时间前先跑 `date`。",

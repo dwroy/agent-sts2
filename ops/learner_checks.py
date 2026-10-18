@@ -5,6 +5,8 @@ import os
 import re
 import subprocess
 import importlib.util
+import sys
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
 
 def proposal_tools():
@@ -121,7 +123,8 @@ def finish_write_batch(batch_id, batch, rc, root, out_dir, enqueue, inbox, *, ru
         batch["proposal_repair_needed"] = True
     if empty:
         batch["no_changes"] = empty
-    enqueue({"experience-update": "experience-done", "strategy-proposal": "strategy-done"}.get(task, "fix-done"),
+    kind = {"experience-update": "experience-done", "strategy-proposal": "strategy-done"}.get(task, "fix-done")
+    message = (
             f"{task} 批次 {batch_id} 结束：exit {rc}；已核实合入 live：{merged if verified else '无'}。"
             f"回报：{out_dir}/{batch_id}.out。"
             + (f"未取得可验收完成回报，先查原 stderr：{out_dir}/{batch_id}.err；保留失败原件，不把启动或中断失败当作提案缺失。"
@@ -129,6 +132,9 @@ def finish_write_batch(batch_id, batch, rc, root, out_dir, enqueue, inbox, *, ru
                if empty else "已核实无源码修改的提案处置；证据不足保留待新局，不冒造合入、版本或补测。" if proposal_only
                else "学习者自测后自行合入，无需另设审核；未合入时查回报，提交受阻由运维兜底。")
             + ("；提案链待补：" + "; ".join(proposal_errors) if proposal_errors else ""))
+    from ordinary_close import offer
+    if not offer(root, os.path.dirname(out_dir), batch_id, batch, report, kind, message):
+        enqueue(kind, message)
     if not verified:
         return
     if not run_checks:
