@@ -1,0 +1,67 @@
+{
+  "at": "2026-10-18 10:55:46 CST",
+  "role": "primary ops",
+  "request_id": "roy-20261017-human-pace",
+  "authorization": "Roy 2026-10-18 10:52 via Claude",
+  "plan_commit": "678104758461a767f2f180d7cbf5fc46e02e682f",
+  "plan_only": true,
+  "priority": "urgent; process watcher source before other source publication work when delivered",
+  "rules": [
+    {
+      "topic": "SL retry turn budget",
+      "old": "exact first-attempt reuse plus 10 seconds",
+      "new": "same turn budget as first attempt; Boss 60 seconds; exact reuse retained"
+    },
+    {
+      "topic": "fight attempt cap",
+      "old": 6,
+      "new": 4,
+      "unit": "total attempts per fight including first attempt",
+      "scope": "Silent SL fights per approved plan and decision record"
+    },
+    {
+      "topic": "Jev reserved time",
+      "old": "no stated 3-second reservation in approved prior plan",
+      "new": "reserve 3 seconds each combat turn; B2 and other computation stop within turn budget minus 3 seconds"
+    }
+  ],
+  "motivation": {
+    "attribution": "Roy decision relayed by Claude; original observational motivation, not independently recomputed by ops or treated as causal proof",
+    "text": "01:09之后已结束10局，0局到F33；5局死在F17，这5场Jev截止兜底全部在SL重试，首试为0",
+    "source": "paper/materials/discussions/2026-10-17-human-pace-architecture.md at approved plan commit"
+  },
+  "original_documents": [
+    {
+      "path": "docs/human-pace-plan.md",
+      "source_commit": "678104758461a767f2f180d7cbf5fc46e02e682f",
+      "blob": "4d371edeb6f26448875bcfa82b31abb069050ef1",
+      "bytes": 29671,
+      "sha256": "5434a93912c6f1bc7e06ea8ca1f8de3ede92d05c275a250f725ebeb094f4ae15"
+    },
+    {
+      "path": "paper/materials/discussions/2026-10-17-human-pace-architecture.md",
+      "source_commit": "678104758461a767f2f180d7cbf5fc46e02e682f",
+      "blob": "83038cdfde63314889ca7d3b1836dac3df81d5de",
+      "bytes": 9960,
+      "sha256": "057aa3736dec765b42248430e00c8d2f214ec8060150cf43a668dc7a14a43d20"
+    }
+  ],
+  "original_patch_sha256": "4bc9914713a2bd22ea7e3f28ab7445357237fb5bd72337cdf7495681bf87f030",
+  "implementation_source": null,
+  "delivery_status": "pending watcher implementation handoff",
+  "publication_status": "not started",
+  "release_id": null,
+  "host_acceptance": null,
+  "next_steps": [
+    "Receive original watcher source commit, exact changed-leaf manifest and original checks without cross-account resume",
+    "Use original live lock, preserve parallel knowledge and records, narrow integration with actual rule verification and official release allocation",
+    "Append actual old/new/authorization/expected effect/rollback notices to root notes/for-roy.md and ops/inbox-dev.md after publication",
+    "Request exact actual live host acceptance through original channel; retain original failures and test scopes; complete source workspace only after actual acceptance"
+  ],
+  "new_tests": 0,
+  "new_models": 0,
+  "new_games": 0,
+  "process_or_config_changes": false,
+  "other_role_ack": false,
+  "parent_requests_closed": false
+}

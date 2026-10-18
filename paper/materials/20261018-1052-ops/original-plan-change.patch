@@ -1,0 +1,52 @@
+commit 678104758461a767f2f180d7cbf5fc46e02e682f
+Author:     Roy <me@dwroy.com>
+AuthorDate: Sun Oct 18 10:52:01 2026 +0800
+Commit:     Roy <me@dwroy.com>
+CommitDate: Sun Oct 18 10:52:01 2026 +0800
+
+    Give SL retries the first-attempt budget and reserve Jev time
+    
+    Roy decided on 2026-10-18, after five F17 boss deaths whose Jev deadline
+    fallbacks all occurred in SL retries, that retry turns get the same
+    budget as the first attempt and that each fight allows four attempts
+    instead of six. Each combat turn also reserves three seconds for Jev so
+    simulation can no longer starve it. Only these plan hunks and the
+    discussion addendum are committed.
+    
+    Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>
+    Agent: claude-code@xdwin1
+
+diff --git a/docs/human-pace-plan.md b/docs/human-pace-plan.md
+index 3fc284ca1..4d371edeb 100644
+--- a/docs/human-pace-plan.md
++++ b/docs/human-pace-plan.md
+@@ -61,11 +61,12 @@ V5 偏差分析（详见讨论记录）：
+ | 普通战回合 | 10 秒 | 当前最佳候选 |
+ | 精英战回合 | 15 秒 | 同上 |
+ | Boss 战回合 | 60 秒（Roy 2026-10-17 由 30 秒放宽） | 同上，标注样本数与误差 |
+-| SL 重试回合 | 复用首试结果 + 10 秒 | 首试结果 |
++| SL 重试回合 | 与首试相同（Boss 60 秒；Roy 2026-10-18 由“复用首试 + 10 秒”改），能精确复用时照常复用；每场最多尝试由 6 次降为 4 次 | 首试结果 |
+ | 已移交 L1 的常规选择 | 5 秒 | 计划规则或经验打分 |
+ | L2 大脑调用 | 90 秒硬截止 | L1 答案 |
+ | L2 调用次数 | 每局约 12–15 次（软上限） | 超出后只保留高优先级例外 |
+ | 全局方向模块（每幕开头、复查点） | 60 秒 | 沿用上一次的方向得分并标注 |
++| Jev 预留（每个战斗回合） | 3 秒，B2 等计算必须在“回合预算 − 3 秒”内停下（Roy 2026-10-18） | 当前最佳候选 |
+ 
+ 低可信 Boss 在预算内少量采样，结果明确标注“低可信、未完整”。
+ 
+diff --git a/paper/materials/discussions/2026-10-17-human-pace-architecture.md b/paper/materials/discussions/2026-10-17-human-pace-architecture.md
+index 2cae95c80..83038cdfd 100644
+--- a/paper/materials/discussions/2026-10-17-human-pace-architecture.md
++++ b/paper/materials/discussions/2026-10-17-human-pace-architecture.md
+@@ -91,3 +91,11 @@ Roy 原话：
+ Claude：20 遍时胜率差的 95% 区间约 ±15–23 个百分点，分不清常见的几个百分点差别；600/1000 遍时样本误差已远小于模拟器自身的系统误差，属于浪费。建议自适应采样：B3 第一轮 100、每轮 +100、上限 300；B2 第一轮 50、每轮 +50、上限 200；领先超过 3 个标准误或剩余选项相差不到 3 个百分点即停；SL 复用；低可信 Boss 50、上限 100。
+ 
+ Roy：“就按照这个改动来，以及你之前的2个建议也可以拍下去一起诊断”。同时派发：H1 之后的质量回退诊断（V5-R380 之后 9 局中打到 F33 的只有 3 局，之前第 51–60 局是 8/10）与 silent-0332 失败现场记录机制检查。
++
++## 续：SL 重试被预算掐断（2026-10-18）
++
++watcher 三项交付：0332 记录机制无 bug（R373 之后没有再发生同类资源失败，固定故障注入可完整捕获）；自适应采样发布为 V5-R394；H1 回退诊断见 paper/materials/20261018-h1-regression/report.md（R389 前 L2 截断 39/452，之后 0/181；第二幕普通战每场净掉血 8.56→14.63，精英 26→42；R389 后启动的 9 局 0 局到达 F33）。
++
++Claude 核对：10-18 01:09 之后打完的 10 局无一到达 F33，5 局死在 F17（同族 3、乐加维林族母 2）。per-fight.csv 显示这 5 场的 Jev 截止兜底全部发生在 SL 重试（0NMF 20、9W38 32、NRZA 20、KCA0 4、KRLP 2），首试为 0：重试预算“复用首试 + 10 秒”在局面偏离后不够算 B2，Jev 被跳过，由代码默认候选出牌。
++
++Roy 选择：SL 重试回合“和首试一样 但是重打次数降低2次”。Claude 理解为重试回合预算与首试相同（Boss 60 秒），每场最多尝试 6→4 次；同时修复 Jev 被挤占（每个战斗回合给 Jev 预留 3 秒）。
