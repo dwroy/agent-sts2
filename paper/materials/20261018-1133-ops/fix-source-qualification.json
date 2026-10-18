@@ -1,0 +1,98 @@
+{
+  "at": "2026-10-18 11:40:46 CST",
+  "batch": "20261018-110254-fix-batch",
+  "source": "5011b4cbda9a9056a1fd146e375e3cd67b60c0a9",
+  "parent": "92024e9e266ee78e29d9909029971f320bb122fe",
+  "tree": "91f6760ae6079c621f83df78427fe4e288842b2b",
+  "paths": [
+    {
+      "path": "agent/tests/adaptive_health_test.py",
+      "sha256": "1b3b26ddc4b081c745ced4f00530c271a652008193d61c94942dba0cbe8d4143"
+    },
+    {
+      "path": "agent/tests/fixtures/human-pace-indifferent.json",
+      "sha256": "4533bd247906e9a6448f65d0fa11e68f7027bd55257dd4871f638321a514f9ed"
+    },
+    {
+      "path": "ops/adaptive_health.py",
+      "sha256": "4ff7a071fd922c227842cd8b4152957cd8e90017a4b86c335a2ab3e8ecf4e19e"
+    }
+  ],
+  "source_original_tsc": 0,
+  "source_original_sandbox_rc": 0,
+  "source_files": 493,
+  "source_cases": 4463,
+  "python_fixed_cases": 7,
+  "original_initial_expected44_error_retained": true,
+  "without_source_fix_rc": 1,
+  "restored_rc": 0,
+  "original_preflight_rc": 77,
+  "original14_conflicts_not_executable_conflicts": true,
+  "original_report_and_canonical_failed_rc0_mergednull_preserved": true,
+  "source_full_not_repeated": true,
+  "native": {
+    "batch": "20261018-110254-fix-batch",
+    "thread": "01a14cf6-8cfa-7aa3-ad4e-8418d9e8bb7a",
+    "cwd": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261018-110254",
+    "event_log": "learner/runs/20261018-110259-5792e43b-7ed3-447e-94aa-2879edd38f81-fix-batch.jsonl",
+    "registered_launch_batch": "20261018-110254-fix-batch",
+    "original_lease": "3298568197a3f9fc8db20fad029a0b9000ca094d73bc86bb2fbc70c880448747",
+    "native_context": {
+      "source": "ops/codex-ops/accounts/codex3/learner/sessions/2026/10/18/rollout-2026-10-18T11-03-08-01a14cf6-8cfa-7aa3-ad4e-8418d9e8bb7a.jsonl",
+      "offset": 50304,
+      "bytes": 5152,
+      "sha256": "8f30fd55f1340ad37e503631dc00ee88002d49ae25fdcaf339e68fb2a831cdf4",
+      "model": "gpt-6.1-sol",
+      "effort": "xhigh",
+      "sandbox": {
+        "type": "workspace-write",
+        "writable_roots": [
+          "/home/dw/Projects/agent-sts2",
+          "/home/dw/Projects/agent-sts2/.git",
+          "/home/dw/Projects/agent-sts2/.git/worktrees/codex-fix-silent-20261018-110254"
+        ],
+        "network_access": false,
+        "exclude_tmpdir_env_var": false,
+        "exclude_slash_tmp": false
+      },
+      "approval_policy": "never"
+    },
+    "native_user_input": {
+      "offset": 58299,
+      "bytes": 13078,
+      "sha256": "240b599b395d2bd1e0253a1e6812359f80ea48869e6fdbf4de0c2e4c4785c194",
+      "input_sha256": "a0d2e670433c05b8a2f30cfc6e982466c2988a6cd04de99eaf2a8dae1311782c"
+    },
+    "original_header_events": [
+      {
+        "offset": 0,
+        "bytes": 14892,
+        "sha256": "548325eb7b559b7f12cd9b00c2f55b2d30b288aaa8cc3fc0f7431f6dfd87829b",
+        "type": "learner_launch",
+        "attempt": null,
+        "code": null
+      },
+      {
+        "offset": 14892,
+        "bytes": 369,
+        "sha256": "ab5a713d670d4ab79387ac0ed7901f4ad6811131f3096a60f8d49885e93e4e54",
+        "type": "learner_startup_attempt",
+        "attempt": 1,
+        "code": null
+      },
+      {
+        "offset": 18274,
+        "bytes": 77,
+        "sha256": "76ccef150c02f318fb4cf7a4a758ab27d5d0bd918daaa5f05b6675d42c034162",
+        "type": "thread.started",
+        "attempt": null,
+        "code": null
+      }
+    ],
+    "startup_attempts": 1,
+    "failed_startups_preserved": 0,
+    "no_model_or_manual_restart": true
+  },
+  "behavior_rule_changed": false,
+  "release_id_not_allocated": true
+}
