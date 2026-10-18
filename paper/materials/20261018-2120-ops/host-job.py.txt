@@ -1,0 +1,70 @@
+from pathlib import Path
+import datetime as dt
+import fcntl
+import hashlib
+import json
+import os
+import subprocess
+import sys
+import time
+
+r = Path('/home/dw/Projects/agent-sts2')
+p = r / 'ops/codex-ops/record-staging/20261018-2120'
+pub = r / 'paper/materials/20261018-2120-ops'
+sys.path.insert(0, str(r / 'ops'))
+from learner_checks import FULL_CHECK_COMMAND
+from learner_retention import atomic, stamp
+
+request = json.loads((p / 'host-request.json').read_bytes())
+wt = Path(request['worktree'])
+result_path = p / 'host-result.json'
+assert not result_path.exists()
+def git(*args, repo=wt):
+    return subprocess.check_output(['git', '-C', str(repo), *args]).decode().strip()
+result = {'request': request['request'], 'started_at': stamp(), 'pid': os.getpid(),
+          'worktree': str(wt), 'commit': request['commit'], 'tree': request['tree'],
+          'full_command': FULL_CHECK_COMMAND, 'full_command_sha256': hashlib.sha256(FULL_CHECK_COMMAND.encode()).hexdigest(),
+          'log': str((p / 'combined-host.log').relative_to(r)), 'full_attempts': 0,
+          'actual_published': False, 'new_model_or_game_started': False}
+try:
+    with (r / 'ops/live-merge.lock').open('a') as lock:
+        fcntl.flock(lock, fcntl.LOCK_EX | fcntl.LOCK_NB)
+        assert git('rev-parse', 'live', repo=r) == request['base_live']
+        assert git('rev-parse', 'HEAD') == request['commit']
+        assert git('rev-parse', 'HEAD^{tree}') == request['tree']
+        assert not git('diff', 'HEAD', '--name-only')
+        composition = json.loads((pub / 'composition.json').read_bytes())
+        for item in composition['files']:
+            assert hashlib.sha256((wt / item['path']).read_bytes()).hexdigest() == item['live_composition_sha256']
+        fd = os.open(p / 'host-started.json', os.O_CREAT | os.O_EXCL | os.O_WRONLY, 0o600)
+        with os.fdopen(fd, 'w') as handle:
+            json.dump(result, handle, ensure_ascii=False, indent=2)
+            handle.write('\n')
+        result['full_attempts'] = 1
+        with (p / 'combined-host.log').open('wb') as handle:
+            checked = subprocess.run(['bash', '-c', FULL_CHECK_COMMAND], cwd=wt / 'agent',
+                                     stdin=subprocess.DEVNULL, stdout=handle, stderr=subprocess.STDOUT, timeout=3600)
+        result['rc'] = checked.returncode
+        assert git('rev-parse', 'HEAD') == request['commit']
+        assert git('rev-parse', 'HEAD^{tree}') == request['tree']
+        assert not git('diff', 'HEAD', '--name-only')
+        for item in composition['files']:
+            assert hashlib.sha256((wt / item['path']).read_bytes()).hexdigest() == item['live_composition_sha256']
+        result['state'] = 'exact-composition-host-passed-awaiting-publication' if checked.returncode == 0 else 'exact-composition-host-failed-retain-original'
+        result['log_sha256'] = hashlib.sha256((p / 'combined-host.log').read_bytes()).hexdigest()
+except (AssertionError, OSError, subprocess.SubprocessError) as error:
+    result.update(rc=75 if isinstance(error, BlockingIOError) else 1,
+                  state='deferred-before-full' if result['full_attempts'] == 0 else 'host-error-retain-original',
+                  error=type(error).__name__ + ': ' + str(error))
+result['finished_at'] = stamp()
+atomic(result_path, result)
+queue = r / 'ops/codex-ops/queue'
+name = str(time.time_ns()) + '-manual.md'
+text = ('磁盘第一组原唯一组合宿主终局：request=' + request['request'] + '，exit=' + str(result['rc'])
+        + '，state=' + result['state'] + '，commit=' + request['commit'] + '，tree=' + request['tree']
+        + '；原件 ' + str(result_path) + '。尚未发布；按原锁核新main/live/并行刷新后窄集成与双记录，'
+        '保原四源full1及固定补验，不重未变源full，不重开模型/局，不因本事件恢复Regent或关闭宽父。\n')
+temporary = queue / ('.' + name)
+temporary.write_text(text)
+os.replace(temporary, queue / name)
+print(json.dumps(result, ensure_ascii=False), flush=True)

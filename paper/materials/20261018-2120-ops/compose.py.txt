@@ -1,0 +1,100 @@
+from pathlib import Path
+import hashlib
+import json
+import os
+import subprocess
+
+r = Path.cwd()
+wt = r / '.worktrees/ops-disk-group1-20261018-2120'
+p = r / 'ops/codex-ops/record-staging/20261018-2120'
+pub = r / 'paper/materials/20261018-2120-ops'
+bundle_path = r / 'paper/materials/20261018-disk-and-regent/implementation/bundle.json'
+bundle = json.loads(bundle_path.read_bytes())
+at = subprocess.check_output(['date', '--iso-8601=seconds'], text=True).strip()
+def git(*args, repo=r):
+    return subprocess.check_output(['git', '-C', str(repo), *args])
+def get(commit, path):
+    return git('show', commit + ':' + path)
+base = git('rev-parse', 'HEAD', repo=wt).decode().strip()
+assert base == 'dadb3a7df5ae81972a9f65d2bc6adfde0091e5cd'
+def function(raw):
+    start = raw.index(b'export function learnerGitRules(')
+    opened = raw.index(b'{', start)
+    depth = 1
+    end = opened + 1
+    while depth:
+        depth += (raw[end] == 123) - (raw[end] == 125)
+        end += 1
+    return raw[start:end]
+
+manifest = []
+plus_lines = []
+for feature in bundle['features']:
+    source = feature['source_commit']
+    for item in feature['files']:
+        path = item['path']
+        raw = get(source, path)
+        assert hashlib.sha256(raw).hexdigest() == item['sha256']
+        prepared = raw
+        adaptations = []
+        if path == 'learner/lib/launcher.ts':
+            old_rules = function(get(base, path))
+            prepared = prepared.replace(function(prepared), old_rules)
+            prepared = prepared.replace('需要 Roy 重新'.encode(), '需要 Dai 重新'.encode())
+            adaptations = ['preserve existing live learnerGitRules exactly; no additional sandbox Git grant',
+                           'preserve existing live login notice attribution']
+        elif path == 'learner/lib/engines.ts':
+            prepared = prepared.replace('需要 Roy 安装并登录'.encode(), '需要 Dai 安装并登录'.encode())
+            prepared = prepared.replace(b'(Roy 2026-10-04:', b'(Dai 2026-10-04:')
+            adaptations = ['preserve existing live attribution only']
+        elif path == 'agent/tests/learner.test.ts':
+            prepared = prepared.replace(b'notes/for-roy.md', b'notes/for-dai.md')
+            prepared = prepared.replace('需要 Roy 安装并登录'.encode(), '需要 Dai 安装并登录'.encode())
+            adaptations = ['retain existing live notice/task fixture attribution; all assertions otherwise preserved']
+        elif path == 'ops/codex-ops-actions.sh':
+            prepared = prepared.replace(b"the desktop one is Roy's", b"the desktop one is Dai's")
+            adaptations = ['preserve existing live desktop ownership notice only']
+        mode = git('ls-tree', source, '--', path).decode().split()[0]
+        destination = wt / path
+        destination.parent.mkdir(parents=True, exist_ok=True)
+        assert not destination.is_symlink()
+        destination.write_bytes(prepared)
+        destination.chmod(0o755 if mode == '100755' else 0o644)
+        manifest.append({'path': path, 'source': source, 'source_sha256': item['sha256'],
+                         'live_composition_sha256': hashlib.sha256(prepared).hexdigest(), 'adaptations': adaptations})
+        delta = git('diff', '--unified=0', feature['base'], source, '--', path)
+        plus_lines.extend(line[1:] for line in delta.splitlines() if line.startswith(b'+') and not line.startswith(b'+++'))
+assert len(manifest) == 35
+assert function((wt / 'learner/lib/launcher.ts').read_bytes()) == function(get(base, 'learner/lib/launcher.ts'))
+assert function(get(bundle['features'][0]['source_commit'], 'learner/lib/launcher.ts')) == function(get(bundle['features'][0]['base'], 'learner/lib/launcher.ts'))
+for local, target in [(wt / 'agent/node_modules', r / 'agent/node_modules'), (wt / 'logs', r / 'logs'), (wt / 'data', r / 'data')]:
+    if local.is_symlink():
+        assert local.resolve() == target.resolve()
+    elif local.exists():
+        assert local.is_dir() and not any(local.iterdir()), 'nonempty existing checkout directory retained'
+        local.rmdir()
+        local.symlink_to(target, target_is_directory=True)
+    else:
+        local.symlink_to(target, target_is_directory=True)
+paths = [entry['path'] for entry in manifest]
+git('add', '--', *paths, repo=wt)
+staged = git('diff', '--cached', '--name-only', repo=wt).decode().splitlines()
+assert set(staged) == set(paths)
+git('commit', '-m', 'Compose Roy-approved disk group 1 with existing live sandbox boundaries\n\nCo-Authored-By: Codex gpt-6.1-sol <noreply@openai.com>', repo=wt)
+commit = git('rev-parse', 'HEAD', repo=wt).decode().strip()
+tree = git('rev-parse', 'HEAD^{tree}', repo=wt).decode().strip()
+(p / 'source-added-lines.txt').write_bytes(b'\n'.join(plus_lines) + b'\n')
+proof = {'at': at, 'request': bundle['request_id'], 'worktree': str(wt), 'base_live': base,
+         'composition_commit': commit, 'composition_tree': tree, 'files': manifest,
+         'bundle': str(bundle_path.relative_to(r)), 'bundle_sha256': hashlib.sha256(bundle_path.read_bytes()).hexdigest(),
+         'exact_source_files': sum(not entry['adaptations'] for entry in manifest),
+         'sandbox_and_fixture_context_variants': sum(bool(entry['adaptations']) for entry in manifest),
+         'live_sandbox_Git_rules_unchanged': True, 'main_source_Git_rules_unchanged': True,
+         'main_uses_original_35_source_leaves': True,
+         'original_source_full1_and_old_fixture_warnings_retained': True,
+         'new_model_or_game_started': False, 'actual_published': False, 'host_full_requested': False,
+         'regent_remains_paused': True}
+(pub / 'composition.json').write_text(json.dumps(proof, ensure_ascii=False, indent=2) + '\n')
+(pub / 'compose.py.txt').write_bytes(Path(__file__).read_bytes())
+print(json.dumps({'commit': commit, 'tree': tree, 'files': len(manifest), 'source_exact': proof['exact_source_files'],
+                  'context_variants': proof['sandbox_and_fixture_context_variants'], 'published': False}, ensure_ascii=False))
