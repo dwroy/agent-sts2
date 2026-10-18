@@ -1,0 +1,578 @@
+[
+  {
+    "batch": "20261018-094302-fix-batch",
+    "canonical_state": "failed",
+    "canonical_rc": 0,
+    "canonical_merged": null,
+    "report": {
+      "task": "fix-batch",
+      "base": "a39157dabea8791c896df7b5cc477707ec5c89fd",
+      "fixes": [],
+      "skipped": [
+        {
+          "item": "出牌、药水、SL、终局、路线及角色机制条目（0256/0260/0263/0266/0308/0311/0317/0319/0320/0322/0324/0329/0334/0339/0344/0347/0349/0362/0365/0481/0487，另含XTSV1U9JD34T终局与GXNKW8X1XYJP抽牌身份）",
+          "reason": "策略类；沿已有独立strategy-proposal链处理，不重复派发或补入开发者游戏知识。"
+        },
+        {
+          "item": "silent-0339续证：BXU0CKWKH2RU尾巴误核销",
+          "reason": "策略类；已有58ab473f6c814061/c232010cd405fe44原提案链，保留当前行为和原证据。"
+        },
+        {
+          "item": "silent-0332 nonpositive-hp实际资源契约根因",
+          "reason": "证据不足；原专用owner链仍未闭环，诊断及样本身份窄修不等于根因修复。"
+        },
+        {
+          "item": "U5W7NUE925NK F15/F16两次原G2缺DPR告警的完整根因",
+          "reason": "证据不足；原未来样本数组及配对DPR分母未保存，此前窄修只覆盖有固定复现的严格零前缀边界，不将其冒作两次实盘根因。"
+        },
+        {
+          "item": "sandbox-glob-startup-race目录生命周期与磁盘压力宽项",
+          "reason": "证据不足；已有启动恢复/租约/回收窄修，目录删除归属与上游时序未确定。"
+        },
+        {
+          "item": "arch-funnel-guard / arch-learning-priority / arch-unified-resource-value / inv-f33-regression及调度公平性调查",
+          "reason": "独立架构、策略或归因任务，范围太大，超出普通纯bug批次。"
+        },
+        {
+          "item": "core-build-notify-222802-rc2旧原生通知恢复",
+          "reason": "证据不足；stderr持久化已修，旧送达状态未证，不重发可能已送达的通知。"
+        },
+        {
+          "item": "Codex缓存实测、DPR/B2性能及历史宿主超时根因",
+          "reason": "证据不足或独立性能调查；固定测试确定性子项已修，不代表自然性能根因已解决。"
+        },
+        {
+          "item": "原20261018-011241报告的recheck接续",
+          "reason": "证据不足：已复读原输出并核SHA80db955e17d8091dba170c45152d49d5129e6f894fd9920260783afea0a2cf5d；9ae48941不是所报dddad5d67祖先，原输出无base/runs，原Markdown无机器JSON。保留原报告、状态、recheck2及实际宿主范围，不降低现有身份守卫。"
+        },
+        {
+          "item": "ops-learner-recheck-report-fixes-shape-20261018补证：窄cherry-pick提案验收",
+          "reason": "太大：原Markdown没有机器JSON、原输出缺runs/base；独立原注册/原报告/六叶源码及发布/真实宿主回执协议超出本批格式修复。不造祖先、不改原报告/提案ID/seen_runs/租约或ACK，保留pending。"
+        },
+        {
+          "item": "infra-h0-414-host-fixed-test-stability-20261018 的生产性能及原full1归因",
+          "reason": "证据不足；已合入的固定测试修复不证明CPU或产品性能根因已解决，保留原失败历史。"
+        },
+        {
+          "item": "silent-0461：9W38TRGPJW9Q F17T10普通斗篷及0511/0512药水窗口补证",
+          "reason": "策略类；先前批次已收到05:16:47追加的旧项证据，沿既有f4eb/7338、c440ae480782dca0和c734f60b55906bae独立策略链，不重复实现或添加机制。"
+        },
+        {
+          "item": "infra-paper-dataset-concurrent-gzip-keyscan-20261018",
+          "reason": "已有原owner已测源码dee6386621e8122d123a3cd0017c3e4c199f524e，当前main基线及只读核得live均未包含；队列明确禁止重复实现，保留原ops运输链，不复制源码或另造提交。"
+        },
+        {
+          "item": "infra-h0-414-host-fixed-test-stability-20261018 / a406-fixed-deadlines 五处消费夹具边界",
+          "reason": "已有原批已测源码2a778b13ac1ead79afef957d4708c1df5dfd3757，当前main基线及只读核得live均未包含；沿原ops pending集成，不盲目叠加。read_report文件关闭缺陷9aec57cd7已在本次基线，无新增代码。"
+        },
+        {
+          "item": "21bf-fake-herdr-workspace-deadline及原完整宿主超时根因",
+          "reason": "证据不足；fake herdr未回收退出进程误判已由707702873705b81219a23915f4981060cfafff2e修复并纳入基线，但原15秒宿主超时及CPU/产品/调度因果未证，保留原full1，不重复原补验或修改断言。"
+        },
+        {
+          "item": "infra-chest-claimed-action-conflict-0516：claimed与领取动作矛盾",
+          "reason": "证据不足，保留原行为；三局Silent A10 F10原帧及SHA已复核，但均未发领取请求，缺接口响应/合法领取与有界确认契约。原结构提案silent-proposal-cf77920511042e9c已pending，沿既有strategy-proposal链核实，不重复派发、不添加游戏判断或将遗物视为已获得。"
+        }
+      ],
+      "merged": null,
+      "tests": {
+        "tsc": 0,
+        "vitest": 0,
+        "cases": 4463
+      },
+      "code_proposals": [],
+      "implementation_domains": [],
+      "report": "/home/dw/Projects/agent-sts2/learner/runs/20261018-094307-95512e54-739b-4bfa-87dd-61a6cb1e6fb5-fix-batch/report.md"
+    },
+    "native": {
+      "batch": "20261018-094302-fix-batch",
+      "thread": "01a14cad-75d3-7ba1-86db-fcc441d1b163",
+      "cwd": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261018-094302",
+      "event_log": "learner/runs/20261018-094307-95512e54-739b-4bfa-87dd-61a6cb1e6fb5-fix-batch.jsonl",
+      "registered_launch_batch": "20261018-094302-fix-batch",
+      "original_lease": "89b868e7941d9b7fde33328d3f620e426a1454bd0a3cb648f8f5d1517be1856f",
+      "native_context": {
+        "source": "ops/codex-ops/accounts/codex3/learner/sessions/2026/10/18/rollout-2026-10-18T09-43-18-01a14cad-75d3-7ba1-86db-fcc441d1b163.jsonl",
+        "offset": 50303,
+        "bytes": 5152,
+        "sha256": "59e3d41f186feeb432eb9cdacf31248670c0150bf5b95be2e02d74caa62341df",
+        "model": "gpt-6.1-sol",
+        "effort": "xhigh",
+        "sandbox": {
+          "type": "workspace-write",
+          "writable_roots": [
+            "/home/dw/Projects/agent-sts2",
+            "/home/dw/Projects/agent-sts2/.git",
+            "/home/dw/Projects/agent-sts2/.git/worktrees/codex-fix-silent-20261018-094302"
+          ],
+          "network_access": false,
+          "exclude_tmpdir_env_var": false,
+          "exclude_slash_tmp": false
+        },
+        "approval_policy": "never"
+      },
+      "native_user_input": {
+        "offset": 58298,
+        "bytes": 13081,
+        "sha256": "5164297acd3ddb07106d6b38fe637030e6766c5a38fa1c95dbf110a44b5f2f87",
+        "input_sha256": "a125a6522f0113cc1446c9c496b5192816840757a119b0a5883cc990b1d99c57"
+      },
+      "original_header_events": [
+        {
+          "offset": 0,
+          "bytes": 14892,
+          "sha256": "a4a0c414d0998ab8eb32781fe248cf4a2856f646203205309a82eeaeaeb27678",
+          "type": "learner_launch",
+          "attempt": null,
+          "code": null
+        },
+        {
+          "offset": 14892,
+          "bytes": 369,
+          "sha256": "cfcc706d342e1e16980d13922259a6e253f6e807bd7cc0baaabafc33e2accc4b",
+          "type": "learner_startup_attempt",
+          "attempt": 1,
+          "code": null
+        },
+        {
+          "offset": 18274,
+          "bytes": 77,
+          "sha256": "e0a816322b5e59648845e43d4bd3bb949e84bfbd0f8d01fd1f04ed04ee0ba1e3",
+          "type": "thread.started",
+          "attempt": null,
+          "code": null
+        }
+      ],
+      "startup_attempts": 1,
+      "failed_startups_preserved": 0,
+      "no_model_or_manual_restart": true
+    },
+    "source_unchanged": true,
+    "source_selftest_exit": 0,
+    "source_files": 493,
+    "source_cases": 4463,
+    "diagnostic_case_separate": true,
+    "verified_chest_frames": 6,
+    "original_source_full_not_repeated": true,
+    "new_source_or_merge": false
+  },
+  {
+    "batch": "20261018-083033-fix-batch",
+    "canonical_state": "done",
+    "canonical_rc": 0,
+    "canonical_merged": "8c7657bac63f42830854b069a7da894fb295ba62",
+    "report": {
+      "task": "fix-batch",
+      "character": "silent",
+      "task_nature": "Roy已授权新功能的定期校准刷新，非bug-infra",
+      "base": "535254a8a063098342173c9b5b45ba9e53ad3de4",
+      "fixes": [
+        {
+          "item": "Roy 已授权新功能：静默 boss 模拟校准",
+          "commit": "cf36dba65ac18c6bef58b3d90292851a5ba08c3c",
+          "source_parent": "9d9f5adb00766a6a3865c46b301bfd62c7ddd7da",
+          "changes": "仅静默trust、校准指纹档案、报告和记录；生产代码差异为空",
+          "test": "源端tsc、Python16项、相关Vitest及paths通过；实际live完整沙箱4464项通过，生产可信接口24项读回通过",
+          "fails_without_fix": "旧发布缺少本批20个实际结局，验证候选507场，无厌沙虫B2仍低可信；本批扩至527场，其B2按原四闸达标",
+          "ledger": [
+            "silent-0515"
+          ]
+        }
+      ],
+      "merged": "8c7657bac63f42830854b069a7da894fb295ba62",
+      "published_commit": "b155d00a36080418149e63d2f21b491d34d7f40a",
+      "published_tree": "184868e76c9b64366dd75796475cda97cef6eb69",
+      "tested_tree": "e63a1367b1aa7849edaeed6eb81a6aee32be3331",
+      "version": {
+        "eval_name": "S1.silent-boss-calibration-refresh-20261018-da073483",
+        "release_id": null,
+        "status": "实际已发布；正式编号和shipped由ops核实登记"
+      },
+      "statistics": {
+        "finished_runs": 356,
+        "boss_attempts": 1564,
+        "usable_openings": 634,
+        "sl_censored": 929,
+        "new_actual_outcomes": 20,
+        "new_wins": 12,
+        "new_deaths": 8,
+        "tuning_keys": 107,
+        "validation_candidates": 527,
+        "successful_validation_b2_b3": [
+          525,
+          525
+        ],
+        "brier_b2_b3": [
+          0.1183,
+          0.12
+        ],
+        "split_model_platt_unchanged": true
+      },
+      "boss_trust_columns": [
+        "boss",
+        "验证n",
+        "数量缺口",
+        "B2",
+        "B3",
+        "失败指标B2/B3"
+      ],
+      "boss_trust": [
+        [
+          "永世沙漏",
+          38,
+          0,
+          "低",
+          "低",
+          "brier,gap,leak / brier,gap,leak"
+        ],
+        [
+          "仪式兽",
+          43,
+          0,
+          "可信",
+          "可信",
+          "无 / 无"
+        ],
+        [
+          "帝王蟹",
+          50,
+          0,
+          "低",
+          "低",
+          "brier,leak / brier,leak"
+        ],
+        [
+          "知识恶魔",
+          48,
+          0,
+          "低",
+          "低",
+          "leak / leak"
+        ],
+        [
+          "乐加维林族母",
+          47,
+          0,
+          "可信",
+          "可信",
+          "无 / 无"
+        ],
+        [
+          "女王",
+          34,
+          0,
+          "低",
+          "低",
+          "brier,gap / brier,gap"
+        ],
+        [
+          "灵魂异鱼",
+          40,
+          0,
+          "可信",
+          "可信",
+          "无 / 无"
+        ],
+        [
+          "实验体",
+          31,
+          0,
+          "低",
+          "低",
+          "brier,leak / brier,leak"
+        ],
+        [
+          "无厌沙虫",
+          51,
+          0,
+          "可信",
+          "低",
+          "无 / brier"
+        ],
+        [
+          "同族",
+          46,
+          0,
+          "可信",
+          "可信",
+          "无 / 无"
+        ],
+        [
+          "墨影幻灵",
+          56,
+          0,
+          "可信",
+          "可信",
+          "无 / 无"
+        ],
+        [
+          "瀑布巨兽",
+          41,
+          0,
+          "可信",
+          "可信",
+          "无 / 无"
+        ]
+      ],
+      "a10": {
+        "validation_n": 525,
+        "win_rate_residual_pp_b2_b3": [
+          4.1,
+          4.5
+        ],
+        "leak_ratio_b2_b3": [
+          1.314,
+          1.333
+        ],
+        "f49": {
+          "validation_n": 32,
+          "quantity_shortage": 0,
+          "brier_b2_b3": [
+            0.202262,
+            0.18074
+          ],
+          "win_rate_residual_pp_b2_b3": [
+            32.2,
+            27.9
+          ],
+          "leak_ratio_b2_b3": [
+            2.482,
+            2.597
+          ],
+          "status": "质量三项失败，保持低可信"
+        }
+      },
+      "refresh": {
+        "entry": "agent/tools/boss-sim/refresh-silent.py",
+        "trigger": "升阶或新增20次boss实际结局；每小时:13/:43及学习完成事件检查",
+        "model_commit": "7e1193cef9467416bc10c8e344a49f4fd98390c7",
+        "frozen_cutoff": "2026-10-06T02:46:11.648000",
+        "idempotence": "固定快照new=0幂等跳过，输出SHA未变",
+        "artifact": "da07348370065202d28758637df38f299ad22f74b8a2c112934a197fb564d404"
+      },
+      "tests": {
+        "tsc": 0,
+        "vitest": 0,
+        "live_files": 493,
+        "live_cases": 4464,
+        "python_cases": 16,
+        "consumer_checks": 24,
+        "gitleaks": 0,
+        "ledger_check": 0,
+        "preserved_history": "原main完整检查1、原失败单项补验0、两次中断130及公开SHA误报均保留，未改写",
+        "external_full": "交调度器补跑"
+      },
+      "other_commits": {
+        "main_sync_local_only": "e93b9a276b3d84f0bb54495445c2f53a9fa4c709",
+        "saved_live_refresh": "a66b9bb813fe6635cc9db8a7e423e00484a7f6d7"
+      },
+      "skipped": [
+        "A0–4、A5–9独立验证各0，不外推样本外可靠性",
+        "原6个no-solve记录保留",
+        "未认证当前H0/H1有限预算模型、自然收益或F48/F49联合通关；未处理其他修复队列"
+      ],
+      "report": "/home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration/paper/materials/silent/boss-sim-calibration.md",
+      "task_report": "/home/dw/Projects/agent-sts2/learner/runs/20261018-083038-15a4e2b1-b8c5-4300-81af-b17a493e89f8-silent-boss-calibration/report.md",
+      "notifications": "根目录双通知已追加并读回，不代填下游确认",
+      "ledger": [
+        "silent-0515"
+      ],
+      "code_proposals": [],
+      "implementation_domains": []
+    },
+    "native": {
+      "batch": "20261018-083033-fix-batch",
+      "thread": "01a14c6a-febf-75c2-b3d3-10fbc46009d3",
+      "cwd": "/home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration",
+      "event_log": "learner/runs/20261018-083038-15a4e2b1-b8c5-4300-81af-b17a493e89f8-silent-boss-calibration.jsonl",
+      "registered_launch_batch": "20261018-083033-fix-batch",
+      "original_lease": "7786d6f316f9c312df81b4ed1dbb60364e471ab6b9b047d76e74bc4a92d64d3f",
+      "native_context": {
+        "source": "ops/codex-ops/accounts/codex3/learner/sessions/2026/10/18/rollout-2026-10-18T08-30-42-01a14c6a-febf-75c2-b3d3-10fbc46009d3.jsonl",
+        "offset": 50194,
+        "bytes": 5098,
+        "sha256": "25ddbc32d2ec73c78c6e9b3af7bbbadfc18802cab2947f16c624d4fd0b7df769",
+        "model": "gpt-6.1-sol",
+        "effort": "xhigh",
+        "sandbox": {
+          "type": "workspace-write",
+          "writable_roots": [
+            "/home/dw/Projects/agent-sts2",
+            "/home/dw/Projects/agent-sts2/.git",
+            "/home/dw/Projects/agent-sts2/.git/worktrees/silent-boss-calibration"
+          ],
+          "network_access": false,
+          "exclude_tmpdir_env_var": false,
+          "exclude_slash_tmp": false
+        },
+        "approval_policy": "never"
+      },
+      "native_user_input": {
+        "offset": 58099,
+        "bytes": 11432,
+        "sha256": "3750ba9a1dfe01ae9371184d8aa104c3dac6628820535928f228a67155f2b5e7",
+        "input_sha256": "bf94ec3aaede17bba95ed23fa7973e480f75fa8e5f1f057c066a1c9308c717f2"
+      },
+      "original_header_events": [
+        {
+          "offset": 0,
+          "bytes": 13142,
+          "sha256": "0a20292984c7b352f4451cb657c8818b8a26cf6a2549f4838bc1c06afa296214",
+          "type": "learner_launch",
+          "attempt": null,
+          "code": null
+        },
+        {
+          "offset": 13142,
+          "bytes": 370,
+          "sha256": "f56015078d53f91224d47b479626f8edfe01be71b04b911b2a46219bc94d249f",
+          "type": "learner_startup_attempt",
+          "attempt": 1,
+          "code": null
+        },
+        {
+          "offset": 16524,
+          "bytes": 77,
+          "sha256": "9f438d225b59e1073645471f70b90c290fafb07f13b53f1547a6c35810f2e4a2",
+          "type": "thread.started",
+          "attempt": null,
+          "code": null
+        }
+      ],
+      "startup_attempts": 1,
+      "failed_startups_preserved": 0,
+      "no_model_or_manual_restart": true
+    },
+    "source_data_only": true,
+    "source_leaves": 20,
+    "main_sync_data_paths": 19,
+    "existing_host_acceptance": {
+      "at": "2026-10-18 10:14:23 CST",
+      "batch": "20261016-075726-strategy-proposal",
+      "canonical_check": {
+        "rc": 0,
+        "log": "/home/dw/Projects/agent-sts2/ops/codex-ops/learner/20261016-075726-strategy-proposal.fallback-184868e76c9b64366dd75796475cda97cef6eb69.checks.log",
+        "merged": "b155d00a36080418149e63d2f21b491d34d7f40a",
+        "tree": "184868e76c9b64366dd75796475cda97cef6eb69",
+        "commits": [
+          "28161b2d2a31e95587999fc6e5028acd727cecb2",
+          "b2bdb0b1dbc7ec9a39909595238b00efbb718321"
+        ]
+      },
+      "original_log": "ops/codex-ops/learner/20261016-075726-strategy-proposal.fallback-184868e76c9b64366dd75796475cda97cef6eb69.checks.log",
+      "original_log_sha256": "b97f59d0608196eea73575360a0a4170bae8919abbd238350430b317d94b0b9c",
+      "actual_checked_commit": "b155d00a36080418149e63d2f21b491d34d7f40a",
+      "actual_checked_tree": "184868e76c9b64366dd75796475cda97cef6eb69",
+      "tsc_exit": 0,
+      "tsc_scope": "Original full checker success includes silent tsc exit0.",
+      "vitest_exit": 0,
+      "files_passed": 544,
+      "cases_passed": 5271,
+      "cases_skipped": 2,
+      "duration_seconds": 645.3,
+      "adaptive_source": "03bec265b5ba885c82853cf76908d06d90e2dec7",
+      "adaptive_main": "84d37ee0947517411a9825460cfa4f3952ab35d8",
+      "adaptive_original_publication": "53c9d61749abd51ed1727ac0c22dc5d52a8a7965",
+      "adaptive_original_requested_tree": "cfd9053aa7519f68dc1cfb877723ada6ee36f331",
+      "original_requested_tree_full0_not_claimed": true,
+      "acceptance_scope": "R394 eight original source leaves present in actually checked newer live composition; no full0 claim for original cfd9053 request tree.",
+      "source_paths_between_request_and_check_unchanged": true,
+      "source_paths": [
+        "agent/src",
+        "agent/tools",
+        "agent/tests",
+        "agent/package*.json",
+        "agent/tsconfig*.json",
+        "agent/vitest*",
+        "learner/*.ts",
+        "learner/*.py",
+        "learner/lib",
+        "learner/tasks",
+        "ops/*.sh",
+        "ops/*.py",
+        "ops/codex",
+        "eval/*.py",
+        "eval/*.ts",
+        "eval/cost-config.json",
+        "knowledge/builders"
+      ],
+      "verified_eight_leaves": [
+        {
+          "path": "agent/src/sim/adaptive-shadow.ts",
+          "sha256": "e0e19ef375ddf8334c9c20d4d1cd892a0f21b76e4e0e77bd4810f6e08d64572e",
+          "mode": "100644"
+        },
+        {
+          "path": "agent/src/sim/adaptive-sampler.ts",
+          "sha256": "ed75873222ef5bd212dff7ea885036ce985e3e7e4ddf95b1c5d17f56888b5f84",
+          "mode": "100644"
+        },
+        {
+          "path": "agent/src/sim/adaptive-decks.ts",
+          "sha256": "6b1cc4fe7fbaf8298c30b4deb9eeb93e6a80c3eb533504b2c1b2612b5fbd34c8",
+          "mode": "100644"
+        },
+        {
+          "path": "agent/src/sim/build-sim.ts",
+          "sha256": "e1384889748cf42f31aaab5be173e9dde4227c3a0b34a919026068ef34c9a115",
+          "mode": "100644"
+        },
+        {
+          "path": "agent/src/sim/build-sim-facts.ts",
+          "sha256": "c86879476796b8f49dde0078923e6ba5e46e725210d23acf14a0195b6bcb652e",
+          "mode": "100644"
+        },
+        {
+          "path": "agent/src/sim/boss-lines.ts",
+          "sha256": "ee25326b2f01c82cea39b4b09a78340080784b4c30527fa2b17c3e2a971e0837",
+          "mode": "100644"
+        },
+        {
+          "path": "agent/tests/human-pace-sampling.test.ts",
+          "sha256": "b1474e21dfff9e3e7aa042a938d600d5ebe460021d35b265a846c9dbbba168d3",
+          "mode": "100644"
+        },
+        {
+          "path": "agent/tests/human-pace-adaptive.test.ts",
+          "sha256": "92ec19182171ebb472781b7adafb1607f7c48a3c78a0355e5ded99eea6c52322",
+          "mode": "100644"
+        }
+      ],
+      "intervening_paths": [
+        "eval/versions.json",
+        "experiments/boss-sim/silent/da07348370065202d28758637df38f299ad22f74b8a2c112934a197fb564d404/boss-trust.json",
+        "experiments/boss-sim/silent/da07348370065202d28758637df38f299ad22f74b8a2c112934a197fb564d404/completed.json",
+        "experiments/boss-sim/silent/da07348370065202d28758637df38f299ad22f74b8a2c112934a197fb564d404/corrected-opening-keys.json",
+        "experiments/boss-sim/silent/da07348370065202d28758637df38f299ad22f74b8a2c112934a197fb564d404/extraction.json",
+        "experiments/boss-sim/silent/da07348370065202d28758637df38f299ad22f74b8a2c112934a197fb564d404/fights.jsonl",
+        "experiments/boss-sim/silent/da07348370065202d28758637df38f299ad22f74b8a2c112934a197fb564d404/model-input-audit.json",
+        "experiments/boss-sim/silent/da07348370065202d28758637df38f299ad22f74b8a2c112934a197fb564d404/opening-audit.json",
+        "experiments/boss-sim/silent/da07348370065202d28758637df38f299ad22f74b8a2c112934a197fb564d404/provenance.json",
+        "experiments/boss-sim/silent/da07348370065202d28758637df38f299ad22f74b8a2c112934a197fb564d404/replay-keys.json",
+        "experiments/boss-sim/silent/da07348370065202d28758637df38f299ad22f74b8a2c112934a197fb564d404/report.md",
+        "experiments/boss-sim/silent/da07348370065202d28758637df38f299ad22f74b8a2c112934a197fb564d404/results.jsonl",
+        "experiments/boss-sim/silent/da07348370065202d28758637df38f299ad22f74b8a2c112934a197fb564d404/runs-snapshot.jsonl",
+        "experiments/boss-sim/silent/da07348370065202d28758637df38f299ad22f74b8a2c112934a197fb564d404/runtime-source-audit.json",
+        "experiments/boss-sim/silent/da07348370065202d28758637df38f299ad22f74b8a2c112934a197fb564d404/sl-snapshot.jsonl",
+        "experiments/boss-sim/silent/da07348370065202d28758637df38f299ad22f74b8a2c112934a197fb564d404/sources.jsonl",
+        "experiments/boss-sim/silent/da07348370065202d28758637df38f299ad22f74b8a2c112934a197fb564d404/split.json",
+        "experiments/boss-sim/silent/da07348370065202d28758637df38f299ad22f74b8a2c112934a197fb564d404/turns.jsonl",
+        "knowledge/characters/silent/boss-trust.json",
+        "notes/fight-value-backtest-silent.md",
+        "notes/monster-db-check.md",
+        "paper/materials/decision-log.md",
+        "paper/materials/silent/boss-sim-calibration.md"
+      ],
+      "intervening_calibration_commit": "8c7657bac63f42830854b069a7da894fb295ba62",
+      "intervening_calibration_not_this_strategy_batch_output": true,
+      "canonical_failed_rc0_mergednull_and_old_failures_preserved": true,
+      "source_original_full_rc": 1,
+      "source_original_supplement_rc": 0,
+      "new_test_calls": 0,
+      "new_release_or_ledger_ship": false,
+      "parent_requirements_closed": false
+    },
+    "new_test_calls": 0,
+    "parents_closed": false
+  }
+]
