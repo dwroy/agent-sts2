@@ -3884,7 +3884,13 @@ function planTurn(env: DecisionEnv): Decision | null {
   const rolloutBest = rollout?.available ? rollout.best : null;
   const rolloutBestIsPotion = rolloutBest !== null && mcMedians.includes(rolloutBest);
   const offerPotions = potions.length > 0;
-  const unsimulatedKeys = offerPotions ? potions.reduce((sum, potion) => sum + (potion.requires_target ? Math.min(2, potion.valid_targets.length) : 1), 0) : 0;
+  // silent-0365: 67AFTXLWVN4L F38 T2 reports three legal targets; reserve and offer the same set.
+  const allPotionTargets = str(asRecord(state.run?.raw)["character_id"]).toLowerCase() === "silent" && state.run?.ascension === 10;
+  const unsimulatedTargets = (potion: typeof potions[number]): (number | null)[] => {
+    const targets: (number | null)[] = potion.requires_target ? potion.valid_targets : [null];
+    return allPotionTargets ? targets : targets.slice(0, 2);
+  };
+  const unsimulatedKeys = offerPotions ? potions.reduce((sum, potion) => sum + unsimulatedTargets(potion).length, 0) : 0;
   // The 10-option cap holds a slot for every random potion and unsimulated drink shown: plan lines make room.
   const keep = new Set<Plan>([top, ...potionLethal, ...(setupClose && setupLine ? [setupLine] : []), ...focusOf.keys(), ...(noPotionBase ? [noPotionBase] : []), ...thiefKept]);
   const planOptions = trimForPotionOptions(options, mcShown.length + unsimulatedKeys + (noPotionOwn ? 1 : 0), keep);
@@ -4020,8 +4026,7 @@ function planTurn(env: DecisionEnv): Decision | null {
   // Unsimulated potions: always an option, with no invented numbers.
   if (offerPotions) {
     for (const potion of potions) {
-      const targets: (number | null)[] = potion.requires_target ? potion.valid_targets : [null];
-      for (const target of targets.slice(0, 2)) {
+      for (const target of unsimulatedTargets(potion)) {
         const key = target === null ? potion.key : `${potion.key}->e${target}`;
         const enemyName = target === null ? null : enemies.find((enemy) => enemy.index === target)?.name ?? `enemy ${target}`;
         const keptBy = planOffer(potion.potion_id) === false ? fightPlan?.potions[potion.potion_id] : undefined;
