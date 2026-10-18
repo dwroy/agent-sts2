@@ -2536,3 +2536,7 @@ source4c16dab0（parent9ed8ac27）仅ops/learner_checks.py、ops/tests/test_lear
 - 2026-10-18 13:25:10 CST 原ops1322：130525-s2十waiting，无源码/合入/新测试；五旧Silent A10局6606原行、13组/26原字节快照及6blame区间、126材料SHA核回，109有界原件归档。32metadata CLI/10waiting原行接收，根/候选485 check0，科学字段/支持/状态版本保持。离线audit首轮五失败/修正五0均保留，242片段212窗口及完整认证null不是新增失败或生产绿；RC首末3轮2样本/5轮24样本口径分列，不改策略。1320论文和1309工具源验收已闭环，不重复；其他源/父待办保持，详1322材料。
 
 - 2026-10-18 13:28:21 CST 原ops1325：131302-fix无新修复/源码提交/合入；baseb7ea1d23干净、62旧源在基线/liveacfd历史、208执行/校验叶与9原输入核回，相对7c27仅5ff419三叶增量。原tsc/vitest未跑、cases0和canonical failed0/mergednull/no_changesnull保持，不借旧绿或跑整套改状态。两旧原运输源dee638662/2a778b13仍各自pending，不新做/标完成；原0365补证沿策略链。22原件归档、初次Git-SHA扫描误报/最终0及路径探针失败均保留，本轮零测试/导出/host/源码/ledger/ACK，原宽父与待办保持，详1325材料。
+
+## 2026-10-18 13:44:02 CST Codex用量规划交付
+
+已按Roy13:31要求冻结原生统计并交付 `paper/materials/20261018-codex-usage-plan/plan.md`，逐会话账在同目录。先做原调度器无代码收尾与相关证据重派去重，启动精简文稿在 `startup-context-proposal.md` 供Roy看；按已授权方向在自然停点分档，不能用默认配置证明已切换。本轮没改生产、没停worker或当局，也没向炉石发ACK。实际部署和6小时数字验收仍由原开发/调度链执行，H0/0332等父保持。
