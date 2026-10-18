@@ -4541,3 +4541,7 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
 - 2026-10-18 16:09:55 CST [运维 codex] 实收 20261018-153503-s2-strategy-proposal exit0；原 no-change 守卫及干净 HEAD=base 3ea109e5afcc 核回一致，10项原提案/队列均 waiting，保留逐项证据缺口。无源码、合入、发布号或 shipped；tsc/vitest/cases 原 null，不补测、不重复派发、不关闭父要求；本批早于普通新批 high 上线，不计为新 high 消费回执。原件 SHA 见 paper/materials/20261018-1607-ops/receipt.json。
 
 - 2026-10-18 16:14:23 CST [运维 codex] 实收 Roy16:13 经 Claude 批准的启动上下文节省三项：ops 启动只读 notes/ops-current.md 短清单，历史按事件需要查询；无代码改动、工作树干净且完成协议核验通过的普通批次，由调度器自动收尾，不再单独唤醒 ops；普通记录控制在300–500字。watcher 负责沿既有草案修改 ops prompt、AGENTS.md 和调度器并交精确源码及检查回执，原 ops 接源后按原锁窄集成、保并行记录与历史，不重复实现。当前根短清单尚不存在，本条仅登记授权与 owner，不冒称已实现、部署或节省生效；新 prompt 在下一个自然停点生效，不热切当前会话，不中断当局、学习者或在途宿主检查，不另开模型、研究、对局或计时器。异常、异议、源码变化及需人工判断的完成事件继续保留；本轮未改 prompt/AGENTS/调度器，不新增行为号或 shipped，不关闭任何宽父。
+
+- 2026-10-18 16:16:38 CST [运维 codex] 接收用量节省首批63e53c111a9d的原唯一宿主检查：live080c347c35df/tree0e9cc1ad5f19与原请求、fallback台账及实际26叶一致，main发布b8072ee0271b仍在集成历史；tsc0，完整vitest548文件、5294过/2跳过，721.49秒，日志SHA及验收见paper/materials/20261018-1615-ops/host-acceptance.json。保源端原full1及13文件99项补验，不重源full或另请求宿主。发布锁忙，仅只读核固定提交和前后HEAD稳定的现有叶，不写live。原retention complete只执行一次rc1，历史live署名/通知路径与源不同而保留工作树；不改基线或强删。新批原生high及6小时节省仍待真实回执，宽父保持；纯ops不加行为号、不写shipped，不重启当局或worker。
+
+- 2026-10-18 16:17:02 CST [运维 codex] 更正本轮上一条retention原因：实际唯一complete调用因retention.lock忙返回rc1，尚未进入源码叶相等门禁；历史live上下文差异是预先识别的后续验收限制，不是本次返回原因。保留原命令、stdout及工作树，后续正常事件接续，不本轮循环。
