@@ -1,0 +1,607 @@
+{
+  "at": "2026-10-18 13:27:15 CST",
+  "batch": "20261018-131302-fix-batch",
+  "report": {
+    "task": "fix-batch",
+    "base": "b7ea1d2307cf4931c336548bf8938cebd827b63e",
+    "fixes": [],
+    "skipped": [
+      {
+        "item": "出牌/药水/SL/终局/路线及角色机制未完成项（含0365最新补证）",
+        "reason": "策略类：沿原strategy-proposal及原证据链；本批无新增独立纯bug，不重复提案或补游戏知识。"
+      },
+      {
+        "item": "silent-0332实际资源契约根因",
+        "reason": "证据不足：缺完整原resources/steps及触发输入，诊断/时限/样本身份窄修不等于根因解决。"
+      },
+      {
+        "item": "U5W7NUE925NK F15/F16原G2缺DPR告警完整根因",
+        "reason": "证据不足：原未来样本数组及配对分母未保存；已有预算/零前缀窄修不冒认整项。"
+      },
+      {
+        "item": "sandbox-glob-startup-race生命周期、磁盘/宿主超时与DPR性能宽项",
+        "reason": "证据不足：已有恢复/租约/回收/固定夹具窄修，不据定向补验认定CPU、产品或调度因果。"
+      },
+      {
+        "item": "arch-funnel-guard / arch-learning-priority / arch-unified-resource-value / inv-f33-regression / 调度公平性",
+        "reason": "太大：独立架构、策略或归因任务，不混入普通纯bug批次。"
+      },
+      {
+        "item": "core-build-notify-222802-rc2旧通知恢复",
+        "reason": "证据不足：stderr持久化已修，旧实际送达未证；不重复发消息或代填ACK。"
+      },
+      {
+        "item": "unassigned_proof原窄cherry-pick提案登记宽项",
+        "reason": "太大：原Markdown无机器JSON、原输出缺base/runs；需独立冻结原注册/报告/发布协议，recheck窄修已在main/live。"
+      },
+      {
+        "item": "infra-paper-dataset-concurrent-gzip-keyscan-20261018",
+        "reason": "已有源dee6386621e8122d123a3cd0017c3e4c199f524e，当前main/live未含；队列明确保原ops运输链，不重复实现。"
+      },
+      {
+        "item": "a406-fixed-deadlines五处消费夹具",
+        "reason": "已有源2a778b13ac1ead79afef957d4708c1df5dfd3757，当前main/live未含；保原ops运输链，不盲叠候选。"
+      },
+      {
+        "item": "21bf-fake-herdr-workspace-deadline及一般固定测试性能根因",
+        "reason": "证据不足：退出进程误判已由707702873窄修，原15秒宿主超时及宽因果未证；保原失败、时限和断言。"
+      },
+      {
+        "item": "infra-chest-claimed-action-conflict-0516",
+        "reason": "证据不足：缺领取请求和有界确认契约；沿原结构提案cf77920511042e9c核实。"
+      }
+    ],
+    "merged": null,
+    "tests": {
+      "tsc": null,
+      "vitest": null,
+      "cases": 0
+    },
+    "code_proposals": [],
+    "implementation_domains": [],
+    "report": "/home/dw/Projects/agent-sts2/learner/runs/20261018-131307-66e161d2-ded4-491a-acfa-958eff3fc124-fix-batch/report.md"
+  },
+  "native": {
+    "batch": "20261018-131302-fix-batch",
+    "thread": "01a14d6d-9a5e-7aa2-b77f-0d6ec4b31921",
+    "cwd": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261018-131302",
+    "event_log": "learner/runs/20261018-131307-66e161d2-ded4-491a-acfa-958eff3fc124-fix-batch.jsonl",
+    "registered_launch_batch": "20261018-131302-fix-batch",
+    "original_lease": "c5a44f704e82e5dc64048590cd61713543708e2cfc43887cec8f40f3a19d77a0",
+    "native_context": {
+      "source": "ops/codex-ops/accounts/codex3/learner/sessions/2026/10/18/rollout-2026-10-18T13-13-11-01a14d6d-9a5e-7aa2-b77f-0d6ec4b31921.jsonl",
+      "offset": 50305,
+      "bytes": 5152,
+      "sha256": "6a803a67ae9a69bba496515748a9857288ae5e4e061b2b1a1d2c6a93999bdf75",
+      "model": "gpt-6.1-sol",
+      "effort": "xhigh",
+      "sandbox": {
+        "type": "workspace-write",
+        "writable_roots": [
+          "/home/dw/Projects/agent-sts2",
+          "/home/dw/Projects/agent-sts2/.git",
+          "/home/dw/Projects/agent-sts2/.git/worktrees/codex-fix-silent-20261018-131302"
+        ],
+        "network_access": false,
+        "exclude_tmpdir_env_var": false,
+        "exclude_slash_tmp": false
+      },
+      "approval_policy": "never"
+    },
+    "native_user_input": {
+      "offset": 58300,
+      "bytes": 13081,
+      "sha256": "3c1840afa5da19497e5611783d1021a6a47d16ec39473dbf2089e526af7390d6",
+      "input_sha256": "e3fe805912c05ff4327098d5f47c5a232ed86afaf2724715819515fc6aad9208"
+    },
+    "original_header_events": [
+      {
+        "offset": 0,
+        "bytes": 14892,
+        "sha256": "8299fa222f911f0278889e8972c5a9d12892fd67368e30931cebb3734673af51",
+        "type": "learner_launch",
+        "attempt": null,
+        "code": null
+      },
+      {
+        "offset": 14892,
+        "bytes": 370,
+        "sha256": "e3848b62e10bdaa7e2b402dbc08469d8c18277f198be528315689f3daf32e96d",
+        "type": "learner_startup_attempt",
+        "attempt": 1,
+        "code": null
+      },
+      {
+        "offset": 18274,
+        "bytes": 77,
+        "sha256": "744a6cf8d3456991a463768ad34e6cb437393bfbe7e89d57500d364a6fdf2311",
+        "type": "thread.started",
+        "attempt": null,
+        "code": null
+      }
+    ],
+    "startup_attempts": 1,
+    "failed_startups_preserved": 0,
+    "no_model_or_manual_restart": true
+  },
+  "canonical_state": "failed",
+  "canonical_rc": 0,
+  "canonical_no_changes": null,
+  "source_worktree_clean": true,
+  "no_new_commits": true,
+  "source_diff_bytes": 0,
+  "already_fixed_original_ancestry": [
+    {
+      "item": "额度恢复基线与实际进阶通知",
+      "commit": "5b56a452bb9be14d620b368ec46974c1b57901ca",
+      "in_base": true,
+      "in_observed_live": true
+    },
+    {
+      "item": "核心通知stdout/stderr持久化（不等于旧原生通知已安全恢复）",
+      "commit": "5c92f2aaf0b758a1a5e7d591745694004664f83a",
+      "in_base": true,
+      "in_observed_live": true
+    },
+    {
+      "item": "知识工作线程签名固定输入",
+      "commit": "8fbb441eb61eef226eb7366f9612003480c83988",
+      "in_base": true,
+      "in_observed_live": true
+    },
+    {
+      "item": "rollout最佳候选固定输入",
+      "commit": "bbc5b993a7524bbb8e80a975f204f8d193657b46",
+      "in_base": true,
+      "in_observed_live": true
+    },
+    {
+      "item": "空产出补链误派",
+      "commit": "84366ad06ee4f978394c1b9489a82c83ea12bd36",
+      "in_base": true,
+      "in_observed_live": true
+    },
+    {
+      "item": "多角色药水表测试隔离",
+      "commit": "5ef3c4612bd2673c19968c5a2d24bf62af519ee1",
+      "in_base": true,
+      "in_observed_live": true
+    },
+    {
+      "item": "未派发提案结果登记",
+      "commit": "3a98e213a826e94f9708af4b1a265e1892659f4e",
+      "in_base": true,
+      "in_observed_live": true
+    },
+    {
+      "item": "事件流同秒碰撞",
+      "commit": "b6ee3f8c29cc10d4652a67d14f0e0e394aa6ce6f",
+      "in_base": true,
+      "in_observed_live": true
+    },
+    {
+      "item": "纸鹤夹具",
+      "commit": "befc39e5ca0105f8ff96d47f817df44f0b2760f1",
+      "in_base": true,
+      "in_observed_live": true
+    },
+    {
+      "item": "账本状态分叉前缀",
+      "commit": "dd478f0b3e5a0f234f082972d21b203dbf8229d7",
+      "in_base": true,
+      "in_observed_live": true
+    },
+    {
+      "item": "共享main启动冲突",
+      "commit": "22efae55484bc2bdcc54e847a8dc40bb4888c4e2",
+      "in_base": true,
+      "in_observed_live": true
+    },
+    {
+      "item": "根事件通知路径",
+      "commit": "577f0bc424b7287910735cfdc86c253cc7ee8057",
+      "in_base": true,
+      "in_observed_live": true
+    },
+    {
+      "item": "global-build宿主loadavg",
+      "commit": "5bc8f025fe043cb8738cce57870354fa23fa84a1",
+      "in_base": true,
+      "in_observed_live": true
+    },
+    {
+      "item": "局间quiet误报",
+      "commit": "21a9c52484f04d510bd397959c958ec9767f1d2d",
+      "in_base": true,
+      "in_observed_live": true
+    },
+    {
+      "item": "global-health异步测试",
+      "commit": "d27df54f0651c4af84c6c12ceceec82a016f1142",
+      "in_base": true,
+      "in_observed_live": true
+    },
+    {
+      "item": "target-options此前两个标注回放的固定预算（默认路径已另修）",
+      "commit": "83a7f796c24eea8f16eb317bc70bfd832251ad27",
+      "in_base": true,
+      "in_observed_live": true
+    },
+    {
+      "item": "retention数字UUID",
+      "commit": "d91236326bc1af7a5417ce016c1a182f8084e7a3",
+      "in_base": true,
+      "in_observed_live": true
+    },
+    {
+      "item": "retention旧根scratch",
+      "commit": "0699b05c436d3d51d00ee92f153d16d16e64bea4",
+      "in_base": true,
+      "in_observed_live": true
+    },
+    {
+      "item": "无COMBAT决策死亡漏记",
+      "commit": "3b48088dec5fc6eafe576a1296bbdadde43432ee",
+      "in_base": true,
+      "in_observed_live": true
+    },
+    {
+      "item": "broker请求写失败立即退出",
+      "commit": "eaa118c1d72f11b2b6b68c98c1d7bab10d138f5b",
+      "in_base": true,
+      "in_observed_live": true
+    },
+    {
+      "item": "broker回执保留与队列错误隔离",
+      "commit": "6eb38508ceeb81d534159b3516458521ad09bbed",
+      "in_base": true,
+      "in_observed_live": true
+    },
+    {
+      "item": "JSONL残尾边界恢复",
+      "commit": "3daf122a5168d1a8cb456aed1c926b2d1b6c4488",
+      "in_base": true,
+      "in_observed_live": true
+    },
+    {
+      "item": "宿主定向续验入口",
+      "commit": "24c2e3a75b5db6bac76d6c924f86b7fcd9438316",
+      "in_base": true,
+      "in_observed_live": true
+    },
+    {
+      "item": "会话启动租约保存屏障",
+      "commit": "798af209b9a268b7dafab1440150f1b39cd5595d",
+      "in_base": true,
+      "in_observed_live": true
+    },
+    {
+      "item": "prompt-dump倒序按偏移读取状态日志",
+      "commit": "6ee8e2a2c1edc31492962137b96af8c6e1d12093",
+      "in_base": true,
+      "in_observed_live": true
+    },
+    {
+      "item": "知识前缀房间回血说明角色中立",
+      "commit": "6d2de57ceae3def4caf073951ed9d2f9d1544cd7",
+      "in_base": true,
+      "in_observed_live": true
+    },
+    {
+      "item": "fix-batch默认队列与live模板",
+      "commit": "5805dd187b7913a53b9e2645f40db1657eb5213c",
+      "in_base": true,
+      "in_observed_live": true
+    },
+    {
+      "item": "experience-update使用live合入流程",
+      "commit": "16ebc4aecb12a1d4b2f34ee767bb2816a3a0b466",
+      "in_base": true,
+      "in_observed_live": true
+    },
+    {
+      "item": "outcome-stats按mtime与大小重新加载",
+      "commit": "2650aed8baa84b8cf26e1e98b975582a6d5ab537",
+      "in_base": true,
+      "in_observed_live": true
+    },
+    {
+      "item": "021302宿主eval校准固定夹具超时（误遍历线上发布表）",
+      "commit": "d8748f2e70bfb2a91138ede0e1f6046927c116a4",
+      "in_base": true,
+      "in_observed_live": true
+    },
+    {
+      "item": "021302宿主potions-jev-call全部局面扫描超时",
+      "commit": "c5fd30d8d369ea6c56bba2e4c3daa6e01e3bf420",
+      "in_base": true,
+      "in_observed_live": true
+    },
+    {
+      "item": "infra-target-options-fixed-fixture-timeout（默认EZ2L路径）",
+      "commit": "c57105ca66bd75c6d6952772dcf712399eda828b",
+      "in_base": true,
+      "in_observed_live": true
+    },
+    {
+      "item": "infra-test-rollout-ties-host-timeout-15000",
+      "commit": "da08fcead2025c293140f1ba103d8efdbd39a4c3",
+      "in_base": true,
+      "in_observed_live": true
+    },
+    {
+      "item": "infra-test-build-facts-selection-remove-latency",
+      "commit": "e2c1d8a2d29f1cbaf8e5620e4bb912d6f05965f0",
+      "in_base": true,
+      "in_observed_live": true
+    },
+    {
+      "item": "h1-budget-completion-health-contract",
+      "commit": "c40e43fd25c200a01f4da94a4dac8db1b34664a8",
+      "in_base": true,
+      "in_observed_live": true
+    },
+    {
+      "item": "h1-strict-pick-deadline-stall",
+      "commit": "b3b9734d85defbdbd1b73ab85fab9ea2f636affd",
+      "in_base": true,
+      "in_observed_live": true
+    },
+    {
+      "item": "selection-hidden-daggers-conditional-followup-readback",
+      "commit": "a473263eb35ce5bea8e06f1ee94f4da1ba880bc3",
+      "in_base": true,
+      "in_observed_live": true
+    },
+    {
+      "item": "silent-0338：末挡诊断漏列既有奥利哈钢",
+      "commit": "c1d84804956bedbd29a7f0e81294114e18415b9d",
+      "in_base": true,
+      "in_observed_live": true
+    },
+    {
+      "item": "silent-0272：商店移除预判误报不可选",
+      "commit": "db20ec3cc6cd0e47ac014d0c523dd4ed1c781d26",
+      "in_base": true,
+      "in_observed_live": true
+    },
+    {
+      "item": "silent-0367：构筑事实未传已用尾巴状态",
+      "commit": "5baf663d7e6678efa3690e5a48329c4f8baee109",
+      "in_base": true,
+      "in_observed_live": true
+    },
+    {
+      "item": "h1-b2-margin-sample-identity（已发布V5-R384）",
+      "commit": "660b194c950f017e356a4b3da952e127c7e5c768",
+      "in_base": true,
+      "in_observed_live": true
+    },
+    {
+      "item": "silent-vigor-skewer-J2VR：赤牛活力与串刺两段伤害（J2VR2DFJG8K4 A10 F22第2/3试T1，silent-0504/0505，V5-R387）",
+      "commit": "d959e176af7338ea2bca6f4ff9a39673b80e5fdf",
+      "in_base": true,
+      "in_observed_live": true
+    },
+    {
+      "item": "U5W7NUE925NK/H1/G2预算到期诊断及零样本前缀（已实际合入；原F15/F16完整根因仍未知）",
+      "commit": "0b1807b159a1e3d7fc09aad541ea6f97be627a91",
+      "in_base": true,
+      "in_observed_live": true
+    },
+    {
+      "item": "host-fixed-test-timeouts-010547：eval固定历史发布表夹具",
+      "commit": "d9881ba593b0b8d701ebbe1c95626c0ebdd554c7",
+      "in_base": true,
+      "in_observed_live": true
+    },
+    {
+      "item": "host-fixed-test-timeouts-010547：F45固定工作时钟与采样夹具",
+      "commit": "9e8c93555131c3347f9e809d9722a848a75c2692",
+      "in_base": true,
+      "in_observed_live": true
+    },
+    {
+      "item": "ops-learner-recheck-report-fixes-shape-20261018：描述型fixes格式兼容子项",
+      "commit": "4c16dab0457a61e22ef06b27e367d146cb99bab3",
+      "in_base": true,
+      "in_observed_live": true
+    },
+    {
+      "item": "infra-h0-414-host-fixed-test-stability-20261018：Codex stall固定时间/rollout固定回执（main已集成原031302六测试叶）",
+      "commit": "738433d865d943e80b7726588fa2bbeb3a1980da",
+      "in_base": true,
+      "in_observed_live": true
+    },
+    {
+      "item": "router-timeout-max-gap-76fe29f3：按实际事件及结束时间精确验证最大间隔",
+      "commit": "a6913706952661afe1de38f290cd9434cbb91621",
+      "in_base": true,
+      "in_observed_live": true
+    },
+    {
+      "item": "read_report文件句柄释放",
+      "commit": "9aec57cd7bf8d6c5f67bdaa6b5b9bc115df73239",
+      "in_base": true,
+      "in_observed_live": true
+    },
+    {
+      "item": "learning-notice-ordinary-ack-registry-20261013：普通通知ACK不再误查学习父要求",
+      "commit": "672e198a4730012330f599068a0ef1efadb02002",
+      "in_base": true,
+      "in_observed_live": true
+    },
+    {
+      "item": "infra-legacy-continuation-notice-ack-identity：原续跑通知身份桥",
+      "commit": "368fccabd42eb72ffcea9a2fe6cbbb7c149326be",
+      "in_base": true,
+      "in_observed_live": true
+    },
+    {
+      "item": "strategy-proposal无源码报告scratch归属",
+      "commit": "5f04139cefe5c651dd5bf62f7e164014dbf5f23b",
+      "in_base": true,
+      "in_observed_live": true
+    },
+    {
+      "item": "silent-0459：独立run-plan请求费用归集",
+      "commit": "799a5cd0caf9329b43c32376079218a9bd0c3e9e",
+      "in_base": true,
+      "in_observed_live": true
+    },
+    {
+      "item": "postmortem-capacity-failure-proposal-repair-20261013：无输出失败不误派补链",
+      "commit": "3fdcd77927f01b35c20c6c5c1fcfd790676032d2",
+      "in_base": true,
+      "in_observed_live": true
+    },
+    {
+      "item": "codex-brain-cache-probe固定工具使用隔离home",
+      "commit": "548b53ca211231ab5f1079a16fe9ad65f62b3c6c",
+      "in_base": true,
+      "in_observed_live": true
+    },
+    {
+      "item": "TMPDIR未设置时的订阅采样固定测试",
+      "commit": "6bfbe3d2e2aa6e5e8c1969d5ee1cca08671ae02a",
+      "in_base": true,
+      "in_observed_live": true
+    },
+    {
+      "item": "21bf固定测试链：fake herdr未回收的已退出进程误判忙碌",
+      "commit": "707702873705b81219a23915f4981060cfafff2e",
+      "in_base": true,
+      "in_observed_live": true
+    },
+    {
+      "item": "silent-0040：boss统计按最终SL尝试分组",
+      "commit": "3f40af6fffbb37a06e258c0e4b314a9fe8faaede",
+      "in_base": true,
+      "in_observed_live": true
+    },
+    {
+      "item": "学习账本追加式来源元数据更正",
+      "commit": "87c89b7aea90c7275e0fbb04b1e4148a4209630c",
+      "in_base": true,
+      "in_observed_live": true
+    },
+    {
+      "item": "单次mod超时恢复后的stall误报",
+      "commit": "a4f4ec868d122dc92af510862c6240cf2eaff2b6",
+      "in_base": true,
+      "in_observed_live": true
+    },
+    {
+      "item": "R394 indifferent监控兼容子项",
+      "commit": "5011b4cbda9a9056a1fd146e375e3cd67b60c0a9",
+      "in_base": true,
+      "in_observed_live": true
+    },
+    {
+      "item": "窄cherry-pick的recheck身份子项",
+      "commit": "5ff419bbf2968a13167c6556885ced73736c6ec6",
+      "in_base": true,
+      "in_observed_live": true
+    }
+  ],
+  "source_pin_count": 208,
+  "changed_from_original_previous_base": [
+    "agent/tests/learner-cherry-pick-recheck.test.ts",
+    "ops/learner_checks.py",
+    "ops/tests/test_learner_cherry_pick_recheck.py"
+  ],
+  "pending_sources": [
+    {
+      "item": "infra-paper-dataset-concurrent-gzip-keyscan-20261018",
+      "source_commit": "dee6386621e8122d123a3cd0017c3e4c199f524e",
+      "in_base": false,
+      "in_observed_live": false,
+      "changed_paths": [
+        ".gitignore",
+        "agent/tests/paper-dataset-publication.test.ts",
+        "ops/paper_dataset.py",
+        "ops/tests/test_paper_dataset_publication.py"
+      ],
+      "disposition": "已有原owner源码，沿原ops运输链；本批不重复实现/合入旧分支"
+    },
+    {
+      "item": "a406-fixed-deadlines五处消费夹具",
+      "source_commit": "2a778b13ac1ead79afef957d4708c1df5dfd3757",
+      "in_base": false,
+      "in_observed_live": false,
+      "changed_paths": [
+        "agent/tests/build-decider.test.ts",
+        "agent/tests/fixture-http.test.ts",
+        "agent/tests/fixture-http.ts",
+        "agent/tests/global-build-fixed-inputs.test.ts",
+        "agent/tests/global-build-integration.test.ts",
+        "agent/tests/journal-replay.test.ts",
+        "agent/tests/learner-retention-fixture.test.ts",
+        "agent/tests/learner-retention.test.ts",
+        "agent/tests/loop-consumer-fixed-transport.test.ts",
+        "agent/tests/oneshot-support.ts",
+        "agent/tests/synthetic-board-fixture.ts"
+      ],
+      "disposition": "已有原owner源码，沿原ops运输链；本批不重复实现/合入旧分支"
+    }
+  ],
+  "original_input_fingerprints_verified": [
+    {
+      "path": "/home/dw/Projects/agent-sts2/learner/runs/20261018-121315-ea0c3df9-3269-4bfe-b5c5-c8ecf35727a9-fix-batch/result.json",
+      "bytes": 3498,
+      "sha256": "34466af3aa89d753e0cbfc15257342ad4f4c3955880692ef0ac93804a0ec7d1b"
+    },
+    {
+      "path": "/home/dw/Projects/agent-sts2/learner/runs/20261018-121315-ea0c3df9-3269-4bfe-b5c5-c8ecf35727a9-fix-batch/queue-dispositions.json",
+      "bytes": 60911,
+      "sha256": "bec183bc480a1bf2c9c56e63ab3de50b5db174b6afd657759809088b457bca5b"
+    },
+    {
+      "path": "/home/dw/Projects/agent-sts2/learner/runs/20261018-121315-ea0c3df9-3269-4bfe-b5c5-c8ecf35727a9-fix-batch/fix-queue-input.md",
+      "bytes": 483159,
+      "sha256": "71354da76b20927daf75cc810b5805cb6157aea3f2e9de42da4d655eae4cf729"
+    },
+    {
+      "path": "/home/dw/Projects/agent-sts2/learner/runs/20261018-110259-5792e43b-7ed3-447e-94aa-2879edd38f81-fix-batch/queue-prior-readback.json",
+      "bytes": 53882,
+      "sha256": "5314bd3f46522066e4f0389e73cff6c9a66687cd74d66264e6b2ebfc60c836f5"
+    },
+    {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261018-131302/README.md",
+      "bytes": 8133,
+      "sha256": "86234efa91efbe07dd4b880cf23fa8ecff32b2d41f02eb5a7cc7e89243229876"
+    },
+    {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261018-131302/AGENTS.md",
+      "bytes": 6902,
+      "sha256": "af64e7a8cfa3fb884820fed73daf75131360c2b4ada00ab1a4a6505ef7685232"
+    },
+    {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261018-131302/paper/materials/STATE-2026-10-18.md",
+      "bytes": 2579,
+      "sha256": "ca33b7c7339199f7950e15b6313fdc9c67ed45fec58b7601e25596a89c613509"
+    },
+    {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261018-131302/docs/learning-protocol.md",
+      "bytes": 9709,
+      "sha256": "92e071c9e7490f6841a0651d6549809102e7785e8e1dff38d424bd4aef886c32"
+    },
+    {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261018-131302/docs/learning-code-proposals.md",
+      "bytes": 3954,
+      "sha256": "29c2e6aa847007780d2cfd9ce0074c79a96c303fcdab77c25304064a90ceab81"
+    }
+  ],
+  "source_tests_ran": false,
+  "empty_fix_guard_result": null,
+  "empty_guard_not_satisfied_by_unrun_tests": true,
+  "first_gitleaks_rc": 1,
+  "documented_false_positive_is_existing_Git_commit": true,
+  "final_gitleaks_rc": 0,
+  "first_failure_not_rewritten": true,
+  "ledger_or_queue_changed": false,
+  "source_or_rules_changed": false,
+  "new_models_games_host_checks_or_export_calls": 0,
+  "other_role_ack": false,
+  "scientific_parents_closed": false
+}
