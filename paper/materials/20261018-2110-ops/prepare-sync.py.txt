@@ -1,0 +1,100 @@
+from pathlib import Path
+import hashlib
+import json
+import os
+import subprocess
+
+r = Path.cwd()
+exec((r / 'ops/codex-ops/record-staging/20261016-2003/publish.py').read_text().split('phase=r/')[0])
+p = r / 'ops/codex-ops/record-staging/20261018-2110'
+pub = r / 'paper/materials/20261018-2110-ops'
+at = subprocess.check_output(['date', '--iso-8601=seconds'], text=True).strip()
+source = '6c7a3558a3a84cf206e6ea997a21d36ac2b65a2f'
+saved = '1214300d6d320b2e1d0ed996493ccfa711574060'
+publication = 'dadb3a7df5ae81972a9f65d2bc6adfde0091e5cd'
+name = 'S1.silent-boss-calibration-refresh-20261018-314824d6'
+head = git('rev-parse', 'main').decode().strip()
+live_head = git('rev-parse', 'live').decode().strip()
+assert live_head == publication
+source_paths = git('diff-tree', '--no-commit-id', '--name-only', '-r', source).decode().splitlines()
+saved_paths = git('diff-tree', '--no-commit-id', '--name-only', '-r', saved).decode().splitlines()
+assert len(source_paths) == 23 and len(saved_paths) == 12
+values = {}
+origins = {}
+for path in source_paths + saved_paths:
+    if path == 'paper/materials/decision-log.md':
+        continue
+    values[path] = blob(live_head, path)
+    origins[path] = 'actual-live-leaf'
+    if path in source_paths:
+        assert values[path] == blob(source, path)
+    if path in saved_paths:
+        assert path.startswith('knowledge/') or path in ['notes/fight-value-backtest-silent.md', 'notes/monster-db-check.md']
+
+# Preserve the main registry and every historical alias; stage the learner's new entry without allocating a number.
+versions = json.loads(blob(head, 'eval/versions.json'))
+live_versions = json.loads(blob(live_head, 'eval/versions.json'))
+entries = [v for v in live_versions['versions'] if v.get('name') == name]
+assert len(entries) == 1 and entries[0]['commit'] == '085b94e6fd710d81bf1235a480a6bcfb3fb470d8'
+assert not any(v.get('name') == name for v in versions['versions'])
+old = json.loads(json.dumps(versions))
+versions['versions'].append(entries[0])
+assert versions['versions'][:-1] == old['versions'] and versions['release_numbering'] == old['release_numbering']
+values['eval/versions.json'] = (json.dumps(versions, ensure_ascii=False, indent=2) + '\n').encode()
+origins['eval/versions.json'] = 'main-history-plus-original-pending-live-entry'
+
+# Preserve original learner CLI rows, without importing unrelated live ledger history or assigning shipped.
+ledger_path = 'paper/materials/learning/ledger.jsonl'
+ledger = blob(head, ledger_path)
+physical = (r / ledger_path).read_bytes()
+assert physical.startswith(ledger)
+rows = [line for line in physical.splitlines(keepends=True) if json.loads(line).get('id') == 'silent-0518' and line not in ledger]
+assert all(json.loads(line).get('status') != 'shipped' for line in rows)
+assert any(json.loads(line).get('id') == 'silent-0518' for line in ledger.splitlines() + [value.rstrip(b'\n') for value in rows])
+values[ledger_path] = ledger + b''.join(rows)
+origins[ledger_path] = 'exact-own-silent-0518-learner-CLI-rows-proposed'
+
+decision_path = 'paper/materials/decision-log.md'
+decision = blob(head, decision_path)
+for c in [source, publication]:
+    before = blob(c + '^', decision_path)
+    after = blob(c, decision_path)
+    assert after.startswith(before)
+    for line in after[len(before):].splitlines(keepends=True):
+        if line.strip() and line not in decision:
+            decision += b'\n' + line
+values[decision_path] = decision
+origins[decision_path] = 'main-history-plus-original-source-and-publication-appends'
+
+private = {**os.environ, 'GIT_INDEX_FILE': str(p / 'candidate-main.index')}
+git('read-tree', head, env=private)
+for path, raw in values.items():
+    stage(path, raw, private, r)
+tree = git('write-tree', env=private).decode().strip()
+git('update-ref', 'refs/ops-integration-candidates/20261018-2110-main-tree', tree)
+changed = git('diff', '--name-only', head, tree).decode().splitlines()
+assert not any(path.startswith('paper/data/') or path in ['paper/materials/ordinary-completions.jsonl', 'paper/materials/learning/code-proposals.jsonl'] for path in changed)
+assert all(blob(tree, path) == blob(live_head, path) for path in source_paths + saved_paths if path != decision_path)
+plan = {'at': at, 'batch': '20261018-201302-fix-batch', 'state': 'prepared-awaiting-original-live-lock-and-host-check',
+        'source': source, 'source_parent': git('rev-parse', source + '^').decode().strip(), 'base_main': head,
+        'actual_live': live_head, 'actual_live_tree': git('rev-parse', live_head + '^{tree}').decode().strip(),
+        'candidate_main_tree': tree, 'candidate_ref': 'refs/ops-integration-candidates/20261018-2110-main-tree',
+        'intended_merge_parents_after_fresh_revalidation': [head, live_head],
+        'version_name': name, 'changed_paths': changed,
+        'exact_leaf_manifest': {path: {'origin': origins[path], 'blob': git('rev-parse', tree + ':' + path).decode().strip(),
+                                      'sha256': hashlib.sha256(raw).hexdigest(), 'bytes': len(raw)} for path, raw in values.items()},
+        'own_ledger_rows': len(rows), 'all_published_source_and_saved_knowledge_leaves_equal_actual_live': True,
+        'main_paper_data_and_other_record_history_preserved': True, 'physical_source_or_knowledge_files_rewritten': False,
+        'fresh_main_live_versions_and_knowledge_revalidation_required': True,
+        'release_allocated': False, 'ledger_shipped': False, 'main_synced': False,
+        'host_check': {'owner': 'original-scheduler', 'already_started': True,
+                       'log': 'ops/codex-ops/learner/20261018-201302-fix-batch.fallback-5ffb0053e7af25cfca3bc53c17d7d6bd6b534e1c.checks.log',
+                       'new_request_started': False}, 'parent_requests_closed': False}
+(pub / 'prepared-main-sync.json').write_text(json.dumps(plan, ensure_ascii=False, indent=2) + '\n')
+pending = r / 'ops/codex-ops/pending-integrations/20261018-201302-fix-batch.json'
+pending.write_text(json.dumps({**plan, 'phase': plan['state'], 'completed': False,
+                              'evidence': str((pub / 'verified-deployment.json').relative_to(r)),
+                              'candidate_plan': str((pub / 'prepared-main-sync.json').relative_to(r)),
+                              'next_event': 'original-learner-checks'}, ensure_ascii=False, indent=2) + '\n')
+print(json.dumps({'candidate_tree': tree, 'changed_paths': len(changed), 'saved_live_refresh_paths': len(saved_paths),
+                  'own_proposed_ledger_rows': len(rows), 'published': False, 'number_allocated': False}, ensure_ascii=False))
