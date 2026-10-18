@@ -1,0 +1,196 @@
+{
+  "at": "2026-10-18 11:20:14 CST",
+  "original_result": {
+    "at": "2026-10-18 11:05:54 CST",
+    "command": [
+      "nice",
+      "-n",
+      "19",
+      "python3",
+      "ops/paper_dataset.py",
+      "--no-raw"
+    ],
+    "pid": 512943,
+    "birth": "118469798",
+    "calls": 1,
+    "raw_snapshot": false,
+    "previous_outputs_preserved": "ops/codex-ops/record-staging/20261018-1105/paper-before",
+    "actual_exit_code": 0
+  },
+  "original_log_sha256": "3d06759b67f756ef92a7ac90891559bba27715a6d7b9e9219b7b8b16b0bc5fae",
+  "generated_at": "2026-10-18T03:05:55.008Z",
+  "source_cut_bytes": {
+    "decisions.jsonl": 2508735453,
+    "deepseek-reasoning.jsonl": 377746518,
+    "runs.jsonl": 371605,
+    "states.jsonl": 14295895818,
+    "fight-plans.jsonl": 2233957,
+    "run-plans.jsonl": 9294577,
+    "brain.jsonl": 809072691,
+    "sl-attempts.jsonl": 47743216,
+    "run-config.jsonl": 2080396
+  },
+  "source_checks": {
+    "decisions attributed + unattributed == play records": true,
+    "decisions_by_label sum == attributed decisions": true,
+    "escalations rows == records with escalation": true,
+    "every runs.jsonl id present in runs.csv": true,
+    "commits == git rev-list --all --count": true
+  },
+  "row_counts": {
+    "runs.csv": 843,
+    "decisions_by_label.csv": 28126,
+    "escalations.csv": 3600,
+    "fight_plans.csv": 1461,
+    "commits.csv": 7015
+  },
+  "runs": 843,
+  "selected_run": {
+    "run_id": "Q9KFP3J3JNU5",
+    "start_ts": "2026-10-18T00:36:20.712Z",
+    "end_ts": "2026-10-18T02:15:24.600Z",
+    "duration_min": "99.1",
+    "floor_max": "48",
+    "act_reached": "3",
+    "outcome": "defeat",
+    "victory": "0",
+    "outcome_source": "runs.jsonl",
+    "finished": "1",
+    "character": "SILENT",
+    "ascension": "10",
+    "code_version": "current",
+    "code_version_source": "runs.jsonl",
+    "code_version_console": "cacff7cd8+dirty",
+    "code_versions_all": "cacff7cd8+dirty",
+    "n_decisions": "1159",
+    "n_shadow": "0",
+    "decider_inferred": "0",
+    "n_code": "489",
+    "n_jev": "256",
+    "n_deepseek": "0",
+    "n_claude": "0",
+    "n_code_fallback": "34",
+    "n_jev_plan": "319",
+    "n_deepseek_plan": "0",
+    "n_claude_plan": "0",
+    "jev_calls": "301",
+    "jev_in_tokens": "11061301",
+    "jev_out_tokens": "69110",
+    "jev_cost_usd": "0.467477",
+    "jev_latency_p50_ms": "554.5",
+    "ds_calls": "0",
+    "ds_in": "0",
+    "ds_cache_hit": "0",
+    "ds_out": "0",
+    "ds_reasoning": "0",
+    "ds_total_tokens": "0",
+    "ds_calls_no_token_split": "0",
+    "ds_cost_usd": "0",
+    "ds_latency_p50_s": "",
+    "ds_overrides": "0",
+    "fight_plans": "0",
+    "fight_plan_errors": "0",
+    "fight_plan_cost_usd": "0",
+    "fight_plan_latency_p50_s": "",
+    "claude_calls": "0",
+    "claude_latency_p50_s": "",
+    "hp_guard_count": "0",
+    "escalation_chain": "none",
+    "era": "deepseek_memory",
+    "learning_loop": "1",
+    "death_enemy": "永世沙漏",
+    "death_enemy_ids": "AEONGLASS",
+    "final_hp": "0",
+    "max_hp": "70",
+    "bosses_seen": "CEREMONIAL_BEAST_BOSS KAISER_CRAB_BOSS AEONGLASS_BOSS",
+    "has_postmortem": "1",
+    "postmortem_heading": "Q9KFP3J3JNU5（A10，静默猎手，第48层，死于三幕首boss永世沙漏 AEONGLASS：六试均41/70血、空药进场；前五试T7／T5／T7／T7／T7判死读档，末试T7以32血6挡对35攻击及两张各9伤凋萎阵亡，完整需损47、维持该末态存活至少差16血，敌仍407/535血）",
+    "preloop_listed": "0",
+    "n_run_notes": "1",
+    "autoplay_finished_lines": "1",
+    "in_runs_jsonl": "1",
+    "brain_source": "{\"basis\": \"brain.jsonl accepted verdict; legacy answer != null, no error/problems; unique question_id+engine\", \"brain_rows\": 47, \"coverage\": \"missing_or_unresolved_logged_questions\", \"eligible\": false, \"embedded_answers\": {\"map/route\": 26, \"run-plan\": 11}, \"exclusion_reason\": \"unresolved_brain_questions\", \"failed_or_unaccepted_rows\": 1, \"first_success\": \"2026-10-18T00:36:20.701Z\", \"last_success\": \"2026-10-18T02:03:33.471Z\", \"policy\": \"codex-successful-brain-v1\", \"source\": \"unknown\", \"successful_answers\": {\"codex\": 46}, \"successful_by_label\": {\"event/act-plan\": {\"codex\": 2}, \"event/choose\": {\"codex\": 5}, \"event/plan\": {\"codex\": 1}, \"map/route-plan\": {\"codex\": 1}, \"rest/plan\": {\"codex\": 9}, \"reward/card\": {\"codex\": 23}, \"run-plan\": {\"codex\": 1}, \"shop/plan\": {\"codex\": 4}}, \"unknown_successes\": 0, \"unresolved_questions\": 1}",
+    "first_attempt": "{\"death_floor\": 33, \"floor\": 33, \"passed_act1\": false, \"passed_act2\": false, \"reloads\": 0, \"sl_rows\": 13, \"victory\": false}",
+    "performance_policy": "codex-successful-brain-v1",
+    "performance_included": "0",
+    "performance_exclusion_reason": "unresolved_brain_questions"
+  },
+  "changed_outputs": [
+    {
+      "path": "paper/data/README.md",
+      "bytes": 14189,
+      "sha256": "91415ddf62ed8b3c8eee4ca39196d53a568a1c4f608ae45e923ec600de8de6f3"
+    },
+    {
+      "path": "paper/data/commits.csv",
+      "bytes": 1055774,
+      "sha256": "39334c7e00c3bf8e05517beda9f9e5f6c7f0d327c4d9bf1040bf87af973f2696"
+    },
+    {
+      "path": "paper/data/cost-curve-silent.csv",
+      "bytes": 15108,
+      "sha256": "875ecdcf2f422b26957b1986d792ef9edaef669075ef58e532d2371e86461731"
+    },
+    {
+      "path": "paper/data/cost-silent.csv",
+      "bytes": 1006874,
+      "sha256": "b1d395e5d0408dfdf9bf7a040d79a126d73a2170adb79ce4e4f490ccab349424"
+    },
+    {
+      "path": "paper/data/cost-sources.json",
+      "bytes": 261647,
+      "sha256": "195d8ae259661aba69e1b8f4c60c7b95870b074c4a2863fb1a475370ff3f6bbd"
+    },
+    {
+      "path": "paper/data/cost-unattributed.csv",
+      "bytes": 20364,
+      "sha256": "731e6960e4df2220f5e124ac41f213965e72c0a1dd56c2df20cc20f258ecf3f9"
+    },
+    {
+      "path": "paper/data/decisions_by_label.csv",
+      "bytes": 1215398,
+      "sha256": "b4b26ea4d92699627c5721828fe3732b7643ecda69319f1e2502ae4568e51f05"
+    },
+    {
+      "path": "paper/data/learning-curve-silent.csv",
+      "bytes": 74579,
+      "sha256": "e173fd6153ceca6bbff00ecfef7ca67d31d2ec047f83a7a287a8c0303dcc5a42"
+    },
+    {
+      "path": "paper/data/runs.csv",
+      "bytes": 1377583,
+      "sha256": "48bef97c16171f8c0a13a3e8a14bad8389e0f2dd92ed34ae869374531bb30afe"
+    },
+    {
+      "path": "paper/data/summary.json",
+      "bytes": 572591,
+      "sha256": "e116c4ee1f45a61e3c4c1558d73c3009c8a8448e69e65771b2316cbf663d1579"
+    },
+    {
+      "path": "paper/data/verification.json",
+      "bytes": 587,
+      "sha256": "6a0136dfa9bf0c2155889753de4ac887079927e3da51428d4b29981863ebae0c"
+    },
+    {
+      "path": "paper/materials/silent/cost.md",
+      "bytes": 4200,
+      "sha256": "572c42f89ef5f5d19a49ef08de24485591016cbbe064fd4223c43589f6779861"
+    }
+  ],
+  "actual_exit_code": 0,
+  "new_export_calls_this_wake": 0,
+  "same_original_finite_job": true,
+  "original_1105_postmortem_not_reappended": true,
+  "original_key_pattern_scan_clean": true,
+  "cost_is_estimate_not_bill": true,
+  "component_costs_keep_own_cuts_and_estimates": true,
+  "count_warnings": [
+    [
+      "KF9HMZKTFC3V",
+      879,
+      880
+    ]
+  ],
+  "daily_session_findings_not_reclassified": true,
+  "old_failure_history_not_rewritten": true
+}
