@@ -1,6 +1,6 @@
 /** Fixed returned sample prefixes; these tests never start workers or invoke a model. */
 import { afterAll, afterEach, beforeAll, beforeEach, expect, it, vi } from "vitest";
-import { DecisionBudget, withDecisionBudget } from "../src/core/decision-budget.js";
+import { DecisionBudget, withDecisionBudget, withCombatComputation } from "../src/core/decision-budget.js";
 import { bossLineSim, simLog, bossLinesOptions, BossLinesPool, releaseBossLinesPool, type BossLineSimArgs } from "../src/sim/boss-lines.js";
 import { compareOptions } from "../src/sim/build-sim.js";
 import { bossEvaluationPending, withBossSim } from "../src/sim/build-sim-facts.js";
@@ -53,6 +53,23 @@ function prefixRunner(n: number, expired?: () => void) {
   } };
   return { runner, calls };
 }
+
+it("B2's actual worker deadline leaves the turn's protected Jev allowance intact", () => {
+  const args = b2Args();
+  let time = 0;
+  bossLinesOptions.now = () => time;
+  const budget = new DecisionBudget("reserved-B2", "boss", () => time);
+  const pool = vi.spyOn(BossLinesPool.prototype, "run").mockImplementation((_input, pairs, count, _seed, ms, _now, _progress, work) => {
+    expect(ms).toBeGreaterThan(0); expect(ms).toBeLessThanOrEqual(56000);
+    time += ms;
+    const from = work?.range.from ?? 0;
+    return { outcomes: pairs.map(() => Array.from({ length: count }, (_, i) => i === from ? returned : undefined)),
+      complete: [from], timedOut: true, elapsedMs: ms, workers: 0, done: pairs.length };
+  });
+  withDecisionBudget(budget, () => withCombatComputation(() => bossLineSim(args)));
+  expect(pool).toHaveBeenCalledTimes(1);
+  expect(budget.remaining()).toBeGreaterThanOrEqual(3000);
+});
 
 it("B2 retains only completed paired prefixes on a mid-C2 deadline and reuses the first attempt with no extra work", () => {
   const args = b2Args(), memo = new ComputeMemo("fixed");

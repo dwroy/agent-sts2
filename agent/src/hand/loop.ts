@@ -1,7 +1,7 @@
 import { prepareObservedCandidates } from "./pace-precompute.js";
 import { HumanPaceShadow } from "../sim/human-pace-observer.js";
 import { setPaceSolverScope } from "../reflex/pace-solver-cache.js";
-import { currentDecisionBudget, withDecisionBudget, enterDecisionBudget, DecisionBudgetLedger, DecisionBudgetExpired, outsideDecisionBudget, shadowBudgetAvailable, withShadowDecisionBudget, measureDecisionBudgetStage, budgetUnknown, type BudgetKind } from "../core/decision-budget.js";
+import { currentDecisionBudget, withDecisionBudget, enterDecisionBudget, DecisionBudgetLedger, DecisionBudgetExpired, outsideDecisionBudget, shadowBudgetAvailable, withShadowDecisionBudget, measureDecisionBudgetStage, withCombatComputation, combatBudgetKind, budgetUnknown } from "../core/decision-budget.js";
 /**
  * The decision loop (PLAN.md §7).
  *
@@ -775,7 +775,7 @@ async function runLoopWithBudgets(options: LoopOptions): Promise<LoopStats> {
     if (str(asRecord(state.run?.raw)["character_id"]).toLowerCase() === "silent") {
       const combat = asRecord(state.raw["combat"]);
       const fight = fightKind(combat, env);
-      const kind: BudgetKind = state.in_combat ? slEnv ? "retry" : fight === "boss" ? "boss" : fight === "elite" ? "elite" : "ordinary" : "routine";
+      const kind = state.in_combat ? combatBudgetKind(fight) : "routine";
       const key = state.in_combat ? `${runId}:${state.run?.floor}:${state.turn}:${slEnv?.attempt ?? 1}` : `${runId}:${observedFp}`;
       setPaceSolverScope(`${runId}:${state.run?.floor}:${config.cardConditions}:${config.passivePieces}:${config.mechRules}:${config.mechMoveRules}:${config.mechDeathMove}`);
       enterDecisionBudget(paceLedger.open(key, kind));
@@ -819,7 +819,7 @@ async function runLoopWithBudgets(options: LoopOptions): Promise<LoopStats> {
     // fight before the question that needs it (up to ~15 s, Roy 2026-10-02); kept in screen memory. Never throws: no
     // value, no cost.
     if (!planned && config.thiefFacts && config.thiefCost && options.thiefSim && state.in_combat) {
-      const value = await ensureThiefCardValue(env, options.thiefSim);
+      const value = await withCombatComputation(() => ensureThiefCardValue(env, options.thiefSim!));
       if (value) {
         thiefValueToLog = value;
         onEvent({ type: "note", message: `thief card value: ${value.card} ${value.hp === null ? "no HP value" : `≈ ${value.hp} HP`} (${value.status}${value.route ? `, ${value.route}` : ""}; ${value.samples} samples, ${value.ms} ms)` });
@@ -835,7 +835,7 @@ async function runLoopWithBudgets(options: LoopOptions): Promise<LoopStats> {
         const plannerStarted = Date.now();
         preMs = plannerStarted - Date.parse(observedTs);
         plannerTiming.last = null;
-        planned = planDecision(gateCodeBaseline ? { ...env, strictJev: false } : env);
+        planned = withCombatComputation(() => planDecision(gateCodeBaseline ? { ...env, strictJev: false } : env));
         plannerMs = Date.now() - plannerStarted;
         combatTiming = plannerTiming.last;
         plannerTiming.last = null;

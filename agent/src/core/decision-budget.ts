@@ -4,6 +4,9 @@ import { AsyncLocalStorage } from "node:async_hooks";
 export const HUMAN_PACE_BUDGETS = Object.freeze({ ordinary: 10_000, elite: 15_000, boss: 60_000,
   retry: 10_000, routine: 5_000, brain: 90_000, direction: 60_000 });
 export type BudgetKind = keyof typeof HUMAN_PACE_BUDGETS;
+export const COMBAT_JEV_RESERVE_MS = 3_000;
+export const combatBudgetKind = (fight: string): BudgetKind => fight === "boss" ? "boss" : fight === "elite" ? "elite" : "ordinary";
+const computationStorage = new AsyncLocalStorage<DecisionBudget>();
 export class DecisionBudgetExpired extends Error {
   constructor(readonly stage: string) { super(`human-pace budget exhausted: ${stage}`); this.name = "DecisionBudgetExpired"; }
 }
@@ -21,13 +24,20 @@ export class DecisionBudget {
   private fallback: string | null = null;
   private independentSpent = 0;
   private independentEntryStart = 0;
+  private jevSpent = 0;
   readonly skipped: string[] = [];
   readonly stages: BudgetStage[] = [];
-  constructor(readonly key: string, public kind: BudgetKind, readonly now = () => performance.now(), milliseconds?: number) {
+  constructor(readonly key: string, public kind: BudgetKind, readonly now = () => performance.now(), milliseconds?: number,
+    readonly jevReserveMs = ["ordinary", "elite", "boss", "retry"].includes(kind) ? COMBAT_JEV_RESERVE_MS : 0) {
     this.limit = milliseconds ?? HUMAN_PACE_BUDGETS[kind]; this.entryAllowance = this.limit; this.since = now();
   }
   elapsed(): number { return this.spent + (this.since === null ? 0 : Math.max(0, this.now() - this.since)); }
-  remaining(cap = Infinity): number { return Math.max(0, Math.min(cap, this.limit - this.elapsed())); }
+  private totalRemaining(cap = Infinity): number { return Math.max(0, Math.min(cap, this.limit - this.elapsed())); }
+  private unspentJevReserve(): number { return Math.max(0, this.jevReserveMs - this.jevSpent); }
+  /** In the planner scope every existing solver/worker/rollout deadline sees the protected allowance. */
+  remaining(cap = Infinity): number { return computationStorage.getStore() === this ? this.computationRemaining(cap) : this.totalRemaining(cap); }
+  computationRemaining(cap = Infinity): number { return Math.max(0, Math.min(cap, this.totalRemaining() - this.unspentJevReserve())); }
+  chargeJev(milliseconds: number): void { this.jevSpent += Math.max(0, milliseconds); }
   pause(): void { if (this.since !== null) { this.spent = this.elapsed(); this.since = null; } }
   resume(): void { this.since ??= this.now(); }
   get running(): boolean { return this.since !== null; }
@@ -47,7 +57,9 @@ export class DecisionBudget {
     entry_budget_ms: this.entryAllowance, actual_ms: Math.round(this.elapsed() - this.entryStart + this.independentSpent - this.independentEntryStart),
     turn_actual_ms: Math.round(this.elapsed() + this.independentSpent), shared_actual_ms: Math.round(this.elapsed() - this.entryStart),
     independent_actual_ms: Math.round(this.independentSpent - this.independentEntryStart),
-    timed_out: this.remaining() <= 0 || this.stages.slice(this.entryStage).some((s) => s.scope === "L2" && s.timed_out), fallback: this.fallback,
+    timed_out: this.totalRemaining() <= 0 || this.stages.slice(this.entryStage).some((s) => s.scope === "L2" && s.timed_out), fallback: this.fallback,
+    ...(this.jevReserveMs ? { jev_reserve_ms: this.jevReserveMs, jev_actual_ms: Math.round(this.jevSpent),
+      jev_reserved_remaining_ms: this.unspentJevReserve(), computation_remaining_ms: this.computationRemaining() } : {}),
     shadow_unknown: [...this.skipped], stages: this.stages.slice(this.entryStage).map((s) => ({ ...s })), animation_time_included: false }; }
 }
 
@@ -57,6 +69,19 @@ export const withDecisionBudget = <T>(value: DecisionBudget | undefined, work: (
 /** Called only inside runLoop's isolated async scope, after the actual role has been checked. */
 export const enterDecisionBudget = (value: DecisionBudget | undefined): void => storage.enterWith(value);
 
+/** One reservation per combat turn, shared across card steps and re-asks; no extra turn time is granted. */
+export function withCombatComputation<T>(work: () => T): T {
+  const budget = currentDecisionBudget();
+  if (!budget?.jevReserveMs || computationStorage.getStore() === budget) return work();
+  const started = budget.elapsed(), allowance = budget.computationRemaining();
+  const finish = (): void => { budget.stages.push({ stage: "combat_computation", budget_ms: allowance,
+    actual_ms: Math.round(budget.elapsed() - started), timed_out: budget.computationRemaining() <= 0 }); };
+  let value: T;
+  try { value = computationStorage.run(budget, work); } catch (error) { finish(); throw error; }
+  if (value instanceof Promise) return value.finally(finish) as T;
+  finish(); return value;
+}
+
 /** Separate allowance, same clock: neither L2 nor an observer debits the real computation budget. */
 export function withIndependentDecisionBudget<T>(stage: string, kind: BudgetKind, milliseconds: number,
   scope: "L2" | "shadow", work: () => T): T {
@@ -64,7 +89,7 @@ export function withIndependentDecisionBudget<T>(stage: string, kind: BudgetKind
   if (!parent) return work();
   const running = parent.running;
   parent.pause();
-  const child = new DecisionBudget(`${parent.key}:${stage}`, kind, parent.now, milliseconds);
+  const child = new DecisionBudget(`${parent.key}:${stage}`, kind, parent.now, milliseconds, 0);
   const finish = (): void => { child.pause(); parent.independent(stage, child, scope); if (running) parent.resume(); };
   let value: T;
   try { value = withDecisionBudget(child, work); } catch (error) { finish(); throw error; }
@@ -132,6 +157,10 @@ export async function withinDecisionBudget<T>(stage: string, work: (signal?: Abo
     return result;
   }
   catch (error) { timedOut = error instanceof DecisionBudgetExpired; throw error; }
-  finally { clearTimeout(timer); budget.stages.push({ stage, budget_ms: ms,
-    actual_ms: Math.round(budget.now() - started), timed_out: timedOut }); }
+  finally {
+    clearTimeout(timer);
+    const actual = Math.max(0, budget.now() - started);
+    if (/^Jev(?:$|_)/.test(stage)) budget.chargeJev(actual);
+    budget.stages.push({ stage, budget_ms: ms, actual_ms: Math.round(actual), timed_out: timedOut });
+  }
 }
