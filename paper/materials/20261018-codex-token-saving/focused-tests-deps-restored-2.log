@@ -1,0 +1,75 @@
+
+ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/codex-saving-20261018/agent
+
+ ❯ tests/learner.test.ts (47 tests | 2 failed) 797ms
+     × a read-only task gets the read-only profile; gpt-6.1-sol at xhigh unless asked; never --sandbox (it cannot mix with a profile) 13ms
+     × codex: the argv, cwd and stdin the fake saw match codexCommand; no key in its env; log framed and summarised 178ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/learner.test.ts > codex command line > a read-only task gets the read-only profile; gpt-6.1-sol at xhigh unless asked; never --sandbox (it cannot mix with a profile)
+AssertionError: expected [ 'exec', '--json', …(71) ] to deeply equal [ 'exec', '--json', …(71) ]
+
+- Expected
++ Received
+
+@@ -14,11 +14,11 @@
+    "-c",
+    "approval_policy=\"never\"",
+    "-c",
+    "web_search=\"disabled\"",
+    "-c",
+-   "model_reasoning_effort=\"xhigh\"",
++   "model_reasoning_effort=\"high\"",
+    "-c",
+    "service_tier=\"default\"",
+    "-c",
+    "model_context_window=512000",
+    "-c",
+
+ ❯ tests/learner.test.ts:275:22
+    273|     const req = request({ engine: "codex", tools: ["Read", "Grep", "Gl…
+    274|     const cmd = codexCommand(req, "x");
+    275|     expect(cmd.args).toEqual(["exec", "--json", "--ignore-user-config"…
+       |                      ^
+    276|     expect(cmd.args).not.toContain("--sandbox");
+    277|     expect(cmd.args).not.toContain("--add-dir");
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  tests/learner.test.ts > whole runs against fake binaries > codex: the argv, cwd and stdin the fake saw match codexCommand; no key in its env; log framed and summarised
+AssertionError: expected [ '--model', 'gpt-6.1-sol', …(61) ] to deeply equal [ '--model', 'gpt-6.1-sol', …(61) ]
+
+- Expected
++ Received
+
+@@ -4,11 +4,11 @@
+    "-c",
+    "approval_policy=\"never\"",
+    "-c",
+    "web_search=\"disabled\"",
+    "-c",
+-   "model_reasoning_effort=\"xhigh\"",
++   "model_reasoning_effort=\"high\"",
+    "-c",
+    "service_tier=\"default\"",
+    "-c",
+    "model_context_window=512000",
+    "-c",
+
+ ❯ tests/learner.test.ts:606:33
+    604|     expect(seen.argv[7]).toBe('default_permissions="learner"');
+    605|     expect(seen.argv[9]).toContain(`${JSON.stringify(join(tmp, "codex-…
+    606|     expect(seen.argv.slice(10)).toEqual(["--model", "gpt-6.1-sol", ...…
+       |                                 ^
+    607|     expect(seen.argv).not.toContain("--sandbox");
+    608|     expect(seen.env).toContain("CODEX_HOME");
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+
+ Test Files  1 failed | 3 passed (4)
+      Tests  2 failed | 69 passed (71)
+   Start at  14:57:07
+   Duration  9.01s (transform 1.18s, setup 774ms, import 953ms, tests 6.71s, environment 0ms)
+

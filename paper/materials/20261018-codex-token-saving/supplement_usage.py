@@ -1,0 +1,129 @@
+#!/usr/bin/env python3
+"""Numeric-only supplement to the frozen ops audit; never reads auth/config files."""
+import csv
+import datetime as dt
+from decimal import Decimal
+import gzip
+import hashlib
+import json
+from pathlib import Path
+from collections import defaultdict
+
+OUT = Path(__file__).resolve().parent
+BASE = OUT.parent / '20261018-codex-usage-plan'
+WATCHERS = {'01a13dcd-83d4-7c63-b233-f93cf878ecf4', '01a14aae-4b03-7cf1-9185-34dc3bed786f'}
+START = '2026-10-17T09:00:00+00:00'
+END = '2026-10-18T05:20:00+00:00'
+
+
+def instant(value):
+    return dt.datetime.fromisoformat(value.replace('Z', '+00:00'))
+
+
+def dump(name, value):
+    (OUT / name).write_text(json.dumps(value, ensure_ascii=False, indent=2) + '\n')
+
+
+def token_totals():
+    buckets = defaultdict(list)
+    with gzip.open(BASE / 'numeric-usage-events.csv.gz', 'rt') as handle:
+        for row in csv.DictReader(handle):
+            if not instant(START) <= instant(row['ts']) < instant(END):
+                continue
+            accounts = row['accounts'].split(',')
+            account = 'codex1' if any(a == '.codex1' or a.startswith('codex1/') for a in accounts) else (
+                'codex3' if any(a == '.codex3' or a.startswith('codex3/') for a in accounts) else 'other-or-unresolved')
+            role = 'watcher' if row['thread_id'] in WATCHERS else row['role']
+            buckets[account, role].append(row)
+    results = []
+    for (account, role), rows in sorted(buckets.items()):
+        inputs = sorted(int(r['input_tokens']) for r in rows)
+        results.append(dict(account=account, role=role, calls=len(rows), threads=len({r['thread_id'] for r in rows}),
+                            input_tokens=sum(inputs), cached_input_tokens=sum(int(r['cached_input_tokens']) for r in rows),
+                            output_tokens=sum(int(r['output_tokens']) for r in rows),
+                            mean_input=round(sum(inputs) / len(rows), 1),
+                            context_p50=inputs[(len(inputs) - 1) // 2], context_p90=inputs[int((len(inputs)-1)*.9)]))
+    dump('account-role-usage.json', dict(window_start=START, window_end=END, rows=results,
+          source=str(BASE / 'numeric-usage-events.csv.gz'), calls_are_positive_native_usage_deltas=True,
+          brain_missing_native_excluded=True))
+
+
+def credits():
+    # Freeze byte ends before streaming. Shared-account observations are NOT STS2-attributed billing.
+    cuts = [(path, path.stat().st_size) for path in sorted(Path('/home/dw/.codex1/sessions').rglob('*.jsonl'))]
+    events = []
+    manifest = []
+    malformed = 0
+    for path, end in cuts:
+        offset = 0
+        file_hash = hashlib.sha256()
+        with path.open('rb') as handle:
+            while offset < end:
+                raw = handle.readline(end - offset)
+                if not raw:
+                    break
+                file_hash.update(raw)
+                here = offset
+                offset += len(raw)
+                if b'"token_count"' not in raw or b'"balance"' not in raw:
+                    continue
+                try:
+                    obj = json.loads(raw)
+                    payload = obj.get('payload', {})
+                    if payload.get('type') != 'token_count':
+                        continue
+                    limits = payload.get('rate_limits') or {}
+                    credit = limits.get('credits') or {}
+                    if credit.get('balance') is None or not credit.get('has_credits') or credit.get('unlimited'):
+                        continue
+                    balance = Decimal(str(credit['balance']))
+                    if not balance.is_finite():
+                        continue
+                    events.append(dict(ts=obj['timestamp'], balance=str(balance), source=str(path), offset=here,
+                                       bytes=len(raw), sha256=hashlib.sha256(raw).hexdigest()))
+                except (ValueError, KeyError, TypeError, ArithmeticError):
+                    malformed += 1
+        manifest.append(dict(path=str(path), cutoff_bytes=end, read_bytes=offset, sha256=file_hash.hexdigest()))
+    events.sort(key=lambda e: (instant(e['ts']), e['source'], e['offset']))
+    seen = set()
+    unique = []
+    for event in events:
+        key = (event['ts'], event['balance'])
+        if key not in seen:
+            unique.append(event)
+            seen.add(key)
+    hourly = defaultdict(list)
+    local = dt.timezone(dt.timedelta(hours=8))
+    for event in unique:
+        hour = instant(event['ts']).astimezone(local).replace(minute=0, second=0, microsecond=0).isoformat()
+        hourly[hour].append(event)
+
+    def summarize(rows):
+        if not rows:
+            return None
+        first, last = rows[0], rows[-1]
+        seconds = Decimal(str((instant(last['ts']) - instant(first['ts'])).total_seconds()))
+        delta = Decimal(first['balance']) - Decimal(last['balance'])
+        rises = sum(Decimal(b['balance']) > Decimal(a['balance']) for a, b in zip(rows, rows[1:]))
+        return dict(observations=len(rows), first_ts=first['ts'], last_ts=last['ts'],
+                    first_balance=first['balance'], last_balance=last['balance'], observed_seconds=str(seconds),
+                    net_credit_decrease=str(delta), balance_increases=rises,
+                    net_credits_per_hour=str(delta * 3600 / seconds) if seconds > 0 else None,
+                    interpretation='Shared account net change; increases/refills/stale telemetry are not resolved; not project billing')
+
+    aligned = [e for e in unique if instant(START) <= instant(e['ts']) < instant(END)]
+    with gzip.open(OUT / 'codex1-credit-events.json.gz', 'wt') as handle:
+        json.dump(unique, handle, ensure_ascii=False, separators=(',', ':'))
+        handle.write('\n')
+    dump('codex1-credit-source-manifest.json', manifest)
+    dump('codex1-credits-hourly.json', dict(at=dt.datetime.now().astimezone().isoformat(),
+          malformed_numeric_records=malformed, raw_observations=len(events), deduplicated_observations=len(unique),
+          aligned=summarize(aligned), hours=[dict(hour=h, **summarize(rows)) for h, rows in sorted(hourly.items())],
+          limitations=['Rate-limit credits are account-wide, including other projects/devices.',
+                       'Rates use actual first/last observation duration; gaps are not filled.',
+                       'No balance means unknown, not zero; no model-token-to-credit conversion.']))
+
+
+if __name__ == '__main__':
+    token_totals()
+    credits()

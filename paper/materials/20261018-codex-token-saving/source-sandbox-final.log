@@ -1,0 +1,397 @@
+
+ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/codex-saving-20261018/agent
+
+ ❯ tests/learner-entry.test.ts (1 test | 1 failed) 6004ms
+   × recovers only the registered pre-session shared-main config import failure and preserves its evidence 6002ms
+ ❯ tests/strategy-research-scheduling.test.ts (10 tests | 1 failed) 25986ms
+   × frozen research group 10 takes the next slot and starts only after its actual registration is saved 15271ms
+ ❯ tests/component-usage.test.ts (1 test | 1 failed) 30ms
+   × syncs component logs, derives counter deltas and refreshes paper costs on fixed fixtures 29ms
+ ❯ tests/learner-launch-failures.test.ts (1 test | 1 failed) 939ms
+   × nested learner launches preserve the native CLI and learner-only policy and missing failed reports keep their original failure 938ms
+ ❯ tests/learner-registration-barrier.test.ts (1 test | 1 failed) 3408ms
+   × waits for saved scheduler registration before starting a learner and stops on lock timeout 3405ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 5 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/component-usage.test.ts > syncs component logs, derives counter deltas and refreshes paper costs on fixed fixtures
+AssertionError: nice: ../data/logdb-venv/bin/python: No such file or directory (os error 2)
+: expected 127 to be +0 // Object.is equality
+
+- Expected
++ Received
+
+- 0
++ 127
+
+ ❯ tests/component-usage.test.ts:14:38
+     12|     child.on("close", (code) => resolve({ code, output }));
+     13|   });
+     14|   expect(result.code, result.output).toBe(0);
+       |                                      ^
+     15|   expect(result.output).toContain("Ran 9 tests");
+     16| }, 20_000);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/5]⎯
+
+ FAIL  tests/learner-entry.test.ts > recovers only the registered pre-session shared-main config import failure and preserves its evidence
+AssertionError: ......F..
+======================================================================
+FAIL: test_shell_entry_uses_recovery_before_loading_the_shared_typescript_graph (__main__.Entry.test_shell_entry_uses_recovery_before_loading_the_shared_typescript_graph)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/dw/Projects/agent-sts2/.worktrees/codex-saving-20261018/agent/../ops/tests/test_learner_entry.py", line 184, in test_shell_entry_uses_recovery_before_loading_the_shared_typescript_graph
+    self.assertEqual(args[args.index("--effort") + 1], "xhigh")
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 'high' != 'xhigh'
+- high
++ xhigh
+? +
+
+
+----------------------------------------------------------------------
+Ran 9 tests in 5.525s
+
+FAILED (failures=1)
+: expected 1 to be +0 // Object.is equality
+
+- Expected
++ Received
+
+- 0
++ 1
+
+ ❯ tests/learner-entry.test.ts:8:40
+      6|     encoding: "utf8", timeout: 30_000,
+      7|   });
+      8|   expect(result.status, result.stderr).toBe(0);
+       |                                        ^
+      9|   expect(result.stderr).toContain("Ran 9 tests");
+     10| }, 30_000);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/5]⎯
+
+ FAIL  tests/learner-launch-failures.test.ts > nested learner launches preserve the native CLI and learner-only policy and missing failed reports keep their original failure
+AssertionError: F.FFFFF.FFFFF...
+======================================================================
+FAIL: test_already_recursive_environment_recovers_the_native_from_path (__main__.LearnerLauncher.test_already_recursive_environment_recovers_the_native_from_path)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/dw/Projects/agent-sts2/.worktrees/codex-saving-20261018/agent/../ops/tests/test_learner_launch_failures.py", line 76, in test_already_recursive_environment_recovers_the_native_from_path
+    self.launch(LEARNER_CODEX_BIN=str(self.wrapper), STS2_CODEX_LEARNER_BIN=str(self.wrapper))
+    ~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/dw/Projects/agent-sts2/.worktrees/codex-saving-20261018/agent/../ops/tests/test_learner_launch_failures.py", line 64, in launch
+    self.assertEqual(launcher[launcher.index("--effort") + 1], "xhigh")
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 'high' != 'xhigh'
+- high
++ xhigh
+? +
+
+
+======================================================================
+FAIL: test_explicit_native_override_is_kept (__main__.LearnerLauncher.test_explicit_native_override_is_kept)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/dw/Projects/agent-sts2/.worktrees/codex-saving-20261018/agent/../ops/tests/test_learner_launch_failures.py", line 67, in test_explicit_native_override_is_kept
+    self.launch(LEARNER_CODEX_BIN=str(self.native), STS2_CODEX_LEARNER_BIN="/unselected/codex")
+    ~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/dw/Projects/agent-sts2/.worktrees/codex-saving-20261018/agent/../ops/tests/test_learner_launch_failures.py", line 64, in launch
+    self.assertEqual(launcher[launcher.index("--effort") + 1], "xhigh")
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 'high' != 'xhigh'
+- high
++ xhigh
+? +
+
+
+======================================================================
+FAIL: test_historical_scheduler_uses_current_root_policy_at_native_boundary (__main__.LearnerLauncher.test_historical_scheduler_uses_current_root_policy_at_native_boundary) (inherited={'LEARNER_CODEX_BIN': '/tmp/tmpmklodtys/bin/codex'})
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/dw/Projects/agent-sts2/.worktrees/codex-saving-20261018/agent/../ops/tests/test_learner_launch_failures.py", line 132, in test_historical_scheduler_uses_current_root_policy_at_native_boundary
+    self.assertEqual(args, ["exec", "--ignore-user-config", "-c", 'default_permissions="learner"', "-", *POLICY])
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Lists differ: ['exe[127 chars]ort="high"', '-c', 'service_tier="default"', '[77 chars]800'] != ['exe[127 chars]ort="xhigh"', '-c', 'service_tier="default"', [78 chars]800']
+
+First differing element 8:
+'model_reasoning_effort="high"'
+'model_reasoning_effort="xhigh"'
+
+  ['exec',
+   '--ignore-user-config',
+   '-c',
+   'default_permissions="learner"',
+   '-',
+   '-c',
+   'model="gpt-6.1-sol"',
+   '-c',
+-  'model_reasoning_effort="high"',
++  'model_reasoning_effort="xhigh"',
+?                           +
+
+   '-c',
+   'service_tier="default"',
+   '-c',
+   'model_context_window=512000',
+   '-c',
+   'model_auto_compact_token_limit=460800']
+
+======================================================================
+FAIL: test_historical_scheduler_uses_current_root_policy_at_native_boundary (__main__.LearnerLauncher.test_historical_scheduler_uses_current_root_policy_at_native_boundary) (inherited={'LEARNER_CODEX_BIN': '/tmp/tmpmklodtys/ops/codex-learner.sh', 'STS2_CODEX_LEARNER_BIN': '/tmp/tmpmklodtys/bin/codex'})
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/dw/Projects/agent-sts2/.worktrees/codex-saving-20261018/agent/../ops/tests/test_learner_launch_failures.py", line 132, in test_historical_scheduler_uses_current_root_policy_at_native_boundary
+    self.assertEqual(args, ["exec", "--ignore-user-config", "-c", 'default_permissions="learner"', "-", *POLICY])
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Lists differ: ['exe[127 chars]ort="high"', '-c', 'service_tier="default"', '[77 chars]800'] != ['exe[127 chars]ort="xhigh"', '-c', 'service_tier="default"', [78 chars]800']
+
+First differing element 8:
+'model_reasoning_effort="high"'
+'model_reasoning_effort="xhigh"'
+
+  ['exec',
+   '--ignore-user-config',
+   '-c',
+   'default_permissions="learner"',
+   '-',
+   '-c',
+   'model="gpt-6.1-sol"',
+   '-c',
+-  'model_reasoning_effort="high"',
++  'model_reasoning_effort="xhigh"',
+?                           +
+
+   '-c',
+   'service_tier="default"',
+   '-c',
+   'model_context_window=512000',
+   '-c',
+   'model_auto_compact_token_limit=460800']
+
+======================================================================
+FAIL: test_last_permission_profile_controls_routing (__main__.LearnerLauncher.test_last_permission_profile_controls_routing)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/dw/Projects/agent-sts2/.worktrees/codex-saving-20261018/agent/../ops/tests/test_learner_launch_failures.py", line 154, in test_last_permission_profile_controls_routing
+    self.assertEqual(args, [*command, *POLICY])
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Lists differ: ['exe[134 chars]ort="high"', '-c', 'service_tier="default"', '[77 chars]800'] != ['exe[134 chars]ort="xhigh"', '-c', 'service_tier="default"', [78 chars]800']
+
+First differing element 7:
+'model_reasoning_effort="high"'
+'model_reasoning_effort="xhigh"'
+
+  ['exec',
+   '-c',
+   'default_permissions="learner"',
+   '--config=default_permissions=ops',
+   '-c',
+   'model="gpt-6.1-sol"',
+   '-c',
+-  'model_reasoning_effort="high"',
++  'model_reasoning_effort="xhigh"',
+?                           +
+
+   '-c',
+   'service_tier="default"',
+   '-c',
+   'model_context_window=512000',
+   '-c',
+   'model_auto_compact_token_limit=460800']
+
+======================================================================
+FAIL: test_legacy_fast_dispatch_keeps_native_and_disables_fast (__main__.LearnerLauncher.test_legacy_fast_dispatch_keeps_native_and_disables_fast)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/dw/Projects/agent-sts2/.worktrees/codex-saving-20261018/agent/../ops/tests/test_learner_launch_failures.py", line 73, in test_legacy_fast_dispatch_keeps_native_and_disables_fast
+    self.launch(LEARNER_CODEX_BIN=str(self.legacy_wrapper), STS2_CODEX_FAST_BIN=str(self.native))
+    ~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/dw/Projects/agent-sts2/.worktrees/codex-saving-20261018/agent/../ops/tests/test_learner_launch_failures.py", line 64, in launch
+    self.assertEqual(launcher[launcher.index("--effort") + 1], "xhigh")
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 'high' != 'xhigh'
+- high
++ xhigh
+? +
+
+
+======================================================================
+FAIL: test_nested_dispatch_reuses_the_original_native (__main__.LearnerLauncher.test_nested_dispatch_reuses_the_original_native)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/dw/Projects/agent-sts2/.worktrees/codex-saving-20261018/agent/../ops/tests/test_learner_launch_failures.py", line 70, in test_nested_dispatch_reuses_the_original_native
+    self.launch(LEARNER_CODEX_BIN=str(self.wrapper), STS2_CODEX_LEARNER_BIN=str(self.native))
+    ~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/dw/Projects/agent-sts2/.worktrees/codex-saving-20261018/agent/../ops/tests/test_learner_launch_failures.py", line 64, in launch
+    self.assertEqual(launcher[launcher.index("--effort") + 1], "xhigh")
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 'high' != 'xhigh'
+- high
++ xhigh
+? +
+
+
+======================================================================
+FAIL: test_old_exec_tiers_removed_without_changing_prompt_or_sandbox_child (__main__.LearnerLauncher.test_old_exec_tiers_removed_without_changing_prompt_or_sandbox_child)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/dw/Projects/agent-sts2/.worktrees/codex-saving-20261018/agent/../ops/tests/test_learner_launch_failures.py", line 105, in test_old_exec_tiers_removed_without_changing_prompt_or_sandbox_child
+    self.assertEqual(args, ["exec", "--ignore-user-config", "-", *POLICY])
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Lists differ: ['exe[88 chars]ort="high"', '-c', 'service_tier="default"', '[77 chars]800'] != ['exe[88 chars]ort="xhigh"', '-c', 'service_tier="default"', [78 chars]800']
+
+First differing element 6:
+'model_reasoning_effort="high"'
+'model_reasoning_effort="xhigh"'
+
+  ['exec',
+   '--ignore-user-config',
+   '-',
+   '-c',
+   'model="gpt-6.1-sol"',
+   '-c',
+-  'model_reasoning_effort="high"',
++  'model_reasoning_effort="xhigh"',
+?                           +
+
+   '-c',
+   'service_tier="default"',
+   '-c',
+   'model_context_window=512000',
+   '-c',
+   'model_auto_compact_token_limit=460800']
+
+======================================================================
+FAIL: test_ops_play_and_child_profile_use_same_policy_despite_learner_environment (__main__.LearnerLauncher.test_ops_play_and_child_profile_use_same_policy_despite_learner_environment)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/dw/Projects/agent-sts2/.worktrees/codex-saving-20261018/agent/../ops/tests/test_learner_launch_failures.py", line 170, in test_ops_play_and_child_profile_use_same_policy_despite_learner_environment
+    self.assertEqual(args, [*prefix, *POLICY, *command[at:]])
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Lists differ: ['exe[94 chars]ort="high"', '-c', 'service_tier="default"', '[77 chars]800'] != ['exe[94 chars]ort="xhigh"', '-c', 'service_tier="default"', [78 chars]800']
+
+First differing element 6:
+'model_reasoning_effort="high"'
+'model_reasoning_effort="xhigh"'
+
+  ['exec',
+   '-c',
+   'default_permissions="ops"',
+   '-c',
+   'model="gpt-6.1-sol"',
+   '-c',
+-  'model_reasoning_effort="high"',
++  'model_reasoning_effort="xhigh"',
+?                           +
+
+   '-c',
+   'service_tier="default"',
+   '-c',
+   'model_context_window=512000',
+   '-c',
+   'model_auto_compact_token_limit=460800']
+
+======================================================================
+FAIL: test_precise_learner_profiles_strip_fast_and_preserve_sandbox_child (__main__.LearnerLauncher.test_precise_learner_profiles_strip_fast_and_preserve_sandbox_child)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/dw/Projects/agent-sts2/.worktrees/codex-saving-20261018/agent/../ops/tests/test_learner_launch_failures.py", line 142, in test_precise_learner_profiles_strip_fast_and_preserve_sandbox_child
+    self.assertIn('model_reasoning_effort="xhigh"', args)
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 'model_reasoning_effort="xhigh"' not found in ['exec', '--ignore-user-config', '-c', 'default_permissions="learner"', '-', '-c', 'model="gpt-6.1-sol"', '-c', 'model_reasoning_effort="high"', '-c', 'service_tier="default"', '-c', 'model_context_window=512000', '-c', 'model_auto_compact_token_limit=460800']
+
+======================================================================
+FAIL: test_symlink_to_either_wrapper_is_not_treated_as_native (__main__.LearnerLauncher.test_symlink_to_either_wrapper_is_not_treated_as_native)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/dw/Projects/agent-sts2/.worktrees/codex-saving-20261018/agent/../ops/tests/test_learner_launch_failures.py", line 83, in test_symlink_to_either_wrapper_is_not_treated_as_native
+    self.launch(LEARNER_CODEX_BIN=str(alias), STS2_CODEX_LEARNER_BIN=str(self.native))
+    ~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/dw/Projects/agent-sts2/.worktrees/codex-saving-20261018/agent/../ops/tests/test_learner_launch_failures.py", line 64, in launch
+    self.assertEqual(launcher[launcher.index("--effort") + 1], "xhigh")
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 'high' != 'xhigh'
+- high
++ xhigh
+? +
+
+
+----------------------------------------------------------------------
+Ran 15 tests in 0.827s
+
+FAILED (failures=11)
+: expected 1 to be +0 // Object.is equality
+
+- Expected
++ Received
+
+- 0
++ 1
+
+ ❯ tests/learner-launch-failures.test.ts:8:40
+      6|     encoding: "utf8", timeout: 30_000,
+      7|   });
+      8|   expect(result.status, result.stderr).toBe(0);
+       |                                        ^
+      9|   expect(result.stderr).toContain("Ran 15 tests");
+     10| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/5]⎯
+
+ FAIL  tests/learner-registration-barrier.test.ts > waits for saved scheduler registration before starting a learner and stops on lock timeout
+AssertionError: .F
+======================================================================
+FAIL: test_waits_for_parent_registration_before_capturing_the_original_postmortem_lease (__main__.RegistrationBarrier.test_waits_for_parent_registration_before_capturing_the_original_postmortem_lease)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/dw/Projects/agent-sts2/.worktrees/codex-saving-20261018/agent/../ops/tests/test_learner_registration_barrier.py", line 74, in test_waits_for_parent_registration_before_capturing_the_original_postmortem_lease
+    self.assertEqual(launch["args"][launch["args"].index(flag) + 1], value)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 'high' != 'xhigh'
+- high
++ xhigh
+? +
+
+
+----------------------------------------------------------------------
+Ran 2 tests in 3.004s
+
+FAILED (failures=1)
+: expected 1 to be +0 // Object.is equality
+
+- Expected
++ Received
+
+- 0
++ 1
+
+ ❯ tests/learner-registration-barrier.test.ts:8:40
+      6|     encoding: "utf8", timeout: 30_000,
+      7|   });
+      8|   expect(result.status, result.stderr).toBe(0);
+       |                                        ^
+      9|   expect(result.stderr).toContain("Ran 2 tests");
+     10| }, 30_000);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/5]⎯
+
+ FAIL  tests/strategy-research-scheduling.test.ts > frozen research group 10 takes the next slot and starts only after its actual registration is saved
+Error: Test timed out in 15000ms.
+If this is a long-running test, pass a timeout value as the last argument or configure it globally with "testTimeout".
+ ❯ tests/strategy-research-scheduling.test.ts:4:79
+      2| import { runSchedulingGroup, schedulingGroups } from "./research-sched…
+      3|
+      4| it.each(schedulingGroups().map((cases, index) => [index + 1, cases] as…
+       |                                                                               ^
+      5|   "frozen research group %i takes the next slot and starts only after …
+      6|     const result = await runSchedulingGroup(cases);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/5]⎯
+
+
+ Test Files  5 failed | 491 passed (496)
+      Tests  5 failed | 4470 passed (4475)
+   Start at  15:13:55
+   Duration  1627.81s (transform 21.18s, setup 42.07s, import 123.46s, tests 1347.67s, environment 79ms)
+

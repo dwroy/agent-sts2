@@ -1,0 +1,677 @@
+diff --git a/AGENTS.md b/AGENTS.md
+index d593e4c58..3cd8337b1 100644
+--- a/AGENTS.md
++++ b/AGENTS.md
+@@ -19,7 +19,7 @@ Roy指定“学习入库”的要求按 [学习要求闭环](docs/learning-reque
+ 
+ ## 规矩
+ 
+-- **运行模型**：Roy 2026-10-12 要求本项目所有 Codex 运行会话统一 `gpt-6.1-sol` / `xhigh`，包括大脑、ops、复盘/经验/策略/修复学习者及只读辅助。普通服务档与现有权限保持；不能只改默认配置就报告运行会话已切换，须核实际原生会话/请求模型。续跑保留原任务、线程和对局身份，旧记录不改写。
++- **运行模型**：模型统一 `gpt-6.1-sol`。Roy 2026-10-18 用量节省指示更新档位：大脑保持 `xhigh`；例行分析、开发、运维和学习任务在下一自然启动点显式用 `high`；纯格式任务可用 `medium` 或代码；困难专项可记录理由保留 `xhigh`。不热切在途会话，不修改共用 config、账号/home、普通服务档或权限。须核实际原生 turn_context/请求回执才能报告档位生效；续跑保留任务、线程和对局身份，旧记录不改写。
+ - **记录**：决定和上线都在 `paper/materials/decision-log.md` 追加一行，写之前先跑 `date`，格式和已有的行一致。改变对局行为的上线，还要在 `eval/versions.json` 加一个版本，并通知运维会话。讨论、数据、转录都要落盘，不能丢历史。
+ - **发布编号**：对外使用 `eval/versions.json` 的 `release_id`，格式 `V4-R307`（架构代数 + 累计行为发布序号），规则见 [统一发布编号](docs/eval.md#统一发布编号)。ops 在 `ops/live-merge.lock` 内核实际 live 提交后分配；同一发布提交的多个补丁名称共用一号，新行为发布才加一，纯文档/运维记录不加号。保留原 `name/family/commit/source`、旧顺序和经验库日期版本；不按名称末尾数字相加，不重编号历史。学习者沿用原上线流程，由 ops 统一核号。
+ - **规则变更通知**：规则实际上线后先 `date`，在项目根目录 `notes/for-roy.md` 和 `ops/inbox-dev.md` 同时追加通知 Roy：逐项旧规则、新规则、证据/账本、预期影响和回退方法。这是已授权的记录例外，保留其他并行记录；只经 CLI 记台账，不修改运维 prompt。
+diff --git a/agent/tests/codex-fast.test.ts b/agent/tests/codex-fast.test.ts
+index 1811e0c71..2dc0f74d9 100644
+--- a/agent/tests/codex-fast.test.ts
++++ b/agent/tests/codex-fast.test.ts
+@@ -37,14 +37,14 @@ describe("Shared Codex defaults across session entry points", () => {
+     }
+   });
+ 
+-  it("shares learner GPT-6.1 Sol/xhigh/normal with gameplay and ops", () => {
+-    expect(engineDefaults("codex")).toEqual({ model: "gpt-6.1-sol", effort: "xhigh" });
++  it("uses high for offline defaults while preserving explicit gameplay effort", () => {
++    expect(engineDefaults("codex")).toEqual({ model: "gpt-6.1-sol", effort: "high" });
+     const opsArgs = initCommand({ ...request, model: undefined, effort: undefined }, "TASK", "codex").args;
+     expect(opsArgs).toContain("gpt-6.1-sol");
+     expect(opsArgs).toContain('service_tier="default"');
+     const args = codexCommand({ ...request, model: undefined, effort: undefined }, "TASK", "codex").args;
+     expect(args).toContain("gpt-6.1-sol");
+-    expect(args).toContain('model_reasoning_effort="xhigh"');
++    expect(args).toContain('model_reasoning_effort="high"');
+     expect(args).toContain("--ignore-user-config");
+     expect(args).toContain("model_context_window=512000");
+     expect(args).toContain("model_auto_compact_token_limit=460800");
+diff --git a/agent/tests/codex-saving.test.ts b/agent/tests/codex-saving.test.ts
+new file mode 100644
+index 000000000..e3528e8d5
+--- /dev/null
++++ b/agent/tests/codex-saving.test.ts
+@@ -0,0 +1,95 @@
++import { spawnSync } from "node:child_process";
++import { chmodSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
++import { tmpdir } from "node:os";
++import { resolve, join } from "node:path";
++import { afterAll, expect, it } from "vitest";
++
++const root = resolve("..");
++const tmp = mkdtempSync(join(tmpdir(), "codex-saving-"));
++afterAll(() => rmSync(tmp, { recursive: true, force: true }));
++
++it("batches Silent at five, bounds low-volume latency, preserves manual/retry and other characters", () => {
++  const result = spawnSync("python3", ["-B", "-c", `
++import importlib.util,sys
++spec=importlib.util.spec_from_file_location('learning',sys.argv[1]);m=importlib.util.module_from_spec(spec);spec.loader.exec_module(m)
++m.running_batch=lambda state:None
++m.postmortem_ids=lambda:set()
++m.dispatch=lambda state,runs,character,reason:(runs,reason)
++m.time.time=lambda:20000
++state={'runs':{},'batches':{}}
++rows=[{'run_id':'SILENT000001'}]
++m.finished_runs=lambda character:rows
++assert m.check_postmortems(state,'silent') is None
++assert state['postmortem_wait']['silent']['since']==20000
++m.time.time=lambda:27199
++assert m.check_postmortems(state,'silent') is None
++m.time.time=lambda:27200
++assert m.check_postmortems(state,'silent')==(['SILENT000001'],'tick')
++assert m.check_postmortems({'runs':{},'batches':{}},'ironclad')==(['SILENT000001'],'tick')
++rows.extend({'run_id':'SILENT00000'+str(i)} for i in range(2,6))
++assert len(m.check_postmortems({'runs':{},'batches':{}},'silent')[0])==5
++rows[:]=[{'run_id':'SILENT000001','ended':'1970-01-01T00:00:00Z'}]
++assert m.check_postmortems({'runs':{},'batches':{}},'silent') is not None
++rows[0].pop('ended')
++assert m.check_postmortems({'runs':{'SILENT000001':{'attempts':1,'retry_at':1}},'batches':{}},'silent') is not None
++assert m.check_postmortems({'runs':{'SILENT000001':{'attempts':1,'retry_at':99999}},'batches':{}},'silent') is None
++print('batch/retry invariants OK')
++`, join(root, "ops/codex-ops-learn.py")], { encoding: "utf8" });
++  expect(result.status, result.stderr).toBe(0);
++});
++
++it("summary excludes foreign mentions, preserves duplicate outcome evidence and exact byte hashes", () => {
++  const result = spawnSync("python3", ["-B", "-c", `
++import sys,json,pathlib,hashlib
++sys.path.insert(0,sys.argv[1]);from evidence_summary import summarize
++p=pathlib.Path(sys.argv[2]);run='SILENT000001'
++raws=[{'run_id':'FOREIGN00001','rationale':run},{'run_id':run,'label':'reward/card','decider':'brain'},
++      {'run_id':run,'state':{'run_id':'FOREIGN00001'}},{'run_id':run,'label':'hand','fallback':'deadline'}]
++data=b''.join((json.dumps(r)+'\\n').encode() for r in raws)
++(p/'decisions.jsonl').write_bytes(data+b'{"run_id":"SILENT000001"')
++(p/'runs.jsonl').write_text((json.dumps({'run_id':run,'floor':17})+'\\n')*2)
++d=summarize(p,[run]);item=d['runs'][run]
++assert item['decision_count']==2 and len(item['outcomes'])==2
++assert item['fallbacks']=={'deadline':1}
++assert d['sources'][1]['incomplete_lines']==1
++for ref in (x['ref'] for x in item['last_five_decision_refs']):
++ raw=data[ref['offset']:ref['offset']+ref['bytes']]
++ assert hashlib.sha256(raw).hexdigest()==ref['sha256']
++assert not d['complete_raw_evidence']
++(p/'runs.jsonl').unlink();assert summarize(p,[run])['sources'][0]['exists'] is False
++print('identity/hash/missing invariants OK')
++`, join(root, "learner"), tmp], { encoding: "utf8" });
++  expect(result.status, result.stderr).toBe(0);
++});
++
++const fake = join(tmp, "native");
++writeFileSync(fake, '#!/usr/bin/python3\nimport json,sys\nprint(json.dumps(sys.argv[1:]))\n');
++chmodSync(fake, 0o755);
++function boundary(args: string[]) {
++  return spawnSync("bash", ["-c", 'codex_bin="$1"; shift; . "$1" "${@:2}"', "test", fake,
++    join(root, "ops/codex-policy.sh"), ...args], { encoding: "utf8" });
++}
++
++it.each(["medium", "high", "xhigh"])("preserves explicit %s at the native boundary, including quoted config", (effort) => {
++  const result = boundary(["exec", "-c", `model_reasoning_effort="${effort}"`, "--model", "old", "-"]);
++  expect(result.status, result.stderr).toBe(0);
++  const args: string[] = JSON.parse(result.stdout);
++  expect(args).toContain(`model_reasoning_effort="${effort}"`);
++  expect(args).toContain('model="gpt-6.1-sol"');
++  expect(args).not.toContain("old");
++  expect(args.filter((v) => v.startsWith("model_reasoning_effort="))).toHaveLength(1);
++});
++
++it("supports inline effort, defaults to high, rejects invalid effort, and preserves sandbox child arguments", () => {
++  expect(JSON.parse(boundary(["exec", "-"]).stdout)).toContain('model_reasoning_effort="high"');
++  expect(JSON.parse(boundary(["exec", "--config=model_reasoning_effort=medium", "-"]).stdout)).toContain('model_reasoning_effort="medium"');
++  expect(boundary(["exec", "-c", "model_reasoning_effort=unknown"]).status).toBe(2);
++  const args: string[] = JSON.parse(boundary(["debug", "--", "-c", "model_reasoning_effort=child"]).stdout);
++  expect(args.slice(args.indexOf("--"))).toEqual(["--", "-c", "model_reasoning_effort=child"]);
++});
++
++it("ordinary tasks use high and specialists/gameplay retain their separate effort", () => {
++  for (const task of ["postmortem", "strategy-proposal", "fix-batch", "experience-update"])
++    expect(readFileSync(join(root, `learner/tasks/${task}.md`), "utf8")).toContain("effort.codex: high");
++  expect(readFileSync(join(root, "learner/tasks/silent-boss-calibration.md"), "utf8")).toContain("effort.codex: xhigh");
++});
+diff --git a/agent/tests/learner-strategy.test.ts b/agent/tests/learner-strategy.test.ts
+index 8ca7a19f0..48e77df05 100644
+--- a/agent/tests/learner-strategy.test.ts
++++ b/agent/tests/learner-strategy.test.ts
+@@ -42,14 +42,14 @@ print(json.dumps(dict(initial=initial,blocked=blocked,first=first,duplicate=dupl
+     expect(data.calls[0][3].split(",")).toHaveLength(10);
+   });
+ 
+-  it("renders a character-isolated evidence task at xhigh effort with the live release protocol", () => {
++  it("renders a character-isolated evidence task at high effort with the live release protocol", () => {
+     const spec = loadTask("strategy-proposal", "../learner/tasks");
+     const task = renderTask(spec, { runs: "SILENT000001" }, {
+       cwd: "/fixture/wt", worktree: "/fixture/wt", project_root: "/fixture", logs_dir: "/fixture/logs",
+       scratch: "/fixture/scratch", task: "strategy-proposal", ...characterBuiltins("silent"),
+     });
+-    // Roy's 2026-10-05 learner setting (45e22535); the in-game brain keeps its separate effort.
+-    expect(spec.efforts.codex).toBe("xhigh");
++    // Roy 2026-10-18: offline analysis uses high; the in-game brain keeps xhigh.
++    expect(spec.efforts.codex).toBe("high");
+     expect(task.values.merge).toBe("live");
+     for (const text of ["knowledge/characters/silent", "账本 id", "flock /fixture/ops/live-merge.lock", "保留刷新数据", "eval/versions.json", "不删选项", "游戏知识只能从对局里学"]) expect(task.prompt).toContain(text);
+     expect(task.prompt).not.toMatch(/\{\{|characters\/ironclad/);
+diff --git a/agent/tests/learner.test.ts b/agent/tests/learner.test.ts
+index df9d655dc..f56e7e2e5 100644
+--- a/agent/tests/learner.test.ts
++++ b/agent/tests/learner.test.ts
+@@ -48,7 +48,7 @@ describe("per-engine model and effort in the front matter", () => {
+     expect(() => parseTask(head("effort.codex: Extra High"), "t", "t.md")).toThrow(/小写词/);
+   });
+ 
+-  it("the launcher takes --effort, else the task's, else codex's default xhigh; claude gets none by default", async () => {
++  it("the launcher takes --effort, else the task's, else offline Codex's default high; claude gets none by default", async () => {
+     const dir = join(tmpdir(), `learner-fm-${process.pid}`);
+     mkdirSync(join(dir, "tasks"), { recursive: true });
+     mkdirSync(join(dir, "p", "wt"), { recursive: true });
+@@ -269,10 +269,10 @@ describe("codex command line", () => {
+     ]);
+   });
+ 
+-  it("a read-only task gets the read-only profile; gpt-6.1-sol at xhigh unless asked; never --sandbox (it cannot mix with a profile)", () => {
++  it("a read-only task gets the read-only profile; gpt-6.1-sol at high unless asked; never --sandbox (it cannot mix with a profile)", () => {
+     const req = request({ engine: "codex", tools: ["Read", "Grep", "Glob"], cwd: ROOT, home: "/h", keyFiles: [] });
+     const cmd = codexCommand(req, "x");
+-    expect(cmd.args).toEqual(["exec", "--json", "--ignore-user-config", "--ignore-rules", "--cd", ROOT, ...profileArgs(req), "--model", "gpt-6.1-sol", ...codexTail("xhigh"), ...disables(), "-"]);
++    expect(cmd.args).toEqual(["exec", "--json", "--ignore-user-config", "--ignore-rules", "--cd", ROOT, ...profileArgs(req), "--model", "gpt-6.1-sol", ...codexTail("high"), ...disables(), "-"]);
+     expect(cmd.args).not.toContain("--sandbox");
+     expect(cmd.args).not.toContain("--add-dir");
+   });
+@@ -603,7 +603,7 @@ describe("whole runs against fake binaries", () => {
+     expect(seen.argv.slice(0, 7)).toEqual(["exec", "--json", "--ignore-user-config", "--ignore-rules", "--cd", join(project, "wt"), "-c"]);
+     expect(seen.argv[7]).toBe('default_permissions="learner"');
+     expect(seen.argv[9]).toContain(`${JSON.stringify(join(tmp, "codex-home", "auth.json"))} = "none"`);
+-    expect(seen.argv.slice(10)).toEqual(["--model", "gpt-6.1-sol", ...codexTail("xhigh"), ...disables(), "-"]);
++    expect(seen.argv.slice(10)).toEqual(["--model", "gpt-6.1-sol", ...codexTail("high"), ...disables(), "-"]);
+     expect(seen.argv).not.toContain("--sandbox");
+     expect(seen.env).toContain("CODEX_HOME");
+     expect(seen.stdin.startsWith("【启动器说明（codex）】")).toBe(true);
+diff --git a/agent/tests/ops-codex.test.ts b/agent/tests/ops-codex.test.ts
+index a1773a7c9..4efb592ac 100644
+--- a/agent/tests/ops-codex.test.ts
++++ b/agent/tests/ops-codex.test.ts
+@@ -47,11 +47,11 @@ describe("command lines", () => {
+   const root = join(tmp, "proj");
+   mkdirSync(root, { recursive: true });
+ 
+-  it("init: codex exec with the ops profile, xhigh, compaction limit, the prompt on stdin", () => {
++  it("init: codex exec with the ops profile, high, compaction limit, the prompt on stdin", () => {
+     const cmd = initCommand(request(root), "PROMPT", "codex");
+     expect(cmd.args.slice(0, 2)).toEqual(["exec", "--json"]);
+     expect(cmd.args).toContain(`default_permissions="${OPS_PROFILE}"`);
+-    expect(cmd.args).toContain('model_reasoning_effort="xhigh"');
++    expect(cmd.args).toContain('model_reasoning_effort="high"');
+     expect(cmd.args).toContain('service_tier="default"');
+     expect(cmd.args).toContain("gpt-6.1-sol");
+     expect(cmd.args).toContain("model_auto_compact_token_limit=460800");
+diff --git a/agent/tests/ops-host-recovery.test.ts b/agent/tests/ops-host-recovery.test.ts
+index 934b2549b..2639f235f 100644
+--- a/agent/tests/ops-host-recovery.test.ts
++++ b/agent/tests/ops-host-recovery.test.ts
+@@ -22,7 +22,7 @@ it("uses explicit host access on all main ops launch paths, without conflicting
+     expect(args).toContain('approval_policy="never"');
+     expect(args.some((arg) => /^(default_permissions|permissions\.ops\.filesystem)=/.test(arg))).toBe(false);
+     expect(args).toContain("gpt-6.1-sol");
+-    expect(args).toContain('model_reasoning_effort="xhigh"');
++    expect(args).toContain('model_reasoning_effort="high"');
+   }
+ });
+ 
+diff --git a/agent/tests/subscription-usage.test.ts b/agent/tests/subscription-usage.test.ts
+index f94bb2d38..d5cc40be2 100644
+--- a/agent/tests/subscription-usage.test.ts
++++ b/agent/tests/subscription-usage.test.ts
+@@ -19,6 +19,16 @@ const usage = (reset = "2026-10-10T09:00:00Z"): CodexUsage => ({ readAt: now.toI
+     { name: "codex/secondary", usedPct: 21, windowMins: 10080, resetsAt: reset }], credits: null,
+   ordinaryUsageAllowed: true, reachedType: null, spendControlReached: null });
+ 
++it("preserves numeric account credits and keeps missing/stale balances distinct", () => {
++  const observed = { ...usage(), credits: { hasCredits: true, unlimited: false, balance: 35426.468553 } };
++  expect(quotaSnapshot(observed, now).credits).toEqual({ has_credits: true, unlimited: false, balance: 35426.468553, stale: false });
++  expect(quotaSnapshot(null, now).credits).toBeNull();
++  expect(quotaSnapshot(usage(), now).credits).toBeNull();
++  expect(quotaSnapshot({ ...observed, readAt: "2026-10-05T12:00:00Z" }, now).credits?.stale).toBe(true);
++  expect(quotaSnapshot({ ...observed, credits: { hasCredits: false, unlimited: false, balance: 0 } }, now).credits?.balance).toBe(0);
++  expect(quotaSnapshot({ ...observed, credits: { hasCredits: true, unlimited: false, balance: NaN } }, now).credits?.balance).toBeNull();
++});
++
+ it("maps the cached primary 43% observation to 5h and secondary to weekly by duration", () => {
+   const g = sessionGrowth(JSON.stringify({ type: "event_msg", payload: { type: "token_count", rate_limits: {
+     primary: { used_percent: 43, window_minutes: 300 }, secondary: { used_percent: 21, window_minutes: 10080 },
+diff --git a/docs/codex-ops.md b/docs/codex-ops.md
+index 7576caefd..e7d2a0cda 100644
+--- a/docs/codex-ops.md
++++ b/docs/codex-ops.md
+@@ -192,3 +192,9 @@ Roy要求将DPR供给检查固定到框架。现有五分钟 `tick stall` 在卡
+ - 快照和唯一异常证据在 `ops/codex-ops/module-health/`，属于小型正式验收记录；不复制全量日志，不创建学习WT。离线性能探针 `agent/tools/profile-build-health.ts` 只读冻结输入，最多4线程，须 `nice`；显式HP/当前模型重算不能称原历史胜率重放。开发WT按标准验收、合入及回收流程处理。
+ 
+ 只读手工核查（不投递异常）：`python3 ops/module_health.py --run <局号> --no-notify`。
++
++## Roy 2026-10-18 用量节省
++
++Silent 的例行复盘按 5 局批处理；不足 5 局从最早未复盘局结束起最多等待 2 小时，缺结束时间则从首次看到积压起计。下一次原 :13/:43 tick 到期派发，不增加 timer 或模型轮询。失败的原重试、逐局复盘/账本和手动立即 dispatch 保留；其他角色原节奏保持。普通策略原 10 份复盘/进阶触发保留，waiting 提案的相关证据去重由原独立任务处理。
++
++下一自然启动点普通分析/开发/ops 显式 high，困难专项及已绑定科学请求保留 xhigh；局内大脑 xhigh 不变，不改共用账号 config 或在途进程。新批先读 evidence_summary.py 生成的有限索引，再按 offset/bytes/SHA 读取需要的原文；摘要不替代资源链、全部冻结局覆盖或科学四闸。实际生效以新原生 turn_context 回执为准。
+diff --git a/learner/evidence_summary.py b/learner/evidence_summary.py
+new file mode 100644
+index 000000000..724dae6fc
+--- /dev/null
++++ b/learner/evidence_summary.py
+@@ -0,0 +1,93 @@
++#!/usr/bin/env python3
++"""Build a bounded evidence index, not game knowledge, before reading raw run data."""
++import argparse
++from collections import Counter, deque
++import hashlib
++import json
++from pathlib import Path
++import re
++
++from extract_evidence import run_identity
++
++
++def summarize(logs, runs):
++    logs = Path(logs)
++    selected = set(runs)
++    if not 1 <= len(selected) <= 10 or any(not re.fullmatch(r'[A-Z0-9]{12}', run) for run in selected):
++        raise ValueError('expected one to ten distinct observed run IDs')
++    result = {'schema': 'run-evidence-summary-v1', 'complete_raw_evidence': False,
++              'notice': '仅事实计数和有限索引；机制、资源、死因必须按原始行核验，缺失不是零。',
++              'sources': [], 'runs': {run: {'outcomes': [], 'decision_count': 0} for run in runs}}
++    labels = {run: Counter() for run in runs}
++    deciders = {run: Counter() for run in runs}
++    fallbacks = {run: Counter() for run in runs}
++    refs = {run: deque(maxlen=5) for run in runs}
++    needles = [run.encode() for run in runs]
++    for stream in ('runs', 'decisions'):
++        path = logs / (stream + '.jsonl')
++        info = {'path': str(path), 'exists': path.exists(), 'invalid_selected_lines': 0,
++                'incomplete_lines': 0, 'rows': 0}
++        result['sources'].append(info)
++        if not path.exists():
++            continue
++        with path.open('rb') as handle:
++            limit = path.stat().st_size
++            info['cutoff_bytes'] = limit
++            offset = 0
++            while offset < limit:
++                raw = handle.readline(limit - offset)
++                if not raw:
++                    raise ValueError('source truncated during scan')
++                start = offset
++                offset += len(raw)
++                info['rows'] += 1
++                if not raw.endswith(b'\n'):
++                    info['incomplete_lines'] += 1
++                    continue
++                if not any(needle in raw for needle in needles):
++                    continue
++                try:
++                    row = json.loads(raw)
++                except (ValueError, UnicodeDecodeError):
++                    info['invalid_selected_lines'] += 1
++                    continue
++                run = run_identity(row)
++                if run not in selected:
++                    continue
++                ref = {'source': str(path), 'offset': start, 'bytes': len(raw),
++                       'sha256': hashlib.sha256(raw).hexdigest()}
++                if stream == 'runs':
++                    # Retain all outcome references, including conflicting duplicate rows.
++                    result['runs'][run]['outcomes'].append({
++                        **{key: row[key] for key in ('ended', 'character', 'floor', 'ascension', 'victory', 'code') if key in row},
++                        'ref': ref})
++                    continue
++                result['runs'][run]['decision_count'] += 1
++                labels[run][str(row.get('label', '<missing>'))] += 1
++                deciders[run][str(row.get('decider', '<missing>'))] += 1
++                if row.get('fallback'):
++                    fallbacks[run][str(row['fallback'])[:160]] += 1
++                refs[run].append({**{key: row[key] for key in ('ts', 'floor', 'turn', 'label') if key in row}, 'ref': ref})
++    for run, item in result['runs'].items():
++        for name, counters in (('labels', labels), ('deciders', deciders), ('fallbacks', fallbacks)):
++            item[name] = dict(counters[run].most_common(12))
++            item[name + '_other_count'] = sum(counters[run].values()) - sum(item[name].values())
++        item['last_five_decision_refs'] = list(refs[run])
++    return result
++
++
++def main():
++    parser = argparse.ArgumentParser(description=__doc__)
++    parser.add_argument('--logs', type=Path, required=True)
++    parser.add_argument('--runs', required=True)
++    parser.add_argument('--out', type=Path, required=True)
++    args = parser.parse_args()
++    result = summarize(args.logs, args.runs.split(','))
++    args.out.parent.mkdir(parents=True, exist_ok=True)
++    args.out.write_text(json.dumps(result, ensure_ascii=False, separators=(',', ':')) + '\n')
++    print(json.dumps({'path': str(args.out), 'bytes': args.out.stat().st_size,
++                      'sha256': hashlib.sha256(args.out.read_bytes()).hexdigest()}))
++
++
++if __name__ == '__main__':
++    main()
+diff --git a/learner/lib/engines.ts b/learner/lib/engines.ts
+index 3bcb02af0..8b2ac85ea 100644
+--- a/learner/lib/engines.ts
++++ b/learner/lib/engines.ts
+@@ -21,16 +21,16 @@ import { CODEX_DISABLED_FEATURES, codexEnv } from "../../agent/src/brain/engines
+ import { runAgent } from "../../agent/src/brain/engines/process.js";
+ import type { McpLaunchSpec } from "../../agent/src/brain/tools/mcp-launch.js";
+ import { PROJECT_ROOT as REPO_ROOT } from "../../agent/src/core/paths.js";
+-import { CODEX_SERVICE_TIER, CODEX_CONTEXT_WINDOW, CODEX_AUTO_COMPACT_TOKENS, DEFAULT_CODEX_MODEL, DEFAULT_CODEX_EFFORT, resolveCodexBin, resolveCodexHome } from "../../agent/src/core/config.js";
++import { CODEX_SERVICE_TIER, CODEX_CONTEXT_WINDOW, CODEX_AUTO_COMPACT_TOKENS, DEFAULT_CODEX_MODEL, resolveCodexBin, resolveCodexHome } from "../../agent/src/core/config.js";
+ import { MCP_SERVER_NAME } from "../../agent/src/brain/tools/mcp-launch.js";
+ import type { TaskTool } from "./task.js";
+ 
+ export const ENGINES = ["claude", "codex"] as const;
+ export type EngineName = (typeof ENGINES)[number];
+ 
+-/** All project launchers share the same Codex defaults. */
++/** Offline work uses high; gameplay retains its separate xhigh default. */
+ export const DEFAULT_LEARNER_CODEX_MODEL = DEFAULT_CODEX_MODEL;
+-export const DEFAULT_LEARNER_CODEX_EFFORT = DEFAULT_CODEX_EFFORT;
++export const DEFAULT_LEARNER_CODEX_EFFORT = "high";
+ 
+ export interface EngineRequest {
+   engine: EngineName;
+@@ -533,7 +533,7 @@ export function codexChildEnv(env: NodeJS.ProcessEnv, bin: string): Record<strin
+ 
+ /**
+  * The engine's defaults under --model / --effort and the task's model.<engine> / effort.<engine>: codex gpt-6-astra
+- * at xhigh without Fast (Roy 2026-10-10); claude the CLI's own.
++ * at high without Fast (Roy 2026-10-18); claude the CLI's own.
+  */
+ export function engineDefaults(engine: EngineName): { model?: string; effort?: string } {
+   return engine === "codex" ? { model: DEFAULT_LEARNER_CODEX_MODEL, effort: DEFAULT_LEARNER_CODEX_EFFORT } : {};
+diff --git a/learner/tasks/ascension-audit.md b/learner/tasks/ascension-audit.md
+index 3fc09e176..2790844b2 100644
+--- a/learner/tasks/ascension-audit.md
++++ b/learner/tasks/ascension-audit.md
+@@ -1,6 +1,6 @@
+ ---
+ title: 升阶结构独立审计
+-effort.codex: xhigh
++effort.codex: high
+ tools: Read, Grep, Glob, Bash, Edit, Write
+ timeout_min: 120
+ max_turns: 400
+diff --git a/learner/tasks/experience-asc-audit.md b/learner/tasks/experience-asc-audit.md
+index 5b0babca9..7e4d520ea 100644
+--- a/learner/tasks/experience-asc-audit.md
++++ b/learner/tasks/experience-asc-audit.md
+@@ -1,7 +1,7 @@
+ ---
+ title: 经验库进阶审核
+ characters: ironclad
+-effort.codex: xhigh
++effort.codex: high
+ tools: Read, Grep, Glob, Bash, Edit, Write
+ timeout_min: 300
+ max_turns: 800
+diff --git a/learner/tasks/experience-update.md b/learner/tasks/experience-update.md
+index 19991b82d..3f9da4859 100644
+--- a/learner/tasks/experience-update.md
++++ b/learner/tasks/experience-update.md
+@@ -1,6 +1,6 @@
+ ---
+ title: 经验库更新
+-effort.codex: xhigh
++effort.codex: high
+ tools: Read, Grep, Glob, Bash, Edit, Write
+ timeout_min: 240
+ max_turns: 600
+diff --git a/learner/tasks/fix-batch.md b/learner/tasks/fix-batch.md
+index 0cf67273f..34ab048da 100644
+--- a/learner/tasks/fix-batch.md
++++ b/learner/tasks/fix-batch.md
+@@ -1,6 +1,6 @@
+ ---
+ title: 批量修 bug
+-effort.codex: xhigh
++effort.codex: high
+ tools: Read, Grep, Glob, Bash, Edit, Write
+ timeout_min: 240
+ max_turns: 800
+diff --git a/learner/tasks/mechanics-audit.md b/learner/tasks/mechanics-audit.md
+index 1a1972162..f6b88adfd 100644
+--- a/learner/tasks/mechanics-audit.md
++++ b/learner/tasks/mechanics-audit.md
+@@ -1,6 +1,6 @@
+ ---
+ title: 机制审计（只出提案）
+-effort.codex: xhigh
++effort.codex: high
+ tools: Read, Grep, Glob, Bash, Write
+ timeout_min: 45
+ max_turns: 200
+diff --git a/learner/tasks/postmortem.md b/learner/tasks/postmortem.md
+index e31d5c4e6..fa361b1ac 100644
+--- a/learner/tasks/postmortem.md
++++ b/learner/tasks/postmortem.md
+@@ -1,6 +1,6 @@
+ ---
+ title: 复盘
+-effort.codex: xhigh
++effort.codex: high
+ tools: Read, Grep, Glob, Bash
+ timeout_min: 120
+ max_turns: 400
+@@ -24,6 +24,9 @@ default.code_dir: {{project_root}}/.worktrees/live
+ 3. 这次复盘的是{{character_name}}（{{character}}）的局：每个 run id 在 runs.jsonl 里的 `character` 要是 {{character}}（不分大小写；没有这个字段的旧局是铁甲战士的）。不是的跳过，并在回报里写明。
+ {{/is_ironclad}}
+ 
++## 摘要优先（Roy 2026-10-18 用量节省）
++先运行 `nice -n 19 python3 {{project_root}}/learner/evidence_summary.py --logs "{{logs_dir}}" --runs "{{runs}}" --out "{{scratch}}/evidence-summary.json"`，只把该摘要及本批提案/已有复盘作为初始材料。摘要是事实索引，不提供游戏结论；需要验证的机制、资源、关键决定仍须按原始 offset/bytes/SHA 定位读取原文，并保留反例和缺失。不要把整份 `states.evidence.jsonl` 或本局所有 state 灌进上下文；脚本可完整流式分析，模型只读所需窗口和结构化结果。冻结专项输入/原请求若规定额外完整证据，仍全部覆盖，不能用摘要替代科学验收。
++
+ ## 2. 读哪些材料
+ - `{{project_root}}/notes/run-*-<run id>.md`（一局可能有好几个文件，是中途重启留下的，都要看）。
+ - `{{logs_dir}}` 下的：
+diff --git a/learner/tasks/strategy-proposal.md b/learner/tasks/strategy-proposal.md
+index e5c13ad3b..266048b66 100644
+--- a/learner/tasks/strategy-proposal.md
++++ b/learner/tasks/strategy-proposal.md
+@@ -1,6 +1,6 @@
+ ---
+ title: 策略提案与实现
+-effort.codex: xhigh
++effort.codex: high
+ tools: Read, Grep, Glob, Bash, Edit, Write
+ timeout_min: 240
+ max_turns: 800
+@@ -15,6 +15,9 @@ Roy 2026-10-05 08:33 批准独立策略学习任务。本次角色为 {{characte
+ 
+ 工作树：{{worktree}}；基线：{{base_branch}}；日志（只读）：{{logs_dir}}；临时文件只放 {{scratch}}。
+ 
++## 摘要优先（Roy 2026-10-18 用量节省）
++先运行 `nice -n 19 python3 {{project_root}}/learner/evidence_summary.py --logs "{{logs_dir}}" --runs "{{runs}}" --out "{{scratch}}/evidence-summary.json"`，只把该摘要及本批提案/已有复盘作为初始材料。摘要是事实索引，不提供游戏结论；需要验证的机制、资源、关键决定仍须按原始 offset/bytes/SHA 定位读取原文，并保留反例和缺失。不要把整份 `states.evidence.jsonl` 或本局所有 state 灌进上下文；脚本可完整流式分析，模型只读所需窗口和结构化结果。冻结专项输入/原请求若规定额外完整证据，仍全部覆盖，不能用摘要替代科学验收。
++
+ ## 1. 开工与证据
+ - 先读 README.md、最新 paper/materials/STATE-*.md、decision-log.md 末尾、docs/learning-protocol.md。先 git status 确认干净并核第 1.2 节身份；已绑定纯研究保持 dispatch_base，不合入后续 main。其他提案仍 git merge --no-edit {{base_branch}}；冲突就停下回报。
+ - 只从本角色对局、复盘和 {{character_dir}} 学习。核对 runs.jsonl 角色；不得读取或搬用其他角色知识。共用事实仅用观察得到的数据。
+diff --git a/ops/codex-ops-learn.py b/ops/codex-ops-learn.py
+index a0e19a83e..722bb0bc8 100755
+--- a/ops/codex-ops-learn.py
++++ b/ops/codex-ops-learn.py
+@@ -57,6 +57,7 @@ sys.path.insert(0, os.path.join(os.path.dirname(SCRIPTS), "knowledge", "builders
+ from characters import NAMES_ZH, character_key, run_character  # noqa: E402
+ 
+ BATCH_MAX = 5
++SILENT_BATCH_WAIT_S = 2 * 3600
+ RETRY_AFTER_S = 3600
+ MAX_ATTEMPTS = 3
+ RUN_ID = re.compile(r"^[0-9A-Z]{12}$")
+@@ -238,6 +239,7 @@ def check_postmortems(state, character):
+     have = postmortem_ids()
+     now = time.time()
+     todo = []
++    retry_ready = False
+     for row in finished_runs(character):
+         run = row["run_id"]
+         if run in have or run in todo:
+@@ -248,9 +250,33 @@ def check_postmortems(state, character):
+                 continue
+             if info.get("retry_at") is None or info["retry_at"] > now:
+                 continue
++        if info:
++            retry_ready = True
+         todo.append(run)
+     if not todo:
++        state.setdefault("postmortem_wait", {}).pop(character, None)
+         return None
++    if character == "silent" and len(todo) < BATCH_MAX and not retry_ready:
++        # Bound latency even if play stops before five runs. Manual dispatch bypasses this gate.
++        waiting = state.setdefault("postmortem_wait", {})
++        prior = waiting.get(character, {})
++        anchor = todo[0]
++        since = prior.get("since") if prior.get("anchor") == anchor else None
++        if not isinstance(since, (float, int)) or since > now:
++            since = now
++            # An old unreviewed run should not wait another two hours after deployment.
++            for row in finished_runs(character):
++                if row.get("run_id") == anchor and isinstance(row.get("ended"), str):
++                    try:
++                        ended = dt.datetime.fromisoformat(row["ended"].replace("Z", "+00:00"))
++                        if ended.tzinfo is not None:
++                            since = min(since, ended.timestamp())
++                    except ValueError:
++                        pass
++        waiting[character] = {"anchor": anchor, "since": since, "runs": todo}
++        if now - since < SILENT_BATCH_WAIT_S:
++            return None
++    state.setdefault("postmortem_wait", {}).pop(character, None)
+     return dispatch(state, todo[:BATCH_MAX], character, "tick")
+ 
+ 
+diff --git a/ops/codex-ops-learner.sh b/ops/codex-ops-learner.sh
+index 7133d26b6..99a7069af 100755
+--- a/ops/codex-ops-learner.sh
++++ b/ops/codex-ops-learner.sh
+@@ -144,7 +144,7 @@ if [ -n "${HERDR_HOST_LABEL:-}" ]; then
+   tail -n +1 -F "$out" "$err" 2>/dev/null &
+   tailer=$!
+ fi
+-# Scheduled learners use GPT-6.1 Sol/xhigh without Fast, including historical leased worktrees.
++# Scheduled ordinary work uses high; frozen specialist requests retain xhigh. No shared config edits.
+ # LEARNER_CMD overrides the command for fixed tests only.
+ if [ "$audit_ready" != 1 ]; then
+   rc=1
+@@ -169,7 +169,12 @@ else
+   fi
+   export STS2_CODEX_LEARNER_BIN="$codex_learner_native"
+   export LEARNER_CODEX_BIN="$codex_learner_wrapper"
+-  args=(--engine codex --model gpt-6.1-sol --effort xhigh --task "${implementation_task_file:-$learner_task}" --character "$character" --cwd "$worktree")
++  learner_effort=high
++  # Preserve specialist research and explicitly bound implementation requests.
++  if [ "$learner_task" != "$task" ] || [ -n "$research_request$implementation_request" ]; then
++    learner_effort=xhigh
++  fi
++  args=(--engine codex --model gpt-6.1-sol --effort "$learner_effort" --task "${implementation_task_file:-$learner_task}" --character "$character" --cwd "$worktree")
+   [ "$task" != strategy-proposal ] || args+=(--set "batch=$batch")
+   if [ "$learner_task" = silent-historical-core-builds ]; then
+     args+=(--set "evidence=${7}" --set "batch=$batch")
+diff --git a/ops/codex-policy.sh b/ops/codex-policy.sh
+index 1605c88aa..3d83274bb 100644
+--- a/ops/codex-policy.sh
++++ b/ops/codex-policy.sh
+@@ -1,12 +1,19 @@
+-# Sourced by the historical launcher names after resolving and checking the native binary.
+-# Only normalize Codex arguments; never inspect or rewrite a sandbox child after --.
++# Sourced by historical launcher names after resolving the native binary.
++# Respect explicit role effort without reading or editing shared account config.
+ args=()
+-policy=(-c 'model="gpt-6.1-sol"' -c 'model_reasoning_effort="xhigh"'
+-        -c 'service_tier="default"' -c 'model_context_window=512000'
+-        -c 'model_auto_compact_token_limit=460800')
++tail_args=()
++role_effort=high
++read_role_effort() {
++  local value="${1#*=}"
++  value="${value#\"}"; value="${value%\"}"
++  case "$value" in
++    medium|high|xhigh) role_effort="$value" ;;
++    *) echo "unsupported STS2 Codex role effort" >&2; exit 2 ;;
++  esac
++}
+ while [ "$#" -gt 0 ]; do
+   case "$1" in
+-    --) args+=("${policy[@]}" "$@"); policy=(); break ;;
++    --) tail_args=("$@"); break ;;
+     -m|--model)
+       [ "$#" -ge 2 ] || { echo "missing Codex model" >&2; exit 2; }
+       shift 2 ;;
+@@ -14,12 +21,16 @@ while [ "$#" -gt 0 ]; do
+     -c|--config)
+       [ "$#" -ge 2 ] || { echo "missing Codex config value" >&2; exit 2; }
+       case "$2" in
+-        model=*|model_reasoning_effort=*|service_tier=*|model_context_window=*|model_auto_compact_token_limit=*) shift 2; continue ;;
++        model_reasoning_effort=*) read_role_effort "$2"; shift 2; continue ;;
++        model=*|service_tier=*|model_context_window=*|model_auto_compact_token_limit=*) shift 2; continue ;;
+       esac
+       args+=("$1" "$2"); shift 2 ;;
+-    --config=model=*|--config=model_reasoning_effort=*|--config=service_tier=*|--config=model_context_window=*|--config=model_auto_compact_token_limit=*) shift ;;
++    --config=model_reasoning_effort=*) read_role_effort "${1#--config=}"; shift ;;
++    --config=model=*|--config=service_tier=*|--config=model_context_window=*|--config=model_auto_compact_token_limit=*) shift ;;
+     *) args+=("$1"); shift ;;
+   esac
+ done
+-args+=("${policy[@]}")
+-exec "$codex_bin" "${args[@]}"
++policy=(-c 'model="gpt-6.1-sol"' -c "model_reasoning_effort=\"$role_effort\""
++        -c 'service_tier="default"' -c 'model_context_window=512000'
++        -c 'model_auto_compact_token_limit=460800')
++exec "$codex_bin" "${args[@]}" "${policy[@]}" "${tail_args[@]}"
+diff --git a/ops/codex/lib.ts b/ops/codex/lib.ts
+index f7f81e715..81b5cf4bf 100644
+--- a/ops/codex/lib.ts
++++ b/ops/codex/lib.ts
+@@ -18,7 +18,7 @@
+ import { existsSync, readdirSync, readFileSync } from "node:fs";
+ import { join } from "node:path";
+ 
+-import { CODEX_SERVICE_TIER, CODEX_AUTO_COMPACT_TOKENS, DEFAULT_CODEX_EFFORT, DEFAULT_CODEX_MODEL } from "../../agent/src/core/config.js";
++import { CODEX_SERVICE_TIER, CODEX_AUTO_COMPACT_TOKENS, DEFAULT_CODEX_MODEL } from "../../agent/src/core/config.js";
+ import { codexCommand, mainCheckout, withCodexKeys, type CommandLine, type EngineRequest } from "../../learner/lib/engines.js";
+ import type { TaskTool } from "../../learner/lib/task.js";
+ 
+@@ -117,7 +117,7 @@ export function opsRequest(root: string, env: NodeJS.ProcessEnv, opts: { model?:
+       profile: OPS_PROFILE,
+       extraRules: opsExtraRules(root),
+       model: opts.model ?? env["CODEX_OPS_MODEL"] ?? DEFAULT_CODEX_MODEL,
+-      effort: opts.effort ?? env["CODEX_OPS_EFFORT"] ?? DEFAULT_CODEX_EFFORT,
++      effort: opts.effort ?? env["CODEX_OPS_EFFORT"] ?? "high",
+     },
+     env,
+   ), opsExecution: opsExecution(root, env) };
+@@ -129,7 +129,7 @@ export function opsRequest(root: string, env: NodeJS.ProcessEnv, opts: { model?:
+  */
+ export function initCommand(request: OpsRequest, prompt: string, bin: string): CommandLine {
+   const base = codexCommand({ ...request, model: request.model ?? DEFAULT_CODEX_MODEL,
+-    effort: request.effort ?? DEFAULT_CODEX_EFFORT, serviceTier: CODEX_SERVICE_TIER }, "", bin);
++    effort: request.effort ?? "high", serviceTier: CODEX_SERVICE_TIER }, "", bin);
+   if (base.args.at(-1) !== "-") throw new Error("codexCommand no longer ends with '-'");
+   if (request.opsExecution === "host") {
+     if (request.profile !== OPS_PROFILE) throw new Error("host execution is restricted to the main ops role");
+diff --git a/ops/subscription-usage.ts b/ops/subscription-usage.ts
+index 40b3f28ad..6eba8a516 100644
+--- a/ops/subscription-usage.ts
++++ b/ops/subscription-usage.ts
+@@ -23,6 +23,13 @@ export function quotaSnapshot(usage: CodexUsage | null, capturedAt: Date) {
+     source: "account/rateLimits/read", sample_observed_at: Number.isFinite(observed) ? new Date(observed).toISOString() : null,
+     freshness: usage ? (windows.length > 0 && windows.every((w) => !w.stale) ? "fresh" : "stale_or_unknown") : "failed",
+     error_code: usage ? null : "usage_read_failed", windows,
++    // Reuse the existing scheduler read; missing credits are unknown, never a zero balance.
++    credits: usage?.credits ? {
++      has_credits: usage.credits.hasCredits,
++      unlimited: usage.credits.unlimited,
++      balance: Number.isFinite(usage.credits.balance) ? usage.credits.balance : null,
++      stale: !Number.isFinite(observed) || age < 0 || age > 600_000,
++    } : null,
+   };
+ }
+ 
