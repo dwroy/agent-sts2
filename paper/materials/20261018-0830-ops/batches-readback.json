@@ -1,0 +1,509 @@
+[
+  {
+    "batch": "20261018-081302",
+    "canonical_state": "done",
+    "canonical_rc": 0,
+    "report": {
+      "task": "postmortem",
+      "appended": [
+        "KRLPMR0FWVZE"
+      ],
+      "skipped": [],
+      "bugs": [],
+      "ledger": {
+        "added": [
+          "silent-0514"
+        ],
+        "updated": [
+          "silent-0020",
+          "silent-0030",
+          "silent-0079",
+          "silent-0276",
+          "silent-0333"
+        ],
+        "repeats": [],
+        "check": 0
+      },
+      "code_proposals": [
+        "silent-proposal-3fc794d07eb2de0e",
+        "silent-proposal-9a02207e17a5b2af"
+      ],
+      "implementation_domains": [
+        "combat",
+        "potion",
+        "sl"
+      ],
+      "report": "/home/dw/Projects/agent-sts2/learner/runs/20261018-081306-ac103f15-31b9-4ba3-a1d1-94ce218ad9b7-postmortem/report.md"
+    },
+    "native": {
+      "batch": "20261018-081302",
+      "thread": "01a14c5a-f9a9-7340-bf37-b8073b26812f",
+      "cwd": "/home/dw/Projects/agent-sts2",
+      "event_log": "learner/runs/20261018-081306-ac103f15-31b9-4ba3-a1d1-94ce218ad9b7-postmortem.jsonl",
+      "registered_launch_batch": "20261018-081302",
+      "original_lease": "d3c3eedbf4c5b0acb9abdc1ee02122b5881ed022ebb24ec6ab48cbdfa19d0dd2",
+      "native_context": {
+        "source": "ops/codex-ops/accounts/codex3/learner/sessions/2026/10/18/rollout-2026-10-18T08-13-13-01a14c5a-f9a9-7340-bf37-b8073b26812f.jsonl",
+        "offset": 49293,
+        "bytes": 4654,
+        "sha256": "c780b957a2cfc326147dca559cb81701e06728643cb746bd01e14688cf1f9536",
+        "model": "gpt-6.1-sol",
+        "effort": "xhigh",
+        "sandbox": {
+          "type": "workspace-write",
+          "writable_roots": [
+            "/home/dw/Projects/agent-sts2/.git"
+          ],
+          "network_access": false,
+          "exclude_tmpdir_env_var": false,
+          "exclude_slash_tmp": false
+        },
+        "approval_policy": "never"
+      },
+      "native_user_input": {
+        "offset": 56530,
+        "bytes": 15345,
+        "sha256": "262c63840f8a0bf05dc3441c1da656bcc25a144ea7efcd2ded08061b14e6a19a",
+        "input_sha256": "3fd6941f5339fbb67ccc916c8524d0e830d8b4418504faf171b4ddec122cf412"
+      },
+      "original_header_events": [
+        {
+          "offset": 0,
+          "bytes": 16866,
+          "sha256": "8475c58dba7e8bb9bff36fa7314f0739c416689c3a89f26c98629b8697b3587d",
+          "type": "learner_launch",
+          "attempt": null,
+          "code": null
+        },
+        {
+          "offset": 16866,
+          "bytes": 360,
+          "sha256": "b3ae03898800d7e129c49725ac02494c42f5abcdfe5fa94eaaf01396ef2fc757",
+          "type": "learner_startup_attempt",
+          "attempt": 1,
+          "code": null
+        },
+        {
+          "offset": 20240,
+          "bytes": 77,
+          "sha256": "f1b49e19e32f9b367c7a886e359753f03a9962119a87f1d6bf6e4a296b6b12d3",
+          "type": "thread.started",
+          "attempt": null,
+          "code": null
+        }
+      ],
+      "startup_attempts": 1,
+      "failed_startups_preserved": 0,
+      "no_model_or_manual_restart": true
+    },
+    "source_files": [
+      {
+        "path": "agent/src/reflex/card-model.ts",
+        "sha256": "c6ee633f5e7e2b2e6569dc678e7e48972edb22211a0ed92c0266381b4b6449d0",
+        "blob": "6fc002409bce2b7f599c8039db7aa1e5ce6881c3",
+        "snapshot": "learner/runs/20261018-081306-ac103f15-31b9-4ba3-a1d1-94ce218ad9b7-postmortem/source-card-model.ts",
+        "run_start_commit": "adbdcb0a92e98a64a3f96bfe7faddf60642ab05a",
+        "run_start_leaf_same": true
+      },
+      {
+        "path": "agent/src/reflex/turn-solver.ts",
+        "sha256": "f9cc623485a3481db6b4cbe6d405a8d6f6677beb369309942598da3be685b808",
+        "blob": "a7f520dc34357a1c0d13c31c5ad35c96b3f66882",
+        "snapshot": "learner/runs/20261018-081306-ac103f15-31b9-4ba3-a1d1-94ce218ad9b7-postmortem/source-turn-solver.ts",
+        "run_start_commit": "adbdcb0a92e98a64a3f96bfe7faddf60642ab05a",
+        "run_start_leaf_same": true
+      },
+      {
+        "path": "agent/src/reflex/combat-plan.ts",
+        "sha256": "d2ce972bcfcfe1f558a32b1212f506734feeaadb7da3a26230bf9568702c3106",
+        "blob": "661e51d448af4ed0baa1112088e7a880ec452611",
+        "snapshot": "learner/runs/20261018-081306-ac103f15-31b9-4ba3-a1d1-94ce218ad9b7-postmortem/source-combat-plan.ts",
+        "run_start_commit": "adbdcb0a92e98a64a3f96bfe7faddf60642ab05a",
+        "run_start_leaf_same": true
+      },
+      {
+        "path": "agent/src/sl/explore.ts",
+        "sha256": "89875b8d7fa6470bf2fea69188c16125992f9736a6fa048123c26f7ae6c0d312",
+        "blob": "ddaacde8ed9f73fd035c145f82ea99a51ed48172",
+        "snapshot": "learner/runs/20261018-081306-ac103f15-31b9-4ba3-a1d1-94ce218ad9b7-postmortem/source-explore.ts",
+        "run_start_commit": "adbdcb0a92e98a64a3f96bfe7faddf60642ab05a",
+        "run_start_leaf_same": true
+      }
+    ],
+    "source_stream_counts": {
+      "brain.jsonl": 16,
+      "decisions.jsonl": 648,
+      "run-config.jsonl": 1,
+      "run-plans.jsonl": 5,
+      "sl-attempts.jsonl": 6,
+      "states.jsonl": 657
+    },
+    "original_ledger_rows": [
+      {
+        "offset": 24189531,
+        "bytes": 617,
+        "sha256": "76db66862ca4754df59edef5783c6ec4402e757de76bd489231845851598384e",
+        "row": {
+          "op": "update",
+          "id": "silent-0020",
+          "ts": "2026-10-18T08:27:39+08:00",
+          "by": "learner:postmortem",
+          "evidence": [
+            {
+              "run": "KRLPMR0FWVZE",
+              "floor": 13,
+              "note": "八胜战净损103；事件补33、三火补63，56+33+63-103=49。F13所选回血分支投影boss63，实际49；F16所选49与实际一致。仅补资源分账支持，没有锻造或换线的受控整场对照。",
+              "role": "support"
+            }
+          ],
+          "where": {
+            "lessons": [
+              "KRLPMR0FWVZE"
+            ]
+          },
+          "note": "来源20261018-081306-ac103f15-31b9-4ba3-a1d1-94ce218ad9b7-postmortem；只补本角色实证与复盘去处，保留旧claim/first_run/prior/status/version/effect。"
+        }
+      },
+      {
+        "offset": 24190148,
+        "bytes": 683,
+        "sha256": "713fc05e76430277a9654be0e91730f394e42bb68bf656bd92ddcc47aad8a44a",
+        "row": {
+          "op": "update",
+          "id": "silent-0030",
+          "ts": "2026-10-18T08:27:39+08:00",
+          "by": "learner:postmortem",
+          "evidence": [
+            {
+              "run": "KRLPMR0FWVZE",
+              "floor": 17,
+              "note": "末试三次吸取在T6/T10/T14执行，玩家力敏各减2、敌力各加2。复制普通非凡先建2力2敏，苦无六次各加1敏，末轮-4力/2敏，两防御共14，对20攻、4血死亡、敌68。只支持既有吸取机制，不把未胜当旧错误repeat。",
+              "role": "support",
+              "turn": 15
+            }
+          ],
+          "where": {
+            "lessons": [
+              "KRLPMR0FWVZE"
+            ]
+          },
+          "note": "来源20261018-081306-ac103f15-31b9-4ba3-a1d1-94ce218ad9b7-postmortem；只补本角色实证与复盘去处，保留旧claim/first_run/prior/status/version/effect。"
+        }
+      },
+      {
+        "offset": 24190831,
+        "bytes": 677,
+        "sha256": "9512d91451f215bc16d10bc22bee8614c75c43da1f20162b9819a9e4179fea37",
+        "row": {
+          "op": "update",
+          "id": "silent-0079",
+          "ts": "2026-10-18T08:27:39+08:00",
+          "by": "learner:postmortem",
+          "evidence": [
+            {
+              "run": "KRLPMR0FWVZE",
+              "floor": 17,
+              "note": "d431164末试SL将尖啸换第二打击，预测损4/伤7→损10/伤13；第五试T7实30→26、敌150→143，第六试实30→20、敌150→137，实际多损6/多伤6。前者T13判死，后者T15死亡；没有胜利对照，不据晚死断言安全改善。",
+              "role": "support",
+              "turn": 7
+            }
+          ],
+          "where": {
+            "lessons": [
+              "KRLPMR0FWVZE"
+            ]
+          },
+          "note": "来源20261018-081306-ac103f15-31b9-4ba3-a1d1-94ce218ad9b7-postmortem；只补本角色实证与复盘去处，保留旧claim/first_run/prior/status/version/effect。"
+        }
+      },
+      {
+        "offset": 24191508,
+        "bytes": 573,
+        "sha256": "4e1a066b03c033a8c25eafe8ea3892764ed374326c3e20b1a188b2febc003194",
+        "row": {
+          "op": "update",
+          "id": "silent-0276",
+          "ts": "2026-10-18T08:27:39+08:00",
+          "by": "learner:postmortem",
+          "evidence": [
+            {
+              "run": "KRLPMR0FWVZE",
+              "floor": 8,
+              "note": "d430719、s445457→445458：敏捷药水使0→2敏，已有10挡保持10，后继按现场敏捷；本场43→6获胜。不推提前喝药必胜或持有价。",
+              "role": "support",
+              "turn": 4
+            }
+          ],
+          "where": {
+            "lessons": [
+              "KRLPMR0FWVZE"
+            ]
+          },
+          "note": "来源20261018-081306-ac103f15-31b9-4ba3-a1d1-94ce218ad9b7-postmortem；只补本角色实证与复盘去处，保留旧claim/first_run/prior/status/version/effect。"
+        }
+      },
+      {
+        "offset": 24192081,
+        "bytes": 673,
+        "sha256": "ef55aa30ca26d7e4f04ac663f2083814079fd41cbf56fd301b571a7fb88e2651",
+        "row": {
+          "op": "update",
+          "id": "silent-0333",
+          "ts": "2026-10-18T08:27:39+08:00",
+          "by": "learner:postmortem",
+          "evidence": [
+            {
+              "run": "KRLPMR0FWVZE",
+              "floor": 14,
+              "note": "d430802/430803，s445543→445548：能力药水实际取无尽刀刃，T1建立INFINITE_BLADES_POWER1，后轮小刀按实际状态与出牌计；该临时能力不在F17永久22张牌组。仅补已建与持有/生成分账，不改变旧claim或判repeat。",
+              "role": "support",
+              "turn": 1
+            }
+          ],
+          "where": {
+            "lessons": [
+              "KRLPMR0FWVZE"
+            ]
+          },
+          "note": "来源20261018-081306-ac103f15-31b9-4ba3-a1d1-94ce218ad9b7-postmortem；只补本角色实证与复盘去处，保留旧claim/first_run/prior/status/version/effect。"
+        }
+      },
+      {
+        "offset": 24192754,
+        "bytes": 1436,
+        "sha256": "b1f5d471809829381340ea56f4da83357a64708a93026e63c25400cac2dce89b",
+        "row": {
+          "op": "add",
+          "id": "silent-0514",
+          "ts": "2026-10-18T08:27:40+08:00",
+          "by": "learner:postmortem",
+          "character": "silent",
+          "kind": "mechanic",
+          "claim": "KRLPMR0FWVZE A10族母战：普通非凡技艺PROWESS现场牌面各给1力量/敏捷；先饮复制药水建立DUPLICATION_POWER1后，施放实使力敏各0→2、复制消失，已有格挡仍0。后续实际投掷匕首扣11、突然一拳扣10；格挡药水另加12挡。这是普通能力与药水的实测组合，不能搬用升级牌2点作为单次值，也不代表已经形成格挡或整场胜率提高。五次复现来自同一局的SL尝试，n=1。",
+          "evidence": [
+            {
+              "run": "KRLPMR0FWVZE",
+              "floor": 17,
+              "turn": 3,
+              "role": "support",
+              "note": "首试d430874—430879、s445616—445622；末试d431142—431147、s445884—445890。复制1→消失、力敏各0→2、已有挡0不变；原物理行/偏移/字节数/SHA见任务evidence-manifest.json。第二试T3先单放能力、T7才喝复制，为不同牌序边界，非胜负对照。"
+            }
+          ],
+          "first_run": "KRLPMR0FWVZE",
+          "prior": "unknown",
+          "prior_runs": [],
+          "prior_note": "ledger.py按PROWESS/非凡技艺/DUPLICATOR/复制药水检索；旧silent-0036是升级牌各2，silent-0118是爆发+与药瓶的另一组合。本角色较早复盘未检出普通非凡技艺配复制的同场组合，未据此声称所有旧状态从未出现。",
+          "status": "observed",
+          "where": {
+            "lessons": [
+              "KRLPMR0FWVZE"
+            ]
+          },
+          "asc": 10
+        }
+      },
+      {
+        "offset": 24194190,
+        "bytes": 376,
+        "sha256": "7ec751cd07ac49dbfe79ca4ddf717a34b5c4d88a7c3f9abd913791b0c7547796",
+        "row": {
+          "op": "update",
+          "id": "silent-0514",
+          "ts": "2026-10-18T08:29:10+08:00",
+          "by": "learner:postmortem",
+          "where": {
+            "proposal": [
+              "/home/dw/Projects/agent-sts2/learner/runs/20261018-081306-ac103f15-31b9-4ba3-a1d1-94ce218ad9b7-postmortem/proposal-mechanic-consumers.md"
+            ]
+          },
+          "note": "代码提案 silent-proposal-3fc794d07eb2de0e → task=strategy-proposal；Roy-2026-10-07-learning"
+        }
+      },
+      {
+        "offset": 24194566,
+        "bytes": 376,
+        "sha256": "41bd50e49309459c588fc61c8e2f75e3af5d5a5bc83933420c25bd2d116b4075",
+        "row": {
+          "op": "update",
+          "id": "silent-0030",
+          "ts": "2026-10-18T08:29:10+08:00",
+          "by": "learner:postmortem",
+          "where": {
+            "proposal": [
+              "/home/dw/Projects/agent-sts2/learner/runs/20261018-081306-ac103f15-31b9-4ba3-a1d1-94ce218ad9b7-postmortem/proposal-mechanic-consumers.md"
+            ]
+          },
+          "note": "代码提案 silent-proposal-3fc794d07eb2de0e → task=strategy-proposal；Roy-2026-10-07-learning"
+        }
+      },
+      {
+        "offset": 24194942,
+        "bytes": 376,
+        "sha256": "1abed0db8bbf157b333b48758ddabd05fd3836e724509a6142b0dca898d743e2",
+        "row": {
+          "op": "update",
+          "id": "silent-0276",
+          "ts": "2026-10-18T08:29:10+08:00",
+          "by": "learner:postmortem",
+          "where": {
+            "proposal": [
+              "/home/dw/Projects/agent-sts2/learner/runs/20261018-081306-ac103f15-31b9-4ba3-a1d1-94ce218ad9b7-postmortem/proposal-mechanic-consumers.md"
+            ]
+          },
+          "note": "代码提案 silent-proposal-3fc794d07eb2de0e → task=strategy-proposal；Roy-2026-10-07-learning"
+        }
+      },
+      {
+        "offset": 24195318,
+        "bytes": 376,
+        "sha256": "aa36f2e6a4e588e8be92163bec4e3fd8c2ec20c915a1ae6a824868d5c3524fcd",
+        "row": {
+          "op": "update",
+          "id": "silent-0333",
+          "ts": "2026-10-18T08:29:10+08:00",
+          "by": "learner:postmortem",
+          "where": {
+            "proposal": [
+              "/home/dw/Projects/agent-sts2/learner/runs/20261018-081306-ac103f15-31b9-4ba3-a1d1-94ce218ad9b7-postmortem/proposal-mechanic-consumers.md"
+            ]
+          },
+          "note": "代码提案 silent-proposal-3fc794d07eb2de0e → task=strategy-proposal；Roy-2026-10-07-learning"
+        }
+      },
+      {
+        "offset": 24195694,
+        "bytes": 378,
+        "sha256": "14871e31959d82fff39cea8cb223686bc146b1de8461bb6473b65933a71ed29f",
+        "row": {
+          "op": "update",
+          "id": "silent-0079",
+          "ts": "2026-10-18T08:29:13+08:00",
+          "by": "learner:postmortem",
+          "where": {
+            "proposal": [
+              "/home/dw/Projects/agent-sts2/learner/runs/20261018-081306-ac103f15-31b9-4ba3-a1d1-94ce218ad9b7-postmortem/proposal-guard-sl-attribution.md"
+            ]
+          },
+          "note": "代码提案 silent-proposal-9a02207e17a5b2af → task=strategy-proposal；Roy-2026-10-07-learning"
+        }
+      },
+      {
+        "offset": 24196072,
+        "bytes": 378,
+        "sha256": "bd63172c1440a623cdb42aeff36cae3006d89b0c2509cf906102fd7a250b28bd",
+        "row": {
+          "op": "update",
+          "id": "silent-0020",
+          "ts": "2026-10-18T08:29:13+08:00",
+          "by": "learner:postmortem",
+          "where": {
+            "proposal": [
+              "/home/dw/Projects/agent-sts2/learner/runs/20261018-081306-ac103f15-31b9-4ba3-a1d1-94ce218ad9b7-postmortem/proposal-guard-sl-attribution.md"
+            ]
+          },
+          "note": "代码提案 silent-proposal-9a02207e17a5b2af → task=strategy-proposal；Roy-2026-10-07-learning"
+        }
+      }
+    ],
+    "original_queue_rows": [
+      {
+        "offset": 4577438,
+        "bytes": 782,
+        "sha256": "44409f3b198926eeded30bccc7c937c838fe3e16b8f6b0bd7310bc1f6a56631f",
+        "row": {
+          "op": "add",
+          "id": "silent-proposal-3fc794d07eb2de0e",
+          "ts": "2026-10-18T08:29:11+08:00",
+          "character": "silent",
+          "ledger": [
+            "silent-0514",
+            "silent-0030",
+            "silent-0276",
+            "silent-0333"
+          ],
+          "runs": [
+            "KRLPMR0FWVZE"
+          ],
+          "source_task": "postmortem",
+          "target_task": "strategy-proposal",
+          "domains": [
+            "combat",
+            "potion"
+          ],
+          "summary": "以本局核普通非凡复制的2力2敏、后继格挡及吸取消减消费者；已有模型先查重，缺证保留原行为。",
+          "proposal": "/home/dw/Projects/agent-sts2/learner/runs/20261018-081306-ac103f15-31b9-4ba3-a1d1-94ce218ad9b7-postmortem/proposal-mechanic-consumers.md",
+          "rule_changes": false,
+          "authorization": "Roy-2026-10-07-learning",
+          "proposal_sha256": "e8a2202a5abf006fa57bca97d2479584233b138c56572256cfba58b05adc2b0f",
+          "state": "pending"
+        }
+      },
+      {
+        "offset": 4578220,
+        "bytes": 735,
+        "sha256": "52cbc2bf29f16e094d7d5e40c8cb0c5631894d39789def1794f42d8a6d75df53",
+        "row": {
+          "op": "add",
+          "id": "silent-proposal-9a02207e17a5b2af",
+          "ts": "2026-10-18T08:29:13+08:00",
+          "character": "silent",
+          "ledger": [
+            "silent-0079",
+            "silent-0020"
+          ],
+          "runs": [
+            "KRLPMR0FWVZE"
+          ],
+          "source_task": "postmortem",
+          "target_task": "strategy-proposal",
+          "domains": [
+            "combat",
+            "sl"
+          ],
+          "summary": "核5次护栏与9条SL候选差的实际后继归因；T7实际6血换6伤，缺整战反事实不改探索阈值。",
+          "proposal": "/home/dw/Projects/agent-sts2/learner/runs/20261018-081306-ac103f15-31b9-4ba3-a1d1-94ce218ad9b7-postmortem/proposal-guard-sl-attribution.md",
+          "rule_changes": false,
+          "authorization": "Roy-2026-10-07-learning",
+          "proposal_sha256": "83d1243e772a3c8dd65f0281e3d69ecf9cb3593f38cdd5c599183f0abfbb324e",
+          "state": "pending"
+        }
+      }
+    ],
+    "postmortem_chunk_sha256": "5a3452f8d1a32bebb72bdc74b18c75dcb692e96ec51d43b00b90b9c15bda2d51",
+    "postmortem_bytes": 19812,
+    "actual_run_identity": {
+      "run_id": "KRLPMR0FWVZE",
+      "ended": "2026-10-18T00:00:42.377Z",
+      "victory": false,
+      "floor": 17,
+      "character": "SILENT",
+      "ascension": 10,
+      "code": "current",
+      "decisions": 648,
+      "jev_calls": 178,
+      "deepseek_calls": 16,
+      "claude_calls": 0,
+      "tokens": 1408469,
+      "ds_tokens_in": 2970233,
+      "ds_tokens_out": 19685,
+      "ds_cache_hit": 149376,
+      "deciders": {
+        "codex": 20,
+        "code": 276,
+        "jev": 178,
+        "jev-plan": 168,
+        "code-fallback": 6
+      },
+      "death_fight": [
+        "乐加维林族母"
+      ],
+      "death_fight_floor": 17,
+      "death_enemy_ids": [
+        "LAGAVULIN_MATRIARCH"
+      ]
+    },
+    "no_new_pure_bugs": true,
+    "complete_dirty_start_snapshot_not_claimed": true,
+    "SL_attempts_not_independent_support": true
+  }
+]
