@@ -1,0 +1,171 @@
+{
+  "at": "2026-10-18 11:59:16 CST",
+  "original_batch": "20261016-075726-strategy-proposal",
+  "original_check": {
+    "rc": 0,
+    "log": "/home/dw/Projects/agent-sts2/ops/codex-ops/learner/20261016-075726-strategy-proposal.fallback-f0cec4c3c1f76d2179b3cc79ffa6434eed0c3022.checks.log",
+    "merged": "e713f211362f23e21102c63cd9a5e0195833021c",
+    "tree": "f0cec4c3c1f76d2179b3cc79ffa6434eed0c3022",
+    "commits": [
+      "28161b2d2a31e95587999fc6e5028acd727cecb2",
+      "b2bdb0b1dbc7ec9a39909595238b00efbb718321"
+    ]
+  },
+  "request": {
+    "at": "2026-10-18 11:41:57 CST",
+    "batch": "20261016-075726-strategy-proposal",
+    "command": [
+      "nice",
+      "-n",
+      "19",
+      "bash",
+      "ops/codex-ops-actions.sh",
+      "learner-recheck",
+      "20261016-075726-strategy-proposal"
+    ],
+    "entry": "original learner-recheck native action; primary ops host mode",
+    "original_broker_action_entry_used_directly": true,
+    "original_unique_host_channel_preserved": true,
+    "source": "cde4957955c45587672c2767b093cd558c9e1c60",
+    "release_id": "V5-R396",
+    "requested_live": "e713f211362f23e21102c63cd9a5e0195833021c",
+    "requested_tree": "f0cec4c3c1f76d2179b3cc79ffa6434eed0c3022",
+    "sl_original_published_live": "875500bb5e1f87c0635ea9c909cd70ed1f8c192d",
+    "monitoring_source": "5011b4cbda9a9056a1fd146e375e3cd67b60c0a9",
+    "monitoring_batch": "20261018-110254-fix-batch",
+    "monitoring_exact_three_leaves_present": true,
+    "original_batch_and_reports_not_rewritten": true,
+    "original_sl_source_full_rc": 0,
+    "original_monitoring_source_full_rc": 0,
+    "one_new_combination_host_request": true,
+    "actual_host_test_started_not_assumed": true,
+    "host_complete": false,
+    "result_by_normal_learner_checks_event": true,
+    "no_poll_or_wait": true,
+    "client_job_pid": 679311,
+    "pid_kind": "finite original action wrapper; not claimed host test PID"
+  },
+  "terminal": {
+    "at": "2026-10-18 11:56:56 CST",
+    "actual_action_exit": 0,
+    "request": "paper/materials/20261018-1133-ops/host-recheck-request.json",
+    "action_log": "paper/materials/20261018-1133-ops/host-recheck-action.log",
+    "actual_full_result_must_be_read_from_original_pinned_receipt": true
+  },
+  "actual_tsc_and_vitest_exit": 0,
+  "files": 546,
+  "passed_cases": 5285,
+  "skipped_cases": 2,
+  "elapsed_seconds": 896.23,
+  "log_sha256": "b925a36c6067bedafa51169a0c4a5c6a5fc8533c6e175e6e0a7a1093314034d8",
+  "checked_live": "e713f211362f23e21102c63cd9a5e0195833021c",
+  "checked_tree": "f0cec4c3c1f76d2179b3cc79ffa6434eed0c3022",
+  "actual_leaf_pins": [
+    {
+      "source": "cde4957955c45587672c2767b093cd558c9e1c60",
+      "path": "agent/src/core/decision-budget.ts",
+      "checked_sha256": "a6e7e627467274731ab704c42ff4b52cc0f122ccb41e4360215dc0fcb2c1fd12",
+      "current_live_sha256": "a6e7e627467274731ab704c42ff4b52cc0f122ccb41e4360215dc0fcb2c1fd12",
+      "actual_main_sha256": "a6e7e627467274731ab704c42ff4b52cc0f122ccb41e4360215dc0fcb2c1fd12",
+      "actual_main_exact_source": true,
+      "main_historical_attribution_only": false
+    },
+    {
+      "source": "cde4957955c45587672c2767b093cd558c9e1c60",
+      "path": "agent/src/hand/loop.ts",
+      "checked_sha256": "688333c8df339d1a0867ef63e734ab451abc096b9259cd672e4c4231daf166e1",
+      "current_live_sha256": "688333c8df339d1a0867ef63e734ab451abc096b9259cd672e4c4231daf166e1",
+      "actual_main_sha256": "688333c8df339d1a0867ef63e734ab451abc096b9259cd672e4c4231daf166e1",
+      "actual_main_exact_source": true,
+      "main_historical_attribution_only": false
+    },
+    {
+      "source": "cde4957955c45587672c2767b093cd558c9e1c60",
+      "path": "agent/src/hand/pace-precompute.ts",
+      "checked_sha256": "dd2ca27c65749e756e75fc9aa026e56bb059eaa4d3b82779e97f559484215a68",
+      "current_live_sha256": "dd2ca27c65749e756e75fc9aa026e56bb059eaa4d3b82779e97f559484215a68",
+      "actual_main_sha256": "dd2ca27c65749e756e75fc9aa026e56bb059eaa4d3b82779e97f559484215a68",
+      "actual_main_exact_source": true,
+      "main_historical_attribution_only": false
+    },
+    {
+      "source": "cde4957955c45587672c2767b093cd558c9e1c60",
+      "path": "agent/src/sl/controller.ts",
+      "checked_sha256": "0814ca2a4a5d5a1e9247f717ca8e5306f443fc23fe24dcc8d1c8de3b331fdca5",
+      "current_live_sha256": "0814ca2a4a5d5a1e9247f717ca8e5306f443fc23fe24dcc8d1c8de3b331fdca5",
+      "actual_main_sha256": "675b4408fa8c6d7074c8db98f949bd14a422fd57c6bbb28a0ed438c85070b4fc",
+      "actual_main_exact_source": false,
+      "main_historical_attribution_only": true
+    },
+    {
+      "source": "cde4957955c45587672c2767b093cd558c9e1c60",
+      "path": "agent/tests/human-pace-jev.test.ts",
+      "checked_sha256": "377a68bf694285ff5835d7e66c2ac75994c5173bf19df70ac1f473befe308e72",
+      "current_live_sha256": "377a68bf694285ff5835d7e66c2ac75994c5173bf19df70ac1f473befe308e72",
+      "actual_main_sha256": "377a68bf694285ff5835d7e66c2ac75994c5173bf19df70ac1f473befe308e72",
+      "actual_main_exact_source": true,
+      "main_historical_attribution_only": false
+    },
+    {
+      "source": "cde4957955c45587672c2767b093cd558c9e1c60",
+      "path": "agent/tests/human-pace-sampling.test.ts",
+      "checked_sha256": "0b91c8dda4a86f636ebde122ef1523bc635a121e5a853e8a80286e5fd4b065fd",
+      "current_live_sha256": "0b91c8dda4a86f636ebde122ef1523bc635a121e5a853e8a80286e5fd4b065fd",
+      "actual_main_sha256": "0b91c8dda4a86f636ebde122ef1523bc635a121e5a853e8a80286e5fd4b065fd",
+      "actual_main_exact_source": true,
+      "main_historical_attribution_only": false
+    },
+    {
+      "source": "cde4957955c45587672c2767b093cd558c9e1c60",
+      "path": "agent/tests/human-pace-sl-budget.test.ts",
+      "checked_sha256": "dcedda5e6063127e8c2ef8822fc7564b9661044dba3208db31036c04e8fd0d93",
+      "current_live_sha256": "dcedda5e6063127e8c2ef8822fc7564b9661044dba3208db31036c04e8fd0d93",
+      "actual_main_sha256": "dcedda5e6063127e8c2ef8822fc7564b9661044dba3208db31036c04e8fd0d93",
+      "actual_main_exact_source": true,
+      "main_historical_attribution_only": false
+    },
+    {
+      "source": "cde4957955c45587672c2767b093cd558c9e1c60",
+      "path": "agent/tests/human-pace-sl-loop.test.ts",
+      "checked_sha256": "4ab329485f850a426ed1c1c05046159c0b73a33db9a43063d52c69d951b9aba2",
+      "current_live_sha256": "4ab329485f850a426ed1c1c05046159c0b73a33db9a43063d52c69d951b9aba2",
+      "actual_main_sha256": "4ab329485f850a426ed1c1c05046159c0b73a33db9a43063d52c69d951b9aba2",
+      "actual_main_exact_source": true,
+      "main_historical_attribution_only": false
+    },
+    {
+      "source": "5011b4cbda9a9056a1fd146e375e3cd67b60c0a9",
+      "path": "agent/tests/adaptive_health_test.py",
+      "checked_sha256": "1b3b26ddc4b081c745ced4f00530c271a652008193d61c94942dba0cbe8d4143",
+      "current_live_sha256": "1b3b26ddc4b081c745ced4f00530c271a652008193d61c94942dba0cbe8d4143",
+      "actual_main_sha256": "1b3b26ddc4b081c745ced4f00530c271a652008193d61c94942dba0cbe8d4143",
+      "actual_main_exact_source": true,
+      "main_historical_attribution_only": false
+    },
+    {
+      "source": "5011b4cbda9a9056a1fd146e375e3cd67b60c0a9",
+      "path": "agent/tests/fixtures/human-pace-indifferent.json",
+      "checked_sha256": "4533bd247906e9a6448f65d0fa11e68f7027bd55257dd4871f638321a514f9ed",
+      "current_live_sha256": "4533bd247906e9a6448f65d0fa11e68f7027bd55257dd4871f638321a514f9ed",
+      "actual_main_sha256": "4533bd247906e9a6448f65d0fa11e68f7027bd55257dd4871f638321a514f9ed",
+      "actual_main_exact_source": true,
+      "main_historical_attribution_only": false
+    },
+    {
+      "source": "5011b4cbda9a9056a1fd146e375e3cd67b60c0a9",
+      "path": "ops/adaptive_health.py",
+      "checked_sha256": "4ff7a071fd922c227842cd8b4152957cd8e90017a4b86c335a2ab3e8ecf4e19e",
+      "current_live_sha256": "4ff7a071fd922c227842cd8b4152957cd8e90017a4b86c335a2ab3e8ecf4e19e",
+      "actual_main_sha256": "4ff7a071fd922c227842cd8b4152957cd8e90017a4b86c335a2ab3e8ecf4e19e",
+      "actual_main_exact_source": true,
+      "main_historical_attribution_only": false
+    }
+  ],
+  "source_original_full_results_preserved": true,
+  "source_or_combination_not_retested": true,
+  "applies_to_actual_R396_and_exact_monitoring_three_leaf_combination": true,
+  "full_check_not_source_green_borrowed": true,
+  "natural_runtime_or_game_benefit_not_certified": true,
+  "scientific_parents_closed": false,
+  "other_role_ack": false
+}
