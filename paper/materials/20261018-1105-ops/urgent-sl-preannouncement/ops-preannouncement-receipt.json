@@ -1,0 +1,78 @@
+{
+  "at": "2026-10-18 11:11:22 CST",
+  "request": "roy-20261017-human-pace",
+  "approved_plan": "678104758461a767f2f180d7cbf5fc46e02e682f",
+  "actual_ops_preannouncement_received": true,
+  "final_implementation_source_received": false,
+  "source_commit": null,
+  "source_tree": null,
+  "source_workspace": ".worktrees/sl-retry-budget-20261018",
+  "source_owner": "Existing watcher assigned by Claude/Roy; no new owner or model",
+  "urgency": "Prioritize final source delivery after its one original source check terminates",
+  "approved_changes": [
+    "Silent every combat turn reserves 3 seconds for Jev within the same turn budget",
+    "SL retry uses actual first-attempt fight budget: Boss60 / elite15 / normal10 seconds, exact reuse retained",
+    "All existing Silent SL gates at most 4 total attempts; already lower configured limits not increased; other roles retain original behavior"
+  ],
+  "watcher_reported_provisional_checks": {
+    "selected_fixed_cases": 34,
+    "selected_exit": 0,
+    "tsc_exit": 0,
+    "source_gitleaks_exit": 0,
+    "sole_source_full_check": "running; no terminal result or source commit yet",
+    "independently_repeated_by_ops": false
+  },
+  "source_report_snapshot": {
+    "path": "paper/materials/20261018-sl-retry-budget/report.md",
+    "bytes": 6824,
+    "sha256": "6f54cccd1604a4e16cb76b300b784d89d8f08995150f5c22d90bb35cfdb395a1",
+    "provisional": true,
+    "final_source_manifest_or_checks_not_inferred": true
+  },
+  "correction": {
+    "earlier_claim": "All 78 Jev deadline fallbacks in the five F17 fights were retries and first-attempt count was zero",
+    "corrected_first_attempt": 7,
+    "corrected_retries": 71,
+    "per_run": [
+      {
+        "run": "0NMF36KX3F7Y",
+        "first_attempt": 1,
+        "retry": 19
+      },
+      {
+        "run": "9W38TRGPJW9Q",
+        "first_attempt": 3,
+        "retry": 29
+      },
+      {
+        "run": "NRZAYVRMM7M0",
+        "first_attempt": 3,
+        "retry": 17
+      },
+      {
+        "run": "KCA04Q3SEYTF",
+        "first_attempt": 0,
+        "retry": 4
+      },
+      {
+        "run": "KRLPMR0FWVZE",
+        "first_attempt": 0,
+        "retry": 2
+      }
+    ],
+    "jev_stage_present": 55,
+    "no_jev_stage_request_before_budget_branch": 23,
+    "stage_presence_does_not_certify_remote_receipt_or_answer": true,
+    "original_csv_bug": "first attempt sl_attempt=1 was excluded",
+    "source": "Watcher explicit correction; old artifacts retained",
+    "watcher_reported_original_rows": 1356,
+    "watcher_reported_retained_attempt_2_to_4_clock_cases": 97,
+    "independent_ops_replay_this_wake": false,
+    "no_claim_old_fights_would_win": true
+  },
+  "release_id": null,
+  "publication_started": false,
+  "new_tests_or_models_or_games": 0,
+  "other_role_ack": false,
+  "scientific_parent_requests_closed": false
+}
