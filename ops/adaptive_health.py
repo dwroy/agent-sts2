@@ -1,5 +1,47 @@
 """C2 shadow readback only; a passing snapshot never activates adaptive sampling."""
 from collections import Counter
+import math
+
+
+def _valid_indifferent(value, sim, candidates, completion):
+    """Read back the R394 contract; a new stop label alone is not completion."""
+    rule = value.get('rule')
+    if not isinstance(rule, dict) or not isinstance(candidates, list) or not candidates:
+        return False
+    lane, low = value.get('lane'), rule.get('lowTrust')
+    if (value.get('schema') != 'sim-adaptive-v1' or value.get('status') != 'complete_adaptive'
+            or value.get('stop_reason') != 'indifferent' or lane not in ('b2', 'b3')
+            or rule.get('version') != 'adaptive-v1' or rule.get('profile') != 'silent-human-pace-v2'
+            or type(low) is not bool or sim.get('error') or value.get('error')
+            or completion.get('budgeted') is not True or completion.get('required') is not True
+            or completion.get('failure') is not False or completion.get('status') != 'complete_budget'):
+        return False
+    first = 50 if low or lane == 'b2' else 100
+    cap = 100 if low else 200 if lane == 'b2' else 300
+    requested, spread = rule.get('requested'), value.get('indifference_spread')
+    if (rule.get('first') != first or rule.get('batch') != first or rule.get('indifference') != .03
+            or type(requested) is not int or not 1 <= requested <= cap
+            or type(spread) not in (int, float) or not math.isfinite(spread) or not 0 <= spread < .03):
+        return False
+    keys, active, largest = set(), [], 0
+    for candidate in candidates:
+        if not isinstance(candidate, dict):
+            return False
+        key, n, rounds = candidate.get('key'), candidate.get('samples'), candidate.get('rounds')
+        if (not isinstance(key, str) or not key or key in keys
+                or type(n) is not int or not min(first, requested) <= n <= requested
+                or (n != requested and (n - first) % first != 0)
+                or type(rounds) is not int or rounds != 1 + max(0, math.ceil((n - first) / first))
+                or candidate.get('stop') not in ('eliminated', 'indifferent')):
+            return False
+        keys.add(key)
+        largest = max(largest, n)
+        if candidate['stop'] == 'indifferent':
+            active.append(candidate)
+    # The baseline is not a selectable option; every survivor uses the same prefix.
+    return (sum(c.get('baseline') is not True for c in active) > 1
+            and all(c['samples'] == largest for c in active)
+            and (lane != 'b3' or any(c['key'] == '@current' and c.get('baseline') is True for c in active)))
 
 
 def adaptive_health(config, records):
@@ -26,6 +68,11 @@ def adaptive_health(config, records):
             candidates = value.get('candidates') or []
             completion = sim.get('completion')
             completion = completion if isinstance(completion, dict) else {}
+            indifferent = (value.get('stop_reason') == 'indifferent' or isinstance(candidates, list)
+                           and any(isinstance(c, dict) and c.get('stop') == 'indifferent' for c in candidates))
+            if indifferent and not _valid_indifferent(value, sim, candidates, completion):
+                counts['errors'] += 1
+                continue
             # A normal H1 deadline preserves a prefix, not an adaptive completion or a C1 failure.
             budgeted_partial = (value.get('status') == 'partial'
                                 and completion.get('budgeted') is True and completion.get('failure') is False
@@ -44,7 +91,7 @@ def adaptive_health(config, records):
                 continue
             if (value.get('status') != 'complete_adaptive' or not candidates
                     or any(not isinstance(c, dict) or type(c.get('samples')) is not int or c['samples'] < 1
-                           or c.get('stop') not in ('eliminated', 'leader', 'max') for c in candidates)):
+                           or c.get('stop') not in ('eliminated', 'leader', 'max', 'indifferent') for c in candidates)):
                 counts['errors'] += 1
                 continue
             counts['produced'] += 1
