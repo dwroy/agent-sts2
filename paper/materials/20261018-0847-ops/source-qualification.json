@@ -1,0 +1,186 @@
+{
+  "batch": "20261018-081302-fix-batch",
+  "source": "707702873705b81219a23915f4981060cfafff2e",
+  "parent": "d6023fa476a507fd3466835067815c063d9da876",
+  "worktree": ".worktrees/codex-fix-silent-20261018-081302",
+  "paths": [
+    {
+      "path": "agent/tests/fake-herdr-process.test.ts",
+      "sha256": "961e267282a6d38baef6a2b02fea861612a7d3449cf37599d8825769642bb5f3",
+      "bytes": 2540,
+      "mode": "100644"
+    },
+    {
+      "path": "agent/tests/fixtures-herdr/fake-herdr.py",
+      "sha256": "c8ca1268aec89041b2cde8ee2af9f88f2ff1e3a955b364c703ed91d4834424cb",
+      "bytes": 9951,
+      "mode": "100755"
+    }
+  ],
+  "source_sandbox_rc": 0,
+  "source_test_files": 492,
+  "source_test_cases": 4452,
+  "source_ablation_rc": 1,
+  "source_ablation_failed_cases": 1,
+  "source_restored_rc": 0,
+  "source_restored_passed_cases": 2,
+  "source_restored_not_rerun_cases": 26,
+  "native": {
+    "batch": "20261018-081302-fix-batch",
+    "thread": "01a14c5b-1992-7c73-8d09-c9695a832f0d",
+    "cwd": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261018-081302",
+    "event_log": "learner/runs/20261018-081308-94998165-b046-4c7a-9bc0-bab8806b89df-fix-batch.jsonl",
+    "registered_launch_batch": "20261018-081302-fix-batch",
+    "original_lease": "5ea91718c2d3ec16c8ada7858f73a426d78c00491e5660cd5956f956878a30b2",
+    "native_context": {
+      "source": "ops/codex-ops/accounts/codex3/learner/sessions/2026/10/18/rollout-2026-10-18T08-13-21-01a14c5b-1992-7c73-8d09-c9695a832f0d.jsonl",
+      "offset": 50304,
+      "bytes": 5152,
+      "sha256": "00543db798c262ddc0b179de53ca60785b23e905f2978d7377c3b1cf0bf0ebf7",
+      "model": "gpt-6.1-sol",
+      "effort": "xhigh",
+      "sandbox": {
+        "type": "workspace-write",
+        "writable_roots": [
+          "/home/dw/Projects/agent-sts2",
+          "/home/dw/Projects/agent-sts2/.git",
+          "/home/dw/Projects/agent-sts2/.git/worktrees/codex-fix-silent-20261018-081302"
+        ],
+        "network_access": false,
+        "exclude_tmpdir_env_var": false,
+        "exclude_slash_tmp": false
+      },
+      "approval_policy": "never"
+    },
+    "native_user_input": {
+      "offset": 58299,
+      "bytes": 13081,
+      "sha256": "c2f2f0f35d59334b7cc48bf00f8417431a8905fad707e0fb4bb20acf1a975e5c",
+      "input_sha256": "efcc65d4c9c8ee41e0491fae11eaac20266cf5758c01dad03526acbf7a34e454"
+    },
+    "original_header_events": [
+      {
+        "offset": 0,
+        "bytes": 14892,
+        "sha256": "582c9e61c1448b63a76212b9e509085184bc296bf5dac11a9166ae88316c9ae2",
+        "type": "learner_launch",
+        "attempt": null,
+        "code": null
+      },
+      {
+        "offset": 14892,
+        "bytes": 370,
+        "sha256": "2f1fab20e164e30224940f6b3adf97439224f8906a3a7103bb0cfac5d0f615d2",
+        "type": "learner_startup_attempt",
+        "attempt": 1,
+        "code": null
+      },
+      {
+        "offset": 18277,
+        "bytes": 77,
+        "sha256": "2590e04650529615023d2caefd17085911f3ccd5faabb18b76c931a26943fb89",
+        "type": "thread.started",
+        "attempt": null,
+        "code": null
+      }
+    ],
+    "startup_attempts": 1,
+    "failed_startups_preserved": 0,
+    "no_model_or_manual_restart": true
+  },
+  "verified_artifacts": 23,
+  "original_files": 43,
+  "canonical_state": "failed",
+  "canonical_rc": 0,
+  "canonical_merged": null,
+  "original_report": {
+    "task": "fix-batch",
+    "base": "d6023fa476a507fd3466835067815c063d9da876",
+    "fixes": [
+      {
+        "item": "21bf固定测试链窄修：fake herdr将未回收的已退出进程误判为忙碌",
+        "commit": "707702873705b81219a23915f4981060cfafff2e",
+        "test": "agent/tests/fake-herdr-process.test.ts",
+        "fails_without_fix": true
+      }
+    ],
+    "skipped": [
+      {
+        "item": "出牌、药水、SL、终局、路线及角色机制条目",
+        "reason": "策略类；沿已有独立strategy-proposal链处理。"
+      },
+      {
+        "item": "silent-0339尾巴误核销续证",
+        "reason": "策略类；保留既有提案链及当前行为。"
+      },
+      {
+        "item": "silent-0332资源契约根因",
+        "reason": "证据不足；保留原专用owner链。"
+      },
+      {
+        "item": "U5W7NUE925NK F15/F16 G2缺DPR根因",
+        "reason": "证据不足；缺原未来样本数组及配对分母。"
+      },
+      {
+        "item": "sandbox-glob-startup-race及磁盘压力宽项",
+        "reason": "证据不足；目录生命周期和上游时序未确定。"
+      },
+      {
+        "item": "全漏斗、学习优先级、统一资源价值、F33归因及调度公平性",
+        "reason": "独立架构或策略任务，超出普通纯bug批次。"
+      },
+      {
+        "item": "core-build-notify-222802-rc2旧通知恢复",
+        "reason": "证据不足；旧送达状态未知，不重复发送。"
+      },
+      {
+        "item": "Codex缓存、DPR/B2性能及历史宿主超时根因",
+        "reason": "证据不足或属于独立性能调查。"
+      },
+      {
+        "item": "20261018-011241报告recheck接续",
+        "reason": "原输出缺base/runs且源码祖先身份不满足守卫，保留原失败。"
+      },
+      {
+        "item": "窄cherry-pick提案验收协议",
+        "reason": "范围太大；需绑定原注册、报告、源码及真实宿主回执。"
+      },
+      {
+        "item": "infra-h0-414家族生产性能及full1归因",
+        "reason": "证据不足；固定测试修复不证明自然性能根因已解决。"
+      },
+      {
+        "item": "silent-0461及0511/0512药水窗口补证",
+        "reason": "策略类；沿既有提案链处理。"
+      },
+      {
+        "item": "infra-paper-dataset-concurrent-gzip-keyscan-20261018",
+        "reason": "已有已测源码dee6386621e8122d123a3cd0017c3e4c199f524e，按队列要求等待原ops集成。"
+      },
+      {
+        "item": "a406-fixed-deadlines五处消费夹具",
+        "reason": "已有已测源码2a778b13ac1ead79afef957d4708c1df5dfd3757，等待原ops集成。"
+      },
+      {
+        "item": "21bf原完整宿主超时根因",
+        "reason": "证据不足；本批只修复固定复现的进程状态误判，原15秒超时及full1保持。"
+      }
+    ],
+    "merged": null,
+    "tests": {
+      "tsc": 0,
+      "vitest": 0,
+      "files": 492,
+      "cases": 4452
+    },
+    "code_proposals": [],
+    "implementation_domains": [],
+    "report": "/home/dw/Projects/agent-sts2/learner/runs/20261018-081308-94998165-b046-4c7a-9bc0-bab8806b89df-fix-batch/report.md"
+  },
+  "original_merge_conflicts_and_abort_preserved": true,
+  "old_21bf_full1_and_scoped1pass_preserved": true,
+  "fixed_zombie_reproduction_not_historical_timeout_causality": true,
+  "fixture_only_no_game_or_model_behavior_change": true,
+  "new_release_or_shipped": false,
+  "source_full_not_repeated": true
+}

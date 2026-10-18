@@ -1,0 +1,196 @@
+{
+  "at": "2026-10-18 08:48:14 CST",
+  "original_result": {
+    "at": "2026-10-18 08:31:11 CST",
+    "command": [
+      "nice",
+      "-n",
+      "19",
+      "python3",
+      "ops/paper_dataset.py",
+      "--no-raw"
+    ],
+    "pid": 4052435,
+    "birth": "117541456",
+    "calls": 1,
+    "raw_snapshot": false,
+    "previous_outputs_preserved": "ops/codex-ops/record-staging/20261018-0830/paper-before",
+    "actual_exit_code": 0
+  },
+  "original_log_sha256": "f2dcc73ded218c2ad0d64c3328a57eb2dc2a14c30e4333f39118841509f3102f",
+  "generated_at": "2026-10-18T00:31:11.591Z",
+  "source_cut_bytes": {
+    "decisions.jsonl": 2469214176,
+    "deepseek-reasoning.jsonl": 377746518,
+    "runs.jsonl": 370870,
+    "states.jsonl": 14233898089,
+    "fight-plans.jsonl": 2233957,
+    "run-plans.jsonl": 9235144,
+    "brain.jsonl": 800295000,
+    "sl-attempts.jsonl": 47407254,
+    "run-config.jsonl": 2068734
+  },
+  "source_checks": {
+    "decisions attributed + unattributed == play records": true,
+    "decisions_by_label sum == attributed decisions": true,
+    "escalations rows == records with escalation": true,
+    "every runs.jsonl id present in runs.csv": true,
+    "commits == git rev-list --all --count": true
+  },
+  "row_counts": {
+    "runs.csv": 841,
+    "decisions_by_label.csv": 28053,
+    "escalations.csv": 3600,
+    "fight_plans.csv": 1461,
+    "commits.csv": 6985
+  },
+  "runs": 841,
+  "selected_run": {
+    "run_id": "KRLPMR0FWVZE",
+    "start_ts": "2026-10-17T23:18:14.717Z",
+    "end_ts": "2026-10-18T00:00:42.377Z",
+    "duration_min": "42.5",
+    "floor_max": "17",
+    "act_reached": "1",
+    "outcome": "defeat",
+    "victory": "0",
+    "outcome_source": "runs.jsonl",
+    "finished": "1",
+    "character": "SILENT",
+    "ascension": "10",
+    "code_version": "current",
+    "code_version_source": "runs.jsonl",
+    "code_version_console": "adbdcb0a9+dirty",
+    "code_versions_all": "adbdcb0a9+dirty",
+    "n_decisions": "648",
+    "n_shadow": "0",
+    "decider_inferred": "0",
+    "n_code": "276",
+    "n_jev": "178",
+    "n_deepseek": "0",
+    "n_claude": "0",
+    "n_code_fallback": "6",
+    "n_jev_plan": "168",
+    "n_deepseek_plan": "0",
+    "n_claude_plan": "0",
+    "jev_calls": "194",
+    "jev_in_tokens": "4369551",
+    "jev_out_tokens": "28836",
+    "jev_cost_usd": "0.184732",
+    "jev_latency_p50_ms": "519.5",
+    "ds_calls": "0",
+    "ds_in": "0",
+    "ds_cache_hit": "0",
+    "ds_out": "0",
+    "ds_reasoning": "0",
+    "ds_total_tokens": "0",
+    "ds_calls_no_token_split": "0",
+    "ds_cost_usd": "0",
+    "ds_latency_p50_s": "",
+    "ds_overrides": "0",
+    "fight_plans": "0",
+    "fight_plan_errors": "0",
+    "fight_plan_cost_usd": "0",
+    "fight_plan_latency_p50_s": "",
+    "claude_calls": "0",
+    "claude_latency_p50_s": "",
+    "hp_guard_count": "0",
+    "escalation_chain": "none",
+    "era": "deepseek_memory",
+    "learning_loop": "1",
+    "death_enemy": "乐加维林族母",
+    "death_enemy_ids": "LAGAVULIN_MATRIARCH",
+    "final_hp": "0",
+    "max_hp": "70",
+    "bosses_seen": "LAGAVULIN_MATRIARCH_BOSS",
+    "has_postmortem": "1",
+    "postmortem_heading": "KRLPMR0FWVZE（A10，静默猎手，第17层，死于一幕boss乐加维林族母 LAGAVULIN_MATRIARCH：六试均49/70血、槽0复制药水与槽1格挡药水进场；前五试T12／T8／T12／T12／T13判死读档，末试T15以4血14挡对虚弱后20攻击阵亡，完整需损6、维持该末态存活至少差3血，敌仍68/233血）",
+    "preloop_listed": "0",
+    "n_run_notes": "1",
+    "autoplay_finished_lines": "1",
+    "in_runs_jsonl": "1",
+    "brain_source": "{\"basis\": \"brain.jsonl accepted verdict; legacy answer != null, no error/problems; unique question_id+engine\", \"brain_rows\": 16, \"coverage\": \"all_logged_questions_resolved\", \"eligible\": true, \"embedded_answers\": {\"map/route\": 11, \"run-plan\": 5}, \"exclusion_reason\": null, \"failed_or_unaccepted_rows\": 0, \"first_success\": \"2026-10-17T23:18:14.710Z\", \"last_success\": \"2026-10-17T23:45:59.894Z\", \"policy\": \"codex-successful-brain-v1\", \"source\": \"codex\", \"successful_answers\": {\"codex\": 16}, \"successful_by_label\": {\"event/choose\": {\"codex\": 2}, \"event/plan\": {\"codex\": 1}, \"map/route-plan\": {\"codex\": 1}, \"rest/plan\": {\"codex\": 3}, \"reward/card\": {\"codex\": 8}, \"shop/plan\": {\"codex\": 1}}, \"unknown_successes\": 0, \"unresolved_questions\": 0}",
+    "first_attempt": "{\"death_floor\": 17, \"floor\": 17, \"passed_act1\": false, \"passed_act2\": false, \"reloads\": 0, \"sl_rows\": 6, \"victory\": false}",
+    "performance_policy": "codex-successful-brain-v1",
+    "performance_included": "1",
+    "performance_exclusion_reason": ""
+  },
+  "changed_outputs": [
+    {
+      "path": "paper/data/README.md",
+      "bytes": 14188,
+      "sha256": "2ca8c0745a2fdf22ae3914ff778b955447cc3949360d1dfa9d17e241868439bb"
+    },
+    {
+      "path": "paper/data/commits.csv",
+      "bytes": 1051273,
+      "sha256": "efd22b6443c0b10ff534e37088acaa469d036453998e63e93a863413bcb7dd2e"
+    },
+    {
+      "path": "paper/data/cost-curve-silent.csv",
+      "bytes": 15076,
+      "sha256": "6c6037fc3469bb21051f8d3e61f10c2cc2f6f2f9faeb77fbcac0c11eb371f2d5"
+    },
+    {
+      "path": "paper/data/cost-silent.csv",
+      "bytes": 983574,
+      "sha256": "c231227df7291005c2fb61514d5b73c8591a17012dda06c513f81d765f3887c9"
+    },
+    {
+      "path": "paper/data/cost-sources.json",
+      "bytes": 259614,
+      "sha256": "3e0fc8e517e217239c37e6e3f8d3a753de39f091d8eaa49edef3abc1b1fa0c74"
+    },
+    {
+      "path": "paper/data/cost-unattributed.csv",
+      "bytes": 20112,
+      "sha256": "6d8918a4cb8dd661e2de847066d812a12c4594b396fc5cbf8b92e3944ebb70c4"
+    },
+    {
+      "path": "paper/data/decisions_by_label.csv",
+      "bytes": 1212234,
+      "sha256": "106b8fad66dc82c0086a88496e3a80225b9b0fdad42aff443133e4513ea12166"
+    },
+    {
+      "path": "paper/data/learning-curve-silent.csv",
+      "bytes": 74358,
+      "sha256": "716304a0bea930cdf95a4b5894c2e7be2a8a56716798ac28d595ba0cc9efdc3f"
+    },
+    {
+      "path": "paper/data/runs.csv",
+      "bytes": 1374098,
+      "sha256": "a02154d1dffa3c060b05c2206f8a4a4e59d25cef9cb416ab94e0b1fecdff9f18"
+    },
+    {
+      "path": "paper/data/summary.json",
+      "bytes": 569418,
+      "sha256": "17f09cbeffa5b0d850ee904aac9e0d0841dff9a78d90b9ac99e4f4138ddeb21c"
+    },
+    {
+      "path": "paper/data/verification.json",
+      "bytes": 587,
+      "sha256": "6ff9461b1eaedc246afc59cd5213f9fecf464c77d21344142c6a607908e64f07"
+    },
+    {
+      "path": "paper/materials/silent/cost.md",
+      "bytes": 4200,
+      "sha256": "686ff54640fad058fe52477ae8b76e1c00d58b554e03d2c84c19b46892c917d6"
+    }
+  ],
+  "actual_exit_code": 0,
+  "new_export_calls_this_wake": 0,
+  "same_original_finite_job": true,
+  "original_0830_postmortem_not_reappended": true,
+  "original_key_pattern_scan_clean": true,
+  "cost_is_estimate_not_bill": true,
+  "component_costs_keep_own_cuts_and_estimates": true,
+  "count_warnings": [
+    [
+      "KF9HMZKTFC3V",
+      879,
+      880
+    ]
+  ],
+  "daily_session_findings_not_reclassified": true,
+  "old_failure_history_not_rewritten": true
+}
