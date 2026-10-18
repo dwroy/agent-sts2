@@ -1,0 +1,183 @@
+{
+  "batch": "20261018-074302-fix-batch",
+  "canonical_state": "failed",
+  "canonical_rc": 0,
+  "canonical_merged": null,
+  "report": {
+    "task": "fix-batch",
+    "base": "1482f9ba09fbccddf5b73e7a9ca510eb48cff356",
+    "fixes": [],
+    "skipped": [
+      {
+        "item": "出牌、药水、SL、终局、路线及角色机制条目",
+        "reason": "策略类；沿已有独立 strategy-proposal 链处理。"
+      },
+      {
+        "item": "silent-0339：BXU0CKWKH2RU尾巴误核销",
+        "reason": "策略类；保留既有提案链及当前行为。"
+      },
+      {
+        "item": "silent-0332 nonpositive-hp资源契约根因",
+        "reason": "证据不足；诊断窄修不代表根因已修，保留原专用owner链。"
+      },
+      {
+        "item": "U5W7NUE925NK F15/F16 G2缺DPR根因",
+        "reason": "证据不足；缺原未来样本数组和配对分母。"
+      },
+      {
+        "item": "sandbox-glob-startup-race及磁盘压力宽项",
+        "reason": "证据不足；目录删除归属和上游时序未确定。"
+      },
+      {
+        "item": "arch-funnel-guard、arch-learning-priority、arch-unified-resource-value、inv-f33-regression及调度公平性",
+        "reason": "独立架构、策略或归因任务，超出普通纯bug批次。"
+      },
+      {
+        "item": "core-build-notify-222802-rc2旧通知恢复",
+        "reason": "证据不足；旧送达状态未知，不重复发送。"
+      },
+      {
+        "item": "Codex缓存实测、DPR/B2性能及历史宿主超时根因",
+        "reason": "证据不足或属于独立性能调查；固定测试修复不代表自然性能根因已解决。"
+      },
+      {
+        "item": "20261018-011241报告recheck接续",
+        "reason": "原源码9ae48941不是所报dddad5d67祖先，原输出缺base/runs，Markdown无机器JSON；保留身份守卫及原失败。"
+      },
+      {
+        "item": "窄cherry-pick提案验收协议",
+        "reason": "范围太大；需绑定原注册、报告、六叶源码、发布及真实宿主回执，不伪造祖先或改写原报告。"
+      },
+      {
+        "item": "infra-h0-414固定测试家族的生产性能及full1归因",
+        "reason": "证据不足；保留原完整失败，不能据定向通过认定根因。"
+      },
+      {
+        "item": "silent-0461及0511/0512药水窗口补证",
+        "reason": "策略类；沿既有提案链处理。"
+      },
+      {
+        "item": "infra-paper-dataset-concurrent-gzip-keyscan-20261018",
+        "reason": "已有原owner已测源码dee6386621e8122d123a3cd0017c3e4c199f524e，待原ops集成；队列明确禁止重复实现。"
+      },
+      {
+        "item": "a406-fixed-deadlines五处消费夹具边界",
+        "reason": "已有已测源码2a778b13ac1ead79afef957d4708c1df5dfd3757，待原ops集成，不盲目叠加。"
+      },
+      {
+        "item": "21bf-fake-herdr-workspace-deadline",
+        "reason": "本批启动后新增；原精确补验已通过1题，完整失败及根因未知仍保留，不热改在途输入或重复补验。"
+      }
+    ],
+    "merged": null,
+    "tests": {
+      "tsc": 0,
+      "vitest": 0,
+      "files": 491,
+      "cases": 4451
+    },
+    "code_proposals": [],
+    "implementation_domains": [],
+    "report": "/home/dw/Projects/agent-sts2/learner/runs/20261018-074312-4fe45893-8351-4035-8679-e9661f5dbd2e-fix-batch/report.md"
+  },
+  "original_final_report_preserved": true,
+  "skip_description_versions_preserved": true,
+  "native": {
+    "batch": "20261018-074302-fix-batch",
+    "thread": "01a14c3f-9db2-7812-b9fc-b4c3d08d7859",
+    "cwd": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261018-074302",
+    "event_log": "learner/runs/20261018-074312-4fe45893-8351-4035-8679-e9661f5dbd2e-fix-batch.jsonl",
+    "registered_launch_batch": "20261018-074302-fix-batch",
+    "original_lease": "7fce7416d7f8dc5ea55f4a0cb041fa76e3424c31baae80b80780f4305fdd2428",
+    "native_context": {
+      "source": "ops/codex-ops/accounts/codex3/learner/sessions/2026/10/18/rollout-2026-10-18T07-43-20-01a14c3f-9db2-7812-b9fc-b4c3d08d7859.jsonl",
+      "offset": 50304,
+      "bytes": 5152,
+      "sha256": "6ea77c1fd410afff8f00d48da02436861d92e1c46a175225eb1ec5ccd8d1332b",
+      "model": "gpt-6.1-sol",
+      "effort": "xhigh",
+      "sandbox": {
+        "type": "workspace-write",
+        "writable_roots": [
+          "/home/dw/Projects/agent-sts2",
+          "/home/dw/Projects/agent-sts2/.git",
+          "/home/dw/Projects/agent-sts2/.git/worktrees/codex-fix-silent-20261018-074302"
+        ],
+        "network_access": false,
+        "exclude_tmpdir_env_var": false,
+        "exclude_slash_tmp": false
+      },
+      "approval_policy": "never"
+    },
+    "native_user_input": {
+      "offset": 58299,
+      "bytes": 13081,
+      "sha256": "8d12414b8709bb9c304dc80035512a477fb44f747c747d376e4d912978d4b189",
+      "input_sha256": "022fc9aad477257becbbe5ad09f207e23d6e8c6b0b2e1f967aa3049266fb3fef"
+    },
+    "original_header_events": [
+      {
+        "offset": 0,
+        "bytes": 14892,
+        "sha256": "5aa270dcd5e3da0172a0d1a87aba9978a5ab879eab1697ac75adc6e3b289eb82",
+        "type": "learner_launch",
+        "attempt": null,
+        "code": null
+      },
+      {
+        "offset": 14892,
+        "bytes": 370,
+        "sha256": "95344afd6f1961d306dc7234c70a443410811355cd5f6656026894a7b6c56d8b",
+        "type": "learner_startup_attempt",
+        "attempt": 1,
+        "code": null
+      },
+      {
+        "offset": 18275,
+        "bytes": 77,
+        "sha256": "f9345dad3489c8101bdac52ef9528dd8967bf9991f733b959cbb915532425f76",
+        "type": "thread.started",
+        "attempt": null,
+        "code": null
+      }
+    ],
+    "startup_attempts": 1,
+    "failed_startups_preserved": 0,
+    "no_model_or_manual_restart": true
+  },
+  "worktree": ".worktrees/codex-fix-silent-20261018-074302",
+  "source_base": "1482f9ba09fbccddf5b73e7a9ca510eb48cff356",
+  "source_worktree_clean": true,
+  "no_new_source": true,
+  "source_tests": {
+    "tsc": 0,
+    "vitest": 0,
+    "files": 491,
+    "cases": 4451,
+    "reruns": [],
+    "sandbox_workers": 1,
+    "command": "nice -n 19 bash tools/test-sandbox.sh",
+    "log_sha256": "fad79a21bb4988704d336310d2ecdef911c762b129f62738c4fcba2141e14921",
+    "diagnostic": {
+      "file": "agent/tests/learner-report-resources.test.ts",
+      "files": 1,
+      "cases": 4,
+      "exit": 0,
+      "counted_in_suite_total": false
+    },
+    "note": "定向运行只确认运行器可用；没有替代或追加到整套去重计数"
+  },
+  "verified_artifacts": 14,
+  "verified_source_leaves": 211,
+  "verified_existing_source_ancestors": 56,
+  "live": "4eaad4c93ca1ea9f73b75dad4d9e719ea217a2b1",
+  "live_tree": "21bf5842187f7138369fa08c48fb5db18fb37137",
+  "preexisting_base_live_different_leaves": 155,
+  "no_live_green_borrowed_from_source": true,
+  "no_merge_needed_or_fabricated": true,
+  "new_checks_or_models": 0,
+  "release_id": null,
+  "shipped": false,
+  "source_worktree_complete": false,
+  "parent_requests_closed": false
+}
