@@ -1268,7 +1268,10 @@ export class SlController {
     if (!gate) return;
     const boss = gate.kind === "boss";
     const elite = gate.elite;
-    const retries = boss ? this.config.bossRetries : this.config.eliteRetries;
+    const configuredRetries = boss ? this.config.bossRetries : this.config.eliteRetries;
+    // Roy 2026-10-18: Silent gets at most three retries for every existing SL gate.
+    const retries = str(asRecord(state.run?.raw)["character_id"]).toLowerCase() === "silent"
+      ? Math.min(3, configuredRetries) : configuredRetries;
     const done = earlier.filter((row) => row.result === "predicted_death" && row.reload?.ok === true).length;
     this.fight = {
       runId: this.runId,
