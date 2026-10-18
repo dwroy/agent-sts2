@@ -1,0 +1,51 @@
+{
+  "at": "2026-10-18T21:45:30.918260+08:00",
+  "malformed_numeric_records": 0,
+  "raw_observations": 122,
+  "deduplicated_observations": 122,
+  "aligned": {
+    "observations": 122,
+    "first_ts": "2026-10-18T11:39:31.523Z",
+    "last_ts": "2026-10-18T12:55:19.992Z",
+    "first_balance": "35423.3513630000",
+    "last_balance": "35423.3513630000",
+    "observed_seconds": "4548.469",
+    "net_credit_decrease": "0E-10",
+    "balance_increases": 0,
+    "net_credits_per_hour": "0E-7",
+    "interpretation": "Shared account net change; increases/refills/stale telemetry are not resolved; not project billing"
+  },
+  "hours": [
+    {
+      "hour": "2026-10-18T19:00:00+08:00",
+      "observations": 52,
+      "first_ts": "2026-10-18T11:39:31.523Z",
+      "last_ts": "2026-10-18T11:59:21.432Z",
+      "first_balance": "35423.3513630000",
+      "last_balance": "35423.3513630000",
+      "observed_seconds": "1189.909",
+      "net_credit_decrease": "0E-10",
+      "balance_increases": 0,
+      "net_credits_per_hour": "0E-7",
+      "interpretation": "Shared account net change; increases/refills/stale telemetry are not resolved; not project billing"
+    },
+    {
+      "hour": "2026-10-18T20:00:00+08:00",
+      "observations": 70,
+      "first_ts": "2026-10-18T12:00:01.928Z",
+      "last_ts": "2026-10-18T12:55:19.992Z",
+      "first_balance": "35423.3513630000",
+      "last_balance": "35423.3513630000",
+      "observed_seconds": "3318.064",
+      "net_credit_decrease": "0E-10",
+      "balance_increases": 0,
+      "net_credits_per_hour": "0E-7",
+      "interpretation": "Shared account net change; increases/refills/stale telemetry are not resolved; not project billing"
+    }
+  ],
+  "limitations": [
+    "Rate-limit credits are account-wide, including other projects/devices.",
+    "Rates use actual first/last observation duration; gaps are not filled.",
+    "No balance means unknown, not zero; no model-token-to-credit conversion."
+  ]
+}

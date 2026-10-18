@@ -1,0 +1,82 @@
+{
+  "at": "2026-10-18T21:43:52+08:00",
+  "comparisons": [
+    {
+      "role": "main-ops",
+      "scope": "before_optimization_10_13_cst",
+      "observed_window_hours": 3,
+      "calls": 326,
+      "input_tokens": 72091367,
+      "calls_per_hour": 108.67,
+      "input_tokens_per_hour": 24030455.67,
+      "mean_context_tokens": 221139.2,
+      "cache_fraction": 0.979603,
+      "context_p90": 333763
+    },
+    {
+      "role": "main-ops",
+      "scope": "after_short_context_1730_cst",
+      "observed_window_hours": 4.231111,
+      "calls": 117,
+      "input_tokens": 22700136,
+      "calls_per_hour": 27.65,
+      "input_tokens_per_hour": 5365053.15,
+      "mean_context_tokens": 194018.3,
+      "cache_fraction": 0.976076,
+      "context_p90": 299828
+    },
+    {
+      "role": "watcher",
+      "scope": "before_optimization_10_13_cst",
+      "observed_window_hours": 3,
+      "calls": 58,
+      "input_tokens": 12268548,
+      "calls_per_hour": 19.33,
+      "input_tokens_per_hour": 4089516.0,
+      "mean_context_tokens": 211526.7,
+      "cache_fraction": 0.967459,
+      "context_p90": 252374
+    },
+    {
+      "role": "watcher",
+      "scope": "after_short_context_1730_cst",
+      "observed_window_hours": 4.231111,
+      "calls": 158,
+      "input_tokens": 41752986,
+      "calls_per_hour": 37.34,
+      "input_tokens_per_hour": 9868090.18,
+      "mean_context_tokens": 264259.4,
+      "cache_fraction": 0.984545,
+      "context_p90": 407273
+    },
+    {
+      "role": "all-project-native",
+      "scope": "before_optimization_10_13_cst",
+      "observed_window_hours": 3,
+      "calls": 1243,
+      "input_tokens": 199009331,
+      "calls_per_hour": 414.33,
+      "input_tokens_per_hour": 66336443.67,
+      "mean_context_tokens": 160104.0,
+      "cache_fraction": 0.97305,
+      "context_p90": 266317
+    },
+    {
+      "role": "all-project-native",
+      "scope": "after_short_context_1730_cst",
+      "observed_window_hours": 4.231111,
+      "calls": 1124,
+      "input_tokens": 186054721,
+      "calls_per_hour": 265.65,
+      "input_tokens_per_hour": 43973017.04,
+      "mean_context_tokens": 165529.1,
+      "cache_fraction": 0.97393,
+      "context_p90": 309839
+    }
+  ],
+  "coverage": "Observed positive native cumulative token deltas, exact same-thread dedup; no missing ephemeral brain totals or invoice attribution; unequal workloads/windows, no causal savings claim.",
+  "role_aliases": {
+    "01a14aae-4b03-7cf1-9185-34dc3bed786f": "original watcher human-pace / knowledge-catalog; actual global codex3",
+    "01a14a9f-38e7-78e2-95d0-ba274d4b3e19": "main ops"
+  }
+}

@@ -1,0 +1,6 @@
+import { writeFileSync } from "node:fs";
+import { readCodexUsage } from "/home/dw/Projects/agent-sts2/agent/src/brain/engines/codex-usage.ts";
+import { quotaSnapshot } from "/home/dw/Projects/agent-sts2/ops/subscription-usage.ts";
+import { codexChildEnv,engineBinary } from "/home/dw/Projects/agent-sts2/learner/lib/engines.ts";
+async function main(){const root="/home/dw/Projects/agent-sts2";const home=root+"/ops/codex-ops/accounts/codex1/learner";const env={...process.env,LEARNER_CODEX_HOME:home,CODEX_HOME:home};const bin=engineBinary("codex",env)!;let usage=null;try{usage=await readCodexUsage({bin,home,env:codexChildEnv(env,bin),stateDir:root+"/ops/codex-ops/record-staging/20261018-2140-account-audit/usage-state",timeoutMs:15000});}catch{}const row=quotaSnapshot(usage,new Date());writeFileSync(root+"/paper/materials/20261018-2140-account-audit/codex1-current-safe-quota.json",JSON.stringify(row,null,2)+"\n");console.log(JSON.stringify(row));}
+main();

@@ -1,0 +1,486 @@
+{
+  "at": "2026-10-18T21:44:46+08:00",
+  "processes": [
+    {
+      "pid": 43907,
+      "ppid": 1,
+      "start_ticks": "589821",
+      "exe": "codex",
+      "cwd": "/home/dw/Projects/agent-sts2",
+      "selectors": {},
+      "mode": "app-server",
+      "flags": {},
+      "daemon_open_metadata_paths": [
+        "/home/dw/.codex/app-server-daemon/daemon-updater.stderr.log"
+      ]
+    },
+    {
+      "pid": 719567,
+      "ppid": 43907,
+      "start_ticks": "99458785",
+      "exe": "codex",
+      "cwd": "/home/dw/Projects/agent-sts2",
+      "selectors": {},
+      "mode": "app-server",
+      "flags": {},
+      "daemon_open_metadata_paths": [
+        "/home/dw/.codex/app-server-daemon/daemon.stderr.log",
+        "/home/dw/.codex/logs_2.sqlite-wal",
+        "/home/dw/.codex/logs_2.sqlite-shm",
+        "/home/dw/.codex/logs_2.sqlite",
+        "/home/dw/.codex/logs_2.sqlite"
+      ]
+    },
+    {
+      "pid": 930038,
+      "ppid": 719567,
+      "start_ticks": "99829335",
+      "exe": "codex-code-mode-host",
+      "cwd": "/home/dw/Projects/agent-sts2",
+      "selectors": {},
+      "mode": "helper-or-daemon",
+      "flags": {},
+      "daemon_open_metadata_paths": []
+    },
+    {
+      "pid": 1060064,
+      "ppid": 2945196,
+      "start_ticks": "99998599",
+      "exe": "node",
+      "cwd": "/home/dw/Projects/agent-sts2/.worktrees/regent-climb",
+      "selectors": {
+        "CODEX_HOME": "/home/dw/.codex1"
+      },
+      "mode": "resume",
+      "flags": {
+        "model_reasoning_effort": "xhigh"
+      },
+      "daemon_open_metadata_paths": []
+    },
+    {
+      "pid": 1060071,
+      "ppid": 1060064,
+      "start_ticks": "99998606",
+      "exe": "codex",
+      "cwd": "/home/dw/Projects/agent-sts2/.worktrees/regent-climb",
+      "selectors": {
+        "CODEX_HOME": "/home/dw/.codex1"
+      },
+      "mode": "resume",
+      "flags": {
+        "model_reasoning_effort": "xhigh"
+      },
+      "daemon_open_metadata_paths": []
+    },
+    {
+      "pid": 1063031,
+      "ppid": 1060071,
+      "start_ticks": "100002832",
+      "exe": "codex-code-mode-host",
+      "cwd": "/home/dw/Projects/agent-sts2/.worktrees/regent-climb",
+      "selectors": {
+        "CODEX_HOME": "/home/dw/.codex1"
+      },
+      "mode": "helper-or-daemon",
+      "flags": {},
+      "daemon_open_metadata_paths": []
+    },
+    {
+      "pid": 1843187,
+      "ppid": 1472531,
+      "start_ticks": "100587949",
+      "exe": "node",
+      "cwd": "/home/dw/Projects/agent-sts2/.worktrees/regent-climb",
+      "selectors": {
+        "CODEX_HOME": "/home/dw/Projects/agent-sts2/ops/codex-ops/accounts/codex1/learner"
+      },
+      "mode": "resume",
+      "flags": {
+        "approval_policy": "\"never\"",
+        "model_reasoning_effort": "\"xhigh\"",
+        "service_tier": "\"default\"",
+        "model_context_window": "512000",
+        "model_auto_compact_token_limit": "460800"
+      },
+      "daemon_open_metadata_paths": []
+    },
+    {
+      "pid": 1843224,
+      "ppid": 1843187,
+      "start_ticks": "100587959",
+      "exe": "codex",
+      "cwd": "/home/dw/Projects/agent-sts2/.worktrees/regent-climb",
+      "selectors": {
+        "CODEX_HOME": "/home/dw/Projects/agent-sts2/ops/codex-ops/accounts/codex1/learner"
+      },
+      "mode": "resume",
+      "flags": {
+        "approval_policy": "\"never\"",
+        "model_reasoning_effort": "\"xhigh\"",
+        "service_tier": "\"default\"",
+        "model_context_window": "512000",
+        "model_auto_compact_token_limit": "460800"
+      },
+      "daemon_open_metadata_paths": []
+    },
+    {
+      "pid": 1849145,
+      "ppid": 1843224,
+      "start_ticks": "100590334",
+      "exe": "codex-code-mode-host",
+      "cwd": "/home/dw/Projects/agent-sts2/.worktrees/regent-climb",
+      "selectors": {
+        "CODEX_HOME": "/home/dw/Projects/agent-sts2/ops/codex-ops/accounts/codex1/learner"
+      },
+      "mode": "helper-or-daemon",
+      "flags": {},
+      "daemon_open_metadata_paths": []
+    },
+    {
+      "pid": 2025737,
+      "ppid": 1753540,
+      "start_ticks": "114555816",
+      "exe": "node",
+      "cwd": "/home/dw/Projects/agent-sts2",
+      "selectors": {
+        "LEARNER_CODEX_HOME": "/home/dw/Projects/agent-sts2/ops/codex-ops/accounts/codex3/learner",
+        "CODEX_HOME": "/home/dw/Projects/agent-sts2/ops/codex-ops/accounts/codex3/learner"
+      },
+      "mode": "resume",
+      "flags": {
+        "approval_policy": "\"never\"",
+        "model_reasoning_effort": "\"xhigh\"",
+        "service_tier": "\"default\"",
+        "model_context_window": "512000",
+        "model_auto_compact_token_limit": "460800"
+      },
+      "daemon_open_metadata_paths": []
+    },
+    {
+      "pid": 2025744,
+      "ppid": 2025737,
+      "start_ticks": "114555819",
+      "exe": "codex",
+      "cwd": "/home/dw/Projects/agent-sts2",
+      "selectors": {
+        "LEARNER_CODEX_HOME": "/home/dw/Projects/agent-sts2/ops/codex-ops/accounts/codex3/learner",
+        "CODEX_HOME": "/home/dw/Projects/agent-sts2/ops/codex-ops/accounts/codex3/learner"
+      },
+      "mode": "resume",
+      "flags": {
+        "approval_policy": "\"never\"",
+        "model_reasoning_effort": "\"xhigh\"",
+        "service_tier": "\"default\"",
+        "model_context_window": "512000",
+        "model_auto_compact_token_limit": "460800"
+      },
+      "daemon_open_metadata_paths": []
+    },
+    {
+      "pid": 2026113,
+      "ppid": 2025744,
+      "start_ticks": "114556957",
+      "exe": "codex-code-mode-host",
+      "cwd": "/home/dw/Projects/agent-sts2",
+      "selectors": {
+        "CODEX_HOME": "/home/dw/Projects/agent-sts2/ops/codex-ops/accounts/codex3/learner",
+        "LEARNER_CODEX_HOME": "/home/dw/Projects/agent-sts2/ops/codex-ops/accounts/codex3/learner"
+      },
+      "mode": "helper-or-daemon",
+      "flags": {},
+      "daemon_open_metadata_paths": []
+    },
+    {
+      "pid": 2051601,
+      "ppid": 1846938,
+      "start_ticks": "114624099",
+      "exe": "node",
+      "cwd": "/home/dw/Projects/agent-sts2",
+      "selectors": {
+        "CODEX_HOME": "/home/dw/.codex3"
+      },
+      "mode": "helper-or-daemon",
+      "flags": {
+        "model_reasoning_effort": "xhigh",
+        "service_tier": "default"
+      },
+      "daemon_open_metadata_paths": []
+    },
+    {
+      "pid": 2051635,
+      "ppid": 2051601,
+      "start_ticks": "114624102",
+      "exe": "codex",
+      "cwd": "/home/dw/Projects/agent-sts2",
+      "selectors": {
+        "CODEX_HOME": "/home/dw/.codex3"
+      },
+      "mode": "helper-or-daemon",
+      "flags": {
+        "model_reasoning_effort": "xhigh",
+        "service_tier": "default"
+      },
+      "daemon_open_metadata_paths": []
+    },
+    {
+      "pid": 2053736,
+      "ppid": 2051635,
+      "start_ticks": "114627963",
+      "exe": "codex-code-mode-host",
+      "cwd": "/home/dw/Projects/agent-sts2",
+      "selectors": {
+        "CODEX_HOME": "/home/dw/.codex3"
+      },
+      "mode": "helper-or-daemon",
+      "flags": {},
+      "daemon_open_metadata_paths": []
+    },
+    {
+      "pid": 3094454,
+      "ppid": 3094101,
+      "start_ticks": "122092548",
+      "exe": "node",
+      "cwd": "/home/dw/Projects/agent-sts2/.worktrees/boss-sim-silent-aeonglass-20261018-210932",
+      "selectors": {
+        "LEARNER_CODEX_HOME": "/home/dw/Projects/agent-sts2/ops/codex-ops/accounts/codex3/learner",
+        "STS2_WORKSPACE": "/home/dw/Projects/agent-sts2",
+        "CODEX_HOME": "/home/dw/Projects/agent-sts2/ops/codex-ops/accounts/codex3/learner"
+      },
+      "mode": "exec",
+      "flags": {
+        "approval_policy": "\"never\"",
+        "model": "\"gpt-6.1-sol\"",
+        "model_reasoning_effort": "\"xhigh\"",
+        "service_tier": "\"default\"",
+        "model_context_window": "512000",
+        "model_auto_compact_token_limit": "460800"
+      },
+      "daemon_open_metadata_paths": []
+    },
+    {
+      "pid": 3094463,
+      "ppid": 3094454,
+      "start_ticks": "122092553",
+      "exe": "codex",
+      "cwd": "/home/dw/Projects/agent-sts2/.worktrees/boss-sim-silent-aeonglass-20261018-210932",
+      "selectors": {
+        "LEARNER_CODEX_HOME": "/home/dw/Projects/agent-sts2/ops/codex-ops/accounts/codex3/learner",
+        "STS2_WORKSPACE": "/home/dw/Projects/agent-sts2",
+        "CODEX_HOME": "/home/dw/Projects/agent-sts2/ops/codex-ops/accounts/codex3/learner"
+      },
+      "mode": "exec",
+      "flags": {
+        "approval_policy": "\"never\"",
+        "model": "\"gpt-6.1-sol\"",
+        "model_reasoning_effort": "\"xhigh\"",
+        "service_tier": "\"default\"",
+        "model_context_window": "512000",
+        "model_auto_compact_token_limit": "460800"
+      },
+      "daemon_open_metadata_paths": []
+    },
+    {
+      "pid": 3095833,
+      "ppid": 3094463,
+      "start_ticks": "122095522",
+      "exe": "codex-code-mode-host",
+      "cwd": "/home/dw/Projects/agent-sts2/.worktrees/boss-sim-silent-aeonglass-20261018-210932",
+      "selectors": {
+        "CODEX_HOME": "/home/dw/Projects/agent-sts2/ops/codex-ops/accounts/codex3/learner",
+        "LEARNER_CODEX_HOME": "/home/dw/Projects/agent-sts2/ops/codex-ops/accounts/codex3/learner",
+        "STS2_WORKSPACE": "/home/dw/Projects/agent-sts2"
+      },
+      "mode": "helper-or-daemon",
+      "flags": {},
+      "daemon_open_metadata_paths": []
+    },
+    {
+      "pid": 3197493,
+      "ppid": 3094463,
+      "start_ticks": "122253715",
+      "exe": "codex-linux-sandbox",
+      "cwd": "/home/dw/Projects/agent-sts2/.worktrees/boss-sim-silent-aeonglass-20261018-210932",
+      "selectors": {
+        "CODEX_HOME": "/home/dw/Projects/agent-sts2/ops/codex-ops/accounts/codex3/learner",
+        "LEARNER_CODEX_HOME": "/home/dw/Projects/agent-sts2/ops/codex-ops/accounts/codex3/learner",
+        "STS2_WORKSPACE": "/home/dw/Projects/agent-sts2"
+      },
+      "mode": "helper-or-daemon",
+      "flags": {},
+      "daemon_open_metadata_paths": []
+    },
+    {
+      "pid": 3197588,
+      "ppid": 3197587,
+      "start_ticks": "122253931",
+      "exe": "codex-linux-sandbox",
+      "cwd": "/home/dw/Projects/agent-sts2/.worktrees/boss-sim-silent-aeonglass-20261018-210932",
+      "selectors": {
+        "CODEX_HOME": "/home/dw/Projects/agent-sts2/ops/codex-ops/accounts/codex3/learner",
+        "LEARNER_CODEX_HOME": "/home/dw/Projects/agent-sts2/ops/codex-ops/accounts/codex3/learner",
+        "STS2_WORKSPACE": "/home/dw/Projects/agent-sts2"
+      },
+      "mode": "helper-or-daemon",
+      "flags": {},
+      "daemon_open_metadata_paths": []
+    },
+    {
+      "pid": 3230114,
+      "ppid": 3229096,
+      "start_ticks": "122294700",
+      "exe": "node",
+      "cwd": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261018-214302",
+      "selectors": {
+        "LEARNER_CODEX_HOME": "/home/dw/Projects/agent-sts2/ops/codex-ops/accounts/codex3/learner",
+        "STS2_WORKSPACE": "/home/dw/Projects/agent-sts2",
+        "CODEX_HOME": "/home/dw/Projects/agent-sts2/ops/codex-ops/accounts/codex3/learner"
+      },
+      "mode": "exec",
+      "flags": {
+        "approval_policy": "\"never\"",
+        "model": "\"gpt-6.1-sol\"",
+        "model_reasoning_effort": "\"high\"",
+        "service_tier": "\"default\"",
+        "model_context_window": "512000",
+        "model_auto_compact_token_limit": "460800"
+      },
+      "daemon_open_metadata_paths": []
+    },
+    {
+      "pid": 3230127,
+      "ppid": 3230114,
+      "start_ticks": "122294708",
+      "exe": "codex",
+      "cwd": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261018-214302",
+      "selectors": {
+        "LEARNER_CODEX_HOME": "/home/dw/Projects/agent-sts2/ops/codex-ops/accounts/codex3/learner",
+        "STS2_WORKSPACE": "/home/dw/Projects/agent-sts2",
+        "CODEX_HOME": "/home/dw/Projects/agent-sts2/ops/codex-ops/accounts/codex3/learner"
+      },
+      "mode": "exec",
+      "flags": {
+        "approval_policy": "\"never\"",
+        "model": "\"gpt-6.1-sol\"",
+        "model_reasoning_effort": "\"high\"",
+        "service_tier": "\"default\"",
+        "model_context_window": "512000",
+        "model_auto_compact_token_limit": "460800"
+      },
+      "daemon_open_metadata_paths": []
+    },
+    {
+      "pid": 3230399,
+      "ppid": 3229241,
+      "start_ticks": "122294760",
+      "exe": "node",
+      "cwd": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261018-214302-s2",
+      "selectors": {
+        "LEARNER_CODEX_HOME": "/home/dw/Projects/agent-sts2/ops/codex-ops/accounts/codex3/learner",
+        "STS2_WORKSPACE": "/home/dw/Projects/agent-sts2",
+        "CODEX_HOME": "/home/dw/Projects/agent-sts2/ops/codex-ops/accounts/codex3/learner"
+      },
+      "mode": "exec",
+      "flags": {
+        "approval_policy": "\"never\"",
+        "model": "\"gpt-6.1-sol\"",
+        "model_reasoning_effort": "\"high\"",
+        "service_tier": "\"default\"",
+        "model_context_window": "512000",
+        "model_auto_compact_token_limit": "460800"
+      },
+      "daemon_open_metadata_paths": []
+    },
+    {
+      "pid": 3230421,
+      "ppid": 3230399,
+      "start_ticks": "122294781",
+      "exe": "codex",
+      "cwd": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261018-214302-s2",
+      "selectors": {
+        "LEARNER_CODEX_HOME": "/home/dw/Projects/agent-sts2/ops/codex-ops/accounts/codex3/learner",
+        "STS2_WORKSPACE": "/home/dw/Projects/agent-sts2",
+        "CODEX_HOME": "/home/dw/Projects/agent-sts2/ops/codex-ops/accounts/codex3/learner"
+      },
+      "mode": "exec",
+      "flags": {
+        "approval_policy": "\"never\"",
+        "model": "\"gpt-6.1-sol\"",
+        "model_reasoning_effort": "\"high\"",
+        "service_tier": "\"default\"",
+        "model_context_window": "512000",
+        "model_auto_compact_token_limit": "460800"
+      },
+      "daemon_open_metadata_paths": []
+    },
+    {
+      "pid": 3236182,
+      "ppid": 3230127,
+      "start_ticks": "122300008",
+      "exe": "codex-code-mode-host",
+      "cwd": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261018-214302",
+      "selectors": {
+        "CODEX_HOME": "/home/dw/Projects/agent-sts2/ops/codex-ops/accounts/codex3/learner",
+        "LEARNER_CODEX_HOME": "/home/dw/Projects/agent-sts2/ops/codex-ops/accounts/codex3/learner",
+        "STS2_WORKSPACE": "/home/dw/Projects/agent-sts2"
+      },
+      "mode": "helper-or-daemon",
+      "flags": {},
+      "daemon_open_metadata_paths": []
+    },
+    {
+      "pid": 3237127,
+      "ppid": 3230421,
+      "start_ticks": "122300343",
+      "exe": "codex-code-mode-host",
+      "cwd": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261018-214302-s2",
+      "selectors": {
+        "CODEX_HOME": "/home/dw/Projects/agent-sts2/ops/codex-ops/accounts/codex3/learner",
+        "LEARNER_CODEX_HOME": "/home/dw/Projects/agent-sts2/ops/codex-ops/accounts/codex3/learner",
+        "STS2_WORKSPACE": "/home/dw/Projects/agent-sts2"
+      },
+      "mode": "helper-or-daemon",
+      "flags": {},
+      "daemon_open_metadata_paths": []
+    },
+    {
+      "pid": 3237740,
+      "ppid": 3230421,
+      "start_ticks": "122300623",
+      "exe": "codex-linux-sandbox",
+      "cwd": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261018-214302-s2",
+      "selectors": {
+        "CODEX_HOME": "/home/dw/Projects/agent-sts2/ops/codex-ops/accounts/codex3/learner",
+        "LEARNER_CODEX_HOME": "/home/dw/Projects/agent-sts2/ops/codex-ops/accounts/codex3/learner",
+        "STS2_WORKSPACE": "/home/dw/Projects/agent-sts2"
+      },
+      "mode": "helper-or-daemon",
+      "flags": {},
+      "daemon_open_metadata_paths": []
+    },
+    {
+      "pid": 3238034,
+      "ppid": 3237993,
+      "start_ticks": "122300912",
+      "exe": "codex-linux-sandbox",
+      "cwd": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261018-214302-s2",
+      "selectors": {
+        "CODEX_HOME": "/home/dw/Projects/agent-sts2/ops/codex-ops/accounts/codex3/learner",
+        "LEARNER_CODEX_HOME": "/home/dw/Projects/agent-sts2/ops/codex-ops/accounts/codex3/learner",
+        "STS2_WORKSPACE": "/home/dw/Projects/agent-sts2"
+      },
+      "mode": "helper-or-daemon",
+      "flags": {},
+      "daemon_open_metadata_paths": []
+    }
+  ],
+  "credentials_env_values_not_exported": true,
+  "env_whitelist": [
+    "CODEX_HOME",
+    "LEARNER_CODEX_HOME",
+    "BRAIN_CODEX_HOME",
+    "CODEX_OPS_ROOT",
+    "STS2_WORKSPACE"
+  ],
+  "no_process_interrupted": true,
+  "unconfigured_daemon_account_not_guessed": true
+}

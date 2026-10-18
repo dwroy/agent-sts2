@@ -1,0 +1,24 @@
+import { writeFileSync } from "node:fs";
+import { checkCodex } from "/home/dw/Projects/agent-sts2/agent/src/brain/engines/codex.ts";
+import { codexKeyCheck, codexKeyFiles, codexChildEnv, engineBinary } from "/home/dw/Projects/agent-sts2/learner/lib/engines.ts";
+const root="/home/dw/Projects/agent-sts2";
+const phase=root+"/ops/codex-ops/record-staging/20261018-2140-account-audit";
+const binary=engineBinary("codex",process.env)!;
+async function main(){
+ const result=[];
+ for (const role of ["learner","brain"]){
+  const home=root+"/ops/codex-ops/accounts/codex1/"+role;
+  const check=await checkCodex({bin:binary,home},"gpt-6.1-sol","xhigh",{stateDir:phase+"/preflight-state-"+role});
+  const row:any={role,home,check};
+  if(role==="learner"){
+   const env={...process.env,LEARNER_CODEX_HOME:home,CODEX_HOME:home};
+   row.key_check=await codexKeyCheck(binary,{engine:"codex",cwd:root,projectRoot:root,tools:["Read","Grep","Glob","Bash","Edit","Write"],home:"/home/dw",codexHome:home,keyFiles:codexKeyFiles(root,"/home/dw",home)},codexChildEnv(env,binary));
+   if(!row.key_check.ok){row.key_check={ok:false,error:"original key isolation check failed; private details retained only in original check state"};}
+  }
+  result.push(row);
+ }
+ writeFileSync(phase+"/codex1-preflight.json",JSON.stringify(result,null,2)+"\n");
+ console.log(JSON.stringify(result));
+ if(!result.every((r:any)=>r.check.ok && (!r.key_check || r.key_check.ok)))process.exitCode=3;
+}
+main();
