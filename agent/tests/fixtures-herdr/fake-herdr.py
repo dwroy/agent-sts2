@@ -47,9 +47,14 @@ def err(code, message=""):
 
 def alive(pid):
     try:
+        # An exited child may await reaping while the host polls the foreground job.
+        # kill(pid, 0) still succeeds for it, but it cannot keep the pane busy.
+        with open(f"/proc/{pid}/stat") as stat:
+            if stat.read().rsplit(")", 1)[1].split()[0] in ("Z", "X"):
+                return False
         os.kill(pid, 0)
         return True
-    except (OSError, TypeError):
+    except (OSError, TypeError, IndexError):
         return False
 
 
