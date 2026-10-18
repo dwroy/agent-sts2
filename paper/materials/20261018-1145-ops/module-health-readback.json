@@ -1,0 +1,3956 @@
+{
+  "at": "2026-10-18 11:46:25 CST",
+  "run_id": "67AFTXLWVN4L",
+  "original_alert_sha256": "9c19bf3aadfe631f1ee9ae574598833b32047ce5266ea4570481c6a4566fd904",
+  "original_frozen_segments": [
+    {
+      "stream": "decisions",
+      "path": "/home/dw/Projects/agent-sts2/logs/decisions.jsonl",
+      "start": 2481307277,
+      "end": 2514271454,
+      "complete": false,
+      "malformed": 0,
+      "first_ts": "2026-10-18T01:15:16.836Z",
+      "bytes": 32964177,
+      "sha256": "6fdb41b8cf3ffd62b2247edf13bb8312f7bf1a39de8c0d428082c4ef32da29df",
+      "parsed": 1418,
+      "malformed_recomputed": 0
+    },
+    {
+      "stream": "brain",
+      "path": "/home/dw/Projects/agent-sts2/logs/brain.jsonl",
+      "start": 776583973,
+      "end": 810073755,
+      "complete": false,
+      "malformed": 0,
+      "first_ts": "2026-10-17T15:11:51.479Z",
+      "bytes": 33489782,
+      "sha256": "98757d021d04eb40d92f88146437d3646398fa752ab5254657dc8a39c8fb98ac",
+      "parsed": 302,
+      "malformed_recomputed": 0
+    },
+    {
+      "stream": "plans",
+      "path": "/home/dw/Projects/agent-sts2/logs/run-plans.jsonl",
+      "start": 5107076,
+      "end": 9300091,
+      "complete": false,
+      "malformed": 0,
+      "first_ts": "2026-10-05T17:33:40.731Z",
+      "bytes": 4193015,
+      "sha256": "164a68a6acceb03e12f6f65167ab6235fb09c36b58c9dcd8438bef8c0ae4dce9",
+      "parsed": 1932,
+      "malformed_recomputed": 0
+    },
+    {
+      "stream": "config",
+      "path": "/home/dw/Projects/agent-sts2/logs/run-config.jsonl",
+      "start": 0,
+      "end": 2086430,
+      "complete": true,
+      "malformed": 0,
+      "first_ts": "2026-09-30T00:10:45.685Z",
+      "bytes": 2086430,
+      "sha256": "9ecb4c439ba2eba2a9b95ed7b086fe2d87fd203ca410367124c5ac974589545e",
+      "parsed": 489,
+      "malformed_recomputed": 0
+    }
+  ],
+  "original_summary_recomputed_equal": true,
+  "current_summary_differences_only": [
+    "at",
+    "adaptive",
+    "alert"
+  ],
+  "original_alert_not_rewritten_or_cleared": true,
+  "original_snapshot_at": "2026-10-18T03:35:03.042474+00:00",
+  "original_complete_flag_not_proof_run_ended": true,
+  "alert_summary": {
+    "schema": "module-health-v1",
+    "at": "2026-10-18T03:35:03.042474+00:00",
+    "run_id": "67AFTXLWVN4L",
+    "character": "SILENT",
+    "architecture": "V5",
+    "construction_mode": "shadow",
+    "simulation_enabled": true,
+    "coverage": {
+      "decisions_complete": true,
+      "decisions": {
+        "path": "/home/dw/Projects/agent-sts2/logs/decisions.jsonl",
+        "start": 2481307277,
+        "end": 2514271454,
+        "complete": false,
+        "malformed": 0,
+        "first_ts": "2026-10-18T01:15:16.836Z"
+      },
+      "brain": {
+        "path": "/home/dw/Projects/agent-sts2/logs/brain.jsonl",
+        "start": 776583973,
+        "end": 810073755,
+        "complete": false,
+        "malformed": 0,
+        "first_ts": "2026-10-17T15:11:51.479Z"
+      },
+      "plans": {
+        "path": "/home/dw/Projects/agent-sts2/logs/run-plans.jsonl",
+        "start": 5107076,
+        "end": 9300091,
+        "complete": false,
+        "malformed": 0,
+        "first_ts": "2026-10-05T17:33:40.731Z"
+      },
+      "config": {
+        "path": "/home/dw/Projects/agent-sts2/logs/run-config.jsonl",
+        "start": 0,
+        "end": 2086430,
+        "complete": true,
+        "malformed": 0,
+        "first_ts": "2026-09-30T00:10:45.685Z"
+      }
+    },
+    "complete": true,
+    "construction": {
+      "missing_route": 2,
+      "predicted": 4
+    },
+    "construction_pipeline": {
+      "enabled": true,
+      "evaluation_expected": 6,
+      "evaluation_attached": 6,
+      "evaluation_missing": 0,
+      "brain_evaluation": 6,
+      "accepted_evaluation": 6,
+      "accepted_choice_with_evaluation": 5,
+      "plan_due": 1,
+      "accepted_structured_plan": 1,
+      "missing_structured_plan": 0,
+      "saved_structured_plan": 1,
+      "plan_readback": 6,
+      "checkpoint_review_due": 0,
+      "probability_delivered": 0,
+      "admission": {
+        "missing_or_mismatched_prospective_calibration": 4
+      },
+      "evidence": [],
+      "alert": false,
+      "limits": "Payload delivery, accepted output and saved/read-back plans are distinct observations, not causal win-rate evidence. Missing calibration is pending, not a service failure."
+    },
+    "s_readiness": {
+      "mode": "shadow",
+      "expected": 5,
+      "produced": 5,
+      "missing": 0,
+      "eligible": 0,
+      "low_trust": 5,
+      "sign_rejected": 4,
+      "brain_delivered": 0,
+      "brain_accepted": 0,
+      "ms_max": 1.6652659999999742,
+      "longest_missing_streak": 0,
+      "alert": false,
+      "limits": "Shadow is not brain delivery. Low trust and failed sign audit suppress facts without changing mandatory computation or old ranking."
+    },
+    "s_combat_rank": {
+      "mode": "shadow",
+      "expected": 0,
+      "produced": 0,
+      "used": 0,
+      "fallback": 0,
+      "missing": 0,
+      "shadow_produced": 0,
+      "shadow_invalid": 0,
+      "fallback_reasons": {},
+      "longest_missing_streak": 0,
+      "alert": false,
+      "limits": "S tie ranking is conditional on paired samples, sign audit and existing model trust; not game calibration or causal benefit."
+    },
+    "build_ranking": {
+      "mode": "shadow",
+      "expected": 5,
+      "produced": 5,
+      "missing": 0,
+      "brain_delivered": 0,
+      "brain_accepted": 0,
+      "choices": 5,
+      "overrides": 1,
+      "reasons_present": 0,
+      "missing_reasons": 1,
+      "target_pending": 0,
+      "longest_missing_streak": 0,
+      "alert": false,
+      "limits": "Shadow choices do not require override reasons. Pending card targets and first shop actions do not certify complete plans or causal benefit."
+    },
+    "computation": {
+      "attempts": 5,
+      "failures": 0,
+      "degraded": 0,
+      "evidence": [],
+      "alert": false,
+      "scope": "B2/B3 computation service failures; degradation permits continuation, not fault resolution."
+    },
+    "adaptive": {
+      "mode": "on",
+      "observed": 5,
+      "produced": 2,
+      "errors": 3,
+      "evaluable": 0,
+      "matched": 0,
+      "unknown": 0,
+      "complete_adaptive": 2,
+      "budgeted_partial": 0,
+      "production_evaluable": 0,
+      "production_matched": 0,
+      "agreement": null,
+      "production_agreement": null,
+      "saved_fraction": {
+        "p50": null,
+        "p90": null
+      },
+      "mismatches": [],
+      "actual_saved_fraction": {
+        "p50": 0.4342105263157895,
+        "p90": 0.4868421052631579
+      },
+      "candidate_samples": [
+        50,
+        50,
+        50,
+        50,
+        50,
+        50,
+        100,
+        50,
+        50,
+        50,
+        100,
+        50,
+        50,
+        100,
+        100,
+        50,
+        50,
+        50,
+        50,
+        50,
+        100,
+        50,
+        50,
+        50,
+        50,
+        50
+      ],
+      "candidate_rounds": [
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        2,
+        1,
+        1,
+        1,
+        2,
+        1,
+        1,
+        2,
+        2,
+        1,
+        1,
+        1,
+        1,
+        1,
+        2,
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "stop_counts": {
+        "leader": 2,
+        "eliminated": 20,
+        "max": 4
+      },
+      "alert": true,
+      "admission_state": "accepted",
+      "admission": "accepted source; runtime mode=on; never auto-enable",
+      "limits": "Shadow estimates and actual on-mode sample work are separate. On-mode cannot observe full-run agreement; no elapsed-time saving or game benefit inferred."
+    },
+    "b3": {
+      "attempts": 5,
+      "skipped": 0,
+      "produced_dpr": 5,
+      "coverage": 1.0,
+      "failures": {},
+      "unsupported": 0,
+      "applicable_attempts": 5,
+      "unsupported_only": 0,
+      "candidates": {
+        "observed": 34,
+        "unsupported": 6,
+        "with_dpr": 28,
+        "missing_dpr": 0
+      },
+      "applicable_coverage": 1.0,
+      "longest_failure_streak": 0,
+      "trailing_failure_streak": 0,
+      "paired_samples_min": 50,
+      "ms_max": 4395
+    },
+    "brain": {
+      "observed_questions": 5,
+      "questions_with_dpr": 5,
+      "accepted_with_dpr": 5,
+      "decision_use": "unknown; delivery is not evidence of reasoning or a fixed DPR weight"
+    },
+    "global_build": {
+      "mode": "shadow",
+      "expected": 5,
+      "covered": 5,
+      "missing": 0,
+      "invalid_shadow": 0,
+      "observations": 5,
+      "memo_hits": 0,
+      "current_dependency_unknown": 0,
+      "service_failures": 0,
+      "partial": 0,
+      "unknown": 5,
+      "budgeted_partial": 0,
+      "unknown_reasons": {
+        "验证集 26 场（战前起点）：校准 Brier 0.200，高于整体 0.120 的 1.25 倍 0.151；偏乐观：预测平均胜率 62%，实际 46%": 5,
+        "offered_candidate_not_modeled": 4,
+        "验证集 21 场（战前起点）：校准 Brier 0.182，高于整体 0.120 的 1.25 倍 0.151": 5,
+        "Act3_quality_gate_and_production_trust_unknown": 15
+      },
+      "longest_missing_streak": 0,
+      "wall_ms": {
+        "n": 5,
+        "p50": 4616.0,
+        "p90": 14807.0,
+        "max": 19205
+      },
+      "computation_wall_ms": {
+        "n": 5,
+        "p50": 4616.0,
+        "p90": 14807.0,
+        "max": 19205
+      },
+      "memo_wall_ms": {
+        "n": 0,
+        "p50": null,
+        "p90": null,
+        "max": null
+      },
+      "future_target_wall_ms": {
+        "n": 10,
+        "p50": 2748.5,
+        "p90": 7494.299999999997,
+        "max": 14382
+      },
+      "evidence": [],
+      "alert": false,
+      "admission": "pending two complete natural shadow runs and real later-Boss comparison report; never auto-enable",
+      "limits": "Declared Act3/final unknowns are coverage limitations, not zero predictions or service failures. Times are observed wall clocks with duplicate observation IDs excluded, not CPU time or a causal speedup. No calibration, whole-run win probability or role ACK inferred."
+    },
+    "alert": true,
+    "failures": [],
+    "diagnostics": [
+      {
+        "ts": "2026-10-18T03:27:41.115Z",
+        "schema": "build-sim-health-v1",
+        "status": "produced",
+        "availableCpus": 32,
+        "loadAverage": [
+          4.85,
+          7.55,
+          19.27
+        ],
+        "decks": 6,
+        "options": 5,
+        "deckCards": 13,
+        "deadlineMs": 10895.744565,
+        "orderSearch": null,
+        "comparison": {
+          "samples": 50,
+          "elapsedMs": 1325,
+          "timedOut": false,
+          "workers": 24,
+          "deadlineMs": 10895.512952000001,
+          "pool": {
+            "queueMs": 0,
+            "coldStart": true,
+            "preparationMs": 11,
+            "firstReplyMs": 474,
+            "chunksPlanned": 42,
+            "chunksDispatched": 42,
+            "chunksCompleted": 42,
+            "outcomesCompleted": 300
+          }
+        },
+        "boss": "WATERFALL_GIANT",
+        "samples": 50,
+        "requested": 100,
+        "minimumShown": 100,
+        "timedOut": false,
+        "simMs": 1348,
+        "workers": 24
+      },
+      {
+        "ts": "2026-10-18T03:30:17.687Z",
+        "schema": "build-sim-health-v1",
+        "status": "produced",
+        "availableCpus": 32,
+        "loadAverage": [
+          9.04,
+          9.99,
+          18.39
+        ],
+        "decks": 4,
+        "options": 4,
+        "deckCards": 16,
+        "deadlineMs": 10982.84859899999,
+        "orderSearch": null,
+        "comparison": {
+          "samples": 50,
+          "elapsedMs": 747,
+          "timedOut": false,
+          "workers": 24,
+          "deadlineMs": 10982.774674999993,
+          "pool": {
+            "queueMs": 0,
+            "coldStart": false,
+            "preparationMs": 0,
+            "firstReplyMs": 60,
+            "chunksPlanned": 28,
+            "chunksDispatched": 28,
+            "chunksCompleted": 28,
+            "outcomesCompleted": 200
+          }
+        },
+        "boss": "WATERFALL_GIANT",
+        "samples": 50,
+        "requested": 100,
+        "minimumShown": 100,
+        "timedOut": false,
+        "simMs": 755,
+        "workers": 24
+      },
+      {
+        "ts": "2026-10-18T03:31:13.481Z",
+        "schema": "build-sim-health-v1",
+        "status": "produced",
+        "availableCpus": 32,
+        "loadAverage": [
+          8.63,
+          10.09,
+          18.01
+        ],
+        "decks": 4,
+        "options": 4,
+        "deckCards": 17,
+        "deadlineMs": 10986.706930000015,
+        "orderSearch": null,
+        "comparison": {
+          "samples": 50,
+          "elapsedMs": 693,
+          "timedOut": false,
+          "workers": 24,
+          "deadlineMs": 10986.686121000006,
+          "pool": {
+            "queueMs": 0,
+            "coldStart": false,
+            "preparationMs": 0,
+            "firstReplyMs": 35,
+            "chunksPlanned": 28,
+            "chunksDispatched": 28,
+            "chunksCompleted": 28,
+            "outcomesCompleted": 200
+          }
+        },
+        "boss": "WATERFALL_GIANT",
+        "samples": 50,
+        "requested": 100,
+        "minimumShown": 100,
+        "timedOut": false,
+        "simMs": 701,
+        "workers": 24
+      },
+      {
+        "ts": "2026-10-18T03:32:28.901Z",
+        "schema": "build-sim-health-v1",
+        "status": "produced",
+        "availableCpus": 32,
+        "loadAverage": [
+          9.68,
+          10.23,
+          17.73
+        ],
+        "decks": 19,
+        "options": 19,
+        "deckCards": 18,
+        "deadlineMs": 10880.013842999993,
+        "orderSearch": null,
+        "comparison": {
+          "samples": 100,
+          "elapsedMs": 4178,
+          "timedOut": false,
+          "workers": 24,
+          "deadlineMs": 10879.960387,
+          "pool": {
+            "queueMs": 0,
+            "coldStart": false,
+            "preparationMs": 1,
+            "firstReplyMs": 49,
+            "chunksPlanned": 168,
+            "chunksDispatched": 168,
+            "chunksCompleted": 168,
+            "outcomesCompleted": 1200
+          }
+        },
+        "boss": "WATERFALL_GIANT",
+        "samples": 100,
+        "requested": 100,
+        "minimumShown": 100,
+        "timedOut": false,
+        "simMs": 4243,
+        "workers": 24
+      },
+      {
+        "ts": "2026-10-18T03:33:50.479Z",
+        "schema": "build-sim-health-v1",
+        "status": "produced",
+        "availableCpus": 32,
+        "loadAverage": [
+          11.63,
+          10.47,
+          16.9
+        ],
+        "decks": 4,
+        "options": 4,
+        "deckCards": 19,
+        "deadlineMs": 10988.649881999998,
+        "orderSearch": null,
+        "comparison": {
+          "samples": 50,
+          "elapsedMs": 615,
+          "timedOut": false,
+          "workers": 24,
+          "deadlineMs": 10988.619593999989,
+          "pool": {
+            "queueMs": 0,
+            "coldStart": false,
+            "preparationMs": 0,
+            "firstReplyMs": 35,
+            "chunksPlanned": 28,
+            "chunksDispatched": 28,
+            "chunksCompleted": 28,
+            "outcomesCompleted": 200
+          }
+        },
+        "boss": "WATERFALL_GIANT",
+        "samples": 50,
+        "requested": 100,
+        "minimumShown": 100,
+        "timedOut": false,
+        "simMs": 621,
+        "workers": 24
+      }
+    ],
+    "unsupported": [],
+    "scope": "Service availability only; sample threshold, simulator validity and game policy unchanged.",
+    "queue_name": "1792294503042473984-module-health.md"
+  },
+  "current_same_frozen_input_summary": {
+    "schema": "module-health-v1",
+    "at": "2026-10-18T03:46:33.081905+00:00",
+    "run_id": "67AFTXLWVN4L",
+    "character": "SILENT",
+    "architecture": "V5",
+    "construction_mode": "shadow",
+    "simulation_enabled": true,
+    "coverage": {
+      "decisions_complete": true,
+      "decisions": {
+        "path": "/home/dw/Projects/agent-sts2/logs/decisions.jsonl",
+        "start": 2481307277,
+        "end": 2514271454,
+        "complete": false,
+        "malformed": 0,
+        "first_ts": "2026-10-18T01:15:16.836Z"
+      },
+      "brain": {
+        "path": "/home/dw/Projects/agent-sts2/logs/brain.jsonl",
+        "start": 776583973,
+        "end": 810073755,
+        "complete": false,
+        "malformed": 0,
+        "first_ts": "2026-10-17T15:11:51.479Z"
+      },
+      "plans": {
+        "path": "/home/dw/Projects/agent-sts2/logs/run-plans.jsonl",
+        "start": 5107076,
+        "end": 9300091,
+        "complete": false,
+        "malformed": 0,
+        "first_ts": "2026-10-05T17:33:40.731Z"
+      },
+      "config": {
+        "path": "/home/dw/Projects/agent-sts2/logs/run-config.jsonl",
+        "start": 0,
+        "end": 2086430,
+        "complete": true,
+        "malformed": 0,
+        "first_ts": "2026-09-30T00:10:45.685Z"
+      }
+    },
+    "complete": true,
+    "construction": {
+      "missing_route": 2,
+      "predicted": 4
+    },
+    "construction_pipeline": {
+      "enabled": true,
+      "evaluation_expected": 6,
+      "evaluation_attached": 6,
+      "evaluation_missing": 0,
+      "brain_evaluation": 6,
+      "accepted_evaluation": 6,
+      "accepted_choice_with_evaluation": 5,
+      "plan_due": 1,
+      "accepted_structured_plan": 1,
+      "missing_structured_plan": 0,
+      "saved_structured_plan": 1,
+      "plan_readback": 6,
+      "checkpoint_review_due": 0,
+      "probability_delivered": 0,
+      "admission": {
+        "missing_or_mismatched_prospective_calibration": 4
+      },
+      "evidence": [],
+      "alert": false,
+      "limits": "Payload delivery, accepted output and saved/read-back plans are distinct observations, not causal win-rate evidence. Missing calibration is pending, not a service failure."
+    },
+    "s_readiness": {
+      "mode": "shadow",
+      "expected": 5,
+      "produced": 5,
+      "missing": 0,
+      "eligible": 0,
+      "low_trust": 5,
+      "sign_rejected": 4,
+      "brain_delivered": 0,
+      "brain_accepted": 0,
+      "ms_max": 1.6652659999999742,
+      "longest_missing_streak": 0,
+      "alert": false,
+      "limits": "Shadow is not brain delivery. Low trust and failed sign audit suppress facts without changing mandatory computation or old ranking."
+    },
+    "s_combat_rank": {
+      "mode": "shadow",
+      "expected": 0,
+      "produced": 0,
+      "used": 0,
+      "fallback": 0,
+      "missing": 0,
+      "shadow_produced": 0,
+      "shadow_invalid": 0,
+      "fallback_reasons": {},
+      "longest_missing_streak": 0,
+      "alert": false,
+      "limits": "S tie ranking is conditional on paired samples, sign audit and existing model trust; not game calibration or causal benefit."
+    },
+    "build_ranking": {
+      "mode": "shadow",
+      "expected": 5,
+      "produced": 5,
+      "missing": 0,
+      "brain_delivered": 0,
+      "brain_accepted": 0,
+      "choices": 5,
+      "overrides": 1,
+      "reasons_present": 0,
+      "missing_reasons": 1,
+      "target_pending": 0,
+      "longest_missing_streak": 0,
+      "alert": false,
+      "limits": "Shadow choices do not require override reasons. Pending card targets and first shop actions do not certify complete plans or causal benefit."
+    },
+    "computation": {
+      "attempts": 5,
+      "failures": 0,
+      "degraded": 0,
+      "evidence": [],
+      "alert": false,
+      "scope": "B2/B3 computation service failures; degradation permits continuation, not fault resolution."
+    },
+    "adaptive": {
+      "mode": "on",
+      "observed": 5,
+      "produced": 5,
+      "errors": 0,
+      "evaluable": 0,
+      "matched": 0,
+      "unknown": 0,
+      "complete_adaptive": 5,
+      "budgeted_partial": 0,
+      "production_evaluable": 0,
+      "production_matched": 0,
+      "agreement": null,
+      "production_agreement": null,
+      "saved_fraction": {
+        "p50": null,
+        "p90": null
+      },
+      "mismatches": [],
+      "actual_saved_fraction": {
+        "p50": 0.5,
+        "p90": 0.5
+      },
+      "candidate_samples": [
+        50,
+        50,
+        50,
+        50,
+        50,
+        50,
+        50,
+        50,
+        50,
+        50,
+        50,
+        50,
+        50,
+        50,
+        50,
+        50,
+        100,
+        50,
+        50,
+        50,
+        100,
+        50,
+        50,
+        100,
+        100,
+        50,
+        50,
+        50,
+        50,
+        50,
+        100,
+        50,
+        50,
+        50,
+        50,
+        50,
+        50,
+        50,
+        50,
+        50,
+        50
+      ],
+      "candidate_rounds": [
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        2,
+        1,
+        1,
+        1,
+        2,
+        1,
+        1,
+        2,
+        2,
+        1,
+        1,
+        1,
+        1,
+        1,
+        2,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "stop_counts": {
+        "leader": 2,
+        "eliminated": 22,
+        "indifferent": 13,
+        "max": 4
+      },
+      "alert": false,
+      "admission_state": "accepted",
+      "admission": "accepted source; runtime mode=on; never auto-enable",
+      "limits": "Shadow estimates and actual on-mode sample work are separate. On-mode cannot observe full-run agreement; no elapsed-time saving or game benefit inferred."
+    },
+    "b3": {
+      "attempts": 5,
+      "skipped": 0,
+      "produced_dpr": 5,
+      "coverage": 1.0,
+      "failures": {},
+      "unsupported": 0,
+      "applicable_attempts": 5,
+      "unsupported_only": 0,
+      "candidates": {
+        "observed": 34,
+        "unsupported": 6,
+        "with_dpr": 28,
+        "missing_dpr": 0
+      },
+      "applicable_coverage": 1.0,
+      "longest_failure_streak": 0,
+      "trailing_failure_streak": 0,
+      "paired_samples_min": 50,
+      "ms_max": 4395
+    },
+    "brain": {
+      "observed_questions": 5,
+      "questions_with_dpr": 5,
+      "accepted_with_dpr": 5,
+      "decision_use": "unknown; delivery is not evidence of reasoning or a fixed DPR weight"
+    },
+    "global_build": {
+      "mode": "shadow",
+      "expected": 5,
+      "covered": 5,
+      "missing": 0,
+      "invalid_shadow": 0,
+      "observations": 5,
+      "memo_hits": 0,
+      "current_dependency_unknown": 0,
+      "service_failures": 0,
+      "partial": 0,
+      "unknown": 5,
+      "budgeted_partial": 0,
+      "unknown_reasons": {
+        "验证集 26 场（战前起点）：校准 Brier 0.200，高于整体 0.120 的 1.25 倍 0.151；偏乐观：预测平均胜率 62%，实际 46%": 5,
+        "offered_candidate_not_modeled": 4,
+        "验证集 21 场（战前起点）：校准 Brier 0.182，高于整体 0.120 的 1.25 倍 0.151": 5,
+        "Act3_quality_gate_and_production_trust_unknown": 15
+      },
+      "longest_missing_streak": 0,
+      "wall_ms": {
+        "n": 5,
+        "p50": 4616.0,
+        "p90": 14807.0,
+        "max": 19205
+      },
+      "computation_wall_ms": {
+        "n": 5,
+        "p50": 4616.0,
+        "p90": 14807.0,
+        "max": 19205
+      },
+      "memo_wall_ms": {
+        "n": 0,
+        "p50": null,
+        "p90": null,
+        "max": null
+      },
+      "future_target_wall_ms": {
+        "n": 10,
+        "p50": 2748.5,
+        "p90": 7494.299999999997,
+        "max": 14382
+      },
+      "evidence": [],
+      "alert": false,
+      "admission": "pending two complete natural shadow runs and real later-Boss comparison report; never auto-enable",
+      "limits": "Declared Act3/final unknowns are coverage limitations, not zero predictions or service failures. Times are observed wall clocks with duplicate observation IDs excluded, not CPU time or a causal speedup. No calibration, whole-run win probability or role ACK inferred."
+    },
+    "alert": false,
+    "failures": [],
+    "diagnostics": [
+      {
+        "ts": "2026-10-18T03:27:41.115Z",
+        "schema": "build-sim-health-v1",
+        "status": "produced",
+        "availableCpus": 32,
+        "loadAverage": [
+          4.85,
+          7.55,
+          19.27
+        ],
+        "decks": 6,
+        "options": 5,
+        "deckCards": 13,
+        "deadlineMs": 10895.744565,
+        "orderSearch": null,
+        "comparison": {
+          "samples": 50,
+          "elapsedMs": 1325,
+          "timedOut": false,
+          "workers": 24,
+          "deadlineMs": 10895.512952000001,
+          "pool": {
+            "queueMs": 0,
+            "coldStart": true,
+            "preparationMs": 11,
+            "firstReplyMs": 474,
+            "chunksPlanned": 42,
+            "chunksDispatched": 42,
+            "chunksCompleted": 42,
+            "outcomesCompleted": 300
+          }
+        },
+        "boss": "WATERFALL_GIANT",
+        "samples": 50,
+        "requested": 100,
+        "minimumShown": 100,
+        "timedOut": false,
+        "simMs": 1348,
+        "workers": 24
+      },
+      {
+        "ts": "2026-10-18T03:30:17.687Z",
+        "schema": "build-sim-health-v1",
+        "status": "produced",
+        "availableCpus": 32,
+        "loadAverage": [
+          9.04,
+          9.99,
+          18.39
+        ],
+        "decks": 4,
+        "options": 4,
+        "deckCards": 16,
+        "deadlineMs": 10982.84859899999,
+        "orderSearch": null,
+        "comparison": {
+          "samples": 50,
+          "elapsedMs": 747,
+          "timedOut": false,
+          "workers": 24,
+          "deadlineMs": 10982.774674999993,
+          "pool": {
+            "queueMs": 0,
+            "coldStart": false,
+            "preparationMs": 0,
+            "firstReplyMs": 60,
+            "chunksPlanned": 28,
+            "chunksDispatched": 28,
+            "chunksCompleted": 28,
+            "outcomesCompleted": 200
+          }
+        },
+        "boss": "WATERFALL_GIANT",
+        "samples": 50,
+        "requested": 100,
+        "minimumShown": 100,
+        "timedOut": false,
+        "simMs": 755,
+        "workers": 24
+      },
+      {
+        "ts": "2026-10-18T03:31:13.481Z",
+        "schema": "build-sim-health-v1",
+        "status": "produced",
+        "availableCpus": 32,
+        "loadAverage": [
+          8.63,
+          10.09,
+          18.01
+        ],
+        "decks": 4,
+        "options": 4,
+        "deckCards": 17,
+        "deadlineMs": 10986.706930000015,
+        "orderSearch": null,
+        "comparison": {
+          "samples": 50,
+          "elapsedMs": 693,
+          "timedOut": false,
+          "workers": 24,
+          "deadlineMs": 10986.686121000006,
+          "pool": {
+            "queueMs": 0,
+            "coldStart": false,
+            "preparationMs": 0,
+            "firstReplyMs": 35,
+            "chunksPlanned": 28,
+            "chunksDispatched": 28,
+            "chunksCompleted": 28,
+            "outcomesCompleted": 200
+          }
+        },
+        "boss": "WATERFALL_GIANT",
+        "samples": 50,
+        "requested": 100,
+        "minimumShown": 100,
+        "timedOut": false,
+        "simMs": 701,
+        "workers": 24
+      },
+      {
+        "ts": "2026-10-18T03:32:28.901Z",
+        "schema": "build-sim-health-v1",
+        "status": "produced",
+        "availableCpus": 32,
+        "loadAverage": [
+          9.68,
+          10.23,
+          17.73
+        ],
+        "decks": 19,
+        "options": 19,
+        "deckCards": 18,
+        "deadlineMs": 10880.013842999993,
+        "orderSearch": null,
+        "comparison": {
+          "samples": 100,
+          "elapsedMs": 4178,
+          "timedOut": false,
+          "workers": 24,
+          "deadlineMs": 10879.960387,
+          "pool": {
+            "queueMs": 0,
+            "coldStart": false,
+            "preparationMs": 1,
+            "firstReplyMs": 49,
+            "chunksPlanned": 168,
+            "chunksDispatched": 168,
+            "chunksCompleted": 168,
+            "outcomesCompleted": 1200
+          }
+        },
+        "boss": "WATERFALL_GIANT",
+        "samples": 100,
+        "requested": 100,
+        "minimumShown": 100,
+        "timedOut": false,
+        "simMs": 4243,
+        "workers": 24
+      },
+      {
+        "ts": "2026-10-18T03:33:50.479Z",
+        "schema": "build-sim-health-v1",
+        "status": "produced",
+        "availableCpus": 32,
+        "loadAverage": [
+          11.63,
+          10.47,
+          16.9
+        ],
+        "decks": 4,
+        "options": 4,
+        "deckCards": 19,
+        "deadlineMs": 10988.649881999998,
+        "orderSearch": null,
+        "comparison": {
+          "samples": 50,
+          "elapsedMs": 615,
+          "timedOut": false,
+          "workers": 24,
+          "deadlineMs": 10988.619593999989,
+          "pool": {
+            "queueMs": 0,
+            "coldStart": false,
+            "preparationMs": 0,
+            "firstReplyMs": 35,
+            "chunksPlanned": 28,
+            "chunksDispatched": 28,
+            "chunksCompleted": 28,
+            "outcomesCompleted": 200
+          }
+        },
+        "boss": "WATERFALL_GIANT",
+        "samples": 50,
+        "requested": 100,
+        "minimumShown": 100,
+        "timedOut": false,
+        "simMs": 621,
+        "workers": 24
+      }
+    ],
+    "unsupported": [],
+    "scope": "Service availability only; sample threshold, simulator validity and game policy unchanged."
+  },
+  "runtime_config": {
+    "ts": "2026-10-18T03:26:55.825Z",
+    "run_id": "67AFTXLWVN4L",
+    "ascension": 10,
+    "character": "SILENT",
+    "floor": 1,
+    "restart": false,
+    "process": {
+      "pid": 636373,
+      "started": "2026-10-18T03:26:45.873Z"
+    },
+    "code": {
+      "commit": "b155d00a36080418149e63d2f21b491d34d7f40a",
+      "code": "b155d00+dirty",
+      "dirty": true,
+      "dirty_files": [
+        "knowledge/characters/silent/boss-damage.json",
+        "knowledge/characters/silent/construction-opportunities.json",
+        "knowledge/characters/silent/fight-value-gates.json",
+        "knowledge/characters/silent/fight-value.json",
+        "knowledge/characters/silent/monster-records.json",
+        "knowledge/characters/silent/outcome-stats.json",
+        "knowledge/characters/silent/room-costs.json",
+        "knowledge/common/card-upgrades.json",
+        "knowledge/common/monster-db.json",
+        "knowledge/common/move-model.json",
+        "notes/fight-value-backtest-silent.md",
+        "notes/monster-db-check.md"
+      ],
+      "branch": "live",
+      "worktree": "live"
+    },
+    "brain": {
+      "active": true,
+      "engine": "codex",
+      "by_prefix": {},
+      "fallback": null,
+      "reask": null,
+      "tools": null,
+      "log": "/home/dw/Projects/agent-sts2/.worktrees/live/logs/brain.jsonl",
+      "engines": {
+        "codex": {
+          "model": "gpt-6.1-sol",
+          "model_by_prefix": {},
+          "timeout_ms": 600000,
+          "effort": "xhigh",
+          "reask": null,
+          "tools": false,
+          "max_calls": null
+        }
+      },
+      "codex": {
+        "mode": "session",
+        "service_tier": "default",
+        "context_window": 512000,
+        "auto_compact_token_limit": 460800,
+        "summary": "auto",
+        "stall_ms": 120000,
+        "first_token_ms": null,
+        "stall_retries": 1,
+        "schema_fields": "used",
+        "route_reason": "drop",
+        "route_pattern": true,
+        "accept_cut": true,
+        "max_field_chars": 600,
+        "max_answer_blanks": 100
+      }
+    },
+    "knowledge": {
+      "prefix": "full",
+      "ascension": 10,
+      "prefix_sha": "c49ac42c4113",
+      "prefix_chars": 200076,
+      "prefix_tokens_est": {
+        "deepseek": 140053,
+        "claude": 194074
+      },
+      "system_sha": "7bf4fd4de526",
+      "system_chars": 202360,
+      "experience_version": "2026-10-18.h0-r3-queen1",
+      "prefix_note": "the prefix at this run's start; the brain re-renders it when the knowledge files or notes/lessons.md change (brain/knowledge.ts), so the prefix each call used is its brain.jsonl row's knowledge.prefix_sha"
+    },
+    "deepseek": {
+      "model": "deepseek-flash",
+      "max_calls": 300,
+      "timeout_ms": 300000,
+      "reasoning_effort": "max",
+      "combat_reasoning_effort": "high",
+      "effort_by_label": null
+    },
+    "jev": {
+      "enabled": true,
+      "model": "jev-latest",
+      "context": "v1",
+      "strict": true,
+      "prompt_log": "/home/dw/Projects/agent-sts2/.worktrees/live/logs/jev-prompts.jsonl"
+    },
+    "human_pace": {
+      "schema": "human-pace-h1-v1",
+      "budgets": {
+        "ordinary": 10000,
+        "elite": 15000,
+        "boss": 60000,
+        "retry": 10000,
+        "routine": 5000,
+        "brain": 90000,
+        "direction": 60000
+      },
+      "model_effort": "xhigh",
+      "required_full_replaced": true
+    },
+    "human_pace_h2": {
+      "schema": "human-pace-h2-shadow-v1",
+      "mode": "shadow",
+      "requested": "shadow",
+      "delivered": false,
+      "direction_budget_ms": 60000,
+      "card_budget_ms": 5000,
+      "jev_budget_ms": 1000,
+      "actual_selector": "existing_brain_and_gates_unchanged"
+    },
+    "loop": {
+      "mode": "play",
+      "combat_planner": "turn",
+      "build_decider": "deepseek",
+      "build_oneshot": "on",
+      "boss_sim_build": "on",
+      "s_readiness": "shadow",
+      "s_combat_rank": "shadow",
+      "s_build_rank": "shadow",
+      "global_build_eval": "shadow",
+      "global_build_requested": "shadow",
+      "global_build_admission": "pending_two_natural_shadow",
+      "s_build_sort": "shadow",
+      "sim_failure_exit": "on",
+      "sim_failure_retries": 2,
+      "sim_adaptive": "on",
+      "sim_adaptive_requested": "on",
+      "sim_adaptive_admission": "accepted",
+      "boss_sim_completion": "required-full-paired-v1",
+      "boss_sim_build_requested": "on",
+      "combat_deepseek": "off",
+      "thief_facts": true,
+      "thief_cost": true,
+      "mech_rules": true,
+      "mech_move_rules": true,
+      "mech_death_move": true,
+      "passive_pieces": true,
+      "sandpit_start": true,
+      "fight_plan": "off",
+      "run_plan": "v1",
+      "run_plan_merge": true,
+      "escalation": [
+        "deepseek"
+      ],
+      "confidence": {
+        "act": 0.55,
+        "strong": 0.75
+      },
+      "run_start": "auto",
+      "character": "SILENT"
+    },
+    "operator_constraints": {
+      "id": "roy-20261013-v5-no-deck-cap",
+      "max_permanent_cards": null,
+      "activation": "V5: Roy removed the fixed permanent deck-size limit"
+    },
+    "construction": {
+      "architecture": "V5",
+      "schema": "construction-v1",
+      "mode": "shadow",
+      "policy": "observed-signature-completion",
+      "validation": "prospective-calibration-required",
+      "evaluation": "same-question-combat-facts"
+    },
+    "target_ascension": 11,
+    "target_ascension_mode": "climb",
+    "arm": null,
+    "sl": {
+      "enabled": true,
+      "boss_retries": 5,
+      "elite_retries": 3,
+      "act3_low_hp": true,
+      "act3_low_hp_pct": 50,
+      "act2_low_hp": true,
+      "act2_low_hp_pct": 50,
+      "retry_show_sim": true,
+      "retry_memo": true,
+      "retry_known_draws": true,
+      "retry_compute": {
+        "rollout_samples": 24,
+        "rollout_budget_ms": 20000,
+        "turn_budget_ms": 30000,
+        "mc_samples": 36,
+        "mc_budget_ms": 1200,
+        "boss_sim_samples": 1200
+      },
+      "judge_known_draws": true,
+      "judge_any_draw": true,
+      "reload_early": true,
+      "reload_on_revive": false,
+      "retry_known_inserts": true,
+      "retry_known_top": true,
+      "retry_explore": true,
+      "retry_explore_b2": true,
+      "retry_explore_boss_potions": true,
+      "retry_explore_order": true,
+      "retry_explore_replay": true,
+      "retry_explore_replay_plays": true,
+      "retry_explore_replay_deviate": true,
+      "retry_explore_key_counters": true,
+      "retry_explore_second": true,
+      "retry_explore_replay_order": true,
+      "retry_explore_replay_code": true,
+      "retry_explore_target_turn": true,
+      "retry_explore_rearm": true,
+      "retry_explore_wasted": true,
+      "retry_explore_anchor": true,
+      "retry_explore_canon": true,
+      "retry_explore_turn": true,
+      "retry_explore_whole": true,
+      "retry_explore_where": true,
+      "retry_explore_potion": true,
+      "retry_known_picks": true,
+      "retry_known_off_top": true,
+      "retry_known_hand_order": true,
+      "step_timeout_ms": 60000,
+      "log": "/home/dw/Projects/agent-sts2/.worktrees/live/logs/sl-attempts.jsonl",
+      "elites": [],
+      "elites_date": ""
+    },
+    "codex_check": {
+      "bin": "/home/dw/.local/node/bin/codex",
+      "ok": true,
+      "version": "codex-cli 0.163.0"
+    },
+    "codex_usage": {
+      "stop_pct": 100,
+      "every_calls": 3,
+      "every_min": 10,
+      "required": true,
+      "start": {
+        "engine": "codex",
+        "read_at": "2026-10-18T03:26:44.953Z",
+        "read_ms": 851,
+        "plan": "promax",
+        "used_pct": 21,
+        "window": "codex/primary",
+        "window_min": 10080,
+        "resets_at": "2026-10-24T20:40:50.000Z",
+        "credits": 0,
+        "ordinary_usage_allowed": true,
+        "reached_type": null
+      },
+      "last": {
+        "engine": "codex",
+        "read_at": "2026-10-18T03:26:44.953Z",
+        "read_ms": 851,
+        "plan": "promax",
+        "used_pct": 21,
+        "window": "codex/primary",
+        "window_min": 10080,
+        "resets_at": "2026-10-24T20:40:50.000Z",
+        "credits": 0,
+        "ordinary_usage_allowed": true,
+        "reached_type": null
+      },
+      "calls_since_read": 0
+    },
+    "config_sha": "348d02011014",
+    "_source": {
+      "offset": 2080396,
+      "length": 6034,
+      "sha256": "aba8d1e21ab8624dfd11e05a92e6e9949f8513dd6f6c5a107bf7748287f611ec"
+    }
+  },
+  "source_pins": [
+    {
+      "path": "ops/module_health.py",
+      "runtime_commit": "b155d00a36080418149e63d2f21b491d34d7f40a",
+      "main_commit": "fcc2ec5e7ac6324cc9f2c0d40656de24975a71bf",
+      "live_commit": "e713f211362f23e21102c63cd9a5e0195833021c",
+      "old_sha256": "8832bc5128509407a96f8169d14e1ca3ff6febf3cb56a5971e03933e3d18ce07",
+      "current_sha256": "8832bc5128509407a96f8169d14e1ca3ff6febf3cb56a5971e03933e3d18ce07",
+      "same_bytes": true,
+      "main_live_working_and_git_same": true
+    },
+    {
+      "path": "ops/adaptive_health.py",
+      "runtime_commit": "b155d00a36080418149e63d2f21b491d34d7f40a",
+      "main_commit": "fcc2ec5e7ac6324cc9f2c0d40656de24975a71bf",
+      "live_commit": "e713f211362f23e21102c63cd9a5e0195833021c",
+      "old_sha256": "49dd06ac9ab1a8cc4e1ff0b3c44a2c6f9e1cf6d5976c506d4a276a8c2fb9fe43",
+      "current_sha256": "4ff7a071fd922c227842cd8b4152957cd8e90017a4b86c335a2ab3e8ecf4e19e",
+      "same_bytes": false,
+      "main_live_working_and_git_same": true
+    },
+    {
+      "path": "ops/global_build_health.py",
+      "runtime_commit": "b155d00a36080418149e63d2f21b491d34d7f40a",
+      "main_commit": "fcc2ec5e7ac6324cc9f2c0d40656de24975a71bf",
+      "live_commit": "e713f211362f23e21102c63cd9a5e0195833021c",
+      "old_sha256": "c156fae120daa48b455981d85c40a8fbc9d59061ff355a8b59fa36ce679f0983",
+      "current_sha256": "c156fae120daa48b455981d85c40a8fbc9d59061ff355a8b59fa36ce679f0983",
+      "same_bytes": true,
+      "main_live_working_and_git_same": true
+    },
+    {
+      "path": "agent/src/sim/adaptive-sampler.ts",
+      "runtime_commit": "b155d00a36080418149e63d2f21b491d34d7f40a",
+      "main_commit": "fcc2ec5e7ac6324cc9f2c0d40656de24975a71bf",
+      "live_commit": "e713f211362f23e21102c63cd9a5e0195833021c",
+      "old_sha256": "ed75873222ef5bd212dff7ea885036ce985e3e7e4ddf95b1c5d17f56888b5f84",
+      "current_sha256": "ed75873222ef5bd212dff7ea885036ce985e3e7e4ddf95b1c5d17f56888b5f84",
+      "same_bytes": true,
+      "main_live_working_and_git_same": true
+    },
+    {
+      "path": "agent/src/sim/adaptive-shadow.ts",
+      "runtime_commit": "b155d00a36080418149e63d2f21b491d34d7f40a",
+      "main_commit": "fcc2ec5e7ac6324cc9f2c0d40656de24975a71bf",
+      "live_commit": "e713f211362f23e21102c63cd9a5e0195833021c",
+      "old_sha256": "e0e19ef375ddf8334c9c20d4d1cd892a0f21b76e4e0e77bd4810f6e08d64572e",
+      "current_sha256": "e0e19ef375ddf8334c9c20d4d1cd892a0f21b76e4e0e77bd4810f6e08d64572e",
+      "same_bytes": true,
+      "main_live_working_and_git_same": true
+    }
+  ],
+  "adaptive_observations": [
+    {
+      "ts": "2026-10-18T03:27:41.115Z",
+      "floor": 1,
+      "label": "event/plan",
+      "decision_id": "85d79105-9f7a-4326-a9d1-c0cf012e60e8",
+      "source": {
+        "offset": 2512288989,
+        "length": 169464,
+        "sha256": "2b3523028307aa6a6536d8b161e8dd09c8ee65030d1582701ee8cd7c88489d38"
+      },
+      "old_errors": 0,
+      "new_errors": 0,
+      "old_produced": 1,
+      "new_produced": 1,
+      "status": "complete_adaptive",
+      "stop_reason": "leader",
+      "rule": {
+        "version": "adaptive-v1",
+        "b3First": 300,
+        "b2First": 200,
+        "batch": 50,
+        "zElim": 3,
+        "zTie": 2,
+        "profile": "silent-human-pace-v2",
+        "lowTrust": true,
+        "indifference": 0.03,
+        "first": 50,
+        "requested": 100
+      },
+      "samples": [
+        50,
+        50,
+        50,
+        50,
+        50,
+        50
+      ],
+      "rounds": [
+        1,
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "stops": {
+        "leader": 2,
+        "eliminated": 4
+      }
+    },
+    {
+      "ts": "2026-10-18T03:30:17.687Z",
+      "floor": 2,
+      "label": "reward/card",
+      "decision_id": "59b2ebad-18f5-4255-9c6f-5c70c5a8e333",
+      "source": {
+        "offset": 2512563886,
+        "length": 194652,
+        "sha256": "c8f7b7b6c2c55b6a8f5ecfcef0057fc60f1f46d0922ab5eed4c6393343ef8c4f"
+      },
+      "old_errors": 1,
+      "new_errors": 0,
+      "old_produced": 0,
+      "new_produced": 1,
+      "status": "complete_adaptive",
+      "stop_reason": "indifferent",
+      "rule": {
+        "version": "adaptive-v1",
+        "b3First": 300,
+        "b2First": 200,
+        "batch": 50,
+        "zElim": 3,
+        "zTie": 2,
+        "profile": "silent-human-pace-v2",
+        "lowTrust": true,
+        "indifference": 0.03,
+        "first": 50,
+        "requested": 100
+      },
+      "samples": [
+        50,
+        50,
+        50,
+        50,
+        50
+      ],
+      "rounds": [
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "stops": {
+        "indifferent": 4,
+        "eliminated": 1
+      }
+    },
+    {
+      "ts": "2026-10-18T03:31:13.481Z",
+      "floor": 3,
+      "label": "reward/card",
+      "decision_id": "482e031b-a3b7-400b-ae66-bc71438859ca",
+      "source": {
+        "offset": 2512814184,
+        "length": 192736,
+        "sha256": "3b679bf883fb8962d6d4620c90395b17ed7183f0229d03375feab76d8d57887e"
+      },
+      "old_errors": 1,
+      "new_errors": 0,
+      "old_produced": 0,
+      "new_produced": 1,
+      "status": "complete_adaptive",
+      "stop_reason": "indifferent",
+      "rule": {
+        "version": "adaptive-v1",
+        "b3First": 300,
+        "b2First": 200,
+        "batch": 50,
+        "zElim": 3,
+        "zTie": 2,
+        "profile": "silent-human-pace-v2",
+        "lowTrust": true,
+        "indifference": 0.03,
+        "first": 50,
+        "requested": 100
+      },
+      "samples": [
+        50,
+        50,
+        50,
+        50,
+        50
+      ],
+      "rounds": [
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "stops": {
+        "indifferent": 4,
+        "eliminated": 1
+      }
+    },
+    {
+      "ts": "2026-10-18T03:32:28.901Z",
+      "floor": 4,
+      "label": "shop/plan",
+      "decision_id": "4d3a1c33-7ea6-4986-9ac2-6ae08334543f",
+      "source": {
+        "offset": 2513013695,
+        "length": 877440,
+        "sha256": "bf8523fe923cef1833aadc625e2879a0f54d3d0875f7b416b10a3faf6de10b96"
+      },
+      "old_errors": 0,
+      "new_errors": 0,
+      "old_produced": 1,
+      "new_produced": 1,
+      "status": "complete_adaptive",
+      "stop_reason": "max",
+      "rule": {
+        "version": "adaptive-v1",
+        "b3First": 300,
+        "b2First": 200,
+        "batch": 50,
+        "zElim": 3,
+        "zTie": 2,
+        "profile": "silent-human-pace-v2",
+        "lowTrust": true,
+        "indifference": 0.03,
+        "first": 50,
+        "requested": 100
+      },
+      "samples": [
+        100,
+        50,
+        50,
+        50,
+        100,
+        50,
+        50,
+        100,
+        100,
+        50,
+        50,
+        50,
+        50,
+        50,
+        100,
+        50,
+        50,
+        50,
+        50,
+        50
+      ],
+      "rounds": [
+        2,
+        1,
+        1,
+        1,
+        2,
+        1,
+        1,
+        2,
+        2,
+        1,
+        1,
+        1,
+        1,
+        1,
+        2,
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "stops": {
+        "max": 4,
+        "eliminated": 16
+      }
+    },
+    {
+      "ts": "2026-10-18T03:33:50.479Z",
+      "floor": 5,
+      "label": "reward/card",
+      "decision_id": "d47e6b4c-a85c-4fa1-b031-333cf487f703",
+      "source": {
+        "offset": 2514063017,
+        "length": 203731,
+        "sha256": "978dc66c1009f849e64646b7cefcbc7cf49453e80207c7a4dbc5e7a08f515f41"
+      },
+      "old_errors": 1,
+      "new_errors": 0,
+      "old_produced": 0,
+      "new_produced": 1,
+      "status": "complete_adaptive",
+      "stop_reason": "indifferent",
+      "rule": {
+        "version": "adaptive-v1",
+        "b3First": 300,
+        "b2First": 200,
+        "batch": 50,
+        "zElim": 3,
+        "zTie": 2,
+        "profile": "silent-human-pace-v2",
+        "lowTrust": true,
+        "indifference": 0.03,
+        "first": 50,
+        "requested": 100
+      },
+      "samples": [
+        50,
+        50,
+        50,
+        50,
+        50
+      ],
+      "rounds": [
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "stops": {
+        "indifferent": 5
+      }
+    }
+  ],
+  "cases": [
+    {
+      "ts": "2026-10-18T03:30:17.687Z",
+      "floor": 2,
+      "label": "reward/card",
+      "decision_id": "59b2ebad-18f5-4255-9c6f-5c70c5a8e333",
+      "source": {
+        "offset": 2512563886,
+        "length": 194652,
+        "sha256": "c8f7b7b6c2c55b6a8f5ecfcef0057fc60f1f46d0922ab5eed4c6393343ef8c4f"
+      },
+      "old_errors": 1,
+      "new_errors": 0,
+      "old_produced": 0,
+      "new_produced": 1,
+      "status": "complete_adaptive",
+      "stop_reason": "indifferent",
+      "rule": {
+        "version": "adaptive-v1",
+        "b3First": 300,
+        "b2First": 200,
+        "batch": 50,
+        "zElim": 3,
+        "zTie": 2,
+        "profile": "silent-human-pace-v2",
+        "lowTrust": true,
+        "indifference": 0.03,
+        "first": 50,
+        "requested": 100
+      },
+      "samples": [
+        50,
+        50,
+        50,
+        50,
+        50
+      ],
+      "rounds": [
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "stops": {
+        "indifferent": 4,
+        "eliminated": 1
+      },
+      "adaptive": {
+        "schema": "sim-adaptive-v1",
+        "mode": "on",
+        "status": "complete_adaptive",
+        "lane": "b3",
+        "stop_reason": "indifferent",
+        "indifference_spread": 0,
+        "rule": {
+          "version": "adaptive-v1",
+          "b3First": 300,
+          "b2First": 200,
+          "batch": 50,
+          "zElim": 3,
+          "zTie": 2,
+          "profile": "silent-human-pace-v2",
+          "lowTrust": true,
+          "indifference": 0.03,
+          "first": 50,
+          "requested": 100
+        },
+        "candidates": [
+          {
+            "key": "@current",
+            "samples": 50,
+            "rounds": 1,
+            "stop": "indifferent",
+            "baseline": true
+          },
+          {
+            "key": "card0",
+            "samples": 50,
+            "rounds": 1,
+            "stop": "indifferent",
+            "baseline": false
+          },
+          {
+            "key": "card1",
+            "samples": 50,
+            "rounds": 1,
+            "stop": "indifferent",
+            "baseline": false
+          },
+          {
+            "key": "card2",
+            "samples": 50,
+            "rounds": 1,
+            "stop": "eliminated",
+            "baseline": false
+          },
+          {
+            "key": "skip",
+            "samples": 50,
+            "rounds": 1,
+            "stop": "indifferent",
+            "baseline": false
+          }
+        ],
+        "final": {
+          "leader": "card0",
+          "group": [
+            "card0",
+            "card1",
+            "skip"
+          ]
+        },
+        "rounds": [
+          {
+            "n": 50,
+            "leader": "card0",
+            "eliminated": [
+              {
+                "key": "card2",
+                "metric": {
+                  "key": "boss_left",
+                  "difference": -21.6,
+                  "se": 5.961919975638582
+                }
+              }
+            ]
+          }
+        ],
+        "evaluable": true,
+        "work": {
+          "full": 400,
+          "actual": 200,
+          "savedFraction": 0.5,
+          "unit": "unique-option-sample-equivalents"
+        },
+        "limits": "Actual prefixes only. All candidates remain available with their own sample count. Full-run agreement is an independent admission result, not observed during an early-stopped question.",
+        "input_key": "human-pace-b3-v1:a01bc73d15fcc935e0f0acfffc1588bc6e08f5fe4b9b6d8915ad154a05a87d34",
+        "fixed_order_search_in_work": true
+      },
+      "completion": {
+        "required": true,
+        "uniqueDecks": 4,
+        "originalDecks": 4,
+        "memoHit": false,
+        "budgeted": true,
+        "status": "complete_budget",
+        "failure": false,
+        "samples": 50,
+        "requested": 100,
+        "attempt_id": "36519af3-22da-446a-a9c9-0f8c44e1f4da",
+        "attempts": 1,
+        "reasons": [],
+        "key": "sim-failure-v1:59239d6452f7896de9fe03ed5a5a97e466af8b393a156f1b6b96c0a8126c3291",
+        "latencyTargetMs": 11000,
+        "latencyTargetExceeded": false
+      },
+      "diagnostics": {
+        "schema": "build-sim-health-v1",
+        "status": "produced",
+        "availableCpus": 32,
+        "loadAverage": [
+          9.04,
+          9.99,
+          18.39
+        ],
+        "decks": 4,
+        "options": 4,
+        "deckCards": 16,
+        "deadlineMs": 10982.84859899999,
+        "orderSearch": null,
+        "comparison": {
+          "samples": 50,
+          "elapsedMs": 747,
+          "timedOut": false,
+          "workers": 24,
+          "deadlineMs": 10982.774674999993,
+          "pool": {
+            "queueMs": 0,
+            "coldStart": false,
+            "preparationMs": 0,
+            "firstReplyMs": 60,
+            "chunksPlanned": 28,
+            "chunksDispatched": 28,
+            "chunksCompleted": 28,
+            "outcomesCompleted": 200
+          }
+        },
+        "boss": "WATERFALL_GIANT",
+        "samples": 50,
+        "requested": 100,
+        "minimumShown": 100,
+        "timedOut": false,
+        "simMs": 755,
+        "workers": 24
+      },
+      "result": "completed: Action completed.",
+      "sim_ms": 786,
+      "time_budget": {
+        "schema": "decision-budget-v1",
+        "kind": "brain",
+        "key": "67AFTXLWVN4L:{\"actions\":[\"save_and_quit\",\"resolve_rewards\",\"collect_rewards_and_proceed\",\"choose_reward_card\",\"skip_reward_cards\"],\"combat\":false,\"enemies\":\"\",\"event\":\"\",\"gold\":114,\"hand\":\"\",\"hp\":50,\"maxHp\":70,\"nodes\":\"\",\"pendingCard\":true,\"player\":\"1:0:0\",\"potions\":\"FIRE_POTION:true:false|:false:false\",\"powers\":\"\",\"rewards\":\"\",\"run\":\"67AFTXLWVN4L\",\"screen\":\"REWARD\",\"selection\":\"null:false\",\"shopOpen\":false,\"shopStock\":\"\",\"turn\":4}",
+        "budget_ms": 90000,
+        "entry_budget_ms": 4999.995879999973,
+        "actual_ms": 30860,
+        "turn_actual_ms": 30860,
+        "shared_actual_ms": 800,
+        "independent_actual_ms": 30060,
+        "timed_out": false,
+        "fallback": null,
+        "shadow_unknown": [],
+        "stages": [
+          {
+            "stage": "P1_readiness_shadow",
+            "scope": "shadow",
+            "budget_ms": 89216.58028699999,
+            "actual_ms": 1,
+            "timed_out": false,
+            "shared_remaining_ms": 89216.57663699999,
+            "stages": []
+          },
+          {
+            "stage": "C2_sampling_shadow",
+            "scope": "shadow",
+            "budget_ms": 89216.573637,
+            "actual_ms": 0,
+            "timed_out": false,
+            "shared_remaining_ms": 89216.57296699999,
+            "stages": []
+          },
+          {
+            "stage": "P2_S_build_counterfactual",
+            "scope": "shadow",
+            "budget_ms": 89216.570797,
+            "actual_ms": 0,
+            "timed_out": false,
+            "shared_remaining_ms": 89216.57040699999,
+            "stages": []
+          },
+          {
+            "stage": "C2_ranking_counterfactual",
+            "scope": "shadow",
+            "budget_ms": 89216.568447,
+            "actual_ms": 0,
+            "timed_out": false,
+            "shared_remaining_ms": 89216.567787,
+            "stages": []
+          },
+          {
+            "stage": "G2_global_shadow",
+            "scope": "shadow",
+            "budget_ms": 89206.619565,
+            "actual_ms": 8211,
+            "timed_out": false,
+            "shared_remaining_ms": 89206.615265,
+            "stages": [
+              {
+                "stage": "C2_sampling_shadow",
+                "scope": "shadow",
+                "budget_ms": 82509.695244,
+                "actual_ms": 0,
+                "timed_out": false,
+                "shared_remaining_ms": 82509.691115,
+                "stages": []
+              },
+              {
+                "stage": "P2_S_build_counterfactual",
+                "scope": "shadow",
+                "budget_ms": 82509.68768499998,
+                "actual_ms": 33,
+                "timed_out": false,
+                "shared_remaining_ms": 82509.68688499997,
+                "stages": []
+              },
+              {
+                "stage": "C2_ranking_counterfactual",
+                "scope": "shadow",
+                "budget_ms": 82509.677145,
+                "actual_ms": 0,
+                "timed_out": false,
+                "shared_remaining_ms": 82509.674466,
+                "stages": []
+              },
+              {
+                "stage": "C2_sampling_shadow",
+                "scope": "shadow",
+                "budget_ms": 81048.956465,
+                "actual_ms": 0,
+                "timed_out": false,
+                "shared_remaining_ms": 81048.95140600001,
+                "stages": []
+              },
+              {
+                "stage": "P2_S_build_counterfactual",
+                "scope": "shadow",
+                "budget_ms": 81048.94892700002,
+                "actual_ms": 17,
+                "timed_out": false,
+                "shared_remaining_ms": 81048.94817700001,
+                "stages": []
+              },
+              {
+                "stage": "C2_ranking_counterfactual",
+                "scope": "shadow",
+                "budget_ms": 81048.876314,
+                "actual_ms": 0,
+                "timed_out": false,
+                "shared_remaining_ms": 81048.867884,
+                "stages": []
+              }
+            ]
+          },
+          {
+            "stage": "B3_current",
+            "budget_ms": 89992.39087599999,
+            "actual_ms": 787,
+            "timed_out": false
+          },
+          {
+            "stage": "construction_shadow",
+            "scope": "shadow",
+            "budget_ms": 89205.04306299999,
+            "actual_ms": 1954,
+            "timed_out": false,
+            "shared_remaining_ms": 89205.03707299998,
+            "stages": []
+          },
+          {
+            "stage": "construction_evaluation_shadow",
+            "scope": "shadow",
+            "budget_ms": 89205.02369399997,
+            "actual_ms": 0,
+            "timed_out": false,
+            "shared_remaining_ms": 89205.02236399997,
+            "stages": []
+          },
+          {
+            "stage": "L2_brain",
+            "scope": "L2",
+            "budget_ms": 90000,
+            "actual_ms": 19894,
+            "timed_out": false,
+            "shared_remaining_ms": 89200.51423199996,
+            "stages": [
+              {
+                "stage": "L2_brain",
+                "budget_ms": 89999.988721,
+                "actual_ms": 19894,
+                "timed_out": false
+              }
+            ]
+          }
+        ],
+        "animation_time_included": false
+      }
+    },
+    {
+      "ts": "2026-10-18T03:31:13.481Z",
+      "floor": 3,
+      "label": "reward/card",
+      "decision_id": "482e031b-a3b7-400b-ae66-bc71438859ca",
+      "source": {
+        "offset": 2512814184,
+        "length": 192736,
+        "sha256": "3b679bf883fb8962d6d4620c90395b17ed7183f0229d03375feab76d8d57887e"
+      },
+      "old_errors": 1,
+      "new_errors": 0,
+      "old_produced": 0,
+      "new_produced": 1,
+      "status": "complete_adaptive",
+      "stop_reason": "indifferent",
+      "rule": {
+        "version": "adaptive-v1",
+        "b3First": 300,
+        "b2First": 200,
+        "batch": 50,
+        "zElim": 3,
+        "zTie": 2,
+        "profile": "silent-human-pace-v2",
+        "lowTrust": true,
+        "indifference": 0.03,
+        "first": 50,
+        "requested": 100
+      },
+      "samples": [
+        50,
+        50,
+        50,
+        50,
+        50
+      ],
+      "rounds": [
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "stops": {
+        "indifferent": 4,
+        "eliminated": 1
+      },
+      "adaptive": {
+        "schema": "sim-adaptive-v1",
+        "mode": "on",
+        "status": "complete_adaptive",
+        "lane": "b3",
+        "stop_reason": "indifferent",
+        "indifference_spread": 0,
+        "rule": {
+          "version": "adaptive-v1",
+          "b3First": 300,
+          "b2First": 200,
+          "batch": 50,
+          "zElim": 3,
+          "zTie": 2,
+          "profile": "silent-human-pace-v2",
+          "lowTrust": true,
+          "indifference": 0.03,
+          "first": 50,
+          "requested": 100
+        },
+        "candidates": [
+          {
+            "key": "@current",
+            "samples": 50,
+            "rounds": 1,
+            "stop": "indifferent",
+            "baseline": true
+          },
+          {
+            "key": "card0",
+            "samples": 50,
+            "rounds": 1,
+            "stop": "indifferent",
+            "baseline": false
+          },
+          {
+            "key": "card1",
+            "samples": 50,
+            "rounds": 1,
+            "stop": "indifferent",
+            "baseline": false
+          },
+          {
+            "key": "card2",
+            "samples": 50,
+            "rounds": 1,
+            "stop": "eliminated",
+            "baseline": false
+          },
+          {
+            "key": "skip",
+            "samples": 50,
+            "rounds": 1,
+            "stop": "indifferent",
+            "baseline": false
+          }
+        ],
+        "final": {
+          "leader": "card0",
+          "group": [
+            "card0",
+            "card1"
+          ]
+        },
+        "rounds": [
+          {
+            "n": 50,
+            "leader": "card0",
+            "eliminated": [
+              {
+                "key": "card2",
+                "metric": {
+                  "key": "boss_left",
+                  "difference": -23.8,
+                  "se": 5.664065029028288
+                }
+              }
+            ]
+          }
+        ],
+        "evaluable": true,
+        "work": {
+          "full": 400,
+          "actual": 200,
+          "savedFraction": 0.5,
+          "unit": "unique-option-sample-equivalents"
+        },
+        "limits": "Actual prefixes only. All candidates remain available with their own sample count. Full-run agreement is an independent admission result, not observed during an early-stopped question.",
+        "input_key": "human-pace-b3-v1:79728298bd6800be3c99cbad1ec0c5efed6e1d04b3cf52a6e93f33c7026ee9ef",
+        "fixed_order_search_in_work": true
+      },
+      "completion": {
+        "required": true,
+        "uniqueDecks": 4,
+        "originalDecks": 4,
+        "memoHit": false,
+        "budgeted": true,
+        "status": "complete_budget",
+        "failure": false,
+        "samples": 50,
+        "requested": 100,
+        "attempt_id": "242e702e-a459-4cec-9264-c8de49b2c662",
+        "attempts": 1,
+        "reasons": [],
+        "key": "sim-failure-v1:4695b824dcc6cdf1d8720b4545b7431a5a152058696d08324a1d8f34ec2d10c8",
+        "latencyTargetMs": 11000,
+        "latencyTargetExceeded": false
+      },
+      "diagnostics": {
+        "schema": "build-sim-health-v1",
+        "status": "produced",
+        "availableCpus": 32,
+        "loadAverage": [
+          8.63,
+          10.09,
+          18.01
+        ],
+        "decks": 4,
+        "options": 4,
+        "deckCards": 17,
+        "deadlineMs": 10986.706930000015,
+        "orderSearch": null,
+        "comparison": {
+          "samples": 50,
+          "elapsedMs": 693,
+          "timedOut": false,
+          "workers": 24,
+          "deadlineMs": 10986.686121000006,
+          "pool": {
+            "queueMs": 0,
+            "coldStart": false,
+            "preparationMs": 0,
+            "firstReplyMs": 35,
+            "chunksPlanned": 28,
+            "chunksDispatched": 28,
+            "chunksCompleted": 28,
+            "outcomesCompleted": 200
+          }
+        },
+        "boss": "WATERFALL_GIANT",
+        "samples": 50,
+        "requested": 100,
+        "minimumShown": 100,
+        "timedOut": false,
+        "simMs": 701,
+        "workers": 24
+      },
+      "result": "completed: Action completed.",
+      "sim_ms": 720,
+      "time_budget": {
+        "schema": "decision-budget-v1",
+        "kind": "brain",
+        "key": "67AFTXLWVN4L:{\"actions\":[\"save_and_quit\",\"resolve_rewards\",\"collect_rewards_and_proceed\",\"choose_reward_card\",\"skip_reward_cards\"],\"combat\":false,\"enemies\":\"\",\"event\":\"\",\"gold\":126,\"hand\":\"\",\"hp\":49,\"maxHp\":70,\"nodes\":\"\",\"pendingCard\":true,\"player\":\"0:0:0\",\"potions\":\"POISON_POTION:true:false|:false:false\",\"powers\":\"\",\"rewards\":\"\",\"run\":\"67AFTXLWVN4L\",\"screen\":\"REWARD\",\"selection\":\"null:false\",\"shopOpen\":false,\"shopStock\":\"\",\"turn\":2}",
+        "budget_ms": 90000,
+        "entry_budget_ms": 4999.996790999983,
+        "actual_ms": 37242,
+        "turn_actual_ms": 37242,
+        "shared_actual_ms": 728,
+        "independent_actual_ms": 36514,
+        "timed_out": false,
+        "fallback": null,
+        "shadow_unknown": [],
+        "stages": [
+          {
+            "stage": "P1_readiness_shadow",
+            "scope": "shadow",
+            "budget_ms": 89280.434809,
+            "actual_ms": 1,
+            "timed_out": false,
+            "shared_remaining_ms": 89280.43106999999,
+            "stages": []
+          },
+          {
+            "stage": "C2_sampling_shadow",
+            "scope": "shadow",
+            "budget_ms": 89280.42635099997,
+            "actual_ms": 0,
+            "timed_out": false,
+            "shared_remaining_ms": 89280.42548099998,
+            "stages": []
+          },
+          {
+            "stage": "P2_S_build_counterfactual",
+            "scope": "shadow",
+            "budget_ms": 89280.42194099998,
+            "actual_ms": 0,
+            "timed_out": false,
+            "shared_remaining_ms": 89280.421451,
+            "stages": []
+          },
+          {
+            "stage": "C2_ranking_counterfactual",
+            "scope": "shadow",
+            "budget_ms": 89280.41967100001,
+            "actual_ms": 0,
+            "timed_out": false,
+            "shared_remaining_ms": 89280.41877100003,
+            "stages": []
+          },
+          {
+            "stage": "G2_global_shadow",
+            "scope": "shadow",
+            "budget_ms": 89277.49078100003,
+            "actual_ms": 4242,
+            "timed_out": false,
+            "shared_remaining_ms": 89277.48794100003,
+            "stages": [
+              {
+                "stage": "C2_sampling_shadow",
+                "scope": "shadow",
+                "budget_ms": 86344.69873900004,
+                "actual_ms": 0,
+                "timed_out": false,
+                "shared_remaining_ms": 86344.69442900005,
+                "stages": []
+              },
+              {
+                "stage": "P2_S_build_counterfactual",
+                "scope": "shadow",
+                "budget_ms": 86344.68971900005,
+                "actual_ms": 20,
+                "timed_out": false,
+                "shared_remaining_ms": 86344.68881900006,
+                "stages": []
+              },
+              {
+                "stage": "C2_ranking_counterfactual",
+                "scope": "shadow",
+                "budget_ms": 86344.67984000006,
+                "actual_ms": 0,
+                "timed_out": false,
+                "shared_remaining_ms": 86344.67782000007,
+                "stages": []
+              },
+              {
+                "stage": "C2_sampling_shadow",
+                "scope": "shadow",
+                "budget_ms": 85073.07752600007,
+                "actual_ms": 0,
+                "timed_out": false,
+                "shared_remaining_ms": 85073.07292600008,
+                "stages": []
+              },
+              {
+                "stage": "P2_S_build_counterfactual",
+                "scope": "shadow",
+                "budget_ms": 85073.0713160001,
+                "actual_ms": 16,
+                "timed_out": false,
+                "shared_remaining_ms": 85073.07049600009,
+                "stages": []
+              },
+              {
+                "stage": "C2_ranking_counterfactual",
+                "scope": "shadow",
+                "budget_ms": 85073.05974700008,
+                "actual_ms": 0,
+                "timed_out": false,
+                "shared_remaining_ms": 85073.05726700008,
+                "stages": []
+              }
+            ]
+          },
+          {
+            "stage": "B3_current",
+            "budget_ms": 89996.44655600001,
+            "actual_ms": 720,
+            "timed_out": false
+          },
+          {
+            "stage": "construction_shadow",
+            "scope": "shadow",
+            "budget_ms": 89276.23048300005,
+            "actual_ms": 1854,
+            "timed_out": false,
+            "shared_remaining_ms": 89276.22522300004,
+            "stages": []
+          },
+          {
+            "stage": "construction_evaluation_shadow",
+            "scope": "shadow",
+            "budget_ms": 89276.21830300006,
+            "actual_ms": 0,
+            "timed_out": false,
+            "shared_remaining_ms": 89276.21685300005,
+            "stages": []
+          },
+          {
+            "stage": "L2_brain",
+            "scope": "L2",
+            "budget_ms": 90000,
+            "actual_ms": 30417,
+            "timed_out": false,
+            "shared_remaining_ms": 89272.69937500005,
+            "stages": [
+              {
+                "stage": "L2_brain",
+                "budget_ms": 89999.98993099999,
+                "actual_ms": 30417,
+                "timed_out": false
+              }
+            ]
+          }
+        ],
+        "animation_time_included": false
+      }
+    },
+    {
+      "ts": "2026-10-18T03:33:50.479Z",
+      "floor": 5,
+      "label": "reward/card",
+      "decision_id": "d47e6b4c-a85c-4fa1-b031-333cf487f703",
+      "source": {
+        "offset": 2514063017,
+        "length": 203731,
+        "sha256": "978dc66c1009f849e64646b7cefcbc7cf49453e80207c7a4dbc5e7a08f515f41"
+      },
+      "old_errors": 1,
+      "new_errors": 0,
+      "old_produced": 0,
+      "new_produced": 1,
+      "status": "complete_adaptive",
+      "stop_reason": "indifferent",
+      "rule": {
+        "version": "adaptive-v1",
+        "b3First": 300,
+        "b2First": 200,
+        "batch": 50,
+        "zElim": 3,
+        "zTie": 2,
+        "profile": "silent-human-pace-v2",
+        "lowTrust": true,
+        "indifference": 0.03,
+        "first": 50,
+        "requested": 100
+      },
+      "samples": [
+        50,
+        50,
+        50,
+        50,
+        50
+      ],
+      "rounds": [
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "stops": {
+        "indifferent": 5
+      },
+      "adaptive": {
+        "schema": "sim-adaptive-v1",
+        "mode": "on",
+        "status": "complete_adaptive",
+        "lane": "b3",
+        "stop_reason": "indifferent",
+        "indifference_spread": 0.02,
+        "rule": {
+          "version": "adaptive-v1",
+          "b3First": 300,
+          "b2First": 200,
+          "batch": 50,
+          "zElim": 3,
+          "zTie": 2,
+          "profile": "silent-human-pace-v2",
+          "lowTrust": true,
+          "indifference": 0.03,
+          "first": 50,
+          "requested": 100
+        },
+        "candidates": [
+          {
+            "key": "@current",
+            "samples": 50,
+            "rounds": 1,
+            "stop": "indifferent",
+            "baseline": true
+          },
+          {
+            "key": "card0",
+            "samples": 50,
+            "rounds": 1,
+            "stop": "indifferent",
+            "baseline": false
+          },
+          {
+            "key": "card1",
+            "samples": 50,
+            "rounds": 1,
+            "stop": "indifferent",
+            "baseline": false
+          },
+          {
+            "key": "card2",
+            "samples": 50,
+            "rounds": 1,
+            "stop": "indifferent",
+            "baseline": false
+          },
+          {
+            "key": "skip",
+            "samples": 50,
+            "rounds": 1,
+            "stop": "indifferent",
+            "baseline": false
+          }
+        ],
+        "final": {
+          "leader": "card0",
+          "group": [
+            "card0",
+            "card1",
+            "card2",
+            "skip"
+          ]
+        },
+        "rounds": [
+          {
+            "n": 50,
+            "leader": "card0",
+            "eliminated": []
+          }
+        ],
+        "evaluable": true,
+        "work": {
+          "full": 400,
+          "actual": 200,
+          "savedFraction": 0.5,
+          "unit": "unique-option-sample-equivalents"
+        },
+        "limits": "Actual prefixes only. All candidates remain available with their own sample count. Full-run agreement is an independent admission result, not observed during an early-stopped question.",
+        "input_key": "human-pace-b3-v1:ac96e5e0f7a448677d273146e66d57a4a42dbd3f93ca82c35c1686263f9808e5",
+        "fixed_order_search_in_work": true
+      },
+      "completion": {
+        "required": true,
+        "uniqueDecks": 4,
+        "originalDecks": 4,
+        "memoHit": false,
+        "budgeted": true,
+        "status": "complete_budget",
+        "failure": false,
+        "samples": 50,
+        "requested": 100,
+        "attempt_id": "e3c944aa-8b32-4da0-86c5-a29852714308",
+        "attempts": 1,
+        "reasons": [],
+        "key": "sim-failure-v1:fe7fe95989c1048cd065b87a2bc62c9d5cfebf540fa2fa0439aa04ec810b1cbf",
+        "latencyTargetMs": 11000,
+        "latencyTargetExceeded": false
+      },
+      "diagnostics": {
+        "schema": "build-sim-health-v1",
+        "status": "produced",
+        "availableCpus": 32,
+        "loadAverage": [
+          11.63,
+          10.47,
+          16.9
+        ],
+        "decks": 4,
+        "options": 4,
+        "deckCards": 19,
+        "deadlineMs": 10988.649881999998,
+        "orderSearch": null,
+        "comparison": {
+          "samples": 50,
+          "elapsedMs": 615,
+          "timedOut": false,
+          "workers": 24,
+          "deadlineMs": 10988.619593999989,
+          "pool": {
+            "queueMs": 0,
+            "coldStart": false,
+            "preparationMs": 0,
+            "firstReplyMs": 35,
+            "chunksPlanned": 28,
+            "chunksDispatched": 28,
+            "chunksCompleted": 28,
+            "outcomesCompleted": 200
+          }
+        },
+        "boss": "WATERFALL_GIANT",
+        "samples": 50,
+        "requested": 100,
+        "minimumShown": 100,
+        "timedOut": false,
+        "simMs": 621,
+        "workers": 24
+      },
+      "result": "completed: Action completed.",
+      "sim_ms": 641,
+      "time_budget": {
+        "schema": "decision-budget-v1",
+        "kind": "brain",
+        "key": "67AFTXLWVN4L:{\"actions\":[\"save_and_quit\",\"resolve_rewards\",\"collect_rewards_and_proceed\",\"choose_reward_card\",\"skip_reward_cards\"],\"combat\":false,\"enemies\":\"\",\"event\":\"\",\"gold\":36,\"hand\":\"\",\"hp\":49,\"maxHp\":70,\"nodes\":\"\",\"pendingCard\":true,\"player\":\"2:0:0\",\"potions\":\"POISON_POTION:true:false|:false:false\",\"powers\":\"\",\"rewards\":\"\",\"run\":\"67AFTXLWVN4L\",\"screen\":\"REWARD\",\"selection\":\"null:false\",\"shopOpen\":false,\"shopStock\":\"\",\"turn\":3}",
+        "budget_ms": 90000,
+        "entry_budget_ms": 4999.996670000022,
+        "actual_ms": 32285,
+        "turn_actual_ms": 32285,
+        "shared_actual_ms": 651,
+        "independent_actual_ms": 31634,
+        "timed_out": false,
+        "fallback": null,
+        "shadow_unknown": [],
+        "stages": [
+          {
+            "stage": "P1_readiness_shadow",
+            "scope": "shadow",
+            "budget_ms": 89356.91095300007,
+            "actual_ms": 1,
+            "timed_out": false,
+            "shared_remaining_ms": 89356.90533400007,
+            "stages": []
+          },
+          {
+            "stage": "C2_sampling_shadow",
+            "scope": "shadow",
+            "budget_ms": 89356.90021400002,
+            "actual_ms": 0,
+            "timed_out": false,
+            "shared_remaining_ms": 89356.89890400006,
+            "stages": []
+          },
+          {
+            "stage": "P2_S_build_counterfactual",
+            "scope": "shadow",
+            "budget_ms": 89356.89579500008,
+            "actual_ms": 1,
+            "timed_out": false,
+            "shared_remaining_ms": 89356.89546500007,
+            "stages": []
+          },
+          {
+            "stage": "C2_ranking_counterfactual",
+            "scope": "shadow",
+            "budget_ms": 89356.89149500005,
+            "actual_ms": 0,
+            "timed_out": false,
+            "shared_remaining_ms": 89356.89055500005,
+            "stages": []
+          },
+          {
+            "stage": "G2_global_shadow",
+            "scope": "shadow",
+            "budget_ms": 89354.59967200004,
+            "actual_ms": 4616,
+            "timed_out": false,
+            "shared_remaining_ms": 89354.59803200001,
+            "stages": [
+              {
+                "stage": "exact_observed_solver_cache",
+                "budget_ms": 0,
+                "actual_ms": 0,
+                "timed_out": false
+              },
+              {
+                "stage": "C2_sampling_shadow",
+                "scope": "shadow",
+                "budget_ms": 86809.17822200002,
+                "actual_ms": 0,
+                "timed_out": false,
+                "shared_remaining_ms": 86809.17500300001,
+                "stages": []
+              },
+              {
+                "stage": "P2_S_build_counterfactual",
+                "scope": "shadow",
+                "budget_ms": 86809.173313,
+                "actual_ms": 10,
+                "timed_out": false,
+                "shared_remaining_ms": 86809.172983,
+                "stages": []
+              },
+              {
+                "stage": "C2_ranking_counterfactual",
+                "scope": "shadow",
+                "budget_ms": 86809.165744,
+                "actual_ms": 0,
+                "timed_out": false,
+                "shared_remaining_ms": 86809.16381399997,
+                "stages": []
+              },
+              {
+                "stage": "exact_observed_solver_cache",
+                "budget_ms": 0,
+                "actual_ms": 0,
+                "timed_out": false
+              },
+              {
+                "stage": "C2_sampling_shadow",
+                "scope": "shadow",
+                "budget_ms": 84784.96384899993,
+                "actual_ms": 0,
+                "timed_out": false,
+                "shared_remaining_ms": 84784.95800999994,
+                "stages": []
+              },
+              {
+                "stage": "P2_S_build_counterfactual",
+                "scope": "shadow",
+                "budget_ms": 84784.95626999997,
+                "actual_ms": 35,
+                "timed_out": false,
+                "shared_remaining_ms": 84784.95591999998,
+                "stages": []
+              },
+              {
+                "stage": "C2_ranking_counterfactual",
+                "scope": "shadow",
+                "budget_ms": 84784.95092999999,
+                "actual_ms": 0,
+                "timed_out": false,
+                "shared_remaining_ms": 84784.94864999998,
+                "stages": []
+              }
+            ]
+          },
+          {
+            "stage": "B3_current",
+            "budget_ms": 89993.77836300008,
+            "actual_ms": 640,
+            "timed_out": false
+          },
+          {
+            "stage": "construction_shadow",
+            "scope": "shadow",
+            "budget_ms": 89353.61594400002,
+            "actual_ms": 1509,
+            "timed_out": false,
+            "shared_remaining_ms": 89353.60957500001,
+            "stages": []
+          },
+          {
+            "stage": "construction_evaluation_shadow",
+            "scope": "shadow",
+            "budget_ms": 89353.60339600005,
+            "actual_ms": 0,
+            "timed_out": false,
+            "shared_remaining_ms": 89353.602236,
+            "stages": []
+          },
+          {
+            "stage": "L2_brain",
+            "scope": "L2",
+            "budget_ms": 90000,
+            "actual_ms": 25507,
+            "timed_out": false,
+            "shared_remaining_ms": 89350.10793599999,
+            "stages": [
+              {
+                "stage": "L2_brain",
+                "budget_ms": 89999.98702100001,
+                "actual_ms": 25507,
+                "timed_out": false
+              }
+            ]
+          }
+        ],
+        "animation_time_included": false
+      }
+    }
+  ],
+  "timings": [
+    {
+      "source": {
+        "offset": 2512288989,
+        "length": 169464,
+        "sha256": "2b3523028307aa6a6536d8b161e8dd09c8ee65030d1582701ee8cd7c88489d38"
+      },
+      "ts": "2026-10-18T03:27:41.115Z",
+      "floor": 1,
+      "label": "event/plan",
+      "sim_ms": 1463,
+      "diagnostics": {
+        "schema": "build-sim-health-v1",
+        "status": "produced",
+        "availableCpus": 32,
+        "loadAverage": [
+          4.85,
+          7.55,
+          19.27
+        ],
+        "decks": 6,
+        "options": 5,
+        "deckCards": 13,
+        "deadlineMs": 10895.744565,
+        "orderSearch": null,
+        "comparison": {
+          "samples": 50,
+          "elapsedMs": 1325,
+          "timedOut": false,
+          "workers": 24,
+          "deadlineMs": 10895.512952000001,
+          "pool": {
+            "queueMs": 0,
+            "coldStart": true,
+            "preparationMs": 11,
+            "firstReplyMs": 474,
+            "chunksPlanned": 42,
+            "chunksDispatched": 42,
+            "chunksCompleted": 42,
+            "outcomesCompleted": 300
+          }
+        },
+        "boss": "WATERFALL_GIANT",
+        "samples": 50,
+        "requested": 100,
+        "minimumShown": 100,
+        "timedOut": false,
+        "simMs": 1348,
+        "workers": 24
+      },
+      "completion": {
+        "required": true,
+        "uniqueDecks": 6,
+        "originalDecks": 6,
+        "memoHit": false,
+        "budgeted": true,
+        "status": "complete_budget",
+        "failure": false,
+        "samples": 50,
+        "requested": 100,
+        "attempt_id": "3d8d5adb-1347-491d-9ebe-9b5991992cf4",
+        "attempts": 1,
+        "reasons": [],
+        "key": "sim-failure-v1:28152775da3f2968113f44ae1f2ad23595b149eb20732145e996933f439cd157",
+        "latencyTargetMs": 11000,
+        "latencyTargetExceeded": false
+      },
+      "actual_ms": 39763,
+      "shared_actual_ms": 1591,
+      "independent_actual_ms": 38172,
+      "stages": [
+        {
+          "stage": "P1_readiness_shadow",
+          "scope": "shadow",
+          "budget_ms": 88442.56040300001,
+          "actual_ms": 1,
+          "timed_out": false,
+          "shared_remaining_ms": 88442.517626,
+          "stages": []
+        },
+        {
+          "stage": "C2_sampling_shadow",
+          "scope": "shadow",
+          "budget_ms": 88442.510846,
+          "actual_ms": 0,
+          "timed_out": false,
+          "shared_remaining_ms": 88442.508806,
+          "stages": []
+        },
+        {
+          "stage": "P2_S_build_counterfactual",
+          "scope": "shadow",
+          "budget_ms": 88442.50613600001,
+          "actual_ms": 3,
+          "timed_out": false,
+          "shared_remaining_ms": 88442.504656,
+          "stages": []
+        },
+        {
+          "stage": "C2_ranking_counterfactual",
+          "scope": "shadow",
+          "budget_ms": 88442.492897,
+          "actual_ms": 0,
+          "timed_out": false,
+          "shared_remaining_ms": 88442.491257,
+          "stages": []
+        },
+        {
+          "stage": "G2_global_shadow",
+          "scope": "shadow",
+          "budget_ms": 88437.03642,
+          "actual_ms": 4504,
+          "timed_out": false,
+          "shared_remaining_ms": 88437.02902,
+          "stages": [
+            {
+              "stage": "C2_sampling_shadow",
+              "scope": "shadow",
+              "budget_ms": 85512.06731900001,
+              "actual_ms": 0,
+              "timed_out": false,
+              "shared_remaining_ms": 85512.06400900001,
+              "stages": []
+            },
+            {
+              "stage": "P2_S_build_counterfactual",
+              "scope": "shadow",
+              "budget_ms": 85512.059159,
+              "actual_ms": 26,
+              "timed_out": false,
+              "shared_remaining_ms": 85512.057329,
+              "stages": []
+            },
+            {
+              "stage": "C2_ranking_counterfactual",
+              "scope": "shadow",
+              "budget_ms": 85512.04403,
+              "actual_ms": 0,
+              "timed_out": false,
+              "shared_remaining_ms": 85512.04006,
+              "stages": []
+            },
+            {
+              "stage": "C2_sampling_shadow",
+              "scope": "shadow",
+              "budget_ms": 83986.084674,
+              "actual_ms": 0,
+              "timed_out": false,
+              "shared_remaining_ms": 83986.078595,
+              "stages": []
+            },
+            {
+              "stage": "P2_S_build_counterfactual",
+              "scope": "shadow",
+              "budget_ms": 83986.075835,
+              "actual_ms": 25,
+              "timed_out": false,
+              "shared_remaining_ms": 83986.072165,
+              "stages": []
+            },
+            {
+              "stage": "C2_ranking_counterfactual",
+              "scope": "shadow",
+              "budget_ms": 83986.06114600001,
+              "actual_ms": 0,
+              "timed_out": false,
+              "shared_remaining_ms": 83986.059496,
+              "stages": []
+            }
+          ]
+        },
+        {
+          "stage": "B3_current",
+          "budget_ms": 89897.32052000001,
+          "actual_ms": 1461,
+          "timed_out": false
+        },
+        {
+          "stage": "construction_shadow",
+          "scope": "shadow",
+          "budget_ms": 88435.892185,
+          "actual_ms": 19,
+          "timed_out": false,
+          "shared_remaining_ms": 88435.88736600001,
+          "stages": []
+        },
+        {
+          "stage": "construction_evaluation_shadow",
+          "scope": "shadow",
+          "budget_ms": 88435.874537,
+          "actual_ms": 0,
+          "timed_out": false,
+          "shared_remaining_ms": 88435.87220700001,
+          "stages": []
+        },
+        {
+          "stage": "L2_brain",
+          "scope": "L2",
+          "budget_ms": 90000,
+          "actual_ms": 33645,
+          "timed_out": false,
+          "shared_remaining_ms": 88413.71927,
+          "stages": [
+            {
+              "stage": "L2_brain",
+              "budget_ms": 89999.86147,
+              "actual_ms": 33645,
+              "timed_out": false
+            }
+          ]
+        }
+      ],
+      "timed_out": false
+    },
+    {
+      "source": {
+        "offset": 2512563886,
+        "length": 194652,
+        "sha256": "c8f7b7b6c2c55b6a8f5ecfcef0057fc60f1f46d0922ab5eed4c6393343ef8c4f"
+      },
+      "ts": "2026-10-18T03:30:17.687Z",
+      "floor": 2,
+      "label": "reward/card",
+      "sim_ms": 786,
+      "diagnostics": {
+        "schema": "build-sim-health-v1",
+        "status": "produced",
+        "availableCpus": 32,
+        "loadAverage": [
+          9.04,
+          9.99,
+          18.39
+        ],
+        "decks": 4,
+        "options": 4,
+        "deckCards": 16,
+        "deadlineMs": 10982.84859899999,
+        "orderSearch": null,
+        "comparison": {
+          "samples": 50,
+          "elapsedMs": 747,
+          "timedOut": false,
+          "workers": 24,
+          "deadlineMs": 10982.774674999993,
+          "pool": {
+            "queueMs": 0,
+            "coldStart": false,
+            "preparationMs": 0,
+            "firstReplyMs": 60,
+            "chunksPlanned": 28,
+            "chunksDispatched": 28,
+            "chunksCompleted": 28,
+            "outcomesCompleted": 200
+          }
+        },
+        "boss": "WATERFALL_GIANT",
+        "samples": 50,
+        "requested": 100,
+        "minimumShown": 100,
+        "timedOut": false,
+        "simMs": 755,
+        "workers": 24
+      },
+      "completion": {
+        "required": true,
+        "uniqueDecks": 4,
+        "originalDecks": 4,
+        "memoHit": false,
+        "budgeted": true,
+        "status": "complete_budget",
+        "failure": false,
+        "samples": 50,
+        "requested": 100,
+        "attempt_id": "36519af3-22da-446a-a9c9-0f8c44e1f4da",
+        "attempts": 1,
+        "reasons": [],
+        "key": "sim-failure-v1:59239d6452f7896de9fe03ed5a5a97e466af8b393a156f1b6b96c0a8126c3291",
+        "latencyTargetMs": 11000,
+        "latencyTargetExceeded": false
+      },
+      "actual_ms": 30860,
+      "shared_actual_ms": 800,
+      "independent_actual_ms": 30060,
+      "stages": [
+        {
+          "stage": "P1_readiness_shadow",
+          "scope": "shadow",
+          "budget_ms": 89216.58028699999,
+          "actual_ms": 1,
+          "timed_out": false,
+          "shared_remaining_ms": 89216.57663699999,
+          "stages": []
+        },
+        {
+          "stage": "C2_sampling_shadow",
+          "scope": "shadow",
+          "budget_ms": 89216.573637,
+          "actual_ms": 0,
+          "timed_out": false,
+          "shared_remaining_ms": 89216.57296699999,
+          "stages": []
+        },
+        {
+          "stage": "P2_S_build_counterfactual",
+          "scope": "shadow",
+          "budget_ms": 89216.570797,
+          "actual_ms": 0,
+          "timed_out": false,
+          "shared_remaining_ms": 89216.57040699999,
+          "stages": []
+        },
+        {
+          "stage": "C2_ranking_counterfactual",
+          "scope": "shadow",
+          "budget_ms": 89216.568447,
+          "actual_ms": 0,
+          "timed_out": false,
+          "shared_remaining_ms": 89216.567787,
+          "stages": []
+        },
+        {
+          "stage": "G2_global_shadow",
+          "scope": "shadow",
+          "budget_ms": 89206.619565,
+          "actual_ms": 8211,
+          "timed_out": false,
+          "shared_remaining_ms": 89206.615265,
+          "stages": [
+            {
+              "stage": "C2_sampling_shadow",
+              "scope": "shadow",
+              "budget_ms": 82509.695244,
+              "actual_ms": 0,
+              "timed_out": false,
+              "shared_remaining_ms": 82509.691115,
+              "stages": []
+            },
+            {
+              "stage": "P2_S_build_counterfactual",
+              "scope": "shadow",
+              "budget_ms": 82509.68768499998,
+              "actual_ms": 33,
+              "timed_out": false,
+              "shared_remaining_ms": 82509.68688499997,
+              "stages": []
+            },
+            {
+              "stage": "C2_ranking_counterfactual",
+              "scope": "shadow",
+              "budget_ms": 82509.677145,
+              "actual_ms": 0,
+              "timed_out": false,
+              "shared_remaining_ms": 82509.674466,
+              "stages": []
+            },
+            {
+              "stage": "C2_sampling_shadow",
+              "scope": "shadow",
+              "budget_ms": 81048.956465,
+              "actual_ms": 0,
+              "timed_out": false,
+              "shared_remaining_ms": 81048.95140600001,
+              "stages": []
+            },
+            {
+              "stage": "P2_S_build_counterfactual",
+              "scope": "shadow",
+              "budget_ms": 81048.94892700002,
+              "actual_ms": 17,
+              "timed_out": false,
+              "shared_remaining_ms": 81048.94817700001,
+              "stages": []
+            },
+            {
+              "stage": "C2_ranking_counterfactual",
+              "scope": "shadow",
+              "budget_ms": 81048.876314,
+              "actual_ms": 0,
+              "timed_out": false,
+              "shared_remaining_ms": 81048.867884,
+              "stages": []
+            }
+          ]
+        },
+        {
+          "stage": "B3_current",
+          "budget_ms": 89992.39087599999,
+          "actual_ms": 787,
+          "timed_out": false
+        },
+        {
+          "stage": "construction_shadow",
+          "scope": "shadow",
+          "budget_ms": 89205.04306299999,
+          "actual_ms": 1954,
+          "timed_out": false,
+          "shared_remaining_ms": 89205.03707299998,
+          "stages": []
+        },
+        {
+          "stage": "construction_evaluation_shadow",
+          "scope": "shadow",
+          "budget_ms": 89205.02369399997,
+          "actual_ms": 0,
+          "timed_out": false,
+          "shared_remaining_ms": 89205.02236399997,
+          "stages": []
+        },
+        {
+          "stage": "L2_brain",
+          "scope": "L2",
+          "budget_ms": 90000,
+          "actual_ms": 19894,
+          "timed_out": false,
+          "shared_remaining_ms": 89200.51423199996,
+          "stages": [
+            {
+              "stage": "L2_brain",
+              "budget_ms": 89999.988721,
+              "actual_ms": 19894,
+              "timed_out": false
+            }
+          ]
+        }
+      ],
+      "timed_out": false
+    },
+    {
+      "source": {
+        "offset": 2512814184,
+        "length": 192736,
+        "sha256": "3b679bf883fb8962d6d4620c90395b17ed7183f0229d03375feab76d8d57887e"
+      },
+      "ts": "2026-10-18T03:31:13.481Z",
+      "floor": 3,
+      "label": "reward/card",
+      "sim_ms": 720,
+      "diagnostics": {
+        "schema": "build-sim-health-v1",
+        "status": "produced",
+        "availableCpus": 32,
+        "loadAverage": [
+          8.63,
+          10.09,
+          18.01
+        ],
+        "decks": 4,
+        "options": 4,
+        "deckCards": 17,
+        "deadlineMs": 10986.706930000015,
+        "orderSearch": null,
+        "comparison": {
+          "samples": 50,
+          "elapsedMs": 693,
+          "timedOut": false,
+          "workers": 24,
+          "deadlineMs": 10986.686121000006,
+          "pool": {
+            "queueMs": 0,
+            "coldStart": false,
+            "preparationMs": 0,
+            "firstReplyMs": 35,
+            "chunksPlanned": 28,
+            "chunksDispatched": 28,
+            "chunksCompleted": 28,
+            "outcomesCompleted": 200
+          }
+        },
+        "boss": "WATERFALL_GIANT",
+        "samples": 50,
+        "requested": 100,
+        "minimumShown": 100,
+        "timedOut": false,
+        "simMs": 701,
+        "workers": 24
+      },
+      "completion": {
+        "required": true,
+        "uniqueDecks": 4,
+        "originalDecks": 4,
+        "memoHit": false,
+        "budgeted": true,
+        "status": "complete_budget",
+        "failure": false,
+        "samples": 50,
+        "requested": 100,
+        "attempt_id": "242e702e-a459-4cec-9264-c8de49b2c662",
+        "attempts": 1,
+        "reasons": [],
+        "key": "sim-failure-v1:4695b824dcc6cdf1d8720b4545b7431a5a152058696d08324a1d8f34ec2d10c8",
+        "latencyTargetMs": 11000,
+        "latencyTargetExceeded": false
+      },
+      "actual_ms": 37242,
+      "shared_actual_ms": 728,
+      "independent_actual_ms": 36514,
+      "stages": [
+        {
+          "stage": "P1_readiness_shadow",
+          "scope": "shadow",
+          "budget_ms": 89280.434809,
+          "actual_ms": 1,
+          "timed_out": false,
+          "shared_remaining_ms": 89280.43106999999,
+          "stages": []
+        },
+        {
+          "stage": "C2_sampling_shadow",
+          "scope": "shadow",
+          "budget_ms": 89280.42635099997,
+          "actual_ms": 0,
+          "timed_out": false,
+          "shared_remaining_ms": 89280.42548099998,
+          "stages": []
+        },
+        {
+          "stage": "P2_S_build_counterfactual",
+          "scope": "shadow",
+          "budget_ms": 89280.42194099998,
+          "actual_ms": 0,
+          "timed_out": false,
+          "shared_remaining_ms": 89280.421451,
+          "stages": []
+        },
+        {
+          "stage": "C2_ranking_counterfactual",
+          "scope": "shadow",
+          "budget_ms": 89280.41967100001,
+          "actual_ms": 0,
+          "timed_out": false,
+          "shared_remaining_ms": 89280.41877100003,
+          "stages": []
+        },
+        {
+          "stage": "G2_global_shadow",
+          "scope": "shadow",
+          "budget_ms": 89277.49078100003,
+          "actual_ms": 4242,
+          "timed_out": false,
+          "shared_remaining_ms": 89277.48794100003,
+          "stages": [
+            {
+              "stage": "C2_sampling_shadow",
+              "scope": "shadow",
+              "budget_ms": 86344.69873900004,
+              "actual_ms": 0,
+              "timed_out": false,
+              "shared_remaining_ms": 86344.69442900005,
+              "stages": []
+            },
+            {
+              "stage": "P2_S_build_counterfactual",
+              "scope": "shadow",
+              "budget_ms": 86344.68971900005,
+              "actual_ms": 20,
+              "timed_out": false,
+              "shared_remaining_ms": 86344.68881900006,
+              "stages": []
+            },
+            {
+              "stage": "C2_ranking_counterfactual",
+              "scope": "shadow",
+              "budget_ms": 86344.67984000006,
+              "actual_ms": 0,
+              "timed_out": false,
+              "shared_remaining_ms": 86344.67782000007,
+              "stages": []
+            },
+            {
+              "stage": "C2_sampling_shadow",
+              "scope": "shadow",
+              "budget_ms": 85073.07752600007,
+              "actual_ms": 0,
+              "timed_out": false,
+              "shared_remaining_ms": 85073.07292600008,
+              "stages": []
+            },
+            {
+              "stage": "P2_S_build_counterfactual",
+              "scope": "shadow",
+              "budget_ms": 85073.0713160001,
+              "actual_ms": 16,
+              "timed_out": false,
+              "shared_remaining_ms": 85073.07049600009,
+              "stages": []
+            },
+            {
+              "stage": "C2_ranking_counterfactual",
+              "scope": "shadow",
+              "budget_ms": 85073.05974700008,
+              "actual_ms": 0,
+              "timed_out": false,
+              "shared_remaining_ms": 85073.05726700008,
+              "stages": []
+            }
+          ]
+        },
+        {
+          "stage": "B3_current",
+          "budget_ms": 89996.44655600001,
+          "actual_ms": 720,
+          "timed_out": false
+        },
+        {
+          "stage": "construction_shadow",
+          "scope": "shadow",
+          "budget_ms": 89276.23048300005,
+          "actual_ms": 1854,
+          "timed_out": false,
+          "shared_remaining_ms": 89276.22522300004,
+          "stages": []
+        },
+        {
+          "stage": "construction_evaluation_shadow",
+          "scope": "shadow",
+          "budget_ms": 89276.21830300006,
+          "actual_ms": 0,
+          "timed_out": false,
+          "shared_remaining_ms": 89276.21685300005,
+          "stages": []
+        },
+        {
+          "stage": "L2_brain",
+          "scope": "L2",
+          "budget_ms": 90000,
+          "actual_ms": 30417,
+          "timed_out": false,
+          "shared_remaining_ms": 89272.69937500005,
+          "stages": [
+            {
+              "stage": "L2_brain",
+              "budget_ms": 89999.98993099999,
+              "actual_ms": 30417,
+              "timed_out": false
+            }
+          ]
+        }
+      ],
+      "timed_out": false
+    },
+    {
+      "source": {
+        "offset": 2513013695,
+        "length": 877440,
+        "sha256": "bf8523fe923cef1833aadc625e2879a0f54d3d0875f7b416b10a3faf6de10b96"
+      },
+      "ts": "2026-10-18T03:32:28.901Z",
+      "floor": 4,
+      "label": "shop/plan",
+      "sim_ms": 4395,
+      "diagnostics": {
+        "schema": "build-sim-health-v1",
+        "status": "produced",
+        "availableCpus": 32,
+        "loadAverage": [
+          9.68,
+          10.23,
+          17.73
+        ],
+        "decks": 19,
+        "options": 19,
+        "deckCards": 18,
+        "deadlineMs": 10880.013842999993,
+        "orderSearch": null,
+        "comparison": {
+          "samples": 100,
+          "elapsedMs": 4178,
+          "timedOut": false,
+          "workers": 24,
+          "deadlineMs": 10879.960387,
+          "pool": {
+            "queueMs": 0,
+            "coldStart": false,
+            "preparationMs": 1,
+            "firstReplyMs": 49,
+            "chunksPlanned": 168,
+            "chunksDispatched": 168,
+            "chunksCompleted": 168,
+            "outcomesCompleted": 1200
+          }
+        },
+        "boss": "WATERFALL_GIANT",
+        "samples": 100,
+        "requested": 100,
+        "minimumShown": 100,
+        "timedOut": false,
+        "simMs": 4243,
+        "workers": 24
+      },
+      "completion": {
+        "required": true,
+        "uniqueDecks": 19,
+        "originalDecks": 19,
+        "memoHit": false,
+        "budgeted": true,
+        "status": "complete_budget",
+        "failure": false,
+        "samples": 100,
+        "requested": 100,
+        "attempt_id": "e94daa75-6caa-498b-be31-be17168eaa72",
+        "attempts": 1,
+        "reasons": [],
+        "key": "sim-failure-v1:ff4caee147f9fce9aa120d92e0152d6f917ed972e09de2fda1b57e0d291aecbc",
+        "latencyTargetMs": 11000,
+        "latencyTargetExceeded": false
+      },
+      "actual_ms": 72792,
+      "shared_actual_ms": 4405,
+      "independent_actual_ms": 68387,
+      "stages": [
+        {
+          "stage": "exact_observed_solver_cache",
+          "budget_ms": 0,
+          "actual_ms": 0,
+          "timed_out": false
+        },
+        {
+          "stage": "exact_observed_solver_cache",
+          "budget_ms": 0,
+          "actual_ms": 0,
+          "timed_out": false
+        },
+        {
+          "stage": "P1_readiness_shadow",
+          "scope": "shadow",
+          "budget_ms": 85621.64277800004,
+          "actual_ms": 1,
+          "timed_out": false,
+          "shared_remaining_ms": 85621.63629800006,
+          "stages": []
+        },
+        {
+          "stage": "C2_sampling_shadow",
+          "scope": "shadow",
+          "budget_ms": 85621.63153900008,
+          "actual_ms": 0,
+          "timed_out": false,
+          "shared_remaining_ms": 85621.6305790001,
+          "stages": []
+        },
+        {
+          "stage": "P2_S_build_counterfactual",
+          "scope": "shadow",
+          "budget_ms": 85621.62936900015,
+          "actual_ms": 7,
+          "timed_out": false,
+          "shared_remaining_ms": 85621.62884900015,
+          "stages": []
+        },
+        {
+          "stage": "C2_ranking_counterfactual",
+          "scope": "shadow",
+          "budget_ms": 85621.61750900018,
+          "actual_ms": 0,
+          "timed_out": false,
+          "shared_remaining_ms": 85621.61486000015,
+          "stages": []
+        },
+        {
+          "stage": "G2_global_shadow",
+          "scope": "shadow",
+          "budget_ms": 85604.70838500012,
+          "actual_ms": 19205,
+          "timed_out": false,
+          "shared_remaining_ms": 85604.70471500012,
+          "stages": [
+            {
+              "stage": "exact_observed_solver_cache",
+              "budget_ms": 0,
+              "actual_ms": 0,
+              "timed_out": false
+            },
+            {
+              "stage": "exact_observed_solver_cache",
+              "budget_ms": 0,
+              "actual_ms": 0,
+              "timed_out": false
+            },
+            {
+              "stage": "C2_sampling_shadow",
+              "scope": "shadow",
+              "budget_ms": 71310.25606300012,
+              "actual_ms": 0,
+              "timed_out": false,
+              "shared_remaining_ms": 71310.25283400016,
+              "stages": []
+            },
+            {
+              "stage": "P2_S_build_counterfactual",
+              "scope": "shadow",
+              "budget_ms": 71310.2517840002,
+              "actual_ms": 91,
+              "timed_out": false,
+              "shared_remaining_ms": 71310.2513640002,
+              "stages": []
+            },
+            {
+              "stage": "C2_ranking_counterfactual",
+              "scope": "shadow",
+              "budget_ms": 71310.2433150002,
+              "actual_ms": 0,
+              "timed_out": false,
+              "shared_remaining_ms": 71310.24167500017,
+              "stages": []
+            },
+            {
+              "stage": "exact_observed_solver_cache",
+              "budget_ms": 0,
+              "actual_ms": 0,
+              "timed_out": false
+            },
+            {
+              "stage": "exact_observed_solver_cache",
+              "budget_ms": 0,
+              "actual_ms": 0,
+              "timed_out": false
+            },
+            {
+              "stage": "C2_sampling_shadow",
+              "scope": "shadow",
+              "budget_ms": 66542.9409060002,
+              "actual_ms": 0,
+              "timed_out": false,
+              "shared_remaining_ms": 66542.93494700018,
+              "stages": []
+            },
+            {
+              "stage": "P2_S_build_counterfactual",
+              "scope": "shadow",
+              "budget_ms": 66542.93328700023,
+              "actual_ms": 49,
+              "timed_out": false,
+              "shared_remaining_ms": 66542.93251700018,
+              "stages": []
+            },
+            {
+              "stage": "C2_ranking_counterfactual",
+              "scope": "shadow",
+              "budget_ms": 66542.92261700018,
+              "actual_ms": 0,
+              "timed_out": false,
+              "shared_remaining_ms": 66542.92065800016,
+              "stages": []
+            }
+          ]
+        },
+        {
+          "stage": "B3_current",
+          "budget_ms": 89991.93863200006,
+          "actual_ms": 4388,
+          "timed_out": false
+        },
+        {
+          "stage": "construction_shadow",
+          "scope": "shadow",
+          "budget_ms": 85603.48379700014,
+          "actual_ms": 4691,
+          "timed_out": false,
+          "shared_remaining_ms": 85603.48031800013,
+          "stages": []
+        },
+        {
+          "stage": "construction_evaluation_shadow",
+          "scope": "shadow",
+          "budget_ms": 85603.47188900015,
+          "actual_ms": 1,
+          "timed_out": false,
+          "shared_remaining_ms": 85603.46997900016,
+          "stages": []
+        },
+        {
+          "stage": "L2_brain",
+          "scope": "L2",
+          "budget_ms": 90000,
+          "actual_ms": 44482,
+          "timed_out": false,
+          "shared_remaining_ms": 85595.93921100016,
+          "stages": [
+            {
+              "stage": "L2_brain",
+              "budget_ms": 89999.98723099998,
+              "actual_ms": 44482,
+              "timed_out": false
+            }
+          ]
+        }
+      ],
+      "timed_out": false
+    },
+    {
+      "source": {
+        "offset": 2514063017,
+        "length": 203731,
+        "sha256": "978dc66c1009f849e64646b7cefcbc7cf49453e80207c7a4dbc5e7a08f515f41"
+      },
+      "ts": "2026-10-18T03:33:50.479Z",
+      "floor": 5,
+      "label": "reward/card",
+      "sim_ms": 641,
+      "diagnostics": {
+        "schema": "build-sim-health-v1",
+        "status": "produced",
+        "availableCpus": 32,
+        "loadAverage": [
+          11.63,
+          10.47,
+          16.9
+        ],
+        "decks": 4,
+        "options": 4,
+        "deckCards": 19,
+        "deadlineMs": 10988.649881999998,
+        "orderSearch": null,
+        "comparison": {
+          "samples": 50,
+          "elapsedMs": 615,
+          "timedOut": false,
+          "workers": 24,
+          "deadlineMs": 10988.619593999989,
+          "pool": {
+            "queueMs": 0,
+            "coldStart": false,
+            "preparationMs": 0,
+            "firstReplyMs": 35,
+            "chunksPlanned": 28,
+            "chunksDispatched": 28,
+            "chunksCompleted": 28,
+            "outcomesCompleted": 200
+          }
+        },
+        "boss": "WATERFALL_GIANT",
+        "samples": 50,
+        "requested": 100,
+        "minimumShown": 100,
+        "timedOut": false,
+        "simMs": 621,
+        "workers": 24
+      },
+      "completion": {
+        "required": true,
+        "uniqueDecks": 4,
+        "originalDecks": 4,
+        "memoHit": false,
+        "budgeted": true,
+        "status": "complete_budget",
+        "failure": false,
+        "samples": 50,
+        "requested": 100,
+        "attempt_id": "e3c944aa-8b32-4da0-86c5-a29852714308",
+        "attempts": 1,
+        "reasons": [],
+        "key": "sim-failure-v1:fe7fe95989c1048cd065b87a2bc62c9d5cfebf540fa2fa0439aa04ec810b1cbf",
+        "latencyTargetMs": 11000,
+        "latencyTargetExceeded": false
+      },
+      "actual_ms": 32285,
+      "shared_actual_ms": 651,
+      "independent_actual_ms": 31634,
+      "stages": [
+        {
+          "stage": "P1_readiness_shadow",
+          "scope": "shadow",
+          "budget_ms": 89356.91095300007,
+          "actual_ms": 1,
+          "timed_out": false,
+          "shared_remaining_ms": 89356.90533400007,
+          "stages": []
+        },
+        {
+          "stage": "C2_sampling_shadow",
+          "scope": "shadow",
+          "budget_ms": 89356.90021400002,
+          "actual_ms": 0,
+          "timed_out": false,
+          "shared_remaining_ms": 89356.89890400006,
+          "stages": []
+        },
+        {
+          "stage": "P2_S_build_counterfactual",
+          "scope": "shadow",
+          "budget_ms": 89356.89579500008,
+          "actual_ms": 1,
+          "timed_out": false,
+          "shared_remaining_ms": 89356.89546500007,
+          "stages": []
+        },
+        {
+          "stage": "C2_ranking_counterfactual",
+          "scope": "shadow",
+          "budget_ms": 89356.89149500005,
+          "actual_ms": 0,
+          "timed_out": false,
+          "shared_remaining_ms": 89356.89055500005,
+          "stages": []
+        },
+        {
+          "stage": "G2_global_shadow",
+          "scope": "shadow",
+          "budget_ms": 89354.59967200004,
+          "actual_ms": 4616,
+          "timed_out": false,
+          "shared_remaining_ms": 89354.59803200001,
+          "stages": [
+            {
+              "stage": "exact_observed_solver_cache",
+              "budget_ms": 0,
+              "actual_ms": 0,
+              "timed_out": false
+            },
+            {
+              "stage": "C2_sampling_shadow",
+              "scope": "shadow",
+              "budget_ms": 86809.17822200002,
+              "actual_ms": 0,
+              "timed_out": false,
+              "shared_remaining_ms": 86809.17500300001,
+              "stages": []
+            },
+            {
+              "stage": "P2_S_build_counterfactual",
+              "scope": "shadow",
+              "budget_ms": 86809.173313,
+              "actual_ms": 10,
+              "timed_out": false,
+              "shared_remaining_ms": 86809.172983,
+              "stages": []
+            },
+            {
+              "stage": "C2_ranking_counterfactual",
+              "scope": "shadow",
+              "budget_ms": 86809.165744,
+              "actual_ms": 0,
+              "timed_out": false,
+              "shared_remaining_ms": 86809.16381399997,
+              "stages": []
+            },
+            {
+              "stage": "exact_observed_solver_cache",
+              "budget_ms": 0,
+              "actual_ms": 0,
+              "timed_out": false
+            },
+            {
+              "stage": "C2_sampling_shadow",
+              "scope": "shadow",
+              "budget_ms": 84784.96384899993,
+              "actual_ms": 0,
+              "timed_out": false,
+              "shared_remaining_ms": 84784.95800999994,
+              "stages": []
+            },
+            {
+              "stage": "P2_S_build_counterfactual",
+              "scope": "shadow",
+              "budget_ms": 84784.95626999997,
+              "actual_ms": 35,
+              "timed_out": false,
+              "shared_remaining_ms": 84784.95591999998,
+              "stages": []
+            },
+            {
+              "stage": "C2_ranking_counterfactual",
+              "scope": "shadow",
+              "budget_ms": 84784.95092999999,
+              "actual_ms": 0,
+              "timed_out": false,
+              "shared_remaining_ms": 84784.94864999998,
+              "stages": []
+            }
+          ]
+        },
+        {
+          "stage": "B3_current",
+          "budget_ms": 89993.77836300008,
+          "actual_ms": 640,
+          "timed_out": false
+        },
+        {
+          "stage": "construction_shadow",
+          "scope": "shadow",
+          "budget_ms": 89353.61594400002,
+          "actual_ms": 1509,
+          "timed_out": false,
+          "shared_remaining_ms": 89353.60957500001,
+          "stages": []
+        },
+        {
+          "stage": "construction_evaluation_shadow",
+          "scope": "shadow",
+          "budget_ms": 89353.60339600005,
+          "actual_ms": 0,
+          "timed_out": false,
+          "shared_remaining_ms": 89353.602236,
+          "stages": []
+        },
+        {
+          "stage": "L2_brain",
+          "scope": "L2",
+          "budget_ms": 90000,
+          "actual_ms": 25507,
+          "timed_out": false,
+          "shared_remaining_ms": 89350.10793599999,
+          "stages": [
+            {
+              "stage": "L2_brain",
+              "budget_ms": 89999.98702100001,
+              "actual_ms": 25507,
+              "timed_out": false
+            }
+          ]
+        }
+      ],
+      "timed_out": false
+    }
+  ],
+  "owners": {
+    "original_module_parent": "v5-dpr-health-20261013",
+    "human_pace_parent": "roy-20261017-human-pace",
+    "engineering_chain": "h1-budget-completion-health-contract",
+    "original_ET1_queue": "paper/materials/20261018-1055-ops/module-health-readback.json",
+    "original_fix_batch": "20261018-110254-fix-batch",
+    "source": "5011b4cbda9a9056a1fd146e375e3cd67b60c0a9",
+    "source_present_main_and_live": true,
+    "current_fix_pending": {
+      "at": "2026-10-18 11:43:38 CST",
+      "batch": "20261018-110254-fix-batch",
+      "feature": "original H1/module-health R394 indifferent compatibility",
+      "source": "5011b4cbda9a9056a1fd146e375e3cd67b60c0a9",
+      "source_parent": "92024e9e266ee78e29d9909029971f320bb122fe",
+      "source_paths": 3,
+      "actual_main": "a41c2bd8305c310fa0396a7f49e5c6d2e8ecc934",
+      "actual_live": "e713f211362f23e21102c63cd9a5e0195833021c",
+      "tree": "f0cec4c3c1f76d2179b3cc79ffa6434eed0c3022",
+      "qualification": "paper/materials/20261018-1133-ops/fix-source-qualification.json",
+      "source_original_full_rc": 0,
+      "source_original_files": 493,
+      "source_original_cases": 4463,
+      "source_fixed_python_cases": 7,
+      "source_full_not_repeated": true,
+      "actual_selected_tsc": 0,
+      "actual_selected_unique_vitest_cases": 50,
+      "actual_health_python_cases": 7,
+      "original_failed_rc0_mergednull_completion_preserved": true,
+      "original_14_conflicts_bypassed_by_exact_three_leaf_narrow_integration": true,
+      "new_behavior_release_id": null,
+      "host_full_rc": null,
+      "host_request": "paper/materials/20261018-1133-ops/host-recheck-request.json",
+      "host_scope": "One original075726 full check on the final exact composition contains this source; do not launch duplicate full for this same tree or equate source green with live green. Actual acceptance must cite the full pinned result and checked source leaves.",
+      "source_worktree_complete": false,
+      "completed": false,
+      "no_game_knowledge_or_ledger_shipped": true,
+      "scientific_parent_requests_closed": false,
+      "records_commit_pending": false,
+      "next": "On the normal original learner-checks event read actual final exact-tree result, verify all three source leaves, keep original batch/report failure history, register real acceptance and original retention complete for codex-fix-silent-20261018-110254 only when accepted. No new behavior number, no new research or duplicate source full.",
+      "last_records_commit": "214f73468f471d26aebbc16cd31c485633476b0c",
+      "records_commit_recorded_at": "2026-10-18 11:44:51 CST",
+      "records_commit": "214f73468f471d26aebbc16cd31c485633476b0c"
+    },
+    "learner_state_sha256": "0f3001a2e04eff7cfa29941093b3a012e6a86c0396bd25262a0a931dea95654e",
+    "observed_active_batches": [
+      {
+        "batch": "20261018-114301",
+        "task": "postmortem",
+        "worktree": null,
+        "pid": 680359,
+        "pid_stat_exists": true
+      },
+      {
+        "batch": "20261018-114302-strategy-proposal",
+        "task": "strategy-proposal",
+        "worktree": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261018-114302",
+        "pid": 680495,
+        "pid_stat_exists": true
+      },
+      {
+        "batch": "20261018-114302-s2-strategy-proposal",
+        "task": "strategy-proposal",
+        "worktree": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261018-114302-s2",
+        "pid": 680605,
+        "pid_stat_exists": true
+      }
+    ],
+    "original_failed_rc0_mergednull_preserved": true,
+    "host_full_pending": true,
+    "host_request": "paper/materials/20261018-1133-ops/host-recheck-request.json",
+    "duplicate_dispatch": false,
+    "source_worktree_retained": true,
+    "new_fix_or_research_owner": false
+  },
+  "engineering_diagnosis": "All3 original errors are R394 indifferent stop labels rejected by pre-fix ops/adaptive_health.py. Same immutable source inputs with actual5011b4 main/live monitoring source produce5/5 adaptive completions and0errors; no other module summary changes. This is a retrospective fixed-source readback, not a new natural production snapshot, a simulation rerun, full-host acceptance, simulator quality or game benefit.",
+  "acceptance_boundaries": "Keep full300 acceptance threshold and actual authorized adaptive n/caps/rounds distinct. No lowered sampling threshold; independent/shadow/shared durations retained separately, no total actual_ms vs parent90s alone, no load-time causal attribution. Legacy on-mode counterfactual agreement and calibration remain unknown.",
+  "no_new_tests_simulations_games_models_or_listeners": true,
+  "no_source_or_rule_changes": true,
+  "no_routine_watcher_or_roy_notice": true,
+  "no_other_role_ack": true,
+  "parent_requests_closed": false
+}
