@@ -2,10 +2,10 @@
 
 先读 [README.md](README.md)。动手之前还要读：
 1. 最新的 `paper/materials/STATE-*.md`：当前目标、系统现状、待定事项。
-2. `paper/materials/decision-log.md` 的末尾：最近的决定。
+2. `paper/materials/decision-log.md` 的末尾：最近的决定（运维按下文短清单规则沿事件定位历史）。
 3. [docs/learning-protocol.md](docs/learning-protocol.md)：**游戏知识只能从对局里学**。这是本项目的实验前提，违反了结论就不成立。
 
-运维会话还要读 `notes/ops-handoff.md` 全文。学习者以任务说明为准，见 `learner/tasks/`。
+运维首次启动读 `notes/ops-current.md` 的当前检查点和未完成待办；原 `notes/ops-handoff.md` 及 decision-log 历史原文保留，根据当前事件的引用按需读取，不每轮全文重读。首次仍读 README、最新 STATE、学习协议。摘要与原件冲突时保留冲突并查原件，不自行关闭待办。学习者以任务说明为准，见 `learner/tasks/`。
 
 Roy指定“学习入库”的要求按 [学习要求闭环](docs/learning-requests.md) 跟进到实际live经验及消费者读回；报告/批次结束不关闭父要求。学习者有不同意见、反证或与旧知识冲突时必须明确记录并经ops→watcher→Roy告知，不强行支持原假设。watcher接续时检查`ops/codex-ops/learning-notices/`未确认通知；不把排队当已送达，不代填其他角色的确认。
 
@@ -19,7 +19,7 @@ Roy指定“学习入库”的要求按 [学习要求闭环](docs/learning-reque
 
 ## 规矩
 
-- **运行模型**：模型统一 `gpt-6.1-sol`。Roy 2026-10-18 用量节省指示更新档位：大脑保持 `xhigh`；例行分析、开发、运维和学习任务在下一自然启动点显式用 `high`；纯格式任务可用 `medium` 或代码；困难专项可记录理由保留 `xhigh`。不热切在途会话，不修改共用 config、账号/home、普通服务档或权限。须核实际原生 turn_context/请求回执才能报告档位生效；续跑保留任务、线程和对局身份，旧记录不改写。
+- **运行模型**：模型统一 `gpt-6.1-sol`。Roy 2026-10-18 用量节省指示更新档位：大脑保持 `xhigh`；例行分析、开发、运维和学习任务在下一自然启动点显式用 `high`；纯格式任务可用 `medium` 或代码；困难专项可记录理由保留 `xhigh`。STS2 现有账号仍 codex3；需要临时 xhigh 时记录任务原因与下一停点。不热切在途会话，不修改共用 config、账号/home、普通服务档或权限。须核实际原生 turn_context/请求回执才能报告档位生效；续跑保留任务、线程和对局身份，旧记录不改写。
 - **记录**：决定和上线都在 `paper/materials/decision-log.md` 追加一行，写之前先跑 `date`，格式和已有的行一致。改变对局行为的上线，还要在 `eval/versions.json` 加一个版本，并通知运维会话。讨论、数据、转录都要落盘，不能丢历史。
 - **发布编号**：对外使用 `eval/versions.json` 的 `release_id`，格式 `V4-R307`（架构代数 + 累计行为发布序号），规则见 [统一发布编号](docs/eval.md#统一发布编号)。ops 在 `ops/live-merge.lock` 内核实际 live 提交后分配；同一发布提交的多个补丁名称共用一号，新行为发布才加一，纯文档/运维记录不加号。保留原 `name/family/commit/source`、旧顺序和经验库日期版本；不按名称末尾数字相加，不重编号历史。学习者沿用原上线流程，由 ops 统一核号。
 - **规则变更通知**：规则实际上线后先 `date`，在项目根目录 `notes/for-dai.md` 和 `ops/inbox-dev.md` 同时追加通知 Roy：逐项旧规则、新规则、证据/账本、预期影响和回退方法。这是已授权的记录例外，保留其他并行记录；只经 CLI 记台账，不修改运维 prompt。

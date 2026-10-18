@@ -17,6 +17,7 @@ import collections
 import csv
 import datetime as dt
 import gzip
+import fcntl
 import hashlib
 import io
 import json
@@ -1055,6 +1056,15 @@ def component_costs(root=ROOT, code_root=ROOT):
 
 
 def main():
+    # All original manual/snapshot/ordinary callers share one dataset writer, without a new timer.
+    directory = os.environ.get("CODEX_OPS_DIR") or os.path.join(ROOT, "ops", "codex-ops")
+    os.makedirs(directory, exist_ok=True)
+    with open(os.path.join(directory, "paper-dataset.lock"), "a") as lock:
+        fcntl.flock(lock, fcntl.LOCK_EX)
+        return build_locked()
+
+
+def build_locked():
     lim, summ, counts = build()
     if "--no-raw" not in sys.argv:
         raw_snapshot(lim)
