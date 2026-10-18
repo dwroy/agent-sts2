@@ -1,0 +1,30 @@
+{
+  "at": "2026-10-18 12:52:44 CST",
+  "actual_exit": 0,
+  "command": [
+    "nice",
+    "-n",
+    "19",
+    "env",
+    "SANDBOX_WORKERS=1",
+    "bash",
+    "agent/tools/test-sandbox.sh",
+    "tests/learner-cherry-pick-recheck.test.ts",
+    "tests/learner-report-fixes-shape.test.ts",
+    "--reporter=dot"
+  ],
+  "live_commit": "acfd63aaa8f664ca6f81a025cf8ebf25883531a9",
+  "live_tree": "376839f41060180270df76078a09a55f8faaf42e",
+  "pin_unchanged": true,
+  "reported_file_counts": [
+    2,
+    3
+  ],
+  "reported_case_counts": [
+    2,
+    13
+  ],
+  "log_sha256": "cfbf7ee99dbf5a81b5dd952eda442be1a75e4f68600e7e594ecece289a965f7f",
+  "full_suite_pass": false,
+  "source_full_not_repeated": true
+}
