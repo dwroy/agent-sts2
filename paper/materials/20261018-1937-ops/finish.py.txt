@@ -1,0 +1,60 @@
+from pathlib import Path
+import datetime as dt,gzip,hashlib,json,os,subprocess,sys
+sys.dont_write_bytecode=True
+r=Path.cwd();p=r/'ops/codex-ops/record-staging/20261018-1937';pub=r/'paper/materials/20261018-1937-ops'
+sys.path.insert(0,str(r/'ops'));import learner_retention as ret
+sha=lambda x:hashlib.sha256(x).hexdigest()
+load=lambda x:json.loads(x.read_bytes())
+assert not (p/'own-appends.json').exists(), 'final receipts already appended; do not repeat'
+completed=load(pub/'completed.json');assert completed['actual_consumer_restore_verified']
+consumer=load(pub/'consumer-restore-readback.json');assert consumer['restore_rc']==0 and consumer['exact_input_and_actual_consumer_output_SHA_equal']
+phases=[load(pub/f'step{n}-result.json') for n in (1,2)]
+archives={};entries=[]
+for phase in phases:
+ for row in phase['compressed']:
+  mp=ret.safe_path(r,row['manifest']);m=load(mp);assert m['state']=='process_copy_compressed'
+  assert m['source_sha_verified'] and m['archive_payload_readback_verified']
+  file=m['files'][0];assert file['path']==row['path'] and file['sha256']==row['payload_sha256']
+  archive=ret.safe_path(r,m['archive'])
+  if str(archive) not in archives:
+   assert archive.stat().st_size==m['archive_bytes'] and ret.sha_file(archive)==m['archive_sha256'];archives[str(archive)]=m['archive_sha256']
+  target=ret.safe_path(r,file['path'])
+  if target.exists():assert ret.sha_file(target)==file['sha256']
+  entries.append({'path':file['path'],'manifest':row['manifest'],'manifest_sha256':ret.sha_file(mp),'archive':m['archive'],'archive_sha256':m['archive_sha256'],'payload_sha256':file['sha256'],'bytes':file['bytes']})
+assert len(entries)==completed['archived_files']
+ret.atomic(pub/'verified-manifest-index.json',{'files':entries,'unique_archive_hashes_verified':len(archives),'payload_readback_verified_before_every_unlink':True,'consumer_restored_original_path_and_output_equal':True})
+scan=load(pub/'scan-reclamation.json');net=completed['total_net_reclaimed_bytes']+scan['verified_net_reclaimed_bytes']
+at=subprocess.check_output(['date','--iso-8601=seconds'],text=True).strip();at_text=subprocess.check_output(['date','+%Y-%m-%d %H:%M'],text=True).strip()
+v=os.statvfs(r);available=v.f_bavail*v.f_frsize
+before=load(pub/'capacity-before.json');base=load(r/'paper/materials/20261018-disk-and-regent/capacity-and-runway.json')
+parse=dt.datetime.fromisoformat
+hours=(parse(before['at'])-parse(base['at'])).total_seconds()/3600
+pre_rate=(base['root_available_bytes']-before['available_bytes'])/2**30/hours
+elapsed=(parse(at)-parse(base['at'])).total_seconds()/3600
+adjusted_rate=(base['root_available_bytes']+net-available)/2**30/elapsed
+capacity={'at':at,'available_bytes':available,'available_GiB':available/2**30,'verified_net_reclaimed_bytes':net,'scan_net_reclaimed_bytes':scan['verified_net_reclaimed_bytes'],'input_process_net_reclaimed_bytes':completed['total_net_reclaimed_bytes'],'df_available_delta_bytes':available-before['available_bytes'],'verified_net_reclaimed_method':'selected originals allocated blocks minus newly allocated archive and manifests; df also includes parallel writers/reclamation','pre_cleanup_window':{'start':base['at'],'end':before['at'],'hours':hours,'global_net_consumption_GiB_hour':pre_rate},'whole_window_reclamation_adjusted_global_net_write_GiB_hour':adjusted_rate,'net_write_method':'(baseline ordinary-user available + this verified net reclamation - final available) / elapsed; shared-root global metric, not STS2-only','runway_hours_at_adjusted_rate':available/2**30/adjusted_rate if adjusted_rate>0 else None,'runway_hours_at_pre_cleanup_rate':available/2**30/pre_rate if pre_rate>0 else None,'admission':{'new_large_extract_research_channels_blocked':available<=100*2**30,'pause_next_run_naturally_required':available<=60*2**30,'regent_available_at_least_200GiB':available>=200*2**30,'regent_buffer_48h_at_actual_rate':adjusted_rate>0 and available/2**30/adjusted_rate>=48,'regent_explicit_Claude_restart_assignment':False,'regent_remains_paused':True},'no_game_worker_account_or_other_repository_changed':True}
+ret.atomic(pub/'capacity-after.json',capacity)
+policy=load(r/'ops/codex-ops/pending/20261018-disk-capacity-policy.json');ret.atomic(pub/'operating-policy.json',policy)
+ordinary=load(pub/'ordinary-close-disposition.json');batch=ordinary['batch'];head=subprocess.check_output(['git','rev-parse','HEAD'],text=True).strip()
+record_path='paper/materials/ordinary-completions.jsonl';head_rows=subprocess.check_output(['git','show','HEAD:'+record_path]).splitlines(keepends=True)
+committed=[x for x in head_rows if ('"'+batch+'"').encode() in x]
+if committed:
+ assert len(committed)==1 and sha(committed[0])==ordinary['owned_completion_line_sha256']
+ origin=subprocess.check_output(['git','log','-1','--format=%H','-S',batch,'HEAD','--',record_path],text=True).strip()
+ ordinary.update(state='records-covered-by-original-concurrent-close',record_commit=origin,verified_at=at,head=head,original_attention_receipt_unchanged=True)
+ pending=r/'ops/codex-ops/pending'/f'{batch}-record-conflict.json';z=load(pending);z.update(state=ordinary['state'],completed=True,record_commit=origin,updated_at=at);ret.atomic(pending,z)
+else:
+ ordinary.update(state='pending-existing-shared-record-writer',verified_at=at,head=head,original_attention_receipt_unchanged=True)
+ret.atomic(pub/'ordinary-close-disposition.json',ordinary)
+text=f"按Roy19:39批准沿原retention归档已结束超过48小时的过程副本，净释放{net/2**30:.3f}GiB，根盘普通可用{available/2**30:.3f}GiB。18:14至回收前净写速{pre_rate:.3f}GiB/h，扣回收校正后{adjusted_rate:.3f}GiB/h，均为共享根盘净值，df另含并行写入与回收。单nice19/ionice-idle压缩worker，原锁逐文件SHA/解压读回、原路径恢复及真实audit-selection输出一致；另4组扫描/索引经Git消费者读回。≤100GiB禁新大提取/研究/通道，≤60GiB自然局末暂停下一局并告警；regent仍暂停，须≥200GiB、实际净写速可撑48h及Claude明确指派。19:37并行记录冲突保原件，未重dataset或合入，状态见普通收尾处置回执。原日志/知识/账本、当前局/worker及未完成研究保留，无新行为号或父项关闭。证据paper/materials/20261018-1937-ops/。"
+assert 300<=len(text)<=500
+appends=[]
+for name in ['ops/inbox-dev.md','notes/for-roy.md','notes/ops-handoff.md','paper/materials/decision-log.md']:
+ line=f"\n- {at_text} [运维 codex] {text}\n"
+ with (r/name).open('a') as f:f.write(line)
+ appends.append({'path':name,'text':line})
+ret.atomic(p/'own-appends.json',appends)
+readme=f"Roy 2026-10-18 19:39 CST授权 / roy-20261018-regent-adapt。\n\n{text}\n\n提取与过程JSON恢复：查 verified-manifest-index.json，以原路径检索manifest，再运行 `nice -n 19 python3 paper/materials/20261018-1937-ops/restore-compressed-copies.py.txt --manifest <项目内manifest路径>`。原恢复器拒绝覆盖变化文件，校验归档、成员及SHA。扫描副本归档清单见 scan-reclamation.json；恢复运行同目录restore-ops-copies.py.txt --manifest <项目内manifest路径>，只投影缺失的原SHA成员，拒绝覆盖变化文件。所有大归档在原retention/storage忽略目录，Git只收精确脚本、清单和回执。\n"
+(pub/'README.md').write_text(readme)
+ret.atomic(pub/'final-verification.json',{'at':at,'files':len(entries),'scan_groups':len(scan['results']),'unique_input_archives':len(archives),'total_net_reclaimed_bytes':net,'available_bytes':available,'consumer_restore_verified':True,'ordinary_disposition':ordinary['state'],'no_source_or_game_tests_or_release_or_models_started':True,'no_parent_or_other_role_ack_filled':True})
+print(json.dumps({'final_verified':True,'net_GiB':net/2**30,'available_GiB':available/2**30,'rate':adjusted_rate,'ordinary':ordinary['state']}),flush=True)

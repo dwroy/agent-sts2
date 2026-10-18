@@ -1,0 +1,220 @@
+from pathlib import Path
+import collections, datetime as dt, fcntl, hashlib, inspect, json, os, shutil, subprocess, sys, tarfile, time
+from contextlib import contextmanager
+
+sys.dont_write_bytecode = True
+r = Path.cwd(); p = r / 'ops/codex-ops/record-staging/20261018-1937'; pub = r / 'paper/materials/20261018-1937-ops'
+sys.path.insert(0, str(r / 'ops'))
+import learner_retention as retention
+retention.require_host_process_view()
+plan = retention.load(p / 'frozen-plan.json')
+plan_sha = retention.sha_file(p / 'frozen-plan.json')
+storage = r / 'ops/codex-ops/retention/storage/20261018-expanded-compressed-copies'
+storage.mkdir(parents=True, exist_ok=True)
+sha = lambda raw: hashlib.sha256(raw).hexdigest()
+def write(f, value): retention.atomic(f, value)
+def identity(f):
+    v = f.stat(); return (v.st_dev, v.st_ino, v.st_size, v.st_mtime_ns)
+def allocated(folder): return sum(f.stat().st_blocks * 512 for f in folder.rglob('*') if f.is_file() and not f.is_symlink())
+
+# Use the established primitive unchanged apart from the requested gzip level.
+source = inspect.getsource(retention.archive)
+assert source.count('compresslevel=1') == 1
+namespace = dict(retention.__dict__)
+exec(source.replace('compresslevel=1', 'compresslevel=6'), namespace)
+archive_six = namespace['archive']
+write(pub / 'archive-primitive-binding.json', dict(original_file='ops/learner_retention.py',
+    original_source_sha256=sha(source.encode()), exact_change='compresslevel=1 -> compresslevel=6',
+    existing_SHA_readback_fsync_and_path_guards_preserved=True, no_production_script_modified=True))
+pool = {}; verified = {}; done = []; retained = []; phases = []
+for mp in (r / 'ops/codex-ops/retention/storage').rglob('*.manifest.json'):
+    try:
+        m = retention.load(mp)
+        if m.get('root') == str(r) and len(m.get('files', [])) == 1:
+            item = m['files'][0]
+            if (r / m['archive']).is_file(): pool.setdefault((item['sha256'], item['bytes']), (m, str(mp.relative_to(r))))
+    except (OSError, ValueError, KeyError): continue
+
+def active(scratch):
+    text = str(scratch); needle = text.encode()
+    for proc in Path('/proc').iterdir():
+        if not proc.name.isdigit() or int(proc.name) == os.getpid(): continue
+        try:
+            cwd = (proc / 'cwd').resolve()
+            if cwd == scratch or scratch in cwd.parents: return True
+            args = (proc / 'cmdline').read_bytes()
+            if needle in args: return True
+            if cwd == r or r in cwd.parents or str(r).encode() in args:
+                for fd in (proc / 'fd').iterdir():
+                    try: target = os.readlink(fd)
+                    except OSError: continue
+                    if target == text or target.startswith(text + '/'): return True
+        except OSError: continue
+    return False
+
+def guard(batch, file=None):
+    scratch = retention.safe_path(r, batch['scratch'])
+    state = retention.load(r / 'ops/codex-ops/learn.json')
+    original = state['batches'][batch['batch']]
+    assert original.get('state') in ['done', 'failed'] and original.get('rc') == 0
+    assert original.get('finished') == batch['finished']
+    assert not any(original.get(k) for k in ['learning_request', 'research_request', 'implementation_request', 'feature_request', 'boss_sim', 'checks_pending', 'proposal_repair_needed', 'proposal_audit_errors'])
+    for item in state.get('learning_requests', {}).values():
+        assert batch['batch'] not in [item.get('original_batch'), item.get('batch'), item.get('verified_batch')]
+        assert batch['batch'] not in item.get('attempts', [])
+    if batch.get('original_launch'):
+        event = retention.safe_path(r, batch['original_launch'])
+        with event.open('rb') as stream: first = stream.readline(131073)
+        assert sha(first) == batch['original_launch_header_sha256']
+    assert not active(scratch), 'active scratch consumer/owner retained'
+    if file:
+        f = retention.safe_path(r, file['path'])
+        assert f.is_relative_to(scratch) and f.is_file() and not f.is_symlink()
+        assert f.suffix in ['.json', '.jsonl'] and not retention.secret_name(f)
+    return scratch
+
+def payload_verified(m):
+    archive = retention.safe_path(r, m['archive']); expected = m['files'][0]
+    assert archive.is_relative_to(r / 'ops/codex-ops/retention/storage') and not retention.secret_name(archive)
+    key = (str(archive), *identity(archive), m['archive_sha256'])
+    if key in verified: return
+    assert retention.sha_file(archive) == m['archive_sha256']
+    with tarfile.open(archive, 'r:gz') as tar:
+        members = tar.getmembers()
+        assert len(members) == 1 and members[0].isfile()
+        assert members[0].name == expected.get('archive_member_path', expected['path'])
+        digest = hashlib.sha256(); total = 0
+        with tar.extractfile(members[0]) as stream:
+            for chunk in iter(lambda: stream.read(1024**2), b''):
+                digest.update(chunk); total += len(chunk)
+        assert digest.hexdigest() == expected['sha256'] and total == expected['bytes']
+    verified[key] = True
+
+@contextmanager
+def serial_gate(batch):
+    # Wait for the original retention transaction; do not skip every file during its short lock.
+    with (r / 'ops/codex-ops/retention.lock').open('a') as handle:
+        fcntl.flock(handle, fcntl.LOCK_EX)
+        with retention.locks([r / 'ops/codex-ops' / (batch['batch'] + '.checks.lock')]):
+            yield
+
+def manifest_path(file): return storage / 'files' / (sha(file['path'].encode()) + '.manifest.json')
+def compress_one(batch, file, restoring=False):
+    f = retention.safe_path(r, file['path']); mp = manifest_path(file)
+    if not f.exists():
+        if mp.exists(): return retention.load(mp)
+        raise ValueError('copy already absent; no claimed reclamation')
+    with serial_gate(batch):
+        scratch = guard(batch, file)
+        before = f.stat()
+        if not restoring: assert identity(f) == (file['device'], file['inode'], file['bytes'], file['mtime_ns'])
+        digest = retention.sha_file(f)
+        proof = dict(kind='Roy-authorized-ended48h-process-copy-compression', batch=batch['batch'],
+            original_scratch=batch['scratch'], original_launch=batch.get('original_launch'),
+            original_launch_header_sha256=batch.get('original_launch_header_sha256'), original_finished=batch['finished'],
+            frozen_cutoff_48h=plan['summary']['cutoff_48h'], canonical_state_preserved=batch['original_canonical_state'],
+            exp_ingestion=batch.get('exp_ingestion'), stage=file['stage'], plan_sha256=plan_sha,
+            root_logs_knowledge_ledgers_reports_proposals_and_original_events_retained=True,
+            no_task_completion_ingestion_or_scientific_claim_added=True)
+        key = (digest, before.st_size)
+        if key not in pool:
+            base = storage / 'blobs' / digest
+            if base.with_suffix('.manifest.json').exists():
+                blob = retention.load(base.with_suffix('.manifest.json'))
+                assert blob['files'][0]['sha256'] == digest
+            else:
+                blob, _ = archive_six(r, base, scratch, [f], proof)
+            pool[key] = (blob, str(base.with_suffix('.manifest.json').relative_to(r)))
+        blob, original_manifest = pool[key]
+        payload_verified(blob)
+        member = blob['files'][0].get('archive_member_path', blob['files'][0]['path'])
+        item = dict(path=file['path'], archive_member_path=member, bytes=before.st_size,
+            sha256=digest, mode=before.st_mode & 0o777, original_mtime_ns=before.st_mtime_ns)
+        m = dict(schema='learner-retention-v1', at=retention.stamp(), root=str(r), scratch=batch['scratch'],
+            proof=proof, archive=blob['archive'], archive_sha256=blob['archive_sha256'], archive_bytes=blob['archive_bytes'],
+            files=[item], state='archived_not_reclaimed', payload_source_manifest=original_manifest,
+            identical_payload_deduplicated=member != file['path'], archive_payload_readback_verified=True,
+            source_sha_verified=True, original_allocated_bytes=before.st_blocks * 512)
+        write(mp, m)
+        assert retention.sha_file(f) == digest
+        assert identity(f) == (before.st_dev, before.st_ino, before.st_size, before.st_mtime_ns)
+        guard(batch, file)
+        f.unlink()
+        parent = os.open(f.parent, os.O_RDONLY | os.O_DIRECTORY)
+        try: os.fsync(parent)
+        finally: os.close(parent)
+        m.update(state='process_copy_compressed', reclaimed_at=retention.stamp())
+        write(mp, m)
+        return m
+
+def consumer(path, label):
+    output = p / (label + '.json'); err = p / (label + '.stderr')
+    command = ['nice', '-n', '19', str(r / 'agent/node_modules/.bin/tsx'), str(r / 'learner/audit-selection.ts'), str(path)]
+    with output.open('wb') as out, err.open('wb') as stderr:
+        result = subprocess.run(command, cwd=r, stdout=out, stderr=stderr, env={**os.environ, 'GOMAXPROCS':'1'})
+    assert result.returncode == 0
+    data = retention.load(output)
+    return dict(command=command, rc=0, output_sha256=retention.sha_file(output), schema=data.get('schema'),
+                run_id=data.get('run_id'), segments=len(data.get('segments', [])), output=str(output.relative_to(r)))
+
+canaries = [(b, f) for b in plan['batches'] for f in b['files'] if f['stage'] == 1 and f['path'].endswith('.audit-input.json') and f['bytes'] < 16 * 1024**2]
+assert canaries
+canary_batch, canary_file = min(canaries, key=lambda x:x[1]['bytes'])
+baseline = consumer(r / canary_file['path'], 'consumer-before')
+write(pub / 'consumer-baseline.json', dict(path=canary_file['path'], input_sha256=retention.sha_file(r / canary_file['path']), baseline=baseline))
+write(pub / 'running.json', dict(at=retention.stamp(), pid=os.getpid(), nice=os.getpriority(os.PRIO_PROCESS, 0),
+    single_compression_worker=True, compression_level=6, plan='frozen-plan-summary.json', stage=1,
+    manifest_root=str(storage.relative_to(r)), restoration_script=str((p / 'restore-compressed-copies.py').relative_to(r))))
+last = time.monotonic()
+for stage in [1, 2]:
+    if stage == 2: assert (pub / 'consumer-restore-readback.json').is_file()
+    before_free = shutil.disk_usage(r).free; before_storage = allocated(storage); stage_done = []; stage_retained = []
+    work = [(b, f) for b in plan['batches'] for f in b['files'] if f['stage'] == stage]
+    # Larger copies first; each file yields the original retention lock before the next.
+    work.sort(key=lambda value:value[1]['bytes'], reverse=True)
+    for batch, file in work:
+        try:
+            m = compress_one(batch, file)
+            record = dict(batch=batch['batch'], path=file['path'], manifest=str(manifest_path(file).relative_to(r)),
+                bytes=m['files'][0]['bytes'], original_allocated_bytes=m['original_allocated_bytes'],
+                archive=m['archive'], archive_bytes=m['archive_bytes'], payload_sha256=m['files'][0]['sha256'],
+                payload_deduplicated=m['identical_payload_deduplicated'])
+            stage_done.append(record); done.append(record)
+        except (AssertionError, OSError, ValueError, KeyError, subprocess.SubprocessError) as error:
+            record = dict(batch=batch['batch'], path=file['path'], reason=str(error) or type(error).__name__)
+            stage_retained.append(record); retained.append(record)
+        if time.monotonic() - last > 30:
+            report = dict(stage=stage, files_completed=len(stage_done), files_total=len(work), retained=len(stage_retained),
+                original_GiB=sum(v['bytes'] for v in stage_done)/1024**3, available_GiB=shutil.disk_usage(r).free/1024**3)
+            write(pub / 'progress.json', report); print(json.dumps(report), flush=True); last=time.monotonic()
+    after_storage = allocated(storage); after_free = shutil.disk_usage(r).free
+    receipt = dict(at=retention.stamp(), stage=stage, files=len(stage_done), candidate_files=len(work),
+        batches=len({x['batch'] for x in stage_done}), compressed=stage_done, retained=stage_retained,
+        original_copy_bytes=sum(x['bytes'] for x in stage_done),
+        original_allocated_bytes=sum(x['original_allocated_bytes'] for x in stage_done),
+        new_archive_manifest_allocated_bytes=after_storage-before_storage,
+        verified_net_reclaimed_bytes=sum(x['original_allocated_bytes'] for x in stage_done)-(after_storage-before_storage),
+        available_before=before_free, available_after=after_free, available_delta=after_free-before_free,
+        filesystem_delta_includes_parallel_writers=True, original_payloads_archived_SHA_verified_before_unlink=True,
+        original_reports_logs_native_events_and_task_states_retained=True)
+    phases.append(receipt); write(pub / f'step{stage}-result.json', receipt)
+    print(json.dumps(dict(stage_complete=stage, files=receipt['files'], verified_net_GiB=receipt['verified_net_reclaimed_bytes']/1024**3, available_GiB=after_free/1024**3)), flush=True)
+    if stage == 1:
+        mp = manifest_path(canary_file); assert mp.is_file() and not (r / canary_file['path']).exists()
+        command = ['nice','-n','19','python3',str(p / 'restore-compressed-copies.py'),'--manifest',str(mp.relative_to(r))]
+        restored = subprocess.run(command, cwd=r, capture_output=True, text=True)
+        assert restored.returncode == 0, restored.stderr
+        assert retention.sha_file(r / canary_file['path']) == retention.load(pub / 'consumer-baseline.json')['input_sha256']
+        after = consumer(r / canary_file['path'], 'consumer-after-restore')
+        assert baseline['output_sha256'] == after['output_sha256']
+        write(pub / 'consumer-restore-readback.json', dict(at=retention.stamp(), manifest=str(mp.relative_to(r)),
+            restored_original_path=canary_file['path'], restore_rc=0, stdout=restored.stdout, before=baseline, after=after,
+            exact_input_and_actual_consumer_output_SHA_equal=True, no_simulation_model_or_game_action=True))
+        compress_one(canary_batch, canary_file, restoring=True)
+        print(json.dumps(dict(restore_and_actual_consumer_verified=True, stage2_admitted=True)), flush=True)
+write(pub / 'completed.json', dict(at=retention.stamp(), phases=[{k:v for k,v in x.items() if k not in ['compressed','retained']} for x in phases],
+    total_net_reclaimed_bytes=sum(x['verified_net_reclaimed_bytes'] for x in phases), available_bytes=shutil.disk_usage(r).free,
+    archived_files=len(done), retained_files=len(retained), payloads_verified=len(verified),
+    actual_consumer_restore_verified=True, no_other_repo_home_tmp_game_or_learner_changed=True))
+print(json.dumps(dict(completed=True, files=len(done), net_GiB=sum(x['verified_net_reclaimed_bytes'] for x in phases)/1024**3,
+    available_GiB=shutil.disk_usage(r).free/1024**3)), flush=True)

@@ -1,0 +1,48 @@
+from pathlib import Path
+import collections, json, subprocess, sys
+sys.dont_write_bytecode = True
+r = Path.cwd(); p = r / 'ops/codex-ops/record-staging/20261018-1937'
+sys.path.insert(0, str(r / 'ops'))
+import learner_retention as retention
+x = retention.load(p / 'plan.json'); state = retention.load(r / 'ops/codex-ops/learn.json')
+retention.atomic(p / 'plan-before-final-guards.json', x)
+tracked = {}; guards = {}; kept = []; omitted = []
+for b in x['batches']:
+    tree = (r / b['scratch']).parents[2]
+    if tree not in tracked:
+        if (tree / '.git').exists():
+            cp = subprocess.run(['git', '-C', str(tree), 'ls-files', '-z', '--', 'learner/runs'], capture_output=True, check=True)
+            tracked[tree] = set(cp.stdout.decode().split('\0'))
+        else: tracked[tree] = set()
+    if tree not in [r, r / '.worktrees/exp']:
+        if tree not in guards: guards[tree] = retention.request_guard(r, state, tree, b['batch'])
+        if guards[tree]:
+            omitted.append(dict(batch=b['batch'], scratch=b['scratch'], reason='original request/thread workspace retained')); continue
+    current = state['batches'][b['batch']]
+    rep = current.get('report')
+    if not isinstance(rep, dict):
+        rep = retention.read_report(str(r / 'ops/codex-ops/learner' / (b['batch'] + '.out'))) or {}
+    sources = ([rep['commit']] if rep.get('commit') else []) + [v.get('commit') for v in rep.get('fixes', []) if isinstance(v, dict)]
+    if sources and not b.get('exp_ingestion'):
+        check = retention.successful_checks(current)
+        if not check or not retention.check_log_completed(r, check) or not all(retention.ancestor(r, v) and retention.ancestor(r / '.worktrees/live', v) for v in sources):
+            omitted.append(dict(batch=b['batch'], scratch=b['scratch'], reason='source batch lacks accepted main/live/full0')); continue
+    files = []
+    for f in b['files']:
+        if str((r / f['path']).relative_to(tree)) in tracked[tree]:
+            omitted.append(dict(batch=b['batch'], path=f['path'], reason='tracked evidence retained')); continue
+        # CLI request inputs are retained as protocol history, not treated as root-log extraction.
+        if f['stage'] == 1 and any(v in Path(f['path']).name.lower() for v in ['dispatch', 'ledger', 'proposal', 'request']): f['stage'] = 2
+        files.append(f)
+    if files:
+        b['files'] = files; b['original_canonical_state'] = current['state']; kept.append(b)
+x['batches'] = kept; x['retained'].extend(omitted)
+stages = {}
+for stage in [1, 2]:
+    files = [f for b in kept for f in b['files'] if f['stage'] == stage]
+    stages[str(stage)] = dict(files=len(files), bytes=sum(f['bytes'] for f in files), allocated_bytes=sum(f['allocated_bytes'] for f in files), GiB=sum(f['bytes'] for f in files) / 1024**3)
+x['summary'].update(final_guards_applied=True, admitted_scratch_count=len(kept), stages=stages,
+    additional_retained=len(omitted), canonical_failed_rc0_preserved=True, no_tracked_files_selected=True)
+retention.atomic(p / 'frozen-plan.json', x)
+retention.atomic(r / 'paper/materials/20261018-1937-ops/frozen-plan-summary.json', x['summary'])
+print(json.dumps(x['summary'], ensure_ascii=False), flush=True)

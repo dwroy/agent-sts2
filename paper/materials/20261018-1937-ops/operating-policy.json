@@ -1,0 +1,19 @@
+{
+  "request": "roy-20261018-regent-adapt",
+  "at": "2026-10-18T19:42:57+08:00",
+  "owner": "original-main-ops",
+  "authority": "Roy 2026-10-18 19:39 CST via Claude",
+  "state": "manual-operating-policy-active-awaiting-original-watcher-scheduler-gate",
+  "available_metric": "statvfs.f_bavail * f_frsize, GiB=2^30",
+  "stop_new_large_extract_research_channels_at_or_below_bytes": 107374182400,
+  "pause_next_run_at_natural_end_at_or_below_bytes": 64424509440,
+  "regent_remains_paused": true,
+  "regent_resume_requires": {
+    "available_bytes_at_least": 214748364800,
+    "hours_at_actual_net_write_rate_at_least": 48,
+    "explicit_Claude_assignment": true
+  },
+  "current_run_or_workers_interrupted": false,
+  "scheduler_gate_implemented": false,
+  "no_new_timer_or_model": true
+}

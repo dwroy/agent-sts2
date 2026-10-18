@@ -1,0 +1,29 @@
+{
+  "at": "2026-10-18T19:52:35+08:00",
+  "available_bytes": 172155678720,
+  "available_GiB": 160.33246994018555,
+  "verified_net_reclaimed_bytes": 30308028416,
+  "scan_net_reclaimed_bytes": 450998272,
+  "input_process_net_reclaimed_bytes": 29857030144,
+  "df_available_delta_bytes": 40733089792,
+  "verified_net_reclaimed_method": "selected originals allocated blocks minus newly allocated archive and manifests; df also includes parallel writers/reclamation",
+  "pre_cleanup_window": {
+    "start": "2026-10-18T18:14:30.276519+08:00",
+    "end": "2026-10-18T19:40:55+08:00",
+    "hours": 1.4402009669444444,
+    "global_net_consumption_GiB_hour": 3.813240554063691
+  },
+  "whole_window_reclamation_adjusted_global_net_write_GiB_hour": -2.5799248195871285,
+  "net_write_method": "(baseline ordinary-user available + this verified net reclamation - final available) / elapsed; shared-root global metric, not STS2-only",
+  "runway_hours_at_adjusted_rate": null,
+  "runway_hours_at_pre_cleanup_rate": 42.046251126046215,
+  "admission": {
+    "new_large_extract_research_channels_blocked": false,
+    "pause_next_run_naturally_required": false,
+    "regent_available_at_least_200GiB": false,
+    "regent_buffer_48h_at_actual_rate": false,
+    "regent_explicit_Claude_restart_assignment": false,
+    "regent_remains_paused": true
+  },
+  "no_game_worker_account_or_other_repository_changed": true
+}

@@ -1,0 +1,7 @@
+from pathlib import Path
+import subprocess,sys
+r=Path.cwd();p=r/'ops/codex-ops/record-staging/20261018-1937'
+assert (r/'paper/materials/20261018-1937-ops/completed.json').is_file()
+# Only independent receipts and owned journal appends are projected; the normal index lock and HEAD CAS remain authoritative.
+subprocess.run([sys.executable,str(p/'finish.py')],cwd=r,check=True)
+subprocess.run([sys.executable,str(p/'seal.py')],cwd=r,check=True)

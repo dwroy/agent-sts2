@@ -1,0 +1,81 @@
+from pathlib import Path
+import datetime as dt, hashlib, json, os, subprocess, sys, tarfile
+sys.dont_write_bytecode=True
+r=Path.cwd(); p=r/'ops/codex-ops/record-staging/20261018-1937'; pub=r/'paper/materials/20261018-1937-ops'
+sys.path.insert(0,str(r/'ops'))
+import learner_retention as ret
+import worktree_retention as wt
+ret.require_host_process_view()
+def df():
+ v=os.statvfs(r);return v.f_bavail*v.f_frsize
+def allocated(q):
+ return sum(f.stat().st_blocks*512 for f in q.rglob('*') if f.is_file() and not f.is_symlink())
+def selected(folder):
+ files=[]
+ for child in folder.iterdir():
+  if child.is_file() and not child.is_symlink() and child.suffix=='.index':files.append(child)
+  elif child.is_dir() and not child.is_symlink() and child.name in ('record-scan','composition-scan','source-scan'):
+   for f in child.rglob('*'):
+    if f.is_symlink():raise ValueError('symlink copy retained')
+    if f.is_file():files.append(f)
+ for f in files:
+  ret.safe_path(r,f)
+  if ret.secret_name(f):raise ValueError('credential-named path retained without reading')
+ return sorted(files)
+res={'at':ret.stamp(),'available_before':df(),'results':[],'retained':[],'limit':4,'original_task_states_unchanged':True}
+with ret.locks([r/'ops/codex-ops/retention.lock']):
+ for candidate in json.loads((p/'scan-candidate-summary.json').read_text()):
+  if len(res['results'])>=4:break
+  folder=r/'ops/codex-ops/record-staging'/candidate['phase']
+  try:
+   receipt=folder/'commit-readback.json';record=ret.load(receipt)
+   assert record['commit']==candidate['commit'] and record.get('gitleaks',record.get('gitleaks_rc'))==0
+   assert ret.ancestor(r,record['commit'])
+   assert ret.load(folder/'records-gitleaks.json')==[]
+   assert not wt.active(folder,ignore_pid=os.getpid())
+   files=selected(folder);assert files
+   proof={'kind':'Roy-20261018-1939-completed-ops-process-copies','commit':record['commit'],'commit_readback':str(receipt.relative_to(r)),'commit_readback_sha256':ret.sha_file(receipt),'original_records_in_git_and_original_inputs_retained':True,'no_task_state_changed':True,'request':'roy-20261018-regent-adapt'}
+   base=r/'ops/codex-ops/retention/storage/completed-ops-copy-v2'/folder.name
+   before_alloc=allocated(base.parent) if base.parent.exists() else 0
+   original_alloc=sum(f.stat().st_blocks*512 for f in files)
+   manifest,mp=ret.archive(r,base,folder,files,proof)
+   assert not wt.active(folder,ignore_pid=os.getpid())
+   for item in manifest['files']:assert ret.sha_file(ret.safe_path(r,item['path']))==item['sha256']
+   # Verify the normal Git index consumer reads an archived index as identical staged entries.
+   canary=next((f for f in files if f.suffix=='.index'),None)
+   consumer=None
+   if canary:
+    original=subprocess.check_output(['git','ls-files','--stage','-z'],cwd=r,env={**os.environ,'GIT_INDEX_FILE':str(canary)})
+    target=p/(folder.name+'.restored-index')
+    assert not target.exists()
+    with tarfile.open(r/manifest['archive'],'r:gz') as tar:
+     with tar.extractfile(str(canary.relative_to(r))) as source,target.open('xb') as out:
+      for chunk in iter(lambda:source.read(1048576),b''):out.write(chunk)
+    expected=next(i for i in manifest['files'] if i['path']==str(canary.relative_to(r)))
+    assert ret.sha_file(target)==expected['sha256']
+    restored=subprocess.check_output(['git','ls-files','--stage','-z'],cwd=r,env={**os.environ,'GIT_INDEX_FILE':str(target)})
+    assert restored==original
+    consumer={'input_sha256':expected['sha256'],'git_ls_files_sha256':hashlib.sha256(original).hexdigest(),'original_and_restored_equal':True,'rc':0}
+    target.unlink()
+   assert not wt.active(folder,ignore_pid=os.getpid())
+   for item in manifest['files']:assert ret.sha_file(ret.safe_path(r,item['path']))==item['sha256']
+   for item in manifest['files']:ret.safe_path(r,item['path']).unlink()
+   for name in ('record-scan','composition-scan','source-scan'):
+    scope=folder/name
+    if scope.is_dir():
+     for d in sorted((f for f in scope.rglob('*') if f.is_dir() and not f.is_symlink()),key=lambda x:len(x.parts),reverse=True):
+      try:d.rmdir()
+      except OSError:pass
+     try:scope.rmdir()
+     except OSError:pass
+   manifest.update(state='process_copies_compressed',reclaimed_at=ret.stamp(),consumer_restore=consumer)
+   ret.atomic(mp,manifest)
+   new_alloc=allocated(base.parent)-before_alloc
+   row={'phase':folder.name,'files':len(files),'manifest':str(mp.relative_to(r)),'manifest_sha256':ret.sha_file(mp),'original_allocated_bytes':original_alloc,'new_archive_manifest_allocated_bytes':new_alloc,'verified_net_reclaimed_bytes':original_alloc-new_alloc,'consumer_restore':consumer}
+   res['results'].append(row);ret.atomic(pub/'scan-reclamation.json',res)
+   print(json.dumps({'scan_completed':folder.name,'net_GiB':row['verified_net_reclaimed_bytes']/2**30}),flush=True)
+  except (AssertionError,ValueError,OSError,subprocess.SubprocessError) as e:
+   res['retained'].append({'phase':folder.name,'reason':str(e) or type(e).__name__})
+res.update(finished=ret.stamp(),available_after=df(),verified_net_reclaimed_bytes=sum(i['verified_net_reclaimed_bytes'] for i in res['results']))
+ret.atomic(pub/'scan-reclamation.json',res)
+print(json.dumps({'scan_final':True,'net_GiB':res['verified_net_reclaimed_bytes']/2**30,'retained':len(res['retained'])}),flush=True)
