@@ -3346,3 +3346,5 @@ ledger=silent-0508仍proposed；proposal=silent-proposal-048d6591d2a81b7e。版�
 
 - 2026-10-18 06:24 [运维 codex] H0新源8fb2f481及旧Queen正式main/核号本轮一次原锁运输因report/builder PID3508143守卫75止，未改source/main/live/index/知识/版本、未分配R393或任何新号/shipped；10经验/12候选consumer/549原引用及原83件SHA已封存，原0509/0510/0513、凋萎源码/0332资源根修复及六目标质量闸继续待实际验收。具体原线程/运输/0332协调待办已存paper/materials/20261018-0613-ops/，不再派模型做运输、重校准/源full或重复抢锁。两原notice已向现有watcher实发且ops ACK两0，独立实读/Roy通知不代填。
 - 2026-10-18 07:55 [运维 codex] 原070101-fix-batch精确树21bf5842187f7138369fa08c48fb5db18fb37137完整宿主1：541文件/5258项过、唯一fake herdr工作区标签题原15秒超时（ops-herdr.test.ts:174），另2跳。决定保文件关闭修复/live/知识，接原普通fixture队列；只沿原通道补这一精确题一次，不重复模型或full、不改时限/断言，旧full1及根因未知保持。证据paper/materials/20261018-0753-ops/。
+
+- 2026-10-18 08:38 [运维 codex] 卡死告警已核：上一局9S9U3YSYEPK1处于局末报告/知识刷新间隙，原autoplay已于08:35自动接上Q9KFP3J3JNU5（Silent A10），现已正常出牌；未重启或杀进程，无需人工操作。证据paper/materials/20261018-0835-ops/stall-readback.json。
