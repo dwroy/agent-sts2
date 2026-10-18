@@ -55,6 +55,7 @@ import { readinessText } from "./boss-readiness.js";
 import { globalBuildFailure, globalBuildForB3 } from "./global-build-b3.js";
 import type { GlobalBossPool } from "./global-build-pool.js";
 import { continuationFailureOf, preserveContinuationFailure } from "./continuation-failure.js";
+import { humanPaceSampling } from "./adaptive-shadow.js";
 import { fingerprint } from "../hand/act/gate.js";
 
 /** The deck-building questions that get the simulation. */
@@ -577,7 +578,9 @@ export async function withBossSim(decision: Decision, env: DecisionEnv, setup: B
     const entryHp = Math.max(1, Math.round(projected));
     const start = syntheticBossStart(state, knowledge, bossId, entryHp, { ...(setup.db ? { db: setup.db } : {}), ...(setup.mm ? { mm: setup.mm } : {}) });
     const continuation = doubleBossPreparation(state);
-    if (pace && (continuation || bossTrustReason(bossKey(bossId), "b3", state.run?.ascension, state.run?.floor))) requested = Math.min(requested, 200);
+    const sampling = pace && str(state.run?.raw["character_id"]).toLowerCase() === "silent"
+      ? humanPaceSampling("b3", !!(continuation || bossTrustReason(bossKey(bossId), "b3", state.run?.ascension, state.run?.floor))) : null;
+    if (sampling) requested = Math.min(requested, sampling.cap);
     const startOpts = { ...(setup.db ? { db: setup.db } : {}), ...(setup.mm ? { mm: setup.mm } : {}) };
     if (continuation) start.input = withDoubleBossStart(state, knowledge, start.input, continuation, startOpts);
     const rebuild = (edit: (run: Record<string, unknown>) => void): RolloutInput => {
@@ -600,7 +603,7 @@ export async function withBossSim(decision: Decision, env: DecisionEnv, setup: B
       wait = env.simWait?.start({ run: str(state.raw["run_id"]), floor: state.run?.floor ?? null, label: ask.label });
     }
     const adaptive = required && !attempt?.degraded && adaptiveMode !== "off";
-    const result: CompareResult = await compareOptions(setup.runner, start.input, deckOptions, { samples: requested, seed: setup.seed ?? BUILD_SIM_SEED, deadlineMs: Math.max(0, budget), ...(setup.now ? { now: setup.now } : {}), ...(diagnosticEnabled ? { quantitative: true, diagnostics: true } : {}), ...(required && !attempt?.degraded ? { requireComplete: true } : {}), ...(wait ? { onProgress: wait.progress } : {}), ...(adaptive ? { adaptive: { mode: adaptiveMode as "shadow" | "on", allowS: !continuation && !bossTrustReason(bossKey(bossId), "b3", state.run?.ascension, state.run?.floor) } } : {}), ...(readinessMode !== "off" ? { readiness: true, readinessShadow: readinessMode === "shadow" } : {}),
+    const result: CompareResult = await compareOptions(setup.runner, start.input, deckOptions, { samples: requested, seed: setup.seed ?? BUILD_SIM_SEED, deadlineMs: Math.max(0, budget), ...(setup.now ? { now: setup.now } : {}), ...(diagnosticEnabled ? { quantitative: true, diagnostics: true } : {}), ...(required && !attempt?.degraded ? { requireComplete: true } : {}), ...(wait ? { onProgress: wait.progress } : {}), ...(adaptive ? { adaptive: { ...sampling?.adaptive, mode: adaptiveMode as "shadow" | "on", allowS: !continuation && !bossTrustReason(bossKey(bossId), "b3", state.run?.ascension, state.run?.floor) } } : {}), ...(readinessMode !== "off" ? { readiness: true, readinessShadow: readinessMode === "shadow" } : {}),
       ...(jointScope ? { f48JointScope: jointScope } : {}),
       ...(rankingMode !== "off" ? { buildRankShadow: rankingMode === "shadow", buildRank: { lowTrust: continuation?.limitation ?? bossTrustReason(bossKey(bossId), "b3", state.run?.ascension, state.run?.floor), calibratedFloor: calibratedFloor(state.run?.ascension ?? 0), tieSe: BOSS_LINES_TIE_SE, sSort: "shadow" } } : {}) });
     const adaptiveComplete = completeAdaptiveBuild(result);

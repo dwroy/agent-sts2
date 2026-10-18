@@ -21,7 +21,7 @@ import { binomialInterval } from "./quantitative-stats.js";
  * Switch: BOSS_SIM_LINES=off (bossLinesOptions.enabled) leaves the question and its ranking as they were before B2.
  */
 
-import { ADAPTIVE_RULE, safeAdaptiveShadow } from "./adaptive-shadow.js";
+import { ADAPTIVE_RULE, safeAdaptiveShadow, humanPaceSampling, type AdaptiveTuning } from "./adaptive-shadow.js";
 import { simAdaptivePolicy, sCombatRankEnabled, sCombatRankMode } from "../core/config.js";
 import { rankByBossMargin, type CombatSRanking } from "./s-combat-rank.js";
 import { auditSigns } from "./s-sign.js";
@@ -500,7 +500,7 @@ export function linesInput(input: RolloutInput, holdHp = bossLinesOptions.holdHp
 export function runLines(
   input: RolloutInput,
   lines: Plan[],
-  opts: { samples: number; seed: number; deadlineMs: number; serial?: boolean; now?: () => number; adaptive?: { allowS: boolean; mode?: "shadow" | "on"; rankS?: boolean }; onProgress?: SimProgress; holdHp?: (potionId: string, input: RolloutInput) => number | null },
+  opts: { samples: number; seed: number; deadlineMs: number; serial?: boolean; now?: () => number; adaptive?: AdaptiveTuning & { allowS: boolean; mode?: "shadow" | "on"; rankS?: boolean }; onProgress?: SimProgress; holdHp?: (potionId: string, input: RolloutInput) => number | null },
 ): LinesResult {
   const orders = fightOrders(input);
   const pairs = lines.flatMap((plan, lineIndex) => [null, ...orders].map((order, orderIndex) => ({ plan, order, lineIndex, orderIndex })));
@@ -515,7 +515,7 @@ export function runLines(
     if (Number.isFinite(opts.deadlineMs) && !budgeted) throw new Error("adaptive B2 requires the complete-computation path");
     const began = now();
     const sampler = new AdaptiveSampler(lines.map((_, i) => ({ key: `line:${i}` })),
-      { lane: "b2", requested: opts.samples, allowS: opts.adaptive.allowS });
+      { ...opts.adaptive, lane: "b2", requested: opts.samples, allowS: opts.adaptive.allowS });
     const outcomes: PairsRun["outcomes"] = pairs.map(() => new Array<FightSampleResult | undefined>(opts.samples));
     let done = 0, workers = 0, cut = false;
     for (let request = sampler.next(); request; request = sampler.next()) {
@@ -566,7 +566,7 @@ export function runLines(
   const adaptive = !actualAdaptive && opts.adaptive && !run.timedOut && run.complete.length === opts.samples && shadowBudgetAvailable("C2_sampling_shadow") ? safeAdaptiveShadow(
     out.map((line, i) => ({ key: `line:${i}`, samples: line.outcomes,
       orders: Array.from({ length: per }, (_, k) => run.complete.map((id) => run.outcomes[i * per + k]![id]!)) })),
-    { lane: "b2", requested: opts.samples, allowS: opts.adaptive.allowS }) : null;
+    { ...opts.adaptive, lane: "b2", requested: opts.samples, allowS: opts.adaptive.allowS }) : null;
   if (adaptive && "work" in adaptive) {
     adaptive.work.full *= per;
     adaptive.work.shadow *= per;
@@ -832,9 +832,11 @@ export function bossLineSim(args: BossLineSimArgs): BossLineSim {
     const input = bossSimInput(args);
     const boss = bossKeyOf(input.enemies.map((e) => e.id));
     const lowTrust = input.continuation?.limitation ?? (boss ? bossTrustReason(boss, "b2", args.state.run?.ascension, args.state.run?.floor) : null);
-    if (pace && lowTrust) samples = Math.min(samples, 200);
+    const sampling = pace && String(args.state.run?.raw["character_id"] ?? "").toLowerCase() === "silent"
+      ? humanPaceSampling("b2", !!lowTrust) : null;
+    if (sampling) samples = Math.min(samples, sampling.cap);
     const adaptiveMode = simAdaptivePolicy(String(args.state.run?.raw["character_id"] ?? "")).mode;
-    const configuredAdaptive = required && adaptiveMode !== "off" ? { mode: adaptiveMode, allowS: !lowTrust, rankS: sCombatRankEnabled(String(args.state.run?.raw["character_id"] ?? "")) } : undefined;
+    const configuredAdaptive = required && adaptiveMode !== "off" ? { ...sampling?.adaptive, mode: adaptiveMode, allowS: !lowTrust, rankS: sCombatRankEnabled(String(args.state.run?.raw["character_id"] ?? "")) } : undefined;
     if (required) {
       attempt = beginComputation(args.memory, args.state, "boss-lines", linesMemoKey(input, args.lines, samples, linesWhere() ?? "unknown", configuredAdaptive));
       if (attempt.degraded) left = Math.min(left, bossLinesOptions.deadlineMs);

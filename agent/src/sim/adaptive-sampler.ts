@@ -1,5 +1,5 @@
 /** C2 incremental controller. Only supplied prefixes are inspected; workers and samples belong to the caller. */
-import { ADAPTIVE_RULE, adaptiveShadow, type AdaptiveCandidate } from "./adaptive-shadow.js";
+import { ADAPTIVE_RULE, adaptiveShadow, humanPaceSampling, type AdaptiveCandidate, type AdaptiveTuning } from "./adaptive-shadow.js";
 import { asArray, asRecord } from "../core/util/json.js";
 
 /** A status string alone cannot release the mandatory-computation gate or enter the complete memo. */
@@ -9,29 +9,38 @@ export function isAdaptiveComplete(value: unknown, lane: "b2" | "b3", requested:
       || result["lane"] !== lane || rule["version"] !== ADAPTIVE_RULE.version || rule["requested"] !== requested
       || !Number.isSafeInteger(requested) || requested < 1 || candidates.length !== counts.size || !candidates.length
       || new Set(candidates.map((c) => c["key"])).size !== candidates.length) return false;
-  const first = lane === "b3" ? ADAPTIVE_RULE.b3First : ADAPTIVE_RULE.b2First;
+  const human = rule["profile"] === "silent-human-pace-v2";
+  const profile = human ? humanPaceSampling(lane, rule["lowTrust"] === true) : null;
+  if (profile && (typeof rule["lowTrust"] !== "boolean" || rule["first"] !== profile.adaptive.first || rule["batch"] !== profile.adaptive.batch
+      || rule["indifference"] !== profile.adaptive.indifference || requested > profile.cap)) return false;
+  const first = profile?.adaptive.first ?? (lane === "b3" ? ADAPTIVE_RULE.b3First : ADAPTIVE_RULE.b2First);
   const sizes = candidates.map((c) => Number(c["samples"])), largest = Math.max(...sizes);
   if (candidates.some((c, i) => !Number.isSafeInteger(sizes[i]) || sizes[i]! < Math.min(first, requested) || sizes[i]! > requested
       || counts.get(String(c["key"])) !== sizes[i] || !Number.isSafeInteger(c["rounds"]) || Number(c["rounds"]) < 1
-      || !["eliminated", "leader", "max"].includes(String(c["stop"]))
+      || !["eliminated", "leader", "max", ...(human ? ["indifferent"] : [])].includes(String(c["stop"]))
       || (c["stop"] !== "eliminated" && sizes[i] !== largest))) return false;
   const active = candidates.filter((c) => c["stop"] !== "eliminated");
   if (lane === "b3" && !active.some((c) => c["key"] === "@current" && c["baseline"] === true)) return false;
   const choices = active.filter((c) => c["baseline"] !== true);
-  return choices.length > 0 && (largest === requested || choices.length === 1);
+  const spread = result["indifference_spread"];
+  const indifferent = human && result["stop_reason"] === "indifferent" && active.every((c) => c["stop"] === "indifferent")
+    && typeof spread === "number" && Number.isFinite(spread) && spread >= 0 && spread < .03;
+  return choices.length > 0 && (largest === requested || choices.length === 1 || indifferent);
 }
 
 type Identity = Pick<AdaptiveCandidate, "key" | "baseline" | "workGroup">;
-type Options = { lane: "b2" | "b3"; requested: number; allowS: boolean; first?: number; zElim?: number };
+type Options = AdaptiveTuning & { lane: "b2" | "b3"; requested: number; allowS: boolean; zElim?: number };
 export class AdaptiveSampler {
   readonly candidates: readonly Identity[];
   private readonly active: Set<string>;
-  private readonly used = new Map<string, { samples: number; rounds: number; stop: "eliminated" | "leader" | "max" }>();
+  private readonly used = new Map<string, { samples: number; rounds: number; stop: "eliminated" | "leader" | "max" | "indifferent" }>();
   private n = 0;
   private finished = false;
   private final: { leader: string; group: string[] } | null = null;
   private history: ReturnType<typeof adaptiveShadow>["rounds"] = [];
   private evaluable = true;
+  private stopReason: "leader" | "max" | "indifferent" = "max";
+  private indifferenceSpread: number | null = null;
 
   constructor(candidates: readonly Identity[], readonly options: Options) {
     if (!candidates.length || !candidates.some((c) => !c.baseline) || new Set(candidates.map((c) => c.key)).size !== candidates.length
@@ -45,7 +54,7 @@ export class AdaptiveSampler {
   next(): { from: number; to: number; active: string[] } | null {
     if (this.finished) return null;
     const first = this.options.first ?? (this.options.lane === "b3" ? ADAPTIVE_RULE.b3First : ADAPTIVE_RULE.b2First);
-    return { from: this.n, to: Math.min(this.options.requested, this.n ? this.n + ADAPTIVE_RULE.batch : first), active: [...this.active] };
+    return { from: this.n, to: Math.min(this.options.requested, this.n ? this.n + (this.options.batch ?? ADAPTIVE_RULE.batch) : first), active: [...this.active] };
   }
 
   observe(prefixes: readonly AdaptiveCandidate[]): void {
@@ -76,8 +85,12 @@ export class AdaptiveSampler {
     this.history.push(...decision.rounds);
     this.final = decision.shadow;
     const remaining = this.candidates.filter((candidate) => !candidate.baseline && this.active.has(candidate.key));
-    this.finished = remaining.length === 1 || this.n === this.options.requested;
-    if (this.finished) for (const key of this.active) this.used.get(key)!.stop = this.n === this.options.requested ? "max" : "leader";
+    this.finished = remaining.length === 1 || decision.stop_reason === "indifferent" || this.n === this.options.requested;
+    if (this.finished) {
+      this.stopReason = decision.stop_reason === "indifferent" ? "indifferent" : this.n === this.options.requested ? "max" : "leader";
+      this.indifferenceSpread = decision.indifference_spread;
+      for (const key of this.active) this.used.get(key)!.stop = this.stopReason;
+    }
   }
 
   /** A deadline may stop within a batch. Keep only its actual common prefix; never eliminate from it. */
@@ -100,7 +113,9 @@ export class AdaptiveSampler {
       Math.max(work.get(candidate.workGroup ?? candidate.key) ?? 0, this.used.get(candidate.key)!.samples));
     const full = work.size * this.options.requested, actual = [...work.values()].reduce((a, b) => a + b, 0);
     return { schema: "sim-adaptive-v1", mode: "on", status: this.finished ? "complete_adaptive" : "partial", lane: this.options.lane,
-      rule: { ...ADAPTIVE_RULE, first: this.options.first ?? (this.options.lane === "b3" ? ADAPTIVE_RULE.b3First : ADAPTIVE_RULE.b2First),
+      stop_reason: this.finished ? this.stopReason : "budget", indifference_spread: this.indifferenceSpread,
+      rule: { ...ADAPTIVE_RULE, ...(this.options.profile ? { profile: this.options.profile, lowTrust: this.options.lowTrust, indifference: this.options.indifference } : {}), first: this.options.first ?? (this.options.lane === "b3" ? ADAPTIVE_RULE.b3First : ADAPTIVE_RULE.b2First),
+        batch: this.options.batch ?? ADAPTIVE_RULE.batch,
         zElim: this.options.zElim ?? ADAPTIVE_RULE.zElim, requested: this.options.requested },
       candidates: this.candidates.map((candidate) => ({ key: candidate.key, ...this.used.get(candidate.key)!,
         ...(!this.finished && this.active.has(candidate.key) ? { stop: "budget" } : {}), baseline: candidate.baseline === true })),
