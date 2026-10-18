@@ -1,0 +1,135 @@
+{
+  "accepted_at": "2026-10-18 14:19:09 CST",
+  "same_original_request": {
+    "at": "2026-10-18 14:05:04 CST",
+    "command": [
+      "nice",
+      "-n",
+      "19",
+      "python3",
+      "ops/paper_dataset.py",
+      "--no-raw"
+    ],
+    "pid": 1330558,
+    "birth": "119544798",
+    "calls": 1,
+    "raw_snapshot": false,
+    "previous_outputs_preserved": "ops/codex-ops/record-staging/20261018-1403/paper-before"
+  },
+  "actual_exit_code": 0,
+  "calls": 1,
+  "frozen_files": 22,
+  "changed_files": [
+    {
+      "path": "paper/data/README.md",
+      "bytes": 14189,
+      "sha256": "159a25f020bd980f4e1ed0d895948a63897ae848d8a1ed5595bb934b6fa98663"
+    },
+    {
+      "path": "paper/data/commits.csv",
+      "bytes": 1062132,
+      "sha256": "5040c6b296c759d489234d3f47222a5b2f7d61ce6c65616c7f0f85c593f6e34e"
+    },
+    {
+      "path": "paper/data/cost-curve-silent.csv",
+      "bytes": 15164,
+      "sha256": "00b2a4d93d2e3d33f8b51511dab88468013a5fc096c7847bfb24b05b885af584"
+    },
+    {
+      "path": "paper/data/cost-silent.csv",
+      "bytes": 1034986,
+      "sha256": "9866851d54f948739ec21e83332ed92ace074fee30170a753ba9b2c048a859ea"
+    },
+    {
+      "path": "paper/data/cost-sources.json",
+      "bytes": 264121,
+      "sha256": "da3cc45ff075be0e91514895bd1f5c13e64d81cde0b6d9c7c221388ef24392d2"
+    },
+    {
+      "path": "paper/data/cost-unattributed.csv",
+      "bytes": 20364,
+      "sha256": "3c9b19c243f3d27cdbde9abc54c87eec0bd8748a26a25effa3f8ebecf40b3477"
+    },
+    {
+      "path": "paper/data/decisions_by_label.csv",
+      "bytes": 1220123,
+      "sha256": "1c21a54d10aa94538b7ed1dece184d26896674726ccc6bfc5cdf72568fd99a0f"
+    },
+    {
+      "path": "paper/data/learning-curve-silent.csv",
+      "bytes": 75158,
+      "sha256": "afd12fd5012e32fe05bcc7f58d07a775033af528b4b375e63f6b1fa05ed82f8f"
+    },
+    {
+      "path": "paper/data/runs.csv",
+      "bytes": 1382837,
+      "sha256": "80a7b6d63b7aeda994c7ba9d3ba1636308e83338b588eeeb5d20a874bb02ddfb"
+    },
+    {
+      "path": "paper/data/summary.json",
+      "bytes": 576336,
+      "sha256": "9aa4e4bd86fa581990f1eed3e166d6ccf1bf38949640a95995a07e4af78aba4e"
+    },
+    {
+      "path": "paper/data/verification.json",
+      "bytes": 587,
+      "sha256": "ab8cbbc6ee58dca189c03a84b69548e66bc62f203033f89ed28f5d26100e1000"
+    },
+    {
+      "path": "paper/materials/silent/cost.md",
+      "bytes": 4200,
+      "sha256": "f57d09943bc02cec9790342d2932446653da1fb63b44a844f119dcaee4ff0a67"
+    }
+  ],
+  "accepted_cut": "2026-10-18T06:05:04.978Z",
+  "runs_total": 846,
+  "boolean_checks": {
+    "decisions attributed + unattributed == play records": true,
+    "decisions_by_label sum == attributed decisions": true,
+    "escalations rows == records with escalation": true,
+    "every runs.jsonl id present in runs.csv": true,
+    "commits == git rev-list --all --count": true
+  },
+  "row_counts": {
+    "runs.csv": 846,
+    "decisions_by_label.csv": 28236,
+    "escalations.csv": 3600,
+    "fight_plans.csv": 1461,
+    "commits.csv": 7058
+  },
+  "retained_verification_warnings": {
+    "runs.jsonl decision-count mismatches": [
+      [
+        "KF9HMZKTFC3V",
+        879,
+        880
+      ]
+    ]
+  },
+  "own_run": {
+    "run_id": "0QDRNCRMC8BU",
+    "character": "SILENT",
+    "ascension": "10",
+    "floor_max": "44",
+    "outcome": "defeat",
+    "has_postmortem": "1",
+    "code_version": "current",
+    "code_version_console": "e713f2113+dirty",
+    "performance_included": "0",
+    "performance_exclusion_reason": "unresolved_brain_questions"
+  },
+  "brain_coverage": {
+    "logged_rows": 46,
+    "accepted_codex": 44,
+    "unresolved_questions": 2,
+    "eligible": false,
+    "policy": "codex-successful-brain-v1"
+  },
+  "cost_component_cuts_remain_separate": true,
+  "key_scan_scope": "Dataset original sk-<key> pattern CLEAN; independent commit scan recorded separately",
+  "core_record_commit": "c1edf3aafe3d22118f486eeb8e7028a813894e53",
+  "publication_or_game_knowledge_changes": false,
+  "new_exports_models_games_tests": 0,
+  "parents_closed": false,
+  "commit_pending": true
+}
