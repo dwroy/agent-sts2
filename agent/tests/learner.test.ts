@@ -48,7 +48,7 @@ describe("per-engine model and effort in the front matter", () => {
     expect(() => parseTask(head("effort.codex: Extra High"), "t", "t.md")).toThrow(/小写词/);
   });
 
-  it("the launcher takes --effort, else the task's, else codex's default xhigh; claude gets none by default", async () => {
+  it("the launcher takes --effort, else the task's, else offline Codex's default high; claude gets none by default", async () => {
     const dir = join(tmpdir(), `learner-fm-${process.pid}`);
     mkdirSync(join(dir, "tasks"), { recursive: true });
     mkdirSync(join(dir, "p", "wt"), { recursive: true });
@@ -269,10 +269,10 @@ describe("codex command line", () => {
     ]);
   });
 
-  it("a read-only task gets the read-only profile; gpt-6.1-sol at xhigh unless asked; never --sandbox (it cannot mix with a profile)", () => {
+  it("a read-only task gets the read-only profile; gpt-6.1-sol at high unless asked; never --sandbox (it cannot mix with a profile)", () => {
     const req = request({ engine: "codex", tools: ["Read", "Grep", "Glob"], cwd: ROOT, home: "/h", keyFiles: [] });
     const cmd = codexCommand(req, "x");
-    expect(cmd.args).toEqual(["exec", "--json", "--ignore-user-config", "--ignore-rules", "--cd", ROOT, ...profileArgs(req), "--model", "gpt-6.1-sol", ...codexTail("xhigh"), ...disables(), "-"]);
+    expect(cmd.args).toEqual(["exec", "--json", "--ignore-user-config", "--ignore-rules", "--cd", ROOT, ...profileArgs(req), "--model", "gpt-6.1-sol", ...codexTail("high"), ...disables(), "-"]);
     expect(cmd.args).not.toContain("--sandbox");
     expect(cmd.args).not.toContain("--add-dir");
   });
@@ -603,7 +603,7 @@ describe("whole runs against fake binaries", () => {
     expect(seen.argv.slice(0, 7)).toEqual(["exec", "--json", "--ignore-user-config", "--ignore-rules", "--cd", join(project, "wt"), "-c"]);
     expect(seen.argv[7]).toBe('default_permissions="learner"');
     expect(seen.argv[9]).toContain(`${JSON.stringify(join(tmp, "codex-home", "auth.json"))} = "none"`);
-    expect(seen.argv.slice(10)).toEqual(["--model", "gpt-6.1-sol", ...codexTail("xhigh"), ...disables(), "-"]);
+    expect(seen.argv.slice(10)).toEqual(["--model", "gpt-6.1-sol", ...codexTail("high"), ...disables(), "-"]);
     expect(seen.argv).not.toContain("--sandbox");
     expect(seen.env).toContain("CODEX_HOME");
     expect(seen.stdin.startsWith("【启动器说明（codex）】")).toBe(true);

@@ -70,7 +70,7 @@ class RegistrationBarrier(unittest.TestCase):
         self.assertEqual(launch["batch"], self.batch)
         self.assertEqual(launch["registration"], saved["batches"])
         self.assertEqual(launch["args"][0], str(self.root / "learner/run.ts"))
-        for flag, value in (("--cwd", str(self.root)), ("--model", "gpt-6.1-sol"), ("--effort", "xhigh")):
+        for flag, value in (("--cwd", str(self.root)), ("--model", "gpt-6.1-sol"), ("--effort", "high")):
             self.assertEqual(launch["args"][launch["args"].index(flag) + 1], value)
         rows = [json.loads(line) for line in (self.state_dir / "learner" / (self.batch + ".err.entry.jsonl")).read_text().splitlines()]
         self.assertEqual(len(rows), 1)

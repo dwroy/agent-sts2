@@ -1,6 +1,6 @@
 ---
 title: 策略提案与实现
-effort.codex: xhigh
+effort.codex: high
 tools: Read, Grep, Glob, Bash, Edit, Write
 timeout_min: 240
 max_turns: 800
@@ -14,6 +14,9 @@ default.batch: manual
 Roy 2026-10-05 08:33 批准独立策略学习任务。本次角色为 {{character_name}}（{{character}}），来源局为 {{runs}}。自己做，不许再派下级 agent。全程中文，提交信息英文。使用普通模式、high 推理强度，不为提速降低强度。
 
 工作树：{{worktree}}；基线：{{base_branch}}；日志（只读）：{{logs_dir}}；临时文件只放 {{scratch}}。
+
+## 摘要优先（Roy 2026-10-18 用量节省）
+先运行 `nice -n 19 python3 {{project_root}}/learner/evidence_summary.py --logs "{{logs_dir}}" --runs "{{runs}}" --out "{{scratch}}/evidence-summary.json"`，只把该摘要及本批提案/已有复盘作为初始材料。摘要是事实索引，不提供游戏结论；需要验证的机制、资源、关键决定仍须按原始 offset/bytes/SHA 定位读取原文，并保留反例和缺失。不要把整份 `states.evidence.jsonl` 或本局所有 state 灌进上下文；脚本可完整流式分析，模型只读所需窗口和结构化结果。冻结专项输入/原请求若规定额外完整证据，仍全部覆盖，不能用摘要替代科学验收。
 
 ## 1. 开工与证据
 - 先读 README.md、最新 paper/materials/STATE-*.md、decision-log.md 末尾、docs/learning-protocol.md。先 git status 确认干净并核第 1.2 节身份；已绑定纯研究保持 dispatch_base，不合入后续 main。其他提案仍 git merge --no-edit {{base_branch}}；冲突就停下回报。

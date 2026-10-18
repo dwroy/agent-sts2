@@ -144,7 +144,7 @@ if [ -n "${HERDR_HOST_LABEL:-}" ]; then
   tail -n +1 -F "$out" "$err" 2>/dev/null &
   tailer=$!
 fi
-# Scheduled learners use GPT-6.1 Sol/xhigh without Fast, including historical leased worktrees.
+# Scheduled ordinary work uses high; frozen specialist requests retain xhigh. No shared config edits.
 # LEARNER_CMD overrides the command for fixed tests only.
 if [ "$audit_ready" != 1 ]; then
   rc=1
@@ -169,7 +169,12 @@ else
   fi
   export STS2_CODEX_LEARNER_BIN="$codex_learner_native"
   export LEARNER_CODEX_BIN="$codex_learner_wrapper"
-  args=(--engine codex --model gpt-6.1-sol --effort xhigh --task "${implementation_task_file:-$learner_task}" --character "$character" --cwd "$worktree")
+  learner_effort=high
+  # Preserve specialist research and explicitly bound implementation requests.
+  if [ "$learner_task" != "$task" ] || [ -n "$research_request$implementation_request" ]; then
+    learner_effort=xhigh
+  fi
+  args=(--engine codex --model gpt-6.1-sol --effort "$learner_effort" --task "${implementation_task_file:-$learner_task}" --character "$character" --cwd "$worktree")
   [ "$task" != strategy-proposal ] || args+=(--set "batch=$batch")
   if [ "$learner_task" = silent-historical-core-builds ]; then
     args+=(--set "evidence=${7}" --set "batch=$batch")

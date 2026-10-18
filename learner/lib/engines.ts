@@ -21,16 +21,16 @@ import { CODEX_DISABLED_FEATURES, codexEnv } from "../../agent/src/brain/engines
 import { runAgent } from "../../agent/src/brain/engines/process.js";
 import type { McpLaunchSpec } from "../../agent/src/brain/tools/mcp-launch.js";
 import { PROJECT_ROOT as REPO_ROOT } from "../../agent/src/core/paths.js";
-import { CODEX_SERVICE_TIER, CODEX_CONTEXT_WINDOW, CODEX_AUTO_COMPACT_TOKENS, DEFAULT_CODEX_MODEL, DEFAULT_CODEX_EFFORT, resolveCodexBin, resolveCodexHome } from "../../agent/src/core/config.js";
+import { CODEX_SERVICE_TIER, CODEX_CONTEXT_WINDOW, CODEX_AUTO_COMPACT_TOKENS, DEFAULT_CODEX_MODEL, resolveCodexBin, resolveCodexHome } from "../../agent/src/core/config.js";
 import { MCP_SERVER_NAME } from "../../agent/src/brain/tools/mcp-launch.js";
 import type { TaskTool } from "./task.js";
 
 export const ENGINES = ["claude", "codex"] as const;
 export type EngineName = (typeof ENGINES)[number];
 
-/** All project launchers share the same Codex defaults. */
+/** Offline work uses high; gameplay retains its separate xhigh default. */
 export const DEFAULT_LEARNER_CODEX_MODEL = DEFAULT_CODEX_MODEL;
-export const DEFAULT_LEARNER_CODEX_EFFORT = DEFAULT_CODEX_EFFORT;
+export const DEFAULT_LEARNER_CODEX_EFFORT = "high";
 
 export interface EngineRequest {
   engine: EngineName;
@@ -533,7 +533,7 @@ export function codexChildEnv(env: NodeJS.ProcessEnv, bin: string): Record<strin
 
 /**
  * The engine's defaults under --model / --effort and the task's model.<engine> / effort.<engine>: codex gpt-6-astra
- * at xhigh without Fast (Roy 2026-10-10); claude the CLI's own.
+ * at high without Fast (Roy 2026-10-18); claude the CLI's own.
  */
 export function engineDefaults(engine: EngineName): { model?: string; effort?: string } {
   return engine === "codex" ? { model: DEFAULT_LEARNER_CODEX_MODEL, effort: DEFAULT_LEARNER_CODEX_EFFORT } : {};

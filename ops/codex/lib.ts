@@ -18,7 +18,7 @@
 import { existsSync, readdirSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 
-import { CODEX_SERVICE_TIER, CODEX_AUTO_COMPACT_TOKENS, DEFAULT_CODEX_EFFORT, DEFAULT_CODEX_MODEL } from "../../agent/src/core/config.js";
+import { CODEX_SERVICE_TIER, CODEX_AUTO_COMPACT_TOKENS, DEFAULT_CODEX_MODEL } from "../../agent/src/core/config.js";
 import { codexCommand, mainCheckout, withCodexKeys, type CommandLine, type EngineRequest } from "../../learner/lib/engines.js";
 import type { TaskTool } from "../../learner/lib/task.js";
 
@@ -117,7 +117,7 @@ export function opsRequest(root: string, env: NodeJS.ProcessEnv, opts: { model?:
       profile: OPS_PROFILE,
       extraRules: opsExtraRules(root),
       model: opts.model ?? env["CODEX_OPS_MODEL"] ?? DEFAULT_CODEX_MODEL,
-      effort: opts.effort ?? env["CODEX_OPS_EFFORT"] ?? DEFAULT_CODEX_EFFORT,
+      effort: opts.effort ?? env["CODEX_OPS_EFFORT"] ?? "high",
     },
     env,
   ), opsExecution: opsExecution(root, env) };
@@ -129,7 +129,7 @@ export function opsRequest(root: string, env: NodeJS.ProcessEnv, opts: { model?:
  */
 export function initCommand(request: OpsRequest, prompt: string, bin: string): CommandLine {
   const base = codexCommand({ ...request, model: request.model ?? DEFAULT_CODEX_MODEL,
-    effort: request.effort ?? DEFAULT_CODEX_EFFORT, serviceTier: CODEX_SERVICE_TIER }, "", bin);
+    effort: request.effort ?? "high", serviceTier: CODEX_SERVICE_TIER }, "", bin);
   if (base.args.at(-1) !== "-") throw new Error("codexCommand no longer ends with '-'");
   if (request.opsExecution === "host") {
     if (request.profile !== OPS_PROFILE) throw new Error("host execution is restricted to the main ops role");

@@ -47,11 +47,11 @@ describe("command lines", () => {
   const root = join(tmp, "proj");
   mkdirSync(root, { recursive: true });
 
-  it("init: codex exec with the ops profile, xhigh, compaction limit, the prompt on stdin", () => {
+  it("init: codex exec with the ops profile, high, compaction limit, the prompt on stdin", () => {
     const cmd = initCommand(request(root), "PROMPT", "codex");
     expect(cmd.args.slice(0, 2)).toEqual(["exec", "--json"]);
     expect(cmd.args).toContain(`default_permissions="${OPS_PROFILE}"`);
-    expect(cmd.args).toContain('model_reasoning_effort="xhigh"');
+    expect(cmd.args).toContain('model_reasoning_effort="high"');
     expect(cmd.args).toContain('service_tier="default"');
     expect(cmd.args).toContain("gpt-6.1-sol");
     expect(cmd.args).toContain("model_auto_compact_token_limit=460800");

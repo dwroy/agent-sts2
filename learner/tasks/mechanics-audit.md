@@ -1,6 +1,6 @@
 ---
 title: 机制审计（只出提案）
-effort.codex: xhigh
+effort.codex: high
 tools: Read, Grep, Glob, Bash, Write
 timeout_min: 45
 max_turns: 200
