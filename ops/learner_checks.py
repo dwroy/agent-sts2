@@ -219,6 +219,54 @@ def preserved_calibration_report(batch_id, batch, root):
     return candidates[0] if len(candidates) == 1 else ({}, None)
 
 
+def descriptive_publication(report, batch, root, live):
+    """Verify a narrow publication without claiming the original source is a live ancestor."""
+    from pathlib import Path
+
+    source, merged = report["source_commit"], report["merged"]
+    def git(cwd, *args):
+        return subprocess.run(["git", "-C", str(cwd), *args], capture_output=True, text=True)
+
+    if git(live, "merge-base", "--is-ancestor", merged, "HEAD").returncode:
+        raise ValueError("reported publication is not in live")
+    # The ordinary merge path retains its original ancestor requirement.
+    if git(live, "merge-base", "--is-ancestor", source, merged).returncode == 0:
+        return None
+    project = Path(root).resolve()
+    raw_tree = batch.get("worktree")
+    if not isinstance(raw_tree, str) or not Path(raw_tree).is_absolute():
+        raise ValueError("missing original source worktree")
+    tree = Path(raw_tree).resolve()
+    if tree.parent != project / ".worktrees" or tree == Path(live).resolve() or not tree.is_dir():
+        raise ValueError("source worktree is outside the original project")
+    if git(tree, "merge-base", "--is-ancestor", source, "HEAD").returncode:
+        raise ValueError("source is not in the original worktree")
+    paths_by_commit = []
+    for cwd, commit in ((tree, source), (live, merged)):
+        parents = git(cwd, "rev-list", "--parents", "-n", "1", commit)
+        if parents.returncode or len(parents.stdout.split()) != 2:
+            raise ValueError("narrow publication requires single-parent commits")
+        changed = git(cwd, "diff-tree", "--no-commit-id", "--name-only", "-r", "-z", commit)
+        paths = [path for path in changed.stdout.split("\0") if path]
+        if changed.returncode or not paths:
+            raise ValueError("narrow publication has no source leaves")
+        paths_by_commit.append(paths)
+    paths, published_paths = paths_by_commit
+    if not set(paths).issubset(published_paths):
+        raise ValueError("source leaves were not changed by the reported publication")
+    # Include knowledge leaves as well as executable inputs; untracked inputs cannot substitute for a commit.
+    dirty = git(tree, "status", "--porcelain", "--untracked-files=all", "--", *SOURCE_PATHS, *paths)
+    if dirty.returncode or dirty.stdout or git(tree, "diff", "--quiet", source, "HEAD", "--", *paths).returncode:
+        raise ValueError("original source inputs have changed")
+    dirty_live = git(live, "status", "--porcelain", "--untracked-files=all", "--", *SOURCE_PATHS, *paths)
+    if dirty_live.returncode or dirty_live.stdout:
+        raise ValueError("live validation inputs have changed")
+    for refs in ((source, merged), (source, "HEAD"), ("HEAD",)):
+        if git(live, "diff", "--quiet", *refs, "--", *paths).returncode:
+            raise ValueError("published source leaves have changed")
+    return {"source": source, "worktree": str(tree), "published": merged, "paths": paths}
+
+
 def recheck_write_batch(batch_id, batch, root, out_dir, enqueue, inbox, *, continuation=None):
     """Verify fallback merges and check their pinned live tree without rewriting the original completion."""
     if continuation is not None:
@@ -262,11 +310,20 @@ def recheck_write_batch(batch_id, batch, root, out_dir, enqueue, inbox, *, conti
     live = live_dir(root)
     with open(os.path.join(root, "ops", "live-merge.lock"), "a", encoding="utf8") as lock:
         fcntl.flock(lock, fcntl.LOCK_EX)
+        publication_proof = None
+        if descriptive_fixes:
+            try:
+                publication_proof = descriptive_publication(report, batch, root, live)
+            except (OSError, ValueError):
+                return 2
+            if publication_proof:
+                # Only actual live commits belong in the ancestor list. Preserve the source mapping separately.
+                commits = [commit for commit in commits if commit != report["source_commit"]]
         for commit in set(commits):
             if subprocess.run(["git", "-C", live, "merge-base", "--is-ancestor", commit, "HEAD"],
                               stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL).returncode:
                 return 2
-        if descriptive_fixes:
+        if descriptive_fixes and not publication_proof:
             source = report["source_commit"]
             if subprocess.run(["git", "-C", live, "merge-base", "--is-ancestor", source, report["merged"]],
                               stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL).returncode:
@@ -324,6 +381,7 @@ def recheck_write_batch(batch_id, batch, root, out_dir, enqueue, inbox, *, conti
                 handle.write(f"{type(error).__name__}: {error}\n")
                 code = 124 if isinstance(error, subprocess.TimeoutExpired) else 1
         history.append({"rc": code, "log": log, "merged": merged, "tree": tree, "commits": commits,
+                        **({"source_publications": [publication_proof]} if publication_proof else {}),
                         **({"report_proof": report_proof} if report_proof else {})})
         message = f"批次 {batch_id} 已核实兜底合入 live {merged}，树 {tree}；沙箱外完整 tsc + vitest exit {code}；日志 {log}。"
         if code:
