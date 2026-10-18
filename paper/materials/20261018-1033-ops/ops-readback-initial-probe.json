@@ -1,0 +1,6 @@
+{
+  "exit": 1,
+  "stage": "Original source manifest optional fields",
+  "reason": "Three exact-base/live supplemental pins omit live_blob_sha256; initial reader assumed it mandatory. Original evidence loop19523 completed before this readback KeyError.",
+  "correction": "For only missing optional digests require actual live bytes exactly equal base; existing digests remain strictly checked. No source, original manifests, scientific data or Git indexes changed."
+}
