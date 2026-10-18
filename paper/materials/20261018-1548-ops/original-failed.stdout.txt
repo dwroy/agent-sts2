@@ -1,0 +1,15 @@
+六局限定窗口的离线审计均正常退出，共关联 197 个选线片段、957 条动作。审计能保留重问、药槽变化和部分整轮端点，但不认证完整候选收益；KV 两次 T5 仍为 `turn_end_unverified`。本批 10 项将逐项保留为 waiting，并写明补证条件；本次没有源码改动或 live 合入。
+
+
+
+== 学习者 codex / strategy-proposal ==
+状态：turn.failed（出错）；退出码 1
+模型：gpt-6.1-sol；会话：01a14def-a507-7a13-bd19-02e0fc8b5b63
+轮数：未记录；工具调用：command_execution×45 file_change×2
+token：输入 0、输出 0（其中推理 0）、cache 读 0、cache 写 0（命中 —）
+成本：未提供
+耗时：776.4 s（墙钟）
+时间：首个事件 34.7 s、模型首个输出 39.3 s、首次工具 48.8 s、末次工具结束 772.3 s；工具内共 511.3 s，其余（模型生成、推理、网络）230.3 s
+codex 会话记录：AGENTS.md 已加载（/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261018-153503）；模型的工具调用 exec×30；/home/dw/Projects/agent-sts2/ops/codex-ops/accounts/codex3/learner/sessions/2026/10/18/rollout-2026-10-18T15-35-13-01a14def-a507-7a13-bd19-02e0fc8b5b63.jsonl
+错误：Selected model is at capacity. Please try a different model.；Selected model is at capacity. Please try a different model.
+日志：/home/dw/Projects/agent-sts2/learner/runs/20261018-153510-27151725-d574-4fc6-993e-463f9cd12259-strategy-proposal.jsonl

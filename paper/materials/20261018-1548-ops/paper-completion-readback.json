@@ -1,0 +1,133 @@
+{
+  "accepted_at": "2026-10-18 15:53:05 CST",
+  "same_original_request": {
+    "at": "2026-10-18 15:35:32 CST",
+    "command": [
+      "nice",
+      "-n",
+      "19",
+      "python3",
+      "ops/paper_dataset.py",
+      "--no-raw"
+    ],
+    "pid": 1703906,
+    "birth": "120087587",
+    "calls": 1,
+    "raw_snapshot": false,
+    "previous_outputs_preserved": "ops/codex-ops/record-staging/20261018-1535/paper-before"
+  },
+  "actual_exit_code": 0,
+  "calls": 1,
+  "frozen_files": 22,
+  "changed_files": [
+    {
+      "path": "paper/data/README.md",
+      "bytes": 14188,
+      "sha256": "8d41f15849c28b67402a5674e6b2a0263bd211831f74593ff88f119e12d0cf8a"
+    },
+    {
+      "path": "paper/data/commits.csv",
+      "bytes": 1063395,
+      "sha256": "2e6150513a90750e0388ac8e6c3b93fb9538f95da9d80d9bcc2f9c80405a77a9"
+    },
+    {
+      "path": "paper/data/cost-curve-silent.csv",
+      "bytes": 15182,
+      "sha256": "3ed7087bae68a5b23670d3a97e700ea6266ea4b1fcd7130e329d445b549d9992"
+    },
+    {
+      "path": "paper/data/cost-silent.csv",
+      "bytes": 1048643,
+      "sha256": "b0264291185c00d6abb51f4be02bd24284991d31c67360d1e6aca8b988e50f75"
+    },
+    {
+      "path": "paper/data/cost-sources.json",
+      "bytes": 265213,
+      "sha256": "48d59bedeb2dd4912578fb34c81420cecbfecd31e41c176d3d65a70f6d9855b1"
+    },
+    {
+      "path": "paper/data/cost-unattributed.csv",
+      "bytes": 20334,
+      "sha256": "535ba88110f7fe84e316fd9bb18192f68792b46362c8a76461a70ffe1297e04d"
+    },
+    {
+      "path": "paper/data/decisions_by_label.csv",
+      "bytes": 1221565,
+      "sha256": "202abdcf3bf3a8c78cfb691c5fde333f7df1540482e423bdfb4424f5a005bae1"
+    },
+    {
+      "path": "paper/data/learning-curve-silent.csv",
+      "bytes": 75336,
+      "sha256": "d898ef27088e44e225e310ff0d2f9d15fbc6401863c18ad32c3f7c99ba984431"
+    },
+    {
+      "path": "paper/data/runs.csv",
+      "bytes": 1384533,
+      "sha256": "7baa8e37fc007768a46e1c6bfb62a553e96a47ca2010915f06992ad5a9a7451f"
+    },
+    {
+      "path": "paper/data/summary.json",
+      "bytes": 577731,
+      "sha256": "2223c9e40cb11820b755dcdf5266f434145dfc6af68401995fd0d06ac98bce65"
+    },
+    {
+      "path": "paper/data/verification.json",
+      "bytes": 587,
+      "sha256": "303ea0b7e089c1f10c11843710de47a704e62488bb51ce51acc43d917e7cc1e9"
+    },
+    {
+      "path": "paper/materials/silent/cost.md",
+      "bytes": 4200,
+      "sha256": "ae562046ff0bbf35d9379eacc3ecefdb642d4eef8502d0fc531f0b20c1a93e44"
+    }
+  ],
+  "accepted_cut": "2026-10-18T07:35:32.900Z",
+  "runs_total": 847,
+  "boolean_checks": {
+    "decisions attributed + unattributed == play records": true,
+    "decisions_by_label sum == attributed decisions": true,
+    "escalations rows == records with escalation": true,
+    "every runs.jsonl id present in runs.csv": true,
+    "commits == git rev-list --all --count": true
+  },
+  "row_counts": {
+    "runs.csv": 847,
+    "decisions_by_label.csv": 28270,
+    "escalations.csv": 3600,
+    "fight_plans.csv": 1461,
+    "commits.csv": 7067
+  },
+  "retained_verification_warnings": {
+    "runs.jsonl decision-count mismatches": [
+      [
+        "KF9HMZKTFC3V",
+        879,
+        880
+      ]
+    ]
+  },
+  "own_run": {
+    "run_id": "T4PL60Z0DZV3",
+    "character": "SILENT",
+    "ascension": "10",
+    "floor_max": "49",
+    "outcome": "defeat",
+    "has_postmortem": "1",
+    "code_version": "current",
+    "code_version_console": "acfd63aaa+dirty",
+    "performance_included": "1",
+    "performance_exclusion_reason": ""
+  },
+  "brain_coverage": {
+    "logged_rows": 48,
+    "accepted_codex": 48,
+    "unresolved_questions": 0,
+    "eligible": true,
+    "policy": "codex-successful-brain-v1"
+  },
+  "cost_component_cuts_remain_separate": true,
+  "core_record_commit": "09e8315b01decdab917a0dcf78831a795257db0e",
+  "new_exports_models_games_tests": 0,
+  "parents_closed": false,
+  "commit_pending": true
+}
