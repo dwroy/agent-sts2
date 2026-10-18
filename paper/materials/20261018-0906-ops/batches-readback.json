@@ -1,0 +1,4454 @@
+[
+  {
+    "batch": "20261018-084303-strategy-proposal",
+    "report": {
+      "task": "strategy-proposal",
+      "character": "silent",
+      "batch": "20261018-084303-strategy-proposal",
+      "base": "fbb38ad23ac566333b4fb664699ac34f2a0c8885",
+      "runs": [
+        "751FN9QM9MHQ",
+        "KV0JHNJCKXLS",
+        "YQL8RZ8BWN1E",
+        "L9SGRBB5R698",
+        "PU80F84P6HPN",
+        "KEN58SH9SLZ6"
+      ],
+      "fixes": [],
+      "skipped": [],
+      "merged": null,
+      "tests": {
+        "tsc": null,
+        "vitest": null,
+        "cases": null
+      },
+      "code_proposals": [
+        "silent-proposal-366288801d9150d9",
+        "silent-proposal-85929bdfc8a3fc1b",
+        "silent-proposal-efd9f83ee9e1a6dc",
+        "silent-proposal-131042659448ae74",
+        "silent-proposal-990f054036609447",
+        "silent-proposal-e18d3f18e6cac2a0",
+        "silent-proposal-9733bb80f445aeae",
+        "silent-proposal-c51468c5e8ba6668",
+        "silent-proposal-86a7db08d1a31976",
+        "silent-proposal-e282a9131b99129a"
+      ],
+      "implementation_domains": [],
+      "proposal_results": [
+        {
+          "id": "silent-proposal-366288801d9150d9",
+          "state": "waiting",
+          "reason": "缺SL候选实际逐来源成本、保持后继一致的整战对照及独立局验证；三组局部血价不能确定探索准入阈值。"
+        },
+        {
+          "id": "silent-proposal-85929bdfc8a3fc1b",
+          "state": "waiting",
+          "reason": "缺无药或留至后战的完整实际分支，以及已确定敌伤与持牌损血的实际逐来源结算；成本缺表记0不等于持有价值0。"
+        },
+        {
+          "id": "silent-proposal-efd9f83ee9e1a6dc",
+          "state": "waiting",
+          "reason": "缺完整候选实际成本归属、受控整战及后期独立验证；同源经验和已上线诊断不能证明整项已实现。"
+        },
+        {
+          "id": "silent-proposal-131042659448ae74",
+          "state": "waiting",
+          "reason": "缺敏捷、毒、荆棘及未决弃牌的完整联合消费者实际结算，以及跨战留药对照；局部组件不覆盖九类经验整项。"
+        },
+        {
+          "id": "silent-proposal-990f054036609447",
+          "state": "waiting",
+          "reason": "缺毛伤、回血与成长的完整归属、保持后继不变的整战胜线及独立验证；删输出而同零损不构成已证保血收益。"
+        },
+        {
+          "id": "silent-proposal-e18d3f18e6cac2a0",
+          "state": "waiting",
+          "reason": "缺改序后的受控整战、完整最终资源及提前饮药结果；直接归零占位HP会改变同轮排序，阶段说明不证明排序收益。"
+        },
+        {
+          "id": "silent-proposal-9733bb80f445aeae",
+          "state": "waiting",
+          "reason": "缺阶段改序、提前用药及路线的受控验证；现有阶段子实现与同源经验不能登记整项duplicate。"
+        },
+        {
+          "id": "silent-proposal-c51468c5e8ba6668",
+          "state": "waiting",
+          "reason": "缺随机选牌、发光水重问后的完整候选收益归属，以及不饮用或留到Boss的完整分支；七次消耗不足拟合持有价值与跨战预算。"
+        },
+        {
+          "id": "silent-proposal-86a7db08d1a31976",
+          "state": "waiting",
+          "reason": "缺能力建立后的完整后继、逐来源实际归属、同后轮整战对照及独立验证；不能拟统一6血/2伤准入阈值。"
+        },
+        {
+          "id": "silent-proposal-e282a9131b99129a",
+          "state": "waiting",
+          "reason": "缺续问后完整执行归属、受控整战和后期独立验证；省血或未试线均不足直接关闭探索、改变HP护栏。"
+        }
+      ],
+      "report": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261018-084303/learner/runs/20261018-084310-02a6ff7f-433f-43d1-8f26-cb70c5a1f9e7-strategy-proposal/report.md"
+    },
+    "native": {
+      "batch": "20261018-084303-strategy-proposal",
+      "thread": "01a14c76-abfe-7361-92d3-d3af99e40cfa",
+      "cwd": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261018-084303",
+      "event_log": "learner/runs/20261018-084310-02a6ff7f-433f-43d1-8f26-cb70c5a1f9e7-strategy-proposal.jsonl",
+      "registered_launch_batch": "20261018-084303-strategy-proposal",
+      "original_lease": "19c8eefe70ec56a12258d6813c69f6c3f3d2f9af75efae9c01a3f816b894503b",
+      "native_context": {
+        "source": "ops/codex-ops/accounts/codex3/learner/sessions/2026/10/18/rollout-2026-10-18T08-43-28-01a14c76-abfe-7361-92d3-d3af99e40cfa.jsonl",
+        "offset": 50380,
+        "bytes": 5182,
+        "sha256": "86f3d6a74faaece2c9c5fdbf8837327bedbdbfe01b39145d88892b6f7315e0ea",
+        "model": "gpt-6.1-sol",
+        "effort": "xhigh",
+        "sandbox": {
+          "type": "workspace-write",
+          "writable_roots": [
+            "/home/dw/Projects/agent-sts2",
+            "/home/dw/Projects/agent-sts2/.git",
+            "/home/dw/Projects/agent-sts2/.git/worktrees/codex-strategy-silent-20261018-084303"
+          ],
+          "network_access": false,
+          "exclude_tmpdir_env_var": false,
+          "exclude_slash_tmp": false
+        },
+        "approval_policy": "never"
+      },
+      "native_user_input": {
+        "offset": 58425,
+        "bytes": 21446,
+        "sha256": "ff7f5d2d7773821065f646b4f22b8256454389af0629a49afb4fa7d137da7399",
+        "input_sha256": "679ce75859173d9c985a9dee5e34276b06df260bcbc1096fd3f96e028bb50aee"
+      },
+      "original_header_events": [
+        {
+          "offset": 0,
+          "bytes": 23459,
+          "sha256": "4705071a4530a044e49bd31e2fb49a52a10a7ab68c4d8bc674a506778cff3e66",
+          "type": "learner_launch",
+          "attempt": null,
+          "code": null
+        },
+        {
+          "offset": 23459,
+          "bytes": 378,
+          "sha256": "9fdbd4e18be713dffa6a31202f906f508a2ff5e6f3783c15c786820fa58382bd",
+          "type": "learner_startup_attempt",
+          "attempt": 1,
+          "code": null
+        },
+        {
+          "offset": 26850,
+          "bytes": 77,
+          "sha256": "7dfa612e6860a086366d5d597751e00693f10b8e33be16e78c857ac5c74f0e1a",
+          "type": "thread.started",
+          "attempt": null,
+          "code": null
+        }
+      ],
+      "startup_attempts": 1,
+      "failed_startups_preserved": 0,
+      "no_model_or_manual_restart": true
+    },
+    "original_ledger_rows": [
+      {
+        "offset": 24254085,
+        "bytes": 856,
+        "sha256": "1fdcf3e540c1fde0ac444c97c1b40372c5293b2a3af39b9eff33771240694105",
+        "row": {
+          "op": "update",
+          "id": "silent-0005",
+          "ts": "2026-10-18T08:55:28+08:00",
+          "by": "learner:strategy-proposal",
+          "where": {
+            "proposal": [
+              "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261018-084303/learner/runs/20261018-084310-02a6ff7f-433f-43d1-8f26-cb70c5a1f9e7-strategy-proposal/proposal.md",
+              "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261018-084303/learner/runs/20261018-084310-02a6ff7f-433f-43d1-8f26-cb70c5a1f9e7-strategy-proposal/report.md"
+            ]
+          },
+          "note": "20261018-084303-strategy-proposal 本批仅复核原六局证据并补处置链接；silent-proposal-85929bdfc8a3fc1b,silent-proposal-131042659448ae74,silent-proposal-86a7db08d1a31976 均waiting。逐项缺数据理由见本批proposal-results.json；无源码/知识改动、无提交/合入/版本，不增加支持或repeat、不改变原状态和经验。"
+        }
+      },
+      {
+        "offset": 24254941,
+        "bytes": 790,
+        "sha256": "e0dd2e0b709bfc65f68b3e563f936c52221f37bfcc0a597000600454695cb957",
+        "row": {
+          "op": "update",
+          "id": "silent-0006",
+          "ts": "2026-10-18T08:55:28+08:00",
+          "by": "learner:strategy-proposal",
+          "where": {
+            "proposal": [
+              "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261018-084303/learner/runs/20261018-084310-02a6ff7f-433f-43d1-8f26-cb70c5a1f9e7-strategy-proposal/proposal.md",
+              "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261018-084303/learner/runs/20261018-084310-02a6ff7f-433f-43d1-8f26-cb70c5a1f9e7-strategy-proposal/report.md"
+            ]
+          },
+          "note": "20261018-084303-strategy-proposal 本批仅复核原六局证据并补处置链接；silent-proposal-131042659448ae74 均waiting。逐项缺数据理由见本批proposal-results.json；无源码/知识改动、无提交/合入/版本，不增加支持或repeat、不改变原状态和经验。"
+        }
+      },
+      {
+        "offset": 24255731,
+        "bytes": 823,
+        "sha256": "9068e6ae371e80aa58173dfff77bf20fc5d18ecb2aede1b3b43a4a42a8afd172",
+        "row": {
+          "op": "update",
+          "id": "silent-0007",
+          "ts": "2026-10-18T08:55:28+08:00",
+          "by": "learner:strategy-proposal",
+          "where": {
+            "proposal": [
+              "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261018-084303/learner/runs/20261018-084310-02a6ff7f-433f-43d1-8f26-cb70c5a1f9e7-strategy-proposal/proposal.md",
+              "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261018-084303/learner/runs/20261018-084310-02a6ff7f-433f-43d1-8f26-cb70c5a1f9e7-strategy-proposal/report.md"
+            ]
+          },
+          "note": "20261018-084303-strategy-proposal 本批仅复核原六局证据并补处置链接；silent-proposal-85929bdfc8a3fc1b,silent-proposal-131042659448ae74 均waiting。逐项缺数据理由见本批proposal-results.json；无源码/知识改动、无提交/合入/版本，不增加支持或repeat、不改变原状态和经验。"
+        }
+      },
+      {
+        "offset": 24256554,
+        "bytes": 790,
+        "sha256": "3855e2ea15ad8f6e4b3535fc44461d33a8c695bfa00b2ae1fefc17f6ef8361aa",
+        "row": {
+          "op": "update",
+          "id": "silent-0011",
+          "ts": "2026-10-18T08:55:28+08:00",
+          "by": "learner:strategy-proposal",
+          "where": {
+            "proposal": [
+              "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261018-084303/learner/runs/20261018-084310-02a6ff7f-433f-43d1-8f26-cb70c5a1f9e7-strategy-proposal/proposal.md",
+              "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261018-084303/learner/runs/20261018-084310-02a6ff7f-433f-43d1-8f26-cb70c5a1f9e7-strategy-proposal/report.md"
+            ]
+          },
+          "note": "20261018-084303-strategy-proposal 本批仅复核原六局证据并补处置链接；silent-proposal-e18d3f18e6cac2a0 均waiting。逐项缺数据理由见本批proposal-results.json；无源码/知识改动、无提交/合入/版本，不增加支持或repeat、不改变原状态和经验。"
+        }
+      },
+      {
+        "offset": 24257344,
+        "bytes": 823,
+        "sha256": "cabb4976475fd5cb7d92c30ba70c691fb98a3b127f4ebd4188d865ca0b3ac181",
+        "row": {
+          "op": "update",
+          "id": "silent-0017",
+          "ts": "2026-10-18T08:55:28+08:00",
+          "by": "learner:strategy-proposal",
+          "where": {
+            "proposal": [
+              "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261018-084303/learner/runs/20261018-084310-02a6ff7f-433f-43d1-8f26-cb70c5a1f9e7-strategy-proposal/proposal.md",
+              "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261018-084303/learner/runs/20261018-084310-02a6ff7f-433f-43d1-8f26-cb70c5a1f9e7-strategy-proposal/report.md"
+            ]
+          },
+          "note": "20261018-084303-strategy-proposal 本批仅复核原六局证据并补处置链接；silent-proposal-e18d3f18e6cac2a0,silent-proposal-9733bb80f445aeae 均waiting。逐项缺数据理由见本批proposal-results.json；无源码/知识改动、无提交/合入/版本，不增加支持或repeat、不改变原状态和经验。"
+        }
+      },
+      {
+        "offset": 24258167,
+        "bytes": 922,
+        "sha256": "c02057e58a701c9c610ccd6fb36ad83adfb446d4eea29ba1ce3b23e5b8eea3ec",
+        "row": {
+          "op": "update",
+          "id": "silent-0019",
+          "ts": "2026-10-18T08:55:28+08:00",
+          "by": "learner:strategy-proposal",
+          "where": {
+            "proposal": [
+              "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261018-084303/learner/runs/20261018-084310-02a6ff7f-433f-43d1-8f26-cb70c5a1f9e7-strategy-proposal/proposal.md",
+              "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261018-084303/learner/runs/20261018-084310-02a6ff7f-433f-43d1-8f26-cb70c5a1f9e7-strategy-proposal/report.md"
+            ]
+          },
+          "note": "20261018-084303-strategy-proposal 本批仅复核原六局证据并补处置链接；silent-proposal-85929bdfc8a3fc1b,silent-proposal-131042659448ae74,silent-proposal-990f054036609447,silent-proposal-9733bb80f445aeae,silent-proposal-c51468c5e8ba6668 均waiting。逐项缺数据理由见本批proposal-results.json；无源码/知识改动、无提交/合入/版本，不增加支持或repeat、不改变原状态和经验。"
+        }
+      },
+      {
+        "offset": 24259089,
+        "bytes": 856,
+        "sha256": "88995fced937ec0413cf8312f68a516c629cd1381d6036ff76567662140ffbd3",
+        "row": {
+          "op": "update",
+          "id": "silent-0020",
+          "ts": "2026-10-18T08:55:28+08:00",
+          "by": "learner:strategy-proposal",
+          "where": {
+            "proposal": [
+              "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261018-084303/learner/runs/20261018-084310-02a6ff7f-433f-43d1-8f26-cb70c5a1f9e7-strategy-proposal/proposal.md",
+              "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261018-084303/learner/runs/20261018-084310-02a6ff7f-433f-43d1-8f26-cb70c5a1f9e7-strategy-proposal/report.md"
+            ]
+          },
+          "note": "20261018-084303-strategy-proposal 本批仅复核原六局证据并补处置链接；silent-proposal-131042659448ae74,silent-proposal-990f054036609447,silent-proposal-9733bb80f445aeae 均waiting。逐项缺数据理由见本批proposal-results.json；无源码/知识改动、无提交/合入/版本，不增加支持或repeat、不改变原状态和经验。"
+        }
+      },
+      {
+        "offset": 24259945,
+        "bytes": 889,
+        "sha256": "f7ed67bbfcd0e483b5efb630ebf15f91e7520fee58d656134fde69641eefe2d7",
+        "row": {
+          "op": "update",
+          "id": "silent-0021",
+          "ts": "2026-10-18T08:55:28+08:00",
+          "by": "learner:strategy-proposal",
+          "where": {
+            "proposal": [
+              "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261018-084303/learner/runs/20261018-084310-02a6ff7f-433f-43d1-8f26-cb70c5a1f9e7-strategy-proposal/proposal.md",
+              "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261018-084303/learner/runs/20261018-084310-02a6ff7f-433f-43d1-8f26-cb70c5a1f9e7-strategy-proposal/report.md"
+            ]
+          },
+          "note": "20261018-084303-strategy-proposal 本批仅复核原六局证据并补处置链接；silent-proposal-85929bdfc8a3fc1b,silent-proposal-131042659448ae74,silent-proposal-86a7db08d1a31976,silent-proposal-e282a9131b99129a 均waiting。逐项缺数据理由见本批proposal-results.json；无源码/知识改动、无提交/合入/版本，不增加支持或repeat、不改变原状态和经验。"
+        }
+      },
+      {
+        "offset": 24260834,
+        "bytes": 790,
+        "sha256": "a146b140e55a91feb3a75b93f2e7e7efcf548f86cfe5207a062d541d2c259474",
+        "row": {
+          "op": "update",
+          "id": "silent-0027",
+          "ts": "2026-10-18T08:55:28+08:00",
+          "by": "learner:strategy-proposal",
+          "where": {
+            "proposal": [
+              "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261018-084303/learner/runs/20261018-084310-02a6ff7f-433f-43d1-8f26-cb70c5a1f9e7-strategy-proposal/proposal.md",
+              "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261018-084303/learner/runs/20261018-084310-02a6ff7f-433f-43d1-8f26-cb70c5a1f9e7-strategy-proposal/report.md"
+            ]
+          },
+          "note": "20261018-084303-strategy-proposal 本批仅复核原六局证据并补处置链接；silent-proposal-e18d3f18e6cac2a0 均waiting。逐项缺数据理由见本批proposal-results.json；无源码/知识改动、无提交/合入/版本，不增加支持或repeat、不改变原状态和经验。"
+        }
+      },
+      {
+        "offset": 24261624,
+        "bytes": 823,
+        "sha256": "39488114649bbcbe631ea4a7e60354743570a7bdde4309d9f7e1a282eea0c672",
+        "row": {
+          "op": "update",
+          "id": "silent-0046",
+          "ts": "2026-10-18T08:55:28+08:00",
+          "by": "learner:strategy-proposal",
+          "where": {
+            "proposal": [
+              "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261018-084303/learner/runs/20261018-084310-02a6ff7f-433f-43d1-8f26-cb70c5a1f9e7-strategy-proposal/proposal.md",
+              "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261018-084303/learner/runs/20261018-084310-02a6ff7f-433f-43d1-8f26-cb70c5a1f9e7-strategy-proposal/report.md"
+            ]
+          },
+          "note": "20261018-084303-strategy-proposal 本批仅复核原六局证据并补处置链接；silent-proposal-131042659448ae74,silent-proposal-e18d3f18e6cac2a0 均waiting。逐项缺数据理由见本批proposal-results.json；无源码/知识改动、无提交/合入/版本，不增加支持或repeat、不改变原状态和经验。"
+        }
+      },
+      {
+        "offset": 24262447,
+        "bytes": 889,
+        "sha256": "d68a1d21f854df2afac129d1df1bd5d738324f3c156b019b0130b4d63cc3cb37",
+        "row": {
+          "op": "update",
+          "id": "silent-0079",
+          "ts": "2026-10-18T08:55:28+08:00",
+          "by": "learner:strategy-proposal",
+          "where": {
+            "proposal": [
+              "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261018-084303/learner/runs/20261018-084310-02a6ff7f-433f-43d1-8f26-cb70c5a1f9e7-strategy-proposal/proposal.md",
+              "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261018-084303/learner/runs/20261018-084310-02a6ff7f-433f-43d1-8f26-cb70c5a1f9e7-strategy-proposal/report.md"
+            ]
+          },
+          "note": "20261018-084303-strategy-proposal 本批仅复核原六局证据并补处置链接；silent-proposal-366288801d9150d9,silent-proposal-efd9f83ee9e1a6dc,silent-proposal-86a7db08d1a31976,silent-proposal-e282a9131b99129a 均waiting。逐项缺数据理由见本批proposal-results.json；无源码/知识改动、无提交/合入/版本，不增加支持或repeat、不改变原状态和经验。"
+        }
+      },
+      {
+        "offset": 24263336,
+        "bytes": 790,
+        "sha256": "948ce3e514ac2efc05ad79ca3f2d10ec43d9cfa0919bab99f1545802d6f295cc",
+        "row": {
+          "op": "update",
+          "id": "silent-0102",
+          "ts": "2026-10-18T08:55:28+08:00",
+          "by": "learner:strategy-proposal",
+          "where": {
+            "proposal": [
+              "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261018-084303/learner/runs/20261018-084310-02a6ff7f-433f-43d1-8f26-cb70c5a1f9e7-strategy-proposal/proposal.md",
+              "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261018-084303/learner/runs/20261018-084310-02a6ff7f-433f-43d1-8f26-cb70c5a1f9e7-strategy-proposal/report.md"
+            ]
+          },
+          "note": "20261018-084303-strategy-proposal 本批仅复核原六局证据并补处置链接；silent-proposal-990f054036609447 均waiting。逐项缺数据理由见本批proposal-results.json；无源码/知识改动、无提交/合入/版本，不增加支持或repeat、不改变原状态和经验。"
+        }
+      },
+      {
+        "offset": 24264126,
+        "bytes": 823,
+        "sha256": "8d495aeaf82645ead517176da7a91d11a4481be1eae3f4a859d23887a69ae5a4",
+        "row": {
+          "op": "update",
+          "id": "silent-0125",
+          "ts": "2026-10-18T08:55:28+08:00",
+          "by": "learner:strategy-proposal",
+          "where": {
+            "proposal": [
+              "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261018-084303/learner/runs/20261018-084310-02a6ff7f-433f-43d1-8f26-cb70c5a1f9e7-strategy-proposal/proposal.md",
+              "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261018-084303/learner/runs/20261018-084310-02a6ff7f-433f-43d1-8f26-cb70c5a1f9e7-strategy-proposal/report.md"
+            ]
+          },
+          "note": "20261018-084303-strategy-proposal 本批仅复核原六局证据并补处置链接；silent-proposal-86a7db08d1a31976,silent-proposal-e282a9131b99129a 均waiting。逐项缺数据理由见本批proposal-results.json；无源码/知识改动、无提交/合入/版本，不增加支持或repeat、不改变原状态和经验。"
+        }
+      },
+      {
+        "offset": 24264949,
+        "bytes": 823,
+        "sha256": "d7a1ebcbe96759f2ed2ac3db2c2304210f12b8331bfd4ee1cb8f44b30ef0b70e",
+        "row": {
+          "op": "update",
+          "id": "silent-0129",
+          "ts": "2026-10-18T08:55:28+08:00",
+          "by": "learner:strategy-proposal",
+          "where": {
+            "proposal": [
+              "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261018-084303/learner/runs/20261018-084310-02a6ff7f-433f-43d1-8f26-cb70c5a1f9e7-strategy-proposal/proposal.md",
+              "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261018-084303/learner/runs/20261018-084310-02a6ff7f-433f-43d1-8f26-cb70c5a1f9e7-strategy-proposal/report.md"
+            ]
+          },
+          "note": "20261018-084303-strategy-proposal 本批仅复核原六局证据并补处置链接；silent-proposal-85929bdfc8a3fc1b,silent-proposal-131042659448ae74 均waiting。逐项缺数据理由见本批proposal-results.json；无源码/知识改动、无提交/合入/版本，不增加支持或repeat、不改变原状态和经验。"
+        }
+      },
+      {
+        "offset": 24265772,
+        "bytes": 955,
+        "sha256": "e56499917d96074ce32200a94c2b99afbe9ffdf84d70b14685bee5334d3bc681",
+        "row": {
+          "op": "update",
+          "id": "silent-0176",
+          "ts": "2026-10-18T08:55:28+08:00",
+          "by": "learner:strategy-proposal",
+          "where": {
+            "proposal": [
+              "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261018-084303/learner/runs/20261018-084310-02a6ff7f-433f-43d1-8f26-cb70c5a1f9e7-strategy-proposal/proposal.md",
+              "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261018-084303/learner/runs/20261018-084310-02a6ff7f-433f-43d1-8f26-cb70c5a1f9e7-strategy-proposal/report.md"
+            ]
+          },
+          "note": "20261018-084303-strategy-proposal 本批仅复核原六局证据并补处置链接；silent-proposal-366288801d9150d9,silent-proposal-85929bdfc8a3fc1b,silent-proposal-efd9f83ee9e1a6dc,silent-proposal-131042659448ae74,silent-proposal-86a7db08d1a31976,silent-proposal-e282a9131b99129a 均waiting。逐项缺数据理由见本批proposal-results.json；无源码/知识改动、无提交/合入/版本，不增加支持或repeat、不改变原状态和经验。"
+        }
+      },
+      {
+        "offset": 24266727,
+        "bytes": 823,
+        "sha256": "43a51766af81740feecfe1d2805471a109f5196e450d680e2b76cbc4b2bb4b82",
+        "row": {
+          "op": "update",
+          "id": "silent-0250",
+          "ts": "2026-10-18T08:55:28+08:00",
+          "by": "learner:strategy-proposal",
+          "where": {
+            "proposal": [
+              "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261018-084303/learner/runs/20261018-084310-02a6ff7f-433f-43d1-8f26-cb70c5a1f9e7-strategy-proposal/proposal.md",
+              "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261018-084303/learner/runs/20261018-084310-02a6ff7f-433f-43d1-8f26-cb70c5a1f9e7-strategy-proposal/report.md"
+            ]
+          },
+          "note": "20261018-084303-strategy-proposal 本批仅复核原六局证据并补处置链接；silent-proposal-e18d3f18e6cac2a0,silent-proposal-9733bb80f445aeae 均waiting。逐项缺数据理由见本批proposal-results.json；无源码/知识改动、无提交/合入/版本，不增加支持或repeat、不改变原状态和经验。"
+        }
+      }
+    ],
+    "original_queue_rows": [
+      {
+        "offset": 4592773,
+        "bytes": 663,
+        "sha256": "fe7f7c791458af4b25def9f5ed8bb5c7b3018693de6388cacb3e915a3c9fb1db",
+        "row": {
+          "op": "update",
+          "id": "silent-proposal-366288801d9150d9",
+          "ts": "2026-10-18T08:59:01+08:00",
+          "state": "waiting",
+          "reason": "缺SL候选实际逐来源成本、保持后继一致的整战对照及独立局验证；三组局部血价不能确定探索准入阈值。",
+          "commit": null,
+          "seen_runs": 356,
+          "batch": "code-proposals:silent-proposal-366288801d9150d9,silent-proposal-85929bdfc8a3fc1b,silent-proposal-efd9f83ee9e1a6dc,silent-proposal-131042659448ae74,silent-proposal-990f054036609447,silent-proposal-e18d3f18e6cac2a0,silent-proposal-9733bb80f445aeae,silent-proposal-c51468c5e8ba6668,silent-proposal-86a7db08d1a31976,silent-proposal-e282a9131b99129a:356"
+        }
+      },
+      {
+        "offset": 4593436,
+        "bytes": 675,
+        "sha256": "01a414fe9e564ed3e5bde2a535ca16376af62c000a403cf15db4e532897f46b0",
+        "row": {
+          "op": "update",
+          "id": "silent-proposal-85929bdfc8a3fc1b",
+          "ts": "2026-10-18T08:59:01+08:00",
+          "state": "waiting",
+          "reason": "缺无药或留至后战的完整实际分支，以及已确定敌伤与持牌损血的实际逐来源结算；成本缺表记0不等于持有价值0。",
+          "commit": null,
+          "seen_runs": 356,
+          "batch": "code-proposals:silent-proposal-366288801d9150d9,silent-proposal-85929bdfc8a3fc1b,silent-proposal-efd9f83ee9e1a6dc,silent-proposal-131042659448ae74,silent-proposal-990f054036609447,silent-proposal-e18d3f18e6cac2a0,silent-proposal-9733bb80f445aeae,silent-proposal-c51468c5e8ba6668,silent-proposal-86a7db08d1a31976,silent-proposal-e282a9131b99129a:356"
+        }
+      },
+      {
+        "offset": 4594111,
+        "bytes": 655,
+        "sha256": "68d8da07d9bd62219753ede801a74bbd6f7feb90d0bcbaf704f280f445de4d72",
+        "row": {
+          "op": "update",
+          "id": "silent-proposal-efd9f83ee9e1a6dc",
+          "ts": "2026-10-18T08:59:01+08:00",
+          "state": "waiting",
+          "reason": "缺完整候选实际成本归属、受控整战及后期独立验证；同源经验和已上线诊断不能证明整项已实现。",
+          "commit": null,
+          "seen_runs": 356,
+          "batch": "code-proposals:silent-proposal-366288801d9150d9,silent-proposal-85929bdfc8a3fc1b,silent-proposal-efd9f83ee9e1a6dc,silent-proposal-131042659448ae74,silent-proposal-990f054036609447,silent-proposal-e18d3f18e6cac2a0,silent-proposal-9733bb80f445aeae,silent-proposal-c51468c5e8ba6668,silent-proposal-86a7db08d1a31976,silent-proposal-e282a9131b99129a:356"
+        }
+      },
+      {
+        "offset": 4594766,
+        "bytes": 670,
+        "sha256": "2d6018aeb4b52843eb91011a119fbb855a6a4701abfa9f80b41a2f2dee1ed76f",
+        "row": {
+          "op": "update",
+          "id": "silent-proposal-131042659448ae74",
+          "ts": "2026-10-18T08:59:01+08:00",
+          "state": "waiting",
+          "reason": "缺敏捷、毒、荆棘及未决弃牌的完整联合消费者实际结算，以及跨战留药对照；局部组件不覆盖九类经验整项。",
+          "commit": null,
+          "seen_runs": 356,
+          "batch": "code-proposals:silent-proposal-366288801d9150d9,silent-proposal-85929bdfc8a3fc1b,silent-proposal-efd9f83ee9e1a6dc,silent-proposal-131042659448ae74,silent-proposal-990f054036609447,silent-proposal-e18d3f18e6cac2a0,silent-proposal-9733bb80f445aeae,silent-proposal-c51468c5e8ba6668,silent-proposal-86a7db08d1a31976,silent-proposal-e282a9131b99129a:356"
+        }
+      },
+      {
+        "offset": 4595436,
+        "bytes": 670,
+        "sha256": "4016d97bb80ff14dbc70ab08c1718b1ccd5f245320b2577555cc4d429caa871c",
+        "row": {
+          "op": "update",
+          "id": "silent-proposal-990f054036609447",
+          "ts": "2026-10-18T08:59:01+08:00",
+          "state": "waiting",
+          "reason": "缺毛伤、回血与成长的完整归属、保持后继不变的整战胜线及独立验证；删输出而同零损不构成已证保血收益。",
+          "commit": null,
+          "seen_runs": 356,
+          "batch": "code-proposals:silent-proposal-366288801d9150d9,silent-proposal-85929bdfc8a3fc1b,silent-proposal-efd9f83ee9e1a6dc,silent-proposal-131042659448ae74,silent-proposal-990f054036609447,silent-proposal-e18d3f18e6cac2a0,silent-proposal-9733bb80f445aeae,silent-proposal-c51468c5e8ba6668,silent-proposal-86a7db08d1a31976,silent-proposal-e282a9131b99129a:356"
+        }
+      },
+      {
+        "offset": 4596106,
+        "bytes": 675,
+        "sha256": "dd8007502eb3469f2c2e9e50aa52655ec3f8362faac0ae0eb5e32f65e7f33433",
+        "row": {
+          "op": "update",
+          "id": "silent-proposal-e18d3f18e6cac2a0",
+          "ts": "2026-10-18T08:59:01+08:00",
+          "state": "waiting",
+          "reason": "缺改序后的受控整战、完整最终资源及提前饮药结果；直接归零占位HP会改变同轮排序，阶段说明不证明排序收益。",
+          "commit": null,
+          "seen_runs": 356,
+          "batch": "code-proposals:silent-proposal-366288801d9150d9,silent-proposal-85929bdfc8a3fc1b,silent-proposal-efd9f83ee9e1a6dc,silent-proposal-131042659448ae74,silent-proposal-990f054036609447,silent-proposal-e18d3f18e6cac2a0,silent-proposal-9733bb80f445aeae,silent-proposal-c51468c5e8ba6668,silent-proposal-86a7db08d1a31976,silent-proposal-e282a9131b99129a:356"
+        }
+      },
+      {
+        "offset": 4596781,
+        "bytes": 646,
+        "sha256": "946748547a1f7397730724b2f48704369536b5f46b1a8be229bb4c0f8e9cb490",
+        "row": {
+          "op": "update",
+          "id": "silent-proposal-9733bb80f445aeae",
+          "ts": "2026-10-18T08:59:01+08:00",
+          "state": "waiting",
+          "reason": "缺阶段改序、提前用药及路线的受控验证；现有阶段子实现与同源经验不能登记整项duplicate。",
+          "commit": null,
+          "seen_runs": 356,
+          "batch": "code-proposals:silent-proposal-366288801d9150d9,silent-proposal-85929bdfc8a3fc1b,silent-proposal-efd9f83ee9e1a6dc,silent-proposal-131042659448ae74,silent-proposal-990f054036609447,silent-proposal-e18d3f18e6cac2a0,silent-proposal-9733bb80f445aeae,silent-proposal-c51468c5e8ba6668,silent-proposal-86a7db08d1a31976,silent-proposal-e282a9131b99129a:356"
+        }
+      },
+      {
+        "offset": 4597427,
+        "bytes": 689,
+        "sha256": "ca5a38a929536bd4df5833eb0fff4dd9f015416053ed5d7e7119a03444916fa4",
+        "row": {
+          "op": "update",
+          "id": "silent-proposal-c51468c5e8ba6668",
+          "ts": "2026-10-18T08:59:01+08:00",
+          "state": "waiting",
+          "reason": "缺随机选牌、发光水重问后的完整候选收益归属，以及不饮用或留到Boss的完整分支；七次消耗不足拟合持有价值与跨战预算。",
+          "commit": null,
+          "seen_runs": 356,
+          "batch": "code-proposals:silent-proposal-366288801d9150d9,silent-proposal-85929bdfc8a3fc1b,silent-proposal-efd9f83ee9e1a6dc,silent-proposal-131042659448ae74,silent-proposal-990f054036609447,silent-proposal-e18d3f18e6cac2a0,silent-proposal-9733bb80f445aeae,silent-proposal-c51468c5e8ba6668,silent-proposal-86a7db08d1a31976,silent-proposal-e282a9131b99129a:356"
+        }
+      },
+      {
+        "offset": 4598116,
+        "bytes": 661,
+        "sha256": "e7d9b733e94a8325f18239e36d881bb331103b2a1a13162d629b4ddee99efe36",
+        "row": {
+          "op": "update",
+          "id": "silent-proposal-86a7db08d1a31976",
+          "ts": "2026-10-18T08:59:01+08:00",
+          "state": "waiting",
+          "reason": "缺能力建立后的完整后继、逐来源实际归属、同后轮整战对照及独立验证；不能拟统一6血/2伤准入阈值。",
+          "commit": null,
+          "seen_runs": 356,
+          "batch": "code-proposals:silent-proposal-366288801d9150d9,silent-proposal-85929bdfc8a3fc1b,silent-proposal-efd9f83ee9e1a6dc,silent-proposal-131042659448ae74,silent-proposal-990f054036609447,silent-proposal-e18d3f18e6cac2a0,silent-proposal-9733bb80f445aeae,silent-proposal-c51468c5e8ba6668,silent-proposal-86a7db08d1a31976,silent-proposal-e282a9131b99129a:356"
+        }
+      },
+      {
+        "offset": 4598777,
+        "bytes": 657,
+        "sha256": "41653b3cfb1502aa243d57a3c5573fcacf79b4a79df0812a7b05d3c3d87073a8",
+        "row": {
+          "op": "update",
+          "id": "silent-proposal-e282a9131b99129a",
+          "ts": "2026-10-18T08:59:01+08:00",
+          "state": "waiting",
+          "reason": "缺续问后完整执行归属、受控整战和后期独立验证；省血或未试线均不足直接关闭探索、改变HP护栏。",
+          "commit": null,
+          "seen_runs": 356,
+          "batch": "code-proposals:silent-proposal-366288801d9150d9,silent-proposal-85929bdfc8a3fc1b,silent-proposal-efd9f83ee9e1a6dc,silent-proposal-131042659448ae74,silent-proposal-990f054036609447,silent-proposal-e18d3f18e6cac2a0,silent-proposal-9733bb80f445aeae,silent-proposal-c51468c5e8ba6668,silent-proposal-86a7db08d1a31976,silent-proposal-e282a9131b99129a:356"
+        }
+      }
+    ],
+    "verified_source_rows": 8444,
+    "stream_counts": {
+      "states": 4167,
+      "decisions": 4071,
+      "sl-attempts": 43,
+      "run-config": 6,
+      "run-plans": 21,
+      "brain": 130,
+      "runs": 6,
+      "fight-plans": 0
+    },
+    "source_pins": 16,
+    "artifact_files": 95,
+    "production_tests_ran": false,
+    "offline_full_candidate_certified": 0
+  },
+  {
+    "batch": "20261018-084302",
+    "report": {
+      "task": "postmortem",
+      "appended": [
+        "9S9U3YSYEPK1"
+      ],
+      "skipped": [],
+      "bugs": [
+        {
+          "run": "9S9U3YSYEPK1",
+          "where": "agent/src/hand/screens/chest.ts:21",
+          "what": "宝箱领取标记与可用领取动作冲突，代码直接离开，开心小花未入实际遗物列表。",
+          "new": true
+        }
+      ],
+      "ledger": {
+        "added": [
+          "silent-0516"
+        ],
+        "updated": [
+          "silent-0020",
+          "silent-0407",
+          "silent-0262",
+          "silent-0410",
+          "silent-0011",
+          "silent-0005"
+        ],
+        "repeats": [],
+        "check": 0
+      },
+      "code_proposals": [
+        "silent-proposal-cf77920511042e9c",
+        "silent-proposal-99f14e823a866ad7"
+      ],
+      "implementation_domains": [
+        "structure",
+        "combat"
+      ],
+      "report": "/home/dw/Projects/agent-sts2/learner/runs/20261018-084309-b7bbd2c2-3349-4ebe-97b9-0b9dd8c0e1ee-postmortem/report.md"
+    },
+    "native": {
+      "batch": "20261018-084302",
+      "thread": "01a14c76-8b67-75c3-8767-3bde1bd2d9ef",
+      "cwd": "/home/dw/Projects/agent-sts2",
+      "event_log": "learner/runs/20261018-084309-b7bbd2c2-3349-4ebe-97b9-0b9dd8c0e1ee-postmortem.jsonl",
+      "registered_launch_batch": "20261018-084302",
+      "original_lease": "79866a20f78dc3d4fba3d58b0c0d0578f9c0398da4f3e8babefcd8a3ca9ff891",
+      "native_context": {
+        "source": "ops/codex-ops/accounts/codex3/learner/sessions/2026/10/18/rollout-2026-10-18T08-43-19-01a14c76-8b67-75c3-8767-3bde1bd2d9ef.jsonl",
+        "offset": 49292,
+        "bytes": 4654,
+        "sha256": "3baaab8d17988343cd7e0a3a5bf1b29e0d511e3f798a3aa2fe12dda1d7ceaa2c",
+        "model": "gpt-6.1-sol",
+        "effort": "xhigh",
+        "sandbox": {
+          "type": "workspace-write",
+          "writable_roots": [
+            "/home/dw/Projects/agent-sts2/.git"
+          ],
+          "network_access": false,
+          "exclude_tmpdir_env_var": false,
+          "exclude_slash_tmp": false
+        },
+        "approval_policy": "never"
+      },
+      "native_user_input": {
+        "offset": 56529,
+        "bytes": 15345,
+        "sha256": "11511c5023f51333e704cc6da7d5a92d92ed4c416decdfe8d666a2e7b7095a6a",
+        "input_sha256": "11ae6216b97297a1ab25f0b4234762d98f51389674e8d904cfd498d098271b88"
+      },
+      "original_header_events": [
+        {
+          "offset": 0,
+          "bytes": 16866,
+          "sha256": "f895342b4509db4b5bef59371b555e1ce6e7fca12aa5ac4ce10e6d9c09e8a90c",
+          "type": "learner_launch",
+          "attempt": null,
+          "code": null
+        },
+        {
+          "offset": 16866,
+          "bytes": 360,
+          "sha256": "1a271d5afb416b97cdfa363f098055e20c959ce22d8bfdffc404c60ad85ec204",
+          "type": "learner_startup_attempt",
+          "attempt": 1,
+          "code": null
+        },
+        {
+          "offset": 20239,
+          "bytes": 77,
+          "sha256": "c11fedee1d2dcdb4393787de7636f7c375beb3e1715b519d7c71f50bfd4c28ac",
+          "type": "thread.started",
+          "attempt": null,
+          "code": null
+        }
+      ],
+      "startup_attempts": 1,
+      "failed_startups_preserved": 0,
+      "no_model_or_manual_restart": true
+    },
+    "original_ledger_rows": [
+      {
+        "offset": 24267550,
+        "bytes": 2074,
+        "sha256": "27b89ed7a011d9ff2d6c5d983bf1268e3b4eaafc55e8b3f6eb8131835f907e15",
+        "row": {
+          "op": "add",
+          "id": "silent-0516",
+          "ts": "2026-10-18T09:00:50+08:00",
+          "by": "learner:postmortem",
+          "character": "silent",
+          "kind": "bug-infra",
+          "claim": "静默A10三局宝箱将has_relic_been_claimed报为true，同时仍有未持有的唯一遗物及choose_treasure_relic动作。planChest用该布尔值跳过选遗物，直接proceed；三局均未发领取指令，后续持有列表没有对应遗物。应核对矛盾接口与实际入包确认，不能静默当作已处理；未证明直接领取必成功或修后胜负。",
+          "first_run": "NRZAYVRMM7M0",
+          "prior": "no",
+          "prior_runs": [
+            "NRZAYVRMM7M0",
+            "KCA04Q3SEYTF"
+          ],
+          "prior_note": "登记前两局同为SILENT A10，F10均出现该矛盾，实际都直接proceed且未入包。按本角色已结束局全部状态流式筛查，首个同签名为NRZ；旧复盘与账本无同项定位。只评价矛盾状态处理，不评价所有正常宝箱。",
+          "status": "observed",
+          "where": {
+            "lessons": [
+              "9S9U3YSYEPK1"
+            ]
+          },
+          "evidence": [
+            {
+              "run": "NRZAYVRMM7M0",
+              "floor": 10,
+              "note": "states:443979→443980，2026-10-17T20:56:17.828Z→20:56:18.123Z：弹珠袋BAG_OF_MARBLES未持有、claimed=true且choose_treasure_relic可用；同期chest/proceed后MAP仍无。原字节引用见本任务chest-history.json及chest-prior-decision-refs.json。",
+              "role": "support"
+            },
+            {
+              "run": "KCA04Q3SEYTF",
+              "floor": 10,
+              "note": "states:444419→444420，2026-10-17T21:50:31.877Z→21:50:32.171Z：手里剑SHURIKEN同矛盾；chest/proceed后仍无。",
+              "role": "support"
+            },
+            {
+              "run": "9S9U3YSYEPK1",
+              "floor": 10,
+              "note": "本局d157／states:446116→446117，00:22:02.927Z→00:22:03.255Z：开心小花HAPPY_FLOWER同矛盾，直接proceed；后续战斗及末帧仍无。只读live 9d9f5adb的agent/src/hand/screens/chest.ts:21、:64定位，新bug，fix-queue两表未列。",
+              "role": "support"
+            }
+          ],
+          "note": "来源任务20261018-084309-b7bbd2c2-3349-4ebe-97b9-0b9dd8c0e1ee-postmortem；本次首次定位，first_run追溯更早同角色原帧，不改旧复盘；只登记观察与独立strategy-proposal，不声称上线。",
+          "asc": 10
+        }
+      },
+      {
+        "offset": 24269624,
+        "bytes": 599,
+        "sha256": "52d90c13642ff1db97b2b5d448c9e0d7c1b0088e63e0d5910ea7223fa3f96446",
+        "row": {
+          "op": "update",
+          "id": "silent-0020",
+          "ts": "2026-10-18T09:00:51+08:00",
+          "by": "learner:postmortem",
+          "evidence": [
+            {
+              "run": "9S9U3YSYEPK1",
+              "floor": 8,
+              "note": "F6双尾鼠胜42→12；F7潜水付7到5、取103金，F8休息实际+21到26；F9胜后23、F11胜后6、F12以6死。后两处营火未到，F5后金币未再消费；无不潜水/另一休息动作/路线的受控整战对照。",
+              "role": "support"
+            }
+          ],
+          "where": {
+            "lessons": [
+              "9S9U3YSYEPK1"
+            ]
+          },
+          "note": "本次仅追加本角色支持及复盘去处；保留claim/first_run/prior/status/version/effect，不因本局失败登记repeat。"
+        }
+      },
+      {
+        "offset": 24270223,
+        "bytes": 654,
+        "sha256": "d609238bc918629cc0d762e31bf5379fac1bb92b77675b8dc0761a46da95f8ed",
+        "row": {
+          "op": "update",
+          "id": "silent-0407",
+          "ts": "2026-10-18T09:00:51+08:00",
+          "by": "learner:postmortem",
+          "evidence": [
+            {
+              "run": "9S9U3YSYEPK1",
+              "floor": 12,
+              "turn": 2,
+              "note": "states:446154—446157：SMOGGY_POWER1下先打NOXIOUS_FUMES能力，再防御；余1能量的零费ANTICIPATE被SMOGGY_POWER明确禁止。T4一防御后其余技能同样不可打，Jev/代码已按限制执行；T5两敌虚弱后各6攻、6血0挡死，不登记repeat。",
+              "role": "support"
+            }
+          ],
+          "where": {
+            "lessons": [
+              "9S9U3YSYEPK1"
+            ]
+          },
+          "note": "本次仅追加本角色支持及复盘去处；保留claim/first_run/prior/status/version/effect，不因本局失败登记repeat。"
+        }
+      },
+      {
+        "offset": 24270877,
+        "bytes": 599,
+        "sha256": "e47d4dfdeed8111ce5010530888fc870d4211063e38d4e919dabd2aa6351e7db",
+        "row": {
+          "op": "update",
+          "id": "silent-0262",
+          "ts": "2026-10-18T09:00:52+08:00",
+          "by": "learner:postmortem",
+          "evidence": [
+            {
+              "run": "9S9U3YSYEPK1",
+              "floor": 11,
+              "turn": 5,
+              "note": "T3三蛞蝓无力量，T4剩两只有5力量、T5独体10力量，GLOMP无虚弱9→14→19；T5中和将19降14，脆弱防御3挡，实17→6损11。只核现成力量/攻击/防御，不拟完整饥饿触发规则。",
+              "role": "support"
+            }
+          ],
+          "where": {
+            "lessons": [
+              "9S9U3YSYEPK1"
+            ]
+          },
+          "note": "本次仅追加本角色支持及复盘去处；保留claim/first_run/prior/status/version/effect，不因本局失败登记repeat。"
+        }
+      },
+      {
+        "offset": 24271476,
+        "bytes": 615,
+        "sha256": "9f49edadf01fca9d4f26935b86a2516ed999fcf823f50b99f5484e69e0e20c7b",
+        "row": {
+          "op": "update",
+          "id": "silent-0410",
+          "ts": "2026-10-18T09:00:53+08:00",
+          "by": "learner:postmortem",
+          "evidence": [
+            {
+              "run": "9S9U3YSYEPK1",
+              "floor": 6,
+              "turn": 3,
+              "note": "呼援CALL_FOR_BACKUP_MOVE后的同类新增体：T3→T4新18/18，T4→T5新20/20，T7→T8新18/18；旧敌索引会重排。T7原候选28伤而净存活血池只少10含新增18，不把差额当单一伤害bug；整场42→12赢。",
+              "role": "support"
+            }
+          ],
+          "where": {
+            "lessons": [
+              "9S9U3YSYEPK1"
+            ]
+          },
+          "note": "本次仅追加本角色支持及复盘去处；保留claim/first_run/prior/status/version/effect，不因本局失败登记repeat。"
+        }
+      },
+      {
+        "offset": 24272091,
+        "bytes": 585,
+        "sha256": "6b87cbf4361db1e557c339b9725d4ac573645060dba07cb077d35a5117548edf",
+        "row": {
+          "op": "update",
+          "id": "silent-0011",
+          "ts": "2026-10-18T09:00:53+08:00",
+          "by": "learner:postmortem",
+          "evidence": [
+            {
+              "run": "9S9U3YSYEPK1",
+              "floor": 12,
+              "turn": 5,
+              "note": "T2建立NOXIOUS_FUMES_POWER2；活雾T3/T4/T5轮初毒2/3/4，前两次实结2和3。T5弹跳药瓶实加9至13毒，41→28实结13，合已结18毒仍未杀；不把末态12毒预支为已发生伤害。",
+              "role": "support"
+            }
+          ],
+          "where": {
+            "lessons": [
+              "9S9U3YSYEPK1"
+            ]
+          },
+          "note": "本次仅追加本角色支持及复盘去处；保留claim/first_run/prior/status/version/effect，不因本局失败登记repeat。"
+        }
+      },
+      {
+        "offset": 24272676,
+        "bytes": 648,
+        "sha256": "8d9ef531ddd2de0fa3007df9c2f7fcdfeaa042a246e5ba7d338ee44efb68f36e",
+        "row": {
+          "op": "update",
+          "id": "silent-0005",
+          "ts": "2026-10-18T09:00:54+08:00",
+          "by": "learner:postmortem",
+          "evidence": [
+            {
+              "run": "9S9U3YSYEPK1",
+              "floor": 6,
+              "turn": 1,
+              "note": "本局ANTICIPATE临时2敏后两防御各7合14，比普通5+5多4，实对16损2；T6脆弱下预判后扫腿9+生存者7=16挡，虚弱后总攻20仍损4。只补敏捷对多挡牌现成加值，临时敏捷不当永久能力，不把旧预判模型bug认作重犯。",
+              "role": "support"
+            }
+          ],
+          "where": {
+            "lessons": [
+              "9S9U3YSYEPK1"
+            ]
+          },
+          "note": "本次仅追加本角色支持及复盘去处；保留claim/first_run/prior/status/version/effect，不因本局失败登记repeat。"
+        }
+      },
+      {
+        "offset": 24273324,
+        "bytes": 367,
+        "sha256": "91d912428d2e0b4b6366865a5eb105dd40260db032400098765361c2c89fc3f5",
+        "row": {
+          "op": "update",
+          "id": "silent-0516",
+          "ts": "2026-10-18T09:02:32+08:00",
+          "by": "learner:postmortem",
+          "where": {
+            "proposal": [
+              "/home/dw/Projects/agent-sts2/learner/runs/20261018-084309-b7bbd2c2-3349-4ebe-97b9-0b9dd8c0e1ee-postmortem/proposal-structure.md"
+            ]
+          },
+          "note": "代码提案 silent-proposal-cf77920511042e9c → task=strategy-proposal；Roy-2026-10-07-learning"
+        }
+      },
+      {
+        "offset": 24274961,
+        "bytes": 364,
+        "sha256": "e2552225df6cf92383774ca914cbdf8ceb8216be360e6532ea158672369109cd",
+        "row": {
+          "op": "update",
+          "id": "silent-0020",
+          "ts": "2026-10-18T09:03:21+08:00",
+          "by": "learner:postmortem",
+          "where": {
+            "proposal": [
+              "/home/dw/Projects/agent-sts2/learner/runs/20261018-084309-b7bbd2c2-3349-4ebe-97b9-0b9dd8c0e1ee-postmortem/proposal-combat.md"
+            ]
+          },
+          "note": "代码提案 silent-proposal-99f14e823a866ad7 → task=strategy-proposal；Roy-2026-10-07-learning"
+        }
+      },
+      {
+        "offset": 24275325,
+        "bytes": 364,
+        "sha256": "433b1f1da6925b40685f29a91068d75b5f0931e3a31cd3dba1ae77c24d436a6f",
+        "row": {
+          "op": "update",
+          "id": "silent-0407",
+          "ts": "2026-10-18T09:03:21+08:00",
+          "by": "learner:postmortem",
+          "where": {
+            "proposal": [
+              "/home/dw/Projects/agent-sts2/learner/runs/20261018-084309-b7bbd2c2-3349-4ebe-97b9-0b9dd8c0e1ee-postmortem/proposal-combat.md"
+            ]
+          },
+          "note": "代码提案 silent-proposal-99f14e823a866ad7 → task=strategy-proposal；Roy-2026-10-07-learning"
+        }
+      },
+      {
+        "offset": 24275689,
+        "bytes": 364,
+        "sha256": "8b877038f3d54ec927b8c67f609348f68798f697df5c7d0e116416cf8a7fdafb",
+        "row": {
+          "op": "update",
+          "id": "silent-0262",
+          "ts": "2026-10-18T09:03:21+08:00",
+          "by": "learner:postmortem",
+          "where": {
+            "proposal": [
+              "/home/dw/Projects/agent-sts2/learner/runs/20261018-084309-b7bbd2c2-3349-4ebe-97b9-0b9dd8c0e1ee-postmortem/proposal-combat.md"
+            ]
+          },
+          "note": "代码提案 silent-proposal-99f14e823a866ad7 → task=strategy-proposal；Roy-2026-10-07-learning"
+        }
+      },
+      {
+        "offset": 24276053,
+        "bytes": 364,
+        "sha256": "d8e7562c1ef4b934d3905c482b8a5b8d3bab820d4500b95c728960e5819b9f21",
+        "row": {
+          "op": "update",
+          "id": "silent-0410",
+          "ts": "2026-10-18T09:03:21+08:00",
+          "by": "learner:postmortem",
+          "where": {
+            "proposal": [
+              "/home/dw/Projects/agent-sts2/learner/runs/20261018-084309-b7bbd2c2-3349-4ebe-97b9-0b9dd8c0e1ee-postmortem/proposal-combat.md"
+            ]
+          },
+          "note": "代码提案 silent-proposal-99f14e823a866ad7 → task=strategy-proposal；Roy-2026-10-07-learning"
+        }
+      },
+      {
+        "offset": 24276417,
+        "bytes": 364,
+        "sha256": "1ca0075fbe74f8572e6a9c1bcae7dece708d5ebb56509180b446e0a76830732f",
+        "row": {
+          "op": "update",
+          "id": "silent-0011",
+          "ts": "2026-10-18T09:03:21+08:00",
+          "by": "learner:postmortem",
+          "where": {
+            "proposal": [
+              "/home/dw/Projects/agent-sts2/learner/runs/20261018-084309-b7bbd2c2-3349-4ebe-97b9-0b9dd8c0e1ee-postmortem/proposal-combat.md"
+            ]
+          },
+          "note": "代码提案 silent-proposal-99f14e823a866ad7 → task=strategy-proposal；Roy-2026-10-07-learning"
+        }
+      },
+      {
+        "offset": 24276781,
+        "bytes": 364,
+        "sha256": "b2a5b8bfd01203ddd6ab27e013145f24afbaea63e516c43546d62b21841090fd",
+        "row": {
+          "op": "update",
+          "id": "silent-0005",
+          "ts": "2026-10-18T09:03:21+08:00",
+          "by": "learner:postmortem",
+          "where": {
+            "proposal": [
+              "/home/dw/Projects/agent-sts2/learner/runs/20261018-084309-b7bbd2c2-3349-4ebe-97b9-0b9dd8c0e1ee-postmortem/proposal-combat.md"
+            ]
+          },
+          "note": "代码提案 silent-proposal-99f14e823a866ad7 → task=strategy-proposal；Roy-2026-10-07-learning"
+        }
+      }
+    ],
+    "original_queue_rows": [
+      {
+        "offset": 4599434,
+        "bytes": 727,
+        "sha256": "302ffe9dee92e5c505185fb6bee3c912b88a645b0c7db169d4815b3f956509ac",
+        "row": {
+          "op": "add",
+          "id": "silent-proposal-cf77920511042e9c",
+          "ts": "2026-10-18T09:02:32+08:00",
+          "character": "silent",
+          "ledger": [
+            "silent-0516"
+          ],
+          "runs": [
+            "NRZAYVRMM7M0",
+            "KCA04Q3SEYTF",
+            "9S9U3YSYEPK1"
+          ],
+          "source_task": "postmortem",
+          "target_task": "strategy-proposal",
+          "domains": [
+            "structure"
+          ],
+          "summary": "核对宝箱claimed标记、仍可领取动作与实际持有矛盾，修复直接proceed且不确认遗物的接口路径；三局首证追溯NRZ。",
+          "proposal": "/home/dw/Projects/agent-sts2/learner/runs/20261018-084309-b7bbd2c2-3349-4ebe-97b9-0b9dd8c0e1ee-postmortem/proposal-structure.md",
+          "rule_changes": false,
+          "proposal_sha256": "fba7a916fa31378914ec80b4924d568238a07eb26666dd6a429c2774b46194ed",
+          "state": "pending"
+        }
+      },
+      {
+        "offset": 4600161,
+        "bytes": 793,
+        "sha256": "ff0ed3d6d9368585f239b3af569be615b3d0c99bd02b8f839e43fc7a6a2d2871",
+        "row": {
+          "op": "add",
+          "id": "silent-proposal-99f14e823a866ad7",
+          "ts": "2026-10-18T09:03:21+08:00",
+          "character": "silent",
+          "ledger": [
+            "silent-0020",
+            "silent-0407",
+            "silent-0262",
+            "silent-0410",
+            "silent-0011",
+            "silent-0005"
+          ],
+          "runs": [
+            "9S9U3YSYEPK1"
+          ],
+          "source_task": "postmortem",
+          "target_task": "strategy-proposal",
+          "domains": [
+            "combat"
+          ],
+          "summary": "以本局固定帧核召唤新增体、力量与烟雾技能限额、条件选线和实际后继；即时值多处兑现，单局T4预测8/8后T5死亡不足改排序或药价。",
+          "proposal": "/home/dw/Projects/agent-sts2/learner/runs/20261018-084309-b7bbd2c2-3349-4ebe-97b9-0b9dd8c0e1ee-postmortem/proposal-combat.md",
+          "rule_changes": false,
+          "proposal_sha256": "e43787a9be592449e25b93fa9710f8edf9083b90ad48026d4a9a0638ddc7b672",
+          "state": "pending"
+        }
+      }
+    ],
+    "verified_source_rows": 449,
+    "stream_counts": {
+      "decisions": 207,
+      "states": 214,
+      "run-plans": 3,
+      "run-config": 1,
+      "sl-attempts": 0,
+      "fight-plans": 0,
+      "runs": 1,
+      "brain": 11,
+      "deepseek-reasoning": 0,
+      "codex-calls": 12
+    },
+    "original_byte_refs": [
+      {
+        "stream": "decisions",
+        "offset": 2465047412,
+        "bytes": 113563,
+        "sha256": "bc99435a755c511988758125b7ba07bf305d57982cad93ee5d96aa3db0821537",
+        "ts": "2026-10-18T00:09:03.882Z"
+      },
+      {
+        "stream": "decisions",
+        "offset": 2465160975,
+        "bytes": 2038,
+        "sha256": "6941fa417d10495e1613c824080ec173c68855377e2d2da0c133fec0baeb0188",
+        "ts": "2026-10-18T00:09:57.601Z"
+      },
+      {
+        "stream": "decisions",
+        "offset": 2465163013,
+        "bytes": 14027,
+        "sha256": "b9e49238c8bf201f46cdec760037ec7deff956aa2a294b3e2ef2875ebe68455d",
+        "ts": "2026-10-18T00:10:23.147Z"
+      },
+      {
+        "stream": "decisions",
+        "offset": 2465177040,
+        "bytes": 34205,
+        "sha256": "e69754d0c5d46436910fe9143d1285429ca9142e021c83982b52d635cb31eeb6",
+        "ts": "2026-10-18T00:10:28.257Z"
+      },
+      {
+        "stream": "decisions",
+        "offset": 2465211245,
+        "bytes": 18913,
+        "sha256": "9e75e34de9fe72735b8bfe51744cd7acf0356dbeb84671f2744bc72bfa06e3b9",
+        "ts": "2026-10-18T00:10:29.876Z"
+      },
+      {
+        "stream": "decisions",
+        "offset": 2465230158,
+        "bytes": 1892,
+        "sha256": "d6704ce43707c90f4b5174e9da0faef1dcd31dc5f15962b0f022b9cc7e16389e",
+        "ts": "2026-10-18T00:10:30.937Z"
+      },
+      {
+        "stream": "decisions",
+        "offset": 2465232050,
+        "bytes": 1816,
+        "sha256": "70db5f1a5cada97a459a67b3b52596b02fbb39b98619d30e1da6eacd8e3d9828",
+        "ts": "2026-10-18T00:10:31.858Z"
+      },
+      {
+        "stream": "decisions",
+        "offset": 2465233866,
+        "bytes": 6081,
+        "sha256": "966831a1e81c3c1b6bfac2aa6b6880e95d8b01703ace4a45971aa304e0192631",
+        "ts": "2026-10-18T00:10:32.994Z"
+      },
+      {
+        "stream": "decisions",
+        "offset": 2465239947,
+        "bytes": 1579,
+        "sha256": "097171fa23b70fc533cda1e53e7d9c317cb1cfee28f1bb26bc820e9086cb5d0f",
+        "ts": "2026-10-18T00:10:33.538Z"
+      },
+      {
+        "stream": "decisions",
+        "offset": 2465241526,
+        "bytes": 14023,
+        "sha256": "168e603d8932d0f2916599a4376165db264f02298f8e90e7ac604149a48cbd6e",
+        "ts": "2026-10-18T00:10:39.493Z"
+      },
+      {
+        "stream": "decisions",
+        "offset": 2465255549,
+        "bytes": 1870,
+        "sha256": "ac04e7b9f260305d9cd60da2f3898acf9a0a8f6020453efb54169de7cd6af2d0",
+        "ts": "2026-10-18T00:10:40.333Z"
+      },
+      {
+        "stream": "decisions",
+        "offset": 2465257419,
+        "bytes": 1834,
+        "sha256": "78d42e81ad33c3afea472191c6a544fb8f03e4efae2e6654ee1e1740a846b08c",
+        "ts": "2026-10-18T00:10:41.383Z"
+      },
+      {
+        "stream": "decisions",
+        "offset": 2465259253,
+        "bytes": 1567,
+        "sha256": "145c37545cdc20496989893cc9e622776813daccda9ac2cc9178ccfbffef1814",
+        "ts": "2026-10-18T00:10:42.400Z"
+      },
+      {
+        "stream": "decisions",
+        "offset": 2465260820,
+        "bytes": 31368,
+        "sha256": "508a22f81043e9f53956be06176a15ff48c104d7f19b327f0b4b8ad0b6213e67",
+        "ts": "2026-10-18T00:10:47.974Z"
+      },
+      {
+        "stream": "decisions",
+        "offset": 2465292188,
+        "bytes": 8440,
+        "sha256": "c6aa7092627244c32ff78e639cd477377515bc4f69d2da45e7ad44568c7da438",
+        "ts": "2026-10-18T00:10:49.172Z"
+      },
+      {
+        "stream": "decisions",
+        "offset": 2465300628,
+        "bytes": 14473,
+        "sha256": "da67f8a4732d3d57bb0163156a345274156ab9424ec3592800e8562e90757085",
+        "ts": "2026-10-18T00:10:50.034Z"
+      },
+      {
+        "stream": "decisions",
+        "offset": 2465315101,
+        "bytes": 1910,
+        "sha256": "805a2706d5ddc01d809107fd88238a8a90bb2287588be37cdaedb51c58b455ca",
+        "ts": "2026-10-18T00:10:54.866Z"
+      },
+      {
+        "stream": "decisions",
+        "offset": 2465317011,
+        "bytes": 1756,
+        "sha256": "1b1a2de61940367faaaed21ec6540df2671553e692f37e2113d5897319ac3771",
+        "ts": "2026-10-18T00:10:55.701Z"
+      },
+      {
+        "stream": "decisions",
+        "offset": 2465318767,
+        "bytes": 1796,
+        "sha256": "7f4caeb18f00e3240ecf0c830ae33656130a6d842e201735d8fec48fbb259a2d",
+        "ts": "2026-10-18T00:10:56.532Z"
+      },
+      {
+        "stream": "decisions",
+        "offset": 2465320563,
+        "bytes": 1770,
+        "sha256": "0c9bdefe0ebe9299aa17e8348dde9fe4012c8289d8398fc91d55ef5203166e11",
+        "ts": "2026-10-18T00:10:57.533Z"
+      },
+      {
+        "stream": "decisions",
+        "offset": 2465322333,
+        "bytes": 1544,
+        "sha256": "cf37f5b0fd05be702d9e2cc0dfdb6fd890387917c0d6e2f7f224e893a225e5a3",
+        "ts": "2026-10-18T00:10:58.435Z"
+      },
+      {
+        "stream": "decisions",
+        "offset": 2465323877,
+        "bytes": 1846,
+        "sha256": "a461002a0e58f856d7c23c7928687ffc0b62e45695cc18c8d3f4da419385bdd4",
+        "ts": "2026-10-18T00:11:03.671Z"
+      },
+      {
+        "stream": "decisions",
+        "offset": 2465325723,
+        "bytes": 1827,
+        "sha256": "2b0b795e514a7429f2207e7aad1c6fc19e6d9741d2f3bb1c0f163fafac8b06c4",
+        "ts": "2026-10-18T00:11:04.569Z"
+      },
+      {
+        "stream": "decisions",
+        "offset": 2465327550,
+        "bytes": 2034,
+        "sha256": "ece578f5f46eca9b4643379aad2e5b3f927466d5f129eca69ff3b0d4a57668b9",
+        "ts": "2026-10-18T00:11:05.335Z"
+      },
+      {
+        "stream": "decisions",
+        "offset": 2465329584,
+        "bytes": 2049,
+        "sha256": "435c7e87da32441243f3b61d1a553191529c9c85c95621681bb3ffec3b19a4df",
+        "ts": "2026-10-18T00:11:05.562Z"
+      },
+      {
+        "stream": "decisions",
+        "offset": 2465331633,
+        "bytes": 2142,
+        "sha256": "1ca2bbe2b5c56ffa3f2f78736f9a4ed0b77ff27f3eb0a0aecc09c1d0e4c56063",
+        "ts": "2026-10-18T00:11:05.761Z"
+      },
+      {
+        "stream": "decisions",
+        "offset": 2465333775,
+        "bytes": 200897,
+        "sha256": "06317501e845173e09d87f394ee2cd62c0d1e5110ebd2c1a72081a88873baff3",
+        "ts": "2026-10-18T00:11:35.184Z"
+      },
+      {
+        "stream": "decisions",
+        "offset": 2465534672,
+        "bytes": 2046,
+        "sha256": "d83f8749e7284db001a62b8d6145dab9ddd2f45c51d3a5f4860c5ffec0bdeff2",
+        "ts": "2026-10-18T00:11:35.930Z"
+      },
+      {
+        "stream": "decisions",
+        "offset": 2465536718,
+        "bytes": 2672,
+        "sha256": "6f9e3c6f777ee64287487dff0bd7f4681edf706770833d8d8d8cf11e42d2a5f0",
+        "ts": "2026-10-18T00:11:36.206Z"
+      },
+      {
+        "stream": "decisions",
+        "offset": 2465539390,
+        "bytes": 37877,
+        "sha256": "6e87b4a7c192d98b87f0b66a014efb54ebd3f1ad386812999b2e5cc36c719a27",
+        "ts": "2026-10-18T00:11:41.993Z"
+      },
+      {
+        "stream": "decisions",
+        "offset": 2465577267,
+        "bytes": 26999,
+        "sha256": "1b938d3b686d1c1e009f8fee42a6f9273bbad9b09b161655270f4adac5f816c4",
+        "ts": "2026-10-18T00:11:44.839Z"
+      },
+      {
+        "stream": "decisions",
+        "offset": 2465604266,
+        "bytes": 1755,
+        "sha256": "2008d96ee326ae021cc62ae942d1fba67f39c73e560b14da8cd9f5dcc1fda762",
+        "ts": "2026-10-18T00:11:45.798Z"
+      },
+      {
+        "stream": "decisions",
+        "offset": 2465606021,
+        "bytes": 23878,
+        "sha256": "7386285e4b5256a7d82972a4188a0bcd7370609cde4e83fdce627bbfb016a478",
+        "ts": "2026-10-18T00:11:47.299Z"
+      },
+      {
+        "stream": "decisions",
+        "offset": 2465629899,
+        "bytes": 1874,
+        "sha256": "df0b1fa7f46cc8bae5ea9a41fdf813dee2c896105e24e3202c58356826a0346c",
+        "ts": "2026-10-18T00:11:48.142Z"
+      },
+      {
+        "stream": "decisions",
+        "offset": 2465631773,
+        "bytes": 1859,
+        "sha256": "4eb7d6bb9afc4cef3bab18474a437391f6f93ab3b1d968afc2392d184b26305a",
+        "ts": "2026-10-18T00:11:48.982Z"
+      },
+      {
+        "stream": "decisions",
+        "offset": 2465633632,
+        "bytes": 1625,
+        "sha256": "742dc5a53ccadd6c26f97acb9dc3c58b64f753223eb31962299883c991bb4fd9",
+        "ts": "2026-10-18T00:11:50.036Z"
+      },
+      {
+        "stream": "decisions",
+        "offset": 2465635257,
+        "bytes": 15413,
+        "sha256": "72b66d1254207e4ce98d41f50afe531a5c45baefb80b88e90f4b3ed60c18accd",
+        "ts": "2026-10-18T00:11:56.010Z"
+      },
+      {
+        "stream": "decisions",
+        "offset": 2465650670,
+        "bytes": 1872,
+        "sha256": "2ae5404d55a359627ad6ca44f42941f847d61d908a4fd3a79cc6db7016cd57bb",
+        "ts": "2026-10-18T00:11:56.907Z"
+      },
+      {
+        "stream": "decisions",
+        "offset": 2465652542,
+        "bytes": 1835,
+        "sha256": "87274370f847acb44847fc64147dac83e9b4078c53c403e9395dca700c89d9cd",
+        "ts": "2026-10-18T00:11:57.922Z"
+      },
+      {
+        "stream": "decisions",
+        "offset": 2465654377,
+        "bytes": 1590,
+        "sha256": "931d1dc722ced055d47b0e219d7c3d9efb17748c136ff6526240913c2c6814b1",
+        "ts": "2026-10-18T00:11:58.989Z"
+      },
+      {
+        "stream": "decisions",
+        "offset": 2465655967,
+        "bytes": 40491,
+        "sha256": "628b87162b675a694ea55c05c2a4184114eadda4b5ca6262d95e397dc19ed6e6",
+        "ts": "2026-10-18T00:12:06.374Z"
+      },
+      {
+        "stream": "decisions",
+        "offset": 2465696458,
+        "bytes": 1877,
+        "sha256": "bc1a320748e961044ddf7e4a7ab3877cd82e13360e182b51ac35cb850a00925b",
+        "ts": "2026-10-18T00:12:07.269Z"
+      },
+      {
+        "stream": "decisions",
+        "offset": 2465698335,
+        "bytes": 1625,
+        "sha256": "23168cf0c2fdd13905c909cea89075bf7f7e6d4f75ff32532d02946ece20aaff",
+        "ts": "2026-10-18T00:12:08.557Z"
+      },
+      {
+        "stream": "decisions",
+        "offset": 2465699960,
+        "bytes": 1867,
+        "sha256": "e32640eaefefc04beb1b3e7f9a135492e2ebd2de1617599fca3b5c346715c77a",
+        "ts": "2026-10-18T00:12:13.389Z"
+      },
+      {
+        "stream": "decisions",
+        "offset": 2465701827,
+        "bytes": 1857,
+        "sha256": "2125c3f03ac188715c1cd11e1b1a30ad4a57636945f319de818688ffbaf39262",
+        "ts": "2026-10-18T00:12:14.306Z"
+      },
+      {
+        "stream": "decisions",
+        "offset": 2465703684,
+        "bytes": 2031,
+        "sha256": "543b78de76c4219315d63b198d4f2065148cf71bd8d8b588c09072955a9bb19c",
+        "ts": "2026-10-18T00:12:15.450Z"
+      },
+      {
+        "stream": "decisions",
+        "offset": 2465705715,
+        "bytes": 2113,
+        "sha256": "f27d5336f86a0cd6c5b165214e7a79ac97adf1bd960581eb22aa17c5379602b5",
+        "ts": "2026-10-18T00:12:15.650Z"
+      },
+      {
+        "stream": "decisions",
+        "offset": 2465707828,
+        "bytes": 205161,
+        "sha256": "3d06e58e034bbaf5ca60ec355b26fec849de207d8ef496824eb40cea0bbbdf33",
+        "ts": "2026-10-18T00:12:36.959Z"
+      },
+      {
+        "stream": "decisions",
+        "offset": 2465912989,
+        "bytes": 2016,
+        "sha256": "940940751e73e2782df9850f4d2b49f8950ed725938f05cf2663f7de7669fb6e",
+        "ts": "2026-10-18T00:12:37.616Z"
+      },
+      {
+        "stream": "decisions",
+        "offset": 2465915005,
+        "bytes": 2608,
+        "sha256": "5e329855df889d991fd18380bfee370f9d37badcd532a8126f17c2565a6f3614",
+        "ts": "2026-10-18T00:12:37.866Z"
+      },
+      {
+        "stream": "decisions",
+        "offset": 2465917613,
+        "bytes": 1915,
+        "sha256": "b32d6971d78ac69f80cc144f7e4d69f044ec049ba0e6124196e0ba9ce169db4c",
+        "ts": "2026-10-18T00:12:41.740Z"
+      },
+      {
+        "stream": "decisions",
+        "offset": 2465919528,
+        "bytes": 1678,
+        "sha256": "84b67dc1829f4d908521c3813a85d5b3be1fbcfc9cfff890b71e230f85b9d41a",
+        "ts": "2026-10-18T00:12:42.798Z"
+      },
+      {
+        "stream": "decisions",
+        "offset": 2465921206,
+        "bytes": 2051,
+        "sha256": "ba766c8960baa6390489473287b0293e23d30cebcda645d3ebe2706906d2a220",
+        "ts": "2026-10-18T00:12:47.258Z"
+      },
+      {
+        "stream": "decisions",
+        "offset": 2465923257,
+        "bytes": 1867,
+        "sha256": "4045d121d34cd794467cb02c19f290fa265a177710321be46a54e52589731f53",
+        "ts": "2026-10-18T00:12:48.141Z"
+      },
+      {
+        "stream": "decisions",
+        "offset": 2465925124,
+        "bytes": 1823,
+        "sha256": "af777cbeb33fc9a663fa7590287bd86f8f6dfb50d0fc349c41c1fe45d16fb6fd",
+        "ts": "2026-10-18T00:12:49.175Z"
+      },
+      {
+        "stream": "decisions",
+        "offset": 2465926947,
+        "bytes": 1786,
+        "sha256": "4b75cf9e30e51bd3914cff406b79cce0bff23ace2b57d057eebd069fb03924ab",
+        "ts": "2026-10-18T00:12:50.075Z"
+      },
+      {
+        "stream": "decisions",
+        "offset": 2465928733,
+        "bytes": 1556,
+        "sha256": "3a1c0da5c3a6e73047aa0bd19306aa41da1ced3582ded53862a17138632e6b3b",
+        "ts": "2026-10-18T00:12:51.107Z"
+      },
+      {
+        "stream": "decisions",
+        "offset": 2465930289,
+        "bytes": 23491,
+        "sha256": "8db879eda6bee4c962ad0d759a2d4ad493f570c63a9f7d28d3c50661ca0864f4",
+        "ts": "2026-10-18T00:12:57.467Z"
+      },
+      {
+        "stream": "decisions",
+        "offset": 2465953780,
+        "bytes": 13492,
+        "sha256": "f25d5e33733d54bf08ed56018909754ff919a936daf611580f9c54ebadaf5859",
+        "ts": "2026-10-18T00:12:58.895Z"
+      },
+      {
+        "stream": "decisions",
+        "offset": 2465967272,
+        "bytes": 1729,
+        "sha256": "81c68918998cc7722d8bae22c3f0330ac6f0c0b459f8adf4d01111d77c428a79",
+        "ts": "2026-10-18T00:12:59.774Z"
+      },
+      {
+        "stream": "decisions",
+        "offset": 2465969001,
+        "bytes": 1774,
+        "sha256": "7867ec26ec1ee6f894ee497613140543bd43c04ff762337cdfa53d7f34cc5908",
+        "ts": "2026-10-18T00:13:00.606Z"
+      },
+      {
+        "stream": "decisions",
+        "offset": 2465970775,
+        "bytes": 1545,
+        "sha256": "afcf5168218aebc6c953674a5cc66d140f0899b4b9507ec22ec1a152c61f395f",
+        "ts": "2026-10-18T00:13:01.640Z"
+      },
+      {
+        "stream": "decisions",
+        "offset": 2465972320,
+        "bytes": 1865,
+        "sha256": "31519abc4826d91e164584417de676be9a795950768a6c2bf1fd7a292fdd6f92",
+        "ts": "2026-10-18T00:13:06.073Z"
+      },
+      {
+        "stream": "decisions",
+        "offset": 2465974185,
+        "bytes": 1855,
+        "sha256": "257329603046defdcbafbdd722490608678c84931cd7141cca569918ec01a284",
+        "ts": "2026-10-18T00:13:07.011Z"
+      },
+      {
+        "stream": "decisions",
+        "offset": 2465976040,
+        "bytes": 2029,
+        "sha256": "dff18b52969f23e9eddd3aa5a5d1c4779afeb0096d99e6d80a8e87e588ff9d16",
+        "ts": "2026-10-18T00:13:08.204Z"
+      },
+      {
+        "stream": "decisions",
+        "offset": 2465978069,
+        "bytes": 2112,
+        "sha256": "f8a833c6af61804e5becbdfa4c24178cc22cf8e97536892766f2e99cbacf9054",
+        "ts": "2026-10-18T00:13:08.472Z"
+      },
+      {
+        "stream": "decisions",
+        "offset": 2465980181,
+        "bytes": 220296,
+        "sha256": "18cd3b96b02e48e4284b99c4a8b5b32794d45700f2780ac4c4b99885dd51ce10",
+        "ts": "2026-10-18T00:14:00.797Z"
+      },
+      {
+        "stream": "decisions",
+        "offset": 2466200477,
+        "bytes": 2016,
+        "sha256": "06f7ef8719648db2d94afde87fb4e89d5d9ee7bed31bd828d455c5529d1c6d64",
+        "ts": "2026-10-18T00:14:01.607Z"
+      },
+      {
+        "stream": "decisions",
+        "offset": 2466202493,
+        "bytes": 2595,
+        "sha256": "540fa5909df96a401f94fb14f97c28fc90b7aa0d8ab5a07a8a01dc53bae87862",
+        "ts": "2026-10-18T00:14:01.901Z"
+      },
+      {
+        "stream": "decisions",
+        "offset": 2466205088,
+        "bytes": 2012,
+        "sha256": "14c29b1340ec010c6a719bffc5f281f19896334dbd5a2a8cfdcd4299fd5ddc8c",
+        "ts": "2026-10-18T00:14:03.378Z"
+      },
+      {
+        "stream": "decisions",
+        "offset": 2466207100,
+        "bytes": 614557,
+        "sha256": "36b4f1e4567e0ed9a01cd72713c0ff88f04d74771c0d7d82fc7e3df55c61b6f5",
+        "ts": "2026-10-18T00:15:25.794Z"
+      },
+      {
+        "stream": "decisions",
+        "offset": 2466821657,
+        "bytes": 2275,
+        "sha256": "8e4031569c840f4f70eea7472811934920807c9981641704cb10590c6f5f868d",
+        "ts": "2026-10-18T00:15:26.061Z"
+      },
+      {
+        "stream": "decisions",
+        "offset": 2466823932,
+        "bytes": 2150,
+        "sha256": "0c84ec5da3501b01d4373907e8cc91cc7b60fe7cc441fd5841beebd991b9e87f",
+        "ts": "2026-10-18T00:15:26.299Z"
+      },
+      {
+        "stream": "decisions",
+        "offset": 2466826082,
+        "bytes": 1985,
+        "sha256": "7121ca684a2beacfac3c8777ef82c98a1e1eeaf8a4485a0ae88b30bf1f49cc5e",
+        "ts": "2026-10-18T00:15:26.553Z"
+      },
+      {
+        "stream": "decisions",
+        "offset": 2466828067,
+        "bytes": 2611,
+        "sha256": "5ecf05698336a22e99e67d3cfa71b0edee4caf9d26a81ee61eff56cba5d40c7b",
+        "ts": "2026-10-18T00:15:26.807Z"
+      },
+      {
+        "stream": "decisions",
+        "offset": 2466830678,
+        "bytes": 25154,
+        "sha256": "afeb78ff690fd7a3b0c531e28b679b507734ce37916daa987243b5ae61bd3fff",
+        "ts": "2026-10-18T00:15:33.054Z"
+      },
+      {
+        "stream": "decisions",
+        "offset": 2466855832,
+        "bytes": 1891,
+        "sha256": "bdef5363c0947c7f352d711d87984d6ad0ebea22540702140af167e03227e608",
+        "ts": "2026-10-18T00:15:33.963Z"
+      },
+      {
+        "stream": "decisions",
+        "offset": 2466857723,
+        "bytes": 1901,
+        "sha256": "7c8e6a52c136ea24bde905b6fc6e039b11bdab75aa10942a5c1021de378aa5b0",
+        "ts": "2026-10-18T00:15:35.026Z"
+      },
+      {
+        "stream": "decisions",
+        "offset": 2466859624,
+        "bytes": 1866,
+        "sha256": "9e092562dbc410bd78b32807e8fc1ed3657093c6511a9c495afb9ceab90f5950",
+        "ts": "2026-10-18T00:15:35.863Z"
+      },
+      {
+        "stream": "decisions",
+        "offset": 2466861490,
+        "bytes": 1651,
+        "sha256": "724d3fe4a40d773304c9d562ea837dd9d5a0705ff99cefa34dbe423c3a8fad85",
+        "ts": "2026-10-18T00:15:36.706Z"
+      },
+      {
+        "stream": "decisions",
+        "offset": 2466863141,
+        "bytes": 26482,
+        "sha256": "a167d08854b197afba2d8f0acdd60449c9c05c6ff145e32e0ba97a3070ae20a6",
+        "ts": "2026-10-18T00:15:45.403Z"
+      },
+      {
+        "stream": "decisions",
+        "offset": 2466889623,
+        "bytes": 1834,
+        "sha256": "d78ce4e064cbe080810b5cab35b1e52cf52a796c34d1e0172fb99d0973ad76de",
+        "ts": "2026-10-18T00:15:46.467Z"
+      },
+      {
+        "stream": "decisions",
+        "offset": 2466891457,
+        "bytes": 1623,
+        "sha256": "69da8a11e7fd98d8016f520ede898fc08b0c88c9235d30947ebfd2912cb8c5c1",
+        "ts": "2026-10-18T00:15:47.332Z"
+      },
+      {
+        "stream": "decisions",
+        "offset": 2466893080,
+        "bytes": 58519,
+        "sha256": "c020a0c4e4d30b9b6db9c0272dc151bbd4247b2da544e603b72b0ce7f931f743",
+        "ts": "2026-10-18T00:15:55.704Z"
+      },
+      {
+        "stream": "decisions",
+        "offset": 2466951599,
+        "bytes": 1980,
+        "sha256": "74f1c8406f9b4be71400ad93d5d490ac5c1fbb04cb9ace469246adc6f3aaf201",
+        "ts": "2026-10-18T00:15:56.765Z"
+      },
+      {
+        "stream": "decisions",
+        "offset": 2466953579,
+        "bytes": 1595,
+        "sha256": "66e2ee338623c5c3d23eef644cc99caead878a8a45803af29711aa6da84c25cf",
+        "ts": "2026-10-18T00:15:57.731Z"
+      },
+      {
+        "stream": "decisions",
+        "offset": 2466955174,
+        "bytes": 16167,
+        "sha256": "c3ef73f91d248d25b5e3e25eecc3665ebe66d5dbe89dd1329fef436bbd4ec360",
+        "ts": "2026-10-18T00:15:59.052Z"
+      },
+      {
+        "stream": "decisions",
+        "offset": 2466971341,
+        "bytes": 6224,
+        "sha256": "4b9571ddaaf41014a99783b5506c9b6cde5ff944ce4ce2b554a7638a72e0eb4b",
+        "ts": "2026-10-18T00:16:00.225Z"
+      },
+      {
+        "stream": "decisions",
+        "offset": 2466977565,
+        "bytes": 1588,
+        "sha256": "b5133db9c931e36b8d73b94d8cd06f20e057853fafac8913f2431cfcdd048a76",
+        "ts": "2026-10-18T00:16:00.764Z"
+      },
+      {
+        "stream": "decisions",
+        "offset": 2466979153,
+        "bytes": 25862,
+        "sha256": "574c289c7a616dcb23b957e1c784da3cc9c6f7983511cbcb630268e6ecf45054",
+        "ts": "2026-10-18T00:16:09.526Z"
+      },
+      {
+        "stream": "decisions",
+        "offset": 2467005015,
+        "bytes": 1925,
+        "sha256": "d38f9c9688be015051ef55167ff2e6f880b052bec7a7379dab5a25ed1a325738",
+        "ts": "2026-10-18T00:16:10.431Z"
+      },
+      {
+        "stream": "decisions",
+        "offset": 2467006940,
+        "bytes": 1899,
+        "sha256": "1e0fb39d1242c27dd20396c373ad6e8363169ddca37f894b80422af7167818b0",
+        "ts": "2026-10-18T00:16:11.464Z"
+      },
+      {
+        "stream": "decisions",
+        "offset": 2467008839,
+        "bytes": 1864,
+        "sha256": "6d83015cbb3e29897de3aab3e71c66d82b22d25ee078cb8f33ebd962938ca7f8",
+        "ts": "2026-10-18T00:16:12.395Z"
+      },
+      {
+        "stream": "decisions",
+        "offset": 2467010703,
+        "bytes": 1574,
+        "sha256": "4e977411f382db76806487da69dd7e01e0ef1c283f879045b105af4e5fdaaf9d",
+        "ts": "2026-10-18T00:16:13.331Z"
+      },
+      {
+        "stream": "decisions",
+        "offset": 2467012277,
+        "bytes": 32003,
+        "sha256": "b915d715081f12eced27ad02dc3e81bbcabcb064b644507fd5753024031ee9b3",
+        "ts": "2026-10-18T00:16:21.148Z"
+      },
+      {
+        "stream": "decisions",
+        "offset": 2467044280,
+        "bytes": 1890,
+        "sha256": "45d7837a95709a5aec6cb136a39d77de9ea50d2e78ecbd59e166cea661007536",
+        "ts": "2026-10-18T00:16:22.502Z"
+      },
+      {
+        "stream": "decisions",
+        "offset": 2467046170,
+        "bytes": 1855,
+        "sha256": "af65e87b11700580bd93e47ef056942648a23689f43267839f103136b0daf3cb",
+        "ts": "2026-10-18T00:16:23.363Z"
+      },
+      {
+        "stream": "decisions",
+        "offset": 2467048025,
+        "bytes": 1646,
+        "sha256": "c79553240f46611e369eecc7b8617a2ecca5db8626378ba996e68b75cb37c347",
+        "ts": "2026-10-18T00:16:24.231Z"
+      },
+      {
+        "stream": "decisions",
+        "offset": 2467049671,
+        "bytes": 33886,
+        "sha256": "ebac7f65793f78f4f599038ff50a0e9b3f85ed7c4c61100cd3ebb2774ded9906",
+        "ts": "2026-10-18T00:16:31.905Z"
+      },
+      {
+        "stream": "decisions",
+        "offset": 2467083557,
+        "bytes": 1986,
+        "sha256": "7550b97f8022a9c1897a1f0ac3136e3c60d454dcd8752cd8fcfd0d235c1721e4",
+        "ts": "2026-10-18T00:16:32.962Z"
+      },
+      {
+        "stream": "decisions",
+        "offset": 2467085543,
+        "bytes": 1922,
+        "sha256": "e61357e4d0ef4a546f5456a9003f96527d44763bb1275a52d51f82fcb32c10cf",
+        "ts": "2026-10-18T00:16:34.092Z"
+      },
+      {
+        "stream": "decisions",
+        "offset": 2467087465,
+        "bytes": 6185,
+        "sha256": "b2ad46f19d54bdb5ff776f55a5e24961b9fda58166915b8c635fae7444b355ff",
+        "ts": "2026-10-18T00:16:35.268Z"
+      },
+      {
+        "stream": "decisions",
+        "offset": 2467093650,
+        "bytes": 1660,
+        "sha256": "afeed54434cdb84d2a13be7da33385b86437f5764789f201fd7bc24c1e2932c2",
+        "ts": "2026-10-18T00:16:35.765Z"
+      },
+      {
+        "stream": "decisions",
+        "offset": 2467095310,
+        "bytes": 38559,
+        "sha256": "4a8f9a364daa8978f889352e3ecaf00c595792b6dc3ca14257303a89fe06e973",
+        "ts": "2026-10-18T00:16:46.193Z"
+      },
+      {
+        "stream": "decisions",
+        "offset": 2467133869,
+        "bytes": 1958,
+        "sha256": "b3677a4a074011c9978020191e8d9f293d656e34cae069384c4b7dd4bbd21314",
+        "ts": "2026-10-18T00:16:47.137Z"
+      },
+      {
+        "stream": "decisions",
+        "offset": 2467135827,
+        "bytes": 1914,
+        "sha256": "9cb0d3ac03786176e245cfdaada728e1782d4fe6165959060aac72185195a063",
+        "ts": "2026-10-18T00:16:48.156Z"
+      },
+      {
+        "stream": "decisions",
+        "offset": 2467137741,
+        "bytes": 1625,
+        "sha256": "65dbbb1c3046620b79a3def1494464145f24165fe81e007d8e2af6f76907a8b0",
+        "ts": "2026-10-18T00:16:49.058Z"
+      },
+      {
+        "stream": "decisions",
+        "offset": 2467139366,
+        "bytes": 21483,
+        "sha256": "ac05c4bc140163cc36b442adfbad4d0ae5e77a706ebea45037c8d6be09ad3bf7",
+        "ts": "2026-10-18T00:16:56.896Z"
+      },
+      {
+        "stream": "decisions",
+        "offset": 2467160849,
+        "bytes": 1879,
+        "sha256": "8319292e74f8b8ba479b3ac00549fa31251cdb4b85f61c8120009a8506ed1581",
+        "ts": "2026-10-18T00:16:57.796Z"
+      },
+      {
+        "stream": "decisions",
+        "offset": 2467162728,
+        "bytes": 1890,
+        "sha256": "ddd06a70591ff426d2def4255da56a6c3032f526213b3f5dd2cc67b5146c5f80",
+        "ts": "2026-10-18T00:16:58.866Z"
+      },
+      {
+        "stream": "decisions",
+        "offset": 2467164618,
+        "bytes": 1938,
+        "sha256": "8ad56aea6df0c6ae00c347b643c0b7f4e1d0c750ef07ac0fee8c46d0a62384c4",
+        "ts": "2026-10-18T00:16:59.733Z"
+      },
+      {
+        "stream": "decisions",
+        "offset": 2467166556,
+        "bytes": 1658,
+        "sha256": "3e9ca412c9800c2bdc53571dcad941b585ae925bf137ed095eae21eb78beccb6",
+        "ts": "2026-10-18T00:17:00.703Z"
+      },
+      {
+        "stream": "decisions",
+        "offset": 2467168214,
+        "bytes": 29200,
+        "sha256": "3677f598a53a6d5613922c271fc9f7f6f20dfd94dd5ed957bfd1638df732be65",
+        "ts": "2026-10-18T00:17:08.293Z"
+      },
+      {
+        "stream": "decisions",
+        "offset": 2467197414,
+        "bytes": 1914,
+        "sha256": "b2a09de4a757d7081099001f26a9b69b43beff26c7854a09a5a98a12e6bd7713",
+        "ts": "2026-10-18T00:17:09.261Z"
+      },
+      {
+        "stream": "decisions",
+        "offset": 2467199328,
+        "bytes": 1667,
+        "sha256": "293bcadbd00a63ef0bc0c7c8b3b2a1ae674cf8b72130c0e67c8d4920e7cd1ea4",
+        "ts": "2026-10-18T00:17:10.299Z"
+      },
+      {
+        "stream": "decisions",
+        "offset": 2467200995,
+        "bytes": 1681,
+        "sha256": "6136be08e0d0b460029fb7cff91f9c7e1093486b1124a38d361a852cc9f665be",
+        "ts": "2026-10-18T00:17:16.057Z"
+      },
+      {
+        "stream": "decisions",
+        "offset": 2467202676,
+        "bytes": 2029,
+        "sha256": "fdd8d4bb2891f879f3f1606a857728ab4e5c2e87bfc7e8675ea70f352a9c385e",
+        "ts": "2026-10-18T00:17:18.293Z"
+      },
+      {
+        "stream": "decisions",
+        "offset": 2467204705,
+        "bytes": 2114,
+        "sha256": "11579f11cd81c3d174e95a42e048bf4e23d22151144747417db1d3764f63b764",
+        "ts": "2026-10-18T00:17:47.818Z"
+      },
+      {
+        "stream": "decisions",
+        "offset": 2467206819,
+        "bytes": 262611,
+        "sha256": "98ae9715fdfce423c1d5a58cbd04915a5cbaf9825ffbab85e2a9f22f093eebaa",
+        "ts": "2026-10-18T00:18:32.998Z"
+      },
+      {
+        "stream": "decisions",
+        "offset": 2467469430,
+        "bytes": 8269,
+        "sha256": "a31d00fce08636f2ecde810d4b3aff771230f0ba4c6a2b17466e2a3fbb22a5fa",
+        "ts": "2026-10-18T00:18:32.998Z"
+      },
+      {
+        "stream": "decisions",
+        "offset": 2467477699,
+        "bytes": 2017,
+        "sha256": "7ccf6e5d4a48de79d2aedef2bb9242a1becead04566611606f0f941569a29d0d",
+        "ts": "2026-10-18T00:18:33.718Z"
+      },
+      {
+        "stream": "decisions",
+        "offset": 2467479716,
+        "bytes": 2438,
+        "sha256": "bdee1b4ee365f9123681002bd02f8b1ac7dd44958cdeaef180216ddd8a1ae264",
+        "ts": "2026-10-18T00:18:33.971Z"
+      },
+      {
+        "stream": "decisions",
+        "offset": 2467482154,
+        "bytes": 124439,
+        "sha256": "abd4d12b45e89c10ff9f352a4bf3e35f996ba59487e871a0fe898302504985fc",
+        "ts": "2026-10-18T00:19:34.069Z"
+      },
+      {
+        "stream": "decisions",
+        "offset": 2467606593,
+        "bytes": 2060,
+        "sha256": "77d48d0895741c7379ad32db1bae178d73dcf78f047097710f2b134dfd70f99d",
+        "ts": "2026-10-18T00:19:34.581Z"
+      },
+      {
+        "stream": "decisions",
+        "offset": 2467608653,
+        "bytes": 2441,
+        "sha256": "bb0a9afcc491bd0861db6cfc9fed7d5eadc1ce0e40b567f608aeccba3867ee47",
+        "ts": "2026-10-18T00:19:35.072Z"
+      },
+      {
+        "stream": "decisions",
+        "offset": 2467611094,
+        "bytes": 590897,
+        "sha256": "273a595417f3a9a99a9a548357a2ece242f496f00652f93ff642d3ac510bfaff",
+        "ts": "2026-10-18T00:19:58.493Z"
+      },
+      {
+        "stream": "decisions",
+        "offset": 2468201991,
+        "bytes": 1851,
+        "sha256": "da866365bf917f13ea24ffa239745019af4db2394b88e5601504c35c8c922489",
+        "ts": "2026-10-18T00:19:58.758Z"
+      },
+      {
+        "stream": "decisions",
+        "offset": 2468203842,
+        "bytes": 2441,
+        "sha256": "6a140bf5fbb9b4fce3cad3d51698573cefc680e35940a2ea6e0163e4264864af",
+        "ts": "2026-10-18T00:19:59.054Z"
+      },
+      {
+        "stream": "decisions",
+        "offset": 2468206283,
+        "bytes": 2033,
+        "sha256": "9a95d37efe68c6e86539b103175aef5fa5433bcdd37b98ebab05c0e82641a12f",
+        "ts": "2026-10-18T00:20:03.059Z"
+      },
+      {
+        "stream": "decisions",
+        "offset": 2468208316,
+        "bytes": 1927,
+        "sha256": "bd26fd6addc0cb0f808aac61f793fa7932a20ff67e2cdea508629355c284fa84",
+        "ts": "2026-10-18T00:20:03.993Z"
+      },
+      {
+        "stream": "decisions",
+        "offset": 2468210243,
+        "bytes": 1892,
+        "sha256": "c755abf6c4cdbb3df391d676c84f15a9d96c63f743a26b97b63b407b30a8820f",
+        "ts": "2026-10-18T00:20:04.930Z"
+      },
+      {
+        "stream": "decisions",
+        "offset": 2468212135,
+        "bytes": 1619,
+        "sha256": "a379bd03a53351e364f64023df5843eeec655c3701634ca316eba7a5fe89418f",
+        "ts": "2026-10-18T00:20:05.865Z"
+      },
+      {
+        "stream": "decisions",
+        "offset": 2468213754,
+        "bytes": 23301,
+        "sha256": "e0b2c1f6c4ae364401ac3b14e6ddbf7e2ac8ce708ad1890b9ec209d9a3ca489f",
+        "ts": "2026-10-18T00:20:11.494Z"
+      },
+      {
+        "stream": "decisions",
+        "offset": 2468237055,
+        "bytes": 1834,
+        "sha256": "0c1685d53d005dfe6924dd86b8eee0ffd1a07b97843ba2be9ff750b61eaf030c",
+        "ts": "2026-10-18T00:20:12.858Z"
+      },
+      {
+        "stream": "decisions",
+        "offset": 2468238889,
+        "bytes": 1584,
+        "sha256": "cdf0863632fd9bbe23b19f2ac2c9aab2c6213fe8603f3d9d926dd2dadaf5ae7a",
+        "ts": "2026-10-18T00:20:13.891Z"
+      },
+      {
+        "stream": "decisions",
+        "offset": 2468240473,
+        "bytes": 39079,
+        "sha256": "fe964ed1c06779ddfe7afad6da40fa1f62797f7703973a8ddd15c884850f0915",
+        "ts": "2026-10-18T00:20:19.724Z"
+      },
+      {
+        "stream": "decisions",
+        "offset": 2468279552,
+        "bytes": 1889,
+        "sha256": "551689f8b50b545cfd6e2058e4e50cb7f24326723809438a0dd7d8f17945ccc7",
+        "ts": "2026-10-18T00:20:20.789Z"
+      },
+      {
+        "stream": "decisions",
+        "offset": 2468281441,
+        "bytes": 1765,
+        "sha256": "361a5c5fc5a379765534396c0da18c0f702fee6ac044970e8b2e3c4b1ec231a7",
+        "ts": "2026-10-18T00:20:21.659Z"
+      },
+      {
+        "stream": "decisions",
+        "offset": 2468283206,
+        "bytes": 1771,
+        "sha256": "e24cb6b488f904b17dd7c5ecb94e74d09bc560a6d49d359ebefbd9a5b642c23c",
+        "ts": "2026-10-18T00:20:22.490Z"
+      },
+      {
+        "stream": "decisions",
+        "offset": 2468284977,
+        "bytes": 4184,
+        "sha256": "e14e051118f6bd8e7d87215e049c8b88078d5047f00524e59c29694d3eeb5ffb",
+        "ts": "2026-10-18T00:20:23.649Z"
+      },
+      {
+        "stream": "decisions",
+        "offset": 2468289161,
+        "bytes": 1555,
+        "sha256": "193af70762cb58ed8f31809b55644b02c0d1f533415cd08acf9326c9f6d579bd",
+        "ts": "2026-10-18T00:20:24.210Z"
+      },
+      {
+        "stream": "decisions",
+        "offset": 2468290716,
+        "bytes": 14971,
+        "sha256": "ef3982a89e9763610cf761da4aea610dc936eb2ace24888552548c9bc31d0569",
+        "ts": "2026-10-18T00:20:30.773Z"
+      },
+      {
+        "stream": "decisions",
+        "offset": 2468305687,
+        "bytes": 1883,
+        "sha256": "744b8d2901a3a173cca6714168a187988ed779f6b67ae34ba1b288b28b01a65d",
+        "ts": "2026-10-18T00:20:31.693Z"
+      },
+      {
+        "stream": "decisions",
+        "offset": 2468307570,
+        "bytes": 1861,
+        "sha256": "8b439ce3ec9f46969edcd8c6743c4ef2f3ec787c722bcb337aaebcd1a4b0eaa9",
+        "ts": "2026-10-18T00:20:32.623Z"
+      },
+      {
+        "stream": "decisions",
+        "offset": 2468309431,
+        "bytes": 1584,
+        "sha256": "65f354e1736e04f15a0ddda91434ee53cafcdb919be644465fb48fd3de752c0c",
+        "ts": "2026-10-18T00:20:33.623Z"
+      },
+      {
+        "stream": "decisions",
+        "offset": 2468311015,
+        "bytes": 14140,
+        "sha256": "4712528467b2a6c473c7362a36b5b3cd32f35134e33fd969245b9598c91288c9",
+        "ts": "2026-10-18T00:20:38.675Z"
+      },
+      {
+        "stream": "decisions",
+        "offset": 2468325155,
+        "bytes": 1650,
+        "sha256": "a469cbe3bdfa2f8978cdf199c6058b2df2aaeaa432fe784901e625dc4988ea7b",
+        "ts": "2026-10-18T00:20:39.727Z"
+      },
+      {
+        "stream": "decisions",
+        "offset": 2468326805,
+        "bytes": 1891,
+        "sha256": "0791a278bd1aa9b5f4b07346f615a6d1b14c512150a9de9611beba69b447bbce",
+        "ts": "2026-10-18T00:20:44.195Z"
+      },
+      {
+        "stream": "decisions",
+        "offset": 2468328696,
+        "bytes": 1892,
+        "sha256": "f363ac7f856ade2bec5e56d39faadf4332381ab89e51045c95f086cc0d7446b6",
+        "ts": "2026-10-18T00:20:45.121Z"
+      },
+      {
+        "stream": "decisions",
+        "offset": 2468330588,
+        "bytes": 1556,
+        "sha256": "c738c4f1c753dce1fbae8056d87d98593d646f6fc32c029926c28b9d77c442b3",
+        "ts": "2026-10-18T00:20:46.156Z"
+      },
+      {
+        "stream": "decisions",
+        "offset": 2468332144,
+        "bytes": 2032,
+        "sha256": "0bcfd64c5f46e37e413fc5eee4069959065f34d2dce3e8c9a64fff1b307abe33",
+        "ts": "2026-10-18T00:20:48.384Z"
+      },
+      {
+        "stream": "decisions",
+        "offset": 2468334176,
+        "bytes": 2112,
+        "sha256": "faf63b396606a60b109b9ea2af038615a9704cf2d6510667fd2ad89a0ad9bac3",
+        "ts": "2026-10-18T00:20:48.616Z"
+      },
+      {
+        "stream": "decisions",
+        "offset": 2468336288,
+        "bytes": 266454,
+        "sha256": "c74ca0b80d292551662bb6ad86138c586bb6ac44cd0ae096e81998bc05b49206",
+        "ts": "2026-10-18T00:21:22.882Z"
+      },
+      {
+        "stream": "decisions",
+        "offset": 2468602742,
+        "bytes": 2016,
+        "sha256": "7e5eb3be40e488887112d16ccb8d2e974b661311b5be15694383a1db819d89ae",
+        "ts": "2026-10-18T00:21:23.614Z"
+      },
+      {
+        "stream": "decisions",
+        "offset": 2468604758,
+        "bytes": 2439,
+        "sha256": "a25facf307913346053bd12882f6b5ac65407e62d3f1697acdee290268601afa",
+        "ts": "2026-10-18T00:21:23.897Z"
+      },
+      {
+        "stream": "decisions",
+        "offset": 2468607197,
+        "bytes": 1826,
+        "sha256": "da6eab1973e16af152f59421694cb4239641878b0b6b9f2fe97b1f48840e1e50",
+        "ts": "2026-10-18T00:21:25.090Z"
+      },
+      {
+        "stream": "decisions",
+        "offset": 2468609023,
+        "bytes": 1864,
+        "sha256": "82393da2eccf1748d949dcd625cab9cf8caf24e9af362d24f0d0c2211da1902a",
+        "ts": "2026-10-18T00:22:02.927Z"
+      },
+      {
+        "stream": "decisions",
+        "offset": 2468610887,
+        "bytes": 2445,
+        "sha256": "21dc0706f1ce8dc885565c04b82ca2a6f85d04e38142617caa092e9a64cee576",
+        "ts": "2026-10-18T00:22:03.255Z"
+      },
+      {
+        "stream": "decisions",
+        "offset": 2468613332,
+        "bytes": 63775,
+        "sha256": "3564f469ef0044c6a4a81da017ff869bfe15f01f5207886ca7de6a292b636bbb",
+        "ts": "2026-10-18T00:22:09.489Z"
+      },
+      {
+        "stream": "decisions",
+        "offset": 2468677107,
+        "bytes": 1872,
+        "sha256": "e31181c690c71c366e6ef569fe5b9324a90e6e6d4e8cf3fe221d88a731b5f3f1",
+        "ts": "2026-10-18T00:22:10.367Z"
+      },
+      {
+        "stream": "decisions",
+        "offset": 2468678979,
+        "bytes": 1921,
+        "sha256": "66684cc2551f17173b6e19db4b06736527c537affb8e59ea1ab6d08659b31cef",
+        "ts": "2026-10-18T00:22:11.311Z"
+      },
+      {
+        "stream": "decisions",
+        "offset": 2468680900,
+        "bytes": 1905,
+        "sha256": "752444052672464f201e9c0e5757c87435ac60c44f6135d86653e5d1f09136e6",
+        "ts": "2026-10-18T00:22:12.379Z"
+      },
+      {
+        "stream": "decisions",
+        "offset": 2468682805,
+        "bytes": 1815,
+        "sha256": "28798d8a049356fb522df584f88ab347e47f7369baded04411c6b05c9af05fe9",
+        "ts": "2026-10-18T00:22:13.442Z"
+      },
+      {
+        "stream": "decisions",
+        "offset": 2468684620,
+        "bytes": 4115,
+        "sha256": "43ce734291ceb3611a31d1b093716c2ca7acf6fca76b18c32fcc3e9fcb228ff0",
+        "ts": "2026-10-18T00:22:14.764Z"
+      },
+      {
+        "stream": "decisions",
+        "offset": 2468688735,
+        "bytes": 1572,
+        "sha256": "7bd51d9e9ef64ee73064d23f358683012c7a6d32fecb47460df00ad6f5e507b8",
+        "ts": "2026-10-18T00:22:15.310Z"
+      },
+      {
+        "stream": "decisions",
+        "offset": 2468690307,
+        "bytes": 18613,
+        "sha256": "2c2f903a56dcdfb54b12eb4db69f22b2372419bb472d6ca8b969cfc28e584dac",
+        "ts": "2026-10-18T00:22:23.468Z"
+      },
+      {
+        "stream": "decisions",
+        "offset": 2468708920,
+        "bytes": 1921,
+        "sha256": "566b81dc7082d9146e0b992ef7c781e05d471664ed67197b9e22c89ae68faa13",
+        "ts": "2026-10-18T00:22:24.345Z"
+      },
+      {
+        "stream": "decisions",
+        "offset": 2468710841,
+        "bytes": 1804,
+        "sha256": "2e753ed468822be2b8ec0044941df04c2b1149a943ba7f32542dc655eed41f6d",
+        "ts": "2026-10-18T00:22:25.264Z"
+      },
+      {
+        "stream": "decisions",
+        "offset": 2468712645,
+        "bytes": 1607,
+        "sha256": "19f7e8fa8c04f44abe19282f4b83180a2758fb9d05fde80018e1462f91afe6b8",
+        "ts": "2026-10-18T00:22:26.158Z"
+      },
+      {
+        "stream": "decisions",
+        "offset": 2468714252,
+        "bytes": 36181,
+        "sha256": "e875a10e7d3822d8f55f360b6a4e04b65b2804ba186bf0c1b9d6d32edd0e64ec",
+        "ts": "2026-10-18T00:22:34.815Z"
+      },
+      {
+        "stream": "decisions",
+        "offset": 2468750433,
+        "bytes": 1914,
+        "sha256": "10c375c4c343613d8153e43814369355c292267e0bad2dfa8bd110a5ff79f368",
+        "ts": "2026-10-18T00:22:35.780Z"
+      },
+      {
+        "stream": "decisions",
+        "offset": 2468752347,
+        "bytes": 1625,
+        "sha256": "4e18a6bbb1e4b4979ccd05dcf2b72ba4e0893edde609629e45f6f92bb3ad75ca",
+        "ts": "2026-10-18T00:22:36.688Z"
+      },
+      {
+        "stream": "decisions",
+        "offset": 2468753972,
+        "bytes": 1972,
+        "sha256": "fef86f8b3330cf69d9dce1097547022aafe8b65fcd599a06f1c12a30ce252aa2",
+        "ts": "2026-10-18T00:22:44.173Z"
+      },
+      {
+        "stream": "decisions",
+        "offset": 2468755944,
+        "bytes": 1920,
+        "sha256": "6803af21fa2a7b4af7e9ffc9e492946db8c22d95d21036d9ff1a355a58479d04",
+        "ts": "2026-10-18T00:22:45.087Z"
+      },
+      {
+        "stream": "decisions",
+        "offset": 2468757864,
+        "bytes": 1563,
+        "sha256": "e492666f256a4e3dbc747fa6b8f0544e5b501c7e0b0af2b415ea434d32204028",
+        "ts": "2026-10-18T00:22:46.369Z"
+      },
+      {
+        "stream": "decisions",
+        "offset": 2468759427,
+        "bytes": 1624,
+        "sha256": "a484c2336f57dd4a5ae46d4084fcfa83be0a4f8eea5f46f1d7cf50b51956ab43",
+        "ts": "2026-10-18T00:22:46.902Z"
+      },
+      {
+        "stream": "decisions",
+        "offset": 2468761051,
+        "bytes": 18677,
+        "sha256": "6da5e556212d1b1d724e509eff27558c5537c9f93e2437239db629bdfc96bccf",
+        "ts": "2026-10-18T00:22:51.952Z"
+      },
+      {
+        "stream": "decisions",
+        "offset": 2468779728,
+        "bytes": 1791,
+        "sha256": "ff3744e36475d10933a9a5352c3a759aea152bf6b5b8489e2aa1947ab4d7b582",
+        "ts": "2026-10-18T00:22:52.774Z"
+      },
+      {
+        "stream": "decisions",
+        "offset": 2468781519,
+        "bytes": 1818,
+        "sha256": "7b3b55603e57a097b6ae4a5bf6863fdc7f0d189666b96af1a532e49cc071fb81",
+        "ts": "2026-10-18T00:22:55.612Z"
+      },
+      {
+        "stream": "decisions",
+        "offset": 2468783337,
+        "bytes": 1583,
+        "sha256": "48ee4aff2334dd4d2333bcbc0dcd6be08ba71c4acaa3d8579619dc69888610e8",
+        "ts": "2026-10-18T00:22:56.645Z"
+      },
+      {
+        "stream": "decisions",
+        "offset": 2468784920,
+        "bytes": 1811,
+        "sha256": "6638610b53f29017c6a6703fbd348601921cd70431fb1c88ae9f65bed9bf25a4",
+        "ts": "2026-10-18T00:23:01.945Z"
+      },
+      {
+        "stream": "decisions",
+        "offset": 2468786731,
+        "bytes": 1539,
+        "sha256": "8e3c625ec641c2d3794961ed635b04aba947184167033a9b8450464d8f9712d0",
+        "ts": "2026-10-18T00:23:02.977Z"
+      },
+      {
+        "stream": "decisions",
+        "offset": 2468788270,
+        "bytes": 2031,
+        "sha256": "5550b140bdbba007136b6baf685cd6a8ad76329ee173a0c0e46b44c95cb3ebe9",
+        "ts": "2026-10-18T00:23:05.233Z"
+      },
+      {
+        "stream": "decisions",
+        "offset": 2468790301,
+        "bytes": 2111,
+        "sha256": "13cb44dc029403ee8d947eba79ec466253b9d1a324bc88e0ee664610a4ba05aa",
+        "ts": "2026-10-18T00:23:24.134Z"
+      },
+      {
+        "stream": "decisions",
+        "offset": 2468792412,
+        "bytes": 279111,
+        "sha256": "6388d1674de2f55234c4e9c994629856a947d22591edab3f0979e0d0234dbd97",
+        "ts": "2026-10-18T00:24:20.547Z"
+      },
+      {
+        "stream": "decisions",
+        "offset": 2469071523,
+        "bytes": 2014,
+        "sha256": "73d8f948d9569b0223ebdec26687163533233ae66d1e37c622a94e028565f2fe",
+        "ts": "2026-10-18T00:24:21.231Z"
+      },
+      {
+        "stream": "decisions",
+        "offset": 2469073537,
+        "bytes": 2437,
+        "sha256": "2dba2772189f0148414168d2e778a1013b5697be7475575c8f585b1dcd449d38",
+        "ts": "2026-10-18T00:24:21.519Z"
+      },
+      {
+        "stream": "decisions",
+        "offset": 2469075974,
+        "bytes": 24502,
+        "sha256": "1cc54a0c866387e2ae45d21798ed814c553f4680c240482575db7b3cf27e8a22",
+        "ts": "2026-10-18T00:24:26.467Z"
+      },
+      {
+        "stream": "decisions",
+        "offset": 2469100476,
+        "bytes": 1829,
+        "sha256": "49470d9a458cb66bf9fa995db780ce790750ef2557682dfa1e0240fa3de7f7ec",
+        "ts": "2026-10-18T00:24:27.346Z"
+      },
+      {
+        "stream": "decisions",
+        "offset": 2469102305,
+        "bytes": 1795,
+        "sha256": "0e790090ce4a562d4b17c0f8e8c981db64f1e8874b3f40556e7781376feec170",
+        "ts": "2026-10-18T00:24:28.219Z"
+      },
+      {
+        "stream": "decisions",
+        "offset": 2469104100,
+        "bytes": 1827,
+        "sha256": "60430f90bb827a730853b45e4c50d2e990859e44991c8ea1826b0c72ad078253",
+        "ts": "2026-10-18T00:24:29.083Z"
+      },
+      {
+        "stream": "decisions",
+        "offset": 2469105927,
+        "bytes": 1587,
+        "sha256": "3f96805d628f233f41f08de195e3349c5ac8a489b9b0d026f2e7ab487f7f9161",
+        "ts": "2026-10-18T00:24:29.979Z"
+      },
+      {
+        "stream": "decisions",
+        "offset": 2469107514,
+        "bytes": 1866,
+        "sha256": "1c1c543c4dbb81361c418fd31ab646dc52d31aa0857a9dbfcd9aac1cb2e5aa97",
+        "ts": "2026-10-18T00:24:34.398Z"
+      },
+      {
+        "stream": "decisions",
+        "offset": 2469109380,
+        "bytes": 1794,
+        "sha256": "136dfb9ba1bc5b7d1d233f63bf28d98cf8d040955b5b7472c8b5d036d8084671",
+        "ts": "2026-10-18T00:24:35.776Z"
+      },
+      {
+        "stream": "decisions",
+        "offset": 2469111174,
+        "bytes": 1823,
+        "sha256": "fea054124f0ca28a478a180fa5a44a92500efc458073b8be3f2476be3a05cb31",
+        "ts": "2026-10-18T00:24:36.596Z"
+      },
+      {
+        "stream": "decisions",
+        "offset": 2469112997,
+        "bytes": 1583,
+        "sha256": "3a21a781173422745e6a530ee582e693c7a0691e01e1168c59ce59acc18f422e",
+        "ts": "2026-10-18T00:24:37.653Z"
+      },
+      {
+        "stream": "decisions",
+        "offset": 2469114580,
+        "bytes": 23625,
+        "sha256": "f12709dfed903f1c7fdc5238392b022851f76018ee8bab03560282b710b1d9e3",
+        "ts": "2026-10-18T00:24:43.312Z"
+      },
+      {
+        "stream": "decisions",
+        "offset": 2469138205,
+        "bytes": 1870,
+        "sha256": "8b40492cb4758f915534d1b008c0a1f82b07c8a5aa2d534c11df0ff5f0a3572c",
+        "ts": "2026-10-18T00:24:44.178Z"
+      },
+      {
+        "stream": "decisions",
+        "offset": 2469140075,
+        "bytes": 1628,
+        "sha256": "98bce592ea924651492e53c8cb807d8b9a803a1fbeed62d05d6ecc6ec4ee404b",
+        "ts": "2026-10-18T00:24:45.249Z"
+      },
+      {
+        "stream": "decisions",
+        "offset": 2469141703,
+        "bytes": 17136,
+        "sha256": "372db1e19c7fc84e57baddcb001bd308e51074fd246592d7ffe5eacee045d87f",
+        "ts": "2026-10-18T00:24:50.904Z"
+      },
+      {
+        "stream": "decisions",
+        "offset": 2469158839,
+        "bytes": 1831,
+        "sha256": "4ef8c61146d6a1a2968df35f02cf11f71978c6d240dfa82368a06f76d9f860df",
+        "ts": "2026-10-18T00:24:51.951Z"
+      },
+      {
+        "stream": "decisions",
+        "offset": 2469160670,
+        "bytes": 1627,
+        "sha256": "ff9e01744b0ecc7cb5ea8759764488203b8599f1832ee620e2e47ab3efff8943",
+        "ts": "2026-10-18T00:24:52.806Z"
+      },
+      {
+        "stream": "decisions",
+        "offset": 2469162297,
+        "bytes": 44468,
+        "sha256": "ea0f046d7e46268a3def2b24c227c355a5749802327c3f335e2f7c9fb4f82d3f",
+        "ts": "2026-10-18T00:24:59.697Z"
+      },
+      {
+        "stream": "decisions",
+        "offset": 2469206765,
+        "bytes": 1920,
+        "sha256": "c7d579bfa146378c7d4f6e7116339ce2ceb93f18027f9bb555b0ad32abdd82db",
+        "ts": "2026-10-18T00:25:00.779Z"
+      },
+      {
+        "stream": "decisions",
+        "offset": 2469208685,
+        "bytes": 1832,
+        "sha256": "50697985005d5575f2c13e4cf793f44622ddbaf2c92b98dd85aed81a1a26c25f",
+        "ts": "2026-10-18T00:25:01.816Z"
+      },
+      {
+        "stream": "decisions",
+        "offset": 2469210517,
+        "bytes": 1709,
+        "sha256": "aba0631b2b35cb98a1e073d5dc3299022943103adc902a667ca06c65cfa482bb",
+        "ts": "2026-10-18T00:25:04.621Z"
+      },
+      {
+        "stream": "decisions",
+        "offset": 2469212226,
+        "bytes": 1950,
+        "sha256": "a4d2050f5261436991b8e4f8b6d208a62523bded236fa331d8752f74e157b398",
+        "ts": "2026-10-18T00:25:07.322Z"
+      },
+      {
+        "stream": "states",
+        "offset": 14228322522,
+        "bytes": 13849,
+        "sha256": "6dea2c5778fc4470f02b2c6852e26f78888b5b261e4f027109121119f6024723",
+        "ts": "2026-10-18T00:09:03.882Z"
+      },
+      {
+        "stream": "states",
+        "offset": 14228336371,
+        "bytes": 13356,
+        "sha256": "c44ac0d73d800b58296cdcbaa2183667084e8d0d2c10e132b65875902672fb6e",
+        "ts": "2026-10-18T00:09:57.601Z"
+      },
+      {
+        "stream": "states",
+        "offset": 14228349727,
+        "bytes": 35873,
+        "sha256": "c585a07e9cd8466a6a69ac9d990136964f062ee975063a5f809ffa67a251dffe",
+        "ts": "2026-10-18T00:10:23.147Z"
+      },
+      {
+        "stream": "states",
+        "offset": 14228385600,
+        "bytes": 18151,
+        "sha256": "1313d31087bc0fd51e35dcc1d30bfab2c9d4907f7fe586898431f511a49aa47e",
+        "ts": "2026-10-18T00:10:24.933Z"
+      },
+      {
+        "stream": "states",
+        "offset": 14228403751,
+        "bytes": 24869,
+        "sha256": "a745c7654643dd3b9f92801565319d7ee4620111bff2057c190e6854faf5e8b2",
+        "ts": "2026-10-18T00:10:28.257Z"
+      },
+      {
+        "stream": "states",
+        "offset": 14228428620,
+        "bytes": 23893,
+        "sha256": "873f7b0dfec284e55bea7c6a46690dca8db6ac9f20e2351241b42f08e43a9183",
+        "ts": "2026-10-18T00:10:29.876Z"
+      },
+      {
+        "stream": "states",
+        "offset": 14228452513,
+        "bytes": 23041,
+        "sha256": "5aad8badd128daee5be08ab0aa85b561af7fb6d3e731d52d5a53de844863e240",
+        "ts": "2026-10-18T00:10:30.937Z"
+      },
+      {
+        "stream": "states",
+        "offset": 14228475554,
+        "bytes": 22235,
+        "sha256": "fb16c3fd9d16252ef56b4c5b4922d038b88d7de8da58593686c4555b7323b929",
+        "ts": "2026-10-18T00:10:31.858Z"
+      },
+      {
+        "stream": "states",
+        "offset": 14228497789,
+        "bytes": 23610,
+        "sha256": "a7c3cd90d602931f636a3447a5d52c15ab516db428d1584bfda4b2541553fee4",
+        "ts": "2026-10-18T00:10:32.994Z"
+      },
+      {
+        "stream": "states",
+        "offset": 14228521399,
+        "bytes": 20791,
+        "sha256": "d1ffdc9cfdcd88e768bee2a3740c4030ca53ab6462635b6e89eeadc2d1f4f91d",
+        "ts": "2026-10-18T00:10:33.538Z"
+      },
+      {
+        "stream": "states",
+        "offset": 14228542190,
+        "bytes": 23214,
+        "sha256": "a920bf2bf590cfc10ac129758229b87bc71a6bdc54a2e0eea96e581fb060ba96",
+        "ts": "2026-10-18T00:10:39.493Z"
+      },
+      {
+        "stream": "states",
+        "offset": 14228565404,
+        "bytes": 22221,
+        "sha256": "acfd599089a22a30950985d16a19f43e586769a9d5536e8104f196cde8a8cf24",
+        "ts": "2026-10-18T00:10:40.333Z"
+      },
+      {
+        "stream": "states",
+        "offset": 14228587625,
+        "bytes": 21216,
+        "sha256": "6281dbc0a6de3fea84ca2a6033fadbebdf3115e34859ff354f48da7d2bd53622",
+        "ts": "2026-10-18T00:10:41.383Z"
+      },
+      {
+        "stream": "states",
+        "offset": 14228608841,
+        "bytes": 19446,
+        "sha256": "2b71c839fbb00753183a69af10e1d45a1ec66c1d5757e8215cacbd4ac9b3cc3f",
+        "ts": "2026-10-18T00:10:42.400Z"
+      },
+      {
+        "stream": "states",
+        "offset": 14228628287,
+        "bytes": 22487,
+        "sha256": "f7f007be6f883808259423cab0d67a8d8857064232072baf7fcbf657633f8f92",
+        "ts": "2026-10-18T00:10:47.974Z"
+      },
+      {
+        "stream": "states",
+        "offset": 14228650774,
+        "bytes": 24149,
+        "sha256": "2440d456c39b67f9d589af236b197c9da607a5cdb4974f06e00ba18441321e92",
+        "ts": "2026-10-18T00:10:49.172Z"
+      },
+      {
+        "stream": "states",
+        "offset": 14228674923,
+        "bytes": 20894,
+        "sha256": "43fbcaf7420e6d36e56cc9fd86a3a7ef7be2480c7d8c289cdd30f152e5042cb4",
+        "ts": "2026-10-18T00:10:50.034Z"
+      },
+      {
+        "stream": "states",
+        "offset": 14228695817,
+        "bytes": 22443,
+        "sha256": "197f4c245be75928278d43587954e154a36ece2b2253a30d2b46285ddafe6eb8",
+        "ts": "2026-10-18T00:10:54.866Z"
+      },
+      {
+        "stream": "states",
+        "offset": 14228718260,
+        "bytes": 21666,
+        "sha256": "2d7f951f81ba9972f0ec1fec3bf1e9e5434e6b5acada8263f379bd275e8b0835",
+        "ts": "2026-10-18T00:10:55.701Z"
+      },
+      {
+        "stream": "states",
+        "offset": 14228739926,
+        "bytes": 20682,
+        "sha256": "c079205b7abcf87a5e291b802e85c9b84deb1914d86c3ad03455fbf3a3201949",
+        "ts": "2026-10-18T00:10:56.532Z"
+      },
+      {
+        "stream": "states",
+        "offset": 14228760608,
+        "bytes": 19836,
+        "sha256": "48143dfcc4841b43b8190a8ec9dfec4bde51a21d5c842c21457970ca91a0a545",
+        "ts": "2026-10-18T00:10:57.533Z"
+      },
+      {
+        "stream": "states",
+        "offset": 14228780444,
+        "bytes": 18876,
+        "sha256": "c6502506168c0fabbb1d235850700e0945b7d24dfed1b0bc69b0e3d102bfe756",
+        "ts": "2026-10-18T00:10:58.435Z"
+      },
+      {
+        "stream": "states",
+        "offset": 14228799320,
+        "bytes": 22315,
+        "sha256": "af56ef1447a9ffb300b8740af835ab185bff6d8710404ae2782985593d017948",
+        "ts": "2026-10-18T00:11:03.671Z"
+      },
+      {
+        "stream": "states",
+        "offset": 14228821635,
+        "bytes": 21508,
+        "sha256": "b45fd70256a4377e6be403d05b1b580fe7174fa1487e62a89478b245831dee10",
+        "ts": "2026-10-18T00:11:04.569Z"
+      },
+      {
+        "stream": "states",
+        "offset": 14228843143,
+        "bytes": 16045,
+        "sha256": "efb80c6fc9f00a290055a99ee45d45e4c9d84b4fe9e56722a255045963bda0b5",
+        "ts": "2026-10-18T00:11:05.335Z"
+      },
+      {
+        "stream": "states",
+        "offset": 14228859188,
+        "bytes": 15924,
+        "sha256": "214938929c0e76543aca2dccd610fc891305f0566d192736f9d0187fb8f6b9e0",
+        "ts": "2026-10-18T00:11:05.562Z"
+      },
+      {
+        "stream": "states",
+        "offset": 14228875112,
+        "bytes": 16153,
+        "sha256": "540357ebc7da29d41a6f92981ed2521f649a9f58883754fc2922375eb2c63072",
+        "ts": "2026-10-18T00:11:05.761Z"
+      },
+      {
+        "stream": "states",
+        "offset": 14228891265,
+        "bytes": 18042,
+        "sha256": "c3e1b51df6873053b06954f904838086ca543985fa308e85b6299c7e6f6c9f12",
+        "ts": "2026-10-18T00:11:35.184Z"
+      },
+      {
+        "stream": "states",
+        "offset": 14228909307,
+        "bytes": 16644,
+        "sha256": "817481e3ff09118d7d0821b4c96e8eaf74816092f8b3e2d336153058efe6f26f",
+        "ts": "2026-10-18T00:11:35.930Z"
+      },
+      {
+        "stream": "states",
+        "offset": 14228925951,
+        "bytes": 38864,
+        "sha256": "d46a32bc09d96ec2acd41aa8dd39a8893eb06362e61c85a8bfb164d3dc914976",
+        "ts": "2026-10-18T00:11:36.206Z"
+      },
+      {
+        "stream": "states",
+        "offset": 14228964815,
+        "bytes": 19771,
+        "sha256": "0bbcab9e35093ba5faa0672ac3891c41ca0b62c7f91ea9ec401219c97dcbef7b",
+        "ts": "2026-10-18T00:11:37.543Z"
+      },
+      {
+        "stream": "states",
+        "offset": 14228984586,
+        "bytes": 26478,
+        "sha256": "cd9baeea4b4687c803e7fc3fb0d467314febe8c4686a5bc194191786157d674a",
+        "ts": "2026-10-18T00:11:41.993Z"
+      },
+      {
+        "stream": "states",
+        "offset": 14229011064,
+        "bytes": 25502,
+        "sha256": "adfb2c79856cb4aec33828a854b089e163168b5d07915a4f7c6ab614f8ec9cf2",
+        "ts": "2026-10-18T00:11:44.839Z"
+      },
+      {
+        "stream": "states",
+        "offset": 14229036566,
+        "bytes": 27421,
+        "sha256": "0d6ff6a14e31b3843a01e91a52b9bc1ef5b96600b7e03fa8c6625925ded17060",
+        "ts": "2026-10-18T00:11:45.798Z"
+      },
+      {
+        "stream": "states",
+        "offset": 14229063987,
+        "bytes": 26179,
+        "sha256": "28789c7563bf3b0d8732e4ea635e1544205d4311d112eda8db5d96c283148b35",
+        "ts": "2026-10-18T00:11:47.299Z"
+      },
+      {
+        "stream": "states",
+        "offset": 14229090166,
+        "bytes": 25400,
+        "sha256": "550e565d1d7429ca094f4760224f218e15db284fb259d8c93e29ede670a65ed1",
+        "ts": "2026-10-18T00:11:48.142Z"
+      },
+      {
+        "stream": "states",
+        "offset": 14229115566,
+        "bytes": 24656,
+        "sha256": "51388b0b4bcde0bf0ad963eeaae1fe6e64a290282d513fbb19b29c967ff781dc",
+        "ts": "2026-10-18T00:11:48.982Z"
+      },
+      {
+        "stream": "states",
+        "offset": 14229140222,
+        "bytes": 23826,
+        "sha256": "c676aef9c1baf9bc7963c78c435439f107b8238554992b26fc77be5031d287b5",
+        "ts": "2026-10-18T00:11:50.036Z"
+      },
+      {
+        "stream": "states",
+        "offset": 14229164048,
+        "bytes": 25196,
+        "sha256": "0997bd1d6bdadc2b781d0d9b91cf3400330c1c0e88ef890c5f68150ca1930efb",
+        "ts": "2026-10-18T00:11:56.010Z"
+      },
+      {
+        "stream": "states",
+        "offset": 14229189244,
+        "bytes": 24190,
+        "sha256": "05db4806dc0093e286d4780522fed51ce22a34ae90a27f3afd58483e188fdc77",
+        "ts": "2026-10-18T00:11:56.907Z"
+      },
+      {
+        "stream": "states",
+        "offset": 14229213434,
+        "bytes": 23339,
+        "sha256": "5f0db6d8061f45d47a8827b4895685594ca59c567788b5dcb69baadc0b5b70cd",
+        "ts": "2026-10-18T00:11:57.922Z"
+      },
+      {
+        "stream": "states",
+        "offset": 14229236773,
+        "bytes": 22626,
+        "sha256": "ffa0b21462d0ae1282a4d704e57422534f617a414897e0b7601436258b0ddf0b",
+        "ts": "2026-10-18T00:11:58.989Z"
+      },
+      {
+        "stream": "states",
+        "offset": 14229259399,
+        "bytes": 24770,
+        "sha256": "a720a85d54c3b8deb0958ea458f63a911f820bcd85b5f4d813856f3cbd83a9ed",
+        "ts": "2026-10-18T00:12:06.374Z"
+      },
+      {
+        "stream": "states",
+        "offset": 14229284169,
+        "bytes": 23962,
+        "sha256": "985cb8b67da017fcabc546fde223e4b5fd89ef177b24f721bc80d31b5cd683cc",
+        "ts": "2026-10-18T00:12:07.269Z"
+      },
+      {
+        "stream": "states",
+        "offset": 14229308131,
+        "bytes": 22258,
+        "sha256": "25de9584bd75d25f0b7eba10ecf8db102ab027e2f3b2b2857e266b1998cf910c",
+        "ts": "2026-10-18T00:12:08.557Z"
+      },
+      {
+        "stream": "states",
+        "offset": 14229330389,
+        "bytes": 24430,
+        "sha256": "a489bcd791d0dcbd5d3f9e652714b1160ad756af2ffe9805d9f363600b6157fd",
+        "ts": "2026-10-18T00:12:13.389Z"
+      },
+      {
+        "stream": "states",
+        "offset": 14229354819,
+        "bytes": 23428,
+        "sha256": "35d850dd4811a59c04d42d73d04c4ba17dc154293b1bdf42cdf6a4f78af8b042",
+        "ts": "2026-10-18T00:12:14.306Z"
+      },
+      {
+        "stream": "states",
+        "offset": 14229378247,
+        "bytes": 16629,
+        "sha256": "88c5920d900d51b91b50f2f59f282711f1aaf1bcb32bf76fe74fe885719c90b8",
+        "ts": "2026-10-18T00:12:15.450Z"
+      },
+      {
+        "stream": "states",
+        "offset": 14229394876,
+        "bytes": 16503,
+        "sha256": "e02b8c35b2ebba7a40b190eb07005f8ba21894405397ff98b7515a1401463d6b",
+        "ts": "2026-10-18T00:12:15.650Z"
+      },
+      {
+        "stream": "states",
+        "offset": 14229411379,
+        "bytes": 18266,
+        "sha256": "8d64cc70f477f8a97ff3cd9b5377f4743d401d5af8e90f0a0d3df76cf2b210ba",
+        "ts": "2026-10-18T00:12:36.959Z"
+      },
+      {
+        "stream": "states",
+        "offset": 14229429645,
+        "bytes": 16999,
+        "sha256": "fdc817ca1b0ca5bca9bf53f7d3cb74ba8cdbc828580b8a6a55415e85befde031",
+        "ts": "2026-10-18T00:12:37.616Z"
+      },
+      {
+        "stream": "states",
+        "offset": 14229446644,
+        "bytes": 39323,
+        "sha256": "df07ff87e251db765e032d9788de7cca7623c953fa32c8ee0a7f677ffa69e4f5",
+        "ts": "2026-10-18T00:12:37.866Z"
+      },
+      {
+        "stream": "states",
+        "offset": 14229485967,
+        "bytes": 19740,
+        "sha256": "a9c80fbe9b1ce01c726c05d27118876399a12738177fd61da568ae9e5a16ff8e",
+        "ts": "2026-10-18T00:12:39.095Z"
+      },
+      {
+        "stream": "states",
+        "offset": 14229505707,
+        "bytes": 26127,
+        "sha256": "5f15864b4a416c978ef80172e82dce0e167220645825a270efdda12c7dd7cbb9",
+        "ts": "2026-10-18T00:12:41.740Z"
+      },
+      {
+        "stream": "states",
+        "offset": 14229531834,
+        "bytes": 25293,
+        "sha256": "990a4806428eaacaa4dbf883b5a4974b10823879de2180641306aa078cf08aa5",
+        "ts": "2026-10-18T00:12:42.798Z"
+      },
+      {
+        "stream": "states",
+        "offset": 14229557127,
+        "bytes": 24831,
+        "sha256": "727e60571d3a2009e5ce38b944586d035e490ced0b044c10fc4bfeace7d53460",
+        "ts": "2026-10-18T00:12:47.258Z"
+      },
+      {
+        "stream": "states",
+        "offset": 14229581958,
+        "bytes": 24030,
+        "sha256": "831f270f3ed9d7e43158ce5c2fc594fdbaf40d62da245c8dd5d7657ee10b8838",
+        "ts": "2026-10-18T00:12:48.141Z"
+      },
+      {
+        "stream": "states",
+        "offset": 14229605988,
+        "bytes": 23081,
+        "sha256": "1825474c287f8b7cf1c60b1be0e0367cf07d169f4d7622c1c1e3da136213f45b",
+        "ts": "2026-10-18T00:12:49.175Z"
+      },
+      {
+        "stream": "states",
+        "offset": 14229629069,
+        "bytes": 22164,
+        "sha256": "5b754119e6fdcacf9b7c1051a291593a57f0dd62563757fc8f2399cf105e9e9a",
+        "ts": "2026-10-18T00:12:50.075Z"
+      },
+      {
+        "stream": "states",
+        "offset": 14229651233,
+        "bytes": 21179,
+        "sha256": "e4c00eb67c58e3c110cf3ea522ea5e7f2cdaea1146d6f1f412af73cb44a0ccc3",
+        "ts": "2026-10-18T00:12:51.107Z"
+      },
+      {
+        "stream": "states",
+        "offset": 14229672412,
+        "bytes": 24773,
+        "sha256": "e7634060c88f625c691be69386031fc9eaa614408bafdcba875f0a9e5174f1ee",
+        "ts": "2026-10-18T00:12:57.467Z"
+      },
+      {
+        "stream": "states",
+        "offset": 14229697185,
+        "bytes": 23803,
+        "sha256": "82c5f0cd31b980e447574ef91e779441754a7d292189ffe2f5de9640d2b70ae7",
+        "ts": "2026-10-18T00:12:58.895Z"
+      },
+      {
+        "stream": "states",
+        "offset": 14229720988,
+        "bytes": 22999,
+        "sha256": "0fe70ab10f7746e7557c2512cc7cc95e7612d5c1d9f266b80a4a5dfd8bb4923a",
+        "ts": "2026-10-18T00:12:59.774Z"
+      },
+      {
+        "stream": "states",
+        "offset": 14229743987,
+        "bytes": 22302,
+        "sha256": "5c7e0852bbd29b22217148b652bfbaea9184fb943aeba8bc7f4e478f464241c4",
+        "ts": "2026-10-18T00:13:00.606Z"
+      },
+      {
+        "stream": "states",
+        "offset": 14229766289,
+        "bytes": 21313,
+        "sha256": "7165622d2c5bf49ff53caf374c85affec34f9468df6b070876210f7ce52ecdcc",
+        "ts": "2026-10-18T00:13:01.640Z"
+      },
+      {
+        "stream": "states",
+        "offset": 14229787602,
+        "bytes": 25094,
+        "sha256": "9677337318db7e52ee097d2f3ccf83244820797f1c9e392b6694bb40e2102d0b",
+        "ts": "2026-10-18T00:13:06.073Z"
+      },
+      {
+        "stream": "states",
+        "offset": 14229812696,
+        "bytes": 24093,
+        "sha256": "c499b891303934d54898246194c236c667efac23f1a488401f383c185b1d97d4",
+        "ts": "2026-10-18T00:13:07.011Z"
+      },
+      {
+        "stream": "states",
+        "offset": 14229836789,
+        "bytes": 17349,
+        "sha256": "deacccb44ebbb3c273a4cd9d60b108e536d57ab4e75bd834ee3808d9815b381f",
+        "ts": "2026-10-18T00:13:08.204Z"
+      },
+      {
+        "stream": "states",
+        "offset": 14229854138,
+        "bytes": 17225,
+        "sha256": "c2eb271f7312af232a69a52cd9272456d97187591295509a5373c7afbd1914d3",
+        "ts": "2026-10-18T00:13:08.472Z"
+      },
+      {
+        "stream": "states",
+        "offset": 14229871363,
+        "bytes": 18889,
+        "sha256": "d0df57e4e5fe592aea88236878f3b1ffb9bdcfd13d9e58d53ea8a3635fc04f0b",
+        "ts": "2026-10-18T00:14:00.797Z"
+      },
+      {
+        "stream": "states",
+        "offset": 14229890252,
+        "bytes": 17624,
+        "sha256": "31c32fac29ca793c029b4debaf88df4b3b0efda83149c4bae9787b890f224fac",
+        "ts": "2026-10-18T00:14:01.607Z"
+      },
+      {
+        "stream": "states",
+        "offset": 14229907876,
+        "bytes": 39775,
+        "sha256": "066beb54dc85adddb7851068809f11c717ee43ae19df60bc161f706b7840dde3",
+        "ts": "2026-10-18T00:14:01.901Z"
+      },
+      {
+        "stream": "states",
+        "offset": 14229947651,
+        "bytes": 22630,
+        "sha256": "acfa41b5629f08af895ce29d101c5cd57ac2959deb8f0073319f6a6342f7d4b3",
+        "ts": "2026-10-18T00:14:03.378Z"
+      },
+      {
+        "stream": "states",
+        "offset": 14229970281,
+        "bytes": 22742,
+        "sha256": "c9d39f5d8940f6ca8a86e12f2b927ce290faf1252975585e6701902e8957b9c7",
+        "ts": "2026-10-18T00:15:25.794Z"
+      },
+      {
+        "stream": "states",
+        "offset": 14229993023,
+        "bytes": 22946,
+        "sha256": "3b40068c66f3196617b18891893e2d1fb694125c9f575afa8e28949d64e07358",
+        "ts": "2026-10-18T00:15:26.061Z"
+      },
+      {
+        "stream": "states",
+        "offset": 14230015969,
+        "bytes": 23155,
+        "sha256": "02d2f9d11c2521f87df9210ad41110e7e432517626970c4766131b77809d7e8e",
+        "ts": "2026-10-18T00:15:26.299Z"
+      },
+      {
+        "stream": "states",
+        "offset": 14230039124,
+        "bytes": 23187,
+        "sha256": "612de68d067b7927d63353a057ac51d1738789797e80a0eb959ac3bb1b5e1331",
+        "ts": "2026-10-18T00:15:26.553Z"
+      },
+      {
+        "stream": "states",
+        "offset": 14230062311,
+        "bytes": 38795,
+        "sha256": "e8314bb9217ba0818070b459b6187a13f1da909eafedf149192b6ee52953cd2b",
+        "ts": "2026-10-18T00:15:26.807Z"
+      },
+      {
+        "stream": "states",
+        "offset": 14230101106,
+        "bytes": 23597,
+        "sha256": "0c501eab5922a81937e305f71ea721cf5322dff7d1f0d0d98566229a7090e9a8",
+        "ts": "2026-10-18T00:15:28.495Z"
+      },
+      {
+        "stream": "states",
+        "offset": 14230124703,
+        "bytes": 30091,
+        "sha256": "f6f118704bfbec88b5fd6c85c505be3962abb0a48081afe89de7903b0b6e9882",
+        "ts": "2026-10-18T00:15:33.054Z"
+      },
+      {
+        "stream": "states",
+        "offset": 14230154794,
+        "bytes": 29279,
+        "sha256": "cc00d4d4275278a627419126d58b4dd9cd31ce105a126650d5f461f6794f51e0",
+        "ts": "2026-10-18T00:15:33.963Z"
+      },
+      {
+        "stream": "states",
+        "offset": 14230184073,
+        "bytes": 28720,
+        "sha256": "7a64036d582e132ad5e93287e8af0cff1614fccd14a009731489fccf4cdab339",
+        "ts": "2026-10-18T00:15:35.026Z"
+      },
+      {
+        "stream": "states",
+        "offset": 14230212793,
+        "bytes": 27944,
+        "sha256": "9cbfa07b37776ea9e965d0fd44d2aec6eb4305045e3796997e2dfa6171948c65",
+        "ts": "2026-10-18T00:15:35.863Z"
+      },
+      {
+        "stream": "states",
+        "offset": 14230240737,
+        "bytes": 27083,
+        "sha256": "11e58366599efba357133ac7666da9df9cdf79dce9142581aa176c6f9d024464",
+        "ts": "2026-10-18T00:15:36.706Z"
+      },
+      {
+        "stream": "states",
+        "offset": 14230267820,
+        "bytes": 28640,
+        "sha256": "b0b7c905d5accd37a0e5a197d790bcd34a442f7c6964ae67b20d99f90b6ffd08",
+        "ts": "2026-10-18T00:15:45.403Z"
+      },
+      {
+        "stream": "states",
+        "offset": 14230296460,
+        "bytes": 27879,
+        "sha256": "37e766ae0e9af6ef74e166987e659392cdca47d68c4b82e6603f31a8ec003d1a",
+        "ts": "2026-10-18T00:15:46.467Z"
+      },
+      {
+        "stream": "states",
+        "offset": 14230324339,
+        "bytes": 27014,
+        "sha256": "77eaa6c3946d6071aeb3f33346b4ba93e603a0f7d4873e53e35b7848077fdb9c",
+        "ts": "2026-10-18T00:15:47.332Z"
+      },
+      {
+        "stream": "states",
+        "offset": 14230351353,
+        "bytes": 29439,
+        "sha256": "62673bc2a9653abc070170391a00ad4e0b41b7bce9a6e55de2c39994c06d688d",
+        "ts": "2026-10-18T00:15:55.704Z"
+      },
+      {
+        "stream": "states",
+        "offset": 14230380792,
+        "bytes": 28580,
+        "sha256": "9c814cb9430c07d9ac77b4ca3cf7545cdab012c9eb3c53f387b233d386ae05db",
+        "ts": "2026-10-18T00:15:56.765Z"
+      },
+      {
+        "stream": "states",
+        "offset": 14230409372,
+        "bytes": 33539,
+        "sha256": "6e8632f76f0627d8965ca0c1f9578a9bc729f85ae50c3f29182e6b70bbc54a5a",
+        "ts": "2026-10-18T00:15:57.731Z"
+      },
+      {
+        "stream": "states",
+        "offset": 14230442911,
+        "bytes": 26910,
+        "sha256": "6c5ce09b7a45de0d7fbf7e4b77cca3ece16dc471587ed1c51970418e17c63c0d",
+        "ts": "2026-10-18T00:15:59.052Z"
+      },
+      {
+        "stream": "states",
+        "offset": 14230469821,
+        "bytes": 28371,
+        "sha256": "499bab4a6e843ac6a9a4d314aa6e452c6912b65489afabcae1a25900dc3a462b",
+        "ts": "2026-10-18T00:16:00.225Z"
+      },
+      {
+        "stream": "states",
+        "offset": 14230498192,
+        "bytes": 25158,
+        "sha256": "863e55b30920e1f88e7b034f181efea98dee8a33763b6d7b10af991802da4672",
+        "ts": "2026-10-18T00:16:00.764Z"
+      },
+      {
+        "stream": "states",
+        "offset": 14230523350,
+        "bytes": 29400,
+        "sha256": "4f20d4700ee3bfa516224f7abd0c9bcffcd815fd5182ed16c2b98c65f75103ec",
+        "ts": "2026-10-18T00:16:09.526Z"
+      },
+      {
+        "stream": "states",
+        "offset": 14230552750,
+        "bytes": 28588,
+        "sha256": "2da728ae209d02a4f99f200d406678119758cfbcac8783d9eac4a8275ee0d3ea",
+        "ts": "2026-10-18T00:16:10.431Z"
+      },
+      {
+        "stream": "states",
+        "offset": 14230581338,
+        "bytes": 27734,
+        "sha256": "2b31fcb605efe945a859f35b9c53595dd8c5743935e7e274b0cc359947b7f792",
+        "ts": "2026-10-18T00:16:11.464Z"
+      },
+      {
+        "stream": "states",
+        "offset": 14230609072,
+        "bytes": 26805,
+        "sha256": "80ab3cf1abe953dd145d09ab9cddd48a435aa766dbc27acd3dcaf031ffb6d85e",
+        "ts": "2026-10-18T00:16:12.395Z"
+      },
+      {
+        "stream": "states",
+        "offset": 14230635877,
+        "bytes": 25167,
+        "sha256": "e91c65daa95fb2c161767570bb7b2af3dbb3c87afd2a0016fcfa63d559253b11",
+        "ts": "2026-10-18T00:16:13.331Z"
+      },
+      {
+        "stream": "states",
+        "offset": 14230661044,
+        "bytes": 29537,
+        "sha256": "e60907bbff2b6ca58c92118e46b4565a42f28c1506d896bd8ba13d6bd0a65c94",
+        "ts": "2026-10-18T00:16:21.148Z"
+      },
+      {
+        "stream": "states",
+        "offset": 14230690581,
+        "bytes": 28547,
+        "sha256": "136fc92a34fee5c5fe670e6c636524d6031cb3ec8c6c922b033f2f7297b4be13",
+        "ts": "2026-10-18T00:16:22.502Z"
+      },
+      {
+        "stream": "states",
+        "offset": 14230719128,
+        "bytes": 27851,
+        "sha256": "10983e18982dfb0c5cb515d2ab25e40ed162c54546f0363b6bf4cecdad8dccbf",
+        "ts": "2026-10-18T00:16:23.363Z"
+      },
+      {
+        "stream": "states",
+        "offset": 14230746979,
+        "bytes": 26985,
+        "sha256": "cd80c19bccc6d18f2ac89ed3bc9ee25c3367e249e77bf6e890eeb7693630c626",
+        "ts": "2026-10-18T00:16:24.231Z"
+      },
+      {
+        "stream": "states",
+        "offset": 14230773964,
+        "bytes": 29398,
+        "sha256": "6b31c3da0cb9e6f643aaa4423ea03e6d2a340d331b2121b833ef54c3ff1e08ef",
+        "ts": "2026-10-18T00:16:31.905Z"
+      },
+      {
+        "stream": "states",
+        "offset": 14230803362,
+        "bytes": 28847,
+        "sha256": "4933a5b2cfaacce93ecd9c54cc220fe7a05a9cd33cd3d9e86134e90b5dcc353f",
+        "ts": "2026-10-18T00:16:32.962Z"
+      },
+      {
+        "stream": "states",
+        "offset": 14230832209,
+        "bytes": 28088,
+        "sha256": "46cc52bcfcddbf7d9c1a7942e3225ea1c4238b9c4a7bee48a890e8cd186c439d",
+        "ts": "2026-10-18T00:16:34.092Z"
+      },
+      {
+        "stream": "states",
+        "offset": 14230860297,
+        "bytes": 29423,
+        "sha256": "8f6cc97a82c3c62d86e4efdca8f2ebcfbe07ac2986be7adc89d7f36ea4a526a1",
+        "ts": "2026-10-18T00:16:35.268Z"
+      },
+      {
+        "stream": "states",
+        "offset": 14230889720,
+        "bytes": 26354,
+        "sha256": "0df0215b280ecf82404e91fdfde93f2a5c2e1523472219855181aef930c30c13",
+        "ts": "2026-10-18T00:16:35.765Z"
+      },
+      {
+        "stream": "states",
+        "offset": 14230916074,
+        "bytes": 29615,
+        "sha256": "6c88b81bcbb3a8ce206f6e9fd8e4fe7933471cf64d3e0718752c3466e584662b",
+        "ts": "2026-10-18T00:16:46.193Z"
+      },
+      {
+        "stream": "states",
+        "offset": 14230945689,
+        "bytes": 28803,
+        "sha256": "ccfb8a8739e078b7da727c67b69fac6730156b32ca2f0c769ec4fa867c1f2f63",
+        "ts": "2026-10-18T00:16:47.137Z"
+      },
+      {
+        "stream": "states",
+        "offset": 14230974492,
+        "bytes": 28106,
+        "sha256": "557cce8adcab5a434eaf3963d87dbbd0edd4453cee8a2346d4db5e6c032f0a3f",
+        "ts": "2026-10-18T00:16:48.156Z"
+      },
+      {
+        "stream": "states",
+        "offset": 14231002598,
+        "bytes": 27142,
+        "sha256": "e2cad6e5bbc81d106d8a2996375df65ff81fae5ce46909befb5d4cdd1e7be4cd",
+        "ts": "2026-10-18T00:16:49.058Z"
+      },
+      {
+        "stream": "states",
+        "offset": 14231029740,
+        "bytes": 30268,
+        "sha256": "1081f59856b575059b51cd16166e0f7dbd715d1c4a7a53aad4867e458aefa494",
+        "ts": "2026-10-18T00:16:56.896Z"
+      },
+      {
+        "stream": "states",
+        "offset": 14231060008,
+        "bytes": 29258,
+        "sha256": "2d3ef5397c3d1822443413a5f567a8a337b5b878d5af8643b18b1cf0682fb711",
+        "ts": "2026-10-18T00:16:57.796Z"
+      },
+      {
+        "stream": "states",
+        "offset": 14231089266,
+        "bytes": 28706,
+        "sha256": "6a2d00e18c5b26324d24387bbf98e922c338f4bc5ac4d7fcf4235c004087e673",
+        "ts": "2026-10-18T00:16:58.866Z"
+      },
+      {
+        "stream": "states",
+        "offset": 14231117972,
+        "bytes": 27267,
+        "sha256": "a01c9be93639f0f63865799ae3fecda8a30729a2f79ef3e91cd77c08c8195f63",
+        "ts": "2026-10-18T00:16:59.733Z"
+      },
+      {
+        "stream": "states",
+        "offset": 14231145239,
+        "bytes": 26299,
+        "sha256": "ce8349a01350e634743e1661e4cb6f919fe3ac5501ef08c9637aaa79f25c7fb1",
+        "ts": "2026-10-18T00:17:00.703Z"
+      },
+      {
+        "stream": "states",
+        "offset": 14231171538,
+        "bytes": 28503,
+        "sha256": "745943e434c307ad35ec7fc4d66e4a01578bcbe6e8867b156b95115efda634f0",
+        "ts": "2026-10-18T00:17:08.293Z"
+      },
+      {
+        "stream": "states",
+        "offset": 14231200041,
+        "bytes": 27718,
+        "sha256": "e9a21a9b091d2abac86b33ccd8d756e6611305b7cd6d57de36dede220179ce8e",
+        "ts": "2026-10-18T00:17:09.261Z"
+      },
+      {
+        "stream": "states",
+        "offset": 14231227759,
+        "bytes": 26870,
+        "sha256": "c0b913963be3a9af7bc83618e9bbb9737ca3acb329be2e4ebbea03325140905e",
+        "ts": "2026-10-18T00:17:10.299Z"
+      },
+      {
+        "stream": "states",
+        "offset": 14231254629,
+        "bytes": 26886,
+        "sha256": "8f34e0bacf0e69373c8b2338f20035ff349cf6929f157e2d6103e78db55ef067",
+        "ts": "2026-10-18T00:17:16.057Z"
+      },
+      {
+        "stream": "states",
+        "offset": 14231281515,
+        "bytes": 19339,
+        "sha256": "c2e56bb99f250f28e5187a9d6dd1d9fc5aae2bca4e791104a4f4e8159afe6085",
+        "ts": "2026-10-18T00:17:18.293Z"
+      },
+      {
+        "stream": "states",
+        "offset": 14231300854,
+        "bytes": 19215,
+        "sha256": "49fdb25706bb5e006f5740e3de181f645b6e51683604313314192b085d4a42b1",
+        "ts": "2026-10-18T00:17:47.818Z"
+      },
+      {
+        "stream": "states",
+        "offset": 14231320069,
+        "bytes": 21052,
+        "sha256": "043186103a47e1dddc87d135b3d0c34ee85d508aba53c4fe75c3f7f30c35d056",
+        "ts": "2026-10-18T00:18:32.998Z"
+      },
+      {
+        "stream": "states",
+        "offset": 14231341121,
+        "bytes": 19559,
+        "sha256": "156095d8b5c66fdfaffef56190364b8365e95104a6e69f7a9eaa0e92ae92a78d",
+        "ts": "2026-10-18T00:18:33.718Z"
+      },
+      {
+        "stream": "states",
+        "offset": 14231360680,
+        "bytes": 41867,
+        "sha256": "8f1d555a0c9783cf3a15b9c547e3437a9a8b431ace08c3d14b6c7fd366912069",
+        "ts": "2026-10-18T00:18:33.971Z"
+      },
+      {
+        "stream": "states",
+        "offset": 14231402547,
+        "bytes": 18453,
+        "sha256": "5bb1745378fefef0d31ddafa0aa1549d0b5c4fb15938d080a2cb5a2679e80780",
+        "ts": "2026-10-18T00:19:34.069Z"
+      },
+      {
+        "stream": "states",
+        "offset": 14231421000,
+        "bytes": 17786,
+        "sha256": "3de708e5ed0b14b0d59c2077a547ffd59e303b7c153410d44709128a6991f3e5",
+        "ts": "2026-10-18T00:19:34.581Z"
+      },
+      {
+        "stream": "states",
+        "offset": 14231438786,
+        "bytes": 39355,
+        "sha256": "2ae3777f55bd414651f2b2fd2608b43f2d83cba8c5cd71884a2abdf8a66b3349",
+        "ts": "2026-10-18T00:19:35.072Z"
+      },
+      {
+        "stream": "states",
+        "offset": 14231478141,
+        "bytes": 17802,
+        "sha256": "720a13701c0b3d39b7addf476007d9541f4dd1b95cc00d195393757051858d61",
+        "ts": "2026-10-18T00:19:58.493Z"
+      },
+      {
+        "stream": "states",
+        "offset": 14231495943,
+        "bytes": 16936,
+        "sha256": "0f17a3fed7a1854ee02b766fa684e7c4474e135dce44d8182abbdf6e45761da5",
+        "ts": "2026-10-18T00:19:58.758Z"
+      },
+      {
+        "stream": "states",
+        "offset": 14231512879,
+        "bytes": 39352,
+        "sha256": "ed09eb6400371486ec6ea2036e0f47eda5e1b3f66ea1a93b2e9be9a344947383",
+        "ts": "2026-10-18T00:19:59.054Z"
+      },
+      {
+        "stream": "states",
+        "offset": 14231552231,
+        "bytes": 23260,
+        "sha256": "678fcc384b9859cfc41d3a63d60fd004e6033a909f6cba21bbbbf51d08a4a7f3",
+        "ts": "2026-10-18T00:20:00.410Z"
+      },
+      {
+        "stream": "states",
+        "offset": 14231575491,
+        "bytes": 29519,
+        "sha256": "0b99bbaf34758601474a4ff4e8e787925c65ec233ecf67c402147a85af4e159c",
+        "ts": "2026-10-18T00:20:03.059Z"
+      },
+      {
+        "stream": "states",
+        "offset": 14231605010,
+        "bytes": 28743,
+        "sha256": "98dcfb89f17d0316472d7eebe71e3d4b9304dd29ab43d8dbdc222426d797eb05",
+        "ts": "2026-10-18T00:20:03.993Z"
+      },
+      {
+        "stream": "states",
+        "offset": 14231633753,
+        "bytes": 27939,
+        "sha256": "18752eaa755dca2f2a4a49086ff710a3653540887fa7598b832513be91681815",
+        "ts": "2026-10-18T00:20:04.930Z"
+      },
+      {
+        "stream": "states",
+        "offset": 14231661692,
+        "bytes": 26941,
+        "sha256": "1aca11e15348b5e07d3f3c7b15e9d498fd4b632e434e76f5ebea43458917631f",
+        "ts": "2026-10-18T00:20:05.865Z"
+      },
+      {
+        "stream": "states",
+        "offset": 14231688633,
+        "bytes": 28630,
+        "sha256": "ce0c9af49ce78934f577075d0ebb136e319ce4ebd6a205520224bb971d325459",
+        "ts": "2026-10-18T00:20:11.494Z"
+      },
+      {
+        "stream": "states",
+        "offset": 14231717263,
+        "bytes": 27569,
+        "sha256": "650c42bf6807ff22cedbfb920fe7f1a3351d937338fb9b540bb9d72c345fb726",
+        "ts": "2026-10-18T00:20:12.858Z"
+      },
+      {
+        "stream": "states",
+        "offset": 14231744832,
+        "bytes": 26937,
+        "sha256": "e04143ff93ad84619e08d9e763210829fd5bb6bc4877640cd0e1637bd4558d3f",
+        "ts": "2026-10-18T00:20:13.891Z"
+      },
+      {
+        "stream": "states",
+        "offset": 14231771769,
+        "bytes": 29164,
+        "sha256": "22cca88e62f3148c78e525f426232db8f8e468d211540005e9d3e71a4f3daff6",
+        "ts": "2026-10-18T00:20:19.724Z"
+      },
+      {
+        "stream": "states",
+        "offset": 14231800933,
+        "bytes": 28216,
+        "sha256": "277e2a456bebebc2e8ba63ce269961293fbd11d1f57d6bf71ab0238666a6ce2d",
+        "ts": "2026-10-18T00:20:20.789Z"
+      },
+      {
+        "stream": "states",
+        "offset": 14231829149,
+        "bytes": 27214,
+        "sha256": "9f9edae66c13594597dd16a64ca2c7a19037dde1812f47f0b3b52573cae3150f",
+        "ts": "2026-10-18T00:20:21.659Z"
+      },
+      {
+        "stream": "states",
+        "offset": 14231856363,
+        "bytes": 26302,
+        "sha256": "d6e51e30204c3d09fa25f3adc75aceeb91b6b147ce817a405197636c58ddbae5",
+        "ts": "2026-10-18T00:20:22.490Z"
+      },
+      {
+        "stream": "states",
+        "offset": 14231882665,
+        "bytes": 27141,
+        "sha256": "50edb7fd6b879de7e8e8d14074d12ae241115930ebbc171eabd144618867f626",
+        "ts": "2026-10-18T00:20:23.649Z"
+      },
+      {
+        "stream": "states",
+        "offset": 14231909806,
+        "bytes": 24644,
+        "sha256": "288e1a72db40c7beb2392fd498b51cd1270dd3a6ad3aababe05a2c00e018fea2",
+        "ts": "2026-10-18T00:20:24.210Z"
+      },
+      {
+        "stream": "states",
+        "offset": 14231934450,
+        "bytes": 29002,
+        "sha256": "51fee04de0773729dd2c0da7db2b6a2b0f51e4ddfb2d4396b4788240331b14f7",
+        "ts": "2026-10-18T00:20:30.773Z"
+      },
+      {
+        "stream": "states",
+        "offset": 14231963452,
+        "bytes": 28198,
+        "sha256": "53d4201c4b6658ad86b378c869725532fe387214084b2069ff4feb115770a94f",
+        "ts": "2026-10-18T00:20:31.693Z"
+      },
+      {
+        "stream": "states",
+        "offset": 14231991650,
+        "bytes": 27280,
+        "sha256": "0c9d1e0916b84acd7e08eaf1cfe22139972649053b42e6ece5bf889554461172",
+        "ts": "2026-10-18T00:20:32.623Z"
+      },
+      {
+        "stream": "states",
+        "offset": 14232018930,
+        "bytes": 26449,
+        "sha256": "b13b13ab1cdc15bd429c0223888b5633a043d51bfe476103ef2c734b2b3205e0",
+        "ts": "2026-10-18T00:20:33.623Z"
+      },
+      {
+        "stream": "states",
+        "offset": 14232045379,
+        "bytes": 29281,
+        "sha256": "dc93ca35636dbea1f47646d0c982dbbb4744343e0aefdba5d33a98b71ffcc1ac",
+        "ts": "2026-10-18T00:20:38.675Z"
+      },
+      {
+        "stream": "states",
+        "offset": 14232074660,
+        "bytes": 28427,
+        "sha256": "9ec97ae8abe78caf49c9c93e1567ed9ad8ec0ecf1f410242347adef1af1a705d",
+        "ts": "2026-10-18T00:20:39.727Z"
+      },
+      {
+        "stream": "states",
+        "offset": 14232103087,
+        "bytes": 29339,
+        "sha256": "97282afdf9549423089f9d98183001e71f7ab3440fba01547d5ac5f89171234e",
+        "ts": "2026-10-18T00:20:44.195Z"
+      },
+      {
+        "stream": "states",
+        "offset": 14232132426,
+        "bytes": 28664,
+        "sha256": "3cd37b3c139f3cc7704d905835ecedff82455c85b7113107fe048f1d9d106579",
+        "ts": "2026-10-18T00:20:45.121Z"
+      },
+      {
+        "stream": "states",
+        "offset": 14232161090,
+        "bytes": 27716,
+        "sha256": "2a7617f41efcaebd04c7f354af6b815f0831dae40f0bf53be588e0ae5181e3f8",
+        "ts": "2026-10-18T00:20:46.156Z"
+      },
+      {
+        "stream": "states",
+        "offset": 14232188806,
+        "bytes": 19911,
+        "sha256": "a89a1ce47612c9ef18268a8f43e54125cf34a5b11342d4ea1118bbb6b54808b8",
+        "ts": "2026-10-18T00:20:48.384Z"
+      },
+      {
+        "stream": "states",
+        "offset": 14232208717,
+        "bytes": 19785,
+        "sha256": "56618f0c3b03a970542b5d10dfa6061adaa55b544e10ca1c144bea66185704bc",
+        "ts": "2026-10-18T00:20:48.616Z"
+      },
+      {
+        "stream": "states",
+        "offset": 14232228502,
+        "bytes": 21708,
+        "sha256": "b7b1676b4adb3798ac167ef0b6102f9f2815bf6065ea62cbd983e26f78b53ee2",
+        "ts": "2026-10-18T00:21:22.882Z"
+      },
+      {
+        "stream": "states",
+        "offset": 14232250210,
+        "bytes": 20278,
+        "sha256": "daa0716c32e1c85a1daa7964b5ef25d19a61942e5d84bfc365aa7aaa6cb57701",
+        "ts": "2026-10-18T00:21:23.614Z"
+      },
+      {
+        "stream": "states",
+        "offset": 14232270488,
+        "bytes": 42570,
+        "sha256": "ce2646363ac441af64eb81b6b97329809a36af7a2fcae4a1a17dcdb556452d92",
+        "ts": "2026-10-18T00:21:23.897Z"
+      },
+      {
+        "stream": "states",
+        "offset": 14232313058,
+        "bytes": 17755,
+        "sha256": "5116fd4ebf08746ad968be2d39b9c8f9f1f65653c1dc9653c2c5e7eefe4dadd5",
+        "ts": "2026-10-18T00:21:25.090Z"
+      },
+      {
+        "stream": "states",
+        "offset": 14232330813,
+        "bytes": 17957,
+        "sha256": "6a51f10d0ec03830727bbce87cfbb6d793d596ef255daf7f3292b1eb61e7657c",
+        "ts": "2026-10-18T00:22:02.927Z"
+      },
+      {
+        "stream": "states",
+        "offset": 14232348770,
+        "bytes": 40063,
+        "sha256": "67a8c171813ffe6d7485b684e493415708c0f8b2964c5ae41da62504d4398060",
+        "ts": "2026-10-18T00:22:03.255Z"
+      },
+      {
+        "stream": "states",
+        "offset": 14232388833,
+        "bytes": 25771,
+        "sha256": "1c4a033e0697856a4fb48b76ac88de2d8fc3f842df6500f12b97223221fe7d77",
+        "ts": "2026-10-18T00:22:04.757Z"
+      },
+      {
+        "stream": "states",
+        "offset": 14232414604,
+        "bytes": 32270,
+        "sha256": "733e164003a51cfe4d8cd61f07f9197418be200178478fdfca04209b51ecf68f",
+        "ts": "2026-10-18T00:22:09.489Z"
+      },
+      {
+        "stream": "states",
+        "offset": 14232446874,
+        "bytes": 31486,
+        "sha256": "a95522a3d194d93ee0c197c4a37af498b5981e7da95f09d433aeaecc6fdf5add",
+        "ts": "2026-10-18T00:22:10.367Z"
+      },
+      {
+        "stream": "states",
+        "offset": 14232478360,
+        "bytes": 30707,
+        "sha256": "022a3f61df02a4661cca9352c17a7a62feb6ef36bd2bae35858bf90c4f683862",
+        "ts": "2026-10-18T00:22:11.311Z"
+      },
+      {
+        "stream": "states",
+        "offset": 14232509067,
+        "bytes": 29855,
+        "sha256": "a252a56e533f49df1d7b04fc07453850a5d65c73cfe0694fd29d66e6dbc5caca",
+        "ts": "2026-10-18T00:22:12.379Z"
+      },
+      {
+        "stream": "states",
+        "offset": 14232538922,
+        "bytes": 28894,
+        "sha256": "13412a7086f73fb0f5036d821971a493accebdf70893024aad688ba595658153",
+        "ts": "2026-10-18T00:22:13.442Z"
+      },
+      {
+        "stream": "states",
+        "offset": 14232567816,
+        "bytes": 29642,
+        "sha256": "bd95e98c432ee3decfb84ca766a855fcb1c125a48475f221e1d57794abb26582",
+        "ts": "2026-10-18T00:22:14.764Z"
+      },
+      {
+        "stream": "states",
+        "offset": 14232597458,
+        "bytes": 27342,
+        "sha256": "f9263035fb0ef82db7330ea859a54443c256d2abdc38ecf7208b94950f01663b",
+        "ts": "2026-10-18T00:22:15.310Z"
+      },
+      {
+        "stream": "states",
+        "offset": 14232624800,
+        "bytes": 31096,
+        "sha256": "1283ea44a84908bc09afcb6aba9dff96494d121d3cffd9a11e21287731c1dfb9",
+        "ts": "2026-10-18T00:22:23.468Z"
+      },
+      {
+        "stream": "states",
+        "offset": 14232655896,
+        "bytes": 30104,
+        "sha256": "a5200b2c1778af08c454307e3c14e03587c4155949162c315c00d7f9460e0839",
+        "ts": "2026-10-18T00:22:24.345Z"
+      },
+      {
+        "stream": "states",
+        "offset": 14232686000,
+        "bytes": 29098,
+        "sha256": "ef793c2d67870cff51fdf3fb4ab9f3e9f730cbc28017889eb471b3d06cb16657",
+        "ts": "2026-10-18T00:22:25.264Z"
+      },
+      {
+        "stream": "states",
+        "offset": 14232715098,
+        "bytes": 28148,
+        "sha256": "047ab743b8f94e89b366b23f1139a3da0f6ab2b1a113f67afad1a307e3676e9c",
+        "ts": "2026-10-18T00:22:26.158Z"
+      },
+      {
+        "stream": "states",
+        "offset": 14232743246,
+        "bytes": 30835,
+        "sha256": "d01f140342446618c9d045126c74dfb3d6c6741ae74b2bc72f13ec3cfe36beb1",
+        "ts": "2026-10-18T00:22:34.815Z"
+      },
+      {
+        "stream": "states",
+        "offset": 14232774081,
+        "bytes": 30312,
+        "sha256": "fcc7cda070b3784591c4647d74fd9a62c2cc4125504b8fd3e955d34f4f6ee27b",
+        "ts": "2026-10-18T00:22:35.780Z"
+      },
+      {
+        "stream": "states",
+        "offset": 14232804393,
+        "bytes": 29344,
+        "sha256": "c4379b8359be365ddca64379877fe11297dcbae772261322e0e341f85fbd7c9d",
+        "ts": "2026-10-18T00:22:36.688Z"
+      },
+      {
+        "stream": "states",
+        "offset": 14232833737,
+        "bytes": 30459,
+        "sha256": "cd6c2057bcb7a64bc430afabb7c1ee026f092f134c871091ca36f3c1f3182fad",
+        "ts": "2026-10-18T00:22:44.173Z"
+      },
+      {
+        "stream": "states",
+        "offset": 14232864196,
+        "bytes": 29651,
+        "sha256": "fbb661c0a59c653a803e25f7125ca61e0a916b63ede4db1c7c40c2370c99d149",
+        "ts": "2026-10-18T00:22:45.087Z"
+      },
+      {
+        "stream": "states",
+        "offset": 14232893847,
+        "bytes": 27929,
+        "sha256": "149dc4ed36d75865b684532f2a5a6dfde46ffd00d236689e2d3caf355725832f",
+        "ts": "2026-10-18T00:22:46.369Z"
+      },
+      {
+        "stream": "states",
+        "offset": 14232921776,
+        "bytes": 27228,
+        "sha256": "fd3939821b8e1456225b243cea21450e227743042676afa6429469427fe1e1c5",
+        "ts": "2026-10-18T00:22:46.902Z"
+      },
+      {
+        "stream": "states",
+        "offset": 14232949004,
+        "bytes": 30100,
+        "sha256": "e5df8a26afca50907e918fa3331c090b8c0b0cfa1e2ca761d29404c02ce8595b",
+        "ts": "2026-10-18T00:22:51.952Z"
+      },
+      {
+        "stream": "states",
+        "offset": 14232979104,
+        "bytes": 28582,
+        "sha256": "4bf145b920442bcfdc87e878bbacc9c933fb0e56a5230a9aac9032dcff0ca3d3",
+        "ts": "2026-10-18T00:22:52.774Z"
+      },
+      {
+        "stream": "states",
+        "offset": 14233007686,
+        "bytes": 27906,
+        "sha256": "338b06602a9531889590803578b6b80b0b44b69a987d6ca2530595cfb82b59a9",
+        "ts": "2026-10-18T00:22:55.612Z"
+      },
+      {
+        "stream": "states",
+        "offset": 14233035592,
+        "bytes": 27024,
+        "sha256": "1dc43a825fece3755b09ef461d4e89b93c24e9bac9ca48ee20ecc8ce8067d693",
+        "ts": "2026-10-18T00:22:56.645Z"
+      },
+      {
+        "stream": "states",
+        "offset": 14233062616,
+        "bytes": 29521,
+        "sha256": "1f626bb0b3c53ea9d12ef9d2f3ed29244dda9e1b18377698e4ba9655335f607d",
+        "ts": "2026-10-18T00:23:01.945Z"
+      },
+      {
+        "stream": "states",
+        "offset": 14233092137,
+        "bytes": 28672,
+        "sha256": "763cf669beae5c71e99b0ddfa25beee66c353304e982c84de6ef70ba0282aad4",
+        "ts": "2026-10-18T00:23:02.977Z"
+      },
+      {
+        "stream": "states",
+        "offset": 14233120809,
+        "bytes": 20623,
+        "sha256": "607daf8e13945f4697e3a6936340489e29a336f0b9693a56a5af098ff6a28a07",
+        "ts": "2026-10-18T00:23:05.233Z"
+      },
+      {
+        "stream": "states",
+        "offset": 14233141432,
+        "bytes": 20497,
+        "sha256": "ce1af3056c44eaef10394d54c31ccea3d2987e03c4ac2e59ec0a549d31f02267",
+        "ts": "2026-10-18T00:23:24.134Z"
+      },
+      {
+        "stream": "states",
+        "offset": 14233161929,
+        "bytes": 22276,
+        "sha256": "cea34ee8a023e8ae11a3f69d54db8a78a8d82dbb5288b8ee24553944a91ed0b9",
+        "ts": "2026-10-18T00:24:20.547Z"
+      },
+      {
+        "stream": "states",
+        "offset": 14233184205,
+        "bytes": 20807,
+        "sha256": "081cc8b9c76a13ee727a462adeccea0dee4ebb7b0cb6b4bc3f32ab12ec85dc28",
+        "ts": "2026-10-18T00:24:21.231Z"
+      },
+      {
+        "stream": "states",
+        "offset": 14233205012,
+        "bytes": 43085,
+        "sha256": "d51b2d8d8da46e0dd0822a3319bd782f86ab4354ab0590ea287d6aebd3cf620e",
+        "ts": "2026-10-18T00:24:21.519Z"
+      },
+      {
+        "stream": "states",
+        "offset": 14233248097,
+        "bytes": 25636,
+        "sha256": "29f3ff117fab322be19095c2187aa4b0f6a63abd9d2a13cffab5d76a6986c451",
+        "ts": "2026-10-18T00:24:22.926Z"
+      },
+      {
+        "stream": "states",
+        "offset": 14233273733,
+        "bytes": 32390,
+        "sha256": "f6c25afbd69d0b50d5651a1610e4cc3e8a0e29dd519ff83e09f3625cd2dbe87d",
+        "ts": "2026-10-18T00:24:26.467Z"
+      },
+      {
+        "stream": "states",
+        "offset": 14233306123,
+        "bytes": 31614,
+        "sha256": "20c3592a8d5335781e73e660789119d71e56ed619e8f4b6297901ffb22254145",
+        "ts": "2026-10-18T00:24:27.346Z"
+      },
+      {
+        "stream": "states",
+        "offset": 14233337737,
+        "bytes": 30311,
+        "sha256": "97b86d5c2e7994d65de09408e259904efee209fedf26968e3574518e6bf82fec",
+        "ts": "2026-10-18T00:24:28.219Z"
+      },
+      {
+        "stream": "states",
+        "offset": 14233368048,
+        "bytes": 29327,
+        "sha256": "6ca92f609c3b42a3ab3bfdc4a3d4c3090ccd148ae519844e1dc4ce9162c1665d",
+        "ts": "2026-10-18T00:24:29.083Z"
+      },
+      {
+        "stream": "states",
+        "offset": 14233397375,
+        "bytes": 28727,
+        "sha256": "3f5236c4e87cbf838f1e42083dc30e04093257041a46e105140aac848ad4c5d0",
+        "ts": "2026-10-18T00:24:29.979Z"
+      },
+      {
+        "stream": "states",
+        "offset": 14233426102,
+        "bytes": 30414,
+        "sha256": "a0e06ef4c6d5df429b81e553cece00a004e8b589bf3fd7c7cd4090d1eeb5747e",
+        "ts": "2026-10-18T00:24:34.398Z"
+      },
+      {
+        "stream": "states",
+        "offset": 14233456516,
+        "bytes": 29424,
+        "sha256": "551e4b03d492f8ab4dd545cef340e759619207f171381332611a38765890dbac",
+        "ts": "2026-10-18T00:24:35.776Z"
+      },
+      {
+        "stream": "states",
+        "offset": 14233485940,
+        "bytes": 28077,
+        "sha256": "bbcceb3c97a5a5d5ffea2494e170576b24ef61be84a28fd1617803a17afe7171",
+        "ts": "2026-10-18T00:24:36.596Z"
+      },
+      {
+        "stream": "states",
+        "offset": 14233514017,
+        "bytes": 27193,
+        "sha256": "7cb026ca805682cbaf36b2895fcf2d3565a82a217f56a053d04c0400aef78509",
+        "ts": "2026-10-18T00:24:37.653Z"
+      },
+      {
+        "stream": "states",
+        "offset": 14233541210,
+        "bytes": 26078,
+        "sha256": "9229c71520ff6a15eab3ef68ff81c61c540a6b06110726c686c22e91d340a252",
+        "ts": "2026-10-18T00:24:39.869Z"
+      },
+      {
+        "stream": "states",
+        "offset": 14233567288,
+        "bytes": 31093,
+        "sha256": "f95667009f9decee7d9652a5d9d849494b80868c9e2dd006b40ed4dc60e9621f",
+        "ts": "2026-10-18T00:24:43.312Z"
+      },
+      {
+        "stream": "states",
+        "offset": 14233598381,
+        "bytes": 30087,
+        "sha256": "06523dc26253851ddc75196c21321a015344011510f01950a1cd5d1dcf4828c3",
+        "ts": "2026-10-18T00:24:44.178Z"
+      },
+      {
+        "stream": "states",
+        "offset": 14233628468,
+        "bytes": 29195,
+        "sha256": "5542f8118d99df4355e8c097be9c381b72f4da66b29f58b477236482739adb2e",
+        "ts": "2026-10-18T00:24:45.249Z"
+      },
+      {
+        "stream": "states",
+        "offset": 14233657663,
+        "bytes": 31157,
+        "sha256": "a67b0c0c7a1c4c59b8af9cc98c6d123f2965ada86e04f6523a1197e4eefe7841",
+        "ts": "2026-10-18T00:24:50.904Z"
+      },
+      {
+        "stream": "states",
+        "offset": 14233688820,
+        "bytes": 29787,
+        "sha256": "ee60a0d9c872713b5cd926fae3c64e1db5654119de2737b2c29c5254ec2c5b07",
+        "ts": "2026-10-18T00:24:51.951Z"
+      },
+      {
+        "stream": "states",
+        "offset": 14233718607,
+        "bytes": 29524,
+        "sha256": "60efc923a02691d453d515edce9bbea6296a15ba8e08801b4ade9760a5842141",
+        "ts": "2026-10-18T00:24:52.806Z"
+      },
+      {
+        "stream": "states",
+        "offset": 14233748131,
+        "bytes": 31993,
+        "sha256": "5ab9234d3ae5a746d2b6763d5d951c4a39a555e74219dd4938ca398b4a4c2446",
+        "ts": "2026-10-18T00:24:59.697Z"
+      },
+      {
+        "stream": "states",
+        "offset": 14233780124,
+        "bytes": 31141,
+        "sha256": "44997d289ca397897f7414d56c0c7b141acbc6beba81287b3fde3981717abf1c",
+        "ts": "2026-10-18T00:25:00.779Z"
+      },
+      {
+        "stream": "states",
+        "offset": 14233811265,
+        "bytes": 30293,
+        "sha256": "d2cbecd714da4a1a5b0127f5f3d473005ecfa82e528ce203bf0866e268ef0b67",
+        "ts": "2026-10-18T00:25:01.816Z"
+      },
+      {
+        "stream": "states",
+        "offset": 14233841558,
+        "bytes": 29687,
+        "sha256": "006e8a2bcedbeb2e99d4a9b8cd679daac17b0270bccf0b5d3d5f3fe3ff259e43",
+        "ts": "2026-10-18T00:25:04.621Z"
+      },
+      {
+        "stream": "states",
+        "offset": 14233871245,
+        "bytes": 26844,
+        "sha256": "be314595f652b75c6f80c78f6ab85e4f48043111d057d6fc6c9a652918f091b3",
+        "ts": "2026-10-18T00:25:07.322Z"
+      },
+      {
+        "stream": "run-plans",
+        "offset": 9226911,
+        "bytes": 2684,
+        "sha256": "2e0c0f0873158b6f0511dc24f961fcc6ad8f45b3febe33677486077471c186e3",
+        "ts": "2026-10-18T00:09:03.879Z"
+      },
+      {
+        "stream": "run-plans",
+        "offset": 9229595,
+        "bytes": 2656,
+        "sha256": "61ce4f45a932ff87db7ee12a8ca7930895405b13bcd114a075ad24e5280a14c5",
+        "ts": "2026-10-18T00:19:34.068Z"
+      },
+      {
+        "stream": "run-plans",
+        "offset": 9232251,
+        "bytes": 2893,
+        "sha256": "dab23e8ab190786023ce0cbbff472c5b3258b13400705a8bfe24f55d065769a7",
+        "ts": "2026-10-18T00:24:20.546Z"
+      },
+      {
+        "stream": "run-config",
+        "offset": 2062799,
+        "bytes": 5935,
+        "sha256": "c7057c9ae4011015c3d8e5fe9767192e07ab32a80875a3b2a3b8057eb3d5ccba",
+        "ts": "2026-10-18T00:08:21.747Z"
+      },
+      {
+        "stream": "runs",
+        "offset": 370367,
+        "bytes": 503,
+        "sha256": "907ec262069dda02f431b17ef194aee267627fad55d157abfaf37ad75504a04b",
+        "ts": null
+      },
+      {
+        "stream": "brain",
+        "offset": 799112536,
+        "bytes": 62193,
+        "sha256": "1b560b228b50df46355fffb250bb4bfd12aacc1b69a6229fd2355991f26c9f52",
+        "ts": "2026-10-18T00:09:03.871Z"
+      },
+      {
+        "stream": "brain",
+        "offset": 799174729,
+        "bytes": 23575,
+        "sha256": "0ed7c9fb523282e6b3a2d7392bf52fde83d77217a801839c0a0b928d9a23374a",
+        "ts": "2026-10-18T00:10:23.144Z"
+      },
+      {
+        "stream": "brain",
+        "offset": 799198304,
+        "bytes": 93487,
+        "sha256": "9bfa691ebb2d22a0b5757e91ae51c2320a90647b53a0f26b07e77658cd052948",
+        "ts": "2026-10-18T00:11:35.180Z"
+      },
+      {
+        "stream": "brain",
+        "offset": 799291791,
+        "bytes": 94926,
+        "sha256": "ef3232db8d3ff47ae091be91d7a4c1d3d6cd4f98c918ba65780535cc0a7695d7",
+        "ts": "2026-10-18T00:12:36.957Z"
+      },
+      {
+        "stream": "brain",
+        "offset": 799386717,
+        "bytes": 95288,
+        "sha256": "632365d5232cb7ba9cf2c5e7aa607cf90510f664a1ec27e1a794660feb550003",
+        "ts": "2026-10-18T00:14:00.794Z"
+      },
+      {
+        "stream": "brain",
+        "offset": 799482005,
+        "bytes": 175622,
+        "sha256": "48af32a78ca44de4820382fddccfe7f41afb6f0a4b9b643e997d4a8aad8d0a88",
+        "ts": "2026-10-18T00:15:25.788Z"
+      },
+      {
+        "stream": "brain",
+        "offset": 799657627,
+        "bytes": 104941,
+        "sha256": "e793d58b1830b23d14e7a71aaaf4b4d14652d5d0702a384f2c87d6442e14d8a7",
+        "ts": "2026-10-18T00:18:32.993Z"
+      },
+      {
+        "stream": "brain",
+        "offset": 799762568,
+        "bytes": 61840,
+        "sha256": "018a860770af5af87c929a4691a2d8fb61b88f852d55354fe7c62f184851714c",
+        "ts": "2026-10-18T00:19:34.064Z"
+      },
+      {
+        "stream": "brain",
+        "offset": 799824408,
+        "bytes": 242674,
+        "sha256": "862ddd4330ee5f9245001259b7b4a1764e6d2ded97949b1ccd4f9c60f78b2052",
+        "ts": "2026-10-18T00:19:58.488Z"
+      },
+      {
+        "stream": "brain",
+        "offset": 800067082,
+        "bytes": 107830,
+        "sha256": "f589c57823fa5d15e2a9b8bfc73798f3c5f73ec0a60b2b2e51cbd6859984fd9c",
+        "ts": "2026-10-18T00:21:22.880Z"
+      },
+      {
+        "stream": "brain",
+        "offset": 800174912,
+        "bytes": 120088,
+        "sha256": "ef62a1090f46a7e503930442f6164873ef26cfa7d4fc18dab06920c13bf0903c",
+        "ts": "2026-10-18T00:24:20.541Z"
+      },
+      {
+        "stream": "codex-calls",
+        "offset": 44927331,
+        "bytes": 2660,
+        "sha256": "9a0bc9b4bf52524bb2f9660eae174de65e1f0aa1d98c028300bac28169d8eebe",
+        "ts": "2026-10-18T00:08:32.986Z"
+      },
+      {
+        "stream": "codex-calls",
+        "offset": 44929991,
+        "bytes": 2817,
+        "sha256": "ccc60fbd6f07ace5c7866fffee79236f2020048cab3d402b57caae6bfcfa8b97",
+        "ts": "2026-10-18T00:09:03.868Z"
+      },
+      {
+        "stream": "codex-calls",
+        "offset": 44932808,
+        "bytes": 2990,
+        "sha256": "0b15b56cc3677edce85ee7541edd431676f19081d83a946420ac5cfdbce7a6f6",
+        "ts": "2026-10-18T00:10:23.141Z"
+      },
+      {
+        "stream": "codex-calls",
+        "offset": 44935798,
+        "bytes": 2986,
+        "sha256": "c6792f840944d5d15e8695003db1dae8d2708e718d2bd23d5a8bf4502dfc89d5",
+        "ts": "2026-10-18T00:11:35.178Z"
+      },
+      {
+        "stream": "codex-calls",
+        "offset": 44938784,
+        "bytes": 2853,
+        "sha256": "97a9ee41228c13d508302cca457d6a5debc3c359a39945cf9c6014c3512ba2dd",
+        "ts": "2026-10-18T00:12:36.955Z"
+      },
+      {
+        "stream": "codex-calls",
+        "offset": 44941637,
+        "bytes": 2855,
+        "sha256": "faa1670bcd3358d6837568419bdea1901b6b27c03c25a8f0b6bf39f21c1f8d8a",
+        "ts": "2026-10-18T00:14:00.787Z"
+      },
+      {
+        "stream": "codex-calls",
+        "offset": 44944492,
+        "bytes": 2919,
+        "sha256": "c11d9b87f5d0adc803786527f5e4ad12ac50669403c369d733e77d5b343458a2",
+        "ts": "2026-10-18T00:15:25.782Z"
+      },
+      {
+        "stream": "codex-calls",
+        "offset": 44947411,
+        "bytes": 2922,
+        "sha256": "e53ca755b1138b883d455ec64d6c77cb7e9559e44dba371a0f8e0cf74b9b6be5",
+        "ts": "2026-10-18T00:18:32.990Z"
+      },
+      {
+        "stream": "codex-calls",
+        "offset": 44950333,
+        "bytes": 2925,
+        "sha256": "b0a703e1016cfa249410e74b93ac11e039366677dc3d8681e72a579127002971",
+        "ts": "2026-10-18T00:19:34.062Z"
+      },
+      {
+        "stream": "codex-calls",
+        "offset": 44953258,
+        "bytes": 2847,
+        "sha256": "7778898e2f046479bda429fc6125ac6b02616a21a7f7e6e70190b1d660ed0575",
+        "ts": "2026-10-18T00:19:58.486Z"
+      },
+      {
+        "stream": "codex-calls",
+        "offset": 44956105,
+        "bytes": 2927,
+        "sha256": "500ae5d3c4e059c77a48df0a2a481fdaa9e269a7598abdbee263b1c3f52ecbb1",
+        "ts": "2026-10-18T00:21:22.878Z"
+      },
+      {
+        "stream": "codex-calls",
+        "offset": 44959032,
+        "bytes": 2927,
+        "sha256": "962656b7789aa1ce6904ca1ed2eb30776bf3c6ab6f3828b650f26c34041f8481",
+        "ts": "2026-10-18T00:24:20.539Z"
+      }
+    ],
+    "historical_byte_refs": [
+      {
+        "stream": "decisions",
+        "offset": 2428023931,
+        "bytes": 1824,
+        "sha256": "c3d4ddffc49385171217b2e9e7eebb1fb02f982b11b5a1c0149a2e2dd1ccfb6e",
+        "run": "NRZAYVRMM7M0",
+        "ts": "2026-10-17T20:55:51.696Z"
+      },
+      {
+        "stream": "decisions",
+        "offset": 2428025755,
+        "bytes": 1863,
+        "sha256": "4866aeeccfbbbab3db41db8406cfd784163e958f2c8ce91b8294a4c3ada35e0c",
+        "run": "NRZAYVRMM7M0",
+        "ts": "2026-10-17T20:56:17.828Z"
+      },
+      {
+        "stream": "decisions",
+        "offset": 2437288937,
+        "bytes": 1878,
+        "sha256": "1d9fb65c82c3e8667d5b25c11c0275ec49221178e114867953be9ff6ab6cca6a",
+        "run": "KCA04Q3SEYTF",
+        "ts": "2026-10-17T21:49:41.241Z"
+      },
+      {
+        "stream": "decisions",
+        "offset": 2437290815,
+        "bytes": 1916,
+        "sha256": "4bb2c0bf6ce0bd8d77296ed3147cd088c57361fb1b73c01a40e2c9932f1f200c",
+        "run": "KCA04Q3SEYTF",
+        "ts": "2026-10-17T21:50:31.877Z"
+      },
+      {
+        "stream": "decisions",
+        "offset": 2468607197,
+        "bytes": 1826,
+        "sha256": "da6eab1973e16af152f59421694cb4239641878b0b6b9f2fe97b1f48840e1e50",
+        "run": "9S9U3YSYEPK1",
+        "ts": "2026-10-18T00:21:25.090Z"
+      },
+      {
+        "stream": "decisions",
+        "offset": 2468609023,
+        "bytes": 1864,
+        "sha256": "82393da2eccf1748d949dcd625cab9cf8caf24e9af362d24f0d0c2211da1902a",
+        "run": "9S9U3YSYEPK1",
+        "ts": "2026-10-18T00:22:02.927Z"
+      },
+      {
+        "stream": "states",
+        "run": "NRZAYVRMM7M0",
+        "floor": 10,
+        "ts": "2026-10-17T20:56:17.828Z",
+        "line": 443979,
+        "offset": 14171146895,
+        "bytes": 16757,
+        "sha256": "69c7f9ed09513ea85bb6259638cd5dbd328d264819a138e37be1b521f7e4b6d8",
+        "missing": [
+          "BAG_OF_MARBLES"
+        ],
+        "actions": [
+          "save_and_quit",
+          "proceed",
+          "choose_treasure_relic"
+        ]
+      },
+      {
+        "stream": "states",
+        "run": "KCA04Q3SEYTF",
+        "floor": 10,
+        "ts": "2026-10-17T21:50:31.877Z",
+        "line": 444419,
+        "offset": 14183590997,
+        "bytes": 18388,
+        "sha256": "ac9211e030166abffa334c71a3ce40c5b26752337f29432973f514c117997d4f",
+        "missing": [
+          "SHURIKEN"
+        ],
+        "actions": [
+          "save_and_quit",
+          "proceed",
+          "choose_treasure_relic",
+          "discard_potion"
+        ]
+      },
+      {
+        "stream": "states",
+        "run": "9S9U3YSYEPK1",
+        "floor": 10,
+        "ts": "2026-10-18T00:22:02.927Z",
+        "line": 446116,
+        "offset": 14232330813,
+        "bytes": 17957,
+        "sha256": "6a51f10d0ec03830727bbce87cfbb6d793d596ef255daf7f3292b1eb61e7657c",
+        "missing": [
+          "HAPPY_FLOWER"
+        ],
+        "actions": [
+          "save_and_quit",
+          "proceed",
+          "choose_treasure_relic"
+        ]
+      }
+    ],
+    "source_pins": [
+      {
+        "path": "agent/src/reflex/combat-plan.ts",
+        "snapshot": "/home/dw/Projects/agent-sts2/learner/runs/20261018-084309-b7bbd2c2-3349-4ebe-97b9-0b9dd8c0e1ee-postmortem/live-combat-plan.ts",
+        "bytes": 368698,
+        "sha256": "d2ce972bcfcfe1f558a32b1212f506734feeaadb7da3a26230bf9568702c3106",
+        "git_blob": "661e51d448af4ed0baa1112088e7a880ec452611",
+        "run_start_leaf_same": true
+      },
+      {
+        "path": "agent/src/reflex/turn-solver.ts",
+        "snapshot": "/home/dw/Projects/agent-sts2/learner/runs/20261018-084309-b7bbd2c2-3349-4ebe-97b9-0b9dd8c0e1ee-postmortem/live-turn-solver.ts",
+        "bytes": 265430,
+        "sha256": "f9cc623485a3481db6b4cbe6d405a8d6f6677beb369309942598da3be685b808",
+        "git_blob": "a7f520dc34357a1c0d13c31c5ad35c96b3f66882",
+        "run_start_leaf_same": true
+      },
+      {
+        "path": "agent/src/reflex/rollout-live.ts",
+        "snapshot": "/home/dw/Projects/agent-sts2/learner/runs/20261018-084309-b7bbd2c2-3349-4ebe-97b9-0b9dd8c0e1ee-postmortem/live-rollout-live.ts",
+        "bytes": 79880,
+        "sha256": "6e5eea63b945e5bb5be83165eaef646568ed2481357848b5e2c80c912470a68d",
+        "git_blob": "219c9c693c429083493196fd05a5c949fa49de6d",
+        "run_start_leaf_same": true
+      },
+      {
+        "path": "agent/src/reflex/rollout.ts",
+        "snapshot": "/home/dw/Projects/agent-sts2/learner/runs/20261018-084309-b7bbd2c2-3349-4ebe-97b9-0b9dd8c0e1ee-postmortem/live-rollout.ts",
+        "bytes": 219331,
+        "sha256": "1e2b170e5172b0cbb32dbc402fff01a103307ee85cb75e628719763fa5eca2eb",
+        "git_blob": "6ea478da65d0efa5ed7e33d6973a7e9cf4f333ca",
+        "run_start_leaf_same": true
+      },
+      {
+        "path": "agent/src/reflex/card-model.ts",
+        "snapshot": "/home/dw/Projects/agent-sts2/learner/runs/20261018-084309-b7bbd2c2-3349-4ebe-97b9-0b9dd8c0e1ee-postmortem/live-card-model.ts",
+        "bytes": 129049,
+        "sha256": "c6ee633f5e7e2b2e6569dc678e7e48972edb22211a0ed92c0266381b4b6449d0",
+        "git_blob": "6fc002409bce2b7f599c8039db7aa1e5ce6881c3",
+        "run_start_leaf_same": true
+      }
+    ],
+    "chest_source_pin": {
+      "time": "2026-10-18T08:55:09+08:00",
+      "live_commit": "9d9f5adb00766a6a3865c46b301bfd62c7ddd7da",
+      "path": "agent/src/hand/screens/chest.ts",
+      "sha256": "94e5666d4c8b6881bfad3b969106c16192cccfc6e3502c19d8e5ffeffaa3b671",
+      "git_blob": "7e8ad13589698d7928a9fcdf2e83a5c0f37d8c32"
+    },
+    "artifact_files": 169,
+    "postmortem_bytes": 15741,
+    "postmortem_sha256": "d09793923cd3ea7f38bb09ba71a0391834f35e8143f6d80bca0e260a8ccd6bc5",
+    "actual_run_identity": {
+      "run_id": "9S9U3YSYEPK1",
+      "ended": "2026-10-18T00:25:07.322Z",
+      "victory": false,
+      "floor": 12,
+      "character": "SILENT",
+      "ascension": 10,
+      "code": "current",
+      "decisions": 207,
+      "jev_calls": 40,
+      "deepseek_calls": 11,
+      "claude_calls": 0,
+      "tokens": 262600,
+      "ds_tokens_in": 2040350,
+      "ds_tokens_out": 12122,
+      "ds_cache_hit": 148992,
+      "deciders": {
+        "codex": 14,
+        "code": 102,
+        "jev": 40,
+        "jev-plan": 51
+      },
+      "death_fight": [
+        "气态炸弹",
+        "活雾"
+      ],
+      "death_fight_floor": 12,
+      "death_enemy_ids": [
+        "GAS_BOMB",
+        "LIVING_FOG"
+      ]
+    },
+    "nonblocking_bug": true,
+    "bug_proposal_owner_preserved": true,
+    "new_item_first_evidence_not_rewritten": true
+  }
+]
