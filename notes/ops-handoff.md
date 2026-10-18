@@ -2522,3 +2522,5 @@ source4c16dab0（parent9ed8ac27）仅ops/learner_checks.py、ops/tests/test_lear
 - 2026-10-18 12:34:40 CST 原ops1230：121302普通strategy十waiting，31metadata CLI/10waiting队列原行已核，根/候选485项check0且科学字段/状态/版本保持；15旧Silent局按A1/A7/A9/A10分列，19929原行、20组/26源快照及99材料SHA核回，97有界原件归档。既有4署名差/2rollout功能差及原工具失败保留，不冒整树等价或新增支持。无源码/合入/版本/shipped或补测/重派，上一paper已验收不重复；原运输/回收及科学父待办保持，详1230材料。
 
 - 2026-10-18 12:54:09 CST 原ops1250：121302-fix-batch三叶source5ff419bbf最终496文件4478项0及七Python/撤修复反例核回，未重源full；因live两份notes脏记录挡整分支merge，已沿原锁窄集成main1f5b2cdc8eb699b13cd0b0661fa0bed9116fbe63/liveacfd63aaa8f664ca6f81a025cf8ebf25883531a9，源祖先及三叶同字节、两notes/刷新efd308保持。实际组合原入口tsc0/唯一13定向项0，原批learner-recheck仅请求一次树376839f41060180270df76078a09a55f8faaf42e，有限wrapper PID1033113，等正常checks事件，勿重复请求或冒完整绿。旧011241宽登记/当前知识叶已变仍有独立守卫，不由本修复追认；原failed0/mergednull/失败报告保持，sourceWT待验收后原retention，详1250材料。
+
+- 2026-10-18 13:00:37 CST 原ops1258：124303-s2十waiting、无源码或合入；六旧Silent A10局8274原行、21组/42源快照及98材料SHA核回，100有界原件归档。30metadata CLI/10waiting原行接收，根/候选485项check0且科学字段/状态/版本不变。旧误链canonical b07c三角色既有实际回执SHA核实，不等于科学问题解决、不重发/代ACK。1250唯一精确组合宿主仍等原checks事件，本轮零新测试/请求/导出/回收，原父要求及待办保持，详1258材料。
