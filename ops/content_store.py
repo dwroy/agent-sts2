@@ -19,6 +19,9 @@ import uuid
 
 SHA = re.compile(r"[0-9a-f]{64}")
 SECRET = re.compile(r"(^\.env($|\.)|api.?key|credentials|auth\.json|token|secret)", re.I)
+# Exact producer streams from learner/extract_evidence.py; never accept arbitrary paths.
+EVIDENCE_STREAMS = frozenset(("states", "decisions", "sl-attempts", "run-config", "run-plans",
+                              "brain", "runs", "fight-plans", "v6-build", "jev-prompts"))
 
 
 def digest(path):
@@ -205,7 +208,7 @@ def finalize(scratch, store_directory):
                 if not isinstance(row, dict) or not isinstance(row.get("content"), dict):
                     continue
                 stream = row.get("stream", "")
-                if not re.fullmatch(r"[a-z][a-z-]*", stream) or row["content"].get("sha256") != row.get("output_sha256"):
+                if not isinstance(stream, str) or stream not in EVIDENCE_STREAMS or row["content"].get("sha256") != row.get("output_sha256"):
                     raise ValueError("invalid frozen evidence declaration")
                 pending.append((manifest.parent / (stream + ".evidence.jsonl"), row, "content"))
         elif isinstance(value, dict) and value.get("schema") == "frozen-simulation-artifacts-v1":
