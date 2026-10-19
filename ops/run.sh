@@ -4,6 +4,10 @@
 # log goes to $ROOT/logs/console/<ts>-<sha>.log. STS2_WORKSPACE: notes/ (lessons.md) and ops/ come from the main checkout.
 set -u
 . "$(dirname "$0")/paths.sh"
+# Deployment settings are loaded only at a new play boundary, never into an active game.
+if [ -f "$ROOT/ops/production-runtime.sh" ]; then
+  . "$ROOT/ops/production-runtime.sh" || exit 78
+fi
 # Drain only at admission. Never use STOP, which cancels an in-flight brain request.
 if [ -f "$ROOT/ops/codex-ops/LLM_DRAIN" ]; then
   echo "LLM drain: next play deferred" >&2

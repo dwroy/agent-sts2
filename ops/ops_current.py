@@ -63,6 +63,22 @@ def generate(root, directory):
         identity = obj(directory / "herdr-ops.json", {})
         home = (read(directory / "codex-home", "未设置".encode()) or b"").decode().strip()
         execution = (read(directory / "execution-mode", b"sandbox") or b"").decode().strip()
+        context = obj(root / "notes/ops-current-context.json", {})
+        if context:
+            def context_artifact(name):
+                path = (root / name).resolve()
+                if not path.is_relative_to(root) or path.suffix not in (".json", ".md"):
+                    raise ValueError("ops current context artifact outside project records")
+                return read(path)
+
+            authorization = context["authorization"]
+            authorization_raw = context_artifact(authorization["path"])
+            if authorization_raw is None or hashlib.sha256(authorization_raw).hexdigest() != authorization["sha256"]:
+                raise ValueError("ops current authorization SHA mismatch; retain original checklist")
+            context_artifact(context["takeover_receipt"])
+            for task in context.get("external_tasks", []):
+                if task.get("receipt"):
+                    context_artifact(task["receipt"])
         active = {k: {name: v.get(name) for name in ("task", "learner_task", "character", "state", "pid", "worktree", "feature_request", "research_request", "resume_thread", "checks_pending") if v.get(name) is not None}
                   for k, v in state.get("batches", {}).items()
                   if v.get("state") in ("running", "pending", "blocked", "awaiting_delivery") or v.get("checks_pending")}
@@ -117,6 +133,7 @@ def generate(root, directory):
         current = {"schema": "ops-current-v1", "at": stamp(), "main": main_head, "live": live_head,
                    "release": release.get("release_id"), "release_record": release,
                    "identity": identity, "home_selector": home, "execution": execution,
+                   "restoration_context": context,
                    "active_batches": active, "open_requests": requests, "pending_notices": notices,
                    "historical_lost": lost, "not_marked_completed_transactions": unfinished,
                    "human_pace": human_pace, "recent_directives": directives[-2:],
@@ -126,7 +143,8 @@ def generate(root, directory):
         save(receipt, current)
         receipt_sha = hashlib.sha256(receipt.read_bytes()).hexdigest()
         lines = ["# 运维当前清单（调度器生成）", f"生成：{current['at']}；原件索引：{receipt} SHA256 {receipt_sha}",
-                 "授权：Roy 2026-10-18 16:13；只处理原事件，不轮询、不新增模型/局/计时器，regent 保持暂停。",
+                 ("当前授权：" + context["summary"] + "；原件 " + context["authorization"]["path"]
+                  if context else "授权：Roy 2026-10-18 16:13；只处理原事件，不轮询、不新增模型/局/计时器，regent 保持暂停。"),
                  "模型 gpt-6.1-sol；普通 ops/学习下次自然启动 high，专项可有理由 xhigh，大脑保持 xhigh。实际生效须原生回执，不能从默认值推定。",
                  f"账号选择：{home}；原 ops：{identity.get('pane', '未知')} / {identity.get('session', '未知')}；执行模式：{execution}；辅助/学习者沙箱保持。",
                  "不读凭据/.env/游戏二进制，不改共享配置/账号；不推送。", f"main {main_head}", f"live {live_head}；登记 release {current['release']}（登记值不代表新树检查绿或实际采用）。",
@@ -134,6 +152,10 @@ def generate(root, directory):
                  f"在途批次 {len(active)}（完整 owner/租约与路径见 current.json）："]
         for key, row in list(active.items())[-8:]:
             lines.append(f"- {key} {row.get('state')} {row.get('task')} PID={row.get('pid')}；{row.get('worktree', '')}")
+        if context.get("external_tasks"):
+            lines.append("外部原owner任务（不以learn.json缺项判退出，不重复派；实际状态沿原件核）：")
+            for task in context["external_tasks"][:6]:
+                lines.append(f"- {task['id']}；thread={task['thread']}；{task['worktree']}；{task.get('receipt', context['takeover_receipt'])}")
         lines.append(f"历史 lost {len(lost)} 项另存索引，不能视为活进程，不按旧PID操作或自行关闭。")
         lines.append(f"开放父要求 {len(requests)}：" + ", ".join(requests)[:650] + "；不因本轮结束关闭。")
         if checkpoint:
