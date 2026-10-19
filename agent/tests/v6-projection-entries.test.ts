@@ -32,7 +32,9 @@ it("precomputes baseline simulations for reuse and preserves the P=1 boundary in
   expect(certain.every(e => e.win?.value === 1 && e.win_incomplete === null && e.expected_win === 1 && validateProjectionEntry(e).ok)).toBe(true);
   const task = directionTask({ summaries: directionSummaries("silent", 10, [], [r.directions[0]!.core], null), entries: certain.map(e => ({ ...e, combo_id: "D:minimal" })), appearedCards: [], potionIds: [], floor: 5, current: null });
   const combo = asRecord(asArray(asRecord(asArray(task["build_cores"])[0])["combos"])[0]);
-  expect(asArray(task["direction_evaluation"]).map(asRecord).filter(e => e["combo_id"] === combo["id"]))
-    .toEqual([expect.objectContaining({ expected_win: 1, win_incomplete: null })]);
+  const evaluations = asArray(task["direction_evaluation"]).map(asRecord).filter(e => e["combo_id"] === combo["id"]);
+  expect(evaluations.map(e => e["option_id"])).toEqual(certain.map(e => e.option_id));
+  expect(evaluations).toHaveLength(certain.length);
+  expect(evaluations.every(e => e["expected_win"] === 1 && e["win_incomplete"] === null)).toBe(true);
   expect(validateProjectionEntry({ ...certain[0], availability: { take: .5, skip: .5 } }).ok).toBe(false);
 });
