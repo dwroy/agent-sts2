@@ -16,7 +16,7 @@ import { bossKeyOf } from "./boss-lines.js";
 import type { SyntheticStartOptions } from "./boss-start.js";
 import { v6Digest, v6Directions, type V6ProjectionOption } from "./v6-completion.js";
 import type { V6HistoryLoad } from "./v6-history-pack.js";
-import type { V6ProjectionRequest } from "./v6-projection.js";
+import type { V6PreparedProjection, V6ProjectionRequest } from "./v6-projection.js";
 import { projectV6RouteEntries, type V6RouteInput, type V6RouteEntryTable } from "./v6-route-entry.js";
 import { v6ProjectionStart } from "./v6-start.js";
 import { v6SupplySource } from "./v6-supply.js";
@@ -95,6 +95,9 @@ export function createV6ProjectionFactory(snapshot: V6FactorySnapshot): V6Projec
   for (const core of cores.filter(c => c.scope.character === character)) for (const combo of core.combos) {
     const metric = pack.data.combo_metrics.find(m => m.id === combo.id); if (metric) combo.metrics = structuredClone(metric.metrics);
   }
+  // One run-start factory owns its frozen supply cache across act, idle and pick requests.
+  const supplies = new Map<string, ReturnType<typeof v6SupplySource>>();
+  const openings = new Map<string, V6PreparedProjection | null>();
   return { create(supplied) { try {
     const s = { ...supplied, state: parseGameState(structuredClone(supplied.state.raw)) }, run = asRecord(s.state.run?.raw);
     const ascension = run["ascension"], floor = run["floor"], hp = run["current_hp"], maxHp = run["max_hp"], gold = run["gold"];
@@ -141,24 +144,31 @@ export function createV6ProjectionFactory(snapshot: V6FactorySnapshot): V6Projec
         routeEntries = projectV6RouteEntries(config, { ...route, character, ascension: ascension as number, floor: state.floor, act,
           hp: state.hp, max_hp: state.maxHp, costs: typeof costs === "function" ? costs(option) : costs,
           ...(bossExit ? { bossExit: (step, entry) => bossExit(option, step, entry) } : {}) }) ?? undefined;
-      } else if (state.hp !== build.hp) {
-        routeEntries = { character, ascension: ascension as number, source_floor: state.floor, source_act: act, max_hp: state.maxHp,
-          signature: "healing_requires_route_reprojection", entries: targets.map(t => ({ act: t.act, floor: t.floor, hp: null,
-            max_hp: state.maxHp, labels: ["healing_requires_route_reprojection"] })) };
       }
-      if (routeEntries) for (const target of targets) {
-        if (!routeEntries.entries.some(e => e.act === target.act && e.floor === target.floor)) routeEntries.entries.push({
-          act: target.act, floor: target.floor, hp: null, max_hp: state.maxHp, labels: ["route_target_not_projected"] });
+      if (state.hp !== build.hp) {
+        // A historical baseline cannot measure healing at an unprojected checkpoint.
+        routeEntries ??= { character, ascension: ascension as number, source_floor: state.floor, source_act: act, max_hp: state.maxHp,
+          signature: "healing_requires_route_reprojection", entries: [] };
+        for (const t of targets) if (!routeEntries.entries.some(e => e.act === t.act && e.floor === t.floor))
+          routeEntries.entries.push({ act: t.act, floor: t.floor, hp: null, max_hp: state.maxHp,
+            labels: ["healing_requires_route_reprojection"] });
       }
+      // Absent checkpoints (including an empty route) use own historical entry HP.
+      // Explicit null entries from an unmodelled/dead route and healing still remain unknown.
       const routeHp = s.currentRouteSignature && state.hp === build.hp ? s.currentRouteHp ?? null : null;
       option.preparationKey = v6Digest([raw, routeEntries, routeHp, s.currentRouteSignature]);
       resources.set(option.id, { raw, context: { ...targetBase, ...(routeEntries ? { routeEntries } : {}) }, routeHp }); options.push(option);
     }
     const baseline = options.shift()!;
     const historySignature = v6Digest([pack.content_sha256, s.asOf, s.runId]);
-    const completionSources = [v6SupplySource({ character, ascension: ascension as number,
+    const supplyKey = `${historySignature}:${ascension}`;
+    let supply = supplies.get(supplyKey);
+    if (!supply) { supply = v6SupplySource({ character, ascension: ascension as number,
       opportunities: { ...pack.data.opportunities, rows: pack.data.opportunities.rows.filter(o => prior.has(o.run)) },
-      histories: pack.data.histories.filter(h => prior.has(h.run)), excludeRun: s.runId, asOf: s.asOf, signature: historySignature, draws: 200 })];
+      histories: pack.data.histories.filter(h => prior.has(h.run)), excludeRun: s.runId, asOf: s.asOf, signature: historySignature, draws: 200 });
+      if (supplies.size >= 4) supplies.delete(supplies.keys().next().value!); supplies.set(supplyKey, supply);
+    }
+    const completionSources = [supply];
     const request: V6ProjectionRequest = { config: structuredClone(config), phase: s.phase, character, ascension: ascension as number, act,
       baseline, options, directions, weights: structuredClone(s.weights), targets, completionSources, seed: s.seed, modelVersion,
       contextDigest: v6Digest({ raw: s.state.raw, history: [pack.content_sha256, pack.generated_at], asOf: s.asOf, run: s.runId,
@@ -168,9 +178,13 @@ export function createV6ProjectionFactory(snapshot: V6FactorySnapshot): V6Projec
       ...(s.appearedCards ? { appearedCards: [...s.appearedCards] } : {}), ...(s.rankings ? { rankings: structuredClone(s.rankings) } : {}),
       prepare(target, completed, option = baseline) {
         const resource = resources.get(option.id); if (!resource || option.preparationKey !== [baseline, ...options].find(o => o.id === option.id)?.preparationKey) return null;
+        const key = v6Digest([option.preparationKey, target, completed]);
+        if (openings.has(key)) return openings.get(key)!;
         const raw = structuredClone(resource.raw); asRecord(raw["run"])["gold"] = completed.gold;
-        return v6ProjectionStart({ state: parseGameState(raw), knowledge, targets: resource.context,
+        const opening = v6ProjectionStart({ state: parseGameState(raw), knowledge, targets: resource.context,
           currentRouteHp: resource.routeHp, doubleBoss, models }, target, completed);
+        if (openings.size >= 2048) openings.delete(openings.keys().next().value!);
+        openings.set(key, opening); return opening;
       }, trust: target => v6TargetTrust(character, ascension as number, target, trust) };
     return { status: "ready", request, rejected_options, labels: [...pack.data.labels,
       ...(!s.route && !s.currentRouteSignature ? ["current_route_hp_unknown"] : []),

@@ -73,7 +73,7 @@ export function v6ProjectionInputs(dir = KNOWLEDGE_DIR, now = () => new Date().t
       ...asArray(raw.deck).map(c => str(asRecord(c).card_id)), ...offers.map(c => str(c.card_id))].filter(Boolean))];
     return { factory: frozen.factory, situation: { state, phase, runId: run, asOf: frozen.asOf, seed: parseInt(v6Digest(run).slice(0, 8), 16),
       weights, options, baselineId: "skip", idealOverrides: plan?.ideal_overrides, appearedCards, visibleBosses,
-      // Explicit empty steps preserve unknown entry HP; never substitute historical HP for a missing route.
+      // Empty steps admit the scoped historical entry-HP fallback; explicit route failures remain unknown.
       route: { signature, steps, costs } } };
   };
 }

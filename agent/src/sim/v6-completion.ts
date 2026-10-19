@@ -62,6 +62,8 @@ export interface V6CompletionCombination {
   availability: Readonly<Record<string, number | null>>;
   /** Shared supply worlds permit a paired uncertainty term without independent-binomial assumptions. */
   supply: Readonly<Record<string, readonly boolean[] | null>>;
+  /** Distinguish missing evidence/prerequisites from an interrupted Monte Carlo. */
+  unknownReasons?: Readonly<Record<string, readonly string[]>>;
   labels: string[];
 }
 export interface V6CompletionSet { source: string; signature: string; combinations: V6CompletionCombination[]; labels: string[] }

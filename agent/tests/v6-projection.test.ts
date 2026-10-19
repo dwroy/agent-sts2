@@ -18,8 +18,91 @@ describe("V6 combination expectation", () => {
   it("shares identical completed decks within/across combinations and invalidates held resources", async () => {
     const runner = new FixedRunner(), engine = new V6ProjectionEngine(runner), r = request(); r.completionSources = [source(undefined, 2)];
     const t = await engine.evaluate(r); expect(t.telemetry.simulations).toBe(40); expect(t.combinations).toHaveLength(4);
-    expect(t.telemetry.cache_hits).toBeGreaterThanOrEqual(6);
-    r.contextDigest = "different-potions"; const u = await engine.evaluate(r); expect(u.telemetry.simulations).toBe(40);
+    expect(t.telemetry.cache_hits).toBeGreaterThanOrEqual(4);
+    r.contextDigest = "new-question-same-input";
+    expect((await engine.evaluate(r)).telemetry.simulations).toBe(0);
+    const prepare = r.prepare;
+    r.prepare = (...args) => { const p = prepare(...args)!; p.input.solver.player.hp--; return p; };
+    expect((await engine.evaluate(r)).telemetry.simulations).toBe(40);
+    r.modelVersion = "new-frozen-model";
+    expect((await engine.evaluate(r)).telemetry.simulations).toBe(40);
+  });
+  it("reuses act-start absolute seeds at pick, then computes only missing larger-sample indices", async () => {
+    const runner = new FixedRunner(), engine = new V6ProjectionEngine(runner), r = request(); r.phase = "act";
+    expect((await engine.evaluate(r)).telemetry.simulations).toBe(200);
+    r.phase = "pick"; r.contextDigest = "pick-question";
+    const hot = await engine.evaluate(r), fresh = await new V6ProjectionEngine(new FixedRunner()).evaluate(r);
+    expect(hot.telemetry.simulations).toBe(0); expect(hot.entries).toEqual(fresh.entries);
+    r.config.samples_pick = 120;
+    expect((await engine.evaluate(r)).telemetry.simulations).toBe(40);
+  });
+  it("keeps current paired results when the bounded cross-request cache evicts another completed input", async () => {
+    const r = request();
+    const bounded = await new V6ProjectionEngine(new FixedRunner(), () => 0, 1).evaluate(r);
+    const ordinary = await new V6ProjectionEngine(new FixedRunner(), () => 0).evaluate(r);
+    expect(bounded.entries).toEqual(ordinary.entries);
+    expect(bounded.combinations.map(c => [c.completed_win, c.general_win]))
+      .toEqual(ordinary.combinations.map(c => [c.completed_win, c.general_win]));
+  });
+  it("retains complete samples across a timed-out idle slice without changing seed indices", async () => {
+    const runner = new FixedRunner(), run = runner.run.bind(runner); let first = true;
+    runner.run = async r => { const result = await run(r);
+      if (first) { first = false; result.timedOut = true;
+        for (const deck of result.outcomes) for (const order of deck) order.splice(7, order.length - 7);
+      } return result;
+    };
+    const r = request(), engine = new V6ProjectionEngine(runner);
+    expect((await engine.evaluate(r)).telemetry.simulations).toBe(14);
+    const resumed = await engine.evaluate(r);
+    expect(resumed.telemetry.simulations).toBe(26);
+    expect(resumed.entries).toEqual((await new V6ProjectionEngine(new FixedRunner()).evaluate(r)).entries);
+    expect(runner.calls[1]!.stripes?.every(s => s && s.of === 20 && s.at >= 7)).toBe(true);
+  });
+  it("does not exhaust the shared budget when a runner times out before the shared deadline", async () => {
+    const r = request(), runner = new FixedRunner(), run = runner.run.bind(runner);
+    r.targets = Array.from({ length: 4 }, (_, i) => ({ ...r.targets[0]!, id: `boss${i}` }));
+    r.prepare = (t, s) => { const input = request().prepare(t, s)!; input.input.meta.enc += t.id; return input; };
+    runner.run = async req => ({ ...await run(req), timedOut: true });
+    const table = await new V6ProjectionEngine(runner, () => 0).evaluate(r);
+    expect(runner.calls).toHaveLength(4);
+    expect(table.telemetry.degradation).toEqual([]);
+    expect(table.combinations.some(x => x.unknown_reasons.includes("budget_remaining_unknown"))).toBe(false);
+  });
+  it("gives eligible paired fights the remaining budget instead of slicing it across ineligible catalog rows", async () => {
+    const r = request(), runner = new FixedRunner(), run = runner.run.bind(runner); let time = 0;
+    r.targets = Array.from({ length: 40 }, (_, i) => ({ ...r.targets[0]!, id: `boss${i}` }));
+    r.prepare = (t, s) => { const p = request().prepare(t, s)!; p.input.meta.enc += t.id; return p; };
+    runner.run = async req => { expect(req.deadlineMs).toBeGreaterThanOrEqual(4000);
+      const result = await run(req); time = 5000; return result;
+    };
+    const table = await new V6ProjectionEngine(runner, () => time).evaluate(r);
+    expect(runner.calls).toHaveLength(1);
+    expect(table.entries.filter(x => x.target_id === "boss0").every(x => x.win !== null)).toBe(true);
+    expect(table.entries.filter(x => x.target_id !== "boss0").every(x => x.win === null)).toBe(true);
+  });
+  it("invalidates cached samples when a caller mutates a retained prepared object between requests", async () => {
+    const r = request(), runner = new FixedRunner(), engine = new V6ProjectionEngine(runner), prepare = r.prepare;
+    const inputs = new Map<string, NonNullable<ReturnType<typeof prepare>>>();
+    r.prepare = (t, s, o) => { const key = JSON.stringify([t, s]);
+      if (!inputs.has(key)) inputs.set(key, prepare(t, s, o)!); return inputs.get(key)!;
+    };
+    expect((await engine.evaluate(r)).telemetry.simulations).toBe(40);
+    for (const input of inputs.values()) input.input.solver.player.hp--;
+    expect((await engine.evaluate(r)).telemetry.simulations).toBe(40);
+  });
+  it("excludes known below-threshold combinations from the eligible maximum, preserving truly unknown competitors", async () => {
+    const r = request(), provider = source(undefined, 2), resolve = provider.resolve;
+    provider.resolve = c => { const result = resolve(c)!;
+      result.combinations[1]!.availability = { skip: 0, take: 0 };
+      result.combinations[1]!.supply = { skip: Array(200).fill(false), take: Array(200).fill(false) }; return result;
+    };
+    r.completionSources = [provider];
+    expect((await new V6ProjectionEngine(new FixedRunner()).evaluate(r)).entries[0]!.win).not.toBeNull();
+    provider.resolve = c => { const result = resolve(c)!;
+      result.combinations[1]!.availability = { skip: null, take: null };
+      result.combinations[1]!.supply = { skip: null, take: null }; return result;
+    };
+    expect((await new V6ProjectionEngine(new FixedRunner()).evaluate(r)).entries[0]!.win).toBeNull();
   });
   it("does not run combat below 5%, including zero, and keeps missing values unknown", async () => {
     const runner = new FixedRunner(), r = request(); r.completionSources = [source({ skip: 0, take: .04 })];
