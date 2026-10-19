@@ -60,7 +60,7 @@ export function boundV6State(input: Record<string, JsonValue>, limit: number, un
       if (protectedPaths.has(path)) return;
       if (Array.isArray(v)) {
         // Keep cards, metric strata, and potion comparisons intact when removing optional rows.
-        if ((v.length > 1 || (v.length > 0 && /\.projections$/.test(path))) && !/\.(cards|any|types|metrics|comparisons|adjusted_win_rates)$/.test(path))
+        if (v.length > 1 && !/\.(cards|any|types|metrics|comparisons|adjusted_win_rates)$/.test(path))
           result.push({ path, value: v, cost: size(v[v.length - 1]) });
         v.forEach((child, i) => walk(child, `${path}[${i}]`));
       } else if (v && typeof v === "object") for (const [k, child] of Object.entries(v)) if (k !== "prompt_budget") walk(child, path ? `${path}.${k}` : k);
@@ -74,7 +74,8 @@ export function boundV6State(input: Record<string, JsonValue>, limit: number, un
     if (candidate) {
       // Batch whole rows from one array. Serializing the entire shop once per row was quadratic.
       let remaining = size(state) - limit + 256;
-      const minimum = /\.projections$/.test(candidate.path) ? 0 : 1;
+      // Each legal option keeps its leading numeric comparison, including the skip baseline.
+      const minimum = 1;
       while (candidate.value.length > minimum && remaining > 0) {
         remaining -= size(candidate.value.pop()) + 1;
         budget.omitted[candidate.path] = (budget.omitted[candidate.path] ?? 0) + 1;

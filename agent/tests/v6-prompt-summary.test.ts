@@ -131,6 +131,11 @@ it.each(["card", "shop", "rest"] as const)("bounds the real published %s prompt 
   expect(size({ model: "typesafe/jev-1.14", state: d.state, questions: d.questions })).toBeLessThanOrEqual(V6_JEV_REQUEST_BYTES);
   expect(asRecord(asArray(d.state.core_metrics)[0]).direction).toBe("R");
   expect(Object.keys(asRecord(d.state.options))).toEqual(Object.keys(asRecord(d.questions.pick).criteria));
+  if (kind === "card") for (const fact of Object.values(asRecord(d.state.options))) {
+    const kept = asArray(asRecord(fact).projections);
+    expect(kept.length).toBeGreaterThan(0);
+    expect(asRecord(kept[0]).direction_id).toBe("R");
+  }
   expect(promptBudgetLabels(d.state)).toHaveLength(1);
   expect(JSON.stringify(d.state)).not.toContain('"combo_metrics"');
   const choice = Object.keys(asRecord(d.questions.pick).criteria)[0]!;
