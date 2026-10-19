@@ -1,0 +1,6 @@
+[extend]
+useDefault = true
+[allowlist]
+description = "Exact SHA-256 evidence IDs verified in preserved source patches"
+regexTarget = "line"
+regexes = ['''^\s*[-+ ]?\s*"(?:source_)?evidence_key"\s*:\s*"[a-f0-9]{64}"[,]?\s*$''']
