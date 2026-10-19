@@ -3,6 +3,7 @@ import { join, relative, isAbsolute } from "node:path";
 import { array, object, literal, refine, validate, type Result } from "./schema.js";
 import { characterKey } from "../knowledge/files.js";
 import { characterSchema, directionCardSchema, reflexEntrySchema, reflexVocabSchema, type Character, type DirectionCard, type ReflexEntry, type ReflexVocab } from "./formats.js";
+import { validateBuildCoreFile, type BuildCore } from "./build-core.js";
 
 export type KnowledgeResult<T> = { status: "loaded"; value: T; path: string }
   | { status: "missing" | "invalid"; message: string; path: string; issues?: string[] };
@@ -16,6 +17,8 @@ export const reflexFile = refine(object({ schema: literal("reflex-file-v1"), cha
 });
 export interface V6Knowledge {
   character: Character | null;
+  cores: KnowledgeResult<BuildCore[]>;
+  /** Legacy compatibility only; cores never fall back to these cards. */
   directions: KnowledgeResult<DirectionCard[]>;
   vocab: KnowledgeResult<ReflexVocab>;
   reflex: KnowledgeResult<ReflexEntry[]>;
@@ -45,6 +48,10 @@ export function loadV6Knowledge(knowledgeDir: string, rawCharacter: string | nul
   function own<T extends { character: Character }>(result: Result<T>): Result<T> {
     return result.ok && result.value.character !== character ? { ok: false, issues: ["file character does not match requested character"] } : result;
   }
+  const cores = load("build-cores.json", v => {
+    const r = own(validateBuildCoreFile(v));
+    return r.ok ? { ok: true, value: r.value.entries } : r;
+  });
   const directions = load("direction-cards.json", v => {
     const r = own(validate(directionFile, v));
     return r.ok ? { ok: true, value: r.value.entries } : r;
@@ -55,7 +62,8 @@ export function loadV6Knowledge(knowledgeDir: string, rawCharacter: string | nul
     return r.ok ? { ok: true, value: r.value.entries } : r;
   });
   if (reflex.status === "loaded") {
-    const directionIds = new Set(directions.status === "loaded" ? directions.value.map(d => d.id) : []);
+    const directionIds = new Set(cores.status === "loaded" ? cores.value.map(d => d.direction)
+      : directions.status === "loaded" ? directions.value.map(d => d.id) : []);
     const tags = new Set(vocab.status === "loaded" ? Object.values(vocab.value.dimensions).flat().map(m => m.id) : []);
     const issues: string[] = [];
     for (const entry of reflex.value) {
@@ -64,5 +72,5 @@ export function loadV6Knowledge(knowledgeDir: string, rawCharacter: string | nul
     }
     if (issues.length) reflex = { status: "invalid", message: "小脑记忆引用缺失", path: reflex.path, issues };
   }
-  return { character, directions, vocab, reflex };
+  return { character, cores, directions, vocab, reflex };
 }
