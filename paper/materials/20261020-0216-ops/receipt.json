@@ -1,0 +1,97 @@
+{
+  "at": "2026-10-20 02:21:55 CST",
+  "events": [
+    "learning-attention",
+    "learning-attention",
+    "learning-attention",
+    "stall",
+    "manual-emergency-stop"
+  ],
+  "emergency_authorization": {
+    "path": "paper/materials/20261020-0216-ops/authorization-original.md",
+    "bytes": 1166,
+    "sha256": "e96db422f2ba5ecdae1412a381ee822619958df895aac9a1765793fd2916f7dd"
+  },
+  "actual_native_ops_acceptance": {
+    "path": "/home/dw/.codex1/sessions/2026/10/19/rollout-2026-10-19T08-07-15-01a1517b-e200-7c52-b463-6ea22220c0a9.jsonl",
+    "offset": 20832298,
+    "bytes": 1021,
+    "sha256": "f4e04e0e1b32efb1fe8d223927d0c0f7e27a7b34cb0a2b476bca8ee1f5a57733",
+    "timestamp": "2026-10-19T18:16:58.937Z",
+    "text": "已实际收到紧急暂停指令。我现在先重新落下 `ops/STOP`，再核对原 autoplay/play PID 并保存故障与存档状态；保持 V6 配置和原局，不重试模型，恢复须等原 owner 修复实际合入、复验后的原回执。\n"
+  },
+  "STOP_actual_CST": "2026-10-20 02:17:04 CST",
+  "STOP_exists": true,
+  "autoplay_pid": 3579120,
+  "autoplay_exited_at_original_STOP_boundary": true,
+  "play_pid": 3579363,
+  "play_already_exited": true,
+  "process_signal_sent": false,
+  "original_mod_identity": {
+    "status": "instance_verified",
+    "process_id": 34676,
+    "base_url": "http://127.0.0.1:8080",
+    "native_profile_id": "1"
+  },
+  "same_saved_run": {
+    "run_id": "MWMR855QHTWR",
+    "screen": "REWARD",
+    "state_version": 16,
+    "in_combat": false
+  },
+  "ascension": 10,
+  "floor": 13,
+  "game_state_action_sent": false,
+  "saved_run_reset": false,
+  "new_seed_created": false,
+  "original_fault_marker_unchanged": true,
+  "marker_cleared": false,
+  "V5_enabled": false,
+  "whole_v6_rollback": false,
+  "model_retried": false,
+  "actual_live_observed": "67d9cfce08f7e1efd7d603fe78b419f5825d040d",
+  "release_id": "V6-R398",
+  "shop_rest": "brain for original saved run; no flag changed",
+  "Jev_smoke_fault": {
+    "source": "current watcher-relayed Claude supervision, not independently replayed by ops",
+    "prompt_MB_approx": 6.95,
+    "combo_metrics_MB_approx": 6.02,
+    "Nova_HTTP": 400,
+    "projection_unknown_reported": "100%",
+    "fallback_reported": "all skip"
+  },
+  "repair_owner": {
+    "name": "v6-w4w6",
+    "thread": "01a15382-68eb-7093-b677-040c9b45767f",
+    "pane": "wJ:p1GX",
+    "observed_status": "blocked",
+    "actual_new_prompt_received": false,
+    "route": "original watcher/Claude channel; no bypass, new thread or duplicate model"
+  },
+  "recovery_admission": "Original owner compacts summaries and enforces payload cap; exact source must be tested, actually integrated live and verified. Only then original ops may remove STOP and continue the same saved run.",
+  "watcher_scope": "Original bad-line repair single-worker joint full remains in flight per user report; independent relation of 100% unknown to old 1/17 packet remains unverified; no duplicate refresh.",
+  "manual_notices": {
+    "ids": [
+      "0baef634d02e1ff85843c10a",
+      "f619c26f4bfa10970591beb5",
+      "b5b53e0d8bebe1df7fb30468"
+    ],
+    "original_message_SHA_unchanged": true,
+    "actual_prior_native_delivery_evidence_SHA_verified": true,
+    "protocol_ACK_pending": true,
+    "ACK_source_sha256": "2bd6d3e6a7ea6cc7a71b6eb999ea738e2f7772df75baeeb93befcf6c9b617d84",
+    "ACK_code_unchanged": true,
+    "ACK_source_bridge_published": false,
+    "ACK_CLI_retried": false,
+    "other_role_ACK_written": false,
+    "source_notices_changed_by_ops": false,
+    "compatibility_pending_does_not_mean_unread": true,
+    "new_learning_parent_or_batch_created": false
+  },
+  "watcher_forward_CLI_rc": 0,
+  "actual_new_watcher_Claude_or_owner_receipt": null,
+  "dataset_or_full_checks_or_calibration_repeated": false,
+  "retention_busy_pending_unchanged": true,
+  "H0_0332_or_learning_parent_closed": false,
+  "Regent": "paused"
+}
