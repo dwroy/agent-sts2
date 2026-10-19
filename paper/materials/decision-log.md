@@ -4888,3 +4888,5 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
 - 2026-10-20 07:27:25 CST [Claude/Roy，仅文档] Roy 简化 V6 投影：牌的出现概率按历史对局离线统计，每局结束后更新一次写入冻结历史包，对局中凑齐概率直接查表计算（不做供给蒙特卡洛）；不再计算凑不齐时的胜率 W_0，每个组合 × 目标只给凑齐概率 P_k 与凑齐后胜率 W_k（附 P_k × W_k），方向值取 P_k × W_k 最大的组合；按目标分别给出已算完的结果。docs/v6-plan.md 第 3.2 节已更新，交 watcher 改 W3、v6-w8 改生成器。
 
 - 2026-10-20 07:28:52 CST [运维 codex/安全网同步R401] 原锁实际main23f9→livefbe35f6/行为dff5c142，安全网914bd+W8精确同原受测输入，加载器17ID与原哈希/安全网离线读回，未API烟测/续局。064302预算三叶未提交固定b235唯一原宿主735133检查中，旧失败、STOP/fault与宽父保留。原件：paper/materials/20261020-0723-ops/receipt.json。
+
+- 2026-10-20 07:39:45 CST [运维 codex/联合源发布R402] 原249932完整0/600文件5736过2跳，源0ac37→main68beb→livec2c54e5/行为78380770；两个模型别名共用R402并保R401/安全网/W8/知识，实际live六固定项及17ID/原哈希读回。窄源workspace acceptance已登记，原失败/科学父/ACK和STOP保留，无重full/模型/刷新或续局。原件：paper/materials/20261020-0735-ops/receipt.json。

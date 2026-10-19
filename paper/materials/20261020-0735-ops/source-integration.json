@@ -1,0 +1,50 @@
+{
+  "original_fixed_tree": "24993273b9768a349f84781ea58298f2192a4f4d",
+  "accepted_host_status": {
+    "batch": "20261020-061302-s2-strategy-proposal",
+    "at": "2026-10-20T07:21:55+08:00",
+    "pid": 722693,
+    "start_ticks": 134405841,
+    "nice": 19,
+    "state": "passed",
+    "combined_full_rc": 0,
+    "source_commit": "f6b0d8371a4f9cbca5a12d37b94d49c0db81087b",
+    "base": "f6b0d8371a4f9cbca5a12d37b94d49c0db81087b",
+    "prospective_tree": "24993273b9768a349f84781ea58298f2192a4f4d",
+    "input_sha256": "35e75a21e8958f479d85b87b745f20c7db74c5fde03adf99ca871d3402f45f8e",
+    "log": "ops/codex-ops/learner/20261020-061302-s2-strategy-proposal.host-uncommitted-24993273b9768a349f84781ea58298f2192a4f4d.checks.log",
+    "uncommitted_source": false,
+    "prospective_uncommitted_merge": true,
+    "integration_main": "d4968a885f79543cc968fc21062f9d8a336f15f0",
+    "new_model": false,
+    "command": "export PATH=\"$HOME/.local/node/bin:$PATH\"; nice -n 19 npx tsc -p tsconfig.json --noEmit; a=$?; nice -n 19 npx vitest run --maxWorkers=2; b=$?; [ \"$a\" = 0 ] && [ \"$b\" = 0 ]",
+    "check_pid": 722749,
+    "started_at": "2026-10-20T07:21:55+08:00",
+    "finished_at": "2026-10-20T07:32:10+08:00",
+    "log_sha256": "33168a5c736ef595f0af8be9bd48a6d2f5d15f954088ffa3b3090774c0ddbd0b"
+  },
+  "original_source_commit": "0ac37bead3bdee4006df90ab2ec7785eef0fc8ee",
+  "original_source_tree_exact_full0": true,
+  "original_source_parents": [
+    "f6b0d8371a4f9cbca5a12d37b94d49c0db81087b",
+    "d4968a885f79543cc968fc21062f9d8a336f15f0",
+    "a46239a29c3109ff9f69224ad77128d9929d3e9a"
+  ],
+  "main_before": "d4c166d9b0c7841566cbc48ad7a09e9cde53be9f",
+  "main_integrated": "68beb12b4b168210c55b5111383026c4088df0be",
+  "live_before": "fbe35f607972afc0dd835dfeee179a7f0c6c17a7",
+  "integrated_source_leaves": [
+    "agent/src/reflex/card-model.ts",
+    "agent/src/reflex/silent-apotheosis.ts",
+    "agent/tests/silent-apotheosis-upgraded-evidence.json",
+    "agent/tests/silent-apotheosis-upgraded.test.ts",
+    "agent/tests/silent-apotheosis.test.ts",
+    "agent/tests/silent-plain-blade-dance-a0-evidence.json",
+    "agent/tests/silent-plain-blade-dance-a0.test.ts"
+  ],
+  "all_source_paths_equal_host_passed_tree": true,
+  "R401_metadata_preserved": true,
+  "gitleaks_rc": 0,
+  "old_failures_preserved": true,
+  "STOP_kept": true
+}
