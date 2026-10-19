@@ -1,0 +1,77 @@
+{
+  "at": "2026-10-20T00:20:48+08:00",
+  "batch": "20261019-234302-strategy-proposal",
+  "original_attention": {
+    "path": "ops/codex-ops/ordinary-close/20261019-234302-strategy-proposal.json",
+    "sha256": "f193d5570a837b104e2b78cc5754a47780020429920c28c592b6b4cb540ed250",
+    "state": "attention",
+    "reason": "source changed during batch; retain ordinary ops review"
+  },
+  "dataset_attempts": 1,
+  "original_dataset": {
+    "path": "ops/codex-ops/ordinary-close/20261019-234302-strategy-proposal.dataset.log",
+    "sha256": "b73bb98881ad38ebcd2895ab2b26137ee01640f257ac9296c31474379822a0e1",
+    "recovered_exit_code": 0,
+    "recovery_basis": "exact unchanged original close_pending code reaches source-change postcheck only after subprocess returncode==0; complete original log/keyscan/CUT and matching current summary verified",
+    "original_standalone_rc_not_saved": true,
+    "source_cut": "2026-10-19T16:00:55.964Z",
+    "runs": 858,
+    "summary_sha256": "a573b384745b9d366609b25c47a4a3841fb4be56dded21e3184fdfbfd4e2449c",
+    "source_cut_bytes": {
+      "decisions.jsonl": 2762497354,
+      "deepseek-reasoning.jsonl": 377746518,
+      "runs.jsonl": 381905,
+      "states.jsonl": 14613516359,
+      "fight-plans.jsonl": 2233957,
+      "run-plans.jsonl": 9654464,
+      "brain.jsonl": 870579124,
+      "sl-attempts.jsonl": 49319425,
+      "run-config.jsonl": 2173783
+    }
+  },
+  "report_original_SHA_verified": true,
+  "baseline_to_dataset_start_source_unchanged": true,
+  "current_source_drift_expected": "original new storage fix392 after dataset start; batch itself source-free",
+  "retention_original_no_source_git_proof": {
+    "task": "strategy-proposal",
+    "character": "silent",
+    "original_batch_state": "done",
+    "kind": "settled-report-only",
+    "no_experience_claim": true,
+    "worktree_head": "13a06c1e4c301343fb4251cb8aeff6d553ab38b9",
+    "worktree_branch": "refs/heads/codex-strategy-silent-20261019-234302",
+    "discarded_python_cache": [
+      {
+        "path": ".worktrees/codex-strategy-silent-20261019-234302/learner/__pycache__/evidence_identity.cpython-314.pyc",
+        "source": ".worktrees/codex-strategy-silent-20261019-234302/learner/evidence_identity.py",
+        "bytes": 8103
+      },
+      {
+        "path": ".worktrees/codex-strategy-silent-20261019-234302/ops/__pycache__/content_store.cpython-314.pyc",
+        "source": ".worktrees/codex-strategy-silent-20261019-234302/ops/content_store.py",
+        "bytes": 24694
+      }
+    ],
+    "retire_checkout": true,
+    "compact_scratch": false
+  },
+  "actual_proposal_latest_states": {
+    "silent-proposal-9952ee8e8df9a0fe": "waiting",
+    "silent-proposal-47be799a87af03be": "waiting",
+    "silent-proposal-3a5274da3c42672a": "waiting",
+    "silent-proposal-bc4b92d590f2c4ce": "waiting",
+    "silent-proposal-f52fbbab4dccc3b4": "waiting",
+    "silent-proposal-10f37c0edd3d24a6": "waiting",
+    "silent-proposal-3f82387e2e179703": "waiting",
+    "silent-proposal-aee21084c991abd3": "waiting",
+    "silent-proposal-df37594e9b12debf": "waiting",
+    "silent-proposal-42e81c83b2e1e56b": "waiting"
+  },
+  "ledger_check": {
+    "problems": 0,
+    "items": 530
+  },
+  "dataset_rerun": false,
+  "source_remerged": false,
+  "parent_completed": false
+}
