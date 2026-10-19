@@ -1,0 +1,64 @@
+{
+  "at": "2026-10-19 23:13:36 CST",
+  "batch": "20261019-224304-strategy-proposal",
+  "task": "strategy-proposal",
+  "learner_exit": 0,
+  "observed_main": "00a8c152e85b2ccd05a157afa366e4abcac2bbe4",
+  "observed_live": "b0c86240d8ba35e4fae35c2d193b3d1f428651bf",
+  "reported_and_original_retention_source": "601160a34f130bf16c73e61078a90ffe97a724c0",
+  "actual_proposal_states": {
+    "silent-proposal-89354805ee4d7e77": "waiting",
+    "silent-proposal-f2bfceddb1898dca": "waiting",
+    "silent-proposal-283a164780d11e69": "waiting",
+    "silent-proposal-ebbfe3b97548756d": "waiting",
+    "silent-proposal-e5b87be50f28f311": "waiting",
+    "silent-proposal-49632bc4878fb597": "waiting",
+    "silent-proposal-66532328a585941f": "waiting",
+    "silent-proposal-43a76a31ba7bdcfa": "waiting",
+    "silent-proposal-5264153a4a4b0e5c": "waiting",
+    "silent-proposal-bddfa690a84e03d0": "waiting"
+  },
+  "proposal_audit_errors": [],
+  "merged": null,
+  "tests": {
+    "tsc": null,
+    "vitest": null,
+    "cases": null
+  },
+  "source_modified": false,
+  "source_evidence": "original verified scheduler no-change protocol plus settled-report-only retention Git head/branch; no extant checkout Git status claim",
+  "retention": {
+    "state": "checkout_reclaimed",
+    "worktree_head": "601160a34f130bf16c73e61078a90ffe97a724c0",
+    "worktree_branch": "refs/heads/codex-strategy-silent-20261019-224304",
+    "pending_scratch_preserved": true,
+    "branch_retained": true
+  },
+  "verification_note": "First git -C inspection fell through the reclaimed checkout directory to the main repository; that output was discarded. Exact original retention manifest and actual proposal fold were used.",
+  "ordinary_close_receipt_exists": false,
+  "dataset_started_by_ops": false,
+  "ordinary_dataset_or_record_completion_claimed": false,
+  "new_release_id": null,
+  "consumer_or_shipped_claim": false,
+  "parent_completed": false,
+  "new_game": null,
+  "source_checks_repeated": false,
+  "sources": [
+    {
+      "path": "ops/codex-ops/learner/20261019-224304-strategy-proposal.out",
+      "bytes": 5016,
+      "sha256": "914f98c25c0b95be2d50c8bae99a310f08cdedee519ff1be97021e7dbfde6bee"
+    },
+    {
+      "path": ".worktrees/codex-strategy-silent-20261019-224304/learner/runs/20261019-224313-0e1048de-eca5-44bf-b302-6a0d4e540596-strategy-proposal/report.md",
+      "bytes": 10648,
+      "sha256": "32ffa375188490801ac6bf6d07a576a2753f9a5750fd45a72cbc994a9ea2661e"
+    },
+    {
+      "path": "ops/codex-ops/retention/archives/20261019-224304-strategy-proposal.manifest.json",
+      "bytes": 1232,
+      "sha256": "3ba8d344505fd68d83d22325ba877ca33adb040e75916d1d58462a925c041cf5"
+    }
+  ],
+  "next": "Keep ten original proposals waiting for the stated new evidence; original scheduler handles later eligible inputs. No new research or duplicate batch from this disposition event."
+}
