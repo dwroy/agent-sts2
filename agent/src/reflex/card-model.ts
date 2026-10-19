@@ -68,6 +68,8 @@ export interface CardModel {
   strangle?: number;
   /** LY83 A10 F21 T10: this upgraded follow-up has an observed ordinary Strangle trigger. */
   observedStrangleFollowup?: true;
+  /** HEMND A10 F48 T3: only these observed plays complete a three-stack Strangle trigger. */
+  observedStrangleThreeFollowup?: true;
   /** MAUL's observed Increase: every copy gains this much damage after this play (silent-0056/0058). */
   maulIncrease?: number;
   /** Observed Shadowmeld (both versions): later card Block in this turn is doubled. */
@@ -1284,6 +1286,17 @@ export function modelHandCard(entry: unknown, fallbackIndex: number, knowledge: 
       dynBase(card, "Damage", true) === 8 && dyn(card, "StranglePower") === 2 &&
       template.replace(/\s+/g, "") === "造成{Damage:diff()}点伤害。你在这个回合内每出一张牌，该名敌人都会失去{StranglePower:diff()}点生命。"
       ? { strangle: dyn(card, "StranglePower")! } : {}),
+    // HEMND3SMQYB8 F48 T3, silent-0260/0261: ten damage establishes three; establishment does not trigger itself.
+    ...(character.toLowerCase() === "silent" && ascension === 10 && cardId === "STRANGLE" && bool(card["upgraded"]) &&
+      type === "Attack" && card["enchantment"] == null && dynBase(card, "Damage", true) === 10 && dyn(card, "StranglePower") === 3 &&
+      template.replace(/\s+/g, "") === "造成{Damage:diff()}点伤害。你在这个回合内每出一张牌，该名敌人都会失去{StranglePower:diff()}点生命。"
+      ? { strangle: 3 } : {}),
+    ...(character.toLowerCase() === "silent" && ascension === 10 && card["enchantment"] == null &&
+      ((cardId === "BUBBLE_BUBBLE" && type === "Skill" && !bool(card["upgraded"]) && dyn(card, "PoisonPower") === 9 &&
+        renderedText.replace(/\s+/g, "") === "如果敌方拥有中毒，则给予9层中毒。") ||
+       (cardId === "ACCELERANT" && type === "Power" && bool(card["upgraded"]) && dyn(card, "Accelerant") === 2 &&
+        renderedText.replace(/\s+/g, "") === "中毒会额外触发2次。"))
+      ? { observedStrangleThreeFollowup: true as const } : {}),
     ...(immediatePlays ? { immediatePlays } : {}),
     hits: Math.max(0, Math.round(hits)),
     ...(whistleStun ? { whistleStun: true } : {}),
