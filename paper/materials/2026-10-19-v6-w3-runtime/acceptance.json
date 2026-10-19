@@ -1,0 +1,141 @@
+{
+  "at": "2026-10-19T22:07:38.155031+08:00",
+  "base": "7aa0943449fd987f6e49696ce63661f9f3177909",
+  "agent_tree": "5e8b261e816a4b92cbf63f275d2473d0a3e749a2",
+  "tested_files": [
+    {
+      "feature": "history",
+      "path": "agent/src/sim/v6-history-pack.ts",
+      "sha256": "5c1f5f5cb4cb1d0785927613d91ffed573fe797f722ad2f9244593a210198d52"
+    },
+    {
+      "feature": "history",
+      "path": "agent/tools/v6/freeze-history.ts",
+      "sha256": "6affcdceb83b423495882cb228d6a861da8f57d24fbbc8de39c58b3648f5e7c3"
+    },
+    {
+      "feature": "history",
+      "path": "knowledge/builders/build-v6-history.py",
+      "sha256": "7370c5105570f62ef781beb7212ccffe5354f2038db7b72f87e46339ef435e27"
+    },
+    {
+      "feature": "history",
+      "path": "agent/tests/v6-history-pack.test.ts",
+      "sha256": "e501c506e87fe313506ae5091f478e127bfe39d422cdc4aab3b56e1be153a1f7"
+    },
+    {
+      "feature": "history",
+      "path": "knowledge/characters/silent/v6-history.json",
+      "sha256": "4858fedc44da6d43a49ea23716199897df1398c65900f931893156bd4e3cb40b"
+    },
+    {
+      "feature": "direction-pairs",
+      "path": "agent/src/sim/v6-projection.ts",
+      "sha256": "140f81a87c3ac91f0a97b5ba32694e984a61cb636fa3d938cb9b60e5b7d6fcc2"
+    },
+    {
+      "feature": "direction-pairs",
+      "path": "agent/tests/v6-direction-pairs.test.ts",
+      "sha256": "071669b0f56a60bc7a6b4242f2202e8fa7b6a12295f817020d058ac0f026fea3"
+    },
+    {
+      "feature": "route-entry",
+      "path": "agent/src/sim/v6-route-entry.ts",
+      "sha256": "d5a14da59a0e082ed4789c8f1685c5fd6aab33e5ea8c147359e328e16da1ca28"
+    },
+    {
+      "feature": "route-entry",
+      "path": "agent/src/sim/v6-targets.ts",
+      "sha256": "9b36d2eb168bda876e11df67c94e2279ebcbc7df0da50c061aebf75ab76a6e42"
+    },
+    {
+      "feature": "route-entry",
+      "path": "agent/tools/v6/frozen-route.ts",
+      "sha256": "2d9ce0beea811b3f0f9cbedebb0aa0217aaac258c637ab8f3910e58fb03aed26"
+    },
+    {
+      "feature": "route-entry",
+      "path": "agent/tools/v6/freeze-route-inputs.ts",
+      "sha256": "2c5be285872346e19ba3ba85328914116e1acf5438b8067ab85423756f3b0fbe"
+    },
+    {
+      "feature": "route-entry",
+      "path": "agent/tools/v6/replay.ts",
+      "sha256": "f3eecdae28d501a755ae0412feccc0fc9eea4806d6dbed186de4b23f82523a5b"
+    },
+    {
+      "feature": "route-entry",
+      "path": "agent/tests/v6-route-entry.test.ts",
+      "sha256": "1bce0068914ea170cd2c6ae7ef68e352f735bc59a474aae9b973966eabe00631"
+    },
+    {
+      "feature": "route-entry",
+      "path": "agent/tests/v6-frozen-route.test.ts",
+      "sha256": "83829b3baa8b52534e59e629a6742d04a2f08012dfdb0844080c125224fa31b0"
+    },
+    {
+      "feature": "idle-precompute",
+      "path": "agent/src/sim/v6-precompute.ts",
+      "sha256": "3b3de9eb2ea29c7c565f55086ffc8c52c344ec95e5f4968c7cacb3583b4488f8"
+    },
+    {
+      "feature": "idle-precompute",
+      "path": "agent/tests/v6-precompute.test.ts",
+      "sha256": "0151d32b0bf173c8c6f254bd93f1f87033fafb3011c2ced21293db10cd90ddca"
+    }
+  ],
+  "checks": {
+    "at": "2026-10-19T21:53:38.059471+08:00",
+    "head": "f7580b3f5e687e690403b743d7b0be3aca9c68a0",
+    "checks": [
+      {
+        "name": "tsc",
+        "argv": [
+          "npx",
+          "tsc",
+          "-p",
+          "tsconfig.json",
+          "--noEmit"
+        ],
+        "exit_code": 0,
+        "seconds": 2.057
+      },
+      {
+        "name": "vitest",
+        "argv": [
+          "npx",
+          "vitest",
+          "run",
+          "--maxWorkers=2"
+        ],
+        "exit_code": 0,
+        "seconds": 775.787
+      }
+    ]
+  },
+  "original_check_logs": [
+    {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/v6-w3-runtime-integration-20261019/paper/materials/2026-10-19-v6-w3-runtime/checks-2155/tsc.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/v6-w3-runtime-integration-20261019/paper/materials/2026-10-19-v6-w3-runtime/checks-2155/vitest.log",
+      "bytes": 402,
+      "sha256": "15a48b4fed0fa41338cf9082ef6000b841c840fee1da52ee13454a34e695c395"
+    }
+  ],
+  "source_commits": {
+    "history": "43f438b502b5cfec4644f7ac180d428d67d90a3d",
+    "direction-pairs": "4cd876e30e471b4ef4f6475967dca9cf3477d36d",
+    "route-entry": "f053cf413b43761c987b14834579fc771168deac",
+    "idle-precompute": "78489f4612d9535b894cbc7b0b73481c36b85e54"
+  },
+  "replayed_commits": {
+    "history": "f5c835ff9601cfab638df78ae30093b7f8072ac0",
+    "direction-pairs": "67733b5d2287d2e076ba0d19a6fd91f531a585ed",
+    "route-entry": "c1541bb59803045f789de4f2da05f3178fb2c1eb",
+    "idle-precompute": "a8016142e5d1d45edb571b39545a7afcce0468a9"
+  },
+  "code_identical_after_replay": true
+}
