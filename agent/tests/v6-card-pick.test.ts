@@ -45,7 +45,7 @@ it("keeps legal reward indices, English Decisions criteria and unknown per-combo
   expect(p.choices).toEqual(["card2", "card7", "skip"]);
   expect(p.decision.questions.pick).toMatchObject({ type: "choice", criteria: { card2: "Take TEST_CARD+", card7: "Take TEST_OTHER", skip: "Take no card" } });
   expect(p.decision.resolve(answer("card7")).intent).toEqual({ action: "choose_reward_card", option_index: 7 });
-  expect(p.decision.resolve(answer("unoffered")).intent).toEqual({ action: "skip_reward_cards" });
+  expect(p.decision.resolve(answer("unoffered")).intent).toEqual({ action: "choose_reward_card", option_index: 2 });
   expect(p.entries).toHaveLength(12); expect(p.entries.every(e => validateProjectionEntry(e).ok && e.win === null)).toBe(true);
   expect(p.decision.state).toMatchObject({ core_metrics: [expect.objectContaining({ metrics: expect.arrayContaining([
     expect.objectContaining({ attempt: "first", dpr_boss: expect.objectContaining({ value: 20, n: 3 }) }),
@@ -121,7 +121,7 @@ it("fallback excludes the unsafe boss gate, then ranks chain, current boss and s
   expect(cardFallback(choices, t)).toBe("card7");
   t.target_mixtures.find(r => r.option_id === "card7" && r.kind === "current_gate")!.paired_delta!.mean = 0;
   expect(cardFallback(choices, t)).toBe("skip");
-  expect(cardFallback(choices, table())).toBe("skip");
+  expect(cardFallback(choices, table())).toBe("card2");
   expect(cardFallback(["card2"], table())).toBe("card2");
 });
 it.each([NaN, -1, 1.1])("rejects invalid confidence %s without dispatching a foreign choice", confidence => {
@@ -135,9 +135,11 @@ it.each(["IRONCLAD", "SILENT", "DEFECT", "NECROBINDER", "REGENT"])("%s off rewar
   vi.stubEnv("V6_CARD_DECIDER", "jev"); expect(render()).toBe(before);
   expect(buildV6CardPick(env(raw), undefined, "/missing")).toBeNull();
 });
-it.each(["success", "error", "invalid", "timeout"])("loop routes cards to Jev once with independent budget and logs fallback (%s)", async mode => {
-  const { raw, dir } = fixture(), fake = new FakeDeepSeek(() => "skip");
-  const provider = { evaluate: vi.fn(async r => ({ ...table(), phase: r.phase })), precompute: vi.fn() };
+it.each(["success", "error", "invalid", "timeout"])("loop routes known cards to Jev, then the original brain on failure (%s)", async mode => {
+  const { raw, dir } = fixture("on", "ironclad"), fake = new FakeDeepSeek(() => "card2");
+  const known = table();
+  for (const option_id of ["card2", "card7", "skip"]) known.target_mixtures.push({ option_id, kind: "clearance", value: { value: .5, se: .1, n: 20 }, paired_delta: null, known_mass: 1, known_value: .5, labels: [] });
+  const provider = { evaluate: vi.fn(async r => ({ ...known, phase: r.phase })), precompute: vi.fn() };
   const runtime = new V6ProjectionRuntime(provider, async (_e, phase) => ({ ...request(), phase }));
   if (mode === "timeout") vi.stubEnv("V6_JEV_MS", "10");
   const ask = vi.fn(async (state: unknown, _q: unknown, timeout: number) => {
@@ -148,12 +150,17 @@ it.each(["success", "error", "invalid", "timeout"])("loop routes cards to Jev on
     return { model: "fixture", answers: answer(mode === "invalid" ? "foreign" : "card7"), inputTokens: 7, outputTokens: 2, latencyMs: 1, requestId: "fixed" };
   });
   const events: unknown[] = [];
-  const result = await play([raw], fake, { runPlanLog: join(dir, "plans.jsonl"), buildOneshot: "off", sl: { ...loadConfig({}).sl, enabled: false }, run: { ...loadConfig({}).run, character: "silent" } }, { onEvent: event => events.push(event), brain: null, jev: { model: "fixture", ask } as unknown as JevClient, v6Projection: mode === "success" ? runtime : undefined, maxDecisions: 1 }).catch(error => { throw new Error(`${error}; events=${JSON.stringify(events)}`); });
-  expect(ask).toHaveBeenCalledTimes(1); expect(fake.calls).toHaveLength(0);
+  const result = await play([raw], fake, { runPlanLog: join(dir, "plans.jsonl"), buildOneshot: "off", sl: { ...loadConfig({}).sl, enabled: false }, run: { ...loadConfig({}).run, character: "silent" } }, { onEvent: event => events.push(event), jev: { model: "fixture", ask } as unknown as JevClient, v6Projection: runtime, maxDecisions: 1 }).catch(error => { throw new Error(`${error}; events=${JSON.stringify(events)}`); });
+  expect(ask).toHaveBeenCalledTimes(1); expect(fake.calls.filter(c => c.label === "reward/card")).toHaveLength(mode === "success" ? 0 : 1);
   expect(result.actions).toHaveLength(1);
-  expect(result.actions[0]).toMatchObject(mode === "success" ? { action: "choose_reward_card", option_index: 7 } : { action: "skip_reward_cards" });
-  const row = result.records.find(r => r.v6_card)!;
-  expect(row.fallback).toBe(mode !== "success");
+  expect(result.actions[0]).toMatchObject({ action: "choose_reward_card", option_index: mode === "success" ? 7 : 2 });
+  const row = result.records.find(r => mode === "success" ? r.v6_card : r.v6_unknown_to_brain)!;
+  expect(row.fallback).toBe(false);
+  if (mode !== "success") {
+    const rows = readFileSync(join(dir, "v6-build.jsonl"), "utf8").trim().split("\n").map(line => JSON.parse(line));
+    expect(rows).toContainEqual(expect.objectContaining({ event: "v6_unknown_to_brain" }));
+    expect(rows).toContainEqual(expect.objectContaining({ kind: "card_pick", fallback: expect.stringMatching(/^jev_/), elapsed_ms: expect.any(Number) }));
+  }
   expect(result.stats.jevCalls).toBe(1);
   if (mode === "success") expect(provider.evaluate).toHaveBeenCalledWith(expect.objectContaining({ phase: "act" }));
   if (mode === "success") expect(row).toMatchObject({ usage: { input_tokens: 7, output_tokens: 2 }, request_ids: ["fixed"] });
@@ -170,4 +177,26 @@ it("shadow calls and records Jev but executes the existing brain's choice", asyn
   expect(result.stats.inputTokens).toBe(0);
   const shadow = result.records.find(r => r.label === "reward/card/v6-shadow")!;
   expect(shadow).toMatchObject({ chosen: { action: "choose_reward_card", option_index: 7 }, request_ids: ["shadow-fixed"] });
+});
+
+it.each(["all_unknown", "one_known", "low_ratio", "brain_failed"])("routes %s rewards to the original brain before any Jev call", async mode => {
+  const { raw, dir } = fixture("on", "ironclad"), fake = new FakeDeepSeek(() => {
+    if (mode === "brain_failed") throw Error("fixed brain failure");
+    return "card7";
+  });
+  const t = table(), count = mode === "one_known" ? 1 : mode === "low_ratio" ? 2 : 0;
+  if (mode === "low_ratio") vi.stubEnv("V6_MIN_KNOWN_OPTION_RATIO", ".75");
+  for (const option_id of ["card2", "card7"].slice(0, count)) t.target_mixtures.push({ option_id, kind: "clearance",
+    value: { value: .5, se: .1, n: 20 }, paired_delta: null, known_mass: 1, known_value: .5, labels: [] });
+  const runtime = new V6ProjectionRuntime({ evaluate: vi.fn(async () => t), precompute: vi.fn() }, async (_env, phase) => ({ ...request(), phase }));
+  const ask = vi.fn(async () => { throw Error("unknown projections must never be sent to Jev"); });
+  const result = await play([raw], fake, { runPlanLog: join(dir, "plans.jsonl"), buildOneshot: "off", sl: { ...loadConfig({}).sl, enabled: false }, run: { ...loadConfig({}).run, character: "ironclad" } },
+    { maxDecisions: 1, jev: { model: "fixture", ask } as unknown as JevClient, v6Projection: runtime });
+  expect(ask).not.toHaveBeenCalled(); expect(fake.calls.filter(c => c.label === "reward/card")).toHaveLength(1);
+  expect(result.actions).toEqual([{ action: "choose_reward_card", option_index: mode === "brain_failed" ? 2 : 7 }]);
+  const row = result.records.find(r => r.v6_unknown_to_brain)!;
+  expect(row.fallback).toBe(mode === "brain_failed");
+  expect(row.v6_unknown_to_brain).toMatchObject({ kind: "card_pick", known: count,
+    reason: mode === "low_ratio" ? "known_ratio_below_threshold" : "insufficient_known_options" });
+  if (mode === "brain_failed") { expect(row.rationale).toContain("first legal offered card"); expect(row.decider).toBe("code-fallback"); }
 });

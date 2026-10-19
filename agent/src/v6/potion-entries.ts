@@ -35,7 +35,7 @@ export interface PotionEntry {
 /** Shops migrate in W7; combat and automatic reward claims keep their existing routes. */
 export function v6PotionActive(env: DecisionEnv): boolean {
   const config = v6Config();
-  return config.mode === "on" && config.deciders.potion === "jev" && !env.state.in_combat && env.state.screen !== "SHOP";
+  return !env.v6BrainFallback && config.mode === "on" && config.deciders.potion === "jev" && !env.state.in_combat && env.state.screen !== "SHOP";
 }
 
 export function notePotionFallback(env: DecisionEnv, fallback: boolean): void {

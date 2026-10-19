@@ -27,6 +27,8 @@ const PAIRS: Record<string, { cost?: [number, number]; vars: Record<string, [num
   SNAKEBITE: { cost: [2, 2], vars: { PoisonPower: [7, 10] } },
   // F36 T1's plain deck and T2's upgraded draw/cast; F37 T5 repeats the seven-Poison effect.
   DEADLY_POISON: { vars: { PoisonPower: [5, 7] } },
+  // PBUBM0LRTEDD A10 F49 attempt 6 T1: the direct hand pair after upgraded Apotheosis.
+  SHADOWMELD: { cost: [1, 0], vars: { Power: [1, 1] } },
 };
 
 /** No inferred upgrade for modified values, costs, text effects, or cards absent from the paired evidence. */
@@ -46,6 +48,10 @@ export function observedApotheosisUpgrade(card: Record<string, unknown>): Record
   const pair = PAIRS[str(card["card_id"])];
   if (!pair || num(card["energy_cost"], NaN) !== (pair.cost?.[0] ?? 1) ||
     /重放|replay/i.test(str(card["resolved_rules_text"])) || card["enchantment"] != null) return null;
+  if (str(card["card_id"]) === "SHADOWMELD" &&
+    (card["star_costs_x"] !== false || card["star_cost"] !== 0 || card["target_type"] !== "Self" ||
+      card["requires_target"] !== false || card["rules_text"] !== "本回合你获得的格挡值翻倍。" ||
+      str(card["resolved_rules_text"]).replace(/\s+/g, "") !== "本回合你获得的格挡值翻倍。")) return null;
   if (str(card["card_id"]) === "SNAKEBITE" &&
     (str(card["rules_text"]) !== "给予{PoisonPower:diff()}层中毒。" ||
       str(card["resolved_rules_text"]).replace(/\s+/g, "") !== "保留。给予7层中毒。")) return null;

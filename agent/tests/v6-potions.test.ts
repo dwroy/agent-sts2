@@ -166,19 +166,16 @@ it("the route stays with the brain while Jev chooses drink/discard independently
   expect(resolved.intent).toEqual({ action: "use_potion", option_index: 0 }); resolved.apply?.();
   expect(e.screenMemory.afterDiscard).toMatchObject({ via: "drink", slot: 0 });
 });
-it.each(["success", "error", "invalid"])("loop asks Jev separately with its timeout and records the result (%s)", async mode => {
+it("unknown slot projections return to the original brain and preserve its discard fields", async () => {
   active(); const dir = temp(), fake = new FakeDeepSeek(() => "o0");
-  const ask = vi.fn(async (_state: unknown, _questions: unknown, timeout: number) => {
-    expect(timeout).toBeGreaterThan(0); expect(timeout).toBeLessThanOrEqual(5000);
-    if (mode === "error") throw new Error("fixture timeout");
-    const answers = potionPick("o0:discard", { discard_p1: .1, discard_p2: .9 });
-    if (mode === "invalid") (answers["potion_o0"] as { confidence: number }).confidence = 2;
-    return { model: "fixture", answers, inputTokens: 3, outputTokens: 2, latencyMs: 1, requestId: "fixture" };
-  });
-  const result = await play([logged("batch-g/zgz0-f11-rest-mailbox").state], fake, { runPlanLog: join(dir, "plans.jsonl"), buildOneshot: "off" }, { jev: { model: "fixture", ask } as unknown as JevClient, maxDecisions: 1 });
-  expect(ask).toHaveBeenCalledTimes(1); expect(result.actions[0]?.["action"]).toBe(mode === "success" ? "discard_potion" : "choose_rest_option");
-  if (mode === "success") expect(result.actions[0]?.["option_index"]).toBe(2);
-  const row = result.records.find(r => r["potion_jev"]); expect(row).toBeDefined();
-  expect((row!["potion_jev"] as Raw)["fallback"]).toBe(mode === "error" ? "Jev potion request failed; brain tier then holding HP" : mode === "invalid" ? "Jev potion answer incomplete; brain tier then holding HP" : null);
+  const choose = fake.choose.bind(fake);
+  vi.spyOn(fake, "choose").mockImplementation(async (...args) => ({ ...await choose(...args), discard: [2] }));
+  const ask = vi.fn(async () => { throw Error("Jev must not receive unknown slot projections"); });
+  const result = await play([logged("batch-g/zgz0-f11-rest-mailbox").state], fake, { runPlanLog: join(dir, "plans.jsonl"), buildOneshot: "off" },
+    { jev: { model: "fixture", ask } as unknown as JevClient, maxDecisions: 1 });
+  expect(ask).not.toHaveBeenCalled();
+  expect(result.actions[0]).toEqual({ action: "discard_potion", option_index: 2 });
+  expect(fake.calls.filter(c => c.label === "rest/choose")).toHaveLength(1);
+  expect(result.records.some(r => r.v6_unknown_to_brain)).toBe(true);
   expect(readFileSync(join(dir, "v6-build.jsonl"), "utf8")).toContain('"kind":"potion"');
 });

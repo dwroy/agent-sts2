@@ -32,6 +32,7 @@ export function v6Config(env: NodeJS.ProcessEnv = process.env) {
     schema: "v6-config-v1" as const, mode, deciders, reflex,
     admission: "interfaces_only" as const, delivered: false as const,
     samples_pick: numeric("V6_SAMPLES_PICK", 20, 1, 10000, true), samples_act: numeric("V6_SAMPLES_ACT", 100, 1, 10000, true),
+    min_known_option_ratio: numeric("V6_MIN_KNOWN_OPTION_RATIO", .50, 0, 1),
     direction_min_weight: numeric("V6_DIRECTION_MIN_WEIGHT", .10, 0, 1), win, delta,
     triggers: {
       t1_core_min: numeric("V6_T1_CORE_MIN", .30, 0, 1), t2_se: numeric("V6_T2_SE", 2, 0, 100),

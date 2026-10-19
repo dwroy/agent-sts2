@@ -1405,7 +1405,12 @@ export function modelHandCard(entry: unknown, fallbackIndex: number, knowledge: 
     text: str(card["resolved_rules_text"]) || info?.description || "",
   };
   if (character.toLowerCase() === "silent" && ascension === 10) {
-    if (cardId === "APOTHEOSIS" && !model.upgraded && model.cost === 2 && !model.xCost &&
+    // PBUBM0LRTEDD A10 F49 attempt 6 T1: the unmodified one-cost upgraded entry.
+    const observedUpgradedApotheosis = model.upgraded && model.cost === 1 &&
+      card["energy_cost"] === 1 && card["costs_x"] === false && card["star_costs_x"] === false &&
+      card["star_cost"] === 0 && card["enchantment"] == null && card["target_type"] === "Self" &&
+      card["requires_target"] === false && Array.isArray(card["dynamic_values"]) && card["dynamic_values"].length === 0;
+    if (cardId === "APOTHEOSIS" && ((!model.upgraded && model.cost === 2) || observedUpgradedApotheosis) && !model.xCost &&
       template === "升级你的全部卡牌。" && str(card["resolved_rules_text"]).replace(/\s+/g, "") === "固有。升级你的全部卡牌。消耗。" && !model.replay) {
       model.apotheosis = true;
       model.known = true;

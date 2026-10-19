@@ -107,7 +107,7 @@ it("keeps missing or modified upgrades visibly unknown and every unobserved scop
   }
   for (const ascension of [null, 0, 9, 11]) expect(models("before43", "silent", ascension)[0]?.apotheosis).toBeUndefined();
   const raw = evidence.frames.before43.hand[0]!;
-  expect(modelHandCard({ ...raw, upgraded: true, energy_cost: 1 }, 0, knowledge, "silent", 10).apotheosis).toBeUndefined();
+  expect(modelHandCard({ ...raw, upgraded: true, energy_cost: 0 }, 0, knowledge, "silent", 10).apotheosis).toBeUndefined();
 });
 
 it("does not certify replayed or modifier-dependent Apotheosis", () => {
