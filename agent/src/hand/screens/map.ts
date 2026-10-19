@@ -15,6 +15,7 @@ import { runPlanEliteShift } from "../../memory/run-plan.js";
 import { briefJson } from "../../memory/run-brief.js";
 import type { ActDecision, AskDecision, Decision, DecisionEnv, RememberedMap, ResolvedAction } from "../../memory/types.js";
 import { bestOption, buildPickDecision, type PickOption } from "./pick.js";
+import { boundedV6Jev } from "../../v6/prompt-summary.js";
 import { buildFacts, deepseekDecides } from "../../brain/build-facts.js";
 import { bossStartHealOf, NO_REST_RELICS, restedHp, restHealOf, roomCost, roomCostModel, type RestHeal, type RoomCostModel } from "../../sim/route-projection.js";
 import { checkRoute, floorOfRow, hasChoiceAhead, isKeep, nextRestVersus, nodeId, roomName, routeIds, type RouteMap } from "../../sim/route-map.js";
@@ -902,7 +903,7 @@ function routePotionJev(env: DecisionEnv, available: NodeRef[]): {
     [`potion_n${index}`]: choiceQ("If the route starts at this node, keep the potions, discard first, or drink a potion usable on the map? Compare the potion entries; unknown is not zero.",
       Object.fromEntries(options.map(option => [option.key, JSON.stringify(option.summary)]))), ...optionQuestions(options),
   })));
-  return { aux: { state: { run_brief: briefJson(env.brief) }, questions, supply: value => { answers = value; } },
+  return { aux: { ...boundedV6Jev({ run_brief: briefJson(env.brief) }, questions), supply: value => { answers = value; } },
     move: first => {
       const options = byNode.get(first.index);
       if (!options || options.length < 2) return undefined;

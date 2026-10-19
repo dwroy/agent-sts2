@@ -9,6 +9,7 @@ import type { AnswerSet } from "../reflex/jev/answers.js";
 import type { QuestionSet } from "../reflex/jev/questions.js";
 import { currentDecisionBudget, DecisionBudget, withDecisionBudget, withinDecisionBudget } from "../core/decision-budget.js";
 import { V6BuildLog } from "./log.js";
+import { promptBudgetLabels } from "./prompt-summary.js";
 import { v6Config } from "./config.js";
 import { loadV6Knowledge } from "./knowledge.js";
 import { evaluatePredicate } from "./predicate.js";
@@ -156,7 +157,8 @@ export function rankPotionDiscards(entries: PotionEntry[]): PotionEntry[] {
 }
 
 /** Ordinary decision logs retain the full potion entries; this row supplies the V6 audit join. */
-export function recordPotionJev(env: DecisionEnv, runPlanLog: string, questionId: string, answers: AnswerSet, fallback: string | null, elapsedMs: number): void {
+export function recordPotionJev(env: DecisionEnv, runPlanLog: string, questionId: string, answers: AnswerSet, fallback: string | null, elapsedMs: number,
+  promptState: Record<string, JsonValue> = {}): void {
   const character = loadV6Knowledge(KNOWLEDGE_DIR, str(asRecord(env.state.run?.raw)["character_id"])).character;
   if (!character || !v6PotionActive(env)) return;
   const potions = potionEntries(env, asArray(asRecord(env.state.run?.raw)["potions"]).map(asRecord).filter(p => bool(p["occupied"])).map(p => str(p["potion_id"])));
@@ -165,7 +167,7 @@ export function recordPotionJev(env: DecisionEnv, runPlanLog: string, questionId
   new V6BuildLog(v6Config(), join(dirname(runPlanLog), "v6-build.jsonl")).append({
     schema: "v6-build-log-v1", ts: new Date().toISOString(), run_id: str(env.state.raw["run_id"]), character,
     question_id: questionId, kind: "potion", mode: "on", entries: [], jev_answer: Object.keys(answers).length ? { choice: choices.join("_") || "keep", confidence: confidence.length ? Math.min(...confidence) : null } : null,
-    fallback, elapsed_ms: elapsedMs, cache: { hits: 0, misses: 0 }, degradation: [],
+    fallback, elapsed_ms: elapsedMs, cache: { hits: 0, misses: 0 }, degradation: promptBudgetLabels(promptState),
     unknown: { count: potions.filter(p => p.hold_hp === null || p.trust.current_boss === "unknown" || p.trust.joint === "unknown").length, total: potions.length }, triggers: [], merged_triggers: [], skipped_triggers: [],
   });
 }

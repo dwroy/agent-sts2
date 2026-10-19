@@ -48,8 +48,8 @@ it("keeps legal reward indices, English Decisions criteria and unknown per-combo
   expect(p.decision.resolve(answer("unoffered")).intent).toEqual({ action: "skip_reward_cards" });
   expect(p.entries).toHaveLength(12); expect(p.entries.every(e => validateProjectionEntry(e).ok && e.win === null)).toBe(true);
   expect(p.decision.state).toMatchObject({ core_metrics: [expect.objectContaining({ metrics: expect.arrayContaining([
-    expect.objectContaining({ attempt: "first", dpr_boss: expect.objectContaining({ value: 20, n: 3, method: "synthetic contract" }) }),
-    expect.objectContaining({ attempt: "including_sl", dpr_boss: expect.objectContaining({ value: 20, n: 3, method: "synthetic contract" }) }),
+    expect.objectContaining({ attempt: "first", dpr_boss: expect.objectContaining({ value: 20, n: 3 }) }),
+    expect.objectContaining({ attempt: "including_sl", dpr_boss: expect.objectContaining({ value: 20, n: 3 }) }),
   ]) }), expect.anything()] });
   expect(JSON.stringify((p.decision.state as { options: object }).options)).not.toContain("combo_metrics");
   expect(p.decision.deepseek).toBeUndefined(); expect(p.decision.escalate).toBeUndefined();
@@ -101,13 +101,9 @@ it("consumes W1.2 pooled metrics without filtering source ascensions or merging 
   for (const combo of state.core_metrics) {
     expect(combo.metrics.map(m => m.attempt)).toEqual(["first", "including_sl"]);
     for (const metric of combo.metrics) {
-      expect(metric).toMatchObject({ target_ascension: 10, raw_counts: { runs: 3 },
-        sources: [{ version: "fixture-old", ascension: 1, counts: { runs: 2 } }, { version: null, ascension: null, counts: { runs: 1 } }],
-        dpr_boss: { value: 20, n: 3 }, history: { bosses: { TEST_TARGET: { reached: { value: 3 }, won: { value: 1 } } } },
-        simulation: [{ entry_hp: null, win_rate: { value: null, n: 0, unknown_reason: "fixture has no observations" }, labels: ["missing_exact_A10"] }],
-        regression: [{ ascension_offset: { win_rate: { value: null } }, labels: ["unknown_regression"] }],
-        shrinkage: [{ raw: { value: 20 }, direction: { value: 10 }, estimate: { value: 12.5 }, combo_weight: .25 }],
-      });
+      expect(metric).toMatchObject({ target_ascension: 10, pooled_runs: 3,
+        dpr_boss: { value: 20, n: 3 }, adjusted_win_rates: [{ target: "TEST_TARGET", value: null, n: 0 }] });
+      for (const key of ["sources", "simulation", "regression", "shrinkage", "history"]) expect(metric).not.toHaveProperty(key);
       expect(metric).not.toHaveProperty("ascension"); expect(metric).not.toHaveProperty("version");
     }
   }

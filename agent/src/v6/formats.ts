@@ -60,7 +60,8 @@ const turnEstimate = object({ value: number(0, 10000), se: number(0, 10000), n: 
 const metricSnapshot = custom<JsonValue>((value, path, issues) => {
   let nodes = 0;
   const walk = (v: unknown, depth: number): boolean => {
-    if (++nodes > 20000 || depth > 16) return false;
+    // R2's pooled 17-combination snapshots reach 21,434 nodes; retain them for audit.
+    if (++nodes > 50000 || depth > 16) return false;
     if (v === null || typeof v === "boolean") return true;
     if (typeof v === "number") return Number.isFinite(v);
     if (typeof v === "string") return v.length <= 4000;

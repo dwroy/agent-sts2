@@ -1170,7 +1170,7 @@ async function runLoopWithBudgets(options: LoopOptions): Promise<LoopStats> {
           }
           aux.supply(validPotionAnswers(aux.questions, answers));
           notePotionFallback(env, fallback !== null);
-          recordPotionJev(env, config.runPlanLog, decisionId, answers, fallback, Date.now() - potionStarted);
+          recordPotionJev(env, config.runPlanLog, decisionId, answers, fallback, Date.now() - potionStarted, aux.state);
           potionJevRecord = toJsonValue({ questions: aux.questions, answers, fallback });
         }
         /**
@@ -1556,7 +1556,7 @@ async function runLoopWithBudgets(options: LoopOptions): Promise<LoopStats> {
         if (potionOnly) {
           const fallback = resolved.fallback || !potionAnswersComplete(jevQuestions, result.answers) ? "Jev potion answer incomplete; brain tier then holding HP" : null;
           notePotionFallback(env, fallback !== null);
-          recordPotionJev(env, config.runPlanLog, decisionId, result.answers, fallback, Date.now() - potionStarted);
+          recordPotionJev(env, config.runPlanLog, decisionId, result.answers, fallback, Date.now() - potionStarted, jevState);
         }
 
         const esc = decision.escalate;
@@ -1682,7 +1682,7 @@ async function runLoopWithBudgets(options: LoopOptions): Promise<LoopStats> {
           resolved = { ...decision.resolve({}, { budgetExpired: true }), fallback: true };
         } else if (potionOnly) {
           notePotionFallback(env, true);
-          recordPotionJev(env, config.runPlanLog, decisionId, firstAnswers, "Jev potion request failed; keep current potions", Date.now() - potionStarted);
+          recordPotionJev(env, config.runPlanLog, decisionId, firstAnswers, "Jev potion request failed; keep current potions", Date.now() - potionStarted, jevState);
           resolved = { ...decision.resolve({}, { budgetExpired: true }), fallback: true };
         } else if (error instanceof DecisionBudgetExpired) {
           currentDecisionBudget()?.useFallback("Jev_deadline_current_candidate");

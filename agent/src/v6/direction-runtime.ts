@@ -16,6 +16,7 @@ import { loadV6Knowledge } from "./knowledge.js";
 import { directionContext, directionSummaries, directionTask, directionCombos, type DirectionSummary } from "./direction-plan.js";
 import { validateDirectionWeights, validateProjectionEntry, type Character } from "./formats.js";
 import { detectReplan, freshReplanState, reserveReplan, type ReplanState, type TriggerResult } from "./replan-triggers.js";
+import { promptBudgetLabels } from "./prompt-summary.js";
 import { V6BuildLog } from "./log.js";
 
 export interface DirectionPlannerMemory {
@@ -138,7 +139,7 @@ export async function ensureDirectionPlan(env: DecisionEnv, brain: Pick<Brain, "
   const recordBrain = (failed: boolean) => log.append({ schema: "v6-build-log-v1", ts: new Date().toISOString(), run_id: run,
     character: str(raw["character_id"]).toLowerCase() as Character, question_id: `direction_${act}_${floor}`, kind: result.triggers.includes("act_start") ? "act" : "replan", stage: "brain", mode: config.mode,
     entries: [], jev_answer: null, fallback: failed ? "brain_request_failed" : null, elapsed_ms: Date.now() - started,
-    cache: { hits: 0, misses: 0 }, degradation: [], unknown: { count: 0, total: 0 }, triggers: [], merged_triggers: [], skipped_triggers: [] });
+    cache: { hits: 0, misses: 0 }, degradation: promptBudgetLabels(payload), unknown: { count: 0, total: 0 }, triggers: [], merged_triggers: [], skipped_triggers: [] });
   const { parsed, meta } = await (async () => {
     try {
       const { json, meta } = await brain.askJson(payload, "run-plan", value => validateDirectionWeights(value, context).ok);
