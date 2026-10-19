@@ -1,0 +1,108 @@
+[
+  {
+    "run_id": "KAY522KT5NXR",
+    "ended": "2026-10-04T19:47:45.135Z",
+    "ascension": 0,
+    "code": "5de5d518+dirty",
+    "victory": true,
+    "floor": 48,
+    "configured_engines": [
+      "codex"
+    ],
+    "accepted_engines": [],
+    "actual_engine_group": "unknown",
+    "accepted_models": [],
+    "config_commits": [
+      "5de5d5182c050e41500e97465348a008172fe445"
+    ],
+    "config_code": [
+      {
+        "commit": "5de5d5182c050e41500e97465348a008172fe445",
+        "code": "5de5d51+dirty",
+        "dirty": true,
+        "dirty_files": [
+          "knowledge/characters/silent/boss-damage.json",
+          "knowledge/characters/silent/monster-records.json",
+          "knowledge/characters/silent/outcome-stats.json",
+          "knowledge/characters/silent/room-costs.json",
+          "knowledge/common/card-upgrades.json",
+          "knowledge/common/monster-db.json",
+          "knowledge/common/move-model.json"
+        ],
+        "branch": "live",
+        "worktree": "live"
+      }
+    ],
+    "config_refs": [
+      {
+        "source": "/home/dw/Projects/agent-sts2/logs/run-config.jsonl",
+        "offset": 306308,
+        "bytes": 4634,
+        "sha256": "4d2f91adc6e00184e0d372f0782e44f7e4ddd5c6496ff3bb32ceb094917d7ab2",
+        "run_id": "KAY522KT5NXR",
+        "path": "/home/dw/Projects/agent-sts2/learner/runs/20261019-171010-c702c588-a5c6-445c-838d-fd94eb877532-v6-reflex-distill/raw/run-config-306308.json",
+        "ts": "2026-10-04T18:50:57.142Z"
+      }
+    ],
+    "accepted_brain_rows": 0,
+    "first_predicted_death": {
+      "ts": "2026-10-04T19:42:33.475Z",
+      "floor": 48,
+      "turn": 11,
+      "ref": {
+        "source": "/home/dw/Projects/agent-sts2/logs/sl-attempts.jsonl",
+        "offset": 4230119,
+        "bytes": 41262,
+        "sha256": "46ef35426a5d2a930237efc7a408005dc189b2cf958d54afb8150ca449388560",
+        "run_id": "KAY522KT5NXR",
+        "path": "/home/dw/Projects/agent-sts2/learner/runs/20261019-171010-c702c588-a5c6-445c-838d-fd94eb877532-v6-reflex-distill/raw/sl-attempts-4230119.json",
+        "ts": "2026-10-04T19:42:33.475Z"
+      }
+    },
+    "final_result_includes_sl": true,
+    "first_trial_result": "predicted_death_censored",
+    "all_decisions": 848,
+    "decisions_before_cutoff": 752,
+    "sl_summary_rows_not_independent_runs": 5,
+    "stream_ranges": {
+      "runs.jsonl": {
+        "rows": 1,
+        "first_offset": 195609,
+        "end_offset": 196026
+      },
+      "run-config.jsonl": {
+        "rows": 1,
+        "first_offset": 306308,
+        "end_offset": 310942
+      },
+      "sl-attempts.jsonl": {
+        "rows": 5,
+        "first_offset": 4149992,
+        "end_offset": 4311821
+      },
+      "decisions.jsonl": {
+        "rows": 848,
+        "first_offset": 474752764,
+        "end_offset": 477685948
+      },
+      "states.jsonl": {
+        "rows": 875,
+        "first_offset": 6424346876,
+        "end_offset": 6457315151
+      },
+      "jev-prompts.jsonl": {
+        "rows": 155,
+        "first_offset": 208305848,
+        "end_offset": 210266176
+      },
+      "brain.jsonl": {
+        "rows": 55,
+        "first_offset": 150871264,
+        "end_offset": 152737119
+      }
+    },
+    "limitations": [
+      "没有accepted=true脑元数据；configured engine不冒实际来源。"
+    ]
+  }
+]

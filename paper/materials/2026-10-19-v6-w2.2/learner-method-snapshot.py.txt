@@ -1,0 +1,354 @@
+"""Reproducible descriptive statistics and evidence-only pending build cards."""
+import bisect
+import collections
+import copy
+import hashlib
+import json
+import math
+from pathlib import Path
+import random
+import statistics
+import sys
+from extract_all import OUT,ROOT,M,D,R,RUNS,write,change,digest,hp_decrease
+from combinations import CANDIDATES,holding,activation,contributed
+
+DATA=OUT/'extraction-v2'
+PENDING=Path(M['draft_directory'])
+METRIC_NAMES=['dpr_boss','dpr_elite','dpr_normal','dpr_turns_1_3','dpr_turns_4_6','dpr_turns_7_plus','peak_turn_damage','aoe_damage','block_per_turn','hp_loss_per_turn','startup_turn','startup_energy','startup_draw','first_completed_floor','formed_runs','cleared_runs','mean_reached_floor','chain_reached','chain_won','chain_win_rate','formation_rate','deck_size_min','deck_size_max','deck_size_scaling','potion_dependency','sl_dependency','key_relic_dependency']
+INV={x['run_id']:x for x in json.load(open(R/'run-inventory.json'))}
+COV={x['run_id']:x for x in json.load(open(D/'run-coverage.json'))}
+OUTCOMES={x['row']['run_id']:x for x in json.load(open(R/'run-outcomes.json'))}
+SL=collections.defaultdict(list)
+for x in json.load(open(R/'sl-index.json')):SL[x['row']['run_id']].append(x)
+CHAIN_ASCENSIONS={RUNS[rid]['ascension'] for rid,attempts in SL.items() if any(x['row']['floor']==49 for x in attempts)}
+EXP=json.load(open(ROOT/'knowledge/characters/silent/experience.json'))['entries']
+OLD_MAPPING={x['id']:x for x in json.load(open(D/'experience-mapping.json'))}
+TEMPLATES=json.load(open(ROOT/'knowledge/characters/silent/construction-templates.json'))['templates']
+REFLEX=json.load(open(M['reflex_draft']))['reflex']['entries']
+
+def obs(f):
+    x=dict(run_id=f['run_id'],floor=f['floor'])
+    if isinstance(f.get('turn'),int):x['turn']=f['turn']
+    return x
+
+def stop(rid):
+    candidates=[]
+    p=INV[rid].get('first_predicted_death')
+    if p:candidates.append(dict(ts=p['ts'],floor=p['floor'],turn=p.get('turn'),kind='predicted_death',source=p['ref']))
+    for x in SL[rid]:
+        if x['row']['result']=='died':candidates.append(dict(ts=x['row'].get('ended_at') or x['row']['ts'],floor=x['row']['floor'],turn=x['row'].get('turns'),kind='died',source=x['ref']))
+    return min(candidates,key=lambda x:x['ts']) if candidates else None
+
+STOPS={rid:stop(rid) for rid in RUNS}
+
+def within(rid,ts,attempt):
+    return attempt=='including_sl' or STOPS[rid] is None or ts<=STOPS[rid]['ts']
+
+def stratum(rid):
+    i=INV[rid];r=RUNS[rid]
+    version=r['code']+';records='+COV[rid]['engine_observed']+';accepted='+i['actual_engine_group']+';config='+','.join(i['config_commits'])
+    assert len(version)<=500
+    return r['ascension'],version
+
+GROUPS=collections.defaultdict(list)
+for rid in RUNS:GROUPS[stratum(rid)].append(rid)
+
+def percentile(v,q):
+    v=sorted(v);pos=(len(v)-1)*q;a=int(pos);z=min(a+1,len(v)-1)
+    return v[a]+(v[z]-v[a])*(pos-a)
+
+def statistic(values,method,unit='independent_run',aggregation='median',unknown='无满足本指标观察条件的独立局；不补零',distribution=False):
+    values=[(rid,float(value),e) for rid,value,e in values if value is not None]
+    n=len(values)
+    if not n:return dict(n=0,unit=unit,method=method,value=None,se=None,distribution=[],evidence=[],unknown_reason=unknown,small_sample=True)
+    assert len({rid for rid,_,_ in values})==n
+    nums=[v for _,v,_ in values]
+    if aggregation=='median':value=statistics.median(nums)
+    elif aggregation=='mean':value=statistics.mean(nums)
+    elif aggregation=='sum':value=sum(nums)
+    elif aggregation=='min':value=min(nums)
+    elif aggregation=='max':value=max(nums)
+    else:raise ValueError(aggregation)
+    se=None
+    if aggregation=='mean' and n>=2:se=statistics.stdev(nums)/math.sqrt(n)
+    elif aggregation=='median' and n>=3:
+        rng=random.Random(20261019)
+        se=statistics.stdev(statistics.median(rng.choices(nums,k=n)) for _ in range(400))
+    ev=list({json.dumps(e,sort_keys=True):e for _,_,e in values}.values())
+    dist=[dict(label=str(k),count=v) for k,v in sorted(collections.Counter(nums).items())] if distribution else []
+    r=dict(n=n,unit=unit,method=method+('; SE=400次固定种子20261019独立局bootstrap' if aggregation=='median' and n>=3 else '; n<3中位数SE未知' if aggregation=='median' else '; 计数/极值不报告抽样SE' if aggregation in ['sum','min','max'] else '; 均值SE按独立局'),value=value,se=se,distribution=dist,evidence=ev,unknown_reason=None,small_sample=n<10)
+    if aggregation in ['median','mean','min','max']:r.update(p25=percentile(nums,.25),p75=percentile(nums,.75))
+    return r
+
+def rate(values,method,unknown='无可用独立局分母，胜率未知'):
+    r=statistic(values,method+'；观察性比例，边界SE=0不表示确定，Wilson区间见metric-samples',aggregation='mean',unknown=unknown)
+    if r['n']:
+        p=r['value'];n=r['n'];r['se']=math.sqrt(p*(1-p)/n)
+    return r
+
+def initial_obs(rid):
+    return obs(HISTORY[rid][0])
+
+HISTORY=collections.defaultdict(list)
+for line in (DATA/'deck-history.jsonl').open():
+    x=json.loads(line);HISTORY[x['run_id']].append(x)
+
+def at_time(rid,ts):
+    fs=HISTORY[rid];ix=bisect.bisect_right([x['ts'] for x in fs],ts)-1
+    return fs[ix] if ix>=0 else None
+
+MAPS=collections.defaultdict(list)
+for x in json.load(open(OUT/'map-evidence.json')):MAPS[(x['run_id'],x['floor'])].append(x)
+
+def classify(b):
+    if b['sl']:
+        k=b['sl']['row'].get('fight_kind');return 'normal' if k=='hallway' else k
+    kinds={x['node']['node_type'] for x in MAPS[(b['run_id'],b['floor'])]}
+    return {'Monster':'normal','Elite':'elite','Boss':'boss'}.get(next(iter(kinds))) if len(kinds)==1 else 'unknown'
+
+def turns_after(b,a):
+    result=[]
+    turns=b['turns']
+    for i,t in enumerate(turns[:-1]):
+        u=turns[i+1];f=t.get('ready_start');g=u.get('ready_start')
+        if not f or not g or t['turn']<=a['turn'] or u['turn']!=t['turn']+1:continue
+        dep=hp_decrease(f,g)
+        if dep is None or t['phase_or_heal']:continue
+        result.append(dict(turn=t['turn'],start_ts=f['ts'],end_ts=g['ts'],hp_damage=dep,block_lower_bound=t['block_positive'],hp_loss=max(0,f['hp']-g['hp']) if not t.get('hp_positive_heal') and f['hp']>=g['hp'] else None,enemies=len(f['enemies']),start_source=f['source'],end_source=g['source'],evidence=obs(f)))
+    return result
+
+def clean_event(e):
+    return dict(run_id=e['run_id'],floor=e['floor'],turn=e['turn'],ts=e['ts'],card=e['card'],delta_block=e['delta_block'],hp_depletion=e['hp_depletion'],energy_net=e['energy_net'],before_source=e['before']['source'],after_source=e['after']['source'])
+
+def main():
+    assert json.load(open(DATA/'extraction-counts.json'))['runs']==len(RUNS)
+    results={s['id']:dict(spec=s,battles=[],contributions=collections.defaultdict(list)) for s in CANDIDATES}
+    kinds=collections.Counter();total=0
+    for line in (DATA/'battles.jsonl').open():
+        b=json.loads(line);total+=1;kind=classify(b) or 'unknown';kinds[kind]+=1
+        for s in CANDIDATES:
+            if not holding(b['deck'],b['relics'],s):continue
+            a=activation(b,s)
+            component_events=[clean_event(e) for e in b['events'] if e['card']['id'] in {r['id'] for r in s['cards']} and contributed(e)]
+            for e in component_events:results[s['id']]['contributions'][e['card']['id']].append(e)
+            results[s['id']]['battles'].append(dict(battle=b['id'],run_id=b['run_id'],floor=b['floor'],act=b['act'],kind=kind,entry_ts=b['started_ts'],ended_ts=b['ended_ts'],entry_source=b['entry']['source'],entry_hp=b['entry']['hp'],exit_hp=b['exit']['hp'],deck_size=b['deck_size'],relics=b['relics'],sl=b['sl'],activation=a,component_events=component_events,turns=turns_after(b,a) if a else [],segment_has_explicit_sl_window=b['explicit_window'] is not None))
+    accepted={k:v for k,v in results.items() if any(b['activation'] for b in v['battles'])}
+    rejected=[dict(id=k,spec=v['spec'],reason='冻结范围没有满足升级/遗物/逐牌贡献及同战生效定义的见证，未入卡；不证明组合无效',held_battles=len(v['battles'])) for k,v in results.items() if k not in accepted]
+    write('rejected-candidates.json',rejected)
+    rows=[];summaries=[];all_metrics={};sample_records=[];boss_rows=[];chain_rows=[];fit_notes={};combo_links={k:[] for k in accepted}
+    for cid,res in accepted.items():
+        s=res['spec'];byrun=collections.defaultdict(list)
+        for b in res['battles']:byrun[b['run_id']].append(b)
+        run_status={};summary=dict(id=cid,direction=s['direction'],cards=s['cards'],required_relic=s['relic'],held_runs=0,including_sl_formed_runs=0,first_formed_runs=0,first_wins=0,final_wins=0,active_battles=0,complete_turns=0)
+        for rid in RUNS:
+            h=[f for f in HISTORY[rid] if holding(f['deck'],f['relics'],s)]
+            entry=dict(combo=cid,run_id=rid,ascension=RUNS[rid]['ascension'],version=stratum(rid)[1],first_stop=STOPS[rid],holding_observed=bool(h),first_holding=h[0] if h else None,first_holding_before_cut=next((f for f in h if within(rid,f['ts'],'first')),None),activation_witnesses=[dict(battle=b['battle'],activation=b['activation'],sl_source=b['sl']['ref'] if b['sl'] else None,result=b['sl']['row']['result'] if b['sl'] else 'unrecorded') for b in byrun[rid] if b['activation']],battles=byrun[rid],exclusion_reason=None if any(b['activation'] for b in byrun[rid]) else '曾持有但未见全部贡献同战成立；不算成型，保留未知' if h else '冻结逐时牌组未见该组合完整持有；不以末牌组倒填，也不证明未记录区间不存在')
+            entry['first_activation']=next((x for x in entry['activation_witnesses'] if within(rid,x['activation']['ts'],'first')),None)
+            entry['including_sl_activation']=entry['activation_witnesses'][0] if entry['activation_witnesses'] else None
+            run_status[rid]=entry;rows.append(entry)
+            summary['held_runs']+=bool(h);summary['including_sl_formed_runs']+=bool(entry['including_sl_activation']);summary['first_formed_runs']+=bool(entry['first_activation']);summary['first_wins']+=bool(entry['first_activation'] and RUNS[rid]['victory'] and STOPS[rid] is None);summary['final_wins']+=bool(entry['including_sl_activation'] and RUNS[rid]['victory']);summary['active_battles']+=len(entry['activation_witnesses']);summary['complete_turns']+=sum(len(b['turns']) for b in byrun[rid])
+        summaries.append(summary);res['run_status']=run_status
+        # Only held strata enter the bounded draft. The full frozen strata denominator remains on disk.
+        relevant={stratum(rid) for rid,r in run_status.items() if r['holding_observed']}
+        metrics=[]
+        for group in sorted(relevant):
+            rids=GROUPS[group]
+            for attempt in ['first','including_sl']:
+                active={rid:run_status[rid][attempt+'_activation'] for rid in rids if run_status[rid][attempt+'_activation']}
+                formed=list(active)
+                vals=collections.defaultdict(list)
+                perrun_turns={};selected=[]
+                for rid in formed:
+                    a=active[rid]['activation'];e=obs(dict(run_id=rid,**a));eligible=[b for b in byrun[rid] if b['activation'] and within(rid,b['activation']['ts'],attempt)]
+                    # One chronological qualifying attempt per floor; repeats remain in full witnesses.
+                    picked=[];seen_floor=set()
+                    for b in eligible:
+                        if b['floor'] not in seen_floor:picked.append(b);seen_floor.add(b['floor'])
+                    selected+=picked
+                    for name,value in [('startup_turn',a['turn']),('first_completed_floor',a['floor'])]:vals[name].append((rid,value,e))
+                    need={r['id']:r['count'] for r in s['cards']};used=collections.Counter();costs=[]
+                    for w in a['witness']:
+                        k=w['card']['id']
+                        if used[k]<need.get(k,0):
+                            used[k]+=1;costs.append(w['card']['cost'])
+                    if costs and all(isinstance(c,(int,float)) and c>=0 for c in costs):vals['startup_energy'].append((rid,sum(costs),e))
+                    ts=[(b,t) for b in picked for t in b['turns'] if within(rid,t['end_ts'],attempt)]
+                    perrun_turns[rid]=ts
+                    for kind in ['boss','elite','normal']:
+                        vv=[t['hp_damage'] for b,t in ts if b['kind']==kind]
+                        if vv:vals['dpr_'+kind].append((rid,statistics.mean(vv),e))
+                    for name,condition in [('dpr_turns_1_3',lambda t:1<=t<=3),('dpr_turns_4_6',lambda t:4<=t<=6),('dpr_turns_7_plus',lambda t:t>=7)]:
+                        vv=[t['hp_damage'] for b,t in ts if condition(t['turn'])]
+                        if vv:vals[name].append((rid,statistics.mean(vv),e))
+                    if ts:
+                        vals['peak_turn_damage'].append((rid,max(t['hp_damage'] for b,t in ts),e));vals['block_per_turn'].append((rid,statistics.mean(t['block_lower_bound'] for b,t in ts),e))
+                        hp=[t['hp_loss'] for b,t in ts if t['hp_loss'] is not None]
+                        if hp:vals['hp_loss_per_turn'].append((rid,statistics.mean(hp),e))
+                    sizes=[b['deck_size'] for b in eligible]
+                    vals['deck_size_min'].append((rid,min(sizes),e));vals['deck_size_max'].append((rid,max(sizes),e))
+                    vals['mean_reached_floor'].append((rid,STOPS[rid]['floor'] if attempt=='first' and STOPS[rid] else RUNS[rid]['floor'],e))
+                    vals['cleared_runs'].append((rid,int(RUNS[rid]['victory'] and (attempt=='including_sl' or STOPS[rid] is None)),e))
+                    sample_records.append(dict(combo=cid,ascension=group[0],version=group[1],attempt=attempt,run_id=rid,first_activation=active[rid],selected_battles=[b['battle'] for b in picked],turn_observations=[dict(battle=b['battle'],kind=b['kind'],**t) for b,t in ts],deck_size_observations=[dict(floor=b['floor'],size=b['deck_size'],kind=b['kind']) for b in eligible],resource_observation=dict(relics_at_first_activation=next(b['relics'] for b in eligible if b['activation']['ts']==a['ts']),sl_records=[dict(source=x['ref'],result=x['row']['result'],reload=x['row'].get('reload'),potions=(x['row'].get('summary') or {}).get('potions')) for x in SL[rid]])))
+                observed={}
+                for name in METRIC_NAMES:
+                    method='局内启动后完整就绪回合敌HP净推进均值→局间中位；排除终结/换相/重复ID/回血/缺帧，包含全部伤源及余血截断，非组合归因'
+                    if name.startswith('dpr_'):observed[name]=statistic(vals[name],method)
+                    elif name=='peak_turn_damage':observed[name]=statistic(vals[name],'可见完整回合敌HP推进的最高值；未见终结回合及过量伤不推全战真实峰值',aggregation='max')
+                    elif name=='block_per_turn':observed[name]=statistic(vals[name],'可见同回合快照正格挡增量之和的下界，先局内均值再局间中位数；初始/保留挡不重复加，内部同帧抵消及缺帧未知')
+                    elif name=='hp_loss_per_turn':observed[name]=statistic(vals[name],'无可见回血的完整就绪回合，玩家HP首尾差；包含自损及其他来源，内部同帧伤疗不可分，非敌人毛伤')
+                    elif name=='startup_turn':observed[name]=statistic(vals[name],'每独立局最早可核同战逐牌贡献且核心同时可运转见证的回合；未观测间隙真实首次未知',distribution=True)
+                    elif name=='startup_energy':observed[name]=statistic(vals[name],'首次生效前各必需贡献施放的现场energy_cost合计；非最低能量预算，不计其他过渡牌/循环供能；实际净能量变化另存见证')
+                    elif name=='first_completed_floor':observed[name]=statistic(vals[name],'逐局最早生效见证所在层；与首次同时持有层分列，缺帧下实际更早生效未知')
+                    elif name in ['deck_size_min','deck_size_max']:observed[name]=statistic(vals[name],'所有已核生效战斗入口牌组规模，独立局先取极值再取全层极值',aggregation='min' if name.endswith('min') else 'max')
+                    elif name=='mean_reached_floor':observed[name]=statistic(vals[name],'已核成型独立局平均到达层；first截在全局首条predicted_death或更早实死；含SL用最终结束层',aggregation='mean')
+                    elif name=='cleared_runs':observed[name]=statistic(vals[name],'已核成型独立局中实际记录整局通关的局数；first不得含判死之后胜利',aggregation='sum')
+                    elif name=='formed_runs':observed[name]=statistic([(rid,int(rid in active),initial_obs(rid)) for rid in rids],'本精确进阶/版本/实际记录与accepted来源层中有生效见证的独立局计数；n为该层全部冻结局',aggregation='sum')
+                    elif name=='formation_rate':observed[name]=rate([(rid,int(rid in active),initial_obs(rid)) for rid in rids],'本层全部冻结独立局中观察到生效见证的比例，下界；未见不证明真实未成型；持有凑齐率另存')
+                    else:observed[name]=statistic([], '未做反事实或不能从冻结观察量识别',unknown={'aoe_damage':'多敌HP总推进不能区分群体技能、逐个单攻、毒及遗物；保留多敌推进原样，不冒称AoE伤害','startup_draw':'未保存可核的累计实际抽牌计数；手牌净增、抽牌堆差及draws.order不能当实际抽入数量','deck_size_scaling':'阶段/敌人/路线/资源与规模共同变化，当前精确分层无受控或可比较的规模变化效应；原始规模与DPR观测另存','potion_dependency':'有实际用药记录但没有不喝/早喝/保留的配对反事实；用药观察率不冒称依赖','key_relic_dependency':'R的遗物是条件性入组限制；共现不识别移除后的因果依赖，其余遗物也无移除反事实','sl_dependency':'仅能标首试/SL记录及最终胜利差，不能识别不SL反事实'}.get(name,'尚无可核观察'))
+                bosses={};all_boss_keys=sorted({(x['row']['encounter'],x['row']['floor']) for rid in rids for x in SL[rid] if x['row'].get('fight_kind')=='boss'})
+                for boss,floor in all_boss_keys:
+                    reached=[];won=[]
+                    for rid in formed:
+                        a=active[rid]['activation'];qual=[]
+                        for x in SL[rid]:
+                            z=x['row'];ts=z.get('ended_at') or z['ts'];h=at_time(rid,z.get('started_at') or ts)
+                            if z.get('fight_kind')=='boss' and z['encounter']==boss and z['floor']==floor and ts>=a['ts'] and within(rid,ts,attempt) and h and holding(h['deck'],h['relics'],s):qual.append(x)
+                        if qual:
+                            e=dict(run_id=rid,floor=floor);reached.append((rid,1,e));won.append((rid,int(any(x['row']['result']=='won' for x in qual)),e))
+                            boss_rows.append(dict(combo=cid,attempt=attempt,version=group[1],ascension=group[0],run_id=rid,boss=boss,floor=floor,attempts=qual,entry_holding=True,first_activation=a,won=bool(won[-1][1])))
+                    key=(boss.replace('+','-')+'-F'+str(floor))[:100]
+                    bosses[key]=dict(reached=statistic(reached,'已生效独立局在本Boss完成前已生效且入口仍持有，实际到达局数；同局重复SL只计一局',aggregation='sum'),won=statistic(won,'上述到达局中至少一次实际won的独立局数；first全局截止，判死仅算未记录通过',aggregation='sum'),win_rate=rate(won,'实际通过独立局/上述实际到达独立局；这是条件描述，非开局选择策略胜率'))
+                chain_reached=[];chain_won=[]
+                for rid in formed:
+                    if RUNS[rid]['ascension'] not in CHAIN_ASCENSIONS:continue
+                    a=active[rid]['activation'];aa=[x for x in SL[rid] if x['row']['floor'] in [48,49] and (x['row'].get('ended_at') or x['row']['ts'])>=a['ts'] and within(rid,x['row'].get('ended_at') or x['row']['ts'],attempt)]
+                    f48=[x for x in aa if x['row']['floor']==48];f49=[x for x in aa if x['row']['floor']==49]
+                    if not f48:continue
+                    h=at_time(rid,f48[0]['row'].get('started_at') or f48[0]['row']['ts'])
+                    if not h or not holding(h['deck'],h['relics'],s):continue
+                    e=dict(run_id=rid,floor=48);chain_reached.append((rid,1,e));chain_won.append((rid,int(any(x['row']['result']=='won' for x in f48) and any(x['row']['result']=='won' for x in f49)),e))
+                    chain_rows.append(dict(combo=cid,run_id=rid,attempt=attempt,ascension=group[0],version=group[1],f48=f48,f49=f49,both_recorded_won=bool(chain_won[-1][1]),f48_exit_hp=[x['row'].get('end_hp') for x in f48 if x['row']['result']=='won'],handoff='原SL出口与F49入口状态引用可复读；包括SL时不声称未经恢复的连续资源，未相乘单战概率'))
+                for name,v,agg in [('chain_reached',chain_reached,'sum'),('chain_won',chain_won,'sum')]:observed[name]=statistic(v,'F48入口仍持有且已生效的独立局；F48与F49同局实际结果接续，不乘单战概率；含SL可有恢复',aggregation=agg)
+                observed['chain_win_rate']=rate(chain_won,'同局实际两战均won/符合F48入口条件的独立局；非未经恢复的模拟连战')
+                if group[0] not in CHAIN_ASCENSIONS:
+                    for name in ['chain_reached','chain_won','chain_win_rate']:observed[name]['unknown_reason']='该进阶冻结实战没有F49连战结构见证；不能把F48单Boss后结束当连战失败'
+                availability=[]
+                for req in s['cards']:
+                    for act in [1,2,3]:
+                        available=[]
+                        for rid in rids:
+                            rr=[o for o in OFFERS[(rid,act)] if within(rid,o['ts'],attempt)]
+                            if rr:
+                                seen=any(any(c['id']==req['id'] and (not req['upgraded'] or c['upgraded']) for c in o['cards']) for o in rr)
+                                available.append((rid,int(seen),obs(rr[0])))
+                        availability.append(dict(card=req['id'],act=act,offered_rate=rate(available,'同版本独立run-act中至少一次实际奖励/在售商店出现该版本牌的比例；分母为该幕有可见牌供给的局，非每次奖励概率/可购买率/持有率，起始牌另列',unknown='此层此幕没有可见牌奖励/商店供给的独立局')))
+                metrics.append(dict(ascension=group[0],attempt=attempt,version=group[1],observed=observed,bosses=bosses,availability=availability,simulation=[]))
+        all_metrics[cid]=metrics
+    # Exact frozen formal experience objects retained; links require a specific same-run contextual witness.
+    coverage=[];proposals=[]
+    core_ids={'silent-core-poison-defense-observation':'P','silent-core-dexterity-defense-observation':'D','silent-core-shiv-defense-observation':'S','silent-core-discard-relic-observation':'R'}
+    for exp in EXP:
+        old=OLD_MAPPING[exp['id']];kind,_,obj=exp['scope'].partition(':');links=[];matches=[];display=exp.get('name') or exp['id']
+        if exp.get('status')!='retired':
+            for cid,res in accepted.items():
+                s=res['spec'];direct=(kind=='card' and obj in {r['id'] for r in s['cards']}) or (kind=='relic' and obj==s['relic']) or core_ids.get(exp['id'])==s['direction']
+                if not direct:continue
+                witnesses=[(rid,r) for rid,r in res['run_status'].items() if rid in exp['evidence'] and r['including_sl_activation']]
+                if not witnesses:continue
+                links.append(dict(core=s['direction'],combo=cid));combo_links[cid].append(exp['id']);matches.append(dict(combo=cid,role='same-run component/direction retrieval association; original mechanism evidence not re-proved by aggregate outcome',runs=[rid for rid,_ in witnesses],activation=[r['including_sl_activation'] for _,r in witnesses]))
+        if links:status='linked';reason=f"{display}（{exp['scope']}）为本组合逐牌/遗物条件或原方向经验；已定位原证据局内生效见证。关联是检索关系，未把主题索引、累计支持数或整局胜负当单件因果。"
+        elif exp.get('status')=='retired':status='disputed';reason=f"{display}原正式条目status=retired，保留原文、证据和历史身份；不能仅凭内容重新作为active核心依据。"
+        elif kind in ['card','relic']:
+            if any(obj in {r['id'] for r in v['spec']['cards']} or obj==v['spec']['relic'] for v in accepted.values()):status='unknown';reason=f"{display}（{exp['scope']}）涉及候选组件，但原证据局没有本批完整组合生效交集；不能把牌的单独机制外推组合。"
+            else:status='unrelated';reason=f"{display}（{exp['scope']}）原条目聚焦该非牌池对象；本批未建立其对具名组合的逐牌贡献或遗物必要条件。原经验完整保留；本轮不加关联不等于该对象无用。"
+        else:status='unknown';reason=f"{display}（{exp['scope']}）属于遭遇/资源/计划/模拟边界；没有组合在原层/回合实际成立的专属关系，不把9.1跨方向主题索引直接改成组合关联。"
+        coverage.append(dict(experience_id=exp['id'],status=status,links=links,reason=reason))
+        proposals.append(dict(experience_id=exp['id'],json_pointer='/entries/'+str(len(proposals)),source_file_sha256=next(f['sha256'] for f in M['files'] if f['path']==str(ROOT/'knowledge/characters/silent/experience.json')),original_entry=exp,original_canonical_sha256=digest(json.dumps(exp,sort_keys=True,separators=(',',':'),ensure_ascii=False).encode()),append_only_fields=dict(cores=sorted({x['core'] for x in links}),combos=[x['combo'] for x in links]),status=status,reason=reason,ledger_ids=old['ledger_ids'],original_ledger_provenance=old['ledger_provenance'],specific_combo_witnesses=matches,mechanism_validation='保留原机制证据，新增组合见证来自冻结原行；未宣称每条历史机制逐动作重验'))
+    cores=[];missing=[]
+    for template in TEMPLATES:
+        direction=template['id'];combos=[];pool={};core_exp=[];ce=[(cid,res) for cid,res in accepted.items() if res['spec']['direction']==direction]
+        for cid,res in ce:
+            spec=res['spec'];active=[b for b in res['battles'] if b['activation']];evidence=list({json.dumps(obs(dict(run_id=b['run_id'],**b['activation'])),sort_keys=True):obs(dict(run_id=b['run_id'],**b['activation'])) for b in active}.values())
+            evidence=list({e['run_id']:e for e in reversed(evidence)}.values())[:1000]
+            combo=dict(id=cid,types=['common'] if len({b['run_id'] for b in active})>=2 else ['observed_case'],boss=None,cards=spec['cards'],metrics=all_metrics[cid],fits=dict(bosses_positive=[],bosses_negative=[],routes=[dict(text='实际路线只作观察；未有相同局面精英数量/休息与升级取舍的配对对照，最优需求未知。逐局路线来源见map-evidence及metric-samples。',evidence=[evidence[0]])],situations=[dict(text=('仅在实际持有'+spec['relic']+'且实弃收益已经观察时成立；cards字段不能编码遗物，消费者必须保留这个前提。' if spec['relic'] else '生效见证须现场能力/毒/后继挡或刀同时成立；血量阈值、最优牌组规模与遗物充分性未知。')+'同一方向可重叠，不是稳定胜率或必拿规则。',evidence=[evidence[0]])]),evidence=evidence,confidence='low',linked_experience=combo_links[cid])
+            bresults=[b for b in active if b['sl'] and b['sl']['row'].get('fight_kind')=='boss']
+            for won,key in [(True,'bosses_positive'),(False,'bosses_negative')]:
+                byboss=collections.defaultdict(list)
+                for b in bresults:
+                    if (b['sl']['row']['result']=='won')==won:byboss[b['sl']['row']['encounter']].append(b)
+                for boss,bs in byboss.items():
+                    ev=[obs(dict(run_id=b['run_id'],**b['activation'])) for b in bs]
+                    combo['fits'][key].append(dict(text=f"{boss}：{len({b['run_id'] for b in bs})}个独立局有已核生效后{'实际通过' if won else '判死/实死或未记录通过'}见证，仅描述性{'正例' if won else '反例'}，不证明适合性或禁选；精确分层见metrics。",evidence=list({json.dumps(e,sort_keys=True):e for e in ev}.values())))
+            for req in spec['cards']:
+                card=req['id'];contributions=res['contributions'][card]
+                assert contributions, (cid,card)
+                card_ev=[dict(run_id=x['run_id'],floor=x['floor'],turn=x['turn']) for x in contributions]
+                role={'FOOTWORK':['core','defense'],'ACCELERANT':['core','poison_settlement'],'NOXIOUS_FUMES':['core','poison_supply'],'DEADLY_POISON':['poison_supply'],'BOUNCING_FLASK':['poison_supply'],'AFTERIMAGE':['core','defense'],'BACKFLIP':['defense','draw'],'LEG_SWEEP':['defense'],'BLADE_DANCE':['shiv_supply'],'CLOAK_AND_DAGGER':['shiv_supply','defense'],'ACCURACY':['core','shiv_gain'],'PHANTOM_BLADES':['core','shiv_gain'],'ACROBATICS':['draw','discard'],'SURVIVOR':['defense','discard'],'TOOLS_OF_THE_TRADE':['draw','discard'],'CALCULATED_GAMBLE':['draw','discard']}[card]
+                text={'FOOTWORK':'实建敏捷并在同战后继挡牌兑现；双份要求仅是实际持有两张及至少两次实建，不能证明两个物理副本都已打出或缺一不可。','ACCELERANT':'实建触媒层与同战实毒、后继防御共存；不把层数当倍增毒层，未将所有HP推进归它。','NOXIOUS_FUMES':'实建毒雾能力，后续可见实毒窗口；供毒与实际结算伤分列，不用持有代启动。','DEADLY_POISON':'实际施放后敌POISON_POWER净增；当步施毒不冒充伤害。','BOUNCING_FLASK':'实际施放后活敌总毒净增；不推未见的指定落点/制品后必留毒。','AFTERIMAGE':'实建余像，后继出牌出现实际挡；自身首次建立不计已触发自身。','BACKFLIP':'实出后挡净增，部分过牌可见；只描述该费用/能力状态，封抽时不预支抽牌。','LEG_SWEEP':'实出后挡净增；虚弱另源记录，不把牌面挡当整战生存。','BLADE_DANCE':'实出后手牌出现实体小刀，并在本组合增益窗口实打有HP推进的刀；不预支全手刀伤。','CLOAK_AND_DAGGER':'实出后有新增挡及实体刀，增益窗口有实际刀伤；不把供刀当已出。','ACCURACY':'实建精准，后继实体小刀有HP推进；不由初始牌面推所有刀已兑现。','PHANTOM_BLADES':'实建幻影能力，后继刀有HP推进；增益按冻结经验的首刀边界，不平摊至全部刀。','ACROBATICS':'实出后出现新手牌，并有同战真实手牌移除及所需遗物兼容收益；无无限循环或最优弃序结论。','SURVIVOR':'实出后挡净增并参与同战弃牌收益；被弃牌的未执行效果不预支。','TOOLS_OF_THE_TRADE':'实建工具能力并有后续实弃收益；持续抽弃和生存代价不自动转为稳定循环。','CALCULATED_GAMBLE':'仅保留实际升级版本的重抽观察；不把重抽前后缀当可继续执行。'}[card]
+                if card not in pool:pool[card]=dict(roles=role,contribution=text+' 升级与普通版本的组合收益差/必要性未做配对；upgraded_matters=false表示未证必须升级，不表示已证等价。逐次版本、现场费用及原字节SHA在组合见证。',upgraded_matters=False,combos=[],evidence=[])
+                pool[card]['combos'].append(cid);pool[card]['evidence']+=card_ev
+            combos.append(combo);core_exp+=combo_links[cid]
+        if not combos:
+            for cat in ['must_pick_minimal','common','max_cards','max_dpr']:missing.append(dict(direction=direction,category=cat,reason='冻结证据没有达到逐牌贡献与完整同战生效要求的具名组合，不能成卡'))
+            continue
+        for p in pool.values():p['evidence']=list({e['run_id']:e for e in reversed(p['evidence'])}.values())[:1000]
+        core_evidence=combos[0]['evidence'][0]
+        reflex=[e['id'] for e in REFLEX if any(obs0['run_id'] in {b['run_id'] for _,r in ce for b in r['battles'] if b['activation']} for obs0 in e['evidence']['observations']) and e['id'] in {'silent-reflex-v6-poison-pending','silent-reflex-v6-dexterity-established','silent-reflex-v6-frail','silent-reflex-v6-draw-lock','silent-reflex-v6-card-quota'}]
+        cores.append(dict(schema='build-core-v1',direction=direction,name=template['name'],status='candidate',scope=dict(character='silent',ascensions=sorted({m['ascension'] for c in combos for m in c['metrics']})),card_pool=pool,combos=combos,pivot_signals=[dict(text='仅记录缺组件、已建能力、实毒/实弃/实刀和可活后继的复核信号；没有固定转向血线、删牌或拿牌阈值。见证不成立时仍为未成型目标。',evidence=[core_evidence])],failure_modes=[dict(text='持有不等生效；即使本组合局部全部兑现，仍可判死/实死。费用、名额、封抽、阶段重置与资源前史须按原证据复核，不将单步收益推成整战胜因。',evidence=[core_evidence])],linked_experience=sorted(set(core_exp)),linked_reflex=reflex))
+        for cat,reason in [('must_pick_minimal','没有去件或替代配对实战；已见最小持有子集不证明必拿或最小充分。'),('max_cards','候选只覆盖能逐张解释作用的已见子集；未穷举全牌池且未逐张证实更大子集同时兑现，不能声称最多牌。'),('max_dpr','精确进阶/版本/引擎层样本小且敌人/资源/路线不同，无可比候选全量排名及终结/换相全伤害，不能声称最高DPR。')]:missing.append(dict(direction=direction,category=cat,reason=reason))
+        if not any('common' in c['types'] for c in combos):missing.append(dict(direction=direction,category='common',reason='只有单独立局生效见证，未达到本批common的至少两独立局描述性定义。'))
+    limitations=[
+        '所有条目仅pending草稿；完整审计、格式通过不证明正式发布、消费者可用、W2/W2.2完成或父要求关闭。',
+        '日志整前缀SHA未测；逐局精确范围与每条抽取状态原字节已测SHA；只读冻结372个已结束Silent局。',
+        'form指本批可核生效操作定义；持有、逐牌贡献、生效、胜负分开。单计数+单移除的施放识别排除重放/多卡同时变化；缺帧可漏报，未见不证明不存在。',
+        '每个候选全部372局逐时核持有/生效，所有符合定义的局入统计，死亡和未成型原件保留；条件于已生效的战绩有选择偏差，不能解释开局选择策略的收益。',
+        '首试在全局首条predicted_death或更早实死截断，判死不是实际死亡；含SL同局多次尝试只计一独立局，连续指标每层取最早合格生效尝试，所有尝试另存。',
+        '精确分层保留进阶、结束记录code含dirty、brain记录引擎、accepted来源及run-config完整commit集合；旧accepted缺失保持unknown，不能称全部纯Codex或重建dirty源码。',
+        'DPR是完整就绪回合敌HP净推进，非组合归因伤/牌面伤/过量伤；终结、换相、重复敌ID、回血及缺就绪边界排除。第1–3段仅含实际启动后的完整回合，可能无样本。',
+        '格挡是可见正增量下界；HP是无可见回血的就绪边界净差，包含自损。内部同帧伤疗/挡消耗无法拆分；AoE真实归因、累计启动抽牌保持unknown。',
+        '统计n为声明的独立局单位；每局先汇总，跨局不把SL当独立样本；SE按方法标注，n<10标small_sample，n<3中位数SE未知，边界比例的零SE不代表确定。',
+        'common仅指本冻结集至少两独立局有具名生效见证，不代表常见选择、稳定通关或已验证普适核心。必拿最小/最多牌/最高DPR缺证逐方向列missing。',
+        '卡牌upgraded=false不要求普通版，只表示未提出必须升级；普通与升级的组合价值差未知。升级需求没有配对证据，不补理想升级/休息排序。',
+        'R以实际持有指定遗物为入组条件；cards格式不能编码遗物要求，不可丢失fits.situations再消费。遗物和药水因果依赖、最优血量/规模/路线未知。',
+        'availability为同版本可见供给run-act中至少一次出现率，非每奖励供给概率或凑齐预测；起始牌、金币/商店可买性、事件供给分列不外推。',
+        '没有新模拟，simulation=[]；boss-trust/double-boss旧模拟不计实战，未运行Boss模拟池。',
+        '正式244条原对象及证据全量保留，关联仅追加提案；未知/无关逐条有原因，不借其他角色或旧报告/模拟补组合。历史机制未全部逐动作重验。',
+        'linked_reflex仅引用冻结9.2实际ID作同局上下文索引，其描述tag不提供组合效应量；未读取清单外后续产物。',
+        '为满足8MiB格式入口，牌池及组合evidence只内联每独立局最早的代表见证；完整每次施放/全部生效/反例与原字节SHA在combo-run-witnesses，不减少统计或校验分母。',
+        '本轮只给描述性组合及索引，未提出新的出牌/药水/SL/终局执行规则；未实施策略改动或派修复。',
+    ]
+    disagreements=[
+        'prior：将9.1的持有签名视为第6节完整成型。新证据：本轮逐牌实出/能力/后继收益见证比持有集合更窄，逐组合全部未生效和失败局留存。影响：旧签名统计不能直接复制为新组合的formed_runs/startup_turn。未知：漏帧/重放边界中的真实首次及独立组件因果。沿ops→watcher→Roy转达，本批不代填ACK。',
+        'prior：必须填齐四种组合类型或理想升级/转向规则。新证据：冻结观察没有最小充分、全牌池穷举或可比最高DPR对照。影响：保留有实效候选并逐方向missing三种类型；不以格式目标生成牌表。未知：受控实战比较结果。',
+        'prior：R的纯cards条目可直接表示完整核心。新证据：本角色冻结经验和实弃见证均带TINGSHA/TOUGH_BANDAGES前提，两遗物不同收益。影响：R候选必须连同fits条件读，现schema无可执行遗物门槛，不能宣称消费者已可用。未知：去遗物反事实和未来格式承载方式。',
+    ]
+    draft=dict(schema='v6-build-core-draft-v1',character='silent',cores=dict(schema='build-cores-v1',character='silent',entries=cores),coverage=coverage,missing=missing,catalog_opinions=['保留冻结P/D/S/R目录；本批不新增/合并/放弃方向。共享牌和交叠样本不证明方向等价；R两种遗物仅作条件不同的组合分支。'],disagreements=disagreements,limitations=limitations)
+    PENDING.mkdir(parents=True,exist_ok=True)
+    raw=(json.dumps(draft,ensure_ascii=False,separators=(',',':'))+'\n').encode()
+    write('draft-size.json',dict(bytes=len(raw),limit=8*1024*1024))
+    if len(raw)>8*1024*1024:
+        (OUT/'draft-over-8MiB.json').write_bytes(raw)
+        print('OVER 8MiB',len(raw));raise SystemExit(8)
+    if not (PENDING/'draft-initial-v1.json').exists():(PENDING/'draft-initial-v1.json').write_bytes(raw)
+    if len(sys.argv)>1:(PENDING/('draft-'+sys.argv[1]+'.json')).write_bytes(raw)
+    (PENDING/'draft.json').write_bytes(raw)
+    for name,obj in [('experience-append-proposals.json',proposals),('combo-summaries.json',summaries),('combo-run-witnesses.json',rows),('metric-samples.json',sample_records),('boss-witnesses.json',boss_rows),('chain-witnesses.json',chain_rows),('all-metrics.json',all_metrics),('disagreements.json',disagreements),('limitations.json',limitations)]:write(name,obj)
+    write('full-strata-denominators.json',dict(grouping=['ascension','exact logged code including dirty','all recorded brain engines','accepted brain source (unknown retained)','full run-config commit set'],groups=[dict(ascension=k[0],version=k[1],run_ids=v) for k,v in sorted(GROUPS.items())],omitted_from_draft='Only strata where the exact candidate was never observed held are omitted from draft metric arrays; all frozen runs remain in witnesses and group inventory, no denominator deleted',combo_state_counts=summaries))
+    write('build-counts.json',dict(cores=len(cores),combos=sum(len(c['combos']) for c in cores),experience=len(coverage),coverage_status=dict(collections.Counter(c['status'] for c in coverage)),inventory_runs=len(RUNS),witness_rows=len(rows),candidate_count=len(CANDIDATES),rejected=len(rejected),battle_segments=total,battle_kinds=dict(kinds),metric_strata=sum(len(v) for v in all_metrics.values()),draft_bytes=len(raw)))
+    change('初始状态分段候选，不作为结论','严格原SL窗口/同轮计数回落切段后的完整草稿v1','防止不同SL尝试被同一层T1连成一次生效；保留初始候选、失败/未成型见证与完整分母',['candidate-audit-v1.json','candidate-audit-v2.json','extraction-v2/state-range-scans.json','combo-run-witnesses.json'])
+    print(json.dumps(json.load(open(OUT/'build-counts.json')),ensure_ascii=False))
+
+OFFERS=collections.defaultdict(list)
+for line in (DATA/'offers.jsonl').open():
+    x=json.loads(line);cards=[]
+    reward=x['offer'].get('reward') or {};shop=x['offer'].get('shop') or {}
+    for c in reward.get('card_options',[]):
+        if c.get('card_id'):cards.append(dict(id=c['card_id'],upgraded=bool(c.get('upgraded'))))
+    for c in shop.get('cards',[]):
+        if c.get('card_id') and c.get('is_stocked'):cards.append(dict(id=c['card_id'],upgraded=bool(c.get('upgraded'))))
+    if cards:
+        try:act=int(x['act'])+1
+        except (ValueError,TypeError):continue
+        OFFERS[(x['run_id'],act)].append(dict(run_id=x['run_id'],floor=x['floor'],ts=x['ts'],source=x['source'],cards=cards))
+
+if __name__=='__main__':main()
