@@ -11,6 +11,8 @@ import type { JsonValue } from "../core/util/json.js";
 import type { RunBrief } from "./run-brief.js";
 
 export interface DecisionEnv {
+  /** Re-enter the original construction brain path without invoking V6 Jev again. */
+  v6BrainFallback?: boolean;
   /** Shared run snapshot and foreground-locked projection service for V6 consumers. */
   v6Projection?: import("../v6/projection-runtime.js").V6ProjectionRuntime;
   v6ProjectionTable?: import("../sim/v6-projection.js").V6ProjectionTable;
@@ -174,6 +176,8 @@ export interface SlCompute {
 }
 
 export interface ScreenMemory {
+  /** A construction handover is a T6 signal, consumed by the next direction evaluation. */
+  v6BrainFallbackPending?: { run: string; questionId: string };
   /** Consecutive V6 Jev failures; direction replanning consumes this counter. */
   v6JevFallbacks?: number;
   v6JevFallbackRun?: string;

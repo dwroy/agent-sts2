@@ -13,6 +13,7 @@ import type { JsonValue } from "../core/util/json.js";
 
 export interface DecisionRecord {
   v6_card?: JsonValue;
+  v6_unknown_to_brain?: JsonValue;
   time_budget?: ReturnType<import("../core/decision-budget.js").DecisionBudget["record"]>;
   ts: string;
   mode: string;

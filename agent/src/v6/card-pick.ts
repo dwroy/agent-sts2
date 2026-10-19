@@ -25,7 +25,7 @@ export interface V6CardPick {
 }
 export function v6CardActive(env: DecisionEnv): boolean {
   const c = v6Config();
-  return c.mode !== "off" && c.deciders.card === "jev" && !env.state.in_combat
+  return !env.v6BrainFallback && c.mode !== "off" && c.deciders.card === "jev" && !env.state.in_combat
     && env.state.screen === "REWARD" && bool(asRecord(env.state.raw.reward).pending_card_choice);
 }
 
@@ -33,6 +33,8 @@ export function v6CardActive(env: DecisionEnv): boolean {
 export function cardFallback(choices: readonly string[], table?: V6ProjectionTable): string {
   const config = v6Config();
   const mixture = (id: string, kind: "clearance" | "current_gate") => table?.target_mixtures.find(r => r.option_id === id && r.kind === kind)?.paired_delta ?? null;
+  // Only used after the brain is unavailable. Missing numbers cannot make skip the default.
+  if (!choices.some(id => mixture(id, "clearance") || mixture(id, "current_gate"))) return choices.find(id => id !== "skip") ?? choices[0]!;
   const viable = choices.filter(id => v6DeltaTier(mixture(id, "current_gate"), config) !== "much_worse");
   const rank = (id: string) => [mixture(id, "clearance")?.mean ?? -Infinity, mixture(id, "current_gate")?.mean ?? -Infinity];
   return [...viable].sort((a, b) => {

@@ -3,6 +3,7 @@ import { mkdtempSync, mkdirSync, writeFileSync, rmSync, readFileSync } from "nod
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { afterEach, expect, it, vi } from "vitest";
+import { constructionCoverage, recordConstructionHandover } from "../src/v6/construction-safety.js";
 import { ensureDirectionPlan, v6Directions } from "../src/v6/direction-runtime.js";
 import type { Brain } from "../src/brain/brain.js";
 import { direction, weights, projection } from "./v6-fixtures.js";
@@ -138,4 +139,19 @@ it("forwards provider opening reasons through the actual planner and keeps unkno
   }));
   expect(result?.payload?.opening_note).toContain("never substitute Wk for W0");
   expect(e.v6DirectionEvaluation.entries[0]).toEqual(entry);
+});
+
+it("consumes a construction T6 with the same signal ID rather than counting a second handover", async () => {
+  vi.stubEnv("V6_BUILD", "on"); const { dir, log, e } = fixture();
+  const brain = { askJson: vi.fn(async () => ({ json: { ...weights, potion_directions: [] } })) } as unknown as Pick<Brain, "askJson">;
+  await ensureDirectionPlan(e, brain, log, dir);
+  e.state.run!.floor += 1;
+  recordConstructionHandover(e, log, "handover-fixture", "card_pick", constructionCoverage(["take", "skip"]), "insufficient_known_options");
+  const result = await ensureDirectionPlan(e, brain, log, dir);
+  expect(result?.result.triggers).toContain("T6");
+  expect(e.screenMemory.v6BrainFallbackPending).toBeUndefined();
+  const rows = readFileSync(join(dir, "v6-build.jsonl"), "utf8").trim().split("\n").map(line => JSON.parse(line));
+  expect(rows.filter(r => r.stage === "trigger" && r.question_id === "handover-fixture")).toHaveLength(2);
+  expect(new Set(rows.filter(r => r.question_id === "handover-fixture" && r.triggers.includes("T6")).map(r => r.question_id)).size).toBe(1);
+  expect(rows.find(r => r.stage === "brain" && r.question_id === "handover-fixture")).toBeTruthy();
 });
