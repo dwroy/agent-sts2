@@ -1,0 +1,80 @@
+
+ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/v6-prompt-budget-20261020/agent
+
+ ❯ tests/v6-direction-provider.test.ts (3 tests | 1 failed) 298ms
+   × delivers actual W3 targets and per-combination P=1 rows to the W4 brain task 60ms
+.....
+----------------------------------------------------------------------
+Ran 5 tests in 0.015s
+
+OK
+ ❯ tests/v6-projection-entries.test.ts (2 tests | 2 failed) 107ms
+   × hands actual combination rows to W4 without cloning a direction maximum into each combo 63ms
+   × precomputes baseline simulations for reuse and preserves the P=1 boundary in strict rows 43ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 3 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/v6-direction-provider.test.ts > delivers actual W3 targets and per-combination P=1 rows to the W4 brain task
+AssertionError: expected [] to deeply equal [ ObjectContaining{…} ]
+
+- Expected
++ Received
+
+- [
+-   ObjectContaining {
+-     "expected_win": 1,
+-     "target": "f17:TEST_BOSS",
+-     "win_incomplete": null,
+-   },
+- ]
++ []
+
+ ❯ tests/v6-direction-provider.test.ts:25:38
+     23|     entries: evaluation.entries, appearedCards: [], potionIds: [], flo…
+     24|   const combo = asRecord(asArray(asRecord(asArray(task.build_cores)[0]…
+     25|   expect(combo.id).toBe("D:minimal");
+       |                                      ^
+     26|   expect(combo.evaluations).toBeUndefined();
+     27|   expect(asArray(task.direction_evaluation)).toEqual([expect.objectCon…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/3]⎯
+
+ FAIL  tests/v6-projection-entries.test.ts > hands actual combination rows to W4 without cloning a direction maximum into each combo
+AssertionError: expected [] to have a length of 1 but got +0
+
+- Expected
++ Received
+
+- 1
++ 0
+
+ ❯ tests/v6-projection-entries.test.ts:18:41
+     16|   const task = directionTask({ summaries: directionSummaries("silent",…
+     17|   const combo = asRecord(asArray(asRecord(asArray(task["build_cores"])…
+     18|   expect(combo["evaluations"]).toBeUndefined();
+       |                                         ^
+     19|   const evaluations = asArray(task["direction_evaluation"]).map(asReco…
+     20|   expect(evaluations.map(e => e["combo_id"])).toEqual(entries.map(e =>…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/3]⎯
+
+ FAIL  tests/v6-projection-entries.test.ts > precomputes baseline simulations for reuse and preserves the P=1 boundary in strict rows
+AssertionError: expected undefined to be 1 // Object.is equality
+
+- Expected:
+1
+
++ Received:
+undefined
+
+ ❯ tests/v6-projection-entries.test.ts:31:70
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/3]⎯
+
+
+ Test Files  2 failed | 588 passed (590)
+      Tests  3 failed | 5659 passed | 2 skipped (5664)
+   Start at  02:37:46
+   Duration  757.89s (transform 20.65s, setup 43.18s, import 137.24s, tests 1238.43s, environment 71ms)
+

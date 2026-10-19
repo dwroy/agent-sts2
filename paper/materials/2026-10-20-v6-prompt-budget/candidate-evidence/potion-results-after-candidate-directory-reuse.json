@@ -1,0 +1,834 @@
+{
+  "schema": "v6-live-smoke-v1",
+  "started_at": "2026-10-19T18:31:00.463Z",
+  "live_commit": "7f53d9f1b2eb797f643c9e0d7dc272fc43c428a1",
+  "no_game_actions": true,
+  "live_writes": false,
+  "samples": [
+    {
+      "file": "potion-1.json",
+      "source": "/home/dw/Projects/agent-sts2/logs/states.jsonl",
+      "byte_offset": 13955331073,
+      "line_sha256": "bb7951b2b13f65b392ad1aef0726e01f3d25de2ee3db0dce51a4f07c7b13668d",
+      "ts": "2026-10-17T09:00:09.591Z",
+      "run_id": "S5GZG328S1LN",
+      "floor": 27,
+      "screen": "REST",
+      "kind": "potion",
+      "timings_ms": {
+        "snapshot": 636.44104,
+        "factory": 121.3366709999998,
+        "projection": 4515.346417,
+        "prompt": 158.5901270000004,
+        "jev": 875.5206210000006,
+        "fallback": 108.94511700000021,
+        "total": 6532.194445
+      },
+      "factory": "ready",
+      "labels": [
+        "first_stop_is_predicted_death_or_actual_death_not_necessarily_actual_death",
+        "first_observed_boss_entry_may_follow_initial_actions",
+        "sparse_frames_net_card_and_gold_changes_only",
+        "rest_visits_not_observed_smith_choices",
+        "no_final_deck_backfill",
+        "pooled_versions_and_ascensions_sources_only",
+        "floor_frames_are_polls_not_independent_runs",
+        "combo_metrics_are_descriptive_not_formal_build_knowledge"
+      ],
+      "rejected_options": [],
+      "projection": {
+        "elapsed_ms": 4513.886816,
+        "cache_hits": 0,
+        "cache_misses": 0,
+        "simulations": 0,
+        "timed_out": 27,
+        "degradation": [
+          "drop_lowest_direction",
+          "current_and_chain_targets_only",
+          "remaining_unknown"
+        ],
+        "unknown_entries": 117,
+        "total_entries": 117,
+        "unknown_fraction": 1,
+        "act_cache_hit": false
+      },
+      "prompt_bytes": 4220,
+      "prompt_sha256": "4aa84599d779e9209a47bd2bf0fffaa8c6ca8bfc3931596917fa225472788bf6",
+      "state_bytes": 1580,
+      "prompt_budget": {
+        "limit": 16000,
+        "unit": "bytes",
+        "before": 1450,
+        "after": 1580,
+        "truncated": true,
+        "omitted": {
+          "question_text_bytes": 1274
+        }
+      },
+      "questions": [
+        "potion_o0",
+        "discard_p0",
+        "discard_p1"
+      ],
+      "potion_entries": [
+        {
+          "schema": "v6-potion-entry-v1",
+          "id": "COLORLESS_POTION",
+          "category": "random",
+          "tier": "normal",
+          "for": null,
+          "reason": null,
+          "hold_hp": 3.3,
+          "value_source": {
+            "source": "估",
+            "n": 162,
+            "table_ascension": 10,
+            "inputs_ascension": 10
+          },
+          "slots": {
+            "occupied": 2,
+            "max": 2
+          },
+          "price": null,
+          "gold_after": null,
+          "trust": {
+            "current_boss": "unknown",
+            "joint": "unknown"
+          },
+          "comparisons": [
+            {
+              "slot": 0,
+              "id": "COLORLESS_POTION",
+              "tier": "normal",
+              "hold_hp": 3.3,
+              "hold_hp_delta": 0
+            },
+            {
+              "slot": 1,
+              "id": "POISON_POTION",
+              "tier": "normal",
+              "hold_hp": null,
+              "hold_hp_delta": null
+            }
+          ],
+          "reflex": []
+        },
+        {
+          "schema": "v6-potion-entry-v1",
+          "id": "POISON_POTION",
+          "category": "damage",
+          "tier": "normal",
+          "for": null,
+          "reason": null,
+          "hold_hp": null,
+          "value_source": null,
+          "slots": {
+            "occupied": 2,
+            "max": 2
+          },
+          "price": null,
+          "gold_after": null,
+          "trust": {
+            "current_boss": "unknown",
+            "joint": "unknown"
+          },
+          "comparisons": [
+            {
+              "slot": 0,
+              "id": "COLORLESS_POTION",
+              "tier": "normal",
+              "hold_hp": 3.3,
+              "hold_hp_delta": null
+            },
+            {
+              "slot": 1,
+              "id": "POISON_POTION",
+              "tier": "normal",
+              "hold_hp": null,
+              "hold_hp_delta": null
+            }
+          ],
+          "reflex": []
+        }
+      ],
+      "unknown": {
+        "count": 2,
+        "total": 2
+      },
+      "jev": {
+        "model": "typesafe/jev-1.14",
+        "answers": {
+          "discard_p0": {
+            "type": "noul",
+            "noul": 0.32,
+            "raw": {
+              "noul": 0.32,
+              "type": "noul"
+            }
+          },
+          "discard_p1": {
+            "type": "noul",
+            "noul": 0.34,
+            "raw": {
+              "noul": 0.34,
+              "type": "noul"
+            }
+          },
+          "potion_o0": {
+            "type": "choice",
+            "choice": "o0:discard",
+            "probabilities": {
+              "o0": 0.39,
+              "o0:discard": 0.61
+            },
+            "confidence": 0.22,
+            "raw": {
+              "choice": "o0:discard",
+              "confidence": 0.22,
+              "probabilities": {
+                "o0": 0.39,
+                "o0:discard": 0.61
+              },
+              "type": "choice"
+            }
+          }
+        },
+        "latency_ms": 874,
+        "input_tokens": 1688,
+        "output_tokens": 79,
+        "request_id": null
+      },
+      "answer_valid": true,
+      "resolved": {
+        "intent": {
+          "action": "discard_potion",
+          "option_index": 1
+        },
+        "rationale": "smoke-control chose discard potion(s), then 休息 (HEAL) (code's fallback order: 10, rank 1 of 3; not shown to smoke-control)",
+        "confidence": 1,
+        "fallback": false,
+        "decider": "deepseek",
+        "plan": {
+          "id": "o0:discard",
+          "steps": [
+            "discard potion slot 1",
+            "o0"
+          ]
+        },
+        "journal": "discarded 毒药水, then 休息"
+      },
+      "forced_keep_fallback": {
+        "intent": {
+          "action": "choose_rest_option",
+          "option_index": 0
+        },
+        "rationale": "smoke-control chose 休息 (HEAL) (code's fallback order: 10, rank 1 of 3; not shown to smoke-control)",
+        "confidence": 1,
+        "fallback": false,
+        "decider": "deepseek"
+      },
+      "forced_slot_fallback": {
+        "cards": [],
+        "discard": [
+          0
+        ]
+      },
+      "forced_discard_plan": {
+        "id": "o0:discard",
+        "steps": [
+          "discard potion slot 0",
+          "o0"
+        ],
+        "intent": {
+          "action": "discard_potion",
+          "option_index": 0
+        },
+        "journal": "discarded 无色药水, then 休息"
+      },
+      "status": "completed"
+    },
+    {
+      "file": "potion-2.json",
+      "source": "/home/dw/Projects/agent-sts2/logs/states.jsonl",
+      "byte_offset": 13955067712,
+      "line_sha256": "177ca843527e50ad086689a812e176c582747d1f9be4eff8e4fb17055ba9085b",
+      "ts": "2026-10-17T08:59:19.912Z",
+      "run_id": "S5GZG328S1LN",
+      "floor": 25,
+      "screen": "REST",
+      "kind": "potion",
+      "timings_ms": {
+        "snapshot": 0.21705399999973451,
+        "factory": 105.97585700000036,
+        "projection": 4511.583495000001,
+        "prompt": 123.78933899999902,
+        "jev": 394.64666699999907,
+        "fallback": 106.86808599999858,
+        "total": 5347.832933999999
+      },
+      "factory": "ready",
+      "labels": [
+        "first_stop_is_predicted_death_or_actual_death_not_necessarily_actual_death",
+        "first_observed_boss_entry_may_follow_initial_actions",
+        "sparse_frames_net_card_and_gold_changes_only",
+        "rest_visits_not_observed_smith_choices",
+        "no_final_deck_backfill",
+        "pooled_versions_and_ascensions_sources_only",
+        "floor_frames_are_polls_not_independent_runs",
+        "combo_metrics_are_descriptive_not_formal_build_knowledge"
+      ],
+      "rejected_options": [],
+      "projection": {
+        "elapsed_ms": 4511.263999000001,
+        "cache_hits": 0,
+        "cache_misses": 0,
+        "simulations": 0,
+        "timed_out": 28,
+        "degradation": [
+          "drop_lowest_direction",
+          "current_and_chain_targets_only",
+          "remaining_unknown"
+        ],
+        "unknown_entries": 114,
+        "total_entries": 114,
+        "unknown_fraction": 1,
+        "act_cache_hit": false
+      },
+      "prompt_bytes": 4082,
+      "prompt_sha256": "c4be3538464c1e48afc27b768c49111cb9e226595bd8a399515bb00daa1370fc",
+      "state_bytes": 1427,
+      "prompt_budget": {
+        "limit": 16000,
+        "unit": "bytes",
+        "before": 1297,
+        "after": 1427,
+        "truncated": true,
+        "omitted": {
+          "question_text_bytes": 1160
+        }
+      },
+      "questions": [
+        "potion_o0",
+        "discard_p0",
+        "discard_p1"
+      ],
+      "potion_entries": [
+        {
+          "schema": "v6-potion-entry-v1",
+          "id": "LIQUID_BRONZE",
+          "category": "other",
+          "tier": "normal",
+          "for": null,
+          "reason": null,
+          "hold_hp": 2.7,
+          "value_source": {
+            "source": "估",
+            "n": 162,
+            "table_ascension": 10,
+            "inputs_ascension": 10
+          },
+          "slots": {
+            "occupied": 2,
+            "max": 2
+          },
+          "price": null,
+          "gold_after": null,
+          "trust": {
+            "current_boss": "unknown",
+            "joint": "unknown"
+          },
+          "comparisons": [
+            {
+              "slot": 0,
+              "id": "LIQUID_BRONZE",
+              "tier": "normal",
+              "hold_hp": 2.7,
+              "hold_hp_delta": 0
+            },
+            {
+              "slot": 1,
+              "id": "POISON_POTION",
+              "tier": "normal",
+              "hold_hp": null,
+              "hold_hp_delta": null
+            }
+          ],
+          "reflex": []
+        },
+        {
+          "schema": "v6-potion-entry-v1",
+          "id": "POISON_POTION",
+          "category": "damage",
+          "tier": "normal",
+          "for": null,
+          "reason": null,
+          "hold_hp": null,
+          "value_source": null,
+          "slots": {
+            "occupied": 2,
+            "max": 2
+          },
+          "price": null,
+          "gold_after": null,
+          "trust": {
+            "current_boss": "unknown",
+            "joint": "unknown"
+          },
+          "comparisons": [
+            {
+              "slot": 0,
+              "id": "LIQUID_BRONZE",
+              "tier": "normal",
+              "hold_hp": 2.7,
+              "hold_hp_delta": null
+            },
+            {
+              "slot": 1,
+              "id": "POISON_POTION",
+              "tier": "normal",
+              "hold_hp": null,
+              "hold_hp_delta": null
+            }
+          ],
+          "reflex": []
+        }
+      ],
+      "unknown": {
+        "count": 2,
+        "total": 2
+      },
+      "jev": {
+        "model": "typesafe/jev-1.14",
+        "answers": {
+          "discard_p0": {
+            "type": "noul",
+            "noul": 0.34,
+            "raw": {
+              "noul": 0.34,
+              "type": "noul"
+            }
+          },
+          "discard_p1": {
+            "type": "noul",
+            "noul": 0.37,
+            "raw": {
+              "noul": 0.37,
+              "type": "noul"
+            }
+          },
+          "potion_o0": {
+            "type": "choice",
+            "choice": "o0",
+            "probabilities": {
+              "o0": 0.51,
+              "o0:discard": 0.49
+            },
+            "confidence": 0.02,
+            "raw": {
+              "choice": "o0",
+              "confidence": 0.02,
+              "probabilities": {
+                "o0": 0.51,
+                "o0:discard": 0.49
+              },
+              "type": "choice"
+            }
+          }
+        },
+        "latency_ms": 395,
+        "input_tokens": 1639,
+        "output_tokens": 76,
+        "request_id": null
+      },
+      "answer_valid": true,
+      "resolved": {
+        "intent": {
+          "action": "choose_rest_option",
+          "option_index": 0
+        },
+        "rationale": "smoke-control chose 休息 (HEAL) (code's fallback order: 10, rank 1 of 3; not shown to smoke-control)",
+        "confidence": 1,
+        "fallback": false,
+        "decider": "deepseek"
+      },
+      "forced_keep_fallback": {
+        "intent": {
+          "action": "choose_rest_option",
+          "option_index": 0
+        },
+        "rationale": "smoke-control chose 休息 (HEAL) (code's fallback order: 10, rank 1 of 3; not shown to smoke-control)",
+        "confidence": 1,
+        "fallback": false,
+        "decider": "deepseek"
+      },
+      "forced_slot_fallback": {
+        "cards": [],
+        "discard": [
+          0
+        ]
+      },
+      "forced_discard_plan": {
+        "id": "o0:discard",
+        "steps": [
+          "discard potion slot 0",
+          "o0"
+        ],
+        "intent": {
+          "action": "discard_potion",
+          "option_index": 0
+        },
+        "journal": "discarded 流动铜液, then 休息"
+      },
+      "status": "completed"
+    },
+    {
+      "file": "potion-3.json",
+      "source": "/home/dw/Projects/agent-sts2/logs/states.jsonl",
+      "byte_offset": 13680618956,
+      "line_sha256": "385ecf19112753cc1fb1248fd933729f0d6ead77fe17a9f20edc0eb7a48544ff",
+      "ts": "2026-10-16T14:47:16.342Z",
+      "run_id": "N9GKED3PMEV3",
+      "floor": 37,
+      "screen": "EVENT",
+      "kind": "potion",
+      "timings_ms": {
+        "snapshot": 579.5904659999997,
+        "factory": 107.35979299999963,
+        "projection": 4434.8127140000015,
+        "prompt": 280.39133500000025,
+        "jev": 2747.164066000001,
+        "fallback": 105.65904800000135,
+        "total": 8367.181590999999
+      },
+      "factory": "ready",
+      "labels": [
+        "first_stop_is_predicted_death_or_actual_death_not_necessarily_actual_death",
+        "first_observed_boss_entry_may_follow_initial_actions",
+        "sparse_frames_net_card_and_gold_changes_only",
+        "rest_visits_not_observed_smith_choices",
+        "no_final_deck_backfill",
+        "pooled_versions_and_ascensions_sources_only",
+        "floor_frames_are_polls_not_independent_runs",
+        "combo_metrics_are_descriptive_not_formal_build_knowledge"
+      ],
+      "rejected_options": [],
+      "projection": {
+        "elapsed_ms": 4434.631447000002,
+        "cache_hits": 0,
+        "cache_misses": 0,
+        "simulations": 0,
+        "timed_out": 0,
+        "degradation": [],
+        "unknown_entries": 124,
+        "total_entries": 124,
+        "unknown_fraction": 1,
+        "act_cache_hit": false
+      },
+      "prompt_bytes": 5898,
+      "prompt_sha256": "9599f40ffb5cf0d6946db0d401bfd324d24623e5629b86a89405c92b45baf766",
+      "state_bytes": 2072,
+      "prompt_budget": {
+        "limit": 16000,
+        "unit": "bytes",
+        "before": 1942,
+        "after": 2072,
+        "truncated": true,
+        "omitted": {
+          "question_text_bytes": 2122
+        }
+      },
+      "questions": [
+        "potion_o0",
+        "potion_o1",
+        "discard_p0",
+        "discard_p1"
+      ],
+      "potion_entries": [
+        {
+          "schema": "v6-potion-entry-v1",
+          "id": "POISON_POTION",
+          "category": "damage",
+          "tier": "normal",
+          "for": null,
+          "reason": null,
+          "hold_hp": null,
+          "value_source": null,
+          "slots": {
+            "occupied": 2,
+            "max": 2
+          },
+          "price": null,
+          "gold_after": null,
+          "trust": {
+            "current_boss": "unknown",
+            "joint": "unknown"
+          },
+          "comparisons": [
+            {
+              "slot": 0,
+              "id": "POISON_POTION",
+              "tier": "normal",
+              "hold_hp": null,
+              "hold_hp_delta": null
+            },
+            {
+              "slot": 1,
+              "id": "TOUCH_OF_INSANITY",
+              "tier": "normal",
+              "hold_hp": 8.6,
+              "hold_hp_delta": null
+            }
+          ],
+          "reflex": []
+        },
+        {
+          "schema": "v6-potion-entry-v1",
+          "id": "TOUCH_OF_INSANITY",
+          "category": "energy",
+          "tier": "normal",
+          "for": null,
+          "reason": null,
+          "hold_hp": 8.6,
+          "value_source": {
+            "source": "估",
+            "n": 117,
+            "table_ascension": 10,
+            "inputs_ascension": 10
+          },
+          "slots": {
+            "occupied": 2,
+            "max": 2
+          },
+          "price": null,
+          "gold_after": null,
+          "trust": {
+            "current_boss": "unknown",
+            "joint": "unknown"
+          },
+          "comparisons": [
+            {
+              "slot": 0,
+              "id": "POISON_POTION",
+              "tier": "normal",
+              "hold_hp": null,
+              "hold_hp_delta": null
+            },
+            {
+              "slot": 1,
+              "id": "TOUCH_OF_INSANITY",
+              "tier": "normal",
+              "hold_hp": 8.6,
+              "hold_hp_delta": 0
+            }
+          ],
+          "reflex": []
+        }
+      ],
+      "unknown": {
+        "count": 2,
+        "total": 2
+      },
+      "jev": {
+        "model": "typesafe/jev-1.14",
+        "answers": {
+          "discard_p0": {
+            "type": "noul",
+            "noul": 0.29,
+            "raw": {
+              "noul": 0.29,
+              "type": "noul"
+            }
+          },
+          "discard_p1": {
+            "type": "noul",
+            "noul": 0.28,
+            "raw": {
+              "noul": 0.28,
+              "type": "noul"
+            }
+          },
+          "potion_o0": {
+            "type": "choice",
+            "choice": "o0:discard",
+            "probabilities": {
+              "o0": 0.26,
+              "o0:discard": 0.74
+            },
+            "confidence": 0.48,
+            "raw": {
+              "choice": "o0:discard",
+              "confidence": 0.48,
+              "probabilities": {
+                "o0": 0.26,
+                "o0:discard": 0.74
+              },
+              "type": "choice"
+            }
+          },
+          "potion_o1": {
+            "type": "choice",
+            "choice": "o1:discard",
+            "probabilities": {
+              "o1": 0.26,
+              "o1:discard": 0.74
+            },
+            "confidence": 0.48,
+            "raw": {
+              "choice": "o1:discard",
+              "confidence": 0.48,
+              "probabilities": {
+                "o1": 0.26,
+                "o1:discard": 0.74
+              },
+              "type": "choice"
+            }
+          }
+        },
+        "latency_ms": 2747,
+        "input_tokens": 2175,
+        "output_tokens": 119,
+        "request_id": null
+      },
+      "answer_valid": true,
+      "resolved": {
+        "intent": {
+          "action": "discard_potion",
+          "option_index": 0
+        },
+        "rationale": "smoke-control chose discard potion(s), then 拿走这批药水 (code's fallback order: 0, rank 1 of 4; not shown to smoke-control)",
+        "confidence": 1,
+        "fallback": false,
+        "decider": "deepseek",
+        "plan": {
+          "id": "o0:discard",
+          "steps": [
+            "discard potion slot 0",
+            "o0"
+          ]
+        },
+        "journal": "discarded 毒药水, then 拿走这批药水"
+      },
+      "forced_keep_fallback": {
+        "intent": {
+          "action": "choose_event_option",
+          "option_index": 0
+        },
+        "rationale": "smoke-control chose 拿走这批药水 (code's fallback order: 0, rank 1 of 4; not shown to smoke-control)",
+        "confidence": 1,
+        "fallback": false,
+        "decider": "deepseek"
+      },
+      "forced_slot_fallback": {
+        "cards": [],
+        "discard": [
+          1
+        ]
+      },
+      "forced_discard_plan": {
+        "id": "o0:discard",
+        "steps": [
+          "discard potion slot 1",
+          "o0"
+        ],
+        "intent": {
+          "action": "discard_potion",
+          "option_index": 1
+        },
+        "journal": "discarded 癫狂之触, then 拿走这批药水"
+      },
+      "status": "completed"
+    }
+  ],
+  "http": [
+    {
+      "sample": "potion-1.json",
+      "origin": "https://llm-proxy.tapsvc.com",
+      "path": "/api/alpha/decisions",
+      "model": "typesafe/jev-1.14",
+      "started_at": "2026-10-19T18:31:06.057Z",
+      "bytes": 4248,
+      "status": 200,
+      "elapsed_ms": 864.92011
+    },
+    {
+      "sample": "potion-2.json",
+      "origin": "https://llm-proxy.tapsvc.com",
+      "path": "/api/alpha/decisions",
+      "model": "typesafe/jev-1.14",
+      "started_at": "2026-10-19T18:31:11.887Z",
+      "bytes": 4110,
+      "status": 200,
+      "elapsed_ms": 391.64805999999953
+    },
+    {
+      "sample": "potion-3.json",
+      "origin": "https://llm-proxy.tapsvc.com",
+      "path": "/api/alpha/decisions",
+      "model": "typesafe/jev-1.14",
+      "started_at": "2026-10-19T18:31:17.903Z",
+      "bytes": 5926,
+      "status": 200,
+      "elapsed_ms": 2744.891635
+    }
+  ],
+  "limitations": [
+    "Frozen pre-V6 boards have no V6 brain direction or potion tiers; production uniform direction fallback and unknown potion tiers are retained.",
+    "No saved selected route is injected; missing boss entry HP stays unknown.",
+    "Potion projection uses the production provider baseline context; W6 potion choice uses published holding values, not invented counterfactual win estimates.",
+    "Potion resolver is exercised with a local parent-option control answer; no DeepSeek request or action apply runs."
+  ],
+  "catalog": {
+    "source": "/home/dw/Projects/agent-sts2/data/game-data.json",
+    "sha256": "8973610b44d41683ecc414299006df99decaf82e9017b9bf4ebb89c216268a69",
+    "mod_version": "0.16.2"
+  },
+  "config": {
+    "schema": "v6-config-v1",
+    "mode": "on",
+    "deciders": {
+      "card": "jev",
+      "potion": "jev",
+      "shop": "jev",
+      "rest": "brain"
+    },
+    "reflex": "off",
+    "admission": "interfaces_only",
+    "delivered": false,
+    "samples_pick": 20,
+    "samples_act": 100,
+    "direction_min_weight": 0.1,
+    "win": {
+      "certain_win": 0.95,
+      "favored": 0.7,
+      "even": 0.3,
+      "unfavored": 0.05
+    },
+    "delta": {
+      "much_se": 2,
+      "better_se": 1,
+      "much_min": 0.05
+    },
+    "triggers": {
+      "t1_core_min": 0.3,
+      "t2_se": 2,
+      "t2_min_delta": 0.05,
+      "t2_consecutive": 2,
+      "t3_weight_max": 0.2,
+      "t5_hazard": "existing_route_projection",
+      "t6_unknown_max": 0.5,
+      "t6_fallbacks": 2,
+      "t7_checkpoint": "validated_brain_answer"
+    },
+    "budgets": {
+      "brain_soft_cap": 15,
+      "brain_ms": 90000,
+      "act_ms": 60000,
+      "pick_ms": 5000,
+      "jev_ms": 5000
+    },
+    "invalid": []
+  },
+  "finished_at": "2026-10-19T18:31:20.756Z",
+  "live_commit_after": "7f53d9f1b2eb797f643c9e0d7dc272fc43c428a1",
+  "status": "completed"
+}

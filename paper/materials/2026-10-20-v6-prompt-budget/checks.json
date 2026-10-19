@@ -1,0 +1,106 @@
+{
+  "recorded_at": "2026-10-20 03:11:03 CST",
+  "checked_head": "d7e97722f3ad955f173d7a00aaaec4ceddffd626",
+  "source_commit_after_checks": "658d83da92d833b8c028e9295b042b8725747e43",
+  "checked_inputs": 1443,
+  "source_changed_after_checks": [],
+  "dirty_tested_patch": "checks-final-r4/tested-working-tree.patch",
+  "statuses": {
+    "focused": {
+      "commit": "d7e97722f3ad955f173d7a00aaaec4ceddffd626",
+      "started_at": "2026-10-19T18:59:51.722922+00:00",
+      "argv": [
+        "npx",
+        "vitest",
+        "run",
+        "tests/v6-direction-provider.test.ts",
+        "tests/v6-projection-entries.test.ts",
+        "tests/v6-prompt-summary.test.ts",
+        "tests/v6-card-pick.test.ts",
+        "tests/v6-room.test.ts",
+        "tests/v6-direction-plan.test.ts",
+        "tests/v6-direction-runtime.test.ts",
+        "tests/v6-potions.test.ts",
+        "--maxWorkers=1"
+      ],
+      "state": "complete",
+      "ended_at": "2026-10-19T19:00:05.786316+00:00",
+      "exit_code": 0,
+      "log_sha256": "63d7bdf378488805829263b1a0c448a5725605c22f31f247a05c2ea8ef9c82a8"
+    },
+    "tsc": {
+      "commit": "d7e97722f3ad955f173d7a00aaaec4ceddffd626",
+      "started_at": "2026-10-19T19:00:05.786641+00:00",
+      "argv": [
+        "npx",
+        "tsc",
+        "-p",
+        "tsconfig.json",
+        "--noEmit"
+      ],
+      "state": "complete",
+      "ended_at": "2026-10-19T19:00:06.825283+00:00",
+      "exit_code": 0,
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "vitest": {
+      "commit": "d7e97722f3ad955f173d7a00aaaec4ceddffd626",
+      "started_at": "2026-10-19T19:00:06.825593+00:00",
+      "argv": [
+        "npx",
+        "vitest",
+        "run",
+        "--maxWorkers=2"
+      ],
+      "state": "complete",
+      "ended_at": "2026-10-19T19:10:53.121692+00:00",
+      "exit_code": 0,
+      "log_sha256": "727c6ee78c515f68cfadea7b1515f20fbaddbc4ceba0306c30c7fb63c8b0cb09"
+    },
+    "gitleaks": {
+      "commit": "d7e97722f3ad955f173d7a00aaaec4ceddffd626",
+      "started_at": "2026-10-19T19:10:53.122158+00:00",
+      "argv": [
+        "gitleaks",
+        "git",
+        "--log-opts=main..HEAD",
+        "--redact",
+        "--no-banner"
+      ],
+      "state": "complete",
+      "ended_at": "2026-10-19T19:10:53.563599+00:00",
+      "exit_code": 0,
+      "log_sha256": "48ee85d11d465dbc5ce37517c8bb088c589e866562d555a197f40b06478fc295"
+    }
+  },
+  "vitest_summary": "591 passed (591); tests 5663 passed | 2 skipped (5665)",
+  "live_accepted": false,
+  "stages_are_not_strategy_quality_acceptance": true,
+  "past_runs": [
+    {
+      "path": ".artifacts/prompt-budget",
+      "state": "failed",
+      "exit": 1,
+      "detail": "590 files: 588 passed / 2 failed; tests 5659 passed / 3 failed / 2 skipped. Three stale centralized-table assertions subsequently corrected."
+    },
+    {
+      "path": ".artifacts/prompt-budget/checks-final",
+      "state": "focused_failed",
+      "detail": "P1 baseline includes two target rows; exact count assertion replaced with all option IDs and numeric baseline semantics."
+    },
+    {
+      "path": ".artifacts/prompt-budget/checks-final-r2",
+      "state": "intentionally_interrupted",
+      "exit": 143,
+      "at": "2026-10-20 02:57:34 CST",
+      "detail": "Found truncation could drop every per-option projection; fixed before restarting. Original running status files are preserved without rewriting."
+    },
+    {
+      "path": ".artifacts/prompt-budget/checks-final-r3",
+      "state": "intentionally_interrupted",
+      "exit": 143,
+      "at": "2026-10-20 02:59:40 CST",
+      "detail": "Watcher history exclusion code and test merged main; rebased and restarted full joint checks. Original running status files are preserved without rewriting."
+    }
+  ]
+}

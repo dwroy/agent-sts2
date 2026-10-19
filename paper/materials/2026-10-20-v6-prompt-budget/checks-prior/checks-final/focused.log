@@ -1,0 +1,95 @@
+
+ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/v6-prompt-budget-20261020/agent
+
+ ❯ tests/v6-projection-entries.test.ts (2 tests | 1 failed) 114ms
+   × precomputes baseline simulations for reuse and preserves the P=1 boundary in strict rows 49ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/v6-projection-entries.test.ts > precomputes baseline simulations for reuse and preserves the P=1 boundary in strict rows
+AssertionError: expected [ { …(28) }, { …(28) } ] to deeply equal [ ObjectContaining{…} ]
+
+- Expected
++ Received
+
+@@ -54,6 +54,63 @@
+        "n": 20,
+        "se": 0,
+        "value": 0.3333333333333333,
+      },
+    },
++   {
++     "availability": {
++       "skip": 1,
++       "take": 1,
++     },
++     "combo_id": "D:minimal",
++     "combo_source": "construction-transition",
++     "core_first_cast_turn": null,
++     "deck_count_change": 1,
++     "delta_tier": "same",
++     "direction_id": "D",
++     "direction_role": "core",
++     "direction_value": 1,
++     "expected_win": 1,
++     "incomplete_source": "unknown",
++     "joint_paired_delta": null,
++     "joint_win": null,
++     "losing_boss_hp_fraction": null,
++     "option_id": "take",
++     "paired_delta": {
++       "mean": 0,
++       "n": 20,
++       "se": 0,
++     },
++     "reflex_ids": [],
++     "schema": "projection-entry-v1",
++     "target_id": "boss",
++     "trust": "unknown",
++     "turns": {
++       "n": 20,
++       "se": 0,
++       "value": 4,
++     },
++     "weighted_current_boss_delta": {
++       "mean": 0,
++       "n": 20,
++       "se": 0,
++     },
++     "weighted_joint_delta": null,
++     "win": {
++       "n": 20,
++       "se": 0,
++       "value": 1,
++     },
++     "win_complete": {
++       "n": 20,
++       "se": 0,
++       "value": 1,
++     },
++     "win_incomplete": null,
++     "win_tier": "certain_win",
++     "winning_player_hp_fraction": {
++       "n": 20,
++       "se": 0,
++       "value": 0.3333333333333333,
++     },
++   },
+  ]
+
+ ❯ tests/v6-projection-entries.test.ts:36:6
+     34|   const combo = asRecord(asArray(asRecord(asArray(task["build_cores"])…
+     35|   expect(asArray(task["direction_evaluation"]).map(asRecord).filter(e …
+     36|     .toEqual([expect.objectContaining({ expected_win: 1, win_incomplet…
+       |      ^
+     37|   expect(validateProjectionEntry({ ...certain[0], availability: { take…
+     38| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed | 1 passed (2)
+      Tests  1 failed | 4 passed (5)
+   Start at  02:51:25
+   Duration  2.08s (transform 928ms, setup 622ms, import 628ms, tests 499ms, environment 0ms)
+

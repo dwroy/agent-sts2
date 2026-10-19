@@ -18,3 +18,5 @@ Application ceilings: Jev state 16,000 UTF-8 bytes; Jev Decisions request 24,000
 Tests load the published Silent R2 file (four directions/17 combinations), assert prompt ceilings and legal answers/fallbacks for brain/card/potion/shop/rest, and exercise known provider rows through the consumer for every real combination. Tests do not make network requests.
 
 No simulation, Jev provider/client, game knowledge, operational prompts, live files or STOP state are changed by this work package.
+
+Final preservation rule: each legal card option, including skip, retains at least its first numeric projection after bounding; ordering puts the highest brain-weight direction and best available combination first. Published R2 fixed tests enforce this under the request ceiling.

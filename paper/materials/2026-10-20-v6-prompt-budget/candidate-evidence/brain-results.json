@@ -1,0 +1,74 @@
+{
+  "started_at": "2026-10-19T18:32:01.744Z",
+  "request_only": true,
+  "candidate": "7f53d9f1b2eb797f643c9e0d7dc272fc43c428a1",
+  "uncommitted": true,
+  "settings": {
+    "home": "/home/dw/Projects/agent-sts2/ops/codex-ops/accounts/codex1/brain",
+    "model": "gpt-6.1-sol",
+    "effort": "xhigh",
+    "mode": "exec",
+    "prefix": "off"
+  },
+  "projection": {
+    "elapsed_ms": 17187.877748,
+    "cache_hits": 0,
+    "cache_misses": 0,
+    "simulations": 0,
+    "timed_out": 0,
+    "degradation": [],
+    "unknown_entries": 293,
+    "total_entries": 293,
+    "unknown_fraction": 1,
+    "act_cache_hit": false,
+    "elapsed_total_ms": 17956.535537
+  },
+  "prompt_ms": 108.95728600000075,
+  "v6_chars": 63715,
+  "prompt_budget": {
+    "limit": 64000,
+    "unit": "chars",
+    "before": 269912,
+    "after": 63715,
+    "truncated": true,
+    "omitted": {
+      "build_cores": 3,
+      "build_cores[0].combos": 5,
+      "direction_evaluation": 264
+    }
+  },
+  "full_request_chars": 68303,
+  "brain_ms": 76834.839124,
+  "answer": {
+    "json": {
+      "schema": "direction-weights-v1",
+      "direction_weights": {
+        "P": 0.25,
+        "D": 0.5,
+        "S": 0.2,
+        "R": 0.05
+      },
+      "potion_directions": [],
+      "route": "keep",
+      "rest": "heal",
+      "checkpoint": 9,
+      "reason": "胜率、组合期望及配对误差未知；SL单例不外推。低血优先防御回血，保留毒刀分支，不强凑核心。"
+    },
+    "meta": {
+      "latencyMs": 61698,
+      "inputTokens": 20950,
+      "outputTokens": 2320,
+      "cacheHitTokens": 0,
+      "reasoningTokens": 2205,
+      "effort": "",
+      "brain": {
+        "engine": "codex",
+        "model": "gpt-6.1-sol",
+        "attempts": 1,
+        "tool_calls": []
+      }
+    }
+  },
+  "valid": true,
+  "status": "passed"
+}
