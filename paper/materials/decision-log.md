@@ -4828,3 +4828,4 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
 - 2026-10-20 03:03:03 CST [运维 codex/watcher坏行修复交付] 核main46f4/live80dc与原完整受测7a053984b源及知识一致；唯一nice19刷新在途，17覆盖/消费者未核。保持STOP及原恢复门槛，无重复刷新/full/模型。原件：paper/materials/20261020-0302-ops/receipt.json。
 
 - 2026-10-20 03:09:46 CST [运维 codex/024301-s2收尾异常核收] 十waiting、无新源码；原唯一dataset后因并行de94源码变化保留attention，无收尾commit、不重跑/合入；原回收与科学父边界保持。原件：paper/materials/20261020-0308-ops/receipt.json。
+- 2026-10-20 03:12:21 CST [Codex v6-w4w6] V6题面精简及硬上限修复已完整检查并FF main ff589f1d2：tsc0、vitest 591 passed (591); tests 5663 passed | 2 skipped (5665)、gitleaks0；17/17真实R2组合读回及每选项保留投影固定回归。候选真实Jev六题/大脑通过不冒live验收；W3入口HP/供给预算未知修复待接续，STOP/fault保留。报告paper/materials/2026-10-20-v6-prompt-budget/report.md。
