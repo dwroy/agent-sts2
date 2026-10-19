@@ -285,6 +285,7 @@ Roy 2026-10-19：核心构筑方向下可以有很多组合，不按牌数分，
 - 改代码的提交在 `agent/` 跑 `npx tsc -p tsconfig.json --noEmit` 与 `npx vitest run`（PATH 加 `~/.local/node/bin`），两者通过；Codex 沙箱内用 `bash tools/test-sandbox.sh`。测试只用固定数据，不 `npm install`。
 - 新开关默认 `off`；关闭时铁甲、Regent、Silent 现有行为逐字节等价，并用测试锁住。
 - 提交信息末尾带 `Co-Authored-By: Codex gpt-6.1-sol <noreply@openai.com>`；提交前 gitleaks；不读游戏二进制、不读密钥。
+- Jev 与 DeepSeek 一律经公司 Nova AI Gateway（Roy 2026-10-19；接入说明 `/home/dw/.config/nova-game-agents/AGENT-INTEGRATION.md`，项目适配 main `895b85cfd`，交接 `handoff/nova-gateway-20261019.md`）：Jev 模型 `typesafe/jev-1.14`（Decisions 协议 `/api/alpha/decisions`，走项目已有的 Nova 适配器），DeepSeek `deepseek/deepseek-flash`。Key 只从文件读取，不打印、不写日志、不提交，不回退到自费 Key。开发中的真实请求（冻结题验收等）同样走 Nova。
 - 每个工作包完成后 `date`，在 `paper/materials/decision-log.md` 追加一行，材料放 `paper/materials/<日期>-v6-<工作包>/`；停下向 Claude 回报：做了什么、测试结果、未决问题、建议的下一步。下一项由 Claude 指派。
 - 不启动对局、不移除 `ops/STOP`、不恢复 Regent；需要对局的验收等 Roy 恢复运行。
 
@@ -391,7 +392,7 @@ Roy 2026-10-19：核心构筑方向下可以有很多组合，不按牌数分，
 |---|---|
 | 负责 | ops（恢复后）；watcher 核验 |
 | 依赖 | W5、W6（W7、W8 可后续增量上线）；Roy 恢复运行 |
-| 内容 | 重建 live；`V6_BUILD=shadow` 跑 2–3 局自然对局，只查功能健康（耗时、覆盖、未知、故障、触发次数）；通过后 `V6_BUILD=on`、`V6_CARD_DECIDER=jev`、`V6_POTION_DECIDER=jev`。ops 登记 `eval/versions.json` 新版本（`V6-R…`），写规则变更通知（第 4 节）。 |
+| 内容 | 重建 live；在新启动 shell `source /home/dw/.config/nova-game-agents/environment.sh`（或将 `api.env` 的 API 项并入角色配置），核对 run-config 中 Jev 为 `typesafe/jev-1.14`、DeepSeek 经 Nova；Jev 模型由 jev-latest（1.13）换为 jev-1.14 属行为变化，随 V6 发布一并登记；`V6_BUILD=shadow` 跑 2–3 局自然对局，只查功能健康（耗时、覆盖、未知、故障、触发次数）；通过后 `V6_BUILD=on`、`V6_CARD_DECIDER=jev`、`V6_POTION_DECIDER=jev`。ops 登记 `eval/versions.json` 新版本（`V6-R…`），写规则变更通知（第 4 节）。 |
 | 回退 | 开关改回 `brain` / `off`，登记新编号 |
 | 验收 | 第 10 节指标首个 10 局报告 |
 

@@ -129,3 +129,9 @@ Claude 撤回单牌档位示例，细化公式：对选项 o、组合 k、目标
 Roy：“这个就没问题了，另外组合的信息最好能多一点，比如对于伤害能力/回合的估算等等，启动回合等等，历史胜率等等”
 
 据此更新计划第 3.2、3.3、5、6 节，新增 W1.1（`build-core-v1` 格式与白名单扩充）、9.3 学习任务 `v6-build-cores`（xhigh）与 W2.2 指标生成器。出牌的小脑条目保持按出牌方案计算。
+
+## 12. 续：Jev 与 DeepSeek 改用公司 API（2026-10-19 19:07:54）
+
+Roy：“另外，对于jev 和deepseek的调用 后续使用公司提供的api /home/dw/.config/nova-game-agents/AGENT-INTEGRATION.md”
+
+计划第 9 节通用要求与 W9 已加入：Jev 与 DeepSeek 一律经公司 Nova AI Gateway（Jev `typesafe/jev-1.14`，Decisions 协议；DeepSeek `deepseek/deepseek-flash`），Key 只从文件读取、不回退自费 Key；开发中的真实请求同样走 Nova；上线时在新启动 shell 加载 environment.sh，Jev 由 jev-latest（1.13）换为 1.14 随 V6 发布登记。项目适配已在 main 895b85cfd。
