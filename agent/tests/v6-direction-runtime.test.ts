@@ -103,3 +103,16 @@ it("restores a brain combo before accepting its next projection after restart", 
   e.state.raw["run_id"] = "OTHER_RUN";
   expect(v6Directions(e, dir).every(s => s.combos.every(c => c.source !== "brain"))).toBe(true);
 });
+
+it("uses the provider target IDs without adding legacy boss or joint placeholders", async () => {
+  vi.stubEnv("V6_BUILD", "on"); const { dir, log, e } = fixture();
+  const target = "f48:FIXTURE_A:then:f49:FIXTURE_B";
+  e.v6DirectionEvaluation = { id: "formal-provider", entries: [{ ...comboProjection(), target_id: target }],
+    targets: [{ id: "f17:FIXTURE_CURRENT", kind: "current" }, { id: target, kind: "chain" }] };
+  const brain = { askJson: vi.fn(async () => ({ json: { ...weights, potion_directions: [] } })) } as unknown as Pick<Brain, "askJson">;
+  const result = await ensureDirectionPlan(e, brain, log, dir);
+  const rows = result?.payload?.direction_evaluation as Array<ReturnType<typeof comboProjection>>;
+  expect(new Set(rows.map(r => r.target_id))).toEqual(new Set(["f17:FIXTURE_CURRENT", target]));
+  expect(rows).toHaveLength(8);
+  expect(rows.filter(r => r.expected_win !== null)).toHaveLength(1);
+});

@@ -67,16 +67,20 @@ export function potionEntries(env: DecisionEnv, ids: string[], options: {
   const belt = asArray(raw["potions"]).map(asRecord);
   const held = belt.filter(slot => bool(slot["occupied"]));
   const plan = (env.screenMemory.runPlan as { v6?: DirectionWeights } | undefined)?.v6;
-  const projectionTrust = (target: string): ProjectionEntry["trust"] => {
+  const projectionTrust = (targets: string[]): ProjectionEntry["trust"] => {
     const directions = Object.keys(plan?.direction_weights ?? {}).filter(id => (plan?.direction_weights[id] ?? 0) > 0);
-    if (!directions.length) return "unknown";
-    const entries = (env.v6DirectionEvaluation?.entries ?? []).filter(e => e.target_id === target && directions.includes(e.direction_id) && validateProjectionEntry(e).ok);
-    if (directions.some(id => !entries.some(e => e.direction_id === id))) return "unknown";
+    if (!directions.length || !targets.length) return "unknown";
+    const entries = (env.v6DirectionEvaluation?.entries ?? []).filter(e => targets.includes(e.target_id) && directions.includes(e.direction_id) && validateProjectionEntry(e).ok);
+    if (targets.some(target => directions.some(id => !entries.some(e => e.direction_id === id && e.target_id === target)))) return "unknown";
     const trusts = new Set(entries.map(e => e.trust));
     // Mixed bias signs cannot be collapsed into a calibrated confidence label.
     return trusts.size === 1 ? entries[0]!.trust : "unknown";
   };
-  const trust = options.trust ?? { current_boss: projectionTrust(str(raw["boss_id"]) || "current_boss"), joint: projectionTrust("joint") };
+  const targets = env.v6DirectionEvaluation?.targets;
+  const trust = options.trust ?? {
+    current_boss: projectionTrust(targets ? targets.filter(t => t.kind === "current").map(t => t.id) : [str(raw["boss_id"]) || "current_boss"]),
+    joint: projectionTrust(targets ? targets.filter(t => t.kind === "chain").map(t => t.id) : ["joint"]),
+  };
   const publishedTags = new Set(knowledge.vocab.status === "loaded" ? knowledge.vocab.value.dimensions.potion_category.map(tag => tag.id) : []);
   let table: ReturnType<typeof parsePotionEquivalents> | null = null;
   if (knowledge.character) {

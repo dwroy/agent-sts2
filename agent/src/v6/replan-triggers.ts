@@ -10,6 +10,8 @@ export interface DirectionComparison {
 export interface DirectionEvaluation {
   id: string;
   entries: ProjectionEntry[];
+  /** Actual W3 checkpoint identities, including ordered two-boss targets. */
+  targets?: Array<{ id: string; kind: "current" | "future" | "chain" }>;
   comparisons?: DirectionComparison[];
   coreCompletion?: Record<string, number | null>;
   acquiredComponentIds?: string[];

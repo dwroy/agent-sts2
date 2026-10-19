@@ -87,7 +87,8 @@ export async function ensureDirectionPlan(env: DecisionEnv, brain: Pick<Brain, "
   const provided = env.v6DirectionEvaluation;
   const validEntries = (provided?.entries ?? []).filter(e => validateProjectionEntry(e).ok && summaries.some(s => s.id === e.direction_id
     && (e.combo_id === undefined || s.combos.some(c => c.id === e.combo_id && c.source === e.combo_source))));
-  const targets = [...new Set([str(raw["boss_id"]) || "unknown_boss", "joint", ...validEntries.map(e => e.target_id)])];
+  const targets = [...new Set(provided?.targets?.length ? provided.targets.map(t => t.id)
+    : [str(raw["boss_id"]) || "unknown_boss", "joint", ...validEntries.map(e => e.target_id)])];
   const entries = [...validEntries, ...summaries.flatMap(s => s.combos.flatMap(c => targets.filter(target => !validEntries.some(e => e.direction_id === s.id && e.combo_id === c.id && e.target_id === target)).map(target => ({
     schema: "projection-entry-v1" as const, option_id: "current", direction_id: s.id, target_id: target, combo_id: c.id, combo_source: c.source,
     win_complete: null, win_incomplete: null, incomplete_source: "unknown" as const, expected_win: null, direction_value: null,
