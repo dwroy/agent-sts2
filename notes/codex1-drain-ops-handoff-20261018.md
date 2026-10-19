@@ -1,3 +1,13 @@
+## 最高优先：08:02 同一事务恢复及恢复对局
+
+更新 2026-10-19 08:04:40 CST。Claude08:02紧急授权：同一 codex1-20261018-2140 事务在宿主由 Herdr 托管重跑原一次性控制器；旧3278720已不存在且原锁空闲。原控制器用旧home把自身计入old_account_engine而六小时超时。此次仅控制器环境显式改目标codex1隔离home，冻结target/profile不改，不新事务、不跨账号resume、不拷认证、不热切。
+
+受控bootstrap本轮：先读notes/ops-current.md，再核本交接；只核新原生UUID/model/effort/home并保存接管回执、明确接管，尽快自然结束。不要在验证轮删闸/派发；原控制器在该轮终局后核新UUID/rollout并只释放自有LLM_DRAIN和PAUSE。必须让bootstrap尽快终局，不能在该轮等待事务complete，避免自锁。
+
+原llm-resumed轮最高优先：核事务complete及标记所有权释放、旧局结束/报告、无残留play/autoplay/report与磁盘门槛、mod当前状态；通过原broker autoplay-start恢复正常Silent对局和原队列派发，不能停在仅切选择器。保存第一局真实run_id/角色/进阶、brain实际home与原生model/effort/thread及首消费；learner/strategy/fix等按自然真实新派批记录实际home/native身份，未派角色写待正常消费，不另开探针或重复活批。立刻在ops/inbox-dev.md记录切换完成时间、各角色已证/待证实际账号及第一局恢复身份。若仍有阻塞，具体写事实、所需动作/谁决定，不能默等。
+
+Regent三处原STOP/PAUSE/LLM_DRAIN绝不移除，三组适配仍搁置；Silent磁盘/校准原事务、失败、宽父和队列保留。原两组磁盘组合宿主已有正常终局0，沿原回执后续集成，不重跑；当前事件先完成换号/恢复对局。
+
 ## 最新决定：Regent 三组适配搁置
 
 更新 2026-10-19 00:36:55 CST；Roy 2026-10-19 00:32 经 Claude 决定。Regent 继续 STOP/PAUSE，regent-dev resources 0a3e0bff、budget 76fb9b38、compute 4e96d06f 三组仅保留原工作树、源码提交和历史，不合 main/live、不派宿主检查、不登记完成回收，等以后明确恢复指派再处理。原三闸 SHA 已核保持；宽父不关闭。此决定只限 Regent 适配，Silent、磁盘回收及 watcher 第一组磁盘改动继续原流程；不要因共用 request_id 将磁盘事务一并暂停。精确源/WT/闸及原件见 paper/materials/20261019-0032-ops/regent-deferred.json；运行待办 ops/codex-ops/pending-integrations/20261019-regent-dev-three-groups-deferred.json。下文早期上线/恢复待办以本决定为准。

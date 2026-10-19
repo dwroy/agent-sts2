@@ -1,0 +1,142 @@
+{
+  "at": "2026-10-19 08:04:40 CST",
+  "transaction": "codex1-20261018-2140",
+  "phase_before": "draining",
+  "original_controller_pid": 3278720,
+  "original_controller_absent": true,
+  "controller_lock_free": true,
+  "target_digest_unchanged": "e7864f765b0d534351d59b5f2782f037ec7b4ce342e4b3969e22e39ae08d88f2",
+  "original_last_snapshot": {
+    "at": "2026-10-19T03:53:11+08:00",
+    "active_workers": [
+      {
+        "kind": "old_account_engine",
+        "pid": 3278720,
+        "start_ticks": "122353640"
+      }
+    ],
+    "excluded_workers": [
+      {
+        "kind": "other_instance",
+        "pid": 1060064,
+        "start_ticks": "99998599",
+        "root": "/home/dw/Projects/agent-sts2/.worktrees/regent-climb"
+      },
+      {
+        "kind": "other_instance",
+        "pid": 1060071,
+        "start_ticks": "99998606",
+        "root": "/home/dw/Projects/agent-sts2/.worktrees/regent-climb"
+      },
+      {
+        "kind": "other_instance",
+        "pid": 1063031,
+        "start_ticks": "100002832",
+        "root": "/home/dw/Projects/agent-sts2/.worktrees/regent-climb"
+      },
+      {
+        "kind": "other_instance",
+        "pid": 1303571,
+        "start_ticks": "100219367",
+        "root": "/home/dw/Projects/agent-sts2/.worktrees/regent-climb"
+      },
+      {
+        "kind": "other_instance",
+        "pid": 1303572,
+        "start_ticks": "100219367",
+        "root": "/home/dw/Projects/agent-sts2/.worktrees/regent-climb"
+      },
+      {
+        "kind": "other_instance",
+        "pid": 1306749,
+        "start_ticks": "100224739",
+        "root": "/home/dw/Projects/agent-sts2/.worktrees/regent-climb"
+      },
+      {
+        "kind": "other_instance",
+        "pid": 1843187,
+        "start_ticks": "100587949",
+        "root": "/home/dw/Projects/agent-sts2/.worktrees/regent-climb"
+      },
+      {
+        "kind": "other_instance",
+        "pid": 1843224,
+        "start_ticks": "100587959",
+        "root": "/home/dw/Projects/agent-sts2/.worktrees/regent-climb"
+      },
+      {
+        "kind": "other_instance",
+        "pid": 1849145,
+        "start_ticks": "100590334",
+        "root": "/home/dw/Projects/agent-sts2/.worktrees/regent-climb"
+      },
+      {
+        "kind": "source_ops_process",
+        "pid": 2025737,
+        "start_ticks": "114555816"
+      },
+      {
+        "kind": "source_ops_process",
+        "pid": 2025744,
+        "start_ticks": "114555819"
+      },
+      {
+        "kind": "source_ops_process",
+        "pid": 2026113,
+        "start_ticks": "114556957"
+      }
+    ],
+    "ops_idle": true,
+    "checkpoint_ready": true,
+    "inventory_complete": true,
+    "ops_pane": "wJ:p5",
+    "ops_identity": [
+      {
+        "pid": 2025744,
+        "start_ticks": "114555819"
+      },
+      {
+        "pid": 2025737,
+        "start_ticks": "114555816"
+      },
+      {
+        "pid": 2025864,
+        "start_ticks": "114555908"
+      }
+    ]
+  },
+  "new_controller_environment": {
+    "CODEX_HOME": "/home/dw/Projects/agent-sts2/ops/codex-ops/accounts/codex1/learner",
+    "LEARNER_CODEX_HOME": "/home/dw/Projects/agent-sts2/ops/codex-ops/accounts/codex1/learner",
+    "CODEX_OPS_EFFORT": "high",
+    "CODEX_OPS_ROOT": "/home/dw/Projects/agent-sts2",
+    "STS2_WORKSPACE": "/home/dw/Projects/agent-sts2"
+  },
+  "cause": "Original detached controller inherited source private home and was classified by snapshot as its own old_account_engine; new one-shot controller uses target home.",
+  "scope": "Same original run entry/transaction, Herdr hosted once. No source change, no new scheduler, no flag release before actual takeover.",
+  "flags_before": {
+    "ops/codex-ops/LLM_DRAIN": {
+      "bytes": 21,
+      "sha256": "db04c5c28fbe40ce7c41f07379674d6da0990a0dc6b57b1bc4f08d8f7ac642a7"
+    },
+    "ops/codex-ops/PAUSE": {
+      "bytes": 21,
+      "sha256": "db04c5c28fbe40ce7c41f07379674d6da0990a0dc6b57b1bc4f08d8f7ac642a7"
+    },
+    ".worktrees/regent-climb/ops/STOP": {
+      "bytes": 174,
+      "sha256": "1df3fcbc93e77d5d1ee203b161e9f4b151cf533b375c38eae4d7e71b9302f08c"
+    },
+    ".worktrees/regent-climb/ops/codex-ops/PAUSE": {
+      "bytes": 174,
+      "sha256": "1df3fcbc93e77d5d1ee203b161e9f4b151cf533b375c38eae4d7e71b9302f08c"
+    },
+    ".worktrees/regent-climb/ops/codex-ops/LLM_DRAIN": {
+      "bytes": 174,
+      "sha256": "1df3fcbc93e77d5d1ee203b161e9f4b151cf533b375c38eae4d7e71b9302f08c"
+    }
+  },
+  "handoff": "notes/codex1-drain-ops-handoff-20261018.md",
+  "new_ops_must_finish_bootstrap_before_release": true,
+  "first_resumed_game_and_runtime_consumption": "pending actual post-release original dispatch; never count this preparation as completion"
+}
