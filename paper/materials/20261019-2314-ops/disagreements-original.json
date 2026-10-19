@@ -1,0 +1,8 @@
+[
+  "本轮自我反证：初版16组合把P的描述性最小牌集限制为4张。补查发现致命毒药/触媒/蜃景的三牌实际生效，初筛25局中24局同时满足永久牌组持有和完整生效条件；KV0JHNJCKXLS原帧触媒不在run.deck，不能充当可组装永久核心。影响：P最小类型改为三牌，全部池化/方向收缩与共同A10偏移重新计算，初版校验稿/统计保留。未知：模板其他分支与全牌池穷举，不宣称全局最小。见mirage-expansion-audit.json与probe-exclusion.json。",
+  "prior：R1因无受控消融/全牌池穷举而遗漏must_pick_minimal、max_cards与max_dpr。新证据：冻结逐牌同战见证及本批具名比较表足以给描述性类型，新增D/S同战并集各1独立局。影响：本轮重新赋类，旧missing理由保留历史但不沿用。未知：全局/因果最优与升级必要性，不能据类型名要求必拿。见category-audit.json及raw source SHA。供ops→watcher→Roy转达，不代填ACK。",
+  "prior：9.1持有签名可直接作核心全部生效。新证据：本批372局逐组合持有/生效/未见生效及首试截尾分开，持有数量大于已核生效集合。影响：旧签名/最终牌组不能回填startup/formed_runs。未知：缺帧与重放窗口的真实首次。见all-combo-run-witnesses.jsonl。供ops→watcher→Roy转达。",
+  "prior：R遗物前提只能藏在文字fits中。新证据：本批对原始冻结状态复用白名单player.relics contains及三值求值，分别表示TINGSHA与TOUGH_BANDAGES。影响：旧格式承载异议在本草稿可表达层面解除，去遗物因果依赖与消费者实际读回仍未知，不能代关闭父要求。见prerequisites-summary.json。",
+  "prior：原W2.2 CLI可直接消费本批全部旧inventory。新证据：原CLI在null stream range处退出1，本批保留原件并以冻结有效行索引适配到未修改的统计函数。影响：数值产出不等于原CLI全量兼容性验收；原生成器null传播计数及本批观察事件重算并列对账。未知：通用入口对旧坏JSON/空流的后续实现处理，留续跑清单，不改生成器或派修复。",
+  "prior：R1账本摘要把旧14组合的方向首试并集写作P42/D11。新证据：冻结R1逐局见证实际去重为P44/D12，且R2相同旧组合的局集合完全一致；加入本次P三牌后P为57/70（首试/含SL）。影响：本批按逐局原始见证计数，旧摘要不作新统计分母；旧账本物理历史保留，追加限定说明。未知：旧摘要生成/封口错位的原因，不能从数字差推机制变化。见r1-r2-formation-differences.json与count-summary-disagreement.json，供ops→watcher→Roy转达。"
+]
