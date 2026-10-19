@@ -51,12 +51,12 @@ def write(path, value):
     return descriptor(path)
 
 
-def strict_rows(path, limit, info):
-    for row, ref in scan(path, limit, info):
+def strict_rows(path, limit, info, on_gap=None):
+    for row, ref in scan(path, limit, info, on_gap=on_gap):
         if len(set(identities(row).values())) > 1:
             raise ValueError(f'conflicting explicit run fields: {ref}')
         yield row, ref
-    if info.get('status') == 'missing' or info['invalid_lines'] or info['incomplete_lines']:
+    if info.get('status') == 'missing' or info['incomplete_lines'] or (info['invalid_lines'] and on_gap is None):
         raise ValueError(f'incomplete frozen source: {path}; {info}')
 
 
@@ -65,10 +65,30 @@ def freeze(root, character, directory, cutoff, receipt):
     limits = {s + '.jsonl': (logs / (s + '.jsonl')).stat().st_size if (logs / (s + '.jsonl')).exists() else None for s in STREAMS}
     receipt['log_byte_limits'] = limits
     receipt['sources'] = {}
+    exclusions = directory / 'excluded-source-rows.jsonl'
+    exclusions.write_bytes(b'')
+    exclusion_sha = hashlib.sha256()
+    exclusion_counts = Counter()
+    receipt['source_exclusions'] = dict(descriptor(exclusions), count=0, counts_by_stream={})
+
+    def record_gap(ref):
+        # Only complete malformed rows may be excluded. A partial frozen tail still fails.
+        if ref['reason'] != 'invalid_json':
+            return
+        entry = dict(ref, byte_range=dict(start=ref['offset'], end_exclusive=ref['offset'] + ref['bytes']))
+        data = (json.dumps(entry, ensure_ascii=False, allow_nan=False) + '\n').encode()
+        with exclusions.open('ab') as out:
+            out.write(data)
+        exclusion_sha.update(data)
+        exclusion_counts[Path(ref['source']).stem] += 1
+        manifest = receipt['source_exclusions']
+        manifest.update(bytes=manifest['bytes'] + len(data), sha256=exclusion_sha.hexdigest(),
+                        count=sum(exclusion_counts.values()), counts_by_stream=dict(exclusion_counts))
+
     runs, summaries, entries = {}, defaultdict(list), {}
     excluded = Counter()
     info = receipt['sources']['runs'] = {}
-    for row, ref in strict_rows(logs / 'runs.jsonl', limits['runs.jsonl'], info):
+    for row, ref in strict_rows(logs / 'runs.jsonl', limits['runs.jsonl'], info, record_gap):
         if not isinstance(row, dict) or str(row.get('character', '')).lower() != character or not row.get('ended'):
             continue
         ended = timestamp(row['ended'])
@@ -86,7 +106,7 @@ def freeze(root, character, directory, cutoff, receipt):
     if not runs:
         raise ValueError('no complete own ended run evidence; keep previous history')
     info = receipt['sources']['sl-attempts'] = {}
-    for row, ref in strict_rows(logs / 'sl-attempts.jsonl', limits['sl-attempts.jsonl'], info):
+    for row, ref in strict_rows(logs / 'sl-attempts.jsonl', limits['sl-attempts.jsonl'], info, record_gap):
         rid = run_identity(row)
         if rid not in runs:
             continue
@@ -110,7 +130,7 @@ def freeze(root, character, directory, cutoff, receipt):
     refs = directory / 'frame-sources.jsonl'
     info = receipt['sources']['states'] = {}
     with frames.open('w') as out, refs.open('w') as raw_refs:
-        for row, ref in strict_rows(logs / 'states.jsonl', limits['states.jsonl'], info):
+        for row, ref in strict_rows(logs / 'states.jsonl', limits['states.jsonl'], info, record_gap):
             rid = run_identity(row)
             if rid not in runs:
                 continue
@@ -150,7 +170,7 @@ def freeze(root, character, directory, cutoff, receipt):
                         entries[key] = dict(ts=ts, hp=frame['hp'], max_hp=frame['max_hp'])
     info = receipt['sources']['decisions'] = {}
     # Validate the decision prefix too: the existing combo CLI reopens the same frozen cuts.
-    for row, _ref in strict_rows(logs / 'decisions.jsonl', limits['decisions.jsonl'], info):
+    for row, _ref in strict_rows(logs / 'decisions.jsonl', limits['decisions.jsonl'], info, record_gap):
         rid = run_identity(row)
         if rid in runs and timestamp(row['ts']) > runs[rid]['ended']:
             raise ValueError('decision after its recorded run end')
@@ -183,6 +203,7 @@ def freeze(root, character, directory, cutoff, receipt):
                   opportunities=write(directory / 'opportunities.json', opportunities), combo_metrics=None)
     receipt['limitations'] = ['first stop uses recorded SL only; unlogged retries remain unknown',
                               'sparse/missing frames and activation evidence are never filled',
+                              'complete malformed rows are excluded with raw byte ranges/SHA; missing evidence remains unknown',
                               'no simulation, trust calibration or knowledge publication']
     return inputs, limits
 
@@ -228,7 +249,7 @@ def refresh(root, ops_root, character, run_command=None):
                 raise ValueError('redirected character knowledge path')
             inputs, limits = freeze(root, character, directory, receipt['started_at'], receipt)
             log_manifest = directory / 'logs.json'
-            write(log_manifest, dict(log_byte_limits=limits))
+            write(log_manifest, dict(log_byte_limits=limits, source_exclusions=receipt['source_exclusions']))
             spec = root / 'knowledge/characters' / character / 'build-cores.json'
             has_cores = False
             if spec.exists():
@@ -266,9 +287,10 @@ def refresh(root, ops_root, character, run_command=None):
             if pack['schema'] != 'v6-frozen-history-v1' or pack['data']['character'] != character or pack['data']['cutoff'] != receipt['started_at']:
                 raise ValueError('history output scope mismatch')
             # Detect modifications to frozen prefixes; appended future rows are deliberately ignored.
+            # Exclusions were already recorded in full; the second scan checks every raw byte, including gaps.
             for stream, before in receipt['sources'].items():
                 after = {}
-                for _row, _ref in strict_rows(root / 'logs' / (stream + '.jsonl'), before['source_size'], after):
+                for _row, _ref in strict_rows(root / 'logs' / (stream + '.jsonl'), before['source_size'], after, on_gap=lambda _gap: None):
                     pass
                 if after['source_sha256'] != before['source_sha256']:
                     raise ValueError('frozen source changed: ' + stream)

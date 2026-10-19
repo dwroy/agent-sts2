@@ -1,0 +1,16 @@
+{
+  "exit_code": 1,
+  "finding": [
+    {
+      "RuleID": "generic-api-key",
+      "File": "paper/materials/2026-10-20-v6-history-exclusions/checks-original/full-tested-source-manifest.json",
+      "StartLine": 560,
+      "EndLine": 560,
+      "Description": "Detected a Generic API Key, potentially exposing access to various services and sensitive operations.",
+      "Fingerprint": "paper/materials/2026-10-20-v6-history-exclusions/checks-original/full-tested-source-manifest.json:generic-api-key:560"
+    }
+  ],
+  "verification": "all manifest values are file SHA256 digests; no file contents or keys are present",
+  "original_report": ".artifacts/history-exclusion-checks/gitleaks-precommit.json",
+  "resolution": "represent path and digest as separate fields; retain the original manifest and scan report"
+}

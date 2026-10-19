@@ -32,7 +32,7 @@ def frozen_sizes(logs, streams):
             if (Path(logs) / (s + '.jsonl')).exists() else None for s in streams}
 
 
-def scan(path, limit, info):
+def scan(path, limit, info, on_gap=None):
     """Hash the whole frozen prefix, preserving partial/invalid rows as explicit gaps."""
     path = Path(path)
     info.update(source=str(path), source_size=limit, invalid_lines=0, incomplete_lines=0, rows=0, gap_refs=[], gap_refs_limit=5)
@@ -56,13 +56,19 @@ def scan(path, limit, info):
                        bytes=len(raw), sha256=hashlib.sha256(raw).hexdigest())
             if not raw.endswith(b'\n'):
                 info['incomplete_lines'] += 1
-                info['gap_refs'] = (info['gap_refs'] + [dict(ref, reason='incomplete_at_frozen_cutoff')])[-5:]
+                gap = dict(ref, reason='incomplete_at_frozen_cutoff')
+                info['gap_refs'] = (info['gap_refs'] + [gap])[-5:]
+                if on_gap is not None:
+                    on_gap(gap)
                 continue
             try:
                 row = json.loads(raw)
             except (ValueError, UnicodeDecodeError):
                 info['invalid_lines'] += 1
-                info['gap_refs'] = (info['gap_refs'] + [dict(ref, reason='invalid_json')])[-5:]
+                gap = dict(ref, reason='invalid_json')
+                info['gap_refs'] = (info['gap_refs'] + [gap])[-5:]
+                if on_gap is not None:
+                    on_gap(gap)
                 continue
             yield row, ref
         info.update(status='scanned', source_sha256=sha.hexdigest())
