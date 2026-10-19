@@ -1,0 +1,61 @@
+{
+  "draft_core": {
+    "exit_code": 1,
+    "issues": 123,
+    "context_sha256": "fcb6e6601b240c1ec6cbc377fd25d18ebdaf2e467355edace9b3ac65e1ca2525"
+  },
+  "draft_reflex": {
+    "exit_code": 0,
+    "context_sha256": "35719c520364a9756fa0081c1b7f52d0e7166dceb359ceba0d7d4f47a09b9b9a"
+  },
+  "formal_loader": "passed_subset_only",
+  "experience_check": {
+    "missing": [],
+    "changed_fields": [],
+    "identical_bytes": true
+  },
+  "sandbox": {
+    "test-sandbox": {
+      "exit_code": 1,
+      "stdout": "/home/dw/Projects/agent-sts2/learner/runs/20261019-223315-7d9a9517-d3f1-4f91-afc0-79b2c1626623-v6-knowledge-publish/checks/test-sandbox.stdout",
+      "stderr": "/home/dw/Projects/agent-sts2/learner/runs/20261019-223315-7d9a9517-d3f1-4f91-afc0-79b2c1626623-v6-knowledge-publish/checks/test-sandbox.stderr"
+    },
+    "test-sandbox-runner": {
+      "exit_code": 130,
+      "stdout": "/home/dw/Projects/agent-sts2/learner/runs/20261019-223315-7d9a9517-d3f1-4f91-afc0-79b2c1626623-v6-knowledge-publish/checks/test-sandbox-runner.stdout",
+      "stderr": "/home/dw/Projects/agent-sts2/learner/runs/20261019-223315-7d9a9517-d3f1-4f91-afc0-79b2c1626623-v6-knowledge-publish/checks/test-sandbox-runner.stderr"
+    },
+    "test-sandbox-native": {
+      "exit_code": 1,
+      "stdout": "/home/dw/Projects/agent-sts2/learner/runs/20261019-223315-7d9a9517-d3f1-4f91-afc0-79b2c1626623-v6-knowledge-publish/checks/test-sandbox-native.stdout",
+      "stderr": "/home/dw/Projects/agent-sts2/learner/runs/20261019-223315-7d9a9517-d3f1-4f91-afc0-79b2c1626623-v6-knowledge-publish/checks/test-sandbox-native.stderr"
+    }
+  },
+  "targeted": {
+    "test_files": 8,
+    "passed": 141,
+    "failed": 1,
+    "failure": "v6-draft CLI tsx IPC listen EPERM independently reproduced; direct fixed entry succeeds with node --import tsx"
+  },
+  "sandbox_native_summary": {
+    "test_files_passed": 525,
+    "test_files_failed": 7,
+    "tests_passed": 4740,
+    "tests_failed": 15,
+    "errors": 3,
+    "duration_seconds": 873.67,
+    "failure_classes": [
+      "spawnSync EPERM",
+      "tsx IPC listen EPERM",
+      "127.0.0.1 listen EPERM with three fixture timeouts",
+      "Vite bundled-config EROFS"
+    ],
+    "second_paths_fork_phase": "not reached because set-e stops after failed main suite"
+  },
+  "production_tsc_exit_code": 0,
+  "ops_full_suite_required": true,
+  "gitleaks_formal_files": "passed",
+  "gitleaks_publication_and_audit_exit_code": 0,
+  "gitleaks_final_receipt": "/home/dw/Projects/agent-sts2/learner/runs/20261019-223315-7d9a9517-d3f1-4f91-afc0-79b2c1626623-v6-knowledge-publish/checks/gitleaks-final.json",
+  "scientific_validity": "descriptive_only_not_causal"
+}

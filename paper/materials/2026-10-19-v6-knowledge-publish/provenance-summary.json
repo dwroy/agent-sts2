@@ -1,0 +1,134 @@
+{
+  "input_manifest": {
+    "path": "/home/dw/Projects/agent-sts2/learner/runs/20261019-223315-7d9a9517-d3f1-4f91-afc0-79b2c1626623-v6-knowledge-publish/inputs.json",
+    "sha256": "00723648cc68127f91e67a988b4a77ca26782832d94fb91d37a8a5c1106710c7"
+  },
+  "artifact_verification": {
+    "path": "/home/dw/Projects/agent-sts2/learner/runs/20261019-223315-7d9a9517-d3f1-4f91-afc0-79b2c1626623-v6-knowledge-publish/artifact-verification.json",
+    "sha256": "c94eccc476d5e632e79d6326dd9fad5381c01a508b3020dc9518315049be6173",
+    "n": 1448,
+    "all_sha_match": true
+  },
+  "raw_evidence_verification": {
+    "path": "/home/dw/Projects/agent-sts2/learner/runs/20261019-223315-7d9a9517-d3f1-4f91-afc0-79b2c1626623-v6-knowledge-publish/raw-evidence-verification.json",
+    "sha256": "d9b25ec5595fa6afdc174c674bd15fded3215fc4507c5ecb055650fe0b0120e4",
+    "n": 1979,
+    "bytes": 63529458,
+    "all_sha_and_identity_match": true
+  },
+  "known_unmatched_original_observations": [
+    [
+      "silent-reflex-v6-draw-lock",
+      [
+        {
+          "run_id": "PUY011SBWSSU",
+          "floor": 39,
+          "turn": 3
+        },
+        {
+          "run_id": "FETDVL1P59B9",
+          "floor": 17,
+          "turn": 6
+        }
+      ]
+    ],
+    [
+      "silent-r2-card-afterimage",
+      [
+        {
+          "run_id": "0C3AR6J0Z8LD",
+          "floor": 48,
+          "turn": 1
+        }
+      ]
+    ],
+    [
+      "silent-r2-card-wither",
+      [
+        {
+          "run_id": "KF9HMZKTFC3V",
+          "floor": 49,
+          "turn": 2
+        }
+      ]
+    ],
+    [
+      "silent-r2-card-serpent-form",
+      [
+        {
+          "run_id": "K643VJCTQT0J",
+          "floor": 33,
+          "turn": 1
+        },
+        {
+          "run_id": "WCDTYJKUDS4T",
+          "floor": 33,
+          "turn": 1
+        },
+        {
+          "run_id": "VGNDNGPFYRE3",
+          "floor": 31,
+          "turn": 2
+        }
+      ]
+    ],
+    [
+      "silent-r2-card-volley",
+      [
+        {
+          "run_id": "MEXYTC0Z2MQQ",
+          "floor": 17,
+          "turn": 1
+        }
+      ]
+    ]
+  ],
+  "published_vocabulary_audit": [
+    {
+      "id": "silent-r2-debuff-window",
+      "dimension": "enemy_threat",
+      "observations": 147,
+      "unmatched": []
+    },
+    {
+      "id": "silent-r2-current-block",
+      "dimension": "card_role",
+      "observations": 93,
+      "unmatched": []
+    },
+    {
+      "id": "silent-r2-counted-attack",
+      "dimension": "card_role",
+      "observations": 34,
+      "unmatched": []
+    },
+    {
+      "id": "silent-r2-poison-application",
+      "dimension": "line_tempo",
+      "observations": 132,
+      "unmatched": []
+    },
+    {
+      "id": "silent-r2-delayed-setup",
+      "dimension": "line_tempo",
+      "observations": 216,
+      "unmatched": []
+    },
+    {
+      "id": "silent-r2-observed-continuation",
+      "dimension": "line_tempo",
+      "observations": 45,
+      "unmatched": []
+    },
+    {
+      "id": "silent-r2-draw-lock",
+      "dimension": "line_tempo",
+      "observations": 8,
+      "unmatched": []
+    }
+  ],
+  "failed_audit_v1": {
+    "path": "/home/dw/Projects/agent-sts2/learner/runs/20261019-223315-7d9a9517-d3f1-4f91-afc0-79b2c1626623-v6-knowledge-publish/raw-evidence-verification-v1.json",
+    "reason": "Original checker read run_id at the log envelope, but log schema puts it in state.run_id; corrected checks reseek the original source. Failed output retained."
+  }
+}

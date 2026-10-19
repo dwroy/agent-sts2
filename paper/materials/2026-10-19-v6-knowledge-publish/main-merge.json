@@ -1,0 +1,60 @@
+{
+  "source_commit": "de4e1deee010b1250dddf910c5b11808e10aa25e",
+  "before_main_commit": "601160a34f130bf16c73e61078a90ffe97a724c0",
+  "main_commit": "de4e1deee010b1250dddf910c5b11808e10aa25e",
+  "command": [
+    "git",
+    "-C",
+    "/home/dw/Projects/agent-sts2",
+    "merge",
+    "--ff-only",
+    "de4e1deee010b1250dddf910c5b11808e10aa25e"
+  ],
+  "exit_code": 0,
+  "stdout": "Updating 601160a34..de4e1deee\nFast-forward\n knowledge/characters/silent/reflex-vocab.json | 3431 +++++++++++++++++++++++++\n knowledge/characters/silent/reflex.json       | 2711 +++++++++++++++++++\n 2 files changed, 6142 insertions(+)\n create mode 100644 knowledge/characters/silent/reflex-vocab.json\n create mode 100644 knowledge/characters/silent/reflex.json\n",
+  "stderr": "",
+  "main_merged": true,
+  "formal_before_merge": [
+    {
+      "path": "knowledge/characters/silent/build-cores.json",
+      "sha256": null
+    },
+    {
+      "path": "knowledge/characters/silent/reflex.json",
+      "sha256": null
+    },
+    {
+      "path": "knowledge/characters/silent/reflex-vocab.json",
+      "sha256": null
+    },
+    {
+      "path": "knowledge/characters/silent/experience.json",
+      "sha256": "cce6bde4b02657667e05b632b897811dd4679b3371733106e038690cd04cf48c"
+    }
+  ],
+  "live_precheck": {
+    "head": "9f4245511181c6228cf63dc44700ea28ccf35730",
+    "files": [
+      {
+        "path": "knowledge/characters/silent/build-cores.json",
+        "sha256": null
+      },
+      {
+        "path": "knowledge/characters/silent/reflex.json",
+        "sha256": null
+      },
+      {
+        "path": "knowledge/characters/silent/reflex-vocab.json",
+        "sha256": null
+      },
+      {
+        "path": "knowledge/characters/silent/experience.json",
+        "sha256": "cce6bde4b02657667e05b632b897811dd4679b3371733106e038690cd04cf48c"
+      }
+    ],
+    "published_sync_verified": false
+  },
+  "live_commit": null,
+  "live_synced": false,
+  "checks_scope": "Data-only publication: exact objects/evidence, loader and 19 true/false/unknown probes passed; 141 targeted tests passed, one independently reproduced tsx IPC EPERM; broad sandbox suite still running. No claim of full suite pass."
+}

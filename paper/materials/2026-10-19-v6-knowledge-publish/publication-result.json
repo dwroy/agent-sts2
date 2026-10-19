@@ -1,0 +1,654 @@
+{
+  "task": "v6-knowledge-publish",
+  "request_id": "roy-20261019-v6",
+  "batch": "v6-knowledge-publish-20261019-223156",
+  "character": "silent",
+  "input_sha256": "00723648cc68127f91e67a988b4a77ca26782832d94fb91d37a8a5c1106710c7",
+  "complete": false,
+  "status": "partial_main_published_live_and_host_checks_pending",
+  "baseline_commit": "601160a34f130bf16c73e61078a90ffe97a724c0",
+  "source_commit": "de4e1deee010b1250dddf910c5b11808e10aa25e",
+  "main_commit": "de4e1deee010b1250dddf910c5b11808e10aa25e",
+  "live_commit": null,
+  "main_merged": true,
+  "live_synced": false,
+  "consumer_readback_status": "partial_actual_main_subset_passed",
+  "published_files": [
+    {
+      "path": "knowledge/characters/silent/reflex.json",
+      "present": true,
+      "sha256": "aab34d6e5fb0a2375cf95a44aed94a77907e175de3f817686389ef687b5aaee9",
+      "bytes": 61328,
+      "commit": "de4e1deee010b1250dddf910c5b11808e10aa25e"
+    },
+    {
+      "path": "knowledge/characters/silent/reflex-vocab.json",
+      "present": true,
+      "sha256": "a4e2d063a2896ea4d1ac7168f031072b6f5ae0e7f7218e54feeb5c9fbf626a2c",
+      "bytes": 75419,
+      "commit": "de4e1deee010b1250dddf910c5b11808e10aa25e"
+    }
+  ],
+  "validation": {
+    "draft_core": {
+      "exit_code": 1,
+      "issues": 123,
+      "context_sha256": "fcb6e6601b240c1ec6cbc377fd25d18ebdaf2e467355edace9b3ac65e1ca2525"
+    },
+    "draft_reflex": {
+      "exit_code": 0,
+      "context_sha256": "35719c520364a9756fa0081c1b7f52d0e7166dceb359ceba0d7d4f47a09b9b9a"
+    },
+    "formal_loader": "passed_subset_only",
+    "experience_check": {
+      "missing": [],
+      "changed_fields": [],
+      "identical_bytes": true
+    },
+    "sandbox": {
+      "test-sandbox": {
+        "exit_code": 1,
+        "stdout": "/home/dw/Projects/agent-sts2/learner/runs/20261019-223315-7d9a9517-d3f1-4f91-afc0-79b2c1626623-v6-knowledge-publish/checks/test-sandbox.stdout",
+        "stderr": "/home/dw/Projects/agent-sts2/learner/runs/20261019-223315-7d9a9517-d3f1-4f91-afc0-79b2c1626623-v6-knowledge-publish/checks/test-sandbox.stderr"
+      },
+      "test-sandbox-runner": {
+        "exit_code": 130,
+        "stdout": "/home/dw/Projects/agent-sts2/learner/runs/20261019-223315-7d9a9517-d3f1-4f91-afc0-79b2c1626623-v6-knowledge-publish/checks/test-sandbox-runner.stdout",
+        "stderr": "/home/dw/Projects/agent-sts2/learner/runs/20261019-223315-7d9a9517-d3f1-4f91-afc0-79b2c1626623-v6-knowledge-publish/checks/test-sandbox-runner.stderr"
+      },
+      "test-sandbox-native": {
+        "exit_code": 1,
+        "stdout": "/home/dw/Projects/agent-sts2/learner/runs/20261019-223315-7d9a9517-d3f1-4f91-afc0-79b2c1626623-v6-knowledge-publish/checks/test-sandbox-native.stdout",
+        "stderr": "/home/dw/Projects/agent-sts2/learner/runs/20261019-223315-7d9a9517-d3f1-4f91-afc0-79b2c1626623-v6-knowledge-publish/checks/test-sandbox-native.stderr"
+      }
+    },
+    "targeted": {
+      "test_files": 8,
+      "passed": 141,
+      "failed": 1,
+      "failure": "v6-draft CLI tsx IPC listen EPERM independently reproduced; direct fixed entry succeeds with node --import tsx"
+    },
+    "sandbox_native_summary": {
+      "test_files_passed": 525,
+      "test_files_failed": 7,
+      "tests_passed": 4740,
+      "tests_failed": 15,
+      "errors": 3,
+      "duration_seconds": 873.67,
+      "failure_classes": [
+        "spawnSync EPERM",
+        "tsx IPC listen EPERM",
+        "127.0.0.1 listen EPERM with three fixture timeouts",
+        "Vite bundled-config EROFS"
+      ],
+      "second_paths_fork_phase": "not reached because set-e stops after failed main suite"
+    },
+    "production_tsc_exit_code": 0,
+    "ops_full_suite_required": true,
+    "gitleaks_formal_files": "passed",
+    "gitleaks_publication_and_audit_exit_code": 0,
+    "gitleaks_final_receipt": "/home/dw/Projects/agent-sts2/learner/runs/20261019-223315-7d9a9517-d3f1-4f91-afc0-79b2c1626623-v6-knowledge-publish/checks/gitleaks-final.json",
+    "scientific_validity": "descriptive_only_not_causal"
+  },
+  "consumer_readback": [
+    {
+      "consumer": "combat_line",
+      "input": "/home/dw/Projects/agent-sts2/learner/runs/20261019-223315-7d9a9517-d3f1-4f91-afc0-79b2c1626623-v6-knowledge-publish/probe-inputs-selected.json",
+      "output": "/home/dw/Projects/agent-sts2/learner/runs/20261019-223315-7d9a9517-d3f1-4f91-afc0-79b2c1626623-v6-knowledge-publish/main-consumer-readback.json",
+      "sha256": "0dfc7fea2af7655f8b48175c69f069de5b0cb48ceb709085f1313382d687e14e",
+      "status": "passed_actual_main_question_included",
+      "limitations": [
+        "19 fixed candidates derived from recorded hand states, not historical dispatch; all true/false/unknown checks passed.",
+        "No natural adoption, online model, action or benefit measurement."
+      ],
+      "evidence": [
+        {
+          "path": "/home/dw/Projects/agent-sts2/learner/runs/20261019-223315-7d9a9517-d3f1-4f91-afc0-79b2c1626623-v6-knowledge-publish/probe-inputs-selected.json",
+          "sha256": "0d45535d0956db982f21834cd37f1360a88e1e28dba6d0b52fd05552bde567d8"
+        },
+        {
+          "path": "/home/dw/Projects/agent-sts2/learner/runs/20261019-223315-7d9a9517-d3f1-4f91-afc0-79b2c1626623-v6-knowledge-publish/main-consumer-readback.json",
+          "sha256": "0dfc7fea2af7655f8b48175c69f069de5b0cb48ceb709085f1313382d687e14e"
+        }
+      ],
+      "main_commit": "de4e1deee010b1250dddf910c5b11808e10aa25e",
+      "dependency_commit": "de4e1deee010b1250dddf910c5b11808e10aa25e"
+    },
+    {
+      "consumer": "reflex_vocabulary",
+      "input": "/home/dw/Projects/agent-sts2/learner/runs/20261019-223315-7d9a9517-d3f1-4f91-afc0-79b2c1626623-v6-knowledge-publish/probe-inputs-selected.json",
+      "output": "/home/dw/Projects/agent-sts2/learner/runs/20261019-223315-7d9a9517-d3f1-4f91-afc0-79b2c1626623-v6-knowledge-publish/main-consumer-readback.json",
+      "sha256": "0dfc7fea2af7655f8b48175c69f069de5b0cb48ceb709085f1313382d687e14e",
+      "status": "passed_actual_main_question_included",
+      "limitations": [
+        "7 original enums referenced by published combat tags; no new scoring."
+      ],
+      "evidence": [
+        {
+          "path": "/home/dw/Projects/agent-sts2/learner/runs/20261019-223315-7d9a9517-d3f1-4f91-afc0-79b2c1626623-v6-knowledge-publish/probe-inputs-selected.json",
+          "sha256": "0d45535d0956db982f21834cd37f1360a88e1e28dba6d0b52fd05552bde567d8"
+        },
+        {
+          "path": "/home/dw/Projects/agent-sts2/learner/runs/20261019-223315-7d9a9517-d3f1-4f91-afc0-79b2c1626623-v6-knowledge-publish/main-consumer-readback.json",
+          "sha256": "0dfc7fea2af7655f8b48175c69f069de5b0cb48ceb709085f1313382d687e14e"
+        }
+      ],
+      "main_commit": "de4e1deee010b1250dddf910c5b11808e10aa25e",
+      "dependency_commit": "de4e1deee010b1250dddf910c5b11808e10aa25e"
+    },
+    {
+      "consumer": "direction_planner",
+      "input": "/home/dw/Projects/agent-sts2/learner/runs/20261019-223315-7d9a9517-d3f1-4f91-afc0-79b2c1626623-v6-knowledge-publish/probe-inputs-selected.json",
+      "output": "/home/dw/Projects/agent-sts2/learner/runs/20261019-223315-7d9a9517-d3f1-4f91-afc0-79b2c1626623-v6-knowledge-publish/main-consumer-readback.json",
+      "sha256": "0dfc7fea2af7655f8b48175c69f069de5b0cb48ceb709085f1313382d687e14e",
+      "status": "blocked_no_formal_core_published",
+      "limitations": [
+        "Current main loader returns cores missing; actual directionSummaries/directionTask output has no formal combos."
+      ],
+      "evidence": [
+        {
+          "path": "/home/dw/Projects/agent-sts2/learner/runs/20261019-223315-7d9a9517-d3f1-4f91-afc0-79b2c1626623-v6-knowledge-publish/probe-inputs-selected.json",
+          "sha256": "0d45535d0956db982f21834cd37f1360a88e1e28dba6d0b52fd05552bde567d8"
+        },
+        {
+          "path": "/home/dw/Projects/agent-sts2/learner/runs/20261019-223315-7d9a9517-d3f1-4f91-afc0-79b2c1626623-v6-knowledge-publish/main-consumer-readback.json",
+          "sha256": "0dfc7fea2af7655f8b48175c69f069de5b0cb48ceb709085f1313382d687e14e"
+        }
+      ],
+      "main_commit": "de4e1deee010b1250dddf910c5b11808e10aa25e",
+      "dependency_commit": "de4e1deee010b1250dddf910c5b11808e10aa25e"
+    },
+    {
+      "consumer": "card_pick",
+      "input": "/home/dw/Projects/agent-sts2/learner/runs/20261019-223315-7d9a9517-d3f1-4f91-afc0-79b2c1626623-v6-knowledge-publish/probe-inputs-selected.json",
+      "output": "/home/dw/Projects/agent-sts2/learner/runs/20261019-223315-7d9a9517-d3f1-4f91-afc0-79b2c1626623-v6-knowledge-publish/main-consumer-readback.json",
+      "sha256": "0dfc7fea2af7655f8b48175c69f069de5b0cb48ceb709085f1313382d687e14e",
+      "status": "not_claimed_dependency_unmerged",
+      "limitations": [
+        "W5 final consumer integration commit absent from frozen baseline; dependency commit unknown.",
+        "No published formal core/combo; no single-card statistic substituted."
+      ],
+      "evidence": [
+        {
+          "path": "/home/dw/Projects/agent-sts2/learner/runs/20261019-223315-7d9a9517-d3f1-4f91-afc0-79b2c1626623-v6-knowledge-publish/probe-inputs-selected.json",
+          "sha256": "0d45535d0956db982f21834cd37f1360a88e1e28dba6d0b52fd05552bde567d8"
+        },
+        {
+          "path": "/home/dw/Projects/agent-sts2/learner/runs/20261019-223315-7d9a9517-d3f1-4f91-afc0-79b2c1626623-v6-knowledge-publish/main-consumer-readback.json",
+          "sha256": "0dfc7fea2af7655f8b48175c69f069de5b0cb48ceb709085f1313382d687e14e"
+        }
+      ],
+      "main_commit": "de4e1deee010b1250dddf910c5b11808e10aa25e",
+      "dependency_commit": null
+    },
+    {
+      "consumer": "shop",
+      "input": "/home/dw/Projects/agent-sts2/learner/runs/20261019-223315-7d9a9517-d3f1-4f91-afc0-79b2c1626623-v6-knowledge-publish/probe-inputs-selected.json",
+      "output": "/home/dw/Projects/agent-sts2/learner/runs/20261019-223315-7d9a9517-d3f1-4f91-afc0-79b2c1626623-v6-knowledge-publish/main-consumer-readback.json",
+      "sha256": "0dfc7fea2af7655f8b48175c69f069de5b0cb48ceb709085f1313382d687e14e",
+      "status": "not_claimed_dependency_unmerged",
+      "limitations": [
+        "W7 owner integration commit absent from frozen baseline; dependency commit unknown."
+      ],
+      "evidence": [
+        {
+          "path": "/home/dw/Projects/agent-sts2/learner/runs/20261019-223315-7d9a9517-d3f1-4f91-afc0-79b2c1626623-v6-knowledge-publish/probe-inputs-selected.json",
+          "sha256": "0d45535d0956db982f21834cd37f1360a88e1e28dba6d0b52fd05552bde567d8"
+        },
+        {
+          "path": "/home/dw/Projects/agent-sts2/learner/runs/20261019-223315-7d9a9517-d3f1-4f91-afc0-79b2c1626623-v6-knowledge-publish/main-consumer-readback.json",
+          "sha256": "0dfc7fea2af7655f8b48175c69f069de5b0cb48ceb709085f1313382d687e14e"
+        }
+      ],
+      "main_commit": "de4e1deee010b1250dddf910c5b11808e10aa25e",
+      "dependency_commit": null
+    },
+    {
+      "consumer": "rest",
+      "input": "/home/dw/Projects/agent-sts2/learner/runs/20261019-223315-7d9a9517-d3f1-4f91-afc0-79b2c1626623-v6-knowledge-publish/probe-inputs-selected.json",
+      "output": "/home/dw/Projects/agent-sts2/learner/runs/20261019-223315-7d9a9517-d3f1-4f91-afc0-79b2c1626623-v6-knowledge-publish/main-consumer-readback.json",
+      "sha256": "0dfc7fea2af7655f8b48175c69f069de5b0cb48ceb709085f1313382d687e14e",
+      "status": "not_claimed_dependency_unmerged",
+      "limitations": [
+        "W7 owner integration commit absent from frozen baseline; dependency commit unknown."
+      ],
+      "evidence": [
+        {
+          "path": "/home/dw/Projects/agent-sts2/learner/runs/20261019-223315-7d9a9517-d3f1-4f91-afc0-79b2c1626623-v6-knowledge-publish/probe-inputs-selected.json",
+          "sha256": "0d45535d0956db982f21834cd37f1360a88e1e28dba6d0b52fd05552bde567d8"
+        },
+        {
+          "path": "/home/dw/Projects/agent-sts2/learner/runs/20261019-223315-7d9a9517-d3f1-4f91-afc0-79b2c1626623-v6-knowledge-publish/main-consumer-readback.json",
+          "sha256": "0dfc7fea2af7655f8b48175c69f069de5b0cb48ceb709085f1313382d687e14e"
+        }
+      ],
+      "main_commit": "de4e1deee010b1250dddf910c5b11808e10aa25e",
+      "dependency_commit": null
+    },
+    {
+      "consumer": "potion",
+      "input": "/home/dw/Projects/agent-sts2/learner/runs/20261019-223315-7d9a9517-d3f1-4f91-afc0-79b2c1626623-v6-knowledge-publish/probe-inputs-selected.json",
+      "output": "/home/dw/Projects/agent-sts2/learner/runs/20261019-223315-7d9a9517-d3f1-4f91-afc0-79b2c1626623-v6-knowledge-publish/main-consumer-readback.json",
+      "sha256": "0dfc7fea2af7655f8b48175c69f069de5b0cb48ceb709085f1313382d687e14e",
+      "status": "not_run_no_potion_knowledge_published",
+      "limitations": [
+        "Published entries apply only to combat_line; no positive potion readback claimed."
+      ],
+      "evidence": [
+        {
+          "path": "/home/dw/Projects/agent-sts2/learner/runs/20261019-223315-7d9a9517-d3f1-4f91-afc0-79b2c1626623-v6-knowledge-publish/probe-inputs-selected.json",
+          "sha256": "0d45535d0956db982f21834cd37f1360a88e1e28dba6d0b52fd05552bde567d8"
+        },
+        {
+          "path": "/home/dw/Projects/agent-sts2/learner/runs/20261019-223315-7d9a9517-d3f1-4f91-afc0-79b2c1626623-v6-knowledge-publish/main-consumer-readback.json",
+          "sha256": "0dfc7fea2af7655f8b48175c69f069de5b0cb48ceb709085f1313382d687e14e"
+        }
+      ],
+      "main_commit": "de4e1deee010b1250dddf910c5b11808e10aa25e",
+      "dependency_commit": "de4e1deee010b1250dddf910c5b11808e10aa25e"
+    }
+  ],
+  "covered_experience_ids": [
+    "silent-knife-trap-count",
+    "silent-footwork-block",
+    "silent-bouncing-flask-poison",
+    "silent-finisher-attacks",
+    "silent-shockwave-duration",
+    "silent-gorget-plating",
+    "silent-strength-weak-observation",
+    "silent-giant-explosion-window",
+    "silent-insatiable-dual-clock",
+    "silent-route-hp-observation",
+    "silent-rest-buffer-observation",
+    "silent-deck-burst-observation",
+    "silent-deadly-poison-application",
+    "silent-noxious-fumes-growth",
+    "silent-bubble-bubble-condition",
+    "silent-vambrace-opening-block",
+    "silent-frail-card-block",
+    "silent-kin-poison-sl-observation",
+    "silent-accelerant-triggers",
+    "silent-outbreak-immediate-poison",
+    "silent-poisoned-stab-components",
+    "silent-well-laid-plans-retention",
+    "silent-afterimage-per-card-block",
+    "silent-sai-start-block",
+    "silent-beating-remnant-loss-cap",
+    "silent-captains-wheel-third-turn",
+    "silent-test-subject-phase-reset",
+    "silent-lagavulin-siphon-poison-sl",
+    "silent-obscura-summon-growth",
+    "silent-regret-hand-loss",
+    "silent-shadow-step-delayed-damage",
+    "silent-prowess-strength-dexterity",
+    "silent-toasty-mittens-growth",
+    "silent-abrasive-thorns-dexterity",
+    "silent-speedster-draw-damage",
+    "silent-piercing-wail-temporary-strength",
+    "silent-orichalcum-zero-block",
+    "silent-ripple-basin-no-attack-block",
+    "silent-vajra-opening-strength",
+    "silent-terror-eel-vigor-vulnerable",
+    "silent-malaise-x-debuff",
+    "silent-accuracy-shiv-scaling",
+    "silent-letter-opener-third-skill",
+    "silent-maul-shared-growth",
+    "silent-wither-end-turn-loss",
+    "silent-forgotten-soul-exhaust-damage",
+    "silent-aeonglass-artifact-growth-sl",
+    "silent-daughter-wind-attack-block",
+    "silent-shuriken-attack-count-strength",
+    "silent-reptile-trinket-temporary-strength",
+    "silent-decimillipede-reattach-poison",
+    "silent-kaiser-crab-facing-sl",
+    "silent-expose-vulnerable",
+    "silent-spiked-gauntlets-power-cost",
+    "silent-mummified-hand-free-card",
+    "silent-paper-krane-weak-multihit",
+    "silent-sparkling-rouge-turn-three",
+    "silent-tuning-fork-skill-block",
+    "silent-cloak-clasp-end-turn-hand-block",
+    "silent-queen-poison-main-target",
+    "silent-corrosive-wave-draw-poison",
+    "silent-shadowmeld-new-block-double",
+    "silent-anticipate-temporary-dexterity",
+    "silent-devoted-sculptor-ritual-growth",
+    "silent-envenom-unblocked-attack-poison",
+    "silent-kunai-attack-count-dexterity",
+    "silent-mirage-poison-card-block",
+    "silent-snecko-skull-poison-application",
+    "silent-ornamental-fan-attack-block",
+    "silent-queen-poison-window-sl-observation",
+    "silent-throwing-axe-first-card-replay",
+    "silent-rolling-boulder-start-growth",
+    "silent-sturdy-clamp-retention-cap",
+    "silent-phantom-blades-first-shiv",
+    "silent-doubt-end-turn-weak",
+    "silent-precarious-shears-defense-observation",
+    "silent-knowledge-demon-healing-sl-observation",
+    "silent-helical-dart-shiv-dexterity",
+    "silent-mad-science-custom-strangle",
+    "silent-three-knights-output-buffer-observation",
+    "silent-thieving-hopper-poison-sl-observation",
+    "silent-bread-energy-timing",
+    "silent-construct-artifact-growth",
+    "silent-grand-finale-empty-draw",
+    "silent-burst-next-skills-replay",
+    "silent-glitter-future-reward-replay",
+    "silent-belt-buckle-empty-slots-dexterity",
+    "silent-lords-parasol-shop-acquisition",
+    "silent-iron-club-four-card-draw",
+    "silent-paels-legion-card-block-double",
+    "silent-ghost-seed-starter-ethereal",
+    "silent-bronze-scales-per-hit-thorns",
+    "silent-slumbering-beetle-wake-growth",
+    "silent-diamond-diadem-opening-retention",
+    "silent-serpent-form-per-card-damage",
+    "silent-ceremonial-beast-threshold-growth-sl",
+    "silent-byrdonis-strength-multihit-observation",
+    "silent-nightmare-next-turn-copies",
+    "silent-eternal-feather-rest-arrival-heal",
+    "silent-fasten-defend-extra-block",
+    "silent-miniature-tent-two-rest-options",
+    "silent-planisphere-unknown-arrival-heal",
+    "silent-fan-of-knives-capacity",
+    "silent-flechettes-remaining-skills",
+    "silent-white-star-double-rewards",
+    "silent-hidden-daggers-discard-shivs",
+    "silent-memento-mori-discard-scaling",
+    "silent-fiddle-draw-lock",
+    "silent-smooth-stone-opening-dexterity",
+    "silent-mr-struggles-turn-start-damage",
+    "silent-whispering-earring-first-turn-control",
+    "silent-juggernaut-block-gain-triggers",
+    "silent-infested-prism-tainted-skill-cost",
+    "silent-precise-cut-hand-count-observation",
+    "silent-fishing-rod-random-upgrade",
+    "silent-permafrost-first-power-block",
+    "silent-exoskeleton-poison-hit-cap",
+    "silent-beckon-held-end-turn-loss",
+    "silent-dowsing-rod-question-task",
+    "silent-lost-forgotten-possession",
+    "silent-pumpkin-candle-charge-energy",
+    "silent-bing-bong-tooth-five-rings",
+    "silent-paels-flesh-third-turn-energy",
+    "silent-berserker-growth-sl-observation",
+    "silent-tough-bandages-discard-block",
+    "silent-bowlbug-rock-full-block-stun",
+    "silent-royal-poison-blood-vial-opening-net",
+    "silent-replay-effect-counter-observation",
+    "silent-metamorphosis-generated-free-attacks",
+    "silent-stone-humidifier-rest-growth",
+    "silent-survivor-neutralize-discard",
+    "silent-apparition-player-intangible",
+    "silent-tunneler-burrow-block-stun",
+    "silent-gardener-skittish-shield",
+    "silent-panic-button-card-block-lock",
+    "silent-toxic-paid-exhaust-end-turn-loss",
+    "silent-snakebite-retained-poison",
+    "silent-scroll-paper-cuts-unblocked",
+    "silent-ceremonial-beast-ringing-one-card",
+    "silent-vantom-slippery-growth",
+    "silent-vantom-sl-observation",
+    "silent-caltrops-thorns",
+    "silent-sewer-clam-pressure-growth",
+    "silent-hunter-tender-card-attributes",
+    "silent-zapbot-high-voltage-growth",
+    "silent-haze-group-poison-weak",
+    "silent-apotheosis-combat-upgrades",
+    "silent-cure-all-energy-draw",
+    "silent-dark-shackles-temporary-strength",
+    "silent-horn-cleat-second-turn-block",
+    "silent-fysh-resource-sl-observation",
+    "silent-knowledge-demon-sloth-replay-observation",
+    "silent-bullet-time-no-draw-observation",
+    "silent-radiant-tincture-energy-window",
+    "silent-speed-potion-temporary-dexterity",
+    "silent-cunning-potion-shiv-capacity",
+    "silent-regen-potion-decay-heal",
+    "silent-strangle-following-card-hp-loss",
+    "silent-unsettling-lamp-first-debuff",
+    "silent-act-transition-missing-hp-heal",
+    "silent-myte-toxic-block-sl-observation",
+    "silent-dexterity-potion-card-block",
+    "silent-heart-of-iron-plating",
+    "silent-poison-potion-observed-application",
+    "silent-hand-trick-sly-card-limit",
+    "silent-dampen-battle-upgrade-observation",
+    "silent-three-knights-revival-blood-price",
+    "silent-liquid-bronze-per-hit-thorns",
+    "silent-tingsha-discard-damage",
+    "silent-tungsten-rod-hp-loss-observation",
+    "silent-infection-end-turn-block",
+    "silent-stone-calendar-end-turn-window",
+    "silent-toric-toughness-delayed-block",
+    "silent-battle-trance-draw-lock",
+    "silent-double-boss-resource-handoff",
+    "silent-alchemize-potion-resource-observation",
+    "silent-fight-me-upgraded-dual-strength",
+    "silent-ghost-in-a-jar-current-turn",
+    "silent-very-hot-cocoa-opening-energy",
+    "silent-spiny-toad-draw-block-sl",
+    "silent-rainbow-ring-three-card-types",
+    "silent-offering-direct-hp-cost",
+    "silent-bygone-effigy-wake-strength",
+    "silent-mercury-hourglass-start-observation",
+    "silent-fortifier-existing-block-triple",
+    "silent-axebot-stock-phase-budget",
+    "silent-stolen-card-availability-observation",
+    "silent-louse-progenitor-strength-growth",
+    "silent-calculated-gamble-upgraded-hand-reset",
+    "silent-unmovable-first-card-block",
+    "silent-petrified-toad-opening-rock",
+    "silent-flex-potion-temporary-strength",
+    "silent-dodge-and-roll-delayed-block",
+    "silent-infinite-blades-start-turn-shiv",
+    "silent-foul-potion-slot-replacement-observation",
+    "silent-weak-potion-hatching-window-observation",
+    "silent-lizard-tail-observed-revival",
+    "silent-panache-fifth-card-group-damage",
+    "silent-jaxfruit-strength-vulnerable-observation",
+    "silent-fabricator-living-summon-observation",
+    "silent-fairy-revival-exit-observation",
+    "silent-bottled-potential-execution-observation",
+    "silent-blur-leftover-block-carry",
+    "silent-core-poison-defense-observation",
+    "silent-core-dexterity-defense-observation",
+    "silent-core-shiv-defense-observation",
+    "silent-core-discard-relic-observation",
+    "silent-beetle-juice-shrink-observation",
+    "silent-chomper-artifact-temporary-block-sl-observation",
+    "silent-louse-poison-window-sl-observation",
+    "silent-leg-sweep-weak-vulnerable-observation",
+    "silent-ship-in-bottle-delayed-block",
+    "silent-entomancer-growth-hand-window",
+    "silent-ricochet-discard-intangible",
+    "silent-mecha-knight-strength-burn-budget",
+    "silent-kusarigama-random-hit-observation",
+    "silent-eternal-armor-finite-plating",
+    "silent-living-fog-smoggy-legality",
+    "silent-two-tailed-rat-backup-budget",
+    "silent-duplicator-next-card-replay",
+    "silent-ovicopter-hatch-poison-survivors",
+    "silent-bowlbug-nectar-buff-window",
+    "silent-flick-flack-discard-aoe",
+    "silent-intimidating-helmet-observed-replay-block",
+    "silent-owl-soar-double-damage-observation",
+    "silent-chemical-x-observed-effects",
+    "silent-stone-armor-plating",
+    "silent-constrict-poison-victory-blood-price",
+    "silent-rollout-endpoint-progress-observation",
+    "silent-parrying-shield-end-turn-hit",
+    "silent-volley-generated-x-energy",
+    "silent-skill-potion-empty-hand-consumption",
+    "silent-g1a-aeonglass-calibration-boundary",
+    "silent-g1a-queen-calibration-boundary",
+    "silent-g1a-test-subject-calibration-boundary",
+    "silent-g1a-fixed-production-boundary",
+    "silent-0332-continuation-contract-boundary",
+    "silent-sl-potion-retry-opportunity",
+    "silent-h0-kaiser-crab-calibration-boundary",
+    "silent-h0-knowledge-demon-calibration-boundary",
+    "silent-h0-insatiable-calibration-boundary",
+    "silent-h0-end-turn-measurement-boundary",
+    "silent-aeonglass-intensity-observed-turns",
+    "silent-queen-burn-bright-ally-strength"
+  ],
+  "published_reflex_ids": [
+    "silent-r2-card-shockwave",
+    "silent-r2-card-well-laid-plans",
+    "silent-r2-card-piercing-wail",
+    "silent-r2-card-malaise",
+    "silent-r2-card-shadowmeld",
+    "silent-r2-card-rolling-boulder",
+    "silent-r2-card-flechettes",
+    "silent-r2-card-precise-cut",
+    "silent-r2-card-metamorphosis",
+    "silent-r2-card-caltrops",
+    "silent-r2-card-haze",
+    "silent-r2-card-dark-shackles",
+    "silent-r2-card-bullet-time",
+    "silent-r2-card-toric-toughness",
+    "silent-r2-card-fight-me",
+    "silent-r2-card-panache",
+    "silent-r2-card-blur",
+    "silent-r2-card-eternal-armor",
+    "silent-r2-card-stone-armor"
+  ],
+  "published_source_experience_ids": [
+    "silent-blur-leftover-block-carry",
+    "silent-bullet-time-no-draw-observation",
+    "silent-caltrops-thorns",
+    "silent-dark-shackles-temporary-strength",
+    "silent-eternal-armor-finite-plating",
+    "silent-fight-me-upgraded-dual-strength",
+    "silent-flechettes-remaining-skills",
+    "silent-haze-group-poison-weak",
+    "silent-malaise-x-debuff",
+    "silent-metamorphosis-generated-free-attacks",
+    "silent-panache-fifth-card-group-damage",
+    "silent-piercing-wail-temporary-strength",
+    "silent-precise-cut-hand-count-observation",
+    "silent-rolling-boulder-start-growth",
+    "silent-shadowmeld-new-block-double",
+    "silent-shockwave-duration",
+    "silent-stone-armor-plating",
+    "silent-toric-toughness-delayed-block",
+    "silent-well-laid-plans-retention"
+  ],
+  "limitations": [
+    "Core R1 has 123 current-validator issues; 4 directions/14 combos not published. No in-flight R2/R3 inputs consumed, no refit or fabricated pooled/A10/shrinkage values.",
+    "Reflex R2 has 85 tags, zero directly publishable numeric signals; only 19 tags/7 enums published, 66 tags/14 vocab members remain pending with per-item reasons.",
+    "244 experience objects and entire original bytes unchanged; no cores/combos association added because no core/combo published.",
+    "Known missing original witness MEXYTC0Z2MQQ/F17/T1 blocks shared explicit-legality enum and 3 dependent entries; original evidence preserved.",
+    "Fixed consumer readback proves file loading and question inclusion, not actual game adoption or causal benefit.",
+    "Full sandbox/host checks and live synchronization remain separate; no V6 release ID assigned by learner.",
+    "Code proposal registration rejected actual source_task=v6-knowledge-publish; no fake source_task used.",
+    "Main shared checkout had pre-existing pending decision-log edits; own line appended in place under a file lock and left for its ops owner to commit, preserving parallel records."
+  ],
+  "disagreements": {
+    "inherited_core": [
+      "prior：将9.1的持有签名视为第6节完整成型。新证据：本轮逐牌实出/能力/后继收益见证比持有集合更窄，逐组合全部未生效和失败局留存。影响：旧签名统计不能直接复制为新组合的formed_runs/startup_turn。未知：漏帧/重放边界中的真实首次及独立组件因果。沿ops→watcher→Roy转达，本批不代填ACK。",
+      "prior：必须填齐四种组合类型或理想升级/转向规则。新证据：冻结观察没有最小充分、全牌池穷举或可比最高DPR对照。影响：保留有实效候选并逐方向missing三种类型；不以格式目标生成牌表。未知：受控实战比较结果。",
+      "prior：R的纯cards条目可直接表示完整核心。新证据：本角色冻结经验和实弃见证均带TINGSHA/TOUGH_BANDAGES前提，两遗物不同收益。影响：R候选必须连同fits条件读，现schema无可执行遗物门槛，不能宣称消费者已可用。未知：去遗物反事实和未来格式承载方式。"
+    ],
+    "inherited_reflex": [
+      {
+        "id": "retired-duplicate",
+        "prior": "把全部正式库条目都作为active小脑规则转换。",
+        "new_evidence": "silent-louse-poison-window-sl-observation实际retired；retired_reason明确合入silent-louse-progenitor-strength-growth且未被反证。",
+        "affected_experience_ids": [
+          "silent-louse-poison-window-sl-observation"
+        ],
+        "impact": "disputed只指重复适用身份已过时，不把四次失败改成四个独立样本或事实错误。",
+        "unknown": "未重做原单局所有排列；不主张必死或禁牌。",
+        "source": "/home/dw/Projects/agent-sts2/knowledge/characters/silent/experience.json",
+        "new_discovery": false,
+        "forwarding": "仅报告，供ops→watcher→Roy原通道接续；未排队或代填ACK。",
+        "carried_forward": true,
+        "forwarding_status": "scratch proposal only; ops must check original notice receipts; no ACK supplied"
+      },
+      {
+        "id": "nightmare-not-double-footwork",
+        "prior": "把持有单步法+夜魇当作已完成双步法D签名。",
+        "new_evidence": "冻结historical-core-builds报告已撤该代理签名；4Y94N8RDPGPM复制实际对象是毒牌，不能由持有复制技能推已经复制步法。",
+        "affected_experience_ids": [
+          "silent-core-dexterity-defense-observation",
+          "silent-nightmare-next-turn-copies"
+        ],
+        "impact": "D仍candidate，方向附加关系不能证明已建或等价替代；本批未生成card_pick偏好。",
+        "unknown": "缺同状态移除/替代的实战对照。",
+        "source": "/home/dw/Projects/agent-sts2/paper/materials/silent/20261009-2335-events/core-builds/report.md",
+        "new_discovery": false,
+        "forwarding": "保留旧异议，不代原owner关闭要求。",
+        "carried_forward": true,
+        "forwarding_status": "scratch proposal only; ops must check original notice receipts; no ACK supplied"
+      },
+      {
+        "id": "model-not-live-effect",
+        "prior": "把独立Boss模型、功能包模拟或状态窄修当作自然拿牌/整局胜率收益。",
+        "new_evidence": "正式核心经验与H0限定已保留首试/SL、模型指纹、质量闸未通过与F49联合未知；double-boss.value源为4局/8192模拟。",
+        "affected_experience_ids": [
+          "silent-core-poison-defense-observation",
+          "silent-double-boss-resource-handoff",
+          "silent-g1a-fixed-production-boundary"
+        ],
+        "impact": "无可交付hp/win效应条目，全部impact_score未知；不将0/24模型结果用作必死/SL门槛。",
+        "unknown": "自然取得、连续两王与反事实效应仍未验证。",
+        "source": "/home/dw/Projects/agent-sts2/knowledge/characters/silent/double-boss.json",
+        "new_discovery": false,
+        "forwarding": "只保留限制供原通道转达，不声称新异议已送达。",
+        "carried_forward": true,
+        "forwarding_status": "scratch proposal only; ops must check original notice receipts; no ACK supplied"
+      }
+    ],
+    "publication": [
+      "Current sealed R1 core provenance/old validator acceptance does not establish compatibility with pooled current schema.",
+      "Format validity alone does not establish scientific validity; unresolved original observations and references are not removed to obtain publication."
+    ]
+  },
+  "code_proposals": [],
+  "implementation_domains": [],
+  "code_proposal_drafts": [
+    {
+      "path": "/home/dw/Projects/agent-sts2/learner/runs/20261019-223315-7d9a9517-d3f1-4f91-afc0-79b2c1626623-v6-knowledge-publish/code-proposal.md",
+      "sha256": "33bc41b988fbfec8bc4c0a63373554533bd8b1c18add484571f49d14907040b5",
+      "ledger": "silent-0529",
+      "registration": "/home/dw/Projects/agent-sts2/learner/runs/20261019-223315-7d9a9517-d3f1-4f91-afc0-79b2c1626623-v6-knowledge-publish/code-proposal-registration.json",
+      "status": "blocked_invalid_task_link"
+    }
+  ],
+  "ledger_ids": [
+    "silent-0529"
+  ],
+  "report": "/home/dw/Projects/agent-sts2/learner/runs/20261019-223315-7d9a9517-d3f1-4f91-afc0-79b2c1626623-v6-knowledge-publish/report.md",
+  "ops_handoff": "/home/dw/Projects/agent-sts2/learner/runs/20261019-223315-7d9a9517-d3f1-4f91-afc0-79b2c1626623-v6-knowledge-publish/ops-handoff.json",
+  "main_readback": "/home/dw/Projects/agent-sts2/learner/runs/20261019-223315-7d9a9517-d3f1-4f91-afc0-79b2c1626623-v6-knowledge-publish/main-readback-receipt.json",
+  "rollback": {
+    "base_commit": "601160a34f130bf16c73e61078a90ffe97a724c0",
+    "publication_commit": "de4e1deee010b1250dddf910c5b11808e10aa25e",
+    "method": "Revert only the two new Silent files from the publication commit; preserve concurrent refreshes."
+  },
+  "continuation": [
+    {
+      "owner": "ops",
+      "status": "pending",
+      "action": "Verify actual live source ancestry and file SHA, synchronize published main subset through original lane, rerun preserved probe from actual live path, then handle release/notification/host checks. No live action authorized to this learner."
+    },
+    {
+      "owner": "original_core_and_reflex_owners",
+      "status": "pending",
+      "action": "Resolve current core-format/statistic requirements, missing original evidence, deferred links and dependent vocab under explicit subsequent frozen input; no automatic batch or continuation launched."
+    },
+    {
+      "owner": "ops_or_original_developer",
+      "status": "blocked",
+      "action": "Make actual task-name proposal registration possible via original code-proposals workflow; preserve rejected payload and ledger source, do not change source_task to bypass."
+    },
+    {
+      "owner": "ops_watcher_Roy",
+      "status": "pending",
+      "action": "Acknowledge actual handoff and communicate limitations/disagreements along original route. No ACKs or parent completion filled by learner."
+    }
+  ]
+}

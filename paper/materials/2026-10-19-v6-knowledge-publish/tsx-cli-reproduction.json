@@ -1,0 +1,16 @@
+{
+  "command": [
+    "nice",
+    "-n",
+    "10",
+    "node",
+    "node_modules/tsx/dist/cli.mjs",
+    "../knowledge/builders/validate-v6.ts",
+    "reflex",
+    "/home/dw/Projects/agent-sts2/.worktrees/v6-reflex-distill-r2-20261019/knowledge/characters/silent/pending/v6-reflex-distill-r2-v6-reflex-distill-r2-20261019-1913/draft.json",
+    "/home/dw/Projects/agent-sts2/learner/runs/20261019-191321-36f2fdf6-0f25-4cf0-a330-b92cbd315341-v6-reflex-distill-r2/validation-context.json"
+  ],
+  "exit_code": 1,
+  "stdout": "",
+  "stderr": "node:net:1919\n      const error = new UVExceptionWithHostPort(rval, 'listen', address, port);\n                    ^\n\nError: listen EPERM: operation not permitted /tmp/tsx-1000/4.pipe\n    at Server.setupListenHandle [as _listen2] (node:net:1919:21)\n    at listenInCluster (node:net:1998:12)\n    at Server.listen (node:net:2120:5)\n    at file:///home/dw/Projects/agent-sts2/agent/node_modules/tsx/dist/cli.mjs:53:31472\n    at new Promise (<anonymous>)\n    at createIpcServer (file:///home/dw/Projects/agent-sts2/agent/node_modules/tsx/dist/cli.mjs:53:31450)\n    at async file:///home/dw/Projects/agent-sts2/agent/node_modules/tsx/dist/cli.mjs:55:542 {\n  code: 'EPERM',\n  errno: -1,\n  syscall: 'listen',\n  address: '/tmp/tsx-1000/4.pipe',\n  port: -1\n}\n\nNode.js v22.23.3\n"
+}
