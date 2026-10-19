@@ -1,0 +1,91 @@
+{
+  "at": "2026-10-20 00:14:50 CST",
+  "event": "fix-done",
+  "batch": "20261019-234302-fix-batch",
+  "original_learner_outcome": {
+    "state": "failed",
+    "exit": 0,
+    "merged": null,
+    "tests": {
+      "tsc": 0,
+      "vitest": 1,
+      "cases": 4762
+    },
+    "original_report": {
+      "path": "learner/runs/20261019-234307-bc091678-1c36-4667-9ced-cce9de542782-fix-batch/report.md",
+      "bytes": 15321,
+      "sha256": "8925cde54fac0fb2a4df7d438ed287c4594ec1c845bc31a9bb5f431ca6d2df9b"
+    },
+    "original_result": {
+      "path": "learner/runs/20261019-234307-bc091678-1c36-4667-9ced-cce9de542782-fix-batch/result.json",
+      "bytes": 3232,
+      "sha256": "5c4a4c756e4df489e3b1ad8ba6bc0f704b375fbd211d0e9e137324b6ebe30007"
+    },
+    "sandbox_permission_failures_and_repeated_failures_preserved": true,
+    "unrelated_63_already_fixed_and_broad_skipped_items_not_closed_by_ops": true
+  },
+  "publication": {
+    "at": "2026-10-20T00:12:47+08:00",
+    "batch": "20261019-234302-fix-batch",
+    "source": "39258bd0fba27da2ba5f95ef8f18acdd3e1f7896",
+    "original_base": "13a06c1e4c301343fb4251cb8aeff6d553ab38b9",
+    "previous_main": "6d1c869484b42ae21620116ef2733668337c42cc",
+    "actual_main": "dc315aee38a2ab63bbfd312a613f46a039422d35",
+    "actual_live": "39258bd0fba27da2ba5f95ef8f18acdd3e1f7896",
+    "live_tree": "52b4c9ec0338a5731177d86d377dd88ab584ec7e",
+    "source_files": [
+      {
+        "path": "agent/tests/content-store.test.ts",
+        "sha256": "5823f0f2ba16226b92463c49de2252a29e4e10e7858c061bc68b4ee33d0c0a5a"
+      },
+      {
+        "path": "ops/content_store.py",
+        "sha256": "8d5ff2cf50975358e6bb1e65cb71c28cb47e3449386260c2fe0719358146666c"
+      },
+      {
+        "path": "ops/tests/test_content_store.py",
+        "sha256": "9b58176543e077e97a75f848bec98ea942d7726bba11cc57f52cd2ebc875b2f1"
+      }
+    ],
+    "main_parallel_knowledge_tree_preserved": "b693211a5ecb1089f05ab0168c4dd55c9229dca7\na827607ec4d4b2c10e8cd1d4c11e1b09082dfc68",
+    "live_previous_knowledge_tree_preserved": "308c1d387aa8e071742349ac2500973de2b76158\na827607ec4d4b2c10e8cd1d4c11e1b09082dfc68",
+    "R2_main_live_knowledge_difference_not_accepted_or_published_by_this_event": true,
+    "preservation_ref": "refs/ops-live-before/frozen-storage-fix-20261020-0010",
+    "original_sandbox_tests": {
+      "tsc": 0,
+      "vitest": 1,
+      "cases": 4762
+    },
+    "source_gitleaks_rc": 0,
+    "host_full_state": "not started yet; original recheck next",
+    "STOP_retained": true,
+    "Regent": "paused",
+    "original_failed_state_preserved": true,
+    "shipped": false,
+    "parents_completed": false
+  },
+  "host": {
+    "entry": "original ops/codex-ops-actions.sh learner-recheck -> codex-ops-learn.py recheck -> learner_checks.recheck_write_batch",
+    "entry_wrapper_pid": 3120611,
+    "entry_wrapper_start_ticks": 131834041,
+    "state_at_record": "original-recheck-invoked-outcome-pending",
+    "actual_recheck_pid": 3121717,
+    "original_recheck_log_exists_at_record": true,
+    "host_state": ".artifacts/ops-wake-20261020-0010/host-status.json",
+    "expected_tree": "52b4c9ec0338a5731177d86d377dd88ab584ec7e",
+    "combined_full_result": null,
+    "original_command_dedup_by_batch_tree": true,
+    "completion": "original learner-checks event; no polling or extra timer/model",
+    "source_full_repeated": false
+  },
+  "acceptance": "new source integrated into paused live; original full outcome pending, not passed/shipped",
+  "retention": "deferred original request/scratch retained; no complete or sweep before host acceptance",
+  "R2": "main new core/experience retained; prior live knowledge kept, R2 not consumed/published/accepted by this fix event",
+  "old_failed_finalizers": "preserved; no retry or report rewrite",
+  "STOP_retained": true,
+  "Regent": "paused",
+  "release_id": null,
+  "dataset_started": false,
+  "new_model_started": false,
+  "parent_completed": false
+}
