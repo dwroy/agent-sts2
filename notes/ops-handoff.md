@@ -2541,4 +2541,9 @@ source4c16dab0（parent9ed8ac27）仅ops/learner_checks.py、ops/tests/test_lear
 
 已按Roy13:31要求冻结原生统计并交付 `paper/materials/20261018-codex-usage-plan/plan.md`，逐会话账在同目录。先做原调度器无代码收尾与相关证据重派去重，启动精简文稿在 `startup-context-proposal.md` 供Roy看；按已授权方向在自然停点分档，不能用默认配置证明已切换。本轮没改生产、没停worker或当局，也没向炉石发ACK。实际部署和6小时数字验收仍由原开发/调度链执行，H0/0332等父保持。
 
+
+## 2026-10-18 15:48:48 CST watcher用量节省第一批源码交接
+
+Roy14:41用量节省首批：codex1历史可观测7.39h约544.51 credits/h（共享账号非STS2独占账单）；原审计漏173条camelCase脑usage，更正脑缓存15.59%。源63e53c111/26叶：普通下批high、Silent复盘5局/2h、摘要入口及既有采样保credits；脑/专项xhigh、共享config/home/当前局保持。tsc0；原full1（4470过5失败）保留，全部失败固定补验含于13文件99项0，paths11项0，不冒full0。交原ops沿原流程集成/精确树验收，尚未上线或验证新批high/6h节省。报告及交接paper/materials/20261018-codex-token-saving/；其余P0/P1/压缩仍planned，原宽父保持。 详细动作/源SHA/检查边界见该目录ops-handoff.md；不重未变source full，实际集成树沿原通道验收；当前source WT未登记完成/不回收。
+
 - 2026-10-18 19:52 [运维 codex] 按Roy19:39批准沿原retention归档已结束超过48小时的过程副本，净释放28.227GiB，根盘普通可用160.332GiB。18:14至回收前净写速3.813GiB/h，扣回收校正后-2.580GiB/h，均为共享根盘净值，df另含并行写入与回收。单nice19/ionice-idle压缩worker，原锁逐文件SHA/解压读回、原路径恢复及真实audit-selection输出一致；另4组扫描/索引经Git消费者读回。≤100GiB禁新大提取/研究/通道，≤60GiB自然局末暂停下一局并告警；regent仍暂停，须≥200GiB、实际净写速可撑48h及Claude明确指派。19:37并行记录冲突保原件，未重dataset或合入，状态见普通收尾处置回执。原日志/知识/账本、当前局/worker及未完成研究保留，无新行为号或父项关闭。证据paper/materials/20261018-1937-ops/。
