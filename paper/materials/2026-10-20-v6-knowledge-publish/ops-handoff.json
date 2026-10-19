@@ -1,0 +1,72 @@
+{
+  "task": "v6-knowledge-publish",
+  "request_id": "roy-20261019-v6",
+  "batch": "v6-knowledge-publish-r2-20261019-234603",
+  "main_commit": "6d1c869484b42ae21620116ef2733668337c42cc",
+  "publication_commit": "6d1c869484b42ae21620116ef2733668337c42cc",
+  "live_commit": null,
+  "live_synced": false,
+  "published_files": [
+    {
+      "path": "knowledge/characters/silent/build-cores.json",
+      "sha256": "377920574ce7859f5e39dd01aad495947140226777e742251ac850004ae0cbe6",
+      "bytes": 7903933,
+      "changed": true,
+      "actual_path": "/home/dw/Projects/agent-sts2/knowledge/characters/silent/build-cores.json",
+      "actual_main_file_sha256": "377920574ce7859f5e39dd01aad495947140226777e742251ac850004ae0cbe6",
+      "head_blob_sha256": "377920574ce7859f5e39dd01aad495947140226777e742251ac850004ae0cbe6"
+    },
+    {
+      "path": "knowledge/characters/silent/reflex.json",
+      "sha256": "aab34d6e5fb0a2375cf95a44aed94a77907e175de3f817686389ef687b5aaee9",
+      "bytes": 61328,
+      "changed": false,
+      "actual_path": "/home/dw/Projects/agent-sts2/knowledge/characters/silent/reflex.json",
+      "actual_main_file_sha256": "aab34d6e5fb0a2375cf95a44aed94a77907e175de3f817686389ef687b5aaee9",
+      "head_blob_sha256": "aab34d6e5fb0a2375cf95a44aed94a77907e175de3f817686389ef687b5aaee9"
+    },
+    {
+      "path": "knowledge/characters/silent/reflex-vocab.json",
+      "sha256": "a4e2d063a2896ea4d1ac7168f031072b6f5ae0e7f7218e54feeb5c9fbf626a2c",
+      "bytes": 75419,
+      "changed": false,
+      "actual_path": "/home/dw/Projects/agent-sts2/knowledge/characters/silent/reflex-vocab.json",
+      "actual_main_file_sha256": "a4e2d063a2896ea4d1ac7168f031072b6f5ae0e7f7218e54feeb5c9fbf626a2c",
+      "head_blob_sha256": "a4e2d063a2896ea4d1ac7168f031072b6f5ae0e7f7218e54feeb5c9fbf626a2c"
+    },
+    {
+      "path": "knowledge/characters/silent/experience.json",
+      "sha256": "f3479ea243643adcc71bfce934dccd555c34d9309fb4b1424da98a1f30db329d",
+      "bytes": 370318,
+      "changed": true,
+      "actual_path": "/home/dw/Projects/agent-sts2/knowledge/characters/silent/experience.json",
+      "actual_main_file_sha256": "f3479ea243643adcc71bfce934dccd555c34d9309fb4b1424da98a1f30db329d",
+      "head_blob_sha256": "f3479ea243643adcc71bfce934dccd555c34d9309fb4b1424da98a1f30db329d"
+    }
+  ],
+  "rollback_commit": "d9df4faa01f67d194cd03b626d0c13d1a142919e",
+  "rollback_publication_commit": "6d1c869484b42ae21620116ef2733668337c42cc",
+  "probe_command_template": [
+    "nice",
+    "-n",
+    "19",
+    "node",
+    "--import",
+    "tsx",
+    "/home/dw/Projects/agent-sts2/learner/runs/20261019-234627-445c22d3-22cb-4f8b-a840-d0ad125ce628-v6-knowledge-publish/probe.mts",
+    "<actual-live-worktree>",
+    "/home/dw/Projects/agent-sts2/learner/runs/20261019-234627-445c22d3-22cb-4f8b-a840-d0ad125ce628-v6-knowledge-publish",
+    "<unique-live-readback-label>"
+  ],
+  "probe_cwd": "<actual-live-worktree>/agent",
+  "probe_environment": "PATH adds ~/.local/node/bin; no model/HTTP/action; explicit V6 flags passed as pure function input only",
+  "validation": "/home/dw/Projects/agent-sts2/learner/runs/20261019-234627-445c22d3-22cb-4f8b-a840-d0ad125ce628-v6-knowledge-publish/validation.json",
+  "report": "/home/dw/Projects/agent-sts2/learner/runs/20261019-234627-445c22d3-22cb-4f8b-a840-d0ad125ce628-v6-knowledge-publish/report.md",
+  "continuation": [
+    "核实际live提交/叶子SHA后从真实live路径固定读回；不要覆盖main探针输出",
+    "补跑沙箱外完整tsc/vitest；不依据本批声明全绿",
+    "沿原发布锁分配实际行为release_id，不提前填",
+    "保留父要求/原异议/缺链关联pending，不代填ACK"
+  ],
+  "receipt_scope": "file notifications appended; not watcher_received or roy_notified; no scheduler/registry edits"
+}

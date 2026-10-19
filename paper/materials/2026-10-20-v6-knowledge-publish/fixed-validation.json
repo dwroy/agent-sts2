@@ -1,0 +1,60 @@
+[
+  {
+    "label": "core",
+    "command": [
+      "nice",
+      "-n",
+      "19",
+      "node",
+      "--import",
+      "tsx",
+      "../knowledge/builders/validate-v6-build-cores.ts",
+      "/home/dw/Projects/agent-sts2/.worktrees/v6-build-cores-r2-20261019/knowledge/characters/silent/pending/v6-build-cores-v6-build-cores-r2-20261019-2135/draft.json",
+      "/home/dw/Projects/agent-sts2/learner/runs/20261019-234627-445c22d3-22cb-4f8b-a840-d0ad125ce628-v6-knowledge-publish/core-validation-context.json"
+    ],
+    "cwd": "/home/dw/Projects/agent-sts2/.worktrees/v6-knowledge-publish-r2-20261019-234603/agent",
+    "exit_code": 0,
+    "stdout_sha256": "c9cb595461bca41bedad448434ed5d899e717c5ac99079cea7fbe90002784f01",
+    "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "label": "reflex",
+    "command": [
+      "nice",
+      "-n",
+      "19",
+      "node",
+      "--import",
+      "tsx",
+      "../knowledge/builders/validate-v6.ts",
+      "reflex",
+      "/home/dw/Projects/agent-sts2/.worktrees/v6-reflex-distill-r2-20261019/knowledge/characters/silent/pending/v6-reflex-distill-r2-v6-reflex-distill-r2-20261019-1913/draft.json",
+      "/home/dw/Projects/agent-sts2/learner/runs/20261019-234627-445c22d3-22cb-4f8b-a840-d0ad125ce628-v6-knowledge-publish/reflex-validation-context.json"
+    ],
+    "cwd": "/home/dw/Projects/agent-sts2/.worktrees/v6-knowledge-publish-r2-20261019-234603/agent",
+    "exit_code": 0,
+    "stdout_sha256": "06fe10d7d1c594b69d362d33a12604cddaae5add2778d6a2e1cb20b1ce0b07ba",
+    "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "label": "experience-proposals",
+    "command": [
+      "nice",
+      "-n",
+      "19",
+      "python3",
+      "../learner/code_proposals.py",
+      "check-experience",
+      "--character",
+      "silent",
+      "--before",
+      "/home/dw/Projects/agent-sts2/learner/runs/20261019-234627-445c22d3-22cb-4f8b-a840-d0ad125ce628-v6-knowledge-publish/before/experience.json",
+      "--after",
+      "../knowledge/characters/silent/experience.json"
+    ],
+    "cwd": "/home/dw/Projects/agent-sts2/.worktrees/v6-knowledge-publish-r2-20261019-234603/agent",
+    "exit_code": 1,
+    "stdout_sha256": "45606f85d2037c95b5332ba897482842445be0e042b4f3cc9aa361b7cc3e02f9",
+    "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  }
+]

@@ -1,0 +1,112 @@
+{
+  "original_draft_validators": [
+    {
+      "label": "core",
+      "command": [
+        "nice",
+        "-n",
+        "19",
+        "node",
+        "--import",
+        "tsx",
+        "../knowledge/builders/validate-v6-build-cores.ts",
+        "/home/dw/Projects/agent-sts2/.worktrees/v6-build-cores-r2-20261019/knowledge/characters/silent/pending/v6-build-cores-v6-build-cores-r2-20261019-2135/draft.json",
+        "/home/dw/Projects/agent-sts2/learner/runs/20261019-234627-445c22d3-22cb-4f8b-a840-d0ad125ce628-v6-knowledge-publish/core-validation-context.json"
+      ],
+      "cwd": "/home/dw/Projects/agent-sts2/.worktrees/v6-knowledge-publish-r2-20261019-234603/agent",
+      "exit_code": 0,
+      "stdout_sha256": "c9cb595461bca41bedad448434ed5d899e717c5ac99079cea7fbe90002784f01",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "label": "reflex",
+      "command": [
+        "nice",
+        "-n",
+        "19",
+        "node",
+        "--import",
+        "tsx",
+        "../knowledge/builders/validate-v6.ts",
+        "reflex",
+        "/home/dw/Projects/agent-sts2/.worktrees/v6-reflex-distill-r2-20261019/knowledge/characters/silent/pending/v6-reflex-distill-r2-v6-reflex-distill-r2-20261019-1913/draft.json",
+        "/home/dw/Projects/agent-sts2/learner/runs/20261019-234627-445c22d3-22cb-4f8b-a840-d0ad125ce628-v6-knowledge-publish/reflex-validation-context.json"
+      ],
+      "cwd": "/home/dw/Projects/agent-sts2/.worktrees/v6-knowledge-publish-r2-20261019-234603/agent",
+      "exit_code": 0,
+      "stdout_sha256": "06fe10d7d1c594b69d362d33a12604cddaae5add2778d6a2e1cb20b1ce0b07ba",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  ],
+  "experience_proposal_check": {
+    "initial_exit_code": 1,
+    "initial_missing": [
+      "silent-berserker-growth-sl-observation"
+    ],
+    "final_exit_code": 0,
+    "final_stdout": "/home/dw/Projects/agent-sts2/learner/runs/20261019-234627-445c22d3-22cb-4f8b-a840-d0ad125ce628-v6-knowledge-publish/experience-proposals-final.stdout",
+    "final_stdout_sha256": "dadc7734b449f5532e27b49ce723cfb0117ca4e755ef2a03976f19820670f44b"
+  },
+  "formal_load": {
+    "cores": "loaded",
+    "directions": "missing",
+    "reflex": "loaded",
+    "vocab": "loaded"
+  },
+  "reference_audit": {
+    "design": "observational",
+    "raw_ranges": 5481,
+    "raw_bytes": 196026337,
+    "seconds": 4.626079559326172,
+    "formal_observations": 6900,
+    "unresolved_formal_observations": 0,
+    "statistics": 20670,
+    "witness_rows": 12648,
+    "all_sha256_match": true,
+    "whole_log_prefix_sha256": null,
+    "scope": "Published explicit observations + all combo/run holding/activation/action witnesses + selected19 reflex/vocabulary full observations; unchanged other statistical inputs retain exact frozen full-stat/source hashes and prior learner verification, not full-log reanalysis."
+  },
+  "tsc": {
+    "exit_code": 0,
+    "entrypoint": "script first step: npx tsc -p tsconfig.json --noEmit",
+    "scope": "production source"
+  },
+  "sandbox": {
+    "exit_code": 1,
+    "command": "nice -n 19 bash tools/test-sandbox.sh --configLoader native",
+    "scope": "fixed sandbox exclusions; full external checks pending ops",
+    "stdout": "/home/dw/Projects/agent-sts2/learner/runs/20261019-234627-445c22d3-22cb-4f8b-a840-d0ad125ce628-v6-knowledge-publish/sandbox.log",
+    "sha256": "1028090d59d68a547348a6da043be6dcf83a9c3457df140794d4f9702d0dad8d",
+    "script_sha256": "e3ecef5d95f20df476341615c879c4a1be053c0fec0ebb269708536185b3d70b",
+    "full_external_tsc_vitest": "pending_ops",
+    "fixed_exclusions_unchanged": true,
+    "passed_files": 526,
+    "failed_files": 7,
+    "passed_tests": 4747,
+    "failed_tests": 15,
+    "errors": 3,
+    "duration_seconds": 730.91,
+    "failure_causes": [
+      "spawnSync python3/node EPERM",
+      "tsx IPC listen EPERM reproduced directly",
+      "Vite node_modules/.vite-temp EROFS",
+      "3 potion local HTTP tests timeout with listen(127.0.0.1) EPERM"
+    ],
+    "paths_fork_stage": "not_run_due_set_e",
+    "script_fixed_excluded_files": "see exact retained script SHA"
+  },
+  "gitleaks": {
+    "core": {
+      "exit_code": 0
+    },
+    "experience": {
+      "exit_code": 0
+    },
+    "scratch": {
+      "exit_code": 0
+    },
+    "staged": {
+      "exit_code": 0
+    }
+  }
+}
