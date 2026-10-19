@@ -1,0 +1,83 @@
+{
+  "at": "2026-10-19 23:10:32 CST",
+  "batch": "20261019-224302",
+  "run": "MEQ6ETDCEEE9",
+  "learner_rc": 0,
+  "report": {
+    "task": "postmortem",
+    "appended": [
+      "MEQ6ETDCEEE9"
+    ],
+    "skipped": [],
+    "bugs": [],
+    "ledger": {
+      "added": [],
+      "updated": [
+        "silent-0102",
+        "silent-0044",
+        "silent-0079",
+        "silent-0046",
+        "silent-0063"
+      ],
+      "repeats": [],
+      "check": 0
+    },
+    "code_proposals": [
+      "silent-proposal-36915250f0638e1b"
+    ],
+    "implementation_domains": [
+      "combat",
+      "potion",
+      "sl",
+      "terminal"
+    ],
+    "report": "/home/dw/Projects/agent-sts2/learner/runs/20261019-224312-71066cd7-45b2-484a-902a-2e590af1f03b-postmortem/report.md"
+  },
+  "out": {
+    "path": "ops/codex-ops/learner/20261019-224302.out",
+    "exists": true,
+    "bytes": 2111,
+    "sha256": "eefd1b5863644db05a1302c0ffbb8a8b90db257a53e8f0f50a51b0e683f08c87"
+  },
+  "report_file": {
+    "path": "learner/runs/20261019-224312-71066cd7-45b2-484a-902a-2e590af1f03b-postmortem/report.md",
+    "exists": true,
+    "bytes": 1340,
+    "sha256": "fc870d42def53e5fde90dc36a1194ec1c28da9d27bc1f90a76d4d95f7d837b05"
+  },
+  "new_pure_bugs": [],
+  "dataset_started_by_this_wake": false,
+  "actual_dataset_commit_for_this_batch": null,
+  "existing_dataset_owner": {
+    "pid": 2667324,
+    "start_ticks": 131385606,
+    "argv": [
+      "python3",
+      "/home/dw/Projects/agent-sts2/ops/paper_dataset.py",
+      "--no-raw"
+    ],
+    "ordinary_batch": "20261019-224304-s2-strategy-proposal",
+    "original_receipt": {
+      "path": "ops/codex-ops/ordinary-close/20261019-224304-s2-strategy-proposal.json",
+      "exists": true,
+      "bytes": 15808,
+      "sha256": "f8389d6e61b2212f851c9656efc65268ee09f4e4c958726d84f2aa33902980df"
+    }
+  },
+  "learning_records": [
+    {
+      "path": "notes/lessons.md",
+      "exists": true,
+      "bytes": 10152836,
+      "sha256": "fc093ef1e7cac9604eea323131afbfd66b334b1d89e3175bbd9713c4da82eccb"
+    },
+    {
+      "path": "paper/materials/learning/ledger.jsonl",
+      "exists": true,
+      "bytes": 25538929,
+      "sha256": "517393bc7f24b9449dafacdce69ca397ed1b7605ad962d7e9599f8d2c7bc1cac"
+    }
+  ],
+  "completion": "pending-dataset-and-controlled-record-commit; do not treat learner exit as close",
+  "next": "Collect the existing original ordinary-close result/event. No duplicate active dataset. Reconcile the cut and any successful reusable receipt; if this batch remains uncovered, execute one original --no-raw job after original ownership releases and commit only authorized learning records/generated outputs."
+}
