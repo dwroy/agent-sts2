@@ -19,6 +19,7 @@ import { comboProjection } from "./v6-direction-core-fixtures.js";
 import { FixedRunner, request, source } from "./v6-projection-fixture.js";
 import { v6Directions } from "../src/sim/v6-completion.js";
 import { V6ProjectionEngine } from "../src/sim/v6-projection.js";
+import type { V6ProjectionTable } from "../src/sim/v6-projection.js";
 import { ensureDirectionPlan } from "../src/v6/direction-runtime.js";
 import { logRow } from "./v6-fixtures.js";
 import { board, env, setupOneshotTests, type Raw } from "./oneshot-support.js";
@@ -173,4 +174,51 @@ it("keeps unknown W0 distinct from evaluated zero without replacing it with the 
   expect(budgetOnly.opening).toEqual({ Wk: "opening unknown", W0: "opening unknown" });
   expect(budgetOnly.unknown_reasons).toEqual(["budget_remaining_unknown"]);
   expect(JSON.stringify(budgetOnly)).not.toMatch(/cardUpgrade|AFTERIMAGE|missing_upgrade_model/);
+});
+
+it("keeps a meaningful minimum for every one of 28 real shop choices with the published 17-combo file", () => {
+  on(); const e = situation("shop"), input = v6ShopOptions(e)!;
+  expect(input.options).toHaveLength(28);
+  const table: V6ProjectionTable = { schema: "v6-projection-table-v1", enabled: true, phase: "pick",
+    entries: [], combinations: [], act_evaluations: [], weighted: [], rankings: {}, pick_direction_comparisons: [],
+    target_mixtures: [], targets: [
+      { id: "f48:AEONGLASS", boss: "AEONGLASS", act: 3, floor: 48, kind: "current", probability: 1, labels: [] },
+      { id: "chain:unknown", boss: "AEONGLASS", act: 3, floor: 49, kind: "chain", probability: 1, labels: [] }],
+    telemetry: { elapsed_ms: 1, cache_hits: 0, cache_misses: 0, simulations: 0, timed_out: 0,
+      degradation: ["synthetic_comparison_contract"], unknown_entries: 0, total_entries: 0, unknown_fraction: 0, act_cache_hit: false } };
+  for (const [i, o] of input.options.entries()) {
+    for (const kind of ["clearance", "current_gate"] as const) table.target_mixtures.push({ option_id: o.option.key, kind,
+      value: null, paired_delta: i === 27 ? null : { mean: kind === "clearance" ? .02 : -.01, se: .001, n: 20 },
+      known_mass: i === 27 ? .25 : 1, known_value: 0, labels: i === 27 ? ["fixture_incomplete_target_mass"] : [] });
+    for (const entry of entries) {
+      const row = { ...entry, option_id: o.option.key };
+      table.combinations.push({ entry: row, combination_id: row.combo_id!, completion_source: "build_core", general_source: "empirical",
+        scope: "combination_expectation", completed_win: row.win_complete!, general_win: row.win_incomplete!,
+        completed_joint_win: row.win_complete!, general_joint_win: row.win_incomplete!, formation_n: 200, formation_se: .01,
+        summary: row.combo_metrics!, role: "unknown", role_labels: [], model_labels: [], completion_sample_ids: [],
+        unknown_reasons: ["fixture_opening_limitation"], continuous: null });
+    }
+  }
+  const d = buildV6RoomDecision(e, input, table, "ready", knowledge), opts = asRecord(d.state.options);
+  expect(size(d.state)).toBeLessThanOrEqual(V6_JEV_STATE_BYTES);
+  expect(size({ model: "typesafe/jev-1.14", state: d.state, questions: d.questions })).toBeLessThanOrEqual(V6_JEV_REQUEST_BYTES);
+  expect(Object.keys(opts)).toEqual(input.options.map(o => o.option.key));
+  expect(asRecord(asArray(d.state.core_metrics)[0]).direction).toBe("R");
+  for (const [i, o] of input.options.entries()) {
+    expect(opts[o.option.key]).not.toBeNull();
+    const view = asRecord(opts[o.option.key]), fact = asRecord(view.facts), cmp = asRecord(view.comparison), p = asRecord(asArray(view.projections)[0]);
+    if (asRecord(o.option.summary).id) expect(fact.id).toBe(asRecord(o.option.summary).id);
+    if (asRecord(o.option.summary).card) expect(fact.card).toBe(asRecord(o.option.summary).card);
+    expect(cmp.weighted_chain).toMatchObject({ delta: i === 27 ? null : { mean: .02, se: .001, n: 20 }, tier: i === 27 ? "unknown" : "better", known_mass: i === 27 ? .25 : 1 });
+    expect(cmp.current_boss).toMatchObject({ delta: i === 27 ? null : { mean: -.01, se: .001, n: 20 }, tier: i === 27 ? "unknown" : "worse" });
+    expect(p.direction_id).toBe("R"); expect(p.availability).toEqual({ take: .6, skip: .5 });
+    expect(Number(p.availability_change)).toBeCloseTo(.1);
+    expect(view.unknown_reasons).toContain("fixture_opening_limitation");
+    if (i === 27) expect(view.unknown_reasons).toContain("fixture_incomplete_target_mass");
+    expect(p.opening).toEqual({ Wk: "evaluated", W0: "evaluated" });
+  }
+  expect(buildV6RoomDecision(e, input, table, "ready", knowledge).state).toEqual(d.state);
+  expect(d.roomEntries).toHaveLength(28 * 17 * 2);
+  expect(table.combinations).toHaveLength(28 * 17 * 2);
+  expect(promptBudgetLabels(d.state)).toHaveLength(1);
 });
