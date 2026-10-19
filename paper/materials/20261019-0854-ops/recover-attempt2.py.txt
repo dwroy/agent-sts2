@@ -1,0 +1,132 @@
+from pathlib import Path
+import json
+import os
+import subprocess
+import sys
+
+r = Path('/home/dw/Projects/agent-sts2')
+exec((r / 'ops/codex-ops/record-staging/20261019-0811/publish-storage.py').read_text().split("assert not (pub / 'storage-publication.json').exists()")[0])
+sys.path.insert(0, str(r / 'ops'))
+import record_manifest
+
+p = r / 'ops/codex-ops/record-staging/20261019-0854'
+pub = r / 'paper/materials/20261019-0854-ops'
+batch = '20261019-082914-strategy-proposal'
+rec = json.loads((pub / 'recovery.json').read_text())
+original = r / rec['original_attention_path']
+manifest = r / rec['source_scan_manifest']
+m = json.loads(manifest.read_text())
+assert not (p / 'record-commit.json').exists()
+assert sha(original.read_bytes()) == rec['original_attention_sha256']
+assert sha(manifest.read_bytes()) == rec['scan_manifest_sha256']
+assert m['state'] == 'clean' and record_manifest.scanner_identity(r)[0] == m['scanner_sha256']
+head = git('rev-parse', 'HEAD').decode().strip()
+assert head == m['base_commit']
+assert not git('diff', '--cached', '--name-only').strip()
+allowed = {'notes/lessons.md', 'paper/materials/learning/ledger.jsonl', 'paper/materials/learning/code-proposals.jsonl', 'paper/materials/ordinary-completions.jsonl'}
+allowed.update(n for n in git('ls-files', 'paper/data/*', 'paper/materials/*/cost.md', 'paper/materials/cost.md').decode().splitlines() if not n.startswith('paper/data/history/'))
+assert {i['path'] for i in m['files']} <= allowed
+at = subprocess.check_output(['date', '+%Y-%m-%d %H:%M:%S %Z'], text=True).strip()
+print(at, flush=True)
+idx = Path(git('rev-parse', '--git-path', 'index').decode().strip())
+idx = idx if idx.is_absolute() else r / idx
+before = idx.read_bytes()
+private = p / 'recovered.index'
+private.write_bytes(before)
+env = {**os.environ, 'GIT_INDEX_FILE': str(private)}
+changed = []
+frozen = {}
+for item in m['files']:
+    name = record_manifest.safe_name(item['path'])
+    raw = git('cat-file', 'blob', item['git_blob'])
+    assert len(raw) == item['bytes'] and sha(raw) == item['sha256']
+    frozen[name] = raw
+    physical = (r / name).read_bytes()
+    if physical != raw:
+        assert name in ['paper/materials/learning/ledger.jsonl', 'paper/materials/learning/code-proposals.jsonl']
+        assert physical.startswith(raw), 'non-append parallel record change requires original evidence review'
+        changed.append(dict(path=name, frozen_bytes=len(raw), physical_bytes=len(physical), append_only=True))
+    git('update-index', '--add', '--cacheinfo', '100644', item['git_blob'], name, env=env)
+frozen_tree = git('write-tree', env=env).decode().strip()
+frozen_ref = 'refs/ops-record-recovery/' + batch
+existing = subprocess.run(['git', 'rev-parse', '--verify', frozen_ref], cwd=r, capture_output=True)
+if existing.returncode == 0:
+    assert existing.stdout.decode().strip() == frozen_tree
+else:
+    git('update-ref', frozen_ref, frozen_tree, '0' * 40)
+own_row = [json.loads(line) for line in frozen['paper/materials/ordinary-completions.jsonl'].splitlines() if json.loads(line).get('batch') == batch]
+assert len(own_row) == 1 and own_row[0]['report']['report_sha256'] == rec['report_proof']['report_sha256']
+rec.update(recovered_at=at, recovered_original_tree=frozen_tree, publication_base=head, parallel_growth=changed, original_dataset_repeated=False, original_attention_bytes_unchanged=True)
+save(pub / 'recovery.json', rec)
+line = f'- {at} [运维 codex] 已核082914策略批ordinary收尾attention：唯一dataset已正常结束，原日志完整且走过returncode0守卫；失败只在受控记录提交。原clean清单358叶（185扫描/173复用）及全部Git对象逐SHA/字节可恢复，当前仅账本和提案队列纯追加，工作树严格干净、原10项waiting及报告SHA不变，账本复检518项/0问题。本轮恢复原冻结记录树并保留两文件后续追加；只扫描新增接续记录，不重跑dataset、源码合入或补测。原attention文件/事件/原因/失败时间逐字节保留，实际恢复commit另见pending-records/20261019-082914-strategy-proposal-recovery.json，不把原失败改成成功。提案、宽父和retention暂缓保持。原件及冻结清单paper/materials/20261019-0854-ops/recovery.json。\n'
+own = {}
+appends_path = p / 'own-appends.json'
+appends = json.loads(appends_path.read_text()) if appends_path.exists() else []
+for name in ['ops/inbox-dev.md', 'notes/for-roy.md', 'paper/materials/decision-log.md']:
+    assert name not in frozen
+    with (r / name).open('a') as f:
+        f.write(line)
+    appends.append(dict(path=name, text=line))
+    physical = (r / name).read_bytes()
+    additions = [x['text'].encode() for x in appends if x['path'] == name]
+    assert all(physical.count(x) == 1 for x in additions)
+    original_head = blob(head, name)
+    own[name] = original_head + b''.join(x for x in sorted(additions, key=physical.index) if x not in original_head)
+save(appends_path, appends)
+for f in pub.rglob('*'):
+    if f.is_file():
+        own[str(f.relative_to(r))] = f.read_bytes()
+scan = b'\n'.join(raw for name, raw in own.items() if name not in ['ops/inbox-dev.md', 'notes/for-roy.md', 'paper/materials/decision-log.md']) + line.encode()
+with (pub / 'recovery-gitleaks.log').open('wb') as out:
+    rc = subprocess.run(['gitleaks', 'stdin', '--redact', '--no-banner', '--report-format', 'json', '--report-path', str(p / 'recovery-gitleaks.json')], input=scan, stdout=out, stderr=subprocess.STDOUT, env={**os.environ, 'GOMAXPROCS': '1'}).returncode
+assert rc == 0 and json.loads((p / 'recovery-gitleaks.json').read_text()) == []
+save(pub / 'new-record-scan.json', dict(at=at, rc=0, original_frozen_scan_retained=rec['source_scan_manifest'], original_policy_unchanged=True, scope='New recovery metadata and own notices only; frozen 358 leaves retain original clean scan.'))
+for n in ['recovery-gitleaks.log', 'new-record-scan.json']:
+    own[str((pub / n).relative_to(r))] = (pub / n).read_bytes()
+for name, raw in own.items():
+    stage(env, name, raw)
+tree = git('write-tree', env=env).decode().strip()
+new = commit(tree, [head], 'Recover original frozen ordinary records without rerunning dataset')
+lockpath = Path(str(idx) + '.lock')
+fd = os.open(lockpath, os.O_CREAT | os.O_EXCL | os.O_WRONLY, 0o600)
+try:
+    # A read-only Git command can refresh index metadata while preparation runs.
+    # Preserve the latest index under its lock; a staged content change still refuses publication.
+    assert git('rev-parse', 'HEAD').decode().strip() == head
+    assert not git('diff', '--cached', '--name-only').strip()
+    latest = p / 'recovered-latest.index'
+    latest.write_bytes(idx.read_bytes())
+    latest_env = {**os.environ, 'GIT_INDEX_FILE': str(latest)}
+    for item in m['files']:
+        git('update-index', '--add', '--cacheinfo', '100644', item['git_blob'], item['path'], env=latest_env)
+    for name, raw in own.items():
+        stage(latest_env, name, raw)
+    assert git('write-tree', env=latest_env).decode().strip() == tree
+    with os.fdopen(fd, 'wb') as f:
+        f.write(latest.read_bytes())
+    assert git('rev-parse', 'HEAD').decode().strip() == head
+    assert sha(original.read_bytes()) == rec['original_attention_sha256']
+    for name, raw in frozen.items():
+        physical = (r / name).read_bytes()
+        if name in ['paper/materials/learning/ledger.jsonl', 'paper/materials/learning/code-proposals.jsonl']:
+            assert physical.startswith(raw)
+        else:
+            assert physical == raw
+    for name, raw in own.items():
+        if name not in ['ops/inbox-dev.md', 'notes/for-roy.md', 'paper/materials/decision-log.md']:
+            assert (r / name).read_bytes() == raw
+    git('update-ref', '-m', 'ops: recover immutable ordinary record snapshot', 'HEAD', new, head)
+    os.replace(lockpath, idx)
+finally:
+    if lockpath.exists():
+        lockpath.unlink()
+for name, raw in {**frozen, **own}.items():
+    assert blob(new, name) == raw
+assert sha(original.read_bytes()) == rec['original_attention_sha256']
+actual = dict(at=at, batch=batch, record_commit=new, parent=head, tree=tree, recovered_original_tree=frozen_tree, original_manifest=rec['source_scan_manifest'], original_attention_sha256=rec['original_attention_sha256'], original_attention_preserved=True, dataset_attempts=1, original_dataset_verified_rc=0, new_dataset_attempts=0, ledger=rec['ledger_check'], new_record_gitleaks_rc=0, frozen_leaves=len(frozen), parallel_growth_preserved=changed, scientific_parent_requests_closed=False, source_or_versions_or_tests_changed=False)
+save(p / 'record-commit.json', actual)
+pending = r / 'ops/codex-ops/pending-records' / (batch + '-recovery.json')
+saved = json.loads(pending.read_text())
+saved.update(completed=True, phase='original-frozen-records-recovered-actual-commit-verified', record_commit=new, record_receipt=str((p / 'record-commit.json').relative_to(r)), new_record_gitleaks_rc=0, original_attention_preserved=True)
+save(pending, saved)
+print(json.dumps(dict(commit=new, recovered_leaves=len(frozen), dataset_repeated=False, original_attention_preserved=True, parallel_append_paths=len(changed), waiting=10), ensure_ascii=False), flush=True)
