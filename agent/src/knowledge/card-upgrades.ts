@@ -16,6 +16,18 @@ export interface CardUpgrade {
   cost?: [number, number];
   /** Dynamic value (by name) base plain -> upgraded, for those that change. */
   vars: Record<string, [number, number]>;
+  /** Whole observed plain/upgraded faces for text-only differences; never inferred rules. */
+  faces?: [ObservedUpgradeFace, ObservedUpgradeFace];
+}
+
+export interface ObservedUpgradeFace {
+  card: Record<string, unknown>;
+  evidence: {
+    file: string; off: number; sha256: string; path: string; run_id: string;
+    character: string | null; ascension: number | null; floor: number | null; ts: string | null;
+  };
+  /** Independent runs supporting this exact unmodified out-of-combat face. */
+  n_runs: number;
 }
 
 let cached: Record<string, CardUpgrade> | null = null;
@@ -36,7 +48,7 @@ export function setCardUpgradesForTests(table: Record<string, CardUpgrade> | nul
   cached = table;
 }
 
-/** What upgrading this card changes, or null when it was never logged both ways. */
+/** Observed numeric or text changes, or null when the paired evidence is absent. */
 export function cardUpgrade(cardId: string): CardUpgrade | null {
   return load()[cardId] ?? null;
 }

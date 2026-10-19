@@ -1,0 +1,13 @@
+{
+  "at": "2026-10-20T06:54:59+08:00",
+  "initial_generation_rc": 1,
+  "initial_error": "TypeError: unsupported operand type(s) for /: 'PosixPath' and 'dict' at context_artifact(task['receipt'])",
+  "cause": "ops wrote external_tasks.receipt as reference object rather than required path string",
+  "correction": "receipt now points to original continuation host-status.json; intake_receipt points to fixed paper receipt; retained previous status path; corrected original host PID and launch status",
+  "generation_rc_after_correction": 0,
+  "checklist_bytes": 11252,
+  "checklist_sha256": "62a0ee5ddf4df191b595c33d92b20b3722ef509d4612fd876c7804343abfb91e",
+  "prompt_or_generator_changed": false,
+  "source_or_host_check_changed": false,
+  "old_checklist_preserved_on_failure": true
+}

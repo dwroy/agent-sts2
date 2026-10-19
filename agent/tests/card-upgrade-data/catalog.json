@@ -1,0 +1,189 @@
+{
+  "mod_version": "0.16.2",
+  "fetched_at": "2026-09-27T03:51:37.812Z",
+  "collections": {
+    "cards": [
+      {
+        "id": "AFTERIMAGE",
+        "name": "余像",
+        "description": "你每打出一张牌，都获得1点格挡。",
+        "description_raw": "你每打出一张牌，都获得{AfterimagePower:diff()}点格挡。",
+        "type": "Power",
+        "rarity": "Rare",
+        "target": "Self",
+        "cost": 1,
+        "is_x_cost": false,
+        "star_cost": null,
+        "is_x_star_cost": false,
+        "color": "silent",
+        "damage": null,
+        "block": null,
+        "keywords": [],
+        "tags": [],
+        "vars": [
+          {
+            "name": "AfterimagePower",
+            "base_value": 1,
+            "current_value": 1,
+            "enchanted_value": 1,
+            "is_modified": false,
+            "was_just_upgraded": false
+          }
+        ],
+        "upgrade": {
+          "description": "你每打出一张牌，都获得1点格挡。"
+        }
+      },
+      {
+        "id": "CALCULATED_GAMBLE",
+        "name": "计算下注",
+        "description": "丢弃你的所有手牌, 然后抽相同数量的牌。 消耗。",
+        "description_raw": "丢弃你的所有手牌, 然后抽相同数量的牌。",
+        "type": "Skill",
+        "rarity": "Uncommon",
+        "target": "Self",
+        "cost": 0,
+        "is_x_cost": false,
+        "star_cost": null,
+        "is_x_star_cost": false,
+        "color": "silent",
+        "damage": null,
+        "block": null,
+        "keywords": [
+          "Exhaust"
+        ],
+        "tags": [],
+        "vars": [],
+        "upgrade": {
+          "description": "丢弃你的所有手牌, 然后抽相同数量的牌。 消耗。"
+        }
+      },
+      {
+        "id": "INFINITE_BLADES",
+        "name": "无尽刀刃",
+        "description": "在你的回合开始时，在你的手牌中加入1张小刀。",
+        "description_raw": "在你的回合开始时，在你的手牌中加入1张小刀。",
+        "type": "Power",
+        "rarity": "Uncommon",
+        "target": "Self",
+        "cost": 1,
+        "is_x_cost": false,
+        "star_cost": null,
+        "is_x_star_cost": false,
+        "color": "silent",
+        "damage": null,
+        "block": null,
+        "keywords": [],
+        "tags": [],
+        "vars": [],
+        "upgrade": {
+          "description": "在你的回合开始时，在你的手牌中加入1张小刀。"
+        }
+      },
+      {
+        "id": "MALAISE",
+        "name": "萎靡",
+        "description": "敌人失去X点力量。给予X层虚弱。 消耗。",
+        "description_raw": "敌人失去X{IfUpgraded:show:+1}点力量。给予X{IfUpgraded:show:+1}层虚弱。",
+        "type": "Skill",
+        "rarity": "Rare",
+        "target": "AnyEnemy",
+        "cost": 0,
+        "is_x_cost": true,
+        "star_cost": null,
+        "is_x_star_cost": false,
+        "color": "silent",
+        "damage": null,
+        "block": null,
+        "keywords": [
+          "Exhaust"
+        ],
+        "tags": [],
+        "vars": [],
+        "upgrade": {
+          "description": "敌人失去X+1点力量。给予X+1层虚弱。 消耗。"
+        }
+      },
+      {
+        "id": "MIRAGE",
+        "name": "蜃景",
+        "description": "获得等量于所有敌人中毒层数总和的格挡。 消耗。",
+        "description_raw": "获得等量于所有敌人中毒层数总和的格挡。{InCombat: （获得{CalculatedBlock:diff()}点格挡）|}",
+        "type": "Skill",
+        "rarity": "Uncommon",
+        "target": "Self",
+        "cost": 1,
+        "is_x_cost": false,
+        "star_cost": null,
+        "is_x_star_cost": false,
+        "color": "silent",
+        "damage": null,
+        "block": null,
+        "keywords": [
+          "Exhaust"
+        ],
+        "tags": [],
+        "vars": [
+          {
+            "name": "CalculatedBlock",
+            "base_value": 0,
+            "current_value": 0,
+            "enchanted_value": 0,
+            "is_modified": false,
+            "was_just_upgraded": false
+          },
+          {
+            "name": "CalculationBase",
+            "base_value": 0,
+            "current_value": 0,
+            "enchanted_value": 0,
+            "is_modified": false,
+            "was_just_upgraded": false
+          },
+          {
+            "name": "CalculationExtra",
+            "base_value": 1,
+            "current_value": 1,
+            "enchanted_value": 1,
+            "is_modified": false,
+            "was_just_upgraded": false
+          }
+        ],
+        "upgrade": {
+          "description": "获得等量于所有敌人中毒层数总和的格挡。 消耗。"
+        }
+      },
+      {
+        "id": "SPEEDSTER",
+        "name": "速行者",
+        "description": "每当你在回合进行中抽到一张牌时，对所有敌人造成2点伤害。",
+        "description_raw": "每当你在回合进行中抽到一张牌时，对所有敌人造成{SpeedsterPower:diff()}点伤害。",
+        "type": "Power",
+        "rarity": "Uncommon",
+        "target": "Self",
+        "cost": 2,
+        "is_x_cost": false,
+        "star_cost": null,
+        "is_x_star_cost": false,
+        "color": "silent",
+        "damage": null,
+        "block": null,
+        "keywords": [],
+        "tags": [],
+        "vars": [
+          {
+            "name": "SpeedsterPower",
+            "base_value": 2,
+            "current_value": 2,
+            "enchanted_value": 2,
+            "is_modified": false,
+            "was_just_upgraded": false
+          }
+        ],
+        "upgrade": {
+          "description": "每当你在回合进行中抽到一张牌时，对所有敌人造成2点伤害。"
+        }
+      }
+    ]
+  }
+}
