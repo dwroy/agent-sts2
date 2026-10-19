@@ -30,6 +30,34 @@ def git(root, *args, **kw):
     return subprocess.check_output(["git", "-C", str(root), *args], **kw).decode().strip()
 
 
+def bounded_checklist(text, current, receipt, receipt_sha):
+    """Fall back to a mandatory, hash-bound read list, never partial authority or evidence."""
+    if len(text.encode()) <= 12288:
+        return text
+    lines = ["# 运维当前清单（调度器生成；索引模式）",
+             f"生成：{current['at']}；原件索引：{receipt} SHA256 {receipt_sha}",
+             f"main {current['main']}",
+             f"live {current['live']}；登记 release 见 current.json.release（不代表检查绿或实际采用）。",
+             "动态事实超出短清单预算，已完整保存在上述 SHA 的 current.json；没有截断授权、失败、任务或事件。",
+             "处理前必须核 SHA 并逐项读取以下字段及其原件；本清单不代表已经读过授权，不可沿用旧清单：",
+             "- restoration_context：完整 summary、authorization 路径/SHA、takeover_receipt、external_tasks；先核授权原文与失败回执，缺失或冲突时停止并保留待办。",
+             "- identity、home_selector、execution：原账号、pane/session、执行模式；不以默认配置推定实际生效。",
+             f"- active_batches：在途 {len(current['active_batches'])}；完整 owner/线程/PID/租约/路径，不重复派发或按旧 PID 操作。",
+             f"- open_requests：开放父要求 {len(current['open_requests'])}；不因本轮结束关闭。",
+             f"- pending_notices：未确认 {len(current['pending_notices'])}；按本事件 notice id 核原件，不代其他角色 ACK，不把排队当送达。",
+             f"- queued_events：队列 {len(current['queued_events'])}；只处理本轮已提交事件，按路径及 sources 的字节数/SHA 核全文，不以 preview 代完整事件。",
+             f"- not_marked_completed_transactions：未标 completed {len(current['not_marked_completed_transactions'])}；保留未知/失败与原件引用，不推定活进程或成功。",
+             f"- historical_lost：历史 {len(current['historical_lost'])}；不自行关闭；human_pace、transactions、recent_directives、inbox_tail、sources、missing：按事件定位未完成事务及指令的 offset/bytes/SHA，缺项不冒当前。",
+             "首次另读 AGENTS/README/最新 STATE/学习协议；历史 handoff/decision-log 只沿事务定位，摘要冲突查原件。",
+             "模型 gpt-6.1-sol；普通 ops/学习下次自然启动 high，专项有理由 xhigh，大脑 xhigh；实际档位须原生回执。不热切在途会话。",
+             "只处理原事件，不新增轮询/模型/局/计时器；STOP、恢复开局及角色授权必须按 restoration_context 原文核实，regent 保持暂停。",
+             "不读凭据/.env/游戏二进制，不改共享配置/账号/ops prompt，不推送。",
+             "H0/0332 等科学边界、精确宿主树、发布/兼容与 retention 沿原报告核实；索引不代验收、shipped、覆盖率或消费。",
+             "严格普通无源码成功仍须原调度器账本检查、唯一 dataset、受控记录提交及 ordinary-close 回执；异常/异议/缺证/人工决定正常唤醒。",
+             "普通记录300–500字并附原件路径；不复制报告，通关/升级照旧。"]
+    return "\n".join(lines) + "\n"
+
+
 def generate(root, directory):
     root, directory = Path(root).resolve(), Path(directory).resolve()
     directory.mkdir(parents=True, exist_ok=True)
@@ -178,7 +206,7 @@ def generate(root, directory):
                       "H0/0332等科学边界、精确宿主树、未完成发布/兼容及 retention 仅沿原报告和事务回执；清单不代验收、shipped、覆盖率或消费。",
                       "严格普通无源码成功由调度器完成账本检查、唯一 dataset 与受控记录提交，回执 ops/codex-ops/ordinary-close/；异常、异议、缺证、人工决定正常唤醒。",
                       "普通记录300–500字内并附原件路径；不复制报告，通关/升级照旧。"])
-        text = "\n".join(lines) + "\n"
+        text = bounded_checklist("\n".join(lines) + "\n", current, receipt, receipt_sha)
         if len(text.encode()) > 12288:
             raise ValueError("ops-current exceeds 12KB; retain previous checklist and inspect current.json")
         if git(root, "rev-parse", "HEAD") != main_head or git(live, "rev-parse", "HEAD") != live_head:
