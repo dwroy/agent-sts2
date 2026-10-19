@@ -1,0 +1,80 @@
+{
+  "at": "2026-10-20T05:01:41+08:00",
+  "event": "learner-checks",
+  "batch": "20261020-041302-fix-batch",
+  "fixed_staged_tree": "79fc63feaa9426d49e6f603650f6656803cd9a0e",
+  "base": "e208023e3dcfeafffb4cc8ae2bff0ddb674751c3",
+  "original_host_status": {
+    "path": ".artifacts/ops-wake-20261020-0442/proposal-host-status.json",
+    "bytes": 989,
+    "sha256": "5019372bc76b9361adcd4ad01ce884192efb3916aefccacd4dc7892dc72b0eff"
+  },
+  "fixed_input": {
+    "path": ".artifacts/ops-wake-20261020-0442/proposal-source-input.json",
+    "bytes": 1464,
+    "sha256": "b2a2df8007e8359a95e2871f0a8fd75f7e2da92e899687a045217faf0d6d4554"
+  },
+  "host_log": {
+    "path": "ops/codex-ops/learner/20261020-041302-fix-batch.host-uncommitted-79fc63feaa9426d49e6f603650f6656803cd9a0e.checks.log",
+    "bytes": 1320,
+    "sha256": "e1dcb418fce7c134de516bf57d9eb602308053f0c0aa21ef6d4cbeffcbb7a6b5"
+  },
+  "original_host_full_rc": 1,
+  "host_tsc_rc": 0,
+  "host_vitest": {
+    "passed_files": 593,
+    "failed_files": 1,
+    "passed_tests": 5688,
+    "failed_tests": 1,
+    "skipped_tests": 2
+  },
+  "only_host_failure": {
+    "file": "agent/tests/v6-prompt-summary.test.ts",
+    "test": "keeps a meaningful minimum for every one of 28 real shop choices with the published 17-combo file",
+    "threshold_ms": 15000,
+    "observed_full_ms": 15737,
+    "reason": "timeout; not enough evidence for host-load or gameplay regression attribution"
+  },
+  "source_and_original_patch_verified_unchanged": true,
+  "verification": {
+    "path": "paper/materials/20261020-0500-ops/verification.json",
+    "bytes": 697,
+    "sha256": "3e8ce52cba705f08d55b42f9d1a6d4ea8fdf658e9994704a95301c1b83b88309"
+  },
+  "targeted_checks": {
+    "path": "paper/materials/20261020-0500-ops/targeted-checks.json",
+    "bytes": 1803,
+    "sha256": "9a5c47c0dce40e4dbf4a9738c6fb5adb321d918600649369e88b70d2b971ee08"
+  },
+  "targeted_results": {
+    "shop_failed_case_rc": 0,
+    "shop_test_duration_ms": 13170,
+    "shop_other_cases_filtered_out": 9,
+    "publication_fixed_case_rc": 0,
+    "publication_python_six_cases_rc": 0,
+    "nice": 19,
+    "workers": 1,
+    "threshold_unchanged": true
+  },
+  "source_commit": null,
+  "main_merge": null,
+  "live_merge": null,
+  "actual_main": "791923bdba29b7d8ffce806c3c9cd17bf5aebd8d",
+  "actual_live": "2897d89b63f0ea8c898672cdf5919072f7e41c37",
+  "decision": "retain original candidate and host full1; directed0 does not replace full0; await original W5 shared-summary performance repair and accepted exact source checks before fallback commit/integration",
+  "dependency_original_owner": "v6-w4w6/W5 through existing watcher-Claude route, as watcher04:56 checkpoint; no new owner or learner",
+  "watcher_related_checkpoint": ".artifacts/v6-watcher-w3-checkpoint-20261020-0456/receipt.json",
+  "original_failed_rc0_mergednull_retained": true,
+  "original_sandbox_full1_29failed_17errors_retained": true,
+  "full_repeated": false,
+  "production_dataset_run": false,
+  "new_model_dispatched": false,
+  "R3_registration_retry": false,
+  "R3_published": false,
+  "other_role_ACK_written": false,
+  "parents_closed": false,
+  "STOP_kept": true,
+  "saved_run_fault_frozen_request_preserved": "paper/materials/20261020-0249-ops/frozen-request-location.json",
+  "Regent_paused": true,
+  "retention": "unfinished original worktree and patch retained"
+}

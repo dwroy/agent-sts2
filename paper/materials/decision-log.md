@@ -4852,3 +4852,5 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
 - 2026-10-20 04:44:07 CST [运维 codex/041302原宿主补验] 原发布任务身份三叶未提交候选FF e208、补丁SHA不变，固定79fc唯一宿主PID120886/nice19实际checking；原沙箱full1和failed/rc0保留，待原learner-checks，不登记上线或重试R3。STOP保持。原件：paper/materials/20261020-0442-ops/receipt.json。
 
 - 2026-10-20 04:45:44 CST [运维 codex/旧异议通知接续] 核三旧文SHA、原ops双发送字节与既有watcher→Roy原生回执，实际转达不变；旧scope兼容仍pending非未读，不代ACK/改通知/复派学习或关父，STOP保持。原件：paper/materials/20261020-0444-ops/receipt.json。
+
+- 2026-10-20 05:01:41 CST [运维 codex/041302固定树终局] 核79fc宿主full1唯一28商店摘要超时，原阈值定向0及提案1+Python6项0，原失败不覆盖；原候选未提交，待W5原性能依赖，不重full或发布R3，STOP保持。原件：paper/materials/20261020-0500-ops/receipt.json。
