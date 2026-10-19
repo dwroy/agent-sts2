@@ -5,7 +5,7 @@ import type { ActionRequest } from "../hand/mod/client.js";
 import type { AnswerSet, ChoiceAnswer } from "../reflex/jev/answers.js";
 import { choiceQ } from "../reflex/jev/questions.js";
 import { v6DeltaTier, type V6ProjectionTable } from "../sim/v6-projection.js";
-import { v6ProjectionEntries } from "../sim/v6-projection-entries.js";
+import { promptProjectionEntries } from "./prompt-projection.js";
 import { boundedV6Jev, compactCombo, compactProjection, prioritize, promptBudgetLabels } from "./prompt-summary.js";
 import { directionCombos } from "./direction-plan.js";
 import { v6Config } from "./config.js";
@@ -61,7 +61,7 @@ export function buildV6CardPick(env: DecisionEnv, table: V6ProjectionTable | und
   const weights = plan?.direction_weights ?? {};
   const character = str(asRecord(env.state.run?.raw).character_id).toLowerCase();
   const knowledge = loadV6Knowledge(dir, character), ascension = env.state.run?.ascension ?? 0;
-  const entries = table?.enabled ? v6ProjectionEntries(table, v6Config()).filter(e => summaries.some(s => s.id === e.direction_id
+  const entries = table?.enabled ? promptProjectionEntries(table, v6Config()).filter(e => summaries.some(s => s.id === e.direction_id
     && directionCombos(s, toJsonValue(plan)).some(c => c.id === e.combo_id && c.source === e.combo_source))) : [];
   if (actions.includes("choose_reward_card")) for (const [fallbackIndex, card] of offers.entries()) {
     const index = numOrNull(card.index) ?? fallbackIndex;
@@ -76,11 +76,11 @@ export function buildV6CardPick(env: DecisionEnv, table: V6ProjectionTable | und
       && evaluatePredicate(r.predicate, { act: Number(str(asRecord(env.state.run?.raw).act_id, "0")) + 1,
         floor: env.state.run?.floor, player: { hp: env.state.run?.current_hp }, card: { id, tags: [] }, direction_weights: weights }) === true)
       .map(r => ({ id: r.id, label_en: r.label_en, signal: r.signal, confidence: r.confidence, n_support: r.evidence.n_support, n_contradict: r.evidence.n_contradict })) : [];
-    facts[key] = toJsonValue({ card: id, upgraded: bool(card.upgraded), projections: entries.filter(e => e.option_id === key), reflex });
+    facts[key] = toJsonValue({ card: id, upgraded: bool(card.upgraded), reflex });
   }
   if (actions.includes("skip_reward_cards")) {
     intents.skip = { action: "skip_reward_cards" }; criteria.skip = "Take no card";
-    facts.skip = toJsonValue({ projections: entries.filter(e => e.option_id === "skip") });
+    facts.skip = {};
   }
   const choices = Object.keys(intents); if (!choices.length) return null;
   entries.splice(0, entries.length, ...entries.filter(e => choices.includes(e.option_id)));

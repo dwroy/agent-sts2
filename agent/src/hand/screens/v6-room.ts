@@ -6,13 +6,13 @@ import { currentDecisionBudget, DecisionBudget, withDecisionBudget, withinDecisi
 import type { AskDecision, Decision, DecisionEnv, ResolvedAction } from "../../memory/types.js";
 import type { AnswerSet, ChoiceAnswer } from "../../reflex/jev/answers.js";
 import { choiceQ } from "../../reflex/jev/questions.js";
-import { v6ProjectionEntries } from "../../sim/v6-projection-entries.js";
+import { promptProjectionEntries } from "../../v6/prompt-projection.js";
 import { v6DeltaTier, type V6ProjectionTable } from "../../sim/v6-projection.js";
 import { v6Config } from "../../v6/config.js";
 import { v6Directions } from "../../v6/direction-runtime.js";
 import { boundedV6Jev, compactCombo, compactProjection, prioritize, promptBudgetLabels } from "../../v6/prompt-summary.js";
 import { directionCombos } from "../../v6/direction-plan.js";
-import { validateProjectionEntry, type ProjectionEntry } from "../../v6/formats.js";
+import { validateProjectionEntries, type ProjectionEntry } from "../../v6/formats.js";
 import { potionAnswersComplete } from "../../v6/potion-entries.js";
 import { KNOWLEDGE_DIR } from "../../knowledge/files.js";
 import type { V6RoomOptions } from "./v6-room-options.js";
@@ -70,9 +70,9 @@ export function buildV6RoomDecision(env: DecisionEnv, input: V6RoomOptions, tabl
   if (!input.baseline || !table?.enabled || table.phase !== "pick") table = undefined;
   const plan = env.screenMemory.runPlan?.runId === str(env.state.raw.run_id) ? env.screenMemory.runPlan.v6 : undefined;
   const combos = summaries.flatMap(d => directionCombos(d, toJsonValue(plan)).map(c => ({ direction: d.id, combo: c })));
-  const projected = table?.enabled ? v6ProjectionEntries(table, config).filter(e => keys.includes(e.option_id)
-    && input.baseline !== null && table!.targets.some(t => t.id === e.target_id)
-    && validateProjectionEntry(e).ok) : [];
+  const candidates = table?.enabled ? promptProjectionEntries(table, config).filter(e => keys.includes(e.option_id)
+    && input.baseline !== null && table!.targets.some(t => t.id === e.target_id)) : [];
+  const projected = validateProjectionEntries(candidates).flatMap(result => result.ok ? [result.value] : []);
   // Published files can change during a run. The factory's frozen combinations remain authoritative.
   for (const e of projected) if (e.combo_id && e.combo_source
     && !combos.some(c => c.direction === e.direction_id && c.combo.id === e.combo_id && c.combo.source === e.combo_source)) {

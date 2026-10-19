@@ -109,24 +109,31 @@ export function boundV6State(input: Record<string, JsonValue>, limit: number, un
     };
     walk(state, ""); return result.sort((a, b) => b.cost - a.cost || a.path.localeCompare(b.path));
   };
-  const update = () => { for (let i = 0; i < 4; i++) { state.prompt_budget = toJsonValue(budget); budget.after = size(state); } state.prompt_budget = toJsonValue(budget); };
+  let total = 0;
+  const update = () => {
+    // Serialize the compact payload once per mutation, then stabilize only the small budget record.
+    delete state.prompt_budget;
+    const payload = size(state), separator = Object.keys(state).length ? 1 : 0;
+    for (let i = 0; i < 4; i++) budget.after = payload + separator + size("prompt_budget") + 1 + size(budget);
+    state.prompt_budget = toJsonValue(budget); total = budget.after;
+  };
   update();
   // Shared duplicate tables can go only after their per-option paired estimates have been reserved.
   const secondary = Object.keys(state).filter(k => !protectedPaths.has(k)
     && !["options", "task", "prompt_budget", "core_metrics", "build_cores", "direction_evaluation", "inventory"].includes(k))
     .sort((a, b) => size(state[b]) - size(state[a]) || a.localeCompare(b));
-  for (const key of secondary) if (Object.keys(options).length && size(state) > limit) { delete state[key]; budget.omitted[key] = 1; budget.truncated = true; update(); }
-  if (Object.keys(options).length && size(state) > limit && state.inventory) {
+  for (const key of secondary) if (Object.keys(options).length && total > limit) { delete state[key]; budget.omitted[key] = 1; budget.truncated = true; update(); }
+  if (Object.keys(options).length && total > limit && state.inventory) {
     const inventory = asRecord(state.inventory);
     state.inventory = toJsonValue(Object.fromEntries(Object.entries(inventory).filter(([k]) => !["deck", "relics"].includes(k))));
     budget.omitted["inventory.deck_relics"] = 1; budget.truncated = true; update();
   }
   let optionsCompacted = false;
-  while (size(state) > limit) {
+  while (total > limit) {
     const candidate = candidates()[0];
     if (candidate) {
       // Batch whole rows from one array. Serializing the entire shop once per row was quadratic.
-      let remaining = size(state) - limit + 256;
+      let remaining = total - limit + 256;
       // Each legal option keeps its leading numeric comparison, including the skip baseline.
       const minimum = 1;
       while (candidate.value.length > minimum && remaining > 0) {
@@ -159,7 +166,7 @@ export function boundV6State(input: Record<string, JsonValue>, limit: number, un
     budget.truncated = true; update();
   }
   // Stabilize the size field, which is itself part of the serialized prompt.
-  for (let i = 0; i < 4; i++) update();
+  update();
   return state;
 }
 /** Bound questions as well: potion choice criteria can contain an entire serialized option. */
