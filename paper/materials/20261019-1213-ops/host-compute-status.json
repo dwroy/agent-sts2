@@ -1,0 +1,66 @@
+{
+  "at": "2026-10-19 12:19:11 CST",
+  "host_view": true,
+  "original_tool_session": 70517,
+  "matching_research_cwd_processes": [],
+  "original_replay_worker_observed": false,
+  "original_worker_exit_code": null,
+  "wrapper_present": true,
+  "original_wrapper_and_descendants": [
+    {
+      "pid": 681748,
+      "ppid": 3874239,
+      "pgid": 3874237,
+      "state": "S",
+      "start_ticks": "127500398",
+      "comm": "python3",
+      "cwd": "/home/dw/Projects/agent-sts2"
+    },
+    {
+      "pid": 681863,
+      "ppid": 681748,
+      "pgid": 3874237,
+      "state": "R",
+      "start_ticks": "127501013",
+      "comm": "python3",
+      "cwd": "/home/dw/Projects/agent-sts2"
+    },
+    {
+      "pid": 3874237,
+      "ppid": 3874045,
+      "pgid": 3874237,
+      "state": "S",
+      "start_ticks": "126111594",
+      "comm": "bash",
+      "cwd": "/home/dw/Projects/agent-sts2"
+    },
+    {
+      "pid": 3874239,
+      "ppid": 3874237,
+      "pgid": 3874237,
+      "state": "S",
+      "start_ticks": "126111595",
+      "comm": "bash",
+      "cwd": "/home/dw/Projects/agent-sts2"
+    }
+  ],
+  "completed_result_rows": 280,
+  "expected_result_rows": 1316,
+  "remaining_result_rows": 1036,
+  "retained_results": {
+    "path": "learner/runs/20261019-081937-fbd78246-f888-40b7-bd52-b9d5e04bf880-silent-boss-calibration/replay/results-0.jsonl",
+    "bytes": 994144,
+    "sha256": "7fd0edc83dc5abdd63540c9f24cb98b19ce7b5f245466ea03d2f70a17ce20ecc"
+  },
+  "explicit_replay_errors": 2,
+  "partial_role_sample_outcome_checks": 0,
+  "original_named_input_manifest_matches": true,
+  "model_sha256": "c9f5bfecafd45698af4c8e14f929c4d41cf03afb73818d0dedc2f257c4ef858b",
+  "available_bytes": 146662928384,
+  "new_compute_or_models_started": 0,
+  "initial_ops_identity_check": {
+    "rc": 1,
+    "cause": "Ops initially recomputed a path-keyed manifest using the copied game-data pathname. Original named inputs were then compared exactly and match; no input or source was changed.",
+    "classified_as": "ops-preflight-error-retained"
+  }
+}
