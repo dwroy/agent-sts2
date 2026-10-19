@@ -47,3 +47,5 @@
 第三轮在R2基线6d1c86948完整通过：tsc0，588文件/5607项通过/2项原有跳过（502.10s），1439个源码/知识文件哈希一致。正式加载器读回4方向/17组合、均为build_core。运行期间main合入独立content_store流名兼容修复；最终再变基并完整检查，不把第三轮冒充后续源码检查。
 
 已变基main0c1f289eb，精确核实agent受测文件只有上游content-store.test.ts发生变化；W5生产代码及R2哈希全部一致。ops/content_store与其Python固定测试纳入第四轮快照；Python15项已通过，tsc/完整Vitest最终状态见checks/formal/final-result.json。
+
+2026-10-20 00:29:23 CST 最终受测基线0c1f289ebee1b608eb81a1acd5ea4d315a4a35c4：tsc退出0；完整Vitest 588文件/5607项通过/2项原有跳过（528.65s）；Python冻结存储15项/健康9项通过；范围gitleaks零发现。1441个源码、测试、R2知识及存储脚本哈希全部一致，结果及原件见checks/formal/final-result.json。W7共享context/evaluateRequest接口见interfaces.md。正式配对T2/T3已接通；缺数据、配对质量或校准危险线保持unknown。未合live、未开局，生产质量与自然收益仍未知。

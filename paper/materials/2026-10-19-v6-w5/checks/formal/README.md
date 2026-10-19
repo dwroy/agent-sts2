@@ -11,3 +11,5 @@
 第二轮完整检查588文件/5607项通过/2项原有跳过；合入前 main 新发布 Silent R2 两个知识文件6d1c86948，W5不修改该发布。第三轮在该基线重跑完整检查，以 source-sha256-3.json（含R2知识哈希）及 full-3/tsc-4 原件为准。
 
 第三轮588文件/5607项通过/2项原有跳过（502.10s）。随后只读变基content_store兼容修复及记录main0c1f289eb，agent受测文件仅上游content-store.test.ts更新；第四轮以source-sha256-4.json、full-4/tsc-5为准，包含两个ops脚本与R2哈希。
+
+最终第四轮：588文件/5607项通过/2项原有跳过（528.65s），tsc0，Python存储15/健康9通过，范围gitleaks0；1441文件逐项哈希无漂移。详见final-result.json。
