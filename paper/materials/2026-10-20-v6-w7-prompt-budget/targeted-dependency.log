@@ -1,0 +1,41 @@
+
+ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/v6-w7-prompt-budget-20261020/agent
+
+ ❯ tests/v6-room-prompt-budget.test.ts (3 tests | 2 failed) 1159ms
+   × keeps every shop action and its continuation after trimming, with full unknown/audit rows 1050ms
+   × keeps every rest action and its continuation after trimming, with full unknown/audit rows 52ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/v6-room-prompt-budget.test.ts > keeps every shop action and its continuation after trimming, with full unknown/audit rows
+ FAIL  tests/v6-room-prompt-budget.test.ts > keeps every rest action and its continuation after trimming, with full unknown/audit rows
+AssertionError: expected { attempt: 'first', …(9) } to match object { dpr_boss: { value: 20, n: 3, …(1) } }
+(18 matching properties omitted from actual)
+
+- Expected
++ Received
+
+  {
+    "dpr_boss": {
+      "n": 3,
+-     "se": null,
+      "value": 20,
+    },
+  }
+
+ ❯ tests/v6-room-prompt-budget.test.ts:69:22
+     67|   for (const p of projections) expect(p).toMatchObject({ win: null, ex…
+     68|   const metrics = asArray(asRecord(asArray(d.state.core_metrics)[0]).m…
+     69|   expect(metrics[0]).toMatchObject({ dpr_boss: { value: 20, n: 3, se: …
+       |                      ^
+     70|   expect(d.roomEntries).toHaveLength(input.options.length * core.combo…
+     71|   expect(d.roomEntries.every(row => row.win === null)).toBe(true);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+
+ Test Files  1 failed | 2 passed (3)
+      Tests  2 failed | 47 passed (49)
+   Start at  02:50:49
+   Duration  13.03s (transform 3.23s, setup 657ms, import 4.56s, tests 7.33s, environment 0ms)
+
