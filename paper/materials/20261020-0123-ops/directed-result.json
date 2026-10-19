@@ -1,0 +1,38 @@
+{
+  "prospective_tree": "fd4999c6cb43b5dfa6d83c6ba38f15bb9536453a",
+  "source_commit": null,
+  "original_full_rc": 1,
+  "timeout_unchanged": true,
+  "max_workers": 1,
+  "checks": [
+    {
+      "name": "tsc",
+      "at": "2026-10-20 01:23:38 CST",
+      "command": [
+        "npx",
+        "tsc",
+        "-p",
+        "tsconfig.json",
+        "--noEmit"
+      ],
+      "rc": 0,
+      "log": ".artifacts/ops-wake-20261020-0123/tsc.log",
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "directed",
+      "at": "2026-10-20 01:23:40 CST",
+      "command": [
+        "npx",
+        "vitest",
+        "run",
+        "tests/report-plan-costs.test.ts",
+        "tests/ops-current-events.test.ts",
+        "--maxWorkers=1"
+      ],
+      "rc": 0,
+      "log": ".artifacts/ops-wake-20261020-0123/directed.log",
+      "log_sha256": "0a359f17128f40fb9a622ae97a7d522838c56625f330e297176de6e75015873a"
+    }
+  ]
+}
