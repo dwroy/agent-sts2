@@ -1,0 +1,43 @@
+{
+  "at": "2026-10-19 08:35:54 CST",
+  "batch": "20261019-081302-s2-strategy-proposal",
+  "phase": "manual-record-single-dataset-running-no-new-waiter",
+  "completed": false,
+  "report_dispositions_verified": true,
+  "proposals_waiting": 10,
+  "merged": null,
+  "ledger_check": {
+    "items": 518,
+    "problems": 0,
+    "log": "paper/materials/20261019-0825-ops/ledger-check.log"
+  },
+  "dataset_attempts": 1,
+  "original_dataset_processes": [
+    {
+      "pid": 3897011,
+      "ppid": 3897010,
+      "start_ticks": "126145195",
+      "nice": "0",
+      "command_sha256": "1aa9cf5c0bca8df239eca152d65c19745f1607b3f38766e7b7bef5f353d3c116",
+      "matches_dataset_entry": false,
+      "cwd": "/home/dw/Projects/agent-sts2"
+    },
+    {
+      "pid": 3897206,
+      "ppid": 3897011,
+      "start_ticks": "126145323",
+      "nice": "19",
+      "command_sha256": "7bd3246656b9a6011f95107a9d6acfb22ed0b00929f73e18f157c02e8d24d158",
+      "matches_dataset_entry": true,
+      "cwd": "/home/dw/Projects/agent-sts2"
+    }
+  ],
+  "dataset_log": "paper/materials/20261019-0825-ops/dataset.log",
+  "terminal_receipt": "ops/codex-ops/pending-records/20261019-081302-s2-strategy-proposal.json",
+  "close_script": "ops/codex-ops/record-staging/20261019-0825/seal.py",
+  "next": "On the next original relevant event, consume the original terminal receipt. Only dataset_rc=0 and ledger_rc=0 allow the prepared controlled record commit; do not rerun dataset. Preserve any original failure. Acceptance does not close scientific proposals or parent requests.",
+  "new_watcher_timer_model_or_game": false,
+  "source_or_release_or_tests_added": false,
+  "record_commit_pending": true,
+  "parent_requests_closed": false
+}
