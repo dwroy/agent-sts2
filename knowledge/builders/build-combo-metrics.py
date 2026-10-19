@@ -86,6 +86,34 @@ def verified_witnesses(path, combos, logs, limits, run_ids):
     return result
 
 
+def source_exclusions(manifest, logs, limits):
+    """Accept only explicitly listed malformed rows from a sealed exclusion manifest."""
+    source = manifest.get('source_exclusions')
+    if source is None:
+        return {}
+    data = Path(source['path']).read_bytes()
+    if len(data) != source['bytes'] or digest(data) != source['sha256']:
+        raise ValueError('source exclusion manifest SHA/size mismatch')
+    result = {}
+    for line in data.splitlines():
+        entry = json.loads(line)
+        path = Path(entry['source']).resolve()
+        offset, size = entry['offset'], entry['bytes']
+        if (path.parent != logs.resolve() or path.name not in limits or entry['source_size'] != limits[path.name]
+            or type(offset) is not int or type(size) is not int or not 0 <= offset < offset + size <= limits[path.name]
+            or type(entry['line']) is not int or entry['line'] < 1 or entry['reason'] != 'invalid_json'
+            or entry['byte_range'] != dict(start=offset, end_exclusive=offset + size)
+            or not isinstance(entry['sha256'], str) or len(entry['sha256']) != 64):
+            raise ValueError('invalid source exclusion scope/range/reason')
+        key = (str(path), offset)
+        if key in result:
+            raise ValueError('duplicate source exclusion')
+        result[key] = entry
+    if len(result) != source['count']:
+        raise ValueError('source exclusion count mismatch')
+    return result
+
+
 def main():
     p = argparse.ArgumentParser(description=__doc__)
     p.add_argument('--logs', type=Path, required=True)
@@ -128,15 +156,18 @@ def main():
             p.error(f'{cid}: activation/key relic rules need learner evidence')
     if args.manifest:
         manifest_bytes = args.manifest.read_bytes()
-        limits = json.loads(manifest_bytes)['log_byte_limits']
+        manifest = json.loads(manifest_bytes)
+        limits = manifest['log_byte_limits']
     else:
         manifest_bytes = None
+        manifest = {}
         limits = {name: (args.logs/name).stat().st_size for name in
                   ('runs.jsonl', 'states.jsonl', 'sl-attempts.jsonl', 'decisions.jsonl') if (args.logs/name).exists()}
+    exclusions = source_exclusions(manifest, args.logs, limits)
     inventory_bytes = args.run_inventory.read_bytes() if args.run_inventory else None
     inventory = json.loads(inventory_bytes) if inventory_bytes else None
     runs, ranges = extract(args.logs.resolve(), args.character, limits, inventory,
-                           set(args.run) if args.run else None)
+                           set(args.run) if args.run else None, exclusions)
     if args.coverage:
         if inventory is None:
             p.error('--coverage requires --run-inventory')
@@ -199,7 +230,7 @@ def main():
                               inventory_sha256=digest(inventory_bytes) if inventory_bytes else None,
                               witnesses_sha256=digest(args.witnesses.read_bytes()) if args.witnesses else None,
                               coverage_sha256=digest(args.coverage.read_bytes()) if args.coverage else None,
-                              log_byte_limits=limits, ranges=ranges),
+                              log_byte_limits=limits, ranges=ranges, source_exclusions=manifest.get('source_exclusions')),
                   ended_runs=[r['run_id'] for r in runs], combos=outputs,
                   simulation=simulated,
                   limitations=['只含已结束且角色匹配的日志；缺失观察保留null/n=0及原因，不补零。',

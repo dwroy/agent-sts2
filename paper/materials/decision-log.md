@@ -4817,3 +4817,10 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
 - 2026-10-20 01:55:43 CST 运维 codex：V6-R398/live51168ea4实际于01:47:57.860恢复MWMR855QHTWR/A10/F13，原1/17包缺项unknown；随后大脑题input_too_large、play78，原包装/fault守卫保持，原owner接续且不重启/绕守卫；发布、自然出牌题面与完整健康分列，父/ACK不关。原件paper/materials/20261020-014x-ops/receipt.json。
 - 2026-10-20 01:59:53 CST 运维 codex：01:55三事件原件核回，011302-s2因checkout已回收保普通收尾pending；011302未提交三叶固定树d84e3186原宿主全测真启动待终局，原沙箱full1不改；stall沿MWMR855QHTWR原fault保持，未重复dataset/模型或启局。原件paper/materials/20261020-0155-ops/receipt.json。
 - 2026-10-20 02:03:13 CST 运维 codex：AEONGLASS011318固定验收rejected，候选仅研究分支、原冷却及0531拒收保留，无发布号；014302十策略waiting且两SHA冲突转原owner，stall仍原超限fault保持，不复派/启局/代ACK/关父。原件paper/materials/20261020-0200-ops/receipt.json。
+
+- 2026-10-20 02:14:29 CST [Claude 监督] V6-R398 于 01:47 以 V6 开启恢复 Silent A10 局 MWMR855QHTWR（F13），01:49 起卡在大脑 V6 整局计划题 input_too_large（Codex exit 1，brain-wait=fault）；v6-w4w6 的 live 端到端烟测同时发现拿牌 Jev 题面约 6.95 MB（核心构筑卡 R2 完整组合指标占 6.02 MB），Nova 返回 HTTP 400，投影未知率 100%，全部兜底为跳过。处置：经 watcher 让 ops 重新放上 STOP 暂停对局（按 Roy 指示不回退 V5、不整体回退），v6-w4w6 修题面为精简组合摘要并设体积上限、查未知率原因，修复合入 live 并复验后从存档继续该局；W7 复用同一摘要函数，修好前不开启商店/休息 Jev。
+- 2026-10-20 02:16:05 CST 运维 codex：011302源码e87e6cc宿主固定d84e3186 full0，main d94885c/live67d9cfce精确输入验收并保知识，原沙箱失败不改、未重full；纯协议修复及已测main运输不切玩法开关，保V6-R398。retention锁忙登记pending，原故障/父/ACK保持。原件paper/materials/20261020-0210-ops/receipt.json。
+- 2026-10-20 02:21:55 CST 运维 codex：按Claude 02:1x紧急授权02:17:04恢复STOP，原两controller已退出、MWMR855QHTWR/F13及fault保留；原v6-w4w6体积修复合live复验后才可同局恢复，不回V5/整体rollback/新seed/重试。三旧异议为兼容pending且已有真实转达，不代ACK/关父。原件paper/materials/20261020-0216-ops/receipt.json。
+- 2026-10-20 02:51:54 CST 运维 codex：Claude原通道新恢复门槛已登记：W5摘要体积与W3/B均实际live，Claude安排原会话真实请求烟测通过后才可解除STOP；原请求原位/字节SHA已核，STOP/fault/存档保留，仅登记不派发或恢复。原件paper/materials/20261020-0249-ops/receipt.json。
+
+- 2026-10-20 02:56:10 CST [运维 codex/024301 fix回报] 无新源码/提交；严格干净而tests=null/0例，保留原failed/rc0/mergednull与归属deferred；不补测/dataset/合入，不解STOP/关父。原件：paper/materials/20261020-0249-fix-ops/receipt.json。

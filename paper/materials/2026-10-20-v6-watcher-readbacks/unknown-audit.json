@@ -1,0 +1,186 @@
+{
+  "at": "2026-10-20 02:21:10 CST",
+  "read_only": true,
+  "no_new_smoke_or_model_request": true,
+  "original_results": {
+    "path": ".worktrees/v6-live-smoke-20261020/.artifacts/v6-live-smoke/results.json",
+    "bytes": 9772,
+    "sha256": "ebfb308ce5bc5451fad7c0ef7376894470a78557b82b5981ea58e52aa1e9e49a"
+  },
+  "original_smoke_source": {
+    "path": ".worktrees/v6-live-smoke-20261020/.artifacts/v6-live-smoke/smoke.ts",
+    "bytes": 12181,
+    "sha256": "f6d711c3a08c688d83cffebd4d13005b62c3019908752411a1f61f2ba63eeef4"
+  },
+  "original_card1_request": {
+    "path": ".worktrees/v6-live-smoke-20261020/.artifacts/v6-live-smoke/card-1-request.json",
+    "bytes": 12931993,
+    "sha256": "e13e30598b993b5e08b69da30e66cb548be69dafbbdb3dc044c1bbd4f80bf467"
+  },
+  "old_pack": {
+    "path": ".worktrees/live/knowledge/characters/silent/v6-history.json",
+    "bytes": 5811407,
+    "sha256": "4858fedc44da6d43a49ea23716199897df1398c65900f931893156bd4e3cb40b",
+    "combo_metric_ids": [
+      "P-toxin-footwork"
+    ]
+  },
+  "request_formal_core_metric_count": 17,
+  "samples": [
+    {
+      "file": "card-1.json",
+      "floor": 8,
+      "projection": {
+        "elapsed_ms": 4541.451448,
+        "cache_hits": 0,
+        "cache_misses": 0,
+        "simulations": 0,
+        "timed_out": 68,
+        "degradation": [
+          "drop_lowest_direction",
+          "current_and_chain_targets_only",
+          "remaining_unknown"
+        ],
+        "unknown_entries": 384,
+        "total_entries": 384,
+        "unknown_fraction": 1,
+        "act_cache_hit": false
+      },
+      "prompt_bytes": 6955048,
+      "unknown": {
+        "count": 1224,
+        "total": 1224
+      },
+      "http_status": 400
+    },
+    {
+      "file": "card-2.json",
+      "floor": 7,
+      "projection": {
+        "elapsed_ms": 4531.817465,
+        "cache_hits": 0,
+        "cache_misses": 0,
+        "simulations": 0,
+        "timed_out": 69,
+        "degradation": [
+          "drop_lowest_direction",
+          "current_and_chain_targets_only",
+          "remaining_unknown"
+        ],
+        "unknown_entries": 372,
+        "total_entries": 372,
+        "unknown_fraction": 1,
+        "act_cache_hit": false
+      },
+      "prompt_bytes": 6952044,
+      "unknown": {
+        "count": 1224,
+        "total": 1224
+      },
+      "http_status": 400
+    },
+    {
+      "file": "card-3.json",
+      "floor": 6,
+      "projection": {
+        "elapsed_ms": 4550.722731999998,
+        "cache_hits": 0,
+        "cache_misses": 0,
+        "simulations": 0,
+        "timed_out": 69,
+        "degradation": [
+          "drop_lowest_direction",
+          "current_and_chain_targets_only",
+          "remaining_unknown"
+        ],
+        "unknown_entries": 372,
+        "total_entries": 372,
+        "unknown_fraction": 1,
+        "act_cache_hit": false
+      },
+      "prompt_bytes": 6952309,
+      "unknown": {
+        "count": 1224,
+        "total": 1224
+      },
+      "http_status": null
+    }
+  ],
+  "request_unknown_reasons_occurrences": {
+    "formation_below_5_percent_not_simulated": 100,
+    "expectation_unknown": 128,
+    "continuous_joint_unknown": 32,
+    "formation_unknown": 16
+  },
+  "original_limitations": [
+    "Frozen pre-V6 boards have no V6 brain direction or potion tiers; production uniform direction fallback and unknown potion tiers are retained.",
+    "No saved selected route is injected; missing boss entry HP stays unknown.",
+    "Potion projection uses the production provider baseline context; W6 potion choice uses published holding values, not invented counterfactual win estimates.",
+    "Potion resolver is exercised with a local parent-option control answer; no DeepSeek request or action apply runs."
+  ],
+  "source_verification": [
+    {
+      "path": "agent/src/sim/v6-request-factory.ts",
+      "smoke_commit": "435dadad777a7f64dae9e484ae63b6f5b2637ac3",
+      "smoke_source_sha256": "718b6134140da741587da4dfd2fadab2cbe1a7521fc6088ae6283d232de2bd5f",
+      "read_current_source_matches_smoke": true
+    },
+    {
+      "path": "agent/src/sim/v6-completion.ts",
+      "smoke_commit": "435dadad777a7f64dae9e484ae63b6f5b2637ac3",
+      "smoke_source_sha256": "bb402b2517cc9b0efd043e05d9f744e65d6c4b900756b6c5effd3b8275f8903d",
+      "read_current_source_matches_smoke": true
+    },
+    {
+      "path": "agent/src/sim/v6-supply.ts",
+      "smoke_commit": "435dadad777a7f64dae9e484ae63b6f5b2637ac3",
+      "smoke_source_sha256": "391550507c9d8472a71b9841182cdd09c2a14f71c8fe3d1ac01415b46582cddb",
+      "read_current_source_matches_smoke": true
+    },
+    {
+      "path": "agent/src/sim/v6-projection.ts",
+      "smoke_commit": "435dadad777a7f64dae9e484ae63b6f5b2637ac3",
+      "smoke_source_sha256": "6cbf3d9e4be625c81554364f9ba93ff3cfbbc08327cc406246627cb3b3181b9d",
+      "read_current_source_matches_smoke": true
+    },
+    {
+      "path": "agent/src/sim/v6-targets.ts",
+      "smoke_commit": "435dadad777a7f64dae9e484ae63b6f5b2637ac3",
+      "smoke_source_sha256": "9b36d2eb168bda876e11df67c94e2279ebcbc7df0da50c061aebf75ab76a6e42",
+      "read_current_source_matches_smoke": true
+    },
+    {
+      "path": "agent/src/sim/v6-start.ts",
+      "smoke_commit": "435dadad777a7f64dae9e484ae63b6f5b2637ac3",
+      "smoke_source_sha256": "655b171c449a11d43ec91aa8586487c752519059f8a9af9e5fbbea0752c42f12",
+      "read_current_source_matches_smoke": true
+    },
+    {
+      "path": "agent/src/v6/projection-input.ts",
+      "smoke_commit": "435dadad777a7f64dae9e484ae63b6f5b2637ac3",
+      "smoke_source_sha256": "31abbd7fa12046f85d6c58b12cc0af355229ec041162acfa8a3ad866c536ff1e",
+      "read_current_source_matches_smoke": true
+    }
+  ],
+  "conclusions": {
+    "direct_missing_combo_metric_gate": false,
+    "all_17_formal_combos_present_in_prompt": true,
+    "projection_unknown_precedes_HTTP400": true,
+    "smoke_missing_selected_route_explicit_unknown_entry_HP": true,
+    "all_smoke_simulations_zero": true,
+    "old_pack_other_supply_history_effect_quantified": false,
+    "heavy_summary_hashing_cost_profiled": false,
+    "refresh_17_metrics_alone_proven_to_fix_unknown": false
+  },
+  "next_owner_checks": [
+    "Compact summaries and cap requests in original W5 owner feature; do not enlarge limits or invent route HP.",
+    "Recheck frozen boards with explicitly preserved real route plus unknown-reason telemetry, independent compute and Jev budgets; no new request by watcher.",
+    "After bad-row integration and 17-combo refresh, compare exact same source inputs; keep P<5%, unknown route/scope/prerequisites and partial models explicit."
+  ],
+  "delivery": {
+    "current_Claude_Roy_user_visible": true,
+    "original_W5_pane_status": "blocked",
+    "original_W5_received": false,
+    "blocked_prompt_bypassed": false
+  }
+}

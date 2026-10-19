@@ -1,0 +1,51 @@
+{
+  "at": "2026-10-20 02:21:10 CST",
+  "watcher_thread": "01a14f5d-da55-7831-959e-53727796115e",
+  "ops_intake": {
+    "path": ".artifacts/v6-emergency-stop-20261020-021x/intake-receipt.json",
+    "bytes": 2052,
+    "sha256": "90f579e7664812c1848d033c755969e85f3773814b8481d015b5cb1979ffab78"
+  },
+  "native_acceptance": {
+    "ops_thread": "01a1517b-e200-7c52-b463-6ea22220c0a9",
+    "actual_native_acceptance": {
+      "path": "/home/dw/.codex1/sessions/2026/10/19/rollout-2026-10-19T08-07-15-01a1517b-e200-7c52-b463-6ea22220c0a9.jsonl",
+      "offset": 20832298,
+      "bytes": 1021,
+      "sha256": "f4e04e0e1b32efb1fe8d223927d0c0f7e27a7b34cb0a2b476bca8ee1f5a57733",
+      "timestamp": "2026-10-19T18:16:58.937Z",
+      "text": "已实际收到紧急暂停指令。我现在先重新落下 `ops/STOP`，再核对原 autoplay/play PID 并保存故障与存档状态；保持 V6 配置和原局，不重试模型，恢复须等原 owner 修复实际合入、复验后的原回执。\n"
+    }
+  },
+  "STOP": {
+    "path": "ops/STOP",
+    "bytes": 159,
+    "sha256": "81f76ef4f8ce5618c092f4aa027a45f1aade373efb74fe168f22801e21fd71d4"
+  },
+  "controller_pids_exist": {
+    "3579120": false,
+    "3579363": false
+  },
+  "saved_run_readback": {
+    "run_id": "MWMR855QHTWR",
+    "screen": "REWARD",
+    "state_version": 16,
+    "in_combat": false
+  },
+  "original_mod_state": {
+    "path": ".artifacts/v6-emergency-stop-20261020-021x/mod-state.original.out",
+    "bytes": 22345,
+    "sha256": "bddb4f4aeffe3d475fba3eab4f869303160ba6819e061ec5685c4c66defb662a"
+  },
+  "fault_marker": {
+    "path": "logs/brain-wait.json",
+    "bytes": 619,
+    "sha256": "1e8ee3a27fbdcabe9c5a2698e2b70bc909147f13d45ff3792779613ffc92ed30"
+  },
+  "original_fault_sha_matches": true,
+  "scope": "Independent current STOP/PID/fault verification and original ops broker readback; no game action, signal, model retry or saved-game reset",
+  "owner_pane": "wJ:p1GX",
+  "owner_status": "blocked",
+  "owner_new_prompt_delivery_claimed": false,
+  "current_Claude_Roy_channel_reported": true
+}

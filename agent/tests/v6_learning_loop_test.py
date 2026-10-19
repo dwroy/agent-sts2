@@ -227,6 +227,97 @@ class RefreshTest(unittest.TestCase):
             self.assertEqual(refresh.refresh(root, root, 'regent')[0]['status'], 'unchanged_other_character')
             self.assertEqual(target.read_bytes(), before)
 
+    def test_malformed_rows_are_fully_excluded_without_changing_original_logs(self):
+        with tempfile.TemporaryDirectory() as d:
+            root = Path(d)
+            target = fixture(root)
+            original = {}
+            expected = []
+            for stream in refresh.STREAMS:
+                path = root / 'logs' / (stream + '.jsonl')
+                first = path.read_bytes()
+                gaps = [b'{broken-' + str(i).encode() + b'\n' for i in range(7)] if stream == 'states' else [b'\xff\n']
+                # A valid frame after the malformed rows must retain its original offset.
+                data = first + b''.join(gaps) + (first if stream == 'states' else b'')
+                path.write_bytes(data)
+                original[stream] = data
+                offset = len(first)
+                for i, gap in enumerate(gaps):
+                    expected.append(dict(source=str(path), source_size=len(data), line=first.count(b'\n') + i + 1,
+                        offset=offset, bytes=len(gap), sha256=hashlib.sha256(gap).hexdigest(), reason='invalid_json',
+                        byte_range=dict(start=offset, end_exclusive=offset + len(gap))))
+                    offset += len(gap)
+            receipt, code = refresh.refresh(root, root, 'silent')
+            self.assertEqual(code, 0, receipt)
+            manifest = receipt['source_exclusions']
+            content = Path(manifest['path']).read_bytes()
+            self.assertEqual(manifest['count'], 10)
+            self.assertEqual(manifest['counts_by_stream'], {'runs': 1, 'sl-attempts': 1, 'states': 7, 'decisions': 1})
+            self.assertEqual(manifest['sha256'], hashlib.sha256(content).hexdigest())
+            actual = list(map(json.loads, content.splitlines()))
+            self.assertEqual(sorted(actual, key=lambda r: (r['source'], r['offset'])),
+                             sorted(expected, key=lambda r: (r['source'], r['offset'])))
+            self.assertEqual(len(receipt['sources']['states']['gap_refs']), 5)
+            for stream, data in original.items():
+                self.assertEqual((root / 'logs' / (stream + '.jsonl')).read_bytes(), data)
+                self.assertEqual(receipt['sources'][stream]['source_sha256'], hashlib.sha256(data).hexdigest())
+            refs = list(map(json.loads, Path(receipt['frame_sources']['path']).read_bytes().splitlines()))
+            self.assertEqual(len(refs), 2)
+            self.assertEqual(refs[-1]['source']['offset'], len(original['states']) - refs[-1]['source']['bytes'])
+            pack = json.loads(target.read_bytes())
+            self.assertEqual([c['id'] for c in pack['data']['combo_metrics']], ['fixture_combo'])
+            self.assertEqual([c['run_id'] for c in pack['data']['coverage']], [RUN])
+            report = json.loads((Path(receipt['directory']) / 'combo-metrics.json').read_bytes())
+            self.assertEqual(report['inputs']['source_exclusions'], manifest)
+            self.assertEqual((root / 'knowledge/characters/regent/v6-history.json').read_bytes(), b'REGENT_PACKET')
+            retain('malformed-row-exclusions', dict(exclusions=actual, **call_evidence(receipt)))
+
+    def test_excluded_row_or_manifest_mutation_keeps_previous_packet(self):
+        for case in ('raw_row', 'manifest'):
+            with self.subTest(case=case), tempfile.TemporaryDirectory() as d:
+                root = Path(d)
+                target = fixture(root)
+                states = root / 'logs/states.jsonl'
+                with states.open('ab') as out:
+                    out.write(b'{broken-0\n')
+                def runner(argv, **kwargs):
+                    if case == 'manifest' and 'build-combo-metrics.py' in Path(argv[1]).name:
+                        manifest = json.loads(Path(argv[argv.index('--manifest') + 1]).read_bytes())
+                        Path(manifest['source_exclusions']['path']).write_bytes(b'')
+                    result = subprocess.run(argv, **kwargs)
+                    if case == 'raw_row' and 'build-v6-history.py' in Path(argv[1]).name:
+                        states.write_bytes(states.read_bytes().replace(b'{broken-0', b'{broken-1'))
+                    return result
+                receipt, code = refresh.refresh(root, root, 'silent', runner)
+                self.assertEqual(code, 1, receipt)
+                self.assertEqual(target.read_bytes(), b'OLD_PACKET')
+                self.assertIsNone(receipt['published'])
+                if case == 'raw_row':
+                    self.assertIn('frozen source changed', receipt['error'])
+                else:
+                    step = receipt['steps'][-1]
+                    self.assertEqual(step['name'], 'combo-metrics')
+                    self.assertIn('source exclusion manifest SHA/size mismatch', Path(step['stderr']['path']).read_text())
+
+    def test_combo_reader_requires_exact_explicit_malformed_row_exclusion(self):
+        sys.path.insert(0, str(ROOT / 'knowledge/builders'))
+        from combo_metrics import read_rows
+        with tempfile.TemporaryDirectory() as d:
+            path = Path(d) / 'states.jsonl'
+            data = b'{broken-0\n'
+            path.write_bytes(data)
+            key = (str(path.resolve()), 0)
+            entry = dict(source_size=len(data), bytes=len(data), sha256=hashlib.sha256(data).hexdigest())
+            with self.assertRaisesRegex(ValueError, 'unlisted or changed'):
+                list(read_rows(path, len(data)))
+            self.assertEqual(list(read_rows(path, len(data), exclusions={key: entry})), [])
+            for field, value in [('sha256', '0' * 64), ('bytes', len(data) - 1), ('source_size', len(data) + 1)]:
+                with self.subTest(field=field), self.assertRaisesRegex(ValueError, 'unlisted or changed'):
+                    list(read_rows(path, len(data), exclusions={key: dict(entry, **{field: value})}))
+            path.write_bytes(b'{}\n')
+            with self.assertRaisesRegex(ValueError, 'excluded row is valid'):
+                list(read_rows(path, 3, exclusions={key: dict(source_size=3, bytes=3, sha256=hashlib.sha256(b'{}\n').hexdigest())}))
+
     def test_no_core_and_missing_or_truncated_logs_are_explicit(self):
         for case in ('no_core', 'empty_core', 'missing', 'partial', 'foreign_state'):
             with self.subTest(case=case), tempfile.TemporaryDirectory() as d:

@@ -159,7 +159,7 @@ def digest(raw):
     return hashlib.sha256(raw).hexdigest()
 
 
-def read_rows(path, limit, spans=None, audit=None):
+def read_rows(path, limit, spans=None, audit=None, exclusions=None):
     """Read immutable byte cuts; hash every scanned range and each retained source row."""
     if not isinstance(limit, int) or not 0 <= limit <= path.stat().st_size:
         raise ValueError(f'invalid byte limit: {path}')
@@ -176,7 +176,16 @@ def read_rows(path, limit, spans=None, audit=None):
                 if not raw.endswith(b'\n'):
                     raise ValueError(f'partial JSONL row at {path}:{offset}')
                 sha.update(raw)
-                row = json.loads(raw)
+                exclusion = (exclusions or {}).get((str(path.resolve()), offset))
+                try:
+                    row = json.loads(raw)
+                except (ValueError, UnicodeDecodeError):
+                    if (exclusion is None or exclusion['source_size'] != limit or
+                        exclusion['bytes'] != len(raw) or exclusion['sha256'] != digest(raw)):
+                        raise ValueError(f'unlisted or changed malformed JSONL row at {path}:{offset}')
+                    continue
+                if exclusion is not None:
+                    raise ValueError(f'excluded row is valid JSON at {path}:{offset}')
                 ref = dict(path=str(path), offset=offset, bytes=len(raw), sha256=digest(raw))
                 yield row, ref
             if audit is not None:
@@ -259,10 +268,10 @@ def compact(row, source):
     return dict(ts=row['ts'], state=state, _source=source)
 
 
-def extract(logs, character, limits, inventory=None, selected=None):
+def extract(logs, character, limits, inventory=None, selected=None, exclusions=None):
     """Normalize actual runtime JSONL; no final-deck backfill or hidden simulator."""
     audit, runs, grouped = [], {}, defaultdict(list)
-    for row, source in read_rows(logs/'runs.jsonl', limits['runs.jsonl'], audit=audit):
+    for row, source in read_rows(logs/'runs.jsonl', limits['runs.jsonl'], audit=audit, exclusions=exclusions):
         if str(row.get('character', '')).lower() == character and row.get('ended') and (selected is None or row['run_id'] in selected):
             if row['run_id'] in runs and {k: v for k, v in runs[row['run_id']].items() if k != '_source'} != row:
                 raise ValueError('conflicting ended run identity')
@@ -296,10 +305,10 @@ def extract(logs, character, limits, inventory=None, selected=None):
     for name, target in [('sl-attempts.jsonl', summaries), ('decisions.jsonl', actions)]:
         if name not in limits:
             continue
-        for row, source in read_rows(logs/name, limits[name], ranges(name), audit):
+        for row, source in read_rows(logs/name, limits[name], ranges(name), audit, exclusions):
             if row.get('run_id') in runs:
                 target[row['run_id']].append(dict(row, _source=source))
-    for row, source in read_rows(logs/'states.jsonl', limits['states.jsonl'], ranges('states.jsonl'), audit):
+    for row, source in read_rows(logs/'states.jsonl', limits['states.jsonl'], ranges('states.jsonl'), audit, exclusions):
         state = row.get('state') or {}
         rid = state.get('run_id')
         if rid not in runs or row.get('ts', '') > runs[rid]['ended']:

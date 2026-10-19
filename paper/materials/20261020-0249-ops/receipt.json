@@ -1,0 +1,64 @@
+{
+  "at": "2026-10-20 02:51:54 CST",
+  "event": "manual-original-channel-intake-only",
+  "authorization": {
+    "path": "paper/materials/20261020-0249-ops/authorization-original.md",
+    "bytes": 651,
+    "sha256": "5df961773e47945c48d0bd6264784e484acd36e7b595dcaf36c5884815e9288d"
+  },
+  "run_id": "MWMR855QHTWR",
+  "request": {
+    "path": "logs/brain.jsonl",
+    "absolute_path": "/home/dw/Projects/agent-sts2/logs/brain.jsonl",
+    "offset": 870579124,
+    "bytes": 219668516,
+    "end_exclusive": 1090247640,
+    "sha256": "2eec4b82f81a2dd80ed893b2f822c87d3619d6d1ea32497184fc9f6d88de39b6",
+    "includes_terminating_newline": true,
+    "source_size_at_read": 1090247640,
+    "inode_at_read": 153608,
+    "original_location_preserved": true,
+    "record_scope": "original logged question/memory/payload and client metadata; not a separate raw app-server wire dump"
+  },
+  "actual_client_user_fragment": {
+    "sha256": "e25bc31521ccb24783d2c318fa49ebb1b097f875fec73bbf9854b927dc0c11df",
+    "bytes": 219667404,
+    "chars": 179790098
+  },
+  "client_hash_source": {
+    "path": "logs/codex-calls.jsonl",
+    "offset": 47072851,
+    "bytes": 2533,
+    "sha256": "444ee89541490adcf35438aa8d67b90cf32f8fe1bc9170e5bbf247328ba850f7"
+  },
+  "record_and_client_fragment_hashes_are_different_scopes": true,
+  "STOP_exists": true,
+  "fault_marker": {
+    "path": "logs/brain-wait.json",
+    "sha256": "1e8ee3a27fbdcabe9c5a2698e2b70bc909147f13d45ff3792779613ffc92ed30",
+    "state": "fault"
+  },
+  "original_saved_run_and_scene_retained": true,
+  "new_mod_action_or_read_sent": false,
+  "repair_tracks": [
+    "original W5 prompt summary and payload-size repair",
+    "original W3/B repair"
+  ],
+  "recovery_gate": "Keep STOP, the original request at its exact byte location, brain-wait fault and saved run unchanged. Original W5 prompt-summary/payload-size repair AND original W3/B repair must actually enter live; Claude must arrange a passing real-request smoke test in the original sessions. Only then may original ops clear STOP and continue the original saved run; this intake does not start that test or authorize a current retry.",
+  "watcher_original_queue_priorities": [
+    "continue original bad-line fix single-worker combined full",
+    "supply unknown",
+    "cold/hot cache precomputation",
+    "missing route-history entrance HP fallback"
+  ],
+  "task_dispatch_or_new_model_or_packet_refresh": false,
+  "real_request_smoke_started_by_ops": false,
+  "source_or_live_changed_by_ops": false,
+  "marker_cleared": false,
+  "game_restarted": false,
+  "raw_request_copied_moved_or_rewritten": false,
+  "ACK_CLI_called": false,
+  "other_role_ACK_written": false,
+  "parent_closed": false,
+  "Regent": "paused"
+}
