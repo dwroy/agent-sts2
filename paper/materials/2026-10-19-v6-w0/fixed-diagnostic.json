@@ -1,0 +1,996 @@
+{
+  "schema": "v6-w0-diagnostic-v1",
+  "source_commit": "18e9ab6307a2069c8207b975fe49758313f77f41",
+  "run": "Q9KFP3J3JNU5",
+  "source": "logs/states.jsonl, first in-combat F33 / first F38 and F42 frames; same-run current main metadata",
+  "seed": 7,
+  "seeds": "sampleSeed(7, 0..2)",
+  "samples_per_order": 3,
+  "scope": "27 fixed trajectories, not a calibration refresh or probability estimate",
+  "rows": [
+    {
+      "floor": 33,
+      "hp": 55,
+      "max_hp": 70,
+      "deck_size": 33,
+      "frame_sha256": "40ac479ff70e87f8cd9451a5da22b6627894baa1ffbdc8f54ff764c5266663bf",
+      "model_limits": [
+        "partial_model_benchmark_shared_held_relics_not_modelled;effects_do_not_assume_cancellation",
+        "unmodelled_held_relic:蛇之戒指",
+        "unmodelled_held_relic:节日拉炮",
+        "unmodelled_held_relic:餐券",
+        "unmodelled_held_relic:活动星图"
+      ],
+      "enemies": [
+        {
+          "index": 0,
+          "hp": 219,
+          "attacks": [
+            {
+              "damage": 21,
+              "hits": 1
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "hp": 209,
+          "attacks": [
+            {
+              "damage": 4,
+              "hits": 1
+            }
+          ]
+        }
+      ],
+      "samples": [
+        {
+          "order": null,
+          "outcomes": [
+            {
+              "won": false,
+              "died": true,
+              "capped": false,
+              "turns": 6,
+              "hpLoss": 55,
+              "enemyHpLeft": 276,
+              "dmgByTurn": [
+                45,
+                9,
+                17,
+                40,
+                32,
+                9
+              ],
+              "incomingByTurn": [
+                25,
+                51,
+                42,
+                67,
+                27,
+                39
+              ],
+              "blockByTurn": [
+                7,
+                30,
+                8,
+                7,
+                18,
+                25
+              ]
+            },
+            {
+              "won": false,
+              "died": true,
+              "capped": false,
+              "turns": 4,
+              "hpLoss": 55,
+              "enemyHpLeft": 300,
+              "dmgByTurn": [
+                9,
+                54,
+                23,
+                42
+              ],
+              "incomingByTurn": [
+                25,
+                51,
+                30,
+                67
+              ],
+              "blockByTurn": [
+                25,
+                2,
+                7,
+                15
+              ]
+            },
+            {
+              "won": false,
+              "died": true,
+              "capped": false,
+              "turns": 4,
+              "hpLoss": 55,
+              "enemyHpLeft": 371,
+              "dmgByTurn": [
+                32,
+                21,
+                0,
+                4
+              ],
+              "incomingByTurn": [
+                25,
+                51,
+                42,
+                67
+              ],
+              "blockByTurn": [
+                4,
+                9,
+                24,
+                17
+              ]
+            }
+          ]
+        },
+        {
+          "order": {
+            "key": "CRUSHER>ROCKET",
+            "label": "碾碎爪 > 火箭",
+            "groups": [
+              [
+                0
+              ],
+              [
+                1
+              ]
+            ]
+          },
+          "outcomes": [
+            {
+              "won": false,
+              "died": true,
+              "capped": false,
+              "turns": 6,
+              "hpLoss": 55,
+              "enemyHpLeft": 276,
+              "dmgByTurn": [
+                45,
+                9,
+                17,
+                40,
+                32,
+                9
+              ],
+              "incomingByTurn": [
+                25,
+                51,
+                42,
+                67,
+                27,
+                39
+              ],
+              "blockByTurn": [
+                7,
+                30,
+                8,
+                7,
+                18,
+                25
+              ]
+            },
+            {
+              "won": false,
+              "died": true,
+              "capped": false,
+              "turns": 4,
+              "hpLoss": 55,
+              "enemyHpLeft": 300,
+              "dmgByTurn": [
+                9,
+                54,
+                23,
+                42
+              ],
+              "incomingByTurn": [
+                25,
+                51,
+                30,
+                67
+              ],
+              "blockByTurn": [
+                25,
+                2,
+                7,
+                15
+              ]
+            },
+            {
+              "won": false,
+              "died": true,
+              "capped": false,
+              "turns": 4,
+              "hpLoss": 55,
+              "enemyHpLeft": 371,
+              "dmgByTurn": [
+                32,
+                21,
+                0,
+                4
+              ],
+              "incomingByTurn": [
+                25,
+                51,
+                42,
+                67
+              ],
+              "blockByTurn": [
+                4,
+                9,
+                24,
+                17
+              ]
+            }
+          ]
+        },
+        {
+          "order": {
+            "key": "ROCKET>CRUSHER",
+            "label": "火箭 > 碾碎爪",
+            "groups": [
+              [
+                1
+              ],
+              [
+                0
+              ]
+            ]
+          },
+          "outcomes": [
+            {
+              "won": false,
+              "died": true,
+              "capped": false,
+              "turns": 6,
+              "hpLoss": 55,
+              "enemyHpLeft": 276,
+              "dmgByTurn": [
+                45,
+                9,
+                17,
+                40,
+                32,
+                9
+              ],
+              "incomingByTurn": [
+                25,
+                51,
+                42,
+                67,
+                27,
+                39
+              ],
+              "blockByTurn": [
+                7,
+                30,
+                8,
+                7,
+                18,
+                25
+              ]
+            },
+            {
+              "won": false,
+              "died": true,
+              "capped": false,
+              "turns": 4,
+              "hpLoss": 55,
+              "enemyHpLeft": 300,
+              "dmgByTurn": [
+                9,
+                54,
+                23,
+                42
+              ],
+              "incomingByTurn": [
+                25,
+                51,
+                30,
+                67
+              ],
+              "blockByTurn": [
+                25,
+                2,
+                7,
+                15
+              ]
+            },
+            {
+              "won": false,
+              "died": true,
+              "capped": false,
+              "turns": 4,
+              "hpLoss": 55,
+              "enemyHpLeft": 371,
+              "dmgByTurn": [
+                32,
+                21,
+                0,
+                4
+              ],
+              "incomingByTurn": [
+                25,
+                51,
+                42,
+                67
+              ],
+              "blockByTurn": [
+                4,
+                9,
+                24,
+                17
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "floor": 38,
+      "hp": 60,
+      "max_hp": 70,
+      "deck_size": 37,
+      "frame_sha256": "1d5bc80c84f4907b664ec3f9a3f20b73bb7d0545e08cb8a98c494b0829e69182",
+      "model_limits": [
+        "partial_model_benchmark_shared_held_relics_not_modelled;effects_do_not_assume_cancellation",
+        "unmodelled_held_relic:蛇之戒指",
+        "unmodelled_held_relic:节日拉炮",
+        "unmodelled_held_relic:餐券",
+        "unmodelled_held_relic:活动星图",
+        "unmodelled_held_relic:铁棒"
+      ],
+      "enemies": [
+        {
+          "index": 0,
+          "hp": 219,
+          "attacks": [
+            {
+              "damage": 21,
+              "hits": 1
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "hp": 209,
+          "attacks": [
+            {
+              "damage": 4,
+              "hits": 1
+            }
+          ]
+        }
+      ],
+      "samples": [
+        {
+          "order": null,
+          "outcomes": [
+            {
+              "won": false,
+              "died": true,
+              "capped": false,
+              "turns": 4,
+              "hpLoss": 60,
+              "enemyHpLeft": 310,
+              "dmgByTurn": [
+                26,
+                18,
+                35,
+                39
+              ],
+              "incomingByTurn": [
+                25,
+                51,
+                42,
+                67
+              ],
+              "blockByTurn": [
+                8,
+                0,
+                21,
+                1
+              ]
+            },
+            {
+              "won": false,
+              "died": true,
+              "capped": false,
+              "turns": 4,
+              "hpLoss": 60,
+              "enemyHpLeft": 333,
+              "dmgByTurn": [
+                9,
+                19,
+                22,
+                33
+              ],
+              "incomingByTurn": [
+                25,
+                48,
+                42,
+                67
+              ],
+              "blockByTurn": [
+                19,
+                15,
+                8,
+                0
+              ]
+            },
+            {
+              "won": false,
+              "died": true,
+              "capped": false,
+              "turns": 5,
+              "hpLoss": 60,
+              "enemyHpLeft": 268,
+              "dmgByTurn": [
+                60,
+                26,
+                11,
+                21,
+                42
+              ],
+              "incomingByTurn": [
+                25,
+                48,
+                42,
+                67,
+                36
+              ],
+              "blockByTurn": [
+                16,
+                9,
+                24,
+                2,
+                3
+              ]
+            }
+          ]
+        },
+        {
+          "order": {
+            "key": "CRUSHER>ROCKET",
+            "label": "碾碎爪 > 火箭",
+            "groups": [
+              [
+                0
+              ],
+              [
+                1
+              ]
+            ]
+          },
+          "outcomes": [
+            {
+              "won": false,
+              "died": true,
+              "capped": false,
+              "turns": 4,
+              "hpLoss": 60,
+              "enemyHpLeft": 310,
+              "dmgByTurn": [
+                26,
+                18,
+                35,
+                39
+              ],
+              "incomingByTurn": [
+                25,
+                51,
+                42,
+                67
+              ],
+              "blockByTurn": [
+                8,
+                0,
+                21,
+                1
+              ]
+            },
+            {
+              "won": false,
+              "died": true,
+              "capped": false,
+              "turns": 4,
+              "hpLoss": 60,
+              "enemyHpLeft": 333,
+              "dmgByTurn": [
+                9,
+                19,
+                22,
+                33
+              ],
+              "incomingByTurn": [
+                25,
+                48,
+                42,
+                67
+              ],
+              "blockByTurn": [
+                19,
+                15,
+                8,
+                0
+              ]
+            },
+            {
+              "won": false,
+              "died": true,
+              "capped": false,
+              "turns": 5,
+              "hpLoss": 60,
+              "enemyHpLeft": 268,
+              "dmgByTurn": [
+                60,
+                26,
+                11,
+                21,
+                42
+              ],
+              "incomingByTurn": [
+                25,
+                48,
+                42,
+                67,
+                36
+              ],
+              "blockByTurn": [
+                16,
+                9,
+                24,
+                2,
+                3
+              ]
+            }
+          ]
+        },
+        {
+          "order": {
+            "key": "ROCKET>CRUSHER",
+            "label": "火箭 > 碾碎爪",
+            "groups": [
+              [
+                1
+              ],
+              [
+                0
+              ]
+            ]
+          },
+          "outcomes": [
+            {
+              "won": false,
+              "died": true,
+              "capped": false,
+              "turns": 4,
+              "hpLoss": 60,
+              "enemyHpLeft": 310,
+              "dmgByTurn": [
+                26,
+                18,
+                35,
+                39
+              ],
+              "incomingByTurn": [
+                25,
+                51,
+                42,
+                67
+              ],
+              "blockByTurn": [
+                8,
+                0,
+                21,
+                1
+              ]
+            },
+            {
+              "won": false,
+              "died": true,
+              "capped": false,
+              "turns": 4,
+              "hpLoss": 60,
+              "enemyHpLeft": 333,
+              "dmgByTurn": [
+                9,
+                19,
+                22,
+                33
+              ],
+              "incomingByTurn": [
+                25,
+                48,
+                42,
+                67
+              ],
+              "blockByTurn": [
+                19,
+                15,
+                8,
+                0
+              ]
+            },
+            {
+              "won": false,
+              "died": true,
+              "capped": false,
+              "turns": 5,
+              "hpLoss": 60,
+              "enemyHpLeft": 268,
+              "dmgByTurn": [
+                60,
+                26,
+                11,
+                21,
+                42
+              ],
+              "incomingByTurn": [
+                25,
+                48,
+                42,
+                67,
+                36
+              ],
+              "blockByTurn": [
+                16,
+                9,
+                24,
+                2,
+                3
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "floor": 42,
+      "hp": 60,
+      "max_hp": 70,
+      "deck_size": 39,
+      "frame_sha256": "c49636f3e76b1aaaf7732033caa1d49bf583247b939c30f589406b8639adb0ba",
+      "model_limits": [
+        "partial_model_benchmark_shared_held_relics_not_modelled;effects_do_not_assume_cancellation",
+        "unmodelled_held_relic:蛇之戒指",
+        "unmodelled_held_relic:节日拉炮",
+        "unmodelled_held_relic:餐券",
+        "unmodelled_held_relic:活动星图",
+        "unmodelled_held_relic:铁棒",
+        "unmodelled_held_relic:螺线飞镖"
+      ],
+      "enemies": [
+        {
+          "index": 0,
+          "hp": 219,
+          "attacks": [
+            {
+              "damage": 21,
+              "hits": 1
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "hp": 209,
+          "attacks": [
+            {
+              "damage": 4,
+              "hits": 1
+            }
+          ]
+        }
+      ],
+      "samples": [
+        {
+          "order": null,
+          "outcomes": [
+            {
+              "won": false,
+              "died": true,
+              "capped": false,
+              "turns": 6,
+              "hpLoss": 60,
+              "enemyHpLeft": 280,
+              "dmgByTurn": [
+                12,
+                16,
+                59,
+                25,
+                13,
+                23
+              ],
+              "incomingByTurn": [
+                25,
+                48,
+                42,
+                67,
+                36,
+                45
+              ],
+              "blockByTurn": [
+                20,
+                27,
+                17,
+                17,
+                5,
+                14
+              ]
+            },
+            {
+              "won": false,
+              "died": true,
+              "capped": false,
+              "turns": 5,
+              "hpLoss": 60,
+              "enemyHpLeft": 226,
+              "dmgByTurn": [
+                56,
+                54,
+                43,
+                23,
+                26
+              ],
+              "incomingByTurn": [
+                25,
+                51,
+                30,
+                67,
+                36
+              ],
+              "blockByTurn": [
+                15,
+                19,
+                2,
+                19,
+                3
+              ]
+            },
+            {
+              "won": false,
+              "died": true,
+              "capped": false,
+              "turns": 4,
+              "hpLoss": 60,
+              "enemyHpLeft": 278,
+              "dmgByTurn": [
+                26,
+                34,
+                62,
+                28
+              ],
+              "incomingByTurn": [
+                25,
+                51,
+                42,
+                67
+              ],
+              "blockByTurn": [
+                7,
+                15,
+                3,
+                16
+              ]
+            }
+          ]
+        },
+        {
+          "order": {
+            "key": "CRUSHER>ROCKET",
+            "label": "碾碎爪 > 火箭",
+            "groups": [
+              [
+                0
+              ],
+              [
+                1
+              ]
+            ]
+          },
+          "outcomes": [
+            {
+              "won": false,
+              "died": true,
+              "capped": false,
+              "turns": 6,
+              "hpLoss": 60,
+              "enemyHpLeft": 280,
+              "dmgByTurn": [
+                12,
+                16,
+                59,
+                25,
+                13,
+                23
+              ],
+              "incomingByTurn": [
+                25,
+                48,
+                42,
+                67,
+                36,
+                45
+              ],
+              "blockByTurn": [
+                20,
+                27,
+                17,
+                17,
+                5,
+                14
+              ]
+            },
+            {
+              "won": false,
+              "died": true,
+              "capped": false,
+              "turns": 5,
+              "hpLoss": 60,
+              "enemyHpLeft": 226,
+              "dmgByTurn": [
+                56,
+                54,
+                43,
+                23,
+                26
+              ],
+              "incomingByTurn": [
+                25,
+                51,
+                30,
+                67,
+                36
+              ],
+              "blockByTurn": [
+                15,
+                19,
+                2,
+                19,
+                3
+              ]
+            },
+            {
+              "won": false,
+              "died": true,
+              "capped": false,
+              "turns": 4,
+              "hpLoss": 60,
+              "enemyHpLeft": 278,
+              "dmgByTurn": [
+                26,
+                34,
+                62,
+                28
+              ],
+              "incomingByTurn": [
+                25,
+                51,
+                42,
+                67
+              ],
+              "blockByTurn": [
+                7,
+                15,
+                3,
+                16
+              ]
+            }
+          ]
+        },
+        {
+          "order": {
+            "key": "ROCKET>CRUSHER",
+            "label": "火箭 > 碾碎爪",
+            "groups": [
+              [
+                1
+              ],
+              [
+                0
+              ]
+            ]
+          },
+          "outcomes": [
+            {
+              "won": false,
+              "died": true,
+              "capped": false,
+              "turns": 6,
+              "hpLoss": 60,
+              "enemyHpLeft": 280,
+              "dmgByTurn": [
+                12,
+                16,
+                59,
+                25,
+                13,
+                23
+              ],
+              "incomingByTurn": [
+                25,
+                48,
+                42,
+                67,
+                36,
+                45
+              ],
+              "blockByTurn": [
+                20,
+                27,
+                17,
+                17,
+                5,
+                14
+              ]
+            },
+            {
+              "won": false,
+              "died": true,
+              "capped": false,
+              "turns": 5,
+              "hpLoss": 60,
+              "enemyHpLeft": 226,
+              "dmgByTurn": [
+                56,
+                54,
+                43,
+                23,
+                26
+              ],
+              "incomingByTurn": [
+                25,
+                51,
+                30,
+                67,
+                36
+              ],
+              "blockByTurn": [
+                15,
+                19,
+                2,
+                19,
+                3
+              ]
+            },
+            {
+              "won": false,
+              "died": true,
+              "capped": false,
+              "turns": 4,
+              "hpLoss": 60,
+              "enemyHpLeft": 278,
+              "dmgByTurn": [
+                26,
+                34,
+                62,
+                28
+              ],
+              "incomingByTurn": [
+                25,
+                51,
+                42,
+                67
+              ],
+              "blockByTurn": [
+                7,
+                15,
+                3,
+                16
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
