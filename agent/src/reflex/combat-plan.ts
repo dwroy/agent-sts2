@@ -47,6 +47,7 @@ import { silentSlComparison } from "./silent-sl-comparison.js";
 import type { ActionRequest } from "../hand/mod/client.js";
 import type { ActionExpect } from "../hand/act/identity.js";
 import { enemyPowerText, playerJson, potionViews } from "../memory/narrow.js";
+import { silentStockNote } from "./silent-stock-note.js";
 import { briefJson, combatBriefJson } from "../memory/run-brief.js";
 import { hintText, selectHints } from "../knowledge/jev-hints.js";
 import type { AskDecision, CombatPlanMemo, Decision, DecisionEnv, ResolvedAction, ScreenMemory } from "../memory/types.js";
@@ -4101,7 +4102,8 @@ function planTurn(env: DecisionEnv): Decision | null {
           const power = asRecord(entry);
           // MECH_RULES: a learned strip-stun on this power, as the logs show it (none with the switch off).
           const sim = enemies.find((other) => other.index === (numOrNull(enemy["index"]) ?? i));
-          return `${enemyPowerText(power, env.knowledge)}${POWER_NOTES[str(power["power_id"])] ?? ""}${stripStunNote(sim, str(power["power_id"]), mechRules)}${moveRuleNote(sim, str(power["power_id"]))}${backAttackPairNote(env, str(power["power_id"]), living.length)}`;
+          const note = power["power_id"] === "STOCK_POWER" ? silentStockNote(state, enemy) : null;
+          return `${enemyPowerText(power, env.knowledge)}${note ?? POWER_NOTES[str(power["power_id"])] ?? ""}${stripStunNote(sim, str(power["power_id"]), mechRules)}${moveRuleNote(sim, str(power["power_id"]))}${backAttackPairNote(env, str(power["power_id"]), living.length)}`;
         }),
         // MECH_DEATH_MOVE: what an ally's death does to its move, as the logs show it (none with the switch off).
         ...((note): Record<string, string> => (note ? { observed: note } : {}))(deathRuleNote(enemies.find((other) => other.index === (numOrNull(enemy["index"]) ?? i)))),
