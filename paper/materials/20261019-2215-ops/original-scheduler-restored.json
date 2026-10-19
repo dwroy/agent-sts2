@@ -1,0 +1,31 @@
+{
+  "at": "2026-10-19T22:53:54.156362+08:00",
+  "scope": "original scheduler mechanically resumed; tasks not completed",
+  "cron": [
+    "*/5 * * * * /bin/bash /home/dw/Projects/agent-sts2/ops/codex-ops.sh tick stall >/dev/null 2>&1",
+    "13,43 * * * * /bin/bash /home/dw/Projects/agent-sts2/ops/codex-ops.sh tick learn >/dev/null 2>&1",
+    "7 4 * * * /bin/bash /home/dw/Projects/agent-sts2/ops/codex-ops.sh tick snapshot >/dev/null 2>&1"
+  ],
+  "PAUSE_exists": false,
+  "LLM_DRAIN_exists": false,
+  "STOP_exists": true,
+  "learn_tick_rc": 0,
+  "learn_tick_log": ".artifacts/v6-ops-restore-20261019/original-learn-tick.log",
+  "actual_new_consumers": ".artifacts/v6-ops-restore-20261019/automatic-learning-native.json",
+  "retention_sweeps": [
+    {
+      "path": "ops/codex-ops/retention/last-sweep.json",
+      "sha256": "09e8fcc3c2390eaedaf437c7c61112950d31f6aa5fdc30fa459a02f29acbf4a1",
+      "at": "2026-10-19T22:44:40+08:00",
+      "result_count": 0,
+      "retained_count": 7
+    },
+    {
+      "path": "ops/codex-ops/retention/last-worktree-sweep.json",
+      "sha256": "2e84bd004ac481da4c4dddd4139a0d67f3a1ac0b6612cde6654b5a58571e515d",
+      "at": "2026-10-19T22:45:11+08:00",
+      "result_count": 0,
+      "retained_count": 1
+    }
+  ]
+}
