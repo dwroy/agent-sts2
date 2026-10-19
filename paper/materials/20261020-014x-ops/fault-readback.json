@@ -1,0 +1,105 @@
+{
+  "at": "2026-10-20 01:55:43 CST",
+  "run_id": "MWMR855QHTWR",
+  "question_id": "mvfjs0un-3579363-1",
+  "thread_id": "01a15548-4545-7fc2-b61a-ffed86ac2ed7",
+  "source": {
+    "path": "logs/codex-calls.jsonl",
+    "offset": 47072851,
+    "bytes": 2533,
+    "sha256": "444ee89541490adcf35438aa8d67b90cf32f8fe1bc9170e5bbf247328ba850f7"
+  },
+  "request": {
+    "instructions": {
+      "sha256": "38986474dcec38ab1fd5289dacc345b4bec39e973d803bae1c892df65644b653",
+      "bytes": 1938,
+      "chars": 1924
+    },
+    "user": {
+      "sha256": "e25bc31521ccb24783d2c318fa49ebb1b097f875fec73bbf9854b927dc0c11df",
+      "bytes": 219667404,
+      "chars": 179790098
+    },
+    "schema": {
+      "sha256": "37654706d48809226fe3c83aff1809405edbf9f9dfb152e310e4aae8538d03bf",
+      "bytes": 3660,
+      "chars": 3660
+    },
+    "service_tier": "default",
+    "roles": [
+      "instructions",
+      "user"
+    ],
+    "tools": "disabled",
+    "previous_in_scope": false,
+    "first_different_byte": null
+  },
+  "outcome": "failed",
+  "exit": 1,
+  "ts": "2026-10-19T17:49:23.022Z",
+  "error": {
+    "code": "input_too_large",
+    "method": "turn/start",
+    "max_chars": 1048576,
+    "actual_chars": 179790098
+  },
+  "brain_model": "gpt-6.1-sol",
+  "brain_effort": "xhigh",
+  "successful_brain_turn": false,
+  "play_pid": 3579363,
+  "play_exited": true,
+  "play_exit": 78,
+  "autoplay_pid": 3579120,
+  "autoplay_alive": true,
+  "autoplay_command": "bash /home/dw/Projects/agent-sts2/ops/autoplay.sh --tail-console",
+  "terminal_fault_marker": {
+    "ts": "2026-10-19T17:49:23.026Z",
+    "state": "fault",
+    "pid": 3579363,
+    "run_id": "MWMR855QHTWR",
+    "question_id": "mvfjs0un-3579363-1",
+    "decision_type": "run-plan",
+    "retries": 0,
+    "next_retry": null
+  },
+  "marker_source": {
+    "path": "logs/brain-wait.json",
+    "bytes": 619,
+    "sha256": "1e8ee3a27fbdcabe9c5a2698e2b70bc909147f13d45ff3792779613ffc92ed30"
+  },
+  "build_brain_failure": {
+    "schema": "v6-build-log-v1",
+    "ts": "2026-10-19T17:49:25.530Z",
+    "run_id": "MWMR855QHTWR",
+    "character": "silent",
+    "question_id": "direction_1_13",
+    "kind": "act",
+    "stage": "brain",
+    "mode": "on",
+    "entries": [],
+    "jev_answer": null,
+    "fallback": "brain_request_failed",
+    "elapsed_ms": 8507,
+    "cache": {
+      "hits": 0,
+      "misses": 0
+    },
+    "degradation": [],
+    "unknown": {
+      "count": 0,
+      "total": 0
+    },
+    "triggers": [],
+    "merged_triggers": [],
+    "skipped_triggers": []
+  },
+  "build_source": {
+    "path": "logs/v6-build.jsonl",
+    "bytes": 397,
+    "sha256": "c9ba35a2aef66f2f3ba26dbb977d6fa86e2e0674834821a2d5bf13b77078494b"
+  },
+  "saved_run_retained": true,
+  "Nova_or_Jev_service_failure": false,
+  "root_cause_of_input_expansion": "unknown; original W5/prompt owner to investigate",
+  "no_restart_no_marker_clear_no_guard_bypass": true
+}

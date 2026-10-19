@@ -1,0 +1,539 @@
+{
+  "at": "2026-10-20 01:49:43 CST",
+  "actual_actor_pane": "w1H:p14",
+  "autoplay_pid": 3579120,
+  "actual_play_pid": 3579363,
+  "first_V6_controller_config": {
+    "source": {
+      "path": "logs/run-config.jsonl",
+      "offset": 2173783,
+      "bytes": 5973,
+      "sha256": "05e6cfa923e1b16ca33455b425761f0e344423d4ed5300d2642d7542ec248e87"
+    },
+    "ts": "2026-10-19T17:47:57.860Z",
+    "run_id": "MWMR855QHTWR",
+    "ascension": 10,
+    "character": "SILENT",
+    "floor": 13,
+    "restart": true,
+    "process": {
+      "pid": 3579363,
+      "started": "2026-10-19T17:47:57.833Z"
+    },
+    "code": {
+      "commit": "51168ea4abdcc6743daa6e01026b6dee1a11472a",
+      "code": "51168ea",
+      "dirty": false,
+      "dirty_files": [],
+      "branch": "live",
+      "worktree": "live"
+    },
+    "v6": {
+      "schema": "v6-config-v1",
+      "mode": "on",
+      "deciders": {
+        "card": "jev",
+        "potion": "jev",
+        "shop": "brain",
+        "rest": "brain"
+      },
+      "reflex": "off",
+      "admission": "interfaces_only",
+      "delivered": false,
+      "samples_pick": 20,
+      "samples_act": 100,
+      "direction_min_weight": 0.1,
+      "win": {
+        "certain_win": 0.95,
+        "favored": 0.7,
+        "even": 0.3,
+        "unfavored": 0.05
+      },
+      "delta": {
+        "much_se": 2,
+        "better_se": 1,
+        "much_min": 0.05
+      },
+      "triggers": {
+        "t1_core_min": 0.3,
+        "t2_se": 2,
+        "t2_min_delta": 0.05,
+        "t2_consecutive": 2,
+        "t3_weight_max": 0.2,
+        "t5_hazard": "existing_route_projection",
+        "t6_unknown_max": 0.5,
+        "t6_fallbacks": 2,
+        "t7_checkpoint": "validated_brain_answer"
+      },
+      "budgets": {
+        "brain_soft_cap": 15,
+        "brain_ms": 90000,
+        "act_ms": 60000,
+        "pick_ms": 5000,
+        "jev_ms": 5000
+      },
+      "invalid": []
+    },
+    "Jev_model": "typesafe/jev-1.14",
+    "DeepSeek_model": "deepseek/deepseek-flash",
+    "brain_model": "gpt-6.1-sol",
+    "brain_effort": "xhigh"
+  },
+  "resumed_existing_run": true,
+  "original_saved_floor": 13,
+  "new_seed_or_new_run_created": false,
+  "first_actions": [
+    {
+      "ts": "2026-10-19T17:47:59.333Z",
+      "source": {
+        "path": "logs/decisions.jsonl",
+        "offset": 2762497354,
+        "bytes": 3821,
+        "sha256": "2bb2cc685b09c2b778a8807b118fd37f1ca8b2bf559fa54de13478e12ed669bc"
+      },
+      "screen": "CARD_SELECTION",
+      "decider": "jev",
+      "chosen": {
+        "action": "select_deck_card",
+        "option_index": 4
+      },
+      "result": "completed: Action completed.",
+      "latency_ms": {
+        "plan": 17,
+        "jev": 822,
+        "action": 313,
+        "planner": 4,
+        "pre": 524
+      }
+    },
+    {
+      "ts": "2026-10-19T17:48:01.231Z",
+      "source": {
+        "path": "logs/decisions.jsonl",
+        "offset": 2762501175,
+        "bytes": 94620,
+        "sha256": "97d91470fd9b75830f24ca47fc148ce5a68da6b8047f6756d9cb101c26ef61c5"
+      },
+      "screen": "COMBAT",
+      "decider": "jev",
+      "chosen": {
+        "action": "play_card",
+        "card_index": 2,
+        "target_index": 0
+      },
+      "result": "completed: Action completed.",
+      "latency_ms": {
+        "plan": 34,
+        "jev": 593,
+        "action": 359,
+        "planner": 660,
+        "pre": 168
+      }
+    },
+    {
+      "ts": "2026-10-19T17:48:02.633Z",
+      "source": {
+        "path": "logs/decisions.jsonl",
+        "offset": 2762595795,
+        "bytes": 2142,
+        "sha256": "4428f968b854b74589fda9a3572344fd48a8eefa5fc1c6d377ddedada3880dd2"
+      },
+      "screen": "COMBAT",
+      "decider": "code",
+      "chosen": {
+        "action": "play_card",
+        "card_index": 2
+      },
+      "result": "completed: Action completed.",
+      "latency_ms": {
+        "plan": 0,
+        "jev": 0,
+        "action": 764,
+        "planner": 4,
+        "pre": 254
+      }
+    },
+    {
+      "ts": "2026-10-19T17:48:04.483Z",
+      "source": {
+        "path": "logs/decisions.jsonl",
+        "offset": 2762597937,
+        "bytes": 2183,
+        "sha256": "5f71fe5f1206f1d6e0d7e7e2cb247256ec8d9a530915859d5049c1d918ca5a2a"
+      },
+      "screen": "COMBAT",
+      "decider": "code",
+      "chosen": {
+        "action": "play_card",
+        "card_index": 2
+      },
+      "result": "pending (unstable): Action queued but state is still transitioning.",
+      "latency_ms": {
+        "plan": 0,
+        "jev": 0,
+        "action": 507,
+        "planner": 4,
+        "pre": 257
+      }
+    },
+    {
+      "ts": "2026-10-19T17:48:06.253Z",
+      "source": {
+        "path": "logs/decisions.jsonl",
+        "offset": 2762600120,
+        "bytes": 6281,
+        "sha256": "8c193371208a37fcef0a2a1b7b5932af615bf277bd3b87d9b3b7d193a736dc32"
+      },
+      "screen": "CARD_SELECTION",
+      "decider": "jev",
+      "chosen": {
+        "action": "select_deck_card",
+        "option_index": 1
+      },
+      "result": "completed: Action completed.",
+      "latency_ms": {
+        "plan": 48,
+        "jev": 816,
+        "action": 300,
+        "planner": 4,
+        "pre": 288
+      }
+    },
+    {
+      "ts": "2026-10-19T17:48:07.639Z",
+      "source": {
+        "path": "logs/decisions.jsonl",
+        "offset": 2762606401,
+        "bytes": 35972,
+        "sha256": "c89c614062c65b682892ef4a71d4783e43e002ba74602cb20293108b8c34cbf3"
+      },
+      "screen": "COMBAT",
+      "decider": "jev",
+      "chosen": {
+        "action": "end_turn"
+      },
+      "result": "completed: Action completed.",
+      "latency_ms": {
+        "plan": 34,
+        "jev": 366,
+        "action": 723,
+        "planner": 325,
+        "pre": 251
+      }
+    },
+    {
+      "ts": "2026-10-19T17:48:14.388Z",
+      "source": {
+        "path": "logs/decisions.jsonl",
+        "offset": 2762642373,
+        "bytes": 73471,
+        "sha256": "1a344c655de23c0134bc0bac05b03a3c30809762d09e8fb68f037b39c83923ee"
+      },
+      "screen": "COMBAT",
+      "decider": "jev",
+      "chosen": {
+        "action": "play_card",
+        "card_index": 0,
+        "target_index": 0
+      },
+      "result": "completed: Action completed.",
+      "latency_ms": {
+        "plan": 31,
+        "jev": 1025,
+        "action": 384,
+        "planner": 671,
+        "pre": 239
+      }
+    },
+    {
+      "ts": "2026-10-19T17:48:15.929Z",
+      "source": {
+        "path": "logs/decisions.jsonl",
+        "offset": 2762715844,
+        "bytes": 2149,
+        "sha256": "ae012d870231a525f755bb5e6c4da4425d1f613d2f6bd1d07780b588fd275aac"
+      },
+      "screen": "COMBAT",
+      "decider": "code",
+      "chosen": {
+        "action": "play_card",
+        "card_index": 2
+      },
+      "result": "completed: Action completed.",
+      "latency_ms": {
+        "plan": 0,
+        "jev": 0,
+        "action": 416,
+        "planner": 4,
+        "pre": 318
+      }
+    }
+  ],
+  "Jev_actual_requests": [
+    {
+      "ts": "2026-10-19T17:47:58.510Z",
+      "source": {
+        "path": "logs/jev-prompts.jsonl",
+        "offset": 1810708841,
+        "bytes": 5911,
+        "sha256": "10e2465cab09c8189a752a6e7c2a6969014baef6bb4e8fdc4429a17be621dbe4"
+      },
+      "label": "selection/choose",
+      "decision_id": "6a1203c8-fac6-4807-8beb-e8f5d315f44c",
+      "server_request_id": null,
+      "latency_ms": 822,
+      "error": null,
+      "has_answers": true,
+      "V6_audit": []
+    },
+    {
+      "ts": "2026-10-19T17:48:00.634Z",
+      "source": {
+        "path": "logs/jev-prompts.jsonl",
+        "offset": 1810714752,
+        "bytes": 219214,
+        "sha256": "80badd4f3b6e78b4f578e025a0165df9d3d5f92734651531949e1565f995b8ac"
+      },
+      "label": "combat/plan-choice+potion",
+      "decision_id": "ab1c0089-5915-44b5-a177-dd8ab3288e4f",
+      "server_request_id": null,
+      "latency_ms": 593,
+      "error": null,
+      "has_answers": true,
+      "V6_audit": [
+        {
+          "path": "state.jev_decision_contract",
+          "schema": "v6-combat-decision-v1",
+          "field_type": "dict"
+        },
+        {
+          "path": "state.jev_decision_contract.schema",
+          "schema": "v6-combat-decision-v1",
+          "field_type": "str"
+        }
+      ]
+    },
+    {
+      "ts": "2026-10-19T17:48:05.414Z",
+      "source": {
+        "path": "logs/jev-prompts.jsonl",
+        "offset": 1810933966,
+        "bytes": 11080,
+        "sha256": "6f64d601140612f87146739334ef5339d9ba284578c191a79227fba1d1f59089"
+      },
+      "label": "selection/choose",
+      "decision_id": "a01b2585-2325-4edc-93b0-1c406c578604",
+      "server_request_id": null,
+      "latency_ms": 816,
+      "error": null,
+      "has_answers": true,
+      "V6_audit": []
+    },
+    {
+      "ts": "2026-10-19T17:48:07.271Z",
+      "source": {
+        "path": "logs/jev-prompts.jsonl",
+        "offset": 1810945046,
+        "bytes": 124618,
+        "sha256": "e58669110e6c13f2242a0876cca2676b264ad9feab959a7f3c5400af2b9a3b64"
+      },
+      "label": "combat/plan-choice+potion",
+      "decision_id": "02e8c75b-5243-48bf-919c-9804f32f7eda",
+      "server_request_id": null,
+      "latency_ms": 366,
+      "error": null,
+      "has_answers": true,
+      "V6_audit": [
+        {
+          "path": "state.jev_decision_contract",
+          "schema": "v6-combat-decision-v1",
+          "field_type": "dict"
+        },
+        {
+          "path": "state.jev_decision_contract.schema",
+          "schema": "v6-combat-decision-v1",
+          "field_type": "str"
+        }
+      ]
+    },
+    {
+      "ts": "2026-10-19T17:48:13.360Z",
+      "source": {
+        "path": "logs/jev-prompts.jsonl",
+        "offset": 1811069664,
+        "bytes": 189949,
+        "sha256": "1da1c781c2afc132e52d7b9fbac0f00814498ca7f818e1f510e690424a9ba7c8"
+      },
+      "label": "combat/plan-choice+potion",
+      "decision_id": "66008521-e9b1-43ac-9983-c51fa94700b5",
+      "server_request_id": null,
+      "latency_ms": 1025,
+      "error": null,
+      "has_answers": true,
+      "V6_audit": [
+        {
+          "path": "state.jev_decision_contract",
+          "schema": "v6-combat-decision-v1",
+          "field_type": "dict"
+        },
+        {
+          "path": "state.jev_decision_contract.schema",
+          "schema": "v6-combat-decision-v1",
+          "field_type": "str"
+        }
+      ]
+    },
+    {
+      "ts": "2026-10-19T17:48:19.617Z",
+      "source": {
+        "path": "logs/jev-prompts.jsonl",
+        "offset": 1811259613,
+        "bytes": 125167,
+        "sha256": "8bedd13a5546d7b536e31c36d2d6168ccf316730cfc84a87b86433cc2be1d2d6"
+      },
+      "label": "combat/plan-choice+potion",
+      "decision_id": "5ebd4f48-1bcc-4ee6-b454-552225022839",
+      "server_request_id": null,
+      "latency_ms": 449,
+      "error": null,
+      "has_answers": true,
+      "V6_audit": [
+        {
+          "path": "state.jev_decision_contract",
+          "schema": "v6-combat-decision-v1",
+          "field_type": "dict"
+        },
+        {
+          "path": "state.jev_decision_contract.schema",
+          "schema": "v6-combat-decision-v1",
+          "field_type": "str"
+        }
+      ]
+    },
+    {
+      "ts": "2026-10-19T17:48:25.445Z",
+      "source": {
+        "path": "logs/jev-prompts.jsonl",
+        "offset": 1811384780,
+        "bytes": 125474,
+        "sha256": "2ad3fb2ee97d657da13cfe8c10b13b5d1f5829e08ea391d92c6c45a9e40be276"
+      },
+      "label": "combat/plan-choice+potion",
+      "decision_id": "80d7ec53-12b5-47b1-809f-b6ae410499d6",
+      "server_request_id": null,
+      "latency_ms": 408,
+      "error": null,
+      "has_answers": true,
+      "V6_audit": [
+        {
+          "path": "state.jev_decision_contract",
+          "schema": "v6-combat-decision-v1",
+          "field_type": "dict"
+        },
+        {
+          "path": "state.jev_decision_contract.schema",
+          "schema": "v6-combat-decision-v1",
+          "field_type": "str"
+        }
+      ]
+    },
+    {
+      "ts": "2026-10-19T17:48:27.289Z",
+      "source": {
+        "path": "logs/jev-prompts.jsonl",
+        "offset": 1811510254,
+        "bytes": 124793,
+        "sha256": "792636135407e417968fba23770ead493e4caab7e56bef0c6fa89b5afc974292"
+      },
+      "label": "combat/plan-choice+potion",
+      "decision_id": "99a1967c-c2d4-4ac7-9f05-332d0c47126f",
+      "server_request_id": null,
+      "latency_ms": 543,
+      "error": null,
+      "has_answers": true,
+      "V6_audit": [
+        {
+          "path": "state.jev_decision_contract",
+          "schema": "v6-combat-decision-v1",
+          "field_type": "dict"
+        },
+        {
+          "path": "state.jev_decision_contract.schema",
+          "schema": "v6-combat-decision-v1",
+          "field_type": "str"
+        }
+      ]
+    },
+    {
+      "ts": "2026-10-19T17:48:34.070Z",
+      "source": {
+        "path": "logs/jev-prompts.jsonl",
+        "offset": 1811635047,
+        "bytes": 156880,
+        "sha256": "57c677732d7b1b4091c8c0033619ea91d8221ca022ecf7064a3638bbcbe09374"
+      },
+      "label": "combat/plan-choice+potion",
+      "decision_id": "1f210742-836e-4daf-b885-aad5e2b97765",
+      "server_request_id": null,
+      "latency_ms": 572,
+      "error": null,
+      "has_answers": true,
+      "V6_audit": [
+        {
+          "path": "state.jev_decision_contract",
+          "schema": "v6-combat-decision-v1",
+          "field_type": "dict"
+        },
+        {
+          "path": "state.jev_decision_contract.schema",
+          "schema": "v6-combat-decision-v1",
+          "field_type": "str"
+        }
+      ]
+    },
+    {
+      "ts": "2026-10-19T17:48:38.747Z",
+      "source": {
+        "path": "logs/jev-prompts.jsonl",
+        "offset": 1811791927,
+        "bytes": 125088,
+        "sha256": "7af99f8bb991ed2cfbd12de890467f207352506d23fd42a1a00dcd3ede01209c"
+      },
+      "label": "combat/plan-choice+potion",
+      "decision_id": "e104e953-2e8f-48ee-b21b-7a6541ebd744",
+      "server_request_id": null,
+      "latency_ms": 399,
+      "error": null,
+      "has_answers": true,
+      "V6_audit": [
+        {
+          "path": "state.jev_decision_contract",
+          "schema": "v6-combat-decision-v1",
+          "field_type": "dict"
+        },
+        {
+          "path": "state.jev_decision_contract.schema",
+          "schema": "v6-combat-decision-v1",
+          "field_type": "str"
+        }
+      ]
+    }
+  ],
+  "V6_COMBAT_ENTRIES_actor_flag": "on",
+  "combat_entry_natural_prompt_audits": 8,
+  "current_mod": {
+    "run_id": "MWMR855QHTWR",
+    "screen": "REWARD",
+    "state_version": 16,
+    "ascension": 10,
+    "floor": 13,
+    "turn": 5
+  },
+  "old_history_SHA": "4858fedc44da6d43a49ea23716199897df1398c65900f931893156bd4e3cb40b",
+  "combo_metrics": 1,
+  "formal_combos": 17,
+  "new_history_claimed": false,
+  "natural_win_or_quality_gain_claimed": false,
+  "brain_codex1_native_new_request": "pending if not naturally called yet; config alone is not account consumption",
+  "STOP_absent": true
+}

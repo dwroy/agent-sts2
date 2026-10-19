@@ -1,0 +1,44 @@
+{
+  "at": "2026-10-20T01:49:17.764084+08:00",
+  "code_commit": "1e941776902b41b53dc9b3626ab0b90958a9fdcf",
+  "tested_base": "435dadad777a7f64dae9e484ae63b6f5b2637ac3",
+  "integration_base": "252ff36eee24a0dfeddb590c9ff27904d4959632",
+  "main_ff": true,
+  "checks": {
+    "tsc": 0,
+    "vitest": 0,
+    "files_passed": 589,
+    "tests_passed": 5650,
+    "tests_skipped": 2,
+    "gitleaks": 0
+  },
+  "source_files_verified": 1441,
+  "material_blobs_verified": 57,
+  "source_or_test_delta_after_full": false,
+  "rebase_note": "Only records/release registration advanced on main during full check. Source SHA manifest and all material blobs verified after rebase; reused the full pass without changing source or thresholds. The sparse worktree omitted committed material paths; an initial filesystem read failed, then verification read the exact manifest and 57 material blobs from git objects.",
+  "scan_logs": [
+    {
+      "file": "v6-w7-gitleaks-final-commit.log.gz",
+      "exit_code": 0,
+      "raw_sha256": "1629f2cfe6469d11fc8f2d32df6d16765808aa1662d5ed155021d8c9a73078ee",
+      "sha256": "f2e2408fe07aa79d60fe3fdaadc913a0313be516cfe5be6892d1944787b4b542"
+    },
+    {
+      "file": "v6-w7-gitleaks-after-rebase.log.gz",
+      "exit_code": 0,
+      "raw_sha256": "e1179e61255d5fb00dbddcbadcc88d7240890447b15af7b74c4e18c051e3d713",
+      "sha256": "1e73fa762c9f49454dfb794719691de1ac0a5b22a0b2519c47c55a257ec1842f"
+    }
+  ],
+  "root_dirty_paths_preserved": 6,
+  "shared_records_appended": [
+    "paper/materials/decision-log.md",
+    "notes/for-roy.md",
+    "ops/inbox-dev.md"
+  ],
+  "shared_records_commit_owner": "parallel shared-record owners; existing edits preserved, not staged here",
+  "live_changed_by_this_session": false,
+  "game_started_by_this_session": false,
+  "formal_knowledge_changed_by_this_session": false,
+  "retirement": "retain worktree; original scheduler to complete after actual live integration"
+}

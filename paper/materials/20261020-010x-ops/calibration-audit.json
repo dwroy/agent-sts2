@@ -1,0 +1,1114 @@
+{
+  "at": "2026-10-20T01:06:52.958707+08:00",
+  "status": "numeric-verified-report-only",
+  "published_by_watcher": false,
+  "source_result": "/home/dw/Projects/agent-sts2/learner/runs/20261019-205809-d8a80b70-a777-4435-b1e4-121ca4bfb660-v6-boss-calibration-host-resume/result.json",
+  "archive": "/home/dw/Projects/agent-sts2/learner/runs/20261019-205809-d8a80b70-a777-4435-b1e4-121ca4bfb660-v6-boss-calibration-host-resume/2fce300434130222abaad2996dac0562b68061aad23221efa1d68d27ca60bcf0",
+  "candidate_sha256": "b16f7ca9bad297683a8f245476c6cc9a80b472be023f52b92b23f926e69ed58c",
+  "results_sha256": "269be5bb8c4981f2f332c095cd4ddd7f7d618fddf7bf43e9bf10ededb68e8abe",
+  "counts": {
+    "completed": 1316,
+    "successful": 1310,
+    "explicit_failures": 6,
+    "missing": 0,
+    "retained": 217
+  },
+  "original_seeds_verified": 1099,
+  "frozen_inputs_verified": 32,
+  "old_commit": "7e1193cef9467416bc10c8e344a49f4fd98390c7",
+  "old_table_sha256": "efe45027cf53dc1221db2310f0aced98b14fff277c8a8f622af07b4cb934d156",
+  "old_inputs": {
+    "results.jsonl": {
+      "path": "/home/dw/Projects/agent-sts2/experiments/boss-sim/silent/e918959162ed7c88e3f8d995163e1a65d77963b8533a7a26050fbfa222261491/results.jsonl",
+      "bytes": 2833684,
+      "sha256": "c038453b52905f545d8cd5d00020a630cd1b73dfcf7d50e7c0403a8acdb1b563"
+    },
+    "turns.jsonl": {
+      "path": "/home/dw/Projects/agent-sts2/experiments/boss-sim/silent/e918959162ed7c88e3f8d995163e1a65d77963b8533a7a26050fbfa222261491/turns.jsonl",
+      "bytes": 89397,
+      "sha256": "ea25799760a535999f35619c9b0da89c05ebd6ae94da111b5045ab09d1653ac7"
+    },
+    "split.json": {
+      "path": "/home/dw/Projects/agent-sts2/experiments/boss-sim/silent/e918959162ed7c88e3f8d995163e1a65d77963b8533a7a26050fbfa222261491/split.json",
+      "bytes": 11164,
+      "sha256": "5cc6de15eff50279458428609f4804b151e95df338b72de7a20b7754f551e777"
+    }
+  },
+  "supplemental_baseline_sha256": "81077f1c34d2dab5cd36d3205afbef390b1795604c55085925d78cebd2579bef",
+  "supplemental_baseline_is_requested_7e1193c": false,
+  "old_rounding_differences": [],
+  "overall": {
+    "old_7e1193c": {
+      "t1": {
+        "n": 214,
+        "brier": 0.11645642291885272,
+        "platt": {
+          "a": 2.0844,
+          "b": 0.4502,
+          "c": 0.0
+        }
+      },
+      "pre": {
+        "n": 214,
+        "brier": 0.11698534350393328,
+        "platt": {
+          "a": 2.2754,
+          "b": 0.5047,
+          "c": 0.0
+        }
+      }
+    },
+    "current": {
+      "t1": {
+        "n": 549,
+        "brier": 0.10441816044616342,
+        "platt": {
+          "a": 2.0443,
+          "b": 0.4536,
+          "c": 0.0
+        }
+      },
+      "pre": {
+        "n": 549,
+        "brier": 0.10756047459552542,
+        "platt": {
+          "a": 2.2681,
+          "b": 0.5105,
+          "c": 0.0
+        }
+      }
+    }
+  },
+  "bosses": [
+    {
+      "arm": "old_7e1193c",
+      "boss": "KAISER_CRAB",
+      "name": "帝王蟹",
+      "start": "t1",
+      "n": 21,
+      "brier": 0.11622848914938536,
+      "limit": 0.1455705286485659,
+      "gap": 0.027844245539089152,
+      "leak": 1.1800242130750602,
+      "failed": [],
+      "published_failed": []
+    },
+    {
+      "arm": "old_7e1193c",
+      "boss": "THE_KIN",
+      "name": "同族",
+      "start": "t1",
+      "n": 15,
+      "brier": 0.14918022349740276,
+      "limit": 0.1455705286485659,
+      "gap": -0.05571124105875702,
+      "leak": 1.3063670411985016,
+      "failed": [
+        "brier",
+        "leak"
+      ],
+      "published_failed": [
+        "brier",
+        "leak"
+      ]
+    },
+    {
+      "arm": "old_7e1193c",
+      "boss": "QUEEN",
+      "name": "女王",
+      "start": "t1",
+      "n": 15,
+      "brier": 0.25694461316966266,
+      "limit": 0.1455705286485659,
+      "gap": 0.34925110142318944,
+      "leak": 1.116622691292876,
+      "failed": [
+        "brier",
+        "gap"
+      ],
+      "published_failed": [
+        "brier",
+        "gap"
+      ]
+    },
+    {
+      "arm": "old_7e1193c",
+      "boss": "AEONGLASS",
+      "name": "永世沙漏",
+      "start": "t1",
+      "n": 15,
+      "brier": 0.16170943899137522,
+      "limit": 0.1455705286485659,
+      "gap": 0.15069898261966008,
+      "leak": 3.624999999999999,
+      "failed": [
+        "brier",
+        "gap",
+        "leak"
+      ],
+      "published_failed": [
+        "brier",
+        "gap",
+        "leak"
+      ]
+    },
+    {
+      "arm": "old_7e1193c",
+      "boss": "CEREMONIAL_BEAST",
+      "name": "仪式兽",
+      "start": "t1",
+      "n": 20,
+      "brier": 0.05949655825676353,
+      "limit": 0.1455705286485659,
+      "gap": 0.0032196721524883065,
+      "leak": 1.0384843982169392,
+      "failed": [],
+      "published_failed": []
+    },
+    {
+      "arm": "old_7e1193c",
+      "boss": "KNOWLEDGE_DEMON",
+      "name": "知识恶魔",
+      "start": "t1",
+      "n": 20,
+      "brier": 0.06177073959064474,
+      "limit": 0.1455705286485659,
+      "gap": -0.017878624099321838,
+      "leak": 1.2747826086956529,
+      "failed": [],
+      "published_failed": []
+    },
+    {
+      "arm": "old_7e1193c",
+      "boss": "LAGAVULIN_MATRIARCH",
+      "name": "乐加维林族母",
+      "start": "t1",
+      "n": 20,
+      "brier": 0.06945262101079773,
+      "limit": 0.1455705286485659,
+      "gap": 0.09184664663739872,
+      "leak": 0.9229946524064172,
+      "failed": [],
+      "published_failed": []
+    },
+    {
+      "arm": "old_7e1193c",
+      "boss": "SOUL_FYSH",
+      "name": "灵魂异鱼",
+      "start": "t1",
+      "n": 17,
+      "brier": 0.0640398300659014,
+      "limit": 0.1455705286485659,
+      "gap": 0.04671782228060384,
+      "leak": 0.882451253481894,
+      "failed": [],
+      "published_failed": []
+    },
+    {
+      "arm": "old_7e1193c",
+      "boss": "TEST_SUBJECT",
+      "name": "实验体",
+      "start": "t1",
+      "n": 12,
+      "brier": 0.17291514193185673,
+      "limit": 0.1455705286485659,
+      "gap": 0.18446206396700607,
+      "leak": 3.390295358649789,
+      "failed": [
+        "brier",
+        "gap",
+        "leak"
+      ],
+      "published_failed": [
+        "brier",
+        "gap",
+        "leak"
+      ]
+    },
+    {
+      "arm": "old_7e1193c",
+      "boss": "THE_INSATIABLE",
+      "name": "无厌沙虫",
+      "start": "t1",
+      "n": 22,
+      "brier": 0.15696431616043297,
+      "limit": 0.1455705286485659,
+      "gap": 0.034567949044103874,
+      "leak": 1.437801204819277,
+      "failed": [
+        "brier",
+        "leak"
+      ],
+      "published_failed": [
+        "brier",
+        "leak"
+      ]
+    },
+    {
+      "arm": "old_7e1193c",
+      "boss": "VANTOM",
+      "name": "墨影幻灵",
+      "start": "t1",
+      "n": 17,
+      "brier": 0.10751454153657519,
+      "limit": 0.1455705286485659,
+      "gap": 0.1014549056382047,
+      "leak": 1.0108108108108107,
+      "failed": [],
+      "published_failed": []
+    },
+    {
+      "arm": "old_7e1193c",
+      "boss": "WATERFALL_GIANT",
+      "name": "瀑布巨兽",
+      "start": "t1",
+      "n": 20,
+      "brier": 0.08521713722513748,
+      "limit": 0.1455705286485659,
+      "gap": 0.027141968231200297,
+      "leak": 0.8942660550458716,
+      "failed": [],
+      "published_failed": []
+    },
+    {
+      "arm": "old_7e1193c",
+      "boss": "KAISER_CRAB",
+      "name": "帝王蟹",
+      "start": "pre",
+      "n": 21,
+      "brier": 0.1384014527809918,
+      "limit": 0.1462316793799166,
+      "gap": 0.0366330739661509,
+      "leak": 1.182566585956416,
+      "failed": [],
+      "published_failed": []
+    },
+    {
+      "arm": "old_7e1193c",
+      "boss": "THE_KIN",
+      "name": "同族",
+      "start": "pre",
+      "n": 15,
+      "brier": 0.15123073324277142,
+      "limit": 0.1462316793799166,
+      "gap": -0.03625883275333064,
+      "leak": 1.2838951310861422,
+      "failed": [
+        "brier"
+      ],
+      "published_failed": [
+        "brier"
+      ]
+    },
+    {
+      "arm": "old_7e1193c",
+      "boss": "QUEEN",
+      "name": "女王",
+      "start": "pre",
+      "n": 15,
+      "brier": 0.23185836573989504,
+      "limit": 0.1462316793799166,
+      "gap": 0.3041953256002196,
+      "leak": 1.265699208443272,
+      "failed": [
+        "brier",
+        "gap"
+      ],
+      "published_failed": [
+        "brier",
+        "gap"
+      ]
+    },
+    {
+      "arm": "old_7e1193c",
+      "boss": "AEONGLASS",
+      "name": "永世沙漏",
+      "start": "pre",
+      "n": 15,
+      "brier": 0.15197202914793756,
+      "limit": 0.1462316793799166,
+      "gap": 0.15466832551560938,
+      "leak": 3.4682926829268306,
+      "failed": [
+        "brier",
+        "gap",
+        "leak"
+      ],
+      "published_failed": [
+        "brier",
+        "gap",
+        "leak"
+      ]
+    },
+    {
+      "arm": "old_7e1193c",
+      "boss": "CEREMONIAL_BEAST",
+      "name": "仪式兽",
+      "start": "pre",
+      "n": 20,
+      "brier": 0.0644267076620541,
+      "limit": 0.1462316793799166,
+      "gap": 0.012673641457879525,
+      "leak": 1.0870728083209509,
+      "failed": [],
+      "published_failed": []
+    },
+    {
+      "arm": "old_7e1193c",
+      "boss": "KNOWLEDGE_DEMON",
+      "name": "知识恶魔",
+      "start": "pre",
+      "n": 20,
+      "brier": 0.05078876366840403,
+      "limit": 0.1462316793799166,
+      "gap": -0.0178413969036062,
+      "leak": 1.3032608695652175,
+      "failed": [
+        "leak"
+      ],
+      "published_failed": [
+        "leak"
+      ]
+    },
+    {
+      "arm": "old_7e1193c",
+      "boss": "LAGAVULIN_MATRIARCH",
+      "name": "乐加维林族母",
+      "start": "pre",
+      "n": 20,
+      "brier": 0.06329335941928103,
+      "limit": 0.1462316793799166,
+      "gap": 0.0816507941934399,
+      "leak": 1.0807486631016043,
+      "failed": [],
+      "published_failed": []
+    },
+    {
+      "arm": "old_7e1193c",
+      "boss": "SOUL_FYSH",
+      "name": "灵魂异鱼",
+      "start": "pre",
+      "n": 17,
+      "brier": 0.07199248591400854,
+      "limit": 0.1462316793799166,
+      "gap": 0.059613769311896436,
+      "leak": 0.8713091922005571,
+      "failed": [],
+      "published_failed": []
+    },
+    {
+      "arm": "old_7e1193c",
+      "boss": "TEST_SUBJECT",
+      "name": "实验体",
+      "start": "pre",
+      "n": 12,
+      "brier": 0.16266918184778173,
+      "limit": 0.1462316793799166,
+      "gap": 0.15420860209110535,
+      "leak": 3.349789029535865,
+      "failed": [
+        "brier",
+        "gap",
+        "leak"
+      ],
+      "published_failed": [
+        "brier",
+        "gap",
+        "leak"
+      ]
+    },
+    {
+      "arm": "old_7e1193c",
+      "boss": "THE_INSATIABLE",
+      "name": "无厌沙虫",
+      "start": "pre",
+      "n": 22,
+      "brier": 0.18007396007181642,
+      "limit": 0.1462316793799166,
+      "gap": 0.05920553808573148,
+      "leak": 1.473644578313253,
+      "failed": [
+        "brier",
+        "leak"
+      ],
+      "published_failed": [
+        "brier",
+        "leak"
+      ]
+    },
+    {
+      "arm": "old_7e1193c",
+      "boss": "VANTOM",
+      "name": "墨影幻灵",
+      "start": "pre",
+      "n": 17,
+      "brier": 0.1001813835572673,
+      "limit": 0.1462316793799166,
+      "gap": 0.09113789090943358,
+      "leak": 0.9968814968814966,
+      "failed": [],
+      "published_failed": []
+    },
+    {
+      "arm": "old_7e1193c",
+      "boss": "WATERFALL_GIANT",
+      "name": "瀑布巨兽",
+      "start": "pre",
+      "n": 20,
+      "brier": 0.0845863189861008,
+      "limit": 0.1462316793799166,
+      "gap": 0.04225081319823587,
+      "leak": 0.8761467889908255,
+      "failed": [],
+      "published_failed": []
+    },
+    {
+      "arm": "current",
+      "boss": "KAISER_CRAB",
+      "name": "帝王蟹",
+      "start": "t1",
+      "n": 52,
+      "brier": 0.15199595687865614,
+      "limit": 0.13052270055770426,
+      "gap": 0.02346185814258539,
+      "leak": 1.298526912181303,
+      "failed": [
+        "brier"
+      ],
+      "published_failed": [
+        "brier"
+      ]
+    },
+    {
+      "arm": "current",
+      "boss": "THE_KIN",
+      "name": "同族",
+      "start": "t1",
+      "n": 48,
+      "brier": 0.11160958888647816,
+      "limit": 0.13052270055770426,
+      "gap": 0.009532162832044833,
+      "leak": 1.0725043782837125,
+      "failed": [],
+      "published_failed": []
+    },
+    {
+      "arm": "current",
+      "boss": "QUEEN",
+      "name": "女王",
+      "start": "t1",
+      "n": 35,
+      "brier": 0.1848686401530196,
+      "limit": 0.13052270055770426,
+      "gap": 0.2091460111362209,
+      "leak": 1.3379611650485435,
+      "failed": [
+        "brier",
+        "gap",
+        "leak"
+      ],
+      "published_failed": [
+        "brier",
+        "gap",
+        "leak"
+      ]
+    },
+    {
+      "arm": "current",
+      "boss": "AEONGLASS",
+      "name": "永世沙漏",
+      "start": "t1",
+      "n": 42,
+      "brier": 0.19446469457982568,
+      "limit": 0.13052270055770426,
+      "gap": 0.1766953973145785,
+      "leak": 4.4043478260869575,
+      "failed": [
+        "brier",
+        "gap",
+        "leak"
+      ],
+      "published_failed": [
+        "brier",
+        "gap",
+        "leak"
+      ]
+    },
+    {
+      "arm": "current",
+      "boss": "CEREMONIAL_BEAST",
+      "name": "仪式兽",
+      "start": "t1",
+      "n": 44,
+      "brier": 0.05724002730661866,
+      "limit": 0.13052270055770426,
+      "gap": -0.019363474497179345,
+      "leak": 1.1424100156494528,
+      "failed": [],
+      "published_failed": []
+    },
+    {
+      "arm": "current",
+      "boss": "KNOWLEDGE_DEMON",
+      "name": "知识恶魔",
+      "start": "t1",
+      "n": 50,
+      "brier": 0.0809679980993636,
+      "limit": 0.13052270055770426,
+      "gap": 0.013822599502600785,
+      "leak": 1.3496809480401095,
+      "failed": [
+        "leak"
+      ],
+      "published_failed": [
+        "leak"
+      ]
+    },
+    {
+      "arm": "current",
+      "boss": "LAGAVULIN_MATRIARCH",
+      "name": "乐加维林族母",
+      "start": "t1",
+      "n": 48,
+      "brier": 0.05415867815773501,
+      "limit": 0.13052270055770426,
+      "gap": -0.005208983296979719,
+      "leak": 0.9712871287128715,
+      "failed": [],
+      "published_failed": []
+    },
+    {
+      "arm": "current",
+      "boss": "SOUL_FYSH",
+      "name": "灵魂异鱼",
+      "start": "t1",
+      "n": 43,
+      "brier": 0.031083878109560932,
+      "limit": 0.13052270055770426,
+      "gap": 0.010529214889868133,
+      "leak": 0.8417531718569783,
+      "failed": [],
+      "published_failed": []
+    },
+    {
+      "arm": "current",
+      "boss": "TEST_SUBJECT",
+      "name": "实验体",
+      "start": "t1",
+      "n": 33,
+      "brier": 0.13683663479627606,
+      "limit": 0.13052270055770426,
+      "gap": 0.1864815420575033,
+      "leak": 2.314203730272596,
+      "failed": [
+        "brier",
+        "gap",
+        "leak"
+      ],
+      "published_failed": [
+        "brier",
+        "gap",
+        "leak"
+      ]
+    },
+    {
+      "arm": "current",
+      "boss": "THE_INSATIABLE",
+      "name": "无厌沙虫",
+      "start": "t1",
+      "n": 55,
+      "brier": 0.13269786878030213,
+      "limit": 0.13052270055770426,
+      "gap": 0.03553278311072883,
+      "leak": 1.2382086167800448,
+      "failed": [
+        "brier"
+      ],
+      "published_failed": [
+        "brier"
+      ]
+    },
+    {
+      "arm": "current",
+      "boss": "VANTOM",
+      "name": "墨影幻灵",
+      "start": "t1",
+      "n": 56,
+      "brier": 0.04588887128942086,
+      "limit": 0.13052270055770426,
+      "gap": -0.03272333921003512,
+      "leak": 0.9563437139561706,
+      "failed": [],
+      "published_failed": []
+    },
+    {
+      "arm": "current",
+      "boss": "WATERFALL_GIANT",
+      "name": "瀑布巨兽",
+      "start": "t1",
+      "n": 43,
+      "brier": 0.10557319867095794,
+      "limit": 0.13052270055770426,
+      "gap": 0.027431539805878646,
+      "leak": 0.9219146482122254,
+      "failed": [],
+      "published_failed": []
+    },
+    {
+      "arm": "current",
+      "boss": "KAISER_CRAB",
+      "name": "帝王蟹",
+      "start": "pre",
+      "n": 52,
+      "brier": 0.17119235637211988,
+      "limit": 0.13445059324440678,
+      "gap": 0.04669010904533388,
+      "leak": 1.3275920679886692,
+      "failed": [
+        "brier",
+        "leak"
+      ],
+      "published_failed": [
+        "brier",
+        "leak"
+      ]
+    },
+    {
+      "arm": "current",
+      "boss": "THE_KIN",
+      "name": "同族",
+      "start": "pre",
+      "n": 48,
+      "brier": 0.11504711188127226,
+      "limit": 0.13445059324440678,
+      "gap": 0.0210519787265675,
+      "leak": 1.030881494454174,
+      "failed": [],
+      "published_failed": []
+    },
+    {
+      "arm": "current",
+      "boss": "QUEEN",
+      "name": "女王",
+      "start": "pre",
+      "n": 35,
+      "brier": 0.20597886422884956,
+      "limit": 0.13445059324440678,
+      "gap": 0.19519285615761084,
+      "leak": 1.4741747572815547,
+      "failed": [
+        "brier",
+        "gap",
+        "leak"
+      ],
+      "published_failed": [
+        "brier",
+        "gap",
+        "leak"
+      ]
+    },
+    {
+      "arm": "current",
+      "boss": "AEONGLASS",
+      "name": "永世沙漏",
+      "start": "pre",
+      "n": 42,
+      "brier": 0.19875479205624338,
+      "limit": 0.13445059324440678,
+      "gap": 0.19376803609575632,
+      "leak": 4.413043478260867,
+      "failed": [
+        "brier",
+        "gap",
+        "leak"
+      ],
+      "published_failed": [
+        "brier",
+        "gap",
+        "leak"
+      ]
+    },
+    {
+      "arm": "current",
+      "boss": "CEREMONIAL_BEAST",
+      "name": "仪式兽",
+      "start": "pre",
+      "n": 44,
+      "brier": 0.04708820385797342,
+      "limit": 0.13445059324440678,
+      "gap": 0.0012028433954229811,
+      "leak": 1.1702660406885763,
+      "failed": [],
+      "published_failed": []
+    },
+    {
+      "arm": "current",
+      "boss": "KNOWLEDGE_DEMON",
+      "name": "知识恶魔",
+      "start": "pre",
+      "n": 50,
+      "brier": 0.07365024939033941,
+      "limit": 0.13445059324440678,
+      "gap": 0.03418458731152474,
+      "leak": 1.376572470373746,
+      "failed": [
+        "leak"
+      ],
+      "published_failed": [
+        "leak"
+      ]
+    },
+    {
+      "arm": "current",
+      "boss": "LAGAVULIN_MATRIARCH",
+      "name": "乐加维林族母",
+      "start": "pre",
+      "n": 48,
+      "brier": 0.06217444288788105,
+      "limit": 0.13445059324440678,
+      "gap": -0.006852075196153051,
+      "leak": 1.0126732673267331,
+      "failed": [],
+      "published_failed": []
+    },
+    {
+      "arm": "current",
+      "boss": "SOUL_FYSH",
+      "name": "灵魂异鱼",
+      "start": "pre",
+      "n": 43,
+      "brier": 0.034455359165797346,
+      "limit": 0.13445059324440678,
+      "gap": 0.021575485591001975,
+      "leak": 0.8403690888119952,
+      "failed": [],
+      "published_failed": []
+    },
+    {
+      "arm": "current",
+      "boss": "TEST_SUBJECT",
+      "name": "实验体",
+      "start": "pre",
+      "n": 33,
+      "brier": 0.12345391000188176,
+      "limit": 0.13445059324440678,
+      "gap": 0.15852489043501863,
+      "leak": 2.309325681492109,
+      "failed": [
+        "gap",
+        "leak"
+      ],
+      "published_failed": [
+        "gap",
+        "leak"
+      ]
+    },
+    {
+      "arm": "current",
+      "boss": "THE_INSATIABLE",
+      "name": "无厌沙虫",
+      "start": "pre",
+      "n": 55,
+      "brier": 0.13919585197911757,
+      "limit": 0.13445059324440678,
+      "gap": 0.052980742574678774,
+      "leak": 1.248072562358277,
+      "failed": [
+        "brier"
+      ],
+      "published_failed": [
+        "brier"
+      ]
+    },
+    {
+      "arm": "current",
+      "boss": "VANTOM",
+      "name": "墨影幻灵",
+      "start": "pre",
+      "n": 56,
+      "brier": 0.045773809987279646,
+      "limit": 0.13445059324440678,
+      "gap": -0.025042310071602625,
+      "leak": 0.9321799307958477,
+      "failed": [],
+      "published_failed": []
+    },
+    {
+      "arm": "current",
+      "boss": "WATERFALL_GIANT",
+      "name": "瀑布巨兽",
+      "start": "pre",
+      "n": 43,
+      "brier": 0.10595450573729298,
+      "limit": 0.13445059324440678,
+      "gap": 0.04552948681863689,
+      "leak": 0.8935409457900807,
+      "failed": [],
+      "published_failed": []
+    }
+  ],
+  "F49": [
+    {
+      "arm": "old_7e1193c",
+      "scope": "F49_all",
+      "start": "t1",
+      "n": 14,
+      "brier": 0.1612307411251088,
+      "limit": 0.1455705286485659,
+      "gap": 0.3926625694462239,
+      "leak": 3.628712871287129,
+      "failed": [
+        "brier",
+        "gap",
+        "leak"
+      ]
+    },
+    {
+      "arm": "old_7e1193c",
+      "scope": "F49_QUEEN",
+      "start": "t1",
+      "n": 7,
+      "brier": 0.19917009677380326,
+      "limit": 0.1455705286485659,
+      "gap": 0.434196408258775,
+      "leak": 2.427272727272727,
+      "failed": [
+        "n",
+        "brier",
+        "gap",
+        "leak"
+      ]
+    },
+    {
+      "arm": "old_7e1193c",
+      "scope": "F49_AEONGLASS",
+      "start": "t1",
+      "n": 1,
+      "brier": 0.1232913854764143,
+      "limit": 0.1455705286485659,
+      "gap": 0.3511287306336727,
+      "leak": null,
+      "failed": [
+        "n",
+        "gap",
+        "leak_missing"
+      ]
+    },
+    {
+      "arm": "old_7e1193c",
+      "scope": "F49_TEST_SUBJECT",
+      "start": "t1",
+      "n": 6,
+      "brier": 0.12329138547641431,
+      "limit": 0.1455705286485659,
+      "gap": 0.3511287306336727,
+      "leak": 4.0017543859649125,
+      "failed": [
+        "n",
+        "gap",
+        "leak"
+      ]
+    },
+    {
+      "arm": "old_7e1193c",
+      "scope": "F49_all",
+      "start": "pre",
+      "n": 14,
+      "brier": 0.1126910230181681,
+      "limit": 0.1462316793799166,
+      "gap": 0.3328886422750384,
+      "leak": 3.710891089108911,
+      "failed": [
+        "gap",
+        "leak"
+      ]
+    },
+    {
+      "arm": "old_7e1193c",
+      "scope": "F49_QUEEN",
+      "start": "pre",
+      "n": 7,
+      "brier": 0.12242110793596375,
+      "limit": 0.1462316793799166,
+      "gap": 0.3449020157923047,
+      "leak": 2.6590909090909096,
+      "failed": [
+        "n",
+        "gap",
+        "leak"
+      ]
+    },
+    {
+      "arm": "old_7e1193c",
+      "scope": "F49_AEONGLASS",
+      "start": "pre",
+      "n": 1,
+      "brier": 0.10296093810037242,
+      "limit": 0.1462316793799166,
+      "gap": 0.320875268757772,
+      "leak": null,
+      "failed": [
+        "n",
+        "gap",
+        "leak_missing"
+      ]
+    },
+    {
+      "arm": "old_7e1193c",
+      "scope": "F49_TEST_SUBJECT",
+      "start": "pre",
+      "n": 6,
+      "brier": 0.10296093810037242,
+      "limit": 0.1462316793799166,
+      "gap": 0.320875268757772,
+      "leak": 3.782456140350877,
+      "failed": [
+        "n",
+        "gap",
+        "leak"
+      ]
+    },
+    {
+      "arm": "current",
+      "scope": "F49_all",
+      "start": "t1",
+      "n": 34,
+      "brier": 0.1757004342291537,
+      "limit": 0.13052270055770426,
+      "gap": 0.27692790401928347,
+      "leak": 2.4508571428571417,
+      "failed": [
+        "brier",
+        "gap",
+        "leak"
+      ]
+    },
+    {
+      "arm": "current",
+      "scope": "F49_QUEEN",
+      "start": "t1",
+      "n": 13,
+      "brier": 0.2152577120144937,
+      "limit": 0.13052270055770426,
+      "gap": 0.3349266614499282,
+      "leak": 1.4349462365591399,
+      "failed": [
+        "brier",
+        "gap",
+        "leak"
+      ]
+    },
+    {
+      "arm": "current",
+      "scope": "F49_AEONGLASS",
+      "start": "t1",
+      "n": 6,
+      "brier": 0.1903438423639268,
+      "limit": 0.13052270055770426,
+      "gap": 0.16655952706527444,
+      "leak": 5.38,
+      "failed": [
+        "n",
+        "brier",
+        "gap",
+        "leak"
+      ]
+    },
+    {
+      "arm": "current",
+      "scope": "F49_TEST_SUBJECT",
+      "start": "t1",
+      "n": 15,
+      "brier": 0.1355600968946165,
+      "limit": 0.13052270055770426,
+      "gap": 0.27080966502766163,
+      "leak": 3.2052238805970155,
+      "failed": [
+        "brier",
+        "gap",
+        "leak"
+      ]
+    },
+    {
+      "arm": "current",
+      "scope": "F49_all",
+      "start": "pre",
+      "n": 34,
+      "brier": 0.16273995173383182,
+      "limit": 0.13445059324440678,
+      "gap": 0.2535313243592342,
+      "leak": 2.5105714285714282,
+      "failed": [
+        "brier",
+        "gap",
+        "leak"
+      ]
+    },
+    {
+      "arm": "current",
+      "scope": "F49_QUEEN",
+      "start": "pre",
+      "n": 13,
+      "brier": 0.1926610872540705,
+      "limit": 0.13445059324440678,
+      "gap": 0.3044453264037364,
+      "leak": 1.5924731182795695,
+      "failed": [
+        "brier",
+        "gap",
+        "leak"
+      ]
+    },
+    {
+      "arm": "current",
+      "scope": "F49_AEONGLASS",
+      "start": "pre",
+      "n": 6,
+      "brier": 0.19900550959323524,
+      "limit": 0.13445059324440678,
+      "gap": 0.16426615264802014,
+      "leak": 5.840000000000001,
+      "failed": [
+        "n",
+        "brier",
+        "gap",
+        "leak"
+      ]
+    },
+    {
+      "arm": "current",
+      "scope": "F49_TEST_SUBJECT",
+      "start": "pre",
+      "n": 15,
+      "brier": 0.12230207780586365,
+      "limit": 0.13445059324440678,
+      "gap": 0.24511192460515147,
+      "leak": 3.03955223880597,
+      "failed": [
+        "gap",
+        "leak"
+      ]
+    }
+  ],
+  "candidate_trusted_b2": [
+    "THE_KIN",
+    "CEREMONIAL_BEAST",
+    "LAGAVULIN_MATRIARCH",
+    "SOUL_FYSH",
+    "VANTOM",
+    "WATERFALL_GIANT"
+  ],
+  "candidate_trusted_b3": [
+    "THE_KIN",
+    "CEREMONIAL_BEAST",
+    "LAGAVULIN_MATRIARCH",
+    "SOUL_FYSH",
+    "VANTOM",
+    "WATERFALL_GIANT"
+  ],
+  "limitations": [
+    "Old and current samples/models differ; changes are descriptive, not an ablation or causal gain.",
+    "F49 is a separate fight, not F48/F49 joint completion; SL attempts are not independent runs.",
+    "No natural consumer adoption, benefit, parent completion, or formal trust publication asserted."
+  ]
+}

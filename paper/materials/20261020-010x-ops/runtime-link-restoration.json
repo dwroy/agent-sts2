@@ -1,0 +1,29 @@
+{
+  "at": "2026-10-20 01:12:34 CST",
+  "actual_action": "Restored only missing live/logs -> original root/logs; original logs unchanged. Existing live/data directory and dependencies left unchanged.",
+  "initial_link_preflight_error": "AssertionError data: existing directory differs from expected symlink contract, so no data/dependency mutation performed",
+  "previous_refresh_failure_preserved": true,
+  "links": [
+    {
+      "path": ".worktrees/live/logs",
+      "exists": true,
+      "is_symlink": true,
+      "is_directory": true,
+      "resolved_target": "/home/dw/Projects/agent-sts2/logs"
+    },
+    {
+      "path": ".worktrees/live/data",
+      "exists": true,
+      "is_symlink": false,
+      "is_directory": true,
+      "resolved_target": null
+    },
+    {
+      "path": ".worktrees/live/agent/node_modules",
+      "exists": true,
+      "is_symlink": true,
+      "is_directory": true,
+      "resolved_target": "/home/dw/Projects/agent-sts2/agent/node_modules"
+    }
+  ]
+}

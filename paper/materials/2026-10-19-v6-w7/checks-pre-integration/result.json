@@ -1,0 +1,180 @@
+{
+  "at": "2026-10-19T23:14:32+08:00",
+  "base": "601160a34f130bf16c73e61078a90ffe97a724c0",
+  "status": "pending_shared_production_interface_and_final_checks",
+  "targeted": {
+    "exit_code": 0,
+    "files_passed": 3,
+    "tests_passed": 59,
+    "log": "v6-w7-targeted-twelfth.log.gz",
+    "scope": "W7 room, legacy off equivalence and rest/event routes; includes new follow-up provenance tests"
+  },
+  "tsc": {
+    "exit_code": 1,
+    "reason": "Two TS2307 errors: W3 v6-request-factory module is not yet on main",
+    "log": "v6-w7-tsc-third.log.gz"
+  },
+  "full_vitest": {
+    "exit_code": 143,
+    "status": "interrupted",
+    "reason": "Intermediate source changed; final production wiring and dependencies pending. Deliberately stopped only own test PIDs to release shared CPU. Not a pass.",
+    "log": "v6-w7-full-vitest-first.log.gz"
+  },
+  "artifacts": [
+    {
+      "file": "v6-w7-baseline-capture-second.log.gz",
+      "raw_sha256": "32f69a131100083320ebbadb67bcc9e00d15175f0f89545c5ef9aa269e360b0b",
+      "sha256": "9230440099e65cd6a515ed30d14f7a2bc39d9757bd323d0a60fa7439f7c14e79"
+    },
+    {
+      "file": "v6-w7-baseline-capture.log.gz",
+      "raw_sha256": "1081e76ff5234295c692d8bec3a71c8c81465cbf0706fb26039d410353f239cc",
+      "sha256": "e05277a4308a5ec95e56c146f958894371342d5afdd9fa3ae283f240c57beb08"
+    },
+    {
+      "file": "v6-w7-full-vitest-first.log.gz",
+      "raw_sha256": "043a28421c997b2a9f9335d7a7cbce6e6162a50c9a67ab60961f5de6b8923eac",
+      "sha256": "4a59f2c1a20e2f580f633736424e904c88f8a1df7c6994860b5b058e4b9335b9"
+    },
+    {
+      "file": "v6-w7-gitleaks-staged-first.log.gz",
+      "raw_sha256": "226b82b079b678481f91f3bdcf05edfec4f08d793a6ce13edbbccfe1695f2886",
+      "sha256": "b07996ca7a1785dbb65ef0693e1067aee69257c07d5b62e79a4b62d1c648b6ce"
+    },
+    {
+      "file": "v6-w7-loop-debug.log.gz",
+      "raw_sha256": "6ffb9a3eb9d7460f42c9812cec2c17335697e21013bbefa5e1a8787aa471da7c",
+      "sha256": "6c07c4b839e2382b3da92dc9573f59ef60033b18c547b464bc8084165a3fabea"
+    },
+    {
+      "file": "v6-w7-targeted-eighth.log.gz",
+      "raw_sha256": "f83f75dcef21f455bcf24445ed02192b74b45186ff69b58c7d7ac5b579940a60",
+      "sha256": "2a15ea4614fa2bc4815eb29d81fdf4ee63b964b585f094c9ce87ce8ecab36ffa"
+    },
+    {
+      "file": "v6-w7-targeted-fifth.log.gz",
+      "raw_sha256": "05ada43195e3fca7fcc706436ef281e7987c33964b9537c2f5bee86e4fd69188",
+      "sha256": "452a0e1eca2c1e7b78ef6c79cad70d4b297756dde4f131cc7d37c202dfbb3a60"
+    },
+    {
+      "file": "v6-w7-targeted-fourth.log.gz",
+      "raw_sha256": "befd79d9ad7fec3cb6d0880dee5d7576e19a70799ef308c373e2012d906149d5",
+      "sha256": "27f0753362c41fdc932202640da2f405a3c5681f53bd7d5ecda121ff0199f81c"
+    },
+    {
+      "file": "v6-w7-targeted-initial.log.gz",
+      "raw_sha256": "e79c4fb72432ef93e58d0ed245cccf695441234a71e6c573faba7e0f4ee0f46c",
+      "sha256": "cff5b4ae88d801c60ebbbc293014473c1f35262d356d6c08b01d8d5b31fd4d7c"
+    },
+    {
+      "file": "v6-w7-targeted-ninth.log.gz",
+      "raw_sha256": "b1a047e01e48ad8ca686becc640d41e28cfe8611b237f66af389c89d0d743f75",
+      "sha256": "90da86cf6b30bfd9c76bb9aed06c4f032aa1635d1983aba74253f1a2bbfc3310"
+    },
+    {
+      "file": "v6-w7-targeted-second.log.gz",
+      "raw_sha256": "24312e1d2ba75b91671e09af82535423df603203c3bbcc4b0934b4d3453f4d35",
+      "sha256": "b87f0b77179cbe470c3944da84a868cdc4bcd2fa1a64a5f8f3733518870eb506"
+    },
+    {
+      "file": "v6-w7-targeted-seventh.log.gz",
+      "raw_sha256": "d0d2c78041dd59dac6f9e8ffc6f0f93f197e787eb6453ac8fb229341bfab7963",
+      "sha256": "b0df6e48e5ca2929e170038e240b98b98149cff4b9f995dc714a801abe3ff89f"
+    },
+    {
+      "file": "v6-w7-targeted-sixth.log.gz",
+      "raw_sha256": "20b16f9cdd6dffccd56fd0d1ee6ed60d90566ee5b53af75f4893f3f2b983516e",
+      "sha256": "acaa1ecd7b760782efe620ce5c618ae861c036d305af851eafb987bc55a12053"
+    },
+    {
+      "file": "v6-w7-targeted-third.log.gz",
+      "raw_sha256": "b7d1de7d0bea878d088ea667372ecfcf9192ebc311fd6e210804d7fc4aac1fb8",
+      "sha256": "2dfbed462ed8ba7496372502c94d9820c107bf0b37dc8008f6330339a0fcc17c"
+    },
+    {
+      "file": "v6-w7-tsc-first.log.gz",
+      "raw_sha256": "87e9c6e1b6362f9b02779f26327a0b4be07faddb9ffb06432b292768bdb4f751",
+      "sha256": "022887f6892a777edb3549334520a2e450c778098c2c0c4d87f087c4dc66987c"
+    },
+    {
+      "file": "v6-w7-tsc-second.log.gz",
+      "raw_sha256": "87e9c6e1b6362f9b02779f26327a0b4be07faddb9ffb06432b292768bdb4f751",
+      "sha256": "022887f6892a777edb3549334520a2e450c778098c2c0c4d87f087c4dc66987c"
+    },
+    {
+      "file": "v6-w7-baseline-hashes.txt",
+      "sha256": "dc14f7175b24ff74230c267d4c36b57c470275ce6d4f9c20308b77d9b29e5974"
+    },
+    {
+      "file": "v6-w7-gitleaks-preintegration-second.log.gz",
+      "raw_sha256": "f04025a56f126f1d0bc412d9a504f93d907ace84f085cecd99f22e0da8f8f9c1",
+      "sha256": "14670325e1af774a7b4c81376c653522b3f76ab4f5037ec8a2256831b18a999f"
+    },
+    {
+      "file": "v6-w7-targeted-tenth.log.gz",
+      "raw_sha256": "40d487fd483a63451c88b4d1f0450fa88e93a3d25752a8b9eb104677c86c6e11",
+      "sha256": "6ea8c34968ea48938f25c8850862ef189be7a71cd0b28b9597c8b80b8164fd9e"
+    },
+    {
+      "file": "v6-w7-targeted-eleventh.log.gz",
+      "raw_sha256": "564b3b92c532432567d2b7585d84620396749cd6b5ef334a72aab88cfe25c068",
+      "sha256": "cd309d4a83e56c1b9747deeed741d92e19018efef3939f26542088526cd6cd1a"
+    },
+    {
+      "file": "v6-w7-targeted-twelfth.log.gz",
+      "raw_sha256": "54ebbb022c1b0dc2a4cdeef7e4c57e32e63b278b3a965d62f1cbc904d74d0d73",
+      "sha256": "4ff3446fff15483c95d458588d3722fd7a4c3f6ecaa8b3fdf86200c2cfea97cf"
+    },
+    {
+      "file": "v6-w7-tsc-third.log.gz",
+      "raw_sha256": "87e9c6e1b6362f9b02779f26327a0b4be07faddb9ffb06432b292768bdb4f751",
+      "sha256": "022887f6892a777edb3549334520a2e450c778098c2c0c4d87f087c4dc66987c"
+    },
+    {
+      "file": "v6-w7-targeted-thirteenth.log.gz",
+      "raw_sha256": "0a854b25af8740187abee86d5cb769535eb379d77abb871d74e2312d82eda9c8",
+      "sha256": "4d417dd4316118475c78453a280ae82d41095415ceca83f549d560db58207577"
+    },
+    {
+      "file": "v6-w7-targeted-fourteenth.log.gz",
+      "raw_sha256": "7a83b3b9238afa550860701b4ceba3070f1701d716f31ccdb260ea9e6d0a459c",
+      "sha256": "049b20d270f6964acd5b17d943ff39f6068f87d84700c8441fca7c15d8375e20"
+    },
+    {
+      "file": "v6-w7-gitleaks-preintegration-third.log.gz",
+      "raw_sha256": "bcb7297be9ede5a6e77ff08a299fe2b92e86e30fa91093c3dc1792114b7f8a81",
+      "sha256": "b8f7459919170716434bc8f2513d14addfe2a06d8306bdd0f3266b954f397fbb"
+    }
+  ],
+  "gitleaks": {
+    "exit_code": 0,
+    "status": "pre_integration_staged_scan_before_frozen_combo_change",
+    "log": "v6-w7-gitleaks-preintegration-third.log.gz"
+  },
+  "diff_check": {
+    "exit_code": 0
+  },
+  "artifact_encoding": "gzip, original bytes verified after decompression; original .log files remain untouched locally",
+  "targeted_broader": {
+    "exit_code": 0,
+    "files_passed": 7,
+    "tests_passed": 143,
+    "log": "v6-w7-targeted-eleventh.log.gz",
+    "scope": "Before the follow-up provenance addition"
+  },
+  "targeted_after_frozen_combo_change": {
+    "exit_code": 0,
+    "files_passed": 2,
+    "tests_passed": 43,
+    "log": "v6-w7-targeted-fourteenth.log.gz",
+    "scope": "W7 room and legacy off equivalence; frozen combinations survive formal-file changes during a run"
+  },
+  "superseded_targeted": {
+    "exit_code": 1,
+    "files_failed": 1,
+    "tests_failed": 1,
+    "tests_passed": 42,
+    "log": "v6-w7-targeted-thirteenth.log.gz",
+    "reason": "New frozen-combo assertion compared against the raw fixture rather than W3 normalized expected_win. Corrected to compare complete entries before/after the formal-file change."
+  }
+}

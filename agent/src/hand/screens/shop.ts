@@ -7,6 +7,8 @@
  */
 
 import { asArray, asRecord, bool, iconsToText, numOrNull, str, truncate, type JsonValue } from "../../core/util/json.js";
+import { buildV6RoomDecision } from "./v6-room.js";
+import { v6RoomActive, v6ShopOptions } from "./v6-room-options.js";
 import { deckEntries, describeDeck } from "../../memory/deck.js";
 import { potionViews } from "../../memory/narrow.js";
 import { briefJson } from "../../memory/run-brief.js";
@@ -44,7 +46,7 @@ export function planShop(env: DecisionEnv): Decision | null {
   if (!bool(shop["is_open"])) {
     // 1. Dump the junk potions first: a live shop run showed a Foul Potion blocking a slot, and the
     //    shop is the safe place to be rid of it.
-    if (!env.screenMemory.shopOpened && actions.includes("discard_potion")) {
+    if (!v6RoomActive(env, "shop") && !env.screenMemory.shopOpened && actions.includes("discard_potion")) {
       const discardList = env.shopDiscardPotions.map((entry) => entry.toLowerCase());
       const junk = potionViews({ raw: asRecord(state.run?.raw) }, knowledge).find(
         (potion) =>
@@ -89,6 +91,9 @@ export function planShop(env: DecisionEnv): Decision | null {
     }
     return null;
   }
+
+  const v6 = v6ShopOptions(env);
+  if (v6) return buildV6RoomDecision(env, v6);
 
   const options: PickOption[] = [];
   /** Every stocked item, affordable or not, with its value as if affordable (the one-shot plan's view). */

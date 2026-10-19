@@ -1,0 +1,357 @@
+{
+  "candidate": {
+    "path": "learner/runs/20261019-205809-d8a80b70-a777-4435-b1e4-121ca4bfb660-v6-boss-calibration-host-resume/2fce300434130222abaad2996dac0562b68061aad23221efa1d68d27ca60bcf0/boss-trust.json",
+    "bytes": 184543,
+    "sha256": "b16f7ca9bad297683a8f245476c6cc9a80b472be023f52b92b23f926e69ed58c"
+  },
+  "independent_audit": {
+    "path": ".artifacts/v6-supervision-20261019-234x/calibration-audit.json",
+    "bytes": 25826,
+    "sha256": "3625e13ee59de0019e900a0f44f83381b80716cc199a03e9d3e5bb732f92b98d"
+  },
+  "requested_old_SHA": "efe45027cf53dc1221db2310f0aced98b14fff277c8a8f622af07b4cb934d156",
+  "supplemental_old_SHA": "81077f1c34d2dab5cd36d3205afbef390b1795604c55085925d78cebd2579bef",
+  "gates": [
+    {
+      "boss": "KAISER_CRAB",
+      "start": "t1",
+      "n": 52,
+      "admission": {
+        "brier": 0.15199595687865614,
+        "brier_limit": 0.13052270055770426,
+        "gap": 0.02346185814258539,
+        "leak_ratio": 1.298526912181303
+      },
+      "failed": [
+        "brier"
+      ]
+    },
+    {
+      "boss": "KAISER_CRAB",
+      "start": "pre",
+      "n": 52,
+      "admission": {
+        "brier": 0.17119235637211988,
+        "brier_limit": 0.13445059324440678,
+        "gap": 0.04669010904533388,
+        "leak_ratio": 1.3275920679886692
+      },
+      "failed": [
+        "brier",
+        "leak"
+      ]
+    },
+    {
+      "boss": "THE_KIN",
+      "start": "t1",
+      "n": 48,
+      "admission": {
+        "brier": 0.11160958888647816,
+        "brier_limit": 0.13052270055770426,
+        "gap": 0.009532162832044833,
+        "leak_ratio": 1.0725043782837125
+      },
+      "failed": []
+    },
+    {
+      "boss": "THE_KIN",
+      "start": "pre",
+      "n": 48,
+      "admission": {
+        "brier": 0.11504711188127226,
+        "brier_limit": 0.13445059324440678,
+        "gap": 0.0210519787265675,
+        "leak_ratio": 1.030881494454174
+      },
+      "failed": []
+    },
+    {
+      "boss": "QUEEN",
+      "start": "t1",
+      "n": 35,
+      "admission": {
+        "brier": 0.1848686401530196,
+        "brier_limit": 0.13052270055770426,
+        "gap": 0.2091460111362209,
+        "leak_ratio": 1.3379611650485435
+      },
+      "failed": [
+        "brier",
+        "gap",
+        "leak"
+      ]
+    },
+    {
+      "boss": "QUEEN",
+      "start": "pre",
+      "n": 35,
+      "admission": {
+        "brier": 0.20597886422884956,
+        "brier_limit": 0.13445059324440678,
+        "gap": 0.19519285615761084,
+        "leak_ratio": 1.4741747572815547
+      },
+      "failed": [
+        "brier",
+        "gap",
+        "leak"
+      ]
+    },
+    {
+      "boss": "AEONGLASS",
+      "start": "t1",
+      "n": 42,
+      "admission": {
+        "brier": 0.19446469457982568,
+        "brier_limit": 0.13052270055770426,
+        "gap": 0.1766953973145785,
+        "leak_ratio": 4.4043478260869575
+      },
+      "failed": [
+        "brier",
+        "gap",
+        "leak"
+      ]
+    },
+    {
+      "boss": "AEONGLASS",
+      "start": "pre",
+      "n": 42,
+      "admission": {
+        "brier": 0.19875479205624338,
+        "brier_limit": 0.13445059324440678,
+        "gap": 0.19376803609575632,
+        "leak_ratio": 4.413043478260867
+      },
+      "failed": [
+        "brier",
+        "gap",
+        "leak"
+      ]
+    },
+    {
+      "boss": "CEREMONIAL_BEAST",
+      "start": "t1",
+      "n": 44,
+      "admission": {
+        "brier": 0.05724002730661866,
+        "brier_limit": 0.13052270055770426,
+        "gap": -0.019363474497179345,
+        "leak_ratio": 1.1424100156494528
+      },
+      "failed": []
+    },
+    {
+      "boss": "CEREMONIAL_BEAST",
+      "start": "pre",
+      "n": 44,
+      "admission": {
+        "brier": 0.04708820385797342,
+        "brier_limit": 0.13445059324440678,
+        "gap": 0.0012028433954229811,
+        "leak_ratio": 1.1702660406885763
+      },
+      "failed": []
+    },
+    {
+      "boss": "KNOWLEDGE_DEMON",
+      "start": "t1",
+      "n": 50,
+      "admission": {
+        "brier": 0.0809679980993636,
+        "brier_limit": 0.13052270055770426,
+        "gap": 0.013822599502600785,
+        "leak_ratio": 1.3496809480401095
+      },
+      "failed": [
+        "leak"
+      ]
+    },
+    {
+      "boss": "KNOWLEDGE_DEMON",
+      "start": "pre",
+      "n": 50,
+      "admission": {
+        "brier": 0.07365024939033941,
+        "brier_limit": 0.13445059324440678,
+        "gap": 0.03418458731152474,
+        "leak_ratio": 1.376572470373746
+      },
+      "failed": [
+        "leak"
+      ]
+    },
+    {
+      "boss": "LAGAVULIN_MATRIARCH",
+      "start": "t1",
+      "n": 48,
+      "admission": {
+        "brier": 0.05415867815773501,
+        "brier_limit": 0.13052270055770426,
+        "gap": -0.005208983296979719,
+        "leak_ratio": 0.9712871287128715
+      },
+      "failed": []
+    },
+    {
+      "boss": "LAGAVULIN_MATRIARCH",
+      "start": "pre",
+      "n": 48,
+      "admission": {
+        "brier": 0.06217444288788105,
+        "brier_limit": 0.13445059324440678,
+        "gap": -0.006852075196153051,
+        "leak_ratio": 1.0126732673267331
+      },
+      "failed": []
+    },
+    {
+      "boss": "SOUL_FYSH",
+      "start": "t1",
+      "n": 43,
+      "admission": {
+        "brier": 0.031083878109560932,
+        "brier_limit": 0.13052270055770426,
+        "gap": 0.010529214889868133,
+        "leak_ratio": 0.8417531718569783
+      },
+      "failed": []
+    },
+    {
+      "boss": "SOUL_FYSH",
+      "start": "pre",
+      "n": 43,
+      "admission": {
+        "brier": 0.034455359165797346,
+        "brier_limit": 0.13445059324440678,
+        "gap": 0.021575485591001975,
+        "leak_ratio": 0.8403690888119952
+      },
+      "failed": []
+    },
+    {
+      "boss": "TEST_SUBJECT",
+      "start": "t1",
+      "n": 33,
+      "admission": {
+        "brier": 0.13683663479627606,
+        "brier_limit": 0.13052270055770426,
+        "gap": 0.1864815420575033,
+        "leak_ratio": 2.314203730272596
+      },
+      "failed": [
+        "brier",
+        "gap",
+        "leak"
+      ]
+    },
+    {
+      "boss": "TEST_SUBJECT",
+      "start": "pre",
+      "n": 33,
+      "admission": {
+        "brier": 0.12345391000188176,
+        "brier_limit": 0.13445059324440678,
+        "gap": 0.15852489043501863,
+        "leak_ratio": 2.309325681492109
+      },
+      "failed": [
+        "gap",
+        "leak"
+      ]
+    },
+    {
+      "boss": "THE_INSATIABLE",
+      "start": "t1",
+      "n": 55,
+      "admission": {
+        "brier": 0.13269786878030213,
+        "brier_limit": 0.13052270055770426,
+        "gap": 0.03553278311072883,
+        "leak_ratio": 1.2382086167800448
+      },
+      "failed": [
+        "brier"
+      ]
+    },
+    {
+      "boss": "THE_INSATIABLE",
+      "start": "pre",
+      "n": 55,
+      "admission": {
+        "brier": 0.13919585197911757,
+        "brier_limit": 0.13445059324440678,
+        "gap": 0.052980742574678774,
+        "leak_ratio": 1.248072562358277
+      },
+      "failed": [
+        "brier"
+      ]
+    },
+    {
+      "boss": "VANTOM",
+      "start": "t1",
+      "n": 56,
+      "admission": {
+        "brier": 0.04588887128942086,
+        "brier_limit": 0.13052270055770426,
+        "gap": -0.03272333921003512,
+        "leak_ratio": 0.9563437139561706
+      },
+      "failed": []
+    },
+    {
+      "boss": "VANTOM",
+      "start": "pre",
+      "n": 56,
+      "admission": {
+        "brier": 0.045773809987279646,
+        "brier_limit": 0.13445059324440678,
+        "gap": -0.025042310071602625,
+        "leak_ratio": 0.9321799307958477
+      },
+      "failed": []
+    },
+    {
+      "boss": "WATERFALL_GIANT",
+      "start": "t1",
+      "n": 43,
+      "admission": {
+        "brier": 0.10557319867095794,
+        "brier_limit": 0.13052270055770426,
+        "gap": 0.027431539805878646,
+        "leak_ratio": 0.9219146482122254
+      },
+      "failed": []
+    },
+    {
+      "boss": "WATERFALL_GIANT",
+      "start": "pre",
+      "n": 43,
+      "admission": {
+        "brier": 0.10595450573729298,
+        "brier_limit": 0.13445059324440678,
+        "gap": 0.04552948681863689,
+        "leak_ratio": 0.8935409457900807
+      },
+      "failed": []
+    }
+  ],
+  "trusted_b2": [
+    "THE_KIN",
+    "CEREMONIAL_BEAST",
+    "LAGAVULIN_MATRIARCH",
+    "SOUL_FYSH",
+    "VANTOM",
+    "WATERFALL_GIANT"
+  ],
+  "trusted_b3": [
+    "THE_KIN",
+    "CEREMONIAL_BEAST",
+    "LAGAVULIN_MATRIARCH",
+    "SOUL_FYSH",
+    "VANTOM",
+    "WATERFALL_GIANT"
+  ],
+  "scope": "Frozen model 9f424551, original four gates and split, no natural adoption or joint-F49 reliability claim. H0 authorized next AEONGLASS then TEST_SUBJECT, original report QUEEN suggestion retained."
+}

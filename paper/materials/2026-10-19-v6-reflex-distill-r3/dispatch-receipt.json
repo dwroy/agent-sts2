@@ -1,0 +1,57 @@
+{
+  "at": "2026-10-19T23:50:42.376475+08:00",
+  "task": "v6-reflex-distill-r3",
+  "request_id": "roy-20261019-v6",
+  "batch": "v6-reflex-distill-r3-20261019-2347",
+  "template_commit": "7aa0943449fd987f6e49696ce63661f9f3177909",
+  "dispatch_count": 1,
+  "preflight_failures_before_model_start": 1,
+  "preflight_failure_record": "/home/dw/Projects/agent-sts2/ops/codex-ops/learner/v6-reflex-distill-r3-20261019-2347.launch.json",
+  "launcher_pid": 2949916,
+  "child_pid": 2950579,
+  "account": "codex1",
+  "auth_target_path_only": "/home/dw/.codex1/auth.json",
+  "auth_contents_read": false,
+  "timeout_min": 240,
+  "thread_id": "01a154da-3c95-7a23-9a7f-2ef787859c44",
+  "native_log": "/home/dw/Projects/agent-sts2/ops/codex-ops/accounts/codex1/learner/sessions/2026/10/19/rollout-2026-10-19T23-49-11-01a154da-3c95-7a23-9a7f-2ef787859c44.jsonl",
+  "native_turn_contexts": [
+    {
+      "timestamp": "2026-10-19T15:49:44.088Z",
+      "cwd": "/home/dw/Projects/agent-sts2/.worktrees/v6-reflex-distill-r3-20261019",
+      "model": "gpt-6.1-sol",
+      "effort": "xhigh",
+      "service_tier": null
+    }
+  ],
+  "processes": [
+    {
+      "pid": 2949916,
+      "state": "S",
+      "nice": 19,
+      "account_selectors": [
+        "CODEX_HOME=/home/dw/.codex1",
+        "LEARNER_CODEX_HOME=/home/dw/Projects/agent-sts2/ops/codex-ops/accounts/codex1/learner"
+      ]
+    },
+    {
+      "pid": 2950579,
+      "state": "S",
+      "nice": 19,
+      "account_selectors": [
+        "CODEX_HOME=/home/dw/Projects/agent-sts2/ops/codex-ops/accounts/codex1/learner",
+        "LEARNER_CODEX_HOME=/home/dw/Projects/agent-sts2/ops/codex-ops/accounts/codex1/learner"
+      ]
+    }
+  ],
+  "inputs_path": "/home/dw/Projects/agent-sts2/ops/codex-ops/learner/v6-reflex-distill-r3-20261019-2347.inputs.json",
+  "inputs_sha256": "024e715fe35e7134c8d6896c4beb9a6876214231435697ec4f99bcd11f133fa4",
+  "frozen_files": 1612,
+  "ended_silent_runs": 372,
+  "verified_prior_artifacts": 1417,
+  "log_bytes": 20109176791,
+  "simulation": "off",
+  "formal_knowledge_write": false,
+  "formal_publication_dispatched": false,
+  "status": "running_verified"
+}
