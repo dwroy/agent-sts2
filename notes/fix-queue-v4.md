@@ -1490,3 +1490,5 @@ Roy：「上线后进 F48 反而降低一半，这才是关键，要找问题。
 - [ ] 2026-10-19 23:42:26 CST **ops-frozen-storage-v6-stream-20261019（非对局阻塞）**：ops/content_store.py:208流名正则[a-z][a-z-]*拒绝learner/extract_evidence.py原支持v6-build；231301策略原finalizer retained。九份原声明已由ops显式--file入口逐SHA/size/只读同inode核验归并，原失败/三manifest保留。沿原普通fix链做精确受支持流兼容，保未知流、越界、SHA/size、symlink/凭据拒绝守卫；不重模型、不改历史声明/结果、不以本批归并冒源码修复。证据paper/materials/20261019-2337-ops/receipt.json。
 
 - [ ] 2026-10-19 23:51:33 CST **infra-manual-learning-notice-ack-scope-20261019（非对局阻塞，原通知协议fix链）**：0baef634d02e1ff85843c10a/f619c26f4bfa10970591beb5/b5b53e0d8bebe1df7fb30468为Roy一次性手动学习异议，原watcher已实际读/告Roy，六份真实角色回执保留；无注册父且旧notice缺scope，ack_request:66-67拒unknown learning request。须按原批/线程/原文SHA/角色真实回执建立窄来源兼容，保现有普通proposal/feature/legacy、token/前阶段/异源/伪送达负控；禁止原地补字段、造父/提案或代ACK消pending。修复后原watcher本人走CLI补登记；不重派学习/研究，不改变知识或开局。证据paper/materials/20261019-2349-ops/receipt.json，原失败及旧源不改。
+
+- 2026-10-20 00:04:01 CST [ops-frozen-storage-v6-stream-20261019 原项续证] 234302双策略同一v6-build流名冲突再现，两原失败保留；24已声明文件/607163778逻辑字节已原显式--file入口逐SHA/size/只读同inode核验归并。仅兜底存储，源码兼容仍open；继续原fix链，不重复条目/模型、不得删改manifest或放松原路径与SHA守卫。证据paper/materials/20261020-0001-ops/receipt.json。
