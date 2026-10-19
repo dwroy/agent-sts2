@@ -54,6 +54,20 @@ describe("V6 run-start frozen history", () => {
     if (loaded.status === "loaded") expect(loaded.value.data.coverage[0]!.ascension).toBe(0);
     expect(loadV6HistoryPack("/does/not/exist", "silent", { mode: "off" })).toMatchObject({ status: "disabled", path: "" });
   });
+  it("a valid between-run replacement is read only by the next run snapshot", () => {
+    const root = temporary(), path = publish(root);
+    const active = loadV6HistoryPack(root, "silent", { mode: "on" });
+    const next = assembleV6History(input());
+    next.data.labels.push("fixed_next_run_refresh");
+    writeFileSync(path, JSON.stringify(sealV6History(next.data, at(57))));
+    const following = loadV6HistoryPack(root, "silent", { mode: "on" });
+    expect(active.status).toBe("loaded"); expect(following.status).toBe("loaded");
+    if (active.status === "loaded" && following.status === "loaded") {
+      expect(active.value.data.labels).not.toContain("fixed_next_run_refresh");
+      expect(following.value.data.labels).toContain("fixed_next_run_refresh");
+      expect(active.value.content_sha256).not.toBe(following.value.content_sha256);
+    }
+  });
   it("rejects cross-character symlinks and mismatched or future-dated payloads even with a new hash", () => {
     const root = temporary(), path = publish(root), dir = join(root, "characters/regent"); mkdirSync(dir);
     symlinkSync(path, join(dir, "v6-history.json"));

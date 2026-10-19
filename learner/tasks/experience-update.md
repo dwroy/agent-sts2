@@ -8,6 +8,13 @@ default.base_branch: main
 default.merge: live
 default.merge_dir: {{project_root}}/.worktrees/live
 ---
+
+## V6 与 Jev 原始证据（机械提证，不能用摘要代替原文）
+
+先核本批 `{{runs}}` 在 runs.jsonl 的角色为 `{{character}}` 且已结束。运行 `nice -n 19 python3 {{project_root}}/learner/evidence_summary.py --logs "{{logs_dir}}" --runs "{{runs}}" --out "{{scratch}}/evidence-summary.json"`，并运行 `nice -n 19 python3 {{worktree}}/learner/extract_evidence.py --logs "{{logs_dir}}" --output "{{scratch}}/v6-evidence" --runs "{{runs}}" --streams v6-build jev-prompts decisions run-config`。实际读取 manifest 和本角色/本批两条流中相关的原始 row；逐问题核完整题面、答案/错误、decisions 的 chosen/result/gate_reject/selection_dispatch 与后续 states 后果，保留 offset/bytes/SHA、冻结切点和 identity 关联出处。有限索引只是定位入口；覆盖哪些问题、未读哪些问题及原因必须写入报告，不把最后五条当完整覆盖。
+
+只接受显式 run_id 或通过 decisions 原始行核对的精确 decision_id；正文提及、时间邻近和 question_id 的相似字符串均不建立所属局。v6-build 的 entries/jev_answer/fallback/unknown 和 Jev request/answers/error 分开解释；完整题面存在不表示采用、执行成功或收益。V6 off、历史缺流、无匹配、截断、未知身份都显式保留，沿原任务其余证据流程继续；缺失不是零，也不能据此补经验或跨角色借证。提证不证明本批正式发布、下一局消费或自然收益。
+
 # 任务：更新经验库（{{runs}}）
 
 你是 STS2 × Jev 项目的离线学习者，这一次只做一件事：把新写好的复盘并进经验库 `{{experience_path}}`，同时在变更记录里追加一节。全程用中文。自己做，不许再派下级 agent。
@@ -61,7 +68,7 @@ default.merge_dir: {{project_root}}/.worktrees/live
 公共与角色专属条目分别去重并保留原来源映射。共享变更走固定自测/live/账本与提案 CLI/版本登记；独立通道候选交主 ops 精确集成，再同步已发布文件，不合整个通道分支。根请求由 ops 维护，学习者不能关闭。回报列 shared_entries/shared_candidates、来源、实际发布及消费者材料；报告完成不表示要求完成，固定读取与自然采用分开。
 
 ## 2. 方法（照变更记录）
-- **来源**：这几局的复盘，加上日志里重新抽出来的数字。日志文件很大，只能按 run id grep 或按字节偏移 seek 流式读；`deepseek-reasoning.jsonl`、`states.jsonl` 没有 run id，按时间窗定位。可以沿用变更记录里写过的抽取脚本和工具（`agent/tools/boss-fights-extract.py`、`agent/tools/boss-clock-calibrate.ts --rows`、`agent/tools/knowledge-slice.ts` 等），在 {{worktree}} 里跑。
+- **来源**：这几局的复盘，加上日志里重新抽出来的数字。日志文件很大，只能按 run id grep 或按字节偏移 seek 流式读；`states.jsonl` 按 `state.run_id`，decisions 按显式 `run_id`／`fingerprint.run` 定位；旧 deepseek-reasoning 若缺可核身份，只作待核索引，不按邻近时间归局。可以沿用变更记录里写过的抽取脚本和工具（`agent/tools/boss-fights-extract.py`、`agent/tools/boss-clock-calibrate.ts --rows`、`agent/tools/knowledge-slice.ts` 等），在 {{worktree}} 里跑。
 - **口径**沿用上一节（「战内掉血」= 第一帧 HP − 最后一帧 HP，死亡单独计；走廊只算 Monster 房，问号另算；汇总截至哪个时间、哪些局只进数字，都写明）。用同样的口径把上一节的数字重算一遍，对上了再加新局；对不上的，先找原因并写进本节。
 - **合并原则**：同一件事只留一条；单局事实并入汇总条目作证据；纯代码 bug 留在修复记录；可复现的出牌/药水/SL/终局经验要保留并同步代码提案，逐回合明细留报告（带真实游戏数据的 bug 记录，把数据留下）。
 - **字段**：

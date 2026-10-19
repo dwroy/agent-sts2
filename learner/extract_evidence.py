@@ -12,82 +12,53 @@ import tempfile
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / 'ops'))
 from content_store import Store, default_directory
 
-STREAMS = ('states', 'decisions', 'sl-attempts', 'run-config', 'run-plans', 'brain', 'runs', 'fight-plans')
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+from evidence_identity import run_identity, scan, associate, decision_index, frozen_sizes
+
+STREAMS = ('states', 'decisions', 'sl-attempts', 'run-config', 'run-plans', 'brain', 'runs', 'fight-plans', 'v6-build', 'jev-prompts')
 
 
-def run_identity(row):
-    """Read explicit identities only; conflicting fields cannot establish a run."""
-    if not isinstance(row, dict):
-        return None
-    state = row.get('state')
-    values = [row.get('run_id'), state.get('run_id') if isinstance(state, dict) else None,
-              row.get('run')]
-    fingerprint = row.get('fingerprint')
-    if isinstance(fingerprint, str):
-        try:
-            fingerprint = json.loads(fingerprint)
-        except ValueError:
-            fingerprint = None
-    if isinstance(fingerprint, dict):
-        values.append(fingerprint.get('run'))
-    identities = {value for value in values if isinstance(value, str) and value and value != 'run_unknown'}
-    return next(iter(identities)) if len(identities) == 1 else None
-
-
-def extract(source, output, runs, source_size=None, store=None):
-    """Freeze the scan boundary before reading; preserve raw line bytes, including LF."""
+def extract(source, output, runs, source_size=None, store=None, index=None, frozen_missing=False):
+    """Freeze the scan boundary; retain raw rows and exact identity provenance."""
     source, output = Path(source), Path(output)
-    counts = dict.fromkeys(runs, 0)
-    invalid = incomplete = 0
-    with source.open('rb') as handle:
-        size = os.fstat(handle.fileno()).st_size
-        limit = size if source_size is None else source_size
-        if type(limit) is not int or not 0 <= limit <= size:
-            raise ValueError('source size must be within the observed file')
-        digest = hashlib.sha256()
-        temporary = None
-        try:
-            fd, name = tempfile.mkstemp(prefix='.' + output.name + '-', dir=output.parent)
-            temporary = Path(name)
-            destination = os.fdopen(fd, 'wb')
-            with destination:
-                number = offset = 0
-                while offset < limit:
-                    raw = handle.readline(limit - offset)
-                    if not raw:
-                        raise ValueError('source truncated during extraction')
-                    number += 1
-                    start = offset
-                    offset += len(raw)
-                    if not raw.endswith(b'\n'):
-                        incomplete += 1
-                        continue
-                    try:
-                        row = json.loads(raw)
-                    except (ValueError, UnicodeDecodeError):
-                        invalid += 1
-                        continue
-                    run = run_identity(row)
-                    if run not in counts:
-                        continue
-                    counts[run] += 1
-                    item = {'source': str(source), 'line': number, 'offset': start, 'bytes': len(raw),
-                            'sha256': hashlib.sha256(raw).hexdigest(), 'run_id': run, 'row': row}
-                    encoded = (json.dumps(item, ensure_ascii=False) + '\n').encode('utf8')
-                    destination.write(encoded)
-                    digest.update(encoded)
-                destination.flush()
-                os.fsync(destination.fileno())
-            if store:
-                content = store.publish_view(temporary, output)
-            else:
-                content = None
-                os.replace(temporary, output)
-        finally:
-            if temporary is not None:
-                temporary.unlink(missing_ok=True)
-    result = {'stream': source.stem, 'source_size': limit, 'counts': counts,
-              'invalid_lines': invalid, 'incomplete_lines': incomplete, 'output_sha256': digest.hexdigest()}
+    limit = None if frozen_missing else ((source.stat().st_size if source.exists() else None)
+                                        if source_size is None else source_size)
+    counts = dict.fromkeys(runs, 0 if limit is not None else None)
+    info = {}
+    unknown = {}
+    unknown_refs = []
+    digest = hashlib.sha256()
+    fd, name = tempfile.mkstemp(prefix='.' + output.name + '-', dir=output.parent)
+    temporary = Path(name)
+    try:
+        with os.fdopen(fd, 'wb') as destination:
+            for row, ref in scan(source, limit, info):
+                run, association = associate(row, index)
+                if run is None:
+                    status = association['status']
+                    unknown[status] = unknown.get(status, 0) + 1
+                    unknown_refs = (unknown_refs + [{**ref, 'identity': association}])[-5:]
+                if run not in counts:
+                    continue
+                counts[run] += 1
+                item = {**ref, 'run_id': run, 'identity': association, 'row': row}
+                encoded = (json.dumps(item, ensure_ascii=False) + '\n').encode('utf8')
+                destination.write(encoded)
+                digest.update(encoded)
+            destination.flush()
+            os.fsync(destination.fileno())
+        if store:
+            content = store.publish_view(temporary, output)
+        else:
+            content = None
+            os.replace(temporary, output)
+    finally:
+        temporary.unlink(missing_ok=True)
+    result = {**info, 'stream': source.stem, 'counts': counts, 'identity_gaps': unknown,
+              'identity_gap_refs': unknown_refs, 'identity_gap_refs_limit': 5,
+              'selection_status': {run: 'missing' if count is None else 'matched' if count else 'no_match'
+                                   for run, count in counts.items()},
+              'output_sha256': digest.hexdigest(), 'consumption_or_benefit': None}
     if content:
         result['content'] = content
     return result
@@ -98,7 +69,7 @@ def main():
     parser.add_argument('--logs', type=Path, required=True)
     parser.add_argument('--output', type=Path, required=True)
     parser.add_argument('--runs', required=True, help='comma-separated observed run IDs')
-    parser.add_argument('--streams', choices=STREAMS, nargs='+', default=list(STREAMS[:6]))
+    parser.add_argument('--streams', choices=STREAMS, nargs='+', default=list(STREAMS[:6]) + list(STREAMS[-2:]))
     parser.add_argument('--source-size', type=int, help='earlier byte cutoff; requires one stream')
     parser.add_argument('--object-store', type=Path, help='shared immutable store; default is this repository object directory')
     args = parser.parse_args()
@@ -111,8 +82,17 @@ def main():
         parser.error('streams must be distinct')
     args.output.mkdir(parents=True, exist_ok=True)
     store = Store(args.object_store or default_directory(args.output))
-    manifest = [extract(args.logs / (name + '.jsonl'), args.output / (name + '.evidence.jsonl'),
-                        runs, args.source_size, store) for name in args.streams]
+    cuts = frozen_sizes(args.logs, list(dict.fromkeys([*args.streams, 'decisions'])))
+    if args.source_size is not None:
+        cuts[args.streams[0]] = args.source_size
+    index, decision_source = decision_index(args.logs / 'decisions.jsonl', runs, cuts['decisions']) if 'jev-prompts' in args.streams else ({}, None)
+    manifest = []
+    for name in args.streams:
+        item = extract(args.logs / (name + '.jsonl'), args.output / (name + '.evidence.jsonl'),
+                       runs, cuts[name], store, index if name == 'jev-prompts' else None, frozen_missing=cuts[name] is None)
+        if name == 'jev-prompts':
+            item['decision_identity_source'] = decision_source
+        manifest.append(item)
     (args.output / 'evidence-manifest.json').write_text(json.dumps(manifest, ensure_ascii=False, indent=2) + '\n')
     print(json.dumps(manifest, ensure_ascii=False))
 

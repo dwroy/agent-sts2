@@ -7,7 +7,7 @@ import json
 from pathlib import Path
 import re
 
-from extract_evidence import run_identity
+from evidence_identity import run_identity, scan, associate, decision_index, frozen_sizes, identities
 
 
 def summarize(logs, runs):
@@ -22,57 +22,59 @@ def summarize(logs, runs):
     deciders = {run: Counter() for run in runs}
     fallbacks = {run: Counter() for run in runs}
     refs = {run: deque(maxlen=5) for run in runs}
-    needles = [run.encode() for run in runs]
+    cuts = frozen_sizes(logs, ('runs', 'decisions', 'v6-build', 'jev-prompts'))
     for stream in ('runs', 'decisions'):
         path = logs / (stream + '.jsonl')
-        info = {'path': str(path), 'exists': path.exists(), 'invalid_selected_lines': 0,
-                'incomplete_lines': 0, 'rows': 0}
+        info = {'path': str(path), 'exists': cuts[stream] is not None, 'cutoff_bytes': cuts[stream]}
         result['sources'].append(info)
-        if not path.exists():
-            continue
-        with path.open('rb') as handle:
-            limit = path.stat().st_size
-            info['cutoff_bytes'] = limit
-            offset = 0
-            while offset < limit:
-                raw = handle.readline(limit - offset)
-                if not raw:
-                    raise ValueError('source truncated during scan')
-                start = offset
-                offset += len(raw)
-                info['rows'] += 1
-                if not raw.endswith(b'\n'):
-                    info['incomplete_lines'] += 1
-                    continue
-                if not any(needle in raw for needle in needles):
-                    continue
-                try:
-                    row = json.loads(raw)
-                except (ValueError, UnicodeDecodeError):
-                    info['invalid_selected_lines'] += 1
-                    continue
-                run = run_identity(row)
-                if run not in selected:
-                    continue
-                ref = {'source': str(path), 'offset': start, 'bytes': len(raw),
-                       'sha256': hashlib.sha256(raw).hexdigest()}
-                if stream == 'runs':
-                    # Retain all outcome references, including conflicting duplicate rows.
-                    result['runs'][run]['outcomes'].append({
-                        **{key: row[key] for key in ('ended', 'character', 'floor', 'ascension', 'victory', 'code') if key in row},
-                        'ref': ref})
-                    continue
-                result['runs'][run]['decision_count'] += 1
-                labels[run][str(row.get('label', '<missing>'))] += 1
-                deciders[run][str(row.get('decider', '<missing>'))] += 1
-                if row.get('fallback'):
-                    fallbacks[run][str(row['fallback'])[:160]] += 1
-                refs[run].append({**{key: row[key] for key in ('ts', 'floor', 'turn', 'label') if key in row}, 'ref': ref})
+        for row, ref in scan(path, cuts[stream], info):
+            run = run_identity(row)
+            if run not in selected:
+                continue
+            ref['identity'] = {'fields': identities(row)}
+            if stream == 'runs':
+                # Retain all outcome references, including conflicting duplicate rows.
+                result['runs'][run]['outcomes'].append({
+                    **{key: row[key] for key in ('ended', 'character', 'floor', 'ascension', 'victory', 'code') if key in row},
+                    'ref': ref})
+                continue
+            result['runs'][run]['decision_count'] += 1
+            labels[run][str(row.get('label', '<missing>'))] += 1
+            deciders[run][str(row.get('decider', '<missing>'))] += 1
+            if row.get('fallback'):
+                fallbacks[run][str(row['fallback'])[:160]] += 1
+            refs[run].append({**{key: row[key] for key in ('ts', 'floor', 'turn', 'label') if key in row}, 'ref': ref})
     for run, item in result['runs'].items():
         for name, counters in (('labels', labels), ('deciders', deciders), ('fallbacks', fallbacks)):
             item[name] = dict(counters[run].most_common(12))
             item[name + '_other_count'] = sum(counters[run].values()) - sum(item[name].values())
         item['last_five_decision_refs'] = list(refs[run])
+    index, decision_source = decision_index(logs / 'decisions.jsonl', runs, cuts['decisions'])
+    for stream in ('v6-build', 'jev-prompts'):
+        info, gaps, gap_refs = {}, Counter(), deque(maxlen=5)
+        counts = dict.fromkeys(runs, 0 if cuts[stream] is not None else None)
+        samples = {run: deque(maxlen=5) for run in runs}
+        for row, ref in scan(logs / (stream + '.jsonl'), cuts[stream], info):
+            run, identity = associate(row, index if stream == 'jev-prompts' else None)
+            if run is None:
+                gaps[identity['status']] += 1
+                gap_refs.append({**ref, 'identity': identity})
+            if run not in selected:
+                continue
+            counts[run] += 1
+            samples[run].append({**ref, 'identity': identity,
+                                 **{key: row[key] for key in ('decision_id', 'question_id', 'kind', 'mode') if key in row}})
+        info['identity_gaps'] = dict(gaps)
+        info['identity_gap_refs'] = list(gap_refs)
+        info['identity_gap_refs_limit'] = 5
+        info['counts'] = counts
+        if stream == 'jev-prompts':
+            info['decision_identity_source'] = decision_source
+        result['sources'].append(info)
+        for run in runs:
+            result['runs'][run][stream] = {'count': counts[run], 'last_five_refs': list(samples[run]),
+                'status': 'missing' if counts[run] is None else 'matched' if counts[run] else 'no_match',
+                'consumption_or_benefit': None}
     return result
 
 

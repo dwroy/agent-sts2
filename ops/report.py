@@ -9,6 +9,7 @@ import collections
 import json
 import os
 import re
+import shlex
 import subprocess
 import sys
 
@@ -501,7 +502,7 @@ def refresh_knowledge(character=None) -> None:
     import subprocess
     # Into the live worktree (.worktrees/live, agent-sts2 layout 2026-10-04; was jev-sts2-v4run), whose logs/ and data/
     # link to the main checkout's. knowledge/builders/refresh.sh holds the command list (same steps, same order).
-    refresh = f"{LIVE}/knowledge/builders/refresh.sh"
+    refresh = "bash " + shlex.quote(f"{LIVE}/knowledge/builders/refresh.sh") + " --ops-root " + shlex.quote(ROOT)
     if character and re.fullmatch(r"[a-z0-9_]+", character):
         refresh += f" --character {character}"
     cmd = refresh
@@ -521,6 +522,7 @@ def refresh_knowledge(character=None) -> None:
             log.write(f"refresh still running after {os.environ.get('REFRESH_WAIT_S', '1800')} s; next run starts anyway\n")
             log.flush()
             result["timed_out"] = True
+    log.close()
     return result
 
 

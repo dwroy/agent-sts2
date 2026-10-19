@@ -9,6 +9,13 @@ default.merge: live
 default.merge_dir: {{project_root}}/.worktrees/live
 default.batch: manual
 ---
+
+## V6 与 Jev 原始证据（机械提证，不能用摘要代替原文）
+
+先核本批 `{{runs}}` 在 runs.jsonl 的角色为 `{{character}}` 且已结束。沿下方原有 evidence_summary 入口建立摘要，并运行 `nice -n 19 python3 {{worktree}}/learner/extract_evidence.py --logs "{{logs_dir}}" --output "{{scratch}}/v6-evidence" --runs "{{runs}}" --streams v6-build jev-prompts decisions run-config`。实际读取 manifest 和本角色/本批两条流中相关的原始 row；逐问题核完整题面、答案/错误、decisions 的 chosen/result/gate_reject/selection_dispatch 与后续 states 后果，保留 offset/bytes/SHA、冻结切点和 identity 关联出处。有限索引只是定位入口；覆盖哪些问题、未读哪些问题及原因必须写入报告，不把最后五条当完整覆盖。
+
+只接受显式 run_id 或通过 decisions 原始行核对的精确 decision_id；正文提及、时间邻近和 question_id 的相似字符串均不建立所属局。v6-build 的 entries/jev_answer/fallback/unknown 和 Jev request/answers/error 分开解释；完整题面存在不表示采用、执行成功或收益。V6 off、历史缺流、无匹配、截断、未知身份都显式保留，沿原任务其余证据流程继续；缺失不是零，也不能据此补经验或跨角色借证。提证不证明本批正式发布、下一局消费或自然收益。
+
 # 任务：依据本角色对局证据提出并实现策略
 
 Roy 2026-10-05 08:33 批准独立策略学习任务。本次角色为 {{character_name}}（{{character}}），来源局为 {{runs}}。自己做，不许再派下级 agent。全程中文，提交信息英文。使用普通模式、high 推理强度，不为提速降低强度。

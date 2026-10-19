@@ -18,12 +18,14 @@ ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"  # the project root
 B="$ROOT/knowledge/builders"
 fight_value=0
 only=""
+ops_root="$ROOT"
 while [[ $# -gt 0 ]]; do
   case "$1" in
     --fight-value) fight_value=1 ;;
     --character) only="${2:-}"; shift ;;
     --character=*) only="${1#--character=}" ;;
-    *) echo "usage: $0 [--fight-value] [--character ID]" >&2; exit 2 ;;
+    --ops-root) ops_root="${2:?missing ops root}"; shift ;;
+    *) echo "usage: $0 [--fight-value] [--character ID] [--ops-root ROOT]" >&2; exit 2 ;;
   esac
   shift
 done
@@ -45,6 +47,7 @@ python3 "$B/build-monster-db.py" --quiet --move-model-out "$ROOT/knowledge/commo
 python3 "$B/monster-db-check.py" >/dev/null 2>&1
 python3 "$B/build-card-upgrades.py" >/dev/null 2>&1
 nice -n 10 "$ROOT/data/logdb-venv/bin/python" "$ROOT/agent/tools/logdb/sync.py" >/dev/null 2>&1
+v6_status=0
 for c in $characters; do
   python3 "$B/build-outcome-stats.py" --character "$c" >/dev/null 2>&1
   if [[ "$c" == "silent" ]]; then
@@ -53,7 +56,11 @@ for c in $characters; do
   python3 "$B/build-room-costs.py" --character "$c" >/dev/null 2>&1
   python3 "$B/build-boss-damage.py" --character "$c" >/dev/null 2>&1
   "$B/refresh-potion-equivalents.sh" --character "$c" >/dev/null 2>&1
+  if [[ "$c" == "silent" ]]; then
+    nice -n 19 python3 "$B/refresh-v6-history.py" --root "$ROOT" --ops-root "$ops_root" --character "$c" || v6_status=1
+  fi
 done
 
 # Mechanical indexing only; failure remains visible to the existing refresh owner.
-nice -n 10 python3 "$B/build-catalog.py" --knowledge-root "$ROOT/knowledge"
+nice -n 10 python3 "$B/build-catalog.py" --knowledge-root "$ROOT/knowledge" || exit 1
+exit "$v6_status"
