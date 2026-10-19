@@ -8,6 +8,7 @@ import { currentDecisionBudget, withinDecisionBudget, DecisionBudgetExpired } fr
  */
 
 import { TypeSafeClient, noul } from "@typesafe-ai/sdk";
+import { novaJevFetch } from "./nova.js";
 
 import { readAnswers, type AnswerSet } from "./answers.js";
 import type { QuestionSet } from "./questions.js";
@@ -162,6 +163,7 @@ export class JevClient {
       apiKey: options.apiKey,
       ...(options.baseUrl ? { baseURL: options.baseUrl } : {}),
       defaultModel: options.model,
+      fetch: novaJevFetch(options.baseUrl, (input, init) => globalThis.fetch(input, init)),
       timeout: options.timeoutMs ?? 20_000,
       retry: { maxRetries: options.maxRetries ?? 2 },
       logLevel: "warn",

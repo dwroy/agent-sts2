@@ -1104,7 +1104,17 @@ export function loadConfig(env: NodeJS.ProcessEnv = process.env, overrides: Conf
     { min: 250, max: 120_000 },
   );
 
-  const jevApiKey = pick(overrides, env, "jevApiKey", "TYPESAFE_API_KEY");
+  let jevApiKey = pick(overrides, env, "jevApiKey", "TYPESAFE_API_KEY");
+  const jevKeyFile = readEnv(env, "TYPESAFE_API_KEY_FILE");
+  if (jevKeyFile) {
+    try {
+      jevApiKey = readFileSync(fromRoot(jevKeyFile.replace(/^~(?=\/)/, process.env["HOME"] ?? "~")), "utf8").trim();
+      if (!jevApiKey) throw new Error("empty_jev_key_file");
+    } catch {
+      jevApiKey = null;
+      problems.push({ field: "TYPESAFE_API_KEY_FILE", message: "could not read a nonempty key file" });
+    }
+  }
   const jevBaseUrlRaw = readEnv(env, "TYPESAFE_BASE_URL");
   const jevBaseUrl = jevBaseUrlRaw ? parseUrl(jevBaseUrlRaw, "TYPESAFE_BASE_URL", problems) : null;
   const jevModel = pick(overrides, env, "jevModel", "JEV_MODEL") ?? DEFAULTS.jevModel;

@@ -12,6 +12,8 @@ it("batches Silent at five, bounds low-volume latency, preserves manual/retry an
   const result = spawnSync("python3", ["-B", "-c", `
 import importlib.util,sys
 spec=importlib.util.spec_from_file_location('learning',sys.argv[1]);m=importlib.util.module_from_spec(spec);spec.loader.exec_module(m)
+# The batching fixture owns its clock; capacity admission has separate fixed-input tests.
+m.disk_admission.jobs_allowed=lambda *_:True
 m.running_batch=lambda state:None
 m.postmortem_ids=lambda:set()
 m.dispatch=lambda state,runs,character,reason:(runs,reason)
