@@ -1,0 +1,213 @@
+{
+  "at": "2026-10-19T17:47:32.342561+08:00",
+  "request_id": "roy-20261019-v6",
+  "batch": "v6-reflex-distill-20261019-1704",
+  "reviewer": "codex1 watcher",
+  "manifest": {
+    "path": "/home/dw/Projects/agent-sts2/ops/codex-ops/learner/v6-reflex-distill-20261019-1704.inputs-v2.json",
+    "sha256": "93ce6ab674e065cea857f893bc5d2cccf298dbef2ab2d449bbc1e7a8e61397eb",
+    "bytes": 170969
+  },
+  "frozen_files": {
+    "count": 431,
+    "ok": true,
+    "failures": []
+  },
+  "artifact_index": {
+    "path": "/home/dw/Projects/agent-sts2/learner/runs/20261019-171010-c702c588-a5c6-445c-838d-fd94eb877532-v6-reflex-distill/artifacts.json",
+    "sha256": "bec6b97812cdf60c8c06e81c1157dfd73fa19c9d8b8a86769a6122045471300f",
+    "bytes": 21959
+  },
+  "artifact_refs": {
+    "count": 84,
+    "ok": true,
+    "failures": []
+  },
+  "result_refs": {
+    "count": 84,
+    "ok": true,
+    "failures": []
+  },
+  "raw_evidence": {
+    "files": 8483,
+    "bytes": 315167335,
+    "sources": 7,
+    "hash_and_source_byte_checks_ok": true,
+    "failures": [],
+    "frozen_prefix_bounds_ok": true,
+    "outside": [],
+    "full_prefix_rehash_by_reviewer": false,
+    "method": "Every extracted raw file hash and exact source byte slice verified; whole multi-GB source prefixes were not rehashed again."
+  },
+  "experience_coverage": {
+    "formal_count": 244,
+    "mapping_count": 244,
+    "unique_mapping_count": 244,
+    "all_ids_exact": true,
+    "all_original_objects_exact": true,
+    "statuses": {
+      "text_only": 222,
+      "partial": 21,
+      "disputed": 1
+    },
+    "formal_statuses": {
+      "active": 243,
+      "retired": 1
+    }
+  },
+  "formal_knowledge": {
+    "root_frozen_files": 18,
+    "learner_copy_files": 18,
+    "both_match_frozen": true,
+    "learner_changed": []
+  },
+  "format_code": {
+    "count": 7,
+    "ok": true,
+    "failures": [],
+    "frozen_sources_match": true
+  },
+  "independent_validations": [
+    {
+      "draft": "draft-initial-v1.json",
+      "command": [
+        "node",
+        "--import",
+        "/home/dw/Projects/agent-sts2/agent/node_modules/tsx/dist/loader.mjs",
+        "/home/dw/Projects/agent-sts2/.worktrees/v6-reflex-distill-20261019/knowledge/builders/validate-v6.ts",
+        "reflex",
+        "/home/dw/Projects/agent-sts2/.worktrees/v6-reflex-distill-20261019/knowledge/characters/silent/pending/v6-reflex-distill-v6-reflex-distill-20261019-1704/draft-initial-v1.json",
+        "/home/dw/Projects/agent-sts2/learner/runs/20261019-171010-c702c588-a5c6-445c-838d-fd94eb877532-v6-reflex-distill/validation-context.json"
+      ],
+      "exit_code": 0,
+      "stdout": "{\"ok\":true,\"kind\":\"reflex\",\"draft_sha256\":\"34d164ca2a7bf498db9aa58dcba283ef0635965a5f806c3ad5314eee83f5f63e\",\"context_sha256\":\"35719c520364a9756fa0081c1b7f52d0e7166dceb359ceba0d7d4f47a09b9b9a\",\"publication\":false}\n",
+      "stderr": ""
+    },
+    {
+      "draft": "draft-validated-v2.json",
+      "command": [
+        "node",
+        "--import",
+        "/home/dw/Projects/agent-sts2/agent/node_modules/tsx/dist/loader.mjs",
+        "/home/dw/Projects/agent-sts2/.worktrees/v6-reflex-distill-20261019/knowledge/builders/validate-v6.ts",
+        "reflex",
+        "/home/dw/Projects/agent-sts2/.worktrees/v6-reflex-distill-20261019/knowledge/characters/silent/pending/v6-reflex-distill-v6-reflex-distill-20261019-1704/draft-validated-v2.json",
+        "/home/dw/Projects/agent-sts2/learner/runs/20261019-171010-c702c588-a5c6-445c-838d-fd94eb877532-v6-reflex-distill/validation-context.json"
+      ],
+      "exit_code": 0,
+      "stdout": "{\"ok\":true,\"kind\":\"reflex\",\"draft_sha256\":\"d94fc18e90dc06ac58af6f1dab7be888a512ab59473c03f0b3e7e2eaed5b942b\",\"context_sha256\":\"35719c520364a9756fa0081c1b7f52d0e7166dceb359ceba0d7d4f47a09b9b9a\",\"publication\":false}\n",
+      "stderr": ""
+    },
+    {
+      "draft": "draft.json",
+      "command": [
+        "node",
+        "--import",
+        "/home/dw/Projects/agent-sts2/agent/node_modules/tsx/dist/loader.mjs",
+        "/home/dw/Projects/agent-sts2/.worktrees/v6-reflex-distill-20261019/knowledge/builders/validate-v6.ts",
+        "reflex",
+        "/home/dw/Projects/agent-sts2/.worktrees/v6-reflex-distill-20261019/knowledge/characters/silent/pending/v6-reflex-distill-v6-reflex-distill-20261019-1704/draft.json",
+        "/home/dw/Projects/agent-sts2/learner/runs/20261019-171010-c702c588-a5c6-445c-838d-fd94eb877532-v6-reflex-distill/validation-context.json"
+      ],
+      "exit_code": 0,
+      "stdout": "{\"ok\":true,\"kind\":\"reflex\",\"draft_sha256\":\"0db54eb0c2dae18b4729d17dc30e060778c3e3bb15b41a6905ae5f871ae0d1b8\",\"context_sha256\":\"35719c520364a9756fa0081c1b7f52d0e7166dceb359ceba0d7d4f47a09b9b9a\",\"publication\":false}\n",
+      "stderr": ""
+    }
+  ],
+  "ledger_readback": {
+    "exit_code": 0,
+    "stderr": "",
+    "artifact": {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/v6-reflex-audit-20261019/paper/materials/2026-10-19-v6-reflex-audit/ledger-readback.json",
+      "sha256": "6ad6c1a42687ad087b8a6269171b4f747b7fbd1fa3150a499921bb085f77667d",
+      "bytes": 2105
+    }
+  },
+  "draft": {
+    "path": "/home/dw/Projects/agent-sts2/.worktrees/v6-reflex-distill-20261019/knowledge/characters/silent/pending/v6-reflex-distill-v6-reflex-distill-20261019-1704/draft.json",
+    "sha256": "0db54eb0c2dae18b4729d17dc30e060778c3e3bb15b41a6905ae5f871ae0d1b8",
+    "bytes": 214539,
+    "entries": 13,
+    "applies_to": {
+      "combat_line": 13
+    },
+    "signals": {
+      "tag": 13
+    },
+    "missing_fields": 32,
+    "all_evidence_runs_in_manifest": true,
+    "all_source_experiences_formal": true
+  },
+  "counts_reported_by_learner": {
+    "frozen_files": 431,
+    "frozen_runs": 372,
+    "formal_experiences": 244,
+    "active_experiences": 243,
+    "retired_experiences": 1,
+    "converted": 0,
+    "text_only": 222,
+    "partial": 21,
+    "disputed": 1,
+    "reflex_entries": 13,
+    "combat_line": 13,
+    "card_pick": 0,
+    "potion": 0,
+    "rest": 0,
+    "shop": 0,
+    "tag_signals": 13,
+    "numeric_signals": 0,
+    "metrics": 13,
+    "vocab_members": 15,
+    "vocab_by_dimension": {
+      "enemy_threat": 4,
+      "card_role": 1,
+      "line_tempo": 5,
+      "resource_cost": 3,
+      "potion_category": 2
+    },
+    "missing_fields": 32,
+    "rejected_final_candidates": 1,
+    "recent_a10_runs": 20,
+    "recent_first_trial_turn_frames": 1385,
+    "detailed_state_runs": 29,
+    "parsed_decisions": 235333,
+    "malformed_decisions": 2,
+    "malformed_brain_rows": 2,
+    "raw_evidence_files": 8483,
+    "raw_evidence_bytes": 315167335,
+    "format_validated_drafts": 3,
+    "new_ledger_items_proposed": 1
+  },
+  "result": {
+    "path": "/home/dw/Projects/agent-sts2/learner/runs/20261019-171010-c702c588-a5c6-445c-838d-fd94eb877532-v6-reflex-distill/result.json",
+    "sha256": "df2663e01393eb93ee7601ead75713b9d25e83c0ccbb54afb23160f315bf7cf9",
+    "bytes": 49785
+  },
+  "report": {
+    "path": "/home/dw/Projects/agent-sts2/learner/runs/20261019-171010-c702c588-a5c6-445c-838d-fd94eb877532-v6-reflex-distill/report.md",
+    "sha256": "d4ff9b58c0623c6db867bfea444f5e83aadcc61e523dc7c5290a3f008608cb23",
+    "bytes": 115751
+  },
+  "merged": false,
+  "published": false,
+  "terminal": {
+    "type": "learner_startup_exit",
+    "ts": "2026-10-19T09:41:42.013Z",
+    "exit_code": 0,
+    "signal": null,
+    "timed_out": false,
+    "cancelled": false
+  },
+  "learner_tracked_diff": "",
+  "all_review_checks_passed": true,
+  "coverage_reflex_links_consistent": true,
+  "all_13_effect_size_and_se_unknown": true,
+  "native_learner": {
+    "home": "/home/dw/Projects/agent-sts2/ops/codex-ops/accounts/codex1/learner",
+    "thread": "01a1536c-f80e-7043-8daa-94d16f0810fa",
+    "model": "gpt-6.1-sol",
+    "effort": "high",
+    "rollout": "/home/dw/Projects/agent-sts2/ops/codex-ops/accounts/codex1/learner/sessions/2026/10/19/rollout-2026-10-19T17-10-12-01a1536c-f80e-7043-8daa-94d16f0810fa.jsonl",
+    "verification": "first native turn_context read independently"
+  }
+}

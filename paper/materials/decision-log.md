@@ -4743,3 +4743,5 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
 - 2026-10-19 17:33:28 CST [Claude/Roy，仅文档] Roy 要求并行加速 V6：新开 herdr Codex 会话 v6-w4w6（W4 大脑方向条目与触发 + W6 Jev 选药）和 v6-w8（W8 出牌条目与小脑记忆接入），codex1、gpt-6.1-sol xhigh，按 W1 格式与固定数据先行开发，各自工作树、变基后跑 tsc/vitest/gitleaks 再合入 main；watcher 继续 W3 并做集成核验；W5、W7 按依赖后续开始。见 docs/v6-plan.md 第 9 节并行开发安排。
 
 - 2026-10-19 17:37:32 CST [Claude/Roy，运维记录] Roy 指示并行后关闭 fast：Claude 经 herdr 在 sts2-watcher、v6-w4w6、v6-w8 三个会话执行 /fast，界面均回显 Service tier set to default、状态栏无 fast，watcher 线程设置 17:36:51 起为 default（此前自 17:01:41 起为 priority，非本会话切换）。副作用：/fast 会写入共用 ~/.codex/config.toml（~/.codex1 软链至此），第 8 行 service_tier 由 fast 改为 default，会影响共用该配置的其他会话；未回滚，等 Roy 决定。学习者 v6-reflex-distill 用独立账号配置，原生记录为 default，不受影响。
+
+- 2026-10-19 17:49:28 CST [Codex/V6-9.2验收停点] 小脑批次17:41:42退出0未超时；独立核431冻结输入、84引用、8483原证据SHA/源字节、244经验原对象及三版只读校验全通过。13个combat_line描述tag、21partial/222text_only/1retired身份disputed，数值效应未知，32DTO缺口，其余四题型0条；0524仅proposed、未正式发布/消费者验收。三异议原文经原程序送两收件箱，通知f619c26f4bfa10970591beb5，watcher/Roy确认pending，不代填。按有结果停下向Claude回报；W3未完代码保留独立树，后续目标/输入/回放与完整检查及并行合入后main核验待接续；不续派/开局/改STOP、正式知识或共享配置。详paper/materials/2026-10-19-v6-reflex-audit/report.md。
