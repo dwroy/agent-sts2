@@ -1,0 +1,59 @@
+{
+  "at": "2026-10-20 01:14:26 CST",
+  "history_refresh_jobs": [
+    {
+      "pid": 3404055,
+      "start_ticks": 132188404,
+      "nice": 19,
+      "command": "original refresh-v6-history.py --root actual live --ops-root original root --character silent",
+      "state": "R"
+    }
+  ],
+  "live_publication_lock_busy": true,
+  "boss_original_dispatch_rows": [
+    {
+      "state": "running",
+      "pid": 3419315,
+      "pid_birth": "132199795",
+      "pane": "w1H:p11",
+      "worktree": "/home/dw/Projects/agent-sts2/.worktrees/boss-sim-silent-aeonglass-20261020-011318",
+      "base": "435dadad777a7f64dae9e484ae63b6f5b2637ac3",
+      "evidence_path": "/home/dw/Projects/agent-sts2/ops/codex-ops/learner/20261020-011318-fix-batch.boss-evidence.json",
+      "failure": null,
+      "retry_at": null,
+      "batch": "20261020-011318-fix-batch",
+      "calibration": "cfb54d1350c1d7bdb24a8d672993be73acd23bf3d16fee2f658ae8524fe2b0d8",
+      "artifact": "314824d651664d32c816e607ea5af2e16380b1ecde9b8203daaecd95942727ec",
+      "original_failure_not_rewritten": true
+    }
+  ],
+  "STOP": true,
+  "terminal_at": "2026-10-20 01:20:24 CST",
+  "history_refresh_terminal": {
+    "state": "failed",
+    "rc": 1,
+    "pid": 3404055,
+    "original_lock_released": true,
+    "receipt": "ops/codex-ops/v6-refresh/silent/refresh-lvwyjjbk/receipt.json",
+    "bad_rows": [
+      {
+        "source": "/home/dw/Projects/agent-sts2/.worktrees/live/logs/states.jsonl",
+        "source_size": 14613516359,
+        "line": 384730,
+        "offset": 12147077242,
+        "bytes": 30774,
+        "sha256": "d16432e9966164264125aeaa4ac40b92d0ccd2c675bdaf823354c637ab50b96e",
+        "reason": "invalid_json"
+      },
+      {
+        "source": "/home/dw/Projects/agent-sts2/.worktrees/live/logs/states.jsonl",
+        "source_size": 14613516359,
+        "line": 384746,
+        "offset": 12147505958,
+        "bytes": 22133,
+        "sha256": "ad26f8bc1a55745b083208f3e4b1613c84667bcfc78195217f09d2e2d1ae4dc5",
+        "reason": "invalid_json"
+      }
+    ]
+  }
+}
