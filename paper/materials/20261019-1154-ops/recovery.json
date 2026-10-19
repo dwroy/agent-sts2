@@ -1,0 +1,145 @@
+{
+  "at": "2026-10-19 11:57:01 CST",
+  "batches": [
+    "20261019-110212-strategy-proposal",
+    "20261019-111302-strategy-proposal"
+  ],
+  "phase": "verified-shared-frozen-records-prepared-for-controlled-recovery",
+  "source_scan_manifest": "ops/codex-ops/record-scans/runs/b6e16e085d9346c19dc4120f340e862d/manifest.json",
+  "scan_manifest_sha256": "f19a7506b7919939c1a9a75811c0113e0141d2f838b47bb38fb99e859280939a",
+  "scanner_policy_unchanged": true,
+  "files": 358,
+  "original_scan": {
+    "scanned": 13,
+    "reused": 345,
+    "state": "clean"
+  },
+  "recovered_original_tree": "9f048a0e51610f971b7e05c5188d53a5d11458c5",
+  "publication_base": "e553c2d45e05cb75038472073fcd79d9119daec4",
+  "original_attentions": {
+    "20261019-110212-strategy-proposal": {
+      "path": "ops/codex-ops/ordinary-close/20261019-110212-strategy-proposal.json",
+      "sha256": "c9333d043753429c75515c35263008c57406854848542c3605dc3dbb356109d4",
+      "state": "attention",
+      "reason": "parallel record change; retain evidence and wake ops"
+    },
+    "20261019-111302-strategy-proposal": {
+      "path": "ops/codex-ops/ordinary-close/20261019-111302-strategy-proposal.json",
+      "sha256": "ad66a91d2a6cf1ecd204c77a2610f495e5755b2e675c92528eb84c17a38d17a6",
+      "state": "attention",
+      "reason": "parallel record change; retain evidence and wake ops"
+    }
+  },
+  "original_report_proofs": {
+    "20261019-110212-strategy-proposal": {
+      "head": "52f640c74bb08b066f1e345d5ea4be657759219e",
+      "report": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261019-110212/learner/runs/20261019-110216-41883e01-a71a-45bb-a8f2-11dbf70ae196-strategy-proposal/report.md",
+      "report_sha256": "f349349758ecd3bab6a88a9d737abdd43dc9658f1d9d980bddc5c562f27ef91d"
+    },
+    "20261019-111302-strategy-proposal": {
+      "head": "52f640c74bb08b066f1e345d5ea4be657759219e",
+      "report": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261019-111302/learner/runs/20261019-111307-2d079828-961a-4940-95ea-1e50abff1742-strategy-proposal/report.md",
+      "report_sha256": "6719a203439d93bb4dcc4a8f36b5777a8d757eab797e56846976eb798aef25f5"
+    }
+  },
+  "fresh_eligibility": {
+    "20261019-110212-strategy-proposal": {
+      "head": "e553c2d45e05cb75038472073fcd79d9119daec4",
+      "report": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261019-110212/learner/runs/20261019-110216-41883e01-a71a-45bb-a8f2-11dbf70ae196-strategy-proposal/report.md",
+      "report_sha256": "f349349758ecd3bab6a88a9d737abdd43dc9658f1d9d980bddc5c562f27ef91d"
+    },
+    "20261019-111302-strategy-proposal": {
+      "head": "e553c2d45e05cb75038472073fcd79d9119daec4",
+      "report": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261019-111302/learner/runs/20261019-111307-2d079828-961a-4940-95ea-1e50abff1742-strategy-proposal/report.md",
+      "report_sha256": "6719a203439d93bb4dcc4a8f36b5777a8d757eab797e56846976eb798aef25f5"
+    }
+  },
+  "original_ledger_checks": {
+    "20261019-110212-strategy-proposal": {
+      "problems": 0,
+      "items": 519
+    },
+    "20261019-111302-strategy-proposal": {
+      "problems": 0,
+      "items": 519
+    }
+  },
+  "ledger_check": {
+    "problems": 0,
+    "items": 519
+  },
+  "original_dataset_jobs": 1,
+  "dataset_log": "ops/codex-ops/ordinary-close/20261019-110212-strategy-proposal.dataset.log",
+  "dataset_log_sha256": "7f38085faf60c3abe91e56b9cc3888fc7be5f6d8efd1011e22a37f350c4e6ff4",
+  "dataset_rc_verified": 0,
+  "dataset_rc_evidence": "Both exact parallel-record-change exceptions follow the original shared subprocess returncode==0 guard and complete dataset output; only record publication failed. No raw process receipt is invented.",
+  "batch_proposals_waiting": {
+    "20261019-110212-strategy-proposal": 10,
+    "20261019-111302-strategy-proposal": 10
+  },
+  "merged": {
+    "20261019-110212-strategy-proposal": null,
+    "20261019-111302-strategy-proposal": null
+  },
+  "source_tests": {
+    "20261019-110212-strategy-proposal": {
+      "tsc": null,
+      "vitest": null,
+      "cases": null
+    },
+    "20261019-111302-strategy-proposal": {
+      "tsc": null,
+      "vitest": null,
+      "cases": null
+    }
+  },
+  "parallel_changes_at_recovery": [
+    {
+      "path": "paper/data/cost-curve-silent.csv",
+      "frozen_bytes": 15340,
+      "physical_bytes": 15350,
+      "append_only": false,
+      "physical_sha256": "00b5f6f1a36afb28a60d760f791c352231229f44b2e39806200456a079899355",
+      "physical_output_not_written_by_recovery": true
+    },
+    {
+      "path": "paper/data/cost-silent.csv",
+      "frozen_bytes": 1138818,
+      "physical_bytes": 1142299,
+      "append_only": false,
+      "physical_sha256": "0552c293d2928a8f46d2f74c0da6a3536008484894a190bcd0da08a2a1f95b73",
+      "physical_output_not_written_by_recovery": true
+    },
+    {
+      "path": "paper/data/cost-sources.json",
+      "frozen_bytes": 272347,
+      "physical_bytes": 272357,
+      "append_only": false,
+      "physical_sha256": "7bb38ddb2c881cecd9d9fd89f851e076b221f89c59eff7d1caa9eb7187836f8a",
+      "physical_output_not_written_by_recovery": true
+    },
+    {
+      "path": "paper/data/cost-unattributed.csv",
+      "frozen_bytes": 20012,
+      "physical_bytes": 20012,
+      "append_only": false,
+      "physical_sha256": "3adae49a13e5b732db1147d7e93c8ad512b62ea5e35d2a2d11e3735842eb0cd3",
+      "physical_output_not_written_by_recovery": true
+    },
+    {
+      "path": "paper/materials/silent/cost.md",
+      "frozen_bytes": 4202,
+      "physical_bytes": 4202,
+      "append_only": false,
+      "physical_sha256": "3b6cecd1283c5531e4e02d254a5a2b89a866c6d628bee52cf5c153e8f7512258",
+      "physical_output_not_written_by_recovery": true
+    }
+  ],
+  "physical_outputs_not_written_by_recovery": true,
+  "new_dataset_attempts": 0,
+  "scientific_parent_requests_closed": false,
+  "completion_receipts": {
+    "20261019-110212-strategy-proposal": "ops/codex-ops/pending-records/20261019-110212-strategy-proposal-recovery.json",
+    "20261019-111302-strategy-proposal": "ops/codex-ops/pending-records/20261019-111302-strategy-proposal-recovery.json"
+  }
+}
