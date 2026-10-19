@@ -1,0 +1,77 @@
+{
+  "at": "2026-10-19 12:20:53 CST",
+  "request_id": "roy-20261019-current-production-boss-calibration",
+  "event": "calibration-continuation",
+  "event_source": "ops/codex-ops/queue/1792383552353058773-calibration-continuation.md",
+  "event_sha256": "7e85d246346e11748e57addae114493c70cef6b344888b9756b86fed2b413485",
+  "original_checkpoint": "paper/materials/20261019-1213-ops/host-compute-status.json",
+  "original_checkpoint_sha256": "d422eded9438792c937322946a87fc76a046835dcb632a5011f92aaaeed334c0",
+  "host_view": true,
+  "wrapper_identity_matched": true,
+  "wrapper_and_descendants": [
+    {
+      "pid": 681748,
+      "ppid": 3874239,
+      "pgid": 3874237,
+      "state": "S",
+      "start_ticks": "127500398",
+      "comm": "python3",
+      "cwd": "/home/dw/Projects/agent-sts2"
+    },
+    {
+      "pid": 681863,
+      "ppid": 681748,
+      "pgid": 3874237,
+      "state": "R",
+      "start_ticks": "127501013",
+      "comm": "python3",
+      "cwd": "/home/dw/Projects/agent-sts2"
+    },
+    {
+      "pid": 3874237,
+      "ppid": 3874045,
+      "pgid": 3874237,
+      "state": "S",
+      "start_ticks": "126111594",
+      "comm": "bash",
+      "cwd": "/home/dw/Projects/agent-sts2"
+    },
+    {
+      "pid": 3874239,
+      "ppid": 3874237,
+      "pgid": 3874237,
+      "state": "S",
+      "start_ticks": "126111595",
+      "comm": "bash",
+      "cwd": "/home/dw/Projects/agent-sts2"
+    }
+  ],
+  "research_cwd_processes": [],
+  "lock_probes": [
+    {
+      "path": "ops/codex-ops/learn.lock",
+      "free_at_probe": true
+    },
+    {
+      "path": "ops/codex-ops/learner/silent-boss-calibration.lock",
+      "free_at_probe": true
+    }
+  ],
+  "release_gate": "original-wrapper-has-not-exited",
+  "lease_file_free_does_not_override_live_wrapper": true,
+  "completed_result_rows": 280,
+  "expected_result_rows": 1316,
+  "remaining_result_rows": 1036,
+  "retained_results_sha256": "7fd0edc83dc5abdd63540c9f24cb98b19ce7b5f245466ea03d2f70a17ce20ecc",
+  "actual_continuation_batch": null,
+  "models_or_compute_started": 0,
+  "event_requeued": false,
+  "completed": false,
+  "live": "9f4245511181c6228cf63dc44700ea28ccf35730",
+  "source_full_rc": 1,
+  "source_full_failed_cases": 11,
+  "h0_next_boss": null,
+  "parent_requests_closed": false,
+  "original_failed_batch_unchanged": true,
+  "next": "Retain pending until an original completion/release event permits a new host identity check; same request/thread/home only. Do not create timers, poll, stop the wrapper, or recycle this research."
+}
