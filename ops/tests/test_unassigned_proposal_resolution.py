@@ -192,6 +192,97 @@ class Resolution(unittest.TestCase):
         self.resolve()
         self.assertEqual(proposals.fold(self.queue)[IDENT]['reason'], self.report['proposal_results'][0]['reason'])
 
+    def narrow_publication(self):
+        # Reproduce 20261018-011241: prose fixes, source_commit and a different live commit.
+        self.git(self.live, 'reset', '--hard', self.base)
+        (self.live / 'record.txt').write_text('unrelated preserved record')
+        self.git(self.live, 'add', 'record.txt')
+        self.git(self.live, 'commit', '-qm', 'Independent live history')
+        self.git(self.live, 'cherry-pick', self.source)
+        published = self.git(self.live, 'rev-parse', 'HEAD')
+        self.assertNotEqual(published, self.source)
+        self.report.update(source_commit=self.source, merged=published, fixes=['原限定来源的窄合提交。'])
+        self.report.pop('runs')
+        self.report.pop('base')
+        self.report['proposal_results'][0]['commit'] = published
+        self.save_report()
+        proof = checks.descriptive_publication(self.report, self.batch, self.root, self.live)
+        log = self.root / 'ops/codex-ops/learner/fixed.checks.log'
+        log.parent.mkdir(parents=True)
+        log.write_text('Fixed successful host receipt; no real test runner or game.\n')
+        self.batch['fallback_checks'] = [{'rc': 0, 'tree': self.git(self.live, 'rev-parse', 'HEAD^{tree}'),
+                                          'source_publications': [proof], 'commits': [published], 'log': str(log)}]
+        return published
+
+    def test_resolves_narrow_publication_without_inventing_source_ancestry(self):
+        published = self.narrow_publication()
+        before_batch, before_report = copy.deepcopy(self.batch), self.report_path.read_bytes()
+        self.resolve()
+        item = proposals.fold(self.queue)[IDENT]
+        self.assertEqual((item['state'], item['commit']), ('implemented', published))
+        proof = item['resolution_publication']
+        self.assertEqual(proof['publication']['source'], self.source)
+        self.assertEqual(proof['publication']['published'], published)
+        self.assertEqual(proof['host_log_sha256'], hashlib.sha256(Path(proof['host_log']).read_bytes()).hexdigest())
+        self.assertEqual((item['seen_runs'], item['batch']), (7, 'active-dispatched-batch'))
+        self.assertEqual(self.batch, before_batch)
+        self.assertEqual(self.report_path.read_bytes(), before_report)
+        raw = self.queue.read_bytes()
+        self.resolve()
+        self.assertEqual(self.queue.read_bytes(), raw)
+
+    def test_rejects_narrow_publication_without_matching_host_receipt(self):
+        self.narrow_publication()
+        original = copy.deepcopy(self.batch['fallback_checks'])
+        for change in ({'rc': 1}, {'rc': False}, {'tree': self.base}, {'commits': [self.source]},
+                       {'source_publications': []}, {'log': str(self.root / 'missing.log')}):
+            with self.subTest(change=change):
+                self.batch['fallback_checks'] = [{**original[0], **change}]
+                before = self.queue.read_bytes()
+                with self.assertRaises(ValueError): self.resolve()
+                self.assertEqual(self.queue.read_bytes(), before)
+        self.batch['fallback_checks'] = []
+        with self.assertRaises(ValueError): self.resolve()
+
+    def test_rejects_narrow_source_or_live_drift_before_any_resolution(self):
+        self.narrow_publication()
+        for tree in (self.tree, self.live):
+            path = tree / 'fixed.txt'
+            original = path.read_bytes()
+            path.write_text('changed source')
+            before = self.queue.read_bytes()
+            with self.assertRaises(ValueError): self.resolve()
+            self.assertEqual(self.queue.read_bytes(), before)
+            path.write_bytes(original)
+        self.git(self.live, 'commit', '--allow-empty', '-qm', 'Later host input')
+        (self.live / 'agent').mkdir()
+        (self.live / 'agent/untracked.txt').write_text('not an executable leaf')
+        (self.live / 'fixed.txt').chmod(0o755)
+        with self.assertRaises(ValueError): self.resolve()
+
+    def test_rejects_narrow_registration_report_and_proposal_identity_changes(self):
+        self.narrow_publication()
+        good = copy.deepcopy(self.report)
+        for scenario in ('runs', 'source', 'commit', 'another_id', 'markdown'):
+            with self.subTest(scenario=scenario):
+                self.report = copy.deepcopy(good)
+                if scenario == 'runs': self.report['runs'] = ['OTHER0000001']
+                if scenario == 'source': self.report['source_commit'] = self.base
+                if scenario == 'commit': self.report['proposal_results'][0]['commit'] = self.source
+                if scenario == 'another_id': self.report['code_proposals'].append('silent-proposal-another')
+                self.save_report()
+                if scenario == 'markdown': self.report['source_commit'] = self.base
+                before = self.queue.read_bytes()
+                with self.assertRaises(ValueError): self.resolve()
+                self.assertEqual(self.queue.read_bytes(), before)
+        self.report = copy.deepcopy(good)
+        self.save_report()
+        original = Path(self.item['proposal'])
+        original.write_text('changed registered proposal')
+        before = self.queue.read_bytes()
+        with self.assertRaises(ValueError): self.resolve()
+        self.assertEqual(self.queue.read_bytes(), before)
+
 
 if __name__ == '__main__':
     unittest.main()
