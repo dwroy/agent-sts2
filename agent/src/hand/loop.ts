@@ -63,6 +63,9 @@ import { buildRankingSelection, rankingOverrideProblems } from "../sim/build-ran
 import { shopPlanList } from "../brain/specs.js";
 import { ensureDirectionPlan, noteV6BrainCall, v6DirectionActive } from "../v6/direction-runtime.js";
 import { routeV6CardDecision } from "../v6/card-routing.js";
+import { directionEvaluationFromProjection } from "../v6/projection-consumer.js";
+import { buildV6CardPick, recordCardPick } from "../v6/card-pick.js";
+import { withConstructionJevBudget } from "../v6/potion-entries.js";
 import { v6Config } from "../v6/config.js";
 import { withConstruction } from "../construction/adapter.js";
 import { withConstructionEvaluation } from "../construction/consumer.js";
@@ -85,6 +88,7 @@ interface AnswerMemo {
 }
 
 export interface LoopOptions {
+  v6Projection?: import("../v6/projection-runtime.js").V6ProjectionRuntime;
   /** W3 supplies projection-entry-v1 data; tests inject frozen evaluations. */
   v6DirectionEvaluation?: (env: DecisionEnv) => Promise<import("../v6/replan-triggers.js").DirectionEvaluation>;
   config: AppConfig;
@@ -358,6 +362,9 @@ async function runLoopWithBudgets(options: LoopOptions): Promise<LoopStats> {
   // Debounce (PLAN.md §8.1). Jev answers in well under a second, so the loop can outrun the game's
   // animations: this memo means one question per (board, decision) and one answer per board change.
   // It is cleared on every dispatch, so an answer can never be reused across an action.
+  let v6CardShadowKey = "";
+  let v6CardShadowRequests = 0;
+  let v6CardShadowTokens = 0;
   let answerMemo: AnswerMemo | null = null;
   // Consecutive gate refusals on the board `gateRejectedFp` (at decision or at dispatch); only an action that is sent
   // starts them over. At GATE_REJECTION_LIMIT the loop ends the turn (combat) or plays code's baseline instead of spinning.
@@ -788,12 +795,32 @@ async function runLoopWithBudgets(options: LoopOptions): Promise<LoopStats> {
     }
     // FIGHT_PLAN=v1: DeepSeek plans an elite/boss fight once, before its first decision.
     // RUN_PLAN=v1: DeepSeek's run strategy, renewed at the map screen when a checkpoint is due.
+    if (!planned && v6Config().mode !== "off" && !state.in_combat && options.v6Projection) {
+      try {
+        if (!screenMemory.runPlan || screenMemory.runPlan.runId !== runId) screenMemory.runPlan = loadRunPlan(config.runPlanLog, runId);
+        const phase = !screenMemory.runPlan?.v6 || screenMemory.runPlan.act !== actOf(state) ? "act" : "pick";
+        const table = await options.v6Projection.evaluate(env, phase);
+        if (table) {
+          env.v6ProjectionTable = table;
+          env.v6DirectionEvaluation = directionEvaluationFromProjection(table, v6Config(), "skip", screenMemory.runPlan?.v6);
+        }
+      } catch (error) {
+        logRunPlan(config.runPlanLog, { run: runId, v6_projection_error: String(error).slice(0, 200) });
+      }
+    }
     if (!planned && v6Config().mode !== "off" && !state.in_combat && brain && brainBudgetLeft("run-plan")) {
       try {
         if (options.v6DirectionEvaluation) env.v6DirectionEvaluation = await options.v6DirectionEvaluation(env);
         const attempt = await ensureDirectionPlan(env, brain, config.runPlanLog);
         if (attempt?.usage) countPlan("run-plan")(attempt.usage.inputTokens + attempt.usage.outputTokens, attempt.usage.brain);
-        if (attempt?.stored) onEvent({ type: "note", message: `V6 direction plan stored (${attempt.result.triggers.join(",")})` });
+        if (attempt?.stored) {
+          onEvent({ type: "note", message: `V6 direction plan stored (${attempt.result.triggers.join(",")})` });
+          // The reward must use the new weights/brain combination, rather than the table that prompted re-planning.
+          if (options.v6Projection && bool(asRecord(state.raw.reward).pending_card_choice)) {
+            env.v6ProjectionTable = undefined;
+            env.v6ProjectionTable = await options.v6Projection.evaluate(env, "pick") ?? undefined;
+          }
+        }
       } catch (error) {
         if (isBrainBlocked(error)) throw error;
         logRunPlan(config.runPlanLog, { run: runId, v6_error: String(error).slice(0, 200) });
@@ -875,6 +902,10 @@ async function runLoopWithBudgets(options: LoopOptions): Promise<LoopStats> {
     plannerFailures = 0;
 
     if (planned.kind === "wait") {
+      const v6WaitStarted = Date.now();
+      if (v6Config().mode !== "off" && options.v6Projection && !state.in_combat) {
+        try { await options.v6Projection.precompute(env, pollIntervalMs); } catch { /* Missing evidence stays unknown. */ }
+      }
       const prepared = prepareObservedCandidates(env, pollIntervalMs);
       if (prepared) onEvent({ type: "note", message: `H1 idle preparation: ${JSON.stringify(prepared)}` });
       if (screenMemory.bossEvaluationWait && screenMemory.bossEvaluationRecord) {
@@ -893,7 +924,7 @@ async function runLoopWithBudgets(options: LoopOptions): Promise<LoopStats> {
       stats.waits += 1;
       noteStall(state, planned.reason);
       onEvent({ type: "wait", screen: state.screen, reason: planned.reason });
-      await sleep(pollIntervalMs);
+      await sleep(v6Config().mode !== "off" && options.v6Projection ? Math.max(0, pollIntervalMs - (Date.now() - v6WaitStarted)) : pollIntervalMs);
       continue;
     }
     if (planned.kind === "unsupported") {
@@ -913,7 +944,8 @@ async function runLoopWithBudgets(options: LoopOptions): Promise<LoopStats> {
       break;
     }
 
-    let decision = routeV6CardDecision(planned.decision, state.in_combat);
+    const v6CardPick = buildV6CardPick(env);
+    let decision = v6Config().mode === "on" && v6CardPick ? v6CardPick.decision : routeV6CardDecision(planned.decision, state.in_combat);
     if (brain?.router.codexOnly && decision.label === "map/route-fallback" && asArray(asRecord(state.raw["map"])["available_nodes"]).length !== 1) {
       const reason = "Codex route question could not be constructed; no code route choice dispatched";
       brain.router.wait.finish("fault", { label: "map/route-plan", runId, questionId: randomUUID(), system: "", question: "", payload: {}, spec: { label: "map/route-plan", kind: "plan", schema: {}, validate: () => [] } }, reason);
@@ -924,9 +956,45 @@ async function runLoopWithBudgets(options: LoopOptions): Promise<LoopStats> {
     const codeBaseline = gateCodeBaseline && decision.kind === "ask";
     if (codeBaseline && decision.kind === "ask" && decision.deepseek) decision = decision.deepseek.baseline;
     const decisionId = randomUUID();
+    if (v6CardPick && v6Config().mode === "shadow") {
+      const key = `${stateFingerprint}|${JSON.stringify(v6CardPick.decision.state)}|${JSON.stringify(v6CardPick.decision.questions)}`;
+      if (key !== v6CardShadowKey && v6CardShadowRequests < config.budgets.maxRequests && v6CardShadowTokens < config.budgets.maxTokens) {
+        v6CardShadowKey = key;
+        const started = Date.now(), observerId = `${decisionId}:v6-card-shadow`;
+        let answers: AnswerSet = {}, tokens = { input_tokens: 0, output_tokens: 0 }, requestId: string | null = null;
+        let reason: string | null = jev ? null : "Jev unavailable";
+        if (jev) try {
+          v6CardShadowRequests += 1;
+          const timed = { model: jev.model, ask: (st: unknown, qs: typeof v6CardPick.decision.questions) => jev.ask(st, qs, Math.max(1, v6Config().budgets.jev_ms - (Date.now() - started))) };
+          const result = await withConstructionJevBudget("Jev_card_shadow", () => askJevLogged(timed, promptLog, {
+            decisionId: observerId, runId: str(state.raw.run_id) || null, floor: state.run?.floor ?? null,
+            turn: state.turn, fingerprint: stateFingerprint, observedTs, label: "reward/card/v6-shadow", jevContext: null, call: "ask",
+          }, v6CardPick.decision.state, v6CardPick.decision.questions), "shadow");
+          answers = result.answers; requestId = result.requestId ?? null;
+          tokens = { input_tokens: result.inputTokens, output_tokens: result.outputTokens };
+          v6CardShadowTokens += result.inputTokens + result.outputTokens;
+        } catch { reason = "Jev failed or exceeded its construction allowance"; }
+        const observed = v6CardPick.decision.resolve(answers);
+        if (observed.fallback && !reason) reason = "invalid answer; weighted paired fallback";
+        const elapsed = Date.now() - started;
+        recordCardPick(env, v6CardPick, config.runPlanLog, observerId, answers, elapsed, reason);
+        log.write({ ts: new Date().toISOString(), mode, screen: state.screen,
+          session: `${state.session.mode}/${state.session.phase}`, floor: state.run?.floor ?? null, turn: state.turn,
+          label: "reward/card/v6-shadow", decision_id: observerId, decider: observed.fallback ? "code-fallback" : "jev",
+          fingerprint: stateFingerprint, questions: toJsonValue(v6CardPick.decision.questions) as Record<string, JsonValue>, answers: toJsonValue(answers),
+          chosen: toJsonValue(observed.intent), rationale: observed.rationale, confidence: observed.confidence,
+          fallback: observed.fallback, reasked: false, no_jev: !jev, reused_answer: false,
+          request_ids: requestId ? [requestId] : [], latency_ms: { plan: 0, jev: elapsed, action: 0 }, usage: tokens,
+          v6_card: toJsonValue({ entries: v6CardPick.entries, weighted: v6CardPick.table?.weighted, target_mixtures: v6CardPick.table?.target_mixtures, telemetry: v6CardPick.table?.telemetry }),
+          ...(runId ? { run_id: runId } : {}), observed_ts: observedTs,
+          result: "V6 shadow only; actual reward remains with the brain",
+        });
+      }
+    }
     const humanPaceCardInput = humanPaceShadow.capture(decision, env);
     let resolved: ResolvedAction;
     let jevLatency = 0;
+    let cardElapsed = 0;
     const requestIds: string[] = [];
     let potionJevRecord: JsonValue | undefined;
     let potionJevTokens = { input_tokens: 0, output_tokens: 0 };
@@ -1397,7 +1465,7 @@ async function runLoopWithBudgets(options: LoopOptions): Promise<LoopStats> {
       resolved = { intent: decision.intent, rationale: decision.rationale, confidence: null, fallback: false, ...(decision.apply ? { apply: decision.apply } : {}), ...(decision.log ? { log: decision.log } : {}), ...(decision.journal ? { journal: decision.journal } : {}) };
       // A step of a DeepSeek one-shot plan, played by code: DeepSeek's decision, no call made (reused).
       if (decision.plan) deepseekRecord = { by: "deepseek", direct: true, reused: true, plan_ref: decision.plan.ref, plan_step: decision.plan.step, choice: decision.plan.choice };
-    } else if (!jev || codeBaseline || (currentDecisionBudget()?.remaining() === 0 && !(v6PotionActive(env) && decision.label === "map/statue-potion"))) {
+    } else if (!jev || codeBaseline || (currentDecisionBudget()?.remaining() === 0 && !decision.v6Card && !(v6PotionActive(env) && decision.label === "map/statue-potion"))) {
       // No-Jev mode, or a board the gate kept refusing: the resolver sees an empty answer set and takes its
       // deterministic path.
       resolved = decision.resolve({}, currentDecisionBudget()?.remaining() === 0 ? { budgetExpired: true } : undefined);
@@ -1408,7 +1476,7 @@ async function runLoopWithBudgets(options: LoopOptions): Promise<LoopStats> {
         stop(`request cap reached (${config.budgets.maxRequests})`);
         break;
       }
-      const memoKey = `${stateFingerprint}|${decision.label}`;
+      const memoKey = `${stateFingerprint}|${decision.label}${decision.v6Card ? `|${JSON.stringify(decision.state)}|${JSON.stringify(decision.questions)}` : ""}`;
       const memo = readMemo(memoKey);
       if (memo) {
         // The board has not moved since we last asked this question: reuse the answer.
@@ -1449,14 +1517,17 @@ async function runLoopWithBudgets(options: LoopOptions): Promise<LoopStats> {
       });
       let firstAnswers: AnswerSet = {};
       const potionOnly = v6PotionActive(env) && decision.label === "map/statue-potion";
+      const cardOnly = decision.v6Card === true;
       const potionStarted = Date.now();
+      if (cardOnly) stats.jevCalls += 1;
       try {
-        const timedJev = potionOnly ? { model: jev.model, ask: (s: unknown, q: typeof jevQuestions) => jev.ask(s, q, Math.max(1, v6Config().budgets.jev_ms - (Date.now() - potionStarted))) } : jev;
+        const timedJev = potionOnly || cardOnly ? { model: jev.model, ask: (s: unknown, q: typeof jevQuestions) => jev.ask(s, q, Math.max(1, v6Config().budgets.jev_ms - (Date.now() - potionStarted))) } : jev;
         const result = potionOnly ? await withPotionJevBudget(() => askJevLogged(timedJev, promptLog, promptMeta("ask"), jevState, jevQuestions))
+          : cardOnly ? await withConstructionJevBudget("Jev_card", () => askJevLogged(timedJev, promptLog, promptMeta("ask"), jevState, jevQuestions))
           : await withJevRetry(() => askJevLogged(jev, promptLog, promptMeta("ask"), jevState, jevQuestions), jevRetry);
         usedJev = true;
         if (result.requestId) requestIds.push(result.requestId);
-        stats.jevCalls += 1;
+        if (!cardOnly) stats.jevCalls += 1;
         stats.inputTokens += result.inputTokens;
         stats.outputTokens += result.outputTokens;
         jevLatency += result.latencyMs;
@@ -1589,7 +1660,9 @@ async function runLoopWithBudgets(options: LoopOptions): Promise<LoopStats> {
           }
         }
       } catch (error) {
-        if (potionOnly) {
+        if (cardOnly) {
+          resolved = { ...decision.resolve({}, { budgetExpired: true }), fallback: true };
+        } else if (potionOnly) {
           notePotionFallback(env, true);
           recordPotionJev(env, config.runPlanLog, decisionId, firstAnswers, "Jev potion request failed; keep current potions", Date.now() - potionStarted);
           resolved = { ...decision.resolve({}, { budgetExpired: true }), fallback: true };
@@ -1610,11 +1683,17 @@ async function runLoopWithBudgets(options: LoopOptions): Promise<LoopStats> {
         continue;
       }
         }
+      if (cardOnly) cardElapsed = Date.now() - potionStarted;
       // Memoise the finished resolution (including any shortlist re-ask that ran above).
       answerMemo = { key: memoKey, resolved, answers: firstAnswers };
       }
     }
 
+    if (v6CardPick && v6Config().mode === "on" && !fromMemo) {
+      notePotionFallback(env, resolved.fallback);
+      recordCardPick(env, v6CardPick, config.runPlanLog, decisionId, (rawAnswers ?? {}) as unknown as AnswerSet, cardElapsed,
+        resolved.fallback ? "Jev unavailable, timed out or invalid; weighted paired fallback" : null);
+    }
     if (resolved.fallback) stats.fallbacks += 1;
 
     if (!resolved.intent) {
@@ -1682,6 +1761,8 @@ async function runLoopWithBudgets(options: LoopOptions): Promise<LoopStats> {
       // BUILD_DECIDER=deepseek: DeepSeek's own decision (not an escalation of a Jev answer).
       ...(deepseekRecord === undefined ? {} : { deepseek: deepseekRecord }),
       ...(potionJevRecord === undefined ? {} : { potion_jev: potionJevRecord, potion_jev_usage: potionJevTokens }),
+      ...(v6CardPick && v6Config().mode === "on" ? { v6_card: toJsonValue({ entries: v6CardPick.entries, weighted: v6CardPick.table?.weighted,
+        target_mixtures: v6CardPick.table?.target_mixtures, telemetry: v6CardPick.table?.telemetry }) } : {}),
       ...(deepseekFallback === undefined ? {} : { deepseek_fallback: deepseekFallback }),
       ...(deepseekConsistency === undefined ? {} : { deepseek_consistency: deepseekConsistency }),
       ...(bossSimRecord === undefined ? {} : { boss_sim: bossSimRecord }),

@@ -1,0 +1,2555 @@
+{
+  "state": {
+    "direction_weights": {
+      "TEST_A": 1
+    },
+    "availability": [
+      {
+        "direction": "TEST_A",
+        "combo": "TEST_A:min",
+        "target": "f17:TEST_BOSS",
+        "probability": null,
+        "trust": "unknown"
+      },
+      {
+        "direction": "TEST_A",
+        "combo": "TEST_A:common",
+        "target": "f17:TEST_BOSS",
+        "probability": null,
+        "trust": "unknown"
+      }
+    ],
+    "targets": [
+      {
+        "id": "f17:TEST_BOSS",
+        "boss": "TEST_BOSS",
+        "act": 1,
+        "floor": 17,
+        "kind": "current",
+        "probability": 1,
+        "labels": []
+      }
+    ],
+    "weighted": [],
+    "target_mixtures": [],
+    "limitations": [
+      "synthetic_format_fixture; estimates deliberately unknown"
+    ],
+    "note": "Probabilities are model estimates, not guarantees. Null means unknown. Paired deltas compare taking with skipping; missing mass is not renormalized. Core-combination metrics describe observed evidence, not causal benefits.",
+    "options": {
+      "card2": {
+        "card": "TEST_CARD",
+        "upgraded": true,
+        "projections": [
+          {
+            "schema": "projection-entry-v1",
+            "option_id": "card2",
+            "direction_id": "TEST_A",
+            "target_id": "f17:TEST_BOSS",
+            "combo_id": "TEST_A:min",
+            "combo_source": "build-core-v1",
+            "combo_metrics": [
+              {
+                "ascension": 0,
+                "attempt": "first",
+                "version": "fixture",
+                "observed": {
+                  "dpr_boss": {
+                    "n": 3,
+                    "unit": "fixture",
+                    "method": "synthetic contract",
+                    "value": 20,
+                    "se": null,
+                    "distribution": [],
+                    "evidence": [
+                      {
+                        "run_id": "FIXTURE_RUN",
+                        "floor": 8,
+                        "turn": 1
+                      }
+                    ],
+                    "unknown_reason": null,
+                    "small_sample": true
+                  },
+                  "dpr_elite": {
+                    "n": 0,
+                    "unit": "fixture",
+                    "method": "synthetic contract",
+                    "value": null,
+                    "se": null,
+                    "distribution": [],
+                    "evidence": [],
+                    "unknown_reason": "not measured",
+                    "small_sample": true
+                  },
+                  "dpr_normal": {
+                    "n": 0,
+                    "unit": "fixture",
+                    "method": "synthetic contract",
+                    "value": null,
+                    "se": null,
+                    "distribution": [],
+                    "evidence": [],
+                    "unknown_reason": "not measured",
+                    "small_sample": true
+                  },
+                  "dpr_turns_1_3": {
+                    "n": 0,
+                    "unit": "fixture",
+                    "method": "synthetic contract",
+                    "value": null,
+                    "se": null,
+                    "distribution": [],
+                    "evidence": [],
+                    "unknown_reason": "not measured",
+                    "small_sample": true
+                  },
+                  "dpr_turns_4_6": {
+                    "n": 0,
+                    "unit": "fixture",
+                    "method": "synthetic contract",
+                    "value": null,
+                    "se": null,
+                    "distribution": [],
+                    "evidence": [],
+                    "unknown_reason": "not measured",
+                    "small_sample": true
+                  },
+                  "dpr_turns_7_plus": {
+                    "n": 0,
+                    "unit": "fixture",
+                    "method": "synthetic contract",
+                    "value": null,
+                    "se": null,
+                    "distribution": [],
+                    "evidence": [],
+                    "unknown_reason": "not measured",
+                    "small_sample": true
+                  },
+                  "peak_turn_damage": {
+                    "n": 0,
+                    "unit": "fixture",
+                    "method": "synthetic contract",
+                    "value": null,
+                    "se": null,
+                    "distribution": [],
+                    "evidence": [],
+                    "unknown_reason": "not measured",
+                    "small_sample": true
+                  },
+                  "aoe_damage": {
+                    "n": 0,
+                    "unit": "fixture",
+                    "method": "synthetic contract",
+                    "value": null,
+                    "se": null,
+                    "distribution": [],
+                    "evidence": [],
+                    "unknown_reason": "not measured",
+                    "small_sample": true
+                  },
+                  "block_per_turn": {
+                    "n": 0,
+                    "unit": "fixture",
+                    "method": "synthetic contract",
+                    "value": null,
+                    "se": null,
+                    "distribution": [],
+                    "evidence": [],
+                    "unknown_reason": "not measured",
+                    "small_sample": true
+                  },
+                  "hp_loss_per_turn": {
+                    "n": 0,
+                    "unit": "fixture",
+                    "method": "synthetic contract",
+                    "value": null,
+                    "se": null,
+                    "distribution": [],
+                    "evidence": [],
+                    "unknown_reason": "not measured",
+                    "small_sample": true
+                  },
+                  "startup_turn": {
+                    "n": 3,
+                    "unit": "fixture",
+                    "method": "synthetic contract",
+                    "value": 3,
+                    "se": null,
+                    "distribution": [],
+                    "evidence": [
+                      {
+                        "run_id": "FIXTURE_RUN",
+                        "floor": 8,
+                        "turn": 1
+                      }
+                    ],
+                    "unknown_reason": null,
+                    "small_sample": true
+                  },
+                  "startup_energy": {
+                    "n": 0,
+                    "unit": "fixture",
+                    "method": "synthetic contract",
+                    "value": null,
+                    "se": null,
+                    "distribution": [],
+                    "evidence": [],
+                    "unknown_reason": "not measured",
+                    "small_sample": true
+                  },
+                  "startup_draw": {
+                    "n": 0,
+                    "unit": "fixture",
+                    "method": "synthetic contract",
+                    "value": null,
+                    "se": null,
+                    "distribution": [],
+                    "evidence": [],
+                    "unknown_reason": "not measured",
+                    "small_sample": true
+                  },
+                  "first_completed_floor": {
+                    "n": 0,
+                    "unit": "fixture",
+                    "method": "synthetic contract",
+                    "value": null,
+                    "se": null,
+                    "distribution": [],
+                    "evidence": [],
+                    "unknown_reason": "not measured",
+                    "small_sample": true
+                  },
+                  "formed_runs": {
+                    "n": 0,
+                    "unit": "fixture",
+                    "method": "synthetic contract",
+                    "value": null,
+                    "se": null,
+                    "distribution": [],
+                    "evidence": [],
+                    "unknown_reason": "not measured",
+                    "small_sample": true
+                  },
+                  "cleared_runs": {
+                    "n": 3,
+                    "unit": "fixture",
+                    "method": "synthetic contract",
+                    "value": 1,
+                    "se": null,
+                    "distribution": [],
+                    "evidence": [
+                      {
+                        "run_id": "FIXTURE_RUN",
+                        "floor": 8,
+                        "turn": 1
+                      }
+                    ],
+                    "unknown_reason": null,
+                    "small_sample": true
+                  },
+                  "mean_reached_floor": {
+                    "n": 0,
+                    "unit": "fixture",
+                    "method": "synthetic contract",
+                    "value": null,
+                    "se": null,
+                    "distribution": [],
+                    "evidence": [],
+                    "unknown_reason": "not measured",
+                    "small_sample": true
+                  },
+                  "chain_reached": {
+                    "n": 0,
+                    "unit": "fixture",
+                    "method": "synthetic contract",
+                    "value": null,
+                    "se": null,
+                    "distribution": [],
+                    "evidence": [],
+                    "unknown_reason": "not measured",
+                    "small_sample": true
+                  },
+                  "chain_won": {
+                    "n": 0,
+                    "unit": "fixture",
+                    "method": "synthetic contract",
+                    "value": null,
+                    "se": null,
+                    "distribution": [],
+                    "evidence": [],
+                    "unknown_reason": "not measured",
+                    "small_sample": true
+                  },
+                  "chain_win_rate": {
+                    "n": 0,
+                    "unit": "fixture",
+                    "method": "synthetic contract",
+                    "value": null,
+                    "se": null,
+                    "distribution": [],
+                    "evidence": [],
+                    "unknown_reason": "not measured",
+                    "small_sample": true
+                  },
+                  "formation_rate": {
+                    "n": 0,
+                    "unit": "fixture",
+                    "method": "synthetic contract",
+                    "value": null,
+                    "se": null,
+                    "distribution": [],
+                    "evidence": [],
+                    "unknown_reason": "not measured",
+                    "small_sample": true
+                  },
+                  "deck_size_min": {
+                    "n": 0,
+                    "unit": "fixture",
+                    "method": "synthetic contract",
+                    "value": null,
+                    "se": null,
+                    "distribution": [],
+                    "evidence": [],
+                    "unknown_reason": "not measured",
+                    "small_sample": true
+                  },
+                  "deck_size_max": {
+                    "n": 0,
+                    "unit": "fixture",
+                    "method": "synthetic contract",
+                    "value": null,
+                    "se": null,
+                    "distribution": [],
+                    "evidence": [],
+                    "unknown_reason": "not measured",
+                    "small_sample": true
+                  },
+                  "deck_size_scaling": {
+                    "n": 0,
+                    "unit": "fixture",
+                    "method": "synthetic contract",
+                    "value": null,
+                    "se": null,
+                    "distribution": [],
+                    "evidence": [],
+                    "unknown_reason": "not measured",
+                    "small_sample": true
+                  },
+                  "potion_dependency": {
+                    "n": 0,
+                    "unit": "fixture",
+                    "method": "synthetic contract",
+                    "value": null,
+                    "se": null,
+                    "distribution": [],
+                    "evidence": [],
+                    "unknown_reason": "not measured",
+                    "small_sample": true
+                  },
+                  "sl_dependency": {
+                    "n": 0,
+                    "unit": "fixture",
+                    "method": "synthetic contract",
+                    "value": null,
+                    "se": null,
+                    "distribution": [],
+                    "evidence": [],
+                    "unknown_reason": "not measured",
+                    "small_sample": true
+                  },
+                  "key_relic_dependency": {
+                    "n": 0,
+                    "unit": "fixture",
+                    "method": "synthetic contract",
+                    "value": null,
+                    "se": null,
+                    "distribution": [],
+                    "evidence": [],
+                    "unknown_reason": "not measured",
+                    "small_sample": true
+                  }
+                },
+                "bosses": {
+                  "TEST_TARGET": {
+                    "reached": {
+                      "n": 3,
+                      "unit": "fixture",
+                      "method": "synthetic contract",
+                      "value": 3,
+                      "se": null,
+                      "distribution": [],
+                      "evidence": [
+                        {
+                          "run_id": "FIXTURE_RUN",
+                          "floor": 8,
+                          "turn": 1
+                        }
+                      ],
+                      "unknown_reason": null,
+                      "small_sample": true
+                    },
+                    "won": {
+                      "n": 3,
+                      "unit": "fixture",
+                      "method": "synthetic contract",
+                      "value": 1,
+                      "se": null,
+                      "distribution": [],
+                      "evidence": [
+                        {
+                          "run_id": "FIXTURE_RUN",
+                          "floor": 8,
+                          "turn": 1
+                        }
+                      ],
+                      "unknown_reason": null,
+                      "small_sample": true
+                    },
+                    "win_rate": {
+                      "n": 3,
+                      "unit": "fixture",
+                      "method": "synthetic contract",
+                      "value": 0.3333333333333333,
+                      "se": null,
+                      "distribution": [],
+                      "evidence": [
+                        {
+                          "run_id": "FIXTURE_RUN",
+                          "floor": 8,
+                          "turn": 1
+                        }
+                      ],
+                      "unknown_reason": null,
+                      "small_sample": true
+                    }
+                  }
+                },
+                "availability": [],
+                "simulation": []
+              }
+            ],
+            "win_complete": null,
+            "win_incomplete": null,
+            "incomplete_source": "unknown",
+            "expected_win": null,
+            "direction_value": null,
+            "win": null,
+            "paired_delta": null,
+            "losing_boss_hp_fraction": null,
+            "winning_player_hp_fraction": null,
+            "turns": null,
+            "joint_win": null,
+            "joint_paired_delta": null,
+            "availability": {
+              "take": null,
+              "skip": null
+            },
+            "weighted_current_boss_delta": null,
+            "weighted_joint_delta": null,
+            "deck_count_change": null,
+            "core_first_cast_turn": null,
+            "win_tier": "unknown",
+            "delta_tier": "unknown",
+            "direction_role": "unknown",
+            "trust": "unknown",
+            "reflex_ids": []
+          },
+          {
+            "schema": "projection-entry-v1",
+            "option_id": "card2",
+            "direction_id": "TEST_A",
+            "target_id": "f17:TEST_BOSS",
+            "combo_id": "TEST_A:common",
+            "combo_source": "build-core-v1",
+            "combo_metrics": [
+              {
+                "ascension": 0,
+                "attempt": "including_sl",
+                "version": "fixture",
+                "observed": {
+                  "dpr_boss": {
+                    "n": 3,
+                    "unit": "fixture",
+                    "method": "synthetic contract",
+                    "value": 20,
+                    "se": null,
+                    "distribution": [],
+                    "evidence": [
+                      {
+                        "run_id": "FIXTURE_RUN",
+                        "floor": 8,
+                        "turn": 1
+                      }
+                    ],
+                    "unknown_reason": null,
+                    "small_sample": true
+                  },
+                  "dpr_elite": {
+                    "n": 0,
+                    "unit": "fixture",
+                    "method": "synthetic contract",
+                    "value": null,
+                    "se": null,
+                    "distribution": [],
+                    "evidence": [],
+                    "unknown_reason": "not measured",
+                    "small_sample": true
+                  },
+                  "dpr_normal": {
+                    "n": 0,
+                    "unit": "fixture",
+                    "method": "synthetic contract",
+                    "value": null,
+                    "se": null,
+                    "distribution": [],
+                    "evidence": [],
+                    "unknown_reason": "not measured",
+                    "small_sample": true
+                  },
+                  "dpr_turns_1_3": {
+                    "n": 0,
+                    "unit": "fixture",
+                    "method": "synthetic contract",
+                    "value": null,
+                    "se": null,
+                    "distribution": [],
+                    "evidence": [],
+                    "unknown_reason": "not measured",
+                    "small_sample": true
+                  },
+                  "dpr_turns_4_6": {
+                    "n": 0,
+                    "unit": "fixture",
+                    "method": "synthetic contract",
+                    "value": null,
+                    "se": null,
+                    "distribution": [],
+                    "evidence": [],
+                    "unknown_reason": "not measured",
+                    "small_sample": true
+                  },
+                  "dpr_turns_7_plus": {
+                    "n": 0,
+                    "unit": "fixture",
+                    "method": "synthetic contract",
+                    "value": null,
+                    "se": null,
+                    "distribution": [],
+                    "evidence": [],
+                    "unknown_reason": "not measured",
+                    "small_sample": true
+                  },
+                  "peak_turn_damage": {
+                    "n": 0,
+                    "unit": "fixture",
+                    "method": "synthetic contract",
+                    "value": null,
+                    "se": null,
+                    "distribution": [],
+                    "evidence": [],
+                    "unknown_reason": "not measured",
+                    "small_sample": true
+                  },
+                  "aoe_damage": {
+                    "n": 0,
+                    "unit": "fixture",
+                    "method": "synthetic contract",
+                    "value": null,
+                    "se": null,
+                    "distribution": [],
+                    "evidence": [],
+                    "unknown_reason": "not measured",
+                    "small_sample": true
+                  },
+                  "block_per_turn": {
+                    "n": 0,
+                    "unit": "fixture",
+                    "method": "synthetic contract",
+                    "value": null,
+                    "se": null,
+                    "distribution": [],
+                    "evidence": [],
+                    "unknown_reason": "not measured",
+                    "small_sample": true
+                  },
+                  "hp_loss_per_turn": {
+                    "n": 0,
+                    "unit": "fixture",
+                    "method": "synthetic contract",
+                    "value": null,
+                    "se": null,
+                    "distribution": [],
+                    "evidence": [],
+                    "unknown_reason": "not measured",
+                    "small_sample": true
+                  },
+                  "startup_turn": {
+                    "n": 3,
+                    "unit": "fixture",
+                    "method": "synthetic contract",
+                    "value": 3,
+                    "se": null,
+                    "distribution": [],
+                    "evidence": [
+                      {
+                        "run_id": "FIXTURE_RUN",
+                        "floor": 8,
+                        "turn": 1
+                      }
+                    ],
+                    "unknown_reason": null,
+                    "small_sample": true
+                  },
+                  "startup_energy": {
+                    "n": 0,
+                    "unit": "fixture",
+                    "method": "synthetic contract",
+                    "value": null,
+                    "se": null,
+                    "distribution": [],
+                    "evidence": [],
+                    "unknown_reason": "not measured",
+                    "small_sample": true
+                  },
+                  "startup_draw": {
+                    "n": 0,
+                    "unit": "fixture",
+                    "method": "synthetic contract",
+                    "value": null,
+                    "se": null,
+                    "distribution": [],
+                    "evidence": [],
+                    "unknown_reason": "not measured",
+                    "small_sample": true
+                  },
+                  "first_completed_floor": {
+                    "n": 0,
+                    "unit": "fixture",
+                    "method": "synthetic contract",
+                    "value": null,
+                    "se": null,
+                    "distribution": [],
+                    "evidence": [],
+                    "unknown_reason": "not measured",
+                    "small_sample": true
+                  },
+                  "formed_runs": {
+                    "n": 0,
+                    "unit": "fixture",
+                    "method": "synthetic contract",
+                    "value": null,
+                    "se": null,
+                    "distribution": [],
+                    "evidence": [],
+                    "unknown_reason": "not measured",
+                    "small_sample": true
+                  },
+                  "cleared_runs": {
+                    "n": 3,
+                    "unit": "fixture",
+                    "method": "synthetic contract",
+                    "value": 1,
+                    "se": null,
+                    "distribution": [],
+                    "evidence": [
+                      {
+                        "run_id": "FIXTURE_RUN",
+                        "floor": 8,
+                        "turn": 1
+                      }
+                    ],
+                    "unknown_reason": null,
+                    "small_sample": true
+                  },
+                  "mean_reached_floor": {
+                    "n": 0,
+                    "unit": "fixture",
+                    "method": "synthetic contract",
+                    "value": null,
+                    "se": null,
+                    "distribution": [],
+                    "evidence": [],
+                    "unknown_reason": "not measured",
+                    "small_sample": true
+                  },
+                  "chain_reached": {
+                    "n": 0,
+                    "unit": "fixture",
+                    "method": "synthetic contract",
+                    "value": null,
+                    "se": null,
+                    "distribution": [],
+                    "evidence": [],
+                    "unknown_reason": "not measured",
+                    "small_sample": true
+                  },
+                  "chain_won": {
+                    "n": 0,
+                    "unit": "fixture",
+                    "method": "synthetic contract",
+                    "value": null,
+                    "se": null,
+                    "distribution": [],
+                    "evidence": [],
+                    "unknown_reason": "not measured",
+                    "small_sample": true
+                  },
+                  "chain_win_rate": {
+                    "n": 0,
+                    "unit": "fixture",
+                    "method": "synthetic contract",
+                    "value": null,
+                    "se": null,
+                    "distribution": [],
+                    "evidence": [],
+                    "unknown_reason": "not measured",
+                    "small_sample": true
+                  },
+                  "formation_rate": {
+                    "n": 0,
+                    "unit": "fixture",
+                    "method": "synthetic contract",
+                    "value": null,
+                    "se": null,
+                    "distribution": [],
+                    "evidence": [],
+                    "unknown_reason": "not measured",
+                    "small_sample": true
+                  },
+                  "deck_size_min": {
+                    "n": 0,
+                    "unit": "fixture",
+                    "method": "synthetic contract",
+                    "value": null,
+                    "se": null,
+                    "distribution": [],
+                    "evidence": [],
+                    "unknown_reason": "not measured",
+                    "small_sample": true
+                  },
+                  "deck_size_max": {
+                    "n": 0,
+                    "unit": "fixture",
+                    "method": "synthetic contract",
+                    "value": null,
+                    "se": null,
+                    "distribution": [],
+                    "evidence": [],
+                    "unknown_reason": "not measured",
+                    "small_sample": true
+                  },
+                  "deck_size_scaling": {
+                    "n": 0,
+                    "unit": "fixture",
+                    "method": "synthetic contract",
+                    "value": null,
+                    "se": null,
+                    "distribution": [],
+                    "evidence": [],
+                    "unknown_reason": "not measured",
+                    "small_sample": true
+                  },
+                  "potion_dependency": {
+                    "n": 0,
+                    "unit": "fixture",
+                    "method": "synthetic contract",
+                    "value": null,
+                    "se": null,
+                    "distribution": [],
+                    "evidence": [],
+                    "unknown_reason": "not measured",
+                    "small_sample": true
+                  },
+                  "sl_dependency": {
+                    "n": 0,
+                    "unit": "fixture",
+                    "method": "synthetic contract",
+                    "value": null,
+                    "se": null,
+                    "distribution": [],
+                    "evidence": [],
+                    "unknown_reason": "not measured",
+                    "small_sample": true
+                  },
+                  "key_relic_dependency": {
+                    "n": 0,
+                    "unit": "fixture",
+                    "method": "synthetic contract",
+                    "value": null,
+                    "se": null,
+                    "distribution": [],
+                    "evidence": [],
+                    "unknown_reason": "not measured",
+                    "small_sample": true
+                  }
+                },
+                "bosses": {
+                  "TEST_TARGET": {
+                    "reached": {
+                      "n": 3,
+                      "unit": "fixture",
+                      "method": "synthetic contract",
+                      "value": 3,
+                      "se": null,
+                      "distribution": [],
+                      "evidence": [
+                        {
+                          "run_id": "FIXTURE_RUN",
+                          "floor": 8,
+                          "turn": 1
+                        }
+                      ],
+                      "unknown_reason": null,
+                      "small_sample": true
+                    },
+                    "won": {
+                      "n": 3,
+                      "unit": "fixture",
+                      "method": "synthetic contract",
+                      "value": 1,
+                      "se": null,
+                      "distribution": [],
+                      "evidence": [
+                        {
+                          "run_id": "FIXTURE_RUN",
+                          "floor": 8,
+                          "turn": 1
+                        }
+                      ],
+                      "unknown_reason": null,
+                      "small_sample": true
+                    },
+                    "win_rate": {
+                      "n": 3,
+                      "unit": "fixture",
+                      "method": "synthetic contract",
+                      "value": 0.3333333333333333,
+                      "se": null,
+                      "distribution": [],
+                      "evidence": [
+                        {
+                          "run_id": "FIXTURE_RUN",
+                          "floor": 8,
+                          "turn": 1
+                        }
+                      ],
+                      "unknown_reason": null,
+                      "small_sample": true
+                    }
+                  }
+                },
+                "availability": [],
+                "simulation": []
+              }
+            ],
+            "win_complete": null,
+            "win_incomplete": null,
+            "incomplete_source": "unknown",
+            "expected_win": null,
+            "direction_value": null,
+            "win": null,
+            "paired_delta": null,
+            "losing_boss_hp_fraction": null,
+            "winning_player_hp_fraction": null,
+            "turns": null,
+            "joint_win": null,
+            "joint_paired_delta": null,
+            "availability": {
+              "take": null,
+              "skip": null
+            },
+            "weighted_current_boss_delta": null,
+            "weighted_joint_delta": null,
+            "deck_count_change": null,
+            "core_first_cast_turn": null,
+            "win_tier": "unknown",
+            "delta_tier": "unknown",
+            "direction_role": "unknown",
+            "trust": "unknown",
+            "reflex_ids": []
+          }
+        ],
+        "reflex": []
+      },
+      "card7": {
+        "card": "TEST_OTHER",
+        "upgraded": false,
+        "projections": [
+          {
+            "schema": "projection-entry-v1",
+            "option_id": "card7",
+            "direction_id": "TEST_A",
+            "target_id": "f17:TEST_BOSS",
+            "combo_id": "TEST_A:min",
+            "combo_source": "build-core-v1",
+            "combo_metrics": [
+              {
+                "ascension": 0,
+                "attempt": "first",
+                "version": "fixture",
+                "observed": {
+                  "dpr_boss": {
+                    "n": 3,
+                    "unit": "fixture",
+                    "method": "synthetic contract",
+                    "value": 20,
+                    "se": null,
+                    "distribution": [],
+                    "evidence": [
+                      {
+                        "run_id": "FIXTURE_RUN",
+                        "floor": 8,
+                        "turn": 1
+                      }
+                    ],
+                    "unknown_reason": null,
+                    "small_sample": true
+                  },
+                  "dpr_elite": {
+                    "n": 0,
+                    "unit": "fixture",
+                    "method": "synthetic contract",
+                    "value": null,
+                    "se": null,
+                    "distribution": [],
+                    "evidence": [],
+                    "unknown_reason": "not measured",
+                    "small_sample": true
+                  },
+                  "dpr_normal": {
+                    "n": 0,
+                    "unit": "fixture",
+                    "method": "synthetic contract",
+                    "value": null,
+                    "se": null,
+                    "distribution": [],
+                    "evidence": [],
+                    "unknown_reason": "not measured",
+                    "small_sample": true
+                  },
+                  "dpr_turns_1_3": {
+                    "n": 0,
+                    "unit": "fixture",
+                    "method": "synthetic contract",
+                    "value": null,
+                    "se": null,
+                    "distribution": [],
+                    "evidence": [],
+                    "unknown_reason": "not measured",
+                    "small_sample": true
+                  },
+                  "dpr_turns_4_6": {
+                    "n": 0,
+                    "unit": "fixture",
+                    "method": "synthetic contract",
+                    "value": null,
+                    "se": null,
+                    "distribution": [],
+                    "evidence": [],
+                    "unknown_reason": "not measured",
+                    "small_sample": true
+                  },
+                  "dpr_turns_7_plus": {
+                    "n": 0,
+                    "unit": "fixture",
+                    "method": "synthetic contract",
+                    "value": null,
+                    "se": null,
+                    "distribution": [],
+                    "evidence": [],
+                    "unknown_reason": "not measured",
+                    "small_sample": true
+                  },
+                  "peak_turn_damage": {
+                    "n": 0,
+                    "unit": "fixture",
+                    "method": "synthetic contract",
+                    "value": null,
+                    "se": null,
+                    "distribution": [],
+                    "evidence": [],
+                    "unknown_reason": "not measured",
+                    "small_sample": true
+                  },
+                  "aoe_damage": {
+                    "n": 0,
+                    "unit": "fixture",
+                    "method": "synthetic contract",
+                    "value": null,
+                    "se": null,
+                    "distribution": [],
+                    "evidence": [],
+                    "unknown_reason": "not measured",
+                    "small_sample": true
+                  },
+                  "block_per_turn": {
+                    "n": 0,
+                    "unit": "fixture",
+                    "method": "synthetic contract",
+                    "value": null,
+                    "se": null,
+                    "distribution": [],
+                    "evidence": [],
+                    "unknown_reason": "not measured",
+                    "small_sample": true
+                  },
+                  "hp_loss_per_turn": {
+                    "n": 0,
+                    "unit": "fixture",
+                    "method": "synthetic contract",
+                    "value": null,
+                    "se": null,
+                    "distribution": [],
+                    "evidence": [],
+                    "unknown_reason": "not measured",
+                    "small_sample": true
+                  },
+                  "startup_turn": {
+                    "n": 3,
+                    "unit": "fixture",
+                    "method": "synthetic contract",
+                    "value": 3,
+                    "se": null,
+                    "distribution": [],
+                    "evidence": [
+                      {
+                        "run_id": "FIXTURE_RUN",
+                        "floor": 8,
+                        "turn": 1
+                      }
+                    ],
+                    "unknown_reason": null,
+                    "small_sample": true
+                  },
+                  "startup_energy": {
+                    "n": 0,
+                    "unit": "fixture",
+                    "method": "synthetic contract",
+                    "value": null,
+                    "se": null,
+                    "distribution": [],
+                    "evidence": [],
+                    "unknown_reason": "not measured",
+                    "small_sample": true
+                  },
+                  "startup_draw": {
+                    "n": 0,
+                    "unit": "fixture",
+                    "method": "synthetic contract",
+                    "value": null,
+                    "se": null,
+                    "distribution": [],
+                    "evidence": [],
+                    "unknown_reason": "not measured",
+                    "small_sample": true
+                  },
+                  "first_completed_floor": {
+                    "n": 0,
+                    "unit": "fixture",
+                    "method": "synthetic contract",
+                    "value": null,
+                    "se": null,
+                    "distribution": [],
+                    "evidence": [],
+                    "unknown_reason": "not measured",
+                    "small_sample": true
+                  },
+                  "formed_runs": {
+                    "n": 0,
+                    "unit": "fixture",
+                    "method": "synthetic contract",
+                    "value": null,
+                    "se": null,
+                    "distribution": [],
+                    "evidence": [],
+                    "unknown_reason": "not measured",
+                    "small_sample": true
+                  },
+                  "cleared_runs": {
+                    "n": 3,
+                    "unit": "fixture",
+                    "method": "synthetic contract",
+                    "value": 1,
+                    "se": null,
+                    "distribution": [],
+                    "evidence": [
+                      {
+                        "run_id": "FIXTURE_RUN",
+                        "floor": 8,
+                        "turn": 1
+                      }
+                    ],
+                    "unknown_reason": null,
+                    "small_sample": true
+                  },
+                  "mean_reached_floor": {
+                    "n": 0,
+                    "unit": "fixture",
+                    "method": "synthetic contract",
+                    "value": null,
+                    "se": null,
+                    "distribution": [],
+                    "evidence": [],
+                    "unknown_reason": "not measured",
+                    "small_sample": true
+                  },
+                  "chain_reached": {
+                    "n": 0,
+                    "unit": "fixture",
+                    "method": "synthetic contract",
+                    "value": null,
+                    "se": null,
+                    "distribution": [],
+                    "evidence": [],
+                    "unknown_reason": "not measured",
+                    "small_sample": true
+                  },
+                  "chain_won": {
+                    "n": 0,
+                    "unit": "fixture",
+                    "method": "synthetic contract",
+                    "value": null,
+                    "se": null,
+                    "distribution": [],
+                    "evidence": [],
+                    "unknown_reason": "not measured",
+                    "small_sample": true
+                  },
+                  "chain_win_rate": {
+                    "n": 0,
+                    "unit": "fixture",
+                    "method": "synthetic contract",
+                    "value": null,
+                    "se": null,
+                    "distribution": [],
+                    "evidence": [],
+                    "unknown_reason": "not measured",
+                    "small_sample": true
+                  },
+                  "formation_rate": {
+                    "n": 0,
+                    "unit": "fixture",
+                    "method": "synthetic contract",
+                    "value": null,
+                    "se": null,
+                    "distribution": [],
+                    "evidence": [],
+                    "unknown_reason": "not measured",
+                    "small_sample": true
+                  },
+                  "deck_size_min": {
+                    "n": 0,
+                    "unit": "fixture",
+                    "method": "synthetic contract",
+                    "value": null,
+                    "se": null,
+                    "distribution": [],
+                    "evidence": [],
+                    "unknown_reason": "not measured",
+                    "small_sample": true
+                  },
+                  "deck_size_max": {
+                    "n": 0,
+                    "unit": "fixture",
+                    "method": "synthetic contract",
+                    "value": null,
+                    "se": null,
+                    "distribution": [],
+                    "evidence": [],
+                    "unknown_reason": "not measured",
+                    "small_sample": true
+                  },
+                  "deck_size_scaling": {
+                    "n": 0,
+                    "unit": "fixture",
+                    "method": "synthetic contract",
+                    "value": null,
+                    "se": null,
+                    "distribution": [],
+                    "evidence": [],
+                    "unknown_reason": "not measured",
+                    "small_sample": true
+                  },
+                  "potion_dependency": {
+                    "n": 0,
+                    "unit": "fixture",
+                    "method": "synthetic contract",
+                    "value": null,
+                    "se": null,
+                    "distribution": [],
+                    "evidence": [],
+                    "unknown_reason": "not measured",
+                    "small_sample": true
+                  },
+                  "sl_dependency": {
+                    "n": 0,
+                    "unit": "fixture",
+                    "method": "synthetic contract",
+                    "value": null,
+                    "se": null,
+                    "distribution": [],
+                    "evidence": [],
+                    "unknown_reason": "not measured",
+                    "small_sample": true
+                  },
+                  "key_relic_dependency": {
+                    "n": 0,
+                    "unit": "fixture",
+                    "method": "synthetic contract",
+                    "value": null,
+                    "se": null,
+                    "distribution": [],
+                    "evidence": [],
+                    "unknown_reason": "not measured",
+                    "small_sample": true
+                  }
+                },
+                "bosses": {
+                  "TEST_TARGET": {
+                    "reached": {
+                      "n": 3,
+                      "unit": "fixture",
+                      "method": "synthetic contract",
+                      "value": 3,
+                      "se": null,
+                      "distribution": [],
+                      "evidence": [
+                        {
+                          "run_id": "FIXTURE_RUN",
+                          "floor": 8,
+                          "turn": 1
+                        }
+                      ],
+                      "unknown_reason": null,
+                      "small_sample": true
+                    },
+                    "won": {
+                      "n": 3,
+                      "unit": "fixture",
+                      "method": "synthetic contract",
+                      "value": 1,
+                      "se": null,
+                      "distribution": [],
+                      "evidence": [
+                        {
+                          "run_id": "FIXTURE_RUN",
+                          "floor": 8,
+                          "turn": 1
+                        }
+                      ],
+                      "unknown_reason": null,
+                      "small_sample": true
+                    },
+                    "win_rate": {
+                      "n": 3,
+                      "unit": "fixture",
+                      "method": "synthetic contract",
+                      "value": 0.3333333333333333,
+                      "se": null,
+                      "distribution": [],
+                      "evidence": [
+                        {
+                          "run_id": "FIXTURE_RUN",
+                          "floor": 8,
+                          "turn": 1
+                        }
+                      ],
+                      "unknown_reason": null,
+                      "small_sample": true
+                    }
+                  }
+                },
+                "availability": [],
+                "simulation": []
+              }
+            ],
+            "win_complete": null,
+            "win_incomplete": null,
+            "incomplete_source": "unknown",
+            "expected_win": null,
+            "direction_value": null,
+            "win": null,
+            "paired_delta": null,
+            "losing_boss_hp_fraction": null,
+            "winning_player_hp_fraction": null,
+            "turns": null,
+            "joint_win": null,
+            "joint_paired_delta": null,
+            "availability": {
+              "take": null,
+              "skip": null
+            },
+            "weighted_current_boss_delta": null,
+            "weighted_joint_delta": null,
+            "deck_count_change": null,
+            "core_first_cast_turn": null,
+            "win_tier": "unknown",
+            "delta_tier": "unknown",
+            "direction_role": "unknown",
+            "trust": "unknown",
+            "reflex_ids": []
+          },
+          {
+            "schema": "projection-entry-v1",
+            "option_id": "card7",
+            "direction_id": "TEST_A",
+            "target_id": "f17:TEST_BOSS",
+            "combo_id": "TEST_A:common",
+            "combo_source": "build-core-v1",
+            "combo_metrics": [
+              {
+                "ascension": 0,
+                "attempt": "including_sl",
+                "version": "fixture",
+                "observed": {
+                  "dpr_boss": {
+                    "n": 3,
+                    "unit": "fixture",
+                    "method": "synthetic contract",
+                    "value": 20,
+                    "se": null,
+                    "distribution": [],
+                    "evidence": [
+                      {
+                        "run_id": "FIXTURE_RUN",
+                        "floor": 8,
+                        "turn": 1
+                      }
+                    ],
+                    "unknown_reason": null,
+                    "small_sample": true
+                  },
+                  "dpr_elite": {
+                    "n": 0,
+                    "unit": "fixture",
+                    "method": "synthetic contract",
+                    "value": null,
+                    "se": null,
+                    "distribution": [],
+                    "evidence": [],
+                    "unknown_reason": "not measured",
+                    "small_sample": true
+                  },
+                  "dpr_normal": {
+                    "n": 0,
+                    "unit": "fixture",
+                    "method": "synthetic contract",
+                    "value": null,
+                    "se": null,
+                    "distribution": [],
+                    "evidence": [],
+                    "unknown_reason": "not measured",
+                    "small_sample": true
+                  },
+                  "dpr_turns_1_3": {
+                    "n": 0,
+                    "unit": "fixture",
+                    "method": "synthetic contract",
+                    "value": null,
+                    "se": null,
+                    "distribution": [],
+                    "evidence": [],
+                    "unknown_reason": "not measured",
+                    "small_sample": true
+                  },
+                  "dpr_turns_4_6": {
+                    "n": 0,
+                    "unit": "fixture",
+                    "method": "synthetic contract",
+                    "value": null,
+                    "se": null,
+                    "distribution": [],
+                    "evidence": [],
+                    "unknown_reason": "not measured",
+                    "small_sample": true
+                  },
+                  "dpr_turns_7_plus": {
+                    "n": 0,
+                    "unit": "fixture",
+                    "method": "synthetic contract",
+                    "value": null,
+                    "se": null,
+                    "distribution": [],
+                    "evidence": [],
+                    "unknown_reason": "not measured",
+                    "small_sample": true
+                  },
+                  "peak_turn_damage": {
+                    "n": 0,
+                    "unit": "fixture",
+                    "method": "synthetic contract",
+                    "value": null,
+                    "se": null,
+                    "distribution": [],
+                    "evidence": [],
+                    "unknown_reason": "not measured",
+                    "small_sample": true
+                  },
+                  "aoe_damage": {
+                    "n": 0,
+                    "unit": "fixture",
+                    "method": "synthetic contract",
+                    "value": null,
+                    "se": null,
+                    "distribution": [],
+                    "evidence": [],
+                    "unknown_reason": "not measured",
+                    "small_sample": true
+                  },
+                  "block_per_turn": {
+                    "n": 0,
+                    "unit": "fixture",
+                    "method": "synthetic contract",
+                    "value": null,
+                    "se": null,
+                    "distribution": [],
+                    "evidence": [],
+                    "unknown_reason": "not measured",
+                    "small_sample": true
+                  },
+                  "hp_loss_per_turn": {
+                    "n": 0,
+                    "unit": "fixture",
+                    "method": "synthetic contract",
+                    "value": null,
+                    "se": null,
+                    "distribution": [],
+                    "evidence": [],
+                    "unknown_reason": "not measured",
+                    "small_sample": true
+                  },
+                  "startup_turn": {
+                    "n": 3,
+                    "unit": "fixture",
+                    "method": "synthetic contract",
+                    "value": 3,
+                    "se": null,
+                    "distribution": [],
+                    "evidence": [
+                      {
+                        "run_id": "FIXTURE_RUN",
+                        "floor": 8,
+                        "turn": 1
+                      }
+                    ],
+                    "unknown_reason": null,
+                    "small_sample": true
+                  },
+                  "startup_energy": {
+                    "n": 0,
+                    "unit": "fixture",
+                    "method": "synthetic contract",
+                    "value": null,
+                    "se": null,
+                    "distribution": [],
+                    "evidence": [],
+                    "unknown_reason": "not measured",
+                    "small_sample": true
+                  },
+                  "startup_draw": {
+                    "n": 0,
+                    "unit": "fixture",
+                    "method": "synthetic contract",
+                    "value": null,
+                    "se": null,
+                    "distribution": [],
+                    "evidence": [],
+                    "unknown_reason": "not measured",
+                    "small_sample": true
+                  },
+                  "first_completed_floor": {
+                    "n": 0,
+                    "unit": "fixture",
+                    "method": "synthetic contract",
+                    "value": null,
+                    "se": null,
+                    "distribution": [],
+                    "evidence": [],
+                    "unknown_reason": "not measured",
+                    "small_sample": true
+                  },
+                  "formed_runs": {
+                    "n": 0,
+                    "unit": "fixture",
+                    "method": "synthetic contract",
+                    "value": null,
+                    "se": null,
+                    "distribution": [],
+                    "evidence": [],
+                    "unknown_reason": "not measured",
+                    "small_sample": true
+                  },
+                  "cleared_runs": {
+                    "n": 3,
+                    "unit": "fixture",
+                    "method": "synthetic contract",
+                    "value": 1,
+                    "se": null,
+                    "distribution": [],
+                    "evidence": [
+                      {
+                        "run_id": "FIXTURE_RUN",
+                        "floor": 8,
+                        "turn": 1
+                      }
+                    ],
+                    "unknown_reason": null,
+                    "small_sample": true
+                  },
+                  "mean_reached_floor": {
+                    "n": 0,
+                    "unit": "fixture",
+                    "method": "synthetic contract",
+                    "value": null,
+                    "se": null,
+                    "distribution": [],
+                    "evidence": [],
+                    "unknown_reason": "not measured",
+                    "small_sample": true
+                  },
+                  "chain_reached": {
+                    "n": 0,
+                    "unit": "fixture",
+                    "method": "synthetic contract",
+                    "value": null,
+                    "se": null,
+                    "distribution": [],
+                    "evidence": [],
+                    "unknown_reason": "not measured",
+                    "small_sample": true
+                  },
+                  "chain_won": {
+                    "n": 0,
+                    "unit": "fixture",
+                    "method": "synthetic contract",
+                    "value": null,
+                    "se": null,
+                    "distribution": [],
+                    "evidence": [],
+                    "unknown_reason": "not measured",
+                    "small_sample": true
+                  },
+                  "chain_win_rate": {
+                    "n": 0,
+                    "unit": "fixture",
+                    "method": "synthetic contract",
+                    "value": null,
+                    "se": null,
+                    "distribution": [],
+                    "evidence": [],
+                    "unknown_reason": "not measured",
+                    "small_sample": true
+                  },
+                  "formation_rate": {
+                    "n": 0,
+                    "unit": "fixture",
+                    "method": "synthetic contract",
+                    "value": null,
+                    "se": null,
+                    "distribution": [],
+                    "evidence": [],
+                    "unknown_reason": "not measured",
+                    "small_sample": true
+                  },
+                  "deck_size_min": {
+                    "n": 0,
+                    "unit": "fixture",
+                    "method": "synthetic contract",
+                    "value": null,
+                    "se": null,
+                    "distribution": [],
+                    "evidence": [],
+                    "unknown_reason": "not measured",
+                    "small_sample": true
+                  },
+                  "deck_size_max": {
+                    "n": 0,
+                    "unit": "fixture",
+                    "method": "synthetic contract",
+                    "value": null,
+                    "se": null,
+                    "distribution": [],
+                    "evidence": [],
+                    "unknown_reason": "not measured",
+                    "small_sample": true
+                  },
+                  "deck_size_scaling": {
+                    "n": 0,
+                    "unit": "fixture",
+                    "method": "synthetic contract",
+                    "value": null,
+                    "se": null,
+                    "distribution": [],
+                    "evidence": [],
+                    "unknown_reason": "not measured",
+                    "small_sample": true
+                  },
+                  "potion_dependency": {
+                    "n": 0,
+                    "unit": "fixture",
+                    "method": "synthetic contract",
+                    "value": null,
+                    "se": null,
+                    "distribution": [],
+                    "evidence": [],
+                    "unknown_reason": "not measured",
+                    "small_sample": true
+                  },
+                  "sl_dependency": {
+                    "n": 0,
+                    "unit": "fixture",
+                    "method": "synthetic contract",
+                    "value": null,
+                    "se": null,
+                    "distribution": [],
+                    "evidence": [],
+                    "unknown_reason": "not measured",
+                    "small_sample": true
+                  },
+                  "key_relic_dependency": {
+                    "n": 0,
+                    "unit": "fixture",
+                    "method": "synthetic contract",
+                    "value": null,
+                    "se": null,
+                    "distribution": [],
+                    "evidence": [],
+                    "unknown_reason": "not measured",
+                    "small_sample": true
+                  }
+                },
+                "bosses": {
+                  "TEST_TARGET": {
+                    "reached": {
+                      "n": 3,
+                      "unit": "fixture",
+                      "method": "synthetic contract",
+                      "value": 3,
+                      "se": null,
+                      "distribution": [],
+                      "evidence": [
+                        {
+                          "run_id": "FIXTURE_RUN",
+                          "floor": 8,
+                          "turn": 1
+                        }
+                      ],
+                      "unknown_reason": null,
+                      "small_sample": true
+                    },
+                    "won": {
+                      "n": 3,
+                      "unit": "fixture",
+                      "method": "synthetic contract",
+                      "value": 1,
+                      "se": null,
+                      "distribution": [],
+                      "evidence": [
+                        {
+                          "run_id": "FIXTURE_RUN",
+                          "floor": 8,
+                          "turn": 1
+                        }
+                      ],
+                      "unknown_reason": null,
+                      "small_sample": true
+                    },
+                    "win_rate": {
+                      "n": 3,
+                      "unit": "fixture",
+                      "method": "synthetic contract",
+                      "value": 0.3333333333333333,
+                      "se": null,
+                      "distribution": [],
+                      "evidence": [
+                        {
+                          "run_id": "FIXTURE_RUN",
+                          "floor": 8,
+                          "turn": 1
+                        }
+                      ],
+                      "unknown_reason": null,
+                      "small_sample": true
+                    }
+                  }
+                },
+                "availability": [],
+                "simulation": []
+              }
+            ],
+            "win_complete": null,
+            "win_incomplete": null,
+            "incomplete_source": "unknown",
+            "expected_win": null,
+            "direction_value": null,
+            "win": null,
+            "paired_delta": null,
+            "losing_boss_hp_fraction": null,
+            "winning_player_hp_fraction": null,
+            "turns": null,
+            "joint_win": null,
+            "joint_paired_delta": null,
+            "availability": {
+              "take": null,
+              "skip": null
+            },
+            "weighted_current_boss_delta": null,
+            "weighted_joint_delta": null,
+            "deck_count_change": null,
+            "core_first_cast_turn": null,
+            "win_tier": "unknown",
+            "delta_tier": "unknown",
+            "direction_role": "unknown",
+            "trust": "unknown",
+            "reflex_ids": []
+          }
+        ],
+        "reflex": []
+      },
+      "skip": {
+        "projections": [
+          {
+            "schema": "projection-entry-v1",
+            "option_id": "skip",
+            "direction_id": "TEST_A",
+            "target_id": "f17:TEST_BOSS",
+            "combo_id": "TEST_A:min",
+            "combo_source": "build-core-v1",
+            "combo_metrics": [
+              {
+                "ascension": 0,
+                "attempt": "first",
+                "version": "fixture",
+                "observed": {
+                  "dpr_boss": {
+                    "n": 3,
+                    "unit": "fixture",
+                    "method": "synthetic contract",
+                    "value": 20,
+                    "se": null,
+                    "distribution": [],
+                    "evidence": [
+                      {
+                        "run_id": "FIXTURE_RUN",
+                        "floor": 8,
+                        "turn": 1
+                      }
+                    ],
+                    "unknown_reason": null,
+                    "small_sample": true
+                  },
+                  "dpr_elite": {
+                    "n": 0,
+                    "unit": "fixture",
+                    "method": "synthetic contract",
+                    "value": null,
+                    "se": null,
+                    "distribution": [],
+                    "evidence": [],
+                    "unknown_reason": "not measured",
+                    "small_sample": true
+                  },
+                  "dpr_normal": {
+                    "n": 0,
+                    "unit": "fixture",
+                    "method": "synthetic contract",
+                    "value": null,
+                    "se": null,
+                    "distribution": [],
+                    "evidence": [],
+                    "unknown_reason": "not measured",
+                    "small_sample": true
+                  },
+                  "dpr_turns_1_3": {
+                    "n": 0,
+                    "unit": "fixture",
+                    "method": "synthetic contract",
+                    "value": null,
+                    "se": null,
+                    "distribution": [],
+                    "evidence": [],
+                    "unknown_reason": "not measured",
+                    "small_sample": true
+                  },
+                  "dpr_turns_4_6": {
+                    "n": 0,
+                    "unit": "fixture",
+                    "method": "synthetic contract",
+                    "value": null,
+                    "se": null,
+                    "distribution": [],
+                    "evidence": [],
+                    "unknown_reason": "not measured",
+                    "small_sample": true
+                  },
+                  "dpr_turns_7_plus": {
+                    "n": 0,
+                    "unit": "fixture",
+                    "method": "synthetic contract",
+                    "value": null,
+                    "se": null,
+                    "distribution": [],
+                    "evidence": [],
+                    "unknown_reason": "not measured",
+                    "small_sample": true
+                  },
+                  "peak_turn_damage": {
+                    "n": 0,
+                    "unit": "fixture",
+                    "method": "synthetic contract",
+                    "value": null,
+                    "se": null,
+                    "distribution": [],
+                    "evidence": [],
+                    "unknown_reason": "not measured",
+                    "small_sample": true
+                  },
+                  "aoe_damage": {
+                    "n": 0,
+                    "unit": "fixture",
+                    "method": "synthetic contract",
+                    "value": null,
+                    "se": null,
+                    "distribution": [],
+                    "evidence": [],
+                    "unknown_reason": "not measured",
+                    "small_sample": true
+                  },
+                  "block_per_turn": {
+                    "n": 0,
+                    "unit": "fixture",
+                    "method": "synthetic contract",
+                    "value": null,
+                    "se": null,
+                    "distribution": [],
+                    "evidence": [],
+                    "unknown_reason": "not measured",
+                    "small_sample": true
+                  },
+                  "hp_loss_per_turn": {
+                    "n": 0,
+                    "unit": "fixture",
+                    "method": "synthetic contract",
+                    "value": null,
+                    "se": null,
+                    "distribution": [],
+                    "evidence": [],
+                    "unknown_reason": "not measured",
+                    "small_sample": true
+                  },
+                  "startup_turn": {
+                    "n": 3,
+                    "unit": "fixture",
+                    "method": "synthetic contract",
+                    "value": 3,
+                    "se": null,
+                    "distribution": [],
+                    "evidence": [
+                      {
+                        "run_id": "FIXTURE_RUN",
+                        "floor": 8,
+                        "turn": 1
+                      }
+                    ],
+                    "unknown_reason": null,
+                    "small_sample": true
+                  },
+                  "startup_energy": {
+                    "n": 0,
+                    "unit": "fixture",
+                    "method": "synthetic contract",
+                    "value": null,
+                    "se": null,
+                    "distribution": [],
+                    "evidence": [],
+                    "unknown_reason": "not measured",
+                    "small_sample": true
+                  },
+                  "startup_draw": {
+                    "n": 0,
+                    "unit": "fixture",
+                    "method": "synthetic contract",
+                    "value": null,
+                    "se": null,
+                    "distribution": [],
+                    "evidence": [],
+                    "unknown_reason": "not measured",
+                    "small_sample": true
+                  },
+                  "first_completed_floor": {
+                    "n": 0,
+                    "unit": "fixture",
+                    "method": "synthetic contract",
+                    "value": null,
+                    "se": null,
+                    "distribution": [],
+                    "evidence": [],
+                    "unknown_reason": "not measured",
+                    "small_sample": true
+                  },
+                  "formed_runs": {
+                    "n": 0,
+                    "unit": "fixture",
+                    "method": "synthetic contract",
+                    "value": null,
+                    "se": null,
+                    "distribution": [],
+                    "evidence": [],
+                    "unknown_reason": "not measured",
+                    "small_sample": true
+                  },
+                  "cleared_runs": {
+                    "n": 3,
+                    "unit": "fixture",
+                    "method": "synthetic contract",
+                    "value": 1,
+                    "se": null,
+                    "distribution": [],
+                    "evidence": [
+                      {
+                        "run_id": "FIXTURE_RUN",
+                        "floor": 8,
+                        "turn": 1
+                      }
+                    ],
+                    "unknown_reason": null,
+                    "small_sample": true
+                  },
+                  "mean_reached_floor": {
+                    "n": 0,
+                    "unit": "fixture",
+                    "method": "synthetic contract",
+                    "value": null,
+                    "se": null,
+                    "distribution": [],
+                    "evidence": [],
+                    "unknown_reason": "not measured",
+                    "small_sample": true
+                  },
+                  "chain_reached": {
+                    "n": 0,
+                    "unit": "fixture",
+                    "method": "synthetic contract",
+                    "value": null,
+                    "se": null,
+                    "distribution": [],
+                    "evidence": [],
+                    "unknown_reason": "not measured",
+                    "small_sample": true
+                  },
+                  "chain_won": {
+                    "n": 0,
+                    "unit": "fixture",
+                    "method": "synthetic contract",
+                    "value": null,
+                    "se": null,
+                    "distribution": [],
+                    "evidence": [],
+                    "unknown_reason": "not measured",
+                    "small_sample": true
+                  },
+                  "chain_win_rate": {
+                    "n": 0,
+                    "unit": "fixture",
+                    "method": "synthetic contract",
+                    "value": null,
+                    "se": null,
+                    "distribution": [],
+                    "evidence": [],
+                    "unknown_reason": "not measured",
+                    "small_sample": true
+                  },
+                  "formation_rate": {
+                    "n": 0,
+                    "unit": "fixture",
+                    "method": "synthetic contract",
+                    "value": null,
+                    "se": null,
+                    "distribution": [],
+                    "evidence": [],
+                    "unknown_reason": "not measured",
+                    "small_sample": true
+                  },
+                  "deck_size_min": {
+                    "n": 0,
+                    "unit": "fixture",
+                    "method": "synthetic contract",
+                    "value": null,
+                    "se": null,
+                    "distribution": [],
+                    "evidence": [],
+                    "unknown_reason": "not measured",
+                    "small_sample": true
+                  },
+                  "deck_size_max": {
+                    "n": 0,
+                    "unit": "fixture",
+                    "method": "synthetic contract",
+                    "value": null,
+                    "se": null,
+                    "distribution": [],
+                    "evidence": [],
+                    "unknown_reason": "not measured",
+                    "small_sample": true
+                  },
+                  "deck_size_scaling": {
+                    "n": 0,
+                    "unit": "fixture",
+                    "method": "synthetic contract",
+                    "value": null,
+                    "se": null,
+                    "distribution": [],
+                    "evidence": [],
+                    "unknown_reason": "not measured",
+                    "small_sample": true
+                  },
+                  "potion_dependency": {
+                    "n": 0,
+                    "unit": "fixture",
+                    "method": "synthetic contract",
+                    "value": null,
+                    "se": null,
+                    "distribution": [],
+                    "evidence": [],
+                    "unknown_reason": "not measured",
+                    "small_sample": true
+                  },
+                  "sl_dependency": {
+                    "n": 0,
+                    "unit": "fixture",
+                    "method": "synthetic contract",
+                    "value": null,
+                    "se": null,
+                    "distribution": [],
+                    "evidence": [],
+                    "unknown_reason": "not measured",
+                    "small_sample": true
+                  },
+                  "key_relic_dependency": {
+                    "n": 0,
+                    "unit": "fixture",
+                    "method": "synthetic contract",
+                    "value": null,
+                    "se": null,
+                    "distribution": [],
+                    "evidence": [],
+                    "unknown_reason": "not measured",
+                    "small_sample": true
+                  }
+                },
+                "bosses": {
+                  "TEST_TARGET": {
+                    "reached": {
+                      "n": 3,
+                      "unit": "fixture",
+                      "method": "synthetic contract",
+                      "value": 3,
+                      "se": null,
+                      "distribution": [],
+                      "evidence": [
+                        {
+                          "run_id": "FIXTURE_RUN",
+                          "floor": 8,
+                          "turn": 1
+                        }
+                      ],
+                      "unknown_reason": null,
+                      "small_sample": true
+                    },
+                    "won": {
+                      "n": 3,
+                      "unit": "fixture",
+                      "method": "synthetic contract",
+                      "value": 1,
+                      "se": null,
+                      "distribution": [],
+                      "evidence": [
+                        {
+                          "run_id": "FIXTURE_RUN",
+                          "floor": 8,
+                          "turn": 1
+                        }
+                      ],
+                      "unknown_reason": null,
+                      "small_sample": true
+                    },
+                    "win_rate": {
+                      "n": 3,
+                      "unit": "fixture",
+                      "method": "synthetic contract",
+                      "value": 0.3333333333333333,
+                      "se": null,
+                      "distribution": [],
+                      "evidence": [
+                        {
+                          "run_id": "FIXTURE_RUN",
+                          "floor": 8,
+                          "turn": 1
+                        }
+                      ],
+                      "unknown_reason": null,
+                      "small_sample": true
+                    }
+                  }
+                },
+                "availability": [],
+                "simulation": []
+              }
+            ],
+            "win_complete": null,
+            "win_incomplete": null,
+            "incomplete_source": "unknown",
+            "expected_win": null,
+            "direction_value": null,
+            "win": null,
+            "paired_delta": null,
+            "losing_boss_hp_fraction": null,
+            "winning_player_hp_fraction": null,
+            "turns": null,
+            "joint_win": null,
+            "joint_paired_delta": null,
+            "availability": {
+              "take": null,
+              "skip": null
+            },
+            "weighted_current_boss_delta": null,
+            "weighted_joint_delta": null,
+            "deck_count_change": null,
+            "core_first_cast_turn": null,
+            "win_tier": "unknown",
+            "delta_tier": "unknown",
+            "direction_role": "unknown",
+            "trust": "unknown",
+            "reflex_ids": []
+          },
+          {
+            "schema": "projection-entry-v1",
+            "option_id": "skip",
+            "direction_id": "TEST_A",
+            "target_id": "f17:TEST_BOSS",
+            "combo_id": "TEST_A:common",
+            "combo_source": "build-core-v1",
+            "combo_metrics": [
+              {
+                "ascension": 0,
+                "attempt": "including_sl",
+                "version": "fixture",
+                "observed": {
+                  "dpr_boss": {
+                    "n": 3,
+                    "unit": "fixture",
+                    "method": "synthetic contract",
+                    "value": 20,
+                    "se": null,
+                    "distribution": [],
+                    "evidence": [
+                      {
+                        "run_id": "FIXTURE_RUN",
+                        "floor": 8,
+                        "turn": 1
+                      }
+                    ],
+                    "unknown_reason": null,
+                    "small_sample": true
+                  },
+                  "dpr_elite": {
+                    "n": 0,
+                    "unit": "fixture",
+                    "method": "synthetic contract",
+                    "value": null,
+                    "se": null,
+                    "distribution": [],
+                    "evidence": [],
+                    "unknown_reason": "not measured",
+                    "small_sample": true
+                  },
+                  "dpr_normal": {
+                    "n": 0,
+                    "unit": "fixture",
+                    "method": "synthetic contract",
+                    "value": null,
+                    "se": null,
+                    "distribution": [],
+                    "evidence": [],
+                    "unknown_reason": "not measured",
+                    "small_sample": true
+                  },
+                  "dpr_turns_1_3": {
+                    "n": 0,
+                    "unit": "fixture",
+                    "method": "synthetic contract",
+                    "value": null,
+                    "se": null,
+                    "distribution": [],
+                    "evidence": [],
+                    "unknown_reason": "not measured",
+                    "small_sample": true
+                  },
+                  "dpr_turns_4_6": {
+                    "n": 0,
+                    "unit": "fixture",
+                    "method": "synthetic contract",
+                    "value": null,
+                    "se": null,
+                    "distribution": [],
+                    "evidence": [],
+                    "unknown_reason": "not measured",
+                    "small_sample": true
+                  },
+                  "dpr_turns_7_plus": {
+                    "n": 0,
+                    "unit": "fixture",
+                    "method": "synthetic contract",
+                    "value": null,
+                    "se": null,
+                    "distribution": [],
+                    "evidence": [],
+                    "unknown_reason": "not measured",
+                    "small_sample": true
+                  },
+                  "peak_turn_damage": {
+                    "n": 0,
+                    "unit": "fixture",
+                    "method": "synthetic contract",
+                    "value": null,
+                    "se": null,
+                    "distribution": [],
+                    "evidence": [],
+                    "unknown_reason": "not measured",
+                    "small_sample": true
+                  },
+                  "aoe_damage": {
+                    "n": 0,
+                    "unit": "fixture",
+                    "method": "synthetic contract",
+                    "value": null,
+                    "se": null,
+                    "distribution": [],
+                    "evidence": [],
+                    "unknown_reason": "not measured",
+                    "small_sample": true
+                  },
+                  "block_per_turn": {
+                    "n": 0,
+                    "unit": "fixture",
+                    "method": "synthetic contract",
+                    "value": null,
+                    "se": null,
+                    "distribution": [],
+                    "evidence": [],
+                    "unknown_reason": "not measured",
+                    "small_sample": true
+                  },
+                  "hp_loss_per_turn": {
+                    "n": 0,
+                    "unit": "fixture",
+                    "method": "synthetic contract",
+                    "value": null,
+                    "se": null,
+                    "distribution": [],
+                    "evidence": [],
+                    "unknown_reason": "not measured",
+                    "small_sample": true
+                  },
+                  "startup_turn": {
+                    "n": 3,
+                    "unit": "fixture",
+                    "method": "synthetic contract",
+                    "value": 3,
+                    "se": null,
+                    "distribution": [],
+                    "evidence": [
+                      {
+                        "run_id": "FIXTURE_RUN",
+                        "floor": 8,
+                        "turn": 1
+                      }
+                    ],
+                    "unknown_reason": null,
+                    "small_sample": true
+                  },
+                  "startup_energy": {
+                    "n": 0,
+                    "unit": "fixture",
+                    "method": "synthetic contract",
+                    "value": null,
+                    "se": null,
+                    "distribution": [],
+                    "evidence": [],
+                    "unknown_reason": "not measured",
+                    "small_sample": true
+                  },
+                  "startup_draw": {
+                    "n": 0,
+                    "unit": "fixture",
+                    "method": "synthetic contract",
+                    "value": null,
+                    "se": null,
+                    "distribution": [],
+                    "evidence": [],
+                    "unknown_reason": "not measured",
+                    "small_sample": true
+                  },
+                  "first_completed_floor": {
+                    "n": 0,
+                    "unit": "fixture",
+                    "method": "synthetic contract",
+                    "value": null,
+                    "se": null,
+                    "distribution": [],
+                    "evidence": [],
+                    "unknown_reason": "not measured",
+                    "small_sample": true
+                  },
+                  "formed_runs": {
+                    "n": 0,
+                    "unit": "fixture",
+                    "method": "synthetic contract",
+                    "value": null,
+                    "se": null,
+                    "distribution": [],
+                    "evidence": [],
+                    "unknown_reason": "not measured",
+                    "small_sample": true
+                  },
+                  "cleared_runs": {
+                    "n": 3,
+                    "unit": "fixture",
+                    "method": "synthetic contract",
+                    "value": 1,
+                    "se": null,
+                    "distribution": [],
+                    "evidence": [
+                      {
+                        "run_id": "FIXTURE_RUN",
+                        "floor": 8,
+                        "turn": 1
+                      }
+                    ],
+                    "unknown_reason": null,
+                    "small_sample": true
+                  },
+                  "mean_reached_floor": {
+                    "n": 0,
+                    "unit": "fixture",
+                    "method": "synthetic contract",
+                    "value": null,
+                    "se": null,
+                    "distribution": [],
+                    "evidence": [],
+                    "unknown_reason": "not measured",
+                    "small_sample": true
+                  },
+                  "chain_reached": {
+                    "n": 0,
+                    "unit": "fixture",
+                    "method": "synthetic contract",
+                    "value": null,
+                    "se": null,
+                    "distribution": [],
+                    "evidence": [],
+                    "unknown_reason": "not measured",
+                    "small_sample": true
+                  },
+                  "chain_won": {
+                    "n": 0,
+                    "unit": "fixture",
+                    "method": "synthetic contract",
+                    "value": null,
+                    "se": null,
+                    "distribution": [],
+                    "evidence": [],
+                    "unknown_reason": "not measured",
+                    "small_sample": true
+                  },
+                  "chain_win_rate": {
+                    "n": 0,
+                    "unit": "fixture",
+                    "method": "synthetic contract",
+                    "value": null,
+                    "se": null,
+                    "distribution": [],
+                    "evidence": [],
+                    "unknown_reason": "not measured",
+                    "small_sample": true
+                  },
+                  "formation_rate": {
+                    "n": 0,
+                    "unit": "fixture",
+                    "method": "synthetic contract",
+                    "value": null,
+                    "se": null,
+                    "distribution": [],
+                    "evidence": [],
+                    "unknown_reason": "not measured",
+                    "small_sample": true
+                  },
+                  "deck_size_min": {
+                    "n": 0,
+                    "unit": "fixture",
+                    "method": "synthetic contract",
+                    "value": null,
+                    "se": null,
+                    "distribution": [],
+                    "evidence": [],
+                    "unknown_reason": "not measured",
+                    "small_sample": true
+                  },
+                  "deck_size_max": {
+                    "n": 0,
+                    "unit": "fixture",
+                    "method": "synthetic contract",
+                    "value": null,
+                    "se": null,
+                    "distribution": [],
+                    "evidence": [],
+                    "unknown_reason": "not measured",
+                    "small_sample": true
+                  },
+                  "deck_size_scaling": {
+                    "n": 0,
+                    "unit": "fixture",
+                    "method": "synthetic contract",
+                    "value": null,
+                    "se": null,
+                    "distribution": [],
+                    "evidence": [],
+                    "unknown_reason": "not measured",
+                    "small_sample": true
+                  },
+                  "potion_dependency": {
+                    "n": 0,
+                    "unit": "fixture",
+                    "method": "synthetic contract",
+                    "value": null,
+                    "se": null,
+                    "distribution": [],
+                    "evidence": [],
+                    "unknown_reason": "not measured",
+                    "small_sample": true
+                  },
+                  "sl_dependency": {
+                    "n": 0,
+                    "unit": "fixture",
+                    "method": "synthetic contract",
+                    "value": null,
+                    "se": null,
+                    "distribution": [],
+                    "evidence": [],
+                    "unknown_reason": "not measured",
+                    "small_sample": true
+                  },
+                  "key_relic_dependency": {
+                    "n": 0,
+                    "unit": "fixture",
+                    "method": "synthetic contract",
+                    "value": null,
+                    "se": null,
+                    "distribution": [],
+                    "evidence": [],
+                    "unknown_reason": "not measured",
+                    "small_sample": true
+                  }
+                },
+                "bosses": {
+                  "TEST_TARGET": {
+                    "reached": {
+                      "n": 3,
+                      "unit": "fixture",
+                      "method": "synthetic contract",
+                      "value": 3,
+                      "se": null,
+                      "distribution": [],
+                      "evidence": [
+                        {
+                          "run_id": "FIXTURE_RUN",
+                          "floor": 8,
+                          "turn": 1
+                        }
+                      ],
+                      "unknown_reason": null,
+                      "small_sample": true
+                    },
+                    "won": {
+                      "n": 3,
+                      "unit": "fixture",
+                      "method": "synthetic contract",
+                      "value": 1,
+                      "se": null,
+                      "distribution": [],
+                      "evidence": [
+                        {
+                          "run_id": "FIXTURE_RUN",
+                          "floor": 8,
+                          "turn": 1
+                        }
+                      ],
+                      "unknown_reason": null,
+                      "small_sample": true
+                    },
+                    "win_rate": {
+                      "n": 3,
+                      "unit": "fixture",
+                      "method": "synthetic contract",
+                      "value": 0.3333333333333333,
+                      "se": null,
+                      "distribution": [],
+                      "evidence": [
+                        {
+                          "run_id": "FIXTURE_RUN",
+                          "floor": 8,
+                          "turn": 1
+                        }
+                      ],
+                      "unknown_reason": null,
+                      "small_sample": true
+                    }
+                  }
+                },
+                "availability": [],
+                "simulation": []
+              }
+            ],
+            "win_complete": null,
+            "win_incomplete": null,
+            "incomplete_source": "unknown",
+            "expected_win": null,
+            "direction_value": null,
+            "win": null,
+            "paired_delta": null,
+            "losing_boss_hp_fraction": null,
+            "winning_player_hp_fraction": null,
+            "turns": null,
+            "joint_win": null,
+            "joint_paired_delta": null,
+            "availability": {
+              "take": null,
+              "skip": null
+            },
+            "weighted_current_boss_delta": null,
+            "weighted_joint_delta": null,
+            "deck_count_change": null,
+            "core_first_cast_turn": null,
+            "win_tier": "unknown",
+            "delta_tier": "unknown",
+            "direction_role": "unknown",
+            "trust": "unknown",
+            "reflex_ids": []
+          }
+        ]
+      }
+    }
+  },
+  "questions": {
+    "pick": {
+      "type": "choice",
+      "instructions": "Choose one card reward or skip. Follow direction weights; compare current-boss safety and weighted two-boss-chain deltas, completion probability and trust. Use only the supplied facts.",
+      "criteria": {
+        "card2": "Take TEST_CARD+",
+        "card7": "Take TEST_OTHER",
+        "skip": "Take no card"
+      }
+    }
+  }
+}

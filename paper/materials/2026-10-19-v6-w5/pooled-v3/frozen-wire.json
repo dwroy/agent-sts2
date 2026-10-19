@@ -1,0 +1,754 @@
+{
+  "state": {
+    "direction_weights": {
+      "TEST_A": 1
+    },
+    "availability": [
+      {
+        "direction": "TEST_A",
+        "combo": "TEST_A:min",
+        "target": "f17:TEST_BOSS",
+        "probability": null,
+        "trust": "unknown"
+      },
+      {
+        "direction": "TEST_A",
+        "combo": "TEST_A:common",
+        "target": "f17:TEST_BOSS",
+        "probability": null,
+        "trust": "unknown"
+      }
+    ],
+    "targets": [
+      {
+        "id": "f17:TEST_BOSS",
+        "boss": "TEST_BOSS",
+        "act": 1,
+        "floor": 17,
+        "kind": "current",
+        "probability": 1,
+        "labels": []
+      }
+    ],
+    "core_metrics": [
+      {
+        "direction": "TEST_A",
+        "combo": "TEST_A:min",
+        "source": "build-core-v1",
+        "cards": [
+          {
+            "id": "TEST_A:min:0",
+            "count": 1,
+            "any": [
+              {
+                "kind": "card",
+                "id": "TEST_CARD",
+                "upgraded": true
+              }
+            ]
+          }
+        ],
+        "metrics": [
+          {
+            "attempt": "first",
+            "target_ascension": 0,
+            "sources": [
+              {
+                "version": "fixture",
+                "ascension": 1,
+                "counts": {
+                  "runs": 3,
+                  "formed_runs": 3,
+                  "cleared_runs": 1,
+                  "chain_reached": 0,
+                  "chain_won": 0,
+                  "bosses": {
+                    "TEST_TARGET": {
+                      "reached": 3,
+                      "won": 1
+                    }
+                  }
+                }
+              }
+            ],
+            "raw_counts": {
+              "runs": 3,
+              "formed_runs": 3,
+              "cleared_runs": 1,
+              "chain_reached": 0,
+              "chain_won": 0,
+              "bosses": {
+                "TEST_TARGET": {
+                  "reached": 3,
+                  "won": 1
+                }
+              }
+            },
+            "dpr_boss": {
+              "value": 20,
+              "se": null,
+              "n": 3,
+              "unit": "fixture",
+              "method": "synthetic contract",
+              "small_sample": true,
+              "unknown_reason": null
+            },
+            "startup_turn": {
+              "value": 3,
+              "se": null,
+              "n": 3,
+              "unit": "fixture",
+              "method": "synthetic contract",
+              "small_sample": true,
+              "unknown_reason": null
+            },
+            "history": {
+              "cleared_runs": {
+                "value": 1,
+                "se": null,
+                "n": 3,
+                "unit": "fixture",
+                "method": "synthetic contract",
+                "small_sample": true,
+                "unknown_reason": null
+              },
+              "chain_win_rate": {
+                "value": null,
+                "se": null,
+                "n": 0,
+                "unit": "independent_run",
+                "method": "synthetic missing observation",
+                "small_sample": true,
+                "unknown_reason": "fixture has no observations"
+              },
+              "bosses": {
+                "TEST_TARGET": {
+                  "reached": {
+                    "value": 3,
+                    "se": null,
+                    "n": 3,
+                    "unit": "fixture",
+                    "method": "synthetic contract",
+                    "small_sample": true,
+                    "unknown_reason": null
+                  },
+                  "won": {
+                    "value": 1,
+                    "se": null,
+                    "n": 3,
+                    "unit": "fixture",
+                    "method": "synthetic contract",
+                    "small_sample": true,
+                    "unknown_reason": null
+                  },
+                  "win_rate": {
+                    "value": 0.3333333333333333,
+                    "se": null,
+                    "n": 3,
+                    "unit": "fixture",
+                    "method": "synthetic contract",
+                    "small_sample": true,
+                    "unknown_reason": null
+                  }
+                }
+              }
+            },
+            "simulation": [],
+            "regression": [],
+            "shrinkage": []
+          },
+          {
+            "attempt": "including_sl",
+            "target_ascension": 0,
+            "sources": [
+              {
+                "version": "fixture",
+                "ascension": 1,
+                "counts": {
+                  "runs": 3,
+                  "formed_runs": 3,
+                  "cleared_runs": 1,
+                  "chain_reached": 0,
+                  "chain_won": 0,
+                  "bosses": {
+                    "TEST_TARGET": {
+                      "reached": 3,
+                      "won": 1
+                    }
+                  }
+                }
+              }
+            ],
+            "raw_counts": {
+              "runs": 3,
+              "formed_runs": 3,
+              "cleared_runs": 1,
+              "chain_reached": 0,
+              "chain_won": 0,
+              "bosses": {
+                "TEST_TARGET": {
+                  "reached": 3,
+                  "won": 1
+                }
+              }
+            },
+            "dpr_boss": {
+              "value": 20,
+              "se": null,
+              "n": 3,
+              "unit": "fixture",
+              "method": "synthetic contract",
+              "small_sample": true,
+              "unknown_reason": null
+            },
+            "startup_turn": {
+              "value": 3,
+              "se": null,
+              "n": 3,
+              "unit": "fixture",
+              "method": "synthetic contract",
+              "small_sample": true,
+              "unknown_reason": null
+            },
+            "history": {
+              "cleared_runs": {
+                "value": 1,
+                "se": null,
+                "n": 3,
+                "unit": "fixture",
+                "method": "synthetic contract",
+                "small_sample": true,
+                "unknown_reason": null
+              },
+              "chain_win_rate": {
+                "value": null,
+                "se": null,
+                "n": 0,
+                "unit": "independent_run",
+                "method": "synthetic missing observation",
+                "small_sample": true,
+                "unknown_reason": "fixture has no observations"
+              },
+              "bosses": {
+                "TEST_TARGET": {
+                  "reached": {
+                    "value": 3,
+                    "se": null,
+                    "n": 3,
+                    "unit": "fixture",
+                    "method": "synthetic contract",
+                    "small_sample": true,
+                    "unknown_reason": null
+                  },
+                  "won": {
+                    "value": 1,
+                    "se": null,
+                    "n": 3,
+                    "unit": "fixture",
+                    "method": "synthetic contract",
+                    "small_sample": true,
+                    "unknown_reason": null
+                  },
+                  "win_rate": {
+                    "value": 0.3333333333333333,
+                    "se": null,
+                    "n": 3,
+                    "unit": "fixture",
+                    "method": "synthetic contract",
+                    "small_sample": true,
+                    "unknown_reason": null
+                  }
+                }
+              }
+            },
+            "simulation": [],
+            "regression": [],
+            "shrinkage": []
+          }
+        ]
+      },
+      {
+        "direction": "TEST_A",
+        "combo": "TEST_A:common",
+        "source": "build-core-v1",
+        "cards": [
+          {
+            "id": "TEST_A:common:0",
+            "count": 1,
+            "any": [
+              {
+                "kind": "card",
+                "id": "TEST_CARD",
+                "upgraded": true
+              }
+            ]
+          },
+          {
+            "id": "TEST_A:common:1",
+            "count": 2,
+            "any": [
+              {
+                "kind": "card",
+                "id": "TEST_OTHER",
+                "upgraded": false
+              }
+            ]
+          }
+        ],
+        "metrics": [
+          {
+            "attempt": "first",
+            "target_ascension": 0,
+            "sources": [
+              {
+                "version": "fixture",
+                "ascension": 1,
+                "counts": {
+                  "runs": 3,
+                  "formed_runs": 3,
+                  "cleared_runs": 1,
+                  "chain_reached": 0,
+                  "chain_won": 0,
+                  "bosses": {
+                    "TEST_TARGET": {
+                      "reached": 3,
+                      "won": 1
+                    }
+                  }
+                }
+              }
+            ],
+            "raw_counts": {
+              "runs": 3,
+              "formed_runs": 3,
+              "cleared_runs": 1,
+              "chain_reached": 0,
+              "chain_won": 0,
+              "bosses": {
+                "TEST_TARGET": {
+                  "reached": 3,
+                  "won": 1
+                }
+              }
+            },
+            "dpr_boss": {
+              "value": 20,
+              "se": null,
+              "n": 3,
+              "unit": "fixture",
+              "method": "synthetic contract",
+              "small_sample": true,
+              "unknown_reason": null
+            },
+            "startup_turn": {
+              "value": 3,
+              "se": null,
+              "n": 3,
+              "unit": "fixture",
+              "method": "synthetic contract",
+              "small_sample": true,
+              "unknown_reason": null
+            },
+            "history": {
+              "cleared_runs": {
+                "value": 1,
+                "se": null,
+                "n": 3,
+                "unit": "fixture",
+                "method": "synthetic contract",
+                "small_sample": true,
+                "unknown_reason": null
+              },
+              "chain_win_rate": {
+                "value": null,
+                "se": null,
+                "n": 0,
+                "unit": "independent_run",
+                "method": "synthetic missing observation",
+                "small_sample": true,
+                "unknown_reason": "fixture has no observations"
+              },
+              "bosses": {
+                "TEST_TARGET": {
+                  "reached": {
+                    "value": 3,
+                    "se": null,
+                    "n": 3,
+                    "unit": "fixture",
+                    "method": "synthetic contract",
+                    "small_sample": true,
+                    "unknown_reason": null
+                  },
+                  "won": {
+                    "value": 1,
+                    "se": null,
+                    "n": 3,
+                    "unit": "fixture",
+                    "method": "synthetic contract",
+                    "small_sample": true,
+                    "unknown_reason": null
+                  },
+                  "win_rate": {
+                    "value": 0.3333333333333333,
+                    "se": null,
+                    "n": 3,
+                    "unit": "fixture",
+                    "method": "synthetic contract",
+                    "small_sample": true,
+                    "unknown_reason": null
+                  }
+                }
+              }
+            },
+            "simulation": [],
+            "regression": [],
+            "shrinkage": []
+          },
+          {
+            "attempt": "including_sl",
+            "target_ascension": 0,
+            "sources": [
+              {
+                "version": "fixture",
+                "ascension": 1,
+                "counts": {
+                  "runs": 3,
+                  "formed_runs": 3,
+                  "cleared_runs": 1,
+                  "chain_reached": 0,
+                  "chain_won": 0,
+                  "bosses": {
+                    "TEST_TARGET": {
+                      "reached": 3,
+                      "won": 1
+                    }
+                  }
+                }
+              }
+            ],
+            "raw_counts": {
+              "runs": 3,
+              "formed_runs": 3,
+              "cleared_runs": 1,
+              "chain_reached": 0,
+              "chain_won": 0,
+              "bosses": {
+                "TEST_TARGET": {
+                  "reached": 3,
+                  "won": 1
+                }
+              }
+            },
+            "dpr_boss": {
+              "value": 20,
+              "se": null,
+              "n": 3,
+              "unit": "fixture",
+              "method": "synthetic contract",
+              "small_sample": true,
+              "unknown_reason": null
+            },
+            "startup_turn": {
+              "value": 3,
+              "se": null,
+              "n": 3,
+              "unit": "fixture",
+              "method": "synthetic contract",
+              "small_sample": true,
+              "unknown_reason": null
+            },
+            "history": {
+              "cleared_runs": {
+                "value": 1,
+                "se": null,
+                "n": 3,
+                "unit": "fixture",
+                "method": "synthetic contract",
+                "small_sample": true,
+                "unknown_reason": null
+              },
+              "chain_win_rate": {
+                "value": null,
+                "se": null,
+                "n": 0,
+                "unit": "independent_run",
+                "method": "synthetic missing observation",
+                "small_sample": true,
+                "unknown_reason": "fixture has no observations"
+              },
+              "bosses": {
+                "TEST_TARGET": {
+                  "reached": {
+                    "value": 3,
+                    "se": null,
+                    "n": 3,
+                    "unit": "fixture",
+                    "method": "synthetic contract",
+                    "small_sample": true,
+                    "unknown_reason": null
+                  },
+                  "won": {
+                    "value": 1,
+                    "se": null,
+                    "n": 3,
+                    "unit": "fixture",
+                    "method": "synthetic contract",
+                    "small_sample": true,
+                    "unknown_reason": null
+                  },
+                  "win_rate": {
+                    "value": 0.3333333333333333,
+                    "se": null,
+                    "n": 3,
+                    "unit": "fixture",
+                    "method": "synthetic contract",
+                    "small_sample": true,
+                    "unknown_reason": null
+                  }
+                }
+              }
+            },
+            "simulation": [],
+            "regression": [],
+            "shrinkage": []
+          }
+        ]
+      }
+    ],
+    "weighted": [],
+    "target_mixtures": [],
+    "limitations": [
+      "synthetic_format_fixture; estimates deliberately unknown"
+    ],
+    "note": "Probabilities are model estimates, not guarantees. Null means unknown. Paired deltas compare taking with skipping; missing mass is not renormalized. Core observations pool versions and ascensions, separated by first/including-SL attempt; sources describe provenance. Adjusted estimates name their target ascension. These metrics are descriptive, not causal benefits.",
+    "options": {
+      "card2": {
+        "card": "TEST_CARD",
+        "upgraded": true,
+        "projections": [
+          {
+            "schema": "projection-entry-v1",
+            "option_id": "card2",
+            "direction_id": "TEST_A",
+            "target_id": "f17:TEST_BOSS",
+            "combo_id": "TEST_A:min",
+            "combo_source": "build-core-v1",
+            "win_complete": null,
+            "win_incomplete": null,
+            "incomplete_source": "unknown",
+            "expected_win": null,
+            "direction_value": null,
+            "win": null,
+            "paired_delta": null,
+            "losing_boss_hp_fraction": null,
+            "winning_player_hp_fraction": null,
+            "turns": null,
+            "joint_win": null,
+            "joint_paired_delta": null,
+            "availability": {
+              "take": null,
+              "skip": null
+            },
+            "weighted_current_boss_delta": null,
+            "weighted_joint_delta": null,
+            "deck_count_change": null,
+            "core_first_cast_turn": null,
+            "win_tier": "unknown",
+            "delta_tier": "unknown",
+            "direction_role": "unknown",
+            "trust": "unknown",
+            "reflex_ids": []
+          },
+          {
+            "schema": "projection-entry-v1",
+            "option_id": "card2",
+            "direction_id": "TEST_A",
+            "target_id": "f17:TEST_BOSS",
+            "combo_id": "TEST_A:common",
+            "combo_source": "build-core-v1",
+            "win_complete": null,
+            "win_incomplete": null,
+            "incomplete_source": "unknown",
+            "expected_win": null,
+            "direction_value": null,
+            "win": null,
+            "paired_delta": null,
+            "losing_boss_hp_fraction": null,
+            "winning_player_hp_fraction": null,
+            "turns": null,
+            "joint_win": null,
+            "joint_paired_delta": null,
+            "availability": {
+              "take": null,
+              "skip": null
+            },
+            "weighted_current_boss_delta": null,
+            "weighted_joint_delta": null,
+            "deck_count_change": null,
+            "core_first_cast_turn": null,
+            "win_tier": "unknown",
+            "delta_tier": "unknown",
+            "direction_role": "unknown",
+            "trust": "unknown",
+            "reflex_ids": []
+          }
+        ],
+        "reflex": []
+      },
+      "card7": {
+        "card": "TEST_OTHER",
+        "upgraded": false,
+        "projections": [
+          {
+            "schema": "projection-entry-v1",
+            "option_id": "card7",
+            "direction_id": "TEST_A",
+            "target_id": "f17:TEST_BOSS",
+            "combo_id": "TEST_A:min",
+            "combo_source": "build-core-v1",
+            "win_complete": null,
+            "win_incomplete": null,
+            "incomplete_source": "unknown",
+            "expected_win": null,
+            "direction_value": null,
+            "win": null,
+            "paired_delta": null,
+            "losing_boss_hp_fraction": null,
+            "winning_player_hp_fraction": null,
+            "turns": null,
+            "joint_win": null,
+            "joint_paired_delta": null,
+            "availability": {
+              "take": null,
+              "skip": null
+            },
+            "weighted_current_boss_delta": null,
+            "weighted_joint_delta": null,
+            "deck_count_change": null,
+            "core_first_cast_turn": null,
+            "win_tier": "unknown",
+            "delta_tier": "unknown",
+            "direction_role": "unknown",
+            "trust": "unknown",
+            "reflex_ids": []
+          },
+          {
+            "schema": "projection-entry-v1",
+            "option_id": "card7",
+            "direction_id": "TEST_A",
+            "target_id": "f17:TEST_BOSS",
+            "combo_id": "TEST_A:common",
+            "combo_source": "build-core-v1",
+            "win_complete": null,
+            "win_incomplete": null,
+            "incomplete_source": "unknown",
+            "expected_win": null,
+            "direction_value": null,
+            "win": null,
+            "paired_delta": null,
+            "losing_boss_hp_fraction": null,
+            "winning_player_hp_fraction": null,
+            "turns": null,
+            "joint_win": null,
+            "joint_paired_delta": null,
+            "availability": {
+              "take": null,
+              "skip": null
+            },
+            "weighted_current_boss_delta": null,
+            "weighted_joint_delta": null,
+            "deck_count_change": null,
+            "core_first_cast_turn": null,
+            "win_tier": "unknown",
+            "delta_tier": "unknown",
+            "direction_role": "unknown",
+            "trust": "unknown",
+            "reflex_ids": []
+          }
+        ],
+        "reflex": []
+      },
+      "skip": {
+        "projections": [
+          {
+            "schema": "projection-entry-v1",
+            "option_id": "skip",
+            "direction_id": "TEST_A",
+            "target_id": "f17:TEST_BOSS",
+            "combo_id": "TEST_A:min",
+            "combo_source": "build-core-v1",
+            "win_complete": null,
+            "win_incomplete": null,
+            "incomplete_source": "unknown",
+            "expected_win": null,
+            "direction_value": null,
+            "win": null,
+            "paired_delta": null,
+            "losing_boss_hp_fraction": null,
+            "winning_player_hp_fraction": null,
+            "turns": null,
+            "joint_win": null,
+            "joint_paired_delta": null,
+            "availability": {
+              "take": null,
+              "skip": null
+            },
+            "weighted_current_boss_delta": null,
+            "weighted_joint_delta": null,
+            "deck_count_change": null,
+            "core_first_cast_turn": null,
+            "win_tier": "unknown",
+            "delta_tier": "unknown",
+            "direction_role": "unknown",
+            "trust": "unknown",
+            "reflex_ids": []
+          },
+          {
+            "schema": "projection-entry-v1",
+            "option_id": "skip",
+            "direction_id": "TEST_A",
+            "target_id": "f17:TEST_BOSS",
+            "combo_id": "TEST_A:common",
+            "combo_source": "build-core-v1",
+            "win_complete": null,
+            "win_incomplete": null,
+            "incomplete_source": "unknown",
+            "expected_win": null,
+            "direction_value": null,
+            "win": null,
+            "paired_delta": null,
+            "losing_boss_hp_fraction": null,
+            "winning_player_hp_fraction": null,
+            "turns": null,
+            "joint_win": null,
+            "joint_paired_delta": null,
+            "availability": {
+              "take": null,
+              "skip": null
+            },
+            "weighted_current_boss_delta": null,
+            "weighted_joint_delta": null,
+            "deck_count_change": null,
+            "core_first_cast_turn": null,
+            "win_tier": "unknown",
+            "delta_tier": "unknown",
+            "direction_role": "unknown",
+            "trust": "unknown",
+            "reflex_ids": []
+          }
+        ]
+      }
+    }
+  },
+  "questions": {
+    "pick": {
+      "type": "choice",
+      "instructions": "Choose one card reward or skip. Follow direction weights; compare current-boss safety and weighted two-boss-chain deltas, completion probability and trust. Use only the supplied facts.",
+      "criteria": {
+        "card2": "Take TEST_CARD+",
+        "card7": "Take TEST_OTHER",
+        "skip": "Take no card"
+      }
+    }
+  }
+}

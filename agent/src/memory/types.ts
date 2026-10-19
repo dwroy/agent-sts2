@@ -11,6 +11,7 @@ import type { JsonValue } from "../core/util/json.js";
 import type { RunBrief } from "./run-brief.js";
 
 export interface DecisionEnv {
+  v6ProjectionTable?: import("../sim/v6-projection.js").V6ProjectionTable;
   /** Optional projection boundary; absent data stays unknown. Never read while V6 is off. */
   v6DirectionEvaluation?: import("../v6/replan-triggers.js").DirectionEvaluation;
   /** Set by the live loop for Silent; archived replay callers keep their declared historical policy. */
@@ -556,6 +557,8 @@ export interface RouteReviewResult {
 }
 
 export interface AskDecision {
+  /** V6 construction allowance and answer validation, independent of combat Jev policy. */
+  v6Card?: boolean;
   kind: "ask";
   label: string;
   /** The narrow, English payload sent as `state` (PLAN.md §5.1). */

@@ -12,6 +12,7 @@ import type { BrainDecider } from "../brain/types.js";
 import type { JsonValue } from "../core/util/json.js";
 
 export interface DecisionRecord {
+  v6_card?: JsonValue;
   time_budget?: ReturnType<import("../core/decision-budget.js").DecisionBudget["record"]>;
   ts: string;
   mode: string;

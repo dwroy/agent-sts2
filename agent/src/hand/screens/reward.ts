@@ -19,6 +19,8 @@ import { cardOutcome } from "../../knowledge/outcome-facts.js";
 import { CARD_REWARD_ROOMS } from "./map.js";
 import { routeReviewBlock, withRouteReview } from "./route-review.js";
 import { silentRewardAdditionFacts } from "./silent-reward-addition.js";
+import { buildV6CardPick } from "../../v6/card-pick.js";
+import { v6Config } from "../../v6/config.js";
 
 /**
  * Special card rewards that put their card straight into the deck, with no choice to make: the stolen card's return
@@ -42,6 +44,10 @@ function opensCardChoice(entry: Record<string, unknown>): boolean {
 }
 
 export function planReward(env: DecisionEnv): Decision | null {
+  if (v6Config().mode === "on") {
+    const v6 = buildV6CardPick(env);
+    if (v6) return v6.decision;
+  }
   const { state, knowledge } = env;
   const reward = asRecord(state.raw["reward"]);
   const actions = state.available_actions;

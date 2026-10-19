@@ -1,0 +1,173 @@
+
+ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/v6-w5-20261019/agent
+
+ ❯ tests/v6-card-pick.test.ts (17 tests | 1 failed) 962ms
+   × keeps legal reward indices, English Decisions criteria and unknown per-combo entries 50ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/v6-card-pick.test.ts > keeps legal reward indices, English Decisions criteria and unknown per-combo entries
+AssertionError: expected { …(9) } to match object { core_metrics: [ …(2) ] }
+(17 matching properties omitted from actual)
+
+- Expected
++ Received
+
+@@ -1,11 +1,134 @@
+  {
+    "core_metrics": [
+      {
++       "cards": [
++         {
++           "any": [
++             {
++               "id": "TEST_CARD",
++               "kind": "card",
++               "upgraded": true,
++             },
++           ],
++           "count": 1,
++           "id": "TEST_A:min:0",
++         },
++       ],
++       "combo": "TEST_A:min",
++       "direction": "TEST_A",
+        "metrics": [
+          {
+            "attempt": "first",
++           "dpr_boss": {
++             "method": "synthetic contract",
++             "n": 3,
++             "se": null,
++             "small_sample": true,
++             "unit": "fixture",
++             "unknown_reason": null,
++             "value": 20,
++           },
++           "history": {
++             "bosses": {
++               "TEST_TARGET": {
++                 "reached": {
++                   "method": "synthetic contract",
++                   "n": 3,
++                   "se": null,
++                   "small_sample": true,
++                   "unit": "fixture",
++                   "unknown_reason": null,
++                   "value": 3,
++                 },
++                 "win_rate": {
++                   "method": "synthetic contract",
++                   "n": 3,
++                   "se": null,
++                   "small_sample": true,
++                   "unit": "fixture",
++                   "unknown_reason": null,
++                   "value": 0.3333333333333333,
++                 },
++                 "won": {
++                   "method": "synthetic contract",
++                   "n": 3,
++                   "se": null,
++                   "small_sample": true,
++                   "unit": "fixture",
++                   "unknown_reason": null,
++                   "value": 1,
++                 },
++               },
++             },
++             "chain_win_rate": {
++               "method": "synthetic missing observation",
++               "n": 0,
++               "se": null,
++               "small_sample": true,
++               "unit": "independent_run",
++               "unknown_reason": "fixture has no observations",
++               "value": null,
++             },
++             "cleared_runs": {
++               "method": "synthetic contract",
++               "n": 3,
++               "se": null,
++               "small_sample": true,
++               "unit": "fixture",
++               "unknown_reason": null,
++               "value": 1,
++             },
++           },
++           "raw_counts": {
++             "bosses": {
++               "TEST_TARGET": {
++                 "reached": 3,
++                 "won": 1,
++               },
++             },
++             "chain_reached": 0,
++             "chain_won": 0,
++             "cleared_runs": 1,
++             "formed_runs": 3,
++             "runs": 3,
++           },
++           "regression": [],
++           "shrinkage": [],
++           "simulation": [],
++           "sources": [
++             {
++               "ascension": 1,
++               "counts": {
++                 "bosses": {
++                   "TEST_TARGET": {
++                     "reached": 3,
++                     "won": 1,
++                   },
++                 },
++                 "chain_reached": 0,
++                 "chain_won": 0,
++                 "cleared_runs": 1,
++                 "formed_runs": 3,
++                 "runs": 3,
++               },
++               "version": "fixture",
++             },
++           ],
++           "startup_turn": {
++             "method": "synthetic contract",
++             "n": 3,
++             "se": null,
++             "small_sample": true,
++             "unit": "fixture",
++             "unknown_reason": null,
++             "value": 3,
++           },
++           "target_ascension": 0,
++         },
++         {
++           "attempt": "including_sl",
+            "dpr_boss": {
+              "method": "synthetic contract",
+              "n": 3,
+              "se": null,
+              "small_sample": true,
+@@ -109,9 +232,10 @@
+              "value": 3,
+            },
+            "target_ascension": 0,
+          },
+        ],
++       "source": "build-core-v1",
+      },
+      Anything,
+    ],
+  }
+
+ ❯ tests/v6-card-pick.test.ts:50:28
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed | 2 passed (3)
+      Tests  1 failed | 27 passed (28)
+   Start at  21:39:46
+   Duration  5.33s (transform 9.34s, setup 2.23s, import 10.23s, tests 1.14s, environment 1ms)
+
