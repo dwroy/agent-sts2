@@ -1015,8 +1015,8 @@ export function modelHandCard(entry: unknown, fallbackIndex: number, knowledge: 
     renderedText.replace(/\s+/g, "") === "丢弃所有手牌。每丢弃一张牌，就将一张小刀+添加至你的手牌。";
   const hiddenDaggers = character.toLowerCase() === "silent" && cardId === "HIDDEN_DAGGERS" && !bool(card["upgraded"]) &&
     dyn(card, "Cards") === 2 && dyn(card, "Shivs") === 2;
-  // YBRA3EJ94GBR F30 T3 / F33 T10, silent-0324: Cards=3 makes Shivs; it never draws from the pile.
-  const plainBladeDance = character.toLowerCase() === "silent" && ascension === 10 && cardId === "BLADE_DANCE" &&
+  // C48LLXBGKXQ9 A0 F6 T3 / FU8ZUQHBHNV9 A10 F8 T4, silent-0324: Cards=3 makes Shivs, not draws.
+  const plainBladeDance = character.toLowerCase() === "silent" && (ascension === 0 || ascension === 10) && cardId === "BLADE_DANCE" &&
     !bool(card["upgraded"]) && dyn(card, "Cards") === 3 &&
     template.replace(/\s+/g, "") === "添加{Cards:diff()}张小刀到你的手牌。" &&
     renderedText.replace(/\s+/g, "") === "添加3张小刀到你的手牌。消耗。";
