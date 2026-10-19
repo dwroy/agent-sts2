@@ -1,0 +1,26 @@
+{
+  "schema": "legacy-enemy-observation-v1",
+  "enemy_id": "THE_LOST",
+  "source": "common/move-model.json",
+  "pointer": [
+    "THE_LOST"
+  ],
+  "scope_policy": "仅机械封装原common数据，未扩适用范围或新增机制结论。",
+  "payload": {
+    "buffs": [
+      "DEBILITATING_SMOG"
+    ],
+    "damage": {
+      "DEBILITATING_SMOG": 0.0,
+      "EYE_LASERS": 14.1
+    },
+    "next": {
+      "DEBILITATING_SMOG": {
+        "EYE_LASERS": 99
+      },
+      "EYE_LASERS": {
+        "DEBILITATING_SMOG": 63
+      }
+    }
+  }
+}

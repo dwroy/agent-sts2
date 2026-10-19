@@ -1,0 +1,27 @@
+{
+  "schema": "legacy-enemy-observation-v1",
+  "enemy_id": "SLUMBERING_BEETLE",
+  "source": "common/move-model.json",
+  "pointer": [
+    "SLUMBERING_BEETLE"
+  ],
+  "scope_policy": "仅机械封装原common数据，未扩适用范围或新增机制结论。",
+  "payload": {
+    "buffs": [
+      "ROLL_OUT_MOVE"
+    ],
+    "damage": {
+      "ROLL_OUT_MOVE": 18.8,
+      "SNORE_MOVE": 0.0
+    },
+    "next": {
+      "ROLL_OUT_MOVE": {
+        "ROLL_OUT_MOVE": 341
+      },
+      "SNORE_MOVE": {
+        "ROLL_OUT_MOVE": 160,
+        "SNORE_MOVE": 257
+      }
+    }
+  }
+}

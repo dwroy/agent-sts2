@@ -1,0 +1,29 @@
+{
+  "schema": "legacy-enemy-observation-v1",
+  "enemy_id": "HUNTER_KILLER",
+  "source": "common/move-model.json",
+  "pointer": [
+    "HUNTER_KILLER"
+  ],
+  "scope_policy": "仅机械封装原common数据，未扩适用范围或新增机制结论。",
+  "payload": {
+    "damage": {
+      "BITE_MOVE": 17.1,
+      "PUNCTURE_MOVE": 21.5,
+      "TENDERIZING_GOOP_MOVE": 0.0
+    },
+    "next": {
+      "BITE_MOVE": {
+        "PUNCTURE_MOVE": 191
+      },
+      "PUNCTURE_MOVE": {
+        "BITE_MOVE": 169,
+        "PUNCTURE_MOVE": 104
+      },
+      "TENDERIZING_GOOP_MOVE": {
+        "BITE_MOVE": 95,
+        "PUNCTURE_MOVE": 91
+      }
+    }
+  }
+}

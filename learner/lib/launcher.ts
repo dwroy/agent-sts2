@@ -17,9 +17,9 @@
  *
  * Exit codes: 0 done, 1 the agent failed, 2 usage/task error, 3 engine or tool server unavailable, 124 timeout.
  */
-import { spawn, type ChildProcess } from "node:child_process";
+import { spawn, spawnSync, type ChildProcess } from "node:child_process";
 import { createHash, randomUUID } from "node:crypto";
-import { appendFileSync, closeSync, existsSync, mkdirSync, mkdtempSync, openSync, readdirSync, readFileSync, readSync, realpathSync, renameSync, rmSync, statSync, writeSync } from "node:fs";
+import { appendFileSync, closeSync, existsSync, mkdirSync, mkdtempSync, openSync, readdirSync, readFileSync, readSync, realpathSync, renameSync, rmSync, statSync, writeFileSync, writeSync } from "node:fs";
 import { homedir, tmpdir } from "node:os";
 import { join, relative, resolve, sep } from "node:path";
 import { createInterface } from "node:readline";
@@ -590,6 +590,31 @@ export async function main(argv: string[], overrides: Partial<LauncherDeps> = {}
   if (killTimer) clearTimeout(killTimer);
   process.removeListener("SIGINT", onSignal);
   process.removeListener("SIGTERM", onSignal);
+
+  // This launcher is outside the model's sandbox and the child has fully closed.
+  // Bind mounts can forbid sandbox hardlinks; finalize declared immutable files
+  // here without widening the model's permissions or changing its result/retry.
+  const storageHelper = join(deps.projectRoot, "ops/content_store.py");
+  if (existsSync(storageHelper)) {
+    const receipt = join(scratch, "storage-finalization.json");
+    const queue = join(resolve(deps.projectRoot, deps.env["CODEX_OPS_DIR"] ?? "ops/codex-ops"), "queue");
+    const store = join(realpathSync(mainCheckout(deps.projectRoot)), "ops/codex-ops/objects/v1");
+    const storage = spawnSync("nice", ["-n", "19", "python3", "-B", storageHelper,
+      "--finalize", scratch, "--store", store, "--receipt", receipt], {
+      cwd: request.cwd, env: { ...env, PYTHONDONTWRITEBYTECODE: "1" }, encoding: "utf8", stdio: ["ignore", "ignore", "pipe"],
+    });
+    log({ type: "learner_storage", ts: deps.now().toISOString(), after_model_close: true,
+      rc: storage.status, receipt, helper_sha256: createHash("sha256").update(readFileSync(storageHelper)).digest("hex"),
+      models_started: 0, permissions_changed: false });
+    if (storage.status !== 0) {
+      mkdirSync(queue, { recursive: true });
+      const name = `${BigInt(Date.now()) * 1_000_000n + process.hrtime.bigint() % 1_000_000n}-frozen-storage-attention.md`;
+      const temporary = join(queue, `.${name}`);
+      writeFileSync(temporary, `冻结文件归并入口未完成，模型结果和原件保留，不重跑模型。scratch ${scratch}；预期回执 ${receipt}。\n`);
+      renameSync(temporary, join(queue, name));
+      deps.err(`冻结文件归并待原ops处理，模型结果不变且不重跑模型；原件 ${receipt}\n`);
+    }
+  }
 
   const wallMs = deps.now().getTime() - started.getTime();
   const summary = tracker.summary;

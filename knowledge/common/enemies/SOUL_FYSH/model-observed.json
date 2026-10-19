@@ -1,0 +1,38 @@
+{
+  "schema": "legacy-enemy-observation-v1",
+  "enemy_id": "SOUL_FYSH",
+  "source": "common/move-model.json",
+  "pointer": [
+    "SOUL_FYSH"
+  ],
+  "scope_policy": "仅机械封装原common数据，未扩适用范围或新增机制结论。",
+  "payload": {
+    "buffs": [
+      "FADE_MOVE"
+    ],
+    "damage": {
+      "BECKON_MOVE": 0.0,
+      "DE_GAS_MOVE": 21.2,
+      "FADE_MOVE": 0.0,
+      "GAZE_MOVE": 9.1,
+      "SCREAM_MOVE": 13.6
+    },
+    "next": {
+      "BECKON_MOVE": {
+        "DE_GAS_MOVE": 320
+      },
+      "DE_GAS_MOVE": {
+        "GAZE_MOVE": 277
+      },
+      "FADE_MOVE": {
+        "SCREAM_MOVE": 218
+      },
+      "GAZE_MOVE": {
+        "FADE_MOVE": 248
+      },
+      "SCREAM_MOVE": {
+        "BECKON_MOVE": 213
+      }
+    }
+  }
+}

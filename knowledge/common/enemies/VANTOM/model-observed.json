@@ -1,0 +1,34 @@
+{
+  "schema": "legacy-enemy-observation-v1",
+  "enemy_id": "VANTOM",
+  "source": "common/move-model.json",
+  "pointer": [
+    "VANTOM"
+  ],
+  "scope_policy": "仅机械封装原common数据，未扩适用范围或新增机制结论。",
+  "payload": {
+    "buffs": [
+      "PREPARE_MOVE"
+    ],
+    "damage": {
+      "DISMEMBER_MOVE": 28.1,
+      "INKY_LANCE_MOVE": 15.4,
+      "INK_BLOT_MOVE": 9.0,
+      "PREPARE_MOVE": 0.0
+    },
+    "next": {
+      "DISMEMBER_MOVE": {
+        "PREPARE_MOVE": 242
+      },
+      "INKY_LANCE_MOVE": {
+        "DISMEMBER_MOVE": 284
+      },
+      "INK_BLOT_MOVE": {
+        "INKY_LANCE_MOVE": 327
+      },
+      "PREPARE_MOVE": {
+        "INK_BLOT_MOVE": 220
+      }
+    }
+  }
+}

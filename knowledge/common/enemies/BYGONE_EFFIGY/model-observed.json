@@ -1,0 +1,30 @@
+{
+  "schema": "legacy-enemy-observation-v1",
+  "enemy_id": "BYGONE_EFFIGY",
+  "source": "common/move-model.json",
+  "pointer": [
+    "BYGONE_EFFIGY"
+  ],
+  "scope_policy": "仅机械封装原common数据，未扩适用范围或新增机制结论。",
+  "payload": {
+    "buffs": [
+      "WAKE_MOVE"
+    ],
+    "damage": {
+      "SLASHES_MOVE": 23.1,
+      "SLEEP_MOVE": 0.0,
+      "WAKE_MOVE": 0.0
+    },
+    "next": {
+      "SLASHES_MOVE": {
+        "SLASHES_MOVE": 416
+      },
+      "SLEEP_MOVE": {
+        "WAKE_MOVE": 171
+      },
+      "WAKE_MOVE": {
+        "SLASHES_MOVE": 170
+      }
+    }
+  }
+}

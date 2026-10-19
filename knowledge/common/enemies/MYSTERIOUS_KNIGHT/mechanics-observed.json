@@ -1,0 +1,373 @@
+{
+  "schema": "legacy-enemy-observation-v1",
+  "enemy_id": "MYSTERIOUS_KNIGHT",
+  "source": "common/monster-db.json",
+  "pointer": [
+    "monsters",
+    "MYSTERIOUS_KNIGHT"
+  ],
+  "scope_policy": "仅机械封装原common数据，未扩适用范围或新增机制结论。",
+  "payload": {
+    "name": {
+      "zh": "神秘骑士"
+    },
+    "game_type": "Normal",
+    "game_hp_range": [
+      101,
+      101
+    ],
+    "kind": "unknown_room",
+    "rooms": {
+      "unknown_room": 5
+    },
+    "acts": {
+      "2": 5
+    },
+    "encounters": {
+      "MYSTERIOUS_KNIGHT": 5
+    },
+    "hp_by_asc": {
+      "6": {
+        "min": 101,
+        "median": 101,
+        "max": 101,
+        "n": 1
+      },
+      "7": {
+        "min": 101,
+        "median": 101.0,
+        "max": 101,
+        "n": 2
+      },
+      "8": {
+        "min": 108,
+        "median": 108.0,
+        "max": 108,
+        "n": 2
+      }
+    },
+    "moves": {
+      "FLAIL_MOVE": {
+        "name": "连枷",
+        "n_seen": 8,
+        "intents": {
+          "Attack": 8
+        },
+        "turns_seen": {
+          "2": 1,
+          "3": 2,
+          "4": 4,
+          "5": 1
+        },
+        "next": {
+          "FLAIL_MOVE": 2,
+          "RAM_MOVE": 2,
+          "WAR_CHANT": 1
+        },
+        "avg_total_shown": 35.2,
+        "damage_by_asc": {
+          "6": {
+            "shown": {
+              "18x2": 2
+            },
+            "base_per_hit": {
+              "9": 2
+            },
+            "hits": {
+              "2": 2
+            },
+            "n_base": 2
+          },
+          "7": {
+            "shown": {
+              "15x2": 1,
+              "18x2": 2
+            },
+            "base_per_hit": {
+              "9": 3
+            },
+            "hits": {
+              "2": 3
+            },
+            "n_base": 3
+          },
+          "8": {
+            "shown": {
+              "18x2": 3
+            },
+            "base_per_hit": {
+              "9": 3
+            },
+            "hits": {
+              "2": 3
+            },
+            "n_base": 3
+          }
+        }
+      },
+      "RAM_MOVE": {
+        "name": "撞击",
+        "n_seen": 9,
+        "intents": {
+          "Attack": 9
+        },
+        "turns_seen": {
+          "1": 5,
+          "2": 2,
+          "3": 1,
+          "5": 1
+        },
+        "next": {
+          "WAR_CHANT": 6,
+          "RAM_MOVE": 2,
+          "FLAIL_MOVE": 1
+        },
+        "avg_total_shown": 20.7,
+        "damage_by_asc": {
+          "6": {
+            "shown": {
+              "21x1": 1
+            },
+            "base_per_hit": {
+              "15": 1
+            },
+            "hits": {
+              "1": 1
+            },
+            "n_base": 1
+          },
+          "7": {
+            "shown": {
+              "15x1": 1,
+              "21x1": 3
+            },
+            "base_per_hit": {
+              "15": 3
+            },
+            "hits": {
+              "1": 4
+            },
+            "n_base": 3
+          },
+          "8": {
+            "shown": {
+              "21x1": 3,
+              "24x1": 1
+            },
+            "base_per_hit": {
+              "15": 4
+            },
+            "hits": {
+              "1": 4
+            },
+            "n_base": 4
+          }
+        }
+      },
+      "WAR_CHANT": {
+        "name": "战争吟唱",
+        "n_seen": 7,
+        "intents": {
+          "Buff": 7
+        },
+        "turns_seen": {
+          "2": 2,
+          "3": 2,
+          "4": 1,
+          "5": 1,
+          "6": 1
+        },
+        "next": {
+          "FLAIL_MOVE": 5
+        },
+        "avg_total_shown": 0.0,
+        "self_powers_gained": {
+          "STRENGTH_POWER": {
+            "3": 5
+          }
+        },
+        "self_powers_gained_by_asc": {
+          "6": {
+            "STRENGTH_POWER": {
+              "3": 1
+            }
+          },
+          "7": {
+            "STRENGTH_POWER": {
+              "3": 2
+            }
+          },
+          "8": {
+            "STRENGTH_POWER": {
+              "3": 2
+            }
+          }
+        }
+      }
+    },
+    "powers": {
+      "PLATING_POWER": {
+        "name": "覆甲",
+        "type": "Buff",
+        "description": "在你的回合结束时获得[gold]格挡[/gold]。[gold]覆甲[/gold]会在你的回合开始时减少[blue]1[/blue]层。",
+        "n_fights": 5,
+        "amount_at_first_sight": {
+          "6": 5
+        },
+        "amount_max_in_fight": {
+          "6": 5
+        },
+        "amount_at_first_sight_by_asc": {
+          "6": {
+            "6": 1
+          },
+          "7": {
+            "6": 2
+          },
+          "8": {
+            "6": 2
+          }
+        },
+        "turn_at_first_sight_by_asc": {
+          "6": {
+            "1": 1
+          },
+          "7": {
+            "1": 2
+          },
+          "8": {
+            "1": 2
+          }
+        }
+      },
+      "STRENGTH_POWER": {
+        "name": "力量",
+        "type": "Buff",
+        "description": "力量会增加攻击牌造成的伤害。",
+        "n_fights": 5,
+        "amount_at_first_sight": {
+          "6": 5
+        },
+        "amount_max_in_fight": {
+          "9": 5
+        },
+        "amount_at_first_sight_by_asc": {
+          "6": {
+            "6": 1
+          },
+          "7": {
+            "6": 2
+          },
+          "8": {
+            "6": 2
+          }
+        },
+        "turn_at_first_sight_by_asc": {
+          "6": {
+            "1": 1
+          },
+          "7": {
+            "1": 2
+          },
+          "8": {
+            "1": 2
+          }
+        }
+      },
+      "VULNERABLE_POWER": {
+        "name": "易伤",
+        "type": "Debuff",
+        "description": "易伤的生物从攻击中受到的伤害增加[blue]50%[/blue]。",
+        "n_fights": 4,
+        "amount_at_first_sight": {
+          "1": 2,
+          "3": 2
+        },
+        "amount_max_in_fight": {
+          "3": 3,
+          "4": 1
+        },
+        "amount_at_first_sight_by_asc": {
+          "6": {
+            "3": 1
+          },
+          "7": {
+            "1": 1,
+            "3": 1
+          },
+          "8": {
+            "1": 1
+          }
+        },
+        "turn_at_first_sight_by_asc": {
+          "6": {
+            "2": 1
+          },
+          "7": {
+            "1": 1,
+            "2": 1
+          },
+          "8": {
+            "1": 1
+          }
+        }
+      },
+      "WEAK_POWER": {
+        "name": "虚弱",
+        "type": "Debuff",
+        "description": "虚弱的生物造成的攻击伤害减少[blue]25%[/blue]。",
+        "n_fights": 1,
+        "amount_at_first_sight": {
+          "1": 1
+        },
+        "amount_max_in_fight": {
+          "1": 1
+        },
+        "amount_at_first_sight_by_asc": {
+          "7": {
+            "1": 1
+          }
+        },
+        "turn_at_first_sight_by_asc": {
+          "7": {
+            "1": 1
+          }
+        }
+      }
+    },
+    "provenance": {
+      "first_seen": "2026-09-26T04:45:25.867Z",
+      "last_seen": "2026-09-27T09:08:42.245Z",
+      "n_runs": 5,
+      "n_instances": 5,
+      "n_spawned_mid_fight": 0,
+      "n_minion_instances": 0
+    },
+    "observed": {
+      "kill_rewards": [
+        {
+          "reward": "SpecialCard:将灯火钥匙加入你的牌组。",
+          "killed": [
+            5,
+            5
+          ],
+          "left": [
+            0,
+            0
+          ],
+          "elsewhere": [
+            0,
+            11534
+          ],
+          "only_when_killed": false,
+          "exclusive": true,
+          "evidence": [
+            "F3SSGJ0N6YYN F20",
+            "4V5TA3ZG6MJS F23",
+            "GGF8C3G76C7B F23"
+          ]
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,35 @@
+{
+  "schema": "legacy-enemy-observation-v1",
+  "enemy_id": "FROG_KNIGHT",
+  "source": "common/move-model.json",
+  "pointer": [
+    "FROG_KNIGHT"
+  ],
+  "scope_policy": "仅机械封装原common数据，未扩适用范围或新增机制结论。",
+  "payload": {
+    "buffs": [
+      "FOR_THE_QUEEN"
+    ],
+    "damage": {
+      "BEETLE_CHARGE": 41.1,
+      "FOR_THE_QUEEN": 0.0,
+      "STRIKE_DOWN_EVIL": 22.6,
+      "TONGUE_LASH": 15.5
+    },
+    "next": {
+      "BEETLE_CHARGE": {
+        "TONGUE_LASH": 14
+      },
+      "FOR_THE_QUEEN": {
+        "BEETLE_CHARGE": 38,
+        "TONGUE_LASH": 43
+      },
+      "STRIKE_DOWN_EVIL": {
+        "FOR_THE_QUEEN": 93
+      },
+      "TONGUE_LASH": {
+        "STRIKE_DOWN_EVIL": 111
+      }
+    }
+  }
+}

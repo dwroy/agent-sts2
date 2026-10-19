@@ -1,0 +1,36 @@
+{
+  "schema": "legacy-enemy-observation-v1",
+  "enemy_id": "TUNNELER",
+  "source": "common/move-model.json",
+  "pointer": [
+    "TUNNELER"
+  ],
+  "scope_policy": "仅机械封装原common数据，未扩适用范围或新增机制结论。",
+  "payload": {
+    "buffs": [
+      "BURROW_MOVE"
+    ],
+    "damage": {
+      "BELOW_MOVE": 23.5,
+      "BITE_MOVE": 13.8,
+      "BURROW_MOVE": 0.0,
+      "STUNNED": 0.0
+    },
+    "next": {
+      "BELOW_MOVE": {
+        "BELOW_MOVE": 329,
+        "BITE_MOVE": 161,
+        "STUNNED": 2
+      },
+      "BITE_MOVE": {
+        "BURROW_MOVE": 345
+      },
+      "BURROW_MOVE": {
+        "BELOW_MOVE": 289
+      },
+      "STUNNED": {
+        "BITE_MOVE": 1
+      }
+    }
+  }
+}

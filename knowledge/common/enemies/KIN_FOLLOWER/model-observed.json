@@ -1,0 +1,30 @@
+{
+  "schema": "legacy-enemy-observation-v1",
+  "enemy_id": "KIN_FOLLOWER",
+  "source": "common/move-model.json",
+  "pointer": [
+    "KIN_FOLLOWER"
+  ],
+  "scope_policy": "仅机械封装原common数据，未扩适用范围或新增机制结论。",
+  "payload": {
+    "buffs": [
+      "POWER_DANCE_MOVE"
+    ],
+    "damage": {
+      "BOOMERANG_MOVE": 8.9,
+      "POWER_DANCE_MOVE": 0.0,
+      "QUICK_SLASH_MOVE": 7.9
+    },
+    "next": {
+      "BOOMERANG_MOVE": {
+        "POWER_DANCE_MOVE": 437
+      },
+      "POWER_DANCE_MOVE": {
+        "QUICK_SLASH_MOVE": 519
+      },
+      "QUICK_SLASH_MOVE": {
+        "BOOMERANG_MOVE": 537
+      }
+    }
+  }
+}

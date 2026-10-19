@@ -1,0 +1,47 @@
+{
+  "schema": "legacy-enemy-observation-v1",
+  "enemy_id": "QUEEN",
+  "source": "common/move-model.json",
+  "pointer": [
+    "QUEEN"
+  ],
+  "scope_policy": "仅机械封装原common数据，未扩适用范围或新增机制结论。",
+  "payload": {
+    "buffs": [
+      "BURN_BRIGHT_FOR_ME_MOVE",
+      "ENRAGE_MOVE"
+    ],
+    "damage": {
+      "BURN_BRIGHT_FOR_ME_MOVE": 0.0,
+      "ENRAGE_MOVE": 0.0,
+      "EXECUTION_MOVE": 25.1,
+      "OFF_WITH_YOUR_HEAD_MOVE": 41.2,
+      "PUPPET_STRINGS_MOVE": 0.0,
+      "YOU_ARE_MINE_MOVE": 0.0
+    },
+    "next": {
+      "BURN_BRIGHT_FOR_ME_MOVE": {
+        "BURN_BRIGHT_FOR_ME_MOVE": 247,
+        "OFF_WITH_YOUR_HEAD_MOVE": 44
+      },
+      "ENRAGE_MOVE": {
+        "OFF_WITH_YOUR_HEAD_MOVE": 18
+      },
+      "EXECUTION_MOVE": {
+        "ENRAGE_MOVE": 25,
+        "OFF_WITH_YOUR_HEAD_MOVE": 1
+      },
+      "OFF_WITH_YOUR_HEAD_MOVE": {
+        "EXECUTION_MOVE": 36,
+        "OFF_WITH_YOUR_HEAD_MOVE": 1
+      },
+      "PUPPET_STRINGS_MOVE": {
+        "YOU_ARE_MINE_MOVE": 78
+      },
+      "YOU_ARE_MINE_MOVE": {
+        "BURN_BRIGHT_FOR_ME_MOVE": 76,
+        "OFF_WITH_YOUR_HEAD_MOVE": 2
+      }
+    }
+  }
+}

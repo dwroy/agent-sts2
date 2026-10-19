@@ -1,0 +1,1033 @@
+{
+  "schema": "legacy-enemy-observation-v1",
+  "enemy_id": "AXE_RUBY_RAIDER",
+  "source": "common/monster-db.json",
+  "pointer": [
+    "monsters",
+    "AXE_RUBY_RAIDER"
+  ],
+  "scope_policy": "仅机械封装原common数据，未扩适用范围或新增机制结论。",
+  "payload": {
+    "name": {
+      "zh": "劫掠者斧手"
+    },
+    "game_type": "Normal",
+    "game_hp_range": [
+      20,
+      22
+    ],
+    "kind": "hallway",
+    "rooms": {
+      "hallway": 60,
+      "unknown_room": 4
+    },
+    "acts": {
+      "1": 64
+    },
+    "encounters": {
+      "ASSASSIN_RUBY_RAIDER+AXE_RUBY_RAIDER+BRUTE_RUBY_RAIDER": 14,
+      "ASSASSIN_RUBY_RAIDER+AXE_RUBY_RAIDER+TRACKER_RUBY_RAIDER": 13,
+      "AXE_RUBY_RAIDER+BRUTE_RUBY_RAIDER+TRACKER_RUBY_RAIDER": 11,
+      "AXE_RUBY_RAIDER+CROSSBOW_RUBY_RAIDER+TRACKER_RUBY_RAIDER": 10,
+      "ASSASSIN_RUBY_RAIDER+AXE_RUBY_RAIDER+CROSSBOW_RUBY_RAIDER": 9,
+      "AXE_RUBY_RAIDER+BRUTE_RUBY_RAIDER+CROSSBOW_RUBY_RAIDER": 7
+    },
+    "hp_by_asc": {
+      "0": {
+        "min": 20,
+        "median": 22,
+        "max": 22,
+        "n": 5
+      },
+      "3": {
+        "min": 21,
+        "median": 21,
+        "max": 22,
+        "n": 3
+      },
+      "4": {
+        "min": 20,
+        "median": 21.5,
+        "max": 22,
+        "n": 4
+      },
+      "6": {
+        "min": 20,
+        "median": 21.0,
+        "max": 22,
+        "n": 2
+      },
+      "7": {
+        "min": 20,
+        "median": 20.5,
+        "max": 22,
+        "n": 4
+      },
+      "8": {
+        "min": 21,
+        "median": 22.5,
+        "max": 23,
+        "n": 18
+      },
+      "9": {
+        "min": 21,
+        "median": 22,
+        "max": 23,
+        "n": 7
+      },
+      "10": {
+        "min": 21,
+        "median": 22,
+        "max": 23,
+        "n": 21
+      }
+    },
+    "moves": {
+      "BIG_SWING": {
+        "name": "大力挥舞",
+        "n_seen": 45,
+        "intents": {
+          "Attack": 45
+        },
+        "turns_seen": {
+          "3": 41,
+          "6": 3,
+          "9": 1
+        },
+        "next": {
+          "SWING_1": 25
+        },
+        "avg_total_shown": 12.4,
+        "damage_by_asc": {
+          "0": {
+            "shown": {
+              "12x1": 2
+            },
+            "base_per_hit": {
+              "12": 2
+            },
+            "hits": {
+              "1": 2
+            },
+            "n_base": 2
+          },
+          "3": {
+            "shown": {
+              "12x1": 3
+            },
+            "base_per_hit": {
+              "12": 3
+            },
+            "hits": {
+              "1": 3
+            },
+            "n_base": 3
+          },
+          "4": {
+            "shown": {
+              "12x1": 3
+            },
+            "base_per_hit": {
+              "12": 3
+            },
+            "hits": {
+              "1": 3
+            },
+            "n_base": 3
+          },
+          "6": {
+            "shown": {
+              "12x1": 2
+            },
+            "base_per_hit": {
+              "12": 2
+            },
+            "hits": {
+              "1": 2
+            },
+            "n_base": 2
+          },
+          "7": {
+            "shown": {
+              "12x1": 2
+            },
+            "base_per_hit": {
+              "12": 2
+            },
+            "hits": {
+              "1": 2
+            },
+            "n_base": 2
+          },
+          "8": {
+            "shown": {
+              "12x1": 11,
+              "13x1": 1
+            },
+            "base_per_hit": {
+              "12": 12
+            },
+            "hits": {
+              "1": 12
+            },
+            "n_base": 12
+          },
+          "9": {
+            "shown": {
+              "13x1": 2
+            },
+            "base_per_hit": {
+              "13": 2
+            },
+            "hits": {
+              "1": 2
+            },
+            "n_base": 2
+          },
+          "10": {
+            "shown": {
+              "13x1": 18,
+              "9x1": 1
+            },
+            "base_per_hit": {
+              "13": 18
+            },
+            "hits": {
+              "1": 19
+            },
+            "n_base": 18
+          }
+        }
+      },
+      "SWING_1": {
+        "name": null,
+        "n_seen": 89,
+        "intents": {
+          "Attack+Defend": 89
+        },
+        "turns_seen": {
+          "1": 64,
+          "4": 24,
+          "7": 1
+        },
+        "next": {
+          "SWING_2": 61
+        },
+        "avg_total_shown": 5.4,
+        "damage_by_asc": {
+          "0": {
+            "shown": {
+              "5x1": 6
+            },
+            "base_per_hit": {
+              "5": 6
+            },
+            "hits": {
+              "1": 6
+            },
+            "n_base": 6
+          },
+          "3": {
+            "shown": {
+              "5x1": 5
+            },
+            "base_per_hit": {
+              "5": 5
+            },
+            "hits": {
+              "1": 5
+            },
+            "n_base": 5
+          },
+          "4": {
+            "shown": {
+              "5x1": 4
+            },
+            "base_per_hit": {
+              "5": 4
+            },
+            "hits": {
+              "1": 4
+            },
+            "n_base": 4
+          },
+          "6": {
+            "shown": {
+              "5x1": 3
+            },
+            "base_per_hit": {
+              "5": 3
+            },
+            "hits": {
+              "1": 3
+            },
+            "n_base": 3
+          },
+          "7": {
+            "shown": {
+              "3x1": 1,
+              "5x1": 5
+            },
+            "base_per_hit": {
+              "5": 5
+            },
+            "hits": {
+              "1": 6
+            },
+            "n_base": 5
+          },
+          "8": {
+            "shown": {
+              "5x1": 24
+            },
+            "base_per_hit": {
+              "5": 24
+            },
+            "hits": {
+              "1": 24
+            },
+            "n_base": 24
+          },
+          "9": {
+            "shown": {
+              "6x1": 9
+            },
+            "base_per_hit": {
+              "6": 9
+            },
+            "hits": {
+              "1": 9
+            },
+            "n_base": 9
+          },
+          "10": {
+            "shown": {
+              "4x1": 1,
+              "6x1": 31
+            },
+            "base_per_hit": {
+              "6": 31
+            },
+            "hits": {
+              "1": 32
+            },
+            "n_base": 31
+          }
+        },
+        "block_gained": {
+          "1": 1,
+          "5": 30,
+          "6": 26
+        },
+        "block_gained_by_asc": {
+          "0": {
+            "5": 3
+          },
+          "3": {
+            "5": 3
+          },
+          "4": {
+            "5": 4
+          },
+          "6": {
+            "5": 2
+          },
+          "7": {
+            "5": 4
+          },
+          "8": {
+            "5": 14
+          },
+          "9": {
+            "6": 4
+          },
+          "10": {
+            "1": 1,
+            "6": 22
+          }
+        }
+      },
+      "SWING_2": {
+        "name": null,
+        "n_seen": 61,
+        "intents": {
+          "Attack+Defend": 61
+        },
+        "turns_seen": {
+          "2": 54,
+          "5": 6,
+          "8": 1
+        },
+        "next": {
+          "BIG_SWING": 45
+        },
+        "avg_total_shown": 5.5,
+        "damage_by_asc": {
+          "0": {
+            "shown": {
+              "5x1": 3
+            },
+            "base_per_hit": {
+              "5": 3
+            },
+            "hits": {
+              "1": 3
+            },
+            "n_base": 3
+          },
+          "3": {
+            "shown": {
+              "5x1": 3
+            },
+            "base_per_hit": {
+              "5": 3
+            },
+            "hits": {
+              "1": 3
+            },
+            "n_base": 3
+          },
+          "4": {
+            "shown": {
+              "5x1": 4
+            },
+            "base_per_hit": {
+              "5": 4
+            },
+            "hits": {
+              "1": 4
+            },
+            "n_base": 4
+          },
+          "6": {
+            "shown": {
+              "5x1": 2
+            },
+            "base_per_hit": {
+              "5": 2
+            },
+            "hits": {
+              "1": 2
+            },
+            "n_base": 2
+          },
+          "7": {
+            "shown": {
+              "5x1": 4
+            },
+            "base_per_hit": {
+              "5": 4
+            },
+            "hits": {
+              "1": 4
+            },
+            "n_base": 4
+          },
+          "8": {
+            "shown": {
+              "5x1": 15,
+              "6x1": 1
+            },
+            "base_per_hit": {
+              "5": 16
+            },
+            "hits": {
+              "1": 16
+            },
+            "n_base": 16
+          },
+          "9": {
+            "shown": {
+              "6x1": 6
+            },
+            "base_per_hit": {
+              "6": 6
+            },
+            "hits": {
+              "1": 6
+            },
+            "n_base": 6
+          },
+          "10": {
+            "shown": {
+              "4x1": 1,
+              "6x1": 22
+            },
+            "base_per_hit": {
+              "6": 22
+            },
+            "hits": {
+              "1": 23
+            },
+            "n_base": 22
+          }
+        },
+        "block_gained": {
+          "5": 23,
+          "6": 19
+        },
+        "block_gained_by_asc": {
+          "0": {
+            "5": 2
+          },
+          "3": {
+            "5": 3
+          },
+          "4": {
+            "5": 3
+          },
+          "6": {
+            "5": 2
+          },
+          "7": {
+            "5": 2
+          },
+          "8": {
+            "5": 11
+          },
+          "9": {
+            "6": 1
+          },
+          "10": {
+            "6": 18
+          }
+        }
+      }
+    },
+    "powers": {
+      "PIERCING_WAIL_POWER": {
+        "name": "尖啸",
+        "type": "Debuff",
+        "description": "在本回合结束前失去[gold]力量[/gold]。",
+        "n_fights": 1,
+        "amount_at_first_sight": {
+          "6": 1
+        },
+        "amount_max_in_fight": {
+          "6": 1
+        },
+        "amount_at_first_sight_by_asc": {
+          "6": {
+            "6": 1
+          }
+        },
+        "turn_at_first_sight_by_asc": {
+          "6": {
+            "2": 1
+          }
+        }
+      },
+      "POISON_POWER": {
+        "name": "中毒",
+        "type": "Debuff",
+        "description": "中毒的生物会在自身回合开始时失去生命。中毒层数每回合减少[blue]1[/blue]。",
+        "n_fights": 9,
+        "amount_at_first_sight": {
+          "2": 1,
+          "3": 2,
+          "4": 1,
+          "5": 1,
+          "6": 2,
+          "7": 1,
+          "9": 1
+        },
+        "amount_max_in_fight": {
+          "3": 2,
+          "4": 1,
+          "5": 2,
+          "6": 2,
+          "7": 1,
+          "9": 1
+        },
+        "amount_at_first_sight_by_asc": {
+          "10": {
+            "2": 1,
+            "3": 2,
+            "4": 1,
+            "5": 1,
+            "6": 2,
+            "7": 1,
+            "9": 1
+          }
+        },
+        "turn_at_first_sight_by_asc": {
+          "10": {
+            "1": 2,
+            "2": 2,
+            "3": 3,
+            "5": 1,
+            "8": 1
+          }
+        }
+      },
+      "STRENGTH_POWER": {
+        "name": "力量",
+        "type": "Buff",
+        "description": "力量会增加攻击牌造成的伤害。",
+        "n_fights": 2,
+        "amount_at_first_sight": {
+          "-6": 1,
+          "1": 1
+        },
+        "amount_max_in_fight": {
+          "-6": 1,
+          "1": 1
+        },
+        "amount_at_first_sight_by_asc": {
+          "6": {
+            "-6": 1
+          },
+          "8": {
+            "1": 1
+          }
+        },
+        "turn_at_first_sight_by_asc": {
+          "6": {
+            "2": 1
+          },
+          "8": {
+            "1": 1
+          }
+        }
+      },
+      "VULNERABLE_POWER": {
+        "name": "易伤",
+        "type": "Debuff",
+        "description": "易伤的生物从攻击中受到的伤害增加[blue]50%[/blue]。",
+        "n_fights": 10,
+        "amount_at_first_sight": {
+          "1": 5,
+          "2": 2,
+          "3": 3
+        },
+        "amount_max_in_fight": {
+          "1": 5,
+          "2": 2,
+          "3": 3
+        },
+        "amount_at_first_sight_by_asc": {
+          "0": {
+            "2": 2
+          },
+          "3": {
+            "1": 1
+          },
+          "4": {
+            "1": 1
+          },
+          "8": {
+            "1": 1,
+            "3": 2
+          },
+          "9": {
+            "1": 1,
+            "3": 1
+          },
+          "10": {
+            "1": 1
+          }
+        },
+        "turn_at_first_sight_by_asc": {
+          "0": {
+            "1": 1,
+            "3": 1
+          },
+          "3": {
+            "3": 1
+          },
+          "4": {
+            "3": 1
+          },
+          "8": {
+            "1": 1,
+            "3": 2
+          },
+          "9": {
+            "1": 1,
+            "5": 1
+          },
+          "10": {
+            "1": 1
+          }
+        }
+      },
+      "WEAK_POWER": {
+        "name": "虚弱",
+        "type": "Debuff",
+        "description": "虚弱的生物造成的攻击伤害减少[blue]25%[/blue]。",
+        "n_fights": 13,
+        "amount_at_first_sight": {
+          "1": 10,
+          "2": 3
+        },
+        "amount_max_in_fight": {
+          "1": 9,
+          "2": 3,
+          "3": 1
+        },
+        "amount_at_first_sight_by_asc": {
+          "7": {
+            "1": 1
+          },
+          "9": {
+            "1": 1
+          },
+          "10": {
+            "1": 8,
+            "2": 3
+          }
+        },
+        "turn_at_first_sight_by_asc": {
+          "7": {
+            "1": 1
+          },
+          "9": {
+            "1": 1
+          },
+          "10": {
+            "1": 5,
+            "2": 3,
+            "5": 2,
+            "6": 1
+          }
+        }
+      }
+    },
+    "provenance": {
+      "first_seen": "2026-09-24T05:49:40.308Z",
+      "last_seen": "2026-10-18T02:41:14.121Z",
+      "n_runs": 64,
+      "n_instances": 64,
+      "n_spawned_mid_fight": 0,
+      "n_minion_instances": 0
+    },
+    "observed": {
+      "ally_deaths": {
+        "ASSASSIN_RUBY_RAIDER": {
+          "n": 26,
+          "fights": 26,
+          "move_before": {
+            "SWING_1": 14,
+            "SWING_2": 10,
+            "BIG_SWING": 2
+          },
+          "move_changed": 0,
+          "move_changed_share": 0.0,
+          "changed_to": {},
+          "by_move": {
+            "BIG_SWING": {
+              "n": 2,
+              "changed_to": {}
+            },
+            "SWING_1": {
+              "n": 14,
+              "changed_to": {}
+            },
+            "SWING_2": {
+              "n": 10,
+              "changed_to": {}
+            }
+          },
+          "changed_evidence": [],
+          "attack_changed": 0,
+          "co_deaths": 2,
+          "end_move": {
+            "SWING_1": 14,
+            "SWING_2": 9,
+            "BIG_SWING": 2
+          },
+          "next_n": 25,
+          "next_move": {
+            "SWING_2": 14,
+            "BIG_SWING": 9,
+            "SWING_1": 2
+          },
+          "next_after": {
+            "BIG_SWING": {
+              "SWING_1": 2
+            },
+            "SWING_1": {
+              "SWING_2": 14
+            },
+            "SWING_2": {
+              "BIG_SWING": 9
+            }
+          },
+          "next_evidence": [
+            "G8AQJ2YEMEHE F9 T1",
+            "S780Y1W7AQZL F7 T1",
+            "K39JRY3WW4VM F6 T3"
+          ],
+          "alive": {
+            "turns": 57,
+            "moves": {
+              "SWING_1": 38,
+              "SWING_2": 15,
+              "BIG_SWING": 4
+            },
+            "next": {
+              "BIG_SWING": {
+                "SWING_1": 2
+              },
+              "SWING_1": {
+                "SWING_2": 15
+              },
+              "SWING_2": {
+                "BIG_SWING": 4
+              }
+            }
+          },
+          "dead": {
+            "turns": 51,
+            "moves": {
+              "BIG_SWING": 20,
+              "SWING_2": 18,
+              "SWING_1": 13
+            }
+          }
+        },
+        "BRUTE_RUBY_RAIDER": {
+          "n": 9,
+          "fights": 9,
+          "move_before": {
+            "SWING_1": 5,
+            "BIG_SWING": 3,
+            "SWING_2": 1
+          },
+          "move_changed": 0,
+          "move_changed_share": 0.0,
+          "changed_to": {},
+          "by_move": {
+            "BIG_SWING": {
+              "n": 3,
+              "changed_to": {}
+            },
+            "SWING_1": {
+              "n": 5,
+              "changed_to": {}
+            },
+            "SWING_2": {
+              "n": 1,
+              "changed_to": {}
+            }
+          },
+          "changed_evidence": [],
+          "attack_changed": 0,
+          "co_deaths": 2,
+          "end_move": {
+            "SWING_1": 4,
+            "BIG_SWING": 2
+          },
+          "next_n": 6,
+          "next_move": {
+            "SWING_2": 4,
+            "SWING_1": 2
+          },
+          "next_after": {
+            "BIG_SWING": {
+              "SWING_1": 2
+            },
+            "SWING_1": {
+              "SWING_2": 4
+            }
+          },
+          "next_evidence": [
+            "WM2XPDZ02BNF F14 T3",
+            "G1Z0X3WBH4XQ F9 T3",
+            "7MG7E5EYETA6 F6 T1"
+          ],
+          "alive": {
+            "turns": 87,
+            "moves": {
+              "SWING_1": 41,
+              "SWING_2": 26,
+              "BIG_SWING": 20
+            },
+            "next": {
+              "BIG_SWING": {
+                "SWING_1": 9
+              },
+              "SWING_1": {
+                "SWING_2": 26
+              }
+            }
+          },
+          "dead": {
+            "turns": 7,
+            "moves": {
+              "SWING_2": 4,
+              "SWING_1": 2,
+              "BIG_SWING": 1
+            }
+          }
+        },
+        "CROSSBOW_RUBY_RAIDER": {
+          "n": 18,
+          "fights": 18,
+          "move_before": {
+            "SWING_2": 10,
+            "SWING_1": 6,
+            "BIG_SWING": 2
+          },
+          "move_changed": 0,
+          "move_changed_share": 0.0,
+          "changed_to": {},
+          "by_move": {
+            "BIG_SWING": {
+              "n": 2,
+              "changed_to": {}
+            },
+            "SWING_1": {
+              "n": 6,
+              "changed_to": {}
+            },
+            "SWING_2": {
+              "n": 10,
+              "changed_to": {}
+            }
+          },
+          "changed_evidence": [],
+          "attack_changed": 0,
+          "co_deaths": 3,
+          "end_move": {
+            "SWING_2": 9,
+            "SWING_1": 6,
+            "BIG_SWING": 2
+          },
+          "next_n": 16,
+          "next_move": {
+            "BIG_SWING": 9,
+            "SWING_2": 6,
+            "SWING_1": 1
+          },
+          "next_after": {
+            "BIG_SWING": {
+              "SWING_1": 1
+            },
+            "SWING_1": {
+              "SWING_2": 6
+            },
+            "SWING_2": {
+              "BIG_SWING": 9
+            }
+          },
+          "next_evidence": [
+            "ZZA7PCSRYTNM F9 T2",
+            "K39JRY3WW4VM F6 T2",
+            "VQSA3FRA2ML9 F6 T4"
+          ],
+          "alive": {
+            "turns": 46,
+            "moves": {
+              "SWING_1": 27,
+              "SWING_2": 16,
+              "BIG_SWING": 3
+            },
+            "next": {
+              "BIG_SWING": {
+                "SWING_1": 1
+              },
+              "SWING_1": {
+                "SWING_2": 16
+              },
+              "SWING_2": {
+                "BIG_SWING": 3
+              }
+            }
+          },
+          "dead": {
+            "turns": 28,
+            "moves": {
+              "BIG_SWING": 13,
+              "SWING_1": 8,
+              "SWING_2": 7
+            }
+          }
+        },
+        "TRACKER_RUBY_RAIDER": {
+          "n": 14,
+          "fights": 14,
+          "move_before": {
+            "BIG_SWING": 6,
+            "SWING_2": 5,
+            "SWING_1": 3
+          },
+          "move_changed": 0,
+          "move_changed_share": 0.0,
+          "changed_to": {},
+          "by_move": {
+            "BIG_SWING": {
+              "n": 6,
+              "changed_to": {}
+            },
+            "SWING_1": {
+              "n": 3,
+              "changed_to": {}
+            },
+            "SWING_2": {
+              "n": 5,
+              "changed_to": {}
+            }
+          },
+          "changed_evidence": [],
+          "attack_changed": 0,
+          "co_deaths": 1,
+          "end_move": {
+            "BIG_SWING": 6,
+            "SWING_2": 5,
+            "SWING_1": 2
+          },
+          "next_n": 13,
+          "next_move": {
+            "SWING_1": 6,
+            "BIG_SWING": 5,
+            "SWING_2": 2
+          },
+          "next_after": {
+            "BIG_SWING": {
+              "SWING_1": 6
+            },
+            "SWING_1": {
+              "SWING_2": 2
+            },
+            "SWING_2": {
+              "BIG_SWING": 5
+            }
+          },
+          "next_evidence": [
+            "G8AQJ2YEMEHE F9 T2",
+            "Y27BHTAKJH33 F14 T2",
+            "5TQX4PBBB9ZU F14 T2"
+          ],
+          "alive": {
+            "turns": 81,
+            "moves": {
+              "SWING_1": 37,
+              "SWING_2": 28,
+              "BIG_SWING": 16
+            },
+            "next": {
+              "BIG_SWING": {
+                "SWING_1": 3
+              },
+              "SWING_1": {
+                "SWING_2": 28
+              },
+              "SWING_2": {
+                "BIG_SWING": 16
+              }
+            }
+          },
+          "dead": {
+            "turns": 18,
+            "moves": {
+              "SWING_1": 9,
+              "BIG_SWING": 6,
+              "SWING_2": 3
+            }
+          }
+        }
+      }
+    }
+  }
+}

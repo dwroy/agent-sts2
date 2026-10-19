@@ -401,6 +401,15 @@ export function codexPermissions(request: EngineRequest): FilesystemRules {
   rules[root] = { ...(writes ? { ".": "write" as const } : {}), "**/.env": "none", "**/*.env": "none" };
   for (const other of keyRoots(root, request.repo)) if (other !== root) rules[other] = { "**/.env": "none", "**/*.env": "none" };
   for (const [path, access] of Object.entries(request.extraRules ?? {})) if (writes || access !== "write") rules[path.replace(/\/+$/, "")] = access;
+  // Matching tools are shared, but a learner must not mutate the provider's environment.
+  for (const base of new Set([root, request.cwd])) {
+    for (const relative of ["agent/node_modules", "data/logdb-venv"]) {
+      const candidate = join(base, relative);
+      try {
+        if (statSync(candidate).isDirectory()) rules[realpathSync(candidate)] = { ".": "read", "**/.env": "none", "**/*.env": "none" };
+      } catch { /* Missing optional tools add no filesystem rule or glob scan path. */ }
+    }
+  }
   const homeRules: Record<string, Access> = { ".sts2-jev-env*": "none" };
   for (const name of HOME_KEY_FILES) homeRules[name] = "none";
   rules[home] = homeRules;

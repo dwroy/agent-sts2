@@ -1,0 +1,45 @@
+{
+  "schema": "legacy-enemy-observation-v1",
+  "enemy_id": "DECIMILLIPEDE_SEGMENT_BACK",
+  "source": "common/move-model.json",
+  "pointer": [
+    "DECIMILLIPEDE_SEGMENT_BACK"
+  ],
+  "scope_policy": "仅机械封装原common数据，未扩适用范围或新增机制结论。",
+  "payload": {
+    "buffs": [
+      "BULK_MOVE"
+    ],
+    "damage": {
+      "BULK_MOVE": 6.7,
+      "CONSTRICT_MOVE": 9.1,
+      "DEAD_MOVE": 0.0,
+      "REATTACH_MOVE": 0.0,
+      "WRITHE_MOVE": 14.3
+    },
+    "next": {
+      "BULK_MOVE": {
+        "REATTACH_MOVE": 9,
+        "WRITHE_MOVE": 155
+      },
+      "CONSTRICT_MOVE": {
+        "BULK_MOVE": 120,
+        "DEAD_MOVE": 2,
+        "REATTACH_MOVE": 17
+      },
+      "DEAD_MOVE": {
+        "REATTACH_MOVE": 2
+      },
+      "REATTACH_MOVE": {
+        "BULK_MOVE": 11,
+        "CONSTRICT_MOVE": 16,
+        "WRITHE_MOVE": 10
+      },
+      "WRITHE_MOVE": {
+        "CONSTRICT_MOVE": 111,
+        "DEAD_MOVE": 2,
+        "REATTACH_MOVE": 47
+      }
+    }
+  }
+}

@@ -1,0 +1,35 @@
+{
+  "schema": "legacy-enemy-observation-v1",
+  "enemy_id": "OVICOPTER",
+  "source": "common/move-model.json",
+  "pointer": [
+    "OVICOPTER"
+  ],
+  "scope_policy": "仅机械封装原common数据，未扩适用范围或新增机制结论。",
+  "payload": {
+    "buffs": [
+      "NUTRITIONAL_PASTE_MOVE"
+    ],
+    "damage": {
+      "LAY_EGGS_MOVE": 0.0,
+      "NUTRITIONAL_PASTE_MOVE": 0.0,
+      "SMASH_MOVE": 19.5,
+      "TENDERIZER_MOVE": 7.5
+    },
+    "next": {
+      "LAY_EGGS_MOVE": {
+        "SMASH_MOVE": 229
+      },
+      "NUTRITIONAL_PASTE_MOVE": {
+        "SMASH_MOVE": 34
+      },
+      "SMASH_MOVE": {
+        "TENDERIZER_MOVE": 195
+      },
+      "TENDERIZER_MOVE": {
+        "LAY_EGGS_MOVE": 92,
+        "NUTRITIONAL_PASTE_MOVE": 66
+      }
+    }
+  }
+}

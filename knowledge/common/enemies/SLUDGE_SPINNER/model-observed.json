@@ -1,0 +1,33 @@
+{
+  "schema": "legacy-enemy-observation-v1",
+  "enemy_id": "SLUDGE_SPINNER",
+  "source": "common/move-model.json",
+  "pointer": [
+    "SLUDGE_SPINNER"
+  ],
+  "scope_policy": "仅机械封装原common数据，未扩适用范围或新增机制结论。",
+  "payload": {
+    "buffs": [
+      "RAGE_MOVE"
+    ],
+    "damage": {
+      "OIL_SPRAY_MOVE": 9.4,
+      "RAGE_MOVE": 6.9,
+      "SLAM_MOVE": 12.8
+    },
+    "next": {
+      "OIL_SPRAY_MOVE": {
+        "RAGE_MOVE": 205,
+        "SLAM_MOVE": 235
+      },
+      "RAGE_MOVE": {
+        "OIL_SPRAY_MOVE": 132,
+        "SLAM_MOVE": 101
+      },
+      "SLAM_MOVE": {
+        "OIL_SPRAY_MOVE": 122,
+        "RAGE_MOVE": 113
+      }
+    }
+  }
+}

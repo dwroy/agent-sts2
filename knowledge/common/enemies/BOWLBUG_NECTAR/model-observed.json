@@ -1,0 +1,30 @@
+{
+  "schema": "legacy-enemy-observation-v1",
+  "enemy_id": "BOWLBUG_NECTAR",
+  "source": "common/move-model.json",
+  "pointer": [
+    "BOWLBUG_NECTAR"
+  ],
+  "scope_policy": "仅机械封装原common数据，未扩适用范围或新增机制结论。",
+  "payload": {
+    "buffs": [
+      "BUFF_MOVE"
+    ],
+    "damage": {
+      "BUFF_MOVE": 0.0,
+      "THRASH2_MOVE": 18.2,
+      "THRASH_MOVE": 3.0
+    },
+    "next": {
+      "BUFF_MOVE": {
+        "THRASH2_MOVE": 183
+      },
+      "THRASH2_MOVE": {
+        "THRASH2_MOVE": 49
+      },
+      "THRASH_MOVE": {
+        "BUFF_MOVE": 243
+      }
+    }
+  }
+}

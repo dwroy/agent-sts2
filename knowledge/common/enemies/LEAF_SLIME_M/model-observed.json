@@ -1,0 +1,23 @@
+{
+  "schema": "legacy-enemy-observation-v1",
+  "enemy_id": "LEAF_SLIME_M",
+  "source": "common/move-model.json",
+  "pointer": [
+    "LEAF_SLIME_M"
+  ],
+  "scope_policy": "仅机械封装原common数据，未扩适用范围或新增机制结论。",
+  "payload": {
+    "damage": {
+      "CLUMP_SHOT": 8.6,
+      "STICKY_SHOT": 0.0
+    },
+    "next": {
+      "CLUMP_SHOT": {
+        "STICKY_SHOT": 386
+      },
+      "STICKY_SHOT": {
+        "CLUMP_SHOT": 569
+      }
+    }
+  }
+}

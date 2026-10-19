@@ -1,0 +1,31 @@
+{
+  "schema": "legacy-enemy-observation-v1",
+  "enemy_id": "EXOSKELETON",
+  "source": "common/move-model.json",
+  "pointer": [
+    "EXOSKELETON"
+  ],
+  "scope_policy": "仅机械封装原common数据，未扩适用范围或新增机制结论。",
+  "payload": {
+    "buffs": [
+      "ENRAGE_MOVE"
+    ],
+    "damage": {
+      "ENRAGE_MOVE": 0.0,
+      "MANDIBLES_MOVE": 9.2,
+      "SKITTER_MOVE": 7.2
+    },
+    "next": {
+      "ENRAGE_MOVE": {
+        "MANDIBLES_MOVE": 585,
+        "SKITTER_MOVE": 581
+      },
+      "MANDIBLES_MOVE": {
+        "ENRAGE_MOVE": 1087
+      },
+      "SKITTER_MOVE": {
+        "MANDIBLES_MOVE": 678
+      }
+    }
+  }
+}

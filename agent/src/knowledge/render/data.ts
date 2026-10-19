@@ -6,6 +6,7 @@
  * The files are refreshed after every run, so the cache is keyed by each file's mtime and size.
  */
 
+import { readCompatibleKnowledgeText } from "../catalog.js";
 import { existsSync, readFileSync, statSync } from "node:fs";
 import { join, resolve } from "node:path";
 
@@ -118,7 +119,7 @@ function readText(dir: string, name: string): string {
   const path = knowledgeFile(dir, name);
   let text: string;
   try {
-    text = readFileSync(path, "utf8");
+    text = readCompatibleKnowledgeText(dir, name);
   } catch (error) {
     throw new KnowledgeLoadError(`知识文件读取失败 ${path}: ${(error as Error).message}`);
   }
@@ -228,6 +229,12 @@ function stamp(dir: string): string {
         const info = statSync(knowledgeFile(dir, name));
         return `${name}:${info.mtimeMs}:${info.size}`;
       } catch {
+        if (name === "monster-db.json") {
+          try {
+            const info = statSync(join(dir, "catalog.json"));
+            return `${name}:catalog:${info.mtimeMs}:${info.size}`;
+          } catch { /* The existing missing-file error remains authoritative. */ }
+        }
         return `${name}:missing`;
       }
     })

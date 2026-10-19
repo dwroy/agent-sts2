@@ -1,0 +1,1508 @@
+{
+  "schema": "legacy-enemy-observation-v1",
+  "enemy_id": "FROG_KNIGHT",
+  "source": "common/monster-db.json",
+  "pointer": [
+    "monsters",
+    "FROG_KNIGHT"
+  ],
+  "scope_policy": "仅机械封装原common数据，未扩适用范围或新增机制结论。",
+  "payload": {
+    "name": {
+      "zh": "青蛙骑士"
+    },
+    "game_type": "Normal",
+    "game_hp_range": [
+      191,
+      191
+    ],
+    "kind": "hallway",
+    "rooms": {
+      "hallway": 51,
+      "unknown_room": 13
+    },
+    "acts": {
+      "3": 64
+    },
+    "encounters": {
+      "FROG_KNIGHT": 64
+    },
+    "hp_by_asc": {
+      "0": {
+        "min": 191,
+        "median": 191,
+        "max": 191,
+        "n": 3
+      },
+      "2": {
+        "min": 191,
+        "median": 191.0,
+        "max": 191,
+        "n": 2
+      },
+      "3": {
+        "min": 191,
+        "median": 191.0,
+        "max": 191,
+        "n": 2
+      },
+      "4": {
+        "min": 191,
+        "median": 191.0,
+        "max": 191,
+        "n": 2
+      },
+      "5": {
+        "min": 191,
+        "median": 191.0,
+        "max": 191,
+        "n": 2
+      },
+      "6": {
+        "min": 191,
+        "median": 191.0,
+        "max": 191,
+        "n": 2
+      },
+      "7": {
+        "min": 191,
+        "median": 191,
+        "max": 191,
+        "n": 5
+      },
+      "8": {
+        "min": 199,
+        "median": 199,
+        "max": 199,
+        "n": 15
+      },
+      "9": {
+        "min": 199,
+        "median": 199.0,
+        "max": 199,
+        "n": 6
+      },
+      "10": {
+        "min": 199,
+        "median": 199,
+        "max": 199,
+        "n": 25
+      }
+    },
+    "moves": {
+      "BEETLE_CHARGE": {
+        "name": "甲虫冲锋",
+        "n_seen": 38,
+        "intents": {
+          "Attack": 38
+        },
+        "turns_seen": {
+          "4": 22,
+          "7": 14,
+          "10": 1,
+          "13": 1
+        },
+        "next": {
+          "TONGUE_LASH": 14
+        },
+        "avg_total_shown": 41.1,
+        "damage_by_asc": {
+          "0": {
+            "shown": {
+              "30x1": 1,
+              "40x1": 1
+            },
+            "base_per_hit": {
+              "35": 1
+            },
+            "hits": {
+              "1": 2
+            },
+            "n_base": 1
+          },
+          "3": {
+            "shown": {
+              "40x1": 2
+            },
+            "base_per_hit": {
+              "35": 2
+            },
+            "hits": {
+              "1": 2
+            },
+            "n_base": 2
+          },
+          "4": {
+            "shown": {
+              "30x1": 1
+            },
+            "base_per_hit": {},
+            "hits": {
+              "1": 1
+            },
+            "n_base": 0
+          },
+          "5": {
+            "shown": {
+              "40x1": 1,
+              "45x1": 1
+            },
+            "base_per_hit": {
+              "35": 2
+            },
+            "hits": {
+              "1": 2
+            },
+            "n_base": 2
+          },
+          "6": {
+            "shown": {
+              "30x1": 1,
+              "45x1": 1
+            },
+            "base_per_hit": {
+              "35": 1
+            },
+            "hits": {
+              "1": 2
+            },
+            "n_base": 1
+          },
+          "7": {
+            "shown": {
+              "40x1": 2,
+              "45x1": 1,
+              "47x1": 1
+            },
+            "base_per_hit": {
+              "35": 4
+            },
+            "hits": {
+              "1": 4
+            },
+            "n_base": 4
+          },
+          "8": {
+            "shown": {
+              "40x1": 5,
+              "41x1": 1,
+              "45x1": 3,
+              "46x1": 1
+            },
+            "base_per_hit": {
+              "35": 10
+            },
+            "hits": {
+              "1": 10
+            },
+            "n_base": 10
+          },
+          "9": {
+            "shown": {
+              "33x1": 1,
+              "46x1": 1,
+              "50x1": 1
+            },
+            "base_per_hit": {
+              "40": 2
+            },
+            "hits": {
+              "1": 3
+            },
+            "n_base": 2
+          },
+          "10": {
+            "shown": {
+              "30x1": 1,
+              "33x1": 1,
+              "35x1": 1,
+              "37x1": 2,
+              "42x1": 1,
+              "45x1": 3,
+              "50x1": 3
+            },
+            "base_per_hit": {
+              "40": 6
+            },
+            "hits": {
+              "1": 12
+            },
+            "n_base": 6
+          }
+        }
+      },
+      "FOR_THE_QUEEN": {
+        "name": "为了女王",
+        "n_seen": 93,
+        "intents": {
+          "Buff": 93
+        },
+        "turns_seen": {
+          "3": 62,
+          "6": 26,
+          "9": 3,
+          "12": 1,
+          "16": 1
+        },
+        "next": {
+          "TONGUE_LASH": 43,
+          "BEETLE_CHARGE": 38
+        },
+        "avg_total_shown": 0.0,
+        "self_powers_gained": {
+          "STRENGTH_POWER": {
+            "5": 79,
+            "6": 2
+          }
+        },
+        "self_powers_gained_by_asc": {
+          "0": {
+            "STRENGTH_POWER": {
+              "5": 3
+            }
+          },
+          "2": {
+            "STRENGTH_POWER": {
+              "5": 1
+            }
+          },
+          "3": {
+            "STRENGTH_POWER": {
+              "5": 2
+            }
+          },
+          "4": {
+            "STRENGTH_POWER": {
+              "5": 1
+            }
+          },
+          "5": {
+            "STRENGTH_POWER": {
+              "5": 3
+            }
+          },
+          "6": {
+            "STRENGTH_POWER": {
+              "5": 3
+            }
+          },
+          "7": {
+            "STRENGTH_POWER": {
+              "5": 8
+            }
+          },
+          "8": {
+            "STRENGTH_POWER": {
+              "5": 16,
+              "6": 2
+            }
+          },
+          "9": {
+            "STRENGTH_POWER": {
+              "5": 7
+            }
+          },
+          "10": {
+            "STRENGTH_POWER": {
+              "5": 35
+            }
+          }
+        }
+      },
+      "STRIKE_DOWN_EVIL": {
+        "name": "惩恶一击",
+        "n_seen": 111,
+        "intents": {
+          "Attack": 111
+        },
+        "turns_seen": {
+          "2": 64,
+          "5": 35,
+          "6": 4,
+          "8": 4,
+          "9": 2,
+          "11": 1,
+          "15": 1
+        },
+        "next": {
+          "FOR_THE_QUEEN": 93
+        },
+        "avg_total_shown": 22.6,
+        "damage_by_asc": {
+          "0": {
+            "shown": {
+              "15x1": 1,
+              "21x1": 2,
+              "26x1": 2
+            },
+            "base_per_hit": {
+              "21": 4
+            },
+            "hits": {
+              "1": 5
+            },
+            "n_base": 4
+          },
+          "2": {
+            "shown": {
+              "15x1": 1,
+              "21x1": 2
+            },
+            "base_per_hit": {
+              "21": 2
+            },
+            "hits": {
+              "1": 3
+            },
+            "n_base": 2
+          },
+          "3": {
+            "shown": {
+              "15x1": 1,
+              "21x1": 1,
+              "26x1": 1
+            },
+            "base_per_hit": {
+              "21": 2
+            },
+            "hits": {
+              "1": 3
+            },
+            "n_base": 2
+          },
+          "4": {
+            "shown": {
+              "21x1": 1,
+              "23x1": 1
+            },
+            "base_per_hit": {
+              "21": 2
+            },
+            "hits": {
+              "1": 2
+            },
+            "n_base": 2
+          },
+          "5": {
+            "shown": {
+              "21x1": 2,
+              "26x1": 1
+            },
+            "base_per_hit": {
+              "21": 3
+            },
+            "hits": {
+              "1": 3
+            },
+            "n_base": 3
+          },
+          "6": {
+            "shown": {
+              "15x1": 1,
+              "21x1": 1,
+              "26x1": 2
+            },
+            "base_per_hit": {
+              "21": 3
+            },
+            "hits": {
+              "1": 4
+            },
+            "n_base": 3
+          },
+          "7": {
+            "shown": {
+              "17x1": 1,
+              "21x1": 5,
+              "26x1": 2,
+              "28x1": 1
+            },
+            "base_per_hit": {
+              "21": 8
+            },
+            "hits": {
+              "1": 9
+            },
+            "n_base": 8
+          },
+          "8": {
+            "shown": {
+              "15x1": 3,
+              "17x1": 1,
+              "21x1": 8,
+              "22x1": 1,
+              "23x1": 2,
+              "26x1": 4,
+              "31x1": 3
+            },
+            "base_per_hit": {
+              "21": 18
+            },
+            "hits": {
+              "1": 22
+            },
+            "n_base": 18
+          },
+          "9": {
+            "shown": {
+              "23x1": 6,
+              "28x1": 3,
+              "29x1": 1
+            },
+            "base_per_hit": {
+              "23": 10
+            },
+            "hits": {
+              "1": 10
+            },
+            "n_base": 10
+          },
+          "10": {
+            "shown": {
+              "14x1": 1,
+              "17x1": 4,
+              "18x1": 4,
+              "20x1": 1,
+              "21x1": 6,
+              "22x1": 2,
+              "23x1": 20,
+              "24x1": 1,
+              "25x1": 1,
+              "28x1": 9,
+              "29x1": 1
+            },
+            "base_per_hit": {
+              "23": 29
+            },
+            "hits": {
+              "1": 50
+            },
+            "n_base": 29
+          }
+        }
+      },
+      "TONGUE_LASH": {
+        "name": "吐舌",
+        "n_seen": 121,
+        "intents": {
+          "Attack+Debuff": 121
+        },
+        "turns_seen": {
+          "1": 64,
+          "4": 37,
+          "5": 8,
+          "7": 4,
+          "8": 5,
+          "10": 1,
+          "14": 1,
+          "17": 1
+        },
+        "next": {
+          "STRIKE_DOWN_EVIL": 111
+        },
+        "avg_total_shown": 15.5,
+        "damage_by_asc": {
+          "0": {
+            "shown": {
+              "13x1": 3,
+              "18x1": 2
+            },
+            "base_per_hit": {
+              "13": 5
+            },
+            "hits": {
+              "1": 5
+            },
+            "n_base": 5
+          },
+          "2": {
+            "shown": {
+              "13x1": 2,
+              "18x1": 1
+            },
+            "base_per_hit": {
+              "13": 3
+            },
+            "hits": {
+              "1": 3
+            },
+            "n_base": 3
+          },
+          "3": {
+            "shown": {
+              "13x1": 2,
+              "18x1": 1
+            },
+            "base_per_hit": {
+              "13": 3
+            },
+            "hits": {
+              "1": 3
+            },
+            "n_base": 3
+          },
+          "4": {
+            "shown": {
+              "13x1": 1,
+              "14x1": 1
+            },
+            "base_per_hit": {
+              "13": 2
+            },
+            "hits": {
+              "1": 2
+            },
+            "n_base": 2
+          },
+          "5": {
+            "shown": {
+              "13x1": 2,
+              "18x1": 2
+            },
+            "base_per_hit": {
+              "13": 4
+            },
+            "hits": {
+              "1": 4
+            },
+            "n_base": 4
+          },
+          "6": {
+            "shown": {
+              "13x1": 3,
+              "18x1": 1
+            },
+            "base_per_hit": {
+              "13": 3
+            },
+            "hits": {
+              "1": 4
+            },
+            "n_base": 3
+          },
+          "7": {
+            "shown": {
+              "11x1": 1,
+              "13x1": 5,
+              "15x1": 1,
+              "18x1": 3
+            },
+            "base_per_hit": {
+              "13": 8
+            },
+            "hits": {
+              "1": 10
+            },
+            "n_base": 8
+          },
+          "8": {
+            "shown": {
+              "12x1": 1,
+              "13x1": 14,
+              "14x1": 1,
+              "18x1": 6,
+              "19x1": 1,
+              "22x1": 2,
+              "23x1": 2
+            },
+            "base_per_hit": {
+              "13": 26
+            },
+            "hits": {
+              "1": 27
+            },
+            "n_base": 26
+          },
+          "9": {
+            "shown": {
+              "14x1": 6,
+              "19x1": 3,
+              "20x1": 1,
+              "24x1": 1
+            },
+            "base_per_hit": {
+              "14": 11
+            },
+            "hits": {
+              "1": 11
+            },
+            "n_base": 11
+          },
+          "10": {
+            "shown": {
+              "11x1": 3,
+              "12x1": 1,
+              "13x1": 1,
+              "14x1": 29,
+              "15x1": 3,
+              "18x1": 2,
+              "19x1": 10,
+              "22x1": 1,
+              "24x1": 1,
+              "26x1": 1
+            },
+            "base_per_hit": {
+              "14": 36
+            },
+            "hits": {
+              "1": 52
+            },
+            "n_base": 36
+          }
+        },
+        "player_powers_applied": {
+          "FRAIL_POWER": {
+            "2": 110
+          },
+          "WEAK_POWER": {
+            "1": 1
+          }
+        },
+        "player_powers_applied_by_asc": {
+          "0": {
+            "FRAIL_POWER": {
+              "2": 5
+            }
+          },
+          "2": {
+            "FRAIL_POWER": {
+              "2": 3
+            }
+          },
+          "3": {
+            "FRAIL_POWER": {
+              "2": 3
+            }
+          },
+          "4": {
+            "FRAIL_POWER": {
+              "2": 2
+            }
+          },
+          "5": {
+            "FRAIL_POWER": {
+              "2": 3
+            }
+          },
+          "6": {
+            "FRAIL_POWER": {
+              "2": 4
+            }
+          },
+          "7": {
+            "FRAIL_POWER": {
+              "2": 9
+            }
+          },
+          "8": {
+            "FRAIL_POWER": {
+              "2": 22
+            }
+          },
+          "9": {
+            "FRAIL_POWER": {
+              "2": 10
+            }
+          },
+          "10": {
+            "FRAIL_POWER": {
+              "2": 49
+            },
+            "WEAK_POWER": {
+              "1": 1
+            }
+          }
+        }
+      }
+    },
+    "powers": {
+      "DEMISE_POWER": {
+        "name": "消亡",
+        "type": "Debuff",
+        "description": "这个生物在其回合结束时失去生命。",
+        "n_fights": 1,
+        "amount_at_first_sight": {
+          "9": 1
+        },
+        "amount_max_in_fight": {
+          "9": 1
+        },
+        "amount_at_first_sight_by_asc": {
+          "10": {
+            "9": 1
+          }
+        },
+        "turn_at_first_sight_by_asc": {
+          "10": {
+            "1": 1
+          }
+        }
+      },
+      "PIERCING_WAIL_POWER": {
+        "name": "尖啸",
+        "type": "Debuff",
+        "description": "在本回合结束前失去[gold]力量[/gold]。",
+        "n_fights": 15,
+        "amount_at_first_sight": {
+          "6": 12,
+          "8": 3
+        },
+        "amount_max_in_fight": {
+          "6": 12,
+          "8": 3
+        },
+        "amount_at_first_sight_by_asc": {
+          "6": {
+            "6": 2
+          },
+          "7": {
+            "6": 1
+          },
+          "10": {
+            "6": 9,
+            "8": 3
+          }
+        },
+        "turn_at_first_sight_by_asc": {
+          "6": {
+            "2": 1,
+            "4": 1
+          },
+          "7": {
+            "8": 1
+          },
+          "10": {
+            "1": 5,
+            "2": 3,
+            "4": 1,
+            "5": 2,
+            "14": 1
+          }
+        }
+      },
+      "PLATING_POWER": {
+        "name": "覆甲",
+        "type": "Buff",
+        "description": "在你的回合结束时获得[gold]格挡[/gold]。[gold]覆甲[/gold]会在你的回合开始时减少[blue]1[/blue]层。",
+        "n_fights": 64,
+        "amount_at_first_sight": {
+          "15": 18,
+          "19": 46
+        },
+        "amount_max_in_fight": {
+          "15": 18,
+          "19": 46
+        },
+        "amount_at_first_sight_by_asc": {
+          "0": {
+            "15": 3
+          },
+          "2": {
+            "15": 2
+          },
+          "3": {
+            "15": 2
+          },
+          "4": {
+            "15": 2
+          },
+          "5": {
+            "15": 2
+          },
+          "6": {
+            "15": 2
+          },
+          "7": {
+            "15": 5
+          },
+          "8": {
+            "19": 15
+          },
+          "9": {
+            "19": 6
+          },
+          "10": {
+            "19": 25
+          }
+        },
+        "turn_at_first_sight_by_asc": {
+          "0": {
+            "1": 3
+          },
+          "2": {
+            "1": 2
+          },
+          "3": {
+            "1": 2
+          },
+          "4": {
+            "1": 2
+          },
+          "5": {
+            "1": 2
+          },
+          "6": {
+            "1": 2
+          },
+          "7": {
+            "1": 5
+          },
+          "8": {
+            "1": 15
+          },
+          "9": {
+            "1": 6
+          },
+          "10": {
+            "1": 25
+          }
+        }
+      },
+      "POISON_POWER": {
+        "name": "中毒",
+        "type": "Debuff",
+        "description": "中毒的生物会在自身回合开始时失去生命。中毒层数每回合减少[blue]1[/blue]。",
+        "n_fights": 33,
+        "amount_at_first_sight": {
+          "2": 2,
+          "3": 5,
+          "4": 4,
+          "5": 7,
+          "6": 1,
+          "7": 6,
+          "8": 1,
+          "11": 3,
+          "12": 2,
+          "14": 2
+        },
+        "amount_max_in_fight": {
+          "2": 1,
+          "5": 1,
+          "11": 1,
+          "12": 1,
+          "17": 1,
+          "18": 3,
+          "19": 2,
+          "20": 3,
+          "21": 2,
+          "23": 3,
+          "24": 2,
+          "27": 1,
+          "30": 2,
+          "32": 1,
+          "34": 1,
+          "35": 1,
+          "36": 1,
+          "38": 1,
+          "39": 1,
+          "42": 1,
+          "64": 1,
+          "67": 1,
+          "68": 1
+        },
+        "amount_at_first_sight_by_asc": {
+          "0": {
+            "2": 1
+          },
+          "2": {
+            "3": 1
+          },
+          "3": {
+            "11": 1
+          },
+          "4": {
+            "6": 1
+          },
+          "6": {
+            "3": 1,
+            "14": 1
+          },
+          "7": {
+            "5": 1
+          },
+          "8": {
+            "8": 1
+          },
+          "10": {
+            "2": 1,
+            "3": 3,
+            "4": 4,
+            "5": 6,
+            "7": 6,
+            "11": 2,
+            "12": 2,
+            "14": 1
+          }
+        },
+        "turn_at_first_sight_by_asc": {
+          "0": {
+            "4": 1
+          },
+          "2": {
+            "1": 1
+          },
+          "3": {
+            "1": 1
+          },
+          "4": {
+            "2": 1
+          },
+          "6": {
+            "2": 1,
+            "4": 1
+          },
+          "7": {
+            "1": 1
+          },
+          "8": {
+            "1": 1
+          },
+          "10": {
+            "1": 15,
+            "2": 5,
+            "3": 1,
+            "4": 2,
+            "6": 2
+          }
+        }
+      },
+      "STRANGLE_POWER": {
+        "name": "紧勒",
+        "type": "Debuff",
+        "description": "本回合，你每次打出牌时，这名敌人失去[blue]2[/blue]点生命。",
+        "n_fights": 1,
+        "amount_at_first_sight": {
+          "3": 1
+        },
+        "amount_max_in_fight": {
+          "3": 1
+        },
+        "amount_at_first_sight_by_asc": {
+          "0": {
+            "3": 1
+          }
+        },
+        "turn_at_first_sight_by_asc": {
+          "0": {
+            "2": 1
+          }
+        }
+      },
+      "STRENGTH_POWER": {
+        "name": "力量",
+        "type": "Buff",
+        "description": "力量会增加攻击牌造成的伤害。",
+        "n_fights": 61,
+        "amount_at_first_sight": {
+          "-8": 3,
+          "-6": 6,
+          "-4": 2,
+          "-3": 2,
+          "-1": 1,
+          "1": 7,
+          "5": 40
+        },
+        "amount_max_in_fight": {
+          "1": 2,
+          "2": 1,
+          "3": 1,
+          "4": 2,
+          "5": 31,
+          "6": 4,
+          "7": 2,
+          "10": 14,
+          "11": 2,
+          "12": 1,
+          "21": 1
+        },
+        "amount_at_first_sight_by_asc": {
+          "0": {
+            "5": 3
+          },
+          "2": {
+            "5": 1
+          },
+          "3": {
+            "5": 2
+          },
+          "4": {
+            "1": 1,
+            "5": 1
+          },
+          "5": {
+            "5": 2
+          },
+          "6": {
+            "-6": 1,
+            "5": 1
+          },
+          "7": {
+            "-3": 1,
+            "5": 4
+          },
+          "8": {
+            "-1": 1,
+            "1": 4,
+            "5": 10
+          },
+          "9": {
+            "1": 2,
+            "5": 4
+          },
+          "10": {
+            "-8": 3,
+            "-6": 5,
+            "-4": 2,
+            "-3": 1,
+            "5": 12
+          }
+        },
+        "turn_at_first_sight_by_asc": {
+          "0": {
+            "4": 3
+          },
+          "2": {
+            "4": 1
+          },
+          "3": {
+            "4": 2
+          },
+          "4": {
+            "1": 1,
+            "4": 1
+          },
+          "5": {
+            "4": 2
+          },
+          "6": {
+            "2": 1,
+            "4": 1
+          },
+          "7": {
+            "3": 1,
+            "4": 4
+          },
+          "8": {
+            "1": 4,
+            "3": 1,
+            "4": 10
+          },
+          "9": {
+            "2": 1,
+            "3": 1,
+            "4": 4
+          },
+          "10": {
+            "1": 6,
+            "2": 3,
+            "3": 2,
+            "4": 12
+          }
+        }
+      },
+      "VULNERABLE_POWER": {
+        "name": "易伤",
+        "type": "Debuff",
+        "description": "易伤的生物从攻击中受到的伤害增加[blue]50%[/blue]。",
+        "n_fights": 43,
+        "amount_at_first_sight": {
+          "1": 23,
+          "2": 8,
+          "3": 10,
+          "4": 2
+        },
+        "amount_max_in_fight": {
+          "1": 9,
+          "2": 11,
+          "3": 13,
+          "4": 6,
+          "5": 1,
+          "6": 2,
+          "8": 1
+        },
+        "amount_at_first_sight_by_asc": {
+          "0": {
+            "1": 2,
+            "3": 1
+          },
+          "2": {
+            "1": 1
+          },
+          "3": {
+            "2": 1
+          },
+          "4": {
+            "1": 1,
+            "4": 1
+          },
+          "5": {
+            "1": 1,
+            "3": 1
+          },
+          "6": {
+            "1": 1
+          },
+          "7": {
+            "1": 3,
+            "3": 1
+          },
+          "8": {
+            "1": 6,
+            "2": 1,
+            "3": 4,
+            "4": 1
+          },
+          "9": {
+            "1": 2,
+            "2": 1,
+            "3": 2
+          },
+          "10": {
+            "1": 6,
+            "2": 5,
+            "3": 1
+          }
+        },
+        "turn_at_first_sight_by_asc": {
+          "0": {
+            "1": 1,
+            "3": 2
+          },
+          "2": {
+            "1": 1
+          },
+          "3": {
+            "1": 1
+          },
+          "4": {
+            "1": 1,
+            "2": 1
+          },
+          "5": {
+            "1": 1,
+            "2": 1
+          },
+          "6": {
+            "1": 1
+          },
+          "7": {
+            "1": 2,
+            "2": 1,
+            "5": 1
+          },
+          "8": {
+            "1": 7,
+            "2": 3,
+            "4": 1,
+            "5": 1
+          },
+          "9": {
+            "1": 2,
+            "2": 1,
+            "3": 1,
+            "4": 1
+          },
+          "10": {
+            "1": 8,
+            "2": 2,
+            "3": 1,
+            "4": 1
+          }
+        }
+      },
+      "WEAK_POWER": {
+        "name": "虚弱",
+        "type": "Debuff",
+        "description": "虚弱的生物造成的攻击伤害减少[blue]25%[/blue]。",
+        "n_fights": 42,
+        "amount_at_first_sight": {
+          "1": 18,
+          "2": 17,
+          "3": 5,
+          "4": 2
+        },
+        "amount_max_in_fight": {
+          "1": 10,
+          "2": 12,
+          "3": 10,
+          "4": 7,
+          "5": 1,
+          "6": 2
+        },
+        "amount_at_first_sight_by_asc": {
+          "0": {
+            "1": 1,
+            "4": 1
+          },
+          "2": {
+            "2": 1
+          },
+          "3": {
+            "1": 1,
+            "2": 1
+          },
+          "4": {
+            "2": 1
+          },
+          "6": {
+            "1": 1,
+            "2": 1
+          },
+          "7": {
+            "1": 2
+          },
+          "8": {
+            "1": 2,
+            "2": 3,
+            "3": 1
+          },
+          "9": {
+            "1": 2,
+            "2": 1
+          },
+          "10": {
+            "1": 9,
+            "2": 9,
+            "3": 4,
+            "4": 1
+          }
+        },
+        "turn_at_first_sight_by_asc": {
+          "0": {
+            "1": 1,
+            "3": 1
+          },
+          "2": {
+            "2": 1
+          },
+          "3": {
+            "1": 1,
+            "4": 1
+          },
+          "4": {
+            "2": 1
+          },
+          "6": {
+            "1": 1,
+            "2": 1
+          },
+          "7": {
+            "1": 1,
+            "3": 1
+          },
+          "8": {
+            "1": 5,
+            "2": 1
+          },
+          "9": {
+            "1": 1,
+            "3": 2
+          },
+          "10": {
+            "1": 7,
+            "2": 11,
+            "3": 2,
+            "4": 2,
+            "6": 1
+          }
+        }
+      }
+    },
+    "provenance": {
+      "first_seen": "2026-09-24T06:50:15.615Z",
+      "last_seen": "2026-10-17T05:46:50.689Z",
+      "n_runs": 64,
+      "n_instances": 64,
+      "n_spawned_mid_fight": 0,
+      "n_minion_instances": 0
+    },
+    "observed": {
+      "powers_stripped": {
+        "POISON_POWER": {
+          "n": 2,
+          "fights": 1,
+          "amount_before": {
+            "4": 1,
+            "5": 1
+          },
+          "move_after": {
+            "TONGUE_LASH": 1,
+            "STRIKE_DOWN_EVIL": 1
+          },
+          "stunned_share": 0.0,
+          "co_removed": {
+            "WEAK_POWER": 2
+          },
+          "died_same_turn": 0,
+          "turn_end_unclear": 0,
+          "alive_at_turn_end": 2,
+          "stunned_at_turn_end": 0,
+          "attack_before": 2,
+          "attack_cancelled": 0,
+          "hp_check": {
+            "n": 0,
+            "landed": 0
+          },
+          "evidence": [],
+          "move_before": {
+            "TONGUE_LASH": 1,
+            "STRIKE_DOWN_EVIL": 1
+          },
+          "move_changed": 0,
+          "move_changed_share": 0.0,
+          "changed_to": {},
+          "changed_evidence": [],
+          "end_move": {
+            "TONGUE_LASH": 1,
+            "STRIKE_DOWN_EVIL": 1
+          },
+          "next_move": {
+            "STRIKE_DOWN_EVIL": 1,
+            "FOR_THE_QUEEN": 1
+          },
+          "changed_next": {},
+          "revived": 1
+        },
+        "STRENGTH_POWER": {
+          "n": 4,
+          "fights": 4,
+          "amount_before": {
+            "5": 4
+          },
+          "move_after": {
+            "TONGUE_LASH": 2,
+            "STRIKE_DOWN_EVIL": 2
+          },
+          "stunned_share": 0.0,
+          "co_removed": {},
+          "died_same_turn": 0,
+          "turn_end_unclear": 0,
+          "alive_at_turn_end": 4,
+          "stunned_at_turn_end": 0,
+          "attack_before": 4,
+          "attack_cancelled": 0,
+          "hp_check": {
+            "n": 3,
+            "landed": 2
+          },
+          "evidence": [],
+          "move_before": {
+            "TONGUE_LASH": 2,
+            "STRIKE_DOWN_EVIL": 2
+          },
+          "move_changed": 0,
+          "move_changed_share": 0.0,
+          "changed_to": {},
+          "changed_evidence": [],
+          "end_move": {
+            "TONGUE_LASH": 2,
+            "STRIKE_DOWN_EVIL": 2
+          },
+          "next_move": {
+            "STRIKE_DOWN_EVIL": 2,
+            "FOR_THE_QUEEN": 2
+          },
+          "changed_next": {},
+          "revived": 0
+        },
+        "WEAK_POWER": {
+          "n": 5,
+          "fights": 1,
+          "amount_before": {
+            "1": 3,
+            "2": 2
+          },
+          "move_after": {
+            "STRIKE_DOWN_EVIL": 3,
+            "TONGUE_LASH": 2
+          },
+          "stunned_share": 0.0,
+          "co_removed": {
+            "POISON_POWER": 2
+          },
+          "died_same_turn": 0,
+          "turn_end_unclear": 0,
+          "alive_at_turn_end": 5,
+          "stunned_at_turn_end": 0,
+          "attack_before": 5,
+          "attack_cancelled": 0,
+          "hp_check": {
+            "n": 0,
+            "landed": 0
+          },
+          "evidence": [],
+          "move_before": {
+            "STRIKE_DOWN_EVIL": 3,
+            "TONGUE_LASH": 2
+          },
+          "move_changed": 0,
+          "move_changed_share": 0.0,
+          "changed_to": {},
+          "changed_evidence": [],
+          "end_move": {
+            "STRIKE_DOWN_EVIL": 3,
+            "TONGUE_LASH": 2
+          },
+          "next_move": {
+            "FOR_THE_QUEEN": 3,
+            "STRIKE_DOWN_EVIL": 2
+          },
+          "changed_next": {},
+          "revived": 1
+        }
+      },
+      "powers_lowered": {
+        "POISON_POWER": {
+          "n": 8,
+          "fights": 1,
+          "move_before": {
+            "STRIKE_DOWN_EVIL": 4,
+            "FOR_THE_QUEEN": 3,
+            "TONGUE_LASH": 1
+          },
+          "move_changed": 0,
+          "move_changed_share": 0.0,
+          "changed_to": {},
+          "changed_evidence": [],
+          "end_move": {
+            "STRIKE_DOWN_EVIL": 4,
+            "FOR_THE_QUEEN": 3,
+            "TONGUE_LASH": 1
+          },
+          "next_move": {
+            "TONGUE_LASH": 3,
+            "FOR_THE_QUEEN": 1,
+            "STRIKE_DOWN_EVIL": 1
+          },
+          "changed_next": {},
+          "revived": 4
+        },
+        "STRENGTH_POWER": {
+          "n": 3,
+          "fights": 3,
+          "move_before": {
+            "STRIKE_DOWN_EVIL": 1,
+            "FOR_THE_QUEEN": 1,
+            "TONGUE_LASH": 1
+          },
+          "move_changed": 0,
+          "move_changed_share": 0.0,
+          "changed_to": {},
+          "changed_evidence": [],
+          "end_move": {
+            "STRIKE_DOWN_EVIL": 1,
+            "FOR_THE_QUEEN": 1,
+            "TONGUE_LASH": 1
+          },
+          "next_move": {
+            "FOR_THE_QUEEN": 1,
+            "BEETLE_CHARGE": 1,
+            "STRIKE_DOWN_EVIL": 1
+          },
+          "changed_next": {},
+          "revived": 0
+        }
+      }
+    }
+  }
+}

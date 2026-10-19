@@ -1,0 +1,30 @@
+{
+  "schema": "legacy-enemy-observation-v1",
+  "enemy_id": "FUZZY_WURM_CRAWLER",
+  "source": "common/move-model.json",
+  "pointer": [
+    "FUZZY_WURM_CRAWLER"
+  ],
+  "scope_policy": "仅机械封装原common数据，未扩适用范围或新增机制结论。",
+  "payload": {
+    "buffs": [
+      "INHALE"
+    ],
+    "damage": {
+      "ACID_GOOP": 13.3,
+      "FIRST_ACID_GOOP": 8.2,
+      "INHALE": 0.0
+    },
+    "next": {
+      "ACID_GOOP": {
+        "FIRST_ACID_GOOP": 286
+      },
+      "FIRST_ACID_GOOP": {
+        "INHALE": 541
+      },
+      "INHALE": {
+        "ACID_GOOP": 461
+      }
+    }
+  }
+}

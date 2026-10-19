@@ -1,0 +1,38 @@
+{
+  "schema": "legacy-enemy-observation-v1",
+  "enemy_id": "TERROR_EEL",
+  "source": "common/move-model.json",
+  "pointer": [
+    "TERROR_EEL"
+  ],
+  "scope_policy": "仅机械封装原common数据，未扩适用范围或新增机制结论。",
+  "payload": {
+    "buffs": [
+      "THRASH_MOVE"
+    ],
+    "damage": {
+      "CRASH_MOVE": 23.4,
+      "STUNNED": 0.0,
+      "TERROR_MOVE": 0.0,
+      "THRASH_MOVE": 11.1
+    },
+    "next": {
+      "CRASH_MOVE": {
+        "STUNNED": 2,
+        "TERROR_MOVE": 86,
+        "THRASH_MOVE": 357
+      },
+      "STUNNED": {
+        "TERROR_MOVE": 4
+      },
+      "TERROR_MOVE": {
+        "CRASH_MOVE": 144
+      },
+      "THRASH_MOVE": {
+        "CRASH_MOVE": 233,
+        "STUNNED": 3,
+        "TERROR_MOVE": 67
+      }
+    }
+  }
+}

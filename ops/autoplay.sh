@@ -97,6 +97,14 @@ PY
     # report.py appends the run to runs.jsonl only when it sees the end itself (stop-after-a8.sh counts those).
     note=""; grep -q "\"run_id\": \"$rid\"" "$RUNS" || note=" (not in runs.jsonl)"
     echo "$(date '+%F %T') finished run $rid$note" >> "$OPS/autoplay.log"
+    # Only an actual terminal boundary can hold the next run; never interrupt a
+    # borrowed controller, a mid-run restart, reporting or the current save.
+    if [ -f "$OPS/disk_admission.py" ] || [ -f "$ROOT/ops/disk-policy.json" ]; then
+      if ! nice -n 19 python3 "$OPS/disk_admission.py" "$ROOT" --state-dir "$OPS/codex-ops" --kind next-run >> "$OPS/autoplay.log" 2>&1; then
+        echo "$(date '+%F %T') capacity hold at natural terminal boundary; next run not started" >> "$OPS/autoplay.log"
+        break
+      fi
+    fi
     restarts=0
     sleep 5
   else
@@ -107,4 +115,4 @@ PY
     sleep "$delay"
   fi
 done
-echo "$(date '+%F %T') admission held (STOP or LLM_DRAIN), exiting" >> "$OPS/autoplay.log"
+echo "$(date '+%F %T') admission held (STOP, LLM_DRAIN or capacity), exiting" >> "$OPS/autoplay.log"

@@ -1,0 +1,26 @@
+{
+  "schema": "legacy-enemy-observation-v1",
+  "enemy_id": "SEWER_CLAM",
+  "source": "common/move-model.json",
+  "pointer": [
+    "SEWER_CLAM"
+  ],
+  "scope_policy": "仅机械封装原common数据，未扩适用范围或新增机制结论。",
+  "payload": {
+    "buffs": [
+      "PRESSURIZE_MOVE"
+    ],
+    "damage": {
+      "JET_MOVE": 13.8,
+      "PRESSURIZE_MOVE": 0.0
+    },
+    "next": {
+      "JET_MOVE": {
+        "PRESSURIZE_MOVE": 260
+      },
+      "PRESSURIZE_MOVE": {
+        "JET_MOVE": 209
+      }
+    }
+  }
+}

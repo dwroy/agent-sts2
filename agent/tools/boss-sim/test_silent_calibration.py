@@ -174,12 +174,18 @@ class Calibration(unittest.TestCase):
         with tempfile.TemporaryDirectory() as name:
             root = Path(name)
             (root / "agent/node_modules").mkdir(parents=True)
+            for name in ("package.json", "package-lock.json"):
+                (root / "agent" / name).write_bytes(b"{}")
             game = root / "game-data.json"
             game.write_bytes(raw)
             source = {"simulator_base": "f" * 40, "input_files": {
                 "agent/src/fixture.ts": hashlib.sha256(raw).hexdigest(), str(game): hashlib.sha256(raw).hexdigest()}}
-            with patch("pinned_silent.subprocess.check_output", return_value=raw):
-                self.assertEqual(restore_model(root, root / "model", source, game), source["input_files"])
+            def fixed_git(command, **kwargs):
+                return b"{}" if command[-1].endswith((":agent/package.json", ":agent/package-lock.json")) else raw
+            with patch("pinned_silent.subprocess.check_output", side_effect=fixed_git):
+                verified = restore_model(root, root / "model", source, game)
+                self.assertEqual({k: verified[k] for k in source["input_files"]}, source["input_files"])
+                self.assertEqual(verified["agent/package-lock.json"], hashlib.sha256(b"{}").hexdigest())
             self.assertTrue((root / "model/agent/node_modules").is_symlink())
             for path in ("knowledge/characters/ironclad/x.json", "../outside", "/denied.env"):
                 bad = {**source, "input_files": {path: hashlib.sha256(raw).hexdigest()}}

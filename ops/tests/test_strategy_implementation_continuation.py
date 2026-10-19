@@ -173,7 +173,7 @@ class Continuation(unittest.TestCase):
         self.dispatch()
         self.f.save()
         for relative in ("ops/codex-ops-learner.sh", "ops/learner_entry.py", "ops/paths.sh", "ops/disk_capacity.py", "ops/proposal_dispatch.py",
-                         "ops/worktree_checkout.py", "ops/worktree_retention.py", "ops/learner_retention.py", "ops/learner_checks.py",
+                         "ops/worktree_checkout.py", "ops/worktree_retention.py", "ops/learner_retention.py", "ops/learner_checks.py", "ops/shared_tools.py",
                          "ops/strategy_research_jobs.py", "learner/code_proposals.py"):
             self.f.write(relative, (fixtures.REPO / relative).read_bytes())
         for module, filename, names in (

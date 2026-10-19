@@ -1,0 +1,41 @@
+{
+  "schema": "legacy-enemy-observation-v1",
+  "enemy_id": "TWO_TAILED_RAT",
+  "source": "common/move-model.json",
+  "pointer": [
+    "TWO_TAILED_RAT"
+  ],
+  "scope_policy": "仅机械封装原common数据，未扩适用范围或新增机制结论。",
+  "payload": {
+    "damage": {
+      "CALL_FOR_BACKUP_MOVE": 0.0,
+      "DISEASE_BITE_MOVE": 6.4,
+      "SCRATCH_MOVE": 8.4,
+      "SCREECH_MOVE": 0.0
+    },
+    "next": {
+      "CALL_FOR_BACKUP_MOVE": {
+        "DISEASE_BITE_MOVE": 13,
+        "SCRATCH_MOVE": 15,
+        "SCREECH_MOVE": 11
+      },
+      "DISEASE_BITE_MOVE": {
+        "CALL_FOR_BACKUP_MOVE": 29,
+        "DISEASE_BITE_MOVE": 2,
+        "SCRATCH_MOVE": 75,
+        "SCREECH_MOVE": 65
+      },
+      "SCRATCH_MOVE": {
+        "CALL_FOR_BACKUP_MOVE": 28,
+        "DISEASE_BITE_MOVE": 55,
+        "SCREECH_MOVE": 37
+      },
+      "SCREECH_MOVE": {
+        "CALL_FOR_BACKUP_MOVE": 44,
+        "DISEASE_BITE_MOVE": 89,
+        "SCRATCH_MOVE": 68,
+        "SCREECH_MOVE": 3
+      }
+    }
+  }
+}

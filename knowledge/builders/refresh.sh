@@ -38,6 +38,7 @@ if [[ $fight_value -eq 1 ]]; then
   for c in $characters; do
     nice -n 10 python3 "$B/build-fight-value.py" all --character "$c"
   done
+  nice -n 10 python3 "$B/build-catalog.py" --knowledge-root "$ROOT/knowledge" || exit 1
   exit 0
 fi
 python3 "$B/build-monster-db.py" --quiet --move-model-out "$ROOT/knowledge/common/move-model.json"
@@ -53,3 +54,6 @@ for c in $characters; do
   python3 "$B/build-boss-damage.py" --character "$c" >/dev/null 2>&1
   "$B/refresh-potion-equivalents.sh" --character "$c" >/dev/null 2>&1
 done
+
+# Mechanical indexing only; failure remains visible to the existing refresh owner.
+nice -n 10 python3 "$B/build-catalog.py" --knowledge-root "$ROOT/knowledge"

@@ -1,0 +1,35 @@
+{
+  "schema": "legacy-enemy-observation-v1",
+  "enemy_id": "KNOWLEDGE_DEMON",
+  "source": "common/move-model.json",
+  "pointer": [
+    "KNOWLEDGE_DEMON"
+  ],
+  "scope_policy": "仅机械封装原common数据，未扩适用范围或新增机制结论。",
+  "payload": {
+    "buffs": [
+      "PONDER_MOVE"
+    ],
+    "damage": {
+      "CURSE_OF_KNOWLEDGE_MOVE": 0.0,
+      "KNOWLEDGE_OVERWHELMING_MOVE": 29.4,
+      "PONDER_MOVE": 12.6,
+      "SLAP_MOVE": 18.7
+    },
+    "next": {
+      "CURSE_OF_KNOWLEDGE_MOVE": {
+        "SLAP_MOVE": 391
+      },
+      "KNOWLEDGE_OVERWHELMING_MOVE": {
+        "PONDER_MOVE": 304
+      },
+      "PONDER_MOVE": {
+        "CURSE_OF_KNOWLEDGE_MOVE": 253,
+        "SLAP_MOVE": 24
+      },
+      "SLAP_MOVE": {
+        "KNOWLEDGE_OVERWHELMING_MOVE": 371
+      }
+    }
+  }
+}

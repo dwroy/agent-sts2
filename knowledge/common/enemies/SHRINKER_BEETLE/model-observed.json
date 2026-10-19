@@ -1,0 +1,27 @@
+{
+  "schema": "legacy-enemy-observation-v1",
+  "enemy_id": "SHRINKER_BEETLE",
+  "source": "common/move-model.json",
+  "pointer": [
+    "SHRINKER_BEETLE"
+  ],
+  "scope_policy": "仅机械封装原common数据，未扩适用范围或新增机制结论。",
+  "payload": {
+    "damage": {
+      "CHOMP_MOVE": 7.5,
+      "SHRINKER_MOVE": 0.0,
+      "STOMP_MOVE": 13.5
+    },
+    "next": {
+      "CHOMP_MOVE": {
+        "STOMP_MOVE": 411
+      },
+      "SHRINKER_MOVE": {
+        "CHOMP_MOVE": 373
+      },
+      "STOMP_MOVE": {
+        "CHOMP_MOVE": 210
+      }
+    }
+  }
+}

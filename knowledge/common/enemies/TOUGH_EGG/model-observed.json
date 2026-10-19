@@ -1,0 +1,28 @@
+{
+  "schema": "legacy-enemy-observation-v1",
+  "enemy_id": "TOUGH_EGG",
+  "source": "common/move-model.json",
+  "pointer": [
+    "TOUGH_EGG"
+  ],
+  "scope_policy": "仅机械封装原common数据，未扩适用范围或新增机制结论。",
+  "payload": {
+    "damage": {
+      "HATCH_MOVE": 0.0,
+      "NIBBLE_MOVE": 5.5,
+      "UNSET_MOVE": 0.0
+    },
+    "next": {
+      "HATCH_MOVE": {
+        "NIBBLE_MOVE": 354
+      },
+      "NIBBLE_MOVE": {
+        "HATCH_MOVE": 43,
+        "NIBBLE_MOVE": 415
+      },
+      "UNSET_MOVE": {
+        "HATCH_MOVE": 157
+      }
+    }
+  }
+}

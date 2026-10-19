@@ -1,0 +1,33 @@
+{
+  "schema": "legacy-enemy-observation-v1",
+  "enemy_id": "AXEBOT",
+  "source": "common/move-model.json",
+  "pointer": [
+    "AXEBOT"
+  ],
+  "scope_policy": "仅机械封装原common数据，未扩适用范围或新增机制结论。",
+  "payload": {
+    "buffs": [
+      "BOOT_UP_MOVE"
+    ],
+    "damage": {
+      "BOOT_UP_MOVE": 0.0,
+      "HAMMER_UPPERCUT_MOVE": 18.1,
+      "ONE_TWO_MOVE": 24.5
+    },
+    "next": {
+      "BOOT_UP_MOVE": {
+        "HAMMER_UPPERCUT_MOVE": 53
+      },
+      "HAMMER_UPPERCUT_MOVE": {
+        "BOOT_UP_MOVE": 28,
+        "HAMMER_UPPERCUT_MOVE": 42,
+        "ONE_TWO_MOVE": 209
+      },
+      "ONE_TWO_MOVE": {
+        "BOOT_UP_MOVE": 26,
+        "HAMMER_UPPERCUT_MOVE": 150
+      }
+    }
+  }
+}

@@ -1,0 +1,35 @@
+{
+  "schema": "legacy-enemy-observation-v1",
+  "enemy_id": "WRIGGLER",
+  "source": "common/move-model.json",
+  "pointer": [
+    "WRIGGLER"
+  ],
+  "scope_policy": "仅机械封装原common数据，未扩适用范围或新增机制结论。",
+  "payload": {
+    "buffs": [
+      "WRIGGLE_MOVE"
+    ],
+    "damage": {
+      "NASTY_BITE_MOVE": 8.2,
+      "SPAWNED_MOVE": 0.0,
+      "UNSET_MOVE": 0.0,
+      "WRIGGLE_MOVE": 0.0
+    },
+    "next": {
+      "NASTY_BITE_MOVE": {
+        "WRIGGLE_MOVE": 492
+      },
+      "SPAWNED_MOVE": {
+        "NASTY_BITE_MOVE": 280,
+        "WRIGGLE_MOVE": 283
+      },
+      "UNSET_MOVE": {
+        "SPAWNED_MOVE": 152
+      },
+      "WRIGGLE_MOVE": {
+        "NASTY_BITE_MOVE": 645
+      }
+    }
+  }
+}

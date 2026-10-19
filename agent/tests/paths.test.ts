@@ -129,7 +129,7 @@ describe("the knowledge files", () => {
   });
 
   it("nothing in the data directories is outside that map (a file a loader would not find)", () => {
-    const seen = knowledgeDataDirs().flatMap((dir) => readdirSync(dir).filter((name) => !name.startsWith(".")).map((name) => join(dir, name)));
+    const seen = knowledgeDataDirs().flatMap((dir) => readdirSync(dir, { withFileTypes: true }).filter((entry) => entry.isFile() && !entry.name.startsWith(".")).map((entry) => join(dir, entry.name)));
     for (const path of seen) expect(knowledgeFile(KNOWLEDGE_DIR, path.split("/").pop()!), path).toBe(path);
     expect(seen.length).toBe(DATA_FILES.length);
   });

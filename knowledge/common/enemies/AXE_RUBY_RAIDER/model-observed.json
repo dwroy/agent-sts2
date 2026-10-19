@@ -1,0 +1,27 @@
+{
+  "schema": "legacy-enemy-observation-v1",
+  "enemy_id": "AXE_RUBY_RAIDER",
+  "source": "common/move-model.json",
+  "pointer": [
+    "AXE_RUBY_RAIDER"
+  ],
+  "scope_policy": "仅机械封装原common数据，未扩适用范围或新增机制结论。",
+  "payload": {
+    "damage": {
+      "BIG_SWING": 12.4,
+      "SWING_1": 5.4,
+      "SWING_2": 5.5
+    },
+    "next": {
+      "BIG_SWING": {
+        "SWING_1": 25
+      },
+      "SWING_1": {
+        "SWING_2": 61
+      },
+      "SWING_2": {
+        "BIG_SWING": 45
+      }
+    }
+  }
+}

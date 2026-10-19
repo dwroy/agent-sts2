@@ -1,0 +1,27 @@
+{
+  "schema": "legacy-enemy-observation-v1",
+  "enemy_id": "HAUNTED_SHIP",
+  "source": "common/move-model.json",
+  "pointer": [
+    "HAUNTED_SHIP"
+  ],
+  "scope_policy": "仅机械封装原common数据，未扩适用范围或新增机制结论。",
+  "payload": {
+    "damage": {
+      "HAUNT_MOVE": 0.0,
+      "STOMP_MOVE": 13.1,
+      "SWIPE_MOVE": 13.3
+    },
+    "next": {
+      "HAUNT_MOVE": {
+        "SWIPE_MOVE": 145
+      },
+      "STOMP_MOVE": {
+        "SWIPE_MOVE": 122
+      },
+      "SWIPE_MOVE": {
+        "STOMP_MOVE": 207
+      }
+    }
+  }
+}

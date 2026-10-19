@@ -1,0 +1,38 @@
+{
+  "schema": "legacy-enemy-observation-v1",
+  "enemy_id": "THIEVING_HOPPER",
+  "source": "common/move-model.json",
+  "pointer": [
+    "THIEVING_HOPPER"
+  ],
+  "scope_policy": "仅机械封装原common数据，未扩适用范围或新增机制结论。",
+  "payload": {
+    "buffs": [
+      "FLUTTER_MOVE"
+    ],
+    "damage": {
+      "ESCAPE_MOVE": 0.0,
+      "FLUTTER_MOVE": 0.0,
+      "HAT_TRICK_MOVE": 21.2,
+      "NAB_MOVE": 14.3,
+      "THIEVERY_MOVE": 18.0
+    },
+    "next": {
+      "ESCAPE_MOVE": {
+        "ESCAPE_MOVE": 22
+      },
+      "FLUTTER_MOVE": {
+        "HAT_TRICK_MOVE": 287
+      },
+      "HAT_TRICK_MOVE": {
+        "NAB_MOVE": 209
+      },
+      "NAB_MOVE": {
+        "ESCAPE_MOVE": 124
+      },
+      "THIEVERY_MOVE": {
+        "FLUTTER_MOVE": 331
+      }
+    }
+  }
+}

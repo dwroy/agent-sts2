@@ -1,0 +1,714 @@
+{
+  "schema": "legacy-enemy-observation-v1",
+  "enemy_id": "TWIG_SLIME_S",
+  "source": "common/monster-db.json",
+  "pointer": [
+    "monsters",
+    "TWIG_SLIME_S"
+  ],
+  "scope_policy": "仅机械封装原common数据，未扩适用范围或新增机制结论。",
+  "payload": {
+    "name": {
+      "zh": "树枝史莱姆（小）"
+    },
+    "game_type": "Normal",
+    "game_hp_range": [
+      7,
+      11
+    ],
+    "kind": "hallway",
+    "rooms": {
+      "hallway": 396,
+      "unknown_room": 22
+    },
+    "acts": {
+      "1": 418
+    },
+    "encounters": {
+      "LEAF_SLIME_M+LEAF_SLIME_S+TWIG_SLIME_S": 163,
+      "LEAF_SLIME_S+TWIG_SLIME_M+TWIG_SLIME_S": 144,
+      "LEAF_SLIME_M+LEAF_SLIME_S+TWIG_SLIME_M+TWIG_SLIME_S": 98,
+      "SLITHERING_STRANGLER+TWIG_SLIME_S+TWIG_SLIME_S": 7,
+      "LEAF_SLIME_S+SLITHERING_STRANGLER+TWIG_SLIME_S": 6
+    },
+    "hp_by_asc": {
+      "0": {
+        "min": 7,
+        "median": 8,
+        "max": 11,
+        "n": 25
+      },
+      "1": {
+        "min": 7,
+        "median": 8.0,
+        "max": 9,
+        "n": 2
+      },
+      "2": {
+        "min": 8,
+        "median": 9,
+        "max": 9,
+        "n": 3
+      },
+      "3": {
+        "min": 7,
+        "median": 9.0,
+        "max": 11,
+        "n": 8
+      },
+      "4": {
+        "min": 8,
+        "median": 10,
+        "max": 11,
+        "n": 7
+      },
+      "5": {
+        "min": 9,
+        "median": 9,
+        "max": 10,
+        "n": 3
+      },
+      "6": {
+        "min": 7,
+        "median": 9,
+        "max": 11,
+        "n": 7
+      },
+      "7": {
+        "min": 7,
+        "median": 9.0,
+        "max": 11,
+        "n": 26
+      },
+      "8": {
+        "min": 8,
+        "median": 10,
+        "max": 12,
+        "n": 119
+      },
+      "9": {
+        "min": 8,
+        "median": 9.0,
+        "max": 12,
+        "n": 52
+      },
+      "10": {
+        "min": 8,
+        "median": 10,
+        "max": 12,
+        "n": 173
+      }
+    },
+    "moves": {
+      "TACKLE_MOVE": {
+        "name": "冲撞",
+        "n_seen": 622,
+        "intents": {
+          "Attack": 622
+        },
+        "turns_seen": {
+          "1": 425,
+          "2": 132,
+          "3": 54,
+          "4": 9,
+          "5": 2
+        },
+        "next": {
+          "TACKLE_MOVE": 197
+        },
+        "avg_total_shown": 4.5,
+        "damage_by_asc": {
+          "0": {
+            "shown": {
+              "4x1": 28
+            },
+            "base_per_hit": {
+              "4": 28
+            },
+            "hits": {
+              "1": 28
+            },
+            "n_base": 28
+          },
+          "1": {
+            "shown": {
+              "4x1": 2
+            },
+            "base_per_hit": {
+              "4": 2
+            },
+            "hits": {
+              "1": 2
+            },
+            "n_base": 2
+          },
+          "2": {
+            "shown": {
+              "4x1": 3
+            },
+            "base_per_hit": {
+              "4": 3
+            },
+            "hits": {
+              "1": 3
+            },
+            "n_base": 3
+          },
+          "3": {
+            "shown": {
+              "4x1": 12
+            },
+            "base_per_hit": {
+              "4": 12
+            },
+            "hits": {
+              "1": 12
+            },
+            "n_base": 12
+          },
+          "4": {
+            "shown": {
+              "4x1": 9
+            },
+            "base_per_hit": {
+              "4": 9
+            },
+            "hits": {
+              "1": 9
+            },
+            "n_base": 9
+          },
+          "5": {
+            "shown": {
+              "4x1": 4
+            },
+            "base_per_hit": {
+              "4": 4
+            },
+            "hits": {
+              "1": 4
+            },
+            "n_base": 4
+          },
+          "6": {
+            "shown": {
+              "4x1": 8
+            },
+            "base_per_hit": {
+              "4": 8
+            },
+            "hits": {
+              "1": 8
+            },
+            "n_base": 8
+          },
+          "7": {
+            "shown": {
+              "4x1": 31
+            },
+            "base_per_hit": {
+              "4": 31
+            },
+            "hits": {
+              "1": 31
+            },
+            "n_base": 31
+          },
+          "8": {
+            "shown": {
+              "3x1": 1,
+              "4x1": 183
+            },
+            "base_per_hit": {
+              "4": 183
+            },
+            "hits": {
+              "1": 184
+            },
+            "n_base": 183
+          },
+          "9": {
+            "shown": {
+              "5x1": 73
+            },
+            "base_per_hit": {
+              "5": 73
+            },
+            "hits": {
+              "1": 73
+            },
+            "n_base": 73
+          },
+          "10": {
+            "shown": {
+              "3x1": 5,
+              "5x1": 263
+            },
+            "base_per_hit": {
+              "5": 263
+            },
+            "hits": {
+              "1": 268
+            },
+            "n_base": 263
+          }
+        }
+      }
+    },
+    "powers": {
+      "DARK_SHACKLES_POWER": {
+        "name": "黑暗镣铐",
+        "type": "Debuff",
+        "description": "在本回合结束前失去[gold]力量[/gold]。",
+        "n_fights": 1,
+        "amount_at_first_sight": {
+          "9": 1
+        },
+        "amount_max_in_fight": {
+          "9": 1
+        },
+        "amount_at_first_sight_by_asc": {
+          "8": {
+            "9": 1
+          }
+        },
+        "turn_at_first_sight_by_asc": {
+          "8": {
+            "1": 1
+          }
+        }
+      },
+      "PIERCING_WAIL_POWER": {
+        "name": "尖啸",
+        "type": "Debuff",
+        "description": "在本回合结束前失去[gold]力量[/gold]。",
+        "n_fights": 4,
+        "amount_at_first_sight": {
+          "6": 4
+        },
+        "amount_max_in_fight": {
+          "6": 4
+        },
+        "amount_at_first_sight_by_asc": {
+          "10": {
+            "6": 4
+          }
+        },
+        "turn_at_first_sight_by_asc": {
+          "10": {
+            "1": 3,
+            "2": 1
+          }
+        }
+      },
+      "POISON_POWER": {
+        "name": "中毒",
+        "type": "Debuff",
+        "description": "中毒的生物会在自身回合开始时失去生命。中毒层数每回合减少[blue]1[/blue]。",
+        "n_fights": 26,
+        "amount_at_first_sight": {
+          "2": 2,
+          "3": 5,
+          "4": 7,
+          "5": 6,
+          "6": 3,
+          "7": 2,
+          "10": 1
+        },
+        "amount_max_in_fight": {
+          "2": 1,
+          "3": 5,
+          "4": 7,
+          "5": 6,
+          "6": 3,
+          "7": 3,
+          "10": 1
+        },
+        "amount_at_first_sight_by_asc": {
+          "7": {
+            "5": 1,
+            "10": 1
+          },
+          "10": {
+            "2": 2,
+            "3": 5,
+            "4": 7,
+            "5": 5,
+            "6": 3,
+            "7": 2
+          }
+        },
+        "turn_at_first_sight_by_asc": {
+          "7": {
+            "1": 2
+          },
+          "10": {
+            "1": 14,
+            "2": 6,
+            "3": 4
+          }
+        }
+      },
+      "STRENGTH_POWER": {
+        "name": "力量",
+        "type": "Buff",
+        "description": "力量会增加攻击牌造成的伤害。",
+        "n_fights": 5,
+        "amount_at_first_sight": {
+          "-9": 1,
+          "-6": 4
+        },
+        "amount_max_in_fight": {
+          "-9": 1,
+          "-6": 4
+        },
+        "amount_at_first_sight_by_asc": {
+          "8": {
+            "-9": 1
+          },
+          "10": {
+            "-6": 4
+          }
+        },
+        "turn_at_first_sight_by_asc": {
+          "8": {
+            "1": 1
+          },
+          "10": {
+            "1": 3,
+            "2": 1
+          }
+        }
+      },
+      "VULNERABLE_POWER": {
+        "name": "易伤",
+        "type": "Debuff",
+        "description": "易伤的生物从攻击中受到的伤害增加[blue]50%[/blue]。",
+        "n_fights": 16,
+        "amount_at_first_sight": {
+          "1": 10,
+          "2": 4,
+          "3": 2
+        },
+        "amount_max_in_fight": {
+          "1": 10,
+          "2": 4,
+          "3": 2
+        },
+        "amount_at_first_sight_by_asc": {
+          "2": {
+            "1": 1
+          },
+          "7": {
+            "1": 1
+          },
+          "8": {
+            "1": 6,
+            "2": 2,
+            "3": 2
+          },
+          "9": {
+            "2": 2
+          },
+          "10": {
+            "1": 2
+          }
+        },
+        "turn_at_first_sight_by_asc": {
+          "2": {
+            "1": 1
+          },
+          "7": {
+            "1": 1
+          },
+          "8": {
+            "1": 6,
+            "2": 4
+          },
+          "9": {
+            "1": 2
+          },
+          "10": {
+            "1": 2
+          }
+        }
+      },
+      "WEAK_POWER": {
+        "name": "虚弱",
+        "type": "Debuff",
+        "description": "虚弱的生物造成的攻击伤害减少[blue]25%[/blue]。",
+        "n_fights": 41,
+        "amount_at_first_sight": {
+          "1": 36,
+          "2": 3,
+          "3": 2
+        },
+        "amount_max_in_fight": {
+          "1": 34,
+          "2": 5,
+          "3": 2
+        },
+        "amount_at_first_sight_by_asc": {
+          "2": {
+            "1": 1
+          },
+          "6": {
+            "1": 1
+          },
+          "7": {
+            "1": 3
+          },
+          "8": {
+            "1": 1
+          },
+          "10": {
+            "1": 30,
+            "2": 3,
+            "3": 2
+          }
+        },
+        "turn_at_first_sight_by_asc": {
+          "2": {
+            "1": 1
+          },
+          "6": {
+            "1": 1
+          },
+          "7": {
+            "1": 3
+          },
+          "8": {
+            "1": 1
+          },
+          "10": {
+            "1": 25,
+            "2": 7,
+            "3": 3
+          }
+        }
+      }
+    },
+    "provenance": {
+      "first_seen": "2026-09-24T04:08:00.849Z",
+      "last_seen": "2026-10-18T07:13:06.500Z",
+      "n_runs": 338,
+      "n_instances": 425,
+      "n_spawned_mid_fight": 0,
+      "n_minion_instances": 0
+    },
+    "observed": {
+      "ally_deaths": {
+        "LEAF_SLIME_M": {
+          "n": 5,
+          "fights": 5,
+          "move_before": {
+            "TACKLE_MOVE": 5
+          },
+          "move_changed": 0,
+          "move_changed_share": 0.0,
+          "changed_to": {},
+          "by_move": {
+            "TACKLE_MOVE": {
+              "n": 5,
+              "changed_to": {}
+            }
+          },
+          "changed_evidence": [],
+          "attack_changed": 0,
+          "co_deaths": 0,
+          "end_move": {
+            "TACKLE_MOVE": 5
+          },
+          "next_n": 5,
+          "next_move": {
+            "TACKLE_MOVE": 5
+          },
+          "next_after": {
+            "TACKLE_MOVE": {
+              "TACKLE_MOVE": 5
+            }
+          },
+          "next_evidence": [
+            "41VAUAM2EFY7 F6 T3",
+            "FZLZ9M4QJWBH F2 T2",
+            "GWGTNXPWS7PE F5 T2"
+          ],
+          "alive": {
+            "turns": 343,
+            "moves": {
+              "TACKLE_MOVE": 343
+            },
+            "next": {
+              "TACKLE_MOVE": {
+                "TACKLE_MOVE": 83
+              }
+            }
+          },
+          "dead": {
+            "turns": 5,
+            "moves": {
+              "TACKLE_MOVE": 5
+            }
+          }
+        },
+        "LEAF_SLIME_S": {
+          "n": 50,
+          "fights": 50,
+          "move_before": {
+            "TACKLE_MOVE": 50
+          },
+          "move_changed": 0,
+          "move_changed_share": 0.0,
+          "changed_to": {},
+          "by_move": {
+            "TACKLE_MOVE": {
+              "n": 50,
+              "changed_to": {}
+            }
+          },
+          "changed_evidence": [],
+          "attack_changed": 0,
+          "co_deaths": 0,
+          "end_move": {
+            "TACKLE_MOVE": 35
+          },
+          "next_n": 34,
+          "next_move": {
+            "TACKLE_MOVE": 34
+          },
+          "next_after": {
+            "TACKLE_MOVE": {
+              "TACKLE_MOVE": 34
+            }
+          },
+          "next_evidence": [
+            "QE4KRWB1MB3X F2 T1",
+            "JR66CJ9T8H7W F4 T1",
+            "WY41FADPAGTW F3 T1"
+          ],
+          "alive": {
+            "turns": 556,
+            "moves": {
+              "TACKLE_MOVE": 556
+            },
+            "next": {
+              "TACKLE_MOVE": {
+                "TACKLE_MOVE": 147
+              }
+            }
+          },
+          "dead": {
+            "turns": 45,
+            "moves": {
+              "TACKLE_MOVE": 45
+            }
+          }
+        },
+        "TWIG_SLIME_M": {
+          "n": 40,
+          "fights": 40,
+          "move_before": {
+            "TACKLE_MOVE": 40
+          },
+          "move_changed": 0,
+          "move_changed_share": 0.0,
+          "changed_to": {},
+          "by_move": {
+            "TACKLE_MOVE": {
+              "n": 40,
+              "changed_to": {}
+            }
+          },
+          "changed_evidence": [],
+          "attack_changed": 0,
+          "co_deaths": 0,
+          "end_move": {
+            "TACKLE_MOVE": 35
+          },
+          "next_n": 34,
+          "next_move": {
+            "TACKLE_MOVE": 34
+          },
+          "next_after": {
+            "TACKLE_MOVE": {
+              "TACKLE_MOVE": 34
+            }
+          },
+          "next_evidence": [
+            "S780Y1W7AQZL F2 T2",
+            "VQSA3FRA2ML9 F8 T2",
+            "2VW5U020FUTV F4 T1"
+          ],
+          "alive": {
+            "turns": 333,
+            "moves": {
+              "TACKLE_MOVE": 333
+            },
+            "next": {
+              "TACKLE_MOVE": {
+                "TACKLE_MOVE": 93
+              }
+            }
+          },
+          "dead": {
+            "turns": 42,
+            "moves": {
+              "TACKLE_MOVE": 42
+            }
+          }
+        },
+        "TWIG_SLIME_S": {
+          "n": 4,
+          "fights": 4,
+          "move_before": {
+            "TACKLE_MOVE": 4
+          },
+          "move_changed": 0,
+          "move_changed_share": 0.0,
+          "changed_to": {},
+          "by_move": {
+            "TACKLE_MOVE": {
+              "n": 4,
+              "changed_to": {}
+            }
+          },
+          "changed_evidence": [],
+          "attack_changed": 0,
+          "co_deaths": 0,
+          "end_move": {
+            "TACKLE_MOVE": 1
+          },
+          "next_n": 1,
+          "next_move": {
+            "TACKLE_MOVE": 1
+          },
+          "next_after": {
+            "TACKLE_MOVE": {
+              "TACKLE_MOVE": 1
+            }
+          },
+          "next_evidence": [
+            "ZW9SQYC7KBC3 F9 T1"
+          ],
+          "alive": {
+            "turns": 16,
+            "moves": {
+              "TACKLE_MOVE": 16
+            },
+            "next": {
+              "TACKLE_MOVE": {
+                "TACKLE_MOVE": 2
+              }
+            }
+          },
+          "dead": {
+            "turns": 1,
+            "moves": {
+              "TACKLE_MOVE": 1
+            }
+          }
+        }
+      }
+    }
+  }
+}

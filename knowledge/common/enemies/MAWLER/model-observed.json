@@ -1,0 +1,30 @@
+{
+  "schema": "legacy-enemy-observation-v1",
+  "enemy_id": "MAWLER",
+  "source": "common/move-model.json",
+  "pointer": [
+    "MAWLER"
+  ],
+  "scope_policy": "仅机械封装原common数据，未扩适用范围或新增机制结论。",
+  "payload": {
+    "damage": {
+      "CLAW_MOVE": 10.3,
+      "RIP_AND_TEAR_MOVE": 19.0,
+      "ROAR_MOVE": 0.0
+    },
+    "next": {
+      "CLAW_MOVE": {
+        "RIP_AND_TEAR_MOVE": 116,
+        "ROAR_MOVE": 78
+      },
+      "RIP_AND_TEAR_MOVE": {
+        "CLAW_MOVE": 75,
+        "ROAR_MOVE": 35
+      },
+      "ROAR_MOVE": {
+        "CLAW_MOVE": 45,
+        "RIP_AND_TEAR_MOVE": 51
+      }
+    }
+  }
+}

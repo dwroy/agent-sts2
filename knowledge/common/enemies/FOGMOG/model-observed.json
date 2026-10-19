@@ -1,0 +1,36 @@
+{
+  "schema": "legacy-enemy-observation-v1",
+  "enemy_id": "FOGMOG",
+  "source": "common/move-model.json",
+  "pointer": [
+    "FOGMOG"
+  ],
+  "scope_policy": "仅机械封装原common数据，未扩适用范围或新增机制结论。",
+  "payload": {
+    "buffs": [
+      "SWIPE_MOVE",
+      "SWIPE_RANDOM_MOVE"
+    ],
+    "damage": {
+      "HEADBUTT_MOVE": 16.3,
+      "ILLUSION_MOVE": 0.0,
+      "SWIPE_MOVE": 8.7,
+      "SWIPE_RANDOM_MOVE": 9.4
+    },
+    "next": {
+      "HEADBUTT_MOVE": {
+        "SWIPE_MOVE": 72
+      },
+      "ILLUSION_MOVE": {
+        "SWIPE_MOVE": 117
+      },
+      "SWIPE_MOVE": {
+        "HEADBUTT_MOVE": 86,
+        "SWIPE_RANDOM_MOVE": 52
+      },
+      "SWIPE_RANDOM_MOVE": {
+        "HEADBUTT_MOVE": 33
+      }
+    }
+  }
+}

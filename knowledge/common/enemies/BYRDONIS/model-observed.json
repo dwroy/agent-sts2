@@ -1,0 +1,23 @@
+{
+  "schema": "legacy-enemy-observation-v1",
+  "enemy_id": "BYRDONIS",
+  "source": "common/move-model.json",
+  "pointer": [
+    "BYRDONIS"
+  ],
+  "scope_policy": "仅机械封装原common数据，未扩适用范围或新增机制结论。",
+  "payload": {
+    "damage": {
+      "PECK_MOVE": 16.7,
+      "SWOOP_MOVE": 19.2
+    },
+    "next": {
+      "PECK_MOVE": {
+        "SWOOP_MOVE": 235
+      },
+      "SWOOP_MOVE": {
+        "PECK_MOVE": 307
+      }
+    }
+  }
+}

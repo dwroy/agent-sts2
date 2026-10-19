@@ -1,0 +1,24 @@
+{
+  "schema": "legacy-enemy-observation-v1",
+  "enemy_id": "BOWLBUG_ROCK",
+  "source": "common/move-model.json",
+  "pointer": [
+    "BOWLBUG_ROCK"
+  ],
+  "scope_policy": "仅机械封装原common数据，未扩适用范围或新增机制结论。",
+  "payload": {
+    "damage": {
+      "HEADBUTT_MOVE": 15.2,
+      "STUNNED": 0.0
+    },
+    "next": {
+      "HEADBUTT_MOVE": {
+        "HEADBUTT_MOVE": 509,
+        "STUNNED": 458
+      },
+      "STUNNED": {
+        "HEADBUTT_MOVE": 337
+      }
+    }
+  }
+}

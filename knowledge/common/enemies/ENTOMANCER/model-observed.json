@@ -1,0 +1,30 @@
+{
+  "schema": "legacy-enemy-observation-v1",
+  "enemy_id": "ENTOMANCER",
+  "source": "common/move-model.json",
+  "pointer": [
+    "ENTOMANCER"
+  ],
+  "scope_policy": "仅机械封装原common数据，未扩适用范围或新增机制结论。",
+  "payload": {
+    "buffs": [
+      "PHEROMONE_SPIT_MOVE"
+    ],
+    "damage": {
+      "BEES_MOVE": 26.6,
+      "PHEROMONE_SPIT_MOVE": 0.0,
+      "SPEAR_MOVE": 18.8
+    },
+    "next": {
+      "BEES_MOVE": {
+        "SPEAR_MOVE": 246
+      },
+      "PHEROMONE_SPIT_MOVE": {
+        "BEES_MOVE": 168
+      },
+      "SPEAR_MOVE": {
+        "PHEROMONE_SPIT_MOVE": 199
+      }
+    }
+  }
+}

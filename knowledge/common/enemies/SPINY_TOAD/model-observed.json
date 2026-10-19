@@ -1,0 +1,30 @@
+{
+  "schema": "legacy-enemy-observation-v1",
+  "enemy_id": "SPINY_TOAD",
+  "source": "common/move-model.json",
+  "pointer": [
+    "SPINY_TOAD"
+  ],
+  "scope_policy": "仅机械封装原common数据，未扩适用范围或新增机制结论。",
+  "payload": {
+    "buffs": [
+      "PROTRUDING_SPIKES_MOVE"
+    ],
+    "damage": {
+      "PROTRUDING_SPIKES_MOVE": 0.0,
+      "SPIKE_EXPLOSION_MOVE": 22.9,
+      "TONGUE_LASH_MOVE": 17.0
+    },
+    "next": {
+      "PROTRUDING_SPIKES_MOVE": {
+        "SPIKE_EXPLOSION_MOVE": 281
+      },
+      "SPIKE_EXPLOSION_MOVE": {
+        "TONGUE_LASH_MOVE": 205
+      },
+      "TONGUE_LASH_MOVE": {
+        "PROTRUDING_SPIKES_MOVE": 161
+      }
+    }
+  }
+}

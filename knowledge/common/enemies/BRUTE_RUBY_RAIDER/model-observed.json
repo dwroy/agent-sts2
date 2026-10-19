@@ -1,0 +1,26 @@
+{
+  "schema": "legacy-enemy-observation-v1",
+  "enemy_id": "BRUTE_RUBY_RAIDER",
+  "source": "common/move-model.json",
+  "pointer": [
+    "BRUTE_RUBY_RAIDER"
+  ],
+  "scope_policy": "仅机械封装原common数据，未扩适用范围或新增机制结论。",
+  "payload": {
+    "buffs": [
+      "ROAR_MOVE"
+    ],
+    "damage": {
+      "BEAT_MOVE": 9.5,
+      "ROAR_MOVE": 0.0
+    },
+    "next": {
+      "BEAT_MOVE": {
+        "ROAR_MOVE": 104
+      },
+      "ROAR_MOVE": {
+        "BEAT_MOVE": 79
+      }
+    }
+  }
+}

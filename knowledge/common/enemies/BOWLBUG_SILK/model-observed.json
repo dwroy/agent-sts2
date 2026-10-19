@@ -1,0 +1,23 @@
+{
+  "schema": "legacy-enemy-observation-v1",
+  "enemy_id": "BOWLBUG_SILK",
+  "source": "common/move-model.json",
+  "pointer": [
+    "BOWLBUG_SILK"
+  ],
+  "scope_policy": "仅机械封装原common数据，未扩适用范围或新增机制结论。",
+  "payload": {
+    "damage": {
+      "THRASH_MOVE": 8.8,
+      "TOXIC_SPIT_MOVE": 0.0
+    },
+    "next": {
+      "THRASH_MOVE": {
+        "TOXIC_SPIT_MOVE": 330
+      },
+      "TOXIC_SPIT_MOVE": {
+        "THRASH_MOVE": 462
+      }
+    }
+  }
+}

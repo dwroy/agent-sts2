@@ -35,6 +35,12 @@ STEAM_URI="steam://rungameid/2868840"
 TASK=sts2-launch-desktop
 action="${1:-}"; arg="${2:-}"
 case "$action" in
+  autoplay-start|launch-game)
+    if [ -f "$OPS/disk_admission.py" ] || [ -f "$ROOT/ops/disk-policy.json" ]; then
+      nice -n 19 python3 "$OPS/disk_admission.py" "$ROOT" --state-dir "$DIR" --kind channel || exit 75
+    fi ;;
+esac
+case "$action" in
   autoplay-start|autoplay-reload|ops-assist|codex-brain-cache-probe)
     if [ -f "$DIR/LLM_DRAIN" ]; then
       echo "LLM drain: new work deferred"

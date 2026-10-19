@@ -1,0 +1,31 @@
+{
+  "schema": "legacy-enemy-observation-v1",
+  "enemy_id": "SCROLL_OF_BITING",
+  "source": "common/move-model.json",
+  "pointer": [
+    "SCROLL_OF_BITING"
+  ],
+  "scope_policy": "仅机械封装原common数据，未扩适用范围或新增机制结论。",
+  "payload": {
+    "buffs": [
+      "MORE_TEETH"
+    ],
+    "damage": {
+      "CHEW": 13.2,
+      "CHOMP": 15.1,
+      "MORE_TEETH": 0.0
+    },
+    "next": {
+      "CHEW": {
+        "CHEW": 124,
+        "CHOMP": 209
+      },
+      "CHOMP": {
+        "MORE_TEETH": 236
+      },
+      "MORE_TEETH": {
+        "CHEW": 381
+      }
+    }
+  }
+}

@@ -1,0 +1,35 @@
+{
+  "schema": "legacy-enemy-observation-v1",
+  "enemy_id": "FLAIL_KNIGHT",
+  "source": "common/move-model.json",
+  "pointer": [
+    "FLAIL_KNIGHT"
+  ],
+  "scope_policy": "仅机械封装原common数据，未扩适用范围或新增机制结论。",
+  "payload": {
+    "buffs": [
+      "WAR_CHANT"
+    ],
+    "damage": {
+      "FLAIL_MOVE": 21.1,
+      "RAM_MOVE": 16.4,
+      "WAR_CHANT": 0.0
+    },
+    "next": {
+      "FLAIL_MOVE": {
+        "FLAIL_MOVE": 13,
+        "RAM_MOVE": 5,
+        "WAR_CHANT": 17
+      },
+      "RAM_MOVE": {
+        "FLAIL_MOVE": 33,
+        "RAM_MOVE": 18,
+        "WAR_CHANT": 24
+      },
+      "WAR_CHANT": {
+        "FLAIL_MOVE": 19,
+        "RAM_MOVE": 17
+      }
+    }
+  }
+}

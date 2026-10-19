@@ -279,13 +279,19 @@ describe("codex command line", () => {
 
   it("the permission profile: all readable, writes only for write tasks (cwd, project root, tmp), key files unreadable in both", () => {
     const keys = { "/h": { ".sts2-jev-env*": "none", ".jev_api_keys": "none", ".deepseek_api_key": "none" }, "/h/.codex/auth.json": "none", "/h/.jev_api_keys": "none" };
-    const readOnly = codexPermissions(request({ engine: "codex", tools: ["Read", "Grep"], home: "/h", keyFiles: ["/h/.jev_api_keys"], repo: ROOT }));
-    expect(readOnly).toEqual({ ":root": "read", glob_scan_max_depth: 8, [ROOT]: { "**/.env": "none", "**/*.env": "none" }, ...keys });
-    const write = codexPermissions(request({ engine: "codex", home: "/h", keyFiles: ["/h/.jev_api_keys"], repo: ROOT }));
-    expect(write).toEqual({
-      ":root": "read", glob_scan_max_depth: 8, ":project_roots": { ".": "write" }, ":tmpdir": "write", ":slash_tmp": "write",
-      [ROOT]: { ".": "write", "**/.env": "none", "**/*.env": "none" }, ...keys,
-    });
+    // The historical ROOT can be a real alias of the production checkout; this case
+    // needs a fixed empty workspace, independently of installed shared tools.
+    const fixtureRoot = mkdtempSync(join(tmpdir(), "learner-permissions-fixed-"));
+    try {
+      const fixed = { projectRoot: fixtureRoot, cwd: fixtureRoot, repo: fixtureRoot };
+      const readOnly = codexPermissions(request({ ...fixed, engine: "codex", tools: ["Read", "Grep"], home: "/h", keyFiles: ["/h/.jev_api_keys"] }));
+      expect(readOnly).toEqual({ ":root": "read", glob_scan_max_depth: 8, [fixtureRoot]: { "**/.env": "none", "**/*.env": "none" }, ...keys });
+      const write = codexPermissions(request({ ...fixed, engine: "codex", home: "/h", keyFiles: ["/h/.jev_api_keys"] }));
+      expect(write).toEqual({
+        ":root": "read", glob_scan_max_depth: 8, ":project_roots": { ".": "write" }, ":tmpdir": "write", ":slash_tmp": "write",
+        [fixtureRoot]: { ".": "write", "**/.env": "none", "**/*.env": "none" }, ...keys,
+      });
+    } finally { rmSync(fixtureRoot, { recursive: true, force: true }); }
     // a project root inside a worktree: the main checkout's .env files are denied too
     const nested = codexPermissions(request({ engine: "codex", projectRoot: "/r/.claude/worktrees/w", cwd: "/r/.claude/worktrees/w", home: "/h", keyFiles: [], repo: "/r/.claude/worktrees/w" }));
     expect(nested["/r"]).toEqual({ "**/.env": "none", "**/*.env": "none" });

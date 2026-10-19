@@ -1,0 +1,23 @@
+{
+  "schema": "legacy-enemy-observation-v1",
+  "enemy_id": "CROSSBOW_RUBY_RAIDER",
+  "source": "common/move-model.json",
+  "pointer": [
+    "CROSSBOW_RUBY_RAIDER"
+  ],
+  "scope_policy": "仅机械封装原common数据，未扩适用范围或新增机制结论。",
+  "payload": {
+    "damage": {
+      "FIRE_MOVE": 14.8,
+      "RELOAD_MOVE": 0.0
+    },
+    "next": {
+      "FIRE_MOVE": {
+        "RELOAD_MOVE": 25
+      },
+      "RELOAD_MOVE": {
+        "FIRE_MOVE": 73
+      }
+    }
+  }
+}

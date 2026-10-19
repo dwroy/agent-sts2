@@ -1,0 +1,39 @@
+{
+  "schema": "legacy-enemy-observation-v1",
+  "enemy_id": "THE_OBSCURA",
+  "source": "common/move-model.json",
+  "pointer": [
+    "THE_OBSCURA"
+  ],
+  "scope_policy": "仅机械封装原common数据，未扩适用范围或新增机制结论。",
+  "payload": {
+    "buffs": [
+      "SAIL_MOVE"
+    ],
+    "damage": {
+      "HARDENING_STRIKE_MOVE": 8.5,
+      "ILLUSION_MOVE": 0.0,
+      "PIERCING_GAZE_MOVE": 12.4,
+      "SAIL_MOVE": 0.0
+    },
+    "next": {
+      "HARDENING_STRIKE_MOVE": {
+        "PIERCING_GAZE_MOVE": 102,
+        "SAIL_MOVE": 107
+      },
+      "ILLUSION_MOVE": {
+        "HARDENING_STRIKE_MOVE": 73,
+        "PIERCING_GAZE_MOVE": 67,
+        "SAIL_MOVE": 52
+      },
+      "PIERCING_GAZE_MOVE": {
+        "HARDENING_STRIKE_MOVE": 97,
+        "SAIL_MOVE": 96
+      },
+      "SAIL_MOVE": {
+        "HARDENING_STRIKE_MOVE": 115,
+        "PIERCING_GAZE_MOVE": 84
+      }
+    }
+  }
+}

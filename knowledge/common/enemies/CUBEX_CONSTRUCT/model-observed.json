@@ -1,0 +1,36 @@
+{
+  "schema": "legacy-enemy-observation-v1",
+  "enemy_id": "CUBEX_CONSTRUCT",
+  "source": "common/move-model.json",
+  "pointer": [
+    "CUBEX_CONSTRUCT"
+  ],
+  "scope_policy": "仅机械封装原common数据，未扩适用范围或新增机制结论。",
+  "payload": {
+    "buffs": [
+      "CHARGE_UP_MOVE",
+      "REPEATER_BLAST_MOVE",
+      "REPEATER_BLAST_MOVE_2"
+    ],
+    "damage": {
+      "CHARGE_UP_MOVE": 0.0,
+      "EXPEL_MOVE": 23.0,
+      "REPEATER_BLAST_MOVE": 10.1,
+      "REPEATER_BLAST_MOVE_2": 11.8
+    },
+    "next": {
+      "CHARGE_UP_MOVE": {
+        "REPEATER_BLAST_MOVE": 259
+      },
+      "EXPEL_MOVE": {
+        "REPEATER_BLAST_MOVE": 51
+      },
+      "REPEATER_BLAST_MOVE": {
+        "REPEATER_BLAST_MOVE_2": 242
+      },
+      "REPEATER_BLAST_MOVE_2": {
+        "EXPEL_MOVE": 141
+      }
+    }
+  }
+}

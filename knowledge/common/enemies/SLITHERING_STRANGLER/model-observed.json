@@ -1,0 +1,28 @@
+{
+  "schema": "legacy-enemy-observation-v1",
+  "enemy_id": "SLITHERING_STRANGLER",
+  "source": "common/move-model.json",
+  "pointer": [
+    "SLITHERING_STRANGLER"
+  ],
+  "scope_policy": "仅机械封装原common数据，未扩适用范围或新增机制结论。",
+  "payload": {
+    "damage": {
+      "CONSTRICT": 0.0,
+      "LASH": 12.3,
+      "THWACK": 7.2
+    },
+    "next": {
+      "CONSTRICT": {
+        "LASH": 78,
+        "THWACK": 72
+      },
+      "LASH": {
+        "CONSTRICT": 51
+      },
+      "THWACK": {
+        "CONSTRICT": 46
+      }
+    }
+  }
+}

@@ -1,0 +1,30 @@
+{
+  "schema": "legacy-enemy-observation-v1",
+  "enemy_id": "SOUL_NEXUS",
+  "source": "common/move-model.json",
+  "pointer": [
+    "SOUL_NEXUS"
+  ],
+  "scope_policy": "仅机械封装原common数据，未扩适用范围或新增机制结论。",
+  "payload": {
+    "damage": {
+      "DRAIN_LIFE_MOVE": 18.5,
+      "MAELSTROM_MOVE": 28.5,
+      "SOUL_BURN_MOVE": 32.8
+    },
+    "next": {
+      "DRAIN_LIFE_MOVE": {
+        "MAELSTROM_MOVE": 24,
+        "SOUL_BURN_MOVE": 25
+      },
+      "MAELSTROM_MOVE": {
+        "DRAIN_LIFE_MOVE": 25,
+        "SOUL_BURN_MOVE": 24
+      },
+      "SOUL_BURN_MOVE": {
+        "DRAIN_LIFE_MOVE": 34,
+        "MAELSTROM_MOVE": 36
+      }
+    }
+  }
+}

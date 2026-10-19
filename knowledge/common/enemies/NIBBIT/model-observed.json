@@ -1,0 +1,30 @@
+{
+  "schema": "legacy-enemy-observation-v1",
+  "enemy_id": "NIBBIT",
+  "source": "common/move-model.json",
+  "pointer": [
+    "NIBBIT"
+  ],
+  "scope_policy": "仅机械封装原common数据，未扩适用范围或新增机制结论。",
+  "payload": {
+    "buffs": [
+      "HISS_MOVE"
+    ],
+    "damage": {
+      "BUTT_MOVE": 14.4,
+      "HISS_MOVE": 0.0,
+      "SLICE_MOVE": 7.5
+    },
+    "next": {
+      "BUTT_MOVE": {
+        "SLICE_MOVE": 550
+      },
+      "HISS_MOVE": {
+        "BUTT_MOVE": 513
+      },
+      "SLICE_MOVE": {
+        "HISS_MOVE": 508
+      }
+    }
+  }
+}

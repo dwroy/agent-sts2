@@ -1,0 +1,2180 @@
+{
+  "schema": "legacy-enemy-observation-v1",
+  "enemy_id": "AXEBOT",
+  "source": "common/monster-db.json",
+  "pointer": [
+    "monsters",
+    "AXEBOT"
+  ],
+  "scope_policy": "仅机械封装原common数据，未扩适用范围或新增机制结论。",
+  "payload": {
+    "name": {
+      "zh": "巨斧机器人"
+    },
+    "game_type": "Normal",
+    "game_hp_range": [
+      70,
+      78
+    ],
+    "kind": "hallway",
+    "rooms": {
+      "hallway": 58,
+      "unknown_room": 15
+    },
+    "acts": {
+      "3": 73
+    },
+    "encounters": {
+      "AXEBOT": 73
+    },
+    "hp_by_asc": {
+      "0": {
+        "min": 70,
+        "median": 73,
+        "max": 77,
+        "n": 5
+      },
+      "2": {
+        "min": 70,
+        "median": 73.0,
+        "max": 76,
+        "n": 2
+      },
+      "3": {
+        "min": 74,
+        "median": 76,
+        "max": 77,
+        "n": 3
+      },
+      "4": {
+        "min": 71,
+        "median": 72.0,
+        "max": 77,
+        "n": 4
+      },
+      "5": {
+        "min": 72,
+        "median": 74,
+        "max": 76,
+        "n": 3
+      },
+      "6": {
+        "min": 74,
+        "median": 76,
+        "max": 76,
+        "n": 3
+      },
+      "7": {
+        "min": 76,
+        "median": 77.0,
+        "max": 78,
+        "n": 2
+      },
+      "8": {
+        "min": 76,
+        "median": 82,
+        "max": 85,
+        "n": 15
+      },
+      "9": {
+        "min": 76,
+        "median": 80,
+        "max": 85,
+        "n": 11
+      },
+      "10": {
+        "min": 76,
+        "median": 83,
+        "max": 86,
+        "n": 25
+      }
+    },
+    "moves": {
+      "BOOT_UP_MOVE": {
+        "name": "启动",
+        "n_seen": 54,
+        "intents": {
+          "Buff+Defend": 54
+        },
+        "turns_seen": {
+          "2": 2,
+          "3": 5,
+          "4": 8,
+          "5": 8,
+          "6": 7,
+          "7": 10,
+          "8": 3,
+          "9": 4,
+          "10": 7
+        },
+        "next": {
+          "HAMMER_UPPERCUT_MOVE": 53
+        },
+        "avg_total_shown": 0.0,
+        "block_gained": {
+          "4": 1,
+          "6": 1,
+          "7": 1,
+          "9": 2,
+          "10": 12,
+          "12": 2,
+          "15": 30
+        },
+        "block_gained_by_asc": {
+          "0": {
+            "10": 2
+          },
+          "2": {
+            "10": 2
+          },
+          "3": {
+            "10": 2
+          },
+          "4": {
+            "10": 1
+          },
+          "6": {
+            "10": 1
+          },
+          "7": {
+            "10": 4
+          },
+          "8": {
+            "4": 1
+          },
+          "10": {
+            "6": 1,
+            "7": 1,
+            "9": 2,
+            "12": 2,
+            "15": 30
+          }
+        },
+        "self_powers_gained": {
+          "STRENGTH_POWER": {
+            "3": 6,
+            "4": 19,
+            "6": 8,
+            "8": 18
+          }
+        },
+        "self_powers_gained_by_asc": {
+          "0": {
+            "STRENGTH_POWER": {
+              "3": 1,
+              "6": 2
+            }
+          },
+          "2": {
+            "STRENGTH_POWER": {
+              "3": 1,
+              "6": 1
+            }
+          },
+          "3": {
+            "STRENGTH_POWER": {
+              "3": 1,
+              "6": 1
+            }
+          },
+          "4": {
+            "STRENGTH_POWER": {
+              "6": 1
+            }
+          },
+          "6": {
+            "STRENGTH_POWER": {
+              "6": 1
+            }
+          },
+          "7": {
+            "STRENGTH_POWER": {
+              "3": 1,
+              "6": 1
+            }
+          },
+          "8": {
+            "STRENGTH_POWER": {
+              "3": 2,
+              "6": 1
+            }
+          },
+          "9": {
+            "STRENGTH_POWER": {
+              "4": 1
+            }
+          },
+          "10": {
+            "STRENGTH_POWER": {
+              "4": 18,
+              "8": 18
+            }
+          }
+        }
+      },
+      "HAMMER_UPPERCUT_MOVE": {
+        "name": "上勾锤击",
+        "n_seen": 318,
+        "intents": {
+          "Attack+Debuff": 318
+        },
+        "turns_seen": {
+          "1": 73,
+          "2": 4,
+          "3": 63,
+          "4": 26,
+          "5": 45,
+          "6": 28,
+          "7": 24,
+          "8": 20,
+          "9": 12,
+          "10": 8,
+          "11": 9,
+          "12": 4,
+          "13": 2
+        },
+        "next": {
+          "ONE_TWO_MOVE": 209,
+          "HAMMER_UPPERCUT_MOVE": 42,
+          "BOOT_UP_MOVE": 28
+        },
+        "avg_total_shown": 18.1,
+        "damage_by_asc": {
+          "0": {
+            "shown": {
+              "12x1": 1,
+              "14x1": 7,
+              "15x1": 2,
+              "17x1": 4,
+              "20x1": 5
+            },
+            "base_per_hit": {
+              "14": 16
+            },
+            "hits": {
+              "1": 19
+            },
+            "n_base": 16
+          },
+          "2": {
+            "shown": {
+              "10x1": 1,
+              "14x1": 3,
+              "17x1": 2,
+              "20x1": 3
+            },
+            "base_per_hit": {
+              "14": 8
+            },
+            "hits": {
+              "1": 9
+            },
+            "n_base": 8
+          },
+          "3": {
+            "shown": {
+              "14x1": 4,
+              "15x1": 1,
+              "17x1": 4,
+              "20x1": 2,
+              "7x1": 1
+            },
+            "base_per_hit": {
+              "14": 10
+            },
+            "hits": {
+              "1": 12
+            },
+            "n_base": 10
+          },
+          "4": {
+            "shown": {
+              "14x1": 4,
+              "15x1": 1,
+              "17x1": 4,
+              "18x1": 1,
+              "20x1": 5,
+              "9x1": 1
+            },
+            "base_per_hit": {
+              "14": 15
+            },
+            "hits": {
+              "1": 16
+            },
+            "n_base": 15
+          },
+          "5": {
+            "shown": {
+              "10x1": 2,
+              "14x1": 3,
+              "17x1": 3,
+              "20x1": 3
+            },
+            "base_per_hit": {
+              "14": 9
+            },
+            "hits": {
+              "1": 11
+            },
+            "n_base": 9
+          },
+          "6": {
+            "shown": {
+              "10x1": 1,
+              "14x1": 5,
+              "17x1": 3,
+              "20x1": 3,
+              "8x1": 1
+            },
+            "base_per_hit": {
+              "14": 11
+            },
+            "hits": {
+              "1": 13
+            },
+            "n_base": 11
+          },
+          "7": {
+            "shown": {
+              "13x1": 1,
+              "14x1": 4,
+              "17x1": 2,
+              "20x1": 2
+            },
+            "base_per_hit": {
+              "14": 8
+            },
+            "hits": {
+              "1": 9
+            },
+            "n_base": 8
+          },
+          "8": {
+            "shown": {
+              "10x1": 1,
+              "12x1": 2,
+              "14x1": 18,
+              "15x1": 3,
+              "17x1": 18,
+              "18x1": 3,
+              "20x1": 16,
+              "21x1": 2
+            },
+            "base_per_hit": {
+              "14": 59
+            },
+            "hits": {
+              "1": 63
+            },
+            "n_base": 59
+          },
+          "9": {
+            "shown": {
+              "13x1": 1,
+              "18x1": 15,
+              "19x1": 1,
+              "22x1": 12,
+              "26x1": 10
+            },
+            "base_per_hit": {
+              "18": 38
+            },
+            "hits": {
+              "1": 39
+            },
+            "n_base": 38
+          },
+          "10": {
+            "shown": {
+              "10x1": 1,
+              "11x1": 2,
+              "12x1": 5,
+              "13x1": 8,
+              "15x1": 2,
+              "16x1": 8,
+              "18x1": 36,
+              "19x1": 8,
+              "22x1": 36,
+              "26x1": 19,
+              "7x1": 1,
+              "9x1": 1
+            },
+            "base_per_hit": {
+              "18": 91
+            },
+            "hits": {
+              "1": 127
+            },
+            "n_base": 91
+          }
+        },
+        "player_powers_applied": {
+          "FRAIL_POWER": {
+            "1": 80,
+            "2": 131
+          },
+          "STRENGTH_POWER": {
+            "-1": 2
+          },
+          "WEAK_POWER": {
+            "1": 80,
+            "2": 130,
+            "3": 1
+          }
+        },
+        "player_powers_applied_by_asc": {
+          "0": {
+            "FRAIL_POWER": {
+              "1": 5,
+              "2": 8
+            },
+            "WEAK_POWER": {
+              "1": 5,
+              "2": 8
+            }
+          },
+          "2": {
+            "FRAIL_POWER": {
+              "2": 4
+            },
+            "WEAK_POWER": {
+              "2": 4
+            }
+          },
+          "3": {
+            "FRAIL_POWER": {
+              "1": 4,
+              "2": 5
+            },
+            "WEAK_POWER": {
+              "1": 4,
+              "2": 5
+            }
+          },
+          "4": {
+            "FRAIL_POWER": {
+              "1": 6,
+              "2": 5
+            },
+            "WEAK_POWER": {
+              "1": 6,
+              "2": 5
+            }
+          },
+          "5": {
+            "FRAIL_POWER": {
+              "1": 1,
+              "2": 5
+            },
+            "WEAK_POWER": {
+              "1": 1,
+              "2": 5
+            }
+          },
+          "6": {
+            "FRAIL_POWER": {
+              "1": 1,
+              "2": 6
+            },
+            "WEAK_POWER": {
+              "1": 1,
+              "2": 6
+            }
+          },
+          "7": {
+            "FRAIL_POWER": {
+              "1": 2,
+              "2": 4
+            },
+            "WEAK_POWER": {
+              "1": 2,
+              "2": 4
+            }
+          },
+          "8": {
+            "FRAIL_POWER": {
+              "1": 18,
+              "2": 22
+            },
+            "WEAK_POWER": {
+              "1": 18,
+              "2": 22
+            }
+          },
+          "9": {
+            "FRAIL_POWER": {
+              "1": 10,
+              "2": 16
+            },
+            "STRENGTH_POWER": {
+              "-1": 2
+            },
+            "WEAK_POWER": {
+              "1": 10,
+              "2": 15,
+              "3": 1
+            }
+          },
+          "10": {
+            "FRAIL_POWER": {
+              "1": 33,
+              "2": 56
+            },
+            "WEAK_POWER": {
+              "1": 33,
+              "2": 56
+            }
+          }
+        }
+      },
+      "ONE_TWO_MOVE": {
+        "name": "两连击",
+        "n_seen": 209,
+        "intents": {
+          "Attack": 209
+        },
+        "turns_seen": {
+          "2": 67,
+          "3": 4,
+          "4": 38,
+          "5": 17,
+          "6": 26,
+          "7": 16,
+          "8": 15,
+          "9": 12,
+          "10": 2,
+          "11": 6,
+          "12": 6
+        },
+        "next": {
+          "HAMMER_UPPERCUT_MOVE": 150,
+          "BOOT_UP_MOVE": 26
+        },
+        "avg_total_shown": 24.5,
+        "damage_by_asc": {
+          "0": {
+            "shown": {
+              "10x2": 2,
+              "12x2": 1,
+              "13x2": 3,
+              "16x2": 4,
+              "7x2": 1,
+              "9x2": 1
+            },
+            "base_per_hit": {
+              "10": 9
+            },
+            "hits": {
+              "2": 12
+            },
+            "n_base": 9
+          },
+          "2": {
+            "shown": {
+              "10x2": 2,
+              "13x2": 1,
+              "16x2": 1
+            },
+            "base_per_hit": {
+              "10": 4
+            },
+            "hits": {
+              "2": 4
+            },
+            "n_base": 4
+          },
+          "3": {
+            "shown": {
+              "10x2": 2,
+              "12x2": 1,
+              "13x2": 4,
+              "7x2": 2
+            },
+            "base_per_hit": {
+              "10": 6
+            },
+            "hits": {
+              "2": 9
+            },
+            "n_base": 6
+          },
+          "4": {
+            "shown": {
+              "10x2": 1,
+              "13x2": 4,
+              "15x2": 1,
+              "16x2": 2,
+              "7x2": 3
+            },
+            "base_per_hit": {
+              "10": 8
+            },
+            "hits": {
+              "2": 11
+            },
+            "n_base": 8
+          },
+          "5": {
+            "shown": {
+              "10x2": 2,
+              "13x2": 2,
+              "16x2": 2
+            },
+            "base_per_hit": {
+              "10": 6
+            },
+            "hits": {
+              "2": 6
+            },
+            "n_base": 6
+          },
+          "6": {
+            "shown": {
+              "10x2": 3,
+              "13x2": 1,
+              "16x2": 2,
+              "7x2": 1
+            },
+            "base_per_hit": {
+              "10": 6
+            },
+            "hits": {
+              "2": 7
+            },
+            "n_base": 6
+          },
+          "7": {
+            "shown": {
+              "10x2": 2,
+              "12x2": 1,
+              "13x2": 2,
+              "7x2": 1
+            },
+            "base_per_hit": {
+              "10": 4
+            },
+            "hits": {
+              "2": 6
+            },
+            "n_base": 4
+          },
+          "8": {
+            "shown": {
+              "10x2": 13,
+              "12x2": 1,
+              "13x2": 12,
+              "15x2": 1,
+              "16x2": 7,
+              "18x2": 1,
+              "7x2": 1,
+              "9x2": 2
+            },
+            "base_per_hit": {
+              "10": 35
+            },
+            "hits": {
+              "2": 38
+            },
+            "n_base": 35
+          },
+          "9": {
+            "shown": {
+              "11x2": 11,
+              "14x2": 1,
+              "15x2": 5,
+              "16x2": 2,
+              "19x2": 6,
+              "8x2": 1
+            },
+            "base_per_hit": {
+              "11": 24
+            },
+            "hits": {
+              "2": 26
+            },
+            "n_base": 24
+          },
+          "10": {
+            "shown": {
+              "11x2": 30,
+              "12x2": 1,
+              "14x2": 3,
+              "15x2": 20,
+              "19x2": 12,
+              "3x2": 4,
+              "6x2": 5,
+              "7x2": 4,
+              "8x2": 10,
+              "9x2": 1
+            },
+            "base_per_hit": {
+              "11": 51
+            },
+            "hits": {
+              "2": 90
+            },
+            "n_base": 51
+          }
+        }
+      }
+    },
+    "powers": {
+      "DARK_SHACKLES_POWER": {
+        "name": "黑暗镣铐",
+        "type": "Debuff",
+        "description": "在本回合结束前失去[gold]力量[/gold]。",
+        "n_fights": 3,
+        "amount_at_first_sight": {
+          "9": 1,
+          "15": 2
+        },
+        "amount_max_in_fight": {
+          "9": 1,
+          "15": 2
+        },
+        "amount_at_first_sight_by_asc": {
+          "6": {
+            "15": 1
+          },
+          "10": {
+            "9": 1,
+            "15": 1
+          }
+        },
+        "turn_at_first_sight_by_asc": {
+          "6": {
+            "4": 1
+          },
+          "10": {
+            "3": 1,
+            "5": 1
+          }
+        }
+      },
+      "MANGLE_POWER": {
+        "name": "凌虐",
+        "type": "Debuff",
+        "description": "在本回合结束前失去[gold]力量[/gold]。",
+        "n_fights": 2,
+        "amount_at_first_sight": {
+          "10": 2
+        },
+        "amount_max_in_fight": {
+          "10": 2
+        },
+        "amount_at_first_sight_by_asc": {
+          "8": {
+            "10": 1
+          },
+          "9": {
+            "10": 1
+          }
+        },
+        "turn_at_first_sight_by_asc": {
+          "8": {
+            "1": 1
+          },
+          "9": {
+            "2": 1
+          }
+        }
+      },
+      "PIERCING_WAIL_POWER": {
+        "name": "尖啸",
+        "type": "Debuff",
+        "description": "在本回合结束前失去[gold]力量[/gold]。",
+        "n_fights": 21,
+        "amount_at_first_sight": {
+          "6": 17,
+          "8": 4
+        },
+        "amount_max_in_fight": {
+          "6": 15,
+          "8": 5,
+          "12": 1
+        },
+        "amount_at_first_sight_by_asc": {
+          "2": {
+            "6": 1
+          },
+          "3": {
+            "6": 1
+          },
+          "6": {
+            "6": 1,
+            "8": 1
+          },
+          "7": {
+            "6": 1
+          },
+          "10": {
+            "6": 13,
+            "8": 3
+          }
+        },
+        "turn_at_first_sight_by_asc": {
+          "2": {
+            "4": 1
+          },
+          "3": {
+            "3": 1
+          },
+          "6": {
+            "2": 1,
+            "8": 1
+          },
+          "7": {
+            "4": 1
+          },
+          "10": {
+            "1": 2,
+            "2": 7,
+            "3": 1,
+            "4": 3,
+            "7": 1,
+            "8": 1,
+            "9": 1
+          }
+        }
+      },
+      "POISON_POWER": {
+        "name": "中毒",
+        "type": "Debuff",
+        "description": "中毒的生物会在自身回合开始时失去生命。中毒层数每回合减少[blue]1[/blue]。",
+        "n_fights": 32,
+        "amount_at_first_sight": {
+          "2": 4,
+          "3": 7,
+          "4": 5,
+          "5": 2,
+          "6": 1,
+          "7": 8,
+          "8": 1,
+          "9": 1,
+          "10": 1,
+          "14": 1,
+          "16": 1
+        },
+        "amount_max_in_fight": {
+          "4": 1,
+          "5": 1,
+          "8": 2,
+          "10": 1,
+          "11": 1,
+          "12": 1,
+          "13": 2,
+          "14": 3,
+          "16": 1,
+          "17": 1,
+          "18": 1,
+          "20": 3,
+          "21": 4,
+          "22": 2,
+          "23": 2,
+          "25": 1,
+          "26": 1,
+          "27": 2,
+          "41": 1,
+          "42": 1
+        },
+        "amount_at_first_sight_by_asc": {
+          "0": {
+            "4": 2,
+            "5": 1
+          },
+          "2": {
+            "9": 1
+          },
+          "3": {
+            "7": 1
+          },
+          "6": {
+            "14": 1
+          },
+          "7": {
+            "3": 1,
+            "7": 1
+          },
+          "10": {
+            "2": 4,
+            "3": 6,
+            "4": 3,
+            "5": 1,
+            "6": 1,
+            "7": 6,
+            "8": 1,
+            "10": 1,
+            "16": 1
+          }
+        },
+        "turn_at_first_sight_by_asc": {
+          "0": {
+            "1": 1,
+            "2": 1,
+            "3": 1
+          },
+          "2": {
+            "2": 1
+          },
+          "3": {
+            "1": 1
+          },
+          "6": {
+            "4": 1
+          },
+          "7": {
+            "1": 1,
+            "2": 1
+          },
+          "10": {
+            "1": 8,
+            "2": 6,
+            "3": 4,
+            "4": 5,
+            "5": 1
+          }
+        }
+      },
+      "SHACKLING_POTION_POWER": {
+        "name": "镣铐药水",
+        "type": "Debuff",
+        "description": "在本回合结束前失去[gold]力量[/gold]。",
+        "n_fights": 1,
+        "amount_at_first_sight": {
+          "7": 1
+        },
+        "amount_max_in_fight": {
+          "7": 1
+        },
+        "amount_at_first_sight_by_asc": {
+          "4": {
+            "7": 1
+          }
+        },
+        "turn_at_first_sight_by_asc": {
+          "4": {
+            "4": 1
+          }
+        }
+      },
+      "SHRINK_POWER": {
+        "name": "缩小",
+        "type": "Debuff",
+        "description": "这个生物的攻击伤害在3回合内减少[blue]30%[/blue]。",
+        "n_fights": 1,
+        "amount_at_first_sight": {
+          "4": 1
+        },
+        "amount_max_in_fight": {
+          "4": 1
+        },
+        "amount_at_first_sight_by_asc": {
+          "4": {
+            "4": 1
+          }
+        },
+        "turn_at_first_sight_by_asc": {
+          "4": {
+            "1": 1
+          }
+        }
+      },
+      "STOCK_POWER": {
+        "name": "库存",
+        "type": "Buff",
+        "description": "被击杀时，召唤一个全新的巨斧机器人。",
+        "n_fights": 73,
+        "amount_at_first_sight": {
+          "2": 73
+        },
+        "amount_max_in_fight": {
+          "2": 73
+        },
+        "amount_at_first_sight_by_asc": {
+          "0": {
+            "2": 5
+          },
+          "2": {
+            "2": 2
+          },
+          "3": {
+            "2": 3
+          },
+          "4": {
+            "2": 4
+          },
+          "5": {
+            "2": 3
+          },
+          "6": {
+            "2": 3
+          },
+          "7": {
+            "2": 2
+          },
+          "8": {
+            "2": 15
+          },
+          "9": {
+            "2": 11
+          },
+          "10": {
+            "2": 25
+          }
+        },
+        "turn_at_first_sight_by_asc": {
+          "0": {
+            "1": 5
+          },
+          "2": {
+            "1": 2
+          },
+          "3": {
+            "1": 3
+          },
+          "4": {
+            "1": 4
+          },
+          "5": {
+            "1": 3
+          },
+          "6": {
+            "1": 3
+          },
+          "7": {
+            "1": 2
+          },
+          "8": {
+            "1": 15
+          },
+          "9": {
+            "1": 11
+          },
+          "10": {
+            "1": 25
+          }
+        }
+      },
+      "STRANGLE_POWER": {
+        "name": "紧勒",
+        "type": "Debuff",
+        "description": "本回合，你每次打出牌时，这名敌人失去[blue]2[/blue]点生命。",
+        "n_fights": 5,
+        "amount_at_first_sight": {
+          "2": 2,
+          "3": 2,
+          "6": 1
+        },
+        "amount_max_in_fight": {
+          "2": 2,
+          "3": 2,
+          "6": 1
+        },
+        "amount_at_first_sight_by_asc": {
+          "0": {
+            "2": 1,
+            "3": 2
+          },
+          "6": {
+            "2": 1
+          },
+          "10": {
+            "6": 1
+          }
+        },
+        "turn_at_first_sight_by_asc": {
+          "0": {
+            "1": 2,
+            "2": 1
+          },
+          "6": {
+            "5": 1
+          },
+          "10": {
+            "1": 1
+          }
+        }
+      },
+      "STRENGTH_POWER": {
+        "name": "力量",
+        "type": "Buff",
+        "description": "力量会增加攻击牌造成的伤害。",
+        "n_fights": 72,
+        "amount_at_first_sight": {
+          "-10": 2,
+          "-8": 2,
+          "-6": 9,
+          "-4": 2,
+          "-3": 1,
+          "-2": 1,
+          "-1": 1,
+          "1": 5,
+          "3": 26,
+          "4": 21,
+          "6": 2
+        },
+        "amount_max_in_fight": {
+          "4": 3,
+          "6": 34,
+          "8": 34,
+          "9": 1
+        },
+        "amount_at_first_sight_by_asc": {
+          "0": {
+            "3": 3,
+            "6": 1
+          },
+          "2": {
+            "3": 2
+          },
+          "3": {
+            "-4": 1,
+            "3": 2
+          },
+          "4": {
+            "1": 1,
+            "3": 3
+          },
+          "5": {
+            "3": 2,
+            "6": 1
+          },
+          "6": {
+            "-8": 1,
+            "3": 2
+          },
+          "7": {
+            "-6": 1,
+            "3": 1
+          },
+          "8": {
+            "-10": 1,
+            "1": 3,
+            "3": 11
+          },
+          "9": {
+            "-10": 1,
+            "1": 1,
+            "4": 9
+          },
+          "10": {
+            "-8": 1,
+            "-6": 8,
+            "-4": 1,
+            "-3": 1,
+            "-2": 1,
+            "-1": 1,
+            "4": 12
+          }
+        },
+        "turn_at_first_sight_by_asc": {
+          "0": {
+            "2": 1,
+            "3": 1,
+            "4": 1,
+            "5": 1
+          },
+          "2": {
+            "4": 2
+          },
+          "3": {
+            "2": 1,
+            "3": 1,
+            "5": 1
+          },
+          "4": {
+            "1": 1,
+            "3": 1,
+            "4": 1,
+            "5": 1
+          },
+          "5": {
+            "2": 1,
+            "4": 2
+          },
+          "6": {
+            "2": 1,
+            "4": 1,
+            "6": 1
+          },
+          "7": {
+            "4": 1,
+            "5": 1
+          },
+          "8": {
+            "1": 3,
+            "2": 2,
+            "3": 6,
+            "4": 2,
+            "5": 1,
+            "6": 1
+          },
+          "9": {
+            "2": 2,
+            "3": 4,
+            "4": 4,
+            "5": 1
+          },
+          "10": {
+            "1": 5,
+            "2": 8,
+            "3": 2,
+            "4": 2,
+            "5": 3,
+            "6": 4,
+            "7": 1
+          }
+        }
+      },
+      "VULNERABLE_POWER": {
+        "name": "易伤",
+        "type": "Debuff",
+        "description": "易伤的生物从攻击中受到的伤害增加[blue]50%[/blue]。",
+        "n_fights": 54,
+        "amount_at_first_sight": {
+          "1": 21,
+          "2": 17,
+          "3": 15,
+          "6": 1
+        },
+        "amount_max_in_fight": {
+          "1": 3,
+          "2": 15,
+          "3": 25,
+          "4": 4,
+          "5": 2,
+          "6": 4,
+          "8": 1
+        },
+        "amount_at_first_sight_by_asc": {
+          "0": {
+            "1": 1,
+            "2": 3,
+            "3": 1
+          },
+          "2": {
+            "1": 1
+          },
+          "3": {
+            "2": 1,
+            "3": 1
+          },
+          "4": {
+            "1": 3,
+            "2": 1
+          },
+          "5": {
+            "2": 1,
+            "3": 2
+          },
+          "6": {
+            "2": 1,
+            "6": 1
+          },
+          "7": {
+            "2": 1
+          },
+          "8": {
+            "1": 7,
+            "2": 2,
+            "3": 6
+          },
+          "9": {
+            "1": 3,
+            "2": 4,
+            "3": 3
+          },
+          "10": {
+            "1": 6,
+            "2": 3,
+            "3": 2
+          }
+        },
+        "turn_at_first_sight_by_asc": {
+          "0": {
+            "1": 4,
+            "3": 1
+          },
+          "2": {
+            "1": 1
+          },
+          "3": {
+            "1": 1,
+            "3": 1
+          },
+          "4": {
+            "1": 3,
+            "3": 1
+          },
+          "5": {
+            "1": 3
+          },
+          "6": {
+            "4": 2
+          },
+          "7": {
+            "3": 1
+          },
+          "8": {
+            "1": 8,
+            "2": 4,
+            "5": 3
+          },
+          "9": {
+            "1": 5,
+            "2": 2,
+            "3": 2,
+            "4": 1
+          },
+          "10": {
+            "1": 7,
+            "2": 2,
+            "3": 1,
+            "4": 1
+          }
+        }
+      },
+      "WEAK_POWER": {
+        "name": "虚弱",
+        "type": "Debuff",
+        "description": "虚弱的生物造成的攻击伤害减少[blue]25%[/blue]。",
+        "n_fights": 51,
+        "amount_at_first_sight": {
+          "1": 23,
+          "2": 23,
+          "3": 4,
+          "6": 1
+        },
+        "amount_max_in_fight": {
+          "1": 7,
+          "2": 17,
+          "3": 16,
+          "4": 6,
+          "5": 1,
+          "6": 1,
+          "7": 1,
+          "9": 2
+        },
+        "amount_at_first_sight_by_asc": {
+          "0": {
+            "1": 3,
+            "2": 1
+          },
+          "2": {
+            "1": 1,
+            "2": 1
+          },
+          "3": {
+            "2": 1,
+            "3": 1
+          },
+          "4": {
+            "2": 1
+          },
+          "5": {
+            "1": 2
+          },
+          "6": {
+            "1": 1,
+            "2": 1
+          },
+          "7": {
+            "1": 1,
+            "2": 1
+          },
+          "8": {
+            "1": 3,
+            "2": 1,
+            "3": 2
+          },
+          "9": {
+            "1": 2,
+            "2": 3
+          },
+          "10": {
+            "1": 10,
+            "2": 13,
+            "3": 1,
+            "6": 1
+          }
+        },
+        "turn_at_first_sight_by_asc": {
+          "0": {
+            "1": 2,
+            "3": 1,
+            "9": 1
+          },
+          "2": {
+            "1": 1,
+            "2": 1
+          },
+          "3": {
+            "1": 1,
+            "3": 1
+          },
+          "4": {
+            "1": 1
+          },
+          "5": {
+            "1": 1,
+            "3": 1
+          },
+          "6": {
+            "1": 1,
+            "2": 1
+          },
+          "7": {
+            "1": 2
+          },
+          "8": {
+            "1": 3,
+            "2": 3
+          },
+          "9": {
+            "1": 1,
+            "2": 1,
+            "3": 1,
+            "4": 1,
+            "6": 1
+          },
+          "10": {
+            "1": 13,
+            "2": 7,
+            "3": 2,
+            "4": 2,
+            "5": 1
+          }
+        }
+      }
+    },
+    "provenance": {
+      "first_seen": "2026-09-24T19:20:59.949Z",
+      "last_seen": "2026-10-18T01:49:11.398Z",
+      "n_runs": 73,
+      "n_instances": 73,
+      "n_spawned_mid_fight": 0,
+      "n_minion_instances": 0
+    },
+    "phases_by_asc": {
+      "0": {
+        "73 > 81 > 90": 1,
+        "77 > 88 > 98": 1,
+        "77 > 85 > 93": 1,
+        "70 > 85 > 91": 1
+      },
+      "2": {
+        "76 > 80 > 95": 1,
+        "70 > 82 > 94": 1
+      },
+      "3": {
+        "76 > 85 > 95": 1,
+        "74 > 85 > 94": 1,
+        "77 > 82 > 97": 1
+      },
+      "4": {
+        "71 > 88 > 90": 1,
+        "72 > 82 > 98": 1,
+        "77 > 84 > 95": 1,
+        "72 > 86 > 91": 1
+      },
+      "5": {
+        "72 > 80 > 97": 1,
+        "74 > 84 > 93": 1,
+        "76 > 85 > 93": 1
+      },
+      "6": {
+        "76 > 83 > 98": 1,
+        "74 > 80 > 97": 1,
+        "76 > 87 > 94": 1
+      },
+      "7": {
+        "76 > 84 > 93": 1,
+        "78 > 80 > 97 > 78 > 80 > 97": 1
+      },
+      "8": {
+        "81 > 95 > 101": 1,
+        "77 > 92 > 97": 1,
+        "77 > 96 > 103": 1,
+        "82 > 93 > 102": 1,
+        "76 > 92 > 101": 1,
+        "76 > 86 > 102": 1,
+        "81 > 94 > 102": 1,
+        "84 > 86 > 101": 1,
+        "84 > 89 > 101": 1,
+        "80 > 91 > 102": 1,
+        "83 > 94 > 104": 1,
+        "84 > 96 > 103": 1,
+        "84 > 93 > 101": 1,
+        "85 > 89 > 104": 1,
+        "82 > 95 > 97": 1
+      },
+      "9": {
+        "82 > 93 > 97": 1,
+        "81 > 96 > 106": 1,
+        "78 > 88 > 98": 1,
+        "80 > 90 > 98": 1,
+        "77 > 96 > 99": 1,
+        "79 > 88 > 101": 1,
+        "80 > 89 > 104": 1,
+        "82 > 93": 1,
+        "76 > 91 > 97": 1,
+        "85 > 93 > 85 > 93 > 85": 1,
+        "76 > 89 > 100": 1
+      },
+      "10": {
+        "85 > 93 > 98": 2,
+        "84 > 95 > 99": 1,
+        "78 > 96 > 98": 1,
+        "79 > 90 > 103": 1,
+        "80 > 88 > 105": 1,
+        "83 > 90 > 100": 1,
+        "79 > 86 > 100": 1,
+        "77 > 93 > 96": 1,
+        "77 > 90 > 106": 1,
+        "85 > 88 > 100": 1,
+        "79 > 88 > 106": 1,
+        "84 > 87 > 84 > 87 > 84 > 87 > 100": 1,
+        "84 > 90 > 102": 1,
+        "77 > 86 > 100": 1,
+        "86 > 94 > 96": 1,
+        "82 > 88 > 99": 1,
+        "84 > 89 > 105": 1,
+        "86 > 91 > 102": 1,
+        "85 > 90 > 97": 1,
+        "81 > 90 > 103": 1,
+        "85 > 88 > 97": 1,
+        "77 > 90 > 99": 1,
+        "86 > 87 > 102": 1,
+        "76 > 96 > 102": 1
+      }
+    },
+    "observed": {
+      "powers_stripped": {
+        "DARK_SHACKLES_POWER": {
+          "n": 1,
+          "fights": 1,
+          "amount_before": {
+            "15": 1
+          },
+          "move_after": {
+            "BOOT_UP_MOVE": 1
+          },
+          "stunned_share": 0.0,
+          "co_removed": {
+            "STOCK_POWER": 1
+          },
+          "died_same_turn": 0,
+          "turn_end_unclear": 0,
+          "alive_at_turn_end": 1,
+          "stunned_at_turn_end": 0,
+          "attack_before": 1,
+          "attack_cancelled": 1,
+          "hp_check": {
+            "n": 0,
+            "landed": 0
+          },
+          "evidence": [],
+          "move_before": {
+            "HAMMER_UPPERCUT_MOVE": 1
+          },
+          "move_changed": 1,
+          "move_changed_share": 1.0,
+          "changed_to": {
+            "BOOT_UP_MOVE": 1
+          },
+          "changed_evidence": [
+            "UACFSW4VDDLD F46 T4"
+          ],
+          "end_move": {
+            "BOOT_UP_MOVE": 1
+          },
+          "next_move": {
+            "HAMMER_UPPERCUT_MOVE": 1
+          },
+          "changed_next": {
+            "HAMMER_UPPERCUT_MOVE": 1
+          },
+          "revived": 1
+        },
+        "MANGLE_POWER": {
+          "n": 3,
+          "fights": 1,
+          "amount_before": {
+            "10": 3
+          },
+          "move_after": {
+            "ONE_TWO_MOVE": 3
+          },
+          "stunned_share": 0.0,
+          "co_removed": {},
+          "died_same_turn": 0,
+          "turn_end_unclear": 0,
+          "alive_at_turn_end": 3,
+          "stunned_at_turn_end": 0,
+          "attack_before": 3,
+          "attack_cancelled": 0,
+          "hp_check": {
+            "n": 0,
+            "landed": 0
+          },
+          "evidence": [],
+          "move_before": {
+            "ONE_TWO_MOVE": 3
+          },
+          "move_changed": 0,
+          "move_changed_share": 0.0,
+          "changed_to": {},
+          "changed_evidence": [],
+          "end_move": {
+            "ONE_TWO_MOVE": 3
+          },
+          "next_move": {
+            "HAMMER_UPPERCUT_MOVE": 3
+          },
+          "changed_next": {},
+          "revived": 3
+        },
+        "PIERCING_WAIL_POWER": {
+          "n": 3,
+          "fights": 2,
+          "amount_before": {
+            "6": 1,
+            "8": 2
+          },
+          "move_after": {
+            "HAMMER_UPPERCUT_MOVE": 1,
+            "BOOT_UP_MOVE": 1,
+            "ONE_TWO_MOVE": 1
+          },
+          "stunned_share": 0.0,
+          "co_removed": {
+            "POISON_POWER": 2,
+            "VULNERABLE_POWER": 2,
+            "WEAK_POWER": 2
+          },
+          "died_same_turn": 0,
+          "turn_end_unclear": 0,
+          "alive_at_turn_end": 3,
+          "stunned_at_turn_end": 0,
+          "attack_before": 3,
+          "attack_cancelled": 0,
+          "hp_check": {
+            "n": 2,
+            "landed": 0
+          },
+          "evidence": [],
+          "move_before": {
+            "HAMMER_UPPERCUT_MOVE": 2,
+            "ONE_TWO_MOVE": 1
+          },
+          "move_changed": 3,
+          "move_changed_share": 1.0,
+          "changed_to": {
+            "HAMMER_UPPERCUT_MOVE": 1,
+            "BOOT_UP_MOVE": 1,
+            "ONE_TWO_MOVE": 1
+          },
+          "changed_evidence": [
+            "VLV17NUSFS61 F37 T4",
+            "H9ERYJLBL4UC F46 T4",
+            "H9ERYJLBL4UC F46 T5"
+          ],
+          "end_move": {
+            "HAMMER_UPPERCUT_MOVE": 2,
+            "ONE_TWO_MOVE": 1
+          },
+          "next_move": {
+            "BOOT_UP_MOVE": 2,
+            "ONE_TWO_MOVE": 1
+          },
+          "changed_next": {
+            "BOOT_UP_MOVE": 2,
+            "ONE_TWO_MOVE": 1
+          },
+          "revived": 2
+        },
+        "POISON_POWER": {
+          "n": 18,
+          "fights": 12,
+          "amount_before": {
+            "2": 2,
+            "3": 1,
+            "4": 1,
+            "5": 2,
+            "6": 1,
+            "7": 2,
+            "8": 1,
+            "9": 1,
+            "10": 1,
+            "11": 1,
+            "13": 1,
+            "14": 1,
+            "19": 1,
+            "21": 1,
+            "27": 1
+          },
+          "move_after": {
+            "BOOT_UP_MOVE": 15,
+            "HAMMER_UPPERCUT_MOVE": 2,
+            "ONE_TWO_MOVE": 1
+          },
+          "stunned_share": 0.0,
+          "co_removed": {
+            "WEAK_POWER": 9,
+            "VULNERABLE_POWER": 8,
+            "STOCK_POWER": 7,
+            "STRENGTH_POWER": 6,
+            "PIERCING_WAIL_POWER": 2
+          },
+          "died_same_turn": 0,
+          "turn_end_unclear": 0,
+          "alive_at_turn_end": 18,
+          "stunned_at_turn_end": 0,
+          "attack_before": 16,
+          "attack_cancelled": 13,
+          "hp_check": {
+            "n": 13,
+            "landed": 0
+          },
+          "evidence": [],
+          "move_before": {
+            "HAMMER_UPPERCUT_MOVE": 9,
+            "ONE_TWO_MOVE": 7,
+            "BOOT_UP_MOVE": 2
+          },
+          "move_changed": 16,
+          "move_changed_share": 0.889,
+          "changed_to": {
+            "BOOT_UP_MOVE": 14,
+            "HAMMER_UPPERCUT_MOVE": 2
+          },
+          "changed_evidence": [
+            "T082DRCUHRRD F44 T3",
+            "R0HEV5E3QT6G F45 T4",
+            "53FLQ68CETW0 F45 T5"
+          ],
+          "end_move": {
+            "BOOT_UP_MOVE": 15,
+            "HAMMER_UPPERCUT_MOVE": 2,
+            "ONE_TWO_MOVE": 1
+          },
+          "next_move": {
+            "HAMMER_UPPERCUT_MOVE": 15,
+            "ONE_TWO_MOVE": 2,
+            "BOOT_UP_MOVE": 1
+          },
+          "changed_next": {
+            "HAMMER_UPPERCUT_MOVE": 13,
+            "ONE_TWO_MOVE": 2,
+            "BOOT_UP_MOVE": 1
+          },
+          "revived": 18
+        },
+        "STOCK_POWER": {
+          "n": 43,
+          "fights": 42,
+          "amount_before": {
+            "1": 43
+          },
+          "move_after": {
+            "BOOT_UP_MOVE": 42,
+            "HAMMER_UPPERCUT_MOVE": 1
+          },
+          "stunned_share": 0.0,
+          "co_removed": {
+            "STRENGTH_POWER": 39,
+            "VULNERABLE_POWER": 22,
+            "WEAK_POWER": 8,
+            "POISON_POWER": 7,
+            "DARK_SHACKLES_POWER": 1
+          },
+          "died_same_turn": 1,
+          "turn_end_unclear": 0,
+          "alive_at_turn_end": 42,
+          "stunned_at_turn_end": 0,
+          "attack_before": 40,
+          "attack_cancelled": 39,
+          "hp_check": {
+            "n": 38,
+            "landed": 2
+          },
+          "evidence": [],
+          "move_before": {
+            "HAMMER_UPPERCUT_MOVE": 21,
+            "ONE_TWO_MOVE": 20,
+            "BOOT_UP_MOVE": 2
+          },
+          "move_changed": 41,
+          "move_changed_share": 0.953,
+          "changed_to": {
+            "BOOT_UP_MOVE": 40,
+            "HAMMER_UPPERCUT_MOVE": 1
+          },
+          "changed_evidence": [
+            "TQX5JJX3UD39 F37 T5",
+            "U6W7J2AWV7AV F39 T4",
+            "CAYKKMTJWBPM F39 T6"
+          ],
+          "end_move": {
+            "BOOT_UP_MOVE": 41,
+            "HAMMER_UPPERCUT_MOVE": 1
+          },
+          "next_move": {
+            "HAMMER_UPPERCUT_MOVE": 40,
+            "ONE_TWO_MOVE": 1,
+            "BOOT_UP_MOVE": 1
+          },
+          "changed_next": {
+            "HAMMER_UPPERCUT_MOVE": 38,
+            "ONE_TWO_MOVE": 1,
+            "BOOT_UP_MOVE": 1
+          },
+          "revived": 43
+        },
+        "STRENGTH_POWER": {
+          "n": 58,
+          "fights": 49,
+          "amount_before": {
+            "1": 3,
+            "2": 2,
+            "3": 25,
+            "4": 22,
+            "5": 2,
+            "6": 2,
+            "7": 1,
+            "8": 1
+          },
+          "move_after": {
+            "BOOT_UP_MOVE": 43,
+            "HAMMER_UPPERCUT_MOVE": 13,
+            "ONE_TWO_MOVE": 2
+          },
+          "stunned_share": 0.0,
+          "co_removed": {
+            "STOCK_POWER": 39,
+            "VULNERABLE_POWER": 22,
+            "WEAK_POWER": 7,
+            "POISON_POWER": 6
+          },
+          "died_same_turn": 1,
+          "turn_end_unclear": 0,
+          "alive_at_turn_end": 57,
+          "stunned_at_turn_end": 0,
+          "attack_before": 57,
+          "attack_cancelled": 43,
+          "hp_check": {
+            "n": 52,
+            "landed": 3
+          },
+          "evidence": [],
+          "move_before": {
+            "HAMMER_UPPERCUT_MOVE": 35,
+            "ONE_TWO_MOVE": 23
+          },
+          "move_changed": 43,
+          "move_changed_share": 0.741,
+          "changed_to": {
+            "BOOT_UP_MOVE": 43
+          },
+          "changed_evidence": [
+            "TQX5JJX3UD39 F37 T5",
+            "U6W7J2AWV7AV F39 T4",
+            "CAYKKMTJWBPM F39 T6"
+          ],
+          "end_move": {
+            "BOOT_UP_MOVE": 43,
+            "HAMMER_UPPERCUT_MOVE": 11,
+            "ONE_TWO_MOVE": 3
+          },
+          "next_move": {
+            "HAMMER_UPPERCUT_MOVE": 44,
+            "ONE_TWO_MOVE": 11,
+            "BOOT_UP_MOVE": 2
+          },
+          "changed_next": {
+            "HAMMER_UPPERCUT_MOVE": 41,
+            "ONE_TWO_MOVE": 1
+          },
+          "revived": 43
+        },
+        "VULNERABLE_POWER": {
+          "n": 53,
+          "fights": 35,
+          "amount_before": {
+            "1": 21,
+            "2": 15,
+            "3": 11,
+            "4": 1,
+            "5": 2,
+            "6": 2,
+            "7": 1
+          },
+          "move_after": {
+            "BOOT_UP_MOVE": 48,
+            "HAMMER_UPPERCUT_MOVE": 3,
+            "ONE_TWO_MOVE": 2
+          },
+          "stunned_share": 0.0,
+          "co_removed": {
+            "STOCK_POWER": 22,
+            "STRENGTH_POWER": 22,
+            "WEAK_POWER": 12,
+            "POISON_POWER": 8,
+            "PIERCING_WAIL_POWER": 2
+          },
+          "died_same_turn": 0,
+          "turn_end_unclear": 0,
+          "alive_at_turn_end": 53,
+          "stunned_at_turn_end": 0,
+          "attack_before": 52,
+          "attack_cancelled": 45,
+          "hp_check": {
+            "n": 47,
+            "landed": 3
+          },
+          "evidence": [],
+          "move_before": {
+            "ONE_TWO_MOVE": 28,
+            "HAMMER_UPPERCUT_MOVE": 24,
+            "BOOT_UP_MOVE": 1
+          },
+          "move_changed": 49,
+          "move_changed_share": 0.925,
+          "changed_to": {
+            "BOOT_UP_MOVE": 47,
+            "HAMMER_UPPERCUT_MOVE": 2
+          },
+          "changed_evidence": [
+            "TQX5JJX3UD39 F37 T1",
+            "TQX5JJX3UD39 F37 T5",
+            "U6W7J2AWV7AV F39 T4"
+          ],
+          "end_move": {
+            "BOOT_UP_MOVE": 46,
+            "HAMMER_UPPERCUT_MOVE": 4,
+            "ONE_TWO_MOVE": 3
+          },
+          "next_move": {
+            "HAMMER_UPPERCUT_MOVE": 47,
+            "BOOT_UP_MOVE": 3,
+            "ONE_TWO_MOVE": 2
+          },
+          "changed_next": {
+            "HAMMER_UPPERCUT_MOVE": 45,
+            "ONE_TWO_MOVE": 2,
+            "BOOT_UP_MOVE": 2
+          },
+          "revived": 52
+        },
+        "WEAK_POWER": {
+          "n": 24,
+          "fights": 18,
+          "amount_before": {
+            "1": 13,
+            "2": 6,
+            "3": 3,
+            "5": 1,
+            "8": 1
+          },
+          "move_after": {
+            "BOOT_UP_MOVE": 21,
+            "HAMMER_UPPERCUT_MOVE": 2,
+            "ONE_TWO_MOVE": 1
+          },
+          "stunned_share": 0.0,
+          "co_removed": {
+            "VULNERABLE_POWER": 12,
+            "POISON_POWER": 9,
+            "STOCK_POWER": 8,
+            "STRENGTH_POWER": 7,
+            "PIERCING_WAIL_POWER": 2
+          },
+          "died_same_turn": 0,
+          "turn_end_unclear": 0,
+          "alive_at_turn_end": 24,
+          "stunned_at_turn_end": 0,
+          "attack_before": 21,
+          "attack_cancelled": 18,
+          "hp_check": {
+            "n": 16,
+            "landed": 0
+          },
+          "evidence": [],
+          "move_before": {
+            "ONE_TWO_MOVE": 12,
+            "HAMMER_UPPERCUT_MOVE": 9,
+            "BOOT_UP_MOVE": 3
+          },
+          "move_changed": 21,
+          "move_changed_share": 0.875,
+          "changed_to": {
+            "BOOT_UP_MOVE": 19,
+            "HAMMER_UPPERCUT_MOVE": 1,
+            "ONE_TWO_MOVE": 1
+          },
+          "changed_evidence": [
+            "JR66CJ9T8H7W F45 T4",
+            "WY41FADPAGTW F44 T3",
+            "Y3XT9EBS7U8B F45 T2"
+          ],
+          "end_move": {
+            "BOOT_UP_MOVE": 20,
+            "HAMMER_UPPERCUT_MOVE": 3,
+            "ONE_TWO_MOVE": 1
+          },
+          "next_move": {
+            "HAMMER_UPPERCUT_MOVE": 21,
+            "ONE_TWO_MOVE": 2,
+            "BOOT_UP_MOVE": 1
+          },
+          "changed_next": {
+            "HAMMER_UPPERCUT_MOVE": 19,
+            "BOOT_UP_MOVE": 1,
+            "ONE_TWO_MOVE": 1
+          },
+          "revived": 23
+        }
+      },
+      "powers_lowered": {
+        "POISON_POWER": {
+          "n": 3,
+          "fights": 2,
+          "move_before": {
+            "ONE_TWO_MOVE": 2,
+            "HAMMER_UPPERCUT_MOVE": 1
+          },
+          "move_changed": 3,
+          "move_changed_share": 1.0,
+          "changed_to": {
+            "HAMMER_UPPERCUT_MOVE": 2,
+            "BOOT_UP_MOVE": 1
+          },
+          "changed_evidence": [
+            "VLV17NUSFS61 F37 T6",
+            "VLV17NUSFS61 F37 T7",
+            "H9ERYJLBL4UC F46 T5"
+          ],
+          "end_move": {
+            "BOOT_UP_MOVE": 1,
+            "HAMMER_UPPERCUT_MOVE": 1,
+            "ONE_TWO_MOVE": 1
+          },
+          "next_move": {
+            "BOOT_UP_MOVE": 2,
+            "ONE_TWO_MOVE": 1
+          },
+          "changed_next": {
+            "BOOT_UP_MOVE": 2,
+            "ONE_TWO_MOVE": 1
+          },
+          "revived": 3
+        },
+        "STOCK_POWER": {
+          "n": 46,
+          "fights": 44,
+          "move_before": {
+            "HAMMER_UPPERCUT_MOVE": 23,
+            "ONE_TWO_MOVE": 23
+          },
+          "move_changed": 46,
+          "move_changed_share": 1.0,
+          "changed_to": {
+            "BOOT_UP_MOVE": 45,
+            "HAMMER_UPPERCUT_MOVE": 1
+          },
+          "changed_evidence": [
+            "TQX5JJX3UD39 F37 T1",
+            "U6W7J2AWV7AV F39 T3",
+            "CAYKKMTJWBPM F39 T2"
+          ],
+          "end_move": {
+            "BOOT_UP_MOVE": 43,
+            "HAMMER_UPPERCUT_MOVE": 3
+          },
+          "next_move": {
+            "HAMMER_UPPERCUT_MOVE": 44,
+            "ONE_TWO_MOVE": 1,
+            "BOOT_UP_MOVE": 1
+          },
+          "changed_next": {
+            "HAMMER_UPPERCUT_MOVE": 44,
+            "ONE_TWO_MOVE": 1,
+            "BOOT_UP_MOVE": 1
+          },
+          "revived": 46
+        },
+        "STRENGTH_POWER": {
+          "n": 3,
+          "fights": 3,
+          "move_before": {
+            "ONE_TWO_MOVE": 2,
+            "HAMMER_UPPERCUT_MOVE": 1
+          },
+          "move_changed": 0,
+          "move_changed_share": 0.0,
+          "changed_to": {},
+          "changed_evidence": [],
+          "end_move": {
+            "ONE_TWO_MOVE": 2,
+            "HAMMER_UPPERCUT_MOVE": 1
+          },
+          "next_move": {
+            "HAMMER_UPPERCUT_MOVE": 2,
+            "ONE_TWO_MOVE": 1
+          },
+          "changed_next": {},
+          "revived": 0
+        },
+        "VULNERABLE_POWER": {
+          "n": 3,
+          "fights": 3,
+          "move_before": {
+            "HAMMER_UPPERCUT_MOVE": 2,
+            "BOOT_UP_MOVE": 1
+          },
+          "move_changed": 2,
+          "move_changed_share": 0.667,
+          "changed_to": {
+            "BOOT_UP_MOVE": 1,
+            "HAMMER_UPPERCUT_MOVE": 1
+          },
+          "changed_evidence": [
+            "8L29N792FA45 F39 T3",
+            "H9ERYJLBL4UC F46 T3"
+          ],
+          "end_move": {
+            "BOOT_UP_MOVE": 3
+          },
+          "next_move": {
+            "HAMMER_UPPERCUT_MOVE": 2,
+            "ONE_TWO_MOVE": 1
+          },
+          "changed_next": {
+            "HAMMER_UPPERCUT_MOVE": 2
+          },
+          "revived": 2
+        },
+        "WEAK_POWER": {
+          "n": 2,
+          "fights": 1,
+          "move_before": {
+            "HAMMER_UPPERCUT_MOVE": 2
+          },
+          "move_changed": 0,
+          "move_changed_share": 0.0,
+          "changed_to": {},
+          "changed_evidence": [],
+          "end_move": {
+            "HAMMER_UPPERCUT_MOVE": 2
+          },
+          "next_move": {
+            "ONE_TWO_MOVE": 2
+          },
+          "changed_next": {},
+          "revived": 2
+        }
+      }
+    }
+  }
+}

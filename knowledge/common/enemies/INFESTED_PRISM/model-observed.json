@@ -1,0 +1,34 @@
+{
+  "schema": "legacy-enemy-observation-v1",
+  "enemy_id": "INFESTED_PRISM",
+  "source": "common/move-model.json",
+  "pointer": [
+    "INFESTED_PRISM"
+  ],
+  "scope_policy": "仅机械封装原common数据，未扩适用范围或新增机制结论。",
+  "payload": {
+    "buffs": [
+      "PULSATE_MOVE"
+    ],
+    "damage": {
+      "JAB_MOVE": 15.5,
+      "PULSATE_MOVE": 8.6,
+      "RADIATE_MOVE": 11.3,
+      "WHIRLWIND_MOVE": 15.3
+    },
+    "next": {
+      "JAB_MOVE": {
+        "RADIATE_MOVE": 198
+      },
+      "PULSATE_MOVE": {
+        "JAB_MOVE": 112
+      },
+      "RADIATE_MOVE": {
+        "WHIRLWIND_MOVE": 170
+      },
+      "WHIRLWIND_MOVE": {
+        "PULSATE_MOVE": 141
+      }
+    }
+  }
+}

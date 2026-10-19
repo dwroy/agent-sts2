@@ -1,0 +1,34 @@
+{
+  "schema": "legacy-enemy-observation-v1",
+  "enemy_id": "MECHA_KNIGHT",
+  "source": "common/move-model.json",
+  "pointer": [
+    "MECHA_KNIGHT"
+  ],
+  "scope_policy": "仅机械封装原common数据，未扩适用范围或新增机制结论。",
+  "payload": {
+    "buffs": [
+      "WINDUP_MOVE"
+    ],
+    "damage": {
+      "CHARGE_MOVE": 26.9,
+      "FLAMETHROWER_MOVE": 13.1,
+      "HEAVY_CLEAVE_MOVE": 43.4,
+      "WINDUP_MOVE": 0.0
+    },
+    "next": {
+      "CHARGE_MOVE": {
+        "FLAMETHROWER_MOVE": 40
+      },
+      "FLAMETHROWER_MOVE": {
+        "WINDUP_MOVE": 82
+      },
+      "HEAVY_CLEAVE_MOVE": {
+        "FLAMETHROWER_MOVE": 60
+      },
+      "WINDUP_MOVE": {
+        "HEAVY_CLEAVE_MOVE": 72
+      }
+    }
+  }
+}

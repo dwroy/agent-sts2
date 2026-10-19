@@ -60,7 +60,7 @@ def restore_model(root, target, source, game_data):
                 raise ValueError("unsupported external model input")
             raw = game_data.read_bytes()
         else:
-            if not name.startswith(allowed) or ".." in path.parts or path.suffix not in (".ts", ".py", ".json"):
+            if (not name.startswith(allowed) and name != "ops/content_store.py") or ".." in path.parts or path.suffix not in (".ts", ".py", ".json"):
                 raise ValueError("unsupported pinned model path: " + name)
             raw = subprocess.check_output(["git", "show", base + ":" + name], cwd=root)
         if digest(raw) != expected:
@@ -72,13 +72,20 @@ def restore_model(root, target, source, game_data):
             if output.exists() and output.read_bytes() != raw:
                 raise ValueError("retain changed pinned input: " + name)
             output.write_bytes(raw)
-    for name in ("agent/package.json", "agent/tsconfig.json"):
+    for name in ("agent/package.json", "agent/tsconfig.json", "agent/package-lock.json"):
         raw = subprocess.check_output(["git", "show", base + ":" + name], cwd=root)
+        if name == "agent/package-lock.json" and (root / name).read_bytes() != raw:
+            raise ValueError("pinned dependency lock differs; do not share current tools: " + name)
+        if name == "agent/package.json":
+            pinned, current = json.loads(raw), json.loads((root / name).read_bytes())
+            if any(pinned.get(field) != current.get(field) for field in ("dependencies", "devDependencies", "optionalDependencies", "engines")):
+                raise ValueError("pinned dependency manifest differs; do not share current tools")
         output = target / name
         output.parent.mkdir(parents=True, exist_ok=True)
         if output.exists() and output.read_bytes() != raw:
             raise ValueError("retain changed pinned dependency input: " + name)
         output.write_bytes(raw)
+        verified[name] = digest(raw)
     link = target / "agent/node_modules"
     if not link.exists():
         link.symlink_to(root / "agent/node_modules", target_is_directory=True)

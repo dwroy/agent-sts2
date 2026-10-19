@@ -1,0 +1,30 @@
+{
+  "schema": "legacy-enemy-observation-v1",
+  "enemy_id": "TURRET_OPERATOR",
+  "source": "common/move-model.json",
+  "pointer": [
+    "TURRET_OPERATOR"
+  ],
+  "scope_policy": "仅机械封装原common数据，未扩适用范围或新增机制结论。",
+  "payload": {
+    "buffs": [
+      "RELOAD_MOVE"
+    ],
+    "damage": {
+      "RELOAD_MOVE": 0.0,
+      "UNLOAD_MOVE": 18.8,
+      "UNLOAD_MOVE_2": 17.5
+    },
+    "next": {
+      "RELOAD_MOVE": {
+        "UNLOAD_MOVE": 85
+      },
+      "UNLOAD_MOVE": {
+        "UNLOAD_MOVE_2": 206
+      },
+      "UNLOAD_MOVE_2": {
+        "RELOAD_MOVE": 157
+      }
+    }
+  }
+}

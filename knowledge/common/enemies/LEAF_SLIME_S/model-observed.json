@@ -1,0 +1,23 @@
+{
+  "schema": "legacy-enemy-observation-v1",
+  "enemy_id": "LEAF_SLIME_S",
+  "source": "common/move-model.json",
+  "pointer": [
+    "LEAF_SLIME_S"
+  ],
+  "scope_policy": "仅机械封装原common数据，未扩适用范围或新增机制结论。",
+  "payload": {
+    "damage": {
+      "GOOP_MOVE": 0.0,
+      "TACKLE_MOVE": 3.6
+    },
+    "next": {
+      "GOOP_MOVE": {
+        "TACKLE_MOVE": 405
+      },
+      "TACKLE_MOVE": {
+        "GOOP_MOVE": 360
+      }
+    }
+  }
+}

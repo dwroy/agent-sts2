@@ -1,0 +1,28 @@
+{
+  "schema": "legacy-enemy-observation-v1",
+  "enemy_id": "SPECTRAL_KNIGHT",
+  "source": "common/move-model.json",
+  "pointer": [
+    "SPECTRAL_KNIGHT"
+  ],
+  "scope_policy": "仅机械封装原common数据，未扩适用范围或新增机制结论。",
+  "payload": {
+    "damage": {
+      "HEX": 0.0,
+      "SOUL_FLAME": 9.9,
+      "SOUL_SLASH": 15.8
+    },
+    "next": {
+      "HEX": {
+        "SOUL_SLASH": 50
+      },
+      "SOUL_FLAME": {
+        "SOUL_SLASH": 43
+      },
+      "SOUL_SLASH": {
+        "SOUL_FLAME": 60,
+        "SOUL_SLASH": 31
+      }
+    }
+  }
+}

@@ -1,0 +1,35 @@
+{
+  "schema": "legacy-enemy-observation-v1",
+  "enemy_id": "TORCH_HEAD_AMALGAM",
+  "source": "common/move-model.json",
+  "pointer": [
+    "TORCH_HEAD_AMALGAM"
+  ],
+  "scope_policy": "仅机械封装原common数据，未扩适用范围或新增机制结论。",
+  "payload": {
+    "damage": {
+      "BEAM_MOVE": 38.7,
+      "STRONG_TACKLE_MOVE": 29.0,
+      "TACKLE_2_MOVE": 18.9,
+      "TACKLE_3_MOVE": 23.4,
+      "TACKLE_4_MOVE": 24.5
+    },
+    "next": {
+      "BEAM_MOVE": {
+        "TACKLE_3_MOVE": 154
+      },
+      "STRONG_TACKLE_MOVE": {
+        "TACKLE_2_MOVE": 105
+      },
+      "TACKLE_2_MOVE": {
+        "BEAM_MOVE": 103
+      },
+      "TACKLE_3_MOVE": {
+        "TACKLE_4_MOVE": 134
+      },
+      "TACKLE_4_MOVE": {
+        "BEAM_MOVE": 94
+      }
+    }
+  }
+}

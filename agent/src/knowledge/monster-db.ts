@@ -1,3 +1,4 @@
+import { readCompatibleKnowledgeText } from "./catalog.js";
 /**
  * The monster database (knowledge/builders/build-monster-db.py -> monster-db.json): measured facts about every enemy,
  * encounter and act boss from the logged fights, per ascension, with n on every number. DeepSeek sees it
@@ -172,7 +173,7 @@ export function readMonsterRecords(dir: string = KNOWLEDGE_DIR): Record<string, 
 
 /** The monster DB in `dir` merged with the run's character's records (mergeMonsterRecords); throws when the common file does not read. */
 export function readMonsterDbJson(dir: string = KNOWLEDGE_DIR): Record<string, unknown> {
-  const parsed = JSON.parse(readFileSync(knowledgeFile(dir, "monster-db.json"), "utf8")) as unknown;
+  const parsed = JSON.parse(readCompatibleKnowledgeText(dir, "monster-db.json")) as unknown;
   if (!isObject(parsed)) throw new Error(`${knowledgeFile(dir, "monster-db.json")}: not an object`);
   return mergeMonsterRecords(parsed, readMonsterRecords(dir));
 }

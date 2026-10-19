@@ -99,17 +99,21 @@ class StrategyConcurrency(unittest.TestCase):
             (root/'agent/node_modules').mkdir(parents=True)
             (root/'agent/.keep').write_text('fixture agent directory\n')
             (root/'data/logdb-venv/bin').mkdir(parents=True)
-            (root/'data/logdb-venv/bin/python').write_text('existing fixture dependency\n')
+            (root/'agent/tools/logdb').mkdir(parents=True)
+            (root/'agent/tools/logdb/requirements.txt').write_text('duckdb==fixed\n')
+            (root/'data/logdb-venv/pyvenv.cfg').write_text('fixed interpreter fixture\n')
+            (root/'data/logdb-venv/bin/python').write_text('#!/bin/sh\nprintf \'%s\\n\' \'{"python":[3,14,0],"cache_tag":"fixed","duckdb":"fixed"}\'\n')
+            (root/'data/logdb-venv/bin/python').chmod(0o755)
             (root/'.gitignore').write_text('.worktrees/\nops/codex-ops/\nagent/node_modules\ndata/logdb-venv\n')
             for name in ['paths.sh', 'codex-ops-learner.sh', 'disk_capacity.py', 'worktree_checkout.py',
-                         'worktree_retention.py', 'learner_retention.py', 'learner_checks.py']:
+                         'worktree_retention.py', 'learner_retention.py', 'learner_checks.py', 'shared_tools.py']:
                 shutil.copyfile(ROOT/'ops'/name, root/'ops'/name)
             (root/'ops/codex-ops-learn.py').write_text('raise SystemExit(0)\n')
             env = dict(os.environ)
             env.update(GIT_AUTHOR_NAME='Fixture', GIT_AUTHOR_EMAIL='fixture@example.test',
                        GIT_COMMITTER_NAME='Fixture', GIT_COMMITTER_EMAIL='fixture@example.test')
             subprocess.run(['git', 'init', '-b', 'main', str(root)], check=True, capture_output=True, env=env)
-            subprocess.run(['git', '-C', str(root), 'add', '.gitignore', 'ops', 'agent/.keep'], check=True, capture_output=True, env=env)
+            subprocess.run(['git', '-C', str(root), 'add', '.gitignore', 'ops', 'agent/.keep', 'agent/tools/logdb/requirements.txt'], check=True, capture_output=True, env=env)
             subprocess.run(['git', '-C', str(root), '-c', 'core.hooksPath=/dev/null', 'commit', '-m', 'fixture'],
                            check=True, capture_output=True, env=env)
             batch = '20261009-120000-s2-strategy-proposal'

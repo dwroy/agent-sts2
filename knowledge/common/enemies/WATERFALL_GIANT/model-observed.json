@@ -1,0 +1,65 @@
+{
+  "schema": "legacy-enemy-observation-v1",
+  "enemy_id": "WATERFALL_GIANT",
+  "source": "common/move-model.json",
+  "pointer": [
+    "WATERFALL_GIANT"
+  ],
+  "scope_policy": "仅机械封装原common数据，未扩适用范围或新增机制结论。",
+  "payload": {
+    "buffs": [
+      "PRESSURE_GUN_MOVE",
+      "PRESSURE_UP_MOVE",
+      "PRESSURIZE_MOVE",
+      "RAM_MOVE",
+      "SIPHON_MOVE",
+      "STOMP_MOVE"
+    ],
+    "damage": {
+      "ABOUT_TO_BLOW_MOVE": 0.0,
+      "EXPLODE_MOVE": 41.9,
+      "PRESSURE_GUN_MOVE": 23.6,
+      "PRESSURE_UP_MOVE": 13.2,
+      "PRESSURIZE_MOVE": 0.0,
+      "RAM_MOVE": 10.2,
+      "SIPHON_MOVE": 0.0,
+      "STOMP_MOVE": 15.2
+    },
+    "next": {
+      "ABOUT_TO_BLOW_MOVE": {
+        "EXPLODE_MOVE": 4
+      },
+      "EXPLODE_MOVE": {
+        "ABOUT_TO_BLOW_MOVE": 1,
+        "EXPLODE_MOVE": 1,
+        "STOMP_MOVE": 1
+      },
+      "PRESSURE_GUN_MOVE": {
+        "EXPLODE_MOVE": 35,
+        "PRESSURE_UP_MOVE": 193
+      },
+      "PRESSURE_UP_MOVE": {
+        "ABOUT_TO_BLOW_MOVE": 1,
+        "EXPLODE_MOVE": 16,
+        "STOMP_MOVE": 176
+      },
+      "PRESSURIZE_MOVE": {
+        "STOMP_MOVE": 141
+      },
+      "RAM_MOVE": {
+        "ABOUT_TO_BLOW_MOVE": 1,
+        "EXPLODE_MOVE": 25,
+        "SIPHON_MOVE": 268
+      },
+      "SIPHON_MOVE": {
+        "ABOUT_TO_BLOW_MOVE": 1,
+        "EXPLODE_MOVE": 32,
+        "PRESSURE_GUN_MOVE": 235
+      },
+      "STOMP_MOVE": {
+        "EXPLODE_MOVE": 23,
+        "RAM_MOVE": 294
+      }
+    }
+  }
+}

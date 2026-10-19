@@ -1,0 +1,57 @@
+{
+  "schema": "legacy-enemy-observation-v1",
+  "enemy_id": "TEST_SUBJECT",
+  "source": "common/move-model.json",
+  "pointer": [
+    "TEST_SUBJECT"
+  ],
+  "scope_policy": "仅机械封装原common数据，未扩适用范围或新增机制结论。",
+  "payload": {
+    "buffs": [
+      "BURNING_GROWL_MOVE",
+      "RESPAWN_MOVE"
+    ],
+    "damage": {
+      "BIG_POUNCE": 41.0,
+      "BITE_MOVE": 30.4,
+      "BURNING_GROWL_MOVE": 0.0,
+      "MULTI_CLAW_MOVE": 43.3,
+      "PHASE3_LACERATE_MOVE": 33.4,
+      "RESPAWN_MOVE": 0.0,
+      "SKULL_BASH_MOVE": 19.0
+    },
+    "next": {
+      "BIG_POUNCE": {
+        "BIG_POUNCE": 2,
+        "BURNING_GROWL_MOVE": 31,
+        "PHASE3_LACERATE_MOVE": 2
+      },
+      "BITE_MOVE": {
+        "MULTI_CLAW_MOVE": 42,
+        "RESPAWN_MOVE": 1,
+        "SKULL_BASH_MOVE": 77
+      },
+      "BURNING_GROWL_MOVE": {
+        "PHASE3_LACERATE_MOVE": 23
+      },
+      "MULTI_CLAW_MOVE": {
+        "BIG_POUNCE": 2,
+        "MULTI_CLAW_MOVE": 151,
+        "PHASE3_LACERATE_MOVE": 27,
+        "RESPAWN_MOVE": 4
+      },
+      "PHASE3_LACERATE_MOVE": {
+        "BIG_POUNCE": 45
+      },
+      "RESPAWN_MOVE": {
+        "MULTI_CLAW_MOVE": 2,
+        "PHASE3_LACERATE_MOVE": 4
+      },
+      "SKULL_BASH_MOVE": {
+        "BITE_MOVE": 62,
+        "MULTI_CLAW_MOVE": 12,
+        "RESPAWN_MOVE": 1
+      }
+    }
+  }
+}

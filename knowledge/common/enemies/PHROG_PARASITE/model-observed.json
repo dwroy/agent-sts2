@@ -1,0 +1,23 @@
+{
+  "schema": "legacy-enemy-observation-v1",
+  "enemy_id": "PHROG_PARASITE",
+  "source": "common/move-model.json",
+  "pointer": [
+    "PHROG_PARASITE"
+  ],
+  "scope_policy": "仅机械封装原common数据，未扩适用范围或新增机制结论。",
+  "payload": {
+    "damage": {
+      "INFECT_MOVE": 0.0,
+      "LASH_MOVE": 17.6
+    },
+    "next": {
+      "INFECT_MOVE": {
+        "LASH_MOVE": 218
+      },
+      "LASH_MOVE": {
+        "INFECT_MOVE": 152
+      }
+    }
+  }
+}

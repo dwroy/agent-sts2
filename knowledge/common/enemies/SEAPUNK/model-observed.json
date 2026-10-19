@@ -1,0 +1,30 @@
+{
+  "schema": "legacy-enemy-observation-v1",
+  "enemy_id": "SEAPUNK",
+  "source": "common/move-model.json",
+  "pointer": [
+    "SEAPUNK"
+  ],
+  "scope_policy": "仅机械封装原common数据，未扩适用范围或新增机制结论。",
+  "payload": {
+    "buffs": [
+      "BUBBLE_BURP_MOVE"
+    ],
+    "damage": {
+      "BUBBLE_BURP_MOVE": 0.0,
+      "SEA_KICK_MOVE": 12.6,
+      "SPINNING_KICK_MOVE": 9.6
+    },
+    "next": {
+      "BUBBLE_BURP_MOVE": {
+        "SEA_KICK_MOVE": 302
+      },
+      "SEA_KICK_MOVE": {
+        "SPINNING_KICK_MOVE": 590
+      },
+      "SPINNING_KICK_MOVE": {
+        "BUBBLE_BURP_MOVE": 450
+      }
+    }
+  }
+}

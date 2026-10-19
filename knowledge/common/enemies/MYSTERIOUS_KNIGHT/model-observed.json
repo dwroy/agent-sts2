@@ -1,0 +1,34 @@
+{
+  "schema": "legacy-enemy-observation-v1",
+  "enemy_id": "MYSTERIOUS_KNIGHT",
+  "source": "common/move-model.json",
+  "pointer": [
+    "MYSTERIOUS_KNIGHT"
+  ],
+  "scope_policy": "仅机械封装原common数据，未扩适用范围或新增机制结论。",
+  "payload": {
+    "buffs": [
+      "WAR_CHANT"
+    ],
+    "damage": {
+      "FLAIL_MOVE": 35.2,
+      "RAM_MOVE": 20.7,
+      "WAR_CHANT": 0.0
+    },
+    "next": {
+      "FLAIL_MOVE": {
+        "FLAIL_MOVE": 2,
+        "RAM_MOVE": 2,
+        "WAR_CHANT": 1
+      },
+      "RAM_MOVE": {
+        "FLAIL_MOVE": 1,
+        "RAM_MOVE": 2,
+        "WAR_CHANT": 6
+      },
+      "WAR_CHANT": {
+        "FLAIL_MOVE": 5
+      }
+    }
+  }
+}

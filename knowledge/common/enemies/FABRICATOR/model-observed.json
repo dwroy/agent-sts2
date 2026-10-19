@@ -1,0 +1,33 @@
+{
+  "schema": "legacy-enemy-observation-v1",
+  "enemy_id": "FABRICATOR",
+  "source": "common/move-model.json",
+  "pointer": [
+    "FABRICATOR"
+  ],
+  "scope_policy": "仅机械封装原common数据，未扩适用范围或新增机制结论。",
+  "payload": {
+    "damage": {
+      "DISINTEGRATE_MOVE": 11.8,
+      "FABRICATE_MOVE": 0.0,
+      "FABRICATING_STRIKE_MOVE": 18.9
+    },
+    "next": {
+      "DISINTEGRATE_MOVE": {
+        "DISINTEGRATE_MOVE": 20,
+        "FABRICATE_MOVE": 21,
+        "FABRICATING_STRIKE_MOVE": 18
+      },
+      "FABRICATE_MOVE": {
+        "DISINTEGRATE_MOVE": 51,
+        "FABRICATE_MOVE": 36,
+        "FABRICATING_STRIKE_MOVE": 32
+      },
+      "FABRICATING_STRIKE_MOVE": {
+        "DISINTEGRATE_MOVE": 11,
+        "FABRICATE_MOVE": 46,
+        "FABRICATING_STRIKE_MOVE": 35
+      }
+    }
+  }
+}

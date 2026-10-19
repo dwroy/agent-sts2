@@ -11,6 +11,8 @@ import sys
 HERE = Path(__file__).resolve().parent
 ROOT = HERE.parents[2]
 sys.path.insert(0, str(HERE))
+sys.path.insert(0, str(ROOT / "ops"))
+from content_store import Store, default_directory
 from character_extract import extract, read_jsonl
 from silent_calibration import cadence, frozen_split, render
 from report import load
@@ -26,6 +28,9 @@ def model_fingerprint(root, game_data):
                     if p.suffix in (".ts", ".py") and not p.name.startswith("test_"))
     paths += sorted((root / "knowledge/common").glob("*.json"))
     paths += sorted(p for p in (root / "knowledge/characters/silent").glob("*.json") if p.name != "boss-trust.json")
+    # New frozen producers must remain restorable without borrowing a mutable helper.
+    if (root / "ops/content_store.py").is_file():
+        paths += [root / "ops/content_store.py"]
     paths += [game_data]
     return {str(p.relative_to(root)) if p.is_relative_to(root) else str(p): digest(p) for p in paths}
 
@@ -41,6 +46,16 @@ def synchronize(archive, args):
             Path(target).write_bytes((archive / source).read_bytes())
 
 
+def seal_archive(archive, store_directory):
+    """Deduplicate completed inputs/results, preserving every existing reuse check."""
+    store = Store(store_directory)
+    records = {str(path.relative_to(archive)): store.publish_view(path, path)
+               for path in sorted(archive.rglob("*")) if path.is_file() and path.suffix in (".json", ".jsonl")}
+    write_json(archive.with_suffix(".content.json"), {"schema": "frozen-simulation-artifacts-v1",
+               "artifact": archive.name, "files": records,
+               "reuse_contract": "original provenance, split, input/hash/seed/control checks unchanged"})
+
+
 def main(argv=None):
     p = argparse.ArgumentParser(description=__doc__)
     p.add_argument("--scratch", required=True)
@@ -54,6 +69,7 @@ def main(argv=None):
     p.add_argument("--out", help="generated Silent trust output (never writes other characters)")
     p.add_argument("--report", help="generated report path")
     p.add_argument("--force", action="store_true", help="rerun unchanged trigger; does not move the split")
+    p.add_argument("--object-store", help="immutable input/result object directory; default shared by repository worktrees")
     args = p.parse_args(argv)
     scratch = Path(args.scratch).resolve()
     scratch.mkdir(parents=True, exist_ok=True)
@@ -105,6 +121,7 @@ def main(argv=None):
             raise RuntimeError("completed archive changed; do not publish corrupted artifacts")
         if any(digest(archive / name) != value for name, value in completed.get("files_sha256", {}).items()):
             raise RuntimeError("completed sources/results changed; retain and investigate before publishing")
+        seal_archive(archive, args.object_store or default_directory(scratch))
         synchronize(archive, args)
         print(json.dumps({"skipped": "identical artifact already complete", "archive": str(archive)}))
         return 0
@@ -163,6 +180,7 @@ def main(argv=None):
     synchronize(archive, args)
     write_json(archive / "completed.json", {"artifact": identity, "trust_sha256": digest(trust_path), "report_sha256": digest(archive / "report.md"),
                "files_sha256": {path.name: digest(path) for path in archive.iterdir() if path.is_file() and path.name != "completed.json"}})
+    seal_archive(archive, args.object_store or default_directory(scratch))
     print(json.dumps({"archive": str(archive), "artifact": identity, "trusted_b2": data["trusted_b2"], "trusted_b3": data["trusted_b3"]}))
     return 0
 

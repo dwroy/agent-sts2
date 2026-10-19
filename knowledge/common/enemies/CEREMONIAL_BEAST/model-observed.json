@@ -1,0 +1,49 @@
+{
+  "schema": "legacy-enemy-observation-v1",
+  "enemy_id": "CEREMONIAL_BEAST",
+  "source": "common/move-model.json",
+  "pointer": [
+    "CEREMONIAL_BEAST"
+  ],
+  "scope_policy": "仅机械封装原common数据，未扩适用范围或新增机制结论。",
+  "payload": {
+    "buffs": [
+      "CRUSH_MOVE",
+      "PLOW_MOVE",
+      "STAMP_MOVE"
+    ],
+    "damage": {
+      "BEAST_CRY_MOVE": 0.0,
+      "CRUSH_MOVE": 18.6,
+      "PLOW_MOVE": 20.9,
+      "STAMP_MOVE": 0.0,
+      "STOMP_MOVE": 16.9,
+      "STUNNED": 0.0
+    },
+    "next": {
+      "BEAST_CRY_MOVE": {
+        "STOMP_MOVE": 190
+      },
+      "CRUSH_MOVE": {
+        "BEAST_CRY_MOVE": 107,
+        "CRUSH_MOVE": 2,
+        "STOMP_MOVE": 1
+      },
+      "PLOW_MOVE": {
+        "BEAST_CRY_MOVE": 110,
+        "PLOW_MOVE": 286,
+        "STUNNED": 2
+      },
+      "STAMP_MOVE": {
+        "PLOW_MOVE": 116
+      },
+      "STOMP_MOVE": {
+        "CRUSH_MOVE": 148,
+        "STOMP_MOVE": 2
+      },
+      "STUNNED": {
+        "BEAST_CRY_MOVE": 2
+      }
+    }
+  }
+}

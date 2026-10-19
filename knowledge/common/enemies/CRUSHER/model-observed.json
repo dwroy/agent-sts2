@@ -1,0 +1,38 @@
+{
+  "schema": "legacy-enemy-observation-v1",
+  "enemy_id": "CRUSHER",
+  "source": "common/move-model.json",
+  "pointer": [
+    "CRUSHER"
+  ],
+  "scope_policy": "仅机械封装原common数据，未扩适用范围或新增机制结论。",
+  "payload": {
+    "buffs": [
+      "ADAPT_MOVE"
+    ],
+    "damage": {
+      "ADAPT_MOVE": 0.0,
+      "BUG_STING_MOVE": 20.9,
+      "ENLARGING_STRIKE_MOVE": 5.7,
+      "GUARDED_STRIKE_MOVE": 22.6,
+      "THRASH_MOVE": 17.7
+    },
+    "next": {
+      "ADAPT_MOVE": {
+        "GUARDED_STRIKE_MOVE": 172
+      },
+      "BUG_STING_MOVE": {
+        "ADAPT_MOVE": 219
+      },
+      "ENLARGING_STRIKE_MOVE": {
+        "BUG_STING_MOVE": 247
+      },
+      "GUARDED_STRIKE_MOVE": {
+        "THRASH_MOVE": 138
+      },
+      "THRASH_MOVE": {
+        "ENLARGING_STRIKE_MOVE": 276
+      }
+    }
+  }
+}

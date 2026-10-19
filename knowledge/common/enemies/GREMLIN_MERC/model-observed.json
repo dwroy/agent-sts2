@@ -1,0 +1,30 @@
+{
+  "schema": "legacy-enemy-observation-v1",
+  "enemy_id": "GREMLIN_MERC",
+  "source": "common/move-model.json",
+  "pointer": [
+    "GREMLIN_MERC"
+  ],
+  "scope_policy": "仅机械封装原common数据，未扩适用范围或新增机制结论。",
+  "payload": {
+    "buffs": [
+      "HEHE_MOVE"
+    ],
+    "damage": {
+      "DOUBLE_SMASH_MOVE": 13.8,
+      "GIMME_MOVE": 16.7,
+      "HEHE_MOVE": 8.6
+    },
+    "next": {
+      "DOUBLE_SMASH_MOVE": {
+        "HEHE_MOVE": 100
+      },
+      "GIMME_MOVE": {
+        "DOUBLE_SMASH_MOVE": 149
+      },
+      "HEHE_MOVE": {
+        "GIMME_MOVE": 59
+      }
+    }
+  }
+}

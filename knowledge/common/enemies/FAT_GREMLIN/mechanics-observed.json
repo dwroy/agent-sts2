@@ -1,0 +1,600 @@
+{
+  "schema": "legacy-enemy-observation-v1",
+  "enemy_id": "FAT_GREMLIN",
+  "source": "common/monster-db.json",
+  "pointer": [
+    "monsters",
+    "FAT_GREMLIN"
+  ],
+  "scope_policy": "仅机械封装原common数据，未扩适用范围或新增机制结论。",
+  "payload": {
+    "name": {
+      "zh": "胖地精"
+    },
+    "game_type": "Normal",
+    "game_hp_range": [
+      13,
+      17
+    ],
+    "kind": "hallway",
+    "rooms": {
+      "hallway": 111,
+      "unknown_room": 17
+    },
+    "acts": {
+      "1": 128
+    },
+    "encounters": {
+      "GREMLIN_MERC": 128
+    },
+    "hp_by_asc": {
+      "0": {
+        "min": 13,
+        "median": 14,
+        "max": 17,
+        "n": 15
+      },
+      "2": {
+        "min": 13,
+        "median": 14,
+        "max": 17,
+        "n": 5
+      },
+      "3": {
+        "min": 15,
+        "median": 15.0,
+        "max": 15,
+        "n": 2
+      },
+      "4": {
+        "min": 17,
+        "median": 17,
+        "max": 17,
+        "n": 1
+      },
+      "5": {
+        "min": 14,
+        "median": 16,
+        "max": 17,
+        "n": 3
+      },
+      "6": {
+        "min": 13,
+        "median": 14,
+        "max": 15,
+        "n": 3
+      },
+      "7": {
+        "min": 13,
+        "median": 14.5,
+        "max": 17,
+        "n": 6
+      },
+      "8": {
+        "min": 14,
+        "median": 15.0,
+        "max": 18,
+        "n": 40
+      },
+      "9": {
+        "min": 14,
+        "median": 17,
+        "max": 18,
+        "n": 15
+      },
+      "10": {
+        "min": 14,
+        "median": 16.0,
+        "max": 18,
+        "n": 38
+      }
+    },
+    "moves": {
+      "FLEE_MOVE": {
+        "name": "逃跑",
+        "n_seen": 112,
+        "intents": {
+          "Escape": 112
+        },
+        "turns_seen": {
+          "2": 2,
+          "3": 24,
+          "4": 33,
+          "5": 28,
+          "6": 21,
+          "7": 2,
+          "8": 2
+        },
+        "next": {},
+        "avg_total_shown": 0.0
+      },
+      "SPAWNED_MOVE": {
+        "name": "醒来",
+        "n_seen": 128,
+        "intents": {
+          "Stun": 128
+        },
+        "turns_seen": {
+          "1": 2,
+          "2": 24,
+          "3": 37,
+          "4": 30,
+          "5": 31,
+          "6": 2,
+          "7": 2
+        },
+        "next": {
+          "FLEE_MOVE": 112
+        },
+        "avg_total_shown": 0.0
+      },
+      "UNSET_MOVE": {
+        "name": null,
+        "n_seen": 27,
+        "intents": {
+          "None": 27
+        },
+        "turns_seen": {
+          "1": 1,
+          "2": 4,
+          "3": 9,
+          "4": 12,
+          "5": 1
+        },
+        "next": {
+          "SPAWNED_MOVE": 27
+        },
+        "avg_total_shown": 0.0
+      }
+    },
+    "powers": {
+      "HEIST_POWER": {
+        "name": "盗窃",
+        "type": "Buff",
+        "description": "被击杀时，返还所有偷走的[gold]金币[/gold]。",
+        "n_fights": 123,
+        "amount_at_first_sight": {
+          "1": 2,
+          "10": 1,
+          "12": 1,
+          "18": 1,
+          "20": 26,
+          "22": 1,
+          "26": 2,
+          "31": 2,
+          "33": 1,
+          "34": 1,
+          "38": 1,
+          "40": 35,
+          "44": 1,
+          "50": 1,
+          "54": 1,
+          "58": 1,
+          "60": 26,
+          "80": 16,
+          "100": 1,
+          "120": 2
+        },
+        "amount_max_in_fight": {
+          "1": 2,
+          "10": 1,
+          "12": 1,
+          "18": 1,
+          "20": 26,
+          "22": 1,
+          "26": 2,
+          "31": 2,
+          "33": 1,
+          "34": 1,
+          "38": 1,
+          "40": 35,
+          "44": 1,
+          "50": 1,
+          "54": 1,
+          "58": 1,
+          "60": 26,
+          "80": 16,
+          "100": 1,
+          "120": 2
+        },
+        "amount_at_first_sight_by_asc": {
+          "0": {
+            "20": 4,
+            "40": 2,
+            "60": 2,
+            "80": 3,
+            "100": 1,
+            "120": 1
+          },
+          "2": {
+            "18": 1,
+            "40": 1,
+            "60": 2,
+            "80": 1
+          },
+          "3": {
+            "20": 1,
+            "80": 1
+          },
+          "4": {
+            "40": 1
+          },
+          "5": {
+            "20": 1,
+            "40": 2
+          },
+          "6": {
+            "40": 1,
+            "60": 2
+          },
+          "7": {
+            "40": 1,
+            "60": 2,
+            "80": 2
+          },
+          "8": {
+            "1": 1,
+            "20": 10,
+            "26": 1,
+            "31": 2,
+            "34": 1,
+            "38": 1,
+            "40": 12,
+            "44": 1,
+            "50": 1,
+            "60": 5,
+            "80": 4
+          },
+          "9": {
+            "20": 7,
+            "22": 1,
+            "26": 1,
+            "40": 3,
+            "58": 1,
+            "60": 1
+          },
+          "10": {
+            "1": 1,
+            "10": 1,
+            "12": 1,
+            "20": 3,
+            "33": 1,
+            "40": 12,
+            "54": 1,
+            "60": 12,
+            "80": 5,
+            "120": 1
+          }
+        },
+        "turn_at_first_sight_by_asc": {
+          "0": {
+            "2": 4,
+            "3": 2,
+            "4": 2,
+            "5": 3,
+            "6": 1,
+            "7": 1
+          },
+          "2": {
+            "3": 1,
+            "4": 2,
+            "5": 2
+          },
+          "3": {
+            "2": 1,
+            "5": 1
+          },
+          "4": {
+            "3": 1
+          },
+          "5": {
+            "2": 1,
+            "3": 2
+          },
+          "6": {
+            "3": 1,
+            "4": 2
+          },
+          "7": {
+            "3": 1,
+            "4": 2,
+            "5": 2
+          },
+          "8": {
+            "2": 10,
+            "3": 14,
+            "4": 8,
+            "5": 7
+          },
+          "9": {
+            "2": 7,
+            "3": 4,
+            "4": 3
+          },
+          "10": {
+            "2": 3,
+            "3": 15,
+            "4": 14,
+            "5": 5,
+            "7": 1
+          }
+        }
+      },
+      "POISON_POWER": {
+        "name": "中毒",
+        "type": "Debuff",
+        "description": "中毒的生物会在自身回合开始时失去生命。中毒层数每回合减少[blue]1[/blue]。",
+        "n_fights": 19,
+        "amount_at_first_sight": {
+          "2": 5,
+          "3": 7,
+          "5": 2,
+          "6": 1,
+          "7": 4
+        },
+        "amount_max_in_fight": {
+          "2": 1,
+          "3": 7,
+          "5": 2,
+          "6": 1,
+          "7": 6,
+          "8": 1,
+          "9": 1
+        },
+        "amount_at_first_sight_by_asc": {
+          "6": {
+            "3": 1
+          },
+          "9": {
+            "3": 1
+          },
+          "10": {
+            "2": 5,
+            "3": 5,
+            "5": 2,
+            "6": 1,
+            "7": 4
+          }
+        },
+        "turn_at_first_sight_by_asc": {
+          "6": {
+            "6": 1
+          },
+          "9": {
+            "5": 1
+          },
+          "10": {
+            "3": 1,
+            "4": 6,
+            "5": 7,
+            "6": 3
+          }
+        }
+      },
+      "VULNERABLE_POWER": {
+        "name": "易伤",
+        "type": "Debuff",
+        "description": "易伤的生物从攻击中受到的伤害增加[blue]50%[/blue]。",
+        "n_fights": 14,
+        "amount_at_first_sight": {
+          "1": 4,
+          "2": 8,
+          "3": 2
+        },
+        "amount_max_in_fight": {
+          "1": 4,
+          "2": 8,
+          "3": 2
+        },
+        "amount_at_first_sight_by_asc": {
+          "0": {
+            "1": 1,
+            "2": 1
+          },
+          "2": {
+            "2": 1
+          },
+          "5": {
+            "2": 1
+          },
+          "8": {
+            "1": 3,
+            "2": 3,
+            "3": 1
+          },
+          "9": {
+            "2": 2,
+            "3": 1
+          }
+        },
+        "turn_at_first_sight_by_asc": {
+          "0": {
+            "2": 1,
+            "5": 1
+          },
+          "2": {
+            "6": 1
+          },
+          "5": {
+            "4": 1
+          },
+          "8": {
+            "3": 1,
+            "4": 3,
+            "5": 1,
+            "6": 2
+          },
+          "9": {
+            "3": 1,
+            "4": 1,
+            "5": 1
+          }
+        }
+      },
+      "WEAK_POWER": {
+        "name": "虚弱",
+        "type": "Debuff",
+        "description": "虚弱的生物造成的攻击伤害减少[blue]25%[/blue]。",
+        "n_fights": 14,
+        "amount_at_first_sight": {
+          "1": 13,
+          "2": 1
+        },
+        "amount_max_in_fight": {
+          "1": 13,
+          "2": 1
+        },
+        "amount_at_first_sight_by_asc": {
+          "2": {
+            "1": 1
+          },
+          "8": {
+            "1": 1
+          },
+          "9": {
+            "1": 1
+          },
+          "10": {
+            "1": 10,
+            "2": 1
+          }
+        },
+        "turn_at_first_sight_by_asc": {
+          "2": {
+            "5": 1
+          },
+          "8": {
+            "3": 1
+          },
+          "9": {
+            "5": 1
+          },
+          "10": {
+            "3": 1,
+            "4": 4,
+            "5": 3,
+            "6": 2,
+            "7": 1
+          }
+        }
+      }
+    },
+    "provenance": {
+      "first_seen": "2026-09-24T07:20:21.259Z",
+      "last_seen": "2026-10-17T08:34:21.932Z",
+      "n_runs": 128,
+      "n_instances": 128,
+      "n_spawned_mid_fight": 128,
+      "n_minion_instances": 0
+    },
+    "observed": {
+      "escape_moves": {
+        "FLEE_MOVE": {
+          "n": 112,
+          "gone": 73,
+          "gone_stunned": 0,
+          "stayed": 0,
+          "stayed_stunned": 0,
+          "killed_first": 8,
+          "killed_last_card": 31,
+          "we_died": 0,
+          "unclear": 0,
+          "gone_share": 1.0,
+          "next_after_stay": {},
+          "evidence_gone": [
+            "YWER495F5AYS F13 T6",
+            "VKPXGMV8YV31 F15 T5",
+            "2WUMK6PK5QHD F6 T6"
+          ],
+          "evidence_stayed": []
+        }
+      },
+      "kill_rewards": [
+        {
+          "reward": "Gold:N金币（偷回）",
+          "killed": [
+            53,
+            55
+          ],
+          "left": [
+            9,
+            73
+          ],
+          "elsewhere": [
+            0,
+            11411
+          ],
+          "only_when_killed": false,
+          "exclusive": true,
+          "evidence": [
+            "DG1CDGW8Y5JE F11",
+            "WQTRXBJY0Q1S F6",
+            "BG4W9DSX99DA F7"
+          ]
+        }
+      ],
+      "ally_deaths": {
+        "SNEAKY_GREMLIN": {
+          "n": 75,
+          "fights": 75,
+          "move_before": {
+            "FLEE_MOVE": 63,
+            "SPAWNED_MOVE": 12
+          },
+          "move_changed": 0,
+          "move_changed_share": 0.0,
+          "changed_to": {},
+          "by_move": {
+            "FLEE_MOVE": {
+              "n": 63,
+              "changed_to": {}
+            },
+            "SPAWNED_MOVE": {
+              "n": 12,
+              "changed_to": {}
+            }
+          },
+          "changed_evidence": [],
+          "attack_changed": 0,
+          "co_deaths": 0,
+          "end_move": {
+            "FLEE_MOVE": 49,
+            "SPAWNED_MOVE": 12
+          },
+          "next_n": 11,
+          "next_move": {
+            "FLEE_MOVE": 11
+          },
+          "next_after": {
+            "SPAWNED_MOVE": {
+              "FLEE_MOVE": 11
+            }
+          },
+          "next_evidence": [
+            "WQTRXBJY0Q1S F6 T5",
+            "BG4W9DSX99DA F7 T4",
+            "XPA49DEKREQ1 F5 T6"
+          ],
+          "alive": {
+            "turns": 129,
+            "moves": {
+              "FLEE_MOVE": 98,
+              "SPAWNED_MOVE": 31
+            },
+            "next": {
+              "SPAWNED_MOVE": {
+                "FLEE_MOVE": 10
+              }
+            }
+          },
+          "dead": {
+            "turns": 11,
+            "moves": {
+              "FLEE_MOVE": 11
+            }
+          }
+        }
+      }
+    }
+  }
+}

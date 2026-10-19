@@ -10,12 +10,12 @@
  * turns in it) is only the fallback when the DB has neither, or when no context is given.
  */
 
-import { readFileSync } from "node:fs";
+import { readCompatibleKnowledgeText } from "./catalog.js";
 
 import { asArray, asRecord, numOrNull, str } from "../core/util/json.js";
 import { monsterMoves, moveDamageAt, shownDamageAt } from "./monster-db.js";
 import { bumpDataVersion } from "../core/util/data-version.js";
-import { KNOWLEDGE_DIR, knowledgeFile } from "./files.js";
+import { KNOWLEDGE_DIR } from "./files.js";
 
 export interface EnemyModel {
   next: Record<string, Record<string, number>>;
@@ -29,8 +29,7 @@ let model: Record<string, EnemyModel> | null = null;
 function load(): Record<string, EnemyModel> {
   if (model) return model;
   try {
-    const path = knowledgeFile(KNOWLEDGE_DIR, "move-model.json");
-    model = JSON.parse(readFileSync(path, "utf8")) as Record<string, EnemyModel>;
+    model = JSON.parse(readCompatibleKnowledgeText(KNOWLEDGE_DIR, "move-model.json")) as Record<string, EnemyModel>;
   } catch {
     model = {};
   }

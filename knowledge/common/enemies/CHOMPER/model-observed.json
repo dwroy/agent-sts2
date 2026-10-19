@@ -1,0 +1,24 @@
+{
+  "schema": "legacy-enemy-observation-v1",
+  "enemy_id": "CHOMPER",
+  "source": "common/move-model.json",
+  "pointer": [
+    "CHOMPER"
+  ],
+  "scope_policy": "仅机械封装原common数据，未扩适用范围或新增机制结论。",
+  "payload": {
+    "damage": {
+      "CLAMP_MOVE": 16.8,
+      "SCREECH_MOVE": 0.0
+    },
+    "next": {
+      "CLAMP_MOVE": {
+        "CLAMP_MOVE": 1,
+        "SCREECH_MOVE": 568
+      },
+      "SCREECH_MOVE": {
+        "CLAMP_MOVE": 604
+      }
+    }
+  }
+}

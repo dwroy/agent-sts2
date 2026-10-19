@@ -1,0 +1,34 @@
+{
+  "schema": "legacy-enemy-observation-v1",
+  "enemy_id": "PHANTASMAL_GARDENER",
+  "source": "common/move-model.json",
+  "pointer": [
+    "PHANTASMAL_GARDENER"
+  ],
+  "scope_policy": "仅机械封装原common数据，未扩适用范围或新增机制结论。",
+  "payload": {
+    "buffs": [
+      "ENLARGE_MOVE"
+    ],
+    "damage": {
+      "BITE_MOVE": 7.1,
+      "ENLARGE_MOVE": 0.0,
+      "FLAIL_MOVE": 5.2,
+      "LASH_MOVE": 8.4
+    },
+    "next": {
+      "BITE_MOVE": {
+        "LASH_MOVE": 508
+      },
+      "ENLARGE_MOVE": {
+        "BITE_MOVE": 592
+      },
+      "FLAIL_MOVE": {
+        "ENLARGE_MOVE": 520
+      },
+      "LASH_MOVE": {
+        "FLAIL_MOVE": 461
+      }
+    }
+  }
+}

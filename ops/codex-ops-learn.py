@@ -41,6 +41,7 @@ import core_build_jobs  # noqa: E402
 import learner_retention  # noqa: E402
 import ordinary_close  # noqa: E402
 import ops_current  # noqa: E402
+import disk_admission  # noqa: E402
 from learner_checks import read_report  # noqa: E402
 
 ROOT = os.environ.get("CODEX_OPS_ROOT") or paths.ROOT
@@ -230,12 +231,16 @@ def check_ascension(state, character):
 
 
 def check_ascension_audits(state, character):
+    if not disk_admission.jobs_allowed(ROOT, DIR):
+        return None
     return ascension_audit.dispatch(state, ROOT, SCRIPTS, character, finished_runs(character), alive,
                                     dt.datetime.now().strftime("%Y%m%d-%H%M%S"), start_learner, available_worktree,
                                     persist=save_state, notice=inbox)
 
 
 def check_postmortems(state, character):
+    if not disk_admission.jobs_allowed(ROOT, DIR):
+        return None
     if running_batch(state):
         return None
     have = postmortem_ids()
@@ -304,6 +309,10 @@ def cmd_tick(args):
     state = load_state()
     character = args.character
     report = {"victory": check_victories(character), "ascension": check_ascension(state, character)}
+    capacity = disk_admission.snapshot(ROOT, DIR, record=True)
+    report["disk_capacity"] = capacity
+    if capacity.get("attention_transition"):
+        enqueue("disk-capacity", f"容量门槛变化：{capacity['severity']}；可用{capacity['available_GiB']:.3f}GiB。新大作业/通道100、自然局边界60、Regent200及48小时。原件{capacity['policy']}和同目录codex-ops/disk-capacity/current.json；不热停当前局或恢复Regent。")
     batch = check_postmortems(state, character)
     report["dispatched"] = batch
     report["pending_notified"] = check_pending(state, character)
@@ -398,7 +407,8 @@ def cmd_finish(args):
             finish_write_batch(args.batch, batch, args.rc, ROOT, os.path.join(DIR, "learner"), enqueue, inbox, run_checks=False)
         if batch["state"] == "failed":
             batch["retry_at"] = time.time() + RETRY_AFTER_S
-        if not account_draining() and batch.get("learner_task") in ("silent-boss-calibration", "boss-sim-batch"):
+        if (not account_draining() and disk_admission.jobs_allowed(ROOT, DIR)
+                and batch.get("learner_task") in ("silent-boss-calibration", "boss-sim-batch")):
             boss_sim_jobs.check(state, ROOT, SCRIPTS, args.character, alive,
                                 dt.datetime.now().strftime("%Y%m%d-%H%M%S"), start_learner)
         if batch.get("proposal_repair_needed"):
@@ -625,6 +635,9 @@ def main():
     with state_lock():
         if account_draining() and args.command in ("tick", "dispatch", "write", "boss-check"):
             print(json.dumps({"dispatched": None, "reason": "account_drain", "command": args.command}))
+            return 75
+        if args.command in ("dispatch", "write", "boss-check") and not disk_admission.jobs_allowed(ROOT, DIR):
+            print(json.dumps({"dispatched": None, "reason": "disk_capacity_hold", "command": args.command}))
             return 75
         result = handler(args) or 0
         checks_pending = args.command == "finish" and load_state()["batches"].get(args.batch, {}).get("checks_pending")

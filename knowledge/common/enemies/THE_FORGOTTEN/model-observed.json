@@ -1,0 +1,26 @@
+{
+  "schema": "legacy-enemy-observation-v1",
+  "enemy_id": "THE_FORGOTTEN",
+  "source": "common/move-model.json",
+  "pointer": [
+    "THE_FORGOTTEN"
+  ],
+  "scope_policy": "仅机械封装原common数据，未扩适用范围或新增机制结论。",
+  "payload": {
+    "buffs": [
+      "MIASMA"
+    ],
+    "damage": {
+      "DREAD": 16.7,
+      "MIASMA": 0.0
+    },
+    "next": {
+      "DREAD": {
+        "MIASMA": 112
+      },
+      "MIASMA": {
+        "DREAD": 145
+      }
+    }
+  }
+}

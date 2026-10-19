@@ -1,0 +1,30 @@
+{
+  "schema": "legacy-enemy-observation-v1",
+  "enemy_id": "EYE_WITH_TEETH",
+  "source": "common/move-model.json",
+  "pointer": [
+    "EYE_WITH_TEETH"
+  ],
+  "scope_policy": "仅机械封装原common数据，未扩适用范围或新增机制结论。",
+  "payload": {
+    "damage": {
+      "DISTRACT_MOVE": 0.0,
+      "REVIVE_MOVE": 0.0,
+      "UNSET_MOVE": 0.0
+    },
+    "next": {
+      "DISTRACT_MOVE": {
+        "DISTRACT_MOVE": 230,
+        "REVIVE_MOVE": 6
+      },
+      "REVIVE_MOVE": {
+        "DISTRACT_MOVE": 3,
+        "REVIVE_MOVE": 4
+      },
+      "UNSET_MOVE": {
+        "DISTRACT_MOVE": 66,
+        "REVIVE_MOVE": 1
+      }
+    }
+  }
+}

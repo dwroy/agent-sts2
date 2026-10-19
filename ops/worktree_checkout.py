@@ -10,6 +10,7 @@ import sys
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 import learner_retention as retention
 from disk_capacity import require_worktree_capacity
+from shared_tools import attach
 
 EXCLUDED = ("paper/data/history/", "paper/raw/", "paper/materials/", "experiments/")
 
@@ -47,6 +48,7 @@ def restore_checkout(root, tree, branch):
     retention.git(root, "worktree", "add", "--no-checkout", str(tree), branch)
     set_profile(tree)
     retention.git(tree, "read-tree", "-mu", "HEAD")
+    attach(root, tree, apply=False)
 
 
 def create(root, directory, tree, ref):
@@ -71,6 +73,7 @@ def create(root, directory, tree, ref):
         created = True
         set_profile(tree)
         retention.git(tree, "read-tree", "-mu", "HEAD")
+        record["shared_tools"] = attach(root, tree)
         if retention.git(tree, "status", "--porcelain", "--untracked-files=all"):
             raise ValueError("new sparse workspace differs from its recorded base")
         record.update(state="allocated", finished_at=retention.stamp())

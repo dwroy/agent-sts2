@@ -1,0 +1,35 @@
+{
+  "schema": "legacy-enemy-observation-v1",
+  "enemy_id": "MAGI_KNIGHT",
+  "source": "common/move-model.json",
+  "pointer": [
+    "MAGI_KNIGHT"
+  ],
+  "scope_policy": "仅机械封装原common数据，未扩适用范围或新增机制结论。",
+  "payload": {
+    "damage": {
+      "DAMPEN_MOVE": 0.0,
+      "MAGIC_BOMB": 37.7,
+      "POWER_SHIELD_MOVE": 6.4,
+      "PREP_MOVE": 0.0,
+      "RAM_MOVE": 10.3
+    },
+    "next": {
+      "DAMPEN_MOVE": {
+        "RAM_MOVE": 48
+      },
+      "MAGIC_BOMB": {
+        "RAM_MOVE": 15
+      },
+      "POWER_SHIELD_MOVE": {
+        "DAMPEN_MOVE": 51
+      },
+      "PREP_MOVE": {
+        "MAGIC_BOMB": 36
+      },
+      "RAM_MOVE": {
+        "PREP_MOVE": 45
+      }
+    }
+  }
+}

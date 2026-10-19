@@ -1,0 +1,813 @@
+{
+  "schema": "legacy-enemy-observation-v1",
+  "enemy_id": "PHROG_PARASITE",
+  "source": "common/monster-db.json",
+  "pointer": [
+    "monsters",
+    "PHROG_PARASITE"
+  ],
+  "scope_policy": "仅机械封装原common数据，未扩适用范围或新增机制结论。",
+  "payload": {
+    "name": {
+      "zh": "异蛙寄生虫"
+    },
+    "game_type": "Elite",
+    "game_hp_range": [
+      61,
+      64
+    ],
+    "kind": "elite",
+    "rooms": {
+      "elite": 148
+    },
+    "acts": {
+      "1": 148
+    },
+    "encounters": {
+      "PHROG_PARASITE": 148
+    },
+    "hp_by_asc": {
+      "0": {
+        "min": 61,
+        "median": 63,
+        "max": 64,
+        "n": 9
+      },
+      "1": {
+        "min": 62,
+        "median": 62,
+        "max": 62,
+        "n": 1
+      },
+      "2": {
+        "min": 61,
+        "median": 62,
+        "max": 63,
+        "n": 3
+      },
+      "3": {
+        "min": 61,
+        "median": 62,
+        "max": 63,
+        "n": 5
+      },
+      "4": {
+        "min": 61,
+        "median": 62,
+        "max": 64,
+        "n": 5
+      },
+      "5": {
+        "min": 61,
+        "median": 61.0,
+        "max": 61,
+        "n": 2
+      },
+      "6": {
+        "min": 61,
+        "median": 64,
+        "max": 64,
+        "n": 3
+      },
+      "7": {
+        "min": 61,
+        "median": 64,
+        "max": 64,
+        "n": 9
+      },
+      "8": {
+        "min": 66,
+        "median": 67,
+        "max": 68,
+        "n": 37
+      },
+      "9": {
+        "min": 66,
+        "median": 67,
+        "max": 68,
+        "n": 21
+      },
+      "10": {
+        "min": 66,
+        "median": 67,
+        "max": 68,
+        "n": 53
+      }
+    },
+    "moves": {
+      "INFECT_MOVE": {
+        "name": "感染",
+        "n_seen": 300,
+        "intents": {
+          "StatusCard": 300
+        },
+        "turns_seen": {
+          "1": 148,
+          "3": 124,
+          "5": 23,
+          "7": 4,
+          "9": 1
+        },
+        "next": {
+          "LASH_MOVE": 218
+        },
+        "avg_total_shown": 0.0,
+        "status_cards": {
+          "3": 300
+        },
+        "status_card_ids": {
+          "INFECTION": 657
+        },
+        "status_card_pile": {
+          "discard": 528,
+          "draw": 129
+        }
+      },
+      "LASH_MOVE": {
+        "name": "甩动",
+        "n_seen": 218,
+        "intents": {
+          "Attack": 218
+        },
+        "turns_seen": {
+          "2": 147,
+          "4": 61,
+          "6": 7,
+          "8": 2,
+          "10": 1
+        },
+        "next": {
+          "INFECT_MOVE": 152
+        },
+        "avg_total_shown": 17.6,
+        "damage_by_asc": {
+          "0": {
+            "shown": {
+              "4x4": 11
+            },
+            "base_per_hit": {
+              "4": 11
+            },
+            "hits": {
+              "4": 11
+            },
+            "n_base": 11
+          },
+          "1": {
+            "shown": {
+              "4x4": 1
+            },
+            "base_per_hit": {
+              "4": 1
+            },
+            "hits": {
+              "4": 1
+            },
+            "n_base": 1
+          },
+          "2": {
+            "shown": {
+              "4x4": 3
+            },
+            "base_per_hit": {
+              "4": 3
+            },
+            "hits": {
+              "4": 3
+            },
+            "n_base": 3
+          },
+          "3": {
+            "shown": {
+              "4x4": 7
+            },
+            "base_per_hit": {
+              "4": 7
+            },
+            "hits": {
+              "4": 7
+            },
+            "n_base": 7
+          },
+          "4": {
+            "shown": {
+              "4x4": 6
+            },
+            "base_per_hit": {
+              "4": 6
+            },
+            "hits": {
+              "4": 6
+            },
+            "n_base": 6
+          },
+          "5": {
+            "shown": {
+              "4x4": 2
+            },
+            "base_per_hit": {
+              "4": 2
+            },
+            "hits": {
+              "4": 2
+            },
+            "n_base": 2
+          },
+          "6": {
+            "shown": {
+              "4x4": 4
+            },
+            "base_per_hit": {
+              "4": 4
+            },
+            "hits": {
+              "4": 4
+            },
+            "n_base": 4
+          },
+          "7": {
+            "shown": {
+              "4x4": 11
+            },
+            "base_per_hit": {
+              "4": 11
+            },
+            "hits": {
+              "4": 11
+            },
+            "n_base": 11
+          },
+          "8": {
+            "shown": {
+              "3x4": 4,
+              "4x4": 38,
+              "5x4": 5
+            },
+            "base_per_hit": {
+              "4": 43
+            },
+            "hits": {
+              "4": 47
+            },
+            "n_base": 43
+          },
+          "9": {
+            "shown": {
+              "5x4": 25
+            },
+            "base_per_hit": {
+              "5": 25
+            },
+            "hits": {
+              "4": 25
+            },
+            "n_base": 25
+          },
+          "10": {
+            "shown": {
+              "3x4": 19,
+              "5x4": 82
+            },
+            "base_per_hit": {
+              "5": 82
+            },
+            "hits": {
+              "4": 101
+            },
+            "n_base": 82
+          }
+        }
+      }
+    },
+    "powers": {
+      "DEMISE_POWER": {
+        "name": "消亡",
+        "type": "Debuff",
+        "description": "这个生物在其回合结束时失去生命。",
+        "n_fights": 2,
+        "amount_at_first_sight": {
+          "9": 2
+        },
+        "amount_max_in_fight": {
+          "9": 2
+        },
+        "amount_at_first_sight_by_asc": {
+          "10": {
+            "9": 2
+          }
+        },
+        "turn_at_first_sight_by_asc": {
+          "10": {
+            "1": 1,
+            "2": 1
+          }
+        }
+      },
+      "INFESTED_POWER": {
+        "name": "寄生物",
+        "type": "Buff",
+        "description": "死亡时，召唤……某种东西。",
+        "n_fights": 148,
+        "amount_at_first_sight": {
+          "4": 148
+        },
+        "amount_max_in_fight": {
+          "4": 148
+        },
+        "amount_at_first_sight_by_asc": {
+          "0": {
+            "4": 9
+          },
+          "1": {
+            "4": 1
+          },
+          "2": {
+            "4": 3
+          },
+          "3": {
+            "4": 5
+          },
+          "4": {
+            "4": 5
+          },
+          "5": {
+            "4": 2
+          },
+          "6": {
+            "4": 3
+          },
+          "7": {
+            "4": 9
+          },
+          "8": {
+            "4": 37
+          },
+          "9": {
+            "4": 21
+          },
+          "10": {
+            "4": 53
+          }
+        },
+        "turn_at_first_sight_by_asc": {
+          "0": {
+            "1": 9
+          },
+          "1": {
+            "1": 1
+          },
+          "2": {
+            "1": 3
+          },
+          "3": {
+            "1": 5
+          },
+          "4": {
+            "1": 5
+          },
+          "5": {
+            "1": 2
+          },
+          "6": {
+            "1": 3
+          },
+          "7": {
+            "1": 9
+          },
+          "8": {
+            "1": 37
+          },
+          "9": {
+            "1": 21
+          },
+          "10": {
+            "1": 53
+          }
+        }
+      },
+      "MANGLE_POWER": {
+        "name": "凌虐",
+        "type": "Debuff",
+        "description": "在本回合结束前失去[gold]力量[/gold]。",
+        "n_fights": 1,
+        "amount_at_first_sight": {
+          "10": 1
+        },
+        "amount_max_in_fight": {
+          "10": 1
+        },
+        "amount_at_first_sight_by_asc": {
+          "8": {
+            "10": 1
+          }
+        },
+        "turn_at_first_sight_by_asc": {
+          "8": {
+            "1": 1
+          }
+        }
+      },
+      "PIERCING_WAIL_POWER": {
+        "name": "尖啸",
+        "type": "Debuff",
+        "description": "在本回合结束前失去[gold]力量[/gold]。",
+        "n_fights": 4,
+        "amount_at_first_sight": {
+          "6": 4
+        },
+        "amount_max_in_fight": {
+          "6": 4
+        },
+        "amount_at_first_sight_by_asc": {
+          "6": {
+            "6": 1
+          },
+          "10": {
+            "6": 3
+          }
+        },
+        "turn_at_first_sight_by_asc": {
+          "6": {
+            "2": 1
+          },
+          "10": {
+            "2": 3
+          }
+        }
+      },
+      "POISON_POWER": {
+        "name": "中毒",
+        "type": "Debuff",
+        "description": "中毒的生物会在自身回合开始时失去生命。中毒层数每回合减少[blue]1[/blue]。",
+        "n_fights": 46,
+        "amount_at_first_sight": {
+          "2": 3,
+          "3": 16,
+          "4": 2,
+          "5": 9,
+          "6": 4,
+          "7": 12
+        },
+        "amount_max_in_fight": {
+          "2": 1,
+          "3": 5,
+          "4": 1,
+          "5": 7,
+          "6": 4,
+          "7": 6,
+          "8": 3,
+          "9": 4,
+          "10": 6,
+          "12": 4,
+          "13": 2,
+          "15": 1,
+          "17": 1,
+          "18": 1
+        },
+        "amount_at_first_sight_by_asc": {
+          "6": {
+            "5": 1
+          },
+          "7": {
+            "3": 1
+          },
+          "8": {
+            "2": 1
+          },
+          "10": {
+            "2": 2,
+            "3": 15,
+            "4": 2,
+            "5": 8,
+            "6": 4,
+            "7": 12
+          }
+        },
+        "turn_at_first_sight_by_asc": {
+          "6": {
+            "1": 1
+          },
+          "7": {
+            "1": 1
+          },
+          "8": {
+            "2": 1
+          },
+          "10": {
+            "1": 9,
+            "2": 13,
+            "3": 14,
+            "5": 5,
+            "7": 1,
+            "10": 1
+          }
+        }
+      },
+      "SHACKLING_POTION_POWER": {
+        "name": "镣铐药水",
+        "type": "Debuff",
+        "description": "在本回合结束前失去[gold]力量[/gold]。",
+        "n_fights": 1,
+        "amount_at_first_sight": {
+          "7": 1
+        },
+        "amount_max_in_fight": {
+          "7": 1
+        },
+        "amount_at_first_sight_by_asc": {
+          "8": {
+            "7": 1
+          }
+        },
+        "turn_at_first_sight_by_asc": {
+          "8": {
+            "2": 1
+          }
+        }
+      },
+      "SHRINK_POWER": {
+        "name": "缩小",
+        "type": "Debuff",
+        "description": "这个生物的攻击伤害在3回合内减少[blue]30%[/blue]。",
+        "n_fights": 1,
+        "amount_at_first_sight": {
+          "4": 1
+        },
+        "amount_max_in_fight": {
+          "4": 1
+        },
+        "amount_at_first_sight_by_asc": {
+          "9": {
+            "4": 1
+          }
+        },
+        "turn_at_first_sight_by_asc": {
+          "9": {
+            "2": 1
+          }
+        }
+      },
+      "STRANGLE_POWER": {
+        "name": "紧勒",
+        "type": "Debuff",
+        "description": "本回合，你每次打出牌时，这名敌人失去[blue]2[/blue]点生命。",
+        "n_fights": 1,
+        "amount_at_first_sight": {
+          "2": 1
+        },
+        "amount_max_in_fight": {
+          "2": 1
+        },
+        "amount_at_first_sight_by_asc": {
+          "4": {
+            "2": 1
+          }
+        },
+        "turn_at_first_sight_by_asc": {
+          "4": {
+            "1": 1
+          }
+        }
+      },
+      "STRENGTH_POWER": {
+        "name": "力量",
+        "type": "Buff",
+        "description": "力量会增加攻击牌造成的伤害。",
+        "n_fights": 13,
+        "amount_at_first_sight": {
+          "-10": 1,
+          "-7": 1,
+          "-6": 4,
+          "1": 7
+        },
+        "amount_max_in_fight": {
+          "-10": 1,
+          "-7": 1,
+          "-6": 4,
+          "1": 7
+        },
+        "amount_at_first_sight_by_asc": {
+          "6": {
+            "-6": 1
+          },
+          "8": {
+            "-10": 1,
+            "-7": 1,
+            "1": 4
+          },
+          "9": {
+            "1": 3
+          },
+          "10": {
+            "-6": 3
+          }
+        },
+        "turn_at_first_sight_by_asc": {
+          "6": {
+            "2": 1
+          },
+          "8": {
+            "1": 5,
+            "2": 1
+          },
+          "9": {
+            "1": 1,
+            "2": 1,
+            "3": 1
+          },
+          "10": {
+            "2": 3
+          }
+        }
+      },
+      "VULNERABLE_POWER": {
+        "name": "易伤",
+        "type": "Debuff",
+        "description": "易伤的生物从攻击中受到的伤害增加[blue]50%[/blue]。",
+        "n_fights": 69,
+        "amount_at_first_sight": {
+          "1": 11,
+          "2": 36,
+          "3": 22
+        },
+        "amount_max_in_fight": {
+          "1": 6,
+          "2": 35,
+          "3": 21,
+          "4": 5,
+          "6": 2
+        },
+        "amount_at_first_sight_by_asc": {
+          "0": {
+            "1": 4,
+            "2": 2,
+            "3": 3
+          },
+          "1": {
+            "2": 1
+          },
+          "2": {
+            "2": 1
+          },
+          "3": {
+            "2": 3,
+            "3": 2
+          },
+          "4": {
+            "1": 1,
+            "2": 2
+          },
+          "6": {
+            "2": 1
+          },
+          "7": {
+            "1": 3,
+            "2": 1,
+            "3": 3
+          },
+          "8": {
+            "1": 2,
+            "2": 15,
+            "3": 7
+          },
+          "9": {
+            "1": 1,
+            "2": 8,
+            "3": 5
+          },
+          "10": {
+            "2": 2,
+            "3": 2
+          }
+        },
+        "turn_at_first_sight_by_asc": {
+          "0": {
+            "1": 4,
+            "2": 3,
+            "4": 2
+          },
+          "1": {
+            "1": 1
+          },
+          "2": {
+            "1": 1
+          },
+          "3": {
+            "1": 2,
+            "2": 2,
+            "3": 1
+          },
+          "4": {
+            "1": 1,
+            "3": 2
+          },
+          "6": {
+            "3": 1
+          },
+          "7": {
+            "1": 3,
+            "2": 3,
+            "3": 1
+          },
+          "8": {
+            "1": 15,
+            "2": 4,
+            "3": 5
+          },
+          "9": {
+            "1": 7,
+            "2": 4,
+            "3": 3
+          },
+          "10": {
+            "1": 3,
+            "3": 1
+          }
+        }
+      },
+      "WEAK_POWER": {
+        "name": "虚弱",
+        "type": "Debuff",
+        "description": "虚弱的生物造成的攻击伤害减少[blue]25%[/blue]。",
+        "n_fights": 72,
+        "amount_at_first_sight": {
+          "1": 56,
+          "2": 15,
+          "3": 1
+        },
+        "amount_max_in_fight": {
+          "1": 48,
+          "2": 20,
+          "3": 2,
+          "4": 2
+        },
+        "amount_at_first_sight_by_asc": {
+          "0": {
+            "1": 3
+          },
+          "3": {
+            "1": 1
+          },
+          "6": {
+            "1": 1
+          },
+          "7": {
+            "1": 4
+          },
+          "8": {
+            "1": 5,
+            "2": 4
+          },
+          "9": {
+            "1": 3
+          },
+          "10": {
+            "1": 39,
+            "2": 11,
+            "3": 1
+          }
+        },
+        "turn_at_first_sight_by_asc": {
+          "0": {
+            "1": 2,
+            "3": 1
+          },
+          "3": {
+            "1": 1
+          },
+          "6": {
+            "1": 1
+          },
+          "7": {
+            "1": 1,
+            "2": 2,
+            "3": 1
+          },
+          "8": {
+            "1": 6,
+            "2": 2,
+            "3": 1
+          },
+          "9": {
+            "2": 2,
+            "3": 1
+          },
+          "10": {
+            "1": 24,
+            "2": 16,
+            "3": 10,
+            "4": 1
+          }
+        }
+      }
+    },
+    "provenance": {
+      "first_seen": "2026-09-24T04:14:29.431Z",
+      "last_seen": "2026-10-18T07:26:35.581Z",
+      "n_runs": 148,
+      "n_instances": 148,
+      "n_spawned_mid_fight": 0,
+      "n_minion_instances": 0
+    }
+  }
+}

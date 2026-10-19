@@ -1,0 +1,31 @@
+{
+  "schema": "legacy-enemy-observation-v1",
+  "enemy_id": "AEONGLASS",
+  "source": "common/move-model.json",
+  "pointer": [
+    "AEONGLASS"
+  ],
+  "scope_policy": "仅机械封装原common数据，未扩适用范围或新增机制结论。",
+  "payload": {
+    "buffs": [
+      "INCREASING_INTENSITY_MOVE"
+    ],
+    "damage": {
+      "EBB_MOVE": 27.5,
+      "EYE_LASERS_MOVE": 29.0,
+      "INCREASING_INTENSITY_MOVE": 0.0
+    },
+    "next": {
+      "EBB_MOVE": {
+        "EYE_LASERS_MOVE": 228
+      },
+      "EYE_LASERS_MOVE": {
+        "EYE_LASERS_MOVE": 1,
+        "INCREASING_INTENSITY_MOVE": 199
+      },
+      "INCREASING_INTENSITY_MOVE": {
+        "EBB_MOVE": 184
+      }
+    }
+  }
+}

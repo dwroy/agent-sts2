@@ -1,0 +1,27 @@
+{
+  "schema": "legacy-enemy-observation-v1",
+  "enemy_id": "LIVING_FOG",
+  "source": "common/move-model.json",
+  "pointer": [
+    "LIVING_FOG"
+  ],
+  "scope_policy": "仅机械封装原common数据，未扩适用范围或新增机制结论。",
+  "payload": {
+    "damage": {
+      "ADVANCED_GAS_MOVE": 8.5,
+      "BLOAT_MOVE": 5.5,
+      "SUPER_GAS_BLAST_MOVE": 8.3
+    },
+    "next": {
+      "ADVANCED_GAS_MOVE": {
+        "BLOAT_MOVE": 120
+      },
+      "BLOAT_MOVE": {
+        "SUPER_GAS_BLAST_MOVE": 215
+      },
+      "SUPER_GAS_BLAST_MOVE": {
+        "BLOAT_MOVE": 142
+      }
+    }
+  }
+}

@@ -1,0 +1,29 @@
+{
+  "schema": "legacy-enemy-observation-v1",
+  "enemy_id": "PUNCH_CONSTRUCT",
+  "source": "common/move-model.json",
+  "pointer": [
+    "PUNCH_CONSTRUCT"
+  ],
+  "scope_policy": "仅机械封装原common数据，未扩适用范围或新增机制结论。",
+  "payload": {
+    "damage": {
+      "FAST_PUNCH_MOVE": 10.8,
+      "READY_MOVE": 0.0,
+      "STRONG_PUNCH_MOVE": 14.6
+    },
+    "next": {
+      "FAST_PUNCH_MOVE": {
+        "STRONG_PUNCH_MOVE": 238
+      },
+      "READY_MOVE": {
+        "FAST_PUNCH_MOVE": 286,
+        "STRONG_PUNCH_MOVE": 2
+      },
+      "STRONG_PUNCH_MOVE": {
+        "READY_MOVE": 148,
+        "STRONG_PUNCH_MOVE": 1
+      }
+    }
+  }
+}

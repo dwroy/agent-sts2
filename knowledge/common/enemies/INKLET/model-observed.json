@@ -1,0 +1,28 @@
+{
+  "schema": "legacy-enemy-observation-v1",
+  "enemy_id": "INKLET",
+  "source": "common/move-model.json",
+  "pointer": [
+    "INKLET"
+  ],
+  "scope_policy": "仅机械封装原common数据，未扩适用范围或新增机制结论。",
+  "payload": {
+    "damage": {
+      "JAB_MOVE": 3.5,
+      "PIERCING_GAZE_MOVE": 10.5,
+      "WHIRLWIND_MOVE": 7.3
+    },
+    "next": {
+      "JAB_MOVE": {
+        "PIERCING_GAZE_MOVE": 137,
+        "WHIRLWIND_MOVE": 166
+      },
+      "PIERCING_GAZE_MOVE": {
+        "JAB_MOVE": 54
+      },
+      "WHIRLWIND_MOVE": {
+        "JAB_MOVE": 142
+      }
+    }
+  }
+}

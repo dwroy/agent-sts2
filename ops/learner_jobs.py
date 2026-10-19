@@ -286,6 +286,9 @@ def dispatch_write(state, root, scripts, task, character, runs, key, reason, ali
 
 
 def check_jobs(state, root, scripts, character, alive, stamp):
+    from disk_admission import jobs_allowed
+    if not jobs_allowed(root, os.path.join(root, "ops/codex-ops")):
+        return {"disk_capacity_hold": True, "dispatched": None}
     core = None
     if character == "silent":
         import core_build_jobs

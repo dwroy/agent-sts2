@@ -1,0 +1,39 @@
+{
+  "schema": "legacy-enemy-observation-v1",
+  "enemy_id": "THE_INSATIABLE",
+  "source": "common/move-model.json",
+  "pointer": [
+    "THE_INSATIABLE"
+  ],
+  "scope_policy": "仅机械封装原common数据，未扩适用范围或新增机制结论。",
+  "payload": {
+    "buffs": [
+      "LIQUIFY_GROUND_MOVE",
+      "SALIVATE_MOVE"
+    ],
+    "damage": {
+      "LIQUIFY_GROUND_MOVE": 0.0,
+      "LUNGING_BITE_MOVE": 29.3,
+      "SALIVATE_MOVE": 0.0,
+      "THRASH_MOVE": 19.0,
+      "THRASH_MOVE_2": 22.3
+    },
+    "next": {
+      "LIQUIFY_GROUND_MOVE": {
+        "THRASH_MOVE": 149
+      },
+      "LUNGING_BITE_MOVE": {
+        "SALIVATE_MOVE": 232
+      },
+      "SALIVATE_MOVE": {
+        "THRASH_MOVE_2": 202
+      },
+      "THRASH_MOVE": {
+        "LUNGING_BITE_MOVE": 278
+      },
+      "THRASH_MOVE_2": {
+        "THRASH_MOVE": 160
+      }
+    }
+  }
+}

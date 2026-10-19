@@ -1,0 +1,30 @@
+{
+  "schema": "legacy-enemy-observation-v1",
+  "enemy_id": "TOADPOLE",
+  "source": "common/move-model.json",
+  "pointer": [
+    "TOADPOLE"
+  ],
+  "scope_policy": "仅机械封装原common数据，未扩适用范围或新增机制结论。",
+  "payload": {
+    "buffs": [
+      "SPIKEN_MOVE"
+    ],
+    "damage": {
+      "SPIKEN_MOVE": 0.0,
+      "SPIKE_SPIT_MOVE": 10.5,
+      "WHIRL_MOVE": 7.5
+    },
+    "next": {
+      "SPIKEN_MOVE": {
+        "SPIKE_SPIT_MOVE": 611
+      },
+      "SPIKE_SPIT_MOVE": {
+        "WHIRL_MOVE": 252
+      },
+      "WHIRL_MOVE": {
+        "SPIKEN_MOVE": 395
+      }
+    }
+  }
+}

@@ -1,0 +1,294 @@
+{
+  "schema": "legacy-enemy-observation-v1",
+  "enemy_id": "BATTLE_FRIEND_V2",
+  "source": "common/monster-db.json",
+  "pointer": [
+    "monsters",
+    "BATTLE_FRIEND_V2"
+  ],
+  "scope_policy": "仅机械封装原common数据，未扩适用范围或新增机制结论。",
+  "payload": {
+    "name": {
+      "zh": "战斗好伙伴V2.0"
+    },
+    "game_type": "Normal",
+    "game_hp_range": [
+      150,
+      150
+    ],
+    "kind": "unknown_room",
+    "rooms": {
+      "unknown_room": 12
+    },
+    "acts": {
+      "3": 12
+    },
+    "encounters": {
+      "BATTLE_FRIEND_V2": 12
+    },
+    "hp_by_asc": {
+      "0": {
+        "min": 150,
+        "median": 150.0,
+        "max": 150,
+        "n": 2
+      },
+      "3": {
+        "min": 150,
+        "median": 150,
+        "max": 150,
+        "n": 1
+      },
+      "7": {
+        "min": 150,
+        "median": 150,
+        "max": 150,
+        "n": 1
+      },
+      "8": {
+        "min": 150,
+        "median": 150.0,
+        "max": 150,
+        "n": 4
+      },
+      "9": {
+        "min": 150,
+        "median": 150,
+        "max": 150,
+        "n": 3
+      },
+      "10": {
+        "min": 150,
+        "median": 150,
+        "max": 150,
+        "n": 1
+      }
+    },
+    "moves": {
+      "NOTHING_MOVE": {
+        "name": "无",
+        "n_seen": 34,
+        "intents": {
+          "None": 34
+        },
+        "turns_seen": {
+          "1": 12,
+          "2": 12,
+          "3": 10
+        },
+        "next": {
+          "NOTHING_MOVE": 22
+        },
+        "avg_total_shown": 0.0
+      }
+    },
+    "powers": {
+      "BATTLEWORN_DUMMY_TIME_LIMIT_POWER": {
+        "name": "时间限制",
+        "type": "Buff",
+        "description": "你还有[blue]3[/blue]个回合来击败战斗好伙伴。",
+        "n_fights": 12,
+        "amount_at_first_sight": {
+          "3": 12
+        },
+        "amount_max_in_fight": {
+          "3": 12
+        },
+        "amount_at_first_sight_by_asc": {
+          "0": {
+            "3": 2
+          },
+          "3": {
+            "3": 1
+          },
+          "7": {
+            "3": 1
+          },
+          "8": {
+            "3": 4
+          },
+          "9": {
+            "3": 3
+          },
+          "10": {
+            "3": 1
+          }
+        },
+        "turn_at_first_sight_by_asc": {
+          "0": {
+            "1": 2
+          },
+          "3": {
+            "1": 1
+          },
+          "7": {
+            "1": 1
+          },
+          "8": {
+            "1": 4
+          },
+          "9": {
+            "1": 3
+          },
+          "10": {
+            "1": 1
+          }
+        }
+      },
+      "POISON_POWER": {
+        "name": "中毒",
+        "type": "Debuff",
+        "description": "中毒的生物会在自身回合开始时失去生命。中毒层数每回合减少[blue]1[/blue]。",
+        "n_fights": 2,
+        "amount_at_first_sight": {
+          "5": 1,
+          "7": 1
+        },
+        "amount_max_in_fight": {
+          "7": 1,
+          "12": 1
+        },
+        "amount_at_first_sight_by_asc": {
+          "9": {
+            "7": 1
+          },
+          "10": {
+            "5": 1
+          }
+        },
+        "turn_at_first_sight_by_asc": {
+          "9": {
+            "3": 1
+          },
+          "10": {
+            "2": 1
+          }
+        }
+      },
+      "STRENGTH_POWER": {
+        "name": "力量",
+        "type": "Buff",
+        "description": "力量会增加攻击牌造成的伤害。",
+        "n_fights": 2,
+        "amount_at_first_sight": {
+          "-1": 1,
+          "1": 1
+        },
+        "amount_max_in_fight": {
+          "-1": 1,
+          "1": 1
+        },
+        "amount_at_first_sight_by_asc": {
+          "8": {
+            "1": 1
+          },
+          "9": {
+            "-1": 1
+          }
+        },
+        "turn_at_first_sight_by_asc": {
+          "8": {
+            "1": 1
+          },
+          "9": {
+            "2": 1
+          }
+        }
+      },
+      "VULNERABLE_POWER": {
+        "name": "易伤",
+        "type": "Debuff",
+        "description": "易伤的生物从攻击中受到的伤害增加[blue]50%[/blue]。",
+        "n_fights": 9,
+        "amount_at_first_sight": {
+          "1": 4,
+          "2": 3,
+          "3": 2
+        },
+        "amount_max_in_fight": {
+          "1": 3,
+          "2": 3,
+          "3": 2,
+          "4": 1
+        },
+        "amount_at_first_sight_by_asc": {
+          "0": {
+            "1": 1,
+            "3": 1
+          },
+          "3": {
+            "2": 1
+          },
+          "7": {
+            "1": 1
+          },
+          "8": {
+            "2": 1,
+            "3": 1
+          },
+          "9": {
+            "1": 2,
+            "2": 1
+          }
+        },
+        "turn_at_first_sight_by_asc": {
+          "0": {
+            "1": 2
+          },
+          "3": {
+            "1": 1
+          },
+          "7": {
+            "1": 1
+          },
+          "8": {
+            "1": 1,
+            "3": 1
+          },
+          "9": {
+            "1": 3
+          }
+        }
+      },
+      "WEAK_POWER": {
+        "name": "虚弱",
+        "type": "Debuff",
+        "description": "虚弱的生物造成的攻击伤害减少[blue]25%[/blue]。",
+        "n_fights": 3,
+        "amount_at_first_sight": {
+          "1": 2,
+          "2": 1
+        },
+        "amount_max_in_fight": {
+          "1": 1,
+          "2": 2
+        },
+        "amount_at_first_sight_by_asc": {
+          "9": {
+            "1": 1,
+            "2": 1
+          },
+          "10": {
+            "1": 1
+          }
+        },
+        "turn_at_first_sight_by_asc": {
+          "9": {
+            "1": 2
+          },
+          "10": {
+            "1": 1
+          }
+        }
+      }
+    },
+    "provenance": {
+      "first_seen": "2026-09-24T17:01:21.180Z",
+      "last_seen": "2026-10-06T05:05:17.457Z",
+      "n_runs": 12,
+      "n_instances": 12,
+      "n_spawned_mid_fight": 0,
+      "n_minion_instances": 0
+    }
+  }
+}

@@ -1,7 +1,10 @@
 import { defineConfig } from "vitest/config";
+import { fileURLToPath } from "node:url";
 
 // The test files, the setup files and the timeout; everything else is vitest's default.
 export default defineConfig({
+  // Shared dependencies stay read-only; every worktree owns its generated test cache.
+  cacheDir: fileURLToPath(new URL("../.cache/vitest", import.meta.url)),
   // Tests use fixed inputs; never load a live worktree's credentials or play configuration.
   envDir: false,
   test: {

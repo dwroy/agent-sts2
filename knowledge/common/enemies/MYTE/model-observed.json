@@ -1,0 +1,30 @@
+{
+  "schema": "legacy-enemy-observation-v1",
+  "enemy_id": "MYTE",
+  "source": "common/move-model.json",
+  "pointer": [
+    "MYTE"
+  ],
+  "scope_policy": "仅机械封装原common数据，未扩适用范围或新增机制结论。",
+  "payload": {
+    "buffs": [
+      "SUCK_MOVE"
+    ],
+    "damage": {
+      "BITE_MOVE": 15.2,
+      "SUCK_MOVE": 5.3,
+      "TOXIC_MOVE": 0.0
+    },
+    "next": {
+      "BITE_MOVE": {
+        "SUCK_MOVE": 252
+      },
+      "SUCK_MOVE": {
+        "TOXIC_MOVE": 368
+      },
+      "TOXIC_MOVE": {
+        "BITE_MOVE": 433
+      }
+    }
+  }
+}

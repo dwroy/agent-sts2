@@ -1,0 +1,30 @@
+{
+  "schema": "legacy-enemy-observation-v1",
+  "enemy_id": "GLOBE_HEAD",
+  "source": "common/move-model.json",
+  "pointer": [
+    "GLOBE_HEAD"
+  ],
+  "scope_policy": "仅机械封装原common数据，未扩适用范围或新增机制结论。",
+  "payload": {
+    "buffs": [
+      "GALVANIC_BURST"
+    ],
+    "damage": {
+      "GALVANIC_BURST": 14.6,
+      "SHOCKING_SLAP": 13.7,
+      "THUNDER_STRIKE": 18.7
+    },
+    "next": {
+      "GALVANIC_BURST": {
+        "SHOCKING_SLAP": 48
+      },
+      "SHOCKING_SLAP": {
+        "THUNDER_STRIKE": 92
+      },
+      "THUNDER_STRIKE": {
+        "GALVANIC_BURST": 68
+      }
+    }
+  }
+}

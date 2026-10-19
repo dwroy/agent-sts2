@@ -1,0 +1,1152 @@
+{
+  "schema": "legacy-enemy-observation-v1",
+  "enemy_id": "FOGMOG",
+  "source": "common/monster-db.json",
+  "pointer": [
+    "monsters",
+    "FOGMOG"
+  ],
+  "scope_policy": "仅机械封装原common数据，未扩适用范围或新增机制结论。",
+  "payload": {
+    "name": {
+      "zh": "雾菇"
+    },
+    "game_type": "Normal",
+    "game_hp_range": [
+      74,
+      74
+    ],
+    "kind": "hallway",
+    "rooms": {
+      "hallway": 99,
+      "unknown_room": 18
+    },
+    "acts": {
+      "1": 117
+    },
+    "encounters": {
+      "FOGMOG": 117
+    },
+    "hp_by_asc": {
+      "0": {
+        "min": 74,
+        "median": 74.0,
+        "max": 74,
+        "n": 12
+      },
+      "2": {
+        "min": 74,
+        "median": 74,
+        "max": 74,
+        "n": 1
+      },
+      "3": {
+        "min": 74,
+        "median": 74.0,
+        "max": 74,
+        "n": 2
+      },
+      "4": {
+        "min": 74,
+        "median": 74.0,
+        "max": 74,
+        "n": 2
+      },
+      "5": {
+        "min": 74,
+        "median": 74,
+        "max": 74,
+        "n": 1
+      },
+      "6": {
+        "min": 74,
+        "median": 74.0,
+        "max": 74,
+        "n": 2
+      },
+      "7": {
+        "min": 74,
+        "median": 74,
+        "max": 74,
+        "n": 5
+      },
+      "8": {
+        "min": 78,
+        "median": 78.0,
+        "max": 78,
+        "n": 32
+      },
+      "9": {
+        "min": 78,
+        "median": 78.0,
+        "max": 78,
+        "n": 12
+      },
+      "10": {
+        "min": 78,
+        "median": 78.0,
+        "max": 78,
+        "n": 48
+      }
+    },
+    "moves": {
+      "HEADBUTT_MOVE": {
+        "name": null,
+        "n_seen": 119,
+        "intents": {
+          "Attack": 119
+        },
+        "turns_seen": {
+          "3": 70,
+          "4": 28,
+          "5": 8,
+          "6": 9,
+          "7": 1,
+          "8": 3
+        },
+        "next": {
+          "SWIPE_MOVE": 72
+        },
+        "avg_total_shown": 16.3,
+        "damage_by_asc": {
+          "0": {
+            "shown": {
+              "15x1": 6,
+              "16x1": 4,
+              "17x1": 1
+            },
+            "base_per_hit": {
+              "14": 11
+            },
+            "hits": {
+              "1": 11
+            },
+            "n_base": 11
+          },
+          "3": {
+            "shown": {
+              "15x1": 2
+            },
+            "base_per_hit": {
+              "14": 2
+            },
+            "hits": {
+              "1": 2
+            },
+            "n_base": 2
+          },
+          "4": {
+            "shown": {
+              "15x1": 1,
+              "16x1": 1
+            },
+            "base_per_hit": {
+              "14": 2
+            },
+            "hits": {
+              "1": 2
+            },
+            "n_base": 2
+          },
+          "5": {
+            "shown": {
+              "16x1": 1
+            },
+            "base_per_hit": {
+              "14": 1
+            },
+            "hits": {
+              "1": 1
+            },
+            "n_base": 1
+          },
+          "6": {
+            "shown": {
+              "15x1": 2
+            },
+            "base_per_hit": {
+              "14": 2
+            },
+            "hits": {
+              "1": 2
+            },
+            "n_base": 2
+          },
+          "7": {
+            "shown": {
+              "15x1": 2,
+              "16x1": 1,
+              "17x1": 1
+            },
+            "base_per_hit": {
+              "14": 4
+            },
+            "hits": {
+              "1": 4
+            },
+            "n_base": 4
+          },
+          "8": {
+            "shown": {
+              "15x1": 21,
+              "16x1": 6
+            },
+            "base_per_hit": {
+              "14": 27
+            },
+            "hits": {
+              "1": 27
+            },
+            "n_base": 27
+          },
+          "9": {
+            "shown": {
+              "17x1": 6,
+              "18x1": 2,
+              "19x1": 1
+            },
+            "base_per_hit": {
+              "16": 9
+            },
+            "hits": {
+              "1": 9
+            },
+            "n_base": 9
+          },
+          "10": {
+            "shown": {
+              "12x1": 5,
+              "13x1": 4,
+              "15x1": 1,
+              "17x1": 24,
+              "18x1": 18,
+              "19x1": 6,
+              "20x1": 3
+            },
+            "base_per_hit": {
+              "16": 51
+            },
+            "hits": {
+              "1": 61
+            },
+            "n_base": 51
+          }
+        }
+      },
+      "ILLUSION_MOVE": {
+        "name": "虚幻孢子",
+        "n_seen": 117,
+        "intents": {
+          "Summon": 117
+        },
+        "turns_seen": {
+          "1": 117
+        },
+        "next": {
+          "SWIPE_MOVE": 117
+        },
+        "avg_total_shown": 0.0
+      },
+      "SWIPE_MOVE": {
+        "name": "重击",
+        "n_seen": 189,
+        "intents": {
+          "Attack+Buff": 189
+        },
+        "turns_seen": {
+          "2": 117,
+          "4": 49,
+          "5": 16,
+          "6": 3,
+          "7": 4
+        },
+        "next": {
+          "HEADBUTT_MOVE": 86,
+          "SWIPE_RANDOM_MOVE": 52
+        },
+        "avg_total_shown": 8.7,
+        "damage_by_asc": {
+          "0": {
+            "shown": {
+              "10x1": 1,
+              "11x1": 1,
+              "8x1": 12,
+              "9x1": 2
+            },
+            "base_per_hit": {
+              "8": 16
+            },
+            "hits": {
+              "1": 16
+            },
+            "n_base": 16
+          },
+          "2": {
+            "shown": {
+              "8x1": 1
+            },
+            "base_per_hit": {
+              "8": 1
+            },
+            "hits": {
+              "1": 1
+            },
+            "n_base": 1
+          },
+          "3": {
+            "shown": {
+              "8x1": 2,
+              "9x1": 2
+            },
+            "base_per_hit": {
+              "8": 4
+            },
+            "hits": {
+              "1": 4
+            },
+            "n_base": 4
+          },
+          "4": {
+            "shown": {
+              "7x1": 1,
+              "8x1": 2,
+              "9x1": 1
+            },
+            "base_per_hit": {
+              "8": 3
+            },
+            "hits": {
+              "1": 4
+            },
+            "n_base": 3
+          },
+          "5": {
+            "shown": {
+              "8x1": 1
+            },
+            "base_per_hit": {
+              "8": 1
+            },
+            "hits": {
+              "1": 1
+            },
+            "n_base": 1
+          },
+          "6": {
+            "shown": {
+              "8x1": 2,
+              "9x1": 1
+            },
+            "base_per_hit": {
+              "8": 3
+            },
+            "hits": {
+              "1": 3
+            },
+            "n_base": 3
+          },
+          "7": {
+            "shown": {
+              "10x1": 1,
+              "8x1": 5,
+              "9x1": 1
+            },
+            "base_per_hit": {
+              "8": 7
+            },
+            "hits": {
+              "1": 7
+            },
+            "n_base": 7
+          },
+          "8": {
+            "shown": {
+              "10x1": 1,
+              "6x1": 1,
+              "8x1": 30,
+              "9x1": 13
+            },
+            "base_per_hit": {
+              "8": 44
+            },
+            "hits": {
+              "1": 45
+            },
+            "n_base": 44
+          },
+          "9": {
+            "shown": {
+              "10x1": 4,
+              "6x1": 2,
+              "9x1": 9
+            },
+            "base_per_hit": {
+              "9": 13
+            },
+            "hits": {
+              "1": 15
+            },
+            "n_base": 13
+          },
+          "10": {
+            "shown": {
+              "10x1": 20,
+              "11x1": 12,
+              "12x1": 3,
+              "6x1": 9,
+              "7x1": 7,
+              "8x1": 3,
+              "9x1": 39
+            },
+            "base_per_hit": {
+              "9": 74
+            },
+            "hits": {
+              "1": 93
+            },
+            "n_base": 74
+          }
+        },
+        "self_powers_gained": {
+          "STRENGTH_POWER": {
+            "1": 136
+          }
+        },
+        "self_powers_gained_by_asc": {
+          "0": {
+            "STRENGTH_POWER": {
+              "1": 15
+            }
+          },
+          "2": {
+            "STRENGTH_POWER": {
+              "1": 1
+            }
+          },
+          "3": {
+            "STRENGTH_POWER": {
+              "1": 2
+            }
+          },
+          "4": {
+            "STRENGTH_POWER": {
+              "1": 3
+            }
+          },
+          "5": {
+            "STRENGTH_POWER": {
+              "1": 1
+            }
+          },
+          "6": {
+            "STRENGTH_POWER": {
+              "1": 2
+            }
+          },
+          "7": {
+            "STRENGTH_POWER": {
+              "1": 5
+            }
+          },
+          "8": {
+            "STRENGTH_POWER": {
+              "1": 30
+            }
+          },
+          "9": {
+            "STRENGTH_POWER": {
+              "1": 12
+            }
+          },
+          "10": {
+            "STRENGTH_POWER": {
+              "1": 65
+            }
+          }
+        }
+      },
+      "SWIPE_RANDOM_MOVE": {
+        "name": null,
+        "n_seen": 52,
+        "intents": {
+          "Attack+Buff": 52
+        },
+        "turns_seen": {
+          "3": 41,
+          "5": 8,
+          "6": 2,
+          "7": 1
+        },
+        "next": {
+          "HEADBUTT_MOVE": 33
+        },
+        "avg_total_shown": 9.4,
+        "damage_by_asc": {
+          "0": {
+            "shown": {
+              "9x1": 6
+            },
+            "base_per_hit": {
+              "8": 6
+            },
+            "hits": {
+              "1": 6
+            },
+            "n_base": 6
+          },
+          "2": {
+            "shown": {
+              "9x1": 1
+            },
+            "base_per_hit": {
+              "8": 1
+            },
+            "hits": {
+              "1": 1
+            },
+            "n_base": 1
+          },
+          "4": {
+            "shown": {
+              "10x1": 1,
+              "9x1": 1
+            },
+            "base_per_hit": {
+              "8": 2
+            },
+            "hits": {
+              "1": 2
+            },
+            "n_base": 2
+          },
+          "5": {
+            "shown": {
+              "9x1": 1
+            },
+            "base_per_hit": {
+              "8": 1
+            },
+            "hits": {
+              "1": 1
+            },
+            "n_base": 1
+          },
+          "7": {
+            "shown": {
+              "9x1": 2
+            },
+            "base_per_hit": {
+              "8": 2
+            },
+            "hits": {
+              "1": 2
+            },
+            "n_base": 2
+          },
+          "8": {
+            "shown": {
+              "10x1": 1,
+              "9x1": 7
+            },
+            "base_per_hit": {
+              "8": 8
+            },
+            "hits": {
+              "1": 8
+            },
+            "n_base": 8
+          },
+          "9": {
+            "shown": {
+              "10x1": 4,
+              "11x1": 1
+            },
+            "base_per_hit": {
+              "9": 5
+            },
+            "hits": {
+              "1": 5
+            },
+            "n_base": 5
+          },
+          "10": {
+            "shown": {
+              "10x1": 13,
+              "11x1": 5,
+              "12x1": 1,
+              "7x1": 5,
+              "8x1": 1,
+              "9x1": 2
+            },
+            "base_per_hit": {
+              "9": 19
+            },
+            "hits": {
+              "1": 27
+            },
+            "n_base": 19
+          }
+        },
+        "self_powers_gained": {
+          "STRENGTH_POWER": {
+            "1": 32
+          }
+        },
+        "self_powers_gained_by_asc": {
+          "0": {
+            "STRENGTH_POWER": {
+              "1": 2
+            }
+          },
+          "4": {
+            "STRENGTH_POWER": {
+              "1": 1
+            }
+          },
+          "5": {
+            "STRENGTH_POWER": {
+              "1": 1
+            }
+          },
+          "7": {
+            "STRENGTH_POWER": {
+              "1": 1
+            }
+          },
+          "8": {
+            "STRENGTH_POWER": {
+              "1": 5
+            }
+          },
+          "9": {
+            "STRENGTH_POWER": {
+              "1": 2
+            }
+          },
+          "10": {
+            "STRENGTH_POWER": {
+              "1": 20
+            }
+          }
+        }
+      }
+    },
+    "powers": {
+      "PIERCING_WAIL_POWER": {
+        "name": "尖啸",
+        "type": "Debuff",
+        "description": "在本回合结束前失去[gold]力量[/gold]。",
+        "n_fights": 5,
+        "amount_at_first_sight": {
+          "6": 5
+        },
+        "amount_max_in_fight": {
+          "6": 5
+        },
+        "amount_at_first_sight_by_asc": {
+          "10": {
+            "6": 5
+          }
+        },
+        "turn_at_first_sight_by_asc": {
+          "10": {
+            "2": 1,
+            "3": 3,
+            "5": 1
+          }
+        }
+      },
+      "POISON_POWER": {
+        "name": "中毒",
+        "type": "Debuff",
+        "description": "中毒的生物会在自身回合开始时失去生命。中毒层数每回合减少[blue]1[/blue]。",
+        "n_fights": 39,
+        "amount_at_first_sight": {
+          "2": 2,
+          "3": 13,
+          "4": 3,
+          "5": 10,
+          "6": 2,
+          "7": 6,
+          "9": 1,
+          "10": 1,
+          "24": 1
+        },
+        "amount_max_in_fight": {
+          "3": 3,
+          "4": 4,
+          "5": 10,
+          "7": 3,
+          "8": 5,
+          "9": 5,
+          "12": 3,
+          "14": 2,
+          "16": 1,
+          "20": 1,
+          "24": 2
+        },
+        "amount_at_first_sight_by_asc": {
+          "4": {
+            "3": 1
+          },
+          "6": {
+            "5": 1
+          },
+          "9": {
+            "5": 1
+          },
+          "10": {
+            "2": 2,
+            "3": 12,
+            "4": 3,
+            "5": 8,
+            "6": 2,
+            "7": 6,
+            "9": 1,
+            "10": 1,
+            "24": 1
+          }
+        },
+        "turn_at_first_sight_by_asc": {
+          "4": {
+            "3": 1
+          },
+          "6": {
+            "1": 1
+          },
+          "9": {
+            "2": 1
+          },
+          "10": {
+            "1": 20,
+            "2": 8,
+            "3": 5,
+            "4": 2,
+            "6": 1
+          }
+        }
+      },
+      "STRANGLE_POWER": {
+        "name": "紧勒",
+        "type": "Debuff",
+        "description": "本回合，你每次打出牌时，这名敌人失去[blue]2[/blue]点生命。",
+        "n_fights": 1,
+        "amount_at_first_sight": {
+          "2": 1
+        },
+        "amount_max_in_fight": {
+          "2": 1
+        },
+        "amount_at_first_sight_by_asc": {
+          "10": {
+            "2": 1
+          }
+        },
+        "turn_at_first_sight_by_asc": {
+          "10": {
+            "1": 1
+          }
+        }
+      },
+      "STRENGTH_POWER": {
+        "name": "力量",
+        "type": "Buff",
+        "description": "力量会增加攻击牌造成的伤害。",
+        "n_fights": 111,
+        "amount_at_first_sight": {
+          "-6": 1,
+          "1": 110
+        },
+        "amount_max_in_fight": {
+          "1": 65,
+          "2": 34,
+          "3": 8,
+          "4": 4
+        },
+        "amount_at_first_sight_by_asc": {
+          "0": {
+            "1": 12
+          },
+          "2": {
+            "1": 1
+          },
+          "3": {
+            "1": 2
+          },
+          "4": {
+            "1": 2
+          },
+          "5": {
+            "1": 1
+          },
+          "6": {
+            "1": 2
+          },
+          "7": {
+            "1": 4
+          },
+          "8": {
+            "1": 29
+          },
+          "9": {
+            "1": 11
+          },
+          "10": {
+            "-6": 1,
+            "1": 46
+          }
+        },
+        "turn_at_first_sight_by_asc": {
+          "0": {
+            "3": 12
+          },
+          "2": {
+            "3": 1
+          },
+          "3": {
+            "3": 2
+          },
+          "4": {
+            "3": 2
+          },
+          "5": {
+            "3": 1
+          },
+          "6": {
+            "3": 2
+          },
+          "7": {
+            "3": 4
+          },
+          "8": {
+            "1": 1,
+            "3": 28
+          },
+          "9": {
+            "1": 1,
+            "3": 10
+          },
+          "10": {
+            "2": 1,
+            "3": 46
+          }
+        }
+      },
+      "VULNERABLE_POWER": {
+        "name": "易伤",
+        "type": "Debuff",
+        "description": "易伤的生物从攻击中受到的伤害增加[blue]50%[/blue]。",
+        "n_fights": 59,
+        "amount_at_first_sight": {
+          "1": 9,
+          "2": 25,
+          "3": 24,
+          "6": 1
+        },
+        "amount_max_in_fight": {
+          "1": 5,
+          "2": 24,
+          "3": 24,
+          "4": 3,
+          "6": 2,
+          "8": 1
+        },
+        "amount_at_first_sight_by_asc": {
+          "0": {
+            "1": 1,
+            "2": 6,
+            "3": 4
+          },
+          "2": {
+            "1": 1
+          },
+          "3": {
+            "3": 2
+          },
+          "4": {
+            "2": 1
+          },
+          "7": {
+            "1": 1,
+            "2": 3,
+            "3": 1
+          },
+          "8": {
+            "1": 3,
+            "2": 9,
+            "3": 13,
+            "6": 1
+          },
+          "9": {
+            "1": 2,
+            "2": 5,
+            "3": 3
+          },
+          "10": {
+            "1": 1,
+            "2": 1,
+            "3": 1
+          }
+        },
+        "turn_at_first_sight_by_asc": {
+          "0": {
+            "1": 6,
+            "2": 1,
+            "3": 2,
+            "4": 1,
+            "5": 1
+          },
+          "2": {
+            "1": 1
+          },
+          "3": {
+            "1": 1,
+            "3": 1
+          },
+          "4": {
+            "1": 1
+          },
+          "7": {
+            "1": 1,
+            "2": 3,
+            "4": 1
+          },
+          "8": {
+            "1": 12,
+            "2": 7,
+            "3": 7
+          },
+          "9": {
+            "1": 5,
+            "2": 1,
+            "3": 2,
+            "4": 1,
+            "6": 1
+          },
+          "10": {
+            "1": 3
+          }
+        }
+      },
+      "WEAK_POWER": {
+        "name": "虚弱",
+        "type": "Debuff",
+        "description": "虚弱的生物造成的攻击伤害减少[blue]25%[/blue]。",
+        "n_fights": 57,
+        "amount_at_first_sight": {
+          "1": 44,
+          "2": 13
+        },
+        "amount_max_in_fight": {
+          "1": 31,
+          "2": 20,
+          "3": 5,
+          "4": 1
+        },
+        "amount_at_first_sight_by_asc": {
+          "0": {
+            "1": 3
+          },
+          "4": {
+            "2": 1
+          },
+          "6": {
+            "1": 2
+          },
+          "7": {
+            "1": 1
+          },
+          "8": {
+            "1": 4,
+            "2": 1
+          },
+          "9": {
+            "1": 2,
+            "2": 1
+          },
+          "10": {
+            "1": 32,
+            "2": 10
+          }
+        },
+        "turn_at_first_sight_by_asc": {
+          "0": {
+            "1": 1,
+            "2": 1,
+            "6": 1
+          },
+          "4": {
+            "4": 1
+          },
+          "6": {
+            "1": 1,
+            "2": 1
+          },
+          "7": {
+            "1": 1
+          },
+          "8": {
+            "1": 4,
+            "3": 1
+          },
+          "9": {
+            "1": 2,
+            "4": 1
+          },
+          "10": {
+            "1": 17,
+            "2": 13,
+            "3": 7,
+            "4": 4,
+            "5": 1
+          }
+        }
+      }
+    },
+    "provenance": {
+      "first_seen": "2026-09-24T04:10:03.747Z",
+      "last_seen": "2026-10-17T22:40:25.509Z",
+      "n_runs": 117,
+      "n_instances": 117,
+      "n_spawned_mid_fight": 0,
+      "n_minion_instances": 0
+    },
+    "observed": {
+      "powers_stripped": {
+        "STRENGTH_POWER": {
+          "n": 4,
+          "fights": 4,
+          "amount_before": {
+            "1": 3,
+            "2": 1
+          },
+          "move_after": {
+            "HEADBUTT_MOVE": 2,
+            "SWIPE_RANDOM_MOVE": 1,
+            "SWIPE_MOVE": 1
+          },
+          "stunned_share": 0.0,
+          "co_removed": {},
+          "died_same_turn": 0,
+          "turn_end_unclear": 0,
+          "alive_at_turn_end": 4,
+          "stunned_at_turn_end": 0,
+          "attack_before": 4,
+          "attack_cancelled": 0,
+          "hp_check": {
+            "n": 4,
+            "landed": 0
+          },
+          "evidence": [],
+          "move_before": {
+            "HEADBUTT_MOVE": 2,
+            "SWIPE_RANDOM_MOVE": 1,
+            "SWIPE_MOVE": 1
+          },
+          "move_changed": 0,
+          "move_changed_share": 0.0,
+          "changed_to": {},
+          "changed_evidence": [],
+          "end_move": {
+            "HEADBUTT_MOVE": 2,
+            "SWIPE_RANDOM_MOVE": 1,
+            "SWIPE_MOVE": 1
+          },
+          "next_move": {
+            "SWIPE_MOVE": 2,
+            "HEADBUTT_MOVE": 1,
+            "SWIPE_RANDOM_MOVE": 1
+          },
+          "changed_next": {},
+          "revived": 0
+        }
+      },
+      "ally_deaths": {
+        "EYE_WITH_TEETH": {
+          "n": 106,
+          "fights": 71,
+          "move_before": {
+            "SWIPE_MOVE": 57,
+            "HEADBUTT_MOVE": 31,
+            "SWIPE_RANDOM_MOVE": 18
+          },
+          "move_changed": 0,
+          "move_changed_share": 0.0,
+          "changed_to": {},
+          "by_move": {
+            "HEADBUTT_MOVE": {
+              "n": 31,
+              "changed_to": {}
+            },
+            "SWIPE_MOVE": {
+              "n": 57,
+              "changed_to": {}
+            },
+            "SWIPE_RANDOM_MOVE": {
+              "n": 18,
+              "changed_to": {}
+            }
+          },
+          "changed_evidence": [],
+          "attack_changed": 0,
+          "co_deaths": 0,
+          "end_move": {
+            "SWIPE_MOVE": 45,
+            "HEADBUTT_MOVE": 18,
+            "SWIPE_RANDOM_MOVE": 12
+          },
+          "next_n": 68,
+          "next_move": {
+            "HEADBUTT_MOVE": 33,
+            "SWIPE_RANDOM_MOVE": 18,
+            "SWIPE_MOVE": 17
+          },
+          "next_after": {
+            "HEADBUTT_MOVE": {
+              "SWIPE_MOVE": 17
+            },
+            "SWIPE_MOVE": {
+              "HEADBUTT_MOVE": 23,
+              "SWIPE_RANDOM_MOVE": 18
+            },
+            "SWIPE_RANDOM_MOVE": {
+              "HEADBUTT_MOVE": 10
+            }
+          },
+          "next_evidence": [
+            "5L1H7N0ULL7C F7 T2",
+            "5L1H7N0ULL7C F7 T3",
+            "5L1H7N0ULL7C F7 T4"
+          ],
+          "alive": {
+            "turns": 348,
+            "moves": {
+              "SWIPE_MOVE": 185,
+              "HEADBUTT_MOVE": 112,
+              "SWIPE_RANDOM_MOVE": 51
+            },
+            "next": {
+              "HEADBUTT_MOVE": {
+                "SWIPE_MOVE": 50
+              },
+              "SWIPE_MOVE": {
+                "HEADBUTT_MOVE": 57,
+                "SWIPE_RANDOM_MOVE": 33
+              },
+              "SWIPE_RANDOM_MOVE": {
+                "HEADBUTT_MOVE": 23
+              }
+            }
+          },
+          "dead": {
+            "turns": 2,
+            "moves": {
+              "HEADBUTT_MOVE": 1,
+              "SWIPE_MOVE": 1
+            }
+          }
+        }
+      }
+    }
+  }
+}

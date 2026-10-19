@@ -1,0 +1,33 @@
+{
+  "schema": "legacy-enemy-observation-v1",
+  "enemy_id": "FOSSIL_STALKER",
+  "source": "common/move-model.json",
+  "pointer": [
+    "FOSSIL_STALKER"
+  ],
+  "scope_policy": "仅机械封装原common数据，未扩适用范围或新增机制结论。",
+  "payload": {
+    "damage": {
+      "LASH_MOVE": 12.5,
+      "LATCH_MOVE": 14.1,
+      "TACKLE_MOVE": 12.7
+    },
+    "next": {
+      "LASH_MOVE": {
+        "LASH_MOVE": 20,
+        "LATCH_MOVE": 32,
+        "TACKLE_MOVE": 28
+      },
+      "LATCH_MOVE": {
+        "LASH_MOVE": 85,
+        "LATCH_MOVE": 47,
+        "TACKLE_MOVE": 65
+      },
+      "TACKLE_MOVE": {
+        "LASH_MOVE": 26,
+        "LATCH_MOVE": 20,
+        "TACKLE_MOVE": 23
+      }
+    }
+  }
+}

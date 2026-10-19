@@ -1,0 +1,30 @@
+{
+  "schema": "legacy-enemy-observation-v1",
+  "enemy_id": "LOUSE_PROGENITOR",
+  "source": "common/move-model.json",
+  "pointer": [
+    "LOUSE_PROGENITOR"
+  ],
+  "scope_policy": "仅机械封装原common数据，未扩适用范围或新增机制结论。",
+  "payload": {
+    "buffs": [
+      "CURL_AND_GROW_MOVE"
+    ],
+    "damage": {
+      "CURL_AND_GROW_MOVE": 0.0,
+      "POUNCE_MOVE": 22.0,
+      "WEB_CANNON_MOVE": 12.6
+    },
+    "next": {
+      "CURL_AND_GROW_MOVE": {
+        "POUNCE_MOVE": 249
+      },
+      "POUNCE_MOVE": {
+        "WEB_CANNON_MOVE": 184
+      },
+      "WEB_CANNON_MOVE": {
+        "CURL_AND_GROW_MOVE": 299
+      }
+    }
+  }
+}

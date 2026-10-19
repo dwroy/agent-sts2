@@ -1,0 +1,29 @@
+{
+  "schema": "legacy-enemy-observation-v1",
+  "enemy_id": "PARAFRIGHT",
+  "source": "common/move-model.json",
+  "pointer": [
+    "PARAFRIGHT"
+  ],
+  "scope_policy": "仅机械封装原common数据，未扩适用范围或新增机制结论。",
+  "payload": {
+    "damage": {
+      "REVIVE_MOVE": 0.0,
+      "SLAM_MOVE": 18.3,
+      "UNSET_MOVE": 0.0
+    },
+    "next": {
+      "REVIVE_MOVE": {
+        "REVIVE_MOVE": 1,
+        "SLAM_MOVE": 2
+      },
+      "SLAM_MOVE": {
+        "REVIVE_MOVE": 3,
+        "SLAM_MOVE": 622
+      },
+      "UNSET_MOVE": {
+        "SLAM_MOVE": 131
+      }
+    }
+  }
+}

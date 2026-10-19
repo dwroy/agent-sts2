@@ -1,0 +1,27 @@
+{
+  "schema": "legacy-enemy-observation-v1",
+  "enemy_id": "VINE_SHAMBLER",
+  "source": "common/move-model.json",
+  "pointer": [
+    "VINE_SHAMBLER"
+  ],
+  "scope_policy": "仅机械封装原common数据，未扩适用范围或新增机制结论。",
+  "payload": {
+    "damage": {
+      "CHOMP_MOVE": 16.6,
+      "GRASPING_VINES_MOVE": 8.4,
+      "SWIPE_MOVE": 12.9
+    },
+    "next": {
+      "CHOMP_MOVE": {
+        "SWIPE_MOVE": 86
+      },
+      "GRASPING_VINES_MOVE": {
+        "CHOMP_MOVE": 112
+      },
+      "SWIPE_MOVE": {
+        "GRASPING_VINES_MOVE": 151
+      }
+    }
+  }
+}

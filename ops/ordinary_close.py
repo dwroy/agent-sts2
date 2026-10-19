@@ -9,6 +9,7 @@ from pathlib import Path
 import re
 import subprocess
 import tempfile
+import record_manifest
 
 from ops_current import atomic, git, save, stamp
 
@@ -146,8 +147,6 @@ def controlled_commit(root, directory, paths, message, verify=None):
             raise ValueError("pre-staged records retained; ops must decide ownership")
         with tempfile.TemporaryDirectory(prefix="ordinary-records-", dir=directory) as temp:
             temp = Path(temp)
-            scan = temp / "records"
-            scan.mkdir()
             snapshots = {}
             for name in paths:
                 path = root / name
@@ -156,11 +155,7 @@ def controlled_commit(root, directory, paths, message, verify=None):
                 if path.exists():
                     raw = path.read_bytes()
                     snapshots[name] = raw
-                    dest = scan / name
-                    dest.parent.mkdir(parents=True, exist_ok=True)
-                    dest.write_bytes(raw)
-            subprocess.run(["gitleaks", "dir", str(scan), "--no-banner", "--redact", "--log-level", "error"],
-                           check=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+            scan = record_manifest.scan_snapshots(root, directory, snapshots, head)
             private = temp / "index"
             env = {**os.environ, "GIT_INDEX_FILE": str(private)}
             def run(*args, input=None):
@@ -173,7 +168,7 @@ def controlled_commit(root, directory, paths, message, verify=None):
                 hashes[name] = hashlib.sha256(raw).hexdigest()
             tree = run("write-tree")
             if tree == git(root, "rev-parse", head + "^{tree}"):
-                return {"commit": head, "new_commit": False, "files": hashes}
+                return {"commit": head, "new_commit": False, "files": hashes, "scan": scan}
             if verify:
                 verify()
             # HEAD and all staged bytes are rechecked before publishing the exact cut.
@@ -189,7 +184,7 @@ def controlled_commit(root, directory, paths, message, verify=None):
             os.close(fd)
             fd = None
             os.replace(lock, index)
-            return {"commit": commit, "new_commit": True, "files": hashes}
+            return {"commit": commit, "new_commit": True, "files": hashes, "scan": scan}
     finally:
         if fd is not None:
             os.close(fd)

@@ -1,0 +1,30 @@
+{
+  "schema": "legacy-enemy-observation-v1",
+  "enemy_id": "CORPSE_SLUG",
+  "source": "common/move-model.json",
+  "pointer": [
+    "CORPSE_SLUG"
+  ],
+  "scope_policy": "仅机械封装原common数据，未扩适用范围或新增机制结论。",
+  "payload": {
+    "damage": {
+      "GLOMP_MOVE": 9.8,
+      "GOOP_MOVE": 0.0,
+      "WHIP_SLAP_MOVE": 8.6
+    },
+    "next": {
+      "GLOMP_MOVE": {
+        "GLOMP_MOVE": 216,
+        "GOOP_MOVE": 584
+      },
+      "GOOP_MOVE": {
+        "GOOP_MOVE": 167,
+        "WHIP_SLAP_MOVE": 618
+      },
+      "WHIP_SLAP_MOVE": {
+        "GLOMP_MOVE": 574,
+        "WHIP_SLAP_MOVE": 214
+      }
+    }
+  }
+}

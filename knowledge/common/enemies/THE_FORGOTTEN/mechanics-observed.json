@@ -1,0 +1,1270 @@
+{
+  "schema": "legacy-enemy-observation-v1",
+  "enemy_id": "THE_FORGOTTEN",
+  "source": "common/monster-db.json",
+  "pointer": [
+    "monsters",
+    "THE_FORGOTTEN"
+  ],
+  "scope_policy": "仅机械封装原common数据，未扩适用范围或新增机制结论。",
+  "payload": {
+    "name": {
+      "zh": "遗忘之物"
+    },
+    "game_type": "Normal",
+    "game_hp_range": [
+      106,
+      106
+    ],
+    "kind": "hallway",
+    "rooms": {
+      "hallway": 53,
+      "unknown_room": 13
+    },
+    "acts": {
+      "3": 66
+    },
+    "encounters": {
+      "THE_FORGOTTEN+THE_LOST": 66
+    },
+    "hp_by_asc": {
+      "0": {
+        "min": 106,
+        "median": 106.0,
+        "max": 106,
+        "n": 2
+      },
+      "1": {
+        "min": 106,
+        "median": 106,
+        "max": 106,
+        "n": 1
+      },
+      "3": {
+        "min": 106,
+        "median": 106,
+        "max": 106,
+        "n": 1
+      },
+      "5": {
+        "min": 106,
+        "median": 106,
+        "max": 106,
+        "n": 1
+      },
+      "6": {
+        "min": 106,
+        "median": 106,
+        "max": 106,
+        "n": 3
+      },
+      "7": {
+        "min": 106,
+        "median": 106.0,
+        "max": 106,
+        "n": 4
+      },
+      "8": {
+        "min": 111,
+        "median": 111.0,
+        "max": 111,
+        "n": 20
+      },
+      "9": {
+        "min": 111,
+        "median": 111,
+        "max": 111,
+        "n": 11
+      },
+      "10": {
+        "min": 111,
+        "median": 111,
+        "max": 111,
+        "n": 23
+      }
+    },
+    "moves": {
+      "DREAD": {
+        "name": "恐惧",
+        "n_seen": 145,
+        "intents": {
+          "Attack": 145
+        },
+        "turns_seen": {
+          "2": 64,
+          "4": 49,
+          "6": 28,
+          "8": 4
+        },
+        "next": {
+          "MIASMA": 112
+        },
+        "avg_total_shown": 16.7,
+        "damage_by_asc": {
+          "0": {
+            "shown": {
+              "15x1": 2,
+              "17x1": 2
+            },
+            "base_per_hit": {
+              "15": 2,
+              "17": 2
+            },
+            "hits": {
+              "1": 4
+            },
+            "n_base": 4
+          },
+          "1": {
+            "shown": {
+              "14x1": 1,
+              "15x1": 1,
+              "17x1": 1
+            },
+            "base_per_hit": {
+              "15": 1,
+              "17": 1
+            },
+            "hits": {
+              "1": 3
+            },
+            "n_base": 2
+          },
+          "3": {
+            "shown": {
+              "15x1": 1,
+              "17x1": 1
+            },
+            "base_per_hit": {
+              "15": 1,
+              "17": 1
+            },
+            "hits": {
+              "1": 2
+            },
+            "n_base": 2
+          },
+          "5": {
+            "shown": {
+              "15x1": 1,
+              "17x1": 1
+            },
+            "base_per_hit": {
+              "15": 1,
+              "17": 1
+            },
+            "hits": {
+              "1": 2
+            },
+            "n_base": 2
+          },
+          "6": {
+            "shown": {
+              "11x1": 1,
+              "12x1": 1,
+              "14x1": 1,
+              "15x1": 3,
+              "17x1": 2,
+              "19x1": 1,
+              "21x1": 1
+            },
+            "base_per_hit": {
+              "15": 2,
+              "17": 2,
+              "19": 1,
+              "21": 1
+            },
+            "hits": {
+              "1": 10
+            },
+            "n_base": 6
+          },
+          "7": {
+            "shown": {
+              "15x1": 4,
+              "17x1": 2,
+              "19x1": 1
+            },
+            "base_per_hit": {
+              "15": 4,
+              "17": 2,
+              "19": 1
+            },
+            "hits": {
+              "1": 7
+            },
+            "n_base": 7
+          },
+          "8": {
+            "shown": {
+              "14x1": 1,
+              "15x1": 18,
+              "17x1": 13,
+              "18x1": 1,
+              "19x1": 4,
+              "20x1": 1,
+              "23x1": 1
+            },
+            "base_per_hit": {
+              "15": 18,
+              "17": 14,
+              "19": 5,
+              "21": 1
+            },
+            "hits": {
+              "1": 39
+            },
+            "n_base": 38
+          },
+          "9": {
+            "shown": {
+              "17x1": 10,
+              "18x1": 1,
+              "19x1": 4,
+              "21x1": 3
+            },
+            "base_per_hit": {
+              "17": 11,
+              "19": 4,
+              "21": 3
+            },
+            "hits": {
+              "1": 18
+            },
+            "n_base": 18
+          },
+          "10": {
+            "shown": {
+              "10x1": 2,
+              "11x1": 1,
+              "12x1": 4,
+              "13x1": 1,
+              "14x1": 5,
+              "15x1": 5,
+              "16x1": 1,
+              "17x1": 19,
+              "19x1": 14,
+              "21x1": 8
+            },
+            "base_per_hit": {
+              "17": 18,
+              "19": 15,
+              "21": 8
+            },
+            "hits": {
+              "1": 60
+            },
+            "n_base": 41
+          }
+        }
+      },
+      "MIASMA": {
+        "name": "瘴气",
+        "n_seen": 178,
+        "intents": {
+          "Buff+Debuff+Defend": 178
+        },
+        "turns_seen": {
+          "1": 66,
+          "3": 59,
+          "5": 39,
+          "7": 12,
+          "9": 2
+        },
+        "next": {
+          "DREAD": 145
+        },
+        "avg_total_shown": 0.0,
+        "block_gained": {
+          "1": 1,
+          "2": 1,
+          "3": 1,
+          "4": 2,
+          "5": 1,
+          "6": 9,
+          "7": 1,
+          "8": 56,
+          "10": 41,
+          "12": 23,
+          "14": 3
+        },
+        "block_gained_by_asc": {
+          "0": {
+            "8": 2,
+            "10": 2
+          },
+          "1": {
+            "8": 1,
+            "10": 1,
+            "12": 1
+          },
+          "3": {
+            "8": 1,
+            "10": 1
+          },
+          "5": {
+            "8": 1,
+            "10": 1
+          },
+          "6": {
+            "8": 3,
+            "10": 3,
+            "12": 2,
+            "14": 2
+          },
+          "7": {
+            "8": 3,
+            "10": 2,
+            "12": 1
+          },
+          "8": {
+            "1": 1,
+            "2": 1,
+            "4": 2,
+            "6": 7,
+            "8": 14,
+            "10": 9,
+            "12": 3
+          },
+          "9": {
+            "3": 1,
+            "8": 10,
+            "10": 3,
+            "12": 1
+          },
+          "10": {
+            "5": 1,
+            "6": 2,
+            "7": 1,
+            "8": 21,
+            "10": 19,
+            "12": 15,
+            "14": 1
+          }
+        },
+        "self_powers_gained": {
+          "DEXTERITY_POWER": {
+            "2": 144
+          }
+        },
+        "self_powers_gained_by_asc": {
+          "0": {
+            "DEXTERITY_POWER": {
+              "2": 4
+            }
+          },
+          "1": {
+            "DEXTERITY_POWER": {
+              "2": 3
+            }
+          },
+          "3": {
+            "DEXTERITY_POWER": {
+              "2": 2
+            }
+          },
+          "5": {
+            "DEXTERITY_POWER": {
+              "2": 2
+            }
+          },
+          "6": {
+            "DEXTERITY_POWER": {
+              "2": 10
+            }
+          },
+          "7": {
+            "DEXTERITY_POWER": {
+              "2": 7
+            }
+          },
+          "8": {
+            "DEXTERITY_POWER": {
+              "2": 39
+            }
+          },
+          "9": {
+            "DEXTERITY_POWER": {
+              "2": 18
+            }
+          },
+          "10": {
+            "DEXTERITY_POWER": {
+              "2": 59
+            }
+          }
+        },
+        "player_powers_applied": {
+          "DEXTERITY_POWER": {
+            "-2": 130
+          },
+          "STRENGTH_POWER": {
+            "-2": 67,
+            "-1": 9
+          }
+        },
+        "player_powers_applied_by_asc": {
+          "0": {
+            "DEXTERITY_POWER": {
+              "-2": 3
+            },
+            "STRENGTH_POWER": {
+              "-2": 1
+            }
+          },
+          "1": {
+            "DEXTERITY_POWER": {
+              "-2": 3
+            },
+            "STRENGTH_POWER": {
+              "-2": 1
+            }
+          },
+          "3": {
+            "DEXTERITY_POWER": {
+              "-2": 1
+            }
+          },
+          "5": {
+            "DEXTERITY_POWER": {
+              "-2": 1
+            }
+          },
+          "6": {
+            "DEXTERITY_POWER": {
+              "-2": 8
+            },
+            "STRENGTH_POWER": {
+              "-2": 5
+            }
+          },
+          "7": {
+            "DEXTERITY_POWER": {
+              "-2": 6
+            },
+            "STRENGTH_POWER": {
+              "-2": 2,
+              "-1": 2
+            }
+          },
+          "8": {
+            "DEXTERITY_POWER": {
+              "-2": 33
+            },
+            "STRENGTH_POWER": {
+              "-2": 13,
+              "-1": 5
+            }
+          },
+          "9": {
+            "DEXTERITY_POWER": {
+              "-2": 18
+            },
+            "STRENGTH_POWER": {
+              "-2": 10,
+              "-1": 2
+            }
+          },
+          "10": {
+            "DEXTERITY_POWER": {
+              "-2": 57
+            },
+            "STRENGTH_POWER": {
+              "-2": 35
+            }
+          }
+        }
+      }
+    },
+    "powers": {
+      "DARK_SHACKLES_POWER": {
+        "name": "黑暗镣铐",
+        "type": "Debuff",
+        "description": "在本回合结束前失去[gold]力量[/gold]。",
+        "n_fights": 1,
+        "amount_at_first_sight": {
+          "15": 1
+        },
+        "amount_max_in_fight": {
+          "15": 1
+        },
+        "amount_at_first_sight_by_asc": {
+          "6": {
+            "15": 1
+          }
+        },
+        "turn_at_first_sight_by_asc": {
+          "6": {
+            "4": 1
+          }
+        }
+      },
+      "DEMISE_POWER": {
+        "name": "消亡",
+        "type": "Debuff",
+        "description": "这个生物在其回合结束时失去生命。",
+        "n_fights": 1,
+        "amount_at_first_sight": {
+          "9": 1
+        },
+        "amount_max_in_fight": {
+          "9": 1
+        },
+        "amount_at_first_sight_by_asc": {
+          "8": {
+            "9": 1
+          }
+        },
+        "turn_at_first_sight_by_asc": {
+          "8": {
+            "2": 1
+          }
+        }
+      },
+      "DEXTERITY_POWER": {
+        "name": "敏捷",
+        "type": "Buff",
+        "description": "敏捷会增加从卡牌中获得的[gold]格挡[/gold]。",
+        "n_fights": 64,
+        "amount_at_first_sight": {
+          "2": 64
+        },
+        "amount_max_in_fight": {
+          "2": 15,
+          "4": 21,
+          "6": 24,
+          "8": 4
+        },
+        "amount_at_first_sight_by_asc": {
+          "0": {
+            "2": 2
+          },
+          "1": {
+            "2": 1
+          },
+          "3": {
+            "2": 1
+          },
+          "5": {
+            "2": 1
+          },
+          "6": {
+            "2": 3
+          },
+          "7": {
+            "2": 4
+          },
+          "8": {
+            "2": 18
+          },
+          "9": {
+            "2": 11
+          },
+          "10": {
+            "2": 23
+          }
+        },
+        "turn_at_first_sight_by_asc": {
+          "0": {
+            "2": 2
+          },
+          "1": {
+            "2": 1
+          },
+          "3": {
+            "2": 1
+          },
+          "5": {
+            "2": 1
+          },
+          "6": {
+            "2": 3
+          },
+          "7": {
+            "2": 4
+          },
+          "8": {
+            "2": 18
+          },
+          "9": {
+            "2": 11
+          },
+          "10": {
+            "2": 23
+          }
+        }
+      },
+      "PIERCING_WAIL_POWER": {
+        "name": "尖啸",
+        "type": "Debuff",
+        "description": "在本回合结束前失去[gold]力量[/gold]。",
+        "n_fights": 11,
+        "amount_at_first_sight": {
+          "6": 6,
+          "8": 5
+        },
+        "amount_max_in_fight": {
+          "6": 5,
+          "8": 5,
+          "14": 1
+        },
+        "amount_at_first_sight_by_asc": {
+          "6": {
+            "8": 2
+          },
+          "9": {
+            "8": 1
+          },
+          "10": {
+            "6": 6,
+            "8": 2
+          }
+        },
+        "turn_at_first_sight_by_asc": {
+          "6": {
+            "2": 2
+          },
+          "9": {
+            "4": 1
+          },
+          "10": {
+            "2": 3,
+            "3": 1,
+            "4": 3,
+            "6": 1
+          }
+        }
+      },
+      "POISON_POWER": {
+        "name": "中毒",
+        "type": "Debuff",
+        "description": "中毒的生物会在自身回合开始时失去生命。中毒层数每回合减少[blue]1[/blue]。",
+        "n_fights": 29,
+        "amount_at_first_sight": {
+          "2": 6,
+          "3": 8,
+          "4": 3,
+          "6": 2,
+          "7": 6,
+          "9": 2,
+          "10": 1,
+          "24": 1
+        },
+        "amount_max_in_fight": {
+          "3": 1,
+          "7": 2,
+          "8": 2,
+          "9": 1,
+          "10": 2,
+          "11": 3,
+          "12": 1,
+          "13": 1,
+          "14": 1,
+          "15": 2,
+          "19": 3,
+          "22": 1,
+          "23": 3,
+          "28": 1,
+          "30": 2,
+          "31": 2,
+          "32": 1
+        },
+        "amount_at_first_sight_by_asc": {
+          "0": {
+            "3": 1
+          },
+          "1": {
+            "7": 1
+          },
+          "6": {
+            "2": 1,
+            "4": 1
+          },
+          "7": {
+            "7": 1,
+            "10": 1
+          },
+          "10": {
+            "2": 5,
+            "3": 7,
+            "4": 2,
+            "6": 2,
+            "7": 4,
+            "9": 2,
+            "24": 1
+          }
+        },
+        "turn_at_first_sight_by_asc": {
+          "0": {
+            "2": 1
+          },
+          "1": {
+            "5": 1
+          },
+          "6": {
+            "4": 2
+          },
+          "7": {
+            "1": 1,
+            "4": 1
+          },
+          "10": {
+            "1": 3,
+            "2": 4,
+            "3": 8,
+            "4": 6,
+            "5": 1,
+            "8": 1
+          }
+        }
+      },
+      "POSSESS_SPEED_POWER": {
+        "name": "抢夺速度",
+        "type": "Buff",
+        "description": "被击杀时，将偷窃的所有[gold]敏捷[/gold]返还给玩家。",
+        "n_fights": 66,
+        "amount_at_first_sight": {
+          "1": 66
+        },
+        "amount_max_in_fight": {
+          "1": 66
+        },
+        "amount_at_first_sight_by_asc": {
+          "0": {
+            "1": 2
+          },
+          "1": {
+            "1": 1
+          },
+          "3": {
+            "1": 1
+          },
+          "5": {
+            "1": 1
+          },
+          "6": {
+            "1": 3
+          },
+          "7": {
+            "1": 4
+          },
+          "8": {
+            "1": 20
+          },
+          "9": {
+            "1": 11
+          },
+          "10": {
+            "1": 23
+          }
+        },
+        "turn_at_first_sight_by_asc": {
+          "0": {
+            "1": 2
+          },
+          "1": {
+            "1": 1
+          },
+          "3": {
+            "1": 1
+          },
+          "5": {
+            "1": 1
+          },
+          "6": {
+            "1": 3
+          },
+          "7": {
+            "1": 4
+          },
+          "8": {
+            "1": 20
+          },
+          "9": {
+            "1": 11
+          },
+          "10": {
+            "1": 23
+          }
+        }
+      },
+      "STRANGLE_POWER": {
+        "name": "紧勒",
+        "type": "Debuff",
+        "description": "本回合，你每次打出牌时，这名敌人失去[blue]2[/blue]点生命。",
+        "n_fights": 2,
+        "amount_at_first_sight": {
+          "2": 2
+        },
+        "amount_max_in_fight": {
+          "2": 2
+        },
+        "amount_at_first_sight_by_asc": {
+          "10": {
+            "2": 2
+          }
+        },
+        "turn_at_first_sight_by_asc": {
+          "10": {
+            "1": 1,
+            "5": 1
+          }
+        }
+      },
+      "STRENGTH_POWER": {
+        "name": "力量",
+        "type": "Buff",
+        "description": "力量会增加攻击牌造成的伤害。",
+        "n_fights": 15,
+        "amount_at_first_sight": {
+          "-8": 5,
+          "-7": 1,
+          "-6": 5,
+          "-3": 1,
+          "1": 3
+        },
+        "amount_max_in_fight": {
+          "-8": 5,
+          "-7": 1,
+          "-6": 5,
+          "-3": 1,
+          "1": 2,
+          "2": 1
+        },
+        "amount_at_first_sight_by_asc": {
+          "6": {
+            "-8": 2
+          },
+          "8": {
+            "1": 2
+          },
+          "9": {
+            "-8": 1,
+            "1": 1
+          },
+          "10": {
+            "-8": 2,
+            "-7": 1,
+            "-6": 5,
+            "-3": 1
+          }
+        },
+        "turn_at_first_sight_by_asc": {
+          "6": {
+            "2": 2
+          },
+          "8": {
+            "2": 1,
+            "3": 1
+          },
+          "9": {
+            "1": 1,
+            "4": 1
+          },
+          "10": {
+            "1": 1,
+            "2": 3,
+            "4": 3,
+            "5": 1,
+            "6": 1
+          }
+        }
+      },
+      "VULNERABLE_POWER": {
+        "name": "易伤",
+        "type": "Debuff",
+        "description": "易伤的生物从攻击中受到的伤害增加[blue]50%[/blue]。",
+        "n_fights": 34,
+        "amount_at_first_sight": {
+          "1": 15,
+          "2": 11,
+          "3": 8
+        },
+        "amount_max_in_fight": {
+          "1": 9,
+          "2": 14,
+          "3": 7,
+          "4": 2,
+          "6": 2
+        },
+        "amount_at_first_sight_by_asc": {
+          "0": {
+            "2": 2
+          },
+          "3": {
+            "1": 1
+          },
+          "5": {
+            "1": 1
+          },
+          "7": {
+            "3": 1
+          },
+          "8": {
+            "1": 6,
+            "2": 5,
+            "3": 2
+          },
+          "9": {
+            "1": 4,
+            "2": 1,
+            "3": 5
+          },
+          "10": {
+            "1": 3,
+            "2": 3
+          }
+        },
+        "turn_at_first_sight_by_asc": {
+          "0": {
+            "4": 1,
+            "5": 1
+          },
+          "3": {
+            "4": 1
+          },
+          "5": {
+            "3": 1
+          },
+          "7": {
+            "3": 1
+          },
+          "8": {
+            "1": 4,
+            "3": 4,
+            "4": 1,
+            "5": 3,
+            "6": 1
+          },
+          "9": {
+            "1": 3,
+            "2": 4,
+            "4": 2,
+            "5": 1
+          },
+          "10": {
+            "1": 2,
+            "3": 2,
+            "5": 2
+          }
+        }
+      },
+      "WEAK_POWER": {
+        "name": "虚弱",
+        "type": "Debuff",
+        "description": "虚弱的生物造成的攻击伤害减少[blue]25%[/blue]。",
+        "n_fights": 32,
+        "amount_at_first_sight": {
+          "1": 16,
+          "2": 11,
+          "3": 5
+        },
+        "amount_max_in_fight": {
+          "1": 9,
+          "2": 13,
+          "3": 4,
+          "4": 3,
+          "5": 2,
+          "9": 1
+        },
+        "amount_at_first_sight_by_asc": {
+          "0": {
+            "2": 1
+          },
+          "1": {
+            "2": 1
+          },
+          "5": {
+            "1": 1
+          },
+          "6": {
+            "1": 1,
+            "2": 2
+          },
+          "7": {
+            "1": 1
+          },
+          "8": {
+            "1": 2,
+            "2": 1
+          },
+          "9": {
+            "1": 4
+          },
+          "10": {
+            "1": 7,
+            "2": 6,
+            "3": 5
+          }
+        },
+        "turn_at_first_sight_by_asc": {
+          "0": {
+            "4": 1
+          },
+          "1": {
+            "5": 1
+          },
+          "5": {
+            "3": 1
+          },
+          "6": {
+            "1": 2,
+            "8": 1
+          },
+          "7": {
+            "2": 1
+          },
+          "8": {
+            "1": 2,
+            "5": 1
+          },
+          "9": {
+            "1": 2,
+            "4": 1,
+            "5": 1
+          },
+          "10": {
+            "1": 7,
+            "2": 6,
+            "3": 1,
+            "4": 1,
+            "5": 2,
+            "6": 1
+          }
+        }
+      }
+    },
+    "provenance": {
+      "first_seen": "2026-09-24T16:50:10.270Z",
+      "last_seen": "2026-10-18T01:57:39.401Z",
+      "n_runs": 66,
+      "n_instances": 66,
+      "n_spawned_mid_fight": 0,
+      "n_minion_instances": 0
+    },
+    "observed": {
+      "powers_stripped": {
+        "POISON_POWER": {
+          "n": 4,
+          "fights": 2,
+          "amount_before": {
+            "3": 3,
+            "11": 1
+          },
+          "move_after": {
+            "MIASMA": 2,
+            "DREAD": 2
+          },
+          "stunned_share": 0.0,
+          "co_removed": {
+            "STRANGLE_POWER": 1,
+            "WEAK_POWER": 1
+          },
+          "died_same_turn": 0,
+          "turn_end_unclear": 0,
+          "alive_at_turn_end": 4,
+          "stunned_at_turn_end": 0,
+          "attack_before": 2,
+          "attack_cancelled": 0,
+          "hp_check": {
+            "n": 0,
+            "landed": 0
+          },
+          "evidence": [],
+          "move_before": {
+            "MIASMA": 2,
+            "DREAD": 2
+          },
+          "move_changed": 0,
+          "move_changed_share": 0.0,
+          "changed_to": {},
+          "changed_evidence": [],
+          "end_move": {
+            "MIASMA": 2,
+            "DREAD": 2
+          },
+          "next_move": {
+            "DREAD": 2,
+            "MIASMA": 1
+          },
+          "changed_next": {},
+          "revived": 3
+        },
+        "STRANGLE_POWER": {
+          "n": 1,
+          "fights": 1,
+          "amount_before": {
+            "2": 1
+          },
+          "move_after": {
+            "MIASMA": 1
+          },
+          "stunned_share": 0.0,
+          "co_removed": {
+            "POISON_POWER": 1
+          },
+          "died_same_turn": 0,
+          "turn_end_unclear": 0,
+          "alive_at_turn_end": 1,
+          "stunned_at_turn_end": 0,
+          "attack_before": 0,
+          "attack_cancelled": 0,
+          "hp_check": {
+            "n": 0,
+            "landed": 0
+          },
+          "evidence": [],
+          "move_before": {
+            "MIASMA": 1
+          },
+          "move_changed": 0,
+          "move_changed_share": 0.0,
+          "changed_to": {},
+          "changed_evidence": [],
+          "end_move": {
+            "MIASMA": 1
+          },
+          "next_move": {
+            "DREAD": 1
+          },
+          "changed_next": {},
+          "revived": 1
+        },
+        "WEAK_POWER": {
+          "n": 4,
+          "fights": 2,
+          "amount_before": {
+            "1": 3,
+            "2": 1
+          },
+          "move_after": {
+            "DREAD": 3,
+            "MIASMA": 1
+          },
+          "stunned_share": 0.0,
+          "co_removed": {
+            "POISON_POWER": 1
+          },
+          "died_same_turn": 0,
+          "turn_end_unclear": 0,
+          "alive_at_turn_end": 4,
+          "stunned_at_turn_end": 0,
+          "attack_before": 3,
+          "attack_cancelled": 0,
+          "hp_check": {
+            "n": 0,
+            "landed": 0
+          },
+          "evidence": [],
+          "move_before": {
+            "DREAD": 3,
+            "MIASMA": 1
+          },
+          "move_changed": 0,
+          "move_changed_share": 0.0,
+          "changed_to": {},
+          "changed_evidence": [],
+          "end_move": {
+            "DREAD": 3,
+            "MIASMA": 1
+          },
+          "next_move": {
+            "DREAD": 1,
+            "MIASMA": 1
+          },
+          "changed_next": {},
+          "revived": 2
+        }
+      },
+      "powers_lowered": {
+        "POISON_POWER": {
+          "n": 1,
+          "fights": 1,
+          "move_before": {
+            "DREAD": 1
+          },
+          "move_changed": 0,
+          "move_changed_share": 0.0,
+          "changed_to": {},
+          "changed_evidence": [],
+          "end_move": {
+            "DREAD": 1
+          },
+          "next_move": {},
+          "changed_next": {},
+          "revived": 0
+        }
+      },
+      "ally_deaths": {
+        "THE_LOST": {
+          "n": 31,
+          "fights": 31,
+          "move_before": {
+            "MIASMA": 17,
+            "DREAD": 14
+          },
+          "move_changed": 0,
+          "move_changed_share": 0.0,
+          "changed_to": {},
+          "by_move": {
+            "DREAD": {
+              "n": 14,
+              "changed_to": {}
+            },
+            "MIASMA": {
+              "n": 17,
+              "changed_to": {}
+            }
+          },
+          "changed_evidence": [],
+          "attack_changed": 0,
+          "co_deaths": 0,
+          "end_move": {
+            "MIASMA": 17,
+            "DREAD": 12
+          },
+          "next_n": 29,
+          "next_move": {
+            "DREAD": 17,
+            "MIASMA": 12
+          },
+          "next_after": {
+            "DREAD": {
+              "MIASMA": 12
+            },
+            "MIASMA": {
+              "DREAD": 17
+            }
+          },
+          "next_evidence": [
+            "2WUMK6PK5QHD F37 T2",
+            "Y0KJC2MQ57Z4 F44 T4",
+            "L34T7HND7EL8 F45 T1"
+          ],
+          "alive": {
+            "turns": 220,
+            "moves": {
+              "MIASMA": 126,
+              "DREAD": 94
+            },
+            "next": {
+              "DREAD": {
+                "MIASMA": 56
+              },
+              "MIASMA": {
+                "DREAD": 94
+              }
+            }
+          },
+          "dead": {
+            "turns": 60,
+            "moves": {
+              "DREAD": 32,
+              "MIASMA": 28
+            }
+          }
+        }
+      }
+    }
+  }
+}
