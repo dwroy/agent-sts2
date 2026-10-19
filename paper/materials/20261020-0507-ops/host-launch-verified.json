@@ -1,0 +1,27 @@
+{
+  "status": {
+    "batch": "20261020-044302-s2-strategy-proposal",
+    "at": "2026-10-20T05:09:24+08:00",
+    "pid": 253980,
+    "start_ticks": 133610733,
+    "nice": 19,
+    "state": "checking",
+    "combined_full_rc": null,
+    "source_commit": null,
+    "base": "a31121be29fefe40085d0a6d1a29219b8a39ac41",
+    "prospective_tree": "50f19b448a1b612d28c57764d95c4d257a94e613",
+    "input_sha256": "289d03340730caa1a502a5bbc4570615e3bbac517043bee5ac444d7d1c446f68",
+    "log": "ops/codex-ops/learner/20261020-044302-s2-strategy-proposal.host-uncommitted-50f19b448a1b612d28c57764d95c4d257a94e613.checks.log",
+    "uncommitted_source": true,
+    "new_model": false,
+    "command": "export PATH=\"$HOME/.local/node/bin:$PATH\"; nice -n 19 npx tsc -p tsconfig.json --noEmit; a=$?; nice -n 19 npx vitest run --maxWorkers=2; b=$?; [ \"$a\" = 0 ] && [ \"$b\" = 0 ]",
+    "check_pid": 254010,
+    "started_at": "2026-10-20T05:09:24+08:00"
+  },
+  "process_exists": true,
+  "command": "python3 /home/dw/Projects/agent-sts2/.artifacts/ops-wake-20261020-0507/proposal-host-once.py ",
+  "nice": 19,
+  "start_ticks": 133610733,
+  "start_ticks_match": true,
+  "original_worktree_lease_busy": true
+}
