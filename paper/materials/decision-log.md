@@ -4733,3 +4733,7 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
 - 2026-10-19 16:58:59 CST [Claude/Roy，仅文档] Roy 要求重点关注小脑记忆（reflex 经验）。W0 78933a38d、W1 e3cf543b6 已合入 main、9.1 已在跑；新增 docs/v6-plan.md 9.2 学习任务 v6-reflex-distill：按 W1 的 reflex 格式与 predicate 白名单产出词表和条目草稿（出牌 > 拿牌 > 药水 > 休息与商店，按出现频率 × 效应排序），逐条给出 244 条经验的转换状态并列白名单缺字段，存 scratch 与 pending、不改正式知识；与 9.1 并行，由 watcher 写模板并按此授权一次性派发。
 
 - 2026-10-19 17:08:55 CST [Codex/V6-W2] roy-20261019-v6 9.2：新增reflex-distill与direction-cards任务模板、复用W1格式/predicate的只读草稿校验入口；全量去重经验覆盖、来源/方向/词表引用、冻结局号与数值审计一致性，格式通过不代表证据/因果成立。只写任务要求和格式，不写游戏知识；方向卡不派发，小脑独立树最终dry-run后按一次性授权派发。agent/CLI tsc通过，完整vitest561文件/5372通过/2原有跳过，默认off三角色字节等价测试通过，gitleaks通过；合main，无行为发布，STOP/live删除/Regent暂停保持。材料paper/materials/2026-10-19-v6-w2/。
+
+- 2026-10-19 17:16:33 CST [Codex/V6-W2派发] 30c2d83d7已合main；最终dry-run后17:10:12按Roy第9.2节单次授权用herdr/learner派出v6-reflex-distill，独立树、codex1专用home，原生线程01a1536c-f80e-7043-8daa-94d16f0810fa实际gpt-6.1-sol/high、240分钟/nice10/网络关闭，冻结372局431输入，17:12仍运行、未验收。先前launcher缺模板退出2未启动模型的preflight失败保留，实际模型只派一次。正式方向卡只模板未派；不改正式知识/STOP/live/Regent，不追加模型或轮询。回执paper/materials/2026-10-19-v6-w2/learner-dispatch.md。
+
+- 2026-10-19 17:16:33 CST [Codex/V6-9.1验收停点] 方向经验批次17:12:16正常退出0；独立核423冻结输入、110产物/28回报引用SHA，372局/244正式经验精确覆盖及原文保持、17处原日志范围，正式13文件不变、无学习者提交。4方向pending草稿理想牌组/排序仍未知，4局部reflex候选n1，无正式发布/消费者读回；ledger0520–0523实际observed，5项异议原文经既有程序送两收件箱、通知0baef634d02e1ff85843c10a，watcher/Roy确认pending，不代填。来源/结构核验不替代全量因果复算；详paper/materials/2026-10-19-v6-w2/direction-verification.md。按学习批次有结果即停下向Claude回报，W3未启动，小脑原任务继续但不新增调度，等待Claude接续指派。
