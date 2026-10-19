@@ -8,9 +8,14 @@ export interface DirectionComparison {
   offeredCore?: boolean;
   optionId?: string; labels?: string[];
 }
+export interface ProjectionReason {
+  option_id: string; direction_id: string; target_id: string; combo_id?: string; reasons: string[];
+}
 export interface DirectionEvaluation {
   id: string;
   entries: ProjectionEntry[];
+  /** Provider diagnostics for prompt display only; absence never diagnoses a model failure. */
+  projectionReasons?: ProjectionReason[];
   /** Actual W3 checkpoint identities, including ordered two-boss targets. */
   targets?: Array<{ id: string; kind: "current" | "future" | "chain" }>;
   comparisons?: DirectionComparison[];

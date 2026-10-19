@@ -4,7 +4,7 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { afterEach, expect, it, vi } from "vitest";
-import { boundV6State, boundedV6Jev, compactBuildMetrics, promptBudgetLabels, V6_BRAIN_CHARS, V6_JEV_REQUEST_BYTES, V6_JEV_STATE_BYTES } from "../src/v6/prompt-summary.js";
+import { boundV6State, boundedV6Jev, compactBuildMetrics, compactProjection, promptBudgetLabels, V6_OPENING_NOTE, V6_BRAIN_CHARS, V6_JEV_REQUEST_BYTES, V6_JEV_STATE_BYTES } from "../src/v6/prompt-summary.js";
 import { directionSummaries, directionTask, directionPlanSpec } from "../src/v6/direction-plan.js";
 import { buildV6CardPick } from "../src/v6/card-pick.js";
 import { buildV6RoomDecision } from "../src/hand/screens/v6-room.js";
@@ -113,6 +113,7 @@ it("bounds real 17-combo act/replan prompts deterministically and preserves all 
   const payload = directionTask(input);
   expect(JSON.stringify(payload).length).toBeLessThanOrEqual(V6_BRAIN_CHARS);
   expect(directionTask(input)).toEqual(payload);
+  expect(payload.opening_note).toBe(V6_OPENING_NOTE);
   const first = asRecord(asArray(payload.build_cores)[0]);
   expect(first.id).toBe("R"); expect(asArray(first.combos).length).toBeGreaterThan(0);
   expect(directionPlanSpec(payload)!.schema.properties!.direction_weights!.required).toEqual(["P", "D", "S", "R"]);
@@ -121,6 +122,7 @@ it("bounds real 17-combo act/replan prompts deterministically and preserves all 
   const forced = boundV6State({ ...payload, oversized: "超长".repeat(100_000) }, V6_BRAIN_CHARS, "chars");
   expect(JSON.stringify(forced).length).toBeLessThanOrEqual(V6_BRAIN_CHARS);
   expect(promptBudgetLabels(forced)).toHaveLength(1);
+  expect(forced.opening_note).toBe(V6_OPENING_NOTE);
   expect(asRecord(asArray(forced.build_cores)[0]).id).toBe("R");
 });
 it.each(["card", "shop", "rest"] as const)("bounds the real published %s prompt and preserves legal choices plus the leading combo", kind => {
@@ -128,6 +130,7 @@ it.each(["card", "shop", "rest"] as const)("bounds the real published %s prompt 
   const d = kind === "card" ? buildV6CardPick(e, undefined, knowledge)!.decision
     : buildV6RoomDecision(e, (kind === "shop" ? v6ShopOptions(e) : v6RestOptions(e))!, undefined, undefined, knowledge);
   expect(size(d.state)).toBeLessThanOrEqual(V6_JEV_STATE_BYTES);
+  expect(d.state.opening_note).toBe(V6_OPENING_NOTE);
   expect(size({ model: "typesafe/jev-1.14", state: d.state, questions: d.questions })).toBeLessThanOrEqual(V6_JEV_REQUEST_BYTES);
   expect(asRecord(asArray(d.state.core_metrics)[0]).direction).toBe("R");
   expect(Object.keys(asRecord(d.state.options))).toEqual(Object.keys(asRecord(d.questions.pick).criteria));
@@ -135,6 +138,7 @@ it.each(["card", "shop", "rest"] as const)("bounds the real published %s prompt 
     const kept = asArray(asRecord(fact).projections);
     expect(kept.length).toBeGreaterThan(0);
     expect(asRecord(kept[0]).direction_id).toBe("R");
+    expect(asRecord(kept[0]).opening).toEqual({ Wk: "opening unknown", W0: "opening unknown" });
   }
   expect(promptBudgetLabels(d.state)).toHaveLength(1);
   expect(JSON.stringify(d.state)).not.toContain('"combo_metrics"');
@@ -152,6 +156,21 @@ it("bounds UTF-8 potion state and question text, preserving all slot/candidate k
   expect(Object.keys(asRecord(result.state.options))).toEqual(Object.keys(options));
   expect(Object.keys(asRecord(result.questions.pick).criteria)).toEqual(Object.keys(options));
   expect(result.questions.slot).toEqual(questions.slot);
+  expect(result.state.opening_note).toBe(V6_OPENING_NOTE);
   expect(asRecord(result.state.prompt_budget).after).toBe(size(result.state));
   expect(promptBudgetLabels(result.state)).toHaveLength(1);
+});
+
+it("keeps unknown W0 distinct from evaluated zero without replacing it with the known Wk", () => {
+  const entry = { ...comboProjection(), win: null, expected_win: null, win_incomplete: null };
+  const view = asRecord(compactProjection(entry, ["unknown_opening_entry_hp_or_empirical_sample"]));
+  expect(view).toMatchObject({ win: null, expected_win: null, win_complete: entry.win_complete, win_incomplete: null,
+    opening: { Wk: "evaluated", W0: "opening unknown" }, unknown_reasons: ["unknown_opening_entry_hp_or_empirical_sample"] });
+  expect(entry.win_incomplete).toBeNull();
+  const zero = { ...entry, win_complete: { value: 0, se: 0, n: 20 }, win_incomplete: { value: 0, se: 0, n: 20 } };
+  expect(asRecord(compactProjection(zero)).opening).toEqual({ Wk: "evaluated", W0: "evaluated" });
+  const budgetOnly = asRecord(compactProjection({ ...entry, win_complete: null }, ["budget_remaining_unknown"]));
+  expect(budgetOnly.opening).toEqual({ Wk: "opening unknown", W0: "opening unknown" });
+  expect(budgetOnly.unknown_reasons).toEqual(["budget_remaining_unknown"]);
+  expect(JSON.stringify(budgetOnly)).not.toMatch(/cardUpgrade|AFTERIMAGE|missing_upgrade_model/);
 });

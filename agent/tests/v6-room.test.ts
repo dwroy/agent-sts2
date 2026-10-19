@@ -270,8 +270,8 @@ it("publishes each combination with n/error/trust, leaves absent projections unk
   const d = buildV6RoomDecision(e, input, t, undefined, dir);
   expect(d.roomEntries).toHaveLength(input.options.length * 2); expect(d.roomEntries.every(e => validateProjectionEntry(e).ok)).toBe(true);
   const output = asRecord(asRecord(d.state.options).buy_card0), projections = output.projections as Raw[];
-  expect(projections.find(p => p.combo_id === "TEST_A:min")).toMatchObject({ formation_n: 200, formation_se: .02, combo_source: "build-core-v1", combo_role: "in_combo", model_labels: ["fixture_model"] });
-  expect(projections.find(p => p.combo_id === "TEST_A:common")).toMatchObject({ win: null, formation_n: null, trust: "unknown" });
+  expect(projections.find(p => p.combo_id === "TEST_A:min")).toMatchObject({ formation_n: 200, formation_se: .02, combo_source: "build-core-v1", combo_role: "in_combo", model_labels: ["fixture_model"], opening: { Wk: "evaluated", W0: "evaluated" } });
+  expect(projections.find(p => p.combo_id === "TEST_A:common")).toMatchObject({ win: null, formation_n: null, trust: "unknown", opening: { Wk: "opening unknown", W0: "opening unknown" } });
   const coreMetrics = d.state.core_metrics as Raw[];
   expect((coreMetrics.find(c => c.id === "TEST_A:min")!.metrics as Raw[])[0]!).toMatchObject({ dpr_boss: { value: 42, n: 7, se: 2 } });
   expect(JSON.stringify(d.state)).not.toContain("FIXTURE_RUN"); expect(JSON.stringify(d.state)).not.toContain('"evidence"'); expect(JSON.stringify(d.state)).not.toContain("card_outcome_stats");

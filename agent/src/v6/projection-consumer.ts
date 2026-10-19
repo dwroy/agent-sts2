@@ -35,6 +35,9 @@ export function directionEvaluationFromProjection(table: V6ProjectionTable, conf
       offeredCore: row.option_id !== baselineId && table.entries.some(e => e.option_id === row.option_id
         && e.direction_id === row.direction_id && e.direction_role === "core") });
   }
-  return { id: v6Digest({ entries, comparisons, targets: table.targets }), entries,
+  const projectionReasons = table.combinations.filter(r => r.entry.option_id === baselineId).map(r => ({
+    option_id: r.entry.option_id, direction_id: r.entry.direction_id, target_id: r.entry.target_id,
+    ...(r.combination_id !== null ? { combo_id: r.combination_id } : {}), reasons: [...r.unknown_reasons] }));
+  return { id: v6Digest({ entries, comparisons, targets: table.targets }), entries, projectionReasons,
     targets: table.targets.map(t => ({ id: t.id, kind: t.kind })), coreCompletion, comparisons, ...extra };
 }

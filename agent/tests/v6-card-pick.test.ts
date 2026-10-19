@@ -72,7 +72,8 @@ it("consumes W3's genuine per-combination rows including the P=1 null-W0 boundar
   expect(p.entries.filter(e => e.option_id === "card7").every(e => e.expected_win === null)).toBe(true);
   expect(p.entries.every(e => validateProjectionEntry(e).ok)).toBe(true);
   expect(p.decision.state).toMatchObject({ options: { card2: { projections: [expect.objectContaining({ combo_id: "TEST_A:min",
-    combo_role: "in_combo", role_labels: ["output"], formation_se: 0, formation_n: 200 }), expect.anything()] },
+    combo_role: "in_combo", role_labels: ["output"], formation_se: 0, formation_n: 200,
+    opening: { Wk: "evaluated", W0: "opening unknown" }, win_incomplete: null }), expect.anything()] },
     skip: { projections: [expect.objectContaining({ combo_role: "off_combo", role_labels: [] }), expect.anything()] } },
     model_limits: expect.arrayContaining(["raw_simulation_not_calibrated", "partial_model"]) });
 });

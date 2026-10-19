@@ -129,7 +129,7 @@ export async function ensureDirectionPlan(env: DecisionEnv, brain: Pick<Brain, "
     ...(data.vocab.status === "loaded" ? data.vocab.value.dimensions.potion_category.map(p => p.id) : []),
     ...tableIds])];
   const map = mapFromState(env) ?? actStartMap(env);
-  const payload = directionTask({ summaries, entries, appearedCards: m.appearedCards, potionIds, floor,
+  const payload = directionTask({ summaries, entries, projectionReasons: provided?.projectionReasons, appearedCards: m.appearedCards, potionIds, floor,
     current: runPlanInput(state, env.knowledge, "review", cards, relics, asArray(raw["potions"]).map(p => str(asRecord(p)["potion_id"]))),
     ...(map ? { map: toJsonValue(routeView(map)) } : {}), ...(screenMemory.runPlan?.v6 ? { previous: toJsonValue(screenMemory.runPlan.v6) } : {}) });
   reserveReplan(m.scheduler, act, turnKey);

@@ -10,7 +10,7 @@ import { v6ProjectionEntries } from "../../sim/v6-projection-entries.js";
 import { v6DeltaTier, type V6ProjectionTable } from "../../sim/v6-projection.js";
 import { v6Config } from "../../v6/config.js";
 import { v6Directions } from "../../v6/direction-runtime.js";
-import { boundedV6Jev, compactCombo, prioritize, promptBudgetLabels } from "../../v6/prompt-summary.js";
+import { boundedV6Jev, compactCombo, compactProjection, prioritize, promptBudgetLabels } from "../../v6/prompt-summary.js";
 import { directionCombos } from "../../v6/direction-plan.js";
 import { validateProjectionEntry, type ProjectionEntry } from "../../v6/formats.js";
 import { potionAnswersComplete } from "../../v6/potion-entries.js";
@@ -107,8 +107,7 @@ export function buildV6RoomDecision(env: DecisionEnv, input: V6RoomOptions, tabl
           e => e.expected_win ?? -1).map(e => {
           const row = table?.combinations.find(r => r.entry.option_id === e.option_id && r.entry.direction_id === e.direction_id
             && r.entry.target_id === e.target_id && r.combination_id === e.combo_id);
-          const { combo_metrics: _metrics, ...fields } = e;
-          return { ...fields, formation_n: row?.formation_n ?? null, formation_se: row?.formation_se ?? null,
+          return { ...asRecord(compactProjection(e)), formation_n: row?.formation_n ?? null, formation_se: row?.formation_se ?? null,
             combo_role: row?.role ?? "unknown", role_labels: row?.role_labels ?? [], model_labels: row?.model_labels ?? [],
             unknown_reasons: row?.unknown_reasons ?? [source?.rejected_options.find(r => r.id === o.option.key)?.reason ?? o.unknown_reason ?? reason] };
         }) }])))),

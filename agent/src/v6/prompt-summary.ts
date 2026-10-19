@@ -7,6 +7,7 @@ import type { ProjectionEntry } from "./formats.js";
 export const V6_JEV_STATE_BYTES = 16_000;
 export const V6_JEV_REQUEST_BYTES = 24_000;
 export const V6_BRAIN_CHARS = 64_000;
+export const V6_OPENING_NOTE = "Wk is the completed-combo branch; W0 is the incomplete empirical branch. 'opening unknown' means an evaluated opening outcome is unavailable or unreported; provider reasons do not necessarily identify its cause. Missing upgrade models remain unknown; more compute cannot supply a model. Null is not zero. Retain failed samples; never substitute Wk for W0.";
 const bytes = (v: unknown) => Buffer.byteLength(JSON.stringify(v));
 const stat = (v: unknown): JsonValue => {
   const s = asRecord(v);
@@ -36,9 +37,12 @@ export function compactCombo(combo: { id: string; source: string; requirements: 
     cards: combo.requirements, metrics: compactBuildMetrics(metrics, targets) });
 }
 /** projection-entry-v1 numeric semantics are unchanged; metric snapshots are sent once per combo. */
-export function compactProjection(entry: ProjectionEntry): JsonValue {
+export function compactProjection(entry: ProjectionEntry, reasons?: readonly string[]): JsonValue {
   const { combo_metrics: _audit, ...fields } = entry;
-  return toJsonValue(fields);
+  return toJsonValue({ ...fields,
+    // A missing estimate is not proof of an opening-construction failure, including P=1's unused W0.
+    opening: { Wk: entry.win_complete ? "evaluated" : "opening unknown", W0: entry.win_incomplete ? "evaluated" : "opening unknown" },
+    ...(reasons?.length ? { unknown_reasons: [...reasons] } : {}) });
 }
 export function prioritize<T>(rows: readonly T[], weights: Readonly<Record<string, number>>, direction: (v: T) => string, score: (v: T) => number = () => 0): T[] {
   return rows.map((v, i) => ({ v, i })).sort((a, b) => (weights[direction(b.v)] ?? 0) - (weights[direction(a.v)] ?? 0)
@@ -50,10 +54,10 @@ export interface PromptBudget {
 }
 /** Remove whole trailing rows first. Callers order directions/combos by brain weight and expected win. */
 export function boundV6State(input: Record<string, JsonValue>, limit: number, unit: "bytes" | "chars" = "bytes", omitted: Record<string, number> = {}): Record<string, JsonValue> {
-  const state = structuredClone(input), size = unit === "bytes" ? bytes : (v: unknown) => JSON.stringify(v).length;
+  const state = structuredClone({ ...input, opening_note: V6_OPENING_NOTE }) as Record<string, JsonValue>, size = unit === "bytes" ? bytes : (v: unknown) => JSON.stringify(v).length;
   const budget: PromptBudget = { limit, unit, before: size(state), after: 0, truncated: Object.keys(omitted).length > 0, omitted: { ...omitted } };
   state.prompt_budget = toJsonValue(budget);
-  const protectedPaths = new Set(["v6_direction_context", "direction_weights", "act_route"]);
+  const protectedPaths = new Set(["v6_direction_context", "direction_weights", "act_route", "opening_note"]);
   const candidates = (): { path: string; value: JsonValue[]; cost: number }[] => {
     const result: { path: string; value: JsonValue[]; cost: number }[] = [];
     const walk = (v: JsonValue, path: string) => {

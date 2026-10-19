@@ -6,7 +6,7 @@ import type { AnswerSet, ChoiceAnswer } from "../reflex/jev/answers.js";
 import { choiceQ } from "../reflex/jev/questions.js";
 import { v6DeltaTier, type V6ProjectionTable } from "../sim/v6-projection.js";
 import { v6ProjectionEntries } from "../sim/v6-projection-entries.js";
-import { boundedV6Jev, compactCombo, prioritize, promptBudgetLabels } from "./prompt-summary.js";
+import { boundedV6Jev, compactCombo, compactProjection, prioritize, promptBudgetLabels } from "./prompt-summary.js";
 import { directionCombos } from "./direction-plan.js";
 import { v6Config } from "./config.js";
 import { v6Directions } from "./direction-runtime.js";
@@ -96,11 +96,11 @@ export function buildV6CardPick(env: DecisionEnv, table: V6ProjectionTable | und
       availability: { take: null, skip: null }, weighted_current_boss_delta: null, weighted_joint_delta: null,
       deck_count_change: null, core_first_cast_turn: null, win_tier: "unknown", delta_tier: "unknown", direction_role: "unknown", trust: "unknown", reflex_ids: [] });
   }
-  for (const key of choices) facts[key] = { ...asRecord(facts[key]), projections: toJsonValue(entries.filter(e => e.option_id === key).map(({ combo_metrics: _metrics, ...entry }) => {
+  for (const key of choices) facts[key] = { ...asRecord(facts[key]), projections: toJsonValue(entries.filter(e => e.option_id === key).map(entry => {
     const row = table?.combinations.find(r => r.entry.option_id === entry.option_id && r.entry.direction_id === entry.direction_id
       && r.combination_id === entry.combo_id && r.entry.target_id === entry.target_id);
-    return { ...entry, ...(row ? { combo_role: row.role, role_labels: row.role_labels,
-      formation_se: row.formation_se, formation_n: row.formation_n, unknown_reasons: row.unknown_reasons } : {}) };
+    return { ...asRecord(compactProjection(entry, row?.unknown_reasons)), ...(row ? { combo_role: row.role, role_labels: row.role_labels,
+      formation_se: row.formation_se, formation_n: row.formation_n } : {}) };
   })) };
   const modelLimits = [...new Set(table?.combinations.flatMap(r => r.model_labels) ?? [])];
   const score = (d: string, c: string) => Math.max(-1, ...entries.filter(e => e.direction_id === d && e.combo_id === c).map(e => e.expected_win ?? -1));

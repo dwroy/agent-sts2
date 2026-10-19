@@ -122,3 +122,20 @@ it("uses the provider target IDs without adding legacy boss or joint placeholder
   expect(rows).toHaveLength(8);
   expect(rows.filter(r => r.expected_win !== null)).toHaveLength(1);
 });
+
+it("forwards provider opening reasons through the actual planner and keeps unknown W0", async () => {
+  vi.stubEnv("V6_BUILD", "on"); const { dir, log, e } = fixture();
+  const entry = { ...comboProjection(), target_id: "TEST_TARGET", win: null, win_tier: "unknown" as const, expected_win: null, win_incomplete: null };
+  e.v6DirectionEvaluation = { id: "opening-fixture", entries: [entry], projectionReasons: [{
+    option_id: entry.option_id, direction_id: entry.direction_id, target_id: entry.target_id, combo_id: entry.combo_id,
+    reasons: ["unknown_opening_entry_hp_or_empirical_sample"],
+  }] };
+  const brain = { askJson: vi.fn(async () => ({ json: { ...weights, potion_directions: [] } })) } as unknown as Pick<Brain, "askJson">;
+  const result = await ensureDirectionPlan(e, brain, log, dir);
+  expect(result?.payload?.direction_evaluation).toContainEqual(expect.objectContaining({
+    combo_id: entry.combo_id, target_id: "TEST_TARGET", win_complete: entry.win_complete, win_incomplete: null,
+    opening: { Wk: "evaluated", W0: "opening unknown" }, unknown_reasons: ["unknown_opening_entry_hp_or_empirical_sample"],
+  }));
+  expect(result?.payload?.opening_note).toContain("never substitute Wk for W0");
+  expect(e.v6DirectionEvaluation.entries[0]).toEqual(entry);
+});
