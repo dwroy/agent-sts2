@@ -1,0 +1,121 @@
+{
+  "at": "2026-10-19T23:22:19.688154+08:00",
+  "batch": "v6-knowledge-publish-20261019-223156",
+  "observed_main": "77006d05339691e97baa3c9b5e4d1cd4fc0deea5",
+  "verified_live": "b0c86240d8ba35e4fae35c2d193b3d1f428651bf",
+  "live_tree": "500fef0f02a29154ab52caf8734a3f711b5275ca",
+  "publication_commit": "de4e1deee010b1250dddf910c5b11808e10aa25e",
+  "publication_is_main_and_live_ancestor": true,
+  "four_files": [
+    {
+      "path": "knowledge/characters/silent/build-cores.json",
+      "main_present": false,
+      "live_present": false,
+      "main_sha256": null,
+      "live_sha256": null,
+      "publication_sha256": null
+    },
+    {
+      "path": "knowledge/characters/silent/reflex.json",
+      "main_present": true,
+      "live_present": true,
+      "main_sha256": "aab34d6e5fb0a2375cf95a44aed94a77907e175de3f817686389ef687b5aaee9",
+      "live_sha256": "aab34d6e5fb0a2375cf95a44aed94a77907e175de3f817686389ef687b5aaee9",
+      "publication_sha256": "aab34d6e5fb0a2375cf95a44aed94a77907e175de3f817686389ef687b5aaee9"
+    },
+    {
+      "path": "knowledge/characters/silent/reflex-vocab.json",
+      "main_present": true,
+      "live_present": true,
+      "main_sha256": "a4e2d063a2896ea4d1ac7168f031072b6f5ae0e7f7218e54feeb5c9fbf626a2c",
+      "live_sha256": "a4e2d063a2896ea4d1ac7168f031072b6f5ae0e7f7218e54feeb5c9fbf626a2c",
+      "publication_sha256": "a4e2d063a2896ea4d1ac7168f031072b6f5ae0e7f7218e54feeb5c9fbf626a2c"
+    },
+    {
+      "path": "knowledge/characters/silent/experience.json",
+      "main_present": true,
+      "live_present": true,
+      "main_sha256": "cce6bde4b02657667e05b632b897811dd4679b3371733106e038690cd04cf48c",
+      "live_sha256": "cce6bde4b02657667e05b632b897811dd4679b3371733106e038690cd04cf48c",
+      "publication_sha256": "cce6bde4b02657667e05b632b897811dd4679b3371733106e038690cd04cf48c"
+    }
+  ],
+  "live_data_sync": "already present; exact SHA readback verified under original lock; no duplicate merge",
+  "source_host_full": {
+    "receipt": ".artifacts/v6-ops-restore-20261019/checks-runtime-role/result.json",
+    "source_files": {
+      "ops/ops_current.py": "a5adfcaad158f6dda245258b296cfedef874e7e0b79d6025be9eef0a4f8929d1",
+      "ops/run.sh": "11dafc93a9a8f3a50e40bd4c014ab425af48bc3fe99a52f72ce17848a882fdea",
+      "ops/production-runtime.sh": "6237da9b6f47ac6716d9272da25c1dd6bb930eebad6f093e5ec6c1d3157e371d"
+    },
+    "tsc": 0,
+    "vitest": 0,
+    "passed": 5573,
+    "skipped": 2
+  },
+  "exact_combination_scoped_host": {
+    "receipt": ".artifacts/v6-ops-restore-20261019/parallel-composition.json",
+    "rc": 0,
+    "passed": 93
+  },
+  "same_unchanged_source_full_repeated": false,
+  "original_learner_sandbox_failures_preserved": {
+    "test_files_passed": 525,
+    "test_files_failed": 7,
+    "tests_passed": 4740,
+    "tests_failed": 15,
+    "errors": 3,
+    "duration_seconds": 873.67,
+    "failure_classes": [
+      "spawnSync EPERM",
+      "tsx IPC listen EPERM",
+      "127.0.0.1 listen EPERM with three fixture timeouts",
+      "Vite bundled-config EROFS"
+    ],
+    "second_paths_fork_phase": "not reached because set-e stops after failed main suite"
+  },
+  "probe": {
+    "command": [
+      "nice",
+      "-n",
+      "19",
+      "node",
+      "--import",
+      "tsx",
+      "/home/dw/Projects/agent-sts2/learner/runs/20261019-223315-7d9a9517-d3f1-4f91-afc0-79b2c1626623-v6-knowledge-publish/v6-publish-probe.mts",
+      "/home/dw/Projects/agent-sts2/.worktrees/live",
+      "/home/dw/Projects/agent-sts2/.artifacts/ops-wake-20261019-2315/probe",
+      "live-host"
+    ],
+    "exit_code": 0,
+    "input_path": ".artifacts/ops-wake-20261019-2315/probe/probe-inputs-selected.json",
+    "input_sha256": "0d45535d0956db982f21834cd37f1360a88e1e28dba6d0b52fd05552bde567d8",
+    "output_path": ".artifacts/ops-wake-20261019-2315/probe/live-host-consumer-readback.json",
+    "output_sha256": "5faa7d02e4bf986ab92ffe5699ad89b4ef77777f5c77060aa6cc2c60442d0f97",
+    "log_path": ".artifacts/ops-wake-20261019-2315/probe/live-probe.log",
+    "log_sha256": "b6560088043c9aae33178f228220c53eea56857a0868d1a6b598d0434016820b",
+    "entries": 19,
+    "actual_live_path_question_true_false_unknown": true,
+    "natural_game_adoption": false
+  },
+  "parallel_main_sources_not_in_this_publication": [
+    "agent/tests/v6-history-pack.test.ts",
+    "agent/tests/v6_learning_loop_test.py",
+    "knowledge/builders/check-v6-refresh.mts",
+    "knowledge/builders/refresh-v6-history.py",
+    "knowledge/builders/refresh.sh",
+    "learner/evidence_identity.py",
+    "learner/evidence_summary.py",
+    "learner/extract_evidence.py",
+    "learner/tasks/experience-update.md",
+    "learner/tasks/postmortem.md",
+    "learner/tasks/strategy-proposal.md",
+    "ops/report.py"
+  ],
+  "parallel_source_full_claimed": false,
+  "STOP_retained": true,
+  "new_game": null,
+  "new_release": null,
+  "parent_completed": false,
+  "publication_scope": "19 combat_line tags/7 vocab enums only; core/66 reflex/14 vocab/task-name registration/role ACKs remain pending"
+}

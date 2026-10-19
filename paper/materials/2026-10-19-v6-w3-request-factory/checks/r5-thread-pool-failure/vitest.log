@@ -1,0 +1,88 @@
+
+ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/v6-w3-request-factory-20261019/agent
+
+···························································································································································································································································································································································································································································································································································································································································································································································································································································································································································································································································································································································································································································································································································································································································································································································································································································································································································································································································································································································································.....
+----------------------------------------------------------------------
+Ran 5 tests in 0.016s
+
+OK
+·················································································································································································································································································································································································································································································································································································································································································································································································································································································································································································································································································································································································································································································································································································································································································································································································································································································································································································································································································································································································································································································································································································································································································································xxxxxxxxxxx························--····························································································································································································································································································································································································································································································································································································································································································································································································································································································································································································································································································································································································································································································································································································································································
+
+⎯⎯⎯⎯⎯⎯ Failed Tests 11 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/paths.test.ts > the project root > is this checkout's root: agent/ (with this test), knowledge/ and the logs/ and data/ beside them
+ FAIL  tests/paths.test.ts > the project root > resolves a relative path against itself whatever the cwd; an absolute one stays
+ FAIL  tests/paths.test.ts > the project root > the workspace (notes/, ops/) is STS2_WORKSPACE, else the project root
+ FAIL  tests/paths.test.ts > paths from the environment > a relative one (an .env's DECISION_LOG=logs/decisions.jsonl) resolves against the project root, not the cwd
+ FAIL  tests/paths.test.ts > paths from the environment > an absolute one is used as given
+ FAIL  tests/paths.test.ts > paths from the environment > the defaults are the project's logs/ (where the old code root kept them)
+ FAIL  tests/paths.test.ts > the knowledge files > every data file is where its loader looks: common/ or characters/<character>/
+ FAIL  tests/paths.test.ts > the knowledge files > nothing in the data directories is outside that map (a file a loader would not find)
+ FAIL  tests/paths.test.ts > the knowledge files > the default guide and handbook (v3's system prompt) exist and reach DeepSeek's system prompt
+ FAIL  tests/paths.test.ts > the tool servers' and log database's defaults > the MCP server runs this package's tsx on its own source
+ FAIL  tests/paths.test.ts > the tool servers' and log database's defaults > the log database's query script is in agent/tools/logdb
+TypeError: process.chdir() is not supported in workers
+ ❯ tests/paths.test.ts:25:25
+     23| const HERE = dirname(fileURLToPath(import.meta.url));
+     24| const cwd = process.cwd();
+     25| afterEach(() => process.chdir(cwd));
+       |                         ^
+     26|
+     27| /** Every knowledge data file a loader reads (src/knowledge/*.ts, sim/…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/15]⎯
+
+ FAIL  tests/paths.test.ts > the project root > resolves a relative path against itself whatever the cwd; an absolute one stays
+TypeError: process.chdir() is not supported in workers
+ ❯ tests/paths.test.ts:47:13
+     45|
+     46|   it("resolves a relative path against itself whatever the cwd; an abs…
+     47|     process.chdir(mkdtempSync(join(tmpdir(), "paths-cwd-")));
+       |             ^
+     48|     expect(fromRoot("logs/decisions.jsonl")).toBe(join(PROJECT_ROOT, "…
+     49|     expect(fromRoot("./logs/escalation")).toBe(join(PROJECT_ROOT, "log…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/15]⎯
+
+ FAIL  tests/paths.test.ts > paths from the environment > a relative one (an .env's DECISION_LOG=logs/decisions.jsonl) resolves against the project root, not the cwd
+TypeError: process.chdir() is not supported in workers
+ ❯ tests/paths.test.ts:81:13
+     79|
+     80|   it("a relative one (an .env's DECISION_LOG=logs/decisions.jsonl) res…
+     81|     process.chdir(mkdtempSync(join(tmpdir(), "paths-env-")));
+       |             ^
+     82|     const config = loadConfig(env);
+     83|     const at = (rel: string) => join(PROJECT_ROOT, rel);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/15]⎯
+
+ FAIL  tests/paths.test.ts > paths from the environment > the defaults are the project's logs/ (where the old code root kept them)
+TypeError: process.chdir() is not supported in workers
+ ❯ tests/paths.test.ts:106:13
+    104|
+    105|   it("the defaults are the project's logs/ (where the old code root ke…
+    106|     process.chdir(tmpdir());
+       |             ^
+    107|     const config = loadConfig({ DEEPSEEK_API_KEY: "placeholder-not-a-k…
+    108|     expect(config.log.decisionLog).toBe(join(LOGS_DIR, "decisions.json…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/15]⎯
+
+ FAIL  tests/paths.test.ts > the knowledge files > the default guide and handbook (v3's system prompt) exist and reach DeepSeek's system prompt
+TypeError: process.chdir() is not supported in workers
+ ❯ tests/paths.test.ts:138:13
+    136|
+    137|   it("the default guide and handbook (v3's system prompt) exist and re…
+    138|     process.chdir(tmpdir());
+       |             ^
+    139|     const config = loadConfig({ DEEPSEEK_API_KEY: "placeholder-not-a-k…
+    140|     expect(config.deepseek?.guideFile).toBe(knowledgeFile(KNOWLEDGE_DI…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/15]⎯
+
+
+ Test Files  1 failed | 584 passed (585)
+      Tests  11 failed | 5568 passed | 2 skipped (5581)
+   Start at  23:05:13
+   Duration  1072.31s (transform 28.27s, setup 44.53s, import 141.00s, tests 1849.90s, environment 78ms)
+

@@ -25,7 +25,7 @@ export interface V6ProjectionRequest {
   seed: number; modelVersion: string;
   /** Includes held resources, route, frozen history/trust, current run and act identity. */
   contextDigest: string;
-  prepare: (target: V6ProjectionTarget, state: BuildState) => V6PreparedProjection | null;
+  prepare: (target: V6ProjectionTarget, state: BuildState, option?: V6ProjectionOption) => V6PreparedProjection | null;
   trust: (target: V6ProjectionTarget) => { value: ProjectionEntry["trust"]; labels: string[] };
 }
 type Estimate = NonNullable<ProjectionEntry["win"]>;
@@ -214,8 +214,8 @@ export class V6ProjectionEngine {
           for (let i = 0; i < n; i++) {
             const state = (branch === "completed" ? c?.samples : c?.general)?.[i]?.states[o.id];
             if (error || skip || !state || this.now() >= deadline) { ps.push(null); continue; }
-            const key = v6Digest([t, state]);
-            try { if (!preparedCache.has(key)) preparedCache.set(key, r.prepare(t, structuredClone(state)));
+            const key = v6Digest([t, state, o.preparationKey ?? null]);
+            try { if (!preparedCache.has(key)) preparedCache.set(key, r.prepare(t, structuredClone(state), o));
               const input = preparedCache.get(key) ?? null;
               if (input && (!(input.maxHp > 0) || !(input.bossHp > 0) || !Number.isFinite(input.maxHp) || !Number.isFinite(input.bossHp)
                 || t.kind === "chain" && (!t.secondBoss || input.input.continuation?.variants.length !== 1 || input.input.continuation.variants[0]?.boss !== t.secondBoss))) ps.push(null);

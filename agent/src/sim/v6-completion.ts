@@ -50,7 +50,11 @@ export function v6DirectionRole(d: V6Direction, all: readonly V6Direction[], car
   if (all.some(x => x.id !== d.id && x.combos.some(k => k.requirements.some(r => r.any.some(c => matches(c, card)))))) return "core_of_other";
   return d.source === "build_core" ? "neutral" : "unknown";
 }
-export interface V6ProjectionOption { id: string; state: BuildState; card?: { id: string; upgraded: boolean } }
+export interface V6ProjectionOption {
+  id: string; state: BuildState; card?: { id: string; upgraded: boolean };
+  /** Held inventory and route identity outside BuildState (for example the potion belt). */
+  preparationKey?: string;
+}
 export interface V6CompletionCombination {
   id: string; source: V6Combo["source"]; requirements: Requirement[]; summary: V6Combo["summary"]; roles: V6Combo["roles"];
   samples: { id: string; states: Readonly<Record<string, BuildState | null>> }[];

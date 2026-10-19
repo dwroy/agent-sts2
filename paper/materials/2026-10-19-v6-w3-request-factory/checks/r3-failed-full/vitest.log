@@ -1,0 +1,32 @@
+
+ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/v6-w3-request-factory-20261019/agent
+
+ ❯ tests/thief.test.ts (11 tests | 1 failed) 71654ms
+     × T2: what it carries (the card missing since the fight's first frame), turns left, HP; every option's thief fact 26863ms
+.....
+----------------------------------------------------------------------
+Ran 5 tests in 0.039s
+
+OK
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/thief.test.ts > THIEF_FACTS on: the Thieving Hopper > T2: what it carries (the card missing since the fight's first frame), turns left, HP; every option's thief fact
+Error: Test timed out in 15000ms.
+If this is a long-running test, pass a timeout value as the last argument or configure it globally with "testTimeout".
+ ❯ tests/thief.test.ts:228:3
+    226|
+    227| describe("THIEF_FACTS on: the Thieving Hopper", () => {
+    228|   it("T2: what it carries (the card missing since the fight's first fr…
+       |   ^
+    229|     const decision = askOn("rpc6-f20-t2-hopper");
+    230|     const context = decision.state["thief_context"] as Record<string, …
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed | 584 passed (585)
+      Tests  1 failed | 5578 passed | 2 skipped (5581)
+   Start at  22:35:54
+   Duration  1713.67s (transform 47.97s, setup 96.21s, import 277.19s, tests 2854.36s, environment 108ms)
+
