@@ -1,0 +1,72 @@
+{
+  "at": "2026-10-20T05:26:01+08:00",
+  "event": "learner-checks",
+  "batch": "20261020-044302-s2-strategy-proposal",
+  "original_state": "failed",
+  "original_process_rc": 0,
+  "original_merged": null,
+  "original_host_status": {
+    "path": ".artifacts/ops-wake-20261020-0507/proposal-host-status.json",
+    "bytes": 1011,
+    "sha256": "b676eac7b73b20a48982f5de9bda2f3e1b3ebfb550c517c920b27a1ed8cb929c"
+  },
+  "fixed_input": {
+    "path": ".artifacts/ops-wake-20261020-0507/proposal-source-input.json",
+    "bytes": 2094,
+    "sha256": "289d03340730caa1a502a5bbc4570615e3bbac517043bee5ac444d7d1c446f68"
+  },
+  "host_log": {
+    "path": "ops/codex-ops/learner/20261020-044302-s2-strategy-proposal.host-uncommitted-50f19b448a1b612d28c57764d95c4d257a94e613.checks.log",
+    "bytes": 1328,
+    "sha256": "abf71115b9792c6c6e83889876cce2db99d41fcc6cb89fb993fb360ec5cbd021"
+  },
+  "fixed_staged_tree": "50f19b448a1b612d28c57764d95c4d257a94e613",
+  "fixed_base": "a31121be29fefe40085d0a6d1a29219b8a39ac41",
+  "actual_verification": {
+    "path": "paper/materials/20261020-0525-ops/verification.json",
+    "bytes": 1006,
+    "sha256": "702fb3f6eb5e64df94b8c3362ff8aaa197eb1862459c143c2a4d06b66c6c7299"
+  },
+  "host_full_rc": 1,
+  "host_tsc_rc": 0,
+  "vitest": {
+    "files_passed": 593,
+    "files_failed": 1,
+    "cases_passed": 5690,
+    "cases_failed": 1,
+    "cases_skipped": 2
+  },
+  "only_failure": {
+    "file": "agent/tests/v6-prompt-summary.test.ts",
+    "case": "keeps a meaningful minimum for every one of 28 real shop choices with the published 17-combo file",
+    "observed_ms": 15074,
+    "original_threshold_ms": 15000
+  },
+  "five_owned_leaves_and_staged_patch_unchanged": true,
+  "shared_summary_source_test_same_as_previous_041302_host": true,
+  "prior_directed0_receipt": "paper/materials/20261020-0500-ops/receipt.json",
+  "prior_directed0_not_claimed_for_this_candidate": true,
+  "full_or_targeted_tests_repeated": false,
+  "decision": "retain uncommitted original five-leaf candidate and full1; original W5/v6-w4w6 owner handles shared summary performance; exact repaired source acceptance required before original ops source commit/integration",
+  "root_cause": "not established by timeout; no CPU/load/gameplay regression claim",
+  "source_commit": null,
+  "main_merge": null,
+  "live_merge": null,
+  "observed_main": "e07b793706259b79e902b21f464be5d6d8228fc2",
+  "observed_live": "2897d89b63f0ea8c898672cdf5919072f7e41c37",
+  "original_sandbox_full_exit": null,
+  "original_sandbox_HTTP_checkpoint_and_EPERM_kept": true,
+  "ten_report_waiting_and_four_original_missing_proposals_kept": true,
+  "natural_adoption_or_gain_claimed": false,
+  "new_model_dispatched": false,
+  "production_dataset_run": false,
+  "new_version": false,
+  "proposal_or_ledger_states_changed": false,
+  "other_role_ACK_written": false,
+  "parents_closed": false,
+  "retention_complete": false,
+  "STOP_kept": true,
+  "saved_run_fault_frozen_request_preserved": "paper/materials/20261020-0249-ops/frozen-request-location.json",
+  "Regent_paused": true,
+  "next": "Await original W5 performance source delivery, preserve parallel work and original checks; no unchanged-source full rerun, duplicate learner, model retry or game restart."
+}
