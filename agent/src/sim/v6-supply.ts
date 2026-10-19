@@ -1,4 +1,5 @@
 /** Supply Monte Carlo and empirical fallback use only scoped historical observations. */
+import { evaluateBuildPrerequisites } from "../v6/build-core-conditions.js";
 import type { BuildState, Component, Requirement, OpportunityModel } from "../construction/types.js";
 import { v6Digest, type V6Combo, type V6CompletionSource, type V6CompletionContext, type V6CompletionCombination } from "./v6-completion.js";
 export interface V6HistoryChange {
@@ -75,8 +76,8 @@ function general(state: BuildState, route: V6HistoryRun, end: number): BuildStat
 export function v6SupplySource(data: V6SupplyData, now: () => number = () => performance.now()): V6CompletionSource {
   const draws = data.draws ?? 200, band = data.floorBand ?? 4;
   if (!data.signature || !Number.isSafeInteger(draws) || draws < 1 || draws > 10000 || !Number.isSafeInteger(band) || band < 0) throw new Error("invalid frozen V6 supply data");
-  const scoped = data.histories.filter(h => h.character === data.character && h.ascension === data.ascension && h.run !== data.excludeRun && h.endedAt < data.asOf);
-  const offers = data.opportunities.character === data.character ? data.opportunities.rows.filter(o => o.ascension === data.ascension && o.run !== data.excludeRun && o.ts < data.asOf) : [];
+  const scoped = data.histories.filter(h => h.character === data.character && h.run !== data.excludeRun && h.endedAt < data.asOf);
+  const offers = data.opportunities.character === data.character ? data.opportunities.rows.filter(o => o.run !== data.excludeRun && o.ts < data.asOf) : [];
   const pools = new Map<string, typeof offers>();
   const pool = (act: number, floor: number, kind: string) => { const key = `${act}:${floor}:${kind}`; let p = pools.get(key);
     if (!p) { p = offers.filter(o => o.act === act && o.kind === kind && Math.abs(o.floor - floor) <= band); pools.set(key, p); } return p; };
@@ -93,7 +94,7 @@ export function v6SupplySource(data: V6SupplyData, now: () => number = () => per
       [...route.changes.filter(x => x.floor > start && x.floor < target.floor).map(c => ({ floor: c.floor, change: c, offer: null })),
         ...offers.filter(x => x.run === route.run && x.floor > start && x.floor < target.floor).map(x => ({ floor: x.floor, change: null, offer: x }))]
         .sort((a, b) => a.floor - b.floor || Number(!!a.offer) - Number(!!b.offer))]));
-    const labels = ["historical_reached_target_selection", "historical_net_positive_gold_conservative", "signature_not_operability",
+    const labels = ["historical_reached_target_selection", "supply_pooled_versions_and_ascensions", "historical_net_positive_gold_conservative", "signature_not_operability",
       "future_relics_and_potions_not_predicted", "empirical_same_floor_actual_add_upgrade_remove", "supply_mc_uncertainty_excludes_model_error",
       "supply_greedy_signature_distance_policy_not_optimal_acquisition", "empirical_absent_removal_or_upgrade_target_skipped"];
     let combos = [...d.combos]; const override = context.idealOverrides?.[d.id];
@@ -101,8 +102,14 @@ export function v6SupplySource(data: V6SupplyData, now: () => number = () => per
       const permitted = new Set([...d.combos.flatMap(k => [...Object.keys(k.roles), ...k.requirements.flatMap(r => r.any.filter(x => x.kind === "card").map(x => x.id))]), ...baseline.state.cards.map(c => c.id), ...context.appearedCards ?? []]);
       if (override.some(id => !permitted.has(id))) throw new Error("brain override outside build pool or current deck");
       const counts = new Map<string, number>(); for (const id of override) counts.set(id, (counts.get(id) ?? 0) + 1);
-      const temporary: V6Combo = { id: `${d.id}:brain`, source: "brain", summary: null, roles: {},
-        requirements: [...counts].map(([id, count]) => ({ id, count, any: [{ id, kind: "card" }] })) }; combos.unshift(temporary);
+      const temporary: V6Combo = { id: `${d.id}:brain`, source: "brain", summary: null, prerequisites: null, roles: {},
+        requirements: [...counts].map(([id, count]) => ({ id, count, any: [{ id, kind: "card" }] })) };
+      // A brain list cannot silently discard executable prerequisites from a matching formal combo.
+      const matching = d.combos.filter(c => v6Match({ ...baseline.state, cards: override.map(id => ({ id, upgraded: true })) }, c.requirements).missing === 0);
+      if (matching.length && matching.every(c => c.prerequisites !== null)) temporary.prerequisites = matching.length === 1
+        ? matching[0]!.prerequisites : { op: "or", args: matching.map(c => c.prerequisites!) };
+      else if (!matching.length && d.combos.some(c => c.prerequisites !== null)) temporary.prerequisiteResolution = "unknown";
+      combos.unshift(temporary);
     }
     if (context.phase === "pick") { const rank = context.ranking ?? []; combos.sort((a, b) => {
       const ia = rank.indexOf(a.id), ib = rank.indexOf(b.id); return (ia < 0 ? Infinity : ia) - (ib < 0 ? Infinity : ib);
@@ -114,20 +121,36 @@ export function v6SupplySource(data: V6SupplyData, now: () => number = () => per
       const matchCache = new Map<string, ReturnType<typeof v6Match>>();
       const match = (state: BuildState, reqs: readonly Requirement[]) => { const key = JSON.stringify([state.cards.map(c => [c.id, c.upgraded]), state.relics, reqs === combo.requirements ? 0 : 1]);
         let v = matchCache.get(key); if (!v) { v = v6Match(state, reqs); if (matchCache.size < 20000) matchCache.set(key, v); } return v; };
+      // Only forecast facts are supplied. Missing HP/counters/powers must not become an invented condition.
+      const forecastable = (p: NonNullable<V6Combo["prerequisites"]>): boolean => p.op === "and" || p.op === "or" ? p.args.every(forecastable)
+        : p.op === "not" ? forecastable(p.arg) : p.op === "any" || p.op === "all" ? p.field === "player.deck" && forecastable(p.arg)
+          : "field" in p && ["floor", "player.gold", "player.relics", "player.deck", "card.id", "card.upgraded"].includes(p.field);
+      const condition = (state: BuildState): boolean | null => combo.prerequisiteResolution === "unknown" || combo.prerequisites && !forecastable(combo.prerequisites) ? null
+        : evaluateBuildPrerequisites(combo, { floor: target.floor, player: { gold: state.gold, relics: state.relics,
+          deck: state.cards.map(card => ({ id: card.id, upgraded: card.upgraded })) } });
+      const formed = (state: BuildState): boolean | null => match(state, combo.requirements).missing ? false : condition(state);
+      const unknownOptions = new Set<string>();
       const outcomes: Record<string, boolean[] | null> = {}, availability: Record<string, number | null> = {};
-      const completed = Object.fromEntries(options.map(o => [o.id, v6Complete(o.state, combo.requirements)]));
+      const completed = Object.fromEntries(options.map(o => {
+        const state = v6Complete(o.state, combo.requirements); return [o.id, state && condition(state) === true ? state : null];
+      }));
       for (const o of options) outcomes[o.id] = [];
       let unknown = false;
       for (let world = 0; world < draws; world++) {
         if (now() >= context.deadline) { unknown = true; break; }
         const route = routes[Math.floor(uniform(seed, world, "route") * routes.length)];
         for (const o of options) {
-          if (match(o.state, combo.requirements).missing === 0) { outcomes[o.id]!.push(true); continue; }
-          if (!route) { unknown = true; continue; }
+          const initial = formed(o.state);
+          if (initial === true) { outcomes[o.id]!.push(true); continue; }
+          // Relics are held constant in this supply model; never invent a prerequisite relic.
+          if (combo.prerequisites?.op === "contains" && combo.prerequisites.field === "player.relics" && condition(o.state) === false) {
+            outcomes[o.id]!.push(false); continue;
+          }
+          if (!route) { unknownOptions.add(o.id); continue; }
           let state = structuredClone(o.state);
           const events = eventsByRun.get(route.run)!;
           for (const [ei, e] of events.entries()) {
-            if (match(state, combo.requirements).missing === 0) break;
+            if (formed(state) === true) break;
             if (now() >= context.deadline) { unknown = true; break; }
             if (e.change) { state.gold += e.change.positiveGold;
               if (e.change.rest) { let best = match(state, combo.requirements).missing, choice = -1;
@@ -149,20 +172,21 @@ export function v6SupplySource(data: V6SupplyData, now: () => number = () => per
               if (choice < 0 || !next) break; (next as BuildState).gold -= remaining[choice]!.price; remaining.splice(choice, 1); state = next;
             }
           }
-          outcomes[o.id]!.push(match(state, combo.requirements).missing === 0);
+          const result = formed(state);
+          if (result === null) unknownOptions.add(o.id); else outcomes[o.id]!.push(result);
         }
       }
       for (const o of options) {
-        const already = match(o.state, combo.requirements).missing === 0;
+        const already = formed(o.state) === true;
         if (already) outcomes[o.id] = Array.from({ length: draws }, () => true);
-        else if (unknown || outcomes[o.id]!.length !== draws) outcomes[o.id] = null;
+        else if (unknown || unknownOptions.has(o.id) || outcomes[o.id]!.length !== draws) outcomes[o.id] = null;
         availability[o.id] = outcomes[o.id] ? outcomes[o.id]!.filter(Boolean).length / draws : null;
       }
       const scenarioIds = Array.from({ length: n }, (_, i) => `seed:${i}`);
       const gs = scenarioIds.map((id, i) => { const route = routes[i % routes.length]; return { id, states: Object.fromEntries(options.map(o => [o.id, route ? general(o.state, route, target.floor) : null])) }; });
       combinations.push({ id: combo.id, source: combo.source, requirements: combo.requirements, summary: combo.summary, roles: combo.roles,
         samples: scenarioIds.map(id => ({ id, states: completed })), general: gs, availability, supply: outcomes,
-        labels: ["completed_signature_adds_only_missing_cards_and_upgrades", "empirical_samples_split_simulation_budget", ...(combo.requirements.some(r => r.any.length > 1) ? ["alternative_membership_completed_by_deterministic_minimum_signature"] : [])] });
+        labels: ["completed_signature_adds_only_missing_cards_and_upgrades", ...(combo.prerequisites !== null || combo.prerequisiteResolution ? ["prerequisites_evaluated_on_projected_deck_gold_and_held_relics", "unforecast_prerequisite_facts_remain_unknown"] : []), "empirical_samples_split_simulation_budget", ...(combo.requirements.some(r => r.any.length > 1) ? ["alternative_membership_completed_by_deterministic_minimum_signature"] : [])] });
     }
     const result = { source: kind, signature: v6Digest([data.signature, combos, draws, band]), combinations, labels };
     if (combinations.every(c => Object.values(c.availability).every(p => p !== null))) {

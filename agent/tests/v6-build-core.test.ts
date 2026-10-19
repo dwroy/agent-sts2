@@ -2,9 +2,10 @@ import { mkdirSync, mkdtempSync, rmSync, symlinkSync, writeFileSync } from "node
 import { join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { afterEach, describe, expect, it } from "vitest";
-import { buildObservedMetricNames, validateBuildCore, validateBuildCoreFile } from "../src/v6/build-core.js";
+import { validateBuildCore, validateBuildCoreFile } from "../src/v6/build-core.js";
 import { validateBuildCoreDraft } from "../src/v6/build-core-draft.js";
 import { loadV6Knowledge } from "../src/v6/knowledge.js";
+import { pooledMetrics } from "./v6-build-metric-fixtures.js";
 const observation = { run_id: "FIXTURE_RUN", floor: 8, turn: 2 };
 const stat = () => ({ n: 0, unit: "independent_run", method: "fixed missing observation", value: null, se: null,
   distribution: [], evidence: [], unknown_reason: "fixture has no observations", small_sample: true });
@@ -13,8 +14,7 @@ function core() {
     scope: { character: "silent", ascensions: [0] }, card_pool: { TEST_CARD: { roles: ["test_role"],
       contribution: "fixed parser fixture", upgraded_matters: false, combos: ["TEST_COMBO"], evidence: [observation] } },
     combos: [{ id: "TEST_COMBO", types: ["must_pick_minimal", "common", "max_cards", "max_dpr"], boss: null,
-      cards: [{ id: "TEST_CARD", count: 1, upgraded: false }], metrics: [{ ascension: 0, attempt: "first", version: "fixture",
-        observed: Object.fromEntries(buildObservedMetricNames.map(k => [k, stat()])), bosses: {}, availability: [], simulation: [] }],
+      cards: [{ id: "TEST_CARD", count: 1, upgraded: false }], prerequisites: null, metrics: pooledMetrics(),
       fits: { bosses_positive: [], bosses_negative: [], routes: [], situations: [] }, evidence: [observation], confidence: "low", linked_experience: ["EXP_1"] }],
     pivot_signals: [], failure_modes: [], linked_experience: ["EXP_1"], linked_reflex: ["REF_1"] };
 }
@@ -77,6 +77,13 @@ describe("build-core-v1 and frozen draft", () => {
     const v = draft(); v.cores.entries = []; v.coverage = [{ experience_id: "EXP_1", status: "unrelated", links: [], reason: "fixed absence" }];
     expect(validateBuildCoreDraft(v, context).ok).toBe(false);
     expect(validateBuildCoreDraft({ ...v, missing: ["must_pick_minimal", "common", "max_cards", "max_dpr"].map(category => ({ direction: "TEST_A", category, reason: "unobserved" })) }, context).ok).toBe(true);
+  });
+  it("rejects provenance run IDs outside the frozen inventory even without metric evidence", () => {
+    const v = draft(), m = v.cores.entries[0]!.combos[0]!.metrics[0]!;
+    m.sources = [{ version: null, ascension: null, run_ids: ["UNFROZEN"], counts: { ...m.raw_counts, runs: 1 } }];
+    m.raw_counts = { ...m.raw_counts, runs: 1 };
+    expect(validateBuildCoreFile(v.cores).ok).toBe(true);
+    expect(validateBuildCoreDraft(v, context)).toMatchObject({ ok: false, issues: ["source outside frozen runs: UNFROZEN"] });
   });
 });
 describe("per-character build core loader", () => {

@@ -3,10 +3,12 @@ import { createHash } from "node:crypto";
 import type { ConstructionSupport } from "../construction/support.js";
 import type { BuildState, Component, CoreTemplate, Requirement } from "../construction/types.js";
 import type { Character, ProjectionEntry } from "../v6/formats.js";
+import type { Predicate } from "../v6/predicate.js";
 import type { BuildCore, BuildCombo } from "../v6/build-core.js";
 export const v6Digest = (value: unknown): string => createHash("sha256").update(JSON.stringify(value)).digest("hex");
 export interface V6Combo {
   id: string; requirements: Requirement[]; source: "brain" | "build_core" | "construction_adapter";
+  prerequisites: Predicate | null; prerequisiteResolution?: "unknown";
   summary: BuildCombo["metrics"] | null; roles: Record<string, string[]>;
 }
 export interface V6Direction {
@@ -18,7 +20,7 @@ export interface V6Direction {
 export function v6Directions(character: Character, ascension: number, templates: readonly CoreTemplate[],
   support: ConstructionSupport | null, cards: readonly BuildCore[] = []): V6Direction[] {
   const result: V6Direction[] = cards.filter(c => c.scope.character === character && c.scope.ascensions.includes(ascension)).map(c => {
-    const combos: V6Combo[] = c.combos.map(k => ({ id: k.id, source: "build_core", summary: k.metrics,
+    const combos: V6Combo[] = c.combos.map(k => ({ id: k.id, source: "build_core", summary: k.metrics, prerequisites: k.prerequisites,
       roles: Object.fromEntries(Object.entries(c.card_pool).map(([id, p]) => [id, p.roles])),
       requirements: k.cards.map((r, i) => ({ id: `${k.id}:${i}`, count: r.count,
         any: ("id" in r ? [r.id] : r.any_of).map(id => ({ id, kind: "card", upgraded: r.upgraded })) })) }));
@@ -32,7 +34,7 @@ export function v6Directions(character: Character, ascension: number, templates:
     if (result.some(c => c.id === core.id)) continue;
     const observed = support?.character === character ? support.entries.filter(e => e.core === core.id && e.ascensions.includes(ascension)) : [];
     result.push({ id: core.id, name: core.name, character, ascensions: core.ascensions, core,
-      combos: [{ id: `${core.id}:minimal`, requirements: core.requirements, source: "construction_adapter", summary: null, roles: {} }],
+      combos: [{ id: `${core.id}:minimal`, requirements: core.requirements, source: "construction_adapter", summary: null, prerequisites: null, roles: {} }],
       support: observed.map(e => e.component), conflict: [], source: "construction_adapter", signature: v6Digest({ core, observed }),
       limits: ["candidate_signature_not_functional_completion", "local_support_is_not_net_benefit", ...core.limits] });
   }

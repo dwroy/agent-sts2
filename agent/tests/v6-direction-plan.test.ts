@@ -65,14 +65,14 @@ it("uses the W1 validator for catalog, sum, overrides, potions, checkpoint and r
   expect(directionPlanSpec({})).toBeNull();
 });
 
-it("reads multiple core combos, scopes metrics, and carries provider evaluations without collapsing them", () => {
+it("reads multiple core combos, pools metrics across source ascensions, and carries provider evaluations without collapsing them", () => {
   const core = coreFixture();
   expect(directionSummaries("ironclad", 0, [core], [], null)).toEqual([]);
   expect(directionSummaries("silent", 2, [core], [], null)).toEqual([]);
   const summaries = directionSummaries("silent", 0, [core], [], null);
   expect(summaries[0]?.source).toBe("build-core-v1");
   expect(summaries[0]?.combos).toHaveLength(2);
-  expect(summaries[0]?.combos[0]?.metrics).toEqual([core.combos[0]!.metrics[0]]);
+  expect(summaries[0]?.combos[0]?.metrics).toEqual(core.combos[0]!.metrics);
   const entry = comboProjection();
   const payload = directionTask({ summaries, entries: [entry], appearedCards: [], potionIds: [], floor: 8, current: {}, previous: { ideal_overrides: { TEST_A: ["TEST_CARD"] } } });
   const rows = payload["build_cores"] as { combos: { source: string; metrics: unknown; evaluations: unknown[] }[] }[];

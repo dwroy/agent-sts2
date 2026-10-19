@@ -22,8 +22,8 @@ export function directionSummaries(character: string, ascension: number, cores: 
     const combos = d.combos.map(c => ({ id: c.id, source: "build-core-v1" as const,
       requirements: toJsonValue(c.cards.map((r, i) => ({ id: `${c.id}:${i}`, count: r.count,
         any: ("id" in r ? [r.id] : r.any_of).map(id => ({ kind: "card", id, upgraded: r.upgraded })) }))),
-      metrics: toJsonValue(c.metrics.filter(m => m.ascension === ascension)),
-      details: toJsonValue({ ...c, metrics: c.metrics.filter(m => m.ascension === ascension) }) }));
+      metrics: toJsonValue(c.metrics),
+      details: toJsonValue({ ...c, metrics: c.metrics }) }));
     return { id: d.direction, name: d.name, source: "build-core-v1", components: Object.keys(d.card_pool),
       requirements: toJsonValue(combos.flatMap(c => asArray(c.requirements))), support: null,
       details: toJsonValue({ status: d.status, card_pool: d.card_pool, pivot_signals: d.pivot_signals, failure_modes: d.failure_modes,

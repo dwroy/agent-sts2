@@ -25,6 +25,8 @@ export function validateBuildCoreDraft(raw: unknown, context: DraftContext & { r
     if (!context.directionIds.includes(c.direction)) issues.push(`${c.direction}: catalog change requires separate proposal`);
     if (c.linked_experience.some(x => !context.experienceIds.includes(x))) issues.push(`${c.direction}: unknown experience`);
     if (c.linked_reflex.some(x => !context.reflexIds.includes(x))) issues.push(`${c.direction}: unknown reflex`);
+    for (const combo of c.combos) for (const source of combo.metrics.flatMap(m => m.sources))
+      for (const run of source.run_ids) if (!context.runIds.includes(run)) issues.push(`source outside frozen runs: ${run}`);
     for (const combo of c.combos) for (const exp of combo.linked_experience) {
       if (!v.coverage.find(x => x.experience_id === exp)?.links.some(x => x.core === c.direction && x.combo === combo.id)) issues.push(`${exp}: missing reverse coverage`);
     }

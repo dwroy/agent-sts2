@@ -15,10 +15,10 @@ describe("offline combo metrics builder", () => {
     const evidence = [{ run_id: "FIXTURE", floor: 48 }];
     const result = validateBuildCore({
       schema: "build-core-v1", direction: "fixture", name: "fixed fixture", status: "candidate",
-      scope: { character: "silent", ascensions: [0] },
+      scope: { character: "silent", ascensions: [10] },
       card_pool: { ALPHA: { roles: ["fixture"], contribution: "固定数据", upgraded_matters: false, combos: ["fixture-combo"], evidence } },
       combos: [{ id: "fixture-combo", types: ["fixture"], boss: null,
-        cards: [{ id: "ALPHA", count: 1, upgraded: false }], metrics,
+        cards: [{ id: "ALPHA", count: 1, upgraded: false }], prerequisites: null, metrics,
         fits: { bosses_positive: [], bosses_negative: [], routes: [], situations: [] }, evidence,
         confidence: "low", linked_experience: [] }],
       pivot_signals: [], failure_modes: [], linked_experience: [], linked_reflex: [],

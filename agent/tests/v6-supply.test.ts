@@ -31,7 +31,7 @@ it("reproduces 200 shared worlds and splits 20 fights among empirical edits", ()
   expect(a.combinations[0]?.general[0]?.states.skip?.cards).toEqual([{ id: "G", upgraded: false }]);
 });
 it("keeps absent own first-attempt histories unknown", () => {
-  for (const mutate of [(d: V6SupplyData) => { d.histories[0]!.character = "ironclad"; }, (d: V6SupplyData) => { d.histories[0]!.ascension = 9; },
+  for (const mutate of [(d: V6SupplyData) => { d.histories[0]!.character = "ironclad"; },
     (d: V6SupplyData) => { d.histories[0]!.run = "current"; }, (d: V6SupplyData) => { d.histories[0]!.endedAt = "2027"; }, (d: V6SupplyData) => { d.histories[0]!.floors = [5]; }]) {
     const d = data(); mutate(d); expect(resolve(d).combinations[0]?.availability.skip).toBeNull();
   }
@@ -43,4 +43,30 @@ it("caps picks to ranked four; evaluates all at act start and restricts brain ov
   expect(() => s.resolve({ ...c, idealOverrides: { D: ["UNLEARNED"] } })).toThrow();
   expect(s.resolve({ ...c, phase: "act", idealOverrides: { D: ["A"] } })?.combinations[0]?.source).toBe("brain");
   expect(s.resolve({ ...c, phase: "act", appearedCards: ["SEEN"], idealOverrides: { D: ["SEEN"] } })?.combinations[0]?.id).toBe("D:brain");
+});
+
+it("pools supply across ascensions while preserving role, cutoff and run isolation", () => {
+  const d = data(); d.histories[0]!.ascension = 0; d.opportunities.rows[0]!.ascension = 1;
+  expect(resolve(d).combinations[0]?.availability.skip).toBe(1);
+  expect(resolve(d).labels).toContain("supply_pooled_versions_and_ascensions");
+});
+it("gates formation and completed simulations on held prerequisite relics", () => {
+  const c = context(); c.direction.combos[0]!.prerequisites = { op: "contains", field: "player.relics", value: "FIXTURE_RELIC" };
+  const s = v6SupplySource(data(), () => 0);
+  const absent = s.resolve(c)!.combinations[0]!;
+  expect(absent.availability.skip).toBe(0); expect(absent.samples[0]!.states.skip).toBeNull();
+  c.options[0]!.state.relics = ["FIXTURE_RELIC"];
+  expect(s.resolve(c)!.combinations[0]!.availability.skip).toBe(1);
+  expect(s.resolve(c)!.combinations[0]!.samples[0]!.states.skip).not.toBeNull();
+  expect(c.options[0]!.state.cards).toEqual([]);
+});
+it("keeps unforecast prerequisite facts unknown and does not simulate an assumed completion", () => {
+  const c = context(); c.direction.combos[0]!.prerequisites = { op: "gte", field: "player.relic_counters.FIXTURE_RELIC", value: 2 };
+  const row = v6SupplySource(data(), () => 0).resolve(c)!.combinations[0]!;
+  expect(row.availability.skip).toBeNull(); expect(row.samples[0]!.states.skip).toBeNull();
+});
+it("brain overrides inherit formal prerequisites and cannot invent prerequisite relics", () => {
+  const c = context(); c.direction.combos[0]!.prerequisites = { op: "contains", field: "player.relics", value: "FIXTURE_RELIC" };
+  const row = v6SupplySource(data(), () => 0).resolve({ ...c, idealOverrides: { D: ["A"] } })!.combinations[0]!;
+  expect(row.source).toBe("brain"); expect(row.availability.skip).toBe(0); expect(row.samples[0]!.states.skip).toBeNull();
 });
