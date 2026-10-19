@@ -1,0 +1,46 @@
+[
+  {
+    "id": "r3-numeric-observation-not-causal-bonus",
+    "prior": "第二轮将所有85条保留tag，认为版本/模型缺口使单个HP信号无法交付。",
+    "new_evidence": "本轮重核预存最终计划与原执行/HP窗口，78个条件可写出非因果的实际净掉血均值，其中19个仅单局并省略SE。例：silent-r2-card-footwork的真实样本、反例、原始SHA见signal-audit/statistics。",
+    "affected_experience_ids": [
+      "silent-footwork-block"
+    ],
+    "impact": "78个hp数值实际入严格signal，不把跨版本合并或完整格式当作可迁移收益；7个tag的不同估计对象仍保留。",
+    "unknown": "没有未执行候选的反事实或因果增益，终局/变更线及缺计划有选择偏差；不是发布建议。",
+    "evidence": [
+      "statistics.json",
+      "signal-audit.json",
+      "per-signal-raw-checks.jsonl.gz"
+    ],
+    "forwarding": "待原ops→watcher→Roy；本任务未发送或代确认。"
+  },
+  {
+    "id": "r3-metadata-sidecar-contract",
+    "prior": "希望n、design、method与数值一起给消费者。",
+    "new_evidence": "冻结numericSignal严格只有kind/value/se?/unit，当前combatEntryAudit.memory发送label/signal/confidence/support计数和来源等，不读取draft.metrics或本轮sidecar。",
+    "affected_experience_ids": [],
+    "impact": "本轮明确交付draft.metrics、signal-audit和按id+draft SHA关联的audit-index；不能说n/design/method已在signal对象内，也不能说Jev已消费这些口径。",
+    "unknown": "原消费者后续如何带入完整元数据需原工程通道处理；本轮禁止改源码。",
+    "evidence": [
+      "audit-index.json",
+      "source-provenance.json",
+      "validation.json"
+    ],
+    "forwarding": "待原ops→watcher→Roy；本任务未发送或代确认。"
+  },
+  {
+    "id": "r3-priority-not-identifiable",
+    "prior": "要求用条件出现频率乘绝对观察效应给出全历史和近期排序。",
+    "new_evidence": "37902个原回合中27458个没有结构化最终计划；另有scope内的字段/计划缺口。保留原分母并应用真实scope后，85×2尝试×2窗口的340个整体优先级仍未知。",
+    "affected_experience_ids": [],
+    "impact": "ranking.json逐项给分子/原分母、频率界限、效应符号、G与SE，并保留priority=null；界限代理不充当已知优先级，不补0或挑有利窗口。",
+    "unknown": "缺历史计划不能从执行结果倒填；没有本轮可合法补齐这些历史机会的额外证据。",
+    "evidence": [
+      "ranking.json",
+      "plan-opportunity-summary.json",
+      "statistics.json"
+    ],
+    "forwarding": "待原ops→watcher→Roy；本任务未发送或代确认。"
+  }
+]
