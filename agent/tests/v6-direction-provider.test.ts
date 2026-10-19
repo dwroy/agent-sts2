@@ -22,7 +22,11 @@ it("delivers actual W3 targets and per-combination P=1 rows to the W4 brain task
   const task = directionTask({ summaries: directionSummaries("silent", 10, [], [r.directions[0]!.core], null),
     entries: evaluation.entries, appearedCards: [], potionIds: [], floor: 5, current: null });
   const combo = asRecord(asArray(asRecord(asArray(task.build_cores)[0]).combos)[0]);
-  expect(asArray(combo.evaluations)).toEqual([expect.objectContaining({ target: "f17:TEST_BOSS", expected_win: 1, win_incomplete: null })]);
+  expect(combo.id).toBe("D:minimal");
+  expect(combo.evaluations).toBeUndefined();
+  expect(asArray(task.direction_evaluation)).toEqual([expect.objectContaining({
+    combo_id: "D:minimal", target_id: "f17:TEST_BOSS", expected_win: 1, win_incomplete: null,
+  })]);
   expect(directionEvaluationFromProjection(table, { ...r.config, mode: "off" }, "skip")).toEqual({ id: "off", entries: [] });
 });
 it("reads W3 act and pick paired chain comparisons without marginal-error substitution", async () => {
