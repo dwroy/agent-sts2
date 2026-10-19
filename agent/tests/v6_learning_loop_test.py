@@ -290,7 +290,9 @@ class RefreshTest(unittest.TestCase):
             potion.chmod(0o755)
             py = root / 'data/logdb-venv/bin/python'
             py.parent.mkdir(parents=True)
-            py.symlink_to(sys.executable)
+            # Unrelated legacy sync must never follow the agent symlink to real logs.
+            py.write_text('#!/bin/sh\nexit 0\n')
+            py.chmod(0o755)
             (root / 'ops/refresh.log').touch()
             # Read only the entry function's AST to avoid report module's real project globals/logs.
             import ast
