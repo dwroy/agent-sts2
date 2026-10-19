@@ -17,7 +17,8 @@ import type { AnswerSet } from "../reflex/jev/answers.js";
 import { classifyJevError, type JevAskResult } from "../reflex/jev/client.js";
 import type { QuestionSet } from "../reflex/jev/questions.js";
 import { compactJevRequest, isJevContextLimitError, type CompactJevRequest } from "../reflex/jev/compact-request.js";
-import { projectSilentCombatDecision, type DecisionProjection } from "../reflex/jev/decision-projection.js";
+import type { DecisionProjection } from "../reflex/jev/decision-projection.js";
+import { projectCombatDecision } from "../reflex/jev/combat-entry-projection.js";
 
 export interface JevPromptMeta {
   /** The decision this request was made for (the decision row's `decision_id`). */
@@ -111,7 +112,7 @@ export interface JevAsker {
  */
 export async function askJevLogged(jev: JevAsker, log: JevPromptLog | null, meta: JevPromptMeta, state: unknown, questions: QuestionSet): Promise<JevAskResult> {
   const started = Date.now();
-  const projection = meta.label.startsWith("combat/plan") ? projectSilentCombatDecision(state, questions) : null;
+  const projection = meta.label.startsWith("combat/plan") ? projectCombatDecision(state, questions) : null;
   const wireState = projection?.state ?? state, wireQuestions = projection?.questions ?? questions;
   try {
     return await askOnceLogged(jev, log, meta, wireState, wireQuestions, undefined, projection ?? undefined);

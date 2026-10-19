@@ -10,11 +10,12 @@ export interface DecisionProjection {
   questions: QuestionSet;
   evidence: { state: unknown; questions: QuestionSet };
   contract: {
-    schema: "silent-combat-decision-v1";
+    schema: "silent-combat-decision-v1" | "v6-combat-decision-v1";
     sourceSha256: string;
     originalBytes: number;
     projectedBytes: number;
     sources: { question: string; candidate: string; field: string; source: string }[];
+    stateSources?: { field: string; source: string; transform?: string }[];
   };
 }
 

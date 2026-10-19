@@ -23,6 +23,7 @@ import { completeAdaptiveLines } from "../sim/boss-lines.js";
  */
 
 import { choiceQ } from "./jev/questions.js";
+import { loadCombatEntries, combatEntryAudit, combatEntriesState } from "./jev/combat-entries.js";
 import { quantitativeEnabled, quantitativeTurnFacts } from "../sim/quantitative-facts.js";
 import { BOSS_MARGIN_NOTE } from "../sim/boss-margin.js";
 import { silentPhaseReference } from "./silent-phase-reference.js";
@@ -3896,6 +3897,8 @@ function planTurn(env: DecisionEnv): Decision | null {
   const planOptions = trimForPotionOptions(options, mcShown.length + unsimulatedKeys + (noPotionOwn ? 1 : 0), keep);
   options.splice(0, options.length, ...planOptions);
   const shown = [...options, ...(noPotionOwn ? [noPotionOwn] : []), ...(rolloutBest && !rolloutBestIsPotion && !options.includes(rolloutBest) && rolloutBest !== noPotionOwn ? [rolloutBest] : [])];
+  const combatEntries = loadCombatEntries(state);
+  const showV6Boss = combatEntries !== null && combatEntries.act === 3 && kind === "boss";
   // B2 (BOSS_SIM_LINES, boss fights only; docs/boss-sim.md §11): every shown line and random potion line played to the
   // fight's end on the same samples. A boss the simulator is trusted on ranks the lines by it (simRanks: rollout_best,
   // ties, the HP guard, code's fallback) and shows its numbers; a low-trust boss's numbers and plan only go to the
@@ -3904,7 +3907,7 @@ function planTurn(env: DecisionEnv): Decision | null {
   // BOSS_SIM_LOW_TRUST=retry (default): a low-trust boss is simulated only on an SL retry, where its numbers are shown; on
   // a first attempt they only went to the log, and the sim's cores cut this question's rollout. The question is the same.
   const requiredBossComputation = env.requiredBossEvaluation === true && kind === "boss" && quantitativeEnabled(state);
-  const lowTrustSkipped = !requiredBossComputation && bossLinesOptions.lowTrust === "retry" && kind === "boss" && env.sl?.showSim !== true && lowTrustOfState(state) !== null;
+  const lowTrustSkipped = !showV6Boss && !requiredBossComputation && bossLinesOptions.lowTrust === "retry" && kind === "boss" && env.sl?.showSim !== true && lowTrustOfState(state) !== null;
   const bossPiles = kind === "boss" && (bossLinesOptions.enabled || requiredBossComputation) && !lowTrustSkipped && rolloutSolver !== null ? rolloutPiles(state, env.knowledge, enemyTargets) : null;
   const bossSim: BossLineSim | null =
     kind === "boss" && (bossLinesOptions.enabled || requiredBossComputation) && rolloutSolver !== null
@@ -3938,7 +3941,7 @@ function planTurn(env: DecisionEnv): Decision | null {
   // SL_RETRY_SHOW_SIM (docs/sl.md): on a retried boss fight a low-trust boss's numbers are shown too, labelled; the
   // ranking (simRanks) stays the trusted bosses' only.
   const slLowTrustSim = env.sl?.showSim === true && bossSim?.available === true && bossSim.lowTrust !== null ? bossSim.lowTrust : null;
-  const simShown = bossSim !== null && ((bossSim.available ? bossSim.lowTrust : lowTrustOfState(state)) === null || slLowTrustSim !== null);
+  const simShown = bossSim !== null && ((bossSim.available ? bossSim.lowTrust : lowTrustOfState(state)) === null || slLowTrustSim !== null || showV6Boss);
   const simFact = (plan: Plan): Record<string, JsonValue> => {
     const line = simShown && bossSim?.available ? bossSim.byPlan.get(plan) : undefined;
     return line ? { whole_fight_sim: line.text, ...(line.bossMargin ? { boss_relative_margin: toJsonValue(line.bossMargin) } : {}) } : {};
@@ -3993,6 +3996,8 @@ function planTurn(env: DecisionEnv): Decision | null {
     ...simFact(plan),
     ...phaseFacts.get(plan),
     ...lossFacts.get(plan),
+    ...(combatEntries ? { v6_combat_entry: combatEntryAudit(combatEntries, plan, rollout, simShown ? bossSim : null, "plan",
+      { best: plan === bestShown, tied_with: rolloutTied.includes(plan) ? tiedKeys.filter(key => key !== keyOfShown(plan)) : [] }) } : {}),
   });
   const criteria: Record<string, string | null> = {};
   const byKey = new Map<string, { plan?: Plan; potion?: ActionRequest; label: string }>();
@@ -4013,6 +4018,8 @@ function planTurn(env: DecisionEnv): Decision | null {
     const facts = {
       ...(rolled ? { ...rolled, rollout: `the median sample's line: ${String(rolled["rollout"])}`, ...(mc.median === bestShown ? { rollout_best: true } : {}), ...(mc.median ? tieNote(mc.median) : {}) } : {}),
       ...(mc.median ? simFact(mc.median) : {}),
+      ...(combatEntries ? { v6_combat_entry: combatEntryAudit(combatEntries, mc.median, rollout, simShown ? bossSim : null, "potion_median",
+        { best: mc.median === bestShown, tied_with: mc.median && rolloutTied.includes(mc.median) ? tiedKeys.filter(key => key !== keyOfShown(mc.median!)) : [] }) } : {}),
     };
     const mcCost = !costsOn
       ? {}
@@ -4049,6 +4056,7 @@ function planTurn(env: DecisionEnv): Decision | null {
           ...(keptBy ? { fight_plan: `keeps it (${keptBy})` } : planOffer(potion.potion_id) === true ? { fight_plan: "says now" } : {}),
           ...(costsOn ? { potion_cost: `drinking it costs ${costs.get(potion.potion_id) ? potionCostText(costs.get(potion.potion_id)!) : "0 (no conversion value in the potion table)"}` } : {}),
           ...(rollout ? { rollout: brewGives !== null ? "not rolled out: the potions it gives are random; the turn is re-planned with them after drinking" : DRINK_FIRST_ROLLOUT } : {}),
+          ...(combatEntries ? { v6_combat_entry: combatEntryAudit(combatEntries, null, rollout, null, "unmodelled") } : {}),
         });
         byKey.set(key, {
           potion: target === null ? { action: "use_potion", option_index: potion.slot } : { action: "use_potion", option_index: potion.slot, target_index: target },
@@ -4062,6 +4070,7 @@ function planTurn(env: DecisionEnv): Decision | null {
   const deepseekPlan = deepseekPlanLine(env);
   const lessons = fightLessons(state);
   const questionState: Record<string, JsonValue> = {
+    ...(combatEntries ? { v6_combat_entries: combatEntriesState(combatEntries, currentRunPlan(env) !== null) } : {}),
     ...silentGiantPotionFacts(state),
     ...silentPhaseCurrentFacts(state),
     ...silentKinBoardFacts(state),
