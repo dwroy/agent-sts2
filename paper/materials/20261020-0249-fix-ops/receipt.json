@@ -1,0 +1,94 @@
+{
+  "at": "2026-10-20 02:56:10 CST",
+  "event": "fix-done",
+  "batch": "20261020-024301-fix-batch",
+  "batch_state": "failed",
+  "process_rc": 0,
+  "merged": null,
+  "report_base": "96979fad9afaf671399158e663eb8ab6e3d80992",
+  "source_changes": false,
+  "new_source_commit": null,
+  "independent_git": {
+    "worktree": ".worktrees/codex-fix-silent-20261020-024301",
+    "root_verified": true,
+    "head": "96979fad9afaf671399158e663eb8ab6e3d80992",
+    "strictly_clean": true
+  },
+  "tests": {
+    "tsc": null,
+    "vitest": null,
+    "cases": 0
+  },
+  "empty_fix_guard_passed": false,
+  "guard_reason": "requires integer tsc=0, vitest=0 and positive cases; original null checks and cases=0 preserved",
+  "ordinary_close": "not eligible: original state failed; no no-change success proof; no automatic-close receipt exists",
+  "dataset_invoked": false,
+  "full_checks_or_model_repeated": false,
+  "retention": {
+    "state": "deferred",
+    "last_result": {
+      "state": "deferred",
+      "reason": "scratch ownership not bound to original report"
+    },
+    "worktree_preserved": true,
+    "manual_complete_or_delete": false
+  },
+  "native_turn_context": {
+    "path": "ops/codex-ops/accounts/codex1/learner/sessions/2026/10/20/rollout-2026-10-20T02-43-19-01a15579-ab53-71e3-85b5-451d6d042993.jsonl",
+    "offset": 53821,
+    "bytes": 6252,
+    "sha256": "d7477b1dfd3360270e43499a333b353400e4e930cd5b1be390a91bf8d18eb92d",
+    "model": "gpt-6.1-sol",
+    "effort": "high",
+    "account": "codex1 isolated learner",
+    "sandbox_type": "workspace-write"
+  },
+  "actual_main_observed": "3abb94cf0843030a636469abaeeaa245eae7874b",
+  "actual_live_observed": "67d9cfce08f7e1efd7d603fe78b419f5825d040d",
+  "previous_23_limited_fixes_or_wide_parents_reaccepted_by_ops": false,
+  "owner_pending": "Original ACK/ordinary-close failed checks, existing bad-line/gzip/fixture candidates and payload owners remain; no duplicate source/dispatch. Latest W5 plus W3/B live repair and Claude-arranged real-request smoke gate remains authoritative.",
+  "STOP_exists": true,
+  "brain_wait": {
+    "path": "logs/brain-wait.json",
+    "bytes": 619,
+    "sha256": "1e8ee3a27fbdcabe9c5a2698e2b70bc909147f13d45ff3792779613ffc92ed30"
+  },
+  "brain_wait_state": "fault",
+  "markers_cleared": false,
+  "game_resumed": false,
+  "other_role_ACK_written": false,
+  "parent_closed": false,
+  "source_references": [
+    {
+      "path": "ops/codex-ops/learner/20261020-024301-fix-batch.out",
+      "bytes": 3227,
+      "sha256": "046092cfee232f0fb0edf0e8370010d569a09293758dd7a6dbf3ffdf48691428"
+    },
+    {
+      "path": "ops/codex-ops/learner/20261020-024301-fix-batch.err",
+      "bytes": 5433,
+      "sha256": "6b3973ff3a42b608127738d384060621eb3daeeed205d8bc7c4ee17752f1a868"
+    },
+    {
+      "path": "learner/runs/20261020-024312-8cbb07f3-0b6c-49a7-9477-6a40e5dc1643-fix-batch/report.md",
+      "bytes": 16955,
+      "sha256": "22e60b1d4ddb85fcafd4c4a49d885a98be96ba36d01a161a0c799a93760f78dd"
+    },
+    {
+      "path": "ops/codex-ops/retention/requests/20261020-024301-fix-batch.json",
+      "bytes": 568,
+      "sha256": "7c877c70628b6b68bd2f98bf4769e0e44156aba125bf828fdc20f4e6ef83bd35"
+    },
+    {
+      "path": "ops/learner_checks.py",
+      "bytes": 23890,
+      "sha256": "4cb0c9e576004d0ed21546beee37f3a6d32b87e748a9df9580c31942fc180e36"
+    },
+    {
+      "path": "ops/ordinary_close.py",
+      "bytes": 16162,
+      "sha256": "14cae7930c4dc28ccfa52a280c4c20f526dac7a60c4df6412c2bac00bc1b82e2"
+    }
+  ],
+  "next": "No source integration fallback necessary. Preserve original empty-check failure, deferred ownership/retention and all unresolved owners; no tests or production dataset to manufacture completion."
+}
