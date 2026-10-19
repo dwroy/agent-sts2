@@ -10,7 +10,7 @@ it("deduplicates frozen evidence and simulation results without changing their b
     encoding: "utf8", timeout: 30_000,
   });
   expect(result.status, result.stdout + result.stderr).toBe(0);
-  expect(result.stderr).toContain("Ran 13 tests");
+  expect(result.stderr).toContain("Ran 15 tests");
 }, 35_000);
 
 it.each([false, true])("the original host finalizes only after its fake model closes; storage failure=%s never reruns it", async (corrupt) => {
@@ -20,7 +20,7 @@ it.each([false, true])("the original host finalizes only after its fake model cl
     mkdirSync(join(root, "tasks"));
     writeFileSync(join(root, "ops/content_store.py"), readFileSync(resolve("../ops/content_store.py")));
     writeFileSync(join(root, "tasks/storage-smoke.md"), "---\ntitle: Fixed storage host\ntools: Read\n---\nSCRATCH={{scratch}}\n");
-    const fake = join(root, "fake-codex");
+    const fake = join(root, "fake-codex.cjs");
     writeFileSync(fake, `#!/usr/bin/env node
 const fs=require('node:fs'), path=require('node:path'), crypto=require('node:crypto');
 const prompt=fs.readFileSync(0,'utf8'), scratch=prompt.match(/SCRATCH=(.+)/)[1].trim();
@@ -39,10 +39,12 @@ console.log(JSON.stringify({type:'turn.completed',usage:{input_tokens:1,output_t
       now: () => new Date(), out: () => undefined, err: () => undefined,
       checkCodex: async () => ({ ok: true }), checkKeys: async () => ({ ok: true }),
     } as unknown as LauncherDeps;
-    expect(await main(["--engine", "codex", "--task", "storage-smoke", "--cwd", root], deps)).toBe(0);
-    expect(readFileSync(join(root, "invocations"), "utf8")).toBe("one\n");
+    const status = await main(["--engine", "codex", "--task", "storage-smoke", "--cwd", root], deps);
     const log = readdirSync(deps.runsDir).find((name) => name.endsWith(".jsonl"))!;
     const events = readFileSync(join(deps.runsDir, log), "utf8").trim().split("\n").map((line) => JSON.parse(line));
+    expect(status, events.filter((x) => x.type === "learner_stderr" || x.type === "learner_error")
+      .map((x) => x.text ?? x.message).join("\n")).toBe(0);
+    expect(readFileSync(join(root, "invocations"), "utf8")).toBe("one\n");
     const exited = events.findIndex((x) => x.type === "learner_startup_exit");
     const stored = events.findIndex((x) => x.type === "learner_storage");
     expect(stored).toBeGreaterThan(exited);

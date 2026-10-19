@@ -90,9 +90,11 @@ class ContentStore(unittest.TestCase):
         self.assertEqual(list(self.root.glob(".b.jsonl.object-*")), [])
 
     def test_project_worktrees_share_store_without_copying_mutable_state(self):
+        expected = objects.default_directory(self.root)
         (self.root / ".git").mkdir()
-        with patch.object(objects.subprocess, "check_output", side_effect=AssertionError("invalid marker is not a repository")):
-            self.assertEqual(objects.default_directory(self.root), self.root / ".objects/v1")
+        with patch.object(objects.subprocess, "check_output", wraps=subprocess.check_output) as git:
+            self.assertEqual(objects.default_directory(self.root), expected)
+            self.assertTrue(all(call.args[0][2] != str(self.root) for call in git.call_args_list))
         (self.root / ".git").rmdir()
         subprocess.run(["git", "init", "-q", str(self.root)], check=True)
         self.assertEqual(objects.default_directory(self.root / "learner/runs/fixed"), self.root / "ops/codex-ops/objects/v1")
@@ -199,6 +201,62 @@ class ContentStore(unittest.TestCase):
             objects.finalize(scratch, self.store.directory)
         self.assertEqual(manifest.read_bytes(), before)
         self.assertEqual(view.read_bytes(), b"changed frozen bytes")
+
+    def test_host_finalizes_all_supported_streams_including_v6_without_changing_declarations(self):
+        scratch = self.root / "task"
+        scratch.mkdir()
+        reference = self.store.put(self.a)
+        streams = ("states", "decisions", "sl-attempts", "run-config", "run-plans",
+                   "brain", "runs", "fight-plans", "v6-build", "jev-prompts")
+        declarations = []
+        for stream in streams:
+            (scratch / (stream + ".evidence.jsonl")).write_bytes(self.raw)
+            declarations.append({"stream": stream, "output_sha256": reference["sha256"], "content": reference})
+        manifest = scratch / "evidence-manifest.json"
+        manifest.write_text(json.dumps(declarations))
+        original = manifest.read_bytes()
+        for _ in range(2):
+            result = objects.finalize(scratch, self.store.directory)
+            self.assertEqual(result["status"], "sealed")
+            self.assertEqual(len(result["files"]), len(streams))
+            self.assertEqual(manifest.read_bytes(), original)
+            for stream in streams:
+                view = scratch / (stream + ".evidence.jsonl")
+                self.assertEqual(view.read_bytes(), self.raw)
+                self.assertTrue(os.path.samefile(view, self.store.path(reference["sha256"])))
+                self.assertEqual(view.stat().st_mode & 0o222, 0)
+
+    def test_host_rejects_unknown_streams_and_unsafe_v6_declarations(self):
+        scratch = self.root / "task"
+        scratch.mkdir()
+        manifest = scratch / "evidence-manifest.json"
+        reference = self.store.put(self.a)
+        view = scratch / "v6-build.evidence.jsonl"
+        for case in ("unknown", "v7-build", "../v6-build", "/v6-build", "auth.json", 6,
+                     "sha", "size", "symlink", "credential"):
+            with self.subTest(case=case):
+                view.unlink(missing_ok=True)
+                view.write_bytes(self.raw)
+                content = dict(reference)
+                stream = "v6-build" if case in ("sha", "size", "symlink", "credential") else case
+                if case == "sha":
+                    content["sha256"] = "f" * 64
+                if case == "size":
+                    content["bytes"] += 1
+                if case == "symlink":
+                    view.unlink()
+                    view.symlink_to(self.a)
+                if case == "credential":
+                    manifest.unlink(missing_ok=True)
+                    credential = scratch / "auth.json"
+                    credential.write_text("fixed sentinel")
+                    manifest.symlink_to(credential)
+                else:
+                    manifest.write_text(json.dumps([{"stream": stream, "output_sha256": content["sha256"], "content": content}]))
+                before = manifest.read_bytes()
+                with self.assertRaises(ValueError):
+                    objects.finalize(scratch, self.store.directory)
+                self.assertEqual(manifest.read_bytes(), before)
 
 
 if __name__ == "__main__":
