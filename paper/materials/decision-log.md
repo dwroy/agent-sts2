@@ -4869,3 +4869,5 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
 - 2026-10-20 06:36:45 CST [Codex watcher/W3历史刷新] R2冻结历史包已FF main eb92ebe3e，17/17组合各first/including_sl两份指标，字节SHA aea1fcc9b9927118a5f8158cadb6940576d1b8db783084edaca1d6c182f205f6、内容哈希 531cd98c93395888832e05d6678a65a821862ab2bf5f9ac621d89ab1e0988219；原四步骤0、生产加载器/共享请求工厂固定离线17ID及指标读回0，gitleaks0。沿70cf统一终局边界逐行排除，原来源/字节范围/SHA/原因及原日志不变核验见paper/materials/2026-10-20-v6-history-r2-17-refresh/report.json。simulation=off、缺证指标与缺升级模型继续unknown；正式构筑卡/经验未改，未发送模型请求/启局，不称自然采用/健康。原ops实际main→live运输/消费者及Claude原真实请求烟测待核；STOP、MWMR故障/存档、Regent及宽父保持，不代ACK。
 
 - 2026-10-20 06:44:41 CST [运维 codex/V6-R400运输] 原队列3705实际接管，清单12KB摘要恢复；原锁运输受测main b0aace与17包eb92至live 6528e3db867924dbe402f370b0579c63106679cd（行为4b31），main/live17ID双口径/hash固定消费者通过，复用原full0不重跑；旧记录/失败保留，STOP/fault不动，未续局/关父。原件：paper/materials/20261020-0637-ops/receipt.json。
+
+- 2026-10-20 06:49:20 CST [运维 codex/06:40原事件接续] 去重旧异议/清单失败与已完成R400运输；061302-s2原A0三叶未提交候选SHA不变，固定bb3f唯一宿主520208/nice19实际checking，原full1保留，不重复运输/刷新或关父，STOP保持。原件：paper/materials/20261020-0640-ops/receipt.json。
