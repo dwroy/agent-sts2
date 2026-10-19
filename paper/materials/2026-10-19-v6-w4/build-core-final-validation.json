@@ -1,0 +1,43 @@
+{
+  "checked_at": "2026-10-19T19:18:38.955792+08:00",
+  "implementation": "787cb52439b10d730a79e922db4fefbd0e4f056e",
+  "main_base": "509fa794015348e5117ec002616013659b3d5825",
+  "test_source_commit": "846ebde22",
+  "tested_agent_tree": "b9d1910427ec2b1fe2ba944a73ace759adddaf95",
+  "rebased_agent_tree": "b9d1910427ec2b1fe2ba944a73ace759adddaf95",
+  "post_test_main_changes": [
+    "learner/tasks/v6-reflex-distill-r2.md"
+  ],
+  "source_paths": [
+    "agent/src/v6/direction-plan.ts",
+    "agent/src/v6/direction-runtime.ts",
+    "agent/src/v6/formats.ts",
+    "agent/tests/v6-direction-core-fixtures.ts",
+    "agent/tests/v6-direction-plan.test.ts",
+    "agent/tests/v6-direction-runtime.test.ts"
+  ],
+  "commands": [
+    {
+      "command": "npx tsc -p tsconfig.json --noEmit",
+      "exit_code": 0,
+      "log": "build-core-tsc-after-nova-doc.log"
+    },
+    {
+      "command": "npx vitest run --maxWorkers=4",
+      "exit_code": 0,
+      "files_passed": 568,
+      "tests_passed": 5505,
+      "tests_skipped": 2,
+      "duration_seconds": 350.57,
+      "log": "build-core-vitest-after-nova-doc.log"
+    },
+    {
+      "command": "gitleaks git --redact --no-banner --log-opts='509fa7940..HEAD'",
+      "exit_code": 0,
+      "log": "build-core-gitleaks-final.log"
+    }
+  ],
+  "source_and_tests_fixed_during_full_run": true,
+  "network_requests_for_multi_combo_followup": 0,
+  "publication_scope": "main only; default off; W3 formal integration pending"
+}

@@ -1,0 +1,137 @@
+
+ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/v6-w4-20261019/agent
+
+ ❯ tests/v6-direction-runtime.test.ts (12 tests | 1 failed) 208ms
+   × keeps combo projections and rejects unknown combo IDs or sources 17ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/v6-direction-runtime.test.ts > keeps combo projections and rejects unknown combo IDs or sources
+AssertionError: expected [ { …(29) }, { …(28) }, …(2) ] to deeply equal [ { …(29) } ]
+
+- Expected
++ Received
+
+@@ -67,6 +67,105 @@
+        "value": 0.2,
+      },
+      "win_tier": "even",
+      "winning_player_hp_fraction": null,
+    },
++   {
++     "availability": {
++       "skip": null,
++       "take": null,
++     },
++     "combo_id": "TEST_A:common",
++     "combo_source": "build-core-v1",
++     "core_first_cast_turn": null,
++     "deck_count_change": null,
++     "delta_tier": "unknown",
++     "direction_id": "TEST_A",
++     "direction_role": "unknown",
++     "direction_value": null,
++     "expected_win": null,
++     "incomplete_source": "unknown",
++     "joint_paired_delta": null,
++     "joint_win": null,
++     "losing_boss_hp_fraction": null,
++     "option_id": "current",
++     "paired_delta": null,
++     "reflex_ids": [],
++     "schema": "projection-entry-v1",
++     "target_id": "TEST_TARGET",
++     "trust": "unknown",
++     "turns": null,
++     "weighted_current_boss_delta": null,
++     "weighted_joint_delta": null,
++     "win": null,
++     "win_complete": null,
++     "win_incomplete": null,
++     "win_tier": "unknown",
++     "winning_player_hp_fraction": null,
++   },
++   {
++     "availability": {
++       "skip": null,
++       "take": null,
++     },
++     "combo_id": "TEST_B:min",
++     "combo_source": "build-core-v1",
++     "core_first_cast_turn": null,
++     "deck_count_change": null,
++     "delta_tier": "unknown",
++     "direction_id": "TEST_B",
++     "direction_role": "unknown",
++     "direction_value": null,
++     "expected_win": null,
++     "incomplete_source": "unknown",
++     "joint_paired_delta": null,
++     "joint_win": null,
++     "losing_boss_hp_fraction": null,
++     "option_id": "current",
++     "paired_delta": null,
++     "reflex_ids": [],
++     "schema": "projection-entry-v1",
++     "target_id": "TEST_TARGET",
++     "trust": "unknown",
++     "turns": null,
++     "weighted_current_boss_delta": null,
++     "weighted_joint_delta": null,
++     "win": null,
++     "win_complete": null,
++     "win_incomplete": null,
++     "win_tier": "unknown",
++     "winning_player_hp_fraction": null,
++   },
++   {
++     "availability": {
++       "skip": null,
++       "take": null,
++     },
++     "combo_id": "TEST_B:common",
++     "combo_source": "build-core-v1",
++     "core_first_cast_turn": null,
++     "deck_count_change": null,
++     "delta_tier": "unknown",
++     "direction_id": "TEST_B",
++     "direction_role": "unknown",
++     "direction_value": null,
++     "expected_win": null,
++     "incomplete_source": "unknown",
++     "joint_paired_delta": null,
++     "joint_win": null,
++     "losing_boss_hp_fraction": null,
++     "option_id": "current",
++     "paired_delta": null,
++     "reflex_ids": [],
++     "schema": "projection-entry-v1",
++     "target_id": "TEST_TARGET",
++     "trust": "unknown",
++     "turns": null,
++     "weighted_current_boss_delta": null,
++     "weighted_joint_delta": null,
++     "win": null,
++     "win_complete": null,
++     "win_incomplete": null,
++     "win_tier": "unknown",
++     "winning_player_hp_fraction": null,
++   },
+  ]
+
+ ❯ tests/v6-direction-runtime.test.ts:79:115
+     77|   const brain = { askJson: vi.fn(async () => ({ json: { ...weights, po…
+     78|   const result = await ensureDirectionPlan(e, brain, log, dir);
+     79|   expect((result?.payload?.direction_evaluation as unknown[]).filter(r…
+       |                                                                                                                   ^
+     80|   expect(result?.payload?.direction_evaluation).toHaveLength(4);
+     81|   expect(result?.result.triggers).toContain("T6");
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed | 4 passed (5)
+      Tests  1 failed | 58 passed (59)
+   Start at  18:51:28
+   Duration  3.25s (transform 7.23s, setup 1.63s, import 7.60s, tests 606ms, environment 0ms)
+
