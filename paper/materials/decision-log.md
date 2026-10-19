@@ -4837,3 +4837,5 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
 - 2026-10-20 03:35:57 CST [运维 codex/R3增量正式发布派发] 按原370f8cde8/240分钟单次派v6-knowledge-publish-r3-20261020-033408，原生codex1/high/沙箱及首答已核；保观察/SE未知/priority null/sidecar消费缺口与R2，main/live和自然采用待完成事件，STOP不解除。原件：paper/materials/20261020-0334-ops/receipt.json。
 
 - 2026-10-20 03:39:55 CST [运维 codex/031301策略宿主兜底] 固定原五文件tree7f714单次宿主full在途，原沙箱未full0/1duplicate9waiting及六原稿缺失保留；不提前提交/合入/记shipped或解STOP。原件：paper/materials/20261020-0337-ops/receipt.json。
+
+- 2026-10-20 03:45:22 CST [运维 codex/库存提示合入事实核收] 6b119/29ab实际live四叶核同，原完整检查待办且live锁忙，main/统一release保持pending；不将限定排除检查或宽项waiting冒完成，不重复full/模型/解除STOP。原件：paper/materials/20261020-0343-ops/receipt.json。
