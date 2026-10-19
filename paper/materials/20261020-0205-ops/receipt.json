@@ -1,0 +1,38 @@
+{
+  "at": "2026-10-20 02:05:47 CST",
+  "event": "stall",
+  "run_id": "MWMR855QHTWR",
+  "question_id": "mvfjs0un-3579363-1",
+  "same_fault_marker_SHA_verified": true,
+  "marker": {
+    "path": "logs/brain-wait.json",
+    "bytes": 619,
+    "sha256": "1e8ee3a27fbdcabe9c5a2698e2b70bc909147f13d45ff3792779613ffc92ed30"
+  },
+  "fault_state": "fault",
+  "retries": 0,
+  "play_pid": 3579363,
+  "play_exited": true,
+  "autoplay_pid": 3579120,
+  "autoplay_alive": true,
+  "autoplay_command": "bash /home/dw/Projects/agent-sts2/ops/autoplay.sh --tail-console ",
+  "autoplay_start_ticks": 132401584,
+  "original_fault": {
+    "path": "paper/materials/20261020-014x-ops/fault-readback.json",
+    "bytes": 2869,
+    "sha256": "b4c41c4de7dba8c1b134baf1d4cc8aa70610b6e3b35b45308b32a8b2e1ce260c"
+  },
+  "event_reported_console_silent_seconds": 936,
+  "event_reported_decision_silent_seconds": 973,
+  "reason": "same input_too_large terminal hold, not a new Nova/Jev failure",
+  "action": "retain saved run and original fault guard; original owner diagnosis pending",
+  "marker_cleared": false,
+  "play_or_model_restarted": false,
+  "source_or_release_changed": false,
+  "checks_dataset_or_calibration_repeated": false,
+  "duplicate_watcher_notification_sent": false,
+  "new_observer_or_timer": false,
+  "Regent": "paused",
+  "parent_closed": false,
+  "other_role_ACK_written": false
+}
