@@ -135,10 +135,36 @@ def results(report,batch):
     return rows
 
 
+def unassigned_publication(report, batch, root, live):
+    """Reuse the exact narrow-publication guard and its completed host recheck."""
+    from learner_checks import descriptive_publication
+    for key in ('source_commit', 'merged'):
+        if not isinstance(report.get(key), str) or not re.fullmatch('[0-9a-f]{40}', report[key]):
+            raise ValueError('narrow proposal resolution needs full source/publication identities')
+    proof = descriptive_publication(report, batch, root, live)
+    if proof is None:
+        raise ValueError('descriptive proposal resolution requires an exact narrow publication')
+    tree = subprocess.check_output(['git', '-C', str(live), 'rev-parse', 'HEAD^{tree}'], text=True).strip()
+    for check in batch.get('fallback_checks', []):
+        if (type(check.get('rc')) is not int or check['rc'] != 0 or check.get('tree') != tree
+                or proof not in check.get('source_publications', [])
+                or report['merged'] not in check.get('commits', [])):
+            continue
+        log = Path(check.get('log', '')).resolve()
+        if not log.is_relative_to(Path(root).resolve()) or not log.is_file():
+            continue
+        return {'publication': proof, 'host_tree': tree, 'host_log': str(log),
+                'host_log_sha256': hashlib.sha256(log.read_bytes()).hexdigest()}
+    raise ValueError('narrow proposal resolution lacks a matching successful host recheck')
+
+
 def unassigned_proof(report,batch,root,items,rows,lib):
     """Bind an ordinary strategy completion to original registrations and source commits."""
     character=batch.get('character')
-    if report.get('character')!=character or report.get('runs')!=batch.get('runs'):
+    fixes = report.get('fixes')
+    descriptive = isinstance(fixes, list) and bool(fixes) and all(isinstance(f, str) and f.strip() for f in fixes)
+    if (report.get('character')!=character
+            or ('runs' in report or not descriptive) and report.get('runs')!=batch.get('runs')):
         raise ValueError('unassigned report differs from its batch character or runs')
     project=Path(root).resolve()
     raw_tree=batch.get('worktree');raw_report=report.get('report')
@@ -155,7 +181,7 @@ def unassigned_proof(report,batch,root,items,rows,lib):
         if isinstance(candidate,dict) and candidate.get('task')=='strategy-proposal':
             saved=candidate;break
     # The final output may rephrase prose, but must retain the preserved source identities.
-    keys=('task','character','base','runs','fixes','merged','code_proposals')
+    keys=('task','character','base','runs','fixes','source_commit','merged','code_proposals')
     if any(saved.get(k)!=report.get(k) for k in keys) or not saved:
         raise ValueError('unassigned source identities differ from the preserved report')
     saved_rows=saved.get('proposal_results')
@@ -165,7 +191,7 @@ def unassigned_proof(report,batch,root,items,rows,lib):
         raise ValueError('unassigned dispositions differ from the preserved report')
     fixes=report.get('fixes')
     runs=batch.get('runs')
-    if (not isinstance(fixes,list) or not all(isinstance(f,dict) for f in fixes)
+    if (not isinstance(fixes,list) or not descriptive and not all(isinstance(f,dict) for f in fixes)
             or not isinstance(runs,list) or not runs or not all(isinstance(r,str) for r in runs)):
         raise ValueError('unassigned report lacks source fixes or evidence runs')
     def ancestor(source,target,cwd):
@@ -176,6 +202,12 @@ def unassigned_proof(report,batch,root,items,rows,lib):
     live = Path(os.environ.get('STS2_LIVE', str(project/'.worktrees/live')))
     if not ancestor(merged,'HEAD',live):
         raise ValueError('unassigned report lacks an actual live merge')
+    publication = {}
+    if descriptive:
+        # A prose list cannot assign distinct sources to multiple proposals.
+        if len(rows) != 1 or report.get('code_proposals') != [rows[0]['id']]:
+            raise ValueError('descriptive proposal resolution must identify one original proposal')
+        publication = unassigned_publication(report, batch, root, live)
     for row in rows:
         item=items.get(row['id'])
         if (not item or item.get('character')!=character or item.get('target_task')!='strategy-proposal'
@@ -190,13 +222,18 @@ def unassigned_proof(report,batch,root,items,rows,lib):
         commit=row.get('commit')
         if row['state'] not in ('implemented','duplicate'):
             raise ValueError('unassigned resolution requires a published source disposition')
-        if (not any(f.get('proposal_id')==row['id'] and f.get('commit')==commit for f in fixes)
-                or not ancestor(commit,merged,live) or not ancestor(commit,'HEAD',tree)):
+        if descriptive:
+            bound = commit == merged
+        else:
+            bound = (any(f.get('proposal_id')==row['id'] and f.get('commit')==commit for f in fixes)
+                     and ancestor(commit,'HEAD',tree))
+        if not bound or not ancestor(commit,merged,live):
             raise ValueError('unassigned disposition is not bound to its reported live source fix')
         if item.get('state') in ('implemented','duplicate') and item.get('commit',item.get('implemented_commit'))!=commit:
             raise ValueError('unassigned disposition conflicts with an existing resolution')
     return {'resolution_report':str(path),'resolution_report_sha256':hashlib.sha256(raw).hexdigest(),
-            'resolution_batch':batch.get('key')}
+            'resolution_batch':batch.get('key'),
+            **({'resolution_publication': publication} if publication else {})}
 
 
 def research_proof(report,batch,root):

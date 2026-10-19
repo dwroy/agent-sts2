@@ -12,6 +12,10 @@ it.each([
   "inflight_dispatched_waiting_cannot_reopen_verified_resolution",
   "legacy_empty_and_dispatched_strict_coverage_are_unchanged",
   "preserves_output_scope_when_markdown_has_equivalent_prose",
+  "resolves_narrow_publication_without_inventing_source_ancestry",
+  "rejects_narrow_publication_without_matching_host_receipt",
+  "rejects_narrow_source_or_live_drift_before_any_resolution",
+  "rejects_narrow_registration_report_and_proposal_identity_changes",
 ])("unassigned proposal: %s", (name) => {
   const result = spawnSync("python3", ["-B", "../ops/tests/test_unassigned_proposal_resolution.py",
     `Resolution.test_${name}`], { encoding: "utf8", timeout: 10_000 });
