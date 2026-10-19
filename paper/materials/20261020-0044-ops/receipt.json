@@ -1,0 +1,68 @@
+{
+  "at": "2026-10-20 00:46:32 CST",
+  "event": "strategy-done",
+  "batch": "20261020-001302-strategy-proposal",
+  "model_state": "done",
+  "model_rc": 0,
+  "source_commit": null,
+  "merged": null,
+  "tests": {
+    "tsc": null,
+    "vitest": null,
+    "cases": null
+  },
+  "original_worktree_head": "4ec7f10212d6411ede35ac448356489405ac57a0",
+  "strictly_clean": true,
+  "completion_artifact_SHA_verification": true,
+  "actual_proposal_states": {
+    "silent-proposal-2631859b524e0652": "waiting",
+    "silent-proposal-b13fda1dfeb37927": "waiting",
+    "silent-proposal-d7b8d36cf3d0303d": "waiting",
+    "silent-proposal-c873d6543c414f92": "waiting",
+    "silent-proposal-dfbf51502f30c9b1": "waiting",
+    "silent-proposal-c2888032d1337388": "waiting",
+    "silent-proposal-042ee2299084b528": "waiting",
+    "silent-proposal-8cd3db3bad5f34f1": "waiting",
+    "silent-proposal-43fe170707574455": "waiting",
+    "silent-proposal-3f5a665dca133a8c": "waiting"
+  },
+  "ledger_check": {
+    "problems": 0,
+    "items": 530
+  },
+  "original_guard_rejection": "source changed during batch; retain ordinary ops review",
+  "main_at_guard": "a1e3401d96393e7377b284d0479e7ec2b756030a",
+  "baseline": "dc315aee38a2ab63bbfd312a613f46a039422d35",
+  "parallel_source_paths": [
+    "agent/src/eye/decision-log.ts",
+    "agent/src/hand/loop.ts",
+    "agent/src/hand/screens/reward.ts",
+    "agent/src/memory/types.ts",
+    "agent/src/v6/card-pick.ts",
+    "agent/src/v6/projection-consumer.ts",
+    "agent/src/v6/projection-input.ts",
+    "agent/src/v6/projection-runtime.ts",
+    "agent/src/v6/replan-triggers.ts",
+    "agent/tests/rollout.test.ts",
+    "agent/tests/v6-card-pick.test.ts",
+    "agent/tests/v6-direction-provider.test.ts",
+    "agent/tests/v6-projection-input.test.ts",
+    "agent/tests/v6-projection-runtime.test.ts"
+  ],
+  "ordinary_close_receipt_present": false,
+  "dataset_started_by_ops": false,
+  "dataset_commit": null,
+  "record_completion": false,
+  "storage_receipt": {
+    "path": ".worktrees/codex-strategy-silent-20261020-001302/learner/runs/20261020-001307-73a904b0-8002-48c2-9e1c-99dd6ff37964-strategy-proposal/storage-finalization.json",
+    "bytes": 8457,
+    "sha256": "5c4cd6df1e0c2e3f04bcdada00ab16faa72332d3747eaf8781fe936899de17c9"
+  },
+  "storage_status_reported": "sealed; not a new full object-content audit in this event",
+  "parent_completed": false,
+  "retention_manual_complete": false,
+  "source_worktree_retained": true,
+  "STOP_retained": true,
+  "Regent": "paused",
+  "next": "Retain this original source-drift rejection and no-change proposal disposition; original ordinary-close protocol owner handles history-preserving reentry after independent guards. No repeated model, merge, tests or dataset; do not borrow another batch completion."
+}
