@@ -1,0 +1,86 @@
+{
+  "at": "2026-10-19 08:39:34 CST",
+  "events": [
+    "20261019-081302-strategy-proposal",
+    "20261019-081301",
+    "20261019-082914-s2-strategy-proposal"
+  ],
+  "source_manifest": {
+    "strategy-report": {
+      "path": ".worktrees/codex-strategy-silent-20261019-081302/learner/runs/20261019-081311-b09217a5-9316-418f-b163-72555b40c195-strategy-proposal/report.md",
+      "bytes": 9107,
+      "sha256": "41a4073379e8675cde6cc36344d674f0d4d67fcf6ed5d8af5a7c3c0cc1d9e985"
+    },
+    "postmortem-report": {
+      "path": "learner/runs/20261019-081306-0e878341-837d-4621-aab7-4a57499468b8-postmortem/report.md",
+      "bytes": 1679,
+      "sha256": "cb7cdc44640cf17d97988be185397181d1d1db870864de916eb831f8526ccae5"
+    },
+    "failed-out": {
+      "path": "ops/codex-ops/learner/20261019-082914-s2-strategy-proposal.out",
+      "bytes": 1283,
+      "sha256": "eb4a06362044e2ea098a69ce0c7b33948620b08c59f8b108a07ca758f4d43e76"
+    },
+    "failed-stderr": {
+      "path": "ops/codex-ops/learner/20261019-082914-s2-strategy-proposal.err",
+      "bytes": 1771,
+      "sha256": "dc61fb73d1ed7fa8fd1d08759b096ebae78155f25086b55e56bc10a703d4b1e6"
+    }
+  },
+  "strategy": {
+    "rc": 0,
+    "strict_clean": true,
+    "base": "df21d3b4d79e996050cd4fdbb06931fc6a14c4fc",
+    "proposals_waiting": 10,
+    "merged": null,
+    "tests": {
+      "tsc": null,
+      "vitest": null,
+      "cases": null
+    }
+  },
+  "postmortem": {
+    "rc": 0,
+    "runs": [
+      "Y0EMJR6MKWYW",
+      "76VEDXJJ2PFL"
+    ],
+    "missing": [],
+    "new_bugs": [],
+    "support_evidence_rows": 12,
+    "original_ledger_rows_to_record": 24,
+    "proposal_ids": [
+      "silent-proposal-682d0cc98f31b284",
+      "silent-proposal-c4311787311264dc"
+    ],
+    "proposal_status": "pending independent strategy implementation; no shipped",
+    "lessons_block_sha256": [
+      "b04b7e2b51b817e653e91b016efaeb5e2f25cc832d369455a3e19085fa1770fe",
+      "61ce8a3df71526c4d57876f2532ccbc3425fa16f4f93fca7d7ca0ec55513b1a4"
+    ]
+  },
+  "failure": {
+    "rc": 1,
+    "cause": "Selected model is at capacity",
+    "phase": "after native session and tool calls; no complete report",
+    "native_thread": "01a15190-260d-7bb0-9ead-70028d626cff",
+    "strict_clean": true,
+    "merged": null,
+    "retry_at": 1792373537.1743228,
+    "retry_at_CST": "2026-10-19T09:32:17.174323+08:00",
+    "original_failed_state_and_retry_unchanged": true,
+    "not_proposal_absence_or_scientific_failure": true,
+    "account_model_permissions_unchanged": true
+  },
+  "ordinary_auto_guard": "successful batches blocked by unrelated root task-template source change; original guard retained",
+  "shared_dataset": {
+    "terminal_receipt": "ops/codex-ops/pending-records/20261019-081302-s2-strategy-proposal.json",
+    "attempts": 1,
+    "started_before_postmortem_finished": true,
+    "coverage_condition": "Original paper_dataset scans lessons after states and learning curve at end. Before closure verify produced runs.csv has both postmortem headings and ledger-derived output is current; do not claim reuse coverage without actual readback. No second job started."
+  },
+  "record_commit": null,
+  "dataset_close_pending": true,
+  "scientific_parent_requests_closed": false,
+  "new_version_or_source_or_tests": false
+}
