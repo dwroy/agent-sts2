@@ -94,7 +94,8 @@ export function validateProjectionEntry(v: unknown): Result<ProjectionEntry> {
     if (entry.combo_id === undefined && [entry.combo_source, entry.win_complete, entry.win_incomplete, entry.incomplete_source, entry.expected_win, entry.combo_metrics].some(v => v !== undefined)) e.push("combo_id: required for combo measurements");
     if (entry.combo_id !== undefined && entry.combo_source === undefined) e.push("combo_source: required for a combo row");
     if (entry.win_incomplete != null && entry.incomplete_source !== "empirical") e.push("win_incomplete: needs empirical source");
-    if (entry.expected_win != null && (entry.availability.take === null || entry.win_complete == null || entry.win_incomplete == null)) e.push("expected_win: missing completion or conditional win estimates");
+    const p = entry.availability.take;
+    if (entry.expected_win != null && (p === null || (p > 0 && entry.win_complete == null) || (p < 1 && entry.win_incomplete == null))) e.push("expected_win: missing completion or nonzero-weight conditional win estimates");
   }), v);
 }
 
