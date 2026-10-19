@@ -1,0 +1,36 @@
+[
+  {
+    "label": "reflex-validator",
+    "command": [
+      "/home/dw/.local/node/bin/node",
+      "--import",
+      "/home/dw/Projects/agent-sts2/agent/node_modules/tsx/dist/loader.mjs",
+      "knowledge/builders/validate-v6.ts",
+      "reflex",
+      "/home/dw/Projects/agent-sts2/.worktrees/v6-reflex-distill-r3-20261019/knowledge/characters/silent/pending/v6-reflex-distill-r3-v6-reflex-distill-r3-20261019-2347/draft.json",
+      "/home/dw/Projects/agent-sts2/learner/runs/20261020-033447-857c04bf-f11f-4df8-9993-0f829cd36869-v6-knowledge-publish/validation-context.json"
+    ],
+    "cwd": "/home/dw/Projects/agent-sts2/.worktrees/v6-knowledge-publish-r3-20261020-033408",
+    "exit_code": 0,
+    "stdout": "/home/dw/Projects/agent-sts2/learner/runs/20261020-033447-857c04bf-f11f-4df8-9993-0f829cd36869-v6-knowledge-publish/reflex-validator.stdout",
+    "stderr": "/home/dw/Projects/agent-sts2/learner/runs/20261020-033447-857c04bf-f11f-4df8-9993-0f829cd36869-v6-knowledge-publish/reflex-validator.stderr"
+  },
+  {
+    "label": "experience-proposals",
+    "command": [
+      "python3",
+      "learner/code_proposals.py",
+      "check-experience",
+      "--character",
+      "silent",
+      "--before",
+      "/home/dw/Projects/agent-sts2/learner/runs/20261020-033447-857c04bf-f11f-4df8-9993-0f829cd36869-v6-knowledge-publish/before/experience.json",
+      "--after",
+      "knowledge/characters/silent/experience.json"
+    ],
+    "cwd": "/home/dw/Projects/agent-sts2/.worktrees/v6-knowledge-publish-r3-20261020-033408",
+    "exit_code": 0,
+    "stdout": "/home/dw/Projects/agent-sts2/learner/runs/20261020-033447-857c04bf-f11f-4df8-9993-0f829cd36869-v6-knowledge-publish/experience-proposals.stdout",
+    "stderr": "/home/dw/Projects/agent-sts2/learner/runs/20261020-033447-857c04bf-f11f-4df8-9993-0f829cd36869-v6-knowledge-publish/experience-proposals.stderr"
+  }
+]

@@ -1,0 +1,579 @@
+
+ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/v6-knowledge-publish-r3-20261020-033408/agent
+
+ ❯ tests/v6-room.test.ts (38 tests | 9 failed) 136085ms
+   × local scripted loop dispatches one shop Jev choice and no brain request 15014ms
+   × local scripted loop dispatches one rest Jev choice and no brain request 15020ms
+   × binds the shared production runtime by default for shop without a room override 15027ms
+   × binds the shared production runtime by default for rest without a room override 15013ms
+   × local scripted loop failure falls back once without brain or retries 15027ms
+   × local scripted loop invalid falls back once without brain or retries 15024ms
+   × local scripted loop timeout falls back once without brain or retries 15027ms
+   × credits the upgrade follow-up to its actual jev source 15026ms
+   × credits the upgrade follow-up to its actual code-fallback source 15026ms
+ ❯ tests/v6-potions.test.ts (22 tests | 3 failed) 45445ms
+   × loop asks Jev separately with its timeout and records the result (success) 15012ms
+   × loop asks Jev separately with its timeout and records the result (error) 15024ms
+   × loop asks Jev separately with its timeout and records the result (invalid) 15026ms
+ ❯ tests/v6-card-pick.test.ts (17 tests | 5 failed) 75713ms
+   × loop routes cards to Jev once with independent budget and logs fallback (success) 15011ms
+   × loop routes cards to Jev once with independent budget and logs fallback (error) 15023ms
+   × loop routes cards to Jev once with independent budget and logs fallback (invalid) 15029ms
+   × loop routes cards to Jev once with independent budget and logs fallback (timeout) 15026ms
+   × shadow calls and records Jev but executes the existing brain's choice 15026ms
+ ❯ tests/v6-history-pack.test.ts (6 tests | 1 failed) 956ms
+     × builds through the production CLI from hash-frozen inputs and rejects changed bytes 909ms
+ ❯ tests/v6-combo-simulation.test.ts (6 tests | 1 failed) 608ms
+     × verifies exact raw bytes before evaluating a batch and rejects a changed source 591ms
+.....
+----------------------------------------------------------------------
+Ran 5 tests in 0.017s
+
+OK
+ ❯ tests/knowledge-catalog.test.ts (6 tests | 6 failed) 912ms
+     × keeps exact legacy bytes and reconstructs ordered common views with unknown fields 171ms
+     × rejects corrupt fragments and does not silently borrow other role files 134ms
+     × requires explicit foreign query, retains scope and support without aggregation 144ms
+     × is read-only and observes current source updates while marking stale catalogue 137ms
+     × refreshes a missing common compatible view when its catalogue changes 158ms
+     × runs fixed Python source-preservation and curator tests 166ms
+ ❯ tests/v6-draft.test.ts (18 tests | 1 failed) 157ms
+   × CLI accepts a frozen-context draft and rejects missing coverage without writes 139ms
+ ❯ tests/v6-combo-metrics.test.ts (2 tests | 2 failed) 703ms
+     × passes fixed-data tests for raw evidence, censoring, sampling and unknowns 440ms
+     × produces metrics accepted by the real build-core-v1 consumer contract 261ms
+stderr | tests/sandbox-entry.test.ts > Vite disables automatic dotenv loading for fixed-data tests in a live checkout
+failed to load config from /home/dw/Projects/agent-sts2/.worktrees/v6-knowledge-publish-r3-20261020-033408/agent/vitest.config.ts
+
+ ❯ tests/sandbox-entry.test.ts (2 tests | 1 failed) 66ms
+   × Vite disables automatic dotenv loading for fixed-data tests in a live checkout 62ms
+
+⎯⎯⎯⎯⎯⎯ Failed Tests 29 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/knowledge-catalog.test.ts > mechanical knowledge catalogue > keeps exact legacy bytes and reconstructs ordered common views with unknown fields
+Error: spawnSync python3 EPERM
+ ❯ build tests/knowledge-catalog.test.ts:23:23
+     21|     entries: [{ id: role + "-rule", scope: { character: role, asc: 10 …
+     22|   });
+     23|   const build = () => execFileSync("python3", [resolve("../knowledge/b…
+       |                       ^
+     24|   build();
+     25|   return { root, write, build, monster, moves };
+ ❯ fixture tests/knowledge-catalog.test.ts:24:3
+ ❯ tests/knowledge-catalog.test.ts:29:15
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/29]⎯
+
+ FAIL  tests/knowledge-catalog.test.ts > mechanical knowledge catalogue > rejects corrupt fragments and does not silently borrow other role files
+Error: spawnSync python3 EPERM
+ ❯ build tests/knowledge-catalog.test.ts:23:23
+     21|     entries: [{ id: role + "-rule", scope: { character: role, asc: 10 …
+     22|   });
+     23|   const build = () => execFileSync("python3", [resolve("../knowledge/b…
+       |                       ^
+     24|   build();
+     25|   return { root, write, build, monster, moves };
+ ❯ fixture tests/knowledge-catalog.test.ts:24:3
+ ❯ tests/knowledge-catalog.test.ts:40:15
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/29]⎯
+
+ FAIL  tests/knowledge-catalog.test.ts > mechanical knowledge catalogue > requires explicit foreign query, retains scope and support without aggregation
+Error: spawnSync python3 EPERM
+ ❯ build tests/knowledge-catalog.test.ts:23:23
+     21|     entries: [{ id: role + "-rule", scope: { character: role, asc: 10 …
+     22|   });
+     23|   const build = () => execFileSync("python3", [resolve("../knowledge/b…
+       |                       ^
+     24|   build();
+     25|   return { root, write, build, monster, moves };
+ ❯ fixture tests/knowledge-catalog.test.ts:24:3
+ ❯ tests/knowledge-catalog.test.ts:47:15
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/29]⎯
+
+ FAIL  tests/knowledge-catalog.test.ts > mechanical knowledge catalogue > is read-only and observes current source updates while marking stale catalogue
+Error: spawnSync python3 EPERM
+ ❯ build tests/knowledge-catalog.test.ts:23:23
+     21|     entries: [{ id: role + "-rule", scope: { character: role, asc: 10 …
+     22|   });
+     23|   const build = () => execFileSync("python3", [resolve("../knowledge/b…
+       |                       ^
+     24|   build();
+     25|   return { root, write, build, monster, moves };
+ ❯ fixture tests/knowledge-catalog.test.ts:24:3
+ ❯ tests/knowledge-catalog.test.ts:59:15
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/29]⎯
+
+ FAIL  tests/knowledge-catalog.test.ts > mechanical knowledge catalogue > refreshes a missing common compatible view when its catalogue changes
+Error: spawnSync python3 EPERM
+ ❯ build tests/knowledge-catalog.test.ts:23:23
+     21|     entries: [{ id: role + "-rule", scope: { character: role, asc: 10 …
+     22|   });
+     23|   const build = () => execFileSync("python3", [resolve("../knowledge/b…
+       |                       ^
+     24|   build();
+     25|   return { root, write, build, monster, moves };
+ ❯ fixture tests/knowledge-catalog.test.ts:24:3
+ ❯ tests/knowledge-catalog.test.ts:70:15
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/29]⎯
+
+ FAIL  tests/knowledge-catalog.test.ts > mechanical knowledge catalogue > runs fixed Python source-preservation and curator tests
+AssertionError: expected [Function] to not throw an error but 'Error: spawnSync python3 EPERM' was thrown
+
+- Expected:
+undefined
+
++ Received:
+"Error: spawnSync python3 EPERM"
+
+ ❯ tests/knowledge-catalog.test.ts:80:99
+     78|   });
+     79|   it("runs fixed Python source-preservation and curator tests", () => {
+     80|     expect(() => execFileSync("python3", [resolve("../knowledge/builde…
+       |                                                                                                   ^
+     81|   });
+     82| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/29]⎯
+
+ FAIL  tests/sandbox-entry.test.ts > Vite disables automatic dotenv loading for fixed-data tests in a live checkout
+Error: EROFS: read-only file system, open '/home/dw/Projects/agent-sts2/.worktrees/v6-knowledge-publish-r3-20261020-033408/agent/node_modules/.vite-temp/vitest.config.ts.timestamp-1792439316258-e7da851774b16.mjs'
+ ❯ loadConfigFromBundledFile ../../../agent/node_modules/vite/dist/node/chunks/node.js:37497:3
+ ❯ bundleAndLoadConfigFile ../../../agent/node_modules/vite/dist/node/chunks/node.js:37345:21
+ ❯ loadConfigFromFile ../../../agent/node_modules/vite/dist/node/chunks/node.js:37305:42
+ ❯ resolveConfig ../../../agent/node_modules/vite/dist/node/chunks/node.js:36906:22
+ ❯ tests/sandbox-entry.test.ts:7:18
+      5|
+      6| it("Vite disables automatic dotenv loading for fixed-data tests in a l…
+      7|   const config = await resolveConfig({ configFile: resolve("vitest.con…
+       |                  ^
+      8|   expect(config.envDir).toBe(false);
+      9| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[7/29]⎯
+
+ FAIL  tests/v6-card-pick.test.ts > loop routes cards to Jev once with independent budget and logs fallback (success)
+ FAIL  tests/v6-card-pick.test.ts > loop routes cards to Jev once with independent budget and logs fallback (error)
+ FAIL  tests/v6-card-pick.test.ts > loop routes cards to Jev once with independent budget and logs fallback (invalid)
+ FAIL  tests/v6-card-pick.test.ts > loop routes cards to Jev once with independent budget and logs fallback (timeout)
+Error: Test timed out in 15000ms.
+If this is a long-running test, pass a timeout value as the last argument or configure it globally with "testTimeout".
+ ❯ tests/v6-card-pick.test.ts:137:52
+    135|   expect(buildV6CardPick(env(raw), undefined, "/missing")).toBeNull();
+    136| });
+    137| it.each(["success", "error", "invalid", "timeout"])("loop routes cards…
+       |                                                    ^
+    138|   const { raw, dir } = fixture(), fake = new FakeDeepSeek(() => "skip"…
+    139|   const provider = { evaluate: vi.fn(async r => ({ ...table(), phase: …
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[8/29]⎯
+
+ FAIL  tests/v6-card-pick.test.ts > shadow calls and records Jev but executes the existing brain's choice
+Error: Test timed out in 15000ms.
+If this is a long-running test, pass a timeout value as the last argument or configure it globally with "testTimeout".
+ ❯ tests/v6-card-pick.test.ts:160:1
+    158|   if (mode === "success") expect(row).toMatchObject({ usage: { input_t…
+    159| });
+    160| it("shadow calls and records Jev but executes the existing brain's cho…
+       | ^
+    161|   const { raw, dir } = fixture("shadow", "ironclad"), fake = new FakeD…
+    162|   const ask = vi.fn(async () => ({ model: "fixture", answers: answer("…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[9/29]⎯
+
+ FAIL  tests/v6-combo-metrics.test.ts > offline combo metrics builder > passes fixed-data tests for raw evidence, censoring, sampling and unknowns
+AssertionError: expected [Function] to not throw an error but 'Error: spawnSync python3 EPERM' was thrown
+
+- Expected:
+undefined
+
++ Received:
+"Error: spawnSync python3 EPERM"
+
+ ❯ tests/v6-combo-metrics.test.ts:10:100
+      8| describe("offline combo metrics builder", () => {
+      9|   it("passes fixed-data tests for raw evidence, censoring, sampling an…
+     10|     expect(() => execFileSync("python3", [builderTests], { encoding: "…
+       |                                                                                                    ^
+     11|   });
+     12|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[10/29]⎯
+
+ FAIL  tests/v6-combo-metrics.test.ts > offline combo metrics builder > produces metrics accepted by the real build-core-v1 consumer contract
+Error: spawnSync python3 EPERM
+ ❯ tests/v6-combo-metrics.test.ts:14:41
+     12|
+     13|   it("produces metrics accepted by the real build-core-v1 consumer con…
+     14|     const metrics: unknown = JSON.parse(execFileSync("python3", [build…
+       |                                         ^
+     15|     const evidence = [{ run_id: "FIXTURE", floor: 48 }];
+     16|     const result = validateBuildCore({
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[11/29]⎯
+
+ FAIL  tests/v6-combo-simulation.test.ts > historical combo prerequisites > verifies exact raw bytes before evaluating a batch and rejects a changed source
+Error: spawnSync /home/dw/.local/node/bin/node EPERM
+ ❯ tests/v6-combo-simulation.test.ts:27:7
+     25|       const script = fileURLToPath(new URL("../../knowledge/builders/c…
+     26|       writeFileSync(input, JSON.stringify(payload));
+     27|       execFileSync(process.execPath, ["--import", "tsx", script, input…
+       |       ^
+     28|       expect(JSON.parse(readFileSync(output, "utf8"))).toMatchObject({…
+     29|       writeFileSync(sourcePath, Buffer.from(bytes.toString().replace("…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[12/29]⎯
+
+ FAIL  tests/v6-draft.test.ts > CLI accepts a frozen-context draft and rejects missing coverage without writes
+AssertionError: expected 1 to be +0 // Object.is equality
+
+- Expected
++ Received
+
+- 0
++ 1
+
+ ❯ tests/v6-draft.test.ts:55:45
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[13/29]⎯
+
+ FAIL  tests/v6-history-pack.test.ts > V6 run-start frozen history > builds through the production CLI from hash-frozen inputs and rejects changed bytes
+Error: spawnSync /home/dw/.local/node/bin/node EPERM
+ ❯ run tests/v6-history-pack.test.ts:98:34
+     96|     const dir = join(root, "characters/silent"); mkdirSync(dir, { recu…
+     97|     const path = join(dir, "v6-history.json"), cli = resolve("tools/v6…
+     98|     const run = (out: string) => execFileSync(process.execPath, ["--im…
+       |                                  ^
+     99|     run(path);
+    100|     expect(loadV6HistoryPack(root, "silent", { mode: "on" }).status).t…
+ ❯ tests/v6-history-pack.test.ts:99:5
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[14/29]⎯
+
+ FAIL  tests/v6-potions.test.ts > loop asks Jev separately with its timeout and records the result (success)
+ FAIL  tests/v6-potions.test.ts > loop asks Jev separately with its timeout and records the result (error)
+ FAIL  tests/v6-potions.test.ts > loop asks Jev separately with its timeout and records the result (invalid)
+Error: Test timed out in 15000ms.
+If this is a long-running test, pass a timeout value as the last argument or configure it globally with "testTimeout".
+ ❯ tests/v6-potions.test.ts:168:41
+    166|   expect(e.screenMemory.afterDiscard).toMatchObject({ via: "drink", sl…
+    167| });
+    168| it.each(["success", "error", "invalid"])("loop asks Jev separately wit…
+       |                                         ^
+    169|   active(); const dir = temp(), fake = new FakeDeepSeek(() => "o0");
+    170|   const ask = vi.fn(async (_state: unknown, _questions: unknown, timeo…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[15/29]⎯
+
+ FAIL  tests/v6-room.test.ts > local scripted loop dispatches one shop Jev choice and no brain request
+ FAIL  tests/v6-room.test.ts > local scripted loop dispatches one rest Jev choice and no brain request
+Error: Test timed out in 15000ms.
+If this is a long-running test, pass a timeout value as the last argument or configure it globally with "testTimeout".
+ ❯ tests/v6-room.test.ts:322:35
+    320|   expect(await withConstructionJevBudget("Jev_room", async () => "stil…
+    321| });
+    322| it.each(["shop", "rest"] as const)("local scripted loop dispatches one…
+       |                                   ^
+    323|   on(); const e = room(kind), deepseek = new FakeDeepSeek(() => { thro…
+    324|   const picked = kind === "shop" ? "buy_card0" : "o1:c8";
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[16/29]⎯
+
+ FAIL  tests/v6-room.test.ts > binds the shared production runtime by default for shop without a room override
+ FAIL  tests/v6-room.test.ts > binds the shared production runtime by default for rest without a room override
+Error: Test timed out in 15000ms.
+If this is a long-running test, pass a timeout value as the last argument or configure it globally with "testTimeout".
+ ❯ tests/v6-room.test.ts:332:35
+    330|   expect(ask).toHaveBeenCalledTimes(1); expect(provider).toHaveBeenCal…
+    331| });
+    332| it.each(["shop", "rest"] as const)("binds the shared production runtim…
+       |                                   ^
+    333|   on(); const e = room(kind), dir = fixtureDir(), picked = kind === "s…
+    334|   const create = vi.fn(situation => {
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[17/29]⎯
+
+ FAIL  tests/v6-room.test.ts > local scripted loop failure falls back once without brain or retries
+ FAIL  tests/v6-room.test.ts > local scripted loop invalid falls back once without brain or retries
+ FAIL  tests/v6-room.test.ts > local scripted loop timeout falls back once without brain or retries
+Error: Test timed out in 15000ms.
+If this is a long-running test, pass a timeout value as the last argument or configure it globally with "testTimeout".
+ ❯ tests/v6-room.test.ts:358:43
+    356|   expect(ask).toHaveBeenCalledTimes(1); expect(result.stats.jevCalls).…
+    357| });
+    358| it.each(["failure", "invalid", "timeout"])("local scripted loop %s fal…
+       |                                           ^
+    359|   on(); vi.stubEnv("V6_JEV_MS", "15"); const e = room("shop"), dir = f…
+    360|   const ask = vi.fn(async () => { if (mode === "failure") throw Error(…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[18/29]⎯
+
+ FAIL  tests/v6-room.test.ts > credits the upgrade follow-up to its actual jev source
+ FAIL  tests/v6-room.test.ts > credits the upgrade follow-up to its actual code-fallback source
+Error: Test timed out in 15000ms.
+If this is a long-running test, pass a timeout value as the last argument or configure it globally with "testTimeout".
+ ❯ tests/v6-room.test.ts:367:43
+    365|   expect(readFileSync(join(dir, "v6-build.jsonl"), "utf8")).toContain(…
+    366| });
+    367| it.each(["jev", "code-fallback"] as const)("credits the upgrade follow…
+       |                                           ^
+    368|   on(); const e = room("rest"), next = structuredClone(e.state.raw) as…
+    369|   next.screen = "CARD_SELECTION"; next.available_actions = ["save_and_…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[19/29]⎯
+
+⎯⎯⎯⎯⎯⎯ Unhandled Errors ⎯⎯⎯⎯⎯⎯
+
+Vitest caught 17 unhandled errors during the test run.
+This might cause false positive tests. Resolve unhandled errors to make sure your tests are not affected.
+
+⎯⎯⎯⎯⎯ Uncaught Exception ⎯⎯⎯⎯⎯
+Error: listen EPERM: operation not permitted 127.0.0.1
+ ❯ Server.setupListenHandle [as _listen2] node:net:1919:21
+ ❯ listenInCluster node:net:1998:12
+ ❯ node:net:2207:7
+ ❯ processTicksAndRejections node:internal/process/task_queues:89:21
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
+Serialized Error: { code: 'EPERM', errno: -1, syscall: 'listen', address: '127.0.0.1' }
+This error originated in "tests/v6-room.test.ts" test file. It doesn't mean the error was thrown inside the file itself, but while it was running.
+The latest test that might've caused the error is "local scripted loop dispatches one shop Jev choice and no brain request". It might mean one of the following:
+- The error was thrown, while Vitest was running this test.
+- If the error occurred after the test had been completed, this was the last documented test before it was thrown.
+
+⎯⎯⎯⎯⎯ Uncaught Exception ⎯⎯⎯⎯⎯
+Error: listen EPERM: operation not permitted 127.0.0.1
+ ❯ Server.setupListenHandle [as _listen2] node:net:1919:21
+ ❯ listenInCluster node:net:1998:12
+ ❯ node:net:2207:7
+ ❯ processTicksAndRejections node:internal/process/task_queues:89:21
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
+Serialized Error: { code: 'EPERM', errno: -1, syscall: 'listen', address: '127.0.0.1' }
+This error originated in "tests/v6-room.test.ts" test file. It doesn't mean the error was thrown inside the file itself, but while it was running.
+The latest test that might've caused the error is "local scripted loop dispatches one rest Jev choice and no brain request". It might mean one of the following:
+- The error was thrown, while Vitest was running this test.
+- If the error occurred after the test had been completed, this was the last documented test before it was thrown.
+
+⎯⎯⎯⎯⎯ Uncaught Exception ⎯⎯⎯⎯⎯
+Error: listen EPERM: operation not permitted 127.0.0.1
+ ❯ Server.setupListenHandle [as _listen2] node:net:1919:21
+ ❯ listenInCluster node:net:1998:12
+ ❯ node:net:2207:7
+ ❯ processTicksAndRejections node:internal/process/task_queues:89:21
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
+Serialized Error: { code: 'EPERM', errno: -1, syscall: 'listen', address: '127.0.0.1' }
+This error originated in "tests/v6-room.test.ts" test file. It doesn't mean the error was thrown inside the file itself, but while it was running.
+The latest test that might've caused the error is "binds the shared production runtime by default for shop without a room override". It might mean one of the following:
+- The error was thrown, while Vitest was running this test.
+- If the error occurred after the test had been completed, this was the last documented test before it was thrown.
+
+⎯⎯⎯⎯⎯ Uncaught Exception ⎯⎯⎯⎯⎯
+Error: listen EPERM: operation not permitted 127.0.0.1
+ ❯ Server.setupListenHandle [as _listen2] node:net:1919:21
+ ❯ listenInCluster node:net:1998:12
+ ❯ node:net:2207:7
+ ❯ processTicksAndRejections node:internal/process/task_queues:89:21
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
+Serialized Error: { code: 'EPERM', errno: -1, syscall: 'listen', address: '127.0.0.1' }
+This error originated in "tests/v6-room.test.ts" test file. It doesn't mean the error was thrown inside the file itself, but while it was running.
+The latest test that might've caused the error is "binds the shared production runtime by default for rest without a room override". It might mean one of the following:
+- The error was thrown, while Vitest was running this test.
+- If the error occurred after the test had been completed, this was the last documented test before it was thrown.
+
+⎯⎯⎯⎯⎯ Uncaught Exception ⎯⎯⎯⎯⎯
+Error: listen EPERM: operation not permitted 127.0.0.1
+ ❯ Server.setupListenHandle [as _listen2] node:net:1919:21
+ ❯ listenInCluster node:net:1998:12
+ ❯ node:net:2207:7
+ ❯ processTicksAndRejections node:internal/process/task_queues:89:21
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
+Serialized Error: { code: 'EPERM', errno: -1, syscall: 'listen', address: '127.0.0.1' }
+This error originated in "tests/v6-room.test.ts" test file. It doesn't mean the error was thrown inside the file itself, but while it was running.
+The latest test that might've caused the error is "local scripted loop failure falls back once without brain or retries". It might mean one of the following:
+- The error was thrown, while Vitest was running this test.
+- If the error occurred after the test had been completed, this was the last documented test before it was thrown.
+
+⎯⎯⎯⎯⎯ Uncaught Exception ⎯⎯⎯⎯⎯
+Error: listen EPERM: operation not permitted 127.0.0.1
+ ❯ Server.setupListenHandle [as _listen2] node:net:1919:21
+ ❯ listenInCluster node:net:1998:12
+ ❯ node:net:2207:7
+ ❯ processTicksAndRejections node:internal/process/task_queues:89:21
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
+Serialized Error: { code: 'EPERM', errno: -1, syscall: 'listen', address: '127.0.0.1' }
+This error originated in "tests/v6-room.test.ts" test file. It doesn't mean the error was thrown inside the file itself, but while it was running.
+The latest test that might've caused the error is "local scripted loop invalid falls back once without brain or retries". It might mean one of the following:
+- The error was thrown, while Vitest was running this test.
+- If the error occurred after the test had been completed, this was the last documented test before it was thrown.
+
+⎯⎯⎯⎯⎯ Uncaught Exception ⎯⎯⎯⎯⎯
+Error: listen EPERM: operation not permitted 127.0.0.1
+ ❯ Server.setupListenHandle [as _listen2] node:net:1919:21
+ ❯ listenInCluster node:net:1998:12
+ ❯ node:net:2207:7
+ ❯ processTicksAndRejections node:internal/process/task_queues:89:21
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
+Serialized Error: { code: 'EPERM', errno: -1, syscall: 'listen', address: '127.0.0.1' }
+This error originated in "tests/v6-room.test.ts" test file. It doesn't mean the error was thrown inside the file itself, but while it was running.
+The latest test that might've caused the error is "local scripted loop timeout falls back once without brain or retries". It might mean one of the following:
+- The error was thrown, while Vitest was running this test.
+- If the error occurred after the test had been completed, this was the last documented test before it was thrown.
+
+⎯⎯⎯⎯⎯ Uncaught Exception ⎯⎯⎯⎯⎯
+Error: listen EPERM: operation not permitted 127.0.0.1
+ ❯ Server.setupListenHandle [as _listen2] node:net:1919:21
+ ❯ listenInCluster node:net:1998:12
+ ❯ node:net:2207:7
+ ❯ processTicksAndRejections node:internal/process/task_queues:89:21
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
+Serialized Error: { code: 'EPERM', errno: -1, syscall: 'listen', address: '127.0.0.1' }
+This error originated in "tests/v6-room.test.ts" test file. It doesn't mean the error was thrown inside the file itself, but while it was running.
+The latest test that might've caused the error is "credits the upgrade follow-up to its actual jev source". It might mean one of the following:
+- The error was thrown, while Vitest was running this test.
+- If the error occurred after the test had been completed, this was the last documented test before it was thrown.
+
+⎯⎯⎯⎯⎯ Uncaught Exception ⎯⎯⎯⎯⎯
+Error: listen EPERM: operation not permitted 127.0.0.1
+ ❯ Server.setupListenHandle [as _listen2] node:net:1919:21
+ ❯ listenInCluster node:net:1998:12
+ ❯ node:net:2207:7
+ ❯ processTicksAndRejections node:internal/process/task_queues:89:21
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
+Serialized Error: { code: 'EPERM', errno: -1, syscall: 'listen', address: '127.0.0.1' }
+This error originated in "tests/v6-room.test.ts" test file. It doesn't mean the error was thrown inside the file itself, but while it was running.
+The latest test that might've caused the error is "credits the upgrade follow-up to its actual code-fallback source". It might mean one of the following:
+- The error was thrown, while Vitest was running this test.
+- If the error occurred after the test had been completed, this was the last documented test before it was thrown.
+
+⎯⎯⎯⎯⎯ Uncaught Exception ⎯⎯⎯⎯⎯
+Error: listen EPERM: operation not permitted 127.0.0.1
+ ❯ Server.setupListenHandle [as _listen2] node:net:1919:21
+ ❯ listenInCluster node:net:1998:12
+ ❯ node:net:2207:7
+ ❯ processTicksAndRejections node:internal/process/task_queues:89:21
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
+Serialized Error: { code: 'EPERM', errno: -1, syscall: 'listen', address: '127.0.0.1' }
+This error originated in "tests/v6-potions.test.ts" test file. It doesn't mean the error was thrown inside the file itself, but while it was running.
+The latest test that might've caused the error is "loop asks Jev separately with its timeout and records the result (success)". It might mean one of the following:
+- The error was thrown, while Vitest was running this test.
+- If the error occurred after the test had been completed, this was the last documented test before it was thrown.
+
+⎯⎯⎯⎯⎯ Uncaught Exception ⎯⎯⎯⎯⎯
+Error: listen EPERM: operation not permitted 127.0.0.1
+ ❯ Server.setupListenHandle [as _listen2] node:net:1919:21
+ ❯ listenInCluster node:net:1998:12
+ ❯ node:net:2207:7
+ ❯ processTicksAndRejections node:internal/process/task_queues:89:21
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
+Serialized Error: { code: 'EPERM', errno: -1, syscall: 'listen', address: '127.0.0.1' }
+This error originated in "tests/v6-potions.test.ts" test file. It doesn't mean the error was thrown inside the file itself, but while it was running.
+The latest test that might've caused the error is "loop asks Jev separately with its timeout and records the result (error)". It might mean one of the following:
+- The error was thrown, while Vitest was running this test.
+- If the error occurred after the test had been completed, this was the last documented test before it was thrown.
+
+⎯⎯⎯⎯⎯ Uncaught Exception ⎯⎯⎯⎯⎯
+Error: listen EPERM: operation not permitted 127.0.0.1
+ ❯ Server.setupListenHandle [as _listen2] node:net:1919:21
+ ❯ listenInCluster node:net:1998:12
+ ❯ node:net:2207:7
+ ❯ processTicksAndRejections node:internal/process/task_queues:89:21
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
+Serialized Error: { code: 'EPERM', errno: -1, syscall: 'listen', address: '127.0.0.1' }
+This error originated in "tests/v6-potions.test.ts" test file. It doesn't mean the error was thrown inside the file itself, but while it was running.
+The latest test that might've caused the error is "loop asks Jev separately with its timeout and records the result (invalid)". It might mean one of the following:
+- The error was thrown, while Vitest was running this test.
+- If the error occurred after the test had been completed, this was the last documented test before it was thrown.
+
+⎯⎯⎯⎯⎯ Uncaught Exception ⎯⎯⎯⎯⎯
+Error: listen EPERM: operation not permitted 127.0.0.1
+ ❯ Server.setupListenHandle [as _listen2] node:net:1919:21
+ ❯ listenInCluster node:net:1998:12
+ ❯ node:net:2207:7
+ ❯ processTicksAndRejections node:internal/process/task_queues:89:21
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
+Serialized Error: { code: 'EPERM', errno: -1, syscall: 'listen', address: '127.0.0.1' }
+This error originated in "tests/v6-card-pick.test.ts" test file. It doesn't mean the error was thrown inside the file itself, but while it was running.
+The latest test that might've caused the error is "loop routes cards to Jev once with independent budget and logs fallback (success)". It might mean one of the following:
+- The error was thrown, while Vitest was running this test.
+- If the error occurred after the test had been completed, this was the last documented test before it was thrown.
+
+⎯⎯⎯⎯⎯ Uncaught Exception ⎯⎯⎯⎯⎯
+Error: listen EPERM: operation not permitted 127.0.0.1
+ ❯ Server.setupListenHandle [as _listen2] node:net:1919:21
+ ❯ listenInCluster node:net:1998:12
+ ❯ node:net:2207:7
+ ❯ processTicksAndRejections node:internal/process/task_queues:89:21
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
+Serialized Error: { code: 'EPERM', errno: -1, syscall: 'listen', address: '127.0.0.1' }
+This error originated in "tests/v6-card-pick.test.ts" test file. It doesn't mean the error was thrown inside the file itself, but while it was running.
+The latest test that might've caused the error is "loop routes cards to Jev once with independent budget and logs fallback (error)". It might mean one of the following:
+- The error was thrown, while Vitest was running this test.
+- If the error occurred after the test had been completed, this was the last documented test before it was thrown.
+
+⎯⎯⎯⎯⎯ Uncaught Exception ⎯⎯⎯⎯⎯
+Error: listen EPERM: operation not permitted 127.0.0.1
+ ❯ Server.setupListenHandle [as _listen2] node:net:1919:21
+ ❯ listenInCluster node:net:1998:12
+ ❯ node:net:2207:7
+ ❯ processTicksAndRejections node:internal/process/task_queues:89:21
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
+Serialized Error: { code: 'EPERM', errno: -1, syscall: 'listen', address: '127.0.0.1' }
+This error originated in "tests/v6-card-pick.test.ts" test file. It doesn't mean the error was thrown inside the file itself, but while it was running.
+The latest test that might've caused the error is "loop routes cards to Jev once with independent budget and logs fallback (invalid)". It might mean one of the following:
+- The error was thrown, while Vitest was running this test.
+- If the error occurred after the test had been completed, this was the last documented test before it was thrown.
+
+⎯⎯⎯⎯⎯ Uncaught Exception ⎯⎯⎯⎯⎯
+Error: listen EPERM: operation not permitted 127.0.0.1
+ ❯ Server.setupListenHandle [as _listen2] node:net:1919:21
+ ❯ listenInCluster node:net:1998:12
+ ❯ node:net:2207:7
+ ❯ processTicksAndRejections node:internal/process/task_queues:89:21
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
+Serialized Error: { code: 'EPERM', errno: -1, syscall: 'listen', address: '127.0.0.1' }
+This error originated in "tests/v6-card-pick.test.ts" test file. It doesn't mean the error was thrown inside the file itself, but while it was running.
+The latest test that might've caused the error is "loop routes cards to Jev once with independent budget and logs fallback (timeout)". It might mean one of the following:
+- The error was thrown, while Vitest was running this test.
+- If the error occurred after the test had been completed, this was the last documented test before it was thrown.
+
+⎯⎯⎯⎯⎯ Uncaught Exception ⎯⎯⎯⎯⎯
+Error: listen EPERM: operation not permitted 127.0.0.1
+ ❯ Server.setupListenHandle [as _listen2] node:net:1919:21
+ ❯ listenInCluster node:net:1998:12
+ ❯ node:net:2207:7
+ ❯ processTicksAndRejections node:internal/process/task_queues:89:21
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
+Serialized Error: { code: 'EPERM', errno: -1, syscall: 'listen', address: '127.0.0.1' }
+This error originated in "tests/v6-card-pick.test.ts" test file. It doesn't mean the error was thrown inside the file itself, but while it was running.
+The latest test that might've caused the error is "shadow calls and records Jev but executes the existing brain's choice". It might mean one of the following:
+- The error was thrown, while Vitest was running this test.
+- If the error occurred after the test had been completed, this was the last documented test before it was thrown.
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
+
+
+ Test Files  9 failed | 530 passed (539)
+      Tests  29 failed | 4816 passed (4845)
+     Errors  17 errors
+   Start at  03:40:37
+   Duration  495.16s (transform 24.35s, setup 46.73s, import 143.45s, tests 1665.42s, environment 83ms)
+

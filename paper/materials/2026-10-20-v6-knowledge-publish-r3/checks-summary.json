@@ -1,0 +1,75 @@
+{
+  "tsc": {
+    "exit_code": 0,
+    "evidence": "test-sandbox.sh reached vitest under set -eu twice",
+    "command": "npx tsc -p tsconfig.json --noEmit"
+  },
+  "sandbox_initial": {
+    "command": [
+      "bash",
+      "tools/test-sandbox.sh"
+    ],
+    "cwd": "/home/dw/Projects/agent-sts2/.worktrees/v6-knowledge-publish-r3-20261020-033408/agent",
+    "exit_code": 1,
+    "seconds": 2.054253339767456,
+    "stdout": "/home/dw/Projects/agent-sts2/learner/runs/20261020-033447-857c04bf-f11f-4df8-9993-0f829cd36869-v6-knowledge-publish/test-sandbox.stdout",
+    "sha256": "e1859989a23aaedae54fecdedcd846085382801863dc03baf6e68aa44208d201",
+    "scope": "tsc + existing sandbox exclusions; full host follow-up required"
+  },
+  "sandbox_runner": {
+    "command": [
+      "bash",
+      "tools/test-sandbox.sh",
+      "--configLoader",
+      "runner",
+      "--no-cache"
+    ],
+    "cwd": "/home/dw/Projects/agent-sts2/.worktrees/v6-knowledge-publish-r3-20261020-033408/agent",
+    "exit_code": 1,
+    "seconds": 497.9569251537323,
+    "stdout": "/home/dw/Projects/agent-sts2/learner/runs/20261020-033447-857c04bf-f11f-4df8-9993-0f829cd36869-v6-knowledge-publish/test-sandbox-runner.stdout",
+    "sha256": "4a6b62813abc2537469e124bc59aa6ef3298329c4dc917558cfcd1c6828cc181",
+    "scope": "tsc + unchanged sandbox exclusions, configLoader runner and no-cache avoid read-only Vite cache; host full required"
+  },
+  "vitest_summary": {
+    "files_failed": 9,
+    "files_passed": 530,
+    "tests_failed": 29,
+    "tests_passed": 4816,
+    "unhandled_errors": 17,
+    "exit_code": 1
+  },
+  "failures": {
+    "known_environment": [
+      "spawnSync python3/node EPERM",
+      "listen 127.0.0.1 EPERM and associated local loop timeouts",
+      "Vite nested config cache EROFS"
+    ],
+    "unresolved": [
+      "v6-draft CLI subprocess exit1 in restricted sandbox; standalone exact frozen CLI exit0"
+    ],
+    "paths_test": {
+      "standalone_followup": {
+        "command": [
+          "npx",
+          "vitest",
+          "run",
+          "tests/paths.test.ts",
+          "--pool=forks",
+          "--maxWorkers=1",
+          "--configLoader",
+          "runner",
+          "--no-cache"
+        ],
+        "cwd": "/home/dw/Projects/agent-sts2/.worktrees/v6-knowledge-publish-r3-20261020-033408/agent",
+        "exit_code": 0,
+        "sha256": "bda94999c2a203f8f505d6ef818a21eff885af3aa98e517e55c3c37abc83c771",
+        "reason": "Original sandbox script stopped before its separate paths check; run that unchanged fixed suite explicitly."
+      },
+      "tests": 11,
+      "status": "passed"
+    },
+    "excluded_files": "unchanged original tools/test-sandbox.sh list",
+    "full_host": "pending; no fake green"
+  }
+}
