@@ -1,0 +1,35 @@
+{
+  "at": "2026-10-19T21:09:07.741113+08:00",
+  "head": "5483cec4b978f2a5fddf1e45667550dc35e78f9d",
+  "checks": [
+    {
+      "name": "tsc",
+      "argv": [
+        "nice",
+        "-n",
+        "19",
+        "npx",
+        "tsc",
+        "-p",
+        "tsconfig.json",
+        "--noEmit"
+      ],
+      "exit_code": 0,
+      "seconds": 1.719
+    },
+    {
+      "name": "vitest",
+      "argv": [
+        "nice",
+        "-n",
+        "19",
+        "npx",
+        "vitest",
+        "run",
+        "--maxWorkers=2"
+      ],
+      "exit_code": 0,
+      "seconds": 836.704
+    }
+  ]
+}
