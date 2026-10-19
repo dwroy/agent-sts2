@@ -99,3 +99,9 @@ Roy：“但是目前watcher还在负责代码研发，需要调整到xhigh吗�
 - Claude 在 watcher 完成 W2、W3 未开始的停点，通过 herdr 在原 Codex 会话中用 /model 选 gpt-6.1-sol Extra high 并选“仅本会话”（不写共用配置）；界面回显 “Model changed to gpt-6.1-sol xhigh for this session only”，状态栏为 “GPT-6.1-Sol xhigh fast”。fast 服务档按 Roy 指示保留。实际生效以下一轮原生 turn_context 为准。理由：W3–W6 为核心算法与决策路由，统计逻辑错误不一定被测试发现却会直接进入 Jev 题面；codex1 本周额度已用 10%。V6 开发结束后回到 high。
 - 学习者：在跑的 v6-reflex-distill 保持 high 跑完；其续批与正式方向卡任务按困难专项用 xhigh。
 - 9.1 批次（约 40 分钟结束，覆盖 372 局、244 条经验）四个方向三个检查点理想牌组均为空，学习者认为证据不足、不为格式补造，并提出 5 条异议。为加快进度，Claude 在计划 3.2 节加入过渡默认补齐来源“历史实际补齐”（按模板归类的历史局在对应层段的实际加牌/升级/删牌），来源可插拔，Roy 可改。
+
+## 10. 续：并行开发（2026-10-19 17:33:28）
+
+Roy：“你看看还有任务可以并行吗？ 可以的话也起codex加快我们的开发任务吧”
+
+W1 已定义模块间格式，W4、W6、W8 可按格式和固定数据先行开发，与 W3 并行；W5 需 W3、W4，W7 需 W5、W6，暂不并行。新开两个 herdr Codex 会话（codex1，gpt-6.1-sol xhigh）：`v6-w4w6`（W4 + W6，两者都改大脑答案与药水路由，合在一个会话避免冲突）、`v6-w8`（W8）。watcher 继续 W3 并做集成核验。分工与协作规则见计划第 9 节“并行开发安排”。中断的 Silent Boss 校准是否恢复仍待 Roy 决定。

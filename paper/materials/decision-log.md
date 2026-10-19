@@ -4739,3 +4739,5 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
 - 2026-10-19 17:16:33 CST [Codex/V6-9.1验收停点] 方向经验批次17:12:16正常退出0；独立核423冻结输入、110产物/28回报引用SHA，372局/244正式经验精确覆盖及原文保持、17处原日志范围，正式13文件不变、无学习者提交。4方向pending草稿理想牌组/排序仍未知，4局部reflex候选n1，无正式发布/消费者读回；ledger0520–0523实际observed，5项异议原文经既有程序送两收件箱、通知0baef634d02e1ff85843c10a，watcher/Roy确认pending，不代填。来源/结构核验不替代全量因果复算；详paper/materials/2026-10-19-v6-w2/direction-verification.md。按学习批次有结果即停下向Claude回报，W3未启动，小脑原任务继续但不新增调度，等待Claude接续指派。
 
 - 2026-10-19 17:31:22 CST [Claude/Roy，仅文档] Roy 指示 watcher 切 xhigh、保留 fast 档：Claude 经 herdr 在原会话 /model 选 gpt-6.1-sol xhigh 仅本会话（未写共用配置），界面回显已切换，实际生效待下一轮原生 turn_context 核实；理由为 W3–W6 是核心算法与决策路由，codex1 本周额度已用 10%；V6 开发结束回 high。学习者：在跑的 v6-reflex-distill 保持 high，续批与正式方向卡按困难专项用 xhigh。9.1 理想牌组全空，docs/v6-plan.md 3.2 增加过渡默认补齐来源“历史实际补齐”（按模板归类的历史局在对应层段的实际变动，可插拔，Roy 可改）。
+
+- 2026-10-19 17:33:28 CST [Claude/Roy，仅文档] Roy 要求并行加速 V6：新开 herdr Codex 会话 v6-w4w6（W4 大脑方向条目与触发 + W6 Jev 选药）和 v6-w8（W8 出牌条目与小脑记忆接入），codex1、gpt-6.1-sol xhigh，按 W1 格式与固定数据先行开发，各自工作树、变基后跑 tsc/vitest/gitleaks 再合入 main；watcher 继续 W3 并做集成核验；W5、W7 按依赖后续开始。见 docs/v6-plan.md 第 9 节并行开发安排。
