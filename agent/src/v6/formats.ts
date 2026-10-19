@@ -1,4 +1,5 @@
-import { array, boolean, custom, enumeration, id, literal, nullable, number, object, optional, record, refine, text, validate, type Infer, type Result } from "./schema.js";
+import { array, boolean, custom, enumeration, id, literal, nullable, number, object, optional, plain, record, refine, safeKey, text, validate, type Infer, type Result } from "./schema.js";
+import type { JsonValue } from "../core/util/json.js";
 import { predicateSchema } from "./predicate.js";
 
 const probability = number(0, 1);
@@ -29,7 +30,7 @@ const directionWeightsSchema = object({
 });
 export type DirectionWeights = Infer<typeof directionWeightsSchema>;
 export interface DirectionContext {
-  /** All catalog directions, each with the card IDs that appear in that direction card. */
+  /** All catalog directions, each with the card IDs in its build core or transition adapter. */
   catalog: Readonly<Record<string, readonly string[]>>;
   appearedCards: ReadonlySet<string>;
   potionIds: ReadonlySet<string>;
@@ -55,6 +56,19 @@ export function validateDirectionWeights(v: unknown, context: DirectionContext):
 const paired = object({ mean: number(-1, 1), se: number(0, 1), n: positiveCount });
 const estimate = object({ value: probability, se: number(0, 1), n: positiveCount });
 const turnEstimate = object({ value: number(0, 10000), se: number(0, 10000), n: positiveCount });
+// Opaque provider metric snapshots retain sampling strata and evidence without inventing a metric model.
+const metricSnapshot = custom<JsonValue>((value, path, issues) => {
+  let nodes = 0;
+  const walk = (v: unknown, depth: number): boolean => {
+    if (++nodes > 20000 || depth > 16) return false;
+    if (v === null || typeof v === "boolean") return true;
+    if (typeof v === "number") return Number.isFinite(v);
+    if (typeof v === "string") return v.length <= 4000;
+    if (Array.isArray(v)) return v.length <= 1000 && v.every(x => walk(x, depth + 1));
+    return plain(v) && Object.keys(v).length <= 1000 && Object.entries(v).every(([k, x]) => safeKey(k) && walk(x, depth + 1));
+  };
+  if (!walk(value, 0)) issues.push(`${path}: bounded JSON metric snapshot required`);
+});
 export const projectionEntrySchema = object({
   schema: literal("projection-entry-v1"), option_id: id, direction_id: id, target_id: id,
   win: nullable(estimate), paired_delta: nullable(paired), losing_boss_hp_fraction: nullable(estimate),
@@ -66,12 +80,21 @@ export const projectionEntrySchema = object({
   delta_tier: enumeration("much_better", "better", "same", "worse", "much_worse", "unknown"),
   direction_role: enumeration("core", "support", "neutral", "conflict", "core_of_other", "unknown"),
   trust: enumeration("trusted", "low_optimistic", "low_pessimistic", "unknown"), reflex_ids: ids,
+  // Optional additions keep the original direction-only contract byte-compatible.
+  combo_id: optional(id), combo_source: optional(enumeration("build-core-v1", "construction-transition", "brain")),
+  win_complete: optional(nullable(estimate)), win_incomplete: optional(nullable(estimate)),
+  incomplete_source: optional(enumeration("empirical", "unknown")), expected_win: optional(nullable(probability)),
+  direction_value: optional(nullable(probability)), combo_metrics: optional(nullable(metricSnapshot)),
 });
 export type ProjectionEntry = Infer<typeof projectionEntrySchema>;
 export function validateProjectionEntry(v: unknown): Result<ProjectionEntry> {
   return validate(refine(projectionEntrySchema, (entry, e) => {
     if (entry.win === null && entry.win_tier !== "unknown") e.push("win_tier: missing estimate must remain unknown");
     if (entry.paired_delta === null && entry.delta_tier !== "unknown") e.push("delta_tier: missing paired estimate must remain unknown");
+    if (entry.combo_id === undefined && [entry.combo_source, entry.win_complete, entry.win_incomplete, entry.incomplete_source, entry.expected_win, entry.combo_metrics].some(v => v !== undefined)) e.push("combo_id: required for combo measurements");
+    if (entry.combo_id !== undefined && entry.combo_source === undefined) e.push("combo_source: required for a combo row");
+    if (entry.win_incomplete != null && entry.incomplete_source !== "empirical") e.push("win_incomplete: needs empirical source");
+    if (entry.expected_win != null && (entry.availability.take === null || entry.win_complete == null || entry.win_incomplete == null)) e.push("expected_win: missing completion or conditional win estimates");
   }), v);
 }
 

@@ -13,7 +13,7 @@ import { actStartMap, mapFromState, makeRoutePlan, routeCosts } from "../hand/sc
 import { routeIds, routeView } from "../sim/route-map.js";
 import { v6Config } from "./config.js";
 import { loadV6Knowledge } from "./knowledge.js";
-import { directionContext, directionSummaries, directionTask, type DirectionSummary } from "./direction-plan.js";
+import { directionContext, directionSummaries, directionTask, directionCombos, type DirectionSummary } from "./direction-plan.js";
 import { validateDirectionWeights, validateProjectionEntry, type Character } from "./formats.js";
 import { detectReplan, freshReplanState, reserveReplan, type ReplanState, type TriggerResult } from "./replan-triggers.js";
 import { V6BuildLog } from "./log.js";
@@ -27,8 +27,9 @@ export function v6Directions(env: DecisionEnv, dir = KNOWLEDGE_DIR): DirectionSu
   const knowledge = loadV6Knowledge(dir, character);
   const construction = loadConstructionData(character, dir);
   return directionSummaries(character, env.state.run?.ascension ?? 0,
-    knowledge.directions.status === "loaded" ? knowledge.directions.value : [], construction?.templates ?? [],
-    construction ? loadConstructionSupport(character, construction.templates, dir) : null);
+    knowledge.cores.status === "loaded" ? knowledge.cores.value : [], construction?.templates ?? [],
+    construction ? loadConstructionSupport(character, construction.templates, dir) : null)
+    .map(s => ({ ...s, combos: directionCombos(s, toJsonValue(env.screenMemory.runPlan?.runId === str(env.state.raw["run_id"]) ? env.screenMemory.runPlan.v6 : undefined)) }));
 }
 export function v6DirectionActive(env: DecisionEnv): boolean { return v6Config().mode === "on" && v6Directions(env).length > 0; }
 
@@ -76,6 +77,7 @@ export async function ensureDirectionPlan(env: DecisionEnv, brain: Pick<Brain, "
   const { state, screenMemory } = env, run = str(state.raw["run_id"]);
   if (!run) return null;
   if (!screenMemory.runPlan || screenMemory.runPlan.runId !== run) screenMemory.runPlan = loadRunPlan(logFile, run);
+  for (const s of summaries) s.combos = directionCombos(s, toJsonValue(screenMemory.runPlan?.v6));
   const m = memory(env, logFile), raw = asRecord(state.run?.raw), before = JSON.stringify(m);
   const cards = deckEntries(state, env.knowledge).map(c => c.card_id);
   const offers = [...asArray(asRecord(state.raw["reward"])["card_options"]), ...asArray(asRecord(state.raw["selection"])["cards"])]
@@ -83,21 +85,23 @@ export async function ensureDirectionPlan(env: DecisionEnv, brain: Pick<Brain, "
   m.appearedCards = [...new Set([...m.appearedCards, ...cards, ...offers])];
   const relics = asArray(raw["relics"]).map(c => str(asRecord(c)["relic_id"])).filter(Boolean);
   const provided = env.v6DirectionEvaluation;
-  const validEntries = (provided?.entries ?? []).filter(e => validateProjectionEntry(e).ok && summaries.some(s => s.id === e.direction_id));
-  const targets = validEntries.length ? [...new Set(validEntries.map(e => e.target_id))] : [str(raw["boss_id"]) || "unknown_boss", "joint"];
-  const entries = [...validEntries, ...summaries.flatMap(s => targets.filter(target => !validEntries.some(e => e.direction_id === s.id && e.target_id === target)).map(target => ({
-    schema: "projection-entry-v1" as const, option_id: "current", direction_id: s.id, target_id: target,
+  const validEntries = (provided?.entries ?? []).filter(e => validateProjectionEntry(e).ok && summaries.some(s => s.id === e.direction_id
+    && (e.combo_id === undefined || s.combos.some(c => c.id === e.combo_id && c.source === e.combo_source))));
+  const targets = [...new Set([str(raw["boss_id"]) || "unknown_boss", "joint", ...validEntries.map(e => e.target_id)])];
+  const entries = [...validEntries, ...summaries.flatMap(s => s.combos.flatMap(c => targets.filter(target => !validEntries.some(e => e.direction_id === s.id && e.combo_id === c.id && e.target_id === target)).map(target => ({
+    schema: "projection-entry-v1" as const, option_id: "current", direction_id: s.id, target_id: target, combo_id: c.id, combo_source: c.source,
+    win_complete: null, win_incomplete: null, incomplete_source: "unknown" as const, expected_win: null, direction_value: null,
     win: null, paired_delta: null, losing_boss_hp_fraction: null, winning_player_hp_fraction: null, turns: null,
     joint_win: null, joint_paired_delta: null, availability: { take: null, skip: null }, weighted_current_boss_delta: null,
     weighted_joint_delta: null, deck_count_change: null, core_first_cast_turn: null, win_tier: "unknown" as const,
     delta_tier: "unknown" as const, direction_role: "unknown" as const, trust: "unknown" as const, reflex_ids: [],
-  })))];
+  }))))];
   const evaluation = { ...provided, id: provided?.id ?? JSON.stringify([cards, relics, actOf(state)]), entries,
     consecutiveJevFallbacks: Math.max(provided?.consecutiveJevFallbacks ?? 0, screenMemory.v6JevFallbackRun === run ? screenMemory.v6JevFallbacks ?? 0 : 0),
     acquiredComponentIds: [...(provided?.acquiredComponentIds ?? []), ...(m.observed ? relics.filter(id => !m.relics.includes(id)) : [])] };
   m.relics = relics;
   m.observed = true;
-  const requirements = new Set(summaries.flatMap(s => asArray(s.requirements).flatMap(r => asArray(asRecord(r)["any"]).map(c => str(asRecord(c)["id"])))));
+  const requirements = new Set(summaries.flatMap(s => s.combos.flatMap(c => asArray(c.requirements)).flatMap(r => asArray(asRecord(r)["any"]).map(c => str(asRecord(c)["id"])))));
   const act = actOf(state), floor = state.run?.floor ?? 0;
   // Non-combat turn identity: room/floor, not polls or animations within it.
   const turnKey = `${run}:${act}:${floor}:${state.turn ?? "room"}`;

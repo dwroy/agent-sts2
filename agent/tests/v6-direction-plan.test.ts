@@ -1,12 +1,13 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
-import { directionTask, directionPlanSpec, directionSummaries } from "../src/v6/direction-plan.js";
+import { directionTask, directionPlanSpec, directionSummaries, directionCombos } from "../src/v6/direction-plan.js";
 import { detectReplan, freshReplanState, reserveReplan, type DirectionEvaluation } from "../src/v6/replan-triggers.js";
 import { routeV6CardDecision } from "../src/v6/card-routing.js";
 import { runPlanSpec } from "../src/brain/specs.js";
 import { validateDirectionWeights, validateProjectionEntry } from "../src/v6/formats.js";
-import { direction, directionContext, projection, weights } from "./v6-fixtures.js";
+import { directionContext, projection, weights } from "./v6-fixtures.js";
 import { v6Config } from "../src/v6/config.js";
 import { ask, board, decide, env, setupOneshotTests } from "./oneshot-support.js";
+import { coreFixture, comboProjection } from "./v6-direction-core-fixtures.js";
 setupOneshotTests();
 afterEach(() => vi.unstubAllEnvs());
 const parsedWeights = () => { const r = validateDirectionWeights(weights, directionContext); if (!r.ok) throw Error(r.issues.join()); return r.value; };
@@ -51,8 +52,8 @@ describe("direction replanning", () => {
 });
 
 it("uses the W1 validator for catalog, sum, overrides, potions, checkpoint and route", () => {
-  const payload = directionTask({ summaries: [{ id: "TEST_A", name: "A", source: "construction-transition", components: ["TEST_CARD"], requirements: [], support: [], details: {} },
-    { id: "TEST_B", name: "B", source: "construction-transition", components: [], requirements: [], support: [], details: {} }], entries: [p()], appearedCards: ["SEEN_CARD"], potionIds: ["TEST_POTION"], floor: 8, current: {} });
+  const payload = directionTask({ summaries: [{ id: "TEST_A", name: "A", source: "construction-transition", components: ["TEST_CARD"], requirements: [], support: [], details: {}, combos: [] },
+    { id: "TEST_B", name: "B", source: "construction-transition", components: [], requirements: [], support: [], details: {}, combos: [] }], entries: [p()], appearedCards: ["SEEN_CARD"], potionIds: ["TEST_POTION"], floor: 8, current: {} });
   const spec = runPlanSpec("run-plan", payload);
   expect(spec.validate(weights)).toEqual([]);
   for (const bad of [{ direction_weights: { TEST_A: 1 } }, { direction_weights: { TEST_A: .2, TEST_B: .2 } },
@@ -64,14 +65,53 @@ it("uses the W1 validator for catalog, sum, overrides, potions, checkpoint and r
   expect(directionPlanSpec({})).toBeNull();
 });
 
-it("does not turn transitional support into a core or cross character/ascension", () => {
-  const card = structuredClone(direction); const parsed = (awaitImportDirection(card));
-  expect(directionSummaries("ironclad", 0, [parsed], [], null)).toEqual([]);
-  expect(directionSummaries("silent", 1, [parsed], [], null)).toEqual([]);
-  expect(directionSummaries("silent", 0, [parsed], [], null)[0]?.source).toBe("direction-card-v1");
+it("reads multiple core combos, scopes metrics, and carries provider evaluations without collapsing them", () => {
+  const core = coreFixture();
+  expect(directionSummaries("ironclad", 0, [core], [], null)).toEqual([]);
+  expect(directionSummaries("silent", 2, [core], [], null)).toEqual([]);
+  const summaries = directionSummaries("silent", 0, [core], [], null);
+  expect(summaries[0]?.source).toBe("build-core-v1");
+  expect(summaries[0]?.combos).toHaveLength(2);
+  expect(summaries[0]?.combos[0]?.metrics).toEqual([core.combos[0]!.metrics[0]]);
+  const entry = comboProjection();
+  const payload = directionTask({ summaries, entries: [entry], appearedCards: [], potionIds: [], floor: 8, current: {}, previous: { ideal_overrides: { TEST_A: ["TEST_CARD"] } } });
+  const rows = payload["build_cores"] as { combos: { source: string; metrics: unknown; evaluations: unknown[] }[] }[];
+  expect(payload).not.toHaveProperty("direction_cards");
+  expect(payload["direction_evaluation"]).toEqual([entry]);
+  expect(rows[0]?.combos).toHaveLength(3);
+  expect(rows[0]?.combos[0]?.evaluations).toEqual([expect.objectContaining({ availability: entry.availability, win_complete: entry.win_complete,
+    win_incomplete: entry.win_incomplete, expected_win: .56, metrics: entry.combo_metrics, incomplete_source: "empirical" })]);
+  expect(rows[0]?.combos[1]?.evaluations).toEqual([]);
+  expect(rows[0]?.combos[2]).toMatchObject({ source: "brain", metrics: null });
+  const missing = directionTask({ summaries, entries: [{ ...entry, combo_metrics: null }], appearedCards: [], potionIds: [], floor: 8, current: {} });
+  expect((missing["build_cores"] as typeof rows)[0]?.combos[0]?.evaluations).toEqual([expect.objectContaining({ metrics: null })]);
+  const withBrain = { ...summaries[0]!, combos: directionCombos(summaries[0]!, { ideal_overrides: { TEST_A: ["TEST_CARD"] } }) };
+  expect(directionCombos(withBrain, { ideal_overrides: { TEST_A: [] } })).toHaveLength(2);
+  expect(runPlanSpec("run-plan", payload).schema.properties?.direction_weights?.required).toEqual(["TEST_A"]);
 });
-import { validateDirectionCard } from "../src/v6/formats.js";
-function awaitImportDirection(raw: unknown) { const d = validateDirectionCard(raw); if (!d.ok) throw Error(d.issues.join()); return d.value; }
+it("keeps transition requirements exact and outside support, with unknown combo measurements", () => {
+  const template = { id: "TEST_A", name: "Fixture", character: "silent", ascensions: [0], status: "candidate" as const,
+    requirements: [{ id: "REQ", any: [{ kind: "card" as const, id: "TEST_CARD", upgraded: true }, { kind: "relic" as const, id: "TEST_RELIC" }], count: 2, distinct: true }],
+    evidence: { runs: ["FIXTURE_RUN"], source: "fixture", sha256: "0".repeat(64) }, limits: ["synthetic"] };
+  const support = { schema: "construction-support-v1" as const, character: "silent", version: "fixture", entries: [{
+    id: "SUPPORT", core: "TEST_A", core_sha256: "0".repeat(64), component: { kind: "card" as const, id: "TEST_SUPPORT", upgraded: false },
+    ascensions: [0], confidence: "low" as const, effect: "fixture", conditions: "fixture", necessary: null, substitutes: null,
+    upgrade_comparison: null, experience: [], evidence: [] }] };
+  const summary = directionSummaries("silent", 0, [], [template], support)[0]!;
+  expect(summary.components).toContain("TEST_SUPPORT");
+  expect(summary.combos).toEqual([{ id: "TEST_A:minimal", source: "construction-transition", requirements: template.requirements,
+    metrics: null, details: { types: ["must_pick_minimal"], evidence: template.evidence, limits: template.limits } }]);
+  expect(summary.requirements).toEqual(template.requirements);
+  expect(directionSummaries("silent", 0, [coreFixture()], [template], null)).toHaveLength(1);
+});
+it("validates optional combo data while keeping old projection entries unchanged", () => {
+  expect(p()).toEqual({ ...projection, trust: "trusted" });
+  const entry = comboProjection();
+  for (const change of [{ combo_id: undefined }, { combo_source: undefined }, { expected_win: Infinity }, { win_complete: null },
+    { win_incomplete: { value: 2, n: 1, se: 0 } }, { incomplete_source: "unknown" }, { combo_metrics: { bad: NaN } }]) {
+    expect(validateProjectionEntry({ ...entry, ...change }).ok, JSON.stringify(change)).toBe(false);
+  }
+});
 
 it("card routing switch is inert off and never escalates a Jev card pick back to the brain", () => {
   const decision = ask(decide(env(board("xljq-f5-reward", "reward"))));
