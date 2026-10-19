@@ -1,0 +1,75 @@
+{
+  "batch": "v6-learning-loop-20261019-223658",
+  "pid": 2851272,
+  "start_ticks": 131570162,
+  "started_at": "2026-10-19T23:29:18+08:00",
+  "state": "checking",
+  "source_commit": "e4462bb50a3b6bf2fb96433579227717ecf8abfb",
+  "target_main": "7093f670fa1d4e507af1e5e39ca0bc2a9cc60d38",
+  "combined_full_rc": null,
+  "new_game": null,
+  "STOP_retained": true,
+  "parent_completed": false,
+  "original_source_and_sandbox_failures": "preserved; no mutation",
+  "finite_check_only": true,
+  "actual_live": "7093f670fa1d4e507af1e5e39ca0bc2a9cc60d38",
+  "live_tree": "5f6e6b209d541e099bf739ad0473349c76bade46",
+  "previous_live": "b0c86240d8ba35e4fae35c2d193b3d1f428651bf",
+  "preservation_ref": "refs/ops-live-before/v6-learning-loop-20261019-2326",
+  "log": "ops/codex-ops/learner/v6-learning-loop-20261019-223658.host-5f6e6b209d541e099bf739ad0473349c76bade46.checks.log",
+  "source_files": [
+    {
+      "path": "agent/tests/v6-history-pack.test.ts",
+      "sha256": "bfa7e46d6b6109538ac59c7a59bc9f08aac60a8ac5c614fbf060987920b1303a"
+    },
+    {
+      "path": "agent/tests/v6_learning_loop_test.py",
+      "sha256": "be86c481052a53c5822338051f226e09fd081a11f49c31f80b50b59499249ae9"
+    },
+    {
+      "path": "knowledge/builders/check-v6-refresh.mts",
+      "sha256": "57ee667cf476d7f4cff1157e20e3765008c6808e99d337dc66b4ed63982a67ec"
+    },
+    {
+      "path": "knowledge/builders/refresh-v6-history.py",
+      "sha256": "eb9b55345f913fe77e0b12074d7849434f13fb0cedb179f89771731222d8033b"
+    },
+    {
+      "path": "knowledge/builders/refresh.sh",
+      "sha256": "c30dfdb55e2b52b291589a9eda9e45682a79b5cb07986e45d31e1d03e94c11cd"
+    },
+    {
+      "path": "learner/evidence_identity.py",
+      "sha256": "bd67db1793e72048e206a2d6112deb6eb3b926124bfd6c96ee83b54de722ca0a"
+    },
+    {
+      "path": "learner/evidence_summary.py",
+      "sha256": "ab4e4bd09848b29372847fe78212f05701f69771a4c6e3a99a1521e658906bb3"
+    },
+    {
+      "path": "learner/extract_evidence.py",
+      "sha256": "e99b57c93d9988605cfc0daf10287167d2672b11334de6f867105929a537826b"
+    },
+    {
+      "path": "learner/tasks/experience-update.md",
+      "sha256": "aab4c525bfbfe20c0f7d7f70df69e978d47bbb3aa394fff1d302d1953634cf92"
+    },
+    {
+      "path": "learner/tasks/postmortem.md",
+      "sha256": "2aec6349ffc80612e2a322a0d75396834415d162b21de9b631200f78d041da5f"
+    },
+    {
+      "path": "learner/tasks/strategy-proposal.md",
+      "sha256": "7ee77c0667e20da558937a8cca8239a430fb258134256666027c01aaa3fef5af"
+    },
+    {
+      "path": "ops/report.py",
+      "sha256": "19158b27c0f184150efd7231164027987bcbf69cf89a7604885a93232c0f1fa0"
+    }
+  ],
+  "command": "export PATH=\"$HOME/.local/node/bin:$PATH\"; nice -n 19 npx tsc -p tsconfig.json --noEmit; a=$?; nice -n 19 npx vitest run --maxWorkers=2; b=$?; [ \"$a\" = 0 ] && [ \"$b\" = 0 ]",
+  "command_source_sha256": "4cb0c9e576004d0ed21546beee37f3a6d32b87e748a9df9580c31942fc180e36",
+  "check_started_at": "2026-10-19T23:29:20+08:00",
+  "old_live_full_repeated": false,
+  "paused_live_fast_forward": true
+}
