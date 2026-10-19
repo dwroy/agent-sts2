@@ -160,7 +160,9 @@ function spawnText(enemy: Record<string, unknown>, asc: number): string | undefi
 
 /** The enemy's powers the solver does not model (MODELLED_ENEMY_POWERS): damage into it is counted at 80%. */
 function observedStranglePower(enemy: Record<string, unknown>, character: string, asc?: number): boolean {
-  return character.toLowerCase() === "silent" && (asc === 0 || asc === 10) && powerAmount(enemy, "STRANGLE_POWER") === 2;
+  const amount = powerAmount(enemy, "STRANGLE_POWER");
+  return character.toLowerCase() === "silent" &&
+    (((asc === 0 || asc === 10) && amount === 2) || (asc === 10 && amount === 3));
 }
 
 export function unmodelledEnemyPowers(enemy: Record<string, unknown>, character = "", asc?: number): string[] {

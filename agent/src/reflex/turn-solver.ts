@@ -2038,7 +2038,8 @@ function play(sim: Sim, card: CardModel, target: number | null, player: PlayerSi
   const targetEnemy = target === null ? null : next.enemies.find((enemy) => enemy.index === target) ?? null;
 
   if (card.strangle !== undefined && targetEnemy?.alive) {
-    if (card.cardId !== "STRANGLE" || card.type !== "Attack" || card.upgraded) {
+    const observedEstablishment = (!card.upgraded && card.strangle === 2) || (card.upgraded && card.strangle === 3);
+    if (card.cardId !== "STRANGLE" || card.type !== "Attack" || !observedEstablishment) {
       targetEnemy.strangle = null;
       next.unknown = [...next.unknown, "紧勒（牌型或升级模板未验证）"];
     } else if (plays !== 1 || automatic || targetEnemy.strangle !== undefined) {
@@ -2055,12 +2056,18 @@ function play(sim: Sim, card: CardModel, target: number | null, player: PlayerSi
     if (!enemy) continue;
     // LY83ZMTFVKJH A10 F21 T10, silent-0260/0261: upgraded Dagger Spray's two hits trigger one two-HP loss.
     const observedUpgrade = card.observedStrangleFollowup === true && card.cardId === "DAGGER_SPRAY" && card.type === "Attack" && card.hits === 2;
-    if (card.strangle !== undefined || plays !== 1 || automatic || (card.upgraded && !observedUpgrade) || !["Attack", "Skill"].includes(card.type)) {
+    // HEMND F48 T3: Bubble Bubble and Accelerant+ each complete one three-HP loss, before end-turn poison.
+    const observedThree = card.observedStrangleThreeFollowup === true &&
+      ((card.cardId === "BUBBLE_BUBBLE" && card.type === "Skill" && !card.upgraded) ||
+       (card.cardId === "ACCELERANT" && card.type === "Power" && card.upgraded));
+    const observedFollowup = prior.amount === 3 ? observedThree :
+      !(card.upgraded && !observedUpgrade) && ["Attack", "Skill"].includes(card.type);
+    if (card.strangle !== undefined || plays !== 1 || automatic || !observedFollowup) {
       enemy.strangle = null;
       next.unknown = [...next.unknown, "紧勒（后续牌型、升级、叠加、重放或自动出牌未验证）"];
     } else if (!prior.verified || !strangleLossVerified(enemy) || next.hp <= 0) {
       next.unknown = [...next.unknown, "紧勒（有挡、减损或特殊交互未验证）"];
-    } else if (prior.amount === 2) {
+    } else if (prior.amount === 2 || prior.amount === 3) {
       const loss = Math.min(enemy.hp, prior.amount);
       enemy.hp -= loss;
       enemy.lostThisTurn += loss;
