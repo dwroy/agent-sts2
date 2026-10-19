@@ -1,0 +1,63 @@
+
+ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/v6-w6-20261019/agent
+
+ ❯ tests/v6-direction-runtime.test.ts (0 test)
+ ❯ tests/v6-potions.test.ts (0 test)
+
+⎯⎯⎯⎯⎯⎯ Failed Suites 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/v6-direction-runtime.test.ts [ tests/v6-direction-runtime.test.ts ]
+Error: Transform failed with 1 error:
+
+[31m[PARSE_ERROR] [0mIdentifier `v6Config` has already been declared
+    [38;5;246m╭[0m[38;5;246m─[0m[38;5;246m[[0m src/hand/loop.ts:13:10 [38;5;246m][0m
+    [38;5;246m│[0m
+ [38;5;246m13 │[0m [38;5;249mi[0m[38;5;249mm[0m[38;5;249mp[0m[38;5;249mo[0m[38;5;249mr[0m[38;5;249mt[0m[38;5;249m [0m[38;5;249m{[0m[38;5;249m [0mv6Config[38;5;249m [0m[38;5;249m}[0m[38;5;249m [0m[38;5;249mf[0m[38;5;249mr[0m[38;5;249mo[0m[38;5;249mm[0m[38;5;249m [0m[38;5;249m"[0m[38;5;249m.[0m[38;5;249m.[0m[38;5;249m/[0m[38;5;249mv[0m[38;5;249m6[0m[38;5;249m/[0m[38;5;249mc[0m[38;5;249mo[0m[38;5;249mn[0m[38;5;249mf[0m[38;5;249mi[0m[38;5;249mg[0m[38;5;249m.[0m[38;5;249mj[0m[38;5;249ms[0m[38;5;249m"[0m[38;5;249m;[0m
+ [38;5;240m   │[0m          ────┬───  
+ [38;5;240m   │[0m              ╰───── `v6Config` has already been declared here
+ [38;5;240m   │[0m 
+ [38;5;246m67 │[0m [38;5;249mi[0m[38;5;249mm[0m[38;5;249mp[0m[38;5;249mo[0m[38;5;249mr[0m[38;5;249mt[0m[38;5;249m [0m[38;5;249m{[0m[38;5;249m [0mv6Config[38;5;249m [0m[38;5;249m}[0m[38;5;249m [0m[38;5;249mf[0m[38;5;249mr[0m[38;5;249mo[0m[38;5;249mm[0m[38;5;249m [0m[38;5;249m"[0m[38;5;249m.[0m[38;5;249m.[0m[38;5;249m/[0m[38;5;249mv[0m[38;5;249m6[0m[38;5;249m/[0m[38;5;249mc[0m[38;5;249mo[0m[38;5;249mn[0m[38;5;249mf[0m[38;5;249mi[0m[38;5;249mg[0m[38;5;249m.[0m[38;5;249mj[0m[38;5;249ms[0m[38;5;249m"[0m[38;5;249m;[0m
+ [38;5;240m   │[0m          ────┬───  
+ [38;5;240m   │[0m              ╰───── It can not be redeclared here
+[38;5;246m────╯[0m
+
+  Plugin: vite:oxc
+  File: /home/dw/Projects/agent-sts2/.worktrees/v6-w6-20261019/agent/src/hand/loop.ts
+ ❯ transformWithOxc ../../../agent/node_modules/vite/dist/node/chunks/node.js:7208:19
+ ❯ TransformPluginContext.transform ../../../agent/node_modules/vite/dist/node/chunks/node.js:7280:26
+ ❯ EnvironmentPluginContainer.transform ../../../agent/node_modules/vite/dist/node/chunks/node.js:8172:51
+ ❯ loadAndTransform ../../../agent/node_modules/vite/dist/node/chunks/node.js:19634:26
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  tests/v6-potions.test.ts [ tests/v6-potions.test.ts ]
+Error: Transform failed with 1 error:
+
+[31m[PARSE_ERROR] [0mIdentifier `v6Config` has already been declared
+    [38;5;246m╭[0m[38;5;246m─[0m[38;5;246m[[0m src/hand/loop.ts:13:10 [38;5;246m][0m
+    [38;5;246m│[0m
+ [38;5;246m13 │[0m [38;5;249mi[0m[38;5;249mm[0m[38;5;249mp[0m[38;5;249mo[0m[38;5;249mr[0m[38;5;249mt[0m[38;5;249m [0m[38;5;249m{[0m[38;5;249m [0mv6Config[38;5;249m [0m[38;5;249m}[0m[38;5;249m [0m[38;5;249mf[0m[38;5;249mr[0m[38;5;249mo[0m[38;5;249mm[0m[38;5;249m [0m[38;5;249m"[0m[38;5;249m.[0m[38;5;249m.[0m[38;5;249m/[0m[38;5;249mv[0m[38;5;249m6[0m[38;5;249m/[0m[38;5;249mc[0m[38;5;249mo[0m[38;5;249mn[0m[38;5;249mf[0m[38;5;249mi[0m[38;5;249mg[0m[38;5;249m.[0m[38;5;249mj[0m[38;5;249ms[0m[38;5;249m"[0m[38;5;249m;[0m
+ [38;5;240m   │[0m          ────┬───  
+ [38;5;240m   │[0m              ╰───── `v6Config` has already been declared here
+ [38;5;240m   │[0m 
+ [38;5;246m67 │[0m [38;5;249mi[0m[38;5;249mm[0m[38;5;249mp[0m[38;5;249mo[0m[38;5;249mr[0m[38;5;249mt[0m[38;5;249m [0m[38;5;249m{[0m[38;5;249m [0mv6Config[38;5;249m [0m[38;5;249m}[0m[38;5;249m [0m[38;5;249mf[0m[38;5;249mr[0m[38;5;249mo[0m[38;5;249mm[0m[38;5;249m [0m[38;5;249m"[0m[38;5;249m.[0m[38;5;249m.[0m[38;5;249m/[0m[38;5;249mv[0m[38;5;249m6[0m[38;5;249m/[0m[38;5;249mc[0m[38;5;249mo[0m[38;5;249mn[0m[38;5;249mf[0m[38;5;249mi[0m[38;5;249mg[0m[38;5;249m.[0m[38;5;249mj[0m[38;5;249ms[0m[38;5;249m"[0m[38;5;249m;[0m
+ [38;5;240m   │[0m          ────┬───  
+ [38;5;240m   │[0m              ╰───── It can not be redeclared here
+[38;5;246m────╯[0m
+
+  Plugin: vite:oxc
+  File: /home/dw/Projects/agent-sts2/.worktrees/v6-w6-20261019/agent/src/hand/loop.ts
+ ❯ transformWithOxc ../../../agent/node_modules/vite/dist/node/chunks/node.js:7208:19
+ ❯ TransformPluginContext.transform ../../../agent/node_modules/vite/dist/node/chunks/node.js:7280:26
+ ❯ EnvironmentPluginContainer.transform ../../../agent/node_modules/vite/dist/node/chunks/node.js:8172:51
+ ❯ loadAndTransform ../../../agent/node_modules/vite/dist/node/chunks/node.js:19634:26
+ ❯ fetchModule ../../../agent/node_modules/vite/dist/node/chunks/node.js:35529:15
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+
+ Test Files  2 failed (2)
+      Tests  no tests
+   Start at  18:13:30
+   Duration  2.35s (transform 2.89s, setup 779ms, import 0ms, tests 0ms, environment 0ms)
+

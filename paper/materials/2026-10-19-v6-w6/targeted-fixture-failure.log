@@ -1,0 +1,36 @@
+
+ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/v6-w6-20261019/agent
+
+ ❯ tests/v6-potions.test.ts (17 tests | 1 failed) 569ms
+   × consumes target-specific projection trust and keeps missing or conflicting directions unknown 10ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/v6-potions.test.ts > consumes target-specific projection trust and keeps missing or conflicting directions unknown
+AssertionError: expected { current_boss: 'unknown', …(1) } to deeply equal { current_boss: 'trusted', …(1) }
+
+- Expected
++ Received
+
+  {
+-   "current_boss": "trusted",
++   "current_boss": "unknown",
+    "joint": "low_optimistic",
+  }
+
+ ❯ tests/v6-potions.test.ts:68:59
+     66|     { ...projection, target_id: "current_boss", trust: "trusted" }, { …
+     67|   ] as NonNullable<DecisionEnv["v6DirectionEvaluation"]>["entries"] };
+     68|   expect(potionEntries(e, ["TEST_A"], { dir })[0]?.trust).toEqual({ cu…
+       |                                                           ^
+     69|   e.screenMemory.runPlan!.v6!.direction_weights["TEST_B"] = .2;
+     70|   expect(potionEntries(e, ["TEST_A"], { dir })[0]?.trust).toEqual({ cu…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed | 1 passed (2)
+      Tests  1 failed | 20 passed (21)
+   Start at  18:13:53
+   Duration  3.17s (transform 3.69s, setup 808ms, import 4.14s, tests 684ms, environment 0ms)
+

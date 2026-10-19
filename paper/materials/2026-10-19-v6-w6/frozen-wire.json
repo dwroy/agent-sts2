@@ -1,0 +1,56 @@
+{
+  "state": {
+    "run_brief": {
+      "character": "铁甲战士",
+      "act": "1",
+      "floor": 11,
+      "hp": "59/80 (74%)",
+      "gold": 106,
+      "ascension": 9,
+      "deck": "14 cards | 9 attacks / 4 skills / 0 powers | 1 upgraded | 1 curses/statuses | avg cost 1",
+      "relics": [
+        "燃烧之血",
+        "药瓶皮套",
+        "小邮箱",
+        "赤牛"
+      ],
+      "relic_effects": [
+        "燃烧之血: 在战斗结束时，回复6点生命。",
+        "药瓶皮套: 拾起时，获得?(数值未知)个药水栏位并获得?(数值未知)瓶随机药水。",
+        "小邮箱: 每当你休息时，获得2瓶随机药水。",
+        "赤牛: 在每场战斗开始时，获得?(数值未知)点活力。"
+      ],
+      "potions": [
+        "爆炸安瓿: 对所有敌人造成10点伤害。",
+        "格挡药水: 获得12点格挡。"
+      ],
+      "notes": [],
+      "relic_effects_note": "?(数值未知) marks a value the mod does not expose; the effect text around it is accurate"
+    },
+    "situation": {
+      "screen": "REST",
+      "hp": "59/80 (74%)",
+      "hp_percent": 74,
+      "upgradable_cards": 13,
+      "next_nodes": null
+    }
+  },
+  "questions": {
+    "potion_o0": {
+      "type": "choice",
+      "instructions": "Only if this event/rest option is chosen, keep the held potions or free slots first? Compare the potion entries, brain tiers and holding HP; unknown is not zero.",
+      "criteria": {
+        "o0": "{\"option\":\"休息\",\"kind\":\"HEAL\",\"description\":\"回复最大生命值的30%（24）。\\n从小邮箱获得[blue]2[/blue]瓶随机[gold]药水[/gold]\",\"potion_slots\":\"1 potion this option gives has no free slot and is lost unless potions are discarded first (option o0:discard)\"}",
+        "o0:discard": "{\"option\":\"休息\",\"kind\":\"HEAL\",\"description\":\"回复最大生命值的30%（24）。\\n从小邮箱获得[blue]2[/blue]瓶随机[gold]药水[/gold]\",\"discard_first\":\"Jev chooses 1 to 1 discardable slots through discard_p<slot>; then this option\",\"discardable_potions\":{\"1\":\"爆炸安瓿: 对所有敌人造成10点伤害。\",\"2\":\"格挡药水: 获得12点格挡。\"},\"potion_entries\":[{\"schema\":\"v6-potion-entry-v1\",\"id\":\"EXPLOSIVE_AMPOULE\",\"category\":\"damage\",\"tier\":\"normal\",\"for\":null,\"reason\":null,\"hold_hp\":2.2,\"value_source\":{\"source\":\"公式\",\"n\":84,\"table_ascension\":9,\"inputs_ascension\":9},\"slots\":{\"occupied\":2,\"max\":3},\"price\":null,\"gold_after\":null,\"trust\":{\"current_boss\":\"unknown\",\"joint\":\"unknown\"},\"comparisons\":[{\"slot\":1,\"id\":\"EXPLOSIVE_AMPOULE\",\"tier\":\"normal\",\"hold_hp\":2.2,\"hold_hp_delta\":0},{\"slot\":2,\"id\":\"BLOCK_POTION\",\"tier\":\"normal\",\"hold_hp\":7.3,\"hold_hp_delta\":-5.1}],\"reflex\":[]},{\"schema\":\"v6-potion-entry-v1\",\"id\":\"BLOCK_POTION\",\"category\":\"block\",\"tier\":\"normal\",\"for\":null,\"reason\":null,\"hold_hp\":7.3,\"value_source\":{\"source\":\"公式\",\"n\":84,\"table_ascension\":9,\"inputs_ascension\":9},\"slots\":{\"occupied\":2,\"max\":3},\"price\":null,\"gold_after\":null,\"trust\":{\"current_boss\":\"unknown\",\"joint\":\"unknown\"},\"comparisons\":[{\"slot\":1,\"id\":\"EXPLOSIVE_AMPOULE\",\"tier\":\"normal\",\"hold_hp\":2.2,\"hold_hp_delta\":5.1},{\"slot\":2,\"id\":\"BLOCK_POTION\",\"tier\":\"normal\",\"hold_hp\":7.3,\"hold_hp_delta\":0}],\"reflex\":[]}]}"
+      }
+    },
+    "discard_p1": {
+      "type": "noul",
+      "instructions": "The potion slots are full. Only if your pick is a \"discard potion(s), then …\" option: is potion slot 1 (爆炸安瓿) one of those you discard? Yes = discard it. Compare brain tier, holding HP, slots, trust and applicable memories: {\"schema\":\"v6-potion-entry-v1\",\"id\":\"EXPLOSIVE_AMPOULE\",\"category\":\"damage\",\"tier\":\"normal\",\"for\":null,\"reason\":null,\"hold_hp\":2.2,\"value_source\":{\"source\":\"公式\",\"n\":84,\"table_ascension\":9,\"inputs_ascension\":9},\"slots\":{\"occupied\":2,\"max\":3},\"price\":null,\"gold_after\":null,\"trust\":{\"current_boss\":\"unknown\",\"joint\":\"unknown\"},\"comparisons\":[{\"slot\":1,\"id\":\"EXPLOSIVE_AMPOULE\",\"tier\":\"normal\",\"hold_hp\":2.2,\"hold_hp_delta\":0},{\"slot\":2,\"id\":\"BLOCK_POTION\",\"tier\":\"normal\",\"hold_hp\":7.3,\"hold_hp_delta\":-5.1}],\"reflex\":[]}"
+    },
+    "discard_p2": {
+      "type": "noul",
+      "instructions": "The potion slots are full. Only if your pick is a \"discard potion(s), then …\" option: is potion slot 2 (格挡药水) one of those you discard? Yes = discard it. Compare brain tier, holding HP, slots, trust and applicable memories: {\"schema\":\"v6-potion-entry-v1\",\"id\":\"BLOCK_POTION\",\"category\":\"block\",\"tier\":\"normal\",\"for\":null,\"reason\":null,\"hold_hp\":7.3,\"value_source\":{\"source\":\"公式\",\"n\":84,\"table_ascension\":9,\"inputs_ascension\":9},\"slots\":{\"occupied\":2,\"max\":3},\"price\":null,\"gold_after\":null,\"trust\":{\"current_boss\":\"unknown\",\"joint\":\"unknown\"},\"comparisons\":[{\"slot\":1,\"id\":\"EXPLOSIVE_AMPOULE\",\"tier\":\"normal\",\"hold_hp\":2.2,\"hold_hp_delta\":5.1},{\"slot\":2,\"id\":\"BLOCK_POTION\",\"tier\":\"normal\",\"hold_hp\":7.3,\"hold_hp_delta\":0}],\"reflex\":[]}"
+    }
+  }
+}
