@@ -4725,3 +4725,5 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
 - 2026-10-19 16:24:39 CST [Codex/V6-W0] roy-20261019-v6：完成 H2 帝王蟹零值链路与27条固定轨迹诊断，零值为原始模拟败局，与旧校准群体均值口径不同；未证实纯bug，机制/自动策略偏差转为未派发学习者问题，不改知识。复用接口盘点、校准03cb9f2内217/1316、计划254与后续280的分时口径及STATE-2026-10-19已落盘；tsc通过，完整vitest557文件/5319通过、2原有跳过。W0无Roy决策阻塞，接W1；STOP保留，无对局/live/Regent/学习派发。
 
 - 2026-10-19 16:31:31 CST [Claude/Roy，仅文档] Roy 要求另起学习任务 `v6-direction-experience`：把 Silent 现有经验围绕核心构筑方向继续总结抽取（草稿方向卡、经验归属、小脑记忆候选、药水证据、方向目录意见），产出存 scratch 与 knowledge/characters/silent/pending，不改正式知识；与 V6-W0/W1 并行，watcher 写任务模板并按此授权一次性用 learner/run.ts 派发，内容由学习者完成。见 docs/v6-plan.md 9.1。
+
+- 2026-10-19 16:35:10 — Roy/Claude roy-20261019-v6 9.1：新增 v6-direction-experience 学习任务模板，仅指定证据、逐条归属、未知/异议和 scratch/pending 草稿边界；dry-run 渲染已核对 gpt-6.1-sol/high、240 分钟，待以 codex1 在独立工作树一次性 herdr 派发。冻结 372 个已结束 Silent 局及日志字节切点；正式知识不改，不开局、不恢复 live/Regent。
