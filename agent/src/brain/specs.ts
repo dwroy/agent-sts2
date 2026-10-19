@@ -14,6 +14,7 @@
 import { isRunPlanReply, RUN_PLAN_TASK_KEY } from "../memory/run-plan.js";
 import { checkRoute, isKeep, routeIds, routeMapFromView, type RouteMap } from "../sim/route-map.js";
 import type { JsonSchema } from "./tools/types.js";
+import { directionPlanSpec } from "../v6/direction-plan.js";
 import type { AnswerSpec } from "./types.js";
 import { rankingOverrideProblems } from "../sim/build-ranking-choice.js";
 
@@ -427,6 +428,8 @@ export function withRunPlanField(spec: AnswerSpec, state?: unknown): AnswerSpec 
 
 /** The run plan (strategy/run-plan.ts RUN_PLAN_TASK); accepted when it is a plan at all, as v3 did. */
 export function runPlanSpec(label = "run-plan", state?: unknown): AnswerSpec {
+  const direction = directionPlanSpec(state, label);
+  if (direction) return direction;
   return {
     label,
     kind: "plan",

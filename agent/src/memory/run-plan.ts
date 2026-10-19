@@ -34,6 +34,7 @@ export type EliteAppetite = "seek" | "normal" | "avoid";
 export type RestPolicy = "heal" | "smith" | "auto";
 
 export interface RunPlan {
+  v6?: import("../v6/formats.js").DirectionWeights;
   runId: string;
   /** Act (1-based) and floor the plan was made on. */
   act: number;

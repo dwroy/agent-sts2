@@ -11,6 +11,8 @@ import type { JsonValue } from "../core/util/json.js";
 import type { RunBrief } from "./run-brief.js";
 
 export interface DecisionEnv {
+  /** Optional projection boundary; absent data stays unknown. Never read while V6 is off. */
+  v6DirectionEvaluation?: import("../v6/replan-triggers.js").DirectionEvaluation;
   /** Set by the live loop for Silent; archived replay callers keep their declared historical policy. */
   requiredBossEvaluation?: boolean;
   simWait?: import("../sim/computation-wait.js").SimWait;
@@ -346,6 +348,7 @@ export interface ScreenMemory {
   fightPlanFailed?: string;
   /** DeepSeek's run plan (RUN_PLAN=v1): strategy weights for build and route decisions. Kept across screens. */
   runPlan?: import("./run-plan.js").RunPlan | null;
+  v6Planner?: import("../v6/direction-runtime.js").DirectionPlannerMemory;
   /** "runId:floor" of a failed run-plan request: not retried on the same floor. */
   runPlanFailed?: string;
   /**

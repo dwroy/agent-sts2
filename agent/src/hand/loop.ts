@@ -60,6 +60,9 @@ import { OUTCOME_BASIS_KEY } from "../knowledge/outcome-facts.js";
 import { BUILD_SIM_MIN_SHOWN, bossEvaluationPending, withBossSim, type BuildSimSetup } from "../sim/build-sim-facts.js";
 import { buildRankingSelection, rankingOverrideProblems } from "../sim/build-ranking-choice.js";
 import { shopPlanList } from "../brain/specs.js";
+import { ensureDirectionPlan, noteV6BrainCall, v6DirectionActive } from "../v6/direction-runtime.js";
+import { routeV6CardDecision } from "../v6/card-routing.js";
+import { v6Config } from "../v6/config.js";
 import { withConstruction } from "../construction/adapter.js";
 import { withConstructionEvaluation } from "../construction/consumer.js";
 import { passivePiecesOptions } from "../reflex/passive-pieces.js";
@@ -81,6 +84,8 @@ interface AnswerMemo {
 }
 
 export interface LoopOptions {
+  /** W3 supplies projection-entry-v1 data; tests inject frozen evaluations. */
+  v6DirectionEvaluation?: (env: DecisionEnv) => Promise<import("../v6/replan-triggers.js").DirectionEvaluation>;
   config: AppConfig;
   mode: LoopMode;
   client: ModClient;
@@ -435,8 +440,8 @@ async function runLoopWithBudgets(options: LoopOptions): Promise<LoopStats> {
    * questions (BUILD_DECIDER=deepseek with a DeepSeek client) and the run plan has no engine of its own
    * (BRAIN_ENGINE_RUN_PLAN other than BRAIN_ENGINE keeps its own call at the map, as before).
    */
-  const runPlanMerges = (): boolean =>
-    config.runPlan === "v1" && config.runPlanMerge && brain !== null && brain.engineFor("run-plan") === brain.router.config.engine;
+  const runPlanMerges = (env: DecisionEnv): boolean =>
+    !v6DirectionActive(env) && config.runPlan === "v1" && config.runPlanMerge && brain !== null && brain.engineFor("run-plan") === brain.router.config.engine;
   /** Whether DeepSeek is asked first for this label (its call is counted up front, as v3 did). */
   const deepseekFirst = (label: string): boolean => !brain || brain.engineFor(label) === "deepseek";
   /** The router's re-ask on a question DeepSeek was asked first (a route checked by its AnswerSpec: M2): its calls. */
@@ -782,12 +787,24 @@ async function runLoopWithBudgets(options: LoopOptions): Promise<LoopStats> {
     }
     // FIGHT_PLAN=v1: DeepSeek plans an elite/boss fight once, before its first decision.
     // RUN_PLAN=v1: DeepSeek's run strategy, renewed at the map screen when a checkpoint is due.
-    if (!planned && config.runPlan === "v1" && !state.in_combat && state.screen === "MAP") {
+    if (!planned && v6Config().mode !== "off" && !state.in_combat && brain && brainBudgetLeft("run-plan")) {
+      try {
+        if (options.v6DirectionEvaluation) env.v6DirectionEvaluation = await options.v6DirectionEvaluation(env);
+        const attempt = await ensureDirectionPlan(env, brain, config.runPlanLog);
+        if (attempt?.usage) countPlan("run-plan")(attempt.usage.inputTokens + attempt.usage.outputTokens, attempt.usage.brain);
+        if (attempt?.stored) onEvent({ type: "note", message: `V6 direction plan stored (${attempt.result.triggers.join(",")})` });
+      } catch (error) {
+        if (isBrainBlocked(error)) throw error;
+        logRunPlan(config.runPlanLog, { run: runId, v6_error: String(error).slice(0, 200) });
+        onEvent({ type: "note", message: `V6 direction plan failed: ${String(error).slice(0, 160)}` });
+      }
+    }
+    if (!planned && !v6DirectionActive(env) && config.runPlan === "v1" && !state.in_combat && state.screen === "MAP") {
       const deepseek = brain;
       if (deepseek && brainBudgetLeft("run-plan")) {
         const items = journal.itemCount;
         const runId = str(state.raw["run_id"]);
-        if (!runPlanMerges()) {
+        if (!runPlanMerges(env)) {
           await ensureRunPlan(env, deepseek, journal, config.runPlanLog, observedTs, onEvent, countPlan("run-plan"));
         } else if (runId) {
           // RUN_PLAN_MERGE: a due plan rides on the next DeepSeek question; asked here only when none carried it in time
@@ -895,7 +912,7 @@ async function runLoopWithBudgets(options: LoopOptions): Promise<LoopStats> {
       break;
     }
 
-    let decision = planned.decision;
+    let decision = routeV6CardDecision(planned.decision, state.in_combat);
     if (brain?.router.codexOnly && decision.label === "map/route-fallback" && asArray(asRecord(state.raw["map"])["available_nodes"]).length !== 1) {
       const reason = "Codex route question could not be constructed; no code route choice dispatched";
       brain.router.wait.finish("fault", { label: "map/route-plan", runId, questionId: randomUUID(), system: "", question: "", payload: {}, spec: { label: "map/route-plan", kind: "plan", schema: {}, validate: () => [] } }, reason);
@@ -1016,7 +1033,7 @@ async function runLoopWithBudgets(options: LoopOptions): Promise<LoopStats> {
         if (question?.type !== "choice" || decision.kind !== "ask") throw new Error("unreachable: the boss simulation keeps the question");
         // RUN_PLAN_MERGE: a due run plan rides on this question (state.run_plan_task and the answer's run_plan) instead of
         // its own call. Anything wrong in building it: the question goes as without it, the plan stays due.
-        if (runPlanMerges() && !state.in_combat && brain.engineFor(decision.label) === brain.engineFor("run-plan")) {
+        if (runPlanMerges(env) && !state.in_combat && brain.engineFor(decision.label) === brain.engineFor("run-plan")) {
           try {
             const runId = str(state.raw["run_id"]);
             const plan = runId ? currentRunPlan(screenMemory, config.runPlanLog, runId) : null;
@@ -1145,6 +1162,7 @@ async function runLoopWithBudgets(options: LoopOptions): Promise<LoopStats> {
         };
         try {
           // Counted up front when DeepSeek is asked first (v3); another engine's calls count in the router.
+          noteV6BrainCall(env, config.runPlanLog);
           if (deepseekFirst(decision.label)) stats.deepseekCalls += 1;
           if (spec.plan) {
             // A one-shot plan (a shop's shopping list): one JSON answer, validated by the screen. An empty reply
@@ -1438,6 +1456,7 @@ async function runLoopWithBudgets(options: LoopOptions): Promise<LoopStats> {
             try {
               if (escalator.name === "claude") stats.claudeCalls += 1;
               else if (deepseekFirst(decision.label)) stats.deepseekCalls += 1;
+              noteV6BrainCall(env, config.runPlanLog);
               if (escalator.name === "claude") onEvent({ type: "note", message: `escalating ${decision.label} to Claude (Jev ${jevAnswer.choice} @${jevAnswer.confidence.toFixed(2)})` });
               // The DeepSeek escalator is asked through the brain (the engine BRAIN_* names for this label).
               const answer = await (escalator === deepseekClient && brain ? brain : escalator).choose(
