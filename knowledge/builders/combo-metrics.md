@@ -17,6 +17,8 @@ nice -n 10 python3 knowledge/builders/build-combo-metrics.py \
 
 `--manifest` 使用 `log_byte_limits` 冻结日志字节上限；不提供时在启动时捕获当前长度。`--run-inventory` 用每局 `stream_ranges` 限定状态、SL 和决策读取范围；重叠范围合并一次。输入截断半行、坏 JSON、身份冲突、角色不符或缺少指定已结束局均报错，不默默修补。输出同时保存读取范围和 SHA256，每个保留的观察附原文件、偏移、行字节数和 SHA256。生成器拒绝直接输出正式角色知识路径，建议总是写 scratch 或材料目录。
 
+原局间刷新器可提供密封的 `source_exclusions` 清单。完整坏 JSON 必须逐行匹配原文件、冻结上限、字节范围及 SHA；未登记、变更或截断的字节仍拒绝。Roy 2026-10-20 批准状态帧和决策统一使用登记终局时间边界：等于终局保留，严格晚于终局分别以 `frame_after_run_end` / `decision_after_run_end` 排除。有效 JSON 的排除额外核对原始局身份、观察时间和 `runs.jsonl` 实际终局，不设宽限时间、不改日志；SL 摘要终局守卫保持原样。清单本身的大小、SHA 和条数也需一致，缺失证据仍保留未知。
+
 主口径合并全部代码版本与进阶，仅角色、`first`/`including_sl` 分开。原始 `runs.code` 与可选 `--coverage` 的复合版本串、实际进阶仅作为 `sources[]` 来源，保留逐来源和合计 `raw_counts` 对账；未知进阶仍计入原始能力统计，只从进阶回归中排除。不能恢复短 SHA/dirty 的精确构建。每个组合总是输出两个尝试口径，目标进阶固定 A10。
 
 ## 持有、生效与学习者见证

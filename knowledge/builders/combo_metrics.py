@@ -6,6 +6,7 @@ import math
 from pathlib import Path
 import random
 import statistics
+from history_boundary import timestamp, after_run_end, run_identity
 
 
 METRICS = (
@@ -159,7 +160,7 @@ def digest(raw):
     return hashlib.sha256(raw).hexdigest()
 
 
-def read_rows(path, limit, spans=None, audit=None, exclusions=None):
+def read_rows(path, limit, spans=None, audit=None, exclusions=None, terminal_ends=None):
     """Read immutable byte cuts; hash every scanned range and each retained source row."""
     if not isinstance(limit, int) or not 0 <= limit <= path.stat().st_size:
         raise ValueError(f'invalid byte limit: {path}')
@@ -177,15 +178,24 @@ def read_rows(path, limit, spans=None, audit=None, exclusions=None):
                     raise ValueError(f'partial JSONL row at {path}:{offset}')
                 sha.update(raw)
                 exclusion = (exclusions or {}).get((str(path.resolve()), offset))
+                if exclusion is not None and (exclusion['source_size'] != limit or
+                        exclusion['bytes'] != len(raw) or exclusion['sha256'] != digest(raw)):
+                    raise ValueError(f'unlisted or changed excluded JSONL row at {path}:{offset}')
                 try:
                     row = json.loads(raw)
                 except (ValueError, UnicodeDecodeError):
-                    if (exclusion is None or exclusion['source_size'] != limit or
-                        exclusion['bytes'] != len(raw) or exclusion['sha256'] != digest(raw)):
+                    if exclusion is None or exclusion.get('reason', 'invalid_json') != 'invalid_json':
                         raise ValueError(f'unlisted or changed malformed JSONL row at {path}:{offset}')
                     continue
                 if exclusion is not None:
-                    raise ValueError(f'excluded row is valid JSON at {path}:{offset}')
+                    reason = {'states.jsonl': 'frame_after_run_end', 'decisions.jsonl': 'decision_after_run_end'}.get(path.name)
+                    rid = run_identity(row)
+                    ended = (terminal_ends or {}).get(rid)
+                    if (reason is None or exclusion.get('reason') != reason or ended is None or
+                        exclusion.get('run_id') != rid or exclusion.get('ts') != timestamp(row.get('ts')) or
+                        exclusion.get('run_ended') != timestamp(ended) or not after_run_end(row, ended)):
+                        raise ValueError(f'invalid run-end exclusion or excluded row is valid JSON at {path}:{offset}')
+                    continue
                 ref = dict(path=str(path), offset=offset, bytes=len(raw), sha256=digest(raw))
                 yield row, ref
             if audit is not None:
@@ -302,16 +312,19 @@ def extract(logs, character, limits, inventory=None, selected=None, exclusions=N
         return merged
 
     summaries, actions = defaultdict(list), defaultdict(list)
+    terminal_ends = {rid: row['ended'] for rid, row in runs.items()}
     for name, target in [('sl-attempts.jsonl', summaries), ('decisions.jsonl', actions)]:
         if name not in limits:
             continue
-        for row, source in read_rows(logs/name, limits[name], ranges(name), audit, exclusions):
+        for row, source in read_rows(logs/name, limits[name], ranges(name), audit, exclusions, terminal_ends):
             if row.get('run_id') in runs:
+                if name == 'decisions.jsonl' and after_run_end(row, terminal_ends[row['run_id']]):
+                    continue
                 target[row['run_id']].append(dict(row, _source=source))
-    for row, source in read_rows(logs/'states.jsonl', limits['states.jsonl'], ranges('states.jsonl'), audit, exclusions):
+    for row, source in read_rows(logs/'states.jsonl', limits['states.jsonl'], ranges('states.jsonl'), audit, exclusions, terminal_ends):
         state = row.get('state') or {}
         rid = state.get('run_id')
-        if rid not in runs or row.get('ts', '') > runs[rid]['ended']:
+        if rid not in runs or after_run_end(row, runs[rid]['ended']):
             continue
         actual = str((state.get('run') or {}).get('character_id', '')).lower()
         if actual != character:

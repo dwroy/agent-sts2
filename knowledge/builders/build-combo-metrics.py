@@ -87,7 +87,7 @@ def verified_witnesses(path, combos, logs, limits, run_ids):
 
 
 def source_exclusions(manifest, logs, limits):
-    """Accept only explicitly listed malformed rows from a sealed exclusion manifest."""
+    """Accept sealed malformed rows or observed run-end exclusions; recheck raw bytes on read."""
     source = manifest.get('source_exclusions')
     if source is None:
         return {}
@@ -101,7 +101,9 @@ def source_exclusions(manifest, logs, limits):
         offset, size = entry['offset'], entry['bytes']
         if (path.parent != logs.resolve() or path.name not in limits or entry['source_size'] != limits[path.name]
             or type(offset) is not int or type(size) is not int or not 0 <= offset < offset + size <= limits[path.name]
-            or type(entry['line']) is not int or entry['line'] < 1 or entry['reason'] != 'invalid_json'
+            or type(entry['line']) is not int or entry['line'] < 1
+            or not isinstance(entry['reason'], str)
+            or entry['reason'] not in ('invalid_json', {'states.jsonl': 'frame_after_run_end', 'decisions.jsonl': 'decision_after_run_end'}.get(path.name))
             or entry['byte_range'] != dict(start=offset, end_exclusive=offset + size)
             or not isinstance(entry['sha256'], str) or len(entry['sha256']) != 64):
             raise ValueError('invalid source exclusion scope/range/reason')
