@@ -1,0 +1,24 @@
+{
+  "at": "2026-10-19 23:25:24 CST",
+  "executed": false,
+  "source": "agent/src/reflex/jev/combat-entries.ts: V6_COMBAT_ENTRIES gate",
+  "correction_to_old_activation_plan": "Final original Herdr actor must explicitly receive V6_COMBAT_ENTRIES=on; V6_REFLEX alone does not enable combat entries. No current actor/environment changed.",
+  "required_env_at_authorized_on": {
+    "V6_BUILD": "on",
+    "V6_REFLEX": "on",
+    "V6_COMBAT_ENTRIES": "on",
+    "V6_CARD_DECIDER": "jev",
+    "V6_POTION_DECIDER": "jev",
+    "V6_SHOP_DECIDER": "brain",
+    "V6_REST_DECIDER": "brain"
+  },
+  "unchanged_gates": [
+    "actual W5+B integration and exact host acceptance",
+    "Nova runtime",
+    "calibration done or <=4 game-time processes"
+  ],
+  "STOP_retained": true,
+  "W7": "shop/rest enabled only after original W7 delivery on next game",
+  "extra_on_confirmation": false,
+  "V5_or_shadow_game": false
+}
