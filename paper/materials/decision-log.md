@@ -4719,3 +4719,5 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
 - 2026-10-19 14:43:26 CST watcher codex：Roy 指令 Silent 停用、所有代码归 main 并回收 tab/任务/工作树；df21d3b4d 已包含两组批准源码，87137f0eb 保留历史源码差异。正式 Silent 经验244条 main/live一致，补齐最新live观测统计；原 exp lost 批次完整草稿与提案存角色 pending，含2条未正式发布条目，不冒充已验证或已上线。按最新指令删除其余残留、不额外留档；游戏保持 STOP/PAUSE，Regent及共享证据保留，不重跑full、不启动游戏。
 
 - 2026-10-19 14:48:52 CST watcher codex：Silent 回收完成，394 注册工作树+595 未注册残留全部删除、零错误；原66保留检出与并行新增nova-gateway未动，原分支保留。正式经验244条在main，最新live统计已由fb8e643d6同步，lost草稿另存角色pending（2条非正式条目），247来源/211生成索引哈希通过。过程临时大归档按Roy最新指令删除，磁盘可用约296.4 GiB、较本次开始净增约165.0 GiB。Silent运行/学习tab、任务与cron已清，当前仅回报watcher；STOP/PAUSE保留，停止等Claude。
+
+- 2026-10-19 16:10:13 CST [Claude/Roy，仅文档] Roy 批准 V6（`roy-20261019-v6`）：大脑每幕及触发时输出全部构筑方向的概率（不定主/备）和药水方向条目；代码按方向理想补齐后对全部 Boss（含 F48→F49 连战）做 20 场同种子配对模拟（幕初 100 场），以数值、五档枚举和可信度标签作为条目，由 Jev 决定拿牌与选药；大脑每局软上限 15 次，T1–T7 触发重规划；学习者产出构筑方向卡与小脑记忆（reflex）条目；出牌架构不变、条目持续完善；不做 Jev 与代码对照实验。设计与执行计划 W0–W9 见 docs/v6-plan.md，讨论见 paper/materials/discussions/2026-10-19-v6-global-build.md；由 Claude 经 herdr 逐项指派 watcher。首个上线角色、W2 学习批次派发方式、是否恢复中断的 Silent Boss 校准待 Roy 定。
