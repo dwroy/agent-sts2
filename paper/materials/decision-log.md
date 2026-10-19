@@ -4882,3 +4882,5 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
 
 - 2026-10-20 07:09:25 CST [运维 codex/神化固定源验收] e6e582宿主完整0/597文件5714过2跳，原WT提交a46239且干净；原A0+W8联合在途不热改，登记其终局后的精确组合依赖，未main/live集成/加release，旧失败及STOP保持。原件：paper/materials/20261020-0707-ops/receipt.json。
 - 2026-10-20 07:17:32 CST [Codex v6-w4w6] V6构筑unknown/Jev失败安全网FF main 108b45cb0：拿牌、选药、商店、休息实际可选项完整加权值已知不足2项或比例低于V6_MIN_KNOWN_OPTION_RATIO（默认0.5）时改走原大脑；Jev错误/超时/非法答案同样转大脑，单板不重试Jev。记录v6_unknown_to_brain与原因/覆盖率，T6沿同question_id去重且计入原大脑调用；大脑也不可用后才走原代码，拿牌全部unknown不默认skip，尊重大脑显式skip。W6逐槽noul尚无加权投影提供方，当前严格标unknown并转原大脑；不将持有HP冒充胜率。tsc0、完整vitest Test Files  598 passed (598); Tests  5730 passed | 2 skipped (5732)、提交范围gitleaks0；off/shadow等价固定测试保留。W7仅v6RoomActive增加转大脑门禁，原Silent必需Boss评估与Codex fault暂停不绕过。未动sim/知识/live/STOP，未开局/真实请求；材料paper/materials/2026-10-20-v6-unknown-brain/，待Claude/ops沿原授权上线及验收。
+
+- 2026-10-20 07:22:55 CST [运维 codex/A0+W8联合验收] f50a6宿主完整0/598文件5718过2跳，原WT提交f6b0；main新增安全网914bd，与已验神化a462机械合成固定249932/23源叶，唯一原宿主722693/nice19 checking，未main/live集成或加release，旧失败及STOP保留。原件：paper/materials/20261020-0720-ops/receipt.json。
