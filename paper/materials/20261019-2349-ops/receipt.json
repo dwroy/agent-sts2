@@ -1,0 +1,126 @@
+{
+  "at": "2026-10-19 23:51:33 CST",
+  "events": "three repeated learning-attention notices",
+  "notice_ids": [
+    "0baef634d02e1ff85843c10a",
+    "f619c26f4bfa10970591beb5",
+    "b5b53e0d8bebe1df7fb30468"
+  ],
+  "notice_readback": [
+    {
+      "notice": {
+        "path": "ops/codex-ops/learning-notices/0baef634d02e1ff85843c10a.json",
+        "bytes": 4628,
+        "sha256": "a89d2df133b317e0020af2a133f7931d3f914bbe04980eec0651cedc833fe34e"
+      },
+      "message_sha256": "b901a2de0949ad35076a535a065c0099111a8b69ca8502b687957493ef3b292f",
+      "original_ops_forwarded_receipt_verified": true,
+      "actual_watcher_role_receipts": [
+        {
+          "path": ".artifacts/v6-learning-notice-watcher-20261019/0baef634d02e1ff85843c10a.watcher_received.json",
+          "bytes": 421,
+          "sha256": "694f0f8a4083094771ac83e5fc8cd1d7fa7d4e2df7c224f2351b2e6fcd2ac275"
+        },
+        {
+          "path": ".artifacts/v6-learning-notice-watcher-20261019/0baef634d02e1ff85843c10a.roy_notified.json",
+          "bytes": 624,
+          "sha256": "dd766b67ae4e15096532d46df0dee3d7c8782f0b4dceda8d69e30dbb11b8fb58"
+        }
+      ],
+      "protocol_watcher_received": false,
+      "protocol_roy_notified": false,
+      "scope_fields_absent": [
+        "source_kind",
+        "notification_only",
+        "registered_learning_request"
+      ]
+    },
+    {
+      "notice": {
+        "path": "ops/codex-ops/learning-notices/f619c26f4bfa10970591beb5.json",
+        "bytes": 4424,
+        "sha256": "bb7f1fbb42af6ce8ca4ea698e515d3f9c605666fd381b02a3adab5e633ba60ab"
+      },
+      "message_sha256": "079d1ccd40b005ab012a2f78b4fdf922eed1503dbede1298a07f22d24ad9b741",
+      "original_ops_forwarded_receipt_verified": true,
+      "actual_watcher_role_receipts": [
+        {
+          "path": ".artifacts/v6-learning-notice-watcher-20261019/f619c26f4bfa10970591beb5.watcher_received.json",
+          "bytes": 628,
+          "sha256": "e71d72d525215dd32a7d542b65c22b35b7fb56f45b9e0a9b6a37615d9189760d"
+        },
+        {
+          "path": ".artifacts/v6-learning-notice-watcher-20261019/f619c26f4bfa10970591beb5.roy_notified.json",
+          "bytes": 624,
+          "sha256": "5ccdc7d3bc94fd8464b51e67f44804f79f0a08f909b06f35fa9d9a4eff0014ad"
+        }
+      ],
+      "protocol_watcher_received": false,
+      "protocol_roy_notified": false,
+      "scope_fields_absent": [
+        "source_kind",
+        "notification_only",
+        "registered_learning_request"
+      ]
+    },
+    {
+      "notice": {
+        "path": "ops/codex-ops/learning-notices/b5b53e0d8bebe1df7fb30468.json",
+        "bytes": 2342,
+        "sha256": "2f5ea89dd775eff136c5494c45ed6670435be22744305b7fabae0553cbecdb16"
+      },
+      "message_sha256": "c8b21adc6626109ccaa6d2856ae174a7b3a3cb5277632855b9053ec7c84464a4",
+      "original_ops_forwarded_receipt_verified": true,
+      "actual_watcher_role_receipts": [
+        {
+          "path": ".artifacts/v6-learning-notice-watcher-20261019/b5b53e0d8bebe1df7fb30468.watcher_received.json",
+          "bytes": 628,
+          "sha256": "061defbdc1b2517715cf981a6122f404d5b4e5d1f0b94f65f146c6e398f7c616"
+        },
+        {
+          "path": ".artifacts/v6-learning-notice-watcher-20261019/b5b53e0d8bebe1df7fb30468.roy_notified.json",
+          "bytes": 624,
+          "sha256": "4d84fcec5c6435ba228a692d7b0b5874eac7336e2b5b9bc8f9ec214c38f7810c"
+        }
+      ],
+      "protocol_watcher_received": false,
+      "protocol_roy_notified": false,
+      "scope_fields_absent": [
+        "source_kind",
+        "notification_only",
+        "registered_learning_request"
+      ]
+    }
+  ],
+  "actual_original_watcher_read_and_Roy_user_visible_delivery_verified": true,
+  "native_evidence": {
+    "path": ".artifacts/v6-learning-notice-watcher-20261019/native-roy-notification.json",
+    "bytes": 2024,
+    "sha256": "16b0a57bb5d88164e970ba82742d1e4bea38e6a697c9edd0bcf3f27ba3c05752"
+  },
+  "native_line": {
+    "path": "/home/dw/.codex1/sessions/2026/10/18/rollout-2026-10-18T22-15-13-01a14f5d-da55-7831-959e-53727796115e.jsonl",
+    "line": 8185,
+    "sha256": "c681b01b1333994f838dadf0ecd94491abe60a00f88d27d6bf242ac2252de842",
+    "hash_scope": "line excluding terminator"
+  },
+  "current_protocol_ACKs": "pending; retained original notices unchanged",
+  "current_compatibility_failure": "unknown learning request; ordinary notification scope must be explicit",
+  "current_ACK_source": {
+    "path": "ops/learning_requests.py",
+    "bytes": 59134,
+    "sha256": "2bd6d3e6a7ea6cc7a71b6eb999ea738e2f7772df75baeeb93befcf6c9b617d84"
+  },
+  "source_guard": "ack_request lines49-68; no registered parent and absent notification-only scope rejected before writes",
+  "watcher_reminder_rc": 0,
+  "new_watcher_actual_read_or_Roy_reply_claimed": false,
+  "ACK_CLI_not_repeated": true,
+  "other_role_ACK_written_by_ops": false,
+  "new_learning_request_or_batch": false,
+  "formal_knowledge_changed": false,
+  "source_code_changed": false,
+  "STOP_retained": true,
+  "Regent": "paused",
+  "parents_completed": false,
+  "next": "Original nonblocking fix chain adds explicit original manual-notice provenance bridge; original watcher retries its existing real role receipts through CLI after compatible delivery, no fake parent/proposal/source fields and no notice rewriting."
+}
