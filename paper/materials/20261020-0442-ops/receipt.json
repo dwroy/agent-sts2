@@ -1,0 +1,86 @@
+{
+  "at": "2026-10-20T04:44:07+08:00",
+  "event": "fix-done",
+  "batch": "20261020-041302-fix-batch",
+  "original_report": {
+    "path": "learner/runs/20261020-041319-db7e458b-b670-41c5-ab1d-741a9460ba7e-fix-batch/report.md",
+    "bytes": 7604,
+    "sha256": "e5bd6106f16b8419d034bd9c62a547226b40734ceb137e1d7d6f7babe37d3125"
+  },
+  "original_checks": {
+    "path": "learner/runs/20261020-041319-db7e458b-b670-41c5-ab1d-741a9460ba7e-fix-batch/checks.json",
+    "bytes": 1486,
+    "sha256": "7fa2419b097d4623c80dd342ed397a65199c26b538884e4ded25b3b75dc797c4"
+  },
+  "original_state": "failed",
+  "original_exit": 0,
+  "original_merged": null,
+  "source_task": "v6-knowledge-publish exact allowlist compatibility only",
+  "candidate_files": [
+    {
+      "path": "agent/tests/v6-publication-task-link.test.ts",
+      "bytes": 545,
+      "sha256": "651cfa6435c4f0626cabf6dddd0bbe725c0670bf55b6305dc3deca7af8ae31aa"
+    },
+    {
+      "path": "learner/code_proposals.py",
+      "bytes": 10696,
+      "sha256": "fe6cce87c60eaff4f229936563e27a8a8fa5b58e10d76193ccc896b8cab08938"
+    },
+    {
+      "path": "ops/tests/test_learning_flow.py",
+      "bytes": 25782,
+      "sha256": "16b45d701fbdcf61bb6e788692c10b657e451b787cd1f4f84bc294b5c6fbb5e4"
+    }
+  ],
+  "original_patch_unchanged_after_FF": true,
+  "original_patch_sha256": "bee2037df4728686cf24ca922c9045f69f8f579f8f28ec618699a8f0a7bc9079",
+  "original_base": "09b0340b8f587d0f397c631be9e3c3622f8814ef",
+  "host_base": "e208023e3dcfeafffb4cc8ae2bff0ddb674751c3",
+  "fixed_staged_tree": "79fc63feaa9426d49e6f603650f6656803cd9a0e",
+  "source_commit": null,
+  "main_merge": null,
+  "live_merge": null,
+  "actual_live": "2897d89b63f0ea8c898672cdf5919072f7e41c37",
+  "original_sandbox": {
+    "tsc_rc": 0,
+    "full_rc": 1,
+    "failed_cases": 29,
+    "errors": 17,
+    "explicit_EPERM_EROFS_kept": true,
+    "v6_draft_subprocess_failure_unclassified": true,
+    "regression_without_fix_rc": 1,
+    "regression_with_fix_rc": 0,
+    "python_proposal_cases": 6,
+    "python_rc": 0
+  },
+  "source_gitleaks_rc": 0,
+  "host_start": {
+    "path": "paper/materials/20261020-0442-ops/host-launch-verified.json",
+    "bytes": 1163,
+    "sha256": "11e0520e63d9e23920466b742932ab06f0f216abc8d0057fba3f08cbf2b71f6c"
+  },
+  "actual_host_pid": 120886,
+  "actual_host_start_ticks": 133454500,
+  "nice": 19,
+  "worktree_lease_busy": true,
+  "host_state_at_single_readback": "checking",
+  "host_full_rc": null,
+  "host_status": ".artifacts/ops-wake-20261020-0442/proposal-host-status.json",
+  "original_terminal_event": "learner-checks",
+  "new_model_dispatched": false,
+  "new_host_source_combination": true,
+  "unchanged_source_full_repeated": false,
+  "production_dataset_run": false,
+  "R3_registration_or_publication_claimed": false,
+  "original_R3_joint_host0_preserved": "ops/codex-ops/record-staging/20261020-0358/host-result.json",
+  "other_ACK_ordinary_gzip_owners_unchanged": true,
+  "STOP_kept": true,
+  "saved_run": "MWMR855QHTWR",
+  "fault_and_frozen_request_preserved": "paper/materials/20261020-0249-ops/frozen-request-location.json",
+  "Regent_paused": true,
+  "other_role_ACK_written": false,
+  "parents_closed": false,
+  "retention_complete": false,
+  "next": "Original learner-checks terminal event verifies exact staged tree and original host full result before ops commit/integration. Preserve original failed/rc0/mergednull, sandbox full1 and candidate; do not retry production registration on unaccepted patch."
+}

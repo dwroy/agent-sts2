@@ -4848,3 +4848,5 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
 
 - 2026-10-20 04:17:20 CST [运维 codex/R3联合终局] 核501d/775109原唯一host full0（593文件5684过2跳）；原锁main09b/live2897源码无漂移，R3真实task提案CLI仍拒，注册及运输保持pending，未增版/重复full/刷新，STOP保持。原件：paper/materials/20261020-0413-ops/receipt.json。
 - 2026-10-20 04:19:54 CST [Codex v6-w4w6] V6开场unknown题面与多选项最小摘要已FF main c6f77ba1b（开场a29c9f48e）：tsc0、完整vitest Test Files  593 passed (593); Tests  5688 passed | 2 skipped (5690)、gitleaks0；商店28项全部非null并保留身份/两类配对差与档位/凑齐概率变化/未知原因，固定已知与未知混合题21577B state/23076B总请求；state子限额22KB、总请求仍24KB，不冒称Nova官方上限。Wk/W0逐行未知及已有原因透传，不改sim/知识、不补数、不重试模型、不动live/STOP/旧故障；W7沿用boundedV6Jev，watcher模型/HP/缓存及ops真实live验收仍待原owner。材料paper/materials/2026-10-20-v6-option-prompt-floor/与2026-10-20-v6-opening-unknown/。
+
+- 2026-10-20 04:44:07 CST [运维 codex/041302原宿主补验] 原发布任务身份三叶未提交候选FF e208、补丁SHA不变，固定79fc唯一宿主PID120886/nice19实际checking；原沙箱full1和failed/rc0保留，待原learner-checks，不登记上线或重试R3。STOP保持。原件：paper/materials/20261020-0442-ops/receipt.json。
