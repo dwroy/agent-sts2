@@ -1,0 +1,1259 @@
+{
+  "ledger": "silent-0324",
+  "proposal": "silent-proposal-e7ed37db21fc698a",
+  "frames": [
+    {
+      "ref": {
+        "source": "/home/dw/Projects/agent-sts2/logs/states.jsonl",
+        "source_size": 14614066060,
+        "line": 209322,
+        "offset": 6255868658,
+        "bytes": 24058,
+        "sha256": "1b2f71ba34151386e7addd7b908b094a9a658fd81d42d6ab71ca6028f2372325",
+        "run_id": "C48LLXBGKXQ9",
+        "identity": {
+          "status": "explicit_run",
+          "fields": {
+            "state.run_id": "C48LLXBGKXQ9",
+            "fingerprint.run": "C48LLXBGKXQ9"
+          },
+          "decision_ref": null
+        }
+      },
+      "run": {
+        "character_id": "SILENT",
+        "ascension": 0,
+        "floor": 6,
+        "current_hp": 59,
+        "max_hp": 70
+      },
+      "turn": 3,
+      "player": {
+        "current_hp": 59,
+        "max_hp": 70,
+        "block": 0,
+        "energy": 3,
+        "stars": 0,
+        "focus": 0,
+        "powers": [
+          {
+            "index": 0,
+            "power_id": "FRAIL_POWER",
+            "name": "脆弱",
+            "amount": 1,
+            "is_debuff": true
+          }
+        ],
+        "base_orb_slots": 0,
+        "orb_capacity": 0,
+        "empty_orb_slots": 0,
+        "orbs": [],
+        "pets": [],
+        "pet_missing": false,
+        "cards_played_this_turn": 0,
+        "attacks_played_this_turn": 0,
+        "skills_played_this_turn": 0
+      },
+      "hand": [
+        {
+          "index": 0,
+          "card_id": "DAZED",
+          "name": "晕眩",
+          "upgraded": false,
+          "target_type": "None",
+          "requires_target": false,
+          "target_index_space": null,
+          "valid_target_indices": [],
+          "costs_x": false,
+          "star_costs_x": false,
+          "energy_cost": -1,
+          "star_cost": 0,
+          "rules_text": "",
+          "resolved_rules_text": "不能被打出。 虚无。",
+          "dynamic_values": [],
+          "playable": false,
+          "can_play_result": false,
+          "unplayable_reason": "unplayable",
+          "unplayable_reason_raw": "HasUnplayableKeyword",
+          "unplayable_preventer_id": null,
+          "unplayable_preventer_type": null
+        },
+        {
+          "index": 1,
+          "card_id": "BLADE_DANCE",
+          "name": "刀刃之舞",
+          "upgraded": false,
+          "target_type": "Self",
+          "requires_target": false,
+          "target_index_space": null,
+          "valid_target_indices": [],
+          "costs_x": false,
+          "star_costs_x": false,
+          "energy_cost": 1,
+          "star_cost": 0,
+          "rules_text": "添加{Cards:diff()}张小刀到你的手牌。",
+          "resolved_rules_text": "添加3张小刀到你的手牌。 消耗。",
+          "dynamic_values": [
+            {
+              "name": "Cards",
+              "base_value": 3,
+              "current_value": 3,
+              "enchanted_value": 3,
+              "is_modified": false,
+              "was_just_upgraded": false
+            }
+          ],
+          "playable": true,
+          "can_play_result": true,
+          "unplayable_reason": null,
+          "unplayable_reason_raw": null,
+          "unplayable_preventer_id": null,
+          "unplayable_preventer_type": null
+        },
+        {
+          "index": 2,
+          "card_id": "DEFEND_SILENT",
+          "name": "防御",
+          "upgraded": false,
+          "target_type": "Self",
+          "requires_target": false,
+          "target_index_space": null,
+          "valid_target_indices": [],
+          "costs_x": false,
+          "star_costs_x": false,
+          "energy_cost": 1,
+          "star_cost": 0,
+          "rules_text": "获得{Block:diff()}点格挡。",
+          "resolved_rules_text": "获得3点格挡。",
+          "dynamic_values": [
+            {
+              "name": "Block",
+              "base_value": 5,
+              "current_value": 3,
+              "enchanted_value": 5,
+              "is_modified": true,
+              "was_just_upgraded": false
+            }
+          ],
+          "playable": true,
+          "can_play_result": true,
+          "unplayable_reason": null,
+          "unplayable_reason_raw": null,
+          "unplayable_preventer_id": null,
+          "unplayable_preventer_type": null
+        },
+        {
+          "index": 3,
+          "card_id": "DEFEND_SILENT",
+          "name": "防御",
+          "upgraded": false,
+          "target_type": "Self",
+          "requires_target": false,
+          "target_index_space": null,
+          "valid_target_indices": [],
+          "costs_x": false,
+          "star_costs_x": false,
+          "energy_cost": 1,
+          "star_cost": 0,
+          "rules_text": "获得{Block:diff()}点格挡。",
+          "resolved_rules_text": "获得3点格挡。",
+          "dynamic_values": [
+            {
+              "name": "Block",
+              "base_value": 5,
+              "current_value": 3,
+              "enchanted_value": 5,
+              "is_modified": true,
+              "was_just_upgraded": false
+            }
+          ],
+          "playable": true,
+          "can_play_result": true,
+          "unplayable_reason": null,
+          "unplayable_reason_raw": null,
+          "unplayable_preventer_id": null,
+          "unplayable_preventer_type": null
+        },
+        {
+          "index": 4,
+          "card_id": "STRIKE_SILENT",
+          "name": "打击",
+          "upgraded": false,
+          "target_type": "AnyEnemy",
+          "requires_target": true,
+          "target_index_space": "enemies",
+          "valid_target_indices": [
+            0
+          ],
+          "costs_x": false,
+          "star_costs_x": false,
+          "energy_cost": 1,
+          "star_cost": 0,
+          "rules_text": "造成{Damage:diff()}点伤害。",
+          "resolved_rules_text": "造成6点伤害。",
+          "dynamic_values": [
+            {
+              "name": "Damage",
+              "base_value": 6,
+              "current_value": 6,
+              "enchanted_value": 6,
+              "is_modified": false,
+              "was_just_upgraded": false
+            }
+          ],
+          "playable": true,
+          "can_play_result": true,
+          "unplayable_reason": null,
+          "unplayable_reason_raw": null,
+          "unplayable_preventer_id": null,
+          "unplayable_preventer_type": null
+        }
+      ]
+    },
+    {
+      "ref": {
+        "source": "/home/dw/Projects/agent-sts2/logs/states.jsonl",
+        "source_size": 14614066060,
+        "line": 209323,
+        "offset": 6255892716,
+        "bytes": 26457,
+        "sha256": "b139b44f09e917125a9bbc5b25f9d2c6c14368f5e6a3d8fcafb26fe31e610e26",
+        "run_id": "C48LLXBGKXQ9",
+        "identity": {
+          "status": "explicit_run",
+          "fields": {
+            "state.run_id": "C48LLXBGKXQ9",
+            "fingerprint.run": "C48LLXBGKXQ9"
+          },
+          "decision_ref": null
+        }
+      },
+      "run": {
+        "character_id": "SILENT",
+        "ascension": 0,
+        "floor": 6,
+        "current_hp": 59,
+        "max_hp": 70
+      },
+      "turn": 3,
+      "player": {
+        "current_hp": 59,
+        "max_hp": 70,
+        "block": 0,
+        "energy": 2,
+        "stars": 0,
+        "focus": 0,
+        "powers": [
+          {
+            "index": 0,
+            "power_id": "FRAIL_POWER",
+            "name": "脆弱",
+            "amount": 1,
+            "is_debuff": true
+          }
+        ],
+        "base_orb_slots": 0,
+        "orb_capacity": 0,
+        "empty_orb_slots": 0,
+        "orbs": [],
+        "pets": [],
+        "pet_missing": false,
+        "cards_played_this_turn": 1,
+        "attacks_played_this_turn": 0,
+        "skills_played_this_turn": 1
+      },
+      "hand": [
+        {
+          "index": 0,
+          "card_id": "DAZED",
+          "name": "晕眩",
+          "upgraded": false,
+          "target_type": "None",
+          "requires_target": false,
+          "target_index_space": null,
+          "valid_target_indices": [],
+          "costs_x": false,
+          "star_costs_x": false,
+          "energy_cost": -1,
+          "star_cost": 0,
+          "rules_text": "",
+          "resolved_rules_text": "不能被打出。 虚无。",
+          "dynamic_values": [],
+          "playable": false,
+          "can_play_result": false,
+          "unplayable_reason": "unplayable",
+          "unplayable_reason_raw": "HasUnplayableKeyword",
+          "unplayable_preventer_id": null,
+          "unplayable_preventer_type": null
+        },
+        {
+          "index": 1,
+          "card_id": "DEFEND_SILENT",
+          "name": "防御",
+          "upgraded": false,
+          "target_type": "Self",
+          "requires_target": false,
+          "target_index_space": null,
+          "valid_target_indices": [],
+          "costs_x": false,
+          "star_costs_x": false,
+          "energy_cost": 1,
+          "star_cost": 0,
+          "rules_text": "获得{Block:diff()}点格挡。",
+          "resolved_rules_text": "获得3点格挡。",
+          "dynamic_values": [
+            {
+              "name": "Block",
+              "base_value": 5,
+              "current_value": 3,
+              "enchanted_value": 5,
+              "is_modified": true,
+              "was_just_upgraded": false
+            }
+          ],
+          "playable": true,
+          "can_play_result": true,
+          "unplayable_reason": null,
+          "unplayable_reason_raw": null,
+          "unplayable_preventer_id": null,
+          "unplayable_preventer_type": null
+        },
+        {
+          "index": 2,
+          "card_id": "DEFEND_SILENT",
+          "name": "防御",
+          "upgraded": false,
+          "target_type": "Self",
+          "requires_target": false,
+          "target_index_space": null,
+          "valid_target_indices": [],
+          "costs_x": false,
+          "star_costs_x": false,
+          "energy_cost": 1,
+          "star_cost": 0,
+          "rules_text": "获得{Block:diff()}点格挡。",
+          "resolved_rules_text": "获得3点格挡。",
+          "dynamic_values": [
+            {
+              "name": "Block",
+              "base_value": 5,
+              "current_value": 3,
+              "enchanted_value": 5,
+              "is_modified": true,
+              "was_just_upgraded": false
+            }
+          ],
+          "playable": true,
+          "can_play_result": true,
+          "unplayable_reason": null,
+          "unplayable_reason_raw": null,
+          "unplayable_preventer_id": null,
+          "unplayable_preventer_type": null
+        },
+        {
+          "index": 3,
+          "card_id": "STRIKE_SILENT",
+          "name": "打击",
+          "upgraded": false,
+          "target_type": "AnyEnemy",
+          "requires_target": true,
+          "target_index_space": "enemies",
+          "valid_target_indices": [
+            0
+          ],
+          "costs_x": false,
+          "star_costs_x": false,
+          "energy_cost": 1,
+          "star_cost": 0,
+          "rules_text": "造成{Damage:diff()}点伤害。",
+          "resolved_rules_text": "造成6点伤害。",
+          "dynamic_values": [
+            {
+              "name": "Damage",
+              "base_value": 6,
+              "current_value": 6,
+              "enchanted_value": 6,
+              "is_modified": false,
+              "was_just_upgraded": false
+            }
+          ],
+          "playable": true,
+          "can_play_result": true,
+          "unplayable_reason": null,
+          "unplayable_reason_raw": null,
+          "unplayable_preventer_id": null,
+          "unplayable_preventer_type": null
+        },
+        {
+          "index": 4,
+          "card_id": "SHIV",
+          "name": "小刀",
+          "upgraded": false,
+          "target_type": "AnyEnemy",
+          "requires_target": true,
+          "target_index_space": "enemies",
+          "valid_target_indices": [
+            0
+          ],
+          "costs_x": false,
+          "star_costs_x": false,
+          "energy_cost": 0,
+          "star_cost": 0,
+          "rules_text": "{TargetType:choose(AllEnemies):对所有敌人|}造成{Damage:diff()}点伤害。",
+          "resolved_rules_text": "造成4点伤害。 消耗。",
+          "dynamic_values": [
+            {
+              "name": "Damage",
+              "base_value": 4,
+              "current_value": 4,
+              "enchanted_value": 4,
+              "is_modified": false,
+              "was_just_upgraded": false
+            }
+          ],
+          "playable": true,
+          "can_play_result": true,
+          "unplayable_reason": null,
+          "unplayable_reason_raw": null,
+          "unplayable_preventer_id": null,
+          "unplayable_preventer_type": null
+        },
+        {
+          "index": 5,
+          "card_id": "SHIV",
+          "name": "小刀",
+          "upgraded": false,
+          "target_type": "AnyEnemy",
+          "requires_target": true,
+          "target_index_space": "enemies",
+          "valid_target_indices": [
+            0
+          ],
+          "costs_x": false,
+          "star_costs_x": false,
+          "energy_cost": 0,
+          "star_cost": 0,
+          "rules_text": "{TargetType:choose(AllEnemies):对所有敌人|}造成{Damage:diff()}点伤害。",
+          "resolved_rules_text": "造成4点伤害。 消耗。",
+          "dynamic_values": [
+            {
+              "name": "Damage",
+              "base_value": 4,
+              "current_value": 4,
+              "enchanted_value": 4,
+              "is_modified": false,
+              "was_just_upgraded": false
+            }
+          ],
+          "playable": true,
+          "can_play_result": true,
+          "unplayable_reason": null,
+          "unplayable_reason_raw": null,
+          "unplayable_preventer_id": null,
+          "unplayable_preventer_type": null
+        },
+        {
+          "index": 6,
+          "card_id": "SHIV",
+          "name": "小刀",
+          "upgraded": false,
+          "target_type": "AnyEnemy",
+          "requires_target": true,
+          "target_index_space": "enemies",
+          "valid_target_indices": [
+            0
+          ],
+          "costs_x": false,
+          "star_costs_x": false,
+          "energy_cost": 0,
+          "star_cost": 0,
+          "rules_text": "{TargetType:choose(AllEnemies):对所有敌人|}造成{Damage:diff()}点伤害。",
+          "resolved_rules_text": "造成4点伤害。 消耗。",
+          "dynamic_values": [
+            {
+              "name": "Damage",
+              "base_value": 4,
+              "current_value": 4,
+              "enchanted_value": 4,
+              "is_modified": false,
+              "was_just_upgraded": false
+            }
+          ],
+          "playable": true,
+          "can_play_result": true,
+          "unplayable_reason": null,
+          "unplayable_reason_raw": null,
+          "unplayable_preventer_id": null,
+          "unplayable_preventer_type": null
+        }
+      ]
+    },
+    {
+      "ref": {
+        "source": "/home/dw/Projects/agent-sts2/logs/states.jsonl",
+        "source_size": 14614066060,
+        "line": 311492,
+        "offset": 9686964009,
+        "bytes": 27566,
+        "sha256": "0ff8e69a6219ba173fa7a125795ec9d659794d32f8c7f00e1c481fc6f05d9cfa",
+        "run_id": "FU8ZUQHBHNV9",
+        "identity": {
+          "status": "explicit_run",
+          "fields": {
+            "state.run_id": "FU8ZUQHBHNV9",
+            "fingerprint.run": "FU8ZUQHBHNV9"
+          },
+          "decision_ref": null
+        }
+      },
+      "run": {
+        "character_id": "SILENT",
+        "ascension": 10,
+        "floor": 8,
+        "current_hp": 66,
+        "max_hp": 76
+      },
+      "turn": 3,
+      "player": {
+        "current_hp": 66,
+        "max_hp": 76,
+        "block": 0,
+        "energy": 0,
+        "stars": 0,
+        "focus": 0,
+        "powers": [
+          {
+            "index": 0,
+            "power_id": "DRAW_CARDS_NEXT_TURN_POWER",
+            "name": "下回合抽牌",
+            "amount": 2,
+            "is_debuff": false
+          }
+        ],
+        "base_orb_slots": 0,
+        "orb_capacity": 0,
+        "empty_orb_slots": 0,
+        "orbs": [],
+        "pets": [],
+        "pet_missing": false,
+        "cards_played_this_turn": 2,
+        "attacks_played_this_turn": 2,
+        "skills_played_this_turn": 0
+      },
+      "hand": [
+        {
+          "index": 0,
+          "card_id": "FOOTWORK",
+          "name": "灵动步法",
+          "upgraded": false,
+          "target_type": "Self",
+          "requires_target": false,
+          "target_index_space": null,
+          "valid_target_indices": [],
+          "costs_x": false,
+          "star_costs_x": false,
+          "energy_cost": 1,
+          "star_cost": 0,
+          "rules_text": "获得{DexterityPower:diff()}点敏捷。",
+          "resolved_rules_text": "获得2点敏捷。",
+          "dynamic_values": [
+            {
+              "name": "DexterityPower",
+              "base_value": 2,
+              "current_value": 2,
+              "enchanted_value": 2,
+              "is_modified": false,
+              "was_just_upgraded": false
+            }
+          ],
+          "playable": false,
+          "can_play_result": false,
+          "unplayable_reason": "not_enough_energy",
+          "unplayable_reason_raw": "EnergyCostTooHigh",
+          "unplayable_preventer_id": null,
+          "unplayable_preventer_type": null
+        },
+        {
+          "index": 1,
+          "card_id": "DEFEND_SILENT",
+          "name": "防御",
+          "upgraded": false,
+          "target_type": "Self",
+          "requires_target": false,
+          "target_index_space": null,
+          "valid_target_indices": [],
+          "costs_x": false,
+          "star_costs_x": false,
+          "energy_cost": 1,
+          "star_cost": 0,
+          "rules_text": "获得{Block:diff()}点格挡。",
+          "resolved_rules_text": "获得5点格挡。",
+          "dynamic_values": [
+            {
+              "name": "Block",
+              "base_value": 5,
+              "current_value": 5,
+              "enchanted_value": 5,
+              "is_modified": false,
+              "was_just_upgraded": false
+            }
+          ],
+          "playable": false,
+          "can_play_result": false,
+          "unplayable_reason": "not_enough_energy",
+          "unplayable_reason_raw": "EnergyCostTooHigh",
+          "unplayable_preventer_id": null,
+          "unplayable_preventer_type": null
+        },
+        {
+          "index": 2,
+          "card_id": "RICOCHET",
+          "name": "连续反弹",
+          "upgraded": false,
+          "target_type": "RandomEnemy",
+          "requires_target": false,
+          "target_index_space": null,
+          "valid_target_indices": [],
+          "costs_x": false,
+          "star_costs_x": false,
+          "energy_cost": 2,
+          "star_cost": 0,
+          "rules_text": "随机对敌人造成{Damage:diff()}点伤害{Repeat:diff()}次。",
+          "resolved_rules_text": "奇巧。 随机对敌人造成3点伤害4次。",
+          "dynamic_values": [
+            {
+              "name": "Damage",
+              "base_value": 3,
+              "current_value": 3,
+              "enchanted_value": 3,
+              "is_modified": false,
+              "was_just_upgraded": false
+            },
+            {
+              "name": "Repeat",
+              "base_value": 4,
+              "current_value": 4,
+              "enchanted_value": 4,
+              "is_modified": false,
+              "was_just_upgraded": false
+            }
+          ],
+          "playable": false,
+          "can_play_result": false,
+          "unplayable_reason": "not_enough_energy",
+          "unplayable_reason_raw": "EnergyCostTooHigh",
+          "unplayable_preventer_id": null,
+          "unplayable_preventer_type": null
+        },
+        {
+          "index": 3,
+          "card_id": "BLADE_DANCE",
+          "name": "刀刃之舞",
+          "upgraded": false,
+          "target_type": "Self",
+          "requires_target": false,
+          "target_index_space": null,
+          "valid_target_indices": [],
+          "costs_x": false,
+          "star_costs_x": false,
+          "energy_cost": 0,
+          "star_cost": 0,
+          "rules_text": "添加{Cards:diff()}张小刀到你的手牌。",
+          "resolved_rules_text": "添加3张小刀到你的手牌。 消耗。",
+          "dynamic_values": [
+            {
+              "name": "Cards",
+              "base_value": 3,
+              "current_value": 3,
+              "enchanted_value": 3,
+              "is_modified": false,
+              "was_just_upgraded": false
+            }
+          ],
+          "playable": true,
+          "can_play_result": true,
+          "unplayable_reason": null,
+          "unplayable_reason_raw": null,
+          "unplayable_preventer_id": null,
+          "unplayable_preventer_type": null
+        }
+      ]
+    },
+    {
+      "ref": {
+        "source": "/home/dw/Projects/agent-sts2/logs/states.jsonl",
+        "source_size": 14614066060,
+        "line": 311495,
+        "offset": 9687050576,
+        "bytes": 28569,
+        "sha256": "c6e1e2e7b44baf676fc8c8ba1a2444aff1067f3103c9900b3567efbe60b4528a",
+        "run_id": "FU8ZUQHBHNV9",
+        "identity": {
+          "status": "explicit_run",
+          "fields": {
+            "state.run_id": "FU8ZUQHBHNV9",
+            "fingerprint.run": "FU8ZUQHBHNV9"
+          },
+          "decision_ref": null
+        }
+      },
+      "run": {
+        "character_id": "SILENT",
+        "ascension": 10,
+        "floor": 8,
+        "current_hp": 42,
+        "max_hp": 76
+      },
+      "turn": 4,
+      "player": {
+        "current_hp": 42,
+        "max_hp": 76,
+        "block": 0,
+        "energy": 1,
+        "stars": 0,
+        "focus": 0,
+        "powers": [],
+        "base_orb_slots": 0,
+        "orb_capacity": 0,
+        "empty_orb_slots": 0,
+        "orbs": [],
+        "pets": [],
+        "pet_missing": false,
+        "cards_played_this_turn": 2,
+        "attacks_played_this_turn": 1,
+        "skills_played_this_turn": 1
+      },
+      "hand": [
+        {
+          "index": 0,
+          "card_id": "DEFEND_SILENT",
+          "name": "防御",
+          "upgraded": false,
+          "target_type": "Self",
+          "requires_target": false,
+          "target_index_space": null,
+          "valid_target_indices": [],
+          "costs_x": false,
+          "star_costs_x": false,
+          "energy_cost": 1,
+          "star_cost": 0,
+          "rules_text": "获得{Block:diff()}点格挡。",
+          "resolved_rules_text": "获得5点格挡。",
+          "dynamic_values": [
+            {
+              "name": "Block",
+              "base_value": 5,
+              "current_value": 5,
+              "enchanted_value": 5,
+              "is_modified": false,
+              "was_just_upgraded": false
+            }
+          ],
+          "playable": true,
+          "can_play_result": true,
+          "unplayable_reason": null,
+          "unplayable_reason_raw": null,
+          "unplayable_preventer_id": null,
+          "unplayable_preventer_type": null
+        },
+        {
+          "index": 1,
+          "card_id": "BLADE_DANCE",
+          "name": "刀刃之舞",
+          "upgraded": false,
+          "target_type": "Self",
+          "requires_target": false,
+          "target_index_space": null,
+          "valid_target_indices": [],
+          "costs_x": false,
+          "star_costs_x": false,
+          "energy_cost": 1,
+          "star_cost": 0,
+          "rules_text": "添加{Cards:diff()}张小刀到你的手牌。",
+          "resolved_rules_text": "添加3张小刀到你的手牌。 消耗。",
+          "dynamic_values": [
+            {
+              "name": "Cards",
+              "base_value": 3,
+              "current_value": 3,
+              "enchanted_value": 3,
+              "is_modified": false,
+              "was_just_upgraded": false
+            }
+          ],
+          "playable": true,
+          "can_play_result": true,
+          "unplayable_reason": null,
+          "unplayable_reason_raw": null,
+          "unplayable_preventer_id": null,
+          "unplayable_preventer_type": null
+        },
+        {
+          "index": 2,
+          "card_id": "PREDATOR",
+          "name": "猎杀者",
+          "upgraded": false,
+          "target_type": "AnyEnemy",
+          "requires_target": true,
+          "target_index_space": "enemies",
+          "valid_target_indices": [
+            0
+          ],
+          "costs_x": false,
+          "star_costs_x": false,
+          "energy_cost": 2,
+          "star_cost": 0,
+          "rules_text": "造成{Damage:diff()}点伤害。 在下个回合抽2张牌。",
+          "resolved_rules_text": "造成15点伤害。 在下个回合抽2张牌。",
+          "dynamic_values": [
+            {
+              "name": "Damage",
+              "base_value": 15,
+              "current_value": 15,
+              "enchanted_value": 15,
+              "is_modified": false,
+              "was_just_upgraded": false
+            }
+          ],
+          "playable": false,
+          "can_play_result": false,
+          "unplayable_reason": "not_enough_energy",
+          "unplayable_reason_raw": "EnergyCostTooHigh",
+          "unplayable_preventer_id": null,
+          "unplayable_preventer_type": null
+        },
+        {
+          "index": 3,
+          "card_id": "RICOCHET",
+          "name": "连续反弹",
+          "upgraded": false,
+          "target_type": "RandomEnemy",
+          "requires_target": false,
+          "target_index_space": null,
+          "valid_target_indices": [],
+          "costs_x": false,
+          "star_costs_x": false,
+          "energy_cost": 2,
+          "star_cost": 0,
+          "rules_text": "随机对敌人造成{Damage:diff()}点伤害{Repeat:diff()}次。",
+          "resolved_rules_text": "奇巧。 随机对敌人造成3点伤害4次。",
+          "dynamic_values": [
+            {
+              "name": "Damage",
+              "base_value": 3,
+              "current_value": 3,
+              "enchanted_value": 3,
+              "is_modified": false,
+              "was_just_upgraded": false
+            },
+            {
+              "name": "Repeat",
+              "base_value": 4,
+              "current_value": 4,
+              "enchanted_value": 4,
+              "is_modified": false,
+              "was_just_upgraded": false
+            }
+          ],
+          "playable": false,
+          "can_play_result": false,
+          "unplayable_reason": "not_enough_energy",
+          "unplayable_reason_raw": "EnergyCostTooHigh",
+          "unplayable_preventer_id": null,
+          "unplayable_preventer_type": null
+        },
+        {
+          "index": 4,
+          "card_id": "STRIKE_SILENT",
+          "name": "打击",
+          "upgraded": false,
+          "target_type": "AnyEnemy",
+          "requires_target": true,
+          "target_index_space": "enemies",
+          "valid_target_indices": [
+            0
+          ],
+          "costs_x": false,
+          "star_costs_x": false,
+          "energy_cost": 1,
+          "star_cost": 0,
+          "rules_text": "造成{Damage:diff()}点伤害。",
+          "resolved_rules_text": "造成6点伤害。",
+          "dynamic_values": [
+            {
+              "name": "Damage",
+              "base_value": 6,
+              "current_value": 6,
+              "enchanted_value": 6,
+              "is_modified": false,
+              "was_just_upgraded": false
+            }
+          ],
+          "playable": true,
+          "can_play_result": true,
+          "unplayable_reason": null,
+          "unplayable_reason_raw": null,
+          "unplayable_preventer_id": null,
+          "unplayable_preventer_type": null
+        }
+      ]
+    },
+    {
+      "ref": {
+        "source": "/home/dw/Projects/agent-sts2/logs/states.jsonl",
+        "source_size": 14614066060,
+        "line": 311496,
+        "offset": 9687079145,
+        "bytes": 31128,
+        "sha256": "5399f6d04f8103e81281068ff2a5a8040949eb171c44855125b7007565daea23",
+        "run_id": "FU8ZUQHBHNV9",
+        "identity": {
+          "status": "explicit_run",
+          "fields": {
+            "state.run_id": "FU8ZUQHBHNV9",
+            "fingerprint.run": "FU8ZUQHBHNV9"
+          },
+          "decision_ref": null
+        }
+      },
+      "run": {
+        "character_id": "SILENT",
+        "ascension": 10,
+        "floor": 8,
+        "current_hp": 42,
+        "max_hp": 76
+      },
+      "turn": 4,
+      "player": {
+        "current_hp": 42,
+        "max_hp": 76,
+        "block": 0,
+        "energy": 0,
+        "stars": 0,
+        "focus": 0,
+        "powers": [],
+        "base_orb_slots": 0,
+        "orb_capacity": 0,
+        "empty_orb_slots": 0,
+        "orbs": [],
+        "pets": [],
+        "pet_missing": false,
+        "cards_played_this_turn": 3,
+        "attacks_played_this_turn": 1,
+        "skills_played_this_turn": 2
+      },
+      "hand": [
+        {
+          "index": 0,
+          "card_id": "DEFEND_SILENT",
+          "name": "防御",
+          "upgraded": false,
+          "target_type": "Self",
+          "requires_target": false,
+          "target_index_space": null,
+          "valid_target_indices": [],
+          "costs_x": false,
+          "star_costs_x": false,
+          "energy_cost": 1,
+          "star_cost": 0,
+          "rules_text": "获得{Block:diff()}点格挡。",
+          "resolved_rules_text": "获得5点格挡。",
+          "dynamic_values": [
+            {
+              "name": "Block",
+              "base_value": 5,
+              "current_value": 5,
+              "enchanted_value": 5,
+              "is_modified": false,
+              "was_just_upgraded": false
+            }
+          ],
+          "playable": false,
+          "can_play_result": false,
+          "unplayable_reason": "not_enough_energy",
+          "unplayable_reason_raw": "EnergyCostTooHigh",
+          "unplayable_preventer_id": null,
+          "unplayable_preventer_type": null
+        },
+        {
+          "index": 1,
+          "card_id": "PREDATOR",
+          "name": "猎杀者",
+          "upgraded": false,
+          "target_type": "AnyEnemy",
+          "requires_target": true,
+          "target_index_space": "enemies",
+          "valid_target_indices": [
+            0
+          ],
+          "costs_x": false,
+          "star_costs_x": false,
+          "energy_cost": 2,
+          "star_cost": 0,
+          "rules_text": "造成{Damage:diff()}点伤害。 在下个回合抽2张牌。",
+          "resolved_rules_text": "造成15点伤害。 在下个回合抽2张牌。",
+          "dynamic_values": [
+            {
+              "name": "Damage",
+              "base_value": 15,
+              "current_value": 15,
+              "enchanted_value": 15,
+              "is_modified": false,
+              "was_just_upgraded": false
+            }
+          ],
+          "playable": false,
+          "can_play_result": false,
+          "unplayable_reason": "not_enough_energy",
+          "unplayable_reason_raw": "EnergyCostTooHigh",
+          "unplayable_preventer_id": null,
+          "unplayable_preventer_type": null
+        },
+        {
+          "index": 2,
+          "card_id": "RICOCHET",
+          "name": "连续反弹",
+          "upgraded": false,
+          "target_type": "RandomEnemy",
+          "requires_target": false,
+          "target_index_space": null,
+          "valid_target_indices": [],
+          "costs_x": false,
+          "star_costs_x": false,
+          "energy_cost": 2,
+          "star_cost": 0,
+          "rules_text": "随机对敌人造成{Damage:diff()}点伤害{Repeat:diff()}次。",
+          "resolved_rules_text": "奇巧。 随机对敌人造成3点伤害4次。",
+          "dynamic_values": [
+            {
+              "name": "Damage",
+              "base_value": 3,
+              "current_value": 3,
+              "enchanted_value": 3,
+              "is_modified": false,
+              "was_just_upgraded": false
+            },
+            {
+              "name": "Repeat",
+              "base_value": 4,
+              "current_value": 4,
+              "enchanted_value": 4,
+              "is_modified": false,
+              "was_just_upgraded": false
+            }
+          ],
+          "playable": false,
+          "can_play_result": false,
+          "unplayable_reason": "not_enough_energy",
+          "unplayable_reason_raw": "EnergyCostTooHigh",
+          "unplayable_preventer_id": null,
+          "unplayable_preventer_type": null
+        },
+        {
+          "index": 3,
+          "card_id": "STRIKE_SILENT",
+          "name": "打击",
+          "upgraded": false,
+          "target_type": "AnyEnemy",
+          "requires_target": true,
+          "target_index_space": "enemies",
+          "valid_target_indices": [
+            0
+          ],
+          "costs_x": false,
+          "star_costs_x": false,
+          "energy_cost": 1,
+          "star_cost": 0,
+          "rules_text": "造成{Damage:diff()}点伤害。",
+          "resolved_rules_text": "造成6点伤害。",
+          "dynamic_values": [
+            {
+              "name": "Damage",
+              "base_value": 6,
+              "current_value": 6,
+              "enchanted_value": 6,
+              "is_modified": false,
+              "was_just_upgraded": false
+            }
+          ],
+          "playable": false,
+          "can_play_result": false,
+          "unplayable_reason": "not_enough_energy",
+          "unplayable_reason_raw": "EnergyCostTooHigh",
+          "unplayable_preventer_id": null,
+          "unplayable_preventer_type": null
+        },
+        {
+          "index": 4,
+          "card_id": "SHIV",
+          "name": "小刀",
+          "upgraded": false,
+          "target_type": "AnyEnemy",
+          "requires_target": true,
+          "target_index_space": "enemies",
+          "valid_target_indices": [
+            0
+          ],
+          "costs_x": false,
+          "star_costs_x": false,
+          "energy_cost": 0,
+          "star_cost": 0,
+          "rules_text": "{TargetType:choose(AllEnemies):对所有敌人|}造成{Damage:diff()}点伤害。",
+          "resolved_rules_text": "造成4点伤害。 消耗。",
+          "dynamic_values": [
+            {
+              "name": "Damage",
+              "base_value": 4,
+              "current_value": 4,
+              "enchanted_value": 4,
+              "is_modified": false,
+              "was_just_upgraded": false
+            }
+          ],
+          "playable": true,
+          "can_play_result": true,
+          "unplayable_reason": null,
+          "unplayable_reason_raw": null,
+          "unplayable_preventer_id": null,
+          "unplayable_preventer_type": null
+        },
+        {
+          "index": 5,
+          "card_id": "SHIV",
+          "name": "小刀",
+          "upgraded": false,
+          "target_type": "AnyEnemy",
+          "requires_target": true,
+          "target_index_space": "enemies",
+          "valid_target_indices": [
+            0
+          ],
+          "costs_x": false,
+          "star_costs_x": false,
+          "energy_cost": 0,
+          "star_cost": 0,
+          "rules_text": "{TargetType:choose(AllEnemies):对所有敌人|}造成{Damage:diff()}点伤害。",
+          "resolved_rules_text": "造成4点伤害。 消耗。",
+          "dynamic_values": [
+            {
+              "name": "Damage",
+              "base_value": 4,
+              "current_value": 4,
+              "enchanted_value": 4,
+              "is_modified": false,
+              "was_just_upgraded": false
+            }
+          ],
+          "playable": true,
+          "can_play_result": true,
+          "unplayable_reason": null,
+          "unplayable_reason_raw": null,
+          "unplayable_preventer_id": null,
+          "unplayable_preventer_type": null
+        },
+        {
+          "index": 6,
+          "card_id": "SHIV",
+          "name": "小刀",
+          "upgraded": false,
+          "target_type": "AnyEnemy",
+          "requires_target": true,
+          "target_index_space": "enemies",
+          "valid_target_indices": [
+            0
+          ],
+          "costs_x": false,
+          "star_costs_x": false,
+          "energy_cost": 0,
+          "star_cost": 0,
+          "rules_text": "{TargetType:choose(AllEnemies):对所有敌人|}造成{Damage:diff()}点伤害。",
+          "resolved_rules_text": "造成4点伤害。 消耗。",
+          "dynamic_values": [
+            {
+              "name": "Damage",
+              "base_value": 4,
+              "current_value": 4,
+              "enchanted_value": 4,
+              "is_modified": false,
+              "was_just_upgraded": false
+            }
+          ],
+          "playable": true,
+          "can_play_result": true,
+          "unplayable_reason": null,
+          "unplayable_reason_raw": null,
+          "unplayable_preventer_id": null,
+          "unplayable_preventer_type": null
+        }
+      ]
+    }
+  ],
+  "cards": [
+    {
+      "index": 1,
+      "card_id": "BLADE_DANCE",
+      "name": "刀刃之舞",
+      "upgraded": false,
+      "target_type": "Self",
+      "requires_target": false,
+      "target_index_space": null,
+      "valid_target_indices": [],
+      "costs_x": false,
+      "star_costs_x": false,
+      "energy_cost": 1,
+      "star_cost": 0,
+      "rules_text": "添加{Cards:diff()}张小刀到你的手牌。",
+      "resolved_rules_text": "添加3张小刀到你的手牌。 消耗。",
+      "dynamic_values": [
+        {
+          "name": "Cards",
+          "base_value": 3,
+          "current_value": 3,
+          "enchanted_value": 3,
+          "is_modified": false,
+          "was_just_upgraded": false
+        }
+      ],
+      "playable": true,
+      "can_play_result": true,
+      "unplayable_reason": null,
+      "unplayable_reason_raw": null,
+      "unplayable_preventer_id": null,
+      "unplayable_preventer_type": null
+    },
+    {
+      "index": 4,
+      "card_id": "SHIV",
+      "name": "小刀",
+      "upgraded": false,
+      "target_type": "AnyEnemy",
+      "requires_target": true,
+      "target_index_space": "enemies",
+      "valid_target_indices": [
+        0
+      ],
+      "costs_x": false,
+      "star_costs_x": false,
+      "energy_cost": 0,
+      "star_cost": 0,
+      "rules_text": "{TargetType:choose(AllEnemies):对所有敌人|}造成{Damage:diff()}点伤害。",
+      "resolved_rules_text": "造成4点伤害。 消耗。",
+      "dynamic_values": [
+        {
+          "name": "Damage",
+          "base_value": 4,
+          "current_value": 4,
+          "enchanted_value": 4,
+          "is_modified": false,
+          "was_just_upgraded": false
+        }
+      ],
+      "playable": true,
+      "can_play_result": true,
+      "unplayable_reason": null,
+      "unplayable_reason_raw": null,
+      "unplayable_preventer_id": null,
+      "unplayable_preventer_type": null
+    }
+  ]
+}
