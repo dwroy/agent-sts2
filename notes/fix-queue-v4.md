@@ -1494,3 +1494,5 @@ Roy：「上线后进 F48 反而降低一半，这才是关键，要找问题。
 - 2026-10-20 00:04:01 CST [ops-frozen-storage-v6-stream-20261019 原项续证] 234302双策略同一v6-build流名冲突再现，两原失败保留；24已声明文件/607163778逻辑字节已原显式--file入口逐SHA/size/只读同inode核验归并。仅兜底存储，源码兼容仍open；继续原fix链，不重复条目/模型、不得删改manifest或放松原路径与SHA守卫。证据paper/materials/20261020-0001-ops/receipt.json。
 
 - 2026-10-20 00:14:50 CST [ops-frozen-storage-v6-stream-20261019 源码接续，宿主pending] 原234302 source39258bd0fba27da2ba5f95ef8f18acdd3e1f7896已main dc315aee/live原source，精确十流白名单及三叶SHA核同；原failed/rc0/mergednull、两次沙箱full1保留。原learner-recheck入口已起，固定live tree52b4c9ec0338a5731177d86d377dd88ab584ec7e，终局回原learner-checks；未冒完整绿/已验收，不重复模型/未变源full，不回收源树。R2知识仍原线，既有归并失败不重写。证据paper/materials/20261020-0010-ops/receipt.json。
+
+- [ ] 2026-10-20 00:33:48 CST **infra-ordinary-close-candidate-failure-isolation-20261020（非对局阻塞，原自动收尾协议链）**：close_pending在单一try中验证候选，一项source drift可使全组同写相同attention且无dataset；234302-s2原有三叶漂移；001302-s2曾在main769b原eligible通过，后因main并行W5源码推进最新亦source drift，checkout仍严格干净。需原机械owner保留每项旧失败、独立源/报告/账本/Git/异议守卫，给仍有效原候选保历史重入；保持唯一dataset、受控记录提交/真实commit及scope，不能直接清attention、借他批dataset补完成、放宽守卫或吞失败。旧源与报告不改，不派重复模型/生成器、不热改在途输入。证据paper/materials/20261020-0028-ops/receipt.json。
