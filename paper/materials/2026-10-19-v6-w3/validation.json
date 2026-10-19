@@ -1,0 +1,152 @@
+{
+  "recorded_at": "2026-10-19 20:01:46 CST",
+  "source_commit": "79dc023073785d09263b7e10e667f0c55f349abe",
+  "rebased_main": "d07184494dd556e04ab2590b1a4f299ceec1cd24",
+  "agent_tree": "ca1579b2abeef09b691fcc12f277668bb1afa976",
+  "combined_baseline_ancestors": {
+    "W4": "d790f734b0f674d0933207691a051d841a023c25",
+    "W6": "b63639d1b9dca83a3061210ce135bec5cd9e4c13",
+    "W8": "a600fcb58d4d6fe6644b1948b33d9b05a621635e",
+    "W2.2": "d07184494dd556e04ab2590b1a4f299ceec1cd24",
+    "nova_gateway": "895b85cfd51614050a17be4eee84a93bb3ba7c80"
+  },
+  "commands": [
+    {
+      "command": "npx tsc -p tsconfig.json --noEmit",
+      "cwd": "agent",
+      "exit_code": 0,
+      "log": "tsc-rebased.log"
+    },
+    {
+      "command": "npx tsc -p tools/v6/tsconfig.json --noEmit",
+      "cwd": "agent",
+      "exit_code": 0,
+      "log": "tsc-tools-final.log"
+    },
+    {
+      "command": "npx vitest run --maxWorkers 3",
+      "cwd": "agent",
+      "nice": 10,
+      "exit_code": 0,
+      "files_passed": 576,
+      "tests_passed": 5535,
+      "tests_skipped": 2,
+      "duration_seconds": 403.16,
+      "log": "vitest-full-rebased.log"
+    },
+    {
+      "command": "npx vitest run (7 V6-W3 files) --maxWorkers 3",
+      "cwd": "agent",
+      "exit_code": 0,
+      "files_passed": 7,
+      "tests_passed": 28,
+      "log": "vitest-targeted-second.log"
+    },
+    {
+      "command": "gitleaks git (rebased code range)",
+      "exit_code": 0,
+      "log": "gitleaks-rebased-code.log"
+    },
+    {
+      "command": "gitleaks dir paper/materials/2026-10-19-v6-w3 --no-banner --no-color --redact",
+      "exit_code": 0,
+      "log": "gitleaks-materials-w3.log"
+    },
+    {
+      "command": "gitleaks dir paper/materials/2026-10-19-v6-build-cores-audit --no-banner --no-color --redact",
+      "exit_code": 0,
+      "log": "../2026-10-19-v6-build-cores-audit/gitleaks-materials-build-cores.log"
+    }
+  ],
+  "off_equivalence": {
+    "existing_request_hash_lock_roles": [
+      "ironclad",
+      "silent",
+      "regent"
+    ],
+    "W3_engine_disabled_no_IO_roles": [
+      "ironclad",
+      "silent",
+      "regent",
+      "defect",
+      "necrobinder"
+    ],
+    "all_full_suite_checks_passed": true
+  },
+  "previous_full_attempts": [
+    {
+      "files": 575,
+      "tests_passed": 5531,
+      "tests_failed": 1,
+      "tests_skipped": 2,
+      "log": "vitest-full-first.log",
+      "failure": "own exact floating point assertion; original failure retained"
+    },
+    {
+      "files": 575,
+      "tests_passed": 5533,
+      "tests_skipped": 2,
+      "exit_code": 0,
+      "log": "vitest-full-second.log"
+    }
+  ],
+  "offline_replay": {
+    "exit_code": 0,
+    "questions": 12,
+    "tables": 24,
+    "scope": "Silent A10; 6 historical picks and 6 F17/F33 checkpoints, cold/repeat",
+    "summary": "replay-summary.json",
+    "raw_artifacts": "replay-artifacts.json",
+    "use": "performance and descriptive comparison only; estimates mostly unknown, no accuracy claim"
+  },
+  "retention": {
+    "state": "retained",
+    "reason": "no actual live publication SHA; do not fabricate or recreate live",
+    "receipt": "retention-incomplete.json"
+  },
+  "boundaries": {
+    "flags_default_off": true,
+    "knowledge_authored_or_published": false,
+    "game_started": false,
+    "STOP_removed": false,
+    "live_recreated": false,
+    "Regent_resumed": false,
+    "new_API_requests": 0,
+    "additional_learner_dispatches": 0
+  },
+  "sha256": {
+    "checkpoint-comparison.json": "376780ea58f3b76d703b3609e9d2d686b65b9292903086fcb6a9844e6345e066",
+    "gitleaks-materials-w3.log": "0edb6ae6e2f23e4feae5a7afa1724384ceedbbc17a8aec0b5de93c970f2788a3",
+    "gitleaks-rebased-code.log": "942ed5a54ea5f89ce065918d304bfb66b674c715d2721b19f1b9b03cabbcb096",
+    "gitleaks-staged-code.log": "003265f5a2df3ebf0d05634d206a886bd5973a34b164e147906a45caea7a07b6",
+    "interfaces.md": "366d0d208c3d49129db77c6c7036f6243c8b19b7fcc80d6367318c9f24b3feaa",
+    "profile.json": "0fb790ba3d2d094f67a32de9b6e173dccfca22b1b1ab833079c90dccc1592db4",
+    "replay-artifacts.json": "e7059eeb28c65ca5c01169006a078554770adf1536c0cc6a967d9e59cfec8d9f",
+    "replay-summary.json": "72e288ab5d26ac26bfd3c70f8eadca718cf82a231f53773e6776491763842dda",
+    "report.md": "5591725d40c05ffc48f49a1cdd9caadef8006a693d3547e2249bb4ee6b3c8dd4",
+    "retention-incomplete.json": "8a5cc9b459381f945a24a0a37c75cea51c02aa21719929aa731dbaba062b7bab",
+    "tsc-final-second.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "tsc-rebased.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "tsc-tools-final.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "vitest-full-first.log": "6483d65bb7827f20c1317d1fca49ed0456ca92a4040e8e73b0d1b73196895593",
+    "vitest-full-rebased.log": "1423f88fcd9c01b1639eed124ff26c611d7af19fd84c5d58579ec741b46de5ca",
+    "vitest-full-second.log": "ba3c36a33bb272ead40371a76957149e187546bd7a4cc3bd10aa982875a6491b",
+    "vitest-targeted-second.log": "2df3bab22dcdec0f0de4b7e99ebfb96e224476e72c05cf3ae4b94e1ad9182ac0"
+  },
+  "learner_audit_sha256": {
+    "final-independent.json": "3a1f1543e281c59024dd295b74e9207c074c4bd94bfc36a5cfe937c25e2443d6",
+    "gitleaks-materials-build-cores.log": "33891c3740c26667c7287a4a73b8a7e9ca00d70f4dc39121aaf1bd47e88f4171",
+    "ledger-status.json": "a725d6bf946b4230fd436da5bebe1561558d227f7f374241c250020d32238d4f",
+    "native-context.json": "2c2f02bccca76f4dd15579edc854eec939c5a5c43d986ff10994aa143917a805",
+    "notice-receipt.json": "4b743bd9e3ed738cbeea41015096edc18eca1af09b5959a0b7df999bb885a29b",
+    "raw-independent-second.json": "f241237f1171628b077068974380405714c4d57306869c3bea686b684f492e5f",
+    "report.md": "b69bbef1a80c4ab3608b6498278bbf5dbc97f6a307d555885c38a99d7ec475aa",
+    "strict-validator-final.log": "ed186ab1fc5e34f65b6e8545626ce0fbbe21394b81eb67e515089d366c070e3d"
+  },
+  "precommit_staged_scan_log": ".artifacts/gitleaks-staged-complete-docs.log",
+  "diff_check": {
+    "exit_code": 0,
+    "excluded": "paper/materials/2026-10-19-v6-w3/*.log",
+    "reason": "Preserve original stdout bytes including trailing blank lines; no code excluded."
+  }
+}

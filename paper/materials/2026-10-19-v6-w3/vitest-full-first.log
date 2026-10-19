@@ -1,0 +1,38 @@
+
+ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/v6-w3-20261019/agent
+
+.....
+----------------------------------------------------------------------
+Ran 5 tests in 0.017s
+
+OK
+ ❯ tests/v6-chain-log.test.ts (2 tests | 1 failed) 85ms
+     × uses joint same-sample outcomes and retains missing resources as unknown 63ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/v6-chain-log.test.ts > V6 continuous projection and explicit logs > uses joint same-sample outcomes and retains missing resources as unknown
+AssertionError: expected 0.2500000000000001 to be 0.25 // Object.is equality
+
+- Expected
++ Received
+
+- 0.25
++ 0.2500000000000001
+
+ ❯ tests/v6-chain-log.test.ts:40:33
+     38|     expect(good.entries[0]!.joint_win?.value).not.toBe(.5 * .25);
+     39|     const consumer = v6ProjectionEntries(good, r.config)[0]!;
+     40|     expect(consumer.win?.value).toBe(.25); expect(consumer.win_complet…
+       |                                 ^
+     41|     expect(consumer.direction_value).toBe(.25);
+     42|     expect(good.combinations[0]!.continuous?.traces[0]?.secondEntry?.h…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed | 574 passed (575)
+      Tests  1 failed | 5531 passed | 2 skipped (5534)
+   Start at  19:28:21
+   Duration  675.75s (transform 20.04s, setup 38.13s, import 115.65s, tests 1111.49s, environment 69ms)
+

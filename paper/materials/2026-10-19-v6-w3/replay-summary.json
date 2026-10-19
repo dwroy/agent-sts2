@@ -1,0 +1,954 @@
+{
+  "schema": "v6-offline-replay-v1",
+  "generated": "2026-10-19T11:49:08.975Z",
+  "workers": 3,
+  "input_sha256": {
+    "/home/dw/Projects/agent-sts2/learner/runs/20261019-163651-aca8de36-1a87-4109-9fa1-405535c7d209-v6-direction-experience/run-coverage.json": "34ee8e6151e15388c28f8f2bfaa5b5622abb33aefc6ce9b090f4749a24bff254",
+    "/home/dw/Projects/agent-sts2/learner/runs/20261019-163651-aca8de36-1a87-4109-9fa1-405535c7d209-v6-direction-experience/boss-fights.json": "62002c62e63a3ba7fb3fb9d0735a8f824153d5e64f35078ed82abd29caf875a2",
+    "/home/dw/Projects/agent-sts2/learner/runs/20261019-163651-aca8de36-1a87-4109-9fa1-405535c7d209-v6-direction-experience/state-frames.jsonl": "9581fe00deb9614e459ad209392742936210c10ece6e2a281301327f19da1384",
+    "/home/dw/Projects/agent-sts2/.worktrees/v6-w3-20261019/knowledge/characters/silent/boss-damage.json": "d837c4296dd6ecea32a573c56c0ce7a33f7aa1147de16aeea26c56d37df51c00",
+    "/home/dw/Projects/agent-sts2/.worktrees/v6-w3-20261019/knowledge/characters/silent/boss-trust.json": "81077f1c34d2dab5cd36d3205afbef390b1795604c55085925d78cebd2579bef",
+    "/home/dw/Projects/agent-sts2/.worktrees/v6-w3-20261019/knowledge/characters/silent/construction-opportunities.json": "83285e53401cdc32f997a43f3fc0dc63f8f31c52fc0abf6082d2c0cce1958e01",
+    "/home/dw/Projects/agent-sts2/.worktrees/v6-w3-20261019/knowledge/characters/silent/construction-support.json": "fbd2e0a9242e1bfa121649d3652e35982539e51ac4c1a862868ee7bb4ac46fdc",
+    "/home/dw/Projects/agent-sts2/.worktrees/v6-w3-20261019/knowledge/characters/silent/construction-templates.json": "fa2bbf98407f9898ee8fcbcd76d8de731a3a2228c23f8b01a63384b53e12b500",
+    "/home/dw/Projects/agent-sts2/.worktrees/v6-w3-20261019/knowledge/characters/silent/double-boss.json": "dfea492a4b941bf72813518e59ceb6cb0cca2d1420bdeb9c2fb9cc726797e83b",
+    "/home/dw/Projects/agent-sts2/.worktrees/v6-w3-20261019/knowledge/characters/silent/experience.json": "cce6bde4b02657667e05b632b897811dd4679b3371733106e038690cd04cf48c",
+    "/home/dw/Projects/agent-sts2/.worktrees/v6-w3-20261019/knowledge/characters/silent/fight-value-gates.json": "7022916409c71ce3ea861243af74f07c7a5a92fa1abb7c5665b64bf2052d296e",
+    "/home/dw/Projects/agent-sts2/.worktrees/v6-w3-20261019/knowledge/characters/silent/fight-value.json": "6a5de63e117db51cdcd88eff7dba3b16275de36d07bca2e13b8d74932cbd630e",
+    "/home/dw/Projects/agent-sts2/.worktrees/v6-w3-20261019/knowledge/characters/silent/monster-records.json": "c51e0698a7382fc1b650acf0b44a52559446c10d5605be42dcb58800e8a9b9af",
+    "/home/dw/Projects/agent-sts2/.worktrees/v6-w3-20261019/knowledge/characters/silent/outcome-stats.json": "c9bd0c030d65b80c3bd263a19177f0e79877ad6103473cfbd6e0d3ac3ec188c4",
+    "/home/dw/Projects/agent-sts2/.worktrees/v6-w3-20261019/knowledge/characters/silent/potion-equivalents.json": "35198177465539a301fcb8aa6f80ec8196196a9ed898d459d95d175b75c440bc",
+    "/home/dw/Projects/agent-sts2/.worktrees/v6-w3-20261019/knowledge/characters/silent/room-costs.json": "3009920de8d3299e452a3a187a39f4c21b191e3d72d9b6a280f43e52f7cd9e0a",
+    "/home/dw/Projects/agent-sts2/.worktrees/v6-w3-20261019/knowledge/common/card-upgrades.json": "a8b010697cc2727e68a6a660de29527d6f6f8f6ee1234c0c7c1d776ac2662e37",
+    "/home/dw/Projects/agent-sts2/.worktrees/v6-w3-20261019/knowledge/common/event-pages.json": "e7370a71a8fb446b160c7d19120229237dee4775dc443b7cf92e18d6a02936d5",
+    "/home/dw/Projects/agent-sts2/.worktrees/v6-w3-20261019/knowledge/common/monster-db.json": "8f6c2d0409eb012b14bd31e24c431ea5d9a421e7fb58c3363dfd5dc3536e704c",
+    "/home/dw/Projects/agent-sts2/.worktrees/v6-w3-20261019/knowledge/common/move-model.json": "38110110df22ff57b3b73f45e3560fb63eef9e6118765d6c97774a457fac3094",
+    "/home/dw/Projects/agent-sts2/.worktrees/v6-w3-20261019/knowledge/common/shared-experience.json": "f0dc10884c7773ae248480aedfb05e15351372cb9d0684bf99df355d4bd187c8",
+    "/home/dw/Projects/agent-sts2/data/game-data.json": "8973610b44d41683ecc414299006df99decaf82e9017b9bf4ebb89c216268a69"
+  },
+  "verified_state_ranges": [
+    {
+      "path": "states.jsonl",
+      "offset": 14588600685,
+      "bytes": 23291,
+      "sha256": "e49a097c1d4e290fc19d85eaeb4859fb28da26081b2c0bd492726055a5d7b0a1"
+    },
+    {
+      "path": "states.jsonl",
+      "offset": 14598751408,
+      "bytes": 31810,
+      "sha256": "b1d69e50ca8a35a17a5c7757ad4e46f3743dfad320b511711eead4674a22690b"
+    },
+    {
+      "path": "states.jsonl",
+      "offset": 14532895018,
+      "bytes": 33090,
+      "sha256": "6c59ffeaf2bde9806f9fce50bbe22cafe9b9084459e5ab2d477cd83ec57febfd"
+    },
+    {
+      "path": "states.jsonl",
+      "offset": 14587169020,
+      "bytes": 22255,
+      "sha256": "acd2b36c4f94596c046bd00a00b97f0fbbdd37080fb0c6345dac897a84146926"
+    },
+    {
+      "path": "states.jsonl",
+      "offset": 14597089142,
+      "bytes": 29905,
+      "sha256": "436cffbec223ff3d1159e0648811ac916af31b3b780cba019118232b3850b158"
+    },
+    {
+      "path": "states.jsonl",
+      "offset": 14530547547,
+      "bytes": 30256,
+      "sha256": "f2134703294089de34e1363ae3bf85ef23d0d1022c1e0226555acdc5424c653f"
+    },
+    {
+      "path": "/home/dw/Projects/agent-sts2/logs/states.jsonl",
+      "offset": 14589044744,
+      "bytes": 26311,
+      "sha256": "d3f83621aadd3dbe6377885ac045b39bc636c56e1e0feee6e0e7c0a3dad020f5"
+    },
+    {
+      "path": "/home/dw/Projects/agent-sts2/logs/states.jsonl",
+      "offset": 14571082506,
+      "bytes": 24800,
+      "sha256": "e1557ec79894ac88eded778f2c56daa76ecbb574cfc96435f73cd8980761c7d0"
+    },
+    {
+      "path": "/home/dw/Projects/agent-sts2/logs/states.jsonl",
+      "offset": 14557677953,
+      "bytes": 26748,
+      "sha256": "4e8d0585bec6f61d7adbf3ae9891e776cef332d0c6d6bc96c54a0b75428dffe3"
+    },
+    {
+      "path": "/home/dw/Projects/agent-sts2/logs/states.jsonl",
+      "offset": 14598961313,
+      "bytes": 36099,
+      "sha256": "7cf1333749629a3fbaffeced521f6dcb6364be76fbd0ea5a11aeb4a2a2a73b5a"
+    },
+    {
+      "path": "/home/dw/Projects/agent-sts2/logs/states.jsonl",
+      "offset": 14576105894,
+      "bytes": 33161,
+      "sha256": "d7eb873ff738d05e3e8860b180d62378181c1c08b4dd8ec9a967d91bee439ea7"
+    },
+    {
+      "path": "/home/dw/Projects/agent-sts2/logs/states.jsonl",
+      "offset": 14527124029,
+      "bytes": 32883,
+      "sha256": "5c19f7cda76bd7d1a2a3fcd0642e9af1097a2e9b01f3691a59b036a4b041b73c"
+    }
+  ],
+  "scope": {
+    "character": "silent",
+    "ascension": 10,
+    "coverage_runs": 372,
+    "histories": 372,
+    "boss_observations": 604,
+    "opportunities": 4174,
+    "selected_questions": 6,
+    "selected_checkpoints": 6,
+    "completed": 12
+  },
+  "measurements": [
+    {
+      "phase": "pick",
+      "pass": "cold",
+      "elapsed_ms": {
+        "n": 6,
+        "p50": 3512.6279219999997,
+        "p90": 3623.455960000003,
+        "p95": 3623.455960000003,
+        "max": 3623.455960000003
+      },
+      "hits": 0,
+      "misses": 11,
+      "cache_hit_fraction": 0,
+      "act_cache_hits": 0,
+      "degradation_fraction": 0.6666666666666666,
+      "unknown_fraction": 1
+    },
+    {
+      "phase": "pick",
+      "pass": "repeat",
+      "elapsed_ms": {
+        "n": 6,
+        "p50": 3247.604256999999,
+        "p90": 3712.082480000001,
+        "p95": 3712.082480000001,
+        "max": 3712.082480000001
+      },
+      "hits": 0,
+      "misses": 28,
+      "cache_hit_fraction": 0,
+      "act_cache_hits": 0,
+      "degradation_fraction": 0.6666666666666666,
+      "unknown_fraction": 1
+    },
+    {
+      "phase": "act",
+      "pass": "cold",
+      "elapsed_ms": {
+        "n": 6,
+        "p50": 22486.028154,
+        "p90": 42776.088586,
+        "p95": 42776.088586,
+        "max": 42776.088586
+      },
+      "hits": 0,
+      "misses": 51,
+      "cache_hit_fraction": 0,
+      "act_cache_hits": 0,
+      "degradation_fraction": 1,
+      "unknown_fraction": 0.9927536231884058
+    },
+    {
+      "phase": "act",
+      "pass": "repeat",
+      "elapsed_ms": {
+        "n": 6,
+        "p50": 22397.853441999992,
+        "p90": 56295.33804799999,
+        "p95": 56295.33804799999,
+        "max": 56295.33804799999
+      },
+      "hits": 11,
+      "misses": 58,
+      "cache_hit_fraction": 0.15942028985507245,
+      "act_cache_hits": 0,
+      "degradation_fraction": 0.8333333333333334,
+      "unknown_fraction": 0.9782608695652174
+    }
+  ],
+  "exclusions": [],
+  "records": [
+    {
+      "id": "467e4b898cecc1c3dd9efcdc",
+      "run_id": "MEQ6ETDCEEE9",
+      "floor": 13,
+      "phase": "pick",
+      "pass": "cold",
+      "telemetry": {
+        "elapsed_ms": 3570.3007810000004,
+        "cache_hits": 0,
+        "cache_misses": 1,
+        "simulations": 0,
+        "timed_out": 51,
+        "degradation": [
+          "drop_lowest_direction",
+          "current_and_chain_targets_only",
+          "remaining_unknown"
+        ],
+        "unknown_entries": 208,
+        "total_entries": 208,
+        "unknown_fraction": 1,
+        "act_cache_hit": false
+      }
+    },
+    {
+      "id": "467e4b898cecc1c3dd9efcdc",
+      "run_id": "MEQ6ETDCEEE9",
+      "floor": 13,
+      "phase": "pick",
+      "pass": "repeat",
+      "telemetry": {
+        "elapsed_ms": 3712.082480000001,
+        "cache_hits": 0,
+        "cache_misses": 2,
+        "simulations": 0,
+        "timed_out": 51,
+        "degradation": [
+          "drop_lowest_direction",
+          "current_and_chain_targets_only",
+          "remaining_unknown"
+        ],
+        "unknown_entries": 208,
+        "total_entries": 208,
+        "unknown_fraction": 1,
+        "act_cache_hit": false
+      }
+    },
+    {
+      "id": "f6411a313ce50c84bc5b98a4",
+      "run_id": "MEQ6ETDCEEE9",
+      "floor": 31,
+      "phase": "pick",
+      "pass": "cold",
+      "telemetry": {
+        "elapsed_ms": 3512.6279219999997,
+        "cache_hits": 0,
+        "cache_misses": 4,
+        "simulations": 0,
+        "timed_out": 31,
+        "degradation": [
+          "drop_lowest_direction",
+          "current_and_chain_targets_only",
+          "remaining_unknown"
+        ],
+        "unknown_entries": 160,
+        "total_entries": 160,
+        "unknown_fraction": 1,
+        "act_cache_hit": false
+      }
+    },
+    {
+      "id": "f6411a313ce50c84bc5b98a4",
+      "run_id": "MEQ6ETDCEEE9",
+      "floor": 31,
+      "phase": "pick",
+      "pass": "repeat",
+      "telemetry": {
+        "elapsed_ms": 3511.6976919999997,
+        "cache_hits": 0,
+        "cache_misses": 12,
+        "simulations": 0,
+        "timed_out": 26,
+        "degradation": [
+          "drop_lowest_direction",
+          "current_and_chain_targets_only",
+          "remaining_unknown"
+        ],
+        "unknown_entries": 160,
+        "total_entries": 160,
+        "unknown_fraction": 1,
+        "act_cache_hit": false
+      }
+    },
+    {
+      "id": "aa7296b9b9a888662f09e043",
+      "run_id": "2XCG8LXUZLRE",
+      "floor": 43,
+      "phase": "pick",
+      "pass": "cold",
+      "telemetry": {
+        "elapsed_ms": 988.1156580000024,
+        "cache_hits": 0,
+        "cache_misses": 0,
+        "simulations": 0,
+        "timed_out": 0,
+        "degradation": [],
+        "unknown_entries": 60,
+        "total_entries": 60,
+        "unknown_fraction": 1,
+        "act_cache_hit": false
+      }
+    },
+    {
+      "id": "aa7296b9b9a888662f09e043",
+      "run_id": "2XCG8LXUZLRE",
+      "floor": 43,
+      "phase": "pick",
+      "pass": "repeat",
+      "telemetry": {
+        "elapsed_ms": 55.88380999999936,
+        "cache_hits": 0,
+        "cache_misses": 0,
+        "simulations": 0,
+        "timed_out": 0,
+        "degradation": [],
+        "unknown_entries": 60,
+        "total_entries": 60,
+        "unknown_fraction": 1,
+        "act_cache_hit": false
+      }
+    },
+    {
+      "id": "b9e5196f50e4f3d5d65213b1",
+      "run_id": "MEQ6ETDCEEE9",
+      "floor": 11,
+      "phase": "pick",
+      "pass": "cold",
+      "telemetry": {
+        "elapsed_ms": 3623.455960000003,
+        "cache_hits": 0,
+        "cache_misses": 2,
+        "simulations": 0,
+        "timed_out": 51,
+        "degradation": [
+          "drop_lowest_direction",
+          "current_and_chain_targets_only",
+          "remaining_unknown"
+        ],
+        "unknown_entries": 208,
+        "total_entries": 208,
+        "unknown_fraction": 1,
+        "act_cache_hit": false
+      }
+    },
+    {
+      "id": "b9e5196f50e4f3d5d65213b1",
+      "run_id": "MEQ6ETDCEEE9",
+      "floor": 11,
+      "phase": "pick",
+      "pass": "repeat",
+      "telemetry": {
+        "elapsed_ms": 3656.140736000001,
+        "cache_hits": 0,
+        "cache_misses": 2,
+        "simulations": 0,
+        "timed_out": 51,
+        "degradation": [
+          "drop_lowest_direction",
+          "current_and_chain_targets_only",
+          "remaining_unknown"
+        ],
+        "unknown_entries": 208,
+        "total_entries": 208,
+        "unknown_fraction": 1,
+        "act_cache_hit": false
+      }
+    },
+    {
+      "id": "1b80f850a3506f4eb4a2bf70",
+      "run_id": "MEQ6ETDCEEE9",
+      "floor": 29,
+      "phase": "pick",
+      "pass": "cold",
+      "telemetry": {
+        "elapsed_ms": 3512.8124470000002,
+        "cache_hits": 0,
+        "cache_misses": 4,
+        "simulations": 0,
+        "timed_out": 30,
+        "degradation": [
+          "drop_lowest_direction",
+          "current_and_chain_targets_only",
+          "remaining_unknown"
+        ],
+        "unknown_entries": 160,
+        "total_entries": 160,
+        "unknown_fraction": 1,
+        "act_cache_hit": false
+      }
+    },
+    {
+      "id": "1b80f850a3506f4eb4a2bf70",
+      "run_id": "MEQ6ETDCEEE9",
+      "floor": 29,
+      "phase": "pick",
+      "pass": "repeat",
+      "telemetry": {
+        "elapsed_ms": 3247.604256999999,
+        "cache_hits": 0,
+        "cache_misses": 12,
+        "simulations": 0,
+        "timed_out": 3,
+        "degradation": [
+          "drop_lowest_direction",
+          "current_and_chain_targets_only",
+          "remaining_unknown"
+        ],
+        "unknown_entries": 160,
+        "total_entries": 160,
+        "unknown_fraction": 1,
+        "act_cache_hit": false
+      }
+    },
+    {
+      "id": "718146479304a82aad979425",
+      "run_id": "2XCG8LXUZLRE",
+      "floor": 36,
+      "phase": "pick",
+      "pass": "cold",
+      "telemetry": {
+        "elapsed_ms": 1500.5444440000028,
+        "cache_hits": 0,
+        "cache_misses": 0,
+        "simulations": 0,
+        "timed_out": 0,
+        "degradation": [],
+        "unknown_entries": 48,
+        "total_entries": 48,
+        "unknown_fraction": 1,
+        "act_cache_hit": false
+      }
+    },
+    {
+      "id": "718146479304a82aad979425",
+      "run_id": "2XCG8LXUZLRE",
+      "floor": 36,
+      "phase": "pick",
+      "pass": "repeat",
+      "telemetry": {
+        "elapsed_ms": 42.73615599999903,
+        "cache_hits": 0,
+        "cache_misses": 0,
+        "simulations": 0,
+        "timed_out": 0,
+        "degradation": [],
+        "unknown_entries": 48,
+        "total_entries": 48,
+        "unknown_fraction": 1,
+        "act_cache_hit": false
+      }
+    },
+    {
+      "id": "checkpoint:MEQ6ETDCEEE9:17",
+      "run_id": "MEQ6ETDCEEE9",
+      "floor": 17,
+      "phase": "act",
+      "pass": "cold",
+      "telemetry": {
+        "elapsed_ms": 22486.028154,
+        "cache_hits": 0,
+        "cache_misses": 3,
+        "simulations": 146,
+        "timed_out": 3,
+        "degradation": [
+          "drop_lowest_direction",
+          "current_and_chain_targets_only",
+          "remaining_unknown"
+        ],
+        "unknown_entries": 52,
+        "total_entries": 52,
+        "unknown_fraction": 1,
+        "act_cache_hit": false
+      },
+      "actual": {
+        "first_stop": {
+          "ts": "2026-10-19T05:42:59.687Z",
+          "floor": 33,
+          "turns": 11,
+          "result": "predicted_death",
+          "source": {
+            "path": "/home/dw/Projects/agent-sts2/logs/sl-attempts.jsonl",
+            "offset": 49227343,
+            "bytes": 22957,
+            "sha256": "d6bb05bf3de2a99295a1befb50ff1e098e588c8e74172fe81673b1543ed3482f"
+          }
+        },
+        "first_attempt_f48": [],
+        "first_attempt_f49": [],
+        "first_trial_final_victory": false,
+        "final_including_sl_victory": false
+      }
+    },
+    {
+      "id": "checkpoint:MEQ6ETDCEEE9:17",
+      "run_id": "MEQ6ETDCEEE9",
+      "floor": 17,
+      "phase": "act",
+      "pass": "repeat",
+      "telemetry": {
+        "elapsed_ms": 22397.853441999992,
+        "cache_hits": 0,
+        "cache_misses": 3,
+        "simulations": 230,
+        "timed_out": 3,
+        "degradation": [
+          "drop_lowest_direction",
+          "current_and_chain_targets_only",
+          "remaining_unknown"
+        ],
+        "unknown_entries": 52,
+        "total_entries": 52,
+        "unknown_fraction": 1,
+        "act_cache_hit": false
+      },
+      "actual": {
+        "first_stop": {
+          "ts": "2026-10-19T05:42:59.687Z",
+          "floor": 33,
+          "turns": 11,
+          "result": "predicted_death",
+          "source": {
+            "path": "/home/dw/Projects/agent-sts2/logs/sl-attempts.jsonl",
+            "offset": 49227343,
+            "bytes": 22957,
+            "sha256": "d6bb05bf3de2a99295a1befb50ff1e098e588c8e74172fe81673b1543ed3482f"
+          }
+        },
+        "first_attempt_f48": [],
+        "first_attempt_f49": [],
+        "first_trial_final_victory": false,
+        "final_including_sl_victory": false
+      }
+    },
+    {
+      "id": "checkpoint:79421JK2WBA9:17",
+      "run_id": "79421JK2WBA9",
+      "floor": 17,
+      "phase": "act",
+      "pass": "cold",
+      "telemetry": {
+        "elapsed_ms": 42776.088586,
+        "cache_hits": 0,
+        "cache_misses": 5,
+        "simulations": 430,
+        "timed_out": 3,
+        "degradation": [
+          "drop_lowest_direction",
+          "current_and_chain_targets_only",
+          "remaining_unknown"
+        ],
+        "unknown_entries": 52,
+        "total_entries": 52,
+        "unknown_fraction": 1,
+        "act_cache_hit": false
+      },
+      "actual": {
+        "first_stop": {
+          "ts": "2026-10-19T04:34:23.709Z",
+          "floor": 33,
+          "turns": 9,
+          "result": "predicted_death",
+          "source": {
+            "path": "/home/dw/Projects/agent-sts2/logs/sl-attempts.jsonl",
+            "offset": 49116985,
+            "bytes": 14325,
+            "sha256": "b27db8ae6019bb6a245516e05436dc13303e620462afc31773f8601465c74069"
+          }
+        },
+        "first_attempt_f48": [],
+        "first_attempt_f49": [],
+        "first_trial_final_victory": false,
+        "final_including_sl_victory": false
+      }
+    },
+    {
+      "id": "checkpoint:79421JK2WBA9:17",
+      "run_id": "79421JK2WBA9",
+      "floor": 17,
+      "phase": "act",
+      "pass": "repeat",
+      "telemetry": {
+        "elapsed_ms": 56295.33804799999,
+        "cache_hits": 0,
+        "cache_misses": 8,
+        "simulations": 654,
+        "timed_out": 3,
+        "degradation": [
+          "drop_lowest_direction",
+          "current_and_chain_targets_only",
+          "remaining_unknown"
+        ],
+        "unknown_entries": 52,
+        "total_entries": 52,
+        "unknown_fraction": 1,
+        "act_cache_hit": false
+      },
+      "actual": {
+        "first_stop": {
+          "ts": "2026-10-19T04:34:23.709Z",
+          "floor": 33,
+          "turns": 9,
+          "result": "predicted_death",
+          "source": {
+            "path": "/home/dw/Projects/agent-sts2/logs/sl-attempts.jsonl",
+            "offset": 49116985,
+            "bytes": 14325,
+            "sha256": "b27db8ae6019bb6a245516e05436dc13303e620462afc31773f8601465c74069"
+          }
+        },
+        "first_attempt_f48": [],
+        "first_attempt_f49": [],
+        "first_trial_final_victory": false,
+        "final_including_sl_victory": false
+      }
+    },
+    {
+      "id": "checkpoint:34XTHUP4433X:17",
+      "run_id": "34XTHUP4433X",
+      "floor": 17,
+      "phase": "act",
+      "pass": "cold",
+      "telemetry": {
+        "elapsed_ms": 37518.59618200001,
+        "cache_hits": 0,
+        "cache_misses": 22,
+        "simulations": 2180,
+        "timed_out": 1,
+        "degradation": [
+          "drop_lowest_direction"
+        ],
+        "unknown_entries": 52,
+        "total_entries": 52,
+        "unknown_fraction": 1,
+        "act_cache_hit": false
+      },
+      "actual": {
+        "first_stop": {
+          "ts": "2026-10-19T03:42:32.767Z",
+          "floor": 24,
+          "turns": 2,
+          "result": "predicted_death",
+          "source": {
+            "path": "/home/dw/Projects/agent-sts2/logs/sl-attempts.jsonl",
+            "offset": 49066466,
+            "bytes": 4090,
+            "sha256": "1304e4f2c56d193ae7aaee08077ef0f0bc8f9ba92dc62f9ac498963c90ddc693"
+          }
+        },
+        "first_attempt_f48": [],
+        "first_attempt_f49": [],
+        "first_trial_final_victory": false,
+        "final_including_sl_victory": false
+      }
+    },
+    {
+      "id": "checkpoint:34XTHUP4433X:17",
+      "run_id": "34XTHUP4433X",
+      "floor": 17,
+      "phase": "act",
+      "pass": "repeat",
+      "telemetry": {
+        "elapsed_ms": 32752.518496999983,
+        "cache_hits": 9,
+        "cache_misses": 21,
+        "simulations": 2100,
+        "timed_out": 0,
+        "degradation": [],
+        "unknown_entries": 52,
+        "total_entries": 52,
+        "unknown_fraction": 1,
+        "act_cache_hit": false
+      },
+      "actual": {
+        "first_stop": {
+          "ts": "2026-10-19T03:42:32.767Z",
+          "floor": 24,
+          "turns": 2,
+          "result": "predicted_death",
+          "source": {
+            "path": "/home/dw/Projects/agent-sts2/logs/sl-attempts.jsonl",
+            "offset": 49066466,
+            "bytes": 4090,
+            "sha256": "1304e4f2c56d193ae7aaee08077ef0f0bc8f9ba92dc62f9ac498963c90ddc693"
+          }
+        },
+        "first_attempt_f48": [],
+        "first_attempt_f49": [],
+        "first_trial_final_victory": false,
+        "final_including_sl_victory": false
+      }
+    },
+    {
+      "id": "checkpoint:MEQ6ETDCEEE9:33",
+      "run_id": "MEQ6ETDCEEE9",
+      "floor": 33,
+      "phase": "act",
+      "pass": "cold",
+      "telemetry": {
+        "elapsed_ms": 16798.257640000025,
+        "cache_hits": 0,
+        "cache_misses": 8,
+        "simulations": 774,
+        "timed_out": 3,
+        "degradation": [
+          "drop_lowest_direction",
+          "current_and_chain_targets_only",
+          "remaining_unknown"
+        ],
+        "unknown_entries": 39,
+        "total_entries": 40,
+        "unknown_fraction": 0.975,
+        "act_cache_hit": false
+      },
+      "actual": {
+        "first_stop": {
+          "ts": "2026-10-19T05:42:59.687Z",
+          "floor": 33,
+          "turns": 11,
+          "result": "predicted_death",
+          "source": {
+            "path": "/home/dw/Projects/agent-sts2/logs/sl-attempts.jsonl",
+            "offset": 49227343,
+            "bytes": 22957,
+            "sha256": "d6bb05bf3de2a99295a1befb50ff1e098e588c8e74172fe81673b1543ed3482f"
+          }
+        },
+        "first_attempt_f48": [],
+        "first_attempt_f49": [],
+        "first_trial_final_victory": false,
+        "final_including_sl_victory": false
+      }
+    },
+    {
+      "id": "checkpoint:MEQ6ETDCEEE9:33",
+      "run_id": "MEQ6ETDCEEE9",
+      "floor": 33,
+      "phase": "act",
+      "pass": "repeat",
+      "telemetry": {
+        "elapsed_ms": 21317.550514000002,
+        "cache_hits": 1,
+        "cache_misses": 11,
+        "simulations": 1091,
+        "timed_out": 1,
+        "degradation": [
+          "drop_lowest_direction"
+        ],
+        "unknown_entries": 36,
+        "total_entries": 40,
+        "unknown_fraction": 0.9,
+        "act_cache_hit": false
+      },
+      "actual": {
+        "first_stop": {
+          "ts": "2026-10-19T05:42:59.687Z",
+          "floor": 33,
+          "turns": 11,
+          "result": "predicted_death",
+          "source": {
+            "path": "/home/dw/Projects/agent-sts2/logs/sl-attempts.jsonl",
+            "offset": 49227343,
+            "bytes": 22957,
+            "sha256": "d6bb05bf3de2a99295a1befb50ff1e098e588c8e74172fe81673b1543ed3482f"
+          }
+        },
+        "first_attempt_f48": [],
+        "first_attempt_f49": [],
+        "first_trial_final_victory": false,
+        "final_including_sl_victory": false
+      }
+    },
+    {
+      "id": "checkpoint:79421JK2WBA9:33",
+      "run_id": "79421JK2WBA9",
+      "floor": 33,
+      "phase": "act",
+      "pass": "cold",
+      "telemetry": {
+        "elapsed_ms": 14965.464573999983,
+        "cache_hits": 0,
+        "cache_misses": 5,
+        "simulations": 485,
+        "timed_out": 3,
+        "degradation": [
+          "drop_lowest_direction",
+          "current_and_chain_targets_only",
+          "remaining_unknown"
+        ],
+        "unknown_entries": 40,
+        "total_entries": 40,
+        "unknown_fraction": 1,
+        "act_cache_hit": false
+      },
+      "actual": {
+        "first_stop": {
+          "ts": "2026-10-19T04:34:23.709Z",
+          "floor": 33,
+          "turns": 9,
+          "result": "predicted_death",
+          "source": {
+            "path": "/home/dw/Projects/agent-sts2/logs/sl-attempts.jsonl",
+            "offset": 49116985,
+            "bytes": 14325,
+            "sha256": "b27db8ae6019bb6a245516e05436dc13303e620462afc31773f8601465c74069"
+          }
+        },
+        "first_attempt_f48": [],
+        "first_attempt_f49": [],
+        "first_trial_final_victory": false,
+        "final_including_sl_victory": false
+      }
+    },
+    {
+      "id": "checkpoint:79421JK2WBA9:33",
+      "run_id": "79421JK2WBA9",
+      "floor": 33,
+      "phase": "act",
+      "pass": "repeat",
+      "telemetry": {
+        "elapsed_ms": 18758.665363999957,
+        "cache_hits": 0,
+        "cache_misses": 8,
+        "simulations": 738,
+        "timed_out": 3,
+        "degradation": [
+          "drop_lowest_direction",
+          "current_and_chain_targets_only",
+          "remaining_unknown"
+        ],
+        "unknown_entries": 39,
+        "total_entries": 40,
+        "unknown_fraction": 0.975,
+        "act_cache_hit": false
+      },
+      "actual": {
+        "first_stop": {
+          "ts": "2026-10-19T04:34:23.709Z",
+          "floor": 33,
+          "turns": 9,
+          "result": "predicted_death",
+          "source": {
+            "path": "/home/dw/Projects/agent-sts2/logs/sl-attempts.jsonl",
+            "offset": 49116985,
+            "bytes": 14325,
+            "sha256": "b27db8ae6019bb6a245516e05436dc13303e620462afc31773f8601465c74069"
+          }
+        },
+        "first_attempt_f48": [],
+        "first_attempt_f49": [],
+        "first_trial_final_victory": false,
+        "final_including_sl_victory": false
+      }
+    },
+    {
+      "id": "checkpoint:2XCG8LXUZLRE:33",
+      "run_id": "2XCG8LXUZLRE",
+      "floor": 33,
+      "phase": "act",
+      "pass": "cold",
+      "telemetry": {
+        "elapsed_ms": 26723.388627000037,
+        "cache_hits": 0,
+        "cache_misses": 8,
+        "simulations": 683,
+        "timed_out": 3,
+        "degradation": [
+          "drop_lowest_direction",
+          "current_and_chain_targets_only",
+          "remaining_unknown"
+        ],
+        "unknown_entries": 39,
+        "total_entries": 40,
+        "unknown_fraction": 0.975,
+        "act_cache_hit": false
+      },
+      "actual": {
+        "first_stop": {
+          "ts": "2026-10-19T02:06:14.340Z",
+          "floor": 48,
+          "turns": 8,
+          "result": "predicted_death",
+          "source": {
+            "path": "/home/dw/Projects/agent-sts2/logs/sl-attempts.jsonl",
+            "offset": 48916392,
+            "bytes": 22573,
+            "sha256": "7dfbbd23e50b9a1bf324b4d304ad4000edeb5daf0b734c10fef05d0de8bd3707"
+          }
+        },
+        "first_attempt_f48": [
+          {
+            "boss": "TEST_SUBJECT",
+            "result": "predicted_death"
+          }
+        ],
+        "first_attempt_f49": [],
+        "first_trial_final_victory": false,
+        "final_including_sl_victory": false
+      }
+    },
+    {
+      "id": "checkpoint:2XCG8LXUZLRE:33",
+      "run_id": "2XCG8LXUZLRE",
+      "floor": 33,
+      "phase": "act",
+      "pass": "repeat",
+      "telemetry": {
+        "elapsed_ms": 25015.345938000013,
+        "cache_hits": 1,
+        "cache_misses": 7,
+        "simulations": 589,
+        "timed_out": 3,
+        "degradation": [
+          "drop_lowest_direction",
+          "current_and_chain_targets_only",
+          "remaining_unknown"
+        ],
+        "unknown_entries": 39,
+        "total_entries": 40,
+        "unknown_fraction": 0.975,
+        "act_cache_hit": false
+      },
+      "actual": {
+        "first_stop": {
+          "ts": "2026-10-19T02:06:14.340Z",
+          "floor": 48,
+          "turns": 8,
+          "result": "predicted_death",
+          "source": {
+            "path": "/home/dw/Projects/agent-sts2/logs/sl-attempts.jsonl",
+            "offset": 48916392,
+            "bytes": 22573,
+            "sha256": "7dfbbd23e50b9a1bf324b4d304ad4000edeb5daf0b734c10fef05d0de8bd3707"
+          }
+        },
+        "first_attempt_f48": [
+          {
+            "boss": "TEST_SUBJECT",
+            "result": "predicted_death"
+          }
+        ],
+        "first_attempt_f49": [],
+        "first_trial_final_victory": false,
+        "final_including_sl_victory": false
+      }
+    }
+  ],
+  "limitations": [
+    "descriptive_only_no_causal_accuracy_or_gameplay_claim",
+    "uniform_weights_benchmark_only",
+    "missing_route_plan_current_boss_unknown",
+    "post_boss_rewards_excluded_ambiguous_act_transition",
+    "f17_f33_conditional_on_first_observed_combat_turn_one_not_preboss_route_forecast",
+    "f17_f33_actual_results_not_used_for_question_selection",
+    "first_stop_is_predicted_death_or_actual_death_not_necessarily_actual_death",
+    "first_observed_boss_entry_may_follow_initial_actions",
+    "sparse_frames_net_card_and_gold_changes_only",
+    "rest_visits_not_observed_smith_choices",
+    "no_final_deck_backfill"
+  ]
+}
