@@ -18,15 +18,15 @@
     ],
     "kind": "hallway",
     "rooms": {
-      "hallway": 351,
+      "hallway": 357,
       "unknown_room": 29
     },
     "acts": {
-      "1": 380
+      "1": 386
     },
     "encounters": {
-      "SHRINKER_BEETLE": 295,
-      "FUZZY_WURM_CRAWLER+SHRINKER_BEETLE": 85
+      "SHRINKER_BEETLE": 300,
+      "FUZZY_WURM_CRAWLER+SHRINKER_BEETLE": 86
     },
     "hp_by_asc": {
       "0": {
@@ -87,27 +87,27 @@
         "min": 40,
         "median": 41,
         "max": 42,
-        "n": 151
+        "n": 157
       }
     },
     "moves": {
       "CHOMP_MOVE": {
         "name": "大啃",
-        "n_seen": 583,
+        "n_seen": 593,
         "intents": {
-          "Attack": 583
+          "Attack": 593
         },
         "turns_seen": {
-          "2": 373,
-          "4": 171,
-          "6": 32,
+          "2": 379,
+          "4": 174,
+          "6": 33,
           "8": 4,
           "10": 1,
           "12": 1,
           "14": 1
         },
         "next": {
-          "STOMP_MOVE": 411
+          "STOMP_MOVE": 419
         },
         "avg_total_shown": 7.5,
         "damage_by_asc": {
@@ -226,35 +226,35 @@
           },
           "10": {
             "shown": {
-              "6x1": 13,
-              "8x1": 246
+              "6x1": 14,
+              "8x1": 255
             },
             "base_per_hit": {
-              "8": 246
+              "8": 255
             },
             "hits": {
-              "1": 259
+              "1": 269
             },
-            "n_base": 246
+            "n_base": 255
           }
         }
       },
       "SHRINKER_MOVE": {
         "name": "缩小",
-        "n_seen": 380,
+        "n_seen": 386,
         "intents": {
-          "DebuffStrong": 380
+          "DebuffStrong": 386
         },
         "turns_seen": {
-          "1": 380
+          "1": 386
         },
         "next": {
-          "CHOMP_MOVE": 373
+          "CHOMP_MOVE": 379
         },
         "avg_total_shown": 0.0,
         "player_powers_applied": {
           "SHRINK_POWER": {
-            "-1": 373
+            "-1": 379
           }
         },
         "player_powers_applied_by_asc": {
@@ -305,20 +305,20 @@
           },
           "10": {
             "SHRINK_POWER": {
-              "-1": 147
+              "-1": 153
             }
           }
         }
       },
       "STOMP_MOVE": {
         "name": "践踏",
-        "n_seen": 411,
+        "n_seen": 419,
         "intents": {
-          "Attack": 411
+          "Attack": 419
         },
         "turns_seen": {
-          "3": 311,
-          "5": 84,
+          "3": 317,
+          "5": 86,
           "7": 12,
           "9": 1,
           "11": 1,
@@ -326,7 +326,7 @@
           "15": 1
         },
         "next": {
-          "CHOMP_MOVE": 210
+          "CHOMP_MOVE": 214
         },
         "avg_total_shown": 13.5,
         "damage_by_asc": {
@@ -445,16 +445,16 @@
           },
           "10": {
             "shown": {
-              "10x1": 6,
-              "14x1": 182
+              "10x1": 8,
+              "14x1": 188
             },
             "base_per_hit": {
-              "14": 182
+              "14": 188
             },
             "hits": {
-              "1": 188
+              "1": 196
             },
-            "n_base": 182
+            "n_base": 188
           }
         }
       }
@@ -536,13 +536,13 @@
         "name": "中毒",
         "type": "Debuff",
         "description": "中毒的生物会在自身回合开始时失去生命。中毒层数每回合减少[blue]1[/blue]。",
-        "n_fights": 54,
+        "n_fights": 56,
         "amount_at_first_sight": {
           "2": 5,
           "3": 27,
           "4": 2,
-          "5": 7,
-          "6": 2,
+          "5": 8,
+          "6": 3,
           "7": 8,
           "10": 1,
           "14": 1,
@@ -551,8 +551,8 @@
         "amount_max_in_fight": {
           "3": 18,
           "4": 6,
-          "5": 6,
-          "6": 4,
+          "5": 7,
+          "6": 5,
           "7": 8,
           "8": 1,
           "9": 2,
@@ -576,8 +576,8 @@
             "2": 5,
             "3": 26,
             "4": 2,
-            "5": 6,
-            "6": 2,
+            "5": 7,
+            "6": 3,
             "7": 8,
             "18": 1
           }
@@ -592,7 +592,7 @@
           },
           "10": {
             "1": 21,
-            "2": 19,
+            "2": 21,
             "3": 4,
             "4": 2,
             "5": 3,
@@ -785,17 +785,17 @@
         "name": "虚弱",
         "type": "Debuff",
         "description": "虚弱的生物造成的攻击伤害减少[blue]25%[/blue]。",
-        "n_fights": 166,
+        "n_fights": 172,
         "amount_at_first_sight": {
-          "1": 151,
+          "1": 157,
           "2": 13,
           "3": 2
         },
         "amount_max_in_fight": {
-          "1": 142,
+          "1": 147,
           "2": 20,
           "3": 3,
-          "4": 1
+          "4": 2
         },
         "amount_at_first_sight_by_asc": {
           "0": {
@@ -820,7 +820,7 @@
             "1": 8
           },
           "10": {
-            "1": 124,
+            "1": 130,
             "2": 9
           }
         },
@@ -853,9 +853,9 @@
             "3": 1
           },
           "10": {
-            "1": 54,
-            "2": 53,
-            "3": 22,
+            "1": 58,
+            "2": 54,
+            "3": 23,
             "4": 3,
             "5": 1
           }
@@ -864,9 +864,9 @@
     },
     "provenance": {
       "first_seen": "2026-09-24T04:08:58.795Z",
-      "last_seen": "2026-10-18T02:28:13.176Z",
-      "n_runs": 317,
-      "n_instances": 380,
+      "last_seen": "2026-10-19T04:55:08.030Z",
+      "n_runs": 322,
+      "n_instances": 386,
       "n_spawned_mid_fight": 0,
       "n_minion_instances": 0
     },
@@ -918,15 +918,15 @@
             "5507PUWLC09R F8 T6"
           ],
           "alive": {
-            "turns": 273,
+            "turns": 276,
             "moves": {
-              "CHOMP_MOVE": 118,
-              "SHRINKER_MOVE": 85,
-              "STOMP_MOVE": 70
+              "CHOMP_MOVE": 119,
+              "SHRINKER_MOVE": 86,
+              "STOMP_MOVE": 71
             },
             "next": {
               "CHOMP_MOVE": {
-                "STOMP_MOVE": 70
+                "STOMP_MOVE": 71
               },
               "STOMP_MOVE": {
                 "CHOMP_MOVE": 36

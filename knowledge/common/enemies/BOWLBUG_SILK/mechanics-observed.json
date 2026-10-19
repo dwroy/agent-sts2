@@ -18,14 +18,14 @@
     ],
     "kind": "hallway",
     "rooms": {
-      "hallway": 239,
+      "hallway": 240,
       "unknown_room": 28
     },
     "acts": {
-      "2": 267
+      "2": 268
     },
     "encounters": {
-      "BOWLBUG_ROCK+BOWLBUG_SILK+SLUMBERING_BEETLE": 161,
+      "BOWLBUG_ROCK+BOWLBUG_SILK+SLUMBERING_BEETLE": 162,
       "BOWLBUG_EGG+BOWLBUG_ROCK+BOWLBUG_SILK": 54,
       "BOWLBUG_NECTAR+BOWLBUG_ROCK+BOWLBUG_SILK": 52
     },
@@ -92,27 +92,27 @@
       },
       "10": {
         "min": 41,
-        "median": 43.0,
+        "median": 43,
         "max": 44,
-        "n": 94
+        "n": 95
       }
     },
     "moves": {
       "THRASH_MOVE": {
         "name": "撕扯",
-        "n_seen": 462,
+        "n_seen": 464,
         "intents": {
-          "Attack": 462
+          "Attack": 464
         },
         "turns_seen": {
-          "2": 260,
-          "4": 159,
+          "2": 261,
+          "4": 160,
           "6": 38,
           "8": 4,
           "10": 1
         },
         "next": {
-          "TOXIC_SPIT_MOVE": 330
+          "TOXIC_SPIT_MOVE": 331
         },
         "avg_total_shown": 8.8,
         "damage_by_asc": {
@@ -246,38 +246,38 @@
             "shown": {
               "0x2": 1,
               "3x2": 17,
-              "5x2": 155
+              "5x2": 157
             },
             "base_per_hit": {
-              "5": 155
+              "5": 157
             },
             "hits": {
-              "2": 173
+              "2": 175
             },
-            "n_base": 155
+            "n_base": 157
           }
         }
       },
       "TOXIC_SPIT_MOVE": {
         "name": "毒性喷吐",
-        "n_seen": 602,
+        "n_seen": 604,
         "intents": {
-          "Debuff": 602
+          "Debuff": 604
         },
         "turns_seen": {
-          "1": 272,
-          "3": 229,
+          "1": 273,
+          "3": 230,
           "5": 90,
           "7": 9,
           "9": 2
         },
         "next": {
-          "THRASH_MOVE": 462
+          "THRASH_MOVE": 464
         },
         "avg_total_shown": 0.0,
         "player_powers_applied": {
           "WEAK_POWER": {
-            "1": 453
+            "1": 455
           }
         },
         "player_powers_applied_by_asc": {
@@ -333,7 +333,7 @@
           },
           "10": {
             "WEAK_POWER": {
-              "1": 166
+              "1": 168
             }
           }
         }
@@ -434,11 +434,11 @@
         "name": "中毒",
         "type": "Debuff",
         "description": "中毒的生物会在自身回合开始时失去生命。中毒层数每回合减少[blue]1[/blue]。",
-        "n_fights": 77,
+        "n_fights": 78,
         "amount_at_first_sight": {
           "2": 11,
           "3": 27,
-          "4": 16,
+          "4": 17,
           "5": 3,
           "6": 8,
           "7": 5,
@@ -451,7 +451,7 @@
           "4": 13,
           "5": 5,
           "6": 7,
-          "7": 8,
+          "7": 9,
           "8": 7,
           "9": 4,
           "10": 5,
@@ -491,7 +491,7 @@
           "10": {
             "2": 8,
             "3": 21,
-            "4": 15,
+            "4": 16,
             "5": 2,
             "6": 8,
             "7": 4,
@@ -527,7 +527,7 @@
             "3": 1
           },
           "10": {
-            "1": 20,
+            "1": 21,
             "2": 14,
             "3": 11,
             "4": 12,
@@ -801,14 +801,14 @@
         "name": "虚弱",
         "type": "Debuff",
         "description": "虚弱的生物造成的攻击伤害减少[blue]25%[/blue]。",
-        "n_fights": 69,
+        "n_fights": 70,
         "amount_at_first_sight": {
-          "1": 39,
+          "1": 40,
           "2": 29,
           "5": 1
         },
         "amount_max_in_fight": {
-          "1": 35,
+          "1": 36,
           "2": 29,
           "3": 4,
           "5": 1
@@ -844,7 +844,7 @@
             "1": 2
           },
           "10": {
-            "1": 22,
+            "1": 23,
             "2": 24,
             "5": 1
           }
@@ -881,7 +881,7 @@
             "1": 2
           },
           "10": {
-            "1": 13,
+            "1": 14,
             "2": 14,
             "3": 10,
             "4": 6,
@@ -892,9 +892,9 @@
     },
     "provenance": {
       "first_seen": "2026-09-24T04:38:57.672Z",
-      "last_seen": "2026-10-18T07:55:38.078Z",
-      "n_runs": 257,
-      "n_instances": 272,
+      "last_seen": "2026-10-18T09:39:35.948Z",
+      "n_runs": 258,
+      "n_instances": 273,
       "n_spawned_mid_fight": 5,
       "n_minion_instances": 0
     },
@@ -944,49 +944,51 @@
           "revived": 0
         },
         "POISON_POWER": {
-          "n": 5,
-          "fights": 2,
+          "n": 10,
+          "fights": 3,
           "amount_before": {
-            "3": 3,
+            "2": 1,
+            "3": 4,
+            "4": 3,
             "6": 2
           },
           "move_after": {
-            "TOXIC_SPIT_MOVE": 4,
-            "THRASH_MOVE": 1
+            "TOXIC_SPIT_MOVE": 8,
+            "THRASH_MOVE": 2
           },
           "stunned_share": 0.0,
           "co_removed": {
-            "WEAK_POWER": 1
+            "WEAK_POWER": 4
           },
           "died_same_turn": 0,
           "turn_end_unclear": 0,
-          "alive_at_turn_end": 5,
+          "alive_at_turn_end": 10,
           "stunned_at_turn_end": 0,
-          "attack_before": 1,
+          "attack_before": 2,
           "attack_cancelled": 0,
           "hp_check": {
-            "n": 0,
-            "landed": 0
+            "n": 1,
+            "landed": 1
           },
           "evidence": [],
           "move_before": {
-            "TOXIC_SPIT_MOVE": 4,
-            "THRASH_MOVE": 1
+            "TOXIC_SPIT_MOVE": 8,
+            "THRASH_MOVE": 2
           },
           "move_changed": 0,
           "move_changed_share": 0.0,
           "changed_to": {},
           "changed_evidence": [],
           "end_move": {
-            "TOXIC_SPIT_MOVE": 4,
-            "THRASH_MOVE": 1
+            "TOXIC_SPIT_MOVE": 8,
+            "THRASH_MOVE": 2
           },
           "next_move": {
-            "THRASH_MOVE": 4,
-            "TOXIC_SPIT_MOVE": 1
+            "THRASH_MOVE": 8,
+            "TOXIC_SPIT_MOVE": 2
           },
           "changed_next": {},
-          "revived": 2
+          "revived": 4
         },
         "STRANGLE_POWER": {
           "n": 1,
@@ -1027,24 +1029,24 @@
           "revived": 1
         },
         "WEAK_POWER": {
-          "n": 11,
-          "fights": 4,
+          "n": 14,
+          "fights": 5,
           "amount_before": {
-            "1": 7,
+            "1": 10,
             "2": 2,
             "3": 2
           },
           "move_after": {
-            "THRASH_MOVE": 7,
-            "TOXIC_SPIT_MOVE": 4
+            "TOXIC_SPIT_MOVE": 7,
+            "THRASH_MOVE": 7
           },
           "stunned_share": 0.0,
           "co_removed": {
-            "POISON_POWER": 1
+            "POISON_POWER": 4
           },
           "died_same_turn": 0,
           "turn_end_unclear": 0,
-          "alive_at_turn_end": 11,
+          "alive_at_turn_end": 14,
           "stunned_at_turn_end": 0,
           "attack_before": 7,
           "attack_cancelled": 0,
@@ -1054,20 +1056,20 @@
           },
           "evidence": [],
           "move_before": {
-            "THRASH_MOVE": 7,
-            "TOXIC_SPIT_MOVE": 4
+            "TOXIC_SPIT_MOVE": 7,
+            "THRASH_MOVE": 7
           },
           "move_changed": 0,
           "move_changed_share": 0.0,
           "changed_to": {},
           "changed_evidence": [],
           "end_move": {
-            "THRASH_MOVE": 7,
-            "TOXIC_SPIT_MOVE": 4
+            "TOXIC_SPIT_MOVE": 7,
+            "THRASH_MOVE": 7
           },
           "next_move": {
-            "TOXIC_SPIT_MOVE": 6,
-            "THRASH_MOVE": 3
+            "THRASH_MOVE": 6,
+            "TOXIC_SPIT_MOVE": 6
           },
           "changed_next": {},
           "revived": 10
@@ -1075,17 +1077,17 @@
       },
       "powers_lowered": {
         "POISON_POWER": {
-          "n": 3,
-          "fights": 1,
+          "n": 6,
+          "fights": 2,
           "move_before": {
-            "THRASH_MOVE": 3
+            "THRASH_MOVE": 6
           },
           "move_changed": 0,
           "move_changed_share": 0.0,
           "changed_to": {},
           "changed_evidence": [],
           "end_move": {
-            "THRASH_MOVE": 3
+            "THRASH_MOVE": 6
           },
           "next_move": {
             "TOXIC_SPIT_MOVE": 3
@@ -1277,17 +1279,17 @@
             "AMA2B58E2ZMA F25 T7"
           ],
           "alive": {
-            "turns": 792,
+            "turns": 803,
             "moves": {
-              "TOXIC_SPIT_MOVE": 481,
-              "THRASH_MOVE": 311
+              "TOXIC_SPIT_MOVE": 488,
+              "THRASH_MOVE": 315
             },
             "next": {
               "THRASH_MOVE": {
-                "TOXIC_SPIT_MOVE": 193
+                "TOXIC_SPIT_MOVE": 196
               },
               "TOXIC_SPIT_MOVE": {
-                "THRASH_MOVE": 311
+                "THRASH_MOVE": 315
               }
             }
           },
@@ -1345,17 +1347,17 @@
             "LY0N909D4A0V F22 T3"
           ],
           "alive": {
-            "turns": 640,
+            "turns": 656,
             "moves": {
-              "TOXIC_SPIT_MOVE": 373,
-              "THRASH_MOVE": 267
+              "TOXIC_SPIT_MOVE": 381,
+              "THRASH_MOVE": 275
             },
             "next": {
               "THRASH_MOVE": {
-                "TOXIC_SPIT_MOVE": 200
+                "TOXIC_SPIT_MOVE": 204
               },
               "TOXIC_SPIT_MOVE": {
-                "THRASH_MOVE": 267
+                "THRASH_MOVE": 275
               }
             }
           },

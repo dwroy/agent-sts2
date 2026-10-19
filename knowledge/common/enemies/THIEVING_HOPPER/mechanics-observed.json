@@ -18,14 +18,14 @@
     ],
     "kind": "hallway",
     "rooms": {
-      "hallway": 308,
+      "hallway": 311,
       "unknown_room": 25
     },
     "acts": {
-      "2": 333
+      "2": 336
     },
     "encounters": {
-      "THIEVING_HOPPER": 333
+      "THIEVING_HOPPER": 336
     },
     "hp_by_asc": {
       "0": {
@@ -90,20 +90,20 @@
       },
       "10": {
         "min": 84,
-        "median": 84,
+        "median": 84.0,
         "max": 84,
-        "n": 135
+        "n": 138
       }
     },
     "moves": {
       "ESCAPE_MOVE": {
         "name": "逃跑",
-        "n_seen": 146,
+        "n_seen": 147,
         "intents": {
-          "Escape": 146
+          "Escape": 147
         },
         "turns_seen": {
-          "5": 124,
+          "5": 125,
           "6": 22
         },
         "next": {
@@ -113,21 +113,21 @@
       },
       "FLUTTER_MOVE": {
         "name": "振翅",
-        "n_seen": 331,
+        "n_seen": 334,
         "intents": {
-          "Buff": 331
+          "Buff": 334
         },
         "turns_seen": {
-          "2": 331
+          "2": 334
         },
         "next": {
-          "HAT_TRICK_MOVE": 287
+          "HAT_TRICK_MOVE": 290
         },
         "avg_total_shown": 0.0,
         "self_powers_gained": {
           "FLUTTER_POWER": {
             "4": 2,
-            "5": 285
+            "5": 288
           },
           "STRENGTH_POWER": {
             "1": 1
@@ -191,22 +191,22 @@
           },
           "10": {
             "FLUTTER_POWER": {
-              "5": 128
+              "5": 131
             }
           }
         }
       },
       "HAT_TRICK_MOVE": {
         "name": "帽子戏法",
-        "n_seen": 287,
+        "n_seen": 290,
         "intents": {
-          "Attack": 287
+          "Attack": 290
         },
         "turns_seen": {
-          "3": 287
+          "3": 290
         },
         "next": {
-          "NAB_MOVE": 209
+          "NAB_MOVE": 211
         },
         "avg_total_shown": 21.2,
         "damage_by_asc": {
@@ -338,34 +338,35 @@
           },
           "10": {
             "shown": {
+              "11x1": 1,
               "13x1": 2,
               "14x1": 1,
               "15x1": 4,
               "16x1": 3,
               "17x1": 28,
-              "23x1": 90
+              "23x1": 92
             },
             "base_per_hit": {
-              "23": 90
+              "23": 92
             },
             "hits": {
-              "1": 128
+              "1": 131
             },
-            "n_base": 90
+            "n_base": 92
           }
         }
       },
       "NAB_MOVE": {
         "name": "抢夺",
-        "n_seen": 209,
+        "n_seen": 211,
         "intents": {
-          "Attack": 209
+          "Attack": 211
         },
         "turns_seen": {
-          "4": 209
+          "4": 211
         },
         "next": {
-          "ESCAPE_MOVE": 124
+          "ESCAPE_MOVE": 125
         },
         "avg_total_shown": 14.3,
         "damage_by_asc": {
@@ -488,31 +489,32 @@
               "12x1": 25,
               "14x1": 1,
               "15x1": 1,
-              "16x1": 62,
+              "16x1": 63,
+              "6x1": 1,
               "8x1": 1,
               "9x1": 2
             },
             "base_per_hit": {
-              "16": 64
+              "16": 65
             },
             "hits": {
-              "1": 99
+              "1": 101
             },
-            "n_base": 64
+            "n_base": 65
           }
         }
       },
       "THIEVERY_MOVE": {
         "name": "偷盗",
-        "n_seen": 333,
+        "n_seen": 336,
         "intents": {
-          "Attack+CardDebuff": 333
+          "Attack+CardDebuff": 336
         },
         "turns_seen": {
-          "1": 333
+          "1": 336
         },
         "next": {
-          "FLUTTER_MOVE": 331
+          "FLUTTER_MOVE": 334
         },
         "avg_total_shown": 18.0,
         "damage_by_asc": {
@@ -643,15 +645,15 @@
           },
           "10": {
             "shown": {
-              "19x1": 135
+              "19x1": 138
             },
             "base_per_hit": {
-              "19": 135
+              "19": 138
             },
             "hits": {
-              "1": 135
+              "1": 138
             },
-            "n_base": 135
+            "n_base": 138
           }
         }
       }
@@ -705,12 +707,12 @@
         "name": "逃脱大师",
         "type": "Buff",
         "description": "在4回合后离开战斗。",
-        "n_fights": 333,
+        "n_fights": 336,
         "amount_at_first_sight": {
-          "5": 333
+          "5": 336
         },
         "amount_max_in_fight": {
-          "5": 333
+          "5": 336
         },
         "amount_at_first_sight_by_asc": {
           "0": {
@@ -744,7 +746,7 @@
             "5": 41
           },
           "10": {
-            "5": 135
+            "5": 138
           }
         },
         "turn_at_first_sight_by_asc": {
@@ -779,7 +781,7 @@
             "1": 41
           },
           "10": {
-            "1": 135
+            "1": 138
           }
         }
       },
@@ -787,14 +789,14 @@
         "name": "振翅",
         "type": "Buff",
         "description": "从攻击牌中受到的伤害减少[gold]50%[/gold]。",
-        "n_fights": 287,
+        "n_fights": 290,
         "amount_at_first_sight": {
           "4": 2,
-          "5": 285
+          "5": 288
         },
         "amount_max_in_fight": {
           "4": 2,
-          "5": 285
+          "5": 288
         },
         "amount_at_first_sight_by_asc": {
           "0": {
@@ -830,7 +832,7 @@
             "5": 32
           },
           "10": {
-            "5": 128
+            "5": 131
           }
         },
         "turn_at_first_sight_by_asc": {
@@ -865,7 +867,7 @@
             "3": 32
           },
           "10": {
-            "3": 128
+            "3": 131
           }
         }
       },
@@ -923,20 +925,20 @@
         "name": "中毒",
         "type": "Debuff",
         "description": "中毒的生物会在自身回合开始时失去生命。中毒层数每回合减少[blue]1[/blue]。",
-        "n_fights": 134,
+        "n_fights": 137,
         "amount_at_first_sight": {
           "1": 1,
           "2": 4,
-          "3": 43,
+          "3": 44,
           "4": 13,
           "5": 16,
           "6": 4,
-          "7": 29,
+          "7": 30,
           "8": 3,
           "9": 10,
           "10": 1,
           "11": 1,
-          "12": 6,
+          "12": 7,
           "14": 2,
           "36": 1
         },
@@ -946,7 +948,7 @@
           "4": 2,
           "5": 6,
           "6": 5,
-          "7": 10,
+          "7": 11,
           "8": 10,
           "9": 8,
           "10": 9,
@@ -954,13 +956,13 @@
           "12": 14,
           "13": 6,
           "14": 7,
-          "15": 9,
+          "15": 10,
           "16": 2,
           "17": 7,
           "18": 6,
           "19": 3,
           "20": 3,
-          "21": 4,
+          "21": 5,
           "22": 1,
           "23": 2,
           "31": 1,
@@ -993,16 +995,16 @@
           "10": {
             "1": 1,
             "2": 4,
-            "3": 39,
+            "3": 40,
             "4": 12,
             "5": 15,
             "6": 4,
-            "7": 27,
+            "7": 28,
             "8": 2,
             "9": 7,
             "10": 1,
             "11": 1,
-            "12": 6,
+            "12": 7,
             "14": 1,
             "36": 1
           }
@@ -1031,11 +1033,11 @@
             "3": 1
           },
           "10": {
-            "1": 55,
-            "2": 39,
+            "1": 56,
+            "2": 40,
             "3": 16,
             "4": 8,
-            "5": 3
+            "5": 4
           }
         }
       },
@@ -1089,11 +1091,11 @@
         "name": "力量",
         "type": "Buff",
         "description": "力量会增加攻击牌造成的伤害。",
-        "n_fights": 69,
+        "n_fights": 70,
         "amount_at_first_sight": {
           "-10": 2,
           "-9": 4,
-          "-8": 3,
+          "-8": 4,
           "-7": 1,
           "-6": 25,
           "-5": 1,
@@ -1106,7 +1108,7 @@
         "amount_max_in_fight": {
           "-10": 2,
           "-9": 4,
-          "-8": 3,
+          "-8": 4,
           "-7": 1,
           "-6": 23,
           "-5": 1,
@@ -1134,7 +1136,7 @@
           },
           "10": {
             "-9": 4,
-            "-8": 3,
+            "-8": 4,
             "-7": 1,
             "-6": 25,
             "-5": 1,
@@ -1163,7 +1165,7 @@
             "3": 1
           },
           "10": {
-            "1": 17,
+            "1": 18,
             "2": 5,
             "3": 16,
             "4": 7
@@ -1174,12 +1176,12 @@
         "name": "顺走",
         "type": "Buff",
         "description": "击杀这名敌人时，会取回被偷走的卡牌。",
-        "n_fights": 331,
+        "n_fights": 334,
         "amount_at_first_sight": {
-          "1": 331
+          "1": 334
         },
         "amount_max_in_fight": {
-          "1": 331
+          "1": 334
         },
         "amount_at_first_sight_by_asc": {
           "0": {
@@ -1213,7 +1215,7 @@
             "1": 40
           },
           "10": {
-            "1": 135
+            "1": 138
           }
         },
         "turn_at_first_sight_by_asc": {
@@ -1255,7 +1257,7 @@
             "1": 40
           },
           "10": {
-            "1": 135
+            "1": 138
           }
         }
       },
@@ -1391,13 +1393,14 @@
         "name": "虚弱",
         "type": "Debuff",
         "description": "虚弱的生物造成的攻击伤害减少[blue]25%[/blue]。",
-        "n_fights": 169,
+        "n_fights": 170,
         "amount_at_first_sight": {
           "1": 101,
           "2": 62,
           "3": 4,
           "4": 1,
-          "5": 1
+          "5": 1,
+          "8": 1
         },
         "amount_max_in_fight": {
           "1": 69,
@@ -1406,7 +1409,8 @@
           "4": 7,
           "5": 1,
           "6": 4,
-          "7": 1
+          "7": 1,
+          "10": 1
         },
         "amount_at_first_sight_by_asc": {
           "0": {
@@ -1448,7 +1452,8 @@
             "2": 50,
             "3": 4,
             "4": 1,
-            "5": 1
+            "5": 1,
+            "8": 1
           }
         },
         "turn_at_first_sight_by_asc": {
@@ -1490,7 +1495,7 @@
             "1": 4
           },
           "10": {
-            "1": 69,
+            "1": 70,
             "2": 34,
             "3": 19,
             "4": 4
@@ -1500,37 +1505,37 @@
     },
     "provenance": {
       "first_seen": "2026-09-24T04:37:53.128Z",
-      "last_seen": "2026-10-18T06:08:58.271Z",
-      "n_runs": 333,
-      "n_instances": 333,
+      "last_seen": "2026-10-19T01:28:03.937Z",
+      "n_runs": 336,
+      "n_instances": 336,
       "n_spawned_mid_fight": 0,
       "n_minion_instances": 0
     },
     "observed": {
       "powers_stripped": {
         "FLUTTER_POWER": {
-          "n": 107,
-          "fights": 107,
+          "n": 108,
+          "fights": 108,
           "amount_before": {
             "1": 83,
             "2": 13,
             "3": 6,
-            "4": 4,
+            "4": 5,
             "5": 1
           },
           "move_after": {
-            "STUNNED": 107
+            "STUNNED": 108
           },
           "stunned_share": 1.0,
           "co_removed": {},
           "died_same_turn": 27,
           "turn_end_unclear": 0,
-          "alive_at_turn_end": 80,
-          "stunned_at_turn_end": 80,
-          "attack_before": 51,
-          "attack_cancelled": 51,
+          "alive_at_turn_end": 81,
+          "stunned_at_turn_end": 81,
+          "attack_before": 52,
+          "attack_cancelled": 52,
           "hp_check": {
-            "n": 40,
+            "n": 41,
             "landed": 0
           },
           "evidence": [
@@ -1539,14 +1544,14 @@
             "VQSA3FRA2ML9 F20 T5"
           ],
           "move_before": {
-            "NAB_MOVE": 52,
+            "NAB_MOVE": 53,
             "ESCAPE_MOVE": 39,
             "HAT_TRICK_MOVE": 16
           },
-          "move_changed": 107,
+          "move_changed": 108,
           "move_changed_share": 1.0,
           "changed_to": {
-            "STUNNED": 107
+            "STUNNED": 108
           },
           "changed_evidence": [
             "V5S6QVVQYL37 F19 T5",
@@ -1554,14 +1559,14 @@
             "JGJS7QE62GLD F19 T3"
           ],
           "end_move": {
-            "STUNNED": 80
+            "STUNNED": 81
           },
           "next_move": {
-            "ESCAPE_MOVE": 54,
+            "ESCAPE_MOVE": 55,
             "NAB_MOVE": 12
           },
           "changed_next": {
-            "ESCAPE_MOVE": 54,
+            "ESCAPE_MOVE": 55,
             "NAB_MOVE": 12
           },
           "revived": 0
@@ -1645,10 +1650,10 @@
       },
       "powers_lowered": {
         "FLUTTER_POWER": {
-          "n": 645,
-          "fights": 249,
+          "n": 646,
+          "fights": 250,
           "move_before": {
-            "HAT_TRICK_MOVE": 381,
+            "HAT_TRICK_MOVE": 382,
             "NAB_MOVE": 195,
             "ESCAPE_MOVE": 69
           },
@@ -1657,13 +1662,13 @@
           "changed_to": {},
           "changed_evidence": [],
           "end_move": {
-            "HAT_TRICK_MOVE": 307,
+            "HAT_TRICK_MOVE": 308,
             "NAB_MOVE": 122,
             "STUNNED": 103,
             "ESCAPE_MOVE": 34
           },
           "next_move": {
-            "NAB_MOVE": 313,
+            "NAB_MOVE": 314,
             "ESCAPE_MOVE": 168
           },
           "changed_next": {},
@@ -1689,8 +1694,8 @@
       },
       "escape_moves": {
         "ESCAPE_MOVE": {
-          "n": 146,
-          "gone": 83,
+          "n": 147,
+          "gone": 84,
           "gone_stunned": 7,
           "stayed": 22,
           "stayed_stunned": 22,
@@ -1698,7 +1703,7 @@
           "killed_last_card": 41,
           "we_died": 0,
           "unclear": 0,
-          "gone_share": 0.79,
+          "gone_share": 0.792,
           "next_after_stay": {
             "ESCAPE_MOVE": 22
           },
@@ -1718,16 +1723,16 @@
         {
           "reward": "SpecialCard:取回你被偷走的牌。",
           "killed": [
-            247,
-            249
+            249,
+            251
           ],
           "left": [
             47,
-            83
+            84
           ],
           "elsewhere": [
             0,
-            11207
+            11329
           ],
           "only_when_killed": false,
           "exclusive": true,
@@ -1739,11 +1744,11 @@
         }
       ],
       "mid_turn_stuns": {
-        "n": 107,
-        "fights": 107,
+        "n": 108,
+        "fights": 108,
         "triggers": {
-          "power_removed:FLUTTER_POWER": 107,
-          "hp_lost": 107
+          "power_removed:FLUTTER_POWER": 108,
+          "hp_lost": 108
         },
         "unexplained": 0,
         "evidence": [

@@ -18,16 +18,16 @@
     ],
     "kind": "hallway",
     "rooms": {
-      "hallway": 579,
+      "hallway": 584,
       "unknown_room": 58
     },
     "acts": {
-      "2": 637
+      "2": 642
     },
     "encounters": {
-      "BOWLBUG_EGG+BOWLBUG_ROCK": 165,
-      "BOWLBUG_ROCK+BOWLBUG_SILK+SLUMBERING_BEETLE": 161,
-      "BOWLBUG_NECTAR+BOWLBUG_ROCK": 156,
+      "BOWLBUG_EGG+BOWLBUG_ROCK": 168,
+      "BOWLBUG_ROCK+BOWLBUG_SILK+SLUMBERING_BEETLE": 162,
+      "BOWLBUG_NECTAR+BOWLBUG_ROCK": 157,
       "BOWLBUG_EGG+BOWLBUG_ROCK+BOWLBUG_SILK": 54,
       "BOWLBUG_NECTAR+BOWLBUG_ROCK+BOWLBUG_SILK": 52,
       "BOWLBUG_EGG+BOWLBUG_NECTAR+BOWLBUG_ROCK": 49
@@ -97,28 +97,28 @@
         "min": 46,
         "median": 47,
         "max": 49,
-        "n": 243
+        "n": 251
       }
     },
     "moves": {
       "HEADBUTT_MOVE": {
         "name": "头槌",
-        "n_seen": 1496,
+        "n_seen": 1513,
         "intents": {
-          "Attack": 1496
+          "Attack": 1513
         },
         "turns_seen": {
-          "1": 650,
-          "2": 303,
-          "3": 320,
-          "4": 147,
+          "1": 658,
+          "2": 306,
+          "3": 325,
+          "4": 148,
           "5": 63,
           "6": 8,
           "7": 5
         },
         "next": {
-          "HEADBUTT_MOVE": 509,
-          "STUNNED": 458
+          "HEADBUTT_MOVE": 513,
+          "STUNNED": 466
         },
         "avg_total_shown": 15.2,
         "damage_by_asc": {
@@ -264,37 +264,38 @@
           "10": {
             "shown": {
               "10x1": 3,
+              "11x1": 3,
               "12x1": 64,
               "14x1": 3,
               "15x1": 2,
-              "16x1": 518,
+              "16x1": 532,
               "9x1": 2
             },
             "base_per_hit": {
-              "16": 523
+              "16": 537
             },
             "hits": {
-              "1": 592
+              "1": 609
             },
-            "n_base": 523
+            "n_base": 537
           }
         }
       },
       "STUNNED": {
         "name": null,
-        "n_seen": 458,
+        "n_seen": 466,
         "intents": {
-          "Stun": 458
+          "Stun": 466
         },
         "turns_seen": {
-          "2": 256,
-          "3": 92,
-          "4": 80,
+          "2": 261,
+          "3": 94,
+          "4": 81,
           "5": 20,
           "6": 10
         },
         "next": {
-          "HEADBUTT_MOVE": 337
+          "HEADBUTT_MOVE": 342
         },
         "avg_total_shown": 0.0
       }
@@ -362,12 +363,12 @@
         "name": "失衡",
         "type": "Debuff",
         "description": "如果这个生物的攻击被任意玩家完全格挡，则它将被[gold]击晕[/gold]。",
-        "n_fights": 637,
+        "n_fights": 642,
         "amount_at_first_sight": {
-          "1": 637
+          "1": 642
         },
         "amount_max_in_fight": {
-          "1": 637
+          "1": 642
         },
         "amount_at_first_sight_by_asc": {
           "0": {
@@ -401,7 +402,7 @@
             "1": 80
           },
           "10": {
-            "1": 232
+            "1": 237
           }
         },
         "turn_at_first_sight_by_asc": {
@@ -436,7 +437,7 @@
             "1": 80
           },
           "10": {
-            "1": 232
+            "1": 237
           }
         }
       },
@@ -526,13 +527,13 @@
         "name": "中毒",
         "type": "Debuff",
         "description": "中毒的生物会在自身回合开始时失去生命。中毒层数每回合减少[blue]1[/blue]。",
-        "n_fights": 196,
+        "n_fights": 200,
         "amount_at_first_sight": {
           "2": 15,
-          "3": 69,
-          "4": 26,
+          "3": 70,
+          "4": 28,
           "5": 21,
-          "6": 16,
+          "6": 17,
           "7": 28,
           "8": 8,
           "9": 5,
@@ -542,14 +543,14 @@
         },
         "amount_max_in_fight": {
           "2": 3,
-          "3": 28,
-          "4": 17,
+          "3": 29,
+          "4": 18,
           "5": 19,
-          "6": 10,
+          "6": 11,
           "7": 22,
           "8": 14,
           "9": 10,
-          "10": 13,
+          "10": 14,
           "11": 10,
           "12": 17,
           "13": 8,
@@ -591,10 +592,10 @@
           },
           "10": {
             "2": 12,
-            "3": 59,
-            "4": 24,
+            "3": 60,
+            "4": 26,
             "5": 18,
-            "6": 15,
+            "6": 16,
             "7": 27,
             "8": 8,
             "9": 5,
@@ -629,10 +630,10 @@
             "3": 1
           },
           "10": {
-            "1": 60,
+            "1": 63,
             "2": 59,
             "3": 33,
-            "4": 16,
+            "4": 17,
             "5": 5,
             "6": 3
           }
@@ -657,6 +658,28 @@
         "turn_at_first_sight_by_asc": {
           "8": {
             "2": 1
+          }
+        }
+      },
+      "SHRINK_POWER": {
+        "name": "缩小",
+        "type": "Debuff",
+        "description": "这个生物的攻击伤害在3回合内减少[blue]30%[/blue]。",
+        "n_fights": 1,
+        "amount_at_first_sight": {
+          "4": 1
+        },
+        "amount_max_in_fight": {
+          "4": 1
+        },
+        "amount_at_first_sight_by_asc": {
+          "10": {
+            "4": 1
+          }
+        },
+        "turn_at_first_sight_by_asc": {
+          "10": {
+            "1": 1
           }
         }
       },
@@ -946,15 +969,15 @@
         "name": "虚弱",
         "type": "Debuff",
         "description": "虚弱的生物造成的攻击伤害减少[blue]25%[/blue]。",
-        "n_fights": 240,
+        "n_fights": 244,
         "amount_at_first_sight": {
-          "1": 142,
-          "2": 84,
+          "1": 145,
+          "2": 85,
           "3": 14
         },
         "amount_max_in_fight": {
-          "1": 113,
-          "2": 85,
+          "1": 115,
+          "2": 87,
           "3": 27,
           "4": 13,
           "5": 2
@@ -993,8 +1016,8 @@
             "3": 1
           },
           "10": {
-            "1": 83,
-            "2": 70,
+            "1": 86,
+            "2": 71,
             "3": 6
           }
         },
@@ -1036,9 +1059,9 @@
             "3": 1
           },
           "10": {
-            "1": 94,
+            "1": 97,
             "2": 35,
-            "3": 22,
+            "3": 23,
             "4": 7,
             "5": 1
           }
@@ -1047,10 +1070,10 @@
     },
     "provenance": {
       "first_seen": "2026-09-24T04:38:57.672Z",
-      "last_seen": "2026-10-18T07:55:38.078Z",
-      "n_runs": 474,
-      "n_instances": 650,
-      "n_spawned_mid_fight": 13,
+      "last_seen": "2026-10-19T05:19:26.336Z",
+      "n_runs": 479,
+      "n_instances": 658,
+      "n_spawned_mid_fight": 16,
       "n_minion_instances": 0
     },
     "observed": {
@@ -1309,10 +1332,10 @@
       },
       "ally_deaths": {
         "BOWLBUG_EGG": {
-          "n": 158,
-          "fights": 157,
+          "n": 160,
+          "fights": 159,
           "move_before": {
-            "HEADBUTT_MOVE": 127,
+            "HEADBUTT_MOVE": 129,
             "STUNNED": 31
           },
           "move_changed": 0,
@@ -1320,7 +1343,7 @@
           "changed_to": {},
           "by_move": {
             "HEADBUTT_MOVE": {
-              "n": 127,
+              "n": 129,
               "changed_to": {}
             },
             "STUNNED": {
@@ -1332,17 +1355,17 @@
           "attack_changed": 0,
           "co_deaths": 1,
           "end_move": {
-            "HEADBUTT_MOVE": 120,
+            "HEADBUTT_MOVE": 122,
             "STUNNED": 31
           },
-          "next_n": 147,
+          "next_n": 149,
           "next_move": {
-            "HEADBUTT_MOVE": 121,
+            "HEADBUTT_MOVE": 123,
             "STUNNED": 26
           },
           "next_after": {
             "HEADBUTT_MOVE": {
-              "HEADBUTT_MOVE": 91,
+              "HEADBUTT_MOVE": 93,
               "STUNNED": 26
             },
             "STUNNED": {
@@ -1355,9 +1378,9 @@
             "DG1CDGW8Y5JE F30 T1"
           ],
           "alive": {
-            "turns": 525,
+            "turns": 528,
             "moves": {
-              "HEADBUTT_MOVE": 404,
+              "HEADBUTT_MOVE": 407,
               "STUNNED": 121
             },
             "next": {
@@ -1371,10 +1394,10 @@
             }
           },
           "dead": {
-            "turns": 285,
+            "turns": 290,
             "moves": {
-              "HEADBUTT_MOVE": 213,
-              "STUNNED": 72
+              "HEADBUTT_MOVE": 216,
+              "STUNNED": 74
             }
           }
         },
@@ -1425,18 +1448,18 @@
             "AMA2B58E2ZMA F21 T3"
           ],
           "alive": {
-            "turns": 633,
+            "turns": 636,
             "moves": {
-              "HEADBUTT_MOVE": 499,
-              "STUNNED": 134
+              "HEADBUTT_MOVE": 501,
+              "STUNNED": 135
             },
             "next": {
               "HEADBUTT_MOVE": {
                 "HEADBUTT_MOVE": 159,
-                "STUNNED": 134
+                "STUNNED": 135
               },
               "STUNNED": {
-                "HEADBUTT_MOVE": 75
+                "HEADBUTT_MOVE": 76
               }
             }
           },
@@ -1495,18 +1518,18 @@
             "P4ZDR744B9JC F31 T2"
           ],
           "alive": {
-            "turns": 792,
+            "turns": 803,
             "moves": {
-              "HEADBUTT_MOVE": 588,
-              "STUNNED": 204
+              "HEADBUTT_MOVE": 595,
+              "STUNNED": 208
             },
             "next": {
               "HEADBUTT_MOVE": {
-                "STUNNED": 204,
+                "STUNNED": 208,
                 "HEADBUTT_MOVE": 165
               },
               "STUNNED": {
-                "HEADBUTT_MOVE": 135
+                "HEADBUTT_MOVE": 138
               }
             }
           },
@@ -1563,18 +1586,18 @@
             "R31C86606UDG F31 T2"
           ],
           "alive": {
-            "turns": 487,
+            "turns": 498,
             "moves": {
-              "HEADBUTT_MOVE": 361,
-              "STUNNED": 126
+              "HEADBUTT_MOVE": 368,
+              "STUNNED": 130
             },
             "next": {
               "HEADBUTT_MOVE": {
-                "STUNNED": 126,
+                "STUNNED": 130,
                 "HEADBUTT_MOVE": 99
               },
               "STUNNED": {
-                "HEADBUTT_MOVE": 89
+                "HEADBUTT_MOVE": 92
               }
             }
           },

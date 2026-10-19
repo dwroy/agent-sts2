@@ -18,17 +18,17 @@
     ],
     "kind": "hallway",
     "rooms": {
-      "hallway": 301,
+      "hallway": 303,
       "unknown_room": 21
     },
     "acts": {
-      "1": 322
+      "1": 324
     },
     "encounters": {
       "LEAF_SLIME_M+LEAF_SLIME_S+TWIG_SLIME_S": 163,
-      "LEAF_SLIME_M+LEAF_SLIME_S+TWIG_SLIME_M+TWIG_SLIME_S": 98,
+      "LEAF_SLIME_M+LEAF_SLIME_S+TWIG_SLIME_M+TWIG_SLIME_S": 99,
       "FLYCONID+LEAF_SLIME_M": 45,
-      "LEAF_SLIME_M+SLITHERING_STRANGLER": 16
+      "LEAF_SLIME_M+SLITHERING_STRANGLER": 17
     },
     "hp_by_asc": {
       "0": {
@@ -95,25 +95,25 @@
         "min": 33,
         "median": 34,
         "max": 36,
-        "n": 133
+        "n": 135
       }
     },
     "moves": {
       "CLUMP_SHOT": {
         "name": "团块射击",
-        "n_seen": 569,
+        "n_seen": 575,
         "intents": {
-          "Attack": 569
+          "Attack": 575
         },
         "turns_seen": {
-          "2": 311,
-          "4": 208,
-          "6": 46,
+          "2": 313,
+          "4": 210,
+          "6": 48,
           "8": 3,
           "10": 1
         },
         "next": {
-          "STICKY_SHOT": 386
+          "STICKY_SHOT": 391
         },
         "avg_total_shown": 8.6,
         "damage_by_asc": {
@@ -244,46 +244,46 @@
             "shown": {
               "10x1": 1,
               "13x1": 7,
-              "6x1": 13,
-              "9x1": 220
+              "6x1": 14,
+              "9x1": 225
             },
             "base_per_hit": {
-              "9": 220
+              "9": 225
             },
             "hits": {
-              "1": 241
+              "1": 247
             },
-            "n_base": 220
+            "n_base": 225
           }
         }
       },
       "STICKY_SHOT": {
         "name": "黏糊射击",
-        "n_seen": 708,
+        "n_seen": 715,
         "intents": {
-          "StatusCard": 708
+          "StatusCard": 715
         },
         "turns_seen": {
-          "1": 322,
-          "3": 266,
-          "5": 107,
-          "7": 11,
+          "1": 324,
+          "3": 268,
+          "5": 109,
+          "7": 12,
           "9": 1,
           "11": 1
         },
         "next": {
-          "CLUMP_SHOT": 569
+          "CLUMP_SHOT": 575
         },
         "avg_total_shown": 0.0,
         "status_cards": {
-          "2": 708
+          "2": 715
         },
         "status_card_ids": {
-          "SLIMED": 692
+          "SLIMED": 702
         },
         "status_card_pile": {
-          "discard": 568,
-          "draw": 124
+          "discard": 574,
+          "draw": 128
         }
       }
     },
@@ -336,24 +336,24 @@
         "name": "尖啸",
         "type": "Debuff",
         "description": "在本回合结束前失去[gold]力量[/gold]。",
-        "n_fights": 8,
+        "n_fights": 9,
         "amount_at_first_sight": {
-          "6": 8
+          "6": 9
         },
         "amount_max_in_fight": {
-          "6": 7,
+          "6": 8,
           "12": 1
         },
         "amount_at_first_sight_by_asc": {
           "10": {
-            "6": 8
+            "6": 9
           }
         },
         "turn_at_first_sight_by_asc": {
           "10": {
             "1": 2,
             "2": 4,
-            "4": 2
+            "4": 3
           }
         }
       },
@@ -476,17 +476,17 @@
         "name": "力量",
         "type": "Buff",
         "description": "力量会增加攻击牌造成的伤害。",
-        "n_fights": 11,
+        "n_fights": 12,
         "amount_at_first_sight": {
           "-9": 1,
           "-7": 1,
-          "-6": 8,
+          "-6": 9,
           "1": 1
         },
         "amount_max_in_fight": {
           "-9": 1,
           "-7": 1,
-          "-6": 8,
+          "-6": 9,
           "1": 1
         },
         "amount_at_first_sight_by_asc": {
@@ -496,7 +496,7 @@
           "10": {
             "-9": 1,
             "-7": 1,
-            "-6": 8
+            "-6": 9
           }
         },
         "turn_at_first_sight_by_asc": {
@@ -506,7 +506,7 @@
           "10": {
             "1": 2,
             "2": 6,
-            "4": 2
+            "4": 3
           }
         }
       },
@@ -626,15 +626,15 @@
         "name": "虚弱",
         "type": "Debuff",
         "description": "虚弱的生物造成的攻击伤害减少[blue]25%[/blue]。",
-        "n_fights": 99,
+        "n_fights": 101,
         "amount_at_first_sight": {
-          "1": 89,
+          "1": 91,
           "2": 9,
           "3": 1
         },
         "amount_max_in_fight": {
-          "1": 77,
-          "2": 17,
+          "1": 78,
+          "2": 18,
           "3": 3,
           "4": 2
         },
@@ -653,7 +653,7 @@
             "1": 4
           },
           "10": {
-            "1": 75,
+            "1": 77,
             "2": 8,
             "3": 1
           }
@@ -679,10 +679,10 @@
           },
           "10": {
             "1": 28,
-            "2": 27,
+            "2": 28,
             "3": 11,
             "4": 9,
-            "5": 8,
+            "5": 9,
             "6": 1
           }
         }
@@ -690,9 +690,9 @@
     },
     "provenance": {
       "first_seen": "2026-09-24T04:24:14.244Z",
-      "last_seen": "2026-10-18T00:40:37.426Z",
-      "n_runs": 249,
-      "n_instances": 322,
+      "last_seen": "2026-10-19T00:23:46.870Z",
+      "n_runs": 251,
+      "n_instances": 324,
       "n_spawned_mid_fight": 0,
       "n_minion_instances": 0
     },
@@ -805,17 +805,17 @@
             "ZZA7PCSRYTNM F5 T4"
           ],
           "alive": {
-            "turns": 646,
+            "turns": 653,
             "moves": {
-              "STICKY_SHOT": 386,
-              "CLUMP_SHOT": 260
+              "STICKY_SHOT": 390,
+              "CLUMP_SHOT": 263
             },
             "next": {
               "CLUMP_SHOT": {
-                "STICKY_SHOT": 125
+                "STICKY_SHOT": 128
               },
               "STICKY_SHOT": {
-                "CLUMP_SHOT": 260
+                "CLUMP_SHOT": 263
               }
             }
           },
@@ -873,17 +873,17 @@
             "79YRPJ8TCCZ5 F15 T2"
           ],
           "alive": {
-            "turns": 40,
+            "turns": 44,
             "moves": {
-              "STICKY_SHOT": 23,
-              "CLUMP_SHOT": 17
+              "STICKY_SHOT": 25,
+              "CLUMP_SHOT": 19
             },
             "next": {
               "CLUMP_SHOT": {
-                "STICKY_SHOT": 7
+                "STICKY_SHOT": 8
               },
               "STICKY_SHOT": {
-                "CLUMP_SHOT": 17
+                "CLUMP_SHOT": 19
               }
             }
           },
@@ -896,10 +896,10 @@
           }
         },
         "TWIG_SLIME_M": {
-          "n": 74,
-          "fights": 74,
+          "n": 75,
+          "fights": 75,
           "move_before": {
-            "CLUMP_SHOT": 59,
+            "CLUMP_SHOT": 60,
             "STICKY_SHOT": 15
           },
           "move_changed": 0,
@@ -907,7 +907,7 @@
           "changed_to": {},
           "by_move": {
             "CLUMP_SHOT": {
-              "n": 59,
+              "n": 60,
               "changed_to": {}
             },
             "STICKY_SHOT": {
@@ -919,17 +919,17 @@
           "attack_changed": 0,
           "co_deaths": 15,
           "end_move": {
-            "CLUMP_SHOT": 56,
+            "CLUMP_SHOT": 57,
             "STICKY_SHOT": 13
           },
-          "next_n": 67,
+          "next_n": 68,
           "next_move": {
-            "STICKY_SHOT": 54,
+            "STICKY_SHOT": 55,
             "CLUMP_SHOT": 13
           },
           "next_after": {
             "CLUMP_SHOT": {
-              "STICKY_SHOT": 54
+              "STICKY_SHOT": 55
             },
             "STICKY_SHOT": {
               "CLUMP_SHOT": 13
@@ -941,33 +941,33 @@
             "ZZA7PCSRYTNM F5 T4"
           ],
           "alive": {
-            "turns": 240,
+            "turns": 242,
             "moves": {
-              "STICKY_SHOT": 134,
-              "CLUMP_SHOT": 106
+              "STICKY_SHOT": 135,
+              "CLUMP_SHOT": 107
             },
             "next": {
               "CLUMP_SHOT": {
                 "STICKY_SHOT": 36
               },
               "STICKY_SHOT": {
-                "CLUMP_SHOT": 106
+                "CLUMP_SHOT": 107
               }
             }
           },
           "dead": {
-            "turns": 139,
+            "turns": 144,
             "moves": {
-              "STICKY_SHOT": 78,
-              "CLUMP_SHOT": 61
+              "STICKY_SHOT": 81,
+              "CLUMP_SHOT": 63
             }
           }
         },
         "TWIG_SLIME_S": {
-          "n": 229,
-          "fights": 229,
+          "n": 230,
+          "fights": 230,
           "move_before": {
-            "STICKY_SHOT": 186,
+            "STICKY_SHOT": 187,
             "CLUMP_SHOT": 43
           },
           "move_changed": 0,
@@ -979,7 +979,7 @@
               "changed_to": {}
             },
             "STICKY_SHOT": {
-              "n": 186,
+              "n": 187,
               "changed_to": {}
             }
           },
@@ -987,12 +987,12 @@
           "attack_changed": 0,
           "co_deaths": 24,
           "end_move": {
-            "STICKY_SHOT": 185,
+            "STICKY_SHOT": 186,
             "CLUMP_SHOT": 42
           },
-          "next_n": 227,
+          "next_n": 228,
           "next_move": {
-            "CLUMP_SHOT": 185,
+            "CLUMP_SHOT": 186,
             "STICKY_SHOT": 42
           },
           "next_after": {
@@ -1000,7 +1000,7 @@
               "STICKY_SHOT": 42
             },
             "STICKY_SHOT": {
-              "CLUMP_SHOT": 185
+              "CLUMP_SHOT": 186
             }
           },
           "next_evidence": [
@@ -1009,25 +1009,25 @@
             "WFR4AUP2CWDT F11 T1"
           ],
           "alive": {
-            "turns": 343,
+            "turns": 346,
             "moves": {
-              "STICKY_SHOT": 276,
-              "CLUMP_SHOT": 67
+              "STICKY_SHOT": 278,
+              "CLUMP_SHOT": 68
             },
             "next": {
               "CLUMP_SHOT": {
-                "STICKY_SHOT": 16
+                "STICKY_SHOT": 17
               },
               "STICKY_SHOT": {
-                "CLUMP_SHOT": 67
+                "CLUMP_SHOT": 68
               }
             }
           },
           "dead": {
-            "turns": 686,
+            "turns": 690,
             "moves": {
-              "CLUMP_SHOT": 385,
-              "STICKY_SHOT": 301
+              "CLUMP_SHOT": 387,
+              "STICKY_SHOT": 303
             }
           }
         }

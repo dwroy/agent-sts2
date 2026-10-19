@@ -18,14 +18,14 @@
     ],
     "kind": "hallway",
     "rooms": {
-      "hallway": 164,
+      "hallway": 165,
       "unknown_room": 21
     },
     "acts": {
-      "2": 185
+      "2": 186
     },
     "encounters": {
-      "CHOMPER+CHOMPER": 185
+      "CHOMPER+CHOMPER": 186
     },
     "hp_by_asc": {
       "0": {
@@ -86,22 +86,22 @@
         "min": 63,
         "median": 65,
         "max": 67,
-        "n": 133
+        "n": 135
       }
     },
     "moves": {
       "CLAMP_MOVE": {
         "name": "猛夹",
-        "n_seen": 790,
+        "n_seen": 795,
         "intents": {
-          "Attack": 790
+          "Attack": 795
         },
         "turns_seen": {
-          "1": 185,
-          "2": 187,
-          "3": 151,
-          "4": 136,
-          "5": 50,
+          "1": 186,
+          "2": 188,
+          "3": 152,
+          "4": 137,
+          "5": 51,
           "6": 50,
           "7": 11,
           "8": 14,
@@ -109,7 +109,7 @@
           "10": 3
         },
         "next": {
-          "SCREECH_MOVE": 568,
+          "SCREECH_MOVE": 572,
           "CLAMP_MOVE": 1
         },
         "avg_total_shown": 16.8,
@@ -234,33 +234,34 @@
           "10": {
             "shown": {
               "4x2": 2,
-              "6x2": 26,
+              "6x2": 27,
               "7x2": 3,
-              "9x2": 283
+              "8x2": 1,
+              "9x2": 286
             },
             "base_per_hit": {
-              "9": 286
+              "9": 290
             },
             "hits": {
-              "2": 314
+              "2": 319
             },
-            "n_base": 286
+            "n_base": 290
           }
         }
       },
       "SCREECH_MOVE": {
         "name": "尖锐鸣叫",
-        "n_seen": 760,
+        "n_seen": 765,
         "intents": {
-          "StatusCard": 760
+          "StatusCard": 765
         },
         "turns_seen": {
-          "1": 192,
-          "2": 177,
-          "3": 163,
-          "4": 91,
+          "1": 193,
+          "2": 178,
+          "3": 164,
+          "4": 92,
           "5": 80,
-          "6": 18,
+          "6": 19,
           "7": 25,
           "8": 6,
           "9": 6,
@@ -268,19 +269,19 @@
           "11": 1
         },
         "next": {
-          "CLAMP_MOVE": 604
+          "CLAMP_MOVE": 608
         },
         "avg_total_shown": 0.0,
         "status_cards": {
-          "3": 760
+          "3": 765
         },
         "status_card_ids": {
-          "DAZED": 1773,
+          "DAZED": 1785,
           "SOOT": 1
         },
         "status_card_pile": {
-          "discard": 1593,
-          "draw": 181
+          "discard": 1602,
+          "draw": 184
         }
       }
     },
@@ -289,14 +290,14 @@
         "name": "人工制品",
         "type": "Buff",
         "description": "[gold]免疫[/gold]负面效果。",
-        "n_fights": 185,
+        "n_fights": 186,
         "amount_at_first_sight": {
           "1": 12,
-          "2": 173
+          "2": 174
         },
         "amount_max_in_fight": {
           "1": 12,
-          "2": 173
+          "2": 174
         },
         "amount_at_first_sight_by_asc": {
           "0": {
@@ -331,7 +332,7 @@
             "2": 19
           },
           "10": {
-            "2": 63
+            "2": 64
           }
         },
         "turn_at_first_sight_by_asc": {
@@ -363,7 +364,7 @@
             "1": 19
           },
           "10": {
-            "1": 63
+            "1": 64
           }
         }
       },
@@ -419,11 +420,11 @@
         "name": "中毒",
         "type": "Debuff",
         "description": "中毒的生物会在自身回合开始时失去生命。中毒层数每回合减少[blue]1[/blue]。",
-        "n_fights": 39,
+        "n_fights": 40,
         "amount_at_first_sight": {
           "1": 2,
           "2": 7,
-          "3": 8,
+          "3": 9,
           "4": 6,
           "5": 5,
           "6": 2,
@@ -442,7 +443,7 @@
           "7": 2,
           "8": 3,
           "9": 4,
-          "10": 6,
+          "10": 7,
           "12": 2,
           "13": 2,
           "14": 2,
@@ -464,7 +465,7 @@
           "10": {
             "1": 2,
             "2": 6,
-            "3": 8,
+            "3": 9,
             "4": 4,
             "5": 4,
             "6": 2,
@@ -488,7 +489,7 @@
           },
           "10": {
             "1": 5,
-            "2": 6,
+            "2": 7,
             "3": 12,
             "4": 8,
             "5": 1,
@@ -624,15 +625,15 @@
         "name": "虚弱",
         "type": "Debuff",
         "description": "虚弱的生物造成的攻击伤害减少[blue]25%[/blue]。",
-        "n_fights": 36,
+        "n_fights": 37,
         "amount_at_first_sight": {
-          "1": 12,
+          "1": 13,
           "2": 18,
           "3": 6
         },
         "amount_max_in_fight": {
           "1": 9,
-          "2": 18,
+          "2": 19,
           "3": 6,
           "4": 2,
           "5": 1
@@ -654,7 +655,7 @@
             "1": 1
           },
           "10": {
-            "1": 8,
+            "1": 9,
             "2": 16,
             "3": 5
           }
@@ -675,7 +676,7 @@
             "1": 1
           },
           "10": {
-            "1": 7,
+            "1": 8,
             "2": 6,
             "3": 12,
             "4": 1,
@@ -687,9 +688,9 @@
     },
     "provenance": {
       "first_seen": "2026-09-24T06:18:03.348Z",
-      "last_seen": "2026-10-18T06:24:46.941Z",
-      "n_runs": 185,
-      "n_instances": 377,
+      "last_seen": "2026-10-18T12:31:10.201Z",
+      "n_runs": 186,
+      "n_instances": 379,
       "n_spawned_mid_fight": 7,
       "n_minion_instances": 0
     },
@@ -702,32 +703,32 @@
     "observed": {
       "powers_stripped": {
         "ARTIFACT_POWER": {
-          "n": 141,
-          "fights": 83,
+          "n": 143,
+          "fights": 84,
           "amount_before": {
-            "1": 118,
+            "1": 120,
             "2": 23
           },
           "move_after": {
-            "SCREECH_MOVE": 72,
-            "CLAMP_MOVE": 69
+            "SCREECH_MOVE": 73,
+            "CLAMP_MOVE": 70
           },
           "stunned_share": 0.0,
           "co_removed": {},
           "died_same_turn": 17,
           "turn_end_unclear": 1,
-          "alive_at_turn_end": 123,
+          "alive_at_turn_end": 125,
           "stunned_at_turn_end": 0,
-          "attack_before": 60,
+          "attack_before": 61,
           "attack_cancelled": 1,
           "hp_check": {
-            "n": 49,
+            "n": 50,
             "landed": 26
           },
           "evidence": [],
           "move_before": {
-            "SCREECH_MOVE": 71,
-            "CLAMP_MOVE": 70
+            "SCREECH_MOVE": 72,
+            "CLAMP_MOVE": 71
           },
           "move_changed": 1,
           "move_changed_share": 0.007,
@@ -738,12 +739,12 @@
             "C6Z8ATNBNHZ7 F23 T4"
           ],
           "end_move": {
-            "SCREECH_MOVE": 63,
-            "CLAMP_MOVE": 60
+            "SCREECH_MOVE": 64,
+            "CLAMP_MOVE": 61
           },
           "next_move": {
-            "CLAMP_MOVE": 61,
-            "SCREECH_MOVE": 53
+            "CLAMP_MOVE": 62,
+            "SCREECH_MOVE": 54
           },
           "changed_next": {},
           "revived": 4
@@ -877,11 +878,11 @@
       },
       "powers_lowered": {
         "ARTIFACT_POWER": {
-          "n": 152,
-          "fights": 89,
+          "n": 154,
+          "fights": 90,
           "move_before": {
-            "CLAMP_MOVE": 89,
-            "SCREECH_MOVE": 63
+            "CLAMP_MOVE": 90,
+            "SCREECH_MOVE": 64
           },
           "move_changed": 2,
           "move_changed_share": 0.013,
@@ -892,12 +893,12 @@
             "C6Z8ATNBNHZ7 F23 T3"
           ],
           "end_move": {
-            "CLAMP_MOVE": 75,
-            "SCREECH_MOVE": 50
+            "CLAMP_MOVE": 76,
+            "SCREECH_MOVE": 51
           },
           "next_move": {
-            "SCREECH_MOVE": 68,
-            "CLAMP_MOVE": 47
+            "SCREECH_MOVE": 69,
+            "CLAMP_MOVE": 48
           },
           "changed_next": {},
           "revived": 2
@@ -970,17 +971,17 @@
             "7Q5GTQNH1SZT F30 T3"
           ],
           "alive": {
-            "turns": 1380,
+            "turns": 1388,
             "moves": {
-              "CLAMP_MOVE": 690,
-              "SCREECH_MOVE": 690
+              "CLAMP_MOVE": 694,
+              "SCREECH_MOVE": 694
             },
             "next": {
               "CLAMP_MOVE": {
-                "SCREECH_MOVE": 487
+                "SCREECH_MOVE": 490
               },
               "SCREECH_MOVE": {
-                "CLAMP_MOVE": 487
+                "CLAMP_MOVE": 490
               }
             }
           },

@@ -18,15 +18,15 @@
     ],
     "kind": "hallway",
     "rooms": {
-      "hallway": 392,
+      "hallway": 401,
       "unknown_room": 34
     },
     "acts": {
-      "1": 426
+      "1": 435
     },
     "encounters": {
-      "NIBBIT": 317,
-      "NIBBIT+NIBBIT": 109
+      "NIBBIT": 322,
+      "NIBBIT+NIBBIT": 113
     },
     "hp_by_asc": {
       "0": {
@@ -91,30 +91,30 @@
       },
       "10": {
         "min": 44,
-        "median": 46,
+        "median": 46.0,
         "max": 48,
-        "n": 225
+        "n": 238
       }
     },
     "moves": {
       "BUTT_MOVE": {
         "name": "顶撞",
-        "n_seen": 830,
+        "n_seen": 851,
         "intents": {
-          "Attack": 830
+          "Attack": 851
         },
         "turns_seen": {
-          "1": 317,
-          "2": 108,
-          "3": 108,
-          "4": 220,
-          "5": 23,
-          "6": 42,
+          "1": 322,
+          "2": 112,
+          "3": 112,
+          "4": 225,
+          "5": 24,
+          "6": 44,
           "7": 10,
           "9": 2
         },
         "next": {
-          "SLICE_MOVE": 550
+          "SLICE_MOVE": 568
         },
         "avg_total_shown": 14.4,
         "damage_by_asc": {
@@ -259,47 +259,47 @@
           },
           "10": {
             "shown": {
-              "12x1": 12,
-              "13x1": 138,
-              "14x1": 1,
-              "16x1": 196,
-              "19x1": 43,
+              "12x1": 15,
+              "13x1": 143,
+              "14x1": 2,
+              "16x1": 206,
+              "19x1": 45,
               "22x1": 1,
               "9x1": 1
             },
             "base_per_hit": {
-              "13": 378
+              "13": 395
             },
             "hits": {
-              "1": 392
+              "1": 413
             },
-            "n_base": 378
+            "n_base": 395
           }
         }
       },
       "HISS_MOVE": {
         "name": "哈气",
-        "n_seen": 617,
+        "n_seen": 636,
         "intents": {
-          "Buff": 617
+          "Buff": 636
         },
         "turns_seen": {
-          "1": 109,
-          "2": 109,
-          "3": 286,
-          "4": 29,
-          "5": 61,
-          "6": 19,
-          "8": 4
+          "1": 113,
+          "2": 113,
+          "3": 291,
+          "4": 30,
+          "5": 64,
+          "6": 20,
+          "8": 5
         },
         "next": {
-          "BUTT_MOVE": 513
+          "BUTT_MOVE": 529
         },
         "avg_total_shown": 0.0,
         "self_powers_gained": {
           "STRENGTH_POWER": {
             "2": 194,
-            "3": 318
+            "3": 334
           }
         },
         "self_powers_gained_by_asc": {
@@ -351,30 +351,30 @@
           },
           "10": {
             "STRENGTH_POWER": {
-              "3": 252
+              "3": 268
             }
           }
         }
       },
       "SLICE_MOVE": {
         "name": null,
-        "n_seen": 659,
+        "n_seen": 681,
         "intents": {
-          "Attack+Defend": 659
+          "Attack+Defend": 681
         },
         "turns_seen": {
-          "1": 109,
-          "2": 315,
-          "3": 66,
-          "4": 92,
-          "5": 61,
+          "1": 113,
+          "2": 320,
+          "3": 70,
+          "4": 96,
+          "5": 65,
           "6": 3,
-          "7": 13
+          "7": 14
         },
         "next": {
-          "HISS_MOVE": 508
+          "HISS_MOVE": 523
         },
-        "avg_total_shown": 7.5,
+        "avg_total_shown": 7.6,
         "damage_by_asc": {
           "0": {
             "shown": {
@@ -515,23 +515,23 @@
           },
           "10": {
             "shown": {
-              "10x1": 111,
-              "13x1": 10,
+              "10x1": 121,
+              "13x1": 11,
               "5x1": 9,
-              "7x1": 180
+              "7x1": 191
             },
             "base_per_hit": {
-              "7": 293
+              "7": 313
             },
             "hits": {
-              "1": 310
+              "1": 332
             },
-            "n_base": 293
+            "n_base": 313
           }
         },
         "block_gained": {
           "5": 88,
-          "6": 408
+          "6": 423
         },
         "block_gained_by_asc": {
           "0": {
@@ -565,7 +565,7 @@
             "6": 51
           },
           "10": {
-            "6": 243
+            "6": 258
           }
         }
       }
@@ -625,23 +625,23 @@
         "name": "尖啸",
         "type": "Debuff",
         "description": "在本回合结束前失去[gold]力量[/gold]。",
-        "n_fights": 7,
+        "n_fights": 8,
         "amount_at_first_sight": {
-          "6": 7
+          "6": 8
         },
         "amount_max_in_fight": {
-          "6": 7
+          "6": 8
         },
         "amount_at_first_sight_by_asc": {
           "10": {
-            "6": 7
+            "6": 8
           }
         },
         "turn_at_first_sight_by_asc": {
           "10": {
             "1": 2,
             "2": 2,
-            "3": 3
+            "3": 4
           }
         }
       },
@@ -649,28 +649,28 @@
         "name": "中毒",
         "type": "Debuff",
         "description": "中毒的生物会在自身回合开始时失去生命。中毒层数每回合减少[blue]1[/blue]。",
-        "n_fights": 72,
+        "n_fights": 76,
         "amount_at_first_sight": {
           "2": 6,
           "3": 26,
-          "4": 7,
+          "4": 8,
           "5": 16,
-          "6": 1,
-          "7": 13,
+          "6": 3,
+          "7": 14,
           "8": 1,
           "9": 2
         },
         "amount_max_in_fight": {
           "2": 1,
           "3": 13,
-          "4": 8,
+          "4": 9,
           "5": 11,
           "6": 1,
-          "7": 16,
+          "7": 17,
           "8": 8,
           "9": 5,
-          "10": 4,
-          "11": 2,
+          "10": 5,
+          "11": 3,
           "12": 2,
           "15": 1
         },
@@ -689,10 +689,10 @@
           "10": {
             "2": 5,
             "3": 25,
-            "4": 7,
+            "4": 8,
             "5": 15,
-            "6": 1,
-            "7": 12,
+            "6": 3,
+            "7": 13,
             "9": 2
           }
         },
@@ -708,13 +708,14 @@
             "1": 1
           },
           "10": {
-            "1": 21,
+            "1": 22,
             "2": 18,
-            "3": 13,
+            "3": 15,
             "4": 8,
             "5": 5,
             "6": 1,
-            "7": 1
+            "7": 1,
+            "8": 1
           }
         }
       },
@@ -767,23 +768,23 @@
         "name": "力量",
         "type": "Buff",
         "description": "力量会增加攻击牌造成的伤害。",
-        "n_fights": 331,
+        "n_fights": 340,
         "amount_at_first_sight": {
           "-9": 2,
           "-7": 1,
           "-6": 4,
           "1": 2,
           "2": 121,
-          "3": 201
+          "3": 210
         },
         "amount_max_in_fight": {
           "-9": 1,
           "-7": 1,
           "1": 1,
           "2": 106,
-          "3": 168,
+          "3": 175,
           "4": 16,
-          "6": 35,
+          "6": 37,
           "7": 1,
           "9": 2
         },
@@ -821,7 +822,7 @@
           "10": {
             "-9": 1,
             "-6": 4,
-            "3": 161
+            "3": 170
           }
         },
         "turn_at_first_sight_by_asc": {
@@ -864,8 +865,8 @@
           "10": {
             "1": 3,
             "2": 2,
-            "3": 42,
-            "4": 119
+            "3": 46,
+            "4": 124
           }
         }
       },
@@ -993,16 +994,16 @@
         "name": "虚弱",
         "type": "Debuff",
         "description": "虚弱的生物造成的攻击伤害减少[blue]25%[/blue]。",
-        "n_fights": 195,
+        "n_fights": 204,
         "amount_at_first_sight": {
-          "1": 179,
-          "2": 14,
+          "1": 186,
+          "2": 16,
           "3": 2
         },
         "amount_max_in_fight": {
-          "1": 168,
-          "2": 20,
-          "3": 5,
+          "1": 174,
+          "2": 22,
+          "3": 6,
           "4": 1,
           "8": 1
         },
@@ -1028,8 +1029,8 @@
             "1": 4
           },
           "10": {
-            "1": 157,
-            "2": 13,
+            "1": 164,
+            "2": 15,
             "3": 1
           }
         },
@@ -1062,11 +1063,11 @@
             "4": 1
           },
           "10": {
-            "1": 87,
-            "2": 45,
-            "3": 25,
+            "1": 90,
+            "2": 47,
+            "3": 28,
             "4": 9,
-            "5": 2,
+            "5": 3,
             "6": 2,
             "7": 1
           }
@@ -1075,31 +1076,31 @@
     },
     "provenance": {
       "first_seen": "2026-09-24T04:43:34.727Z",
-      "last_seen": "2026-10-18T07:18:26.732Z",
-      "n_runs": 353,
-      "n_instances": 535,
+      "last_seen": "2026-10-19T05:03:08.495Z",
+      "n_runs": 358,
+      "n_instances": 548,
       "n_spawned_mid_fight": 0,
       "n_minion_instances": 0
     },
     "observed": {
       "powers_stripped": {
         "STRENGTH_POWER": {
-          "n": 7,
-          "fights": 4,
+          "n": 9,
+          "fights": 5,
           "amount_before": {
-            "3": 7
+            "3": 9
           },
           "move_after": {
-            "SLICE_MOVE": 4,
-            "BUTT_MOVE": 3
+            "SLICE_MOVE": 5,
+            "BUTT_MOVE": 4
           },
           "stunned_share": 0.0,
           "co_removed": {},
           "died_same_turn": 0,
           "turn_end_unclear": 0,
-          "alive_at_turn_end": 7,
+          "alive_at_turn_end": 9,
           "stunned_at_turn_end": 0,
-          "attack_before": 7,
+          "attack_before": 9,
           "attack_cancelled": 0,
           "hp_check": {
             "n": 1,
@@ -1107,20 +1108,20 @@
           },
           "evidence": [],
           "move_before": {
-            "SLICE_MOVE": 4,
-            "BUTT_MOVE": 3
+            "SLICE_MOVE": 5,
+            "BUTT_MOVE": 4
           },
           "move_changed": 0,
           "move_changed_share": 0.0,
           "changed_to": {},
           "changed_evidence": [],
           "end_move": {
-            "SLICE_MOVE": 4,
-            "BUTT_MOVE": 3
+            "SLICE_MOVE": 5,
+            "BUTT_MOVE": 4
           },
           "next_move": {
-            "HISS_MOVE": 4,
-            "SLICE_MOVE": 3
+            "HISS_MOVE": 5,
+            "SLICE_MOVE": 4
           },
           "changed_next": {},
           "revived": 0
@@ -1128,11 +1129,11 @@
       },
       "ally_deaths": {
         "NIBBIT": {
-          "n": 94,
-          "fights": 94,
+          "n": 95,
+          "fights": 95,
           "move_before": {
             "HISS_MOVE": 51,
-            "BUTT_MOVE": 34,
+            "BUTT_MOVE": 35,
             "SLICE_MOVE": 9
           },
           "move_changed": 0,
@@ -1140,7 +1141,7 @@
           "changed_to": {},
           "by_move": {
             "BUTT_MOVE": {
-              "n": 34,
+              "n": 35,
               "changed_to": {}
             },
             "HISS_MOVE": {
@@ -1157,18 +1158,18 @@
           "co_deaths": 0,
           "end_move": {
             "HISS_MOVE": 51,
-            "BUTT_MOVE": 34,
+            "BUTT_MOVE": 35,
             "SLICE_MOVE": 9
           },
-          "next_n": 92,
+          "next_n": 93,
           "next_move": {
             "BUTT_MOVE": 51,
-            "SLICE_MOVE": 32,
+            "SLICE_MOVE": 33,
             "HISS_MOVE": 9
           },
           "next_after": {
             "BUTT_MOVE": {
-              "SLICE_MOVE": 32
+              "SLICE_MOVE": 33
             },
             "HISS_MOVE": {
               "BUTT_MOVE": 51
@@ -1183,30 +1184,30 @@
             "WFR4AUP2CWDT F9 T3"
           ],
           "alive": {
-            "turns": 642,
+            "turns": 670,
             "moves": {
-              "HISS_MOVE": 254,
-              "SLICE_MOVE": 197,
-              "BUTT_MOVE": 191
+              "HISS_MOVE": 264,
+              "SLICE_MOVE": 206,
+              "BUTT_MOVE": 200
             },
             "next": {
               "BUTT_MOVE": {
-                "SLICE_MOVE": 88
+                "SLICE_MOVE": 93
               },
               "HISS_MOVE": {
-                "BUTT_MOVE": 191
+                "BUTT_MOVE": 200
               },
               "SLICE_MOVE": {
-                "HISS_MOVE": 145
+                "HISS_MOVE": 151
               }
             }
           },
           "dead": {
-            "turns": 203,
+            "turns": 205,
             "moves": {
               "BUTT_MOVE": 79,
-              "SLICE_MOVE": 76,
-              "HISS_MOVE": 48
+              "SLICE_MOVE": 77,
+              "HISS_MOVE": 49
             }
           }
         }

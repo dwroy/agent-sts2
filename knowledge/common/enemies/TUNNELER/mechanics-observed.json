@@ -18,14 +18,14 @@
     ],
     "kind": "hallway",
     "rooms": {
-      "hallway": 288,
+      "hallway": 294,
       "unknown_room": 19
     },
     "acts": {
-      "2": 307
+      "2": 313
     },
     "encounters": {
-      "TUNNELER": 307
+      "TUNNELER": 313
     },
     "hp_by_asc": {
       "0": {
@@ -92,21 +92,21 @@
         "min": 92,
         "median": 92,
         "max": 92,
-        "n": 115
+        "n": 121
       }
     },
     "moves": {
       "BELOW_MOVE": {
         "name": "下方攻击",
-        "n_seen": 618,
+        "n_seen": 637,
         "intents": {
-          "Attack": 618
+          "Attack": 637
         },
         "turns_seen": {
-          "3": 278,
-          "4": 173,
-          "5": 83,
-          "6": 45,
+          "3": 284,
+          "4": 179,
+          "5": 89,
+          "6": 46,
           "7": 19,
           "8": 11,
           "9": 3,
@@ -116,8 +116,8 @@
           "13": 1
         },
         "next": {
-          "BELOW_MOVE": 329,
-          "BITE_MOVE": 161,
+          "BELOW_MOVE": 342,
+          "BITE_MOVE": 164,
           "STUNNED": 2
         },
         "avg_total_shown": 23.5,
@@ -250,39 +250,39 @@
           "10": {
             "shown": {
               "17x1": 5,
-              "18x1": 5,
-              "19x1": 86,
+              "18x1": 7,
+              "19x1": 89,
               "23x1": 1,
-              "26x1": 186
+              "26x1": 200
             },
             "base_per_hit": {
-              "26": 187
+              "26": 201
             },
             "hits": {
-              "1": 283
+              "1": 302
             },
-            "n_base": 187
+            "n_base": 201
           }
         }
       },
       "BITE_MOVE": {
         "name": "啃咬",
-        "n_seen": 469,
+        "n_seen": 478,
         "intents": {
-          "Attack": 469
+          "Attack": 478
         },
         "turns_seen": {
-          "1": 307,
+          "1": 313,
           "4": 72,
           "5": 50,
-          "6": 23,
+          "6": 26,
           "7": 12,
           "9": 3,
           "11": 1,
           "15": 1
         },
         "next": {
-          "BURROW_MOVE": 345
+          "BURROW_MOVE": 353
         },
         "avg_total_shown": 13.8,
         "damage_by_asc": {
@@ -417,35 +417,35 @@
               "10x1": 1,
               "11x1": 13,
               "12x1": 1,
-              "15x1": 140,
+              "15x1": 149,
               "9x1": 1
             },
             "base_per_hit": {
-              "15": 141
+              "15": 150
             },
             "hits": {
-              "1": 156
+              "1": 165
             },
-            "n_base": 141
+            "n_base": 150
           }
         }
       },
       "BURROW_MOVE": {
         "name": "钻洞",
-        "n_seen": 345,
+        "n_seen": 353,
         "intents": {
-          "Buff+Defend": 345
+          "Buff+Defend": 353
         },
         "turns_seen": {
-          "2": 305,
+          "2": 311,
           "5": 17,
           "6": 14,
-          "7": 6,
+          "7": 8,
           "8": 2,
           "10": 1
         },
         "next": {
-          "BELOW_MOVE": 289
+          "BELOW_MOVE": 295
         },
         "avg_total_shown": 0.0,
         "block_gained": {
@@ -457,7 +457,7 @@
           "31": 4,
           "32": 58,
           "34": 4,
-          "37": 214
+          "37": 220
         },
         "block_gained_by_asc": {
           "0": {
@@ -502,12 +502,12 @@
           "10": {
             "22": 1,
             "34": 2,
-            "37": 105
+            "37": 111
           }
         },
         "self_powers_gained": {
           "BURROWED_POWER": {
-            "1": 289
+            "1": 295
           },
           "STRENGTH_POWER": {
             "1": 1
@@ -569,7 +569,7 @@
           },
           "10": {
             "BURROWED_POWER": {
-              "1": 108
+              "1": 114
             }
           }
         }
@@ -595,12 +595,12 @@
         "name": "埋地",
         "type": "Buff",
         "description": "[gold]格挡[/gold]不会在其回合开始时移除。如果所有[gold]格挡[/gold]被移除，则将其[gold]击晕[/gold]。",
-        "n_fights": 278,
+        "n_fights": 284,
         "amount_at_first_sight": {
-          "1": 278
+          "1": 284
         },
         "amount_max_in_fight": {
-          "1": 278
+          "1": 284
         },
         "amount_at_first_sight_by_asc": {
           "0": {
@@ -634,7 +634,7 @@
             "1": 34
           },
           "10": {
-            "1": 106
+            "1": 112
           }
         },
         "turn_at_first_sight_by_asc": {
@@ -669,7 +669,7 @@
             "3": 34
           },
           "10": {
-            "3": 106
+            "3": 112
           }
         }
       },
@@ -756,15 +756,15 @@
         "name": "中毒",
         "type": "Debuff",
         "description": "中毒的生物会在自身回合开始时失去生命。中毒层数每回合减少[blue]1[/blue]。",
-        "n_fights": 119,
+        "n_fights": 124,
         "amount_at_first_sight": {
           "1": 2,
-          "2": 6,
+          "2": 8,
           "3": 35,
-          "4": 12,
+          "4": 13,
           "5": 12,
-          "6": 11,
-          "7": 27,
+          "6": 12,
+          "7": 28,
           "8": 3,
           "9": 3,
           "11": 1,
@@ -775,17 +775,17 @@
           "3": 3,
           "4": 2,
           "5": 3,
-          "6": 1,
+          "6": 2,
           "7": 8,
           "8": 3,
           "9": 6,
           "10": 3,
           "11": 9,
           "12": 10,
-          "13": 5,
+          "13": 6,
           "14": 5,
-          "15": 17,
-          "16": 2,
+          "15": 18,
+          "16": 3,
           "17": 6,
           "18": 5,
           "19": 3,
@@ -795,7 +795,7 @@
           "23": 4,
           "24": 2,
           "25": 3,
-          "26": 3,
+          "26": 4,
           "28": 2,
           "33": 1
         },
@@ -825,12 +825,12 @@
           },
           "10": {
             "1": 2,
-            "2": 5,
+            "2": 7,
             "3": 30,
-            "4": 12,
+            "4": 13,
             "5": 10,
-            "6": 11,
-            "7": 25,
+            "6": 12,
+            "7": 26,
             "8": 3,
             "9": 2,
             "11": 1,
@@ -864,11 +864,12 @@
             "2": 1
           },
           "10": {
-            "1": 56,
-            "2": 30,
+            "1": 58,
+            "2": 32,
             "3": 13,
             "4": 6,
-            "5": 3
+            "5": 3,
+            "6": 1
           }
         }
       },
@@ -904,13 +905,13 @@
         "name": "力量",
         "type": "Buff",
         "description": "力量会增加攻击牌造成的伤害。",
-        "n_fights": 41,
+        "n_fights": 42,
         "amount_at_first_sight": {
           "-12": 1,
           "-9": 2,
           "-6": 15,
           "-3": 2,
-          "-2": 1,
+          "-2": 2,
           "-1": 1,
           "1": 18,
           "2": 1
@@ -919,7 +920,7 @@
           "-9": 2,
           "-6": 16,
           "-3": 2,
-          "-2": 1,
+          "-2": 2,
           "-1": 1,
           "1": 17,
           "2": 1,
@@ -939,7 +940,7 @@
             "-9": 2,
             "-6": 14,
             "-3": 2,
-            "-2": 1,
+            "-2": 2,
             "-1": 1
           }
         },
@@ -960,7 +961,7 @@
           "10": {
             "1": 8,
             "2": 3,
-            "3": 6,
+            "3": 7,
             "4": 3,
             "5": 1
           }
@@ -1100,17 +1101,17 @@
         "name": "虚弱",
         "type": "Debuff",
         "description": "虚弱的生物造成的攻击伤害减少[blue]25%[/blue]。",
-        "n_fights": 159,
+        "n_fights": 165,
         "amount_at_first_sight": {
-          "1": 110,
-          "2": 43,
+          "1": 115,
+          "2": 44,
           "3": 6
         },
         "amount_max_in_fight": {
-          "1": 79,
-          "2": 45,
+          "1": 81,
+          "2": 48,
           "3": 24,
-          "4": 9,
+          "4": 10,
           "5": 1,
           "6": 1
         },
@@ -1152,8 +1153,8 @@
             "2": 3
           },
           "10": {
-            "1": 66,
-            "2": 33,
+            "1": 71,
+            "2": 34,
             "3": 6
           }
         },
@@ -1204,9 +1205,9 @@
             "4": 1
           },
           "10": {
-            "1": 53,
-            "2": 35,
-            "3": 15,
+            "1": 57,
+            "2": 36,
+            "3": 16,
             "4": 2
           }
         }
@@ -1214,33 +1215,33 @@
     },
     "provenance": {
       "first_seen": "2026-09-24T06:10:37.563Z",
-      "last_seen": "2026-10-18T07:50:53.471Z",
-      "n_runs": 307,
-      "n_instances": 307,
+      "last_seen": "2026-10-19T05:18:22.734Z",
+      "n_runs": 313,
+      "n_instances": 313,
       "n_spawned_mid_fight": 0,
       "n_minion_instances": 0
     },
     "observed": {
       "powers_stripped": {
         "BURROWED_POWER": {
-          "n": 192,
-          "fights": 189,
+          "n": 195,
+          "fights": 192,
           "amount_before": {
-            "1": 192
+            "1": 195
           },
           "move_after": {
-            "STUNNED": 192
+            "STUNNED": 195
           },
           "stunned_share": 1.0,
           "co_removed": {},
           "died_same_turn": 25,
           "turn_end_unclear": 0,
-          "alive_at_turn_end": 167,
-          "stunned_at_turn_end": 167,
-          "attack_before": 167,
-          "attack_cancelled": 167,
+          "alive_at_turn_end": 170,
+          "stunned_at_turn_end": 170,
+          "attack_before": 170,
+          "attack_cancelled": 170,
           "hp_check": {
-            "n": 154,
+            "n": 157,
             "landed": 1
           },
           "evidence": [
@@ -1249,12 +1250,12 @@
             "AMA2B58E2ZMA F20 T3"
           ],
           "move_before": {
-            "BELOW_MOVE": 192
+            "BELOW_MOVE": 195
           },
-          "move_changed": 192,
+          "move_changed": 195,
           "move_changed_share": 1.0,
           "changed_to": {
-            "STUNNED": 192
+            "STUNNED": 195
           },
           "changed_evidence": [
             "D4JGCNEL40VL F21 T3",
@@ -1262,24 +1263,24 @@
             "TQCZFBK7T09Y F20 T3"
           ],
           "end_move": {
-            "STUNNED": 167
+            "STUNNED": 170
           },
           "next_move": {
-            "BITE_MOVE": 157
+            "BITE_MOVE": 160
           },
           "changed_next": {
-            "BITE_MOVE": 157
+            "BITE_MOVE": 160
           },
           "revived": 0
         }
       },
       "mid_turn_stuns": {
-        "n": 192,
-        "fights": 189,
+        "n": 195,
+        "fights": 192,
         "triggers": {
-          "power_removed:BURROWED_POWER": 192,
-          "block_broken": 192,
-          "hp_lost": 166
+          "power_removed:BURROWED_POWER": 195,
+          "block_broken": 195,
+          "hp_lost": 169
         },
         "unexplained": 0,
         "evidence": [

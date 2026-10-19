@@ -18,13 +18,13 @@
     ],
     "kind": "elite",
     "rooms": {
-      "elite": 129
+      "elite": 132
     },
     "acts": {
-      "2": 129
+      "2": 132
     },
     "encounters": {
-      "ENTOMANCER": 129
+      "ENTOMANCER": 132
     },
     "hp_by_asc": {
       "0": {
@@ -89,26 +89,26 @@
       },
       "10": {
         "min": 165,
-        "median": 165.0,
+        "median": 165,
         "max": 165,
-        "n": 38
+        "n": 41
       }
     },
     "moves": {
       "BEES_MOVE": {
         "name": "蜜——蜂——！",
-        "n_seen": 297,
+        "n_seen": 303,
         "intents": {
-          "Attack": 297
+          "Attack": 303
         },
         "turns_seen": {
-          "1": 129,
-          "4": 122,
+          "1": 132,
+          "4": 125,
           "7": 44,
           "10": 2
         },
         "next": {
-          "SPEAR_MOVE": 246
+          "SPEAR_MOVE": 250
         },
         "avg_total_shown": 26.6,
         "damage_by_asc": {
@@ -257,42 +257,42 @@
               "0x8": 2,
               "1x8": 1,
               "2x8": 1,
-              "3x8": 51,
-              "4x8": 28,
+              "3x8": 54,
+              "4x8": 31,
               "5x8": 12
             },
             "base_per_hit": {
-              "3": 81
+              "3": 87
             },
             "hits": {
-              "8": 95
+              "8": 101
             },
-            "n_base": 81
+            "n_base": 87
           }
         }
       },
       "PHEROMONE_SPIT_MOVE": {
         "name": "喷射信息素",
-        "n_seen": 199,
+        "n_seen": 202,
         "intents": {
-          "Buff": 199
+          "Buff": 202
         },
         "turns_seen": {
-          "3": 126,
+          "3": 129,
           "6": 65,
           "9": 7,
           "12": 1
         },
         "next": {
-          "BEES_MOVE": 168
+          "BEES_MOVE": 171
         },
         "avg_total_shown": 0.0,
         "self_powers_gained": {
           "PERSONAL_HIVE_POWER": {
-            "1": 166
+            "1": 169
           },
           "STRENGTH_POWER": {
-            "1": 166,
+            "1": 169,
             "2": 2
           }
         },
@@ -373,28 +373,28 @@
           },
           "10": {
             "PERSONAL_HIVE_POWER": {
-              "1": 57
+              "1": 60
             },
             "STRENGTH_POWER": {
-              "1": 57
+              "1": 60
             }
           }
         }
       },
       "SPEAR_MOVE": {
         "name": "矛击！",
-        "n_seen": 246,
+        "n_seen": 250,
         "intents": {
-          "Attack": 246
+          "Attack": 250
         },
         "turns_seen": {
-          "2": 129,
-          "5": 97,
+          "2": 132,
+          "5": 98,
           "8": 19,
           "11": 1
         },
         "next": {
-          "PHEROMONE_SPIT_MOVE": 199
+          "PHEROMONE_SPIT_MOVE": 202
         },
         "avg_total_shown": 18.8,
         "damage_by_asc": {
@@ -541,21 +541,22 @@
           "10": {
             "shown": {
               "12x1": 2,
-              "15x1": 15,
+              "13x1": 1,
+              "15x1": 16,
               "16x1": 1,
               "18x1": 1,
               "19x1": 1,
-              "20x1": 28,
+              "20x1": 30,
               "21x1": 26,
               "22x1": 3
             },
             "base_per_hit": {
-              "20": 59
+              "20": 61
             },
             "hits": {
-              "1": 77
+              "1": 81
             },
-            "n_base": 59
+            "n_base": 61
           }
         }
       }
@@ -615,13 +616,13 @@
         "name": "人体蜂房",
         "type": "Buff",
         "description": "每当这个敌人被攻击命中时，在你的[gold]抽牌堆[/gold]中加入[gold]晕眩[/gold]。",
-        "n_fights": 129,
+        "n_fights": 132,
         "amount_at_first_sight": {
-          "1": 129
+          "1": 132
         },
         "amount_max_in_fight": {
           "1": 7,
-          "2": 78,
+          "2": 81,
           "3": 44
         },
         "amount_at_first_sight_by_asc": {
@@ -656,7 +657,7 @@
             "1": 10
           },
           "10": {
-            "1": 38
+            "1": 41
           }
         },
         "turn_at_first_sight_by_asc": {
@@ -691,7 +692,7 @@
             "1": 10
           },
           "10": {
-            "1": 38
+            "1": 41
           }
         }
       },
@@ -733,14 +734,14 @@
         "name": "中毒",
         "type": "Debuff",
         "description": "中毒的生物会在自身回合开始时失去生命。中毒层数每回合减少[blue]1[/blue]。",
-        "n_fights": 47,
+        "n_fights": 50,
         "amount_at_first_sight": {
           "1": 1,
           "2": 1,
           "3": 18,
           "4": 4,
-          "5": 6,
-          "6": 2,
+          "5": 8,
+          "6": 3,
           "7": 8,
           "8": 1,
           "9": 2,
@@ -748,6 +749,7 @@
           "12": 3
         },
         "amount_max_in_fight": {
+          "5": 1,
           "6": 2,
           "7": 1,
           "8": 1,
@@ -762,7 +764,7 @@
           "17": 1,
           "18": 2,
           "19": 4,
-          "20": 2,
+          "20": 4,
           "21": 1,
           "22": 3,
           "23": 1,
@@ -801,8 +803,8 @@
             "2": 1,
             "3": 16,
             "4": 3,
-            "5": 4,
-            "6": 2,
+            "5": 6,
+            "6": 3,
             "7": 5,
             "8": 1,
             "9": 1,
@@ -833,7 +835,7 @@
             "2": 1
           },
           "10": {
-            "1": 16,
+            "1": 19,
             "2": 13,
             "3": 7,
             "4": 2
@@ -888,20 +890,20 @@
         "name": "力量",
         "type": "Buff",
         "description": "力量会增加攻击牌造成的伤害。",
-        "n_fights": 123,
+        "n_fights": 126,
         "amount_at_first_sight": {
           "-9": 1,
           "-8": 4,
           "-6": 8,
           "-3": 2,
           "-1": 1,
-          "1": 107
+          "1": 110
         },
         "amount_max_in_fight": {
           "-6": 1,
           "-2": 1,
           "-1": 2,
-          "1": 72,
+          "1": 75,
           "2": 44,
           "3": 1,
           "4": 2
@@ -942,7 +944,7 @@
             "-6": 7,
             "-3": 1,
             "-1": 1,
-            "1": 24
+            "1": 27
           }
         },
         "turn_at_first_sight_by_asc": {
@@ -981,7 +983,7 @@
           "10": {
             "1": 9,
             "2": 5,
-            "4": 24
+            "4": 27
           }
         }
       },
@@ -1108,16 +1110,16 @@
         "name": "虚弱",
         "type": "Debuff",
         "description": "虚弱的生物造成的攻击伤害减少[blue]25%[/blue]。",
-        "n_fights": 70,
+        "n_fights": 73,
         "amount_at_first_sight": {
-          "1": 43,
-          "2": 18,
+          "1": 45,
+          "2": 19,
           "3": 9
         },
         "amount_max_in_fight": {
-          "1": 31,
-          "2": 19,
-          "3": 15,
+          "1": 32,
+          "2": 20,
+          "3": 16,
           "4": 5
         },
         "amount_at_first_sight_by_asc": {
@@ -1154,8 +1156,8 @@
             "3": 1
           },
           "10": {
-            "1": 21,
-            "2": 14,
+            "1": 23,
+            "2": 15,
             "3": 3
           }
         },
@@ -1198,8 +1200,8 @@
             "7": 1
           },
           "10": {
-            "1": 21,
-            "2": 6,
+            "1": 23,
+            "2": 7,
             "3": 5,
             "4": 4,
             "5": 2
@@ -1209,9 +1211,9 @@
     },
     "provenance": {
       "first_seen": "2026-09-24T20:29:12.406Z",
-      "last_seen": "2026-10-18T06:22:02.271Z",
-      "n_runs": 129,
-      "n_instances": 129,
+      "last_seen": "2026-10-19T03:44:48.107Z",
+      "n_runs": 132,
+      "n_instances": 132,
       "n_spawned_mid_fight": 0,
       "n_minion_instances": 0
     },
@@ -1264,11 +1266,11 @@
           "revived": 9
         },
         "POISON_POWER": {
-          "n": 13,
-          "fights": 4,
+          "n": 16,
+          "fights": 5,
           "amount_before": {
-            "4": 1,
-            "5": 4,
+            "4": 2,
+            "5": 6,
             "7": 1,
             "8": 1,
             "9": 1,
@@ -1278,8 +1280,8 @@
             "20": 1
           },
           "move_after": {
-            "BEES_MOVE": 8,
-            "SPEAR_MOVE": 4,
+            "BEES_MOVE": 10,
+            "SPEAR_MOVE": 5,
             "PHEROMONE_SPIT_MOVE": 1
           },
           "stunned_share": 0.0,
@@ -1289,18 +1291,18 @@
           },
           "died_same_turn": 0,
           "turn_end_unclear": 0,
-          "alive_at_turn_end": 13,
+          "alive_at_turn_end": 16,
           "stunned_at_turn_end": 0,
-          "attack_before": 9,
+          "attack_before": 12,
           "attack_cancelled": 0,
           "hp_check": {
-            "n": 9,
+            "n": 10,
             "landed": 8
           },
           "evidence": [],
           "move_before": {
-            "BEES_MOVE": 8,
-            "SPEAR_MOVE": 4,
+            "BEES_MOVE": 10,
+            "SPEAR_MOVE": 5,
             "PHEROMONE_SPIT_MOVE": 1
           },
           "move_changed": 0,
@@ -1308,44 +1310,44 @@
           "changed_to": {},
           "changed_evidence": [],
           "end_move": {
-            "BEES_MOVE": 8,
-            "SPEAR_MOVE": 4,
+            "BEES_MOVE": 10,
+            "SPEAR_MOVE": 5,
             "PHEROMONE_SPIT_MOVE": 1
           },
           "next_move": {
-            "SPEAR_MOVE": 7,
-            "PHEROMONE_SPIT_MOVE": 4,
+            "SPEAR_MOVE": 9,
+            "PHEROMONE_SPIT_MOVE": 5,
             "BEES_MOVE": 1
           },
           "changed_next": {},
-          "revived": 11
+          "revived": 14
         },
         "STRENGTH_POWER": {
-          "n": 11,
-          "fights": 8,
+          "n": 12,
+          "fights": 9,
           "amount_before": {
-            "1": 11
+            "1": 12
           },
           "move_after": {
             "SPEAR_MOVE": 6,
-            "BEES_MOVE": 5
+            "BEES_MOVE": 6
           },
           "stunned_share": 0.0,
           "co_removed": {},
           "died_same_turn": 0,
           "turn_end_unclear": 0,
-          "alive_at_turn_end": 11,
+          "alive_at_turn_end": 12,
           "stunned_at_turn_end": 0,
-          "attack_before": 11,
-          "attack_cancelled": 4,
+          "attack_before": 12,
+          "attack_cancelled": 5,
           "hp_check": {
-            "n": 11,
+            "n": 12,
             "landed": 5
           },
           "evidence": [],
           "move_before": {
             "SPEAR_MOVE": 6,
-            "BEES_MOVE": 5
+            "BEES_MOVE": 6
           },
           "move_changed": 0,
           "move_changed_share": 0.0,
@@ -1353,25 +1355,25 @@
           "changed_evidence": [],
           "end_move": {
             "SPEAR_MOVE": 6,
-            "BEES_MOVE": 5
+            "BEES_MOVE": 6
           },
           "next_move": {
             "PHEROMONE_SPIT_MOVE": 6,
-            "SPEAR_MOVE": 5
+            "SPEAR_MOVE": 6
           },
           "changed_next": {},
           "revived": 0
         },
         "WEAK_POWER": {
-          "n": 12,
-          "fights": 3,
+          "n": 13,
+          "fights": 4,
           "amount_before": {
-            "1": 9,
+            "1": 10,
             "2": 2,
             "3": 1
           },
           "move_after": {
-            "BEES_MOVE": 6,
+            "BEES_MOVE": 7,
             "SPEAR_MOVE": 3,
             "PHEROMONE_SPIT_MOVE": 3
           },
@@ -1382,17 +1384,17 @@
           },
           "died_same_turn": 0,
           "turn_end_unclear": 0,
-          "alive_at_turn_end": 12,
+          "alive_at_turn_end": 13,
           "stunned_at_turn_end": 0,
-          "attack_before": 7,
+          "attack_before": 8,
           "attack_cancelled": 0,
           "hp_check": {
-            "n": 6,
-            "landed": 6
+            "n": 7,
+            "landed": 7
           },
           "evidence": [],
           "move_before": {
-            "BEES_MOVE": 6,
+            "BEES_MOVE": 7,
             "SPEAR_MOVE": 3,
             "PHEROMONE_SPIT_MOVE": 3
           },
@@ -1401,7 +1403,7 @@
           "changed_to": {},
           "changed_evidence": [],
           "end_move": {
-            "BEES_MOVE": 6,
+            "BEES_MOVE": 7,
             "SPEAR_MOVE": 3,
             "PHEROMONE_SPIT_MOVE": 3
           },
@@ -1411,7 +1413,7 @@
             "BEES_MOVE": 3
           },
           "changed_next": {},
-          "revived": 10
+          "revived": 11
         }
       },
       "powers_lowered": {

@@ -18,14 +18,14 @@
     ],
     "kind": "hallway",
     "rooms": {
-      "hallway": 53,
-      "unknown_room": 13
+      "hallway": 54,
+      "unknown_room": 14
     },
     "acts": {
-      "3": 66
+      "3": 68
     },
     "encounters": {
-      "THE_FORGOTTEN+THE_LOST": 66
+      "THE_FORGOTTEN+THE_LOST": 68
     },
     "hp_by_asc": {
       "0": {
@@ -80,24 +80,24 @@
         "min": 111,
         "median": 111,
         "max": 111,
-        "n": 23
+        "n": 25
       }
     },
     "moves": {
       "DREAD": {
         "name": "恐惧",
-        "n_seen": 145,
+        "n_seen": 149,
         "intents": {
-          "Attack": 145
+          "Attack": 149
         },
         "turns_seen": {
-          "2": 64,
-          "4": 49,
-          "6": 28,
+          "2": 66,
+          "4": 50,
+          "6": 29,
           "8": 4
         },
         "next": {
-          "MIASMA": 112
+          "MIASMA": 114
         },
         "avg_total_shown": 16.7,
         "damage_by_asc": {
@@ -237,42 +237,42 @@
             "shown": {
               "10x1": 2,
               "11x1": 1,
-              "12x1": 4,
+              "12x1": 5,
               "13x1": 1,
               "14x1": 5,
               "15x1": 5,
               "16x1": 1,
-              "17x1": 19,
-              "19x1": 14,
-              "21x1": 8
+              "17x1": 20,
+              "19x1": 15,
+              "21x1": 9
             },
             "base_per_hit": {
-              "17": 18,
-              "19": 15,
-              "21": 8
+              "17": 19,
+              "19": 16,
+              "21": 9
             },
             "hits": {
-              "1": 60
+              "1": 64
             },
-            "n_base": 41
+            "n_base": 44
           }
         }
       },
       "MIASMA": {
         "name": "瘴气",
-        "n_seen": 178,
+        "n_seen": 182,
         "intents": {
-          "Buff+Debuff+Defend": 178
+          "Buff+Debuff+Defend": 182
         },
         "turns_seen": {
-          "1": 66,
-          "3": 59,
-          "5": 39,
+          "1": 68,
+          "3": 60,
+          "5": 40,
           "7": 12,
           "9": 2
         },
         "next": {
-          "DREAD": 145
+          "DREAD": 149
         },
         "avg_total_shown": 0.0,
         "block_gained": {
@@ -283,9 +283,9 @@
           "5": 1,
           "6": 9,
           "7": 1,
-          "8": 56,
-          "10": 41,
-          "12": 23,
+          "8": 58,
+          "10": 42,
+          "12": 24,
           "14": 3
         },
         "block_gained_by_asc": {
@@ -336,15 +336,15 @@
             "5": 1,
             "6": 2,
             "7": 1,
-            "8": 21,
-            "10": 19,
-            "12": 15,
+            "8": 23,
+            "10": 20,
+            "12": 16,
             "14": 1
           }
         },
         "self_powers_gained": {
           "DEXTERITY_POWER": {
-            "2": 144
+            "2": 148
           }
         },
         "self_powers_gained_by_asc": {
@@ -390,16 +390,16 @@
           },
           "10": {
             "DEXTERITY_POWER": {
-              "2": 59
+              "2": 63
             }
           }
         },
         "player_powers_applied": {
           "DEXTERITY_POWER": {
-            "-2": 130
+            "-2": 134
           },
           "STRENGTH_POWER": {
-            "-2": 67,
+            "-2": 71,
             "-1": 9
           }
         },
@@ -467,10 +467,10 @@
           },
           "10": {
             "DEXTERITY_POWER": {
-              "-2": 57
+              "-2": 61
             },
             "STRENGTH_POWER": {
-              "-2": 35
+              "-2": 39
             }
           }
         }
@@ -525,14 +525,14 @@
         "name": "敏捷",
         "type": "Buff",
         "description": "敏捷会增加从卡牌中获得的[gold]格挡[/gold]。",
-        "n_fights": 64,
+        "n_fights": 66,
         "amount_at_first_sight": {
-          "2": 64
+          "2": 66
         },
         "amount_max_in_fight": {
-          "2": 15,
+          "2": 16,
           "4": 21,
-          "6": 24,
+          "6": 25,
           "8": 4
         },
         "amount_at_first_sight_by_asc": {
@@ -561,7 +561,7 @@
             "2": 11
           },
           "10": {
-            "2": 23
+            "2": 25
           }
         },
         "turn_at_first_sight_by_asc": {
@@ -590,7 +590,7 @@
             "2": 11
           },
           "10": {
-            "2": 23
+            "2": 25
           }
         }
       },
@@ -639,26 +639,26 @@
         "name": "中毒",
         "type": "Debuff",
         "description": "中毒的生物会在自身回合开始时失去生命。中毒层数每回合减少[blue]1[/blue]。",
-        "n_fights": 29,
+        "n_fights": 31,
         "amount_at_first_sight": {
           "2": 6,
           "3": 8,
           "4": 3,
           "6": 2,
-          "7": 6,
+          "7": 8,
           "9": 2,
           "10": 1,
           "24": 1
         },
         "amount_max_in_fight": {
           "3": 1,
-          "7": 2,
+          "7": 3,
           "8": 2,
           "9": 1,
           "10": 2,
           "11": 3,
           "12": 1,
-          "13": 1,
+          "13": 2,
           "14": 1,
           "15": 2,
           "19": 3,
@@ -689,7 +689,7 @@
             "3": 7,
             "4": 2,
             "6": 2,
-            "7": 4,
+            "7": 6,
             "9": 2,
             "24": 1
           }
@@ -709,7 +709,7 @@
             "4": 1
           },
           "10": {
-            "1": 3,
+            "1": 5,
             "2": 4,
             "3": 8,
             "4": 6,
@@ -722,12 +722,12 @@
         "name": "抢夺速度",
         "type": "Buff",
         "description": "被击杀时，将偷窃的所有[gold]敏捷[/gold]返还给玩家。",
-        "n_fights": 66,
+        "n_fights": 68,
         "amount_at_first_sight": {
-          "1": 66
+          "1": 68
         },
         "amount_max_in_fight": {
-          "1": 66
+          "1": 68
         },
         "amount_at_first_sight_by_asc": {
           "0": {
@@ -755,7 +755,7 @@
             "1": 11
           },
           "10": {
-            "1": 23
+            "1": 25
           }
         },
         "turn_at_first_sight_by_asc": {
@@ -784,7 +784,7 @@
             "1": 11
           },
           "10": {
-            "1": 23
+            "1": 25
           }
         }
       },
@@ -953,16 +953,16 @@
         "name": "虚弱",
         "type": "Debuff",
         "description": "虚弱的生物造成的攻击伤害减少[blue]25%[/blue]。",
-        "n_fights": 32,
+        "n_fights": 34,
         "amount_at_first_sight": {
-          "1": 16,
+          "1": 18,
           "2": 11,
           "3": 5
         },
         "amount_max_in_fight": {
-          "1": 9,
+          "1": 10,
           "2": 13,
-          "3": 4,
+          "3": 5,
           "4": 3,
           "5": 2,
           "9": 1
@@ -992,7 +992,7 @@
             "1": 4
           },
           "10": {
-            "1": 7,
+            "1": 9,
             "2": 6,
             "3": 5
           }
@@ -1024,7 +1024,7 @@
             "5": 1
           },
           "10": {
-            "1": 7,
+            "1": 9,
             "2": 6,
             "3": 1,
             "4": 1,
@@ -1036,9 +1036,9 @@
     },
     "provenance": {
       "first_seen": "2026-09-24T16:50:10.270Z",
-      "last_seen": "2026-10-18T01:57:39.401Z",
-      "n_runs": 66,
-      "n_instances": 66,
+      "last_seen": "2026-10-18T13:13:34.425Z",
+      "n_runs": 68,
+      "n_instances": 68,
       "n_spawned_mid_fight": 0,
       "n_minion_instances": 0
     },
@@ -1242,17 +1242,17 @@
             "L34T7HND7EL8 F45 T1"
           ],
           "alive": {
-            "turns": 220,
+            "turns": 228,
             "moves": {
-              "MIASMA": 126,
-              "DREAD": 94
+              "MIASMA": 130,
+              "DREAD": 98
             },
             "next": {
               "DREAD": {
-                "MIASMA": 56
+                "MIASMA": 58
               },
               "MIASMA": {
-                "DREAD": 94
+                "DREAD": 98
               }
             }
           },

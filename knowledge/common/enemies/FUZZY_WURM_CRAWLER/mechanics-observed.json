@@ -18,15 +18,15 @@
     ],
     "kind": "hallway",
     "rooms": {
-      "hallway": 364,
+      "hallway": 368,
       "unknown_room": 28
     },
     "acts": {
-      "1": 392
+      "1": 396
     },
     "encounters": {
-      "FUZZY_WURM_CRAWLER": 307,
-      "FUZZY_WURM_CRAWLER+SHRINKER_BEETLE": 85
+      "FUZZY_WURM_CRAWLER": 310,
+      "FUZZY_WURM_CRAWLER+SHRINKER_BEETLE": 86
     },
     "hp_by_asc": {
       "0": {
@@ -93,23 +93,23 @@
         "min": 58,
         "median": 59,
         "max": 59,
-        "n": 155
+        "n": 159
       }
     },
     "moves": {
       "ACID_GOOP": {
         "name": "酸液黏球",
-        "n_seen": 461,
+        "n_seen": 467,
         "intents": {
-          "Attack": 461
+          "Attack": 467
         },
         "turns_seen": {
-          "3": 381,
-          "6": 76,
+          "3": 385,
+          "6": 78,
           "9": 4
         },
         "next": {
-          "FIRST_ACID_GOOP": 286
+          "FIRST_ACID_GOOP": 290
         },
         "avg_total_shown": 13.3,
         "damage_by_asc": {
@@ -247,36 +247,36 @@
           },
           "10": {
             "shown": {
-              "13x1": 142,
+              "13x1": 146,
               "15x1": 7,
-              "20x1": 50,
+              "20x1": 52,
               "27x1": 3,
               "9x1": 10
             },
             "base_per_hit": {
-              "6": 194
+              "6": 200
             },
             "hits": {
-              "1": 212
+              "1": 218
             },
-            "n_base": 194
+            "n_base": 200
           }
         }
       },
       "FIRST_ACID_GOOP": {
         "name": null,
-        "n_seen": 678,
+        "n_seen": 686,
         "intents": {
-          "Attack": 678
+          "Attack": 686
         },
         "turns_seen": {
-          "1": 392,
-          "4": 270,
-          "7": 15,
+          "1": 396,
+          "4": 273,
+          "7": 16,
           "10": 1
         },
         "next": {
-          "INHALE": 541
+          "INHALE": 548
         },
         "avg_total_shown": 8.2,
         "damage_by_asc": {
@@ -417,41 +417,41 @@
           },
           "10": {
             "shown": {
-              "13x1": 125,
+              "13x1": 128,
               "15x1": 4,
-              "20x1": 9,
+              "20x1": 10,
               "27x1": 1,
-              "6x1": 155,
+              "6x1": 159,
               "9x1": 10
             },
             "base_per_hit": {
-              "6": 290
+              "6": 298
             },
             "hits": {
-              "1": 304
+              "1": 312
             },
-            "n_base": 290
+            "n_base": 298
           }
         }
       },
       "INHALE": {
         "name": "吸入",
-        "n_seen": 541,
+        "n_seen": 548,
         "intents": {
-          "Buff": 541
+          "Buff": 548
         },
         "turns_seen": {
-          "2": 391,
-          "5": 141,
+          "2": 395,
+          "5": 144,
           "8": 9
         },
         "next": {
-          "ACID_GOOP": 461
+          "ACID_GOOP": 467
         },
         "avg_total_shown": 0.0,
         "self_powers_gained": {
           "STRENGTH_POWER": {
-            "7": 460,
+            "7": 466,
             "8": 1
           }
         },
@@ -509,7 +509,7 @@
           },
           "10": {
             "STRENGTH_POWER": {
-              "7": 212
+              "7": 218
             }
           }
         }
@@ -564,23 +564,23 @@
         "name": "尖啸",
         "type": "Debuff",
         "description": "在本回合结束前失去[gold]力量[/gold]。",
-        "n_fights": 6,
+        "n_fights": 7,
         "amount_at_first_sight": {
-          "6": 6
+          "6": 7
         },
         "amount_max_in_fight": {
-          "6": 6
+          "6": 7
         },
         "amount_at_first_sight_by_asc": {
           "10": {
-            "6": 6
+            "6": 7
           }
         },
         "turn_at_first_sight_by_asc": {
           "10": {
             "1": 3,
             "3": 2,
-            "4": 1
+            "4": 2
           }
         }
       },
@@ -588,22 +588,22 @@
         "name": "中毒",
         "type": "Debuff",
         "description": "中毒的生物会在自身回合开始时失去生命。中毒层数每回合减少[blue]1[/blue]。",
-        "n_fights": 56,
+        "n_fights": 58,
         "amount_at_first_sight": {
           "2": 6,
           "3": 19,
           "4": 6,
           "5": 15,
-          "6": 2,
-          "7": 8
+          "6": 3,
+          "7": 9
         },
         "amount_max_in_fight": {
           "2": 1,
           "3": 14,
           "4": 4,
           "5": 10,
-          "6": 3,
-          "7": 12,
+          "6": 4,
+          "7": 13,
           "8": 2,
           "9": 4,
           "12": 1,
@@ -627,8 +627,8 @@
             "3": 18,
             "4": 6,
             "5": 15,
-            "6": 2,
-            "7": 8
+            "6": 3,
+            "7": 9
           }
         },
         "turn_at_first_sight_by_asc": {
@@ -642,12 +642,13 @@
             "3": 1
           },
           "10": {
-            "1": 14,
+            "1": 15,
             "2": 20,
             "3": 8,
             "4": 5,
             "5": 3,
-            "6": 3
+            "6": 3,
+            "7": 1
           }
         }
       },
@@ -712,19 +713,19 @@
         "name": "力量",
         "type": "Buff",
         "description": "力量会增加攻击牌造成的伤害。",
-        "n_fights": 381,
+        "n_fights": 385,
         "amount_at_first_sight": {
           "-10": 1,
           "-6": 3,
           "1": 4,
-          "7": 373
+          "7": 377
         },
         "amount_max_in_fight": {
-          "7": 300,
+          "7": 302,
           "8": 3,
           "9": 1,
           "11": 1,
-          "14": 71,
+          "14": 73,
           "15": 1,
           "21": 4
         },
@@ -764,7 +765,7 @@
           },
           "10": {
             "-6": 3,
-            "7": 149
+            "7": 153
           }
         },
         "turn_at_first_sight_by_asc": {
@@ -803,7 +804,7 @@
           },
           "10": {
             "1": 3,
-            "3": 149
+            "3": 153
           }
         }
       },
@@ -933,14 +934,14 @@
         "name": "虚弱",
         "type": "Debuff",
         "description": "虚弱的生物造成的攻击伤害减少[blue]25%[/blue]。",
-        "n_fights": 179,
+        "n_fights": 183,
         "amount_at_first_sight": {
-          "1": 167,
+          "1": 171,
           "2": 7,
           "3": 5
         },
         "amount_max_in_fight": {
-          "1": 145,
+          "1": 149,
           "2": 23,
           "3": 10,
           "4": 1
@@ -970,7 +971,7 @@
             "3": 1
           },
           "10": {
-            "1": 144,
+            "1": 148,
             "2": 5,
             "3": 2
           }
@@ -1006,21 +1007,21 @@
             "4": 2
           },
           "10": {
-            "1": 79,
-            "2": 41,
+            "1": 81,
+            "2": 42,
             "3": 23,
             "4": 2,
             "5": 4,
-            "6": 2
+            "6": 3
           }
         }
       }
     },
     "provenance": {
       "first_seen": "2026-09-24T04:09:27.504Z",
-      "last_seen": "2026-10-18T07:11:31.292Z",
-      "n_runs": 326,
-      "n_instances": 392,
+      "last_seen": "2026-10-19T04:13:05.143Z",
+      "n_runs": 329,
+      "n_instances": 396,
       "n_spawned_mid_fight": 0,
       "n_minion_instances": 0
     },
@@ -1067,23 +1068,23 @@
       },
       "powers_lowered": {
         "STRENGTH_POWER": {
-          "n": 3,
-          "fights": 3,
+          "n": 4,
+          "fights": 4,
           "move_before": {
-            "ACID_GOOP": 2,
-            "FIRST_ACID_GOOP": 1
+            "FIRST_ACID_GOOP": 2,
+            "ACID_GOOP": 2
           },
           "move_changed": 0,
           "move_changed_share": 0.0,
           "changed_to": {},
           "changed_evidence": [],
           "end_move": {
-            "ACID_GOOP": 2,
-            "FIRST_ACID_GOOP": 1
+            "FIRST_ACID_GOOP": 2,
+            "ACID_GOOP": 2
           },
           "next_move": {
-            "FIRST_ACID_GOOP": 2,
-            "INHALE": 1
+            "INHALE": 2,
+            "FIRST_ACID_GOOP": 2
           },
           "changed_next": {},
           "revived": 0
@@ -1146,21 +1147,21 @@
             "W6F4YXF3MT7A F14 T2"
           ],
           "alive": {
-            "turns": 273,
+            "turns": 276,
             "moves": {
-              "FIRST_ACID_GOOP": 115,
-              "INHALE": 94,
-              "ACID_GOOP": 64
+              "FIRST_ACID_GOOP": 116,
+              "INHALE": 95,
+              "ACID_GOOP": 65
             },
             "next": {
               "ACID_GOOP": {
                 "FIRST_ACID_GOOP": 30
               },
               "FIRST_ACID_GOOP": {
-                "INHALE": 94
+                "INHALE": 95
               },
               "INHALE": {
-                "ACID_GOOP": 64
+                "ACID_GOOP": 65
               }
             }
           },

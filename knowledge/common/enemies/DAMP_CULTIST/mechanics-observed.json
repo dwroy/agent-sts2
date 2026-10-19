@@ -18,14 +18,14 @@
     ],
     "kind": "hallway",
     "rooms": {
-      "hallway": 125,
+      "hallway": 128,
       "unknown_room": 19
     },
     "acts": {
-      "1": 144
+      "1": 147
     },
     "encounters": {
-      "CALCIFIED_CULTIST+DAMP_CULTIST": 144
+      "CALCIFIED_CULTIST+DAMP_CULTIST": 147
     },
     "hp_by_asc": {
       "0": {
@@ -84,31 +84,31 @@
       },
       "10": {
         "min": 52,
-        "median": 53.0,
+        "median": 53,
         "max": 54,
-        "n": 46
+        "n": 49
       }
     },
     "moves": {
       "DARK_STRIKE_MOVE": {
         "name": "黑暗打击",
-        "n_seen": 500,
+        "n_seen": 513,
         "intents": {
-          "Attack": 500
+          "Attack": 513
         },
         "turns_seen": {
-          "2": 143,
-          "3": 140,
-          "4": 119,
-          "5": 62,
-          "6": 24,
+          "2": 146,
+          "3": 143,
+          "4": 122,
+          "5": 65,
+          "6": 25,
           "7": 9,
           "8": 3
         },
         "next": {
-          "DARK_STRIKE_MOVE": 357
+          "DARK_STRIKE_MOVE": 367
         },
-        "avg_total_shown": 9.6,
+        "avg_total_shown": 9.7,
         "damage_by_asc": {
           "0": {
             "shown": {
@@ -265,44 +265,44 @@
               "11x1": 1,
               "13x1": 1,
               "14x1": 1,
-              "15x1": 38,
+              "15x1": 41,
               "20x1": 2,
-              "21x1": 23,
+              "21x1": 26,
               "24x1": 1,
-              "27x1": 7,
+              "27x1": 8,
               "33x1": 3,
-              "3x1": 46,
+              "3x1": 49,
               "5x1": 1,
               "6x1": 3,
-              "9x1": 40
+              "9x1": 43
             },
             "base_per_hit": {
-              "3": 158
+              "3": 171
             },
             "hits": {
-              "1": 167
+              "1": 180
             },
-            "n_base": 158
+            "n_base": 171
           }
         }
       },
       "INCANTATION_MOVE": {
         "name": "念咒",
-        "n_seen": 144,
+        "n_seen": 147,
         "intents": {
-          "Buff": 144
+          "Buff": 147
         },
         "turns_seen": {
-          "1": 144
+          "1": 147
         },
         "next": {
-          "DARK_STRIKE_MOVE": 143
+          "DARK_STRIKE_MOVE": 146
         },
         "avg_total_shown": 0.0,
         "self_powers_gained": {
           "RITUAL_POWER": {
             "5": 81,
-            "6": 62
+            "6": 65
           }
         },
         "self_powers_gained_by_asc": {
@@ -353,7 +353,7 @@
           },
           "10": {
             "RITUAL_POWER": {
-              "6": 46
+              "6": 49
             }
           }
         }
@@ -386,19 +386,19 @@
         "name": "尖啸",
         "type": "Debuff",
         "description": "在本回合结束前失去[gold]力量[/gold]。",
-        "n_fights": 3,
+        "n_fights": 4,
         "amount_at_first_sight": {
-          "6": 3
+          "6": 4
         },
         "amount_max_in_fight": {
-          "6": 3
+          "6": 4
         },
         "amount_at_first_sight_by_asc": {
           "6": {
             "6": 1
           },
           "10": {
-            "6": 2
+            "6": 3
           }
         },
         "turn_at_first_sight_by_asc": {
@@ -406,6 +406,7 @@
             "5": 1
           },
           "10": {
+            "2": 1,
             "3": 2
           }
         }
@@ -414,11 +415,11 @@
         "name": "中毒",
         "type": "Debuff",
         "description": "中毒的生物会在自身回合开始时失去生命。中毒层数每回合减少[blue]1[/blue]。",
-        "n_fights": 35,
+        "n_fights": 38,
         "amount_at_first_sight": {
-          "2": 4,
-          "3": 10,
-          "4": 4,
+          "2": 5,
+          "3": 11,
+          "4": 5,
           "5": 4,
           "6": 2,
           "7": 10,
@@ -426,15 +427,16 @@
         },
         "amount_max_in_fight": {
           "2": 1,
-          "3": 2,
+          "3": 3,
           "4": 1,
           "5": 4,
           "6": 2,
           "7": 11,
           "8": 1,
           "9": 3,
+          "10": 1,
           "11": 4,
-          "12": 3,
+          "12": 4,
           "14": 1,
           "15": 2
         },
@@ -448,9 +450,9 @@
             "5": 1
           },
           "10": {
-            "2": 4,
-            "3": 9,
-            "4": 3,
+            "2": 5,
+            "3": 10,
+            "4": 4,
             "5": 3,
             "6": 2,
             "7": 9,
@@ -468,9 +470,9 @@
           },
           "10": {
             "1": 6,
-            "2": 14,
+            "2": 15,
             "3": 6,
-            "4": 3,
+            "4": 5,
             "5": 2
           }
         }
@@ -479,14 +481,14 @@
         "name": "仪式",
         "type": "Buff",
         "description": "在你的回合结束时获得[gold]力量[/gold]。",
-        "n_fights": 143,
+        "n_fights": 146,
         "amount_at_first_sight": {
           "5": 81,
-          "6": 62
+          "6": 65
         },
         "amount_max_in_fight": {
           "5": 81,
-          "6": 62
+          "6": 65
         },
         "amount_at_first_sight_by_asc": {
           "0": {
@@ -517,7 +519,7 @@
             "6": 16
           },
           "10": {
-            "6": 46
+            "6": 49
           }
         },
         "turn_at_first_sight_by_asc": {
@@ -549,7 +551,7 @@
             "2": 16
           },
           "10": {
-            "2": 46
+            "2": 49
           }
         }
       },
@@ -579,11 +581,12 @@
         "name": "力量",
         "type": "Buff",
         "description": "力量会增加攻击牌造成的伤害。",
-        "n_fights": 140,
+        "n_fights": 143,
         "amount_at_first_sight": {
+          "-6": 1,
           "-2": 1,
           "5": 81,
-          "6": 58
+          "6": 60
         },
         "amount_max_in_fight": {
           "5": 14,
@@ -592,9 +595,9 @@
           "12": 24,
           "15": 21,
           "16": 1,
-          "18": 16,
+          "18": 18,
           "20": 9,
-          "24": 6,
+          "24": 7,
           "25": 1,
           "30": 8
         },
@@ -627,8 +630,9 @@
             "6": 15
           },
           "10": {
+            "-6": 1,
             "-2": 1,
-            "6": 43
+            "6": 45
           }
         },
         "turn_at_first_sight_by_asc": {
@@ -660,8 +664,8 @@
             "3": 15
           },
           "10": {
-            "2": 1,
-            "3": 43
+            "2": 2,
+            "3": 45
           }
         }
       },
@@ -775,13 +779,13 @@
         "name": "虚弱",
         "type": "Debuff",
         "description": "虚弱的生物造成的攻击伤害减少[blue]25%[/blue]。",
-        "n_fights": 50,
+        "n_fights": 53,
         "amount_at_first_sight": {
-          "1": 43,
+          "1": 46,
           "2": 7
         },
         "amount_max_in_fight": {
-          "1": 38,
+          "1": 41,
           "2": 10,
           "3": 2
         },
@@ -807,7 +811,7 @@
             "1": 1
           },
           "10": {
-            "1": 34,
+            "1": 37,
             "2": 5
           }
         },
@@ -834,9 +838,9 @@
             "3": 1
           },
           "10": {
-            "1": 10,
-            "2": 5,
-            "3": 11,
+            "1": 11,
+            "2": 6,
+            "3": 12,
             "4": 6,
             "5": 5,
             "6": 2
@@ -846,9 +850,9 @@
     },
     "provenance": {
       "first_seen": "2026-09-24T06:31:48.876Z",
-      "last_seen": "2026-10-18T05:50:05.719Z",
-      "n_runs": 144,
-      "n_instances": 144,
+      "last_seen": "2026-10-19T03:10:40.837Z",
+      "n_runs": 147,
+      "n_instances": 147,
       "n_spawned_mid_fight": 0,
       "n_minion_instances": 0
     },
@@ -916,10 +920,10 @@
       },
       "ally_deaths": {
         "CALCIFIED_CULTIST": {
-          "n": 107,
-          "fights": 107,
+          "n": 108,
+          "fights": 108,
           "move_before": {
-            "DARK_STRIKE_MOVE": 96,
+            "DARK_STRIKE_MOVE": 97,
             "INCANTATION_MOVE": 11
           },
           "move_changed": 0,
@@ -927,7 +931,7 @@
           "changed_to": {},
           "by_move": {
             "DARK_STRIKE_MOVE": {
-              "n": 96,
+              "n": 97,
               "changed_to": {}
             },
             "INCANTATION_MOVE": {
@@ -939,16 +943,16 @@
           "attack_changed": 0,
           "co_deaths": 0,
           "end_move": {
-            "DARK_STRIKE_MOVE": 95,
+            "DARK_STRIKE_MOVE": 96,
             "INCANTATION_MOVE": 11
           },
-          "next_n": 106,
+          "next_n": 107,
           "next_move": {
-            "DARK_STRIKE_MOVE": 106
+            "DARK_STRIKE_MOVE": 107
           },
           "next_after": {
             "DARK_STRIKE_MOVE": {
-              "DARK_STRIKE_MOVE": 95
+              "DARK_STRIKE_MOVE": 96
             },
             "INCANTATION_MOVE": {
               "DARK_STRIKE_MOVE": 11
@@ -960,24 +964,24 @@
             "3RWJX25LB2CD F8 T2"
           ],
           "alive": {
-            "turns": 341,
+            "turns": 348,
             "moves": {
-              "DARK_STRIKE_MOVE": 197,
-              "INCANTATION_MOVE": 144
+              "DARK_STRIKE_MOVE": 201,
+              "INCANTATION_MOVE": 147
             },
             "next": {
               "DARK_STRIKE_MOVE": {
-                "DARK_STRIKE_MOVE": 65
+                "DARK_STRIKE_MOVE": 66
               },
               "INCANTATION_MOVE": {
-                "DARK_STRIKE_MOVE": 132
+                "DARK_STRIKE_MOVE": 135
               }
             }
           },
           "dead": {
-            "turns": 242,
+            "turns": 245,
             "moves": {
-              "DARK_STRIKE_MOVE": 242
+              "DARK_STRIKE_MOVE": 245
             }
           }
         }

@@ -18,14 +18,14 @@
     ],
     "kind": "hallway",
     "rooms": {
-      "hallway": 169,
-      "unknown_room": 23
+      "hallway": 170,
+      "unknown_room": 24
     },
     "acts": {
-      "2": 192
+      "2": 194
     },
     "encounters": {
-      "SPINY_TOAD": 192
+      "SPINY_TOAD": 194
     },
     "hp_by_asc": {
       "0": {
@@ -86,23 +86,23 @@
         "min": 121,
         "median": 123,
         "max": 124,
-        "n": 69
+        "n": 71
       }
     },
     "moves": {
       "PROTRUDING_SPIKES_MOVE": {
         "name": "伸出尖刺",
-        "n_seen": 353,
+        "n_seen": 357,
         "intents": {
-          "Buff": 353
+          "Buff": 357
         },
         "turns_seen": {
-          "1": 192,
-          "4": 146,
+          "1": 194,
+          "4": 148,
           "7": 15
         },
         "next": {
-          "SPIKE_EXPLOSION_MOVE": 281
+          "SPIKE_EXPLOSION_MOVE": 285
         },
         "avg_total_shown": 0.0,
         "self_powers_gained": {
@@ -110,7 +110,7 @@
             "1": 1
           },
           "THORNS_POWER": {
-            "5": 281
+            "5": 285
           }
         },
         "self_powers_gained_by_asc": {
@@ -164,26 +164,26 @@
           },
           "10": {
             "THORNS_POWER": {
-              "5": 118
+              "5": 122
             }
           }
         }
       },
       "SPIKE_EXPLOSION_MOVE": {
         "name": "尖刺爆破",
-        "n_seen": 281,
+        "n_seen": 285,
         "intents": {
-          "Attack": 281
+          "Attack": 285
         },
         "turns_seen": {
-          "2": 191,
-          "5": 84,
+          "2": 193,
+          "5": 86,
           "8": 6
         },
         "next": {
-          "TONGUE_LASH_MOVE": 205
+          "TONGUE_LASH_MOVE": 208
         },
-        "avg_total_shown": 22.9,
+        "avg_total_shown": 22.8,
         "damage_by_asc": {
           "0": {
             "shown": {
@@ -303,35 +303,35 @@
             "shown": {
               "15x1": 5,
               "17x1": 3,
-              "18x1": 30,
+              "18x1": 33,
               "22x1": 1,
               "23x1": 1,
               "24x1": 1,
-              "25x1": 77
+              "25x1": 78
             },
             "base_per_hit": {
-              "25": 80
+              "25": 81
             },
             "hits": {
-              "1": 118
+              "1": 122
             },
-            "n_base": 80
+            "n_base": 81
           }
         }
       },
       "TONGUE_LASH_MOVE": {
         "name": "吐舌",
-        "n_seen": 205,
+        "n_seen": 208,
         "intents": {
-          "Attack": 205
+          "Attack": 208
         },
         "turns_seen": {
-          "3": 177,
-          "6": 27,
+          "3": 179,
+          "6": 28,
           "9": 1
         },
         "next": {
-          "PROTRUDING_SPIKES_MOVE": 161
+          "PROTRUDING_SPIKES_MOVE": 163
         },
         "avg_total_shown": 17.0,
         "damage_by_asc": {
@@ -456,15 +456,15 @@
               "13x1": 2,
               "14x1": 28,
               "17x1": 1,
-              "19x1": 50
+              "19x1": 53
             },
             "base_per_hit": {
-              "19": 51
+              "19": 54
             },
             "hits": {
-              "1": 87
+              "1": 90
             },
-            "n_base": 51
+            "n_base": 54
           }
         }
       }
@@ -578,12 +578,12 @@
         "name": "中毒",
         "type": "Debuff",
         "description": "中毒的生物会在自身回合开始时失去生命。中毒层数每回合减少[blue]1[/blue]。",
-        "n_fights": 75,
+        "n_fights": 77,
         "amount_at_first_sight": {
-          "2": 3,
+          "2": 4,
           "3": 20,
           "4": 7,
-          "5": 13,
+          "5": 14,
           "6": 4,
           "7": 18,
           "8": 3,
@@ -594,7 +594,7 @@
         "amount_max_in_fight": {
           "3": 4,
           "4": 2,
-          "5": 3,
+          "5": 4,
           "6": 1,
           "7": 5,
           "9": 4,
@@ -610,6 +610,7 @@
           "19": 5,
           "20": 2,
           "21": 1,
+          "22": 1,
           "23": 3,
           "24": 2,
           "25": 1,
@@ -640,10 +641,10 @@
             "7": 1
           },
           "10": {
-            "2": 2,
+            "2": 3,
             "3": 18,
             "4": 5,
-            "5": 11,
+            "5": 12,
             "6": 4,
             "7": 16,
             "8": 2,
@@ -673,8 +674,8 @@
           },
           "10": {
             "1": 34,
-            "2": 14,
-            "3": 9,
+            "2": 15,
+            "3": 10,
             "4": 7,
             "5": 1
           }
@@ -797,12 +798,12 @@
         "name": "荆棘",
         "type": "Buff",
         "description": "当被攻击命中时，反击造成伤害。",
-        "n_fights": 191,
+        "n_fights": 193,
         "amount_at_first_sight": {
-          "5": 191
+          "5": 193
         },
         "amount_max_in_fight": {
-          "5": 191
+          "5": 193
         },
         "amount_at_first_sight_by_asc": {
           "0": {
@@ -833,7 +834,7 @@
             "5": 22
           },
           "10": {
-            "5": 68
+            "5": 70
           }
         },
         "turn_at_first_sight_by_asc": {
@@ -865,7 +866,7 @@
             "2": 22
           },
           "10": {
-            "2": 68
+            "2": 70
           }
         }
       },
@@ -985,16 +986,16 @@
         "name": "虚弱",
         "type": "Debuff",
         "description": "虚弱的生物造成的攻击伤害减少[blue]25%[/blue]。",
-        "n_fights": 105,
+        "n_fights": 107,
         "amount_at_first_sight": {
-          "1": 62,
-          "2": 36,
+          "1": 63,
+          "2": 37,
           "3": 6,
           "4": 1
         },
         "amount_max_in_fight": {
           "1": 38,
-          "2": 38,
+          "2": 40,
           "3": 18,
           "4": 5,
           "5": 5,
@@ -1030,8 +1031,8 @@
             "3": 2
           },
           "10": {
-            "1": 33,
-            "2": 28,
+            "1": 34,
+            "2": 29,
             "3": 4,
             "4": 1
           }
@@ -1072,7 +1073,7 @@
             "4": 1
           },
           "10": {
-            "1": 32,
+            "1": 34,
             "2": 18,
             "3": 6,
             "4": 7,
@@ -1083,9 +1084,9 @@
     },
     "provenance": {
       "first_seen": "2026-09-24T05:21:58.821Z",
-      "last_seen": "2026-10-18T06:14:56.324Z",
-      "n_runs": 192,
-      "n_instances": 192,
+      "last_seen": "2026-10-19T05:32:37.696Z",
+      "n_runs": 194,
+      "n_instances": 194,
       "n_spawned_mid_fight": 0,
       "n_minion_instances": 0
     },

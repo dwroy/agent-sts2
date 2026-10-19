@@ -18,14 +18,14 @@
     ],
     "kind": "hallway",
     "rooms": {
-      "hallway": 107,
+      "hallway": 109,
       "unknown_room": 19
     },
     "acts": {
-      "1": 126
+      "1": 128
     },
     "encounters": {
-      "MAWLER": 126
+      "MAWLER": 128
     },
     "hp_by_asc": {
       "0": {
@@ -86,28 +86,28 @@
         "min": 76,
         "median": 76.0,
         "max": 76,
-        "n": 56
+        "n": 58
       }
     },
     "moves": {
       "CLAW_MOVE": {
         "name": "爪击",
-        "n_seen": 246,
+        "n_seen": 250,
         "intents": {
-          "Attack": 246
+          "Attack": 250
         },
         "turns_seen": {
-          "1": 126,
+          "1": 128,
           "3": 56,
-          "4": 35,
-          "5": 17,
+          "4": 36,
+          "5": 18,
           "6": 9,
           "7": 2,
           "8": 1
         },
         "next": {
-          "RIP_AND_TEAR_MOVE": 116,
-          "ROAR_MOVE": 78
+          "RIP_AND_TEAR_MOVE": 118,
+          "ROAR_MOVE": 79
         },
         "avg_total_shown": 10.3,
         "damage_by_asc": {
@@ -232,38 +232,38 @@
           "10": {
             "shown": {
               "3x2": 2,
-              "5x2": 86,
-              "7x2": 33
+              "5x2": 88,
+              "7x2": 35
             },
             "base_per_hit": {
-              "5": 75
+              "5": 77
             },
             "hits": {
-              "2": 121
+              "2": 125
             },
-            "n_base": 75
+            "n_base": 77
           }
         }
       },
       "RIP_AND_TEAR_MOVE": {
         "name": "狂乱撕扯",
-        "n_seen": 167,
+        "n_seen": 171,
         "intents": {
-          "Attack": 167
+          "Attack": 171
         },
         "turns_seen": {
-          "2": 61,
-          "3": 35,
-          "4": 42,
+          "2": 62,
+          "3": 36,
+          "4": 43,
           "5": 21,
-          "6": 5,
+          "6": 6,
           "7": 3
         },
         "next": {
-          "CLAW_MOVE": 75,
-          "ROAR_MOVE": 35
+          "CLAW_MOVE": 77,
+          "ROAR_MOVE": 36
         },
-        "avg_total_shown": 19.0,
+        "avg_total_shown": 19.1,
         "damage_by_asc": {
           "0": {
             "shown": {
@@ -383,40 +383,40 @@
           "10": {
             "shown": {
               "12x1": 7,
-              "16x1": 34,
+              "16x1": 35,
               "18x1": 10,
-              "24x1": 39
+              "24x1": 42
             },
             "base_per_hit": {
-              "16": 34
+              "16": 35
             },
             "hits": {
-              "1": 90
+              "1": 94
             },
-            "n_base": 34
+            "n_base": 35
           }
         }
       },
       "ROAR_MOVE": {
         "name": "怒吼",
-        "n_seen": 113,
+        "n_seen": 115,
         "intents": {
-          "Debuff": 113
+          "Debuff": 115
         },
         "turns_seen": {
-          "2": 65,
-          "3": 32,
+          "2": 66,
+          "3": 33,
           "4": 13,
           "5": 3
         },
         "next": {
-          "RIP_AND_TEAR_MOVE": 51,
+          "RIP_AND_TEAR_MOVE": 53,
           "CLAW_MOVE": 45
         },
         "avg_total_shown": 0.0,
         "player_powers_applied": {
           "VULNERABLE_POWER": {
-            "3": 96
+            "3": 98
           }
         },
         "player_powers_applied_by_asc": {
@@ -462,7 +462,7 @@
           },
           "10": {
             "VULNERABLE_POWER": {
-              "3": 45
+              "3": 47
             }
           }
         }
@@ -540,21 +540,21 @@
         "name": "中毒",
         "type": "Debuff",
         "description": "中毒的生物会在自身回合开始时失去生命。中毒层数每回合减少[blue]1[/blue]。",
-        "n_fights": 44,
+        "n_fights": 46,
         "amount_at_first_sight": {
           "2": 2,
           "3": 21,
-          "4": 1,
+          "4": 2,
           "5": 7,
           "6": 4,
-          "7": 6,
+          "7": 7,
           "9": 1,
           "10": 1,
           "12": 1
         },
         "amount_max_in_fight": {
           "3": 3,
-          "4": 3,
+          "4": 4,
           "5": 9,
           "6": 4,
           "7": 4,
@@ -563,7 +563,8 @@
           "10": 2,
           "12": 6,
           "13": 2,
-          "14": 1
+          "14": 1,
+          "20": 1
         },
         "amount_at_first_sight_by_asc": {
           "4": {
@@ -572,10 +573,10 @@
           "10": {
             "2": 2,
             "3": 20,
-            "4": 1,
+            "4": 2,
             "5": 7,
             "6": 4,
-            "7": 6,
+            "7": 7,
             "9": 1,
             "10": 1,
             "12": 1
@@ -588,8 +589,8 @@
           "10": {
             "1": 15,
             "2": 16,
-            "3": 6,
-            "4": 2,
+            "3": 7,
+            "4": 3,
             "5": 2,
             "7": 2
           }
@@ -765,14 +766,14 @@
         "name": "虚弱",
         "type": "Debuff",
         "description": "虚弱的生物造成的攻击伤害减少[blue]25%[/blue]。",
-        "n_fights": 68,
+        "n_fights": 70,
         "amount_at_first_sight": {
-          "1": 51,
+          "1": 53,
           "2": 16,
           "3": 1
         },
         "amount_max_in_fight": {
-          "1": 35,
+          "1": 37,
           "2": 24,
           "3": 9
         },
@@ -799,7 +800,7 @@
             "2": 1
           },
           "10": {
-            "1": 43,
+            "1": 45,
             "2": 12,
             "3": 1
           }
@@ -829,17 +830,17 @@
           },
           "10": {
             "1": 31,
-            "2": 14,
-            "3": 11
+            "2": 15,
+            "3": 12
           }
         }
       }
     },
     "provenance": {
       "first_seen": "2026-09-24T04:52:08.652Z",
-      "last_seen": "2026-10-17T19:07:35.647Z",
-      "n_runs": 126,
-      "n_instances": 126,
+      "last_seen": "2026-10-19T04:03:25.935Z",
+      "n_runs": 128,
+      "n_instances": 128,
       "n_spawned_mid_fight": 0,
       "n_minion_instances": 0
     }

@@ -18,15 +18,15 @@
     ],
     "kind": "hallway",
     "rooms": {
-      "hallway": 409,
-      "unknown_room": 35
+      "hallway": 417,
+      "unknown_room": 36
     },
     "acts": {
-      "1": 444
+      "1": 453
     },
     "encounters": {
-      "SEAPUNK": 316,
-      "CALCIFIED_CULTIST+SEAPUNK": 128
+      "SEAPUNK": 320,
+      "CALCIFIED_CULTIST+SEAPUNK": 133
     },
     "hp_by_asc": {
       "0": {
@@ -91,25 +91,25 @@
       },
       "10": {
         "min": 47,
-        "median": 48,
+        "median": 48.0,
         "max": 49,
-        "n": 153
+        "n": 162
       }
     },
     "moves": {
       "BUBBLE_BURP_MOVE": {
         "name": "吐泡泡",
-        "n_seen": 450,
+        "n_seen": 461,
         "intents": {
-          "Buff+Defend": 450
+          "Buff+Defend": 461
         },
         "turns_seen": {
-          "3": 402,
-          "6": 47,
+          "3": 410,
+          "6": 50,
           "9": 1
         },
         "next": {
-          "SEA_KICK_MOVE": 302
+          "SEA_KICK_MOVE": 311
         },
         "avg_total_shown": 0.0,
         "block_gained": {
@@ -117,7 +117,7 @@
           "2": 1,
           "3": 1,
           "7": 63,
-          "8": 235
+          "8": 244
         },
         "block_gained_by_asc": {
           "0": {
@@ -154,13 +154,13 @@
           },
           "10": {
             "3": 1,
-            "8": 133
+            "8": 142
           }
         },
         "self_powers_gained": {
           "STRENGTH_POWER": {
             "1": 132,
-            "2": 169
+            "2": 178
           }
         },
         "self_powers_gained_by_asc": {
@@ -216,26 +216,26 @@
           },
           "10": {
             "STRENGTH_POWER": {
-              "2": 134
+              "2": 143
             }
           }
         }
       },
       "SEA_KICK_MOVE": {
         "name": "海洋踢",
-        "n_seen": 746,
+        "n_seen": 764,
         "intents": {
-          "Attack": 746
+          "Attack": 764
         },
         "turns_seen": {
-          "1": 444,
-          "4": 287,
-          "7": 15
+          "1": 453,
+          "4": 295,
+          "7": 16
         },
         "next": {
-          "SPINNING_KICK_MOVE": 590
+          "SPINNING_KICK_MOVE": 606
         },
-        "avg_total_shown": 12.6,
+        "avg_total_shown": 12.7,
         "damage_by_asc": {
           "0": {
             "shown": {
@@ -378,35 +378,35 @@
             "shown": {
               "11x1": 5,
               "12x1": 1,
-              "13x1": 153,
-              "15x1": 117,
-              "17x1": 11
+              "13x1": 162,
+              "15x1": 125,
+              "17x1": 12
             },
             "base_per_hit": {
-              "13": 281
+              "13": 299
             },
             "hits": {
-              "1": 287
+              "1": 305
             },
-            "n_base": 281
+            "n_base": 299
           }
         }
       },
       "SPINNING_KICK_MOVE": {
         "name": "回旋踢",
-        "n_seen": 590,
+        "n_seen": 606,
         "intents": {
-          "Attack": 590
+          "Attack": 606
         },
         "turns_seen": {
-          "2": 437,
-          "5": 148,
+          "2": 446,
+          "5": 155,
           "8": 5
         },
         "next": {
-          "BUBBLE_BURP_MOVE": 450
+          "BUBBLE_BURP_MOVE": 461
         },
-        "avg_total_shown": 9.6,
+        "avg_total_shown": 9.7,
         "damage_by_asc": {
           "0": {
             "shown": {
@@ -544,19 +544,19 @@
           },
           "10": {
             "shown": {
-              "1x4": 12,
-              "2x4": 139,
+              "1x4": 13,
+              "2x4": 147,
               "3x4": 3,
-              "4x4": 82,
+              "4x4": 89,
               "6x4": 4
             },
             "base_per_hit": {
-              "2": 225
+              "2": 240
             },
             "hits": {
-              "4": 240
+              "4": 256
             },
-            "n_base": 225
+            "n_base": 240
           }
         }
       }
@@ -641,28 +641,28 @@
         "name": "中毒",
         "type": "Debuff",
         "description": "中毒的生物会在自身回合开始时失去生命。中毒层数每回合减少[blue]1[/blue]。",
-        "n_fights": 75,
+        "n_fights": 80,
         "amount_at_first_sight": {
-          "2": 7,
-          "3": 25,
+          "2": 8,
+          "3": 27,
           "4": 4,
           "5": 12,
           "6": 4,
-          "7": 17,
+          "7": 19,
           "9": 5,
           "12": 1
         },
         "amount_max_in_fight": {
-          "3": 16,
+          "3": 17,
           "4": 9,
           "5": 6,
           "6": 5,
-          "7": 16,
-          "8": 2,
+          "7": 18,
+          "8": 3,
           "9": 6,
           "10": 4,
           "11": 6,
-          "12": 2,
+          "12": 3,
           "15": 1,
           "16": 1,
           "19": 1
@@ -680,12 +680,12 @@
             "4": 1
           },
           "10": {
-            "2": 7,
-            "3": 22,
+            "2": 8,
+            "3": 24,
             "4": 3,
             "5": 11,
             "6": 3,
-            "7": 17,
+            "7": 19,
             "9": 5,
             "12": 1
           }
@@ -703,10 +703,10 @@
           },
           "10": {
             "1": 12,
-            "2": 24,
-            "3": 18,
+            "2": 27,
+            "3": 19,
             "4": 5,
-            "5": 8,
+            "5": 9,
             "6": 2
           }
         }
@@ -793,22 +793,22 @@
         "name": "力量",
         "type": "Buff",
         "description": "力量会增加攻击牌造成的伤害。",
-        "n_fights": 289,
+        "n_fights": 297,
         "amount_at_first_sight": {
           "-10": 1,
           "-7": 1,
           "-6": 3,
           "-1": 1,
           "1": 131,
-          "2": 152
+          "2": 160
         },
         "amount_max_in_fight": {
           "-10": 1,
           "-1": 1,
           "1": 127,
-          "2": 146,
+          "2": 153,
           "3": 1,
-          "4": 13
+          "4": 14
         },
         "amount_at_first_sight_by_asc": {
           "0": {
@@ -847,7 +847,7 @@
           "10": {
             "-7": 1,
             "-6": 3,
-            "2": 118
+            "2": 126
           }
         },
         "turn_at_first_sight_by_asc": {
@@ -888,7 +888,7 @@
           "10": {
             "1": 1,
             "2": 3,
-            "4": 118
+            "4": 126
           }
         }
       },
@@ -1023,15 +1023,15 @@
         "name": "虚弱",
         "type": "Debuff",
         "description": "虚弱的生物造成的攻击伤害减少[blue]25%[/blue]。",
-        "n_fights": 176,
+        "n_fights": 185,
         "amount_at_first_sight": {
-          "1": 164,
+          "1": 173,
           "2": 8,
           "3": 4
         },
         "amount_max_in_fight": {
-          "1": 151,
-          "2": 15,
+          "1": 159,
+          "2": 16,
           "3": 10
         },
         "amount_at_first_sight_by_asc": {
@@ -1068,7 +1068,7 @@
             "3": 1
           },
           "10": {
-            "1": 130,
+            "1": 139,
             "2": 8,
             "3": 2
           }
@@ -1116,10 +1116,10 @@
             "2": 2
           },
           "10": {
-            "1": 71,
-            "2": 33,
+            "1": 75,
+            "2": 37,
             "3": 24,
-            "4": 8,
+            "4": 9,
             "5": 3,
             "7": 1
           }
@@ -1128,9 +1128,9 @@
     },
     "provenance": {
       "first_seen": "2026-09-24T06:25:19.722Z",
-      "last_seen": "2026-10-18T05:52:11.193Z",
-      "n_runs": 347,
-      "n_instances": 444,
+      "last_seen": "2026-10-19T03:26:40.757Z",
+      "n_runs": 352,
+      "n_instances": 453,
       "n_spawned_mid_fight": 0,
       "n_minion_instances": 0
     },
@@ -1182,10 +1182,10 @@
       },
       "ally_deaths": {
         "CALCIFIED_CULTIST": {
-          "n": 102,
-          "fights": 102,
+          "n": 103,
+          "fights": 103,
           "move_before": {
-            "SPINNING_KICK_MOVE": 54,
+            "SPINNING_KICK_MOVE": 55,
             "BUBBLE_BURP_MOVE": 35,
             "SEA_KICK_MOVE": 13
           },
@@ -1202,7 +1202,7 @@
               "changed_to": {}
             },
             "SPINNING_KICK_MOVE": {
-              "n": 54,
+              "n": 55,
               "changed_to": {}
             }
           },
@@ -1210,13 +1210,13 @@
           "attack_changed": 0,
           "co_deaths": 0,
           "end_move": {
-            "SPINNING_KICK_MOVE": 53,
+            "SPINNING_KICK_MOVE": 54,
             "BUBBLE_BURP_MOVE": 35,
             "SEA_KICK_MOVE": 11
           },
-          "next_n": 99,
+          "next_n": 100,
           "next_move": {
-            "BUBBLE_BURP_MOVE": 53,
+            "BUBBLE_BURP_MOVE": 54,
             "SEA_KICK_MOVE": 35,
             "SPINNING_KICK_MOVE": 11
           },
@@ -1228,7 +1228,7 @@
               "SPINNING_KICK_MOVE": 11
             },
             "SPINNING_KICK_MOVE": {
-              "BUBBLE_BURP_MOVE": 53
+              "BUBBLE_BURP_MOVE": 54
             }
           },
           "next_evidence": [
@@ -1237,30 +1237,30 @@
             "G7EJ07RPR1NX F7 T2"
           ],
           "alive": {
-            "turns": 331,
+            "turns": 347,
             "moves": {
-              "SEA_KICK_MOVE": 146,
-              "SPINNING_KICK_MOVE": 126,
-              "BUBBLE_BURP_MOVE": 59
+              "SEA_KICK_MOVE": 153,
+              "SPINNING_KICK_MOVE": 131,
+              "BUBBLE_BURP_MOVE": 63
             },
             "next": {
               "BUBBLE_BURP_MOVE": {
-                "SEA_KICK_MOVE": 18
+                "SEA_KICK_MOVE": 20
               },
               "SEA_KICK_MOVE": {
-                "SPINNING_KICK_MOVE": 126
+                "SPINNING_KICK_MOVE": 131
               },
               "SPINNING_KICK_MOVE": {
-                "BUBBLE_BURP_MOVE": 59
+                "BUBBLE_BURP_MOVE": 63
               }
             }
           },
           "dead": {
-            "turns": 212,
+            "turns": 215,
             "moves": {
-              "SEA_KICK_MOVE": 82,
-              "BUBBLE_BURP_MOVE": 74,
-              "SPINNING_KICK_MOVE": 56
+              "SEA_KICK_MOVE": 83,
+              "BUBBLE_BURP_MOVE": 75,
+              "SPINNING_KICK_MOVE": 57
             }
           }
         }
