@@ -21,3 +21,5 @@
 在 `1e84ccf32` 基线上重跑完整 tsc / vitest / Python 固定测试：tsc 通过，584 文件 / 5574 通过 / 2 原跳过，518.75 秒；Python 9 项通过。原件在 `checks/rebase-2/`。后续仅含运维记录及 Python 测试隔离夹具的 main 更新，在变基后核相同 TypeScript 源码/测试树并补跑对应 Python 测试。
 
 本次分支范围与新增材料暂存区 gitleaks 扫描均为零发现（`checks/rebase-2/gitleaks-*.log`）。检查日志按原始字节保留，包括 Vitest 末尾空行；代码与文档的空白检查单独执行。
+
+最终变基基线为 `77006d053`。相对刚完成全检的版本，agent 下仅 `tests/v6_learning_loop_test.py` 的隔离夹具有变化，TypeScript 源码、配置和测试树相同；补跑该 Python 固定测试 9 项通过（6.422s），凭据在 `checks/final/`。W9 按授权单独快进 main，live 发布、行为版本号与实际开启由 ops 核实际读回登记。
