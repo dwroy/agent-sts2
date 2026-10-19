@@ -1,0 +1,40 @@
+{
+  "prospective_tree": "8a43e902fa67a0b793e17a94af69563132eb4dab",
+  "source_commit": null,
+  "original_full_rc": 1,
+  "timeout_unchanged": true,
+  "max_workers": 1,
+  "checks": [
+    {
+      "name": "tsc",
+      "at": "2026-10-20 00:50:40 CST",
+      "command": [
+        "npx",
+        "tsc",
+        "-p",
+        "tsconfig.json",
+        "--noEmit"
+      ],
+      "rc": 0,
+      "log": ".artifacts/ops-wake-20261020-0050/tsc.log",
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "directed",
+      "at": "2026-10-20 00:50:42 CST",
+      "command": [
+        "npx",
+        "vitest",
+        "run",
+        "tests/silent-enchanted-afterimage.test.ts",
+        "tests/silent-kin-progress.test.ts",
+        "tests/manual-notice-ack.test.ts",
+        "tests/learning-requests.test.ts",
+        "--maxWorkers=1"
+      ],
+      "rc": 0,
+      "log": ".artifacts/ops-wake-20261020-0050/directed.log",
+      "log_sha256": "34d9d3812563bc1aa6f3a20316b04904e9ff7b7ead5845be971f5c310f3c870a"
+    }
+  ]
+}

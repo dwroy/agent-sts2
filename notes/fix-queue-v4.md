@@ -1498,3 +1498,5 @@ Roy：「上线后进 F48 反而降低一半，这才是关键，要找问题。
 - [ ] 2026-10-20 00:33:48 CST **infra-ordinary-close-candidate-failure-isolation-20261020（非对局阻塞，原自动收尾协议链）**：close_pending在单一try中验证候选，一项source drift可使全组同写相同attention且无dataset；234302-s2原有三叶漂移；001302-s2曾在main769b原eligible通过，后因main并行W5源码推进最新亦source drift，checkout仍严格干净。需原机械owner保留每项旧失败、独立源/报告/账本/Git/异议守卫，给仍有效原候选保历史重入；保持唯一dataset、受控记录提交/真实commit及scope，不能直接清attention、借他批dataset补完成、放宽守卫或吞失败。旧源与报告不改，不派重复模型/生成器、不热改在途输入。证据paper/materials/20261020-0028-ops/receipt.json。
 
 - [x] 2026-10-20 00:42:11 CST **ops-frozen-storage-v6-stream-20261019 仅流名子项验收**：source392三叶main/live核同，原52b4c9ec宿主full0/585文件5580过2跳，日志SHA3371995e9c2f5dc85c76b98a5345646fde9e1ca425fa373c84e7b5caa91448fe；原失败/显式归并回执及宽父保留。新ACK源桥接原001302未提交，宿主full pending，不合并验收范围。证据paper/materials/20261020-0034-ops/receipt.json。
+
+- 2026-10-20 00:52:37 CST **infra-manual-learning-notice-ack-scope-20261019 原项宿主补证**：原001302未提交三叶树8a43e902宿主full1，两既有用例15秒超时；587文件5606项通过，ACK新测试通过。同树原超时单worker四套27项及独立tsc均0，原full1不改。完整检查仍阻塞发布，工作树/原补丁保留、租约已释放；原协议owner于自然步骤处置超时验收/测试可靠性，不以增超时或放宽守卫冒修复，不重复未变源full或模型、不热改在途任务。旧三通知实际已读/告Roy、CLI兼容待发布及角色ACK边界保持。原件paper/materials/20261020-0050-ops/receipt.json。

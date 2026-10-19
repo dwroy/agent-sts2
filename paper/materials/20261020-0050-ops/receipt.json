@@ -1,0 +1,63 @@
+{
+  "at": "2026-10-20 00:52:37 CST",
+  "event": "learner-checks",
+  "batch": "20261020-001302-fix-batch",
+  "fixed_input_SHA_verified": true,
+  "source_commit": null,
+  "merged": null,
+  "fixed_staged_tree": "8a43e902fa67a0b793e17a94af69563132eb4dab",
+  "patch_sha256": "ea414f3476609a28d27a3aafd73407e88c2b1ca9924c0ed38b690a83b3993e95",
+  "source_base": "8c2811863747d566c152dc1e4fbec43b07b5a124",
+  "host_full": {
+    "rc": 1,
+    "test_files_passed": 587,
+    "test_files_failed": 2,
+    "tests_passed": 5606,
+    "tests_failed": 2,
+    "tests_skipped": 2,
+    "failures": [
+      {
+        "file": "agent/tests/silent-enchanted-afterimage.test.ts",
+        "test": "F39 and held-out F45 full prefixes retain the measured twelve and twenty Block",
+        "error": "Test timed out in 15000ms."
+      },
+      {
+        "file": "agent/tests/silent-kin-progress.test.ts",
+        "test": "unknown character preserves the previous consumer",
+        "error": "Test timed out in 15000ms."
+      }
+    ],
+    "log": {
+      "path": "ops/codex-ops/learner/20261020-001302-fix-batch.host-uncommitted-8a43e902fa67a0b793e17a94af69563132eb4dab.checks.log",
+      "bytes": 124542,
+      "sha256": "1d5f45e3e0f115e300c7685442d764a8ad3ca932305466258107025c2f9012f0"
+    }
+  },
+  "supplement": {
+    "tsc_rc": 0,
+    "vitest_rc": 0,
+    "test_files_passed": 4,
+    "tests_passed": 27,
+    "max_workers": 1,
+    "test_timeout_unchanged_ms": 15000,
+    "same_fixed_tree": true,
+    "full_rc_remains": 1,
+    "repeat_full": false
+  },
+  "decision": "Hold original uncommitted patch; original complete check has not passed. Directed recovery does not replace the original full failure. Original protocol owner must resolve the timeout acceptance/test reliability at its natural step; do not rerun unchanged full or duplicate learner/model.",
+  "original_failed_rc0_mergednull_and_sandbox_full1_preserved": true,
+  "lease_released": true,
+  "wrapper_identity_exited": true,
+  "source_worktree_retained": true,
+  "retention_completed": false,
+  "main_at_verification": "bf5e0419c6345e919838a4fb5d883feb7073e720",
+  "live_unchanged": "7a0fa6070486142e692dc8801a24b1019163aa8e",
+  "watcher_reminder_CLI_rc": 0,
+  "watcher_actual_receipt": null,
+  "manual_notice_actual_read_and_Roy_delivery": "Previously verified; CLI pending does not mean unread",
+  "production_ACK_written": false,
+  "parents_completed": false,
+  "new_model_or_game": false,
+  "STOP_retained": true,
+  "Regent": "paused"
+}
