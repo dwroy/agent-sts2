@@ -4723,3 +4723,5 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
 - 2026-10-19 16:10:13 CST [Claude/Roy，仅文档] Roy 批准 V6（`roy-20261019-v6`）：大脑每幕及触发时输出全部构筑方向的概率（不定主/备）和药水方向条目；代码按方向理想补齐后对全部 Boss（含 F48→F49 连战）做 20 场同种子配对模拟（幕初 100 场），以数值、五档枚举和可信度标签作为条目，由 Jev 决定拿牌与选药；大脑每局软上限 15 次，T1–T7 触发重规划；学习者产出构筑方向卡与小脑记忆（reflex）条目；出牌架构不变、条目持续完善；不做 Jev 与代码对照实验。设计与执行计划 W0–W9 见 docs/v6-plan.md，讨论见 paper/materials/discussions/2026-10-19-v6-global-build.md；由 Claude 经 herdr 逐项指派 watcher。首个上线角色、W2 学习批次派发方式、是否恢复中断的 Silent Boss 校准待 Roy 定。
 
 - 2026-10-19 16:24:39 CST [Codex/V6-W0] roy-20261019-v6：完成 H2 帝王蟹零值链路与27条固定轨迹诊断，零值为原始模拟败局，与旧校准群体均值口径不同；未证实纯bug，机制/自动策略偏差转为未派发学习者问题，不改知识。复用接口盘点、校准03cb9f2内217/1316、计划254与后续280的分时口径及STATE-2026-10-19已落盘；tsc通过，完整vitest557文件/5319通过、2原有跳过。W0无Roy决策阻塞，接W1；STOP保留，无对局/live/Regent/学习派发。
+
+- 2026-10-19 16:31:31 CST [Claude/Roy，仅文档] Roy 要求另起学习任务 `v6-direction-experience`：把 Silent 现有经验围绕核心构筑方向继续总结抽取（草稿方向卡、经验归属、小脑记忆候选、药水证据、方向目录意见），产出存 scratch 与 knowledge/characters/silent/pending，不改正式知识；与 V6-W0/W1 并行，watcher 写任务模板并按此授权一次性用 learner/run.ts 派发，内容由学习者完成。见 docs/v6-plan.md 9.1。

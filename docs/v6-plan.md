@@ -264,6 +264,7 @@ W1 定义 `predicate` 可引用的字段白名单（例如：敌人意图类型/
 | 依赖 | W1 |
 | 内容 | 新任务模板：`learner/tasks/v6-direction-cards.md`（第 6 节，含理想清单、对局表现、转向信号、失败方式；现有经验追加 `directions`、`reflex_ids`）、`learner/tasks/v6-reflex-distill.md`（第 5 节，含词表与条目）。模板写明证据要求、未知处理、异议通知、不删原条目、按代码提案闭环登记。新增 `knowledge/builders/` 下的校验入口供学习者自测。 |
 | 派发 | 学习批次由 ops 按原流程派发；ops 停止期间，由 Roy 决定是否授权一次性手动派发（第 11 节）。首批角色按 Roy 决定，离线基于已有日志，不需要开局。 |
+| 提前任务 | Roy 2026-10-19 要求另起一个学习任务，先把 Silent 现有经验围绕核心构筑方向继续总结抽取（任务 `v6-direction-experience`，见 9.1）。它不等 W1 格式，产出为草稿；W2 完成后由学习者按 `direction-card-v1` 等正式格式转写入库。 |
 | 产物 | 两个任务模板与校验器（watcher）；`direction-cards.json`、`reflex-vocab.json`、`reflex.json`（学习者） |
 | 验收 | 校验器通过；每条内容有证据局号；消费者读回由 ops 登记 |
 
@@ -335,7 +336,20 @@ W1 定义 `predicate` 可引用的字段白名单（例如：敌人意图类型/
 | 回退 | 开关改回 `brain` / `off`，登记新编号 |
 | 验收 | 第 10 节指标首个 10 局报告 |
 
-依赖顺序：W0 → W1 → (W2 ∥ W3) → W4 → (W5 ∥ W6) → W9；W7、W8 在 W5 后增量进行。
+依赖顺序：W0 → W1 → (W2 ∥ W3) → W4 → (W5 ∥ W6) → W9；W7、W8 在 W5 后增量进行。`v6-direction-experience`（9.1）与 W0/W1 并行。
+
+### 9.1 学习任务 `v6-direction-experience`：现有经验按核心构筑方向归纳
+
+Roy 2026-10-19：“另外需要在[再]起个任务，把现有经验继续总结抽取，围绕核心构筑方向进行归纳”。
+
+| 项 | 内容 |
+|---|---|
+| 性质 | 学习者任务（游戏知识），由学习者按学习协议完成；watcher 只写任务模板并按 Roy 授权一次性用 `learner/run.ts` 派发，不写内容 |
+| 角色与输入 | Silent。冻结输入：`knowledge/characters/silent/` 下现有正式经验（244 条）与 pending 草稿、`construction-templates.json`、`construction-support.json`、`construction-opportunities.json`、`outcome-stats.json`、`monster-records.json`、`boss-trust.json`、`double-boss.json`；全部已结束 Silent 局的日志按冻结字节上限读取；既有报告（含 `silent-historical-core-builds` 历史成果）。记录输入 SHA |
+| 产出 | (1) 每个核心方向一份草稿方向卡，字段按第 6 节：核心/支撑/冲突件、各检查点理想牌组与升级/删牌优先级、对第三幕各 Boss 及 F48→F49 的实际战绩（独立局分母，首试与含 SL 分开）、转向与放弃信号、典型失败方式、反例、可信度；(2) 现有每条经验到方向的归属表（含“与方向无关”）；(3) 可写成“条件 + 数值/标签”的小脑记忆候选清单（供 W2 正式化）；(4) 与方向相关的药水证据（供大脑药水方向条目参考）；(5) 对方向目录本身的意见：是否需要新增、合并或放弃某方向，附证据；与旧知识冲突的写成异议 |
+| 存放 | 报告与机器结果写任务 scratch；草稿另存 `knowledge/characters/silent/pending/`，不改正式知识、不改代码、不合入；新结论经 `learner/ledger.py` CLI 登记 observed/proposed |
+| 约束 | 只用本角色证据，不用预训练流派或观察者建议补牌表；不能用最终牌组倒填前期、不能只看幸存者；未知保留未知；`nice`、≤4 进程；不开局、不跑在线调用或 Boss 模拟池；模型 gpt-6.1-sol / high，超时 240 分钟 |
+| 回报 | 中文报告 + JSON 摘要（覆盖局、方向、各章节是否完成、限制、异议）；watcher 核实产物后向 Claude 回报 |
 
 ## 10. 监控指标
 
@@ -350,7 +364,7 @@ W1 定义 `predicate` 可引用的字段白名单（例如：敌人意图类型/
 ## 11. 待 Roy 决定
 
 1. **首个上线角色与恢复运行时间。** Silent 已停用，Regent 暂停；代码按角色通用实现，离线开发和回放用现有 Silent 日志。
-2. **W2 学习批次的派发方式。** 等 ops 恢复后按原流程派发，还是授权一次性手动派发。
+2. **W2 学习批次的派发方式。** 等 ops 恢复后按原流程派发，还是授权一次性手动派发。（9.1 的 `v6-direction-experience` 已由 Roy 要求另起，按一次性手动派发执行。）
 3. **是否恢复中断的 Silent Boss 校准。** V6 不依赖它，但第三幕可信度标签依赖它；检查点在 `03cb9f2`。
 
 已按草案确认：理想补齐值与可得率同时给出；拿牌 20 场、幕初 100 场；Jev 题面用英文短题面；第三幕条目带标签照常给；上线前 2–3 局健康检查；大脑每局软上限 15 次。
