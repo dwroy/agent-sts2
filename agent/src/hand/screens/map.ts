@@ -21,6 +21,9 @@ import { checkRoute, floorOfRow, hasChoiceAhead, isKeep, nextRestVersus, nodeId,
 import { actOfFloor, actPlan, makeRoutePlan, mapActOf, mapFromState, nextPlannedStep, remainingIds, routeBlockState, routeCosts, runSnapshot, snapshotChange, type RoutePlan } from "./route-plan.js";
 import { oneshotOn } from "./oneshot.js";
 import { continueAfterDiscard, DISCARD_ANSWER_NOTE, DISCARD_SUFFIX, discardableSlots, discardSlotsOf, discardVariant, DRINK_SUFFIX, drinkableSlots, drinkVariant } from "./potion-discard.js";
+import { optionQuestions } from "./potion-discard.js";
+import { v6PotionActive } from "../../v6/potion-entries.js";
+import type { AnswerSet } from "../../reflex/jev/answers.js";
 
 interface MapNode {
   row: number;
@@ -662,10 +665,11 @@ function routePlanQuestion(env: DecisionEnv, map: RouteMap, fallback: Decision, 
   const costs = routeCosts(env, map.act);
   const start = hpNow(env);
   const statue = statueSlots(env, available);
+  const potion = routePotionJev(env, available);
   const routeMap: Record<string, JsonValue> = {
     ...routeBlockState({ map, start, costs, candidates: {} }),
     ...(replanWhy ? { replan_because: replanWhy, previous_plan: previous?.summary ?? null } : {}),
-    ...(statue ?? {}),
+    ...(!potion ? statue ?? {} : {}),
   };
   const question: AskDecision = {
     kind: "ask",
@@ -676,6 +680,7 @@ function routePlanQuestion(env: DecisionEnv, map: RouteMap, fallback: Decision, 
       facts: buildFacts(env, replanWhy ? { replan_because: replanWhy } : {}),
     },
     questions: { pick: choiceQ(ROUTE_PLAN_TASK, nextOptions(map)) },
+    ...(potion ? { potionJev: potion.aux } : {}),
     resolve: () => fallbackResolution(fallback),
     deepseek: {
       question: "pick",
@@ -692,7 +697,7 @@ function routePlanQuestion(env: DecisionEnv, map: RouteMap, fallback: Decision, 
           const first = available.find((node) => nodeId(node.row, node.col) === ids[0]);
           if (!first) return { invalid: `the route's first node ${ids[0]} is not an available map node` };
           const plan = makeRoutePlan(env, map, ids, start, costs, replanWhy ? `re-plan: ${replanWhy}` : undefined);
-          const move = firstMove(env, available, first, discardSlotsOf(json["discard"]), typeof json["drink"] === "number" ? [json["drink"]] : discardSlotsOf(json["drink"]));
+          const move = potion?.move(first) ?? firstMove(env, available, first, discardSlotsOf(json["discard"]), typeof json["drink"] === "number" ? [json["drink"]] : discardSlotsOf(json["drink"]));
           if ("invalid" in move) return move;
           return {
             intent: move.intent,
@@ -726,6 +731,7 @@ function routeReviewQuestion(env: DecisionEnv, plan: RoutePlan, follow: ActDecis
   const here = map.current ? map.nodes.get(map.current) ?? null : null;
   const kept = remainingIds(plan, here);
   const revealed = snapshotChange(review.before, runSnapshot(state));
+  const potion = routePotionJev(env, available);
   const clear = (): void => {
     if (plan.oneshot) plan.oneshot.firstPending = false;
     plan.review = undefined;
@@ -739,6 +745,7 @@ function routeReviewQuestion(env: DecisionEnv, plan: RoutePlan, follow: ActDecis
       facts: buildFacts(env),
     },
     questions: { pick: choiceQ(ROUTE_REVIEW_TASK, { keep: `保留原路线：${plan.summary}`, ...nextOptions(map) }) },
+    ...(potion ? { potionJev: potion.aux } : {}),
     resolve: () => fallbackResolution(follow),
     deepseek: {
       question: "pick",
@@ -751,6 +758,11 @@ function routeReviewQuestion(env: DecisionEnv, plan: RoutePlan, follow: ActDecis
         resolve(json): ResolvedAction | { invalid: string } {
           const reason = str(json["reason"]).trim();
           if (isKeep(json["route"])) {
+            const first = available.find(node => node.index === follow.intent.option_index);
+            const move = first ? potion?.move(first) : undefined;
+            if (move) return { intent: move.intent, rationale: `route review: keep ${plan.summary}; ${move.journal ?? "Jev potion choice"}`,
+              confidence: null, fallback: false, decider: "deepseek", journal: `route kept: ${plan.summary}`,
+              apply: () => (follow.apply?.(), clear(), move.apply?.()) };
             return { intent: follow.intent, rationale: `route review (${review.why}): keep ${plan.summary}${reason ? ` — ${reason}` : ""}`, confidence: null, fallback: false, decider: "deepseek", journal: `route kept: ${plan.summary}`, apply: () => (follow.apply?.(), clear()) };
           }
           const ids = routeIds(json["route"]);
@@ -761,8 +773,9 @@ function routeReviewQuestion(env: DecisionEnv, plan: RoutePlan, follow: ActDecis
           if (!first) return { invalid: `the route's first node ${ids[0]} is not an available map node` };
           const changed = makeRoutePlan(env, map, ids, start, costs, `review after the act-start Ancient (${review.why}): ${revealed}`);
           const nextRest = nextRestVersus(map, kept, ids, start, costs);
+          const move = potion?.move(first);
           return {
-            intent: { action: "choose_map_node", option_index: first.index },
+            intent: move?.intent ?? { action: "choose_map_node", option_index: first.index },
             rationale: `route review (${review.why}): changed to ${changed.summary}${reason ? ` — ${reason}` : ""}${nextRest ? `; next rest: ${nextRest.text}${nextRest.worse ? " (clearly worse than the kept route)" : ""}${nextRest.eliteWorse ? " (clearly lower at the next elite)" : ""}` : ""}`,
             confidence: null,
             fallback: false,
@@ -771,6 +784,7 @@ function routeReviewQuestion(env: DecisionEnv, plan: RoutePlan, follow: ActDecis
             apply: () => {
               clear();
               screenMemory.routePlan = changed;
+              move?.apply?.();
             },
           };
         },
@@ -875,6 +889,32 @@ function discardNoteOf(options: PickOption[]): { note?: string } {
   return options.some((option) => option.key.endsWith(DISCARD_SUFFIX)) ? { note: DISCARD_ANSWER_NOTE } : {};
 }
 
+/** Potion choices are conditional on the route's first node; the brain still selects the route. */
+function routePotionJev(env: DecisionEnv, available: NodeRef[]): {
+  aux: NonNullable<AskDecision["potionJev"]>;
+  move(first: NodeRef): { intent: ActionRequest; apply?: () => void; journal?: string } | undefined;
+} | null {
+  if (!v6PotionActive(env)) return null;
+  const byNode = new Map(available.map(node => [node.index, statuePotionOptions(env, available)(goOption(node))]));
+  if (![...byNode.values()].some(options => options.length > 1)) return null;
+  let answers: AnswerSet = {};
+  const questions = Object.assign({}, ...[...byNode].filter(([, options]) => options.length > 1).map(([index, options]) => ({
+    [`potion_n${index}`]: choiceQ("If the route starts at this node, keep the potions, discard first, or drink a potion usable on the map? Compare the potion entries; unknown is not zero.",
+      Object.fromEntries(options.map(option => [option.key, JSON.stringify(option.summary)]))), ...optionQuestions(options),
+  })));
+  return { aux: { state: { run_brief: briefJson(env.brief) }, questions, supply: value => { answers = value; } },
+    move: first => {
+      const options = byNode.get(first.index);
+      if (!options || options.length < 2) return undefined;
+      const decision = buildPickDecision({ label: "map/statue-potion", state: {}, instructions: "Choose potion handling for this node", options,
+        strictJev: false, actThreshold: 0, skipModelWhenSingle: false });
+      if (decision.kind !== "ask") return undefined;
+      const pick = answers[`potion_n${first.index}`];
+      const out = decision.resolve({ ...answers, ...(pick ? { pick } : {}) }, { budgetExpired: true });
+      return out.intent ? { intent: out.intent, ...(out.apply ? { apply: out.apply } : {}), journal: out.rationale } : undefined;
+    } };
+}
+
 /**
  * The route plan's next move into a fight with White Beast Statue and a full belt: travel keeping every potion, or
  * discard first (the decider's call; its failure or absence keeps the plain move). Null when nothing applies.
@@ -897,13 +937,13 @@ function statueFollow(env: DecisionEnv, follow: Decision, available: { index: nu
     instructions:
       "White Beast Statue drops a potion after every fight and the potion belt is full: travel to the route's next node keeping every potion, or first discard potion(s) or drink a potion usable on the map, so the fight's potion has a slot?",
     actThreshold: env.thresholds.act,
-    strictJev: env.strictJev,
+    strictJev: v6PotionActive(env) ? false : env.strictJev,
     options,
     unranked: true,
     state: {
       run_brief: briefJson(env.brief),
       situation: { screen: "MAP", floor: env.state.run?.floor ?? null, hp_percent: Math.round(hpPercent(env) * 100) },
     },
-    ...(deepseekDecides(env) ? { deepseek: { facts: buildFacts(env), baseline: follow, ...discardNoteOf(options) } } : {}),
+    ...(deepseekDecides(env) && !v6PotionActive(env) ? { deepseek: { facts: buildFacts(env), baseline: follow, ...discardNoteOf(options) } } : {}),
   });
 }

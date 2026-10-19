@@ -144,7 +144,7 @@ export function pickSpec(label: string, options: Record<string, string | null>, 
     properties["cards"] = { type: "array", description: "the deck card keys the chosen option takes, when it lists eligible_cards (repeat a key for several copies); [] otherwise", items: { type: "string", enum: all } };
     required.push("cards");
   }
-  const discardable = keys.some((key) => key.endsWith(DISCARD_SUFFIX));
+  const discardable = st["v6_potion_decider"] !== "jev" && keys.some((key) => key.endsWith(DISCARD_SUFFIX));
   if (discardable) {
     properties["discard"] = { type: "array", description: 'potion slot numbers a "discard potion(s), then …" option (key ending ":discard") discards first; [] otherwise', items: { type: "integer" } };
     required.push("discard");
@@ -176,7 +176,7 @@ export function pickSpec(label: string, options: Record<string, string | null>, 
         }
         const discard = answer["discard"];
         if (discard !== undefined && discard !== null && !Array.isArray(discard)) problems.push('"discard" is not a list');
-        else if (choice.endsWith(DISCARD_SUFFIX) && (!Array.isArray(discard) || discard.length === 0)) problems.push(`${choice} discards potions first: "discard" must name 1 or more potion slot numbers`);
+        else if (discardable && choice.endsWith(DISCARD_SUFFIX) && (!Array.isArray(discard) || discard.length === 0)) problems.push(`${choice} discards potions first: "discard" must name 1 or more potion slot numbers`);
       }
       return [...problems, ...(ranking ? rankingOverrideProblems(ranking, answer) : [])];
     },

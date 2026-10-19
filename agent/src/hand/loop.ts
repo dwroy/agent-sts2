@@ -10,6 +10,7 @@ import { currentDecisionBudget, withDecisionBudget, enterDecisionBudget, Decisio
  * and the run boundary.
  */
 
+import { notePotionFallback, potionAnswersComplete, recordPotionJev, validPotionAnswers, v6PotionActive, withPotionJevBudget } from "../v6/potion-entries.js";
 import { fileSimWait } from "../sim/computation-wait.js";
 import { randomUUID } from "node:crypto";
 import { dirname, join } from "node:path";
@@ -926,6 +927,9 @@ async function runLoopWithBudgets(options: LoopOptions): Promise<LoopStats> {
     const humanPaceCardInput = humanPaceShadow.capture(decision, env);
     let resolved: ResolvedAction;
     let jevLatency = 0;
+    const requestIds: string[] = [];
+    let potionJevRecord: JsonValue | undefined;
+    let potionJevTokens = { input_tokens: 0, output_tokens: 0 };
     let deepseekLatency = 0;
     /** BUILD_DECIDER=deepseek: DeepSeek's own decision on this screen, and its log record. */
     let deepseekResolved: ResolvedAction | null = null;
@@ -1057,6 +1061,37 @@ async function runLoopWithBudgets(options: LoopOptions): Promise<LoopStats> {
         const memory = journal.render(state, knowledge, screenMemory, { label: decision.label, criteria: question.criteria, factsCovered: "facts" in decision.state, ...(spec.offeredCards ? { offeredCards: spec.offeredCards } : {}), ...(OUTCOME_BASIS_KEY in asRecord(decision.state["facts"]) ? { statsCovered: true } : {}) });
         onEvent({ type: "note", message: `${engineLabel(brain?.engineFor(decision.label))} decides ${decision.label} (${Object.keys(question.criteria).length} options, floor ${state.run?.floor ?? "?"}, run context ${memoryChars(memory)} chars)` });
         const ask = decision;
+        if (ask.potionJev) {
+          const aux = ask.potionJev;
+          let answers: AnswerSet = {};
+          let fallback: string | null = null;
+          const potionStarted = Date.now();
+          try {
+            if (!jev || stats.jevCalls >= config.budgets.maxRequests || currentDecisionBudget()?.remaining() === 0) {
+              fallback = "Jev unavailable or request budget exhausted; brain tier then holding HP";
+            } else {
+              stats.jevCalls += 1;
+              const timedJev = { model: jev.model, ask: (s: unknown, q: typeof aux.questions) => jev.ask(s, q, Math.max(1, v6Config().budgets.jev_ms - (Date.now() - potionStarted))) };
+              const result = await withPotionJevBudget(() => askJevLogged(timedJev, promptLog, {
+                decisionId, runId: str(state.raw["run_id"]) || null, floor: state.run?.floor ?? null,
+                turn: state.turn, fingerprint: stateFingerprint, observedTs, label: `${ask.label}/potion`, jevContext: null, call: "ask",
+              }, aux.state, aux.questions));
+              answers = result.answers;
+              jevLatency += result.latencyMs;
+              stats.inputTokens += result.inputTokens;
+              stats.outputTokens += result.outputTokens;
+              potionJevTokens = { input_tokens: result.inputTokens, output_tokens: result.outputTokens };
+              if (result.requestId) requestIds.push(result.requestId);
+              if (!potionAnswersComplete(aux.questions, answers)) fallback = "Jev potion answer incomplete; brain tier then holding HP";
+            }
+          } catch {
+            fallback = "Jev potion request failed; brain tier then holding HP";
+          }
+          aux.supply(validPotionAnswers(aux.questions, answers));
+          notePotionFallback(env, fallback !== null);
+          recordPotionJev(env, config.runPlanLog, decisionId, answers, fallback, Date.now() - potionStarted);
+          potionJevRecord = toJsonValue({ questions: aux.questions, answers, fallback });
+        }
         /**
          * RUN_PLAN_MERGE: the run plan in the answer (its run_plan), stored and logged as the run plan's own call stored it
          * (screen memory, run-plans.jsonl with its trigger, the journal), the call being this question's (its usage under
@@ -1345,7 +1380,6 @@ async function runLoopWithBudgets(options: LoopOptions): Promise<LoopStats> {
     let asked: Record<string, JsonValue> | undefined;
     let rawAnswers: JsonValue | undefined;
     let usage: { input_tokens: number; output_tokens: number; cache_hit_tokens?: number; reasoning_tokens?: number } = { input_tokens: 0, output_tokens: 0 };
-    const requestIds: string[] = [];
     // A second ask for this decision: DeepSeek's re-ask after its consistency guard (BXAZV0R9ZHWK F11 rest:
     // "reasoning concluded o0 but answered o1", re-asked, the row still read reasked: false), or Jev's
     // follow-up below.
@@ -1414,8 +1448,12 @@ async function runLoopWithBudgets(options: LoopOptions): Promise<LoopStats> {
         fingerprint: stateFingerprint, observedTs, label: decision.label, jevContext: decision.jevView?.context ?? null, call,
       });
       let firstAnswers: AnswerSet = {};
+      const potionOnly = v6PotionActive(env) && decision.label === "map/statue-potion";
+      const potionStarted = Date.now();
       try {
-        const result = await withJevRetry(() => askJevLogged(jev, promptLog, promptMeta("ask"), jevState, jevQuestions), jevRetry);
+        const timedJev = potionOnly ? { model: jev.model, ask: (s: unknown, q: typeof jevQuestions) => jev.ask(s, q, Math.max(1, v6Config().budgets.jev_ms - (Date.now() - potionStarted))) } : jev;
+        const result = potionOnly ? await withPotionJevBudget(() => askJevLogged(timedJev, promptLog, promptMeta("ask"), jevState, jevQuestions))
+          : await withJevRetry(() => askJevLogged(jev, promptLog, promptMeta("ask"), jevState, jevQuestions), jevRetry);
         usedJev = true;
         if (result.requestId) requestIds.push(result.requestId);
         stats.jevCalls += 1;
@@ -1424,8 +1462,13 @@ async function runLoopWithBudgets(options: LoopOptions): Promise<LoopStats> {
         jevLatency += result.latencyMs;
         usage = { input_tokens: result.inputTokens, output_tokens: result.outputTokens };
         rawAnswers = toJsonValue(result.answers);
-        resolved = decision.resolve(result.answers);
+        resolved = decision.resolve(potionOnly ? validPotionAnswers(jevQuestions, result.answers) : result.answers);
         firstAnswers = result.answers;
+        if (potionOnly) {
+          const fallback = resolved.fallback || !potionAnswersComplete(jevQuestions, result.answers) ? "Jev potion answer incomplete; brain tier then holding HP" : null;
+          notePotionFallback(env, fallback !== null);
+          recordPotionJev(env, config.runPlanLog, decisionId, result.answers, fallback, Date.now() - potionStarted);
+        }
 
         const esc = decision.escalate;
         const jevAnswer = esc ? result.answers[esc.question] : undefined;
@@ -1546,7 +1589,11 @@ async function runLoopWithBudgets(options: LoopOptions): Promise<LoopStats> {
           }
         }
       } catch (error) {
-        if (error instanceof DecisionBudgetExpired) {
+        if (potionOnly) {
+          notePotionFallback(env, true);
+          recordPotionJev(env, config.runPlanLog, decisionId, firstAnswers, "Jev potion request failed; keep current potions", Date.now() - potionStarted);
+          resolved = { ...decision.resolve({}, { budgetExpired: true }), fallback: true };
+        } else if (error instanceof DecisionBudgetExpired) {
           currentDecisionBudget()?.useFallback("Jev_deadline_current_candidate");
           resolved = { ...decision.resolve(firstAnswers, { budgetExpired: true }), fallback: true };
         } else {
@@ -1634,6 +1681,7 @@ async function runLoopWithBudgets(options: LoopOptions): Promise<LoopStats> {
       ...(escalation === undefined ? {} : { escalation }),
       // BUILD_DECIDER=deepseek: DeepSeek's own decision (not an escalation of a Jev answer).
       ...(deepseekRecord === undefined ? {} : { deepseek: deepseekRecord }),
+      ...(potionJevRecord === undefined ? {} : { potion_jev: potionJevRecord, potion_jev_usage: potionJevTokens }),
       ...(deepseekFallback === undefined ? {} : { deepseek_fallback: deepseekFallback }),
       ...(deepseekConsistency === undefined ? {} : { deepseek_consistency: deepseekConsistency }),
       ...(bossSimRecord === undefined ? {} : { boss_sim: bossSimRecord }),

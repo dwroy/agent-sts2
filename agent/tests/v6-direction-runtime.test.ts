@@ -4,7 +4,7 @@ import { join } from "node:path";
 import { afterEach, expect, it, vi } from "vitest";
 import { ensureDirectionPlan } from "../src/v6/direction-runtime.js";
 import type { Brain } from "../src/brain/brain.js";
-import { direction, weights } from "./v6-fixtures.js";
+import { direction, weights, projection } from "./v6-fixtures.js";
 import { board, env, setupOneshotTests } from "./oneshot-support.js";
 setupOneshotTests();
 const dirs: string[] = [];
@@ -44,4 +44,13 @@ it("rejects an invalid answer without replacing the plan or retrying the frozen 
   await expect(ensureDirectionPlan(e, brain, log, dir)).rejects.toThrow("complete character catalog");
   expect(e.screenMemory.runPlan?.v6).toBeUndefined();
   await ensureDirectionPlan(e, brain, log, dir); expect(brain.askJson).toHaveBeenCalledTimes(1);
+});
+it("feeds actual potion fallback streaks into T6 without relying on unknown projection rows", async () => {
+  vi.stubEnv("V6_BUILD", "on"); const { dir, log, e } = fixture();
+  const brain = { askJson: vi.fn(async () => ({ json: { ...weights, potion_directions: [] } })) } as unknown as Pick<Brain, "askJson">;
+  e.v6DirectionEvaluation = { id: "fixture", entries: ["TEST_A", "TEST_B"].map(direction_id => ({ ...projection, direction_id, trust: "trusted" })) as NonNullable<typeof e.v6DirectionEvaluation>["entries"] };
+  await ensureDirectionPlan(e, brain, log, dir);
+  e.state.run!.floor += 1; e.screenMemory.v6JevFallbacks = 2; e.screenMemory.v6JevFallbackRun = String(e.state.raw["run_id"]);
+  const result = await ensureDirectionPlan(e, brain, log, dir);
+  expect(result?.result.triggers).toEqual(["T6"]); expect(brain.askJson).toHaveBeenCalledTimes(2);
 });

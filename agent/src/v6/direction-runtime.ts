@@ -93,6 +93,7 @@ export async function ensureDirectionPlan(env: DecisionEnv, brain: Pick<Brain, "
     delta_tier: "unknown" as const, direction_role: "unknown" as const, trust: "unknown" as const, reflex_ids: [],
   })))];
   const evaluation = { ...provided, id: provided?.id ?? JSON.stringify([cards, relics, actOf(state)]), entries,
+    consecutiveJevFallbacks: Math.max(provided?.consecutiveJevFallbacks ?? 0, screenMemory.v6JevFallbackRun === run ? screenMemory.v6JevFallbacks ?? 0 : 0),
     acquiredComponentIds: [...(provided?.acquiredComponentIds ?? []), ...(m.observed ? relics.filter(id => !m.relics.includes(id)) : [])] };
   m.relics = relics;
   m.observed = true;

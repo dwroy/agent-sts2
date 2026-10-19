@@ -15,7 +15,8 @@ import { fightChainAt } from "./map.js";
 import { routeReviewBlock, withRouteReview } from "./route-review.js";
 import { mapActOf } from "./route-plan.js";
 import { baseRestHeal, BOSS_START_HEAL, restedHp, restHealOf, type RestHeal } from "../../sim/route-projection.js";
-import { continueAfterDiscard, DISCARD_ANSWER_NOTE, DISCARD_SUFFIX, discardableSlots, discardVariant, potionSlotsNeeded } from "./potion-discard.js";
+import { continueAfterDiscard, discardAnswerNote, DISCARD_ANSWER_NOTE, DISCARD_SUFFIX, discardableSlots, discardVariant, potionSlotsNeeded } from "./potion-discard.js";
+import { v6PotionActive } from "../../v6/potion-entries.js";
 import { hpBandOf, restOutcome } from "../../knowledge/outcome-facts.js";
 
 export function planRest(env: DecisionEnv): Decision | null {
@@ -155,7 +156,7 @@ export function planRest(env: DecisionEnv): Decision | null {
   const withReview = (decision: Decision): Decision => withRouteReview(env, decision, review, (choice) => hpAfter.get(choice.split(":")[0] ?? choice) ?? hpNow);
   const reviewState = review ? { state: { ...params.state, route_review: review.state } } : {};
   const discardNote = params.options.some((option) => option.key.endsWith(DISCARD_SUFFIX))
-    ? ` ${DISCARD_ANSWER_NOTE}`
+    ? v6PotionActive(env) ? ` ${discardAnswerNote(env)}` : ` ${DISCARD_ANSWER_NOTE}`
     : "";
   // BUILD_ONESHOT: the rest action and the card it takes (smith X) in one question; code plays both.
   if (oneshotOn(env) && !oneshotFailedHere(env, "rest")) {

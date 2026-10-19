@@ -171,6 +171,9 @@ export interface SlCompute {
 }
 
 export interface ScreenMemory {
+  /** Consecutive V6 Jev failures; direction replanning consumes this counter. */
+  v6JevFallbacks?: number;
+  v6JevFallbackRun?: string;
   screen: string;
   /** Run-scoped G2 shadow observations; never inserted into a decision question before admission. */
   globalBuildHistory?: import("../sim/global-build-observer.js").GlobalBuildHistory;
@@ -558,6 +561,8 @@ export interface AskDecision {
   /** The narrow, English payload sent as `state` (PLAN.md §5.1). */
   state: Record<string, JsonValue>;
   questions: QuestionSet;
+  /** V6: potion slots are answered independently of the parent event/rest brain choice. */
+  potionJev?: { state: Record<string, JsonValue>; questions: QuestionSet; supply(answers: AnswerSet): void };
   /** Explicit H1 expiry may use an existing candidate; ordinary strict waits stay unchanged. */
   resolve(answers: AnswerSet, context?: { budgetExpired?: boolean }): ResolvedAction;
   /**

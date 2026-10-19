@@ -17,6 +17,7 @@ import { fillPotionText } from "../../knowledge/potion-values.js";
 import type { Decision, DecisionEnv } from "../../memory/types.js";
 import { asArray, asRecord, bool, numOrNull, str, type JsonValue } from "../../core/util/json.js";
 import type { PickOption, PlanAnswer, PlannedOption } from "./pick.js";
+import { potionEntries, rankPotionDiscards, v6PotionActive } from "../../v6/potion-entries.js";
 
 /** A potion that can be discarded here: its belt slot, name and potion id. */
 export interface DiscardSlot {
@@ -33,6 +34,10 @@ export const DISCARD_SUFFIX = ":discard";
 /** DeepSeek's note on a question with such variants. */
 export const DISCARD_ANSWER_NOTE =
   'A "discard potion(s), then …" option (key ending ":discard") also needs "discard": [potion slot numbers from its discardable_potions] in your answer; code discards those, then takes the option.';
+
+export function discardAnswerNote(env: DecisionEnv): string {
+  return v6PotionActive(env) ? 'Jev independently chooses potion slots through per-slot questions. Choose the event/rest option; omit discard slot numbers.' : DISCARD_ANSWER_NOTE;
+}
 
 /**
  * The potions the game lets be discarded on this screen (none when discarding is not an available action). The
@@ -92,6 +97,7 @@ export function drinkVariant(env: DecisionEnv, option: PickOption, then: Discard
       ...summary,
       drink_first: `drink ${slot.name} (potion slot ${slot.index}) now, on this screen, then this option`,
       potion: `${slot.name}${slot.description ? `: ${slot.description}` : ""}`,
+      ...(v6PotionActive(env) ? { potion_entries: potionEntries(env, [slot.id ?? "unknown"]) as unknown as JsonValue } : {}),
     },
     apply: () => {
       option.apply?.();
@@ -156,6 +162,10 @@ export interface DiscardThen {
 export function discardVariant(env: DecisionEnv, option: PickOption, then: DiscardThen, need: number, slots: DiscardSlot[]): PickOption | null {
   if (need <= 0 || slots.length === 0) return null;
   const most = Math.min(need, slots.length);
+  const v6 = v6PotionActive(env);
+  const entries = v6 ? potionEntries(env, slots.map(slot => slot.id ?? "unknown")) : [];
+  const ranked = rankPotionDiscards(entries);
+  const fallbackSlot = slots[entries.indexOf(ranked[0]!) ]?.index ?? slots[0]!.index;
   const runId = str(env.state.raw["run_id"]);
   const floor = env.state.run?.floor ?? null;
   const summary = option.summary && typeof option.summary === "object" && !Array.isArray(option.summary) ? (option.summary as Record<string, JsonValue>) : { option: option.summary };
@@ -188,22 +198,27 @@ export function discardVariant(env: DecisionEnv, option: PickOption, then: Disca
     key: `${option.key}${DISCARD_SUFFIX}`,
     label: `discard potion(s), then ${option.label ?? then.title}`,
     // Stands in until the answer names the slots (plan gives the real first discard).
-    intent: { action: "discard_potion", option_index: slots[0]!.index },
+    intent: { action: "discard_potion", option_index: v6 ? fallbackSlot : slots[0]!.index },
     why: option.why?.includes("code does not rank which potions to discard") ? option.why : `${option.why ?? ""}${option.why ? "; " : ""}code does not rank which potions to discard`,
     summary: {
       ...summary,
-      discard_first: `discard 1 to ${most} of discardable_potions (by potion slot number) now to free slot(s), then this option: answer "discard": [potion slot numbers]; Jev: the discard_p<slot> questions`,
+      discard_first: v6 ? `Jev chooses 1 to ${most} discardable slots through discard_p<slot>; then this option` : `discard 1 to ${most} of discardable_potions (by potion slot number) now to free slot(s), then this option: answer "discard": [potion slot numbers]; Jev: the discard_p<slot> questions`,
       discardable_potions: listed,
+      ...(v6 ? { potion_entries: entries as unknown as JsonValue } : {}),
     },
     plan,
     jev: {
+      ...(v6 ? { potion: true } : {}),
       questions: Object.fromEntries(
         slots.map((slot) => [
           slotQuestionKey(slot),
-          noulQ(`The potion slots are full. Only if your pick is a "discard potion(s), then …" option: is potion slot ${slot.index} (${slot.name}) one of those you discard? Yes = discard it.`),
+          noulQ(`The potion slots are full. Only if your pick is a "discard potion(s), then …" option: is potion slot ${slot.index} (${slot.name}) one of those you discard? Yes = discard it.${v6 ? ` Compare brain tier, holding HP, slots, trust and applicable memories: ${JSON.stringify(entries[slots.indexOf(slot)])}` : ""}`),
         ]),
       ),
-      answer: (answers: AnswerSet): PlanAnswer => ({ cards: [], discard: jevDiscards(answers, slots, most) }),
+      answer: (answers: AnswerSet): PlanAnswer => ({ cards: [], discard: v6 && slots.some(slot => {
+        const answer = answers[slotQuestionKey(slot)];
+        return !answer || answer.type !== "noul" || !Number.isFinite(answer.noul) || answer.noul < 0 || answer.noul > 1;
+      }) ? [fallbackSlot] : jevDiscards(answers, slots, most) }),
     },
   };
 }

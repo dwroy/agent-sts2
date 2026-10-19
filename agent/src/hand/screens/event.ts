@@ -20,7 +20,8 @@ import { EVENT_NODES, forcedEliteWithin, forcedNext } from "./rest.js";
 import { deckCards, deckFollowUp, selectableCards, eventPage, nextPlanRef, oneshotFailedHere, oneshotOn, planOnly, visitKey, withFollowUp } from "./oneshot.js";
 import { followUpTargetScore } from "./selection.js";
 import { actStartPlan } from "./act-start.js";
-import { continueAfterDiscard, DISCARD_ANSWER_NOTE, discardableSlots, discardVariant, potionSlotsNeeded } from "./potion-discard.js";
+import { continueAfterDiscard, discardAnswerNote, DISCARD_ANSWER_NOTE, discardableSlots, discardVariant, potionSlotsNeeded } from "./potion-discard.js";
+import { v6PotionActive } from "../../v6/potion-entries.js";
 import { isLastEventPage } from "../../knowledge/event-pages.js";
 import { routeReviewBlock, withRouteReview } from "./route-review.js";
 import { eventOptionOutcome } from "../../knowledge/outcome-facts.js";
@@ -269,7 +270,7 @@ export function planEvent(env: DecisionEnv): Decision | null {
     return [lost, variant];
   };
   const discardNote = pool.some((raw) => potionSlotsNeeded(str(raw["description"]), state.run?.raw) > 0) && slots.length > 0
-    ? ` ${DISCARD_ANSWER_NOTE}`
+    ? v6PotionActive(env) ? ` ${discardAnswerNote(env)}` : ` ${DISCARD_ANSWER_NOTE}`
     : "";
   // BUILD_DECIDER=deepseek: events, Neow's offer and the act-start Ancient relic are DeepSeek's call.
   if (!byDeepseek) return buildPickDecision({ ...params, options: options.flatMap(withDiscards) });

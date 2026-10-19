@@ -48,7 +48,7 @@ export interface PickOption {
    * discards; screens/potion-discard.ts): the extra questions asked with the pick, and how their answers make the
    * option's PlanAnswer (then `plan` runs on Jev's pick as on DeepSeek's).
    */
-  jev?: { questions: QuestionSet; answer: (answers: AnswerSet) => PlanAnswer };
+  jev?: { questions: QuestionSet; answer: (answers: AnswerSet) => PlanAnswer; potion?: boolean };
 }
 
 /** The parts of a one-shot answer beyond its option key. */
@@ -171,10 +171,16 @@ export function buildPickDecision(params: PickDecisionParams): Decision {
       const jevPlan = (option: PickOption): PlannedOption | { invalid: string } | null => {
         if (!option.jev || !option.plan) return null;
         const discard = discardSlotsOf(asRecord(answer?.raw)["discard"]);
-        return option.plan(discard && discard.length > 0 ? { cards: [], discard } : option.jev.answer(answers));
+        return option.plan(!option.jev.potion && discard && discard.length > 0 ? { cards: [], discard } : option.jev.answer(answers));
       };
       const fallback = (why: string, confidence: number | null): ResolvedAction => {
         const choice = bestOption(options);
+        if (choice.jev?.potion && choice.plan) {
+          const plan = choice.plan(choice.jev.answer({}));
+          if (plan && !("invalid" in plan)) return { intent: plan.intent ?? choice.intent,
+            rationale: `${why}; deterministic potion fallback by brain tier then holding HP`, confidence, fallback: true,
+            apply: () => (choice.apply?.(), plan.apply?.()) };
+        }
         return {
           intent: choice.intent,
           rationale: `${why}; deterministic fallback chose ${choice.label ?? choice.key}`,
@@ -275,31 +281,42 @@ export function brainView(option: PickOption): Record<string, JsonValue> {
  * code score, rank or reasons) and the run facts in the state; resolves the same way as the Jev question.
  */
 function deepseekPick(params: PickDecisionParams, deepseek: NonNullable<PickDecisionParams["deepseek"]>): Decision {
+  const potionOptions = params.options.filter(option => option.jev?.potion);
+  const brainOptions = potionOptions.length ? params.options.filter(option => !option.jev?.potion) : params.options;
+  const potionChoices = new Map(potionOptions.map(option => [option.key.slice(0, -DISCARD_SUFFIX.length), option]));
+  let potionAnswers: AnswerSet = {};
   const baseline = deepseek.baseline ?? buildPickDecision({ ...params, deepseek: undefined });
-  const byKey = new Map(params.options.map((option) => [option.key, option]));
+  const byKey = new Map(brainOptions.map((option) => [option.key, option]));
   // Code's fallback order, for the log only (the rationale says where DeepSeek's pick stood in it).
   const ranked = [...params.options].sort((a, b) => b.score - a.score);
   const rankOf = (option: PickOption): number => 1 + params.options.filter((other) => other.score > option.score).length;
   const criteria: Record<string, string | null> = {};
   // Every option with its facts only, route questions included (V4 M2: the route is planned on the whole map).
-  for (const option of params.options) criteria[option.key] = JSON.stringify(brainView(option));
+  for (const option of brainOptions) criteria[option.key] = JSON.stringify(brainView(option));
   // The options' outcome statistics come with what they mean and the baseline to read them against.
   const carriesStats = JSON.stringify([criteria, params.state, deepseek.facts]).includes("outcome_stats");
   const ascension = typeof deepseek.facts["ascension"] === "number" ? deepseek.facts["ascension"] : null;
   const facts = carriesStats ? { ...deepseek.facts, [OUTCOME_BASIS_KEY]: outcomeStatsBasis(ascension) } : deepseek.facts;
-  const instructions = `${params.instructions} ${DEEPSEEK_DECIDES_NOTE}${deepseek.note ? ` ${deepseek.note}` : ""}`;
+  const decidesNote = potionOptions.length ? DEEPSEEK_DECIDES_NOTE.replace("no other model is asked first", "Jev independently handles potion slots") : DEEPSEEK_DECIDES_NOTE;
+  const instructions = `${params.instructions} ${decidesNote}${deepseek.note ? ` ${deepseek.note}` : ""}`;
   return {
     kind: "ask",
     label: params.label,
-    state: { ...params.state, facts },
+    state: { ...params.state, facts, ...(potionOptions.length ? { v6_potion_decider: "jev" } : {}) },
     questions: { pick: choiceQ(instructions, criteria) },
+    ...(potionOptions.length ? { potionJev: { state: params.state, questions: {
+      ...Object.fromEntries([...potionChoices].map(([key, variant]) => [`potion_${key}`, choiceQ(
+        "Only if this event/rest option is chosen, keep the held potions or free slots first? Compare the potion entries, brain tiers and holding HP; unknown is not zero.",
+        { [key]: JSON.stringify(brainView(byKey.get(key)!)), [variant.key]: JSON.stringify(brainView(variant)) },
+      )])), ...optionQuestions(potionOptions),
+    }, supply: (answers: AnswerSet) => { potionAnswers = answers; } } } : {}),
     deepseek: {
       question: "pick",
       baseline,
       ...(deepseek.onFail ? { onFail: deepseek.onFail } : {}),
       ...(deepseek.oneshot ? { oneshot: deepseek.oneshot } : {}),
       ...(deepseek.offeredCards && deepseek.offeredCards.length > 0 ? { offeredCards: deepseek.offeredCards } : {}),
-      options: () => params.options.map((option) => ({ key: option.key, intent: option.intent, summary: option.summary })),
+      options: () => brainOptions.map((option) => ({ key: option.key, intent: option.intent, summary: option.summary })),
     },
     resolve(answers): ResolvedAction {
       const answer = answers["pick"];
@@ -309,16 +326,21 @@ function deepseekPick(params: PickDecisionParams, deepseek: NonNullable<PickDeci
       // The engine that answered (the loop puts its decider in the answer's raw): the texts name it.
       const who = deciderLabel(typeof raw["decider"] === "string" ? raw["decider"] : undefined);
       // The plain key with a "discard" list names its "discard, then …" variant (as "o1" with "cards": ["c5"] names o1:c5).
-      const chosen = named && discard && discard.length > 0 && !named.key.endsWith(DISCARD_SUFFIX) ? byKey.get(`${named.key}${DISCARD_SUFFIX}`) ?? named : named;
+      const potionAnswer = named && potionAnswers[`potion_${named.key}`];
+      const variant = named && potionChoices.get(named.key);
+      const chosen = potionOptions.length
+        ? variant && potionAnswer?.type === "choice" && potionAnswer.choice === variant.key ? variant : named
+        : named && discard && discard.length > 0 && !named.key.endsWith(DISCARD_SUFFIX) ? byKey.get(`${named.key}${DISCARD_SUFFIX}`) ?? named : named;
       if (!chosen) {
         // Not reached through the loop (it plays the baseline when DeepSeek has no usable answer).
-        const best = bestOption(params.options);
+        const best = bestOption(brainOptions);
         return { intent: best.intent, rationale: `no usable ${who} answer; code chose ${best.label ?? best.key}`, confidence: null, fallback: true };
       }
       // A one-shot option names what its follow-up takes: the answer's `cards`, `route` and `discard` ride in its raw.
       const cards = asArray(raw["cards"]).filter((card): card is string => typeof card === "string");
       const route = typeof raw["route"] === "string" ? raw["route"] : undefined;
-      const outcome = chosen.plan?.({ cards, ...(route ? { route } : {}), ...(discard ? { discard } : {}) }) ?? null;
+      const potionDiscard = chosen.jev?.potion ? chosen.jev.answer(potionAnswers).discard : discard;
+      const outcome = chosen.plan?.({ cards, ...(route ? { route } : {}), ...(potionDiscard ? { discard: potionDiscard } : {}) }) ?? null;
       if (outcome && "invalid" in outcome) {
         return { intent: null, rationale: `${who} chose ${chosen.label ?? chosen.key}, but ${outcome.invalid}`, confidence: null, fallback: true };
       }
