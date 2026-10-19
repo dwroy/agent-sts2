@@ -153,7 +153,7 @@ export class V6ProjectionEngine {
     const actKey = v6Digest({ ...r, prepare: undefined, trust: undefined, completionSources: r.completionSources.map(s => [s.kind, s.signature]) });
     if (r.phase === "act" && this.acts.has(actKey)) { const hit = structuredClone(this.acts.get(actKey)!); hit.telemetry = { ...hit.telemetry,
       cache_hits: 0, cache_misses: 0, simulations: 0, timed_out: 0, degradation: [], act_cache_hit: true, elapsed_ms: this.now() - started }; return hit; }
-    const available = r.phase === "act" ? r.config.budgets.act_ms : Math.max(0, r.config.budgets.pick_ms - r.config.budgets.jev_ms);
+    const available = r.phase === "act" ? r.config.budgets.act_ms : r.config.budgets.pick_ms;
     // Leave time for aggregation/serialization after the last synchronous preparation or worker result.
     const deadline = started + Math.max(0, available - Math.min(500, available / 8));
     const raws = new Map<V6CombinationProjection, ExpectedRaw>();

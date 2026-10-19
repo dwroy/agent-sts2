@@ -46,18 +46,21 @@ describe("V6 combination expectation", () => {
     const t = await new V6ProjectionEngine(runner).evaluate(r); expect(t.enabled).toBe(false); expect(t.entries).toEqual([]); expect(runner.calls).toEqual([]);
   });
   it("deadline produces ordered logged degradation and unknown instead of zero", async () => {
-    const r = request(), runner = new FixedRunner(); let time = 0; r.config.budgets.pick_ms = 1001;
+    const r = request(), runner = new FixedRunner(); let time = 0; r.config.budgets.pick_ms = 1;
     r.completionSources[0]!.resolve = () => { time = 10; return null; };
     const t = await new V6ProjectionEngine(runner, () => time++).evaluate(r);
     expect(t.telemetry.degradation).toEqual(["drop_lowest_direction", "current_and_chain_targets_only", "remaining_unknown"]);
     expect(t.entries[0]?.win).toBeNull();
   });
-  it("reserves aggregation time and the Jev budget before handing providers a deadline", async () => {
+  it("reserves aggregation time inside an independent configurable computation budget", async () => {
     const r = request(), provider = r.completionSources[0]!, resolve = provider.resolve, deadlines: number[] = [];
     provider.resolve = c => { deadlines.push(c.deadline); return resolve(c); };
     const engine = new V6ProjectionEngine(new FixedRunner(), () => 100);
-    await engine.evaluate(r); r.phase = "act"; await engine.evaluate(r);
-    expect(deadlines).toEqual([3600, 59600]);
+    await engine.evaluate(r);
+    r.config.budgets.jev_ms = 60000; await engine.evaluate(r);
+    r.config.budgets.pick_ms = 8000; await engine.evaluate(r);
+    r.phase = "act"; await engine.evaluate(r);
+    expect(deadlines).toEqual([4600, 4600, 7600, 59600]);
   });
   it("uses exact configured tier boundaries and strict paired SE", () => {
     const c = v6Config({}); expect([0, .05, .3, .7, .95, 1].map(x => v6WinTier(x, c))).toEqual(["certain_loss", "certain_loss", "unfavored", "favored", "certain_win", "certain_win"]);

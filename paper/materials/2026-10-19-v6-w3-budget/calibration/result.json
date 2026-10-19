@@ -1,0 +1,253 @@
+{
+  "batch": "v6-boss-calibration-resume-20261019-2022",
+  "launcher_run": "20261019-202411-741c20ec-98fc-4d97-bd44-48293f0412a4-v6-boss-calibration-resume",
+  "task": "v6-boss-calibration-resume",
+  "request_id": "roy-20261019-current-production-boss-calibration",
+  "parent_request_id": "roy-20261017-human-pace-h0",
+  "parent_closed": false,
+  "status": "blocked-host-process-visibility",
+  "outcome": "incomplete",
+  "as_of": "2026-10-19T20:30:56.431212+08:00",
+  "blocker": {
+    "required_by": "Roy 2026-10-19 continuation authorization: fresh host /proc identity, cwd/command and original locks before sharding; boundary checks for real play",
+    "observed": "/proc/1 is codex-linux-sandbox; /proc/1/root/proc is the same sandbox view",
+    "host_view": false,
+    "true_conflict": null,
+    "approval_rejection": false,
+    "next_required": "Original host launcher must supply fresh observable host process/cwd/command and both original lock checks, plus ongoing real-play visibility. No change to shared config/permissions in this task."
+  },
+  "original_identity": {
+    "batch": "20261019-081928-fix-batch",
+    "worktree": "/home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration",
+    "resumed_branch": "silent-boss-calibration-refresh-20261018-083038",
+    "owner": "original owner retained; not reassigned or rewritten",
+    "tool_session": 70517,
+    "proposal": "silent-proposal-da817af4fc7159de",
+    "ledger": "silent-0519",
+    "identity_sources": [
+      "/home/dw/Projects/agent-sts2/learner/runs/20261019-081937-fbd78246-f888-40b7-bd52-b9d5e04bf880-silent-boss-calibration/dispatch-frozen.json",
+      "/home/dw/Projects/agent-sts2/learner/runs/20261019-081937-fbd78246-f888-40b7-bd52-b9d5e04bf880-silent-boss-calibration/identity-registration.json",
+      "/home/dw/Projects/agent-sts2/learner/runs/20261019-081937-fbd78246-f888-40b7-bd52-b9d5e04bf880-silent-boss-calibration/final-report.json"
+    ]
+  },
+  "execution_identity": {
+    "role": "codex1 offline learner",
+    "new_batch": true,
+    "worktree": "/home/dw/Projects/agent-sts2/.worktrees/v6-boss-calibration-resume-20261019",
+    "head": "03cb9f2bfb89dadfb0dbda4cc875bc7536714737",
+    "model_requested": "gpt-6.1-sol",
+    "effort_requested": "high",
+    "native_turn_context_verified": false,
+    "native_thread_id": null,
+    "effort_claimed_effective": false
+  },
+  "frozen": {
+    "production": "9f4245511181c6228cf63dc44700ea28ccf35730",
+    "production_model_sha256": "c9f5bfecafd45698af4c8e14f929c4d41cf03afb73818d0dedc2f257c4ef858b",
+    "dataset_sha256": "ba46c92dfbc17c17155752447b7eda4a1f9648f2e821b0e6e4bf4ad05dbc17d6",
+    "sources_sha256": "7e7bcb05662ca4be24f7f1607b215ebad0331567b0498ed42adc1d219c151a3d",
+    "split_sha256": "b185330cd434929c5a4211779753d554dc22ed8c701165dc986a4debf0be9daf",
+    "snapshot_file_sha256": "2006e8897e0e1d4c75c309063566469fe8d50c981a8a82d78608ad5894960cee",
+    "replay_identity_file_sha256": "ec5e74babd164e5584c6fe302babd5b03d69b3038c80aea54a5b6cd66ffc8f11",
+    "tune": 107,
+    "validation": 551,
+    "fights": 658,
+    "starts": 1316,
+    "samples": 200,
+    "seed": 1,
+    "full_row_seed_rule": "1 + original nonempty row index * 101",
+    "verified_model_inputs": 722,
+    "input_manifest": "/home/dw/Projects/agent-sts2/learner/runs/20261019-202411-741c20ec-98fc-4d97-bd44-48293f0412a4-v6-boss-calibration-resume/input-manifest.json",
+    "verified_model_references": "/home/dw/Projects/agent-sts2/learner/runs/20261019-202411-741c20ec-98fc-4d97-bd44-48293f0412a4-v6-boss-calibration-resume/verified-model-references.json"
+  },
+  "checkpoint": {
+    "status": "incomplete",
+    "rows": 217,
+    "successful": 215,
+    "explicit_failures": 2,
+    "sha256": "b87c8ed95c3a16363d4f858207f675051d0cb96eec7ae2d0fdf7172e650df6b6",
+    "directory": "/home/dw/Projects/agent-sts2/learner/runs/20261019-202411-741c20ec-98fc-4d97-bd44-48293f0412a4-v6-boss-calibration-resume/checkpoint217",
+    "git_commit": "03cb9f2bfb89dadfb0dbda4cc875bc7536714737",
+    "later280_rows_reused": false
+  },
+  "counts": {
+    "expected": 1316,
+    "completed": 217,
+    "successful": 215,
+    "explicit_failure": 2,
+    "missing": 1099,
+    "new_completed": 0,
+    "new_successful": 0,
+    "new_explicit_failure": 0
+  },
+  "sharding": {
+    "status": "planned-not-executed",
+    "jobs": 20,
+    "shards": 10,
+    "missing_union_exact": true,
+    "no_overlaps": true,
+    "original_row_seed_unchanged": true,
+    "plan": "/home/dw/Projects/agent-sts2/learner/runs/20261019-202411-741c20ec-98fc-4d97-bd44-48293f0412a4-v6-boss-calibration-resume/shard-plan.json",
+    "assignments": "/home/dw/Projects/agent-sts2/learner/runs/20261019-202411-741c20ec-98fc-4d97-bd44-48293f0412a4-v6-boss-calibration-resume/missing-starts.json",
+    "resumable_driver_implemented": false,
+    "actual_compute_children": 0,
+    "nice": 19,
+    "process_receipt": "/home/dw/Projects/agent-sts2/learner/runs/20261019-202411-741c20ec-98fc-4d97-bd44-48293f0412a4-v6-boss-calibration-resume/process-check.json"
+  },
+  "statistics": {
+    "four_gates_unchanged": {
+      "validation_n_min": 10,
+      "brier_overall_multiplier": 1.25,
+      "absolute_prediction_actual_gap_max": 0.15,
+      "hp_leak_ratio": [
+        0.7,
+        1.3
+      ]
+    },
+    "current_full_metrics": null,
+    "current_partial_validation_metrics_used": false,
+    "four_gate_table": "/home/dw/Projects/agent-sts2/learner/runs/20261019-202411-741c20ec-98fc-4d97-bd44-48293f0412a4-v6-boss-calibration-resume/boss-comparison-pending.json",
+    "old_table_comparison": "/home/dw/Projects/agent-sts2/learner/runs/20261019-202411-741c20ec-98fc-4d97-bd44-48293f0412a4-v6-boss-calibration-resume/boss-comparison-pending.md",
+    "paired": "/home/dw/Projects/agent-sts2/learner/runs/20261019-202411-741c20ec-98fc-4d97-bd44-48293f0412a4-v6-boss-calibration-resume/paired-pending.json",
+    "common_validation_keys": 548,
+    "new_validation_keys": 3,
+    "tune_only_coefficients": {
+      "scope": "tuning-only",
+      "starts": {
+        "t1": {
+          "a": 2.0443,
+          "b": 0.4536,
+          "c": 0.0
+        },
+        "pre": {
+          "a": 2.2681,
+          "b": 0.5105,
+          "c": 0.0
+        }
+      }
+    },
+    "new_fit_performed": false,
+    "next_H0_priority_boss": null,
+    "reason": "Full current validation and paired metrics are missing; do not infer priority from a temporal prefix or old table."
+  },
+  "limitations": {
+    "A10_F49": {
+      "openings": 658,
+      "A10_hp_asc_sources": {
+        "10": 756
+      },
+      "A10_opening_asc_sources": {
+        "10": 756
+      },
+      "A10_damage_asc_sources": {
+        "10": 49
+      },
+      "A10_no_damage_records": [
+        "AEONGLASS:INCREASING_INTENSITY_MOVE",
+        "CEREMONIAL_BEAST:BEAST_CRY_MOVE",
+        "CEREMONIAL_BEAST:STAMP_MOVE",
+        "CEREMONIAL_BEAST:STUNNED",
+        "CRUSHER:ADAPT_MOVE",
+        "KIN_FOLLOWER:POWER_DANCE_MOVE",
+        "KIN_PRIEST:RITUAL_MOVE",
+        "KNOWLEDGE_DEMON:CURSE_OF_KNOWLEDGE_MOVE",
+        "LAGAVULIN_MATRIARCH:SLEEP_MOVE",
+        "LAGAVULIN_MATRIARCH:SOUL_SIPHON_MOVE",
+        "LAGAVULIN_MATRIARCH:STUNNED",
+        "QUEEN:BURN_BRIGHT_FOR_ME_MOVE",
+        "QUEEN:ENRAGE_MOVE",
+        "QUEEN:PUPPET_STRINGS_MOVE",
+        "QUEEN:YOU_ARE_MINE_MOVE",
+        "ROCKET:CHARGE_UP_MOVE",
+        "ROCKET:RECHARGE_MOVE",
+        "SOUL_FYSH:BECKON_MOVE",
+        "SOUL_FYSH:FADE_MOVE",
+        "TEST_SUBJECT:BURNING_GROWL_MOVE",
+        "TEST_SUBJECT:RESPAWN_MOVE",
+        "THE_INSATIABLE:LIQUIFY_GROUND_MOVE",
+        "THE_INSATIABLE:SALIVATE_MOVE",
+        "VANTOM:PREPARE_MOVE",
+        "WATERFALL_GIANT:ABOUT_TO_BLOW_MOVE",
+        "WATERFALL_GIANT:PRESSURIZE_MOVE",
+        "WATERFALL_GIANT:SIPHON_MOVE"
+      ],
+      "A10_estimated_damage_definitions": [],
+      "F49_actual_attempts": 36
+    },
+    "SL": "Separate actual-outcome attempts in frozen split; paired SL attempts are not independent runs or evidence of joint F48/F49 success.",
+    "known_model_gaps": "All original model limitations retained; no mechanism or parameter changed. H0 R386/R392/R393 paired effect and attribution remain uncomputed."
+  },
+  "tests": {
+    "data_validation": {
+      "exit_code": 0,
+      "log": "/home/dw/Projects/agent-sts2/learner/runs/20261019-202411-741c20ec-98fc-4d97-bd44-48293f0412a4-v6-boss-calibration-resume/data-checks.json"
+    },
+    "new_tsc": null,
+    "new_vitest": null,
+    "reason": "No repository code or test files modified; scratch contains data, manifests and plans only. Mandatory code-change tests not triggered.",
+    "original_tsc": 0,
+    "original_vitest": 1,
+    "original_failed_cases": 11,
+    "original_full_log": "/home/dw/Projects/agent-sts2/learner/runs/20261019-081937-fbd78246-f888-40b7-bd52-b9d5e04bf880-silent-boss-calibration/source-sandbox.log",
+    "original_failure_disposition": "/home/dw/Projects/agent-sts2/learner/runs/20261019-081937-fbd78246-f888-40b7-bd52-b9d5e04bf880-silent-boss-calibration/original-check-disposition.json",
+    "original_python": {
+      "exit_code": 0,
+      "cases": 21
+    },
+    "original_targeted_vitest": {
+      "exit_code": 0,
+      "unique_cases": 16
+    },
+    "new_source_failures_observed": null,
+    "gitleaks": {
+      "exit_code": 0,
+      "log": "/home/dw/Projects/agent-sts2/learner/runs/20261019-202411-741c20ec-98fc-4d97-bd44-48293f0412a4-v6-boss-calibration-resume/gitleaks.log",
+      "findings": "/home/dw/Projects/agent-sts2/learner/runs/20261019-202411-741c20ec-98fc-4d97-bd44-48293f0412a4-v6-boss-calibration-resume/gitleaks-findings.json"
+    }
+  },
+  "commits": {
+    "new": [],
+    "new_patch": null,
+    "original_all": [
+      "025c2035bd0e7463fd5cac20045336460c076580",
+      "7c62a85e3292211ba1544640ce1eae04207e4522",
+      "8020e8c60665108af118a5cffc647f165fa53d19",
+      "e092b426c6aa5296901cd05fe0b8de6e3a63434c",
+      "03cb9f2bfb89dadfb0dbda4cc875bc7536714737",
+      "6e2f653ed2679298069bcb29b77bdc9e046305f5"
+    ],
+    "recovered_head": "03cb9f2bfb89dadfb0dbda4cc875bc7536714737",
+    "repository_code_diff_empty": true,
+    "preexisting_untracked_task_preserved": "learner/tasks/v6-boss-calibration-resume.md"
+  },
+  "ledger_ids": [
+    "silent-0519"
+  ],
+  "ledger_status": "proposed; unchanged",
+  "code_proposals": [
+    "silent-proposal-da817af4fc7159de"
+  ],
+  "code_proposal_status": "pending-not-live-implemented; unchanged",
+  "new_ledger_events": [],
+  "learning_disagreements": [],
+  "notifications": [],
+  "published": false,
+  "merged": null,
+  "published_commit": null,
+  "release_id": null,
+  "main_changed": false,
+  "live_changed": false,
+  "knowledge_changed": false,
+  "shipped_recorded": false,
+  "full_result_fingerprint": null,
+  "preparation_incomplete_fingerprint": "d871d471b479a77f3ebd934b65e8761afc3ef89ca6cfb4936ea095b255fb8a58",
+  "unresolved": [
+    "Fresh host /proc and both original-lock checks",
+    "Execute missing 1099 starts using fixed input/model/indices; actual resource and play monitoring",
+    "Merge and validate 1316 rows with explicit failures and duplicate equality",
+    "Package with original tune-only rule and confirm existing coefficients",
+    "Complete 24 Boss×start gate rows, old comparison, 548 common-validation-key pairing, 3 new validation keys and three H0 corrections",
+    "Choose next H0 Boss from complete quantitative evidence; retain A10/F49/SL limits"
+  ],
+  "report": "/home/dw/Projects/agent-sts2/learner/runs/20261019-202411-741c20ec-98fc-4d97-bd44-48293f0412a4-v6-boss-calibration-resume/report.md"
+}
