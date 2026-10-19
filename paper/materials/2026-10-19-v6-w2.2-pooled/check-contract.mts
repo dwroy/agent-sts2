@@ -1,0 +1,11 @@
+import {readFileSync, writeFileSync} from 'node:fs';
+import {createHash} from 'node:crypto';
+import {buildMetricSchema} from '/home/dw/Projects/agent-sts2/.worktrees/v6-w12-build-core-pooled-20261019/agent/src/v6/build-core.ts';
+import {validate} from '/home/dw/Projects/agent-sts2/.worktrees/v6-w12-build-core-pooled-20261019/agent/src/v6/schema.ts';
+const base = new URL('./', import.meta.url);
+const contract = '/home/dw/Projects/agent-sts2/.worktrees/v6-w12-build-core-pooled-20261019/agent/src/v6/build-core.ts';
+const input = JSON.parse(readFileSync(new URL('frozen-generated-v2.json', base), 'utf8'));
+const results = input.combos.flatMap((c:any) => c.metrics.map((m:any) => ({combo:c.id,attempt:m.attempt,result:validate(buildMetricSchema,m)})));
+const out = {status:results.every((r:any)=>r.result.ok)?'pass':'fail', contract:'watcher unmerged working tree; integration still pending', contract_sha256:createHash('sha256').update(readFileSync(contract)).digest('hex'), results};
+writeFileSync(new URL('contract-v2.json',base),JSON.stringify(out,null,2)+'\n');
+if(out.status!=='pass') process.exitCode=1;

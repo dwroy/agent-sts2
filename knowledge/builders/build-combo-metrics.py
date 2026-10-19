@@ -2,9 +2,11 @@
 """Recompute combo observations from frozen runtime logs; never publish game knowledge."""
 import argparse
 import json
+import subprocess
 from pathlib import Path
 from collections import Counter, defaultdict
 from combo_metrics import compute_combo, digest, extract, holding
+from combo_pooled import finalize
 
 
 def verified_witnesses(path, combos, logs, limits, run_ids):
@@ -94,9 +96,14 @@ def main():
     p.add_argument('--run', action='append', help='restrict to an explicitly listed ended run (repeatable)')
     p.add_argument('--rules', type=Path, help='learner-supplied {combo_id:{activation,required_relics,evidence}}')
     p.add_argument('--witnesses', type=Path, help='learner combo-run-witnesses.json; verify source bytes before use')
-    p.add_argument('--coverage', type=Path, help='frozen per-run engine-observed metadata for exact learner version strata')
+    p.add_argument('--coverage', type=Path, help='frozen per-run engine-observed source metadata; never strata')
+    p.add_argument('--simulation', choices=['run','off'], default='run', help='offline single-worker A10 boss-sim; off records explicit unknowns')
+    p.add_argument('--simulation-samples', type=int, default=32)
+    p.add_argument('--shrink-prior-n', type=int, default=10)
     p.add_argument('--output', type=Path, required=True, help='scratch/material report only; no automatic publishing')
     args = p.parse_args()
+    if not 1 <= args.simulation_samples <= 10000 or not 1 <= args.shrink_prior_n <= 10000:
+        p.error('sample and prior counts must be 1..10000')
     if 'knowledge' in args.output.resolve().parts and 'characters' in args.output.resolve().parts and 'pending' not in args.output.resolve().parts:
         p.error('formal character knowledge output is forbidden')
     spec_bytes = args.spec.read_bytes()
@@ -142,13 +149,50 @@ def main():
             run['version'] = str(run['code'])+';records='+coverage[rid]['engine_observed']+';accepted='+inv['actual_engine_group']+';config='+','.join(inv['config_commits'])
     witnesses = verified_witnesses(args.witnesses, {c['id']: c for c in combos}, args.logs.resolve(), limits,
                                    {r['run_id'] for r in runs}) if args.witnesses else {}
+    directions = {combo['id']: core['direction'] for core in cores for combo in core['combos']}
+    args.output.parent.mkdir(parents=True, exist_ok=True)
+    predicates = {c['id']: c['prerequisites'] for c in combos if c.get('prerequisites') is not None}
+    prerequisite_results = {cid: {} for cid in predicates}
+    if predicates:
+        frames = {}
+        for run in runs:
+            for frame in run['states']:
+                ids = [c['id'] for c in combos if c['id'] in predicates and holding(c['cards'], frame['state']['run'].get('deck')) is True]
+                if ids:
+                    frames[frame['_source']['sha256']] = dict(source=frame['_source'], combos=ids)
+        payload = args.output.with_suffix('.prerequisites-input.json')
+        result_path = args.output.with_suffix('.prerequisites-output.json')
+        payload.write_text(json.dumps(dict(predicates=predicates, frames=list(frames.values())), ensure_ascii=False)+'\n')
+        subprocess.run(['nice', '-n', '10', 'node', '--import', 'tsx', str(Path(__file__).with_name('combo-prerequisites.mts').resolve()), str(payload.resolve()), str(result_path.resolve())],
+                       cwd=Path(__file__).resolve().parents[2]/'agent', check=True)
+        for row in json.loads(result_path.read_bytes())['rows']:
+            for cid, condition in row['conditions'].items():
+                prerequisite_results[cid][row['source']['sha256']] = condition
     outputs = []
     for combo in combos:
-        options = dict(rules.get(combo['id'], {}))
+        options = dict(rules.get(combo['id'], {}), direction=directions.get(combo['id']))
+        if combo['id'] in predicates:
+            options['prerequisite_results'] = prerequisite_results[combo['id']]
         if args.witnesses:
             options.update(witnesses=witnesses.get(combo['id'], []), has_definition=True)
         metrics, audit = compute_combo(combo, runs, options)
         outputs.append(dict(id=combo['id'], metrics=metrics, audit=audit))
+    args.output.parent.mkdir(parents=True, exist_ok=True)
+    cases = {}
+    for out in outputs:
+        for audit in out['audit']:
+            for case in audit.get('simulation_cases',[]):
+                cases[(case['combo'],case['run_id'],case['target'],case['entry']['sha256'])] = case
+    simulated = {'rows': [], 'reason': 'explicitly_disabled' if args.simulation=='off' else 'no_historical_entries'}
+    if cases and args.simulation=='run':
+        payload = args.output.with_suffix('.simulation-input.json')
+        result_path = args.output.with_suffix('.simulation-output.json')
+        payload.write_text(json.dumps(dict(cases=list(cases.values()),options=dict(samples=args.simulation_samples,seed=20261019,maxTurns=30,policyNodes=1500)),ensure_ascii=False)+'\n')
+        script = Path(__file__).with_name('combo-simulation.mts').resolve()
+        subprocess.run(['nice','-n','10','node','--import','tsx',str(script),str(payload.resolve()),str(result_path.resolve())],
+                       cwd=Path(__file__).resolve().parents[2]/'agent',check=True)
+        simulated = json.loads(result_path.read_bytes())
+    finalize(outputs,runs,directions,simulated,args.shrink_prior_n)
     report = dict(schema='combo-metrics-report-v1', character=args.character,
                   inputs=dict(spec_sha256=digest(spec_bytes), rules_sha256=digest(rule_bytes),
                               manifest_sha256=digest(manifest_bytes) if manifest_bytes else None,
@@ -157,16 +201,16 @@ def main():
                               coverage_sha256=digest(args.coverage.read_bytes()) if args.coverage else None,
                               log_byte_limits=limits, ranges=ranges),
                   ended_runs=[r['run_id'] for r in runs], combos=outputs,
-                  unstratified_runs=[dict(run_id=r['run_id'], reason='原始runs.ascension缺失或不是整数，不能猜测进阶分层') for r in runs if not isinstance(r.get('ascension'), int) or isinstance(r.get('ascension'), bool)],
+                  simulation=simulated,
                   limitations=['只含已结束且角色匹配的日志；缺失观察保留null/n=0及原因，不补零。',
                                'first为日志可见首条路径，在首个已记录判死/重载处截尾；未记录SL无法排除。',
-                               '版本默认按runs.code原始标签分层；给出coverage/inventory时按学习者code/记录引擎/accepted/config复合标签。短SHA/dirty不能恢复成精确构建身份。',
+                               '所有版本与进阶合并为主口径，版本和进阶只保留在sources来源字段；未知进阶仍计我方能力，只从回归排除；短SHA/dirty不恢复成精确构建身份。',
                                '持有与激活分开；激活仅执行学习者提供的有证据条件，代码不内置游戏知识。',
                                '独立局先聚合，DPR局内均值→局间中位；中位数SE=400次固定种子20261019bootstrap，n<3未知；small_sample阈值10局。',
                                '敌人HP减少/正格挡增量/无可见回血的HP首尾差为可见量，不是事件级总伤害/总格挡/组合因果贡献。',
                                '终结回合无下一回合完整边界，伤害统计排除；启动能量仅为贡献施放的现场费用，不是全程消耗；抽牌缺计数未知。',
                                '多敌回合总HP减少不冒充群体效果；规模斜率仅同局同类观察相关，未控敌人/层/资源；无规模变化或资源反事实时相应指标未知，原始记录在audit。',
-                               'simulation为空：本生成器不运行或混入模拟，已有模拟条目需另行按来源保留。'])
+                               'A10 simulation与实战regression分列；只复用boss-sim，不改模拟算法；缺精确A10静态数据时不回退。regression为共同进阶偏移+组合/目标截距，非因果；越界保留未知。小样本收缩单列shrinkage，原始计数不动。'])
     args.output.parent.mkdir(parents=True, exist_ok=True)
     args.output.write_text(json.dumps(report, ensure_ascii=False, indent=2, allow_nan=False)+'\n')
     print(json.dumps({'output': str(args.output), 'runs': len(runs), 'combos': len(outputs)}, ensure_ascii=False))

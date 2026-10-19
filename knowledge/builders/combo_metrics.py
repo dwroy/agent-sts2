@@ -240,7 +240,7 @@ def snapshots_to_fights(rows, summaries, actions):
 def compact(row, source):
     """Retain observed fields and the raw byte reference, not repeated rules text."""
     s = row['state']; r = s.get('run') or {}; c = s.get('combat') or {}
-    run = {k: r[k] for k in ('character_id', 'floor', 'act_id', 'ascension', 'current_hp') if k in r}
+    run = {k: r[k] for k in ('character_id', 'floor', 'act_id', 'ascension', 'current_hp', 'max_hp') if k in r}
     if isinstance(r.get('deck'), list):
         run['deck'] = [{k: card[k] for k in ('card_id', 'upgraded') if k in card} for card in r['deck']]
     if isinstance(r.get('relics'), list):
@@ -384,7 +384,7 @@ def won(fight):
     return None
 
 
-def activation_frame(fight, requirements, rule):
+def activation_frame(fight, requirements, rule, prerequisite=lambda frame: True):
     frames = fight['frames']
     if holding(requirements, frames[0]['state']['run'].get('deck')) is not True:
         return None
@@ -405,7 +405,7 @@ def activation_frame(fight, requirements, rule):
                 if len(cards) == 1 and cards[0].get('card_id'):
                     plays[cards[0]['card_id']] += 1
             index += 1
-        if activation(rule, row['state'], plays) is True:
+        if activation(rule, row['state'], plays) is True and prerequisite(row) is True:
             return row
     return None
 
@@ -482,6 +482,12 @@ def compute_combo(combo, runs, options=None):
     happens at the CLI boundary. This function only joins their exact source rows.
     """
     options = options or {}
+    if combo.get('prerequisites') is not None and 'prerequisite_results' not in options:
+        raise ValueError('non-null prerequisites require source-verified W1 predicate results')
+    def prerequisite(frame):
+        if combo.get('prerequisites') is None:
+            return True
+        return options['prerequisite_results'].get(frame['_source']['sha256'], {}).get('value')
     rule = options.get('activation')
     if rule is not None:
         if len(json.dumps(rule)) > 16000:
@@ -491,255 +497,298 @@ def compute_combo(combo, runs, options=None):
     for w in options.get('witnesses', []):
         witnesses[w['run_id']].append(w)
     definition_known = rule is not None or options.get('has_definition', bool(witnesses))
-    keys = sorted({(r['ascension'], r['version']) for r in runs
-                   if isinstance(r.get('ascension'), int) and not isinstance(r['ascension'], bool)})
+    if len({r['run_id'] for r in runs}) != len(runs):
+        raise ValueError('duplicate independent run identities')
     metrics, audit = [], []
     chain_ascensions = {r.get('ascension') for r in runs if any(s.get('floor') == 49 for s in r['summaries'])}
-    for ascension, version in keys:
-        population = [r for r in runs if r.get('ascension') == ascension and r['version'] == version]
-        for attempt in ('first', 'including_sl'):
-            observations = defaultdict(list)
-            boss_samples = defaultdict(lambda: {'reached': [], 'won': []})
-            offers = defaultdict(list)
-            for run in population:
-                rid = run['run_id']
-                cutoff = run['first_cut'] if attempt == 'first' else None
-                states = [s for s in run['states'] if cutoff is None or s['ts'] <= cutoff]
-                if not states:
+    population = runs
+    for attempt in ('first', 'including_sl'):
+        observations = defaultdict(list)
+        boss_samples = defaultdict(lambda: {'reached': [], 'won': []})
+        offers = defaultdict(list)
+        normalization_rows, simulation_cases = [], []
+        for run in population:
+            rid = run['run_id']
+            cutoff = run['first_cut'] if attempt == 'first' else None
+            states = [s for s in run['states'] if cutoff is None or s['ts'] <= cutoff]
+            if not states:
+                continue
+            initial_floor = (states[0]['state'].get('run') or {}).get('floor')
+            if not isinstance(initial_floor, int):
+                continue
+            initial = dict(run_id=rid, floor=initial_floor)
+            eligible, held, resource_rows = [], [], []
+            for fight in run['fights']:
+                if cutoff is not None and fight['frames'][0]['ts'] > cutoff:
                     continue
-                initial_floor = (states[0]['state'].get('run') or {}).get('floor')
-                if not isinstance(initial_floor, int):
+                if holding(combo['cards'], fight['frames'][0]['state']['run'].get('deck')) is not True:
                     continue
-                initial = dict(run_id=rid, floor=initial_floor)
-                eligible, held, resource_rows = [], [], []
-                for fight in run['fights']:
-                    if cutoff is not None and fight['frames'][0]['ts'] > cutoff:
-                        continue
-                    if holding(combo['cards'], fight['frames'][0]['state']['run'].get('deck')) is not True:
-                        continue
-                    held.append(fight)
-                    if options.get('required_relics'):
-                        relics = fight['frames'][0]['state']['run'].get('relics')
-                        if not isinstance(relics, list) or not set(options['required_relics']).issubset({r.get('relic_id') for r in relics}):
-                            continue
-                    clipped = dict(fight, frames=[f for f in fight['frames'] if cutoff is None or f['ts'] <= cutoff])
-                    if clipped['summary'] and cutoff is not None and clipped['summary'].get('ended_at', clipped['summary']['ts']) > cutoff:
-                        clipped['summary'] = None
-                    if clipped['close'] and cutoff is not None and clipped['close']['ts'] > cutoff:
-                        clipped['close'] = None
-                    active = None
-                    activation_witness = None
-                    for w in witnesses[rid]:
-                        found = next((f for f in clipped['frames'] if f['_source']['offset'] == w['source']['offset'] and f['_source']['sha256'] == w['source']['sha256']), None)
-                        if found and (active is None or found['ts'] < active['ts']):
-                            active, activation_witness = found, w
-                    if active is None and rule is not None:
-                        active = activation_frame(clipped, combo['cards'], rule)
-                    audit_row = dict(combo=combo['id'], run_id=rid, floor=fight['floor'], attempt=attempt,
-                                     kind=fight_kind(fight, states), outcome=won(clipped),
-                                     entry=fight['frames'][0]['_source'], activation=active['_source'] if active else None,
-                                     activation_rule=rule, learner_witness=activation_witness,
-                                     entry_deck_size=len(fight['frames'][0]['state']['run']['deck']), turns=[], excluded_turns=[])
-                    audit.append(audit_row)
-                    if active is None:
-                        continue
-                    audit_row['turns'] = turn_observations(clipped, active, audit_row['excluded_turns'])
-                    eligible.append((clipped, active, audit_row))
-                    resource_rows.append(dict(run_id=rid, floor=fight['floor'], summary=clipped['summary'],
-                                              relics=active['state']['run'].get('relics')))
-                first_held = next((s for s in states if holding(combo['cards'], (s['state'].get('run') or {}).get('deck')) is True), None)
-                active_first = min(eligible, key=lambda v: v[1]['ts']) if eligible else None
-                if definition_known:
-                    observations['formed_runs'].append((int(bool(active_first)), initial))
-                    observations['formation_rate'].append((int(bool(active_first)), initial))
-                run_audit = dict(combo=combo['id'], run_id=rid, attempt=attempt,
-                                 first_holding=first_held['_source'] if first_held else None,
-                                 first_activation=active_first[1]['_source'] if active_first else None,
-                                 resource_observations=resource_rows, deck_size_association=[])
-                audit.append(run_audit)
-                if active_first is None:
+                condition = prerequisite(fight['frames'][0])
+                if condition is not True:
+                    audit.append(dict(combo=combo['id'], run_id=rid, floor=fight['floor'], attempt=attempt,
+                                      entry=fight['frames'][0]['_source'], excluded='prerequisite_false' if condition is False else 'prerequisite_unknown',
+                                      prerequisite=options.get('prerequisite_results', {}).get(fight['frames'][0]['_source']['sha256'])))
                     continue
-                first = active_first[1]
-                ref = dict(run_id=rid, floor=first['state']['run']['floor'], turn=first['state']['turn'])
-                observations['startup_turn'].append((ref['turn'], ref))
-                observations['first_completed_floor'].append((ref['floor'], ref))
-                observations['mean_reached_floor'].append((run.get('floor') if cutoff is None else run.get('first_cut_floor'), ref))
-                if isinstance(run.get('victory'), bool):
-                    observations['cleared_runs'].append((int(run['victory'] and cutoff is None), ref))
-                sizes = [a['entry_deck_size'] for _, _, a in eligible]
-                observations['deck_size_min'].append((min(sizes), ref))
-                observations['deck_size_max'].append((max(sizes), ref))
-                # One chronological qualifying attempt per floor, even including SL.
-                picked, seen = [], set()
-                for f, a, record in eligible:
-                    if f['floor'] not in seen:
-                        seen.add(f['floor']); picked.append(record)
-                turns = [t for record in picked for t in record['turns']]
-                for kind in ('boss', 'elite', 'normal'):
-                    vs = [t['damage'] for a in picked if a['kind'] == kind for t in a['turns'] if numeric(t['damage'])]
-                    if vs:
-                        observations['dpr_'+kind].append((statistics.mean(vs), ref))
-                for suffix, condition in [('1_3', lambda t: t <= 3), ('4_6', lambda t: 4 <= t <= 6), ('7_plus', lambda t: t >= 7)]:
-                    vs = [t['damage'] for t in turns if condition(t['turn']) and numeric(t['damage'])]
-                    if vs:
-                        observations['dpr_turns_'+suffix].append((statistics.mean(vs), ref))
-                for name, field in [('block_per_turn', 'block'), ('hp_loss_per_turn', 'hp_loss')]:
-                    vs = [t[field] for t in turns if numeric(t[field])]
-                    if vs:
-                        observations[name].append((statistics.mean(vs), ref))
-                if turns:
-                    observations['peak_turn_damage'].append((max(t['damage'] for t in turns), ref))
-                # Match the learner's descriptive association, without inferring
-                # a benefit from adding cards or controlling enemy/floor/resources.
-                size_pairs = defaultdict(list)
-                for record in picked:
-                    values = [t['damage'] for t in record['turns']]
-                    if values:
-                        size_pairs[record['kind']].append(dict(floor=record['floor'],
-                                                              size=record['entry_deck_size'], dpr=statistics.mean(values)))
-                slopes = []
-                for kind, points in size_pairs.items():
-                    if len({p['size'] for p in points}) < 2:
+                if options.get('required_relics'):
+                    relics = fight['frames'][0]['state']['run'].get('relics')
+                    if not isinstance(relics, list) or not set(options['required_relics']).issubset({r.get('relic_id') for r in relics}):
                         continue
-                    mx, my = statistics.mean(p['size'] for p in points), statistics.mean(p['dpr'] for p in points)
-                    slope = sum((p['size']-mx)*(p['dpr']-my) for p in points) / sum((p['size']-mx)**2 for p in points)
-                    slopes.append(slope)
-                    run_audit['deck_size_association'].append(dict(kind=kind, slope=slope, points=points))
-                if slopes:
-                    observations['deck_size_scaling'].append((statistics.median(slopes), ref))
-                # Startup energy is the observed cost of required contributing plays,
-                # not all energy spent, net expenditure, or a theoretical minimum.
-                witness = active_first[2]['learner_witness']
-                if witness:
-                    need = Counter()
-                    for req in combo['cards']:
-                        if 'id' in req:
-                            need[req['id']] += req['count']
-                    used, costs = Counter(), []
-                    for w in witness.get('witness', []):
-                        cid = w['card']['id']
-                        if used[cid] < need[cid]:
-                            used[cid] += 1; costs.append(w['card'].get('cost'))
-                    if need and used == need and all(numeric(c) and c >= 0 for c in costs):
-                        observations['startup_energy'].append((sum(costs), ref))
-                # Boss/chain histories are independent runs, not fight-attempt counts.
-                # Only explicit outcome summaries identify results; missing summaries
-                # do not become a recorded loss.
-                run_bosses = defaultdict(list)
-                chain = defaultdict(list)
-                for fight in held:
-                    summary = fight['summary']
-                    if not summary or summary.get('fight_kind') != 'boss':
+                held.append(fight)
+                clipped = dict(fight, frames=[f for f in fight['frames'] if cutoff is None or f['ts'] <= cutoff])
+                if clipped['summary'] and cutoff is not None and clipped['summary'].get('ended_at', clipped['summary']['ts']) > cutoff:
+                    clipped['summary'] = None
+                if clipped['close'] and cutoff is not None and clipped['close']['ts'] > cutoff:
+                    clipped['close'] = None
+                active = None
+                activation_witness = None
+                for w in witnesses[rid]:
+                    found = next((f for f in clipped['frames'] if f['_source']['offset'] == w['source']['offset'] and f['_source']['sha256'] == w['source']['sha256']), None)
+                    if found and prerequisite(found) is True and (active is None or found['ts'] < active['ts']):
+                        active, activation_witness = found, w
+                if active is None and rule is not None:
+                    active = activation_frame(clipped, combo['cards'], rule, prerequisite)
+                audit_row = dict(combo=combo['id'], run_id=rid, floor=fight['floor'], attempt=attempt,
+                                 kind=fight_kind(fight, states), outcome=won(clipped),
+                                 entry=fight['frames'][0]['_source'], activation=active['_source'] if active else None,
+                                 activation_rule=rule, learner_witness=activation_witness,
+                                 entry_deck_size=len(fight['frames'][0]['state']['run']['deck']), turns=[], excluded_turns=[])
+                audit.append(audit_row)
+                if active is None:
+                    continue
+                audit_row['turns'] = turn_observations(clipped, active, audit_row['excluded_turns'])
+                eligible.append((clipped, active, audit_row))
+                resource_rows.append(dict(run_id=rid, floor=fight['floor'], summary=clipped['summary'],
+                                          relics=active['state']['run'].get('relics')))
+            holding_states = [s for s in states if holding(combo['cards'], (s['state'].get('run') or {}).get('deck')) is True]
+            first_held = next((s for s in holding_states if prerequisite(s) is True), None)
+            active_first = min(eligible, key=lambda v: v[1]['ts']) if eligible else None
+            if definition_known and (active_first or not any(prerequisite(s) is None for s in holding_states)):
+                observations['formed_runs'].append((int(bool(active_first)), initial))
+                observations['formation_rate'].append((int(bool(active_first)), initial))
+            run_audit = dict(combo=combo['id'], run_id=rid, attempt=attempt,
+                             first_holding=first_held['_source'] if first_held else None,
+                             first_activation=active_first[1]['_source'] if active_first else None,
+                             resource_observations=resource_rows, deck_size_association=[])
+            audit.append(run_audit)
+            if active_first is None:
+                continue
+            first = active_first[1]
+            ref = dict(run_id=rid, floor=first['state']['run']['floor'], turn=first['state']['turn'])
+            observations['startup_turn'].append((ref['turn'], ref))
+            observations['first_completed_floor'].append((ref['floor'], ref))
+            observations['mean_reached_floor'].append((run.get('floor') if cutoff is None else run.get('first_cut_floor'), ref))
+            if isinstance(run.get('victory'), bool):
+                observations['cleared_runs'].append((int(run['victory'] and cutoff is None), ref))
+            sizes = [a['entry_deck_size'] for _, _, a in eligible]
+            observations['deck_size_min'].append((min(sizes), ref))
+            observations['deck_size_max'].append((max(sizes), ref))
+            # One chronological qualifying attempt per floor, even including SL.
+            picked, seen = [], set()
+            for f, a, record in eligible:
+                if f['floor'] not in seen:
+                    seen.add(f['floor']); picked.append(record)
+            turns = [t for record in picked for t in record['turns']]
+            for kind in ('boss', 'elite', 'normal'):
+                vs = [t['damage'] for a in picked if a['kind'] == kind for t in a['turns'] if numeric(t['damage'])]
+                if vs:
+                    observations['dpr_'+kind].append((statistics.mean(vs), ref))
+            for suffix, condition in [('1_3', lambda t: t <= 3), ('4_6', lambda t: 4 <= t <= 6), ('7_plus', lambda t: t >= 7)]:
+                vs = [t['damage'] for t in turns if condition(t['turn']) and numeric(t['damage'])]
+                if vs:
+                    observations['dpr_turns_'+suffix].append((statistics.mean(vs), ref))
+            for name, field in [('block_per_turn', 'block'), ('hp_loss_per_turn', 'hp_loss')]:
+                vs = [t[field] for t in turns if numeric(t[field])]
+                if vs:
+                    observations[name].append((statistics.mean(vs), ref))
+            if turns:
+                observations['peak_turn_damage'].append((max(t['damage'] for t in turns), ref))
+            # Match the learner's descriptive association, without inferring
+            # a benefit from adding cards or controlling enemy/floor/resources.
+            size_pairs = defaultdict(list)
+            for record in picked:
+                values = [t['damage'] for t in record['turns']]
+                if values:
+                    size_pairs[record['kind']].append(dict(floor=record['floor'],
+                                                          size=record['entry_deck_size'], dpr=statistics.mean(values)))
+            slopes = []
+            for kind, points in size_pairs.items():
+                if len({p['size'] for p in points}) < 2:
+                    continue
+                mx, my = statistics.mean(p['size'] for p in points), statistics.mean(p['dpr'] for p in points)
+                slope = sum((p['size']-mx)*(p['dpr']-my) for p in points) / sum((p['size']-mx)**2 for p in points)
+                slopes.append(slope)
+                run_audit['deck_size_association'].append(dict(kind=kind, slope=slope, points=points))
+            if slopes:
+                observations['deck_size_scaling'].append((statistics.median(slopes), ref))
+            # Startup energy is the observed cost of required contributing plays,
+            # not all energy spent, net expenditure, or a theoretical minimum.
+            witness = active_first[2]['learner_witness']
+            if witness:
+                need = Counter()
+                for req in combo['cards']:
+                    if 'id' in req:
+                        need[req['id']] += req['count']
+                used, costs = Counter(), []
+                for w in witness.get('witness', []):
+                    cid = w['card']['id']
+                    if used[cid] < need[cid]:
+                        used[cid] += 1; costs.append(w['card'].get('cost'))
+                if need and used == need and all(numeric(c) and c >= 0 for c in costs):
+                    observations['startup_energy'].append((sum(costs), ref))
+            # Boss/chain histories are independent runs, not fight-attempt counts.
+            # Only explicit outcome summaries identify results; missing summaries
+            # do not become a recorded loss.
+            run_bosses = defaultdict(list)
+            chain = defaultdict(list)
+            for fight in held:
+                summary = fight['summary']
+                if not summary or summary.get('fight_kind') != 'boss':
+                    continue
+                ended = summary.get('ended_at', summary['ts'])
+                if ended < first['ts'] or (cutoff is not None and ended > cutoff):
+                    continue
+                boss = summary.get('encounter')
+                if not boss:
+                    continue
+                key = (boss.replace('+', '-')+'-F'+str(fight['floor']))[:100]
+                run_bosses[key].append(summary)
+                if fight['floor'] in (48, 49):
+                    chain[fight['floor']].append(summary)
+            for boss, summaries in run_bosses.items():
+                b_ref = dict(run_id=rid, floor=summaries[0]['floor'])
+                boss_samples[boss]['reached'].append((1, b_ref))
+                known = [s for s in summaries if s.get('result') in ('won', 'died', 'predicted_death')]
+                if known:
+                    boss_samples[boss]['won'].append((int(any(s['result'] == 'won' for s in known)), b_ref))
+                    normalization_rows.append(dict(combo=combo['id'], direction=options.get('direction'),
+                        run_id=rid, ascension=run.get('ascension'), version=run.get('version'),
+                        target=boss, metric='win_rate', value=int(any(s['result']=='won' for s in known)), evidence=b_ref))
+                # Completion/loss use the earliest FINISHED attempt, never a
+                # predicted-death cutoff. Missing turn-1/end fields stay unknown.
+                complete = next((f for f in held if f['summary'] in summaries and f['summary'].get('result') in ('won', 'died')
+                                 and f['frames'][0]['state'].get('turn') == 1), None)
+                if complete:
+                    summary = complete['summary']; entry = complete['frames'][0]
+                    for name, value in [('completion_turns', summary.get('turns')),
+                                        ('hp_loss', (entry['state']['combat'].get('player') or {}).get('current_hp'))]:
+                        if name == 'hp_loss':
+                            value = value-summary['end_hp'] if numeric(value) and numeric(summary.get('end_hp')) else None
+                        if numeric(value) and value >= 0:
+                            normalization_rows.append(dict(combo=combo['id'], direction=options.get('direction'), run_id=rid,
+                                ascension=run.get('ascension'), version=run.get('version'), target=boss, metric=name,
+                                value=value, evidence=b_ref))
+                candidate = next((f for f in held if f['summary'] in summaries and f['frames'][0]['state'].get('turn') == 1), None)
+                if candidate:
+                    simulation_cases.append(dict(combo=combo['id'], direction=options.get('direction'), run_id=rid,
+                        ascension=run.get('ascension'), version=run.get('version'), target=boss, encounter=candidate['summary']['encounter'],
+                        historical_max_hp=candidate['frames'][0]['state']['run'].get('max_hp'),
+                        entry=candidate['frames'][0]['_source'], evidence=b_ref))
+            if chain.get(48) and run.get('ascension') in chain_ascensions:
+                c_ref = dict(run_id=rid, floor=48)
+                observations['chain_reached'].append((1, c_ref))
+                first_results = [s['result'] for s in chain[48]]
+                second_results = [s['result'] for s in chain.get(49, [])]
+                if 'won' in first_results and 'won' in second_results:
+                    result = 1
+                elif all(x in ('died', 'predicted_death') for x in first_results) or any(x in ('died', 'predicted_death') for x in second_results):
+                    result = 0
+                else:
+                    result = None
+                if result is not None:
+                    observations['chain_won'].append((result, c_ref))
+                    observations['chain_win_rate'].append((result, c_ref))
+        # Availability denominator includes unformed runs; require explicit
+        # upgrade evidence when the requirement needs an upgraded card.
+        requirements = defaultdict(list)
+        for req in combo['cards']:
+            for cid in req.get('any_of', [req.get('id')]):
+                requirements[cid].append(req['upgraded'])
+        for run in population:
+            cutoff = run['first_cut'] if attempt == 'first' else None
+            visits = defaultdict(list)
+            for row in run['states']:
+                if cutoff is not None and row['ts'] > cutoff:
+                    continue
+                s = row['state']; r = s.get('run') or {}
+                act = act_index(r.get('act_id'))
+                if act is None or not isinstance(r.get('floor'), int):
+                    continue
+                cards = (s.get('reward') or {}).get('card_options') if s.get('screen') == 'REWARD' else (s.get('shop') or {}).get('cards') if s.get('screen') == 'SHOP' else None
+                if not isinstance(cards, list) or not cards or any(not c.get('card_id') for c in cards):
+                    continue
+                if s['screen'] == 'SHOP':
+                    if any(not isinstance(c.get('is_stocked'), bool) for c in cards):
                         continue
-                    ended = summary.get('ended_at', summary['ts'])
-                    if ended < first['ts'] or (cutoff is not None and ended > cutoff):
+                    cards = [c for c in cards if c['is_stocked']]
+                    if not cards:
                         continue
-                    boss = summary.get('encounter')
-                    if not boss:
+                visits[(act+1, r['floor'], s['screen'])].extend(cards)
+            for act in sorted({a for a, _, _ in visits}):
+                visible = [c for (a, _, _), cards in visits.items() if a == act for c in cards]
+                floor = min(f for a, f, _ in visits if a == act)
+                for card, upgraded in requirements.items():
+                    candidates = [c for c in visible if c['card_id'] == card]
+                    needs_upgrade = all(upgraded)
+                    if needs_upgrade and candidates and any(not isinstance(c.get('upgraded'), bool) for c in candidates):
                         continue
-                    key = (boss.replace('+', '-')+'-F'+str(fight['floor']))[:100]
-                    run_bosses[key].append(summary)
-                    if fight['floor'] in (48, 49):
-                        chain[fight['floor']].append(summary)
-                for boss, summaries in run_bosses.items():
-                    b_ref = dict(run_id=rid, floor=summaries[0]['floor'])
-                    boss_samples[boss]['reached'].append((1, b_ref))
-                    known = [s for s in summaries if s.get('result') in ('won', 'died', 'predicted_death')]
-                    if known:
-                        boss_samples[boss]['won'].append((int(any(s['result'] == 'won' for s in known)), b_ref))
-                if chain.get(48) and ascension in chain_ascensions:
-                    c_ref = dict(run_id=rid, floor=48)
-                    observations['chain_reached'].append((1, c_ref))
-                    first_results = [s['result'] for s in chain[48]]
-                    second_results = [s['result'] for s in chain.get(49, [])]
-                    if 'won' in first_results and 'won' in second_results:
-                        result = 1
-                    elif all(x in ('died', 'predicted_death') for x in first_results) or any(x in ('died', 'predicted_death') for x in second_results):
-                        result = 0
-                    else:
-                        result = None
-                    if result is not None:
-                        observations['chain_won'].append((result, c_ref))
-                        observations['chain_win_rate'].append((result, c_ref))
-            # Availability denominator includes unformed runs; require explicit
-            # upgrade evidence when the requirement needs an upgraded card.
-            requirements = defaultdict(list)
-            for req in combo['cards']:
-                for cid in req.get('any_of', [req.get('id')]):
-                    requirements[cid].append(req['upgraded'])
-            for run in population:
-                cutoff = run['first_cut'] if attempt == 'first' else None
-                visits = defaultdict(list)
-                for row in run['states']:
-                    if cutoff is not None and row['ts'] > cutoff:
-                        continue
-                    s = row['state']; r = s.get('run') or {}
-                    act = act_index(r.get('act_id'))
-                    if act is None or not isinstance(r.get('floor'), int):
-                        continue
-                    cards = (s.get('reward') or {}).get('card_options') if s.get('screen') == 'REWARD' else (s.get('shop') or {}).get('cards') if s.get('screen') == 'SHOP' else None
-                    if not isinstance(cards, list) or not cards or any(not c.get('card_id') for c in cards):
-                        continue
-                    if s['screen'] == 'SHOP':
-                        if any(not isinstance(c.get('is_stocked'), bool) for c in cards):
-                            continue
-                        cards = [c for c in cards if c['is_stocked']]
-                        if not cards:
-                            continue
-                    visits[(act+1, r['floor'], s['screen'])].extend(cards)
-                for act in sorted({a for a, _, _ in visits}):
-                    visible = [c for (a, _, _), cards in visits.items() if a == act for c in cards]
-                    floor = min(f for a, f, _ in visits if a == act)
-                    for card, upgraded in requirements.items():
-                        candidates = [c for c in visible if c['card_id'] == card]
-                        needs_upgrade = all(upgraded)
-                        if needs_upgrade and candidates and any(not isinstance(c.get('upgraded'), bool) for c in candidates):
-                            continue
-                        seen = any(not needs_upgrade or c.get('upgraded') is True for c in candidates)
-                        offers[(card, act)].append((int(seen), dict(run_id=run['run_id'], floor=floor)))
-            reasons = {
-                'aoe_damage': '多敌HP推进不能区分群体技能、逐个单攻、持续效果及遗物；多敌原始观察另存audit',
-                'startup_energy': '缺少可核逐牌贡献施放的现场energy_cost；净能量变化不能代替花费',
-                'startup_draw': '未保存累计实际抽牌计数；手牌净增/抽牌堆差不能当实际抽入数量',
-                'deck_size_scaling': '缺同局同战斗类型且至少两种规模的完整回合表现；无变化不能补0',
-                'potion_dependency': '有用药记录但没有可比不喝/早喝/保留反事实；资源原始观察另存audit',
-                'sl_dependency': '首试/SL及最终胜利差可观察，不识别不SL反事实；原始记录另存audit',
-                'key_relic_dependency': '遗物共现/入组条件不能识别移除后的因果依赖；原始观察另存audit',
-            }
-            observed = {}
-            for name in METRICS:
-                method = '进阶/版本/first与including_sl分层；首个已记录判死/实死/重载截尾；局内聚合后局间统计，不把SL/回合当独立局'
-                if name.startswith('dpr') or name == 'peak_turn_damage':
-                    method += '；激活回合之后完整就绪回合的敌HP推进，排除缺帧/变身/回血；全部伤源、余血截断，非组合因果归因'
-                elif name == 'block_per_turn':
-                    method += '；同回合可见正格挡增量之和下界，先局内均值'
-                elif name == 'hp_loss_per_turn':
-                    method += '；无可见回血的完整就绪回合玩家HP首尾差，含自损，非敌人毛伤'
-                elif name == 'startup_energy':
-                    method += '；最早激活见证中必需贡献施放的现场费用合计，非最低预算或全部过渡牌花费'
-                elif name == 'first_completed_floor':
-                    method += '；逐局最早生效见证所在层；首次持有单列audit'
-                elif name == 'deck_size_scaling':
-                    method += '；同局同战斗类型战斗DPR对牌组张数OLS斜率，局内各类型中位再跨局中位；敌人/层/资源未控，仅观察相关，不是加牌收益'
-                reducer = 'sum' if name in ('formed_runs', 'cleared_runs', 'chain_reached', 'chain_won') else 'min' if name == 'deck_size_min' else 'max' if name in ('deck_size_max', 'peak_turn_damage') else 'mean' if name == 'mean_reached_floor' else 'median'
-                reason = reasons.get(name, '无满足条件的可核观察；未给出激活条件/见证或缺完整边界，保留未知')
-                if name.startswith('chain_') and ascension not in chain_ascensions:
-                    reason = '该进阶冻结实战没有F49连战结构见证；不能把F48单Boss后结束当连战失败'
-                unit = 'independent_run_HP_per_turn_per_card' if name == 'deck_size_scaling' else 'independent_run'
-                observed[name] = rate(observations[name], method, reason) if name.endswith('_rate') else statistic(observations[name], unit, method, reducer, reason, name == 'startup_turn')
-            # Include n=0 slots for all explicitly observed or caller-specified targets.
-            boss_keys = set(boss_samples) | set(options.get('bosses', []))
-            for run in population:
-                for summary in run['summaries']:
-                    if summary.get('fight_kind') == 'boss' and summary.get('encounter'):
-                        boss_keys.add((summary['encounter'].replace('+', '-')+'-F'+str(summary['floor']))[:100])
-            bosses = {}
-            for boss in sorted(boss_keys):
-                vs = boss_samples[boss]
-                method = '已生效且入口仍持有所需牌的独立局；同局同Boss/层SL去重；未知结果不计胜率'
-                bosses[boss] = dict(reached=statistic(vs['reached'], 'independent_run', method, 'sum'),
-                                    won=statistic(vs['won'], 'independent_run', method, 'sum'), win_rate=rate(vs['won'], method))
-            metrics.append(dict(ascension=ascension, attempt=attempt, version=version, observed=observed, bosses=bosses,
-                                availability=[dict(card=card, act=act, offered_rate=rate(offers[(card, act)], '同幕有完整奖励/商店牌供给的独立局中至少出现一次所需版本牌的比例；SL/重复访问按局幕去重，不是掉率/可购买率', '本层本幕没有可核完整牌供给的独立局')) for card in sorted(requirements) for act in options.get('acts', [1, 2, 3])],
-                                simulation=[]))
+                    seen = any(not needs_upgrade or c.get('upgraded') is True for c in candidates)
+                    offers[(card, act)].append((int(seen), dict(run_id=run['run_id'], floor=floor)))
+        reasons = {
+            'aoe_damage': '多敌HP推进不能区分群体技能、逐个单攻、持续效果及遗物；多敌原始观察另存audit',
+            'startup_energy': '缺少可核逐牌贡献施放的现场energy_cost；净能量变化不能代替花费',
+            'startup_draw': '未保存累计实际抽牌计数；手牌净增/抽牌堆差不能当实际抽入数量',
+            'deck_size_scaling': '缺同局同战斗类型且至少两种规模的完整回合表现；无变化不能补0',
+            'potion_dependency': '有用药记录但没有可比不喝/早喝/保留反事实；资源原始观察另存audit',
+            'sl_dependency': '首试/SL及最终胜利差可观察，不识别不SL反事实；原始记录另存audit',
+            'key_relic_dependency': '遗物共现/入组条件不能识别移除后的因果依赖；原始观察另存audit',
+        }
+        by_run = {r['run_id']: r for r in population}
+        for name, samples in observations.items():
+            for value, ref in samples:
+                if numeric(value):
+                    rr = by_run[ref['run_id']]
+                    normalization_rows.append(dict(combo=combo['id'], direction=options.get('direction'),
+                        run_id=ref['run_id'], ascension=rr.get('ascension'), version=rr.get('version'),
+                        target='overall', metric=name, value=value, evidence=ref))
+        audit.append(dict(combo=combo['id'], attempt=attempt, normalization_rows=normalization_rows,
+                          simulation_cases=simulation_cases,
+                          raw_samples={k: [dict(value=v, evidence=e) for v, e in vs if numeric(v)] for k,vs in observations.items()},
+                          raw_boss_samples={k:{name:[dict(value=v,evidence=e) for v,e in vs] for name,vs in groups.items()} for k,groups in boss_samples.items()}))
+        observed = {}
+        for name in METRICS:
+            method = '所有进阶与版本合并，仅first与including_sl分开；首个已记录判死/实死/重载截尾；局内聚合后局间统计，不把SL/回合当独立局'
+            if name.startswith('dpr') or name == 'peak_turn_damage':
+                method += '；激活回合之后完整就绪回合的敌HP推进，排除缺帧/变身/回血；全部伤源、余血截断，非组合因果归因'
+            elif name == 'block_per_turn':
+                method += '；同回合可见正格挡增量之和下界，先局内均值'
+            elif name == 'hp_loss_per_turn':
+                method += '；无可见回血的完整就绪回合玩家HP首尾差，含自损，非敌人毛伤'
+            elif name == 'startup_energy':
+                method += '；最早激活见证中必需贡献施放的现场费用合计，非最低预算或全部过渡牌花费'
+            elif name == 'first_completed_floor':
+                method += '；逐局最早生效见证所在层；首次持有单列audit'
+            elif name == 'deck_size_scaling':
+                method += '；同局同战斗类型战斗DPR对牌组张数OLS斜率，局内各类型中位再跨局中位；敌人/层/资源未控，仅观察相关，不是加牌收益'
+            reducer = 'sum' if name in ('formed_runs', 'cleared_runs', 'chain_reached', 'chain_won') else 'min' if name == 'deck_size_min' else 'max' if name in ('deck_size_max', 'peak_turn_damage') else 'mean' if name == 'mean_reached_floor' else 'median'
+            reason = reasons.get(name, '无满足条件的可核观察；未给出激活条件/见证或缺完整边界，保留未知')
+            if name.startswith('chain_') and not any(r.get('ascension') in chain_ascensions for r in population):
+                reason = '冻结实战没有相应进阶F49连战结构见证；不能把F48单Boss后结束当连战失败'
+            unit = 'independent_run_HP_per_turn_per_card' if name == 'deck_size_scaling' else 'independent_run'
+            observed[name] = rate(observations[name], method, reason) if name.endswith('_rate') else statistic(observations[name], unit, method, reducer, reason, name == 'startup_turn')
+        # Include n=0 slots for all explicitly observed or caller-specified targets.
+        boss_keys = set(boss_samples) | set(options.get('bosses', []))
+        for run in population:
+            for summary in run['summaries']:
+                if summary.get('fight_kind') == 'boss' and summary.get('encounter'):
+                    boss_keys.add((summary['encounter'].replace('+', '-')+'-F'+str(summary['floor']))[:100])
+        bosses = {}
+        for boss in sorted(boss_keys):
+            vs = boss_samples[boss]
+            method = '已生效且入口仍持有所需牌的独立局；同局同Boss/层SL去重；未知结果不计胜率'
+            bosses[boss] = dict(reached=statistic(vs['reached'], 'independent_run', method, 'sum'),
+                                won=statistic(vs['won'], 'independent_run', method, 'sum'), win_rate=rate(vs['won'], method))
+        metrics.append(dict(attempt=attempt, observed=observed, bosses=bosses,
+                            availability=[dict(card=card, act=act, offered_rate=rate(offers[(card, act)], '同幕有完整奖励/商店牌供给的独立局中至少出现一次所需版本牌的比例；SL/重复访问按局幕去重，不是掉率/可购买率', '本层本幕没有可核完整牌供给的独立局')) for card in sorted(requirements) for act in options.get('acts', [1, 2, 3])],
+                            simulation=[],
+                            sources=[dict(run_id=r['run_id'], ascension=r.get('ascension'), version=r.get('version')) for r in population]))
     return metrics, audit

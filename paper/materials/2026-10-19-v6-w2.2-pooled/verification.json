@@ -1,0 +1,32 @@
+{
+  "timestamp": "2026-10-19 20:57:08 CST",
+  "branch": "v6-combo-metrics-pooled-20261019",
+  "base": "e3aec6e854a9e7576e696025a96d682ad1a1f3a4",
+  "integration": "not merged; Claude delegates atomic W1.2 + W2.2 integration and full checks to watcher",
+  "tests": {
+    "tsc": "passed; tsc-rebased.stdout/stderr",
+    "python": "40 passed; python-rebased.stdout/stderr",
+    "vitest_targeted": "1 file, 6 passed; targeted-rebased.stdout/stderr",
+    "vitest_full": "not run for this branch; explicitly deferred to watcher joint integration",
+    "frozen_raw_reconciliation": "452 checks passed",
+    "watcher_contract": "2 metrics pass; contract-v2.json"
+  },
+  "gitleaks": {
+    "builders": "passed; gitleaks-builders.json",
+    "materials_and_staged": "all passed, zero findings; gitleaks-extra-0/1/2.json and gitleaks-staged.json"
+  },
+  "sources": {
+    "knowledge/builders/build-combo-metrics.py": "771f8ab957c7ca91788cb2a6bcea764c062c17b05b44e4fc8a0514ba0e859ab9",
+    "knowledge/builders/combo_metrics.py": "7555bc862822468efd2ca9e428cdaae85b66581996722ceffe6bb3fa91a6e404",
+    "knowledge/builders/combo_normalization.py": "d2677391b1d2f5876abe43b416292c3a48c28b5c183fb3db9d060ece218b8784",
+    "knowledge/builders/combo_pooled.py": "4715726bbf6f4075d16b247d1e56644a8e1197e5138dba7b11804dfe0e14778e",
+    "knowledge/builders/combo-simulation.mts": "24ce22644de4fe490678b0e921481ea9a15de6683e6c7bd0b22bc502b6c41d30",
+    "knowledge/builders/combo-prerequisites.mts": "7964f6ddccee50256112f89781f34774734f7662ea03f086ef3a49613ef31e0d",
+    "knowledge/builders/test_combo_metrics.py": "3f77ed79aa4c3fc3dbac5fed43d2661b0fc6a0018999efa7ff0c6b536ffdca3a",
+    "agent/tests/v6-combo-simulation.test.ts": "ff2f704b066c1b58c4b58b97ed020a4c23a15216766b432479ef4c68a976bf80"
+  },
+  "runtime_changed": false,
+  "formal_knowledge_changed": false,
+  "new_game_or_llm_request": false,
+  "watcher_notification": "herdr agent_prompted wJ:pJT accepted at 20:54 and 20:55; commit number notification follows"
+}

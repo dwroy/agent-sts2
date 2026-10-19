@@ -9,6 +9,8 @@ import sys
 import tempfile
 import unittest
 
+from combo_normalization import normalized, offset_fit, unique_runs
+from combo_pooled import finalize
 from combo_metrics import (activation, activation_frame, compute_combo, digest, enemy_delta, extract, holding,
                           METRICS, rate, read_rows, statistic, turn_observations)
 
@@ -61,6 +63,20 @@ def corpus():
 
 
 class ComboMetricsTests(unittest.TestCase):
+    def test_non_null_prerequisite_cannot_be_silently_ignored(self):
+        spec = dict(SPEC, prerequisites={'op': 'contains', 'field': 'player.relics', 'value': 'FIXTURE_RELIC'})
+        with self.assertRaisesRegex(ValueError, 'source-verified'):
+            compute_combo(spec, corpus(), {'activation': RULE})
+        for value in (True, False, None):
+            runs = corpus()
+            results = {s['_source']['sha256']: dict(value=value, unavailable={'fixture': 'not observed'} if value is None else {}) for s in runs[0]['states']}
+            metrics, audit = compute_combo(spec, runs, dict(activation=RULE, prerequisite_results=results))
+            formed = metrics[1]['observed']['formed_runs']
+            self.assertEqual((formed['n'], formed['value']), (0, None) if value is None else (1, int(value)))
+            if value is not True:
+                self.assertTrue(all(b['win_rate']['n'] == 0 for b in metrics[1]['bosses'].values()))
+                self.assertTrue(any(a.get('excluded') == ('prerequisite_unknown' if value is None else 'prerequisite_false') for a in audit))
+
     def test_upgrade_false_accepts_upgraded(self):
         self.assertTrue(holding(SPEC['cards'], [dict(card_id='ALPHA', upgraded=True)]))
 
@@ -227,11 +243,19 @@ class ComboMetricsTests(unittest.TestCase):
         self.assertEqual(results[0]['observed']['chain_win_rate']['n'], 0)
         self.assertEqual(results[1]['observed']['cleared_runs']['value'], 1)
 
-    def test_version_and_ascension_stay_separate(self):
+    def test_version_and_ascension_pool_unknown_ascension_too(self):
         runs = corpus()
-        extra = copy.deepcopy(runs[0]); extra['ascension'] = 1; extra['version'] = 'other'
-        results, _ = compute_combo(SPEC, runs+[extra], {'activation': RULE})
-        self.assertEqual({(r['ascension'], r['version']) for r in results}, {(0, 'runs.code:fixture-v1'), (1, 'other')})
+        def clone(value,version,rid):
+            run = copy.deepcopy(runs[0]); run.update(run_id=rid,ascension=value,version=version)
+            for row in run['states']: row['state']['run_id']=rid
+            for fight in run['fights']:
+                fight['run_id']=rid
+                for row in fight['frames']: row['state']['run_id']=rid
+            return run
+        results, _ = compute_combo(SPEC, runs+[clone(10,'other','SECOND'),clone(None,'unknown','THIRD')], {'activation': RULE})
+        self.assertEqual(len(results),2)
+        self.assertTrue(all(r['observed']['formed_runs']['n']==3 for r in results))
+        self.assertTrue(all('ascension' not in r and 'version' not in r for r in results))
 
     def test_sl_repetition_does_not_inflate_runs_or_boss_denominator(self):
         runs = corpus(); run = runs[0]
@@ -324,13 +348,85 @@ class ComboMetricsTests(unittest.TestCase):
                 module.verified_witnesses(file, {SPEC['id']: SPEC}, path, limits, {'FIXTURE'})
 
 
+class PooledNormalizationTests(unittest.TestCase):
+    def rows(self):
+        return [dict(combo=c, direction='P', run_id=f'{c}-{i}', ascension=a, version=f'old-{i}', target='BOSS',
+                     value=base+.5*(a-10), evidence=dict(run_id=f'{c}-{i}',floor=17))
+                for c,base in [('X',20),('Y',40)] for i,a in enumerate([0,4,8,10])]
+
+    def test_common_offset_and_parent_shrink_with_uncertainty(self):
+        rows=self.rows(); result,detail=normalized(rows,'X','P',target='BOSS')
+        self.assertAlmostEqual(detail['offset'],.5)
+        self.assertAlmostEqual(detail['unshrunk'],20)
+        self.assertAlmostEqual(detail['parent'],30)
+        self.assertAlmostEqual(result['value'],(4*20+10*30)/14)
+        self.assertEqual((result['n'],detail['parent_n']),(4,8))
+        self.assertIsNotNone(result['se'])
+        self.assertEqual((result,detail),normalized(rows,'X','P',target='BOSS'))
+
+    def test_no_within_combo_ascension_variation_is_unknown(self):
+        rows=self.rows()
+        for r in rows: r['ascension']=0 if r['combo']=='X' else 10
+        stat,detail=normalized(rows,'X','P',target='BOSS')
+        self.assertIsNone(stat['value']); self.assertIsNone(detail['offset'])
+        self.assertIn('跨组合差异',stat['unknown_reason'])
+
+    def test_offset_shared_across_targets_not_target_strength(self):
+        rows=self.rows()
+        extra=[dict(r,target='OTHER',value=r['value']+50) for r in rows]
+        self.assertAlmostEqual(offset_fit(rows+extra)['offset'],.5)
+
+    def test_ascension_unknown_excluded_only_from_regression(self):
+        rows=self.rows(); rows[0]['ascension']=None
+        stat,detail=normalized(rows,'X','P',target='BOSS')
+        self.assertEqual(stat['n'],3)
+        self.assertEqual(detail['excluded_ascension_runs'],['X-0'])
+        plain,_=normalized(rows,'X','P',target='BOSS',regression=False)
+        self.assertEqual(plain['n'],4)
+
+    def test_direction_union_does_not_double_count_overlapping_combos(self):
+        rows=self.rows()[:4]
+        overlaps=[dict(r,combo='Y') for r in rows]
+        stat,detail=normalized(rows+overlaps,'X','P',target='BOSS')
+        self.assertEqual((stat['n'],detail['parent_n']),(4,4))
+        self.assertEqual(len(unique_runs(rows+overlaps)),4)
+
+    def test_linear_probability_out_of_range_is_unknown_not_clipped(self):
+        rows=[dict(combo='X',direction='P',target='BOSS',run_id=str(a),ascension=a,value=1-a,
+                   evidence=dict(run_id=str(a),floor=1)) for a in [0,1]]
+        stat,detail=normalized(rows,'X','P',target='BOSS',probability=True)
+        self.assertIsNone(stat['value']); self.assertIn('越界',stat['unknown_reason'])
+
+    def test_small_sample_does_not_invent_error_or_direction(self):
+        rows=self.rows()[:1]
+        stat,detail=normalized(rows,'X',None,target='BOSS',regression=False)
+        self.assertIsNone(stat['se']); self.assertIsNone(detail['parent'])
+        self.assertEqual(detail['weight'],1)
+
+    def test_raw_counts_sources_reconcile_and_missing_a10_is_explicit(self):
+        runs=corpus();metrics,audit=compute_combo(SPEC,runs,{'activation':RULE})
+        outputs=[dict(id=SPEC['id'],metrics=metrics,audit=audit)]
+        finalize(outputs,runs,{SPEC['id']:'P'})
+        for m in metrics:
+            self.assertEqual(m['raw_counts']['runs'],sum(len(s['run_ids']) for s in m['sources']))
+            self.assertEqual(m['raw_counts']['formed_runs'],1)
+            self.assertEqual(m['observed']['formed_runs']['value'],1)
+            self.assertEqual(m['target_ascension'],10)
+            self.assertEqual(len(m['regression']),2)
+            self.assertEqual(m['simulation'][0]['win_rate']['n'],0)
+            self.assertIsNone(m['simulation'][0]['win_rate']['value'])
+            self.assertTrue(m['simulation'][0]['win_rate']['unknown_reason'])
+            self.assertIsNone(m['regression'][0]['win_rate']['value'])
+
+
 def contract_fixture():
     with tempfile.TemporaryDirectory() as directory:
         path = Path(directory); write_logs(path)
         (path/'spec.json').write_text(json.dumps(SPEC))
         (path/'rules.json').write_text(json.dumps({SPEC['id']: dict(activation=RULE, evidence=[dict(run_id='FIXTURE', floor=48)])}))
         output = path/'report.json'
-        subprocess.run([sys.executable, str(HERE/'build-combo-metrics.py'), '--logs', str(path), '--spec', str(path/'spec.json'), '--rules', str(path/'rules.json'), '--character', 'silent', '--output', str(output)], check=True, capture_output=True)
+        proc = subprocess.run([sys.executable, str(HERE/'build-combo-metrics.py'), '--logs', str(path), '--spec', str(path/'spec.json'), '--rules', str(path/'rules.json'), '--character', 'silent', '--simulation', 'off', '--output', str(output)], capture_output=True)
+        if proc.returncode: raise RuntimeError(proc.stderr.decode())
         print(json.dumps(json.loads(output.read_text())['combos'][0]['metrics']))
 
 

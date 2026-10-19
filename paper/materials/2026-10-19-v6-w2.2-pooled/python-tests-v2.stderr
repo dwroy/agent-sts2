@@ -1,0 +1,14 @@
+..................F.....................
+======================================================================
+FAIL: test_non_null_prerequisite_cannot_be_silently_ignored (test_combo_metrics.ComboMetricsTests.test_non_null_prerequisite_cannot_be_silently_ignored)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/dw/Projects/agent-sts2/.worktrees/v6-combo-metrics-pooled-20261019/knowledge/builders/test_combo_metrics.py", line 77, in test_non_null_prerequisite_cannot_be_silently_ignored
+    self.assertFalse(metrics[1]['bosses'])
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: {'FIXTURE_ENEMY-F48': {'reached': {'n': 0, 'unit': 'independent_run', 'method': '已生效且入口仍持有所需牌的独立局；同局同Boss/层SL去重；未知结果不计胜率', 'value': None, 'p25': None, 'p75': None, 'se': None, 'distribution': [], 'evidence': [], 'unknown_reason': '没有符合口径的可核实观察', 'small_sample': True}, 'won': {'n': 0, 'unit': 'independent_run', 'method': '已生效且入口仍持有所需牌的独立局；同局同Boss/层SL去重；未知结果不计胜率', 'value': None, 'p25': None, 'p75': None, 'se': None, 'distribution': [], 'evidence': [], 'unknown_reason': '没有符合口径的可核实观察', 'small_sample': True}, 'win_rate': {'n': 0, 'unit': 'independent_run', 'method': '已生效且入口仍持有所需牌的独立局；同局同Boss/层SL去重；未知结果不计胜率；观察比例，边界SE=0不代表确定', 'value': None, 'p25': None, 'p75': None, 'se': None, 'distribution': [], 'evidence': [], 'unknown_reason': '没有可核独立局分母', 'small_sample': True}}, 'FIXTURE_ENEMY-F49': {'reached': {'n': 0, 'unit': 'independent_run', 'method': '已生效且入口仍持有所需牌的独立局；同局同Boss/层SL去重；未知结果不计胜率', 'value': None, 'p25': None, 'p75': None, 'se': None, 'distribution': [], 'evidence': [], 'unknown_reason': '没有符合口径的可核实观察', 'small_sample': True}, 'won': {'n': 0, 'unit': 'independent_run', 'method': '已生效且入口仍持有所需牌的独立局；同局同Boss/层SL去重；未知结果不计胜率', 'value': None, 'p25': None, 'p75': None, 'se': None, 'distribution': [], 'evidence': [], 'unknown_reason': '没有符合口径的可核实观察', 'small_sample': True}, 'win_rate': {'n': 0, 'unit': 'independent_run', 'method': '已生效且入口仍持有所需牌的独立局；同局同Boss/层SL去重；未知结果不计胜率；观察比例，边界SE=0不代表确定', 'value': None, 'p25': None, 'p75': None, 'se': None, 'distribution': [], 'evidence': [], 'unknown_reason': '没有可核独立局分母', 'small_sample': True}}} is not false
+
+----------------------------------------------------------------------
+Ran 40 tests in 0.231s
+
+FAILED (failures=1)
