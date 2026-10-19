@@ -1,0 +1,71 @@
+{
+  "at": "2026-10-20 01:04:45 CST",
+  "event": "fix-done",
+  "batch": "20261020-004301-fix-batch",
+  "thread": "01a1550b-c2bb-7432-a71e-0bdbd44d9177",
+  "model_rc": 0,
+  "original_batch_state": "failed",
+  "original_report": {
+    "path": "ops/codex-ops/learner/20261020-004301-fix-batch.out",
+    "bytes": 2979,
+    "sha256": "285e845c59657423983c1a08708f350b76fe8979aff57d4edd2a3129a9811e91"
+  },
+  "original_tests": {
+    "tsc": 0,
+    "vitest": 1,
+    "files": 536,
+    "cases": 4789,
+    "passed": 4769,
+    "failed": 20,
+    "restrictions": "EPERM/EROFS; original logs retained"
+  },
+  "original_negative_controls": {
+    "Python_without_source_rc": 1,
+    "wrapper_without_source_rc": 1,
+    "restored_wrapper_rc": 0,
+    "restored_wrapper_cases": 2,
+    "Python_fixed_cases_reported": 23
+  },
+  "owned_source": [
+    {
+      "path": "ops/ordinary_close.py",
+      "sha256": "d0ac7cdadff026a727636955dfc320d233578523a86b0b039b305ac19259450a"
+    },
+    {
+      "path": "ops/tests/test_ordinary_close.py",
+      "sha256": "0e38625ce1a2ea7f424d8f1fe8ed843c188b1c07bc82963755d4d474fdb06e13"
+    }
+  ],
+  "patch_SHA_verified": true,
+  "original_patch_preserved_after_FF": true,
+  "original_base": "a1e3401d96393e7377b284d0479e7ec2b756030a",
+  "rebased_base": "114fc0b34666be02d70cf55b8294088921deb4ed",
+  "fixed_staged_tree": "fd4999c6cb43b5dfa6d83c6ba38f15bb9536453a",
+  "source_commit": null,
+  "merged": null,
+  "host": {
+    "state": "actually_checking",
+    "pid": 3372808,
+    "start_ticks": 132135968,
+    "child_pid": 3372833,
+    "nice": 19,
+    "max_workers": 2,
+    "receipt": ".artifacts/ops-wake-20261020-0102/ordinary-host-status.json",
+    "full_result": null,
+    "original_worktree_lease_and_batch_check_lock": true,
+    "original_ops_owned_shell_pane_reused": "w1H:pT",
+    "new_timer_observer_or_model": false,
+    "callback": "Original learner-checks queue at finite host check termination"
+  },
+  "source_scope": "Candidate-local guards and history-preserving untouched pre-dataset reentry; bounded record commit retry, original full failure remains. Not activated in main or live.",
+  "production_dataset_started": false,
+  "ordinary_close_receipts_changed": false,
+  "prior_pending_records_completed": false,
+  "ACK_patch_or_pending_changed": false,
+  "parent_closed": false,
+  "retention_completed": false,
+  "worktree_and_scratch_retained": true,
+  "STOP_retained": true,
+  "Regent": "paused",
+  "next": "Process original learner-checks terminal event, validate unchanged two-file tree and real result, then commit/integrate only if original checks permit. No model redispatch, unchanged source full retry, production dataset to substitute tests, synthetic completion or role ACK."
+}
