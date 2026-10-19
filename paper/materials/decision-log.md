@@ -4785,3 +4785,5 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
 - 2026-10-19 22:07:38 CST [Codex/V6-W3联合验收] f7580b3f5基线上四功能精确树5e8b261e816a4b92cbf63f275d2473d0a3e749a2完整tsc/vitest通过，gitleaks各功能及联合扫描无发现；冻结包/逐层统计/机会/组合加载与幕初表、projection-entry及pick配对接口见paper/materials/2026-10-19-v6-w3-runtime/interfaces.md；真实小回放未知100%与缓存0、30s软预算超时限制原样记录，不把接口完成当投影有效或知识入库。校准续批与核心卡R2沿原派发继续、无新增批次；STOP保留/live不建/Regent暂停。
 
 - 2026-10-19 22:10:42 CST [Claude/Roy，仅文档] Roy 指示恢复 ops 与学习者并尽快上线 V6：watcher 恢复 ops 会话与调度（保留 STOP、Regent 暂停）并写入授权；ops 从 main 重建 live（V6 全关）、加载 Nova、接管学习闭环（V6 草稿经学习者正式发布并核消费者读回、校准结果按原流程更新可信度表）；校准完成后移除 STOP，Silent A10 以 V6_BUILD=shadow 开始 2–3 局健康检查，后续合入在下一局自然生效；健康检查通过且 W5 合入、正式知识发布后切 on 并登记 V6 发布号。见 docs/v6-plan.md 第 9 节“恢复运行与上线安排”。
+
+- 2026-10-19 22:20:53 CST [Claude/Roy，仅文档] Roy 决定直接上 V6、不跑影子局与 V5 局，由 Claude 监督 V6 正常运行与学习迭代：W5 与 B 合入、live 按 Nova 重建、校准完成后移除 STOP，Silent A10 以 V6_BUILD=on 运行（拿牌、选药走 Jev，出牌条目开启；商店、休息待 W7 合入后的下一局开启）；正式知识发布前用模板过渡组合；首批 V6 局逐局看健康指标，报错/超时/卡住按开关回退；学习闭环读取 V6 记录照常迭代。docs/v6-plan.md 第 9 节已更新。
