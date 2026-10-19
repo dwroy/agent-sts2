@@ -1,0 +1,26 @@
+
+ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/v6-w7-prompt-budget-20261020/agent
+
+ ❯ tests/v6-room-prompt-budget.test.ts (3 tests | 1 failed) 762ms
+   × retains UTF-8 potion slot questions and rejects missing or malformed slot answers after rest truncation 38ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/v6-room-prompt-budget.test.ts > retains UTF-8 potion slot questions and rejects missing or malformed slot answers after rest truncation
+AssertionError: expected 79104 to be less than or equal to 22000
+ ❯ tests/v6-room-prompt-budget.test.ts:117:26
+    115|   expect(variant).toBeTruthy();
+    116|   const d = buildV6RoomDecision(e, input, undefined, "fixed_provider_u…
+    117|   expect(bytes(d.state)).toBeLessThanOrEqual(V6_JEV_STATE_BYTES);
+       |                          ^
+    118|   expect(bytes({ model: "typesafe/jev-1.14", state: d.state, questions…
+    119|   expect(Object.keys(asRecord(d.questions.pick).criteria)).toEqual(inp…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed | 2 passed (3)
+      Tests  1 failed | 50 passed (51)
+   Start at  04:25:19
+   Duration  26.40s (transform 4.63s, setup 823ms, import 5.82s, tests 19.34s, environment 0ms)
+

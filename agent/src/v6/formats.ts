@@ -57,19 +57,23 @@ const paired = object({ mean: number(-1, 1), se: number(0, 1), n: positiveCount 
 const estimate = object({ value: probability, se: number(0, 1), n: positiveCount });
 const turnEstimate = object({ value: number(0, 10000), se: number(0, 10000), n: positiveCount });
 // Opaque provider metric snapshots retain sampling strata and evidence without inventing a metric model.
-const metricSnapshot = custom<JsonValue>((value, path, issues) => {
+function boundedMetricSnapshot(value: unknown): boolean {
   let nodes = 0;
   const walk = (v: unknown, depth: number): boolean => {
-    if (++nodes > 20000 || depth > 16) return false;
+    // R2's pooled 17-combination snapshots reach 21,434 nodes; retain them for audit.
+    if (++nodes > 50000 || depth > 16) return false;
     if (v === null || typeof v === "boolean") return true;
     if (typeof v === "number") return Number.isFinite(v);
     if (typeof v === "string") return v.length <= 4000;
     if (Array.isArray(v)) return v.length <= 1000 && v.every(x => walk(x, depth + 1));
     return plain(v) && Object.keys(v).length <= 1000 && Object.entries(v).every(([k, x]) => safeKey(k) && walk(x, depth + 1));
   };
-  if (!walk(value, 0)) issues.push(`${path}: bounded JSON metric snapshot required`);
+  return walk(value, 0);
+}
+const metricSnapshot = custom<JsonValue>((value, path, issues) => {
+  if (!boundedMetricSnapshot(value)) issues.push(`${path}: bounded JSON metric snapshot required`);
 });
-export const projectionEntrySchema = object({
+const projectionSchema = (snapshot = metricSnapshot) => object({
   schema: literal("projection-entry-v1"), option_id: id, direction_id: id, target_id: id,
   win: nullable(estimate), paired_delta: nullable(paired), losing_boss_hp_fraction: nullable(estimate),
   winning_player_hp_fraction: nullable(estimate), turns: nullable(turnEstimate), joint_win: nullable(estimate), joint_paired_delta: nullable(paired),
@@ -84,19 +88,37 @@ export const projectionEntrySchema = object({
   combo_id: optional(id), combo_source: optional(enumeration("build-core-v1", "construction-transition", "brain")),
   win_complete: optional(nullable(estimate)), win_incomplete: optional(nullable(estimate)),
   incomplete_source: optional(enumeration("empirical", "unknown")), expected_win: optional(nullable(probability)),
-  direction_value: optional(nullable(probability)), combo_metrics: optional(nullable(metricSnapshot)),
+  direction_value: optional(nullable(probability)), combo_metrics: optional(nullable(snapshot)),
 });
+export const projectionEntrySchema = projectionSchema();
 export type ProjectionEntry = Infer<typeof projectionEntrySchema>;
+const projectionChecks = (entry: ProjectionEntry, e: string[]): void => {
+  if (entry.win === null && entry.win_tier !== "unknown") e.push("win_tier: missing estimate must remain unknown");
+  if (entry.paired_delta === null && entry.delta_tier !== "unknown") e.push("delta_tier: missing paired estimate must remain unknown");
+  if (entry.combo_id === undefined && [entry.combo_source, entry.win_complete, entry.win_incomplete, entry.incomplete_source, entry.expected_win, entry.combo_metrics].some(v => v !== undefined)) e.push("combo_id: required for combo measurements");
+  if (entry.combo_id !== undefined && entry.combo_source === undefined) e.push("combo_source: required for a combo row");
+  if (entry.win_incomplete != null && entry.incomplete_source !== "empirical") e.push("win_incomplete: needs empirical source");
+  const p = entry.availability.take;
+  if (entry.expected_win != null && (p === null || (p > 0 && entry.win_complete == null) || (p < 1 && entry.win_incomplete == null))) e.push("expected_win: missing completion or nonzero-weight conditional win estimates");
+};
+const checkedProjectionSchema = refine(projectionEntrySchema, projectionChecks);
 export function validateProjectionEntry(v: unknown): Result<ProjectionEntry> {
-  return validate(refine(projectionEntrySchema, (entry, e) => {
-    if (entry.win === null && entry.win_tier !== "unknown") e.push("win_tier: missing estimate must remain unknown");
-    if (entry.paired_delta === null && entry.delta_tier !== "unknown") e.push("delta_tier: missing paired estimate must remain unknown");
-    if (entry.combo_id === undefined && [entry.combo_source, entry.win_complete, entry.win_incomplete, entry.incomplete_source, entry.expected_win, entry.combo_metrics].some(v => v !== undefined)) e.push("combo_id: required for combo measurements");
-    if (entry.combo_id !== undefined && entry.combo_source === undefined) e.push("combo_source: required for a combo row");
-    if (entry.win_incomplete != null && entry.incomplete_source !== "empirical") e.push("win_incomplete: needs empirical source");
-    const p = entry.availability.take;
-    if (entry.expected_win != null && (p === null || (p > 0 && entry.win_complete == null) || (p < 1 && entry.win_incomplete == null))) e.push("expected_win: missing completion or nonzero-weight conditional win estimates");
-  }), v);
+  return validate(checkedProjectionSchema, v);
+}
+/** Synchronous batch only: shared audit snapshots are checked once; no cache survives the call. */
+export function validateProjectionEntries(values: readonly unknown[]): Result<ProjectionEntry>[] {
+  const snapshots = new WeakMap<object, boolean>();
+  const snapshot = custom<JsonValue>((value, path, issues) => {
+    const object = value !== null && typeof value === "object" ? value : null;
+    let valid = object ? snapshots.get(object) : undefined;
+    if (valid === undefined) {
+      valid = boundedMetricSnapshot(value);
+      if (object) snapshots.set(object, valid);
+    }
+    if (!valid) issues.push(`${path}: bounded JSON metric snapshot required`);
+  });
+  const schema = refine(projectionSchema(snapshot), projectionChecks);
+  return values.map(value => validate(schema, value));
 }
 
 const numericSignal = object({ kind: enumeration("hp", "win"), value: number(), se: optional(number(0)), unit: enumeration("hp", "probability") });

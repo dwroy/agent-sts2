@@ -1,0 +1,34 @@
+{
+  "at": "2026-10-20T05:33:14+08:00",
+  "tested_base": "e07b793706259b79e902b21f464be5d6d8228fc2",
+  "tested_inputs": 2120,
+  "unchanged_tested_inputs": true,
+  "tsc": {
+    "exit_code": 0,
+    "command": "PATH=~/.local/node/bin:$PATH nice -n 15 npx tsc -p tsconfig.json --noEmit",
+    "log": "tsc-final.log"
+  },
+  "vitest": {
+    "exit_code": 0,
+    "command": "PATH=~/.local/node/bin:$PATH nice -n 15 npx vitest run --maxWorkers=2",
+    "summary": "596 files / 5696 passed / 2 existing skipped",
+    "files_passed": 596,
+    "tests_passed": 5696,
+    "tests_skipped": 2,
+    "duration_seconds": 599.41,
+    "log": "vitest-final.log"
+  },
+  "targeted": {
+    "exit_code": 0,
+    "files": 3,
+    "tests": 15,
+    "log": "targeted.log"
+  },
+  "gitleaks": {
+    "exit_code": 0,
+    "scope": "Nine changed/new source and test files plus all package materials; precommit staged and postcommit range scans additionally required",
+    "findings": 0,
+    "report": "gitleaks-scope.json",
+    "log": "gitleaks-scope.log"
+  }
+}

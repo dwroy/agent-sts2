@@ -3,6 +3,8 @@ import type { AnswerSpec } from "../brain/types.js";
 import type { JsonSchema } from "../brain/tools/types.js";
 import type { CoreTemplate } from "../construction/types.js";
 import type { ConstructionSupport } from "../construction/support.js";
+import { boundV6State, compactCombo, compactProjection, prioritize, V6_BRAIN_CHARS } from "./prompt-summary.js";
+import type { ProjectionReason } from "./replan-triggers.js";
 import type { BuildCore } from "./build-core.js";
 import { checkRoute, routeIds, routeMapFromView } from "../sim/route-map.js";
 import { validateDirectionWeights, type DirectionContext, type ProjectionEntry } from "./formats.js";
@@ -70,18 +72,18 @@ export function directionPlanSpec(payload: unknown, label = "run-plan"): AnswerS
   return { label, kind: "plan", reask: true, schema: { type: "object", properties, required: ["schema", "direction_weights", "potion_directions", "route", "rest", "checkpoint", "reason"], additionalProperties: false },
     validate: answer => { const r = validateDirectionWeights(answer, context); return r.ok ? [] : r.issues; } };
 }
-export function directionTask(input: { summaries: DirectionSummary[]; entries: ProjectionEntry[]; appearedCards: string[]; potionIds: string[]; floor: number; current: JsonValue; map?: JsonValue; previous?: JsonValue }): Record<string, JsonValue> {
-  const summaries = input.summaries.map(s => ({ ...s, combos: directionCombos(s, input.previous).map(c => ({ ...c,
-    projection_status: input.entries.some(e => e.direction_id === s.id && e.combo_id === c.id) ? "provided" : "unknown",
-    evaluations: input.entries.filter(e => e.direction_id === s.id && e.combo_id === c.id).map(e => ({
-      option: e.option_id, target: e.target_id, availability: e.availability, win_complete: e.win_complete ?? null,
-      win_incomplete: e.win_incomplete ?? null, incomplete_source: e.incomplete_source ?? "unknown",
-      expected_win: e.expected_win ?? null, paired_delta: e.paired_delta, direction_value: e.direction_value ?? null,
-      metrics: e.combo_metrics === undefined ? c.metrics : e.combo_metrics, trust: e.trust,
-    })) })) }));
-  return { task: "评估全部方向×目标及各组合的凑齐概率、凑齐后胜率、凑不齐胜率、组合期望、配对误差和可信度，输出 direction-weights-v1。核心构筑卡摘要按方向保留多个组合、每回合伤害、启动回合和历史战绩及各自样本口径。全部方向权重和为1，只给方向概率，不给组合概率。未知不得当作收益；过渡最小组合仅复用原要求签名，指标未知。ideal_overrides仅可引用核心构筑卡牌池或本局出现过的牌，作为来源brain的临时组合。药水按ID或已发布类别给档位。route为合法节点路线或keep；rest为heal/smith/auto；checkpoint必须大于当前层。",
+export function directionTask(input: { summaries: DirectionSummary[]; entries: ProjectionEntry[]; projectionReasons?: readonly ProjectionReason[]; appearedCards: string[]; potionIds: string[]; floor: number; current: JsonValue; map?: JsonValue; previous?: JsonValue }): Record<string, JsonValue> {
+  const weights = asRecord(asRecord(input.previous).direction_weights) as Record<string, number>;
+  const score = (direction: string, combo: string) => Math.max(-1, ...input.entries.filter(e => e.direction_id === direction && e.combo_id === combo).map(e => e.expected_win ?? -1));
+  const targets = [...new Set(input.entries.map(e => e.target_id))];
+  const summaries = prioritize(input.summaries, weights, s => s.id).map(s => ({ id: s.id, name: s.name, source: s.source,
+    combos: [...directionCombos(s, input.previous)].sort((a, b) => score(s.id, b.id) - score(s.id, a.id)).map(c => compactCombo(c, targets,
+      input.entries.find(e => e.direction_id === s.id && e.combo_id === c.id && e.combo_metrics != null)?.combo_metrics ?? c.metrics)) }));
+  const entries = prioritize(input.entries, weights, e => e.direction_id, e => score(e.direction_id, e.combo_id ?? ""));
+  return boundV6State({ task: "评估全部方向×目标及各组合的凑齐概率、凑齐后胜率、凑不齐胜率、组合期望、配对误差和可信度，输出 direction-weights-v1。核心构筑卡摘要按方向保留多个组合、每回合伤害、启动回合和历史战绩及各自样本口径。全部方向权重和为1，只给方向概率，不给组合概率。未知不得当作收益；过渡最小组合仅复用原要求签名，指标未知。ideal_overrides仅可引用核心构筑卡牌池或本局出现过的牌，作为来源brain的临时组合。药水按ID或已发布类别给档位。route为合法节点路线或keep；rest为heal/smith/auto；checkpoint必须大于当前层。",
     v6_direction_context: toJsonValue({ schema: "direction-context-v1", catalog: Object.fromEntries(input.summaries.map(s => [s.id, s.components])), appeared_cards: input.appearedCards, potion_ids: input.potionIds, floor: input.floor }),
-    build_cores: toJsonValue(summaries), direction_evaluation: toJsonValue(input.entries),
-    availability: toJsonValue(input.entries.map(e => ({ direction: e.direction_id, ...(e.combo_id ? { combo: e.combo_id, source: e.combo_source! } : {}), target: e.target_id, option: e.option_id, ...e.availability }))),
-    run_state: input.current, ...(input.map ? { act_route: input.map } : {}), ...(input.previous ? { previous_plan: input.previous } : {}) };
+    build_cores: toJsonValue(summaries), direction_evaluation: toJsonValue(entries.map(e => compactProjection(e, input.projectionReasons?.find(r =>
+      r.option_id === e.option_id && r.direction_id === e.direction_id && r.target_id === e.target_id && r.combo_id === e.combo_id)?.reasons))),
+    availability: toJsonValue(entries.map(e => ({ direction: e.direction_id, ...(e.combo_id ? { combo: e.combo_id, source: e.combo_source! } : {}), target: e.target_id, option: e.option_id, ...e.availability }))),
+    run_state: input.current, ...(input.map ? { act_route: input.map } : {}), ...(input.previous ? { previous_plan: input.previous } : {}) }, V6_BRAIN_CHARS, "chars");
 }

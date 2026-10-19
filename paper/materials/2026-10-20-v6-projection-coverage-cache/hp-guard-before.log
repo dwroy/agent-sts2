@@ -1,0 +1,51 @@
+
+ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/v6-projection-coverage-cache-20261020/agent
+
+ ❯ tests/v6-history-targets.test.ts (10 tests | 4 failed) 58ms
+     × keeps invalid explicit current-route HP -1 unknown even with historical fallback 8ms
+     × keeps invalid explicit current-route HP NaN unknown even with historical fallback 1ms
+     × keeps invalid explicit current-route HP Infinity unknown even with historical fallback 1ms
+     × keeps invalid explicit current-route HP 101 unknown even with historical fallback 1ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 4 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/v6-history-targets.test.ts > V6 historical scope and targets > keeps invalid explicit current-route HP -1 unknown even with historical fallback
+ FAIL  tests/v6-history-targets.test.ts > V6 historical scope and targets > keeps invalid explicit current-route HP NaN unknown even with historical fallback
+ FAIL  tests/v6-history-targets.test.ts > V6 historical scope and targets > keeps invalid explicit current-route HP Infinity unknown even with historical fallback
+ FAIL  tests/v6-history-targets.test.ts > V6 historical scope and targets > keeps invalid explicit current-route HP 101 unknown even with historical fallback
+AssertionError: expected { hp: 50, n: 1, …(2) } to match object { hp: null, n: +0, …(2) }
+
+- Expected
++ Received
+
+  {
+-   "hp": null,
++   "hp": 50,
+    "labels": [
+-     "invalid_current_route_hp",
++     "selected_reached_checkpoint_cohort",
++     "future_relics_and_potions_not_predicted",
++     "missing_route_own_checkpoint_hp_fallback",
+    ],
+-   "n": 0,
+-   "source": "existing_route_projection",
++   "n": 1,
++   "source": "own_first_entry_hp_ratio_median",
+  }
+
+ ❯ tests/v6-history-targets.test.ts:59:40
+     57|     const c = context([observation("a",17,"SOUL_FYSH",30)]);
+     58|     const target = { id:"f17",boss:"SOUL_FYSH",act:1,floor:17,kind:"cu…
+     59|     expect(v6EntryHp(c,target,100,hp)).toMatchObject({ hp:null, n:0, s…
+       |                                        ^
+     60|       labels:["invalid_current_route_hp"] });
+     61|     expect(v6EntryHp(c,target,100,null).hp).toBe(50);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/4]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  4 failed | 6 passed (10)
+   Start at  04:04:20
+   Duration  2.46s (transform 1.89s, setup 425ms, import 1.83s, tests 58ms, environment 0ms)
+

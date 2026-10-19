@@ -1,0 +1,336 @@
+diff --git a/agent/src/hand/screens/v6-room.ts b/agent/src/hand/screens/v6-room.ts
+index 708ade3d8..88032e512 100644
+--- a/agent/src/hand/screens/v6-room.ts
++++ b/agent/src/hand/screens/v6-room.ts
+@@ -10,7 +10,7 @@ import { v6ProjectionEntries } from "../../sim/v6-projection-entries.js";
+ import { v6DeltaTier, type V6ProjectionTable } from "../../sim/v6-projection.js";
+ import { v6Config } from "../../v6/config.js";
+ import { v6Directions } from "../../v6/direction-runtime.js";
+-import { boundedV6Jev, compactCombo, prioritize, promptBudgetLabels } from "../../v6/prompt-summary.js";
++import { boundedV6Jev, compactCombo, compactProjection, prioritize, promptBudgetLabels } from "../../v6/prompt-summary.js";
+ import { directionCombos } from "../../v6/direction-plan.js";
+ import { validateProjectionEntry, type ProjectionEntry } from "../../v6/formats.js";
+ import { potionAnswersComplete } from "../../v6/potion-entries.js";
+@@ -107,8 +107,7 @@ export function buildV6RoomDecision(env: DecisionEnv, input: V6RoomOptions, tabl
+           e => e.expected_win ?? -1).map(e => {
+           const row = table?.combinations.find(r => r.entry.option_id === e.option_id && r.entry.direction_id === e.direction_id
+             && r.entry.target_id === e.target_id && r.combination_id === e.combo_id);
+-          const { combo_metrics: _metrics, ...fields } = e;
+-          return { ...fields, formation_n: row?.formation_n ?? null, formation_se: row?.formation_se ?? null,
++          return { ...asRecord(compactProjection(e)), formation_n: row?.formation_n ?? null, formation_se: row?.formation_se ?? null,
+             combo_role: row?.role ?? "unknown", role_labels: row?.role_labels ?? [], model_labels: row?.model_labels ?? [],
+             unknown_reasons: row?.unknown_reasons ?? [source?.rejected_options.find(r => r.id === o.option.key)?.reason ?? o.unknown_reason ?? reason] };
+         }) }])))),
+diff --git a/agent/src/v6/card-pick.ts b/agent/src/v6/card-pick.ts
+index 74295bb42..ef6d44d54 100644
+--- a/agent/src/v6/card-pick.ts
++++ b/agent/src/v6/card-pick.ts
+@@ -6,7 +6,7 @@ import type { AnswerSet, ChoiceAnswer } from "../reflex/jev/answers.js";
+ import { choiceQ } from "../reflex/jev/questions.js";
+ import { v6DeltaTier, type V6ProjectionTable } from "../sim/v6-projection.js";
+ import { v6ProjectionEntries } from "../sim/v6-projection-entries.js";
+-import { boundedV6Jev, compactCombo, prioritize, promptBudgetLabels } from "./prompt-summary.js";
++import { boundedV6Jev, compactCombo, compactProjection, prioritize, promptBudgetLabels } from "./prompt-summary.js";
+ import { directionCombos } from "./direction-plan.js";
+ import { v6Config } from "./config.js";
+ import { v6Directions } from "./direction-runtime.js";
+@@ -96,11 +96,11 @@ export function buildV6CardPick(env: DecisionEnv, table: V6ProjectionTable | und
+       availability: { take: null, skip: null }, weighted_current_boss_delta: null, weighted_joint_delta: null,
+       deck_count_change: null, core_first_cast_turn: null, win_tier: "unknown", delta_tier: "unknown", direction_role: "unknown", trust: "unknown", reflex_ids: [] });
+   }
+-  for (const key of choices) facts[key] = { ...asRecord(facts[key]), projections: toJsonValue(entries.filter(e => e.option_id === key).map(({ combo_metrics: _metrics, ...entry }) => {
++  for (const key of choices) facts[key] = { ...asRecord(facts[key]), projections: toJsonValue(entries.filter(e => e.option_id === key).map(entry => {
+     const row = table?.combinations.find(r => r.entry.option_id === entry.option_id && r.entry.direction_id === entry.direction_id
+       && r.combination_id === entry.combo_id && r.entry.target_id === entry.target_id);
+-    return { ...entry, ...(row ? { combo_role: row.role, role_labels: row.role_labels,
+-      formation_se: row.formation_se, formation_n: row.formation_n, unknown_reasons: row.unknown_reasons } : {}) };
++    return { ...asRecord(compactProjection(entry, row?.unknown_reasons)), ...(row ? { combo_role: row.role, role_labels: row.role_labels,
++      formation_se: row.formation_se, formation_n: row.formation_n } : {}) };
+   })) };
+   const modelLimits = [...new Set(table?.combinations.flatMap(r => r.model_labels) ?? [])];
+   const score = (d: string, c: string) => Math.max(-1, ...entries.filter(e => e.direction_id === d && e.combo_id === c).map(e => e.expected_win ?? -1));
+diff --git a/agent/src/v6/direction-plan.ts b/agent/src/v6/direction-plan.ts
+index f4754209c..db3e14c28 100644
+--- a/agent/src/v6/direction-plan.ts
++++ b/agent/src/v6/direction-plan.ts
+@@ -4,6 +4,7 @@ import type { JsonSchema } from "../brain/tools/types.js";
+ import type { CoreTemplate } from "../construction/types.js";
+ import type { ConstructionSupport } from "../construction/support.js";
+ import { boundV6State, compactCombo, compactProjection, prioritize, V6_BRAIN_CHARS } from "./prompt-summary.js";
++import type { ProjectionReason } from "./replan-triggers.js";
+ import type { BuildCore } from "./build-core.js";
+ import { checkRoute, routeIds, routeMapFromView } from "../sim/route-map.js";
+ import { validateDirectionWeights, type DirectionContext, type ProjectionEntry } from "./formats.js";
+@@ -71,7 +72,7 @@ export function directionPlanSpec(payload: unknown, label = "run-plan"): AnswerS
+   return { label, kind: "plan", reask: true, schema: { type: "object", properties, required: ["schema", "direction_weights", "potion_directions", "route", "rest", "checkpoint", "reason"], additionalProperties: false },
+     validate: answer => { const r = validateDirectionWeights(answer, context); return r.ok ? [] : r.issues; } };
+ }
+-export function directionTask(input: { summaries: DirectionSummary[]; entries: ProjectionEntry[]; appearedCards: string[]; potionIds: string[]; floor: number; current: JsonValue; map?: JsonValue; previous?: JsonValue }): Record<string, JsonValue> {
++export function directionTask(input: { summaries: DirectionSummary[]; entries: ProjectionEntry[]; projectionReasons?: readonly ProjectionReason[]; appearedCards: string[]; potionIds: string[]; floor: number; current: JsonValue; map?: JsonValue; previous?: JsonValue }): Record<string, JsonValue> {
+   const weights = asRecord(asRecord(input.previous).direction_weights) as Record<string, number>;
+   const score = (direction: string, combo: string) => Math.max(-1, ...input.entries.filter(e => e.direction_id === direction && e.combo_id === combo).map(e => e.expected_win ?? -1));
+   const targets = [...new Set(input.entries.map(e => e.target_id))];
+@@ -81,7 +82,8 @@ export function directionTask(input: { summaries: DirectionSummary[]; entries: P
+   const entries = prioritize(input.entries, weights, e => e.direction_id, e => score(e.direction_id, e.combo_id ?? ""));
+   return boundV6State({ task: "评估全部方向×目标及各组合的凑齐概率、凑齐后胜率、凑不齐胜率、组合期望、配对误差和可信度，输出 direction-weights-v1。核心构筑卡摘要按方向保留多个组合、每回合伤害、启动回合和历史战绩及各自样本口径。全部方向权重和为1，只给方向概率，不给组合概率。未知不得当作收益；过渡最小组合仅复用原要求签名，指标未知。ideal_overrides仅可引用核心构筑卡牌池或本局出现过的牌，作为来源brain的临时组合。药水按ID或已发布类别给档位。route为合法节点路线或keep；rest为heal/smith/auto；checkpoint必须大于当前层。",
+     v6_direction_context: toJsonValue({ schema: "direction-context-v1", catalog: Object.fromEntries(input.summaries.map(s => [s.id, s.components])), appeared_cards: input.appearedCards, potion_ids: input.potionIds, floor: input.floor }),
+-    build_cores: toJsonValue(summaries), direction_evaluation: toJsonValue(entries.map(compactProjection)),
++    build_cores: toJsonValue(summaries), direction_evaluation: toJsonValue(entries.map(e => compactProjection(e, input.projectionReasons?.find(r =>
++      r.option_id === e.option_id && r.direction_id === e.direction_id && r.target_id === e.target_id && r.combo_id === e.combo_id)?.reasons))),
+     availability: toJsonValue(entries.map(e => ({ direction: e.direction_id, ...(e.combo_id ? { combo: e.combo_id, source: e.combo_source! } : {}), target: e.target_id, option: e.option_id, ...e.availability }))),
+     run_state: input.current, ...(input.map ? { act_route: input.map } : {}), ...(input.previous ? { previous_plan: input.previous } : {}) }, V6_BRAIN_CHARS, "chars");
+ }
+diff --git a/agent/src/v6/direction-runtime.ts b/agent/src/v6/direction-runtime.ts
+index 396d50a15..81025671f 100644
+--- a/agent/src/v6/direction-runtime.ts
++++ b/agent/src/v6/direction-runtime.ts
+@@ -129,7 +129,7 @@ export async function ensureDirectionPlan(env: DecisionEnv, brain: Pick<Brain, "
+     ...(data.vocab.status === "loaded" ? data.vocab.value.dimensions.potion_category.map(p => p.id) : []),
+     ...tableIds])];
+   const map = mapFromState(env) ?? actStartMap(env);
+-  const payload = directionTask({ summaries, entries, appearedCards: m.appearedCards, potionIds, floor,
++  const payload = directionTask({ summaries, entries, projectionReasons: provided?.projectionReasons, appearedCards: m.appearedCards, potionIds, floor,
+     current: runPlanInput(state, env.knowledge, "review", cards, relics, asArray(raw["potions"]).map(p => str(asRecord(p)["potion_id"]))),
+     ...(map ? { map: toJsonValue(routeView(map)) } : {}), ...(screenMemory.runPlan?.v6 ? { previous: toJsonValue(screenMemory.runPlan.v6) } : {}) });
+   reserveReplan(m.scheduler, act, turnKey);
+diff --git a/agent/src/v6/projection-consumer.ts b/agent/src/v6/projection-consumer.ts
+index 96fd306bc..8cf90bfbe 100644
+--- a/agent/src/v6/projection-consumer.ts
++++ b/agent/src/v6/projection-consumer.ts
+@@ -35,6 +35,9 @@ export function directionEvaluationFromProjection(table: V6ProjectionTable, conf
+       offeredCore: row.option_id !== baselineId && table.entries.some(e => e.option_id === row.option_id
+         && e.direction_id === row.direction_id && e.direction_role === "core") });
+   }
+-  return { id: v6Digest({ entries, comparisons, targets: table.targets }), entries,
++  const projectionReasons = table.combinations.filter(r => r.entry.option_id === baselineId).map(r => ({
++    option_id: r.entry.option_id, direction_id: r.entry.direction_id, target_id: r.entry.target_id,
++    ...(r.combination_id !== null ? { combo_id: r.combination_id } : {}), reasons: [...r.unknown_reasons] }));
++  return { id: v6Digest({ entries, comparisons, targets: table.targets }), entries, projectionReasons,
+     targets: table.targets.map(t => ({ id: t.id, kind: t.kind })), coreCompletion, comparisons, ...extra };
+ }
+diff --git a/agent/src/v6/prompt-summary.ts b/agent/src/v6/prompt-summary.ts
+index b7dd07798..1f12c288f 100644
+--- a/agent/src/v6/prompt-summary.ts
++++ b/agent/src/v6/prompt-summary.ts
+@@ -7,6 +7,7 @@ import type { ProjectionEntry } from "./formats.js";
+ export const V6_JEV_STATE_BYTES = 16_000;
+ export const V6_JEV_REQUEST_BYTES = 24_000;
+ export const V6_BRAIN_CHARS = 64_000;
++export const V6_OPENING_NOTE = "Wk is the completed-combo branch; W0 is the incomplete empirical branch. 'opening unknown' means an evaluated opening outcome is unavailable or unreported; provider reasons do not necessarily identify its cause. Missing upgrade models remain unknown; more compute cannot supply a model. Null is not zero. Retain failed samples; never substitute Wk for W0.";
+ const bytes = (v: unknown) => Buffer.byteLength(JSON.stringify(v));
+ const stat = (v: unknown): JsonValue => {
+   const s = asRecord(v);
+@@ -36,9 +37,12 @@ export function compactCombo(combo: { id: string; source: string; requirements:
+     cards: combo.requirements, metrics: compactBuildMetrics(metrics, targets) });
+ }
+ /** projection-entry-v1 numeric semantics are unchanged; metric snapshots are sent once per combo. */
+-export function compactProjection(entry: ProjectionEntry): JsonValue {
++export function compactProjection(entry: ProjectionEntry, reasons?: readonly string[]): JsonValue {
+   const { combo_metrics: _audit, ...fields } = entry;
+-  return toJsonValue(fields);
++  return toJsonValue({ ...fields,
++    // A missing estimate is not proof of an opening-construction failure, including P=1's unused W0.
++    opening: { Wk: entry.win_complete ? "evaluated" : "opening unknown", W0: entry.win_incomplete ? "evaluated" : "opening unknown" },
++    ...(reasons?.length ? { unknown_reasons: [...reasons] } : {}) });
+ }
+ export function prioritize<T>(rows: readonly T[], weights: Readonly<Record<string, number>>, direction: (v: T) => string, score: (v: T) => number = () => 0): T[] {
+   return rows.map((v, i) => ({ v, i })).sort((a, b) => (weights[direction(b.v)] ?? 0) - (weights[direction(a.v)] ?? 0)
+@@ -50,10 +54,10 @@ export interface PromptBudget {
+ }
+ /** Remove whole trailing rows first. Callers order directions/combos by brain weight and expected win. */
+ export function boundV6State(input: Record<string, JsonValue>, limit: number, unit: "bytes" | "chars" = "bytes", omitted: Record<string, number> = {}): Record<string, JsonValue> {
+-  const state = structuredClone(input), size = unit === "bytes" ? bytes : (v: unknown) => JSON.stringify(v).length;
++  const state = structuredClone({ ...input, opening_note: V6_OPENING_NOTE }) as Record<string, JsonValue>, size = unit === "bytes" ? bytes : (v: unknown) => JSON.stringify(v).length;
+   const budget: PromptBudget = { limit, unit, before: size(state), after: 0, truncated: Object.keys(omitted).length > 0, omitted: { ...omitted } };
+   state.prompt_budget = toJsonValue(budget);
+-  const protectedPaths = new Set(["v6_direction_context", "direction_weights", "act_route"]);
++  const protectedPaths = new Set(["v6_direction_context", "direction_weights", "act_route", "opening_note"]);
+   const candidates = (): { path: string; value: JsonValue[]; cost: number }[] => {
+     const result: { path: string; value: JsonValue[]; cost: number }[] = [];
+     const walk = (v: JsonValue, path: string) => {
+diff --git a/agent/src/v6/replan-triggers.ts b/agent/src/v6/replan-triggers.ts
+index b690280c2..b69e5bd45 100644
+--- a/agent/src/v6/replan-triggers.ts
++++ b/agent/src/v6/replan-triggers.ts
+@@ -8,9 +8,14 @@ export interface DirectionComparison {
+   offeredCore?: boolean;
+   optionId?: string; labels?: string[];
+ }
++export interface ProjectionReason {
++  option_id: string; direction_id: string; target_id: string; combo_id?: string; reasons: string[];
++}
+ export interface DirectionEvaluation {
+   id: string;
+   entries: ProjectionEntry[];
++  /** Provider diagnostics for prompt display only; absence never diagnoses a model failure. */
++  projectionReasons?: ProjectionReason[];
+   /** Actual W3 checkpoint identities, including ordered two-boss targets. */
+   targets?: Array<{ id: string; kind: "current" | "future" | "chain" }>;
+   comparisons?: DirectionComparison[];
+diff --git a/agent/tests/v6-card-pick.test.ts b/agent/tests/v6-card-pick.test.ts
+index 4fb659f1b..10c721dbd 100644
+--- a/agent/tests/v6-card-pick.test.ts
++++ b/agent/tests/v6-card-pick.test.ts
+@@ -72,7 +72,8 @@ it("consumes W3's genuine per-combination rows including the P=1 null-W0 boundar
+   expect(p.entries.filter(e => e.option_id === "card7").every(e => e.expected_win === null)).toBe(true);
+   expect(p.entries.every(e => validateProjectionEntry(e).ok)).toBe(true);
+   expect(p.decision.state).toMatchObject({ options: { card2: { projections: [expect.objectContaining({ combo_id: "TEST_A:min",
+-    combo_role: "in_combo", role_labels: ["output"], formation_se: 0, formation_n: 200 }), expect.anything()] },
++    combo_role: "in_combo", role_labels: ["output"], formation_se: 0, formation_n: 200,
++    opening: { Wk: "evaluated", W0: "opening unknown" }, win_incomplete: null }), expect.anything()] },
+     skip: { projections: [expect.objectContaining({ combo_role: "off_combo", role_labels: [] }), expect.anything()] } },
+     model_limits: expect.arrayContaining(["raw_simulation_not_calibrated", "partial_model"]) });
+ });
+diff --git a/agent/tests/v6-direction-provider.test.ts b/agent/tests/v6-direction-provider.test.ts
+index a19baf1b2..c37541fef 100644
+--- a/agent/tests/v6-direction-provider.test.ts
++++ b/agent/tests/v6-direction-provider.test.ts
+@@ -111,3 +111,29 @@ it("turns official complete pick pairs into one T3 and two independent-evaluatio
+   for (const pair of table.pick_direction_comparisons) pair.known_mass = NaN;
+   expect(directionEvaluationFromProjection(table, r.config, "skip", plan).comparisons).toEqual([]);
+ });
++
++it("carries incomplete-opening provider diagnostics into the brain without treating W0 as a loss or filtering samples", async () => {
++  const r = request(), prepare = r.prepare;
++  r.phase = "act";
++  r.prepare = (target, sample) => sample.cards.some(c => c.id === "G") ? null : prepare(target, sample);
++  const table = await new V6ProjectionEngine(new FixedRunner()).evaluate(r);
++  const baseline = table.combinations.find(row => row.entry.option_id === "skip")!;
++  expect(baseline.completed_win).not.toBeNull(); expect(baseline.general_win).toBeNull();
++  const sampleIds = [...baseline.completion_sample_ids];
++  // Fixed provider diagnostic: current main omits prepare errors; watcher owns their propagation.
++  baseline.unknown_reasons.push("unknown_opening_entry_hp_or_empirical_sample");
++  const evaluation = directionEvaluationFromProjection(table, r.config, "skip");
++  const task = directionTask({ summaries: directionSummaries("silent", 10, [], [r.directions[0]!.core], null),
++    entries: evaluation.entries, projectionReasons: evaluation.projectionReasons,
++    appearedCards: [], potionIds: [], floor: 5, current: null });
++  expect(asArray(task.direction_evaluation)).toEqual([expect.objectContaining({
++    win_complete: baseline.completed_win, win_incomplete: null, expected_win: null,
++    opening: { Wk: "evaluated", W0: "opening unknown" },
++    unknown_reasons: expect.arrayContaining(["unknown_opening_entry_hp_or_empirical_sample"]),
++  })]);
++  expect(baseline.completion_sample_ids).toEqual(sampleIds);
++  expect(baseline.general_win).toBeNull();
++  const copiedReasons = [...evaluation.projectionReasons![0]!.reasons];
++  baseline.unknown_reasons.push("later_provider_mutation");
++  expect(evaluation.projectionReasons![0]!.reasons).toEqual(copiedReasons);
++});
+diff --git a/agent/tests/v6-direction-runtime.test.ts b/agent/tests/v6-direction-runtime.test.ts
+index be87b0afa..e8166937a 100644
+--- a/agent/tests/v6-direction-runtime.test.ts
++++ b/agent/tests/v6-direction-runtime.test.ts
+@@ -122,3 +122,20 @@ it("uses the provider target IDs without adding legacy boss or joint placeholder
+   expect(rows).toHaveLength(8);
+   expect(rows.filter(r => r.expected_win !== null)).toHaveLength(1);
+ });
++
++it("forwards provider opening reasons through the actual planner and keeps unknown W0", async () => {
++  vi.stubEnv("V6_BUILD", "on"); const { dir, log, e } = fixture();
++  const entry = { ...comboProjection(), target_id: "TEST_TARGET", win: null, win_tier: "unknown" as const, expected_win: null, win_incomplete: null };
++  e.v6DirectionEvaluation = { id: "opening-fixture", entries: [entry], projectionReasons: [{
++    option_id: entry.option_id, direction_id: entry.direction_id, target_id: entry.target_id, combo_id: entry.combo_id,
++    reasons: ["unknown_opening_entry_hp_or_empirical_sample"],
++  }] };
++  const brain = { askJson: vi.fn(async () => ({ json: { ...weights, potion_directions: [] } })) } as unknown as Pick<Brain, "askJson">;
++  const result = await ensureDirectionPlan(e, brain, log, dir);
++  expect(result?.payload?.direction_evaluation).toContainEqual(expect.objectContaining({
++    combo_id: entry.combo_id, target_id: "TEST_TARGET", win_complete: entry.win_complete, win_incomplete: null,
++    opening: { Wk: "evaluated", W0: "opening unknown" }, unknown_reasons: ["unknown_opening_entry_hp_or_empirical_sample"],
++  }));
++  expect(result?.payload?.opening_note).toContain("never substitute Wk for W0");
++  expect(e.v6DirectionEvaluation.entries[0]).toEqual(entry);
++});
+diff --git a/agent/tests/v6-potions.test.ts b/agent/tests/v6-potions.test.ts
+index d30e57eed..c241768ec 100644
+--- a/agent/tests/v6-potions.test.ts
++++ b/agent/tests/v6-potions.test.ts
+@@ -111,6 +111,7 @@ it("rest slots come from Jev, ignore brain slot lists, and continue the chosen o
+   active(); const fx = logged("batch-g/zgz0-f11-rest-mailbox"), e = loggedEnv(fx, { buildDecider: "deepseek", oneshot: "off" });
+   const d = planRest(e) as AskDecision;
+   expect(Object.keys(d.potionJev!.questions)).toEqual(["potion_o0", "discard_p1", "discard_p2"]);
++  expect(d.potionJev!.state.opening_note).toContain("opening unknown");
+   expect(Object.keys((d.questions["pick"] as { criteria: object }).criteria)).not.toContain("o0:discard");
+   d.potionJev!.supply(potionPick("o0:discard", { discard_p1: .1, discard_p2: .9 }));
+   const result = d.resolve(brain("o0", [1]));
+diff --git a/agent/tests/v6-prompt-summary.test.ts b/agent/tests/v6-prompt-summary.test.ts
+index 8b5da7f6f..71d5e4245 100644
+--- a/agent/tests/v6-prompt-summary.test.ts
++++ b/agent/tests/v6-prompt-summary.test.ts
+@@ -4,7 +4,7 @@ import { tmpdir } from "node:os";
+ import { join } from "node:path";
+ import { fileURLToPath } from "node:url";
+ import { afterEach, expect, it, vi } from "vitest";
+-import { boundV6State, boundedV6Jev, compactBuildMetrics, promptBudgetLabels, V6_BRAIN_CHARS, V6_JEV_REQUEST_BYTES, V6_JEV_STATE_BYTES } from "../src/v6/prompt-summary.js";
++import { boundV6State, boundedV6Jev, compactBuildMetrics, compactProjection, promptBudgetLabels, V6_OPENING_NOTE, V6_BRAIN_CHARS, V6_JEV_REQUEST_BYTES, V6_JEV_STATE_BYTES } from "../src/v6/prompt-summary.js";
+ import { directionSummaries, directionTask, directionPlanSpec } from "../src/v6/direction-plan.js";
+ import { buildV6CardPick } from "../src/v6/card-pick.js";
+ import { buildV6RoomDecision } from "../src/hand/screens/v6-room.js";
+@@ -113,6 +113,7 @@ it("bounds real 17-combo act/replan prompts deterministically and preserves all
+   const payload = directionTask(input);
+   expect(JSON.stringify(payload).length).toBeLessThanOrEqual(V6_BRAIN_CHARS);
+   expect(directionTask(input)).toEqual(payload);
++  expect(payload.opening_note).toBe(V6_OPENING_NOTE);
+   const first = asRecord(asArray(payload.build_cores)[0]);
+   expect(first.id).toBe("R"); expect(asArray(first.combos).length).toBeGreaterThan(0);
+   expect(directionPlanSpec(payload)!.schema.properties!.direction_weights!.required).toEqual(["P", "D", "S", "R"]);
+@@ -121,6 +122,7 @@ it("bounds real 17-combo act/replan prompts deterministically and preserves all
+   const forced = boundV6State({ ...payload, oversized: "超长".repeat(100_000) }, V6_BRAIN_CHARS, "chars");
+   expect(JSON.stringify(forced).length).toBeLessThanOrEqual(V6_BRAIN_CHARS);
+   expect(promptBudgetLabels(forced)).toHaveLength(1);
++  expect(forced.opening_note).toBe(V6_OPENING_NOTE);
+   expect(asRecord(asArray(forced.build_cores)[0]).id).toBe("R");
+ });
+ it.each(["card", "shop", "rest"] as const)("bounds the real published %s prompt and preserves legal choices plus the leading combo", kind => {
+@@ -128,6 +130,7 @@ it.each(["card", "shop", "rest"] as const)("bounds the real published %s prompt
+   const d = kind === "card" ? buildV6CardPick(e, undefined, knowledge)!.decision
+     : buildV6RoomDecision(e, (kind === "shop" ? v6ShopOptions(e) : v6RestOptions(e))!, undefined, undefined, knowledge);
+   expect(size(d.state)).toBeLessThanOrEqual(V6_JEV_STATE_BYTES);
++  expect(d.state.opening_note).toBe(V6_OPENING_NOTE);
+   expect(size({ model: "typesafe/jev-1.14", state: d.state, questions: d.questions })).toBeLessThanOrEqual(V6_JEV_REQUEST_BYTES);
+   expect(asRecord(asArray(d.state.core_metrics)[0]).direction).toBe("R");
+   expect(Object.keys(asRecord(d.state.options))).toEqual(Object.keys(asRecord(d.questions.pick).criteria));
+@@ -135,6 +138,7 @@ it.each(["card", "shop", "rest"] as const)("bounds the real published %s prompt
+     const kept = asArray(asRecord(fact).projections);
+     expect(kept.length).toBeGreaterThan(0);
+     expect(asRecord(kept[0]).direction_id).toBe("R");
++    expect(asRecord(kept[0]).opening).toEqual({ Wk: "opening unknown", W0: "opening unknown" });
+   }
+   expect(promptBudgetLabels(d.state)).toHaveLength(1);
+   expect(JSON.stringify(d.state)).not.toContain('"combo_metrics"');
+@@ -152,6 +156,21 @@ it("bounds UTF-8 potion state and question text, preserving all slot/candidate k
+   expect(Object.keys(asRecord(result.state.options))).toEqual(Object.keys(options));
+   expect(Object.keys(asRecord(result.questions.pick).criteria)).toEqual(Object.keys(options));
+   expect(result.questions.slot).toEqual(questions.slot);
++  expect(result.state.opening_note).toBe(V6_OPENING_NOTE);
+   expect(asRecord(result.state.prompt_budget).after).toBe(size(result.state));
+   expect(promptBudgetLabels(result.state)).toHaveLength(1);
+ });
++
++it("keeps unknown W0 distinct from evaluated zero without replacing it with the known Wk", () => {
++  const entry = { ...comboProjection(), win: null, expected_win: null, win_incomplete: null };
++  const view = asRecord(compactProjection(entry, ["unknown_opening_entry_hp_or_empirical_sample"]));
++  expect(view).toMatchObject({ win: null, expected_win: null, win_complete: entry.win_complete, win_incomplete: null,
++    opening: { Wk: "evaluated", W0: "opening unknown" }, unknown_reasons: ["unknown_opening_entry_hp_or_empirical_sample"] });
++  expect(entry.win_incomplete).toBeNull();
++  const zero = { ...entry, win_complete: { value: 0, se: 0, n: 20 }, win_incomplete: { value: 0, se: 0, n: 20 } };
++  expect(asRecord(compactProjection(zero)).opening).toEqual({ Wk: "evaluated", W0: "evaluated" });
++  const budgetOnly = asRecord(compactProjection({ ...entry, win_complete: null }, ["budget_remaining_unknown"]));
++  expect(budgetOnly.opening).toEqual({ Wk: "opening unknown", W0: "opening unknown" });
++  expect(budgetOnly.unknown_reasons).toEqual(["budget_remaining_unknown"]);
++  expect(JSON.stringify(budgetOnly)).not.toMatch(/cardUpgrade|AFTERIMAGE|missing_upgrade_model/);
++});
+diff --git a/agent/tests/v6-room.test.ts b/agent/tests/v6-room.test.ts
+index b933dbcec..ef7e6fd99 100644
+--- a/agent/tests/v6-room.test.ts
++++ b/agent/tests/v6-room.test.ts
+@@ -270,8 +270,8 @@ it("publishes each combination with n/error/trust, leaves absent projections unk
+   const d = buildV6RoomDecision(e, input, t, undefined, dir);
+   expect(d.roomEntries).toHaveLength(input.options.length * 2); expect(d.roomEntries.every(e => validateProjectionEntry(e).ok)).toBe(true);
+   const output = asRecord(asRecord(d.state.options).buy_card0), projections = output.projections as Raw[];
+-  expect(projections.find(p => p.combo_id === "TEST_A:min")).toMatchObject({ formation_n: 200, formation_se: .02, combo_source: "build-core-v1", combo_role: "in_combo", model_labels: ["fixture_model"] });
+-  expect(projections.find(p => p.combo_id === "TEST_A:common")).toMatchObject({ win: null, formation_n: null, trust: "unknown" });
++  expect(projections.find(p => p.combo_id === "TEST_A:min")).toMatchObject({ formation_n: 200, formation_se: .02, combo_source: "build-core-v1", combo_role: "in_combo", model_labels: ["fixture_model"], opening: { Wk: "evaluated", W0: "evaluated" } });
++  expect(projections.find(p => p.combo_id === "TEST_A:common")).toMatchObject({ win: null, formation_n: null, trust: "unknown", opening: { Wk: "opening unknown", W0: "opening unknown" } });
+   const coreMetrics = d.state.core_metrics as Raw[];
+   expect((coreMetrics.find(c => c.id === "TEST_A:min")!.metrics as Raw[])[0]!).toMatchObject({ dpr_boss: { value: 42, n: 7, se: 2 } });
+   expect(JSON.stringify(d.state)).not.toContain("FIXTURE_RUN"); expect(JSON.stringify(d.state)).not.toContain('"evidence"'); expect(JSON.stringify(d.state)).not.toContain("card_outcome_stats");

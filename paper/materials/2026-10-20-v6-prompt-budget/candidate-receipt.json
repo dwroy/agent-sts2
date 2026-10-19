@@ -1,0 +1,259 @@
+{
+  "recorded_at": "2026-10-20 02:44:07 CST",
+  "candidate_requests_only": true,
+  "live_verified": false,
+  "candidate_card_requests": [
+    {
+      "file": "card-1.json",
+      "status": "completed",
+      "timings_ms": {
+        "snapshot": 651.296644,
+        "factory": 124.29612099999986,
+        "projection": 4528.688703,
+        "prompt": 791.2251139999998,
+        "jev": 1448.7642859999996,
+        "fallback": 0.14197899999999208,
+        "total": 7550.20251
+      },
+      "answer_valid": true,
+      "projection_unknown": 1,
+      "unknown": {
+        "count": 1224,
+        "total": 1224
+      },
+      "jev_error": null
+    },
+    {
+      "file": "card-2.json",
+      "status": "completed",
+      "timings_ms": {
+        "snapshot": 0.23908299999857263,
+        "factory": 114.59307699999954,
+        "projection": 4529.250383999999,
+        "prompt": 730.1364080000003,
+        "jev": 1708.2545059999993,
+        "fallback": 0.04041699999834236,
+        "total": 7087.191068
+      },
+      "answer_valid": true,
+      "projection_unknown": 1,
+      "unknown": {
+        "count": 1224,
+        "total": 1224
+      },
+      "jev_error": null
+    },
+    {
+      "file": "card-3.json",
+      "status": "completed",
+      "timings_ms": {
+        "snapshot": 0.3480039999994915,
+        "factory": 117.23189699999966,
+        "projection": 4526.105654000001,
+        "prompt": 720.3675389999989,
+        "jev": 601.622288999999,
+        "fallback": 0.023788999998942018,
+        "total": 5971.204929000001
+      },
+      "answer_valid": true,
+      "projection_unknown": 1,
+      "unknown": {
+        "count": 1224,
+        "total": 1224
+      },
+      "jev_error": null
+    }
+  ],
+  "candidate_potion_requests": [
+    {
+      "file": "potion-1.json",
+      "timings_ms": {
+        "snapshot": 636.44104,
+        "factory": 121.3366709999998,
+        "projection": 4515.346417,
+        "prompt": 158.5901270000004,
+        "jev": 875.5206210000006,
+        "fallback": 108.94511700000021,
+        "total": 6532.194445
+      },
+      "prompt_bytes": 4220,
+      "state_bytes": 1580,
+      "unknown": {
+        "count": 2,
+        "total": 2
+      },
+      "answer_valid": true,
+      "status": "completed"
+    },
+    {
+      "file": "potion-2.json",
+      "timings_ms": {
+        "snapshot": 0.21705399999973451,
+        "factory": 105.97585700000036,
+        "projection": 4511.583495000001,
+        "prompt": 123.78933899999902,
+        "jev": 394.64666699999907,
+        "fallback": 106.86808599999858,
+        "total": 5347.832933999999
+      },
+      "prompt_bytes": 4082,
+      "state_bytes": 1427,
+      "unknown": {
+        "count": 2,
+        "total": 2
+      },
+      "answer_valid": true,
+      "status": "completed"
+    },
+    {
+      "file": "potion-3.json",
+      "timings_ms": {
+        "snapshot": 579.5904659999997,
+        "factory": 107.35979299999963,
+        "projection": 4434.8127140000015,
+        "prompt": 280.39133500000025,
+        "jev": 2747.164066000001,
+        "fallback": 105.65904800000135,
+        "total": 8367.181590999999
+      },
+      "prompt_bytes": 5898,
+      "state_bytes": 2072,
+      "unknown": {
+        "count": 2,
+        "total": 2
+      },
+      "answer_valid": true,
+      "status": "completed"
+    }
+  ],
+  "candidate_brain": {
+    "settings": {
+      "home": "/home/dw/Projects/agent-sts2/ops/codex-ops/accounts/codex1/brain",
+      "model": "gpt-6.1-sol",
+      "effort": "xhigh",
+      "mode": "exec",
+      "prefix": "off"
+    },
+    "projection": {
+      "elapsed_ms": 17187.877748,
+      "cache_hits": 0,
+      "cache_misses": 0,
+      "simulations": 0,
+      "timed_out": 0,
+      "degradation": [],
+      "unknown_entries": 293,
+      "total_entries": 293,
+      "unknown_fraction": 1,
+      "act_cache_hit": false,
+      "elapsed_total_ms": 17956.535537
+    },
+    "v6_chars": 63715,
+    "full_request_chars": 68303,
+    "brain_ms": 76834.839124,
+    "valid": true,
+    "status": "passed"
+  },
+  "evidence": [
+    {
+      "path": ".artifacts/prompt-budget/nova-original-400.json",
+      "bytes": 294,
+      "sha256": "e1f4713ba92490540af3329040779cd28f8b13ff2110ea8aab98156a2a15f11e"
+    },
+    {
+      "path": ".artifacts/prompt-budget/smoke-candidate/output.log",
+      "bytes": 1402,
+      "sha256": "b9b59634ece7ed0ee36b975941fc71888f25835684a36d4b51102cdc7ae24064"
+    },
+    {
+      "path": ".artifacts/prompt-budget/smoke-candidate/results.json",
+      "bytes": 23233,
+      "sha256": "283df2b5a378aa8448d071bacee8d1f6ea62d5df960f084be0342e8dc89cbacb"
+    },
+    {
+      "path": ".artifacts/prompt-budget/smoke-potion/output.log",
+      "bytes": 1032,
+      "sha256": "439a2352419670bedf781c4716ccede046fb65de0d43a2d58b1c6c77df8410a1"
+    },
+    {
+      "path": ".artifacts/prompt-budget/brain-candidate/results.json",
+      "bytes": 1807,
+      "sha256": "d0ca1976fb8ac6b124fde34f2b023ed5d396501a85bc81ff923a0103bd74fc30"
+    },
+    {
+      "path": ".artifacts/prompt-budget/brain-candidate/codex-calls.jsonl",
+      "bytes": 2881,
+      "sha256": "d6c439ffba3cbacbfbed4d7e6dd0ee8af8270a17af501e5ec86336d6d712a1c0"
+    },
+    {
+      "path": ".artifacts/prompt-budget/unknown-diagnostic/results.json",
+      "bytes": 43592,
+      "sha256": "d26fad5d9608047eff6c0543308cce4001b043589cfaa8d010ea806c48196328",
+      "previous_bytes": 16303,
+      "previous_sha256": "84269e86f2fd5b2c7da2997885f7ad24f4fd11381b0f260890f4dff06c62f64b",
+      "original_overwritten_not_same_sampling_record": true
+    }
+  ],
+  "unknown_quality_accepted": false,
+  "checks": "Final joint tsc0; vitest 591 files / 5663 passed / 2 skipped; gitleaks0. Exact receipts in checks.json.",
+  "implementation_commit": "2ade5de3f",
+  "candidate_brain_committed_base": "7f53d9f1b2eb797f643c9e0d7dc272fc43c428a1",
+  "candidate_brain_uncommitted": true,
+  "candidate_calls_are_exact_commit_acceptance": false,
+  "candidate_call_scope": "Prompt candidate with worktree changes; final live exact-commit requests are required separately.",
+  "updated_at": "2026-10-20 03:11:43 CST",
+  "source_commit_before_document_only_rebase": "2ade5de3f",
+  "source_commit_after_document_only_rebase": "4fdc28914",
+  "checked_head_after_document_only_rebase": "a115149664c9a155aa0c1f34deefbbce6c180c2c",
+  "doc_only_rebase": {
+    "at": "2026-10-19T18:56:19.568722+00:00",
+    "before": "73d26c13ce0dd9b49306d6597fb16a25b259f612",
+    "after": "a115149664c9a155aa0c1f34deefbbce6c180c2c",
+    "main": "3abb94cf0843030a636469abaeeaa245eae7874b",
+    "main_changes_since_checked_base": [
+      "notes/for-roy.md",
+      "notes/ops-current-context.json",
+      "ops/inbox-dev.md",
+      "paper/materials/20261020-0249-ops/authorization-original.md",
+      "paper/materials/20261020-0249-ops/checklist-recovery.json",
+      "paper/materials/20261020-0249-ops/frozen-request-location.json",
+      "paper/materials/20261020-0249-ops/receipt.json",
+      "paper/materials/20261020-0249-ops/sources.json",
+      "paper/materials/decision-log.md"
+    ],
+    "checked_input_count": 1442,
+    "checked_inputs_byte_identical": true,
+    "full_check_in_progress": true,
+    "full_check_started_from_before_commit": "73d26c13ce0dd9b49306d6597fb16a25b259f612",
+    "no_new_code_or_test_changes": true
+  },
+  "latest_unknown_stage_summary": {
+    "commit": "73d26c13ce0dd9b49306d6597fb16a25b259f612",
+    "sample": "card-1.json",
+    "projection_ms": 4545.8069049999995,
+    "completion_calls": 8,
+    "completion_ms": 4416.187228000001,
+    "preparation_calls": 92,
+    "preparation_ready": 0,
+    "preparation_ms": 34.23566200000187,
+    "simulations": 0,
+    "unknown_fraction": 1,
+    "reason_counts": {
+      "formation_below_5_percent_not_simulated": 100,
+      "expectation_unknown": 384,
+      "continuous_joint_unknown": 120,
+      "formation_unknown": 272,
+      "budget_remaining_unknown": 240,
+      "ordered_pair_unobserved_in_first_boss_cohort": 16
+    },
+    "nonexclusive_reasons": true,
+    "source": ".artifacts/prompt-budget/unknown-stages/results.json",
+    "source_sha256": "d26fad5d9608047eff6c0543308cce4001b043589cfaa8d010ea806c48196328",
+    "original_diagnostic_results_overwritten_by_stage_harness": true,
+    "original_console_retained": ".artifacts/prompt-budget/unknown-diagnostic/output.log"
+  },
+  "final_primary_source_commit": "ee32129ca",
+  "final_leading_projection_commit": "673f255bba9a3436b188a83487b73be66e90d8c9",
+  "final_checks_receipt": "checks.json",
+  "post_check_rebase": "post-check-rebase.json",
+  "candidate_evidence_preserved": "candidate-evidence.json"
+}

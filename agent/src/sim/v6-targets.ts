@@ -16,7 +16,7 @@ export interface V6TargetContext {
   visible: readonly { act: number; floor: number; boss: string }[];
   observations: readonly V6BossObservation[]; excludeRun?: string;
   doubleBoss: DoubleBossModel | null;
-  /** Optional explicit route forecast, including future checkpoints. Missing values do not fall back. */
+  /** Absent checkpoints use own historical HP; explicit null/dead entries do not fall back. */
   routeEntries?: V6RouteEntryTable;
 }
 function scoped(context: V6TargetContext): V6BossObservation[] {
@@ -87,17 +87,20 @@ export function v6EntryHp(context: V6TargetContext, target: V6ProjectionTarget, 
         ...(entry.max_hp !== maxHp ? ["future_max_hp_change_not_modelled"] : []), ...(!valid ? ["explicit_route_entry_unknown"] : [])] };
     }
   }
-  if (target.kind === "current" || target.floor === context.floor
-    || target.act === context.act && context.visible.some(v => v.act === context.act && v.floor === target.floor)) return {
-    hp: currentRouteHp !== null && Number.isFinite(currentRouteHp) && currentRouteHp >= 0 && currentRouteHp <= maxHp ? currentRouteHp : null,
-    n: 0, source: "existing_route_projection", labels: [] };
+  if ((target.kind === "current" || target.floor === context.floor
+    || target.act === context.act && context.visible.some(v => v.act === context.act && v.floor === target.floor))
+    && currentRouteHp !== null) {
+    const valid = Number.isFinite(currentRouteHp) && currentRouteHp >= 0 && currentRouteHp <= maxHp;
+    return { hp: valid ? currentRouteHp : null, n: 0, source: "existing_route_projection",
+      labels: valid ? [] : ["invalid_current_route_hp"] };
+  }
   const rows = scoped(context).filter(o => o.floor === target.floor && o.act === target.act
     && Number.isFinite(o.entry_hp) && Number.isFinite(o.max_hp) && o.max_hp > 0 && o.entry_hp >= 0 && o.entry_hp <= o.max_hp);
   if (!rows.length) return { hp: null, n: 0, source: "unknown", labels: ["no_own_first_entry_hp_at_checkpoint"] };
   const ratios = rows.map(o => o.entry_hp / o.max_hp).sort((a, b) => a - b), mid = Math.floor(ratios.length / 2);
   const median = ratios.length % 2 ? ratios[mid]! : (ratios[mid - 1]! + ratios[mid]!) / 2;
   return { hp: Math.floor(median * maxHp), n: ratios.length, source: "own_first_entry_hp_ratio_median",
-    labels: ["selected_reached_checkpoint_cohort", "future_relics_and_potions_not_predicted"] };
+    labels: ["selected_reached_checkpoint_cohort", "future_relics_and_potions_not_predicted", "missing_route_own_checkpoint_hp_fallback"] };
 }
 /** Preserve the file's reason verbatim. A low-trust reason alone does not establish bias direction. */
 export function v6TargetTrust(character: Character, ascension: number, target: V6ProjectionTarget, data: BossTrustData | null): {

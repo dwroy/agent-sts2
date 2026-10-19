@@ -5,7 +5,8 @@ import type { ActionRequest } from "../hand/mod/client.js";
 import type { AnswerSet, ChoiceAnswer } from "../reflex/jev/answers.js";
 import { choiceQ } from "../reflex/jev/questions.js";
 import { v6DeltaTier, type V6ProjectionTable } from "../sim/v6-projection.js";
-import { v6ProjectionEntries } from "../sim/v6-projection-entries.js";
+import { promptProjectionEntries } from "./prompt-projection.js";
+import { boundedV6Jev, compactCombo, compactProjection, prioritize, promptBudgetLabels } from "./prompt-summary.js";
 import { directionCombos } from "./direction-plan.js";
 import { v6Config } from "./config.js";
 import { v6Directions } from "./direction-runtime.js";
@@ -47,37 +48,6 @@ export function cardAnswer(answers: AnswerSet, choices: readonly string[]): Choi
     && Object.entries(a.probabilities).every(([id, p]) => choices.includes(id) && Number.isFinite(p) && p >= 0 && p <= 1) ? a : null;
 }
 
-/** Send the observed summary once per combo; full evidence remains in the build log. */
-function shortMetrics(value: JsonValue): JsonValue {
-  const measurement = (value: unknown) => {
-    const m = asRecord(value);
-    return value == null ? null : toJsonValue(Object.fromEntries(["value", "se", "n", "unit", "method", "small_sample", "unknown_reason"].filter(k => Object.hasOwn(m, k)).map(k => [k, m[k]])));
-  };
-  const outcomes = (value: unknown) => {
-    const m = asRecord(value);
-    return Object.fromEntries(["win_rate", "hp_loss", "completion_turns"].map(k => [k, measurement(m[k])]));
-  };
-  return toJsonValue(asArray(value).map(asRecord).map(m => {
-    const observed = asRecord(m.observed);
-    return { attempt: m.attempt, target_ascension: m.target_ascension,
-      sources: asArray(m.sources).map(asRecord).map(s => ({ version: s.version, ascension: s.ascension, counts: s.counts })),
-      raw_counts: m.raw_counts,
-      dpr_boss: measurement(observed.dpr_boss), startup_turn: measurement(observed.startup_turn),
-      history: { cleared_runs: measurement(observed.cleared_runs), chain_win_rate: measurement(observed.chain_win_rate),
-        bosses: Object.fromEntries(Object.entries(asRecord(m.bosses)).map(([id, raw]) => {
-          const b = asRecord(raw); return [id, { reached: measurement(b.reached), won: measurement(b.won), win_rate: measurement(b.win_rate) }];
-        })) },
-      simulation: asArray(m.simulation).map(asRecord).map(s => ({ target: s.target, entry_hp: s.entry_hp,
-        ...outcomes(s), dpr: measurement(s.dpr), trust: s.trust, labels: s.labels })),
-      regression: asArray(m.regression).map(asRecord).map(s => ({ target: s.target, ...outcomes(s),
-        ascension_offset: outcomes(s.ascension_offset), method: s.method, labels: s.labels })),
-      shrinkage: asArray(m.shrinkage).map(asRecord).map(s => ({ basis: s.basis, target: s.target, metric: s.metric,
-        raw: measurement(s.raw), direction: measurement(s.direction), estimate: measurement(s.estimate),
-        combo_weight: s.combo_weight, method: s.method, labels: s.labels })),
-    };
-  }));
-}
-
 /** The early return is also the byte-equivalence boundary for all legacy reward planners. */
 export function buildV6CardPick(env: DecisionEnv, table: V6ProjectionTable | undefined = env.v6ProjectionTable, dir = KNOWLEDGE_DIR): V6CardPick | null {
   if (!v6CardActive(env)) return null;
@@ -91,7 +61,7 @@ export function buildV6CardPick(env: DecisionEnv, table: V6ProjectionTable | und
   const weights = plan?.direction_weights ?? {};
   const character = str(asRecord(env.state.run?.raw).character_id).toLowerCase();
   const knowledge = loadV6Knowledge(dir, character), ascension = env.state.run?.ascension ?? 0;
-  const entries = table?.enabled ? v6ProjectionEntries(table, v6Config()).filter(e => summaries.some(s => s.id === e.direction_id
+  const entries = table?.enabled ? promptProjectionEntries(table, v6Config()).filter(e => summaries.some(s => s.id === e.direction_id
     && directionCombos(s, toJsonValue(plan)).some(c => c.id === e.combo_id && c.source === e.combo_source))) : [];
   if (actions.includes("choose_reward_card")) for (const [fallbackIndex, card] of offers.entries()) {
     const index = numOrNull(card.index) ?? fallbackIndex;
@@ -106,11 +76,11 @@ export function buildV6CardPick(env: DecisionEnv, table: V6ProjectionTable | und
       && evaluatePredicate(r.predicate, { act: Number(str(asRecord(env.state.run?.raw).act_id, "0")) + 1,
         floor: env.state.run?.floor, player: { hp: env.state.run?.current_hp }, card: { id, tags: [] }, direction_weights: weights }) === true)
       .map(r => ({ id: r.id, label_en: r.label_en, signal: r.signal, confidence: r.confidence, n_support: r.evidence.n_support, n_contradict: r.evidence.n_contradict })) : [];
-    facts[key] = toJsonValue({ card: id, upgraded: bool(card.upgraded), projections: entries.filter(e => e.option_id === key), reflex });
+    facts[key] = toJsonValue({ card: id, upgraded: bool(card.upgraded), reflex });
   }
   if (actions.includes("skip_reward_cards")) {
     intents.skip = { action: "skip_reward_cards" }; criteria.skip = "Take no card";
-    facts.skip = toJsonValue({ projections: entries.filter(e => e.option_id === "skip") });
+    facts.skip = {};
   }
   const choices = Object.keys(intents); if (!choices.length) return null;
   entries.splice(0, entries.length, ...entries.filter(e => choices.includes(e.option_id)));
@@ -126,17 +96,21 @@ export function buildV6CardPick(env: DecisionEnv, table: V6ProjectionTable | und
       availability: { take: null, skip: null }, weighted_current_boss_delta: null, weighted_joint_delta: null,
       deck_count_change: null, core_first_cast_turn: null, win_tier: "unknown", delta_tier: "unknown", direction_role: "unknown", trust: "unknown", reflex_ids: [] });
   }
-  for (const key of choices) facts[key] = { ...asRecord(facts[key]), projections: toJsonValue(entries.filter(e => e.option_id === key).map(({ combo_metrics: _metrics, ...entry }) => {
+  for (const key of choices) facts[key] = { ...asRecord(facts[key]), projections: toJsonValue(entries.filter(e => e.option_id === key).map(entry => {
     const row = table?.combinations.find(r => r.entry.option_id === entry.option_id && r.entry.direction_id === entry.direction_id
       && r.combination_id === entry.combo_id && r.entry.target_id === entry.target_id);
-    return { ...entry, ...(row ? { combo_role: row.role, role_labels: row.role_labels,
-      formation_se: row.formation_se, formation_n: row.formation_n, unknown_reasons: row.unknown_reasons } : {}) };
+    return { ...asRecord(compactProjection(entry, row?.unknown_reasons)), ...(row ? { combo_role: row.role, role_labels: row.role_labels,
+      formation_se: row.formation_se, formation_n: row.formation_n } : {}) };
   })) };
   const modelLimits = [...new Set(table?.combinations.flatMap(r => r.model_labels) ?? [])];
-  const coreMetrics = summaries.flatMap(direction => directionCombos(direction, toJsonValue(plan)).map(combo => ({
-    direction: direction.id, combo: combo.id, source: combo.source, cards: combo.requirements,
-    metrics: shortMetrics(entries.find(e => e.direction_id === direction.id && e.combo_id === combo.id && e.combo_metrics != null)?.combo_metrics ?? combo.metrics),
-  })));
+  const score = (d: string, c: string) => Math.max(-1, ...entries.filter(e => e.direction_id === d && e.combo_id === c).map(e => e.expected_win ?? -1));
+  for (const key of choices) {
+    const fact = asRecord(facts[key]);
+    fact.projections = toJsonValue(prioritize(asArray(fact.projections).map(asRecord), weights, r => str(r.direction_id), r => score(str(r.direction_id), str(r.combo_id))));
+  }
+  const coreMetrics = prioritize(summaries.flatMap(direction => directionCombos(direction, toJsonValue(plan)).map(combo => ({ direction: direction.id, combo }))), weights, r => r.direction, r => score(r.direction, r.combo.id))
+    .map(({ direction, combo }) => ({ direction, ...asRecord(compactCombo(combo, targets,
+      entries.find(e => e.direction_id === direction && e.combo_id === combo.id && e.combo_metrics != null)?.combo_metrics ?? combo.metrics)) }));
   const fallback = cardFallback(choices, table);
   const decision: AskDecision = { kind: "ask", label: "reward/card", v6Card: true,
     state: { direction_weights: toJsonValue(weights), availability: toJsonValue(entries.filter(e => e.option_id === "skip").map(e => ({ direction: e.direction_id, combo: e.combo_id, target: e.target_id, probability: e.availability.skip, trust: e.trust }))),
@@ -152,6 +126,7 @@ export function buildV6CardPick(env: DecisionEnv, table: V6ProjectionTable | und
       return { intent: intents[key]!, rationale: answer ? `V6 Jev chose ${key}` : `V6 card fallback chose ${key}: current-boss gate, weighted chain delta, current-boss delta, then skip`,
         confidence: answer?.confidence ?? null, fallback: !answer };
     } };
+  Object.assign(decision, boundedV6Jev(decision.state, decision.questions));
   return { decision, entries, table, choices, fallback };
 }
 
@@ -164,7 +139,7 @@ export function recordCardPick(env: DecisionEnv, pick: V6CardPick, logFile: stri
     jev_answer: a ? { choice: a.choice, confidence: a.confidence, probabilities: a.probabilities } : null,
     fallback: reason ?? (a ? null : `invalid_or_missing_answer:${pick.fallback}`), elapsed_ms: elapsedMs,
     cache: { hits: telemetry?.cache_hits ?? 0, misses: telemetry?.cache_misses ?? 0 },
-    degradation: telemetry?.degradation ?? ["projection_provider_unavailable"],
+    degradation: [...(telemetry?.degradation ?? ["projection_provider_unavailable"]), ...promptBudgetLabels(pick.decision.state)],
     unknown: { count: pick.entries.filter(e => e.win === null).length, total: pick.entries.length },
     triggers: [], merged_triggers: [], skipped_triggers: [] });
 }

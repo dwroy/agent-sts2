@@ -1,0 +1,149 @@
+{
+  "at": "2026-10-20T05:20:52+08:00",
+  "event": "fix-done",
+  "batch": "20261020-051302-fix-batch",
+  "original_state": "failed",
+  "original_exit": 0,
+  "original_merged": null,
+  "sources": [
+    {
+      "path": "learner/runs/20261020-051306-f91cdf0c-1ad0-4bff-95ea-6191b45554de-fix-batch/report.md",
+      "bytes": 5556,
+      "sha256": "8a5167a8767af6d654d585183c32e2a559ddb1fd28247ac59a4c85bc20e21df8"
+    },
+    {
+      "path": "learner/runs/20261020-051306-f91cdf0c-1ad0-4bff-95ea-6191b45554de-fix-batch/report.json",
+      "bytes": 1721,
+      "sha256": "5dccf87cd80221330fe86d11c316307a3fdd6f21c2e253b20070a6d0da97d0c1"
+    },
+    {
+      "path": "learner/runs/20261020-051306-f91cdf0c-1ad0-4bff-95ea-6191b45554de-fix-batch/verification.json",
+      "bytes": 1358,
+      "sha256": "a4451e942cd353a6188174c470780ee01274a0616fabcad1537af7f24d1b4c0f"
+    },
+    {
+      "path": "learner/runs/20261020-051306-f91cdf0c-1ad0-4bff-95ea-6191b45554de-fix-batch/queue-review.json",
+      "bytes": 65207,
+      "sha256": "6a3731ad4b074cce1832c1e813fe5f4566a3ee66ae7a47172e4dc83a7af8396c"
+    },
+    {
+      "path": "learner/runs/20261020-051306-f91cdf0c-1ad0-4bff-95ea-6191b45554de-fix-batch/tsc.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "learner/runs/20261020-051306-f91cdf0c-1ad0-4bff-95ea-6191b45554de-fix-batch/tsc.rc",
+      "bytes": 2,
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+    },
+    {
+      "path": "learner/runs/20261020-051306-f91cdf0c-1ad0-4bff-95ea-6191b45554de-fix-batch/targeted-vitest.log",
+      "bytes": 269,
+      "sha256": "bb749b671bb272443bc50fdc3bdd6085068ae2cc3fb828ba37e604d4fdf7c6be"
+    },
+    {
+      "path": "learner/runs/20261020-051306-f91cdf0c-1ad0-4bff-95ea-6191b45554de-fix-batch/targeted-vitest.rc",
+      "bytes": 2,
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+    },
+    {
+      "path": "learner/runs/20261020-051306-f91cdf0c-1ad0-4bff-95ea-6191b45554de-fix-batch/shop-preview-vitest.log",
+      "bytes": 264,
+      "sha256": "25bc04b1ccfdaefaf6aa5664a1dc5c2e841444da2bd5c6d0bcbd1e091962c3de"
+    },
+    {
+      "path": "learner/runs/20261020-051306-f91cdf0c-1ad0-4bff-95ea-6191b45554de-fix-batch/shop-preview-vitest.rc",
+      "bytes": 2,
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+    }
+  ],
+  "original_worktree": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261020-051302",
+  "git_root_verified": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261020-051302",
+  "base": "c6b71d2d108089b83a689f70fb4cd9f05ea70114",
+  "head": "c6b71d2d108089b83a689f70fb4cd9f05ea70114",
+  "strictly_clean": true,
+  "base_to_head_diff": [],
+  "source_changes": false,
+  "source_commit": null,
+  "main_merge": null,
+  "live_merge": null,
+  "observed_live": "2897d89b63f0ea8c898672cdf5919072f7e41c37",
+  "checks": {
+    "tsc_rc": 0,
+    "scope": "targeted only; no full run",
+    "targeted_first_files": 8,
+    "targeted_first_cases": 43,
+    "targeted_first_rc": 0,
+    "shop_files": 1,
+    "shop_cases": 7,
+    "shop_rc": 0,
+    "total_files": 9,
+    "total_cases": 50,
+    "full_rc": null,
+    "original_full_failures_unchanged": true
+  },
+  "original_no_change_marker": null,
+  "original_no_change_guard_source_difference_count": 34,
+  "actual_source_differences_to_live": [
+    "agent/src/hand/loop.ts",
+    "agent/src/hand/screens/map.ts",
+    "agent/src/hand/screens/pick.ts",
+    "agent/src/hand/screens/v6-room.ts",
+    "agent/src/reflex/card-model.ts",
+    "agent/src/reflex/combat-plan.ts",
+    "agent/src/reflex/turn-solver.ts",
+    "agent/src/v6/card-pick.ts",
+    "agent/src/v6/direction-plan.ts",
+    "agent/src/v6/direction-runtime.ts",
+    "agent/src/v6/formats.ts",
+    "agent/src/v6/log.ts",
+    "agent/src/v6/potion-entries.ts",
+    "agent/src/v6/projection-consumer.ts",
+    "agent/src/v6/prompt-summary.ts",
+    "agent/src/v6/replan-triggers.ts",
+    "agent/tests/silent-strangle-upgraded-evidence.json",
+    "agent/tests/silent-strangle-upgraded.test.ts",
+    "agent/tests/v6-card-pick.test.ts",
+    "agent/tests/v6-direction-plan.test.ts",
+    "agent/tests/v6-direction-provider.test.ts",
+    "agent/tests/v6-direction-runtime.test.ts",
+    "agent/tests/v6-history-refresh-exclusions.test.ts",
+    "agent/tests/v6-potions.test.ts",
+    "agent/tests/v6-projection-entries.test.ts",
+    "agent/tests/v6-prompt-summary.test.ts",
+    "agent/tests/v6-room-prompt-budget.test.ts",
+    "agent/tests/v6-room.test.ts",
+    "agent/tests/v6_learning_loop_test.py",
+    "knowledge/builders/build-combo-metrics.py",
+    "knowledge/builders/combo-metrics.md",
+    "knowledge/builders/combo_metrics.py",
+    "knowledge/builders/history_boundary.py",
+    "knowledge/builders/refresh-v6-history.py"
+  ],
+  "ordinary_close_receipt_exists": false,
+  "ordinary_completion_rows": 0,
+  "retention_request": {
+    "path": "ops/codex-ops/retention/requests/20261020-051302-fix-batch.json",
+    "bytes": 568,
+    "sha256": "899bd713f5d65e017e35ff1bd925b4447ca9e06532a3fd422b61b153bb995f12"
+  },
+  "retention_state": "deferred",
+  "retention_reason": "scratch ownership not bound to original report",
+  "original_owner_dependencies": [
+    "001302 ACK compatibility",
+    "004301 ordinary isolation",
+    "041302 task link awaiting W5 performance source",
+    "original gzip fix transport"
+  ],
+  "new_model_or_full_check_dispatched": false,
+  "dataset_run": false,
+  "ledger_or_proposal_states_modified": false,
+  "new_version": false,
+  "parent_closed": false,
+  "other_role_ACK_written": false,
+  "STOP_kept": true,
+  "saved_run_fault_frozen_request_preserved": "paper/materials/20261020-0249-ops/frozen-request-location.json",
+  "Regent_paused": true,
+  "completed": false,
+  "next": "Retain original failed/rc0/mergednull and no full receipt; original protocol/retention owner resolves admission and scratch-report ownership. Do not create a source merge, repeat dataset/checks/learner, or mark original blocked dependencies complete."
+}

@@ -1,0 +1,85 @@
+{
+  "checked_at": "2026-10-20T05:11:28.563721+08:00",
+  "integration_baseline": "ee90bb8224e791b87587f13a5d0891377d07f705",
+  "tested_baseline": "791923bdba29b7d8ffce806c3c9cd17bf5aebd8d",
+  "identical_trees_after_rebase": {
+    "agent": true,
+    "learner": true,
+    "eval": true,
+    "knowledge": true
+  },
+  "ops_changes_after_rebase": [
+    "ops/inbox-dev.md"
+  ],
+  "new_test_sha256": "e915f2797df2455776945455a6055a5b8435c898019a6a1b08d2339c7df50630",
+  "tsc": {
+    "exit": 0,
+    "log": "tsc-recheck.log"
+  },
+  "targeted": {
+    "exit": 0,
+    "files": 3,
+    "pass": 51,
+    "log": "targeted-c6f77ba-2.log"
+  },
+  "full": {
+    "exit": 0,
+    "files": 594,
+    "pass": 5691,
+    "skip": 2,
+    "duration_s": 1317.21,
+    "log": "vitest-full-recheck.log"
+  },
+  "original_full_failure_preserved": "vitest-c6f77ba.log",
+  "measurements": [
+    {
+      "kind": "shop",
+      "comparison_fixture": "no_projection_table",
+      "options": 28,
+      "state_bytes": 21118,
+      "jev_call_argument_bytes": 22617,
+      "every_option_has_details": true,
+      "within_limits": true
+    },
+    {
+      "kind": "rest",
+      "comparison_fixture": "no_projection_table",
+      "options": 7,
+      "state_bytes": 7575,
+      "jev_call_argument_bytes": 8053,
+      "every_option_has_details": true,
+      "within_limits": true
+    },
+    {
+      "kind": "shop",
+      "comparison_fixture": "synthetic_known_and_incomplete_target_mixture",
+      "options": 28,
+      "state_bytes": 20449,
+      "jev_call_argument_bytes": 21948,
+      "every_option_has_details": true,
+      "within_limits": true
+    },
+    {
+      "kind": "rest",
+      "comparison_fixture": "synthetic_known_and_incomplete_target_mixture",
+      "options": 7,
+      "state_bytes": 7672,
+      "jev_call_argument_bytes": 8150,
+      "every_option_has_details": true,
+      "within_limits": true
+    }
+  ],
+  "network_requests": 0,
+  "game_actions": 0,
+  "feature_flags_changed": false,
+  "formal_knowledge_changed": false,
+  "gitleaks_staged": {
+    "exit": 0,
+    "findings": 0,
+    "report": "gitleaks-staged.json",
+    "log": "gitleaks-staged.log"
+  },
+  "whitespace": {
+    "raw_log_trailing_blank_lines": "preserved verbatim; excluded from source/doc whitespace check"
+  }
+}

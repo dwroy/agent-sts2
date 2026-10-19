@@ -50,7 +50,16 @@ describe("V6 historical scope and targets", () => {
     const target = { id:"f48",boss:"AEONGLASS",act:3,floor:48,kind:"future" as const,probability:1,labels:[] };
     expect(v6EntryHp(c,target,100,null)).toMatchObject({hp:50,n:2});
     expect(v6EntryHp(c,{...target,kind:"current"},100,23).hp).toBe(23);
-    expect(v6EntryHp(c,{...target,kind:"current"},100,null).hp).toBeNull();
+    expect(v6EntryHp(c,{...target,kind:"current"},100,null)).toMatchObject({ hp:50, n:2,
+      labels:expect.arrayContaining(["missing_route_own_checkpoint_hp_fallback"]) });
+  });
+  it.each([-1, NaN, Infinity, 101])("keeps invalid explicit current-route HP %s unknown even with historical fallback", hp => {
+    const c = context([observation("a",17,"SOUL_FYSH",30)]);
+    const target = { id:"f17",boss:"SOUL_FYSH",act:1,floor:17,kind:"current" as const,probability:1,labels:[] };
+    expect(v6EntryHp(c,target,100,hp)).toMatchObject({ hp:null, n:0, source:"existing_route_projection",
+      labels:["invalid_current_route_hp"] });
+    expect(v6EntryHp(c,target,100,null).hp).toBe(50);
+    expect(v6EntryHp(c,target,100,0).hp).toBe(0);
   });
   it("preserves unknown chain calibration and takes low-trust bias sign only from adequate own validation", () => {
     const trust: BossTrustData & {bosses:unknown} = { character:"silent", overall:{pre:{platt:{a:0,b:1}}}, criteria:{min_fights:5,brier_ratio:1,max_gap:.1,leak_range:[.7,1.3],starts:{}},

@@ -1,0 +1,58 @@
+{
+  "started": "2026-10-20T05:00:40+08:00",
+  "finished": "2026-10-20T05:01:00+08:00",
+  "results": [
+    {
+      "name": "proposal-python",
+      "command": [
+        "nice",
+        "-n",
+        "19",
+        "python3",
+        "-B",
+        "ops/tests/test_learning_flow.py",
+        "CodeProposals"
+      ],
+      "rc": 0,
+      "log": ".artifacts/ops-wake-20261020-0500/proposal-python.log",
+      "sha256": "0371c17816a95c5737fcae95d01583903a441c8cf57a2fbad2a2e8b518413d31"
+    },
+    {
+      "name": "shop-original-threshold",
+      "command": [
+        "nice",
+        "-n",
+        "19",
+        "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261020-041302/agent/node_modules/.bin/vitest",
+        "run",
+        "tests/v6-prompt-summary.test.ts",
+        "--testNamePattern",
+        "keeps a meaningful minimum for every one of 28 real shop choices with the published 17-combo file",
+        "--maxWorkers=1"
+      ],
+      "rc": 0,
+      "log": ".artifacts/ops-wake-20261020-0500/shop-original-threshold.log",
+      "sha256": "559d0ef728d6ff945321fe9509c7ceb8e7dc1368d7b6c7ba95be2d186f4afd6a"
+    },
+    {
+      "name": "publication-fixed",
+      "command": [
+        "nice",
+        "-n",
+        "19",
+        "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261020-041302/agent/node_modules/.bin/vitest",
+        "run",
+        "tests/v6-publication-task-link.test.ts",
+        "--maxWorkers=1"
+      ],
+      "rc": 0,
+      "log": ".artifacts/ops-wake-20261020-0500/publication-fixed.log",
+      "sha256": "5bed2d43364435e56710857ae6c24281dee15b819a2934702307084972b36c4b"
+    }
+  ],
+  "unchanged15000ms_threshold": true,
+  "single_worker": true,
+  "original_full1_not_overwritten": true,
+  "no_production_dataset": true,
+  "fixed_staged_tree_unchanged": true
+}

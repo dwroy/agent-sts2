@@ -37,6 +37,24 @@ it("disabled factory reads neither snapshot dependencies nor actual situations f
     expect(factory.create(new Proxy({} as V6ProjectionSituation, { get() { throw new Error("state read while off"); } }))).toMatchObject({ status: "disabled" });
   }
 });
+it("reuses frozen supply and openings across idle/pick while invalidating changed route resources", () => {
+  const { snapshot, situation } = fixture(), factory = createV6ProjectionFactory(snapshot);
+  const a = factory.create({ ...situation, phase: "act" }), b = factory.create(situation);
+  expect(a.status).toBe("ready"); expect(b.status).toBe("ready");
+  if (a.status !== "ready" || b.status !== "ready") return;
+  expect(a.request.completionSources[0]).toBe(b.request.completionSources[0]);
+  const spy = vi.spyOn(bossStart, "syntheticBossStart");
+  try {
+    const t = a.request.targets[0]!, first = a.request.prepare(t, a.request.baseline.state, a.request.baseline);
+    expect(first).not.toBeNull();
+    expect(b.request.prepare(t, b.request.baseline.state, b.request.baseline)).toBe(first);
+    expect(spy).toHaveBeenCalledTimes(1);
+    const changed = factory.create({ ...situation, currentRouteHp: 19, currentRouteSignature: "changed-route" });
+    expect(changed.status).toBe("ready");
+    if (changed.status === "ready") expect(changed.request.prepare(t, changed.request.baseline.state, changed.request.baseline)).not.toBe(first);
+    expect(spy).toHaveBeenCalledTimes(2);
+  } finally { spy.mockRestore(); }
+});
 it("builds all five option types with real costs, immutable inputs and preserved instance counters", () => {
   const { snapshot, situation, run, raw } = fixture(), cards = asArray(run["deck"]).map(asRecord);
   const index = cards.findIndex(c => !c["upgraded"] && !!cardUpgrade(String(c["card_id"])));

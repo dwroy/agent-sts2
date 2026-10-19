@@ -1,0 +1,44 @@
+
+ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/v6-w7-prompt-budget-20261020/agent
+
+ ❯ tests/ops-autoplay-console.test.ts (7 tests | 1 failed) 9155ms
+     × tails existing history, new lines, and the next run; stops its viewer on exit 4507ms
+.....
+----------------------------------------------------------------------
+Ran 5 tests in 0.021s
+
+OK
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/ops-autoplay-console.test.ts > autoplay's log pane > tails existing history, new lines, and the next run; stops its viewer on exit
+AssertionError: expected '==> /tmp/autoplay-console-9iFQaM/tail…' to contain 'next run decision'
+
+- Expected
++ Received
+
+- next run decision
++ ==> /tmp/autoplay-console-9iFQaM/tail/ops/autoplay.log <==
++ old loop history
++
++ ==> /tmp/autoplay-console-9iFQaM/tail/logs/console/current <==
++ first run history
++ new decision
++
+
+ ❯ tests/ops-autoplay-console.test.ts:116:27
+    114|     expect(result.stdout).toContain("first run history");
+    115|     expect(result.stdout).toContain("new decision");
+    116|     expect(result.stdout).toContain("next run decision");
+       |                           ^
+    117|     const pid = readFileSync(join(ops, "viewer.pid"), "utf8");
+    118|     expect(spawnSync("bash", ["-c", 'kill -0 "$1" 2>/dev/null', "check…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed | 593 passed (594)
+      Tests  1 failed | 5690 passed | 2 skipped (5693)
+   Start at  04:26:37
+   Duration  1306.59s (transform 19.04s, setup 38.93s, import 122.57s, tests 1051.62s, environment 68ms)
+

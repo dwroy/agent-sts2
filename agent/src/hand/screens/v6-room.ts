@@ -1,17 +1,18 @@
 /** Shared W7 route: concrete inventory choices, W3 combinations, bounded Jev, legal fallback. */
 import { join, dirname } from "node:path";
 import { V6BuildLog } from "../../v6/log.js";
-import { asArray, asRecord, str, toJsonValue, type JsonValue } from "../../core/util/json.js";
+import { asRecord, str, toJsonValue, type JsonValue } from "../../core/util/json.js";
 import { currentDecisionBudget, DecisionBudget, withDecisionBudget, withinDecisionBudget } from "../../core/decision-budget.js";
 import type { AskDecision, Decision, DecisionEnv, ResolvedAction } from "../../memory/types.js";
 import type { AnswerSet, ChoiceAnswer } from "../../reflex/jev/answers.js";
 import { choiceQ } from "../../reflex/jev/questions.js";
-import { v6ProjectionEntries } from "../../sim/v6-projection-entries.js";
+import { promptProjectionEntries } from "../../v6/prompt-projection.js";
 import { v6DeltaTier, type V6ProjectionTable } from "../../sim/v6-projection.js";
 import { v6Config } from "../../v6/config.js";
 import { v6Directions } from "../../v6/direction-runtime.js";
+import { boundedV6Jev, compactCombo, compactProjection, prioritize, promptBudgetLabels } from "../../v6/prompt-summary.js";
 import { directionCombos } from "../../v6/direction-plan.js";
-import { validateProjectionEntry, type ProjectionEntry } from "../../v6/formats.js";
+import { validateProjectionEntries, type ProjectionEntry } from "../../v6/formats.js";
 import { potionAnswersComplete } from "../../v6/potion-entries.js";
 import { KNOWLEDGE_DIR } from "../../knowledge/files.js";
 import type { V6RoomOptions } from "./v6-room-options.js";
@@ -69,9 +70,9 @@ export function buildV6RoomDecision(env: DecisionEnv, input: V6RoomOptions, tabl
   if (!input.baseline || !table?.enabled || table.phase !== "pick") table = undefined;
   const plan = env.screenMemory.runPlan?.runId === str(env.state.raw.run_id) ? env.screenMemory.runPlan.v6 : undefined;
   const combos = summaries.flatMap(d => directionCombos(d, toJsonValue(plan)).map(c => ({ direction: d.id, combo: c })));
-  const projected = table?.enabled ? v6ProjectionEntries(table, config).filter(e => keys.includes(e.option_id)
-    && input.baseline !== null && table!.targets.some(t => t.id === e.target_id)
-    && validateProjectionEntry(e).ok) : [];
+  const candidates = table?.enabled ? promptProjectionEntries(table, config).filter(e => keys.includes(e.option_id)
+    && input.baseline !== null && table!.targets.some(t => t.id === e.target_id)) : [];
+  const projected = validateProjectionEntries(candidates).flatMap(result => result.ok ? [result.value] : []);
   // Published files can change during a run. The factory's frozen combinations remain authoritative.
   for (const e of projected) if (e.combo_id && e.combo_source
     && !combos.some(c => c.direction === e.direction_id && c.combo.id === e.combo_id && c.combo.source === e.combo_source)) {
@@ -95,22 +96,18 @@ export function buildV6RoomDecision(env: DecisionEnv, input: V6RoomOptions, tabl
         gold: env.state.run?.gold ?? null, floor: env.state.run?.floor ?? null,
         potions: Array.isArray(asRecord(env.state.run?.raw).potions) ? asRecord(env.state.run?.raw).potions : null }),
       direction_weights: toJsonValue(plan?.direction_weights ?? {}), targets: toJsonValue(targets),
-      core_metrics: compact(toJsonValue(combos.map(({ direction, combo }) => ({ direction, combo_id: combo.id, combo_source: combo.source,
-        metrics: asArray(table?.combinations.find(row => row.combination_id === combo.id && row.entry.direction_id === direction
-          && row.entry.combo_source === combo.source)?.summary ?? combo.metrics).map(value => {
-          const m = asRecord(value), observed = asRecord(m.observed);
-          return { attempt: m.attempt, target_ascension: m.target_ascension, sources: Array.isArray(m.sources) ? m.sources.map(s => {
-            const source = asRecord(s); return { version: source.version, ascension: source.ascension, counts: source.counts };
-          }) : [], raw_counts: m.raw_counts, observed, bosses: m.bosses, availability: m.availability,
-          simulation: m.simulation, regression: m.regression, shrinkage: m.shrinkage };
-        }) })))),
+      core_metrics: toJsonValue(prioritize(combos, plan?.direction_weights ?? {}, c => c.direction,
+        c => Math.max(-1, ...entries.filter(e => e.direction_id === c.direction && e.combo_id === c.combo.id).map(e => e.expected_win ?? -1)))
+        .map(({ direction, combo }) => ({ direction, ...asRecord(compactCombo(combo, targets.map(t => t.id),
+          table?.combinations.find(row => row.combination_id === combo.id && row.entry.direction_id === direction
+            && row.entry.combo_source === combo.source)?.summary ?? combo.metrics)) }))),
       options: compact(toJsonValue(Object.fromEntries(input.options.map(o => [o.option.key, { facts: o.option.summary, unknown_reason: o.unknown_reason,
         resources_after: o.state ? { hp: o.state.hp, max_hp: o.state.maxHp, gold: o.state.gold, deck_count: o.state.cards.length } : null,
-        projections: entries.filter(e => e.option_id === o.option.key).map(e => {
+        projections: prioritize(entries.filter(e => e.option_id === o.option.key), plan?.direction_weights ?? {}, e => e.direction_id,
+          e => e.expected_win ?? -1).map(e => {
           const row = table?.combinations.find(r => r.entry.option_id === e.option_id && r.entry.direction_id === e.direction_id
             && r.entry.target_id === e.target_id && r.combination_id === e.combo_id);
-          const { combo_metrics: _metrics, ...fields } = e;
-          return { ...fields, formation_n: row?.formation_n ?? null, formation_se: row?.formation_se ?? null,
+          return { ...asRecord(compactProjection(e)), formation_n: row?.formation_n ?? null, formation_se: row?.formation_se ?? null,
             combo_role: row?.role ?? "unknown", role_labels: row?.role_labels ?? [], model_labels: row?.model_labels ?? [],
             unknown_reasons: row?.unknown_reasons ?? [source?.rejected_options.find(r => r.id === o.option.key)?.reason ?? o.unknown_reason ?? reason] };
         }) }])))),
@@ -137,6 +134,7 @@ export function buildV6RoomDecision(env: DecisionEnv, input: V6RoomOptions, tabl
         ...(plan ? { plan: { id: plan.id, steps: plan.steps }, journal: plan.journal } : {}),
         apply: () => { option.apply?.(); plan?.apply?.(); } };
     } };
+  Object.assign(decision, boundedV6Jev(decision.state, decision.questions));
   return decision;
 }
 
@@ -169,7 +167,7 @@ export function recordV6Room(env: DecisionEnv, decision: V6RoomDecision, logFile
     kind: decision.v6Room.kind, mode: v6Config().mode, entries: decision.roomEntries,
     jev_answer: a ? { choice: a.choice, confidence: a.confidence, probabilities: a.probabilities } : null,
     fallback: fallback ? "missing_invalid_or_failed_jev" : null, elapsed_ms: elapsedMs,
-    cache: { hits: t?.cache_hits ?? 0, misses: t?.cache_misses ?? 0 }, degradation: [...(t?.degradation ?? [decision.roomProjectionReason]), ...(decision.roomProjectionSource?.labels ?? []),
+    cache: { hits: t?.cache_hits ?? 0, misses: t?.cache_misses ?? 0 }, degradation: [...(t?.degradation ?? [decision.roomProjectionReason]), ...(decision.roomProjectionSource?.labels ?? []), ...promptBudgetLabels(decision.state),
       ...(decision.roomProjectionSource?.rejected_options.map(r => `${r.id}:${r.reason}`.slice(0, 200)) ?? [])],
     unknown: { count: decision.roomEntries.filter(e => e.win === null).length, total: decision.roomEntries.length },
     triggers: [], merged_triggers: [], skipped_triggers: [] });

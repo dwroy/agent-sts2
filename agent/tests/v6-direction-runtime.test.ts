@@ -1,3 +1,4 @@
+import { compactProjection } from "../src/v6/prompt-summary.js";
 import { mkdtempSync, mkdirSync, writeFileSync, rmSync, readFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
@@ -85,7 +86,7 @@ it.each(["TEST_TARGET", "joint"])("keeps %s projections, fills missing targets a
   const brain = { askJson: vi.fn(async () => ({ json: { ...weights, potion_directions: [] } })) } as unknown as Pick<Brain, "askJson">;
   const result = await ensureDirectionPlan(e, brain, log, dir);
   const rows = result?.payload?.direction_evaluation as Array<typeof entry>;
-  expect(rows.filter(r => r.expected_win !== null)).toEqual([entry]);
+  expect(rows.filter(r => r.expected_win !== null)).toEqual([compactProjection(entry)]);
   expect(rows.some(r => r.combo_id === "UNKNOWN" || r.combo_source === "brain")).toBe(false);
   expect(rows).toHaveLength(8);
   expect(rows.filter(r => r.target_id === "joint")).toHaveLength(4);
@@ -103,7 +104,7 @@ it("restores a brain combo before accepting its next projection after restart", 
   e.v6DirectionEvaluation = { id: "after-restart", entries: [entry] };
   const result = await ensureDirectionPlan(e, brain, log, dir);
   expect(result?.result.triggers).toContain("T7");
-  expect(result?.payload?.direction_evaluation).toContainEqual(entry);
+  expect(result?.payload?.direction_evaluation).toContainEqual(compactProjection(entry));
   expect(v6Directions(e, dir)[0]?.combos.filter(c => c.source === "brain")).toHaveLength(1);
   e.state.raw["run_id"] = "OTHER_RUN";
   expect(v6Directions(e, dir).every(s => s.combos.every(c => c.source !== "brain"))).toBe(true);
@@ -120,4 +121,21 @@ it("uses the provider target IDs without adding legacy boss or joint placeholder
   expect(new Set(rows.map(r => r.target_id))).toEqual(new Set(["f17:FIXTURE_CURRENT", target]));
   expect(rows).toHaveLength(8);
   expect(rows.filter(r => r.expected_win !== null)).toHaveLength(1);
+});
+
+it("forwards provider opening reasons through the actual planner and keeps unknown W0", async () => {
+  vi.stubEnv("V6_BUILD", "on"); const { dir, log, e } = fixture();
+  const entry = { ...comboProjection(), target_id: "TEST_TARGET", win: null, win_tier: "unknown" as const, expected_win: null, win_incomplete: null };
+  e.v6DirectionEvaluation = { id: "opening-fixture", entries: [entry], projectionReasons: [{
+    option_id: entry.option_id, direction_id: entry.direction_id, target_id: entry.target_id, combo_id: entry.combo_id,
+    reasons: ["unknown_opening_entry_hp_or_empirical_sample"],
+  }] };
+  const brain = { askJson: vi.fn(async () => ({ json: { ...weights, potion_directions: [] } })) } as unknown as Pick<Brain, "askJson">;
+  const result = await ensureDirectionPlan(e, brain, log, dir);
+  expect(result?.payload?.direction_evaluation).toContainEqual(expect.objectContaining({
+    combo_id: entry.combo_id, target_id: "TEST_TARGET", win_complete: entry.win_complete, win_incomplete: null,
+    opening: { Wk: "evaluated", W0: "opening unknown" }, unknown_reasons: ["unknown_opening_entry_hp_or_empirical_sample"],
+  }));
+  expect(result?.payload?.opening_note).toContain("never substitute Wk for W0");
+  expect(e.v6DirectionEvaluation.entries[0]).toEqual(entry);
 });

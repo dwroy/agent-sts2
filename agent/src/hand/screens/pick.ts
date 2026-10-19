@@ -1,3 +1,4 @@
+import { boundedV6Jev } from "../../v6/prompt-summary.js";
 /**
  * Shared builder for the "choose one of these" screens (PLAN.md §6.2–§6.7).
  *
@@ -156,11 +157,13 @@ export function buildPickDecision(params: PickDecisionParams): Decision {
     criteria[option.key] = typeof option.summary === "string" ? option.summary : JSON.stringify(option.summary);
   }
 
+  const wire = options.some(option => option.jev?.potion) ? boundedV6Jev(params.state, {
+    pick: choiceQ(params.instructions, criteria), ...optionQuestions(options), ...(params.extras ?? {}),
+  }) : { state: params.state, questions: { pick: choiceQ(params.instructions, criteria), ...optionQuestions(options), ...(params.extras ?? {}) } };
   return {
     kind: "ask",
     label: params.label,
-    state: params.state,
-    questions: { pick: choiceQ(params.instructions, criteria), ...optionQuestions(options), ...(params.extras ?? {}) },
+    ...wire,
     ...(params.escalateBelow === undefined ? {} : { escalate: { question: "pick", below: params.escalateBelow, why: params.label } }),
     resolve(answers, context): ResolvedAction {
       const answer = answers["pick"];
@@ -304,12 +307,12 @@ function deepseekPick(params: PickDecisionParams, deepseek: NonNullable<PickDeci
     label: params.label,
     state: { ...params.state, facts, ...(potionOptions.length ? { v6_potion_decider: "jev" } : {}) },
     questions: { pick: choiceQ(instructions, criteria) },
-    ...(potionOptions.length ? { potionJev: { state: params.state, questions: {
+    ...(potionOptions.length ? { potionJev: { ...boundedV6Jev(params.state, {
       ...Object.fromEntries([...potionChoices].map(([key, variant]) => [`potion_${key}`, choiceQ(
         "Only if this event/rest option is chosen, keep the held potions or free slots first? Compare the potion entries, brain tiers and holding HP; unknown is not zero.",
         { [key]: JSON.stringify(brainView(byKey.get(key)!)), [variant.key]: JSON.stringify(brainView(variant)) },
       )])), ...optionQuestions(potionOptions),
-    }, supply: (answers: AnswerSet) => { potionAnswers = answers; } } } : {}),
+    }), supply: (answers: AnswerSet) => { potionAnswers = answers; } } } : {}),
     deepseek: {
       question: "pick",
       baseline,

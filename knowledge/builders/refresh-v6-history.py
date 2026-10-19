@@ -20,21 +20,13 @@ import time
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[2] / 'learner'))
 from evidence_identity import scan, run_identity, identities
+from history_boundary import timestamp, after_run_end
 
 STREAMS = ('runs', 'states', 'sl-attempts', 'decisions')
 
 
 def now():
     return datetime.now(timezone.utc).isoformat(timespec='milliseconds').replace('+00:00', 'Z')
-
-
-def timestamp(value):
-    if not isinstance(value, str):
-        raise ValueError('missing observed timestamp')
-    parsed = datetime.fromisoformat(value.replace('Z', '+00:00'))
-    if parsed.tzinfo is None:
-        raise ValueError('timestamp has no timezone')
-    return parsed.astimezone(timezone.utc).isoformat(timespec='milliseconds').replace('+00:00', 'Z')
 
 
 def descriptor(path):
@@ -72,8 +64,8 @@ def freeze(root, character, directory, cutoff, receipt):
     receipt['source_exclusions'] = dict(descriptor(exclusions), count=0, counts_by_stream={})
 
     def record_gap(ref):
-        # Only complete malformed rows may be excluded. A partial frozen tail still fails.
-        if ref['reason'] != 'invalid_json':
+        # A partial frozen tail still fails. Valid rows require the observed run-end proof.
+        if ref['reason'] not in ('invalid_json', 'frame_after_run_end', 'decision_after_run_end'):
             return
         entry = dict(ref, byte_range=dict(start=ref['offset'], end_exclusive=ref['offset'] + ref['bytes']))
         data = (json.dumps(entry, ensure_ascii=False, allow_nan=False) + '\n').encode()
@@ -141,6 +133,7 @@ def freeze(root, character, directory, cutoff, receipt):
             ts = timestamp(row['ts'])
             if ts > runs[rid]['ended']:
                 excluded['frame_after_run_end'] += 1
+                record_gap(dict(ref, reason='frame_after_run_end', run_id=rid, ts=ts, run_ended=runs[rid]['ended']))
                 continue
             try:
                 deck = [{'id': c['card_id'], 'upgraded': c['upgraded']} for c in r['deck']]
@@ -170,10 +163,12 @@ def freeze(root, character, directory, cutoff, receipt):
                         entries[key] = dict(ts=ts, hp=frame['hp'], max_hp=frame['max_hp'])
     info = receipt['sources']['decisions'] = {}
     # Validate the decision prefix too: the existing combo CLI reopens the same frozen cuts.
-    for row, _ref in strict_rows(logs / 'decisions.jsonl', limits['decisions.jsonl'], info, record_gap):
+    for row, ref in strict_rows(logs / 'decisions.jsonl', limits['decisions.jsonl'], info, record_gap):
         rid = run_identity(row)
-        if rid in runs and timestamp(row['ts']) > runs[rid]['ended']:
-            raise ValueError('decision after its recorded run end')
+        if rid in runs and after_run_end(row, runs[rid]['ended']):
+            excluded['decision_after_run_end'] += 1
+            record_gap(dict(ref, reason='decision_after_run_end', run_id=rid,
+                            ts=timestamp(row['ts']), run_ended=runs[rid]['ended']))
     fights = []
     for rid, items in summaries.items():
         for i, item in enumerate(items):
@@ -204,6 +199,7 @@ def freeze(root, character, directory, cutoff, receipt):
     receipt['limitations'] = ['first stop uses recorded SL only; unlogged retries remain unknown',
                               'sparse/missing frames and activation evidence are never filled',
                               'complete malformed rows are excluded with raw byte ranges/SHA; missing evidence remains unknown',
+                              'frames and decisions strictly after the observed run end are excluded with raw byte ranges/SHA; no grace period',
                               'no simulation, trust calibration or knowledge publication']
     return inputs, limits
 

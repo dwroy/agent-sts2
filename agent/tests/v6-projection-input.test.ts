@@ -63,7 +63,7 @@ it("uses offered-card states and explicit route signatures with independent budg
   const { root, e } = fixture(), load = v6ProjectionRequests(root), first = (await load(e, "pick"))!;
   expect(first.options.length).toBeGreaterThan(0);
   expect(first.options.every(o => /^card\d+$/.test(o.id) && o.state.cards.length > first.baseline.state.cards.length)).toBe(true);
-  expect(first.prepare(first.targets[0]!, first.baseline.state)).toBeNull();
+  expect(first.prepare(first.targets[0]!, first.baseline.state)?.labels).toContain("missing_route_own_checkpoint_hp_fallback");
   e.screenMemory.routePlan = { runId: String(e.state.raw.run_id), act: 1, path: [{ row: 15, col: 0, type: "RestSite" }, { row: 16, col: 0, type: "Boss" }] } as never;
   const route = (await load(e, "pick"))!;
   expect(route.contextDigest).not.toBe(first.contextDigest);
@@ -72,7 +72,10 @@ it("uses offered-card states and explicit route signatures with independent budg
   expect(route.config.budgets).toMatchObject({ pick_ms: 5000, jev_ms: 5000 });
 });
 it("shares the frozen factory while W7 replaces resource options without changing the reward request", async () => {
-  const { root, dir, e } = fixture(), input = v6ProjectionInputs(root), context = (await input(e, "pick"))!;
+  const { root, dir, e } = fixture();
+  e.state.run!.raw.current_hp = 20; e.state.run!.current_hp = 20;
+  const input = v6ProjectionInputs(root), context = (await input(e, "pick"))!;
+  expect(context.situation.route?.steps).toEqual([]);
   writeFileSync(join(dir, "v6-history.json"), "invalid replacement");
   const again = (await input(e, "pick"))!;
   expect(again.factory).toBe(context.factory);
@@ -85,6 +88,8 @@ it("shares the frozen factory while W7 replaces resource options without changin
   expect(result.request.options.map(o => o.id)).toEqual(["rest"]);
   expect(result.request.options[0]!.state.hp).toBe(Math.min(result.request.baseline.state.maxHp, result.request.baseline.state.hp + 10));
   expect(context.situation.options.every(o => /^card\d+$/.test(o.id))).toBe(true);
+  expect(result.request.prepare(result.request.targets[0]!, result.request.baseline.state)?.labels)
+    .toContain("missing_route_own_checkpoint_hp_fallback");
   expect(result.request.prepare(result.request.targets[0]!, result.request.options[0]!.state, result.request.options[0])).toBeNull();
   vi.stubEnv("V6_BUILD", "off");
   expect(await input(e, "pick")).toBeNull();

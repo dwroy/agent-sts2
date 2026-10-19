@@ -1,0 +1,150 @@
+{
+  "measured_at": "2026-10-19T19:23:26.587Z",
+  "code_head": "de52e1f2c58bb88f649570cb76083cb29cc52b38",
+  "code_head_after": "de52e1f2c58bb88f649570cb76083cb29cc52b38",
+  "source_sha256": {
+    "agent/src/hand/screens/v6-room.ts": "f80974eae10d4afa1ae1b0ede11209cdc0839e051599e43f3e9c1390bb659a60",
+    "agent/src/v6/prompt-summary.ts": "a0589f9f6b2919ecf230042cdeb6042e64bed1daefcaf971214b5ae5880b12a1",
+    "agent/src/v6/log.ts": "67da107ecb15a6d37e59c29fbaff6de3ed3e3938096ffa5cbac090f585b23a7f"
+  },
+  "source_unchanged": true,
+  "knowledge": {
+    "path": "knowledge/characters/silent/build-cores.json",
+    "sha256": "377920574ce7859f5e39dd01aad495947140226777e742251ac850004ae0cbe6",
+    "file_bytes": 7903933
+  },
+  "method": "Actual buildV6RoomDecision on archived W7 inventory fixtures, character/ascension overridden only to load current formal Silent A10 cores; no projection table, no model request, no action. UTF-8 compact JSON sizes; not live Silent room request measurements. Process-local environment overrides only; production toggles untouched.",
+  "results": [
+    {
+      "kind": "shop",
+      "fixture": "agent/tests/logged-states/oneshot/u6ru-f22-shop.json",
+      "fixture_sha256": "a62dcb9f1173582cdcf71fee1e326252f4486728d43e0960f96a49f9f52b3eda",
+      "original_character": "IRONCLAD",
+      "original_ascension": 9,
+      "fixture_override": {
+        "character_id": "SILENT",
+        "ascension": 10
+      },
+      "options": 28,
+      "legal_keys_preserved": true,
+      "projection_entries": 952,
+      "all_projection_wins_unknown": true,
+      "full_metric_combos_in_audit": 17,
+      "projection_status": "projection_provider_unavailable",
+      "state_bytes": 15827,
+      "questions_bytes": 1448,
+      "jev_call_argument_bytes": 17326,
+      "state_limit_bytes": 16000,
+      "request_limit_bytes": 24000,
+      "within_limits": true,
+      "prompt_budget": {
+        "limit": 16000,
+        "unit": "bytes",
+        "before": 267508,
+        "after": 15827,
+        "truncated": true,
+        "omitted": {
+          "core_metrics": 16,
+          "inventory.potions": 1,
+          "options.buy_card0.projections": 33,
+          "options.buy_card1.projections": 33,
+          "options.buy_card2.projections": 33,
+          "options.buy_card3.projections": 33,
+          "options.buy_card4.projections": 33,
+          "options.buy_card5.projections": 33,
+          "options.buy_card6.projections": 33,
+          "options.buy_potion0.projections": 33,
+          "options.buy_potion1.projections": 33,
+          "options.buy_potion2.projections": 33,
+          "options.buy_relic0.projections": 33,
+          "options.buy_relic1.projections": 33,
+          "options.buy_relic2.projections": 33,
+          "options.discard_potion0.projections": 33,
+          "options.leave.projections": 33,
+          "options.remove:c12.projections": 33,
+          "options.remove:c13.projections": 33,
+          "options.remove:c14.projections": 33,
+          "options.remove:c15.projections": 33,
+          "options.remove:c16.projections": 33,
+          "options.remove:c17.projections": 33,
+          "options.remove:c21.projections": 33,
+          "options.remove:c22.projections": 33,
+          "options.remove:c23.projections": 33,
+          "options.remove:c24.projections": 33,
+          "options.remove:c25.projections": 33,
+          "options.remove:c4.projections": 33,
+          "options.remove:c8.projections": 33,
+          "inventory.deck": 26,
+          "targets": 2,
+          "inventory.relics": 6,
+          "inventory": 1,
+          "note": 1,
+          "factory": 1,
+          "limitations": 1,
+          "target_mixtures": 1,
+          "options.discard_potion0": 1,
+          "options.buy_potion1": 1,
+          "options.buy_potion0": 1
+        }
+      },
+      "field_bytes": {
+        "direction_weights": 2,
+        "core_metrics": 1721,
+        "options": 12707,
+        "prompt_budget": 1331
+      }
+    },
+    {
+      "kind": "rest",
+      "fixture": "agent/tests/logged-states/oneshot/w2tb-f7-rest.json",
+      "fixture_sha256": "9d0fe8a5d466d0b484c028ba99330162cd45b9e8681e1bd55f88e5531898e410",
+      "original_character": "IRONCLAD",
+      "original_ascension": 9,
+      "fixture_override": {
+        "character_id": "SILENT",
+        "ascension": 10
+      },
+      "options": 7,
+      "legal_keys_preserved": true,
+      "projection_entries": 238,
+      "all_projection_wins_unknown": true,
+      "full_metric_combos_in_audit": 17,
+      "projection_status": "projection_provider_unavailable",
+      "state_bytes": 15775,
+      "questions_bytes": 427,
+      "jev_call_argument_bytes": 16253,
+      "state_limit_bytes": 16000,
+      "request_limit_bytes": 24000,
+      "within_limits": true,
+      "prompt_budget": {
+        "limit": 16000,
+        "unit": "bytes",
+        "before": 87397,
+        "after": 15775,
+        "truncated": true,
+        "omitted": {
+          "core_metrics": 16,
+          "inventory.potions": 2,
+          "options.o0.projections": 33,
+          "options.o1:c0.projections": 33,
+          "options.o1:c10.projections": 33,
+          "options.o1:c11.projections": 33,
+          "options.o1:c12.projections": 33,
+          "options.o1:c4.projections": 33
+        }
+      },
+      "field_bytes": {
+        "factory": 78,
+        "inventory": 864,
+        "direction_weights": 2,
+        "targets": 86,
+        "core_metrics": 1721,
+        "options": 12182,
+        "target_mixtures": 2,
+        "limitations": 35,
+        "note": 348,
+        "prompt_budget": 314
+      }
+    }
+  ]
+}

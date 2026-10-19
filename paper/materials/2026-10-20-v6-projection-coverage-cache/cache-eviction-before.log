@@ -1,0 +1,147 @@
+
+ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/v6-projection-coverage-cache-20261020/agent
+
+ ❯ tests/v6-projection.test.ts (16 tests | 1 failed | 15 skipped) 44ms
+     × keeps current paired results when the bounded cross-request cache evicts another completed input 42ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/v6-projection.test.ts > V6 combination expectation > keeps current paired results when the bounded cross-request cache evicts another completed input
+AssertionError: expected [ { …(21) }, { …(21) } ] to deeply equal [ { …(21) }, { …(21) } ]
+
+- Expected
++ Received
+
+  [
+    {
+      "availability": {
+-       "skip": 0.5,
+-       "take": 0.5,
++       "skip": null,
++       "take": null,
+      },
+      "core_first_cast_turn": null,
+-     "deck_count_change": 1,
+-     "delta_tier": "same",
++     "deck_count_change": null,
++     "delta_tier": "unknown",
+      "direction_id": "D",
+-     "direction_role": "neutral",
++     "direction_role": "unknown",
+      "joint_paired_delta": null,
+      "joint_win": null,
+      "losing_boss_hp_fraction": null,
+      "option_id": "skip",
+-     "paired_delta": {
+-       "mean": 0,
+-       "n": 20,
+-       "se": 0,
+-     },
++     "paired_delta": null,
+      "reflex_ids": [],
+      "schema": "projection-entry-v1",
+      "target_id": "boss",
+      "trust": "unknown",
+-     "turns": {
+-       "n": 20,
+-       "se": 0,
+-       "value": 4,
+-     },
+-     "weighted_current_boss_delta": {
+-       "mean": 0,
+-       "n": 20,
+-       "se": 0,
+-     },
++     "turns": null,
++     "weighted_current_boss_delta": null,
+      "weighted_joint_delta": null,
+-     "win": {
+-       "n": 20,
+-       "se": 0.056336165600927975,
+-       "value": 0.6250000000000001,
+-     },
+-     "win_tier": "even",
+-     "winning_player_hp_fraction": {
+-       "n": 20,
+-       "se": 0,
+-       "value": 0.3333333333333333,
+-     },
++     "win": null,
++     "win_tier": "unknown",
++     "winning_player_hp_fraction": null,
+    },
+    {
+      "availability": {
+-       "skip": 0.5,
+-       "take": 0.75,
++       "skip": null,
++       "take": null,
+      },
+      "core_first_cast_turn": null,
+-     "deck_count_change": 1,
+-     "delta_tier": "much_better",
++     "deck_count_change": null,
++     "delta_tier": "unknown",
+      "direction_id": "D",
+-     "direction_role": "core",
++     "direction_role": "unknown",
+      "joint_paired_delta": null,
+      "joint_win": null,
+      "losing_boss_hp_fraction": null,
+      "option_id": "take",
+-     "paired_delta": {
+-       "mean": 0.18750000000000003,
+-       "n": 20,
+-       "se": 0.033863993184242734,
+-     },
++     "paired_delta": null,
+      "reflex_ids": [],
+      "schema": "projection-entry-v1",
+      "target_id": "boss",
+      "trust": "unknown",
+-     "turns": {
+-       "n": 20,
+-       "se": 0,
+-       "value": 4,
+-     },
+-     "weighted_current_boss_delta": {
+-       "mean": 0.18750000000000003,
+-       "n": 20,
+-       "se": 0.033863993184242734,
+-     },
++     "turns": null,
++     "weighted_current_boss_delta": null,
+      "weighted_joint_delta": null,
+-     "win": {
+-       "n": 20,
+-       "se": 0.033863993184242734,
+-       "value": 0.8125,
+-     },
+-     "win_tier": "favored",
+-     "winning_player_hp_fraction": {
+-       "n": 20,
+-       "se": 0,
+-       "value": 0.3333333333333333,
+-     },
++     "win": null,
++     "win_tier": "unknown",
++     "winning_player_hp_fraction": null,
+    },
+  ]
+
+ ❯ tests/v6-projection.test.ts:43:29
+     41|     const bounded = await new V6ProjectionEngine(new FixedRunner(), ()…
+     42|     const ordinary = await new V6ProjectionEngine(new FixedRunner(), (…
+     43|     expect(bounded.entries).toEqual(ordinary.entries);
+       |                             ^
+     44|     expect(bounded.combinations.map(c => [c.completed_win, c.general_w…
+     45|       .toEqual(ordinary.combinations.map(c => [c.completed_win, c.gene…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 15 skipped (16)
+   Start at  03:46:08
+   Duration  1.57s (transform 1.10s, setup 692ms, import 603ms, tests 44ms, environment 0ms)
+

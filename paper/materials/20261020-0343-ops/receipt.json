@@ -1,0 +1,166 @@
+{
+  "at": "2026-10-20 03:45:22 CST",
+  "events": [
+    "strategy-done 20261020-024301-strategy-proposal",
+    "three recurring original manual dissent notices"
+  ],
+  "source": "6b11948fa07a79d4ce321f2f44adafacecc1ddd4",
+  "merged": "29ab96f1cdbe5e4f6d09ae78023be3acdd6ea047",
+  "actual_live_observed": "2a2d83c6cb0b4224fe6e2a3aabda96fe81404698",
+  "source_and_merge_actual_live_ancestors": true,
+  "four_tested_leaves": [
+    {
+      "path": "agent/src/reflex/combat-plan.ts",
+      "sha256": "7622d15e4af18c3e1e95e6808fabefac0093224c441470a58b2a61dca245736b",
+      "matches_fixed_source_and_actual_live": true
+    },
+    {
+      "path": "agent/src/reflex/silent-stock-note.ts",
+      "sha256": "142c8821ec0650bd387a8162afb55d30c1493a5a2cf9f4fb43ef1b82276b1eb1",
+      "matches_fixed_source_and_actual_live": true
+    },
+    {
+      "path": "agent/tests/silent-stock-note-evidence.json",
+      "sha256": "cfc7a62131f4da544b8f4b0bdb5b550df8411f96dd11f10275a1a308a37d5f46",
+      "matches_fixed_source_and_actual_live": true
+    },
+    {
+      "path": "agent/tests/silent-stock-note.test.ts",
+      "sha256": "936e9174795cdd8711ce900487bdd4d5c7262e2219e8b77fa08fc90736323262",
+      "matches_fixed_source_and_actual_live": true
+    }
+  ],
+  "original_ten_wide_proposals": "all waiting; narrow inventory question note only, no complete stock model or causal gain claim",
+  "checks": {
+    "report_tsc": 0,
+    "fixed_cases": 12,
+    "ablation_exit": 1,
+    "restored_exit": 0,
+    "source_scoped_files": 528,
+    "source_scoped_cases": 4728,
+    "live_scoped_files": 529,
+    "live_scoped_cases": 4729,
+    "original_sandbox_exit": 1,
+    "http_filtered_sandbox_exit": 1,
+    "extra_exclusions": 10,
+    "host_full": null,
+    "checks_pending_original_scheduler": true,
+    "no_duplicate_full_started": true
+  },
+  "original_full_owner": {
+    "pid_observed": 4027056,
+    "repository_script": "ops/codex-ops-learn.py",
+    "original_live_lock_nonblocking_acquisition": "busy; no wait, override or second worker"
+  },
+  "release": {
+    "name": "S1.silent-stock-model-limits1",
+    "commit": "29ab96f1cdbe5e4f6d09ae78023be3acdd6ea047",
+    "release_id": null,
+    "reason": "actual merge verified; original live lock currently owned by existing ops mechanical process, full check pending. Do not allocate outside lock or claim acceptance.",
+    "main_source_integration": null,
+    "behavior_entry_already_in_live_registry": true,
+    "next": "Original learner-checks terminal event plus exact live/main lock admission; preserve parallel source/knowledge, mechanically integrate and assign unique release without repeated unchanged source full."
+  },
+  "rollback": "Only original four source/test leaves using learner source parent, preserve parallel live knowledge and other features; no rollback executed",
+  "learning_notices": [
+    {
+      "id": "0baef634d02e1ff85843c10a",
+      "message_sha256": "b901a2de0949ad35076a535a065c0099111a8b69ca8502b687957493ef3b292f",
+      "watcher_received": false,
+      "roy_notified": false,
+      "ops_forwarded": {
+        "path": "/home/dw/Projects/agent-sts2/ops/codex-ops/learning-notices/receipts/0baef634d02e1ff85843c10a.ops-forwarded.json",
+        "sha256": "ee9fbcbc275d4712957140ea0f09f85552a0e4cdf3b2116850e9dccca2c88bb0",
+        "at": 1792401326.4226396
+      },
+      "current_notice": {
+        "path": "ops/codex-ops/learning-notices/0baef634d02e1ff85843c10a.json",
+        "bytes": 4628,
+        "sha256": "55e9c2d2d06f5bc43bb92ec2771c873dbee93144e3b0e7e8beda63c0dcb96922"
+      },
+      "message_changed_since0313": false
+    },
+    {
+      "id": "f619c26f4bfa10970591beb5",
+      "message_sha256": "079d1ccd40b005ab012a2f78b4fdf922eed1503dbede1298a07f22d24ad9b741",
+      "watcher_received": false,
+      "roy_notified": false,
+      "ops_forwarded": {
+        "path": "/home/dw/Projects/agent-sts2/ops/codex-ops/learning-notices/receipts/f619c26f4bfa10970591beb5.ops-forwarded.json",
+        "sha256": "def711c31df6af3117610bf415fb51a4ae5bc7822bbf9d37fd65f98843bb5a14",
+        "at": 1792403296.48732
+      },
+      "current_notice": {
+        "path": "ops/codex-ops/learning-notices/f619c26f4bfa10970591beb5.json",
+        "bytes": 4424,
+        "sha256": "4e560223fbc7299c6bf1980fd731e72179a40e3caf9f7e7939d8e62ad359e4dd"
+      },
+      "message_changed_since0313": false
+    },
+    {
+      "id": "b5b53e0d8bebe1df7fb30468",
+      "message_sha256": "c8b21adc6626109ccaa6d2856ae174a7b3a3cb5277632855b9053ec7c84464a4",
+      "watcher_received": false,
+      "roy_notified": false,
+      "ops_forwarded": {
+        "path": "/home/dw/Projects/agent-sts2/ops/codex-ops/learning-notices/receipts/b5b53e0d8bebe1df7fb30468.ops-forwarded.json",
+        "sha256": "a6bcb7ee55c573e14db91ac795c0c3dfbfd7a685f05143aa71d74ff2b1b82ef2",
+        "at": 1792410580.0637586
+      },
+      "current_notice": {
+        "path": "ops/codex-ops/learning-notices/b5b53e0d8bebe1df7fb30468.json",
+        "bytes": 2343,
+        "sha256": "894bb5d05c47653841ea59205a6d1ac2bdfe17356c8c240840de3c6ff62fb8c6"
+      },
+      "message_changed_since0313": false
+    }
+  ],
+  "prior_actual_native_watcher_Roy": {
+    "path": ".artifacts/v6-learning-notice-watcher-20261019/native-roy-notification.json",
+    "bytes": 2024,
+    "sha256": "16b0a57bb5d88164e970ba82742d1e4bea38e6a697c9edd0bcf3f27ba3c05752"
+  },
+  "notice_protocol_source": {
+    "path": "ops/learning_requests.py",
+    "bytes": 59134,
+    "sha256": "2bd6d3e6a7ea6cc7a71b6eb999ea738e2f7772df75baeeb93befcf6c9b617d84"
+  },
+  "notice_role_ACK": "compatibility still pending, original messages and actual prior delivery retained; no ACK retry or other-role flags written",
+  "STOP_exists": true,
+  "brain_wait": {
+    "path": "logs/brain-wait.json",
+    "bytes": 619,
+    "sha256": "1e8ee3a27fbdcabe9c5a2698e2b70bc909147f13d45ff3792779613ffc92ed30"
+  },
+  "game_resumed": false,
+  "source_merged_to_main_by_ops": false,
+  "release_allocated_without_lock": false,
+  "parent_closed": false,
+  "sources": [
+    {
+      "path": "ops/codex-ops/learner/20261020-024301-strategy-proposal.out",
+      "bytes": 8052,
+      "sha256": "0c4bd1524435fcb31f1b1837b799dabc14bbd26d7de43d062dab8b467abc7c35"
+    },
+    {
+      "path": ".worktrees/codex-strategy-silent-20261020-024301/learner/runs/20261020-024312-80d20d8d-2681-4ebc-9302-6819b5520f25-strategy-proposal/report.md",
+      "bytes": 19905,
+      "sha256": "1e057d0493cfbd7e2540b342317eb8cf9dc302446701a95cc734ad281cfef5ec"
+    },
+    {
+      "path": ".worktrees/codex-strategy-silent-20261020-024301/learner/runs/20261020-024312-80d20d8d-2681-4ebc-9302-6819b5520f25-strategy-proposal/live-merge-receipt.json",
+      "bytes": 940,
+      "sha256": "18adc6260dbcb530b6793ae631277c28dafa69fd94c5ba96cbf78b877cc6bbf9"
+    },
+    {
+      "path": ".worktrees/codex-strategy-silent-20261020-024301/learner/runs/20261020-024312-80d20d8d-2681-4ebc-9302-6819b5520f25-strategy-proposal/source-ablation.json",
+      "bytes": 222,
+      "sha256": "7567bdb6a5517d1cc4133ac87c961eb55188aa44e507696adb58f36bfd4524ad"
+    },
+    {
+      "path": ".worktrees/codex-strategy-silent-20261020-024301/learner/runs/20261020-024312-80d20d8d-2681-4ebc-9302-6819b5520f25-strategy-proposal/tested-source-leaves.json",
+      "bytes": 606,
+      "sha256": "98dac3825f788980a23e4d6c794a344da09f4b6c7cab2041d312754ba4ac1e36"
+    }
+  ]
+}

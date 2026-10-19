@@ -1,0 +1,50 @@
+{
+  "started_at": "2026-10-20T04:31:00.583867+08:00",
+  "base": "e208023e3dcfeafffb4cc8ae2bff0ddb674751c3",
+  "staged_tree": "a50da388f00bc771c53a883611905573d700f79e",
+  "nice": 19,
+  "max_workers": 1,
+  "timeouts": "original unchanged",
+  "steps": [
+    {
+      "name": "tsc",
+      "argv": [
+        "npx",
+        "tsc",
+        "-p",
+        "tsconfig.json",
+        "--noEmit"
+      ],
+      "started_at": "2026-10-20T04:31:01.183224+08:00",
+      "exit_code": 0,
+      "ended_at": "2026-10-20T04:31:02.482970+08:00",
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "vitest",
+      "argv": [
+        "npx",
+        "vitest",
+        "run",
+        "--maxWorkers=1"
+      ],
+      "started_at": "2026-10-20T04:31:02.484540+08:00",
+      "exit_code": 1,
+      "ended_at": "2026-10-20T04:54:05.748726+08:00",
+      "log_sha256": "1ba83dc014a6115f757f4b344a57504727fa374e997ac7ecdebcacf47bbdacf0"
+    }
+  ],
+  "ended_at": "2026-10-20T04:54:05.751163+08:00",
+  "source_bytes_unchanged": true,
+  "at": "2026-10-20T04:54:21+08:00",
+  "summary": {
+    "files_passed": 592,
+    "files_failed": 1,
+    "tests_passed": 5702,
+    "tests_failed": 1,
+    "tests_skipped": 2
+  },
+  "failure": "tests/v6-prompt-summary.test.ts original 15000ms timeout, elapsed 17007ms",
+  "tracked_input_count": 1946,
+  "source_manifest": "final-joint-source-manifest.json"
+}

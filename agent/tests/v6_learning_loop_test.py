@@ -13,6 +13,7 @@ from unittest.mock import patch
 
 ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT / 'learner'))
+sys.path.insert(0, str(ROOT / 'knowledge/builders'))
 from evidence_identity import decision_index, associate
 from extract_evidence import extract
 from evidence_summary import summarize
@@ -130,7 +131,7 @@ class IdentityTest(unittest.TestCase):
 def fixture(root):
     b = root / 'knowledge/builders'
     b.mkdir(parents=True)
-    for name in ('build-combo-metrics.py', 'combo_metrics.py', 'combo_pooled.py', 'combo_normalization.py', 'check-v6-refresh.mts', 'build-v6-history.py', 'refresh-v6-history.py', 'refresh.sh'):
+    for name in ('build-combo-metrics.py', 'combo_metrics.py', 'combo_pooled.py', 'combo_normalization.py', 'history_boundary.py', 'check-v6-refresh.mts', 'build-v6-history.py', 'refresh-v6-history.py', 'refresh.sh'):
         shutil.copy2(ROOT / 'knowledge/builders' / name, b / name)
     # Production Node CLI and schemas are used read-only; no copy of a checkout.
     (root / 'agent').symlink_to(ROOT / 'agent', target_is_directory=True)
@@ -178,6 +179,84 @@ def fixture(root):
 
 
 class RefreshTest(unittest.TestCase):
+    def test_terminal_rows_share_inclusive_boundary_and_exact_source_exclusions(self):
+        with tempfile.TemporaryDirectory() as d:
+            root = Path(d)
+            target = fixture(root)
+            ended = '2020-01-01T00:10:00.000Z'
+            later = '2020-01-01T00:16:04.176Z'
+            states = root / 'logs/states.jsonl'
+            state = json.loads(states.read_bytes())
+            original = {}
+            expected = []
+            for name, row, reason in [('states', state, 'frame_after_run_end'),
+                                     ('decisions', dict(run_id=RUN, decision_id='after'), 'decision_after_run_end')]:
+                path = root / 'logs' / (name + '.jsonl')
+                first = path.read_bytes()
+                # An equivalent timezone spelling at the exact boundary is retained.
+                equal = raw(dict(row, ts='2020-01-01T08:10:00.000+08:00'))
+                after = raw(dict(row, ts=later))
+                data = first + equal + after
+                path.write_bytes(data)
+                original[name] = data
+                offset = len(first) + len(equal)
+                expected.append(dict(source=str(path), source_size=len(data), line=3, offset=offset,
+                    bytes=len(after), sha256=hashlib.sha256(after).hexdigest(), reason=reason,
+                    run_id=RUN, ts=later, run_ended=ended,
+                    byte_range=dict(start=offset, end_exclusive=offset + len(after))))
+            receipt, code = refresh.refresh(root, root, 'silent')
+            self.assertEqual(code, 0, receipt)
+            actual = list(map(json.loads, Path(receipt['source_exclusions']['path']).read_bytes().splitlines()))
+            self.assertEqual(actual, expected)
+            self.assertEqual(receipt['excluded'], {'frame_after_run_end': 1, 'decision_after_run_end': 1})
+            self.assertEqual(receipt['source_exclusions']['counts_by_stream'], {'states': 1, 'decisions': 1})
+            refs = list(map(json.loads, Path(receipt['frame_sources']['path']).read_bytes().splitlines()))
+            self.assertEqual(len(refs), 2)
+            from combo_metrics import read_rows
+            spec = importlib.util.spec_from_file_location('boundary_combo_cli', ROOT / 'knowledge/builders/build-combo-metrics.py')
+            builder = importlib.util.module_from_spec(spec)
+            spec.loader.exec_module(builder)
+            manifest = json.loads((Path(receipt['directory']) / 'logs.json').read_bytes())
+            exclusions = builder.source_exclusions(manifest, root / 'logs', receipt['log_byte_limits'])
+            for name, data in original.items():
+                path = root / 'logs' / (name + '.jsonl')
+                self.assertEqual(path.read_bytes(), data)
+                rows = list(read_rows(path, len(data), exclusions=exclusions, terminal_ends={RUN: ended}))
+                self.assertEqual(len(rows), 2)
+                self.assertEqual(rows[-1][0]['ts'], '2020-01-01T08:10:00.000+08:00')
+            self.assertEqual([c['id'] for c in json.loads(target.read_bytes())['data']['combo_metrics']], ['fixture_combo'])
+            retain('terminal-boundary-exclusions', dict(exclusions=actual, **call_evidence(receipt)))
+
+    def test_combo_reader_rejects_forged_terminal_boundary_proofs(self):
+        from combo_metrics import read_rows
+        with tempfile.TemporaryDirectory() as d:
+            path = Path(d) / 'decisions.jsonl'
+            ended = '2020-01-01T00:10:00.000Z'
+            row = dict(run_id=RUN, ts='2020-01-01T00:10:00.001Z')
+            data = raw(row)
+            path.write_bytes(data)
+            entry = dict(source_size=len(data), bytes=len(data), sha256=hashlib.sha256(data).hexdigest(),
+                reason='decision_after_run_end', run_id=RUN, ts=row['ts'], run_ended=ended)
+            key = (str(path), 0)
+            self.assertEqual(list(read_rows(path, len(data), exclusions={key: entry}, terminal_ends={RUN: ended})), [])
+            for changed in [dict(run_id=OTHER), dict(ts=ended), dict(run_ended=row['ts']),
+                            dict(reason='frame_after_run_end'), dict(reason='invalid_json')]:
+                with self.subTest(changed=changed), self.assertRaisesRegex(ValueError, 'invalid run-end exclusion'):
+                    list(read_rows(path, len(data), exclusions={key: dict(entry, **changed)}, terminal_ends={RUN: ended}))
+            for ends in ({}, {RUN: row['ts']}):
+                with self.subTest(ends=ends), self.assertRaisesRegex(ValueError, 'invalid run-end exclusion'):
+                    list(read_rows(path, len(data), exclusions={key: entry}, terminal_ends=ends))
+
+    def test_sl_terminal_guard_is_not_relaxed(self):
+        with tempfile.TemporaryDirectory() as d:
+            root = Path(d)
+            target = fixture(root)
+            put(root / 'logs/sl-attempts.jsonl', dict(run_id=RUN, ts='2020-01-01T00:10:00.001Z'))
+            receipt, code = refresh.refresh(root, root, 'silent')
+            self.assertEqual(code, 1)
+            self.assertEqual(target.read_bytes(), b'OLD_PACKET')
+            self.assertIn('SL summary after its recorded run end', receipt['error'])
+
     def test_both_real_generator_failures_keep_old_packet_and_original_error(self):
         for fail in ('combo-metrics', 'v6-history'):
             with self.subTest(fail=fail), tempfile.TemporaryDirectory() as d:

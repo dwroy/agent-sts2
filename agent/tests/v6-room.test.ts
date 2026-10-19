@@ -259,6 +259,8 @@ it("retains an unavailable production context as unknown, including local unsupp
 });
 it("publishes each combination with n/error/trust, leaves absent projections unknown and keeps full provenance in audit", () => {
   on(); const dir = fixtureDir(), e = room("shop"), input = v6ShopOptions(e)!, t = table();
+  // This checks projection semantics; the real full-shop fixture separately checks truncation.
+  input.options = input.options.filter(o => ["buy_card0", "leave"].includes(o.option.key));
   const entry = { ...comboProjection(), option_id: "buy_card0", target_id: "TEST_TARGET", combo_metrics: coreFixture().combos[0]!.metrics };
   const frozenSummary = structuredClone(coreFixture().combos[0]!.metrics);
   frozenSummary[0]!.observed.dpr_boss = { ...frozenSummary[0]!.observed.dpr_boss, value: 42, n: 7, se: 2 };
@@ -268,10 +270,10 @@ it("publishes each combination with n/error/trust, leaves absent projections unk
   const d = buildV6RoomDecision(e, input, t, undefined, dir);
   expect(d.roomEntries).toHaveLength(input.options.length * 2); expect(d.roomEntries.every(e => validateProjectionEntry(e).ok)).toBe(true);
   const output = asRecord(asRecord(d.state.options).buy_card0), projections = output.projections as Raw[];
-  expect(projections.find(p => p.combo_id === "TEST_A:min")).toMatchObject({ formation_n: 200, formation_se: .02, combo_source: "build-core-v1", combo_role: "in_combo", model_labels: ["fixture_model"] });
-  expect(projections.find(p => p.combo_id === "TEST_A:common")).toMatchObject({ win: null, formation_n: null, trust: "unknown" });
+  expect(projections.find(p => p.combo_id === "TEST_A:min")).toMatchObject({ formation_n: 200, formation_se: .02, combo_source: "build-core-v1", combo_role: "in_combo", model_labels: ["fixture_model"], opening: { Wk: "evaluated", W0: "evaluated" } });
+  expect(projections.find(p => p.combo_id === "TEST_A:common")).toMatchObject({ win: null, formation_n: null, trust: "unknown", opening: { Wk: "opening unknown", W0: "opening unknown" } });
   const coreMetrics = d.state.core_metrics as Raw[];
-  expect((coreMetrics.find(c => c.combo_id === "TEST_A:min")!.metrics as Raw[])[0]!.observed).toMatchObject({ dpr_boss: { value: 42, n: 7, se: 2 } });
+  expect((coreMetrics.find(c => c.id === "TEST_A:min")!.metrics as Raw[])[0]!).toMatchObject({ dpr_boss: { value: 42, n: 7, se: 2 } });
   expect(JSON.stringify(d.state)).not.toContain("FIXTURE_RUN"); expect(JSON.stringify(d.state)).not.toContain('"evidence"'); expect(JSON.stringify(d.state)).not.toContain("card_outcome_stats");
   expect(JSON.stringify(d.roomEntries)).toContain("FIXTURE_RUN");
   recordV6Room(e, d, join(dir, "plans.jsonl"), "fixed", answer("buy_card0"), false, 1);
@@ -282,7 +284,7 @@ it("publishes each combination with n/error/trust, leaves absent projections unk
   const afterPublish = buildV6RoomDecision(e, input, t, undefined, changedDir);
   expect(afterPublish.roomEntries.find(e => e.option_id === "buy_card0" && e.combo_id === "TEST_A:min"))
     .toEqual(d.roomEntries.find(e => e.option_id === "buy_card0" && e.combo_id === "TEST_A:min"));
-  expect((afterPublish.state.core_metrics as Raw[]).find(c => c.combo_id === "TEST_A:min")).toBeTruthy();
+  expect((afterPublish.state.core_metrics as Raw[]).find(c => c.id === "TEST_A:min")).toBeTruthy();
 });
 it("fallback rejects a much-worse current boss, then ranks chain deltas and otherwise legally leaves/heals", () => {
   on(); const e = room("shop"), input = v6ShopOptions(e)!, t = table();

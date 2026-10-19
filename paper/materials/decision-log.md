@@ -4826,3 +4826,49 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
 - 2026-10-20 02:56:10 CST [运维 codex/024301 fix回报] 无新源码/提交；严格干净而tests=null/0例，保留原failed/rc0/mergednull与归属deferred；不补测/dataset/合入，不解STOP/关父。原件：paper/materials/20261020-0249-fix-ops/receipt.json。
 
 - 2026-10-20 03:35:16 CST [Codex学习者/静默库存提示子项] 原提案d04933cbd408d85b、bc357cb8bcee3b22；R3AJCGQGGMR4 A10 F45 T2/T5/T6，silent-0311/0312；源码6b11948fa07a79d4ce321f2f44adafacecc1ddd4已合live29ab96f1cdbe5e4f6d09ae78023be3acdd6ea047，固定撤接线2失败/恢复12过，沙箱tsc及限定范围通过（额外10份的HTTP/管道/IPC/EROFS及原封口fixture失败保留，宿主full待原调度）。仅纠正库存确定总血量/固定启动提示，注明rollout跨体上限未校准；不改候选排序/SL/药价，宽项继续waiting。原HTTP失败保留；release_id待ops锁内核号，不冒自然消费/收益或完整模型修复。
+- 2026-10-20 02:51:54 CST 运维 codex：Claude原通道新恢复门槛已登记：W5摘要体积与W3/B均实际live，Claude安排原会话真实请求烟测通过后才可解除STOP；原请求原位/字节SHA已核，STOP/fault/存档保留，仅登记不派发或恢复。原件paper/materials/20261020-0249-ops/receipt.json。
+
+- 2026-10-20 02:56:10 CST [运维 codex/024301 fix回报] 无新源码/提交；严格干净而tests=null/0例，保留原failed/rc0/mergednull与归属deferred；不补测/dataset/合入，不解STOP/关父。原件：paper/materials/20261020-0249-fix-ops/receipt.json。
+
+- 2026-10-20 03:03:03 CST [运维 codex/watcher坏行修复交付] 核main46f4/live80dc与原完整受测7a053984b源及知识一致；唯一nice19刷新在途，17覆盖/消费者未核。保持STOP及原恢复门槛，无重复刷新/full/模型。原件：paper/materials/20261020-0302-ops/receipt.json。
+
+- 2026-10-20 03:09:46 CST [运维 codex/024301-s2收尾异常核收] 十waiting、无新源码；原唯一dataset后因并行de94源码变化保留attention，无收尾commit、不重跑/合入；原回收与科学父边界保持。原件：paper/materials/20261020-0308-ops/receipt.json。
+- 2026-10-20 03:12:21 CST [Codex v6-w4w6] V6题面精简及硬上限修复已完整检查并FF main ff589f1d2：tsc0、vitest 591 passed (591); tests 5663 passed | 2 skipped (5665)、gitleaks0；17/17真实R2组合读回及每选项保留投影固定回归。候选真实Jev六题/大脑通过不冒live验收；W3入口HP/供给预算未知修复待接续，STOP/fault保留。报告paper/materials/2026-10-20-v6-prompt-budget/report.md。
+
+- 2026-10-20 03:14:14 CST [运维 codex/三旧异议提醒] 原文/原生Roy转达证据一致；watcher现blocked、新提醒待投，旧scope ACK兼容pending而非未读，不代ACK/补知识/续派或关父，STOP保持。原件：paper/materials/20261020-0313-ops/receipt.json。
+
+- 2026-10-20 03:28:43 CST [运维 codex/终局边界新授权接收] Roy批准统一canonical终局并逐行留痕排除严格晚于终局帧/决策，等于保留、SL守卫不改；原e74暂存树完整检查在途、未提交/发布，不重刷/解STOP。原件：paper/materials/20261020-0327-ops/receipt.json。
+
+- 2026-10-20 03:35:57 CST [运维 codex/R3增量正式发布派发] 按原370f8cde8/240分钟单次派v6-knowledge-publish-r3-20261020-033408，原生codex1/high/沙箱及首答已核；保观察/SE未知/priority null/sidecar消费缺口与R2，main/live和自然采用待完成事件，STOP不解除。原件：paper/materials/20261020-0334-ops/receipt.json。
+
+- 2026-10-20 03:39:55 CST [运维 codex/031301策略宿主兜底] 固定原五文件tree7f714单次宿主full在途，原沙箱未full0/1duplicate9waiting及六原稿缺失保留；不提前提交/合入/记shipped或解STOP。原件：paper/materials/20261020-0337-ops/receipt.json。
+
+- 2026-10-20 03:45:22 CST [运维 codex/库存提示合入事实核收] 6b119/29ab实际live四叶核同，原完整检查待办且live锁忙，main/统一release保持pending；不将限定排除检查或宽项waiting冒完成，不重复full/模型/解除STOP。原件：paper/materials/20261020-0343-ops/receipt.json。
+
+- 2026-10-20 03:54:58 CST [运维 codex/终局边界源码main交付核收] 70cf与原e74完整受测源一致，live运输待原4027056完成事件及联合源/锁；单次17包刷新仍未启动，未冒17覆盖/发布/收益，不重full或解STOP。原件：paper/materials/20261020-0354-ops/receipt.json。
+
+- 2026-10-20 03:57:44 CST [运维 codex/紧勒源码提交及main集成] 原固定7f714宿主full0后提交df528并合main7a5c；live联合树/正式号仍pending，原失败不改、不重full/17包/模型。034302无源码但原守卫未过，保留failed与回收deferred。原件：paper/materials/20261020-0353-ops/receipt.json。
+
+- 2026-10-20 04:03:04 CST [运维 codex/V6-R399登记及R3受阻] 核库存原精确full0后同步main并在原锁登记29ab为V6-R399；R3仍候选73d8/full1/CLI任务链受阻，原唯一新组合501d/775109待host，未main/live发布R3或刷新17包，STOP保持。原件：paper/materials/20261020-0358-ops/receipt.json。
+
+- 2026-10-20 04:17:20 CST [运维 codex/R3联合终局] 核501d/775109原唯一host full0（593文件5684过2跳）；原锁main09b/live2897源码无漂移，R3真实task提案CLI仍拒，注册及运输保持pending，未增版/重复full/刷新，STOP保持。原件：paper/materials/20261020-0413-ops/receipt.json。
+- 2026-10-20 04:19:54 CST [Codex v6-w4w6] V6开场unknown题面与多选项最小摘要已FF main c6f77ba1b（开场a29c9f48e）：tsc0、完整vitest Test Files  593 passed (593); Tests  5688 passed | 2 skipped (5690)、gitleaks0；商店28项全部非null并保留身份/两类配对差与档位/凑齐概率变化/未知原因，固定已知与未知混合题21577B state/23076B总请求；state子限额22KB、总请求仍24KB，不冒称Nova官方上限。Wk/W0逐行未知及已有原因透传，不改sim/知识、不补数、不重试模型、不动live/STOP/旧故障；W7沿用boundedV6Jev，watcher模型/HP/缓存及ops真实live验收仍待原owner。材料paper/materials/2026-10-20-v6-option-prompt-floor/与2026-10-20-v6-opening-unknown/。
+
+- 2026-10-20 04:44:07 CST [运维 codex/041302原宿主补验] 原发布任务身份三叶未提交候选FF e208、补丁SHA不变，固定79fc唯一宿主PID120886/nice19实际checking；原沙箱full1和failed/rc0保留，待原learner-checks，不登记上线或重试R3。STOP保持。原件：paper/materials/20261020-0442-ops/receipt.json。
+
+- 2026-10-20 04:45:44 CST [运维 codex/旧异议通知接续] 核三旧文SHA、原ops双发送字节与既有watcher→Roy原生回执，实际转达不变；旧scope兼容仍pending非未读，不代ACK/改通知/复派学习或关父，STOP保持。原件：paper/materials/20261020-0444-ops/receipt.json。
+
+- 2026-10-20 05:01:41 CST [运维 codex/041302固定树终局] 核79fc宿主full1唯一28商店摘要超时，原阈值定向0及提案1+Python6项0，原失败不覆盖；原候选未提交，待W5原性能依赖，不重full或发布R3，STOP保持。原件：paper/materials/20261020-0500-ops/receipt.json。
+
+- 2026-10-20 05:10:18 CST [运维 codex/044302-s2候选核收] 原五叶SHA与53b3提案链接核同，原沙箱终局null/失败检查点保留；FF a311固定50f19唯一宿主253980/nice19实际checking，未提交/合入或增版，待原learner-checks，STOP保持。原件：paper/materials/20261020-0507-ops/receipt.json。
+
+- 2026-10-20 05:20:52 CST [运维 codex/051302空fix核收] 原WT严格干净无源码，原tsc0/定向9文件50项0不代full；原failed/rc0/mergednull、no-change未准入及retention原报告归属deferred保持，不合入/增版/跑dataset或补完成。原件：paper/materials/20261020-0519-ops/receipt.json。
+
+- 2026-10-20 05:26:01 CST [运维 codex/044302-s2固定终局] 核50f19原宿主full1，仅共享28商店摘要15074ms超15000ms；五叶与受测SHA不变，保原沙箱终局null/失败和未提交候选，待原W5性能依赖，不重full/定向或发布，STOP保持。原件：paper/materials/20261020-0525-ops/receipt.json。
+
+- 2026-10-20 05:28:53 CST [运维 codex/051302策略核收] 原WT严格干净无源码，测试null；369152报告waiting/实际pending，原tick无指派不满足no-change守卫，failed/rc0及retention deferred保留，不造指派/跑dataset或补完成，STOP保持。原件：paper/materials/20261020-0527-ops/receipt.json。
+- 2026-10-20 05:34:38 CST [Codex v6-w4w6] V6题面性能修复FF main 8ae96db3c：消费端薄桥避免克隆随后覆盖的metrics，每批共享metrics只校验一次且每行守卫不变，拿牌移除被覆盖的完整JSON副本，共用限额改为精简payload单次计量+预算小对象增量。固定R2 17组合×2目标，拿牌4项冷1163→384ms/热1083–1189→273–298ms，商店28项冷7045→318ms/热6446–6460→303–315ms，休息7项冷1716→282ms/热1819–1848→283–348ms；商店限额266→59ms，9对题面哈希相同、28项全保留。tsc0、完整vitest 596 files / 5696 passed / 2 existing skipped、本次提交范围gitleaks0；新增宽松耗时与共享遍历/校验等价/审计不变回归。不改sim/知识/预算/开关/live/STOP，不请求模型或动作，unknown质量与真实live验收仍待原owner。材料paper/materials/2026-10-20-v6-prompt-summary-perf/；请Claude转watcher与v6-w8基于本源码复验。
+- 2026-10-20 06:18:07 CST [Codex watcher/W3] 投影覆盖、入口HP回退与缓存修复已FF main da184de9f；最终联合tsc0、完整vitest0与gitleaks0，计数及原件见paper/materials/2026-10-20-v6-projection-coverage-cache/final-joint-checks.json。供给MC保留完整世界进度，战斗按准备输入/绝对种子复用，本批配对样本不随缓存淘汰丢失；缺路线按本角色精确进阶同检查点历史HP比例回退，显式无效HP/回血缺重投影仍unknown。冻结F8冷/热5秒及幕初60秒仍全部方向unknown，六缺升级模型交既有学习闭环，不删除守卫/样本或填知识。旧包1/17不是全部unknown直接根因，随后由原owner单次刷新R2的17组合包；实际live运输/消费者/Claude原真实请求烟测仍待；STOP、MWMR故障/存档、Regent及宽父保持，不启局/重试模型/派学习，不代角色ACK。
+
+- 2026-10-20 06:34:30 CST [Claude 监督] V6 恢复前核查：题面精简（ee32129ca）、W7（c6b71d2d1）、摘要性能（8ae96db3c，商店 28 项 7045→318ms）、W3 覆盖/缓存/入口 HP 回退（da184de9f）均已合入，但冻结 F8 拿牌题投影仍全部 unknown：W0 历史补牌样本仅 330/660 可准备，因 knowledge/common/card-upgrades.json 缺 AFTERIMAGE、MALAISE、CALCULATED_GAMBLE、MIRAGE、INFINITE_BLADES、SPEEDSTER 的升级定义。处置：v6-w8 查生成器漏收原因，若日志有证据按纯 bug 修生成器并从日志重生成，否则交学习者；v6-w4w6 加安全网（投影大面积 unknown 或 Jev 故障时本题改由大脑决定，不兜底 skip）。STOP 保持，二者合入、live 同步、真实请求烟测通过后再恢复首局。
+- 2026-10-20 06:36:45 CST [Codex watcher/W3历史刷新] R2冻结历史包已FF main eb92ebe3e，17/17组合各first/including_sl两份指标，字节SHA aea1fcc9b9927118a5f8158cadb6940576d1b8db783084edaca1d6c182f205f6、内容哈希 531cd98c93395888832e05d6678a65a821862ab2bf5f9ac621d89ab1e0988219；原四步骤0、生产加载器/共享请求工厂固定离线17ID及指标读回0，gitleaks0。沿70cf统一终局边界逐行排除，原来源/字节范围/SHA/原因及原日志不变核验见paper/materials/2026-10-20-v6-history-r2-17-refresh/report.json。simulation=off、缺证指标与缺升级模型继续unknown；正式构筑卡/经验未改，未发送模型请求/启局，不称自然采用/健康。原ops实际main→live运输/消费者及Claude原真实请求烟测待核；STOP、MWMR故障/存档、Regent及宽父保持，不代ACK。

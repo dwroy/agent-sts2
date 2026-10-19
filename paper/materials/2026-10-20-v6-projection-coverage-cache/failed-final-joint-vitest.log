@@ -1,0 +1,32 @@
+
+ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/v6-projection-coverage-cache-20261020/agent
+
+ ❯ tests/v6-prompt-summary.test.ts (10 tests | 1 failed) 22712ms
+   × keeps a meaningful minimum for every one of 28 real shop choices with the published 17-combo file 17007ms
+.....
+----------------------------------------------------------------------
+Ran 5 tests in 0.020s
+
+OK
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/v6-prompt-summary.test.ts > keeps a meaningful minimum for every one of 28 real shop choices with the published 17-combo file
+Error: Test timed out in 15000ms.
+If this is a long-running test, pass a timeout value as the last argument or configure it globally with "testTimeout".
+ ❯ tests/v6-prompt-summary.test.ts:179:1
+    177| });
+    178|
+    179| it("keeps a meaningful minimum for every one of 28 real shop choices w…
+       | ^
+    180|   on(); const e = situation("shop"), input = v6ShopOptions(e)!;
+    181|   expect(input.options).toHaveLength(28);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed | 592 passed (593)
+      Tests  1 failed | 5702 passed | 2 skipped (5705)
+   Start at  04:31:03
+   Duration  1382.45s (transform 20.50s, setup 40.44s, import 134.07s, tests 1119.18s, environment 68ms)
+

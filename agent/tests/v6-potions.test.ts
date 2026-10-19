@@ -111,6 +111,7 @@ it("rest slots come from Jev, ignore brain slot lists, and continue the chosen o
   active(); const fx = logged("batch-g/zgz0-f11-rest-mailbox"), e = loggedEnv(fx, { buildDecider: "deepseek", oneshot: "off" });
   const d = planRest(e) as AskDecision;
   expect(Object.keys(d.potionJev!.questions)).toEqual(["potion_o0", "discard_p1", "discard_p2"]);
+  expect(d.potionJev!.state.opening_note).toContain("opening unknown");
   expect(Object.keys((d.questions["pick"] as { criteria: object }).criteria)).not.toContain("o0:discard");
   d.potionJev!.supply(potionPick("o0:discard", { discard_p1: .1, discard_p2: .9 }));
   const result = d.resolve(brain("o0", [1]));

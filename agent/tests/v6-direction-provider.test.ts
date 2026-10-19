@@ -22,7 +22,11 @@ it("delivers actual W3 targets and per-combination P=1 rows to the W4 brain task
   const task = directionTask({ summaries: directionSummaries("silent", 10, [], [r.directions[0]!.core], null),
     entries: evaluation.entries, appearedCards: [], potionIds: [], floor: 5, current: null });
   const combo = asRecord(asArray(asRecord(asArray(task.build_cores)[0]).combos)[0]);
-  expect(asArray(combo.evaluations)).toEqual([expect.objectContaining({ target: "f17:TEST_BOSS", expected_win: 1, win_incomplete: null })]);
+  expect(combo.id).toBe("D:minimal");
+  expect(combo.evaluations).toBeUndefined();
+  expect(asArray(task.direction_evaluation)).toEqual([expect.objectContaining({
+    combo_id: "D:minimal", target_id: "f17:TEST_BOSS", expected_win: 1, win_incomplete: null,
+  })]);
   expect(directionEvaluationFromProjection(table, { ...r.config, mode: "off" }, "skip")).toEqual({ id: "off", entries: [] });
 });
 it("reads W3 act and pick paired chain comparisons without marginal-error substitution", async () => {
@@ -106,4 +110,30 @@ it("turns official complete pick pairs into one T3 and two independent-evaluatio
   expect(detect("second").triggers).toContain("T2");
   for (const pair of table.pick_direction_comparisons) pair.known_mass = NaN;
   expect(directionEvaluationFromProjection(table, r.config, "skip", plan).comparisons).toEqual([]);
+});
+
+it("carries incomplete-opening provider diagnostics into the brain without treating W0 as a loss or filtering samples", async () => {
+  const r = request(), prepare = r.prepare;
+  r.phase = "act";
+  r.prepare = (target, sample) => sample.cards.some(c => c.id === "G") ? null : prepare(target, sample);
+  const table = await new V6ProjectionEngine(new FixedRunner()).evaluate(r);
+  const baseline = table.combinations.find(row => row.entry.option_id === "skip")!;
+  expect(baseline.completed_win).not.toBeNull(); expect(baseline.general_win).toBeNull();
+  const sampleIds = [...baseline.completion_sample_ids];
+  // Fixed provider diagnostic: current main omits prepare errors; watcher owns their propagation.
+  baseline.unknown_reasons.push("unknown_opening_entry_hp_or_empirical_sample");
+  const evaluation = directionEvaluationFromProjection(table, r.config, "skip");
+  const task = directionTask({ summaries: directionSummaries("silent", 10, [], [r.directions[0]!.core], null),
+    entries: evaluation.entries, projectionReasons: evaluation.projectionReasons,
+    appearedCards: [], potionIds: [], floor: 5, current: null });
+  expect(asArray(task.direction_evaluation)).toEqual([expect.objectContaining({
+    win_complete: baseline.completed_win, win_incomplete: null, expected_win: null,
+    opening: { Wk: "evaluated", W0: "opening unknown" },
+    unknown_reasons: expect.arrayContaining(["unknown_opening_entry_hp_or_empirical_sample"]),
+  })]);
+  expect(baseline.completion_sample_ids).toEqual(sampleIds);
+  expect(baseline.general_win).toBeNull();
+  const copiedReasons = [...evaluation.projectionReasons![0]!.reasons];
+  baseline.unknown_reasons.push("later_provider_mutation");
+  expect(evaluation.projectionReasons![0]!.reasons).toEqual(copiedReasons);
 });

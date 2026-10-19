@@ -14,6 +14,17 @@ it("matches physical cards once, distinct identities once, and upgrades without 
   expect(v6Complete(state(["A"]), [req("A", 1, true)])?.cards).toEqual([{ id: "A", upgraded: true }]);
   expect(v6Complete(state(), [{ id: "r", count: 1, any: [{ id: "R", kind: "relic" }] }])).toBeNull();
 });
+it("counts disjoint alternatives, duplicate upgrades and relic identities without changing capacity constraints", () => {
+  const s = state(["A", "A", "B"]); s.cards[1]!.upgraded = true; s.relics = ["R"];
+  const alternatives = [{ id: "r", count: 3, any: [{ id: "A", kind: "card" as const },
+    { id: "A", kind: "card" as const, upgraded: true }, { id: "B", kind: "card" as const }] }];
+  expect(v6Match(s, alternatives)).toEqual({ missing: 0, counts: [0] });
+  expect(v6Match(s, alternatives.map(r => ({ ...r, distinct: true })))).toEqual({ missing: 1, counts: [1] });
+  expect(v6Match(s, [req("A", 2, true), { id: "relic", count: 1, any: [{ id: "R", kind: "relic" }] }]))
+    .toEqual({ missing: 1, counts: [1, 0] });
+  // The overlapping A alternative needs an augmenting path to reserve A for the second requirement.
+  expect(v6Match(state(["A", "B"]), [{ ...alternatives[0]!, count: 1 }, req("A")]).missing).toBe(0);
+});
 it("takes at most one card per reward", () => { expect(resolve(data(), ["A", "B"]).combinations[0]?.availability.skip).toBe(0); expect(resolve(data()).combinations[0]?.availability.skip).toBe(1); });
 it("caps shops by current gold plus historical positive growth", () => {
   const d = data("shop", 30); expect(resolve(d, ["A", "B"], 30).combinations[0]?.availability.skip).toBe(0); expect(resolve(d, ["A", "B"], 60).combinations[0]?.availability.skip).toBe(1);
@@ -69,4 +80,20 @@ it("brain overrides inherit formal prerequisites and cannot invent prerequisite 
   const c = context(); c.direction.combos[0]!.prerequisites = { op: "contains", field: "player.relics", value: "FIXTURE_RELIC" };
   const row = v6SupplySource(data(), () => 0).resolve({ ...c, idealOverrides: { D: ["A"] } })!.combinations[0]!;
   expect(row.source).toBe("brain"); expect(row.availability.skip).toBe(0); expect(row.samples[0]!.states.skip).toBeNull();
+});
+it("resumes interrupted worlds and reuses idle baseline supply when candidates or boss identities change", () => {
+  let time = 0;
+  const s = v6SupplySource(data(), () => time++), c = context(); c.deadline = 45;
+  const partial = s.resolve(c)!.combinations[0]!;
+  expect(partial.availability.skip).toBeNull(); expect(partial.unknownReasons?.skip).toContain("supply_budget_exhausted");
+  time = 0;
+  const complete = s.resolve({ ...c, deadline: 10000 })!.combinations[0]!;
+  expect(complete.supply).toEqual(resolve(data()).combinations[0]!.supply);
+  time = 100;
+  const withCandidate = { ...c, target: { id: "another-boss", floor: 16 }, samples: 100,
+    options: [...c.options, { id: "take", state: state(["A"]) }] };
+  const hot = s.resolve(withCandidate)!.combinations[0]!;
+  expect(hot.supply.skip).toEqual(complete.supply.skip); expect(hot.availability).toEqual({ skip: 1, take: 1 });
+  const changed = s.resolve({ ...withCandidate, seed: 43 })!.combinations[0]!;
+  expect(changed.availability.skip).toBeNull();
 });

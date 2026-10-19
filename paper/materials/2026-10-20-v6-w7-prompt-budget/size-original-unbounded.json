@@ -1,0 +1,105 @@
+{
+  "measured_at": "2026-10-19T18:16:18.540Z",
+  "code_head": "7f53d9f1b2eb797f643c9e0d7dc272fc43c428a1",
+  "code_head_after": "7f53d9f1b2eb797f643c9e0d7dc272fc43c428a1",
+  "source_sha256": {
+    "agent/src/hand/screens/v6-room.ts": "fd0cce3d9301cb540de0fdf1deae04d39fa373c5390384883ad53228f368ad62",
+    "agent/src/v6/direction-runtime.ts": "dbab300fad85993a0df92fbda6ad8985e9b4724d23b8161d44ca96f3d61fab68",
+    "agent/src/v6/direction-plan.ts": "d84b52dcdd12f53a7941662d6f1879b596ca65368e38a91c430d86ac88e4bcfe"
+  },
+  "source_unchanged": true,
+  "knowledge": {
+    "path": "knowledge/characters/silent/build-cores.json",
+    "sha256": "377920574ce7859f5e39dd01aad495947140226777e742251ac850004ae0cbe6",
+    "file_bytes": 7903933
+  },
+  "method": "Actual buildV6RoomDecision on archived W7 inventory fixtures, character/ascension overridden only to load current formal Silent A10 cores; no projection table, no model request, no action. UTF-8 compact JSON sizes; not live Silent room request measurements. Process-local environment overrides only.",
+  "results": [
+    {
+      "kind": "shop",
+      "fixture": "agent/tests/logged-states/oneshot/u6ru-f22-shop.json",
+      "fixture_sha256": "a62dcb9f1173582cdcf71fee1e326252f4486728d43e0960f96a49f9f52b3eda",
+      "original_character": "IRONCLAD",
+      "original_ascension": 9,
+      "fixture_override": {
+        "character_id": "SILENT",
+        "ascension": 10
+      },
+      "options": 28,
+      "combos": 17,
+      "projection_entries": 952,
+      "projection_status": "projection_provider_unavailable",
+      "state_bytes": 7859313,
+      "questions_bytes": 1448,
+      "state_questions_bytes": 7860784,
+      "jev_call_argument_bytes": 7860812,
+      "field_bytes": {
+        "factory": 78,
+        "inventory": 1802,
+        "direction_weights": 2,
+        "targets": 86,
+        "core_metrics": 7033178,
+        "options": 823705,
+        "target_mixtures": 2,
+        "limitations": 35,
+        "note": 299
+      },
+      "core_metric_field_bytes": {
+        "attempt": 357,
+        "target_ascension": 68,
+        "sources": 831608,
+        "raw_counts": 25754,
+        "observed": 249738,
+        "bosses": 321512,
+        "availability": 155286,
+        "simulation": 834928,
+        "regression": 826418,
+        "shrinkage": 3781292
+      },
+      "core_metric_share": 0.8948845783340096
+    },
+    {
+      "kind": "rest",
+      "fixture": "agent/tests/logged-states/oneshot/w2tb-f7-rest.json",
+      "fixture_sha256": "9d0fe8a5d466d0b484c028ba99330162cd45b9e8681e1bd55f88e5531898e410",
+      "original_character": "IRONCLAD",
+      "original_ascension": 9,
+      "fixture_override": {
+        "character_id": "SILENT",
+        "ascension": 10
+      },
+      "options": 7,
+      "combos": 17,
+      "projection_entries": 238,
+      "projection_status": "projection_provider_unavailable",
+      "state_bytes": 7238914,
+      "questions_bytes": 427,
+      "state_questions_bytes": 7239364,
+      "jev_call_argument_bytes": 7239392,
+      "field_bytes": {
+        "factory": 78,
+        "inventory": 1370,
+        "direction_weights": 2,
+        "targets": 86,
+        "core_metrics": 7033178,
+        "options": 203738,
+        "target_mixtures": 2,
+        "limitations": 35,
+        "note": 299
+      },
+      "core_metric_field_bytes": {
+        "attempt": 357,
+        "target_ascension": 68,
+        "sources": 831608,
+        "raw_counts": 25754,
+        "observed": 249738,
+        "bosses": 321512,
+        "availability": 155286,
+        "simulation": 834928,
+        "regression": 826418,
+        "shrinkage": 3781292
+      },
+      "core_metric_share": 0.971579162288708
+    }
+  ]
+}

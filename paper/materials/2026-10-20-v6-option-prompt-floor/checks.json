@@ -1,0 +1,50 @@
+{
+  "at": "2026-10-20T04:15:21.717965+08:00",
+  "status": {
+    "base": "4d3e55dec3690c9ca03c021332775b5219690584",
+    "input_count": 2115,
+    "started_at": "2026-10-20T04:03:51.346326+08:00",
+    "checks": {
+      "tsc": {
+        "argv": [
+          "npx",
+          "tsc",
+          "-p",
+          "tsconfig.json",
+          "--noEmit"
+        ],
+        "started_at": "2026-10-20T04:03:51.346486+08:00",
+        "state": "complete",
+        "ended_at": "2026-10-20T04:03:52.540774+08:00",
+        "exit_code": 0,
+        "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "vitest": {
+        "argv": [
+          "npx",
+          "vitest",
+          "run",
+          "--maxWorkers=2"
+        ],
+        "started_at": "2026-10-20T04:03:52.541256+08:00",
+        "state": "complete",
+        "ended_at": "2026-10-20T04:15:16.089181+08:00",
+        "exit_code": 0,
+        "log_sha256": "93d41fada1b97267bd491827779196214f68245e4a63c9a0163b3a110b9ca0b0"
+      }
+    },
+    "ended_at": "2026-10-20T04:15:16.089575+08:00",
+    "changed_during_checks": []
+  },
+  "vitest_summary": "Test Files  593 passed (593); Tests  5688 passed | 2 skipped (5690)",
+  "source_input_count": 2115,
+  "inputs_unchanged": true,
+  "gitleaks_source_exit": 0,
+  "gitleaks_materials_pre_exit": 0,
+  "runner": "existing project Vitest 4.1.11; PATH includes ~/.local/node/bin; nice15/maxWorkers2",
+  "remaining_acceptance": "not a live/model/strategy quality acceptance; original ops owns live and STOP",
+  "input_manifest_archive_format": "array of {path,sha256}; exact values unchanged",
+  "gitleaks_materials_final_exit": 0,
+  "gitleaks_initial_false_positive": "SHA256 value adjacent to learner-keycheck-retry.test.ts path; separated path and sha256 fields; no allowlist or scan exclusion",
+  "tested_patch_archive_format": "JSON patch string; byte-identical raw patch remains in .artifacts/option-floor/checks/"
+}
