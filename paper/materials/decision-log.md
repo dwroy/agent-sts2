@@ -4777,3 +4777,5 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
 - 2026-10-19 22:02:47 CST [Codex/V6-W3 history] 生产冻结历史包与开局只读加载器；372局/10932逐层摘要/604Boss首试/4174机会/1组合，缺失不补数；角色隔离、哈希/时间/边界/原子生成；tsc0+完整vitest580文件5561通过2跳过（首次既有监听测试失败原件保留，隔离7/7及完整复跑通过），gitleaks暂存0发现；W5接入接口见runtime补记，STOP保留不重建live。
 
 - 2026-10-19 22:03:01 CST [Codex/V6-W3 direction-pairs] pick选项×方向相对最高大脑概率方向追加连战配对差/SE，保留供给及战斗协方差、缺失质量不归一；同种子、字典序并列与off空字段固定回归；tsc0+完整vitest580文件5559通过2跳过，gitleaks暂存0发现；供W4 T2/T3接入，默认off、不开局。
+
+- 2026-10-19 22:07:28 CST [Codex/V6-W3 route-entry] 显式路线入口复用已有模型、跨Boss同样本边界可插拔；原文范围SHA/观察时间/指纹全匹配才回放，不倒填未来HP；6道拿牌+F17/F33小回放仍全部unknown、cache0，原始结果/耗时/预算限制保留，不声称质量改善。联合树基线 f7580b3f5，tsc与完整vitest通过；精确agent树 5e8b261e816a4b92cbf63f275d2473d0a3e749a2，完整统计见runtime报告。功能代码SHA与联合受测树一致；默认off且既有等价测试通过，gitleaks暂存0发现。STOP保留、不开局、不重建live。

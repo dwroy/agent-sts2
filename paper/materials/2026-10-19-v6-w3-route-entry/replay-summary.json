@@ -1,0 +1,603 @@
+{
+  "schema": "v6-offline-replay-v1",
+  "generated": "2026-10-19T13:58:18.897Z",
+  "workers": 1,
+  "input_sha256": {
+    "/home/dw/Projects/agent-sts2/.worktrees/v6-w3-route-entry-20261019/.artifacts/v6-route-replay/route-inputs.json": "e0fd77d91df24e14cdf25c7a0ccdeb53a491ba4aa05d71a050b0ce16d602ce0a",
+    "/home/dw/Projects/agent-sts2/learner/runs/20261019-163651-aca8de36-1a87-4109-9fa1-405535c7d209-v6-direction-experience/run-coverage.json": "34ee8e6151e15388c28f8f2bfaa5b5622abb33aefc6ce9b090f4749a24bff254",
+    "/home/dw/Projects/agent-sts2/learner/runs/20261019-163651-aca8de36-1a87-4109-9fa1-405535c7d209-v6-direction-experience/boss-fights.json": "62002c62e63a3ba7fb3fb9d0735a8f824153d5e64f35078ed82abd29caf875a2",
+    "/home/dw/Projects/agent-sts2/learner/runs/20261019-163651-aca8de36-1a87-4109-9fa1-405535c7d209-v6-direction-experience/state-frames.jsonl": "9581fe00deb9614e459ad209392742936210c10ece6e2a281301327f19da1384",
+    "/home/dw/Projects/agent-sts2/.worktrees/v6-w3-runtime-integration-20261019/knowledge/characters/silent/boss-damage.json": "d837c4296dd6ecea32a573c56c0ce7a33f7aa1147de16aeea26c56d37df51c00",
+    "/home/dw/Projects/agent-sts2/.worktrees/v6-w3-runtime-integration-20261019/knowledge/characters/silent/boss-trust.json": "81077f1c34d2dab5cd36d3205afbef390b1795604c55085925d78cebd2579bef",
+    "/home/dw/Projects/agent-sts2/.worktrees/v6-w3-runtime-integration-20261019/knowledge/characters/silent/construction-opportunities.json": "83285e53401cdc32f997a43f3fc0dc63f8f31c52fc0abf6082d2c0cce1958e01",
+    "/home/dw/Projects/agent-sts2/.worktrees/v6-w3-runtime-integration-20261019/knowledge/characters/silent/construction-support.json": "fbd2e0a9242e1bfa121649d3652e35982539e51ac4c1a862868ee7bb4ac46fdc",
+    "/home/dw/Projects/agent-sts2/.worktrees/v6-w3-runtime-integration-20261019/knowledge/characters/silent/construction-templates.json": "fa2bbf98407f9898ee8fcbcd76d8de731a3a2228c23f8b01a63384b53e12b500",
+    "/home/dw/Projects/agent-sts2/.worktrees/v6-w3-runtime-integration-20261019/knowledge/characters/silent/double-boss.json": "dfea492a4b941bf72813518e59ceb6cb0cca2d1420bdeb9c2fb9cc726797e83b",
+    "/home/dw/Projects/agent-sts2/.worktrees/v6-w3-runtime-integration-20261019/knowledge/characters/silent/experience.json": "cce6bde4b02657667e05b632b897811dd4679b3371733106e038690cd04cf48c",
+    "/home/dw/Projects/agent-sts2/.worktrees/v6-w3-runtime-integration-20261019/knowledge/characters/silent/fight-value-gates.json": "7022916409c71ce3ea861243af74f07c7a5a92fa1abb7c5665b64bf2052d296e",
+    "/home/dw/Projects/agent-sts2/.worktrees/v6-w3-runtime-integration-20261019/knowledge/characters/silent/fight-value.json": "6a5de63e117db51cdcd88eff7dba3b16275de36d07bca2e13b8d74932cbd630e",
+    "/home/dw/Projects/agent-sts2/.worktrees/v6-w3-runtime-integration-20261019/knowledge/characters/silent/monster-records.json": "c51e0698a7382fc1b650acf0b44a52559446c10d5605be42dcb58800e8a9b9af",
+    "/home/dw/Projects/agent-sts2/.worktrees/v6-w3-runtime-integration-20261019/knowledge/characters/silent/outcome-stats.json": "c9bd0c030d65b80c3bd263a19177f0e79877ad6103473cfbd6e0d3ac3ec188c4",
+    "/home/dw/Projects/agent-sts2/.worktrees/v6-w3-runtime-integration-20261019/knowledge/characters/silent/potion-equivalents.json": "35198177465539a301fcb8aa6f80ec8196196a9ed898d459d95d175b75c440bc",
+    "/home/dw/Projects/agent-sts2/.worktrees/v6-w3-runtime-integration-20261019/knowledge/characters/silent/room-costs.json": "3009920de8d3299e452a3a187a39f4c21b191e3d72d9b6a280f43e52f7cd9e0a",
+    "/home/dw/Projects/agent-sts2/.worktrees/v6-w3-runtime-integration-20261019/knowledge/characters/silent/v6-history.json": "4858fedc44da6d43a49ea23716199897df1398c65900f931893156bd4e3cb40b",
+    "/home/dw/Projects/agent-sts2/.worktrees/v6-w3-runtime-integration-20261019/knowledge/common/card-upgrades.json": "a8b010697cc2727e68a6a660de29527d6f6f8f6ee1234c0c7c1d776ac2662e37",
+    "/home/dw/Projects/agent-sts2/.worktrees/v6-w3-runtime-integration-20261019/knowledge/common/event-pages.json": "e7370a71a8fb446b160c7d19120229237dee4775dc443b7cf92e18d6a02936d5",
+    "/home/dw/Projects/agent-sts2/.worktrees/v6-w3-runtime-integration-20261019/knowledge/common/monster-db.json": "8f6c2d0409eb012b14bd31e24c431ea5d9a421e7fb58c3363dfd5dc3536e704c",
+    "/home/dw/Projects/agent-sts2/.worktrees/v6-w3-runtime-integration-20261019/knowledge/common/move-model.json": "38110110df22ff57b3b73f45e3560fb63eef9e6118765d6c97774a457fac3094",
+    "/home/dw/Projects/agent-sts2/.worktrees/v6-w3-runtime-integration-20261019/knowledge/common/shared-experience.json": "f0dc10884c7773ae248480aedfb05e15351372cb9d0684bf99df355d4bd187c8",
+    "/home/dw/Projects/agent-sts2/data/game-data.json": "8973610b44d41683ecc414299006df99decaf82e9017b9bf4ebb89c216268a69"
+  },
+  "verified_state_ranges": [
+    {
+      "path": "states.jsonl",
+      "offset": 14588600685,
+      "bytes": 23291,
+      "sha256": "e49a097c1d4e290fc19d85eaeb4859fb28da26081b2c0bd492726055a5d7b0a1"
+    },
+    {
+      "path": "states.jsonl",
+      "offset": 14598751408,
+      "bytes": 31810,
+      "sha256": "b1d69e50ca8a35a17a5c7757ad4e46f3743dfad320b511711eead4674a22690b"
+    },
+    {
+      "path": "states.jsonl",
+      "offset": 14532895018,
+      "bytes": 33090,
+      "sha256": "6c59ffeaf2bde9806f9fce50bbe22cafe9b9084459e5ab2d477cd83ec57febfd"
+    },
+    {
+      "path": "states.jsonl",
+      "offset": 14587169020,
+      "bytes": 22255,
+      "sha256": "acd2b36c4f94596c046bd00a00b97f0fbbdd37080fb0c6345dac897a84146926"
+    },
+    {
+      "path": "states.jsonl",
+      "offset": 14597089142,
+      "bytes": 29905,
+      "sha256": "436cffbec223ff3d1159e0648811ac916af31b3b780cba019118232b3850b158"
+    },
+    {
+      "path": "states.jsonl",
+      "offset": 14530547547,
+      "bytes": 30256,
+      "sha256": "f2134703294089de34e1363ae3bf85ef23d0d1022c1e0226555acdc5424c653f"
+    },
+    {
+      "path": "/home/dw/Projects/agent-sts2/logs/states.jsonl",
+      "offset": 14589044744,
+      "bytes": 26311,
+      "sha256": "d3f83621aadd3dbe6377885ac045b39bc636c56e1e0feee6e0e7c0a3dad020f5"
+    },
+    {
+      "path": "/home/dw/Projects/agent-sts2/logs/states.jsonl",
+      "offset": 14598961313,
+      "bytes": 36099,
+      "sha256": "7cf1333749629a3fbaffeced521f6dcb6364be76fbd0ea5a11aeb4a2a2a73b5a"
+    }
+  ],
+  "scope": {
+    "character": "silent",
+    "ascension": 10,
+    "coverage_runs": 372,
+    "histories": 372,
+    "boss_observations": 604,
+    "opportunities": 4174,
+    "selected_questions": 6,
+    "selected_checkpoints": 2,
+    "completed": 8
+  },
+  "measurements": [
+    {
+      "phase": "pick",
+      "pass": "cold",
+      "elapsed_ms": {
+        "n": 6,
+        "p50": 4508.992292999999,
+        "p90": 4667.150851,
+        "p95": 4667.150851,
+        "max": 4667.150851
+      },
+      "hits": 0,
+      "misses": 11,
+      "cache_hit_fraction": 0,
+      "act_cache_hits": 0,
+      "degradation_fraction": 0.6666666666666666,
+      "unknown_fraction": 1
+    },
+    {
+      "phase": "pick",
+      "pass": "repeat",
+      "elapsed_ms": {
+        "n": 6,
+        "p50": 3852.032395000002,
+        "p90": 4769.422817000002,
+        "p95": 4769.422817000002,
+        "max": 4769.422817000002
+      },
+      "hits": 0,
+      "misses": 25,
+      "cache_hit_fraction": 0,
+      "act_cache_hits": 0,
+      "degradation_fraction": 0.6666666666666666,
+      "unknown_fraction": 1
+    },
+    {
+      "phase": "act",
+      "pass": "cold",
+      "elapsed_ms": {
+        "n": 2,
+        "p50": 9678.587623,
+        "p90": 34684.535123999995,
+        "p95": 34684.535123999995,
+        "max": 34684.535123999995
+      },
+      "hits": 0,
+      "misses": 6,
+      "cache_hit_fraction": 0,
+      "act_cache_hits": 0,
+      "degradation_fraction": 1,
+      "unknown_fraction": 1
+    },
+    {
+      "phase": "act",
+      "pass": "repeat",
+      "elapsed_ms": {
+        "n": 2,
+        "p50": 9013.049010999996,
+        "p90": 32717.379784000004,
+        "p95": 32717.379784000004,
+        "max": 32717.379784000004
+      },
+      "hits": 0,
+      "misses": 6,
+      "cache_hit_fraction": 0,
+      "act_cache_hits": 0,
+      "degradation_fraction": 1,
+      "unknown_fraction": 1
+    }
+  ],
+  "exclusions": [],
+  "records": [
+    {
+      "id": "467e4b898cecc1c3dd9efcdc",
+      "run_id": "MEQ6ETDCEEE9",
+      "floor": 13,
+      "phase": "pick",
+      "pass": "cold",
+      "telemetry": {
+        "elapsed_ms": 4667.150851,
+        "cache_hits": 0,
+        "cache_misses": 1,
+        "simulations": 0,
+        "timed_out": 51,
+        "degradation": [
+          "drop_lowest_direction",
+          "current_and_chain_targets_only",
+          "remaining_unknown"
+        ],
+        "unknown_entries": 208,
+        "total_entries": 208,
+        "unknown_fraction": 1,
+        "act_cache_hit": false
+      }
+    },
+    {
+      "id": "467e4b898cecc1c3dd9efcdc",
+      "run_id": "MEQ6ETDCEEE9",
+      "floor": 13,
+      "phase": "pick",
+      "pass": "repeat",
+      "telemetry": {
+        "elapsed_ms": 4651.61805,
+        "cache_hits": 0,
+        "cache_misses": 2,
+        "simulations": 0,
+        "timed_out": 51,
+        "degradation": [
+          "drop_lowest_direction",
+          "current_and_chain_targets_only",
+          "remaining_unknown"
+        ],
+        "unknown_entries": 208,
+        "total_entries": 208,
+        "unknown_fraction": 1,
+        "act_cache_hit": false
+      }
+    },
+    {
+      "id": "f6411a313ce50c84bc5b98a4",
+      "run_id": "MEQ6ETDCEEE9",
+      "floor": 31,
+      "phase": "pick",
+      "pass": "cold",
+      "telemetry": {
+        "elapsed_ms": 4513.648979000001,
+        "cache_hits": 0,
+        "cache_misses": 4,
+        "simulations": 8,
+        "timed_out": 31,
+        "degradation": [
+          "drop_lowest_direction",
+          "current_and_chain_targets_only",
+          "remaining_unknown"
+        ],
+        "unknown_entries": 160,
+        "total_entries": 160,
+        "unknown_fraction": 1,
+        "act_cache_hit": false
+      }
+    },
+    {
+      "id": "f6411a313ce50c84bc5b98a4",
+      "run_id": "MEQ6ETDCEEE9",
+      "floor": 31,
+      "phase": "pick",
+      "pass": "repeat",
+      "telemetry": {
+        "elapsed_ms": 4536.489423000003,
+        "cache_hits": 0,
+        "cache_misses": 9,
+        "simulations": 16,
+        "timed_out": 26,
+        "degradation": [
+          "drop_lowest_direction",
+          "current_and_chain_targets_only",
+          "remaining_unknown"
+        ],
+        "unknown_entries": 160,
+        "total_entries": 160,
+        "unknown_fraction": 1,
+        "act_cache_hit": false
+      }
+    },
+    {
+      "id": "aa7296b9b9a888662f09e043",
+      "run_id": "2XCG8LXUZLRE",
+      "floor": 43,
+      "phase": "pick",
+      "pass": "cold",
+      "telemetry": {
+        "elapsed_ms": 1134.0538180000003,
+        "cache_hits": 0,
+        "cache_misses": 0,
+        "simulations": 0,
+        "timed_out": 0,
+        "degradation": [],
+        "unknown_entries": 60,
+        "total_entries": 60,
+        "unknown_fraction": 1,
+        "act_cache_hit": false
+      }
+    },
+    {
+      "id": "aa7296b9b9a888662f09e043",
+      "run_id": "2XCG8LXUZLRE",
+      "floor": 43,
+      "phase": "pick",
+      "pass": "repeat",
+      "telemetry": {
+        "elapsed_ms": 60.434745999998995,
+        "cache_hits": 0,
+        "cache_misses": 0,
+        "simulations": 0,
+        "timed_out": 0,
+        "degradation": [],
+        "unknown_entries": 60,
+        "total_entries": 60,
+        "unknown_fraction": 1,
+        "act_cache_hit": false
+      }
+    },
+    {
+      "id": "b9e5196f50e4f3d5d65213b1",
+      "run_id": "MEQ6ETDCEEE9",
+      "floor": 11,
+      "phase": "pick",
+      "pass": "cold",
+      "telemetry": {
+        "elapsed_ms": 4666.162802999999,
+        "cache_hits": 0,
+        "cache_misses": 2,
+        "simulations": 0,
+        "timed_out": 51,
+        "degradation": [
+          "drop_lowest_direction",
+          "current_and_chain_targets_only",
+          "remaining_unknown"
+        ],
+        "unknown_entries": 208,
+        "total_entries": 208,
+        "unknown_fraction": 1,
+        "act_cache_hit": false
+      }
+    },
+    {
+      "id": "b9e5196f50e4f3d5d65213b1",
+      "run_id": "MEQ6ETDCEEE9",
+      "floor": 11,
+      "phase": "pick",
+      "pass": "repeat",
+      "telemetry": {
+        "elapsed_ms": 4769.422817000002,
+        "cache_hits": 0,
+        "cache_misses": 2,
+        "simulations": 0,
+        "timed_out": 51,
+        "degradation": [
+          "drop_lowest_direction",
+          "current_and_chain_targets_only",
+          "remaining_unknown"
+        ],
+        "unknown_entries": 208,
+        "total_entries": 208,
+        "unknown_fraction": 1,
+        "act_cache_hit": false
+      }
+    },
+    {
+      "id": "1b80f850a3506f4eb4a2bf70",
+      "run_id": "MEQ6ETDCEEE9",
+      "floor": 29,
+      "phase": "pick",
+      "pass": "cold",
+      "telemetry": {
+        "elapsed_ms": 4508.992292999999,
+        "cache_hits": 0,
+        "cache_misses": 4,
+        "simulations": 8,
+        "timed_out": 30,
+        "degradation": [
+          "drop_lowest_direction",
+          "current_and_chain_targets_only",
+          "remaining_unknown"
+        ],
+        "unknown_entries": 160,
+        "total_entries": 160,
+        "unknown_fraction": 1,
+        "act_cache_hit": false
+      }
+    },
+    {
+      "id": "1b80f850a3506f4eb4a2bf70",
+      "run_id": "MEQ6ETDCEEE9",
+      "floor": 29,
+      "phase": "pick",
+      "pass": "repeat",
+      "telemetry": {
+        "elapsed_ms": 3852.032395000002,
+        "cache_hits": 0,
+        "cache_misses": 12,
+        "simulations": 24,
+        "timed_out": 3,
+        "degradation": [
+          "drop_lowest_direction",
+          "current_and_chain_targets_only",
+          "remaining_unknown"
+        ],
+        "unknown_entries": 160,
+        "total_entries": 160,
+        "unknown_fraction": 1,
+        "act_cache_hit": false
+      }
+    },
+    {
+      "id": "718146479304a82aad979425",
+      "run_id": "2XCG8LXUZLRE",
+      "floor": 36,
+      "phase": "pick",
+      "pass": "cold",
+      "telemetry": {
+        "elapsed_ms": 1594.6859440000044,
+        "cache_hits": 0,
+        "cache_misses": 0,
+        "simulations": 0,
+        "timed_out": 0,
+        "degradation": [],
+        "unknown_entries": 48,
+        "total_entries": 48,
+        "unknown_fraction": 1,
+        "act_cache_hit": false
+      }
+    },
+    {
+      "id": "718146479304a82aad979425",
+      "run_id": "2XCG8LXUZLRE",
+      "floor": 36,
+      "phase": "pick",
+      "pass": "repeat",
+      "telemetry": {
+        "elapsed_ms": 63.70925400000124,
+        "cache_hits": 0,
+        "cache_misses": 0,
+        "simulations": 0,
+        "timed_out": 0,
+        "degradation": [],
+        "unknown_entries": 48,
+        "total_entries": 48,
+        "unknown_fraction": 1,
+        "act_cache_hit": false
+      }
+    },
+    {
+      "id": "checkpoint:MEQ6ETDCEEE9:17",
+      "run_id": "MEQ6ETDCEEE9",
+      "floor": 17,
+      "phase": "act",
+      "pass": "cold",
+      "telemetry": {
+        "elapsed_ms": 34684.535123999995,
+        "cache_hits": 0,
+        "cache_misses": 3,
+        "simulations": 56,
+        "timed_out": 3,
+        "degradation": [
+          "drop_lowest_direction",
+          "current_and_chain_targets_only",
+          "remaining_unknown"
+        ],
+        "unknown_entries": 52,
+        "total_entries": 52,
+        "unknown_fraction": 1,
+        "act_cache_hit": false
+      },
+      "actual": {
+        "first_stop": {
+          "ts": "2026-10-19T05:42:59.687Z",
+          "floor": 33,
+          "turns": 11,
+          "result": "predicted_death",
+          "source": {
+            "path": "/home/dw/Projects/agent-sts2/logs/sl-attempts.jsonl",
+            "offset": 49227343,
+            "bytes": 22957,
+            "sha256": "d6bb05bf3de2a99295a1befb50ff1e098e588c8e74172fe81673b1543ed3482f"
+          }
+        },
+        "first_attempt_f48": [],
+        "first_attempt_f49": [],
+        "first_trial_final_victory": false,
+        "final_including_sl_victory": false
+      }
+    },
+    {
+      "id": "checkpoint:MEQ6ETDCEEE9:17",
+      "run_id": "MEQ6ETDCEEE9",
+      "floor": 17,
+      "phase": "act",
+      "pass": "repeat",
+      "telemetry": {
+        "elapsed_ms": 32717.379784000004,
+        "cache_hits": 0,
+        "cache_misses": 3,
+        "simulations": 64,
+        "timed_out": 3,
+        "degradation": [
+          "drop_lowest_direction",
+          "current_and_chain_targets_only",
+          "remaining_unknown"
+        ],
+        "unknown_entries": 52,
+        "total_entries": 52,
+        "unknown_fraction": 1,
+        "act_cache_hit": false
+      },
+      "actual": {
+        "first_stop": {
+          "ts": "2026-10-19T05:42:59.687Z",
+          "floor": 33,
+          "turns": 11,
+          "result": "predicted_death",
+          "source": {
+            "path": "/home/dw/Projects/agent-sts2/logs/sl-attempts.jsonl",
+            "offset": 49227343,
+            "bytes": 22957,
+            "sha256": "d6bb05bf3de2a99295a1befb50ff1e098e588c8e74172fe81673b1543ed3482f"
+          }
+        },
+        "first_attempt_f48": [],
+        "first_attempt_f49": [],
+        "first_trial_final_victory": false,
+        "final_including_sl_victory": false
+      }
+    },
+    {
+      "id": "checkpoint:MEQ6ETDCEEE9:33",
+      "run_id": "MEQ6ETDCEEE9",
+      "floor": 33,
+      "phase": "act",
+      "pass": "cold",
+      "telemetry": {
+        "elapsed_ms": 9678.587623,
+        "cache_hits": 0,
+        "cache_misses": 3,
+        "simulations": 192,
+        "timed_out": 3,
+        "degradation": [
+          "drop_lowest_direction",
+          "current_and_chain_targets_only",
+          "remaining_unknown"
+        ],
+        "unknown_entries": 40,
+        "total_entries": 40,
+        "unknown_fraction": 1,
+        "act_cache_hit": false
+      },
+      "actual": {
+        "first_stop": {
+          "ts": "2026-10-19T05:42:59.687Z",
+          "floor": 33,
+          "turns": 11,
+          "result": "predicted_death",
+          "source": {
+            "path": "/home/dw/Projects/agent-sts2/logs/sl-attempts.jsonl",
+            "offset": 49227343,
+            "bytes": 22957,
+            "sha256": "d6bb05bf3de2a99295a1befb50ff1e098e588c8e74172fe81673b1543ed3482f"
+          }
+        },
+        "first_attempt_f48": [],
+        "first_attempt_f49": [],
+        "first_trial_final_victory": false,
+        "final_including_sl_victory": false
+      }
+    },
+    {
+      "id": "checkpoint:MEQ6ETDCEEE9:33",
+      "run_id": "MEQ6ETDCEEE9",
+      "floor": 33,
+      "phase": "act",
+      "pass": "repeat",
+      "telemetry": {
+        "elapsed_ms": 9013.049010999996,
+        "cache_hits": 0,
+        "cache_misses": 3,
+        "simulations": 216,
+        "timed_out": 3,
+        "degradation": [
+          "drop_lowest_direction",
+          "current_and_chain_targets_only",
+          "remaining_unknown"
+        ],
+        "unknown_entries": 40,
+        "total_entries": 40,
+        "unknown_fraction": 1,
+        "act_cache_hit": false
+      },
+      "actual": {
+        "first_stop": {
+          "ts": "2026-10-19T05:42:59.687Z",
+          "floor": 33,
+          "turns": 11,
+          "result": "predicted_death",
+          "source": {
+            "path": "/home/dw/Projects/agent-sts2/logs/sl-attempts.jsonl",
+            "offset": 49227343,
+            "bytes": 22957,
+            "sha256": "d6bb05bf3de2a99295a1befb50ff1e098e588c8e74172fe81673b1543ed3482f"
+          }
+        },
+        "first_attempt_f48": [],
+        "first_attempt_f49": [],
+        "first_trial_final_victory": false,
+        "final_including_sl_victory": false
+      }
+    }
+  ],
+  "limitations": [
+    "descriptive_only_no_causal_accuracy_or_gameplay_claim",
+    "uniform_weights_benchmark_only",
+    "missing_exact_route_plan_current_boss_unknown",
+    "frozen_route_display_rounding_and_historical_model_retained",
+    "post_boss_rewards_excluded_ambiguous_act_transition",
+    "f17_f33_conditional_on_first_observed_combat_turn_one_not_preboss_route_forecast",
+    "f17_f33_actual_results_not_used_for_question_selection",
+    "first_stop_is_predicted_death_or_actual_death_not_necessarily_actual_death",
+    "first_observed_boss_entry_may_follow_initial_actions",
+    "sparse_frames_net_card_and_gold_changes_only",
+    "rest_visits_not_observed_smith_choices",
+    "no_final_deck_backfill"
+  ]
+}

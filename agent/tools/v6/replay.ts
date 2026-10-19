@@ -27,11 +27,12 @@ import { v6ProjectionLog } from "../../src/sim/v6-projection-log.js";
 import { loadBossTrust } from "../../src/sim/boss-trust.js";
 import { bossKey } from "../../src/sim/boss-start.js";
 import { SerialDeckRunner, BuildSimPool } from "../../src/sim/build-sim-pool.js";
+import { frozenRouteTable, type FrozenRouteIndex } from "./frozen-route.js";
 import { frozenRecord, type FrozenRange } from "./frozen-input.js";
 
 const args = process.argv.slice(2), options = new Map<string, string>();
 for (let i = 0; i < args.length; i += 2) {
-  if (!["--root", "--evidence", "--out", "--limit", "--checkpoints", "--workers"].includes(args[i]!) || !args[i + 1] || options.has(args[i]!)) throw new Error("usage: replay.ts --evidence DIR --out NEW_DIR [--root DIR --limit 6 --checkpoints 2 --workers 1]");
+  if (!["--root", "--evidence", "--out", "--limit", "--checkpoints", "--workers", "--route-inputs"].includes(args[i]!) || !args[i + 1] || options.has(args[i]!)) throw new Error("usage: replay.ts --evidence DIR --out NEW_DIR [--root DIR --limit 6 --checkpoints 2 --workers 1]");
   options.set(args[i]!, args[i + 1]!);
 }
 function integer(key: string, fallback: number, min: number, max: number) { const n = Number(options.get(key) ?? fallback); if (!Number.isInteger(n) || n < min || n > max) throw new Error(`invalid ${key}`); return n; }
@@ -41,6 +42,8 @@ if (!options.has("--evidence") || !options.has("--out") || existsSync(out) || !o
 const limit = integer("--limit", 6, 0, 1000), checkpoints = integer("--checkpoints", 2, 0, 100), workers = integer("--workers", 1, 1, 3);
 const hashes: Record<string, string> = {};
 function json<T>(path: string): T { const bytes = readFileSync(path); hashes[path] = createHash("sha256").update(bytes).digest("hex"); return JSON.parse(bytes.toString("utf8")) as T; }
+const routeIndex = options.has("--route-inputs") ? json<FrozenRouteIndex>(resolve(options.get("--route-inputs")!)) : null;
+if (routeIndex && (routeIndex.schema !== "v6-frozen-route-index-v1" || !Array.isArray(routeIndex.rows))) throw new Error("invalid frozen route index");
 const coverage = json<V6RunCoverage[]>(join(evidence, "run-coverage.json"));
 const fights = json<V6HistoryFight[]>(join(evidence, "boss-fights.json"));
 const frames: (V6HistoryFrame & { source: FrozenRange })[] = [];
@@ -108,6 +111,9 @@ async function evaluate(id: string, ts: string, runId: string, source: FrozenRan
   const targets: V6TargetContext = { character: "silent", ascension: 10, act, floor,
     visible: visible ? [{ act, floor: act === 1 ? 17 : act === 2 ? 33 : 48, boss: visible }] : [],
     observations: history.observations.filter(o => prior.has(o.run_id)), excludeRun: runId, doubleBoss };
+  const recoveredRoute = routeIndex ? frozenRouteTable(join(root, "logs"), routeIndex.rows, state, ts) : null;
+  if (recoveredRoute?.table) targets.routeEntries = recoveredRoute.table;
+  sourceRefs.push(...(recoveredRoute?.sources ?? []));
   const options = (opportunity?.offers ?? []).flatMap((card, index) => {
     const copies = permanentCardGain(state, { action: "choose_reward_card", option_index: index });
     if (copies === null || copies < 1) return [];
@@ -132,7 +138,7 @@ async function evaluate(id: string, ts: string, runId: string, source: FrozenRan
     const checkpointActual = phase === "act" ? actual(runId) : undefined;
     appendFileSync(join(out, "tables.jsonl"), JSON.stringify({ id, run_id: runId, floor, ts, phase, pass,
       labels: ["synthetic_uniform_direction_weights_for_profiling_not_historical_brain", "retrospective_frozen_models_not_prospective_validation",
-        "historical_route_plan_missing_current_entry_hp_unknown", ...history.labels], actual: checkpointActual, table }) + "\n");
+        recoveredRoute?.reason ?? "historical_route_plan_missing_current_entry_hp_unknown", ...history.labels], actual: checkpointActual, table }) + "\n");
     const logged = v6ProjectionLog(config, table, { ts, run_id: runId, character: "silent", question_id: id }, logger);
     if (!logged.written) throw new Error(`projection log rejected: ${logged.reason}`);
     records.push({ id, run_id: runId, floor, phase, pass, telemetry: table.telemetry, ...(checkpointActual ? { actual: checkpointActual } : {}) });
@@ -158,7 +164,7 @@ writeFileSync(join(out, "summary.json"), JSON.stringify({ schema: "v6-offline-re
     histories: history.histories.length, boss_observations: history.observations.length, opportunities: history.opportunities.rows.length,
     selected_questions: selected.length, selected_checkpoints: checkpointFrames.length, completed: records.length / 2 },
   measurements, exclusions, records, limitations: ["descriptive_only_no_causal_accuracy_or_gameplay_claim", "uniform_weights_benchmark_only",
-    "missing_route_plan_current_boss_unknown", "post_boss_rewards_excluded_ambiguous_act_transition",
+    "missing_exact_route_plan_current_boss_unknown", "frozen_route_display_rounding_and_historical_model_retained", "post_boss_rewards_excluded_ambiguous_act_transition",
     "f17_f33_conditional_on_first_observed_combat_turn_one_not_preboss_route_forecast",
     "f17_f33_actual_results_not_used_for_question_selection", ...history.labels] }, null, 2) + "\n");
 process.stdout.write(`report: ${relative(PROJECT_ROOT, out)}/summary.json\n`);

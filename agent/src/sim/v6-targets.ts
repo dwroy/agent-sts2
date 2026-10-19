@@ -1,4 +1,5 @@
 /** Scoped observations determine candidates and entry HP, never another character's knowledge. */
+import type { V6RouteEntryTable } from "./v6-route-entry.js";
 import type { Character, ProjectionEntry } from "../v6/formats.js";
 import { bossKeyOf } from "./boss-lines.js";
 import { BOSS_KEYS, type BossTrustData } from "./boss-trust.js";
@@ -15,6 +16,8 @@ export interface V6TargetContext {
   visible: readonly { act: number; floor: number; boss: string }[];
   observations: readonly V6BossObservation[]; excludeRun?: string;
   doubleBoss: DoubleBossModel | null;
+  /** Optional explicit route forecast, including future checkpoints. Missing values do not fall back. */
+  routeEntries?: V6RouteEntryTable;
 }
 function scoped(context: V6TargetContext): V6BossObservation[] {
   const rows = context.observations.map(o => ({ ...o, boss: bossKeyOf(o.boss.split("+")) ?? o.boss })).filter(o => o.character === context.character && o.ascension === context.ascension
@@ -70,6 +73,20 @@ export interface V6EntryHp { hp: number | null; n: number; source: string; label
 /** Current HP is already the existing route projection's boss-entry estimate. Do not heal it twice. */
 export function v6EntryHp(context: V6TargetContext, target: V6ProjectionTarget, maxHp: number, currentRouteHp: number | null): V6EntryHp {
   if (!(Number.isFinite(maxHp) && maxHp > 0)) return { hp: null, n: 0, source: "unknown", labels: ["invalid_current_max_hp"] };
+  const route = context.routeEntries;
+  if (route) {
+    if (route.character !== context.character || route.ascension !== context.ascension || route.source_floor !== context.floor
+      || route.source_act !== context.act || route.max_hp !== maxHp || !route.signature) return {
+      hp: null, n: 0, source: "explicit_route_projection", labels: ["route_entry_scope_mismatch"] };
+    const matches = route.entries.filter(e => e.act === target.act && e.floor === target.floor);
+    if (matches.length) {
+      const entry = matches[0]!;
+      const valid = matches.length === 1 && entry.max_hp === maxHp && entry.hp !== null
+        && Number.isFinite(entry.hp) && entry.hp >= 0 && entry.hp <= maxHp;
+      return { hp: valid ? entry.hp : null, n: 0, source: "explicit_route_projection", labels: [...entry.labels,
+        ...(entry.max_hp !== maxHp ? ["future_max_hp_change_not_modelled"] : []), ...(!valid ? ["explicit_route_entry_unknown"] : [])] };
+    }
+  }
   if (target.kind === "current" || target.floor === context.floor
     || target.act === context.act && context.visible.some(v => v.act === context.act && v.floor === target.floor)) return {
     hp: currentRouteHp !== null && Number.isFinite(currentRouteHp) && currentRouteHp >= 0 && currentRouteHp <= maxHp ? currentRouteHp : null,
