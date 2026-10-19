@@ -1,0 +1,130 @@
+{
+  "at": "2026-10-20 03:09:46 CST",
+  "event": "ordinary-close-attention",
+  "batch": "20261020-024301-s2-strategy-proposal",
+  "original_attention_reason": "source changed during batch; retain ordinary ops review",
+  "original_batch_state": "done",
+  "original_process_rc": 0,
+  "source_merged": null,
+  "proposal_dispositions": {
+    "waiting": 10,
+    "source_or_knowledge_modified": false,
+    "new_commit": null,
+    "new_release": null,
+    "production_tests": {
+      "tsc": null,
+      "vitest": null,
+      "cases": null
+    }
+  },
+  "report_hash_matches_original_close_proof": true,
+  "source_baseline": "96979fad9afaf671399158e663eb8ab6e3d80992",
+  "initial_ordinary_proof_head": "b0b3f0446cebace4aab8f4f66031fc0908cbd24c",
+  "initial_proof_source_equal_baseline": true,
+  "actual_main_observed": "1e2519439e96c7d89bf375d41cedc6f8f5c3ad9a",
+  "parallel_source_changes_since_baseline": [
+    "A\tagent/tests/v6-history-refresh-exclusions.test.ts",
+    "M\tagent/tests/v6_learning_loop_test.py",
+    "M\tknowledge/builders/build-combo-metrics.py",
+    "M\tknowledge/builders/combo_metrics.py",
+    "M\tknowledge/builders/refresh-v6-history.py",
+    "M\tlearner/evidence_identity.py"
+  ],
+  "parallel_source_commit": "de94aa263bfb25363c13d2968c976d8c9138f5c1",
+  "source_origin": "Previously delivered history bad-row exclusion repair; different owner, not source authored by this strategy batch",
+  "dataset": {
+    "original_attempts": 1,
+    "original_log": {
+      "path": "ops/codex-ops/ordinary-close/20261020-024301-s2-strategy-proposal.dataset.log",
+      "bytes": 958,
+      "sha256": "4e41d8d290d65eca672d6d782bbcaae5252ed9034114e0e1204a9a8856f4d9f8"
+    },
+    "log_has_completed_checks": true,
+    "receipt_dataset_commit": null,
+    "receipt_records_commit": null,
+    "ordinary_completion_row_found": false,
+    "rerun_by_ops": false,
+    "not_closed": true
+  },
+  "proposal_original_sha_verification": {
+    "matched": 10,
+    "git_blob_sources": 6,
+    "existing_original_files": 4,
+    "detail": {
+      "path": "paper/materials/20261020-0308-ops/proposal-originals-verification.json",
+      "bytes": 4223,
+      "sha256": "09ba52025ad6e5698249ebb2b7fb5b249dfb1c9d710e1ae2c3e066f2f2c13690"
+    }
+  },
+  "retention": {
+    "original_state": "checkout_reclaimed",
+    "original_last_result": {
+      "state": "checkout_reclaimed",
+      "available_bytes_delta": 215920640,
+      "batch": "20261020-024301-s2-strategy-proposal"
+    },
+    "workspace_git_missing": true,
+    "scratch_report_still_present": true,
+    "git_fallback_to_main_not_used": true,
+    "new_checkout_or_manual_delete": false,
+    "historical_report_pending_seal_not_rewritten": "original storage-finalization now sealed; original report wording retained"
+  },
+  "STOP_exists": true,
+  "brain_wait": {
+    "path": "logs/brain-wait.json",
+    "bytes": 619,
+    "sha256": "1e8ee3a27fbdcabe9c5a2698e2b70bc909147f13d45ff3792779613ffc92ed30"
+  },
+  "model_full_check_dataset_or_merge_repeated": false,
+  "source_or_knowledge_mutated_by_ops": false,
+  "parent_closed": false,
+  "other_role_ACK_written": false,
+  "next": "Keep original attention and generated dataset artifacts with the single original attempt. No retry, merge or false ordinary-close success; report disposition stays10waiting. Existing ordinary-close protocol owner retains source-change boundary handling.",
+  "sources": [
+    {
+      "path": "ops/codex-ops/ordinary-close/20261020-024301-s2-strategy-proposal.json",
+      "bytes": 14753,
+      "sha256": "e2b16f17c68df0dbf144735c773ae820c6dd90808083e59adda23f4c1e85d4af"
+    },
+    {
+      "path": "ops/codex-ops/ordinary-close/20261020-024301-s2-strategy-proposal.dataset.log",
+      "bytes": 958,
+      "sha256": "4e41d8d290d65eca672d6d782bbcaae5252ed9034114e0e1204a9a8856f4d9f8"
+    },
+    {
+      "path": "ops/codex-ops/learner/20261020-024301-s2-strategy-proposal.out",
+      "bytes": 4293,
+      "sha256": "da945d7b93f9ed1990e033745f307afe55b8f9f0ca551b953c08b256025169ed"
+    },
+    {
+      "path": "ops/codex-ops/retention/requests/20261020-024301-s2-strategy-proposal.json",
+      "bytes": 644,
+      "sha256": "021d040b490cc749db69bb261380fa4aa013a1dbfb270492c7f961361c28abb9"
+    },
+    {
+      "path": ".worktrees/codex-strategy-silent-20261020-024301-s2/learner/runs/20261020-024312-acdbd210-13a5-45b4-a5a6-ab5107ffce44-strategy-proposal/report.md",
+      "bytes": 11220,
+      "sha256": "6cb76c3c82931db11b8c7c6926bd2f1d0521ca070f5e1c0b214a82c1bcb7147b"
+    },
+    {
+      "path": ".worktrees/codex-strategy-silent-20261020-024301-s2/learner/runs/20261020-024312-acdbd210-13a5-45b4-a5a6-ab5107ffce44-strategy-proposal/proposal-provenance.json",
+      "bytes": 5743,
+      "sha256": "4f6ec84d9f7e355d75ad09a82cd93ecd4d00f969f8552d6c1034af1e64fe5ced"
+    },
+    {
+      "path": ".worktrees/codex-strategy-silent-20261020-024301-s2/learner/runs/20261020-024312-acdbd210-13a5-45b4-a5a6-ab5107ffce44-strategy-proposal/final-check.json",
+      "bytes": 283,
+      "sha256": "a571f16f4ee4ace0e2bd708b55c0f41c9cbf6596d3f01db5e8cec3e60f1d298d"
+    },
+    {
+      "path": ".worktrees/codex-strategy-silent-20261020-024301-s2/learner/runs/20261020-024312-acdbd210-13a5-45b4-a5a6-ab5107ffce44-strategy-proposal/ledger-check.log",
+      "bytes": 94,
+      "sha256": "cb3642f3d0207082d8183d4ff587a375ba014cb2a6e0c1871e8aca66f0d6ba9f"
+    },
+    {
+      "path": ".worktrees/codex-strategy-silent-20261020-024301-s2/learner/runs/20261020-024312-acdbd210-13a5-45b4-a5a6-ab5107ffce44-strategy-proposal/storage-finalization.json",
+      "bytes": 8480,
+      "sha256": "55f5868a4e9ba07911b9bed9798321b43b1e3389e437a86b055981c04df9151a"
+    }
+  ]
+}
