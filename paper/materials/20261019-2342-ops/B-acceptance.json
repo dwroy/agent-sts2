@@ -1,0 +1,68 @@
+{
+  "at": "2026-10-19T23:39:37+08:00",
+  "status": "passed",
+  "tested_base": "7093f670fa1d4e507af1e5e39ca0bc2a9cc60d38",
+  "integration_base": "78468e4d9eeeaaaa1914c15c02a8764062905084",
+  "agent_tree": "4fff09c3faf33508f2a12f3b364ecb4dd86e56dd",
+  "runner": {
+    "cwd": "agent",
+    "nice": 19,
+    "pool": "forks",
+    "max_workers": 4,
+    "test_timeout_ms": 120000,
+    "shared_config_changed": false
+  },
+  "checks": {
+    "tsc": {
+      "exit": 0
+    },
+    "vitest": {
+      "exit": 0,
+      "files_passed": 585,
+      "tests_passed": 5580,
+      "tests_skipped": 2,
+      "duration_seconds": 402.79
+    },
+    "python_learning_loop": {
+      "exit": 0,
+      "tests": 9
+    },
+    "python_w9": {
+      "exit": 0,
+      "tests": 9
+    }
+  },
+  "gitleaks": {
+    "exit": 0,
+    "report": "checks/final/gitleaks-staged.json",
+    "findings": 0,
+    "at": "2026-10-19T23:41:43.135458+08:00"
+  },
+  "source_equivalence": "checks/final/source-equivalence.json",
+  "owned_files": [
+    {
+      "path": "agent/src/sim/v6-completion.ts",
+      "sha256": "bb402b2517cc9b0efd043e05d9f744e65d6c4b900756b6c5effd3b8275f8903d"
+    },
+    {
+      "path": "agent/src/sim/v6-projection.ts",
+      "sha256": "6cbf3d9e4be625c81554364f9ba93ff3cfbbc08327cc406246627cb3b3181b9d"
+    },
+    {
+      "path": "agent/src/sim/v6-request-factory.ts",
+      "sha256": "718b6134140da741587da4dfd2fadab2cbe1a7521fc6088ae6283d232de2bd5f"
+    },
+    {
+      "path": "agent/tests/v6-request-factory.test.ts",
+      "sha256": "c34e963780fed9ccf5dd26d5bd65f5b809f921c2aa8df9338b009ebfa3c8ec74"
+    }
+  ],
+  "unchanged_live_full_repeated": false,
+  "game_started": false,
+  "formal_knowledge_changed_by_this_feature": false,
+  "limits": [
+    "Production consumers W5/W7 still require original-owner integration.",
+    "Live 19 tags/7 enums only passed fixed offline questions; natural adoption and benefit unknown.",
+    "Core R2 pending, calibration in flight, parent requirements and role ACKs stay open."
+  ]
+}

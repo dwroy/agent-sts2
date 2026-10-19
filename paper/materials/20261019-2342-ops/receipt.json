@@ -1,0 +1,133 @@
+{
+  "at": "2026-10-19 23:49:06 CST",
+  "events": [
+    "learner-checks",
+    "watcher-B-delivery",
+    "Claude-supervision-new-R2-publication-authorization"
+  ],
+  "learning_loop": {
+    "batch": "v6-learning-loop-20261019-223658",
+    "source": "e4462bb50a3b6bf2fb96433579227717ecf8abfb",
+    "host_full_accepted": true,
+    "combined_full_rc": 0,
+    "test_files_passed": 584,
+    "tests_passed": 5574,
+    "tests_skipped": 2,
+    "original_tested_live": "7093f670fa1d4e507af1e5e39ca0bc2a9cc60d38",
+    "original_tested_tree": "5f6e6b209d541e099bf739ad0473349c76bade46",
+    "original_log": {
+      "path": "ops/codex-ops/learner/v6-learning-loop-20261019-223658.host-5f6e6b209d541e099bf739ad0473349c76bade46.checks.log",
+      "bytes": 123165,
+      "sha256": "367fa81c643ca641656213fd5c3707a9bf9c091adaf54c4861992c8c8d7a334c"
+    },
+    "source_files_verified": 12,
+    "original_sandbox_failures_preserved": true,
+    "actual_production_refresh": null,
+    "next_run_consumption": null,
+    "natural_benefit": null,
+    "full_repeated": false,
+    "shipped": false,
+    "parent_completed": false
+  },
+  "B": {
+    "at": "2026-10-19T23:45:09+08:00",
+    "previous_live": "7093f670fa1d4e507af1e5e39ca0bc2a9cc60d38",
+    "actual_main": "13a06c1e4c301343fb4251cb8aeff6d553ab38b9",
+    "actual_live": "13a06c1e4c301343fb4251cb8aeff6d553ab38b9",
+    "live_tree": "ff11b9e20678f06f649a6c0abf542e043424f398",
+    "source": "a92e8b37f51d8e4bff2c446e3f7447da2db25e2f",
+    "source_ancestor": true,
+    "agent_tree": "4fff09c3faf33508f2a12f3b364ecb4dd86e56dd",
+    "exact_joint_source_and_formal_knowledge_verified": true,
+    "B_source_full": {
+      "files": 585,
+      "tests": 5580,
+      "skipped": 2,
+      "rc": 0,
+      "log": ".worktrees/v6-w3-request-factory-20261019/paper/materials/2026-10-19-v6-w3-request-factory/checks/final/vitest.log",
+      "log_sha256": "dac0c09c53127cc6bd6e95737152534105e495c6f79017bf531be033bb10fcef",
+      "scope": "original B final joint source, identical executable/runtime leaves and formal knowledge; no new full execution"
+    },
+    "learning_loop_original_host_full": {
+      "rc": 0,
+      "files": 584,
+      "tests": 5574,
+      "skipped": 2,
+      "log_sha256": "367fa81c643ca641656213fd5c3707a9bf9c091adaf54c4861992c8c8d7a334c",
+      "tested_live": "7093f670fa1d4e507af1e5e39ca0bc2a9cc60d38",
+      "tree": "5f6e6b209d541e099bf739ad0473349c76bade46"
+    },
+    "old_live_preservation_ref": "refs/ops-live-before/v6-request-factory-20261019-2342",
+    "new_full_executed": false,
+    "game_started": false,
+    "STOP_retained": true,
+    "Regent": "paused",
+    "W5_W7_consumption": null,
+    "production_refresh": null,
+    "shipped": false,
+    "parents_completed": false
+  },
+  "interface_delivery": {
+    "receipt": "paper/materials/20261019-2342-ops/watcher-interface-delivery.json",
+    "CLI_submission_rc": 0,
+    "actual_Claude_W5_W7_readback": null,
+    "block_or_queued_question_not_bypassed": true
+  },
+  "publication": {
+    "batch": "v6-knowledge-publish-r2-20261019-234603",
+    "task": "v6-knowledge-publish",
+    "template_source": "370f8cde8",
+    "manifest": {
+      "path": "ops/codex-ops/learner/v6-knowledge-publish-r2-20261019-234603.inputs.json",
+      "bytes": 8255,
+      "sha256": "c42a77029667ba80985149b0044aa7d34f6502696c0ef0a27db098796a32a1a0"
+    },
+    "authorization": {
+      "path": ".artifacts/v6-supervision-20261019-234x/publication-inputs.json",
+      "bytes": 1340,
+      "sha256": "52505f9b185dfe2f3dcbae466b6f8e42831c8f8d435e3d95f0866fa3d12f6d10"
+    },
+    "state": "actually-running",
+    "home": "ops/codex-ops/accounts/codex1/learner",
+    "model": "gpt-6.1-sol",
+    "effort": "high",
+    "thread": "01a154d7-c8b8-7e43-ad0f-0df3819d54ee",
+    "launcher_pid": 2937694,
+    "model_pid": 2938095,
+    "nice": 19,
+    "native_first_reply_and_context": {
+      "path": ".artifacts/v6-knowledge-publish-r2-20261019/native-consumption.json",
+      "bytes": 1467,
+      "sha256": "06f7f83ee35b8fe980b26b069e1ddbbd900cb458607db5e81b47ed02b1c57cd3"
+    },
+    "sandbox_policy": {
+      "type": "workspace-write",
+      "writable_roots": [
+        "/home/dw/Projects/agent-sts2",
+        "/home/dw/Projects/agent-sts2/.git",
+        "/home/dw/Projects/agent-sts2/.git/worktrees/v6-knowledge-publish-r2-20261019-234603"
+      ],
+      "network_access": false,
+      "exclude_tmpdir_env_var": false,
+      "exclude_slash_tmp": false
+    },
+    "old223156_exit": 0,
+    "shared_original_publication_lease_used": true,
+    "cross_account_resume": false,
+    "R3_inflight_input_read": false,
+    "published_or_completed": false,
+    "old_CLI_failure_and_disagreements_retained": true
+  },
+  "retention": {
+    "learning_loop": "complete CLI accepted source scope; original retention owns pending guards",
+    "B": "complete CLI accepted source scope; original retention owns pending guards",
+    "manual_delete_or_sweep": false
+  },
+  "STOP_retained": true,
+  "Regent": "paused",
+  "W5_on_gate": "original-owner actual delivery/integration still required",
+  "Nova_resource_gates": "unchanged; original calibration not duplicated",
+  "first_new_game": null,
+  "new_behavior_release": null,
+  "other_role_ACK_written": false
+}
