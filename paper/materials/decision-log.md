@@ -4741,3 +4741,5 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
 - 2026-10-19 17:31:22 CST [Claude/Roy，仅文档] Roy 指示 watcher 切 xhigh、保留 fast 档：Claude 经 herdr 在原会话 /model 选 gpt-6.1-sol xhigh 仅本会话（未写共用配置），界面回显已切换，实际生效待下一轮原生 turn_context 核实；理由为 W3–W6 是核心算法与决策路由，codex1 本周额度已用 10%；V6 开发结束回 high。学习者：在跑的 v6-reflex-distill 保持 high，续批与正式方向卡按困难专项用 xhigh。9.1 理想牌组全空，docs/v6-plan.md 3.2 增加过渡默认补齐来源“历史实际补齐”（按模板归类的历史局在对应层段的实际变动，可插拔，Roy 可改）。
 
 - 2026-10-19 17:33:28 CST [Claude/Roy，仅文档] Roy 要求并行加速 V6：新开 herdr Codex 会话 v6-w4w6（W4 大脑方向条目与触发 + W6 Jev 选药）和 v6-w8（W8 出牌条目与小脑记忆接入），codex1、gpt-6.1-sol xhigh，按 W1 格式与固定数据先行开发，各自工作树、变基后跑 tsc/vitest/gitleaks 再合入 main；watcher 继续 W3 并做集成核验；W5、W7 按依赖后续开始。见 docs/v6-plan.md 第 9 节并行开发安排。
+
+- 2026-10-19 17:37:32 CST [Claude/Roy，运维记录] Roy 指示并行后关闭 fast：Claude 经 herdr 在 sts2-watcher、v6-w4w6、v6-w8 三个会话执行 /fast，界面均回显 Service tier set to default、状态栏无 fast，watcher 线程设置 17:36:51 起为 default（此前自 17:01:41 起为 priority，非本会话切换）。副作用：/fast 会写入共用 ~/.codex/config.toml（~/.codex1 软链至此），第 8 行 service_tier 由 fast 改为 default，会影响共用该配置的其他会话；未回滚，等 Roy 决定。学习者 v6-reflex-distill 用独立账号配置，原生记录为 default，不受影响。
