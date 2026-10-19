@@ -1,0 +1,78 @@
+{
+  "at": "2026-10-19T23:54:52.346399+08:00",
+  "base": "13a06c1e4c301343fb4251cb8aeff6d553ab38b9",
+  "status": "independent_factory_integration_passed_pending_W5_production_runtime",
+  "tsc": {
+    "exit_code": 0,
+    "log": "v6-w7-tsc-factory-second.log.gz"
+  },
+  "targeted": {
+    "exit_code": 0,
+    "files_passed": 8,
+    "tests_passed": 153,
+    "log": "v6-w7-targeted-factory-third.log.gz"
+  },
+  "superseded_failure": {
+    "exit_code": 1,
+    "reason": "New test asserted optional expected_win on aggregate table.entries. The engine contract uses win there; corrected assertion now checks win remains null and explicit unknown reasons. Original failure retained.",
+    "log": "v6-w7-targeted-factory-first.log.gz"
+  },
+  "remaining": [
+    "W5 production runtime merge and cancellation/remaining budget at foreground lease",
+    "Default loop binding to shared context/evaluateRequest",
+    "Final rebase, full tsc/vitest and gitleaks before commit/FF main"
+  ],
+  "artifacts": [
+    {
+      "file": "v6-w7-tsc-factory-first.log.gz",
+      "exit_code": 0,
+      "raw_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "sha256": "9ceffb7310338057cfe71a4ae1e2c98d2c485d81cdef906532a801f457a38d64"
+    },
+    {
+      "file": "v6-w7-tsc-factory-second.log.gz",
+      "exit_code": 0,
+      "raw_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "sha256": "9ceffb7310338057cfe71a4ae1e2c98d2c485d81cdef906532a801f457a38d64"
+    },
+    {
+      "file": "v6-w7-targeted-factory-first.log.gz",
+      "exit_code": 1,
+      "raw_sha256": "fccdf3d4c9a21703b5921d946568cb20b6c28f70372c1f164e5b3d471b9d3406",
+      "sha256": "2989c4d18463d85256cf56d671db4450a760f77971a7be8e48a8e56446ea56f2"
+    },
+    {
+      "file": "v6-w7-targeted-factory-second.log.gz",
+      "exit_code": 0,
+      "raw_sha256": "eaa39460779897d490fdb3e3e8a3e040f1621d0ea47b5e9e4b04d7aea3c50d93",
+      "sha256": "97bd5a1cbbb5868d54c7f7450a1f1ae083a152e4e883e90715b5764c077b85f3"
+    },
+    {
+      "file": "v6-w7-targeted-factory-third.log.gz",
+      "exit_code": 0,
+      "raw_sha256": "29cfc85564d358b9852e10711f9b7076d66d086c8313e757b4f539e08a731640",
+      "sha256": "9cd67537d347f7e022e36824cc6fafd37fc9f7d3295b9faa4506dfa63212a0f2"
+    },
+    {
+      "file": "v6-w7-gitleaks-factory-first.log.gz",
+      "exit_code": 0,
+      "raw_sha256": "ccc4b08c49a87387ae9b38399f0415a0d3e92e16f6dd26270fb3d051299f8359",
+      "sha256": "abb39c6c26ebdc9ccbfe3d49269010bf37d1ede13dc64c0093b087582fadd1ad"
+    },
+    {
+      "file": "v6-w7-gitleaks-factory-second.log.gz",
+      "exit_code": 0,
+      "raw_sha256": "b9a089344c82d8a86d616e387f1e5155b1d87450a28fb0d391333d19c78241a0",
+      "sha256": "38ce785888fcf90bfeac45c6481c903e9a169c04608d5706dda952c5036610b6"
+    }
+  ],
+  "gitleaks": {
+    "exit_code": 0,
+    "findings": 0,
+    "scope": "All staged W7 code/materials plus R3 dispatch receipt; second scan follows explicit sparse staging",
+    "log": "v6-w7-gitleaks-factory-second.log.gz"
+  },
+  "diff_check": {
+    "exit_code": 0
+  }
+}

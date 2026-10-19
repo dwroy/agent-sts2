@@ -11,6 +11,8 @@ import { currentDecisionBudget, withDecisionBudget, enterDecisionBudget, Decisio
  * and the run boundary.
  */
 
+import { runtimeV6RoomProjection } from "./screens/v6-room-projection.js";
+import { isV6RoomDecision, prepareV6RoomDecision, recordV6Room, type V6RoomProjection } from "./screens/v6-room.js";
 import { notePotionFallback, potionAnswersComplete, recordPotionJev, validPotionAnswers, v6PotionActive, withPotionJevBudget } from "../v6/potion-entries.js";
 import { fileSimWait } from "../sim/computation-wait.js";
 import { randomUUID } from "node:crypto";
@@ -90,6 +92,8 @@ interface AnswerMemo {
 
 export interface LoopOptions {
   v6Projection?: import("../v6/projection-runtime.js").V6ProjectionRuntime;
+  /** W7 projection provider receives explicit changed decks and its own five-second allowance. */
+  v6RoomProjection?: V6RoomProjection;
   /** W3 supplies projection-entry-v1 data; tests inject frozen evaluations. */
   v6DirectionEvaluation?: (env: DecisionEnv) => Promise<import("../v6/replan-triggers.js").DirectionEvaluation>;
   config: AppConfig;
@@ -287,6 +291,7 @@ async function runLoopWithBudgets(options: LoopOptions): Promise<LoopStats> {
   const paceLedger = new DecisionBudgetLedger();
   const { config, mode, client, knowledge } = options;
   const v6Projection = options.v6Projection ?? productionV6Projection(options.buildSim?.runner, config.runPlanLog);
+  const v6RoomProjection = options.v6RoomProjection ?? (v6Projection ? runtimeV6RoomProjection(v6Projection) : undefined);
   // PASSIVE_PIECES as configured (.env read after the modules loaded: their process.env default may predate it).
   passivePiecesOptions.enabled = config.passivePieces;
   // CARD_CONDITIONS likewise (src/reflex/card-model.ts).
@@ -477,6 +482,7 @@ async function runLoopWithBudgets(options: LoopOptions): Promise<LoopStats> {
    * from it; a plan not made in this process (a restart) is credited to the engine configured for the step's label.
    */
   const planDeciders = new Map<string, BrainDecider>();
+  const roomPlanDeciders = new Map<string, "jev" | "code-fallback">();
   const notePlanDecider = (id: string, by: BrainDecider): void => {
     planDeciders.delete(id);
     planDeciders.set(id, by);
@@ -786,7 +792,9 @@ async function runLoopWithBudgets(options: LoopOptions): Promise<LoopStats> {
       mechDeathMove: config.mechDeathMove,
       sandpitStart: config.sandpitStart,
       // Who made a one-shot plan, as its steps' decider (below) and their rationales name it.
-      planMaker: (ref, label) => deciderLabel(planDeciders.get(ref) ?? (brain ? brain.engineFor(label) : "deepseek")),
+      planMaker: (ref, label) => roomPlanDeciders.has(ref)
+        ? (roomPlanDeciders.get(ref) === "jev" ? "Jev" : "Code fallback")
+        : deciderLabel(planDeciders.get(ref) ?? (brain ? brain.engineFor(label) : "deepseek")),
     };
     if (str(asRecord(state.run?.raw)["character_id"]).toLowerCase() === "silent") {
       const combat = asRecord(state.raw["combat"]);
@@ -949,7 +957,8 @@ async function runLoopWithBudgets(options: LoopOptions): Promise<LoopStats> {
     }
 
     const v6CardPick = buildV6CardPick(env);
-    let decision = v6Config().mode === "on" && v6CardPick ? v6CardPick.decision : routeV6CardDecision(planned.decision, state.in_combat);
+    let decision = v6Config().mode === "on" && v6CardPick ? v6CardPick.decision
+      : routeV6CardDecision(await prepareV6RoomDecision(planned.decision, env, v6RoomProjection), state.in_combat);
     if (brain?.router.codexOnly && decision.label === "map/route-fallback" && asArray(asRecord(state.raw["map"])["available_nodes"]).length !== 1) {
       const reason = "Codex route question could not be constructed; no code route choice dispatched";
       brain.router.wait.finish("fault", { label: "map/route-plan", runId, questionId: randomUUID(), system: "", question: "", payload: {}, spec: { label: "map/route-plan", kind: "plan", schema: {}, validate: () => [] } }, reason);
@@ -1468,8 +1477,12 @@ async function runLoopWithBudgets(options: LoopOptions): Promise<LoopStats> {
     } else if (decision.kind === "act") {
       resolved = { intent: decision.intent, rationale: decision.rationale, confidence: null, fallback: false, ...(decision.apply ? { apply: decision.apply } : {}), ...(decision.log ? { log: decision.log } : {}), ...(decision.journal ? { journal: decision.journal } : {}) };
       // A step of a DeepSeek one-shot plan, played by code: DeepSeek's decision, no call made (reused).
-      if (decision.plan) deepseekRecord = { by: "deepseek", direct: true, reused: true, plan_ref: decision.plan.ref, plan_step: decision.plan.step, choice: decision.plan.choice };
-    } else if (!jev || codeBaseline || (currentDecisionBudget()?.remaining() === 0 && !decision.v6Card && !(v6PotionActive(env) && decision.label === "map/statue-potion"))) {
+      if (decision.plan && !roomPlanDeciders.has(decision.plan.ref)) deepseekRecord = { by: "deepseek", direct: true, reused: true, plan_ref: decision.plan.ref, plan_step: decision.plan.step, choice: decision.plan.choice };
+      if (decision.plan && roomPlanDeciders.has(decision.plan.ref) && resolved.journal) {
+        const maker = roomPlanDeciders.get(decision.plan.ref) === "jev" ? "Jev" : "Code fallback";
+        resolved = { ...resolved, journal: resolved.journal.replace(/^DeepSeek plan /, `${maker} plan `) };
+      }
+    } else if (!jev || codeBaseline || (currentDecisionBudget()?.remaining() === 0 && !decision.v6Card && !isV6RoomDecision(decision) && !(v6PotionActive(env) && decision.label === "map/statue-potion"))) {
       // No-Jev mode, or a board the gate kept refusing: the resolver sees an empty answer set and takes its
       // deterministic path.
       resolved = decision.resolve({}, currentDecisionBudget()?.remaining() === 0 ? { budgetExpired: true } : undefined);
@@ -1480,7 +1493,7 @@ async function runLoopWithBudgets(options: LoopOptions): Promise<LoopStats> {
         stop(`request cap reached (${config.budgets.maxRequests})`);
         break;
       }
-      const memoKey = `${stateFingerprint}|${decision.label}${decision.v6Card ? `|${JSON.stringify(decision.state)}|${JSON.stringify(decision.questions)}` : ""}`;
+      const memoKey = `${stateFingerprint}|${decision.label}${(decision.v6Card || isV6RoomDecision(decision)) ? `|${JSON.stringify(decision.state)}|${JSON.stringify(decision.questions)}` : ""}`;
       const memo = readMemo(memoKey);
       if (memo) {
         // The board has not moved since we last asked this question: reuse the answer.
@@ -1522,16 +1535,17 @@ async function runLoopWithBudgets(options: LoopOptions): Promise<LoopStats> {
       let firstAnswers: AnswerSet = {};
       const potionOnly = v6PotionActive(env) && decision.label === "map/statue-potion";
       const cardOnly = decision.v6Card === true;
+      const roomOnly = isV6RoomDecision(decision);
       const potionStarted = Date.now();
-      if (cardOnly) stats.jevCalls += 1;
+      if (cardOnly || roomOnly) stats.jevCalls += 1;
       try {
-        const timedJev = potionOnly || cardOnly ? { model: jev.model, ask: (s: unknown, q: typeof jevQuestions) => jev.ask(s, q, Math.max(1, v6Config().budgets.jev_ms - (Date.now() - potionStarted))) } : jev;
+        const timedJev = potionOnly || cardOnly || roomOnly ? { model: jev.model, ask: (s: unknown, q: typeof jevQuestions) => jev.ask(s, q, Math.max(1, v6Config().budgets.jev_ms - (Date.now() - potionStarted))) } : jev;
         const result = potionOnly ? await withPotionJevBudget(() => askJevLogged(timedJev, promptLog, promptMeta("ask"), jevState, jevQuestions))
-          : cardOnly ? await withConstructionJevBudget("Jev_card", () => askJevLogged(timedJev, promptLog, promptMeta("ask"), jevState, jevQuestions))
+          : cardOnly || roomOnly ? await withConstructionJevBudget(cardOnly ? "Jev_card" : "Jev_room", () => askJevLogged(timedJev, promptLog, promptMeta("ask"), jevState, jevQuestions))
           : await withJevRetry(() => askJevLogged(jev, promptLog, promptMeta("ask"), jevState, jevQuestions), jevRetry);
         usedJev = true;
         if (result.requestId) requestIds.push(result.requestId);
-        if (!cardOnly) stats.jevCalls += 1;
+        if (!cardOnly && !roomOnly) stats.jevCalls += 1;
         stats.inputTokens += result.inputTokens;
         stats.outputTokens += result.outputTokens;
         jevLatency += result.latencyMs;
@@ -1664,7 +1678,7 @@ async function runLoopWithBudgets(options: LoopOptions): Promise<LoopStats> {
           }
         }
       } catch (error) {
-        if (cardOnly) {
+        if (cardOnly || roomOnly) {
           resolved = { ...decision.resolve({}, { budgetExpired: true }), fallback: true };
         } else if (potionOnly) {
           notePotionFallback(env, true);
@@ -1697,6 +1711,18 @@ async function runLoopWithBudgets(options: LoopOptions): Promise<LoopStats> {
       notePotionFallback(env, resolved.fallback);
       recordCardPick(env, v6CardPick, config.runPlanLog, decisionId, (rawAnswers ?? {}) as unknown as AnswerSet, cardElapsed,
         resolved.fallback ? "Jev unavailable, timed out or invalid; weighted paired fallback" : null);
+    }
+    if (isV6RoomDecision(decision)) {
+      if (resolved.plan) {
+        roomPlanDeciders.delete(resolved.plan.id);
+        roomPlanDeciders.set(resolved.plan.id, !resolved.fallback && (usedJev || fromMemo) ? "jev" : "code-fallback");
+        for (const oldest of roomPlanDeciders.keys()) {
+          if (roomPlanDeciders.size <= 200) break;
+          roomPlanDeciders.delete(oldest);
+        }
+      }
+      notePotionFallback(env, resolved.fallback);
+      recordV6Room(env, decision, config.runPlanLog, decisionId, rawAnswers, resolved.fallback, Date.now() - planStarted);
     }
     if (resolved.fallback) stats.fallbacks += 1;
 
@@ -1740,13 +1766,15 @@ async function runLoopWithBudgets(options: LoopOptions): Promise<LoopStats> {
       decider: deepseekResolved
         ? (deepseekResolved.decider ?? "deepseek")
         : decision.kind === "act" && decision.plan
-          ? (planDeciders.get(decision.plan.ref) ?? (brain ? brain.engineFor(decision.label) : "deepseek"))
+          ? (roomPlanDeciders.get(decision.plan.ref) ?? planDeciders.get(decision.plan.ref) ?? (brain ? brain.engineFor(decision.label) : "deepseek"))
           : decision.kind === "act"
             ? ("code" as const)
             : resolved.fallback || (!usedJev && !fromMemo)
               ? ("code-fallback" as const)
               : resolved.decider ?? ("jev" as const),
       fingerprint: stateFingerprint,
+      ...(decision.kind === "act" && decision.plan && roomPlanDeciders.has(decision.plan.ref)
+        ? { v6_room_plan: { by: roomPlanDeciders.get(decision.plan.ref), ref: decision.plan.ref, step: decision.plan.step, choice: decision.plan.choice } } : {}),
       questions: asked,
       answers: rawAnswers,
       // The action as sent; what the gate checked it against is `expect`.

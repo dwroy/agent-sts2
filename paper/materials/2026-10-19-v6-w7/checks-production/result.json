@@ -1,0 +1,52 @@
+{
+  "at": "2026-10-20T01:46:59.610210+08:00",
+  "tested_base": "435dadad777a7f64dae9e484ae63b6f5b2637ac3",
+  "checks": [
+    {
+      "file": "v6-w7-tsc-w5-third.log.gz",
+      "command": "PATH=~/.local/node/bin:$PATH nice -n 19 npx tsc -p tsconfig.json --noEmit",
+      "exit_code": 0,
+      "raw_bytes": 0,
+      "raw_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "sha256": "9ceffb7310338057cfe71a4ae1e2c98d2c485d81cdef906532a801f457a38d64"
+    },
+    {
+      "file": "v6-w7-full-w5-second.log.gz",
+      "command": "PATH=~/.local/node/bin:$PATH nice -n 19 npx vitest run --maxWorkers=1",
+      "exit_code": 0,
+      "raw_bytes": 383,
+      "raw_sha256": "54cbe278e6bb83397eea3d6615b10065441d278b5a7b57c0738a9ed96516a218",
+      "sha256": "649b6b69da4daa129f95a1f5a7f3a92eeb7268037ba8d9fbc1f71d7aa674e6be"
+    }
+  ],
+  "full": {
+    "files_passed": 589,
+    "files_failed": 0,
+    "tests_passed": 5650,
+    "tests_failed": 0,
+    "tests_skipped": 2,
+    "duration_seconds": 1590.9,
+    "workers": 1
+  },
+  "targeted": {
+    "files_passed": 10,
+    "tests_passed": 182
+  },
+  "source_manifest": {
+    "file": "tested-agent-files.json.gz",
+    "files": 1441,
+    "matches": true
+  },
+  "agent_patch_sha256": "54f501ba3c29330f296700a6ae270feac49928050f62e22e8a03c5b26b5d5eac",
+  "history": "Earlier failures retained unchanged in intermediate.json and original compressed logs. Full rerun changes concurrency only; no source or test-timeout change.",
+  "gitleaks_final": {
+    "exit_code": 0,
+    "command": "gitleaks protect --staged --redact --no-banner",
+    "at": "2026-10-20T01:47:17.134075+08:00",
+    "file": "v6-w7-gitleaks-final-staged.log.gz",
+    "raw_sha256": "8fcbf0d9ef744dceabcdaacb95d6d02f32be93504aef4cd4c0af0beee9aec462",
+    "sha256": "8c3deb2021a0a11ede2e49e3d99a737af19d95879d46f4758df4fc1678055434"
+  },
+  "formal_knowledge_changed": false,
+  "live_changed": false
+}

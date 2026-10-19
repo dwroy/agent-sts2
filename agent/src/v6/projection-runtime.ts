@@ -4,13 +4,15 @@ import { V6ProjectionEngine, type V6ProjectionRequest, type V6ProjectionTable } 
 import { V6IdlePrecomputer } from "../sim/v6-precompute.js";
 import { v6Config } from "./config.js";
 import { v6ProjectionInputs, type V6ProjectionInput } from "./projection-input.js";
-import { withIndependentDecisionBudget } from "../core/decision-budget.js";
+import { currentDecisionBudget, withIndependentDecisionBudget } from "../core/decision-budget.js";
 import { dirname, join } from "node:path";
 import { v6ProjectionLog } from "../sim/v6-projection-log.js";
 import { V6BuildLog } from "./log.js";
 import { str } from "../core/util/json.js";
 import { characterSchema } from "./formats.js";
 import { validate } from "./schema.js";
+
+export interface V6ProjectionEvaluationContext { budget_ms: number; signal: AbortSignal }
 
 /** The provider owns frozen evidence/model versions; this boundary owns live scheduling only. */
 export class V6ProjectionRuntime {
@@ -29,19 +31,30 @@ export class V6ProjectionRuntime {
     return this.foreground(env, () => this.request(env, phase));
   }
   /** All constructed requests share the idle lease, engine/pool and independent compute budget. */
-  async evaluateRequest(env: DecisionEnv, request: V6ProjectionRequest): Promise<V6ProjectionTable | null> {
-    return this.foreground(env, async () => request);
+  async evaluateRequest(env: DecisionEnv, request: V6ProjectionRequest, context?: V6ProjectionEvaluationContext): Promise<V6ProjectionTable | null> {
+    return this.foreground(env, async () => request, context);
   }
-  private async foreground(env: DecisionEnv, request: () => Promise<V6ProjectionRequest | null>): Promise<V6ProjectionTable | null> {
+  private async foreground(env: DecisionEnv, request: () => Promise<V6ProjectionRequest | null>,
+    context?: V6ProjectionEvaluationContext): Promise<V6ProjectionTable | null> {
     if (v6Config().mode === "off" || env.state.in_combat) return null;
+    const budget = currentDecisionBudget(), now = budget?.now ?? (() => performance.now()), started = now();
+    const remaining = () => context ? Math.max(0, Math.min(context.budget_ms - (now() - started), budget?.remaining() ?? Infinity)) : Infinity;
+    const expired = () => context && (context.signal.aborted || !Number.isFinite(remaining()) || remaining() <= 0);
+    if (expired()) return null;
     this.idle.invalidate();
-    // Waiting for an old bounded idle task must not consume the new question's compute allowance.
+    // External room requests already own their allowance; waiting must not replenish it.
     const release = await this.idle.acquireForeground();
     try {
+      if (expired()) return null;
       const r = await request();
-      if (!r || r.config.mode === "off") return null;
-      const table = await withIndependentDecisionBudget("V6_projection", "direction", r.phase === "act" ? r.config.budgets.act_ms : r.config.budgets.pick_ms, "L2", () => this.engine.evaluate(r));
-      if (table) this.record(env, r, table);
+      if (!r || r.config.mode === "off" || expired()) return null;
+      const milliseconds = Math.min(remaining(), r.phase === "act" ? r.config.budgets.act_ms : r.config.budgets.pick_ms);
+      const bounded = context ? { ...r, config: { ...r.config, budgets: { ...r.config.budgets,
+        ...(r.phase === "act" ? { act_ms: milliseconds } : { pick_ms: milliseconds }) } } } : r;
+      const table = context ? await this.engine.evaluate(bounded)
+        : await withIndependentDecisionBudget("V6_projection", "direction", milliseconds, "L2", () => this.engine.evaluate(r));
+      if (expired()) return null;
+      if (table) this.record(env, bounded, table);
       return table;
     } finally { release(); }
   }

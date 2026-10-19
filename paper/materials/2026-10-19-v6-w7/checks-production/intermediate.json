@@ -1,0 +1,74 @@
+{
+  "at": "2026-10-20T01:13:09.145557+08:00",
+  "base": "77d21d20af5612d38a9df705219cfeb9363c6c65",
+  "checks": [
+    {
+      "file": "v6-w7-tsc-w5-first.log.gz",
+      "exit_code": 1,
+      "raw_bytes": 178,
+      "raw_sha256": "9b46ce11e99f6158533864be074c403eb2c081a1cdae353102be5d16b1bb4fae",
+      "sha256": "6f4a59f46dee89a4129358ff691e9e4ca65ff0750c032aa109a0c00a4a4bd61c"
+    },
+    {
+      "file": "v6-w7-tsc-w5-second.log.gz",
+      "exit_code": 0,
+      "raw_bytes": 0,
+      "raw_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "sha256": "9ceffb7310338057cfe71a4ae1e2c98d2c485d81cdef906532a801f457a38d64"
+    },
+    {
+      "file": "v6-w7-targeted-w5-first.log.gz",
+      "exit_code": 1,
+      "raw_bytes": 10870,
+      "raw_sha256": "05cef270f51433e9435d935ded0b5a6944b1d261e71baf45483a5870cd4f3e64",
+      "sha256": "9624183d595e72e7ade35691277954fbfcf89fc6757f62f2b5b2638c0fc81272"
+    },
+    {
+      "file": "v6-w7-targeted-w5-second.log.gz",
+      "exit_code": 0,
+      "raw_bytes": 254,
+      "raw_sha256": "72b61e8060d703d7e0ac030f342e5b04b0299baa030d920c27961a526df51cc7",
+      "sha256": "389911d8494d5ffcefde899f6da10441601b3ccbbf391c8e7d9916e35a8153c4"
+    },
+    {
+      "file": "v6-w7-gitleaks-production-first.log.gz",
+      "exit_code": 1,
+      "raw_sha256": "d231792ae66901e2d33daa9b96c47b5db4edbec7618e8618db08dce097a3fc84",
+      "sha256": "041d175844905361a9ae09351fcb220b4205471d15e2b3fc2a2e8e1bec0baf39"
+    },
+    {
+      "file": "v6-w7-gitleaks-production-second.log.gz",
+      "exit_code": 1,
+      "raw_sha256": "2ddd1bb354adbe8ca9458800f67b7a6084b0ee6a8164bac0c1dc4c4b4c9bba77",
+      "sha256": "dbaa3581d20fde3214f68ba1ab845507366280fd7ba8f07b90e47e89df27eff7"
+    },
+    {
+      "file": "v6-w7-full-w5-first.log.gz",
+      "exit_code": 1,
+      "raw_sha256": "f919c100a152c80ac093b316a14dad4f762de88858db5531d4e008d0a724f30e",
+      "sha256": "7709fece70d5ff0749cf9074d4d4716df133f07e00e9ce0299ce3c35394a1e32"
+    },
+    {
+      "file": "v6-w7-gitleaks-production-third.log.gz",
+      "exit_code": 0,
+      "raw_sha256": "4bd750e50126160ac2269024807c542f48811fc2add5fd28996f718ab540355b",
+      "sha256": "2b2cf2112408aecd2458814df04823b9102dbf7a52bc97e649dee0c20ab35f1b"
+    }
+  ],
+  "first_failures": "Duplicate withConstructionJevBudget import after resolving W5/W7 loop merge; fixed import then reran separately. Full vitest still running.",
+  "source_manifest": {
+    "file": "tested-agent-files.json.gz",
+    "raw_sha256": "0c89c3efda6e007ee4948989685b2246dcdaecea78d01fd3c97cf731d7c96041",
+    "sha256": "9f310982190f7f40d7341ee62643128ed9f8cf08bc4aaee86eb6bdaf1c3df3aa",
+    "note": "Lossless compressed manifest; raw source-hash path learner-keycheck-retry.test.ts triggered generic-api-key false positive. No source credential. Original scan failures retained; no scanner allowlist changes."
+  },
+  "full_first": {
+    "files_passed": 588,
+    "files_failed": 1,
+    "tests_passed": 5646,
+    "tests_failed": 4,
+    "tests_skipped": 2,
+    "duration_seconds": 527.24,
+    "failure": "Existing learner-empty-fix.test.ts spawnSync python timeout=5000 returned status null in four cases. No threshold or source changes; lower-concurrency rerun required."
+  }
+}

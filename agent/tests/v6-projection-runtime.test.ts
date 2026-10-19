@@ -70,3 +70,50 @@ it("exposes the shared factory context and records a W7 request under its own co
   expect(await runtime.context(e, "pick")).toBeNull(); expect(await runtime.evaluateRequest(e, r)).toBeNull();
   expect(input).toHaveBeenCalledTimes(1); expect(engine.evaluate).toHaveBeenCalledTimes(1);
 });
+
+it("charges the foreground wait to an externally owned room allowance without another allocation", async () => {
+  vi.stubEnv("V6_BUILD", "on"); const e = env(board("xljq-f5-reward", "reward"));
+  let now = 0, finish!: (value: never) => void;
+  const budget = new DecisionBudget("room", "routine", () => now, 5000, 0), record = vi.fn();
+  const engine = { precompute: vi.fn(() => new Promise<never>(resolve => { finish = resolve; })),
+    evaluate: vi.fn(async candidate => {
+      expect(candidate.config.budgets.pick_ms).toBe(3200);
+      expect(currentDecisionBudget()).toBe(budget); now += 200; return { phase: "pick" } as never;
+    }) };
+  const runtime = new V6ProjectionRuntime(engine, async () => request(), record), idle = runtime.precompute(e, 100);
+  await vi.waitFor(() => expect(engine.precompute).toHaveBeenCalledTimes(1));
+  const foreground = withDecisionBudget(budget, () => runtime.evaluateRequest(e, request(),
+    { budget_ms: 5000, signal: new AbortController().signal }));
+  now = 1800; finish(null as never); await idle; await foreground;
+  expect(engine.evaluate).toHaveBeenCalledTimes(1); expect(record).toHaveBeenCalledTimes(1);
+  expect(budget.record()).toMatchObject({ shared_actual_ms: 2000, independent_actual_ms: 0 });
+});
+
+it.each(["cancel", "expire"])("does not start late room simulation after %s while waiting for the foreground lease", async mode => {
+  vi.stubEnv("V6_BUILD", "on"); const e = env(board("xljq-f5-reward", "reward")), controller = new AbortController();
+  let now = 0, finish!: (value: never) => void;
+  const budget = new DecisionBudget("room", "routine", () => now, 5000, 0), record = vi.fn();
+  const engine = { evaluate: vi.fn(), precompute: vi.fn(() => new Promise<never>(resolve => { finish = resolve; })) };
+  const runtime = new V6ProjectionRuntime(engine, async () => request(), record), idle = runtime.precompute(e, 100);
+  await vi.waitFor(() => expect(engine.precompute).toHaveBeenCalledTimes(1));
+  const foreground = withDecisionBudget(budget, () => runtime.evaluateRequest(e, request(), { budget_ms: 5000, signal: controller.signal }));
+  if (mode === "cancel") controller.abort(); else now = 5000;
+  finish(null as never); await idle; expect(await foreground).toBeNull();
+  expect(engine.evaluate).not.toHaveBeenCalled(); expect(record).not.toHaveBeenCalled();
+  const later = runtime.precompute(e, 100);
+  await vi.waitFor(() => expect(engine.precompute).toHaveBeenCalledTimes(2)); finish(null as never); await later;
+});
+
+it.each(["cancel", "expire"])("does not record a room result after %s during evaluation", async mode => {
+  vi.stubEnv("V6_BUILD", "on"); const e = env(board("xljq-f5-reward", "reward")), controller = new AbortController();
+  let now = 0;
+  const budget = new DecisionBudget("room", "routine", () => now, 5000, 0), record = vi.fn();
+  const engine = { precompute: vi.fn(), evaluate: vi.fn(async () => {
+    if (mode === "cancel") controller.abort(); else now = 5000;
+    return { phase: "pick" } as never;
+  }) };
+  const runtime = new V6ProjectionRuntime(engine, vi.fn(), record);
+  expect(await withDecisionBudget(budget, () => runtime.evaluateRequest(e, request(),
+    { budget_ms: 5000, signal: controller.signal }))).toBeNull();
+  expect(engine.evaluate).toHaveBeenCalledTimes(1); expect(record).not.toHaveBeenCalled();
+});

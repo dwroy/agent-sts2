@@ -1,5 +1,7 @@
 /** Rest sites (PLAN.md §6.7): HEAL vs SMITH and friends, driven by HP% and upgradeable cards. */
 
+import { buildV6RoomDecision } from "./v6-room.js";
+import { v6RestOptions } from "./v6-room-options.js";
 import { asArray, asRecord, bool, num, numOrNull, str, truncate, type JsonValue } from "../../core/util/json.js";
 import { damageGap, gapRestShift } from "../../sim/boss-clock.js";
 import { runPlanRestShift } from "../../memory/run-plan.js";
@@ -29,6 +31,8 @@ export function planRest(env: DecisionEnv): Decision | null {
     return raw ? { action: "choose_rest_option", option_index: option } : null;
   });
   if (pending !== undefined) return pending;
+  const v6 = v6RestOptions(env);
+  if (v6) return buildV6RoomDecision(env, v6);
 
   const options: PickOption[] = [];
   /** Each option's game entry (its id and text tell which deck selection it opens). */
