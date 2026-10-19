@@ -55,6 +55,13 @@ export interface V6WeightedProjection {
   paired_delta: Delta | null; joint_paired_delta: Delta | null; known_weight: number;
   known_weighted_value: number; labels: string[];
 }
+export interface V6PickDirectionComparison {
+  option_id: string; direction_id: string; reference_direction_id: string | null;
+  targets: { target_id: string; combination_id: string | null; reference_combination_id: string | null;
+    joint_paired_delta: Delta | null }[];
+  /** Candidate-frequency mixture of same-seed direction-minus-reference differences. */
+  joint_paired_delta: Delta | null; known_mass: number; labels: string[];
+}
 export interface V6ProjectionTable {
   schema: "v6-projection-table-v1"; enabled: boolean; phase: "pick" | "act";
   combinations: V6CombinationProjection[]; act_evaluations: V6ActEvaluation[];
@@ -63,6 +70,7 @@ export interface V6ProjectionTable {
   /** Candidate bosses are alternatives, not sequential independent events. */
   target_mixtures: { option_id: string; kind: "current_gate" | "clearance"; value: Estimate | null; paired_delta: Delta | null;
     known_mass: number; known_value: number; labels: string[] }[];
+  pick_direction_comparisons: V6PickDirectionComparison[];
   targets: readonly V6ProjectionTarget[];
   telemetry: { elapsed_ms: number; cache_hits: number; cache_misses: number; simulations: number; timed_out: number;
     degradation: string[]; unknown_entries: number; total_entries: number; unknown_fraction: number; act_cache_hit: boolean };
@@ -101,6 +109,20 @@ function paired(a: ExpectedRaw, b: ExpectedRaw, f: "first" | "joint"): Delta | n
   } else if (a.formation || b.formation) return null;
   return { mean: e.value, se: Math.hypot(e.se, se), n: e.n };
 }
+/** Preserve both combat-seed and supply-world covariance across candidate targets. */
+function pairedMixture(rows: { weight: number; a: ExpectedRaw; b: ExpectedRaw }[]): Delta | null {
+  if (!rows.length) return null;
+  const ids = rows[0]!.a.ids, worlds = rows[0]!.a.formation?.length;
+  if (!worlds || rows.some(({ a, b }) => [a, b].some(v => v.ids.length !== ids.length
+    || v.ids.some((id, i) => id !== ids[i]) || v.joint.some(x => x === null) || v.formation?.length !== worlds))) return null;
+  const combat = estimate(ids.map((_, i) => rows.reduce((sum, r) => sum + r.weight * (r.a.joint[i]! - r.b.joint[i]!), 0)));
+  const effects = rows.flatMap(r => [{ weight: r.weight, raw: r.a }, { weight: -r.weight, raw: r.b }])
+    .map(r => ({ ...r, probability: r.raw.formation!.filter(Boolean).length / worlds }));
+  if (!combat || effects.some(r => r.probability > 0 && r.probability < 1 && r.raw.effect.joint === null)) return null;
+  const supply = estimate(Array.from({ length: worlds }, (_, i) => effects.reduce((sum, r) => sum
+    + r.weight * (Number(r.raw.formation![i]) - r.probability) * (r.raw.effect.joint ?? 0), 0)));
+  return supply ? { mean: combat.value, se: Math.hypot(combat.se, supply.se), n: combat.n } : null;
+}
 export function v6WinTier(value: number | null, config: V6Config): ProjectionEntry["win_tier"] {
   const t = config.win; return value === null ? "unknown" : value >= t.certain_win ? "certain_win" : value >= t.favored ? "favored"
     : value > t.even ? "even" : value > t.unfavored ? "unfavored" : "certain_loss";
@@ -137,7 +159,7 @@ export class V6ProjectionEngine {
   async evaluate(r: V6ProjectionRequest): Promise<V6ProjectionTable> {
     const started = this.now();
     const table: V6ProjectionTable = { schema: "v6-projection-table-v1", enabled: r.config.mode !== "off", phase: r.phase,
-      combinations: [], entries: [], act_evaluations: [], weighted: [], rankings: {}, target_mixtures: [], targets: r.targets,
+      combinations: [], entries: [], act_evaluations: [], weighted: [], rankings: {}, target_mixtures: [], pick_direction_comparisons: [], targets: r.targets,
       telemetry: { elapsed_ms: 0, cache_hits: 0, cache_misses: 0, simulations: 0, timed_out: 0, degradation: [], unknown_entries: 0,
         total_entries: 0, unknown_fraction: 0, act_cache_hit: false } };
     if (!table.enabled) return table;
@@ -345,6 +367,28 @@ export class V6ProjectionEngine {
         known_mass: known.reduce((sum, x) => sum + x.p!, 0), known_value: known.reduce((sum, x) => sum + x.p! * x.row![field]!.value, 0),
         labels: ["observed_candidate_frequency_mixture_not_product", "se_upper_bound_all_cross_target_correlations", "encounter_frequency_estimation_error_not_included",
           ...(!complete ? ["missing_target_mass_not_renormalized"] : [])] });
+    }
+    if (r.phase === "pick") {
+      const reference = weightsValid ? [...all].sort((a, b) => r.weights[b.id]! - r.weights[a.id]! || a.id.localeCompare(b.id))[0] : undefined;
+      const targets = r.targets.filter(t => t.kind === "chain");
+      const probabilities = targets.length > 0 && targets.every(t => t.probability !== null && t.probability >= 0 && t.probability <= 1)
+        && Math.abs(targets.reduce((sum, t) => sum + t.probability!, 0) - 1) < 1e-9;
+      for (const o of options) for (const d of all) {
+        const selected = targets.map(t => ({ target: t, a: best.get(key(o.id, d.id, t.id)),
+          b: reference ? best.get(key(o.id, reference.id, t.id)) : undefined }));
+        const deltas = selected.map(({ target, a, b }) => ({ target_id: target.id, combination_id: a?.combination_id ?? null,
+          reference_combination_id: b?.combination_id ?? null, joint_paired_delta: a && b ? paired(raw.get(a)!, raw.get(b)!, "joint") : null }));
+        const known = selected.filter((x, i) => x.target.probability !== null && x.target.probability > 0 && deltas[i]!.joint_paired_delta);
+        const complete = probabilities && selected.every((x, i) => x.target.probability === 0 || deltas[i]!.joint_paired_delta);
+        table.pick_direction_comparisons.push({ option_id: o.id, direction_id: d.id, reference_direction_id: reference?.id ?? null,
+          targets: deltas, joint_paired_delta: complete ? pairedMixture(known.map(x => ({ weight: x.target.probability!,
+            a: raw.get(x.a!)!, b: raw.get(x.b!)! }))) : null,
+          known_mass: known.reduce((sum, x) => sum + x.target.probability!, 0),
+          labels: ["direction_minus_highest_brain_probability_direction", "same_combat_seeds_and_supply_worlds",
+            "max_combination_selection_descriptive_not_unbiased", "encounter_frequency_estimation_error_not_included",
+            ...(!reference ? ["invalid_or_incomplete_brain_weights"] : []),
+            ...(!complete ? ["missing_target_mass_not_renormalized"] : [])] });
+      }
     }
     if (r.phase === "act") {
       for (const row of table.combinations.filter(x => x.entry.option_id === r.baseline.id)) {

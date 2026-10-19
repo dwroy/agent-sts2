@@ -4775,3 +4775,5 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
 - 2026-10-19 21:35:05 CST [Codex/V6-W1.2+W2.2联合集成] c71adb784基线，W8原3c9d711ac重放为5e3eed497与W1.2 a1743a354联合；build-core-v1每组合first/including_sl两份池化主口径，sources保留版本/进阶及raw计数，A10 simulation/regression/shrinkage并列、entry_hp可空且n=0不补数；运行时prerequisites/fits.when复用W1三值前提。最新基线tsc0+完整vitest579文件5556通过/2跳过，另40 Python通过、两份冻结metrics严格校验及452项对账，gitleaks联合提交/暂存无发现。仅原子FF main，不发布正式知识、不开局/不重建live/不移除STOP；模板禁止新增模拟池并要求生成器--simulation off。reflex R2仍85标签0数值、父要求开放不续派；详见paper/materials/2026-10-19-v6-w12/report.md与interfaces.md。
 
 - 2026-10-19 22:02:47 CST [Codex/V6-W3 history] 生产冻结历史包与开局只读加载器；372局/10932逐层摘要/604Boss首试/4174机会/1组合，缺失不补数；角色隔离、哈希/时间/边界/原子生成；tsc0+完整vitest580文件5561通过2跳过（首次既有监听测试失败原件保留，隔离7/7及完整复跑通过），gitleaks暂存0发现；W5接入接口见runtime补记，STOP保留不重建live。
+
+- 2026-10-19 22:03:01 CST [Codex/V6-W3 direction-pairs] pick选项×方向相对最高大脑概率方向追加连战配对差/SE，保留供给及战斗协方差、缺失质量不归一；同种子、字典序并列与off空字段固定回归；tsc0+完整vitest580文件5559通过2跳过，gitleaks暂存0发现；供W4 T2/T3接入，默认off、不开局。
