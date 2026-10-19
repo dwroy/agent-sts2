@@ -1,0 +1,64 @@
+{
+  "request_id": "roy-20261019-v6",
+  "package": "W1",
+  "base": "7c4b3927d479b5f2a524539f1445169f5b4c1644",
+  "baseline_commit": "78933a38d",
+  "tsc": {
+    "exit_code": 0,
+    "cwd": "agent/",
+    "command": "PATH=\"$HOME/.local/node/bin:$PATH\" nice -n 10 npx tsc -p tsconfig.json --noEmit"
+  },
+  "targeted": {
+    "exit_code": 0,
+    "files": 3,
+    "passed": 38
+  },
+  "full": {
+    "exit_code": 0,
+    "files": 560,
+    "passed": 5357,
+    "skipped": 2,
+    "seconds": 208.66,
+    "cwd": "agent/",
+    "command": "PATH=\"$HOME/.local/node/bin:$PATH\" nice -n 10 npx vitest run"
+  },
+  "code_and_fixture_sha256": {
+    "agent/src/eye/run-config.ts": "73775a0f89c906f0c80ec50c6e3e310f0a33bd7a1a5491934a1e12b1cdb0f81b",
+    "agent/src/v6/config.ts": "5f9e1ffeb486916bf91ea0699daa1496cef95742cfce939591f6e3393860584f",
+    "agent/src/v6/formats.ts": "9df6cda22784078d193d8a5c00e87d62a8c68ffbbb2d17eed4a79d4ea50ddeb7",
+    "agent/src/v6/knowledge.ts": "1c0330ddf85170b83b69c7a20b34d16a1da63cbcb6a1ccd1b032e43915e34f52",
+    "agent/src/v6/log.ts": "63ecba9d1ab3e5a297d9972e026824cfab57a6c5695284acd3461d0ae7aac63c",
+    "agent/src/v6/predicate.ts": "494bb6d605961c5202fd99cdc5da3df1387736a2145b815ba84aaee75e46099a",
+    "agent/src/v6/schema.ts": "279e059f7141780ab6079b06fff344ea7af1e4d5287d2a2f378cf30f879ddbe0",
+    "agent/tests/v6-fixtures.ts": "d9a00549ba4e9148c664cae3f6c9f016809e418c653f896963d41a200487d13d",
+    "agent/tests/v6-formats.test.ts": "f11c372ca8f9fc30e809a30570f75ed3621af5ea2d1cb95b13fe922a58a7bf56",
+    "agent/tests/v6-infrastructure.test.ts": "cbd9be5427d8a54ee2e4344e9f5b507958fded3a49428c5876bf0838f47f9ee8",
+    "agent/tests/v6-off-baseline.json": "02a29d0b413d800701c862af5dabc8d1b42461aabdaaec4d2db1488f2e953212",
+    "agent/tests/v6-off-equivalence.test.ts": "6979238c674c06fa301db70cd82ff13d6a916aba09660069491f4a056463ced2"
+  },
+  "baseline_generator_sha256": "01c7b0950de6cc0371788c86bca027ac7a82465ff17e7fc3590683c53f46bd16",
+  "off_comparison": {
+    "characters": [
+      "ironclad",
+      "silent",
+      "regent"
+    ],
+    "screens": [
+      "rest",
+      "reward",
+      "shop"
+    ],
+    "modes": [
+      "unset",
+      "explicit_off",
+      "off_with_all_subfeatures_requested"
+    ],
+    "checks": [
+      "JSON question and resolved action",
+      "run-config JSON including config_sha with fixed pid"
+    ],
+    "missing_knowledge_fixture": true,
+    "scope": "fixed architecture fixtures, not gameplay/knowledge equivalence proof on every possible board"
+  },
+  "behavior_release": false
+}

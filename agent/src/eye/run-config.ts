@@ -51,6 +51,7 @@ import { SILENT_DECK_CONSTRAINT, V5_DECK_POLICY } from "../memory/run-constraint
 import { constructionMode } from "../construction/adapter.js";
 import { constructionEvaluationEnabled } from "../construction/consumer.js";
 import { globalBuildPolicy } from "../core/global-build-config.js";
+import { v6Config, type V6Config } from "../v6/config.js";
 
 /** The repository this module runs from (core/paths.ts PROJECT_ROOT: the checkout's root). */
 export const REPO_ROOT = PROJECT_ROOT;
@@ -142,6 +143,7 @@ export interface RunConfigRow {
     };
   };
   human_pace?: { schema: string; budgets: typeof HUMAN_PACE_BUDGETS; model_effort: string; required_full_replaced: boolean };
+  v6?: V6Config;
   human_pace_h2?: { schema: string; mode: string; requested: string; delivered: false;
     direction_budget_ms: number; card_budget_ms: number; jev_budget_ms: number; actual_selector: string };
   knowledge: {
@@ -450,6 +452,7 @@ export function runConfigRow(
   now: Date,
 ): RunConfigRow {
   const { config, brain, env } = opts;
+  const v6 = v6Config(env);
   const engines: Partial<Record<EngineName, EngineSnapshot>> = {};
   const actualBrain = brain?.router.config ?? config.brain;
   const used = enginesInUse(actualBrain);
@@ -465,6 +468,7 @@ export function runConfigRow(
       }
     : null;
   const setup = {
+    ...(v6.mode !== "off" ? { v6 } : {}),
     brain: {
       active: brain !== null,
       engine: actualBrain.engine,

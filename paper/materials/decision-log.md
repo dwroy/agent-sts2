@@ -4727,3 +4727,5 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
 - 2026-10-19 16:31:31 CST [Claude/Roy，仅文档] Roy 要求另起学习任务 `v6-direction-experience`：把 Silent 现有经验围绕核心构筑方向继续总结抽取（草稿方向卡、经验归属、小脑记忆候选、药水证据、方向目录意见），产出存 scratch 与 knowledge/characters/silent/pending，不改正式知识；与 V6-W0/W1 并行，watcher 写任务模板并按此授权一次性用 learner/run.ts 派发，内容由学习者完成。见 docs/v6-plan.md 9.1。
 
 - 2026-10-19 16:35:10 — Roy/Claude roy-20261019-v6 9.1：新增 v6-direction-experience 学习任务模板，仅指定证据、逐条归属、未知/异议和 scratch/pending 草稿边界；dry-run 渲染已核对 gpt-6.1-sol/high、240 分钟，待以 codex1 在独立工作树一次性 herdr 派发。冻结 372 个已结束 Silent 局及日志字节切点；正式知识不改，不开局、不恢复 live/Regent。
+
+- 2026-10-19 16:44:05 CST [Codex/V6-W1] roy-20261019-v6：六类严格格式、predicate白名单/三值求值、默认off全部开关与数值阈值、run-config可选登记、v6-build懒日志骨架、严格按角色加载器完成；缺文件“无此知识”，没有其他角色回退或知识内容。旧W0基线锁住三角色固定题面/动作与config_sha，tsc通过、完整vitest560文件/5357通过/2原有跳过，专项38通过；安全扫描后合main，无行为发布。9.1模板7c4b3927d已合main，单次codex1专用learner home的原生线程01a1534e-9333-7791-b561-1140eef8390c已核gpt-6.1-sol/high、240分钟/nice10/网络关闭；372个冻结Silent局/423份输入，仅scratch/pending，仍运行、覆盖未验收，不合入。STOP/Regent暂停/live删除/校准原owner与03cb9f2保留；旧回收工具强制main+live，main-only complete将保留，不造live回执。材料paper/materials/2026-10-19-v6-w1/；停W1等Claude，学习结束后另核真实产物回报。
