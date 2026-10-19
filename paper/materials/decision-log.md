@@ -4877,3 +4877,5 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
 - 2026-10-20 06:57:31 CST [运维 codex/064302策略回报] 核严格干净原base无源码/测试null；原failed/rc0为未领取tick的no_change协议未接纳，两旧提案保持pending，retention守卫拒绝；补原协议队列，不补测/dataset/改科学规则/关父，STOP保持。原件：paper/materials/20261020-0656-ops/receipt.json。
 
 - 2026-10-20 06:58:51 CST [v6-w8/升级日志漏收] 修复 build-card-upgrades.py 只收费用/动态数值差异而漏掉文字升级的纯解析筛选 bug；六张从原日志重生成、12牌面偏移/SHA/局号回读，旧199条不变，最小追加 faces 并传入 v6-start；5119bf69c 已变基8037e126f后FF main。tsc0，Vitest597文件5715过2跳，Python5过，gitleaks最终提交扫描0；最后两次变基仅运维记录，agent/knowledge/learner树与受测源码一致。F8同样本 W0 330/660→660/660、Wk660/660；R2包方向5秒0/288、act60秒0/72仍全unknown，剩余预算/配对/成型问题交原watcher继续，不宣称恢复；未动live/STOP/故障、未开局/模型请求/派学习。材料 paper/materials/2026-10-20-v6-upgrade-log-coverage/report.md。
+
+- 2026-10-20 07:07:26 CST [运维 codex/A0固定源验收] 原bb3f宿主完整0/597文件5714过2跳，原WT提交b9d6；main新增W8八叶，固定f50a6联合唯一宿主641666/nice19检查中，未main/live集成或加release；旧失败与STOP保留，不关科学父项。原件：paper/materials/20261020-0705-ops/receipt.json。
