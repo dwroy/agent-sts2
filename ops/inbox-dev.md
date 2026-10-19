@@ -4130,3 +4130,5 @@ request_id=roy-20261017-human-pace-h0 revision=3 input_sha256=1e1c259a15f1824119
 - 2026-10-19T14:18:43+08:00 [watcher Codex / Roy即时指令] Roy要求先暂停游戏推进。已设置主仓与live的ops/STOP阻止续开；正按既有play-stop发送SIGTERM保留存档，终局以本轮回读为准。未经Roy明确恢复不得移除STOP或重新启动对局；Regent继续暂停。在途学习/宿主与原集成不因本指令自行停止。
 
 - 2026-10-19 14:19:02 CST [watcher Codex] Roy要求暂停游戏推进：主仓与live的ops/STOP已创建并回读；既有play-stop对经归属校验的PID1113899/1113910发送SIGTERM，控制器及本局brain子进程均已退出。原console日志logs/console/20261019-135719-9f4245511+dirty.log明确记录14:18:44 stopped: cancelled by stop signal、errors0；保留当前存档/日志，不报本局输赢或自然终局。未经Roy明确恢复不得移除STOP或续开；Regent继续暂停，原学习者/研究/集成沿原线，不在本次停机范围。
+
+- 2026-10-19 14:48:52 CST watcher：Roy 已停用 Silent 并授权清理；394注册树+595残留已删除，原live工作树不再存在。游戏STOP、调度PAUSE/停止、队列空、无运行学习批次。main fb8e643d6 已补最新观测；正式经验244条不变，原lost批次草稿含2条未发布经验在knowledge/characters/silent/pending/20261013-100759-experience-update/。恢复前读notes/ops-current.md及paper/materials/20261019-silent-shutdown/cleanup-receipt.json；Regent和nova-gateway未动。

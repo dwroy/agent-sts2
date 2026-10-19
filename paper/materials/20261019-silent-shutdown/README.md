@@ -14,6 +14,11 @@ Roy 授权：所有代码汇入 main，回收 Silent 的 tab、任务与工作�
 
 `cleanup-scope.json` 固定回收/保留范围。Roy 最新指令：确保经验已入库，其余残留可删除、无需留档。正式经验 244 条已核 main/live 一致；最新 live 统计复制到 main，原 lost 批次的经验草稿及提案保存在 knowledge/characters/silent/pending/20261013-100759-experience-update/，未改为正式经验。临时大归档删除，不保留过程副本；入向链接的必要小目标保留以免断链。
 
-停止的任务保持原退出码、原失败和原 owner；调度队列事件移到同一私有归档的 retired-events，原调度器保持 PAUSE、STOP 且 cron 已移除。学习父要求和未 ACK 通知保留，不能把取消执行当作完成。原 live 分支与发布号仍保留，工作树回收不代表发布回滚或新上线。
+停止的任务保持原退出码、原失败和原 owner；调度队列事件已取消清空，临时归档按 Roy 最新指令删除，原调度器保持 PAUSE、STOP 且 cron 已移除。学习父要求和未 ACK 通知保留，不能把取消执行当作完成。原 live 分支与发布号仍保留，工作树回收不代表发布回滚或新上线。
 
 原始进程/工作树盘点、密钥扫描结果与清理回执在本目录。source-gitleaks.json 的 8 个初始命中均为 evidence_key/source_evidence_key 的 SHA256 标识；精确放行这些标识后源码补丁复扫为零。本次不提交可删除的辅助脚本副本。
+
+
+## 实际完成
+
+2026-10-19 14:48:52 CST：394 个注册工作树、595 个残留目录已全部回收，无删除错误。全部原保留路径仍在，另有并行新增 nova-gateway 工作树保留。磁盘可用约 296.4 GiB，较本次开始净增约 165.0 GiB；过程临时大归档已删除。详见 cleanup-receipt.json 与 final-verification.json。知识数据提交 fb8e643d6；正式经验244条保持原文，原 lost 草稿保留 pending。当前仅本回报 watcher tab，其余 Silent 运维与学习 tab 已关闭，游戏和调度器保持停止。

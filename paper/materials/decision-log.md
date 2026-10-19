@@ -4717,3 +4717,5 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
 - 2026-10-19 14:19:02 CST [watcher Codex] Roy要求暂停游戏推进：主仓与live的ops/STOP已创建并回读；既有play-stop对经归属校验的PID1113899/1113910发送SIGTERM，控制器及本局brain子进程均已退出。原console日志logs/console/20261019-135719-9f4245511+dirty.log明确记录14:18:44 stopped: cancelled by stop signal、errors0；保留当前存档/日志，不报本局输赢或自然终局。未经Roy明确恢复不得移除STOP或续开；Regent继续暂停，原学习者/研究/集成沿原线，不在本次停机范围。
 
 - 2026-10-19 14:43:26 CST watcher codex：Roy 指令 Silent 停用、所有代码归 main 并回收 tab/任务/工作树；df21d3b4d 已包含两组批准源码，87137f0eb 保留历史源码差异。正式 Silent 经验244条 main/live一致，补齐最新live观测统计；原 exp lost 批次完整草稿与提案存角色 pending，含2条未正式发布条目，不冒充已验证或已上线。按最新指令删除其余残留、不额外留档；游戏保持 STOP/PAUSE，Regent及共享证据保留，不重跑full、不启动游戏。
+
+- 2026-10-19 14:48:52 CST watcher codex：Silent 回收完成，394 注册工作树+595 未注册残留全部删除、零错误；原66保留检出与并行新增nova-gateway未动，原分支保留。正式经验244条在main，最新live统计已由fb8e643d6同步，lost草稿另存角色pending（2条非正式条目），247来源/211生成索引哈希通过。过程临时大归档按Roy最新指令删除，磁盘可用约296.4 GiB、较本次开始净增约165.0 GiB。Silent运行/学习tab、任务与cron已清，当前仅回报watcher；STOP/PAUSE保留，停止等Claude。
