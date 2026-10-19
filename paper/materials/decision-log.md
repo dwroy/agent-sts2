@@ -4824,3 +4824,5 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
 - 2026-10-20 02:51:54 CST 运维 codex：Claude原通道新恢复门槛已登记：W5摘要体积与W3/B均实际live，Claude安排原会话真实请求烟测通过后才可解除STOP；原请求原位/字节SHA已核，STOP/fault/存档保留，仅登记不派发或恢复。原件paper/materials/20261020-0249-ops/receipt.json。
 
 - 2026-10-20 02:56:10 CST [运维 codex/024301 fix回报] 无新源码/提交；严格干净而tests=null/0例，保留原failed/rc0/mergednull与归属deferred；不补测/dataset/合入，不解STOP/关父。原件：paper/materials/20261020-0249-fix-ops/receipt.json。
+
+- 2026-10-20 03:35:16 CST [Codex学习者/静默库存提示子项] 原提案d04933cbd408d85b、bc357cb8bcee3b22；R3AJCGQGGMR4 A10 F45 T2/T5/T6，silent-0311/0312；源码6b11948fa07a79d4ce321f2f44adafacecc1ddd4已合live29ab96f1cdbe5e4f6d09ae78023be3acdd6ea047，固定撤接线2失败/恢复12过，沙箱tsc及限定范围通过（额外10份的HTTP/管道/IPC/EROFS及原封口fixture失败保留，宿主full待原调度）。仅纠正库存确定总血量/固定启动提示，注明rollout跨体上限未校准；不改候选排序/SL/药价，宽项继续waiting。原HTTP失败保留；release_id待ops锁内核号，不冒自然消费/收益或完整模型修复。
