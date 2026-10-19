@@ -110,7 +110,7 @@ export async function ensureDirectionPlan(env: DecisionEnv, brain: Pick<Brain, "
   if (JSON.stringify(m) !== before) logRunPlan(logFile, { run, v6_state: toJsonValue(m) });
   const log = new V6BuildLog(config, join(dirname(logFile), "v6-build.jsonl"));
   if (result.triggers.length) log.append({ schema: "v6-build-log-v1", ts: new Date().toISOString(), run_id: run,
-    character: str(raw["character_id"]).toLowerCase() as Character, question_id: `direction_${act}_${floor}`, kind: result.triggers.includes("act_start") ? "act" : "replan", mode: config.mode,
+    character: str(raw["character_id"]).toLowerCase() as Character, question_id: `direction_${act}_${floor}`, kind: result.triggers.includes("act_start") ? "act" : "replan", stage: "trigger", mode: config.mode,
     entries, jev_answer: null, fallback: null, elapsed_ms: 0, cache: { hits: 0, misses: 0 }, degradation: provided ? [] : ["projection_provider_unavailable"],
     unknown: { count: entries.filter(e => e.trust === "unknown").length, total: entries.length }, triggers: result.triggers, merged_triggers: result.merged, skipped_triggers: result.skipped });
   if (!result.ask || config.mode !== "on") return { result, payload: null, stored: false };
@@ -134,9 +134,19 @@ export async function ensureDirectionPlan(env: DecisionEnv, brain: Pick<Brain, "
   reserveReplan(m.scheduler, act, turnKey);
   logRunPlan(logFile, { run, v6_brain_calls: m.scheduler.calls, v6_turn: turnKey, v6_act: act, v6_state: toJsonValue(m) });
   const context = directionContext(payload)!;
-  const { json, meta } = await brain.askJson(payload, "run-plan", value => validateDirectionWeights(value, context).ok);
-  const parsed = validateDirectionWeights(json, context);
-  if (!parsed.ok) throw new Error(parsed.issues.join("; "));
+  const started = Date.now();
+  const recordBrain = (failed: boolean) => log.append({ schema: "v6-build-log-v1", ts: new Date().toISOString(), run_id: run,
+    character: str(raw["character_id"]).toLowerCase() as Character, question_id: `direction_${act}_${floor}`, kind: result.triggers.includes("act_start") ? "act" : "replan", stage: "brain", mode: config.mode,
+    entries: [], jev_answer: null, fallback: failed ? "brain_request_failed" : null, elapsed_ms: Date.now() - started,
+    cache: { hits: 0, misses: 0 }, degradation: [], unknown: { count: 0, total: 0 }, triggers: [], merged_triggers: [], skipped_triggers: [] });
+  const { parsed, meta } = await (async () => {
+    try {
+      const { json, meta } = await brain.askJson(payload, "run-plan", value => validateDirectionWeights(value, context).ok);
+      const parsed = validateDirectionWeights(json, context);
+      if (!parsed.ok) throw new Error(parsed.issues.join("; "));
+      recordBrain(false); return { parsed, meta };
+    } catch (error) { recordBrain(true); throw error; }
+  })();
   const answer = parsed.value;
   screenMemory.runPlan = { runId: run, act, floor, hpPct: hpFraction(state), trigger: result.triggers.includes("act_start") ? "act" : "review",
     archetype: Object.keys(answer.direction_weights).sort((a, b) => answer.direction_weights[b]! - answer.direction_weights[a]!)[0]!, want: [], avoid: [], remove: [], blockTarget: null,

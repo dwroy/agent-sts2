@@ -9,6 +9,7 @@ import type { V6Config } from "./config.js";
 export const v6LogSchema = object({
   schema: literal("v6-build-log-v1"), ts: text(40), run_id: id, character: characterSchema, question_id: id,
   kind: enumeration("act", "replan", "card_pick", "potion", "shop", "rest", "combat_line"), mode: enumeration("shadow", "on"),
+  stage: optional(enumeration("projection", "trigger", "decision", "brain")),
   entries: array(projectionEntrySchema),
   jev_answer: nullable(object({ choice: id, confidence: nullable(number(0, 1)), probabilities: optional(record(number(0, 1))) })),
   fallback: nullable(text(300)), elapsed_ms: number(0), cache: object({ hits: number(0, 1e9, true), misses: number(0, 1e9, true) }),

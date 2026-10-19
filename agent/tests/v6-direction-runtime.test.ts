@@ -30,6 +30,9 @@ it("asks once per room, publishes validated weights, restores plan and count acr
   e.screenMemory.v6Planner = undefined; e.screenMemory.runPlan = undefined;
   await ensureDirectionPlan(e, brain, log, dir);
   expect(e.screenMemory.v6Planner?.scheduler.calls).toBe(1); expect(askJson).toHaveBeenCalledTimes(1);
+  const measured = readFileSync(join(dir, "v6-build.jsonl"), "utf8").trim().split("\n").map(line => JSON.parse(line));
+  expect(measured.filter(r => r.stage === "brain")).toEqual([expect.objectContaining({ kind: "act", fallback: null, entries: [], triggers: [], elapsed_ms: expect.any(Number) })]);
+  expect(measured.filter(r => r.stage === "trigger" && r.kind === "act")).toHaveLength(1);
   expect(readFileSync(log, "utf8")).toContain('"v6_brain_calls":1');
 });
 it("makes no request or output while off, and shadow does not install a new plan", async () => {
@@ -45,6 +48,8 @@ it("rejects an invalid answer without replacing the plan or retrying the frozen 
   await expect(ensureDirectionPlan(e, brain, log, dir)).rejects.toThrow("complete character catalog");
   expect(e.screenMemory.runPlan?.v6).toBeUndefined();
   await ensureDirectionPlan(e, brain, log, dir); expect(brain.askJson).toHaveBeenCalledTimes(1);
+  const measured = readFileSync(join(dir, "v6-build.jsonl"), "utf8").trim().split("\n").map(line => JSON.parse(line));
+  expect(measured.filter(r => r.stage === "brain")).toEqual([expect.objectContaining({ fallback: "brain_request_failed", elapsed_ms: expect.any(Number) })]);
 });
 it("feeds actual potion fallback streaks into T6 without relying on unknown projection rows", async () => {
   vi.stubEnv("V6_BUILD", "on"); const { dir, log, e } = fixture();

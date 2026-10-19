@@ -1,0 +1,2491 @@
+{
+  "schema": "v6-health-v1",
+  "thresholds": {
+    "min_questions": 5,
+    "fallback_rate": 0.2,
+    "unknown_rate": 0.5,
+    "overrun_ms": 1000
+  },
+  "runs": [
+    {
+      "run_id": "fixed-0",
+      "v6": true,
+      "modes": [
+        "on"
+      ],
+      "config_restarts": 0,
+      "character": "silent",
+      "ascension": 10,
+      "start_epoch": 1790812800.0,
+      "observed_window_s": 90.0,
+      "completion": "terminal_observed",
+      "kinds": {
+        "act": {
+          "rows": 0,
+          "projection_ms": {
+            "n": 0,
+            "p50_ms": null,
+            "p90_ms": null,
+            "max_ms": null
+          },
+          "brain_ms": {
+            "n": 0,
+            "p50_ms": null,
+            "p90_ms": null,
+            "max_ms": null
+          },
+          "jev_ms": {
+            "n": 0,
+            "p50_ms": null,
+            "p90_ms": null,
+            "max_ms": null
+          },
+          "logged_jev_questions": 0,
+          "fallbacks": 0,
+          "fallback_rate": null
+        },
+        "replan": {
+          "rows": 0,
+          "projection_ms": {
+            "n": 0,
+            "p50_ms": null,
+            "p90_ms": null,
+            "max_ms": null
+          },
+          "brain_ms": {
+            "n": 0,
+            "p50_ms": null,
+            "p90_ms": null,
+            "max_ms": null
+          },
+          "jev_ms": {
+            "n": 0,
+            "p50_ms": null,
+            "p90_ms": null,
+            "max_ms": null
+          },
+          "logged_jev_questions": 0,
+          "fallbacks": 0,
+          "fallback_rate": null
+        },
+        "card_pick": {
+          "rows": 1,
+          "projection_ms": {
+            "n": 0,
+            "p50_ms": null,
+            "p90_ms": null,
+            "max_ms": null
+          },
+          "brain_ms": {
+            "n": 0,
+            "p50_ms": null,
+            "p90_ms": null,
+            "max_ms": null
+          },
+          "jev_ms": {
+            "n": 1,
+            "p50_ms": 1000.0,
+            "p90_ms": 1000.0,
+            "max_ms": 1000
+          },
+          "logged_jev_questions": 1,
+          "fallbacks": 1,
+          "fallback_rate": 1.0
+        },
+        "potion": {
+          "rows": 0,
+          "projection_ms": {
+            "n": 0,
+            "p50_ms": null,
+            "p90_ms": null,
+            "max_ms": null
+          },
+          "brain_ms": {
+            "n": 0,
+            "p50_ms": null,
+            "p90_ms": null,
+            "max_ms": null
+          },
+          "jev_ms": {
+            "n": 0,
+            "p50_ms": null,
+            "p90_ms": null,
+            "max_ms": null
+          },
+          "logged_jev_questions": 0,
+          "fallbacks": 0,
+          "fallback_rate": null
+        },
+        "shop": {
+          "rows": 0,
+          "projection_ms": {
+            "n": 0,
+            "p50_ms": null,
+            "p90_ms": null,
+            "max_ms": null
+          },
+          "brain_ms": {
+            "n": 0,
+            "p50_ms": null,
+            "p90_ms": null,
+            "max_ms": null
+          },
+          "jev_ms": {
+            "n": 0,
+            "p50_ms": null,
+            "p90_ms": null,
+            "max_ms": null
+          },
+          "logged_jev_questions": 0,
+          "fallbacks": 0,
+          "fallback_rate": null
+        },
+        "rest": {
+          "rows": 0,
+          "projection_ms": {
+            "n": 0,
+            "p50_ms": null,
+            "p90_ms": null,
+            "max_ms": null
+          },
+          "brain_ms": {
+            "n": 0,
+            "p50_ms": null,
+            "p90_ms": null,
+            "max_ms": null
+          },
+          "jev_ms": {
+            "n": 0,
+            "p50_ms": null,
+            "p90_ms": null,
+            "max_ms": null
+          },
+          "logged_jev_questions": 0,
+          "fallbacks": 0,
+          "fallback_rate": null
+        },
+        "combat_line": {
+          "rows": 0,
+          "projection_ms": {
+            "n": 0,
+            "p50_ms": null,
+            "p90_ms": null,
+            "max_ms": null
+          },
+          "brain_ms": {
+            "n": 0,
+            "p50_ms": null,
+            "p90_ms": null,
+            "max_ms": null
+          },
+          "jev_ms": {
+            "n": 0,
+            "p50_ms": null,
+            "p90_ms": null,
+            "max_ms": null
+          },
+          "logged_jev_questions": 0,
+          "fallbacks": 0,
+          "fallback_rate": null
+        }
+      },
+      "unknown": {
+        "count": 1,
+        "total": 2,
+        "fraction": 0.5,
+        "measured_rows": 1
+      },
+      "degradation": {
+        "events": 0,
+        "reasons": {}
+      },
+      "triggers": {
+        "act_start": 0,
+        "T1": 0,
+        "T2": 0,
+        "T3": 0,
+        "T4": 0,
+        "T5": 0,
+        "T6": 0,
+        "T7": 0
+      },
+      "merged_triggers": {},
+      "skipped_triggers": {},
+      "brain": {
+        "v6_reserved_max": null,
+        "logged_questions": null,
+        "decision_observations_lower_bound": 0
+      },
+      "errors": {
+        "fixed_timeout": 1
+      },
+      "decision_rows": 1,
+      "advice": [
+        {
+          "reason": "projection_coverage_unknown",
+          "action": "verify own-character knowledge/hash/trust/route inputs; do not infer decision quality",
+          "severity": "coverage"
+        }
+      ],
+      "baseline": {
+        "selected_pre_v6_n": 0,
+        "median_observed_window_s": null,
+        "ratio": null
+      }
+    },
+    {
+      "run_id": "fixed-1",
+      "v6": true,
+      "modes": [
+        "on"
+      ],
+      "config_restarts": 0,
+      "character": "silent",
+      "ascension": 10,
+      "start_epoch": 1790812900.0,
+      "observed_window_s": 90.0,
+      "completion": "terminal_observed",
+      "kinds": {
+        "act": {
+          "rows": 0,
+          "projection_ms": {
+            "n": 0,
+            "p50_ms": null,
+            "p90_ms": null,
+            "max_ms": null
+          },
+          "brain_ms": {
+            "n": 0,
+            "p50_ms": null,
+            "p90_ms": null,
+            "max_ms": null
+          },
+          "jev_ms": {
+            "n": 0,
+            "p50_ms": null,
+            "p90_ms": null,
+            "max_ms": null
+          },
+          "logged_jev_questions": 0,
+          "fallbacks": 0,
+          "fallback_rate": null
+        },
+        "replan": {
+          "rows": 0,
+          "projection_ms": {
+            "n": 0,
+            "p50_ms": null,
+            "p90_ms": null,
+            "max_ms": null
+          },
+          "brain_ms": {
+            "n": 0,
+            "p50_ms": null,
+            "p90_ms": null,
+            "max_ms": null
+          },
+          "jev_ms": {
+            "n": 0,
+            "p50_ms": null,
+            "p90_ms": null,
+            "max_ms": null
+          },
+          "logged_jev_questions": 0,
+          "fallbacks": 0,
+          "fallback_rate": null
+        },
+        "card_pick": {
+          "rows": 1,
+          "projection_ms": {
+            "n": 0,
+            "p50_ms": null,
+            "p90_ms": null,
+            "max_ms": null
+          },
+          "brain_ms": {
+            "n": 0,
+            "p50_ms": null,
+            "p90_ms": null,
+            "max_ms": null
+          },
+          "jev_ms": {
+            "n": 1,
+            "p50_ms": 1100.0,
+            "p90_ms": 1100.0,
+            "max_ms": 1100
+          },
+          "logged_jev_questions": 1,
+          "fallbacks": 0,
+          "fallback_rate": 0.0
+        },
+        "potion": {
+          "rows": 0,
+          "projection_ms": {
+            "n": 0,
+            "p50_ms": null,
+            "p90_ms": null,
+            "max_ms": null
+          },
+          "brain_ms": {
+            "n": 0,
+            "p50_ms": null,
+            "p90_ms": null,
+            "max_ms": null
+          },
+          "jev_ms": {
+            "n": 0,
+            "p50_ms": null,
+            "p90_ms": null,
+            "max_ms": null
+          },
+          "logged_jev_questions": 0,
+          "fallbacks": 0,
+          "fallback_rate": null
+        },
+        "shop": {
+          "rows": 0,
+          "projection_ms": {
+            "n": 0,
+            "p50_ms": null,
+            "p90_ms": null,
+            "max_ms": null
+          },
+          "brain_ms": {
+            "n": 0,
+            "p50_ms": null,
+            "p90_ms": null,
+            "max_ms": null
+          },
+          "jev_ms": {
+            "n": 0,
+            "p50_ms": null,
+            "p90_ms": null,
+            "max_ms": null
+          },
+          "logged_jev_questions": 0,
+          "fallbacks": 0,
+          "fallback_rate": null
+        },
+        "rest": {
+          "rows": 0,
+          "projection_ms": {
+            "n": 0,
+            "p50_ms": null,
+            "p90_ms": null,
+            "max_ms": null
+          },
+          "brain_ms": {
+            "n": 0,
+            "p50_ms": null,
+            "p90_ms": null,
+            "max_ms": null
+          },
+          "jev_ms": {
+            "n": 0,
+            "p50_ms": null,
+            "p90_ms": null,
+            "max_ms": null
+          },
+          "logged_jev_questions": 0,
+          "fallbacks": 0,
+          "fallback_rate": null
+        },
+        "combat_line": {
+          "rows": 0,
+          "projection_ms": {
+            "n": 0,
+            "p50_ms": null,
+            "p90_ms": null,
+            "max_ms": null
+          },
+          "brain_ms": {
+            "n": 0,
+            "p50_ms": null,
+            "p90_ms": null,
+            "max_ms": null
+          },
+          "jev_ms": {
+            "n": 0,
+            "p50_ms": null,
+            "p90_ms": null,
+            "max_ms": null
+          },
+          "logged_jev_questions": 0,
+          "fallbacks": 0,
+          "fallback_rate": null
+        }
+      },
+      "unknown": {
+        "count": 1,
+        "total": 2,
+        "fraction": 0.5,
+        "measured_rows": 1
+      },
+      "degradation": {
+        "events": 0,
+        "reasons": {}
+      },
+      "triggers": {
+        "act_start": 0,
+        "T1": 0,
+        "T2": 0,
+        "T3": 0,
+        "T4": 0,
+        "T5": 0,
+        "T6": 0,
+        "T7": 0
+      },
+      "merged_triggers": {},
+      "skipped_triggers": {},
+      "brain": {
+        "v6_reserved_max": null,
+        "logged_questions": null,
+        "decision_observations_lower_bound": 0
+      },
+      "errors": {},
+      "decision_rows": 1,
+      "advice": [
+        {
+          "reason": "projection_coverage_unknown",
+          "action": "verify own-character knowledge/hash/trust/route inputs; do not infer decision quality",
+          "severity": "coverage"
+        }
+      ],
+      "baseline": {
+        "selected_pre_v6_n": 0,
+        "median_observed_window_s": null,
+        "ratio": null
+      }
+    },
+    {
+      "run_id": "fixed-2",
+      "v6": true,
+      "modes": [
+        "on"
+      ],
+      "config_restarts": 0,
+      "character": "silent",
+      "ascension": 10,
+      "start_epoch": 1790813000.0,
+      "observed_window_s": 90.0,
+      "completion": "terminal_observed",
+      "kinds": {
+        "act": {
+          "rows": 0,
+          "projection_ms": {
+            "n": 0,
+            "p50_ms": null,
+            "p90_ms": null,
+            "max_ms": null
+          },
+          "brain_ms": {
+            "n": 0,
+            "p50_ms": null,
+            "p90_ms": null,
+            "max_ms": null
+          },
+          "jev_ms": {
+            "n": 0,
+            "p50_ms": null,
+            "p90_ms": null,
+            "max_ms": null
+          },
+          "logged_jev_questions": 0,
+          "fallbacks": 0,
+          "fallback_rate": null
+        },
+        "replan": {
+          "rows": 0,
+          "projection_ms": {
+            "n": 0,
+            "p50_ms": null,
+            "p90_ms": null,
+            "max_ms": null
+          },
+          "brain_ms": {
+            "n": 0,
+            "p50_ms": null,
+            "p90_ms": null,
+            "max_ms": null
+          },
+          "jev_ms": {
+            "n": 0,
+            "p50_ms": null,
+            "p90_ms": null,
+            "max_ms": null
+          },
+          "logged_jev_questions": 0,
+          "fallbacks": 0,
+          "fallback_rate": null
+        },
+        "card_pick": {
+          "rows": 1,
+          "projection_ms": {
+            "n": 0,
+            "p50_ms": null,
+            "p90_ms": null,
+            "max_ms": null
+          },
+          "brain_ms": {
+            "n": 0,
+            "p50_ms": null,
+            "p90_ms": null,
+            "max_ms": null
+          },
+          "jev_ms": {
+            "n": 1,
+            "p50_ms": 1200.0,
+            "p90_ms": 1200.0,
+            "max_ms": 1200
+          },
+          "logged_jev_questions": 1,
+          "fallbacks": 0,
+          "fallback_rate": 0.0
+        },
+        "potion": {
+          "rows": 0,
+          "projection_ms": {
+            "n": 0,
+            "p50_ms": null,
+            "p90_ms": null,
+            "max_ms": null
+          },
+          "brain_ms": {
+            "n": 0,
+            "p50_ms": null,
+            "p90_ms": null,
+            "max_ms": null
+          },
+          "jev_ms": {
+            "n": 0,
+            "p50_ms": null,
+            "p90_ms": null,
+            "max_ms": null
+          },
+          "logged_jev_questions": 0,
+          "fallbacks": 0,
+          "fallback_rate": null
+        },
+        "shop": {
+          "rows": 0,
+          "projection_ms": {
+            "n": 0,
+            "p50_ms": null,
+            "p90_ms": null,
+            "max_ms": null
+          },
+          "brain_ms": {
+            "n": 0,
+            "p50_ms": null,
+            "p90_ms": null,
+            "max_ms": null
+          },
+          "jev_ms": {
+            "n": 0,
+            "p50_ms": null,
+            "p90_ms": null,
+            "max_ms": null
+          },
+          "logged_jev_questions": 0,
+          "fallbacks": 0,
+          "fallback_rate": null
+        },
+        "rest": {
+          "rows": 0,
+          "projection_ms": {
+            "n": 0,
+            "p50_ms": null,
+            "p90_ms": null,
+            "max_ms": null
+          },
+          "brain_ms": {
+            "n": 0,
+            "p50_ms": null,
+            "p90_ms": null,
+            "max_ms": null
+          },
+          "jev_ms": {
+            "n": 0,
+            "p50_ms": null,
+            "p90_ms": null,
+            "max_ms": null
+          },
+          "logged_jev_questions": 0,
+          "fallbacks": 0,
+          "fallback_rate": null
+        },
+        "combat_line": {
+          "rows": 0,
+          "projection_ms": {
+            "n": 0,
+            "p50_ms": null,
+            "p90_ms": null,
+            "max_ms": null
+          },
+          "brain_ms": {
+            "n": 0,
+            "p50_ms": null,
+            "p90_ms": null,
+            "max_ms": null
+          },
+          "jev_ms": {
+            "n": 0,
+            "p50_ms": null,
+            "p90_ms": null,
+            "max_ms": null
+          },
+          "logged_jev_questions": 0,
+          "fallbacks": 0,
+          "fallback_rate": null
+        }
+      },
+      "unknown": {
+        "count": 1,
+        "total": 2,
+        "fraction": 0.5,
+        "measured_rows": 1
+      },
+      "degradation": {
+        "events": 0,
+        "reasons": {}
+      },
+      "triggers": {
+        "act_start": 0,
+        "T1": 0,
+        "T2": 0,
+        "T3": 0,
+        "T4": 0,
+        "T5": 0,
+        "T6": 0,
+        "T7": 0
+      },
+      "merged_triggers": {},
+      "skipped_triggers": {},
+      "brain": {
+        "v6_reserved_max": null,
+        "logged_questions": null,
+        "decision_observations_lower_bound": 0
+      },
+      "errors": {},
+      "decision_rows": 1,
+      "advice": [
+        {
+          "reason": "projection_coverage_unknown",
+          "action": "verify own-character knowledge/hash/trust/route inputs; do not infer decision quality",
+          "severity": "coverage"
+        }
+      ],
+      "baseline": {
+        "selected_pre_v6_n": 0,
+        "median_observed_window_s": null,
+        "ratio": null
+      }
+    },
+    {
+      "run_id": "fixed-3",
+      "v6": true,
+      "modes": [
+        "on"
+      ],
+      "config_restarts": 0,
+      "character": "silent",
+      "ascension": 10,
+      "start_epoch": 1790813100.0,
+      "observed_window_s": 90.0,
+      "completion": "terminal_observed",
+      "kinds": {
+        "act": {
+          "rows": 0,
+          "projection_ms": {
+            "n": 0,
+            "p50_ms": null,
+            "p90_ms": null,
+            "max_ms": null
+          },
+          "brain_ms": {
+            "n": 0,
+            "p50_ms": null,
+            "p90_ms": null,
+            "max_ms": null
+          },
+          "jev_ms": {
+            "n": 0,
+            "p50_ms": null,
+            "p90_ms": null,
+            "max_ms": null
+          },
+          "logged_jev_questions": 0,
+          "fallbacks": 0,
+          "fallback_rate": null
+        },
+        "replan": {
+          "rows": 0,
+          "projection_ms": {
+            "n": 0,
+            "p50_ms": null,
+            "p90_ms": null,
+            "max_ms": null
+          },
+          "brain_ms": {
+            "n": 0,
+            "p50_ms": null,
+            "p90_ms": null,
+            "max_ms": null
+          },
+          "jev_ms": {
+            "n": 0,
+            "p50_ms": null,
+            "p90_ms": null,
+            "max_ms": null
+          },
+          "logged_jev_questions": 0,
+          "fallbacks": 0,
+          "fallback_rate": null
+        },
+        "card_pick": {
+          "rows": 1,
+          "projection_ms": {
+            "n": 0,
+            "p50_ms": null,
+            "p90_ms": null,
+            "max_ms": null
+          },
+          "brain_ms": {
+            "n": 0,
+            "p50_ms": null,
+            "p90_ms": null,
+            "max_ms": null
+          },
+          "jev_ms": {
+            "n": 1,
+            "p50_ms": 1300.0,
+            "p90_ms": 1300.0,
+            "max_ms": 1300
+          },
+          "logged_jev_questions": 1,
+          "fallbacks": 0,
+          "fallback_rate": 0.0
+        },
+        "potion": {
+          "rows": 0,
+          "projection_ms": {
+            "n": 0,
+            "p50_ms": null,
+            "p90_ms": null,
+            "max_ms": null
+          },
+          "brain_ms": {
+            "n": 0,
+            "p50_ms": null,
+            "p90_ms": null,
+            "max_ms": null
+          },
+          "jev_ms": {
+            "n": 0,
+            "p50_ms": null,
+            "p90_ms": null,
+            "max_ms": null
+          },
+          "logged_jev_questions": 0,
+          "fallbacks": 0,
+          "fallback_rate": null
+        },
+        "shop": {
+          "rows": 0,
+          "projection_ms": {
+            "n": 0,
+            "p50_ms": null,
+            "p90_ms": null,
+            "max_ms": null
+          },
+          "brain_ms": {
+            "n": 0,
+            "p50_ms": null,
+            "p90_ms": null,
+            "max_ms": null
+          },
+          "jev_ms": {
+            "n": 0,
+            "p50_ms": null,
+            "p90_ms": null,
+            "max_ms": null
+          },
+          "logged_jev_questions": 0,
+          "fallbacks": 0,
+          "fallback_rate": null
+        },
+        "rest": {
+          "rows": 0,
+          "projection_ms": {
+            "n": 0,
+            "p50_ms": null,
+            "p90_ms": null,
+            "max_ms": null
+          },
+          "brain_ms": {
+            "n": 0,
+            "p50_ms": null,
+            "p90_ms": null,
+            "max_ms": null
+          },
+          "jev_ms": {
+            "n": 0,
+            "p50_ms": null,
+            "p90_ms": null,
+            "max_ms": null
+          },
+          "logged_jev_questions": 0,
+          "fallbacks": 0,
+          "fallback_rate": null
+        },
+        "combat_line": {
+          "rows": 0,
+          "projection_ms": {
+            "n": 0,
+            "p50_ms": null,
+            "p90_ms": null,
+            "max_ms": null
+          },
+          "brain_ms": {
+            "n": 0,
+            "p50_ms": null,
+            "p90_ms": null,
+            "max_ms": null
+          },
+          "jev_ms": {
+            "n": 0,
+            "p50_ms": null,
+            "p90_ms": null,
+            "max_ms": null
+          },
+          "logged_jev_questions": 0,
+          "fallbacks": 0,
+          "fallback_rate": null
+        }
+      },
+      "unknown": {
+        "count": 1,
+        "total": 2,
+        "fraction": 0.5,
+        "measured_rows": 1
+      },
+      "degradation": {
+        "events": 0,
+        "reasons": {}
+      },
+      "triggers": {
+        "act_start": 0,
+        "T1": 0,
+        "T2": 0,
+        "T3": 0,
+        "T4": 0,
+        "T5": 0,
+        "T6": 0,
+        "T7": 0
+      },
+      "merged_triggers": {},
+      "skipped_triggers": {},
+      "brain": {
+        "v6_reserved_max": null,
+        "logged_questions": null,
+        "decision_observations_lower_bound": 0
+      },
+      "errors": {},
+      "decision_rows": 1,
+      "advice": [
+        {
+          "reason": "projection_coverage_unknown",
+          "action": "verify own-character knowledge/hash/trust/route inputs; do not infer decision quality",
+          "severity": "coverage"
+        }
+      ],
+      "baseline": {
+        "selected_pre_v6_n": 0,
+        "median_observed_window_s": null,
+        "ratio": null
+      }
+    },
+    {
+      "run_id": "fixed-4",
+      "v6": true,
+      "modes": [
+        "on"
+      ],
+      "config_restarts": 0,
+      "character": "silent",
+      "ascension": 10,
+      "start_epoch": 1790813200.0,
+      "observed_window_s": 90.0,
+      "completion": "terminal_observed",
+      "kinds": {
+        "act": {
+          "rows": 0,
+          "projection_ms": {
+            "n": 0,
+            "p50_ms": null,
+            "p90_ms": null,
+            "max_ms": null
+          },
+          "brain_ms": {
+            "n": 0,
+            "p50_ms": null,
+            "p90_ms": null,
+            "max_ms": null
+          },
+          "jev_ms": {
+            "n": 0,
+            "p50_ms": null,
+            "p90_ms": null,
+            "max_ms": null
+          },
+          "logged_jev_questions": 0,
+          "fallbacks": 0,
+          "fallback_rate": null
+        },
+        "replan": {
+          "rows": 0,
+          "projection_ms": {
+            "n": 0,
+            "p50_ms": null,
+            "p90_ms": null,
+            "max_ms": null
+          },
+          "brain_ms": {
+            "n": 0,
+            "p50_ms": null,
+            "p90_ms": null,
+            "max_ms": null
+          },
+          "jev_ms": {
+            "n": 0,
+            "p50_ms": null,
+            "p90_ms": null,
+            "max_ms": null
+          },
+          "logged_jev_questions": 0,
+          "fallbacks": 0,
+          "fallback_rate": null
+        },
+        "card_pick": {
+          "rows": 1,
+          "projection_ms": {
+            "n": 0,
+            "p50_ms": null,
+            "p90_ms": null,
+            "max_ms": null
+          },
+          "brain_ms": {
+            "n": 0,
+            "p50_ms": null,
+            "p90_ms": null,
+            "max_ms": null
+          },
+          "jev_ms": {
+            "n": 1,
+            "p50_ms": 1400.0,
+            "p90_ms": 1400.0,
+            "max_ms": 1400
+          },
+          "logged_jev_questions": 1,
+          "fallbacks": 1,
+          "fallback_rate": 1.0
+        },
+        "potion": {
+          "rows": 0,
+          "projection_ms": {
+            "n": 0,
+            "p50_ms": null,
+            "p90_ms": null,
+            "max_ms": null
+          },
+          "brain_ms": {
+            "n": 0,
+            "p50_ms": null,
+            "p90_ms": null,
+            "max_ms": null
+          },
+          "jev_ms": {
+            "n": 0,
+            "p50_ms": null,
+            "p90_ms": null,
+            "max_ms": null
+          },
+          "logged_jev_questions": 0,
+          "fallbacks": 0,
+          "fallback_rate": null
+        },
+        "shop": {
+          "rows": 0,
+          "projection_ms": {
+            "n": 0,
+            "p50_ms": null,
+            "p90_ms": null,
+            "max_ms": null
+          },
+          "brain_ms": {
+            "n": 0,
+            "p50_ms": null,
+            "p90_ms": null,
+            "max_ms": null
+          },
+          "jev_ms": {
+            "n": 0,
+            "p50_ms": null,
+            "p90_ms": null,
+            "max_ms": null
+          },
+          "logged_jev_questions": 0,
+          "fallbacks": 0,
+          "fallback_rate": null
+        },
+        "rest": {
+          "rows": 0,
+          "projection_ms": {
+            "n": 0,
+            "p50_ms": null,
+            "p90_ms": null,
+            "max_ms": null
+          },
+          "brain_ms": {
+            "n": 0,
+            "p50_ms": null,
+            "p90_ms": null,
+            "max_ms": null
+          },
+          "jev_ms": {
+            "n": 0,
+            "p50_ms": null,
+            "p90_ms": null,
+            "max_ms": null
+          },
+          "logged_jev_questions": 0,
+          "fallbacks": 0,
+          "fallback_rate": null
+        },
+        "combat_line": {
+          "rows": 0,
+          "projection_ms": {
+            "n": 0,
+            "p50_ms": null,
+            "p90_ms": null,
+            "max_ms": null
+          },
+          "brain_ms": {
+            "n": 0,
+            "p50_ms": null,
+            "p90_ms": null,
+            "max_ms": null
+          },
+          "jev_ms": {
+            "n": 0,
+            "p50_ms": null,
+            "p90_ms": null,
+            "max_ms": null
+          },
+          "logged_jev_questions": 0,
+          "fallbacks": 0,
+          "fallback_rate": null
+        }
+      },
+      "unknown": {
+        "count": 1,
+        "total": 2,
+        "fraction": 0.5,
+        "measured_rows": 1
+      },
+      "degradation": {
+        "events": 0,
+        "reasons": {}
+      },
+      "triggers": {
+        "act_start": 0,
+        "T1": 0,
+        "T2": 0,
+        "T3": 0,
+        "T4": 0,
+        "T5": 0,
+        "T6": 0,
+        "T7": 0
+      },
+      "merged_triggers": {},
+      "skipped_triggers": {},
+      "brain": {
+        "v6_reserved_max": null,
+        "logged_questions": null,
+        "decision_observations_lower_bound": 0
+      },
+      "errors": {
+        "fixed_timeout": 1
+      },
+      "decision_rows": 1,
+      "advice": [
+        {
+          "reason": "projection_coverage_unknown",
+          "action": "verify own-character knowledge/hash/trust/route inputs; do not infer decision quality",
+          "severity": "coverage"
+        }
+      ],
+      "baseline": {
+        "selected_pre_v6_n": 0,
+        "median_observed_window_s": null,
+        "ratio": null
+      }
+    },
+    {
+      "run_id": "fixed-5",
+      "v6": true,
+      "modes": [
+        "on"
+      ],
+      "config_restarts": 0,
+      "character": "silent",
+      "ascension": 10,
+      "start_epoch": 1790813300.0,
+      "observed_window_s": 90.0,
+      "completion": "terminal_observed",
+      "kinds": {
+        "act": {
+          "rows": 0,
+          "projection_ms": {
+            "n": 0,
+            "p50_ms": null,
+            "p90_ms": null,
+            "max_ms": null
+          },
+          "brain_ms": {
+            "n": 0,
+            "p50_ms": null,
+            "p90_ms": null,
+            "max_ms": null
+          },
+          "jev_ms": {
+            "n": 0,
+            "p50_ms": null,
+            "p90_ms": null,
+            "max_ms": null
+          },
+          "logged_jev_questions": 0,
+          "fallbacks": 0,
+          "fallback_rate": null
+        },
+        "replan": {
+          "rows": 0,
+          "projection_ms": {
+            "n": 0,
+            "p50_ms": null,
+            "p90_ms": null,
+            "max_ms": null
+          },
+          "brain_ms": {
+            "n": 0,
+            "p50_ms": null,
+            "p90_ms": null,
+            "max_ms": null
+          },
+          "jev_ms": {
+            "n": 0,
+            "p50_ms": null,
+            "p90_ms": null,
+            "max_ms": null
+          },
+          "logged_jev_questions": 0,
+          "fallbacks": 0,
+          "fallback_rate": null
+        },
+        "card_pick": {
+          "rows": 1,
+          "projection_ms": {
+            "n": 0,
+            "p50_ms": null,
+            "p90_ms": null,
+            "max_ms": null
+          },
+          "brain_ms": {
+            "n": 0,
+            "p50_ms": null,
+            "p90_ms": null,
+            "max_ms": null
+          },
+          "jev_ms": {
+            "n": 1,
+            "p50_ms": 1500.0,
+            "p90_ms": 1500.0,
+            "max_ms": 1500
+          },
+          "logged_jev_questions": 1,
+          "fallbacks": 0,
+          "fallback_rate": 0.0
+        },
+        "potion": {
+          "rows": 0,
+          "projection_ms": {
+            "n": 0,
+            "p50_ms": null,
+            "p90_ms": null,
+            "max_ms": null
+          },
+          "brain_ms": {
+            "n": 0,
+            "p50_ms": null,
+            "p90_ms": null,
+            "max_ms": null
+          },
+          "jev_ms": {
+            "n": 0,
+            "p50_ms": null,
+            "p90_ms": null,
+            "max_ms": null
+          },
+          "logged_jev_questions": 0,
+          "fallbacks": 0,
+          "fallback_rate": null
+        },
+        "shop": {
+          "rows": 0,
+          "projection_ms": {
+            "n": 0,
+            "p50_ms": null,
+            "p90_ms": null,
+            "max_ms": null
+          },
+          "brain_ms": {
+            "n": 0,
+            "p50_ms": null,
+            "p90_ms": null,
+            "max_ms": null
+          },
+          "jev_ms": {
+            "n": 0,
+            "p50_ms": null,
+            "p90_ms": null,
+            "max_ms": null
+          },
+          "logged_jev_questions": 0,
+          "fallbacks": 0,
+          "fallback_rate": null
+        },
+        "rest": {
+          "rows": 0,
+          "projection_ms": {
+            "n": 0,
+            "p50_ms": null,
+            "p90_ms": null,
+            "max_ms": null
+          },
+          "brain_ms": {
+            "n": 0,
+            "p50_ms": null,
+            "p90_ms": null,
+            "max_ms": null
+          },
+          "jev_ms": {
+            "n": 0,
+            "p50_ms": null,
+            "p90_ms": null,
+            "max_ms": null
+          },
+          "logged_jev_questions": 0,
+          "fallbacks": 0,
+          "fallback_rate": null
+        },
+        "combat_line": {
+          "rows": 0,
+          "projection_ms": {
+            "n": 0,
+            "p50_ms": null,
+            "p90_ms": null,
+            "max_ms": null
+          },
+          "brain_ms": {
+            "n": 0,
+            "p50_ms": null,
+            "p90_ms": null,
+            "max_ms": null
+          },
+          "jev_ms": {
+            "n": 0,
+            "p50_ms": null,
+            "p90_ms": null,
+            "max_ms": null
+          },
+          "logged_jev_questions": 0,
+          "fallbacks": 0,
+          "fallback_rate": null
+        }
+      },
+      "unknown": {
+        "count": 1,
+        "total": 2,
+        "fraction": 0.5,
+        "measured_rows": 1
+      },
+      "degradation": {
+        "events": 0,
+        "reasons": {}
+      },
+      "triggers": {
+        "act_start": 0,
+        "T1": 0,
+        "T2": 0,
+        "T3": 0,
+        "T4": 0,
+        "T5": 0,
+        "T6": 0,
+        "T7": 0
+      },
+      "merged_triggers": {},
+      "skipped_triggers": {},
+      "brain": {
+        "v6_reserved_max": null,
+        "logged_questions": null,
+        "decision_observations_lower_bound": 0
+      },
+      "errors": {},
+      "decision_rows": 1,
+      "advice": [
+        {
+          "reason": "projection_coverage_unknown",
+          "action": "verify own-character knowledge/hash/trust/route inputs; do not infer decision quality",
+          "severity": "coverage"
+        }
+      ],
+      "baseline": {
+        "selected_pre_v6_n": 0,
+        "median_observed_window_s": null,
+        "ratio": null
+      }
+    },
+    {
+      "run_id": "fixed-6",
+      "v6": true,
+      "modes": [
+        "on"
+      ],
+      "config_restarts": 0,
+      "character": "silent",
+      "ascension": 10,
+      "start_epoch": 1790813400.0,
+      "observed_window_s": 90.0,
+      "completion": "terminal_observed",
+      "kinds": {
+        "act": {
+          "rows": 0,
+          "projection_ms": {
+            "n": 0,
+            "p50_ms": null,
+            "p90_ms": null,
+            "max_ms": null
+          },
+          "brain_ms": {
+            "n": 0,
+            "p50_ms": null,
+            "p90_ms": null,
+            "max_ms": null
+          },
+          "jev_ms": {
+            "n": 0,
+            "p50_ms": null,
+            "p90_ms": null,
+            "max_ms": null
+          },
+          "logged_jev_questions": 0,
+          "fallbacks": 0,
+          "fallback_rate": null
+        },
+        "replan": {
+          "rows": 0,
+          "projection_ms": {
+            "n": 0,
+            "p50_ms": null,
+            "p90_ms": null,
+            "max_ms": null
+          },
+          "brain_ms": {
+            "n": 0,
+            "p50_ms": null,
+            "p90_ms": null,
+            "max_ms": null
+          },
+          "jev_ms": {
+            "n": 0,
+            "p50_ms": null,
+            "p90_ms": null,
+            "max_ms": null
+          },
+          "logged_jev_questions": 0,
+          "fallbacks": 0,
+          "fallback_rate": null
+        },
+        "card_pick": {
+          "rows": 1,
+          "projection_ms": {
+            "n": 0,
+            "p50_ms": null,
+            "p90_ms": null,
+            "max_ms": null
+          },
+          "brain_ms": {
+            "n": 0,
+            "p50_ms": null,
+            "p90_ms": null,
+            "max_ms": null
+          },
+          "jev_ms": {
+            "n": 1,
+            "p50_ms": 1600.0,
+            "p90_ms": 1600.0,
+            "max_ms": 1600
+          },
+          "logged_jev_questions": 1,
+          "fallbacks": 0,
+          "fallback_rate": 0.0
+        },
+        "potion": {
+          "rows": 0,
+          "projection_ms": {
+            "n": 0,
+            "p50_ms": null,
+            "p90_ms": null,
+            "max_ms": null
+          },
+          "brain_ms": {
+            "n": 0,
+            "p50_ms": null,
+            "p90_ms": null,
+            "max_ms": null
+          },
+          "jev_ms": {
+            "n": 0,
+            "p50_ms": null,
+            "p90_ms": null,
+            "max_ms": null
+          },
+          "logged_jev_questions": 0,
+          "fallbacks": 0,
+          "fallback_rate": null
+        },
+        "shop": {
+          "rows": 0,
+          "projection_ms": {
+            "n": 0,
+            "p50_ms": null,
+            "p90_ms": null,
+            "max_ms": null
+          },
+          "brain_ms": {
+            "n": 0,
+            "p50_ms": null,
+            "p90_ms": null,
+            "max_ms": null
+          },
+          "jev_ms": {
+            "n": 0,
+            "p50_ms": null,
+            "p90_ms": null,
+            "max_ms": null
+          },
+          "logged_jev_questions": 0,
+          "fallbacks": 0,
+          "fallback_rate": null
+        },
+        "rest": {
+          "rows": 0,
+          "projection_ms": {
+            "n": 0,
+            "p50_ms": null,
+            "p90_ms": null,
+            "max_ms": null
+          },
+          "brain_ms": {
+            "n": 0,
+            "p50_ms": null,
+            "p90_ms": null,
+            "max_ms": null
+          },
+          "jev_ms": {
+            "n": 0,
+            "p50_ms": null,
+            "p90_ms": null,
+            "max_ms": null
+          },
+          "logged_jev_questions": 0,
+          "fallbacks": 0,
+          "fallback_rate": null
+        },
+        "combat_line": {
+          "rows": 0,
+          "projection_ms": {
+            "n": 0,
+            "p50_ms": null,
+            "p90_ms": null,
+            "max_ms": null
+          },
+          "brain_ms": {
+            "n": 0,
+            "p50_ms": null,
+            "p90_ms": null,
+            "max_ms": null
+          },
+          "jev_ms": {
+            "n": 0,
+            "p50_ms": null,
+            "p90_ms": null,
+            "max_ms": null
+          },
+          "logged_jev_questions": 0,
+          "fallbacks": 0,
+          "fallback_rate": null
+        }
+      },
+      "unknown": {
+        "count": 1,
+        "total": 2,
+        "fraction": 0.5,
+        "measured_rows": 1
+      },
+      "degradation": {
+        "events": 0,
+        "reasons": {}
+      },
+      "triggers": {
+        "act_start": 0,
+        "T1": 0,
+        "T2": 0,
+        "T3": 0,
+        "T4": 0,
+        "T5": 0,
+        "T6": 0,
+        "T7": 0
+      },
+      "merged_triggers": {},
+      "skipped_triggers": {},
+      "brain": {
+        "v6_reserved_max": null,
+        "logged_questions": null,
+        "decision_observations_lower_bound": 0
+      },
+      "errors": {},
+      "decision_rows": 1,
+      "advice": [
+        {
+          "reason": "projection_coverage_unknown",
+          "action": "verify own-character knowledge/hash/trust/route inputs; do not infer decision quality",
+          "severity": "coverage"
+        }
+      ],
+      "baseline": {
+        "selected_pre_v6_n": 0,
+        "median_observed_window_s": null,
+        "ratio": null
+      }
+    },
+    {
+      "run_id": "fixed-7",
+      "v6": true,
+      "modes": [
+        "on"
+      ],
+      "config_restarts": 0,
+      "character": "silent",
+      "ascension": 10,
+      "start_epoch": 1790813500.0,
+      "observed_window_s": 90.0,
+      "completion": "terminal_observed",
+      "kinds": {
+        "act": {
+          "rows": 0,
+          "projection_ms": {
+            "n": 0,
+            "p50_ms": null,
+            "p90_ms": null,
+            "max_ms": null
+          },
+          "brain_ms": {
+            "n": 0,
+            "p50_ms": null,
+            "p90_ms": null,
+            "max_ms": null
+          },
+          "jev_ms": {
+            "n": 0,
+            "p50_ms": null,
+            "p90_ms": null,
+            "max_ms": null
+          },
+          "logged_jev_questions": 0,
+          "fallbacks": 0,
+          "fallback_rate": null
+        },
+        "replan": {
+          "rows": 0,
+          "projection_ms": {
+            "n": 0,
+            "p50_ms": null,
+            "p90_ms": null,
+            "max_ms": null
+          },
+          "brain_ms": {
+            "n": 0,
+            "p50_ms": null,
+            "p90_ms": null,
+            "max_ms": null
+          },
+          "jev_ms": {
+            "n": 0,
+            "p50_ms": null,
+            "p90_ms": null,
+            "max_ms": null
+          },
+          "logged_jev_questions": 0,
+          "fallbacks": 0,
+          "fallback_rate": null
+        },
+        "card_pick": {
+          "rows": 1,
+          "projection_ms": {
+            "n": 0,
+            "p50_ms": null,
+            "p90_ms": null,
+            "max_ms": null
+          },
+          "brain_ms": {
+            "n": 0,
+            "p50_ms": null,
+            "p90_ms": null,
+            "max_ms": null
+          },
+          "jev_ms": {
+            "n": 1,
+            "p50_ms": 1700.0,
+            "p90_ms": 1700.0,
+            "max_ms": 1700
+          },
+          "logged_jev_questions": 1,
+          "fallbacks": 0,
+          "fallback_rate": 0.0
+        },
+        "potion": {
+          "rows": 0,
+          "projection_ms": {
+            "n": 0,
+            "p50_ms": null,
+            "p90_ms": null,
+            "max_ms": null
+          },
+          "brain_ms": {
+            "n": 0,
+            "p50_ms": null,
+            "p90_ms": null,
+            "max_ms": null
+          },
+          "jev_ms": {
+            "n": 0,
+            "p50_ms": null,
+            "p90_ms": null,
+            "max_ms": null
+          },
+          "logged_jev_questions": 0,
+          "fallbacks": 0,
+          "fallback_rate": null
+        },
+        "shop": {
+          "rows": 0,
+          "projection_ms": {
+            "n": 0,
+            "p50_ms": null,
+            "p90_ms": null,
+            "max_ms": null
+          },
+          "brain_ms": {
+            "n": 0,
+            "p50_ms": null,
+            "p90_ms": null,
+            "max_ms": null
+          },
+          "jev_ms": {
+            "n": 0,
+            "p50_ms": null,
+            "p90_ms": null,
+            "max_ms": null
+          },
+          "logged_jev_questions": 0,
+          "fallbacks": 0,
+          "fallback_rate": null
+        },
+        "rest": {
+          "rows": 0,
+          "projection_ms": {
+            "n": 0,
+            "p50_ms": null,
+            "p90_ms": null,
+            "max_ms": null
+          },
+          "brain_ms": {
+            "n": 0,
+            "p50_ms": null,
+            "p90_ms": null,
+            "max_ms": null
+          },
+          "jev_ms": {
+            "n": 0,
+            "p50_ms": null,
+            "p90_ms": null,
+            "max_ms": null
+          },
+          "logged_jev_questions": 0,
+          "fallbacks": 0,
+          "fallback_rate": null
+        },
+        "combat_line": {
+          "rows": 0,
+          "projection_ms": {
+            "n": 0,
+            "p50_ms": null,
+            "p90_ms": null,
+            "max_ms": null
+          },
+          "brain_ms": {
+            "n": 0,
+            "p50_ms": null,
+            "p90_ms": null,
+            "max_ms": null
+          },
+          "jev_ms": {
+            "n": 0,
+            "p50_ms": null,
+            "p90_ms": null,
+            "max_ms": null
+          },
+          "logged_jev_questions": 0,
+          "fallbacks": 0,
+          "fallback_rate": null
+        }
+      },
+      "unknown": {
+        "count": 1,
+        "total": 2,
+        "fraction": 0.5,
+        "measured_rows": 1
+      },
+      "degradation": {
+        "events": 0,
+        "reasons": {}
+      },
+      "triggers": {
+        "act_start": 0,
+        "T1": 0,
+        "T2": 0,
+        "T3": 0,
+        "T4": 0,
+        "T5": 0,
+        "T6": 0,
+        "T7": 0
+      },
+      "merged_triggers": {},
+      "skipped_triggers": {},
+      "brain": {
+        "v6_reserved_max": null,
+        "logged_questions": null,
+        "decision_observations_lower_bound": 0
+      },
+      "errors": {},
+      "decision_rows": 1,
+      "advice": [
+        {
+          "reason": "projection_coverage_unknown",
+          "action": "verify own-character knowledge/hash/trust/route inputs; do not infer decision quality",
+          "severity": "coverage"
+        }
+      ],
+      "baseline": {
+        "selected_pre_v6_n": 0,
+        "median_observed_window_s": null,
+        "ratio": null
+      }
+    },
+    {
+      "run_id": "fixed-8",
+      "v6": true,
+      "modes": [
+        "on"
+      ],
+      "config_restarts": 0,
+      "character": "silent",
+      "ascension": 10,
+      "start_epoch": 1790813600.0,
+      "observed_window_s": 90.0,
+      "completion": "terminal_observed",
+      "kinds": {
+        "act": {
+          "rows": 0,
+          "projection_ms": {
+            "n": 0,
+            "p50_ms": null,
+            "p90_ms": null,
+            "max_ms": null
+          },
+          "brain_ms": {
+            "n": 0,
+            "p50_ms": null,
+            "p90_ms": null,
+            "max_ms": null
+          },
+          "jev_ms": {
+            "n": 0,
+            "p50_ms": null,
+            "p90_ms": null,
+            "max_ms": null
+          },
+          "logged_jev_questions": 0,
+          "fallbacks": 0,
+          "fallback_rate": null
+        },
+        "replan": {
+          "rows": 0,
+          "projection_ms": {
+            "n": 0,
+            "p50_ms": null,
+            "p90_ms": null,
+            "max_ms": null
+          },
+          "brain_ms": {
+            "n": 0,
+            "p50_ms": null,
+            "p90_ms": null,
+            "max_ms": null
+          },
+          "jev_ms": {
+            "n": 0,
+            "p50_ms": null,
+            "p90_ms": null,
+            "max_ms": null
+          },
+          "logged_jev_questions": 0,
+          "fallbacks": 0,
+          "fallback_rate": null
+        },
+        "card_pick": {
+          "rows": 1,
+          "projection_ms": {
+            "n": 0,
+            "p50_ms": null,
+            "p90_ms": null,
+            "max_ms": null
+          },
+          "brain_ms": {
+            "n": 0,
+            "p50_ms": null,
+            "p90_ms": null,
+            "max_ms": null
+          },
+          "jev_ms": {
+            "n": 1,
+            "p50_ms": 1800.0,
+            "p90_ms": 1800.0,
+            "max_ms": 1800
+          },
+          "logged_jev_questions": 1,
+          "fallbacks": 1,
+          "fallback_rate": 1.0
+        },
+        "potion": {
+          "rows": 0,
+          "projection_ms": {
+            "n": 0,
+            "p50_ms": null,
+            "p90_ms": null,
+            "max_ms": null
+          },
+          "brain_ms": {
+            "n": 0,
+            "p50_ms": null,
+            "p90_ms": null,
+            "max_ms": null
+          },
+          "jev_ms": {
+            "n": 0,
+            "p50_ms": null,
+            "p90_ms": null,
+            "max_ms": null
+          },
+          "logged_jev_questions": 0,
+          "fallbacks": 0,
+          "fallback_rate": null
+        },
+        "shop": {
+          "rows": 0,
+          "projection_ms": {
+            "n": 0,
+            "p50_ms": null,
+            "p90_ms": null,
+            "max_ms": null
+          },
+          "brain_ms": {
+            "n": 0,
+            "p50_ms": null,
+            "p90_ms": null,
+            "max_ms": null
+          },
+          "jev_ms": {
+            "n": 0,
+            "p50_ms": null,
+            "p90_ms": null,
+            "max_ms": null
+          },
+          "logged_jev_questions": 0,
+          "fallbacks": 0,
+          "fallback_rate": null
+        },
+        "rest": {
+          "rows": 0,
+          "projection_ms": {
+            "n": 0,
+            "p50_ms": null,
+            "p90_ms": null,
+            "max_ms": null
+          },
+          "brain_ms": {
+            "n": 0,
+            "p50_ms": null,
+            "p90_ms": null,
+            "max_ms": null
+          },
+          "jev_ms": {
+            "n": 0,
+            "p50_ms": null,
+            "p90_ms": null,
+            "max_ms": null
+          },
+          "logged_jev_questions": 0,
+          "fallbacks": 0,
+          "fallback_rate": null
+        },
+        "combat_line": {
+          "rows": 0,
+          "projection_ms": {
+            "n": 0,
+            "p50_ms": null,
+            "p90_ms": null,
+            "max_ms": null
+          },
+          "brain_ms": {
+            "n": 0,
+            "p50_ms": null,
+            "p90_ms": null,
+            "max_ms": null
+          },
+          "jev_ms": {
+            "n": 0,
+            "p50_ms": null,
+            "p90_ms": null,
+            "max_ms": null
+          },
+          "logged_jev_questions": 0,
+          "fallbacks": 0,
+          "fallback_rate": null
+        }
+      },
+      "unknown": {
+        "count": 1,
+        "total": 2,
+        "fraction": 0.5,
+        "measured_rows": 1
+      },
+      "degradation": {
+        "events": 0,
+        "reasons": {}
+      },
+      "triggers": {
+        "act_start": 0,
+        "T1": 0,
+        "T2": 0,
+        "T3": 0,
+        "T4": 0,
+        "T5": 0,
+        "T6": 0,
+        "T7": 0
+      },
+      "merged_triggers": {},
+      "skipped_triggers": {},
+      "brain": {
+        "v6_reserved_max": null,
+        "logged_questions": null,
+        "decision_observations_lower_bound": 0
+      },
+      "errors": {
+        "fixed_timeout": 1
+      },
+      "decision_rows": 1,
+      "advice": [
+        {
+          "reason": "projection_coverage_unknown",
+          "action": "verify own-character knowledge/hash/trust/route inputs; do not infer decision quality",
+          "severity": "coverage"
+        }
+      ],
+      "baseline": {
+        "selected_pre_v6_n": 0,
+        "median_observed_window_s": null,
+        "ratio": null
+      }
+    },
+    {
+      "run_id": "fixed-9",
+      "v6": true,
+      "modes": [
+        "on"
+      ],
+      "config_restarts": 0,
+      "character": "silent",
+      "ascension": 10,
+      "start_epoch": 1790813700.0,
+      "observed_window_s": 90.0,
+      "completion": "terminal_observed",
+      "kinds": {
+        "act": {
+          "rows": 0,
+          "projection_ms": {
+            "n": 0,
+            "p50_ms": null,
+            "p90_ms": null,
+            "max_ms": null
+          },
+          "brain_ms": {
+            "n": 0,
+            "p50_ms": null,
+            "p90_ms": null,
+            "max_ms": null
+          },
+          "jev_ms": {
+            "n": 0,
+            "p50_ms": null,
+            "p90_ms": null,
+            "max_ms": null
+          },
+          "logged_jev_questions": 0,
+          "fallbacks": 0,
+          "fallback_rate": null
+        },
+        "replan": {
+          "rows": 0,
+          "projection_ms": {
+            "n": 0,
+            "p50_ms": null,
+            "p90_ms": null,
+            "max_ms": null
+          },
+          "brain_ms": {
+            "n": 0,
+            "p50_ms": null,
+            "p90_ms": null,
+            "max_ms": null
+          },
+          "jev_ms": {
+            "n": 0,
+            "p50_ms": null,
+            "p90_ms": null,
+            "max_ms": null
+          },
+          "logged_jev_questions": 0,
+          "fallbacks": 0,
+          "fallback_rate": null
+        },
+        "card_pick": {
+          "rows": 1,
+          "projection_ms": {
+            "n": 0,
+            "p50_ms": null,
+            "p90_ms": null,
+            "max_ms": null
+          },
+          "brain_ms": {
+            "n": 0,
+            "p50_ms": null,
+            "p90_ms": null,
+            "max_ms": null
+          },
+          "jev_ms": {
+            "n": 1,
+            "p50_ms": 1900.0,
+            "p90_ms": 1900.0,
+            "max_ms": 1900
+          },
+          "logged_jev_questions": 1,
+          "fallbacks": 0,
+          "fallback_rate": 0.0
+        },
+        "potion": {
+          "rows": 0,
+          "projection_ms": {
+            "n": 0,
+            "p50_ms": null,
+            "p90_ms": null,
+            "max_ms": null
+          },
+          "brain_ms": {
+            "n": 0,
+            "p50_ms": null,
+            "p90_ms": null,
+            "max_ms": null
+          },
+          "jev_ms": {
+            "n": 0,
+            "p50_ms": null,
+            "p90_ms": null,
+            "max_ms": null
+          },
+          "logged_jev_questions": 0,
+          "fallbacks": 0,
+          "fallback_rate": null
+        },
+        "shop": {
+          "rows": 0,
+          "projection_ms": {
+            "n": 0,
+            "p50_ms": null,
+            "p90_ms": null,
+            "max_ms": null
+          },
+          "brain_ms": {
+            "n": 0,
+            "p50_ms": null,
+            "p90_ms": null,
+            "max_ms": null
+          },
+          "jev_ms": {
+            "n": 0,
+            "p50_ms": null,
+            "p90_ms": null,
+            "max_ms": null
+          },
+          "logged_jev_questions": 0,
+          "fallbacks": 0,
+          "fallback_rate": null
+        },
+        "rest": {
+          "rows": 0,
+          "projection_ms": {
+            "n": 0,
+            "p50_ms": null,
+            "p90_ms": null,
+            "max_ms": null
+          },
+          "brain_ms": {
+            "n": 0,
+            "p50_ms": null,
+            "p90_ms": null,
+            "max_ms": null
+          },
+          "jev_ms": {
+            "n": 0,
+            "p50_ms": null,
+            "p90_ms": null,
+            "max_ms": null
+          },
+          "logged_jev_questions": 0,
+          "fallbacks": 0,
+          "fallback_rate": null
+        },
+        "combat_line": {
+          "rows": 0,
+          "projection_ms": {
+            "n": 0,
+            "p50_ms": null,
+            "p90_ms": null,
+            "max_ms": null
+          },
+          "brain_ms": {
+            "n": 0,
+            "p50_ms": null,
+            "p90_ms": null,
+            "max_ms": null
+          },
+          "jev_ms": {
+            "n": 0,
+            "p50_ms": null,
+            "p90_ms": null,
+            "max_ms": null
+          },
+          "logged_jev_questions": 0,
+          "fallbacks": 0,
+          "fallback_rate": null
+        }
+      },
+      "unknown": {
+        "count": 1,
+        "total": 2,
+        "fraction": 0.5,
+        "measured_rows": 1
+      },
+      "degradation": {
+        "events": 0,
+        "reasons": {}
+      },
+      "triggers": {
+        "act_start": 0,
+        "T1": 0,
+        "T2": 0,
+        "T3": 0,
+        "T4": 0,
+        "T5": 0,
+        "T6": 0,
+        "T7": 0
+      },
+      "merged_triggers": {},
+      "skipped_triggers": {},
+      "brain": {
+        "v6_reserved_max": null,
+        "logged_questions": null,
+        "decision_observations_lower_bound": 0
+      },
+      "errors": {},
+      "decision_rows": 1,
+      "advice": [
+        {
+          "reason": "projection_coverage_unknown",
+          "action": "verify own-character knowledge/hash/trust/route inputs; do not infer decision quality",
+          "severity": "coverage"
+        }
+      ],
+      "baseline": {
+        "selected_pre_v6_n": 0,
+        "median_observed_window_s": null,
+        "ratio": null
+      }
+    }
+  ],
+  "batches_of_ten": [
+    {
+      "batch": 1,
+      "runs": [
+        "fixed-0",
+        "fixed-1",
+        "fixed-2",
+        "fixed-3",
+        "fixed-4",
+        "fixed-5",
+        "fixed-6",
+        "fixed-7",
+        "fixed-8",
+        "fixed-9"
+      ],
+      "complete_ten": true,
+      "observed_window_s": {
+        "n": 10,
+        "median": 90.0
+      },
+      "kinds": {
+        "act": {
+          "rows": 0,
+          "projection_ms": {
+            "n": 0,
+            "p50_ms": null,
+            "p90_ms": null,
+            "max_ms": null
+          },
+          "brain_ms": {
+            "n": 0,
+            "p50_ms": null,
+            "p90_ms": null,
+            "max_ms": null
+          },
+          "jev_ms": {
+            "n": 0,
+            "p50_ms": null,
+            "p90_ms": null,
+            "max_ms": null
+          },
+          "logged_jev_questions": 0,
+          "fallbacks": 0,
+          "fallback_rate": null
+        },
+        "replan": {
+          "rows": 0,
+          "projection_ms": {
+            "n": 0,
+            "p50_ms": null,
+            "p90_ms": null,
+            "max_ms": null
+          },
+          "brain_ms": {
+            "n": 0,
+            "p50_ms": null,
+            "p90_ms": null,
+            "max_ms": null
+          },
+          "jev_ms": {
+            "n": 0,
+            "p50_ms": null,
+            "p90_ms": null,
+            "max_ms": null
+          },
+          "logged_jev_questions": 0,
+          "fallbacks": 0,
+          "fallback_rate": null
+        },
+        "card_pick": {
+          "rows": 10,
+          "projection_ms": {
+            "n": 0,
+            "p50_ms": null,
+            "p90_ms": null,
+            "max_ms": null
+          },
+          "brain_ms": {
+            "n": 0,
+            "p50_ms": null,
+            "p90_ms": null,
+            "max_ms": null
+          },
+          "jev_ms": {
+            "n": 10,
+            "p50_ms": 1450.0,
+            "p90_ms": 1810.0,
+            "max_ms": 1900
+          },
+          "logged_jev_questions": 10,
+          "fallbacks": 3,
+          "fallback_rate": 0.3
+        },
+        "potion": {
+          "rows": 0,
+          "projection_ms": {
+            "n": 0,
+            "p50_ms": null,
+            "p90_ms": null,
+            "max_ms": null
+          },
+          "brain_ms": {
+            "n": 0,
+            "p50_ms": null,
+            "p90_ms": null,
+            "max_ms": null
+          },
+          "jev_ms": {
+            "n": 0,
+            "p50_ms": null,
+            "p90_ms": null,
+            "max_ms": null
+          },
+          "logged_jev_questions": 0,
+          "fallbacks": 0,
+          "fallback_rate": null
+        },
+        "shop": {
+          "rows": 0,
+          "projection_ms": {
+            "n": 0,
+            "p50_ms": null,
+            "p90_ms": null,
+            "max_ms": null
+          },
+          "brain_ms": {
+            "n": 0,
+            "p50_ms": null,
+            "p90_ms": null,
+            "max_ms": null
+          },
+          "jev_ms": {
+            "n": 0,
+            "p50_ms": null,
+            "p90_ms": null,
+            "max_ms": null
+          },
+          "logged_jev_questions": 0,
+          "fallbacks": 0,
+          "fallback_rate": null
+        },
+        "rest": {
+          "rows": 0,
+          "projection_ms": {
+            "n": 0,
+            "p50_ms": null,
+            "p90_ms": null,
+            "max_ms": null
+          },
+          "brain_ms": {
+            "n": 0,
+            "p50_ms": null,
+            "p90_ms": null,
+            "max_ms": null
+          },
+          "jev_ms": {
+            "n": 0,
+            "p50_ms": null,
+            "p90_ms": null,
+            "max_ms": null
+          },
+          "logged_jev_questions": 0,
+          "fallbacks": 0,
+          "fallback_rate": null
+        },
+        "combat_line": {
+          "rows": 0,
+          "projection_ms": {
+            "n": 0,
+            "p50_ms": null,
+            "p90_ms": null,
+            "max_ms": null
+          },
+          "brain_ms": {
+            "n": 0,
+            "p50_ms": null,
+            "p90_ms": null,
+            "max_ms": null
+          },
+          "jev_ms": {
+            "n": 0,
+            "p50_ms": null,
+            "p90_ms": null,
+            "max_ms": null
+          },
+          "logged_jev_questions": 0,
+          "fallbacks": 0,
+          "fallback_rate": null
+        }
+      },
+      "unknown": {
+        "count": 10,
+        "total": 20,
+        "fraction": 0.5,
+        "measured_rows": 10
+      },
+      "degradation": {
+        "events": 0,
+        "reasons": {}
+      },
+      "triggers": {
+        "act_start": 0,
+        "T1": 0,
+        "T2": 0,
+        "T3": 0,
+        "T4": 0,
+        "T5": 0,
+        "T6": 0,
+        "T7": 0
+      },
+      "merged_triggers": {},
+      "skipped_triggers": {},
+      "brain": {
+        "v6_reserved_max": null,
+        "logged_questions": null,
+        "decision_observations_lower_bound": 0,
+        "v6_reserved_sum": null,
+        "runs_with_reservations": 0
+      },
+      "errors": {
+        "fixed_timeout": 3
+      },
+      "decision_rows": 10
+    }
+  ],
+  "limits": [
+    "Read-only operational telemetry; no game actions or automatic rollback.",
+    "Observed windows include pauses/restarts and may omit run boundaries; they are not complete-run or causal speed measurements.",
+    "Jev counts are logged question outcomes, not HTTP attempts/retries; legacy stages are inferred.",
+    "Unknown fractions are row-weighted recorded entry occurrences, not unique cards or simulation quality.",
+    "Brain journal reservations include failures, exclude retries; decision-only observations are a lower bound.",
+    "V5 comparisons use only explicitly selected earlier runs of the same character and ascension; none are started."
+  ],
+  "fixture_only": true
+}
