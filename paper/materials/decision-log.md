@@ -4872,3 +4872,20 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
 
 - 2026-10-20 06:34:30 CST [Claude 监督] V6 恢复前核查：题面精简（ee32129ca）、W7（c6b71d2d1）、摘要性能（8ae96db3c，商店 28 项 7045→318ms）、W3 覆盖/缓存/入口 HP 回退（da184de9f）均已合入，但冻结 F8 拿牌题投影仍全部 unknown：W0 历史补牌样本仅 330/660 可准备，因 knowledge/common/card-upgrades.json 缺 AFTERIMAGE、MALAISE、CALCULATED_GAMBLE、MIRAGE、INFINITE_BLADES、SPEEDSTER 的升级定义。处置：v6-w8 查生成器漏收原因，若日志有证据按纯 bug 修生成器并从日志重生成，否则交学习者；v6-w4w6 加安全网（投影大面积 unknown 或 Jev 故障时本题改由大脑决定，不兜底 skip）。STOP 保持，二者合入、live 同步、真实请求烟测通过后再恢复首局。
 - 2026-10-20 06:36:45 CST [Codex watcher/W3历史刷新] R2冻结历史包已FF main eb92ebe3e，17/17组合各first/including_sl两份指标，字节SHA aea1fcc9b9927118a5f8158cadb6940576d1b8db783084edaca1d6c182f205f6、内容哈希 531cd98c93395888832e05d6678a65a821862ab2bf5f9ac621d89ab1e0988219；原四步骤0、生产加载器/共享请求工厂固定离线17ID及指标读回0，gitleaks0。沿70cf统一终局边界逐行排除，原来源/字节范围/SHA/原因及原日志不变核验见paper/materials/2026-10-20-v6-history-r2-17-refresh/report.json。simulation=off、缺证指标与缺升级模型继续unknown；正式构筑卡/经验未改，未发送模型请求/启局，不称自然采用/健康。原ops实际main→live运输/消费者及Claude原真实请求烟测待核；STOP、MWMR故障/存档、Regent及宽父保持，不代ACK。
+
+- 2026-10-20 06:44:41 CST [运维 codex/V6-R400运输] 原队列3705实际接管，清单12KB摘要恢复；原锁运输受测main b0aace与17包eb92至live 6528e3db867924dbe402f370b0579c63106679cd（行为4b31），main/live17ID双口径/hash固定消费者通过，复用原full0不重跑；旧记录/失败保留，STOP/fault不动，未续局/关父。原件：paper/materials/20261020-0637-ops/receipt.json。
+
+- 2026-10-20 06:49:20 CST [运维 codex/06:40原事件接续] 去重旧异议/清单失败与已完成R400运输；061302-s2原A0三叶未提交候选SHA不变，固定bb3f唯一宿主520208/nice19实际checking，原full1保留，不重复运输/刷新或关父，STOP保持。原件：paper/materials/20261020-0640-ops/receipt.json。
+
+- 2026-10-20 06:54:05 CST [运维 codex/06:50事件] 061302神化五叶/patch同原044302-s2，沿原WT固定e6e582唯一宿主544703/nice19核新性能组合，旧full1与十案waiting保留；三旧异议去重、CLI pending不代ACK，STOP保持。原件：paper/materials/20261020-0650-ops/receipt.json。
+
+- 2026-10-20 06:57:31 CST [运维 codex/064302策略回报] 核严格干净原base无源码/测试null；原failed/rc0为未领取tick的no_change协议未接纳，两旧提案保持pending，retention守卫拒绝；补原协议队列，不补测/dataset/改科学规则/关父，STOP保持。原件：paper/materials/20261020-0656-ops/receipt.json。
+
+- 2026-10-20 06:58:51 CST [v6-w8/升级日志漏收] 修复 build-card-upgrades.py 只收费用/动态数值差异而漏掉文字升级的纯解析筛选 bug；六张从原日志重生成、12牌面偏移/SHA/局号回读，旧199条不变，最小追加 faces 并传入 v6-start；5119bf69c 已变基8037e126f后FF main。tsc0，Vitest597文件5715过2跳，Python5过，gitleaks最终提交扫描0；最后两次变基仅运维记录，agent/knowledge/learner树与受测源码一致。F8同样本 W0 330/660→660/660、Wk660/660；R2包方向5秒0/288、act60秒0/72仍全unknown，剩余预算/配对/成型问题交原watcher继续，不宣称恢复；未动live/STOP/故障、未开局/模型请求/派学习。材料 paper/materials/2026-10-20-v6-upgrade-log-coverage/report.md。
+
+- 2026-10-20 07:07:26 CST [运维 codex/A0固定源验收] 原bb3f宿主完整0/597文件5714过2跳，原WT提交b9d6；main新增W8八叶，固定f50a6联合唯一宿主641666/nice19检查中，未main/live集成或加release；旧失败与STOP保留，不关科学父项。原件：paper/materials/20261020-0705-ops/receipt.json。
+
+- 2026-10-20 07:09:25 CST [运维 codex/神化固定源验收] e6e582宿主完整0/597文件5714过2跳，原WT提交a46239且干净；原A0+W8联合在途不热改，登记其终局后的精确组合依赖，未main/live集成/加release，旧失败及STOP保持。原件：paper/materials/20261020-0707-ops/receipt.json。
+- 2026-10-20 07:17:32 CST [Codex v6-w4w6] V6构筑unknown/Jev失败安全网FF main 108b45cb0：拿牌、选药、商店、休息实际可选项完整加权值已知不足2项或比例低于V6_MIN_KNOWN_OPTION_RATIO（默认0.5）时改走原大脑；Jev错误/超时/非法答案同样转大脑，单板不重试Jev。记录v6_unknown_to_brain与原因/覆盖率，T6沿同question_id去重且计入原大脑调用；大脑也不可用后才走原代码，拿牌全部unknown不默认skip，尊重大脑显式skip。W6逐槽noul尚无加权投影提供方，当前严格标unknown并转原大脑；不将持有HP冒充胜率。tsc0、完整vitest Test Files  598 passed (598); Tests  5730 passed | 2 skipped (5732)、提交范围gitleaks0；off/shadow等价固定测试保留。W7仅v6RoomActive增加转大脑门禁，原Silent必需Boss评估与Codex fault暂停不绕过。未动sim/知识/live/STOP，未开局/真实请求；材料paper/materials/2026-10-20-v6-unknown-brain/，待Claude/ops沿原授权上线及验收。
+
+- 2026-10-20 07:22:55 CST [运维 codex/A0+W8联合验收] f50a6宿主完整0/598文件5718过2跳，原WT提交f6b0；main新增安全网914bd，与已验神化a462机械合成固定249932/23源叶，唯一原宿主722693/nice19 checking，未main/live集成或加release，旧失败及STOP保留。原件：paper/materials/20261020-0720-ops/receipt.json。

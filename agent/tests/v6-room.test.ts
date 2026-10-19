@@ -54,6 +54,11 @@ function table(): V6ProjectionTable {
     targets: [{ id: "TEST_TARGET", boss: "TEST_TARGET", act: 1, floor: 17, kind: "current", probability: 1, labels: [] }],
     telemetry: { elapsed_ms: 1, cache_hits: 0, cache_misses: 0, simulations: 0, timed_out: 0, degradation: [], unknown_entries: 0, total_entries: 0, unknown_fraction: 0, act_cache_hit: false } };
 }
+function knownRoom(kind: "shop" | "rest"): V6ProjectionTable {
+  const e = room(kind), input = kind === "shop" ? v6ShopOptions(e)! : v6RestOptions(e)!, t = table();
+  for (const o of input.options) t.target_mixtures.push({ option_id: o.option.key, kind: "clearance", value: { value: .5, se: .1, n: 20 }, paired_delta: null, known_mass: 1, known_value: .5, labels: [] });
+  return t;
+}
 function delta(t: V6ProjectionTable, key: string, kind: "clearance" | "current_gate", mean: number) {
   t.target_mixtures.push({ option_id: key, kind, value: null, paired_delta: { mean, se: .001, n: 20 }, known_mass: 1, known_value: 0, labels: [] });
 }
@@ -323,7 +328,7 @@ it.each(["shop", "rest"] as const)("local scripted loop dispatches one %s Jev ch
   on(); const e = room(kind), deepseek = new FakeDeepSeek(() => { throw Error("brain must not be called"); });
   const picked = kind === "shop" ? "buy_card0" : "o1:c8";
   const ask = vi.fn(async () => ({ model: "fixture", answers: answer(picked), inputTokens: 1, outputTokens: 1, latencyMs: 1, requestId: "fixed" }));
-  const provider = vi.fn(async () => table()); const dir = fixtureDir();
+  const provider = vi.fn(async () => knownRoom(kind)); const dir = fixtureDir();
   const result = await play([e.state.raw, e.state.raw] as Raw[], deepseek, loopConfig(dir),
     { brain: null, maxDecisions: 1, jev: { model: "fixture", ask } as unknown as JevClient, v6RoomProjection: provider });
   expect(result.actions[0]).toMatchObject(kind === "shop" ? { action: "buy_card", option_index: 0 } : { action: "choose_rest_option", option_index: 1 });
@@ -342,7 +347,7 @@ it.each(["shop", "rest"] as const)("binds the shared production runtime by defau
   });
   const engine = { evaluate: vi.fn(async request => {
     expect(request.config.budgets.pick_ms).toBeGreaterThan(0); expect(request.config.budgets.pick_ms).toBeLessThanOrEqual(5000);
-    return table();
+    return knownRoom(kind);
   }), precompute: vi.fn() };
   const runtime = new V6ProjectionRuntime(engine, async () => null, undefined, context as never);
   const ask = vi.fn(async (state) => {
@@ -355,32 +360,37 @@ it.each(["shop", "rest"] as const)("binds the shared production runtime by defau
   expect(context).toHaveBeenCalledTimes(1); expect(create).toHaveBeenCalledTimes(1); expect(engine.evaluate).toHaveBeenCalledTimes(1);
   expect(ask).toHaveBeenCalledTimes(1); expect(result.stats.jevCalls).toBe(1);
 });
-it.each(["failure", "invalid", "timeout"])("local scripted loop %s falls back once without brain or retries", async mode => {
-  on(); vi.stubEnv("V6_JEV_MS", "15"); const e = room("shop"), dir = fixtureDir(), deepseek = new FakeDeepSeek(() => { throw Error("brain"); });
+it.each(["failure", "invalid", "timeout"])("local scripted loop %s hands over to the original brain without Jev retries", async mode => {
+  on(); vi.stubEnv("V6_JEV_MS", "15"); const e = room("shop"), dir = fixtureDir(), deepseek = new FakeDeepSeek(() => "buy_card0");
+  Object.assign(e.state.run!.raw, { character_id: "IRONCLAD" }); vi.stubEnv("CHARACTER", "ironclad");
   const ask = vi.fn(async () => { if (mode === "failure") throw Error("fixed failure"); if (mode === "timeout") return new Promise<never>(() => {});
     return { model: "fixture", answers: answer("foreign"), inputTokens: 1, outputTokens: 1, latencyMs: 1, requestId: "fixed" }; });
   const result = await play([e.state.raw, e.state.raw] as Raw[], deepseek, loopConfig(dir),
-    { brain: null, maxDecisions: 1, jev: { model: "fixture", ask } as unknown as JevClient });
-  expect(result.actions[0]?.action).toBe("close_shop_inventory"); expect(ask).toHaveBeenCalledTimes(1); expect(deepseek.calls).toHaveLength(0); expect(result.stats.jevCalls).toBe(1);
-  expect(readFileSync(join(dir, "v6-build.jsonl"), "utf8")).toContain("missing_invalid_or_failed_jev");
+    { maxDecisions: 1, jev: { model: "fixture", ask } as unknown as JevClient, v6RoomProjection: async () => knownRoom("shop") });
+  expect(result.actions[0]?.action).toBe("buy_card"); expect(ask).toHaveBeenCalledTimes(1); expect(deepseek.calls).toHaveLength(1); expect(result.stats.jevCalls).toBe(1);
+  expect(readFileSync(join(dir, "v6-build.jsonl"), "utf8")).toContain("v6_unknown_to_brain");
 });
-it.each(["jev", "code-fallback"] as const)("credits the upgrade follow-up to its actual %s source", async source => {
-  on(); const e = room("rest"), next = structuredClone(e.state.raw) as Raw, dir = fixtureDir();
+it.each(["jev", "deepseek"] as const)("credits the upgrade follow-up to its actual %s source", async source => {
+  on(); const e = room("rest"); Object.assign(e.state.run!.raw, { character_id: "IRONCLAD" }); vi.stubEnv("CHARACTER", "ironclad");
+  const next = structuredClone(e.state.raw) as Raw, dir = fixtureDir();
   next.screen = "CARD_SELECTION"; next.available_actions = ["save_and_quit", "select_deck_card"]; next.rest = null;
   next.selection = { kind: "deck_upgrade_select", prompt: "选择1张牌来升级。", min_select: 1, max_select: 1,
     selected_count: 0, requires_confirmation: true, can_confirm: false,
     cards: [{ ...(asRecord(e.state.run?.raw).deck as Raw[])[8], index: 3, selected: false }] };
-  const projection = table(); delta(projection, "o1:c8", "clearance", .2);
+  const projection = knownRoom("rest"); delta(projection, "o1:c8", "clearance", .2);
   const ask = vi.fn(async () => ({ model: "fixture", answers: answer(source === "jev" ? "o1:c8" : "foreign"),
     inputTokens: 1, outputTokens: 1, latencyMs: 1, requestId: "fixed" }));
-  const result = await play([e.state.raw as Raw, next, next], new FakeDeepSeek(() => { throw Error("brain"); }), loopConfig(dir),
-    { brain: null, maxDecisions: 2, jev: { model: "fixture", ask } as unknown as JevClient, v6RoomProjection: async () => projection });
+  const result = await play([e.state.raw as Raw, next, next], new FakeDeepSeek(() => "o1:c8"), { ...loopConfig(dir), buildOneshot: "on" },
+    { maxDecisions: 2, jev: { model: "fixture", ask } as unknown as JevClient, v6RoomProjection: async () => projection });
   expect(result.actions).toEqual([{ action: "choose_rest_option", option_index: 1 }, { action: "select_deck_card", option_index: 3 }]);
   const follow = result.records.find(row => row.label === "selection/upgrade" && row.chosen);
-  expect(follow).toMatchObject({ decider: source, v6_room_plan: { by: source, step: 2 }, usage: { input_tokens: 0 } });
-  expect(follow?.deepseek).toBeUndefined();
-  expect(follow?.rationale).toMatch(source === "jev" ? /^Jev plan / : /^Code fallback plan /);
-  expect(asRecord(follow?.journal).choice).toMatch(source === "jev" ? /^Jev plan / : /^Code fallback plan /);
+  expect(follow).toMatchObject({ decider: source, usage: { input_tokens: 0 } });
+  if (source === "jev") {
+    expect(follow?.v6_room_plan).toMatchObject({ by: source, step: 2 });
+    expect(follow?.deepseek).toBeUndefined();
+  } else expect(follow?.deepseek).toMatchObject({ reused: true, plan_step: 2 });
+  expect(follow?.rationale).toMatch(source === "jev" ? /^Jev plan / : /^DeepSeek plan /);
+  expect(asRecord(follow?.journal).choice).toMatch(source === "jev" ? /^Jev plan / : /^DeepSeek plan /);
   expect(ask).toHaveBeenCalledTimes(1);
 });
 
@@ -402,4 +412,16 @@ it.each(["IRONCLAD", "SILENT", "DEFECT", "NECROBINDER", "REGENT"])("%s disabled 
   // Captured before W7 at 7aa094344; fixture knowledge paths and time are frozen.
   const baseline: Record<string, string> = {"IRONCLAD": "27cc024dffa1df45b700b0502b3fbaf5abd2431e7e4926c4ca88c3f9a6252825", "SILENT": "b4b08f0399fc28df77b23be0eb230c03ca78b75362273650d5326ff661b503d0", "DEFECT": "5717f888dff4a0858e3ef97fcebf22eef94f70397b478a103d44b563ebbb9941", "NECROBINDER": "c02fe589650fac84975bac4e55f7a30d144644d81b5b4a7e91f25ceb426d2224", "REGENT": "ec4cd887042d0ff7338f79d693d1f07fcafa874a00abdea9e5cb1871048976e3"};
   expect(hashes[0]).toBe(baseline[character]);
+});
+
+it.each(["shop", "rest"] as const)("unknown %s projections go directly to the original brain", async kind => {
+  on(); const e = room(kind), dir = fixtureDir();
+  Object.assign(e.state.run!.raw, { character_id: "IRONCLAD" }); vi.stubEnv("CHARACTER", "ironclad");
+  const deepseek = new FakeDeepSeek(() => kind === "shop" ? "buy_card0" : "o0");
+  const ask = vi.fn(async () => { throw Error("unknown projections must not call Jev"); });
+  const result = await play([e.state.raw] as Raw[], deepseek, loopConfig(dir),
+    { maxDecisions: 1, jev: { model: "fixture", ask } as unknown as JevClient, v6RoomProjection: async () => table() });
+  expect(ask).not.toHaveBeenCalled(); expect(deepseek.calls).toHaveLength(1);
+  expect(result.actions[0]).toMatchObject(kind === "shop" ? { action: "buy_card", option_index: 0 } : { action: "choose_rest_option", option_index: 0 });
+  expect(result.records.find(r => r.v6_unknown_to_brain)).toMatchObject({ fallback: false, v6_unknown_to_brain: { kind, known: 0 } });
 });

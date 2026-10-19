@@ -1,0 +1,14 @@
+{
+  "pid": 544703,
+  "start_ticks": 134233223,
+  "nice": 19,
+  "state": "checking",
+  "check_pid": 544731,
+  "original_lease_busy": true,
+  "input_sha256": "669b1d54ca66ede820171287df57ce80eee1fbe752e0a127815af3c8d93a16b6",
+  "command": "export PATH=\"$HOME/.local/node/bin:$PATH\"; nice -n 19 npx tsc -p tsconfig.json --noEmit; a=$?; nice -n 19 npx vitest run --maxWorkers=2; b=$?; [ \"$a\" = 0 ] && [ \"$b\" = 0 ]",
+  "source_commit": null,
+  "live_commit": null,
+  "STOP_exists": true,
+  "brain_wait_sha256": "1e8ee3a27fbdcabe9c5a2698e2b70bc909147f13d45ff3792779613ffc92ed30"
+}

@@ -26,6 +26,7 @@ export interface DirectionEvaluation {
   bossEntryHp?: number | null;
   hazardHp?: number | null;
   consecutiveJevFallbacks?: number;
+  constructionHandover?: boolean;
 }
 export interface ReplanState {
   run: string; act: number; calls: number; lastEvaluation?: string;
@@ -61,7 +62,7 @@ export function detectReplan(s: ReplanState, input: {
   if (e.pivotMatched || e.acquiredComponentIds?.some(id => input.requirementIds.has(id))) triggers.push("T4");
   if (finite(e.bossEntryHp) && finite(e.hazardHp) && e.bossEntryHp < e.hazardHp) triggers.push("T5");
   const unknown = e.entries.filter(p => p.trust === "unknown").length;
-  if ((e.entries.length > 0 && unknown / e.entries.length > config.triggers.t6_unknown_max)
+  if (e.constructionHandover || (e.entries.length > 0 && unknown / e.entries.length > config.triggers.t6_unknown_max)
     || (e.consecutiveJevFallbacks ?? 0) >= config.triggers.t6_fallbacks) triggers.push("T6");
   if (plan && input.floor >= plan.checkpoint) triggers.push("T7");
   const capped = s.calls >= config.budgets.brain_soft_cap;

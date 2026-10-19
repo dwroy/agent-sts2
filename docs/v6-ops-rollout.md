@@ -31,9 +31,18 @@ W7 实际合入并随 live 更新后的下一局，将 `V6_SHOP_DECIDER=jev`、`
 | `V6_BRAIN_MS` | 90000 ms，目前属于配置记录意图，不能将其当成独立硬超时已生效；实际大脑等待沿现有机制 |
 | `V6_BRAIN_SOFT_CAP` | 每局 15 次软上限；达到后仅保留幕初/T5/T7，故超过 15 本身不等于错误 |
 | `V6_SAMPLES_ACT` / `V6_SAMPLES_PICK` | 100 / 20，同种子抽样数；减少抽样属于明确配置变更，应留记录 |
+| `V6_MIN_KNOWN_OPTION_RATIO` | 0.50，构筑题已知加权值选项比例下限；无论如何至少两项已知，范围 0–1 |
 | `V6_DIRECTION_MIN_WEIGHT` | 0.10，拿牌评估的方向概率门槛；幕初评估全部方向 |
 
 Jev 模型为 `typesafe/jev-1.14`，走 Nova `/api/alpha/decisions`，choice 候选位于 `criteria`；DeepSeek 为 `deepseek/deepseek-flash`，也走 Nova。key 仅由项目适配器从文件读取，不使用自费 key 回退。接入依据为 `/home/dw/.config/nova-game-agents/AGENT-INTEGRATION.md` 和 [Nova 交接](../handoff/nova-gateway-20261019.md)。不在本步骤发送真实模型请求或执行游戏动作。
+
+## 投影不足或 Jev 失败时转大脑
+
+`V6_BUILD=on` 且相应 decider 为 `jev` 时，拿牌、选药、商店、休息共用安全网：按实际可选项去重，只把完整概率质量（`known_mass=1`）且有有限 `value/se/n` 的加权连战或本幕 Boss 胜率计作已知。部分加权和、仅有配对差、持有价值都不算已知。已知选项不足两项，或已知比例低于 `V6_MIN_KNOWN_OPTION_RATIO`（默认 50%），本题绕过 Jev，重建原大脑题。Jev 错误、超时、非法答案也转原大脑，不重试 Jev 或直接按代码跳过。
+
+`v6-build.jsonl` 记录 `event=v6_unknown_to_brain`、原因、已知/总选项数与 T6；实际动作行记录同名字段及实际大脑 decider。Jev 失败尝试另有原题型耗时/兜底审计。转接信号与方向调度消费共用 question ID，监督统计不会重复计同一次 T6；方向重规划仍遵守原同回合合并与软上限。
+
+目前 W6 药槽题没有加权投影提供方，故需要取舍的药水题直接转原大脑；不能用药水持有 HP 或 noul 分数填充胜率。奖励空槽自动领取及战斗用药沿原路径。原大脑不可用时才允许原代码基线；全部未知的奖励拿牌若该基线会默认 skip，最后退路取首个实际可选的卡牌，并明确记 `code-fallback`。大脑明确选择 skip 仍照常执行。原大脑阻塞/故障守卫继续有效，安全网不解除故障暂停。
 
 ## 核对实际读回
 

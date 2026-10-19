@@ -11,6 +11,7 @@ import { asRecord } from "../core/util/json.js";
 export const v6LogSchema = object({
   schema: literal("v6-build-log-v1"), ts: text(40), run_id: id, character: characterSchema, question_id: id,
   kind: enumeration("act", "replan", "card_pick", "potion", "shop", "rest", "combat_line"), mode: enumeration("shadow", "on"),
+  event: optional(literal("v6_unknown_to_brain")),
   stage: optional(enumeration("projection", "trigger", "decision", "brain")),
   // A real four-option reward has 1,224 combination/target rows.
   entries: array(projectionEntrySchema, 0, 20_000),

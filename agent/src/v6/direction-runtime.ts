@@ -98,7 +98,9 @@ export async function ensureDirectionPlan(env: DecisionEnv, brain: Pick<Brain, "
     weighted_joint_delta: null, deck_count_change: null, core_first_cast_turn: null, win_tier: "unknown" as const,
     delta_tier: "unknown" as const, direction_role: "unknown" as const, trust: "unknown" as const, reflex_ids: [],
   }))))];
+  const handover = screenMemory.v6BrainFallbackPending?.run === run ? screenMemory.v6BrainFallbackPending : undefined;
   const evaluation = { ...provided, id: provided?.id ?? JSON.stringify([cards, relics, actOf(state)]), entries,
+    constructionHandover: provided?.constructionHandover || !!handover,
     consecutiveJevFallbacks: Math.max(provided?.consecutiveJevFallbacks ?? 0, screenMemory.v6JevFallbackRun === run ? screenMemory.v6JevFallbacks ?? 0 : 0),
     acquiredComponentIds: [...(provided?.acquiredComponentIds ?? []), ...(m.observed ? relics.filter(id => !m.relics.includes(id)) : [])] };
   m.relics = relics;
@@ -107,11 +109,14 @@ export async function ensureDirectionPlan(env: DecisionEnv, brain: Pick<Brain, "
   const act = actOf(state), floor = state.run?.floor ?? 0;
   // Non-combat turn identity: room/floor, not polls or animations within it.
   const turnKey = `${run}:${act}:${floor}:${state.turn ?? "room"}`;
+  // Reuse the handover signal ID so supervision counts one T6, including its scheduler consumption.
+  const questionId = handover?.questionId ?? `direction_${act}_${floor}`;
   const result = detectReplan(m.scheduler, { act, floor, turnKey, plan: screenMemory.runPlan?.v6, evaluation, requirementIds: requirements }, config);
+  if (evaluation.constructionHandover) delete screenMemory.v6BrainFallbackPending;
   if (JSON.stringify(m) !== before) logRunPlan(logFile, { run, v6_state: toJsonValue(m) });
   const log = new V6BuildLog(config, join(dirname(logFile), "v6-build.jsonl"));
   if (result.triggers.length) log.append({ schema: "v6-build-log-v1", ts: new Date().toISOString(), run_id: run,
-    character: str(raw["character_id"]).toLowerCase() as Character, question_id: `direction_${act}_${floor}`, kind: result.triggers.includes("act_start") ? "act" : "replan", stage: "trigger", mode: config.mode,
+    character: str(raw["character_id"]).toLowerCase() as Character, question_id: questionId, kind: result.triggers.includes("act_start") ? "act" : "replan", stage: "trigger", mode: config.mode,
     entries, jev_answer: null, fallback: null, elapsed_ms: 0, cache: { hits: 0, misses: 0 }, degradation: provided ? [] : ["projection_provider_unavailable"],
     unknown: { count: entries.filter(e => e.trust === "unknown").length, total: entries.length }, triggers: result.triggers, merged_triggers: result.merged, skipped_triggers: result.skipped });
   if (!result.ask || config.mode !== "on") return { result, payload: null, stored: false };
@@ -137,7 +142,7 @@ export async function ensureDirectionPlan(env: DecisionEnv, brain: Pick<Brain, "
   const context = directionContext(payload)!;
   const started = Date.now();
   const recordBrain = (failed: boolean) => log.append({ schema: "v6-build-log-v1", ts: new Date().toISOString(), run_id: run,
-    character: str(raw["character_id"]).toLowerCase() as Character, question_id: `direction_${act}_${floor}`, kind: result.triggers.includes("act_start") ? "act" : "replan", stage: "brain", mode: config.mode,
+    character: str(raw["character_id"]).toLowerCase() as Character, question_id: questionId, kind: result.triggers.includes("act_start") ? "act" : "replan", stage: "brain", mode: config.mode,
     entries: [], jev_answer: null, fallback: failed ? "brain_request_failed" : null, elapsed_ms: Date.now() - started,
     cache: { hits: 0, misses: 0 }, degradation: promptBudgetLabels(payload), unknown: { count: 0, total: 0 }, triggers: [], merged_triggers: [], skipped_triggers: [] });
   const { parsed, meta } = await (async () => {

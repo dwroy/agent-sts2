@@ -1,0 +1,63 @@
+{
+  "batch": "20261020-044302-s2-strategy-proposal",
+  "linked_identical_batch": "20261020-061302-strategy-proposal",
+  "source_commit": "a46239a29c3109ff9f69224ad77128d9929d3e9a",
+  "source_tree": "e6e58282e2f197af673a38639dd91026bfcca81c",
+  "original_base": "013e04a40b575552f7411060d734bfd3570893bc",
+  "fixed_patch_sha256": "d4774eeb2b740c6f8efd995d772ce87e3ab6d9b2a16c4d35f1e7a46f908a4fb6",
+  "owned_files": [
+    {
+      "path": "agent/src/reflex/card-model.ts",
+      "sha256": "e6ccb304e8d866ed08da60edc65cef46025aac61916f1f4ba034a7159aeae9ea",
+      "bytes": 130839
+    },
+    {
+      "path": "agent/src/reflex/silent-apotheosis.ts",
+      "sha256": "cd7f4956fcda62c63c585ae252b9033a0ff9622390f227fe4c256a8fffb33f0f",
+      "bytes": 5482
+    },
+    {
+      "path": "agent/tests/silent-apotheosis.test.ts",
+      "sha256": "d9b3c2cc9410b74c5c74ff94842fbb0420c0f4c0ab55f1922f3bc3b8a577cf4e",
+      "bytes": 7419
+    },
+    {
+      "path": "agent/tests/silent-apotheosis-upgraded.test.ts",
+      "sha256": "abc2d2847831c4a17fc91f958c8473e1edc5724d5b02d8c18d8e6bdecc65013b",
+      "bytes": 4403
+    },
+    {
+      "path": "agent/tests/silent-apotheosis-upgraded-evidence.json",
+      "sha256": "61304d2a770282d7e8668607178450d4652a24692ca7653595ae322441af74c4",
+      "bytes": 36926
+    }
+  ],
+  "accepted_host_status": {
+    "batch": "20261020-044302-s2-strategy-proposal",
+    "at": "2026-10-20T06:53:09+08:00",
+    "pid": 544703,
+    "start_ticks": 134233223,
+    "nice": 19,
+    "state": "passed",
+    "combined_full_rc": 0,
+    "source_commit": null,
+    "base": "013e04a40b575552f7411060d734bfd3570893bc",
+    "prospective_tree": "e6e58282e2f197af673a38639dd91026bfcca81c",
+    "input_sha256": "669b1d54ca66ede820171287df57ce80eee1fbe752e0a127815af3c8d93a16b6",
+    "log": "ops/codex-ops/learner/20261020-044302-s2-strategy-proposal.host-uncommitted-e6e58282e2f197af673a38639dd91026bfcca81c.checks.log",
+    "uncommitted_source": true,
+    "new_model": false,
+    "command": "export PATH=\"$HOME/.local/node/bin:$PATH\"; nice -n 19 npx tsc -p tsconfig.json --noEmit; a=$?; nice -n 19 npx vitest run --maxWorkers=2; b=$?; [ \"$a\" = 0 ] && [ \"$b\" = 0 ]",
+    "check_pid": 544731,
+    "started_at": "2026-10-20T06:53:09+08:00",
+    "finished_at": "2026-10-20T07:05:13+08:00",
+    "log_sha256": "68aec807e262e6609fe4a9e76c056fba1c611c3a5abdb5e70f7ecb42f3fe402b"
+  },
+  "source_gitleaks_rc": 0,
+  "main_at_commit": "7d13a5037a1356f9f8c78700947621c3f08b1f84",
+  "live_at_commit": "6528e3db867924dbe402f370b0579c63106679cd",
+  "main_integrated": false,
+  "live_integrated": false,
+  "release_added": false,
+  "original_worktree_strictly_clean_after_commit": true
+}

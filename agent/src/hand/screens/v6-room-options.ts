@@ -17,7 +17,7 @@ export interface V6RoomOption { option: PickOption; state: BuildState | null; ch
 export interface V6RoomOptions { kind: V6RoomKind; baseline: BuildState | null; options: V6RoomOption[] }
 export function v6RoomActive(env: DecisionEnv, kind: V6RoomKind): boolean {
   const config = v6Config();
-  return config.mode === "on" && config.deciders[kind] === "jev" && !env.state.in_combat;
+  return !env.v6BrainFallback && config.mode === "on" && config.deciders[kind] === "jev" && !env.state.in_combat;
 }
 
 /** Missing inventory resources cannot become fabricated zero-valued projection inputs. */
