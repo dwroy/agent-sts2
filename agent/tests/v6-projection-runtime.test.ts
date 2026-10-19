@@ -9,6 +9,7 @@ it("does not load frozen inputs or simulate while off or in combat", async () =>
   const e = env(board("xljq-f5-reward", "reward"));
   vi.stubEnv("V6_BUILD", "off");
   expect(await runtime.evaluate(e, "act")).toBeNull(); expect(await runtime.precompute(e, 500)).toBeNull();
+  expect(await runtime.evaluateRequest(e, request())).toBeNull(); expect(await runtime.context(e, "pick")).toBeNull();
   vi.stubEnv("V6_BUILD", "on"); e.state.in_combat = true;
   expect(await runtime.evaluate(e, "pick")).toBeNull(); expect(await runtime.precompute(e, 500)).toBeNull();
   expect(load).not.toHaveBeenCalled(); expect(engine.evaluate).not.toHaveBeenCalled();
@@ -36,4 +37,36 @@ it("bounds precomputation to the idle window and joins a pending result", async 
   const second = runtime.precompute(e, 25); release(null as never); await Promise.all([first, second]);
   expect(load).toHaveBeenCalledTimes(1); expect(engine.precompute).toHaveBeenCalledTimes(1);
   expect(await runtime.precompute(e, 0)).toBeNull();
+});
+
+it("waits for the shared idle engine before starting the foreground budget and releases after failure", async () => {
+  vi.stubEnv("V6_BUILD", "on"); const e = env(board("xljq-f5-reward", "reward"));
+  let finish!: (value: never) => void;
+  const engine = { evaluate: vi.fn(async () => { expect(currentDecisionBudget()!.remaining()).toBeGreaterThan(4900); return null as never; }),
+    precompute: vi.fn(() => new Promise<never>(resolve => { finish = resolve; })) };
+  const runtime = new V6ProjectionRuntime(engine, async () => request());
+  const idle = runtime.precompute(e, 100);
+  await vi.waitFor(() => expect(engine.precompute).toHaveBeenCalledTimes(1));
+  const foreground = withDecisionBudget(new DecisionBudget("test", "routine"), () => runtime.evaluateRequest(e, request())); await Promise.resolve(); expect(engine.evaluate).not.toHaveBeenCalled();
+  finish(null as never); expect(await idle).toBeNull(); await foreground; expect(engine.evaluate).toHaveBeenCalledTimes(1);
+  engine.evaluate.mockRejectedValueOnce(new Error("fixed failure"));
+  await expect(runtime.evaluateRequest(e, request())).rejects.toThrow("fixed failure");
+  const later = runtime.precompute(e, 100);
+  await vi.waitFor(() => expect(engine.precompute).toHaveBeenCalledTimes(2)); finish(null as never); await later;
+});
+
+it("exposes the shared factory context and records a W7 request under its own compute budget", async () => {
+  vi.stubEnv("V6_BUILD", "on"); const e = env(board("xljq-f5-reward", "reward")), r = request();
+  const context = { factory: { create: vi.fn() }, situation: { marker: "fixed" } } as any;
+  const input = vi.fn(async () => context), record = vi.fn();
+  const engine = { evaluate: vi.fn(async candidate => {
+    expect(candidate).toBe(r); expect(currentDecisionBudget()!.remaining()).toBeGreaterThan(4900); return { phase: "pick" } as never;
+  }), precompute: vi.fn() };
+  const runtime = new V6ProjectionRuntime(engine, vi.fn(), record, input);
+  expect(await runtime.context(e, "pick")).toBe(context);
+  expect(await withDecisionBudget(new DecisionBudget("W7", "routine"), () => runtime.evaluateRequest(e, r))).toEqual({ phase: "pick" });
+  expect(record).toHaveBeenCalledWith(e, r, { phase: "pick" });
+  e.state.in_combat = true;
+  expect(await runtime.context(e, "pick")).toBeNull(); expect(await runtime.evaluateRequest(e, r)).toBeNull();
+  expect(input).toHaveBeenCalledTimes(1); expect(engine.evaluate).toHaveBeenCalledTimes(1);
 });

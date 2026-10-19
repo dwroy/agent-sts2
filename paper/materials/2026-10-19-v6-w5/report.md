@@ -26,10 +26,24 @@
 
 首次从错误 cwd 调用 npx tsx 时下载到外部 npm 缓存后因路径不存在失败；没有改项目依赖。随后在 agent/ 使用已有工具 `npx --no-install tsx` 执行冻结验收。
 
-## 待集成（Claude 已明确本轮范围）
+## 原待集成事项（记录保留；本轮进展见下）
 
 1. W3 的生产冻结历史包与开局只读加载器由 watcher 提供，包含 coverage、逐层帧、Boss 首试、机会/供给及组合指标、哈希和生成时间。本包先接正式同步输入与循环注入接口；路线进场 HP/危险线继续由既有投影提供方注入，没有以当前 HP 冒充预测或另造危险阈值。未注入时条目明确 unknown，不能报告生产模型已接通。
 2. W3 pick 表目前没有跨方向的同种子连战配对差/SE。Claude 确认本轮先交付现有接口；T3 和增量 T2 保持 unknown，不用边际 SE 拼配对 SE。watcher 后续合入字段后补 T2/T3 提供方—消费方集成测试。
 3. 未合 live，不分配行为发布号；STOP、Regent 状态和其他会话文件保持原状。工作树保留，不能以仅 main 合入满足要求 main/live 双发布的自动回收验收。
 
 补组合角色字段之前的全量检查为 tsc 退出 0、579 文件/5558 项通过/2 项原有跳过（431.21s），原件保留 pre-role-checks/。补字段后 19 项定向测试通过（role-checks/，从工作树根目录运行，未加载 agent 的全局 setup）；补字段后在 agent/ 重新执行主代码 tsc 和完整 Vitest，579 文件/5558 项通过/2 项原有跳过（479.81s），源码 gitleaks 退出 0，原件见 pre-w12-checks/。该轮基于 c71adb784。W1.2/W2.2 合入 f7580b3f5 后已变基并适配；pooled-checks/ 保留首次定向检查 1 项旧单口径断言失败（27 项通过）的原件，修正断言后 pooled-recheck/ 的 30 项/4 文件通过；最新完整检查基于 f7580b3f5：tsc 退出 0，Vitest 581 文件/5576 项通过/2 项原有跳过（483.30s），源码 gitleaks 退出 0，8 个源码/测试文件的哈希核对一致，原件见 pooled-final-checks/。按 Claude 通知，主树快进合入前仍协调，避免与 B 集成撞车。源码与材料的暂存快照 gitleaks 同样退出 0。每次全量检查期间源码保持固定。
+
+## 正式工厂集成与 W7 接口（2026-10-19）
+
+已变基正式工厂 main `a92e8b37f`/记录 `13a06c1e4`，原待集成 1、2 项的消费接线已完成：本角色冻结历史、实际奖励资源、显式路线、空闲预计算/前台 lease，以及 pick_direction_comparisons 到 T2/T3 的提供方—消费方固定测试。不开局、不执行新验收题动作、不生成游戏知识。
+
+生产循环自动提供 `env.v6Projection`。W7 用 `await runtime.context(env, "pick")` 取得 `{factory, situation}`，替换实际资源 options 后调用正式 factory.create；ready 时 `await runtime.evaluateRequest(env, request)` 共用本局引擎/池、前台锁和独立计算预算。完整例子见 `interfaces.md`。本包不迁移商店或休息决策。
+
+正式 main 接口上的首轮 tsc 发现投影日志 character 需按共用枚举收窄，首轮定向检查发现新增预算断言未建立父决策上下文；分别修正生产类型边界和测试上下文。失败原件保留；修正后 tsc 退出 0，5 文件 / 43 项正式集成测试通过（5.78s），首轮完整 Vitest 为587文件通过/1文件失败，5606项通过/1项导入边界断言失败/2项原有跳过（620.88s）。旧断言只允许原消费者，未列入本包新增的 Boss 标识输入适配器和共享 runner runtime；核实只有这两个新增导入后精确更新名单，其他边界继续约束。随后变基最新记录 main f664817b0；源码仅该测试变更，1437文件哈希逐一核实。tsc 再次退出0，含 rollout 的6文件/129项定向检查通过（9.46s）；第二轮完整 Vitest 退出0：588文件/5607项通过/2项原有跳过（588.47s）。1437个受测文件结束后哈希全部一致；Python健康工具9项通过，暂存源码/材料 gitleaks退出0。源码哈希和各轮原件放 checks/formal/。
+
+2026-10-20 合入前 main 新增 Silent R2 核心卡/经验关联6d1c86948；保留第二轮原件，变基后再做完整检查。W5不修改该知识发布。
+
+第三轮在R2基线6d1c86948完整通过：tsc0，588文件/5607项通过/2项原有跳过（502.10s），1439个源码/知识文件哈希一致。正式加载器读回4方向/17组合、均为build_core。运行期间main合入独立content_store流名兼容修复；最终再变基并完整检查，不把第三轮冒充后续源码检查。
+
+已变基main0c1f289eb，精确核实agent受测文件只有上游content-store.test.ts发生变化；W5生产代码及R2哈希全部一致。ops/content_store与其Python固定测试纳入第四轮快照；Python15项已通过，tsc/完整Vitest最终状态见checks/formal/final-result.json。

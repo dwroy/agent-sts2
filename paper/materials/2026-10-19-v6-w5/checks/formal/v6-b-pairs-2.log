@@ -1,0 +1,26 @@
+
+ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/v6-w5-20261019/agent
+
+ ❯ tests/v6-card-pick.test.ts (0 test)
+
+⎯⎯⎯⎯⎯⎯ Failed Suites 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/v6-card-pick.test.ts [ tests/v6-card-pick.test.ts ]
+Error: Cannot find module '../sim/v6-request-factory.js' imported from /home/dw/Projects/agent-sts2/.worktrees/v6-w5-20261019/agent/src/v6/projection-input.ts
+ ❯ src/v6/projection-input.ts:20:1
+     18| import { loadV6HistoryPack } from "../sim/v6-history-pack.js";
+     19| import { v6Directions, v6Digest } from "../sim/v6-completion.js";
+     20| import { createV6ProjectionFactory, type V6SituationOption } from "../…
+       | ^
+     21| import type { V6ProjectionRequest } from "../sim/v6-projection.js";
+     22| import type { Character } from "./formats.js";
+ ❯ src/v6/projection-runtime.ts:6:1
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed | 1 passed (2)
+      Tests  3 passed (3)
+   Start at  23:03:21
+   Duration  6.09s (transform 7.06s, setup 2.26s, import 1.51s, tests 581ms, environment 0ms)
+

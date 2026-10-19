@@ -1,0 +1,30 @@
+
+ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/v6-w5-20261019/agent
+
+ ❯ tests/v6-projection-runtime.test.ts (5 tests | 1 failed) 215ms
+   × exposes the shared factory context and records a W7 request under its own compute budget 20ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/v6-projection-runtime.test.ts > exposes the shared factory context and records a W7 request under its own compute budget
+TypeError: Cannot read properties of undefined (reading 'remaining')
+ ❯ Object.<anonymous> tests/v6-projection-runtime.test.ts:63:62
+     61|   const input = vi.fn(async () => context), record = vi.fn();
+     62|   const engine = { evaluate: vi.fn(async candidate => {
+     63|     expect(candidate).toBe(r); expect(currentDecisionBudget()!.remaini…
+       |                                                              ^
+     64|   }), precompute: vi.fn() };
+     65|   const runtime = new V6ProjectionRuntime(engine, vi.fn(), record, inp…
+ ❯ src/v6/projection-runtime.ts:41:183
+ ❯ withIndependentDecisionBudget src/core/decision-budget.ts:89:23
+ ❯ V6ProjectionRuntime.foreground src/v6/projection-runtime.ts:41:27
+ ❯ tests/v6-projection-runtime.test.ts:67:10
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed | 4 passed (5)
+      Tests  1 failed | 42 passed (43)
+   Start at  23:46:12
+   Duration  7.12s (transform 14.47s, setup 3.52s, import 17.88s, tests 2.55s, environment 1ms)
+

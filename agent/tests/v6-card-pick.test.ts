@@ -34,7 +34,7 @@ function fixture(mode = "on", character = "silent") {
   return { dir, raw, e };
 }
 function answer(choice: string): AnswerSet { return { pick: { type: "choice", choice, confidence: .8, probabilities: { [choice]: .8 }, raw: {} } }; }
-function table(): V6ProjectionTable { return { schema: "v6-projection-table-v1", enabled: true, phase: "pick", combinations: [], entries: [], act_evaluations: [], weighted: [], rankings: {}, target_mixtures: [],
+function table(): V6ProjectionTable { return { schema: "v6-projection-table-v1", enabled: true, phase: "pick", combinations: [], entries: [], act_evaluations: [], pick_direction_comparisons: [], weighted: [], rankings: {}, target_mixtures: [],
   targets: [{ id: "f17:TEST_BOSS", boss: "TEST_BOSS", act: 1, floor: 17, kind: "current", probability: 1, labels: [] }],
   telemetry: { elapsed_ms: 1, cache_hits: 0, cache_misses: 0, simulations: 0, timed_out: 0, degradation: [], unknown_entries: 0, total_entries: 0, unknown_fraction: 0, act_cache_hit: false } }; }
 function delta(t: V6ProjectionTable, option: string, kind: "current_gate" | "clearance", mean: number | null, se = .01) {

@@ -1,0 +1,40 @@
+
+ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/v6-w5-20261019/agent
+
+ ❯ tests/rollout.test.ts (86 tests | 1 failed) 8684ms
+     × reaches decision code only through rollout-live.ts, and that only from the combat question's facts 203ms
+.....
+----------------------------------------------------------------------
+Ran 5 tests in 0.020s
+
+OK
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/rollout.test.ts > rollout (offline) > reaches decision code only through rollout-live.ts, and that only from the combat question's facts
+AssertionError: expected [ 'src/reflex/combat-plan.ts', …(1) ] to deeply equal [ 'src/reflex/combat-plan.ts' ]
+
+- Expected
++ Received
+
+  [
+    "src/reflex/combat-plan.ts",
++   "src/v6/projection-input.ts",
+  ]
+
+ ❯ tests/rollout.test.ts:437:91
+    435|     expect(importers("rollout-live").filter((path) => !path.startsWith…
+    436|     expect(importers("(sim/)?boss-sim").filter((path) => !path.startsW…
+    437|     expect(importers("(sim/)?boss-lines").filter((path) => !path.start…
+       |                                                                                           ^
+    438|     expect(importers("(sim/)?(boss-start|build-sim)").filter((path) =>…
+    439|     expect(importers("(sim/)?build-sim-facts").filter((path) => !path.…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed | 587 passed (588)
+      Tests  1 failed | 5606 passed | 2 skipped (5609)
+   Start at  23:47:18
+   Duration  620.88s (transform 50.36s, setup 87.91s, import 259.91s, tests 1980.71s, environment 111ms)
+

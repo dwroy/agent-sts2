@@ -414,7 +414,7 @@ describe("rollout (offline)", () => {
     expect(high.hpLoss).toBeGreaterThanOrEqual(low.hpLoss);
   });
 
-  it("reaches decision code only through rollout-live.ts, and that only from the combat question's facts", () => {
+  it("keeps rollout and construction simulation imports at their explicit consumer boundaries", () => {
     const importers = (module: string): string[] => {
       const found: string[] = [];
       const walk = (dir: string): void => {
@@ -431,13 +431,14 @@ describe("rollout (offline)", () => {
     // into the combat question through src/sim/boss-lines.ts only (facts, and the boss ranking behind BOSS_SIM_LINES).
     // B3 builds its synthetic boss start with the live planner's board (rollout-live), and reaches the loop only through
     // build-sim-facts (the deck-building questions' facts) and its worker pool (index.ts).
+    // V6 reads boss identities in the input adapter and shares the runner through its projection runtime.
     expect(importers("rollout").filter((path) => !path.startsWith("src/sim/"))).toEqual(["src/reflex/rollout-live.ts"]);
     expect(importers("rollout-live").filter((path) => !path.startsWith("src/sim/"))).toEqual(["src/reflex/combat-plan.ts"]);
     expect(importers("(sim/)?boss-sim").filter((path) => !path.startsWith("src/sim/"))).toEqual([]);
-    expect(importers("(sim/)?boss-lines").filter((path) => !path.startsWith("src/sim/"))).toEqual(["src/reflex/combat-plan.ts"]);
+    expect(importers("(sim/)?boss-lines").filter((path) => !path.startsWith("src/sim/"))).toEqual(["src/reflex/combat-plan.ts", "src/v6/projection-input.ts"]);
     expect(importers("(sim/)?(boss-start|build-sim)").filter((path) => !path.startsWith("src/sim/"))).toEqual([]);
     expect(importers("(sim/)?build-sim-facts").filter((path) => !path.startsWith("src/sim/"))).toEqual(["src/hand/loop.ts"]);
-    expect(importers("(sim/)?build-sim-pool").filter((path) => !path.startsWith("src/sim/"))).toEqual(["src/core/index.ts"]);
+    expect(importers("(sim/)?build-sim-pool").filter((path) => !path.startsWith("src/sim/"))).toEqual(["src/core/index.ts", "src/v6/projection-runtime.ts"]);
   });
 });
 

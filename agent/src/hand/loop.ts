@@ -1,3 +1,4 @@
+import { productionV6Projection } from "../v6/projection-runtime.js";
 import { prepareObservedCandidates } from "./pace-precompute.js";
 import { HumanPaceShadow } from "../sim/human-pace-observer.js";
 import { setPaceSolverScope } from "../reflex/pace-solver-cache.js";
@@ -285,6 +286,7 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
 async function runLoopWithBudgets(options: LoopOptions): Promise<LoopStats> {
   const paceLedger = new DecisionBudgetLedger();
   const { config, mode, client, knowledge } = options;
+  const v6Projection = options.v6Projection ?? productionV6Projection(options.buildSim?.runner, config.runPlanLog);
   // PASSIVE_PIECES as configured (.env read after the modules loaded: their process.env default may predate it).
   passivePiecesOptions.enabled = config.passivePieces;
   // CARD_CONDITIONS likewise (src/reflex/card-model.ts).
@@ -752,6 +754,7 @@ async function runLoopWithBudgets(options: LoopOptions): Promise<LoopStats> {
     // SL_RETRY_EXPLORE_ANCHOR: a first attempt's decision points recorded (nothing else changes).
     const slRecord = slEnv ? undefined : sl?.recordFor(state);
     const env: DecisionEnv = {
+      ...(v6Projection ? { v6Projection } : {}),
       requiredBossEvaluation: str(asRecord(state.run?.raw)["character_id"]).toLowerCase() === "silent",
       simWait: fileSimWait(join(dirname(config.log.decisionLog), "sim-wait.json"), (message) => onEvent({ type: "note", message })),
       simFailureDirectory: join(dirname(config.log.decisionLog), "sim-failures"),
@@ -795,14 +798,15 @@ async function runLoopWithBudgets(options: LoopOptions): Promise<LoopStats> {
     }
     // FIGHT_PLAN=v1: DeepSeek plans an elite/boss fight once, before its first decision.
     // RUN_PLAN=v1: DeepSeek's run strategy, renewed at the map screen when a checkpoint is due.
-    if (!planned && v6Config().mode !== "off" && !state.in_combat && options.v6Projection) {
+    if (!planned && v6Config().mode !== "off" && !state.in_combat && v6Projection) {
       try {
         if (!screenMemory.runPlan || screenMemory.runPlan.runId !== runId) screenMemory.runPlan = loadRunPlan(config.runPlanLog, runId);
         const phase = !screenMemory.runPlan?.v6 || screenMemory.runPlan.act !== actOf(state) ? "act" : "pick";
-        const table = await options.v6Projection.evaluate(env, phase);
+        const table = await v6Projection.evaluate(env, phase);
         if (table) {
           env.v6ProjectionTable = table;
           env.v6DirectionEvaluation = directionEvaluationFromProjection(table, v6Config(), "skip", screenMemory.runPlan?.v6);
+          env.v6DirectionEvaluation.id = `${runId}:${state.run?.floor}:${env.v6DirectionEvaluation.id}`;
         }
       } catch (error) {
         logRunPlan(config.runPlanLog, { run: runId, v6_projection_error: String(error).slice(0, 200) });
@@ -816,9 +820,9 @@ async function runLoopWithBudgets(options: LoopOptions): Promise<LoopStats> {
         if (attempt?.stored) {
           onEvent({ type: "note", message: `V6 direction plan stored (${attempt.result.triggers.join(",")})` });
           // The reward must use the new weights/brain combination, rather than the table that prompted re-planning.
-          if (options.v6Projection && bool(asRecord(state.raw.reward).pending_card_choice)) {
+          if (v6Projection && bool(asRecord(state.raw.reward).pending_card_choice)) {
             env.v6ProjectionTable = undefined;
-            env.v6ProjectionTable = await options.v6Projection.evaluate(env, "pick") ?? undefined;
+            env.v6ProjectionTable = await v6Projection.evaluate(env, "pick") ?? undefined;
           }
         }
       } catch (error) {
@@ -903,8 +907,8 @@ async function runLoopWithBudgets(options: LoopOptions): Promise<LoopStats> {
 
     if (planned.kind === "wait") {
       const v6WaitStarted = Date.now();
-      if (v6Config().mode !== "off" && options.v6Projection && !state.in_combat) {
-        try { await options.v6Projection.precompute(env, pollIntervalMs); } catch { /* Missing evidence stays unknown. */ }
+      if (v6Config().mode !== "off" && v6Projection && !state.in_combat) {
+        try { await v6Projection.precompute(env, pollIntervalMs); } catch { /* Missing evidence stays unknown. */ }
       }
       const prepared = prepareObservedCandidates(env, pollIntervalMs);
       if (prepared) onEvent({ type: "note", message: `H1 idle preparation: ${JSON.stringify(prepared)}` });
@@ -924,7 +928,7 @@ async function runLoopWithBudgets(options: LoopOptions): Promise<LoopStats> {
       stats.waits += 1;
       noteStall(state, planned.reason);
       onEvent({ type: "wait", screen: state.screen, reason: planned.reason });
-      await sleep(v6Config().mode !== "off" && options.v6Projection ? Math.max(0, pollIntervalMs - (Date.now() - v6WaitStarted)) : pollIntervalMs);
+      await sleep(v6Config().mode !== "off" && v6Projection ? Math.max(0, pollIntervalMs - (Date.now() - v6WaitStarted)) : pollIntervalMs);
       continue;
     }
     if (planned.kind === "unsupported") {

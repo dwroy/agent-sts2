@@ -11,6 +11,8 @@ import type { JsonValue } from "../core/util/json.js";
 import type { RunBrief } from "./run-brief.js";
 
 export interface DecisionEnv {
+  /** Shared run snapshot and foreground-locked projection service for V6 consumers. */
+  v6Projection?: import("../v6/projection-runtime.js").V6ProjectionRuntime;
   v6ProjectionTable?: import("../sim/v6-projection.js").V6ProjectionTable;
   /** Optional projection boundary; absent data stays unknown. Never read while V6 is off. */
   v6DirectionEvaluation?: import("../v6/replan-triggers.js").DirectionEvaluation;

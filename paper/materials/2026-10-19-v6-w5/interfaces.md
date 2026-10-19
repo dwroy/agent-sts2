@@ -1,26 +1,48 @@
-# W5 生产提供器接入合同
+# W5 生产消费接口与 W7 复用合同
 
-当前只接消费边界，未实现 W3 负责的历史包加载器；所有开关默认 off。
+正式工厂基线为 main `a92e8b37f`（交接记录 `13a06c1e4`），合同见 `paper/materials/2026-10-19-v6-w3-request-factory/interfaces.md`。本包不修改 sim 提供方。
+
+`runLoop` 在 V6 开启时建立一个 `productionV6Projection(buildSim?.runner, runPlanLog)`，放入 `env.v6Projection`。已有 `LoopOptions.v6Projection` 注入优先。默认 off 不创建 runner、不读 V6 文件、不增加该 env 字段；off 时各角色的旧题面与动作路径沿用原实现。
+
+## W7 共享上下文与前台求值
 
 ```ts
-const runtime = new V6ProjectionRuntime(engine, async (env, phase) => {
-  // The W3 loader builds a fresh formal request from frozen, role-scoped evidence.
-  return provider.request(env, phase);
-});
-await runLoop({ ...options, v6Projection: runtime });
+const runtime = env.v6Projection;
+const context = await runtime?.context(env, "pick");
+if (runtime && context) {
+  const { factory, situation } = context;
+  const result = factory.create({
+    ...situation,
+    baselineId: "leave",
+    options: [{ id: "rest", changes: [{ kind: "heal", amount: actualHeal, price: 0 }] }],
+  });
+  if (result.status === "ready") {
+    const table = await runtime.evaluateRequest(env, result.request);
+    // W7 consumes projection entries and keeps its own existing legal-action fallback.
+  }
+}
 ```
 
-以上 provider 为待接入组件，不是本包已经提供的实现。`engine` 可使用正式 `V6ProjectionEngine`；request 可返回 null，消费端保持 unknown。
+- `V6ProjectionInput` 从 `agent/src/v6/projection-input.ts` 导出：`{factory: V6ProjectionFactory, situation: V6ProjectionSituation}`。独立固定数据调用方也可用 `v6ProjectionInputs(knowledgeDir, now?)` 创建相同提供器。
+- `V6ProjectionRuntime.context(env, phase)` 返回 `Promise<V6ProjectionInput | null>`。factory 是本局共享的冻结实例，situation 每次由当前实际资源、最新大脑方向概率/临时组合与选定路线生成。W7 替换 options/baselineId；如有选项相关路线模型，沿正式工厂合同替换 route 并更新 signature。不得把已修改的 situation 写回共享 env。
+- `V6ProjectionRuntime.evaluateRequest(env, request)` 返回 `Promise<V6ProjectionTable | null>`，与普通 `evaluate(env, phase)`、空闲预计算共用同一引擎和 runner/pool。先 invalidate 并 await acquireForeground，再开始独立计算窗口，finally release；异常向调用方抛出。pick 默认计算 5000ms，act 默认 60000ms，Jev 5000ms 由调用方另计。off、战斗、request.config.mode=off 返回 null。
+- `context` 在 off/战斗返回 null；自定义注入的 runtime 若未提供第四个 input 回调，也返回 null，W7 保留既有 unknown/兜底。生产 runtime 已提供该回调。
+- ready 的 labels/rejected_options 由 W7 按其题型记录；只拿合法实际动作，拒绝选项不得直接执行。通用投影日志的 `stage=projection` 按 act/pick 标记，W7 自己的 Jev/兜底记录仍用 shop/rest 题型。
 
-1. 奖励 baseline ID 必须为 `skip`，每张候选牌 option ID 必须为 `card${reward.card_options[i].index}`（缺 index 时用数组索引），对应 actual choose_reward_card 的 option_index；不得重编号到 0/1/2 后直接投喂 W5。只应提供当前合法奖励动作。
-2. 方向、组合 ID/source 与本角色 build-core-v1 或 construction 过渡适配器相同；临时组合按 W3 的 `<direction>:brain`。请求的 weights/idealOverrides 每次从当前 env.screenMemory.runPlan.v6 读取；存下新大脑答案后会立即重算奖励 pick 表，不能复用旧概率/旧临时组合。
-3. 使用正式 targets（含 f48→f49 次序）、当前角色/进阶、完整资源、seed/modelVersion/contextDigest、冻结历史签名、实际路线进场 HP。缺来源不伪造数字；历史包只在局间生成、开局只读加载。上下文签名必须隔离本局、角色/进阶、权重、资源、临时组合与证据版本。
-4. `phase=act` 用幕初计算预算，pick 用独立默认 5000ms；Jev 使用独立最多 5000ms。等待预计算会将 pick_ms 限制为当前空闲窗口；不触发游戏动作。off/战斗不读 request、不调用 engine。
-5. W4 读取 `directionEvaluationFromProjection(table, config, "skip", plan, extra)`；extra 保留既有路线投影的 bossEntryHp/hazardHp、acquiredComponentIds、pivotMatched 注入入口。可通过原 `LoopOptions.v6DirectionEvaluation` 提供完整补充评估；该回调在正式表消费之后调用，应保留其 entries/targets。
-6. 当前 act_evaluations 的跨方向 joint_paired_delta 可读；pick 缺少该字段时 T3、增量 T2 保持 unknown。待 watcher 提供正式字段后补消费和集成测试，不从边际胜率 SE 合成配对 SE。
+## 拿牌与触发消费
 
-W5 题面在 ProjectionEntry 之外按正式 `table.combinations` 的 option/direction/combo/target 四项身份消费 `role`、`role_labels`、`formation_se/n` 与 `unknown_reasons`；模型限制 `model_labels` 共享去重。无正式组合行时不制造该信息，已有 unknown 条目保持不变。
+奖励 baseline 为 `skip`，候选 ID 为 `card${reward.card_options[i].index}`（缺 index 才用数组索引），直接对应 choose_reward_card.option_index，复制数沿 `permanentCardGain`。只提供当前合法奖励动作。`V6_CARD_DECIDER=jev` 时英文 Jev choice 的候选放 criteria，独立最多 5000ms；shadow 仅记录，off 沿原题面和动作。奖励空药槽直接领取、战斗用药不变。
 
-W1.2 合并统计以 main f7580b3f5 的 `buildMetricSchema` 为准：每个组合保留 first / including_sl 两项，不按来源版本/进阶筛选，不合并两个分母；target_ascension 明示校正目标。短题面保留 sources 的版本、进阶和计数、raw_counts、测量 value/SE/n/unit/method/unknown_reason、小样本标签及模拟/回归/收缩摘要；来源 run_ids 留在完整 ProjectionEntry 日志。无指标的过渡或 brain 组合保持未知，不向 W1 共用 schema 增补消费端字段。
+方向/组合身份使用正式 build-core-v1 或 construction 过渡适配器；临时组合沿 W3 `<direction>:brain`。每次 situation 读取当前计划，存下新大脑答案后立即重算奖励 pick 表。组合题面保留正式条目可得率、凑齐与凑不齐胜率、组合期望、指标、来源与 unknown 限制；不从历史自行推导知识。
 
-W7 可复用 `withConstructionJevBudget(stage, work)` 获得构筑独立窗口；本包未迁移商店、删牌、升级或休息选择。
+T2/T3 正式读取 `table.pick_direction_comparisons`，仅接受相对当前最高脑概率方向、known_mass=1 的 joint_paired_delta；不从边际 SE 拼配对 SE。T3 另核该奖励选项在对应方向为 core；同一次评估不会累计 T2 连续证据。act_evaluations 继续用于幕初。
+
+`directionEvaluationFromProjection(table, config, "skip", plan, extra)` 的 extra 保留 bossEntryHp/hazardHp、acquiredComponentIds、pivotMatched。既有 `LoopOptions.v6DirectionEvaluation` 可提供完整补充评估，应保留正式 entries/targets；T5 消费已校准危险线，不在本包新造阈值。
+
+## 冻结、路线与未知
+
+每局/角色/进阶只读加载一次本角色 v6-history、正式 cores/过渡模板、support、trust、双 Boss 模型和只读知识，工厂由 W3 提供。模型摘要包含历史哈希/时间与上下文版本；不跨角色回退。asOf 在进程首次观察该局时固定，局内换包不生效；重启或新局重新读取。
+
+路线签名含本局、楼层、HP、路线与成本。显式传 route，包括空路径；缺目标进场 HP 保持 unknown。只接已选择的本幕路线，没有同样本 bossExit 的跨 Boss 路线保持 unknown，不能拿历史 HP 冒充当前路线。W7 若有正式 bossExit 回调，须连同其实现/数据版本纳入 route.signature。
+
+生产包当前仅 1 个组合指标，既有回放未知 100%、cache 0；固定接口测试通过不代表投影质量或自然收益验收。验收过程和原件见 `runtime-integration.md` 与 `checks/`。

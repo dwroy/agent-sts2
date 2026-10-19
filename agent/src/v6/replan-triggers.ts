@@ -6,6 +6,7 @@ export type ReplanTrigger = "act_start" | "T1" | "T2" | "T3" | "T4" | "T5" | "T6
 export interface DirectionComparison {
   direction: string; leader: string; mean: number; se: number; n: number;
   offeredCore?: boolean;
+  optionId?: string; labels?: string[];
 }
 export interface DirectionEvaluation {
   id: string;
