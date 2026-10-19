@@ -1,0 +1,84 @@
+{
+  "task": "v6-upgrade-log-coverage",
+  "tested_base": "b0aacef41",
+  "tsc": {
+    "command": "PATH=\"$HOME/.local/node/bin:$PATH\" nice -n 19 npx tsc -p tsconfig.json --noEmit",
+    "cwd": "agent",
+    "exit_code": 0,
+    "log": "tsc.log"
+  },
+  "python": {
+    "command": "/usr/bin/python3 -m unittest discover -s knowledge/builders -p test_card_upgrades.py -v",
+    "exit_code": 0,
+    "tests_passed": 5,
+    "log": "python-tests.log"
+  },
+  "vitest": {
+    "command": "PATH=\"$HOME/.local/node/bin:$PATH\" nice -n 19 npx vitest run --maxWorkers=3",
+    "cwd": "agent",
+    "status": "passed",
+    "exit_code": 0,
+    "log": "vitest.log.gz",
+    "files_passed": 597,
+    "tests_passed": 5715,
+    "tests_skipped": 2,
+    "duration_seconds": 547.49,
+    "raw_log_preserved_locally": "vitest.log"
+  },
+  "gitleaks": {
+    "status": "passed",
+    "material_scan_exit_code": 0,
+    "staged_scan_exit_code": 0,
+    "logs": [
+      "gitleaks-materials.log",
+      "gitleaks-staged.log",
+      "gitleaks-staged-final.log"
+    ],
+    "final_staged_scan_exit_code": 0
+  },
+  "upgrade_data": {
+    "old_entries": 199,
+    "new_entries": 205,
+    "old_entries_identical": true,
+    "raw_faces_verified": 12,
+    "verification": "source-verification.json"
+  },
+  "f8": {
+    "w0_before": {
+      "prepared": 330,
+      "total": 660
+    },
+    "w0_after": {
+      "prepared": 660,
+      "total": 660
+    },
+    "wk_before_and_after": {
+      "prepared": 660,
+      "total": 660
+    },
+    "identical_sample_hashes": true,
+    "r2_history_pick_known": 0,
+    "r2_history_pick_total": 288,
+    "r2_history_act_known": 0,
+    "r2_history_act_total": 72,
+    "direction_projection_resolved": false
+  },
+  "live_modified": false,
+  "network_requests": 0,
+  "game_actions": 0,
+  "verification_attempts": "verification-attempts.json",
+  "latest_main_before_commit": "83dcc7f4791c3e7abff6bebc0189d351cbdb89c3",
+  "latest_main_agent_knowledge_learner_unchanged_since_tested_base": true,
+  "post_rebase": {
+    "main_parent": "83dcc7f4791c3e7abff6bebc0189d351cbdb89c3",
+    "tsc_exit_code": 0,
+    "tsc_log": "tsc-post-rebase.log",
+    "full_suite_source_commit_before_rebase": "9ee001c69",
+    "full_suite_reuse_reason": "Rebase adds only ops records/release metadata; agent/, knowledge/, learner/ are byte-identical to the fully tested feature commit.",
+    "unchanged_trees": {
+      "agent": "cd7f9e2e62114161d864fdb19d941360631e2bea",
+      "knowledge": "43a18b87c55dc677b4420731e0a96e1f265f53f5",
+      "learner": "bb7fa735d3af889cc28906aa94cdef0db0440233"
+    }
+  }
+}

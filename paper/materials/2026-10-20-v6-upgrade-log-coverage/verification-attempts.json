@@ -1,0 +1,30 @@
+{
+  "full_vitest_attempt_1": {
+    "command": "PATH=\"$HOME/.local/node/bin:$PATH\" nice -n 19 npx vitest run",
+    "status": "interrupted",
+    "exit_code": 143,
+    "reason": "Stopped this attempt by exact process IDs after discovering default worker count exceeded the task worker limit.",
+    "test_result": null,
+    "log_status": "The attempted archive used a path relative to agent/ and failed; the second run overwrote vitest.log. Only the RUN header had been observed. No first-run result is reconstructed."
+  },
+  "full_vitest_attempt_2": {
+    "command": "PATH=\"$HOME/.local/node/bin:$PATH\" nice -n 19 npx vitest run --maxWorkers=3",
+    "log": "vitest.log",
+    "result": "See checks.json after completion."
+  },
+  "frozen_control_attempt_1": {
+    "artifact": "opening-guard-cached-control-diagnostic.json",
+    "status": "invalid_control",
+    "reason": "One shared factory cached null prepare results across before/after data; corrected controls create separate factories and preserve the same sample hashes."
+  },
+  "initial_raw_log_scan": {
+    "status": "failed_on_damaged_json_row",
+    "evidence": "generation-audit.json",
+    "resolution": "Exclude the whole damaged row, record its offset/hash/error, and regenerate without recovering partial cards."
+  },
+  "early_targeted_vitest": {
+    "status": "initial_fixture_setup_failure_then_corrected",
+    "reason": "The logged fixed catalog only contained Ironclad; the first text-face tests could not look up the six Silent cards. Added exact fixed catalog extracts and reran targeted checks successfully.",
+    "original_output": "Tool/session transcript; no separate original logfile exists. The final full suite also covers the corrected fixture and the later enchanted-instance regression."
+  }
+}

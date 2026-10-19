@@ -34,10 +34,19 @@ export function v6ProjectionStart(context: V6StartContext, target: V6ProjectionT
     const at = remaining.findIndex(c => c["card_id"] === card.id && (c["upgraded"] === true) === card.upgraded);
     if (at >= 0) cards.push({ ...remaining.splice(at, 1)[0]!, index });
     else {
-      if (!context.knowledge.card(card.id) || card.upgraded && !cardUpgrade(card.id)) return null;
+      const upgrade = cardUpgrade(card.id);
+      if (!context.knowledge.card(card.id) || card.upgraded && !upgrade) return null;
       const upgradeAt = card.upgraded ? remaining.findIndex(c => c["card_id"] === card.id && c["upgraded"] !== true) : -1;
-      cards.push(upgradeAt >= 0 ? { ...remaining.splice(upgradeAt, 1)[0]!, upgraded: true, index }
-        : { card_id: card.id, upgraded: card.upgraded, index });
+      const held = upgradeAt >= 0 ? remaining.splice(upgradeAt, 1)[0]! : {};
+      // Text-only upgrades need the logged face, not merely an upgraded flag on base rules.
+      const face = upgrade?.faces?.[card.upgraded ? 1 : 0]?.card;
+      // An unenchanted observation cannot replace modified instance values.
+      if (face && (held["enchantment"] != null || asArray(held["dynamic_values"]).some(v => {
+        const value = asRecord(v), base = value["base_value"];
+        return value["is_modified"] === true || ["current_value", "enchanted_value"].some(k => value[k] !== undefined && value[k] !== base);
+      }))) return null;
+      cards.push({ ...held, ...(face ? structuredClone(face) : {}),
+        card_id: card.id, upgraded: card.upgraded, index });
     }
   }
   run["deck"] = cards; run["current_hp"] = hp.hp;
