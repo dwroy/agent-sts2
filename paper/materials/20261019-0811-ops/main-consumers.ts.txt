@@ -1,0 +1,29 @@
+import { readFileSync,writeFileSync } from "node:fs";
+import { createHash } from "node:crypto";
+import { execFileSync } from "node:child_process";
+import { setKnowledgeCharacter as oldSet } from "/home/dw/Projects/agent-sts2/.worktrees/ops-disk-group1-20261018-2120/agent/src/knowledge/files.ts";
+import { readMonsterDbJson as oldDb } from "/home/dw/Projects/agent-sts2/.worktrees/ops-disk-group1-20261018-2120/agent/src/knowledge/monster-db.ts";
+import { renderKnowledgePrefix as oldPrefix } from "/home/dw/Projects/agent-sts2/.worktrees/ops-disk-group1-20261018-2120/agent/src/knowledge/render/knowledge-prefix.ts";
+import { setKnowledgeCharacter as newSet } from "/home/dw/Projects/agent-sts2/agent/src/knowledge/files.ts";
+import { readMonsterDbJson as newDb } from "/home/dw/Projects/agent-sts2/agent/src/knowledge/monster-db.ts";
+import { renderKnowledgePrefix as newPrefix } from "/home/dw/Projects/agent-sts2/agent/src/knowledge/render/knowledge-prefix.ts";
+import { queryKnowledgeCatalog } from "/home/dw/Projects/agent-sts2/agent/src/knowledge/catalog.ts";
+const root="/home/dw/Projects/agent-sts2", phase=root+"/ops/codex-ops/record-staging/20261018-2212";
+const oldRoot="/home/dw/Projects/agent-sts2/knowledge",newRoot=oldRoot;
+const sha=(v:unknown)=>createHash("sha256").update(typeof v==="string"?v:Buffer.isBuffer(v)?v:JSON.stringify(v)).digest("hex");
+const roles=[];
+for(const character of ["silent","ironclad","regent"]){
+ oldSet(character);newSet(character);
+ const old_db=sha(oldDb(oldRoot)),new_db=sha(newDb(newRoot));
+ const old_prefix=sha(oldPrefix({knowledgeDir:oldRoot,ascension:10})),new_prefix=sha(newPrefix({knowledgeDir:newRoot,ascension:10}));
+ if(old_db!==new_db||old_prefix!==new_prefix)throw new Error("default consumer mismatch: "+character);
+ roles.push({character,old_db,new_db,old_prefix,new_prefix,equal:true});
+}
+const before=sha(readFileSync(newRoot+"/catalog.json"));
+const query=queryKnowledgeCatalog(newRoot,{character:"regent",sourceCharacter:"silent",id:"silent-g1a-queen-calibration-boundary",details:true});
+if(!query.records.length||!query.records.every((r:any)=>r.reference_only&&r.source_character==="silent"))throw new Error("cross-role reference guard mismatch");
+if(sha(readFileSync(newRoot+"/catalog.json"))!==before)throw new Error("query modified catalog");
+const at=execFileSync("date",["--iso-8601=seconds"],{encoding:"utf8"}).trim();
+writeFileSync("/home/dw/Projects/agent-sts2/ops/codex-ops/record-staging/20261019-0811/main-consumers.json",JSON.stringify({at,roles,query_input:{character:"regent",sourceCharacter:"silent",id:"silent-g1a-queen-calibration-boundary",details:true},query_output:query,model_calls:0,game_actions:0,checked_carrier_only:false,actual_live_publication:true},null,2)+"\n");
+console.log(JSON.stringify({roles,foreign_records:query.records.length,foreign_reference_only:true,catalog_query_readonly:true,model_calls:0,game_actions:0,publication:true}));
+oldSet(null);newSet(null);

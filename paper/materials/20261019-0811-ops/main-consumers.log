@@ -1,0 +1,17 @@
+/home/dw/Projects/agent-sts2/ops/codex-ops/record-staging/20261019-0811/main-consumers.ts:19
+ if(old_db!==new_db||old_prefix!==new_prefix)throw new Error("default consumer mismatch: "+character);
+                                                   ^
+
+Error: default consumer mismatch: silent
+    at newSet (/home/dw/Projects/agent-sts2/ops/codex-ops/record-staging/20261019-0811/main-consumers.ts:19:52)
+    at Object.<anonymous> (/home/dw/Projects/agent-sts2/ops/codex-ops/record-staging/20261019-0811/main-consumers.ts:29:25)
+    at Module._compile (node:internal/modules/cjs/loader:1781:14)
+    at Object.transformer (/home/dw/Projects/agent-sts2/agent/node_modules/tsx/dist/register-OY9cqBEN.cjs:9:3619)
+    at Module.load (node:internal/modules/cjs/loader:1505:32)
+    at Function._load (node:internal/modules/cjs/loader:1309:12)
+    at wrapModuleLoad (node:internal/modules/cjs/loader:254:19)
+    at loadCJSModuleWithModuleLoad (node:internal/modules/esm/translators:335:3)
+    at ModuleWrap.<anonymous> (node:internal/modules/esm/translators:235:7)
+    at ModuleJob.run (node:internal/modules/esm/module_job:343:25)
+
+Node.js v22.23.3

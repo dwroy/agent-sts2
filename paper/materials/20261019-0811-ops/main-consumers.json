@@ -1,0 +1,140 @@
+{
+  "at": "2026-10-19T08:18:20+08:00",
+  "roles": [
+    {
+      "character": "silent",
+      "old_db": "a8396bf13214b24ff05869ee2660e054bfb92308ae295cd24073d3386a77e05f",
+      "new_db": "a8396bf13214b24ff05869ee2660e054bfb92308ae295cd24073d3386a77e05f",
+      "old_prefix": "d0941250774d9f9e3e4879e595f6844f928beca26fc98ecf5987d459a1a5933c",
+      "new_prefix": "d0941250774d9f9e3e4879e595f6844f928beca26fc98ecf5987d459a1a5933c",
+      "equal": true
+    },
+    {
+      "character": "ironclad",
+      "old_db": "880efe410539aa6bb4af95b65e96cf67440db0367330c1754976324e4e2dfda6",
+      "new_db": "880efe410539aa6bb4af95b65e96cf67440db0367330c1754976324e4e2dfda6",
+      "old_prefix": "e113cdefb7a14f13b4419311860cc80faafd5f09664589f4f0fd2ecffb3b8ef9",
+      "new_prefix": "e113cdefb7a14f13b4419311860cc80faafd5f09664589f4f0fd2ecffb3b8ef9",
+      "equal": true
+    },
+    {
+      "character": "regent",
+      "old_db": "f9bb97dc7e745ceb706714f9f435faf21248b62555da74f2255995843012ef09",
+      "new_db": "f9bb97dc7e745ceb706714f9f435faf21248b62555da74f2255995843012ef09",
+      "old_prefix": "81c2b3aa8706197fad434a26eda7c53754ac3552432502d70ff5b7c24f043bcb",
+      "new_prefix": "81c2b3aa8706197fad434a26eda7c53754ac3552432502d70ff5b7c24f043bcb",
+      "equal": true
+    }
+  ],
+  "query_input": {
+    "character": "regent",
+    "sourceCharacter": "silent",
+    "id": "silent-g1a-queen-calibration-boundary",
+    "details": true
+  },
+  "query_output": {
+    "target_character": "regent",
+    "records": [
+      {
+        "id": "silent-g1a-queen-calibration-boundary",
+        "kind": "role_experience",
+        "source_character": "silent",
+        "target_character": "regent",
+        "reference_only": true,
+        "target_validation": "not_established_by_query",
+        "source": {
+          "path": "characters/silent/experience.json",
+          "pointer": [
+            "entries",
+            233
+          ],
+          "sha256": "cce6bde4b02657667e05b632b897811dd4679b3371733106e038690cd04cf48c",
+          "catalog_source_match": true
+        },
+        "evidence_run_ids": [
+          "1269Y20SKHUM",
+          "16UDD0430SXT",
+          "1GN7WFBWC2E3",
+          "49HL2N70CHMU",
+          "5X2GHKJ89PN1",
+          "7S8HCC0M6G9W",
+          "8HW407EAUYL7",
+          "9GTFF6DC500L",
+          "9KP5S3317EEL",
+          "9R916WW0V65N",
+          "AD3QSC3P41JU",
+          "BSXYMFKN0VJ5",
+          "CVJ4MLQF4CSY",
+          "EEVP0QTLMSX9",
+          "G33HU22H2543",
+          "HEMND3SMQYB8",
+          "HLAWCGM3KHVB",
+          "KF9HMZKTFC3V",
+          "NBJBVSBNPYQB",
+          "P2M3DFJ4DEZ3"
+        ],
+        "evidence_ids_in_source": 33,
+        "evidence_status": "原来源引用，未重验/未增加支持数；完整列表见原件",
+        "name": "女王",
+        "scope": "boss:QUEEN",
+        "payload": {
+          "id": "silent-g1a-queen-calibration-boundary",
+          "scope": "boss:QUEEN",
+          "name": "女王",
+          "asc": [
+            10,
+            10
+          ],
+          "lesson": "限定：R366固定7e1193模型验证29场/29局，数量距10场差0，仍低可信。B2/B3 Brier为0.241/0.229（整体1.25倍上限0.1385/0.1414），预测减实际胜率+0.309/+0.282（限±0.15），被打穿血比1.019/1.119（限0.7–1.3）；失败分别为brier、gap/brier、gap。数量达标不抵消质量失败，无法保证再加固定几场就通过。样本仅真实结局，首试/SL分列，截断不算负局；只评价单战，F49或连战须另核。该表107调参/460验证、固定切点；原生产有70输入SHA差，不证明当前模型或当前构筑S可信。 H0/r1完成限定：新固定模型89717d20b447、原107调参/481验证，B2/T1有效31独立局/源32（模拟缺1，距10缺0）；Brier修前0.2252→0.2186，预测/实际0.708/0.419（差+0.289），leak修前1.065→1.065，失败brier,gap；B3/pre有效31独立局/源32（模拟缺1，距10缺0）；Brier修前0.2265→0.2204，预测/实际0.689/0.419（差+0.270），leak修前1.176→1.176，失败brier,gap。本阶段未隔离新的A10招式/阶段因果缺口；不得从高leak或单轮净HP相符推定完整模型正确。原纸鹤窄修仍只A2/1独立局，不充A10女王已修。原四闸、胜败/缺失与leak口径不变，质量还需多少局未知。该full对象与旧7e1193及当前H1有限前缀/刷新输入分列；固定候选过闸不等于当前生产认证，生产trust未由本表替换，F49联合/自然效果仍未知。 H0/r3限定：固定新对象765690dcf638（承接89717d20b447），原107调参/481验证、Platt方法、200样本/原行seed及四闸不变；t1有效31独立局，Brier 0.2186→0.2186，预测/实际0.708/0.419，穿透比1.065→1.065，失败brier,gap；pre有效31独立局，Brier 0.2204→0.2204，预测/实际0.689/0.419，穿透比1.176→1.176，失败brier,gap。新后继字段初筛22可比窗中13处聚合体力量少1（4局：A2三窗/A10十窗），均为已就绪端点；盟友加力路径待逐actor隔离，不改A10倍率，纸鹤A2窄修不扩阶。数量达标不能消除质量失败；当前H1有限前缀/刷新输入与此full研究对象分列，生产trust不由本表替换，F49联合与自然效果未知。 H0/r3续核：原cut全部真实结局的A10 Queen419/聚合体211/Minion1，121个就绪且双方存活窗口/29局支持当前Burn Bright令活盟友净增1力量，女王自身不增；临时力量恢复单列。旧整场模型漏此盟友加力。只对该签名的full推进窄修，其他阶/角色/短rollout和纸鹤A2界保持。固定对象7508685dee23在765690dcf638上仅叠该源码delta，原107/481、200样本/seed/Platt和四闸不变；t1原独立有效31局，Brier 0.2186→0.1644，预测/实际0.584/0.419，穿透比1.065→1.319，未过brier,gap,leak；pre原独立有效31局，Brier 0.2204→0.1874，预测/实际0.568/0.419，穿透比1.176→1.46，未过brier,leak。不将状态改善自动等同概率质量改善，生产trust不替换，F49联合/自然效果未知。",
+          "evidence": [
+            "1269Y20SKHUM",
+            "16UDD0430SXT",
+            "1GN7WFBWC2E3",
+            "49HL2N70CHMU",
+            "5X2GHKJ89PN1",
+            "7S8HCC0M6G9W",
+            "8HW407EAUYL7",
+            "9GTFF6DC500L",
+            "9KP5S3317EEL",
+            "9R916WW0V65N",
+            "AD3QSC3P41JU",
+            "BSXYMFKN0VJ5",
+            "CVJ4MLQF4CSY",
+            "EEVP0QTLMSX9",
+            "G33HU22H2543",
+            "HEMND3SMQYB8",
+            "HLAWCGM3KHVB",
+            "KF9HMZKTFC3V",
+            "NBJBVSBNPYQB",
+            "P2M3DFJ4DEZ3",
+            "PBUBM0LRTEDD",
+            "PD9AYQVMLQW6",
+            "RMNXHZKV716Y",
+            "RQCHNN0W72KF",
+            "TCDUBRWMEMNA",
+            "TDLBRNA0R05B",
+            "TFYU1MY8NEJ1",
+            "UPAB38G2PA02",
+            "VAC6Z1PZ1QJG",
+            "XTSV1U9JD34T",
+            "XW8B5CHJ814J",
+            "Y8GDTNWG4R3X",
+            "ZVYUL2YP3518"
+          ],
+          "n_support": 33,
+          "n_contradict": 0,
+          "confidence": "low",
+          "last_seen": "2026-10-18",
+          "status": "active"
+        }
+      }
+    ],
+    "total_matches": 1,
+    "truncated": false,
+    "read_only": true
+  },
+  "model_calls": 0,
+  "game_actions": 0,
+  "checked_carrier_only": false,
+  "actual_live_publication": true
+}

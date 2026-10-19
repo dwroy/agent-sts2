@@ -1,0 +1,174 @@
+from pathlib import Path
+import fcntl
+import hashlib
+import json
+import os
+import subprocess
+
+r = Path('/home/dw/Projects/agent-sts2')
+live = r / '.worktrees/live'
+p = r / 'ops/codex-ops/record-staging/20261019-0811'
+pub = r / 'paper/materials/20261019-0811-ops'
+candidate = 'd5f0704ffae5f94254c6ef79124bde808ec63fcf'
+base_live = 'b69c5f58d8651b164e54bcb4e6dbcd2e708ac058'
+prepared = json.loads((r / 'paper/materials/20261018-2212-ops/prepared-main-sync-groups.json').read_text())
+
+def git(*args, cwd=r, env=None, data=None):
+    return subprocess.check_output(['git', '-C', str(cwd), *args], env=env, input=data, stderr=subprocess.PIPE)
+
+def blob(ref, name):
+    return git('show', ref + ':' + name)
+
+def sha(raw):
+    return hashlib.sha256(raw).hexdigest()
+
+def save(path, value):
+    path.write_text(json.dumps(value, ensure_ascii=False, indent=2) + '\n')
+
+def stage(index_env, name, raw, mode='100644'):
+    oid = git('hash-object', '-w', '--stdin', data=raw).decode().strip()
+    git('update-index', '--add', '--cacheinfo', mode, oid, name, env=index_env)
+
+def entry(ref, name):
+    raw = git('ls-tree', ref, '--', name).decode().strip()
+    return raw.split()[0] if raw else None
+
+def commit(tree, parents, title):
+    args = ['commit-tree', tree]
+    for parent in dict.fromkeys(parents):
+        args.extend(['-p', parent])
+    return git(*args, data=(title + '\n\nCo-Authored-By: Codex gpt-6.1-sol <noreply@openai.com>\n').encode()).decode().strip()
+
+def install(cwd, name, raw, mode):
+    dest = cwd / name
+    dest.parent.mkdir(parents=True, exist_ok=True)
+    assert not dest.is_symlink()
+    tmp = dest.with_name(dest.name + '.storage-publish.tmp')
+    assert not tmp.exists()
+    tmp.write_bytes(raw)
+    os.chmod(tmp, 0o755 if mode == '100755' else 0o644)
+    os.replace(tmp, dest)
+
+assert not (pub / 'storage-publication.json').exists()
+with (r / 'ops/live-merge.lock').open('a') as lock:
+    fcntl.flock(lock, fcntl.LOCK_EX | fcntl.LOCK_NB)
+    at = subprocess.check_output(['date', '+%Y-%m-%d %H:%M:%S %Z'], text=True).strip()
+    print(at, flush=True)
+    mh = git('rev-parse', 'HEAD').decode().strip()
+    lh = git('rev-parse', 'HEAD', cwd=live).decode().strip()
+    assert lh == base_live
+    terminal = json.loads((r / 'ops/codex-ops/record-staging/20261018-2212/host-result.json').read_text())
+    assert terminal['rc'] == 0 and terminal['commit'] == candidate
+    assert git('rev-parse', candidate + '^{tree}').decode().strip() == terminal['tree']
+    assert sha((r / terminal['log']).read_bytes()) == terminal['log_sha256']
+    # Only storage/catalog leaves are delivered here. Calibration numbering and main sync remain separate.
+    names = git('diff', '--name-only', lh, candidate).decode().splitlines()
+    assert len(names) == 470 and 'eval/versions.json' not in names
+    assert not any(n.startswith(('notes/', 'paper/')) for n in names)
+    assert not git('diff', '--name-only', 'HEAD', '--', 'knowledge', cwd=live).strip()
+    indexes = {}
+    values = {}
+    for cwd in [r, live]:
+        assert not git('ls-files', '-u', cwd=cwd).strip()
+        assert not git('diff', '--cached', '--name-only', cwd=cwd).strip()
+        assert not git('diff', '--name-only', 'HEAD', '--', *names, cwd=cwd).strip()
+        idx = Path(git('rev-parse', '--git-path', 'index', cwd=cwd).decode().strip())
+        idx = idx if idx.is_absolute() else cwd / idx
+        indexes[str(cwd)] = (idx, idx.read_bytes())
+        vals = {}
+        for name in names:
+            ref = candidate if cwd == live else prepared['private_tree']
+            raw = blob(ref, name)
+            mode = entry(ref, name)
+            assert mode in ['100644', '100755']
+            dest = cwd / name
+            if entry('HEAD' if cwd == r else lh, name):
+                assert dest.read_bytes() == git('show', 'HEAD:' + name, cwd=cwd)
+            elif dest.exists():
+                assert dest.read_bytes() == raw, 'untracked collision: ' + name
+            vals[name] = (raw, mode)
+        values[str(cwd)] = vals
+    # Regenerate the main catalog from its own current original knowledge; do not import live statistics.
+    scratch = p / 'main-knowledge'
+    scratch.mkdir()
+    original_names = git('ls-tree', '-r', '--name-only', mh, '--', 'knowledge/common', 'knowledge/characters').decode().splitlines()
+    originals = {}
+    for name in original_names:
+        if not name.endswith(('.json', '.md')):
+            continue
+        raw = blob(mh, name)
+        assert (r / name).read_bytes() == raw
+        originals[name] = sha(raw)
+        dest = scratch / name[len('knowledge/'):]
+        dest.parent.mkdir(parents=True, exist_ok=True)
+        dest.write_bytes(raw)
+    build = subprocess.check_output(['nice', '-n', '19', 'python3', str(r / '.worktrees/ops-storage-group1-20261018-2220/knowledge/builders/build-catalog.py'), '--knowledge-root', str(scratch)])
+    for name, digest in originals.items():
+        assert sha((scratch / name[len('knowledge/'):]).read_bytes()) == digest
+    generated = [scratch / 'catalog.json', *(scratch / 'common/enemies').rglob('*.json')]
+    for f in generated:
+        name = 'knowledge/' + f.relative_to(scratch).as_posix()
+        assert name in names
+        values[str(r)][name] = (f.read_bytes(), '100644')
+    # Confirm unchanged original live inputs, including curated maintenance layers.
+    old_proof = json.loads((r / 'paper/materials/20261018-2212-ops/storage-composition-prepared.json').read_text())
+    for name, record in old_proof['latest_live_originals'].items():
+        assert sha((live / 'knowledge' / name).read_bytes()) == record['sha256']
+    trees = {}
+    scan = b''
+    for lane, cwd, head in [('main', r, mh), ('live', live, lh)]:
+        env = {**os.environ, 'GIT_INDEX_FILE': str(p / (lane + '.tree.index'))}
+        git('read-tree', head, env=env)
+        for name, (raw, mode) in values[str(cwd)].items():
+            stage(env, name, raw, mode)
+        tree = git('write-tree', env=env).decode().strip()
+        trees[lane] = tree
+        diff = git('diff', '--unified=0', head, tree, '--', *names)
+        scan += b'\n'.join(line[1:] for line in diff.splitlines() if line.startswith(b'+') and not line.startswith(b'+++')) + b'\n'
+    assert trees['live'] == terminal['tree'], 'actual live tree differs from original exact host composition'
+    with (pub / 'storage-gitleaks.log').open('wb') as out:
+        rc = subprocess.run(['nice', '-n', '19', 'gitleaks', 'stdin', '--redact', '--no-banner', '--report-format', 'json', '--report-path', str(p / 'storage-gitleaks.json')], input=scan, stdout=out, stderr=subprocess.STDOUT, env={**os.environ, 'GOMAXPROCS': '1'}).returncode
+    assert rc == 0 and json.loads((p / 'storage-gitleaks.json').read_text()) == []
+    lnew = commit(trees['live'], [lh, candidate], 'Publish exact host-accepted storage and shared knowledge catalog composition')
+    mnew = commit(trees['main'], [mh], 'Integrate approved storage sources and catalog while preserving main knowledge')
+    rec = dict(at=at, request_id='roy-20261018-regent-adapt', scope='disk-groups1-2-only', original_main=mh, main=mnew, original_live=lh, live=lnew, live_tree=trees['live'], main_tree=trees['main'], original_candidate=candidate, exact_host_result=terminal, changed_paths=names, main_originals=originals, main_catalog_builder=json.loads(build), original_main_catalog_rebuilt=True, all_parallel_records_preserved=True, release_id_unchanged='V5-R397', new_behavior_release=False, calibration_main_and_numbering_pending=True, source_full_not_repeated=True, host_exact_tree_equal=True, gitleaks_rc=rc, publication_complete=False)
+    save(p / 'storage-publication-intent.json', rec)
+    locked = []
+    try:
+        for lane, cwd in [('main', r), ('live', live)]:
+            idx, raw_index = indexes[str(cwd)]
+            assert idx.read_bytes() == raw_index
+            normal = p / (lane + '.preserved.index')
+            normal.write_bytes(raw_index)
+            env = {**os.environ, 'GIT_INDEX_FILE': str(normal)}
+            for name, (raw, mode) in values[str(cwd)].items():
+                stage(env, name, raw, mode)
+            lockpath = Path(str(idx) + '.lock')
+            fd = os.open(lockpath, os.O_CREAT | os.O_EXCL | os.O_WRONLY, 0o600)
+            with os.fdopen(fd, 'wb') as f:
+                f.write(normal.read_bytes())
+            locked.append((idx, lockpath))
+        assert git('rev-parse', 'HEAD').decode().strip() == mh
+        assert git('rev-parse', 'HEAD', cwd=live).decode().strip() == lh
+        for name, digest in originals.items():
+            assert sha((r / name).read_bytes()) == digest
+        for name, record in old_proof['latest_live_originals'].items():
+            assert sha((live / 'knowledge' / name).read_bytes()) == record['sha256']
+        git('update-ref', '-m', 'ops: exact storage composition publication', 'HEAD', lnew, lh, cwd=live)
+        for name, (raw, mode) in values[str(live)].items():
+            install(live, name, raw, mode)
+        git('update-ref', '-m', 'ops: narrow main storage integration', 'HEAD', mnew, mh)
+        for name, (raw, mode) in values[str(r)].items():
+            install(r, name, raw, mode)
+        for idx, lockpath in locked:
+            os.replace(lockpath, idx)
+    finally:
+        for idx, lockpath in locked:
+            if lockpath.exists():
+                lockpath.unlink()
+    for cwd in [r, live]:
+        assert not git('diff', '--name-only', 'HEAD', '--', *names, cwd=cwd).strip()
+    rec['publication_complete'] = True
+    rec['source_leaves'] = {str(cwd.relative_to(r)) or '.': {name: sha(raw) for name, (raw, mode) in values[str(cwd)].items()} for cwd in [r, live]}
+    save(pub / 'storage-publication.json', rec)
+    print(json.dumps(dict(main=mnew, live=lnew, exact_tree=trees['live'], files=len(names), gitleaks=rc, main_originals=len(originals)), ensure_ascii=False), flush=True)

@@ -1,0 +1,143 @@
+from pathlib import Path
+import json
+import os
+import re
+import subprocess
+import fcntl
+
+r = Path('/home/dw/Projects/agent-sts2')
+helpers = r / 'ops/codex-ops/record-staging/20261019-0811/publish-storage.py'
+exec(helpers.read_text().split("assert not (pub / 'storage-publication.json').exists()")[0])
+source = '6c7a3558a3a84cf206e6ea997a21d36ac2b65a2f'
+saved = '1214300d6d320b2e1d0ed996493ccfa711574060'
+behavior = '085b94e6fd710d81bf1235a480a6bcfb3fb470d8'
+name = 'S1.silent-boss-calibration-refresh-20261018-314824d6'
+assert not (pub / 'calibration-registration.json').exists()
+with (r / 'ops/live-merge.lock').open('a') as lock:
+    fcntl.flock(lock, fcntl.LOCK_EX | fcntl.LOCK_NB)
+    at = subprocess.check_output(['date', '+%Y-%m-%d %H:%M:%S %Z'], text=True).strip()
+    print(at, flush=True)
+    mh = git('rev-parse', 'HEAD').decode().strip()
+    lh = git('rev-parse', 'HEAD', cwd=live).decode().strip()
+    git('merge-base', '--is-ancestor', behavior, lh)
+    assert git('rev-parse', lh + '^{tree}').decode().strip() == '5ec85e44129df7686b4a9e7213cb23ad94a57e22'
+    assert not git('diff', '--name-only', 'HEAD', '--', 'knowledge', 'eval/versions.json', cwd=live).strip()
+    assert not git('diff', '--name-only', 'HEAD', '--', 'knowledge', 'eval/versions.json').strip()
+    source_paths = git('diff-tree', '--no-commit-id', '--name-only', '-r', source).decode().splitlines()
+    saved_paths = git('diff-tree', '--no-commit-id', '--name-only', '-r', saved).decode().splitlines()
+    paths = [n for n in source_paths + saved_paths if n != 'paper/materials/decision-log.md']
+    assert len(paths) == 34
+    main_values = {n: (blob(lh, n), entry(lh, n)) for n in paths}
+    preserved_physical = {}
+    for n in paths:
+        dest = r / n
+        if dest.exists():
+            current = dest.read_bytes()
+            original = git('show', mh + ':' + n) if entry(mh, n) else None
+            if current != original:
+                assert n.startswith(('notes/', 'paper/')) or current == main_values[n][0], 'parallel source/data change: ' + n
+                preserved_physical[n] = current
+    versions = {}
+    for lane, cwd, head in [('main', r, mh), ('live', live, lh)]:
+        assert (cwd / 'eval/versions.json').read_bytes() == blob(head, 'eval/versions.json')
+        assert not git('diff', '--cached', '--name-only', cwd=cwd).strip()
+        versions[lane] = json.loads(blob(head, 'eval/versions.json'))
+    assert versions['main']['release_numbering'] == versions['live']['release_numbering']
+    mapping = versions['live']['release_numbering']['releases']
+    nums = [int(re.fullmatch(r'V\d+-R(\d+)', x['release_id'])[1]) for x in mapping]
+    assert nums == list(range(max(nums) + 1))
+    assert not any(x['commit'] == behavior for x in mapping)
+    rid = 'V5-R' + str(max(nums) + 1).zfill(3)
+    original_entry = [x for x in versions['live']['versions'] if x.get('name') == name]
+    assert len(original_entry) == 1 and original_entry[0]['commit'] == behavior
+    registered = {**original_entry[0], 'release_id': rid, 'release_status': 'registered-primary-ops'}
+    for lane, data in versions.items():
+        rows = [i for i, x in enumerate(data['versions']) if x.get('name') == name]
+        if rows:
+            assert len(rows) == 1
+            data['versions'][rows[0]] = registered.copy()
+        else:
+            data['versions'].append(registered.copy())
+        data['release_numbering']['releases'].append(dict(release_id=rid, commit=behavior, aliases=[name]))
+    main_values['eval/versions.json'] = ((json.dumps(versions['main'], ensure_ascii=False, indent=2) + '\n').encode(), '100644')
+    # Rebuild only the catalog after mechanically syncing already-published source data.
+    scratch = p / 'main-calibrated-knowledge-r2'
+    scratch.mkdir()
+    knowledge_names = git('ls-tree', '-r', '--name-only', mh, '--', 'knowledge/common', 'knowledge/characters').decode().splitlines()
+    originals = {}
+    for n in knowledge_names:
+        if not n.endswith(('.json', '.md')):
+            continue
+        raw = main_values[n][0] if n in main_values else blob(mh, n)
+        originals[n] = sha(raw)
+        dest = scratch / n[len('knowledge/'):]
+        dest.parent.mkdir(parents=True, exist_ok=True)
+        dest.write_bytes(raw)
+    result = subprocess.check_output(['nice', '-n', '19', 'python3', str(r / 'knowledge/builders/build-catalog.py'), '--knowledge-root', str(scratch)])
+    for n, digest in originals.items():
+        if n.endswith(('/mechanics-observed.json', '/model-observed.json', '/_legacy-meta.json')):
+            continue
+        assert sha((scratch / n[len('knowledge/'):]).read_bytes()) == digest
+    for f in [scratch / 'catalog.json', *(scratch / 'common/enemies').rglob('*.json')]:
+        main_values['knowledge/' + f.relative_to(scratch).as_posix()] = (f.read_bytes(), '100644')
+    live_values = {'eval/versions.json': ((json.dumps(versions['live'], ensure_ascii=False, indent=2) + '\n').encode(), '100644')}
+    indexes = {}
+    trees = {}
+    scan = b''
+    for lane, cwd, head, vals in [('main', r, mh, main_values), ('live', live, lh, live_values)]:
+        idx = Path(git('rev-parse', '--git-path', 'index', cwd=cwd).decode().strip())
+        idx = idx if idx.is_absolute() else cwd / idx
+        indexes[lane] = (idx, idx.read_bytes())
+        env = {**os.environ, 'GIT_INDEX_FILE': str(p / ('calibration-' + lane + '.index'))}
+        git('read-tree', head, env=env)
+        for n, (raw, mode) in vals.items():
+            stage(env, n, raw, mode)
+        tree = git('write-tree', env=env).decode().strip()
+        trees[lane] = tree
+        diff = git('diff', '--unified=0', head, tree)
+        scan += b'\n'.join(line[1:] for line in diff.splitlines() if line.startswith(b'+') and not line.startswith(b'+++')) + b'\n'
+    assert git('diff', '--name-only', lh, trees['live']).decode().splitlines() == ['eval/versions.json']
+    with (pub / 'calibration-gitleaks.log').open('wb') as out:
+        rc = subprocess.run(['nice', '-n', '19', 'gitleaks', 'stdin', '--redact', '--no-banner', '--report-format', 'json', '--report-path', str(p / 'calibration-gitleaks.json')], input=scan, stdout=out, stderr=subprocess.STDOUT, env={**os.environ, 'GOMAXPROCS': '1'}).returncode
+    assert rc == 0 and json.loads((p / 'calibration-gitleaks.json').read_text()) == []
+    mnew = commit(trees['main'], [mh, source], 'Synchronize accepted Silent calibration and register ' + rid)
+    lnew = commit(trees['live'], [lh], 'Register accepted Silent calibration as ' + rid)
+    rec = dict(at=at, source=source, behavior_commit=behavior, release_id=rid, name=name, old_main=mh, main=mnew, old_live=lh, live=lnew, main_tree=trees['main'], live_tree=trees['live'], original_full_checks='paper/materials/20261018-2135-ops/host-acceptance.json', exact_storage_tree='5ec85e44129df7686b4a9e7213cb23ad94a57e22', live_runtime_code_and_knowledge_unchanged=True, main_sync_paths=paths, main_catalog_builder=json.loads(result), preserved_parallel_physical_records={n: sha(raw) for n, raw in preserved_physical.items()}, gitleaks_rc=rc, original_name_family_commit_source_preserved=True, parent_requests_closed=False, game_restart=False)
+    save(p / 'calibration-registration-intent.json', rec)
+    locks = []
+    try:
+        for lane, cwd, vals in [('main', r, main_values), ('live', live, live_values)]:
+            idx, before = indexes[lane]
+            assert idx.read_bytes() == before
+            preserved = p / ('calibration-' + lane + '.preserved.index')
+            preserved.write_bytes(before)
+            env = {**os.environ, 'GIT_INDEX_FILE': str(preserved)}
+            for n, (raw, mode) in vals.items():
+                stage(env, n, raw, mode)
+            lp = Path(str(idx) + '.lock')
+            fd = os.open(lp, os.O_CREAT | os.O_EXCL | os.O_WRONLY, 0o600)
+            with os.fdopen(fd, 'wb') as f:
+                f.write(preserved.read_bytes())
+            locks.append((idx, lp))
+        assert git('rev-parse', 'HEAD').decode().strip() == mh and git('rev-parse', 'HEAD', cwd=live).decode().strip() == lh
+        for n, raw in preserved_physical.items():
+            assert (r / n).read_bytes() == raw
+        git('update-ref', '-m', 'ops: register accepted calibration', 'HEAD', lnew, lh, cwd=live)
+        for n, (raw, mode) in live_values.items():
+            install(live, n, raw, mode)
+        git('update-ref', '-m', 'ops: synchronize accepted calibration', 'HEAD', mnew, mh)
+        for n, (raw, mode) in main_values.items():
+            if n not in preserved_physical:
+                install(r, n, raw, mode)
+        for idx, lp in locks:
+            os.replace(lp, idx)
+    finally:
+        for idx, lp in locks:
+            if lp.exists():
+                lp.unlink()
+    for n, raw in preserved_physical.items():
+        assert (r / n).read_bytes() == raw
+    for n in paths:
+        assert blob(mnew, n) == blob(lnew, n)
+    save(pub / 'calibration-registration.json', rec)
+    print(json.dumps(dict(release_id=rid, main=mnew, live=lnew, live_runtime_unchanged=True, main_sync=len(paths), gitleaks=rc), ensure_ascii=False), flush=True)

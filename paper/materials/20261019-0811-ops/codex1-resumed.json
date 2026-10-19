@@ -1,0 +1,124 @@
+{
+  "at": "2026-10-19 08:13:08 CST",
+  "transaction": "codex1-20261018-2140",
+  "controller_complete_at": "2026-10-19T08:08:48+08:00",
+  "controller_verification": {
+    "ok": true,
+    "target_digest": "e7864f765b0d534351d59b5f2782f037ec7b4ce342e4b3969e22e39ae08d88f2",
+    "new_session": "01a1517b-e200-7c52-b463-6ea22220c0a9",
+    "bootstrap_exit": 0,
+    "rollout": "/home/dw/Projects/agent-sts2/ops/codex-ops/accounts/codex1/learner/sessions/2026/10/19/rollout-2026-10-19T08-07-15-01a1517b-e200-7c52-b463-6ea22220c0a9.jsonl",
+    "runtime_play_and_learning": "awaiting normal dispatch"
+  },
+  "owned_flags_released_verified": true,
+  "regent_original_flags_sha_unchanged": true,
+  "autoplay": {
+    "pid": 3815527,
+    "pane": "wJ:pCY",
+    "broker_start_at": "2026-10-19 08:09:24 CST",
+    "old_pid_file_was_stale": 2027082,
+    "no_process_stopped": true
+  },
+  "old_run": {
+    "id": "76VEDXJJ2PFL",
+    "report": "notes/run-1018-2138-76VEDXJJ2PFL.md",
+    "runs_jsonl_registered": true,
+    "old_autoplay_natural_exit": "2026-10-18 21:48:34"
+  },
+  "available_bytes_before_start": 157759758336,
+  "silent_disk_start_gates_passed": true,
+  "regent_200GiB_gate_not_satisfied_or_resumed": true,
+  "mod_before_start": {
+    "process_id": 34676,
+    "native_profile_id": 1,
+    "run_id": "76VEDXJJ2PFL",
+    "screen": "GAME_OVER"
+  },
+  "first_resumed_run": {
+    "ts": "2026-10-19T00:09:39.078Z",
+    "run_id": "QZZSGXFABBQQ",
+    "character": "SILENT",
+    "ascension": 10,
+    "process": {
+      "pid": 3815750,
+      "started": "2026-10-19T00:09:29.623Z"
+    },
+    "code": {
+      "commit": "b69c5f58d8651b164e54bcb4e6dbcd2e708ac058",
+      "code": "b69c5f5",
+      "dirty": false,
+      "dirty_files": [],
+      "branch": "live",
+      "worktree": "live"
+    }
+  },
+  "roles": {
+    "ops": {
+      "session": "01a1517b-e200-7c52-b463-6ea22220c0a9",
+      "account": "codex1",
+      "model": "gpt-6.1-sol",
+      "effort": "high",
+      "receipt": "ops/codex-ops/llm-switches/codex1-20261018-2140/bootstrap-takeover-20261019-0807.json"
+    },
+    "brain": {
+      "account": "codex1",
+      "selected_private_home": "/home/dw/Projects/agent-sts2/ops/codex-ops/accounts/codex1/brain",
+      "home_evidence": "original ops/run.sh selector plus native account session and matching play PID; no credential or environment read",
+      "native_rollout": "ops/codex-ops/accounts/codex1/brain/sessions/2026/10/19/rollout-2026-10-19T08-09-48-01a1517e-3704-76f0-87bd-abc52c85645d.jsonl",
+      "native_session": "01a1517e-3704-76f0-87bd-abc52c85645d",
+      "native_contexts": [
+        {
+          "line": 1,
+          "type": "session_meta",
+          "raw_sha256": "04d056d8e57440c1656f20a07a49520dfa355cf03eada416ad5310d6bb2e98f8",
+          "id": "01a1517e-3704-76f0-87bd-abc52c85645d",
+          "cwd": "/tmp/jev-brain-codex-state/session-cwd/3815750-1792368587975",
+          "model": null,
+          "effort": null,
+          "approval_policy": null
+        },
+        {
+          "line": 4,
+          "type": "turn_context",
+          "raw_sha256": "c5dcb79355efdbc8f6afbd5cd58bb2d2d1a32bcbe33685d6968b99e2d5642bb6",
+          "id": null,
+          "cwd": "/tmp/jev-brain-codex-state/session-cwd/3815750-1792368587975",
+          "model": "gpt-6.1-sol",
+          "effort": "xhigh",
+          "approval_policy": "never"
+        }
+      ],
+      "first_real_accepted_question": {
+        "raw_sha256": "bda61c532ba74674bbc16034a83742a6151a5165d5ac9087887e267329a9c06e",
+        "ts": "2026-10-19T00:10:35.111Z",
+        "run_id": "QZZSGXFABBQQ",
+        "question_id": "mvehytkw-3815750-1",
+        "engine": "codex",
+        "model": "gpt-6.1-sol",
+        "effort": "xhigh",
+        "accepted": true,
+        "attempts": 1,
+        "knowledge": {
+          "mode": "full",
+          "ascension": 10,
+          "prefix_sha": "569138d4480a",
+          "prefix_chars": 200158
+        }
+      }
+    },
+    "learner_strategy_fix": {
+      "state": "awaiting naturally dispatched real batch; no probe or duplicate dispatch",
+      "selected_home": "/home/dw/Projects/agent-sts2/ops/codex-ops/accounts/codex1/learner",
+      "actual_native_consumption_proven": false
+    },
+    "watcher": {
+      "state": "previous independent native first-reply receipt preserved",
+      "receipt": "paper/materials/20261018-codex-token-saving/account-return-codex1/ops-watcher-transition-verified.json"
+    },
+    "regent": "codex1 paused, three dev groups deferred",
+    "shared_default_app_server": "account/client ownership unknown; no process action"
+  },
+  "all_roles_consumption_complete": false,
+  "source_or_failed_history_rewritten": false,
+  "parent_requests_closed": false
+}
