@@ -1,0 +1,22 @@
+{
+  "launch": {
+    "path": "ops/codex-ops/record-staging/20261020-0358/host-launch.json",
+    "bytes": 231,
+    "sha256": "70d90d524219cfb424b3752a44c2211c21ec59cb826e1c83185d5881163d6267"
+  },
+  "host_started": {
+    "request": "v6-original-joint-R3-20261020-0358",
+    "started_at": "2026-10-20T04:01:33+08:00",
+    "pid": 4167235,
+    "worktree": "/home/dw/Projects/agent-sts2/.worktrees/ops-v6-r3-composition-20261020-040034",
+    "commit": "501d2c90f0870d8c09964d942031c104ec3510cd",
+    "tree": "775109744674ea53de716a3e12358559a6843e67",
+    "full_command": "export PATH=\"$HOME/.local/node/bin:$PATH\"; nice -n 19 npx tsc -p tsconfig.json --noEmit; a=$?; nice -n 19 npx vitest run --maxWorkers=2; b=$?; [ \"$a\" = 0 ] && [ \"$b\" = 0 ]",
+    "full_command_sha256": "896f046db998a1dfe91b22baa98cc341ed6a90cadb542495c08419fcc4040210",
+    "log": "ops/codex-ops/record-staging/20261020-0358/combined-host.log",
+    "full_attempts": 0,
+    "actual_published": false,
+    "new_model_or_game_started": false
+  },
+  "terminal_result": null
+}
