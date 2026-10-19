@@ -1,0 +1,1 @@
+原 watcher 核读 Roy 最新答复：批准统一终局时间边界并留痕排除。原 states/decisions 字节不动，>canonical run end 的帧与决策逐行记来源、字节范围、SHA和 frame_after_run_end/decision_after_run_end；等于终局保留，SL 守卫不改。补丁独立树 v6-history-terminal-boundary-20261020，15项刷新回归、40项组合统计、定向/tsc/gitleaks已过；03:24:53起原超时单worker nice19完整检查在跑，未提交/合live，尚不重刷17包。原v7zxypbo失败、旧4858包/STOP/保存局/脑请求定位保留。W3供给缓存、战斗预算与HP回退沿原树继续，不另派批。CLI投递不代native接管或角色ACK。

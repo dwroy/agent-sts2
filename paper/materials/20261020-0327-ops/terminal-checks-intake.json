@@ -1,0 +1,43 @@
+{
+  "started_at": "2026-10-20T03:24:53.018909+08:00",
+  "base": "de52e1f2c58bb88f649570cb76083cb29cc52b38",
+  "staged_tree": "e74d987e7b8c585a0af49e01a849a4c73088f73b",
+  "nice": 19,
+  "max_workers": 1,
+  "timeouts": "original unchanged",
+  "steps": [
+    {
+      "name": "tsc",
+      "argv": [
+        "npx",
+        "tsc",
+        "-p",
+        "tsconfig.json",
+        "--noEmit"
+      ],
+      "started_at": "2026-10-20T03:24:53.280491+08:00",
+      "exit_code": 0,
+      "ended_at": "2026-10-20T03:24:54.471551+08:00",
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "vitest",
+      "argv": [
+        "npx",
+        "vitest",
+        "run",
+        "--maxWorkers=1"
+      ],
+      "started_at": "2026-10-20T03:24:54.473553+08:00"
+    }
+  ],
+  "ended_at": null,
+  "source_bytes_unchanged": null,
+  "source_count": 1941,
+  "status_source": {
+    "path": ".worktrees/v6-history-terminal-boundary-20261020/.artifacts/terminal-boundary-checks/status.json",
+    "bytes": 222831,
+    "sha256": "7e94b1703d9e3ad3a8e63d7f651ab735af07c79c879744029f7a4b85f6ee9d84"
+  },
+  "log_processes": "3959286 3371127  19 SNs  python3\n3959421 3959286  19 SNl  npm exec vitest\n3959435 3959421  19 SN   sh\n3959436 3959435  19 SNl  node"
+}
