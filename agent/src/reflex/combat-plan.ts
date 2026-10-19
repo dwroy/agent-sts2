@@ -3897,7 +3897,7 @@ function planTurn(env: DecisionEnv): Decision | null {
   const planOptions = trimForPotionOptions(options, mcShown.length + unsimulatedKeys + (noPotionOwn ? 1 : 0), keep);
   options.splice(0, options.length, ...planOptions);
   const shown = [...options, ...(noPotionOwn ? [noPotionOwn] : []), ...(rolloutBest && !rolloutBestIsPotion && !options.includes(rolloutBest) && rolloutBest !== noPotionOwn ? [rolloutBest] : [])];
-  const combatEntries = loadCombatEntries(state);
+  const combatEntries = loadCombatEntries(state, undefined, process.env, { slAttempt: env.sl?.attempt });
   const showV6Boss = combatEntries !== null && combatEntries.act === 3 && kind === "boss";
   // B2 (BOSS_SIM_LINES, boss fights only; docs/boss-sim.md §11): every shown line and random potion line played to the
   // fight's end on the same samples. A boss the simulator is trusted on ranks the lines by it (simRanks: rollout_best,

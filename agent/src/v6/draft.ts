@@ -38,8 +38,9 @@ export function validateV6Draft(kind: "reflex" | "directions", raw: unknown, con
     const tags = new Set(Object.values(v.vocab.dimensions).flat().map(t => t.id));
     function checkTags(p: Predicate): void {
       if (p.op === "and" || p.op === "or") p.args.forEach(checkTags);
-      else if (p.op === "not") checkTags(p.arg);
-      else if ("value" in p && p.op === "contains" && !tags.has(String(p.value))) issues.push("predicate: unknown vocabulary tag");
+      else if (p.op === "not" || p.op === "any" || p.op === "all") checkTags(p.arg);
+      else if ("value" in p && p.op === "contains" && ["card.tags", "potion.tags"].includes(p.field)
+        && !tags.has(String(p.value))) issues.push("predicate: unknown vocabulary tag");
     }
     for (const r of v.reflex.entries) {
       if (r.source_experience.some(e => !experiences.has(e))) issues.push(`${r.id}: unknown source experience`);

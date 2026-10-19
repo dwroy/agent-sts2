@@ -24,11 +24,18 @@ describe("offline V6 drafts", () => {
     (d: any) => { d.coverage[0].reflex_ids = []; },
     (d: any) => { d.reflex.entries[0].signal = { kind: "tag", value: "UNKNOWN_TAG", unit: "label" }; },
     (d: any) => { d.reflex.entries[0].predicate = { op: "contains", field: "card.tags", value: "UNKNOWN_TAG" }; },
+    (d: any) => { d.reflex.entries[0].predicate = { op: "any", field: "player.hand", arg: { op: "contains", field: "card.tags", value: "UNKNOWN_TAG" } }; },
+    (d: any) => { d.reflex.entries[0].predicate = { op: "all", field: "potion.slots", arg: { op: "contains", field: "potion.tags", value: "UNKNOWN_TAG" } }; },
   ])("rejects broken evidence, references and computations %#", mutate => {
     const d = structuredClone(draft); mutate(d); expect(validateV6Draft("reflex", d, context).ok).toBe(false);
   });
   it("allows explicit insufficient evidence without manufacturing entries", () => {
     const d = structuredClone(draft); d.reflex.entries = []; d.metrics = []; d.coverage[0]!.status = "text_only"; d.coverage[0]!.reflex_ids = [];
+    expect(validateV6Draft("reflex", d, context).ok).toBe(true);
+  });
+  it("keeps observed relic IDs distinct from learner vocabulary tags", () => {
+    const d: any = structuredClone(draft);
+    d.reflex.entries[0].predicate = { op: "contains", field: "player.relics", value: "TEST_OBSERVED_RELIC_ID" };
     expect(validateV6Draft("reflex", d, context).ok).toBe(true);
   });
   it("checks direction files with the same W1 schema", () => {

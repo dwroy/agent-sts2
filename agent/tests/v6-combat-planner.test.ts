@@ -39,7 +39,7 @@ afterEach(() => {
 it.each(["off", "v1"] as const)("actual %s planner attaches role-local entries and shows a low-trust Act 3 boss without changing options or rank", jevContext => {
   const directory = mkdtempSync(join(tmpdir(), "v6-combat-planner-")); directories.push(directory); installFixture(directory);
   const load = entries.loadCombatEntries;
-  vi.spyOn(entries, "loadCombatEntries").mockImplementation(state => load(state, directory));
+  vi.spyOn(entries, "loadCombatEntries").mockImplementation((state, _directory, env, runtime) => load(state, directory, env, runtime));
   vi.spyOn(boss, "lowTrustOfState").mockReturnValue("TEST_UNVALIDATED_MODEL");
   const simulate = vi.spyOn(boss, "bossLineSim").mockImplementation(args => {
     if (!fixedBoss.available) throw Error("fixture");
@@ -51,7 +51,7 @@ it.each(["off", "v1"] as const)("actual %s planner attaches role-local entries a
   const decision = () => {
     const fx = logged("k8tc-f17-t5"), rawRun = fx.state.run as Record<string, unknown>;
     rawRun.character_id = "SILENT"; rawRun.ascension = 0; rawRun.act_id = "2";
-    const d = planCombatTurn(loggedEnv(fx, { jevContext }));
+    const d = planCombatTurn(loggedEnv(fx, { jevContext, sl: { attempt: 3, maxAttempts: 5, previousAttempts: [], showSim: false } }));
     if (!d || d.kind !== "ask") throw Error("expected a frozen combat question");
     return d;
   };
@@ -60,6 +60,7 @@ it.each(["off", "v1"] as const)("actual %s planner attaches role-local entries a
   const old = baseline.jevView ?? baseline, current = on.jevView ?? on;
   const projection = projectCombatDecision(current.state, current.questions)!;
   expect(projection.contract.schema).toBe("v6-combat-decision-v1");
+  expect((current.state as any).v6_combat_entries.context.sl.attempt).toBe(3);
   const qid = "plan";
   const before = old.questions[qid], after = projection.questions[qid];
   if (before?.type !== "choice" || after?.type !== "choice") throw Error("missing candidate set");

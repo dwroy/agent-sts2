@@ -92,11 +92,13 @@ export const reflexEntrySchema = refine(object({
   schema: literal("reflex-entry-v1"), id, version: positiveCount, applies_to: enumeration("combat_line", "card_pick", "potion", "rest", "shop"),
   predicate: predicateSchema, signal, label_en: label,
   evidence: object({ observations, n_support: count, n_contradict: count }), confidence: probability, scope,
-  directions: optional(ids), source_experience: array(id, 1),
+  directions: optional(ids), cores: optional(ids), combos: optional(ids), source_experience: array(id, 1),
 }), (v, e) => {
   if (v.evidence.n_support + v.evidence.n_contradict < 1) e.push("evidence: at least one supporting or contradicting observation");
   unique(v.scope.ascensions.map(String), "scope.ascensions", e);
   unique(v.source_experience, "source_experience", e);
+  if (v.cores) unique(v.cores, "cores", e);
+  if (v.combos) unique(v.combos, "combos", e);
 });
 export type ReflexEntry = Infer<typeof reflexEntrySchema>;
 export const validateReflexEntry = (v: unknown): Result<ReflexEntry> => validate(reflexEntrySchema, v);

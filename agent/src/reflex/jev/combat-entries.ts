@@ -1,12 +1,13 @@
 import { createHash } from "node:crypto";
 import { relative } from "node:path";
 import { KNOWLEDGE_DIR } from "../../knowledge/files.js";
-import { asArray, asRecord, toJsonValue, type JsonValue } from "../../core/util/json.js";
+import { asRecord, toJsonValue, type JsonValue } from "../../core/util/json.js";
 import type { GameState } from "../../hand/mod/schema.js";
 import { loadV6Knowledge } from "../../v6/knowledge.js";
 import type { ReflexEntry, ReflexVocab } from "../../v6/formats.js";
 import { evaluatePredicate } from "../../v6/predicate.js";
 import type { Plan } from "../turn-solver.js";
+import { combatPredicateFacts, combatOptionFacts, type CombatPredicateRuntime, type PredicateFacts } from "./predicate-context.js";
 
 type Row = Record<string, unknown>;
 /** Read-only source contract. The adapter cannot import or invoke a simulator. */
@@ -30,45 +31,28 @@ type WholeFightSource = { completion?: { status: string } } & ({ available: fals
 });
 const finite = (value: unknown): number | null => typeof value === "number" && Number.isFinite(value) ? value : null;
 const hash = (value: unknown) => createHash("sha256").update(JSON.stringify(value)).digest("hex");
-const numbers = (pairs: [string, unknown][]): Row => Object.fromEntries(pairs.filter(([, value]) => finite(value) !== null));
 
 export interface CombatEntries {
   character: string;
   ascension: number;
   act: number | null;
   context: Row;
+  predicateFacts: PredicateFacts;
   entries: ReflexEntry[];
   vocab: ReflexVocab;
   provenance: Row;
 }
 
-function powers(value: unknown): Row {
-  return Object.fromEntries(asArray(value).map(asRecord).filter(p => typeof p["power_id"] === "string" && finite(p["amount"]) !== null)
-    .map(p => [String(p["power_id"]), p["amount"]]));
-}
-
 /** No implicit character, pending draft, common knowledge, inferred tags or missing-value defaults. */
-export function loadCombatEntries(state: GameState, directory = KNOWLEDGE_DIR, env: NodeJS.ProcessEnv = process.env): CombatEntries | null {
+export function loadCombatEntries(state: GameState, directory = KNOWLEDGE_DIR, env: NodeJS.ProcessEnv = process.env,
+  runtime: CombatPredicateRuntime = {}): CombatEntries | null {
   if (env["V6_COMBAT_ENTRIES"] !== "on") return null;
   const ascension = state.run?.ascension;
   if (ascension == null) return null;
   const loaded = loadV6Knowledge(directory, String(state.run?.raw["character_id"] ?? ""));
   if (!loaded.character || loaded.reflex.status !== "loaded" || loaded.vocab.status !== "loaded") return null;
-  const combat = asRecord(state.raw["combat"]), player = asRecord(combat["player"]);
-  const living = asArray(combat["enemies"]).map(asRecord).filter(e => e["is_alive"] !== false);
-  // A singular predicate cannot join the intent of one enemy to the powers of another.
-  const enemy = living.length === 1 ? living[0] : undefined;
-  const intents = enemy ? asArray(enemy["intents"]).map(asRecord) : [];
-  const intent = intents.length === 1 ? intents[0] : undefined;
-  const damage = finite(intent?.["damage"]), hits = finite(intent?.["hits"]);
-  const act = state.run?.act_id != null && /^\d+$/.test(state.run.act_id) ? Number(state.run.act_id) + 1 : null;
-  const context: Row = {
-    ...numbers([["act", act], ["floor", state.run?.floor]]),
-    player: { ...numbers([["hp", player["current_hp"]], ["block", player["block"]], ["energy", player["energy"]]]), powers: powers(player["powers"]) },
-    ...(enemy ? { enemy: { ...numbers([["hits", hits], ["total_damage", damage !== null && hits !== null ? damage * hits : null]]),
-      ...(typeof intent?.["intent_type"] === "string" ? { intent_type: intent["intent_type"] } : {}), powers: powers(enemy["powers"]) } } : {}),
-  };
-  return { character: loaded.character, ascension, act, context,
+  const predicateFacts = combatPredicateFacts(state, runtime), context = predicateFacts.context;
+  return { character: loaded.character, ascension, act: finite(context["act"]), context, predicateFacts,
     entries: loaded.reflex.value, vocab: loaded.vocab.value,
     provenance: {
       reflex: { path: relative(directory, loaded.reflex.path), sha256: hash(loaded.reflex.value), encoding: "validated-entries-json", entries: loaded.reflex.value },
@@ -141,10 +125,9 @@ function wholeFightAudit(plan: Plan | null, sim: WholeFightSource | null): Row {
 /** Read-only annotation: neither the candidate list nor any rank/action is changed. */
 export function combatEntryAudit(session: CombatEntries, plan: Plan | null, rollout: RolloutSource | null, sim: WholeFightSource | null,
   basis: "plan" | "potion_median" | "unmodelled" = "plan", selection?: { best: boolean; tied_with: string[] }): JsonValue {
-  const context = { ...session.context, ...(plan ? { option: { turn: numbers([
-    ["damage", plan.outcome.damageDealt], ["block", plan.outcome.blockGained], ["hp_loss", plan.outcome.hpLoss],
-    ["energy_left", plan.outcome.energyLeft], ["cards_drawn", plan.outcome.cardsDrawn],
-  ]) } } : {}) };
+  const rolloutFacts = rolloutAudit(plan, rollout), wholeFightFacts = wholeFightAudit(plan, sim);
+  const option = combatOptionFacts(plan, { rollout: rolloutFacts, whole_fight: wholeFightFacts });
+  const context = { ...session.context, ...option.context };
   const evaluated = session.entries.filter(e => e.applies_to === "combat_line" && e.scope.ascensions.includes(session.ascension))
     .map(entry => ({ id: entry.id, result: evaluatePredicate(entry.predicate, context) }));
   const matched = new Set(evaluated.filter(e => e.result === true).map(e => e.id));
@@ -153,16 +136,19 @@ export function combatEntryAudit(session: CombatEntries, plan: Plan | null, roll
     const tag = entry.signal.kind === "tag" ? Object.entries(session.vocab.dimensions).flatMap(([dimension, members]) => members
       .filter(m => m.id === entry.signal.value).map(m => ({ dimension, id: m.id, label_en: m.label_en }))) : [];
     return { id: entry.id, version: entry.version, label_en: entry.label_en, signal: entry.signal,
+      ...(entry.cores ? { cores: entry.cores } : {}), ...(entry.combos ? { combos: entry.combos } : {}),
       confidence: entry.confidence, n_support: entry.evidence.n_support, n_contradict: entry.evidence.n_contradict,
       source: { path: provenance.path, sha256: provenance.sha256, encoding: provenance.encoding, entry_id: entry.id },
       ...(tag.length > 0 ? { vocabulary: tag } : {}) };
   });
   return toJsonValue({ schema: "v6-combat-entry-audit-v1", basis, context, evaluated, memory,
-    ...(selection ? { selection } : {}), rollout: rolloutAudit(plan, rollout), whole_fight: wholeFightAudit(plan, sim) });
+    predicate_facts: { sources: { ...session.predicateFacts.sources, ...option.sources },
+      unavailable: { ...session.predicateFacts.unavailable, ...option.unavailable } },
+    ...(selection ? { selection } : {}), rollout: rolloutFacts, whole_fight: wholeFightFacts });
 }
 
 export function combatEntriesState(session: CombatEntries, hasRunPlan: boolean): JsonValue {
   return toJsonValue({ schema: "v6-combat-entries-audit-v1", character: session.character, ascension: session.ascension,
-    context: session.context, knowledge: session.provenance,
+    context: session.context, predicate_facts: { sources: session.predicateFacts.sources, unavailable: session.predicateFacts.unavailable }, knowledge: session.provenance,
     run_plan_source: { kind: hasRunPlan ? "run_memory" : "run_brief", author: "unknown" } });
 }

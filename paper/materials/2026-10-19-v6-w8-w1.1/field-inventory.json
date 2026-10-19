@@ -1,0 +1,168 @@
+[
+  {
+    "field": "enemy.id",
+    "source": null,
+    "unavailable_reason": "no_unique_explicitly_living_enemy_or_field_missing; use enemies.items quantifier"
+  },
+  {
+    "field": "enemy.hp",
+    "source": null,
+    "unavailable_reason": "no_unique_explicitly_living_enemy_or_field_missing; use enemies.items quantifier"
+  },
+  {
+    "field": "enemy.move_id",
+    "source": null,
+    "unavailable_reason": "no_unique_explicitly_living_enemy_or_field_missing; use enemies.items quantifier"
+  },
+  {
+    "field": "enemies.alive",
+    "source": "state.raw.combat.enemies[*].is_alive",
+    "unavailable_reason": null
+  },
+  {
+    "field": "card.id",
+    "source": null,
+    "unavailable_reason": "no_singular_card_in_a_combat_line; bind card with any/all over hand/deck/piles/actions",
+    "scoped_binding": "any/all: player.hand, player.deck, player.piles.*, option.actions"
+  },
+  {
+    "field": "card.upgraded",
+    "source": null,
+    "unavailable_reason": "same_entity_binding_required; deck_or_pile_legality_not_inferred",
+    "scoped_binding": "any/all: player.hand, player.deck, player.piles.*, option.actions"
+  },
+  {
+    "field": "card.cost",
+    "source": null,
+    "unavailable_reason": "same_entity_binding_required; only explicit energy_cost, X/star payment not inferred",
+    "scoped_binding": "any/all: player.hand, player.deck, player.piles.*, option.actions"
+  },
+  {
+    "field": "card.can_play",
+    "source": null,
+    "unavailable_reason": "same_entity_binding_required; explicit can_play_result only, current frame not later steps",
+    "scoped_binding": "any/all: player.hand, player.deck, player.piles.*, option.actions"
+  },
+  {
+    "field": "option.actions",
+    "source": "Plan.steps (ordered predicted plays; index starts at 0)",
+    "unavailable_reason": null
+  },
+  {
+    "field": "player.hand",
+    "source": "state.raw.combat.hand[card_id,upgraded,energy_cost,can_play_result]",
+    "unavailable_reason": null
+  },
+  {
+    "field": "player.piles",
+    "source": "state.raw.agent_view.combat.{draw,discard,exhaust}",
+    "unavailable_reason": null
+  },
+  {
+    "field": "player.deck",
+    "source": "state.run.raw.deck (current deck; no final-deck backfill)",
+    "unavailable_reason": null
+  },
+  {
+    "field": "player.relics",
+    "source": "state.run.raw.relics[*].relic_id",
+    "unavailable_reason": null
+  },
+  {
+    "field": "player.relic_counters",
+    "source": "state.run.raw.relics[relic_id,stack]; null stacks omitted",
+    "unavailable_reason": null
+  },
+  {
+    "field": "potion.id",
+    "source": null,
+    "unavailable_reason": "no_singular_potion_in_a_combat_line; bind potion.slots or option.actions",
+    "scoped_binding": "any/all: potion.slots, option.actions"
+  },
+  {
+    "field": "potion.usable",
+    "source": null,
+    "unavailable_reason": "same_entity_binding_required; explicit can_use only, no future legality inference",
+    "scoped_binding": "any/all: potion.slots, option.actions"
+  },
+  {
+    "field": "potion.slots",
+    "source": "state.run.raw.potions (including explicitly empty slots)",
+    "unavailable_reason": null
+  },
+  {
+    "field": "turn",
+    "source": "state.turn",
+    "unavailable_reason": null
+  },
+  {
+    "field": "option.future",
+    "source": "v6_combat_entry.{rollout,whole_fight} numeric conditional summaries",
+    "unavailable_reason": null
+  },
+  {
+    "field": "sl.attempt",
+    "source": null,
+    "unavailable_reason": "SL_env_only_exists_on_retries; absence_does_not_certify_attempt_1"
+  },
+  {
+    "field": "history.first_predicted_death",
+    "source": null,
+    "unavailable_reason": "no_authoritative_first_death_history_in_DecisionEnv; current_lethal_flag_is_not_history"
+  },
+  {
+    "field": "history.resource_handoff",
+    "source": null,
+    "unavailable_reason": "no_observed_cross_fight_resource_ledger_in_DecisionEnv; simulation_is_not_actual_handoff"
+  },
+  {
+    "field": "player.max_hp",
+    "source": "state.raw.combat.player.max_hp",
+    "unavailable_reason": null
+  },
+  {
+    "field": "room.kind",
+    "source": null,
+    "unavailable_reason": "state_screen_and_fight_difficulty_do_not_publish_actual_room_kind"
+  },
+  {
+    "field": "rest.options",
+    "source": null,
+    "unavailable_reason": "no_rest_snapshot_on_this_frame"
+  },
+  {
+    "field": "shop.stock",
+    "source": null,
+    "unavailable_reason": "no_complete_shop_snapshot_on_this_frame"
+  },
+  {
+    "field": "shop.prices",
+    "source": null,
+    "unavailable_reason": "no_complete_shop_snapshot_on_this_frame"
+  },
+  {
+    "field": "player.gold",
+    "source": "state.run.raw.gold",
+    "unavailable_reason": null
+  },
+  {
+    "field": "option.kind",
+    "source": "combatEntryAudit: candidate type",
+    "unavailable_reason": null
+  },
+  {
+    "field": "option.model_version",
+    "source": null,
+    "unavailable_reason": "source_rollout_and_boss_DTOs_do_not_expose_model_SHA; source_name_is_not_version"
+  },
+  {
+    "field": "option.trust",
+    "source": "v6_combat_entry.whole_fight.trust.level (existing boss quality gate)",
+    "unavailable_reason": null
+  },
+  {
+    "field": "option.complete_line",
+    "source": null,
+    "unavailable_reason": "Plan_steps_and_sample_counts_do_not_certify_random_draw_or_discard_continuation_completeness"
+  }
+]

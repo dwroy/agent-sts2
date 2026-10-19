@@ -80,12 +80,13 @@ it.each(Object.keys(baselines))("loads only %s's validated memory without assumi
     { is_alive: true, powers: [{ power_id: "TEST_OTHER_ENEMY", amount: 1 }] }];
   const session = loadCombatEntries(state, dir, { V6_COMBAT_ENTRIES: "on" })!;
   expect(session.character).toBe(character.toLowerCase());
-  expect(session.context.player).toEqual({ powers: { TEST_ZERO: 0 } });
+  expect(session.context.player).toMatchObject({ powers: { TEST_ZERO: 0 } });
+  expect(session.context.player).not.toHaveProperty("hp");
   expect(session.context).not.toHaveProperty("enemy");
   expect((combatEntryAudit(session, fixedPlan, null, null) as any).memory.map((m: any) => m.id)).toEqual(["TEST_HP", "TEST_TAG"]);
   combat["enemies"] = [{ is_alive: true, intents: [{ intent_type: "ATTACK", damage: 4 }] }];
   const singular = loadCombatEntries(state, dir, { V6_COMBAT_ENTRIES: "on" })!;
-  expect(singular.context.enemy).toEqual({ intent_type: "ATTACK", powers: {} });
+  expect(singular.context.enemy).toEqual({ alive: true, intent_type: "ATTACK", powers: {} });
   state.run!.ascension = null;
   expect(loadCombatEntries(state, dir, { V6_COMBAT_ENTRIES: "on" })).toBeNull();
 });
