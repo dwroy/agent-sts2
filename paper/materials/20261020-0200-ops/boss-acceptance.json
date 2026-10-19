@@ -1,0 +1,42 @@
+{
+ "accepted": false,
+ "reasons": [
+  "t1 brier worsened",
+  "t1 gap worsened",
+  "pre brier worsened",
+  "pre gap worsened",
+  "no bias entered/approached its fixed standard"
+ ],
+ "improved": [],
+ "near_rule": "excess reduced >=20% and remaining excess <=10% of fixed limit (leak <=0.03)",
+ "isolation": {
+  "passed": true,
+  "base": "435dadad777a7f64dae9e484ae63b6f5b2637ac3",
+  "head": "f9dadc0e4bcb88301ca107d7e9651d87885e1372",
+  "output_sha256": "1bce9c63060eb08d4225bb1facb368d0f52c6b9e1fc3ff80ca35350ad08d6bc0",
+  "candidate_sha256": "1bce9c63060eb08d4225bb1facb368d0f52c6b9e1fc3ff80ca35350ad08d6bc0",
+  "shared_changes": [
+   "agent/src/reflex/rollout-live.ts",
+   "agent/src/reflex/rollout.ts",
+   "agent/tests/silent-aeonglass-early-intensity.test.ts"
+  ],
+  "runner": "/home/dw/Projects/agent-sts2/learner/runs/20261020-011416-3818f13c-29db-4219-8c20-6cd1cbbe75da-boss-sim-batch/acceptance/source-435dadad777a7f64dae9e484ae63b6f5b2637ac3/agent/tools/boss-sim/isolation.ts",
+  "outputs": [
+   "/home/dw/Projects/agent-sts2/learner/runs/20261020-011416-3818f13c-29db-4219-8c20-6cd1cbbe75da-boss-sim-batch/acceptance/before.isolation.json",
+   "/home/dw/Projects/agent-sts2/learner/runs/20261020-011416-3818f13c-29db-4219-8c20-6cd1cbbe75da-boss-sim-batch/acceptance/after.isolation.json"
+  ]
+ },
+ "character": "silent",
+ "boss": "AEONGLASS",
+ "mode": "b4",
+ "inputs": {
+  "before": {
+   "path": "/home/dw/Projects/agent-sts2/learner/runs/20261020-011416-3818f13c-29db-4219-8c20-6cd1cbbe75da-boss-sim-batch/before-trust.json",
+   "sha256": "80439c6730f0dd096801f2c94282a7e6ad8ecde4cccbd98705b648a713cde4e0"
+  },
+  "after": {
+   "path": "/home/dw/Projects/agent-sts2/learner/runs/20261020-011416-3818f13c-29db-4219-8c20-6cd1cbbe75da-boss-sim-batch/after-trust.json",
+   "sha256": "35fb5becf5861f36b7b4663ed30d86b96f76466dfcb7f1b9ea65dee55d3016ec"
+  }
+ }
+}

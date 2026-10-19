@@ -1,0 +1,145 @@
+{
+  "batch": "20261020-011318-fix-batch",
+  "state": "rejected",
+  "process_rc": 0,
+  "source_commit": "f9dadc0e4bcb88301ca107d7e9651d87885e1372",
+  "source_ancestor_main": false,
+  "source_ancestor_live": false,
+  "acceptance_reasons": [
+    "t1 brier worsened",
+    "t1 gap worsened",
+    "pre brier worsened",
+    "pre gap worsened",
+    "no bias entered/approached its fixed standard"
+  ],
+  "before_metrics": {
+    "name": "永世沙漏",
+    "t1": {
+      "n": 42,
+      "missing": 0,
+      "brier": 0.1945,
+      "mean_pred": 0.653,
+      "actual_win": 0.476,
+      "leak_ratio": 4.404,
+      "leak_turns": 222,
+      "failed": [
+        "brier",
+        "gap",
+        "leak"
+      ],
+      "admission": {
+        "brier": 0.19446469457982568,
+        "brier_limit": 0.13052270055770426,
+        "gap": 0.1766953973145785,
+        "leak_ratio": 4.4043478260869575
+      }
+    },
+    "pre": {
+      "n": 42,
+      "missing": 0,
+      "brier": 0.1988,
+      "mean_pred": 0.67,
+      "actual_win": 0.476,
+      "leak_ratio": 4.413,
+      "leak_turns": 222,
+      "failed": [
+        "brier",
+        "gap",
+        "leak"
+      ],
+      "admission": {
+        "brier": 0.19875479205624338,
+        "brier_limit": 0.13445059324440678,
+        "gap": 0.19376803609575632,
+        "leak_ratio": 4.413043478260867
+      }
+    }
+  },
+  "after_metrics": {
+    "name": "永世沙漏",
+    "t1": {
+      "n": 42,
+      "missing": 0,
+      "brier": 0.195,
+      "mean_pred": 0.656,
+      "actual_win": 0.476,
+      "leak_ratio": 4.404,
+      "leak_turns": 222,
+      "failed": [
+        "brier",
+        "gap",
+        "leak"
+      ],
+      "admission": {
+        "brier": 0.19499655281736325,
+        "brier_limit": 0.13038095918079246,
+        "gap": 0.17960098616308862,
+        "leak_ratio": 4.4043478260869575
+      }
+    },
+    "pre": {
+      "n": 42,
+      "missing": 0,
+      "brier": 0.1991,
+      "mean_pred": 0.672,
+      "actual_win": 0.476,
+      "leak_ratio": 4.413,
+      "leak_turns": 222,
+      "failed": [
+        "brier",
+        "gap",
+        "leak"
+      ],
+      "admission": {
+        "brier": 0.1991071132484337,
+        "brier_limit": 0.1343895802635458,
+        "gap": 0.19581935066884337,
+        "leak_ratio": 4.413043478260867
+      }
+    }
+  },
+  "split_unchanged": true,
+  "criteria_unchanged": true,
+  "isolation_passed": true,
+  "ledger_source_refs": [
+    {
+      "path": "paper/materials/learning/ledger.jsonl",
+      "offset": 25758226,
+      "bytes": 3199,
+      "sha256": "727324751b07e4cf079b15e0bb83079673a589dc68b64df7559a560dddc370da",
+      "id": "silent-0531",
+      "status": "proposed",
+      "kind": "mechanic",
+      "evidence_count": 8
+    },
+    {
+      "path": "paper/materials/learning/ledger.jsonl",
+      "offset": 25761425,
+      "bytes": 1279,
+      "sha256": "84765b6b727f50309260ca199e6323ff52a438d2539ce0d56b25c5fa073cb04a",
+      "id": "silent-0531",
+      "status": "rejected",
+      "kind": null,
+      "evidence_count": 0
+    },
+    {
+      "path": "paper/materials/learning/ledger.jsonl",
+      "offset": 25762704,
+      "bytes": 658,
+      "sha256": "17ce750c7568a7dd5ecee91f0042e86d1f1cdf79f2fb2a847ade05f1fe5a0506",
+      "id": "silent-0531",
+      "status": null,
+      "kind": null,
+      "evidence_count": 0
+    }
+  ],
+  "cooldown": {
+    "batch": "20261020-011318-fix-batch",
+    "outcome": "rejected",
+    "at": 1792432657.2222257,
+    "calibration": "a48bced647a871a68588fcddf6bccbac79599a58fbe29fd1bc6c74af28775a64"
+  },
+  "cooldown_actual_fights": 52,
+  "automatic_cooldown_rule": "10 new actual same-character/boss/phase outcomes plus a new calibration including them and matching original guards; no manual duplicate/retry",
+  "same_original_failed_history_retained": true
+}
