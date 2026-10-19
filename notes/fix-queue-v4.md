@@ -1513,3 +1513,5 @@ Roy：「上线后进 F48 反而降低一半，这才是关键，要找问题。
 - [ ] **infra-v6-publication-task-link-20261020**（非对局阻塞，原提案登记纯工程）：真实source_task=v6-knowledge-publish已存在批准模板/原launcher和R3批v6-knowledge-publish-r3-20261020-033408，learner/code_proposals.py TASKS未接本真实任务，原add退出2 invalid task link。保原0532/proposal/失败，沿原自动fix链做明确任务身份兼容及固定正反校验，不能假称experience-update、放开任意task或手写队列/ACK；不补游戏知识，不关闭父要求。精确命令/输入/SHA见 paper/materials/20261020-0358-ops/receipt.json 与原scratch/code-proposal-command.json；本次未派新模型。
 
 - 2026-10-20 05:01:41 CST **infra-v6-publication-task-link-20261020 原批接续（不新增重复实现）**：041302固定79fc三叶候选原宿主tsc0/full1，仅既有28商店摘要15737ms超15000ms；本批原阈值nice19单worker精确题13.17s通过、发布回归1项/Python6项0，保完整1/沙箱1，不当full0。原W3在04:56同摘要超时停点已归v6-w4w6/W5性能owner；原候选未提交保留，待依赖交付和精确组合验收后由原ops兜底，不复派此任务或重未变full/模型，不抬阈值/删断言/改生产dataset/代ACK。原件paper/materials/20261020-0500-ops/receipt.json。
+
+- [ ] **infra-ops-current-summary-budget-20261020**（原纯工程链，不新派模型）：06:37原wake因ops-current>12288字节在发送前失败，05:29旧md留存/事件未送；本轮仅压缩context.summary恢复原生成0，全部授权/任务/事件/失败来源保留。请原fix owner处理短摘要长期预算/增长门禁，固定验证活批/队列/通知增长时保留关键事实和SHA原件引用；不抬12KB、不截断必要授权/失败或把旧md冒当前，不改ops prompt。恢复及原失败证据paper/materials/20261020-0637-ops/checklist-recovery.json。
