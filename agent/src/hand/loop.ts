@@ -1397,7 +1397,7 @@ async function runLoopWithBudgets(options: LoopOptions): Promise<LoopStats> {
       resolved = { intent: decision.intent, rationale: decision.rationale, confidence: null, fallback: false, ...(decision.apply ? { apply: decision.apply } : {}), ...(decision.log ? { log: decision.log } : {}), ...(decision.journal ? { journal: decision.journal } : {}) };
       // A step of a DeepSeek one-shot plan, played by code: DeepSeek's decision, no call made (reused).
       if (decision.plan) deepseekRecord = { by: "deepseek", direct: true, reused: true, plan_ref: decision.plan.ref, plan_step: decision.plan.step, choice: decision.plan.choice };
-    } else if (!jev || codeBaseline || currentDecisionBudget()?.remaining() === 0) {
+    } else if (!jev || codeBaseline || (currentDecisionBudget()?.remaining() === 0 && !(v6PotionActive(env) && decision.label === "map/statue-potion"))) {
       // No-Jev mode, or a board the gate kept refusing: the resolver sees an empty answer set and takes its
       // deterministic path.
       resolved = decision.resolve({}, currentDecisionBudget()?.remaining() === 0 ? { budgetExpired: true } : undefined);

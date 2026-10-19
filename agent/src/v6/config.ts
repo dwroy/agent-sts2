@@ -43,7 +43,8 @@ export function v6Config(env: NodeJS.ProcessEnv = process.env) {
     budgets: {
       brain_soft_cap: numeric("V6_BRAIN_SOFT_CAP", 15, 1, 1000, true), brain_ms: numeric("V6_BRAIN_MS", 90000, 1, 600000, true),
       act_ms: numeric("V6_ACT_MS", 60000, 1, 600000, true), pick_ms: numeric("V6_PICK_MS", 5000, 1, 600000, true),
-      jev_ms: numeric("V6_JEV_MS", 1000, 1, 600000, true),
+      // Construction requests have their own allowance; combat keeps its existing budget.
+      jev_ms: numeric("V6_JEV_MS", mode === "off" ? 1000 : 5000, 1, mode === "off" ? 600000 : 5000, true),
     },
     invalid,
   };

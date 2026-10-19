@@ -45,16 +45,20 @@ export function notePotionFallback(env: DecisionEnv, fallback: boolean): void {
 }
 
 /** The entire Jev attempt, including SDK retries, shares this wall-clock allowance. */
-export async function withPotionJevBudget<T>(work: () => Promise<T>): Promise<T> {
+export async function withConstructionJevBudget<T>(stage: string, work: () => Promise<T>, scope: "L2" | "shadow" = "L2"): Promise<T> {
   const parent = currentDecisionBudget();
-  const ms = Math.min(v6Config().budgets.jev_ms, parent?.remaining() ?? Infinity);
-  const budget = new DecisionBudget("v6-potion", "routine", parent?.now, ms, 0);
-  try { return await withDecisionBudget(budget, () => withinDecisionBudget("Jev_potion", work)); }
+  const ms = v6Config().budgets.jev_ms;
+  const running = parent?.running;
+  parent?.pause();
+  const budget = new DecisionBudget(stage, "routine", parent?.now, ms, 0);
+  try { return await withDecisionBudget(budget, () => withinDecisionBudget(stage, work)); }
   finally {
-    const record = budget.record();
-    parent?.stages.push({ stage: "Jev_potion", budget_ms: ms, actual_ms: record.actual_ms, timed_out: record.timed_out });
+    budget.pause();
+    parent?.independent(stage, budget, scope);
+    if (running) parent?.resume();
   }
 }
+export const withPotionJevBudget = <T>(work: () => Promise<T>): Promise<T> => withConstructionJevBudget("Jev_potion", work);
 
 export function potionEntries(env: DecisionEnv, ids: string[], options: {
   dir?: string; prices?: Readonly<Record<string, number>>; tags?: Readonly<Record<string, string[]>>;

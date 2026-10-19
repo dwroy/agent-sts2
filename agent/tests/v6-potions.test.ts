@@ -11,6 +11,8 @@ import type { AskDecision, DecisionEnv } from "../src/memory/types.js";
 import type { AnswerSet } from "../src/reflex/jev/answers.js";
 import type { JevClient } from "../src/reflex/jev/client.js";
 import { direction, reflex, vocab, projection } from "./v6-fixtures.js";
+import { v6Config } from "../src/v6/config.js";
+import { currentDecisionBudget, DecisionBudget, withDecisionBudget } from "../src/core/decision-budget.js";
 import { logged, loggedEnv } from "./logged.js";
 import { board, env, FakeDeepSeek, play, setupOneshotTests, type Raw } from "./oneshot-support.js";
 setupOneshotTests();
@@ -39,6 +41,28 @@ function brain(key: string, discard?: number[]): AnswerSet { return { pick: { ty
 function slots(values: Record<string, number>): AnswerSet { return Object.fromEntries(Object.entries(values).map(([key, noul]) => [key, { type: "noul", noul, raw: {} }])) as AnswerSet; }
 function potionPick(key: string, values: Record<string, number> = {}): AnswerSet { return { ...slots(values), potion_o0: { type: "choice", choice: key, probabilities: { [key]: 1 }, confidence: 1, raw: {} } }; }
 function rest() { return loggedEnv(logged("batch-g/zgz0-f11-rest-mailbox"), { buildDecider: "deepseek", oneshot: "off" }); }
+it("allows five seconds for construction Jev independently of computation and preserves off defaults", async () => {
+  const off = v6Config({});
+  expect(off.budgets.jev_ms).toBe(1000);
+  for (const mode of ["on", "shadow"]) {
+    const config = v6Config({ V6_BUILD: mode });
+    expect(config.budgets.jev_ms).toBe(5000);
+    expect(config.budgets.pick_ms).toBe(5000);
+    expect(v6Config({ V6_BUILD: mode, V6_JEV_MS: "6000" }).budgets.jev_ms).toBe(5000);
+  }
+  active();
+  await withPotionJevBudget(async () => { expect(currentDecisionBudget()?.remaining()).toBeGreaterThan(4900); });
+  let now = 0;
+  const parent = new DecisionBudget("computation", "routine", () => now, 5000, 0);
+  now = 5000;
+  await withDecisionBudget(parent, () => withPotionJevBudget(async () => {
+    expect(currentDecisionBudget()?.remaining()).toBe(5000);
+    now += 1200;
+  }));
+  expect(parent.remaining()).toBe(0);
+  expect(parent.record()).toMatchObject({ shared_actual_ms: 5000, independent_actual_ms: 1200 });
+  expect(v6Config({ V6_BUILD: "off" })).toEqual(off);
+});
 it("scopes consecutive fallbacks to the run and clears them after a successful potion answer", () => {
   const e = rest(); notePotionFallback(e, true); notePotionFallback(e, true); expect(e.screenMemory.v6JevFallbacks).toBe(2);
   e.state.raw["run_id"] = "OTHER_RUN"; notePotionFallback(e, true); expect(e.screenMemory.v6JevFallbacks).toBe(1);
@@ -144,7 +168,7 @@ it("the route stays with the brain while Jev chooses drink/discard independently
 it.each(["success", "error", "invalid"])("loop asks Jev separately with its timeout and records the result (%s)", async mode => {
   active(); const dir = temp(), fake = new FakeDeepSeek(() => "o0");
   const ask = vi.fn(async (_state: unknown, _questions: unknown, timeout: number) => {
-    expect(timeout).toBeGreaterThan(0); expect(timeout).toBeLessThanOrEqual(1000);
+    expect(timeout).toBeGreaterThan(0); expect(timeout).toBeLessThanOrEqual(5000);
     if (mode === "error") throw new Error("fixture timeout");
     const answers = potionPick("o0:discard", { discard_p1: .1, discard_p2: .9 });
     if (mode === "invalid") (answers["potion_o0"] as { confidence: number }).confidence = 2;
