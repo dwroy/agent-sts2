@@ -6,11 +6,11 @@ import { characterSchema, directionCardSchema, reflexEntrySchema, reflexVocabSch
 
 export type KnowledgeResult<T> = { status: "loaded"; value: T; path: string }
   | { status: "missing" | "invalid"; message: string; path: string; issues?: string[] };
-const directionFile = refine(object({ schema: literal("direction-cards-v1"), character: characterSchema, entries: array(directionCardSchema) }), (v, e) => {
+export const directionFile = refine(object({ schema: literal("direction-cards-v1"), character: characterSchema, entries: array(directionCardSchema) }), (v, e) => {
   if (new Set(v.entries.map(entry => entry.id)).size !== v.entries.length) e.push("direction cards: duplicate IDs");
   if (v.entries.some(entry => entry.scope.character !== v.character)) e.push("direction cards: cross-character scope");
 });
-const reflexFile = refine(object({ schema: literal("reflex-file-v1"), character: characterSchema, entries: array(reflexEntrySchema) }), (v, e) => {
+export const reflexFile = refine(object({ schema: literal("reflex-file-v1"), character: characterSchema, entries: array(reflexEntrySchema) }), (v, e) => {
   if (new Set(v.entries.map(entry => entry.id)).size !== v.entries.length) e.push("reflex: duplicate IDs");
   if (v.entries.some(entry => entry.scope.character !== v.character)) e.push("reflex: cross-character scope");
 });
