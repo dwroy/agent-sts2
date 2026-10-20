@@ -5135,6 +5135,8 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
 
 - 2026-10-20T13:46:29+08:00 ops：活雾gap原生指派字节核同，08de审计W8/纯bug修复codex1 W4W6来源分列，原提案99f14 pending、不冒boss-sim批；三旧通知原证据核同、609角色登记兼容未入main/live，不代ACK，原1320窗口终局后通知原owner。原件 paper/materials/20261020-1345-ops/receipt.json。
 
+- 2026-10-20 13:48:19 CST watcher G1c 每10完局漏斗归档：Silent A10 V5描述性局集合到100局，新增边界[100]；含最终/ops首试、逐Boss、幕路上存活、死因及未知。证据 paper/materials/20261020-134745-global-build-g1c-through-000100/funnel.json；不声称原生来源门槛或因果收益。[G1c-archive:paper/materials/20261020-134745-global-build-g1c-through-000100]
+
 - 2026-10-20T13:50:04+08:00 ops：原114302树3fd4宿主tsc0/full1唯一run-plan-merge断言失败；单测试接内存HTTP夹具，新树d43e6c23 tsc0/定向21过未full/源码提交/合入。原窗口释放通知W4W6并获13:47:30原full启动回报，待其终局再验变化输入；旧失败不改/W3与Regent不动。原件 paper/materials/20261020-1346-ops/receipt.json。
 
 - 2026-10-20T13:50:47+08:00 ops：原W4W6报加载ENOSPC/full1，原窗口仍占，同源改功能树TMPDIR nice19单worker接续；不判产品结果、不清共享tmp，ops变化输入full继续等原终局释放。原件 paper/materials/20261020-1351-ops/receipt.json。
@@ -5146,3 +5148,5 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
 - 2026-10-20T13:57:47+08:00 ops：接W4W6原报告，长TMPDIR v2 CLI截断/ENOENT断言后仅自身PID停止，短.cache/w4t同源原阈值接续仍占窗口；不查询进度、不判完整绿，ops/W8依序等明确释放，原件 paper/materials/20261020-w4-short-tmp-ops/receipt.json。
 
 - 2026-10-20T14:08:08+08:00 ops：W8 14:10原回报未起tsc/full、仅既有单进程计时，后续短.cache/w8t；保W4W6→ops变化输入→W8检查顺序，等前两窗口实际释放再通知，不查询/叠full或改live。原件 paper/materials/20261020-w8-window-1410-ops/receipt.json。
+
+- 2026-10-20T14:16:00+08:00 ops：按原要求保全root日志实际watcher G1c一条+空行2新增，非两条ops且不代G1c验收；W4W6 v3在途仅报告未释放，W8自有计时已结束/未起full，保持W4→ops→W8顺序，原件 paper/materials/20261020-log-window-1415-ops/receipt.json。
