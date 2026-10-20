@@ -5418,3 +5418,5 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
 - 2026-10-21 03:20:26 CST 原ops：P4正式5e04/材料0e427仅29叶R407前像/patch9ec4/manifest68ae及tree91e48e11后像核同，395材料/326解压scan0；源未main/live。原dataset占三重准入锁，首setup未跑测试；同一请求runner2036302沿原kernel flock排队，锁后重冻最新知识/输入并唯一完整tsc/full、原事件回报，不重复检查/打断现局/刷新。绿后原锁窄main及局终STOP发布/新包读回，原失败与限制保留。原件paper/materials/20261021-P4-R407-joint-ops/receipt.json。
 
 - 2026-10-21 03:23:37 CST 原ops：3YUV原module-health冻复算同，4奖励缺legacy字段但另流A/B有DPR/n34/26/28/18、4370ms内且Jev均拿牌无fallback；旧3计算零失败/降级/超时，pipeline4/4、300门与校准/影子限制保留。原alert保留绑定H1/001302原六叶去重，不查询P4检查/改输入/派批/重启/动live或常规通知；质量门仍Claude原链。原件paper/materials/20261021-0315-ops/receipt.json。
+
+- 2026-10-21 03:25:55 CST 原ops：P4旧03:15 setup事件核同且旧PID退，原接续2036302/start_ticks141576243身份同，未读动态进度/新开检查；031314-fix无源改/WT净、154SHA/46祖先同，tsc0/首次EROFS1保留、runner定向9过分列，不冒full或live。原候选及科学父/精英队列保持，未有ordinary回执不重dataset。原件paper/materials/20261021-0324-ops/receipt.json。

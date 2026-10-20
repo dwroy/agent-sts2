@@ -1,0 +1,35 @@
+{
+  "at": "2026-10-21 03:25:55 CST",
+  "event_path": "ops/codex-ops/queue/1792523744010949483-manual.md",
+  "event_sha256": "86eae83eb11582800b92d5538f02be23f776b529de0b578a05a1a00b1258dc1c",
+  "actual_event_scope": "original03:15 setup admission exit only; no tsc/full/input-manifest or code failure",
+  "original_setup_status": {
+    "request": "original-W8-P4-twenty-nine-exact-R407-latest-knowledge-joint-20261021",
+    "state": "blocked-before-full-or-incomplete-retain-R407",
+    "ended_at": "2026-10-21T03:15:44.010640+08:00",
+    "error": "BlockingIOError",
+    "message": "[Errno 11] Resource temporarily unavailable",
+    "combined_full_rc": null,
+    "no_actual_live_or_active_actor_change": true,
+    "terminal_event_path": "/home/dw/Projects/agent-sts2/ops/codex-ops/queue/1792523744010949483-manual.md",
+    "heavy_admission_locks_released": true,
+    "original_full_window_lock_released": true
+  },
+  "old_runner_pid": 2031280,
+  "old_runner_exited": true,
+  "same_request_continuation": {
+    "at": "2026-10-21T03:17:09+08:00",
+    "runner_pid": 2036302,
+    "request": "original-W8-P4-twenty-nine-exact-R407-latest-knowledge-joint-20261021",
+    "state": "same-request-queued-through-original-heavy-flocks",
+    "previous_setup_never_started_tsc_or_full": true,
+    "new_full_attempt_count_before_lock_release": 0,
+    "old_dataset_interrupted": false,
+    "new_model_or_timer": false
+  },
+  "continuation_identity_verified": true,
+  "continuation_start_ticks": "141576243",
+  "full_current_progress_queried": false,
+  "new_checker_launched": false,
+  "latest_actual_start_and_terminal_must_use_original_new_event": true
+}

@@ -1,0 +1,3 @@
+本轮两事件已核。P4通知精确对应03:15首次非阻塞准入退出：BlockingIOError、无tsc/full步骤、inputSHA/rc均未产生，不记产品失败或完整门终局。旧runner2031280已退；同请求原接续2036302及start_ticks核同，仍沿原kernel flock机制、原实际启动/终局事件接续。本轮未读动态full日志/进度、不重复开检查或改冻结输入，先前29叶/材料证据保留。031314修复批没有新增源码、提交或合入，WT基线fb8b3456洁净，154SHA与46基线祖先核同；不把main祖先当全部live验收。原tsc0、首定向在共享只读配置缓存EROFS退出1，原日志保留；后用runner定向6文件9例0、13.03秒及扫描0分列，不抹失败或据局部绿重写旧整套七败。监控六叶、收尾夹具三叶及精英知识问题均按原链去重，无待兜底的新提交；读取时尚无本批ordinary收尾回执，不补造成功或重dataset。只存记录，R407当前运行、CARDjev/REFLEXoff、P0质量/P2两局、Regent及科学父保持，不重启/派模型/运输源码。
+
+原件：paper/materials/20261021-0324-ops/receipt.json；.artifacts/ops-P4-R407-joint-20261021/setup-attempt-1-status.json；原031314 scratch报告。
