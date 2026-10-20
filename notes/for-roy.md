@@ -3281,3 +3281,8 @@ request_id=roy-20261017-human-pace-h0 revision=3 input_sha256=1e1c259a15f1824119
 
 
 2026-10-20T13:26:48+08:00 原114302批次4项均为测试/工具修复，报告与完成回执SHA核同，原沙箱tsc0/566文件5051例及负控、重跑、EROFS/EPERM/中断130原件保留；failed/rc0/mergednull不改写。整分支5冲突来自旧基线与并行记录，原源码83cb保备份；仅4提交无冲突接最新main1a56，新源698d3bd2、树3fd4d368，26叶每提交patch-id相同，4记录叶未入差分，当前隔离夹具保留。paper工具的main/build_locked函数逐字不变，不执行生产dataset。宿主仅对这次新源码组合以nice19单worker/原阈值跑完整tsc/vitest，PID2405031，终局由原learner-checks队列接续；不借沙箱绿冒宿主完整绿。完整0后窄集成，纯工具不分行为号；不夹ACK旧链或W3自然边界，不另派模型/刷新/开局或关宽父/代ACK，Regent暂停。原件paper/materials/20261020-1320-ops/receipt.json。
+
+
+### 2026-10-20T13:38:04+08:00 原活雾学习缺口去重及来源绑定
+
+本轮实读活雾冻结补证，并将两帧与原states字节段逐一核同：9S9 F12 T4显示召唤意图，T5新增GAS_BOMB；仅保观察，不补机制。去重命中既有pending提案silent-proposal-99f14e823a866ad7，绑定原084302复盘、01a14c76线程和codex3历史来源；7项要求及22个boss-sim批次未找到匹配。已留原清单缺口，尚缺原boss-sim请求/派发、owner线程及账号启动原件，不能冒用复盘线程或造新父。正式发布与实际live模拟消费者读回继续pending。9J6的256样本210胜46死及第9样本HP-6、MRJ4仅owner报告和snakebite原修复分列，不混因果。已向原watcher回所缺来源，CLI0不代实收或角色ACK；未查工具在途检查、未派批/重跑/改live，W3自然边界及Regent保持。原件：paper/materials/20261020-1330-ops/receipt.json。

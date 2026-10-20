@@ -1,0 +1,136 @@
+{
+  "created_at": "2026-10-20T13:29:07+08:00",
+  "watcher_thread": "01a14f5d-da55-7831-959e-53727796115e",
+  "state": "handoff_requested_original_ops_registration_pending",
+  "original_audit_commit": "08de78ace42632336eec1b1b075b9814366627a0",
+  "source_refs": [
+    {
+      "path": ".worktrees/v6-combat-state-divergence-20261020/.artifacts/expanded-summary.jsonl",
+      "bytes": 20893,
+      "sha256": "31e18f21cfdd061cd5de353a98998faf05f065e285fa38216b5044f67866b2c9"
+    },
+    {
+      "path": ".worktrees/v6-combat-state-divergence-20261020/.artifacts/next-replay-summary-v2.jsonl",
+      "bytes": 7226,
+      "sha256": "61adaaafd5bdcaf41642fb8230ae7e9b7dcf0e39c2e28d03fe10aec5da1f0fd1"
+    },
+    {
+      "path": ".worktrees/v6-combat-state-divergence-20261020/.artifacts/evidence/cases.json",
+      "bytes": 219015,
+      "sha256": "f2771818b276ceb3601134b723995921d2be09a8ab77b1d5de39cc4593f43345"
+    },
+    {
+      "path": ".worktrees/v6-combat-state-divergence-20261020/.artifacts/evidence/states-14233657663.json",
+      "bytes": 31157,
+      "sha256": "a67b0c0c7a1c4c59b8af9cc98c6d123f2965ada86e04f6523a1197e4eefe7841"
+    },
+    {
+      "path": ".worktrees/v6-combat-state-divergence-20261020/.artifacts/evidence/states-14233748131.json",
+      "bytes": 31993,
+      "sha256": "5ab9234d3ae5a746d2b6763d5d951c4a39a555e74219dd4938ca398b4a4c2446"
+    }
+  ],
+  "raw_frame_extract": [
+    {
+      "file": "states-14233657663.json",
+      "ts": "2026-10-18T00:24:50.904Z",
+      "run_id": "9S9U3YSYEPK1",
+      "turn": 4,
+      "floor": 12,
+      "player_hp": 6,
+      "enemies": [
+        {
+          "enemy_id": "LIVING_FOG",
+          "current_hp": 60,
+          "max_hp": 82,
+          "move_id": "BLOAT_MOVE",
+          "intents": [
+            {
+              "index": 0,
+              "intent_type": "Attack",
+              "label": "6",
+              "damage": 6,
+              "hits": 1,
+              "total_damage": 6,
+              "status_card_count": null
+            },
+            {
+              "index": 1,
+              "intent_type": "Summon",
+              "label": null,
+              "damage": null,
+              "hits": null,
+              "total_damage": null,
+              "status_card_count": null
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "file": "states-14233748131.json",
+      "ts": "2026-10-18T00:24:59.697Z",
+      "run_id": "9S9U3YSYEPK1",
+      "turn": 5,
+      "floor": 12,
+      "player_hp": 6,
+      "enemies": [
+        {
+          "enemy_id": "GAS_BOMB",
+          "current_hp": 8,
+          "max_hp": 8,
+          "move_id": "EXPLODE_MOVE",
+          "intents": [
+            {
+              "index": 0,
+              "intent_type": "DeathBlow",
+              "label": "9",
+              "damage": 9,
+              "hits": 1,
+              "total_damage": 9,
+              "status_card_count": null
+            }
+          ]
+        },
+        {
+          "enemy_id": "LIVING_FOG",
+          "current_hp": 49,
+          "max_hp": 82,
+          "move_id": "SUPER_GAS_BLAST_MOVE",
+          "intents": [
+            {
+              "index": 0,
+              "intent_type": "Attack",
+              "label": "9",
+              "damage": 9,
+              "hits": 1,
+              "total_damage": 9,
+              "status_card_count": null
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "confirmed_completed_replay": {
+    "run": "9J6T70HSYPG7",
+    "n": 256,
+    "wins": 210,
+    "deaths": 46,
+    "sample_index_8_hp_after": -6
+  },
+  "reported_by_owner_not_independently_reexecuted": {
+    "MRJ4E5HL3ZA9": "19th sample matches actual hand, HP0 death",
+    "summonsAt": "only Obscura",
+    "rollout_live_requested_summon_move": "ILLUSION_MOVE only"
+  },
+  "owner_source_pending": "snakebite minimal simulation state propagation; final report/commit pending",
+  "ops_static_receipt": {
+    "path": "paper/materials/20261020-1320-ops/receipt.json",
+    "bytes": 2178,
+    "sha256": "b6a21041cd461ee2e79f4ec446c8786e01cb52087faf4caa6831b39363919863",
+    "scope": "static receipt only; PID2405031 progress/process/logs not inspected"
+  },
+  "no_simulation_tests_or_api_executed": true,
+  "no_knowledge_live_stop_or_actor_modified": true
+}

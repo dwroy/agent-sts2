@@ -1,0 +1,129 @@
+{
+  "checked_at": "2026-10-20T13:37:24+08:00",
+  "refs": [
+    {
+      "path": ".worktrees/v6-combat-state-divergence-20261020/.artifacts/expanded-summary.jsonl",
+      "bytes": 20893,
+      "sha256": "31e18f21cfdd061cd5de353a98998faf05f065e285fa38216b5044f67866b2c9"
+    },
+    {
+      "path": ".worktrees/v6-combat-state-divergence-20261020/.artifacts/next-replay-summary-v2.jsonl",
+      "bytes": 7226,
+      "sha256": "61adaaafd5bdcaf41642fb8230ae7e9b7dcf0e39c2e28d03fe10aec5da1f0fd1"
+    },
+    {
+      "path": ".worktrees/v6-combat-state-divergence-20261020/.artifacts/evidence/cases.json",
+      "bytes": 219015,
+      "sha256": "f2771818b276ceb3601134b723995921d2be09a8ab77b1d5de39cc4593f43345"
+    },
+    {
+      "path": ".worktrees/v6-combat-state-divergence-20261020/.artifacts/evidence/states-14233657663.json",
+      "bytes": 31157,
+      "sha256": "a67b0c0c7a1c4c59b8af9cc98c6d123f2965ada86e04f6523a1197e4eefe7841"
+    },
+    {
+      "path": ".worktrees/v6-combat-state-divergence-20261020/.artifacts/evidence/states-14233748131.json",
+      "bytes": 31993,
+      "sha256": "5ab9234d3ae5a746d2b6763d5d951c4a39a555e74219dd4938ca398b4a4c2446"
+    }
+  ],
+  "raw_frame_extract": [
+    {
+      "file": "states-14233657663.json",
+      "ts": "2026-10-18T00:24:50.904Z",
+      "run_id": "9S9U3YSYEPK1",
+      "turn": 4,
+      "floor": 12,
+      "player_hp": 6,
+      "enemies": [
+        {
+          "enemy_id": "LIVING_FOG",
+          "current_hp": 60,
+          "max_hp": 82,
+          "move_id": "BLOAT_MOVE",
+          "intents": [
+            {
+              "index": 0,
+              "intent_type": "Attack",
+              "label": "6",
+              "damage": 6,
+              "hits": 1,
+              "total_damage": 6,
+              "status_card_count": null
+            },
+            {
+              "index": 1,
+              "intent_type": "Summon",
+              "label": null,
+              "damage": null,
+              "hits": null,
+              "total_damage": null,
+              "status_card_count": null
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "file": "states-14233748131.json",
+      "ts": "2026-10-18T00:24:59.697Z",
+      "run_id": "9S9U3YSYEPK1",
+      "turn": 5,
+      "floor": 12,
+      "player_hp": 6,
+      "enemies": [
+        {
+          "enemy_id": "GAS_BOMB",
+          "current_hp": 8,
+          "max_hp": 8,
+          "move_id": "EXPLODE_MOVE",
+          "intents": [
+            {
+              "index": 0,
+              "intent_type": "DeathBlow",
+              "label": "9",
+              "damage": 9,
+              "hits": 1,
+              "total_damage": 9,
+              "status_card_count": null
+            }
+          ]
+        },
+        {
+          "enemy_id": "LIVING_FOG",
+          "current_hp": 49,
+          "max_hp": 82,
+          "move_id": "SUPER_GAS_BLAST_MOVE",
+          "intents": [
+            {
+              "index": 0,
+              "intent_type": "Attack",
+              "label": "9",
+              "damage": 9,
+              "hits": 1,
+              "total_damage": 9,
+              "status_card_count": null
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "bounded_raw_reads": [
+    {
+      "path": "logs/states.jsonl",
+      "offset": 14233657663,
+      "bytes": 31157,
+      "sha256": "a67b0c0c7a1c4c59b8af9cc98c6d123f2965ada86e04f6523a1197e4eefe7841",
+      "equals_frozen_bytes": true
+    },
+    {
+      "path": "logs/states.jsonl",
+      "offset": 14233748131,
+      "bytes": 31993,
+      "sha256": "5ab9234d3ae5a746d2b6763d5d951c4a39a555e74219dd4938ca398b4a4c2446",
+      "equals_frozen_bytes": true
+    }
+  ],
+  "scope": "Static original frames and owner outputs only; no new simulation or causal/general mechanism conclusion."
+}

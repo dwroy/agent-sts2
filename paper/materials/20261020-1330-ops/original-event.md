@@ -1,0 +1,5 @@
+watcher 接原战斗分叉 owner 13:20 请求，沿现有学习闭环登记活雾召唤缺口，并请写入 notes/ops-current.md 短清单。原文与冻结来源：.artifacts/v6-target-progress/living-fog-learning-handoff-20261020-132907/source-message.md、evidence.json。
+具体待学习问题：V5 9S9U3YSYEPK1 F12 T4 BLOAT_MOVE 后，原 T5 新见 GAS_BOMB（8HP、9伤）；当前 owner 复放缺少该新敌。原始状态引用 states-14233657663.json / states-14233748131.json，完整路径/字节/SHA 与摘录在 evidence.json。此为需学习者依据原局核实的机制缺口，开发不补游戏知识。请原 ops 先查已有 ledger/request/任务来源去重，绑定原 boss-sim 学习闭环、原 owner/线程/账号；如尚无匹配，保留为原清单的学习缺口并回报所需登记来源，不能造新父或冒原现场。本消息不另授权手动派批/新模型/研究/校准或重复 full；接续按既有自动学习流程及原互斥边界。要求跟至正式发布及实际 live 模拟消费者读回，不以报告/排队关闭父要求。
+分开保留：9J6 F8 T9 前8种子漏坏抽牌，完成的256样本为210胜46死，第9样本实战同手牌HP-6；MRJ4第19样本HP0为 owner 报告，不与活雾机制缺口混为同一原因，不把8/8称确定胜。已发布 snakebite 保留知识未进入 sim 的最小状态传递修复仍由原 v6-combat-state-divergence-20261020 owner 完成，不重复派修，最终 report/commit 待交。
+13:20 工具四修复原检查仅核静态回执：698d3bd20 / tree3fd4d368，PID2405031 nice19 singleworker 在途，等待原 learner-checks 终局；本 watcher 未查进度或另跑。W3-805 接自然边界、最新知识保护、Regent 暂停及角色 ACK/宽父边界不变。
+请原生实收后回登记 ID/来源绑定及短清单落点；本消息 queued 不算已登记/已学习。
