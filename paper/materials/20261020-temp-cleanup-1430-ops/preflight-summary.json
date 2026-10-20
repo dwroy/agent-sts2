@@ -1,0 +1,81 @@
+{
+  "at": "2026-10-20T14:34:45.134622+08:00",
+  "cutoff": "2026-10-19T12:00:00+08:00",
+  "uid": 1000,
+  "tmp_dev": 72,
+  "before": {
+    "total_inodes": 1048576,
+    "available_inodes": 528136,
+    "available_bytes": 55045865472
+  },
+  "source_refs": [
+    {
+      "path": "agent/tests/brain-deepseek.test.ts",
+      "sha256": "155c73bc7a36e567f038d6ffb618791e80f579fa8596a2140491a828cfcb71c9",
+      "bytes": 19723
+    },
+    {
+      "path": "agent/tests/prefix-facts.test.ts",
+      "sha256": "7fe6b88d1798972c19c02eea48a05fe94eea8432d75c41f05cf2355752dd1575",
+      "bytes": 9971
+    },
+    {
+      "path": "agent/tests/asc-band-facts.test.ts",
+      "sha256": "3c35572122e9d52d186ea9a2fc6200d01f119f6f5d1472efa0ad313a97636e7a",
+      "bytes": 18226
+    },
+    {
+      "path": "agent/tests/jev-retry.test.ts",
+      "sha256": "65a69505812960cc0fd1969ace6f6422f80d580c15b77ffccf65e1be4cd56dc3",
+      "bytes": 7244
+    },
+    {
+      "path": "agent/tests/oneshot-support.ts",
+      "sha256": "6bb8aa5163cf544ab73c451a67216aef5d0ba756415b740643622ea73b1b0f93",
+      "bytes": 12739
+    },
+    {
+      "path": "agent/tests/loop.test.ts",
+      "sha256": "9bd8c779ad48211de280c9dbf4425123520e7a736e1461134ede82f386242bdf",
+      "bytes": 28648
+    }
+  ],
+  "top_counts": {
+    "jev-sts": 19392,
+    "brain-log-": 8996,
+    "asc-band-kn-": 2055,
+    "prefix-facts-": 6163,
+    "jev-retry-": 1288
+  },
+  "newer_retained": {
+    "jev-sts": 19392,
+    "brain-log-": 1404,
+    "asc-band-kn-": 312,
+    "prefix-facts-": 918,
+    "jev-retry-": 380
+  },
+  "eligible_roots": 7385,
+  "eligible_by_family": {
+    "jev-retry-": 904,
+    "prefix-facts-": 2265,
+    "asc-band-kn-": 966,
+    "brain-log-": 3250
+  },
+  "eligible_entries": 30975,
+  "eligible_files": 19329,
+  "eligible_apparent_bytes": 45872223,
+  "eligible_allocated_bytes": 108003328,
+  "skipped": {
+    "project-provenance-not-proven": 8103
+  },
+  "active_root_matches": 0,
+  "reference_inspection_denied": 68,
+  "deletion_performed": false,
+  "excluded_names": [
+    "tsx-1000",
+    "hearthstone-test-*",
+    "all other /tmp entries"
+  ],
+  "plan_path": ".artifacts/ops-temp-cleanup-20261020-1430/eligible-plan.jsonl",
+  "plan_sha256": "b67e946a5c23b00ad933443e9575b2423ee59ee920211798846a92b8cf9f8f47"
+}
