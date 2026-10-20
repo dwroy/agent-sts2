@@ -1,0 +1,65 @@
+## 修 bug 回报
+
+- 合并基线：main → efee2055221d0db7c2afaa05205384af16b9b72b
+- 修复（每条一行）：无新增修复；撤修复失败验证不适用。
+- 已被别人修掉的：40 个未勾选条目及 11 个历史工程子项；逐条提交号见[完整报告](/home/dw/Projects/agent-sts2/learner/runs/20261021-054308-fce30cbc-343b-462c-b6a9-40c4652f1250-fix-batch/report.md)。已复核 154 个源码/测试文件指纹、46 个修复提交祖先关系。
+- 没修的：策略、机制和独立架构事项保留原链；通知恢复、检查收尾等缺证事项保留；001302 监控六叶及 014301 夹具三叶候选由原 owner 接续，队列明确禁止重复实现。逐项原因见下方 JSON。
+- 测试：tsc 退出码 0；Vitest **定向** 6 文件 / 24 用例 / 退出码 0，无重跑；未重复完整套件。
+- 合入：未合入；本批无源码改动、无提交，工作树干净。
+- 需要 Roy 定的事：无。
+
+```json
+{
+  "task": "fix-batch",
+  "base": "efee2055221d0db7c2afaa05205384af16b9b72b",
+  "fixes": [],
+  "skipped": [
+    {"item": "silent-0279：SL抽序升级改标身份", "reason": "策略/机制类，保留原strategy-proposal链"},
+    {"item": "silent-0311", "reason": "策略/机制类，保留原strategy-proposal链"},
+    {"item": "silent-0319", "reason": "策略/机制类，保留原strategy-proposal链"},
+    {"item": "silent-0320", "reason": "策略/机制类，保留原strategy-proposal链"},
+    {"item": "silent-0329", "reason": "策略/机制类，保留原strategy-proposal链"},
+    {"item": "arch-funnel-guard", "reason": "独立架构任务"},
+    {"item": "arch-learning-priority", "reason": "独立架构任务"},
+    {"item": "arch-unified-resource-value", "reason": "独立架构任务"},
+    {"item": "inv-f33-regression", "reason": "独立归因研究任务"},
+    {"item": "silent-0332", "reason": "机制根因证据不足，保留原专项"},
+    {"item": "silent-0334：升级隐秘匕首模型", "reason": "策略/机制类，保留原strategy-proposal链"},
+    {"item": "silent-0339", "reason": "策略/机制类，保留原strategy-proposal链"},
+    {"item": "silent-0344：坚韧之环延迟格挡", "reason": "策略/机制类，保留原strategy-proposal链"},
+    {"item": "silent-0347", "reason": "策略/机制类，保留原strategy-proposal链"},
+    {"item": "silent-0349", "reason": "策略/机制类，保留原strategy-proposal链"},
+    {"item": "core-build-notify-222802-rc2", "reason": "原stderr与确定送达状态缺失；诊断保存子项已修，不擅自重送"},
+    {"item": "silent-0362", "reason": "策略/机制类，保留原strategy-proposal链"},
+    {"item": "合后检查包装器总时限与整套重跑", "reason": "历史执行器的owner及精确分段覆盖待核，不修改当前发布事务"},
+    {"item": "策略调度公平性归因核查", "reason": "独立调度归因任务，现有观测不足以证明永久饥饿"},
+    {"item": "silent-0481", "reason": "策略/机制类，保留原strategy-proposal链"},
+    {"item": "silent-0487：三段攻击模型缺口", "reason": "策略/机制类，保留原strategy-proposal链"},
+    {"item": "silent-0339续证", "reason": "策略/机制类，保留原strategy-proposal链"},
+    {"item": "H1/G2预算完成及paired-DPR来源宽项", "reason": "宽根因仍待原owner核实际输入，窄修复不关闭父项"},
+    {"item": "silent-0533：普通撕碎条件伤害", "reason": "策略/机制类，已有独立提案"},
+    {"item": "silent-0535：单动作候选双蟹朝向", "reason": "策略类，已有silent-proposal-84af8bc877ca131f"},
+    {"item": "原v5-dpr-health/H1 module-health V6兼容续项", "reason": "001302六叶候选未提交/发布，队列禁止后批重复实现"},
+    {"item": "infra-chest-claimed-action-conflict-0516", "reason": "策略/结构类，保留原cf77920511042e9c提案链"},
+    {"item": "infra-v6-brain-input-too-large-20261020宽项", "reason": "题面专项已窄运输，原故障自然复验及父要求仍由原链处理"},
+    {"item": "ordinary-close-isolation固定夹具成本续项", "reason": "014301三叶候选未提交/发布，禁止重复实现；新增联合失败保留，待原owner完整验收"},
+    {"item": "silent-elite-simulation-pessimism-20261021", "reason": "队列明确为策略学习任务，非fix-batch纯bug"}
+  ],
+  "merged": null,
+  "tests": {"tsc": 0, "vitest": 0, "cases": 24},
+  "code_proposals": [],
+  "implementation_domains": [],
+  "report": "/home/dw/Projects/agent-sts2/learner/runs/20261021-054308-fce30cbc-343b-462c-b6a9-40c4652f1250-fix-batch/report.md"
+}
+```
+
+== 学习者 codex / fix-batch ==
+状态：success；退出码 0
+模型：gpt-6.1-sol；会话：01a15b44-cfbf-7053-80d6-a53d55a3d6d2
+轮数：1；工具调用：command_execution×27
+token：输入 134.1k、输出 10.1k（其中推理 2329）、cache 读 1573.9k、cache 写 0（命中 92.1%）
+成本：未提供
+耗时：371.5 s（墙钟）
+时间：首个事件 37.7 s、模型首个输出 41.7 s、首次工具 45.8 s、末次工具结束 331.0 s；工具内共 82.1 s，其余（模型生成、推理、网络）251.7 s
+codex 会话记录：AGENTS.md 已加载（/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261021-054302）；模型的工具调用 exec×17；/home/dw/Projects/agent-sts2/ops/codex-ops/accounts/codex1/learner/sessions/2026/10/21/rollout-2026-10-21T05-43-18-01a15b44-cfbf-7053-80d6-a53d55a3d6d2.jsonl
+日志：/home/dw/Projects/agent-sts2/learner/runs/20261021-054308-fce30cbc-343b-462c-b6a9-40c4652f1250-fix-batch.jsonl
