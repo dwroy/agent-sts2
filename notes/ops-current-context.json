@@ -1008,6 +1008,11 @@
       "path": "paper/materials/20261020-1154-ops/receipt.json",
       "bytes": 2414,
       "sha256": "bb07fe303dbc854867f5023e118d0aeb5a9144b4d3e27ba6fd67cd687071de84"
+    },
+    "W8-pause-cold-benchmark-20261020-1159": {
+      "path": "paper/materials/20261020-1159-ops/receipt.json",
+      "bytes": 1736,
+      "sha256": "af9f901d2768f2a96fdbb68c2a0666f68d2474ff969295fe9743799a6e741475"
     }
   },
   "frozen_brain_request": {
@@ -1353,12 +1358,36 @@
       "bytes": 2465,
       "sha256": "55f76ecadc2d4c88094a0eee66988bcff3c447cf77b350adfc3bf8ef67980fb4"
     },
-    "status": "no active window; notify original W8 once natural actor/run-config/console identity exists",
+    "status": "W8-owned CPU cold benchmark paused, /proc T observed for2025282/2025297; code/targeted only; inform original W8 of actual live55 terminal before owner resumes",
     "next_actor_not_started": true,
     "nice": 19,
     "serial": true,
     "scratch_only": true,
-    "production_refresh_not_started": true
+    "production_refresh_not_started": true,
+    "pause_receipt": {
+      "path": "paper/materials/20261020-1159-ops/receipt.json",
+      "bytes": 1736,
+      "sha256": "af9f901d2768f2a96fdbb68c2a0666f68d2474ff969295fe9743799a6e741475"
+    },
+    "paused_owner_pids": [
+      {
+        "pid": 2025282,
+        "state": "T",
+        "ppid": 2025249,
+        "start_ticks": 136034527,
+        "comm": "python3"
+      },
+      {
+        "pid": 2025297,
+        "state": "T",
+        "ppid": 2025282,
+        "start_ticks": 136034532,
+        "comm": "python3"
+      }
+    ],
+    "ops_must_not_send_SIGCONT": true,
+    "wait_for_actual_live55_result": true,
+    "notify_W8_on_actual_natural_start": true
   },
   "latest_postmortem_intake": {
     "batch": "20261020-111302",

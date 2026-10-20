@@ -1,0 +1,50 @@
+{
+  "schema": "ops-W8-cold-measurement-pause-v1",
+  "at": "2026-10-20T12:00:17+08:00",
+  "native_ops": "01a1517b-e200-7c52-b463-6ea22220c0a9",
+  "message": {
+    "path": "paper/materials/20261020-1159-ops/original-message.md",
+    "bytes": 217,
+    "sha256": "1db3b6a50ba3fe2d221da37dad97e0ab4281874dfa8c157e540b220566b974be"
+  },
+  "source": "original W8 report: Claude11:59 pause; ops observed /proc state only",
+  "observed_processes": [
+    {
+      "pid": 2025282,
+      "state": "T",
+      "ppid": 2025249,
+      "start_ticks": 136034527,
+      "comm": "python3"
+    },
+    {
+      "pid": 2025297,
+      "state": "T",
+      "ppid": 2025282,
+      "start_ticks": 136034532,
+      "comm": "python3"
+    }
+  ],
+  "stopped_state_observed": true,
+  "ops_sent_signals": [],
+  "owner": "original V6-W8",
+  "W8_no_full_vitest_started": "owner report; no cross-owner check polling",
+  "allowed_owner_work": "code and targeted checks only while cold benchmark paused",
+  "resume_boundary": "after actual original live55 terminal, original W8 follows Claude arrangement; ops sends actual result but does not SIGCONT owner PIDs or prestart a run",
+  "live55_fixed_tree": "78040c8c27ad482c77b454d8b010fddaa554c40d",
+  "live55_pid": 2011990,
+  "live55_status_path": ".artifacts/ops-wake-20261020-1147/live-host-status.json",
+  "live55_status_not_queried": true,
+  "STOP": {
+    "path": "ops/STOP",
+    "bytes": 230,
+    "sha256": "f922fa01011d72382dc6b227f4a5ecf2224c197a9ffe37f63cf3ed5a1c9ac80d"
+  },
+  "no_new_resume_gate": true,
+  "original_Roy_authorized_publication_and_game_gate_unchanged": true,
+  "W3_excluded": true,
+  "Regent": "paused",
+  "new_model": false,
+  "new_test_or_refresh": false,
+  "new_game": false,
+  "role_ACK": false
+}
