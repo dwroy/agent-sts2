@@ -1,0 +1,148 @@
+{
+  "at": "2026-10-21 02:39:13 CST",
+  "state": "V6-R407-published-actual-CARDjev-REFLEXoff-first-action-readback-quality-Claude-pending",
+  "publication": {
+    "at": "2026-10-21T02:37:04+08:00",
+    "release_id": "V6-R407",
+    "behavior_commit": "389d2650744047aa1e0ef94cd7b07e0ff4012469",
+    "actual_previous_live": "4528a751f17e341a97e7ff70295ec9fba0c947e9",
+    "main_runtime": {
+      "parent": "771d62b40609a384a74f5155bbab9d6bb79d680e",
+      "commit": "9e3e1bce26488b192b6ed8ced5f9d6b17f5f7c2b",
+      "tree": "5fd0fb7367cc01865d9365dd74dbbeda2c36cb09",
+      "paths": [
+        "ops/production-runtime.sh"
+      ]
+    },
+    "registrations": {
+      "live": {
+        "parent": "389d2650744047aa1e0ef94cd7b07e0ff4012469",
+        "commit": "a7d07949efb03278a62050ca39447941309b4b7e",
+        "tree": "9674454101d216b18b530ed75e4a87f29ad3360e",
+        "paths": [
+          "eval/versions.json"
+        ]
+      },
+      "main": {
+        "parent": "9e3e1bce26488b192b6ed8ced5f9d6b17f5f7c2b",
+        "commit": "019b9e4a88158eb114cf28476cc5643828c2bb06",
+        "tree": "d985bc80c10cd569b3f2095a3d243264b5365739",
+        "paths": [
+          "eval/versions.json"
+        ]
+      }
+    },
+    "source_leaf_count": 17,
+    "runtime_delta": {
+      "V6_CARD_DECIDER": [
+        "brain",
+        "jev"
+      ]
+    },
+    "REFLEX": "off",
+    "latest_knowledge_count": 498,
+    "knowledge_preserved": true,
+    "full_original": {
+      "request": "original-W4-P0-option-model-six-plus-accepted-P3-eleven-R406-joint-20261021-0045",
+      "state": "passed-await-original-ops-next-natural-boundary-exact-publication-consumer-and-reward-readback",
+      "started_at": "2026-10-21T00:49:53.257897+08:00",
+      "runner_pid": 1548507,
+      "runner_start_ticks": "140674056",
+      "nice": 19,
+      "worktree": "/home/dw/Projects/agent-sts2/.worktrees/ops-p0-model-plus-p3-20261021-0045",
+      "actual_live_base": "4528a751f17e341a97e7ff70295ec9fba0c947e9",
+      "allocation_base": "4528a751f17e341a97e7ff70295ec9fba0c947e9",
+      "staged_tree": "297cb270699bff16722976af387bbb76b88a861f",
+      "source_count": 17,
+      "knowledge_count": 498,
+      "input_count": 2391,
+      "input_sha256": "2529b6881889503dc98ad7e7f8446ff237256b0a73ca81438887536ea19855f4",
+      "steps": [
+        {
+          "name": "tsc",
+          "command": [
+            "npx",
+            "tsc",
+            "-p",
+            "tsconfig.json",
+            "--noEmit"
+          ],
+          "started_at": "2026-10-21T00:49:53.258464+08:00",
+          "log": "/home/dw/Projects/agent-sts2/.artifacts/ops-p0-model-plus-p3-joint-20261021-0045/tsc.log",
+          "pid": 1556061,
+          "exit_code": 0,
+          "ended_at": "2026-10-21T00:49:54.341727+08:00",
+          "seconds": 1.0832797451876104,
+          "log_bytes": 0,
+          "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "name": "full",
+          "command": [
+            "node",
+            "tools/with-temp.mjs",
+            "node_modules/vitest/vitest.mjs",
+            "run",
+            "--maxWorkers=1"
+          ],
+          "started_at": "2026-10-21T00:49:54.342111+08:00",
+          "log": "/home/dw/Projects/agent-sts2/.artifacts/ops-p0-model-plus-p3-joint-20261021-0045/full.log",
+          "pid": 1556170,
+          "exit_code": 0,
+          "ended_at": "2026-10-21T01:10:54.434397+08:00",
+          "seconds": 1260.0922938170843,
+          "log_bytes": 485,
+          "log_sha256": "b8e3879bb6f453e258f427a1ffbb09855a52e8fd70757cdd4e6b21538ca83086"
+        }
+      ],
+      "held_original_lock": "ops/live-merge.lock",
+      "window_preflight_other_vitest_PIDs": [],
+      "no_actual_live_or_active_actor_change": true,
+      "ended_at": "2026-10-21T01:10:54.596886+08:00",
+      "input_unchanged": true,
+      "combined_full_rc": 0,
+      "heavy_admission_locks_released": true,
+      "original_full_window_lock_released": true,
+      "terminal_event_path": "/home/dw/Projects/agent-sts2/ops/codex-ops/queue/1792516254597254499-manual.md"
+    },
+    "consumer": "/home/dw/Projects/agent-sts2/.artifacts/ops-P0-stop-boundary-20261021-021x/actual-live-consumer.json",
+    "dual_notice_written": true,
+    "STOP_still_present": true,
+    "STOP_sha256": "95af109bb031f6faf6c5791bcb9ed64f527d81522b2ff5713a4835e3acdde1dc",
+    "STOP_mtime_ns": 1792521404027356528,
+    "first_natural_quality": "pending Claude judgement",
+    "next": "After source/registry/dual notices: verify no active play; original autoplay-stop if old loop remains, then existing broker autoplay-start removes STOP only after its guards. Verify next run-config and first action once; no waiting/polling."
+  },
+  "resume": {
+    "broker_stop_rc": 124,
+    "host_stop_rc": 1,
+    "host_stop_result": "original loop already exited; no other autoplay found",
+    "host_start_rc": 0,
+    "autoplay_pid": 1889333,
+    "pane": "w1H:p14",
+    "STOP_removed": true
+  },
+  "first_actual_run_config_and_action": {
+    "run_id": "JPWMMV67SZCL",
+    "run_config_CARD": "jev",
+    "REFLEX": "off",
+    "first_run_action": "EVENT event/choose -> choose_event_option option_index2",
+    "first_run_action_console_time": "02:38:56",
+    "pre_run_first_action": "02:38:37 MAIN_MENU menu/new_run -> open_character_select",
+    "quality_owner": "Claude",
+    "quality_accepted": false,
+    "reward_question_not_yet_in_this_readback": true
+  },
+  "quality_owner": "Claude",
+  "quality_accepted": false,
+  "P2_two_stable_natural_runs_pending": true,
+  "R4_duplicate_dispatch": false,
+  "full_or_dataset_repeated": false,
+  "other_role_ACK_filled": false,
+  "run_config_code_metadata": {
+    "error": "git status failed: spawnSync git ENOBUFS",
+    "commit": null,
+    "not_replaced_with_invented_values": true,
+    "independent_publication_source": "389d2650744047aa1e0ef94cd7b07e0ff4012469"
+  }
+}

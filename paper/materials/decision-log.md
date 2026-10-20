@@ -5394,3 +5394,7 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
 - 2026-10-21 02:17:14 CST 原ops：实收Claude02:1x，1ZZ原play局终由Claude既有守候写STOP/通知，禁止重复守候或局中STOP。原P0发布器/读回已预备（无新full/MC/API），收到原终局实核STOP/PID/漂移后17+CARDjev窄运/消费者/核号双通知，再原autoplay守卫清STOP/恢复；首局质量Claude判。旧CSB/无条件noSTOP等待被此边界策略取代，P0/P2科学门不增，未实际发布/写STOP/动actor。原件paper/materials/20261021-021x-ops/preparation.json。
 
 - 2026-10-21 02:24:01 CST 原ops：014301-fix三叶测试夹具候选未提交，来源tsc0/定向2过/Python24过但沙箱四文件七败、撤源同七败；逐SHA与R406私有最小apply-check0仅可应用，原件保留绑定ordinary原项。P0局终STOP窗口优先，候选待后排最新实际组合全检；无新full/dataset/派批/main/live/版本或父关闭。原件paper/materials/20261021-0213-ops/receipt.json。
+
+- 2026-10-21 02:39:13 CST 原ops：原1ZZ局终STOP窗口实核后窄发布17源码+唯一CARD=jev，登记V6-R407（行为389d2650744047aa1e0ef94cd7b07e0ff4012469/live a7d07949efb03278a62050ca39447941309b4b7e）；498知识保留/实际loader与候选牌面差异及未知保护读回/双通知完成，REFLEXoff不变。原broker124保留，同一原动作宿主确认旧循环退后移STOP拉起1889333/w1H:p14，首局质量由Claude判，P2两稳定局/科学父/Regent保持；无重full/dataset/模型。原件paper/materials/20261021-0236-P0-publication-ops/receipt.json。
+
+- 2026-10-21 02:40:29 CST 原ops：R407新局JPWMMV67SZCL实际配置CARDjev/REFLEXoff与02:38:56首局内动作读回，run-config旧ENOBUFS Git空字段保留，发布源码独立核验；第一局Claude质量仍pending，不代收益/两稳定局。原件paper/materials/20261021-0236-P0-publication-ops/first-natural-readback.json。

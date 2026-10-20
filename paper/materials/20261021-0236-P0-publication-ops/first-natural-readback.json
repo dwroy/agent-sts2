@@ -1,0 +1,111 @@
+{
+  "at": "2026-10-21T02:39:23+08:00",
+  "source": ".worktrees/live/logs/run-config.jsonl",
+  "offset": 2288809,
+  "bytes": 6027,
+  "sha256": "b1e620b6a50af5a7aa9f4aa1ae4afa188ba64bac0b80a7ea5fce55b9a2bcf1f5",
+  "selected": {
+    "run_id": "JPWMMV67SZCL",
+    "v6": {
+      "schema": "v6-config-v1",
+      "mode": "on",
+      "deciders": {
+        "card": "jev",
+        "potion": "brain",
+        "shop": "brain",
+        "rest": "brain"
+      },
+      "reflex": "off",
+      "direction_replan": "off",
+      "admission": "interfaces_only",
+      "delivered": false,
+      "samples_pick": 20,
+      "samples_act": 100,
+      "min_known_option_ratio": 0.5,
+      "direction_min_weight": 0.1,
+      "win": {
+        "certain_win": 0.95,
+        "favored": 0.7,
+        "even": 0.3,
+        "unfavored": 0.05
+      },
+      "delta": {
+        "much_se": 2,
+        "better_se": 1,
+        "much_min": 0.05
+      },
+      "triggers": {
+        "t1_core_min": 0,
+        "t2_se": 2,
+        "t2_min_delta": 1,
+        "t2_consecutive": 2,
+        "t3_weight_max": 0,
+        "t5_hazard": "existing_route_projection",
+        "t6_unknown_max": 1,
+        "t6_fallbacks": 100,
+        "t7_checkpoint": "validated_brain_answer"
+      },
+      "budgets": {
+        "brain_soft_cap": 15,
+        "brain_ms": 90000,
+        "act_ms": 60000,
+        "pick_ms": 5000,
+        "jev_ms": 5000
+      },
+      "invalid": []
+    },
+    "other_keys_present": [
+      "ts",
+      "run_id",
+      "ascension",
+      "character",
+      "floor",
+      "restart",
+      "process",
+      "code",
+      "v6",
+      "brain",
+      "knowledge",
+      "deepseek",
+      "jev",
+      "human_pace",
+      "human_pace_h2",
+      "loop",
+      "operator_constraints",
+      "construction",
+      "target_ascension",
+      "arm",
+      "sl",
+      "codex_check",
+      "codex_usage",
+      "config_sha"
+    ],
+    "ts": "2026-10-20T18:38:40.751Z",
+    "code": {
+      "commit": null,
+      "code": null,
+      "dirty": null,
+      "dirty_files": [],
+      "branch": null,
+      "worktree": "live",
+      "error": "git status failed: spawnSync git ENOBUFS"
+    },
+    "floor": 1,
+    "character": "SILENT",
+    "ascension": 10
+  },
+  "console": "logs/console/20261021-023830-a7d07949e+dirty.log",
+  "console_tail": "mod 0.16.2 at http://127.0.0.1:8080 (protocol 2026-03-11-v1, status ready)\ngame data from cache: 596 cards, 107 monsters, 299 relics, 66 potions, 283 powers, 57 events\nPLAY mode: http://127.0.0.1:8080, model typesafe/jev-1.14\n02:38:37 MAIN_MENU       menu/new_run         -> open_character_select jev 0 ms | 0 in\n         starting a new run\n02:38:38 CHARACTER_SELECT character/select     -> select_character (option_index=2) jev 0 ms | 0 in\n         selecting SILENT (CHARACTER)\n02:38:40 CHARACTER_SELECT character/embark     -> embark jev 0 ms | 0 in\n         character chosen; setting off\n02:38:40 note run JPWMMV67SZCL (F1): no logged rows to rebuild the run memory from, starting it empty (a new run)\n02:38:42 note boss sim on event/choose: 300 samples per option, 1096 ms\n02:38:42 note V5 construction shadow: missing_route, evaluation=attached, probability=absent, 0 ms\n02:38:42 note Codex decides event/choose (3 options, floor 1, run context 4201 chars)\n02:38:56 note Codex (14.0 s) event/choose: o2 — Two early relics offer lasting power worth the starter-card dilution. This choice also has the strongest observed run outcomes.\n02:38:56 note action came back completed; waited for the board to settle\n02:38:56 EVENT           event/choose         -> choose_event_option (option_index=2) jev 0 ms | 10542 in\n         Codex decided o2: Two early relics offer lasting power worth the starter-card dilution. This choice also has the strongest observed run outcomes. | Codex chose 巨大扭蛋 (code's fallback order: 0, rank 1 of 3; not shown to Codex)\n02:38:57 note action came back completed; waited for the board to settle\n02:38:57 EVENT           event/leave          -> choose_event_option (option_index=0) jev 0 ms | 0 in\n         the event is finished; taking the proceed option\n02:38:57 note V5 construction shadow: missing_route, evaluation=attached, probability=absent, 0 ms\n02:38:57 note Codex decides map/route-plan (2 options, floor 1, run context 5288 chars)\n",
+  "STOP_present": false,
+  "actual_adoption": {
+    "run_id": "JPWMMV67SZCL",
+    "run_config_CARD": "jev",
+    "REFLEX": "off",
+    "first_run_action": "EVENT event/choose -> choose_event_option option_index2",
+    "first_run_action_console_time": "02:38:56",
+    "pre_run_first_action": "02:38:37 MAIN_MENU menu/new_run -> open_character_select",
+    "quality_owner": "Claude",
+    "quality_accepted": false,
+    "reward_question_not_yet_in_this_readback": true
+  }
+}

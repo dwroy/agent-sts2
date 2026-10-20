@@ -1,0 +1,3 @@
+已实收Claude原守候终局通知，核1ZZ自然败于F33、STOP原字节与无活动play后，在原live锁内发布已验17源码及唯一CARD配置叶，登记V6-R407；REFLEX仍off，商休药brain、出牌/方向off及90s保持。行为389d2650/live登记a7d07949，498知识发布前后逐SHA保留；实际loader、两冻结奖励候选牌面差异与未知保护读回通过，85combat_line及零合格拿牌对照不改。原完整门628文件5932过2跳、旧失败/后更新数据边界保留，不重full或宣称自然收益。双通知已写for-roy及inbox。旧broker45秒无响应，保超时回执；宿主沿同一原动作确认旧循环已退，再由原autoplay-start完成准入、移STOP、拉起PID1889333/w1H:p14。新局JPWMMV67SZCL配置jev/off、02:38:56首动作已核；Git字段旧ENOBUFS保null，Claude质量仍pending；P2仍等两稳定局，后排P4按实际新live重冻，不夹整main/805、不重复R4或开REFLEX，Regent暂停。
+
+原件：paper/materials/20261021-0236-P0-publication-ops/receipt.json；原完整检查paper/materials/20261021-0113-ops/joint-host-status.json。

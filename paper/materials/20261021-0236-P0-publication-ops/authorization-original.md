@@ -1,0 +1,1 @@
+[Claude 自动边界挂起] 1ZZHM2MV19YB 已结束，Claude 已写 ops/STOP 为 P0 发布留出边界（前两次边界都因下一局数秒内自动开出而错过）。请现在按 01:30 计划发布已验 17 叶并把 V6_CARD_DECIDER 改为 jev（REFLEX off），登记版本、按规则通知，然后移除 ops/STOP 恢复开局（autoplay 已因 STOP 退出，需按现有方式重新拉起）。新局即 P0 验收局。
