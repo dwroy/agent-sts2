@@ -3421,3 +3421,7 @@ request_id=roy-20261017-human-pace-h0 revision=3 input_sha256=1e1c259a15f1824119
 
 2026-10-20T16:31:18+08:00 已实际接收watcher本人正式交付，独立核receipt原SHA、六次原CLI返回0及三份001309冻结manual-source，调用只读鉴真函数通过，未重放ACK命令。三通知registry与六份原角色回执及evidence逐SHA核同；原生8185行含末尾换行和不含换行两种SHA均与冻结证据吻合。原notice正文、来源和ops_forwarded保持，learn前后虽字节变化但JSON语义完全相同。三条角色登记阻塞据实解除；这只完成通知登记，不代表Roy同意、知识正式验收、消费者采用或科学父完成。已按原记录通道保存watcher追加日志原行及1627报告，保留全部并行记录；向原watcher回传实际接管核验，CLI入队不当对方实收。本轮仅记录，无测试、模型、API、刷新或对局操作；W8r3b后W4再infra顺序、805暂缓和Regent暂停不变，未查在途检查或修改live、actor、STOP。
 原件 paper/materials/20261020-1630-ops/verification.json；paper/materials/20261020-1627-watcher-notice-ack/receipt.json。
+
+
+2026-10-20T16:39:09+08:00 已原生实收W8释放回执并核完整终局：固定mainf7、tree42fd与2442输入前后manifest字节及SHA完全一致，tsc0/full0，623文件5891项通过2原跳过，耗时1378.643秒，原full日志SHA核同。实际检查runner、tsc、full三个PID均已不存在，原工作树无剩余检查node进程；旧r2失败、r3漂移中断和r9定向原件仍保留，未重跑未变源码。已沿原线程明确交唯一完整检查窗口给W4拿牌新条目，要求冻结最新真实输入、原阈值nice19单worker及短仓内TMPDIR；自然终局核退出后再明确释放原watcher infra。三方CLI投递成功只记入队，尚未收到W4实际启动读回，不冒已经运行。W8后续由原owner归档、核main短FF并正式交付，本轮全检通过不代源码提交、main或live发布。当前live、actor、STOP不动，805暂缓、Regent暂停及科学父边界保持。
+原件 paper/materials/20261020-1637-ops/receipt.json；verification.json；W8-window-release.json。

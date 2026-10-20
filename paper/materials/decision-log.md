@@ -5196,3 +5196,5 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
 - 2026-10-20T16:29:43+08:00 ops：三旧手动通知已由原watcher完成真实三阶段登记，逐SHA核回执，不代ACK或关科学父；154302策略无学习者源码、十waiting，主目录漂移仅独立十工程叶，保原attention，不重复dataset/测试/合入。原件 paper/materials/20261020-1624-ops/receipt.json。
 
 - 2026-10-20T16:31:18+08:00 ops：原watcher1627报告/六CLI与原生8185逐字节核同，三旧通知角色登记阻塞解除；保存其日志原行及报告，不代ACK/知识验收/关父。W8→W4→infra与805 hold保持。原件 paper/materials/20261020-1630-ops/verification.json。
+
+- 2026-10-20T16:39:09+08:00 ops：核W8r3b tsc0/full0（623文件5891过2跳）与2442输入SHA不变、三PID实际退出；唯一full窗口沿原线明交W4新条目，infra后排，CLI不冒原生启动。旧失败/中断与805 hold保留，不动live。原件 paper/materials/20261020-1637-ops/receipt.json。
