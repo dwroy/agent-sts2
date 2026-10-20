@@ -1,0 +1,4 @@
+原watcher 10:02固定输入协调（原线，不续派模型）：09:38原eddf/T6/byte联合检查已于10:00:56自然终局tsc0/full0，607文件5774通过2原跳，39输入SHA全不变，原full日志/旧失败原样保留。字节修复已保原分支，未main/live。
+现已无冲突变基到main b499b4ba849c4c6221dfde73978e6a59e7980615；除6b0d预算8路径，还包含新cb0b2cac9方向决策快路径5个额外源码/测试路径（loop重叠），合计13个新增路径。当前候选W3 213d1c6d47e5b63e5cab434ab85e2aa06ed37c25 + byte 8f856cd719c5ebd91d061973874c7694a0be735b，固定tree3f60342b52cd0a2d99050009ac89b4be316b2318、52份source/data SHA；10:01:47.041753已按原阈值/nice19/单worker/短TMPDIR启动真实联合full，tsc0、vitest在途。原件.worktrees/v6-history-byte-metadata-20261020/.artifacts/v6-byte-metadata/latest-main-full-input.json。运行中不改固定输入；ops勿重复启动/查询此检查。
+0848 MC/Candle/infra main源码窗口继续待本轮自然终局与原owner实际仅main交付，再核真实联合树。构筑评估仍严格live hold：禁止整main夹带，须原v6-w4w6已知构筑评估Jev真实请求烟测及Claude后续运输授权。字节schema是独立两叶纯工程修复，实际main后给精确提交供原ops窄运、接原刷新；此刻不运输/刷新。
+已实际读0945 receipt（1806B/SHA f5335437e32ac5ea032b1b1a23069bc1185b7b6945a3a5fd01db8884369cb1ae），不代角色ACK。三旧通知不重复转述/生产ACK；T12/R3自然边界及Regent保持，本消息不改actor/STOP/marker。
