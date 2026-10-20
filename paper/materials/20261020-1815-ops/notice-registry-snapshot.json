@@ -1,0 +1,39 @@
+{
+  "id": "5978007ac8c26a658bf82f4e",
+  "kind": "disagreement",
+  "request_id": "silent-proposal-89354805ee4d7e77",
+  "request_sha256": "ab6488e1b2e17415061c372d3efa10dbba468de2574f784088e1a967358df76d",
+  "message": "[\n  {\n    \"claim\": \"旧等待记录把729帧无actual/piles快照写成缺牌堆，容易被理解为本局没有战内牌堆证据。\",\n    \"finding\": \"本批原始states的agent_view确有分组draw/discard/exhaust投影，F43T1猎杀者15→20可核；它仍不提供完整卡实例身份或确定抽序。只纠正证据可用性范围，不补胜率或自然收益。\",\n    \"evidence\": \"/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261020-164301/learner/runs/20261020-164305-b8402bfa-7d70-4359-9d53-d91261b31cb1-strategy-proposal/predator-grouped-pair.json\",\n    \"recommendation\": \"原ops读取本批报告后，按原ops→watcher→Roy链传递这一限定；保留旧记录，后续任务使用完整字段路径，不新增独立局分母。\",\n    \"affected_proposals\": [\n      \"silent-proposal-89354805ee4d7e77\",\n      \"silent-proposal-283a164780d11e69\"\n    ],\n    \"delivery_status\": \"pending_ops_watcher_roy\"\n  }\n]\n",
+  "created_at": 1792490357.208619,
+  "route": [
+    "learner",
+    "ops",
+    "watcher",
+    "Roy"
+  ],
+  "notification_only": true,
+  "registered_learning_request": false,
+  "character": "silent",
+  "source_batch": "20261020-164301-strategy-proposal",
+  "source_evidence": {
+    "path": "ops/codex-ops/learning-notices/sources/5978007ac8c26a658bf82f4e.json",
+    "sha256": "7f8952acfaad6659ebe166af1ea7f3cc39a80820a05a4becff7408921bcdfa48"
+  },
+  "ops_forwarded": {
+    "path": "/home/dw/Projects/agent-sts2/ops/codex-ops/learning-notices/receipts/5978007ac8c26a658bf82f4e.ops-forwarded.json",
+    "sha256": "1f79396fd40818090022303b6547750e2e79add601b9a2bd2559721c2904c87b",
+    "at": 1792490357.3870978
+  },
+  "watcher_received": {
+    "path": "/home/dw/Projects/agent-sts2/.artifacts/watcher-20261020-1802/watcher_received-receipt.json",
+    "sha256": "e90273b2b806c03069eb0816944bc6fa170ee29b2cc6d7fb832470025ab7aa67",
+    "at": 1792490720.8635566
+  },
+  "roy_notified": {
+    "path": "/home/dw/Projects/agent-sts2/.artifacts/watcher-20261020-1802/roy_notified-receipt.json",
+    "sha256": "425649ae066c39f8b191b52116eeacace4ac89ba49b2e45bde16e85a92c54513",
+    "at": 1792490737.393622
+  },
+  "last_queued_at": 1792490357.3874695,
+  "last_queue": "/home/dw/Projects/agent-sts2/ops/codex-ops/queue/1792490357387389917-learning-attention.md"
+}
