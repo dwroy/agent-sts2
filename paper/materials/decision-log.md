@@ -5442,3 +5442,5 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
 - 2026-10-21 04:04:30 CST 原ops：7127时钟夹具单叶核同，原P4失败2399输入仅此叶变化/其余2398同，42材料清单扫描0，旧根因unknown/full1保留；原29+1准备树4af416d9，唯一有限checker2192743沿原kernel锁重冻最新live知识后完整门，实际启动待原事件，不轮询/提前发布。原件paper/materials/20261021-P4-clock-repaired-ops/receipt.json。
 
 - 2026-10-21 04:11:14 CST 原ops：P4修后原唯一full2196201/runner2192743启动静态核同，tsc0/tree5628371e/2399输入98034135，30源与485知识SHA同；相对旧失败仅1测试源+48锁内最新知识数据，原29生产不变，旧full1/unknown保留。不查动态进度/热改/叠full/发布，待原终局。原件paper/materials/20261021-0410-ops/receipt.json。
+
+- 2026-10-21 04:14:13 CST [Claude，P0 质量不达标] v6-w4w6 只读核查（2c4b12ada）：R407 12 次奖励选牌与 A 指标诊断最优 0/12 一致（Boss 权重五档敏感性均 0/12），4 次明确逆指标（如 JPWM F2 选 UNTOUCHABLE 而 SNAKEBITE 各项优于跳过），B 长期结果 238 行全为 null；71.4% 目标所有选项死亡率 1。战绩 R407 四局 F17/F8/F33/F17 对比 R404/R406 大脑拿牌六局 F33/F22/F33/F48/F33/F33。处置：2GFAPDBDNSCR 局终由 Claude 守候挂 STOP，ops 把 V6_CARD_DECIDER 临时改回 brain（R407 代码保留）；v6-w4w6 把相对跳过的汇总数值放进各选项 criteria、标无区分列、修 B 为空，离线冻结题真实 Jev 请求验一致率与逆指标为 0 后再切回 jev。P2 因奖励界面无合法弃药接口（6 个满槽帧 can_discard 全 false）暂停，待 Roy。
