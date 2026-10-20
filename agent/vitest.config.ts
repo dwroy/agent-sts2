@@ -1,5 +1,9 @@
 import { defineConfig } from "vitest/config";
 import { fileURLToPath } from "node:url";
+import { createTempScope } from "./tools/temp-root.mjs";
+
+const scratch = createTempScope();
+Object.assign(process.env, scratch.env);
 
 // The test files, the setup files and the timeout; everything else is vitest's default.
 export default defineConfig({
@@ -8,6 +12,8 @@ export default defineConfig({
   // Tests use fixed inputs; never load a live worktree's credentials or play configuration.
   envDir: false,
   test: {
+    globalSetup: ["tests/temp-global-setup.ts"],
+    env: { STS2_TEST_TMP_ROOT: scratch.directory ?? "", STS2_TEST_TMP_OWNER: scratch.token ?? "" },
     // This package's tests only (agent/tests): never the upstream submodule's, an old worktree's or a nested checkout's.
     include: ["tests/**/*.test.ts"],
     exclude: ["**/node_modules/**", "**/third_party/**", "**/.worktrees/**", "**/jev-sts2*/**"],

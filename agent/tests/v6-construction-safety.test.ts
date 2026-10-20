@@ -7,6 +7,8 @@ import { v6Config } from "../src/v6/config.js";
 import { detectReplan, freshReplanState } from "../src/v6/replan-triggers.js";
 import type { V6ProjectionTable } from "../src/sim/v6-projection.js";
 import type { AskDecision } from "../src/memory/types.js";
+import { outcome, request } from "./v6-projection-fixture.js";
+import { cardCombatRow, type V6CardResults } from "../src/sim/v6-card-results.js";
 import { board, env, setupOneshotTests } from "./oneshot-support.js";
 setupOneshotTests();
 const dirs: string[] = [];
@@ -55,9 +57,17 @@ it("records coverage recovery only for the observed construction kind and run", 
   const run = String(e.state.raw.run_id);
   e.screenMemory.v6ConstructionRecovered = { run, kinds: ["shop", "potion"] };
   e.v6ProjectionTable = table(["a", "b"]);
+  expect(constructionQuestion(e, decision)?.coverage.known).toBe(0); // Old P*W rows cannot satisfy the new A gate.
+  const r = request(), target = r.targets[0]!, prepared = r.prepare(target, r.baseline.state)!, samples = [outcome(true), outcome(true)];
+  e.v6CardResults = { targets: [target], immediate: ["a", "b"].map(id =>
+    cardCombatRow(id, target, prepared, samples, samples, r.trust(target))) } as V6CardResults;
   expect(constructionQuestion(e, decision)?.coverage.reason).toBeNull();
   expect(e.screenMemory.v6ConstructionRecovered).toEqual({ run, kinds: ["shop", "potion", "card_pick"] });
-  e.v6ProjectionTable = undefined;
+  decision.state = { card_prompt_unavailable: "mandatory_A_and_core_catalog_exceed_budget" };
+  expect(constructionQuestion(e, decision)?.coverage).toMatchObject({ known: 2, reason: "prompt_budget_exceeded" });
+  expect(e.screenMemory.v6ConstructionRecovered).toEqual({ run, kinds: ["shop", "potion"] });
+  decision.state = {};
+  e.v6CardResults = undefined;
   expect(constructionQuestion(e, decision)?.coverage.known).toBe(0);
   expect(e.screenMemory.v6ConstructionRecovered).toEqual({ run, kinds: ["shop", "potion"] });
   e.screenMemory.v6ConstructionRecovered = { run: "OTHER", kinds: ["shop"] };

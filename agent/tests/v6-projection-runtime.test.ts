@@ -1,4 +1,6 @@
 import { afterEach, expect, it, vi } from "vitest";
+import { V6ProjectionEngine } from "../src/sim/v6-projection.js";
+import { observeV6CardReward } from "../src/v6/card-reward-scope.js";
 import { V6ProjectionRuntime } from "../src/v6/projection-runtime.js";
 import { DecisionBudget, currentDecisionBudget, withDecisionBudget } from "../src/core/decision-budget.js";
 import { board, env, setupOneshotTests } from "./oneshot-support.js";
@@ -116,4 +118,32 @@ it.each(["cancel", "expire"])("does not record a room result after %s during eva
   expect(await withDecisionBudget(budget, () => runtime.evaluateRequest(e, request(),
     { budget_ms: 5000, signal: controller.signal }))).toBeNull();
   expect(engine.evaluate).toHaveBeenCalledTimes(1); expect(record).not.toHaveBeenCalled();
+});
+it("isolates background core work from the model budget, joins it, and never starts it in foreground", async () => {
+  vi.stubEnv("V6_BUILD", "off"); vi.stubEnv("V6_CARD_DECIDER", "jev");
+  const e = env(board("xljq-f5-reward", "reward")), r = request();
+  let finish!: () => void;
+  const cardEngine = { evaluate: vi.fn(async () => ({ telemetry: { elapsed_ms: 0, preparation_ms: 0 } })),
+    precompute: vi.fn(() => new Promise<void>(resolve => { finish = resolve; })) };
+  const context = vi.fn(() => ({ fingerprint: "fixed" })), input = vi.fn(async () => ({
+    factory: { create: () => ({ status: "ready", request: r }) }, situation: {} }));
+  const engine = { evaluate: vi.fn(), precompute: vi.fn() }, record = vi.fn();
+  const runtime = new V6ProjectionRuntime(engine, vi.fn(), undefined, input as never,
+    { engine: cardEngine as never, context, record });
+  await runtime.startCardBackground(e, 100); expect(await runtime.evaluateCard(e)).toBeNull(); expect(input).not.toHaveBeenCalled();
+  vi.stubEnv("V6_BUILD", "on"); e.state.in_combat = true;
+  const parent = new DecisionBudget("model", "routine"), remaining = parent.remaining();
+  await withDecisionBudget(parent, async () => {
+    const background = runtime.startCardBackground(e, 100);
+    await vi.waitFor(() => expect(cardEngine.precompute).toHaveBeenCalledOnce());
+    expect(currentDecisionBudget()).toBe(parent); expect(parent.remaining()).toBeLessThanOrEqual(remaining);
+    expect(input).toHaveBeenCalledWith(e, "pick", true);
+    observeV6CardReward(e.screenMemory, e.state);
+    e.state.in_combat = false;
+    observeV6CardReward(e.screenMemory, e.state);
+    const foreground = runtime.evaluateCard(e); await Promise.resolve(); expect(cardEngine.evaluate).not.toHaveBeenCalled();
+    expect(cardEngine.precompute.mock.calls[0]![3].aborted).toBe(true);
+    finish(); await background; await foreground;
+  });
+  expect(cardEngine.evaluate).toHaveBeenCalledOnce(); expect(cardEngine.precompute).toHaveBeenCalledOnce(); expect(record).toHaveBeenCalledOnce();
 });

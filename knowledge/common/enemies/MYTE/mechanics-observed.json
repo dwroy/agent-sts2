@@ -19,13 +19,13 @@
     "kind": "hallway",
     "rooms": {
       "hallway": 159,
-      "unknown_room": 31
+      "unknown_room": 32
     },
     "acts": {
-      "2": 190
+      "2": 191
     },
     "encounters": {
-      "MYTE+MYTE": 190
+      "MYTE+MYTE": 191
     },
     "hp_by_asc": {
       "0": {
@@ -86,26 +86,26 @@
         "min": 64,
         "median": 66,
         "max": 69,
-        "n": 125
+        "n": 127
       }
     },
     "moves": {
       "BITE_MOVE": {
         "name": "啃咬",
-        "n_seen": 438,
+        "n_seen": 441,
         "intents": {
-          "Attack": 438
+          "Attack": 441
         },
         "turns_seen": {
-          "2": 190,
-          "3": 145,
-          "5": 83,
+          "2": 191,
+          "3": 146,
+          "5": 84,
           "6": 13,
           "8": 6,
           "9": 1
         },
         "next": {
-          "SUCK_MOVE": 255
+          "SUCK_MOVE": 257
         },
         "avg_total_shown": 15.2,
         "damage_by_asc": {
@@ -249,41 +249,41 @@
             "shown": {
               "11x1": 7,
               "12x1": 2,
-              "13x1": 14,
-              "15x1": 52,
+              "13x1": 15,
+              "15x1": 53,
               "16x1": 3,
               "17x1": 1,
-              "18x1": 73,
+              "18x1": 74,
               "19x1": 1,
               "21x1": 6,
               "9x1": 3
             },
             "base_per_hit": {
-              "15": 135
+              "15": 137
             },
             "hits": {
-              "1": 162
+              "1": 165
             },
-            "n_base": 135
+            "n_base": 137
           }
         }
       },
       "SUCK_MOVE": {
         "name": "吸吮",
-        "n_seen": 448,
+        "n_seen": 451,
         "intents": {
-          "Attack+Buff": 448
+          "Attack+Buff": 451
         },
         "turns_seen": {
-          "1": 193,
-          "3": 174,
+          "1": 194,
+          "3": 175,
           "4": 45,
-          "6": 31,
+          "6": 32,
           "7": 4,
           "9": 1
         },
         "next": {
-          "TOXIC_MOVE": 372
+          "TOXIC_MOVE": 375
         },
         "avg_total_shown": 5.3,
         "damage_by_asc": {
@@ -420,24 +420,24 @@
               "3x1": 2,
               "4x1": 14,
               "5x1": 2,
-              "6x1": 116,
+              "6x1": 118,
               "7x1": 2,
               "8x1": 2,
-              "9x1": 30
+              "9x1": 31
             },
             "base_per_hit": {
-              "6": 144
+              "6": 147
             },
             "hits": {
-              "1": 169
+              "1": 172
             },
-            "n_base": 144
+            "n_base": 147
           }
         },
         "self_powers_gained": {
           "STRENGTH_POWER": {
             "2": 189,
-            "3": 165
+            "3": 168
           }
         },
         "self_powers_gained_by_asc": {
@@ -490,38 +490,38 @@
           },
           "10": {
             "STRENGTH_POWER": {
-              "3": 121
+              "3": 124
             }
           }
         }
       },
       "TOXIC_MOVE": {
         "name": "浓毒",
-        "n_seen": 562,
+        "n_seen": 566,
         "intents": {
-          "StatusCard": 562
+          "StatusCard": 566
         },
         "turns_seen": {
-          "1": 190,
-          "2": 182,
-          "4": 147,
+          "1": 191,
+          "2": 183,
+          "4": 148,
           "5": 26,
-          "7": 16,
+          "7": 17,
           "8": 1
         },
         "next": {
-          "BITE_MOVE": 438
+          "BITE_MOVE": 441
         },
         "avg_total_shown": 0.0,
         "status_cards": {
-          "2": 562
+          "2": 566
         },
         "status_card_ids": {
-          "TOXIC": 868
+          "TOXIC": 874
         },
         "status_card_pile": {
           "discard": 46,
-          "draw": 822
+          "draw": 828
         }
       }
     },
@@ -552,13 +552,13 @@
         "name": "尖啸",
         "type": "Debuff",
         "description": "在本回合结束前失去[gold]力量[/gold]。",
-        "n_fights": 17,
+        "n_fights": 18,
         "amount_at_first_sight": {
-          "6": 16,
+          "6": 17,
           "8": 1
         },
         "amount_max_in_fight": {
-          "6": 16,
+          "6": 17,
           "8": 1
         },
         "amount_at_first_sight_by_asc": {
@@ -569,7 +569,7 @@
             "6": 1
           },
           "10": {
-            "6": 15
+            "6": 16
           }
         },
         "turn_at_first_sight_by_asc": {
@@ -584,7 +584,7 @@
             "2": 3,
             "3": 5,
             "4": 2,
-            "5": 1
+            "5": 2
           }
         }
       },
@@ -592,10 +592,10 @@
         "name": "中毒",
         "type": "Debuff",
         "description": "中毒的生物会在自身回合开始时失去生命。中毒层数每回合减少[blue]1[/blue]。",
-        "n_fights": 57,
+        "n_fights": 58,
         "amount_at_first_sight": {
           "2": 5,
-          "3": 15,
+          "3": 16,
           "4": 10,
           "5": 3,
           "6": 6,
@@ -614,7 +614,7 @@
           "6": 3,
           "7": 5,
           "8": 6,
-          "9": 4,
+          "9": 5,
           "10": 3,
           "11": 5,
           "12": 4,
@@ -651,7 +651,7 @@
           },
           "10": {
             "2": 4,
-            "3": 10,
+            "3": 11,
             "4": 10,
             "5": 2,
             "6": 6,
@@ -691,7 +691,7 @@
             "1": 17,
             "2": 8,
             "3": 11,
-            "4": 6,
+            "4": 7,
             "5": 3,
             "6": 2
           }
@@ -751,7 +751,7 @@
         "name": "力量",
         "type": "Buff",
         "description": "力量会增加攻击牌造成的伤害。",
-        "n_fights": 154,
+        "n_fights": 155,
         "amount_at_first_sight": {
           "-8": 1,
           "-7": 1,
@@ -760,7 +760,7 @@
           "-1": 4,
           "1": 8,
           "2": 75,
-          "3": 49
+          "3": 50
         },
         "amount_max_in_fight": {
           "-6": 1,
@@ -770,7 +770,7 @@
           "3": 53,
           "4": 6,
           "5": 2,
-          "6": 10
+          "6": 11
         },
         "amount_at_first_sight_by_asc": {
           "0": {
@@ -811,7 +811,7 @@
             "-6": 11,
             "-2": 4,
             "-1": 3,
-            "3": 35
+            "3": 36
           }
         },
         "turn_at_first_sight_by_asc": {
@@ -853,7 +853,7 @@
             "1": 8,
             "2": 5,
             "3": 6,
-            "4": 35
+            "4": 36
           }
         }
       },
@@ -971,15 +971,15 @@
         "name": "虚弱",
         "type": "Debuff",
         "description": "虚弱的生物造成的攻击伤害减少[blue]25%[/blue]。",
-        "n_fights": 84,
+        "n_fights": 85,
         "amount_at_first_sight": {
           "1": 49,
-          "2": 30,
+          "2": 31,
           "3": 5
         },
         "amount_max_in_fight": {
           "1": 39,
-          "2": 29,
+          "2": 30,
           "3": 14,
           "4": 2
         },
@@ -1014,7 +1014,7 @@
           },
           "10": {
             "1": 29,
-            "2": 20,
+            "2": 21,
             "3": 2
           }
         },
@@ -1056,7 +1056,7 @@
             "1": 14,
             "2": 22,
             "3": 7,
-            "4": 5,
+            "4": 6,
             "5": 2,
             "6": 1
           }
@@ -1065,9 +1065,9 @@
     },
     "provenance": {
       "first_seen": "2026-09-24T05:00:23.764Z",
-      "last_seen": "2026-10-19T05:22:14.401Z",
-      "n_runs": 190,
-      "n_instances": 383,
+      "last_seen": "2026-10-20T09:14:36.528Z",
+      "n_runs": 191,
+      "n_instances": 385,
       "n_spawned_mid_fight": 3,
       "n_minion_instances": 0
     },
@@ -1213,25 +1213,25 @@
           "revived": 0
         },
         "STRENGTH_POWER": {
-          "n": 14,
-          "fights": 11,
+          "n": 15,
+          "fights": 12,
           "amount_before": {
             "1": 3,
             "2": 2,
-            "3": 9
+            "3": 10
           },
           "move_after": {
             "TOXIC_MOVE": 6,
-            "BITE_MOVE": 5,
+            "BITE_MOVE": 6,
             "SUCK_MOVE": 3
           },
           "stunned_share": 0.0,
           "co_removed": {},
           "died_same_turn": 0,
           "turn_end_unclear": 0,
-          "alive_at_turn_end": 14,
+          "alive_at_turn_end": 15,
           "stunned_at_turn_end": 0,
-          "attack_before": 8,
+          "attack_before": 9,
           "attack_cancelled": 1,
           "hp_check": {
             "n": 6,
@@ -1240,7 +1240,7 @@
           "evidence": [],
           "move_before": {
             "TOXIC_MOVE": 6,
-            "BITE_MOVE": 5,
+            "BITE_MOVE": 6,
             "SUCK_MOVE": 3
           },
           "move_changed": 0,
@@ -1249,12 +1249,12 @@
           "changed_evidence": [],
           "end_move": {
             "TOXIC_MOVE": 6,
-            "BITE_MOVE": 5,
+            "BITE_MOVE": 6,
             "SUCK_MOVE": 3
           },
           "next_move": {
             "BITE_MOVE": 5,
-            "SUCK_MOVE": 4,
+            "SUCK_MOVE": 5,
             "TOXIC_MOVE": 3
           },
           "changed_next": {},
@@ -1380,10 +1380,10 @@
       },
       "ally_deaths": {
         "MYTE": {
-          "n": 128,
-          "fights": 128,
+          "n": 129,
+          "fights": 129,
           "move_before": {
-            "SUCK_MOVE": 67,
+            "SUCK_MOVE": 68,
             "TOXIC_MOVE": 33,
             "BITE_MOVE": 28
           },
@@ -1396,7 +1396,7 @@
               "changed_to": {}
             },
             "SUCK_MOVE": {
-              "n": 67,
+              "n": 68,
               "changed_to": {}
             },
             "TOXIC_MOVE": {
@@ -1408,13 +1408,13 @@
           "attack_changed": 0,
           "co_deaths": 0,
           "end_move": {
-            "SUCK_MOVE": 63,
+            "SUCK_MOVE": 64,
             "TOXIC_MOVE": 30,
             "BITE_MOVE": 27
           },
-          "next_n": 120,
+          "next_n": 121,
           "next_move": {
-            "TOXIC_MOVE": 63,
+            "TOXIC_MOVE": 64,
             "BITE_MOVE": 30,
             "SUCK_MOVE": 27
           },
@@ -1423,7 +1423,7 @@
               "SUCK_MOVE": 27
             },
             "SUCK_MOVE": {
-              "TOXIC_MOVE": 63
+              "TOXIC_MOVE": 64
             },
             "TOXIC_MOVE": {
               "BITE_MOVE": 30
@@ -1435,30 +1435,30 @@
             "AMA2B58E2ZMA F23 T3"
           ],
           "alive": {
-            "turns": 1214,
+            "turns": 1220,
             "moves": {
-              "TOXIC_MOVE": 458,
-              "SUCK_MOVE": 396,
-              "BITE_MOVE": 360
+              "TOXIC_MOVE": 460,
+              "SUCK_MOVE": 398,
+              "BITE_MOVE": 362
             },
             "next": {
               "BITE_MOVE": {
-                "SUCK_MOVE": 195
+                "SUCK_MOVE": 196
               },
               "SUCK_MOVE": {
-                "TOXIC_MOVE": 257
+                "TOXIC_MOVE": 258
               },
               "TOXIC_MOVE": {
-                "BITE_MOVE": 360
+                "BITE_MOVE": 362
               }
             }
           },
           "dead": {
-            "turns": 219,
+            "turns": 223,
             "moves": {
-              "TOXIC_MOVE": 92,
-              "BITE_MOVE": 73,
-              "SUCK_MOVE": 54
+              "TOXIC_MOVE": 94,
+              "BITE_MOVE": 74,
+              "SUCK_MOVE": 55
             }
           }
         }

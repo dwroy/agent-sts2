@@ -1,4 +1,5 @@
-import { mkdtempSync, readdirSync, readFileSync, writeFileSync } from "node:fs";
+import { readdirSync, readFileSync, writeFileSync } from "node:fs";
+import { mkdtempSync } from "./temp-fixtures.js";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 

@@ -6,7 +6,7 @@
  * card), before Inferno's 2. The logged boards are tests/sl-inferno-judge-data's (C4F1 F33 attempt 5, two Inferno+ and
  * Hellraiser up); the loop runs on a scripted mod server. No model call, nothing under logs/ or .cache read.
  */
-import { readFileSync, rmSync } from "node:fs";
+import { mkdtempSync, readFileSync, rmSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
@@ -97,16 +97,17 @@ function stubJev(): JevClient {
   } as unknown as JevClient;
 }
 
-const logs: string[] = [];
+const logDirs: string[] = [];
 afterEach(() => {
   vi.restoreAllMocks();
   vi.useRealTimers();
-  for (const path of logs.splice(0)) rmSync(path, { force: true });
+  for (const dir of logDirs.splice(0)) rmSync(dir, { recursive: true, force: true });
 });
 
 function testConfig(): AppConfig {
-  const path = join(tmpdir(), `jev-sts2-settle-${Date.now()}-${Math.random().toString(16).slice(2)}.jsonl`);
-  logs.push(path);
+  const dir = mkdtempSync(join(tmpdir(), "jev-sts2-settle-"));
+  const path = join(dir, "decisions.jsonl");
+  logDirs.push(dir);
   const config = loadConfig({} as NodeJS.ProcessEnv);
   return { ...config, combatPlanner: "card", log: { ...config.log, decisionLog: path } };
 }

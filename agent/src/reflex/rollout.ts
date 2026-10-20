@@ -2093,6 +2093,8 @@ function applyPlan(
   let regenDrunk = 0;
   // Cards: played ones to the discard pile (exhausted and powers gone), the rest of the hand discarded too.
   const played = new Set<number>();
+  // Retain applies only at end of turn, not to cards explicitly discarded earlier in the line.
+  const discarded = new Set<number>();
   // Known draws (whole fights) played this turn that leave the fight or the piles (exhausted, a Power).
   const knownGone = new Set<CardModel>();
   const knownPlayed = new Set<number>();
@@ -2100,6 +2102,11 @@ function applyPlan(
   const thrashPending: { back: CardModel; grown: number; picks: { strength: number }[] }[] = [];
   let apotheosisApplied = false;
   for (const step of plan.steps) {
+    for (const id of step.discards ?? []) {
+      const at = hand.findIndex((card, i) => card.cardId === id && card.index !== step.cardIndex &&
+        !played.has(i) && !discarded.has(i) && card.type !== "Potion");
+      if (at >= 0) discarded.add(at);
+    }
     if (isPotion(step)) {
       player.potions = Math.max(0, player.potions - 1);
       if (step.cardId.startsWith("POTION:RADIANT_TINCTURE:")) player.radiance += RADIANCE_LATER_ENERGY;
@@ -2182,7 +2189,10 @@ function applyPlan(
   // outcome): they leave the fight, not back through the discard pile.
   // Stable Serum: the rest of the hand is kept for the next turn instead (Ethereal cards still go).
   const keep = player.retainTurns > 0 && !o.winsFight;
-  for (const i of unplayed) if (!hand[i]!.ethereal) (keep ? player.retained : piles.discard).push(handBase[i] ?? hand[i]!);
+  for (const i of unplayed) if (!hand[i]!.ethereal) {
+    const retain = keep || (hand[i]!.retain === true && !discarded.has(i) && !o.winsFight);
+    (retain ? player.retained : piles.discard).push(handBase[i] ?? hand[i]!);
+  }
   // These cards were made during the line, so they are absent from the original hand and draw pile.
   for (const shiv of o.cunningShivsLeft ?? []) (keep ? player.retained : piles.discard).push(shiv);
   player.retainTurns = Math.max(0, player.retainTurns - 1);

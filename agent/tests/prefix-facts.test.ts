@@ -5,7 +5,8 @@
  * the cached prefix holds up to the data-version block. Also: V3-final's lessons carry placeholders, filled in the
  * prefix (b5e1f44) and in Jev's lessons.
  */
-import { cpSync, mkdtempSync, readdirSync, readFileSync, writeFileSync } from "node:fs";
+import { cpSync, readdirSync, readFileSync, writeFileSync } from "node:fs";
+import { mkdtempSync } from "./temp-fixtures.js";
 import { tmpdir } from "node:os";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";

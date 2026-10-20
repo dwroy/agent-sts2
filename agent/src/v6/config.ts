@@ -18,6 +18,7 @@ export function v6Config(env: NodeJS.ProcessEnv = process.env) {
   const deciders = Object.fromEntries(["CARD", "POTION", "SHOP", "REST"].map(kind =>
     [kind.toLowerCase(), choice(`V6_${kind}_DECIDER`, ["brain", "jev"], "brain")])) as Record<"card" | "potion" | "shop" | "rest", "brain" | "jev">;
   const reflex = choice("V6_REFLEX", ["off", "shadow", "on"], "off");
+  const direction_replan = choice("V6_DIRECTION_REPLAN", ["off", "on"], "off");
   const win = {
     certain_win: numeric("V6_WIN_CERTAIN_WIN", .95, 0, 1), favored: numeric("V6_WIN_FAVORED", .70, 0, 1),
     even: numeric("V6_WIN_EVEN", .30, 0, 1), unfavored: numeric("V6_WIN_UNFAVORED", .05, 0, 1),
@@ -29,7 +30,7 @@ export function v6Config(env: NodeJS.ProcessEnv = process.env) {
     much_min: numeric("V6_DELTA_MUCH_MIN", .05, 0, 1) };
   if (delta.much_se < delta.better_se) { invalid.push("V6_DELTA_* ordering"); delta.much_se = 2; delta.better_se = 1; }
   return {
-    schema: "v6-config-v1" as const, mode, deciders, reflex,
+    schema: "v6-config-v1" as const, mode, deciders, reflex, direction_replan,
     admission: "interfaces_only" as const, delivered: false as const,
     samples_pick: numeric("V6_SAMPLES_PICK", 20, 1, 10000, true), samples_act: numeric("V6_SAMPLES_ACT", 100, 1, 10000, true),
     min_known_option_ratio: numeric("V6_MIN_KNOWN_OPTION_RATIO", .50, 0, 1),

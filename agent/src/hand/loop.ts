@@ -64,11 +64,9 @@ import { OUTCOME_BASIS_KEY } from "../knowledge/outcome-facts.js";
 import { BUILD_SIM_MIN_SHOWN, bossEvaluationPending, withBossSim, type BuildSimSetup } from "../sim/build-sim-facts.js";
 import { buildRankingSelection, rankingOverrideProblems } from "../sim/build-ranking-choice.js";
 import { shopPlanList } from "../brain/specs.js";
-import { ensureDirectionPlan, noteV6BrainCall, v6DirectionActive } from "../v6/direction-runtime.js";
-import { routeV6CardDecision } from "../v6/card-routing.js";
-import { V6DirectionCache, directionDecisionPoint, directionFingerprint } from "../v6/direction-decision.js";
-import { directionEvaluationFromProjection } from "../v6/projection-consumer.js";
-import { buildV6CardPick, recordCardPick } from "../v6/card-pick.js";
+import { observeDirectionRide, attachDirectionRide, directionRideTask, fitDirectionRide, acceptDirectionRide, finishDirectionRide } from "../v6/direction-rides.js";
+import { buildV6CardPick, recordCardPick, v6CardActive } from "../v6/card-pick.js";
+import { observeV6CardReward, restoreV6CardReward } from "../v6/card-reward-scope.js";
 import { withConstructionJevBudget } from "../v6/potion-entries.js";
 import { v6Config } from "../v6/config.js";
 import { constructionQuestion, recordConstructionHandover, unknownCardLastResort, type ConstructionKind } from "../v6/construction-safety.js";
@@ -292,7 +290,6 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
 
 async function runLoopWithBudgets(options: LoopOptions): Promise<LoopStats> {
   const paceLedger = new DecisionBudgetLedger();
-  const v6DirectionCache = new V6DirectionCache();
   const { config, mode, client, knowledge } = options;
   const v6Projection = options.v6Projection ?? productionV6Projection(options.buildSim?.runner, config.runPlanLog);
   const v6RoomProjection = options.v6RoomProjection ?? (v6Projection ? runtimeV6RoomProjection(v6Projection) : undefined);
@@ -461,8 +458,8 @@ async function runLoopWithBudgets(options: LoopOptions): Promise<LoopStats> {
    * questions (BUILD_DECIDER=deepseek with a DeepSeek client) and the run plan has no engine of its own
    * (BRAIN_ENGINE_RUN_PLAN other than BRAIN_ENGINE keeps its own call at the map, as before).
    */
-  const runPlanMerges = (env: DecisionEnv): boolean =>
-    !v6DirectionActive(env) && config.runPlan === "v1" && config.runPlanMerge && brain !== null && brain.engineFor("run-plan") === brain.router.config.engine;
+  const runPlanMerges = (_env: DecisionEnv): boolean =>
+    config.runPlan === "v1" && config.runPlanMerge && brain !== null && brain.engineFor("run-plan") === brain.router.config.engine;
   /** Whether DeepSeek is asked first for this label (its call is counted up front, as v3 did). */
   const deepseekFirst = (label: string): boolean => !brain || brain.engineFor(label) === "deepseek";
   /** The router's re-ask on a question DeepSeek was asked first (a route checked by its AnswerSpec: M2): its calls. */
@@ -696,6 +693,7 @@ async function runLoopWithBudgets(options: LoopOptions): Promise<LoopStats> {
         const logs = readRunLogs({ states: statesPath, decisions: config.log.decisionLog, runPlans: config.runPlanLog }, runId);
         if (logs.states.length > 0) {
           const replay = replayRun(logs, knowledge, { journal });
+          if (v6Config().mode !== "off" && v6Config().deciders.card === "jev") restoreV6CardReward(screenMemory, logs.states);
           if (replay.routePlan && replay.routePlan.runId === runId) screenMemory.routePlan = replay.routePlan;
           if (replay.lastMap && !screenMemory.lastMap) screenMemory.lastMap = replay.lastMap;
           if (replay.lizardTail && replay.lizardTail.runId === runId) screenMemory.lizardTail = replay.lizardTail;
@@ -727,6 +725,7 @@ async function runLoopWithBudgets(options: LoopOptions): Promise<LoopStats> {
         onEvent({ type: "note", message: `could not rebuild run ${runId} from its logs: ${error instanceof Error ? error.message : String(error)}` });
       }
     }
+    if (v6Config().mode !== "off" && v6Config().deciders.card === "jev") observeV6CardReward(screenMemory, state);
     // The REST screen has no map: keep the last one for its "forced elite next" check.
     if (state.screen === "MAP") rememberMap(screenMemory, state);
     observedTs = new Date().toISOString();
@@ -817,7 +816,7 @@ async function runLoopWithBudgets(options: LoopOptions): Promise<LoopStats> {
     if (v6Config().mode !== "off" && !state.in_combat && (!screenMemory.runPlan || screenMemory.runPlan.runId !== runId)) {
       screenMemory.runPlan = loadRunPlan(config.runPlanLog, runId);
     }
-    if (!planned && config.runPlan === "v1" && !state.in_combat && state.screen === "MAP" && !v6DirectionActive(env)) {
+    if (!planned && config.runPlan === "v1" && !state.in_combat && state.screen === "MAP") {
       const deepseek = brain;
       if (deepseek && brainBudgetLeft("run-plan")) {
         const items = journal.itemCount;
@@ -889,61 +888,10 @@ async function runLoopWithBudgets(options: LoopOptions): Promise<LoopStats> {
         continue;
       }
     }
-    if (v6Config().mode !== "off" && !state.in_combat && planned.kind === "decision" && directionDecisionPoint(planned.decision)) {
-      if (!env.v6BrainFallback && v6Projection) {
-        try {
-          if (!screenMemory.runPlan || screenMemory.runPlan.runId !== runId) screenMemory.runPlan = loadRunPlan(config.runPlanLog, runId);
-          const phase = !screenMemory.runPlan?.v6 || screenMemory.runPlan.act !== actOf(state) ? "act" : "pick";
-          const table = await v6DirectionCache.get(`table:${directionFingerprint(env, phase)}`, () => v6Projection.evaluate(env, phase));
-          if (table) {
-            env.v6ProjectionTable = table;
-            env.v6DirectionEvaluation = directionEvaluationFromProjection(table, v6Config(), "skip", screenMemory.runPlan?.v6);
-            env.v6DirectionEvaluation.id = `${runId}:${state.run?.floor}:${env.v6DirectionEvaluation.id}`;
-          }
-        } catch (error) {
-          logRunPlan(config.runPlanLog, { run: runId, v6_projection_error: String(error).slice(0, 200) });
-        }
-      }
-      if (brain && brainBudgetLeft("run-plan")) {
-        try {
-          if (options.v6DirectionEvaluation) env.v6DirectionEvaluation = await v6DirectionCache.get(
-            `evaluation:${directionFingerprint(env, "pick")}`, () => options.v6DirectionEvaluation!(env));
-          const attempt = await ensureDirectionPlan(env, brain, config.runPlanLog);
-          if (attempt?.usage) countPlan("run-plan")(attempt.usage.inputTokens + attempt.usage.outputTokens, attempt.usage.brain);
-          if (attempt?.stored) {
-            onEvent({ type: "note", message: `V6 direction plan stored (${attempt.result.triggers.join(",")})` });
-            // The reward must use the new weights/brain combination, rather than the table that prompted re-planning.
-            if (v6Projection && bool(asRecord(state.raw.reward).pending_card_choice)) {
-              env.v6ProjectionTable = undefined;
-              env.v6ProjectionTable = await v6DirectionCache.get(`table:${directionFingerprint(env, "pick")}`, () => v6Projection.evaluate(env, "pick")) ?? undefined;
-            }
-          }
-        } catch (error) {
-          if (isBrainBlocked(error)) throw error;
-          logRunPlan(config.runPlanLog, { run: runId, v6_error: String(error).slice(0, 200) });
-          onEvent({ type: "note", message: `V6 direction plan failed: ${String(error).slice(0, 160)}` });
-        }
-      }
-      if (config.runPlan === "v1" && screenMemory.runPlan?.runId === runId) {
-        const line = runPlanLine(screenMemory.runPlan);
-        if (line) env.brief.plan = line;
-      }
-      // Only genuine choices are rebuilt. Execution steps retain their original decision/apply.
-      try {
-        const refreshStarted = Date.now();
-        planned = planDecision(gateCodeBaseline ? { ...env, strictJev: false } : env);
-        plannerMs = (plannerMs ?? 0) + Date.now() - refreshStarted;
-        preMs = Date.now() - Date.parse(observedTs) - plannerMs;
-      } catch (error) {
-        stats.errors += 1;
-        plannerFailures += 1;
-        const detail = error instanceof Error ? error.message : String(error);
-        onEvent({ type: "note", message: `planner failed on ${state.screen}: ${detail}` });
-        if (plannerFailures >= 3) { stop(`planner failed repeatedly: ${detail}`); break; }
-        await sleep(pollIntervalMs);
-        continue;
-      }
-    }
+    // Direction changes mark the next original V5 brain question; no independent ask or pre-evaluation.
+    try { observeDirectionRide(env, config.runPlanLog); }
+    catch (error) { logRunPlan(config.runPlanLog, { run: runId, v6_direction_ride_error: String(error).slice(0, 200) }); }
+
     plannerFailures = 0;
 
     if (planned.kind === "wait") {
@@ -989,9 +937,13 @@ async function runLoopWithBudgets(options: LoopOptions): Promise<LoopStats> {
       break;
     }
 
+    if (v6CardActive(env) && v6Projection) {
+      try { env.v6CardResults = await v6Projection.evaluateCard(env); }
+      catch (error) { env.v6CardResults = null; logRunPlan(config.runPlanLog, { run: runId, v6_card_results_error: String(error).slice(0, 200) }); }
+    }
     let v6CardPick = buildV6CardPick(env);
     let decision = env.v6BrainFallback ? planned.decision : v6Config().mode === "on" && v6CardPick ? v6CardPick.decision
-      : routeV6CardDecision(await prepareV6RoomDecision(planned.decision, env, v6RoomProjection), state.in_combat);
+      : await prepareV6RoomDecision(planned.decision, env, v6RoomProjection);
     const construction = constructionQuestion(env, decision);
     const handover = (reason: string, elapsed = 0): void => {
       if (!construction || v6HandoverState.current) return;
@@ -1038,8 +990,9 @@ async function runLoopWithBudgets(options: LoopOptions): Promise<LoopStats> {
         v6CardShadowKey = key;
         const started = Date.now(), observerId = `${decisionId}:v6-card-shadow`;
         let answers: AnswerSet = {}, tokens = { input_tokens: 0, output_tokens: 0 }, requestId: string | null = null;
-        let reason: string | null = jev ? null : "Jev unavailable";
-        if (jev) try {
+        const promptUnavailable = asRecord(v6CardPick.decision.state).card_prompt_unavailable;
+        let reason: string | null = promptUnavailable ? `Card prompt unavailable: ${promptUnavailable}` : jev ? null : "Jev unavailable";
+        if (jev && !promptUnavailable) try {
           v6CardShadowRequests += 1;
           const timed = { model: jev.model, ask: (st: unknown, qs: typeof v6CardPick.decision.questions) => jev.ask(st, qs, Math.max(1, v6Config().budgets.jev_ms - (Date.now() - started))) };
           const result = await withConstructionJevBudget("Jev_card_shadow", () => askJevLogged(timed, promptLog, {
@@ -1188,7 +1141,8 @@ async function runLoopWithBudgets(options: LoopOptions): Promise<LoopStats> {
             const plan = runId ? currentRunPlan(screenMemory, config.runPlanLog, runId) : null;
             const trigger = runId ? runPlanDueAtQuestion(screenMemory, state, plan) : null;
             if (trigger) {
-              const carried = withRunPlanTask({ ...decision, deepseek: spec }, runPlanTaskState(state, knowledge, trigger, plan, decision.state));
+              const task = await attachDirectionRide(env, runPlanTaskState(state, knowledge, trigger, plan, decision.state), trigger, decision.label, config.runPlanLog);
+              const carried = withRunPlanTask({ ...decision, deepseek: spec }, task);
               const carriedQuestion = carried.questions[spec.question];
               if (carriedQuestion?.type === "choice") {
                 decision = carried;
@@ -1202,10 +1156,26 @@ async function runLoopWithBudgets(options: LoopOptions): Promise<LoopStats> {
             onEvent({ type: "note", message: `the run plan could not ride on ${decision.label} (${error instanceof Error ? error.message.slice(0, 160) : String(error)}): asked without it, still due` });
           }
         }
+        if (!runPlanRide) {
+          try { decision = { ...decision, state: await attachDirectionRide(env, decision.state, null, decision.label, config.runPlanLog) }; }
+          catch (error) { logRunPlan(config.runPlanLog, { run: runId, v6_direction_ride_error: String(error).slice(0, 200) }); }
+        }
         // The question's facts carry the deck, relics, potions, HP, gold, clock and plan: `now` stays empty.
         const memory = journal.render(state, knowledge, screenMemory, { label: decision.label, criteria: question.criteria, factsCovered: "facts" in decision.state, ...(spec.offeredCards ? { offeredCards: spec.offeredCards } : {}), ...(OUTCOME_BASIS_KEY in asRecord(decision.state["facts"]) ? { statsCovered: true } : {}) });
         onEvent({ type: "note", message: `${engineLabel(brain?.engineFor(decision.label))} decides ${decision.label} (${Object.keys(question.criteria).length} options, floor ${state.run?.floor ?? "?"}, run context ${memoryChars(memory)} chars)` });
+        decision = { ...decision, state: fitDirectionRide(decision.state, { question: question.instructions, options: toJsonValue(question.criteria), memory: toJsonValue(memory) }) };
         const ask = decision;
+        const directionRide = directionRideTask(ask.state);
+        let directionRideFinished = false;
+        const takeDirectionRide = (answer: unknown): void => {
+          if (directionRideFinished || !directionRide) return;
+          directionRideFinished = true;
+          const plan = screenMemory.runPlan;
+          if (plan?.runId === runId) {
+            acceptDirectionRide(env, plan, answer, directionRide, ask.label, config.runPlanLog);
+            logRunPlan(config.runPlanLog, { run: runId, floor: state.run?.floor ?? null, merged_into: ask.label, plan: toJsonValue(plan), v6_ride_update: true });
+          } else finishDirectionRide(env, directionRide, ask.label, config.runPlanLog, "no_current_plan");
+        };
         if (ask.potionJev) {
           const aux = ask.potionJev;
           let answers: AnswerSet = {};
@@ -1263,6 +1233,8 @@ async function runLoopWithBudgets(options: LoopOptions): Promise<LoopStats> {
           if ("missing" in found) return fail("missing", found.missing);
           try {
             const plan = parseRunPlan(found.plan, state, knowledge, ride.trigger);
+            acceptDirectionRide(env, plan, found.plan, directionRide, ask.label, config.runPlanLog);
+            directionRideFinished = true;
             screenMemory.runPlan = plan;
             screenMemory.runPlanPending = undefined;
             const items = journal.itemCount;
@@ -1346,7 +1318,6 @@ async function runLoopWithBudgets(options: LoopOptions): Promise<LoopStats> {
         };
         try {
           // Counted up front when DeepSeek is asked first (v3); another engine's calls count in the router.
-          noteV6BrainCall(env, config.runPlanLog);
           if (deepseekFirst(decision.label)) stats.deepseekCalls += 1;
           if (spec.plan) {
             // A one-shot plan (a shop's shopping list): one JSON answer, validated by the screen. An empty reply
@@ -1360,6 +1331,7 @@ async function runLoopWithBudgets(options: LoopOptions): Promise<LoopStats> {
             const { json, meta, recovered, note } = await brain.choosePlan(decision.state, question.instructions, question.criteria, { label: decision.label, memory: { ...memory } }, valid);
             brainBy = brainDecider(meta.brain);
             takeRunPlan(json["run_plan"], meta);
+            takeDirectionRide(runPlanRide ? json["run_plan"] : json);
             stats.deepseekCalls += reaskCalls(decision.label, meta.brain);
             stats.deepseekTokens += meta.inputTokens + meta.outputTokens;
             deepseekLatency = meta.latencyMs;
@@ -1410,6 +1382,7 @@ async function runLoopWithBudgets(options: LoopOptions): Promise<LoopStats> {
             const answer = await brain.choose(decision.state, question.instructions, question.criteria, { label: decision.label, memory: { ...memory } });
             brainBy = brainDecider(answer.brain);
             takeRunPlan(answer.runPlan, answer);
+            takeDirectionRide(runPlanRide ? answer.runPlan : { v6: answer.v6 });
             stats.deepseekCalls += reaskCalls(decision.label, answer.brain);
             stats.deepseekTokens += answer.inputTokens + answer.outputTokens;
             deepseekLatency = answer.latencyMs;
@@ -1421,6 +1394,10 @@ async function runLoopWithBudgets(options: LoopOptions): Promise<LoopStats> {
             if (!accept(answer, null)) deepseekFailed = true;
           }
         } catch (error) {
+          if (directionRide && !directionRideFinished) {
+            directionRideFinished = true;
+            finishDirectionRide(env, directionRide, ask.label, config.runPlanLog, "brain_request_failed");
+          }
           if (error instanceof DecisionBudgetExpired) { budgetFallback = true; currentDecisionBudget()?.useFallback("L2_deadline_existing_L1"); }
           if (brain?.router.codexOnly && !budgetFallback) {
             if (isBrainBlocked(error)) throw error;
@@ -1613,6 +1590,8 @@ async function runLoopWithBudgets(options: LoopOptions): Promise<LoopStats> {
       const potionStarted = Date.now();
       if (cardOnly || roomOnly) stats.jevCalls += 1;
       try {
+        // Existing network wait is an idle boundary. No timer, new pool, action or foreground core fill.
+        void v6Projection?.startCardBackground(env, pollIntervalMs);
         const timedJev = potionOnly || cardOnly || roomOnly ? { model: jev.model, ask: (s: unknown, q: typeof jevQuestions) => jev.ask(s, q, Math.max(1, v6Config().budgets.jev_ms - (Date.now() - potionStarted))) } : jev;
         const result = potionOnly ? await withPotionJevBudget(() => askJevLogged(timedJev, promptLog, promptMeta("ask"), jevState, jevQuestions))
           : cardOnly || roomOnly ? await withConstructionJevBudget(cardOnly ? "Jev_card" : "Jev_room", () => askJevLogged(timedJev, promptLog, promptMeta("ask"), jevState, jevQuestions))
@@ -1666,7 +1645,6 @@ async function runLoopWithBudgets(options: LoopOptions): Promise<LoopStats> {
             try {
               if (escalator.name === "claude") stats.claudeCalls += 1;
               else if (deepseekFirst(decision.label)) stats.deepseekCalls += 1;
-              noteV6BrainCall(env, config.runPlanLog);
               if (escalator.name === "claude") onEvent({ type: "note", message: `escalating ${decision.label} to Claude (Jev ${jevAnswer.choice} @${jevAnswer.confidence.toFixed(2)})` });
               // The DeepSeek escalator is asked through the brain (the engine BRAIN_* names for this label).
               const answer = await (escalator === deepseekClient && brain ? brain : escalator).choose(
@@ -2435,18 +2413,22 @@ async function ensureRunPlan(
   // run_state and previous_plan carry the current facts: `now` stays empty.
   const memory = journal.render(state, knowledge, screenMemory, { label: "run-plan", factsCovered: true });
   const shown = fightPlanInput(state, knowledge, "run", {});
-  const payload: Record<string, JsonValue> = {
+  let payload: Record<string, JsonValue> = {
     task: RUN_PLAN_TASK,
     run_state: runPlanInput(state, knowledge, trigger, asArray(shown["deck"]).map(String), asArray(shown["relics"]).map(String), asArray(shown["potions"]).map(String)),
     memory: { ...memory },
     ...(screenMemory.runPlan ? { previous_plan: toJsonValue(screenMemory.runPlan) } : {}),
   };
+  try { payload = fitDirectionRide(await attachDirectionRide(env, payload, trigger, "run-plan", logFile), {}); }
+  catch (error) { logRunPlan(logFile, { run: runId, v6_direction_ride_error: String(error).slice(0, 200) }); }
+  const directionRide = directionRideTask(payload);
   onEvent({ type: "note", message: `asking ${engineLabel(deepseek.engineFor?.("run-plan"))} for the run plan (${trigger}, floor ${state.run?.floor ?? "?"})` });
   try {
     // A reply that is no run plan is recovered from the reasoning or fails: the plan in force stays.
     const { json, meta, recovered, note } = await deepseek.askJson(payload, "run-plan", isRunPlanReply);
     count(meta.inputTokens + meta.outputTokens, meta.brain);
     const plan = parseRunPlan(json, state, knowledge, trigger);
+    acceptDirectionRide(env, plan, json, directionRide, "run-plan", logFile);
     screenMemory.runPlan = plan;
     journal.noteRunPlan(state, trigger, runPlanLine(plan));
     logRunPlan(logFile, {
@@ -2472,6 +2454,7 @@ async function ensureRunPlan(
     if (isBrainBlocked(error)) throw error;
     if (error instanceof DecisionBudgetExpired) currentDecisionBudget()?.useFallback("run_plan_deadline_existing_L1");
     if (!(error instanceof DecisionBudgetExpired) && deepseek instanceof Brain && deepseek.router.codexOnly) brainFault(deepseek, "run-plan", runId, `Run-plan resolution failed: ${error instanceof Error ? error.message : String(error)}`, error);
+    if (directionRide) finishDirectionRide(env, directionRide, "run-plan", logFile, "brain_request_failed");
     screenMemory.runPlanFailed = failKey;
     const message = error instanceof Error ? error.message : String(error);
     if (error instanceof DeepSeekAnswerError) count(error.meta.inputTokens + error.meta.outputTokens, (error.meta as BrainMetaUsage).brain);

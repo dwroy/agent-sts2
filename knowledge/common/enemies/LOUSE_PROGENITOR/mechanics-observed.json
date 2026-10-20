@@ -18,14 +18,14 @@
     ],
     "kind": "hallway",
     "rooms": {
-      "hallway": 158,
+      "hallway": 159,
       "unknown_room": 27
     },
     "acts": {
-      "2": 185
+      "2": 186
     },
     "encounters": {
-      "LOUSE_PROGENITOR": 185
+      "LOUSE_PROGENITOR": 186
     },
     "hp_by_asc": {
       "0": {
@@ -90,26 +90,26 @@
       },
       "10": {
         "min": 138,
-        "median": 140,
+        "median": 140.0,
         "max": 141,
-        "n": 65
+        "n": 66
       }
     },
     "moves": {
       "CURL_AND_GROW_MOVE": {
         "name": "蜷身成长",
-        "n_seen": 300,
+        "n_seen": 302,
         "intents": {
-          "Buff+Defend": 300
+          "Buff+Defend": 302
         },
         "turns_seen": {
-          "2": 185,
-          "5": 105,
+          "2": 186,
+          "5": 106,
           "8": 8,
           "11": 2
         },
         "next": {
-          "POUNCE_MOVE": 250
+          "POUNCE_MOVE": 251
         },
         "avg_total_shown": 0.0,
         "block_gained": {
@@ -123,7 +123,7 @@
           "12": 7,
           "14": 40,
           "15": 9,
-          "18": 173
+          "18": 174
         },
         "block_gained_by_asc": {
           "0": {
@@ -174,7 +174,7 @@
             "3": 1,
             "7": 1,
             "15": 6,
-            "18": 93
+            "18": 94
           }
         },
         "self_powers_gained": {
@@ -182,7 +182,7 @@
             "4": 1,
             "5": 116,
             "6": 1,
-            "7": 132
+            "7": 133
           }
         },
         "self_powers_gained_by_asc": {
@@ -240,25 +240,25 @@
           "10": {
             "STRENGTH_POWER": {
               "4": 1,
-              "7": 101
+              "7": 102
             }
           }
         }
       },
       "POUNCE_MOVE": {
         "name": "猛扑",
-        "n_seen": 250,
+        "n_seen": 251,
         "intents": {
-          "Attack": 250
+          "Attack": 251
         },
         "turns_seen": {
-          "3": 182,
+          "3": 183,
           "6": 64,
           "9": 3,
           "12": 1
         },
         "next": {
-          "WEB_CANNON_MOVE": 184
+          "WEB_CANNON_MOVE": 185
         },
         "avg_total_shown": 22.0,
         "damage_by_asc": {
@@ -403,7 +403,7 @@
               "13x1": 1,
               "17x1": 19,
               "22x1": 12,
-              "23x1": 43,
+              "23x1": 44,
               "27x1": 1,
               "29x1": 1,
               "30x1": 22,
@@ -411,29 +411,29 @@
               "44x1": 1
             },
             "base_per_hit": {
-              "16": 69
+              "16": 70
             },
             "hits": {
-              "1": 102
+              "1": 103
             },
-            "n_base": 69
+            "n_base": 70
           }
         }
       },
       "WEB_CANNON_MOVE": {
         "name": "吐网炮",
-        "n_seen": 369,
+        "n_seen": 371,
         "intents": {
-          "Attack+Debuff": 369
+          "Attack+Debuff": 371
         },
         "turns_seen": {
-          "1": 185,
-          "4": 155,
+          "1": 186,
+          "4": 156,
           "7": 27,
           "10": 2
         },
         "next": {
-          "CURL_AND_GROW_MOVE": 300
+          "CURL_AND_GROW_MOVE": 302
         },
         "avg_total_shown": 12.6,
         "damage_by_asc": {
@@ -580,26 +580,26 @@
           },
           "10": {
             "shown": {
-              "10x1": 66,
+              "10x1": 67,
               "12x1": 20,
-              "17x1": 37,
+              "17x1": 38,
               "18x1": 7,
               "23x1": 1,
               "24x1": 8,
               "31x1": 1
             },
             "base_per_hit": {
-              "10": 111
+              "10": 113
             },
             "hits": {
-              "1": 140
+              "1": 142
             },
-            "n_base": 111
+            "n_base": 113
           }
         },
         "player_powers_applied": {
           "FRAIL_POWER": {
-            "2": 299
+            "2": 301
           }
         },
         "player_powers_applied_by_asc": {
@@ -655,7 +655,7 @@
           },
           "10": {
             "FRAIL_POWER": {
-              "2": 120
+              "2": 122
             }
           }
         }
@@ -666,14 +666,14 @@
         "name": "蜷身",
         "type": "Buff",
         "description": "受到伤害时，蜷起身子并获得格挡。（每场战斗一次）",
-        "n_fights": 185,
+        "n_fights": 186,
         "amount_at_first_sight": {
           "14": 37,
-          "18": 148
+          "18": 149
         },
         "amount_max_in_fight": {
           "14": 37,
-          "18": 148
+          "18": 149
         },
         "amount_at_first_sight_by_asc": {
           "0": {
@@ -707,7 +707,7 @@
             "18": 28
           },
           "10": {
-            "18": 65
+            "18": 66
           }
         },
         "turn_at_first_sight_by_asc": {
@@ -742,7 +742,7 @@
             "1": 28
           },
           "10": {
-            "1": 65
+            "1": 66
           }
         }
       },
@@ -845,12 +845,13 @@
         "name": "中毒",
         "type": "Debuff",
         "description": "中毒的生物会在自身回合开始时失去生命。中毒层数每回合减少[blue]1[/blue]。",
-        "n_fights": 70,
+        "n_fights": 71,
         "amount_at_first_sight": {
           "2": 4,
           "3": 15,
           "4": 6,
           "5": 11,
+          "6": 1,
           "7": 16,
           "8": 3,
           "9": 6,
@@ -863,7 +864,7 @@
           "8": 1,
           "9": 4,
           "10": 5,
-          "11": 1,
+          "11": 2,
           "12": 4,
           "13": 3,
           "14": 2,
@@ -907,6 +908,7 @@
             "3": 15,
             "4": 6,
             "5": 9,
+            "6": 1,
             "7": 14,
             "8": 3,
             "9": 5,
@@ -932,7 +934,7 @@
             "1": 1
           },
           "10": {
-            "1": 37,
+            "1": 38,
             "2": 19,
             "3": 6,
             "4": 2
@@ -975,20 +977,20 @@
         "name": "力量",
         "type": "Buff",
         "description": "力量会增加攻击牌造成的伤害。",
-        "n_fights": 183,
+        "n_fights": 184,
         "amount_at_first_sight": {
           "-6": 2,
           "-3": 1,
           "-1": 1,
           "1": 16,
           "5": 78,
-          "7": 85
+          "7": 86
         },
         "amount_max_in_fight": {
           "1": 1,
           "5": 51,
           "6": 10,
-          "7": 49,
+          "7": 50,
           "8": 7,
           "9": 1,
           "10": 25,
@@ -1036,7 +1038,7 @@
             "-6": 2,
             "-3": 1,
             "-1": 1,
-            "7": 61
+            "7": 62
           }
         },
         "turn_at_first_sight_by_asc": {
@@ -1077,7 +1079,7 @@
           "10": {
             "1": 3,
             "2": 1,
-            "3": 61
+            "3": 62
           }
         }
       },
@@ -1085,18 +1087,18 @@
         "name": "易伤",
         "type": "Debuff",
         "description": "易伤的生物从攻击中受到的伤害增加[blue]50%[/blue]。",
-        "n_fights": 128,
+        "n_fights": 129,
         "amount_at_first_sight": {
           "1": 46,
           "2": 26,
-          "3": 53,
+          "3": 54,
           "4": 2,
           "6": 1
         },
         "amount_max_in_fight": {
           "1": 21,
           "2": 34,
-          "3": 43,
+          "3": 44,
           "4": 14,
           "5": 3,
           "6": 6,
@@ -1150,7 +1152,7 @@
           "10": {
             "1": 10,
             "2": 7,
-            "3": 4
+            "3": 5
           }
         },
         "turn_at_first_sight_by_asc": {
@@ -1200,7 +1202,7 @@
             "5": 1
           },
           "10": {
-            "1": 14,
+            "1": 15,
             "2": 3,
             "3": 3,
             "5": 1
@@ -1211,15 +1213,15 @@
         "name": "虚弱",
         "type": "Debuff",
         "description": "虚弱的生物造成的攻击伤害减少[blue]25%[/blue]。",
-        "n_fights": 96,
+        "n_fights": 97,
         "amount_at_first_sight": {
           "1": 64,
-          "2": 27,
+          "2": 28,
           "3": 5
         },
         "amount_max_in_fight": {
           "1": 44,
-          "2": 32,
+          "2": 33,
           "3": 17,
           "4": 3
         },
@@ -1253,7 +1255,7 @@
           },
           "10": {
             "1": 38,
-            "2": 23,
+            "2": 24,
             "3": 4
           }
         },
@@ -1292,7 +1294,7 @@
             "5": 1
           },
           "10": {
-            "1": 37,
+            "1": 38,
             "2": 15,
             "3": 9,
             "4": 3,
@@ -1303,23 +1305,23 @@
     },
     "provenance": {
       "first_seen": "2026-09-24T05:17:27.998Z",
-      "last_seen": "2026-10-20T05:45:04.829Z",
-      "n_runs": 185,
-      "n_instances": 185,
+      "last_seen": "2026-10-20T07:59:12.635Z",
+      "n_runs": 186,
+      "n_instances": 186,
       "n_spawned_mid_fight": 0,
       "n_minion_instances": 0
     },
     "observed": {
       "powers_stripped": {
         "CURL_UP_POWER": {
-          "n": 201,
-          "fights": 185,
+          "n": 202,
+          "fights": 186,
           "amount_before": {
             "14": 37,
-            "18": 164
+            "18": 165
           },
           "move_after": {
-            "WEB_CANNON_MOVE": 185,
+            "WEB_CANNON_MOVE": 186,
             "CURL_AND_GROW_MOVE": 14,
             "POUNCE_MOVE": 2
           },
@@ -1327,17 +1329,17 @@
           "co_removed": {},
           "died_same_turn": 0,
           "turn_end_unclear": 0,
-          "alive_at_turn_end": 201,
+          "alive_at_turn_end": 202,
           "stunned_at_turn_end": 0,
-          "attack_before": 187,
+          "attack_before": 188,
           "attack_cancelled": 1,
           "hp_check": {
-            "n": 100,
-            "landed": 62
+            "n": 101,
+            "landed": 63
           },
           "evidence": [],
           "move_before": {
-            "WEB_CANNON_MOVE": 185,
+            "WEB_CANNON_MOVE": 186,
             "CURL_AND_GROW_MOVE": 14,
             "POUNCE_MOVE": 2
           },
@@ -1346,12 +1348,12 @@
           "changed_to": {},
           "changed_evidence": [],
           "end_move": {
-            "WEB_CANNON_MOVE": 185,
+            "WEB_CANNON_MOVE": 186,
             "CURL_AND_GROW_MOVE": 14,
             "POUNCE_MOVE": 2
           },
           "next_move": {
-            "CURL_AND_GROW_MOVE": 185,
+            "CURL_AND_GROW_MOVE": 186,
             "POUNCE_MOVE": 14,
             "WEB_CANNON_MOVE": 1
           },

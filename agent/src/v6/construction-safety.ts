@@ -1,3 +1,4 @@
+import { cardResultKnown } from "../sim/v6-card-results.js";
 import { dirname, join } from "node:path";
 import { asRecord, str } from "../core/util/json.js";
 import type { Decision, DecisionEnv, ResolvedAction } from "../memory/types.js";
@@ -12,15 +13,16 @@ export interface ConstructionCoverage {
   known: number;
   ratio: number;
   unknown: string[];
-  reason: "insufficient_known_options" | "known_ratio_below_threshold" | null;
+  reason: "insufficient_known_options" | "known_ratio_below_threshold" | "prompt_budget_exceeded" | null;
 }
-/** Count actual selectable options, never combination rows or partial/renormalized sums. */
-export function constructionCoverage(options: readonly string[], table?: V6ProjectionTable | null, config: V6Config = v6Config()): ConstructionCoverage {
-  const ids = [...new Set(options)];
-  const unknown = ids.filter(id => !table?.enabled || !table.target_mixtures.some(row => row.option_id === id
+/** Preserve legacy coverage by default; reward A supplies its own measured-outcome predicate. */
+export function constructionCoverage(options: readonly string[], table?: V6ProjectionTable | null, config: V6Config = v6Config(),
+  knownOption = (id: string) => !(!table?.enabled || !table.target_mixtures.some(row => row.option_id === id
     && row.known_mass >= 1 - 1e-9 && row.known_mass <= 1 + 1e-9
     && row.value !== null && Number.isFinite(row.value.value) && row.value.value >= 0 && row.value.value <= 1
-    && Number.isFinite(row.value.se) && row.value.se >= 0 && Number.isInteger(row.value.n) && row.value.n >= 2));
+    && Number.isFinite(row.value.se) && row.value.se >= 0 && Number.isInteger(row.value.n) && row.value.n >= 2))): ConstructionCoverage {
+  const ids = [...new Set(options)];
+  const unknown = ids.filter(id => !knownOption(id));
   const total = ids.length, known = total - unknown.length, ratio = total ? known / total : 0;
   return { total, known, ratio, unknown,
     reason: known < 2 ? "insufficient_known_options" : ratio < config.min_known_option_ratio ? "known_ratio_below_threshold" : null };
@@ -37,9 +39,12 @@ export function constructionQuestion(env: DecisionEnv, decision: Decision): { ki
   };
   if (isV6RoomDecision(decision)) return observed(decision.v6Room.kind,
     constructionCoverage(decision.v6Room.options.map(o => o.option.key), decision.roomProjection));
-  if (config.deciders.card === "jev" && (decision.v6Card || ["reward/card", "selection/add", "selection/choose"].includes(decision.label))) {
+  if (config.deciders.card === "jev" && decision.v6Card) {
     const question = decision.questions.pick;
-    return observed("card_pick", constructionCoverage(question?.type === "choice" ? Object.keys(question.criteria) : [], env.v6ProjectionTable));
+    const coverage = constructionCoverage(question?.type === "choice" ? Object.keys(question.criteria) : [], env.v6ProjectionTable,
+      config, id => cardResultKnown(env.v6CardResults, id));
+    if (asRecord(decision.state).card_prompt_unavailable) coverage.reason = "prompt_budget_exceeded";
+    return observed("card_pick", coverage);
   }
   if (config.deciders.potion === "jev" && (decision.potionJev || decision.label === "map/statue-potion"
     || asRecord(decision.state).v6_potion_decider === "jev"

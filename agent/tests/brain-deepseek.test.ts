@@ -4,7 +4,8 @@
  * tools it runs DeepSeek's native function calling with the tools in process. No network: a fake fetch captures
  * the request bodies.
  */
-import { mkdtempSync, readFileSync, writeFileSync } from "node:fs";
+import { readFileSync, writeFileSync } from "node:fs";
+import { mkdtempSync } from "./temp-fixtures.js";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { afterEach, beforeEach, describe, expect, it } from "vitest";

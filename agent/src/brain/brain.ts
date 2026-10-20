@@ -32,7 +32,8 @@ import { isContextOverflow, KnowledgePrompt, prefixSizeWarning } from "./knowled
 import { frozenFacts } from "../knowledge/render/facts.js";
 import { BrainRouter, EngineFailure, type BrainLogRow, type FallbackBudget } from "./router.js";
 import type { BrainWait } from "./wait.js";
-import { carriesRunPlan, fightPlanFromSchema, fightPlanSpec, freeSpec, pickSpec, routePlanSpec, runPlanSpec, shopPlanSpec, withRunPlanField } from "./specs.js";
+import { carriesRunPlan, fightPlanFromSchema, fightPlanSpec, freeSpec, pickSpec, routePlanSpec, runPlanSpec, shopPlanSpec, withRunPlanField, withDirectionRideField } from "./specs.js";
+import { DIRECTION_RIDE_KEY } from "../v6/direction-rides.js";
 import { routeAnswerText } from "../sim/route-map.js";
 import type { AnswerSpec, BrainAnswer, BrainEngine, BrainRequest, EngineName } from "./types.js";
 import { KNOWLEDGE_DIR } from "../core/paths.js";
@@ -57,7 +58,7 @@ export interface BrainMeta {
   notes?: string[];
 }
 
-export type BrainChoice = DeepSeekAnswer & { brain?: BrainMeta; rankingOverrideReason?: string };
+export type BrainChoice = DeepSeekAnswer & { brain?: BrainMeta; rankingOverrideReason?: string; v6?: unknown };
 export type BrainMetaUsage = Omit<DeepSeekAnswer, "choice" | "reason"> & { brain?: BrainMeta };
 
 type Json = Record<string, unknown>;
@@ -270,6 +271,8 @@ export class Brain {
   }
 
   private request(label: string, question: string, memory: JsonValue | undefined, payload: unknown, spec: AnswerSpec, options?: Record<string, string | null>): BrainRequest {
+    // A nested run_plan_task places v6 inside run_plan; ordinary room answers carry it at the root.
+    if (isObject(payload) && DIRECTION_RIDE_KEY in payload) spec = withDirectionRideField(spec, payload);
     const liveRun = (this.context?.state as Record<string, unknown> | undefined)?.["run_id"];
     const runId = typeof liveRun === "string" ? liveRun : "";
     const req: BrainRequest = {
@@ -402,6 +405,7 @@ export class Brain {
       ...(route ? { route, ...(routeReason ? { routeReason } : {}) } : {}),
       ...(discard.length > 0 ? { discard } : {}),
       ...(runPlan ? { runPlan } : {}),
+      ...("v6" in answer ? { v6: answer["v6"] } : {}),
     };
   }
 

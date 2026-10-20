@@ -26,6 +26,10 @@ class Admission(unittest.TestCase):
         (self.root / "ops").mkdir()
         shutil.copy2(ROOT / "ops/disk-policy.json", self.root / "ops/disk-policy.json")
         self.directory = self.root / "ops/codex-ops"
+        temporary_stat = patch.object(disk.os, "statvfs", return_value=SimpleNamespace(
+            f_bavail=4 * disk.GiB, f_frsize=1, f_favail=65536))
+        self.tmp_stat = temporary_stat.start()
+        self.addCleanup(temporary_stat.stop)
 
     def sample(self, at, free):
         return disk.snapshot(self.root, self.directory, record=True, now=at, available=free * disk.GiB)
@@ -85,12 +89,41 @@ class Admission(unittest.TestCase):
         with patch.dict(os.environ, {"CHARACTER": "SILENT"}):
             self.assertEqual(disk.character(self.root), "regent")
 
+    def test_tmp_bytes_and_inodes_hold_at_inclusive_thresholds(self):
+        for free_bytes, free_inodes, allowed in [(disk.GiB + 1, 16385, True),
+                (disk.GiB, 65536, False), (4 * disk.GiB, 16384, False), (4 * disk.GiB, 0, False)]:
+            with self.subTest(bytes=free_bytes, inodes=free_inodes):
+                self.tmp_stat.return_value = SimpleNamespace(f_bavail=free_bytes, f_frsize=1, f_favail=free_inodes)
+                result = disk.snapshot(self.root, self.directory, now=1000, available=300 * disk.GiB)
+                self.assertEqual(result["new_jobs_allowed"], allowed)
+                self.assertEqual(result["next_run_allowed"], allowed)
+                self.assertEqual(result["temporary_filesystem"]["allowed"], allowed)
+                self.assertFalse((self.root / "ops/STOP").exists())
+
+    def test_tmp_measurement_failure_is_unknown_and_cannot_admit_work(self):
+        self.tmp_stat.side_effect = OSError("fixed statvfs failure")
+        result = self.sample(1000, 300)
+        self.assertFalse(result["next_run_allowed"])
+        self.assertEqual(result["temporary_filesystem"]["reason"], "measurement_failed")
+        self.assertIsNone(result["temporary_filesystem"]["available_inodes"])
+
+    def test_tmp_recovery_and_recurrence_are_recorded_without_repeating_attention(self):
+        self.tmp_stat.return_value.f_favail = 1
+        self.assertTrue(self.sample(1000, 300)["attention_transition"])
+        self.assertFalse(self.sample(2000, 300)["attention_transition"])
+        self.tmp_stat.return_value.f_favail = 65536
+        self.assertTrue(self.sample(3000, 300)["next_run_allowed"])
+        self.tmp_stat.return_value.f_favail = 1
+        self.assertTrue(self.sample(4000, 300)["attention_transition"])
+
     def test_existing_tick_keeps_victory_and_completion_paths_but_starts_no_jobs(self):
         spec = importlib.util.spec_from_file_location("fixed_capacity_tick", ROOT / "ops/codex-ops-learn.py")
         module = importlib.util.module_from_spec(spec)
         spec.loader.exec_module(module)
         state = {"batches": {}, "runs": {}, "ascension": {}}
         events = []
+        messages = []
+        self.tmp_stat.return_value.f_favail = 1
         with patch.object(module, "ROOT", str(self.root)), patch.object(module, "DIR", str(self.directory)), \
              patch.object(module, "load_state", return_value=state), patch.object(module, "save_state"), \
              patch.object(module, "check_victories", return_value=["fixed-victory"]), \
@@ -98,7 +131,8 @@ class Admission(unittest.TestCase):
              patch.object(module, "check_pending", return_value=None), \
              patch.object(module.learner_retention, "kick", return_value={"fixed_retention": True}), \
              patch.object(module, "enqueue", side_effect=lambda k, v: events.append(k)), \
-             patch.object(disk.shutil, "disk_usage", return_value=SimpleNamespace(free=90 * disk.GiB)), \
+             patch.object(module, "inbox", side_effect=messages.append), \
+             patch.object(disk.shutil, "disk_usage", return_value=SimpleNamespace(free=300 * disk.GiB)), \
              patch.object(module, "start_learner", side_effect=AssertionError("no model may start")):
             with contextlib.redirect_stdout(io.StringIO()) as stdout:
                 module.cmd_tick(SimpleNamespace(character="silent"))
@@ -109,6 +143,9 @@ class Admission(unittest.TestCase):
         self.assertIsNone(rows[0]["dispatched"])
         self.assertTrue(rows[0]["write_jobs"]["disk_capacity_hold"])
         self.assertEqual(events, ["disk-capacity"])
+        self.assertEqual(len(messages), 1)
+        self.assertIn("inodes=1", messages[0])
+        self.assertIn("tmp_capacity_hold", messages[0])
 
     def test_terminal_loop_reports_then_holds_exactly_the_next_run(self):
         ops = self.root / "ops"

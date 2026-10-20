@@ -39,10 +39,13 @@ export interface ReplanState {
   streaks: Record<string, number>; lastTurn?: string;
   /** Reserved T6 causes survive rooms and process restarts, but never another act. */
   t6?: { act: number; handled: string[]; pending: string[] };
+  /** Failed causes allow one retry per act. Room/floor changes never reset them. */
+  failures?: { act: number; causes: Record<string, { count: number; reason: string }>; pending: string[]; active: string[] };
 }
 export interface TriggerResult {
   triggers: ReplanTrigger[]; merged: ReplanTrigger[]; skipped: ReplanTrigger[]; ask: boolean;
   t6?: { reasons: string[]; suppressed: string[] };
+  backoff?: { suppressed: string[] };
 }
 export function freshReplanState(run: string): ReplanState { return { run, act: 0, calls: 0, streaks: {} }; }
 const finite = (n: unknown): n is number => typeof n === "number" && Number.isFinite(n);
@@ -117,18 +120,46 @@ export function detectReplan(s: ReplanState, input: {
   if (reasons.length) triggers.push("T6");
   if (plan && input.floor >= plan.checkpoint) triggers.push("T7");
   const capped = s.calls >= config.budgets.brain_soft_cap;
-  const eligible = triggers.filter(t => (t !== "T6" || reasons.some(key => !latch.handled.includes(key)))
+  const failures = s.failures?.act === input.act ? s.failures : (s.failures = { act: input.act, causes: {}, pending: [], active: [] });
+  const causes = (t: ReplanTrigger): string[] => {
+    if (t === "T6") return reasons.filter(key => !latch.handled.includes(key)).map(key => `T6:${key}`);
+    if (t === "T7") return [`T7:checkpoint:${plan!.checkpoint}`];
+    if (t === "T1") return [`T1:${leader}`];
+    if (t === "T2" || t === "T3") return [`${t}:${identity(Object.keys(next).filter(key => t !== "T3" || e.comparisons?.some(p => `${p.leader}:${p.direction}` === key && p.offeredCore)))}`];
+    if (t === "T4") return [`T4:${identity([...(e.pivotMatched ? ["pivot"] : []), ...(e.acquiredComponentIds ?? []).filter(id => input.requirementIds.has(id))])}`];
+    if (t === "T5") return [`T5:${identity((e.targets ?? []).map(target => target.id))}`];
+    return [`act_start:${input.act}`];
+  };
+  const suppressedFailures = triggers.flatMap(causes).filter(key => (failures.causes[key]?.count ?? 0) >= 2);
+  const eligible = triggers.filter(t => causes(t).some(key => (failures.causes[key]?.count ?? 0) < 2)
+    && (t !== "T6" || reasons.some(key => !latch.handled.includes(key)))
     && (!capped || ["act_start", "T5", "T7"].includes(t)));
   const duplicateTurn = s.lastTurn === input.turnKey;
+  failures.pending = duplicateTurn ? [] : eligible.flatMap(causes).filter(key => (failures.causes[key]?.count ?? 0) < 2);
   latch.pending = eligible.includes("T6") && !duplicateTurn ? reasons.filter(key => !latch.handled.includes(key)) : [];
   return { triggers, merged: eligible.slice(1), skipped: triggers.filter(t => !eligible.includes(t) || duplicateTurn), ask: eligible.length > 0 && !duplicateTurn,
-    ...(reasons.length ? { t6: { reasons, suppressed } } : {}) };
+    ...(reasons.length ? { t6: { reasons, suppressed } } : {}),
+    ...(suppressedFailures.length ? { backoff: { suppressed: suppressedFailures } } : {}) };
 }
 /** Reserve before the request: errors still consume a call and cannot cause a polling storm. */
 export function reserveReplan(s: ReplanState, act: number, turnKey: string): void {
   s.calls++; s.act = act; s.lastTurn = turnKey;
+  if (s.failures?.act === act) { s.failures.active = s.failures.pending; s.failures.pending = []; }
   if (s.t6?.act === act) {
     s.t6.handled = [...new Set([...s.t6.handled, ...s.t6.pending])];
     s.t6.pending = [];
   }
+}
+
+/** Persist only stable failure categories, never variable provider error text. */
+export function finishReplan(s: ReplanState, act: number, error?: unknown): void {
+  const failures = s.failures;
+  if (!failures || failures.act !== act) return;
+  if (error === undefined) { failures.causes = {}; failures.active = []; return; }
+  const text = error instanceof Error ? `${error.name}: ${error.message}` : String(error);
+  const reason = /deadline|budget|timeout|timed out/i.test(text) ? "deadline"
+    : /capacity|rate.limit|overload|429/i.test(text) ? "capacity"
+    : /invalid|schema|json|validation/i.test(text) ? "invalid_answer" : "request_failed";
+  for (const key of failures.active) failures.causes[key] = { count: (failures.causes[key]?.count ?? 0) + 1, reason };
+  failures.active = [];
 }

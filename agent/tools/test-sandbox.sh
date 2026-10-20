@@ -14,7 +14,7 @@ unset CHARACTER
 workers="${SANDBOX_WORKERS:-4}"
 case "$workers" in 1|2|3|4) ;; *) echo "SANDBOX_WORKERS must be 1, 2, 3 or 4" >&2; exit 2 ;; esac
 nice -n 19 npx tsc -p tsconfig.json --noEmit
-nice -n 19 npx vitest run --pool=threads --maxWorkers="$workers" --exclude tests/paths.test.ts \
+nice -n 19 node tools/with-temp.mjs node_modules/vitest/vitest.mjs run --pool=threads --maxWorkers="$workers" --exclude tests/paths.test.ts \
   --exclude tests/brain-codex.test.ts \
   --exclude tests/brain-codex-session.test.ts \
   --exclude tests/brain-codex-usage.test.ts \
@@ -63,4 +63,4 @@ nice -n 19 npx vitest run --pool=threads --maxWorkers="$workers" --exclude tests
   --exclude tests/batch-f.test.ts \
   --exclude tests/fix-queue-v4-fix2.test.ts "$@"
 # paths.test.ts calls process.chdir(), which Node disallows in threads; use one fork for this file.
-nice -n 19 npx vitest run tests/paths.test.ts --pool=forks --maxWorkers=1 "$@"
+nice -n 19 node tools/with-temp.mjs node_modules/vitest/vitest.mjs run tests/paths.test.ts --pool=forks --maxWorkers=1 "$@"

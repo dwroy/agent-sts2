@@ -18,15 +18,15 @@
     ],
     "kind": "hallway",
     "rooms": {
-      "hallway": 70,
+      "hallway": 71,
       "unknown_room": 13
     },
     "acts": {
-      "1": 83
+      "1": 84
     },
     "encounters": {
       "SLITHERING_STRANGLER+SNAPPING_JAXFRUIT": 28,
-      "SLITHERING_STRANGLER+TWIG_SLIME_M": 20,
+      "SLITHERING_STRANGLER+TWIG_SLIME_M": 21,
       "LEAF_SLIME_M+SLITHERING_STRANGLER": 18,
       "SLITHERING_STRANGLER+TWIG_SLIME_S+TWIG_SLIME_S": 7,
       "LEAF_SLIME_S+SLITHERING_STRANGLER+TWIG_SLIME_S": 6,
@@ -77,32 +77,32 @@
       },
       "10": {
         "min": 54,
-        "median": 55.0,
+        "median": 55,
         "max": 56,
-        "n": 28
+        "n": 29
       }
     },
     "moves": {
       "CONSTRICT": {
         "name": "缠身",
-        "n_seen": 182,
+        "n_seen": 185,
         "intents": {
-          "Debuff": 182
+          "Debuff": 185
         },
         "turns_seen": {
-          "1": 83,
-          "3": 70,
-          "5": 26,
+          "1": 84,
+          "3": 71,
+          "5": 27,
           "7": 3
         },
         "next": {
-          "LASH": 80,
-          "THWACK": 74
+          "LASH": 81,
+          "THWACK": 76
         },
         "avg_total_shown": 0.0,
         "player_powers_applied": {
           "CONSTRICT_POWER": {
-            "3": 154
+            "3": 157
           }
         },
         "player_powers_applied_by_asc": {
@@ -143,21 +143,21 @@
           },
           "10": {
             "CONSTRICT_POWER": {
-              "3": 58
+              "3": 61
             }
           }
         }
       },
       "LASH": {
         "name": "甩动",
-        "n_seen": 80,
+        "n_seen": 81,
         "intents": {
-          "Attack": 80
+          "Attack": 81
         },
         "turns_seen": {
           "2": 41,
           "4": 33,
-          "6": 6
+          "6": 7
         },
         "next": {
           "CONSTRICT": 52
@@ -238,34 +238,34 @@
           },
           "10": {
             "shown": {
-              "13x1": 30,
+              "13x1": 31,
               "9x1": 2
             },
             "base_per_hit": {
-              "13": 30
+              "13": 31
             },
             "hits": {
-              "1": 32
+              "1": 33
             },
-            "n_base": 30
+            "n_base": 31
           }
         }
       },
       "THWACK": {
         "name": "重击",
-        "n_seen": 74,
+        "n_seen": 76,
         "intents": {
-          "Attack+Defend": 74
+          "Attack+Defend": 76
         },
         "turns_seen": {
-          "2": 41,
-          "4": 28,
+          "2": 42,
+          "4": 29,
           "6": 5
         },
         "next": {
-          "CONSTRICT": 47
+          "CONSTRICT": 49
         },
-        "avg_total_shown": 7.2,
+        "avg_total_shown": 7.3,
         "damage_by_asc": {
           "0": {
             "shown": {
@@ -343,20 +343,20 @@
           "10": {
             "shown": {
               "6x1": 7,
-              "8x1": 19
+              "8x1": 21
             },
             "base_per_hit": {
-              "8": 19
+              "8": 21
             },
             "hits": {
-              "1": 26
+              "1": 28
             },
-            "n_base": 19
+            "n_base": 21
           }
         },
         "block_gained": {
           "2": 1,
-          "5": 42
+          "5": 44
         },
         "block_gained_by_asc": {
           "0": {
@@ -379,7 +379,7 @@
           },
           "10": {
             "2": 1,
-            "5": 19
+            "5": 21
           }
         }
       }
@@ -434,9 +434,9 @@
         "name": "中毒",
         "type": "Debuff",
         "description": "中毒的生物会在自身回合开始时失去生命。中毒层数每回合减少[blue]1[/blue]。",
-        "n_fights": 22,
+        "n_fights": 23,
         "amount_at_first_sight": {
-          "2": 3,
+          "2": 4,
           "3": 9,
           "5": 1,
           "6": 2,
@@ -446,7 +446,7 @@
         "amount_max_in_fight": {
           "3": 5,
           "4": 2,
-          "5": 4,
+          "5": 5,
           "7": 7,
           "8": 1,
           "9": 1,
@@ -458,7 +458,7 @@
             "3": 1
           },
           "10": {
-            "2": 3,
+            "2": 4,
             "3": 8,
             "5": 1,
             "6": 2,
@@ -473,7 +473,7 @@
           "10": {
             "1": 6,
             "2": 2,
-            "3": 4,
+            "3": 5,
             "4": 5,
             "5": 3,
             "6": 1
@@ -637,13 +637,13 @@
         "name": "虚弱",
         "type": "Debuff",
         "description": "虚弱的生物造成的攻击伤害减少[blue]25%[/blue]。",
-        "n_fights": 31,
+        "n_fights": 32,
         "amount_at_first_sight": {
-          "1": 22,
+          "1": 23,
           "2": 9
         },
         "amount_max_in_fight": {
-          "1": 19,
+          "1": 20,
           "2": 9,
           "4": 2,
           "5": 1
@@ -662,7 +662,7 @@
             "2": 1
           },
           "10": {
-            "1": 16,
+            "1": 17,
             "2": 8
           }
         },
@@ -686,16 +686,17 @@
             "1": 9,
             "2": 7,
             "3": 4,
-            "4": 4
+            "4": 4,
+            "5": 1
           }
         }
       }
     },
     "provenance": {
       "first_seen": "2026-09-24T05:07:48.307Z",
-      "last_seen": "2026-10-19T06:12:38.954Z",
-      "n_runs": 83,
-      "n_instances": 83,
+      "last_seen": "2026-10-20T06:11:14.003Z",
+      "n_runs": 84,
+      "n_instances": 84,
       "n_spawned_mid_fight": 0,
       "n_minion_instances": 0
     },
@@ -952,10 +953,10 @@
           }
         },
         "TWIG_SLIME_M": {
-          "n": 19,
-          "fights": 19,
+          "n": 20,
+          "fights": 20,
           "move_before": {
-            "CONSTRICT": 7,
+            "CONSTRICT": 8,
             "LASH": 7,
             "THWACK": 5
           },
@@ -964,7 +965,7 @@
           "changed_to": {},
           "by_move": {
             "CONSTRICT": {
-              "n": 7,
+              "n": 8,
               "changed_to": {}
             },
             "LASH": {
@@ -980,20 +981,20 @@
           "attack_changed": 0,
           "co_deaths": 0,
           "end_move": {
-            "CONSTRICT": 7,
+            "CONSTRICT": 8,
             "LASH": 5,
             "THWACK": 4
           },
-          "next_n": 16,
+          "next_n": 17,
           "next_move": {
             "CONSTRICT": 9,
             "LASH": 4,
-            "THWACK": 3
+            "THWACK": 4
           },
           "next_after": {
             "CONSTRICT": {
               "LASH": 4,
-              "THWACK": 3
+              "THWACK": 4
             },
             "LASH": {
               "CONSTRICT": 5
@@ -1008,31 +1009,31 @@
             "S780Y1W7AQZL F5 T2"
           ],
           "alive": {
-            "turns": 36,
+            "turns": 39,
             "moves": {
-              "CONSTRICT": 22,
+              "CONSTRICT": 24,
               "LASH": 8,
-              "THWACK": 6
+              "THWACK": 7
             },
             "next": {
               "CONSTRICT": {
                 "LASH": 8,
-                "THWACK": 6
+                "THWACK": 7
               },
               "LASH": {
                 "CONSTRICT": 1
               },
               "THWACK": {
-                "CONSTRICT": 1
+                "CONSTRICT": 2
               }
             }
           },
           "dead": {
-            "turns": 38,
+            "turns": 41,
             "moves": {
-              "CONSTRICT": 18,
-              "LASH": 10,
-              "THWACK": 10
+              "CONSTRICT": 19,
+              "LASH": 11,
+              "THWACK": 11
             }
           }
         },

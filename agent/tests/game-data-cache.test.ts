@@ -2,7 +2,8 @@
  * The game-data cache (knowledge/index.ts): a fake mod's or an empty catalogue never replaces the project's
  * data/game-data.json (2026-10-04 20:00: a doctor run against tools/fake-mod.mjs did), and GAME_DATA_DIR moves the cache.
  */
-import { existsSync, mkdtempSync, readFileSync } from "node:fs";
+import { existsSync, readFileSync } from "node:fs";
+import { mkdtempSync } from "./temp-fixtures.js";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 

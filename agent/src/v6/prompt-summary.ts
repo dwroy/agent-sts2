@@ -55,18 +55,141 @@ export interface PromptBudget {
   limit: number; unit: "bytes" | "chars"; before: number; after: number;
   truncated: boolean; omitted: Record<string, number>;
 }
+/** Card outcomes have a fixed catalog and metric cells, rather than optional projection rows. */
+function boundCardResults(input: Record<string, JsonValue>, limit: number, unit: "bytes" | "chars", omitted: Record<string, number>): Record<string, JsonValue> {
+  const measure = unit === "bytes" ? bytes : (v: unknown) => JSON.stringify(v).length;
+  const state = structuredClone(input), catalog: JsonValue[] = [], refs = new Map<string, number>();
+  const ref = (value: unknown) => {
+    const json = toJsonValue(value), key = JSON.stringify(json);
+    let id = refs.get(key);
+    if (id === undefined) { id = catalog.length; refs.set(key, id); catalog.push(json); }
+    return id;
+  };
+  const targets = asArray(input.targets), targetIds = targets.map(t => String(asRecord(t).id));
+  const targetRef = (value: unknown): JsonValue => { const i = targetIds.indexOf(String(value)); return i < 0 ? toJsonValue(value) : i; };
+  // Prompt display precision only. Full precision, labels and denominators remain in the audit.
+  const cell = (value: unknown): JsonValue => value == null ? null : toJsonValue(asArray(value).map((v, i) =>
+    i < 2 && typeof v === "number" && Number.isFinite(v) ? Number(v.toPrecision(i === 0 ? 5 : 3)) : v));
+  const rows = (value: unknown, paired: boolean): Record<string, JsonValue>[] => asArray(value).map(raw => {
+    const row = asRecord(raw), result = asArray(row.result);
+    return { target: targetRef(row.target), result: result.length ? result.map(cell) : null,
+      ...(paired ? { vs_skip: asArray(row.vs_skip).map(cell) } : {}),
+      samples: toJsonValue(row.samples ?? 0),
+      ...(row.requested !== 100 ? { requested: toJsonValue(row.requested ?? null) } : {}),
+      ...(row.capped ? { capped: toJsonValue(row.capped) } : {}), ...(row.time_up ? { time_up: toJsonValue(row.time_up) } : {}),
+      trust_ref: ref(row.trust ?? null),
+      ...(asArray(row.unknown_reasons).length ? { reason_ref: ref(row.unknown_reasons) } : {}) };
+  });
+  state.targets = targets.map(raw => {
+    const { labels, ...target } = asRecord(raw);
+    // The full target id already names its encounters. Preserve identity and all trust labels once.
+    delete target.boss; delete target.secondBoss;
+    return toJsonValue({ ...target, ...(asArray(labels).length ? { labels_ref: ref(labels) } : {}) });
+  });
+  const cores = asArray(input.core_metrics).map(raw => {
+    const core = asRecord(raw);
+    // Requirement-local ids repeat the combo id; the actual card ids, counts, alternatives,
+    // upgrades and distinctness are the useful information in this display.
+    const cards = asArray(core.cards).map(raw => {
+      const requirement = asRecord(raw);
+      return [requirement.count, asArray(requirement.any).map(raw => {
+        const component = asRecord(raw);
+        return component.kind === "card" && component.upgraded === false ? component.id
+          : [component.id, component.upgraded ?? null, component.kind];
+      }), ...(requirement.distinct ? [true] : [])];
+    });
+    const available = rows(core.outcomes, true).sort((a, b) =>
+      Number(asArray(b.result).some(v => v !== null)) - Number(asArray(a.result).some(v => v !== null)));
+    return { core: toJsonValue({ ...core, cards, outcomes: [], outcomes_omitted: [] }) as Record<string, JsonValue>, rows: available };
+  });
+  const comboIndex = new Map(cores.map(({ core }, i) => [String(core.id), i]));
+  state.options = toJsonValue(Object.fromEntries(Object.entries(asRecord(input.options)).map(([id, raw]) => {
+    const option = asRecord(raw);
+    return [id, { ...optionFacts(option) as Record<string, JsonValue>,
+      ...(asArray(option.reflex).length ? { reflex: option.reflex } : {}),
+      // All immediate Boss and elite targets survive, including paired deltas and unknown reasons.
+      immediate: rows(option.immediate, true), advances: asArray(option.advances).map(raw => {
+        const advance = asRecord(raw);
+        return [comboIndex.get(String(advance.combo)) ?? String(advance.combo), advance.advanced ?? null, advance.missing_after ?? null];
+      }) }];
+  })));
+  state.core_metrics = cores.map(c => c.core);
+  state.card_display = { target: "index into targets", refs: "indices into display_catalog", numeric_precision: "mean 5 and SE 3 significant digits; n exact; audit keeps full precision",
+    requested_samples_default: 100, advance_columns: ["core_metrics index (or combo id)", "advanced", "missing_after"],
+    cards: "requirements [count, alternatives, distinct?]; string alternative is an unupgraded card; otherwise [id, upgraded|null, kind]",
+    B_row_columns: ["target", "result", "vs_skip", "samples", "trust_ref", "optional exception facts"],
+    B: "vs_skip compares the completed core with the current deck at the same future target, independent of this reward. outcomes_omitted lists cached targets whose numeric details did not fit; absent targets are not cached, never zero" };
+  state.display_catalog = catalog;
+  const budget: PromptBudget = { limit, unit, before: measure(input), after: 0, truncated: Object.keys(omitted).length > 0, omitted: { ...omitted } };
+  state.prompt_budget = toJsonValue(budget);
+  const update = () => {
+    delete state.prompt_budget;
+    const payload = measure(state), separator = Object.keys(state).length ? 1 : 0;
+    for (let i = 0; i < 4; i++) budget.after = payload + separator + measure("prompt_budget") + 1 + measure(budget);
+    state.prompt_budget = toJsonValue(budget);
+    return budget.after;
+  };
+  // Reserve the complete combo catalog and all option/elite rows before assigning B detail space.
+  for (const { core, rows: available } of cores) core.outcomes_omitted = toJsonValue(available.map(r => r.target));
+  if (update() > limit) {
+    delete state.temporary_combos; // Already represented by its named core and cards.
+    for (const option of Object.values(asRecord(state.options))) delete asRecord(option).reflex;
+    budget.omitted.secondary_card_facts = 1; budget.truncated = true;
+    update();
+  }
+  // Round-robin by target, then brain-priority core order: no direction loses its entire catalog.
+  let excluded = 0;
+  // Include the counter before allocating rows, so adding it cannot displace a core's sole row.
+  budget.omitted["core_metrics.outcome_details"] = cores.reduce((n, c) => n + c.rows.length, 0);
+  for (let i = 0; i < Math.max(0, ...cores.map(c => c.rows.length)); i++) for (const { core, rows: available } of cores) {
+    const row = available[i]; if (!row) continue;
+    const kept = asArray(core.outcomes), missing = asArray(core.outcomes_omitted), at = missing.indexOf(row.target);
+    const extra = Object.fromEntries(Object.entries(row).filter(([k]) => !["target", "result", "vs_skip", "samples", "trust_ref"].includes(k)));
+    kept.push(toJsonValue([row.target, row.result, row.vs_skip, row.samples, row.trust_ref,
+      ...(Object.keys(extra).length ? [extra] : [])]));
+    if (at >= 0) missing.splice(at, 1);
+    if (update() > limit) { kept.pop(); if (at >= 0) missing.splice(at, 0, row.target); excluded++; }
+  }
+  if (excluded) { budget.omitted["core_metrics.outcome_details"] = excluded; budget.truncated = true; }
+  else delete budget.omitted["core_metrics.outcome_details"];
+  // Reserve the final omission counter as well, without discarding a combo or an immediate row.
+  while (update() > limit) {
+    const donor = [...cores].reverse().find(c => asArray(c.core.outcomes).length > 1);
+    if (!donor) break;
+    const row = asArray(asArray(donor.core.outcomes).pop());
+    asArray(donor.core.outcomes_omitted).push(row[0] as JsonValue);
+    budget.omitted["core_metrics.outcome_details"] = (budget.omitted["core_metrics.outcome_details"] ?? 0) + 1; budget.truncated = true;
+  }
+  update();
+  if (budget.after > limit) {
+    // An impossible mandatory catalog must hand over to the ordinary brain, never
+    // send an oversized request or silently erase A targets to make it look valid.
+    const unavailable: Record<string, JsonValue> = { card_result_schema: input.card_result_schema!,
+      card_prompt_unavailable: "mandatory_A_and_core_catalog_exceed_budget" };
+    budget.omitted.mandatory_card_summary = 1; budget.truncated = true;
+    for (let i = 0; i < 4; i++) {
+      unavailable.prompt_budget = toJsonValue(budget); budget.after = measure(unavailable);
+    }
+    unavailable.prompt_budget = toJsonValue(budget);
+    return unavailable;
+  }
+  return state;
+}
 /** Keep action identity, resources and potion holding comparisons; verbose rules are secondary. */
 function optionFacts(value: unknown): JsonValue {
   if (typeof value === "string") return value.slice(0, 180);
   const source = asRecord(value);
-  const secondary = new Set(["text", "description", "card_text", "card_outcome_stats", "projections", "reflex", "note", "selection_screen_prediction"]);
+  const secondary = new Set(["text", "description", "card_text", "card_outcome_stats", "projections", "best_by_target", "immediate", "advances", "reflex", "note", "selection_screen_prediction"]);
   return toJsonValue(Object.fromEntries(Object.entries(source).filter(([k]) => !secondary.has(k)).map(([k, v]) => [k,
     k === "potion_entries" ? asArray(v).map(entry => optionFacts(entry)) : typeof v === "string" ? v.slice(0, 180) : v])));
 }
 /** Never derive an aggregate from marginal errors or renormalize incomplete target mass. */
 function optionMinimum(key: string, value: unknown, mixtures: readonly unknown[]): Record<string, JsonValue> {
   const option = asRecord(value), rows = asArray(option.projections).map(asRecord), leading = rows[0];
-  if (!leading) return { facts: optionFacts(option.facts ?? value), ...(option.resources_after ? { resources_after: toJsonValue(option.resources_after) } : {}) };
+  if (Array.isArray(option.immediate)) return { facts: optionFacts(value), immediate: toJsonValue(option.immediate.slice(0, 1)), advances: toJsonValue(option.advances ?? []) };
+  const targetValues = asArray(option.best_by_target);
+  const targets: Record<string, JsonValue> = targetValues.length ? { best_by_target: toJsonValue(targetValues.filter(v => asRecord(v).kind === "current")), optional_targets_omitted: targetValues.filter(v => asRecord(v).kind !== "current").length } : {};
+  if (!leading) return { ...targets, facts: optionFacts(option.facts ?? value), ...(option.resources_after ? { resources_after: toJsonValue(option.resources_after) } : {}) };
   const config = v6Config();
   const comparison = (kind: string) => {
     const m = asRecord(mixtures.find(raw => { const r = asRecord(raw); return r.option_id === key && r.kind === kind; }));
@@ -88,21 +211,27 @@ function optionMinimum(key: string, value: unknown, mixtures: readonly unknown[]
 }
 /** Reserve every option's comparison before trimming shared facts or lower-priority combo details. */
 export function boundV6State(input: Record<string, JsonValue>, limit: number, unit: "bytes" | "chars" = "bytes", omitted: Record<string, number> = {}): Record<string, JsonValue> {
-  const state = structuredClone({ ...input, opening_note: V6_OPENING_NOTE }) as Record<string, JsonValue>, size = unit === "bytes" ? bytes : (v: unknown) => JSON.stringify(v).length;
+  if (input.card_result_schema === "v6-card-combat-results-v1") return boundCardResults(input, limit, unit, omitted);
+  const state = structuredClone({ ...input, opening_note: input.card_result_schema === "v6-card-combat-results-v1" ? input.opening_note : V6_OPENING_NOTE }) as Record<string, JsonValue>, size = unit === "bytes" ? bytes : (v: unknown) => JSON.stringify(v).length;
   const budget: PromptBudget = { limit, unit, before: size(state), after: 0, truncated: Object.keys(omitted).length > 0, omitted: { ...omitted } };
   state.prompt_budget = toJsonValue(budget);
   const options = asRecord(state.options), minima = Object.fromEntries(Object.entries(options)
     .map(([key, value]) => [key, optionMinimum(key, value, asArray(state.target_mixtures))]));
   for (const [key, value] of Object.entries(options)) if (minima[key]!.comparison)
     options[key] = { ...asRecord(value), comparison: minima[key]!.comparison };
-  const protectedPaths = new Set(["v6_direction_context", "direction_weights", "act_route", "opening_note"]);
+  const protectedPaths = new Set(["v6_direction_context", "direction_weights", "act_route", "opening_note", "option_reason_catalog", "target_validation", "resources_after_defaults"]);
+  if (input.card_result_schema === "v6-card-combat-results-v1")
+    for (const key of ["card_result_schema", "result_columns", "estimate_columns", "targets", "long_term_cache"]) protectedPaths.add(key);
   const candidates = (): { path: string; value: JsonValue[]; cost: number }[] => {
     const result: { path: string; value: JsonValue[]; cost: number }[] = [];
     const walk = (v: JsonValue, path: string) => {
       if (protectedPaths.has(path) || path === "options") return;
+      // Combat columns and [mean,se,n] cells are atomic; truncation cannot change their schema.
+      if (input.card_result_schema === "v6-card-combat-results-v1" && /\.(result|vs_skip)$/.test(path)) return;
       if (Array.isArray(v)) {
         // Keep cards, metric strata, and potion comparisons intact when removing optional rows.
-        if (v.length > 1 && !/\.(cards|any|types|metrics|comparisons|adjusted_win_rates)$/.test(path))
+        if (v.length > 1 && !(input.card_result_schema === "v6-card-combat-results-v1" && path === "core_metrics")
+          && !/\.(cards|any|types|metrics|comparisons|adjusted_win_rates)$/.test(path))
           result.push({ path, value: v, cost: size(v[v.length - 1]) });
         v.forEach((child, i) => walk(child, `${path}[${i}]`));
       } else if (v && typeof v === "object") for (const [k, child] of Object.entries(v)) if (k !== "prompt_budget") walk(child, path ? `${path}.${k}` : k);
@@ -189,5 +318,6 @@ export function boundedV6Jev(state: Record<string, JsonValue>, questions: Questi
 }
 export function promptBudgetLabels(state: Record<string, JsonValue>): string[] {
   const b = asRecord(state.prompt_budget);
-  return b.truncated ? [`prompt_truncated:${b.before}:${b.after}:${b.limit}:${b.unit}`] : [];
+  return [...(b.truncated ? [`prompt_truncated:${b.before}:${b.after}:${b.limit}:${b.unit}`] : []),
+    ...(state.card_prompt_unavailable ? [`card_prompt_unavailable:${state.card_prompt_unavailable}`] : [])];
 }

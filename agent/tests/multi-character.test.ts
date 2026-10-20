@@ -4,11 +4,12 @@
  * knowledge directory reads as empty knowledge (never the Ironclad's), the climb's target, the monster-records merge,
  * and the model-visible character name. Temp files only; no model, no game.
  */
-import { copyFileSync, mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
+import { copyFileSync, mkdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 
 import { afterEach, describe, expect, it, vi } from "vitest";
+import { mkdtempSync } from "./temp-fixtures.js";
 
 import { loadConfig } from "../src/core/config.js";
 import { parseGameState } from "../src/hand/mod/schema.js";

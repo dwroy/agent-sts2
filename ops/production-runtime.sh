@@ -7,6 +7,10 @@ fi
 # The restored primary instance retains its authorized actor after the old checkout was retired.
 if [ "${ROOT:-}" = /home/dw/Projects/agent-sts2 ]; then
   export CHARACTER=SILENT BRAIN_ENGINE=codex BRAIN_FALLBACK=none
+  # Roy: apply only when ops publishes this at the next natural new-run boundary.
+  export V6_BUILD=on V6_CARD_DECIDER=jev V6_SHOP_DECIDER=brain V6_REST_DECIDER=brain V6_POTION_DECIDER=brain
+  export V6_COMBAT_ENTRIES=off V6_DIRECTION_REPLAN=off
+  export V6_T1_CORE_MIN=0 V6_T2_MIN_DELTA=1 V6_T3_WEIGHT_MAX=0 V6_T6_UNKNOWN_MAX=1 V6_T6_FALLBACKS=100
 fi
 export V6_BUILD="${V6_BUILD:-off}" V6_REFLEX="${V6_REFLEX:-off}"
 export V6_CARD_DECIDER="${V6_CARD_DECIDER:-brain}" V6_POTION_DECIDER="${V6_POTION_DECIDER:-brain}"

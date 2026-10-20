@@ -18,13 +18,13 @@
     ],
     "kind": "boss",
     "rooms": {
-      "boss": 156
+      "boss": 157
     },
     "acts": {
-      "2": 156
+      "2": 157
     },
     "encounters": {
-      "CRUSHER+ROCKET": 156
+      "CRUSHER+ROCKET": 157
     },
     "hp_by_asc": {
       "0": {
@@ -83,25 +83,25 @@
       },
       "10": {
         "min": 209,
-        "median": 209,
+        "median": 209.0,
         "max": 209,
-        "n": 61
+        "n": 62
       }
     },
     "moves": {
       "CHARGE_UP_MOVE": {
         "name": "蓄能",
-        "n_seen": 244,
+        "n_seen": 245,
         "intents": {
-          "Buff": 244
+          "Buff": 245
         },
         "turns_seen": {
-          "3": 167,
+          "3": 168,
           "8": 73,
           "13": 4
         },
         "next": {
-          "LASER_MOVE": 230
+          "LASER_MOVE": 231
         },
         "avg_total_shown": 0.0,
         "self_powers_gained": {
@@ -176,19 +176,19 @@
       },
       "LASER_MOVE": {
         "name": "激光",
-        "n_seen": 230,
+        "n_seen": 231,
         "intents": {
-          "Attack": 230
+          "Attack": 231
         },
         "turns_seen": {
-          "4": 166,
+          "4": 167,
           "9": 61,
           "14": 3
         },
         "next": {
           "RECHARGE_MOVE": 160
         },
-        "avg_total_shown": 47.0,
+        "avg_total_shown": 46.9,
         "damage_by_asc": {
           "0": {
             "shown": {
@@ -326,7 +326,7 @@
           "10": {
             "shown": {
               "27x1": 1,
-              "28x1": 8,
+              "28x1": 9,
               "30x1": 3,
               "35x1": 4,
               "37x1": 1,
@@ -345,7 +345,7 @@
               "35": 37
             },
             "hits": {
-              "1": 98
+              "1": 99
             },
             "n_base": 37
           }
@@ -395,17 +395,17 @@
       },
       "PRECISION_BEAM_MOVE": {
         "name": "精准光束",
-        "n_seen": 288,
+        "n_seen": 289,
         "intents": {
-          "Attack": 288
+          "Attack": 289
         },
         "turns_seen": {
-          "2": 167,
+          "2": 168,
           "7": 113,
           "12": 8
         },
         "next": {
-          "CHARGE_UP_MOVE": 244
+          "CHARGE_UP_MOVE": 245
         },
         "avg_total_shown": 27.5,
         "damage_by_asc": {
@@ -560,17 +560,17 @@
               "24x1": 1,
               "25x1": 3,
               "29x1": 3,
-              "30x1": 48,
+              "30x1": 49,
               "32x1": 2,
               "34x1": 30
             },
             "base_per_hit": {
-              "20": 61
+              "20": 62
             },
             "hits": {
-              "1": 117
+              "1": 118
             },
-            "n_base": 61
+            "n_base": 62
           }
         },
         "back_attack_by_asc": {
@@ -611,7 +611,7 @@
             "facing": 9
           },
           "10": {
-            "behind": 78,
+            "behind": 79,
             "facing": 25
           }
         }
@@ -633,19 +633,19 @@
       },
       "TARGETING_RETICLE_MOVE": {
         "name": "瞄准十字",
-        "n_seen": 312,
+        "n_seen": 313,
         "intents": {
-          "Attack": 312
+          "Attack": 313
         },
         "turns_seen": {
-          "1": 167,
+          "1": 168,
           "6": 132,
           "11": 13
         },
         "next": {
-          "PRECISION_BEAM_MOVE": 288
+          "PRECISION_BEAM_MOVE": 289
         },
-        "avg_total_shown": 6.1,
+        "avg_total_shown": 6.0,
         "damage_by_asc": {
           "0": {
             "shown": {
@@ -790,18 +790,18 @@
               "13x1": 2,
               "15x1": 4,
               "16x1": 3,
-              "4x1": 61,
+              "4x1": 62,
               "5x1": 2,
               "7x1": 14,
               "9x1": 2
             },
             "base_per_hit": {
-              "4": 72
+              "4": 73
             },
             "hits": {
-              "1": 128
+              "1": 129
             },
-            "n_base": 72
+            "n_base": 73
           }
         },
         "back_attack_by_asc": {
@@ -843,7 +843,7 @@
           },
           "10": {
             "behind": 43,
-            "facing": 80
+            "facing": 81
           }
         }
       }
@@ -853,12 +853,12 @@
         "name": "后方攻击",
         "type": "Buff",
         "description": "从后方对你攻击时，造成的伤害增加[blue]50%[/blue]。",
-        "n_fights": 156,
+        "n_fights": 157,
         "amount_at_first_sight": {
-          "1": 156
+          "1": 157
         },
         "amount_max_in_fight": {
-          "1": 156
+          "1": 157
         },
         "amount_at_first_sight_by_asc": {
           "0": {
@@ -889,7 +889,7 @@
             "1": 21
           },
           "10": {
-            "1": 54
+            "1": 55
           }
         },
         "turn_at_first_sight_by_asc": {
@@ -921,7 +921,7 @@
             "1": 21
           },
           "10": {
-            "1": 54
+            "1": 55
           }
         }
       },
@@ -929,12 +929,12 @@
         "name": "蟹之怒",
         "type": "Buff",
         "description": "当有盟友死亡时，这个生物获得[blue]5[/blue]点[gold]力量[/gold]和[blue]99[/blue]点[gold]格挡[/gold]。",
-        "n_fights": 156,
+        "n_fights": 157,
         "amount_at_first_sight": {
-          "1": 156
+          "1": 157
         },
         "amount_max_in_fight": {
-          "1": 156
+          "1": 157
         },
         "amount_at_first_sight_by_asc": {
           "0": {
@@ -965,7 +965,7 @@
             "1": 21
           },
           "10": {
-            "1": 54
+            "1": 55
           }
         },
         "turn_at_first_sight_by_asc": {
@@ -997,7 +997,7 @@
             "1": 21
           },
           "10": {
-            "1": 54
+            "1": 55
           }
         }
       },
@@ -1027,13 +1027,13 @@
         "name": "尖啸",
         "type": "Debuff",
         "description": "在本回合结束前失去[gold]力量[/gold]。",
-        "n_fights": 33,
+        "n_fights": 34,
         "amount_at_first_sight": {
-          "6": 30,
+          "6": 31,
           "8": 3
         },
         "amount_max_in_fight": {
-          "6": 29,
+          "6": 30,
           "8": 4
         },
         "amount_at_first_sight_by_asc": {
@@ -1041,7 +1041,7 @@
             "6": 1
           },
           "10": {
-            "6": 29,
+            "6": 30,
             "8": 3
           }
         },
@@ -1052,7 +1052,7 @@
           "10": {
             "1": 8,
             "2": 6,
-            "3": 5,
+            "3": 6,
             "4": 5,
             "5": 3,
             "6": 2,
@@ -1065,7 +1065,7 @@
         "name": "中毒",
         "type": "Debuff",
         "description": "中毒的生物会在自身回合开始时失去生命。中毒层数每回合减少[blue]1[/blue]。",
-        "n_fights": 60,
+        "n_fights": 61,
         "amount_at_first_sight": {
           "2": 10,
           "3": 15,
@@ -1075,6 +1075,7 @@
           "7": 12,
           "8": 2,
           "9": 2,
+          "10": 1,
           "11": 1,
           "18": 1
         },
@@ -1096,7 +1097,7 @@
           "19": 3,
           "20": 1,
           "21": 2,
-          "22": 3,
+          "22": 4,
           "23": 1,
           "24": 4,
           "25": 1,
@@ -1141,6 +1142,7 @@
             "6": 7,
             "7": 11,
             "9": 2,
+            "10": 1,
             "11": 1,
             "18": 1
           }
@@ -1167,7 +1169,7 @@
           },
           "10": {
             "1": 11,
-            "2": 20,
+            "2": 21,
             "3": 10,
             "4": 3,
             "5": 2,
@@ -1225,12 +1227,12 @@
         "name": "力量",
         "type": "Buff",
         "description": "力量会增加攻击牌造成的伤害。",
-        "n_fights": 155,
+        "n_fights": 156,
         "amount_at_first_sight": {
           "-9": 1,
           "-8": 3,
           "-7": 1,
-          "-6": 15,
+          "-6": 16,
           "-1": 1,
           "1": 6,
           "2": 77,
@@ -1238,7 +1240,7 @@
         },
         "amount_max_in_fight": {
           "2": 47,
-          "3": 36,
+          "3": 37,
           "4": 19,
           "5": 2,
           "6": 20,
@@ -1286,7 +1288,7 @@
           "10": {
             "-9": 1,
             "-8": 3,
-            "-6": 15,
+            "-6": 16,
             "-1": 1,
             "3": 34
           }
@@ -1327,7 +1329,7 @@
           "10": {
             "1": 7,
             "2": 8,
-            "3": 5,
+            "3": 6,
             "4": 34
           }
         }
@@ -1444,9 +1446,9 @@
         "name": "虚弱",
         "type": "Debuff",
         "description": "虚弱的生物造成的攻击伤害减少[blue]25%[/blue]。",
-        "n_fights": 89,
+        "n_fights": 90,
         "amount_at_first_sight": {
-          "1": 56,
+          "1": 57,
           "2": 28,
           "3": 4,
           "6": 1
@@ -1454,7 +1456,7 @@
         "amount_max_in_fight": {
           "1": 39,
           "2": 32,
-          "3": 13,
+          "3": 14,
           "4": 4,
           "6": 1
         },
@@ -1485,7 +1487,7 @@
             "1": 8
           },
           "10": {
-            "1": 23,
+            "1": 24,
             "2": 25,
             "3": 1,
             "6": 1
@@ -1528,7 +1530,7 @@
           },
           "10": {
             "1": 11,
-            "2": 18,
+            "2": 19,
             "3": 10,
             "4": 8,
             "7": 2,
@@ -1539,9 +1541,9 @@
     },
     "provenance": {
       "first_seen": "2026-09-24T06:43:27.871Z",
-      "last_seen": "2026-10-18T11:04:36.064Z",
-      "n_runs": 156,
-      "n_instances": 167,
+      "last_seen": "2026-10-20T08:14:35.670Z",
+      "n_runs": 157,
+      "n_instances": 168,
       "n_spawned_mid_fight": 11,
       "n_minion_instances": 0
     },
@@ -1641,30 +1643,30 @@
           "revived": 5
         },
         "PIERCING_WAIL_POWER": {
-          "n": 46,
-          "fights": 11,
+          "n": 51,
+          "fights": 12,
           "amount_before": {
-            "6": 36,
+            "6": 41,
             "8": 9,
             "12": 1
           },
           "move_after": {
             "TARGETING_RETICLE_MOVE": 22,
+            "CHARGE_UP_MOVE": 13,
             "LASER_MOVE": 11,
-            "CHARGE_UP_MOVE": 10,
-            "RECHARGE_MOVE": 2,
-            "PRECISION_BEAM_MOVE": 1
+            "PRECISION_BEAM_MOVE": 3,
+            "RECHARGE_MOVE": 2
           },
           "stunned_share": 0.0,
           "co_removed": {
-            "POISON_POWER": 13,
-            "WEAK_POWER": 8
+            "POISON_POWER": 15,
+            "WEAK_POWER": 11
           },
           "died_same_turn": 3,
           "turn_end_unclear": 0,
-          "alive_at_turn_end": 43,
+          "alive_at_turn_end": 48,
           "stunned_at_turn_end": 0,
-          "attack_before": 11,
+          "attack_before": 13,
           "attack_cancelled": 0,
           "hp_check": {
             "n": 10,
@@ -1673,10 +1675,10 @@
           "evidence": [],
           "move_before": {
             "TARGETING_RETICLE_MOVE": 22,
+            "CHARGE_UP_MOVE": 13,
             "LASER_MOVE": 11,
-            "CHARGE_UP_MOVE": 10,
-            "RECHARGE_MOVE": 2,
-            "PRECISION_BEAM_MOVE": 1
+            "PRECISION_BEAM_MOVE": 3,
+            "RECHARGE_MOVE": 2
           },
           "move_changed": 0,
           "move_changed_share": 0.0,
@@ -1684,23 +1686,23 @@
           "changed_evidence": [],
           "end_move": {
             "TARGETING_RETICLE_MOVE": 22,
-            "CHARGE_UP_MOVE": 9,
+            "CHARGE_UP_MOVE": 12,
             "LASER_MOVE": 9,
-            "RECHARGE_MOVE": 2,
-            "PRECISION_BEAM_MOVE": 1
+            "PRECISION_BEAM_MOVE": 3,
+            "RECHARGE_MOVE": 2
           },
           "next_move": {
             "PRECISION_BEAM_MOVE": 22,
-            "LASER_MOVE": 9,
+            "LASER_MOVE": 12,
             "RECHARGE_MOVE": 9,
-            "CHARGE_UP_MOVE": 1
+            "CHARGE_UP_MOVE": 3
           },
           "changed_next": {},
-          "revived": 30
+          "revived": 33
         },
         "POISON_POWER": {
-          "n": 94,
-          "fights": 20,
+          "n": 97,
+          "fights": 21,
           "amount_before": {
             "2": 4,
             "3": 6,
@@ -1713,28 +1715,29 @@
             "10": 7,
             "12": 1,
             "13": 3,
-            "15": 1,
+            "15": 2,
+            "16": 2,
             "18": 1
           },
           "move_after": {
-            "PRECISION_BEAM_MOVE": 27,
+            "PRECISION_BEAM_MOVE": 29,
+            "CHARGE_UP_MOVE": 24,
             "LASER_MOVE": 24,
-            "CHARGE_UP_MOVE": 23,
             "TARGETING_RETICLE_MOVE": 16,
             "RECHARGE_MOVE": 4
           },
           "stunned_share": 0.0,
           "co_removed": {
-            "WEAK_POWER": 26,
-            "PIERCING_WAIL_POWER": 13,
+            "WEAK_POWER": 29,
+            "PIERCING_WAIL_POWER": 15,
             "DARK_SHACKLES_POWER": 5,
             "VULNERABLE_POWER": 3
           },
           "died_same_turn": 7,
           "turn_end_unclear": 0,
-          "alive_at_turn_end": 87,
+          "alive_at_turn_end": 90,
           "stunned_at_turn_end": 0,
-          "attack_before": 59,
+          "attack_before": 61,
           "attack_cancelled": 0,
           "hp_check": {
             "n": 25,
@@ -1742,9 +1745,9 @@
           },
           "evidence": [],
           "move_before": {
-            "PRECISION_BEAM_MOVE": 27,
+            "PRECISION_BEAM_MOVE": 29,
+            "CHARGE_UP_MOVE": 24,
             "LASER_MOVE": 24,
-            "CHARGE_UP_MOVE": 23,
             "TARGETING_RETICLE_MOVE": 16,
             "RECHARGE_MOVE": 4
           },
@@ -1753,21 +1756,21 @@
           "changed_to": {},
           "changed_evidence": [],
           "end_move": {
+            "PRECISION_BEAM_MOVE": 25,
             "LASER_MOVE": 24,
-            "PRECISION_BEAM_MOVE": 23,
-            "CHARGE_UP_MOVE": 21,
+            "CHARGE_UP_MOVE": 22,
             "TARGETING_RETICLE_MOVE": 16,
             "RECHARGE_MOVE": 3
           },
           "next_move": {
-            "CHARGE_UP_MOVE": 23,
-            "LASER_MOVE": 21,
+            "CHARGE_UP_MOVE": 25,
+            "LASER_MOVE": 22,
             "PRECISION_BEAM_MOVE": 16,
             "RECHARGE_MOVE": 8,
             "TARGETING_RETICLE_MOVE": 3
           },
           "changed_next": {},
-          "revived": 66
+          "revived": 69
         },
         "STRENGTH_POWER": {
           "n": 55,
@@ -1886,44 +1889,44 @@
           "revived": 32
         },
         "WEAK_POWER": {
-          "n": 147,
-          "fights": 25,
+          "n": 152,
+          "fights": 26,
           "amount_before": {
-            "1": 91,
-            "2": 51,
-            "3": 4,
+            "1": 93,
+            "2": 52,
+            "3": 6,
             "4": 1
           },
           "move_after": {
-            "PRECISION_BEAM_MOVE": 55,
-            "LASER_MOVE": 31,
+            "PRECISION_BEAM_MOVE": 58,
+            "LASER_MOVE": 32,
             "TARGETING_RETICLE_MOVE": 27,
-            "CHARGE_UP_MOVE": 24,
+            "CHARGE_UP_MOVE": 25,
             "RECHARGE_MOVE": 10
           },
           "stunned_share": 0.0,
           "co_removed": {
-            "POISON_POWER": 26,
+            "POISON_POWER": 29,
             "VULNERABLE_POWER": 21,
-            "PIERCING_WAIL_POWER": 8,
+            "PIERCING_WAIL_POWER": 11,
             "STRENGTH_POWER": 1
           },
           "died_same_turn": 13,
           "turn_end_unclear": 0,
-          "alive_at_turn_end": 134,
+          "alive_at_turn_end": 139,
           "stunned_at_turn_end": 0,
-          "attack_before": 103,
+          "attack_before": 107,
           "attack_cancelled": 0,
           "hp_check": {
-            "n": 29,
-            "landed": 23
+            "n": 30,
+            "landed": 24
           },
           "evidence": [],
           "move_before": {
-            "PRECISION_BEAM_MOVE": 55,
-            "LASER_MOVE": 31,
+            "PRECISION_BEAM_MOVE": 58,
+            "LASER_MOVE": 32,
             "TARGETING_RETICLE_MOVE": 27,
-            "CHARGE_UP_MOVE": 24,
+            "CHARGE_UP_MOVE": 25,
             "RECHARGE_MOVE": 10
           },
           "move_changed": 0,
@@ -1931,29 +1934,29 @@
           "changed_to": {},
           "changed_evidence": [],
           "end_move": {
-            "PRECISION_BEAM_MOVE": 48,
-            "LASER_MOVE": 29,
+            "PRECISION_BEAM_MOVE": 51,
+            "LASER_MOVE": 30,
             "TARGETING_RETICLE_MOVE": 27,
-            "CHARGE_UP_MOVE": 21,
+            "CHARGE_UP_MOVE": 22,
             "RECHARGE_MOVE": 9
           },
           "next_move": {
-            "CHARGE_UP_MOVE": 45,
+            "CHARGE_UP_MOVE": 48,
             "PRECISION_BEAM_MOVE": 27,
+            "LASER_MOVE": 22,
             "RECHARGE_MOVE": 22,
-            "LASER_MOVE": 21,
             "TARGETING_RETICLE_MOVE": 9
           },
           "changed_next": {},
-          "revived": 96
+          "revived": 101
         }
       },
       "powers_lowered": {
         "POISON_POWER": {
-          "n": 79,
-          "fights": 15,
+          "n": 81,
+          "fights": 16,
           "move_before": {
-            "LASER_MOVE": 25,
+            "LASER_MOVE": 27,
             "CHARGE_UP_MOVE": 17,
             "TARGETING_RETICLE_MOVE": 13,
             "RECHARGE_MOVE": 13,
@@ -1964,7 +1967,7 @@
           "changed_to": {},
           "changed_evidence": [],
           "end_move": {
-            "LASER_MOVE": 18,
+            "LASER_MOVE": 20,
             "CHARGE_UP_MOVE": 13,
             "RECHARGE_MOVE": 10,
             "TARGETING_RETICLE_MOVE": 9,
@@ -1978,7 +1981,7 @@
             "CHARGE_UP_MOVE": 3
           },
           "changed_next": {},
-          "revived": 54
+          "revived": 55
         },
         "STRENGTH_POWER": {
           "n": 23,
@@ -2137,17 +2140,17 @@
             "1LJFBKUF51PE F33 T6"
           ],
           "alive": {
-            "turns": 1916,
+            "turns": 1932,
             "moves": {
-              "TARGETING_RETICLE_MOVE": 492,
-              "PRECISION_BEAM_MOVE": 450,
-              "CHARGE_UP_MOVE": 380,
-              "LASER_MOVE": 354,
+              "TARGETING_RETICLE_MOVE": 496,
+              "PRECISION_BEAM_MOVE": 454,
+              "CHARGE_UP_MOVE": 384,
+              "LASER_MOVE": 358,
               "RECHARGE_MOVE": 240
             },
             "next": {
               "CHARGE_UP_MOVE": {
-                "LASER_MOVE": 354
+                "LASER_MOVE": 358
               },
               "LASER_MOVE": {
                 "RECHARGE_MOVE": 240
@@ -2156,7 +2159,7 @@
                 "TARGETING_RETICLE_MOVE": 208
               },
               "TARGETING_RETICLE_MOVE": {
-                "PRECISION_BEAM_MOVE": 450
+                "PRECISION_BEAM_MOVE": 454
               }
             }
           },

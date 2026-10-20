@@ -436,7 +436,9 @@ describe("rollout (offline)", () => {
     expect(importers("rollout-live").filter((path) => !path.startsWith("src/sim/"))).toEqual(["src/reflex/combat-plan.ts"]);
     expect(importers("(sim/)?boss-sim").filter((path) => !path.startsWith("src/sim/"))).toEqual([]);
     expect(importers("(sim/)?boss-lines").filter((path) => !path.startsWith("src/sim/"))).toEqual(["src/reflex/combat-plan.ts", "src/v6/projection-input.ts"]);
-    expect(importers("(sim/)?(boss-start|build-sim)").filter((path) => !path.startsWith("src/sim/"))).toEqual([]);
+    // The reward input adapter reads the existing cached monster database; fight execution stays in sim/.
+    expect(importers("(sim/)?boss-start").filter((path) => !path.startsWith("src/sim/"))).toEqual(["src/v6/card-results-input.ts"]);
+    expect(importers("(sim/)?build-sim").filter((path) => !path.startsWith("src/sim/"))).toEqual([]);
     expect(importers("(sim/)?build-sim-facts").filter((path) => !path.startsWith("src/sim/"))).toEqual(["src/hand/loop.ts"]);
     expect(importers("(sim/)?build-sim-pool").filter((path) => !path.startsWith("src/sim/"))).toEqual(["src/core/index.ts", "src/v6/projection-runtime.ts"]);
   });

@@ -18,13 +18,13 @@
     ],
     "kind": "boss",
     "rooms": {
-      "boss": 141
+      "boss": 142
     },
     "acts": {
-      "1": 141
+      "1": 142
     },
     "encounters": {
-      "VANTOM": 141
+      "VANTOM": 142
     },
     "hp_by_asc": {
       "0": {
@@ -77,26 +77,26 @@
       },
       "10": {
         "min": 183,
-        "median": 183,
+        "median": 183.0,
         "max": 183,
-        "n": 59
+        "n": 60
       }
     },
     "moves": {
       "DISMEMBER_MOVE": {
         "name": "肢解",
-        "n_seen": 289,
+        "n_seen": 292,
         "intents": {
-          "Attack+StatusCard": 289
+          "Attack+StatusCard": 292
         },
         "turns_seen": {
-          "3": 141,
-          "7": 115,
-          "11": 30,
+          "3": 142,
+          "7": 116,
+          "11": 31,
           "15": 3
         },
         "next": {
-          "PREPARE_MOVE": 247
+          "PREPARE_MOVE": 250
         },
         "avg_total_shown": 28.1,
         "damage_by_asc": {
@@ -220,49 +220,49 @@
           },
           "10": {
             "shown": {
-              "22x1": 21,
+              "22x1": 22,
               "24x1": 19,
               "25x1": 3,
               "27x1": 1,
               "30x1": 38,
-              "32x1": 36,
-              "34x1": 13,
+              "32x1": 37,
+              "34x1": 14,
               "36x1": 1
             },
             "base_per_hit": {
-              "30": 88
+              "30": 90
             },
             "hits": {
-              "1": 132
+              "1": 135
             },
-            "n_base": 88
+            "n_base": 90
           }
         },
         "status_cards": {
-          "3": 289
+          "3": 292
         },
         "status_card_ids": {
-          "WOUND": 741
+          "WOUND": 750
         },
         "status_card_pile": {
-          "discard": 402,
+          "discard": 411,
           "draw": 339
         }
       },
       "INKY_LANCE_MOVE": {
         "name": "墨水长枪",
-        "n_seen": 333,
+        "n_seen": 336,
         "intents": {
-          "Attack": 333
+          "Attack": 336
         },
         "turns_seen": {
-          "2": 141,
-          "6": 135,
-          "10": 52,
+          "2": 142,
+          "6": 136,
+          "10": 53,
           "14": 5
         },
         "next": {
-          "DISMEMBER_MOVE": 289
+          "DISMEMBER_MOVE": 292
         },
         "avg_total_shown": 15.4,
         "damage_by_asc": {
@@ -388,39 +388,39 @@
           },
           "10": {
             "shown": {
-              "11x2": 20,
+              "11x2": 21,
               "13x2": 1,
               "5x2": 18,
               "6x2": 19,
-              "7x2": 41,
+              "7x2": 42,
               "8x2": 7,
-              "9x2": 41
+              "9x2": 42
             },
             "base_per_hit": {
-              "7": 102
+              "7": 105
             },
             "hits": {
-              "2": 147
+              "2": 150
             },
-            "n_base": 102
+            "n_base": 105
           }
         }
       },
       "INK_BLOT_MOVE": {
         "name": "墨迹",
-        "n_seen": 366,
+        "n_seen": 369,
         "intents": {
-          "Attack": 366
+          "Attack": 369
         },
         "turns_seen": {
-          "1": 141,
-          "5": 140,
-          "9": 76,
+          "1": 142,
+          "5": 141,
+          "9": 77,
           "13": 8,
           "17": 1
         },
         "next": {
-          "INKY_LANCE_MOVE": 333
+          "INKY_LANCE_MOVE": 336
         },
         "avg_total_shown": 9.0,
         "damage_by_asc": {
@@ -553,42 +553,42 @@
           },
           "10": {
             "shown": {
-              "10x1": 44,
-              "12x1": 29,
+              "10x1": 45,
+              "12x1": 30,
               "14x1": 1,
               "7x1": 17,
-              "8x1": 59,
+              "8x1": 60,
               "9x1": 12
             },
             "base_per_hit": {
-              "8": 131
+              "8": 134
             },
             "hits": {
-              "1": 162
+              "1": 165
             },
-            "n_base": 131
+            "n_base": 134
           }
         }
       },
       "PREPARE_MOVE": {
         "name": "准备",
-        "n_seen": 247,
+        "n_seen": 250,
         "intents": {
-          "Buff": 247
+          "Buff": 250
         },
         "turns_seen": {
-          "4": 141,
-          "8": 91,
-          "12": 14,
+          "4": 142,
+          "8": 92,
+          "12": 15,
           "16": 1
         },
         "next": {
-          "INK_BLOT_MOVE": 225
+          "INK_BLOT_MOVE": 227
         },
         "avg_total_shown": 0.0,
         "self_powers_gained": {
           "STRENGTH_POWER": {
-            "2": 224
+            "2": 226
           }
         },
         "self_powers_gained_by_asc": {
@@ -634,7 +634,7 @@
           },
           "10": {
             "STRENGTH_POWER": {
-              "2": 103
+              "2": 105
             }
           }
         }
@@ -695,19 +695,19 @@
         "name": "尖啸",
         "type": "Debuff",
         "description": "在本回合结束前失去[gold]力量[/gold]。",
-        "n_fights": 16,
+        "n_fights": 17,
         "amount_at_first_sight": {
-          "6": 16
+          "6": 17
         },
         "amount_max_in_fight": {
-          "6": 16
+          "6": 17
         },
         "amount_at_first_sight_by_asc": {
           "6": {
             "6": 1
           },
           "10": {
-            "6": 15
+            "6": 16
           }
         },
         "turn_at_first_sight_by_asc": {
@@ -719,7 +719,7 @@
             "2": 2,
             "3": 4,
             "5": 3,
-            "6": 4,
+            "6": 5,
             "10": 1
           }
         }
@@ -728,13 +728,13 @@
         "name": "中毒",
         "type": "Debuff",
         "description": "中毒的生物会在自身回合开始时失去生命。中毒层数每回合减少[blue]1[/blue]。",
-        "n_fights": 59,
+        "n_fights": 60,
         "amount_at_first_sight": {
           "2": 3,
           "3": 19,
           "4": 2,
           "5": 5,
-          "6": 7,
+          "6": 8,
           "7": 14,
           "8": 2,
           "9": 2,
@@ -747,7 +747,7 @@
           "10": 1,
           "11": 1,
           "12": 2,
-          "13": 4,
+          "13": 5,
           "14": 2,
           "15": 2,
           "16": 1,
@@ -781,7 +781,7 @@
             "3": 19,
             "4": 2,
             "5": 5,
-            "6": 7,
+            "6": 8,
             "7": 13,
             "8": 2,
             "9": 1,
@@ -798,7 +798,7 @@
           },
           "10": {
             "1": 23,
-            "2": 16,
+            "2": 17,
             "3": 9,
             "4": 7,
             "5": 1,
@@ -810,16 +810,16 @@
         "name": "滑溜",
         "type": "Buff",
         "description": "这个生物下一次要失去生命值时，只会失去[blue]1[/blue]点生命。",
-        "n_fights": 141,
+        "n_fights": 142,
         "amount_at_first_sight": {
           "7": 4,
           "8": 26,
-          "9": 111
+          "9": 112
         },
         "amount_max_in_fight": {
           "7": 4,
           "8": 26,
-          "9": 111
+          "9": 112
         },
         "amount_at_first_sight_by_asc": {
           "0": {
@@ -852,7 +852,7 @@
             "9": 16
           },
           "10": {
-            "9": 59
+            "9": 60
           }
         },
         "turn_at_first_sight_by_asc": {
@@ -881,7 +881,7 @@
             "1": 16
           },
           "10": {
-            "1": 59
+            "1": 60
           }
         }
       },
@@ -918,18 +918,18 @@
         "name": "力量",
         "type": "Buff",
         "description": "力量会增加攻击牌造成的伤害。",
-        "n_fights": 140,
+        "n_fights": 141,
         "amount_at_first_sight": {
           "-10": 1,
           "-9": 1,
           "-6": 7,
           "1": 10,
-          "2": 121
+          "2": 122
         },
         "amount_max_in_fight": {
           "2": 56,
           "3": 5,
-          "4": 66,
+          "4": 67,
           "6": 10,
           "7": 2,
           "8": 1
@@ -965,7 +965,7 @@
           },
           "10": {
             "-6": 7,
-            "2": 52
+            "2": 53
           }
         },
         "turn_at_first_sight_by_asc": {
@@ -1005,7 +1005,7 @@
             "1": 1,
             "2": 2,
             "3": 4,
-            "5": 52
+            "5": 53
           }
         }
       },
@@ -1122,15 +1122,15 @@
         "name": "虚弱",
         "type": "Debuff",
         "description": "虚弱的生物造成的攻击伤害减少[blue]25%[/blue]。",
-        "n_fights": 90,
+        "n_fights": 91,
         "amount_at_first_sight": {
-          "1": 57,
+          "1": 58,
           "2": 24,
           "3": 9
         },
         "amount_max_in_fight": {
           "1": 25,
-          "2": 33,
+          "2": 34,
           "3": 24,
           "4": 6,
           "5": 2
@@ -1160,7 +1160,7 @@
             "3": 2
           },
           "10": {
-            "1": 37,
+            "1": 38,
             "2": 19,
             "3": 3
           }
@@ -1195,7 +1195,7 @@
             "6": 1
           },
           "10": {
-            "1": 37,
+            "1": 38,
             "2": 10,
             "3": 9,
             "4": 2,
@@ -1206,9 +1206,9 @@
     },
     "provenance": {
       "first_seen": "2026-09-24T04:16:46.979Z",
-      "last_seen": "2026-10-19T05:15:07.155Z",
-      "n_runs": 141,
-      "n_instances": 141,
+      "last_seen": "2026-10-20T07:20:06.167Z",
+      "n_runs": 142,
+      "n_instances": 142,
       "n_spawned_mid_fight": 0,
       "n_minion_instances": 0
     },
@@ -1322,17 +1322,17 @@
           "revived": 30
         },
         "SLIPPERY_POWER": {
-          "n": 133,
-          "fights": 116,
+          "n": 134,
+          "fights": 117,
           "amount_before": {
-            "1": 95,
+            "1": 96,
             "2": 24,
             "3": 9,
             "4": 4,
             "8": 1
           },
           "move_after": {
-            "PREPARE_MOVE": 52,
+            "PREPARE_MOVE": 53,
             "DISMEMBER_MOVE": 46,
             "INKY_LANCE_MOVE": 21,
             "INK_BLOT_MOVE": 14
@@ -1343,7 +1343,7 @@
           },
           "died_same_turn": 0,
           "turn_end_unclear": 0,
-          "alive_at_turn_end": 133,
+          "alive_at_turn_end": 134,
           "stunned_at_turn_end": 0,
           "attack_before": 81,
           "attack_cancelled": 0,
@@ -1353,7 +1353,7 @@
           },
           "evidence": [],
           "move_before": {
-            "PREPARE_MOVE": 52,
+            "PREPARE_MOVE": 53,
             "DISMEMBER_MOVE": 46,
             "INKY_LANCE_MOVE": 21,
             "INK_BLOT_MOVE": 14
@@ -1363,13 +1363,13 @@
           "changed_to": {},
           "changed_evidence": [],
           "end_move": {
-            "PREPARE_MOVE": 52,
+            "PREPARE_MOVE": 53,
             "DISMEMBER_MOVE": 46,
             "INKY_LANCE_MOVE": 21,
             "INK_BLOT_MOVE": 14
           },
           "next_move": {
-            "INK_BLOT_MOVE": 52,
+            "INK_BLOT_MOVE": 53,
             "PREPARE_MOVE": 46,
             "DISMEMBER_MOVE": 21,
             "INKY_LANCE_MOVE": 14
@@ -1378,31 +1378,31 @@
           "revived": 0
         },
         "STRENGTH_POWER": {
-          "n": 12,
-          "fights": 11,
+          "n": 14,
+          "fights": 12,
           "amount_before": {
-            "2": 10,
-            "4": 2
+            "2": 11,
+            "4": 3
           },
           "move_after": {
-            "INKY_LANCE_MOVE": 8,
+            "INKY_LANCE_MOVE": 10,
             "INK_BLOT_MOVE": 4
           },
           "stunned_share": 0.0,
           "co_removed": {},
           "died_same_turn": 0,
           "turn_end_unclear": 0,
-          "alive_at_turn_end": 12,
+          "alive_at_turn_end": 14,
           "stunned_at_turn_end": 0,
-          "attack_before": 12,
+          "attack_before": 14,
           "attack_cancelled": 0,
           "hp_check": {
-            "n": 12,
+            "n": 14,
             "landed": 3
           },
           "evidence": [],
           "move_before": {
-            "INKY_LANCE_MOVE": 8,
+            "INKY_LANCE_MOVE": 10,
             "INK_BLOT_MOVE": 4
           },
           "move_changed": 0,
@@ -1410,11 +1410,11 @@
           "changed_to": {},
           "changed_evidence": [],
           "end_move": {
-            "INKY_LANCE_MOVE": 8,
+            "INKY_LANCE_MOVE": 10,
             "INK_BLOT_MOVE": 4
           },
           "next_move": {
-            "DISMEMBER_MOVE": 8,
+            "DISMEMBER_MOVE": 10,
             "INKY_LANCE_MOVE": 4
           },
           "changed_next": {},
@@ -1508,12 +1508,12 @@
           "revived": 32
         },
         "SLIPPERY_POWER": {
-          "n": 899,
-          "fights": 141,
+          "n": 904,
+          "fights": 142,
           "move_before": {
-            "INK_BLOT_MOVE": 393,
-            "INKY_LANCE_MOVE": 271,
-            "DISMEMBER_MOVE": 147,
+            "INK_BLOT_MOVE": 396,
+            "INKY_LANCE_MOVE": 272,
+            "DISMEMBER_MOVE": 148,
             "PREPARE_MOVE": 88
           },
           "move_changed": 0,
@@ -1521,15 +1521,15 @@
           "changed_to": {},
           "changed_evidence": [],
           "end_move": {
-            "INK_BLOT_MOVE": 393,
-            "INKY_LANCE_MOVE": 271,
-            "DISMEMBER_MOVE": 147,
+            "INK_BLOT_MOVE": 396,
+            "INKY_LANCE_MOVE": 272,
+            "DISMEMBER_MOVE": 148,
             "PREPARE_MOVE": 88
           },
           "next_move": {
-            "INKY_LANCE_MOVE": 393,
-            "DISMEMBER_MOVE": 271,
-            "PREPARE_MOVE": 147,
+            "INKY_LANCE_MOVE": 396,
+            "DISMEMBER_MOVE": 272,
+            "PREPARE_MOVE": 148,
             "INK_BLOT_MOVE": 88
           },
           "changed_next": {},

@@ -312,7 +312,14 @@ def cmd_tick(args):
     capacity = disk_admission.snapshot(ROOT, DIR, record=True)
     report["disk_capacity"] = capacity
     if capacity.get("attention_transition"):
-        enqueue("disk-capacity", f"容量门槛变化：{capacity['severity']}；可用{capacity['available_GiB']:.3f}GiB。新大作业/通道100、自然局边界60、Regent200及48小时。原件{capacity['policy']}和同目录codex-ops/disk-capacity/current.json；不热停当前局或恢复Regent。")
+        temporary = capacity.get("temporary_filesystem", {})
+        message = (f"容量门槛变化：{capacity['severity']}；主盘可用{capacity['available_GiB']:.3f}GiB。"
+                   f"/tmp可用bytes={temporary.get('available_bytes')}、inodes={temporary.get('available_inodes')}，"
+                   f"门槛为严格大于{temporary.get('minimum_available_bytes')} bytes及{temporary.get('minimum_available_inodes')} inodes，"
+                   f"状态{temporary.get('reason')}。新大作业/通道100、自然局边界60、Regent200及48小时。"
+                   f"原件{capacity['policy']}和同目录codex-ops/disk-capacity/current.json；不热停当前局或恢复Regent。")
+        inbox(message)
+        enqueue("disk-capacity", message)
     batch = check_postmortems(state, character)
     report["dispatched"] = batch
     report["pending_notified"] = check_pending(state, character)

@@ -5,7 +5,7 @@
  * log, with no game and no real model.
  */
 
-import { readFileSync, rmSync } from "node:fs";
+import { mkdtempSync, readFileSync, rmSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { afterEach, describe, expect, it } from "vitest";
@@ -68,19 +68,19 @@ const servers: TestServer[] = [];
 const logs: string[] = [];
 
 afterEach(async () => {
-  await Promise.all(servers.splice(0).map((server) => server.close()));
-  for (const path of logs.splice(0)) {
-    try {
-      rmSync(path, { force: true });
-    } catch {
-      // best effort
-    }
+  try {
+    const closed = await Promise.allSettled(servers.splice(0).map((server) => server.close()));
+    const failed = closed.find((result) => result.status === "rejected");
+    if (failed?.status === "rejected") throw failed.reason;
+  } finally {
+    for (const directory of logs.splice(0)) rmSync(directory, { recursive: true, force: true });
   }
 });
 
 function testConfig(): AppConfig {
-  const path = join(tmpdir(), `jev-sts2-test-${Date.now()}-${Math.random().toString(16).slice(2)}.jsonl`);
-  logs.push(path);
+  const directory = mkdtempSync(join(tmpdir(), "jev-sts2-test-"));
+  logs.push(directory);
+  const path = join(directory, "decisions.jsonl");
   const config = loadConfig({} as NodeJS.ProcessEnv);
   return { ...config, combatPlanner: "card", log: { ...config.log, decisionLog: path } };
 }
