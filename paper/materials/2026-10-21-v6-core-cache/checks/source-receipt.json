@@ -1,0 +1,138 @@
+{
+  "source": "9805c160fac06e29a3b6d48235d5c5bbfd1b7e30",
+  "source_tree": "5959a269f25c88e6d0a7d05f4d1cae48c6f275ae",
+  "base": "572bf468bae3e248fbb6778e6b922f15baa5cc75",
+  "incremental_base": "eea3519d9da0b83cb10f7bb9a6f0223775c73819",
+  "owner": {
+    "session": "v6-w4w6",
+    "account": "codex1",
+    "thread": "01a15382-68eb-7093-b677-040c9b45767f",
+    "worktree": "/home/dw/Projects/agent-sts2/.worktrees/v6-card-criteria-20261021",
+    "task": "Claude 04:2x / 05:4x criteria and B cache continuation"
+  },
+  "dependencies": [
+    "024612ef747f63d4a86eb6f57ff2d39f78795d5e",
+    "eea3519d9da0b83cb10f7bb9a6f0223775c73819"
+  ],
+  "source_manifest": {
+    "path": "checks/source-manifest.json",
+    "sha256": "88ef9d3f041d5d871b82d137d64f50316540c974ad450aa1de2c68679878b4ab"
+  },
+  "patches": [
+    {
+      "path": "checks/minimal-source.patch",
+      "sha256": "20848abe54b8fa4493c7d05a3cdcd6fa7c88feb81a5a7a8e3caa469ff63eeb85"
+    },
+    {
+      "path": "checks/cumulative-source.patch",
+      "sha256": "2474ae2867c5888e80645903b8d65ea64e6b934907fad2e5ad1888df94cc54cd"
+    }
+  ],
+  "transport_check": {
+    "path": "checks/transport-check.json",
+    "sha256": "ed7d08db32265319409382a3ec4740e303e50b612edae916dcefe4231629b099",
+    "apply_check": 0,
+    "all_source_blobs_match": true
+  },
+  "source_paths": 11,
+  "incremental_source_paths": 9,
+  "checks": [
+    {
+      "name": "tsc-r2",
+      "exit": 0,
+      "exit_sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "directed-final-r2",
+      "exit": 0,
+      "exit_sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+      "log_sha256": "dd791e256f43472e2319762ae9dbf1e3362014fb3ac0252926377cdadf691a01"
+    },
+    {
+      "name": "budget-directed-r2",
+      "exit": 0,
+      "exit_sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+      "log_sha256": "dd1dc5c9505804924f088cf3e7875502e3dc38e65abafdbf5a5b28661b75b442"
+    },
+    {
+      "name": "warm-replay-r1",
+      "exit": 0,
+      "exit_sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+      "log_sha256": "f9f162327c021e2bf571196ac0446b53d48ae91f2e51e5800d8ac8b3e3f602c7"
+    },
+    {
+      "name": "format-replay-r2",
+      "exit": 0,
+      "exit_sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+      "log_sha256": "16c65f7b2c29c73431f2b944db6034b16eae4e3f1189307efed90a85a4a83372"
+    },
+    {
+      "name": "gitleaks-source",
+      "exit": 0,
+      "exit_sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+      "log_sha256": "dafd6e6a747d4e1f02eb1c119f1130f9acdcb1dd4b8ecf911134b8bf57c325fd"
+    },
+    {
+      "name": "gitleaks-cumulative",
+      "exit": 0,
+      "exit_sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+      "log_sha256": "c08dd1fea13ec4f0e73d7b492cc4379696c5d1ee8bdec12742d69c88fc08e708"
+    },
+    {
+      "name": "gitleaks-unpacked",
+      "exit": 0,
+      "exit_sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+      "log_sha256": "77eeb1826e22d74c6fbd37356cbd6cd69d209e41094af59865445b5420c125ab"
+    }
+  ],
+  "check_scope": {
+    "tsc": 0,
+    "targeted_files": 7,
+    "targeted_tests": 96,
+    "budget_targeted_files": 2,
+    "budget_targeted_tests": 38,
+    "full_run": false,
+    "full_owner": "ops actual-live joint candidate only"
+  },
+  "frozen_results": {
+    "F6": {
+      "stored_rows": 52,
+      "numeric_rows": 43,
+      "numeric_cores": 14,
+      "cores": 17,
+      "numeric_row_n": 2,
+      "foreground_A_and_original_format_ms": 5096.401675
+    },
+    "F7": {
+      "stored_rows": 38,
+      "numeric_rows": 32,
+      "numeric_cores": 14,
+      "cores": 17,
+      "numeric_row_n": 2,
+      "foreground_A_and_original_format_ms": 4438.259467
+    }
+  },
+  "release_constraints": {
+    "V6_CARD_DECIDER": "brain",
+    "P2": "paused",
+    "Roy_decides_jev": true,
+    "main_ff": false,
+    "live_modified": false,
+    "knowledge_modified": false,
+    "game_actions": false,
+    "new_Nova_requests": 0
+  },
+  "limitations": [
+    "F6 exceeds 5000ms foreground goal; do not call all latency acceptance passed.",
+    "B numeric rows all have n=2 and partial target coverage; not calibrated or candidate-ranking quality evidence.",
+    "New B packing has no new Nova request acceptance; prior 16 accepted requests cover 024612ef7 only.",
+    "Old three residual mean-ranking disagreements are not all five-metric strict dominance; raw Nova receipts contain no natural-language reasons.",
+    "Do not transport whole parent/main/805; preserve parallel runtime and knowledge leaves."
+  ],
+  "frozen_manifest": {
+    "path": "checks/frozen-manifest.json",
+    "sha256": "e8e8228b6ffb46549571ac12439afbd5dfbd87ffcc31d0feb2ddac2c9a99a779"
+  },
+  "generated_at": "2026-10-21T06:26:25.181920+08:00"
+}

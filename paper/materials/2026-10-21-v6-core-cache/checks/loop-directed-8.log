@@ -1,0 +1,171 @@
+
+ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/v6-card-criteria-20261021/agent
+
+stdout | tests/v6-card-option-loop.test.ts > warms numeric B through the real brain reward loop without a separate request or foreground B fill
+B-debug H1 idle preparation: {"status":"unknown","reason":"next_solver_input_not_observed_or_not_ready","budget_ms":1}
+
+stdout | tests/v6-card-option-loop.test.ts > warms numeric B through the real brain reward loop without a separate request or foreground B fill
+B-debug boss sim on reward/card: 2 samples per option, 301 ms
+
+stdout | tests/v6-card-option-loop.test.ts > warms numeric B through the real brain reward loop without a separate request or foreground B fill
+B-debug V5 construction shadow: missing_evidence, evaluation=absent, probability=absent, 0 ms
+
+stdout | tests/v6-card-option-loop.test.ts > warms numeric B through the real brain reward loop without a separate request or foreground B fill
+B-debug DeepSeek decides reward/card (4 options, floor 2, run context 9449 chars)
+
+stdout | tests/v6-card-option-loop.test.ts > warms numeric B through the real brain reward loop without a separate request or foreground B fill
+B-debug DeepSeek (0.0 s) reward/card: card0 — fake reason for card0
+
+ ❯ tests/v6-card-option-loop.test.ts (4 tests | 1 failed | 3 skipped) 1132ms
+   × warms numeric B through the real brain reward loop without a separate request or foreground B fill 1129ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/v6-card-option-loop.test.ts > warms numeric B through the real brain reward loop without a separate request or foreground B fill
+AssertionError: expected "ask" to not be called at all, but actually been called 1 times
+
+Received:
+
+  1st ask call:
+
+    Array [
+      Object {
+        "direction": "uncommitted",
+        "facts": Array [
+          Object {
+            "card": "DODGE_AND_ROLL",
+            "core": null,
+            "dilution": Object {
+              "added_slot_fraction": 0.07142857142857142,
+              "deck_after": 14,
+              "deck_before": 13,
+              "functional_draw_or_damage_effect": "unknown",
+            },
+            "key": "card0",
+            "next_boss_trust": "low_trust",
+            "next_boss_win_delta": Object {
+              "mean": 0,
+              "se": 0,
+            },
+            "support": null,
+            "support_observations": Array [],
+            "support_reason": "no_committed_core",
+            "target_S_delta_record_only": null,
+            "target_win_delta": null,
+            "template_membership": Array [],
+          },
+          Object {
+            "card": "ESCAPE_PLAN",
+            "core": null,
+            "dilution": Object {
+              "added_slot_fraction": 0.07142857142857142,
+              "deck_after": 14,
+              "deck_before": 13,
+              "functional_draw_or_damage_effect": "unknown",
+            },
+            "key": "card1",
+            "next_boss_trust": "low_trust",
+            "next_boss_win_delta": Object {
+              "mean": 0,
+              "se": 0,
+            },
+            "support": null,
+            "support_observations": Array [],
+            "support_reason": "no_committed_core",
+            "target_S_delta_record_only": null,
+            "target_win_delta": null,
+            "template_membership": Array [],
+          },
+          Object {
+            "card": "ANTICIPATE",
+            "core": null,
+            "dilution": Object {
+              "added_slot_fraction": 0.07142857142857142,
+              "deck_after": 14,
+              "deck_before": 13,
+              "functional_draw_or_damage_effect": "unknown",
+            },
+            "key": "card2",
+            "next_boss_trust": "low_trust",
+            "next_boss_win_delta": Object {
+              "mean": 0,
+              "se": 0,
+            },
+            "support": null,
+            "support_observations": Array [],
+            "support_reason": "no_committed_core",
+            "target_S_delta_record_only": null,
+            "target_win_delta": null,
+            "template_membership": Array [],
+          },
+          Object {
+            "card": null,
+            "core": false,
+            "dilution": Object {
+              "added_slot_fraction": 0,
+              "deck_after": 13,
+              "deck_before": 13,
+              "functional_draw_or_damage_effect": "unknown",
+            },
+            "key": "skip",
+            "next_boss_trust": "low_trust",
+            "next_boss_win_delta": Object {
+              "mean": 0,
+              "se": 0,
+            },
+            "support": false,
+            "support_observations": Array [],
+            "support_reason": "skip_adds_no_card",
+            "target_S_delta_record_only": null,
+            "target_win_delta": null,
+            "template_membership": Array [],
+          },
+        ],
+        "limits": "Raw simulation and MC errors exclude model error. S is diagnostic only; do not rank by S.",
+        "missing": Array [],
+        "plan_status": "missing",
+        "prior_plan_preferences": Object {
+          "avoid": Array [],
+          "take": Array [],
+        },
+        "ranking": Object {
+          "basis": "defer_to_brain",
+          "confidence": "unknown",
+          "first": null,
+        },
+        "unknown": "Unknown is missing evidence, never zero. A null card ID is the skip option. A null module first means defer to the brain, not skip. An uncommitted direction is not a preference for skipping.",
+      },
+      Object {
+        "card": Object {
+          "criteria": Object {
+            "card0": "DODGE_AND_ROLL",
+            "card1": "ESCAPE_PLAN",
+            "card2": "ANTICIPATE",
+            "skip": "Skip: add no card.",
+          },
+          "instructions": "Choose one offered card or skip for the stated direction. Use only supplied facts; do not calculate or infer missing scores. This is shadow: the brain still makes the real choice.",
+          "type": "choice",
+        },
+      },
+      1000,
+    ]
+
+
+Number of calls: 1
+
+ ❯ tests/v6-card-option-loop.test.ts:192:58
+    190|     await Promise.race([completed, new Promise((_, reject) => setTimeo…
+    191|     expect(stats, notes.join("\n")).toMatchObject({ decisions: 1, deep…
+    192|     expect(brain.calls).toHaveLength(1); expect(ask).not.toHaveBeenCal…
+       |                                                          ^
+    193|     expect(foreground).not.toHaveBeenCalled();
+    194|     const snapshot = runtime.peekCompletedCore(lastEnv);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 3 skipped (4)
+   Start at  06:07:43
+   Duration  4.00s (transform 2.26s, setup 320ms, import 2.40s, tests 1.13s, environment 0ms)
+

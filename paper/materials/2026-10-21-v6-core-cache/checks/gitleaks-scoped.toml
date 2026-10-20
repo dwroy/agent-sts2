@@ -1,0 +1,23 @@
+title = "V6 criteria frozen run-floor false positives only"
+[extend]
+useDefault = true
+
+[[allowlists]]
+description = "Exact independently verified frozen run-floor labels, not credentials"
+regexTarget = "secret"
+regexes = [
+  '''^7XS2Y920KA6E\-f6$''',
+  '''^7XS2Y920KA6E\-f7$''',
+  '''^9ZERN492CSHX\-f2$''',
+  '''^9ZERN492CSHX\-f3$''',
+  '''^9ZERN492CSHX\-f5$''',
+  '''^9ZERN492CSHX\-f6$''',
+  '''^JPWMMV67SZCL\-f11$''',
+  '''^JPWMMV67SZCL\-f12$''',
+  '''^JPWMMV67SZCL\-f15$''',
+  '''^JPWMMV67SZCL\-f2$''',
+  '''^JPWMMV67SZCL\-f3$''',
+  '''^JPWMMV67SZCL\-f4$''',
+  '''^JPWMMV67SZCL\-f8$''',
+  '''^JPWMMV67SZCL\-f9$''',
+]

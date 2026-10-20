@@ -5490,3 +5490,7 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
 - 2026-10-21 05:58:39 CST 原ops核051301-s2原宿主唯一静态启动，tsc0/full2560147、treeeaec4345/2394输入54d20513/498知识同；原三叶+W0两测试隔离，不夹criteria/B/P4/014301/805。仅静态来源核验，不查动态/改输入/叠full；保沙箱8败、十waiting/0546 proposed，不认完整绿或发布，R408 brain/off不动。原件paper/materials/20261021-0557-ops/receipt.json。
 
 - 2026-10-21 06:22:45 CST 原ops核051301-s2宿主tsc0/full1=628文件过1败/5935项过1败2跳，唯一card摘要17.613s越原5s，treeeaec4345/2394输入54d20513同且原PID退/窗口释放。原阈值候选/撤唯一生产叶各三例绿，冷183.8/241.2ms，九组状态hash/请求字节同，finally输入恢复；原full慢因仍unknown，不据定向放行或重未变源full，报watcher/Claude接续，R408 brain/off不动。原件paper/materials/20261021-0620-ops/receipt.json。
+
+- 2026-10-21 06:31:26 CST 原ops实读W4 9805累计11叶/70材料/3gz，R408前像与累计后像核同；原11+W0两测试唯一runner2657047提交原锁准入，尚未核full启动，不夹士兵/P4/014301/父/main/805。原96/预算38定向非联合绿，B43/32行n2部分覆盖、F6旧同次5096ms超5s、新B未Nova/不补造理由等限制保留。按Claude05:4x绿后边界集成仍CARDbrain，jev等Roy，REFLEXoff/P2暂停。原件paper/materials/20261021-W4-core-cache-joint-ops/receipt.json。
+
+- 2026-10-21 06:26:31 CST W4 B缓存：正式源9805c160f（9增量/11累计叶，父eea3519d9，含024612ef7依赖）把B准备接入原大脑/小脑等待、按完整有效开场复用样本并保纯getter指纹门，criteria在24KB内保17组合目录/A及有值B；旧12题238行全insufficient、89 opening/42前提标签重叠，149已准备零样本属调度预算问题。真实F6/F7生产提供方离线回放B数值43/32行、14/17组合且均n2，前台F6 5096.40ms仍超5s；纯格式23882/23871B。tsc0、96定向及38预算专项过、源码/解压扫描0；旧3题是三均值诊断而非五指标含误差严格支配，无文字理由不代推。与0246及精度eea一起交ops唯一实际live联合full，未自开full/改main或live/知识/发新Nova；CARD保持brain等Roy，P2暂停。材料paper/materials/2026-10-21-v6-core-cache/。

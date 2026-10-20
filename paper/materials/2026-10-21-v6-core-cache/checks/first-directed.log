@@ -1,0 +1,90 @@
+
+ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/v6-card-criteria-20261021/agent
+
+ ❯ tests/v6-card-option-loop.test.ts (4 tests | 1 failed) 9014ms
+   × warms numeric B through the real brain reward loop without a separate request or foreground B fill 18ms
+ ❯ tests/v6-card-results.test.ts (21 tests | 2 failed) 114ms
+   × samples B before preparing all targets and rotates interrupted slices without losing cached rows 13ms
+   × samples a B core before constructing all 17 cold openings and resumes the next core 7ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 3 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/v6-card-option-loop.test.ts > warms numeric B through the real brain reward loop without a separate request or foreground B fill
+TypeError: brain?.onNote is not a function
+ ❯ runLoopWithBudgets src/hand/loop.ts:435:10
+
+ ❯ src/hand/loop.ts:288:46
+ ❯ withDecisionBudget src/core/decision-budget.ts:68:103
+ ❯ Module.runLoop src/hand/loop.ts:288:10
+ ❯ tests/v6-card-option-loop.test.ts:175:25
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/3]⎯
+
+ FAIL  tests/v6-card-results.test.ts > samples B before preparing all targets and rotates interrupted slices without losing cached rows
+AssertionError: expected [ [ 'future2', 2 ], [ 'future3', 10 ] ] to deeply equal [ [ 'future2', 2 ], [ 'future3', 2 ] ]
+
+- Expected
++ Received
+
+@@ -3,8 +3,8 @@
+      "future2",
+      2,
+    ],
+    [
+      "future3",
+-     2,
++     10,
+    ],
+  ]
+
+ ❯ tests/v6-card-results.test.ts:88:6
+     86|   await engine.precompute(r, context, 100, next.signal);
+     87|   expect((await engine.evaluate(r, context, 0)).long_term.map(row => […
+     88|     .toEqual([["future2", 2], ["future3", 2]]);
+       |      ^
+     89| });
+     90| it("samples a B core before constructing all 17 cold openings and resu…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/3]⎯
+
+ FAIL  tests/v6-card-results.test.ts > samples a B core before constructing all 17 cold openings and resumes the next core
+AssertionError: expected [ [ 'D0:minimal', 2 ], …(4) ] to deeply equal [ [ 'D0:minimal', 2 ], …(2) ]
+
+- Expected
++ Received
+
+@@ -7,8 +7,16 @@
+      "D1:minimal",
+      2,
+    ],
+    [
+      "D2:minimal",
+-     0,
++     2,
++   ],
++   [
++     "D3:minimal",
++     2,
++   ],
++   [
++     "D4:minimal",
++     2,
+    ],
+  ]
+
+ ❯ tests/v6-card-results.test.ts:100:6
+     98|   await engine.precompute(r, context, 35);
+     99|   expect((await engine.evaluate(r, context, 0)).long_term.map(row => […
+    100|     .toEqual([["D0:minimal", 2], ["D1:minimal", 2], ["D2:minimal", 0]]…
+       |      ^
+    101|   expect(engine.peekCompletedCore(context.fingerprint)![2]!.unknown_re…
+    102| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/3]⎯
+
+
+ Test Files  2 failed | 1 passed (3)
+      Tests  3 failed | 36 passed (39)
+   Start at  05:58:45
+   Duration  13.56s (transform 2.41s, setup 447ms, import 3.02s, tests 9.74s, environment 0ms)
+

@@ -1,0 +1,51 @@
+
+ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/v6-card-criteria-20261021/agent
+
+ ❯ tests/v6-prompt-summary.test.ts (14 tests | 1 failed) 4205ms
+   × preserves every A elite and all 17 B core identities with a realistic 204-row cached target grid 193ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/v6-prompt-summary.test.ts > preserves every A elite and all 17 B core identities with a realistic 204-row cached target grid
+AssertionError: expected [] to deeply equal [ 'D-flask-sweep', …(16) ]
+
+- Expected
++ Received
+
+- [
+-   "D-flask-sweep",
+-   "D-fumes-backflip",
+-   "D-observed-union-fbc4b776",
+-   "D-toxin-backflip",
+-   "P-flask-afterimage",
+-   "P-flask-footwork",
+-   "P-fumes-footwork",
+-   "P-mixed-defense",
+-   "P-toxin-footwork",
+-   "P-toxin-mirage",
+-   "R-acro-bandages",
+-   "R-acro-tingsha",
+-   "R-tools-tingsha",
+-   "S-cloak-phantom",
+-   "S-dance-accuracy",
+-   "S-dance-afterimage",
+-   "S-observed-union-35f60a95",
+- ]
++ []
+
+ ❯ tests/v6-prompt-summary.test.ts:272:38
+    270|   expect(size({ model: "typesafe/jev-1.14", state: d.state, questions:…
+    271|   const kept = asArray(d.state.core_metrics).map(asRecord), catalog = …
+    272|   expect(kept.map(c => c.id).sort()).toEqual(combos.map(c => c.combo.i…
+       |                                      ^
+    273|   expect(new Set(kept.map(c => c.direction))).toEqual(new Set(summarie…
+    274|   for (const combo of kept) {
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed | 6 passed (7)
+      Tests  1 failed | 82 passed (83)
+   Start at  06:10:16
+   Duration  26.52s (transform 2.60s, setup 681ms, import 5.24s, tests 19.77s, environment 1ms)
+

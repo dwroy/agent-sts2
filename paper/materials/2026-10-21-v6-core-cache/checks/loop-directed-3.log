@@ -1,0 +1,27 @@
+
+ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/v6-card-criteria-20261021/agent
+
+ ❯ tests/v6-card-option-loop.test.ts (4 tests | 1 failed | 3 skipped) 15022ms
+   × warms numeric B through the real brain reward loop without a separate request or foreground B fill 15020ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/v6-card-option-loop.test.ts > warms numeric B through the real brain reward loop without a separate request or foreground B fill
+Error: Test timed out in 15000ms.
+If this is a long-running test, pass a timeout value as the last argument or configure it globally with "testTimeout".
+ ❯ tests/v6-card-option-loop.test.ts:149:1
+    147|   }, 15_000);
+    148|
+    149| it("warms numeric B through the real brain reward loop without a separ…
+       | ^
+    150|   const root = fixture(true); vi.stubEnv("V6_CARD_DECIDER", "brain");
+    151|   const knowledge = makeKnowledge(frozen.knowledge_fixture, "cache");
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 3 skipped (4)
+   Start at  06:02:15
+   Duration  18.91s (transform 3.10s, setup 362ms, import 3.37s, tests 15.02s, environment 0ms)
+
