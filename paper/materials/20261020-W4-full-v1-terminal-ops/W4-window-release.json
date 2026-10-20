@@ -1,0 +1,71 @@
+{
+  "checked_at": "2026-10-20T09:07:48.295975+00:00",
+  "source_receipt": "/home/dw/Projects/agent-sts2/.worktrees/v6-card-combat-results-20261020/.artifacts/full-final-card-v1/receipt.json",
+  "base_commit": "5cd435c4b282f3f5b73eefe54e34ea0530e00e40",
+  "fixed_tree": "9ed4b5e5de48ea385df9454bebb7cca368280312",
+  "input_sha256": "21a6f7e2bd8c37679e882c82a099d7f81f4c8d594280c47f73a94b8c3cb66093",
+  "input_unchanged": true,
+  "steps": [
+    {
+      "name": "tsc",
+      "command": [
+        "npx",
+        "tsc",
+        "-p",
+        "tsconfig.json",
+        "--noEmit"
+      ],
+      "started_at": "2026-10-20T08:42:29.900232+00:00",
+      "log": "/home/dw/Projects/agent-sts2/.worktrees/v6-card-combat-results-20261020/.artifacts/full-final-card-v1/tsc.log",
+      "pid": 65496,
+      "exit_code": 0,
+      "ended_at": "2026-10-20T08:42:31.055063+00:00",
+      "seconds": 1.1548262750729918,
+      "log_bytes": 0,
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "full",
+      "command": [
+        "npx",
+        "vitest",
+        "run",
+        "--maxWorkers=1"
+      ],
+      "started_at": "2026-10-20T08:42:31.055337+00:00",
+      "log": "/home/dw/Projects/agent-sts2/.worktrees/v6-card-combat-results-20261020/.artifacts/full-final-card-v1/full.log",
+      "pid": 65597,
+      "exit_code": 1,
+      "ended_at": "2026-10-20T09:07:13.978695+00:00",
+      "seconds": 1482.9233570361976,
+      "log_bytes": 1476,
+      "log_sha256": "931c34347d11987fea9a49b879f37037eda2ce912163485280b85f7c19438996"
+    }
+  ],
+  "known_pids": [
+    {
+      "pid": 65082,
+      "exists": false
+    },
+    {
+      "pid": 65496,
+      "exists": false
+    },
+    {
+      "pid": 65597,
+      "exists": false
+    },
+    {
+      "pid": 65610,
+      "exists": false
+    },
+    {
+      "pid": 65611,
+      "exists": false
+    }
+  ],
+  "remaining_own_check_processes": [],
+  "window_released": true,
+  "next_owner": "sts2-watcher infra repaired full",
+  "second_full_started": false
+}

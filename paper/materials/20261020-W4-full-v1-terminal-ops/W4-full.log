@@ -1,0 +1,35 @@
+
+ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/v6-card-combat-results-20261020/agent
+
+ ❯ tests/rollout.test.ts (86 tests | 1 failed) 3447ms
+     × keeps rollout and construction simulation imports at their explicit consumer boundaries 105ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/rollout.test.ts > rollout (offline) > keeps rollout and construction simulation imports at their explicit consumer boundaries
+AssertionError: expected [ 'src/v6/card-results-input.ts' ] to deeply equal []
+
+- Expected
++ Received
+
+- []
++ [
++   "src/v6/card-results-input.ts",
++ ]
+
+ ❯ tests/rollout.test.ts:439:103
+    437|     expect(importers("(sim/)?boss-sim").filter((path) => !path.startsW…
+    438|     expect(importers("(sim/)?boss-lines").filter((path) => !path.start…
+    439|     expect(importers("(sim/)?(boss-start|build-sim)").filter((path) =>…
+       |                                                                                                       ^
+    440|     expect(importers("(sim/)?build-sim-facts").filter((path) => !path.…
+    441|     expect(importers("(sim/)?build-sim-pool").filter((path) => !path.s…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed | 624 passed (625)
+      Tests  1 failed | 5905 passed | 2 skipped (5908)
+   Start at  16:42:31
+   Duration  1482.19s (transform 17.88s, setup 35.46s, import 123.68s, tests 1238.00s, environment 64ms)
+

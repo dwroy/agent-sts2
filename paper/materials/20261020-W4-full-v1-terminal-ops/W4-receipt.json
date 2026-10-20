@@ -1,0 +1,70 @@
+{
+  "started_at": "2026-10-20T08:42:29.893843+00:00",
+  "runner_pid": 65082,
+  "runner_start_ticks": "137769105",
+  "base_commit": "5cd435c4b282f3f5b73eefe54e34ea0530e00e40",
+  "main_at_start": "5cd435c4b282f3f5b73eefe54e34ea0530e00e40",
+  "fixed_tree": "9ed4b5e5de48ea385df9454bebb7cca368280312",
+  "nice": 19,
+  "tmpdir": "/home/dw/Projects/agent-sts2/.t/w4c",
+  "input_count": 2453,
+  "input_sha256": "21a6f7e2bd8c37679e882c82a099d7f81f4c8d594280c47f73a94b8c3cb66093",
+  "changed_sources": {
+    "agent/src/hand/loop.ts": "2560fa58831b3a968f49d20e914c9df21dafdc70d30c164e4309ab2298b725ce",
+    "agent/src/memory/types.ts": "cd6d80eeec360bb783075e90690e7bdcea7d4bc0fc21992a847a2fae183e4fbd",
+    "agent/src/v6/card-pick.ts": "3e550f2f141ffa95dc5e4fda4ace28562836e35dacb3dcf4b19250f7c83e4aff",
+    "agent/src/v6/construction-safety.ts": "95b8a3bc0b09c5566a0d422496f2c8afedc88bfcaeca9d1ce7009b5b9b57cec9",
+    "agent/src/v6/direction-runtime.ts": "5bb31f464ecfd571de738bff18812d51cbbbff0ca829005d8f71af71004dc106",
+    "agent/src/v6/projection-runtime.ts": "70d70a7a4ae986f1a9a050562463f15cf139362325984fb4f8490d6c1742bb32",
+    "agent/src/v6/prompt-summary.ts": "6efe108b86d5b0768e66a0153aaed01030f505683a5b53ca8fb44c2681dbfe1d",
+    "agent/tests/v6-card-pick.test.ts": "92a28b42368b94e83653bfbc46b03192a6fe87e5d509c0f950f80293d3b49c31",
+    "agent/tests/v6-construction-safety.test.ts": "76881f83ef8b9ab56ac2c34f0b250480e49955ff015a94a668f3f72ef10a2b98",
+    "agent/tests/v6-direction-runtime.test.ts": "76b63c104c45dd79fed0a8d43ae9e56ac08218f353fc29005005a5cf0214a918",
+    "agent/tests/v6-projection-runtime.test.ts": "6ad639cb03b9a2fb6e261859136814240e5a3c363100811f8c5bcc6585657e7c",
+    "agent/tests/v6-prompt-summary.test.ts": "56586cfa8b094261783221e48dd41d945d3e202db0b9c96aaf1379a4766c8fd3",
+    "agent/src/sim/v6-card-results.ts": "77992929039c245405af773f3b6697fc4afb58ac0e62b6e766feedbaa1a336af",
+    "agent/src/v6/card-results-input.ts": "e97693610a7a0f71eb21df7d2f7d624576ce47f2d4cd66ab9fd45e98f4165de4",
+    "agent/tests/v6-card-results.test.ts": "a1874b6d692db37d104c8fc1d48e0c111ada489ac3bff89ae7c22f0ef4a1dcce",
+    "agent/tests/v6-card-results-input.test.ts": "77ed0ab58f41960ab3c8aa1a947dd0714cd7f829792a67b1efd8eb770e23b54d"
+  },
+  "steps": [
+    {
+      "name": "tsc",
+      "command": [
+        "npx",
+        "tsc",
+        "-p",
+        "tsconfig.json",
+        "--noEmit"
+      ],
+      "started_at": "2026-10-20T08:42:29.900232+00:00",
+      "log": "/home/dw/Projects/agent-sts2/.worktrees/v6-card-combat-results-20261020/.artifacts/full-final-card-v1/tsc.log",
+      "pid": 65496,
+      "exit_code": 0,
+      "ended_at": "2026-10-20T08:42:31.055063+00:00",
+      "seconds": 1.1548262750729918,
+      "log_bytes": 0,
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "full",
+      "command": [
+        "npx",
+        "vitest",
+        "run",
+        "--maxWorkers=1"
+      ],
+      "started_at": "2026-10-20T08:42:31.055337+00:00",
+      "log": "/home/dw/Projects/agent-sts2/.worktrees/v6-card-combat-results-20261020/.artifacts/full-final-card-v1/full.log",
+      "pid": 65597,
+      "exit_code": 1,
+      "ended_at": "2026-10-20T09:07:13.978695+00:00",
+      "seconds": 1482.9233570361976,
+      "log_bytes": 1476,
+      "log_sha256": "931c34347d11987fea9a49b879f37037eda2ce912163485280b85f7c19438996"
+    }
+  ],
+  "ended_at": "2026-10-20T09:07:14.129783+00:00",
+  "input_unchanged": true,
+  "after_input_sha256": "21a6f7e2bd8c37679e882c82a099d7f81f4c8d594280c47f73a94b8c3cb66093"
+}

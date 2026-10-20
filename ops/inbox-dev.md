@@ -4515,3 +4515,7 @@ request_id=roy-20261017-human-pace-h0 revision=3 input_sha256=1e1c259a15f1824119
 
 2026-10-20T16:57:42+08:00 已核本批工作树仍5cd基线且源码、暂存区和产品未跟踪项均干净，source.diff为空，无新增实现、提交或待兜底合入。64项中39个现存修复提交均为main祖先，138个当前源文件SHA核同，另25项按原策略、专项owner或缺证边界保留，不据窄修复关闭宽父。live归属分开核：33项为源码祖先，三项协议修复虽无原提交祖先却已精确运输64，四个实际协议文件main/live字节一致；另外三项旧工具继续原114302运输待办，不冒全量已上线。测试仅tsc0与六文件14项定向并集：默认配置EROFS零用例、首次13过1超时均保留，原15秒限制只重跑失败项后通过；日志SHA逐项核同，不报full0。调度器原failed/rc0/mergednull保留，无生产dataset或未变源补测，不重复实现、派模型或改队列/账本。W4当前唯一full及infra后序不动，本轮未查在途；live、actor、STOP、805暂缓、Regent暂停与角色ACK均保持。
 原件 paper/materials/20261020-1655-ops/receipt.json；verification.json；原report.md及测试日志。
+
+
+2026-10-20T17:09:16+08:00 已原生实收并独立核W4首轮终局：固定5cd/tree9ed4、2453输入SHA21a6前后manifest逐字节相同；tsc0/full1，625文件624过1败、5905项过1败2原跳。唯一失败为rollout第439行精确消费者导入白名单多出card-results-input，full日志SHA核同，原失败与未修受测输入保留，不用tsc或既有定向冒全绿。Vitest耗时1482.19秒、包装器1482.923秒分别记录，未混口径。runner、tsc、full及两已知node共五PID实际均不存在，原工作树无残留检查进程；已沿原线程明确交唯一full窗口给watcher infra，要求核最新实际输入、保六未跟踪原叶、原阈值单worker检查，CLI入队不冒已经启动。W4只沿原任务做断言修正和原授权烟测，修后最终full排infra自然终局核退出并明确释放之后，不重复派任务或叠检查。本轮未改代码、知识、预算或阈值，不做dataset、刷新、模型/API、合入或对局操作；未提交/运live的新拿牌条目仍pending，805暂缓与Regent暂停保持。
+原件 paper/materials/20261020-W4-full-v1-terminal-ops/receipt.json；verification.json；W4-full.log。

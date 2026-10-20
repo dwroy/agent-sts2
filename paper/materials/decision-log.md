@@ -5210,3 +5210,5 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
 - 2026-10-20T16:46:53+08:00 ops：记录W4 owner16:46在途rollout导入allowlist断言失败报告，固定5cd/tree9ed4输入不动，不查日志/进程或改源；待自然终局核退出明确交infra，修后完整复验另排。原件 paper/materials/20261020-W4-1646-ops/receipt.json。
 
 - 2026-10-20T16:57:42+08:00 ops：164301-fix无新增源，39既有main子项/138源SHA核同，25保留；live祖先与已运三协议精确叶分列，三旧工具仍pending；只认定向14项，EROFS/超时旧失败保留，不重full/dataset/合入。原件 paper/materials/20261020-1655-ops/verification.json。
+
+- 2026-10-20T17:09:16+08:00 ops：W4v1固定输入首轮tsc0/full1（625文件624过1败/5905过1败2跳），唯一rollout消费者白名单失败保留；五PID实际退出后明交infra唯一full窗，W4修后最终full后排。未改源/运live/启模型。原件 paper/materials/20261020-W4-full-v1-terminal-ops/verification.json。
