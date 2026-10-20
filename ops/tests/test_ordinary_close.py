@@ -88,6 +88,165 @@ class OrdinaryClose(unittest.TestCase):
         self.assertEqual(self.receipt()["records"]["commit"], self.receipt("20261018-170001")["records"]["commit"])
         self.assertEqual((self.root / "dataset.counter").read_text(), "1")
 
+    def test_candidate_source_failure_does_not_poison_valid_peer(self):
+        self.assertTrue(self.offer())
+        self.assertTrue(self.offer("20261018-170001"))
+        path = self.directory / "ordinary-close/20261018-170000.json"
+        row = self.receipt()
+        row["original_batch"]["ordinary_baseline"]["head"] = "0" * 40
+        ops_current.save(path, row)
+        self.process()
+        self.assertEqual(self.receipt()["state"], "attention")
+        good = self.receipt("20261018-170001")
+        self.assertEqual(good["state"], "closed", good)
+        self.assertEqual(self.git("rev-parse", "HEAD"), good["records"]["commit"])
+        self.assertEqual((self.root / "dataset.counter").read_text(), "1")
+        self.assertEqual(len(self.events), 1)
+        records = [json.loads(line) for line in (self.root / "paper/materials/ordinary-completions.jsonl").read_text().splitlines()]
+        self.assertEqual([record["batch"] for record in records], ["20261018-170001"])
+        self.process()
+        self.assertEqual((self.root / "dataset.counter").read_text(), "1")
+        self.assertEqual(len(self.events), 1)
+
+    def test_predataset_attention_reenters_original_guards_with_failure_history(self):
+        self.assertTrue(self.offer())
+        path = self.directory / "ordinary-close/20261018-170000.json"
+        old = self.receipt()
+        old.update(state="attention", reason="original group source drift", finished="fixed original time",
+                   event={"id": "original-event"}, ops_event_enqueued=True)
+        ops_current.save(path, old)
+        self.process()
+        row = self.receipt()
+        self.assertEqual(row["state"], "closed", row)
+        self.assertEqual(row["attempt_history"], [old])
+        self.assertEqual(row["original_batch"], old["original_batch"])
+        self.assertEqual(row["report"], old["report"])
+        self.assertEqual((self.root / "dataset.counter").read_text(), "1")
+        self.assertEqual(self.events, [])
+        self.process()
+        self.assertEqual((self.root / "dataset.counter").read_text(), "1")
+
+    def test_predataset_reentry_preserves_all_original_guards_and_does_not_repeat_wakes(self):
+        for guard in ("source", "report", "ledger", "notice"):
+            with self.subTest(guard=guard):
+                batch_id = "guard-" + guard
+                self.assertTrue(self.offer(batch_id))
+                path = self.directory / f"ordinary-close/{batch_id}.json"
+                row = self.receipt(batch_id)
+                row.update(state="attention", reason="original failure", event="original-event", ops_event_enqueued=True)
+                if guard == "source":
+                    row["original_batch"]["ordinary_baseline"]["head"] = "0" * 40
+                elif guard == "report":
+                    row["proof"]["report_sha256"] = "0" * 64
+                elif guard == "ledger":
+                    row["runs"] = ["MISSING00001"]
+                else:
+                    ops_current.save(self.directory / "learning-notices/new.json", {"kind": "disagreement"})
+                ops_current.save(path, row)
+                original = path.read_bytes()
+                self.process()
+                self.process()
+                self.assertEqual(path.read_bytes(), original)
+                self.assertFalse((self.root / "dataset.counter").exists())
+                self.assertEqual(self.events, [])
+                path.unlink()
+
+    def test_interrupted_candidate_does_not_block_peer_and_never_retries_dataset(self):
+        self.assertTrue(self.offer())
+        self.assertTrue(self.offer("20261018-170001"))
+        path = self.directory / "ordinary-close/20261018-170000.json"
+        row = self.receipt()
+        row["state"] = "running"
+        ops_current.save(path, row)
+        self.process()
+        self.assertEqual(self.receipt()["state"], "attention")
+        self.assertEqual(self.receipt("20261018-170001")["state"], "closed")
+        self.process()
+        self.assertEqual(self.receipt()["state"], "attention")
+        self.assertEqual((self.root / "dataset.counter").read_text(), "1")
+        self.assertEqual(len(self.events), 1)
+
+    def test_any_dataset_side_effect_marker_prevents_attention_reentry(self):
+        self.assertTrue(self.offer())
+        path = self.directory / "ordinary-close/20261018-170000.json"
+        original = self.receipt()
+        for marker in ("started", "dataset_attempts", "dataset", "records", "log"):
+            with self.subTest(marker=marker):
+                row = {**original, "state": "attention", "reason": "original interrupted close"}
+                log = path.with_suffix(".dataset.log")
+                if marker == "log":
+                    log.write_text("original partial output")
+                else:
+                    row[marker] = None
+                ops_current.save(path, row)
+                raw = path.read_bytes()
+                self.process()
+                self.assertEqual(path.read_bytes(), raw)
+                self.assertFalse((self.root / "dataset.counter").exists())
+                self.assertEqual(self.events, [])
+                log.unlink(missing_ok=True)
+
+    def test_postdataset_candidate_failure_is_isolated_and_never_replayed(self):
+        self.assertTrue(self.offer())
+        self.assertTrue(self.offer("20261018-170001"))
+        real_check = close.eligible
+        checked = []
+
+        def check(root, directory, batch, report):
+            checked.append(report["report"])
+            if (self.root / "dataset.counter").exists() and batch.get("fail_after_dataset"):
+                raise ValueError("fixed late candidate failure")
+            return real_check(root, directory, batch, report)
+
+        path = self.directory / "ordinary-close/20261018-170000.json"
+        row = self.receipt()
+        row["original_batch"]["fail_after_dataset"] = True
+        ops_current.save(path, row)
+        with patch.object(close, "eligible", side_effect=check):
+            self.process()
+        self.assertEqual(self.receipt()["state"], "attention")
+        self.assertEqual(self.receipt("20261018-170001")["state"], "closed")
+        self.assertEqual(len(self.events), 1)
+        self.assertGreaterEqual(len(checked), 4)
+        self.process()
+        self.assertEqual(self.receipt()["state"], "attention")
+        self.assertEqual((self.root / "dataset.counter").read_text(), "1")
+
+    def test_final_git_candidate_guard_rejects_only_its_own_private_record(self):
+        self.assertTrue(self.offer())
+        self.assertTrue(self.offer("20261018-170001"))
+        real_commit = close.controlled_commit
+        calls = []
+
+        def commit(*args, **kwargs):
+            calls.append(1)
+            # Simulate a report changing after post-dataset validation, before final Git verification.
+            real_eligible = close.eligible
+
+            def eligible(root, directory, batch, report):
+                if len(calls) == 1 and batch is not None and batch.get("late_failure"):
+                    raise ValueError("fixed final Git candidate failure")
+                return real_eligible(root, directory, batch, report)
+
+            with patch.object(close, "eligible", side_effect=eligible):
+                return real_commit(*args, **kwargs)
+
+        path = self.directory / "ordinary-close/20261018-170000.json"
+        row = self.receipt()
+        row["original_batch"]["late_failure"] = True
+        ops_current.save(path, row)
+        with patch.object(close, "controlled_commit", side_effect=commit):
+            self.process()
+        self.assertEqual(len(calls), 2)
+        self.assertEqual(self.receipt()["state"], "attention")
+        good = self.receipt("20261018-170001")
+        self.assertEqual(good["state"], "closed", good)
+        self.assertEqual(self.git("rev-parse", "HEAD"), good["records"]["commit"])
+        records = [json.loads(line) for line in (self.root / "paper/materials/ordinary-completions.jsonl").read_text().splitlines()]
+        self.assertEqual([record["batch"] for record in records], ["20261018-170001"])
+        self.assertEqual((self.root / "dataset.counter").read_text(), "1")
+        self.assertEqual(len(self.events), 1)
+
     def test_original_finish_cli_closes_clean_postmortem_without_enqueue(self):
         batch_id = "20261018-170000"
         batch = {**self.batch, "state": "running"}
@@ -255,6 +414,28 @@ class OrdinaryClose(unittest.TestCase):
         self.assertEqual(report, before)
         (tree / "new.txt").write_text("untracked")
         self.assertFalse(self.offer("other", batch, report))
+
+    def test_reclaimed_worktree_cannot_fall_back_to_enclosing_main_git(self):
+        tree = self.root / '.worktrees/codex-strategy-silent-fixed'
+        self.git('worktree', 'add', '-qb', 'reclaimed-source', str(tree))
+        original = tree / 'learner/runs/fixed/report.md'
+        original.parent.mkdir(parents=True)
+        original.write_text('固定无源码报告')
+        batch = {**self.batch, 'task': 'strategy-proposal', 'worktree': str(tree),
+                 'no_change_proposals': {'base': self.head}}
+        report = {**self.report, 'task': 'strategy-proposal', 'base': self.head, 'report': str(original)}
+        # Keep enclosing main clean, reproducing Git's otherwise-valid fallback identity.
+        (self.root / '.git/info/exclude').write_text('.worktrees/\n')
+        marker = tree / '.git'
+        raw = marker.read_bytes()
+        marker.unlink()
+        try:
+            self.assertEqual(self.git('-C', str(tree), 'rev-parse', '--show-toplevel'), str(self.root))
+            self.assertFalse(self.offer('reclaimed', batch, report))
+            self.assertFalse((self.root / 'dataset.counter').exists())
+        finally:
+            marker.write_bytes(raw)
+
 
     def test_current_is_bounded_hash_linked_and_never_fills_other_role_ack(self):
         live = self.root / ".worktrees/live"
