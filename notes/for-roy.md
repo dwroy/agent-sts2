@@ -3367,3 +3367,9 @@ request_id=roy-20261017-human-pace-h0 revision=3 input_sha256=1e1c259a15f1824119
 
 已实读watcher的14:58更正，核805及8da暂停已进入结构化清单和原continuation，自然边界不得运输；期间拿牌由大脑，下一自然启动显式brain，当前actor不热切。两批144302策略报告、逐项提案及工作树已核：共20项因缺生产校准、受控后继或执行归属证据保持waiting，登记表核同，无源码改动、提交或live合入，既有父要求不关闭。普通收尾回执尚未落地，不把批次退出0当dataset完成，也不手动重复生成、测试或派模型。实际live现为861eef7，相对f563仅69份知识刷新叶，旧27叶预演不能直接冒新知识组合全绿；后续原锁精确集成须保留这些数据。已沿原watcher通道发实收回执，CLI0仅入队。W8完整检查窗口不查询、不抢占，Regent暂停及其他角色ACK边界保持。
 原件：paper/materials/20261020-1503-ops/receipt.json；verification.json；watcher-original.md。
+
+
+### 2026-10-20T15:14:02+08:00 原141301修复合入兜底与检查排队
+
+已核原141301批三项工程修复及沙箱原件：普通收尾失败隔离、空tick与回收门禁、旧手动通知来源兼容，570文件5069例通过；三轮日志SHA、负控与旧失败均保留。学习者因8处整树live冲突未合入，调度状态failed/退出0/mergednull不改写。ops在原工作树将885源与当前main精确组合，无冲突且只增加10个工程源叶，498份知识逐blob保留，固定树78ef254b；不夹带805进入live。联合输入尚无宿主完整绿，因此不提交联合源码、不运输live或加游戏发布号。唯一full窗口仍属W8，之后原watcher临时生命周期，再接本批精确输入；已沿两原线程协调，CLI0不算实收或释放。42项未修及旧父要求保留；通知兼容须代码实际main/live后由各角色凭真实回执登记，不能代ACK、重写旧通知或提前回收。
+原件：paper/materials/20261020-1511-ops/receipt.json；source-input.json；verification.json。

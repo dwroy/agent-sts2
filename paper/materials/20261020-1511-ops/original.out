@@ -1,0 +1,80 @@
+## 修 bug 回报
+
+- 合并基线：main → `079874c93e34de578bc3a97c7f04a9e7baf42534`
+- 修复：普通收尾候选失败隔离 — `b675eb67f` — 测试 `agent/tests/ordinary-close-isolation.test.ts:isolates failed candidates and revalidates preserved preflight failures before one dataset commit` — 去掉修复时失败：是
+- 修复：tick 零改动报告及回收守卫 — `ca6897f2e` — 测试 `agent/tests/cadence-no-change.test.ts:settles registered empty cadence reviews and preserves source, parent and retention guards` — 去掉修复时失败：是
+- 修复：旧手动学习通知兼容 — `082cc70bf` — 测试 `agent/tests/manual-notice-ack.test.ts:authenticates original manual V6 notice sources and preserves independent role and scope guards` — 去掉修复时失败：是
+- 已被别人修掉的：CLI 回执 — `cb2dd0375`；固定消费者夹具 — `87c1381a4`；论文归档并发 — `0b240cbd1`；Herdr 夹具 — `698d3bd20`。其余历史项及提交见[完整报告](/home/dw/Projects/agent-sts2/learner/runs/20261020-141320-bc745b0c-1922-4627-a6b2-87bbb103e13c-fix-batch/report.md)。
+- 没修的：策略、独立架构及证据不足条目 — 共 42 项逐项保留于报告。
+- 测试：tsc 退出码 0；沙箱 Vitest 570 文件 / 5069 用例 / 退出码 0；gitleaks 0。`ordinary-close-isolation`、`ops-autoplay-console` 曾失败，原阈值单独重跑及整套重跑均通过，原失败日志保留。
+- 合入：未合入；8 处三方预检冲突，按要求停止。知识刷新提交 `861eef7dd` 已保留。
+- 需要 Roy 定的事：无
+
+```json
+{
+  "task": "fix-batch",
+  "base": "079874c93e34de578bc3a97c7f04a9e7baf42534",
+  "fixes": [
+    {
+      "item": "infra-ordinary-close-candidate-failure-isolation-20261020",
+      "commit": "b675eb67f3687fb137434ef9610f1503edbbe8bc",
+      "test": "agent/tests/ordinary-close-isolation.test.ts",
+      "fails_without_fix": true
+    },
+    {
+      "item": "infra-ordinary-unassigned-tick-no-change-20261020",
+      "commit": "ca6897f2e433c9c3bb45d0dad46ba685d864c87d",
+      "test": "agent/tests/cadence-no-change.test.ts",
+      "fails_without_fix": true
+    },
+    {
+      "item": "infra-manual-learning-notice-ack-scope-20261019",
+      "commit": "082cc70bfab2f1f98eb67fc1d441dfd23b6962ee",
+      "test": "agent/tests/manual-notice-ack.test.ts",
+      "fails_without_fix": true
+    }
+  ],
+  "skipped": [
+    {
+      "item": "其余角色机制、出牌、药水、SL、终局及结构提案",
+      "reason": "策略类；保留既有strategy-proposal链，42项未修逐项见报告。"
+    },
+    {
+      "item": "架构、归因、调度公平性及长检查收尾宽项",
+      "reason": "独立专项/太大，普通纯bug批次不混入。"
+    },
+    {
+      "item": "core-build-notify、H1/G2宽性能、V6坏行及生命周期宽项",
+      "reason": "证据不足，原失败及原owner待办保持。"
+    },
+    {
+      "item": "主盘TMPDIR默认及inode准入",
+      "reason": "独立存储专项；本轮清理子项不关闭生命周期宽项。"
+    },
+    {
+      "item": "live整合",
+      "reason": "8处三方合并预检冲突；刷新861eef7dd保留，修复未合live。"
+    }
+  ],
+  "merged": null,
+  "tests": {
+    "tsc": 0,
+    "vitest": 0,
+    "cases": 5069
+  },
+  "code_proposals": [],
+  "implementation_domains": [],
+  "report": "/home/dw/Projects/agent-sts2/learner/runs/20261020-141320-bc745b0c-1922-4627-a6b2-87bbb103e13c-fix-batch/report.md"
+}
+```
+
+== 学习者 codex / fix-batch ==
+状态：success；退出码 0
+模型：gpt-6.1-sol；会话：01a157f1-6fd1-7d42-8026-10bd10260b5f
+轮数：1；工具调用：command_execution×115 file_change×3
+token：输入 287.4k、输出 86.1k（其中推理 54.4k）、cache 读 21750.5k、cache 写 0（命中 98.7%）
+成本：未提供
+耗时：3474.7 s（墙钟）
+时间：首个事件 42.0 s、模型首个输出 46.5 s、首次工具 50.2 s、末次工具结束 3424.6 s；工具内共 2386.3 s，其余（模型生成、推理、网络）1046.4 s
+codex 会话记录：AGENTS.md 已加载（/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261020-141301）；模型的工具调用 exec×113 wait×4；/home/dw/Projects/agent-sts2/ops/codex-ops/accounts/codex1/learner/sessions/2026/10/20/rollout-2026-10-20T14-13-23-01a157f1-6fd1-7d42-8026-10bd10260b5f.jsonl
+日志：/home/dw/Projects/agent-sts2/learner/runs/20261020-141320-bc745b0c-1922-4627-a6b2-87bbb103e13c-fix-batch.jsonl
