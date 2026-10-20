@@ -1,6 +1,7 @@
 import { array, boolean, custom, enumeration, id, literal, nullable, number, object, optional, plain, record, refine, safeKey, text, validate, type Infer, type Result } from "./schema.js";
 import type { JsonValue } from "../core/util/json.js";
-import { predicateSchema } from "./predicate.js";
+import { cardPickDeckPredicate, predicateSchema } from "./predicate.js";
+import { contrastConfidence } from "./contrast-statistics.js";
 
 const probability = number(0, 1);
 const count = number(0, 1_000_000, true);
@@ -146,7 +147,27 @@ export function validateProjectionEntries(values: readonly unknown[]): Result<Pr
 
 const numericSignal = object({ kind: enumeration("hp", "win"), value: number(), se: optional(number(0)), unit: enumeration("hp", "probability") });
 const tagSignal = object({ kind: literal("tag"), value: id, unit: literal("label") });
-const signal = custom<Infer<typeof numericSignal> | Infer<typeof tagSignal>>((v, p, e) => {
+export const contrastSignalSchema = refine(object({
+  kind: literal("contrast"), design: literal("observational"), metric: enumeration("hp_loss", "turns", "damage_per_turn"),
+  value: number(), se: number(Number.MIN_VALUE), unit: enumeration("hp", "turns", "hp_per_turn"),
+  baseline: object({ treatment: literal("take_candidate"), control: literal("same_offer_not_taken"),
+    definition: text(1000), outcome_window: text(1000), adjustment: text(1000) }),
+  n: object({ take: positiveCount, not_take: positiveCount, clusters: number(2, 1_000_000, true) }),
+  uncertainty: object({ method: literal("run_cluster_t"), cluster: literal("run_id"),
+    interval: object({ level: number(.95, .99), lower: number(), upper: number() }) }),
+  audit: object({ path: text(1000), sha256: refine(text(64, 64), (v, e) => { if (!/^[a-f0-9]{64}$/.test(v)) e.push("audit.sha256: lowercase SHA256 required"); }) }),
+}), (s, e) => {
+  const expectedUnit = { hp_loss: "hp", turns: "turns", damage_per_turn: "hp_per_turn" }[s.metric];
+  if (s.unit !== expectedUnit) e.push("contrast: metric/unit mismatch");
+  if (s.n.clusters > s.n.take + s.n.not_take) e.push("contrast: clusters exceed observations");
+  const ci = s.uncertainty.interval, radius = (ci.upper - ci.lower) / 2;
+  const coverage = contrastConfidence(radius, s.se, s.n.clusters);
+  if (!(radius > 0) || Math.abs((ci.lower + ci.upper) / 2 - s.value) > 1e-8 * Math.max(1, Math.abs(s.value))
+    || !Number.isFinite(coverage) || Math.abs(coverage - ci.level) > 1e-6) e.push("contrast: interval must match run-cluster t uncertainty");
+});
+export type ContrastSignal = Infer<typeof contrastSignalSchema>;
+const signal = custom<Infer<typeof numericSignal> | Infer<typeof tagSignal> | ContrastSignal>((v, p, e) => {
+  if (plain(v) && v["kind"] === "contrast") { contrastSignalSchema.check(v, p, e); return; }
   const tag = v && typeof v === "object" && "kind" in v && v.kind === "tag";
   const schema = tag ? tagSignal : numericSignal;
   schema.check(v, p, e);
@@ -168,6 +189,12 @@ export const reflexEntrySchema = refine(object({
   unique(v.source_experience, "source_experience", e);
   if (v.cores) unique(v.cores, "cores", e);
   if (v.combos) unique(v.combos, "combos", e);
+  if (v.signal.kind === "contrast") {
+    if (v.applies_to !== "card_pick") e.push("contrast: card_pick only");
+    if (!cardPickDeckPredicate(v.predicate)) e.push("contrast: every branch requires candidate identity and deck/combo condition");
+    if (Math.abs(v.confidence - contrastConfidence(v.signal.value, v.signal.se, v.signal.n.clusters)) > 1e-8) e.push("contrast: confidence must be derived from effect, SE and independent run count");
+    if (new Set(v.evidence.observations.map(o => o.run_id)).size < 2) e.push("contrast: evidence requires multiple independent runs");
+  }
 });
 export type ReflexEntry = Infer<typeof reflexEntrySchema>;
 export const validateReflexEntry = (v: unknown): Result<ReflexEntry> => validate(reflexEntrySchema, v);

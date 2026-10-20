@@ -13,7 +13,7 @@ import { v6Config } from "./config.js";
 import { postCombatCardReward } from "./card-reward-scope.js";
 import { v6Directions, v6PublishedKnowledge } from "./direction-runtime.js";
 import { KNOWLEDGE_DIR } from "../knowledge/files.js";
-import { evaluatePredicate } from "./predicate.js";
+import { cardPickReflex } from "./card-pick-reflex.js";
 import { V6BuildLog } from "./log.js";
 import type { ProjectionEntry, Character } from "./formats.js";
 
@@ -63,7 +63,7 @@ export function buildV6CardPick(env: DecisionEnv, table: V6ProjectionTable | und
   const intents: Record<string, ActionRequest> = {}, criteria: Record<string, string> = {}, facts: Record<string, JsonValue> = {};
   const plan = env.screenMemory.runPlan?.runId === str(env.state.raw.run_id) ? env.screenMemory.runPlan.v6 : undefined;
   const weights = plan?.direction_weights ?? {};
-  const knowledge = v6PublishedKnowledge(env, dir), ascension = env.state.run?.ascension ?? 0;
+  const knowledge = v6PublishedKnowledge(env, dir);
   const entries = table?.enabled ? promptProjectionEntries(table, v6Config()).filter(e => summaries.some(s => s.id === e.direction_id
     && directionCombos(s, toJsonValue(plan)).some(c => c.id === e.combo_id && c.source === e.combo_source))) : [];
   if (actions.includes("choose_reward_card")) for (const [fallbackIndex, card] of offers.entries()) {
@@ -73,12 +73,7 @@ export function buildV6CardPick(env: DecisionEnv, table: V6ProjectionTable | und
     if (!id) continue;
     intents[key] = { action: "choose_reward_card", option_index: index };
     criteria[key] = `Take ${id}${bool(card.upgraded) ? "+" : ""}`;
-    const reflex = v6Config().reflex === "on" && knowledge.reflex.status === "loaded" ? knowledge.reflex.value.filter(r =>
-      r.applies_to === "card_pick" && r.scope.ascensions.includes(ascension)
-      && (!r.directions || r.directions.some(d => (weights[d] ?? 0) > 0))
-      && evaluatePredicate(r.predicate, { act: Number(str(asRecord(env.state.run?.raw).act_id, "0")) + 1,
-        floor: env.state.run?.floor, player: { hp: env.state.run?.current_hp }, card: { id, tags: [] }, direction_weights: weights }) === true)
-      .map(r => ({ id: r.id, label_en: r.label_en, signal: r.signal, confidence: r.confidence, n_support: r.evidence.n_support, n_contradict: r.evidence.n_contradict })) : [];
+    const reflex = cardPickReflex(env, knowledge, key, card, weights);
     facts[key] = toJsonValue({ card: id, upgraded: bool(card.upgraded), reflex });
   }
   if (actions.includes("skip_reward_cards")) {
