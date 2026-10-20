@@ -1,0 +1,125 @@
+{
+  "recorded_at": "2026-10-20T13:45:26+08:00",
+  "task": {
+    "source": "Claude user instruction",
+    "label_time": "2026-10-20 13:20 +08:00",
+    "native_timestamp": "2026-10-20T05:16:22.518Z",
+    "scope": "Pure combat state divergence bug investigation; no new learning/model batch.",
+    "native_dispatch": {
+      "path": "/home/dw/.codex1/sessions/2026/10/19/rollout-2026-10-19T17-33-37-01a15382-68eb-7093-b677-040c9b45767f.jsonl",
+      "line": 19561,
+      "bytes": 1631,
+      "sha256": "3041ef29fee4a6a608a7d59b4b9c9965edc35a75adf1bc6a66f2288a7f29aeeb",
+      "timestamp": "2026-10-20T05:16:22.518Z"
+    },
+    "saved_dispatch": {
+      "path": "paper/materials/2026-10-20-v6-combat-state-divergence/source-native-dispatch.jsonl",
+      "bytes": 1631,
+      "sha256": "3041ef29fee4a6a608a7d59b4b9c9965edc35a75adf1bc6a66f2288a7f29aeeb"
+    },
+    "native_cst_timestamp": "2026-10-20T13:16:22.518+08:00",
+    "label_native_discrepancy_preserved": true
+  },
+  "current_engineering_owner": {
+    "session_name": "v6-w4w6",
+    "engine": "Codex",
+    "account": "codex1",
+    "account_basis": "Native session under /home/dw/.codex1 and original v6-w4w6 assignment; not historical codex3 postmortem.",
+    "thread_id": "01a15382-68eb-7093-b677-040c9b45767f",
+    "turn_id": "01a157bd-3e39-74e2-a796-1583ef67faa7",
+    "herdr": "wJ:p1GX",
+    "worktree": ".worktrees/v6-combat-state-divergence-20261020",
+    "branch": "v6-combat-state-divergence-20261020",
+    "session_launch": {
+      "path": "/home/dw/.codex1/sessions/2026/10/19/rollout-2026-10-19T17-33-37-01a15382-68eb-7093-b677-040c9b45767f.jsonl",
+      "line": 1,
+      "bytes": 22867,
+      "sha256": "383e0205fee18cb04d779664e2457d761c07facb59dff0c4ab5dd5fa806f1c58",
+      "timestamp": "2026-10-19T09:34:29.175Z",
+      "session_metadata_timestamp": "2026-10-19T09:33:37.945Z"
+    },
+    "task_started": {
+      "path": "/home/dw/.codex1/sessions/2026/10/19/rollout-2026-10-19T17-33-37-01a15382-68eb-7093-b677-040c9b45767f.jsonl",
+      "line": 19559,
+      "bytes": 500,
+      "sha256": "7ccc9058413995740d22317e713822798dab62f6348af8740dd4f2c49a059a01",
+      "timestamp": "2026-10-20T05:16:22.470Z"
+    },
+    "native_turn_context": {
+      "path": "/home/dw/.codex1/sessions/2026/10/19/rollout-2026-10-19T17-33-37-01a15382-68eb-7093-b677-040c9b45767f.jsonl",
+      "line": 19560,
+      "bytes": 1995,
+      "sha256": "e65d33c8ef97725b65d7e92e95955cbc77d6e5545477db54be27d684766cb099",
+      "timestamp": "2026-10-20T05:16:22.499Z"
+    },
+    "model": "gpt-6.1-sol",
+    "reasoning_effort": "xhigh",
+    "effort_reason": "Authorized difficult multi-frame combat divergence diagnosis retained the existing xhigh session; next natural task start follows the high default."
+  },
+  "frozen_inputs": [
+    {
+      "path": "agent/tests/combat-state-divergence-evidence.json",
+      "bytes": 186455,
+      "sha256": "3d1e49eb7dbeb45640fe85ac26440727188b49fec22063401646733130e1b687"
+    },
+    {
+      "path": "paper/materials/2026-10-20-v6-combat-state-divergence/frozen-samples.json",
+      "bytes": 211665,
+      "sha256": "92fe40e6549b557028b0c41548282a2b6e7f6367b1a5d6dbfc55c9814003d418"
+    },
+    {
+      "path": "paper/materials/2026-10-20-v6-combat-state-divergence/evidence-manifest.json",
+      "bytes": 4221,
+      "sha256": "49841ad4afcc258cc6e5c54c9fcbf0d934ddf80f972473e411738c9807f5d322"
+    }
+  ],
+  "historical_boss_sim_origin": {
+    "request_id": null,
+    "dispatch": null,
+    "batch": null,
+    "status": "not_found",
+    "basis": "ops dedup searched 7 learning-request files and 22 original boss-sim batches; no matching original boss-sim dispatch/owner chain found. Do not invent linkage.",
+    "evidence": "paper/materials/20261020-1330-ops/dedup-and-origin-binding.json",
+    "existing_pending_proposal": "silent-proposal-99f14e823a866ad7",
+    "historical_postmortem": "20261018-084302 / codex3 is evidence origin only, not this engineering owner or an identified current boss-sim owner.",
+    "pending_record": "ops/codex-ops/pending-learning/silent-proposal-99f14e823a866ad7-living-fog.json",
+    "no_new_parent_or_batch": true,
+    "no_ack_or_completion_claim": true
+  },
+  "full_test_window": {
+    "observed_at": "2026-10-20T13:44:15+0800",
+    "reason": "Yield the sole host full-test window to ops PID2405031/2405140; own partial run is interrupted, not passed or code-failed.",
+    "terminated_own_processes": [
+      {
+        "pid": 2466529,
+        "cwd": "/home/dw/Projects/agent-sts2/.worktrees/v6-combat-state-divergence-20261020/agent",
+        "cmd": "node"
+      },
+      {
+        "pid": 2429189,
+        "cwd": "/home/dw/Projects/agent-sts2/.worktrees/v6-combat-state-divergence-20261020/agent",
+        "cmd": "node"
+      },
+      {
+        "pid": 2429188,
+        "cwd": "/home/dw/Projects/agent-sts2/.worktrees/v6-combat-state-divergence-20261020/agent",
+        "cmd": "sh"
+      },
+      {
+        "pid": 2429176,
+        "cwd": "/home/dw/Projects/agent-sts2/.worktrees/v6-combat-state-divergence-20261020/agent",
+        "cmd": "npm exec vitest"
+      }
+    ],
+    "other_processes_untouched": [
+      2405031,
+      2405140
+    ]
+  },
+  "related_source_binding": {
+    "reported_path": "paper/materials/2026-10-20-v6-refresh-legacy-incremental/assignment-provenance.json",
+    "verified_preserved_path": "paper/materials/20261020-1346-ops/W8-assignment-provenance.json",
+    "sha256": "9e26ae0db44e32a1ce55baddb97e2f2871cb131467c9e26ca8e2164973ca2b7f",
+    "verification": "Read main preserved copy; bytes hash matches W8 report. Native turn references are separate observations within the same turn."
+  }
+}

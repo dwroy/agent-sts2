@@ -188,6 +188,8 @@ export interface CardModel {
   exhausts: boolean;
   /** Ethereal (「虚无」: Dazed, Clumsy, Ascender's Bane): exhausted at the end of the turn when still in hand. */
   ethereal?: boolean;
+  /** Observed Retain: an unplayed, undiscarded card stays in hand for the next turn. */
+  retain?: boolean;
   /** Conditional behaviour the solver implements by id. */
   special: "malaise" | "dismantle" | "thrash" | "body_slam" | "bully" | "molten_fist" | "whirlwind" | "spite" | "feed" | "triple_block" | "double_block" | "temp_dex" | "buffer" | "duplicate_next" | "rupture" | "colossus" | "frantic_escape" | "crimson_mantle" | "triple_next_attack" | "free_card" | "dexterity" | "dominate" | "fiend_fire" | "ashwater" | "stomp" | "second_wind" | "intangible" | "clarity" | "ritual" | "plating" | "snecko" | "heal" | "gamble" | "regen" | "chaos" | "glowwater" | "bottled" | "radiance" | "forge" | "stew" | "double_next_attacks" | "free_next_attack" | "primal_force" | "retain_hand" | null;
   /**
@@ -1392,6 +1394,8 @@ export function modelHandCard(entry: unknown, fallbackIndex: number, knowledge: 
     soulbound: /(^|\s)魂缚(\s|。|$)|\bSoulbound\b/i.test(rendered),
     ...(playFirst ? { playFirst: true } : {}),
     ...(etherealText(info?.keywords, rendered) ? { ethereal: true } : {}),
+    // silent-snakebite-retained-poison: carry the published Snakebite keyword into later-turn state.
+    ...(snakebite && /保留|\bRetain\b/i.test(rendered) ? { retain: true } : {}),
     putsOnTop: /放到(?:你的)?抽牌堆(?:的)?顶部?|on top of your draw pile/i.test(rendered),
     drawsUntil: /抽牌直到|draw cards? until/i.test(rendered),
     // Thrash's random exhaust takes an Attack and adds its damage (special "thrash", solver), not any card

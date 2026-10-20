@@ -5,9 +5,9 @@ import evidence from "./silent-snakebite-evidence.json";
 import { makeKnowledge } from "../src/knowledge/index.js";
 import { modelHandCard } from "../src/reflex/card-model.js";
 import { enemySims } from "../src/reflex/combat-plan.js";
-import { replaySteps, type SolverInput } from "../src/reflex/turn-solver.js";
+import { replaySteps, solveTap, type SolverInput } from "../src/reflex/turn-solver.js";
 import { simulateFight } from "../src/reflex/rollout.js";
-import { board } from "./boss-sim-fixture.js";
+import { board, card, defend } from "./boss-sim-fixture.js";
 
 vi.mock("node:fs", async (original) => {
   const fs = await original<typeof import("node:fs")>();
@@ -66,4 +66,38 @@ it("the added poison persists through later rollout settlements", () => {
 it("unobserved upgrades and other characters keep their existing model", () => {
   expect(modelHandCard({ ...raw, upgraded: true }, 0, knowledge, "silent").poison).toBeUndefined();
   expect(modelHandCard(raw, 0, knowledge, "ironclad").poison).toBeUndefined();
+  expect(modelHandCard(raw, 0, knowledge, "ironclad").retain).toBeUndefined();
+  expect(modelHandCard({ ...raw, upgraded: true }, 0, knowledge, "silent").retain).toBeUndefined();
+  expect(modelHandCard({ ...raw, resolved_rules_text: "给予7层中毒。" }, 0, knowledge, "silent").retain).toBeUndefined();
 });
+
+it.each(["unplayed", "played", "discarded", "one_of_two_discarded", "exhausted", "ethereal"])(
+  "published Retain reaches the next hand only when eligible: %s", (mode) => {
+    const input = board();
+    const snake = snakebite();
+    expect(snake.retain).toBe(true);
+    input.solver.hand = [snake];
+    input.solver.enemies[0]!.attacks = [];
+    input.tables = { TEST_BOSS: { moves: { HIT: { damage: 0, hits: 1, strength: 0, block: 0 } }, next: { HIT: { HIT: 1 } } } };
+    const survivor = card(2, "SURVIVOR", { type: "Skill", target: "self", validTargets: [], block: 8, survivorDiscard: true });
+    if (mode.includes("discarded")) input.solver.hand.push(survivor);
+    if (mode === "one_of_two_discarded") input.solver.hand.push({ ...snake, index: 3, key: "other-snake" });
+    if (mode === "ethereal") input.solver.hand[0] = { ...snake, ethereal: true };
+    input.piles = { handBase: input.solver.hand, draw: [defend(10)], discard: [] };
+    input.options = { handSize: 1 };
+    const plan = replaySteps(input.solver, mode === "played" ? [step] : mode.includes("discarded") ? [{
+      cardIndex: 2, cardId: "SURVIVOR", name: "生存者", upgraded: false, target: null,
+    }] : [])!;
+    // With multiple candidates the solver waits for a selection; supply the fixed resolved discard here.
+    if (mode === "one_of_two_discarded") plan.steps[0]!.discards = ["SNAKEBITE"];
+    if (mode.includes("discarded")) expect(plan.steps[0]!.discards).toEqual(["SNAKEBITE"]);
+    if (mode === "exhausted") plan.outcome.exhausted = [snake.index];
+    let next: SolverInput | undefined;
+    solveTap.onSolve = (si) => { next = si; };
+    try { simulateFight(input, plan, 2, 1, false); } finally { solveTap.onSolve = null; }
+    expect(next).toBeDefined();
+    expect(next!.hand.filter((c) => c.cardId === "SNAKEBITE")).toHaveLength(
+      mode === "unplayed" || mode === "one_of_two_discarded" ? 1 : 0);
+    expect(next!.hand.filter((c) => c.cardId === "DEFEND")).toHaveLength(1);
+  },
+);

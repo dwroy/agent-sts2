@@ -5152,3 +5152,5 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
 - 2026-10-20T14:16:00+08:00 ops：按原要求保全root日志实际watcher G1c一条+空行2新增，非两条ops且不代G1c验收；W4W6 v3在途仅报告未释放，W8自有计时已结束/未起full，保持W4→ops→W8顺序，原件 paper/materials/20261020-log-window-1415-ops/receipt.json。
 
 - 2026-10-20T14:23:50+08:00 ops：W4原v3 full0/613文件5830过2跳及五源SHA核同、runner退出；原窗口明确释放后接ops固定d43e6c23完整检查，nice19单worker/短.t/f1421/PID3694693、tsc0/full在途，旧失败全保留，终局再通知W8，不改live。原件 paper/materials/20261020-1421-ops/receipt.json。
+
+- 2026-10-20T14:22:06+08:00 v6-w4w6：完成 Claude 原13:20战斗分叉排查；9J6骇鳗/MRJ雕像致死手牌在第9/19固定样本正确判死，8/8属有限样本遗漏；修已发布Silent蛇咬Retain未传入后续手牌的纯bug，不补游戏知识。活雾召唤缺口沿 silent-proposal-99f14e823a866ad7 pending，原boss-sim批次未找到。tsc0、完整vitest613文件/5830过/2原跳过、gitleaks0；未改live/STOP/对局，材料 paper/materials/2026-10-20-v6-combat-state-divergence/，上线交ops按开局边界处理。
