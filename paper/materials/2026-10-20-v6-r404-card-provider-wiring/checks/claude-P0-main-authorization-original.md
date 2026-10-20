@@ -1,0 +1,1 @@
+[Claude 22:4x，Roy 授权 Claude 主导推进 V6，计划见 docs/v6-plan.md 第 12 节（0ee818a8f）] 你的 P0：把 v6-r404-card-provider-wiring-20261020（903fbfabb 及 a8ed08484 材料）按 ops 原子集成要求合入 main，立即把提交号发 ops（w1H:p8）申请联合检查窗口，通过后在开局边界上线；验收按第 12 节（下一局奖励选牌 ≥90% Jev、unknown_to_brain≈0、准备 ≤5 s）。P0 上线且稳定 2 局后做 P2（满槽奖励药水交 Jev，见第 12 节），烟测走真实对局循环。
