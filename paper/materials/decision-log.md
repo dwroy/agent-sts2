@@ -5466,3 +5466,5 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
 - 2026-10-21 05:06:57 CST 原ops：W4 criteria正式八叶及72材料核同，B正式miss/均值反例保留；P0优先独立R408八叶+W0两测试依赖，唯一2387940提交内核准入，尚无实际full回执，不叠full/夹P4/014301或805。CARDbrain/REFLEXoff不变，质量由Claude判；原件paper/materials/20261021-W4-criteria-joint-ops/receipt.json。
 
 - 2026-10-21 05:00:53 CST W4 criteria：正式源024612ef7（8叶，tree9fcaacea2），仅严格战后奖励选牌将A同种子相对skip五指标mean/SE/n及B进度/可用结果放入Nova criteria，保24KB与原脑安全门；B按组合轮转冷采样并明确前提/预算原因。tsc0、78定向过、16真实Nova全成功/无400超时、最大23909B；R407原12题排序一致8/12、保守误差明确逆指标0但3题均值被支配，生产新2题准备含题面4.54/4.94s、Boss已知4/4，B生产仍miss不冒手工预热为通过；局部gitleaks核80条局号楼层误报后0。交ops单点联合full/边界上线，未main/live/开jev；R408 brain与P2暂停保持。材料paper/materials/2026-10-21-v6-card-criteria/。
+
+- 2026-10-21 05:11:07 CST 原ops：W4 criteria八叶+W0两测试依赖R408唯一联合静态启动实核tsc0/full2390915，treee0a2e246/2393输入7a3f7a45/498知识同，未查动态或认终局绿；不叠full/改输入/自动恢复jev，R408不动。原件paper/materials/20261021-0510-ops/receipt.json。

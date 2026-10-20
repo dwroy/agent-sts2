@@ -5119,3 +5119,5 @@ request_id=roy-20261017-human-pace-h0 revision=3 input_sha256=1e1c259a15f1824119
 - 2026-10-21 04:51:51 CST 原ops已实读正式P4 off两叶88b51030b：103材料/两源前后像/54帧核同，独立W0重建及27动作字节同，原tsc0/75定向绿不代联合full。材料窄收、原七败保留；ordinary014301正式依赖仍pending，未启动full或发布，R408 CARDbrain/REFLEXoff不动。原件paper/materials/20261021-P4-off-formal-ops/receipt.json。
 
 - 2026-10-21 05:06:57 CST 原ops实读W4 criteria024612ef八叶/72材料(71清单项)及11gz核同，原16真请求/78定向非联合绿；8/12有三均值反例，B正式runtime0/204仍miss。独立R408树仅八叶+已核W0两测试依赖，唯一runner2387940提交原锁准入，尚未核实际full启动；不夹P4生产/014301未提交源，不自动恢复jev，CARDbrain/REFLEXoff、P2暂停保持。原件paper/materials/20261021-W4-criteria-joint-ops/receipt.json。
+
+- 2026-10-21 05:11:07 CST 原ops已核W4 criteria唯一静态启动：runner2387940/full2390915、tsc0、treee0a2e246/2393输入7a3f7a45、498知识/463正式数据及十源后像同。只核静态原件，不查动态日志/进程、不叠full或改输入；原排队更新为在跑，未认终局绿/发布。B仍miss/质量归Claude，R408 CARDbrain/REFLEXoff保持。原件paper/materials/20261021-0510-ops/receipt.json。
