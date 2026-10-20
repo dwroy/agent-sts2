@@ -1,0 +1,122 @@
+...FE/home/dw/Projects/agent-sts2/.worktrees/v6-refresh-p4-r407-20261021/knowledge/builders/build-monster-db.py:1638: ResourceWarning: unclosed file <_io.TextIOWrapper name='/home/dw/Projects/agent-sts2/.worktrees/v6-refresh-p4-r407-20261021/.cache/w8t/tmpfjg64_ix/logs/runs.jsonl' mode='r' encoding='utf8'>
+  for line in open(path, encoding="utf8"):
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+E..E....
+======================================================================
+ERROR: test_monster_all_mechanics_cold_warm_and_interleaved_parity (__main__.IncrementalTest.test_monster_all_mechanics_cold_warm_and_interleaved_parity)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/dw/Projects/agent-sts2/.worktrees/v6-refresh-p4-r407-20261021/knowledge/builders/test_legacy_incremental.py", line 76, in test_monster_all_mechanics_cold_warm_and_interleaved_parity
+    cold=mod.build(str(states),None,None,str(decisions))
+  File "/home/dw/Projects/agent-sts2/.worktrees/v6-refresh-p4-r407-20261021/knowledge/builders/build-monster-db.py", line 1671, in build
+    consume_fights(__import__("types").SimpleNamespace(**globals()), builder, states)
+    ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/dw/Projects/agent-sts2/.worktrees/v6-refresh-p4-r407-20261021/knowledge/builders/legacy_incremental.py", line 562, in consume_fights
+    checkpoints.save(refs[0]['offset'])
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^
+  File "/home/dw/Projects/agent-sts2/.worktrees/v6-refresh-p4-r407-20261021/knowledge/builders/legacy_incremental.py", line 534, in save
+    self.cache.index.cached('legacy:monster-prefix', self.keys[offset], lambda: dict(
+    ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        builder=pack({k:v for k,v in self.builder.__dict__.items() if k != 'runs'}),
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        mechanics=pack(self.module.MECHANICS.__dict__)))
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/dw/Projects/agent-sts2/.worktrees/v6-refresh-p4-r407-20261021/knowledge/builders/incremental_evidence.py", line 159, in cached
+    value = produce()
+  File "/home/dw/Projects/agent-sts2/.worktrees/v6-refresh-p4-r407-20261021/knowledge/builders/legacy_incremental.py", line 535, in <lambda>
+    builder=pack({k:v for k,v in self.builder.__dict__.items() if k != 'runs'}),
+            ~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/dw/Projects/agent-sts2/.worktrees/v6-refresh-p4-r407-20261021/knowledge/builders/legacy_incremental.py", line 31, in pack
+    return ['dict', [[pack(k), pack(v)] for k, v in value.items()]]
+                               ~~~~^^^
+  File "/home/dw/Projects/agent-sts2/.worktrees/v6-refresh-p4-r407-20261021/knowledge/builders/legacy_incremental.py", line 43, in pack
+    raise TypeError('unsupported intermediate: ' + type(value).__name__)
+TypeError: unsupported intermediate: method
+
+======================================================================
+ERROR: test_monster_checkpoint_append_and_changed_old_evidence_use_original_reducer (__main__.IncrementalTest.test_monster_checkpoint_append_and_changed_old_evidence_use_original_reducer)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/dw/Projects/agent-sts2/.worktrees/v6-refresh-p4-r407-20261021/knowledge/builders/test_legacy_incremental.py", line 125, in test_monster_checkpoint_append_and_changed_old_evidence_use_original_reducer
+    mod.build(str(path),str(runs),None,None)
+    ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/dw/Projects/agent-sts2/.worktrees/v6-refresh-p4-r407-20261021/knowledge/builders/build-monster-db.py", line 1671, in build
+    consume_fights(__import__("types").SimpleNamespace(**globals()), builder, states)
+    ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/dw/Projects/agent-sts2/.worktrees/v6-refresh-p4-r407-20261021/knowledge/builders/legacy_incremental.py", line 562, in consume_fights
+    checkpoints.save(refs[0]['offset'])
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^
+  File "/home/dw/Projects/agent-sts2/.worktrees/v6-refresh-p4-r407-20261021/knowledge/builders/legacy_incremental.py", line 534, in save
+    self.cache.index.cached('legacy:monster-prefix', self.keys[offset], lambda: dict(
+    ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        builder=pack({k:v for k,v in self.builder.__dict__.items() if k != 'runs'}),
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        mechanics=pack(self.module.MECHANICS.__dict__)))
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/dw/Projects/agent-sts2/.worktrees/v6-refresh-p4-r407-20261021/knowledge/builders/incremental_evidence.py", line 159, in cached
+    value = produce()
+  File "/home/dw/Projects/agent-sts2/.worktrees/v6-refresh-p4-r407-20261021/knowledge/builders/legacy_incremental.py", line 535, in <lambda>
+    builder=pack({k:v for k,v in self.builder.__dict__.items() if k != 'runs'}),
+            ~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/dw/Projects/agent-sts2/.worktrees/v6-refresh-p4-r407-20261021/knowledge/builders/legacy_incremental.py", line 31, in pack
+    return ['dict', [[pack(k), pack(v)] for k, v in value.items()]]
+                               ~~~~^^^
+  File "/home/dw/Projects/agent-sts2/.worktrees/v6-refresh-p4-r407-20261021/knowledge/builders/legacy_incremental.py", line 43, in pack
+    raise TypeError('unsupported intermediate: ' + type(value).__name__)
+TypeError: unsupported intermediate: method
+
+======================================================================
+ERROR: test_pending_other_runs_are_not_serialized_in_every_segment (__main__.IncrementalTest.test_pending_other_runs_are_not_serialized_in_every_segment)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/dw/Projects/agent-sts2/.worktrees/v6-refresh-p4-r407-20261021/knowledge/builders/test_legacy_incremental.py", line 107, in test_pending_other_runs_are_not_serialized_in_every_segment
+    self.assertEqual(mod.build(str(path),None,None,None),expected)
+                     ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/dw/Projects/agent-sts2/.worktrees/v6-refresh-p4-r407-20261021/knowledge/builders/build-monster-db.py", line 1671, in build
+    consume_fights(__import__("types").SimpleNamespace(**globals()), builder, states)
+    ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/dw/Projects/agent-sts2/.worktrees/v6-refresh-p4-r407-20261021/knowledge/builders/legacy_incremental.py", line 562, in consume_fights
+    checkpoints.save(refs[0]['offset'])
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^
+  File "/home/dw/Projects/agent-sts2/.worktrees/v6-refresh-p4-r407-20261021/knowledge/builders/legacy_incremental.py", line 534, in save
+    self.cache.index.cached('legacy:monster-prefix', self.keys[offset], lambda: dict(
+    ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        builder=pack({k:v for k,v in self.builder.__dict__.items() if k != 'runs'}),
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        mechanics=pack(self.module.MECHANICS.__dict__)))
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.14/unittest/mock.py", line 1176, in __call__
+    return self._mock_call(*args, **kwargs)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.14/unittest/mock.py", line 1180, in _mock_call
+    return self._execute_mock_call(*args, **kwargs)
+           ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.14/unittest/mock.py", line 1247, in _execute_mock_call
+    result = effect(*args, **kwargs)
+  File "/home/dw/Projects/agent-sts2/.worktrees/v6-refresh-p4-r407-20261021/knowledge/builders/test_legacy_incremental.py", line 105, in observe
+    return original(namespace,key,produce)
+  File "/home/dw/Projects/agent-sts2/.worktrees/v6-refresh-p4-r407-20261021/knowledge/builders/incremental_evidence.py", line 159, in cached
+    value = produce()
+  File "/home/dw/Projects/agent-sts2/.worktrees/v6-refresh-p4-r407-20261021/knowledge/builders/legacy_incremental.py", line 535, in <lambda>
+    builder=pack({k:v for k,v in self.builder.__dict__.items() if k != 'runs'}),
+            ~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/dw/Projects/agent-sts2/.worktrees/v6-refresh-p4-r407-20261021/knowledge/builders/legacy_incremental.py", line 31, in pack
+    return ['dict', [[pack(k), pack(v)] for k, v in value.items()]]
+                               ~~~~^^^
+  File "/home/dw/Projects/agent-sts2/.worktrees/v6-refresh-p4-r407-20261021/knowledge/builders/legacy_incremental.py", line 43, in pack
+    raise TypeError('unsupported intermediate: ' + type(value).__name__)
+TypeError: unsupported intermediate: method
+
+======================================================================
+FAIL: test_fight_rows_replay_serialized_output_without_old_commits_and_keep_character (__main__.IncrementalTest.test_fight_rows_replay_serialized_output_without_old_commits_and_keep_character)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/dw/Projects/agent-sts2/.worktrees/v6-refresh-p4-r407-20261021/knowledge/builders/test_legacy_incremental.py", line 177, in test_fight_rows_replay_serialized_output_without_old_commits_and_keep_character
+    self.assertLess(len(calls),builder.fights)
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 11 not less than 4
+
+----------------------------------------------------------------------
+Ran 13 tests in 0.900s
+
+FAILED (failures=1, errors=3)

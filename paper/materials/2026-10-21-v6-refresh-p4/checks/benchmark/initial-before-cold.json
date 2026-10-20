@@ -1,0 +1,47 @@
+{
+  "name": "initial-before-cold",
+  "version": "before",
+  "enabled": "on",
+  "steps": [
+    {
+      "step": "monster",
+      "seconds": 4.323934013955295,
+      "cpu_seconds": 4.304485001,
+      "output_bytes": 251347,
+      "sha256": "b6e43583c4260417cd706aaa98dea346632eef4008344c1015d7eefdd7b1f1c4"
+    },
+    {
+      "step": "fight-rows",
+      "seconds": 1.4479357961099595,
+      "cpu_seconds": 1.4479185589999997,
+      "output_bytes": 436194,
+      "sha256": "99b3bbc1a05e2e6564b113d258cc32d6279edbc35f9b6161db8930b828e14845"
+    }
+  ],
+  "nice": 19,
+  "rss_kib": 380544,
+  "stats": {
+    "decoded_rows": 7485,
+    "indexed_rows": 7485,
+    "rebuilt_streams": [
+      "decisions",
+      "states"
+    ],
+    "cache_hits": 0,
+    "cache_misses": 24
+  },
+  "phases": [
+    {
+      "name": "index:decisions",
+      "seconds": 1.1171985589899123,
+      "bytes": 94711573,
+      "rows": 3655
+    },
+    {
+      "name": "index:states",
+      "seconds": 1.355027296114713,
+      "bytes": 119075460,
+      "rows": 3830
+    }
+  ]
+}

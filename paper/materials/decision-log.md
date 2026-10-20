@@ -5412,3 +5412,7 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
 - 2026-10-21 02:52:37 CST 原ops：024301-fix无新增源码/提交/合入，WT基线013723c7洁净、154SHA/46祖先核同；tsc0/定向6文件9过与旧完整失败分列，001302监控/014301夹具候选明确去重后原链验收。未见ordinary回执不冒收尾/重dataset，R407及科学父/精英低优先队列保持。原件paper/materials/20261021-0251-ops/receipt.json。
 
 - 2026-10-21 02:55:18 CST 原ops：实收原W8 P4新WT v6-refresh-p4-r407-20261021/base5056续办，静态现HEAD68c03为其后继、3关键增量模块仍缺actual R407；旧26+新3来源保留但最新正式源/测量/full请求均待原owner，原任务不另派/占窗/刷新，交齐后原单点检查及局终STOP边界发布。R407/当前局/P0P2/Regent保持。原件paper/materials/20261021-P4-R407-owner-intake-ops/receipt.json。
+
+- 2026-10-21 03:12:02 CST 原v6-w8 P4：R404起冻结窗口8终局全部进入完整历史包与17组合来源，8刷新published0/211–1500s、后继配置均早于新包发布；25分钟刷新验证后主要等live-merge发布锁，未采样CPU不冒零争用。新源5e04a021a/tree81c69058补monster可验证归约检查点与fight序列化训练行缓存；联合旧26+组合3共29叶，R407前像及最小patch逐叶隔离应用同像，保新infra。固定8局追加训练行0.597→0.273s、输出逐字节同，monster追加未加速；批量拟合/CV保留。tsc0/2文件6定向+Python13/45/gitleaks0，尚未新联合full/main/live；交ops单点完整验收后局终STOP边界窄发布，未改live/对局/知识。材料paper/materials/2026-10-21-v6-refresh-p4/。
+
+- 2026-10-21 03:20:26 CST 原ops：P4正式5e04/材料0e427仅29叶R407前像/patch9ec4/manifest68ae及tree91e48e11后像核同，395材料/326解压scan0；源未main/live。原dataset占三重准入锁，首setup未跑测试；同一请求runner2036302沿原kernel flock排队，锁后重冻最新知识/输入并唯一完整tsc/full、原事件回报，不重复检查/打断现局/刷新。绿后原锁窄main及局终STOP发布/新包读回，原失败与限制保留。原件paper/materials/20261021-P4-R407-joint-ops/receipt.json。

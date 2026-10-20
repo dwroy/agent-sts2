@@ -1,0 +1,49 @@
+{
+  "name": "initial-after-warm",
+  "version": "after",
+  "enabled": "on",
+  "steps": [
+    {
+      "step": "monster",
+      "seconds": 0.36692682397551835,
+      "cpu_seconds": 0.361998563,
+      "output_bytes": 251347,
+      "sha256": "b6e43583c4260417cd706aaa98dea346632eef4008344c1015d7eefdd7b1f1c4"
+    },
+    {
+      "step": "fight-rows",
+      "seconds": 0.05339899193495512,
+      "cpu_seconds": 0.053400665999999986,
+      "output_bytes": 436194,
+      "sha256": "99b3bbc1a05e2e6564b113d258cc32d6279edbc35f9b6161db8930b828e14845"
+    }
+  ],
+  "nice": 19,
+  "rss_kib": 380544,
+  "stats": {
+    "decoded_rows": 0,
+    "indexed_rows": 7485,
+    "rebuilt_streams": [],
+    "cache_hits": 18,
+    "cache_misses": 0
+  },
+  "phases": [
+    {
+      "name": "index:decisions",
+      "seconds": 0.0601395801641047,
+      "bytes": 94711573,
+      "rows": 3655
+    },
+    {
+      "name": "index:states",
+      "seconds": 0.07041116105392575,
+      "bytes": 119075460,
+      "rows": 3830
+    },
+    {
+      "name": "monster-prefix",
+      "resumed_bytes": 119075460,
+      "source_bytes": 119075460
+    }
+  ]
+}

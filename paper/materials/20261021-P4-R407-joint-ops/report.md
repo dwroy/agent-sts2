@@ -1,0 +1,3 @@
+P4正式5e04源/0e427材料已实收，29叶manifest68ae与patch9ec4逐SHA/blob核actual R407工作前像，私有tree91e48e11后像同，保较新infra，不运父/整main/805/知识。395材料/394清单及326压缩证据解压扫描0，原append原字节收纳；固定8局训练行快、monster追加未快/冷建慢不外推生产。已分配独立检查树。原dataset占锁，首非阻塞setup退出且未跑tsc/full，非产品失败，原件保留。同一请求runner2036302现经原kernel flock排队；旧dataset自然结束后，在三重任务/live锁内重冻485保护叶（463正式数据）和29源，唯一nice19/ionice3单worker/短主盘TMPDIR完整门，不sleep/轮询/新timer/重复full。实际启动及终局原事件通知，仅排队未验绿，不抢锁/停旧任务/改现局。通过后核main/live漂移窄集成，再局终STOP发布、实际刷新/包消费与CPU/战斗读回；P0质量/P2两局/REFLEXoff/Regent保持。
+
+原件：paper/materials/20261021-P4-R407-joint-ops/receipt.json；.artifacts/ops-P4-R407-joint-20261021/{host-status,native-start-readback}.json（实际启动后）。

@@ -1,0 +1,2602 @@
+[
+  {
+    "name": "refresh-jzicp6cz",
+    "started_at": "2026-10-19T17:11:20.584Z",
+    "ended_at": "2026-10-19T17:11:20.585Z",
+    "status": "failed",
+    "exit_code": 1,
+    "error": "ValueError: incomplete frozen source: /home/dw/Projects/agent-sts2/.worktrees/live/logs/runs.jsonl; {'source': '/home/dw/Projects/agent-sts2/.worktrees/live/logs/runs.jsonl', 'source_size': None, 'invalid_lines': 0, 'incomplete_lines': 0, 'rows': 0, 'gap_refs': [], 'gap_refs_limit': 5, 'status': 'missing', 'source_sha256': None}",
+    "steps": [],
+    "run_count": 0,
+    "incremental": null,
+    "freeze_seconds": null,
+    "index_seconds": null,
+    "verify_prefix_seconds": null,
+    "pack": {}
+  },
+  {
+    "name": "refresh-lvwyjjbk",
+    "started_at": "2026-10-19T17:12:21.038Z",
+    "ended_at": "2026-10-19T17:18:38.211Z",
+    "status": "failed",
+    "exit_code": 1,
+    "error": "ValueError: incomplete frozen source: /home/dw/Projects/agent-sts2/.worktrees/live/logs/states.jsonl; {'source': '/home/dw/Projects/agent-sts2/.worktrees/live/logs/states.jsonl', 'source_size': 14613516359, 'invalid_lines': 2, 'incomplete_lines': 0, 'rows': 457352, 'gap_refs': [{'source': '/home/dw/Projects/agent-sts2/.worktrees/live/logs/states.jsonl', 'source_size': 14613516359, 'line': 384730, 'offset': 12147077242, 'bytes': 30774, 'sha256': 'd16432e9966164264125aeaa4ac40b92d0ccd2c675bdaf823354c637ab50b96e', 'reason': 'invalid_json'}, {'source': '/home/dw/Projects/agent-sts2/.worktrees/live/logs/states.jsonl', 'source_size': 14613516359, 'line': 384746, 'offset': 12147505958, 'bytes': 22133, 'sha256': 'ad26f8bc1a55745b083208f3e4b1613c84667bcfc78195217f09d2e2d1ae4dc5', 'reason': 'invalid_json'}], 'gap_refs_limit': 5, 'status': 'scanned', 'source_sha256': '2dda769619ec59b0cfd4dbc8aa7ef10b3e394eebcc5545080b7f51bc617f8858'}",
+    "steps": [],
+    "run_count": 0,
+    "incremental": null,
+    "freeze_seconds": null,
+    "index_seconds": null,
+    "verify_prefix_seconds": null,
+    "pack": {}
+  },
+  {
+    "name": "refresh-v7zxypbo",
+    "started_at": "2026-10-19T19:01:52.819Z",
+    "ended_at": "2026-10-19T19:05:00.699Z",
+    "status": "failed",
+    "exit_code": 1,
+    "error": "ValueError: decision after its recorded run end",
+    "steps": [],
+    "run_count": 0,
+    "incremental": null,
+    "freeze_seconds": null,
+    "index_seconds": null,
+    "verify_prefix_seconds": null,
+    "pack": {}
+  },
+  {
+    "name": "refresh-u_12_6ii",
+    "started_at": "2026-10-19T22:18:15.821Z",
+    "ended_at": "2026-10-19T22:33:40.711Z",
+    "status": "published",
+    "exit_code": 0,
+    "error": null,
+    "steps": [
+      {
+        "name": "validate-cores",
+        "started_at": "2026-10-19T22:21:52.953Z",
+        "exit_code": 0,
+        "ended_at": "2026-10-19T22:21:53.441Z",
+        "stdout": {
+          "path": "/home/dw/Projects/agent-sts2/ops/codex-ops/v6-refresh/silent/refresh-u_12_6ii/validate-cores.stdout",
+          "bytes": 247,
+          "sha256": "96926a8aebcaae4e593bc65f7f1e04cf14bde8ce071e9d1e90bc8381b2dd1b32"
+        },
+        "stderr": {
+          "path": "/home/dw/Projects/agent-sts2/ops/codex-ops/v6-refresh/silent/refresh-u_12_6ii/validate-cores.stderr",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      },
+      {
+        "name": "combo-metrics",
+        "started_at": "2026-10-19T22:21:53.516Z",
+        "exit_code": 0,
+        "ended_at": "2026-10-19T22:30:39.974Z",
+        "stdout": {
+          "path": "/home/dw/Projects/agent-sts2/ops/codex-ops/v6-refresh/silent/refresh-u_12_6ii/combo-metrics.stdout",
+          "bytes": 138,
+          "sha256": "88a4e493f7e5ec5133b986a76632fdc166651d00bb3e4c25d44adb4aac58b99c"
+        },
+        "stderr": {
+          "path": "/home/dw/Projects/agent-sts2/ops/codex-ops/v6-refresh/silent/refresh-u_12_6ii/combo-metrics.stderr",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      },
+      {
+        "name": "v6-history",
+        "started_at": "2026-10-19T22:30:40.005Z",
+        "exit_code": 0,
+        "ended_at": "2026-10-19T22:30:48.623Z",
+        "stdout": {
+          "path": "/home/dw/Projects/agent-sts2/ops/codex-ops/v6-refresh/silent/refresh-u_12_6ii/v6-history.stdout",
+          "bytes": 341,
+          "sha256": "32eae631fe9b788f80087b473c0c1a57164f6232a33f5dfaa8a3b62ba1f940f9"
+        },
+        "stderr": {
+          "path": "/home/dw/Projects/agent-sts2/ops/codex-ops/v6-refresh/silent/refresh-u_12_6ii/v6-history.stderr",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      },
+      {
+        "name": "validate-history",
+        "started_at": "2026-10-19T22:30:48.624Z",
+        "exit_code": 0,
+        "ended_at": "2026-10-19T22:30:49.535Z",
+        "stdout": {
+          "path": "/home/dw/Projects/agent-sts2/ops/codex-ops/v6-refresh/silent/refresh-u_12_6ii/validate-history.stdout",
+          "bytes": 249,
+          "sha256": "869d4479966e04a51d79ec443d3bbf0fdbd513860911a0def9ccf10f91bb2d19"
+        },
+        "stderr": {
+          "path": "/home/dw/Projects/agent-sts2/ops/codex-ops/v6-refresh/silent/refresh-u_12_6ii/validate-history.stderr",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      }
+    ],
+    "run_count": 372,
+    "incremental": null,
+    "freeze_seconds": null,
+    "index_seconds": null,
+    "verify_prefix_seconds": null,
+    "pack": {
+      "file_sha256": "aea1fcc9b9927118a5f8158cadb6940576d1b8db783084edaca1d6c182f205f6",
+      "content_sha256": "531cd98c93395888832e05d6678a65a821862ab2bf5f9ac621d89ab1e0988219",
+      "cutoff": "2026-10-19T22:18:15.821Z",
+      "generated_at": "2026-10-19T22:30:46.940Z",
+      "combo_membership": {
+        "Y427BMQH8AU6": [],
+        "1ZZHM2MV19YB": [],
+        "CSBNU2H9LXKD": [],
+        "5ZEPCTQKKXE4": [],
+        "YSRVLSKVU8DL": [],
+        "T15WXHPTM0ET": [],
+        "T0TP8S9MMU9Q": [],
+        "RBMEQGXPE9Z2": [],
+        "JPWMMV67SZCL": []
+      },
+      "ended_membership": []
+    }
+  },
+  {
+    "name": "refresh-gvw5soon",
+    "started_at": "2026-10-19T23:39:46.535Z",
+    "ended_at": "2026-10-20T00:00:08.346Z",
+    "status": "published",
+    "exit_code": 0,
+    "error": null,
+    "steps": [
+      {
+        "name": "validate-cores",
+        "started_at": "2026-10-19T23:44:02.762Z",
+        "exit_code": 0,
+        "ended_at": "2026-10-19T23:44:03.700Z",
+        "stdout": {
+          "path": "/home/dw/Projects/agent-sts2/ops/codex-ops/v6-refresh/silent/refresh-gvw5soon/validate-cores.stdout",
+          "bytes": 247,
+          "sha256": "931260287da23f3d28144f4489c999854b9bd7d3a4ccedf85631f5e944bed9bd"
+        },
+        "stderr": {
+          "path": "/home/dw/Projects/agent-sts2/ops/codex-ops/v6-refresh/silent/refresh-gvw5soon/validate-cores.stderr",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      },
+      {
+        "name": "combo-metrics",
+        "started_at": "2026-10-19T23:44:03.804Z",
+        "exit_code": 0,
+        "ended_at": "2026-10-19T23:55:58.233Z",
+        "stdout": {
+          "path": "/home/dw/Projects/agent-sts2/ops/codex-ops/v6-refresh/silent/refresh-gvw5soon/combo-metrics.stdout",
+          "bytes": 138,
+          "sha256": "8a3a9bf773cd416acbf0d993568ddc6c10ea5e6654d3fe7ef031a55dfe0d7fe0"
+        },
+        "stderr": {
+          "path": "/home/dw/Projects/agent-sts2/ops/codex-ops/v6-refresh/silent/refresh-gvw5soon/combo-metrics.stderr",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      },
+      {
+        "name": "v6-history",
+        "started_at": "2026-10-19T23:55:58.272Z",
+        "exit_code": 0,
+        "ended_at": "2026-10-19T23:56:10.983Z",
+        "stdout": {
+          "path": "/home/dw/Projects/agent-sts2/ops/codex-ops/v6-refresh/silent/refresh-gvw5soon/v6-history.stdout",
+          "bytes": 341,
+          "sha256": "b3e01c7d7bb214642b5c1f4cf0de054bf23df1fb09bf71dd218eb613ffc9e479"
+        },
+        "stderr": {
+          "path": "/home/dw/Projects/agent-sts2/ops/codex-ops/v6-refresh/silent/refresh-gvw5soon/v6-history.stderr",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      },
+      {
+        "name": "validate-history",
+        "started_at": "2026-10-19T23:56:10.984Z",
+        "exit_code": 0,
+        "ended_at": "2026-10-19T23:56:12.283Z",
+        "stdout": {
+          "path": "/home/dw/Projects/agent-sts2/ops/codex-ops/v6-refresh/silent/refresh-gvw5soon/validate-history.stdout",
+          "bytes": 249,
+          "sha256": "673483b774b58b02dc0e6dc1c3c0c1228e288bc933cdf4177649e74cc00c4cfc"
+        },
+        "stderr": {
+          "path": "/home/dw/Projects/agent-sts2/ops/codex-ops/v6-refresh/silent/refresh-gvw5soon/validate-history.stderr",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      }
+    ],
+    "run_count": 372,
+    "incremental": null,
+    "freeze_seconds": null,
+    "index_seconds": null,
+    "verify_prefix_seconds": null,
+    "pack": {
+      "file_sha256": "f96faacf08ac61949a4d5ab2936e729ede17cad4e51384df378483269c7dd07c",
+      "content_sha256": "37d8c3af05eb92deb5024dd4cae7ad608ad434b5907dd32816a621fe5d3c8788",
+      "cutoff": "2026-10-19T23:39:46.535Z",
+      "generated_at": "2026-10-19T23:56:08.181Z",
+      "combo_membership": {
+        "Y427BMQH8AU6": [],
+        "1ZZHM2MV19YB": [],
+        "CSBNU2H9LXKD": [],
+        "5ZEPCTQKKXE4": [],
+        "YSRVLSKVU8DL": [],
+        "T15WXHPTM0ET": [],
+        "T0TP8S9MMU9Q": [],
+        "RBMEQGXPE9Z2": [],
+        "JPWMMV67SZCL": []
+      },
+      "ended_membership": []
+    }
+  },
+  {
+    "name": "refresh-8ltr96g5",
+    "started_at": "2026-10-20T01:02:48.848Z",
+    "ended_at": "2026-10-20T01:14:27.627Z",
+    "status": "failed",
+    "exit_code": 1,
+    "error": "RuntimeError: v6-history failed with exit 1",
+    "steps": [
+      {
+        "name": "validate-cores",
+        "started_at": "2026-10-20T01:06:04.813Z",
+        "exit_code": 0,
+        "ended_at": "2026-10-20T01:06:05.329Z",
+        "stdout": {
+          "path": "/home/dw/Projects/agent-sts2/ops/codex-ops/v6-refresh/silent/refresh-8ltr96g5/validate-cores.stdout",
+          "bytes": 247,
+          "sha256": "060ee839e48eccb0331204c2b2722d079f49c25ee79545cc20b78a05324971d9"
+        },
+        "stderr": {
+          "path": "/home/dw/Projects/agent-sts2/ops/codex-ops/v6-refresh/silent/refresh-8ltr96g5/validate-cores.stderr",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      },
+      {
+        "name": "combo-metrics",
+        "started_at": "2026-10-20T01:06:05.418Z",
+        "exit_code": 0,
+        "ended_at": "2026-10-20T01:14:18.619Z",
+        "stdout": {
+          "path": "/home/dw/Projects/agent-sts2/ops/codex-ops/v6-refresh/silent/refresh-8ltr96g5/combo-metrics.stdout",
+          "bytes": 138,
+          "sha256": "dbc7c5cb0d65976d47ff241f525a22187298dcd0841f7e0bb900df2aa52ca71a"
+        },
+        "stderr": {
+          "path": "/home/dw/Projects/agent-sts2/ops/codex-ops/v6-refresh/silent/refresh-8ltr96g5/combo-metrics.stderr",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      },
+      {
+        "name": "v6-history",
+        "started_at": "2026-10-20T01:14:18.651Z",
+        "exit_code": 1,
+        "ended_at": "2026-10-20T01:14:27.627Z",
+        "stdout": {
+          "path": "/home/dw/Projects/agent-sts2/ops/codex-ops/v6-refresh/silent/refresh-8ltr96g5/v6-history.stdout",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "stderr": {
+          "path": "/home/dw/Projects/agent-sts2/ops/codex-ops/v6-refresh/silent/refresh-8ltr96g5/v6-history.stderr",
+          "bytes": 741,
+          "sha256": "6898187d6279dc78791b1f0c5952c4be75d0580b21f2974a59ab9381ea62063a"
+        }
+      }
+    ],
+    "run_count": 373,
+    "incremental": null,
+    "freeze_seconds": null,
+    "index_seconds": null,
+    "verify_prefix_seconds": null,
+    "pack": {}
+  },
+  {
+    "name": "refresh-tc62b244",
+    "started_at": "2026-10-20T02:12:49.604Z",
+    "ended_at": "2026-10-20T02:27:09.693Z",
+    "status": "failed",
+    "exit_code": 1,
+    "error": "RuntimeError: v6-history failed with exit 1",
+    "steps": [
+      {
+        "name": "validate-cores",
+        "started_at": "2026-10-20T02:18:11.969Z",
+        "exit_code": 0,
+        "ended_at": "2026-10-20T02:18:12.305Z",
+        "stdout": {
+          "path": "/home/dw/Projects/agent-sts2/ops/codex-ops/v6-refresh/silent/refresh-tc62b244/validate-cores.stdout",
+          "bytes": 247,
+          "sha256": "51028e2841a6ed6bbd533268fbccb74f98a43ec8cb9701cc28dd6a4601e99e7f"
+        },
+        "stderr": {
+          "path": "/home/dw/Projects/agent-sts2/ops/codex-ops/v6-refresh/silent/refresh-tc62b244/validate-cores.stderr",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      },
+      {
+        "name": "combo-metrics",
+        "started_at": "2026-10-20T02:18:12.415Z",
+        "exit_code": 0,
+        "ended_at": "2026-10-20T02:27:02.619Z",
+        "stdout": {
+          "path": "/home/dw/Projects/agent-sts2/ops/codex-ops/v6-refresh/silent/refresh-tc62b244/combo-metrics.stdout",
+          "bytes": 138,
+          "sha256": "2fb0611ebf0f5b352b2c9e7882a4a0cc7674a69ca33dd3f6628818461d294792"
+        },
+        "stderr": {
+          "path": "/home/dw/Projects/agent-sts2/ops/codex-ops/v6-refresh/silent/refresh-tc62b244/combo-metrics.stderr",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      },
+      {
+        "name": "v6-history",
+        "started_at": "2026-10-20T02:27:02.649Z",
+        "exit_code": 1,
+        "ended_at": "2026-10-20T02:27:09.692Z",
+        "stdout": {
+          "path": "/home/dw/Projects/agent-sts2/ops/codex-ops/v6-refresh/silent/refresh-tc62b244/v6-history.stdout",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "stderr": {
+          "path": "/home/dw/Projects/agent-sts2/ops/codex-ops/v6-refresh/silent/refresh-tc62b244/v6-history.stderr",
+          "bytes": 1205,
+          "sha256": "ff84815d392c64f71ee8f2fb4bed81301ae2ba1fd78c9ed06b8f5ea36e1f0ed0"
+        }
+      }
+    ],
+    "run_count": 374,
+    "incremental": null,
+    "freeze_seconds": null,
+    "index_seconds": null,
+    "verify_prefix_seconds": null,
+    "pack": {}
+  },
+  {
+    "name": "refresh-1ddvr4_d",
+    "started_at": "2026-10-20T04:56:39.662Z",
+    "ended_at": "2026-10-20T05:12:46.812Z",
+    "status": "published",
+    "exit_code": 0,
+    "error": null,
+    "steps": [
+      {
+        "name": "validate-cores",
+        "started_at": "2026-10-20T05:03:20.183Z",
+        "exit_code": 0,
+        "ended_at": "2026-10-20T05:03:20.475Z",
+        "stdout": {
+          "path": "/home/dw/Projects/agent-sts2/ops/codex-ops/v6-refresh/silent/refresh-1ddvr4_d/validate-cores.stdout",
+          "bytes": 247,
+          "sha256": "a4b1529e589e7aab055218144fb9a6fcc1940c456a9eb2347beed949b2c86c3c"
+        },
+        "stderr": {
+          "path": "/home/dw/Projects/agent-sts2/ops/codex-ops/v6-refresh/silent/refresh-1ddvr4_d/validate-cores.stderr",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "seconds": 0.2920042248442769
+      },
+      {
+        "name": "combo-metrics",
+        "started_at": "2026-10-20T05:03:20.571Z",
+        "exit_code": 0,
+        "ended_at": "2026-10-20T05:12:28.234Z",
+        "stdout": {
+          "path": "/home/dw/Projects/agent-sts2/ops/codex-ops/v6-refresh/silent/refresh-1ddvr4_d/combo-metrics.stdout",
+          "bytes": 514,
+          "sha256": "2f3638cb1509666980f4ca01c59ff5cc2e03ea9cebf0d966f99b13c3e986d14b"
+        },
+        "stderr": {
+          "path": "/home/dw/Projects/agent-sts2/ops/codex-ops/v6-refresh/silent/refresh-1ddvr4_d/combo-metrics.stderr",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "seconds": 547.6631339411251
+      },
+      {
+        "name": "v6-history",
+        "started_at": "2026-10-20T05:12:28.264Z",
+        "exit_code": 0,
+        "ended_at": "2026-10-20T05:12:36.237Z",
+        "stdout": {
+          "path": "/home/dw/Projects/agent-sts2/ops/codex-ops/v6-refresh/silent/refresh-1ddvr4_d/v6-history.stdout",
+          "bytes": 341,
+          "sha256": "ff4b67459dc0014a2d0f1594fde23f594c55bdd76bd4f8230cdcc081f72e3128"
+        },
+        "stderr": {
+          "path": "/home/dw/Projects/agent-sts2/ops/codex-ops/v6-refresh/silent/refresh-1ddvr4_d/v6-history.stderr",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "seconds": 7.9733991040848196
+      },
+      {
+        "name": "validate-history",
+        "started_at": "2026-10-20T05:12:36.237Z",
+        "exit_code": 0,
+        "ended_at": "2026-10-20T05:12:37.140Z",
+        "stdout": {
+          "path": "/home/dw/Projects/agent-sts2/ops/codex-ops/v6-refresh/silent/refresh-1ddvr4_d/validate-history.stdout",
+          "bytes": 249,
+          "sha256": "7b15bdf3a24ccbe8926ebc54bb7d9bd1c9b4f79c5085caebf4cc53e71618e8c4"
+        },
+        "stderr": {
+          "path": "/home/dw/Projects/agent-sts2/ops/codex-ops/v6-refresh/silent/refresh-1ddvr4_d/validate-history.stderr",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "seconds": 0.9031682468485087
+      }
+    ],
+    "run_count": 375,
+    "incremental": {
+      "decoded_rows": 904364,
+      "indexed_rows": 904364,
+      "rebuilt_streams": [
+        "runs",
+        "states",
+        "sl-attempts",
+        "decisions"
+      ],
+      "cache_hits": 0,
+      "cache_misses": 750
+    },
+    "freeze_seconds": 400.4933116128668,
+    "index_seconds": 224.5513929768931,
+    "verify_prefix_seconds": 8.997352679027244,
+    "pack": {
+      "file_sha256": "79d58872c09e06ae76eedd6220bed14cc1bf8be6b7421942dc1fff06483f119f",
+      "content_sha256": "a684640bd8b83885c0d8d122146120db4ef572ee3b9478b5d0a96b4cdba05f76",
+      "cutoff": "2026-10-20T04:56:39.662Z",
+      "generated_at": "2026-10-20T05:12:34.675Z",
+      "combo_membership": {
+        "Y427BMQH8AU6": [],
+        "1ZZHM2MV19YB": [],
+        "CSBNU2H9LXKD": [],
+        "5ZEPCTQKKXE4": [],
+        "YSRVLSKVU8DL": [],
+        "T15WXHPTM0ET": [],
+        "T0TP8S9MMU9Q": [],
+        "RBMEQGXPE9Z2": [],
+        "JPWMMV67SZCL": []
+      },
+      "ended_membership": []
+    }
+  },
+  {
+    "name": "refresh-5xsxuoo0",
+    "started_at": "2026-10-20T06:11:52.521Z",
+    "ended_at": "2026-10-20T06:16:43.052Z",
+    "status": "published",
+    "exit_code": 0,
+    "error": null,
+    "steps": [
+      {
+        "name": "validate-cores",
+        "started_at": "2026-10-20T06:12:23.353Z",
+        "exit_code": 0,
+        "ended_at": "2026-10-20T06:12:23.626Z",
+        "stdout": {
+          "path": "/home/dw/Projects/agent-sts2/ops/codex-ops/v6-refresh/silent/refresh-5xsxuoo0/validate-cores.stdout",
+          "bytes": 247,
+          "sha256": "c170c56f9ba6fad45b9a231157193f4d867e4b529c267c6c19ae83d68ec26e19"
+        },
+        "stderr": {
+          "path": "/home/dw/Projects/agent-sts2/ops/codex-ops/v6-refresh/silent/refresh-5xsxuoo0/validate-cores.stderr",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "seconds": 0.274012265028432
+      },
+      {
+        "name": "combo-metrics",
+        "started_at": "2026-10-20T06:12:23.704Z",
+        "exit_code": 0,
+        "ended_at": "2026-10-20T06:16:17.543Z",
+        "stdout": {
+          "path": "/home/dw/Projects/agent-sts2/ops/codex-ops/v6-refresh/silent/refresh-5xsxuoo0/combo-metrics.stdout",
+          "bytes": 515,
+          "sha256": "f5dfe4962008c923067b025e1ceafde4c87374ef65700c3beca3f620604a0231"
+        },
+        "stderr": {
+          "path": "/home/dw/Projects/agent-sts2/ops/codex-ops/v6-refresh/silent/refresh-5xsxuoo0/combo-metrics.stderr",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "seconds": 233.8395495628938
+      },
+      {
+        "name": "v6-history",
+        "started_at": "2026-10-20T06:16:17.582Z",
+        "exit_code": 0,
+        "ended_at": "2026-10-20T06:16:29.606Z",
+        "stdout": {
+          "path": "/home/dw/Projects/agent-sts2/ops/codex-ops/v6-refresh/silent/refresh-5xsxuoo0/v6-history.stdout",
+          "bytes": 341,
+          "sha256": "01862f71695775333844c2df3e47baa5d27a262a226eab02069a12adc679033e"
+        },
+        "stderr": {
+          "path": "/home/dw/Projects/agent-sts2/ops/codex-ops/v6-refresh/silent/refresh-5xsxuoo0/v6-history.stderr",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "seconds": 12.024773726938292
+      },
+      {
+        "name": "validate-history",
+        "started_at": "2026-10-20T06:16:29.607Z",
+        "exit_code": 0,
+        "ended_at": "2026-10-20T06:16:30.634Z",
+        "stdout": {
+          "path": "/home/dw/Projects/agent-sts2/ops/codex-ops/v6-refresh/silent/refresh-5xsxuoo0/validate-history.stdout",
+          "bytes": 249,
+          "sha256": "86aae98f3da1db539c12fd3a32457eeff846c3474cefc90c7bb3220aef6f2c14"
+        },
+        "stderr": {
+          "path": "/home/dw/Projects/agent-sts2/ops/codex-ops/v6-refresh/silent/refresh-5xsxuoo0/validate-history.stderr",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "seconds": 1.027418304933235
+      }
+    ],
+    "run_count": 376,
+    "incremental": {
+      "decoded_rows": 1303,
+      "indexed_rows": 905667,
+      "rebuilt_streams": [],
+      "cache_hits": 750,
+      "cache_misses": 2
+    },
+    "freeze_seconds": 30.81393067492172,
+    "index_seconds": 10.894835531944409,
+    "verify_prefix_seconds": 11.708717517089099,
+    "pack": {
+      "file_sha256": "e5cff5f41c6c95341aac26893ade30ba2679de11a4eceb311e058d8a6dfe09ee",
+      "content_sha256": "15de6aab76353a3e42f36d506c0702e41e24f238f5c784a4d24622b9b7261723",
+      "cutoff": "2026-10-20T06:11:52.521Z",
+      "generated_at": "2026-10-20T06:16:27.824Z",
+      "combo_membership": {
+        "Y427BMQH8AU6": [],
+        "1ZZHM2MV19YB": [],
+        "CSBNU2H9LXKD": [],
+        "5ZEPCTQKKXE4": [],
+        "YSRVLSKVU8DL": [],
+        "T15WXHPTM0ET": [],
+        "T0TP8S9MMU9Q": [],
+        "RBMEQGXPE9Z2": [],
+        "JPWMMV67SZCL": []
+      },
+      "ended_membership": []
+    }
+  },
+  {
+    "name": "refresh-zv7wkd4p",
+    "started_at": "2026-10-20T07:06:59.581Z",
+    "ended_at": "2026-10-20T07:10:27.487Z",
+    "status": "published",
+    "exit_code": 0,
+    "error": null,
+    "steps": [
+      {
+        "name": "validate-cores",
+        "started_at": "2026-10-20T07:07:29.911Z",
+        "exit_code": 0,
+        "ended_at": "2026-10-20T07:07:30.224Z",
+        "stdout": {
+          "path": "/home/dw/Projects/agent-sts2/ops/codex-ops/v6-refresh/silent/refresh-zv7wkd4p/validate-cores.stdout",
+          "bytes": 247,
+          "sha256": "2303759fe3a4b5d3ea3eeff3a03b498db592dbfd7b8ed99bdb78dce5cddfb5ac"
+        },
+        "stderr": {
+          "path": "/home/dw/Projects/agent-sts2/ops/codex-ops/v6-refresh/silent/refresh-zv7wkd4p/validate-cores.stderr",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "seconds": 0.313705240143463
+      },
+      {
+        "name": "combo-metrics",
+        "started_at": "2026-10-20T07:07:30.322Z",
+        "exit_code": 0,
+        "ended_at": "2026-10-20T07:10:07.435Z",
+        "stdout": {
+          "path": "/home/dw/Projects/agent-sts2/ops/codex-ops/v6-refresh/silent/refresh-zv7wkd4p/combo-metrics.stdout",
+          "bytes": 515,
+          "sha256": "4183dad40adb43562436f6c98f3eaa08b4b469222a80263ab0d2b9b14e706711"
+        },
+        "stderr": {
+          "path": "/home/dw/Projects/agent-sts2/ops/codex-ops/v6-refresh/silent/refresh-zv7wkd4p/combo-metrics.stderr",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "seconds": 157.11324999597855
+      },
+      {
+        "name": "v6-history",
+        "started_at": "2026-10-20T07:10:07.466Z",
+        "exit_code": 0,
+        "ended_at": "2026-10-20T07:10:15.865Z",
+        "stdout": {
+          "path": "/home/dw/Projects/agent-sts2/ops/codex-ops/v6-refresh/silent/refresh-zv7wkd4p/v6-history.stdout",
+          "bytes": 341,
+          "sha256": "2caeaa0cabf1f82f6240c237c2cc822a3177b8db1ad04ce90a5db66c00b77e68"
+        },
+        "stderr": {
+          "path": "/home/dw/Projects/agent-sts2/ops/codex-ops/v6-refresh/silent/refresh-zv7wkd4p/v6-history.stderr",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "seconds": 8.398669547168538
+      },
+      {
+        "name": "validate-history",
+        "started_at": "2026-10-20T07:10:15.865Z",
+        "exit_code": 0,
+        "ended_at": "2026-10-20T07:10:16.817Z",
+        "stdout": {
+          "path": "/home/dw/Projects/agent-sts2/ops/codex-ops/v6-refresh/silent/refresh-zv7wkd4p/validate-history.stdout",
+          "bytes": 249,
+          "sha256": "4db9e106079d949daee737ef48354baff903ea4cdfe3286a41ff0aeb1fe6625f"
+        },
+        "stderr": {
+          "path": "/home/dw/Projects/agent-sts2/ops/codex-ops/v6-refresh/silent/refresh-zv7wkd4p/validate-history.stderr",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "seconds": 0.9526284239254892
+      }
+    ],
+    "run_count": 377,
+    "incremental": {
+      "decoded_rows": 852,
+      "indexed_rows": 906519,
+      "rebuilt_streams": [],
+      "cache_hits": 752,
+      "cache_misses": 2
+    },
+    "freeze_seconds": 30.31037370604463,
+    "index_seconds": 10.8160627449397,
+    "verify_prefix_seconds": 10.015530343167484,
+    "pack": {
+      "file_sha256": "9cfd95503615b269b7301f7276b57448f0b68a98b9056fa5662b3c9fdb8625c4",
+      "content_sha256": "70e558633ca92bec2c110bec913ec060f529389933b48c1319bd17b6c9396d86",
+      "cutoff": "2026-10-20T07:06:59.581Z",
+      "generated_at": "2026-10-20T07:10:14.254Z",
+      "combo_membership": {
+        "Y427BMQH8AU6": [],
+        "1ZZHM2MV19YB": [],
+        "CSBNU2H9LXKD": [],
+        "5ZEPCTQKKXE4": [],
+        "YSRVLSKVU8DL": [],
+        "T15WXHPTM0ET": [],
+        "T0TP8S9MMU9Q": [],
+        "RBMEQGXPE9Z2": [],
+        "JPWMMV67SZCL": []
+      },
+      "ended_membership": []
+    }
+  },
+  {
+    "name": "refresh-pw9i8vlm",
+    "started_at": "2026-10-20T08:29:02.871Z",
+    "ended_at": "2026-10-20T08:32:52.014Z",
+    "status": "published",
+    "exit_code": 0,
+    "error": null,
+    "steps": [
+      {
+        "name": "validate-cores",
+        "started_at": "2026-10-20T08:29:34.095Z",
+        "exit_code": 0,
+        "ended_at": "2026-10-20T08:29:34.361Z",
+        "stdout": {
+          "path": "/home/dw/Projects/agent-sts2/ops/codex-ops/v6-refresh/silent/refresh-pw9i8vlm/validate-cores.stdout",
+          "bytes": 247,
+          "sha256": "59b1b1396e928888c2dbc1f614fc407a136a603074882fbd23f2bf09444d69f0"
+        },
+        "stderr": {
+          "path": "/home/dw/Projects/agent-sts2/ops/codex-ops/v6-refresh/silent/refresh-pw9i8vlm/validate-cores.stderr",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "seconds": 0.2661154440138489
+      },
+      {
+        "name": "combo-metrics",
+        "started_at": "2026-10-20T08:29:34.434Z",
+        "exit_code": 0,
+        "ended_at": "2026-10-20T08:32:30.949Z",
+        "stdout": {
+          "path": "/home/dw/Projects/agent-sts2/ops/codex-ops/v6-refresh/silent/refresh-pw9i8vlm/combo-metrics.stdout",
+          "bytes": 512,
+          "sha256": "2d73f763dd2b8bd64084e51243fceeb889f6bcad88a3de8befd15d935d02db8c"
+        },
+        "stderr": {
+          "path": "/home/dw/Projects/agent-sts2/ops/codex-ops/v6-refresh/silent/refresh-pw9i8vlm/combo-metrics.stderr",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "seconds": 176.51603056211025
+      },
+      {
+        "name": "v6-history",
+        "started_at": "2026-10-20T08:32:30.981Z",
+        "exit_code": 0,
+        "ended_at": "2026-10-20T08:32:40.042Z",
+        "stdout": {
+          "path": "/home/dw/Projects/agent-sts2/ops/codex-ops/v6-refresh/silent/refresh-pw9i8vlm/v6-history.stdout",
+          "bytes": 341,
+          "sha256": "b73e7ccba1b3a95a466a43cfd158062a5ca7553a5e242e170a68a46a480f8e11"
+        },
+        "stderr": {
+          "path": "/home/dw/Projects/agent-sts2/ops/codex-ops/v6-refresh/silent/refresh-pw9i8vlm/v6-history.stderr",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "seconds": 9.06125485082157
+      },
+      {
+        "name": "validate-history",
+        "started_at": "2026-10-20T08:32:40.043Z",
+        "exit_code": 0,
+        "ended_at": "2026-10-20T08:32:40.994Z",
+        "stdout": {
+          "path": "/home/dw/Projects/agent-sts2/ops/codex-ops/v6-refresh/silent/refresh-pw9i8vlm/validate-history.stdout",
+          "bytes": 249,
+          "sha256": "5411fa9fb524aa38dee51490ff461bb44c888843930e47a2db37e46372284a55"
+        },
+        "stderr": {
+          "path": "/home/dw/Projects/agent-sts2/ops/codex-ops/v6-refresh/silent/refresh-pw9i8vlm/validate-history.stderr",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "seconds": 0.9520721430890262
+      }
+    ],
+    "run_count": 378,
+    "incremental": {
+      "decoded_rows": 1054,
+      "indexed_rows": 907573,
+      "rebuilt_streams": [],
+      "cache_hits": 754,
+      "cache_misses": 2
+    },
+    "freeze_seconds": 31.209117230959237,
+    "index_seconds": 10.89392287004739,
+    "verify_prefix_seconds": 10.214617468882352,
+    "pack": {
+      "file_sha256": "a8ec54e89f7cb56ac911a981089ec8835f84c21ef3594ed7363c5a9c52e145f3",
+      "content_sha256": "3a5833b7b0086c939698a885a64bb87e4267c2a834b38d58fb12bde88c9a1852",
+      "cutoff": "2026-10-20T08:29:02.871Z",
+      "generated_at": "2026-10-20T08:32:38.312Z",
+      "combo_membership": {
+        "Y427BMQH8AU6": [],
+        "1ZZHM2MV19YB": [],
+        "CSBNU2H9LXKD": [],
+        "5ZEPCTQKKXE4": [],
+        "YSRVLSKVU8DL": [],
+        "T15WXHPTM0ET": [],
+        "T0TP8S9MMU9Q": [],
+        "RBMEQGXPE9Z2": [],
+        "JPWMMV67SZCL": []
+      },
+      "ended_membership": []
+    }
+  },
+  {
+    "name": "refresh-xz14167p",
+    "started_at": "2026-10-20T09:33:28.753Z",
+    "ended_at": "2026-10-20T09:37:02.925Z",
+    "status": "published",
+    "exit_code": 0,
+    "error": null,
+    "steps": [
+      {
+        "name": "validate-cores",
+        "started_at": "2026-10-20T09:34:02.882Z",
+        "exit_code": 0,
+        "ended_at": "2026-10-20T09:34:03.167Z",
+        "stdout": {
+          "path": "/home/dw/Projects/agent-sts2/ops/codex-ops/v6-refresh/silent/refresh-xz14167p/validate-cores.stdout",
+          "bytes": 247,
+          "sha256": "4c4a95ee052547eb40b0ea640ca6733b76cc092f7044e700cc5895628051ce1c"
+        },
+        "stderr": {
+          "path": "/home/dw/Projects/agent-sts2/ops/codex-ops/v6-refresh/silent/refresh-xz14167p/validate-cores.stderr",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "seconds": 0.2852120001334697
+      },
+      {
+        "name": "combo-metrics",
+        "started_at": "2026-10-20T09:34:03.244Z",
+        "exit_code": 0,
+        "ended_at": "2026-10-20T09:36:42.944Z",
+        "stdout": {
+          "path": "/home/dw/Projects/agent-sts2/ops/codex-ops/v6-refresh/silent/refresh-xz14167p/combo-metrics.stdout",
+          "bytes": 514,
+          "sha256": "86d222619e29b763b8f9b33687e21229b0ecaaba4b873942bf47fda2764ba107"
+        },
+        "stderr": {
+          "path": "/home/dw/Projects/agent-sts2/ops/codex-ops/v6-refresh/silent/refresh-xz14167p/combo-metrics.stderr",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "seconds": 159.70026929606684
+      },
+      {
+        "name": "v6-history",
+        "started_at": "2026-10-20T09:36:42.975Z",
+        "exit_code": 0,
+        "ended_at": "2026-10-20T09:36:52.000Z",
+        "stdout": {
+          "path": "/home/dw/Projects/agent-sts2/ops/codex-ops/v6-refresh/silent/refresh-xz14167p/v6-history.stdout",
+          "bytes": 341,
+          "sha256": "2b5a06c41983a10094ccb0bc5f9dbc6a747b56574bf63b44880c6200e2a0e85a"
+        },
+        "stderr": {
+          "path": "/home/dw/Projects/agent-sts2/ops/codex-ops/v6-refresh/silent/refresh-xz14167p/v6-history.stderr",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "seconds": 9.025478464085609
+      },
+      {
+        "name": "validate-history",
+        "started_at": "2026-10-20T09:36:52.000Z",
+        "exit_code": 0,
+        "ended_at": "2026-10-20T09:36:52.938Z",
+        "stdout": {
+          "path": "/home/dw/Projects/agent-sts2/ops/codex-ops/v6-refresh/silent/refresh-xz14167p/validate-history.stdout",
+          "bytes": 249,
+          "sha256": "89e345e1d6c2c3bc38b7c1d5563c906af0ab0da1c797828b391dc1229298ee87"
+        },
+        "stderr": {
+          "path": "/home/dw/Projects/agent-sts2/ops/codex-ops/v6-refresh/silent/refresh-xz14167p/validate-history.stderr",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "seconds": 0.938232519896701
+      }
+    ],
+    "run_count": 379,
+    "incremental": {
+      "decoded_rows": 923,
+      "indexed_rows": 908496,
+      "rebuilt_streams": [],
+      "cache_hits": 756,
+      "cache_misses": 2
+    },
+    "freeze_seconds": 34.112156140152365,
+    "index_seconds": 10.050835828995332,
+    "verify_prefix_seconds": 9.355823426041752,
+    "pack": {
+      "file_sha256": "2382658dc927ad4bcf3d8a18b5329bc50b6622f0cf58e6544cedbc9d47801514",
+      "content_sha256": "08af66021800020b3fc55e8125e3f6034381208dc009fdcd71f6ec407655946e",
+      "cutoff": "2026-10-20T09:33:28.753Z",
+      "generated_at": "2026-10-20T09:36:50.363Z",
+      "combo_membership": {
+        "Y427BMQH8AU6": [],
+        "1ZZHM2MV19YB": [],
+        "CSBNU2H9LXKD": [],
+        "5ZEPCTQKKXE4": [],
+        "YSRVLSKVU8DL": [],
+        "T15WXHPTM0ET": [],
+        "T0TP8S9MMU9Q": [],
+        "RBMEQGXPE9Z2": [],
+        "JPWMMV67SZCL": []
+      },
+      "ended_membership": []
+    }
+  },
+  {
+    "name": "refresh-jjvxm84u",
+    "started_at": "2026-10-20T10:46:33.971Z",
+    "ended_at": "2026-10-20T10:50:56.091Z",
+    "status": "published",
+    "exit_code": 0,
+    "error": null,
+    "steps": [
+      {
+        "name": "validate-cores",
+        "started_at": "2026-10-20T10:47:10.537Z",
+        "exit_code": 0,
+        "ended_at": "2026-10-20T10:47:10.870Z",
+        "stdout": {
+          "path": "/home/dw/Projects/agent-sts2/ops/codex-ops/v6-refresh/silent/refresh-jjvxm84u/validate-cores.stdout",
+          "bytes": 247,
+          "sha256": "095c9b510c23eb95c7f19318ebbf37deb85690657c75db7e1cded84baa280f4a"
+        },
+        "stderr": {
+          "path": "/home/dw/Projects/agent-sts2/ops/codex-ops/v6-refresh/silent/refresh-jjvxm84u/validate-cores.stderr",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "seconds": 0.33283282606862485
+      },
+      {
+        "name": "combo-metrics",
+        "started_at": "2026-10-20T10:47:10.966Z",
+        "exit_code": 0,
+        "ended_at": "2026-10-20T10:50:29.220Z",
+        "stdout": {
+          "path": "/home/dw/Projects/agent-sts2/ops/codex-ops/v6-refresh/silent/refresh-jjvxm84u/combo-metrics.stdout",
+          "bytes": 515,
+          "sha256": "030ed4003cd47fb20f989a57394e637040acd85cfcd5190d814884dfbdff497d"
+        },
+        "stderr": {
+          "path": "/home/dw/Projects/agent-sts2/ops/codex-ops/v6-refresh/silent/refresh-jjvxm84u/combo-metrics.stderr",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "seconds": 198.25420837500133
+      },
+      {
+        "name": "v6-history",
+        "started_at": "2026-10-20T10:50:29.252Z",
+        "exit_code": 0,
+        "ended_at": "2026-10-20T10:50:38.869Z",
+        "stdout": {
+          "path": "/home/dw/Projects/agent-sts2/ops/codex-ops/v6-refresh/silent/refresh-jjvxm84u/v6-history.stdout",
+          "bytes": 341,
+          "sha256": "3ef71a8fa01684e3406d85a05e9f9a2f2ed584db872cfc713faf014c736eadc3"
+        },
+        "stderr": {
+          "path": "/home/dw/Projects/agent-sts2/ops/codex-ops/v6-refresh/silent/refresh-jjvxm84u/v6-history.stderr",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "seconds": 9.616846047108993
+      },
+      {
+        "name": "validate-history",
+        "started_at": "2026-10-20T10:50:38.869Z",
+        "exit_code": 0,
+        "ended_at": "2026-10-20T10:50:40.429Z",
+        "stdout": {
+          "path": "/home/dw/Projects/agent-sts2/ops/codex-ops/v6-refresh/silent/refresh-jjvxm84u/validate-history.stdout",
+          "bytes": 249,
+          "sha256": "506595946f802a711a34bd77876d0031dcafe7bf82c46105f3049f518a0fde35"
+        },
+        "stderr": {
+          "path": "/home/dw/Projects/agent-sts2/ops/codex-ops/v6-refresh/silent/refresh-jjvxm84u/validate-history.stderr",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "seconds": 1.5603890239726752
+      }
+    ],
+    "run_count": 380,
+    "incremental": {
+      "decoded_rows": 1152,
+      "indexed_rows": 909648,
+      "rebuilt_streams": [],
+      "cache_hits": 758,
+      "cache_misses": 2
+    },
+    "freeze_seconds": 36.547735260101035,
+    "index_seconds": 11.663369257934391,
+    "verify_prefix_seconds": 14.702645426150411,
+    "pack": {
+      "file_sha256": "bc0290ae8354871156068817f0b88c7712af105796fb208d73a2ec03fc08bcc4",
+      "content_sha256": "5369ff1e556a81028424bd4299330c83ddca0f484d50c420ab8de8910be47b3c",
+      "cutoff": "2026-10-20T10:46:33.971Z",
+      "generated_at": "2026-10-20T10:50:37.026Z",
+      "combo_membership": {
+        "Y427BMQH8AU6": [],
+        "1ZZHM2MV19YB": [],
+        "CSBNU2H9LXKD": [],
+        "5ZEPCTQKKXE4": [],
+        "YSRVLSKVU8DL": [],
+        "T15WXHPTM0ET": [],
+        "T0TP8S9MMU9Q": [],
+        "RBMEQGXPE9Z2": [],
+        "JPWMMV67SZCL": []
+      },
+      "ended_membership": []
+    }
+  },
+  {
+    "name": "refresh-g7ptjpbt",
+    "started_at": "2026-10-20T14:30:05.482Z",
+    "ended_at": "2026-10-20T14:33:44.888Z",
+    "status": "published",
+    "exit_code": 0,
+    "error": null,
+    "steps": [
+      {
+        "name": "validate-cores",
+        "started_at": "2026-10-20T14:30:39.688Z",
+        "exit_code": 0,
+        "ended_at": "2026-10-20T14:30:40.011Z",
+        "stdout": {
+          "path": "/home/dw/Projects/agent-sts2/ops/codex-ops/v6-refresh/silent/refresh-g7ptjpbt/validate-cores.stdout",
+          "bytes": 247,
+          "sha256": "39a95f125c0ed51e373c0a4eb9eb8bfd76aedebb2e8e927cc9496f7069c9fc61"
+        },
+        "stderr": {
+          "path": "/home/dw/Projects/agent-sts2/ops/codex-ops/v6-refresh/silent/refresh-g7ptjpbt/validate-cores.stderr",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "seconds": 0.32294291304424405
+      },
+      {
+        "name": "combo-metrics",
+        "started_at": "2026-10-20T14:30:40.103Z",
+        "exit_code": 0,
+        "ended_at": "2026-10-20T14:33:23.049Z",
+        "stdout": {
+          "path": "/home/dw/Projects/agent-sts2/ops/codex-ops/v6-refresh/silent/refresh-g7ptjpbt/combo-metrics.stdout",
+          "bytes": 515,
+          "sha256": "2d024b61a9918e6f54b164146d3ada3b1ac44064a9e1e31034f4ffb20f138352"
+        },
+        "stderr": {
+          "path": "/home/dw/Projects/agent-sts2/ops/codex-ops/v6-refresh/silent/refresh-g7ptjpbt/combo-metrics.stderr",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "seconds": 162.94630606588908
+      },
+      {
+        "name": "v6-history",
+        "started_at": "2026-10-20T14:33:23.080Z",
+        "exit_code": 0,
+        "ended_at": "2026-10-20T14:33:33.794Z",
+        "stdout": {
+          "path": "/home/dw/Projects/agent-sts2/ops/codex-ops/v6-refresh/silent/refresh-g7ptjpbt/v6-history.stdout",
+          "bytes": 341,
+          "sha256": "8887cd784efae684bafe5a593f1b6813155cce5190b02a30479d2a4d8c4ddb40"
+        },
+        "stderr": {
+          "path": "/home/dw/Projects/agent-sts2/ops/codex-ops/v6-refresh/silent/refresh-g7ptjpbt/v6-history.stderr",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "seconds": 10.714476565131918
+      },
+      {
+        "name": "validate-history",
+        "started_at": "2026-10-20T14:33:33.794Z",
+        "exit_code": 0,
+        "ended_at": "2026-10-20T14:33:34.709Z",
+        "stdout": {
+          "path": "/home/dw/Projects/agent-sts2/ops/codex-ops/v6-refresh/silent/refresh-g7ptjpbt/validate-history.stdout",
+          "bytes": 249,
+          "sha256": "4ac914ba47f9baa0ad8d94bb91fe25eccab90013697182b594b05a82155ef865"
+        },
+        "stderr": {
+          "path": "/home/dw/Projects/agent-sts2/ops/codex-ops/v6-refresh/silent/refresh-g7ptjpbt/validate-history.stderr",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "seconds": 0.9151879230048507
+      }
+    ],
+    "run_count": 381,
+    "incremental": {
+      "decoded_rows": 1603,
+      "indexed_rows": 911251,
+      "rebuilt_streams": [],
+      "cache_hits": 760,
+      "cache_misses": 2
+    },
+    "freeze_seconds": 34.1874385131523,
+    "index_seconds": 9.810982199152932,
+    "verify_prefix_seconds": 9.422255573095754,
+    "pack": {
+      "file_sha256": "e8b85339ba1b866a06a6a94a5ef2162d2b03b8892ecd6bf0f073b4ebfcadca98",
+      "content_sha256": "996caf78cea00a709646a0893aa78e38445343ee8c97d3f47080f733c3c7ce07",
+      "cutoff": "2026-10-20T14:30:05.482Z",
+      "generated_at": "2026-10-20T14:33:32.201Z",
+      "combo_membership": {
+        "Y427BMQH8AU6": [
+          "P-toxin-footwork",
+          "P-fumes-footwork",
+          "P-flask-afterimage",
+          "P-flask-footwork",
+          "P-mixed-defense",
+          "P-toxin-mirage",
+          "D-toxin-backflip",
+          "D-fumes-backflip",
+          "D-flask-sweep",
+          "D-observed-union-fbc4b776",
+          "S-dance-accuracy",
+          "S-cloak-phantom",
+          "S-dance-afterimage",
+          "S-observed-union-35f60a95",
+          "R-acro-tingsha",
+          "R-tools-tingsha",
+          "R-acro-bandages"
+        ],
+        "1ZZHM2MV19YB": [],
+        "CSBNU2H9LXKD": [],
+        "5ZEPCTQKKXE4": [],
+        "YSRVLSKVU8DL": [],
+        "T15WXHPTM0ET": [],
+        "T0TP8S9MMU9Q": [],
+        "RBMEQGXPE9Z2": [],
+        "JPWMMV67SZCL": []
+      },
+      "ended_membership": [
+        "Y427BMQH8AU6"
+      ]
+    }
+  },
+  {
+    "name": "refresh-6ykwj5fw",
+    "started_at": "2026-10-20T15:12:54.570Z",
+    "ended_at": "2026-10-20T15:37:54.592Z",
+    "status": "published",
+    "exit_code": 0,
+    "error": null,
+    "steps": [
+      {
+        "name": "validate-cores",
+        "started_at": "2026-10-20T15:13:58.326Z",
+        "exit_code": 0,
+        "ended_at": "2026-10-20T15:13:58.632Z",
+        "stdout": {
+          "path": "/home/dw/Projects/agent-sts2/ops/codex-ops/v6-refresh/silent/refresh-6ykwj5fw/validate-cores.stdout",
+          "bytes": 247,
+          "sha256": "16f53d21ba8aa389c965205b750221747f485ea283d156149f2369e879012681"
+        },
+        "stderr": {
+          "path": "/home/dw/Projects/agent-sts2/ops/codex-ops/v6-refresh/silent/refresh-6ykwj5fw/validate-cores.stderr",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "seconds": 0.30716242687776685
+      },
+      {
+        "name": "combo-metrics",
+        "started_at": "2026-10-20T15:13:58.719Z",
+        "exit_code": 0,
+        "ended_at": "2026-10-20T15:18:31.841Z",
+        "stdout": {
+          "path": "/home/dw/Projects/agent-sts2/ops/codex-ops/v6-refresh/silent/refresh-6ykwj5fw/combo-metrics.stdout",
+          "bytes": 516,
+          "sha256": "eb0df2d173ecb64b61aa45b03c541d4918ae38fb51976cdb190797bc712838b8"
+        },
+        "stderr": {
+          "path": "/home/dw/Projects/agent-sts2/ops/codex-ops/v6-refresh/silent/refresh-6ykwj5fw/combo-metrics.stderr",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "seconds": 273.1222213988658
+      },
+      {
+        "name": "v6-history",
+        "started_at": "2026-10-20T15:18:31.879Z",
+        "exit_code": 0,
+        "ended_at": "2026-10-20T15:18:43.104Z",
+        "stdout": {
+          "path": "/home/dw/Projects/agent-sts2/ops/codex-ops/v6-refresh/silent/refresh-6ykwj5fw/v6-history.stdout",
+          "bytes": 341,
+          "sha256": "e7a7b6c5dd2d6161184ce4a0a9018032a4a8f74af02eaaff17c15f32781b70ff"
+        },
+        "stderr": {
+          "path": "/home/dw/Projects/agent-sts2/ops/codex-ops/v6-refresh/silent/refresh-6ykwj5fw/v6-history.stderr",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "seconds": 11.224989803973585
+      },
+      {
+        "name": "validate-history",
+        "started_at": "2026-10-20T15:18:43.104Z",
+        "exit_code": 0,
+        "ended_at": "2026-10-20T15:18:44.620Z",
+        "stdout": {
+          "path": "/home/dw/Projects/agent-sts2/ops/codex-ops/v6-refresh/silent/refresh-6ykwj5fw/validate-history.stdout",
+          "bytes": 249,
+          "sha256": "9778adee9fabeae68f8dadfa48af1f54d303e8549be075fff846308871bb94d9"
+        },
+        "stderr": {
+          "path": "/home/dw/Projects/agent-sts2/ops/codex-ops/v6-refresh/silent/refresh-6ykwj5fw/validate-history.stderr",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "seconds": 1.5162048561032861
+      }
+    ],
+    "run_count": 382,
+    "incremental": {
+      "decoded_rows": 1228,
+      "indexed_rows": 912479,
+      "rebuilt_streams": [],
+      "cache_hits": 762,
+      "cache_misses": 2
+    },
+    "freeze_seconds": 63.73637307086028,
+    "index_seconds": 10.179312428925186,
+    "verify_prefix_seconds": 12.035995271988213,
+    "pack": {
+      "file_sha256": "bdd39dcbee58131517a656d9ea7e1d66492ba8ddf31c3072a93c9a4871c73a94",
+      "content_sha256": "a55900d7fdef0b90b6bc4d7807004821fa2c5a90f964f92cc8642a83a9d38061",
+      "cutoff": "2026-10-20T15:12:54.570Z",
+      "generated_at": "2026-10-20T15:18:40.842Z",
+      "combo_membership": {
+        "Y427BMQH8AU6": [
+          "P-toxin-footwork",
+          "P-fumes-footwork",
+          "P-flask-afterimage",
+          "P-flask-footwork",
+          "P-mixed-defense",
+          "P-toxin-mirage",
+          "D-toxin-backflip",
+          "D-fumes-backflip",
+          "D-flask-sweep",
+          "D-observed-union-fbc4b776",
+          "S-dance-accuracy",
+          "S-cloak-phantom",
+          "S-dance-afterimage",
+          "S-observed-union-35f60a95",
+          "R-acro-tingsha",
+          "R-tools-tingsha",
+          "R-acro-bandages"
+        ],
+        "1ZZHM2MV19YB": [],
+        "CSBNU2H9LXKD": [],
+        "5ZEPCTQKKXE4": [
+          "P-toxin-footwork",
+          "P-fumes-footwork",
+          "P-flask-afterimage",
+          "P-flask-footwork",
+          "P-mixed-defense",
+          "P-toxin-mirage",
+          "D-toxin-backflip",
+          "D-fumes-backflip",
+          "D-flask-sweep",
+          "D-observed-union-fbc4b776",
+          "S-dance-accuracy",
+          "S-cloak-phantom",
+          "S-dance-afterimage",
+          "S-observed-union-35f60a95",
+          "R-acro-tingsha",
+          "R-tools-tingsha",
+          "R-acro-bandages"
+        ],
+        "YSRVLSKVU8DL": [],
+        "T15WXHPTM0ET": [],
+        "T0TP8S9MMU9Q": [],
+        "RBMEQGXPE9Z2": [],
+        "JPWMMV67SZCL": []
+      },
+      "ended_membership": [
+        "5ZEPCTQKKXE4",
+        "Y427BMQH8AU6"
+      ]
+    }
+  },
+  {
+    "name": "refresh-s3hof6_o",
+    "started_at": "2026-10-20T15:56:12.526Z",
+    "ended_at": "2026-10-20T16:02:11.116Z",
+    "status": "published",
+    "exit_code": 0,
+    "error": null,
+    "steps": [
+      {
+        "name": "validate-cores",
+        "started_at": "2026-10-20T15:56:42.614Z",
+        "exit_code": 0,
+        "ended_at": "2026-10-20T15:56:42.869Z",
+        "stdout": {
+          "path": "/home/dw/Projects/agent-sts2/ops/codex-ops/v6-refresh/silent/refresh-s3hof6_o/validate-cores.stdout",
+          "bytes": 247,
+          "sha256": "0c2fc64fdc801579af5473b30bd984c8a0c0032d56cd280fa43ca7c47542378d"
+        },
+        "stderr": {
+          "path": "/home/dw/Projects/agent-sts2/ops/codex-ops/v6-refresh/silent/refresh-s3hof6_o/validate-cores.stderr",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "seconds": 0.2552231871522963
+      },
+      {
+        "name": "combo-metrics",
+        "started_at": "2026-10-20T15:56:42.936Z",
+        "exit_code": 0,
+        "ended_at": "2026-10-20T15:59:18.940Z",
+        "stdout": {
+          "path": "/home/dw/Projects/agent-sts2/ops/codex-ops/v6-refresh/silent/refresh-s3hof6_o/combo-metrics.stdout",
+          "bytes": 516,
+          "sha256": "745b1d9adfe4c8ec807937d7b609f9d6d9beccaa176a4f52105299134a717837"
+        },
+        "stderr": {
+          "path": "/home/dw/Projects/agent-sts2/ops/codex-ops/v6-refresh/silent/refresh-s3hof6_o/combo-metrics.stderr",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "seconds": 156.00419221702032
+      },
+      {
+        "name": "v6-history",
+        "started_at": "2026-10-20T15:59:18.971Z",
+        "exit_code": 0,
+        "ended_at": "2026-10-20T15:59:27.548Z",
+        "stdout": {
+          "path": "/home/dw/Projects/agent-sts2/ops/codex-ops/v6-refresh/silent/refresh-s3hof6_o/v6-history.stdout",
+          "bytes": 341,
+          "sha256": "22f29a31b179bfa9117e8f302fb2c66753af9439307a81fec41f0a4152c75a05"
+        },
+        "stderr": {
+          "path": "/home/dw/Projects/agent-sts2/ops/codex-ops/v6-refresh/silent/refresh-s3hof6_o/v6-history.stderr",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "seconds": 8.576919601066038
+      },
+      {
+        "name": "validate-history",
+        "started_at": "2026-10-20T15:59:27.548Z",
+        "exit_code": 0,
+        "ended_at": "2026-10-20T15:59:28.492Z",
+        "stdout": {
+          "path": "/home/dw/Projects/agent-sts2/ops/codex-ops/v6-refresh/silent/refresh-s3hof6_o/validate-history.stdout",
+          "bytes": 249,
+          "sha256": "a22c1878d758e12bfbb763ccc97d1935ab1e1fef37751ee2ae75169fbf43a188"
+        },
+        "stderr": {
+          "path": "/home/dw/Projects/agent-sts2/ops/codex-ops/v6-refresh/silent/refresh-s3hof6_o/validate-history.stderr",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "seconds": 0.9444265200290829
+      }
+    ],
+    "run_count": 383,
+    "incremental": {
+      "decoded_rows": 703,
+      "indexed_rows": 913182,
+      "rebuilt_streams": [],
+      "cache_hits": 764,
+      "cache_misses": 2
+    },
+    "freeze_seconds": 30.070792586077005,
+    "index_seconds": 10.262011266080663,
+    "verify_prefix_seconds": 9.94368396885693,
+    "pack": {
+      "file_sha256": "9fc6ed88e5cf46fcb2ba83dd911418227f8041e047f8519949a26a274a06dec6",
+      "content_sha256": "c39fb17842095a835a1029126b35c71192a838b5ac2a51a37ff1ead32895cf0e",
+      "cutoff": "2026-10-20T15:56:12.526Z",
+      "generated_at": "2026-10-20T15:59:25.802Z",
+      "combo_membership": {
+        "Y427BMQH8AU6": [
+          "P-toxin-footwork",
+          "P-fumes-footwork",
+          "P-flask-afterimage",
+          "P-flask-footwork",
+          "P-mixed-defense",
+          "P-toxin-mirage",
+          "D-toxin-backflip",
+          "D-fumes-backflip",
+          "D-flask-sweep",
+          "D-observed-union-fbc4b776",
+          "S-dance-accuracy",
+          "S-cloak-phantom",
+          "S-dance-afterimage",
+          "S-observed-union-35f60a95",
+          "R-acro-tingsha",
+          "R-tools-tingsha",
+          "R-acro-bandages"
+        ],
+        "1ZZHM2MV19YB": [],
+        "CSBNU2H9LXKD": [],
+        "5ZEPCTQKKXE4": [
+          "P-toxin-footwork",
+          "P-fumes-footwork",
+          "P-flask-afterimage",
+          "P-flask-footwork",
+          "P-mixed-defense",
+          "P-toxin-mirage",
+          "D-toxin-backflip",
+          "D-fumes-backflip",
+          "D-flask-sweep",
+          "D-observed-union-fbc4b776",
+          "S-dance-accuracy",
+          "S-cloak-phantom",
+          "S-dance-afterimage",
+          "S-observed-union-35f60a95",
+          "R-acro-tingsha",
+          "R-tools-tingsha",
+          "R-acro-bandages"
+        ],
+        "YSRVLSKVU8DL": [
+          "P-toxin-footwork",
+          "P-fumes-footwork",
+          "P-flask-afterimage",
+          "P-flask-footwork",
+          "P-mixed-defense",
+          "P-toxin-mirage",
+          "D-toxin-backflip",
+          "D-fumes-backflip",
+          "D-flask-sweep",
+          "D-observed-union-fbc4b776",
+          "S-dance-accuracy",
+          "S-cloak-phantom",
+          "S-dance-afterimage",
+          "S-observed-union-35f60a95",
+          "R-acro-tingsha",
+          "R-tools-tingsha",
+          "R-acro-bandages"
+        ],
+        "T15WXHPTM0ET": [],
+        "T0TP8S9MMU9Q": [],
+        "RBMEQGXPE9Z2": [],
+        "JPWMMV67SZCL": []
+      },
+      "ended_membership": [
+        "5ZEPCTQKKXE4",
+        "Y427BMQH8AU6",
+        "YSRVLSKVU8DL"
+      ]
+    }
+  },
+  {
+    "name": "refresh-a30mxn0q",
+    "started_at": "2026-10-20T16:31:27.301Z",
+    "ended_at": "2026-10-20T16:35:31.639Z",
+    "status": "published",
+    "exit_code": 0,
+    "error": null,
+    "steps": [
+      {
+        "name": "validate-cores",
+        "started_at": "2026-10-20T16:31:57.852Z",
+        "exit_code": 0,
+        "ended_at": "2026-10-20T16:31:58.144Z",
+        "stdout": {
+          "path": "/home/dw/Projects/agent-sts2/ops/codex-ops/v6-refresh/silent/refresh-a30mxn0q/validate-cores.stdout",
+          "bytes": 247,
+          "sha256": "7ee7c487c1e124a2e43adf8295822cd93138188660acd83cd5d7778041896b03"
+        },
+        "stderr": {
+          "path": "/home/dw/Projects/agent-sts2/ops/codex-ops/v6-refresh/silent/refresh-a30mxn0q/validate-cores.stderr",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "seconds": 0.2924474829342216
+      },
+      {
+        "name": "combo-metrics",
+        "started_at": "2026-10-20T16:31:58.234Z",
+        "exit_code": 0,
+        "ended_at": "2026-10-20T16:34:45.535Z",
+        "stdout": {
+          "path": "/home/dw/Projects/agent-sts2/ops/codex-ops/v6-refresh/silent/refresh-a30mxn0q/combo-metrics.stdout",
+          "bytes": 514,
+          "sha256": "0812bb8a5828e391bcb866cd96ac2137462450917b5adc990a026914ea59ff85"
+        },
+        "stderr": {
+          "path": "/home/dw/Projects/agent-sts2/ops/codex-ops/v6-refresh/silent/refresh-a30mxn0q/combo-metrics.stderr",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "seconds": 167.30235397606157
+      },
+      {
+        "name": "v6-history",
+        "started_at": "2026-10-20T16:34:45.581Z",
+        "exit_code": 0,
+        "ended_at": "2026-10-20T16:34:55.711Z",
+        "stdout": {
+          "path": "/home/dw/Projects/agent-sts2/ops/codex-ops/v6-refresh/silent/refresh-a30mxn0q/v6-history.stdout",
+          "bytes": 341,
+          "sha256": "4494792cb7a5bb030c054e1c78d55ec66d070d4f07976882083e3e1aa49d33d4"
+        },
+        "stderr": {
+          "path": "/home/dw/Projects/agent-sts2/ops/codex-ops/v6-refresh/silent/refresh-a30mxn0q/v6-history.stderr",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "seconds": 10.13001966709271
+      },
+      {
+        "name": "validate-history",
+        "started_at": "2026-10-20T16:34:55.711Z",
+        "exit_code": 0,
+        "ended_at": "2026-10-20T16:34:56.675Z",
+        "stdout": {
+          "path": "/home/dw/Projects/agent-sts2/ops/codex-ops/v6-refresh/silent/refresh-a30mxn0q/validate-history.stdout",
+          "bytes": 249,
+          "sha256": "cf4f92df39aa71e92d23142094bb084e785f73c2b6fbfec0b6e36b9e42c7a991"
+        },
+        "stderr": {
+          "path": "/home/dw/Projects/agent-sts2/ops/codex-ops/v6-refresh/silent/refresh-a30mxn0q/validate-history.stderr",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "seconds": 0.9641705988906324
+      }
+    ],
+    "run_count": 385,
+    "incremental": {
+      "decoded_rows": 1002,
+      "indexed_rows": 914184,
+      "rebuilt_streams": [],
+      "cache_hits": 766,
+      "cache_misses": 4
+    },
+    "freeze_seconds": 30.53151931404136,
+    "index_seconds": 10.538908184040338,
+    "verify_prefix_seconds": 10.358269091928378,
+    "pack": {
+      "file_sha256": "4b8dd2de2d8814aab58d2b8accc81aae20a6a4c71404043fbb66e1f887ae5476",
+      "content_sha256": "32bcbe489331b210de61ea706b556bf39d915ab2de4df4f0f6b01dcb00fe4dc0",
+      "cutoff": "2026-10-20T16:31:27.301Z",
+      "generated_at": "2026-10-20T16:34:54.048Z",
+      "combo_membership": {
+        "Y427BMQH8AU6": [
+          "P-toxin-footwork",
+          "P-fumes-footwork",
+          "P-flask-afterimage",
+          "P-flask-footwork",
+          "P-mixed-defense",
+          "P-toxin-mirage",
+          "D-toxin-backflip",
+          "D-fumes-backflip",
+          "D-flask-sweep",
+          "D-observed-union-fbc4b776",
+          "S-dance-accuracy",
+          "S-cloak-phantom",
+          "S-dance-afterimage",
+          "S-observed-union-35f60a95",
+          "R-acro-tingsha",
+          "R-tools-tingsha",
+          "R-acro-bandages"
+        ],
+        "1ZZHM2MV19YB": [],
+        "CSBNU2H9LXKD": [],
+        "5ZEPCTQKKXE4": [
+          "P-toxin-footwork",
+          "P-fumes-footwork",
+          "P-flask-afterimage",
+          "P-flask-footwork",
+          "P-mixed-defense",
+          "P-toxin-mirage",
+          "D-toxin-backflip",
+          "D-fumes-backflip",
+          "D-flask-sweep",
+          "D-observed-union-fbc4b776",
+          "S-dance-accuracy",
+          "S-cloak-phantom",
+          "S-dance-afterimage",
+          "S-observed-union-35f60a95",
+          "R-acro-tingsha",
+          "R-tools-tingsha",
+          "R-acro-bandages"
+        ],
+        "YSRVLSKVU8DL": [
+          "P-toxin-footwork",
+          "P-fumes-footwork",
+          "P-flask-afterimage",
+          "P-flask-footwork",
+          "P-mixed-defense",
+          "P-toxin-mirage",
+          "D-toxin-backflip",
+          "D-fumes-backflip",
+          "D-flask-sweep",
+          "D-observed-union-fbc4b776",
+          "S-dance-accuracy",
+          "S-cloak-phantom",
+          "S-dance-afterimage",
+          "S-observed-union-35f60a95",
+          "R-acro-tingsha",
+          "R-tools-tingsha",
+          "R-acro-bandages"
+        ],
+        "T15WXHPTM0ET": [],
+        "T0TP8S9MMU9Q": [
+          "P-toxin-footwork",
+          "P-fumes-footwork",
+          "P-flask-afterimage",
+          "P-flask-footwork",
+          "P-mixed-defense",
+          "P-toxin-mirage",
+          "D-toxin-backflip",
+          "D-fumes-backflip",
+          "D-flask-sweep",
+          "D-observed-union-fbc4b776",
+          "S-dance-accuracy",
+          "S-cloak-phantom",
+          "S-dance-afterimage",
+          "S-observed-union-35f60a95",
+          "R-acro-tingsha",
+          "R-tools-tingsha",
+          "R-acro-bandages"
+        ],
+        "RBMEQGXPE9Z2": [
+          "P-toxin-footwork",
+          "P-fumes-footwork",
+          "P-flask-afterimage",
+          "P-flask-footwork",
+          "P-mixed-defense",
+          "P-toxin-mirage",
+          "D-toxin-backflip",
+          "D-fumes-backflip",
+          "D-flask-sweep",
+          "D-observed-union-fbc4b776",
+          "S-dance-accuracy",
+          "S-cloak-phantom",
+          "S-dance-afterimage",
+          "S-observed-union-35f60a95",
+          "R-acro-tingsha",
+          "R-tools-tingsha",
+          "R-acro-bandages"
+        ],
+        "JPWMMV67SZCL": []
+      },
+      "ended_membership": [
+        "5ZEPCTQKKXE4",
+        "RBMEQGXPE9Z2",
+        "T0TP8S9MMU9Q",
+        "Y427BMQH8AU6",
+        "YSRVLSKVU8DL"
+      ]
+    }
+  },
+  {
+    "name": "refresh-0mgc25qd",
+    "started_at": "2026-10-20T17:03:18.621Z",
+    "ended_at": "2026-10-20T17:10:54.935Z",
+    "status": "published",
+    "exit_code": 0,
+    "error": null,
+    "steps": [
+      {
+        "name": "validate-cores",
+        "started_at": "2026-10-20T17:03:47.264Z",
+        "exit_code": 0,
+        "ended_at": "2026-10-20T17:03:47.529Z",
+        "stdout": {
+          "path": "/home/dw/Projects/agent-sts2/ops/codex-ops/v6-refresh/silent/refresh-0mgc25qd/validate-cores.stdout",
+          "bytes": 247,
+          "sha256": "36f348c4f003afb88e8adefec710db6cbb6ba218ccf389ec7d22de3925789719"
+        },
+        "stderr": {
+          "path": "/home/dw/Projects/agent-sts2/ops/codex-ops/v6-refresh/silent/refresh-0mgc25qd/validate-cores.stderr",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "seconds": 0.2654001750051975
+      },
+      {
+        "name": "combo-metrics",
+        "started_at": "2026-10-20T17:03:47.601Z",
+        "exit_code": 0,
+        "ended_at": "2026-10-20T17:06:27.785Z",
+        "stdout": {
+          "path": "/home/dw/Projects/agent-sts2/ops/codex-ops/v6-refresh/silent/refresh-0mgc25qd/combo-metrics.stdout",
+          "bytes": 511,
+          "sha256": "48e67b4120a7cc281696c3402bd77af72b1ec6ae46256cf9b317617c1c750cbf"
+        },
+        "stderr": {
+          "path": "/home/dw/Projects/agent-sts2/ops/codex-ops/v6-refresh/silent/refresh-0mgc25qd/combo-metrics.stderr",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "seconds": 160.18464111792855
+      },
+      {
+        "name": "v6-history",
+        "started_at": "2026-10-20T17:06:27.815Z",
+        "exit_code": 0,
+        "ended_at": "2026-10-20T17:06:35.981Z",
+        "stdout": {
+          "path": "/home/dw/Projects/agent-sts2/ops/codex-ops/v6-refresh/silent/refresh-0mgc25qd/v6-history.stdout",
+          "bytes": 341,
+          "sha256": "7e7c6646c743cb6445ea75135b8f5af815435e367262467dcd9733227d436ac4"
+        },
+        "stderr": {
+          "path": "/home/dw/Projects/agent-sts2/ops/codex-ops/v6-refresh/silent/refresh-0mgc25qd/v6-history.stderr",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "seconds": 8.166025049053133
+      },
+      {
+        "name": "validate-history",
+        "started_at": "2026-10-20T17:06:35.981Z",
+        "exit_code": 0,
+        "ended_at": "2026-10-20T17:06:36.833Z",
+        "stdout": {
+          "path": "/home/dw/Projects/agent-sts2/ops/codex-ops/v6-refresh/silent/refresh-0mgc25qd/validate-history.stdout",
+          "bytes": 249,
+          "sha256": "1b0985e339a8a5cb088a63e9fd8f145c25040d8a8b1519b8b0fe1ba4a794f63d"
+        },
+        "stderr": {
+          "path": "/home/dw/Projects/agent-sts2/ops/codex-ops/v6-refresh/silent/refresh-0mgc25qd/validate-history.stderr",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "seconds": 0.8517737160436809
+      }
+    ],
+    "run_count": 385,
+    "incremental": {
+      "decoded_rows": 720,
+      "indexed_rows": 914904,
+      "rebuilt_streams": [],
+      "cache_hits": 770,
+      "cache_misses": 0
+    },
+    "freeze_seconds": 28.62589191296138,
+    "index_seconds": 10.284277392784134,
+    "verify_prefix_seconds": 10.830544664058834,
+    "pack": {
+      "file_sha256": "aa73faf873ad15886c0f735bf70330fb7d730d553b3de1b7257449e536039200",
+      "content_sha256": "da5f79614bc2b8a18642fc4c8829a331df283ae3dd60939b5b1dc952171c2c05",
+      "cutoff": "2026-10-20T17:03:18.621Z",
+      "generated_at": "2026-10-20T17:06:34.420Z",
+      "combo_membership": {
+        "Y427BMQH8AU6": [
+          "P-toxin-footwork",
+          "P-fumes-footwork",
+          "P-flask-afterimage",
+          "P-flask-footwork",
+          "P-mixed-defense",
+          "P-toxin-mirage",
+          "D-toxin-backflip",
+          "D-fumes-backflip",
+          "D-flask-sweep",
+          "D-observed-union-fbc4b776",
+          "S-dance-accuracy",
+          "S-cloak-phantom",
+          "S-dance-afterimage",
+          "S-observed-union-35f60a95",
+          "R-acro-tingsha",
+          "R-tools-tingsha",
+          "R-acro-bandages"
+        ],
+        "1ZZHM2MV19YB": [],
+        "CSBNU2H9LXKD": [],
+        "5ZEPCTQKKXE4": [
+          "P-toxin-footwork",
+          "P-fumes-footwork",
+          "P-flask-afterimage",
+          "P-flask-footwork",
+          "P-mixed-defense",
+          "P-toxin-mirage",
+          "D-toxin-backflip",
+          "D-fumes-backflip",
+          "D-flask-sweep",
+          "D-observed-union-fbc4b776",
+          "S-dance-accuracy",
+          "S-cloak-phantom",
+          "S-dance-afterimage",
+          "S-observed-union-35f60a95",
+          "R-acro-tingsha",
+          "R-tools-tingsha",
+          "R-acro-bandages"
+        ],
+        "YSRVLSKVU8DL": [
+          "P-toxin-footwork",
+          "P-fumes-footwork",
+          "P-flask-afterimage",
+          "P-flask-footwork",
+          "P-mixed-defense",
+          "P-toxin-mirage",
+          "D-toxin-backflip",
+          "D-fumes-backflip",
+          "D-flask-sweep",
+          "D-observed-union-fbc4b776",
+          "S-dance-accuracy",
+          "S-cloak-phantom",
+          "S-dance-afterimage",
+          "S-observed-union-35f60a95",
+          "R-acro-tingsha",
+          "R-tools-tingsha",
+          "R-acro-bandages"
+        ],
+        "T15WXHPTM0ET": [],
+        "T0TP8S9MMU9Q": [
+          "P-toxin-footwork",
+          "P-fumes-footwork",
+          "P-flask-afterimage",
+          "P-flask-footwork",
+          "P-mixed-defense",
+          "P-toxin-mirage",
+          "D-toxin-backflip",
+          "D-fumes-backflip",
+          "D-flask-sweep",
+          "D-observed-union-fbc4b776",
+          "S-dance-accuracy",
+          "S-cloak-phantom",
+          "S-dance-afterimage",
+          "S-observed-union-35f60a95",
+          "R-acro-tingsha",
+          "R-tools-tingsha",
+          "R-acro-bandages"
+        ],
+        "RBMEQGXPE9Z2": [
+          "P-toxin-footwork",
+          "P-fumes-footwork",
+          "P-flask-afterimage",
+          "P-flask-footwork",
+          "P-mixed-defense",
+          "P-toxin-mirage",
+          "D-toxin-backflip",
+          "D-fumes-backflip",
+          "D-flask-sweep",
+          "D-observed-union-fbc4b776",
+          "S-dance-accuracy",
+          "S-cloak-phantom",
+          "S-dance-afterimage",
+          "S-observed-union-35f60a95",
+          "R-acro-tingsha",
+          "R-tools-tingsha",
+          "R-acro-bandages"
+        ],
+        "JPWMMV67SZCL": []
+      },
+      "ended_membership": [
+        "5ZEPCTQKKXE4",
+        "RBMEQGXPE9Z2",
+        "T0TP8S9MMU9Q",
+        "Y427BMQH8AU6",
+        "YSRVLSKVU8DL"
+      ]
+    }
+  },
+  {
+    "name": "refresh-x329cdo6",
+    "started_at": "2026-10-20T17:52:04.620Z",
+    "ended_at": "2026-10-20T17:56:18.727Z",
+    "status": "published",
+    "exit_code": 0,
+    "error": null,
+    "steps": [
+      {
+        "name": "validate-cores",
+        "started_at": "2026-10-20T17:52:41.167Z",
+        "exit_code": 0,
+        "ended_at": "2026-10-20T17:52:41.549Z",
+        "stdout": {
+          "path": "/home/dw/Projects/agent-sts2/ops/codex-ops/v6-refresh/silent/refresh-x329cdo6/validate-cores.stdout",
+          "bytes": 247,
+          "sha256": "f26a0fd57f08be04b63cfb7805435ca23e29bf7a4c907c59a3fb91b599902009"
+        },
+        "stderr": {
+          "path": "/home/dw/Projects/agent-sts2/ops/codex-ops/v6-refresh/silent/refresh-x329cdo6/validate-cores.stderr",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "seconds": 0.38246516906656325
+      },
+      {
+        "name": "combo-metrics",
+        "started_at": "2026-10-20T17:52:41.684Z",
+        "exit_code": 0,
+        "ended_at": "2026-10-20T17:55:50.155Z",
+        "stdout": {
+          "path": "/home/dw/Projects/agent-sts2/ops/codex-ops/v6-refresh/silent/refresh-x329cdo6/combo-metrics.stdout",
+          "bytes": 515,
+          "sha256": "b5d8d02d88149d497a79b9b768d6a3b0dae956336a0bde52a21f9c932fbfe286"
+        },
+        "stderr": {
+          "path": "/home/dw/Projects/agent-sts2/ops/codex-ops/v6-refresh/silent/refresh-x329cdo6/combo-metrics.stderr",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "seconds": 188.47100936807692
+      },
+      {
+        "name": "v6-history",
+        "started_at": "2026-10-20T17:55:50.187Z",
+        "exit_code": 0,
+        "ended_at": "2026-10-20T17:56:07.525Z",
+        "stdout": {
+          "path": "/home/dw/Projects/agent-sts2/ops/codex-ops/v6-refresh/silent/refresh-x329cdo6/v6-history.stdout",
+          "bytes": 341,
+          "sha256": "1bf3c96340a7f2f3296436ab08ae9a9335f31217af7d18bd27b020ce4532501c"
+        },
+        "stderr": {
+          "path": "/home/dw/Projects/agent-sts2/ops/codex-ops/v6-refresh/silent/refresh-x329cdo6/v6-history.stderr",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "seconds": 17.338564280886203
+      },
+      {
+        "name": "validate-history",
+        "started_at": "2026-10-20T17:56:07.526Z",
+        "exit_code": 0,
+        "ended_at": "2026-10-20T17:56:08.444Z",
+        "stdout": {
+          "path": "/home/dw/Projects/agent-sts2/ops/codex-ops/v6-refresh/silent/refresh-x329cdo6/validate-history.stdout",
+          "bytes": 249,
+          "sha256": "4ddcddfc48d71b28c06395865f50825c9e43044ef1961f169934f56c9f92bf23"
+        },
+        "stderr": {
+          "path": "/home/dw/Projects/agent-sts2/ops/codex-ops/v6-refresh/silent/refresh-x329cdo6/validate-history.stderr",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "seconds": 0.918880030978471
+      }
+    ],
+    "run_count": 387,
+    "incremental": {
+      "decoded_rows": 1567,
+      "indexed_rows": 916471,
+      "rebuilt_streams": [],
+      "cache_hits": 770,
+      "cache_misses": 4
+    },
+    "freeze_seconds": 36.52626229193993,
+    "index_seconds": 11.141875026980415,
+    "verify_prefix_seconds": 9.548145422013476,
+    "pack": {
+      "file_sha256": "d31764d5da449cf994a5d1a9cd20477214f20f48df443fe4349e2354d07d93f9",
+      "content_sha256": "02520f12a7d6e18303dffaf2781cb2e67d6e7a193330655be4a2ffe5371c2e47",
+      "cutoff": "2026-10-20T17:52:04.620Z",
+      "generated_at": "2026-10-20T17:56:05.865Z",
+      "combo_membership": {
+        "Y427BMQH8AU6": [
+          "P-toxin-footwork",
+          "P-fumes-footwork",
+          "P-flask-afterimage",
+          "P-flask-footwork",
+          "P-mixed-defense",
+          "P-toxin-mirage",
+          "D-toxin-backflip",
+          "D-fumes-backflip",
+          "D-flask-sweep",
+          "D-observed-union-fbc4b776",
+          "S-dance-accuracy",
+          "S-cloak-phantom",
+          "S-dance-afterimage",
+          "S-observed-union-35f60a95",
+          "R-acro-tingsha",
+          "R-tools-tingsha",
+          "R-acro-bandages"
+        ],
+        "1ZZHM2MV19YB": [],
+        "CSBNU2H9LXKD": [
+          "P-toxin-footwork",
+          "P-fumes-footwork",
+          "P-flask-afterimage",
+          "P-flask-footwork",
+          "P-mixed-defense",
+          "P-toxin-mirage",
+          "D-toxin-backflip",
+          "D-fumes-backflip",
+          "D-flask-sweep",
+          "D-observed-union-fbc4b776",
+          "S-dance-accuracy",
+          "S-cloak-phantom",
+          "S-dance-afterimage",
+          "S-observed-union-35f60a95",
+          "R-acro-tingsha",
+          "R-tools-tingsha",
+          "R-acro-bandages"
+        ],
+        "5ZEPCTQKKXE4": [
+          "P-toxin-footwork",
+          "P-fumes-footwork",
+          "P-flask-afterimage",
+          "P-flask-footwork",
+          "P-mixed-defense",
+          "P-toxin-mirage",
+          "D-toxin-backflip",
+          "D-fumes-backflip",
+          "D-flask-sweep",
+          "D-observed-union-fbc4b776",
+          "S-dance-accuracy",
+          "S-cloak-phantom",
+          "S-dance-afterimage",
+          "S-observed-union-35f60a95",
+          "R-acro-tingsha",
+          "R-tools-tingsha",
+          "R-acro-bandages"
+        ],
+        "YSRVLSKVU8DL": [
+          "P-toxin-footwork",
+          "P-fumes-footwork",
+          "P-flask-afterimage",
+          "P-flask-footwork",
+          "P-mixed-defense",
+          "P-toxin-mirage",
+          "D-toxin-backflip",
+          "D-fumes-backflip",
+          "D-flask-sweep",
+          "D-observed-union-fbc4b776",
+          "S-dance-accuracy",
+          "S-cloak-phantom",
+          "S-dance-afterimage",
+          "S-observed-union-35f60a95",
+          "R-acro-tingsha",
+          "R-tools-tingsha",
+          "R-acro-bandages"
+        ],
+        "T15WXHPTM0ET": [
+          "P-toxin-footwork",
+          "P-fumes-footwork",
+          "P-flask-afterimage",
+          "P-flask-footwork",
+          "P-mixed-defense",
+          "P-toxin-mirage",
+          "D-toxin-backflip",
+          "D-fumes-backflip",
+          "D-flask-sweep",
+          "D-observed-union-fbc4b776",
+          "S-dance-accuracy",
+          "S-cloak-phantom",
+          "S-dance-afterimage",
+          "S-observed-union-35f60a95",
+          "R-acro-tingsha",
+          "R-tools-tingsha",
+          "R-acro-bandages"
+        ],
+        "T0TP8S9MMU9Q": [
+          "P-toxin-footwork",
+          "P-fumes-footwork",
+          "P-flask-afterimage",
+          "P-flask-footwork",
+          "P-mixed-defense",
+          "P-toxin-mirage",
+          "D-toxin-backflip",
+          "D-fumes-backflip",
+          "D-flask-sweep",
+          "D-observed-union-fbc4b776",
+          "S-dance-accuracy",
+          "S-cloak-phantom",
+          "S-dance-afterimage",
+          "S-observed-union-35f60a95",
+          "R-acro-tingsha",
+          "R-tools-tingsha",
+          "R-acro-bandages"
+        ],
+        "RBMEQGXPE9Z2": [
+          "P-toxin-footwork",
+          "P-fumes-footwork",
+          "P-flask-afterimage",
+          "P-flask-footwork",
+          "P-mixed-defense",
+          "P-toxin-mirage",
+          "D-toxin-backflip",
+          "D-fumes-backflip",
+          "D-flask-sweep",
+          "D-observed-union-fbc4b776",
+          "S-dance-accuracy",
+          "S-cloak-phantom",
+          "S-dance-afterimage",
+          "S-observed-union-35f60a95",
+          "R-acro-tingsha",
+          "R-tools-tingsha",
+          "R-acro-bandages"
+        ],
+        "JPWMMV67SZCL": []
+      },
+      "ended_membership": [
+        "5ZEPCTQKKXE4",
+        "CSBNU2H9LXKD",
+        "RBMEQGXPE9Z2",
+        "T0TP8S9MMU9Q",
+        "T15WXHPTM0ET",
+        "Y427BMQH8AU6",
+        "YSRVLSKVU8DL"
+      ]
+    }
+  },
+  {
+    "name": "refresh-uxurmv8y",
+    "started_at": "2026-10-20T18:09:42.220Z",
+    "ended_at": "2026-10-20T18:13:13.330Z",
+    "status": "published",
+    "exit_code": 0,
+    "error": null,
+    "steps": [
+      {
+        "name": "validate-cores",
+        "started_at": "2026-10-20T18:10:19.391Z",
+        "exit_code": 0,
+        "ended_at": "2026-10-20T18:10:19.651Z",
+        "stdout": {
+          "path": "/home/dw/Projects/agent-sts2/ops/codex-ops/v6-refresh/silent/refresh-uxurmv8y/validate-cores.stdout",
+          "bytes": 247,
+          "sha256": "5fff5b2bd177b2a49946bcef808ef1208482c98b5a9d8d8f82124a9a46396f3a"
+        },
+        "stderr": {
+          "path": "/home/dw/Projects/agent-sts2/ops/codex-ops/v6-refresh/silent/refresh-uxurmv8y/validate-cores.stderr",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "seconds": 0.260424556909129
+      },
+      {
+        "name": "combo-metrics",
+        "started_at": "2026-10-20T18:10:19.716Z",
+        "exit_code": 0,
+        "ended_at": "2026-10-20T18:12:52.414Z",
+        "stdout": {
+          "path": "/home/dw/Projects/agent-sts2/ops/codex-ops/v6-refresh/silent/refresh-uxurmv8y/combo-metrics.stdout",
+          "bytes": 514,
+          "sha256": "06f86796719051c26c238a612cfef0fff748fad8c134e5ee13c3f4144e2d3c6d"
+        },
+        "stderr": {
+          "path": "/home/dw/Projects/agent-sts2/ops/codex-ops/v6-refresh/silent/refresh-uxurmv8y/combo-metrics.stderr",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "seconds": 152.69787846296094
+      },
+      {
+        "name": "v6-history",
+        "started_at": "2026-10-20T18:12:52.445Z",
+        "exit_code": 0,
+        "ended_at": "2026-10-20T18:13:02.365Z",
+        "stdout": {
+          "path": "/home/dw/Projects/agent-sts2/ops/codex-ops/v6-refresh/silent/refresh-uxurmv8y/v6-history.stdout",
+          "bytes": 341,
+          "sha256": "db482bcd15bdbf316c575af496965a5250ca61cce8a5fc4f802b623327c4739d"
+        },
+        "stderr": {
+          "path": "/home/dw/Projects/agent-sts2/ops/codex-ops/v6-refresh/silent/refresh-uxurmv8y/v6-history.stderr",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "seconds": 9.92105079186149
+      },
+      {
+        "name": "validate-history",
+        "started_at": "2026-10-20T18:13:02.366Z",
+        "exit_code": 0,
+        "ended_at": "2026-10-20T18:13:03.286Z",
+        "stdout": {
+          "path": "/home/dw/Projects/agent-sts2/ops/codex-ops/v6-refresh/silent/refresh-uxurmv8y/validate-history.stdout",
+          "bytes": 249,
+          "sha256": "2f800fd454cc91e9a1b10bf88b1be78e9c27b0cad43fa806375a2339336b4196"
+        },
+        "stderr": {
+          "path": "/home/dw/Projects/agent-sts2/ops/codex-ops/v6-refresh/silent/refresh-uxurmv8y/validate-history.stderr",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "seconds": 0.9206249639391899
+      }
+    ],
+    "run_count": 387,
+    "incremental": {
+      "decoded_rows": 449,
+      "indexed_rows": 916920,
+      "rebuilt_streams": [],
+      "cache_hits": 774,
+      "cache_misses": 0
+    },
+    "freeze_seconds": 37.15399711416103,
+    "index_seconds": 12.278093959903345,
+    "verify_prefix_seconds": 9.381625025998801,
+    "pack": {
+      "file_sha256": "315c015ad9e633275bc0de02249be97650f53919a4149cf8cba76eff1a8d993b",
+      "content_sha256": "ceaf60c9cbd03af40a5d9803a87338c64005ef5d231f881fbe57794242ffe41a",
+      "cutoff": "2026-10-20T18:09:42.220Z",
+      "generated_at": "2026-10-20T18:13:00.734Z",
+      "combo_membership": {
+        "Y427BMQH8AU6": [
+          "P-toxin-footwork",
+          "P-fumes-footwork",
+          "P-flask-afterimage",
+          "P-flask-footwork",
+          "P-mixed-defense",
+          "P-toxin-mirage",
+          "D-toxin-backflip",
+          "D-fumes-backflip",
+          "D-flask-sweep",
+          "D-observed-union-fbc4b776",
+          "S-dance-accuracy",
+          "S-cloak-phantom",
+          "S-dance-afterimage",
+          "S-observed-union-35f60a95",
+          "R-acro-tingsha",
+          "R-tools-tingsha",
+          "R-acro-bandages"
+        ],
+        "1ZZHM2MV19YB": [],
+        "CSBNU2H9LXKD": [
+          "P-toxin-footwork",
+          "P-fumes-footwork",
+          "P-flask-afterimage",
+          "P-flask-footwork",
+          "P-mixed-defense",
+          "P-toxin-mirage",
+          "D-toxin-backflip",
+          "D-fumes-backflip",
+          "D-flask-sweep",
+          "D-observed-union-fbc4b776",
+          "S-dance-accuracy",
+          "S-cloak-phantom",
+          "S-dance-afterimage",
+          "S-observed-union-35f60a95",
+          "R-acro-tingsha",
+          "R-tools-tingsha",
+          "R-acro-bandages"
+        ],
+        "5ZEPCTQKKXE4": [
+          "P-toxin-footwork",
+          "P-fumes-footwork",
+          "P-flask-afterimage",
+          "P-flask-footwork",
+          "P-mixed-defense",
+          "P-toxin-mirage",
+          "D-toxin-backflip",
+          "D-fumes-backflip",
+          "D-flask-sweep",
+          "D-observed-union-fbc4b776",
+          "S-dance-accuracy",
+          "S-cloak-phantom",
+          "S-dance-afterimage",
+          "S-observed-union-35f60a95",
+          "R-acro-tingsha",
+          "R-tools-tingsha",
+          "R-acro-bandages"
+        ],
+        "YSRVLSKVU8DL": [
+          "P-toxin-footwork",
+          "P-fumes-footwork",
+          "P-flask-afterimage",
+          "P-flask-footwork",
+          "P-mixed-defense",
+          "P-toxin-mirage",
+          "D-toxin-backflip",
+          "D-fumes-backflip",
+          "D-flask-sweep",
+          "D-observed-union-fbc4b776",
+          "S-dance-accuracy",
+          "S-cloak-phantom",
+          "S-dance-afterimage",
+          "S-observed-union-35f60a95",
+          "R-acro-tingsha",
+          "R-tools-tingsha",
+          "R-acro-bandages"
+        ],
+        "T15WXHPTM0ET": [
+          "P-toxin-footwork",
+          "P-fumes-footwork",
+          "P-flask-afterimage",
+          "P-flask-footwork",
+          "P-mixed-defense",
+          "P-toxin-mirage",
+          "D-toxin-backflip",
+          "D-fumes-backflip",
+          "D-flask-sweep",
+          "D-observed-union-fbc4b776",
+          "S-dance-accuracy",
+          "S-cloak-phantom",
+          "S-dance-afterimage",
+          "S-observed-union-35f60a95",
+          "R-acro-tingsha",
+          "R-tools-tingsha",
+          "R-acro-bandages"
+        ],
+        "T0TP8S9MMU9Q": [
+          "P-toxin-footwork",
+          "P-fumes-footwork",
+          "P-flask-afterimage",
+          "P-flask-footwork",
+          "P-mixed-defense",
+          "P-toxin-mirage",
+          "D-toxin-backflip",
+          "D-fumes-backflip",
+          "D-flask-sweep",
+          "D-observed-union-fbc4b776",
+          "S-dance-accuracy",
+          "S-cloak-phantom",
+          "S-dance-afterimage",
+          "S-observed-union-35f60a95",
+          "R-acro-tingsha",
+          "R-tools-tingsha",
+          "R-acro-bandages"
+        ],
+        "RBMEQGXPE9Z2": [
+          "P-toxin-footwork",
+          "P-fumes-footwork",
+          "P-flask-afterimage",
+          "P-flask-footwork",
+          "P-mixed-defense",
+          "P-toxin-mirage",
+          "D-toxin-backflip",
+          "D-fumes-backflip",
+          "D-flask-sweep",
+          "D-observed-union-fbc4b776",
+          "S-dance-accuracy",
+          "S-cloak-phantom",
+          "S-dance-afterimage",
+          "S-observed-union-35f60a95",
+          "R-acro-tingsha",
+          "R-tools-tingsha",
+          "R-acro-bandages"
+        ],
+        "JPWMMV67SZCL": []
+      },
+      "ended_membership": [
+        "5ZEPCTQKKXE4",
+        "CSBNU2H9LXKD",
+        "RBMEQGXPE9Z2",
+        "T0TP8S9MMU9Q",
+        "T15WXHPTM0ET",
+        "Y427BMQH8AU6",
+        "YSRVLSKVU8DL"
+      ]
+    }
+  },
+  {
+    "name": "refresh-sl4sppz2",
+    "started_at": "2026-10-20T18:49:54.648Z",
+    "ended_at": "2026-10-20T18:53:58.465Z",
+    "status": "published",
+    "exit_code": 0,
+    "error": null,
+    "steps": [
+      {
+        "name": "validate-cores",
+        "started_at": "2026-10-20T18:50:27.352Z",
+        "exit_code": 0,
+        "ended_at": "2026-10-20T18:50:27.585Z",
+        "stdout": {
+          "path": "/home/dw/Projects/agent-sts2/ops/codex-ops/v6-refresh/silent/refresh-sl4sppz2/validate-cores.stdout",
+          "bytes": 247,
+          "sha256": "10d02de5444e7bb6600f8cb3f0b3a729e1370f85b49c0ad16d574d28aecabf17"
+        },
+        "stderr": {
+          "path": "/home/dw/Projects/agent-sts2/ops/codex-ops/v6-refresh/silent/refresh-sl4sppz2/validate-cores.stderr",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "seconds": 0.23413043096661568
+      },
+      {
+        "name": "combo-metrics",
+        "started_at": "2026-10-20T18:50:27.652Z",
+        "exit_code": 0,
+        "ended_at": "2026-10-20T18:53:37.503Z",
+        "stdout": {
+          "path": "/home/dw/Projects/agent-sts2/ops/codex-ops/v6-refresh/silent/refresh-sl4sppz2/combo-metrics.stdout",
+          "bytes": 512,
+          "sha256": "d77d928975a2d227d0305195418e0709df26368ca2b3f391a9a10e17337b2c9f"
+        },
+        "stderr": {
+          "path": "/home/dw/Projects/agent-sts2/ops/codex-ops/v6-refresh/silent/refresh-sl4sppz2/combo-metrics.stderr",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "seconds": 189.85156231583096
+      },
+      {
+        "name": "v6-history",
+        "started_at": "2026-10-20T18:53:37.534Z",
+        "exit_code": 0,
+        "ended_at": "2026-10-20T18:53:46.851Z",
+        "stdout": {
+          "path": "/home/dw/Projects/agent-sts2/ops/codex-ops/v6-refresh/silent/refresh-sl4sppz2/v6-history.stdout",
+          "bytes": 341,
+          "sha256": "0caffb9ae2b8653041d5f3d31e6bc9e09bef889bcc6c8ae397be1fcfb513b72a"
+        },
+        "stderr": {
+          "path": "/home/dw/Projects/agent-sts2/ops/codex-ops/v6-refresh/silent/refresh-sl4sppz2/v6-history.stderr",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "seconds": 9.31797737814486
+      },
+      {
+        "name": "validate-history",
+        "started_at": "2026-10-20T18:53:46.852Z",
+        "exit_code": 0,
+        "ended_at": "2026-10-20T18:53:47.902Z",
+        "stdout": {
+          "path": "/home/dw/Projects/agent-sts2/ops/codex-ops/v6-refresh/silent/refresh-sl4sppz2/validate-history.stdout",
+          "bytes": 249,
+          "sha256": "2634debf763436910aeebba57e728d270216c1bd590cd6ed8817ba700f1174f8"
+        },
+        "stderr": {
+          "path": "/home/dw/Projects/agent-sts2/ops/codex-ops/v6-refresh/silent/refresh-sl4sppz2/validate-history.stderr",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "seconds": 1.0503657599911094
+      }
+    ],
+    "run_count": 388,
+    "incremental": {
+      "decoded_rows": 1596,
+      "indexed_rows": 918516,
+      "rebuilt_streams": [],
+      "cache_hits": 774,
+      "cache_misses": 2
+    },
+    "freeze_seconds": 32.6891912878491,
+    "index_seconds": 11.288676775991917,
+    "verify_prefix_seconds": 9.744631674839184,
+    "pack": {
+      "file_sha256": "dbff176a6be0f3aa55b137e376cc1d35a83ca76d85526677ab3bb7a819c62b84",
+      "content_sha256": "2ebde2e376cfc0d73a100e6789608547f1e03bb5bfde2815b43428ef68acea04",
+      "cutoff": "2026-10-20T18:49:54.648Z",
+      "generated_at": "2026-10-20T18:53:44.916Z",
+      "combo_membership": {
+        "Y427BMQH8AU6": [
+          "P-toxin-footwork",
+          "P-fumes-footwork",
+          "P-flask-afterimage",
+          "P-flask-footwork",
+          "P-mixed-defense",
+          "P-toxin-mirage",
+          "D-toxin-backflip",
+          "D-fumes-backflip",
+          "D-flask-sweep",
+          "D-observed-union-fbc4b776",
+          "S-dance-accuracy",
+          "S-cloak-phantom",
+          "S-dance-afterimage",
+          "S-observed-union-35f60a95",
+          "R-acro-tingsha",
+          "R-tools-tingsha",
+          "R-acro-bandages"
+        ],
+        "1ZZHM2MV19YB": [
+          "P-toxin-footwork",
+          "P-fumes-footwork",
+          "P-flask-afterimage",
+          "P-flask-footwork",
+          "P-mixed-defense",
+          "P-toxin-mirage",
+          "D-toxin-backflip",
+          "D-fumes-backflip",
+          "D-flask-sweep",
+          "D-observed-union-fbc4b776",
+          "S-dance-accuracy",
+          "S-cloak-phantom",
+          "S-dance-afterimage",
+          "S-observed-union-35f60a95",
+          "R-acro-tingsha",
+          "R-tools-tingsha",
+          "R-acro-bandages"
+        ],
+        "CSBNU2H9LXKD": [
+          "P-toxin-footwork",
+          "P-fumes-footwork",
+          "P-flask-afterimage",
+          "P-flask-footwork",
+          "P-mixed-defense",
+          "P-toxin-mirage",
+          "D-toxin-backflip",
+          "D-fumes-backflip",
+          "D-flask-sweep",
+          "D-observed-union-fbc4b776",
+          "S-dance-accuracy",
+          "S-cloak-phantom",
+          "S-dance-afterimage",
+          "S-observed-union-35f60a95",
+          "R-acro-tingsha",
+          "R-tools-tingsha",
+          "R-acro-bandages"
+        ],
+        "5ZEPCTQKKXE4": [
+          "P-toxin-footwork",
+          "P-fumes-footwork",
+          "P-flask-afterimage",
+          "P-flask-footwork",
+          "P-mixed-defense",
+          "P-toxin-mirage",
+          "D-toxin-backflip",
+          "D-fumes-backflip",
+          "D-flask-sweep",
+          "D-observed-union-fbc4b776",
+          "S-dance-accuracy",
+          "S-cloak-phantom",
+          "S-dance-afterimage",
+          "S-observed-union-35f60a95",
+          "R-acro-tingsha",
+          "R-tools-tingsha",
+          "R-acro-bandages"
+        ],
+        "YSRVLSKVU8DL": [
+          "P-toxin-footwork",
+          "P-fumes-footwork",
+          "P-flask-afterimage",
+          "P-flask-footwork",
+          "P-mixed-defense",
+          "P-toxin-mirage",
+          "D-toxin-backflip",
+          "D-fumes-backflip",
+          "D-flask-sweep",
+          "D-observed-union-fbc4b776",
+          "S-dance-accuracy",
+          "S-cloak-phantom",
+          "S-dance-afterimage",
+          "S-observed-union-35f60a95",
+          "R-acro-tingsha",
+          "R-tools-tingsha",
+          "R-acro-bandages"
+        ],
+        "T15WXHPTM0ET": [
+          "P-toxin-footwork",
+          "P-fumes-footwork",
+          "P-flask-afterimage",
+          "P-flask-footwork",
+          "P-mixed-defense",
+          "P-toxin-mirage",
+          "D-toxin-backflip",
+          "D-fumes-backflip",
+          "D-flask-sweep",
+          "D-observed-union-fbc4b776",
+          "S-dance-accuracy",
+          "S-cloak-phantom",
+          "S-dance-afterimage",
+          "S-observed-union-35f60a95",
+          "R-acro-tingsha",
+          "R-tools-tingsha",
+          "R-acro-bandages"
+        ],
+        "T0TP8S9MMU9Q": [
+          "P-toxin-footwork",
+          "P-fumes-footwork",
+          "P-flask-afterimage",
+          "P-flask-footwork",
+          "P-mixed-defense",
+          "P-toxin-mirage",
+          "D-toxin-backflip",
+          "D-fumes-backflip",
+          "D-flask-sweep",
+          "D-observed-union-fbc4b776",
+          "S-dance-accuracy",
+          "S-cloak-phantom",
+          "S-dance-afterimage",
+          "S-observed-union-35f60a95",
+          "R-acro-tingsha",
+          "R-tools-tingsha",
+          "R-acro-bandages"
+        ],
+        "RBMEQGXPE9Z2": [
+          "P-toxin-footwork",
+          "P-fumes-footwork",
+          "P-flask-afterimage",
+          "P-flask-footwork",
+          "P-mixed-defense",
+          "P-toxin-mirage",
+          "D-toxin-backflip",
+          "D-fumes-backflip",
+          "D-flask-sweep",
+          "D-observed-union-fbc4b776",
+          "S-dance-accuracy",
+          "S-cloak-phantom",
+          "S-dance-afterimage",
+          "S-observed-union-35f60a95",
+          "R-acro-tingsha",
+          "R-tools-tingsha",
+          "R-acro-bandages"
+        ],
+        "JPWMMV67SZCL": []
+      },
+      "ended_membership": [
+        "1ZZHM2MV19YB",
+        "5ZEPCTQKKXE4",
+        "CSBNU2H9LXKD",
+        "RBMEQGXPE9Z2",
+        "T0TP8S9MMU9Q",
+        "T15WXHPTM0ET",
+        "Y427BMQH8AU6",
+        "YSRVLSKVU8DL"
+      ]
+    }
+  }
+]

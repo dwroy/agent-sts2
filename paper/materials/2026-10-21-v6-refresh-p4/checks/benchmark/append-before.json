@@ -1,0 +1,44 @@
+{
+  "name": "append-before",
+  "version": "before",
+  "enabled": "on",
+  "steps": [
+    {
+      "step": "monster",
+      "seconds": 0.986660674912855,
+      "cpu_seconds": 0.977364167,
+      "output_bytes": 263241,
+      "sha256": "fafdc43fba2e362eb1eef214f1b5cf753252d2508b04e288025b1edb2d40d802"
+    },
+    {
+      "step": "fight-rows",
+      "seconds": 0.597048806026578,
+      "cpu_seconds": 0.597039936,
+      "output_bytes": 462659,
+      "sha256": "858925cfe9c26b33135ee6d0803586deb6b8adf1551e0180ff823d3cd73ee9d9"
+    }
+  ],
+  "nice": 19,
+  "rss_kib": 395904,
+  "stats": {
+    "decoded_rows": 730,
+    "indexed_rows": 8215,
+    "rebuilt_streams": [],
+    "cache_hits": 21,
+    "cache_misses": 3
+  },
+  "phases": [
+    {
+      "name": "index:decisions",
+      "seconds": 0.13032650598324835,
+      "bytes": 100479505,
+      "rows": 4000
+    },
+    {
+      "name": "index:states",
+      "seconds": 0.22149612312205136,
+      "bytes": 134971604,
+      "rows": 4215
+    }
+  ]
+}
