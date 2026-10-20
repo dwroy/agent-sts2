@@ -4527,3 +4527,7 @@ request_id=roy-20261017-human-pace-h0 revision=3 input_sha256=1e1c259a15f1824119
 
 2026-10-20T17:15:33+08:00 已核infra r2固定启动：基线595、treef4b、2371输入SHAca9d与初始manifest一致，六个此前未跟踪temp源叶均已纳入清单及固定Git树，逐SHA核同。runner166767/start_ticks、nice19和idle优先级见静态回读，tsc166770退出0，with-temp单worker full166878于17:13:05.456启动；当前main相对受测基线只有记录漂移。本轮只读启动原件、初始清单及固定Git对象，不查在途进程、动态status或full日志，不把启动或tsc0当完整绿。唯一窗口现归原watcher infra，自然终局核退出并本人明放后再交W4 full-v2；W4摘要缺B/精英A的功能烟测阻塞及首轮失败保留。原infra四断言失败、14项定向和事后来源绑定不覆盖。已沿双方原通道回实际接管，CLI不冒实收；上一停点锁阻的原文与回执本轮收纳，保并行记录。本轮无新full、模型/API、dataset、刷新或合入；live、actor、STOP、805暂缓、Regent及角色ACK保持。
 原件 paper/materials/20261020-1713-infra-ops/receipt.json；verification.json；原native-start-readback.json。
+
+
+2026-10-20T17:39:53+08:00 已在原watcher明确释放后独立核infra r2自然终局：tsc0/full0，624文件5896项通过2原跳；Vitest1356.75秒与wrapper1357.3077秒分列。固定base595/treef4b、2371输入SHAca9d核同，终局changed为空，当前2371文件再逐SHA核同，日志与回执SHA一致。六个检查PID实际均不存在，原树无检查进程，主盘TMPDIR由原wrapper回收，ops未额外清理。已沿原W4线程明确交唯一full-v2窗口，要求冻结包含摘要、白名单及固定测试的最新输入，启动后回树、inputSHA和PID；CLI只记入队，不冒对方接管或运行。原W4首轮失败、九题HTTP200但功能未过、48项定向的owner报告，以及infra旧失败和来源绑定均保留。原watcher仅续源码材料提交和main-only交付，当前全检不代main/live发布或回收完成。本轮无新检查、模型/API、dataset或刷新；live、actor、STOP、805暂缓、Regent及角色ACK不动。
+原件 paper/materials/20261020-1738-infra-ops/receipt.json；verification.json；window-release.json。

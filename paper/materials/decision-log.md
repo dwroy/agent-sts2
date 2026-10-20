@@ -5216,3 +5216,5 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
 - 2026-10-20T17:13:18+08:00 ops：W4原任务报告白名单定向修正过，九题HTTP200但card-schema裁剪缺B/精英A导致功能验收未过；摘要/固定测试续修，full-v2待infra自然终局明放，不据协议绿上线。原件 paper/materials/20261020-W4-schema-progress-ops/receipt.json。
 
 - 2026-10-20T17:15:33+08:00 ops：infra r2原生固定启动base595/treef4b/2371SHAca9d、六源叶核同，tsc0/full166878在途，只核静态原件不查进度；后W4 full-v2，旧失败及功能烟测阻塞保留。接收前停点锁阻记录。原件 paper/materials/20261020-1713-infra-ops/verification.json。
+
+- 2026-10-20T17:39:53+08:00 ops：核infra r2 tsc0/full0（624文件5896过2跳）、2371输入SHA不变/当前核同及六PID实际退出，TMPDIR原wrapper回收；明交W4 full-v2窗口，CLI不冒启动，旧失败/烟测功能阻塞保留，未认main/live交付。原件 paper/materials/20261020-1738-infra-ops/verification.json。
