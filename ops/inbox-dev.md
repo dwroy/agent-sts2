@@ -4426,3 +4426,8 @@ request_id=roy-20261017-human-pace-h0 revision=3 input_sha256=1e1c259a15f1824119
 ### 2026-10-20T14:44:38+08:00 继承异议转达证据及角色登记兼容复核
 
 本轮按三条继承通知ID逐项核原消息、ops_forwarded真实回执及实际收件箱证据SHA，均与旧核验一致；9.1和9.2异议原JSON、9.3原报告也核实在位。原watcher向Roy的可见通知证据SHA16b0a57b再次核同，因此不把当前排队当新送达，也不因registry为false抹掉旧实际转达。当前角色登记仍受旧手动来源兼容阻塞，原609修复尚非main/live祖先；只向原watcher提醒独立兼容待办及真实原件，不重复整份异议，不代填watcher/Roy确认，不重试已知拒绝ACK或改JSON绕过来源。科学限制与原owner下一步仍保原样，历史批次未发布说明不误作否定后续独立发布；父要求不因退出0或本轮归档关闭。本轮无新学习父/模型/批次/补测/dataset，未查询在途full或改live/STOP/actor/Regent。原件：paper/materials/20261020-1443-ops/receipt.json。
+
+
+### 2026-10-20T15:01:14+08:00 原全检验收、W8窗口交接及805新hold
+
+本轮核原d43完整终局tsc0/full0：618文件5873过2跳，27源及498保护知识SHA同、runner已退出。单点源8367已提交，原锁仅27工具/测试路径无冲突合main b367，不冒覆盖W4新联合或分游戏号；live预演a84无冲突，71现有知识/报告字节保护，未写live。窗口明确交W8并获原生实收，其r1不支持minWorkers启动退出、未跑测试，r2同源同2436输入仅maxWorkers1接续，窗口继续保留，未查进度。最新Claude14:58覆盖已落：805明确暂缓，自然边界不运输；蛇咬及其余已验源照原流程，拿牌由大脑，下一自然启动显式card=brain，不热切actor。新条目由原W4W6新树定向/冻结模拟，未排新full或模型。旧失败/活雾学习缺口与角色ACK均保留，Regent不变。原件：paper/materials/20261020-1450-ops/receipt.json。

@@ -1,0 +1,56 @@
+{
+  "request": "20261020-114302-fix-batch-run-plan-transport-followup-20261020-1421",
+  "batch": "20261020-114302-fix-batch",
+  "state": "passed-await-original-narrow-main-live-integration",
+  "pid": 3694693,
+  "start_ticks": 136928756,
+  "nice": 19,
+  "started_at": "2026-10-20T14:22:24+08:00",
+  "input_sha256": "ae260064393f1fc816f3d375dc638a3a1a76f13776f340c169fa9ff64e0471fe",
+  "main_base": "1a56c2e1a707447496137b159f6d2ff395c021ba",
+  "source_head": "698d3bd20fc95e2791e6fab8d5ad4c2c9e01a5c4",
+  "prospective_tree": "d43e6c2304407aeeb9583d47feb706c6e255d8cd",
+  "workspace": ".worktrees/codex-fix-silent-20261020-114302",
+  "combined_full_rc": 0,
+  "main_live_changed": false,
+  "new_model": false,
+  "new_game": false,
+  "steps": [
+    {
+      "name": "tsc",
+      "argv": [
+        "npx",
+        "--no-install",
+        "tsc",
+        "-p",
+        "tsconfig.json",
+        "--noEmit"
+      ],
+      "log": ".artifacts/ops-wake-20261020-1421/tsc.log",
+      "started_at": "2026-10-20T14:22:24+08:00",
+      "pid": 3694721,
+      "exit_code": 0,
+      "finished_at": "2026-10-20T14:22:26+08:00",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "name": "vitest",
+      "argv": [
+        "npx",
+        "--no-install",
+        "vitest",
+        "run",
+        "--maxWorkers=1"
+      ],
+      "log": ".artifacts/ops-wake-20261020-1421/vitest.log",
+      "started_at": "2026-10-20T14:22:26+08:00",
+      "pid": 3694787,
+      "exit_code": 0,
+      "finished_at": "2026-10-20T14:48:11+08:00",
+      "sha256": "11827d8cd115e2af7120ce3ac3a5ec9a101f0b15a60af31ed167d994feeaf467",
+      "bytes": 298
+    }
+  ],
+  "finished_at": "2026-10-20T14:48:11+08:00"
+}
