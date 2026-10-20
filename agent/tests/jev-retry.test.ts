@@ -1,6 +1,6 @@
 /** Transient Jev failures (5xx / 429 / timeouts) are retried with backoff instead of ending the process. */
 
-import { rmSync } from "node:fs";
+import { mkdtempSync, rmSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { afterEach, describe, expect, it } from "vitest";
@@ -16,8 +16,13 @@ import { combatPayload, mainMenuPayload, testKnowledge } from "./scenarios.js";
 const servers: TestServer[] = [];
 const logs: string[] = [];
 afterEach(async () => {
-  await Promise.all(servers.splice(0).map((server) => server.close()));
-  for (const path of logs.splice(0)) rmSync(path, { force: true });
+  try {
+    const closed = await Promise.allSettled(servers.splice(0).map((server) => server.close()));
+    const failed = closed.find((result) => result.status === "rejected");
+    if (failed?.status === "rejected") throw failed.reason;
+  } finally {
+    for (const directory of logs.splice(0)) rmSync(directory, { recursive: true, force: true });
+  }
 });
 
 const cloudflare520 = (): Error => Object.assign(new Error("520 status code (no body)"), { status: 520 });
@@ -120,8 +125,9 @@ describe("runLoop with a flaky Jev", () => {
   }
 
   function config() {
-    const path = join(tmpdir(), `jev-retry-${Date.now()}-${Math.random().toString(16).slice(2)}.jsonl`);
-    logs.push(path, path.replace(/\.jsonl$/, ".states.jsonl"), path.replace(/\.jsonl$/, ".brain.jsonl"));
+    const directory = mkdtempSync(join(tmpdir(), "jev-retry-"));
+    logs.push(directory);
+    const path = join(directory, "decisions.jsonl");
     const base = loadConfig({} as NodeJS.ProcessEnv);
     return { ...base, combatPlanner: "card" as const, log: { ...base.log, decisionLog: path } };
   }

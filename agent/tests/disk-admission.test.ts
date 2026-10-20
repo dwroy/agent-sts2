@@ -6,5 +6,5 @@ it("enforces approved capacity gates in the original tick and only at a finished
     encoding: "utf8", timeout: 35_000,
   });
   expect(result.status, result.stdout + result.stderr).toBe(0);
-  expect(result.stderr).toContain("Ran 8 tests");
+    expect(result.stderr).toContain("Ran 11 tests");
 }, 40_000);

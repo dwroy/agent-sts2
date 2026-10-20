@@ -3,6 +3,7 @@ import fcntl
 import json
 import os
 import re
+import shlex
 import subprocess
 import importlib.util
 import sys
@@ -15,7 +16,11 @@ def proposal_tools():
     spec.loader.exec_module(module)
     return module
 
-FULL_CHECK_COMMAND = 'export PATH="$HOME/.local/node/bin:$PATH"; nice -n 19 npx tsc -p tsconfig.json --noEmit; a=$?; nice -n 19 npx vitest run --maxWorkers=2; b=$?; [ "$a" = 0 ] && [ "$b" = 0 ]'
+# The dispatcher owns this helper even when checking an older live checkout.
+_TEMP_WRAPPER = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "agent", "tools", "with-temp.mjs")
+FULL_CHECK_COMMAND = ('export PATH="$HOME/.local/node/bin:$PATH"; nice -n 19 npx tsc -p tsconfig.json --noEmit; a=$?; '
+                      'nice -n 19 node ' + shlex.quote(_TEMP_WRAPPER) +
+                      ' node_modules/vitest/vitest.mjs run --maxWorkers=2; b=$?; [ "$a" = 0 ] && [ "$b" = 0 ]')
 
 # Compare executable sources and their validation inputs, not refreshed knowledge or ops records.
 SOURCE_PATHS = ["agent/src", "agent/tools", "agent/tests", "agent/package*.json", "agent/tsconfig*.json",

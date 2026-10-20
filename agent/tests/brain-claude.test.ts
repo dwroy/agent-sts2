@@ -4,7 +4,8 @@
  * answer and usage read back, failure kinds (quota, rate limit, login) and the stdio MCP round trip with a fake
  * tool. No model is called.
  */
-import { chmodSync, existsSync, mkdtempSync, readFileSync, writeFileSync } from "node:fs";
+import { chmodSync, existsSync, readFileSync, writeFileSync } from "node:fs";
+import { mkdtempSync } from "./temp-fixtures.js";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { describe, expect, it } from "vitest";

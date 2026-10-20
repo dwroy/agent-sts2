@@ -1,0 +1,109 @@
+{
+  "schema": "engineering-validation-v1",
+  "recorded_at": "2026-10-20T15:05:42+08:00",
+  "branch": "infra-temp-lifecycle-20261020",
+  "base": "b367e05d46128849f14b84d12e9180400e4dcaf4",
+  "source_review_manifest": {
+    "path": ".artifacts/infra-temp-review-input.json",
+    "bytes": 6392,
+    "sha256": "6a341b29910e397d4f3ea6f26f45cc4cb83523db40792c107204182858f78897"
+  },
+  "checks": [
+    {
+      "name": "tsc-post-rebase",
+      "exit_code": 0,
+      "log": {
+        "path": ".artifacts/infra-temp-tsc-post-rebase.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "result": null
+    },
+    {
+      "name": "focused-post-rebase",
+      "exit_code": 0,
+      "log": {
+        "path": ".artifacts/infra-temp-post-rebase-targeted-r2.log",
+        "bytes": 265,
+        "sha256": "e4fded0b18148442131bddbc54477b6cb01872dddf43130e1fc0a0c742b31868"
+      },
+      "result": {
+        "files": 3,
+        "passed": 25
+      }
+    },
+    {
+      "name": "direct-vitest-default-temp",
+      "exit_code": 0,
+      "log": {
+        "path": ".artifacts/infra-temp-direct-vitest.log",
+        "bytes": 261,
+        "sha256": "f8b8ec7ac18b6c78e47c3a5b3ac19c98f79943758c5a510178a04413fb533edb"
+      },
+      "result": {
+        "files": 1,
+        "passed": 5
+      }
+    },
+    {
+      "name": "gitleaks-pre-full",
+      "exit_code": 0,
+      "log": {
+        "path": ".artifacts/infra-temp-gitleaks-pre-full.log",
+        "bytes": 81,
+        "sha256": "d9aaaefca717c024a0cada41d7256291c9c01880ddd5b1bef611dfa3b3159bd5"
+      },
+      "result": {
+        "findings": 0
+      }
+    },
+    {
+      "name": "unsupported-cli-option-preserved",
+      "exit_code": 1,
+      "log": {
+        "path": ".artifacts/infra-temp-post-rebase-targeted.log",
+        "bytes": 972,
+        "sha256": "6df40bb2c1bbf0c0c172d2d8a10279384462e81c3cca52d8aeff54c0745669cb"
+      },
+      "result": {
+        "tests_executed": 0,
+        "classification": "unsupported --minWorkers CLI option"
+      }
+    }
+  ],
+  "python_checks": [
+    {
+      "suite": "ops/tests/test_disk_admission.py",
+      "passed": 11,
+      "exit_code": 0
+    },
+    {
+      "suite": "ops/tests/test_learner_cherry_pick_recheck.py",
+      "passed": 7,
+      "exit_code": 0
+    },
+    {
+      "suite": "ops/tests/test_learner_report_fixes_shape.py",
+      "passed": 3,
+      "exit_code": 0
+    }
+  ],
+  "full": {
+    "status": "pending_explicit_window_release",
+    "owner_of_current_window": "original V6-W8",
+    "started": false,
+    "timeout_thresholds_changed": false
+  },
+  "boundaries": {
+    "main_merged": false,
+    "live_merged": false,
+    "game_or_model_requests": 0,
+    "shared_tmp_cleanup_by_this_worktree": false,
+    "W3_805_transport": "hold"
+  },
+  "ops_actual_readback": {
+    "path": "paper/materials/20261020-1503-ops/verification.json",
+    "805_hold_recorded": true,
+    "live_at_that_receipt": "861eef7ddcca034ff871655e74c48ffe7e196b72"
+  }
+}

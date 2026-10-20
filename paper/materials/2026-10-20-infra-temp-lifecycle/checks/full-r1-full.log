@@ -1,0 +1,47 @@
+
+ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/infra-temp-lifecycle-20261020/agent
+
+ ❯ tests/learner-self-check.test.ts (6 tests | 4 failed) 447ms
+     × experience-update emits completion and runs the full suite after a verified live merge 90ms
+     × fix-batch emits completion and runs the full suite after a verified live merge 91ms
+     × strategy-proposal emits completion and runs the full suite after a verified live merge 85ms
+     × the sandbox command excludes exactly the fixed subprocess suites and typechecks first 1ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 4 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/learner-self-check.test.ts > learner self-check completion > experience-update emits completion and runs the full suite after a verified live merge
+ FAIL  tests/learner-self-check.test.ts > learner self-check completion > fix-batch emits completion and runs the full suite after a verified live merge
+ FAIL  tests/learner-self-check.test.ts > learner self-check completion > strategy-proposal emits completion and runs the full suite after a verified live merge
+AssertionError: expected 'export PATH="$HOME/.local/node/bin:$P…' to contain 'npx vitest run --maxWorkers=2'
+
+Expected: "npx vitest run --maxWorkers=2"
+Received: "export PATH="$HOME/.local/node/bin:$PATH"; nice -n 19 npx tsc -p tsconfig.json --noEmit; a=$?; nice -n 19 node /home/dw/Projects/agent-sts2/.worktrees/infra-temp-lifecycle-20261020/agent/tools/with-temp.mjs node_modules/vitest/vitest.mjs run --maxWorkers=2; b=$?; [ "$a" = 0 ] && [ "$b" = 0 ]"
+
+ ❯ tests/learner-self-check.test.ts:33:36
+     31|     expect(result.calls[1].slice(0, 3)).toEqual(["flock", "/fixture/op…
+     32|     expect(result.calls[1].at(-1)).toContain("npx tsc -p tsconfig.json…
+     33|     expect(result.calls[1].at(-1)).toContain("npx vitest run --maxWork…
+       |                                    ^
+     34|     expect(result.calls[1].at(-1)).not.toContain("--exclude");
+     35|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/4]⎯
+
+ FAIL  tests/learner-self-check.test.ts > learner self-check completion > the sandbox command excludes exactly the fixed subprocess suites and typechecks first
+AssertionError: expected 956 to be less than -1
+ ❯ tests/learner-self-check.test.ts:60:40
+     58|     expect(excluded).not.toContain("tests/turn-start-settle.test.ts");
+     59|     expect(excluded.every((name) => name.startsWith("tests/") && name.…
+     60|     expect(command.indexOf("npx tsc")).toBeLessThan(command.indexOf("n…
+       |                                        ^
+     61|   });
+     62| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/4]⎯
+
+
+ Test Files  1 failed | 619 passed (620)
+      Tests  4 failed | 5885 passed | 2 skipped (5891)
+   Start at  15:20:13
+   Duration  1300.28s (transform 18.14s, setup 34.73s, import 120.67s, tests 1065.41s, environment 63ms)
+

@@ -8,7 +8,8 @@
  *
  * Fixed data throughout (setExperienceForTests, a copy of the gkb fixture dir), never the refreshing outcome-stats.json.
  */
-import { cpSync, mkdtempSync, readFileSync, writeFileSync } from "node:fs";
+import { cpSync, readFileSync, writeFileSync } from "node:fs";
+import { mkdtempSync } from "./temp-fixtures.js";
 import { tmpdir } from "node:os";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";

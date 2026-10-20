@@ -1,0 +1,63 @@
+{
+  "at": "2026-10-20T15:44:45.767629+08:00",
+  "state": "full1-natural-terminal-processes-exited-window-released",
+  "base": "73f7056cf268612be7600ff76eba25854ac252a9",
+  "staged_tree": "ed37d6614f15f5276aaad86559fc79988694eeb4",
+  "input_count": 2331,
+  "input_sha256": "46c9e27f9bade7286afa8c886ac2a44760c22e99117423f76d151957b32594d3",
+  "input_unchanged": true,
+  "changed_inputs": [],
+  "ended_at": "2026-10-20T15:41:53.714329+08:00",
+  "tsc_exit": 0,
+  "full_exit": 1,
+  "test_files": {
+    "passed": 619,
+    "failed": 1,
+    "total": 620
+  },
+  "tests": {
+    "passed": 5885,
+    "failed": 4,
+    "skipped": 2
+  },
+  "duration_seconds": 1300.9122283579782,
+  "failures": [
+    "learner-self-check.test.ts: experience-update/fix-batch/strategy-proposal old host command assertions (3)",
+    "learner-self-check.test.ts: sandbox old npx vitest ordering assertion (1)"
+  ],
+  "exited_pid_absence": {
+    "3993740": true,
+    "3993743": true,
+    "3993818": true,
+    "3993826": true,
+    "4016849": true
+  },
+  "remaining_own_check_processes": [],
+  "source_changed_during_full": false,
+  "thresholds_changed": false,
+  "evidence": [
+    {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/infra-temp-lifecycle-20261020/.artifacts/full-infra-r1/status.json",
+      "bytes": 3362,
+      "sha256": "0c04a510a99fee460d5940849c313b63225e1f6c5becad259ec22394c6c25c31"
+    },
+    {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/infra-temp-lifecycle-20261020/.artifacts/full-infra-r1/full.log",
+      "bytes": 2936,
+      "sha256": "4a0dfcd0d14175185b47ff09fc058f68de84097bf3549c4959ae5a7015fd5ab0"
+    },
+    {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/infra-temp-lifecycle-20261020/.artifacts/full-infra-r1/tsc.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  ],
+  "released_to": "ops original 141301",
+  "next_queue": [
+    "ops original 141301",
+    "W8 fixture-fixed r3 full",
+    "W4W6 card-results full"
+  ],
+  "own_next": "fix only obsolete command assertions; targeted checks only; request later full window through original queue",
+  "no_live_play_model_changes": true
+}

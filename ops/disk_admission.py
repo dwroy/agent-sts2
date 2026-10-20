@@ -13,6 +13,26 @@ import time
 
 GiB = 1 << 30
 WINDOW = 24 * 3600
+TMP_MIN_BYTES = GiB
+TMP_MIN_INODES = 16384
+
+
+def temporary_capacity():
+    """The shared tmpfs can run out of inodes while the repository disk is healthy."""
+    result = {"path": "/tmp", "minimum_available_bytes": TMP_MIN_BYTES,
+              "minimum_available_inodes": TMP_MIN_INODES,
+              "available_bytes": None, "available_inodes": None, "allowed": False}
+    try:
+        stat = os.statvfs("/tmp")
+        free_bytes, free_inodes = stat.f_bavail * stat.f_frsize, stat.f_favail
+        if type(free_bytes) is not int or type(free_inodes) is not int or min(free_bytes, free_inodes) < 0:
+            raise ValueError("invalid temporary filesystem measurement")
+        result.update(available_bytes=free_bytes, available_inodes=free_inodes,
+                      allowed=free_bytes > TMP_MIN_BYTES and free_inodes > TMP_MIN_INODES,
+                      reason="ok" if free_bytes > TMP_MIN_BYTES and free_inodes > TMP_MIN_INODES else "low_capacity")
+    except (OSError, ValueError) as error:
+        result.update(reason="measurement_failed", error=str(error))
+    return result
 
 
 def configuration(root):
@@ -119,16 +139,21 @@ def snapshot(root, directory, *, record=False, now=None, available=None):
             if samples and current <= samples[-1]["at"]:
                 raise ValueError("capacity clock did not advance; retain original samples")
             samples.append({"at": current, "available_bytes": free})
+        temporary = temporary_capacity()
         result = {"schema": "disk-admission-state-v1", "configured": True, "at": current,
                   "root": str(root), "policy": str(policy_path), "samples": samples, **evaluate(free, samples)}
+        result["temporary_filesystem"] = temporary
+        if not temporary["allowed"]:
+            for key in ("new_jobs_allowed", "new_channel_allowed", "next_run_allowed", "regent_resume_allowed"):
+                result[key] = False
         previous = state.get("severity")
-        result["severity"] = "next_run_hold" if not result["next_run_allowed"] else "new_work_hold" if not result["new_jobs_allowed"] else "ok"
+        result["severity"] = "tmp_capacity_hold" if not temporary["allowed"] else "next_run_hold" if not result["next_run_allowed"] else "new_work_hold" if not result["new_jobs_allowed"] else "ok"
         result["attention_transition"] = result["severity"] != "ok" and result["severity"] != previous
         if record:
             # Keep original measurements; the bounded current view may age old samples out.
             with (folder / "measurements.jsonl").open("a") as history:
                 history.write(json.dumps({"schema": "capacity-sample-v1", "at": current,
-                    "available_bytes": free, "root": str(root)}, ensure_ascii=False) + "\n")
+                    "available_bytes": free, "root": str(root), "temporary_filesystem": temporary}, ensure_ascii=False) + "\n")
                 history.flush()
                 os.fsync(history.fileno())
             atomic(statefile, result)

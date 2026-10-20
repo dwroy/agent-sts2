@@ -7,7 +7,8 @@
  * filled earlier the same day with the all-ascension text is not handed to an A9 run, and they stay byte-stable within
  * the day. Fixed data throughout (setUnblockedSharesForTests), never the refreshing boss-damage.json.
  */
-import { cpSync, mkdtempSync, readFileSync, writeFileSync } from "node:fs";
+import { cpSync, readFileSync, writeFileSync } from "node:fs";
+import { mkdtempSync } from "./temp-fixtures.js";
 import { tmpdir } from "node:os";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";

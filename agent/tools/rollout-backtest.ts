@@ -13,11 +13,11 @@
  * Pairing tests and the report are knowledge/builders/build-fight-value.py rollout-report.
  *
  * Usage:
- *   npx tsx tools/rollout-backtest.ts extract [--logs DIR] [--rows PATH] [--work DIR]
- *   npx tsx tools/rollout-backtest.ts run [--work DIR] [--shard I --shards N] [--budget 1500] [--limit N] [--fold-dir DIR]
+ *   npm run offline -- node --import tsx tools/rollout-backtest.ts extract [--logs DIR] [--rows PATH] [--work DIR]
+ *   npm run offline -- node --import tsx tools/rollout-backtest.ts run [--work DIR] [--shard I --shards N] [--budget 1500] [--limit N] [--fold-dir DIR]
  * --fold-dir: out-of-fold models and gates (python3 knowledge/builders/build-fight-value.py folds --fold-dir DIR); without it
  * the committed model, which was trained on these very fights, is used (in-sample: optimistic).
- * Output: <work>/decisions.jsonl (extract), <work>/eval-<I>.jsonl (run).
+ * Output: <work>/decisions.jsonl (extract), <work>/eval-<I>.jsonl (run); default work is .artifacts/rollout-backtest.
  */
 import { createReadStream, mkdirSync, readFileSync, writeFileSync, appendFileSync } from "node:fs";
 import { join } from "node:path";
@@ -44,7 +44,7 @@ function arg(name: string, fallback: string): string {
 const stage = process.argv[2] ?? "run";
 const logs = arg("logs", fromRoot("logs"));
 const rowsPath = arg("rows", fromRoot("data/fight-value-rows.jsonl"));
-const work = arg("work", "/tmp/rollout-backtest");
+const work = arg("work", fromRoot(".artifacts/rollout-backtest"));
 mkdirSync(work, { recursive: true });
 
 interface FvRow {

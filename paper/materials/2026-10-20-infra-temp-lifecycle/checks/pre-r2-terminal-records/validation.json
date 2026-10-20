@@ -1,0 +1,214 @@
+{
+  "schema": "engineering-validation-v1",
+  "recorded_at": "2026-10-20T15:46:04.055179+08:00",
+  "branch": "infra-temp-lifecycle-20261020",
+  "base": "73f7056cf268612be7600ff76eba25854ac252a9",
+  "source_review_manifest": {
+    "path": ".artifacts/infra-temp-review-input.json",
+    "bytes": 6392,
+    "sha256": "6a341b29910e397d4f3ea6f26f45cc4cb83523db40792c107204182858f78897"
+  },
+  "checks": [
+    {
+      "name": "tsc-post-rebase",
+      "exit_code": 0,
+      "log": {
+        "path": ".artifacts/infra-temp-tsc-post-rebase.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "result": null
+    },
+    {
+      "name": "focused-post-rebase",
+      "exit_code": 0,
+      "log": {
+        "path": ".artifacts/infra-temp-post-rebase-targeted-r2.log",
+        "bytes": 265,
+        "sha256": "e4fded0b18148442131bddbc54477b6cb01872dddf43130e1fc0a0c742b31868"
+      },
+      "result": {
+        "files": 3,
+        "passed": 25
+      }
+    },
+    {
+      "name": "direct-vitest-default-temp",
+      "exit_code": 0,
+      "log": {
+        "path": ".artifacts/infra-temp-direct-vitest.log",
+        "bytes": 261,
+        "sha256": "f8b8ec7ac18b6c78e47c3a5b3ac19c98f79943758c5a510178a04413fb533edb"
+      },
+      "result": {
+        "files": 1,
+        "passed": 5
+      }
+    },
+    {
+      "name": "gitleaks-pre-full",
+      "exit_code": 0,
+      "log": {
+        "path": ".artifacts/infra-temp-gitleaks-pre-full.log",
+        "bytes": 81,
+        "sha256": "d9aaaefca717c024a0cada41d7256291c9c01880ddd5b1bef611dfa3b3159bd5"
+      },
+      "result": {
+        "findings": 0
+      }
+    },
+    {
+      "name": "unsupported-cli-option-preserved",
+      "exit_code": 1,
+      "log": {
+        "path": ".artifacts/infra-temp-post-rebase-targeted.log",
+        "bytes": 972,
+        "sha256": "6df40bb2c1bbf0c0c172d2d8a10279384462e81c3cca52d8aeff54c0745669cb"
+      },
+      "result": {
+        "tests_executed": 0,
+        "classification": "unsupported --minWorkers CLI option"
+      }
+    },
+    {
+      "name": "command-fixture-r2",
+      "tsc_exit": 0,
+      "exit_code": 0,
+      "files": 4,
+      "passed": 14,
+      "log": {
+        "path": "paper/materials/2026-10-20-infra-temp-lifecycle/checks/fixture-r2-targeted.log",
+        "bytes": 264,
+        "sha256": "ffecfde5b3d2098715407d370e4da74566e103df82b1582228eb28e1773951e9"
+      },
+      "receipt": {
+        "path": "paper/materials/2026-10-20-infra-temp-lifecycle/checks/fixture-r2-receipt.json",
+        "bytes": 1381,
+        "sha256": "e28ca10c459413dff165f5a34439d593ae92a8f2efe0abc065c5c15e9969c699"
+      },
+      "full_pass_claimed": false
+    }
+  ],
+  "python_checks": [
+    {
+      "suite": "ops/tests/test_disk_admission.py",
+      "passed": 11,
+      "exit_code": 0
+    },
+    {
+      "suite": "ops/tests/test_learner_cherry_pick_recheck.py",
+      "passed": 7,
+      "exit_code": 0
+    },
+    {
+      "suite": "ops/tests/test_learner_report_fixes_shape.py",
+      "passed": 3,
+      "exit_code": 0
+    }
+  ],
+  "full": {
+    "status": "pending_later_original_queue_window_after_fixture_fix",
+    "started": false,
+    "historical_full_exit": 1,
+    "timeout_thresholds_changed": false,
+    "queue": [
+      "ops original 141301",
+      "W8 fixture-fixed r3",
+      "W4W6 new card results",
+      "infra fixture-fixed full (requested; no slot acknowledged)"
+    ],
+    "window_released_after_process_exit": {
+      "path": "paper/materials/2026-10-20-infra-temp-lifecycle/checks/full-r1-window-release-r1.json",
+      "bytes": 2173,
+      "sha256": "e47a2d254d1f9f5df62862ecb380796700e4c3a9588241f4fc8f0af52674d8a5"
+    },
+    "ops_release_delivery": {
+      "exit_code": 0,
+      "native_receipt_verified": false
+    }
+  },
+  "boundaries": {
+    "main_merged": false,
+    "live_merged": false,
+    "game_or_model_requests": 0,
+    "shared_tmp_cleanup_by_this_worktree": false,
+    "W3_805_transport": "hold"
+  },
+  "ops_actual_readback": {
+    "path": "paper/materials/20261020-1503-ops/verification.json",
+    "805_hold_recorded": true,
+    "live_at_that_receipt": "861eef7ddcca034ff871655e74c48ffe7e196b72"
+  },
+  "previous_record": {
+    "path": ".artifacts/infra-report-before-r1-terminal/validation.json",
+    "bytes": 2992,
+    "sha256": "18de439ae1fe76321e0a8bd44a14cff47a683fd8f5517c101829e300b97cb1cb"
+  },
+  "historical_fulls": [
+    {
+      "name": "full-infra-r1",
+      "base": "73f7056cf268612be7600ff76eba25854ac252a9",
+      "staged_tree": "ed37d6614f15f5276aaad86559fc79988694eeb4",
+      "input_count": 2331,
+      "input_sha256": "46c9e27f9bade7286afa8c886ac2a44760c22e99117423f76d151957b32594d3",
+      "input_unchanged": true,
+      "changed_inputs": [],
+      "tsc_exit": 0,
+      "exit_code": 1,
+      "files": {
+        "passed": 619,
+        "failed": 1
+      },
+      "tests": {
+        "passed": 5885,
+        "failed": 4,
+        "skipped": 2
+      },
+      "seconds": 1300.9122283579782,
+      "result": "four obsolete command assertions in learner-self-check.test.ts",
+      "evidence": [
+        {
+          "path": "paper/materials/2026-10-20-infra-temp-lifecycle/checks/full-r1-status.json",
+          "bytes": 3362,
+          "sha256": "0c04a510a99fee460d5940849c313b63225e1f6c5becad259ec22394c6c25c31"
+        },
+        {
+          "path": "paper/materials/2026-10-20-infra-temp-lifecycle/checks/full-r1-full.log",
+          "bytes": 2936,
+          "sha256": "4a0dfcd0d14175185b47ff09fc058f68de84097bf3549c4959ae5a7015fd5ab0"
+        }
+      ]
+    }
+  ],
+  "fixture_change": {
+    "path": "agent/tests/learner-self-check.test.ts",
+    "previous_sha256": "a8fe96774b0689748340942c5e2863ceaad0e56e3aca3d83782eca083b01ee65",
+    "current": {
+      "path": "agent/tests/learner-self-check.test.ts",
+      "bytes": 3809,
+      "sha256": "e4a6a74a49e48bd1c4da12d6f006b1bd4aa8ffdbc820ce3d1f115de8551777b0"
+    },
+    "scope": "recognize with-temp full-suite entry; retain exclusion and tsc ordering assertions",
+    "runtime_changed_after_full": false
+  },
+  "source_time_binding": {
+    "recorded_at": "2026-10-20T15:55:59.399569+08:00",
+    "evidence": {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/infra-temp-lifecycle-20261020/paper/materials/2026-10-20-infra-temp-lifecycle/checks/source-time-binding.json",
+      "bytes": 11625,
+      "sha256": "9a87ebe8350ee6b688a590c966cf95056bc081cc3ece2d5354d06e6bc5226230"
+    },
+    "previous_report": {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/infra-temp-lifecycle-20261020/.artifacts/infra-source-binding-1555/previous-report.md",
+      "bytes": 4957,
+      "sha256": "f2a701508578a846b5c0a1fc35a4f6c42347f4e513b7f3c40181c0a550f02d7b"
+    },
+    "previous_validation": {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/infra-temp-lifecycle-20261020/.artifacts/infra-source-binding-1555/previous-validation.json",
+      "bytes": 6036,
+      "sha256": "5a9358ca8a6a3ff070db74c9f2153cd7c8eb7cc4ec788828e131a89cf2daf463"
+    },
+    "full_revalidation_pending": true,
+    "source_changed_this_audit": false
+  }
+}

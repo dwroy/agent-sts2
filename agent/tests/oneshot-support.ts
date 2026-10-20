@@ -5,7 +5,7 @@
  * table (not the refreshed card-upgrades.json).
  */
 
-import { readFileSync, rmSync } from "node:fs";
+import { mkdtempSync, readFileSync, rmSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
@@ -126,8 +126,13 @@ export function setupOneshotTests(): void {
 );
   afterAll(() => setCardUpgradesForTests(null));
   afterEach(async () => {
-    await Promise.all(servers.splice(0).map((server) => server.close()));
-    for (const path of logs.splice(0)) rmSync(path, { force: true });
+    try {
+      const closed = await Promise.allSettled(servers.splice(0).map((server) => server.close()));
+      const failed = closed.find((result) => result.status === "rejected");
+      if (failed?.status === "rejected") throw failed.reason;
+    } finally {
+      for (const directory of logs.splice(0)) rmSync(directory, { recursive: true, force: true });
+    }
   });
 }
 
@@ -182,8 +187,9 @@ const servers: TestServer[] = [];
 const logs: string[] = [];
 
 export async function play(sequence: Raw[], deepseek: DeepSeekClient, over: Partial<AppConfig> = {}, loop: Partial<LoopOptions> = {}) {
-  const path = join(tmpdir(), `jev-sts2-oneshot-${Date.now()}-${Math.random().toString(16).slice(2)}.jsonl`);
-  logs.push(path, path.replace(/\.jsonl$/, ".states.jsonl"), path.replace(/\.jsonl$/, ".brain.jsonl"));
+  const directory = mkdtempSync(join(tmpdir(), "jev-sts2-oneshot-"));
+  logs.push(directory);
+  const path = join(directory, "decisions.jsonl");
   const base = loadConfig({} as NodeJS.ProcessEnv);
   const cfg: AppConfig = {
     ...base,

@@ -3,7 +3,8 @@
  * (tests/logged-states), never the refreshing knowledge files.
  */
 
-import { mkdtempSync, readFileSync } from "node:fs";
+import { readFileSync } from "node:fs";
+import { mkdtempSync } from "./temp-fixtures.js";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 

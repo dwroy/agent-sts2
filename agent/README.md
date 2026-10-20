@@ -19,6 +19,8 @@ npm run doctor
 npm run shadow -- --max-decisions 20
 ```
 
+测试默认在主盘创建并回收独立临时目录；离线烟测和批量模拟使用 `npm run offline -- <命令>`。显式 TMPDIR、中断现场及容量门槛见 [临时文件规则](../docs/temporary-files.md)。
+
 doctor 检查 mod、配置、Jev 与大脑启动条件；shadow 做决策而不派发游戏动作，两者可触发模型请求。开发会话不运行 play。对局只由运维的 ops/autoplay.sh / ops/run.sh 从 `.worktrees/live` 启动，保留单实例锁、当前存档和原日志。
 
 | 命令 | 用途 |
