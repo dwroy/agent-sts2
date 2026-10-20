@@ -5150,3 +5150,5 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
 - 2026-10-20T14:08:08+08:00 ops：W8 14:10原回报未起tsc/full、仅既有单进程计时，后续短.cache/w8t；保W4W6→ops变化输入→W8检查顺序，等前两窗口实际释放再通知，不查询/叠full或改live。原件 paper/materials/20261020-w8-window-1410-ops/receipt.json。
 
 - 2026-10-20T14:16:00+08:00 ops：按原要求保全root日志实际watcher G1c一条+空行2新增，非两条ops且不代G1c验收；W4W6 v3在途仅报告未释放，W8自有计时已结束/未起full，保持W4→ops→W8顺序，原件 paper/materials/20261020-log-window-1415-ops/receipt.json。
+
+- 2026-10-20T14:23:50+08:00 ops：W4原v3 full0/613文件5830过2跳及五源SHA核同、runner退出；原窗口明确释放后接ops固定d43e6c23完整检查，nice19单worker/短.t/f1421/PID3694693、tsc0/full在途，旧失败全保留，终局再通知W8，不改live。原件 paper/materials/20261020-1421-ops/receipt.json。

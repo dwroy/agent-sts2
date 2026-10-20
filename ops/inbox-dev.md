@@ -4401,3 +4401,8 @@ request_id=roy-20261017-human-pace-h0 revision=3 input_sha256=1e1c259a15f1824119
 ### 2026-10-20T14:16:00+08:00 原根日志保全与检查窗口顺序
 
 本轮核根decision-log实际差异为2行新增、0删除：watcher的G1c每十完局归档一条加空行，并非两条ops记录。已冻结HEAD、工作字节及原patch，依本次日志保全要求保存原内容，未stash、恢复或覆盖后续并行记录；不代认G1c科学来源或收益验收。W4W6报告full-final-v3仍按nice19单worker运行、尚未释放，暂未失败仅是其在途回报，本ops不查询或认完整通过。W8报告原自有只读计时均结束、重复训练仅自有PID停止，当前无其模拟/full，已变基079874c93且完整检查前未提交/合main。排队继续W4W6→ops变化输入全检→通知原W8，后续短.cache/w8t；记录保存后将实际main提交回原W4W6供其核FF，不能夹带产品代码或材料。原件：paper/materials/20261020-log-window-1415-ops/receipt.json。
+
+
+### 2026-10-20T14:23:50+08:00 原W4释放核验及ops变化输入完整检查接管
+
+本轮接W4W6明确释放独占窗口，实核v3终局日志SHA及五份受测源码同：613文件、5830项通过、2跳过，原四runner均退出；旧ENOSPC、长路径断言及中断历史保留，不冒源已main/live。ops已沿原排队接单点测试接线修复，固定staged树d43e6c23、27源叶与498保护知识SHA核同；旧基线至当前main仅记录变化，本轮未混入尚待交付的战斗源码。唯一完整tsc/vitest按nice19单worker及短.t/f1421实际启动PID3694693，启动回执tsc0/full在途；旧3fd4失败不覆盖，新输入不冒完整绿或源码提交。已向原W4与W8回投窗口接管，CLI0不代native实收。等待原learner-checks终局后确认释放再通知W8，过程中不轮询、不叠full/派模型/API/刷新/dataset，live/对局及Regent不动。原件：paper/materials/20261020-1421-ops/receipt.json。
