@@ -1,0 +1,33 @@
+
+ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261020-164301/agent
+
+ ❯ tests/cadence-no-change.test.ts (1 test | 1 failed) 15562ms
+   × settles registered empty cadence reviews and preserves source, parent and retention guards 15561ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/cadence-no-change.test.ts > settles registered empty cadence reviews and preserves source, parent and retention guards
+AssertionError: ...: expected null to be +0 // Object.is equality
+
+- Expected:
+0
+
++ Received:
+null
+
+ ❯ tests/cadence-no-change.test.ts:8:56
+      6|     encoding: "utf8", timeout: 15_000,
+      7|   });
+      8|   expect(result.status, result.stdout + result.stderr).toBe(0);
+       |                                                        ^
+      9|   expect(result.stderr).toContain("Ran 4 tests");
+     10| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed | 5 passed (6)
+      Tests  1 failed | 13 passed (14)
+   Start at  16:49:41
+   Duration  39.51s (transform 2.77s, setup 1.01s, import 2.83s, tests 28.15s, environment 1ms)
+

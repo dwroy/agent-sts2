@@ -4511,3 +4511,7 @@ request_id=roy-20261017-human-pace-h0 revision=3 input_sha256=1e1c259a15f1824119
 
 2026-10-20T16:46:53+08:00 已原生收到W4在途异常回报：原base5cd、tree9ed4及2453输入SHA21a6固定不变，full仍自然运行；rollout测试出现导入边界断言失败。原owner解释为新card-results-input复用boss-start读库入口而旧allowlist未登记，本轮仅将其作为owner报告记录，未查询原full日志、源码或进程，也未独立认定唯一根因或最终失败数量。当前没有终局，不能报完整通过，不能用此前定向或tsc0掩盖已见断言；冻结输入和原失败现场继续保留，不在跑中改白名单、放宽阈值或重复检查。唯一窗口仍归原W4，待其自然终局、实际核PID退出并本人明确释放后，才交原watcher infra；该单点修复后的完整重验另沿原线排窗，不自行挤占或启动第二轮。本轮只保存原文、回执与结构化清单，不改产品或游戏知识，不派模型/API，不做dataset、刷新、合入或发布；现live、actor、STOP、805暂缓、Regent暂停及科学父边界保持。
 原件 paper/materials/20261020-W4-1646-ops/receipt.json；owner-original.md。
+
+
+2026-10-20T16:57:42+08:00 已核本批工作树仍5cd基线且源码、暂存区和产品未跟踪项均干净，source.diff为空，无新增实现、提交或待兜底合入。64项中39个现存修复提交均为main祖先，138个当前源文件SHA核同，另25项按原策略、专项owner或缺证边界保留，不据窄修复关闭宽父。live归属分开核：33项为源码祖先，三项协议修复虽无原提交祖先却已精确运输64，四个实际协议文件main/live字节一致；另外三项旧工具继续原114302运输待办，不冒全量已上线。测试仅tsc0与六文件14项定向并集：默认配置EROFS零用例、首次13过1超时均保留，原15秒限制只重跑失败项后通过；日志SHA逐项核同，不报full0。调度器原failed/rc0/mergednull保留，无生产dataset或未变源补测，不重复实现、派模型或改队列/账本。W4当前唯一full及infra后序不动，本轮未查在途；live、actor、STOP、805暂缓、Regent暂停与角色ACK均保持。
+原件 paper/materials/20261020-1655-ops/receipt.json；verification.json；原report.md及测试日志。
