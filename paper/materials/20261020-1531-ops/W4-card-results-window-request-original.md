@@ -1,0 +1,1 @@
+W4W6 原14:58拿牌结果条目任务进展：新树 v6-card-combat-results-20261020，76项定向+tsc已过，首个真实卡奖励4/4已知，冷/热准备4.43/4.29秒。现在只跑同9冻结题只读Nova烟测，nice19单worker，不改live/STOP。后续需一次单worker完整tsc/vitest窗口；请沿现有原owner顺序告知何时可占用，我在确认前不启动full。不新派学习/模型任务。

@@ -3393,3 +3393,7 @@ request_id=roy-20261017-human-pace-h0 revision=3 input_sha256=1e1c259a15f1824119
 
 2026-10-20T15:33:32+08:00 已核原144301唯一收尾终局，dataset_invocations=1、退出0，源检查通过，9J6、UWUF、TR224三局分别F8/F31/F21败局均has_postmortem=1；切点固定07:20:14.220Z，13份变化输出及579份该次归档原件保留，未请求原始日志快照。实际记录提交e399ee711已为main祖先，范围仅notes、收件箱和paper记录/数据，明确包含lessons、学习账本及三项原提案，gitleaks0；旧lessons前缀与三节唯一性、账本原快照前缀均核同。原receipt保留提交前状态，本次以真实commit和终局回执补充完成证明，不倒改历史。原0496为旧重犯而非新增纯bug；复盘和论文数据完成不替代策略实现、正式经验发布、live消费、科学父或角色ACK。已通知原watcher，CLI0不冒实收。仅更新短清单及记录，无需重复dataset、测试或模型；原watcher全检窗口、805暂停、live/actor/STOP与Regent保持。
 原件 paper/materials/20261020-1531-ops/receipt.json；verification.json；record-commit.json。
+
+
+2026-10-20T15:35:30+08:00 另已实收原W4W6拿牌结果条目任务的完整检查窗口申请，工作树v6-card-combat-results-20261020仍由原owner独立维护。其76项定向与tsc、首个真实卡奖励4/4已知、冷热准备4.43/4.29秒均按本次进展报告保存，不外推其他题面或最终烟测通过；同9冻结题只读Nova烟测由原owner接续，ops不查询、不重复API、模拟或派模型。唯一完整检查窗口按既定顺序原watcher infra、ops141301、W8修夹具重验之后才轮到W4，须前任务自然终局、退出和原生明确释放；不依据估计时间或CLI入队启动。已沿原W4及watcher线程回复顺序，轮到时由ops明确通知，当前不启动其full。新条目只处排队与原进度记录阶段，不认已main/live、发布或消费者收益；旧805/P上界版继续明确暂停，当前live/actor/STOP、Regent及角色ACK边界保持。
+原件 paper/materials/20261020-1531-ops/W4-card-results-window-request-original.md。
