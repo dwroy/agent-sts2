@@ -1,0 +1,63 @@
+{
+  "tasks": [
+    {
+      "task": "v6-knowledge-publish",
+      "template": "learner/tasks/v6-knowledge-publish.md",
+      "current_main_whitelist_accepts": false,
+      "expanded_candidate_accepts": true
+    },
+    {
+      "task": "v6-direction-experience",
+      "template": "learner/tasks/v6-direction-experience.md",
+      "current_main_whitelist_accepts": false,
+      "expanded_candidate_accepts": true
+    },
+    {
+      "task": "v6-reflex-distill",
+      "template": "learner/tasks/v6-reflex-distill.md",
+      "current_main_whitelist_accepts": false,
+      "expanded_candidate_accepts": true
+    },
+    {
+      "task": "v6-reflex-distill-r2",
+      "template": "learner/tasks/v6-reflex-distill-r2.md",
+      "current_main_whitelist_accepts": false,
+      "expanded_candidate_accepts": true
+    },
+    {
+      "task": "v6-reflex-distill-r3",
+      "template": "learner/tasks/v6-reflex-distill-r3.md",
+      "current_main_whitelist_accepts": false,
+      "expanded_candidate_accepts": true
+    },
+    {
+      "task": "v6-build-cores",
+      "template": "learner/tasks/v6-build-cores.md",
+      "current_main_whitelist_accepts": false,
+      "expanded_candidate_accepts": true
+    }
+  ],
+  "only_explicit_six_names_added": [
+    "v6-build-cores",
+    "v6-direction-experience",
+    "v6-knowledge-publish",
+    "v6-reflex-distill",
+    "v6-reflex-distill-r2",
+    "v6-reflex-distill-r3"
+  ],
+  "no_wildcard": true,
+  "negative_controls": [
+    "six task-specific unregistered suffixes",
+    "v6-*",
+    "v6-reflex-distill-r4",
+    "wrong target task",
+    "foreign ledger/run/character",
+    "missing Markdown",
+    "unauthorized rule change"
+  ],
+  "withdraw_python_rc": 1,
+  "restored_CodeProposals_rc": 0,
+  "joint_directed_rc": 0,
+  "fixed_fixture_only": true,
+  "production_cli_or_ledger_or_dataset_not_run": true
+}

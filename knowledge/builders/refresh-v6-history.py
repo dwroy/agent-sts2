@@ -21,6 +21,7 @@ import time
 sys.path.insert(0, str(Path(__file__).resolve().parents[2] / 'learner'))
 from evidence_identity import scan, run_identity, identities
 from history_boundary import timestamp, after_run_end
+from appearance_stats import AppearanceCollector
 
 STREAMS = ('runs', 'states', 'sl-attempts', 'decisions')
 
@@ -118,6 +119,7 @@ def freeze(root, character, directory, cutoff, receipt):
         coverage.append(dict(run_id=rid, ended=run['ended'], ascension=run['row']['ascension'], first_stop=stop,
                              first_trial_final_victory=run['row']['victory'] and stop is None,
                              final_including_sl_victory=run['row']['victory']))
+    appearance = AppearanceCollector(character, cutoff, runs, coverage)
     frames = directory / 'frames.jsonl'
     refs = directory / 'frame-sources.jsonl'
     info = receipt['sources']['states'] = {}
@@ -135,6 +137,7 @@ def freeze(root, character, directory, cutoff, receipt):
                 excluded['frame_after_run_end'] += 1
                 record_gap(dict(ref, reason='frame_after_run_end', run_id=rid, ts=ts, run_ended=runs[rid]['ended']))
                 continue
+            appearance.observe(rid, ts, s, ref)
             try:
                 deck = [{'id': c['card_id'], 'upgraded': c['upgraded']} for c in r['deck']]
                 if (any(not isinstance(c['id'], str) or type(c['upgraded']) is not bool for c in deck)
@@ -193,9 +196,18 @@ def freeze(root, character, directory, cutoff, receipt):
         raise ValueError('opportunities scope/cutoff mismatch')
     # Preserve the real opportunity observations and metadata; the original history CLI filters first attempts.
     opportunities['rows'] = [o for o in opportunities['rows'] if o['run'] in runs and timestamp(o['ts']) <= runs[o['run']]['ended']]
+    audit = directory / 'appearance-observations.jsonl'
+    with audit.open('w') as out:
+        for observation in appearance.floor_evidence + appearance.events:
+            out.write(json.dumps(observation, ensure_ascii=False, allow_nan=False) + '\n')
+    table = appearance.build(dict(descriptor(audit), records=len(appearance.floor_evidence) + len(appearance.events)),
+                             targets=[f['floor'] for f in fights if f['attempt'] == 1 and f['entry'] is not None])
+    receipt['appearance'] = dict(evidence=table['evidence'], strata=table['strata'],
+                                 cards=len(table['cards']), remaining=len(table['remaining']), excluded=table['excluded'])
     inputs = dict(coverage=write(directory / 'coverage.json', coverage), frames=descriptor(frames),
                   fights=write(directory / 'fights.json', fights),
-                  opportunities=write(directory / 'opportunities.json', opportunities), combo_metrics=None)
+                  opportunities=write(directory / 'opportunities.json', opportunities), combo_metrics=None,
+                  appearance=write(directory / 'appearance.json', table))
     receipt['limitations'] = ['first stop uses recorded SL only; unlogged retries remain unknown',
                               'sparse/missing frames and activation evidence are never filled',
                               'complete malformed rows are excluded with raw byte ranges/SHA; missing evidence remains unknown',

@@ -5,6 +5,7 @@ import { isAbsolute, join, relative } from "node:path";
 import { array, boolean, custom, literal, nullable, number, object, optional, refine, text, validate, type Infer } from "../v6/schema.js";
 import { characterSchema, type Character } from "../v6/formats.js";
 import { buildMetricSchema } from "../v6/build-core.js";
+import { v6AppearanceSchema, type V6Appearance } from "../v6/appearance.js";
 import type { V6Config } from "../v6/config.js";
 import { v6History } from "./v6-history.js";
 
@@ -44,6 +45,7 @@ const payloadSchema = refine(object({ character: characterSchema, cutoff: timest
     entry_hp: number(0), max_hp: number(1) }), 0, 1e6),
   opportunities: v6OpportunitySchema,
   combo_metrics: array(object({ id: text(), metrics: array(buildMetricSchema, 2, 2) }), 0, 10000),
+  appearance: optional(v6AppearanceSchema),
   labels: array(text(4000)),
 }), (v, e) => {
   const runs = new Map(v.coverage.map(r => [r.run_id, r]));
@@ -65,6 +67,9 @@ const payloadSchema = refine(object({ character: characterSchema, cutoff: timest
   if (new Set(v.combo_metrics.map(c => c.id)).size !== v.combo_metrics.length) e.push("duplicate combo metric identity");
   for (const c of v.combo_metrics) if (new Set(c.metrics.map(m => m.attempt)).size !== 2
     || c.metrics.some(m => m.sources.some(s => s.run_ids.some(id => !runs.has(id))))) e.push("combo metric provenance not covered");
+  if (v.appearance && (v.appearance.character !== v.character || v.appearance.cutoff !== v.cutoff
+    || v.appearance.runs.length !== runs.size || v.appearance.runs.some(r => !runs.has(r.run_id)
+      || runs.get(r.run_id)!.ascension !== r.ascension || runs.get(r.run_id)!.ended !== r.ended))) e.push("appearance scope mismatch");
 });
 export type V6HistoryPayload = Infer<typeof payloadSchema>;
 export const v6HistoryPackSchema = object({ schema: literal("v6-frozen-history-v1"), generated_at: timestamp,
@@ -82,7 +87,7 @@ export function sealV6History(data: unknown, generated_at: string): V6HistoryPac
 export function assembleV6History(input: { character: Character; cutoff: string; generated_at: string;
   sources: V6HistoryPayload["sources"]; coverage: Infer<typeof v6CoverageSchema>[]; frames: Infer<typeof v6FrameSchema>[];
   fights: Infer<typeof v6FightSchema>[]; opportunities: Infer<typeof v6OpportunitySchema>;
-  combo_metrics: V6HistoryPayload["combo_metrics"]; checkpointFloors?: number[] }): V6HistoryPack {
+  combo_metrics: V6HistoryPayload["combo_metrics"]; appearance?: V6Appearance; checkpointFloors?: number[] }): V6HistoryPack {
   const { character, cutoff, sources, coverage, frames, fights, opportunities, combo_metrics } = input;
   const history = v6History(character, coverage, frames, fights, opportunities, input.checkpointFloors ?? []);
   const runs = new Map(coverage.map(r => [r.run_id, r]));
@@ -99,6 +104,7 @@ export function assembleV6History(input: { character: Character; cutoff: string;
   const floor_frames = [...groups.values()].map(g => ({ run_id: g[0]!.run_id, floor: g[0]!.floor, act: Number(g[0]!.act_id) + 1,
     observed_frames: g.length, first: point(g[0]!), last: point(g[g.length - 1]!) }));
   return sealV6History({ character, cutoff, sources, coverage, floor_frames, ...history, combo_metrics,
+    ...(input.appearance === undefined ? {} : { appearance: input.appearance }),
     labels: [...history.labels, "pooled_versions_and_ascensions_sources_only", "floor_frames_are_polls_not_independent_runs",
       "combo_metrics_are_descriptive_not_formal_build_knowledge"] }, input.generated_at);
 }

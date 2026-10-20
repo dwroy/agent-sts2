@@ -131,7 +131,7 @@ class IdentityTest(unittest.TestCase):
 def fixture(root):
     b = root / 'knowledge/builders'
     b.mkdir(parents=True)
-    for name in ('build-combo-metrics.py', 'combo_metrics.py', 'combo_pooled.py', 'combo_normalization.py', 'history_boundary.py', 'check-v6-refresh.mts', 'build-v6-history.py', 'refresh-v6-history.py', 'refresh.sh'):
+    for name in ('build-combo-metrics.py', 'combo_metrics.py', 'combo_pooled.py', 'combo_normalization.py', 'history_boundary.py', 'appearance_stats.py', 'check-v6-refresh.mts', 'build-v6-history.py', 'refresh-v6-history.py', 'refresh.sh'):
         shutil.copy2(ROOT / 'knowledge/builders' / name, b / name)
     # Production Node CLI and schemas are used read-only; no copy of a checkout.
     (root / 'agent').symlink_to(ROOT / 'agent', target_is_directory=True)
