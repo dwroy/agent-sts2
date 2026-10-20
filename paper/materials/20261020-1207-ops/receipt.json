@@ -1,0 +1,46 @@
+{
+  "schema": "ops-W8-interrupted-benchmark-ended-v1",
+  "at": "2026-10-20T12:08:26+08:00",
+  "native_ops": "01a1517b-e200-7c52-b463-6ea22220c0a9",
+  "message": {
+    "path": "paper/materials/20261020-1207-ops/original-message.md",
+    "bytes": 255,
+    "sha256": "73e627a2b77e0b29910e272fa92f5af07885a238501bf995120406fe655dbad7"
+  },
+  "prior_pause": {
+    "path": "paper/materials/20261020-1159-ops/receipt.json",
+    "bytes": 1736,
+    "sha256": "af9f901d2768f2a96fdbb68c2a0666f68d2474ff969295fe9743799a6e741475"
+  },
+  "observed_original_processes": [
+    {
+      "pid": 2025282,
+      "original_start_ticks": 136034527,
+      "state": "absent"
+    },
+    {
+      "pid": 2025297,
+      "original_start_ticks": 136034532,
+      "state": "absent"
+    }
+  ],
+  "original_pids_absent": true,
+  "termination_signals": "original W8 reports checked ticks then SIGTERM+SIGCONT; ops sent no signal",
+  "sample_status": "interrupted, retained by owner, excluded from timing/code-fallback comparison; no benchmark success or complete sample claimed",
+  "sample_retention": "owner report, no benchmark files altered or reread by ops",
+  "new_heavy_workload": "owner reports none; ops launched none",
+  "wait_boundary": "actual original live55 terminal then original W8 reruns; no automatic resume of old/reused PIDs",
+  "live55_fixed_tree": "78040c8c27ad482c77b454d8b010fddaa554c40d",
+  "live55_not_queried": true,
+  "source_or_live_change": false,
+  "STOP": {
+    "path": "ops/STOP",
+    "bytes": 230,
+    "sha256": "f922fa01011d72382dc6b227f4a5ecf2224c197a9ffe37f63cf3ed5a1c9ac80d"
+  },
+  "Regent": "paused",
+  "new_model": false,
+  "new_refresh": false,
+  "new_game": false,
+  "role_ACK": false
+}

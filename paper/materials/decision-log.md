@@ -4996,3 +4996,5 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
 - 2026-10-20T11:55:40+08:00 原复盘111302记录/dataset终局实核：2b9d193已main祖先，588记录/数据叶、单次dataset0、两局has_postmortem1、输出SHA同、ledger534项0问题/gitleaks0；旧KF9 decisions879/880差异保留。仅关本记录阶段，不代科学父/角色ACK/知识发布，STOP/live55验收/Regent保持。原件paper/materials/20261020-1154-ops/receipt.json。
 
 - 2026-10-20T12:00:17+08:00 接W8/Claude11:59冷缓存实测暂停：PID2025282/2025297只读核均T，ops无信号操作；原owner只做代码/定向，待实际live55终局再原线恢复。未查询/重派full、动live或play；STOP/W3排除/Regent与Roy原门槛不变。原件paper/materials/20261020-1159-ops/receipt.json。
+
+- 2026-10-20T12:08:26+08:00 原W8冷缓存benchmark已结束：对照已冻结start_ticks，2025282/2025297只读均不在；ops无信号。原中断样本保留且排除耗时/code-fallback比较，待实际live55终局后原owner重跑；不查询/重派检查或启动新负载，STOP/live/Regent边界不变。原件paper/materials/20261020-1207-ops/receipt.json。

@@ -3257,3 +3257,6 @@ request_id=roy-20261017-human-pace-h0 revision=3 input_sha256=1e1c259a15f1824119
 
 
 2026-10-20T12:00:17+08:00 原ops已原生实收W8按Claude11:59暂停冷缓存实测的回执。仅只读核/proc：自有PID2025282及其子2025297均为T（停止态），start_ticks与父子关系已存原件；ops未发SIGSTOP/SIGCONT或其他信号。W8未启完整vitest为原owner回报，后续只做代码/定向检查；冷缓存实测等原live55实际终局后按原线恢复，ops不代操作owner进程、不另派检查或轮询。当前待验身份仍为55叶固定78040c8c、宿主2011990；本条不查询该检查，也不把暂停变成新的发布/开局审批门槛。原W8自然运行窗口提醒继续：实际自然开局后再给run_id、配置时间、live/release及console/JSONL边界，供一次nice19串行scratch对照，不提前开局。STOP、W3排除、Regent暂停及Roy10:26原精确发布/恢复门槛保持，未动live或play。原件paper/materials/20261020-1159-ops/receipt.json。
+
+
+2026-10-20T12:08:26+08:00 原ops已实收W8更新，暂停的自有冷缓存benchmark由原owner核start_ticks后逐一SIGTERM+SIGCONT结束。对照11:59已冻结身份：PID2025282/start136034527、PID2025297/start136034532，本次只读/proc两PID均不存在；ops未发送信号，也不按旧PID恢复或处理复用进程。清单由“暂停中”更新为“原进程已结束、中断样本保留且排除比较”；没有把中断耗时、准备速度或code-fallback计为完整样本，也不据此报性能收益或验收通过。样本留存和未启新重负载为原W8回报，本轮未改其文件或启动任务。原W8仍待实际live55固定78040c8c终局后再重跑；ops不查询/重复full，不启动scratch、生产刷新或模型。原自然运行窗口身份提醒继续，STOP、W3排除、Regent暂停及Roy原精确发布/恢复门槛保持，无live或play操作。原件paper/materials/20261020-1207-ops/receipt.json。

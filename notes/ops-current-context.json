@@ -1013,6 +1013,11 @@
       "path": "paper/materials/20261020-1159-ops/receipt.json",
       "bytes": 1736,
       "sha256": "af9f901d2768f2a96fdbb68c2a0666f68d2474ff969295fe9743799a6e741475"
+    },
+    "W8-interrupted-benchmark-ended-20261020-1207": {
+      "path": "paper/materials/20261020-1207-ops/receipt.json",
+      "bytes": 1693,
+      "sha256": "ce913618c461b92cc5329f129f8cc19cd478b9a8fc4804a2baf1be13a5eeb68c"
     }
   },
   "frozen_brain_request": {
@@ -1358,7 +1363,7 @@
       "bytes": 2465,
       "sha256": "55f76ecadc2d4c88094a0eee66988bcff3c447cf77b350adfc3bf8ef67980fb4"
     },
-    "status": "W8-owned CPU cold benchmark paused, /proc T observed for2025282/2025297; code/targeted only; inform original W8 of actual live55 terminal before owner resumes",
+    "status": "original W8 benchmark processes ended; both original PIDs absent; interrupted sample retained/excluded; wait actual live55 terminal before owner rerun",
     "next_actor_not_started": true,
     "nice": 19,
     "serial": true,
@@ -1387,7 +1392,26 @@
     ],
     "ops_must_not_send_SIGCONT": true,
     "wait_for_actual_live55_result": true,
-    "notify_W8_on_actual_natural_start": true
+    "notify_W8_on_actual_natural_start": true,
+    "termination_receipt": {
+      "path": "paper/materials/20261020-1207-ops/receipt.json",
+      "bytes": 1693,
+      "sha256": "ce913618c461b92cc5329f129f8cc19cd478b9a8fc4804a2baf1be13a5eeb68c"
+    },
+    "terminated_owner_pids": [
+      {
+        "pid": 2025282,
+        "original_start_ticks": 136034527,
+        "state": "absent"
+      },
+      {
+        "pid": 2025297,
+        "original_start_ticks": 136034532,
+        "state": "absent"
+      }
+    ],
+    "old_pause_superseded": true,
+    "interrupted_sample_excluded_from_comparison": true
   },
   "latest_postmortem_intake": {
     "batch": "20261020-111302",
