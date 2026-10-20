@@ -1,0 +1,65 @@
+{
+  "at": "2026-10-20T18:29:04.432128+08:00",
+  "phase": "current-JWJ-run-finishes-naturally-then-STOP-until-all-five-actual-live-readbacks-single-exact-joint-package",
+  "completed": false,
+  "authorization": {
+    "path": "paper/materials/20261020-five-item-hold-ops/authorization-original.md",
+    "sha256": "15a6f861cb16cff72b5aa4a0981bbe915902c2e2687d647c725c6a634d1fb39c",
+    "received_at": "2026-10-20T18:29:04.432128+08:00",
+    "relay_label": "Claude18:2x preserved",
+    "scope": "after JWJ terminal hold until all five exact live publications/readbacks and complete joint verification; any failure original Claude/Roy decision, no partial resume"
+  },
+  "run_id": "JWJLSQXDKUA2",
+  "existing_guard": {
+    "at": "2026-10-20T18:29:04.432128+08:00",
+    "owner": "existing Claude user-reported guard, not newly started by ops",
+    "pid": 434487,
+    "start_ticks": "138391130",
+    "executable": "bash",
+    "cmdline_sha256": "b61ba84159d88069f3c354fd0e43f0d01ab6dfe7b60130fed05405072d5d82ef",
+    "matches_current_console": "logs/console/20261020-172201-64c218a04+dirty.log",
+    "has_terminal_marker_and_STOP_write_reference": true,
+    "target_run_user_authorized": "JWJLSQXDKUA2",
+    "STOP_present_at_readback": false,
+    "no_guard_started_stopped_or_modified": true,
+    "no_new_polling_timer": true
+  },
+  "required": [
+    {
+      "id": "W4_reward_only",
+      "source_candidate": "79a0a61c9288928c10e147d06f593e04f3c2be09",
+      "status": "strict source scope added, only targeted green; final exact combined full pending"
+    },
+    {
+      "id": "combat_V5",
+      "env": "V6_COMBAT_ENTRIES=off",
+      "status": "current39 runtime candidate under test; not actually published"
+    },
+    {
+      "id": "W8_direction",
+      "env": "V6_DIRECTION_REPLAN=off",
+      "status": "source/compression/cadence/getter original owner formal delivery pending"
+    },
+    {
+      "id": "snakebite_rollout",
+      "source": "e2103b3a9b5fdd524508fa28e5dd64ec7f63eb46",
+      "status": "source/main passed, precise live pending"
+    },
+    {
+      "id": "infra_tmp",
+      "source": "4c7b8d9bf48f54163c04d8e4f4f79ae6eb402e83",
+      "status": "source/main passed; actual39 composition full underway, final five package pending"
+    }
+  ],
+  "release_only_after_all_five": true,
+  "one_precise_integration_and_one_complete_joint_check": true,
+  "current39_already_running_preserve_naturally_as_partial_input_evidence_only": true,
+  "do_not_partial_publish_or_resume_from_current39": true,
+  "freeze_final_all_five_and_necessary_dependencies_only_not_entire_main": true,
+  "on_any_failure": "write inbox and notify watcher/Claude, Claude with Roy decide; ops does not start new run",
+  "resume_executor": "original ops removes STOP and starts only after actual live/readback/release and dual notices",
+  "reports_and_background_refresh_continue": true,
+  "active_actor_do_not_interrupt": true,
+  "Regent_paused": true,
+  "next": "原W4严格战后三选一候选+原W8正式冻结源/getter、蛇咬、infra及出牌V5运行配置合成一个精确真实live组合，保并行知识；独占原窗口完整检查0后原发布锁核号、双通知、消费者/配置读回，五项全部满足才解除STOP。"
+}

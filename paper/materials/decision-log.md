@@ -5248,3 +5248,5 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
 - 2026-10-20T18:23:28.312540+08:00 ops：Roy18:4x方向搭车原文及W8接管双SHA核同，完整原文入授权/短清单，标签与实收时间分列；原W8待正式源/联合验收，不冒生产V5节奏已生效，当前39全检和原队列/actor不变。原件 paper/materials/20261020-1822-ops/receipt.json。
 
 - 2026-10-20 18:26:23 CST [Claude/Roy，开局挂起] Roy：“这局完了就等待，等待上面说的都完成上线了在开始”。JWJLSQXDKUA2 结束后由 Claude 的后台守候在 play 进程打出局终后立即写 ops/STOP（不打断当前局）；恢复条件：新拿牌条目（仅战斗奖励选牌交 Jev，其余 brain）、V6_COMBAT_ENTRIES=off、V6_DIRECTION_REPLAN=off 与方向题面精简、蛇咬 rollout 修复 e2103b3a9、infra 临时目录修复全部上线并读回后，由 ops 移除 STOP；任一项失败由 Claude 与 Roy 决定。已发 ops、watcher。
+
+- 2026-10-20T18:29:36.714532+08:00 ops：Roy JWJ完局等待新令入最高开局门槛，已有终局STOP守候434487身份核同；五项一次精确联合完整验收/实际live读回才恢复，任一失败交Claude/Roy，不部分开局；39在途只保部分证据，W4新严格候选79a待与原W8冻结联合源。原件 paper/materials/20261020-five-item-hold-ops/receipt.json。
