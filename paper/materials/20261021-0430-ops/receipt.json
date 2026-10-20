@@ -1,0 +1,179 @@
+{
+  "at": "2026-10-21 04:35:47 CST",
+  "P4": {
+    "at": "2026-10-21T04:34:26.633853+08:00",
+    "request": "original-W8-P4-single-fixture-clock-repaired-exact-R407-joint-20261021",
+    "tree": "5628371e35d26465df06514f7f4384c269fd1182",
+    "input_count": 2399,
+    "input_sha256": "980341350cc5dece633f10d76f9a302268a406a9260797697fb26a11d8711c6b",
+    "input_unchanged": true,
+    "protected_knowledge": 485,
+    "formal_data": 463,
+    "source_count": 30,
+    "tsc_rc": 0,
+    "full_rc": 1,
+    "full_files": {
+      "passed": 627,
+      "failed": 2,
+      "total": 629
+    },
+    "tests": {
+      "passed": 5930,
+      "failed": 7,
+      "skipped": 2,
+      "total": 5939
+    },
+    "full_seconds": 1390.2724027130753,
+    "full_sha256": "4b3e54cb3c77a8d73168853bfb227863e12aa1e61681954ea3cb5d6faa63eda1",
+    "failures": [
+      {
+        "file": "agent/tests/ordinary-close-isolation.test.ts:14",
+        "cases": 1,
+        "status": null,
+        "original_timeout_ms": 15000,
+        "observed_ms": 15027,
+        "message": "bad object all-zero sentinel in stderr; expected child status0 gotnull; root cause unknown",
+        "existing_owner_chain": "014301 three-leaf candidate; no duplicate implementation or unapproved transport"
+      },
+      {
+        "file": "agent/tests/v6-off-equivalence.test.ts:36",
+        "cases": 6,
+        "fixture": "u6ru-f22-shop",
+        "roles": [
+          "ironclad",
+          "silent"
+        ],
+        "modes": [
+          "unset",
+          "explicit_off",
+          "off_with_all_subfeatures_requested"
+        ],
+        "scope": "decision+resolved-action hash mismatch; semantic difference/root cause unknown; compare actual bytes, never blindly replace goldens"
+      }
+    ],
+    "thief_clock_repaired_file_failed": false,
+    "original_PID_presence": {
+      "2192743": false,
+      "2195890": false,
+      "2196201": false
+    },
+    "WT_remaining_check_processes": [],
+    "original_locks_reported_released": true,
+    "package_not_published": true,
+    "no_unchanged_full_repeat": true,
+    "current_actual_policy": "R408 CARDbrain/REFLEXoff, latest authorization overrides event oldR407jev labels",
+    "files": [
+      {
+        "path": "paper/materials/20261021-0430-ops/P4-host-status.json",
+        "bytes": 2340,
+        "sha256": "c16642c78276dd7820af15f366653806a39f92ea103dc4d8da369947f5442f2d"
+      },
+      {
+        "path": "paper/materials/20261021-0430-ops/P4-host-inputs-before.json",
+        "bytes": 399732,
+        "sha256": "980341350cc5dece633f10d76f9a302268a406a9260797697fb26a11d8711c6b"
+      },
+      {
+        "path": "paper/materials/20261021-0430-ops/P4-host-inputs-after.json",
+        "bytes": 399732,
+        "sha256": "980341350cc5dece633f10d76f9a302268a406a9260797697fb26a11d8711c6b"
+      },
+      {
+        "path": "paper/materials/20261021-0430-ops/P4-tsc.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "path": "paper/materials/20261021-0430-ops/P4-full.log",
+        "bytes": 4761,
+        "sha256": "4b3e54cb3c77a8d73168853bfb227863e12aa1e61681954ea3cb5d6faa63eda1"
+      },
+      {
+        "path": "paper/materials/20261021-0430-ops/P4-native-start-readback.json",
+        "bytes": 1752,
+        "sha256": "a679a047eb7f5dee727d657c6adc52e1121e0af329888f259742f1426857097d"
+      },
+      {
+        "path": "paper/materials/20261021-0430-ops/P4-frozen.json",
+        "bytes": 98396,
+        "sha256": "33b3d7493b43175b820d35675f18ab20624a0deb662f41b98a2098437d6fedbc"
+      }
+    ]
+  },
+  "R408_event_dedup": {
+    "original_event_result": {
+      "at": "2026-10-21T04:28:35.286215+08:00",
+      "state": "published-original-autoplay-resumed",
+      "release_id": "V6-R408",
+      "actual_live": "150890f8bac0253f4e9216af3259784705c7550e",
+      "behavior_commit": "918cee1438aedcbd50456fcb4a646174758333e7",
+      "main_commit": "e0d26e3bce46a19f0f0f30b13111389600e53ed1",
+      "autoplay_pid": 2283493,
+      "STOP_present": false,
+      "actual_new_run_config": null,
+      "actual_new_action_readback": "pending natural log, no polling or extra model",
+      "only_runtime_delta": {
+        "V6_CARD_DECIDER": [
+          "jev",
+          "brain"
+        ]
+      },
+      "knowledge_preserved": true,
+      "source_preserved": true,
+      "P4_inflight_not_changed": true,
+      "P2": "paused pending Roy",
+      "scientific_parents_or_role_ACK_closed": false
+    },
+    "original_event_result_actual_config_null_retained": true,
+    "later_actual_readback": "paper/materials/20261021-R407-terminal-CARDbrain-ops/first-natural-readback.json",
+    "later_actual_run": "7XS2Y920KA6E",
+    "later_actual_CARD": "brain",
+    "actual_first_action": {
+      "offset": 3100693222,
+      "bytes": 48687,
+      "sha256": "121da44cedddc1807d79a332455973e2a48c1376b138cc4f5f54e1e9bd38906f",
+      "ts": "2026-10-20T20:29:09.233Z",
+      "screen": "EVENT",
+      "label": "event/choose",
+      "chosen": {
+        "action": "choose_event_option",
+        "option_index": 1
+      },
+      "result": "completed: Action completed."
+    },
+    "release_registry_verified": {
+      ".": {
+        "release": "V6-R408",
+        "behavior": "918cee1438aedcbd50456fcb4a646174758333e7"
+      },
+      ".worktrees/live": {
+        "release": "V6-R408",
+        "behavior": "918cee1438aedcbd50456fcb4a646174758333e7"
+      }
+    },
+    "already_saved_record_commit": "ad4c91982a618bfd540af162ba5744e020a634b0",
+    "no_republish_or_restart": true,
+    "oldP4_event_R407jev_is_frozen_context_not_current_override": true,
+    "P4_full_ended_before_CARDbrain_publication": true,
+    "publication_receipt": "paper/materials/20261021-R407-terminal-CARDbrain-ops/receipt.json"
+  },
+  "original_channel_delivery": [
+    {
+      "target": "v6-w8",
+      "native_session": "01a15382-761a-76a2-922d-271169b2463c",
+      "CLI_exit": 0,
+      "native_ACK": false,
+      "at": "2026-10-21T04:34:52.769383+08:00"
+    },
+    {
+      "target": "sts2-watcher",
+      "native_session": "01a14f5d-da55-7831-959e-53727796115e",
+      "CLI_exit": 0,
+      "native_ACK": false,
+      "at": "2026-10-21T04:34:53.078403+08:00"
+    }
+  ],
+  "no_new_full_or_dataset_or_model": true,
+  "no_live_actor_config_STOP_change": true,
+  "no_scientific_parent_or_other_role_ACK_closed": true
+}
