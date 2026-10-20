@@ -1,0 +1,68 @@
+{
+  "config": {
+    "schema": "v6-config-v1",
+    "mode": "on",
+    "deciders": {
+      "card": "brain",
+      "potion": "brain",
+      "shop": "brain",
+      "rest": "brain"
+    },
+    "reflex": "off",
+    "direction_replan": "off",
+    "admission": "interfaces_only",
+    "delivered": false,
+    "samples_pick": 20,
+    "samples_act": 100,
+    "min_known_option_ratio": 0.5,
+    "direction_min_weight": 0.1,
+    "win": {
+      "certain_win": 0.95,
+      "favored": 0.7,
+      "even": 0.3,
+      "unfavored": 0.05
+    },
+    "delta": {
+      "much_se": 2,
+      "better_se": 1,
+      "much_min": 0.05
+    },
+    "triggers": {
+      "t1_core_min": 0,
+      "t2_se": 2,
+      "t2_min_delta": 1,
+      "t2_consecutive": 2,
+      "t3_weight_max": 0,
+      "t5_hazard": "existing_route_projection",
+      "t6_unknown_max": 1,
+      "t6_fallbacks": 100,
+      "t7_checkpoint": "validated_brain_answer"
+    },
+    "budgets": {
+      "brain_soft_cap": 15,
+      "brain_ms": 90000,
+      "act_ms": 60000,
+      "pick_ms": 5000,
+      "jev_ms": 5000
+    },
+    "invalid": []
+  },
+  "knowledge": {
+    "cores": "loaded",
+    "history": "loaded",
+    "combos": 17,
+    "content_sha256": "2972c10f5fed80f985ff7b569da2e7a6a9d699341050d3fa204915bfe5886b95"
+  },
+  "consumer": {
+    "criteria_unknown_not_zero": true,
+    "brain_no_card_provider": true,
+    "pure_getter_miss_null": true,
+    "existing_model_wait_hook": true,
+    "audit_sink": true
+  },
+  "providerCalls": 0,
+  "network": "forbidden",
+  "simulation": "not invoked",
+  "natural_cache_audit": "pending first new run",
+  "quality_or_performance_all_passed": false
+}

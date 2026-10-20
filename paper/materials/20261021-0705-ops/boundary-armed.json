@@ -1,0 +1,74 @@
+{
+  "at": "2026-10-21T07:10:41+08:00",
+  "state": "main-integrated-await-one-native-child-exit-event",
+  "controller_pid": 2776590,
+  "controller_start": "142977396",
+  "run_id": "CLCR3DUH66HK",
+  "console": "logs/console/20261021-065508-150890f8b+dirty.log",
+  "autoplay": {
+    "pid": 2283493,
+    "uid": 1000,
+    "start": "142004584",
+    "state": "S",
+    "argv": [
+      "bash",
+      "/home/dw/Projects/agent-sts2/ops/autoplay.sh",
+      "--tail-console"
+    ],
+    "cwd": "/home/dw/Projects/agent-sts2"
+  },
+  "play": {
+    "pid": 2747716,
+    "uid": 1000,
+    "start": "142884610",
+    "state": "S",
+    "argv": [
+      "/home/dw/.local/node/bin/node",
+      "--require",
+      "/home/dw/Projects/agent-sts2/agent/node_modules/tsx/dist/preflight.cjs",
+      "--import",
+      "file:///home/dw/Projects/agent-sts2/agent/node_modules/tsx/dist/loader.mjs",
+      "src/index.ts",
+      "play",
+      "--max-runs",
+      "1",
+      "--max-minutes",
+      "240"
+    ],
+    "cwd": "/home/dw/Projects/agent-sts2/.worktrees/live/agent"
+  },
+  "direct_child": {
+    "pid": 2747625,
+    "start": "142884121",
+    "ppid": 2283493
+  },
+  "ancestry": [
+    {
+      "pid": 2747716,
+      "start": "142884610",
+      "ppid": 2747705
+    },
+    {
+      "pid": 2747705,
+      "start": "142884605",
+      "ppid": 2747704
+    },
+    {
+      "pid": 2747704,
+      "start": "142884605",
+      "ppid": 2747625
+    },
+    {
+      "pid": 2747625,
+      "start": "142884121",
+      "ppid": 2283493
+    }
+  ],
+  "main_source_commit": "715a5d9e784d75f3f2d0a13ca770292427e8f56c",
+  "live_unchanged": "150890f8bac0253f4e9216af3259784705c7550e",
+  "current_play_not_signalled": true,
+  "STOP_not_written": true,
+  "event_wait": "single kernel pidfd readiness, no timer, sleep or progress polling",
+  "CARD": "brain",
+  "REFLEX": "off"
+}

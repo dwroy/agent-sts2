@@ -1,0 +1,63 @@
+{
+  "request": "original-W4-criteria-precision-core-cache-eleven-plus-off-two-R408-joint-20261021",
+  "state": "passed-await-original-ops-next-boundary-criteria-core-cache-exact-main-live-CARDbrain-Roy-controls-jev",
+  "started_at": "2026-10-21T06:40:06.305327+08:00",
+  "runner_pid": 2657047,
+  "runner_start_ticks": "142736498",
+  "nice": 19,
+  "worktree": "/home/dw/Projects/agent-sts2/.worktrees/ops-w4-core-cache-r408-joint-20261021",
+  "actual_live_base": "150890f8bac0253f4e9216af3259784705c7550e",
+  "allocation_base": "150890f8bac0253f4e9216af3259784705c7550e",
+  "staged_tree": "0b46b5f01d7bb5b173688fabfaa19241a0d7d8a4",
+  "source_count": 13,
+  "knowledge_count": 498,
+  "input_count": 2393,
+  "input_sha256": "6eba5918e839e6ee942a93a3b258096c809569b42d37b05400fe530c3fe65cff",
+  "steps": [
+    {
+      "name": "tsc",
+      "command": [
+        "npx",
+        "tsc",
+        "-p",
+        "tsconfig.json",
+        "--noEmit"
+      ],
+      "started_at": "2026-10-21T06:40:06.306153+08:00",
+      "log": "/home/dw/Projects/agent-sts2/.artifacts/ops-W4-core-cache-R408-joint-20261021/tsc.log",
+      "pid": 2703785,
+      "exit_code": 0,
+      "ended_at": "2026-10-21T06:40:07.447041+08:00",
+      "seconds": 1.1408825239632279,
+      "log_bytes": 0,
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "full",
+      "command": [
+        "node",
+        "tools/with-temp.mjs",
+        "node_modules/vitest/vitest.mjs",
+        "run",
+        "--maxWorkers=1"
+      ],
+      "started_at": "2026-10-21T06:40:07.447411+08:00",
+      "log": "/home/dw/Projects/agent-sts2/.artifacts/ops-W4-core-cache-R408-joint-20261021/full.log",
+      "pid": 2704077,
+      "exit_code": 0,
+      "ended_at": "2026-10-21T07:01:09.279503+08:00",
+      "seconds": 1261.832110434072,
+      "log_bytes": 488,
+      "log_sha256": "f813d0c3d02d5ed9b4409e6e28ee73b8ef10037f90c2551083bc28be689bd75f"
+    }
+  ],
+  "held_original_lock": "ops/live-merge.lock",
+  "window_preflight_other_vitest_PIDs": [],
+  "no_actual_live_or_active_actor_change": true,
+  "ended_at": "2026-10-21T07:01:09.450904+08:00",
+  "input_unchanged": true,
+  "combined_full_rc": 0,
+  "heavy_admission_locks_released": true,
+  "original_full_window_lock_released": true,
+  "terminal_event_path": "/home/dw/Projects/agent-sts2/ops/codex-ops/queue/1792537269451221049-manual.md"
+}

@@ -1,0 +1,136 @@
+{
+  "at": "2026-10-21T07:11:25+08:00",
+  "request": "original-W4-criteria-precision-core-cache-eleven-plus-off-two-R408-joint-20261021",
+  "state": "full0-main-exact13-integrated-one-native-natural-exit-publication-continuation-armed",
+  "terminal": {
+    "at": "2026-10-21T07:08:29+08:00",
+    "request": "original-W4-criteria-precision-core-cache-eleven-plus-off-two-R408-joint-20261021",
+    "tree": "0b46b5f01d7bb5b173688fabfaa19241a0d7d8a4",
+    "inputs": 2393,
+    "input_sha256": "6eba5918e839e6ee942a93a3b258096c809569b42d37b05400fe530c3fe65cff",
+    "input_bytes_unchanged": true,
+    "pids_exited": [
+      2657047,
+      2703785,
+      2704077
+    ],
+    "tsc": 0,
+    "full": 0,
+    "files_passed": 628,
+    "tests_passed": 5948,
+    "tests_skipped": 2,
+    "full_sha256": "f813d0c3d02d5ed9b4409e6e28ee73b8ef10037f90c2551083bc28be689bd75f",
+    "runtime_configuration_unchanged": true
+  },
+  "main_source": {
+    "parent": "f57be0b56b937b7656b170ddd3bdd141beab3808",
+    "commit": "715a5d9e784d75f3f2d0a13ca770292427e8f56c",
+    "tree": "dd873c39788e7bc83acedcaeffff82a9d430c893",
+    "paths": [
+      "agent/src/hand/loop.ts",
+      "agent/src/sim/v6-card-results.ts",
+      "agent/src/v6/card-criteria.ts",
+      "agent/src/v6/card-pick.ts",
+      "agent/src/v6/projection-runtime.ts",
+      "agent/src/v6/prompt-summary.ts",
+      "agent/tests/fixtures/v6-off-boss-clock.json",
+      "agent/tests/v6-card-option-loop.test.ts",
+      "agent/tests/v6-card-pick.test.ts",
+      "agent/tests/v6-card-results.test.ts",
+      "agent/tests/v6-off-equivalence.test.ts",
+      "agent/tests/v6-projection-runtime.test.ts",
+      "agent/tests/v6-prompt-summary.test.ts"
+    ]
+  },
+  "boundary": {
+    "at": "2026-10-21T07:10:41+08:00",
+    "state": "main-integrated-await-one-native-child-exit-event",
+    "controller_pid": 2776590,
+    "controller_start": "142977396",
+    "run_id": "CLCR3DUH66HK",
+    "console": "logs/console/20261021-065508-150890f8b+dirty.log",
+    "autoplay": {
+      "pid": 2283493,
+      "uid": 1000,
+      "start": "142004584",
+      "state": "S",
+      "argv": [
+        "bash",
+        "/home/dw/Projects/agent-sts2/ops/autoplay.sh",
+        "--tail-console"
+      ],
+      "cwd": "/home/dw/Projects/agent-sts2"
+    },
+    "play": {
+      "pid": 2747716,
+      "uid": 1000,
+      "start": "142884610",
+      "state": "S",
+      "argv": [
+        "/home/dw/.local/node/bin/node",
+        "--require",
+        "/home/dw/Projects/agent-sts2/agent/node_modules/tsx/dist/preflight.cjs",
+        "--import",
+        "file:///home/dw/Projects/agent-sts2/agent/node_modules/tsx/dist/loader.mjs",
+        "src/index.ts",
+        "play",
+        "--max-runs",
+        "1",
+        "--max-minutes",
+        "240"
+      ],
+      "cwd": "/home/dw/Projects/agent-sts2/.worktrees/live/agent"
+    },
+    "direct_child": {
+      "pid": 2747625,
+      "start": "142884121",
+      "ppid": 2283493
+    },
+    "ancestry": [
+      {
+        "pid": 2747716,
+        "start": "142884610",
+        "ppid": 2747705
+      },
+      {
+        "pid": 2747705,
+        "start": "142884605",
+        "ppid": 2747704
+      },
+      {
+        "pid": 2747704,
+        "start": "142884605",
+        "ppid": 2747625
+      },
+      {
+        "pid": 2747625,
+        "start": "142884121",
+        "ppid": 2283493
+      }
+    ],
+    "main_source_commit": "715a5d9e784d75f3f2d0a13ca770292427e8f56c",
+    "live_unchanged": "150890f8bac0253f4e9216af3259784705c7550e",
+    "current_play_not_signalled": true,
+    "STOP_not_written": true,
+    "event_wait": "single kernel pidfd readiness, no timer, sleep or progress polling",
+    "CARD": "brain",
+    "REFLEX": "off"
+  },
+  "live_published": false,
+  "release_id": "still V6-R408 until actual boundary",
+  "CARD": "brain",
+  "REFLEX": "off",
+  "jev_requires": "Roy decision",
+  "P2": "paused pending Roy",
+  "latest_live_knowledge": "preserve and independently load at publication under original lock; no frozen knowledge transport",
+  "quality_limits": [
+    "F6 original A+format5096ms exceeds5000ms",
+    "B partial14of17,n2; prerequisites unknown",
+    "No new B Nova; old16 only0246",
+    "Do not splice pure format timing with old A as E2E",
+    "Three mean disagreements not proven strict five-metric dominance; no fabricated Nova reason"
+  ],
+  "new_full_model_dataset": false,
+  "old_failures_retained": true,
+  "role_ACK_or_scientific_parent_closed": false
+}

@@ -5143,3 +5143,5 @@ request_id=roy-20261017-human-pace-h0 revision=3 input_sha256=1e1c259a15f1824119
 - 2026-10-21 06:43:18 CST 原ops实际读两份watcher回执，8所引保存原件字节/SHA核同；新B限制/累计源及旧0620 full1+未复现对照归属分列，不扩静态范围或代Claude/Roy ACK。原检查仍单点沿原事件接续，本轮不查动态/新full/模型/API或改变R408 brain/off、Roy切jev门与P2暂停。原件paper/materials/20261021-watcher-core-cache-0620-ops/receipt.json。
 
 - 2026-10-21 06:45:22 CST 原ops核W4累计11+W0两测试唯一静态启动，runner2657047/tsc0/full2704077，tree0b46b5f0/2393输入6eba5918/498知识及13源后像同；不夹士兵/P4/014301/805。未查动态/改输入/叠full，旧失败保留，非终局绿或质量/性能全过。F6超5s/部分B n2/无新B Nova等限制保持，绿后边界仍brain/off、jev等Roy，P2暂停。原件paper/materials/20261021-0643-ops/receipt.json。
+
+原W4累计11叶与W0两测试联合终局已核：tsc/full均0，628文件、5948测试通过，2原跳；2393输入SHA6eba5918前后原字节同，runner/tsc/full三PID均退出，原窗口释放。13叶逐SHA精确合main715a5d9e7，未夹士兵、P4、014301、805、整main或知识。当前CLCR3DUH66HK仍在途，live150890f8未改；只暂停autoplay父壳下一次准入，现行play及脑请求不发信号、不写STOP。一次性接续仅等已核子进程的内核退出事件，非sleep/轮询；核自然终局后才挂STOP、持原锁保最新知识窄发布、消费者读回、核号双通知并恢复原壳。预读知识/brain门/纯getter/criteria通过，未跑模拟或API。上线保持CARDbrain/REFLEXoff，jev等Roy；F6超5秒、部分B n2、缺前提unknown、无新B Nova与旧失败保留，软件绿不代质量收益。原件：paper/materials/20261021-0705-ops/receipt.json。
