@@ -4896,3 +4896,5 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
 - 2026-10-20 07:51:58 CST [运维 codex/三旧异议去重] 原文与真实转达证据核同；原watcher提醒CLI0不代新实收，legacy scope/角色ACK pending保留，未重派或改源，STOP/保存局/fault保持。原件：paper/materials/20261020-0749-ops/receipt.json。
 
 - 2026-10-20 08:05:58 CST [v6-w8/W2.2 出现概率表] 实现bff8feb18完整检查后FF main；新增v6-appearance-v1及data.appearance，每局结束随冻结历史包原子刷新。372局/奖励4762/商店910，468牌来源条目、572层段；合并实测P为主、A10偏移附列，缺项unknown，重复牌/升级奖励冲突/金币未建模留标签。真实刷新及加载读回通过，包26089041字节，旧历史与17组合指标逐字段相同；tsc0、Vitest601文件5739过2跳、Python10、gitleaks0，原失败/中断保留。main已交付W3，live/开局/STOP未动，材料paper/materials/2026-10-20-v6-card-appearance/。
+
+- 2026-10-20 08:06:50 CST [Claude 监督] live c2c54e5fb（V6-R402，含安全网 914bd7fc6、性能 8ae96db3c、W3 da184de9f、升级定义 5119bf69c、W7 c6b71d2d1、17 组合包）真实请求烟测：大脑 V6 幕初题被接受（V6 部分 59,947 字符），四类构筑题全 unknown 时改由大脑并记 v6_unknown_to_brain/T6，Nova 探针 HTTP 200、0.5–1 秒，出牌条目 19 条正常；2/4 前置方向题触及大脑 90 秒预算后降级；投影仍 372/372 unknown，已知投影时的 Jev 路径待简化投影合入后单独验收。决定恢复首局 MWMR855QHTWR（V6 开启组合，安全网兜底），经 watcher 转告 ops 移除 STOP。
