@@ -3437,3 +3437,7 @@ request_id=roy-20261017-human-pace-h0 revision=3 input_sha256=1e1c259a15f1824119
 
 2026-10-20T16:45:31+08:00 已核普通161301-s2策略批次原报告SHA一致、退出0且merged为null，十项提案全部waiting，实施领域和修复列表为空，tsc/vitest/cases保持原null，没有将未运行检查填成通过。学习者工作树HEAD仍原f7基线，跟踪文件、暂存区和产品目录未跟踪项均干净。原proof所在29f主目录当时尚无源码差异；自动收尾期间后来加入的26个源文件，精确对应原W8已验r3b并独立合main5cd的统计/公共刷新增量实现，已与其来源映射核同，不属于本学习者改源或新增策略。原attention及source changed原因据实保留，另记本次人工核验，不覆盖历史失败，不重dataset、模型、测试或合入，不分配行为发布号。十项继续沿原提案队列等待满足各自缺口的本角色新证据，报告、分析脚本与原现场不回收，科学父及角色ACK不代关。W4唯一full仍按已核固定输入运行，infra后排；本轮不查询在途进度，不改live、actor、STOP、805暂缓或Regent暂停。
 原件 paper/materials/20261020-1643-ops/receipt.json；verification.json；原ordinary-close回执保留。
+
+
+2026-10-20T16:46:53+08:00 已原生收到W4在途异常回报：原base5cd、tree9ed4及2453输入SHA21a6固定不变，full仍自然运行；rollout测试出现导入边界断言失败。原owner解释为新card-results-input复用boss-start读库入口而旧allowlist未登记，本轮仅将其作为owner报告记录，未查询原full日志、源码或进程，也未独立认定唯一根因或最终失败数量。当前没有终局，不能报完整通过，不能用此前定向或tsc0掩盖已见断言；冻结输入和原失败现场继续保留，不在跑中改白名单、放宽阈值或重复检查。唯一窗口仍归原W4，待其自然终局、实际核PID退出并本人明确释放后，才交原watcher infra；该单点修复后的完整重验另沿原线排窗，不自行挤占或启动第二轮。本轮只保存原文、回执与结构化清单，不改产品或游戏知识，不派模型/API，不做dataset、刷新、合入或发布；现live、actor、STOP、805暂缓、Regent暂停及科学父边界保持。
+原件 paper/materials/20261020-W4-1646-ops/receipt.json；owner-original.md。

@@ -5206,3 +5206,5 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
 - 2026-10-20T16:44:24+08:00 ops：核W8 main5cd26源逐SHA同r3b受测输入，未运live；W4唯一full静态启动base5cd/tree9ed4/2453SHA21a6，tsc0/full未终局，不查在途，后infra。收纳前停点记录及W8原日志行。原件 paper/materials/20261020-1642-ops/verification.json。
 
 - 2026-10-20T16:45:31+08:00 ops：161301-s2策略WT基线干净/报告SHA同、十waiting；自动收尾源码漂移仅独立W8 main5cd26源，保原attention/失败/父，不重dataset/测试/合入。W4唯一full及infra后序不动。原件 paper/materials/20261020-1643-ops/receipt.json。
+
+- 2026-10-20T16:46:53+08:00 ops：记录W4 owner16:46在途rollout导入allowlist断言失败报告，固定5cd/tree9ed4输入不动，不查日志/进程或改源；待自然终局核退出明确交infra，修后完整复验另排。原件 paper/materials/20261020-W4-1646-ops/receipt.json。

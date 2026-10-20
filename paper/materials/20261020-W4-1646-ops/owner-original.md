@@ -1,0 +1,1 @@
+W4 16:46 原固定 5cd/tree9ed4/2453输入21a6 full仍在自然运行，源码未动。已见一项 rollout.test.ts 导入边界断言失败：新 card-results-input.ts 仅复用 boss-start.loadMonsterDb 的读库入口，旧 allowlist 尚未登记；终局前不改输入、不重跑。会保留原失败并自然终局后核PID退出，按原顺序明确释放给 watcher infra；修复后完整复验另沿原线排窗，不将本轮称绿。无live/805/STOP变化。
