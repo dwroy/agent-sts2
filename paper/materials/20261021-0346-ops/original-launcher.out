@@ -1,0 +1,52 @@
+## 修 bug 回报
+
+- 合并基线：main → 819b1cdbe7a54a860e654a6b8ab3e23497d2d01e
+- 修复（每条一行）：无新增修复；154 个相关源码及测试文件 SHA 未变。
+- 已被别人修掉的：已核实 46 个历史修复提交均在基线中；逐项条目和提交号见[完整回报](/home/dw/Projects/agent-sts2/learner/runs/20261021-034110-ea2b38f3-5259-4577-9d10-297344bb6589-fix-batch/report.md)。
+- 没修的：监控六叶包、收尾夹具三叶包 — 原候选等待验收，队列明确禁止重复实现。
+- 没修的：其余策略、架构及证据不足项 — 30 项处置逐条保存在完整回报，保留原提案链。
+- 测试：tsc 退出码 0；vitest 6 文件 / 41 用例 / 退出码 0，无重跑；gitleaks 0。未重跑完整套件，原完整检查失败保留。
+- 合入：未合入；本批无新增提交，工作区干净。
+- 需要 Roy 定的事：无。
+
+```json
+{
+  "task": "fix-batch",
+  "base": "819b1cdbe7a54a860e654a6b8ab3e23497d2d01e",
+  "fixes": [],
+  "skipped": [
+    {
+      "item": "原001302监控六叶候选",
+      "reason": "原工程链等待验收，禁止重复实现"
+    },
+    {
+      "item": "原014301收尾夹具三叶候选",
+      "reason": "原工程链等待验收，禁止重复实现"
+    },
+    {
+      "item": "其余策略、架构及证据不足项",
+      "reason": "完整30项处置见report.md及同目录result.json"
+    }
+  ],
+  "merged": null,
+  "tests": {
+    "tsc": 0,
+    "vitest": 0,
+    "cases": 41
+  },
+  "code_proposals": [],
+  "implementation_domains": [],
+  "report": "/home/dw/Projects/agent-sts2/learner/runs/20261021-034110-ea2b38f3-5259-4577-9d10-297344bb6589-fix-batch/report.md"
+}
+```
+
+== 学习者 codex / fix-batch ==
+状态：success；退出码 0
+模型：gpt-6.1-sol；会话：01a15ad5-1cdf-7ef3-b5aa-ae3ba5275467
+轮数：1；工具调用：command_execution×21
+token：输入 120.9k、输出 7093（其中推理 1372）、cache 读 1544.8k、cache 写 0（命中 92.7%）
+成本：未提供
+耗时：307.3 s（墙钟）
+时间：首个事件 39.3 s、模型首个输出 43.3 s、首次工具 46.9 s、末次工具结束 296.3 s；工具内共 73.4 s，其余（模型生成、推理、网络）194.6 s
+codex 会话记录：AGENTS.md 已加载（/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261021-034104）；模型的工具调用 exec×18；/home/dw/Projects/agent-sts2/ops/codex-ops/accounts/codex1/learner/sessions/2026/10/21/rollout-2026-10-21T03-41-18-01a15ad5-1cdf-7ef3-b5aa-ae3ba5275467.jsonl
+日志：/home/dw/Projects/agent-sts2/learner/runs/20261021-034110-ea2b38f3-5259-4577-9d10-297344bb6589-fix-batch.jsonl

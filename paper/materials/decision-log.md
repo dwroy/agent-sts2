@@ -5428,3 +5428,5 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
 - 2026-10-21 03:40:54 CST Codex v6-w4w6：按 Claude03:3x 只读冻结 R407 两局12奖励题/答案/实际动作/完整A/B，明确 Boss/精英诊断权重与配对指标排序；A一致0/12（五档敏感性均0/12），两次skip均存在均值更好备选但F8误差宽，四题无可见B推进取舍且明显逆A；238条B行全null，60/84目标全选项必死。报告保留样本/误差/非因果限制，不改题面、源码、知识、live或请求模型；复算/36源行与12动作读回通过、gitleaks0。材料paper/materials/2026-10-21-v6-r407-card-quality；随后按原指派做P2，仅战后满槽奖励药水。
 
 - 2026-10-21 03:42:54 CST 原ops：只读质量2c4b材料16叶/36原行SHA及12动作已核，A诊断0/12与B全未知/60of84饱和及非因果限制保留；原指定append原字收纳，无源码/知识/live运输，不加P0门。P2仅满槽战后奖励药水，后续原单点联合/局终STOP边界，P4原检查不动。原件paper/materials/20261021-R407-quality-ops/receipt.json。
+
+- 2026-10-21 03:47:25 CST 原ops：034104-fix无新源/提交或合入，WT基线819b1cdb洁净、154SHA/46祖先核同；tsc0/6文件41定向过16.89秒/扫描0分列，不代完整门或live。原六叶/三叶候选和P4顺序保持，无ordinary回执不重dataset。原件paper/materials/20261021-0346-ops/receipt.json。
