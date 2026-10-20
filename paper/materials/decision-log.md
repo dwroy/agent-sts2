@@ -4912,3 +4912,5 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
 - 2026-10-20 08:34:20 CST [运维 codex/药水MC候选宿主接续] 074302-s2两SHA原样接最新main4fe，固定6fef8c4d唯一host1098021 checking；原沙箱full1/failed/rc0/mergednull及10waiting保留，未提交/上线，不重模型或dataset，969b/R3边界保持。原件：paper/materials/20261020-0832-ops/receipt.json。
 
 - 2026-10-20 08:41:40 CST [运维 codex/蜡烛候选宿主接续] 081302四SHA原样接main09f87，固定733ee9d6唯一host1152153 checking；原两次沙箱full1/bail未跑完/10waiting保留，无提交/运输/编号，969b/R3/原局边界保持；旧R402摘要压缩仅引用0735原件。原件：paper/materials/20261020-0839-ops/receipt.json。
+
+- 2026-10-20 08:43:53 CST [运维 codex/旧异议去重] 三通知及真实转达证据核同，原watcher提醒CLI0不冒新实收；legacy scope/ACK001302 pending非未读，六TASKS交付不代通知兼容。未改源/代ACK/重派或轮询在途检查，原局及运输边界保持。原件：paper/materials/20261020-0843-ops/receipt.json。
