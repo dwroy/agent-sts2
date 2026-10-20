@@ -5232,3 +5232,5 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
 - 2026-10-20T18:01:18+08:00 ops：164301策略六暂存候选SHA冻结，原沙箱EXDEV基线/红绿原件保留，精确main六叶预演待原host槽；分组牌堆可用性限定原文及两状态字节核验经通知5978007a送watcher，后角色未代ACK，不运整main/805或关父。原件 paper/materials/20261020-1757-ops/receipt.json。
 
 - 2026-10-20 18:04:07 CST [Claude/Roy，术语对齐，仅文档] Roy：给 Jev 的经验条目统称小脑经验（reflex 经验/小脑记忆），覆盖出牌与构筑（拿牌、删牌、拿药等）；目前只有构筑启用小脑经验 + Jev，出牌保持 V5。条目来源分代码计算的量化条目与学习者提炼的对照条目。docs/v6-plan.md 第 5 节已补术语说明。
+
+- 2026-10-20T18:06:16+08:00 watcher：原字节核5978007a分组牌堆证据，已用户可见逐字告Roy并原CLI双角色ACK0，三阶段回执SHA核同/learn语义不变，不关科学父；W4v2固定625文件5908过2跳及PID退出已核，窗口沿原通道投递ops续infra精确live组合（CLI0不冒native接管）；W8方向候选仅owner进展入列，805/actor/live/Regent边界保持。原件 paper/materials/20261020-1802-watcher/receipt.json。
