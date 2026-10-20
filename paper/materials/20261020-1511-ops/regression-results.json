@@ -1,0 +1,84 @@
+[
+  {
+    "item": "isolation",
+    "source_paths": [
+      "ops/ordinary_close.py"
+    ],
+    "tests": [
+      "tests/ordinary-close-isolation.test.ts"
+    ],
+    "red": 1,
+    "green": 0
+  },
+  {
+    "item": "cadence",
+    "source_paths": [
+      "ops/proposal_dispatch.py",
+      "ops/learner_retention.py"
+    ],
+    "tests": [
+      "tests/cadence-no-change.test.ts"
+    ],
+    "red": 1,
+    "green": 0
+  },
+  {
+    "item": "manual",
+    "source_paths": [
+      "ops/learning_requests.py"
+    ],
+    "tests": [
+      "tests/manual-notice-ack.test.ts"
+    ],
+    "red": 1,
+    "green": 0
+  },
+  {
+    "item": "paper",
+    "source_paths": [
+      "ops/paper_dataset.py"
+    ],
+    "tests": [
+      "tests/paper-dataset-publication.test.ts"
+    ],
+    "red": 1,
+    "green": 0
+  },
+  {
+    "item": "cli",
+    "source_paths": [
+      "agent/tests/knowledge-catalog.test.ts",
+      "agent/tests/sandbox-entry.test.ts",
+      "agent/tests/v6-appearance.test.ts",
+      "agent/tests/v6-combo-metrics.test.ts",
+      "agent/tests/v6-combo-simulation.test.ts",
+      "agent/tests/v6-draft.test.ts",
+      "agent/tests/v6-history-pack.test.ts"
+    ],
+    "tests": [
+      "tests/v6-history-pack.test.ts",
+      "tests/sandbox-entry.test.ts"
+    ],
+    "red": 1,
+    "green": 0
+  },
+  {
+    "item": "consumer",
+    "source_paths": [
+      "agent/tests/oneshot-support.ts"
+    ],
+    "tests": [
+      "tests/loop-consumer-fixed-transport.test.ts"
+    ],
+    "red": 1,
+    "green": 0
+  },
+  {
+    "item": "herdr",
+    "red": 1,
+    "green": 0,
+    "tests": [
+      "tests/ops-herdr.test.ts:new learner tabs follow"
+    ]
+  }
+]

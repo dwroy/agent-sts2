@@ -1,0 +1,36 @@
+{
+  "recorded_at": "2026-10-20T13:56:44.641008+08:00",
+  "run": "full-final-v2",
+  "classification": "interrupted_environment_path_length",
+  "reason": "Long repository-local TMPDIR truncates checkClaudeBin ENOENT error to 200 chars; confirmed by isolated fake missing-binary reproduction. A second content-store failure remains unclassified in the partial log. No product source or test threshold changed.",
+  "terminated_processes": [
+    {
+      "pid": 2629403,
+      "cwd": "/home/dw/Projects/agent-sts2/.worktrees/v6-combat-state-divergence-20261020/agent",
+      "command": "/home/dw/.local/node/bin/node --experimental-import-meta-resolve --require /home/dw/Projects/agent-sts2/agent/node_modules/vitest/suppress-warnings.cjs --conditions node --conditions development /home/dw/Projects/agent-sts2/agent/node_modules/vitest/dist/workers/forks.js "
+    },
+    {
+      "pid": 2504335,
+      "cwd": "/home/dw/Projects/agent-sts2/.worktrees/v6-combat-state-divergence-20261020/agent",
+      "command": "node /home/dw/Projects/agent-sts2/.worktrees/v6-combat-state-divergence-20261020/agent/node_modules/.bin/vitest run --maxWorkers=1 "
+    },
+    {
+      "pid": 2504334,
+      "cwd": "/home/dw/Projects/agent-sts2/.worktrees/v6-combat-state-divergence-20261020/agent",
+      "command": "sh -c vitest run --maxWorkers=1 "
+    },
+    {
+      "pid": 2504246,
+      "cwd": "/home/dw/Projects/agent-sts2/.worktrees/v6-combat-state-divergence-20261020/agent",
+      "command": "npm exec vitest run --maxWorkers=1                          "
+    },
+    {
+      "pid": 2504235,
+      "cwd": "/home/dw/Projects/agent-sts2/.worktrees/v6-combat-state-divergence-20261020/agent",
+      "command": "/bin/bash -lc nice -n 19 env PATH=/home/dw/.local/node/bin:$PATH TMPDIR=/home/dw/Projects/agent-sts2/.worktrees/v6-combat-state-divergence-20261020/.artifacts/test-tmp-final-v2 npx vitest run --maxWorkers=1 > ../.artifacts/vitest-full-final-v2.log 2>&1 "
+    }
+  ],
+  "log": ".artifacts/vitest-full-final-v2.log",
+  "log_sha256": "076fdb57cb35e1a581dee865505f93c973444b512b2694e8a0512beb196274db",
+  "next_run": "nice19 maxWorkers1, short ignored repository TMPDIR /home/dw/Projects/agent-sts2/.cache/w4t"
+}

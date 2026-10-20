@@ -5135,6 +5135,8 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
 
 - 2026-10-20T13:46:29+08:00 ops：活雾gap原生指派字节核同，08de审计W8/纯bug修复codex1 W4W6来源分列，原提案99f14 pending、不冒boss-sim批；三旧通知原证据核同、609角色登记兼容未入main/live，不代ACK，原1320窗口终局后通知原owner。原件 paper/materials/20261020-1345-ops/receipt.json。
 
+- 2026-10-20 13:48:19 CST watcher G1c 每10完局漏斗归档：Silent A10 V5描述性局集合到100局，新增边界[100]；含最终/ops首试、逐Boss、幕路上存活、死因及未知。证据 paper/materials/20261020-134745-global-build-g1c-through-000100/funnel.json；不声称原生来源门槛或因果收益。[G1c-archive:paper/materials/20261020-134745-global-build-g1c-through-000100]
+
 - 2026-10-20T13:50:04+08:00 ops：原114302树3fd4宿主tsc0/full1唯一run-plan-merge断言失败；单测试接内存HTTP夹具，新树d43e6c23 tsc0/定向21过未full/源码提交/合入。原窗口释放通知W4W6并获13:47:30原full启动回报，待其终局再验变化输入；旧失败不改/W3与Regent不动。原件 paper/materials/20261020-1346-ops/receipt.json。
 
 - 2026-10-20T13:50:47+08:00 ops：原W4W6报加载ENOSPC/full1，原窗口仍占，同源改功能树TMPDIR nice19单worker接续；不判产品结果、不清共享tmp，ops变化输入full继续等原终局释放。原件 paper/materials/20261020-1351-ops/receipt.json。
@@ -5146,3 +5148,37 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
 - 2026-10-20T13:57:47+08:00 ops：接W4W6原报告，长TMPDIR v2 CLI截断/ENOENT断言后仅自身PID停止，短.cache/w4t同源原阈值接续仍占窗口；不查询进度、不判完整绿，ops/W8依序等明确释放，原件 paper/materials/20261020-w4-short-tmp-ops/receipt.json。
 
 - 2026-10-20T14:08:08+08:00 ops：W8 14:10原回报未起tsc/full、仅既有单进程计时，后续短.cache/w8t；保W4W6→ops变化输入→W8检查顺序，等前两窗口实际释放再通知，不查询/叠full或改live。原件 paper/materials/20261020-w8-window-1410-ops/receipt.json。
+
+- 2026-10-20T14:16:00+08:00 ops：按原要求保全root日志实际watcher G1c一条+空行2新增，非两条ops且不代G1c验收；W4W6 v3在途仅报告未释放，W8自有计时已结束/未起full，保持W4→ops→W8顺序，原件 paper/materials/20261020-log-window-1415-ops/receipt.json。
+
+- 2026-10-20T14:23:50+08:00 ops：W4原v3 full0/613文件5830过2跳及五源SHA核同、runner退出；原窗口明确释放后接ops固定d43e6c23完整检查，nice19单worker/短.t/f1421/PID3694693、tsc0/full在途，旧失败全保留，终局再通知W8，不改live。原件 paper/materials/20261020-1421-ops/receipt.json。
+
+- 2026-10-20T14:22:06+08:00 v6-w4w6：完成 Claude 原13:20战斗分叉排查；9J6骇鳗/MRJ雕像致死手牌在第9/19固定样本正确判死，8/8属有限样本遗漏；修已发布Silent蛇咬Retain未传入后续手牌的纯bug，不补游戏知识。活雾召唤缺口沿 silent-proposal-99f14e823a866ad7 pending，原boss-sim批次未找到。tsc0、完整vitest613文件/5830过/2原跳过、gitleaks0；未改live/STOP/对局，材料 paper/materials/2026-10-20-v6-combat-state-divergence/，上线交ops按开局边界处理。
+
+- 2026-10-20T14:28:09+08:00 ops：原W4蛇咬既有Retain传递源e210 main/5源SHA及原full0日志核同，当前TR224 F17奖励/livef563未到开局边界，精确5叶运输/联合验收/模拟消费/核号待办；ops d43全检输入不改，活雾99f14继续pending，不改live。原件 paper/materials/20261020-W4-main-delivery-1425-ops/receipt.json。
+
+- 2026-10-20T14:38:34+08:00 ops：依Claude14:25例外限定实删旧已证项目tmp 7385对象/30975 inode/103MiB，8103证据不足保留，cutoff10-19 12:00 CST；实际清单/前后inode字节/引用限制存证，tsx-1000等不动，永久infra仍原watcher/full排W8后，不改live。原件 paper/materials/20261020-temp-cleanup-1430-ops/receipt.json。
+
+- 2026-10-20T14:40:48+08:00 ops：141301双策略原报告/WT无源变化核同，20提案报告waiting及原注册状态留存，无源码提交/合入/分号；不重复dataset/补测/模型，不冒父完成或普通收尾回执齐全，在途窗口与live保持。原件 paper/materials/20261020-1438-ops/receipt.json。
+
+- 2026-10-20T14:44:38+08:00 ops：三继承通知消息/原转达及原watcher→Roy可见SHA核同，兼容609未main/live、角色registry仍pending；仅原watcher待办提醒，CLI0非native实收，不重转全文/代ACK/派批或关闭科学父，在途full与live保持。原件 paper/materials/20261020-1443-ops/receipt.json。
+
+- 2026-10-20 14:56:25 CST [Claude/Roy，V6 拿牌条目重做] Roy 13:3x：眼前强度只算“当前牌组+此牌”（不补理想牌）；长期方向不乘凑齐概率，只算核心组合凑齐后对 Boss 的结果；不用胜率，改用伤害/掉血/回合的量化战斗结果。据此暂缓 W3-805（P 上界版）上线，派 v6-w4w6 基于 main 重做拿牌条目：A 当前牌组+此牌对本幕 Boss/精英配对模拟（复用 V5 boss sim）；B 组合凑齐后对后续 Boss/连战后台预算缓存，选项列“推进哪些组合/还差几张”独立字段；C 每目标掉血/回合/每回合伤害/死亡率/输时 Boss 剩血及对跳过配对差，信任门不过照给带标签；安全门以 A 为已知。小脑记忆改为可区分选项的条目另行派发。
+
+- 2026-10-20T15:01:14+08:00 ops：d43完整0/618文件5873过2跳，源8367/mainb367窄27叶集成，live71数据保护预演a84未发布；W8原生实收接窗口，r1启动参数错零测试/r2同输入接续未查。Claude14:58覆盖805自然边界也不运输，其他源原流程、拿牌大脑/下局显式brain，W4新条目原树定向先行，不改actor。原件 paper/materials/20261020-1450-ops/receipt.json。
+
+- 2026-10-20T15:05:47+08:00 ops：实收Claude1458暂停805并核结构化hold；144302双策略20项waiting、无源码，未重复dataset/测试；live861eef7仅知识刷新，W8窗口不动。原件 paper/materials/20261020-1503-ops/receipt.json。
+
+- 2026-10-20T15:14:02+08:00 ops：原141301三工程修复源885已核沙箱/旧冲突，原WT接当前main固定78ef254b，10源/498知识保留；宿主full排W8→原watcher infra后，未main/live提交或代ACK。原件 paper/materials/20261020-1511-ops/receipt.json。
+
+- 2026-10-20T15:20:14+08:00 ops：原复盘144301三局/账本核同，无新增纯bug，旧0496沿原提案；唯一dataset --no-raw有限收尾已启动，成功及记录提交待原终局回执。W8 r2 full1明确释放给watcher infra，再ops141301，三通知兼容pending不代ACK。原件 paper/materials/20261020-1514-ops/intake-receipt.json。
+
+- 2026-10-20T15:22:13+08:00 ops：核watcher infra静态原生启动SHA3e188ee1/树ed37/2331输入，tsc0/full未终局；唯一窗口原watcher→ops141301→W8修夹具后完整重验，r9定向不冒r2全绿。未查在途/重复full或改live。原件 paper/materials/20261020-1520-ops/receipt.json。
+
+- 2026-10-20T15:24:20+08:00 ops：原151301-fix无新增源码/修复，22既有main子项祖先核同；三项待集成修复仍原141301/78ef事务，不重测/派修/生成dataset或冒live。64项报告与原failed/rc0/mergednull保留。原件 paper/materials/20261020-1522-ops/receipt.json。
+
+- 2026-10-20T15:30:27+08:00 ops：复盘144301三局记录/账本核同，旧0496重犯无新增纯bug；唯一dataset --no-raw完整0，三局复盘标记通过，保存自身记录和生成数据。三旧异议角色兼容仍pending；805/live/Regent边界保持。原件 paper/materials/20261020-1514-ops/receipt.json。
+
+- 2026-10-20T15:33:32+08:00 ops：核原144301单次dataset完整0/三局复盘标记，实际记录提交e399ee711已main祖先；只结记录/数据阶段，旧bug/科学父/角色ACK不关，不重跑生成器或查询在途full。原件 paper/materials/20261020-1531-ops/receipt.json。
+
+- 2026-10-20T15:35:30+08:00 ops：实收原W4新拿牌条目完整检查申请，既定窗口watcher infra→ops141301→W8→W4，轮到前需原线明确确认；76定向/首题4选项已知仅owner进展，未认最终烟测或上线，805暂停保持。原件 paper/materials/20261020-1531-ops/W4-card-results-window-request-original.md。

@@ -32,7 +32,8 @@ import { loggedKnowledge } from "./logged.js";
 import { ask, board, decide, DIR, env, scriptedDeepSeek, setupOneshotTests, stubJev, type Raw } from "./oneshot-support.js";
 import { legalRoutes } from "./route-fixture.js";
 import { baseState, mainMenuPayload, runPayload } from "./scenarios.js";
-import { envelope, sendJson, startTestServer, type TestServer } from "./support.js";
+import { envelope, sendJson, type TestServer } from "./support.js";
+import { startFixtureServer as startTestServer } from "./fixture-http.js";
 
 setupOneshotTests();
 

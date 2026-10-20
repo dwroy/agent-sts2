@@ -3326,3 +3326,74 @@ request_id=roy-20261017-human-pace-h0 revision=3 input_sha256=1e1c259a15f1824119
 ### 2026-10-20T14:08:08+08:00 原W8检查排队及短临时路径确认
 
 本轮接W8的14:10原窗口回报：继续保留W4W6短TMPDIR的唯一完整检查窗口；W8报告未启动tsc或full，只维持已有单进程只读计时。已补记其后续检查使用仓库内短.cache/w8t，并保全部失败及中断原件，不覆盖旧/tmp或长路径失败。既有排队顺序不变：等原W4W6完整检查自然终局并明确释放，再由ops接d43e6c23单点测试接线修复的变化输入完整验收；两项都实际释放后，才沿原W8会话通知其核最新main、串行tsc/full。此回报仅确认等待及路径安排，不证明任何检查已启动、完成或通过，也不构成新模型/批次/刷新授权。本ops未查询在途进程、日志或重复任何测试，不清共享/tmp，未改live、当前对局、STOP或Regent状态。已落当前清单和原窗口协调字段，通知仍待实际释放触发。原件：paper/materials/20261020-w8-window-1410-ops/receipt.json。
+
+
+### 2026-10-20T14:16:00+08:00 原根日志保全与检查窗口顺序
+
+本轮核根decision-log实际差异为2行新增、0删除：watcher的G1c每十完局归档一条加空行，并非两条ops记录。已冻结HEAD、工作字节及原patch，依本次日志保全要求保存原内容，未stash、恢复或覆盖后续并行记录；不代认G1c科学来源或收益验收。W4W6报告full-final-v3仍按nice19单worker运行、尚未释放，暂未失败仅是其在途回报，本ops不查询或认完整通过。W8报告原自有只读计时均结束、重复训练仅自有PID停止，当前无其模拟/full，已变基079874c93且完整检查前未提交/合main。排队继续W4W6→ops变化输入全检→通知原W8，后续短.cache/w8t；记录保存后将实际main提交回原W4W6供其核FF，不能夹带产品代码或材料。原件：paper/materials/20261020-log-window-1415-ops/receipt.json。
+
+
+### 2026-10-20T14:23:50+08:00 原W4释放核验及ops变化输入完整检查接管
+
+本轮接W4W6明确释放独占窗口，实核v3终局日志SHA及五份受测源码同：613文件、5830项通过、2跳过，原四runner均退出；旧ENOSPC、长路径断言及中断历史保留，不冒源已main/live。ops已沿原排队接单点测试接线修复，固定staged树d43e6c23、27源叶与498保护知识SHA核同；旧基线至当前main仅记录变化，本轮未混入尚待交付的战斗源码。唯一完整tsc/vitest按nice19单worker及短.t/f1421实际启动PID3694693，启动回执tsc0/full在途；旧3fd4失败不覆盖，新输入不冒完整绿或源码提交。已向原W4与W8回投窗口接管，CLI0不代native实收。等待原learner-checks终局后确认释放再通知W8，过程中不轮询、不叠full/派模型/API/刷新/dataset，live/对局及Regent不动。原件：paper/materials/20261020-1421-ops/receipt.json。
+
+
+### 2026-10-20T14:28:09+08:00 原W4源main交付及精确live待办
+
+本轮核原W4W6纯bug源e210已实际FF main，五受测文件的工作字节与提交blob逐SHA同，validation全部保留日志SHA核同：tsc0、613文件5830过2跳。改动仅接已发布Silent蛇咬Retain到后续手牌；主动弃牌/多副本等回归与铁甲等价限制保留，未新增知识、采样预算或策略。原有限8/8不当必胜，活雾召唤仍锚99f14 pending，源修复完成不关学习父。宿主实核当前TR224PCKENSM F17奖励页/livef563，未到自然开局边界；已留精确两运行时加三测试输入的运输待办，保最新知识/历史包和W3限制，实际联合验收/模拟消费者/核号后才记上线与回收。当前ops d43全检未查未改，不冒覆盖新联合；W8仍后续排队。本轮无新full/模型/刷新/dataset/对局操作。原件：paper/materials/20261020-W4-main-delivery-1425-ops/receipt.json。
+
+
+### 2026-10-20T14:38:34+08:00 限定旧项目临时文件实际清理
+
+本轮按Claude14:25限定清理实办：仅取早于10月19日12:00 CST、能由本仓库固定夹具/已知提交核归属且未见在用引用的旧对象，逐子项复核uid、设备、inode、mtime和类型后删除。共7385对象、19329文件及11646目录，实际释放30975 inode、约103MiB分配空间；/tmp空闲inode528119增至559094，字节55046008832增至55154012160，全局并行变化不替代逐项删除归因。8103证据不足旧对象保留；tsx-1000、较新jev-sts、在用/非项目及Roy已清hearthstone不动。进程引用检查的系统服务权限限制一并保留，原清单、计划与逐节点清单均落盘。已回原watcher，永久生命周期/主盘TMPDIR和准入仍其原infra链，full排W8之后；本轮不新派模型或查询在途检查，不改live/STOP/actor/Regent。原件：paper/materials/20261020-temp-cleanup-1430-ops/receipt.json。
+
+
+### 2026-10-20T14:40:48+08:00 双策略无源码回报核验
+
+本轮核141301双策略原out、报告与提案原件，两工作树HEAD均仍为原079874c93基线，tracked、暂存及未跟踪产品源码均无新增；原调度记录done/rc0/mergednull与回报一致，无提交或合入受阻需要兜底。两批各六个证据局、各十项提案，报告的二十项全部waiting，逐项原因及当前原注册状态均冻结留存；现有窄实现、部分帧、有限样本或跨消费者覆盖不足，不能据报告完成把整项发布/收益或科学父要求关闭。源证据与账本由原学习链维护，本ops不重写、不强行支持原假设。未新增源码、知识、版本或角色ACK，也未重复paper_dataset、补测、模型或学习批次；普通收尾独立回执尚无，不冒唯一dataset已完成。当前ops完整检查及W8后续、infra排W8之后的窗口均保持，不查询或叠检查，live/STOP/actor/Regent不变。原件：paper/materials/20261020-1438-ops/receipt.json。
+
+
+### 2026-10-20T14:44:38+08:00 继承异议转达证据及角色登记兼容复核
+
+本轮按三条继承通知ID逐项核原消息、ops_forwarded真实回执及实际收件箱证据SHA，均与旧核验一致；9.1和9.2异议原JSON、9.3原报告也核实在位。原watcher向Roy的可见通知证据SHA16b0a57b再次核同，因此不把当前排队当新送达，也不因registry为false抹掉旧实际转达。当前角色登记仍受旧手动来源兼容阻塞，原609修复尚非main/live祖先；只向原watcher提醒独立兼容待办及真实原件，不重复整份异议，不代填watcher/Roy确认，不重试已知拒绝ACK或改JSON绕过来源。科学限制与原owner下一步仍保原样，历史批次未发布说明不误作否定后续独立发布；父要求不因退出0或本轮归档关闭。本轮无新学习父/模型/批次/补测/dataset，未查询在途full或改live/STOP/actor/Regent。原件：paper/materials/20261020-1443-ops/receipt.json。
+
+
+### 2026-10-20T15:01:14+08:00 原全检验收、W8窗口交接及805新hold
+
+本轮核原d43完整终局tsc0/full0：618文件5873过2跳，27源及498保护知识SHA同、runner已退出。单点源8367已提交，原锁仅27工具/测试路径无冲突合main b367，不冒覆盖W4新联合或分游戏号；live预演a84无冲突，71现有知识/报告字节保护，未写live。窗口明确交W8并获原生实收，其r1不支持minWorkers启动退出、未跑测试，r2同源同2436输入仅maxWorkers1接续，窗口继续保留，未查进度。最新Claude14:58覆盖已落：805明确暂缓，自然边界不运输；蛇咬及其余已验源照原流程，拿牌由大脑，下一自然启动显式card=brain，不热切actor。新条目由原W4W6新树定向/冻结模拟，未排新full或模型。旧失败/活雾学习缺口与角色ACK均保留，Regent不变。原件：paper/materials/20261020-1450-ops/receipt.json。
+
+
+### 2026-10-20T15:05:47+08:00 原805暂停与双策略无源码核验
+
+已实读watcher的14:58更正，核805及8da暂停已进入结构化清单和原continuation，自然边界不得运输；期间拿牌由大脑，下一自然启动显式brain，当前actor不热切。两批144302策略报告、逐项提案及工作树已核：共20项因缺生产校准、受控后继或执行归属证据保持waiting，登记表核同，无源码改动、提交或live合入，既有父要求不关闭。普通收尾回执尚未落地，不把批次退出0当dataset完成，也不手动重复生成、测试或派模型。实际live现为861eef7，相对f563仅69份知识刷新叶，旧27叶预演不能直接冒新知识组合全绿；后续原锁精确集成须保留这些数据。已沿原watcher通道发实收回执，CLI0仅入队。W8完整检查窗口不查询、不抢占，Regent暂停及其他角色ACK边界保持。
+原件：paper/materials/20261020-1503-ops/receipt.json；verification.json；watcher-original.md。
+
+
+### 2026-10-20T15:14:02+08:00 原141301修复合入兜底与检查排队
+
+已核原141301批三项工程修复及沙箱原件：普通收尾失败隔离、空tick与回收门禁、旧手动通知来源兼容，570文件5069例通过；三轮日志SHA、负控与旧失败均保留。学习者因8处整树live冲突未合入，调度状态failed/退出0/mergednull不改写。ops在原工作树将885源与当前main精确组合，无冲突且只增加10个工程源叶，498份知识逐blob保留，固定树78ef254b；不夹带805进入live。联合输入尚无宿主完整绿，因此不提交联合源码、不运输live或加游戏发布号。唯一full窗口仍属W8，之后原watcher临时生命周期，再接本批精确输入；已沿两原线程协调，CLI0不算实收或释放。42项未修及旧父要求保留；通知兼容须代码实际main/live后由各角色凭真实回执登记，不能代ACK、重写旧通知或提前回收。
+原件：paper/materials/20261020-1511-ops/receipt.json；source-input.json；verification.json。
+
+
+2026-10-20T15:20:14+08:00 已核144301复盘退出0，9J6、UWUF、TR224三节各唯一，旧lessons前缀及草稿字节一致，16个局号与账本映射有效，534项检查0问题。没有新增纯bug，0496零选是旧重犯，沿既有策略提案跟进，不由ops补取牌规则或重复派修。原三异议消息、转达SHA及watcher向Roy可见证据未变，通知后两角色登记仍受旧来源兼容阻塞，实际兼容代码main/live后由各角色凭真回执登记；本轮提醒原watcher而不重转全文或代ACK。已启动唯一nice19/ionice3 paper_dataset --no-raw有限收尾进程，等待原子进程终局后核三局标记、保存指定lessons/账本及生成数据并回队列，此刻不宣称成功。另实收W8 r2三夹具失败终局并明确释放，窗口交原watcher infra、之后ops141301；不启动W8 r3或其他full，不改805暂停、live/actor/STOP及Regent。
+原件 paper/materials/20261020-1514-ops/intake-receipt.json；learning-verification.json；notice-verification.json。
+
+
+2026-10-20T15:22:13+08:00 已实际接收原watcher接管回执，仅核冻结launch和native-start原件，回读SHA3e188ee1、W8释放SHA8fcf8a11一致。其基线73f7056、固定树ed37d661及2331输入46c9e27f已绑定；15:20:11的runner3993740/start_ticks137275447、nice19/ionice3与15:20:12的full3993818均为原生启动回读，tsc0不等完整绿。本轮不查进程、可变status或在途日志，不重启或叠full。唯一窗口现归原watcher，须自然终局、核退出并本人明确释放后才到ops141301，再排W8夹具修正后的完整重验；原ops pending门禁同步更新。W8新报r9 tsc0、定向4文件8例通过仅按owner报告保留，不能覆盖r2三失败或提前合main/live。两原线程已获协调投递，CLI0不冒原生实收。原复盘唯一dataset及记录收尾沿既有有限进程，未重派或查询；805暂停、拿牌下一局brain、live/actor/STOP/Regent及角色ACK边界保持。
+原件 paper/materials/20261020-1520-ops/receipt.json；native-start-readback.json；W8-r9-owner-original.md。
+
+
+2026-10-20T15:24:20+08:00 已核151301-fix回报及完整64项只读审计，原工作树仍为73f7056且无已跟踪或未跟踪产品源码改动，无本批新增提交、修复或测试。22个已修工程子项逐一核为当前main祖先；这只证明相应子项已有源码，不等于整项宽父、游戏收益或实际live消费完成。普通收尾隔离、空tick与retention、手动通知来源兼容三项源码b675/ca689/082cc仍未main/live，继续原141301固定78ef联合输入事务，等待原watcher自然终局并明确释放，不重复实现、派修或另起全检。其余31项策略、4项独立架构、4项缺证或原专项保留既有owner；V6坏行项本轮报告按已有de94源码修正工程分类，不关闭数据包或消费者父要求。调度记录failed/退出0/mergednull原样保留，不把无源码处置说成已上线。本轮仅保存核验记录，无需重复dataset、生产测试或模型；原复盘有限收尾、805暂停、live/actor/STOP、Regent与角色ACK边界不动。
+原件 paper/materials/20261020-1522-ops/receipt.json；verification.json；queue-audit.json。
+
+
+2026-10-20T15:30:27+08:00 三局9J6、UWUF、TR224复盘各唯一，旧lessons前缀及草稿核同，16条账本映射有效，534项账本检查0问题；没有新增纯bug，0496取牌零选是旧重犯，沿既有策略提案继续，不重复派修或由ops补机制。三项复盘提案已登记，报告完成不代表实现、上线或收益。本批唯一一次nice19 paper_dataset --no-raw退出0，源检查通过且三局均有复盘标记；输入切点、旧快照、生成表与日志SHA已留，未重跑生成器。三旧异议原文、ops转达和原watcher到Roy可见凭据核同，旧来源兼容登记仍pending，原141301候选实际main/live前不代任何角色ACK或改写旧通知。W8的r2原full1/三个夹具失败及明确窗口释放另存，窗口沿原watcher infra再到ops141301，不重开W8 full。只保存用户指定复盘记录和本次生成数据，保留并行记录；未改游戏知识、live、actor、STOP或Regent，不关科学父。
+原件 paper/materials/20261020-1514-ops/receipt.json。
+
+
+2026-10-20T15:33:32+08:00 已核原144301唯一收尾终局，dataset_invocations=1、退出0，源检查通过，9J6、UWUF、TR224三局分别F8/F31/F21败局均has_postmortem=1；切点固定07:20:14.220Z，13份变化输出及579份该次归档原件保留，未请求原始日志快照。实际记录提交e399ee711已为main祖先，范围仅notes、收件箱和paper记录/数据，明确包含lessons、学习账本及三项原提案，gitleaks0；旧lessons前缀与三节唯一性、账本原快照前缀均核同。原receipt保留提交前状态，本次以真实commit和终局回执补充完成证明，不倒改历史。原0496为旧重犯而非新增纯bug；复盘和论文数据完成不替代策略实现、正式经验发布、live消费、科学父或角色ACK。已通知原watcher，CLI0不冒实收。仅更新短清单及记录，无需重复dataset、测试或模型；原watcher全检窗口、805暂停、live/actor/STOP与Regent保持。
+原件 paper/materials/20261020-1531-ops/receipt.json；verification.json；record-commit.json。
+
+
+2026-10-20T15:35:30+08:00 另已实收原W4W6拿牌结果条目任务的完整检查窗口申请，工作树v6-card-combat-results-20261020仍由原owner独立维护。其76项定向与tsc、首个真实卡奖励4/4已知、冷热准备4.43/4.29秒均按本次进展报告保存，不外推其他题面或最终烟测通过；同9冻结题只读Nova烟测由原owner接续，ops不查询、不重复API、模拟或派模型。唯一完整检查窗口按既定顺序原watcher infra、ops141301、W8修夹具重验之后才轮到W4，须前任务自然终局、退出和原生明确释放；不依据估计时间或CLI入队启动。已沿原W4及watcher线程回复顺序，轮到时由ops明确通知，当前不启动其full。新条目只处排队与原进度记录阶段，不认已main/live、发布或消费者收益；旧805/P上界版继续明确暂停，当前live/actor/STOP、Regent及角色ACK边界保持。
+原件 paper/materials/20261020-1531-ops/W4-card-results-window-request-original.md。

@@ -1,0 +1,50 @@
+{
+  "started_at": "2026-10-20T06:54:26.849641+00:00",
+  "runner_pid": 3868097,
+  "base_commit": "b367e05d46128849f14b84d12e9180400e4dcaf4",
+  "staged_tree": "5a45afb0d1757f7de076097f90f2845dd1291d69",
+  "nice": 19,
+  "tmpdir": "/home/dw/Projects/agent-sts2/.cache/w8t",
+  "input_count": 2436,
+  "input_sha256": "54d694331eeb459d97f9a706b1940e6774085f483cd730e72125fc1d2f3d3410",
+  "steps": [
+    {
+      "name": "tsc",
+      "command": [
+        "npx",
+        "tsc",
+        "-p",
+        "tsconfig.json",
+        "--noEmit"
+      ],
+      "started_at": "2026-10-20T06:54:27.053723+00:00",
+      "log": "/home/dw/Projects/agent-sts2/.worktrees/v6-refresh-legacy-incremental-20261020/.artifacts/full-final-r2/tsc.log",
+      "pid": 3868141,
+      "exit_code": 0,
+      "ended_at": "2026-10-20T06:54:28.980460+00:00",
+      "seconds": 1.9267189509700984,
+      "log_bytes": 0,
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "full",
+      "command": [
+        "npx",
+        "vitest",
+        "run",
+        "--maxWorkers=1"
+      ],
+      "started_at": "2026-10-20T06:54:28.981048+00:00",
+      "log": "/home/dw/Projects/agent-sts2/.worktrees/v6-refresh-legacy-incremental-20261020/.artifacts/full-final-r2/full.log",
+      "pid": 3868318,
+      "exit_code": 1,
+      "ended_at": "2026-10-20T07:17:35.710825+00:00",
+      "seconds": 1386.7296984381974,
+      "log_bytes": 7313,
+      "log_sha256": "41460ffbdec9e42833de56a13ea2d9165eacdd6e362372a3e358760cea129c4a"
+    }
+  ],
+  "ended_at": "2026-10-20T07:17:35.883989+00:00",
+  "input_unchanged": true,
+  "after_input_sha256": "54d694331eeb459d97f9a706b1940e6774085f483cd730e72125fc1d2f3d3410"
+}

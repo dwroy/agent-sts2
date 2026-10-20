@@ -1,0 +1,97 @@
+{
+  "at": "2026-10-20T14:28:09+08:00",
+  "source_commit": "e2103b3a9b5fdd524508fa28e5dd64ec7f63eb46",
+  "main_contains_source": true,
+  "observed_main": "e2103b3a9b5fdd524508fa28e5dd64ec7f63eb46",
+  "source_files": [
+    {
+      "path": "agent/src/reflex/card-model.ts",
+      "bytes": 131152,
+      "sha256": "46206367e6b61cbefd5759598db543c346bc1e7b1ded09f0a49607e2faf71031"
+    },
+    {
+      "path": "agent/src/reflex/rollout.ts",
+      "bytes": 219830,
+      "sha256": "4e7dbe020d98526aa2ca033302894deb77a817916449ff7e7b1a55bc2e57d5a4"
+    },
+    {
+      "path": "agent/tests/silent-snakebite.test.ts",
+      "bytes": 6079,
+      "sha256": "5814887e63084372a629be76c57c24bea317c33d9558a574ef40aa78cfc275c0"
+    },
+    {
+      "path": "agent/tests/combat-state-divergence.test.ts",
+      "bytes": 3212,
+      "sha256": "1406d662cf33bba8f87f7c3093d208248188237ac53e4fca2e567bc8a0f73406"
+    },
+    {
+      "path": "agent/tests/combat-state-divergence-evidence.json",
+      "bytes": 186455,
+      "sha256": "3d1e49eb7dbeb45640fe85ac26440727188b49fec22063401646733130e1b687"
+    }
+  ],
+  "source_tree": "36f78fd04711446e52a2ba0800f296fb10ba3ca8",
+  "exact_transport_paths": [
+    "agent/src/reflex/card-model.ts",
+    "agent/src/reflex/rollout.ts",
+    "agent/tests/combat-state-divergence-evidence.json",
+    "agent/tests/combat-state-divergence.test.ts",
+    "agent/tests/silent-snakebite.test.ts"
+  ],
+  "changed_paths": [
+    "agent/src/reflex/card-model.ts",
+    "agent/src/reflex/rollout.ts",
+    "agent/tests/combat-state-divergence-evidence.json",
+    "agent/tests/combat-state-divergence.test.ts",
+    "agent/tests/silent-snakebite.test.ts",
+    "paper/materials/2026-10-20-v6-combat-state-divergence/evidence-manifest.json",
+    "paper/materials/2026-10-20-v6-combat-state-divergence/frozen-samples.json",
+    "paper/materials/2026-10-20-v6-combat-state-divergence/full-final-enospc.json",
+    "paper/materials/2026-10-20-v6-combat-state-divergence/full-final-v2-interruption.json",
+    "paper/materials/2026-10-20-v6-combat-state-divergence/full-final-v3-source-identity.json",
+    "paper/materials/2026-10-20-v6-combat-state-divergence/full-window-interruption.json",
+    "paper/materials/2026-10-20-v6-combat-state-divergence/full-window-release.json",
+    "paper/materials/2026-10-20-v6-combat-state-divergence/gitleaks-final.json",
+    "paper/materials/2026-10-20-v6-combat-state-divergence/learner-issue.md",
+    "paper/materials/2026-10-20-v6-combat-state-divergence/owner-origin.json",
+    "paper/materials/2026-10-20-v6-combat-state-divergence/replay.ts",
+    "paper/materials/2026-10-20-v6-combat-state-divergence/report.md",
+    "paper/materials/2026-10-20-v6-combat-state-divergence/source-native-dispatch.jsonl",
+    "paper/materials/2026-10-20-v6-combat-state-divergence/targeted-retain-v2.log",
+    "paper/materials/2026-10-20-v6-combat-state-divergence/temp-path-targeted-v3.log",
+    "paper/materials/2026-10-20-v6-combat-state-divergence/tsc-final.log",
+    "paper/materials/2026-10-20-v6-combat-state-divergence/validation.json",
+    "paper/materials/2026-10-20-v6-combat-state-divergence/vitest-full-final-v2.log",
+    "paper/materials/2026-10-20-v6-combat-state-divergence/vitest-full-final-v3.log",
+    "paper/materials/2026-10-20-v6-combat-state-divergence/vitest-full.log",
+    "paper/materials/2026-10-20-v6-combat-state-divergence/window-release-ops-cli.json",
+    "paper/materials/2026-10-20-v6-combat-state-divergence/window-release-w8-cli.json",
+    "paper/materials/decision-log.md"
+  ],
+  "knowledge_or_versions_changed": false,
+  "all_preserved_check_artifact_SHA_matched": true,
+  "tests": {
+    "tsc": 0,
+    "full": 0,
+    "files": 613,
+    "passed": 5830,
+    "skipped": 2,
+    "seconds": 1370.4
+  },
+  "scope": "source checks only; not a new joint with running ops d43 tree or live refreshed knowledge",
+  "diagnoses": {
+    "Snakebite": "already-published retain state carried to later hand; no new game knowledge",
+    "limited_samples": "owner fixed ninth/19th examples, not complete enumeration or certain win; no samples/budget/policy change",
+    "Living_Fog": "typed summon relation still original pending proposal 99f14; no developer mechanism values"
+  },
+  "old_failure_artifacts_preserved": true,
+  "current_live": "f563cc997814fdccd2dafe8a50d3725c62102c7f",
+  "source_is_live_ancestor": false,
+  "current_run": {
+    "run_id": "TR224PCKENSM",
+    "screen": "REWARD",
+    "floor": 17
+  },
+  "natural_start_boundary": false,
+  "no_live_or_actor_change": true
+}

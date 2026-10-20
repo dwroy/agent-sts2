@@ -1,0 +1,150 @@
+{
+  "recorded_at": "2026-10-20T14:22:32+08:00",
+  "status": "passed",
+  "source_base": "7f08f166d9acfadd4569f667fd12570c01ff58cf",
+  "source_identity": "full-final-v3-source-identity.json",
+  "checks": [
+    {
+      "name": "tsc-final",
+      "exit_code": 0,
+      "log": "tsc-final.log"
+    },
+    {
+      "name": "targeted-retain-v2",
+      "exit_code": 0,
+      "files_passed": 4,
+      "tests_passed": 38,
+      "log": "targeted-retain-v2.log"
+    },
+    {
+      "name": "short-tmp-targeted-v3",
+      "exit_code": 0,
+      "files_passed": 2,
+      "tests_passed": 18,
+      "log": "temp-path-targeted-v3.log"
+    },
+    {
+      "name": "full-initial",
+      "exit_code": 143,
+      "classification": "interrupted_to_yield_ops_window",
+      "receipt": "full-window-interruption.json"
+    },
+    {
+      "name": "full-final",
+      "exit_code": 1,
+      "classification": "environment_blocked_tmp_inodes",
+      "receipt": "full-final-enospc.json",
+      "raw_log_preserved_by_ops": "paper/materials/20261020-1355-ops/original-enospc-vitest.log",
+      "raw_log_sha256": "dfc502ba4bf8e09d3f8a1a0d82b489322100a30a5764e9bd56b4b675ab2fe89e"
+    },
+    {
+      "name": "full-final-v2",
+      "exit_code": 143,
+      "classification": "interrupted_environment_path_length",
+      "receipt": "full-final-v2-interruption.json"
+    },
+    {
+      "name": "full-final-v3",
+      "status": "completed",
+      "started_at": "2026-10-20T13:57:17+08:00",
+      "log_worktree": ".artifacts/vitest-full-final-v3.log",
+      "tmpdir": "/home/dw/Projects/agent-sts2/.cache/w4t",
+      "nice": 19,
+      "max_workers": 1,
+      "exit_code": 0,
+      "files_passed": 613,
+      "tests_passed": 5830,
+      "tests_skipped": 2,
+      "duration_seconds": 1370.4,
+      "log": "vitest-full-final-v3.log"
+    },
+    {
+      "name": "gitleaks-precommit-source-materials-and-decision-log",
+      "exit_code": 0,
+      "findings": 0,
+      "scanned_bytes": 443470,
+      "report": "gitleaks-final.json",
+      "note": "Final staged source, material logs/receipts and decision-log scanned: exit 0, no findings. Only this public receipt update follows."
+    }
+  ],
+  "preserved_files": [
+    {
+      "path": "tsc-final.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "targeted-retain-v2.log",
+      "bytes": 270,
+      "sha256": "146b7011580d7264c5edd796d17699715d8dd8319dfd2769cc3288de393c70d5"
+    },
+    {
+      "path": "temp-path-targeted-v3.log",
+      "bytes": 270,
+      "sha256": "f0466b57c84d04a844b5fe1350fa5e861a6832fd16389afe64164748c1dd6ac9"
+    },
+    {
+      "path": "vitest-full.log",
+      "bytes": 98,
+      "sha256": "8a5335bb8f766010afbd6eb09aba10088311647c5cda6cc4034bd3afd66dcda8"
+    },
+    {
+      "path": "vitest-full-final-v2.log",
+      "bytes": 435,
+      "sha256": "076fdb57cb35e1a581dee865505f93c973444b512b2694e8a0512beb196274db"
+    },
+    {
+      "path": "full-window-interruption.json",
+      "bytes": 906,
+      "sha256": "c042e99171385eec50e233e08ffe94e34227a53922a7f10bef6396e66752c799"
+    },
+    {
+      "path": "full-final-enospc.json",
+      "bytes": 638,
+      "sha256": "4bb2a3727ed359efc86da882b4ff291ef74503c3724cc8108bd880606a6b672f"
+    },
+    {
+      "path": "full-final-v2-interruption.json",
+      "bytes": 2196,
+      "sha256": "17ce90f78099df36c22b84cf35aec1fb661bb841ad5811e8abd53d07bdecd204"
+    },
+    {
+      "path": "full-final-v3-source-identity.json",
+      "bytes": 1369,
+      "sha256": "39ba845370c2badbce985173aa05f81d0cb78ecd2fa5f181b89922b3daa6d8cd"
+    },
+    {
+      "path": "vitest-full-final-v3.log",
+      "bytes": 404,
+      "sha256": "5d2c82f0130eba469c79c8b330ffff1eb5c763731afc7e454323c9481f0ae499"
+    },
+    {
+      "path": "full-window-release.json",
+      "bytes": 513,
+      "sha256": "5c435b52dffcb8d96f7a92a46af58ae8f71dfecde97b325c699a89ece1ecc0a1"
+    },
+    {
+      "path": "window-release-ops-cli.json",
+      "bytes": 515,
+      "sha256": "8bcb53c6962c4f47f84e9b03f3fac3662852548af716cf397470d233cee4b109"
+    },
+    {
+      "path": "window-release-w8-cli.json",
+      "bytes": 629,
+      "sha256": "29616f74e49cf7ed72fab8d53b7710ec48c0ec1aa411b20522b59117c472869b"
+    },
+    {
+      "path": "gitleaks-final.json",
+      "bytes": 3,
+      "sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570"
+    }
+  ],
+  "no_model_requests": true,
+  "no_live_or_game_changes": true,
+  "no_test_threshold_changes": true,
+  "integration_baseline_checked": "b5b96151723d9c8e33d328ed03966744ab445ca3",
+  "integration_baseline_delta": "Only ops/paper/notes records changed from tested source base; no agent, learner, knowledge, eval or ops script changes.",
+  "whitespace_check_note": "Original raw test logs preserve blank lines at EOF. Check substantive whitespace with per-command core.whitespace=-blank-at-eof; original log bytes are not edited.",
+  "window_release_receipt": "full-window-release.json",
+  "tested_source_hashes_reverified": true
+}

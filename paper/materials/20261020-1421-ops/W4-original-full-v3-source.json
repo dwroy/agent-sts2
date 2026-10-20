@@ -1,0 +1,40 @@
+{
+  "recorded_at": "2026-10-20T13:57:17.909045+08:00",
+  "base": "7f08f166d9acfadd4569f667fd12570c01ff58cf",
+  "files": [
+    {
+      "path": "agent/src/reflex/card-model.ts",
+      "bytes": 131152,
+      "sha256": "46206367e6b61cbefd5759598db543c346bc1e7b1ded09f0a49607e2faf71031"
+    },
+    {
+      "path": "agent/src/reflex/rollout.ts",
+      "bytes": 219830,
+      "sha256": "4e7dbe020d98526aa2ca033302894deb77a817916449ff7e7b1a55bc2e57d5a4"
+    },
+    {
+      "path": "agent/tests/silent-snakebite.test.ts",
+      "bytes": 6079,
+      "sha256": "5814887e63084372a629be76c57c24bea317c33d9558a574ef40aa78cfc275c0"
+    },
+    {
+      "path": "agent/tests/combat-state-divergence.test.ts",
+      "bytes": 3212,
+      "sha256": "1406d662cf33bba8f87f7c3093d208248188237ac53e4fca2e567bc8a0f73406"
+    },
+    {
+      "path": "agent/tests/combat-state-divergence-evidence.json",
+      "bytes": 186455,
+      "sha256": "3d1e49eb7dbeb45640fe85ac26440727188b49fec22063401646733130e1b687"
+    }
+  ],
+  "run": "full-final-v3",
+  "command": "nice -n 19 env PATH=/home/dw/.local/node/bin:$PATH TMPDIR=/home/dw/Projects/agent-sts2/.cache/w4t npx vitest run --maxWorkers=1",
+  "source_unchanged_since_full_start": true,
+  "temp_path_targeted_confirmation": {
+    "exit_code": 0,
+    "files_passed": 2,
+    "tests_passed": 18,
+    "log": ".artifacts/temp-path-targeted-v3.log"
+  }
+}
