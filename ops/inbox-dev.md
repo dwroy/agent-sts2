@@ -4356,3 +4356,8 @@ request_id=roy-20261017-human-pace-h0 revision=3 input_sha256=1e1c259a15f1824119
 ### 2026-10-20T13:38:04+08:00 原活雾学习缺口去重及来源绑定
 
 本轮实读活雾冻结补证，并将两帧与原states字节段逐一核同：9S9 F12 T4显示召唤意图，T5新增GAS_BOMB；仅保观察，不补机制。去重命中既有pending提案silent-proposal-99f14e823a866ad7，绑定原084302复盘、01a14c76线程和codex3历史来源；7项要求及22个boss-sim批次未找到匹配。已留原清单缺口，尚缺原boss-sim请求/派发、owner线程及账号启动原件，不能冒用复盘线程或造新父。正式发布与实际live模拟消费者读回继续pending。9J6的256样本210胜46死及第9样本HP-6、MRJ4仅owner报告和snakebite原修复分列，不混因果。已向原watcher回所缺来源，CLI0不代实收或角色ACK；未查工具在途检查、未派批/重跑/改live，W3自然边界及Regent保持。原件：paper/materials/20261020-1330-ops/receipt.json。
+
+
+### 2026-10-20T13:44:57+08:00 原战斗owner检查窗口协调
+
+本轮收到W8及原战斗分叉owner的窗口更正：W8仅nice19/ionice3单任务原授权测量，未启动完整full；重叠检查属于v6-w4w6原树。owner自报codex1、native01a15382-68eb-7093-b677-040c9b45767f，已仅按PID停止自身四进程并保留部分日志；不记完整通过，也不据中断判产品失败。其tsc0与4文件38项定向通过分列，最终来源证据/提交仍待交，未合main/live。原1320宿主检查2405031/2405140未操作；待原learner-checks终局及窗口释放后，沿该原线程通知，由owner按nice19单worker再做最终full，不轮询或复派。活雾缺口补记owner自报身份，原boss-sim请求/启动SHA绑定及正式发布、live模拟消费者读回仍pending。原件：paper/materials/20261020-1344-ops/receipt.json。

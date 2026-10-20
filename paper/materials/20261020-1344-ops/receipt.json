@@ -1,0 +1,56 @@
+{
+  "schema": "ops-window-coordination-v1",
+  "at": "2026-10-20T13:44:57+08:00",
+  "scope": "Native intake of W8 and original combat owner reports; no independent process/log inspection this turn",
+  "sources": {
+    "path": "paper/materials/20261020-1344-ops/source-messages-original.md",
+    "bytes": 963,
+    "sha256": "6043542f5d08e7e2d1e94af0f30b054dbe88753c754b0886002b8fbb80521d9f"
+  },
+  "W8": {
+    "full_started": false,
+    "measurement_only": true,
+    "nice": 19,
+    "ionice_class": 3,
+    "already_notified_original_owner_and_watcher": true
+  },
+  "combat_owner": {
+    "alias": "v6-w4w6",
+    "learner_account": "codex1",
+    "native_thread": "01a15382-68eb-7093-b677-040c9b45767f",
+    "worktree": ".worktrees/v6-combat-state-divergence-20261020",
+    "identity_evidence": "original owner self-report in current user-delivered message; no native launch log read here",
+    "reported_own_stopped_PIDs": [
+      2466529,
+      2429189,
+      2429188,
+      2429176
+    ],
+    "full_outcome": "interrupted partial logs retained; neither pass nor attributed product failure",
+    "reported_tsc_rc": 0,
+    "reported_targeted": {
+      "files": 4,
+      "passed": 38
+    },
+    "final_source_evidence_and_commit_pending": true,
+    "main_live_not_integrated": true
+  },
+  "ops_original_checker": {
+    "batch": "20261020-114302-fix-batch",
+    "PIDs": [
+      2405031,
+      2405140
+    ],
+    "status": "last report still in progress; not queried or controlled",
+    "terminal_event": "original learner-checks"
+  },
+  "next_action": {
+    "trigger": "actual original 1320 host checker terminal event and resource release",
+    "action": "notify original combat owner via native thread 01a15382-68eb-7093-b677-040c9b45767f / v6-w4w6; owner alone resumes nice19 singleworker final full",
+    "notification_pending": true,
+    "no_polling_timer_new_dispatch": true
+  },
+  "no_process_signals_from_ops": true,
+  "no_live_gameplay_or_stop_change": true,
+  "no_full_restarted": true
+}
