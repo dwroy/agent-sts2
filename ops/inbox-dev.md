@@ -4312,3 +4312,6 @@ request_id=roy-20261017-human-pace-h0 revision=3 input_sha256=1e1c259a15f1824119
 
 
 2026-10-20T11:31:35+08:00 原ops实读11:25终局：live52固定1e730完整tsc0/full1，609文件608过1败、5789项过1败2跳；唯一build-decider路线15秒超时，四旧字节断言已过，52叶及486生产知识SHA未漂移。核到测试runPlanLog漏隔离、仍指向真实9.7MB历史；只补独立临时目录和runPlanLog一测试叶，原恢复行为、断言与超时不改，28项定向全过；不能据此证明超时唯一因果或冒full0。原锁内新53树369f8d20，nice19宿主PID1897732单次完整复验在途，tsc0，旧两轮full1保留。11:30已向原watcher投递当前阻塞，CLI0非实收；W3烟测失败明确排除，STOP/Regent保持，未源码提交、核号或开局。完整0后精确集成、17ID/hash/R3字段读回及版本双记录，再沿Roy授权恢复。原件paper/materials/20261020-1125-ops/receipt.json。
+
+
+2026-10-20T11:36:05+08:00 原ops已实收W8 11:35自然运行窗口协调。当前STOP仍在，T12TSEMGUU7F已终局、原actor退出，没有可供并发实测的在途对局；上一自然运行是V6-R402/c351，console为logs/console/20261020-091435-c351dbe7b+dirty.log，仅作历史对照。下一窗口须当前53叶固定369f8d20完整验收、精确提交、消费者读回及核号后，沿Roy10:26既有授权自然恢复，时间与新run_id尚不能确认。已将原W8提醒写入清单：实际启动时给run_id、run-config时间、live完整提交/发布号、console及共享JSONL字节边界，再由原W8做一次nice19串行scratch准备耗时/code-fallback对照。此刻不启动scratch、不重复生产刷新或模型，不提前开局/移STOP；W3排除、Regent暂停保持。原件paper/materials/20261020-1135-ops/receipt.json。

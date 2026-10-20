@@ -1,0 +1,58 @@
+{
+  "schema": "ops-W8-natural-window-coordination-v1",
+  "at": "2026-10-20T11:36:05+08:00",
+  "request": {
+    "path": "paper/materials/20261020-1135-ops/original-request.md",
+    "bytes": 340,
+    "sha256": "325d93fe2abc5815ce0922c647bc40b486578daa1951dd8b85135d3de00b0cba"
+  },
+  "native_ops": "01a1517b-e200-7c52-b463-6ea22220c0a9",
+  "current_window": "none; STOP active and T12 actor exited",
+  "STOP": {
+    "path": "ops/STOP",
+    "bytes": 230,
+    "sha256": "f922fa01011d72382dc6b227f4a5ecf2224c197a9ffe37f63cf3ed5a1c9ac80d"
+  },
+  "last_natural_run": {
+    "run_id": "T12TSEMGUU7F",
+    "release_id": "V6-R402",
+    "runtime_commit": "c351dbe7b5603bbb591e0f63d88be32fa60df56f",
+    "canonical_end": "2026-10-20T01:59:27.357Z",
+    "console": "logs/console/20261020-091435-c351dbe7b+dirty.log",
+    "scope": "historical comparator only; not a current running window"
+  },
+  "next_window": {
+    "status": "pending original publication gates; no ETA promised",
+    "gates": "current changed-input actual-live full0, precise commit and consumer readbacks, release registration, resume under existing Roy10:26 authorization",
+    "host_request": "roy-live-bundle-isolated-route-fixture-20261020-1125",
+    "fixed_tree": "369f8d2060b55852a111c86d0eda439c8f457ae7",
+    "host_pid": 1897732,
+    "host_status": ".artifacts/ops-wake-20261020-1125/live-host-status.json",
+    "actual_run_id": null,
+    "actual_console": null,
+    "actual_run_config_ts": null,
+    "actual_live_release": null,
+    "notify_W8_on_actual_natural_start": true
+  },
+  "logs": {
+    "decisions": ".worktrees/live/logs/decisions.jsonl",
+    "brain": ".worktrees/live/logs/brain.jsonl",
+    "next_run_boundary": "bind actual run_id, run-config timestamp, live full commit/release, console filename and start offsets; shared JSONL path alone is not a run identity",
+    "measurements": "compare actual preparation time and actual code-fallback records within bound run; no inference from historical aggregate"
+  },
+  "scratch": {
+    "owner": "original V6-W8",
+    "nice": 19,
+    "workers": 1,
+    "serial": true,
+    "timing": "only during a naturally resumed run after ops confirms actual identity",
+    "production_files_mutated": false,
+    "ops_started_scratch": false,
+    "new_refresh": false,
+    "new_model": false,
+    "new_game": false
+  },
+  "W3": "failed original known-evaluation smoke; excluded this publication",
+  "Regent": "paused",
+  "new_permission_requested": false
+}
