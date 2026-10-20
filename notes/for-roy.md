@@ -3236,3 +3236,6 @@ request_id=roy-20261017-human-pace-h0 revision=3 input_sha256=1e1c259a15f1824119
 
 
 2026-10-20T11:14:17+08:00 原ops核11:11宿主终局：原101302-fix三项工程修复与main e700固定5ef4，tsc0、完整614文件5807项通过2原跳，日志/输入/10叶SHA全同；原WT已提交609bcdf4df012d515b702bea70f2cf985eddad50，提交树等于受测树，gitleaks0。当前main仅记录漂移；原live发布锁仍由既有52叶1e730检查持有，本轮登记精确10叶单独待集成，不抢锁、不夹带infra或W3进当前V6发布，不作为恢复新增门槛。三项为普通候选隔离、合法空tick/回收门禁、原手动通知来源兼容；桥必须实际main/live后由原角色按真实回执ACK。原failed/rc0/mergednull、sandbox130/EPERM、074302 full1/ENOSPC全保留，不重模型/未变源full/生产dataset或刷新，不代ACK/关父。STOP/W3排除/Regent保持；e552为失败历史，当前1e730检查不查询不重复。原件paper/materials/20261020-1111-ops/receipt.json。
+
+
+2026-10-20T11:17:24+08:00 原ops核11:15三条旧异议重复提醒：message、原来源和ops_forwarded回执SHA均与既有原件相同，双收件箱仍含原投递全文；保留原生watcher→Roy证据16b0a57b，已核原实读及用户可见转达，不把当前pending误记成未送达。本轮只向原watcher提醒ACK兼容登记待办，不重复转述异议、不重派学习。兼容修复原分支609bcdf4已通过精确宿主614文件5807项2跳，但实际main/live仍是旧实现，原锁独立等待运输；代码实际进入两通道后，由原角色凭原接收及用户可见回执分角色登记，ops不代填、不改旧notice scope或新造父。原历史窗口、因果/模拟、理想值、遗物前提及pending知识限制保留，不因通知重复或后续R3候选而关闭学习父。STOP、W3排除、在途live52检查和Regent暂停保持，本轮不查进度、不改源码/知识、不重模型/API/full/dataset/刷新。原件paper/materials/20261020-1115-ops/receipt.json。
