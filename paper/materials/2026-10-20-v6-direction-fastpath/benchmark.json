@@ -1,0 +1,287 @@
+{
+  "before_source": "52ea81bc1c0db6aee3e531bc086ee87e70ef8cce",
+  "note": "Fixed logged reward/shop sequences with an injected provider. Allowance advances Date by 5000ms per call without running simulation or a model. Real-clock provider returns null immediately; timings measure loop overhead, not live end-to-end latency.",
+  "runs": {
+    "before": {
+      "allowance_5000_ms": {
+        "reward": {
+          "evaluation_calls": 4,
+          "errors": 0,
+          "steps": [
+            {
+              "label": "reward/claim",
+              "pre_ms": 5000,
+              "planner_ms": 0
+            },
+            {
+              "label": "reward/claim",
+              "pre_ms": 5000,
+              "planner_ms": 0
+            },
+            {
+              "label": "reward/claim",
+              "pre_ms": 5000,
+              "planner_ms": 0
+            },
+            {
+              "label": "reward/proceed",
+              "pre_ms": 5000,
+              "planner_ms": 0
+            }
+          ]
+        },
+        "shop": {
+          "evaluation_calls": 7,
+          "errors": 0,
+          "steps": [
+            {
+              "label": "shop/plan",
+              "pre_ms": 5000,
+              "planner_ms": 0
+            },
+            {
+              "label": "shop/buy",
+              "pre_ms": 5000,
+              "planner_ms": 0
+            },
+            {
+              "label": "shop/buy",
+              "pre_ms": 5000,
+              "planner_ms": 0
+            },
+            {
+              "label": "shop/buy",
+              "pre_ms": 5000,
+              "planner_ms": 0
+            },
+            {
+              "label": "shop/buy",
+              "pre_ms": 5000,
+              "planner_ms": 0
+            },
+            {
+              "label": "shop/buy",
+              "pre_ms": 5000,
+              "planner_ms": 0
+            },
+            {
+              "label": "shop/leave",
+              "pre_ms": 5000,
+              "planner_ms": 0
+            }
+          ]
+        }
+      },
+      "real_clock": {
+        "reward": {
+          "evaluation_calls": 4,
+          "errors": 0,
+          "steps": [
+            {
+              "label": "reward/claim",
+              "pre_ms": 1,
+              "planner_ms": 0
+            },
+            {
+              "label": "reward/claim",
+              "pre_ms": 1,
+              "planner_ms": 0
+            },
+            {
+              "label": "reward/claim",
+              "pre_ms": 2,
+              "planner_ms": 0
+            },
+            {
+              "label": "reward/proceed",
+              "pre_ms": 2,
+              "planner_ms": 0
+            }
+          ]
+        },
+        "shop": {
+          "evaluation_calls": 7,
+          "errors": 0,
+          "steps": [
+            {
+              "label": "shop/plan",
+              "pre_ms": 3,
+              "planner_ms": 15
+            },
+            {
+              "label": "shop/buy",
+              "pre_ms": 2,
+              "planner_ms": 4
+            },
+            {
+              "label": "shop/buy",
+              "pre_ms": 1,
+              "planner_ms": 3
+            },
+            {
+              "label": "shop/buy",
+              "pre_ms": 1,
+              "planner_ms": 3
+            },
+            {
+              "label": "shop/buy",
+              "pre_ms": 2,
+              "planner_ms": 3
+            },
+            {
+              "label": "shop/buy",
+              "pre_ms": 2,
+              "planner_ms": 4
+            },
+            {
+              "label": "shop/leave",
+              "pre_ms": 2,
+              "planner_ms": 0
+            }
+          ]
+        }
+      }
+    },
+    "after": {
+      "allowance_5000_ms": {
+        "reward": {
+          "evaluation_calls": 0,
+          "errors": 0,
+          "steps": [
+            {
+              "label": "reward/claim",
+              "pre_ms": 0,
+              "planner_ms": 0
+            },
+            {
+              "label": "reward/claim",
+              "pre_ms": 0,
+              "planner_ms": 0
+            },
+            {
+              "label": "reward/claim",
+              "pre_ms": 0,
+              "planner_ms": 0
+            },
+            {
+              "label": "reward/proceed",
+              "pre_ms": 0,
+              "planner_ms": 0
+            }
+          ]
+        },
+        "shop": {
+          "evaluation_calls": 1,
+          "errors": 0,
+          "steps": [
+            {
+              "label": "shop/plan",
+              "pre_ms": 5000,
+              "planner_ms": 0
+            },
+            {
+              "label": "shop/buy",
+              "pre_ms": 0,
+              "planner_ms": 0
+            },
+            {
+              "label": "shop/buy",
+              "pre_ms": 0,
+              "planner_ms": 0
+            },
+            {
+              "label": "shop/buy",
+              "pre_ms": 0,
+              "planner_ms": 0
+            },
+            {
+              "label": "shop/buy",
+              "pre_ms": 0,
+              "planner_ms": 0
+            },
+            {
+              "label": "shop/buy",
+              "pre_ms": 0,
+              "planner_ms": 0
+            },
+            {
+              "label": "shop/leave",
+              "pre_ms": 0,
+              "planner_ms": 0
+            }
+          ]
+        }
+      },
+      "real_clock": {
+        "reward": {
+          "evaluation_calls": 0,
+          "errors": 0,
+          "steps": [
+            {
+              "label": "reward/claim",
+              "pre_ms": 1,
+              "planner_ms": 0
+            },
+            {
+              "label": "reward/claim",
+              "pre_ms": 1,
+              "planner_ms": 0
+            },
+            {
+              "label": "reward/claim",
+              "pre_ms": 1,
+              "planner_ms": 0
+            },
+            {
+              "label": "reward/proceed",
+              "pre_ms": 1,
+              "planner_ms": 0
+            }
+          ]
+        },
+        "shop": {
+          "evaluation_calls": 1,
+          "errors": 0,
+          "steps": [
+            {
+              "label": "shop/plan",
+              "pre_ms": 1,
+              "planner_ms": 15
+            },
+            {
+              "label": "shop/buy",
+              "pre_ms": 1,
+              "planner_ms": 4
+            },
+            {
+              "label": "shop/buy",
+              "pre_ms": 2,
+              "planner_ms": 4
+            },
+            {
+              "label": "shop/buy",
+              "pre_ms": 1,
+              "planner_ms": 5
+            },
+            {
+              "label": "shop/buy",
+              "pre_ms": 1,
+              "planner_ms": 3
+            },
+            {
+              "label": "shop/buy",
+              "pre_ms": 2,
+              "planner_ms": 3
+            },
+            {
+              "label": "shop/leave",
+              "pre_ms": 1,
+              "planner_ms": 0
+            }
+          ]
+        }
+      }
+    }
+  },
+  "action_and_question_payloads_identical": true
+}

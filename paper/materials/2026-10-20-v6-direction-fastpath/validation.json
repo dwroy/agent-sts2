@@ -1,0 +1,98 @@
+{
+  "full_check_base": "8cca64d3b5602b3946335fd775db6875981940c1",
+  "integration_base": "562ff61f3cd15794fc0edd4c02007777b1cc8473",
+  "between_bases_only_records": [
+    "notes/for-roy.md",
+    "notes/ops-current-context.json",
+    "ops/inbox-dev.md",
+    "paper/materials/20261020-0937-ops/byte-metadata-observed.patch",
+    "paper/materials/20261020-0937-ops/evidence-verification.json",
+    "paper/materials/20261020-0937-ops/original-event.md",
+    "paper/materials/20261020-0937-ops/receipt.json",
+    "paper/materials/20261020-0937-ops/watcher-forward.json",
+    "paper/materials/20261020-0943-ops/0baef634d02e1ff85843c10a-original-event.md",
+    "paper/materials/20261020-0943-ops/b5b53e0d8bebe1df7fb30468-original-event.md",
+    "paper/materials/20261020-0943-ops/f619c26f4bfa10970591beb5-original-event.md",
+    "paper/materials/20261020-0943-ops/old-notices-verification.json",
+    "paper/materials/20261020-0943-ops/receipt.json",
+    "paper/materials/20261020-0943-ops/watcher-forward.json",
+    "paper/materials/20261020-0945-ops/original-event.md",
+    "paper/materials/20261020-0945-ops/receipt.json",
+    "paper/materials/20261020-0945-ops/source-boundary-verification.json",
+    "paper/materials/20261020-0945-ops/watcher-forward.json",
+    "paper/materials/decision-log.md"
+  ],
+  "commands": {
+    "tsc": {
+      "command": "PATH=$HOME/.local/node/bin:$PATH TMPDIR=/var/tmp nice -n 10 npx tsc -p tsconfig.json --noEmit",
+      "exit_code": 0
+    },
+    "target": {
+      "files": 4,
+      "passed": 42,
+      "exit_code": 0
+    },
+    "vitest": {
+      "command": "PATH=$HOME/.local/node/bin:$PATH TMPDIR=/var/tmp nice -n 10 npx vitest run --maxWorkers=2 --reporter=verbose",
+      "exit_code": 0,
+      "files_passed": 608,
+      "tests_passed": 5777,
+      "tests_skipped": 2,
+      "duration_seconds": 717.37
+    },
+    "gitleaks_staged": {
+      "exit_code": 0,
+      "findings": 0
+    },
+    "tsc_after_rebase": {
+      "exit_code": 0
+    }
+  },
+  "candidate_sources": {
+    "agent/src/hand/loop.ts": "856341c80e6257b49fde2e0443fea2f985ef09c19c038f9fc5eb1cdf8f3d1b67",
+    "agent/src/v6/direction-decision.ts": "81871af3f95a7ab994e105876062dc0e11d9d0cd5eb663c638d76aa39e530904",
+    "agent/tests/v6-direction-decision.test.ts": "3f6f5f26ff2f855b2203b2f875c395db1c413d18744c289a52a7588b5434c43a",
+    "agent/tests/v6-direction-fastpath-benchmark.test.ts": "ac7d9a6a5c1f77267b3261ec659bc6a2cbf7b2014452ebe222ac781361ff7f87",
+    "agent/tests/v6-direction-fastpath-fixture.ts": "3a9604980ff97a8a974ecc9d6353e8c47b3c5cb036a3fff0b3202fcb6bbd636d",
+    "agent/tests/v6-direction-fastpath.test.ts": "1aec6b470464749c880b24091bb0789a5c16eda8e1af6602644579d16b3e3cc9"
+  },
+  "artifacts": {
+    "tsc-final.log": {
+      "path": ".artifacts/v6-direction-fastpath/tsc-final.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "target-final.log": {
+      "path": ".artifacts/v6-direction-fastpath/target-final.log",
+      "sha256": "3e8be3a10c2b5f4e0214a5f3349373675d8fe6ef63e423135aecb71f5e4e0adf"
+    },
+    "vitest-full.log": {
+      "path": ".artifacts/v6-direction-fastpath/vitest-full.log",
+      "sha256": "40e2fe40ba9b3d40ef21b265c4c19f3803c4e15b0aed6db14ac351775059b83e"
+    },
+    "benchmark-before.log": {
+      "path": ".artifacts/v6-direction-fastpath/benchmark-before.log",
+      "sha256": "d6d9a7a3c03d8891cb4f97539f325f34e705f7915e16e564cf20bdf2425a59a9"
+    },
+    "benchmark-after-final.log": {
+      "path": ".artifacts/v6-direction-fastpath/benchmark-after-final.log",
+      "sha256": "1279d7a3cbf495e3f671d49be573da43ecf64cb1390d3b76913471c30bdd81db"
+    },
+    "before.json": {
+      "path": ".artifacts/v6-direction-fastpath/before.json",
+      "sha256": "0b25c2a5683861ceb826f734f21516b1310c0130a6417373dadebd345e17130d"
+    },
+    "after-final.json": {
+      "path": ".artifacts/v6-direction-fastpath/after-final.json",
+      "sha256": "e08e8f6ad0251354cf834f669ac43ef4473ec91f8ce8adb3ebeed31bc22ee2dc"
+    },
+    "gitleaks-staged.log": {
+      "path": ".artifacts/v6-direction-fastpath/gitleaks-staged.log",
+      "sha256": "c29cf5eb26ec65047c860ee2f0d899dd3ee3f6b77fc7f12a733d0b8139806551"
+    },
+    "tsc-after-rebase.log": {
+      "path": ".artifacts/v6-direction-fastpath/tsc-after-rebase.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  },
+  "limits": "Fixed data and fake providers only. No live/model/game requests; ops owns the next-game live sync."
+}

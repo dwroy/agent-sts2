@@ -66,6 +66,7 @@ import { buildRankingSelection, rankingOverrideProblems } from "../sim/build-ran
 import { shopPlanList } from "../brain/specs.js";
 import { ensureDirectionPlan, noteV6BrainCall, v6DirectionActive } from "../v6/direction-runtime.js";
 import { routeV6CardDecision } from "../v6/card-routing.js";
+import { V6DirectionCache, directionDecisionPoint, directionFingerprint } from "../v6/direction-decision.js";
 import { directionEvaluationFromProjection } from "../v6/projection-consumer.js";
 import { buildV6CardPick, recordCardPick } from "../v6/card-pick.js";
 import { withConstructionJevBudget } from "../v6/potion-entries.js";
@@ -291,6 +292,7 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
 
 async function runLoopWithBudgets(options: LoopOptions): Promise<LoopStats> {
   const paceLedger = new DecisionBudgetLedger();
+  const v6DirectionCache = new V6DirectionCache();
   const { config, mode, client, knowledge } = options;
   const v6Projection = options.v6Projection ?? productionV6Projection(options.buildSim?.runner, config.runPlanLog);
   const v6RoomProjection = options.v6RoomProjection ?? (v6Projection ? runtimeV6RoomProjection(v6Projection) : undefined);
@@ -812,38 +814,8 @@ async function runLoopWithBudgets(options: LoopOptions): Promise<LoopStats> {
     }
     // FIGHT_PLAN=v1: DeepSeek plans an elite/boss fight once, before its first decision.
     // RUN_PLAN=v1: DeepSeek's run strategy, renewed at the map screen when a checkpoint is due.
-    if (!planned && !env.v6BrainFallback && v6Config().mode !== "off" && !state.in_combat && v6Projection) {
-      try {
-        if (!screenMemory.runPlan || screenMemory.runPlan.runId !== runId) screenMemory.runPlan = loadRunPlan(config.runPlanLog, runId);
-        const phase = !screenMemory.runPlan?.v6 || screenMemory.runPlan.act !== actOf(state) ? "act" : "pick";
-        const table = await v6Projection.evaluate(env, phase);
-        if (table) {
-          env.v6ProjectionTable = table;
-          env.v6DirectionEvaluation = directionEvaluationFromProjection(table, v6Config(), "skip", screenMemory.runPlan?.v6);
-          env.v6DirectionEvaluation.id = `${runId}:${state.run?.floor}:${env.v6DirectionEvaluation.id}`;
-        }
-      } catch (error) {
-        logRunPlan(config.runPlanLog, { run: runId, v6_projection_error: String(error).slice(0, 200) });
-      }
-    }
-    if (!planned && v6Config().mode !== "off" && !state.in_combat && brain && brainBudgetLeft("run-plan")) {
-      try {
-        if (options.v6DirectionEvaluation) env.v6DirectionEvaluation = await options.v6DirectionEvaluation(env);
-        const attempt = await ensureDirectionPlan(env, brain, config.runPlanLog);
-        if (attempt?.usage) countPlan("run-plan")(attempt.usage.inputTokens + attempt.usage.outputTokens, attempt.usage.brain);
-        if (attempt?.stored) {
-          onEvent({ type: "note", message: `V6 direction plan stored (${attempt.result.triggers.join(",")})` });
-          // The reward must use the new weights/brain combination, rather than the table that prompted re-planning.
-          if (v6Projection && bool(asRecord(state.raw.reward).pending_card_choice)) {
-            env.v6ProjectionTable = undefined;
-            env.v6ProjectionTable = await v6Projection.evaluate(env, "pick") ?? undefined;
-          }
-        }
-      } catch (error) {
-        if (isBrainBlocked(error)) throw error;
-        logRunPlan(config.runPlanLog, { run: runId, v6_error: String(error).slice(0, 200) });
-        onEvent({ type: "note", message: `V6 direction plan failed: ${String(error).slice(0, 160)}` });
-      }
+    if (v6Config().mode !== "off" && !state.in_combat && (!screenMemory.runPlan || screenMemory.runPlan.runId !== runId)) {
+      screenMemory.runPlan = loadRunPlan(config.runPlanLog, runId);
     }
     if (!planned && config.runPlan === "v1" && !state.in_combat && state.screen === "MAP" && !v6DirectionActive(env)) {
       const deepseek = brain;
@@ -913,6 +885,61 @@ async function runLoopWithBudgets(options: LoopOptions): Promise<LoopStats> {
           stop(`planner failed repeatedly: ${detail}`);
           break;
         }
+        await sleep(pollIntervalMs);
+        continue;
+      }
+    }
+    if (v6Config().mode !== "off" && !state.in_combat && planned.kind === "decision" && directionDecisionPoint(planned.decision)) {
+      if (!env.v6BrainFallback && v6Projection) {
+        try {
+          if (!screenMemory.runPlan || screenMemory.runPlan.runId !== runId) screenMemory.runPlan = loadRunPlan(config.runPlanLog, runId);
+          const phase = !screenMemory.runPlan?.v6 || screenMemory.runPlan.act !== actOf(state) ? "act" : "pick";
+          const table = await v6DirectionCache.get(`table:${directionFingerprint(env, phase)}`, () => v6Projection.evaluate(env, phase));
+          if (table) {
+            env.v6ProjectionTable = table;
+            env.v6DirectionEvaluation = directionEvaluationFromProjection(table, v6Config(), "skip", screenMemory.runPlan?.v6);
+            env.v6DirectionEvaluation.id = `${runId}:${state.run?.floor}:${env.v6DirectionEvaluation.id}`;
+          }
+        } catch (error) {
+          logRunPlan(config.runPlanLog, { run: runId, v6_projection_error: String(error).slice(0, 200) });
+        }
+      }
+      if (brain && brainBudgetLeft("run-plan")) {
+        try {
+          if (options.v6DirectionEvaluation) env.v6DirectionEvaluation = await v6DirectionCache.get(
+            `evaluation:${directionFingerprint(env, "pick")}`, () => options.v6DirectionEvaluation!(env));
+          const attempt = await ensureDirectionPlan(env, brain, config.runPlanLog);
+          if (attempt?.usage) countPlan("run-plan")(attempt.usage.inputTokens + attempt.usage.outputTokens, attempt.usage.brain);
+          if (attempt?.stored) {
+            onEvent({ type: "note", message: `V6 direction plan stored (${attempt.result.triggers.join(",")})` });
+            // The reward must use the new weights/brain combination, rather than the table that prompted re-planning.
+            if (v6Projection && bool(asRecord(state.raw.reward).pending_card_choice)) {
+              env.v6ProjectionTable = undefined;
+              env.v6ProjectionTable = await v6DirectionCache.get(`table:${directionFingerprint(env, "pick")}`, () => v6Projection.evaluate(env, "pick")) ?? undefined;
+            }
+          }
+        } catch (error) {
+          if (isBrainBlocked(error)) throw error;
+          logRunPlan(config.runPlanLog, { run: runId, v6_error: String(error).slice(0, 200) });
+          onEvent({ type: "note", message: `V6 direction plan failed: ${String(error).slice(0, 160)}` });
+        }
+      }
+      if (config.runPlan === "v1" && screenMemory.runPlan?.runId === runId) {
+        const line = runPlanLine(screenMemory.runPlan);
+        if (line) env.brief.plan = line;
+      }
+      // Only genuine choices are rebuilt. Execution steps retain their original decision/apply.
+      try {
+        const refreshStarted = Date.now();
+        planned = planDecision(gateCodeBaseline ? { ...env, strictJev: false } : env);
+        plannerMs = (plannerMs ?? 0) + Date.now() - refreshStarted;
+        preMs = Date.now() - Date.parse(observedTs) - plannerMs;
+      } catch (error) {
+        stats.errors += 1;
+        plannerFailures += 1;
+        const detail = error instanceof Error ? error.message : String(error);
+        onEvent({ type: "note", message: `planner failed on ${state.screen}: ${detail}` });
+        if (plannerFailures >= 3) { stop(`planner failed repeatedly: ${detail}`); break; }
         await sleep(pollIntervalMs);
         continue;
       }
