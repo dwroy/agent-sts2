@@ -1,0 +1,3089 @@
+{
+  "head": "cf3372505b85e8df72e99cb9b5455c9f42b25e1a",
+  "files": [
+    {
+      "path": "agent/src/brain/brain.ts",
+      "sha256": "6d3d33694a7963df7c040ff2c74b2d54e77c1bdb6789bf81010a2bedbc02e30b"
+    },
+    {
+      "path": "agent/src/brain/build-facts.ts",
+      "sha256": "9bb4d79e1117057e5bc1597bde1fbfb1d1bc1c9a5d9efadfc479f47ea2bb42da"
+    },
+    {
+      "path": "agent/src/brain/engines/claude.ts",
+      "sha256": "2498e39adae1cbf1091749131599356db4d385199047a91708861e3955889b37"
+    },
+    {
+      "path": "agent/src/brain/engines/codex-cache.ts",
+      "sha256": "128e173d99884bd1b301199b5944b4aa1ad9916d740903d83bcd0e858bd6ceda"
+    },
+    {
+      "path": "agent/src/brain/engines/codex-credit-policy.ts",
+      "sha256": "c5e29058d35567e72cf7500b2d50d3e294e200c2d05800a9bb3f8ed76214d13e"
+    },
+    {
+      "path": "agent/src/brain/engines/codex-session.ts",
+      "sha256": "6e72622f1b1a1874e501738297bb7731b79f3db5e8a68fb79696377bc4f58e58"
+    },
+    {
+      "path": "agent/src/brain/engines/codex-usage.ts",
+      "sha256": "f1c59ca0c8c85e7ba5c934a84a6ee9bb27a26cd8724452a8b954186925df95d6"
+    },
+    {
+      "path": "agent/src/brain/engines/codex.ts",
+      "sha256": "dbd9d890def41f5903375f328279e46ee48661e84c9867a05cf9a4d76bc4672d"
+    },
+    {
+      "path": "agent/src/brain/engines/deepseek.ts",
+      "sha256": "448c6518aaa5fa1dea4f3893726883198dc0ef1751c959496ea16dd5788f37c4"
+    },
+    {
+      "path": "agent/src/brain/engines/process.ts",
+      "sha256": "5ec8fb3437222f9f9e6ac5e39487526ed133dd611520f4aaf33f6ba167f0e226"
+    },
+    {
+      "path": "agent/src/brain/knowledge.ts",
+      "sha256": "8558c0c4f0124ba8fc61385fa1cf9587307b25ca85a64ce07ed74f4918ef6c8a"
+    },
+    {
+      "path": "agent/src/brain/labels.ts",
+      "sha256": "29c47f5e90f6ed35531e9f6ca219f14671046a85a03b669e78878c44593b4e2a"
+    },
+    {
+      "path": "agent/src/brain/llm/consistency.ts",
+      "sha256": "812d3250cdc73fcda1c51bbcf081ea5d098a40f01bec18639d71e151a3c39d1b"
+    },
+    {
+      "path": "agent/src/brain/llm/deepseek-message.ts",
+      "sha256": "f181f17865669cbe306e1fd1b918bd60bc822c3130643dde5646be3a2a4b9338"
+    },
+    {
+      "path": "agent/src/brain/llm/deepseek.ts",
+      "sha256": "5383f58035d06faedfc26beb1ad217c675eebaaa86bb55ab869d1c0b6b51cef9"
+    },
+    {
+      "path": "agent/src/brain/llm/file-escalation.ts",
+      "sha256": "70bacd5862bf0fe015988d050829b4a0e78faa0efc8a0806aea4def31dff68c7"
+    },
+    {
+      "path": "agent/src/brain/message.ts",
+      "sha256": "29cf55dfa160388092de51e20bf802ea75e11fba993df57eaab515c391f37ebc"
+    },
+    {
+      "path": "agent/src/brain/router.ts",
+      "sha256": "c2b4d8ce888444f7c553f4a77e57c8a1074ae35f421080ebc835ed28c37e8651"
+    },
+    {
+      "path": "agent/src/brain/source.ts",
+      "sha256": "ac540139eb027150ec2fe25f454c78f1a66242f4bd97046d9d61451faac98926"
+    },
+    {
+      "path": "agent/src/brain/specs.ts",
+      "sha256": "2f40f08aa52d9f98f3133c0a39159da02f75a96e14437a03a86dd0f1dfbb66a9"
+    },
+    {
+      "path": "agent/src/brain/tools/kb-tools.ts",
+      "sha256": "2b80d224253353c5b369acfeb4e72106e2adf4e3c360444060620532ca600af8"
+    },
+    {
+      "path": "agent/src/brain/tools/logs-query.ts",
+      "sha256": "8d8adc3c5e1ec0d9deccd6bd816f06804c9114466b32876d7bf9a5a2909c6357"
+    },
+    {
+      "path": "agent/src/brain/tools/mcp-launch.ts",
+      "sha256": "7a2138d7f941cc8caa114f30df0bb3eb9347e50d860d003dbad204f8bb577e09"
+    },
+    {
+      "path": "agent/src/brain/tools/mcp-server.ts",
+      "sha256": "a2a581db5f9ce8d7a7ca7f9cb3efe84b735d72b901427118dce2edd012de47fc"
+    },
+    {
+      "path": "agent/src/brain/tools/registry.ts",
+      "sha256": "2cc8a38dfe3177a85e7dda28059cd1f46e6be58eb5cde5693a754cc1be70b28c"
+    },
+    {
+      "path": "agent/src/brain/tools/types.ts",
+      "sha256": "e38a1f12f82482610bff40fb008a6b05904e57c791036657312743319d7c4f75"
+    },
+    {
+      "path": "agent/src/brain/tools/validate.ts",
+      "sha256": "0ad8ceec84a7ae1749f6f38eeb4d8e4c8a3f7871bd1f99c9638893bbd74d11c5"
+    },
+    {
+      "path": "agent/src/brain/types.ts",
+      "sha256": "7646466cf0d473a5fc1e62ab2ac3d1c0a1f8916fd3d7acc3ca137927ec9bf3b6"
+    },
+    {
+      "path": "agent/src/brain/wait.ts",
+      "sha256": "e5df1824e2000463ddfe6c78eebda8a5959148a275629fc6dc793c20490ff737"
+    },
+    {
+      "path": "agent/src/construction/adapter.ts",
+      "sha256": "14e7243741514aaa9d16009ceb583923ea4a9773e33310c2d7073ef4147fe70d"
+    },
+    {
+      "path": "agent/src/construction/admission.ts",
+      "sha256": "94781b2c2f12e470fbd3849a680d24ecd8679b72d67d6a7fd4d1e6c6549b4398"
+    },
+    {
+      "path": "agent/src/construction/combat.ts",
+      "sha256": "bb4148837ca8aad0d0c7206107ba6b3aeacb1e8f580c4ce35d31b4a9d77f1762"
+    },
+    {
+      "path": "agent/src/construction/consumer.ts",
+      "sha256": "9d20739e6595a82d1ce137e42ec880e0b1558ea540ee3f21956c9fc73d16cecf"
+    },
+    {
+      "path": "agent/src/construction/data.ts",
+      "sha256": "2010e856531dc5e0cb99119db6d80392523c10d41cd7d15df2e4a68e3f177c04"
+    },
+    {
+      "path": "agent/src/construction/evaluation.ts",
+      "sha256": "8127bdb09d243d149e75b428dd2669e307a63083b2a2820ead71987df6fb58f2"
+    },
+    {
+      "path": "agent/src/construction/planner.ts",
+      "sha256": "b6d053333612a79797550deb68e84a4b68cb660e75d7aba73555d7fa9714f2f5"
+    },
+    {
+      "path": "agent/src/construction/support.ts",
+      "sha256": "6dd9b59f9147eb14a90919d5032939c4156a03fc729a9239acd5d626eac1e307"
+    },
+    {
+      "path": "agent/src/construction/types.ts",
+      "sha256": "554781cfaf37c62dd2384e6d076de141f4199a9fb995e154af16efb4fcbc0291"
+    },
+    {
+      "path": "agent/src/core/cli/doctor.ts",
+      "sha256": "bdb514d064ac2ec06ddf91c3b4b7b7afb023d93ac521292937742a31abd2e61d"
+    },
+    {
+      "path": "agent/src/core/cli/reporter.ts",
+      "sha256": "81d5c4b0253361c6d83106dcf141d3e314352c64bd9852fb56de043a465b196b"
+    },
+    {
+      "path": "agent/src/core/cli/runtime.ts",
+      "sha256": "8b255cbd6abff7f40488c71aad923ff3d616b4a276b55e69b4bc57d40da5a38f"
+    },
+    {
+      "path": "agent/src/core/config.ts",
+      "sha256": "c2bc37ea318dfebb5b43cbfec8ab4bd629a86c70734bdb769fb570c7af5cd579"
+    },
+    {
+      "path": "agent/src/core/decision-budget.ts",
+      "sha256": "a6e7e627467274731ab704c42ff4b52cc0f122ccb41e4360215dc0fcb2c1fd12"
+    },
+    {
+      "path": "agent/src/core/global-build-config.ts",
+      "sha256": "89c0a8bfe54d7ed867a5210e265b482b1117d0edb959e02eeb27ce7c43252b3c"
+    },
+    {
+      "path": "agent/src/core/human-pace-shadow-config.ts",
+      "sha256": "947cb3a9f58ad3381ba886db8c7fc68895f0d7d2f4a5e25c10b7d3bdcaa16f65"
+    },
+    {
+      "path": "agent/src/core/index.ts",
+      "sha256": "83201abc83ce849b3f542c370b8ecba30e73ee0d083e8ab4c80b047839574b43"
+    },
+    {
+      "path": "agent/src/core/jev-settings.ts",
+      "sha256": "e9286977ac8a2ad446b01f2da5519414e4caf7a4e29cb80610616e791b20a5d9"
+    },
+    {
+      "path": "agent/src/core/paths.ts",
+      "sha256": "9f60add837acf13966ef8e5ecdf667e28dcc6ee7612ff76f141ddd0455f27b62"
+    },
+    {
+      "path": "agent/src/core/util/data-version.ts",
+      "sha256": "8ad004938a95b2b6b43353cb73372151e03f94d02343a0416140b812ed7800f4"
+    },
+    {
+      "path": "agent/src/core/util/format.ts",
+      "sha256": "77751bafc25435a45278b4c4dd2b301ff22a4a8bb126aa9b2fe6bf7b723e9f75"
+    },
+    {
+      "path": "agent/src/core/util/json.ts",
+      "sha256": "da294432a452d1d300715f7942a871704de28080f5cf4c167236c47982ebf452"
+    },
+    {
+      "path": "agent/src/core/util/jsonl.ts",
+      "sha256": "06c006cf08cbe6dd74c210464e39b261b1b629d4dc879b144e88af341a7e22b7"
+    },
+    {
+      "path": "agent/src/core/util/lock.ts",
+      "sha256": "5d42d6cbefd3e1a8c79d91395d39418bb5579a7ff107f6ab7219cacb95bc95ed"
+    },
+    {
+      "path": "agent/src/eye/decision-log.ts",
+      "sha256": "e357f706b8ad0099a6f635fca1e5bdb481de3e9f8657eee7aafe860ce94333fb"
+    },
+    {
+      "path": "agent/src/eye/jev-prompt-log.ts",
+      "sha256": "709fa8abe7a15834c59a38a9be59d23ae107b3ab748cb865d3468001da193cad"
+    },
+    {
+      "path": "agent/src/eye/replay/record.ts",
+      "sha256": "f8896c8602b79271bca7968faf654fe5534813abb0f26202ee9ea6c20611f76a"
+    },
+    {
+      "path": "agent/src/eye/replay/replay.ts",
+      "sha256": "836a303b635752ad2adcbc1838c6fe883d490b1cfed1c739126e14e70846cb67"
+    },
+    {
+      "path": "agent/src/eye/run-config.ts",
+      "sha256": "73775a0f89c906f0c80ec50c6e3e310f0a33bd7a1a5491934a1e12b1cdb0f81b"
+    },
+    {
+      "path": "agent/src/hand/act/dispatch.ts",
+      "sha256": "968c7e64cc4c5a47a3bb6189e2bf2d7e8fd15ee4842d922d4dee7d97236817b5"
+    },
+    {
+      "path": "agent/src/hand/act/gate.ts",
+      "sha256": "a402e7735ed0e29f06bed8d13f162157eb3d5d07280307f853eedbc03455c855"
+    },
+    {
+      "path": "agent/src/hand/act/identity.ts",
+      "sha256": "03c74667f80bce553b7e00a9777f3c580ef5297c4af2fc6001bdaccc43bc14ab"
+    },
+    {
+      "path": "agent/src/hand/act/turn-start.ts",
+      "sha256": "c0b307dd5542ab6d4289daf3a12ff3938c770c205cefe0371a3f8f6e4a7c96e5"
+    },
+    {
+      "path": "agent/src/hand/loop.ts",
+      "sha256": "803965ff46f0ade840b5d04da99f510cb3f2321245d47025008ec3b2ff72c8ac"
+    },
+    {
+      "path": "agent/src/hand/mod/client.ts",
+      "sha256": "4f1888bff879968fb20024b9eded95efd1b5ca88889d16b724011ab6394dbd2d"
+    },
+    {
+      "path": "agent/src/hand/mod/discovery.ts",
+      "sha256": "ad6a603f05d029491d9672375af008ce123c57f81a10b5651a52e988728c3cad"
+    },
+    {
+      "path": "agent/src/hand/mod/instance.ts",
+      "sha256": "ddc73df0b53572173c7d0f75391847bf3ae102e7cb984b39729fb86018fb2ed8"
+    },
+    {
+      "path": "agent/src/hand/mod/schema.ts",
+      "sha256": "72dc4dfeefaa27ee701b49b1318b50380599980234f7623431b20ff479a0b01f"
+    },
+    {
+      "path": "agent/src/hand/pace-precompute.ts",
+      "sha256": "f8e4a70dd6ad2531264a3407af77543713a10a99c68bd2cd9002b02aac8e7a3a"
+    },
+    {
+      "path": "agent/src/hand/screens/act-start.ts",
+      "sha256": "baa7e82973fb29a687036ae24f39fc301e0627f3d4fda01b7d27ffb9282ffff7"
+    },
+    {
+      "path": "agent/src/hand/screens/card-value.ts",
+      "sha256": "3d4a4413e05d549a774a2e6dbaf09474a398c03617b527932d4392860e202339"
+    },
+    {
+      "path": "agent/src/hand/screens/chest.ts",
+      "sha256": "94e5666d4c8b6881bfad3b969106c16192cccfc6e3502c19d8e5ffeffaa3b671"
+    },
+    {
+      "path": "agent/src/hand/screens/event.ts",
+      "sha256": "6d54caab062f8dc7fdb25c53ddc18b3dbf7be3816766079d68ee90d9a2b7bddc"
+    },
+    {
+      "path": "agent/src/hand/screens/index.ts",
+      "sha256": "68778889d3cddcc7079b5d2389e0ab9d50509237b6dd472c8452e211387cd2cc"
+    },
+    {
+      "path": "agent/src/hand/screens/map.ts",
+      "sha256": "83a76a9d4a1ab27e3bfcf74d8fe255fdbbc62cbcb5372352f77274d3388e3f9c"
+    },
+    {
+      "path": "agent/src/hand/screens/misc.ts",
+      "sha256": "6f99b70fb712bd587ce2870379ecd8e6f203715f2e57b580b004aaf0b446161c"
+    },
+    {
+      "path": "agent/src/hand/screens/oneshot.ts",
+      "sha256": "ded1688e33600aec4189ae1012aec5c3539e3e2ef0823be201089c9540f67313"
+    },
+    {
+      "path": "agent/src/hand/screens/pick.ts",
+      "sha256": "46db42ad5730b2be2392eb1a04212720ddc11c85bd03f71ee16ccb9272895390"
+    },
+    {
+      "path": "agent/src/hand/screens/potion-discard.ts",
+      "sha256": "46f9de60d5f7b68c14989418215d79c4366a5e7f5557c169c374e00f0e6959d6"
+    },
+    {
+      "path": "agent/src/hand/screens/rest.ts",
+      "sha256": "0f8ad04a5e9682d8bbe2331352a314511ee5c1984994a1dc427581adc113ed52"
+    },
+    {
+      "path": "agent/src/hand/screens/reward.ts",
+      "sha256": "254fe1429eb1f3ae63ad66e04c52e6da13764f7407bba9bd0496fda6baace657"
+    },
+    {
+      "path": "agent/src/hand/screens/route-plan.ts",
+      "sha256": "bc9bed805c617c3a2caa1b93d3d5f86913429a8be2e0ec3d7df3e5a0c64ef3e5"
+    },
+    {
+      "path": "agent/src/hand/screens/route-review.ts",
+      "sha256": "6fab3006552c8cd3507d7bcf509ba7fbe10f906aceae4939db3714b5966dc2ba"
+    },
+    {
+      "path": "agent/src/hand/screens/selection.ts",
+      "sha256": "c4432b5fdf8c352ad4d834a87340a3ee69d69606ea705420e4b113db4228c647"
+    },
+    {
+      "path": "agent/src/hand/screens/shop.ts",
+      "sha256": "0dd2d50752caf48484ab83843b508ba471e473ef5272ee907cb608a8a831b532"
+    },
+    {
+      "path": "agent/src/hand/screens/silent-discard-facts.ts",
+      "sha256": "97a130560b461fa2831617b9b6bfb30fbe592f6270a48dd0d350b6d6d2cddbea"
+    },
+    {
+      "path": "agent/src/hand/screens/silent-hand-trick-facts.ts",
+      "sha256": "ebce034d086e32fe10cd6a2e3b849accabd30bc7bcd3d7241ab7ded43f8f5395"
+    },
+    {
+      "path": "agent/src/hand/screens/silent-reward-addition.ts",
+      "sha256": "bc3f8d2f9de05bd0392b062821e39ffeb08af973e3d3b10bb7d4fcdfad471b50"
+    },
+    {
+      "path": "agent/src/hand/screens/silent-sandpit-discard.ts",
+      "sha256": "3ac774e66b894374d5681e2c1dd98a5dcc1fdc6e274ee7d614ed39373e3ba5c6"
+    },
+    {
+      "path": "agent/src/hand/screens/silent-smoggy-selection.ts",
+      "sha256": "853d98f599226231593be2ba1efaa4df3486954b8c02fc54d3109e93abba783e"
+    },
+    {
+      "path": "agent/src/hand/screens/silent-snakebite-discard.ts",
+      "sha256": "bfc831f94fd5dc0aa8ad117717fcf3bde337df84fb839689233ca81d57bbeb03"
+    },
+    {
+      "path": "agent/src/hand/screens/v6-room-options.ts",
+      "sha256": "a7690a0cc3c7d602820162c53083dddff3f9a0b96579b4aefa5c3ae7106ad7bd"
+    },
+    {
+      "path": "agent/src/hand/screens/v6-room-projection.ts",
+      "sha256": "1d335becc8e17a1e9407377cb212d6b35386621e5c06d643e07acc4d149d699e"
+    },
+    {
+      "path": "agent/src/hand/screens/v6-room.ts",
+      "sha256": "a4d88ee2463323da9e4fb32242d3fd45bf06a89a8a3fcebacfe7b2de2e2a67f1"
+    },
+    {
+      "path": "agent/src/index.ts",
+      "sha256": "9aee86b0b3c0169d8eee0c16193d271d09aeb1f07f6bd2090b32c0624fa13a3b"
+    },
+    {
+      "path": "agent/src/knowledge/boss-phase.ts",
+      "sha256": "4e84d7b11e1d37e04df9375c0a0ddf1285689776d8728353b61135466b32e73b"
+    },
+    {
+      "path": "agent/src/knowledge/card-references.ts",
+      "sha256": "255afc71c93d950a306500d715edd786f97d330026a2da2600dc83afd16481f0"
+    },
+    {
+      "path": "agent/src/knowledge/card-upgrades.ts",
+      "sha256": "e8ab32ef01d3909afae1e0497e8790b832214a6c92d2599d4fb3ac3fa3079240"
+    },
+    {
+      "path": "agent/src/knowledge/catalog.ts",
+      "sha256": "77bf62c35ec39d6a872b56720558ec6e04780bd65ecbff6ce6e4b6456749430b"
+    },
+    {
+      "path": "agent/src/knowledge/double-boss.ts",
+      "sha256": "46e497cb169d6a7266f55434b9ab90e311894174100fe4b70c9992a4aa418fed"
+    },
+    {
+      "path": "agent/src/knowledge/enchant-text.ts",
+      "sha256": "7a034321b9ba6a8d89e841b537d1eb02a8de5aa0915828d57b5120047ab0168b"
+    },
+    {
+      "path": "agent/src/knowledge/event-pages.ts",
+      "sha256": "e121bbd24923a4e1af6e94527264b2dabe639a4be40f13fa08e4b9db619416f1"
+    },
+    {
+      "path": "agent/src/knowledge/experience.ts",
+      "sha256": "2b9fedb9ef907bc346519da202b9dbcecda6765f777b1f4557f9226be602e1dd"
+    },
+    {
+      "path": "agent/src/knowledge/files.ts",
+      "sha256": "96742c6793c6d988444a0b60c74a8e57370c75e95b9f27a4a42fd854d8eeae6d"
+    },
+    {
+      "path": "agent/src/knowledge/index.ts",
+      "sha256": "4f79e78beb3d40fd992683ee02be2f3c20649dc0e366e7a7ec2fd4a43aca0712"
+    },
+    {
+      "path": "agent/src/knowledge/jev-hints.ts",
+      "sha256": "a5287ef451cd0f91e2a2ec75ab745a7a7cb154867c6b5edeaa0e3f2d6d141d29"
+    },
+    {
+      "path": "agent/src/knowledge/mechanics.ts",
+      "sha256": "d42a3d9af46240dc51cfa1ce12d87e8442aadc30ee8d9897c72e27c69ba178ad"
+    },
+    {
+      "path": "agent/src/knowledge/monster-db.ts",
+      "sha256": "4a7e53cb17630b19e835e0da272fe52cc283633ef3a646d03f1f2935a772d81c"
+    },
+    {
+      "path": "agent/src/knowledge/move-model.ts",
+      "sha256": "ee92ca65f90de41dd63b0334af34be80ea582d08ed93229b7c83e9edb4a0ae36"
+    },
+    {
+      "path": "agent/src/knowledge/outcome-facts.ts",
+      "sha256": "36bf89741e60c253f0d85bbb54a403eb22dc15a40b8c50587fcb63ea23c72480"
+    },
+    {
+      "path": "agent/src/knowledge/outcome-tables.ts",
+      "sha256": "8937c21bc6fb878812a372a6c40d2491c23f5918d0726510ea1127d03bcf6a72"
+    },
+    {
+      "path": "agent/src/knowledge/potion-equivalents.ts",
+      "sha256": "890f578ac93e32e614202180d8f84c3d9ed6897052427d4be36ad1b6da7498e1"
+    },
+    {
+      "path": "agent/src/knowledge/potion-values.ts",
+      "sha256": "31708aef8b4e8b731a80c072c38848753171eb3b6ab18d7ed15b301f2b218740"
+    },
+    {
+      "path": "agent/src/knowledge/relic-values.ts",
+      "sha256": "f994ac46e6148ee39dfe6708cdbfab11820d8ae19803fc7308df2857e01aa858"
+    },
+    {
+      "path": "agent/src/knowledge/render/data.ts",
+      "sha256": "c05bbc2e36ff4075d282971eb8ead57e8161a7b78c40b574d1d33be06fca3422"
+    },
+    {
+      "path": "agent/src/knowledge/render/experience-text.ts",
+      "sha256": "10a074dba702f77edc563c7405b815777583ed630826c10993de130368586a56"
+    },
+    {
+      "path": "agent/src/knowledge/render/facts.ts",
+      "sha256": "b9f62fc1ff5a244950fd7eb7d730a1ef354f7ad8e8f0180a14ae73a1b27e352f"
+    },
+    {
+      "path": "agent/src/knowledge/render/format.ts",
+      "sha256": "e5dafb0fa0c581ff76c33e32847d590a57c16a057c9a37c18c843bdec7ffbc36"
+    },
+    {
+      "path": "agent/src/knowledge/render/knowledge-prefix.ts",
+      "sha256": "f0822bf3987a2908eeb8aee2fc1c5a6ecd4e650620abcad1e72dd351fd1dd163"
+    },
+    {
+      "path": "agent/src/knowledge/render/monster-text.ts",
+      "sha256": "c4231f7489bab518f496117e9982cc2d4e2cc2b75614f6800689e6d027332aac"
+    },
+    {
+      "path": "agent/src/knowledge/render/old-knowledge.ts",
+      "sha256": "baae261eb37d2225e79a6fa981236e12d17b7c466b80580f202a0dd54f66ebc1"
+    },
+    {
+      "path": "agent/src/knowledge/render/potion-text.ts",
+      "sha256": "d12274f3dea30eff947404e0b6da980bec5dea2608b69338a92cde1d15403846"
+    },
+    {
+      "path": "agent/src/knowledge/render/stats-text.ts",
+      "sha256": "91354ae54f8723be09ca95ac58a93a650affe8e4aef70dd34c4382ede24d208a"
+    },
+    {
+      "path": "agent/src/knowledge/room-costs.ts",
+      "sha256": "531a2f02ba97906d364658b4fe21f141716dd86a9c6305f2d4ce80ec43031f81"
+    },
+    {
+      "path": "agent/src/knowledge/shared-experience.ts",
+      "sha256": "cc64ac54eec67b4a3892158d79f6823687117ceff54605e35ddee8e716e60fa8"
+    },
+    {
+      "path": "agent/src/memory/ascension-target.ts",
+      "sha256": "a799f4a050fe2911f3b8378e6bdc6860be6e676b340a9e402c045de041bbe589"
+    },
+    {
+      "path": "agent/src/memory/deck-profile.ts",
+      "sha256": "d6640509715174ac2c3affc2ea16423d91cda757a3f73640e685d17385a4a0e1"
+    },
+    {
+      "path": "agent/src/memory/deck.ts",
+      "sha256": "a38484995c36609229459a0b3bac901d698f81f964def923340f0d356d53fdcf"
+    },
+    {
+      "path": "agent/src/memory/fight-plan.ts",
+      "sha256": "fc0bfb1dca63c5496ffd667a71422e0709427549d34aa23c6b91f418ef7cba59"
+    },
+    {
+      "path": "agent/src/memory/journal-replay.ts",
+      "sha256": "b2273f526812f13e4c1061a8636d3105102ccd8dd566a18177b44ea16f09d848"
+    },
+    {
+      "path": "agent/src/memory/narrow.ts",
+      "sha256": "aef22caeb263bab54acb8c78f7620fb82c53174485c931c96edc542ce75eb5a7"
+    },
+    {
+      "path": "agent/src/memory/relic-resources.ts",
+      "sha256": "b52ba3c484769c96ae8a33d736cecc817428ace6b80f5207469d78b4a66c2108"
+    },
+    {
+      "path": "agent/src/memory/run-brief.ts",
+      "sha256": "3eb7cda092b67ea178b2ffb4b5ff38478ae9d7d90d4a785b4f910ed3ae99d24a"
+    },
+    {
+      "path": "agent/src/memory/run-constraints.ts",
+      "sha256": "a3016ef6dbe835a9528e96a958cc028418093cc0a83c231191e26f5f5ff54350"
+    },
+    {
+      "path": "agent/src/memory/run-journal.ts",
+      "sha256": "406f5737dc5340ae115328919cb60eab8dee5a686b573cf69ff7409df80ca6ee"
+    },
+    {
+      "path": "agent/src/memory/run-plan-merge.ts",
+      "sha256": "1afb0e5424e9d7d2d98309252b85231c91fa977de9ac79c30eb5531541ed4606"
+    },
+    {
+      "path": "agent/src/memory/run-plan.ts",
+      "sha256": "506daee2d40cfc24eb5a12ac6b10f8355191e2feecf097a91d07e0ed8cbeaea1"
+    },
+    {
+      "path": "agent/src/memory/types.ts",
+      "sha256": "ac5a1f30d81f8bc0943fa96c49b48270641c2be0fb3f4ab2e1c461560b700d7a"
+    },
+    {
+      "path": "agent/src/reflex/card-model.ts",
+      "sha256": "46206367e6b61cbefd5759598db543c346bc1e7b1ded09f0a49607e2faf71031"
+    },
+    {
+      "path": "agent/src/reflex/combat-plan.ts",
+      "sha256": "8cad97bea7bf53037f0841537b14c7630b537fd584211e28a0ba00506a82a1c1"
+    },
+    {
+      "path": "agent/src/reflex/combat.ts",
+      "sha256": "f2f6aaceda51b61b0a67b1919d5ccb649c25a8a10111f1a4cdd4e360677973c4"
+    },
+    {
+      "path": "agent/src/reflex/continuation-value.ts",
+      "sha256": "002277b50728ab8fd405799c0a3345e5dcb788ba8f37d5489b5fbcd9623029bb"
+    },
+    {
+      "path": "agent/src/reflex/damage.ts",
+      "sha256": "7fd7092922f9e692ead821eac958e9d2b6d013f62f5a131691157d22dc361786"
+    },
+    {
+      "path": "agent/src/reflex/fight-plays.ts",
+      "sha256": "608c10043f73918bf9117d90cf770668511bbc7757ee6485f4c943173064231f"
+    },
+    {
+      "path": "agent/src/reflex/fight-value.ts",
+      "sha256": "e630a01778f0758e2fcec26b0219532cd7cb74a3b2d307b1f6e7395808c148ef"
+    },
+    {
+      "path": "agent/src/reflex/jev/answers.ts",
+      "sha256": "5f73eb0e7d267bb04754ac92578b44b7e9eba4cff1d85ff49ff91c05a754b729"
+    },
+    {
+      "path": "agent/src/reflex/jev/client.ts",
+      "sha256": "a5f8bf8f80b9e4b46b796342f1ff6b168ced52b53e44b483ef4b2a5d15028bad"
+    },
+    {
+      "path": "agent/src/reflex/jev/combat-entries.ts",
+      "sha256": "388d671400b7805ae9b0b52493f91f2e277782bc7c73d42ae8e8af5fd99b1b9b"
+    },
+    {
+      "path": "agent/src/reflex/jev/combat-entry-projection.ts",
+      "sha256": "585b2ef9ff9e992798c90be4cdc298ab2bf5ea528afe48a758e61e6f02dc909c"
+    },
+    {
+      "path": "agent/src/reflex/jev/compact-request.ts",
+      "sha256": "e684f600a44f02ff7994f6567a195ac91990fbbd0f91b72e98fba03aa051f26a"
+    },
+    {
+      "path": "agent/src/reflex/jev/decision-projection.ts",
+      "sha256": "96d5ed96f31f6c08380dad47c77c5fdb7169088e5e340d80f13561bd64d8d0e6"
+    },
+    {
+      "path": "agent/src/reflex/jev/nova.ts",
+      "sha256": "f864c40d14bd2d5a83b8baa0bb7a1fb37a0001f58a2348c928899f84b4772743"
+    },
+    {
+      "path": "agent/src/reflex/jev/predicate-context.ts",
+      "sha256": "d2af9e9b9f6101fe6f990530166fe707fbd211c2167bd0dadaa6f5163b99d823"
+    },
+    {
+      "path": "agent/src/reflex/jev/pricing.ts",
+      "sha256": "c538ad5027da7398fe9a1a9dc065e1fe8612e5baaac5a345b7a374282cb1fb4c"
+    },
+    {
+      "path": "agent/src/reflex/jev/questions.ts",
+      "sha256": "50f7e648d6392c6201625abe2c17969d0453b8fdd6e156a0e0e9435df1c2d3a6"
+    },
+    {
+      "path": "agent/src/reflex/jev-experience.ts",
+      "sha256": "629a3ad6240568962b3b1d4aea1db7088fae947229e0d7caf1aa804a5e92c103"
+    },
+    {
+      "path": "agent/src/reflex/pace-solver-cache.ts",
+      "sha256": "18fe4804334637a81bd5a5da4e11e52c06b7b51002d106ccb3c203beb33c558e"
+    },
+    {
+      "path": "agent/src/reflex/passive-pieces.ts",
+      "sha256": "545c917baa6193678160f8f37ef93d5676d68af75e72fef061c235625a31b90e"
+    },
+    {
+      "path": "agent/src/reflex/permafrost.ts",
+      "sha256": "d6b5707427b7acea5f59edb7a51799efe7ab1d2cb64168510161d755d17760bb"
+    },
+    {
+      "path": "agent/src/reflex/potion-cost.ts",
+      "sha256": "b0a952df65e6af5ddd99742b9894367dff086052ef810865e85fe73c0c06c0b2"
+    },
+    {
+      "path": "agent/src/reflex/potion-mc.ts",
+      "sha256": "01679317c4d7203c1577700bda51bdd107844464652cefe8696423291a3224fe"
+    },
+    {
+      "path": "agent/src/reflex/potion-value.ts",
+      "sha256": "dea5f46fd58c10ed57c2d8f4788e73b0fbb7decc2c38d4e5469802ad517e8c0a"
+    },
+    {
+      "path": "agent/src/reflex/rollout-live.ts",
+      "sha256": "f8ad61514ea9f3919a4359edc3c32f01f326cb24139613933a98dcdfe0f7233e"
+    },
+    {
+      "path": "agent/src/reflex/rollout.ts",
+      "sha256": "4e7dbe020d98526aa2ca033302894deb77a817916449ff7e7b1a55bc2e57d5a4"
+    },
+    {
+      "path": "agent/src/reflex/silent-apotheosis-reference.ts",
+      "sha256": "96fdadf221286c9e21a11d78e7200b320da6c8db7717e9edf1915e4a5b739803"
+    },
+    {
+      "path": "agent/src/reflex/silent-apotheosis.ts",
+      "sha256": "cd7f4956fcda62c63c585ae252b9033a0ff9622390f227fe4c256a8fffb33f0f"
+    },
+    {
+      "path": "agent/src/reflex/silent-crab-potion.ts",
+      "sha256": "88e4d0b8a41249559dd838640093f10438fb9809b9067a8d4f8a01b955f239c6"
+    },
+    {
+      "path": "agent/src/reflex/silent-crusher-facing.ts",
+      "sha256": "78a90e120c688a8bae4ed80077ef12a862efa29b1d423160cca4cf72a13eed8e"
+    },
+    {
+      "path": "agent/src/reflex/silent-demon-potion.ts",
+      "sha256": "30d0ac0808b3dae09b5835577f62efd3fa9691a00cf59860779c2c9a81708fbc"
+    },
+    {
+      "path": "agent/src/reflex/silent-giant-potion.ts",
+      "sha256": "4f032ab6458326668c37361d33b7882e7f922bf07ad3f995abb6b5085de5a5d6"
+    },
+    {
+      "path": "agent/src/reflex/silent-held-loss.ts",
+      "sha256": "c60884d37a5386e21ea357cb6b0942bcc3c098366167dcde4506ae79541e9022"
+    },
+    {
+      "path": "agent/src/reflex/silent-helical-dart.ts",
+      "sha256": "f85311d1a78dbb100b1e82b1d817264a87bd40aa6b9ec81d238c4d9bec70965e"
+    },
+    {
+      "path": "agent/src/reflex/silent-hp-guard-audit.ts",
+      "sha256": "183a1c996ce965e05dc5735dc0f3b4f2e2ff65442c7e6779290716b0cd4bf858"
+    },
+    {
+      "path": "agent/src/reflex/silent-kin-progress.ts",
+      "sha256": "a73c8cd3f1d5953e12f1167f328962fc1a738467411ac27cb5a5bbaaac33edc4"
+    },
+    {
+      "path": "agent/src/reflex/silent-kunai.ts",
+      "sha256": "6907c47af72698926543ffdd134313d0c1097a4b01908f2f3fea7f36930ea1e1"
+    },
+    {
+      "path": "agent/src/reflex/silent-loss-reference.ts",
+      "sha256": "713d94462279914dea649b2337e1495a3cc42fd986650099f49f88409bf49c25"
+    },
+    {
+      "path": "agent/src/reflex/silent-phase-current.ts",
+      "sha256": "cd4499e87f7b660bcc549330164391b9252388a55124ac202dfbae3715b1f74f"
+    },
+    {
+      "path": "agent/src/reflex/silent-phase-reference.ts",
+      "sha256": "529b07f58c1934e1e36e99d4c5888183f01109f60684513d7446b49c06e769e1"
+    },
+    {
+      "path": "agent/src/reflex/silent-potion-reference.ts",
+      "sha256": "94399dd7279d6eaed91d139507baf6936a161cd61a792644a4ab7c5d9102a360"
+    },
+    {
+      "path": "agent/src/reflex/silent-razor-snakebite.ts",
+      "sha256": "c081ceb1e7a52b2cc74b88de3cd422b60c43fa9cbb1cc216b29154db05498ff7"
+    },
+    {
+      "path": "agent/src/reflex/silent-selection-audit.ts",
+      "sha256": "2de2533b477546682ef601d0613bd1adb805e03b894f64347475bfa4e222e4db"
+    },
+    {
+      "path": "agent/src/reflex/silent-selection-dispatch.ts",
+      "sha256": "9301b47f0f6a2589ce210d7f3b9fd232854575154e1f77e471d164070003e6d6"
+    },
+    {
+      "path": "agent/src/reflex/silent-simulation-reference.ts",
+      "sha256": "7b017994d9594d9bed3c124f0e62bad686692ea9ea517da559a1f7303042c195"
+    },
+    {
+      "path": "agent/src/reflex/silent-skittish.ts",
+      "sha256": "dbfa23ec61b30dff80b5f8158cf2f8c9da6ad8cb5e70334f9ab402689b491820"
+    },
+    {
+      "path": "agent/src/reflex/silent-sl-comparison.ts",
+      "sha256": "2fbb427662af78dd5428c70e0af9bb82dfe312d4ccffb33201da3c26dfdfc760"
+    },
+    {
+      "path": "agent/src/reflex/silent-sl-resource-comparison.ts",
+      "sha256": "75e3ca7380dab1f0c811b91df908eba08a46ae2810b1b983dd699eafef269ab0"
+    },
+    {
+      "path": "agent/src/reflex/silent-stock-note.ts",
+      "sha256": "142c8821ec0650bd387a8162afb55d30c1493a5a2cf9f4fb43ef1b82276b1eb1"
+    },
+    {
+      "path": "agent/src/reflex/silent-summon-coverage.ts",
+      "sha256": "41e8a32a168747dc44aef573aac1363b193b48c3df206365840c350727b46e22"
+    },
+    {
+      "path": "agent/src/reflex/start-loss.ts",
+      "sha256": "bda105bf162ea693ac35679a4dcf4fabe6a844b6b83eba9bf3ea5ac6c853bc55"
+    },
+    {
+      "path": "agent/src/reflex/thief.ts",
+      "sha256": "b114a8937a3580e27a4c8f45600720d7a6d808ecf4ec2e0a05737163fd301c94"
+    },
+    {
+      "path": "agent/src/reflex/turn-solver.ts",
+      "sha256": "1ecb3544e15ec4ef07f16bc03eb4f963839b90741dc88ec89a65cef74a7cf3eb"
+    },
+    {
+      "path": "agent/src/sim/adaptive-decks.ts",
+      "sha256": "6b1cc4fe7fbaf8298c30b4deb9eeb93e6a80c3eb533504b2c1b2612b5fbd34c8"
+    },
+    {
+      "path": "agent/src/sim/adaptive-sampler.ts",
+      "sha256": "ed75873222ef5bd212dff7ea885036ce985e3e7e4ddf95b1c5d17f56888b5f84"
+    },
+    {
+      "path": "agent/src/sim/adaptive-shadow.ts",
+      "sha256": "e0e19ef375ddf8334c9c20d4d1cd892a0f21b76e4e0e77bd4810f6e08d64572e"
+    },
+    {
+      "path": "agent/src/sim/boss-clock.ts",
+      "sha256": "6af7417bf31e80b617157d40de79fcbea14761c6443e06c10430444b7503325a"
+    },
+    {
+      "path": "agent/src/sim/boss-lines-worker.ts",
+      "sha256": "87dc9451302b7c9ef98b2db60e312c5164ef52c42922635594ed26fe01192ed9"
+    },
+    {
+      "path": "agent/src/sim/boss-lines.ts",
+      "sha256": "ee25326b2f01c82cea39b4b09a78340080784b4c30527fa2b17c3e2a971e0837"
+    },
+    {
+      "path": "agent/src/sim/boss-margin.ts",
+      "sha256": "141f5b292ad2beb460143c598edc75b2e4a6b2e2b1754f94d8c0eb0c37073f1c"
+    },
+    {
+      "path": "agent/src/sim/boss-readiness.ts",
+      "sha256": "d773d0640aabf9429da7bc4fbd8d34b20acb8551db8bde60d60a285f1ffe26b4"
+    },
+    {
+      "path": "agent/src/sim/boss-sim-worker.ts",
+      "sha256": "2a1c494fb6b5811e3708070aecb2bb0c3bb30277b989ee24e0d2cb68e6f4f49a"
+    },
+    {
+      "path": "agent/src/sim/boss-sim.ts",
+      "sha256": "f30a0c5bdd66d63b7ccd962947735ca2dfded2eaec76dd364f5e90fec0aafac6"
+    },
+    {
+      "path": "agent/src/sim/boss-start.ts",
+      "sha256": "01ef66ce210a3d022f1e28e34188b7005c7a88aa2b020e6f242f4030a95aee02"
+    },
+    {
+      "path": "agent/src/sim/boss-trust.ts",
+      "sha256": "51343d95717c09e57451fb58975d94a1130291b9b2a3a6a1c92a15b5fef872c2"
+    },
+    {
+      "path": "agent/src/sim/build-rank.ts",
+      "sha256": "7438f3d9433eb8357dea8cc9c82d8719fcdf35dc3bfee0e552388666d37fe84d"
+    },
+    {
+      "path": "agent/src/sim/build-ranking-choice.ts",
+      "sha256": "3a1342764fc7af9cf42e3ac29e260172fc45972b9bcb593d6df578823a7f0dbb"
+    },
+    {
+      "path": "agent/src/sim/build-sim-facts.ts",
+      "sha256": "c86879476796b8f49dde0078923e6ba5e46e725210d23acf14a0195b6bcb652e"
+    },
+    {
+      "path": "agent/src/sim/build-sim-pool.ts",
+      "sha256": "174141ecd95a3f4c6113b6f599b4d0f8d62a29476de8e305110002042d9ce500"
+    },
+    {
+      "path": "agent/src/sim/build-sim-worker.ts",
+      "sha256": "96da42adc6e9d2e230d5b36cbe6dc30e55ba4c87dbb93a55bfa1bb7aaaa1e087"
+    },
+    {
+      "path": "agent/src/sim/build-sim.ts",
+      "sha256": "e1384889748cf42f31aaab5be173e9dde4227c3a0b34a919026068ef34c9a115"
+    },
+    {
+      "path": "agent/src/sim/computation-failure.ts",
+      "sha256": "59b2cd9d3a55e84e2519433e00e420762a178735e6a5de1f779c7db15b35b39b"
+    },
+    {
+      "path": "agent/src/sim/computation-wait.ts",
+      "sha256": "15498e8c482d43486d748a0eaf20b4dd40df68775f6b40a3cf51a8cc905ba2b2"
+    },
+    {
+      "path": "agent/src/sim/compute-memo.ts",
+      "sha256": "36f0e72ea67c9ddcc34d4ce9234ce2b9397be16d8edab0da07da8d9abb802761"
+    },
+    {
+      "path": "agent/src/sim/construction-combat.ts",
+      "sha256": "9deb118347b60753c7e40fb4e0e588e91107e3960e3fc40089af940d85a0e36b"
+    },
+    {
+      "path": "agent/src/sim/continuation-failure.ts",
+      "sha256": "4d8bb38c69aba5d7870be5c1f6547d92fe0558d1b252792079e81cd68fa7d519"
+    },
+    {
+      "path": "agent/src/sim/continuous-boss-result.ts",
+      "sha256": "f10c43b0fc9a403c0ca7ff9cf3478b5910b00d27f7d47d8dbae8156551aae358"
+    },
+    {
+      "path": "agent/src/sim/core-realization.ts",
+      "sha256": "51523124a4b1cb3948fef2d6f334cfa76f6f2fb35968e50ef5868651497718cd"
+    },
+    {
+      "path": "agent/src/sim/core-window.ts",
+      "sha256": "87a061c6ace294483e2482498b33ed3d76934c1cc92c129b34f1fa1517934ca2"
+    },
+    {
+      "path": "agent/src/sim/double-boss-start.ts",
+      "sha256": "3241dedb92ff1ff9803df3786f15e65e669e7371756cca8668fb8c57771e97eb"
+    },
+    {
+      "path": "agent/src/sim/f48-joint-shadow.ts",
+      "sha256": "beda5aed35121a8ea4e97276b999fa2b2177af99ea05debd597ca66706459ec1"
+    },
+    {
+      "path": "agent/src/sim/global-build-b3.ts",
+      "sha256": "126c5cb42ffec4710ea36b82e9b62703f249d5727b47ef6f5be9ecc8d7abfcbe"
+    },
+    {
+      "path": "agent/src/sim/global-build-observer.ts",
+      "sha256": "ecce02a61eebb79e46e95e6f5ea818227afb72072bd585e72fcb784aef85fbc4"
+    },
+    {
+      "path": "agent/src/sim/global-build-pool.ts",
+      "sha256": "3dd2396d59189bb246de8073c6a09091c3b5405495da8dc0c71d822caa48b349"
+    },
+    {
+      "path": "agent/src/sim/global-build.ts",
+      "sha256": "4daa2d07465bef20e759a28281194131a06cce43e9be606a43b1186bc7c0019b"
+    },
+    {
+      "path": "agent/src/sim/human-pace-card-policy.ts",
+      "sha256": "7ba68e79e684a1bca6566e909d457ff007a5d9c55268692612313e24d0a3eb23"
+    },
+    {
+      "path": "agent/src/sim/human-pace-card-shadow.ts",
+      "sha256": "3c8cb58e7aaa3068da24f4b2439fd6addfc0b0ba834580a0303b7d3c7500ad1c"
+    },
+    {
+      "path": "agent/src/sim/human-pace-comparison.ts",
+      "sha256": "94c7f21f3300251a3ac537d0c1a7440987c321f59565cc16fad7a124bbefd9a5"
+    },
+    {
+      "path": "agent/src/sim/human-pace-direction.ts",
+      "sha256": "2629511d96013e5411a8c0f8c084664d1c3fd4823416d7f640aeb80eeceffc69"
+    },
+    {
+      "path": "agent/src/sim/human-pace-observer.ts",
+      "sha256": "9e5164e3b8bcb87fbcd52533b6481b1bcda1cfa6c60d29e104ec6dd3356e30c0"
+    },
+    {
+      "path": "agent/src/sim/human-pace-plan-shadow.ts",
+      "sha256": "591ee6a4d33bec7ca7aa0214a3f7bd35d2b1a5ca4491bb2e3ff2b6e640d6fab4"
+    },
+    {
+      "path": "agent/src/sim/quantitative-calibration.ts",
+      "sha256": "7edb1b8fa86b49f60ec2e1e4ddee1c6e065432d18ad8cf81461e97fc8242527f"
+    },
+    {
+      "path": "agent/src/sim/quantitative-facts.ts",
+      "sha256": "12b495e8c9922b9c4412ee0a86c5226383833896306c4a283bc6e00aa19845ba"
+    },
+    {
+      "path": "agent/src/sim/quantitative-log-extract.ts",
+      "sha256": "e679232a6cc36efeef49493f3bb3874ee58c977444dfa057af4830c530f22c15"
+    },
+    {
+      "path": "agent/src/sim/quantitative-stats.ts",
+      "sha256": "e33124df786f4060919d6713e494f9ce447b20c75113a573f7e549adf4e8a377"
+    },
+    {
+      "path": "agent/src/sim/route-map.ts",
+      "sha256": "d1276a6f965311333f2500f1ee3a1777bbca31a54ead40da265292f2c23186f6"
+    },
+    {
+      "path": "agent/src/sim/route-projection.ts",
+      "sha256": "ad0e4c94d1e4212cc6732d737a861ae08d6134877186ff97d2623f4b15fd5f8c"
+    },
+    {
+      "path": "agent/src/sim/s-combat-rank.ts",
+      "sha256": "6b6a5f33764f253e6f8fd606b772dd641953b118029e9df32d97c56e691893f8"
+    },
+    {
+      "path": "agent/src/sim/s-sign.ts",
+      "sha256": "910ea2404703619c7cf719c4909e26772a0b6e22480f7eeab92546b04f0ef702"
+    },
+    {
+      "path": "agent/src/sim/sample-range.ts",
+      "sha256": "409d07fa4dfdfdc40eeb01bb66f3b8f36f0b9d64f32537106f648ad25c60d614"
+    },
+    {
+      "path": "agent/src/sim/silent-build-win-ties.ts",
+      "sha256": "7a232f09e25f9c8fd56cdadea7495ce58b74ab4f8460a68a7ee5af15d01652e3"
+    },
+    {
+      "path": "agent/src/sim/silent-opening.ts",
+      "sha256": "f3baa27bfac07d9f60995e37b7bbe31f7fa5baa63f18dd4fda3bc8d2c09bf502"
+    },
+    {
+      "path": "agent/src/sim/sim-pools.ts",
+      "sha256": "f852fee8b01efdc07bed9d92d32b95c005b1d18447c86d789f1e465f1c158e7c"
+    },
+    {
+      "path": "agent/src/sim/thief-card-hp.ts",
+      "sha256": "d488669fe6428d077594d2a8ca5dcffbcdce990a14a8280e4d85feedab7f593f"
+    },
+    {
+      "path": "agent/src/sim/thief-card-value.ts",
+      "sha256": "c0588618ea2e6ae8c6ebb73e23c7b0d1f8ddfaf6c9d56b76a3bbc98fd8f50aeb"
+    },
+    {
+      "path": "agent/src/sim/v6-card-results.ts",
+      "sha256": "f4aca7c5be9f8279646eb9cfece0487059c594f1432e1f83c7eab0625676f3d7"
+    },
+    {
+      "path": "agent/src/sim/v6-completion.ts",
+      "sha256": "cec96b95d31ebffdbf550d42f2cfddbc7e96ca423cac4ecf9726c1c920566bfb"
+    },
+    {
+      "path": "agent/src/sim/v6-formation-table.ts",
+      "sha256": "8a880235f2a2f584a8f09411f7fa96fbbcdc3c2ca20cef28913918776f5bda84"
+    },
+    {
+      "path": "agent/src/sim/v6-history-pack.ts",
+      "sha256": "e312641f3a3090a32ca271ffad702f610c49224226540a5faf0826df4587808a"
+    },
+    {
+      "path": "agent/src/sim/v6-history.ts",
+      "sha256": "8bf98caf99c6263300bb166e75daf8e07ec345164a38d2365d90f7e3383b9518"
+    },
+    {
+      "path": "agent/src/sim/v6-precompute.ts",
+      "sha256": "875d4a7f6efeca2a7b42113af4719f9e4fd8fb7c0c3a400eec0eab663a177614"
+    },
+    {
+      "path": "agent/src/sim/v6-projection-entries.ts",
+      "sha256": "0d6d98744d1736dc786a75efee75cc5c85d696bab9a72bc5c9e4fc3cc3a9a34d"
+    },
+    {
+      "path": "agent/src/sim/v6-projection-log.ts",
+      "sha256": "b9aa7c525accc8daf44555b5a15d2821a0744ba89f5af7066463bd9316f964f4"
+    },
+    {
+      "path": "agent/src/sim/v6-projection.ts",
+      "sha256": "3eeb605aee83be4df37ed7c54f73e1f686fcf06dbb5377a6d8232315ba6d0deb"
+    },
+    {
+      "path": "agent/src/sim/v6-request-factory.ts",
+      "sha256": "bd8cc37862b3327f376071c0817d31e0eacbb80b2b797d3392c72c26381c4539"
+    },
+    {
+      "path": "agent/src/sim/v6-route-entry.ts",
+      "sha256": "d5a14da59a0e082ed4789c8f1685c5fd6aab33e5ea8c147359e328e16da1ca28"
+    },
+    {
+      "path": "agent/src/sim/v6-start.ts",
+      "sha256": "a1ea4be5d73ea44627335e9b48ee8f73f23510786acf3fc12f561bc6a93cab1d"
+    },
+    {
+      "path": "agent/src/sim/v6-supply.ts",
+      "sha256": "69d0f5a24b84d64b7b98862c404b91ce62a2b6713c1c6d18863649d8054b9316"
+    },
+    {
+      "path": "agent/src/sim/v6-table-copy.ts",
+      "sha256": "0a728c999a9cb852b389627da06416515f5de4b8a3dccdd22065ce5db68319ad"
+    },
+    {
+      "path": "agent/src/sim/v6-targets.ts",
+      "sha256": "24b328b31d046324b2ed4fab511b0b692f3dfe6966e41a549e3805d43eb51de2"
+    },
+    {
+      "path": "agent/src/sl/attempts.ts",
+      "sha256": "f3f785f18c77ccc482a58b236d168780c8e010fb0bec12ec3e14ab61a8aca415"
+    },
+    {
+      "path": "agent/src/sl/controller.ts",
+      "sha256": "675b4408fa8c6d7074c8db98f949bd14a422fd57c6bbb28a0ed438c85070b4fc"
+    },
+    {
+      "path": "agent/src/sl/draws.ts",
+      "sha256": "7a739333ce420fd61200b08491810c5287b09a699ba23bc3c3bc69daaf0b56e7"
+    },
+    {
+      "path": "agent/src/sl/elites.ts",
+      "sha256": "d2e285246431860f966a0e1b0841006122041d2acbc1d32ddb72f19e70e9850e"
+    },
+    {
+      "path": "agent/src/sl/explore.ts",
+      "sha256": "2f37e85cc1c1c31e96a0d1b90db850893ec75b6cf5b4b84bf07bbb8de4e3ec43"
+    },
+    {
+      "path": "agent/src/sl/judge.ts",
+      "sha256": "a3c2770ed23cb2d6e28eba8472558955e2e84ded8e966dc9d7f9c19eb63d3f2b"
+    },
+    {
+      "path": "agent/src/sl/random-target.ts",
+      "sha256": "7bae6d0830a8fef4d2fb1dfa1d659a2ee8603bf3847e13f4b3e23cccf310d757"
+    },
+    {
+      "path": "agent/src/sl/reload.ts",
+      "sha256": "02da7188eb3b446b458998dd54a6d2bf3c38e98eab14040e25d7ddb567323517"
+    },
+    {
+      "path": "agent/src/v6/appearance.ts",
+      "sha256": "59abdfb12e169245143ed9be8dd405a4d4edf5d7624dfce37ce61e7c23fb814b"
+    },
+    {
+      "path": "agent/src/v6/build-core-conditions.ts",
+      "sha256": "12ef25396e9facb05d95da0dbf482c67a73fb4e594e2bced257bca12842c2ef5"
+    },
+    {
+      "path": "agent/src/v6/build-core-draft.ts",
+      "sha256": "7bb8ae2bcee1c78ea0df26191197a7e85ef0406829be43cd4ca00c3555f51b25"
+    },
+    {
+      "path": "agent/src/v6/build-core.ts",
+      "sha256": "e1512f526c066ff4b48450325e12ebb25c6c86d7760680c9c21c0887056f889d"
+    },
+    {
+      "path": "agent/src/v6/card-pick-reflex.ts",
+      "sha256": "b0eb07e83e1d6387ffb6afe179895c75ce1ce93d26d60f76eb0b48fdae80ee23"
+    },
+    {
+      "path": "agent/src/v6/card-pick.ts",
+      "sha256": "d1e2534c64ab23332fdf97da1112f43b131f8ed6dfa0c8e6fa76ded48645be12"
+    },
+    {
+      "path": "agent/src/v6/card-results-input.ts",
+      "sha256": "e97693610a7a0f71eb21df7d2f7d624576ce47f2d4cd66ab9fd45e98f4165de4"
+    },
+    {
+      "path": "agent/src/v6/card-reward-scope.ts",
+      "sha256": "b41c67173a18e71326f0dbb908328e932fdf786daf2216f17f98d85628b5c00e"
+    },
+    {
+      "path": "agent/src/v6/card-routing.ts",
+      "sha256": "094d0f76b1da539fa7224ab648298a91cd89d8e4797aa08feba23458abffe574"
+    },
+    {
+      "path": "agent/src/v6/config.ts",
+      "sha256": "67d9d25366836faf482759a5f6b73ce3dc8fdb9200be4f7235771b9dccbf6083"
+    },
+    {
+      "path": "agent/src/v6/construction-safety.ts",
+      "sha256": "087c4a549db4dd01fc5ce1bc3dbab46662052ad2bbe0773ee1b18d1b78172236"
+    },
+    {
+      "path": "agent/src/v6/contrast-statistics.ts",
+      "sha256": "a58856278552b62f2875e55eca6a3c7d226034adeb2b302d6aa00cadd191e538"
+    },
+    {
+      "path": "agent/src/v6/direction-decision.ts",
+      "sha256": "81871af3f95a7ab994e105876062dc0e11d9d0cd5eb663c638d76aa39e530904"
+    },
+    {
+      "path": "agent/src/v6/direction-plan.ts",
+      "sha256": "2ffb659a08b684cfe1e2674920c886d1f5b2bcb928bab7cb27a75ebd20c6b569"
+    },
+    {
+      "path": "agent/src/v6/direction-prompt.ts",
+      "sha256": "734ecac278a617adfad47ada8c121400f60c920c1ac956fab7d6368648880367"
+    },
+    {
+      "path": "agent/src/v6/direction-rides.ts",
+      "sha256": "2dac39d5c8dbd76b20a195f31067b0640be02ebb3856f989e4c27459e0919711"
+    },
+    {
+      "path": "agent/src/v6/direction-runtime.ts",
+      "sha256": "bfec4d1d50811027ea9a06670b4f4bd5c3251f8e72429f68f48a12d8ba525496"
+    },
+    {
+      "path": "agent/src/v6/draft.ts",
+      "sha256": "155e2883f5d7b8262e66c58a646c62a401b5b8384c25f91946eb44add1e09512"
+    },
+    {
+      "path": "agent/src/v6/formats.ts",
+      "sha256": "75e1b2747e5d742ab47f2495ec1734e5104ff9b6154812f42f6892f5ab0de3db"
+    },
+    {
+      "path": "agent/src/v6/knowledge.ts",
+      "sha256": "37c4c452f2c617dfc93c13ce8e6c61d4b574debd8d8e8c4f29e58d64dcb8d8c6"
+    },
+    {
+      "path": "agent/src/v6/log.ts",
+      "sha256": "488c96cd351e82f8303314b30e1f270d218a587032ecf1205a31fa1fe295c85a"
+    },
+    {
+      "path": "agent/src/v6/potion-entries.ts",
+      "sha256": "e82033ff4d777a170902d28887b39e90d73ab0d279f4449d2efa2cde877d59c7"
+    },
+    {
+      "path": "agent/src/v6/predicate.ts",
+      "sha256": "bc228081102b90afc653df245db7e3e5a67b6f7283e5a68a6dcbee2240b23afe"
+    },
+    {
+      "path": "agent/src/v6/projection-consumer.ts",
+      "sha256": "6a7f6e56e070d1a5154e84b9e3a707a1fc5c9ff01d9b4102aa7444e7ef5c80ac"
+    },
+    {
+      "path": "agent/src/v6/projection-input.ts",
+      "sha256": "2336c83542b1ef1c1c064a60a9cb1947870d1898e7b6e777455a45b936de5745"
+    },
+    {
+      "path": "agent/src/v6/projection-runtime.ts",
+      "sha256": "d25a95b486980d09813ea40592e8b42214c6131517ac196f36277e1d68289685"
+    },
+    {
+      "path": "agent/src/v6/prompt-projection.ts",
+      "sha256": "40d51a53b5449797dc74cf315c49490e174067c2add925efc4dc003ded6b1894"
+    },
+    {
+      "path": "agent/src/v6/prompt-summary.ts",
+      "sha256": "1255e48005bf03d1019ffe78c570c16cae8e360137f97f5b95c7a396c39c0330"
+    },
+    {
+      "path": "agent/src/v6/replan-triggers.ts",
+      "sha256": "4492316f4d482b779e58b6554713278912c5d1475880944b8e0aa4623a738cc0"
+    },
+    {
+      "path": "agent/src/v6/schema.ts",
+      "sha256": "279e059f7141780ab6079b06fff344ea7af1e4d5287d2a2f378cf30f879ddbe0"
+    },
+    {
+      "path": "agent/src/v6/target-values.ts",
+      "sha256": "d4a2d9f845879bc925b63bbee6f7d611a24d2388c88e4aeaf241edf537a1e48b"
+    },
+    {
+      "path": "agent/tests/logged.ts",
+      "sha256": "93d47180622583e1909fbb305f625885ddde951573b05852ea67bf90e87bb4ce"
+    },
+    {
+      "path": "agent/tools/boss-sim/audit-calibration-board.ts",
+      "sha256": "216cb7f6c76686f25b543658be32d64f1ca73729f493b63aeb7cb3d937dfeab9"
+    },
+    {
+      "path": "agent/tools/boss-sim/b2-lines.ts",
+      "sha256": "09f25805c544af6b8cc078fe4ddafc0264885353e622d58371629335b1a3b661"
+    },
+    {
+      "path": "agent/tools/boss-sim/b5-lines.ts",
+      "sha256": "0e7f287313391826cfc6a9888d3297da8336a83ff402721c12ecf73b8a08bf89"
+    },
+    {
+      "path": "agent/tools/boss-sim/backtest-board.ts",
+      "sha256": "0146ae6016a4b8063ecac6b762ace0f92cf4f4ec1da23e856912e19c86eff05d"
+    },
+    {
+      "path": "agent/tools/boss-sim/backtest-runner.ts",
+      "sha256": "c66fff9545a6c5c9d0c80276aa5bab31ce9855b98990068749abf0b301ed6e47"
+    },
+    {
+      "path": "agent/tools/boss-sim/backtest.ts",
+      "sha256": "906bcf9f0127ccea4a8782b7e65eb09072765c51e3f61bec62b4e026bccc0eea"
+    },
+    {
+      "path": "agent/tools/boss-sim/bench.ts",
+      "sha256": "598cb335a0635dc647fd282f371d9302229b8bfbf9cc1f4764b2cfead85001d8"
+    },
+    {
+      "path": "agent/tools/boss-sim/build-replay.ts",
+      "sha256": "004f991da80ec2ec210d83cf0caa4cb0c232fa89f2b70fbdd0dcb02998a61fd0"
+    },
+    {
+      "path": "agent/tools/boss-sim/calibration-board.ts",
+      "sha256": "d8cdcaee13a727b2bcf53b049ab95e62a340d17c818814ef38028e468af3e3e3"
+    },
+    {
+      "path": "agent/tools/boss-sim/isolation.ts",
+      "sha256": "7b38ffb486ec92f292705ff024c37784fa219ce5ec233f69d1f264989c43b382"
+    },
+    {
+      "path": "agent/tools/boss-sim/lines.ts",
+      "sha256": "12854c93dc9d6c90d9e20c084215d439ebb044f63ea55ce73a66cedf73959b35"
+    },
+    {
+      "path": "agent/tools/boss-sim/pairs.ts",
+      "sha256": "41b2a825a4f4ec9a2b61ce7c3073258a8a1d82a2ca9818b65f5683031cb874fe"
+    },
+    {
+      "path": "agent/tools/boss-sim/pre-fight.ts",
+      "sha256": "f50c1af48a5b2d5d0d158c67026000980fdf2b0511c9faf09b288be17197a467"
+    },
+    {
+      "path": "agent/tools/boss-sim/synthetic-check.ts",
+      "sha256": "fe4720a3a9f113b2bf96264605e8154fc58ce84dab68d6e671fe6d9c63bdbb96"
+    },
+    {
+      "path": "agent/tools/boss-sim/trace.ts",
+      "sha256": "ceec4eadb6d34d38685af2d92d79c01b21420666875035e68c015ca9c21ed0cb"
+    },
+    {
+      "path": "agent/tools/boss-sim/turn-replay.ts",
+      "sha256": "9a15ec44063428c2c16dd442acc7e613d6249bcf963c64953d2987a2f761522a"
+    },
+    {
+      "path": "knowledge/builders/tsconfig.v6.json",
+      "sha256": "6bcc62cacb0300af9ffbb1adb4a20b2889e686c1550ef73bb984116ce41ec886"
+    },
+    {
+      "path": "knowledge/catalog.json",
+      "sha256": "3ca5e34da29dfdcfeee1dae5f9d64b3f326a4a4b3bd4e2d0e1526277c0eaf98e"
+    },
+    {
+      "path": "knowledge/characters/ironclad/boss-damage.json",
+      "sha256": "4015b526b4a34217c4d9c0254f7ba0b6f7a919615d2b88015b7c1801506fa2c9"
+    },
+    {
+      "path": "knowledge/characters/ironclad/boss-trust.json",
+      "sha256": "c579d0bf4da8a9012baf18477f1f20b8fd7364383a8a318e65269801470c7493"
+    },
+    {
+      "path": "knowledge/characters/ironclad/experience.json",
+      "sha256": "0049b5295a42b787d9b8cba9eeb81e42e9c2e20bbf92d08e458f4832a02fa63e"
+    },
+    {
+      "path": "knowledge/characters/ironclad/fight-value-gates.json",
+      "sha256": "3bb4a98cd8db2799b337de80ca3408010e7e4a003a7771b05706864c73800a2d"
+    },
+    {
+      "path": "knowledge/characters/ironclad/fight-value.json",
+      "sha256": "fde26f14882ddb0b06fa06f1f891dc84c797cb47ec7a3662f13abc503d1aeda9"
+    },
+    {
+      "path": "knowledge/characters/ironclad/jev-hints.json",
+      "sha256": "c3cf0a8eebc4669321ea233838050a1571b69bdc74156d339b1be5f3c01771c2"
+    },
+    {
+      "path": "knowledge/characters/ironclad/monster-records.json",
+      "sha256": "7b322116e66a38a0db356c14ec495948a631b8532858c7dbee59883d4ad8680b"
+    },
+    {
+      "path": "knowledge/characters/ironclad/outcome-stats.json",
+      "sha256": "d7b23ac09a68726946874661991b906aa82d4714037496ad25eb57da456c2d0a"
+    },
+    {
+      "path": "knowledge/characters/ironclad/potion-equivalents.json",
+      "sha256": "25c9d5016f5f3c5afad529342d05c835b3a9e8559125f28dbc62c7949b47eab9"
+    },
+    {
+      "path": "knowledge/characters/ironclad/room-costs.json",
+      "sha256": "3b7aa18edf910e80a56b77cb39c8149f8fb873dce909519b8c1a6f6d89121a69"
+    },
+    {
+      "path": "knowledge/characters/ironclad/sl-elites.json",
+      "sha256": "43e689e274f92ecc0d5681d97325fd1bce1f7a4fe0cc13305d2d972d422f8e6d"
+    },
+    {
+      "path": "knowledge/characters/regent/experience.json",
+      "sha256": "d1c4807e4221f61406393dac65800c60d893879af1b4937511a523e54a54381e"
+    },
+    {
+      "path": "knowledge/characters/silent/boss-damage.json",
+      "sha256": "d837c4296dd6ecea32a573c56c0ce7a33f7aa1147de16aeea26c56d37df51c00"
+    },
+    {
+      "path": "knowledge/characters/silent/boss-trust.json",
+      "sha256": "b16f7ca9bad297683a8f245476c6cc9a80b472be023f52b92b23f926e69ed58c"
+    },
+    {
+      "path": "knowledge/characters/silent/build-cores.json",
+      "sha256": "51c757a11ded9db2619466104f284a7d8a2490e10a621e0b367640e82a81df36"
+    },
+    {
+      "path": "knowledge/characters/silent/construction-opportunities.json",
+      "sha256": "83285e53401cdc32f997a43f3fc0dc63f8f31c52fc0abf6082d2c0cce1958e01"
+    },
+    {
+      "path": "knowledge/characters/silent/construction-support.json",
+      "sha256": "fbd2e0a9242e1bfa121649d3652e35982539e51ac4c1a862868ee7bb4ac46fdc"
+    },
+    {
+      "path": "knowledge/characters/silent/construction-templates.json",
+      "sha256": "fa2bbf98407f9898ee8fcbcd76d8de731a3a2228c23f8b01a63384b53e12b500"
+    },
+    {
+      "path": "knowledge/characters/silent/double-boss.json",
+      "sha256": "dfea492a4b941bf72813518e59ceb6cb0cca2d1420bdeb9c2fb9cc726797e83b"
+    },
+    {
+      "path": "knowledge/characters/silent/experience.json",
+      "sha256": "f3479ea243643adcc71bfce934dccd555c34d9309fb4b1424da98a1f30db329d"
+    },
+    {
+      "path": "knowledge/characters/silent/fight-value-gates.json",
+      "sha256": "7022916409c71ce3ea861243af74f07c7a5a92fa1abb7c5665b64bf2052d296e"
+    },
+    {
+      "path": "knowledge/characters/silent/fight-value.json",
+      "sha256": "6a5de63e117db51cdcd88eff7dba3b16275de36d07bca2e13b8d74932cbd630e"
+    },
+    {
+      "path": "knowledge/characters/silent/monster-records.json",
+      "sha256": "c51e0698a7382fc1b650acf0b44a52559446c10d5605be42dcb58800e8a9b9af"
+    },
+    {
+      "path": "knowledge/characters/silent/outcome-stats.json",
+      "sha256": "c9bd0c030d65b80c3bd263a19177f0e79877ad6103473cfbd6e0d3ac3ec188c4"
+    },
+    {
+      "path": "knowledge/characters/silent/pending/20261013-100759-experience-update/candidate.json",
+      "sha256": "a2a125d5288288b1bf22f160108297495d58c4ce77d36e0e2f66c8b3eaf1c011"
+    },
+    {
+      "path": "knowledge/characters/silent/potion-equivalents.json",
+      "sha256": "35198177465539a301fcb8aa6f80ec8196196a9ed898d459d95d175b75c440bc"
+    },
+    {
+      "path": "knowledge/characters/silent/reflex-vocab.json",
+      "sha256": "561d34d506aa4b8768531f51811aa80a3642bac0838dd32bea802167bf9891db"
+    },
+    {
+      "path": "knowledge/characters/silent/reflex.json",
+      "sha256": "d489acc71907783ef889a60e6a5672135052ecf6489db3b41ea87ecc4901c776"
+    },
+    {
+      "path": "knowledge/characters/silent/room-costs.json",
+      "sha256": "3009920de8d3299e452a3a187a39f4c21b191e3d72d9b6a280f43e52f7cd9e0a"
+    },
+    {
+      "path": "knowledge/characters/silent/v6-history.json",
+      "sha256": "f96faacf08ac61949a4d5ab2936e729ede17cad4e51384df378483269c7dd07c"
+    },
+    {
+      "path": "knowledge/common/card-upgrades.json",
+      "sha256": "4f0137dbb82e198461d628cf9713ff6219f4b20a6dc23345523515db33297b74"
+    },
+    {
+      "path": "knowledge/common/enemies/AEONGLASS/mechanics-observed.json",
+      "sha256": "6ae21ea416469d10e26a1d97268548c4c8a5cf3b0e9e333f7f26753b9279c6dc"
+    },
+    {
+      "path": "knowledge/common/enemies/AEONGLASS/mechanics.json",
+      "sha256": "987c6b5ad4536bf5a01da45f7494f274d255e39a192c2c45ef7e9fa0884f4734"
+    },
+    {
+      "path": "knowledge/common/enemies/AEONGLASS/model-observed.json",
+      "sha256": "e6da965e1454307906a030c3e5ddd0dc9a64a4d9fea07c008e29d12ed3f8c3d9"
+    },
+    {
+      "path": "knowledge/common/enemies/AEONGLASS/model.json",
+      "sha256": "f600cfa9a9c8fec297906f97abfba1a153d57afcec904a7a49a0d945aef501c9"
+    },
+    {
+      "path": "knowledge/common/enemies/ASSASSIN_RUBY_RAIDER/mechanics-observed.json",
+      "sha256": "56d8c001da945c72a74880818a2dfbff1a55be422d04a129313ff01ec690e698"
+    },
+    {
+      "path": "knowledge/common/enemies/ASSASSIN_RUBY_RAIDER/mechanics.json",
+      "sha256": "431f43c898692b967bbb5315c6ffd77fee88bdf53a99763ff7785e3470dc78c9"
+    },
+    {
+      "path": "knowledge/common/enemies/ASSASSIN_RUBY_RAIDER/model-observed.json",
+      "sha256": "a63c37113bd3ee065cacb2392bcf1306468cadd1e50d16db61a184c8c567556e"
+    },
+    {
+      "path": "knowledge/common/enemies/ASSASSIN_RUBY_RAIDER/model.json",
+      "sha256": "dc0571c0d02bf0c2c49915aaf573b918fd4487be78f9a0cff8a0714e747bcaf5"
+    },
+    {
+      "path": "knowledge/common/enemies/AXEBOT/mechanics-observed.json",
+      "sha256": "3f44459fc7ec445cc0ab244747f885c032a993b30069c2b95548d22762b502f8"
+    },
+    {
+      "path": "knowledge/common/enemies/AXEBOT/mechanics.json",
+      "sha256": "dde699d3af4d8cb9194f96b678698d597382129ec2a820590aa85a119051bcda"
+    },
+    {
+      "path": "knowledge/common/enemies/AXEBOT/model-observed.json",
+      "sha256": "57b9bf0e05154d2600e86694a924c2e7adc7aa155b608718a5b95cd5f89f8135"
+    },
+    {
+      "path": "knowledge/common/enemies/AXEBOT/model.json",
+      "sha256": "91d4dc2a5a63cbdc644c634cdb87fe69ddae29a133ba8f0faedd725506619cdf"
+    },
+    {
+      "path": "knowledge/common/enemies/AXE_RUBY_RAIDER/mechanics-observed.json",
+      "sha256": "78bb33502bbbd2136478e5c06238fd86b30def73e2c36e0da2c6813c6d3c2d33"
+    },
+    {
+      "path": "knowledge/common/enemies/AXE_RUBY_RAIDER/mechanics.json",
+      "sha256": "2c7ccab685210faf1ee4169cb7b382f5110ef9d3bcc3ac43213fccdc3578e8e6"
+    },
+    {
+      "path": "knowledge/common/enemies/AXE_RUBY_RAIDER/model-observed.json",
+      "sha256": "bab1b05514e93f2122ac3c094c38f3c0ec3aee30891e01725e9e4a1c870bc4a5"
+    },
+    {
+      "path": "knowledge/common/enemies/AXE_RUBY_RAIDER/model.json",
+      "sha256": "d00551bf791fbaca56b358d0cd65701922d4ab72e1ed1896b0c927d7c99a2d59"
+    },
+    {
+      "path": "knowledge/common/enemies/BATTLE_FRIEND_V1/mechanics-observed.json",
+      "sha256": "98b4c139dffce97101c50ce3fd0ba50ab29ab5decbd9e7be343f0cbdd27fc2f9"
+    },
+    {
+      "path": "knowledge/common/enemies/BATTLE_FRIEND_V1/mechanics.json",
+      "sha256": "f241fd32f5df9187ce3cb4f21a7a414d16e48a79b62758d9e4613673481740fb"
+    },
+    {
+      "path": "knowledge/common/enemies/BATTLE_FRIEND_V1/model-observed.json",
+      "sha256": "1046adfe5b7f2c6bcd47a6a8412c41414659e05c2dec7088acb045949e6de8f9"
+    },
+    {
+      "path": "knowledge/common/enemies/BATTLE_FRIEND_V1/model.json",
+      "sha256": "f6d148d5df959669f5e8b9679bdf579583dd718277208f6911671c623962d456"
+    },
+    {
+      "path": "knowledge/common/enemies/BATTLE_FRIEND_V2/mechanics-observed.json",
+      "sha256": "02c6bd71f069b9ede93fe1b0e76908017e68319fb6cc01dd5b8ad7d4e389b2e5"
+    },
+    {
+      "path": "knowledge/common/enemies/BATTLE_FRIEND_V2/mechanics.json",
+      "sha256": "f92a0c14464797eb41d90a973c42a919f0bd8a845b392f6667c05de28ddc5df7"
+    },
+    {
+      "path": "knowledge/common/enemies/BATTLE_FRIEND_V2/model-observed.json",
+      "sha256": "a20ffe4167e4ae0d7f25a11280dd93c5e97dafe0e66a720eb0a8b8bdfad7283d"
+    },
+    {
+      "path": "knowledge/common/enemies/BATTLE_FRIEND_V2/model.json",
+      "sha256": "d37ba34b899fb60540dd1c96842001d4c23ed34bd08ffbf13deb9f7b1a020aef"
+    },
+    {
+      "path": "knowledge/common/enemies/BOWLBUG_EGG/mechanics-observed.json",
+      "sha256": "66936a409cfdf11b5d5bc2b952e773dbe2df9f0c418edcb5a3ae344b0e2ea146"
+    },
+    {
+      "path": "knowledge/common/enemies/BOWLBUG_EGG/mechanics.json",
+      "sha256": "3d606711da7a52c93c4fb5d6d5751bb7dadfeb2861fd955e00c97dce31765cbd"
+    },
+    {
+      "path": "knowledge/common/enemies/BOWLBUG_EGG/model-observed.json",
+      "sha256": "3b17182e0d68ed33f489a9cc61ec641859e93b9ad84585a212d059d304e3ea37"
+    },
+    {
+      "path": "knowledge/common/enemies/BOWLBUG_EGG/model.json",
+      "sha256": "ffbac7b2bed34b71945d9f0fdf0f8db4dd57216648db7bd4286ebef9673071e5"
+    },
+    {
+      "path": "knowledge/common/enemies/BOWLBUG_NECTAR/mechanics-observed.json",
+      "sha256": "49d8d71c51026390f685cfa420fc391adddc73c7aa4083e997e58ae7b109496c"
+    },
+    {
+      "path": "knowledge/common/enemies/BOWLBUG_NECTAR/mechanics.json",
+      "sha256": "aca98cf30f507284e9d9a0f0203d4d9882810ed937e143df64c50dd9ae020c53"
+    },
+    {
+      "path": "knowledge/common/enemies/BOWLBUG_NECTAR/model-observed.json",
+      "sha256": "35f9f6e70ebd80879af8485dc4dc257cd0c2b85edeccc8b43da74310d2fca667"
+    },
+    {
+      "path": "knowledge/common/enemies/BOWLBUG_NECTAR/model.json",
+      "sha256": "feaec650b83d684365598cfc062477fa47cfa2b885fa4f0a3c9016b2dd2a25a8"
+    },
+    {
+      "path": "knowledge/common/enemies/BOWLBUG_ROCK/mechanics-observed.json",
+      "sha256": "3c4d77a1502f167d491054252454edb6263a028dd705d3beb4d6322d60a7c475"
+    },
+    {
+      "path": "knowledge/common/enemies/BOWLBUG_ROCK/mechanics.json",
+      "sha256": "c5dde21c27d678f953bcbd4983144940bf14e80d2b7063772b2c7ecd54525cc0"
+    },
+    {
+      "path": "knowledge/common/enemies/BOWLBUG_ROCK/model-observed.json",
+      "sha256": "b35ec0f43b464cdc83c9d6e5a8ec68afd1ade83cd81e167460459cec694fe8af"
+    },
+    {
+      "path": "knowledge/common/enemies/BOWLBUG_ROCK/model.json",
+      "sha256": "84f7ac81989dc43cf729f3f41fe82da914cc3de58f17f0fab3686dd1954c8070"
+    },
+    {
+      "path": "knowledge/common/enemies/BOWLBUG_SILK/mechanics-observed.json",
+      "sha256": "5e443d4312073482a950ac6f9455ac2f16a0ac9fe81ab893fba0abd01c64318d"
+    },
+    {
+      "path": "knowledge/common/enemies/BOWLBUG_SILK/mechanics.json",
+      "sha256": "4d5cfe30b3b29d8702ddf7c598da6c09f98136217a64786531e463d84eb77691"
+    },
+    {
+      "path": "knowledge/common/enemies/BOWLBUG_SILK/model-observed.json",
+      "sha256": "aae5b9d1e95c794211c222f3819bdfb80571a05a8e35e43f1832c118e620b6dc"
+    },
+    {
+      "path": "knowledge/common/enemies/BOWLBUG_SILK/model.json",
+      "sha256": "6b3cfa45cdd3a11576c1732e9584538088e6e35c5a93369bdaf6763664d71320"
+    },
+    {
+      "path": "knowledge/common/enemies/BRUTE_RUBY_RAIDER/mechanics-observed.json",
+      "sha256": "aadc6cb5b9d34ef37b764abd77768cbab5e72f9ff5aa06074513194a4db39980"
+    },
+    {
+      "path": "knowledge/common/enemies/BRUTE_RUBY_RAIDER/mechanics.json",
+      "sha256": "e2d3b0c6e445c910090d9d74940b85c9351172071f00a79c38597bc3baf8ff10"
+    },
+    {
+      "path": "knowledge/common/enemies/BRUTE_RUBY_RAIDER/model-observed.json",
+      "sha256": "c4ef9413273442a799946dac692800895b9ed659a758fef21011410ed102c5a8"
+    },
+    {
+      "path": "knowledge/common/enemies/BRUTE_RUBY_RAIDER/model.json",
+      "sha256": "5b102cfbbf356b73b9a4acb077673a23f00c6ff6740943b6ba3b24193f81006f"
+    },
+    {
+      "path": "knowledge/common/enemies/BYGONE_EFFIGY/mechanics-observed.json",
+      "sha256": "554dc638cc649872de329a68ff092a9995bde2433484b9ecb8583a9deb562385"
+    },
+    {
+      "path": "knowledge/common/enemies/BYGONE_EFFIGY/mechanics.json",
+      "sha256": "e1ecc645cf6a153412b4594c7d06a49fba0889f819dd792afdd6455b1b8c58c2"
+    },
+    {
+      "path": "knowledge/common/enemies/BYGONE_EFFIGY/model-observed.json",
+      "sha256": "43148eb57f2305dc266dd4eb687b66015410630f55e2b0fb214f71fd6e8d03b8"
+    },
+    {
+      "path": "knowledge/common/enemies/BYGONE_EFFIGY/model.json",
+      "sha256": "28bbee1acaa41b277477714501e309a05f99f50ef2babb115f6c8e8b9d60f13b"
+    },
+    {
+      "path": "knowledge/common/enemies/BYRDONIS/mechanics-observed.json",
+      "sha256": "c4c2da5679622b3b2fa766412a8da0389c71bf9fba302a4465b42045b3b2f98a"
+    },
+    {
+      "path": "knowledge/common/enemies/BYRDONIS/mechanics.json",
+      "sha256": "16387cff0d957e6bc571628078693f3ce14a46690d7c79ca2cb44914fcdce4f2"
+    },
+    {
+      "path": "knowledge/common/enemies/BYRDONIS/model-observed.json",
+      "sha256": "e663c1bdd76fb70abca57d7fa781538ec9b86cac2ebdeeb7ab13e6fa9f452af0"
+    },
+    {
+      "path": "knowledge/common/enemies/BYRDONIS/model.json",
+      "sha256": "e9c3939167a2f9174e717c664006603ea6bbcbb4cb5dd82c4510dcee65b3b470"
+    },
+    {
+      "path": "knowledge/common/enemies/CALCIFIED_CULTIST/mechanics-observed.json",
+      "sha256": "b206a239b52d5e07abe1a5c7e9947dd225a67b261134a22d759182e6fad95552"
+    },
+    {
+      "path": "knowledge/common/enemies/CALCIFIED_CULTIST/mechanics.json",
+      "sha256": "040235aa9aca2c391ebe00c954ff652dfde2649fd6f672e7059479e4b34a7fb1"
+    },
+    {
+      "path": "knowledge/common/enemies/CALCIFIED_CULTIST/model-observed.json",
+      "sha256": "8cf98264413436465f00693a4c6f54f16c280ed616843bdfe9819d4fa22ca778"
+    },
+    {
+      "path": "knowledge/common/enemies/CALCIFIED_CULTIST/model.json",
+      "sha256": "aac442da462657c255e93fd83144ccb7707f93fb935fda612ce3454201f0ef82"
+    },
+    {
+      "path": "knowledge/common/enemies/CEREMONIAL_BEAST/mechanics-observed.json",
+      "sha256": "7c472dbf6e9bf737d1132c733b9b7c4ac96ed373110fd242389c5afdfbc19816"
+    },
+    {
+      "path": "knowledge/common/enemies/CEREMONIAL_BEAST/mechanics.json",
+      "sha256": "59bae962eeb897885e663d494339ee7b9634b33bbc801889e4f099a2897cb75a"
+    },
+    {
+      "path": "knowledge/common/enemies/CEREMONIAL_BEAST/model-observed.json",
+      "sha256": "8340cb7ea4af120603a7fedde76182509126692ab00ba6b5c665fe008bc05f8c"
+    },
+    {
+      "path": "knowledge/common/enemies/CEREMONIAL_BEAST/model.json",
+      "sha256": "9a958fe146fe6c60bcad3933c1e62b9d129b84ee75ca8fb6dac6380438daf0e3"
+    },
+    {
+      "path": "knowledge/common/enemies/CHOMPER/mechanics-observed.json",
+      "sha256": "a0436ba946d71aa1c0290832ecf3b839a1b096654d474a962081694a254f31c9"
+    },
+    {
+      "path": "knowledge/common/enemies/CHOMPER/mechanics.json",
+      "sha256": "60c2b047ef4148ca872d6e335fabe25ff0161d7ba3a5feda7169e61080b8e48a"
+    },
+    {
+      "path": "knowledge/common/enemies/CHOMPER/model-observed.json",
+      "sha256": "14d5051d25da65d6bfbdb0f9b0216bfb88a9bacb9f9e9469af770a56432c5f8c"
+    },
+    {
+      "path": "knowledge/common/enemies/CHOMPER/model.json",
+      "sha256": "26256f93b335ea7cfaba704bd12bf3cf19e79ec04bb4a07c6f3d471fec43a43e"
+    },
+    {
+      "path": "knowledge/common/enemies/CORPSE_SLUG/mechanics-observed.json",
+      "sha256": "bc652a8cc80e337a94697d754552443f76f4c0106832f6bd156af617a1a0cc28"
+    },
+    {
+      "path": "knowledge/common/enemies/CORPSE_SLUG/mechanics.json",
+      "sha256": "3c3279883f6bf618427c900dec66bf4287b9351afc5a790441de7d3cd19560c7"
+    },
+    {
+      "path": "knowledge/common/enemies/CORPSE_SLUG/model-observed.json",
+      "sha256": "b77c69b55541b3ccd40358b838b63f0492a471c7ecf46a6fef89e9eff4de825e"
+    },
+    {
+      "path": "knowledge/common/enemies/CORPSE_SLUG/model.json",
+      "sha256": "0ac20d696555000def57a56e311b853513f55dcc141910426f295ad519d2394c"
+    },
+    {
+      "path": "knowledge/common/enemies/CROSSBOW_RUBY_RAIDER/mechanics-observed.json",
+      "sha256": "6c62b566a19c5da2c4a71bbcecb0b4367bac422f16123710d8604860d87790db"
+    },
+    {
+      "path": "knowledge/common/enemies/CROSSBOW_RUBY_RAIDER/mechanics.json",
+      "sha256": "1091664c3e71d36f7cf2bbaac4502f6acf5ccceba88b415c04921f6fc829e682"
+    },
+    {
+      "path": "knowledge/common/enemies/CROSSBOW_RUBY_RAIDER/model-observed.json",
+      "sha256": "7f40cc6453fd9754a64733720b922b03049043d588532298bb3b6cc0a818d905"
+    },
+    {
+      "path": "knowledge/common/enemies/CROSSBOW_RUBY_RAIDER/model.json",
+      "sha256": "28e8f636fc1a828ccd7dd779ee350a8c925b4edefcc99bf4910ee41e2a95f2e8"
+    },
+    {
+      "path": "knowledge/common/enemies/CRUSHER/mechanics-observed.json",
+      "sha256": "5a4a80f2800806dd01ee2b3c58cdb733dd147fa98c9782e8159ca4aaca2dc75e"
+    },
+    {
+      "path": "knowledge/common/enemies/CRUSHER/mechanics.json",
+      "sha256": "37f0c698d1f8b243aea8c53ce4fb4231c95aabe76fbfd042282bac1a27181c4b"
+    },
+    {
+      "path": "knowledge/common/enemies/CRUSHER/model-observed.json",
+      "sha256": "ab2952a477a092393a4fb716d929ab0d84aab6a8c06a01670075e5f871b7725a"
+    },
+    {
+      "path": "knowledge/common/enemies/CRUSHER/model.json",
+      "sha256": "ab1c42cbb276ec6e5863a1474483fa0bb82e7511cb9c907afe4162d233c29950"
+    },
+    {
+      "path": "knowledge/common/enemies/CUBEX_CONSTRUCT/mechanics-observed.json",
+      "sha256": "6ae8044936782f855c89b8375d1804edbdd700e37857a013f80c7d57eb4b9cf0"
+    },
+    {
+      "path": "knowledge/common/enemies/CUBEX_CONSTRUCT/mechanics.json",
+      "sha256": "9583b04bc265a1c1ef0a56b7854eac74d577cda86cfb95269822f0652627124e"
+    },
+    {
+      "path": "knowledge/common/enemies/CUBEX_CONSTRUCT/model-observed.json",
+      "sha256": "7d382072c46fbc6802da24b30bb72cc44fa2c6a922c475a13279c2e0dc166e8a"
+    },
+    {
+      "path": "knowledge/common/enemies/CUBEX_CONSTRUCT/model.json",
+      "sha256": "81842ec75956cb80465b6e80a6a019b4a7659be0bd7d739e5ca89a60da3ddcc6"
+    },
+    {
+      "path": "knowledge/common/enemies/DAMP_CULTIST/mechanics-observed.json",
+      "sha256": "475445727002db7970ef7a33c996da4fb59518ff16988b49a3c5d16f0c1a4005"
+    },
+    {
+      "path": "knowledge/common/enemies/DAMP_CULTIST/mechanics.json",
+      "sha256": "590ae57df3103a0395d97057bf3da303b80a76b3c544f8c2791b735b02e74df5"
+    },
+    {
+      "path": "knowledge/common/enemies/DAMP_CULTIST/model-observed.json",
+      "sha256": "d8661620b3555592ee95a31727f23e607d4b832dbb1a49c40f44f69320e7dc48"
+    },
+    {
+      "path": "knowledge/common/enemies/DAMP_CULTIST/model.json",
+      "sha256": "92b267f4b3d97044c637c3cb19a5948603158a681cefd8174944063cef6896c8"
+    },
+    {
+      "path": "knowledge/common/enemies/DECIMILLIPEDE_SEGMENT_BACK/mechanics-observed.json",
+      "sha256": "c390352acd2c42a72b4f5e19ac5d3863cd447ca2ca9dd68ef44f155c5cb2fc30"
+    },
+    {
+      "path": "knowledge/common/enemies/DECIMILLIPEDE_SEGMENT_BACK/mechanics.json",
+      "sha256": "e31b72d9e6667fabb3eb05b6c331a20f1f2cc7d94696dfadef1a549503de2e7a"
+    },
+    {
+      "path": "knowledge/common/enemies/DECIMILLIPEDE_SEGMENT_BACK/model-observed.json",
+      "sha256": "6a65532aa815429e53e328467aa5c9bf7b249856e3fdab252f266443706a2275"
+    },
+    {
+      "path": "knowledge/common/enemies/DECIMILLIPEDE_SEGMENT_BACK/model.json",
+      "sha256": "254e5b022e103f735dccc9ed10e4d7473452bf0d48a8e54b64559c7bb04929a8"
+    },
+    {
+      "path": "knowledge/common/enemies/DECIMILLIPEDE_SEGMENT_FRONT/mechanics-observed.json",
+      "sha256": "3591a9d825ce3efe59c8090805018acf1601cf0fa39678f03277c3c18b657ea9"
+    },
+    {
+      "path": "knowledge/common/enemies/DECIMILLIPEDE_SEGMENT_FRONT/mechanics.json",
+      "sha256": "16517bd85028121d26218ca25368395307ba047fc52e56953cfd0c0901ce65dc"
+    },
+    {
+      "path": "knowledge/common/enemies/DECIMILLIPEDE_SEGMENT_FRONT/model-observed.json",
+      "sha256": "7e079b40fdcaab423ddd8b886b9719a722f227848caf3f77ffe16af209a13398"
+    },
+    {
+      "path": "knowledge/common/enemies/DECIMILLIPEDE_SEGMENT_FRONT/model.json",
+      "sha256": "81672b8764e62a6d3f9802dda5c4a0df73bfc7c5ab2d7860ff59f3b3ea9b65d5"
+    },
+    {
+      "path": "knowledge/common/enemies/DECIMILLIPEDE_SEGMENT_MIDDLE/mechanics-observed.json",
+      "sha256": "981390245251093f27fdc435353e3a6e1075dd264e7728d6ae0ccf4256d7c9cc"
+    },
+    {
+      "path": "knowledge/common/enemies/DECIMILLIPEDE_SEGMENT_MIDDLE/mechanics.json",
+      "sha256": "82d82e5d35b8216e49acd5af54b7c3b2751ed188d83453be1d03d0d07a4bf1ee"
+    },
+    {
+      "path": "knowledge/common/enemies/DECIMILLIPEDE_SEGMENT_MIDDLE/model-observed.json",
+      "sha256": "105447db16ede0c9d6ff733586b84e4d5b37543718475d1b0b051273a8e30192"
+    },
+    {
+      "path": "knowledge/common/enemies/DECIMILLIPEDE_SEGMENT_MIDDLE/model.json",
+      "sha256": "9362ab432667501811139f974fbfab690cb95dbe0620ff0b0bd0e074db665686"
+    },
+    {
+      "path": "knowledge/common/enemies/DEVOTED_SCULPTOR/mechanics-observed.json",
+      "sha256": "76bb7e1054493e1748cdd95e37aaad40f4f9daae512c5029ebec83ef35e769ee"
+    },
+    {
+      "path": "knowledge/common/enemies/DEVOTED_SCULPTOR/mechanics.json",
+      "sha256": "cecae8644791da99181e8ec072192bca5aa8a60fc1a19c43b5aa85ad32093b82"
+    },
+    {
+      "path": "knowledge/common/enemies/DEVOTED_SCULPTOR/model-observed.json",
+      "sha256": "25d54655317eedc1f6c497219b0137e5b3645f26c3d0d5f2ac6ccbb2dc5873df"
+    },
+    {
+      "path": "knowledge/common/enemies/DEVOTED_SCULPTOR/model.json",
+      "sha256": "60b4b2677e414be8d13121170c17dc790e687f88c62d62420324ea78ccdd4e3b"
+    },
+    {
+      "path": "knowledge/common/enemies/ENTOMANCER/mechanics-observed.json",
+      "sha256": "a9d106ed8035c96a7f8abfbc382924bed22bf7677eb8c2f4413b4c580b82b93d"
+    },
+    {
+      "path": "knowledge/common/enemies/ENTOMANCER/mechanics.json",
+      "sha256": "53aea959ff64fa124c041d4afe6702b9c6f9fe4f58aa9b1b7b4f2c1ed73b5f9c"
+    },
+    {
+      "path": "knowledge/common/enemies/ENTOMANCER/model-observed.json",
+      "sha256": "4170ebe0033c2cef0550724a6cc31dd354ab2d499efbd403aeb9d3dc147bfa17"
+    },
+    {
+      "path": "knowledge/common/enemies/ENTOMANCER/model.json",
+      "sha256": "cc3435f0bd22802a528149700512e09265e4e4d51202c257e40eac1fb38076db"
+    },
+    {
+      "path": "knowledge/common/enemies/EXOSKELETON/mechanics-observed.json",
+      "sha256": "1cc123fb65b53cfb8b8961912ce103c6373c03ab807dc4b14ba5880e34f3cd4e"
+    },
+    {
+      "path": "knowledge/common/enemies/EXOSKELETON/mechanics.json",
+      "sha256": "91fc15203dd95c69bcf58c0a029691cddcfe9d0677042c730dccfe9c04134b89"
+    },
+    {
+      "path": "knowledge/common/enemies/EXOSKELETON/model-observed.json",
+      "sha256": "99c262d6956bc781624b22a240932bc61c3808010595711a58b66c4885ab7fa6"
+    },
+    {
+      "path": "knowledge/common/enemies/EXOSKELETON/model.json",
+      "sha256": "1c1993ee91dd578914a2dba7cd84db15872c6b4e4a28a3a805d9d96417f12778"
+    },
+    {
+      "path": "knowledge/common/enemies/EYE_WITH_TEETH/mechanics-observed.json",
+      "sha256": "c6875c5a3119ebec8043195a174a4d7b16b15356a2edff8bd9036649ce602e75"
+    },
+    {
+      "path": "knowledge/common/enemies/EYE_WITH_TEETH/mechanics.json",
+      "sha256": "0bdd55c74084494446b7f8f9d0d65c33e7eaabc28f546d0539a6987ad48bcb90"
+    },
+    {
+      "path": "knowledge/common/enemies/EYE_WITH_TEETH/model-observed.json",
+      "sha256": "9f4e02fc872f12e38a31985a65d8c1473f856caa1bb670bc8d13f5377f4154cd"
+    },
+    {
+      "path": "knowledge/common/enemies/EYE_WITH_TEETH/model.json",
+      "sha256": "413d22b0115cbd74ea71e837a61a6cb93f048999cc4e9f43d0563e7df07ef510"
+    },
+    {
+      "path": "knowledge/common/enemies/FABRICATOR/mechanics-observed.json",
+      "sha256": "e26921409e8883dac3945fd1f80c6eb2f2d1322f6c2d0933693578eb423effe7"
+    },
+    {
+      "path": "knowledge/common/enemies/FABRICATOR/mechanics.json",
+      "sha256": "e76ba15f935916050dd4882c7c274de953a1c6659ed71df338b0d552e5bd3c63"
+    },
+    {
+      "path": "knowledge/common/enemies/FABRICATOR/model-observed.json",
+      "sha256": "95c67395bacae204717a02d477f8c39bc12826d33bc04f6b60871334c4395031"
+    },
+    {
+      "path": "knowledge/common/enemies/FABRICATOR/model.json",
+      "sha256": "9b7655380910c0e21569a034af0d98a6ab91f699dc5019ace8f23f4029184107"
+    },
+    {
+      "path": "knowledge/common/enemies/FAT_GREMLIN/mechanics-observed.json",
+      "sha256": "0c46c506969cd3f30f124cb11c40a02cb32a8a41dadbfb60ca876762b2ee6edf"
+    },
+    {
+      "path": "knowledge/common/enemies/FAT_GREMLIN/mechanics.json",
+      "sha256": "0c05fb5b44070f32ec3a8f068a49c69fecf6837c99acad481fadae7cd5240715"
+    },
+    {
+      "path": "knowledge/common/enemies/FAT_GREMLIN/model-observed.json",
+      "sha256": "f3dc91c59e4620c19aae18294f0990205c2693dfb94e2daaf7a6968c7e94219c"
+    },
+    {
+      "path": "knowledge/common/enemies/FAT_GREMLIN/model.json",
+      "sha256": "8ea70924cd20871a29bdf3a8c26c96fa618356e84958b62fc30fefe27b10702c"
+    },
+    {
+      "path": "knowledge/common/enemies/FLAIL_KNIGHT/mechanics-observed.json",
+      "sha256": "04832fecc07591fd42494802188ac0926731ad84c109fb182ca2a2c5a775aa6a"
+    },
+    {
+      "path": "knowledge/common/enemies/FLAIL_KNIGHT/mechanics.json",
+      "sha256": "5423f21cd08a995bd66d06a0d4a06bbed7c34c21d6b9c45dd7220e6598796a6c"
+    },
+    {
+      "path": "knowledge/common/enemies/FLAIL_KNIGHT/model-observed.json",
+      "sha256": "3b5a23bfce3301e98869b33fea9455a78bb066e42c1e72d64312ddf708aee086"
+    },
+    {
+      "path": "knowledge/common/enemies/FLAIL_KNIGHT/model.json",
+      "sha256": "47595d617a1f738f3e2b29396ad69f48f24065c9351874ff72ec704c8204f87d"
+    },
+    {
+      "path": "knowledge/common/enemies/FLYCONID/mechanics-observed.json",
+      "sha256": "a5ad5ad06cdbbfdbbc3f0c12ccb6fe626d958cfa348604e0c142cf7d705e7673"
+    },
+    {
+      "path": "knowledge/common/enemies/FLYCONID/mechanics.json",
+      "sha256": "0ef5b9a6b24f5db90bc5b4c93b0c7f8709da8fce956d8b02d57e105fab0b9054"
+    },
+    {
+      "path": "knowledge/common/enemies/FLYCONID/model-observed.json",
+      "sha256": "a60fa442d30c9a5bd3c67eb42e0df72b9857142dac423d77a49fe14676404328"
+    },
+    {
+      "path": "knowledge/common/enemies/FLYCONID/model.json",
+      "sha256": "894b020b1064803b8a4201e5d9bf1e3b3d3f614b77b6f8d6b206209165215f4d"
+    },
+    {
+      "path": "knowledge/common/enemies/FOGMOG/mechanics-observed.json",
+      "sha256": "bf280a8a80ccf795c53d980fafa9c38aec61c62b71c1e3c729609b3e86c373f9"
+    },
+    {
+      "path": "knowledge/common/enemies/FOGMOG/mechanics.json",
+      "sha256": "4f1d5185a8e3dddc4be5eded3d2f7dbb6d67d39ef5862950d4ff83069aa3541c"
+    },
+    {
+      "path": "knowledge/common/enemies/FOGMOG/model-observed.json",
+      "sha256": "e27ecc4c7d659a747fb1c4030537fec5a6d176e0f7726d3a90292483cc4b5b8d"
+    },
+    {
+      "path": "knowledge/common/enemies/FOGMOG/model.json",
+      "sha256": "9b29716214b5c0dc00960867a06f94a7d7af1dca349440021184ad4f15531c5e"
+    },
+    {
+      "path": "knowledge/common/enemies/FOSSIL_STALKER/mechanics-observed.json",
+      "sha256": "ea860a41f3579b45fa72d1701004bcf05fddb781f5e32bf18716123329d2f92c"
+    },
+    {
+      "path": "knowledge/common/enemies/FOSSIL_STALKER/mechanics.json",
+      "sha256": "f341959daba0ad96ed4b3b26176f56c390581a2c169e0c17ef8a07e2a8fa2246"
+    },
+    {
+      "path": "knowledge/common/enemies/FOSSIL_STALKER/model-observed.json",
+      "sha256": "17a56cc527f9922e2ba7f932b09122018aad18dfa94ea9ff8f226f99672e912e"
+    },
+    {
+      "path": "knowledge/common/enemies/FOSSIL_STALKER/model.json",
+      "sha256": "3b030e6f73ae1b30f99995fb5bc3fbfb8ec9b6a8db2eb735afb1022b7ca4cd98"
+    },
+    {
+      "path": "knowledge/common/enemies/FROG_KNIGHT/mechanics-observed.json",
+      "sha256": "5f7f3f47e98a1061a3462c37f0764f55d340980e3df8fa74f281f427342ff394"
+    },
+    {
+      "path": "knowledge/common/enemies/FROG_KNIGHT/mechanics.json",
+      "sha256": "f74e751a5245bef05af02e772655a947b995d99a196f5deb4d1703c311e27daf"
+    },
+    {
+      "path": "knowledge/common/enemies/FROG_KNIGHT/model-observed.json",
+      "sha256": "f6335fe0128048f308b43b1bf8cd3865dc9b27a7539d43afb5e609ddb6b24c26"
+    },
+    {
+      "path": "knowledge/common/enemies/FROG_KNIGHT/model.json",
+      "sha256": "7f2c993f7502be801214149477fbcecc6585cb44e856703875f2923443505b71"
+    },
+    {
+      "path": "knowledge/common/enemies/FUZZY_WURM_CRAWLER/mechanics-observed.json",
+      "sha256": "ec4d15416b6f44b3e32fe7c38d2f00ebb6db04ff17dc7ef2c53e4936124cbfd8"
+    },
+    {
+      "path": "knowledge/common/enemies/FUZZY_WURM_CRAWLER/mechanics.json",
+      "sha256": "ea6d58c803983e38fd22de76afe6cb76974d905e0e8f1ff9bf0c69e6f5e0ce5a"
+    },
+    {
+      "path": "knowledge/common/enemies/FUZZY_WURM_CRAWLER/model-observed.json",
+      "sha256": "7225d51f4cec5a43bd13ffee292ac382f46eeaf276a9da2a72afde7bed3faa9c"
+    },
+    {
+      "path": "knowledge/common/enemies/FUZZY_WURM_CRAWLER/model.json",
+      "sha256": "dd64f6c48f6688167555068f0c8ee6ce53285f8a4008b573de9ee66b66ce3c9a"
+    },
+    {
+      "path": "knowledge/common/enemies/GAS_BOMB/mechanics-observed.json",
+      "sha256": "318f53378798bc4c5ab28947c63c567a04a50bb87ebc1dcbd32cdd2878a506f9"
+    },
+    {
+      "path": "knowledge/common/enemies/GAS_BOMB/mechanics.json",
+      "sha256": "de34d0d7cf2dc594d3456c841e84a3161aac303d7bffb888486a4a7cd4e59986"
+    },
+    {
+      "path": "knowledge/common/enemies/GAS_BOMB/model-observed.json",
+      "sha256": "cb0d7906eebc9e2f112253e16dfa2fec390c37d2fd1162e133d3c01016b5dacf"
+    },
+    {
+      "path": "knowledge/common/enemies/GAS_BOMB/model.json",
+      "sha256": "df6b51d0c98cf4864ca1c44a5144a2741d8c3a9cf8ed9e451cfe13b7219cbbeb"
+    },
+    {
+      "path": "knowledge/common/enemies/GLOBE_HEAD/mechanics-observed.json",
+      "sha256": "51d3c19f715bae3ffa421ea05d29ad589ac86c1a14cea1afe55271854252dcb7"
+    },
+    {
+      "path": "knowledge/common/enemies/GLOBE_HEAD/mechanics.json",
+      "sha256": "23989c231b7552c3cabeef765f7099c8a3d4e2e1b3f175c7f1d142df94094436"
+    },
+    {
+      "path": "knowledge/common/enemies/GLOBE_HEAD/model-observed.json",
+      "sha256": "c35f190995497d74d02bd54cd7b64e5b9a8796db7d1438dbca787ad3c5229bd9"
+    },
+    {
+      "path": "knowledge/common/enemies/GLOBE_HEAD/model.json",
+      "sha256": "2ac9e63acb751613bb2800e799147fe2cfd4e8165cf022594dd405c3b09393c4"
+    },
+    {
+      "path": "knowledge/common/enemies/GREMLIN_MERC/mechanics-observed.json",
+      "sha256": "2c5b33472f42557ccada180fbb436b82e0ecb460c1a8fc2623937119b1329993"
+    },
+    {
+      "path": "knowledge/common/enemies/GREMLIN_MERC/mechanics.json",
+      "sha256": "04eac294150b6062980d38446c626995c80dc27882e7e8e84fa93836f0ad0fcf"
+    },
+    {
+      "path": "knowledge/common/enemies/GREMLIN_MERC/model-observed.json",
+      "sha256": "0f38fa40e0290c30780ee9744883aa34c601a2b7eac652360637c714e28cfaca"
+    },
+    {
+      "path": "knowledge/common/enemies/GREMLIN_MERC/model.json",
+      "sha256": "9009440238a8a10156e3743c53e8c8006c64667035a7d8b6974961975863d2cd"
+    },
+    {
+      "path": "knowledge/common/enemies/GUARDBOT/mechanics-observed.json",
+      "sha256": "26a4bfed1638cd22816d7dd69db7270c12a267d900f0145da1c4d7199ed8d4b2"
+    },
+    {
+      "path": "knowledge/common/enemies/GUARDBOT/mechanics.json",
+      "sha256": "5c86c100c26922e98dd4a9a480b99ab3c403f467571cbe80784767d5145c23ab"
+    },
+    {
+      "path": "knowledge/common/enemies/GUARDBOT/model-observed.json",
+      "sha256": "f266538e3e04f23cc8fedb57aea44d7d9e7d042e202d6ae6ff62d4ac643759b9"
+    },
+    {
+      "path": "knowledge/common/enemies/GUARDBOT/model.json",
+      "sha256": "bc2767ac3ea9d4d436553c4a5f721cddc504de812991097657cf638dfe66e126"
+    },
+    {
+      "path": "knowledge/common/enemies/HAUNTED_SHIP/mechanics-observed.json",
+      "sha256": "96f2e0f6939469e6ca992b3539cb14aa7dd74c52782dc4013e0156421db7dce0"
+    },
+    {
+      "path": "knowledge/common/enemies/HAUNTED_SHIP/mechanics.json",
+      "sha256": "adde0592d7339aeb59eb0406deaee3b75ce491c3bcdc57d0b28555cf10da2054"
+    },
+    {
+      "path": "knowledge/common/enemies/HAUNTED_SHIP/model-observed.json",
+      "sha256": "6bb25fec9757a0ee0bb808f0ebf27fa797d4e75aeea78f308050337ce146832e"
+    },
+    {
+      "path": "knowledge/common/enemies/HAUNTED_SHIP/model.json",
+      "sha256": "6fb63cbba69ee7402f65f2680be272a6f415c7a08ecf994b50839986a6fb17aa"
+    },
+    {
+      "path": "knowledge/common/enemies/HUNTER_KILLER/mechanics-observed.json",
+      "sha256": "ca46654e726d67c671f26837188760e4abce5d5c1f55dc47d11283b6587b0643"
+    },
+    {
+      "path": "knowledge/common/enemies/HUNTER_KILLER/mechanics.json",
+      "sha256": "f71689528bf9fa89b67d82bb7362bc9fa6c57010e41f3dee690d6bda7502fb8b"
+    },
+    {
+      "path": "knowledge/common/enemies/HUNTER_KILLER/model-observed.json",
+      "sha256": "7b70b2c319205b5dd08f1598ddf24c004f1dd63621acaf2ca8768194256a3528"
+    },
+    {
+      "path": "knowledge/common/enemies/HUNTER_KILLER/model.json",
+      "sha256": "d70f10f727409846b46d477c3834819c6f1a5ddf454e21bb7958e3f85cc4517f"
+    },
+    {
+      "path": "knowledge/common/enemies/INFESTED_PRISM/mechanics-observed.json",
+      "sha256": "3c5e20e476b11ee6e933887354c5b15447dbe6270d1f83fe632517123cb4ab2e"
+    },
+    {
+      "path": "knowledge/common/enemies/INFESTED_PRISM/mechanics.json",
+      "sha256": "642f8092caa8713d5f69a45d540136bdcf79736025ee76b89583d89a13ee8857"
+    },
+    {
+      "path": "knowledge/common/enemies/INFESTED_PRISM/model-observed.json",
+      "sha256": "4aad83cf5f915750423132ae3eb7763e0d7e78008f66d272785eb7d5c744f89a"
+    },
+    {
+      "path": "knowledge/common/enemies/INFESTED_PRISM/model.json",
+      "sha256": "c1b18efb1716f1d790c1c7e69a085273df215be8c07031b6dac3da5ce2a73a19"
+    },
+    {
+      "path": "knowledge/common/enemies/INKLET/mechanics-observed.json",
+      "sha256": "e8557ee41840d6b123561c806757a9f4822a1487c1733533221c69cdedcc2ab9"
+    },
+    {
+      "path": "knowledge/common/enemies/INKLET/mechanics.json",
+      "sha256": "a4dc30800ba50d6c19202e93f55f61900cead2aefa1c1cb3200b445274583d30"
+    },
+    {
+      "path": "knowledge/common/enemies/INKLET/model-observed.json",
+      "sha256": "b63e83c1ee4cafb789254056d8f026be3bb337e7cc5b1433099de8fa0fc42700"
+    },
+    {
+      "path": "knowledge/common/enemies/INKLET/model.json",
+      "sha256": "862a5087bf0e98bbb7225bc7edfb270cbf794ad941667df35e6de3f47d91a4e0"
+    },
+    {
+      "path": "knowledge/common/enemies/KIN_FOLLOWER/mechanics-observed.json",
+      "sha256": "d958769ce9453e3bffc57442e8e2b6863d88d205476b2e8ef3b618da1896b1b1"
+    },
+    {
+      "path": "knowledge/common/enemies/KIN_FOLLOWER/mechanics.json",
+      "sha256": "478c7057a908b01912e7b7efb2f33ef6b64c9a40223a05e63332b1cc91842238"
+    },
+    {
+      "path": "knowledge/common/enemies/KIN_FOLLOWER/model-observed.json",
+      "sha256": "723e52eecc80e833d42b16ee0e0aa9d1bf1ee5eb6b929cdf1f6a9dd0c33a0e89"
+    },
+    {
+      "path": "knowledge/common/enemies/KIN_FOLLOWER/model.json",
+      "sha256": "9be5a8347741a2693baef6393d246e97215e8824c7286d6199723aacd3a3d376"
+    },
+    {
+      "path": "knowledge/common/enemies/KIN_PRIEST/mechanics-observed.json",
+      "sha256": "8ba192c097b68a3f88179a18a9537682c32edbe5152a0e281ee73d733958d231"
+    },
+    {
+      "path": "knowledge/common/enemies/KIN_PRIEST/mechanics.json",
+      "sha256": "31b2e0f67639b1c52970d2e298ba31e8fe93d85dad15549ed9457728c6792234"
+    },
+    {
+      "path": "knowledge/common/enemies/KIN_PRIEST/model-observed.json",
+      "sha256": "f6ef19baed62c8de3740e21f8d81f7f6bdff567aa3d077f80d70e153e209fbb6"
+    },
+    {
+      "path": "knowledge/common/enemies/KIN_PRIEST/model.json",
+      "sha256": "f34060fc890f1338ded844e1c21edbc93ece1d83c3c2c83a0ba395015a3d8b3b"
+    },
+    {
+      "path": "knowledge/common/enemies/KNOWLEDGE_DEMON/mechanics-observed.json",
+      "sha256": "7def2b77b6bb1fc8326a2a118b36f69a5fc0e2b134f59ceaf895220c6a77f9f7"
+    },
+    {
+      "path": "knowledge/common/enemies/KNOWLEDGE_DEMON/mechanics.json",
+      "sha256": "c9d045c32a9fd8939d37c944a533c96c3acedbe82468e08b94b2f7ee9463c714"
+    },
+    {
+      "path": "knowledge/common/enemies/KNOWLEDGE_DEMON/model-observed.json",
+      "sha256": "25bdbf347f7ea6f8c0f0f3dcd5571e3a44e9020a560355d2873e460543680717"
+    },
+    {
+      "path": "knowledge/common/enemies/KNOWLEDGE_DEMON/model.json",
+      "sha256": "b9c71079755fe9030b8c07b0eb42db7ce436a2f7ed75ba78533b1b65b0de7059"
+    },
+    {
+      "path": "knowledge/common/enemies/LAGAVULIN_MATRIARCH/mechanics-observed.json",
+      "sha256": "29006d6df7f852fd8bb0cce9696b70d70b05150a871174a8ebd7181e01d32af9"
+    },
+    {
+      "path": "knowledge/common/enemies/LAGAVULIN_MATRIARCH/mechanics.json",
+      "sha256": "80345cd8bd7102af89941bd1b4f0b42c3aabc0e085435d1c3d163efaeedb4a5a"
+    },
+    {
+      "path": "knowledge/common/enemies/LAGAVULIN_MATRIARCH/model-observed.json",
+      "sha256": "8e1a1452cb92144cb4d826bf195f54f343c238bb9b84e45bde78a8d039fc0542"
+    },
+    {
+      "path": "knowledge/common/enemies/LAGAVULIN_MATRIARCH/model.json",
+      "sha256": "ef2dfd9300085250936574df152eda63bccd2169a5d0e0636d506895c86f33c1"
+    },
+    {
+      "path": "knowledge/common/enemies/LEAF_SLIME_M/mechanics-observed.json",
+      "sha256": "29750095f6a6ff05196aba4d56a198d2dae74ce207a1a1fac9217ad1e60736cc"
+    },
+    {
+      "path": "knowledge/common/enemies/LEAF_SLIME_M/mechanics.json",
+      "sha256": "e6564737e4a12b7580b2b46494844f7eb2d75b81b8f1a25efe63642969840a1e"
+    },
+    {
+      "path": "knowledge/common/enemies/LEAF_SLIME_M/model-observed.json",
+      "sha256": "0a37201d0edc69ec7a0205e54801522d3847fb9967b6cde0d1f49d65e7974193"
+    },
+    {
+      "path": "knowledge/common/enemies/LEAF_SLIME_M/model.json",
+      "sha256": "6ebc5fd58706bf52434a1a10ef131c3707838c23e1e4358b0b3cb3cbb074adbe"
+    },
+    {
+      "path": "knowledge/common/enemies/LEAF_SLIME_S/mechanics-observed.json",
+      "sha256": "516f580c69be4ee78ac3c966101f562ac584b69a5b6d5e15f9df4c09036e2d98"
+    },
+    {
+      "path": "knowledge/common/enemies/LEAF_SLIME_S/mechanics.json",
+      "sha256": "340351243e973f3e936c53e75af02c3d45d14ce3ef7bad1cc2ebdbd8983900d2"
+    },
+    {
+      "path": "knowledge/common/enemies/LEAF_SLIME_S/model-observed.json",
+      "sha256": "9f889a1d98e23bbb513eac4a8987eec87456da1ad12ea2d0a3c0661e40f02cae"
+    },
+    {
+      "path": "knowledge/common/enemies/LEAF_SLIME_S/model.json",
+      "sha256": "992c22f6a513dd2e8cb2d9789b2e14518e60a030365acb2431091fd296369af7"
+    },
+    {
+      "path": "knowledge/common/enemies/LIVING_FOG/mechanics-observed.json",
+      "sha256": "aa72ee41225ea3cf3ef39497993980e025bd8ff5e10b7e4c8925e1fdd7e02f9c"
+    },
+    {
+      "path": "knowledge/common/enemies/LIVING_FOG/mechanics.json",
+      "sha256": "bd8287b477d773e1317f68230f9d8084b94b48eff8b09e26076d52413ff8fc00"
+    },
+    {
+      "path": "knowledge/common/enemies/LIVING_FOG/model-observed.json",
+      "sha256": "3dbe6b1475138c5fe1ecb775b5664cbb31d4df8bd76ef77544cc9eeb1dcffa20"
+    },
+    {
+      "path": "knowledge/common/enemies/LIVING_FOG/model.json",
+      "sha256": "5db595ad80f07361c7c338817f9198f60fba050091e17b7271a2735e8549dc5e"
+    },
+    {
+      "path": "knowledge/common/enemies/LIVING_SHIELD/mechanics-observed.json",
+      "sha256": "ba3d7070aa8f1a444974625061e121d44d928da0121f09a26475af739e544a66"
+    },
+    {
+      "path": "knowledge/common/enemies/LIVING_SHIELD/mechanics.json",
+      "sha256": "127a73ff675fbc816665b59856dcdd51ef00d81c42b590d91db86b47a03fd946"
+    },
+    {
+      "path": "knowledge/common/enemies/LIVING_SHIELD/model-observed.json",
+      "sha256": "a1e63962fb9cc66f975c421ef6da452ae30600702d4bc20b01cbc4a3b6623309"
+    },
+    {
+      "path": "knowledge/common/enemies/LIVING_SHIELD/model.json",
+      "sha256": "4215ea6c4d7226240d95bc0fe2c523b4e5e3c1ba1bd8c6c1fa3c7a6013ea1fd6"
+    },
+    {
+      "path": "knowledge/common/enemies/LOUSE_PROGENITOR/mechanics-observed.json",
+      "sha256": "f875468aa247a56e56d23d37de6f50296c7330344be7092be5ee28d5ecda18e5"
+    },
+    {
+      "path": "knowledge/common/enemies/LOUSE_PROGENITOR/mechanics.json",
+      "sha256": "a84bd825b735f75f10c459ab77c469c27c1a830159b762f2868bed9b7c624922"
+    },
+    {
+      "path": "knowledge/common/enemies/LOUSE_PROGENITOR/model-observed.json",
+      "sha256": "de591a83be415c4bee248ea1c45847f6ceb9b1c62e35b83e5a28f8f8f94f198d"
+    },
+    {
+      "path": "knowledge/common/enemies/LOUSE_PROGENITOR/model.json",
+      "sha256": "9d4dad2b1642495a64563ab3657027dd1baf7fa073171eb52f9a2ae9233090fe"
+    },
+    {
+      "path": "knowledge/common/enemies/MAGI_KNIGHT/mechanics-observed.json",
+      "sha256": "538ab768747519c3886085b2887d17a97c6395a323fa176d841ec582777dd9cf"
+    },
+    {
+      "path": "knowledge/common/enemies/MAGI_KNIGHT/mechanics.json",
+      "sha256": "21efb66af8c6f2e249463a060108442a2e67100528e70746245e171ada4bf59b"
+    },
+    {
+      "path": "knowledge/common/enemies/MAGI_KNIGHT/model-observed.json",
+      "sha256": "085b6e7a2cd60005a21afaadecd0eee56d0e49d9acb8f87c55c237972ba7dce6"
+    },
+    {
+      "path": "knowledge/common/enemies/MAGI_KNIGHT/model.json",
+      "sha256": "f3b6b90412b935b99d9d7b2d14ce704249db602bb3d4057bc5fa2f4f77a5932d"
+    },
+    {
+      "path": "knowledge/common/enemies/MAWLER/mechanics-observed.json",
+      "sha256": "0b52e5b5d3ab5283d8a15268b68c76894618d167dae76771e79ffe555720ee76"
+    },
+    {
+      "path": "knowledge/common/enemies/MAWLER/mechanics.json",
+      "sha256": "8806fe5d693ee5403e36c84af264310651484a3fdd28aac088d1deb9979a3452"
+    },
+    {
+      "path": "knowledge/common/enemies/MAWLER/model-observed.json",
+      "sha256": "45e40cfb7bd0c67f922876736f7f9650f81a875f86fe5ce8588b11b358448934"
+    },
+    {
+      "path": "knowledge/common/enemies/MAWLER/model.json",
+      "sha256": "c495a205795b172d31a3b07326ad07685181a08c5993e268d6b17f6e2441851d"
+    },
+    {
+      "path": "knowledge/common/enemies/MECHA_KNIGHT/mechanics-observed.json",
+      "sha256": "c544eadf9e202ef66c4e0a8204dfdf1cdb5f5afc148779ea4b9ad1952fd194a8"
+    },
+    {
+      "path": "knowledge/common/enemies/MECHA_KNIGHT/mechanics.json",
+      "sha256": "8cbb993a46fb0b7b250551a4f2c2bef5b11b931ac25384c46098fa764f730eac"
+    },
+    {
+      "path": "knowledge/common/enemies/MECHA_KNIGHT/model-observed.json",
+      "sha256": "a11a1f5b8226bfa95c5de1cf11f4fa241270e5389020eaf41efbdf3df04b70c1"
+    },
+    {
+      "path": "knowledge/common/enemies/MECHA_KNIGHT/model.json",
+      "sha256": "2f8d3b6c51626e874b02ff996920ae70f0cc2187b5734ff7ff1ceeef72fddba7"
+    },
+    {
+      "path": "knowledge/common/enemies/MYSTERIOUS_KNIGHT/mechanics-observed.json",
+      "sha256": "954371aa756ec40754574186e607a493c25d105a4515f2dffc01ad1027cf2ff8"
+    },
+    {
+      "path": "knowledge/common/enemies/MYSTERIOUS_KNIGHT/mechanics.json",
+      "sha256": "c86b5508bdb65ca86abedf25f140404ee6762732c9b49afd4e7b2793219580da"
+    },
+    {
+      "path": "knowledge/common/enemies/MYSTERIOUS_KNIGHT/model-observed.json",
+      "sha256": "d007c0dcf7c321ebb6a2cebd8e684957ee7707f2b9f2222116cdd8e1b2729841"
+    },
+    {
+      "path": "knowledge/common/enemies/MYSTERIOUS_KNIGHT/model.json",
+      "sha256": "150044828e228270731a617f4725627ad3ae0018108508a2c454c6fb88b11386"
+    },
+    {
+      "path": "knowledge/common/enemies/MYTE/mechanics-observed.json",
+      "sha256": "cc8ca4b72aa131a015205412197592382e32ab41ac917b8222ea43c67394874c"
+    },
+    {
+      "path": "knowledge/common/enemies/MYTE/mechanics.json",
+      "sha256": "0b8338a6dd1d84eec6ab7d796a47b3803fd1ed192fd961f566de0dc1fec93aea"
+    },
+    {
+      "path": "knowledge/common/enemies/MYTE/model-observed.json",
+      "sha256": "0dcc8cad04f0176f2aa7e2bffbdb7cd21d1c4740f9488dfcd7c39f26a93a4d99"
+    },
+    {
+      "path": "knowledge/common/enemies/MYTE/model.json",
+      "sha256": "c861106e89251249fc803e18779581bbf599a73d7610db5a5a4d2bcd9a9c17ac"
+    },
+    {
+      "path": "knowledge/common/enemies/NIBBIT/mechanics-observed.json",
+      "sha256": "49c5bbbc801497763b86d91d66eed03a6f4ba1e637ef3c7eee22994a7167c7a6"
+    },
+    {
+      "path": "knowledge/common/enemies/NIBBIT/mechanics.json",
+      "sha256": "00ccacfc349f97938afd72d514d16dd07accc1fdd5ba0613b9118a6db8bdee0a"
+    },
+    {
+      "path": "knowledge/common/enemies/NIBBIT/model-observed.json",
+      "sha256": "c3da3347ab3a88b862aaa5bc4dca1913e5fe94f73ebff8a27c9692da465ea4d1"
+    },
+    {
+      "path": "knowledge/common/enemies/NIBBIT/model.json",
+      "sha256": "71743f5d0565475b89e15d9075f314c7f3b6cfaffa4129e07cb492e4167fe999"
+    },
+    {
+      "path": "knowledge/common/enemies/NOISEBOT/mechanics-observed.json",
+      "sha256": "94932690d01fff438abc0faa02240a16e32029fb4fab6a8057d8a5c22f67b7bd"
+    },
+    {
+      "path": "knowledge/common/enemies/NOISEBOT/mechanics.json",
+      "sha256": "61ef49d71376373b8a644f9e1879ced8b96e3e28166c0fd242ed2236403cf366"
+    },
+    {
+      "path": "knowledge/common/enemies/NOISEBOT/model-observed.json",
+      "sha256": "4b1973cc504199fad996fd6f974ca6ec0826e2fa6cdb4226e0950d01799b12b7"
+    },
+    {
+      "path": "knowledge/common/enemies/NOISEBOT/model.json",
+      "sha256": "492e53cee11916a8fd59a8b2da9ff61061d2328b8e36b67a9e0f5489a2e1f96e"
+    },
+    {
+      "path": "knowledge/common/enemies/OVICOPTER/mechanics-observed.json",
+      "sha256": "07a0dfbc28f4af4c317a49fb58c9d386b0a84f9450dd53f4a195f1b7090a068c"
+    },
+    {
+      "path": "knowledge/common/enemies/OVICOPTER/mechanics.json",
+      "sha256": "58a8f8063e3f22db2c6f18aab2d18c075c357d06883eb763048ddfffb087a466"
+    },
+    {
+      "path": "knowledge/common/enemies/OVICOPTER/model-observed.json",
+      "sha256": "a1a41f2b68ec2e9a054b008ab1ba310556c260689977bcf87e506b9618f941ec"
+    },
+    {
+      "path": "knowledge/common/enemies/OVICOPTER/model.json",
+      "sha256": "5ed51880edcabdf332ecedd368fbd13ecd0ae8ccce5d9a48ab6ce171136a58fa"
+    },
+    {
+      "path": "knowledge/common/enemies/OWL_MAGISTRATE/mechanics-observed.json",
+      "sha256": "0a536ae0bb6f9beb00b6b2f0809f2e3c1e4526fedc0283f41bc665303812e27f"
+    },
+    {
+      "path": "knowledge/common/enemies/OWL_MAGISTRATE/mechanics.json",
+      "sha256": "91f045d80fab8cc9d9db8cb6d7ee9e71967d2abe77ca7d2ac7eb06d52177f827"
+    },
+    {
+      "path": "knowledge/common/enemies/OWL_MAGISTRATE/model-observed.json",
+      "sha256": "4745a58da1672dd4ec2b538d96d25dbb9783e032860ea7dc0165a676ba6b5105"
+    },
+    {
+      "path": "knowledge/common/enemies/OWL_MAGISTRATE/model.json",
+      "sha256": "2e1e5fbadae93a77d6858e1100bbd20210f91a75cf3c800fc16a1e85c50b1a84"
+    },
+    {
+      "path": "knowledge/common/enemies/PARAFRIGHT/mechanics-observed.json",
+      "sha256": "94fa2ccc41b930c898cc04b55f7d26d6a735f20d53fc0ddae2596e6c8e48b008"
+    },
+    {
+      "path": "knowledge/common/enemies/PARAFRIGHT/mechanics.json",
+      "sha256": "184ac1657b81bbc8a9ecccfa9fb2969a28a1be8f3d18d4bf4dc16ea6c51574ba"
+    },
+    {
+      "path": "knowledge/common/enemies/PARAFRIGHT/model-observed.json",
+      "sha256": "e22431f5f5e6f23a435106e9293bb88a73b04fe14181991470993623cc0a22e7"
+    },
+    {
+      "path": "knowledge/common/enemies/PARAFRIGHT/model.json",
+      "sha256": "a4d0f7985d0ad032b521c1a5d0790b58a63f79088a0dd2d3a0f93f919b8abca0"
+    },
+    {
+      "path": "knowledge/common/enemies/PHANTASMAL_GARDENER/mechanics-observed.json",
+      "sha256": "29cc8d3356671b3d2f8c8eab59f0cdaf13a063e77f53b43c687f649339c976cb"
+    },
+    {
+      "path": "knowledge/common/enemies/PHANTASMAL_GARDENER/mechanics.json",
+      "sha256": "160f66a2f6a0adb7c1c37e0d968e596e3a679f5cc6c492425acff910136177b7"
+    },
+    {
+      "path": "knowledge/common/enemies/PHANTASMAL_GARDENER/model-observed.json",
+      "sha256": "2dea72565b6ec82f128d951fdd18bdbe90e9c1ec0575e7336a4dfbed69f3f2c5"
+    },
+    {
+      "path": "knowledge/common/enemies/PHANTASMAL_GARDENER/model.json",
+      "sha256": "eced1ded274f96caf6781fdfb0888cb5199f8b61c33a2c497ced0059fe7110f3"
+    },
+    {
+      "path": "knowledge/common/enemies/PHROG_PARASITE/mechanics-observed.json",
+      "sha256": "91868d899b03e31a1df67f94c6e0ebfe6c59df65d127c1d9c193fc5613fad377"
+    },
+    {
+      "path": "knowledge/common/enemies/PHROG_PARASITE/mechanics.json",
+      "sha256": "d76669a15f70d7a9173eb801ef3ecd994647c89892cfd565844606518c5195d1"
+    },
+    {
+      "path": "knowledge/common/enemies/PHROG_PARASITE/model-observed.json",
+      "sha256": "d0d8c9c1af6599b9d4f877fb9fc0342fe66ad562f71becffe54b1515982b48e1"
+    },
+    {
+      "path": "knowledge/common/enemies/PHROG_PARASITE/model.json",
+      "sha256": "5cbce8e862bb705064f6924eb0b5af6d1e6dc209d9f8f49ffed079a9de1ff3ee"
+    },
+    {
+      "path": "knowledge/common/enemies/PUNCH_CONSTRUCT/mechanics-observed.json",
+      "sha256": "376e3f9eeeb532245d849bbf10bf07b155c834ecb0c3483a82bafff4df4d0e9b"
+    },
+    {
+      "path": "knowledge/common/enemies/PUNCH_CONSTRUCT/mechanics.json",
+      "sha256": "74027aa8ba6b2d878a670f9c19edc4c355a45c2324537dfe7e28c33d033514c3"
+    },
+    {
+      "path": "knowledge/common/enemies/PUNCH_CONSTRUCT/model-observed.json",
+      "sha256": "f7a2dafbf17366c0523d229b566b1e0fe92d5e026c37b262cd20e9545f71e4ba"
+    },
+    {
+      "path": "knowledge/common/enemies/PUNCH_CONSTRUCT/model.json",
+      "sha256": "48fad7110593145cc659d39bebd1fe59d57cd9e81f80809de9af3466a6ee1ba6"
+    },
+    {
+      "path": "knowledge/common/enemies/QUEEN/mechanics-observed.json",
+      "sha256": "0562da5c81065fa4cb0f8de91247c3d1314936f3126a52ce5f3375e35604f4a7"
+    },
+    {
+      "path": "knowledge/common/enemies/QUEEN/mechanics.json",
+      "sha256": "74c40f7c337ea55d8bcbe637a1107f658fea0f801677c5103d3ef43305c5c307"
+    },
+    {
+      "path": "knowledge/common/enemies/QUEEN/model-observed.json",
+      "sha256": "e3101b5fd1b26c869158589b22b4842a92275574b6d1355a68ec357c449b5181"
+    },
+    {
+      "path": "knowledge/common/enemies/QUEEN/model.json",
+      "sha256": "c54be1f359c023713988d30cb0570d787506cdeec8425bdbc8480538311693f6"
+    },
+    {
+      "path": "knowledge/common/enemies/ROCKET/mechanics-observed.json",
+      "sha256": "d571a8f9b5722e687c65a7e559b85af61ef9579b4631bcd9a1960f6047397a38"
+    },
+    {
+      "path": "knowledge/common/enemies/ROCKET/mechanics.json",
+      "sha256": "b4014f203cb18863c7478dc49400ad7c980df262d55e46e1acb29eb377980a9f"
+    },
+    {
+      "path": "knowledge/common/enemies/ROCKET/model-observed.json",
+      "sha256": "0cbe298fbefbd713a685955fddf7446beb164374facc670c3668bdb9a14390db"
+    },
+    {
+      "path": "knowledge/common/enemies/ROCKET/model.json",
+      "sha256": "987b01303fdcc6c4cf7ba61fb7dbba1b87e95af3f1b6bb435b8f7f53a13f94b3"
+    },
+    {
+      "path": "knowledge/common/enemies/SCROLL_OF_BITING/mechanics-observed.json",
+      "sha256": "027631333274d7941f4e15c3a2d5274aadff0699fe6434a56ffdf17fb154fb45"
+    },
+    {
+      "path": "knowledge/common/enemies/SCROLL_OF_BITING/mechanics.json",
+      "sha256": "48c02e6059cd2b358e7793c995d0f3ba51d46239618b40bb32f3f3e0eebe0ca5"
+    },
+    {
+      "path": "knowledge/common/enemies/SCROLL_OF_BITING/model-observed.json",
+      "sha256": "0f032e1c6fe7f5a4e57a36c1ba5d04fb34843ab58bdef1752a314b9bee82918a"
+    },
+    {
+      "path": "knowledge/common/enemies/SCROLL_OF_BITING/model.json",
+      "sha256": "f253c7c695f5039a29cb86a36beb27286604ab93bc018d083f587ccf60b28c8b"
+    },
+    {
+      "path": "knowledge/common/enemies/SEAPUNK/mechanics-observed.json",
+      "sha256": "59c521115146d265b6ea2620f18790bb84b369c7ba54ef51fe331293aaff3e30"
+    },
+    {
+      "path": "knowledge/common/enemies/SEAPUNK/mechanics.json",
+      "sha256": "8e2458970174a0441a0066ed4f902827c5593d6e4a7fcb0a04e52ec65b4e26e9"
+    },
+    {
+      "path": "knowledge/common/enemies/SEAPUNK/model-observed.json",
+      "sha256": "f7b1c10303d472fc23d281ee76440bc34c005eeaad7bf5933f39c31d7d157551"
+    },
+    {
+      "path": "knowledge/common/enemies/SEAPUNK/model.json",
+      "sha256": "cc1d95af20faebbfb3352b319aae47b1e47b2400a15289ed6abec62c699b4ce6"
+    },
+    {
+      "path": "knowledge/common/enemies/SEWER_CLAM/mechanics-observed.json",
+      "sha256": "49dbfe87be04dfe89c0228c9feb10f5acc7dd2eb284f5fff3eb10245a0d4692f"
+    },
+    {
+      "path": "knowledge/common/enemies/SEWER_CLAM/mechanics.json",
+      "sha256": "bbb50d709f18362fc2dabeafda383b126ebc1f250b30737f82319c22d4fc51eb"
+    },
+    {
+      "path": "knowledge/common/enemies/SEWER_CLAM/model-observed.json",
+      "sha256": "1fb4d266a3758d303e9c56dcd9e7126c32e4ec83241d5ef03fc5eed61bba6cec"
+    },
+    {
+      "path": "knowledge/common/enemies/SEWER_CLAM/model.json",
+      "sha256": "0de30784f4915a51e7ce76705ede7301f0decd3b4bc908306c7165efa54fa4c1"
+    },
+    {
+      "path": "knowledge/common/enemies/SHRINKER_BEETLE/mechanics-observed.json",
+      "sha256": "bff9f76d3208fd4dcc05873da22f055b2af726c8ca1ac7915e42969a9948db5f"
+    },
+    {
+      "path": "knowledge/common/enemies/SHRINKER_BEETLE/mechanics.json",
+      "sha256": "ba6b64ef46758163e573e337da64ba6cdb654a8442463621a419b4e50bc0fdf4"
+    },
+    {
+      "path": "knowledge/common/enemies/SHRINKER_BEETLE/model-observed.json",
+      "sha256": "f1955ab722ae9f742ccce236b416413c435b59ea716f0ad6051a48d0c59f7e75"
+    },
+    {
+      "path": "knowledge/common/enemies/SHRINKER_BEETLE/model.json",
+      "sha256": "4ae4e8827773f04a172d833b99172c8f734f1225a0db9dd40bac1a43e7a6c6a7"
+    },
+    {
+      "path": "knowledge/common/enemies/SKULKING_COLONY/mechanics-observed.json",
+      "sha256": "c8276dd1285d0cb6c86359e8c3d37f371fdfa026da1f6ee4670febcccadc11c9"
+    },
+    {
+      "path": "knowledge/common/enemies/SKULKING_COLONY/mechanics.json",
+      "sha256": "1c579db98464f289d6f2261b8a7691a3ff7bdf75e6fd9e1bb5e280ba82096fd8"
+    },
+    {
+      "path": "knowledge/common/enemies/SKULKING_COLONY/model-observed.json",
+      "sha256": "feea8104cbcc2f58f01052bf5e772be3398aeb079b5c63e0d73332b8647f0588"
+    },
+    {
+      "path": "knowledge/common/enemies/SKULKING_COLONY/model.json",
+      "sha256": "3e50291aa92c0a09db61ecde2b0ce640fa5cf3fd039bfc0c4a29177c1940e309"
+    },
+    {
+      "path": "knowledge/common/enemies/SLIMED_BERSERKER/mechanics-observed.json",
+      "sha256": "2db4e753c573f26ce3a6fbd6f8e7fbe792b4f5ccaa32e9eecbf7a0f1347fa37a"
+    },
+    {
+      "path": "knowledge/common/enemies/SLIMED_BERSERKER/mechanics.json",
+      "sha256": "e1a8ed6b7e06acb5de2dc011f408bb01548b4101c9acf175a757a989de3fbbc0"
+    },
+    {
+      "path": "knowledge/common/enemies/SLIMED_BERSERKER/model-observed.json",
+      "sha256": "167c9496a23961402cbeaf7da9d080708540fbee8aa0f5cc6f32323d4b10c2b2"
+    },
+    {
+      "path": "knowledge/common/enemies/SLIMED_BERSERKER/model.json",
+      "sha256": "6e94f230815b75f50cd3e6866affedbf6aafb0290f2014a141534c2392cca1bf"
+    },
+    {
+      "path": "knowledge/common/enemies/SLITHERING_STRANGLER/mechanics-observed.json",
+      "sha256": "787269acf867552da69c60164c3e654aefe11f2d46b5830151e63df4510ad340"
+    },
+    {
+      "path": "knowledge/common/enemies/SLITHERING_STRANGLER/mechanics.json",
+      "sha256": "7286bfe019eb219fdd887b844e738f1c239d1335570b6e903c4bffbb602fc9d0"
+    },
+    {
+      "path": "knowledge/common/enemies/SLITHERING_STRANGLER/model-observed.json",
+      "sha256": "461229ed09d41d7100e49cce848035a4909507738c32ffc3f6b832b0ab32d9fc"
+    },
+    {
+      "path": "knowledge/common/enemies/SLITHERING_STRANGLER/model.json",
+      "sha256": "5ef8632b8cf1b7e387ce80ed73ed95df217bf848ec248cd102897fdaaf3b92bb"
+    },
+    {
+      "path": "knowledge/common/enemies/SLUDGE_SPINNER/mechanics-observed.json",
+      "sha256": "d8e361f5af1c440538c3245ef29442d40b3798d2cdd059209e325834f117f66f"
+    },
+    {
+      "path": "knowledge/common/enemies/SLUDGE_SPINNER/mechanics.json",
+      "sha256": "eef244db1a21d4652b762f3ea8d12b01b1e3769266cf24f4e9a9368b85f938df"
+    },
+    {
+      "path": "knowledge/common/enemies/SLUDGE_SPINNER/model-observed.json",
+      "sha256": "528561af0b94140359bebb63dcbfff7d9538cdd663c8d898bc2de9924dc1128b"
+    },
+    {
+      "path": "knowledge/common/enemies/SLUDGE_SPINNER/model.json",
+      "sha256": "b8adc73fc0f55d78b6ddeea145dd6285cc56defd3891330b30f3a90ff65c1f20"
+    },
+    {
+      "path": "knowledge/common/enemies/SLUMBERING_BEETLE/mechanics-observed.json",
+      "sha256": "9d434245915e0cdb5b682198eb6d2beaac3581def738144782deb52a1d16aa48"
+    },
+    {
+      "path": "knowledge/common/enemies/SLUMBERING_BEETLE/mechanics.json",
+      "sha256": "ce495bc4e3830b2b1e6e00b19ddb6b4cc5d773d654d812895cc91fd0059b84c8"
+    },
+    {
+      "path": "knowledge/common/enemies/SLUMBERING_BEETLE/model-observed.json",
+      "sha256": "9c66e644e561f7e0dfc2d8bb59b9c4b8fccf55085e00664db6966bc15f14a400"
+    },
+    {
+      "path": "knowledge/common/enemies/SLUMBERING_BEETLE/model.json",
+      "sha256": "4c19a7903461019eef265d3bd809f3a81a77b8e2dc894d42ab77da505da7a286"
+    },
+    {
+      "path": "knowledge/common/enemies/SNAPPING_JAXFRUIT/mechanics-observed.json",
+      "sha256": "0148d962e2512e9dcca4a72e4dabed5d8b8c8fa90c752a4c8b315917f6556ae5"
+    },
+    {
+      "path": "knowledge/common/enemies/SNAPPING_JAXFRUIT/mechanics.json",
+      "sha256": "e805bcf9ebcd7490158e5d0382a7bbedd749d4dd17a039dff8e54a6c1ce75014"
+    },
+    {
+      "path": "knowledge/common/enemies/SNAPPING_JAXFRUIT/model-observed.json",
+      "sha256": "2ba557aa78f028cf8f1571501d458affee2ca2d1b0e7254b7ee4960f1cb3e20e"
+    },
+    {
+      "path": "knowledge/common/enemies/SNAPPING_JAXFRUIT/model.json",
+      "sha256": "f8a9d81859a07a081067763b72567e3715fd3dd8eb5fcc957a14426424a9282e"
+    },
+    {
+      "path": "knowledge/common/enemies/SNEAKY_GREMLIN/mechanics-observed.json",
+      "sha256": "c2bbdd1c50690355f6c08ae8ad171ed12212edb19f79ed5745fb9d016fdbed58"
+    },
+    {
+      "path": "knowledge/common/enemies/SNEAKY_GREMLIN/mechanics.json",
+      "sha256": "7fa3ab6b1271aa4afa7839e9ed479c3217ac24f78326710697e0202e8229eff8"
+    },
+    {
+      "path": "knowledge/common/enemies/SNEAKY_GREMLIN/model-observed.json",
+      "sha256": "2407a6fd45368686e8292a77ed0199748265736730f0a339041db8ef606fc821"
+    },
+    {
+      "path": "knowledge/common/enemies/SNEAKY_GREMLIN/model.json",
+      "sha256": "4a9113ffc35dc5ba09dcade1939d61cbfebe00a88aa6237940ef0aec3d47be65"
+    },
+    {
+      "path": "knowledge/common/enemies/SOUL_FYSH/mechanics-observed.json",
+      "sha256": "b2ef0a2812d7b4dc74c2df470e6826cb51f49d7d450ebdafc8097703bb4d14bd"
+    },
+    {
+      "path": "knowledge/common/enemies/SOUL_FYSH/mechanics.json",
+      "sha256": "212e5243cb93ded478352c3b1651c17aff86e0efcd873267b4bd0ca92838bb71"
+    },
+    {
+      "path": "knowledge/common/enemies/SOUL_FYSH/model-observed.json",
+      "sha256": "833121554fc49fd0a6c1a43947745760d14cd1b4d4725e704baaf20a550ffe21"
+    },
+    {
+      "path": "knowledge/common/enemies/SOUL_FYSH/model.json",
+      "sha256": "e82862044406bf2596bd1fa4d347d9ea7ce7ed1e4089fea3e002f2b1b018b30f"
+    },
+    {
+      "path": "knowledge/common/enemies/SOUL_NEXUS/mechanics-observed.json",
+      "sha256": "d19e1e71dfcaddeeddb0fb666cfd22d1b3cd29c0b837b1ec95b40fb1f9bd1d00"
+    },
+    {
+      "path": "knowledge/common/enemies/SOUL_NEXUS/mechanics.json",
+      "sha256": "e3ec7b317dc46769db3f4ced086ac1970b6f2b12641d157754bfdc6bebd4a64d"
+    },
+    {
+      "path": "knowledge/common/enemies/SOUL_NEXUS/model-observed.json",
+      "sha256": "844faa27c23f91c5e35cbd7c7dde321350209ebcab09a2700e5f7a82c8c3c970"
+    },
+    {
+      "path": "knowledge/common/enemies/SOUL_NEXUS/model.json",
+      "sha256": "1f89e3b2b6d5888cc4eacb19f2771335706ae7ae10bef40ac8dceafbbe36a845"
+    },
+    {
+      "path": "knowledge/common/enemies/SPECTRAL_KNIGHT/mechanics-observed.json",
+      "sha256": "92745bfdc0ac1a5cd004c4a44f1ebb79059dc077c78c80beebfb80f6e27d9afd"
+    },
+    {
+      "path": "knowledge/common/enemies/SPECTRAL_KNIGHT/mechanics.json",
+      "sha256": "202558832d9184c4dd5b981d4371f872acd9a176f784e172b2d3d8516dfecc59"
+    },
+    {
+      "path": "knowledge/common/enemies/SPECTRAL_KNIGHT/model-observed.json",
+      "sha256": "a84fec88b112b95261f0c0d2b2c1490e1f0aa73cbf14fb1618cb1608067a7bc1"
+    },
+    {
+      "path": "knowledge/common/enemies/SPECTRAL_KNIGHT/model.json",
+      "sha256": "0612d72fd8e2dbbbb323012e6c579eb9bce8f52a8ea3b5f6dd457e8668b0da3a"
+    },
+    {
+      "path": "knowledge/common/enemies/SPINY_TOAD/mechanics-observed.json",
+      "sha256": "643f9adae85c6663b75dcd89b5ae1707a71a8157802972f4dcd35dc18e66f5bc"
+    },
+    {
+      "path": "knowledge/common/enemies/SPINY_TOAD/mechanics.json",
+      "sha256": "218757514a5355061fa29a16a9829cbdb20b1bd27b4d12cc5bad69a8e1f6f916"
+    },
+    {
+      "path": "knowledge/common/enemies/SPINY_TOAD/model-observed.json",
+      "sha256": "8681b6973446ed5daca10381d131768a55795e13c7fb510cb21d13a046f0d390"
+    },
+    {
+      "path": "knowledge/common/enemies/SPINY_TOAD/model.json",
+      "sha256": "9b2fd60802b3bc8343a3387da11accc83e3cd1fc54942ad9c174e53d1a5be106"
+    },
+    {
+      "path": "knowledge/common/enemies/STABBOT/mechanics-observed.json",
+      "sha256": "2f41c3626dee66cc9f66fac8495dde497c976d0b746fd11ddbff1f53e913bc22"
+    },
+    {
+      "path": "knowledge/common/enemies/STABBOT/mechanics.json",
+      "sha256": "4dcee297f50fe9ed12540a5ebd760b462dcd84df5bde68961ee138f5eeb97984"
+    },
+    {
+      "path": "knowledge/common/enemies/STABBOT/model-observed.json",
+      "sha256": "780fd538c3f448d495904fb1cd3a8b5caae5549b3d7f286dd27fe2ea82e40f5b"
+    },
+    {
+      "path": "knowledge/common/enemies/STABBOT/model.json",
+      "sha256": "da228d0152b8bad0a0a6f668d222acd97d4c3702649d2020dd6396e00df90f48"
+    },
+    {
+      "path": "knowledge/common/enemies/TERROR_EEL/mechanics-observed.json",
+      "sha256": "5f8055416a8e971b0a7723d5dfcce8063147728dbc09ea471c3bb680561a59fa"
+    },
+    {
+      "path": "knowledge/common/enemies/TERROR_EEL/mechanics.json",
+      "sha256": "b90c833e69d8bfc7b204b32193e709962d89e3f68cd1682ccd48579a1151513c"
+    },
+    {
+      "path": "knowledge/common/enemies/TERROR_EEL/model-observed.json",
+      "sha256": "2572ab5ed287d06c8ce1f9d4c1cf65bd49f7f31899da909ef74150e406d26840"
+    },
+    {
+      "path": "knowledge/common/enemies/TERROR_EEL/model.json",
+      "sha256": "7682d668f4dfb2d616b655d91c64a1d96cf773ac9489a41e5c9f7308acde35ce"
+    },
+    {
+      "path": "knowledge/common/enemies/TEST_SUBJECT/mechanics-observed.json",
+      "sha256": "2de5abbe2589652b896dce509cf358579759ba7dd161db4862792a95de430add"
+    },
+    {
+      "path": "knowledge/common/enemies/TEST_SUBJECT/mechanics.json",
+      "sha256": "99ce8b0b5da497f9ac906a93f22a328aeed41f82e731fde8f4a05c0211a482cd"
+    },
+    {
+      "path": "knowledge/common/enemies/TEST_SUBJECT/model-observed.json",
+      "sha256": "04dd5f6b78f176a662c18f4ccf44f76bd4bc6fff6268bd99408a9682ebd909af"
+    },
+    {
+      "path": "knowledge/common/enemies/TEST_SUBJECT/model.json",
+      "sha256": "b73b658d7bb3377c04739ff3dce049b9f6629e6b87cb8c2ff8e95e2240e8bedd"
+    },
+    {
+      "path": "knowledge/common/enemies/THE_FORGOTTEN/mechanics-observed.json",
+      "sha256": "cd794cf3aa857e3ff858a39ae3b083a9580bf9198d20ba1d71c0b684b608f1c3"
+    },
+    {
+      "path": "knowledge/common/enemies/THE_FORGOTTEN/mechanics.json",
+      "sha256": "ba1587e027fdaa03bf6f7b813d1973fa3135cf825586120149472dda05889f80"
+    },
+    {
+      "path": "knowledge/common/enemies/THE_FORGOTTEN/model-observed.json",
+      "sha256": "221d825a447966e07bd507febe159d10704dcccfc704617f27c6359a6145cca1"
+    },
+    {
+      "path": "knowledge/common/enemies/THE_FORGOTTEN/model.json",
+      "sha256": "29eb1a58ffcd4dcf218250fe0c12a112f7bdf53844767fd5dfa91c0ea7e4c472"
+    },
+    {
+      "path": "knowledge/common/enemies/THE_INSATIABLE/mechanics-observed.json",
+      "sha256": "d0e5ce4e8d1943fdbc64acfcc3f21b87684f32d764741445c5ab9b65bf100ab8"
+    },
+    {
+      "path": "knowledge/common/enemies/THE_INSATIABLE/mechanics.json",
+      "sha256": "b32c5942e69c32aa312999a450343f902a6e581f7a84516b8560f1f5d302ea8e"
+    },
+    {
+      "path": "knowledge/common/enemies/THE_INSATIABLE/model-observed.json",
+      "sha256": "8b123bd388458d64d20aa04c1b1435f92ff4025a45dbe1de43d0f70883c1dd5e"
+    },
+    {
+      "path": "knowledge/common/enemies/THE_INSATIABLE/model.json",
+      "sha256": "35ed0116fd0748e662ca6ff4f015dc4ad15c06c99e18d938376b3e4420d5e4f1"
+    },
+    {
+      "path": "knowledge/common/enemies/THE_LOST/mechanics-observed.json",
+      "sha256": "ea0c42bdbb5dfc19468e15592c7451c8c1d9de09235f4603951cfdbe9afc2de6"
+    },
+    {
+      "path": "knowledge/common/enemies/THE_LOST/mechanics.json",
+      "sha256": "ce45ab848ab53e528dba2ec482a21f231825b125b25c7087a955ded3c18f64cc"
+    },
+    {
+      "path": "knowledge/common/enemies/THE_LOST/model-observed.json",
+      "sha256": "e2d960273dab72443453ffe6af171135833af8d1e9cdd0c783236a4118045edc"
+    },
+    {
+      "path": "knowledge/common/enemies/THE_LOST/model.json",
+      "sha256": "718bf550c045c99d33afd6bb5632ef648726eb8390923a7dc075b6db53c6c70d"
+    },
+    {
+      "path": "knowledge/common/enemies/THE_OBSCURA/mechanics-observed.json",
+      "sha256": "a97bb5ba6248cbb7096005840f430ef26d5d1f4ffdea0f62c515bb857975db51"
+    },
+    {
+      "path": "knowledge/common/enemies/THE_OBSCURA/mechanics.json",
+      "sha256": "9e025277b060419913117543e859dde16db5c899b9d0cdabe368098d579e44be"
+    },
+    {
+      "path": "knowledge/common/enemies/THE_OBSCURA/model-observed.json",
+      "sha256": "a4c57884960033685834cde16fe702032da6631db00f26aec4ef7dfeac34f759"
+    },
+    {
+      "path": "knowledge/common/enemies/THE_OBSCURA/model.json",
+      "sha256": "bb4f2e702c9b6ffb67ad81b99b4cd1573fa2230de439cdfa772e10f187c18cec"
+    },
+    {
+      "path": "knowledge/common/enemies/THIEVING_HOPPER/mechanics-observed.json",
+      "sha256": "a583de6dbba274b337712b602acbbf0324fcd55a3f6fbb9246f41af06575d43a"
+    },
+    {
+      "path": "knowledge/common/enemies/THIEVING_HOPPER/mechanics.json",
+      "sha256": "e770b11a96808d98cc76c8a84907bd0cb6f11ead2f907924b2529a3a3449a654"
+    },
+    {
+      "path": "knowledge/common/enemies/THIEVING_HOPPER/model-observed.json",
+      "sha256": "15e573d3cba73dafdf7c3ce495037f2b7ca3af9430cd41bc988da46b3189b585"
+    },
+    {
+      "path": "knowledge/common/enemies/THIEVING_HOPPER/model.json",
+      "sha256": "c1ffa7a4227e94a2844ec4cb725ea25708f2d45acc885be9d7c1f085328f4ca9"
+    },
+    {
+      "path": "knowledge/common/enemies/TOADPOLE/mechanics-observed.json",
+      "sha256": "3647e9f2079bea6976a9bcd99b9eef39fd823e50719e3be522d1a51cf6ab2d41"
+    },
+    {
+      "path": "knowledge/common/enemies/TOADPOLE/mechanics.json",
+      "sha256": "4aa2cd6968846dd6f14a68c8ba5196172d6087f150ba75e9f00402cee0dd43bd"
+    },
+    {
+      "path": "knowledge/common/enemies/TOADPOLE/model-observed.json",
+      "sha256": "e84695c15e2c919fec10f5c469ec0b5ec2b49a5d0b4a5b73346c40956f71b55c"
+    },
+    {
+      "path": "knowledge/common/enemies/TOADPOLE/model.json",
+      "sha256": "ba263762ef2b557d63a1cb2948966d4c5e9abd309165aa8aacf3883a53587cb9"
+    },
+    {
+      "path": "knowledge/common/enemies/TORCH_HEAD_AMALGAM/mechanics-observed.json",
+      "sha256": "13fc75971e89ffa54094f835044a598e91f4d7aa963c1b2d6e0fe0bbaafeb548"
+    },
+    {
+      "path": "knowledge/common/enemies/TORCH_HEAD_AMALGAM/mechanics.json",
+      "sha256": "6440d61dd523d8ab73cbda30cacaac41b5d18c01fcb2eda64760b3bfd5ee309e"
+    },
+    {
+      "path": "knowledge/common/enemies/TORCH_HEAD_AMALGAM/model-observed.json",
+      "sha256": "bf6f5bd4eb73ab7dadd1b363b9f237ceadeb7927280bf3a219e155d056fc8d87"
+    },
+    {
+      "path": "knowledge/common/enemies/TORCH_HEAD_AMALGAM/model.json",
+      "sha256": "11d354ac8fc08f9b962527bdbdcefa5c2e1bc85b217609610ebb53d21b8dd5ec"
+    },
+    {
+      "path": "knowledge/common/enemies/TOUGH_EGG/mechanics-observed.json",
+      "sha256": "ae482288abc4cd7ee228566394656863e4249c290865ffdeaceffefc74850ca2"
+    },
+    {
+      "path": "knowledge/common/enemies/TOUGH_EGG/mechanics.json",
+      "sha256": "0925557e21660ec2d6e31700fcff64ce7c29d4f042ab65a36f98e9b3d9a2bf40"
+    },
+    {
+      "path": "knowledge/common/enemies/TOUGH_EGG/model-observed.json",
+      "sha256": "7477440befe83cfdf96297515cd90aed2ec1e5f206d0d07a52b651bae326eff7"
+    },
+    {
+      "path": "knowledge/common/enemies/TOUGH_EGG/model.json",
+      "sha256": "f0ac3dd97be369f959e8863bd5c2514d9c225be33ea1054a8ecf61fb678b6ad6"
+    },
+    {
+      "path": "knowledge/common/enemies/TRACKER_RUBY_RAIDER/mechanics-observed.json",
+      "sha256": "07e9cacce50b3624ff06f9a33ffc30c18e7a84a3fbbf113ab04a0cbf8a772609"
+    },
+    {
+      "path": "knowledge/common/enemies/TRACKER_RUBY_RAIDER/mechanics.json",
+      "sha256": "68de0e0f29cb263a7e8dd1e2be785a09202204d925318a89874e86c1bb7177c9"
+    },
+    {
+      "path": "knowledge/common/enemies/TRACKER_RUBY_RAIDER/model-observed.json",
+      "sha256": "3aa58ad826a82234add725a885a7426e661354fbf79532587b036a9d8708cbcb"
+    },
+    {
+      "path": "knowledge/common/enemies/TRACKER_RUBY_RAIDER/model.json",
+      "sha256": "136ffad2e69946c05e0dad28fc177a92c8b1ea99efa8cc5803bfa2b5f352248b"
+    },
+    {
+      "path": "knowledge/common/enemies/TUNNELER/mechanics-observed.json",
+      "sha256": "9e99a7641de4b987320638e3e8dbd34c7c0cce0312cb63ed4afffb82a4af11f2"
+    },
+    {
+      "path": "knowledge/common/enemies/TUNNELER/mechanics.json",
+      "sha256": "4d9fe018de365bcb7e39cc1d4f339e49b764df7baf2760a88a554bec04db180c"
+    },
+    {
+      "path": "knowledge/common/enemies/TUNNELER/model-observed.json",
+      "sha256": "63eba225e28624427e520c0afc9648435b799c159fa736ca93a21b22548759ad"
+    },
+    {
+      "path": "knowledge/common/enemies/TUNNELER/model.json",
+      "sha256": "d89e9aa97289380640b434493de8d8792a05d5c96c779c7a1078042e7552f6af"
+    },
+    {
+      "path": "knowledge/common/enemies/TURRET_OPERATOR/mechanics-observed.json",
+      "sha256": "6aac81e91b4ba34c37792137a61c473470b7cad36a4ac71d33271b91b5946ca4"
+    },
+    {
+      "path": "knowledge/common/enemies/TURRET_OPERATOR/mechanics.json",
+      "sha256": "53eb9d52d12dfcbc3c365c7f439dac233f59da428af4ed77763b0f684e6d865e"
+    },
+    {
+      "path": "knowledge/common/enemies/TURRET_OPERATOR/model-observed.json",
+      "sha256": "b9ec80a11d3cbe275d033e623a33a58480575f9ec74f3998b8d3f2808dc6d322"
+    },
+    {
+      "path": "knowledge/common/enemies/TURRET_OPERATOR/model.json",
+      "sha256": "79c284d59cac856f24563995ce854ad019a70aa399bfbb4051458bed59dcd79d"
+    },
+    {
+      "path": "knowledge/common/enemies/TWIG_SLIME_M/mechanics-observed.json",
+      "sha256": "e4c077a8192e90bcdaa1192ad45310302468a51adc5bc51f6764515f23d27983"
+    },
+    {
+      "path": "knowledge/common/enemies/TWIG_SLIME_M/mechanics.json",
+      "sha256": "ee0af26832590879dd0ff0bcdb20f3c7d7efd681d82531c797331dbfefebd791"
+    },
+    {
+      "path": "knowledge/common/enemies/TWIG_SLIME_M/model-observed.json",
+      "sha256": "30e4aec48f494b830b315a0f04554dad9cbabe65a3d62d2898e1d11ae80d1b31"
+    },
+    {
+      "path": "knowledge/common/enemies/TWIG_SLIME_M/model.json",
+      "sha256": "1a677d6eafb610f074a1a093945c7d2dd6456b5650817fd7b3f15245bbec94e3"
+    },
+    {
+      "path": "knowledge/common/enemies/TWIG_SLIME_S/mechanics-observed.json",
+      "sha256": "8a24c1cb107f08f56b54e6dc4e6d2df37eb8204ba5593f8ffde82131e359a6be"
+    },
+    {
+      "path": "knowledge/common/enemies/TWIG_SLIME_S/mechanics.json",
+      "sha256": "c45d37d97d5254db99cb812bb0d4a6cf3b2f34d0116c611712d190e2de92f0c3"
+    },
+    {
+      "path": "knowledge/common/enemies/TWIG_SLIME_S/model-observed.json",
+      "sha256": "e0c55343ae5d83f33c8c1080d321e6d7cd01d938ddbce4eb43a83bc5e40c0784"
+    },
+    {
+      "path": "knowledge/common/enemies/TWIG_SLIME_S/model.json",
+      "sha256": "c1f2ae1572d9c554cc144c182d52fa068bb089229e3ba120e8afa691210e25b7"
+    },
+    {
+      "path": "knowledge/common/enemies/TWO_TAILED_RAT/mechanics-observed.json",
+      "sha256": "9319e548028df0c7afd2b0daa416c3d20a095722282487e91e9093aab919c73c"
+    },
+    {
+      "path": "knowledge/common/enemies/TWO_TAILED_RAT/mechanics.json",
+      "sha256": "f1cbdb740e6d7238419fc2e1e7f82203a9291893ec57e603946d61e335510e5a"
+    },
+    {
+      "path": "knowledge/common/enemies/TWO_TAILED_RAT/model-observed.json",
+      "sha256": "d79ee32c6aced3c9a49e3048c22ce977a4a4e8c71e6a22fc84755e1e41f6650a"
+    },
+    {
+      "path": "knowledge/common/enemies/TWO_TAILED_RAT/model.json",
+      "sha256": "b5fbf9de330f6842dec10a8b98617e76ddb92cb5ca4ad77ef5e2221b5d0c3617"
+    },
+    {
+      "path": "knowledge/common/enemies/VANTOM/mechanics-observed.json",
+      "sha256": "24b39c8b8adc2282244e641eb7c9ff44f092d1bd39533a8bd9720444822e2bef"
+    },
+    {
+      "path": "knowledge/common/enemies/VANTOM/mechanics.json",
+      "sha256": "26f6aa09091bc827f099e3405c49690a35251a17c9539cec5d6c595190d0202c"
+    },
+    {
+      "path": "knowledge/common/enemies/VANTOM/model-observed.json",
+      "sha256": "fbaabcf3e247d76c604f0a8e37071438134ef488f9e4dab8516c8b7412088638"
+    },
+    {
+      "path": "knowledge/common/enemies/VANTOM/model.json",
+      "sha256": "0e4cd7c2442bf37146959e0b75cc9009dd5a929c9503aa6971be2857abb0c181"
+    },
+    {
+      "path": "knowledge/common/enemies/VINE_SHAMBLER/mechanics-observed.json",
+      "sha256": "ecbaa945e2c311c10354ac2d115eecbe4fcfcd6ccdb044fd6b63e067c4e51275"
+    },
+    {
+      "path": "knowledge/common/enemies/VINE_SHAMBLER/mechanics.json",
+      "sha256": "21a664832b4282b9fbafd33fc744760269ba7f27cd58628541d587782bfad52a"
+    },
+    {
+      "path": "knowledge/common/enemies/VINE_SHAMBLER/model-observed.json",
+      "sha256": "f66b69caceeea175a6ec8b4cc04beade16f9c5ff6f052a80b17bd2f7c0d4c416"
+    },
+    {
+      "path": "knowledge/common/enemies/VINE_SHAMBLER/model.json",
+      "sha256": "a654b2a163cc91c0c49d0b561b6f24bed013dd53a07941c6cef44a84cae1ef6c"
+    },
+    {
+      "path": "knowledge/common/enemies/WATERFALL_GIANT/mechanics-observed.json",
+      "sha256": "6e556a654a9ca672466687c5b27b8334cbcde1f3b1324080e7518780fb3def79"
+    },
+    {
+      "path": "knowledge/common/enemies/WATERFALL_GIANT/mechanics.json",
+      "sha256": "be584bdf95ee4964ed21e0748f0d0a8be5853399c250e5abefffb4146e446a7d"
+    },
+    {
+      "path": "knowledge/common/enemies/WATERFALL_GIANT/model-observed.json",
+      "sha256": "2941c16b004bafe09a4adceccf55aabf57b540cb34d3ee43ffc05bb491427f22"
+    },
+    {
+      "path": "knowledge/common/enemies/WATERFALL_GIANT/model.json",
+      "sha256": "f68a2fb37ca7eb7192dbfdca501400307ad1403db53b62a81ca2901f96fc54d8"
+    },
+    {
+      "path": "knowledge/common/enemies/WRIGGLER/mechanics-observed.json",
+      "sha256": "7924535b4ae7abe93a85c0089f82fb4e6c9fa53cfa20b616f201c1f11c20ae47"
+    },
+    {
+      "path": "knowledge/common/enemies/WRIGGLER/mechanics.json",
+      "sha256": "e713cd147697e732134169948b217efe4dadb196b8924343e9832db2ff3cb930"
+    },
+    {
+      "path": "knowledge/common/enemies/WRIGGLER/model-observed.json",
+      "sha256": "9029645419be3b96682dfa75e31a7cd54e044e4a0ea5aef00d87a3a560a6723a"
+    },
+    {
+      "path": "knowledge/common/enemies/WRIGGLER/model.json",
+      "sha256": "a232b5668ed0e009f33fac7fe7160b8902fac026d3110a2348594245598ca301"
+    },
+    {
+      "path": "knowledge/common/enemies/ZAPBOT/mechanics-observed.json",
+      "sha256": "40ff30c6161b9f4490c9874de6cd2857f37e630fd0c36317dceef7fb06fe8d8d"
+    },
+    {
+      "path": "knowledge/common/enemies/ZAPBOT/mechanics.json",
+      "sha256": "d8d45716f59724ddac14f9f1cfff98d4eab416752f809f0bd57b76e5fe244cdf"
+    },
+    {
+      "path": "knowledge/common/enemies/ZAPBOT/model-observed.json",
+      "sha256": "a927457b3f463065d9c9a55ba0a36f402804938cd2aa514df42ee5f137130d94"
+    },
+    {
+      "path": "knowledge/common/enemies/ZAPBOT/model.json",
+      "sha256": "9d551b3bdebfbb857c524cb00501a54268344f5ce3cf12d5e64dda39ef9952da"
+    },
+    {
+      "path": "knowledge/common/enemies/_legacy-meta.json",
+      "sha256": "355d3930fb15995ec7b60d4e224d41ea9dc0dc9d25cc7bd22dcef7e6891a702a"
+    },
+    {
+      "path": "knowledge/common/event-pages.json",
+      "sha256": "e7370a71a8fb446b160c7d19120229237dee4775dc443b7cf92e18d6a02936d5"
+    },
+    {
+      "path": "knowledge/common/monster-db.json",
+      "sha256": "8f6c2d0409eb012b14bd31e24c431ea5d9a421e7fb58c3363dfd5dc3536e704c"
+    },
+    {
+      "path": "knowledge/common/move-model.json",
+      "sha256": "38110110df22ff57b3b73f45e3560fb63eef9e6118765d6c97774a457fac3094"
+    },
+    {
+      "path": "knowledge/common/shared-experience.json",
+      "sha256": "f0dc10884c7773ae248480aedfb05e15351372cb9d0684bf99df355d4bd187c8"
+    }
+  ]
+}

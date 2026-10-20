@@ -1,0 +1,37 @@
+{
+  "completed_at": "2026-10-21T01:47:40.724936+08:00",
+  "scope": "read-only fixed-evidence audit; paper materials and own-branch decision-log only",
+  "runtime_changes": false,
+  "knowledge_changes": false,
+  "live_changes": false,
+  "config_changes": false,
+  "api_or_model_requests": 0,
+  "learning_dispatches": 0,
+  "process_limit": 1,
+  "nice": 19,
+  "ionice": "idle",
+  "checks": {
+    "input_readback": "checks/input-readback.json",
+    "samples": {
+      "main": 3360,
+      "sensitivity_additional": 896
+    },
+    "helper_errors_retained": [
+      "BXU0CKWKH2RU-f46-fight20 actual-opening: Error: no solve"
+    ],
+    "censored_first_attempts": [
+      "34XTHUP4433X-f24-fight13"
+    ],
+    "tsc_vitest": "not run: record-only paper/materials change, AGENTS exemption",
+    "gitleaks": {
+      "exit_code": 0,
+      "findings": 0,
+      "max_archive_depth": 2,
+      "bytes_scanned": 17680498,
+      "elapsed_ms": 529,
+      "report": "checks/gitleaks.json"
+    }
+  },
+  "delivery": "materials branch; ops import only material subtree and append line, preserve parallel records; no runtime publication",
+  "assignment": "assignment-provenance.json"
+}

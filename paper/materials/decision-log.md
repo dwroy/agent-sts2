@@ -5380,3 +5380,7 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
 - 2026-10-21 01:32:39 CST 原ops：011301策略10原项waiting/原WT洁净/无源改合入/testsnull，两窄修复祖先及4源SHA核同不代宽父；五题完整/622题覆盖与274来源原行核验限制保留。无收尾回执不冒完成、不重dataset/测试/派批，P0最新17+CARDjev边界及REFLEXoff不变。原件paper/materials/20261021-0126-ops/receipt.json。
 
 - 2026-10-21 01:34:28 CST 原ops：011301-s2十原提案waiting/原WT洁净/无源改合入/testsnull，五源SHA及五祖先核同不代宽父；六题/1946覆盖与13错误/5缺决策503保原缺口，0540仅proposed。无收尾回执不冒完成，不重dataset/测试/派批；P0最新17+CARDjev边界及REFLEXoff不变。原件paper/materials/20261021-0133-ops/receipt.json。
+
+- 2026-10-21 01:47:28 CST [Codex v6-w4w6] 按Claude01:3x只读核最近40局V5精英：53场含1首试censored，52场实战死亡7.7%对A模拟30.3%，掉血偏差+10.9HP；同51场用实战开场后模拟降17.5%仍高于7.8%。抽牌/遗物及药水表示缺口交既有学习闭环，评分权重单改解释不足；原帧106条/771源码知识SHA核同，两批计算PID自然退出，未改运行时/知识/live/配置、未派学习或模型。原件paper/materials/2026-10-21-v6-elite-bias-audit/report.md；P0边界发布与P2两局稳定门保持。
+
+- 2026-10-21 01:51:48 CST 原ops：W4精英偏差66ff0722只纳95材料子树及授权append，逐Git blob/manifest/report SHA核同、解压扫描0；报告52场/共同51场口径、censored/helper失败/反例及模型偏差限制保留，非机制/候选排序收益验收。本轮无源码/live/full/学习派批，P0已满足上线前门槛/CSB后17+CARDjev及P2两局门不变，不据材料登记回收完成。原件paper/materials/20261021-elite-bias-ops/material-import-verification.json。
