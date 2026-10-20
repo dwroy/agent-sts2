@@ -10,6 +10,8 @@ import type { V6Config } from "../v6/config.js";
 import { v6History } from "./v6-history.js";
 
 const count = number(0, 1e9, true), ascension = number(0, 100, true);
+// Byte provenance is bounded by exact JavaScript integers, not gameplay counts.
+const bytePosition = number(0, Number.MAX_SAFE_INTEGER, true);
 const timestamp = refine(text(100), (v, e) => {
   if (!Number.isFinite(Date.parse(v)) || new Date(v).toISOString() !== v) e.push("canonical UTC timestamp required");
 });
@@ -28,13 +30,13 @@ export const v6OpportunitySchema = object({ schema: literal("construction-opport
     id: text(), run: text(), ts: timestamp, act: number(1, 10, true), ascension, floor: count,
     kind: custom<"reward" | "shop">((v, p, e) => { if (v !== "reward" && v !== "shop") e.push(`${p}: reward/shop required`); }),
     offers: array(object({ id: text(), upgraded: boolean, price: number(0) }), 0, 1000),
-    source: object({ offset: count, bytes: count, sha256: sha }),
+    source: object({ offset: bytePosition, bytes: bytePosition, sha256: sha }),
   }), 0, 1e6) });
 const change = object({ floor: count, act: number(1, 10, true), adds: array(card), removes: array(card),
   upgrades: array(text()), positiveGold: number(0), rest: boolean });
 const framePoint = object({ ts: timestamp, hp: nullable(number(0)), max_hp: nullable(number(1)), gold: nullable(number(0)) });
 const payloadSchema = refine(object({ character: characterSchema, cutoff: timestamp,
-  sources: array(object({ name: text(), sha256: sha, bytes: count }), 4, 100),
+  sources: array(object({ name: text(), sha256: sha, bytes: bytePosition }), 4, 100),
   coverage: array(v6CoverageSchema, 0, 100000),
   floor_frames: array(object({ run_id: text(), floor: count, act: number(1, 10, true), observed_frames: number(1, 1e9, true),
     first: framePoint, last: framePoint }), 0, 1e6),
