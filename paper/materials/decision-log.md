@@ -5178,3 +5178,5 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
 - 2026-10-20T15:24:20+08:00 ops：原151301-fix无新增源码/修复，22既有main子项祖先核同；三项待集成修复仍原141301/78ef事务，不重测/派修/生成dataset或冒live。64项报告与原failed/rc0/mergednull保留。原件 paper/materials/20261020-1522-ops/receipt.json。
 
 - 2026-10-20T15:30:27+08:00 ops：复盘144301三局记录/账本核同，旧0496重犯无新增纯bug；唯一dataset --no-raw完整0，三局复盘标记通过，保存自身记录和生成数据。三旧异议角色兼容仍pending；805/live/Regent边界保持。原件 paper/materials/20261020-1514-ops/receipt.json。
+
+- 2026-10-20T15:33:32+08:00 ops：核原144301单次dataset完整0/三局复盘标记，实际记录提交e399ee711已main祖先；只结记录/数据阶段，旧bug/科学父/角色ACK不关，不重跑生成器或查询在途full。原件 paper/materials/20261020-1531-ops/receipt.json。
