@@ -1,0 +1,10 @@
+diff --git a/paper/materials/decision-log.md b/paper/materials/decision-log.md
+index 881f6f5a9..97ef21080 100644
+--- a/paper/materials/decision-log.md
++++ b/paper/materials/decision-log.md
+@@ -5220,3 +5220,5 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
+ - 2026-10-20T17:39:53+08:00 ops：核infra r2 tsc0/full0（624文件5896过2跳）、2371输入SHA不变/当前核同及六PID实际退出，TMPDIR原wrapper回收；明交W4 full-v2窗口，CLI不冒启动，旧失败/烟测功能阻塞保留，未认main/live交付。原件 paper/materials/20261020-1738-infra-ops/verification.json。
+ 
+ - 2026-10-20T17:45:13+08:00 ops：核W4 full-v2静态启动baseb665/启动maine575（仅记录漂移）、treee388/2456SHA5f9a及17源SHA，tsc0/full257050未终局，不查动态进度；旧失败/功能烟测阻塞与805 hold保留。原件 paper/materials/20261020-1743-ops/verification.json。
++
++- 2026-10-20T17:50:01+08:00 watcher：infra-temp-lifecycle 已仅FF main 4c7b8d9bf48f54163c04d8e4f4f79ae6eb402e83；测试/离线入口默认主盘独占TMPDIR与finally回收，ops增/tmp字节/inode准入及inbox留痕。原阈值nice19单worker tsc0/full0（624文件5896过2原跳），变基后38功能叶/2371输入逐SHA不变、gitleaks0；r1失败/来源绑定原件保留。未运live/改actor/STOP/805/Regent、不重full，原W4v2窗口保持。原件 paper/materials/2026-10-20-infra-temp-lifecycle/；精确main回执 .worktrees/infra-temp-lifecycle-20261020/.artifacts/main-delivery/integration-receipt.json。

@@ -1,0 +1,918 @@
+diff --git a/agent/README.md b/agent/README.md
+index 04ba1497c..62831e1fa 100644
+--- a/agent/README.md
++++ b/agent/README.md
+@@ -19,6 +19,8 @@ npm run doctor
+ npm run shadow -- --max-decisions 20
+ ```
+ 
++测试默认在主盘创建并回收独立临时目录；离线烟测和批量模拟使用 `npm run offline -- <命令>`。显式 TMPDIR、中断现场及容量门槛见 [临时文件规则](../docs/temporary-files.md)。
++
+ doctor 检查 mod、配置、Jev 与大脑启动条件；shadow 做决策而不派发游戏动作，两者可触发模型请求。开发会话不运行 play。对局只由运维的 ops/autoplay.sh / ops/run.sh 从 `.worktrees/live` 启动，保留单实例锁、当前存档和原日志。
+ 
+ | 命令 | 用途 |
+diff --git a/agent/package.json b/agent/package.json
+index 8f79649f7..72163b4ef 100644
+--- a/agent/package.json
++++ b/agent/package.json
+@@ -19,9 +19,12 @@
+     "typecheck": "tsc -p tsconfig.test.json",
+     "typecheck:tools": "tsc -p tsconfig.tools.json",
+     "check:imports": "tsx tools/check-imports.ts",
+-    "test": "vitest run",
++    "test": "node tools/with-temp.mjs vitest run",
+     "test:sandbox": "bash tools/test-sandbox.sh",
+-    "test:watch": "vitest",
++    "test:watch": "node tools/with-temp.mjs vitest",
++    "offline": "node tools/with-temp.mjs",
++    "v6:replay": "node tools/with-temp.mjs node --import tsx tools/v6/replay.ts",
++    "v6:profile": "node tools/with-temp.mjs node --import tsx tools/v6/profile.ts",
+     "fake-mod": "node tools/fake-mod.mjs",
+     "knowledge:stats": "python3 ../knowledge/builders/build-outcome-stats.py"
+   },
+diff --git a/agent/tests/asc-band-facts.test.ts b/agent/tests/asc-band-facts.test.ts
+index fa315da06..5dc365f37 100644
+--- a/agent/tests/asc-band-facts.test.ts
++++ b/agent/tests/asc-band-facts.test.ts
+@@ -7,7 +7,8 @@
+  * filled earlier the same day with the all-ascension text is not handed to an A9 run, and they stay byte-stable within
+  * the day. Fixed data throughout (setUnblockedSharesForTests), never the refreshing boss-damage.json.
+  */
+-import { cpSync, mkdtempSync, readFileSync, writeFileSync } from "node:fs";
++import { cpSync, readFileSync, writeFileSync } from "node:fs";
++import { mkdtempSync } from "./temp-fixtures.js";
+ import { tmpdir } from "node:os";
+ import { dirname, join } from "node:path";
+ import { fileURLToPath } from "node:url";
+diff --git a/agent/tests/batch-c.test.ts b/agent/tests/batch-c.test.ts
+index 96cecbddf..c031b26e6 100644
+--- a/agent/tests/batch-c.test.ts
++++ b/agent/tests/batch-c.test.ts
+@@ -4,7 +4,8 @@
+  * synthetic or logged fixtures (tests/logged-states), never the refreshing knowledge files.
+  */
+ 
+-import { mkdtempSync, readFileSync } from "node:fs";
++import { readFileSync } from "node:fs";
++import { mkdtempSync } from "./temp-fixtures.js";
+ import { tmpdir } from "node:os";
+ import { dirname, join } from "node:path";
+ import { fileURLToPath } from "node:url";
+diff --git a/agent/tests/batch-e.test.ts b/agent/tests/batch-e.test.ts
+index 18a92e3cb..15e55440f 100644
+--- a/agent/tests/batch-e.test.ts
++++ b/agent/tests/batch-e.test.ts
+@@ -3,7 +3,8 @@
+  * (tests/logged-states), never the refreshing knowledge files.
+  */
+ 
+-import { mkdtempSync, readFileSync } from "node:fs";
++import { readFileSync } from "node:fs";
++import { mkdtempSync } from "./temp-fixtures.js";
+ import { tmpdir } from "node:os";
+ import { join } from "node:path";
+ 
+diff --git a/agent/tests/batch-h.test.ts b/agent/tests/batch-h.test.ts
+index 728ab11c2..217600650 100644
+--- a/agent/tests/batch-h.test.ts
++++ b/agent/tests/batch-h.test.ts
+@@ -3,7 +3,8 @@
+  * (tests/logged-states/batch-h, out of the rollout-live / potion-mc sweeps), never the refreshing knowledge files.
+  */
+ 
+-import { mkdtempSync, readFileSync } from "node:fs";
++import { readFileSync } from "node:fs";
++import { mkdtempSync } from "./temp-fixtures.js";
+ import { tmpdir } from "node:os";
+ import { dirname, join } from "node:path";
+ import { fileURLToPath } from "node:url";
+diff --git a/agent/tests/batch-m.test.ts b/agent/tests/batch-m.test.ts
+index 3ee650a05..e0baf4796 100644
+--- a/agent/tests/batch-m.test.ts
++++ b/agent/tests/batch-m.test.ts
+@@ -4,7 +4,8 @@
+  * refreshing knowledge files.
+  */
+ 
+-import { existsSync, mkdtempSync, readdirSync, readFileSync, writeFileSync } from "node:fs";
++import { existsSync, readdirSync, readFileSync, writeFileSync } from "node:fs";
++import { mkdtempSync } from "./temp-fixtures.js";
+ import { tmpdir } from "node:os";
+ import { dirname, join } from "node:path";
+ import { fileURLToPath } from "node:url";
+diff --git a/agent/tests/batch-n.test.ts b/agent/tests/batch-n.test.ts
+index 4b7188adb..bb83a0eac 100644
+--- a/agent/tests/batch-n.test.ts
++++ b/agent/tests/batch-n.test.ts
+@@ -3,7 +3,8 @@
+  * tests/logged-states/batch-n/.
+  */
+ 
+-import { mkdtempSync, readFileSync } from "node:fs";
++import { readFileSync } from "node:fs";
++import { mkdtempSync } from "./temp-fixtures.js";
+ import { tmpdir } from "node:os";
+ import { dirname, join } from "node:path";
+ import { fileURLToPath } from "node:url";
+diff --git a/agent/tests/brain-claude.test.ts b/agent/tests/brain-claude.test.ts
+index 34ae22c9d..0863787a2 100644
+--- a/agent/tests/brain-claude.test.ts
++++ b/agent/tests/brain-claude.test.ts
+@@ -4,7 +4,8 @@
+  * answer and usage read back, failure kinds (quota, rate limit, login) and the stdio MCP round trip with a fake
+  * tool. No model is called.
+  */
+-import { chmodSync, existsSync, mkdtempSync, readFileSync, writeFileSync } from "node:fs";
++import { chmodSync, existsSync, readFileSync, writeFileSync } from "node:fs";
++import { mkdtempSync } from "./temp-fixtures.js";
+ import { tmpdir } from "node:os";
+ import { join } from "node:path";
+ import { describe, expect, it } from "vitest";
+diff --git a/agent/tests/brain-deepseek.test.ts b/agent/tests/brain-deepseek.test.ts
+index 2611260df..fbc8b83d5 100644
+--- a/agent/tests/brain-deepseek.test.ts
++++ b/agent/tests/brain-deepseek.test.ts
+@@ -4,7 +4,8 @@
+  * tools it runs DeepSeek's native function calling with the tools in process. No network: a fake fetch captures
+  * the request bodies.
+  */
+-import { mkdtempSync, readFileSync, writeFileSync } from "node:fs";
++import { readFileSync, writeFileSync } from "node:fs";
++import { mkdtempSync } from "./temp-fixtures.js";
+ import { tmpdir } from "node:os";
+ import { join } from "node:path";
+ import { afterEach, beforeEach, describe, expect, it } from "vitest";
+diff --git a/agent/tests/config.test.ts b/agent/tests/config.test.ts
+index c7ea55590..858267713 100644
+--- a/agent/tests/config.test.ts
++++ b/agent/tests/config.test.ts
+@@ -1,4 +1,5 @@
+-import { chmodSync, mkdirSync, mkdtempSync, writeFileSync } from "node:fs";
++import { chmodSync, mkdirSync, writeFileSync } from "node:fs";
++import { mkdtempSync } from "./temp-fixtures.js";
+ import { tmpdir } from "node:os";
+ import { join } from "node:path";
+ import { describe, expect, it } from "vitest";
+diff --git a/agent/tests/deepseek.test.ts b/agent/tests/deepseek.test.ts
+index 89b82df58..b9f88a8d5 100644
+--- a/agent/tests/deepseek.test.ts
++++ b/agent/tests/deepseek.test.ts
+@@ -1,6 +1,7 @@
+ /** DeepSeek request shape: static system prompt (guide + handbook), run memory in the user message. */
+ 
+-import { mkdtempSync, readFileSync, writeFileSync } from "node:fs";
++import { readFileSync, writeFileSync } from "node:fs";
++import { mkdtempSync } from "./temp-fixtures.js";
+ import { tmpdir } from "node:os";
+ import { join } from "node:path";
+ import { afterEach, describe, expect, it } from "vitest";
+diff --git a/agent/tests/disk-admission.test.ts b/agent/tests/disk-admission.test.ts
+index 20c3b83ab..fde298f42 100644
+--- a/agent/tests/disk-admission.test.ts
++++ b/agent/tests/disk-admission.test.ts
+@@ -6,5 +6,5 @@ it("enforces approved capacity gates in the original tick and only at a finished
+     encoding: "utf8", timeout: 35_000,
+   });
+   expect(result.status, result.stdout + result.stderr).toBe(0);
+-  expect(result.stderr).toContain("Ran 8 tests");
++    expect(result.stderr).toContain("Ran 11 tests");
+ }, 40_000);
+diff --git a/agent/tests/file-escalation.test.ts b/agent/tests/file-escalation.test.ts
+index 2bc4933d4..d34ddab57 100644
+--- a/agent/tests/file-escalation.test.ts
++++ b/agent/tests/file-escalation.test.ts
+@@ -1,4 +1,5 @@
+-import { mkdtempSync, readdirSync, readFileSync, writeFileSync } from "node:fs";
++import { readdirSync, readFileSync, writeFileSync } from "node:fs";
++import { mkdtempSync } from "./temp-fixtures.js";
+ import { tmpdir } from "node:os";
+ import { join } from "node:path";
+ 
+diff --git a/agent/tests/game-data-cache.test.ts b/agent/tests/game-data-cache.test.ts
+index 8dd8368fb..767b1c73d 100644
+--- a/agent/tests/game-data-cache.test.ts
++++ b/agent/tests/game-data-cache.test.ts
+@@ -2,7 +2,8 @@
+  * The game-data cache (knowledge/index.ts): a fake mod's or an empty catalogue never replaces the project's
+  * data/game-data.json (2026-10-04 20:00: a doctor run against tools/fake-mod.mjs did), and GAME_DATA_DIR moves the cache.
+  */
+-import { existsSync, mkdtempSync, readFileSync } from "node:fs";
++import { existsSync, readFileSync } from "node:fs";
++import { mkdtempSync } from "./temp-fixtures.js";
+ import { tmpdir } from "node:os";
+ import { join } from "node:path";
+ 
+diff --git a/agent/tests/jev-retry.test.ts b/agent/tests/jev-retry.test.ts
+index 864da407f..f776798a3 100644
+--- a/agent/tests/jev-retry.test.ts
++++ b/agent/tests/jev-retry.test.ts
+@@ -1,6 +1,6 @@
+ /** Transient Jev failures (5xx / 429 / timeouts) are retried with backoff instead of ending the process. */
+ 
+-import { rmSync } from "node:fs";
++import { mkdtempSync, rmSync } from "node:fs";
+ import { tmpdir } from "node:os";
+ import { join } from "node:path";
+ import { afterEach, describe, expect, it } from "vitest";
+@@ -16,8 +16,13 @@ import { combatPayload, mainMenuPayload, testKnowledge } from "./scenarios.js";
+ const servers: TestServer[] = [];
+ const logs: string[] = [];
+ afterEach(async () => {
+-  await Promise.all(servers.splice(0).map((server) => server.close()));
+-  for (const path of logs.splice(0)) rmSync(path, { force: true });
++  try {
++    const closed = await Promise.allSettled(servers.splice(0).map((server) => server.close()));
++    const failed = closed.find((result) => result.status === "rejected");
++    if (failed?.status === "rejected") throw failed.reason;
++  } finally {
++    for (const directory of logs.splice(0)) rmSync(directory, { recursive: true, force: true });
++  }
+ });
+ 
+ const cloudflare520 = (): Error => Object.assign(new Error("520 status code (no body)"), { status: 520 });
+@@ -120,8 +125,9 @@ describe("runLoop with a flaky Jev", () => {
+   }
+ 
+   function config() {
+-    const path = join(tmpdir(), `jev-retry-${Date.now()}-${Math.random().toString(16).slice(2)}.jsonl`);
+-    logs.push(path, path.replace(/\.jsonl$/, ".states.jsonl"), path.replace(/\.jsonl$/, ".brain.jsonl"));
++    const directory = mkdtempSync(join(tmpdir(), "jev-retry-"));
++    logs.push(directory);
++    const path = join(directory, "decisions.jsonl");
+     const base = loadConfig({} as NodeJS.ProcessEnv);
+     return { ...base, combatPlanner: "card" as const, log: { ...base.log, decisionLog: path } };
+   }
+diff --git a/agent/tests/learner-self-check.test.ts b/agent/tests/learner-self-check.test.ts
+index b090e1a39..647a2db84 100644
+--- a/agent/tests/learner-self-check.test.ts
++++ b/agent/tests/learner-self-check.test.ts
+@@ -30,7 +30,7 @@ describe("learner self-check completion", () => {
+     expect(result.batch.checks.rc).toBe(0);
+     expect(result.calls[1].slice(0, 3)).toEqual(["flock", "/fixture/ops/live-merge.lock", "bash"]);
+     expect(result.calls[1].at(-1)).toContain("npx tsc -p tsconfig.json --noEmit");
+-    expect(result.calls[1].at(-1)).toContain("npx vitest run --maxWorkers=2");
++    expect(result.calls[1].at(-1)).toMatch(/node\s+['"]?[^;\n]*\/agent\/tools\/with-temp\.mjs['"]?\s+node_modules\/vitest\/vitest\.mjs run --maxWorkers=2/);
+     expect(result.calls[1].at(-1)).not.toContain("--exclude");
+   });
+ 
+@@ -57,6 +57,8 @@ describe("learner self-check completion", () => {
+     expect(excluded).toContain("tests/mod-client.test.ts");
+     expect(excluded).not.toContain("tests/turn-start-settle.test.ts");
+     expect(excluded.every((name) => name.startsWith("tests/") && name.endsWith(".test.ts"))).toBe(true);
+-    expect(command.indexOf("npx tsc")).toBeLessThan(command.indexOf("npx vitest"));
++    const suite = "node tools/with-temp.mjs node_modules/vitest/vitest.mjs run";
++    expect(command).toContain(suite);
++    expect(command.indexOf("npx tsc")).toBeLessThan(command.indexOf(suite));
+   });
+ });
+diff --git a/agent/tests/loop.test.ts b/agent/tests/loop.test.ts
+index 7f629b4db..d2c179378 100644
+--- a/agent/tests/loop.test.ts
++++ b/agent/tests/loop.test.ts
+@@ -5,7 +5,7 @@
+  * log, with no game and no real model.
+  */
+ 
+-import { readFileSync, rmSync } from "node:fs";
++import { mkdtempSync, readFileSync, rmSync } from "node:fs";
+ import { tmpdir } from "node:os";
+ import { join } from "node:path";
+ import { afterEach, describe, expect, it } from "vitest";
+@@ -68,19 +68,19 @@ const servers: TestServer[] = [];
+ const logs: string[] = [];
+ 
+ afterEach(async () => {
+-  await Promise.all(servers.splice(0).map((server) => server.close()));
+-  for (const path of logs.splice(0)) {
+-    try {
+-      rmSync(path, { force: true });
+-    } catch {
+-      // best effort
+-    }
++  try {
++    const closed = await Promise.allSettled(servers.splice(0).map((server) => server.close()));
++    const failed = closed.find((result) => result.status === "rejected");
++    if (failed?.status === "rejected") throw failed.reason;
++  } finally {
++    for (const directory of logs.splice(0)) rmSync(directory, { recursive: true, force: true });
+   }
+ });
+ 
+ function testConfig(): AppConfig {
+-  const path = join(tmpdir(), `jev-sts2-test-${Date.now()}-${Math.random().toString(16).slice(2)}.jsonl`);
+-  logs.push(path);
++  const directory = mkdtempSync(join(tmpdir(), "jev-sts2-test-"));
++  logs.push(directory);
++  const path = join(directory, "decisions.jsonl");
+   const config = loadConfig({} as NodeJS.ProcessEnv);
+   return { ...config, combatPlanner: "card", log: { ...config.log, decisionLog: path } };
+ }
+diff --git a/agent/tests/multi-character.test.ts b/agent/tests/multi-character.test.ts
+index db756ec3c..b2dea5df8 100644
+--- a/agent/tests/multi-character.test.ts
++++ b/agent/tests/multi-character.test.ts
+@@ -4,11 +4,12 @@
+  * knowledge directory reads as empty knowledge (never the Ironclad's), the climb's target, the monster-records merge,
+  * and the model-visible character name. Temp files only; no model, no game.
+  */
+-import { copyFileSync, mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
++import { copyFileSync, mkdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
+ import { tmpdir } from "node:os";
+ import { join } from "node:path";
+ 
+ import { afterEach, describe, expect, it, vi } from "vitest";
++import { mkdtempSync } from "./temp-fixtures.js";
+ 
+ import { loadConfig } from "../src/core/config.js";
+ import { parseGameState } from "../src/hand/mod/schema.js";
+diff --git a/agent/tests/oneshot-support.ts b/agent/tests/oneshot-support.ts
+index b48ebe871..b5edfe95b 100644
+--- a/agent/tests/oneshot-support.ts
++++ b/agent/tests/oneshot-support.ts
+@@ -5,7 +5,7 @@
+  * table (not the refreshed card-upgrades.json).
+  */
+ 
+-import { readFileSync, rmSync } from "node:fs";
++import { mkdtempSync, readFileSync, rmSync } from "node:fs";
+ import { tmpdir } from "node:os";
+ import { dirname, join } from "node:path";
+ import { fileURLToPath } from "node:url";
+@@ -125,8 +125,13 @@ export function setupOneshotTests(): void {
+ );
+   afterAll(() => setCardUpgradesForTests(null));
+   afterEach(async () => {
+-    await Promise.all(servers.splice(0).map((server) => server.close()));
+-    for (const path of logs.splice(0)) rmSync(path, { force: true });
++    try {
++      const closed = await Promise.allSettled(servers.splice(0).map((server) => server.close()));
++      const failed = closed.find((result) => result.status === "rejected");
++      if (failed?.status === "rejected") throw failed.reason;
++    } finally {
++      for (const directory of logs.splice(0)) rmSync(directory, { recursive: true, force: true });
++    }
+   });
+ }
+ 
+@@ -181,8 +186,9 @@ const servers: TestServer[] = [];
+ const logs: string[] = [];
+ 
+ export async function play(sequence: Raw[], deepseek: DeepSeekClient, over: Partial<AppConfig> = {}, loop: Partial<LoopOptions> = {}) {
+-  const path = join(tmpdir(), `jev-sts2-oneshot-${Date.now()}-${Math.random().toString(16).slice(2)}.jsonl`);
+-  logs.push(path, path.replace(/\.jsonl$/, ".states.jsonl"), path.replace(/\.jsonl$/, ".brain.jsonl"));
++  const directory = mkdtempSync(join(tmpdir(), "jev-sts2-oneshot-"));
++  logs.push(directory);
++  const path = join(directory, "decisions.jsonl");
+   const base = loadConfig({} as NodeJS.ProcessEnv);
+   const cfg: AppConfig = {
+     ...base,
+diff --git a/agent/tests/outcome-asc.test.ts b/agent/tests/outcome-asc.test.ts
+index a4ed82951..882a2fc6b 100644
+--- a/agent/tests/outcome-asc.test.ts
++++ b/agent/tests/outcome-asc.test.ts
+@@ -8,7 +8,8 @@
+  *
+  * Fixed data throughout (setExperienceForTests, a copy of the gkb fixture dir), never the refreshing outcome-stats.json.
+  */
+-import { cpSync, mkdtempSync, readFileSync, writeFileSync } from "node:fs";
++import { cpSync, readFileSync, writeFileSync } from "node:fs";
++import { mkdtempSync } from "./temp-fixtures.js";
+ import { tmpdir } from "node:os";
+ import { dirname, join } from "node:path";
+ import { fileURLToPath } from "node:url";
+diff --git a/agent/tests/prefix-facts.test.ts b/agent/tests/prefix-facts.test.ts
+index c5e7b7b3a..c47a0d5aa 100644
+--- a/agent/tests/prefix-facts.test.ts
++++ b/agent/tests/prefix-facts.test.ts
+@@ -5,7 +5,8 @@
+  * the cached prefix holds up to the data-version block. Also: V3-final's lessons carry placeholders, filled in the
+  * prefix (b5e1f44) and in Jev's lessons.
+  */
+-import { cpSync, mkdtempSync, readdirSync, readFileSync, writeFileSync } from "node:fs";
++import { cpSync, readdirSync, readFileSync, writeFileSync } from "node:fs";
++import { mkdtempSync } from "./temp-fixtures.js";
+ import { tmpdir } from "node:os";
+ import { dirname, join } from "node:path";
+ import { fileURLToPath } from "node:url";
+diff --git a/agent/tests/route-review.test.ts b/agent/tests/route-review.test.ts
+index 16265bdea..765558d3e 100644
+--- a/agent/tests/route-review.test.ts
++++ b/agent/tests/route-review.test.ts
+@@ -14,7 +14,8 @@
+  * room-costs.json).
+  */
+ 
+-import { chmodSync, mkdtempSync, readFileSync, writeFileSync } from "node:fs";
++import { chmodSync, readFileSync, writeFileSync } from "node:fs";
++import { mkdtempSync } from "./temp-fixtures.js";
+ import { tmpdir } from "node:os";
+ import { join } from "node:path";
+ import { afterAll, beforeAll, describe, expect, it } from "vitest";
+diff --git a/agent/tests/temp-fixtures.ts b/agent/tests/temp-fixtures.ts
+new file mode 100644
+index 000000000..207ad6064
+--- /dev/null
++++ b/agent/tests/temp-fixtures.ts
+@@ -0,0 +1,16 @@
++import { mkdtempSync as createDirectory, rmSync } from "node:fs";
++import { afterAll } from "vitest";
++
++const directories = new Set<string>();
++
++// Some fixtures are allocated at module scope and shared across tests in the file.
++afterAll(() => {
++  for (const directory of directories) rmSync(directory, { recursive: true, force: true });
++  directories.clear();
++});
++
++export function mkdtempSync(prefix: string): string {
++  const directory = createDirectory(prefix);
++  directories.add(directory);
++  return directory;
++}
+diff --git a/agent/tests/temp-global-setup.ts b/agent/tests/temp-global-setup.ts
+new file mode 100644
+index 000000000..03a38a414
+--- /dev/null
++++ b/agent/tests/temp-global-setup.ts
+@@ -0,0 +1,8 @@
++import type { TestProject } from "vitest/node";
++import { cleanupTempScope } from "../tools/temp-root.mjs";
++
++export default function setup(project: TestProject) {
++  const directory = project.config.env["STS2_TEST_TMP_ROOT"];
++  const token = project.config.env["STS2_TEST_TMP_OWNER"];
++  return () => cleanupTempScope(directory, token);
++}
+diff --git a/agent/tests/temp-lifecycle.test.ts b/agent/tests/temp-lifecycle.test.ts
+new file mode 100644
+index 000000000..0cb31fcaa
+--- /dev/null
++++ b/agent/tests/temp-lifecycle.test.ts
+@@ -0,0 +1,64 @@
++import { execFileSync, spawnSync } from "node:child_process";
++import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
++import { tmpdir } from "node:os";
++import { join } from "node:path";
++import { fileURLToPath } from "node:url";
++import { describe, expect, it } from "vitest";
++import { cleanupTempScope, createTempScope, defaultTempParent } from "../tools/temp-root.mjs";
++import { mkdtempSync } from "./temp-fixtures.js";
++
++describe("owned temporary files", () => {
++  it("removes unexpected nested sidecars while leaving neighboring caller files intact", () => {
++    const parent = mkdtempSync(join(tmpdir(), "temp-lifecycle-"));
++    const neighbor = join(parent, "caller-evidence");
++    writeFileSync(neighbor, "retain");
++    const scope = createTempScope({}, parent);
++    const nested = join(scope.directory!, "future-sidecar");
++    mkdirSync(nested);
++    writeFileSync(join(nested, "run-config.jsonl"), "fixed");
++    scope.cleanup();
++    scope.cleanup();
++    expect(existsSync(scope.directory!)).toBe(false);
++    expect(readFileSync(neighbor, "utf8")).toBe("retain");
++  });
++
++  it("preserves an explicit TMPDIR and refuses a mismatched ownership marker", () => {
++    const directory = mkdtempSync(join(tmpdir(), "temp-explicit-"));
++    const scope = createTempScope({ TMPDIR: directory }, "/does-not-exist");
++    expect(scope.env).toEqual({});
++    scope.cleanup();
++    expect(existsSync(directory)).toBe(true);
++    writeFileSync(join(directory, ".sts2-temp-owner"), "original");
++    expect(() => cleanupTempScope(directory, "wrong")).toThrow("owner mismatch");
++    expect(existsSync(directory)).toBe(true);
++  });
++
++  it("defaults to the common repository disk before a child starts and cleans on failure", () => {
++    const env = { ...process.env };
++    delete env.TMPDIR;
++    const cwd = mkdtempSync(join(tmpdir(), "temp-old-checkout-"));
++    const wrapper = fileURLToPath(new URL("../tools/with-temp.mjs", import.meta.url));
++    const result = spawnSync(process.execPath, [wrapper, process.execPath, "-e",
++      "const fs=require('fs'); console.log(require('os').tmpdir()); fs.writeFileSync(process.env.TMPDIR+'/new-sidecar','fixed'); process.exit(7)"],
++    { cwd, env, encoding: "utf8", timeout: 5000 });
++    expect(result.status).toBe(7);
++    const directory = result.stdout.trim();
++    expect(directory.startsWith(defaultTempParent() + "/s-")).toBe(true);
++    expect(existsSync(directory)).toBe(false);
++  });
++
++  it("keeps caller-owned child scratch on a successful smoke command", () => {
++    const directory = mkdtempSync(join(tmpdir(), "temp-smoke-"));
++    execFileSync(process.execPath, ["tools/with-temp.mjs", process.execPath, "-e",
++      "require('fs').writeFileSync(process.env.TMPDIR+'/evidence','fixed')"],
++    { env: { ...process.env, TMPDIR: directory }, timeout: 5000 });
++    expect(readFileSync(join(directory, "evidence"), "utf8")).toBe("fixed");
++  });
++
++  it("reports a missing offline executable as a failure", () => {
++    const result = spawnSync(process.execPath, ["tools/with-temp.mjs", "/missing-sts2-fixed-executable"],
++      { encoding: "utf8", timeout: 5000 });
++    expect(result.status).toBe(1);
++    expect(result.stderr).toContain("ENOENT");
++  });
++});
+diff --git a/agent/tests/turn-start-settle.test.ts b/agent/tests/turn-start-settle.test.ts
+index 1d26cf549..10563a279 100644
+--- a/agent/tests/turn-start-settle.test.ts
++++ b/agent/tests/turn-start-settle.test.ts
+@@ -6,7 +6,7 @@
+  * card), before Inferno's 2. The logged boards are tests/sl-inferno-judge-data's (C4F1 F33 attempt 5, two Inferno+ and
+  * Hellraiser up); the loop runs on a scripted mod server. No model call, nothing under logs/ or .cache read.
+  */
+-import { readFileSync, rmSync } from "node:fs";
++import { mkdtempSync, readFileSync, rmSync } from "node:fs";
+ import { tmpdir } from "node:os";
+ import { dirname, join } from "node:path";
+ import { fileURLToPath } from "node:url";
+@@ -97,16 +97,17 @@ function stubJev(): JevClient {
+   } as unknown as JevClient;
+ }
+ 
+-const logs: string[] = [];
++const logDirs: string[] = [];
+ afterEach(() => {
+   vi.restoreAllMocks();
+   vi.useRealTimers();
+-  for (const path of logs.splice(0)) rmSync(path, { force: true });
++  for (const dir of logDirs.splice(0)) rmSync(dir, { recursive: true, force: true });
+ });
+ 
+ function testConfig(): AppConfig {
+-  const path = join(tmpdir(), `jev-sts2-settle-${Date.now()}-${Math.random().toString(16).slice(2)}.jsonl`);
+-  logs.push(path);
++  const dir = mkdtempSync(join(tmpdir(), "jev-sts2-settle-"));
++  const path = join(dir, "decisions.jsonl");
++  logDirs.push(dir);
+   const config = loadConfig({} as NodeJS.ProcessEnv);
+   return { ...config, combatPlanner: "card", log: { ...config.log, decisionLog: path } };
+ }
+diff --git a/agent/tools/rollout-backtest.ts b/agent/tools/rollout-backtest.ts
+index 86679cd3f..a87c77141 100644
+--- a/agent/tools/rollout-backtest.ts
++++ b/agent/tools/rollout-backtest.ts
+@@ -13,11 +13,11 @@
+  * Pairing tests and the report are knowledge/builders/build-fight-value.py rollout-report.
+  *
+  * Usage:
+- *   npx tsx tools/rollout-backtest.ts extract [--logs DIR] [--rows PATH] [--work DIR]
+- *   npx tsx tools/rollout-backtest.ts run [--work DIR] [--shard I --shards N] [--budget 1500] [--limit N] [--fold-dir DIR]
++ *   npm run offline -- node --import tsx tools/rollout-backtest.ts extract [--logs DIR] [--rows PATH] [--work DIR]
++ *   npm run offline -- node --import tsx tools/rollout-backtest.ts run [--work DIR] [--shard I --shards N] [--budget 1500] [--limit N] [--fold-dir DIR]
+  * --fold-dir: out-of-fold models and gates (python3 knowledge/builders/build-fight-value.py folds --fold-dir DIR); without it
+  * the committed model, which was trained on these very fights, is used (in-sample: optimistic).
+- * Output: <work>/decisions.jsonl (extract), <work>/eval-<I>.jsonl (run).
++ * Output: <work>/decisions.jsonl (extract), <work>/eval-<I>.jsonl (run); default work is .artifacts/rollout-backtest.
+  */
+ import { createReadStream, mkdirSync, readFileSync, writeFileSync, appendFileSync } from "node:fs";
+ import { join } from "node:path";
+@@ -44,7 +44,7 @@ function arg(name: string, fallback: string): string {
+ const stage = process.argv[2] ?? "run";
+ const logs = arg("logs", fromRoot("logs"));
+ const rowsPath = arg("rows", fromRoot("data/fight-value-rows.jsonl"));
+-const work = arg("work", "/tmp/rollout-backtest");
++const work = arg("work", fromRoot(".artifacts/rollout-backtest"));
+ mkdirSync(work, { recursive: true });
+ 
+ interface FvRow {
+diff --git a/agent/tools/temp-root.d.mts b/agent/tools/temp-root.d.mts
+new file mode 100644
+index 000000000..6be12d365
+--- /dev/null
++++ b/agent/tools/temp-root.d.mts
+@@ -0,0 +1,8 @@
++export function defaultTempParent(): string;
++export function cleanupTempScope(directory: string | null | undefined, token: string | null | undefined): void;
++export function createTempScope(env?: NodeJS.ProcessEnv, parent?: string): {
++  directory: string | null;
++  token: string | null;
++  env: NodeJS.ProcessEnv;
++  cleanup(): void;
++};
+diff --git a/agent/tools/temp-root.mjs b/agent/tools/temp-root.mjs
+new file mode 100644
+index 000000000..3f5731b25
+--- /dev/null
++++ b/agent/tools/temp-root.mjs
+@@ -0,0 +1,40 @@
++import { randomUUID } from "node:crypto";
++import { mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
++import { dirname, join, resolve } from "node:path";
++import { execFileSync } from "node:child_process";
++import { fileURLToPath } from "node:url";
++
++export function defaultTempParent() {
++  const project = fileURLToPath(new URL("../..", import.meta.url));
++  try {
++    const common = execFileSync("git", ["-C", project, "rev-parse", "--path-format=absolute", "--git-common-dir"],
++      { encoding: "utf8", stdio: ["ignore", "pipe", "ignore"] }).trim();
++    // The common checkout keeps AF_UNIX paths short even in deeply nested worktrees.
++    return join(dirname(common), ".cache", "t");
++  } catch {
++    return resolve(project, ".cache", "t");
++  }
++}
++
++export function cleanupTempScope(directory, token) {
++  if (!directory || !token) return;
++  const marker = join(directory, ".sts2-temp-owner");
++  try {
++    if (readFileSync(marker, "utf8") !== token) throw new Error("temporary directory owner mismatch");
++  } catch (error) {
++    if (error.code === "ENOENT") return;
++    throw error;
++  }
++  rmSync(directory, { recursive: true, force: true });
++}
++
++export function createTempScope(env = process.env, parent = defaultTempParent()) {
++  // Explicit caller-owned scratch is never removed or redirected.
++  if (env.TMPDIR?.trim()) return { directory: null, token: null, env: {}, cleanup() {} };
++  mkdirSync(parent, { recursive: true, mode: 0o700 });
++  const directory = mkdtempSync(join(parent, "s-"));
++  const token = randomUUID();
++  writeFileSync(join(directory, ".sts2-temp-owner"), token, { mode: 0o600, flag: "wx" });
++  return { directory, token, env: { TMPDIR: directory, TMP: directory, TEMP: directory },
++    cleanup() { cleanupTempScope(directory, token); } };
++}
+diff --git a/agent/tools/test-sandbox.sh b/agent/tools/test-sandbox.sh
+index 624206690..897fbd55c 100644
+--- a/agent/tools/test-sandbox.sh
++++ b/agent/tools/test-sandbox.sh
+@@ -14,7 +14,7 @@ unset CHARACTER
+ workers="${SANDBOX_WORKERS:-4}"
+ case "$workers" in 1|2|3|4) ;; *) echo "SANDBOX_WORKERS must be 1, 2, 3 or 4" >&2; exit 2 ;; esac
+ nice -n 19 npx tsc -p tsconfig.json --noEmit
+-nice -n 19 npx vitest run --pool=threads --maxWorkers="$workers" --exclude tests/paths.test.ts \
++nice -n 19 node tools/with-temp.mjs node_modules/vitest/vitest.mjs run --pool=threads --maxWorkers="$workers" --exclude tests/paths.test.ts \
+   --exclude tests/brain-codex.test.ts \
+   --exclude tests/brain-codex-session.test.ts \
+   --exclude tests/brain-codex-usage.test.ts \
+@@ -63,4 +63,4 @@ nice -n 19 npx vitest run --pool=threads --maxWorkers="$workers" --exclude tests
+   --exclude tests/batch-f.test.ts \
+   --exclude tests/fix-queue-v4-fix2.test.ts "$@"
+ # paths.test.ts calls process.chdir(), which Node disallows in threads; use one fork for this file.
+-nice -n 19 npx vitest run tests/paths.test.ts --pool=forks --maxWorkers=1 "$@"
++nice -n 19 node tools/with-temp.mjs node_modules/vitest/vitest.mjs run tests/paths.test.ts --pool=forks --maxWorkers=1 "$@"
+diff --git a/agent/tools/with-temp.mjs b/agent/tools/with-temp.mjs
+new file mode 100644
+index 000000000..b13368c52
+--- /dev/null
++++ b/agent/tools/with-temp.mjs
+@@ -0,0 +1,25 @@
++#!/usr/bin/env node
++import { spawn } from "node:child_process";
++import { createTempScope } from "./temp-root.mjs";
++
++const [command, ...args] = process.argv.slice(2);
++if (!command) throw new Error("usage: node tools/with-temp.mjs <command> [args...]");
++const scope = createTempScope();
++let interrupted = false;
++let spawnFailed = false;
++const child = spawn(command, args, { stdio: "inherit", env: { ...process.env, ...scope.env } });
++for (const signal of ["SIGINT", "SIGTERM"]) process.on(signal, () => {
++  interrupted = true;
++  child.kill(signal);
++});
++child.once("error", (error) => {
++  spawnFailed = true;
++  scope.cleanup();
++  console.error(error.message);
++  process.exitCode = 1;
++});
++child.once("close", (code, signal) => {
++  // An interrupted process may still have descendants: retain its owned scratch for diagnosis.
++  if (!interrupted && !signal) scope.cleanup();
++  process.exitCode = spawnFailed ? 1 : code ?? (signal === "SIGINT" ? 130 : 143);
++});
+diff --git a/agent/vitest.config.ts b/agent/vitest.config.ts
+index 8dabcfda6..f973bb622 100644
+--- a/agent/vitest.config.ts
++++ b/agent/vitest.config.ts
+@@ -1,5 +1,9 @@
+ import { defineConfig } from "vitest/config";
+ import { fileURLToPath } from "node:url";
++import { createTempScope } from "./tools/temp-root.mjs";
++
++const scratch = createTempScope();
++Object.assign(process.env, scratch.env);
+ 
+ // The test files, the setup files and the timeout; everything else is vitest's default.
+ export default defineConfig({
+@@ -8,6 +12,8 @@ export default defineConfig({
+   // Tests use fixed inputs; never load a live worktree's credentials or play configuration.
+   envDir: false,
+   test: {
++    globalSetup: ["tests/temp-global-setup.ts"],
++    env: { STS2_TEST_TMP_ROOT: scratch.directory ?? "", STS2_TEST_TMP_OWNER: scratch.token ?? "" },
+     // This package's tests only (agent/tests): never the upstream submodule's, an old worktree's or a nested checkout's.
+     include: ["tests/**/*.test.ts"],
+     exclude: ["**/node_modules/**", "**/third_party/**", "**/.worktrees/**", "**/jev-sts2*/**"],
+diff --git a/docs/temporary-files.md b/docs/temporary-files.md
+new file mode 100644
+index 000000000..650224eea
+--- /dev/null
++++ b/docs/temporary-files.md
+@@ -0,0 +1,23 @@
++# 测试与离线工具的临时文件
++
++完整 vitest、沙箱检查及学习者宿主检查默认把临时文件放在主检出的 `.cache/t/s-*`，不使用共享 `/tmp`。直接从 `agent/` 执行 `npx vitest run` 也应用这一默认值。公共 Git 目录用于定位主检出，使工作树较深时的 Unix socket 路径仍保持较短。
++
++每次运行创建独立目录和随机归属标记。正常完成（包括测试失败）后删除本次目录及其 sidecar；各测试也负责在 `afterEach`、`afterAll` 或 `finally` 中删除自己创建的目录。通过统一入口执行的进程被信号中断时保留临时现场，不自动清理仍可能有后代进程使用的目录。
++
++显式设置 `TMPDIR` 时沿用调用者目录，入口不会删除该目录。需要保留诊断现场时可在主盘指定一个独立的短路径，由原 owner 核实无使用者后回收。不要指向共享目录或修改全局环境配置。
++
++离线烟测与批量模拟从 `agent/` 使用统一入口，例如：
++
++```bash
++nice -n 19 npm run offline -- node --import tsx tools/rollout-backtest.ts extract --logs /path/to/frozen-logs --rows /path/to/frozen-rows.jsonl --work ../.artifacts/backtest-new
++nice -n 19 npm run v6:replay -- --evidence /path/to/frozen-evidence --out ../.artifacts/replay-new --workers 1
++nice -n 19 npm run v6:profile -- --evidence /path/to/frozen-evidence --out ../.artifacts/profile-new
++```
++
++`offline` 后可以接现有的离线命令。原工具参数、模型授权和并发边界仍适用；这不是运行对局或发起模型请求的授权。直接运行其他临时脚本时也应使用该入口。显式输出文件和回放产物须放在临时目录之外；`rollout-backtest` 的默认工作目录为项目内 `.artifacts/rollout-backtest`，供后续核验保留。
++
++学习者宿主检查使用调度器所在仓库的包装器绝对路径，待检查的 live 工作树仍作为原命令工作目录。旧 live 尚无这个包装器时也能应用主盘临时目录；不会从新树加载待检查的源码或知识。
++
++运维容量准入同时测量主盘和共享 `/tmp`。`/tmp` 可用空间须严格大于 1 GiB，且可用 inode 须严格大于 16,384；测量失败保留未知并暂停新准入。低容量会阻止新学习作业、通道及下一局，容量 tick 首次发现状态变化时写入 `ops/inbox-dev.md` 并排队通知原 ops，不热停正在运行的对局。测量原件在原容量状态和追加日志中。
++
++旧残留只按已授权截止时间、项目归属和实际使用情况逐项清理。不得删除 `tsx-1000`、在用目录或无法证明归属的目录；本入口不提供全局 `/tmp` 清理。2026-10-20 的旧项目清理回执见 [原 ops 记录](../paper/materials/20261020-temp-cleanup-1430-ops/receipt.json)。
+diff --git a/ops/codex-ops-learn.py b/ops/codex-ops-learn.py
+index 669cb16fd..8596289e4 100644
+--- a/ops/codex-ops-learn.py
++++ b/ops/codex-ops-learn.py
+@@ -312,7 +312,14 @@ def cmd_tick(args):
+     capacity = disk_admission.snapshot(ROOT, DIR, record=True)
+     report["disk_capacity"] = capacity
+     if capacity.get("attention_transition"):
+-        enqueue("disk-capacity", f"容量门槛变化：{capacity['severity']}；可用{capacity['available_GiB']:.3f}GiB。新大作业/通道100、自然局边界60、Regent200及48小时。原件{capacity['policy']}和同目录codex-ops/disk-capacity/current.json；不热停当前局或恢复Regent。")
++        temporary = capacity.get("temporary_filesystem", {})
++        message = (f"容量门槛变化：{capacity['severity']}；主盘可用{capacity['available_GiB']:.3f}GiB。"
++                   f"/tmp可用bytes={temporary.get('available_bytes')}、inodes={temporary.get('available_inodes')}，"
++                   f"门槛为严格大于{temporary.get('minimum_available_bytes')} bytes及{temporary.get('minimum_available_inodes')} inodes，"
++                   f"状态{temporary.get('reason')}。新大作业/通道100、自然局边界60、Regent200及48小时。"
++                   f"原件{capacity['policy']}和同目录codex-ops/disk-capacity/current.json；不热停当前局或恢复Regent。")
++        inbox(message)
++        enqueue("disk-capacity", message)
+     batch = check_postmortems(state, character)
+     report["dispatched"] = batch
+     report["pending_notified"] = check_pending(state, character)
+diff --git a/ops/disk_admission.py b/ops/disk_admission.py
+index 7f9ea1449..f2fc191ed 100644
+--- a/ops/disk_admission.py
++++ b/ops/disk_admission.py
+@@ -13,6 +13,26 @@ import time
+ 
+ GiB = 1 << 30
+ WINDOW = 24 * 3600
++TMP_MIN_BYTES = GiB
++TMP_MIN_INODES = 16384
++
++
++def temporary_capacity():
++    """The shared tmpfs can run out of inodes while the repository disk is healthy."""
++    result = {"path": "/tmp", "minimum_available_bytes": TMP_MIN_BYTES,
++              "minimum_available_inodes": TMP_MIN_INODES,
++              "available_bytes": None, "available_inodes": None, "allowed": False}
++    try:
++        stat = os.statvfs("/tmp")
++        free_bytes, free_inodes = stat.f_bavail * stat.f_frsize, stat.f_favail
++        if type(free_bytes) is not int or type(free_inodes) is not int or min(free_bytes, free_inodes) < 0:
++            raise ValueError("invalid temporary filesystem measurement")
++        result.update(available_bytes=free_bytes, available_inodes=free_inodes,
++                      allowed=free_bytes > TMP_MIN_BYTES and free_inodes > TMP_MIN_INODES,
++                      reason="ok" if free_bytes > TMP_MIN_BYTES and free_inodes > TMP_MIN_INODES else "low_capacity")
++    except (OSError, ValueError) as error:
++        result.update(reason="measurement_failed", error=str(error))
++    return result
+ 
+ 
+ def configuration(root):
+@@ -119,16 +139,21 @@ def snapshot(root, directory, *, record=False, now=None, available=None):
+             if samples and current <= samples[-1]["at"]:
+                 raise ValueError("capacity clock did not advance; retain original samples")
+             samples.append({"at": current, "available_bytes": free})
++        temporary = temporary_capacity()
+         result = {"schema": "disk-admission-state-v1", "configured": True, "at": current,
+                   "root": str(root), "policy": str(policy_path), "samples": samples, **evaluate(free, samples)}
++        result["temporary_filesystem"] = temporary
++        if not temporary["allowed"]:
++            for key in ("new_jobs_allowed", "new_channel_allowed", "next_run_allowed", "regent_resume_allowed"):
++                result[key] = False
+         previous = state.get("severity")
+-        result["severity"] = "next_run_hold" if not result["next_run_allowed"] else "new_work_hold" if not result["new_jobs_allowed"] else "ok"
++        result["severity"] = "tmp_capacity_hold" if not temporary["allowed"] else "next_run_hold" if not result["next_run_allowed"] else "new_work_hold" if not result["new_jobs_allowed"] else "ok"
+         result["attention_transition"] = result["severity"] != "ok" and result["severity"] != previous
+         if record:
+             # Keep original measurements; the bounded current view may age old samples out.
+             with (folder / "measurements.jsonl").open("a") as history:
+                 history.write(json.dumps({"schema": "capacity-sample-v1", "at": current,
+-                    "available_bytes": free, "root": str(root)}, ensure_ascii=False) + "\n")
++                    "available_bytes": free, "root": str(root), "temporary_filesystem": temporary}, ensure_ascii=False) + "\n")
+                 history.flush()
+                 os.fsync(history.fileno())
+             atomic(statefile, result)
+diff --git a/ops/learner_checks.py b/ops/learner_checks.py
+index e21d80340..c5e54ca4e 100644
+--- a/ops/learner_checks.py
++++ b/ops/learner_checks.py
+@@ -3,6 +3,7 @@ import fcntl
+ import json
+ import os
+ import re
++import shlex
+ import subprocess
+ import importlib.util
+ import sys
+@@ -15,7 +16,11 @@ def proposal_tools():
+     spec.loader.exec_module(module)
+     return module
+ 
+-FULL_CHECK_COMMAND = 'export PATH="$HOME/.local/node/bin:$PATH"; nice -n 19 npx tsc -p tsconfig.json --noEmit; a=$?; nice -n 19 npx vitest run --maxWorkers=2; b=$?; [ "$a" = 0 ] && [ "$b" = 0 ]'
++# The dispatcher owns this helper even when checking an older live checkout.
++_TEMP_WRAPPER = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "agent", "tools", "with-temp.mjs")
++FULL_CHECK_COMMAND = ('export PATH="$HOME/.local/node/bin:$PATH"; nice -n 19 npx tsc -p tsconfig.json --noEmit; a=$?; '
++                      'nice -n 19 node ' + shlex.quote(_TEMP_WRAPPER) +
++                      ' node_modules/vitest/vitest.mjs run --maxWorkers=2; b=$?; [ "$a" = 0 ] && [ "$b" = 0 ]')
+ 
+ # Compare executable sources and their validation inputs, not refreshed knowledge or ops records.
+ SOURCE_PATHS = ["agent/src", "agent/tools", "agent/tests", "agent/package*.json", "agent/tsconfig*.json",
+diff --git a/ops/tests/test_disk_admission.py b/ops/tests/test_disk_admission.py
+index 0ca189f8c..b7d2fa298 100644
+--- a/ops/tests/test_disk_admission.py
++++ b/ops/tests/test_disk_admission.py
+@@ -26,6 +26,10 @@ class Admission(unittest.TestCase):
+         (self.root / "ops").mkdir()
+         shutil.copy2(ROOT / "ops/disk-policy.json", self.root / "ops/disk-policy.json")
+         self.directory = self.root / "ops/codex-ops"
++        temporary_stat = patch.object(disk.os, "statvfs", return_value=SimpleNamespace(
++            f_bavail=4 * disk.GiB, f_frsize=1, f_favail=65536))
++        self.tmp_stat = temporary_stat.start()
++        self.addCleanup(temporary_stat.stop)
+ 
+     def sample(self, at, free):
+         return disk.snapshot(self.root, self.directory, record=True, now=at, available=free * disk.GiB)
+@@ -85,12 +89,41 @@ class Admission(unittest.TestCase):
+         with patch.dict(os.environ, {"CHARACTER": "SILENT"}):
+             self.assertEqual(disk.character(self.root), "regent")
+ 
++    def test_tmp_bytes_and_inodes_hold_at_inclusive_thresholds(self):
++        for free_bytes, free_inodes, allowed in [(disk.GiB + 1, 16385, True),
++                (disk.GiB, 65536, False), (4 * disk.GiB, 16384, False), (4 * disk.GiB, 0, False)]:
++            with self.subTest(bytes=free_bytes, inodes=free_inodes):
++                self.tmp_stat.return_value = SimpleNamespace(f_bavail=free_bytes, f_frsize=1, f_favail=free_inodes)
++                result = disk.snapshot(self.root, self.directory, now=1000, available=300 * disk.GiB)
++                self.assertEqual(result["new_jobs_allowed"], allowed)
++                self.assertEqual(result["next_run_allowed"], allowed)
++                self.assertEqual(result["temporary_filesystem"]["allowed"], allowed)
++                self.assertFalse((self.root / "ops/STOP").exists())
++
++    def test_tmp_measurement_failure_is_unknown_and_cannot_admit_work(self):
++        self.tmp_stat.side_effect = OSError("fixed statvfs failure")
++        result = self.sample(1000, 300)
++        self.assertFalse(result["next_run_allowed"])
++        self.assertEqual(result["temporary_filesystem"]["reason"], "measurement_failed")
++        self.assertIsNone(result["temporary_filesystem"]["available_inodes"])
++
++    def test_tmp_recovery_and_recurrence_are_recorded_without_repeating_attention(self):
++        self.tmp_stat.return_value.f_favail = 1
++        self.assertTrue(self.sample(1000, 300)["attention_transition"])
++        self.assertFalse(self.sample(2000, 300)["attention_transition"])
++        self.tmp_stat.return_value.f_favail = 65536
++        self.assertTrue(self.sample(3000, 300)["next_run_allowed"])
++        self.tmp_stat.return_value.f_favail = 1
++        self.assertTrue(self.sample(4000, 300)["attention_transition"])
++
+     def test_existing_tick_keeps_victory_and_completion_paths_but_starts_no_jobs(self):
+         spec = importlib.util.spec_from_file_location("fixed_capacity_tick", ROOT / "ops/codex-ops-learn.py")
+         module = importlib.util.module_from_spec(spec)
+         spec.loader.exec_module(module)
+         state = {"batches": {}, "runs": {}, "ascension": {}}
+         events = []
++        messages = []
++        self.tmp_stat.return_value.f_favail = 1
+         with patch.object(module, "ROOT", str(self.root)), patch.object(module, "DIR", str(self.directory)), \
+              patch.object(module, "load_state", return_value=state), patch.object(module, "save_state"), \
+              patch.object(module, "check_victories", return_value=["fixed-victory"]), \
+@@ -98,7 +131,8 @@ class Admission(unittest.TestCase):
+              patch.object(module, "check_pending", return_value=None), \
+              patch.object(module.learner_retention, "kick", return_value={"fixed_retention": True}), \
+              patch.object(module, "enqueue", side_effect=lambda k, v: events.append(k)), \
+-             patch.object(disk.shutil, "disk_usage", return_value=SimpleNamespace(free=90 * disk.GiB)), \
++             patch.object(module, "inbox", side_effect=messages.append), \
++             patch.object(disk.shutil, "disk_usage", return_value=SimpleNamespace(free=300 * disk.GiB)), \
+              patch.object(module, "start_learner", side_effect=AssertionError("no model may start")):
+             with contextlib.redirect_stdout(io.StringIO()) as stdout:
+                 module.cmd_tick(SimpleNamespace(character="silent"))
+@@ -109,6 +143,9 @@ class Admission(unittest.TestCase):
+         self.assertIsNone(rows[0]["dispatched"])
+         self.assertTrue(rows[0]["write_jobs"]["disk_capacity_hold"])
+         self.assertEqual(events, ["disk-capacity"])
++        self.assertEqual(len(messages), 1)
++        self.assertIn("inodes=1", messages[0])
++        self.assertIn("tmp_capacity_hold", messages[0])
+ 
+     def test_terminal_loop_reports_then_holds_exactly_the_next_run(self):
+         ops = self.root / "ops"

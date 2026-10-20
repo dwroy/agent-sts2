@@ -3465,3 +3465,7 @@ request_id=roy-20261017-human-pace-h0 revision=3 input_sha256=1e1c259a15f1824119
 
 2026-10-20T17:45:13+08:00 已核W4 full-v2启动回执与watcher静态核验SHA一致：固定baseb665、treee388及2456输入SHA5f9a与初始manifest核同，17个变更源与固定Git树逐SHA匹配。runner256839/start_ticks、nice19、tsc256932退出0及full257050于17:39:29.701启动均见原件；只核保存证据，不查询当前进程、动态status或full日志。固定base与启动时真实maine575分列，后者仅论文记录/数据漂移，当前main后续也仅记录变动，不冒实际源码组合扩大。唯一完整窗口现归W4v2，尚无终局，不将启动、定向或HTTP200当通过。旧v1白名单失败和九题摘要丢B/精英A的功能失败保留，完整检查与功能烟测待正式交付。已沿双方原线程回核验，CLI只记入队；infra只续原最终扫描、提交和main-only交付，不叠full。本轮仅记录，不改输入、知识、预算或阈值，不派模型/API、dataset或刷新；live、actor、STOP、805暂缓和Regent保持。
 原件 paper/materials/20261020-1743-ops/receipt.json；verification.json；native-start-readback.json。
+
+
+2026-10-20T17:53:38+08:00 已核infra实际main4c7的38功能叶，与原f4b受测树、旧685源及当前主目录逐SHA一致；来源r2全检与记录变基分列，未重跑检查。原17:50日志前缀及追加行SHA核同，本轮保存。live64精确38叶私有预演已准备97f树，两处测试辅助文件三方合并保留live原接线，无冲突，未夹带整main或W3/W4/W8实现。因这两处合并形成新组合，来源full0不冒实际live联合绿；当前live并行知识尚未冻结，live文件、索引和HEAD均未改。已沿双方原线程预约W4v2自然终局核退出并明确释放后的原ops工程检查窗口，再按当时实际live输入、原锁及隔离功能树做完整验收。38叶包含临时目录归属清理与/tmp严格大于1GiB、16384 inode准入，但实际live入口读回及运输仍pending，不据main交付记完成或retention。本轮未起full、模型/API、刷新或对局，W4固定检查不动；805、现actor、STOP、Regent和发布号保持。
+原件 paper/materials/20261020-1750-ops/receipt.json；verification.json；live-preview.json。
