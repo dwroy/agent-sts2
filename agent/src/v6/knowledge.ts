@@ -69,6 +69,11 @@ export function loadV6Knowledge(knowledgeDir: string, rawCharacter: string | nul
     for (const entry of reflex.value) {
       if (entry.directions?.some(id => !directionIds.has(id))) issues.push(`${entry.id}: unknown direction reference`);
       if (entry.signal.kind === "tag" && !tags.has(entry.signal.value)) issues.push(`${entry.id}: unknown vocabulary tag`);
+      if (entry.signal.kind === "contrast") {
+        const coreIds = new Set(cores.status === "loaded" ? cores.value.map(c => c.direction) : []);
+        const combos = new Set(cores.status === "loaded" ? cores.value.flatMap(c => c.combos.map(combo => combo.id)) : []);
+        if (entry.cores?.some(id => !coreIds.has(id)) || entry.combos?.some(id => !combos.has(id))) issues.push(`${entry.id}: unknown published core/combo reference`);
+      }
     }
     if (issues.length) reflex = { status: "invalid", message: "小脑记忆引用缺失", path: reflex.path, issues };
   }

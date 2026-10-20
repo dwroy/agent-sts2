@@ -13,6 +13,7 @@ export const PREDICATE_COLLECTIONS: Readonly<Record<string, string>> = Object.fr
   "enemies.items": "enemy", "player.hand": "card", "player.deck": "card",
   "player.piles.draw": "card", "player.piles.discard": "card", "player.piles.exhaust": "card",
   "potion.slots": "potion", "option.actions": "action", "rest.options": "rest_option", "shop.stock": "shop_item",
+  "combos.items": "combo", "targets.items": "target",
 });
 export const PREDICATE_FIELDS: Readonly<Record<string, FieldType>> = Object.freeze({
   "enemy.intent_type": "string", "enemy.hits": "number", "enemy.total_damage": "number",
@@ -27,6 +28,10 @@ export const PREDICATE_FIELDS: Readonly<Record<string, FieldType>> = Object.free
   "player.hand": "collection", "player.piles": "record", "player.piles.draw": "collection",
   "player.piles.discard": "collection", "player.piles.exhaust": "collection", "player.deck": "collection",
   "player.relics": "tags", "player.relic_counters": "record", "player.max_hp": "number", "player.gold": "number",
+  "player.deck_size": "number", "combos.items": "collection", "combo.id": "string", "combo.direction": "string",
+  "combo.missing_before": "number", "combo.missing_after": "number", "combo.advanced": "number",
+  "targets.items": "collection", "target.id": "string", "target.boss": "string", "target.kind": "string",
+  "target.act": "number", "target.floor": "number",
   "potion.id": "string", "potion.usable": "boolean", "potion.index": "number", "potion.occupied": "boolean", "potion.slots": "collection",
   turn: "number", "sl.attempt": "number", "history.first_predicted_death": "record", "history.resource_handoff": "record",
   "room.kind": "string", "rest.options": "collection", "rest_option.id": "string", "rest_option.enabled": "boolean",
@@ -79,6 +84,23 @@ export const predicateSchema = custom<Predicate>((value, path, issues) => {
   visit(value, 0);
 });
 export const validatePredicate = (v: unknown): Result<Predicate> => validate(predicateSchema, v);
+
+/** Every OR branch must constrain candidate identity AND the observed deck/combo state. */
+export function cardPickDeckPredicate(p: Predicate): boolean {
+  function anchors(p: Predicate, boundCard = false): number {
+    if (p.op === "and") return p.args.reduce((bits, arg) => bits | anchors(arg, boundCard), 0);
+    if (p.op === "or") return p.args.reduce((bits, arg) => bits & anchors(arg, boundCard), 3);
+    if (p.op === "not") return 0;
+    if (p.op === "any" || p.op === "all") {
+      const bits = anchors(p.arg, boundCard || PREDICATE_COLLECTIONS[p.field] === "card");
+      return bits | (["player.deck", "combos.items"].includes(p.field) ? 2 : 0);
+    }
+    if (!("field" in p) || p.op === "exists") return 0;
+    return (!boundCard && p.field === "card.id" && p.op === "eq" ? 1 : 0)
+      | (p.field === "player.deck_size" ? 2 : 0);
+  }
+  return anchors(p) === 3;
+}
 
 function read(context: unknown, path: string): unknown {
   let current: unknown = context;

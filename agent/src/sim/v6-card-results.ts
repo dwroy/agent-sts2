@@ -38,6 +38,12 @@ type Stored = { key: string; outcomes: Indexed; prepared: V6PreparedProjection }
 type Job = { id: string; target: CardCombatTarget; option: V6ProjectionOption; prepared: V6PreparedProjection; stored: Stored };
 const fields: CombatMetric[] = ["hp_loss", "turns", "damage_per_turn", "death_rate", "losing_enemy_hp_fraction"];
 const empty = (): CombatMetrics => Object.fromEntries(fields.map(k => [k, null])) as CombatMetrics;
+function unmodelledCards(prepared: V6PreparedProjection | null): string[] {
+  if (!prepared) return [];
+  return [...new Set([...prepared.labels.filter(label => label.startsWith("unmodelled_card:")),
+    ...[...prepared.input.piles.draw, ...prepared.input.solver.hand]
+      .filter(card => card.type !== "Potion" && card.playable && !card.known).map(card => `unmodelled_card:${card.cardId}`)])];
+}
 const estimate = (values: number[]): CombatEstimate | null => {
   const s = summarizeSamples(values); return s.mean === null ? null : { mean: s.mean, se: s.meanSe, n: s.n };
 };
@@ -61,19 +67,23 @@ function value(sample: FightSampleResult, metric: CombatMetric, prepared: V6Prep
 export function cardCombatRow(option: string, target: CardCombatTarget, prepared: V6PreparedProjection | null,
   outcomes: Indexed, baseline: Indexed, trust: CardCombatRow["trust"], requested = 100,
   baselinePrepared = prepared): CardCombatRow {
+  const unsupported = unmodelledCards(prepared), baselineUnsupported = unmodelledCards(baselinePrepared);
   const present = outcomes.filter((s): s is FightSampleResult => !!s), metrics = empty(), paired = empty();
   for (const metric of fields) {
+    // Never publish a simulated blank card as a measured option, even if a stale caller supplied samples.
+    if (unsupported.length) continue;
     const values: number[] = [], differences: number[] = [];
     for (let i = 0; i < outcomes.length; i++) {
       const sample = outcomes[i]; if (!sample) continue;
       const a = value(sample, metric, prepared, target.kind === "chain");
       if (a !== null) values.push(a);
-      const b = baseline[i] ? value(baseline[i]!, metric, baselinePrepared, target.kind === "chain") : null;
+      const b = baseline[i] && !baselineUnsupported.length ? value(baseline[i]!, metric, baselinePrepared, target.kind === "chain") : null;
       if (a !== null && b !== null) differences.push(a - b);
     }
     metrics[metric] = estimate(values); paired[metric] = estimate(differences);
   }
   const reasons = [...(!prepared ? [target.unknown ?? "opening_unavailable"] : []),
+    ...unsupported, ...baselineUnsupported.map(label => `baseline_${label}`),
     ...(present.length < 2 ? ["insufficient_samples"] : []),
     ...(metrics.death_rate === null && present.length ? ["no_terminal_samples"] : [])];
   return { option_id: option, target_id: target.id, metrics, paired_delta: paired, samples: present.length,
@@ -89,7 +99,8 @@ export function cardResultKnown(results: V6CardResults | null | undefined, optio
   const targets = results?.targets.filter(t => t.kind === "current") ?? [];
   if (targets.length !== 1 || targets[0]!.unknown) return false;
   const row = results?.immediate.find(r => r.option_id === option && r.target_id === targets[0]!.id);
-  return !!row && row.samples >= 2 && !!row.metrics.hp_loss && !!row.metrics.turns && !!row.metrics.damage_per_turn
+  return !!row && !row.unknown_reasons.some(reason => reason.includes("unmodelled_card:"))
+    && row.samples >= 2 && !!row.metrics.hp_loss && !!row.metrics.turns && !!row.metrics.damage_per_turn
     && !!row.metrics.death_rate && row.paired_delta.death_rate !== null && row.paired_delta.death_rate.n >= 2;
 }
 function core(direction: V6Direction, combo: V6Combo): CoreTemplate { return { ...direction.core, requirements: combo.requirements }; }
@@ -148,7 +159,7 @@ export class V6CardResultsEngine {
   }
   private job(r: V6ProjectionRequest, context: CardResultsContext, target: CardCombatTarget, option: V6ProjectionOption,
     prepared: V6PreparedProjection | null): Job | null {
-    if (!prepared) return null;
+    if (!prepared || unmodelledCards(prepared).length) return null;
     const key = v6Digest([context.fingerprint, r.seed, r.modelVersion, target, option.state, slimInput(prepared.input)]);
     let stored = this.samples.get(key);
     if (!stored) { stored = { key, prepared, outcomes: [] }; this.samples.set(key, stored); }

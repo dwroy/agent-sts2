@@ -54,6 +54,7 @@ export function validateV6Draft(kind: "reflex" | "directions", raw: unknown, con
       if (m.frequency.n > m.frequency.total) issues.push(`${m.reflex_id}: frequency denominator`);
       const r = v.reflex.entries.find(r => r.id === m.reflex_id);
       if (r && r.signal.kind !== "tag" && (m.effect_size !== r.signal.value || m.se !== (r.signal.se ?? null))) issues.push(`${m.reflex_id}: signal and audit disagree`);
+      if (r?.signal.kind === "contrast" && (m.design !== "observational" || m.n !== r.signal.n.take + r.signal.n.not_take)) issues.push(`${m.reflex_id}: contrast design/sample counts disagree`);
     }
   }
   const runs = new Set(context.runIds);
