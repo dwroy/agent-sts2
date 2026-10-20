@@ -1,11 +1,11 @@
-import { execFileSync } from "node:child_process";
+import { fixtureOutput } from "./fixture-command.js";
 import { createHash } from "node:crypto";
 import { describe, expect, it } from "vitest";
 import { v6AppearanceSchema, type V6Appearance } from "../src/v6/appearance.js";
 import { validate } from "../src/v6/schema.js";
 import { assembleV6History, loadV6HistoryPack, sealV6History } from "../src/sim/v6-history-pack.js";
 
-const fixture = () => JSON.parse(execFileSync("nice", ["-n", "19", "python3", "tests/appearance_stats_test.py", "--fixture"], { encoding: "utf8" })) as V6Appearance;
+const fixture = () => JSON.parse(fixtureOutput("nice", ["-n", "19", "python3", "tests/appearance_stats_test.py", "--fixture"], { encoding: "utf8" })) as V6Appearance;
 function input() {
   const appearance = fixture(), generated_at = "2020-01-01T00:56:00.000Z";
   return { character: "silent" as const, cutoff: appearance.cutoff, generated_at,
@@ -17,7 +17,7 @@ function input() {
 }
 describe("frozen card appearance observations", () => {
   it("checks fixed raw observations with the production Python collector", () => {
-    const result = execFileSync("nice", ["-n", "19", "python3", "tests/appearance_stats_test.py"], { encoding: "utf8", stdio: "pipe" });
+    const result = fixtureOutput("nice", ["-n", "19", "python3", "tests/appearance_stats_test.py"], { encoding: "utf8", stdio: "pipe" });
     expect(result).toBe("");
     expect(validate(v6AppearanceSchema, fixture()).ok).toBe(true);
   });

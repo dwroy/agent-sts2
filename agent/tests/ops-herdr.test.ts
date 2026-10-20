@@ -4,7 +4,8 @@
  * wake through the TUI (herdr.ts herdrWake), a learner batch hosted in a pane, and the scheduler treating a deferred
  * wake (exit 75) as no failure. Temp directories and fake commands only: no herdr server, no codex, nothing real starts.
  */
-import { spawnSync } from "node:child_process";
+import { spawn, spawnSync } from "node:child_process";
+import { once } from "node:events";
 import { chmodSync, copyFileSync, existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync, symlinkSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { dirname, join, resolve } from "node:path";
@@ -14,6 +15,7 @@ import { afterAll, describe, expect, it } from "vitest";
 
 import { argsHash, composerState, herdrWake, openTurn, prepareHerdrPrompt, rolloutTurn } from "../../ops/codex/herdr.js";
 import { OPS_PROFILE, hostingMode, interactiveArgs, opsRequest, readQueue, validateRequest } from "../../ops/codex/lib.js";
+import { duplicateWorkspaceFixture } from "./herdr-workspace-fixture.js";
 
 const REPO = resolve(dirname(fileURLToPath(import.meta.url)), "..", "..");
 const FAKE = join(REPO, "agent", "tests", "fixtures-herdr", "fake-herdr.py");
@@ -171,28 +173,34 @@ describe("ops/herdr-host.sh (fake herdr)", () => {
       expect(validateRequest({ action: "learner-log-tab", args }).ok).toBe(false);
     }
   });
-  it("new learner tabs follow the live ops pane when workspace labels are duplicated", () => {
+  it("new learner tabs follow the live ops pane when workspace labels are duplicated", async () => {
     const w = world("ops-workspace");
-    expect(w.host("ensure-workspace").stdout.trim()).toBe("w1");
-    const oldPane = w.host("open-pane", "learner-next").stdout.trim();
-    const busyRun = w.host("run", "learner-active", "--close-on-exit", "--", "sleep", "30");
-    const busyPane = busyRun.stdout.trim();
-    const second = spawnSync(FAKE, ["workspace", "create", "--label", "sts2-test", "--cwd", join(w.dir, "proj")], { env: w.env, encoding: "utf8" });
-    const ops = JSON.parse(second.stdout).result.root_pane;
-    spawnSync(FAKE, ["pane", "rename", ops.pane_id, "ops"], { env: w.env });
-    const registry = join(w.dir, "proj", "ops", "codex-ops", "herdr.json");
-    const registered = JSON.parse(readFileSync(registry, "utf8"));
-    registered.panes.ops = { pane_id: ops.pane_id };
-    writeFileSync(registry, JSON.stringify(registered));
-    expect(w.host("ensure-workspace").stdout.trim()).toBe("w2");
-    const created = w.host("open-pane", "learner-next");
-    expect(created.status, created.stderr).toBe(0);
-    expect(w.state().panes[created.stdout.trim()].ws).toBe("w2");
-    expect(w.state().panes[oldPane]).toBeUndefined();
-    expect(w.host("open-pane", "learner-active").status).toBe(4);
-    expect(w.state().panes[busyPane].ws).toBe("w1");
-    expect(w.state().panes[ops.pane_id].label).toBe("ops");
-    w.host("stop", "learner-active");
+    let hostCalls = 0;
+    const host = w.host;
+    w.host = (...args) => { hostCalls++; return host(...args); };
+    // One owned process supplies real busy-pane liveness without a hosted job or timed startup.
+    const busy = spawn("sleep", ["30"], { detached: true, stdio: "ignore" });
+    const exited = once(busy, "exit");
+    try {
+      const { oldPane, busyPane, opsPane } = duplicateWorkspaceFixture(w, busy.pid!);
+      expect(w.state().workspaces.w1.label).toBe(w.state().workspaces.w2.label);
+      expect(w.state().panes[oldPane].pid).toBeNull();
+      expect(w.state().panes[busyPane].pid).toBeGreaterThan(1);
+      expect(w.host("ensure-workspace").stdout.trim()).toBe("w2");
+      const created = w.host("open-pane", "learner-next");
+      expect(created.status, created.stderr).toBe(0);
+      expect(w.state().panes[created.stdout.trim()].ws).toBe("w2");
+      expect(w.state().panes[oldPane]).toBeUndefined();
+      expect(w.host("open-pane", "learner-active").status).toBe(4);
+      expect(w.state().panes[busyPane].ws).toBe("w1");
+      expect(w.state().panes[opsPane].label).toBe("ops");
+      // Fixture setup must not repeat the separate run/reuse/stop integration suite.
+      expect(hostCalls).toBe(3);
+    } finally {
+      w.host("stop", "learner-active");
+      busy.kill("SIGTERM");
+      await exited;
+    }
   });
 
   it.each(["20261010-164301-strategy-proposal", "20261010-164301"])("shows verified live learner %s beside ops and closes its reused viewer on exit", (batch) => {

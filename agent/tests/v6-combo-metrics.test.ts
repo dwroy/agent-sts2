@@ -1,4 +1,4 @@
-import { execFileSync } from "node:child_process";
+import { fixtureOutput } from "./fixture-command.js";
 import { fileURLToPath } from "node:url";
 import { describe, expect, it } from "vitest";
 import { validateBuildCore } from "../src/v6/build-core.js";
@@ -7,11 +7,11 @@ const builderTests = fileURLToPath(new URL("../../knowledge/builders/test_combo_
 
 describe("offline combo metrics builder", () => {
   it("passes fixed-data tests for raw evidence, censoring, sampling and unknowns", () => {
-    expect(() => execFileSync("python3", [builderTests], { encoding: "utf8", stdio: "pipe" })).not.toThrow();
+    expect(() => fixtureOutput("python3", [builderTests], { encoding: "utf8", stdio: "pipe" })).not.toThrow();
   });
 
   it("produces metrics accepted by the real build-core-v1 consumer contract", () => {
-    const metrics: unknown = JSON.parse(execFileSync("python3", [builderTests, "--contract-fixture"], { encoding: "utf8" }));
+    const metrics: unknown = JSON.parse(fixtureOutput("python3", [builderTests, "--contract-fixture"], { encoding: "utf8" }));
     const evidence = [{ run_id: "FIXTURE", floor: 48 }];
     const result = validateBuildCore({
       schema: "build-core-v1", direction: "fixture", name: "fixed fixture", status: "candidate",

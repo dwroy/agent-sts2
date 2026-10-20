@@ -1,7 +1,7 @@
 import { mkdtempSync, writeFileSync, rmSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
-import { spawnSync } from "node:child_process";
+import { fixtureCommand } from "./fixture-command.js";
 import { describe, it, expect } from "vitest";
 import { validateV6Draft } from "../src/v6/draft.js";
 import { reflex, vocab, direction, observation } from "./v6-fixtures.js";
@@ -51,7 +51,7 @@ it("CLI accepts a frozen-context draft and rejects missing coverage without writ
   try {
     writeFileSync(join(dir, "context.json"), JSON.stringify(context));
     writeFileSync(join(dir, "draft.json"), JSON.stringify(draft));
-    const run = () => spawnSync(process.execPath, ["node_modules/tsx/dist/cli.mjs", "../knowledge/builders/validate-v6.ts", "reflex", join(dir, "draft.json"), join(dir, "context.json")], { encoding: "utf8" });
+    const run = () => fixtureCommand(process.execPath, ["--import", "tsx", "../knowledge/builders/validate-v6.ts", "reflex", join(dir, "draft.json"), join(dir, "context.json")], { encoding: "utf8" });
     const good = run(); expect(good.status).toBe(0); expect(JSON.parse(good.stdout)).toMatchObject({ ok: true, publication: false });
     writeFileSync(join(dir, "draft.json"), JSON.stringify({ ...draft, coverage: [] }));
     const bad = run(); expect(bad.status).toBe(1); expect(JSON.parse(bad.stdout).ok).toBe(false);

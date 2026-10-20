@@ -6,7 +6,7 @@ import type { GameState } from "../src/hand/mod/schema.js";
 import { historicalPrerequisite } from "../../knowledge/builders/combo-prerequisites.mjs";
 import { fixedState } from "./v6-combat-fixtures.js";
 import { createHash } from "node:crypto";
-import { execFileSync } from "node:child_process";
+import { fixtureOutput } from "./fixture-command.js";
 import { mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 import { tmpdir } from "node:os";
@@ -24,10 +24,10 @@ describe("historical combo prerequisites", () => {
       const payload = { predicates: { fixture: { op: "contains", field: "player.relics", value: "FIXTURE_RELIC" } }, frames: [{ source, combos: ["fixture"] }] };
       const script = fileURLToPath(new URL("../../knowledge/builders/combo-prerequisites.mts", import.meta.url));
       writeFileSync(input, JSON.stringify(payload));
-      execFileSync(process.execPath, ["--import", "tsx", script, input, output], { stdio: "pipe" });
+      fixtureOutput(process.execPath, ["--import", "tsx", script, input, output], { stdio: "pipe" });
       expect(JSON.parse(readFileSync(output, "utf8"))).toMatchObject({ rows: [{ conditions: { fixture: { value: true } } }] });
       writeFileSync(sourcePath, Buffer.from(bytes.toString().replace("FIXTURE_RELIC", "CHANGED_RELIC")));
-      expect(() => execFileSync(process.execPath, ["--import", "tsx", script, input, output], { stdio: "pipe" })).toThrow();
+      expect(() => fixtureOutput(process.execPath, ["--import", "tsx", script, input, output], { stdio: "pipe" })).toThrow();
     } finally { rmSync(dir, { recursive: true, force: true }); }
   });
   it("uses the runtime W1 facts and three-valued evaluator on the original frame", () => {
