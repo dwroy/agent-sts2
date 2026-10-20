@@ -1,0 +1,31 @@
+{
+  "id": "0baef634d02e1ff85843c10a",
+  "kind": "learner-dissent",
+  "request_id": "roy-20261019-v6",
+  "message": "9.1手动学习批次已退出0，以下是学习者异议原文（不改正式知识；未正式发布）。来源 /home/dw/Projects/agent-sts2/learner/runs/20261019-163651-aca8de36-1a87-4109-9fa1-405535c7d209-v6-direction-experience/disagreements.json SHA256 1992c837d558ac507f4779f96b6da642f9f2982e2ac62ea351c23e82ab235368；report.md 同目录。\n{\n  \"items\": [\n    {\n      \"id\": \"D1\",\n      \"prior\": \"历史181局窗口P/D的A10整局最终0胜；若把该快照沿用为当前全历史事实\",\n      \"evidence\": \"historical-signature-reconciliation.json + first-formations.json；7S8HCC0M6G9W/KF9HMZKTFC3V/LKC9YXKZWTKR/9GTFF6DC500L/UPAB38G2PA02原SL与状态\",\n      \"finding\": \"旧窗口复算完全一致；新冻结A10的P签名101局有4个最终通关（首试1），D签名50局有2个（首试1），LKC重叠。只是新增个案，不否定旧快照，也不证明稳定模板/组件因果。\",\n      \"unresolved\": \"版本/路线/药水/SL与混合组件贡献未隔离；同版本配对和稳定性未知\",\n      \"ledger_ids\": [\n        \"silent-0352\",\n        \"silent-0353\"\n      ]\n    },\n    {\n      \"id\": \"D2\",\n      \"prior\": \"V6格式要求每检查点理想牌组与升级/删牌优先级；历史另有5套目标牌表\",\n      \"evidence\": \"本批冻结具体牌表report.md的原样/目标区分；checkpoints中的真实当时状态源SHA\",\n      \"finding\": \"原样、未执行替换与理想值必须分列；本批理想/排序留null，不能用字段要求或抽象缩牌计算补答案。4方向与5个具体实例可并存。\",\n      \"unresolved\": \"各检查点可达最优组装、移除损失和升级对照未知\",\n      \"ledger_ids\": [\n        \"silent-0385\"\n      ]\n    },\n    {\n      \"id\": \"D3\",\n      \"prior\": \"单步法+持有夜魇可作完整D代理；或R主选0即可判R无效\",\n      \"evidence\": \"旧discarded-candidates.json；4Y94N8RDPGPM实际复制毒牌；54G实际复制步法；silent-0493的LTQ原选择边界\",\n      \"finding\": \"沿用已更正双永久步法签名；实际复制另记执行。R不因未被选择而放弃，铜钹和绷带保留非等价子分支。\",\n      \"unresolved\": \"复制的等待/支付/存活代价和R完整循环/整局收益缺受控重复\",\n      \"ledger_ids\": [\n        \"silent-0353\",\n        \"silent-0355\",\n        \"silent-0493\"\n      ]\n    },\n    {\n      \"id\": \"D4\",\n      \"prior\": \"核心/支撑组件已共现或局部挡/供能兑现即可当成型有效\",\n      \"evidence\": \"support-source-verification.json的四组原状态与SL端点\",\n      \"finding\": \"P/S/R均实死，D判死而非实死；四个局部支撑关系不能升级为必要充分或胜率增益。R重放下肾上腺素净+2能不能移作普通单放参数。\",\n      \"unresolved\": \"升级差、无重放差、去件/替换后的整战结果未知\",\n      \"ledger_ids\": [\n        \"silent-0508\"\n      ]\n    },\n    {\n      \"id\": \"D5\",\n      \"prior\": \"账本observed或pending文档含active字段就等正式经验\",\n      \"evidence\": \"pending/candidate.json包装status=pending-unverified与not_in_published_ids；正式experience实际244条\",\n      \"finding\": \"佩尔之泪/癫狂之触保留pending；账本0451/0452已存在也不能冒称消费者已读回。\",\n      \"unresolved\": \"原批lost后验收/正式发布未在本批范围补办\",\n      \"ledger_ids\": [\n        \"silent-0451\",\n        \"silent-0452\"\n      ]\n    }\n  ],\n  \"delivery\": \"供原ops→watcher→Roy转达；本批不代填ACK，不宣称已发送或已收到\"\n}\n\n本批为Roy一次性手动派发，不登记自动学习父请求、不恢复调度。原owner继续处理；watcher/Roy确认保持pending，不代填。",
+  "request_sha256": "1992c837d558ac507f4779f96b6da642f9f2982e2ac62ea351c23e82ab235368",
+  "created_at": 1792401326.4103386,
+  "route": [
+    "learner",
+    "ops",
+    "watcher",
+    "Roy"
+  ],
+  "ops_forwarded": {
+    "path": "/home/dw/Projects/agent-sts2/ops/codex-ops/learning-notices/receipts/0baef634d02e1ff85843c10a.ops-forwarded.json",
+    "sha256": "ee9fbcbc275d4712957140ea0f09f85552a0e4cdf3b2116850e9dccca2c88bb0",
+    "at": 1792401326.4226396
+  },
+  "watcher_received": {
+    "path": "/home/dw/Projects/agent-sts2/.artifacts/v6-learning-notice-watcher-20261019/0baef634d02e1ff85843c10a.watcher_received.json",
+    "sha256": "694f0f8a4083094771ac83e5fc8cd1d7fa7d4e2df7c224f2351b2e6fcd2ac275",
+    "at": 1792484849.2620513
+  },
+  "roy_notified": {
+    "path": "/home/dw/Projects/agent-sts2/.artifacts/v6-learning-notice-watcher-20261019/0baef634d02e1ff85843c10a.roy_notified.json",
+    "sha256": "dd766b67ae4e15096532d46df0dee3d7c8782f0b4dceda8d69e30dbb11b8fb58",
+    "at": 1792484871.380374
+  },
+  "last_queued_at": 1792483982.2240584,
+  "last_queue": "/home/dw/Projects/agent-sts2/ops/codex-ops/queue/1792483982223963016-learning-attention.md"
+}

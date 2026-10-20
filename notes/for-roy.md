@@ -3413,3 +3413,7 @@ request_id=roy-20261017-human-pace-h0 revision=3 input_sha256=1e1c259a15f1824119
 
 2026-10-20T16:22:03+08:00 已核原141301宿主自然终局tsc0/full0，622文件5887项过2原跳，2430输入及498知识前后核同，检查PID退出后明确释放W8。来源b800按原锁窄合main f7d4d21，仅十个已验工程文件精确运live64c218a，45份并行知识/报告字节保留；来源全检与实际live运输分列，不冒另一联合树全绿。旧失败候选改隔离，空tick改身份与无改动证明门禁，手动通知改冻结来源鉴真；main/live实际CLI和接口SHA读回一致，三旧通知仍由原角色凭真回执登记，不代ACK或造父。纯运维修复不加游戏号，未夹带805/W4/旧27工具；回退仅撤本十叶至861并保数据。实际retention守卫因并行card-model未live而保留整个工作树，不冒宽范围回收。W8已原生启动固定f7/42fd/2442输入r3b，旧966启动自行中断原件留存，不当完整验收；本轮只核静态回读，不查询在途，后续W4再infra。已双通知并提醒watcher实际兼容桥可用，角色确认、科学父、Regent及当前actor/STOP保持。
 原件 paper/materials/20261020-1610-ops/receipt.json；protocol-changes.json；live-acceptance.json。
+
+
+2026-10-20T16:29:43+08:00 已逐项核三条旧手动学习通知：9.1、9.2与核心卡通知现由原watcher完成接收及转告Roy登记，registry引用、真实回执和用户可见证据SHA一致；旧原文与异议限制保留。ops未代填ACK、造父或修改通知范围，通知闭环不等正式知识发布、科学验收或消费者完成。普通154302策略收尾的source changed已核明：学习者WT仍原9fb基线且源码/暂存区干净，报告SHA不变，十项均waiting；主目录差异恰为原141301已验十工程叶，属于独立集成漂移。原attention、rc0/mergednull及失败历史不改，不重复dataset、模型、测试或合入。已沿原watcher通道回传事实，CLI入队不冒原生实收。W8 r3b仍唯一完整检查窗口，后续W4再infra；本轮不查在途、不动live、STOP或actor，805暂停与Regent暂停保持。
+原件 paper/materials/20261020-1624-ops/receipt.json；notice-readback.json；ordinary-review.json。
