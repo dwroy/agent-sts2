@@ -1,0 +1,51 @@
+{
+  "negative": {
+    "exit": 1,
+    "failed": 1,
+    "passed": 1,
+    "log": "candle-negative-fixed.log"
+  },
+  "positive": {
+    "exit": 0,
+    "files": 2,
+    "passed": 10,
+    "log": "candle-positive.log"
+  },
+  "consumer": {
+    "exit": 0,
+    "files": 2,
+    "passed": 12,
+    "log": "candle-consumer.log"
+  },
+  "sandbox_first": {
+    "exit": 1,
+    "tsc": 0,
+    "vitest": 1,
+    "files_failed": 14,
+    "files_passed": 536,
+    "tests_failed": 40,
+    "tests_passed": 4885,
+    "errors": 21,
+    "log": "sandbox-tests.log"
+  },
+  "sandbox_retry": {
+    "exit": 1,
+    "tsc": 0,
+    "vitest": 1,
+    "workers": 1,
+    "bail": 1,
+    "files_failed": 1,
+    "files_total_selected": 550,
+    "tests_failed": 1,
+    "tests_passed": 24,
+    "tests_total_in_file": 40,
+    "errors": 1,
+    "complete_suite": false,
+    "reason": "listen EPERM 127.0.0.1; v6-room local scripted shop loop timed out at 15000ms",
+    "log": "sandbox-retry.log"
+  },
+  "gitleaks": 0,
+  "diff_check": 0,
+  "commit": null,
+  "merged": null
+}

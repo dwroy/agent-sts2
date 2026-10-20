@@ -4910,3 +4910,5 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
 - 2026-10-20 08:29:51 CST [运维 codex/W3 live hold] 接管969b4005e原进度，原owner检查通过只合main；原已知投影Jev真实烟测及Claude后续授权前禁止自动/整main夹带运live。原局/R402、Regent暂停和R3自然边界不变，未重派/刷新。原件：paper/materials/20261020-0829-ops/receipt.json。
 
 - 2026-10-20 08:34:20 CST [运维 codex/药水MC候选宿主接续] 074302-s2两SHA原样接最新main4fe，固定6fef8c4d唯一host1098021 checking；原沙箱full1/failed/rc0/mergednull及10waiting保留，未提交/上线，不重模型或dataset，969b/R3边界保持。原件：paper/materials/20261020-0832-ops/receipt.json。
+
+- 2026-10-20 08:41:40 CST [运维 codex/蜡烛候选宿主接续] 081302四SHA原样接main09f87，固定733ee9d6唯一host1152153 checking；原两次沙箱full1/bail未跑完/10waiting保留，无提交/运输/编号，969b/R3/原局边界保持；旧R402摘要压缩仅引用0735原件。原件：paper/materials/20261020-0839-ops/receipt.json。
