@@ -1,0 +1,34 @@
+[
+  {
+    "item": "manual",
+    "source_files": [
+      "ops/learning_requests.py"
+    ],
+    "tests": [
+      "tests/manual-notice-ack.test.ts"
+    ],
+    "without_fix_rc": 1
+  },
+  {
+    "item": "ordinary",
+    "source_files": [
+      "ops/ordinary_close.py",
+      "ops/learner_retention.py"
+    ],
+    "tests": [
+      "tests/ops-current-events.test.ts",
+      "tests/cadence-no-change.test.ts"
+    ],
+    "without_fix_rc": 1
+  },
+  {
+    "item": "cadence",
+    "source_files": [
+      "ops/proposal_dispatch.py"
+    ],
+    "tests": [
+      "tests/cadence-no-change.test.ts"
+    ],
+    "without_fix_rc": 1
+  }
+]

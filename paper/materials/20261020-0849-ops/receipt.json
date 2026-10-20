@@ -1,0 +1,100 @@
+{
+  "at": "2026-10-20 08:52:17 CST",
+  "batch": "20261020-074302-fix-batch",
+  "actual_ops_native_takeover": true,
+  "ops_native": "01a1517b-e200-7c52-b463-6ea22220c0a9",
+  "original_learner_thread": "01a1568c-5c1a-7a23-a8fa-f5b46ec62177",
+  "original_launcher_report": {
+    "path": "ops/codex-ops/learner/20261020-074302-fix-batch.out",
+    "bytes": 3566,
+    "sha256": "dad85e2ef683e6d3a8f852ce382db2968c5f17005680ca96d60a0f721e54f154"
+  },
+  "original_source_manifest": {
+    "path": "paper/materials/20261020-0849-ops/original-source-manifest.json",
+    "bytes": 2410,
+    "sha256": "b1fea7144981766c47f65734c93885b50ae0e903076f686fce12c82de887be1e"
+  },
+  "original_validation": {
+    "path": "paper/materials/20261020-0849-ops/original-validation.json",
+    "bytes": 6237,
+    "sha256": "b3613056c7a8a804311e3922aedf6ebc8aa4a14f5d6f254590001378335e0a70"
+  },
+  "original_negative_controls": {
+    "path": "paper/materials/20261020-0849-ops/original-negative-controls.json",
+    "bytes": 616,
+    "sha256": "ba1869d2b1edce33da3e1c0570fa9bd22b56f5bebbed181fb5d1bda4d088943d"
+  },
+  "original_three_patches": [
+    {
+      "path": ".artifacts/ops-wake-20261020-0849/manual.patch",
+      "bytes": 18621,
+      "sha256": "bab43857a67ecb8ec5108f8a008a45a66647d0a5a3fe5adca3687c9c2c028b55"
+    },
+    {
+      "path": ".artifacts/ops-wake-20261020-0849/ordinary.patch",
+      "bytes": 25241,
+      "sha256": "9282ca792a52bcd7528f944952f4da770f4871d81469670fc9bc138431dfc293"
+    },
+    {
+      "path": ".artifacts/ops-wake-20261020-0849/cadence.patch",
+      "bytes": 14096,
+      "sha256": "e9a8aea26c07f73d72873f97e1c157fda79827f9279543762dd2815899fda715"
+    }
+  ],
+  "original_dependency_order": [
+    "manual",
+    "ordinary",
+    "cadence"
+  ],
+  "nine_original_leaf_SHA_unchanged_after_FF": true,
+  "original_directed_9files_37cases_passed": true,
+  "original_paths_11cases_passed": true,
+  "original_tsc_rc": 0,
+  "original_first_full_rc": 1,
+  "original_first_full_failed": 33,
+  "original_final_full_rc": 1,
+  "original_final_full_failed": 38,
+  "original_final_full_errors": 21,
+  "original_new_5_timeout_single_retry_passed": 5,
+  "directed_or_retry_not_full0": true,
+  "original_v6_draft_assertion_root_cause_not_fabricated": true,
+  "original_failed_rc0_mergednull_reports_preserved": true,
+  "original_manual_and_ordinary_historical_candidate_chains_retained": true,
+  "actual_new_fixed_input": {
+    "path": "paper/materials/20261020-0849-ops/fix-source-input.json",
+    "bytes": 11918,
+    "sha256": "71a513f93879e940b72c9616a7e020bc0ae0bcd9d89f7119ce2a847bacd686e7"
+  },
+  "fixed_staged_tree": "4ff60bbc2bee6a3086d90837dd5fc29122b969f1",
+  "one_original_host_launch_verified": {
+    "path": "paper/materials/20261020-0849-ops/fix-host-launch-verified.json",
+    "bytes": 371,
+    "sha256": "3b3ef09d81f17b289667135b4a478f14c8851865720f4385ecce639e4c2f2839"
+  },
+  "host_pid": 1235468,
+  "host_state_at_verification": "checking",
+  "source_commit": null,
+  "main_integration": null,
+  "live_integration": null,
+  "new_release": null,
+  "candidate_gitleaks_rc": 0,
+  "production_notice_source_or_ACK_not_written": true,
+  "manual_scope_compatibility_not_delivered_yet": true,
+  "production_dataset_or_cleanup_not_run": true,
+  "model_learning_batch_or_unchanged_full_not_repeated": true,
+  "other_original_hosts_not_polled_or_modified": true,
+  "main_source_merge_coordination": "Preserve fixed source through original check; acceptance/branch source commit only until original W3 fixed-input terminal/main delivery, then actual-composition integration. Existing 969b live hold and R3 natural boundary remain.",
+  "live_untouched": "c351dbe7b5603bbb591e0f63d88be32fa60df56f",
+  "same_run": "MWMR855QHTWR",
+  "behavior_release": "V6-R402",
+  "actor_STOP_fault_not_modified": true,
+  "Regent_paused_W3_live_hold_R3_natural_boundary_kept": true,
+  "parent_or_role_ACK_not_closed": true,
+  "watcher_delivery": {
+    "path": "paper/materials/20261020-0849-ops/watcher-delivery.json",
+    "bytes": 1983,
+    "sha256": "c9c94925bdcd1337937b02049048adfd969fd75969bdf9a3358890c579ef08ca"
+  },
+  "CLI0_not_native_received": true,
+  "next": "原唯一host完成事件后核固定九SHA/源码树与main/live漂移，保原分支提交；配合W3固定输入终局/仅main交付后按实际联合输入集成。实际main/live交付来源桥前，不运行生产ACK；届时由各真实角色据原生接收/转达回执与原来源证明按CLI登记，不改旧源或代ACK。普通收尾候选不用生产dataset代测试，不把空tick验收用到未领取waiting的旧批。"
+}

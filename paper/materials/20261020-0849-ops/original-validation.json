@@ -1,0 +1,119 @@
+{
+  "base": "cd2f11496e6f8957c59ef72f70b2c6596cce6e63",
+  "source_manifest": "source-manifest.json",
+  "tsc": 0,
+  "initial_suite": {
+    "files": 549,
+    "cases": 4919,
+    "passed": 4886,
+    "failed": 33,
+    "errors": 21,
+    "exit": 1,
+    "workers": 1
+  },
+  "final_suite": {
+    "files": 552,
+    "cases": 4922,
+    "passed": 4884,
+    "failed": 38,
+    "errors": 21,
+    "exit": 1,
+    "workers": 4
+  },
+  "same_initial_failures_reproduced": [
+    "tests/knowledge-catalog.test.ts > mechanical knowledge catalogue > is read-only and observes current source updates while marking stale catalogue",
+    "tests/knowledge-catalog.test.ts > mechanical knowledge catalogue > keeps exact legacy bytes and reconstructs ordered common views with unknown fields",
+    "tests/knowledge-catalog.test.ts > mechanical knowledge catalogue > refreshes a missing common compatible view when its catalogue changes",
+    "tests/knowledge-catalog.test.ts > mechanical knowledge catalogue > rejects corrupt fragments and does not silently borrow other role files",
+    "tests/knowledge-catalog.test.ts > mechanical knowledge catalogue > requires explicit foreign query, retains scope and support without aggregation",
+    "tests/knowledge-catalog.test.ts > mechanical knowledge catalogue > runs fixed Python source-preservation and curator tests",
+    "tests/sandbox-entry.test.ts > Vite disables automatic dotenv loading for fixed-data tests in a live checkout",
+    "tests/v6-card-pick.test.ts > loop routes known cards to Jev, then the original brain on failure (error)",
+    "tests/v6-card-pick.test.ts > loop routes known cards to Jev, then the original brain on failure (invalid)",
+    "tests/v6-card-pick.test.ts > loop routes known cards to Jev, then the original brain on failure (success)",
+    "tests/v6-card-pick.test.ts > loop routes known cards to Jev, then the original brain on failure (timeout)",
+    "tests/v6-card-pick.test.ts > routes all_unknown rewards to the original brain before any Jev call",
+    "tests/v6-card-pick.test.ts > routes brain_failed rewards to the original brain before any Jev call",
+    "tests/v6-card-pick.test.ts > routes low_ratio rewards to the original brain before any Jev call",
+    "tests/v6-card-pick.test.ts > routes one_known rewards to the original brain before any Jev call",
+    "tests/v6-card-pick.test.ts > shadow calls and records Jev but executes the existing brain's choice",
+    "tests/v6-combo-metrics.test.ts > offline combo metrics builder > passes fixed-data tests for raw evidence, censoring, sampling and unknowns",
+    "tests/v6-combo-metrics.test.ts > offline combo metrics builder > produces metrics accepted by the real build-core-v1 consumer contract",
+    "tests/v6-combo-simulation.test.ts > historical combo prerequisites > verifies exact raw bytes before evaluating a batch and rejects a changed source",
+    "tests/v6-draft.test.ts > CLI accepts a frozen-context draft and rejects missing coverage without writes",
+    "tests/v6-history-pack.test.ts > V6 run-start frozen history > builds through the production CLI from hash-frozen inputs and rejects changed bytes",
+    "tests/v6-potions.test.ts > unknown slot projections return to the original brain and preserve its discard fields",
+    "tests/v6-room.test.ts > binds the shared production runtime by default for rest without a room override",
+    "tests/v6-room.test.ts > binds the shared production runtime by default for shop without a room override",
+    "tests/v6-room.test.ts > credits the upgrade follow-up to its actual deepseek source",
+    "tests/v6-room.test.ts > credits the upgrade follow-up to its actual jev source",
+    "tests/v6-room.test.ts > local scripted loop dispatches one rest Jev choice and no brain request",
+    "tests/v6-room.test.ts > local scripted loop dispatches one shop Jev choice and no brain request",
+    "tests/v6-room.test.ts > local scripted loop failure hands over to the original brain without Jev retries",
+    "tests/v6-room.test.ts > local scripted loop invalid hands over to the original brain without Jev retries",
+    "tests/v6-room.test.ts > local scripted loop timeout hands over to the original brain without Jev retries",
+    "tests/v6-room.test.ts > unknown rest projections go directly to the original brain",
+    "tests/v6-room.test.ts > unknown shop projections go directly to the original brain"
+  ],
+  "new_timeouts": [
+    "tests/batch-b.test.ts > 3. Hardened Shell's 20 a turn is carried across re-plans in the turn (3RWJX25LB2CD F14 T3) > the first decision of the turn has the whole cap; after 20 lost this turn, none; a new turn, the whole cap again",
+    "tests/continuation-failure-b2-planner.test.ts > actual B2 combat planner logs the separate reference but sends neither payload nor whole-fight numbers after zero-sample degradation",
+    "tests/learner-retention.test.ts > reclaims only settled learner copies with verified archival and safe restoration",
+    "tests/learning-ledger.test.ts > learning ledger > the ledger file is valid JSONL as committed",
+    "tests/v6-combat-planner.test.ts > actual off planner attaches role-local entries and shows a low-trust Act 3 boss without changing options or rank"
+  ],
+  "new_timeouts_retry": {
+    "files": 5,
+    "passed": 5,
+    "not_selected": 46,
+    "exit": 0,
+    "workers": 1
+  },
+  "paths": {
+    "files": 1,
+    "cases": 11,
+    "exit": 0
+  },
+  "restored_directed": {
+    "files": 9,
+    "cases": 37,
+    "exit": 0
+  },
+  "negative_controls": [
+    {
+      "item": "manual",
+      "source_files": [
+        "ops/learning_requests.py"
+      ],
+      "tests": [
+        "tests/manual-notice-ack.test.ts"
+      ],
+      "without_fix_rc": 1
+    },
+    {
+      "item": "ordinary",
+      "source_files": [
+        "ops/ordinary_close.py",
+        "ops/learner_retention.py"
+      ],
+      "tests": [
+        "tests/ops-current-events.test.ts",
+        "tests/cadence-no-change.test.ts"
+      ],
+      "without_fix_rc": 1
+    },
+    {
+      "item": "cadence",
+      "source_files": [
+        "ops/proposal_dispatch.py"
+      ],
+      "tests": [
+        "tests/cadence-no-change.test.ts"
+      ],
+      "without_fix_rc": 1
+    }
+  ],
+  "gitleaks": 0,
+  "submitted": false,
+  "live_merged": false
+}

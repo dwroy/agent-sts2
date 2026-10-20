@@ -1,0 +1,254 @@
+{
+  "batch": "20261020-074302-fix-batch",
+  "worktree": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261020-074302",
+  "original_base": "cd2f11496e6f8957c59ef72f70b2c6596cce6e63",
+  "rebased_base": "f1f9bffeffb2748386242be2f880b78b0298ed60",
+  "prospective_staged_tree": "4ff60bbc2bee6a3086d90837dd5fc29122b969f1",
+  "staged_patch_sha256": "874d14eed252d6d5abfb0a8698a84a86dd8de6da71c541b5042c421e9c88aa02",
+  "owned_files": [
+    {
+      "path": "agent/tests/cadence-no-change.test.ts",
+      "bytes": 464,
+      "sha256": "94bd26e35c60bc7407f22392ba43a92f8d8d9ae13bf43c8917f7baba0f761108"
+    },
+    {
+      "path": "agent/tests/manual-notice-ack.test.ts",
+      "bytes": 469,
+      "sha256": "9bc4a706c9957b9287173861a86eefc4a92f98ac2126d25e9886e804567e1041"
+    },
+    {
+      "path": "ops/learner_retention.py",
+      "bytes": 43674,
+      "sha256": "836bf1f121e1096f057f8329ac03555a3b310b00baf20e3b9d51b141975f803b"
+    },
+    {
+      "path": "ops/learning_requests.py",
+      "bytes": 63620,
+      "sha256": "be1650c070935a162a5ed8fbd7a98164a0bd651b409624f3d5c7d4e10be8c46f"
+    },
+    {
+      "path": "ops/ordinary_close.py",
+      "bytes": 19308,
+      "sha256": "a1d0ecd83d1d3ed4131a89dccef2ee65d6acbaabf6171b17b9143c4adad921d3"
+    },
+    {
+      "path": "ops/proposal_dispatch.py",
+      "bytes": 28329,
+      "sha256": "18c5484dd67a13dce6868fd9cf1faebe3ea146372de48cc74172050c6dbf3e5f"
+    },
+    {
+      "path": "ops/tests/test_cadence_no_change.py",
+      "bytes": 7374,
+      "sha256": "8882590dd3fbe488a4cbc78cb4905009d9a13182a5e916a85e6c3ad4b9696fbf"
+    },
+    {
+      "path": "ops/tests/test_manual_notice_ack.py",
+      "bytes": 9726,
+      "sha256": "5b5712951f94eed9ea46b22d0261cb741a687a749a403731b4fe5bc34a6312a6"
+    },
+    {
+      "path": "ops/tests/test_ordinary_close.py",
+      "bytes": 27041,
+      "sha256": "eb4551c83494f4d133ceb32f96431ca060ddb78f8664824c89fe7698c871ebc7"
+    }
+  ],
+  "original_three_patch_manifest": [
+    {
+      "item": "manual",
+      "patch": "manual.patch",
+      "sha256": "bab43857a67ecb8ec5108f8a008a45a66647d0a5a3fe5adca3687c9c2c028b55",
+      "files": [
+        {
+          "path": "ops/learning_requests.py",
+          "bytes": 63620,
+          "sha256": "be1650c070935a162a5ed8fbd7a98164a0bd651b409624f3d5c7d4e10be8c46f"
+        },
+        {
+          "path": "agent/tests/manual-notice-ack.test.ts",
+          "bytes": 469,
+          "sha256": "9bc4a706c9957b9287173861a86eefc4a92f98ac2126d25e9886e804567e1041"
+        },
+        {
+          "path": "ops/tests/test_manual_notice_ack.py",
+          "bytes": 9726,
+          "sha256": "5b5712951f94eed9ea46b22d0261cb741a687a749a403731b4fe5bc34a6312a6"
+        }
+      ]
+    },
+    {
+      "item": "ordinary",
+      "patch": "ordinary.patch",
+      "sha256": "9282ca792a52bcd7528f944952f4da770f4871d81469670fc9bc138431dfc293",
+      "files": [
+        {
+          "path": "ops/ordinary_close.py",
+          "bytes": 19308,
+          "sha256": "a1d0ecd83d1d3ed4131a89dccef2ee65d6acbaabf6171b17b9143c4adad921d3"
+        },
+        {
+          "path": "ops/learner_retention.py",
+          "bytes": 43674,
+          "sha256": "836bf1f121e1096f057f8329ac03555a3b310b00baf20e3b9d51b141975f803b"
+        },
+        {
+          "path": "ops/tests/test_ordinary_close.py",
+          "bytes": 27041,
+          "sha256": "eb4551c83494f4d133ceb32f96431ca060ddb78f8664824c89fe7698c871ebc7"
+        }
+      ]
+    },
+    {
+      "item": "cadence",
+      "patch": "cadence.patch",
+      "sha256": "e9a8aea26c07f73d72873f97e1c157fda79827f9279543762dd2815899fda715",
+      "files": [
+        {
+          "path": "ops/proposal_dispatch.py",
+          "bytes": 28329,
+          "sha256": "18c5484dd67a13dce6868fd9cf1faebe3ea146372de48cc74172050c6dbf3e5f"
+        },
+        {
+          "path": "agent/tests/cadence-no-change.test.ts",
+          "bytes": 464,
+          "sha256": "94bd26e35c60bc7407f22392ba43a92f8d8d9ae13bf43c8917f7baba0f761108"
+        },
+        {
+          "path": "ops/tests/test_cadence_no_change.py",
+          "bytes": 7374,
+          "sha256": "8882590dd3fbe488a4cbc78cb4905009d9a13182a5e916a85e6c3ad4b9696fbf"
+        }
+      ]
+    }
+  ],
+  "shared_original_worktree_lease": "ops/codex-ops/learner/codex-fix-silent-20261020-074302.lock",
+  "pending_merge_parents": [],
+  "original_task_thread": "01a1568c-5c1a-7a23-a8fa-f5b46ec62177",
+  "original_report": "learner/runs/20261020-074309-8869f46e-5de5-4ab6-9d28-c527ca2b605c-fix-batch/report.md",
+  "original_validation": {
+    "base": "cd2f11496e6f8957c59ef72f70b2c6596cce6e63",
+    "source_manifest": "source-manifest.json",
+    "tsc": 0,
+    "initial_suite": {
+      "files": 549,
+      "cases": 4919,
+      "passed": 4886,
+      "failed": 33,
+      "errors": 21,
+      "exit": 1,
+      "workers": 1
+    },
+    "final_suite": {
+      "files": 552,
+      "cases": 4922,
+      "passed": 4884,
+      "failed": 38,
+      "errors": 21,
+      "exit": 1,
+      "workers": 4
+    },
+    "same_initial_failures_reproduced": [
+      "tests/knowledge-catalog.test.ts > mechanical knowledge catalogue > is read-only and observes current source updates while marking stale catalogue",
+      "tests/knowledge-catalog.test.ts > mechanical knowledge catalogue > keeps exact legacy bytes and reconstructs ordered common views with unknown fields",
+      "tests/knowledge-catalog.test.ts > mechanical knowledge catalogue > refreshes a missing common compatible view when its catalogue changes",
+      "tests/knowledge-catalog.test.ts > mechanical knowledge catalogue > rejects corrupt fragments and does not silently borrow other role files",
+      "tests/knowledge-catalog.test.ts > mechanical knowledge catalogue > requires explicit foreign query, retains scope and support without aggregation",
+      "tests/knowledge-catalog.test.ts > mechanical knowledge catalogue > runs fixed Python source-preservation and curator tests",
+      "tests/sandbox-entry.test.ts > Vite disables automatic dotenv loading for fixed-data tests in a live checkout",
+      "tests/v6-card-pick.test.ts > loop routes known cards to Jev, then the original brain on failure (error)",
+      "tests/v6-card-pick.test.ts > loop routes known cards to Jev, then the original brain on failure (invalid)",
+      "tests/v6-card-pick.test.ts > loop routes known cards to Jev, then the original brain on failure (success)",
+      "tests/v6-card-pick.test.ts > loop routes known cards to Jev, then the original brain on failure (timeout)",
+      "tests/v6-card-pick.test.ts > routes all_unknown rewards to the original brain before any Jev call",
+      "tests/v6-card-pick.test.ts > routes brain_failed rewards to the original brain before any Jev call",
+      "tests/v6-card-pick.test.ts > routes low_ratio rewards to the original brain before any Jev call",
+      "tests/v6-card-pick.test.ts > routes one_known rewards to the original brain before any Jev call",
+      "tests/v6-card-pick.test.ts > shadow calls and records Jev but executes the existing brain's choice",
+      "tests/v6-combo-metrics.test.ts > offline combo metrics builder > passes fixed-data tests for raw evidence, censoring, sampling and unknowns",
+      "tests/v6-combo-metrics.test.ts > offline combo metrics builder > produces metrics accepted by the real build-core-v1 consumer contract",
+      "tests/v6-combo-simulation.test.ts > historical combo prerequisites > verifies exact raw bytes before evaluating a batch and rejects a changed source",
+      "tests/v6-draft.test.ts > CLI accepts a frozen-context draft and rejects missing coverage without writes",
+      "tests/v6-history-pack.test.ts > V6 run-start frozen history > builds through the production CLI from hash-frozen inputs and rejects changed bytes",
+      "tests/v6-potions.test.ts > unknown slot projections return to the original brain and preserve its discard fields",
+      "tests/v6-room.test.ts > binds the shared production runtime by default for rest without a room override",
+      "tests/v6-room.test.ts > binds the shared production runtime by default for shop without a room override",
+      "tests/v6-room.test.ts > credits the upgrade follow-up to its actual deepseek source",
+      "tests/v6-room.test.ts > credits the upgrade follow-up to its actual jev source",
+      "tests/v6-room.test.ts > local scripted loop dispatches one rest Jev choice and no brain request",
+      "tests/v6-room.test.ts > local scripted loop dispatches one shop Jev choice and no brain request",
+      "tests/v6-room.test.ts > local scripted loop failure hands over to the original brain without Jev retries",
+      "tests/v6-room.test.ts > local scripted loop invalid hands over to the original brain without Jev retries",
+      "tests/v6-room.test.ts > local scripted loop timeout hands over to the original brain without Jev retries",
+      "tests/v6-room.test.ts > unknown rest projections go directly to the original brain",
+      "tests/v6-room.test.ts > unknown shop projections go directly to the original brain"
+    ],
+    "new_timeouts": [
+      "tests/batch-b.test.ts > 3. Hardened Shell's 20 a turn is carried across re-plans in the turn (3RWJX25LB2CD F14 T3) > the first decision of the turn has the whole cap; after 20 lost this turn, none; a new turn, the whole cap again",
+      "tests/continuation-failure-b2-planner.test.ts > actual B2 combat planner logs the separate reference but sends neither payload nor whole-fight numbers after zero-sample degradation",
+      "tests/learner-retention.test.ts > reclaims only settled learner copies with verified archival and safe restoration",
+      "tests/learning-ledger.test.ts > learning ledger > the ledger file is valid JSONL as committed",
+      "tests/v6-combat-planner.test.ts > actual off planner attaches role-local entries and shows a low-trust Act 3 boss without changing options or rank"
+    ],
+    "new_timeouts_retry": {
+      "files": 5,
+      "passed": 5,
+      "not_selected": 46,
+      "exit": 0,
+      "workers": 1
+    },
+    "paths": {
+      "files": 1,
+      "cases": 11,
+      "exit": 0
+    },
+    "restored_directed": {
+      "files": 9,
+      "cases": 37,
+      "exit": 0
+    },
+    "negative_controls": [
+      {
+        "item": "manual",
+        "source_files": [
+          "ops/learning_requests.py"
+        ],
+        "tests": [
+          "tests/manual-notice-ack.test.ts"
+        ],
+        "without_fix_rc": 1
+      },
+      {
+        "item": "ordinary",
+        "source_files": [
+          "ops/ordinary_close.py",
+          "ops/learner_retention.py"
+        ],
+        "tests": [
+          "tests/ops-current-events.test.ts",
+          "tests/cadence-no-change.test.ts"
+        ],
+        "without_fix_rc": 1
+      },
+      {
+        "item": "cadence",
+        "source_files": [
+          "ops/proposal_dispatch.py"
+        ],
+        "tests": [
+          "tests/cadence-no-change.test.ts"
+        ],
+        "without_fix_rc": 1
+      }
+    ],
+    "gitleaks": 0,
+    "submitted": false,
+    "live_merged": false
+  },
+  "original_failed_rc0_mergednull_preserved": true,
+  "original_candidate_bytes_unchanged_after_FF": true,
+  "integration_live": "c351dbe7b5603bbb591e0f63d88be32fa60df56f",
+  "no_source_commit_or_integration_yet": true,
+  "production_notice_ACK_not_touched": true,
+  "production_dataset_not_used_for_validation": true,
+  "main_source_merge_coordination": "Preserve fixed source through original check; acceptance/branch source commit only until original W3 fixed-input terminal/main delivery, then actual-composition integration. Existing 969b live hold and R3 natural boundary remain.",
+  "reason": "Original completed pure-fix learner left three dependent patches/nine source+test leaves after required sandbox final full1. Preserve all original patch and leaf bytes, FF same original WT to latest main, apply original patches in original dependency order, one host full; no new model, source redesign or production acknowledgments."
+}
