@@ -5186,3 +5186,5 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
 - 2026-10-20T15:49:11+08:00 ops：核infra full1自然终局/退出/明放，原141301精确885+main9fb固定a99/2430输入接管唯一宿主全检，tsc0/full实际启动未终局；后续W8→W4→infra待原生明确释放，不运live/805。原件 paper/materials/20261020-1545-ops/receipt.json。
 
 - 2026-10-20T15:52:15+08:00 ops：核infra历史定向4文件14过与SHA，保原full1；当前WT相对ed37七叶变化超出一叶回执，留原文/差异并请owner补时间输入绑定，不冒当前树绿。完整重验仍ops141301→W8→W4后，未查在途。原件 paper/materials/20261020-1549-ops/receipt.json。
+
+- 2026-10-20T16:03:08+08:00 ops：核infra原生时间/字节绑定，纠正前轮Git路径差异推作六处内容修改；六未跟踪文件与原ed37/2331输入/15:19及15:51SHA相同，仅断言一叶实改。保旧diff/full1，事后绑定不代完整验收；队列不变、未查在途。原件 paper/materials/20261020-1600-ops/receipt.json。

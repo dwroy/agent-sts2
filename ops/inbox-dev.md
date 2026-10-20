@@ -4475,3 +4475,7 @@ request_id=roy-20261017-human-pace-h0 revision=3 input_sha256=1e1c259a15f1824119
 
 2026-10-20T15:52:15+08:00 已实读原watcher补回执，15:45的tsc0、单worker定向4文件14项通过，targeted日志SHAffecfde5、报告SHAf2a70150及步骤字节核同；原620文件full1和四项失败保留，定向不能替代完整重验。另在15:51只读核当前工作树，相对原ed37已有7个agent/ops变化路径，除learner-self-check断言外还有临时目录工具与测试六叶，超出事件所述一叶范围。已冻结当前路径/SHA及差异，保留原报告，不武断认定早先回执错误，也不把历史定向绿外推到新树；沿原owner索取受测输入与后增修改时间绑定。原完整重验请求仍排当前ops141301、W8修夹具r3、W4拿牌条目之后，轮到前需明确释放并核最新实际输入。未查询当前ops的status、进程或日志，也未重启或叠full。仅更新清单和证据，不提交候选源码/main/live、不加游戏号，不改当前受测输入、805暂停、STOP/actor/Regent或角色ACK，不重派模型/API、刷新或dataset。
 原件 paper/materials/20261020-1549-ops/receipt.json；targeted-receipt.json；current-source-drift.json。
+
+
+2026-10-20T16:03:08+08:00 已核infra来源时间绑定原件9a87ebe8及新版报告707d2379，并纠正前轮判断：Git相对ed37显示六叶删除，是这些新文件未被真实index跟踪，并非定向后六处源码内容变化。当前六叶与ed37 blob、原2331输入、15:19备份回执SHA及ops15:51保存SHA逐一核同，实际内容变化仅learner-self-check断言一叶。三条原生记录已按精确offset、字节及SHA独立比对，15:45:05.840补丁完成早于tsc和四文件14项定向，旧full1与四失败不改为绿。此次属于依据原件事后补绑定，当时没有独立完整前后manifest，不冒连续监控或扩大定向覆盖。原七叶diff、旧f2报告及前轮记录全部保留，以新回执补充澄清；未改原owner工作树或index，未来冻结和提交仍须保住六个未跟踪源码叶。完整重验继续原ops141301、W8、W4之后，当前全检未查询或重启。仅保存记录，不改live/actor/STOP、805暂停、Regent、角色ACK或科学父，不新派检查、模型/API、刷新及dataset。
+原件 paper/materials/20261020-1600-ops/receipt.json；verification.json；source-time-binding.json。
