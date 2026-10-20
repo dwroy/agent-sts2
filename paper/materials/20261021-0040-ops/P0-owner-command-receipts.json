@@ -1,0 +1,55 @@
+{
+  "constraints": {
+    "nice": 19,
+    "ionice": 3,
+    "maxWorkers": 1,
+    "TMPDIR": "<worktree>/.cache/v6o",
+    "PATH_prefix": "~/.local/node/bin",
+    "full": false,
+    "real_api_requests": false
+  },
+  "targeted-v4": {
+    "tsc": "cd agent && npx tsc -p tsconfig.json --noEmit",
+    "vitest": "cd agent && npx vitest run tests/v6-start.test.ts tests/v6-card-results.test.ts tests/v6-card-face.test.ts tests/v6-card-option-loop.test.ts --maxWorkers=1",
+    "tsc_exit": 0,
+    "vitest_exit": 0,
+    "files": 4,
+    "tests": 18,
+    "seconds": 15.7
+  },
+  "targeted-v5": {
+    "reason": "Rename frozen frame metadata key to frame_ref after false positive; actual states/models unchanged; rerun exact final input.",
+    "vitest": "cd agent && npx vitest run tests/v6-start.test.ts tests/v6-card-results.test.ts tests/v6-card-face.test.ts tests/v6-card-option-loop.test.ts --maxWorkers=1",
+    "exit": 0,
+    "files": 4,
+    "tests": 18,
+    "seconds": 22.38,
+    "input_manifest": "checks/targeted-v5/input.json",
+    "post_manifest": "checks/targeted-v5/after.json"
+  },
+  "consumers-v1": {
+    "vitest": "cd agent && npx vitest run tests/v6-card-pick.test.ts tests/v6-card-input-bridge.test.ts tests/v6-card-route-scope.test.ts tests/v6-construction-safety.test.ts tests/v6-request-factory.test.ts tests/v6-card-results-input.test.ts tests/v6-card-reward-scope.test.ts tests/v6-projection-runtime.test.ts --maxWorkers=1",
+    "exit": 0,
+    "files": 8,
+    "tests": 99,
+    "seconds": 12.5
+  },
+  "red-original-input": {
+    "vitest": "cd agent && npx vitest run tests/v6-card-option-loop.test.ts --maxWorkers=1",
+    "source": "two runtime files temporarily from base 64cc0f8d; current files restored in finally; restored.json retained",
+    "exit": 1,
+    "files": 1,
+    "failed_tests": 2,
+    "reason": "expected 3 distinct candidate result groups, got 1 in each real loop"
+  },
+  "first_failures": "targeted-v1/v2 retained: fixture scope and existing paired numeric upgrade compatibility; not hidden by later green.",
+  "live-context-v1": {
+    "input": "checks/live-context-v1/input.json",
+    "restoration": "checks/live-context-v1/restored.json",
+    "exit": 0,
+    "files": 4,
+    "tests": 18,
+    "seconds": 14.66,
+    "source": "70f3ec976 + two actual live dependency byte overlays, not transported"
+  }
+}
