@@ -3,7 +3,7 @@ import { mkdtempSync, mkdirSync, readFileSync, rmSync, symlinkSync, writeFileSyn
 import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
 import { createHash } from "node:crypto";
-import { execFileSync } from "node:child_process";
+import { fixtureOutput } from "./fixture-command.js";
 import { assembleV6History, loadV6HistoryPack, sealV6History } from "../src/sim/v6-history-pack.js";
 import { pooledMetrics } from "./v6-build-metric-fixtures.js";
 
@@ -101,7 +101,7 @@ describe("V6 run-start frozen history", () => {
       cutoff: at(55), checkpoint_floors: [17], inputs }));
     const dir = join(root, "characters/silent"); mkdirSync(dir, { recursive: true });
     const path = join(dir, "v6-history.json"), cli = resolve("tools/v6/freeze-history.ts");
-    const run = (out: string) => execFileSync(process.execPath, ["--import", "tsx", cli, "--manifest", manifest, "--out", out], { stdio: "pipe" });
+    const run = (out: string) => fixtureOutput(process.execPath, ["--import", "tsx", cli, "--manifest", manifest, "--out", out], { stdio: "pipe" });
     run(path);
     expect(loadV6HistoryPack(root, "silent", { mode: "on" }).status).toBe("loaded");
     writeFileSync(join(root, "frames"), "changed");

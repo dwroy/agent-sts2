@@ -4,7 +4,7 @@ import { resolveConfig } from "vite";
 import { expect, it } from "vitest";
 
 it("Vite disables automatic dotenv loading for fixed-data tests in a live checkout", async () => {
-  const config = await resolveConfig({ configFile: resolve("vitest.config.ts") }, "serve", "test");
+  const config = await resolveConfig({ configFile: resolve("vitest.config.ts"), configLoader: "runner" }, "serve", "test");
   expect(config.envDir).toBe(false);
 });
 

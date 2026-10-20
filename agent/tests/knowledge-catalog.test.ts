@@ -1,5 +1,5 @@
 import { afterEach, describe, expect, it } from "vitest";
-import { execFileSync } from "node:child_process";
+import { fixtureOutput } from "./fixture-command.js";
 import { mkdtempSync, mkdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
@@ -20,7 +20,7 @@ function fixture() {
   for (const role of ["silent", "ironclad", "regent"]) write(`characters/${role}/experience.json`, {
     entries: [{ id: role + "-rule", scope: { character: role, asc: 10 }, n_support: 3, evidence: ["ABCDEFGHIJKL F17 T2"] }],
   });
-  const build = () => execFileSync("python3", [resolve("../knowledge/builders/build-catalog.py"), "--knowledge-root", root]);
+  const build = () => fixtureOutput("python3", [resolve("../knowledge/builders/build-catalog.py"), "--knowledge-root", root]);
   build();
   return { root, write, build, monster, moves };
 }
@@ -77,6 +77,6 @@ describe("mechanical knowledge catalogue", () => {
     expect(after.monsterDb.monsters["ENEMY"]).toMatchObject({ name: "changed-public-observation" });
   });
   it("runs fixed Python source-preservation and curator tests", () => {
-    expect(() => execFileSync("python3", [resolve("../knowledge/builders/test_catalog.py")])).not.toThrow();
+    expect(() => fixtureOutput("python3", [resolve("../knowledge/builders/test_catalog.py")])).not.toThrow();
   });
 });
