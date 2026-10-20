@@ -5440,3 +5440,5 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
 | 2026-10-21 04:00 | W8 P4 单败：确认 thief-card-value 固定 8 样本测试耦合真实模拟时钟；7127c1528 仅注入测试时钟并另锁过期零样本/未知原因，联合2399输入仅1叶变化，tsc0/定向11过/gitleaks0；原full1与历史零样本物理原因未知保留，不冒联合绿，不改预算/断言阈值/生产，交ops单点重组验收。材料 paper/materials/2026-10-21-v6-thief-fixture-clock/。 |
 
 - 2026-10-21 04:04:30 CST 原ops：7127时钟夹具单叶核同，原P4失败2399输入仅此叶变化/其余2398同，42材料清单扫描0，旧根因unknown/full1保留；原29+1准备树4af416d9，唯一有限checker2192743沿原kernel锁重冻最新live知识后完整门，实际启动待原事件，不轮询/提前发布。原件paper/materials/20261021-P4-clock-repaired-ops/receipt.json。
+
+- 2026-10-21 04:11:14 CST 原ops：P4修后原唯一full2196201/runner2192743启动静态核同，tsc0/tree5628371e/2399输入98034135，30源与485知识SHA同；相对旧失败仅1测试源+48锁内最新知识数据，原29生产不变，旧full1/unknown保留。不查动态进度/热改/叠full/发布，待原终局。原件paper/materials/20261021-0410-ops/receipt.json。
