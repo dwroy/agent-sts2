@@ -1,0 +1,19 @@
+usage: learning_requests.py [-h] [--batch BATCH] [--notice NOTICE]
+                            [--stage {ops_forwarded,watcher_received,roy_notified}]
+                            [--request REQUEST] [--receipt RECEIPT]
+                            [--source SOURCE] [--kind {disagreement,blocked}]
+                            {run,ack,retry,recover-account,register-feature}
+
+positional arguments:
+  {run,ack,retry,recover-account,register-feature}
+
+options:
+  -h, --help            show this help message and exit
+  --batch BATCH
+  --notice NOTICE
+  --stage {ops_forwarded,watcher_received,roy_notified}
+  --request REQUEST
+  --receipt RECEIPT
+  --source SOURCE       feature registration source, or original manual V6
+                        provenance for ack
+  --kind {disagreement,blocked}

@@ -1,0 +1,71 @@
+{
+  "at": "2026-10-20T08:14:34.713779+00:00",
+  "receipt": {
+    "started_at": "2026-10-20T08:14:05.921138+00:00",
+    "runner_pid": 4168969,
+    "runner_start_ticks": "137598872",
+    "base_commit": "f7d4d21a6b5a52bf635f040af0dced279c9c0b0c",
+    "staged_tree": "42fd17b2a7a3734e45e4058ead888ceb461b446d",
+    "nice": 19,
+    "tmpdir": "/home/dw/Projects/agent-sts2/.cache/w8t",
+    "input_count": 2442,
+    "input_sha256": "09d46e6eb98857701bf73f3467ecaa5446aa2178adb0f9c6e7c22c14620ee0f1",
+    "steps": [
+      {
+        "name": "tsc",
+        "command": [
+          "npx",
+          "tsc",
+          "-p",
+          "tsconfig.json",
+          "--noEmit"
+        ],
+        "started_at": "2026-10-20T08:14:05.980994+00:00",
+        "log": "/home/dw/Projects/agent-sts2/.worktrees/v6-refresh-legacy-incremental-20261020/.artifacts/full-final-r3b/tsc.log",
+        "pid": 4169062,
+        "exit_code": 0,
+        "ended_at": "2026-10-20T08:14:07.091055+00:00",
+        "seconds": 1.1100511390250176,
+        "log_bytes": 0,
+        "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "name": "full",
+        "command": [
+          "npx",
+          "vitest",
+          "run",
+          "--maxWorkers=1"
+        ],
+        "started_at": "2026-10-20T08:14:07.091386+00:00",
+        "log": "/home/dw/Projects/agent-sts2/.worktrees/v6-refresh-legacy-incremental-20261020/.artifacts/full-final-r3b/full.log",
+        "pid": 4169294
+      }
+    ]
+  },
+  "live_process_readback": [
+    {
+      "pid": 4168969,
+      "ppid": 1451357,
+      "nice": 19,
+      "start_ticks": "137598872",
+      "argv": "/usr/bin/python3 .artifacts/full-final-r3b/run.py ",
+      "ionice": "idle"
+    },
+    {
+      "pid": 4169294,
+      "ppid": 4168969,
+      "nice": 19,
+      "start_ticks": "137599016",
+      "argv": "npm exec vitest run --maxWorkers=1                          ",
+      "ionice": "idle"
+    }
+  ],
+  "prior_r3_interrupted_for_main_drift": ".artifacts/full-final-r3/main-drift-interruption.json",
+  "full_log_not_read_for_acceptance": true,
+  "next": [
+    "W4 card-results",
+    "infra fixed full"
+  ],
+  "live_changed": false
+}
