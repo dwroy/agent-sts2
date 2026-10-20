@@ -1,0 +1,3 @@
+已实际接收Claude04:2x新决定，标签/实收时间分列，原文落盘。这一决定取代继续CARDjev的旧下一局安排：仅在2GFAPDBDNSCR自然结束、原Claude守候写STOP并核无活动play后，沿原锁把CARD改brain，保R407源码和其余开关；实际发布时核号、双通知、配置及下一局读回，再清STOP按原方式恢复，不现在切局或重复建守候。已准备只改一项的补丁，私有index apply检查与bash语法0，后像与旧R406配置字节相同；仅供届时复核漂移，未写main/live运行配置或预占版本号。P4当前冻结full、原锁及输入保持，不能把其冻结jev配置回灌为下一局设置，也不把P4发布当回brain前提。质量依据为2c4材料及Claude所报层数，保诊断权重、小样本、非因果限制，不补知识。W4后续须汇总相对skip指标进criteria、标无区分列并修B为空，冻结R407题真实Jev验证后再按原链恢复jev；不新派模型/API或检查。P2现明确暂停等Roy，不因接口协调或两局条件自动开工；POTIONbrain/REFLEXoff与Regent暂停保持。
+
+原件：本目录authorization-original.md、receipt.json及CARD单项补丁。

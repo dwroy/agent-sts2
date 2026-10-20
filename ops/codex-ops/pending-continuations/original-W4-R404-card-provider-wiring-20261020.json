@@ -1,8 +1,8 @@
 {
   "completed": false,
-  "phase": "R407-actual-next-run-CARDjev-REFLEXoff-first-action-readback-quality-Claude-pending",
+  "phase": "R407-quality-failed-CARDbrain-after-2GF-original-terminal-STOP",
   "authorization": "Claude22:05",
-  "receipt": "paper/materials/20261021-0236-P0-publication-ops/receipt.json",
+  "receipt": "paper/materials/20261021-042x-CARD-brain-ops/receipt.json",
   "source_refs": {
     "W4-evidence-correction-original.md": {
       "path": "paper/materials/20261020-2212-watcher-r404-card-wiring/W4-evidence-correction-original.md",
@@ -63,7 +63,7 @@
   "main_materials": "66781bcf32b92e895bee16a07aa133a0fb89db24",
   "joint_input_unchanged_by_main_integration": true,
   "authorization_plan_section12": "0ee818a8f6d2e0fcd840f658a5c462d0b81112bd",
-  "P2_blocked_until_two_natural_stable_P0_runs": true,
+  "P2_blocked_until_two_natural_stable_P0_runs": false,
   "full_runner": 1111701,
   "full_pid": 1111768,
   "full_started_at": "2026-10-20T22:35:08.770289+08:00",
@@ -79,7 +79,7 @@
     1117921
   ],
   "frozen_source_and_inputs_retained": true,
-  "next": "Read actual next configuration/action then Claude first-run quality; P2 after two stable natural runs; no prepublication mutual wait",
+  "next": "Verify original2GF ended/STOP/inactive play; under original lock preserve newest source/knowledge, publish only CARDbrain config, register release/dual notices and actual runtime readback, then resume. W4 real frozen Jev consistency and B/criteria fixes before restoring jev. Do not mutate current actor or P4 full inputs.",
   "live_publication_completed": true,
   "packaging_source": "75eee88dbf6a1e2cc42e8f7f04eab81d4e3844e7",
   "host_start_readback": "paper/materials/20261020-2303-ops/P0-actual-start-readback.json",
@@ -91,7 +91,7 @@
   "natural_run_id": "JPWMMV67SZCL",
   "full_rc": 0,
   "acceptance": false,
-  "current_card_next_run": "jev",
+  "current_card_next_run": "brain pending actual boundary",
   "await_original_W4_real_loop": false,
   "actual_next_run": "JPWMMV67SZCL",
   "runtime_card": "jev",
@@ -154,6 +154,11 @@
     {
       "phase": "Claude021x-original-guardian-1ZZ-terminal-STOP-then-prepared17-CARDjev-publication",
       "receipt": "paper/materials/20261021-0113-ops/receipt.json"
+    },
+    {
+      "phase": "R407-actual-next-run-CARDjev-REFLEXoff-first-action-readback-quality-Claude-pending",
+      "receipt": "paper/materials/20261021-0236-P0-publication-ops/receipt.json",
+      "at": "2026-10-21 04:15:49 CST"
     }
   ],
   "joint17_terminal_receipt": "paper/materials/20261021-0113-ops/prepared-publication.json",
@@ -170,17 +175,19 @@
   "prepared_live_patch": "paper/materials/20261021-0113-ops/accepted-seventeen-live.patch",
   "current_natural_run": "JPWMMV67SZCL",
   "latest_authorization": {
-    "path": "paper/materials/20261021-021x-ops/authorization-original.md",
-    "sha256": "61c0f17b11e7eefad0b15a2450b3933e95a93a8ab4adcbc3d2586e17a82c8a12",
+    "path": "paper/materials/20261021-042x-CARD-brain-ops/authorization-original.md",
+    "bytes": 847,
+    "sha256": "c7ced7e2a0c9baf4dc284c731f7257ca018124fb47d41cb73a265c4279ee1e46",
+    "label": "Claude04:2x",
+    "actual_ops_received_at": "2026-10-21 04:15:49 CST",
     "source": "current original ops user message",
-    "label": "Claude02:1x",
-    "recorded_at": "2026-10-21 02:17:14 CST",
-    "scope": "terminal STOP publication window for1ZZ via existing Claude guardian; supersedes no-STOP policy only at natural boundary; future boundary packages use STOP window or prepared fast publication"
+    "scope": "supersedes continuing CARDjev: switch only CARD to brain after2GF terminal STOP; preserve R407 code; P2 paused pending Roy",
+    "label_time_is_not_actual_receipt_time": true
   },
   "prepublication_gate_satisfied": true,
   "restore_jev_accepted_meaning": "authorized next-boundary configuration; quality run occurs after publication",
   "next_CARD": "jev",
-  "quality_acceptance": "pending first new natural run judged by Claude",
+  "quality_acceptance": "failed by Claude04:2x",
   "quality_acceptance_owner": "Claude",
   "first_postpublication_run_is_quality_run": true,
   "prepared_publication": "paper/materials/20261021-013x-ops/next-boundary-publication-plan.json",
@@ -192,5 +199,9 @@
   "prepared_publisher": ".artifacts/ops-P0-stop-boundary-20261021-021x/publish-once.py",
   "prepared_publisher_sha256": "eec0d9c01adfbd0e9e827a987345535b915115c34cd9fbbae416cf998370a850",
   "publication_runbook": "paper/materials/20261021-021x-ops/publication-runbook.md",
-  "actual_adoption_receipt": "paper/materials/20261021-0236-P0-publication-ops/first-natural-readback.json"
+  "actual_adoption_receipt": "paper/materials/20261021-0236-P0-publication-ops/first-natural-readback.json",
+  "next_boundary_run": "2GFAPDBDNSCR",
+  "guardian": "existing Claude guardian only",
+  "P2_status": "paused-await-Roy",
+  "P2_prior_gate_superseded": "explicit Claude04:2x pause pending Roy"
 }
