@@ -1,0 +1,46 @@
+{
+  "at": "2026-10-21 06:27:55 CST",
+  "role": "original-watcher",
+  "event": "original-051301-s2-full-failure-and-nonreproduction-relay",
+  "verification_scope": "saved receipt and targeted-comparison byte identities only; no test rerun or dynamic inspection",
+  "sources": [
+    {
+      "path": "paper/materials/20261021-0620-ops/receipt.json",
+      "bytes": 2510,
+      "sha256": "ec704c63544493942b6dd62ddbb875b8a66c76fe9d1d429bde48f959508adc00"
+    },
+    {
+      "path": "paper/materials/20261021-0620-ops/targeted-comparison.json",
+      "bytes": 2114,
+      "sha256": "f09662bb0235445af3cc797aa879783b9bb5b8262f650ac6312499fb60e1e38f"
+    }
+  ],
+  "original_full": {
+    "tsc": 0,
+    "full": 1,
+    "tree": "eaec434573d044367a5d664e44f18d1e5d36a2ef",
+    "inputs": 2394,
+    "input_sha256": "54d205130c4cc9b6f94d0437c804a48120afd20457a9bdd28c5e085d7d2527c4",
+    "files_passed": 628,
+    "files_failed": 1,
+    "tests_passed": 5935,
+    "tests_failed": 1,
+    "tests_skipped": 2,
+    "failure": "v6-prompt-summary-perf.test.ts:41 card summary 17612.75003ms exceeds original 5000ms"
+  },
+  "owner_reported_control": {
+    "candidate_three_tests": 0,
+    "production_leaf_withdrawn_three_tests": 0,
+    "cold_card_ms": [
+      183.77670199999966,
+      241.21071799999982
+    ],
+    "nine_state_digests_and_request_bytes_equal": true,
+    "original_input_restored": true
+  },
+  "physical_cause": "unknown; original instantaneous CPU not sampled; controls do not replace full1",
+  "continuation": "await original Claude-authorized decision; no new work requested",
+  "runtime": "R408 CARD=brain REFLEX=off; P2 paused; criteria+B and Roy Jev gate unchanged",
+  "native_claude_roy_ack": false,
+  "relay_text": "原watcher已实际核读0620静态receipt及targeted-comparison。沿当前Claude/Roy对话转达：051301-s2三叶+W0两测试原宿主tsc0/full1，唯一card摘要17612.75003ms越原5000ms；候选/仅撤combat-plan生产叶原阈值串行各三例0，冷183.8/241.2ms，九组state_digest与请求字节同且原2394输入恢复。未复现不覆盖full1，原现场CPU未采样、物理根因unknown；未归资源/夹具/生产，接续由原Claude授权决定。保原失败、未提交三叶、十waiting/0546 proposed，R408 CARDbrain/REFLEXoff、criteria+B同包/Roy切jev门、P2暂停不变。本人未起检查/full/API/模型/刷新或派批。原件paper/materials/20261021-0620-watcher/receipt.json；本回执确认watcher实际读取，当前对话转达不冒Claude/Roy原生ACK，无需因此重跑或新增任务。"
+}

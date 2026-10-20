@@ -1,0 +1,122 @@
+{
+  "schema": "watcher-static-relay-v1",
+  "at": "2026-10-21T06:40:54.284080+08:00",
+  "watcher_native": "01a14f5d-da55-7831-959e-53727796115e",
+  "source": "9805c160fac06e29a3b6d48235d5c5bbfd1b7e30",
+  "tree": "5959a269f25c88e6d0a7d05f4d1cae48c6f275ae",
+  "materials": "7e1f8719d4c97f16c1d9009edd4407b61b1a8206",
+  "dependencies": [
+    "024612ef747f63d4a86eb6f57ff2d39f78795d5e",
+    "eea3519d9da0b83cb10f7bb9a6f0223775c73819"
+  ],
+  "static_verification": {
+    "formal_report_read": true,
+    "ops_receipt_read": true,
+    "manifest_files_verified": 11,
+    "source_tree_git_blob_working_sha_match": true,
+    "dependencies_are_ancestors": true,
+    "patch_hashes_verified": true,
+    "own_apply_or_test_performed": false
+  },
+  "root_cause": {
+    "old_questions": 12,
+    "cache_hits": 8,
+    "cache_misses": 4,
+    "stored_rows": 238,
+    "all_stored_rows_zero_samples": true,
+    "opening_rows": 89,
+    "opening_prerequisite_subset": 42,
+    "prepared_opening_zero_samples": 149,
+    "causes": [
+      "400ms background window and CARD=jev-only scheduling",
+      "no hook into existing brain wait",
+      "overly broad sample invalidation keys"
+    ]
+  },
+  "change": [
+    "warm B during an existing model wait, capped at 5000ms, no additional request or join",
+    "reuse only identical effective solver opening/seed/model inputs",
+    "external getter preserves strict state fingerprint and returns null on miss",
+    "yield between background slices and add core-cache audit"
+  ],
+  "owner_replay": {
+    "kind": "production input/factory/runtime/runner plus fixed fake 5000ms existing brain wait",
+    "new_B_Nova_requests": 0,
+    "F6_numeric_rows": 43,
+    "F7_numeric_rows": 32,
+    "cores_each": "14/17",
+    "n": 2,
+    "missing_prerequisite_cores": 3,
+    "A_known_each": "4/4",
+    "F6_original_A_plus_format_ms": 5096.4,
+    "F7_original_A_plus_format_ms": 4438.26,
+    "final_pure_format_wire_bytes": [
+      23882,
+      23871
+    ]
+  },
+  "limits": [
+    "partial B with n=2 is not calibration or benefit validation",
+    "F6 remains above 5000ms",
+    "final pure-format timing must not be combined with an earlier A timing into new E2E",
+    "new B had no Nova request; earlier 16 requests cover criteria 0246 only",
+    "three mean-metric concerns are not proved resolved; no text reasons were returned by Nova",
+    "owner directed tests are not an actual live joint full or quality/performance acceptance"
+  ],
+  "ops_phase": "formal cumulative 11 source intake plus W0 two-test isolation; controller 2657047 submitted to original admission",
+  "actual_full_start_verified_in_read_receipt": false,
+  "full_green": false,
+  "main_live_publication": false,
+  "required_config": {
+    "CARD": "brain",
+    "REFLEX": "off",
+    "restore_jev": "Roy decision required",
+    "P2": "paused"
+  },
+  "evidence": [
+    {
+      "path": "paper/materials/20261021-W4-core-cache-joint-ops/receipt.json",
+      "bytes": 1861,
+      "sha256": "ddd5f069bcc88c1dcb28c684474b34dbfa9b750cceb69af107ddb98d5df148fc"
+    },
+    {
+      "path": ".worktrees/v6-card-criteria-20261021/paper/materials/2026-10-21-v6-core-cache/report.md",
+      "bytes": 9261,
+      "sha256": "70b6504d5d950928276b7444c172d561de7da1dcc7eeef62e704bf758a125ae5"
+    },
+    {
+      "path": ".worktrees/v6-card-criteria-20261021/paper/materials/2026-10-21-v6-core-cache/checks/source-manifest.json",
+      "bytes": 12639,
+      "sha256": "88ef9d3f041d5d871b82d137d64f50316540c974ad450aa1de2c68679878b4ab"
+    },
+    {
+      "path": ".worktrees/v6-card-criteria-20261021/paper/materials/2026-10-21-v6-core-cache/checks/source-receipt.json",
+      "bytes": 4981,
+      "sha256": "c10708bfbffeeedceeeb82d1799c7ffd61fdf39f25b306743550852dfd03797f"
+    },
+    {
+      "path": ".worktrees/v6-card-criteria-20261021/paper/materials/2026-10-21-v6-core-cache/checks/minimal-source.patch",
+      "bytes": 38991,
+      "sha256": "20848abe54b8fa4493c7d05a3cdcd6fa7c88feb81a5a7a8e3caa469ff63eeb85"
+    },
+    {
+      "path": ".worktrees/v6-card-criteria-20261021/paper/materials/2026-10-21-v6-core-cache/checks/cumulative-source.patch",
+      "bytes": 67317,
+      "sha256": "2474ae2867c5888e80645903b8d65ea64e6b934907fad2e5ad1888df94cc54cd"
+    }
+  ],
+  "relay": {
+    "current_Claude_Roy_dialogue": true,
+    "separate_native_Claude_channel_verified": false,
+    "native_Claude_Roy_ACK_claimed": false,
+    "ops_CLI_transport_record": "ops-delivery.json"
+  },
+  "actions_not_performed": [
+    "dynamic check monitoring",
+    "full or directed tests",
+    "models or API",
+    "simulation",
+    "dispatch",
+    "live/config/STOP/actor changes"
+  ]
+}
