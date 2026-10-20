@@ -1,0 +1,65 @@
+## 修 bug 回报
+
+- 合并基线：main → `572bf468bae3e248fbb6778e6b922f15baa5cc75`
+- 修复（每条一行）：无新增修复；154 个相关源码及固定测试文件与前批相同。
+- 已被别人修掉的：已核实 46 个历史修复提交均为当前基线祖先；逐条条目和提交号见[完整回报](/home/dw/Projects/agent-sts2/learner/runs/20261021-041320-0c5d797c-d67f-48c2-a3bc-10a79de639d2-fix-batch/report.md)。
+- 没修的：监控六叶、收尾夹具三叶 — 原批候选尚未提交或发布，队列明确禁止重复实现；策略类、独立功能及缺证项保留原链，逐条原因已落盘。
+- 测试：tsc 退出码 0；vitest 6 文件 / 18 用例 / 退出码 0，无重跑。未改代码，未重复完整套件；历史完整检查失败保留。
+- 合入：未合入；本批无源码提交，工作区干净。
+- 需要 Roy 定的事：无。
+
+```json
+{
+  "task": "fix-batch",
+  "base": "572bf468bae3e248fbb6778e6b922f15baa5cc75",
+  "fixes": [],
+  "skipped": [
+    {"item": "silent-0279", "reason": "策略类，保留既有strategy-proposal链"},
+    {"item": "silent-0311", "reason": "策略类，保留既有strategy-proposal链"},
+    {"item": "silent-0319", "reason": "策略类，保留既有strategy-proposal链"},
+    {"item": "silent-0320", "reason": "策略类，保留既有strategy-proposal链"},
+    {"item": "silent-0329", "reason": "策略类，保留既有strategy-proposal链"},
+    {"item": "arch-funnel-guard", "reason": "独立架构任务"},
+    {"item": "arch-learning-priority", "reason": "独立架构任务"},
+    {"item": "arch-unified-resource-value", "reason": "独立架构任务"},
+    {"item": "inv-f33-regression", "reason": "独立归因调查任务"},
+    {"item": "silent-0332", "reason": "机制根因及触发资源证据不足，保留原提案链"},
+    {"item": "silent-0334", "reason": "策略类，保留既有strategy-proposal链"},
+    {"item": "silent-0339", "reason": "策略类，保留既有strategy-proposal链"},
+    {"item": "silent-0344", "reason": "策略类，保留既有strategy-proposal链"},
+    {"item": "silent-0347", "reason": "策略类，保留既有strategy-proposal链"},
+    {"item": "silent-0349", "reason": "策略类，保留既有strategy-proposal链"},
+    {"item": "core-build-notify-222802-rc2", "reason": "原失败原因及未送达证明不足，未重试通知"},
+    {"item": "silent-0362", "reason": "策略类，保留既有strategy-proposal链"},
+    {"item": "合后检查包装器总时限与整套重跑", "reason": "证据不足，保留原专项"},
+    {"item": "策略调度公平性归因核查", "reason": "证据不足，保留原专项"},
+    {"item": "silent-0481", "reason": "保留既有策略提案链，不重复实现"},
+    {"item": "silent-0487", "reason": "策略类，保留既有strategy-proposal链"},
+    {"item": "silent-0339续证", "reason": "沿原策略提案处理，不重复派发"},
+    {"item": "H1/G2预算完成及paired-DPR来源宽项", "reason": "证据不足，保留原专项"},
+    {"item": "silent-0533", "reason": "策略类，保留既有strategy-proposal链"},
+    {"item": "silent-0535", "reason": "策略类，已有silent-proposal-84af8bc877ca131f"},
+    {"item": "原v5-dpr-health/H1 module-health V6兼容续项", "reason": "原001302六叶候选未提交或发布，明确禁止后批重复实现"},
+    {"item": "infra-chest-claimed-action-conflict-0516", "reason": "结构类，保留原独立提案链"},
+    {"item": "infra-v6-brain-input-too-large-20261020宽项", "reason": "专项已窄运输，原故障自然复验及父要求仍开放"},
+    {"item": "ordinary-close-isolation固定夹具成本续项", "reason": "原014301三叶候选待组合完整验收，明确禁止重复实现"},
+    {"item": "silent-elite-simulation-pessimism-20261021", "reason": "策略学习问题，明确非fix-batch纯bug"}
+  ],
+  "merged": null,
+  "tests": {"tsc": 0, "vitest": 0, "files": 6, "cases": 18},
+  "code_proposals": [],
+  "implementation_domains": [],
+  "report": "/home/dw/Projects/agent-sts2/learner/runs/20261021-041320-0c5d797c-d67f-48c2-a3bc-10a79de639d2-fix-batch/report.md"
+}
+```
+
+== 学习者 codex / fix-batch ==
+状态：success；退出码 0
+模型：gpt-6.1-sol；会话：01a15af2-8403-7c62-aa15-312007d99c26
+轮数：1；工具调用：command_execution×34
+token：输入 163.3k、输出 10.7k（其中推理 2354）、cache 读 2178.3k、cache 写 0（命中 93.0%）
+成本：未提供
+耗时：426.1 s（墙钟）
+时间：首个事件 42.0 s、模型首个输出 46.5 s、首次工具 51.4 s、末次工具结束 391.0 s；工具内共 101.0 s，其余（模型生成、推理、网络）283.1 s
+codex 会话记录：AGENTS.md 已加载（/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261021-041301）；模型的工具调用 exec×20；/home/dw/Projects/agent-sts2/ops/codex-ops/accounts/codex1/learner/sessions/2026/10/21/rollout-2026-10-21T04-13-25-01a15af2-8403-7c62-aa15-312007d99c26.jsonl
+日志：/home/dw/Projects/agent-sts2/learner/runs/20261021-041320-0c5d797c-d67f-48c2-a3bc-10a79de639d2-fix-batch.jsonl

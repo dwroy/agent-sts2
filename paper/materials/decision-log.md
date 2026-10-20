@@ -5446,3 +5446,5 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
 - 2026-10-21 04:14:13 CST [Claude，P0 质量不达标] v6-w4w6 只读核查（2c4b12ada）：R407 12 次奖励选牌与 A 指标诊断最优 0/12 一致（Boss 权重五档敏感性均 0/12），4 次明确逆指标（如 JPWM F2 选 UNTOUCHABLE 而 SNAKEBITE 各项优于跳过），B 长期结果 238 行全为 null；71.4% 目标所有选项死亡率 1。战绩 R407 四局 F17/F8/F33/F17 对比 R404/R406 大脑拿牌六局 F33/F22/F33/F48/F33/F33。处置：2GFAPDBDNSCR 局终由 Claude 守候挂 STOP，ops 把 V6_CARD_DECIDER 临时改回 brain（R407 代码保留）；v6-w4w6 把相对跳过的汇总数值放进各选项 criteria、标无区分列、修 B 为空，离线冻结题真实 Jev 请求验一致率与逆指标为 0 后再切回 jev。P2 因奖励界面无合法弃药接口（6 个满槽帧 can_discard 全 false）暂停，待 Roy。
 
 - 2026-10-21 04:15:49 CST 原ops：实收Claude04:2x，2GF自然局终原守候STOP后仅CARDjev→brain、保R407代码；私有单项补丁/语法检查0，未实际发布/核新号，P4冻结不动。P2暂停等Roy；W4 criteria/B修复及冻结真Jev验证后才议恢复。原文SHAc7ced7e2a0c9baf4dc284c731f7257ca018124fb47d41cb73a265c4279ee1e46，原件paper/materials/20261021-042x-CARD-brain-ops/receipt.json。
+
+- 2026-10-21 04:21:40 CST 原ops：041301-fix无新源/提交或合入，基线572bf468洁净、154SHA/46祖先同；原tsc0/6文件18定向过14.69秒/扫描0，不代full/live。原六叶/三叶候选去重，无ordinary回执不重dataset，最高2GF边界CARDbrain与P2暂停、P4唯一在途检查保持。原件paper/materials/20261021-0420-ops/receipt.json。
