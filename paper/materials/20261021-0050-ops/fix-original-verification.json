@@ -1,0 +1,40 @@
+{
+  "base": "2fb9ef1f26df9adfb04d68a409a8060bab7038c3",
+  "committed": false,
+  "merged": null,
+  "pending_fix": {
+    "item": "原v5-dpr-health-20261013/H1：V6奖励监控误要求旧V5模拟字段",
+    "test": "agent/tests/v6-module-health.test.ts",
+    "fails_without_fix": true,
+    "source_paths": {
+      "ops/module_health.py": "7c0c330ae76d80a0fd37b70786ffc2298814dd780338752a9f8a44f98091755a",
+      "ops/v6_card_health.py": "83b8842244e86c0e01d613058ce80171e454c4b43731d06faac20d9a46fefbad",
+      "agent/tests/v6-module-health.test.ts": "97a86c348728d2000f274155b9f259a58dcd2b49aead1212a0354d197a4e5cbe",
+      "agent/tests/v6_module_health_test.py": "fa8157f78516dd133ecb14f33ec26762b60281e6ce92cdec292b45165529caca"
+    }
+  },
+  "source_patch_unchanged": true,
+  "gitleaks": 0,
+  "full": {
+    "tsc": 0,
+    "vitest": 1,
+    "files": 582,
+    "passed": 5170,
+    "failed": 9,
+    "cases": 5179
+  },
+  "baseline_recheck": {
+    "vitest": 1,
+    "files": 6,
+    "passed": 12,
+    "failed": 7,
+    "cases": 19,
+    "production_diff_empty": true
+  },
+  "restored_targeted": {
+    "vitest": 0,
+    "files": 2,
+    "cases": 2
+  },
+  "report_sha256": "3d23a70e6f40163553545185950557ee9e2eea977fdde755f6e99584e092fc29"
+}

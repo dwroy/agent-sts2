@@ -1,0 +1,340 @@
+
+ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261021-001302/agent
+
+ ❯ tests/v6-module-health.test.ts (1 test | 1 failed) 137ms
+   × checks V6 reward computation and consumption without hiding V5 or V6 failures 136ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/v6-module-health.test.ts > checks V6 reward computation and consumption without hiding V5 or V6 failures
+AssertionError: FEEEEEEEEEEEEEEEEEEEEEEEEEE
+======================================================================
+ERROR: test_calculated_is_not_consumed_and_receipts_cannot_cross_decisions (__main__.V6Health.test_calculated_is_not_consumed_and_receipts_cannot_cross_decisions) (change='missing')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261021-001302/agent/tests/v6_module_health_test.py", line 105, in test_calculated_is_not_consumed_and_receipts_cannot_cross_decisions
+    report = summary([d for d, _, _ in fixtures], [r for _, r, _ in fixtures],
+                     [] if change == 'missing' else [b for _, _, b in fixtures])
+  File "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261021-001302/agent/tests/v6_module_health_test.py", line 41, in summary
+    return h.summarize(config, decisions, [], {'decisions_complete': True}, card_results=results, v6_builds=builds)
+           ~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: summarize() got an unexpected keyword argument 'card_results'
+
+======================================================================
+ERROR: test_calculated_is_not_consumed_and_receipts_cannot_cross_decisions (__main__.V6Health.test_calculated_is_not_consumed_and_receipts_cannot_cross_decisions) (change='other_id')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261021-001302/agent/tests/v6_module_health_test.py", line 105, in test_calculated_is_not_consumed_and_receipts_cannot_cross_decisions
+    report = summary([d for d, _, _ in fixtures], [r for _, r, _ in fixtures],
+                     [] if change == 'missing' else [b for _, _, b in fixtures])
+  File "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261021-001302/agent/tests/v6_module_health_test.py", line 41, in summary
+    return h.summarize(config, decisions, [], {'decisions_complete': True}, card_results=results, v6_builds=builds)
+           ~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: summarize() got an unexpected keyword argument 'card_results'
+
+======================================================================
+ERROR: test_calculated_is_not_consumed_and_receipts_cannot_cross_decisions (__main__.V6Health.test_calculated_is_not_consumed_and_receipts_cannot_cross_decisions) (change='other_run')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261021-001302/agent/tests/v6_module_health_test.py", line 105, in test_calculated_is_not_consumed_and_receipts_cannot_cross_decisions
+    report = summary([d for d, _, _ in fixtures], [r for _, r, _ in fixtures],
+                     [] if change == 'missing' else [b for _, _, b in fixtures])
+  File "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261021-001302/agent/tests/v6_module_health_test.py", line 41, in summary
+    return h.summarize(config, decisions, [], {'decisions_complete': True}, card_results=results, v6_builds=builds)
+           ~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: summarize() got an unexpected keyword argument 'card_results'
+
+======================================================================
+ERROR: test_calculated_is_not_consumed_and_receipts_cannot_cross_decisions (__main__.V6Health.test_calculated_is_not_consumed_and_receipts_cannot_cross_decisions) (change='unknown')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261021-001302/agent/tests/v6_module_health_test.py", line 105, in test_calculated_is_not_consumed_and_receipts_cannot_cross_decisions
+    report = summary([d for d, _, _ in fixtures], [r for _, r, _ in fixtures],
+                     [] if change == 'missing' else [b for _, _, b in fixtures])
+  File "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261021-001302/agent/tests/v6_module_health_test.py", line 41, in summary
+    return h.summarize(config, decisions, [], {'decisions_complete': True}, card_results=results, v6_builds=builds)
+           ~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: summarize() got an unexpected keyword argument 'card_results'
+
+======================================================================
+ERROR: test_calculated_is_not_consumed_and_receipts_cannot_cross_decisions (__main__.V6Health.test_calculated_is_not_consumed_and_receipts_cannot_cross_decisions) (change='fallback')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261021-001302/agent/tests/v6_module_health_test.py", line 105, in test_calculated_is_not_consumed_and_receipts_cannot_cross_decisions
+    report = summary([d for d, _, _ in fixtures], [r for _, r, _ in fixtures],
+                     [] if change == 'missing' else [b for _, _, b in fixtures])
+  File "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261021-001302/agent/tests/v6_module_health_test.py", line 41, in summary
+    return h.summarize(config, decisions, [], {'decisions_complete': True}, card_results=results, v6_builds=builds)
+           ~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: summarize() got an unexpected keyword argument 'card_results'
+
+======================================================================
+ERROR: test_calculated_is_not_consumed_and_receipts_cannot_cross_decisions (__main__.V6Health.test_calculated_is_not_consumed_and_receipts_cannot_cross_decisions) (change='answer')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261021-001302/agent/tests/v6_module_health_test.py", line 105, in test_calculated_is_not_consumed_and_receipts_cannot_cross_decisions
+    report = summary([d for d, _, _ in fixtures], [r for _, r, _ in fixtures],
+                     [] if change == 'missing' else [b for _, _, b in fixtures])
+  File "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261021-001302/agent/tests/v6_module_health_test.py", line 41, in summary
+    return h.summarize(config, decisions, [], {'decisions_complete': True}, card_results=results, v6_builds=builds)
+           ~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: summarize() got an unexpected keyword argument 'card_results'
+
+======================================================================
+ERROR: test_calculated_is_not_consumed_and_receipts_cannot_cross_decisions (__main__.V6Health.test_calculated_is_not_consumed_and_receipts_cannot_cross_decisions) (change='failed_action')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261021-001302/agent/tests/v6_module_health_test.py", line 105, in test_calculated_is_not_consumed_and_receipts_cannot_cross_decisions
+    report = summary([d for d, _, _ in fixtures], [r for _, r, _ in fixtures],
+                     [] if change == 'missing' else [b for _, _, b in fixtures])
+  File "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261021-001302/agent/tests/v6_module_health_test.py", line 41, in summary
+    return h.summarize(config, decisions, [], {'decisions_complete': True}, card_results=results, v6_builds=builds)
+           ~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: summarize() got an unexpected keyword argument 'card_results'
+
+======================================================================
+ERROR: test_missing_unknown_incomplete_and_error_receipts_stay_failures (__main__.V6Health.test_missing_unknown_incomplete_and_error_receipts_stay_failures) (change='missing')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261021-001302/agent/tests/v6_module_health_test.py", line 89, in test_missing_unknown_incomplete_and_error_receipts_stay_failures
+    report = summary([d for d, _, _ in fixtures], results, [b for _, _, b in fixtures])
+  File "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261021-001302/agent/tests/v6_module_health_test.py", line 41, in summary
+    return h.summarize(config, decisions, [], {'decisions_complete': True}, card_results=results, v6_builds=builds)
+           ~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: summarize() got an unexpected keyword argument 'card_results'
+
+======================================================================
+ERROR: test_missing_unknown_incomplete_and_error_receipts_stay_failures (__main__.V6Health.test_missing_unknown_incomplete_and_error_receipts_stay_failures) (change='schema')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261021-001302/agent/tests/v6_module_health_test.py", line 89, in test_missing_unknown_incomplete_and_error_receipts_stay_failures
+    report = summary([d for d, _, _ in fixtures], results, [b for _, _, b in fixtures])
+  File "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261021-001302/agent/tests/v6_module_health_test.py", line 41, in summary
+    return h.summarize(config, decisions, [], {'decisions_complete': True}, card_results=results, v6_builds=builds)
+           ~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: summarize() got an unexpected keyword argument 'card_results'
+
+======================================================================
+ERROR: test_missing_unknown_incomplete_and_error_receipts_stay_failures (__main__.V6Health.test_missing_unknown_incomplete_and_error_receipts_stay_failures) (change='floor')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261021-001302/agent/tests/v6_module_health_test.py", line 89, in test_missing_unknown_incomplete_and_error_receipts_stay_failures
+    report = summary([d for d, _, _ in fixtures], results, [b for _, _, b in fixtures])
+  File "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261021-001302/agent/tests/v6_module_health_test.py", line 41, in summary
+    return h.summarize(config, decisions, [], {'decisions_complete': True}, card_results=results, v6_builds=builds)
+           ~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: summarize() got an unexpected keyword argument 'card_results'
+
+======================================================================
+ERROR: test_missing_unknown_incomplete_and_error_receipts_stay_failures (__main__.V6Health.test_missing_unknown_incomplete_and_error_receipts_stay_failures) (change='run')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261021-001302/agent/tests/v6_module_health_test.py", line 89, in test_missing_unknown_incomplete_and_error_receipts_stay_failures
+    report = summary([d for d, _, _ in fixtures], results, [b for _, _, b in fixtures])
+  File "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261021-001302/agent/tests/v6_module_health_test.py", line 41, in summary
+    return h.summarize(config, decisions, [], {'decisions_complete': True}, card_results=results, v6_builds=builds)
+           ~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: summarize() got an unexpected keyword argument 'card_results'
+
+======================================================================
+ERROR: test_missing_unknown_incomplete_and_error_receipts_stay_failures (__main__.V6Health.test_missing_unknown_incomplete_and_error_receipts_stay_failures) (change='future')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261021-001302/agent/tests/v6_module_health_test.py", line 89, in test_missing_unknown_incomplete_and_error_receipts_stay_failures
+    report = summary([d for d, _, _ in fixtures], results, [b for _, _, b in fixtures])
+  File "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261021-001302/agent/tests/v6_module_health_test.py", line 41, in summary
+    return h.summarize(config, decisions, [], {'decisions_complete': True}, card_results=results, v6_builds=builds)
+           ~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: summarize() got an unexpected keyword argument 'card_results'
+
+======================================================================
+ERROR: test_missing_unknown_incomplete_and_error_receipts_stay_failures (__main__.V6Health.test_missing_unknown_incomplete_and_error_receipts_stay_failures) (change='unknown')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261021-001302/agent/tests/v6_module_health_test.py", line 89, in test_missing_unknown_incomplete_and_error_receipts_stay_failures
+    report = summary([d for d, _, _ in fixtures], results, [b for _, _, b in fixtures])
+  File "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261021-001302/agent/tests/v6_module_health_test.py", line 41, in summary
+    return h.summarize(config, decisions, [], {'decisions_complete': True}, card_results=results, v6_builds=builds)
+           ~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: summarize() got an unexpected keyword argument 'card_results'
+
+======================================================================
+ERROR: test_missing_unknown_incomplete_and_error_receipts_stay_failures (__main__.V6Health.test_missing_unknown_incomplete_and_error_receipts_stay_failures) (change='error')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261021-001302/agent/tests/v6_module_health_test.py", line 89, in test_missing_unknown_incomplete_and_error_receipts_stay_failures
+    report = summary([d for d, _, _ in fixtures], results, [b for _, _, b in fixtures])
+  File "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261021-001302/agent/tests/v6_module_health_test.py", line 41, in summary
+    return h.summarize(config, decisions, [], {'decisions_complete': True}, card_results=results, v6_builds=builds)
+           ~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: summarize() got an unexpected keyword argument 'card_results'
+
+======================================================================
+ERROR: test_missing_unknown_incomplete_and_error_receipts_stay_failures (__main__.V6Health.test_missing_unknown_incomplete_and_error_receipts_stay_failures) (change='candidate')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261021-001302/agent/tests/v6_module_health_test.py", line 89, in test_missing_unknown_incomplete_and_error_receipts_stay_failures
+    report = summary([d for d, _, _ in fixtures], results, [b for _, _, b in fixtures])
+  File "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261021-001302/agent/tests/v6_module_health_test.py", line 41, in summary
+    return h.summarize(config, decisions, [], {'decisions_complete': True}, card_results=results, v6_builds=builds)
+           ~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: summarize() got an unexpected keyword argument 'card_results'
+
+======================================================================
+ERROR: test_missing_unknown_incomplete_and_error_receipts_stay_failures (__main__.V6Health.test_missing_unknown_incomplete_and_error_receipts_stay_failures) (change='duplicate')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261021-001302/agent/tests/v6_module_health_test.py", line 89, in test_missing_unknown_incomplete_and_error_receipts_stay_failures
+    report = summary([d for d, _, _ in fixtures], results, [b for _, _, b in fixtures])
+  File "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261021-001302/agent/tests/v6_module_health_test.py", line 41, in summary
+    return h.summarize(config, decisions, [], {'decisions_complete': True}, card_results=results, v6_builds=builds)
+           ~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: summarize() got an unexpected keyword argument 'card_results'
+
+======================================================================
+ERROR: test_missing_unknown_incomplete_and_error_receipts_stay_failures (__main__.V6Health.test_missing_unknown_incomplete_and_error_receipts_stay_failures) (change='samples')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261021-001302/agent/tests/v6_module_health_test.py", line 89, in test_missing_unknown_incomplete_and_error_receipts_stay_failures
+    report = summary([d for d, _, _ in fixtures], results, [b for _, _, b in fixtures])
+  File "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261021-001302/agent/tests/v6_module_health_test.py", line 41, in summary
+    return h.summarize(config, decisions, [], {'decisions_complete': True}, card_results=results, v6_builds=builds)
+           ~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: summarize() got an unexpected keyword argument 'card_results'
+
+======================================================================
+ERROR: test_missing_unknown_incomplete_and_error_receipts_stay_failures (__main__.V6Health.test_missing_unknown_incomplete_and_error_receipts_stay_failures) (change='metric')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261021-001302/agent/tests/v6_module_health_test.py", line 89, in test_missing_unknown_incomplete_and_error_receipts_stay_failures
+    report = summary([d for d, _, _ in fixtures], results, [b for _, _, b in fixtures])
+  File "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261021-001302/agent/tests/v6_module_health_test.py", line 41, in summary
+    return h.summarize(config, decisions, [], {'decisions_complete': True}, card_results=results, v6_builds=builds)
+           ~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: summarize() got an unexpected keyword argument 'card_results'
+
+======================================================================
+ERROR: test_missing_unknown_incomplete_and_error_receipts_stay_failures (__main__.V6Health.test_missing_unknown_incomplete_and_error_receipts_stay_failures) (change='nan')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261021-001302/agent/tests/v6_module_health_test.py", line 89, in test_missing_unknown_incomplete_and_error_receipts_stay_failures
+    report = summary([d for d, _, _ in fixtures], results, [b for _, _, b in fixtures])
+  File "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261021-001302/agent/tests/v6_module_health_test.py", line 41, in summary
+    return h.summarize(config, decisions, [], {'decisions_complete': True}, card_results=results, v6_builds=builds)
+           ~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: summarize() got an unexpected keyword argument 'card_results'
+
+======================================================================
+ERROR: test_missing_unknown_incomplete_and_error_receipts_stay_failures (__main__.V6Health.test_missing_unknown_incomplete_and_error_receipts_stay_failures) (change='paired')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261021-001302/agent/tests/v6_module_health_test.py", line 89, in test_missing_unknown_incomplete_and_error_receipts_stay_failures
+    report = summary([d for d, _, _ in fixtures], results, [b for _, _, b in fixtures])
+  File "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261021-001302/agent/tests/v6_module_health_test.py", line 41, in summary
+    return h.summarize(config, decisions, [], {'decisions_complete': True}, card_results=results, v6_builds=builds)
+           ~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: summarize() got an unexpected keyword argument 'card_results'
+
+======================================================================
+ERROR: test_missing_unknown_incomplete_and_error_receipts_stay_failures (__main__.V6Health.test_missing_unknown_incomplete_and_error_receipts_stay_failures) (change='reasons')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261021-001302/agent/tests/v6_module_health_test.py", line 89, in test_missing_unknown_incomplete_and_error_receipts_stay_failures
+    report = summary([d for d, _, _ in fixtures], results, [b for _, _, b in fixtures])
+  File "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261021-001302/agent/tests/v6_module_health_test.py", line 41, in summary
+    return h.summarize(config, decisions, [], {'decisions_complete': True}, card_results=results, v6_builds=builds)
+           ~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: summarize() got an unexpected keyword argument 'card_results'
+
+======================================================================
+ERROR: test_real_v6_route_uses_computation_and_consumption_not_legacy_b3 (__main__.V6Health.test_real_v6_route_uses_computation_and_consumption_not_legacy_b3)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261021-001302/agent/tests/v6_module_health_test.py", line 47, in test_real_v6_route_uses_computation_and_consumption_not_legacy_b3
+    report = summary(decisions + decisions, results, builds)
+  File "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261021-001302/agent/tests/v6_module_health_test.py", line 41, in summary
+    return h.summarize(config, decisions, [], {'decisions_complete': True}, card_results=results, v6_builds=builds)
+           ~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: summarize() got an unexpected keyword argument 'card_results'
+
+======================================================================
+ERROR: test_v6_marker_or_switch_alone_does_not_exempt_v5 (__main__.V6Health.test_v6_marker_or_switch_alone_does_not_exempt_v5) (changes={'v6_card': None}, config={'run_id': 'RBMEQGXPE9Z2', 'character': 'SILENT', 'construction': {'architecture': 'V5'}, 'loop': {'boss_sim_build': 'on'}, 'v6': {'mode': 'on', 'deciders': {'card': 'jev'}}})
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261021-001302/agent/tests/v6_module_health_test.py", line 61, in test_v6_marker_or_switch_alone_does_not_exempt_v5
+    report = summary(decisions, config=config)
+  File "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261021-001302/agent/tests/v6_module_health_test.py", line 41, in summary
+    return h.summarize(config, decisions, [], {'decisions_complete': True}, card_results=results, v6_builds=builds)
+           ~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: summarize() got an unexpected keyword argument 'card_results'
+
+======================================================================
+ERROR: test_v6_marker_or_switch_alone_does_not_exempt_v5 (__main__.V6Health.test_v6_marker_or_switch_alone_does_not_exempt_v5) (changes={'decider': 'brain'}, config={'run_id': 'RBMEQGXPE9Z2', 'character': 'SILENT', 'construction': {'architecture': 'V5'}, 'loop': {'boss_sim_build': 'on'}, 'v6': {'mode': 'on', 'deciders': {'card': 'jev'}}})
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261021-001302/agent/tests/v6_module_health_test.py", line 61, in test_v6_marker_or_switch_alone_does_not_exempt_v5
+    report = summary(decisions, config=config)
+  File "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261021-001302/agent/tests/v6_module_health_test.py", line 41, in summary
+    return h.summarize(config, decisions, [], {'decisions_complete': True}, card_results=results, v6_builds=builds)
+           ~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: summarize() got an unexpected keyword argument 'card_results'
+
+======================================================================
+ERROR: test_v6_marker_or_switch_alone_does_not_exempt_v5 (__main__.V6Health.test_v6_marker_or_switch_alone_does_not_exempt_v5) (changes={}, config={'run_id': 'RBMEQGXPE9Z2', 'character': 'SILENT', 'construction': {'architecture': 'V5'}, 'loop': {'boss_sim_build': 'on'}, 'v6': {'mode': 'off'}})
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261021-001302/agent/tests/v6_module_health_test.py", line 61, in test_v6_marker_or_switch_alone_does_not_exempt_v5
+    report = summary(decisions, config=config)
+  File "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261021-001302/agent/tests/v6_module_health_test.py", line 41, in summary
+    return h.summarize(config, decisions, [], {'decisions_complete': True}, card_results=results, v6_builds=builds)
+           ~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: summarize() got an unexpected keyword argument 'card_results'
+
+======================================================================
+ERROR: test_v6_marker_or_switch_alone_does_not_exempt_v5 (__main__.V6Health.test_v6_marker_or_switch_alone_does_not_exempt_v5) (changes={}, config={'run_id': 'RBMEQGXPE9Z2', 'character': 'SILENT', 'construction': {'architecture': 'V5'}, 'loop': {'boss_sim_build': 'on'}, 'v6': {'mode': 'on', 'deciders': {'card': 'brain'}}})
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261021-001302/agent/tests/v6_module_health_test.py", line 61, in test_v6_marker_or_switch_alone_does_not_exempt_v5
+    report = summary(decisions, config=config)
+  File "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261021-001302/agent/tests/v6_module_health_test.py", line 41, in summary
+    return h.summarize(config, decisions, [], {'decisions_complete': True}, card_results=results, v6_builds=builds)
+           ~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: summarize() got an unexpected keyword argument 'card_results'
+
+======================================================================
+FAIL: test_audit_reads_formal_streams_and_retains_immutable_incidents (__main__.V6Health.test_audit_reads_formal_streams_and_retains_immutable_incidents)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261021-001302/agent/tests/v6_module_health_test.py", line 123, in test_audit_reads_formal_streams_and_retains_immutable_incidents
+    self.assertFalse(report['alert'])
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+AssertionError: True is not false
+
+----------------------------------------------------------------------
+Ran 5 tests in 0.022s
+
+FAILED (failures=1, errors=26)
+: expected 1 to be +0 // Object.is equality
+
+- Expected
++ Received
+
+- 0
++ 1
+
+ ❯ tests/v6-module-health.test.ts:6:56
+      4| it("checks V6 reward computation and consumption without hiding V5 or …
+      5|   const result = fixtureCommand("python3", ["-B", "tests/v6_module_hea…
+      6|   expect(result.status, result.stdout + result.stderr).toBe(0);
+       |                                                        ^
+      7| });
+      8|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed (1)
+   Start at  00:23:34
+   Duration  602ms (transform 264ms, setup 313ms, import 12ms, tests 137ms, environment 0ms)
+

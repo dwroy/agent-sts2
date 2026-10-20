@@ -1,0 +1,382 @@
+diff --git a/agent/tests/fixture-command.py b/agent/tests/fixture-command.py
+new file mode 100644
+index 000000000..e1ae544e5
+--- /dev/null
++++ b/agent/tests/fixture-command.py
+@@ -0,0 +1,11 @@
++"""Run one fixed test command and attest its actual completion; no games or models."""
++import base64
++import json
++import subprocess
++import sys
++
++token, *command = sys.argv[1:]
++result = subprocess.run(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
++print(json.dumps({"token": token, "status": result.returncode,
++                  "stdout": base64.b64encode(result.stdout).decode("ascii"),
++                  "stderr": base64.b64encode(result.stderr).decode("ascii")}))
+diff --git a/agent/tests/fixture-command.ts b/agent/tests/fixture-command.ts
+new file mode 100644
+index 000000000..3c981344d
+--- /dev/null
++++ b/agent/tests/fixture-command.ts
+@@ -0,0 +1,35 @@
++import { spawnSync } from "node:child_process";
++import { randomUUID } from "node:crypto";
++import { fileURLToPath } from "node:url";
++
++type Options = { encoding?: "utf8"; stdio?: "pipe" };
++type Launch = typeof spawnSync;
++
++/** Require a per-call receipt; sandbox status=0 alone does not prove a Node child ran. */
++export function fixtureCommand(command: string, args: readonly string[], _options: Options = {}, launch: Launch = spawnSync) {
++  const token = randomUUID();
++  const result = launch("nice", ["-n", "19", "python3", fileURLToPath(new URL("./fixture-command.py", import.meta.url)), token, command, ...args],
++    { encoding: "utf8", stdio: "pipe" });
++  if (result.status !== 0 || result.signal || (result.error && (result.error as NodeJS.ErrnoException).code !== "EPERM")) {
++    throw new Error("fixed command launcher failed");
++  }
++  let receipt: Record<string, unknown>;
++  try { receipt = JSON.parse(String(result.stdout)) as Record<string, unknown>; }
++  catch { throw new Error("fixed command has no completion receipt"); }
++  if (!receipt || receipt.token !== token || !Number.isSafeInteger(receipt.status)
++    || typeof receipt.stdout !== "string" || typeof receipt.stderr !== "string") {
++    throw new Error("invalid fixed command completion receipt");
++  }
++  const decode = (value: string) => {
++    const bytes = Buffer.from(value, "base64");
++    if (bytes.toString("base64") !== value) throw new Error("invalid fixed command output encoding");
++    return bytes.toString("utf8");
++  };
++  return { status: receipt.status as number, stdout: decode(receipt.stdout), stderr: decode(receipt.stderr) };
++}
++
++export function fixtureOutput(command: string, args: readonly string[], options: Options = {}) {
++  const result = fixtureCommand(command, args, options);
++  if (result.status !== 0) throw new Error(`fixed command exited ${result.status}`);
++  return result.stdout;
++}
+diff --git a/agent/tests/v6-module-health.test.ts b/agent/tests/v6-module-health.test.ts
+new file mode 100644
+index 000000000..6e8b17072
+--- /dev/null
++++ b/agent/tests/v6-module-health.test.ts
+@@ -0,0 +1,7 @@
++import { expect, it } from "vitest";
++import { fixtureCommand } from "./fixture-command.js";
++
++it("checks V6 reward computation and consumption without hiding V5 or V6 failures", () => {
++  const result = fixtureCommand("python3", ["-B", "tests/v6_module_health_test.py"]);
++  expect(result.status, result.stdout + result.stderr).toBe(0);
++});
+diff --git a/agent/tests/v6_module_health_test.py b/agent/tests/v6_module_health_test.py
+new file mode 100644
+index 000000000..78a028654
+--- /dev/null
++++ b/agent/tests/v6_module_health_test.py
+@@ -0,0 +1,139 @@
++"""Fixed RBMEQGXPE9Z2 F2/3/4/6 service contract; no live knowledge inputs."""
++from copy import deepcopy
++import importlib.util
++import json
++from pathlib import Path
++import tempfile
++import unittest
++
++spec = importlib.util.spec_from_file_location('module_health', Path(__file__).resolve().parents[2] / 'ops/module_health.py')
++h = importlib.util.module_from_spec(spec)
++spec.loader.exec_module(h)
++CONFIG = {'run_id': 'RBMEQGXPE9Z2', 'character': 'SILENT',
++          'construction': {'architecture': 'V5'}, 'loop': {'boss_sim_build': 'on'},
++          'v6': {'mode': 'on', 'deciders': {'card': 'jev'}}}
++
++
++def fixture(floor=2):
++    # Four actual current-Boss sample counts were 34/26/26/42, below the V5 gate.
++    options = ('skip', 'card0', 'card1', 'card2')
++    ts = f'2026-10-20T15:58:{floor:02d}.000Z'
++    later = f'2026-10-20T15:58:{floor:02d}.100Z'
++    decision = {'run_id': CONFIG['run_id'], 'mode': 'play', 'ts': later, 'floor': floor,
++                'decision_id': f'd{floor}', 'label': 'reward/card', 'decider': 'jev',
++                'v6_card': {'entries': []}, 'fallback': False, 'result': 'completed: Action completed.',
++                'questions': {'pick': {'type': 'choice', 'criteria': dict.fromkeys(options, 'fixed offer')}},
++                'answers': {'pick': {'choice': 'card1'}}}
++    n = {2: 34, 3: 26, 4: 26, 6: 42}.get(floor, 34)
++    metrics = {k: {'mean': 1, 'se': 0, 'n': n} for k in ('hp_loss', 'turns', 'damage_per_turn', 'death_rate')}
++    result = {'run_id': CONFIG['run_id'], 'floor': floor, 'ts': ts,
++              'table': {'schema': 'v6-card-combat-results-v1', 'targets': [{'kind': 'current', 'id': 'boss'}],
++                        'immediate': [{'option_id': key, 'target_id': 'boss', 'samples': n,
++                                       'requested_samples': 100, 'metrics': deepcopy(metrics),
++                                       'paired_delta': deepcopy(metrics), 'unknown_reasons': []} for key in options]}}
++    build = {'schema': 'v6-build-log-v1', 'run_id': CONFIG['run_id'], 'ts': later,
++             'question_id': f'd{floor}', 'kind': 'card_pick', 'mode': 'on',
++             'jev_answer': {'choice': 'card1'}, 'fallback': None, 'unknown': {'count': 0, 'total': 4}}
++    return decision, result, build
++
++
++def summary(decisions, results=(), builds=(), config=CONFIG):
++    return h.summarize(config, decisions, [], {'decisions_complete': True}, card_results=results, v6_builds=builds)
++
++
++class V6Health(unittest.TestCase):
++    def test_real_v6_route_uses_computation_and_consumption_not_legacy_b3(self):
++        decisions, results, builds = map(list, zip(*(fixture(f) for f in (2, 3, 4, 6))))
++        report = summary(decisions + decisions, results, builds)
++        self.assertEqual(report['b3']['attempts'], 0)
++        self.assertEqual(report['b3']['failures'], {})
++        self.assertFalse(report['alert'])
++        self.assertEqual({k: report['v6_card'][k] for k in ('expected', 'computed', 'available', 'consumed', 'partial')},
++                         dict(expected=4, computed=4, available=4, consumed=4, partial=4))
++        self.assertIn('not proof of candidate correctness', report['v6_card']['limits'])
++
++    def test_v6_marker_or_switch_alone_does_not_exempt_v5(self):
++        for changes, config in (({'v6_card': None}, CONFIG), ({'decider': 'brain'}, CONFIG),
++                                ({}, {**CONFIG, 'v6': {'mode': 'off'}}),
++                                ({}, {**CONFIG, 'v6': {'mode': 'on', 'deciders': {'card': 'brain'}}})):
++            with self.subTest(changes=changes, config=config):
++                decisions = [{**fixture(f)[0], **changes} for f in (2, 3, 4)]
++                report = summary(decisions, config=config)
++                self.assertEqual(report['b3']['failures'], {'missing_simulation_record': 3})
++                self.assertTrue(report['alert'])
++                self.assertEqual(report['v6_card']['expected'], 0)
++
++    def test_missing_unknown_incomplete_and_error_receipts_stay_failures(self):
++        def mutate(result, change):
++            table = result['table']
++            if change == 'missing': return None
++            if change == 'schema': table['schema'] = 'wrong'
++            if change == 'floor': result['floor'] = 99
++            if change == 'run': result['run_id'] = 'OTHER'
++            if change == 'future': result['ts'] = '2099-01-01T00:00:00Z'
++            if change == 'unknown': table['targets'][0]['unknown'] = 'not observed'
++            if change == 'error': table['error'] = 'worker failed'
++            if change == 'candidate': table['immediate'].pop()
++            if change == 'duplicate': table['immediate'].append(deepcopy(table['immediate'][0]))
++            if change == 'samples': table['immediate'][0]['samples'] = 0
++            if change == 'metric': table['immediate'][0]['metrics']['damage_per_turn'] = None
++            if change == 'nan': table['immediate'][0]['metrics']['damage_per_turn']['mean'] = float('nan')
++            if change == 'paired': table['immediate'][0]['paired_delta']['death_rate']['n'] = 0
++            if change == 'reasons': table['immediate'][0]['unknown_reasons'] = ['insufficient_samples']
++            return result
++        for change in ('missing', 'schema', 'floor', 'run', 'future', 'unknown', 'error', 'candidate',
++                       'duplicate', 'samples', 'metric', 'nan', 'paired', 'reasons'):
++            with self.subTest(change=change):
++                fixtures = [fixture(f) for f in (2, 3, 4)]
++                results = [r for _, result, _ in fixtures if (r := mutate(result, change)) is not None]
++                report = summary([d for d, _, _ in fixtures], results, [b for _, _, b in fixtures])
++                self.assertEqual(report['v6_card']['available'], 0)
++                self.assertTrue(report['v6_card']['failures'])
++                self.assertTrue(report['alert'])
++
++    def test_calculated_is_not_consumed_and_receipts_cannot_cross_decisions(self):
++        for change in ('missing', 'other_id', 'other_run', 'unknown', 'fallback', 'answer', 'failed_action'):
++            with self.subTest(change=change):
++                fixtures = [fixture(f) for f in (2, 3, 4)]
++                for d, _, b in fixtures:
++                    if change == 'other_id': b['question_id'] = 'other'
++                    if change == 'other_run': b['run_id'] = 'other'
++                    if change == 'unknown': b['unknown']['count'] = 1
++                    if change == 'fallback': b['fallback'] = 'Jev unavailable'
++                    if change == 'answer': b['jev_answer']['choice'] = 'skip'
++                    if change == 'failed_action': d['result'] = 'failed: rejected'
++                report = summary([d for d, _, _ in fixtures], [r for _, r, _ in fixtures],
++                                 [] if change == 'missing' else [b for _, _, b in fixtures])
++                self.assertEqual(report['v6_card']['available'], 3)
++                self.assertEqual(report['v6_card']['consumed'], 0)
++                self.assertEqual(report['v6_card']['failures'], {'missing_or_failed_consumption': 3})
++                self.assertTrue(report['alert'])
++
++    def test_audit_reads_formal_streams_and_retains_immutable_incidents(self):
++        with tempfile.TemporaryDirectory() as tmp:
++            root = Path(tmp)
++            (root / 'logs').mkdir()
++            fixtures = [fixture(f) for f in (2, 3, 4)]
++            streams = {'run-config': [CONFIG], 'decisions': [d for d, _, _ in fixtures],
++                       'v6-card-results': [r for _, r, _ in fixtures], 'v6-build': [b for _, _, b in fixtures]}
++            for name, rows in streams.items():
++                (root / f'logs/{name}.jsonl').write_text(''.join(json.dumps(r) + '\n' for r in rows))
++            directory = root / 'ops'
++            report = h.audit(root, directory, CONFIG['run_id'], notify=False)
++            self.assertFalse(report['alert'])
++            self.assertEqual(report['v6_card']['available'], 3)
++            self.assertTrue(report['coverage']['v6_card_results']['complete'])
++            self.assertIsNotNone(report['v6_card']['evidence'][0]['computation_source'])
++            self.assertIsNotNone(report['v6_card']['evidence'][0]['consumption_source'])
++            (root / 'logs/v6-card-results.jsonl').unlink()
++            failed = h.audit(root, directory, CONFIG['run_id'], notify=False)
++            self.assertTrue(failed['alert'])
++            h.persist(failed, directory)
++            alert = directory / 'module-health' / f'{CONFIG["run_id"]}-alert.json'
++            saved = alert.read_bytes()
++            h.persist(report, directory, notify=False)
++            self.assertEqual(alert.read_bytes(), saved)
++
++
++if __name__ == '__main__':
++    unittest.main()
+diff --git a/ops/module_health.py b/ops/module_health.py
+index 27ccb7a05..04631d24d 100644
+--- a/ops/module_health.py
++++ b/ops/module_health.py
+@@ -20,6 +20,7 @@ import sys
+ sys.path.insert(0, str(Path(__file__).resolve().parent))
+ from adaptive_health import adaptive_health
+ from global_build_health import global_build_health
++from v6_card_health import routed as v6_card_routed, v6_card_health
+ 
+ LABELS = {'reward/card', 'shop/buy', 'shop/plan', 'rest/choose', 'rest/plan',
+           'selection/upgrade', 'selection/remove', 'selection/transform', 'selection/add',
+@@ -351,7 +352,7 @@ def computation_health(records):
+             'scope': 'B2/B3 computation service failures; degradation permits continuation, not fault resolution.'}
+ 
+ 
+-def summarize(config, decisions, brains, coverage, plans=()):
++def summarize(config, decisions, brains, coverage, plans=(), card_results=(), v6_builds=()):
+     if str(config.get('character', '')).upper() != 'SILENT' or obj(config.get('construction')).get('architecture') != 'V5':
+         return None
+     rid = config['run_id']
+@@ -376,6 +377,8 @@ def summarize(config, decisions, brains, coverage, plans=()):
+         if (row.get('label') not in LABELS or not enabled
+                 or obj(obj(row.get('questions')).get('pick')).get('type') != 'choice'):
+             continue
++        if v6_card_routed(config, row):
++            continue
+         if sim.get('skipped'):
+             skipped += 1
+             continue
+@@ -433,6 +436,7 @@ def summarize(config, decisions, brains, coverage, plans=()):
+     s_combat = combat_s_ranking_health(config, unique_records)
+     build_ranking = build_ranking_health(config, unique_records, all_brains)
+     global_build = global_build_health(config, unique_records, LABELS, FAIL_STREAK)
++    v6_card = v6_card_health(config, unique_records, card_results, v6_builds, FAIL_STREAK)
+     return {'schema': 'module-health-v1', 'at': datetime.now(timezone.utc).isoformat(), 'run_id': rid,
+             'character': 'SILENT', 'architecture': 'V5', 'construction_mode': obj(config.get('construction')).get('mode'),
+             'simulation_enabled': enabled, 'coverage': coverage, 'complete': complete,
+@@ -447,8 +451,8 @@ def summarize(config, decisions, brains, coverage, plans=()):
+             'brain': {'observed_questions': len(brain_rows), 'questions_with_dpr': delivered,
+                       'accepted_with_dpr': sum(r.get('accepted') is True and dpr_count(r.get('options')) > 0 for r in brain_rows),
+                       'decision_use': 'unknown; delivery is not evidence of reasoning or a fixed DPR weight'},
+-            'global_build': global_build,
+-            'alert': (enabled and longest >= FAIL_STREAK) or pipeline['alert'] or readiness['alert'] or s_combat['alert'] or build_ranking['alert'] or computation['alert'] or adaptive['alert'] or global_build['alert'], 'failures': evidence, 'diagnostics': phases,
++            'global_build': global_build, 'v6_card': v6_card,
++            'alert': (enabled and longest >= FAIL_STREAK) or pipeline['alert'] or readiness['alert'] or s_combat['alert'] or build_ranking['alert'] or computation['alert'] or adaptive['alert'] or global_build['alert'] or v6_card['alert'], 'failures': evidence, 'diagnostics': phases,
+             'unsupported': unsupported,
+             'scope': 'Service availability only; sample threshold, simulator validity and game policy unchanged.'}
+ 
+@@ -520,8 +524,11 @@ def audit(root, directory, run_id=None, decisions=None, character=None, notify=T
+         complete = True
+     brains, brain_source = read_tail(root / 'logs/brain.jsonl')
+     plans, plan_source = read_tail(root / 'logs/run-plans.jsonl', 4 * 1024 * 1024)
++    card_results, card_source = read_tail(root / 'logs/v6-card-results.jsonl')
++    v6_builds, build_source = read_tail(root / 'logs/v6-build.jsonl')
+     report = summarize(config, decisions, brains, {'decisions_complete': complete, 'decisions': source,
+-                         'brain': brain_source, 'plans': plan_source, 'config': config_source}, plans)
++                         'brain': brain_source, 'plans': plan_source, 'config': config_source,
++                         'v6_card_results': card_source, 'v6_build': build_source}, plans, card_results, v6_builds)
+     persist(report, directory, notify)
+     return report
+ 
+diff --git a/ops/v6_card_health.py b/ops/v6_card_health.py
+new file mode 100644
+index 000000000..a0b6710c3
+--- /dev/null
++++ b/ops/v6_card_health.py
+@@ -0,0 +1,98 @@
++"""Read-only V6 reward service receipts; never infer simulator accuracy or policy use."""
++from collections import Counter
++import math
++
++
++def obj(value):
++    return value if isinstance(value, dict) else {}
++
++
++def finite(value, minimum=None):
++    return (isinstance(value, (int, float)) and not isinstance(value, bool)
++            and math.isfinite(value) and (minimum is None or value >= minimum))
++
++
++def routed(config, row):
++    v6 = obj(config.get('v6'))
++    return (v6.get('mode') == 'on' and obj(v6.get('deciders')).get('card') == 'jev'
++            and row.get('label') == 'reward/card' and isinstance(row.get('v6_card'), dict)
++            and row.get('decider') in ('jev', 'code-fallback'))
++
++
++def sampled(row):
++    # Mirror cardResultKnown's current-Boss availability, not the legacy B3 minimum.
++    metrics = obj(row.get('metrics'))
++    required = [metrics.get(k) for k in ('hp_loss', 'turns', 'damage_per_turn', 'death_rate')]
++    required.append(obj(row.get('paired_delta')).get('death_rate'))
++    return (finite(row.get('samples'), 2) and not row.get('unknown_reasons') and not row.get('error')
++            and all(finite(obj(m).get('mean')) and finite(obj(m).get('n'), 2)
++                    and finite(obj(m).get('se'), 0) for m in required))
++
++
++def v6_card_health(config, records, results, builds, failure_streak=3):
++    counts = Counter(expected=0, computed=0, available=0, consumed=0, partial=0)
++    failures, evidence, used = Counter(), [], set()
++    streak = longest = 0
++    for row in records:
++        if not routed(config, row):
++            continue
++        counts['expected'] += 1
++        options = {k for k, v in obj(obj(obj(row.get('questions')).get('pick')).get('criteria')).items() if v is not None}
++        # Old computation rows lack a decision ID: disclose the temporal association.
++        matches = [r for r in results if r.get('run_id') == config['run_id']
++                   and type(r.get('floor')) is int and r['floor'] == row.get('floor')
++                   and isinstance(r.get('ts'), str) and r['ts'] <= row.get('ts', '')]
++        receipt = max(matches, key=lambda r: r['ts']) if matches else {}
++        table = obj(receipt.get('table'))
++        identity = (receipt.get('ts'), receipt.get('floor'))
++        reasons = []
++        if table.get('schema') != 'v6-card-combat-results-v1' or identity in used:
++            reasons.append('missing_computation_receipt')
++        else:
++            used.add(identity)
++            counts['computed'] += 1
++            targets = [t for t in table.get('targets', []) if obj(t).get('kind') == 'current']
++            immediate = [r for r in table.get('immediate', []) if isinstance(r, dict)]
++            current = targets[0] if len(targets) == 1 else {}
++            current_rows = [r for r in immediate if r.get('target_id') == current.get('id')]
++            known = (bool(options) and bool(current.get('id')) and not current.get('unknown')
++                     and {r.get('option_id') for r in current_rows} == options
++                     and len(current_rows) == len(options) and all(sampled(r) for r in current_rows))
++            if table.get('error'):
++                reasons.append('computation_error')
++            elif not known:
++                reasons.append('unavailable_current_outcomes')
++            else:
++                counts['available'] += 1
++                counts['partial'] += any(finite(r.get('requested_samples')) and r['samples'] < r['requested_samples'] for r in current_rows)
++        deliveries = [r for r in builds if r.get('schema') == 'v6-build-log-v1'
++                      and r.get('run_id') == config['run_id'] and r.get('question_id') == row.get('decision_id')
++                      and r.get('kind') == 'card_pick' and r.get('mode') == 'on'
++                      and isinstance(r.get('ts'), str) and receipt.get('ts', '') <= r['ts'] <= row.get('ts', '')]
++        delivery = deliveries[-1] if deliveries else {}
++        answer = obj(obj(row.get('answers')).get('pick'))
++        unknown = obj(delivery.get('unknown'))
++        consumed = (bool(row.get('decision_id')) and row.get('decider') == 'jev'
++                    and row.get('fallback') is False and delivery.get('fallback') is None
++                    and obj(delivery.get('jev_answer')).get('choice') == answer.get('choice')
++                    and answer.get('choice') in options and unknown.get('count') == 0
++                    and unknown.get('total') == len(options) and bool(options)
++                    and str(row.get('result', '')).startswith('completed:'))
++        counts['consumed'] += consumed
++        if not consumed:
++            reasons.append('missing_or_failed_consumption')
++        if reasons:
++            failures.update(reasons)
++            streak += 1
++            longest = max(longest, streak)
++        else:
++            streak = 0
++        evidence.append({'decision': row.get('decision_id'), 'floor': row.get('floor'), 'reasons': reasons,
++                         'source': row.get('_source'), 'computation_source': receipt.get('_source'),
++                         'consumption_source': delivery.get('_source')})
++    return {**counts, 'failures': dict(failures), 'longest_failure_streak': longest,
++            'evidence': evidence, 'alert': longest >= failure_streak,
++            'limits': 'Results are associated by latest preceding run/floor timestamp and offered IDs; '
++                      'the historical computation stream has no decision ID. Availability and completed Jev '
++                      'consumption are separate receipts, not proof of candidate correctness, reasoning, '
++                      '300-sample completion, calibration or benefit. Partial sample coverage remains explicit.'}

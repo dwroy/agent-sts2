@@ -1,0 +1,180 @@
+{
+  "at": "2026-10-21T00:53:06.427853+08:00",
+  "task": "20261021-001302-fix-batch",
+  "original_source_uncommitted": true,
+  "source_count": 4,
+  "explicit_missing_dependencies": 2,
+  "actual_live_base": "4528a751f17e341a97e7ff70295ec9fba0c947e9",
+  "preparation_tree": "f05d4954faba23a91deca271e913372a9b528227",
+  "patch_path": "monitor-six-leaf-minimal-transport.patch",
+  "patch_sha256": "e00d18410d2020a5139dfa29412883f00a82180e21ead4c8979007997ad59b8d",
+  "gitleaks_rc": 0,
+  "leaves": [
+    {
+      "path": "ops/module_health.py",
+      "sha256": "7c0c330ae76d80a0fd37b70786ffc2298814dd780338752a9f8a44f98091755a",
+      "bytes": 29516,
+      "working_and_staged_equal": true,
+      "before_sha256": "8832bc5128509407a96f8169d14e1ca3ff6febf3cb56a5971e03933e3d18ce07",
+      "origin": "original uncommitted learner four-leaf candidate"
+    },
+    {
+      "path": "ops/v6_card_health.py",
+      "sha256": "83b8842244e86c0e01d613058ce80171e454c4b43731d06faac20d9a46fefbad",
+      "bytes": 5676,
+      "working_and_staged_equal": true,
+      "before_sha256": null,
+      "origin": "original uncommitted learner four-leaf candidate"
+    },
+    {
+      "path": "agent/tests/v6-module-health.test.ts",
+      "sha256": "97a86c348728d2000f274155b9f259a58dcd2b49aead1212a0354d197a4e5cbe",
+      "bytes": 339,
+      "working_and_staged_equal": true,
+      "before_sha256": null,
+      "origin": "original uncommitted learner four-leaf candidate"
+    },
+    {
+      "path": "agent/tests/v6_module_health_test.py",
+      "sha256": "fa8157f78516dd133ecb14f33ec26762b60281e6ce92cdec292b45165529caca",
+      "bytes": 8674,
+      "working_and_staged_equal": true,
+      "before_sha256": null,
+      "origin": "original uncommitted learner four-leaf candidate"
+    },
+    {
+      "path": "agent/tests/fixture-command.ts",
+      "sha256": "17d73f446f67bd436704e80fe8ad914c6fafd02e4d2b6867ef1bea6cf7e87d3c",
+      "bytes": 1875,
+      "before_sha256": null,
+      "origin_commit": "cb2dd0375f8cb5637a2813dc2845f702d6007f27",
+      "origin": "canonical missing fixture helper, explicit necessary dependency"
+    },
+    {
+      "path": "agent/tests/fixture-command.py",
+      "sha256": "a68145ebbf646a0d9c0dd0b7fd777f39f5a417b07aad8a5a311d97c57c2c939d",
+      "bytes": 474,
+      "before_sha256": null,
+      "origin_commit": "cb2dd0375f8cb5637a2813dc2845f702d6007f27",
+      "origin": "canonical missing fixture helper, explicit necessary dependency"
+    }
+  ],
+  "checks": {
+    "tsc": {
+      "exit": 0,
+      "log_sha256": null
+    },
+    "sandbox": {
+      "exit": 1,
+      "log_sha256": "f6968c83673f214af7a06cf614a77ce86241c5e264a5dd252fc2a2020d36f6ad"
+    },
+    "baseline-failures-recheck": {
+      "exit": 1,
+      "log_sha256": "545df8570f32bbb0771666f4fc0df7ca7ee6f7e3c92424633e2183e5ad13249f"
+    },
+    "baseline-production": {
+      "exit": 0,
+      "log_sha256": null
+    },
+    "without-fix-python": {
+      "exit": 1,
+      "log_sha256": "23b255b5c0b7378411b2376ffeac7e22aee2f00ab821b507e56f842689fe12f0"
+    },
+    "without-fix-vitest": {
+      "exit": 1,
+      "log_sha256": "a4e323a14075a2a7926feb24addd09de1ddc2bcfb90154094944f9bcc86463bd"
+    },
+    "with-fix-python": {
+      "exit": 0,
+      "log_sha256": "65d3a21d9a25d3449538a550bbf07742cec0a72ecf37d6271c24c8db70978275"
+    },
+    "with-fix-vitest": {
+      "exit": 0,
+      "log_sha256": "61a6b75bc00756e614cabb5759b1b5254979cf5813d40bf96fb0821c1d6a9c8f"
+    },
+    "restored-targeted": {
+      "exit": 0,
+      "log_sha256": "77eaf0592bdfb7cde81f042b0b38a67a2d84ea6b83e205af4e2c526b4d8156fe"
+    },
+    "gitleaks": {
+      "exit": 0,
+      "log_sha256": "33c07752f517acbf591d3bf4805d75677c06a74b1623ac488eeaa2a8e8779407"
+    },
+    "merge-preflight": {
+      "exit": 1,
+      "log_sha256": "c8a55df112fd69e40678e71fd2ab18877e8eccb1c1c2bd888a0a3d20a14b3596"
+    },
+    "live-lock": {
+      "exit": 1,
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "vitest-cli-error": {
+      "exit": 1,
+      "log_sha256": "a0b24cf3621416cc54b0ed3d15484a0b94fc44f4ee83f58b46956bdae495d660"
+    }
+  },
+  "original_full": {
+    "files": 582,
+    "passed": 5170,
+    "failed": 9,
+    "rc": 1
+  },
+  "baseline_recheck": {
+    "failed": 7,
+    "rc": 1
+  },
+  "original_report_Git_objects_exist": [
+    "052e586d753df2f10e478b95e72e2993eb808229",
+    "082cc70bfab2f1f98eb67fc1d441dfd23b6962ee",
+    "0b240cbd109a5e004f010d9659a871204c455639",
+    "16ebc4aecb12a1d4b2f34ee767bb2816a3a0b466",
+    "1ffc0746d7de299fbb7856d397af9da0ab899558",
+    "21a9c52484f04d510bd397959c958ec9767f1d2d",
+    "222445a9bb6bf56cb4f3ceea2cc8b20fba54128f",
+    "22efae55484bc2bdcc54e847a8dc40bb4888c4e2",
+    "2fb9ef1f26df9adfb04d68a409a8060bab7038c3",
+    "3b48088dec5fc6eafe576a1296bbdadde43432ee",
+    "4c16dab0457a61e22ef06b27e367d146cb99bab3",
+    "4c7b8d9bf48f54163c04d8e4f4f79ae6eb402e83",
+    "5011b4cbda9a9056a1fd146e375e3cd67b60c0a9",
+    "577f0bc424b7287910735cfdc86c253cc7ee8057",
+    "5b56a452bb9be14d620b368ec46974c1b57901ca",
+    "5c7105ff0294466da8319f2934beda05c6040794",
+    "5c92f2aaf0b758a1a5e7d591745694004664f83a",
+    "660b194c950f017e356a4b3da952e127c7e5c768",
+    "66283dd9982bdd7f480da7a4d9bfefea0572a9ac",
+    "698d3bd20fc95e2791e6fab8d5ad4c2c9e01a5c4",
+    "6c7019e659b9655d8751002e918ea7fd7dec5041",
+    "6ee8e2a2c1edc31492962137b96af8c6e1d12093",
+    "8045d9fbf0a12523b1dbe39bbed8af06c7497b09",
+    "81d6226fe2c0220be145b5ff1487acbf512153f1",
+    "87c1381a4461c81f9f948a1796600d019c544349",
+    "a46239a29c3109ff9f69224ad77128d9929d3e9a",
+    "a473263eb35ce5bea8e06f1ee94f4da1ba880bc3",
+    "a6913706952661afe1de38f290cd9434cbb91621",
+    "b49112dbc106e315bd7156361d290fc4c73d29e2",
+    "b675eb67f3687fb137434ef9610f1503edbbe8bc",
+    "b9d6ed779c9e369d1f02a0e0935acbe4d1e44d14",
+    "c1d84804956bedbd29a7f0e81294114e18415b9d",
+    "c40e43fd25c200a01f4da94a4dac8db1b34664a8",
+    "c57105ca66bd75c6d6952772dcf712399eda828b",
+    "ca6897f2e433c9c3bb45d0dad46ba685d864c87d",
+    "cb2dd0375f8cb5637a2813dc2845f702d6007f27",
+    "cd2f11496e6f8957c59ef72f70b2c6596cce6e63",
+    "d959e176af7338ea2bca6f4ff9a39673b80e5fdf",
+    "d9881ba593b0b8d701ebbe1c95626c0ebdd554c7",
+    "db20ec3cc6cd0e47ac014d0c523dd4ed1c781d26",
+    "dd478f0b3e5a0f234f082972d21b203dbf8229d7",
+    "de94aa263bfb25363c13d2968c976d8c9138f5c1",
+    "e5e2995d659d15af79ec8bba67a4a25c1cb7295f",
+    "e784dd9f043bf87c29109573f48975f9903280d3",
+    "e87e6cc08bfb2c90e1961d6783cf0c2a7462aac3",
+    "ec29ea34b919344b707e57ba472ea210f9c39d62",
+    "edbbbd6ccffa40decdb6487411d80e3f688f0907"
+  ],
+  "field_fixes_empty_does_not_mean_no_code": true,
+  "next": "after original P0 joint terminal, freeze latest actual main/live and integrate this six-leaf monitor package only with a new complete gate; no full overlap or broad merge",
+  "source_committed": false,
+  "main_live_published": false,
+  "original_failures_retained": true
+}

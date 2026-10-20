@@ -5364,3 +5364,5 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
 - 2026-10-21 00:42:33 CST [v6-w4w6 P0 奖励同值纯 bug 源码交付，非上线] 70f3ec976b5f8fa91dc7647dcc3858997c401e7a（base64cc0f8d/treeb9c11802，仅2运行时+3固定测试+1冻结夹具）修新增候选身份占位绕过牌面回退、并将可打出未建模牌明确unknown/禁止空白数值与伪配对；两局真实COMBAT→REWARD循环原代码均三牌一组红灯、修后同种子n8均三组，tsc0、18核心+99外围定向过，实际R406 factory/support只读覆盖再18过、gitleaks源码/材料0。原失败与输入SHA全保留；F2高死亡率存在当前牌组/HP打完整Boss及已标遗物/策略限制，未匹配V5入口，未补知识/调数。交ops唯一真实live联合full与边界发布，R406 CARD=brain/对局不动、P0两局/P2仍pending；材料paper/materials/2026-10-21-v6-card-option-divergence/。
 
 - 2026-10-21 00:50:02 CST 原ops：P3实际R406 tree6650完整626文件5926过2跳、2388输入同，11源仅main16aa/预发布loader85combat0contrast/off0，未live。W4正式70f3六源实收核SHA/blob/四帧，P0优先+P3十一源合17叶原checker1548507等待原任务锁，未冒tsc/full已启；CARDbrain/REFLEXoff，P4后排，不夹整main/805。234301双普通20waiting/守卫原拒保留不重dataset。原件paper/materials/20261021-0040-ops/receipt.json。
+
+- 2026-10-21 00:56:05 CST 原ops：001302监控四staged叶未提交/full1九败、撤源码复验七败保持，含canonical fixture-command两依赖的六叶窄包已冻/scan0，排原P0终局后最新base完整门，不夹在途输入。普通三候选共享dataset一次五OK/CLEAN后源码守卫拒提交，原dataset=null/attention、20waiting/五局复盘/0538proposed及科学父保留，不重生成/合入。原件paper/materials/20261021-0050-ops/receipt.json。

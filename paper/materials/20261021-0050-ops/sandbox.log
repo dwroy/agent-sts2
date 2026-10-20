@@ -1,0 +1,200 @@
+
+ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261021-001302/agent
+
+ ❯ tests/v6-direction-provider.test.ts (4 tests | 1 failed) 79ms
+   × carries incomplete-opening provider diagnostics into the brain without treating W0 as a loss or filtering samples 15ms
+ ❯ tests/v6-room-prompt-budget.test.ts (3 tests | 1 failed) 16453ms
+   × keeps every shop action and its continuation after trimming, with full unknown/audit rows 15427ms
+ ❯ tests/v6-projection-entries.test.ts (2 tests | 1 failed) 43ms
+   × hands actual combination rows to W4 without cloning a direction maximum into each combo 32ms
+ ❯ tests/v6-target-values.test.ts (4 tests | 2 failed) 53ms
+   × counts low probabilities as bounded known values without inventing W or PW 15ms
+   × retains deterministic P bounds after the combat deadline instead of erasing the table 2ms
+ ❯ tests/temp-lifecycle.test.ts (5 tests | 3 failed) 369ms
+     × defaults to the common repository disk before a child starts and cleans on failure 161ms
+     × keeps caller-owned child scratch on a successful smoke command 110ms
+     × reports a missing offline executable as a failure 87ms
+ ❯ tests/ordinary-close-isolation.test.ts (1 test | 1 failed) 15432ms
+   × isolates failed candidates and revalidates preserved preflight failures before one dataset commit 15428ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 9 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/ordinary-close-isolation.test.ts > isolates failed candidates and revalidates preserved preflight failures before one dataset commit
+AssertionError: fatal: bad object 0000000000000000000000000000000000000000
+fatal: bad object 0000000000000000000000000000000000000000
+....: expected null to be +0 // Object.is equality
+
+- Expected:
+0
+
++ Received:
+null
+
+ ❯ tests/ordinary-close-isolation.test.ts:14:56
+     12|     encoding: "utf8", timeout: 15_000,
+     13|   });
+     14|   expect(result.status, result.stdout + result.stderr).toBe(0);
+       |                                                        ^
+     15|   expect(result.stderr).toContain("Ran 6 tests");
+     16|   expect(result.stderr).toContain("OK");
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/9]⎯
+
+ FAIL  tests/temp-lifecycle.test.ts > owned temporary files > defaults to the common repository disk before a child starts and cleans on failure
+AssertionError: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ tests/temp-lifecycle.test.ts:46:63
+     44|     expect(result.status).toBe(7);
+     45|     const directory = result.stdout.trim();
+     46|     expect(directory.startsWith(defaultTempParent() + "/s-")).toBe(tru…
+       |                                                               ^
+     47|     expect(existsSync(directory)).toBe(false);
+     48|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/9]⎯
+
+ FAIL  tests/temp-lifecycle.test.ts > owned temporary files > keeps caller-owned child scratch on a successful smoke command
+Error: spawnSync /home/dw/.local/node/bin/node EPERM
+ ❯ tests/temp-lifecycle.test.ts:52:5
+     50|   it("keeps caller-owned child scratch on a successful smoke command",…
+     51|     const directory = mkdtempSync(join(tmpdir(), "temp-smoke-"));
+     52|     execFileSync(process.execPath, ["tools/with-temp.mjs", process.exe…
+       |     ^
+     53|       "require('fs').writeFileSync(process.env.TMPDIR+'/evidence','fix…
+     54|     { env: { ...process.env, TMPDIR: directory }, timeout: 5000 });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/9]⎯
+
+ FAIL  tests/temp-lifecycle.test.ts > owned temporary files > reports a missing offline executable as a failure
+AssertionError: expected '' to contain 'ENOENT'
+
+- Expected
++ Received
+
+- ENOENT
+
+ ❯ tests/temp-lifecycle.test.ts:62:27
+     60|       { encoding: "utf8", timeout: 5000 });
+     61|     expect(result.status).toBe(1);
+     62|     expect(result.stderr).toContain("ENOENT");
+       |                           ^
+     63|   });
+     64| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/9]⎯
+
+ FAIL  tests/v6-direction-provider.test.ts > carries incomplete-opening provider diagnostics into the brain without treating W0 as a loss or filtering samples
+AssertionError: expected { Object (schema, option_id, ...) } to match object { win: null, …(3) }
+(40 matching properties omitted from actual)
+
+- Expected
++ Received
+
+@@ -1,8 +1,12 @@
+  {
+-   "expected_win": null,
+-   "win": null,
++   "expected_win": 0.5,
++   "win": {
++     "n": 100,
++     "se": 0,
++     "value": 0.5,
++   },
+    "win_complete": {
+      "n": 100,
+      "se": 0,
+      "value": 1,
+    },
+
+ ❯ tests/v6-direction-provider.test.ts:139:33
+    137|   });
+    138|   // The retained legacy mixture needs W0 when P<1; P*Wk=.5 would sile…
+    139|   expect(evaluation.entries[0]).toMatchObject({ win: null, win_complet…
+       |                                 ^
+    140|   expect(JSON.stringify(task)).not.toMatch(/"(?:expected_win|win_incom…
+    141|   expect(evaluation.projectionReasons![0]!.reasons).toContain("unknown…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/9]⎯
+
+ FAIL  tests/v6-projection-entries.test.ts > hands actual combination rows to W4 without cloning a direction maximum into each combo
+AssertionError: expected undefined to be 20 // Object.is equality
+
+- Expected:
+20
+
++ Received:
+undefined
+
+ ❯ tests/v6-projection-entries.test.ts:23:30
+     21|   expect(row.entry.availability).toEqual({ take: .75, skip: .5 });
+     22|   expect(row.completed_win).toEqual({ value: 1, se: 0, n: r.config.sam…
+     23|   expect(row.general_win?.n).toBe(r.config.samples_pick);
+       |                              ^
+     24|   expect(row.general_win?.value).toBeCloseTo(.25, 14);
+     25|   expect(r.weights).toEqual({ D: 1 }); expect(table.targets.map(t => t…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/9]⎯
+
+ FAIL  tests/v6-room-prompt-budget.test.ts > keeps every shop action and its continuation after trimming, with full unknown/audit rows
+Error: Test timed out in 15000ms.
+If this is a long-running test, pass a timeout value as the last argument or configure it globally with "testTimeout".
+ ❯ tests/v6-room-prompt-budget.test.ts:44:35
+     42|   return { pick: { type: "choice", choice: key, confidence: .9, probab…
+     43| }
+     44| it.each(["shop", "rest"] as const)("keeps every %s action and its cont…
+       |                                   ^
+     45|   on(); const { dir, core } = fixture(), e = room(kind);
+     46|   const input = (kind === "shop" ? v6ShopOptions : v6RestOptions)(e)!;
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[7/9]⎯
+
+ FAIL  tests/v6-target-values.test.ts > counts low probabilities as bounded known values without inventing W or PW
+AssertionError: expected 'insufficient_known_options' to be null
+
+- Expected:
+null
+
++ Received:
+"insufficient_known_options"
+
+ ❯ tests/v6-target-values.test.ts:18:64
+     16|     expect(currentBossKnown(table, row.entry.option_id)).toBe(true);
+     17|   }
+     18|   expect(constructionCoverage(["take", "skip"], table).reason).toBeNul…
+       |                                                                ^
+     19|   expect(validateProjectionEntries(table.combinations.map(r => r.entry…
+     20|   expect(targetValueSummaries(table, "take")[0]).toMatchObject({ P: .0…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[8/9]⎯
+
+ FAIL  tests/v6-target-values.test.ts > retains deterministic P bounds after the combat deadline instead of erasing the table
+AssertionError: expected 'insufficient_known_options' to be null
+
+- Expected:
+null
+
++ Received:
+"insufficient_known_options"
+
+ ❯ tests/v6-target-values.test.ts:58:64
+     56|   const table = await engine.evaluate(r);
+     57|   expect(table.combinations).toHaveLength(2);
+     58|   expect(constructionCoverage(["skip", "take"], table).reason).toBeNul…
+       |                                                                ^
+     59| });
+     60|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[9/9]⎯
+
+
+ Test Files  6 failed | 576 passed (582)
+      Tests  9 failed | 5170 passed (5179)
+   Start at  00:24:06
+   Duration  1292.74s (transform 15.14s, setup 35.20s, import 108.24s, tests 1059.89s, environment 69ms)
+

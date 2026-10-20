@@ -1,0 +1,162 @@
+
+ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261021-001302/agent
+
+ ❯ tests/temp-lifecycle.test.ts (5 tests | 3 failed) 199ms
+     × defaults to the common repository disk before a child starts and cleans on failure 77ms
+     × keeps caller-owned child scratch on a successful smoke command 67ms
+     × reports a missing offline executable as a failure 48ms
+ ❯ tests/v6-direction-provider.test.ts (4 tests | 1 failed) 71ms
+   × carries incomplete-opening provider diagnostics into the brain without treating W0 as a loss or filtering samples 14ms
+ ❯ tests/v6-target-values.test.ts (4 tests | 2 failed) 44ms
+   × counts low probabilities as bounded known values without inventing W or PW 11ms
+   × retains deterministic P bounds after the combat deadline instead of erasing the table 1ms
+ ❯ tests/v6-projection-entries.test.ts (2 tests | 1 failed) 35ms
+   × hands actual combination rows to W4 without cloning a direction maximum into each combo 24ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 7 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/temp-lifecycle.test.ts > owned temporary files > defaults to the common repository disk before a child starts and cleans on failure
+AssertionError: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ tests/temp-lifecycle.test.ts:46:63
+     44|     expect(result.status).toBe(7);
+     45|     const directory = result.stdout.trim();
+     46|     expect(directory.startsWith(defaultTempParent() + "/s-")).toBe(tru…
+       |                                                               ^
+     47|     expect(existsSync(directory)).toBe(false);
+     48|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/7]⎯
+
+ FAIL  tests/temp-lifecycle.test.ts > owned temporary files > keeps caller-owned child scratch on a successful smoke command
+Error: spawnSync /home/dw/.local/node/bin/node EPERM
+ ❯ tests/temp-lifecycle.test.ts:52:5
+     50|   it("keeps caller-owned child scratch on a successful smoke command",…
+     51|     const directory = mkdtempSync(join(tmpdir(), "temp-smoke-"));
+     52|     execFileSync(process.execPath, ["tools/with-temp.mjs", process.exe…
+       |     ^
+     53|       "require('fs').writeFileSync(process.env.TMPDIR+'/evidence','fix…
+     54|     { env: { ...process.env, TMPDIR: directory }, timeout: 5000 });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/7]⎯
+
+ FAIL  tests/temp-lifecycle.test.ts > owned temporary files > reports a missing offline executable as a failure
+AssertionError: expected '' to contain 'ENOENT'
+
+- Expected
++ Received
+
+- ENOENT
+
+ ❯ tests/temp-lifecycle.test.ts:62:27
+     60|       { encoding: "utf8", timeout: 5000 });
+     61|     expect(result.status).toBe(1);
+     62|     expect(result.stderr).toContain("ENOENT");
+       |                           ^
+     63|   });
+     64| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/7]⎯
+
+ FAIL  tests/v6-direction-provider.test.ts > carries incomplete-opening provider diagnostics into the brain without treating W0 as a loss or filtering samples
+AssertionError: expected { Object (schema, option_id, ...) } to match object { win: null, …(3) }
+(40 matching properties omitted from actual)
+
+- Expected
++ Received
+
+@@ -1,8 +1,12 @@
+  {
+-   "expected_win": null,
+-   "win": null,
++   "expected_win": 0.5,
++   "win": {
++     "n": 100,
++     "se": 0,
++     "value": 0.5,
++   },
+    "win_complete": {
+      "n": 100,
+      "se": 0,
+      "value": 1,
+    },
+
+ ❯ tests/v6-direction-provider.test.ts:139:33
+    137|   });
+    138|   // The retained legacy mixture needs W0 when P<1; P*Wk=.5 would sile…
+    139|   expect(evaluation.entries[0]).toMatchObject({ win: null, win_complet…
+       |                                 ^
+    140|   expect(JSON.stringify(task)).not.toMatch(/"(?:expected_win|win_incom…
+    141|   expect(evaluation.projectionReasons![0]!.reasons).toContain("unknown…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/7]⎯
+
+ FAIL  tests/v6-projection-entries.test.ts > hands actual combination rows to W4 without cloning a direction maximum into each combo
+AssertionError: expected undefined to be 20 // Object.is equality
+
+- Expected:
+20
+
++ Received:
+undefined
+
+ ❯ tests/v6-projection-entries.test.ts:23:30
+     21|   expect(row.entry.availability).toEqual({ take: .75, skip: .5 });
+     22|   expect(row.completed_win).toEqual({ value: 1, se: 0, n: r.config.sam…
+     23|   expect(row.general_win?.n).toBe(r.config.samples_pick);
+       |                              ^
+     24|   expect(row.general_win?.value).toBeCloseTo(.25, 14);
+     25|   expect(r.weights).toEqual({ D: 1 }); expect(table.targets.map(t => t…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/7]⎯
+
+ FAIL  tests/v6-target-values.test.ts > counts low probabilities as bounded known values without inventing W or PW
+AssertionError: expected 'insufficient_known_options' to be null
+
+- Expected:
+null
+
++ Received:
+"insufficient_known_options"
+
+ ❯ tests/v6-target-values.test.ts:18:64
+     16|     expect(currentBossKnown(table, row.entry.option_id)).toBe(true);
+     17|   }
+     18|   expect(constructionCoverage(["take", "skip"], table).reason).toBeNul…
+       |                                                                ^
+     19|   expect(validateProjectionEntries(table.combinations.map(r => r.entry…
+     20|   expect(targetValueSummaries(table, "take")[0]).toMatchObject({ P: .0…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/7]⎯
+
+ FAIL  tests/v6-target-values.test.ts > retains deterministic P bounds after the combat deadline instead of erasing the table
+AssertionError: expected 'insufficient_known_options' to be null
+
+- Expected:
+null
+
++ Received:
+"insufficient_known_options"
+
+ ❯ tests/v6-target-values.test.ts:58:64
+     56|   const table = await engine.evaluate(r);
+     57|   expect(table.combinations).toHaveLength(2);
+     58|   expect(constructionCoverage(["skip", "take"], table).reason).toBeNul…
+       |                                                                ^
+     59| });
+     60|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[7/7]⎯
+
+
+ Test Files  4 failed | 2 passed (6)
+      Tests  7 failed | 12 passed (19)
+   Start at  00:46:16
+   Duration  20.21s (transform 3.07s, setup 592ms, import 3.55s, tests 15.25s, environment 1ms)
+

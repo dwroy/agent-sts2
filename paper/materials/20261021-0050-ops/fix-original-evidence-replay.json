@@ -1,0 +1,348 @@
+{
+  "sources": [
+    {
+      "path": "/home/dw/Projects/agent-sts2/logs/v6-card-results.jsonl",
+      "offset": 4425258,
+      "length": 75111,
+      "sha256": "08a1aebd2b650a08183aee1c1ad8b5ab663592d99c8e8e39e87734849336c7ca"
+    },
+    {
+      "path": "/home/dw/Projects/agent-sts2/logs/v6-card-results.jsonl",
+      "offset": 4500369,
+      "length": 73471,
+      "sha256": "c964376eaf22bfa23822e8978692c94aaee9d32fc08621661eea4a40becf7571"
+    },
+    {
+      "path": "/home/dw/Projects/agent-sts2/logs/v6-card-results.jsonl",
+      "offset": 4573840,
+      "length": 51836,
+      "sha256": "c34803b5ec174c535a338e2595d9dcb3d05d0f787d4e4b0e34a6381290f9a1f9"
+    },
+    {
+      "path": "/home/dw/Projects/agent-sts2/logs/v6-card-results.jsonl",
+      "offset": 4625676,
+      "length": 96328,
+      "sha256": "a403c26e810a151f5e2f3dcec71d431a9c039c7594ac8d37be02aaf6a53d2421"
+    },
+    {
+      "path": "/home/dw/Projects/agent-sts2/logs/decisions.jsonl",
+      "offset": 3011106753,
+      "length": 5466,
+      "sha256": "ddf4a69f8685550ae6f477892565c606abd923399cbbd0fe5dcac0df6bcb3e2f"
+    },
+    {
+      "path": "/home/dw/Projects/agent-sts2/logs/decisions.jsonl",
+      "offset": 3011274163,
+      "length": 5385,
+      "sha256": "aaa734096cc73d2b72f90787d1a8e0bf3d91cb7a64979473f1f96de40410749e"
+    },
+    {
+      "path": "/home/dw/Projects/agent-sts2/logs/decisions.jsonl",
+      "offset": 3011415401,
+      "length": 5398,
+      "sha256": "6878882a6377cd58ae273414d107cc75f361b19bacd254734ee47e7cde18f124"
+    },
+    {
+      "path": "/home/dw/Projects/agent-sts2/logs/decisions.jsonl",
+      "offset": 3011713840,
+      "length": 5494,
+      "sha256": "2808d399a2b37b3dbaec4c054b3c601b035bb5e443e1d201e362c4d4053288d5"
+    }
+  ],
+  "report": {
+    "schema": "module-health-v1",
+    "at": "2026-10-20T16:24:36.918545+00:00",
+    "run_id": "RBMEQGXPE9Z2",
+    "character": "SILENT",
+    "architecture": "V5",
+    "construction_mode": "shadow",
+    "simulation_enabled": false,
+    "coverage": {
+      "decisions_complete": false,
+      "scope": "four exact queue evidence rows only",
+      "v6_build": {
+        "path": "/home/dw/Projects/agent-sts2/logs/v6-build.jsonl",
+        "start": 62604925,
+        "end": 64655258,
+        "complete": false,
+        "malformed": 0,
+        "first_ts": "2026-10-20T10:09:03.455Z"
+      }
+    },
+    "complete": false,
+    "construction": {},
+    "construction_pipeline": {
+      "enabled": true,
+      "evaluation_expected": 0,
+      "evaluation_attached": 0,
+      "evaluation_missing": 0,
+      "brain_evaluation": 0,
+      "accepted_evaluation": 0,
+      "accepted_choice_with_evaluation": 0,
+      "plan_due": 0,
+      "accepted_structured_plan": 0,
+      "missing_structured_plan": 0,
+      "saved_structured_plan": 0,
+      "plan_readback": 0,
+      "checkpoint_review_due": 0,
+      "probability_delivered": 0,
+      "admission": {},
+      "evidence": [],
+      "alert": false,
+      "limits": "Payload delivery, accepted output and saved/read-back plans are distinct observations, not causal win-rate evidence. Missing calibration is pending, not a service failure."
+    },
+    "s_readiness": {
+      "mode": "off",
+      "expected": 0,
+      "produced": 0,
+      "missing": 0,
+      "eligible": 0,
+      "low_trust": 0,
+      "sign_rejected": 0,
+      "brain_delivered": 0,
+      "brain_accepted": 0,
+      "ms_max": null,
+      "longest_missing_streak": 0,
+      "alert": false,
+      "limits": "Shadow is not brain delivery. Low trust and failed sign audit suppress facts without changing mandatory computation or old ranking."
+    },
+    "s_combat_rank": {
+      "mode": "off",
+      "expected": 0,
+      "produced": 0,
+      "used": 0,
+      "fallback": 0,
+      "missing": 0,
+      "shadow_produced": 0,
+      "shadow_invalid": 0,
+      "fallback_reasons": {},
+      "longest_missing_streak": 0,
+      "alert": false,
+      "limits": "S tie ranking is conditional on paired samples, sign audit and existing model trust; not game calibration or causal benefit."
+    },
+    "build_ranking": {
+      "mode": "off",
+      "expected": 0,
+      "produced": 0,
+      "missing": 0,
+      "brain_delivered": 0,
+      "brain_accepted": 0,
+      "choices": 0,
+      "overrides": 0,
+      "reasons_present": 0,
+      "missing_reasons": 0,
+      "target_pending": 0,
+      "longest_missing_streak": 0,
+      "alert": false,
+      "limits": "Shadow choices do not require override reasons. Pending card targets and first shop actions do not certify complete plans or causal benefit."
+    },
+    "computation": {
+      "attempts": 0,
+      "failures": 0,
+      "degraded": 0,
+      "evidence": [],
+      "alert": false,
+      "scope": "B2/B3 computation service failures; degradation permits continuation, not fault resolution."
+    },
+    "adaptive": {
+      "mode": "off",
+      "observed": 0,
+      "produced": 0,
+      "errors": 0,
+      "evaluable": 0,
+      "matched": 0,
+      "unknown": 0,
+      "complete_adaptive": 0,
+      "budgeted_partial": 0,
+      "production_evaluable": 0,
+      "production_matched": 0,
+      "agreement": null,
+      "production_agreement": null,
+      "saved_fraction": {
+        "p50": null,
+        "p90": null
+      },
+      "mismatches": [],
+      "actual_saved_fraction": {
+        "p50": null,
+        "p90": null
+      },
+      "candidate_samples": [],
+      "candidate_rounds": [],
+      "stop_counts": {},
+      "alert": false,
+      "admission_state": "unknown",
+      "admission": "pending offline coverage and at least two completed natural shadow runs; never auto-enable",
+      "limits": "Shadow estimates and actual on-mode sample work are separate. On-mode cannot observe full-run agreement; no elapsed-time saving or game benefit inferred."
+    },
+    "b3": {
+      "attempts": 0,
+      "skipped": 0,
+      "produced_dpr": 0,
+      "coverage": null,
+      "failures": {},
+      "unsupported": 0,
+      "applicable_attempts": 0,
+      "unsupported_only": 0,
+      "candidates": {
+        "observed": 0,
+        "unsupported": 0,
+        "with_dpr": 0,
+        "missing_dpr": 0
+      },
+      "applicable_coverage": null,
+      "longest_failure_streak": 0,
+      "trailing_failure_streak": 0,
+      "paired_samples_min": null,
+      "ms_max": null
+    },
+    "brain": {
+      "observed_questions": 0,
+      "questions_with_dpr": 0,
+      "accepted_with_dpr": 0,
+      "decision_use": "unknown; delivery is not evidence of reasoning or a fixed DPR weight"
+    },
+    "global_build": {
+      "mode": "off",
+      "expected": 0,
+      "covered": 0,
+      "missing": 0,
+      "invalid_shadow": 0,
+      "observations": 0,
+      "memo_hits": 0,
+      "current_dependency_unknown": 0,
+      "service_failures": 0,
+      "partial": 0,
+      "unknown": 0,
+      "budgeted_partial": 0,
+      "unknown_reasons": {},
+      "longest_missing_streak": 0,
+      "wall_ms": {
+        "n": 0,
+        "p50": null,
+        "p90": null,
+        "max": null
+      },
+      "computation_wall_ms": {
+        "n": 0,
+        "p50": null,
+        "p90": null,
+        "max": null
+      },
+      "memo_wall_ms": {
+        "n": 0,
+        "p50": null,
+        "p90": null,
+        "max": null
+      },
+      "future_target_wall_ms": {
+        "n": 0,
+        "p50": null,
+        "p90": null,
+        "max": null
+      },
+      "evidence": [],
+      "alert": false,
+      "admission": "pending two complete natural shadow runs and real later-Boss comparison report; never auto-enable",
+      "limits": "Declared Act3/final unknowns are coverage limitations, not zero predictions or service failures. Times are observed wall clocks with duplicate observation IDs excluded, not CPU time or a causal speedup. No calibration, whole-run win probability or role ACK inferred."
+    },
+    "v6_card": {
+      "expected": 4,
+      "computed": 4,
+      "available": 4,
+      "consumed": 4,
+      "partial": 4,
+      "failures": {},
+      "longest_failure_streak": 0,
+      "evidence": [
+        {
+          "decision": "3c9157b7-de6d-441f-aadb-f591777a6709",
+          "floor": 2,
+          "reasons": [],
+          "source": {
+            "offset": 3011106753,
+            "length": 5466,
+            "sha256": "ddf4a69f8685550ae6f477892565c606abd923399cbbd0fe5dcac0df6bcb3e2f"
+          },
+          "computation_source": {
+            "offset": 4425258,
+            "length": 75111,
+            "sha256": "08a1aebd2b650a08183aee1c1ad8b5ab663592d99c8e8e39e87734849336c7ca"
+          },
+          "consumption_source": {
+            "offset": 64652723,
+            "length": 635,
+            "sha256": "1bfe5e00b09d4454ae59e023a3e5e5d7ab904a57cd7a266a67dd5ed6083b967a"
+          }
+        },
+        {
+          "decision": "8ba4360e-0e42-42bf-808d-6f8ae5114237",
+          "floor": 3,
+          "reasons": [],
+          "source": {
+            "offset": 3011274163,
+            "length": 5385,
+            "sha256": "aaa734096cc73d2b72f90787d1a8e0bf3d91cb7a64979473f1f96de40410749e"
+          },
+          "computation_source": {
+            "offset": 4500369,
+            "length": 73471,
+            "sha256": "c964376eaf22bfa23822e8978692c94aaee9d32fc08621661eea4a40becf7571"
+          },
+          "consumption_source": {
+            "offset": 64653358,
+            "length": 634,
+            "sha256": "50fbc84cb99ad3701532afabaadef1b623b2cd90d7fa8db58bd6bf57f10bdf64"
+          }
+        },
+        {
+          "decision": "bf03740a-85bf-4658-a9d0-1b74a7b9b581",
+          "floor": 4,
+          "reasons": [],
+          "source": {
+            "offset": 3011415401,
+            "length": 5398,
+            "sha256": "6878882a6377cd58ae273414d107cc75f361b19bacd254734ee47e7cde18f124"
+          },
+          "computation_source": {
+            "offset": 4573840,
+            "length": 51836,
+            "sha256": "c34803b5ec174c535a338e2595d9dcb3d05d0f787d4e4b0e34a6381290f9a1f9"
+          },
+          "consumption_source": {
+            "offset": 64653992,
+            "length": 632,
+            "sha256": "c463a963058531c7560d537cfcd9bcc93f175a4342720df69faaf1bd14d96b72"
+          }
+        },
+        {
+          "decision": "ad9711ff-1a5a-4c9f-8b73-cc5cc4848943",
+          "floor": 6,
+          "reasons": [],
+          "source": {
+            "offset": 3011713840,
+            "length": 5494,
+            "sha256": "2808d399a2b37b3dbaec4c054b3c601b035bb5e443e1d201e362c4d4053288d5"
+          },
+          "computation_source": {
+            "offset": 4625676,
+            "length": 96328,
+            "sha256": "a403c26e810a151f5e2f3dcec71d431a9c039c7594ac8d37be02aaf6a53d2421"
+          },
+          "consumption_source": {
+            "offset": 64654624,
+            "length": 634,
+            "sha256": "bfe07c3ea020308cef7bbd4df1380cd0f7ef6d3bb4e91f3d837610b03e6524e2"
+          }
+        }
+      ],
+      "alert": false,
+      "limits": "Results are associated by latest preceding run/floor timestamp and offered IDs; the historical computation stream has no decision ID. Availability and completed Jev consumption are separate receipts, not proof of candidate correctness, reasoning, 300-sample completion, calibration or benefit. Partial sample coverage remains explicit."
+    },
+    "alert": false,
+    "failures": [],
+    "diagnostics": [],
+    "unsupported": [],
+    "scope": "Service availability only; sample threshold, simulator validity and game policy unchanged."
+  }
+}
