@@ -3373,3 +3373,7 @@ request_id=roy-20261017-human-pace-h0 revision=3 input_sha256=1e1c259a15f1824119
 
 已核原141301批三项工程修复及沙箱原件：普通收尾失败隔离、空tick与回收门禁、旧手动通知来源兼容，570文件5069例通过；三轮日志SHA、负控与旧失败均保留。学习者因8处整树live冲突未合入，调度状态failed/退出0/mergednull不改写。ops在原工作树将885源与当前main精确组合，无冲突且只增加10个工程源叶，498份知识逐blob保留，固定树78ef254b；不夹带805进入live。联合输入尚无宿主完整绿，因此不提交联合源码、不运输live或加游戏发布号。唯一full窗口仍属W8，之后原watcher临时生命周期，再接本批精确输入；已沿两原线程协调，CLI0不算实收或释放。42项未修及旧父要求保留；通知兼容须代码实际main/live后由各角色凭真实回执登记，不能代ACK、重写旧通知或提前回收。
 原件：paper/materials/20261020-1511-ops/receipt.json；source-input.json；verification.json。
+
+
+2026-10-20T15:20:14+08:00 已核144301复盘退出0，9J6、UWUF、TR224三节各唯一，旧lessons前缀及草稿字节一致，16个局号与账本映射有效，534项检查0问题。没有新增纯bug，0496零选是旧重犯，沿既有策略提案跟进，不由ops补取牌规则或重复派修。原三异议消息、转达SHA及watcher向Roy可见证据未变，通知后两角色登记仍受旧来源兼容阻塞，实际兼容代码main/live后由各角色凭真回执登记；本轮提醒原watcher而不重转全文或代ACK。已启动唯一nice19/ionice3 paper_dataset --no-raw有限收尾进程，等待原子进程终局后核三局标记、保存指定lessons/账本及生成数据并回队列，此刻不宣称成功。另实收W8 r2三夹具失败终局并明确释放，窗口交原watcher infra、之后ops141301；不启动W8 r3或其他full，不改805暂停、live/actor/STOP及Regent。
+原件 paper/materials/20261020-1514-ops/intake-receipt.json；learning-verification.json；notice-verification.json。

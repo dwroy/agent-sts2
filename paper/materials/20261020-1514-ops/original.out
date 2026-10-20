@@ -1,0 +1,49 @@
+## 复盘回报
+
+- 已追加：9J6T70HSYPG7（A10，第8层，骇鳗：12血18挡不足抵挡36攻击）。
+- 已追加：UWUFHGRAJJ6J（A10，第31层，虱虫之祖：末试5血12挡面对23攻击阵亡）。
+- 已追加：TR224PCKENSM（A10，第21层，双啃咬机：2血15挡面对18攻击阵亡）。
+- 新的纯 bug：无。9J6 的涅奥之怒零选确认为旧 bug silent-0496 重犯，定位 `agent/src/hand/screens/selection.ts:85`、`:114`。
+- 写成「未记录」的项：三局均包括完整敌方毛伤、完整候选执行率、反事实收益、Jev缓存、旧式boss时钟、原生档位回执及未到boss的实打值；UWUF另缺末次毒药的selection_dispatch。详细缺失与未读问题见报告。
+- 学习账本：
+  - 9J6T70HSYPG7：新增无；更新 silent-0020、silent-0496、silent-0050；老错 silent-0496。
+  - UWUFHGRAJJ6J：新增无；更新 silent-0019、silent-0314、silent-0316、silent-0005、silent-0023、silent-0278。
+  - TR224PCKENSM：新增无；更新 silent-0019、silent-0426、silent-0418、silent-0011、silent-0046、silent-0132、silent-0080。
+  - `ledger.py check` 退出码 **0**。
+- 代码提案：三局分别登记 `silent-proposal-6d2829d8fef55c5a`、`silent-proposal-f16ecfb980cec25b`、`silent-proposal-f84bf045ec442052`，均关联证据和账本，交独立 `strategy-proposal` 实现任务；当前均 pending。盛碗虫1血预测差异尚未定位根因，其余替代打法缺完整后继证据，保留原行为。
+
+```json
+{
+  "task": "postmortem",
+  "appended": ["9J6T70HSYPG7", "UWUFHGRAJJ6J", "TR224PCKENSM"],
+  "skipped": [],
+  "bugs": [
+    {
+      "run": "9J6T70HSYPG7",
+      "where": "agent/src/hand/screens/selection.ts:85",
+      "what": "涅奥之怒deck_card_select零选确认，旧silent-0496重犯；Cards误作draw另见card-model.ts:1063",
+      "new": false
+    }
+  ],
+  "ledger": {
+    "added": [],
+    "updated": ["silent-0020", "silent-0496", "silent-0050", "silent-0019", "silent-0314", "silent-0316", "silent-0005", "silent-0023", "silent-0278", "silent-0426", "silent-0418", "silent-0011", "silent-0046", "silent-0132", "silent-0080"],
+    "repeats": ["silent-0496"],
+    "check": 0
+  },
+  "code_proposals": ["silent-proposal-6d2829d8fef55c5a", "silent-proposal-f16ecfb980cec25b", "silent-proposal-f84bf045ec442052"],
+  "implementation_domains": ["combat", "potion", "sl", "terminal", "structure"],
+  "report": "/home/dw/Projects/agent-sts2/learner/runs/20261020-144306-1d7d2b90-1c3f-401a-a814-198c58828c30-postmortem/report.md"
+}
+```
+
+== 学习者 codex / postmortem ==
+状态：success；退出码 0
+模型：gpt-6.1-sol；会话：01a1580c-b57f-78b2-b7f6-21d59b47efc8
+轮数：1；工具调用：command_execution×66
+token：输入 306.7k、输出 54.8k（其中推理 13.8k）、cache 读 9435.8k、cache 写 0（命中 96.9%）
+成本：未提供
+耗时：1830.5 s（墙钟）
+时间：首个事件 38.3 s、模型首个输出 43.8 s、首次工具 48.3 s、末次工具结束 1784.5 s；工具内共 841.8 s，其余（模型生成、推理、网络）950.4 s
+codex 会话记录：AGENTS.md 已加载（/home/dw/Projects/agent-sts2）；模型的工具调用 exec×57；/home/dw/Projects/agent-sts2/ops/codex-ops/accounts/codex1/learner/sessions/2026/10/20/rollout-2026-10-20T14-43-10-01a1580c-b57f-78b2-b7f6-21d59b47efc8.jsonl
+日志：/home/dw/Projects/agent-sts2/learner/runs/20261020-144306-1d7d2b90-1c3f-401a-a814-198c58828c30-postmortem.jsonl

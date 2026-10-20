@@ -1,0 +1,54 @@
+{
+  "task": "postmortem",
+  "appended": [
+    "9J6T70HSYPG7",
+    "UWUFHGRAJJ6J",
+    "TR224PCKENSM"
+  ],
+  "skipped": [],
+  "bugs": [
+    {
+      "run": "9J6T70HSYPG7",
+      "where": "agent/src/hand/screens/selection.ts:85",
+      "what": "涅奥之怒deck_card_select零选确认，旧silent-0496重犯；模型Cards误作draw另见card-model.ts:1063",
+      "new": false
+    }
+  ],
+  "ledger": {
+    "added": [],
+    "updated": [
+      "silent-0020",
+      "silent-0496",
+      "silent-0050",
+      "silent-0019",
+      "silent-0314",
+      "silent-0316",
+      "silent-0005",
+      "silent-0023",
+      "silent-0278",
+      "silent-0426",
+      "silent-0418",
+      "silent-0011",
+      "silent-0046",
+      "silent-0132",
+      "silent-0080"
+    ],
+    "repeats": [
+      "silent-0496"
+    ],
+    "check": 0
+  },
+  "code_proposals": [
+    "silent-proposal-6d2829d8fef55c5a",
+    "silent-proposal-f16ecfb980cec25b",
+    "silent-proposal-f84bf045ec442052"
+  ],
+  "implementation_domains": [
+    "combat",
+    "potion",
+    "sl",
+    "terminal",
+    "structure"
+  ],
+  "report": "/home/dw/Projects/agent-sts2/learner/runs/20261020-144306-1d7d2b90-1c3f-401a-a814-198c58828c30-postmortem/report.md"
+}

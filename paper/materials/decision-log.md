@@ -5170,3 +5170,5 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
 - 2026-10-20T15:05:47+08:00 ops：实收Claude1458暂停805并核结构化hold；144302双策略20项waiting、无源码，未重复dataset/测试；live861eef7仅知识刷新，W8窗口不动。原件 paper/materials/20261020-1503-ops/receipt.json。
 
 - 2026-10-20T15:14:02+08:00 ops：原141301三工程修复源885已核沙箱/旧冲突，原WT接当前main固定78ef254b，10源/498知识保留；宿主full排W8→原watcher infra后，未main/live提交或代ACK。原件 paper/materials/20261020-1511-ops/receipt.json。
+
+- 2026-10-20T15:20:14+08:00 ops：原复盘144301三局/账本核同，无新增纯bug，旧0496沿原提案；唯一dataset --no-raw有限收尾已启动，成功及记录提交待原终局回执。W8 r2 full1明确释放给watcher infra，再ops141301，三通知兼容pending不代ACK。原件 paper/materials/20261020-1514-ops/intake-receipt.json。
