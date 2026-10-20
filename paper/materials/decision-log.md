@@ -5402,3 +5402,5 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
 - 2026-10-21 02:42:25 CST 原ops：021302-s2十提案waiting/无源改/testsnull，原唯一dataset日志五OK/CLEAN后因R407唯一CARD配置源码漂移触发attention；原回执不改/不重dataset或合入。六窄源码/四祖先核同不代宽父，原缺口与失败保存，现R407质量/REFLEXoff/P2两局门不动。原件paper/materials/20261021-0239-ops/receipt.json。
 
 - 2026-10-21 02:44:53 CST 原ops：021302普通策略十提案waiting/无源改/testsnull，原attention属dataset前R407唯一CARD配置漂移守卫；本批无副作用标记/日志，不把S2前次dataset冒共享或补跑。八窄源/四祖先/16旧账本审计链接及status/version核同不代宽父，旧失败与未读覆盖保留，不改现live/对局。原件paper/materials/20261021-0243-ops/receipt.json。
+
+- 2026-10-21 02:45:12 CST [Claude，P0 首局验收（前 4 题）] V6-R407（389d26507/a7d07949e，CARD=jev、COMBAT off、REPLAN off、REFLEX off）02:38 开局 JPWMMV67SZCL；守候局终挂 STOP 后 ops 2 分钟内发布。前 4 次奖励选牌全部由 Jev 决定（unknown_to_brain 0），每题 3 张候选结果各不相同，Jev 约 1.0–1.1 s，领奖到选定约 5–6 s（此前大脑 17–35 s）；拿 2 跳 2（UNTOUCHABLE、ACCELERANT；F4、F8 跳过），无报错。暂判通过，局终再核层数与拿/跳比例；P2 待稳定 2 局。
