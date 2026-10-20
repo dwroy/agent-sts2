@@ -78,7 +78,7 @@ export function v6ProjectionInputs(dir = KNOWLEDGE_DIR, now = () => new Date().t
     const costs = { [act]: routeCosts(env, act) };
     const signature = v6Digest({ run, floor, act, hp: state.run?.current_hp, maxHp: state.run?.max_hp, steps, costs });
     const rawBoss = str(raw.boss_id).toUpperCase().replace(/_BOSS$/, "");
-    const boss = (BOSS_KEYS as readonly string[]).includes(rawBoss) ? rawBoss : bossKeyOf([rawBoss]);
+    const boss = (BOSS_KEYS as readonly string[]).includes(rawBoss) ? rawBoss : bossKeyOf(rawBoss.split("+"));
     const bossNode = map?.act === act ? map.nodes.get(map.bosses[0] ?? "") : undefined;
     const visibleBosses = boss && (BOSS_KEYS as readonly string[]).includes(boss) && bossNode
       ? [{ act, floor: floorOfRow(map!, bossNode.row), boss }] : undefined;

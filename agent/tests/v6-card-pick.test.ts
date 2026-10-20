@@ -1,9 +1,11 @@
-import { knownCurrentRows } from "./v6-projection-fixture.js";
+import { cardCombatRow, type V6CardResults } from "../src/sim/v6-card-results.js";
+import { outcome } from "./v6-projection-fixture.js";
 import { mkdtempSync, mkdirSync, writeFileSync, rmSync, readFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { afterEach, expect, it, vi } from "vitest";
 import { buildV6CardPick, cardFallback, cardAnswer, recordCardPick } from "../src/v6/card-pick.js";
+import { observeV6CardReward } from "../src/v6/card-reward-scope.js";
 import { planReward } from "../src/hand/screens/reward.js";
 import { v6Config } from "../src/v6/config.js";
 import { V6ProjectionRuntime } from "../src/v6/projection-runtime.js";
@@ -17,6 +19,7 @@ import { FixedRunner, request, source, direction, req } from "./v6-projection-fi
 import { board, env, FakeDeepSeek, play, setupOneshotTests, type Raw } from "./oneshot-support.js";
 import type { AnswerSet } from "../src/reflex/jev/answers.js";
 import type { JevClient } from "../src/reflex/jev/client.js";
+import { asArray, asRecord } from "../src/core/util/json.js";
 const own = vi.hoisted(() => ({ dir: "" }));
 vi.mock("../src/knowledge/files.js", async original => ({ ...await original<object>(), get KNOWLEDGE_DIR() { return own.dir; } }));
 setupOneshotTests();
@@ -30,44 +33,77 @@ function fixture(mode = "on", character = "silent") {
   const raw = board("xljq-f5-reward", "reward");
   Object.assign(raw.run as Raw, { character_id: character.toUpperCase(), ascension: 0 });
   raw.available_actions = ["choose_reward_card", "skip_reward_cards"];
-  raw.reward = { pending_card_choice: true, card_options: [{ index: 2, card_id: "TEST_CARD", upgraded: true }, { index: 7, card_id: "TEST_OTHER", upgraded: false }] };
+  raw.reward = { pending_card_choice: true, card_options: [{ index: 2, card_id: "TEST_CARD", upgraded: true }, { index: 7, card_id: "TEST_OTHER", upgraded: false }, { index: 9, card_id: "TEST_THIRD", upgraded: false }] };
   const e = env(raw); e.screenMemory.runPlan = { runId: String(raw.run_id), act: 1, v6: { direction_weights: { TEST_A: 1 }, potion_directions: [], checkpoint: 40 } } as typeof e.screenMemory.runPlan;
+  observeV6CardReward(e.screenMemory, env(combatBefore(raw)).state);
+  observeV6CardReward(e.screenMemory, e.state);
   return { dir, raw, e };
+}
+function combatBefore(raw: Raw): Raw {
+  const combat = structuredClone(raw);
+  Object.assign(combat, { screen: "COMBAT", in_combat: true, available_actions: ["end_turn"], reward: null });
+  const board = combat.combat as Raw;
+  Object.assign(board, { hand: [], enemies: [], action_readiness: {
+    ...(board.action_readiness as Raw), can_use_combat_actions: true, combat_over_or_ending: false,
+  } });
+  (combat.run as Raw).potions = [];
+  return combat;
 }
 function answer(choice: string): AnswerSet { return { pick: { type: "choice", choice, confidence: .8, probabilities: { [choice]: .8 }, raw: {} } }; }
 function table(): V6ProjectionTable { return { schema: "v6-projection-table-v1", enabled: true, phase: "pick", combinations: [], entries: [], act_evaluations: [], pick_direction_comparisons: [], weighted: [], rankings: {}, target_mixtures: [],
   targets: [{ id: "f17:TEST_BOSS", boss: "TEST_BOSS", act: 1, floor: 17, kind: "current", probability: 1, labels: [] }],
   telemetry: { elapsed_ms: 1, cache_hits: 0, cache_misses: 0, simulations: 0, timed_out: 0, degradation: [], unknown_entries: 0, total_entries: 0, unknown_fraction: 0, act_cache_hit: false } }; }
+function cardResults(ids = ["card2", "card7", "card9", "skip"]): V6CardResults {
+  const r = request(), target = table().targets[0]!, prepared = r.prepare(r.targets[0]!, r.baseline.state)!;
+  const samples = [0, 1].map(() => ({ ...outcome(true), hpLoss: 8, dmgByTurn: [20, 20, 20, 20] }));
+  return { schema: "v6-card-combat-results-v1", targets: [target],
+    immediate: ids.map(id => cardCombatRow(id, target, prepared, samples, samples, r.trust(target))), long_term: [], progress: {},
+    telemetry: { elapsed_ms: 1, preparation_ms: 0, simulation_ms: 1, simulations: 6, cache_hits: 0,
+      long_term_cache: "miss", long_term_computed: 0, long_term_total: 0, pending_work: true }, labels: [] };
+}
 function delta(t: V6ProjectionTable, option: string, kind: "current_gate" | "clearance", mean: number | null, se = .01) {
   t.target_mixtures.push({ option_id: option, kind, paired_delta: mean === null ? null : { mean, se, n: 20 }, value: null, known_mass: mean === null ? 0 : 1, known_value: 0, labels: [] });
 }
 it("keeps legal reward indices, English Decisions criteria and unknown per-combo entries", () => {
   const { e, dir } = fixture(), p = buildV6CardPick(e, undefined, dir)!;
-  expect(p.choices).toEqual(["card2", "card7", "skip"]);
-  expect(p.decision.questions.pick).toMatchObject({ type: "choice", criteria: { card2: "Take TEST_CARD+", card7: "Take TEST_OTHER", skip: "Take no card" } });
+  expect(p.choices).toEqual(["card2", "card7", "card9", "skip"]);
+  expect(p.decision.questions.pick).toMatchObject({ type: "choice", criteria: { card2: "Take TEST_CARD+", card7: "Take TEST_OTHER", card9: "Take TEST_THIRD", skip: "Take no card" } });
   expect(p.decision.resolve(answer("card7")).intent).toEqual({ action: "choose_reward_card", option_index: 7 });
   expect(p.decision.resolve(answer("unoffered")).intent).toEqual({ action: "choose_reward_card", option_index: 2 });
-  expect(p.entries).toHaveLength(12); expect(p.entries.every(e => validateProjectionEntry(e).ok && e.win === null)).toBe(true);
-  expect(p.decision.state).toMatchObject({ core_metrics: [expect.objectContaining({ metrics: expect.arrayContaining([
-    expect.objectContaining({ attempt: "first", dpr_boss: expect.objectContaining({ value: 20, n: 3 }) }),
-    expect.objectContaining({ attempt: "including_sl", dpr_boss: expect.objectContaining({ value: 20, n: 3 }) }),
-  ]) }), expect.anything()] });
+  expect(p.entries).toEqual([]);
+  expect(p.decision.state).toMatchObject({ card_result_schema: "v6-card-combat-results-v1",
+    core_metrics: [expect.objectContaining({ id: "TEST_A:min", outcomes: [], missing: null }), expect.anything()],
+    options: { card2: { known_current_boss: false }, skip: { known_current_boss: false } } });
   expect(JSON.stringify((p.decision.state as { options: object }).options)).not.toContain("combo_metrics");
   expect(p.decision.deepseek).toBeUndefined(); expect(p.decision.escalate).toBeUndefined();
   expect(JSON.stringify(p.decision)).not.toMatch(/single.card.win|actual.brain.choice/);
   recordCardPick(e, p, join(dir, "plans.jsonl"), "fixture", {}, 2, "missing");
-  expect(JSON.parse(readFileSync(join(dir, "v6-build.jsonl"), "utf8")).unknown).toEqual({ count: 12, total: 12 });
+  expect(JSON.parse(readFileSync(join(dir, "v6-build.jsonl"), "utf8")).unknown).toEqual({ count: 4, total: 4 });
 });
-it("logs low-probability bounds as known without filling the unmeasured win", () => {
-  const { e, dir } = fixture(), pick = buildV6CardPick(e, undefined, dir)!;
-  const entry = pick.entries[0]!;
-  entry.availability.take = .01;
-  entry.expected_win_bound = { lower: 0, upper: .01, reason: "low_probability_not_simulated" };
-  expect(validateProjectionEntry(entry).ok).toBe(true);
-  recordCardPick(e, pick, join(dir, "plans.jsonl"), "low-p", {}, 1, null);
-  const row = JSON.parse(readFileSync(join(dir, "v6-build.jsonl"), "utf8"));
-  expect(row.unknown).toEqual({ count: pick.entries.length - 1, total: pick.entries.length });
-  expect(row.entries[0]).toMatchObject({ win: null, expected_win_bound: { upper: .01 } });
+it("counts current-deck sampled outcomes even when trust and long-term cores are unknown", () => {
+  const { e, dir } = fixture(); e.v6CardResults = cardResults(["card2", "skip"]);
+  const pick = buildV6CardPick(e, undefined, dir)!;
+  expect(pick.decision.state).toMatchObject({ options: { card2: { known_current_boss: true,
+    immediate: [expect.objectContaining({ result: [[8, 0, 2], [4, 0, 2], [20, 0, 2], [0, 0, 2], null],
+      vs_skip: [[0, 0, 2], [0, 0, 2], [0, 0, 2], [0, 0, 2], null], trust_ref: expect.any(Number) })] },
+    card7: { known_current_boss: false } } });
+  const row = asRecord(asArray(asRecord(asRecord(pick.decision.state.options).card2).immediate)[0]);
+  expect(asArray(pick.decision.state.display_catalog)[Number(row.trust_ref)]).toMatchObject({ value: "unknown" });
+  recordCardPick(e, pick, join(dir, "plans.jsonl"), "current", {}, 1, null);
+  const audit = JSON.parse(readFileSync(join(dir, "v6-build.jsonl"), "utf8"));
+  expect(audit.unknown).toEqual({ count: 2, total: 4 });
+});
+it("does not prefer earlier death when both sampled reward and skip always lose", () => {
+  const { e, dir } = fixture(); e.v6CardResults = cardResults();
+  for (const row of e.v6CardResults.immediate) {
+    row.metrics.death_rate = { mean: 1, se: 0, n: 2 };
+    row.metrics.losing_enemy_hp_fraction = { mean: row.option_id === "skip" ? .8 : .5, se: .01, n: 2 };
+    row.metrics.turns = { mean: row.option_id === "skip" ? 2 : 4, se: 0, n: 2 };
+  }
+  const pick = buildV6CardPick(e, undefined, dir)!;
+  expect(pick.fallback).toBe("card2");
+  expect(pick.decision.resolve({}).intent).toEqual({ action: "choose_reward_card", option_index: 2 });
+  expect(pick.decision.state.opening_note).toContain("earlier death");
 });
 it("consumes W3's genuine per-combination rows including the P=1 null-W0 boundary", async () => {
   const { e, dir } = fixture(), r = request(); r.ascension = 0; r.weights = { TEST_A: 1 };
@@ -83,11 +119,10 @@ it("consumes W3's genuine per-combination rows including the P=1 null-W0 boundar
   expect(p.entries.find(e => e.option_id === "card2" && e.combo_id === "TEST_A:min")).toMatchObject({ expected_win: 1, win_incomplete: null, target_id: "f17:TEST_BOSS" });
   expect(p.entries.filter(e => e.option_id === "card7").every(e => e.expected_win === null)).toBe(true);
   expect(p.entries.every(e => validateProjectionEntry(e).ok)).toBe(true);
-  expect(p.decision.state).toMatchObject({ options: { card2: { projections: [expect.objectContaining({ combo_id: "TEST_A:min",
-    combo_role: "in_combo", role_labels: ["output"], formation_se: null, formation_n: 0, formula: "formation_times_completed",
-    opening: { Wk: "evaluated", W0: "not computed by formula" }, win_incomplete: null }), expect.anything()] },
-    skip: { projections: [expect.objectContaining({ combo_role: "off_combo", role_labels: [] }), expect.anything()] } },
-    model_limits: expect.arrayContaining(["raw_simulation_not_calibrated", "partial_model"]) });
+  expect(p.decision.state).toMatchObject({ card_result_schema: "v6-card-combat-results-v1",
+    options: { card2: { known_current_boss: false }, skip: { known_current_boss: false } } });
+  expect(JSON.stringify(p.decision.state)).not.toMatch(/expected_win|formation_times_completed|win_complete/);
+
 });
 it("consumes W1.2 pooled metrics without filtering source ascensions or merging attempt denominators", () => {
   const { e, dir } = fixture(), core = coreFixture(); core.scope.ascensions.push(10);
@@ -109,19 +144,13 @@ it("consumes W1.2 pooled metrics without filtering source ascensions or merging 
   expect(validateBuildCore(core).ok).toBe(true);
   writeFileSync(join(dir, "characters/silent/build-cores.json"), JSON.stringify({ schema: "build-cores-v1", character: "silent", entries: [core] }));
   const pick = buildV6CardPick(e, undefined, dir)!;
-  const state = pick.decision.state as { core_metrics: { metrics: Record<string, unknown>[] }[] };
+  const state = pick.decision.state as { core_metrics: Record<string, unknown>[] };
   expect(state.core_metrics).toHaveLength(2);
-  for (const combo of state.core_metrics) {
-    expect(combo.metrics.map(m => m.attempt)).toEqual(["first", "including_sl"]);
-    for (const metric of combo.metrics) {
-      expect(metric).toMatchObject({ target_ascension: 10, pooled_runs: 3,
-        dpr_boss: { value: 20, n: 3 }, adjusted_win_rates: [{ target: "TEST_TARGET", value: null, n: 0 }] });
-      for (const key of ["sources", "simulation", "regression", "shrinkage", "history"]) expect(metric).not.toHaveProperty(key);
-      expect(metric).not.toHaveProperty("ascension"); expect(metric).not.toHaveProperty("version");
-    }
-  }
-  expect(JSON.stringify(state.core_metrics)).not.toContain("FIXTURE_RUN");
-  expect(JSON.stringify(pick.entries)).toContain("FIXTURE_RUN");
+  expect(state.core_metrics.map(c => c.id)).toEqual(["TEST_A:min", "TEST_A:common"]);
+  expect(state.core_metrics.every(c => c.metrics === undefined && c.outcomes instanceof Array)).toBe(true);
+  expect(JSON.stringify(state)).not.toMatch(/FIXTURE_RUN|adjusted_win_rates|win_rate|shrinkage/);
+  expect(JSON.parse(readFileSync(join(dir, "characters/silent/build-cores.json"), "utf8")).entries[0]).toEqual(core);
+
 });
 it("fallback excludes the unsafe boss gate, then ranks chain, current boss and skip", () => {
   fixture(); const t = table(), choices = ["card2", "card7", "skip"];
@@ -149,10 +178,11 @@ it.each(["IRONCLAD", "SILENT", "DEFECT", "NECROBINDER", "REGENT"])("%s off rewar
 });
 it.each(["success", "error", "invalid", "timeout"])("loop routes known cards to Jev, then the original brain on failure (%s)", async mode => {
   const { raw, dir } = fixture("on", "ironclad"), fake = new FakeDeepSeek(() => "card2");
-  const known = table(); knownCurrentRows(known, ["card2", "card7", "skip"]);
+  const known = table();
   for (const option_id of ["card2", "card7", "skip"]) known.target_mixtures.push({ option_id, kind: "clearance", value: { value: .5, se: .1, n: 20 }, paired_delta: null, known_mass: 1, known_value: .5, labels: [] });
   const provider = { evaluate: vi.fn(async r => ({ ...known, phase: r.phase })), precompute: vi.fn() };
   const runtime = new V6ProjectionRuntime(provider, async (_e, phase) => ({ ...request(), phase }));
+  vi.spyOn(runtime, "evaluateCard").mockResolvedValue(cardResults());
   if (mode === "timeout") vi.stubEnv("V6_JEV_MS", "10");
   const ask = vi.fn(async (state: unknown, _q: unknown, timeout: number) => {
     if (mode === "success") expect(state).toMatchObject({ targets: [expect.objectContaining({ id: "f17:TEST_BOSS" })] });
@@ -162,10 +192,10 @@ it.each(["success", "error", "invalid", "timeout"])("loop routes known cards to 
     return { model: "fixture", answers: answer(mode === "invalid" ? "foreign" : "card7"), inputTokens: 7, outputTokens: 2, latencyMs: 1, requestId: "fixed" };
   });
   const events: unknown[] = [];
-  const result = await play([raw], fake, { runPlanLog: join(dir, "plans.jsonl"), buildOneshot: "off", sl: { ...loadConfig({}).sl, enabled: false }, run: { ...loadConfig({}).run, character: "silent" } }, { onEvent: event => events.push(event), jev: { model: "fixture", ask } as unknown as JevClient, v6Projection: runtime, maxDecisions: 1 }).catch(error => { throw new Error(`${error}; events=${JSON.stringify(events)}`); });
+  const result = await play([combatBefore(raw), raw], fake, { combatPlanner: "card", runPlanLog: join(dir, "plans.jsonl"), buildOneshot: "off", sl: { ...loadConfig({}).sl, enabled: false }, run: { ...loadConfig({}).run, character: "silent" } }, { onEvent: event => events.push(event), jev: { model: "fixture", ask } as unknown as JevClient, v6Projection: runtime, maxDecisions: 2 }).catch(error => { throw new Error(`${error}; events=${JSON.stringify(events)}`); });
   expect(ask).toHaveBeenCalledTimes(1); expect(fake.calls.filter(c => c.label === "reward/card")).toHaveLength(mode === "success" ? 0 : 1);
-  expect(result.actions).toHaveLength(1);
-  expect(result.actions[0]).toMatchObject({ action: "choose_reward_card", option_index: mode === "success" ? 7 : 2 });
+  expect(result.actions).toHaveLength(2);
+  expect(result.actions[1]).toMatchObject({ action: "choose_reward_card", option_index: mode === "success" ? 7 : 2 });
   const row = result.records.find(r => mode === "success" ? r.v6_card : r.v6_unknown_to_brain)!;
   expect(row.fallback).toBe(false);
   if (mode !== "success") {
@@ -174,16 +204,16 @@ it.each(["success", "error", "invalid", "timeout"])("loop routes known cards to 
     expect(rows).toContainEqual(expect.objectContaining({ kind: "card_pick", fallback: expect.stringMatching(/^jev_/), elapsed_ms: expect.any(Number) }));
   }
   expect(result.stats.jevCalls).toBe(1);
-  if (mode === "success") expect(provider.evaluate).toHaveBeenCalledWith(expect.objectContaining({ phase: "act" }));
+  expect(provider.evaluate).not.toHaveBeenCalled();
   if (mode === "success") expect(row).toMatchObject({ usage: { input_tokens: 7, output_tokens: 2 }, request_ids: ["fixed"] });
 });
 it("shadow calls and records Jev but executes the existing brain's choice", async () => {
   const { raw, dir } = fixture("shadow", "ironclad"), fake = new FakeDeepSeek(() => "skip");
   const ask = vi.fn(async () => ({ model: "fixture", answers: answer("card7"), inputTokens: 7, outputTokens: 2, latencyMs: 1, requestId: "shadow-fixed" }));
   const events: unknown[] = [];
-  const result = await play([raw], fake, { runPlanLog: join(dir, "plans.jsonl"), buildOneshot: "off", sl: { ...loadConfig({}).sl, enabled: false }, run: { ...loadConfig({}).run, character: "ironclad" } }, { onEvent: event => events.push(event), jev: { model: "fixture", ask } as unknown as JevClient, maxDecisions: 1 }).catch(error => { throw new Error(`${error}; events=${JSON.stringify(events)}`); });
+  const result = await play([combatBefore(raw), raw], fake, { combatPlanner: "card", runPlanLog: join(dir, "plans.jsonl"), buildOneshot: "off", sl: { ...loadConfig({}).sl, enabled: false }, run: { ...loadConfig({}).run, character: "ironclad" } }, { onEvent: event => events.push(event), jev: { model: "fixture", ask } as unknown as JevClient, maxDecisions: 2 }).catch(error => { throw new Error(`${error}; events=${JSON.stringify(events)}`); });
   expect(ask).toHaveBeenCalledTimes(1);
-  expect(result.actions).toEqual([{ action: "skip_reward_cards" }]);
+  expect(result.actions).toEqual([{ action: "end_turn" }, { action: "skip_reward_cards" }]);
   expect(fake.calls.some(c => c.label === "reward/card")).toBe(true);
   expect(result.stats.jevCalls).toBe(0);
   expect(result.stats.inputTokens).toBe(0);
@@ -197,16 +227,16 @@ it.each(["all_unknown", "one_known", "low_ratio", "brain_failed"])("routes %s re
     return "card7";
   });
   const t = table(), count = mode === "one_known" ? 1 : mode === "low_ratio" ? 2 : 0;
-  knownCurrentRows(t, ["card2", "card7"].slice(0, count));
   if (mode === "low_ratio") vi.stubEnv("V6_MIN_KNOWN_OPTION_RATIO", ".75");
   for (const option_id of ["card2", "card7"].slice(0, count)) t.target_mixtures.push({ option_id, kind: "clearance",
     value: { value: .5, se: .1, n: 20 }, paired_delta: null, known_mass: 1, known_value: .5, labels: [] });
   const runtime = new V6ProjectionRuntime({ evaluate: vi.fn(async () => t), precompute: vi.fn() }, async (_env, phase) => ({ ...request(), phase }));
+  vi.spyOn(runtime, "evaluateCard").mockResolvedValue(cardResults(["card2", "card7"].slice(0, count)));
   const ask = vi.fn(async () => { throw Error("unknown projections must never be sent to Jev"); });
-  const result = await play([raw], fake, { runPlanLog: join(dir, "plans.jsonl"), buildOneshot: "off", sl: { ...loadConfig({}).sl, enabled: false }, run: { ...loadConfig({}).run, character: "ironclad" } },
-    { maxDecisions: 1, jev: { model: "fixture", ask } as unknown as JevClient, v6Projection: runtime });
+  const result = await play([combatBefore(raw), raw], fake, { combatPlanner: "card", runPlanLog: join(dir, "plans.jsonl"), buildOneshot: "off", sl: { ...loadConfig({}).sl, enabled: false }, run: { ...loadConfig({}).run, character: "ironclad" } },
+    { maxDecisions: 2, jev: { model: "fixture", ask } as unknown as JevClient, v6Projection: runtime });
   expect(ask).not.toHaveBeenCalled(); expect(fake.calls.filter(c => c.label === "reward/card")).toHaveLength(1);
-  expect(result.actions).toEqual([{ action: "choose_reward_card", option_index: mode === "brain_failed" ? 2 : 7 }]);
+  expect(result.actions).toEqual([{ action: "end_turn" }, { action: "choose_reward_card", option_index: mode === "brain_failed" ? 2 : 7 }]);
   const row = result.records.find(r => r.v6_unknown_to_brain)!;
   expect(row.fallback).toBe(mode === "brain_failed");
   expect(row.v6_unknown_to_brain).toMatchObject({ kind: "card_pick", known: count,

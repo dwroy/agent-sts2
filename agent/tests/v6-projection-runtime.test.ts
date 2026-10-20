@@ -1,18 +1,19 @@
 import { afterEach, expect, it, vi } from "vitest";
 import { V6ProjectionEngine } from "../src/sim/v6-projection.js";
+import { observeV6CardReward } from "../src/v6/card-reward-scope.js";
 import { V6ProjectionRuntime } from "../src/v6/projection-runtime.js";
 import { DecisionBudget, currentDecisionBudget, withDecisionBudget } from "../src/core/decision-budget.js";
 import { board, env, setupOneshotTests } from "./oneshot-support.js";
-import { request, FixedRunner } from "./v6-projection-fixture.js";
+import { request } from "./v6-projection-fixture.js";
 setupOneshotTests(); afterEach(() => vi.unstubAllEnvs());
-it("does not load frozen inputs or simulate while off, and does not evaluate foreground in combat", async () => {
+it("does not load frozen inputs or simulate while off or in combat", async () => {
   const load = vi.fn(), engine = { evaluate: vi.fn(), precompute: vi.fn() }, runtime = new V6ProjectionRuntime(engine, load);
   const e = env(board("xljq-f5-reward", "reward"));
   vi.stubEnv("V6_BUILD", "off");
   expect(await runtime.evaluate(e, "act")).toBeNull(); expect(await runtime.precompute(e, 500)).toBeNull();
   expect(await runtime.evaluateRequest(e, request())).toBeNull(); expect(await runtime.context(e, "pick")).toBeNull();
   vi.stubEnv("V6_BUILD", "on"); e.state.in_combat = true;
-  expect(await runtime.evaluate(e, "pick")).toBeNull();
+  expect(await runtime.evaluate(e, "pick")).toBeNull(); expect(await runtime.precompute(e, 500)).toBeNull();
   expect(load).not.toHaveBeenCalled(); expect(engine.evaluate).not.toHaveBeenCalled();
 });
 it("passes official requests and keeps act/pick computation separate from an exhausted parent", async () => {
@@ -61,12 +62,12 @@ it("exposes the shared factory context and records a W7 request under its own co
   const context = { factory: { create: vi.fn() }, situation: { marker: "fixed" } } as any;
   const input = vi.fn(async () => context), record = vi.fn();
   const engine = { evaluate: vi.fn(async candidate => {
-    expect(candidate).toEqual({ ...r, currentBossFirst: true }); expect(currentDecisionBudget()!.remaining()).toBeGreaterThan(4900); return { phase: "pick", enabled: false } as never;
+    expect(candidate).toBe(r); expect(currentDecisionBudget()!.remaining()).toBeGreaterThan(4900); return { phase: "pick" } as never;
   }), precompute: vi.fn() };
   const runtime = new V6ProjectionRuntime(engine, vi.fn(), record, input);
   expect(await runtime.context(e, "pick")).toBe(context);
-  expect(await withDecisionBudget(new DecisionBudget("W7", "routine"), () => runtime.evaluateRequest(e, r))).toEqual({ phase: "pick", enabled: false });
-  expect(record).toHaveBeenCalledWith(e, { ...r, currentBossFirst: true }, { phase: "pick", enabled: false });
+  expect(await withDecisionBudget(new DecisionBudget("W7", "routine"), () => runtime.evaluateRequest(e, r))).toEqual({ phase: "pick" });
+  expect(record).toHaveBeenCalledWith(e, r, { phase: "pick" });
   e.state.in_combat = true;
   expect(await runtime.context(e, "pick")).toBeNull(); expect(await runtime.evaluateRequest(e, r)).toBeNull();
   expect(input).toHaveBeenCalledTimes(1); expect(engine.evaluate).toHaveBeenCalledTimes(1);
@@ -79,7 +80,7 @@ it("charges the foreground wait to an externally owned room allowance without an
   const engine = { precompute: vi.fn(() => new Promise<never>(resolve => { finish = resolve; })),
     evaluate: vi.fn(async candidate => {
       expect(candidate.config.budgets.pick_ms).toBe(3200);
-      expect(currentDecisionBudget()).toBe(budget); now += 200; return { phase: "pick", enabled: false } as never;
+      expect(currentDecisionBudget()).toBe(budget); now += 200; return { phase: "pick" } as never;
     }) };
   const runtime = new V6ProjectionRuntime(engine, async () => request(), record), idle = runtime.precompute(e, 100);
   await vi.waitFor(() => expect(engine.precompute).toHaveBeenCalledTimes(1));
@@ -105,52 +106,44 @@ it.each(["cancel", "expire"])("does not start late room simulation after %s whil
   await vi.waitFor(() => expect(engine.precompute).toHaveBeenCalledTimes(2)); finish(null as never); await later;
 });
 
-it.each(["cancel", "expire"])("retains bounded partial results after expiry but discards explicit %s during evaluation", async mode => {
+it.each(["cancel", "expire"])("does not record a room result after %s during evaluation", async mode => {
   vi.stubEnv("V6_BUILD", "on"); const e = env(board("xljq-f5-reward", "reward")), controller = new AbortController();
   let now = 0;
   const budget = new DecisionBudget("room", "routine", () => now, 5000, 0), record = vi.fn();
   const engine = { precompute: vi.fn(), evaluate: vi.fn(async () => {
     if (mode === "cancel") controller.abort(); else now = 5000;
-    return { phase: "pick", enabled: false } as never;
+    return { phase: "pick" } as never;
   }) };
   const runtime = new V6ProjectionRuntime(engine, vi.fn(), record);
-  const result = await withDecisionBudget(budget, () => runtime.evaluateRequest(e, request(),
-    { budget_ms: 5000, signal: controller.signal }));
-  expect(result).toEqual(mode === "cancel" ? null : { phase: "pick", enabled: false });
-  expect(engine.evaluate).toHaveBeenCalledTimes(1); expect(record).toHaveBeenCalledTimes(mode === "cancel" ? 0 : 1);
+  expect(await withDecisionBudget(budget, () => runtime.evaluateRequest(e, request(),
+    { budget_ms: 5000, signal: controller.signal }))).toBeNull();
+  expect(engine.evaluate).toHaveBeenCalledTimes(1); expect(record).not.toHaveBeenCalled();
 });
-
- it("reuses identical resource/offer fingerprints but invalidates HP, weights and offers", async () => {
-  vi.stubEnv("V6_BUILD", "on"); const e = env(board("xljq-f5-reward", "reward")), r = request();
-  const engine = new V6ProjectionEngine(new FixedRunner()), evaluate = vi.spyOn(engine, "evaluate");
-  const runtime = new V6ProjectionRuntime(engine, async () => r);
-  const first = await runtime.evaluate(e, "pick");
-  r.config = { ...r.config, budgets: { ...r.config.budgets, pick_ms: 1234 } };
-  const hit = await runtime.evaluate(e, "pick");
-  expect(evaluate).toHaveBeenCalledTimes(1); expect(hit!.combinations).toEqual(first!.combinations);
-  hit!.combinations[0]!.entry.expected_win = 0;
-  expect((await runtime.evaluate(e, "pick"))!.combinations[0]!.entry.expected_win).not.toBe(0);
-  r.baseline.state.hp--; await runtime.evaluate(e, "pick");
-  r.weights = { D: .5 }; await runtime.evaluate(e, "pick");
-  r.options = [...r.options, { ...r.options[0]!, id: "another" }]; await runtime.evaluate(e, "pick");
-  expect(evaluate).toHaveBeenCalledTimes(4);
- });
- it("admits baseline-only idle preparation in combat without enabling foreground evaluation", async () => {
-  vi.stubEnv("V6_BUILD", "on"); const e = env(board("xljq-f5-reward", "reward")); e.state.in_combat = true;
-  const load = vi.fn(async () => request()), engine = new V6ProjectionEngine(new FixedRunner());
-  const runtime = new V6ProjectionRuntime(engine, load);
-  expect(await runtime.evaluate(e, "pick")).toBeNull();
-  expect(await runtime.precompute(e, 500)).not.toBeNull();
-  expect(load).toHaveBeenCalledWith(e, "pick", true);
- });
-it("refreshes a cached foreground table after idle work completes optional targets", async () => {
-  vi.stubEnv("V6_BUILD", "on"); const e = env(board("xljq-f5-reward", "reward")), r = request();
-  r.targets.push({ ...r.targets[0]!, id: "future", kind: "future", probability: 1 });
-  const engine = new V6ProjectionEngine(new FixedRunner()), runtime = new V6ProjectionRuntime(engine, async () => r);
-  const cold = await runtime.evaluate(e, "pick");
-  expect(cold!.combinations.find(row => row.entry.target_id === "future")!.entry.win).toBeNull();
-  r.cachedPreparation = r.prepare;
-  await runtime.precompute(e, 5000);
-  const warm = await runtime.evaluate(e, "pick");
-  expect(warm!.combinations.find(row => row.entry.target_id === "future")!.entry.win?.n).toBe(20);
+it("isolates background core work from the model budget, joins it, and never starts it in foreground", async () => {
+  vi.stubEnv("V6_BUILD", "off"); vi.stubEnv("V6_CARD_DECIDER", "jev");
+  const e = env(board("xljq-f5-reward", "reward")), r = request();
+  let finish!: () => void;
+  const cardEngine = { evaluate: vi.fn(async () => ({ telemetry: { elapsed_ms: 0, preparation_ms: 0 } })),
+    precompute: vi.fn(() => new Promise<void>(resolve => { finish = resolve; })) };
+  const context = vi.fn(() => ({ fingerprint: "fixed" })), input = vi.fn(async () => ({
+    factory: { create: () => ({ status: "ready", request: r }) }, situation: {} }));
+  const engine = { evaluate: vi.fn(), precompute: vi.fn() }, record = vi.fn();
+  const runtime = new V6ProjectionRuntime(engine, vi.fn(), undefined, input as never,
+    { engine: cardEngine as never, context, record });
+  await runtime.startCardBackground(e, 100); expect(await runtime.evaluateCard(e)).toBeNull(); expect(input).not.toHaveBeenCalled();
+  vi.stubEnv("V6_BUILD", "on"); e.state.in_combat = true;
+  const parent = new DecisionBudget("model", "routine"), remaining = parent.remaining();
+  await withDecisionBudget(parent, async () => {
+    const background = runtime.startCardBackground(e, 100);
+    await vi.waitFor(() => expect(cardEngine.precompute).toHaveBeenCalledOnce());
+    expect(currentDecisionBudget()).toBe(parent); expect(parent.remaining()).toBeLessThanOrEqual(remaining);
+    expect(input).toHaveBeenCalledWith(e, "pick", true);
+    observeV6CardReward(e.screenMemory, e.state);
+    e.state.in_combat = false;
+    observeV6CardReward(e.screenMemory, e.state);
+    const foreground = runtime.evaluateCard(e); await Promise.resolve(); expect(cardEngine.evaluate).not.toHaveBeenCalled();
+    expect(cardEngine.precompute.mock.calls[0]![3].aborted).toBe(true);
+    finish(); await background; await foreground;
+  });
+  expect(cardEngine.evaluate).toHaveBeenCalledOnce(); expect(cardEngine.precompute).toHaveBeenCalledOnce(); expect(record).toHaveBeenCalledOnce();
 });

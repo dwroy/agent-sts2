@@ -6,12 +6,12 @@ import type { AnswerSet, ChoiceAnswer } from "../reflex/jev/answers.js";
 import { choiceQ } from "../reflex/jev/questions.js";
 import { v6DeltaTier, type V6ProjectionTable } from "../sim/v6-projection.js";
 import { promptProjectionEntries } from "./prompt-projection.js";
-import { targetValueSummaries } from "./target-values.js";
-import { boundedV6Jev, compactCombo, compactProjection, prioritize, promptBudgetLabels } from "./prompt-summary.js";
+import { cardResultKnown, type V6CardResults, type CardCombatRow } from "../sim/v6-card-results.js";
+import { boundedV6Jev, prioritize, promptBudgetLabels } from "./prompt-summary.js";
 import { directionCombos } from "./direction-plan.js";
 import { v6Config } from "./config.js";
-import { v6Directions } from "./direction-runtime.js";
-import { loadV6Knowledge } from "./knowledge.js";
+import { postCombatCardReward } from "./card-reward-scope.js";
+import { v6Directions, v6PublishedKnowledge } from "./direction-runtime.js";
 import { KNOWLEDGE_DIR } from "../knowledge/files.js";
 import { evaluatePredicate } from "./predicate.js";
 import { V6BuildLog } from "./log.js";
@@ -21,13 +21,14 @@ export interface V6CardPick {
   decision: AskDecision;
   entries: ProjectionEntry[];
   table?: V6ProjectionTable;
+  results?: V6CardResults | null;
   choices: string[];
   fallback: string;
 }
 export function v6CardActive(env: DecisionEnv): boolean {
   const c = v6Config();
-  return !env.v6BrainFallback && c.mode !== "off" && c.deciders.card === "jev" && !env.state.in_combat
-    && env.state.screen === "REWARD" && bool(asRecord(env.state.raw.reward).pending_card_choice);
+  return !env.v6BrainFallback && c.mode !== "off" && c.deciders.card === "jev"
+    && postCombatCardReward(env.screenMemory, env.state);
 }
 
 /** Unknown estimates stay unknown; only W3's weighted paired comparisons rank choices. */
@@ -62,8 +63,7 @@ export function buildV6CardPick(env: DecisionEnv, table: V6ProjectionTable | und
   const intents: Record<string, ActionRequest> = {}, criteria: Record<string, string> = {}, facts: Record<string, JsonValue> = {};
   const plan = env.screenMemory.runPlan?.runId === str(env.state.raw.run_id) ? env.screenMemory.runPlan.v6 : undefined;
   const weights = plan?.direction_weights ?? {};
-  const character = str(asRecord(env.state.run?.raw).character_id).toLowerCase();
-  const knowledge = loadV6Knowledge(dir, character), ascension = env.state.run?.ascension ?? 0;
+  const knowledge = v6PublishedKnowledge(env, dir), ascension = env.state.run?.ascension ?? 0;
   const entries = table?.enabled ? promptProjectionEntries(table, v6Config()).filter(e => summaries.some(s => s.id === e.direction_id
     && directionCombos(s, toJsonValue(plan)).some(c => c.id === e.combo_id && c.source === e.combo_source))) : [];
   if (actions.includes("choose_reward_card")) for (const [fallbackIndex, card] of offers.entries()) {
@@ -87,62 +87,62 @@ export function buildV6CardPick(env: DecisionEnv, table: V6ProjectionTable | und
   }
   const choices = Object.keys(intents); if (!choices.length) return null;
   entries.splice(0, entries.length, ...entries.filter(e => choices.includes(e.option_id)));
-  const targetMetadata = table?.targets.length ? table.targets : env.v6DirectionEvaluation?.targets?.length ? env.v6DirectionEvaluation.targets
-    : [{ id: "current_boss_unknown", kind: "current", probability: null }, { id: "chain_unknown", kind: "chain", probability: null }];
-  const targets = targetMetadata.map(t => t.id);
-  for (const option of choices) for (const direction of summaries) for (const combo of directionCombos(direction, toJsonValue(plan))) for (const target of targets) {
-    if (entries.some(e => e.option_id === option && e.direction_id === direction.id && e.combo_id === combo.id && e.target_id === target)) continue;
-    entries.push({ schema: "projection-entry-v1", option_id: option, direction_id: direction.id, target_id: target,
-      combo_id: combo.id, combo_source: combo.source, combo_metrics: combo.metrics, win_complete: null, win_incomplete: null,
-      incomplete_source: "unknown", expected_win: null, direction_value: null, win: null, paired_delta: null,
-      losing_boss_hp_fraction: null, winning_player_hp_fraction: null, turns: null, joint_win: null, joint_paired_delta: null,
-      availability: { take: null, skip: null }, weighted_current_boss_delta: null, weighted_joint_delta: null,
-      deck_count_change: null, core_first_cast_turn: null, win_tier: "unknown", delta_tier: "unknown", direction_role: "unknown", trust: "unknown", reflex_ids: [] });
-  }
-  for (const key of choices) facts[key] = { ...asRecord(facts[key]), best_by_target: targetValueSummaries(table, key), projections: toJsonValue(entries.filter(e => e.option_id === key).map(entry => {
-    const row = table?.combinations.find(r => r.entry.option_id === entry.option_id && r.entry.direction_id === entry.direction_id
-      && r.combination_id === entry.combo_id && r.entry.target_id === entry.target_id);
-    return { ...asRecord(compactProjection(entry, row?.unknown_reasons)), ...(row ? { combo_role: row.role, role_labels: row.role_labels,
-      formation_se: row.formation_se, formation_n: row.formation_n } : {}) };
-  })) };
-  const modelLimits = [...new Set(table?.combinations.flatMap(r => r.model_labels) ?? [])];
-  const score = (d: string, c: string) => Math.max(-1, ...entries.filter(e => e.direction_id === d && e.combo_id === c).map(e => e.expected_win ?? -1));
-  for (const key of choices) {
-    const fact = asRecord(facts[key]);
-    fact.projections = toJsonValue(prioritize(asArray(fact.projections).map(asRecord), weights, r => str(r.direction_id), r => score(str(r.direction_id), str(r.combo_id))));
-  }
-  const coreMetrics = prioritize(summaries.flatMap(direction => directionCombos(direction, toJsonValue(plan)).map(combo => ({ direction: direction.id, combo }))), weights, r => r.direction, r => score(r.direction, r.combo.id))
-    .map(({ direction, combo }) => ({ direction, ...asRecord(compactCombo(combo, targets,
-      entries.find(e => e.direction_id === direction && e.combo_id === combo.id && e.combo_metrics != null)?.combo_metrics ?? combo.metrics)) }));
-  const fallback = cardFallback(choices, table);
+  const results = env.v6CardResults;
+  const targetMetadata = results?.targets ?? [{ id: "current_boss_unknown", kind: "current", probability: null }];
+  const current = targetMetadata.find(t => t.kind === "current");
+  const metricOrder = ["hp_loss", "turns", "damage_per_turn", "death_rate", "losing_enemy_hp_fraction"] as const;
+  const pack = (metrics: CardCombatRow["metrics"]) => metricOrder.map(k => {
+    const m = metrics[k]; return m ? [m.mean, m.se, m.n] : null;
+  });
+  const view = (row: CardCombatRow) => ({ target: row.target_id, result: pack(row.metrics), vs_skip: pack(row.paired_delta),
+    samples: row.samples, requested: row.requested_samples, capped: row.capped, time_up: row.time_up,
+    trust: row.trust, unknown_reasons: row.unknown_reasons });
+  for (const key of choices) facts[key] = toJsonValue({ ...asRecord(facts[key]), known_current_boss: cardResultKnown(results, key),
+    immediate: results?.immediate.filter(row => row.option_id === key).map(view) ?? [{ target: current?.id, metrics: null, unknown_reasons: ["current_deck_results_unavailable"] }],
+    advances: results?.progress[key]?.filter(p => p.advanced > 0) ?? [] });
+  const coreMetrics = prioritize(summaries.flatMap(direction => directionCombos(direction, toJsonValue(plan)).map(combo => ({ direction: direction.id, combo }))), weights, r => r.direction)
+    .map(({ direction, combo }) => ({ direction, id: combo.id, source: combo.source, types: asRecord(combo.details).types ?? [], cards: combo.requirements,
+      missing: results?.progress.skip?.find(p => p.direction === direction && p.combo === combo.id)?.missing_before ?? null,
+      outcomes: results?.long_term.filter(row => row.direction_id === direction && row.combo_id === combo.id).map(view) ?? [] }));
+  const known = choices.filter(key => cardResultKnown(results, key));
+  // This resolver is reached only after the ordinary brain is also unavailable.
+  const outcome = (key: string) => results?.immediate.find(row => row.option_id === key && row.target_id === current?.id);
+  const fallback = [...known].sort((a, b) => {
+    const x = outcome(a)!, y = outcome(b)!;
+    return x.metrics.death_rate!.mean - y.metrics.death_rate!.mean || x.metrics.hp_loss!.mean - y.metrics.hp_loss!.mean
+      || (x.metrics.death_rate!.mean === 1 && y.metrics.death_rate!.mean === 1
+        ? (x.metrics.losing_enemy_hp_fraction?.mean ?? Infinity) - (y.metrics.losing_enemy_hp_fraction?.mean ?? Infinity)
+          || y.metrics.damage_per_turn!.mean - x.metrics.damage_per_turn!.mean || y.metrics.turns!.mean - x.metrics.turns!.mean
+        : y.metrics.damage_per_turn!.mean - x.metrics.damage_per_turn!.mean)
+      || Number(b === "skip") - Number(a === "skip") || choices.indexOf(a) - choices.indexOf(b);
+  })[0] ?? choices.find(key => key !== "skip") ?? choices[0]!;
   const decision: AskDecision = { kind: "ask", label: "reward/card", v6Card: true,
-    state: { direction_weights: toJsonValue(weights), availability: toJsonValue(entries.filter(e => e.option_id === "skip").map(e => ({ direction: e.direction_id, combo: e.combo_id, target: e.target_id, probability: e.availability.skip, trust: e.trust }))),
+    state: { card_result_schema: "v6-card-combat-results-v1", direction_weights: toJsonValue(weights),
+      result_columns: [...metricOrder], estimate_columns: ["mean", "se", "n"],
       targets: toJsonValue(targetMetadata), core_metrics: toJsonValue(coreMetrics),
-      weighted: toJsonValue(table?.weighted ?? []), target_mixtures: toJsonValue(table?.target_mixtures ?? []),
-      limitations: toJsonValue(table?.telemetry.degradation ?? ["projection_provider_unavailable"]),
-      ...(modelLimits.length ? { model_limits: toJsonValue(modelLimits) } : {}),
-      note: "Probabilities are model estimates, not guarantees. Null means unknown. Paired deltas compare taking with skipping; missing mass is not renormalized. Core observations pool versions and ascensions, separated by first/including-SL attempt; sources describe provenance. Adjusted estimates name their target ascension. These metrics are descriptive, not causal benefits.",
+      long_term_cache: toJsonValue(results?.telemetry.long_term_cache ?? "miss"),
+      opening_note: "A uses current HP and the actual current deck plus this reward, never ideal cards or forecast route survival. B adds only missing core cards, from background cache independently of this reward. Never multiply by formation probability. Null means unknown. Raw simulation, not calibration. Each mean/SE has its own n; capped/interrupted windows and loss margins have separate denominators. Paired deltas use identical seeds. Lower HP loss/death and higher damage/turn are preferable. Fewer turns can mean faster victory OR earlier death: interpret with death, not as always better. If both die, lower remaining enemy HP and longer survival can matter. Losing enemy HP is conditional on losing, divided by opening encounter HP; later phases/spawns can make it exceed 1. Do not rank it alone. Elites are an observed pool, not spawn probabilities. Future entry HP is an assumption, not forecast inventory.",
       options: facts, ...(plan?.ideal_overrides ? { temporary_combos: toJsonValue(plan.ideal_overrides) } : {}) },
-    questions: { pick: choiceQ("Choose one card reward or skip. Use best_by_target: compare the current Boss best-combo P, W and P*W first, retaining direction weights and trust. PW_bound is an upper bound, never a point estimate. Later targets are optional; missing later mass must not erase current information. Use only the supplied facts.", criteria) },
+    questions: { pick: choiceQ("Choose one card or skip using A immediate current-deck Boss and elite outcomes, paired with skip. B completed-core outcomes describe long-term directions; advances separately names combinations this card progresses and remaining cards. Compare HP loss, turns, damage/turn, death and losing-enemy HP with n, SE and trust. Do not use P*W or treat unknown as zero. Use only supplied facts.", criteria) },
     resolve(answers): ResolvedAction {
       const answer = cardAnswer(answers, choices), key = answer?.choice ?? fallback;
-      return { intent: intents[key]!, rationale: answer ? `V6 Jev chose ${key}` : `V6 card fallback chose ${key}: current-boss gate, weighted chain delta, current-boss delta, then skip`,
+      return { intent: intents[key]!, rationale: answer ? `V6 Jev chose ${key}` : `V6 card fallback chose ${key}: sampled current-Boss death, HP loss and damage outcomes (brain unavailable)`,
         confidence: answer?.confidence ?? null, fallback: !answer };
     } };
   Object.assign(decision, boundedV6Jev(decision.state, decision.questions));
-  return { decision, entries, table, choices, fallback };
+  return { decision, entries, table, results, choices, fallback };
 }
 
 export function recordCardPick(env: DecisionEnv, pick: V6CardPick, logFile: string, questionId: string, answers: AnswerSet, elapsedMs: number, reason: string | null): void {
   const config = v6Config(); if (config.mode === "off") return;
-  const a = cardAnswer(answers, pick.choices), telemetry = pick.table?.telemetry;
+  const a = cardAnswer(answers, pick.choices), telemetry = pick.results?.telemetry;
   new V6BuildLog(config, join(dirname(logFile), "v6-build.jsonl")).append({ schema: "v6-build-log-v1", ts: new Date().toISOString(),
     run_id: str(env.state.raw.run_id), character: str(asRecord(env.state.run?.raw).character_id).toLowerCase() as Character,
     question_id: questionId, kind: "card_pick", mode: config.mode, entries: pick.entries,
     jev_answer: a ? { choice: a.choice, confidence: a.confidence, probabilities: a.probabilities } : null,
     fallback: reason ?? (a ? null : `invalid_or_missing_answer:${pick.fallback}`), elapsed_ms: elapsedMs,
-    cache: { hits: telemetry?.cache_hits ?? 0, misses: telemetry?.cache_misses ?? 0 },
-    degradation: [...(telemetry?.degradation ?? ["projection_provider_unavailable"]), ...promptBudgetLabels(pick.decision.state)],
-    unknown: { count: pick.entries.filter(e => e.win === null && !e.expected_win_bound).length, total: pick.entries.length },
+    cache: { hits: telemetry?.cache_hits ?? 0, misses: Math.max(0, (pick.results?.immediate.length ?? 0) - (telemetry?.cache_hits ?? 0)) },
+    degradation: [...(pick.results?.labels ?? ["current_deck_results_unavailable"]), ...promptBudgetLabels(pick.decision.state)],
+    unknown: { count: pick.choices.filter(id => !cardResultKnown(pick.results, id)).length, total: pick.choices.length },
     triggers: [], merged_triggers: [], skipped_triggers: [] });
 }

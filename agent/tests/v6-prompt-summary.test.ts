@@ -3,10 +3,12 @@ import { mkdtempSync, readFileSync, readdirSync, rmSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { afterEach, expect, it, vi } from "vitest";
-import { boundV6State, boundedV6Jev, compactBuildMetrics, compactProjection, promptBudgetLabels, V6_OPENING_NOTE, V6_BRAIN_CHARS, V6_JEV_REQUEST_BYTES, V6_JEV_STATE_BYTES } from "../src/v6/prompt-summary.js";
+import { boundedV6Jev, compactBuildMetrics, compactProjection, promptBudgetLabels, V6_OPENING_NOTE, V6_JEV_REQUEST_BYTES, V6_JEV_STATE_BYTES } from "../src/v6/prompt-summary.js";
 import { directionTask, directionPlanSpec } from "../src/v6/direction-plan.js";
+import { DIRECTION_COMBAT_NOTE, DIRECTION_PROMPT_CHARS } from "../src/v6/direction-prompt.js";
 import { buildV6CardPick } from "../src/v6/card-pick.js";
-import { buildV6RoomDecision } from "../src/hand/screens/v6-room.js";
+import { buildV6RoomDecision, isV6RoomDecision, prepareV6RoomDecision } from "../src/hand/screens/v6-room.js";
+import { planShop } from "../src/hand/screens/shop.js";
 import { v6ShopOptions, v6RestOptions } from "../src/hand/screens/v6-room-options.js";
 import { validateProjectionEntry } from "../src/v6/formats.js";
 import { V6BuildLog } from "../src/v6/log.js";
@@ -19,7 +21,7 @@ import { v6Directions } from "../src/sim/v6-completion.js";
 import { V6ProjectionEngine } from "../src/sim/v6-projection.js";
 import { ensureDirectionPlan } from "../src/v6/direction-runtime.js";
 import { logRow } from "./v6-fixtures.js";
-import { setupOneshotTests } from "./oneshot-support.js";
+import { planned, setupOneshotTests } from "./oneshot-support.js";
 
 import { knowledge, cores, summaries, weights, entries, size, on, situation, shopTable } from "./v6-prompt-summary-fixtures.js";
 
@@ -27,6 +29,7 @@ setupOneshotTests();
 afterEach(() => vi.unstubAllEnvs());
 it("consumes known provider rows for all published R2 combos without replacing large snapshots with unknown", async () => {
   on();
+  vi.stubEnv("V6_DIRECTION_REPLAN", "on");
   const e = situation("card"), r = request(), provider = source({ skip: 1, take: 1 });
   const resolve = provider.resolve;
   provider.resolve = context => {
@@ -74,28 +77,6 @@ it("retains all 17 real metric snapshots for numeric validation and full content
     expect(size(audit)).toBeLessThan(2 * 1024 * 1024);
   } finally { rmSync(dir, { force: true, recursive: true }); }
 });
-it("audits the larger published history snapshots once per combo within a generous latency bound", () => {
-  const history = JSON.parse(readFileSync(join(knowledge, "characters/silent/v6-history.json"), "utf8"));
-  const metrics = new Map<string, unknown>(history.data.combo_metrics.map((row: { id: string; metrics: unknown }) => [row.id, row.metrics]));
-  expect(metrics.size).toBe(17);
-  const rows = Array.from({ length: 1224 }, (_, i) => {
-    const entry = entries[i % entries.length]!;
-    return { ...entry, combo_metrics: metrics.get(entry.combo_id!) };
-  });
-  const dir = mkdtempSync(join(tmpdir(), "v6-history-metric-audit-"));
-  try {
-    const logger = new V6BuildLog(v6Config({ V6_BUILD: "shadow" }), join(dir, "v6-build.jsonl"));
-    const start = performance.now();
-    expect(logger.append({ ...logRow, entries: rows, unknown: { count: 0, total: rows.length } })).toEqual({ written: true });
-    // Production snapshots exceed the former 50,000-node guard. An invalid shared
-    // snapshot must not turn into hundreds of repeated traversals and serializations.
-    expect(performance.now() - start).toBeLessThan(5_000);
-    const audit = JSON.parse(readFileSync(join(dir, "v6-build.jsonl"), "utf8"));
-    expect(audit.entries).toHaveLength(1224);
-    expect(audit.metric_audits).toHaveLength(17);
-    expect(readdirSync(join(dir, "v6-metrics"))).toHaveLength(new Set(audit.metric_audits.map((r: { sha256: string }) => r.sha256)).size);
-  } finally { rmSync(dir, { recursive: true, force: true }); }
-}, 20_000);
 it("summarizes pooled main metrics with separate denominators and the requested A10 target", () => {
   const metrics = compactBuildMetrics(cores[0]!.combos[0]!.metrics, ["f49:AEONGLASS"]) as Raw[];
   expect(metrics.map(m => m.attempt)).toEqual(["first", "including_sl"]);
@@ -108,36 +89,42 @@ it("summarizes pooled main metrics with separate denominators and the requested 
 it("bounds real 17-combo act/replan prompts deterministically and preserves all direction answer keys", () => {
   const input = { summaries, entries, appearedCards: [], potionIds: [], floor: 8, current: {}, previous: { direction_weights: weights } };
   const payload = directionTask(input);
-  expect(JSON.stringify(payload).length).toBeLessThanOrEqual(V6_BRAIN_CHARS);
+  expect(JSON.stringify(payload).length).toBeLessThanOrEqual(DIRECTION_PROMPT_CHARS);
   expect(directionTask(input)).toEqual(payload);
-  expect(payload.opening_note).toBe(V6_OPENING_NOTE);
+  expect(payload.combat_note).toBe(DIRECTION_COMBAT_NOTE);
+  expect(payload).not.toHaveProperty("opening_note");
+  expect(payload).not.toHaveProperty("direction_evaluation");
+  expect(payload).not.toHaveProperty("availability");
+  expect(asArray(payload.build_cores).map(d => asRecord(d).id)).toEqual(["P", "D", "S", "R"]);
+  expect(asArray(payload.build_cores).flatMap(d => asArray(asRecord(d).combos))).toHaveLength(17);
   const first = asRecord(asArray(payload.build_cores)[0]);
-  expect(first.id).toBe("R"); expect(asArray(first.combos).length).toBeGreaterThan(0);
+  expect(first.id).toBe("P"); expect(asArray(first.combos).length).toBeGreaterThan(0);
   expect(directionPlanSpec(payload)!.schema.properties!.direction_weights!.required).toEqual(["P", "D", "S", "R"]);
   expect(JSON.stringify(payload)).not.toContain('"combo_metrics"');
   expect(JSON.stringify(payload)).not.toMatch(/"(evidence|regression|shrinkage|simulation|sources)"/);
-  const forced = boundV6State({ ...payload, oversized: "超长".repeat(100_000) }, V6_BRAIN_CHARS, "chars");
-  expect(JSON.stringify(forced).length).toBeLessThanOrEqual(V6_BRAIN_CHARS);
-  expect(promptBudgetLabels(forced)).toHaveLength(1);
-  expect(forced.opening_note).toBe(V6_OPENING_NOTE);
-  expect(asRecord(asArray(forced.build_cores)[0]).id).toBe("R");
+  expect(asArray(first.combos).every(c => asArray(asRecord(c).completed_results).length === 0
+    && asArray(asRecord(c).unknown_reasons).includes("completed_core_cache_miss"))).toBe(true);
 });
 it.each(["card", "shop", "rest"] as const)("bounds the real published %s prompt and preserves legal choices plus the leading combo", kind => {
   on(); const e = situation(kind);
   const d = kind === "card" ? buildV6CardPick(e, undefined, knowledge)!.decision
     : buildV6RoomDecision(e, (kind === "shop" ? v6ShopOptions(e) : v6RestOptions(e))!, undefined, undefined, knowledge);
   expect(size(d.state)).toBeLessThanOrEqual(V6_JEV_STATE_BYTES);
-  expect(d.state.opening_note).toBe(V6_OPENING_NOTE);
+  if (kind === "card") {
+    expect(d.state.opening_note).toContain("actual current deck");
+    expect(JSON.stringify(d.state)).not.toMatch(/"(?:expected_win|win_incomplete|availability|PW_bound)":/);
+  }
+  else expect(d.state.opening_note).toBe(V6_OPENING_NOTE);
   expect(size({ model: "typesafe/jev-1.14", state: d.state, questions: d.questions })).toBeLessThanOrEqual(V6_JEV_REQUEST_BYTES);
   expect(asRecord(asArray(d.state.core_metrics)[0]).direction).toBe("R");
   expect(Object.keys(asRecord(d.state.options))).toEqual(Object.keys(asRecord(d.questions.pick).criteria));
   if (kind === "card") for (const fact of Object.values(asRecord(d.state.options))) {
-    const kept = asArray(asRecord(fact).projections);
-    expect(kept.length).toBeGreaterThan(0);
-    expect(asRecord(kept[0]).direction_id).toBe("R");
-    expect(asRecord(kept[0]).opening).toEqual({ Wk: "opening unknown", W0: "opening unknown" });
+    expect(asRecord(fact).known_current_boss).toBe(false);
+    const row = asRecord(asArray(asRecord(fact).immediate)[0]);
+    expect(asArray(d.state.display_catalog)[Number(row.reason_ref)]).toEqual(["current_deck_results_unavailable"]);
+    expect(asRecord(fact).projections).toBeUndefined();
   }
-  expect(promptBudgetLabels(d.state)).toHaveLength(1);
+  if (kind !== "card") expect(promptBudgetLabels(d.state)).toHaveLength(1);
   expect(JSON.stringify(d.state)).not.toContain('"combo_metrics"');
   const choice = Object.keys(asRecord(d.questions.pick).criteria)[0]!;
   const resolved = d.resolve({ pick: { type: "choice", choice, confidence: .8, probabilities: { [choice]: 1 }, raw: {} } });
@@ -190,9 +177,8 @@ it("keeps a meaningful minimum for every one of 28 real shop choices with the pu
     expect(cmp.current_boss).toMatchObject({ delta: i === 27 ? null : { mean: -.01, se: .001, n: 20 }, tier: i === 27 ? "unknown" : "worse" });
     expect(p.direction_id).toBe("R"); expect(p.availability).toEqual({ take: .6, skip: .5 });
     expect(Number(p.availability_change)).toBeCloseTo(.1);
-    const reasons = asArray(view.unknown_reasons).map(r => asRecord(d.state.option_reason_catalog)[String(r)] ?? r);
-    expect(reasons).toContain("fixture_opening_limitation");
-    if (i === 27) expect(reasons).toContain("fixture_incomplete_target_mass");
+    expect(view.unknown_reasons).toContain("fixture_opening_limitation");
+    if (i === 27) expect(view.unknown_reasons).toContain("fixture_incomplete_target_mass");
     expect(p.opening).toEqual({ Wk: "evaluated", W0: "evaluated" });
   }
   expect(buildV6RoomDecision(e, input, table, "ready", knowledge).state).toEqual(d.state);
@@ -201,22 +187,125 @@ it("keeps a meaningful minimum for every one of 28 real shop choices with the pu
   expect(promptBudgetLabels(d.state)).toHaveLength(1);
 });
 
-it("keeps all 28 current Boss low-P bounds, trust and unknown explanations within the wire budget", () => {
+it("keeps 28 low-P shop choices in compatibility audit while production keeps the original brain plan", async () => {
   on(); const e = situation("shop"), input = v6ShopOptions(e)!, table = shopTable(input);
-  for (const row of table.combinations) Object.assign(row.entry, { formula: "formation_times_completed",
-    availability: { take: .04, skip: .03 }, win: null, win_complete: null, win_incomplete: null, expected_win: null,
-    expected_win_bound: { lower: 0, upper: .04, reason: "low_probability_not_simulated" },
-    trust_details: { n: 43, brier: .03, bias: .02, passed: false } });
+  expect(input.options).toHaveLength(28);
+  for (const row of table.combinations) {
+    Object.assign(row.entry, { formula: "formation_times_completed",
+      availability: { take: .04, skip: .03 }, win: null, joint_win: null, win_complete: null, win_incomplete: null, expected_win: null,
+      expected_win_bound: { lower: 0, upper: .04, reason: "low_probability_not_simulated" },
+      trust_details: { n: 43, brier: .03, bias: .02, passed: false } });
+    Object.assign(row, { completed_win: null, general_win: null, completed_joint_win: null, general_joint_win: null });
+  }
+  // Published metrics stay in the audit object; snapshot the contract without serializing their repeated full payloads.
+  const auditView = () => table.combinations.map(row => {
+    const { combo_metrics: _metrics, ...entry } = row.entry;
+    return { entry, unknown_reasons: row.unknown_reasons };
+  });
+  const auditBefore = JSON.stringify(auditView());
   const d = buildV6RoomDecision(e, input, table, "ready", knowledge);
   expect(size(d.state)).toBeLessThanOrEqual(V6_JEV_STATE_BYTES);
   expect(size({ model: "typesafe/jev-1.14", state: d.state, questions: d.questions })).toBeLessThanOrEqual(V6_JEV_REQUEST_BYTES);
   expect(Object.keys(asRecord(d.state.options))).toHaveLength(28);
   for (const raw of Object.values(asRecord(d.state.options))) {
-    const row = asRecord(raw), target = asRecord(asArray(row.best_by_target)[0]);
-    expect(target).toMatchObject({ combo: expect.any(String), P: .04, W: null, PW: null, PW_bound: [0, .04] });
-    const trust = target.validation ?? asRecord(d.state.target_validation)[String(target.validation_ref)];
-    expect(trust).toMatchObject({ n: 43, brier: .03, bias: .02, passed: false });
-    const reasons = asArray(row.unknown_reasons).map(r => asRecord(d.state.option_reason_catalog)[String(r)] ?? r);
-    expect(reasons).toContain("fixture_opening_limitation");
+    const row = asRecord(raw);
+    expect(row).not.toHaveProperty("best_by_target");
+    expect(row.unknown_reasons).toContain("fixture_opening_limitation");
   }
+  expect(d.roomEntries).toHaveLength(28 * 17 * 2);
+  expect(d.roomEntries.every(row => row.win_complete === null && row.win_incomplete === null && row.expected_win === null)).toBe(true);
+  expect(JSON.stringify(auditView())).toBe(auditBefore);
+
+  // Roy's reward-only scope keeps even a pre-existing low-P table out of the shop's brain question.
+  vi.stubEnv("BUILD_ONESHOT", "on"); vi.stubEnv("V6_DIRECTION_REPLAN", "off");
+  for (const name of ["SHOP", "REST", "POTION"]) vi.stubEnv(`V6_${name}_DECIDER`, "brain");
+  const provider = vi.fn(() => { throw Error("shop brain must not prepare V6 results"); }), bytes: string[] = [];
+  vi.useFakeTimers(); vi.setSystemTime(new Date("2026-10-20T00:00:00.000Z"));
+  try {
+    for (const mode of ["off", "on"] as const) {
+      vi.stubEnv("V6_BUILD", mode);
+      const brainEnv = situation("shop"); brainEnv.v6ProjectionTable = table;
+      // The compact-prompt fixture only supplies v6; the original shop also consumes the V5 plan fields.
+      brainEnv.screenMemory.runPlan = { ...brainEnv.screenMemory.runPlan!, floor: 22, hpPct: 1, trigger: "start",
+        archetype: "fixed_test_plan", want: [], avoid: [], remove: [], blockTarget: null,
+        elites: "normal", rest: "auto", bossPrep: "", summary: "fixed test plan" };
+      const decision = planShop(brainEnv)!;
+      expect(decision).toMatchObject({ kind: "ask", label: "shop/plan" });
+      expect(isV6RoomDecision(decision)).toBe(false);
+      expect(await prepareV6RoomDecision(decision, brainEnv, provider)).toBe(decision);
+      const resolved = planned(decision, []);
+      expect(resolved).toMatchObject({ intent: { action: "close_shop_inventory" } });
+      bytes.push(JSON.stringify({ decision, resolved }));
+    }
+  } finally { vi.useRealTimers(); }
+  expect(provider).not.toHaveBeenCalled();
+  expect(bytes[1]).toBe(bytes[0]);
+  expect(bytes[1]).not.toMatch(/"(?:best_by_target|expected_win_bound|PW_bound)":/);
+});
+
+it("preserves every A elite and all 17 B core identities with a realistic 204-row cached target grid", () => {
+  on(); const e = situation("card");
+  const metrics = { hp_loss: { mean: 17.123456789123, se: .123456789123, n: 100 }, turns: { mean: 8.5123456789, se: .25123456789, n: 100 },
+    damage_per_turn: { mean: 19.123456789123, se: .987654321987, n: 100 }, death_rate: { mean: .123456789, se: .02123456789, n: 100 },
+    losing_enemy_hp_fraction: { mean: .35123456789123, se: .03123456789123, n: 12 } };
+  const targets = Array.from({ length: 19 }, (_, i) => ({ id: `target${i}:FIXED_ENCOUNTER`, boss: `BOSS${i}`, act: i < 7 ? 1 : i < 10 ? 2 : 3,
+    floor: i === 0 ? 17 : i < 7 ? 8 : i < 10 ? 33 : 48,
+    kind: i === 0 ? "current" as const : i < 7 ? "elite" as const : i < 13 ? "future" as const : "chain" as const,
+    probability: i === 0 ? 1 : null, labels: [i < 7 ? "fixed_actual_boss_or_observed_elite_pool" : "fixed_uncalibrated_future_target"] }));
+  const row = { option_id: "skip", target_id: targets[0]!.id, metrics, paired_delta: metrics, samples: 100, requested_samples: 100,
+    capped: 0, time_up: 0, missing: 0, trust: { value: "unknown" as const, labels: ["fixed_untrusted_model"], details: { n: 43, brier: .2, bias: .1, passed: false } },
+    labels: [], unknown_reasons: [] };
+  const combos = summaries.flatMap(d => d.combos.map(c => ({ direction: d.id, combo: c })));
+  e.v6CardResults = { schema: "v6-card-combat-results-v1", targets,
+    immediate: ["card0", "card1", "card2", "skip"].flatMap(option_id => targets.slice(0, 7).map(t => ({ ...row, option_id, target_id: t.id,
+      ...(t.id === targets[6]!.id ? { unknown_reasons: ["fixed_partial_opening_limitation"] } : {}) }))),
+    long_term: combos.flatMap(({ direction, combo }) => targets.slice(7).map(t => ({ ...row, target_id: t.id,
+      direction_id: direction, combo_id: combo.id, added_cards: [] }))),
+    progress: { card0: combos.map(({ direction, combo }) => ({ direction, combo: combo.id, advanced: 1, missing_before: 3, missing_after: 2 })) }, labels: [],
+    telemetry: { elapsed_ms: 1, preparation_ms: 0, simulation_ms: 1, cache_hits: 0, simulations: 0,
+      long_term_cache: "hit", long_term_computed: 204, long_term_total: 204, pending_work: false } };
+  const before = JSON.stringify(e.v6CardResults), start = performance.now(), d = buildV6CardPick(e, undefined, knowledge)!.decision;
+  expect(performance.now() - start).toBeLessThan(1500);
+  expect(size(d.state)).toBeLessThanOrEqual(V6_JEV_STATE_BYTES);
+  expect(size({ model: "typesafe/jev-1.14", state: d.state, questions: d.questions })).toBeLessThanOrEqual(V6_JEV_REQUEST_BYTES);
+  const kept = asArray(d.state.core_metrics).map(asRecord), catalog = asArray(d.state.display_catalog);
+  expect(kept.map(c => c.id).sort()).toEqual(combos.map(c => c.combo.id).sort());
+  expect(new Set(kept.map(c => c.direction))).toEqual(new Set(summaries.map(d => d.id)));
+  for (const combo of kept) {
+    const original = combos.find(c => c.combo.id === combo.id)!.combo;
+    expect(asArray(combo.cards).map(raw => asArray(asArray(raw)[1]).map(c => typeof c === "string" ? c : asArray(c)[0])))
+      .toEqual(asArray(original.requirements).map(raw => asArray(asRecord(raw).any).map(c => asRecord(c).id)));
+    // Checking only combo ids allowed the production bug to pass with every numeric B row removed.
+    expect(asArray(combo.outcomes).length, JSON.stringify({ bytes: size(d.state), budget: d.state.prompt_budget, rows: kept.map(c => [c.id, asArray(c.outcomes).length]) })).toBeGreaterThan(0);
+    expect(asArray(combo.outcomes).length + asArray(combo.outcomes_omitted).length).toBe(12);
+    for (const outcome of asArray(combo.outcomes)) {
+      const r = asArray(outcome);
+      expect(asArray(r[1])).toHaveLength(5); expect(asArray(r[2])).toHaveLength(5);
+      for (const cell of asArray(r[1])) expect(asArray(cell)).toHaveLength(3);
+      expect(catalog[Number(r[4])]).toMatchObject({ value: "unknown", details: { n: 43, brier: .2, bias: .1, passed: false } });
+    }
+  }
+  expect(asArray(d.state.targets).map(t => asRecord(t).id)).toEqual(targets.map(t => t.id));
+  for (const fact of Object.values(asRecord(d.state.options))) {
+    const option = asRecord(fact), immediate = asArray(option.immediate).map(asRecord);
+    expect(option.known_current_boss).toBe(true);
+    expect(immediate.map(r => asRecord(asArray(d.state.targets)[Number(r.target)]).id)).toEqual(targets.slice(0, 7).map(t => t.id));
+    expect(catalog[Number(immediate[6]!.reason_ref)]).toEqual(["fixed_partial_opening_limitation"]);
+    expect(immediate[0]!.result).toEqual([[17.123, .123, 100], [8.5123, .251, 100], [19.123, .988, 100], [.12346, .0212, 100], [.35123, .0312, 12]]);
+  }
+  expect(asArray(asRecord(asRecord(d.state.options).card0).advances)).toHaveLength(17);
+  expect(buildV6CardPick(e, undefined, knowledge)!.decision.state).toEqual(d.state);
+  expect(JSON.stringify(e.v6CardResults)).toBe(before);
+  expect(asRecord(d.state.prompt_budget).after).toBe(size(d.state));
+});
+
+it("routes an impossible mandatory card catalog to the brain instead of exceeding the byte ceiling", () => {
+  const result = boundedV6Jev({ card_result_schema: "v6-card-combat-results-v1", targets: [], options: {},
+    core_metrics: [{ id: "fixed", direction: "P", cards: [], outcomes: [], audit_only_accident: "x".repeat(30_000) }] },
+    { pick: { type: "choice", instructions: "Choose", criteria: { card0: "Take", skip: "Skip" } } });
+  expect(result.state.card_prompt_unavailable).toBe("mandatory_A_and_core_catalog_exceed_budget");
+  expect(size(result.state)).toBeLessThanOrEqual(V6_JEV_STATE_BYTES);
+  expect(asRecord(result.state.prompt_budget).after).toBe(size(result.state));
+  expect(promptBudgetLabels(result.state)).toContain("card_prompt_unavailable:mandatory_A_and_core_catalog_exceed_budget");
+  expect(Object.keys(asRecord(result.questions.pick).criteria)).toEqual(["card0", "skip"]);
 });

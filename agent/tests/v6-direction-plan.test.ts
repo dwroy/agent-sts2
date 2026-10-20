@@ -1,5 +1,4 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
-import { compactBuildMetrics, compactProjection } from "../src/v6/prompt-summary.js";
 import { directionTask, directionPlanSpec, directionSummaries, directionCombos } from "../src/v6/direction-plan.js";
 import { detectReplan, freshReplanState, reserveReplan, type DirectionEvaluation } from "../src/v6/replan-triggers.js";
 import { routeV6CardDecision } from "../src/v6/card-routing.js";
@@ -62,11 +61,12 @@ it("uses the W1 validator for catalog, sum, overrides, potions, checkpoint and r
     expect(spec.validate({ ...weights, ...bad }).length).toBeGreaterThan(0);
   }
   expect(spec.schema.properties?.direction_weights?.required).toEqual(["TEST_A", "TEST_B"]);
-  expect(payload["availability"]).toEqual([{ direction: "TEST_A", target: "TEST_TARGET", option: "test_option", take: null, skip: null }]);
+  expect(payload).not.toHaveProperty("availability");
+  expect(payload.targets).toEqual(["TEST_TARGET"]);
   expect(directionPlanSpec({})).toBeNull();
 });
 
-it("reads multiple core combos, pools metrics across source ascensions, and carries provider evaluations without collapsing them", () => {
+it("reads every published combo but keeps legacy metrics and probability evaluations out of the direction prompt", () => {
   const core = coreFixture();
   expect(directionSummaries("ironclad", 0, [core], [], null)).toEqual([]);
   expect(directionSummaries("silent", 2, [core], [], null)).toEqual([]);
@@ -78,13 +78,14 @@ it("reads multiple core combos, pools metrics across source ascensions, and carr
   const payload = directionTask({ summaries, entries: [entry], appearedCards: [], potionIds: [], floor: 8, current: {}, previous: { ideal_overrides: { TEST_A: ["TEST_CARD"] } } });
   const rows = payload["build_cores"] as { combos: { source: string; metrics: unknown }[] }[];
   expect(payload).not.toHaveProperty("direction_cards");
-  expect(payload["direction_evaluation"]).toEqual([compactProjection(entry)]);
+  expect(payload).not.toHaveProperty("direction_evaluation");
   expect(rows[0]?.combos).toHaveLength(3);
-  expect(rows[0]?.combos[0]?.metrics).toEqual(compactBuildMetrics(entry.combo_metrics));
+  expect(rows[0]?.combos[0]).not.toHaveProperty("metrics");
+  expect(rows[0]?.combos[0]).toMatchObject({ completed_results: [], missing_cards: null });
   expect(rows[0]?.combos[0]).not.toHaveProperty("evaluations");
-  expect(rows[0]?.combos[2]).toMatchObject({ source: "brain", metrics: null });
+  expect(rows[0]?.combos[2]).toMatchObject({ source: "brain", completed_results: [], missing_cards: null });
   const missing = directionTask({ summaries, entries: [{ ...entry, combo_metrics: null }], appearedCards: [], potionIds: [], floor: 8, current: {} });
-  expect((missing["build_cores"] as typeof rows)[0]?.combos[0]?.metrics).toEqual(compactBuildMetrics(core.combos[0]!.metrics));
+  expect((missing["build_cores"] as typeof rows)[0]?.combos[0]).not.toHaveProperty("metrics");
   const withBrain = { ...summaries[0]!, combos: directionCombos(summaries[0]!, { ideal_overrides: { TEST_A: ["TEST_CARD"] } }) };
   expect(directionCombos(withBrain, { ideal_overrides: { TEST_A: [] } })).toHaveLength(2);
   expect(runPlanSpec("run-plan", payload).schema.properties?.direction_weights?.required).toEqual(["TEST_A"]);

@@ -15,6 +15,7 @@ import { isRunPlanReply, RUN_PLAN_TASK_KEY } from "../memory/run-plan.js";
 import { checkRoute, isKeep, routeIds, routeMapFromView, type RouteMap } from "../sim/route-map.js";
 import type { JsonSchema } from "./tools/types.js";
 import { directionPlanSpec } from "../v6/direction-plan.js";
+import { directionRideTask } from "../v6/direction-rides.js";
 import type { AnswerSpec } from "./types.js";
 import { rankingOverrideProblems } from "../sim/build-ranking-choice.js";
 
@@ -264,10 +265,12 @@ export function shopPlanList(json: Record<string, unknown>): { list: unknown[]; 
 export function stableSchema(spec: AnswerSpec): JsonSchema {
   if (spec.kind === "pick") {
     const run = spec.schema.properties?.["run_plan"];
-    const base = run?.properties?.["construction"] ? { ...STABLE_PICK_SCHEMA, properties: { ...STABLE_PICK_SCHEMA.properties, run_plan: run } }
+    const base = run?.properties?.["construction"] || run?.properties?.["v6"] ? { ...STABLE_PICK_SCHEMA, properties: { ...STABLE_PICK_SCHEMA.properties, run_plan: run } }
       : run ? STABLE_PICK_SCHEMA_WITH_RUN_PLAN : STABLE_PICK_SCHEMA;
-    return spec.schema.properties?.["ranking_override_reason"] ? { ...base, properties: { ...base.properties, ranking_override_reason: RANKING_REASON },
-      required: [...(base.required ?? []), "ranking_override_reason"] } : base;
+    const direction = spec.schema.properties?.["v6"];
+    const riding = direction ? { ...base, properties: { ...base.properties, v6: direction } } : base;
+    return spec.schema.properties?.["ranking_override_reason"] ? { ...riding, properties: { ...riding.properties, ranking_override_reason: RANKING_REASON },
+      required: [...(riding.required ?? []), "ranking_override_reason"] } : riding;
   }
   const plan = spec.schema.properties?.["plan"];
   if (plan?.items?.enum) {
@@ -410,7 +413,16 @@ function runPlanSchema(construction = false): JsonSchema {
 /** The run_plan field of a question a due run plan rides on (RUN_PLAN_MERGE). */
 const RUN_PLAN_FIELD: JsonSchema = { ...runPlanSchema(), description: "the run plan state.run_plan_task asks for (RUN_PLAN_TASK's fields)" };
 function runPlanField(state: unknown): JsonSchema {
-  return constructionContext(state) ? { ...runPlanSchema(true), description: RUN_PLAN_FIELD.description } : RUN_PLAN_FIELD;
+  return withDirectionRideField({ label: "run-plan", kind: "plan", schema: constructionContext(state)
+    ? { ...runPlanSchema(true), description: RUN_PLAN_FIELD.description } : RUN_PLAN_FIELD, validate: () => [] }, state).schema;
+}
+
+/** Optional direction updates never invalidate the original V5 answer or cause a re-ask. */
+export function withDirectionRideField(spec: AnswerSpec, state: unknown): AnswerSpec {
+  const task = directionRideTask(state), direction = task && directionPlanSpec(task);
+  if (!direction) return spec;
+  return { ...spec, schema: { ...spec.schema, properties: { ...spec.schema.properties,
+    v6: { ...direction.schema, description: "Optional direction update requested in v6_direction_task; null retains the previous weights." } } } };
 }
 
 /** Whether a question's state carries a due run plan (RUN_PLAN_MERGE: state.run_plan_task). */
@@ -433,7 +445,7 @@ export function runPlanSpec(label = "run-plan", state?: unknown): AnswerSpec {
   return {
     label,
     kind: "plan",
-    schema: runPlanSchema(constructionContext(state) !== null),
+    schema: withDirectionRideField({ label, kind: "plan", schema: runPlanSchema(constructionContext(state) !== null), validate: () => [] }, state).schema,
     validate(answer: unknown): string[] {
       if (!isObject(answer)) return ["the answer is not a JSON object"];
       return isRunPlanReply(answer) ? constructionProblems(answer, state) : ["not a run plan: an object without archetype, want, avoid, remove, block_target, elites, rest, boss_prep or summary (an echo of the {choice, reason} format?)"];

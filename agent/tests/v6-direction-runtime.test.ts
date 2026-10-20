@@ -1,15 +1,16 @@
-import { compactProjection } from "../src/v6/prompt-summary.js";
 import { mkdtempSync, mkdirSync, writeFileSync, rmSync, readFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
-import { afterEach, expect, it, vi } from "vitest";
+import { afterEach, beforeEach, expect, it, vi } from "vitest";
 import { constructionCoverage, recordConstructionHandover } from "../src/v6/construction-safety.js";
 import { ensureDirectionPlan, v6Directions } from "../src/v6/direction-runtime.js";
 import type { Brain } from "../src/brain/brain.js";
 import { direction, weights, projection } from "./v6-fixtures.js";
 import { board, env, setupOneshotTests } from "./oneshot-support.js";
 import { coreFixture, comboProjection } from "./v6-direction-core-fixtures.js";
+import type { DirectionCompletedSnapshot } from "../src/v6/direction-prompt.js";
 setupOneshotTests();
+beforeEach(() => vi.stubEnv("V6_DIRECTION_REPLAN", "on"));
 const dirs: string[] = [];
 afterEach(() => { vi.unstubAllEnvs(); for (const d of dirs.splice(0)) rmSync(d, { recursive: true, force: true }); });
 function fixture() {
@@ -23,12 +24,16 @@ it("asks once per room, publishes validated weights, restores plan and count acr
   vi.stubEnv("V6_BUILD", "on"); const { dir, log, e } = fixture();
   const askJson = vi.fn(async () => ({ json: { ...weights, potion_directions: [] } }));
   const brain = { askJson } as unknown as Pick<Brain, "askJson">;
-  const first = await ensureDirectionPlan(e, brain, log, dir);
+  const onBrainWait = vi.fn();
+  const first = await ensureDirectionPlan(e, brain, log, dir, onBrainWait);
   expect(first?.stored).toBe(true); expect(askJson).toHaveBeenCalledTimes(1);
+  expect(onBrainWait).toHaveBeenCalledOnce();
   expect(e.screenMemory.runPlan?.v6?.direction_weights).toEqual(weights.direction_weights);
-  expect(first?.payload?.direction_evaluation).toHaveLength(8);
+  expect(first?.payload?.build_cores).toHaveLength(2);
+  expect(first?.payload?.targets).toEqual(["TEST_TARGET", "joint"]);
   expect(JSON.stringify(first?.payload)).toContain("unknown");
-  await ensureDirectionPlan(e, brain, log, dir); expect(askJson).toHaveBeenCalledTimes(1);
+  await ensureDirectionPlan(e, brain, log, dir, onBrainWait); expect(askJson).toHaveBeenCalledTimes(1);
+  expect(onBrainWait).toHaveBeenCalledOnce();
   e.screenMemory.v6Planner = undefined; e.screenMemory.runPlan = undefined;
   await ensureDirectionPlan(e, brain, log, dir);
   expect(e.screenMemory.v6Planner?.scheduler.calls).toBe(1); expect(askJson).toHaveBeenCalledTimes(1);
@@ -71,10 +76,65 @@ it("feeds actual potion fallback streaks into T6 without relying on unknown proj
 it.each(["IRONCLAD", "SILENT", "DEFECT", "NECROBINDER", "REGENT"])("%s off preserves planner bytes and creates no logs", async character => {
   const { dir, log, e } = fixture(); Object.assign(e.state.run!.raw, { character_id: character });
   vi.stubEnv("V6_BUILD", "off"); const before = JSON.stringify(e.screenMemory);
+  const peekCompletedCore = vi.fn(); e.v6Projection = { peekCompletedCore } as any;
   const brain = { askJson: vi.fn() } as unknown as Pick<Brain, "askJson">;
   expect(await ensureDirectionPlan(e, brain, log, dir)).toBeNull();
   expect(JSON.stringify(e.screenMemory)).toBe(before); expect(brain.askJson).not.toHaveBeenCalled();
+  expect(peekCompletedCore).not.toHaveBeenCalled();
   expect(() => readFileSync(log)).toThrow();
+});
+
+it("uses only the optional completed-core peek and keeps its full snapshot in audit", async () => {
+  vi.stubEnv("V6_BUILD", "on"); const { dir, log, e } = fixture();
+  const metrics = { hp_loss: { mean: 8, se: 2, n: 5 }, turns: null, damage_per_turn: null, death_rate: null, losing_enemy_hp_fraction: null };
+  const snapshot: DirectionCompletedSnapshot = { targets: [{ id: "FUTURE_FIXTURE" }], unknown_reasons: [],
+    progress: [{ direction: "TEST_A", combo: "TEST_A:min", missing_before: 1, missing_after: 1, advanced: 0 }],
+    long_term: [{ direction_id: "TEST_A", combo_id: "TEST_A:min", target_id: "FUTURE_FIXTURE", metrics, paired_delta: metrics,
+      samples: 5, requested_samples: 10, capped: 1, time_up: 2, missing: 5, trust: "unknown", labels: ["fixture_uncalibrated"], unknown_reasons: ["fixture_small_sample"] }] };
+  const peekCompletedCore = vi.fn(() => snapshot), evaluate = vi.fn(), context = vi.fn();
+  e.v6Projection = { peekCompletedCore, evaluate, context } as any;
+  const brain = { askJson: vi.fn(async () => ({ json: { ...weights, potion_directions: [] } })) } as unknown as Pick<Brain, "askJson">;
+  const result = await ensureDirectionPlan(e, brain, log, dir);
+  expect(peekCompletedCore).toHaveBeenCalledExactlyOnceWith(e);
+  expect(evaluate).not.toHaveBeenCalled(); expect(context).not.toHaveBeenCalled();
+  expect(result?.payload?.targets).toEqual(["FUTURE_FIXTURE"]);
+  expect((result?.payload?.build_cores as any[])[0].combos[0]).toMatchObject({ missing_cards: 1,
+    completed_results: [{ target_id: "FUTURE_FIXTURE", metrics: [[8, 2, 5], null, null, null, null], trust: "unknown" }] });
+  const rows = readFileSync(log, "utf8").trim().split("\n").map(line => JSON.parse(line));
+  expect(rows.find(r => r.v6_completed_core)?.v6_completed_core).toEqual(snapshot);
+});
+
+it("persists failed-checkpoint backoff through restart and permits a new act", async () => {
+  vi.stubEnv("V6_BUILD", "on"); const { dir, log, e } = fixture();
+  const askJson = vi.fn(async () => ({ json: { ...weights, potion_directions: [] } }));
+  const brain = { askJson } as unknown as Pick<Brain, "askJson">;
+  await ensureDirectionPlan(e, brain, log, dir);
+  askJson.mockImplementation(async () => { throw new Error("DecisionBudgetExpired: human-pace budget exhausted: L2_brain"); });
+  for (let floor = 20; floor <= 32; floor++) {
+    e.state.run!.floor = floor; e.screenMemory.v6Planner = undefined; e.screenMemory.runPlan = undefined;
+    if (floor <= 21) await expect(ensureDirectionPlan(e, brain, log, dir)).rejects.toThrow("L2_brain");
+    else expect((await ensureDirectionPlan(e, brain, log, dir))?.result).toMatchObject({ ask: false, skipped: ["T6", "T7"] });
+  }
+  expect(askJson).toHaveBeenCalledTimes(3);
+  expect(e.screenMemory.v6Planner?.scheduler.failures?.causes["T7:checkpoint:20"]).toEqual({ count: 2, reason: "deadline" });
+  Object.assign(e.state.run!.raw, { act_id: "1" });
+  e.state.run!.floor = 34;
+  await expect(ensureDirectionPlan(e, brain, log, dir)).rejects.toThrow("L2_brain");
+  expect(askJson).toHaveBeenCalledTimes(4);
+});
+
+it("does not send or repeatedly rebuild oversized required context on every floor", async () => {
+  vi.stubEnv("V6_BUILD", "on"); const { dir, log, e } = fixture();
+  const brain = { askJson: vi.fn(async () => ({ json: { ...weights, potion_directions: [] } })) } as unknown as Pick<Brain, "askJson">;
+  await ensureDirectionPlan(e, brain, log, dir);
+  Object.assign(e.state.run!.raw, { deck: [{ card_id: "X".repeat(31_000), upgraded: false }] });
+  for (let floor = 20; floor <= 24; floor++) {
+    e.state.run!.floor = floor; e.screenMemory.v6Planner = undefined; e.screenMemory.runPlan = undefined;
+    if (floor <= 21) await expect(ensureDirectionPlan(e, brain, log, dir)).rejects.toThrow("exceeds_30000_chars");
+    else expect((await ensureDirectionPlan(e, brain, log, dir))?.result.ask).toBe(false);
+  }
+  expect(brain.askJson).toHaveBeenCalledTimes(1);
+  expect(readFileSync(log, "utf8").match(/"v6_prompt_failed":true/g)).toHaveLength(2);
 });
 it("ignores legacy direction cards and reads build-core combos with brain overrides", async () => {
   vi.stubEnv("V6_BUILD", "on"); const { dir, e } = fixture();
@@ -88,12 +148,9 @@ it.each(["TEST_TARGET", "joint"])("keeps %s projections, fills missing targets a
   e.v6DirectionEvaluation = { id: "fixed", entries: [entry, { ...entry, combo_id: "UNKNOWN" }, { ...entry, combo_source: "brain" }] };
   const brain = { askJson: vi.fn(async () => ({ json: { ...weights, potion_directions: [] } })) } as unknown as Pick<Brain, "askJson">;
   const result = await ensureDirectionPlan(e, brain, log, dir);
-  const rows = result?.payload?.direction_evaluation as Array<typeof entry>;
-  expect(rows.filter(r => r.expected_win !== null)).toEqual([compactProjection(entry)]);
-  expect(rows.some(r => r.combo_id === "UNKNOWN" || r.combo_source === "brain")).toBe(false);
-  expect(rows).toHaveLength(8);
-  expect(rows.filter(r => r.target_id === "joint")).toHaveLength(4);
-  expect(rows.filter(r => r.target_id === "TEST_TARGET")).toHaveLength(4);
+  expect(result?.payload).not.toHaveProperty("direction_evaluation");
+  expect(result?.payload?.targets).toEqual(["TEST_TARGET", "joint"]);
+  expect(JSON.stringify(result?.payload)).not.toContain("expected_win");
   expect(result?.result.triggers).toContain("T6");
   expect(readFileSync(join(dir, "v6-build.jsonl"), "utf8")).toContain('"expected_win":0.56');
   expect(v6Directions(e, dir)[0]?.combos).toContainEqual(expect.objectContaining({ source: "brain", id: "TEST_A:brain" }));
@@ -107,7 +164,8 @@ it("restores a brain combo before accepting its next projection after restart", 
   e.v6DirectionEvaluation = { id: "after-restart", entries: [entry] };
   const result = await ensureDirectionPlan(e, brain, log, dir);
   expect(result?.result.triggers).toContain("T7");
-  expect(result?.payload?.direction_evaluation).toContainEqual(compactProjection(entry));
+  expect(result?.payload).not.toHaveProperty("direction_evaluation");
+  expect(JSON.stringify(result?.payload?.build_cores)).toContain("TEST_A:brain");
   expect(v6Directions(e, dir)[0]?.combos.filter(c => c.source === "brain")).toHaveLength(1);
   e.state.raw["run_id"] = "OTHER_RUN";
   expect(v6Directions(e, dir).every(s => s.combos.every(c => c.source !== "brain"))).toBe(true);
@@ -120,13 +178,11 @@ it("uses the provider target IDs without adding legacy boss or joint placeholder
     targets: [{ id: "f17:FIXTURE_CURRENT", kind: "current" }, { id: target, kind: "chain" }] };
   const brain = { askJson: vi.fn(async () => ({ json: { ...weights, potion_directions: [] } })) } as unknown as Pick<Brain, "askJson">;
   const result = await ensureDirectionPlan(e, brain, log, dir);
-  const rows = result?.payload?.direction_evaluation as Array<ReturnType<typeof comboProjection>>;
-  expect(new Set(rows.map(r => r.target_id))).toEqual(new Set(["f17:FIXTURE_CURRENT", target]));
-  expect(rows).toHaveLength(8);
-  expect(rows.filter(r => r.expected_win !== null)).toHaveLength(1);
+  expect(result?.payload?.targets).toEqual(["f17:FIXTURE_CURRENT", target]);
+  expect(result?.payload).not.toHaveProperty("direction_evaluation");
 });
 
-it("forwards provider opening reasons through the actual planner and keeps unknown W0", async () => {
+it("retains old provider evidence in audit while a completed-core cache miss stays unknown", async () => {
   vi.stubEnv("V6_BUILD", "on"); const { dir, log, e } = fixture();
   const entry = { ...comboProjection(), target_id: "TEST_TARGET", win: null, win_tier: "unknown" as const, expected_win: null, win_incomplete: null };
   e.v6DirectionEvaluation = { id: "opening-fixture", entries: [entry], projectionReasons: [{
@@ -135,11 +191,10 @@ it("forwards provider opening reasons through the actual planner and keeps unkno
   }] };
   const brain = { askJson: vi.fn(async () => ({ json: { ...weights, potion_directions: [] } })) } as unknown as Pick<Brain, "askJson">;
   const result = await ensureDirectionPlan(e, brain, log, dir);
-  expect(result?.payload?.direction_evaluation).toContainEqual(expect.objectContaining({
-    combo_id: entry.combo_id, target_id: "TEST_TARGET", win_complete: entry.win_complete, win_incomplete: null,
-    opening: { Wk: "evaluated", W0: "opening unknown" }, unknown_reasons: ["unknown_opening_entry_hp_or_empirical_sample"],
-  }));
-  expect(result?.payload?.opening_note).toContain("never substitute Wk for W0");
+  expect(result?.payload).not.toHaveProperty("direction_evaluation");
+  expect(result?.payload).not.toHaveProperty("opening_note");
+  expect(JSON.stringify(result?.payload?.build_cores)).toContain("completed_core_cache_miss");
+  expect(readFileSync(join(dir, "v6-build.jsonl"), "utf8")).toContain('"win_complete"');
   expect(e.v6DirectionEvaluation.entries[0]).toEqual(entry);
 });
 
@@ -188,15 +243,4 @@ it("suppresses repeated global T6 across construction kinds and restart, then re
   e.v6DirectionEvaluation = undefined;
   expect((await ensureDirectionPlan(e, brain, log, dir))?.result).toMatchObject({ ask: true, triggers: ["T6"] });
   expect(brain.askJson).toHaveBeenCalledTimes(2);
-});
-
-it("freezes role summaries for the run but applies fresh brain combos and refreshes at a new run", () => {
-  vi.stubEnv("V6_BUILD", "on"); const { dir, e } = fixture();
-  const first = v6Directions(e, dir);
-  writeFileSync(join(dir, "characters", "silent", "build-cores.json"), JSON.stringify({ schema: "build-cores-v1", character: "silent", entries: [coreFixture("CHANGED")] }));
-  expect(v6Directions(e, dir).map(d => d.id)).toEqual(first.map(d => d.id));
-  e.screenMemory.runPlan = { runId: String(e.state.raw.run_id), v6: { ideal_overrides: { TEST_A: ["SURVIVOR"] } } } as any;
-  expect(v6Directions(e, dir)[0]!.combos.some(c => c.source === "brain")).toBe(true);
-  e.state.raw.run_id = "new-run";
-  expect(v6Directions(e, dir).map(d => d.id)).toEqual(["CHANGED"]);
 });

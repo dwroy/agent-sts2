@@ -1,9 +1,9 @@
 import { asRecord, asArray, toJsonValue, type JsonValue } from "../core/util/json.js";
 import type { AnswerSpec } from "../brain/types.js";
 import type { JsonSchema } from "../brain/tools/types.js";
-import type { CoreTemplate } from "../construction/types.js";
+import type { BuildState, CoreTemplate } from "../construction/types.js";
 import type { ConstructionSupport } from "../construction/support.js";
-import { boundV6State, compactCombo, compactProjection, prioritize, V6_BRAIN_CHARS } from "./prompt-summary.js";
+import { boundDirectionPrompt, completedDirectionSummaries, directionResultLabels, DIRECTION_COMBAT_NOTE, type DirectionCompletedSnapshot } from "./direction-prompt.js";
 import type { ProjectionReason } from "./replan-triggers.js";
 import type { BuildCore } from "./build-core.js";
 import { checkRoute, routeIds, routeMapFromView } from "../sim/route-map.js";
@@ -21,15 +21,11 @@ export interface DirectionSummary {
 export function directionSummaries(character: string, ascension: number, cores: readonly BuildCore[], templates: readonly CoreTemplate[], support: ConstructionSupport | null): DirectionSummary[] {
   const formal = cores.filter(d => d.scope.character === character && d.scope.ascensions.includes(ascension));
   const result: DirectionSummary[] = formal.map(d => {
-    const combos = d.combos.map(c => {
-      // Metrics are an immutable published snapshot. Copy them once rather than
-      // walking the multi-megabyte evidence tree again inside details.
-      const metrics = toJsonValue(c.metrics);
-      return { id: c.id, source: "build-core-v1" as const,
-        requirements: toJsonValue(c.cards.map((r, i) => ({ id: `${c.id}:${i}`, count: r.count,
-          any: ("id" in r ? [r.id] : r.any_of).map(id => ({ kind: "card", id, upgraded: r.upgraded })) }))),
-        metrics, details: { ...asRecord(toJsonValue({ ...c, metrics: null })), metrics } };
-    });
+    const combos = d.combos.map(c => ({ id: c.id, source: "build-core-v1" as const,
+      requirements: toJsonValue(c.cards.map((r, i) => ({ id: `${c.id}:${i}`, count: r.count,
+        any: ("id" in r ? [r.id] : r.any_of).map(id => ({ kind: "card", id, upgraded: r.upgraded })) }))),
+      metrics: toJsonValue(c.metrics),
+      details: toJsonValue({ ...c, metrics: c.metrics }) }));
     return { id: d.direction, name: d.name, source: "build-core-v1", components: Object.keys(d.card_pool),
       requirements: toJsonValue(combos.flatMap(c => asArray(c.requirements))), support: null,
       details: toJsonValue({ status: d.status, card_pool: d.card_pool, pivot_signals: d.pivot_signals, failure_modes: d.failure_modes,
@@ -76,18 +72,15 @@ export function directionPlanSpec(payload: unknown, label = "run-plan"): AnswerS
   return { label, kind: "plan", reask: true, schema: { type: "object", properties, required: ["schema", "direction_weights", "potion_directions", "route", "rest", "checkpoint", "reason"], additionalProperties: false },
     validate: answer => { const r = validateDirectionWeights(answer, context); return r.ok ? [] : r.issues; } };
 }
-export function directionTask(input: { summaries: DirectionSummary[]; entries: ProjectionEntry[]; projectionReasons?: readonly ProjectionReason[]; appearedCards: string[]; potionIds: string[]; floor: number; current: JsonValue; map?: JsonValue; previous?: JsonValue }): Record<string, JsonValue> {
-  const weights = asRecord(asRecord(input.previous).direction_weights) as Record<string, number>;
-  const score = (direction: string, combo: string) => Math.max(-1, ...input.entries.filter(e => e.direction_id === direction && e.combo_id === combo).map(e => e.expected_win ?? -1));
-  const targets = [...new Set(input.entries.map(e => e.target_id))];
-  const summaries = prioritize(input.summaries, weights, s => s.id).map(s => ({ id: s.id, name: s.name, source: s.source,
-    combos: [...directionCombos(s, input.previous)].sort((a, b) => score(s.id, b.id) - score(s.id, a.id)).map(c => compactCombo(c, targets,
-      input.entries.find(e => e.direction_id === s.id && e.combo_id === c.id && e.combo_metrics != null)?.combo_metrics ?? c.metrics)) }));
-  const entries = prioritize(input.entries, weights, e => e.direction_id, e => score(e.direction_id, e.combo_id ?? ""));
-  return boundV6State({ task: "评估全部方向×目标及各组合的凑齐概率、凑齐后胜率、凑不齐胜率、组合期望、配对误差和可信度，输出 direction-weights-v1。核心构筑卡摘要按方向保留多个组合、每回合伤害、启动回合和历史战绩及各自样本口径。全部方向权重和为1，只给方向概率，不给组合概率。未知不得当作收益；过渡最小组合仅复用原要求签名，指标未知。ideal_overrides仅可引用核心构筑卡牌池或本局出现过的牌，作为来源brain的临时组合。药水按ID或已发布类别给档位。route为合法节点路线或keep；rest为heal/smith/auto；checkpoint必须大于当前层。",
+export function directionTask(input: { summaries: DirectionSummary[]; entries: ProjectionEntry[]; targets?: readonly string[]; projectionReasons?: readonly ProjectionReason[]; completed?: DirectionCompletedSnapshot | null; inventory?: BuildState; appearedCards: string[]; potionIds: string[]; floor: number; current: JsonValue; map?: JsonValue; previous?: JsonValue }): Record<string, JsonValue> {
+  const summaries = input.summaries.map(s => ({ ...s, combos: directionCombos(s, input.previous) }));
+  // V5's construction instruction asks for a different answer schema and repeats this catalog.
+  const { construction_context: _legacy, ...current } = asRecord(input.current);
+  return boundDirectionPrompt({ task: "评估全部方向及其组合凑齐后对各 Boss/连战的结果与当前还差几张牌，输出 direction-weights-v1。比较掉血、回合数、每回合伤害、死亡率、样本误差和可信度；缺失结果保持未知。不提供凑齐概率或概率乘积。全部方向权重和为1，只给方向权重。ideal_overrides仅可引用核心构筑卡牌池或本局出现过的牌，作为来源brain的临时组合。药水按ID或已发布类别给档位。route为合法节点路线或keep；rest为heal/smith/auto；checkpoint必须大于当前层。",
     v6_direction_context: toJsonValue({ schema: "direction-context-v1", catalog: Object.fromEntries(input.summaries.map(s => [s.id, s.components])), appeared_cards: input.appearedCards, potion_ids: input.potionIds, floor: input.floor }),
-    build_cores: toJsonValue(summaries), direction_evaluation: toJsonValue(entries.map(e => compactProjection(e, input.projectionReasons?.find(r =>
-      r.option_id === e.option_id && r.direction_id === e.direction_id && r.target_id === e.target_id && r.combo_id === e.combo_id)?.reasons))),
-    availability: toJsonValue(entries.map(e => ({ direction: e.direction_id, ...(e.combo_id ? { combo: e.combo_id, source: e.combo_source! } : {}), target: e.target_id, option: e.option_id, ...e.availability }))),
-    run_state: input.current, ...(input.map ? { act_route: input.map } : {}), ...(input.previous ? { previous_plan: input.previous } : {}) }, V6_BRAIN_CHARS, "chars");
+    build_cores: completedDirectionSummaries(summaries, input.completed, input.inventory),
+    result_labels: directionResultLabels(input.completed),
+    combat_note: DIRECTION_COMBAT_NOTE,
+    targets: toJsonValue(input.completed?.targets.map(t => t.id) ?? input.targets ?? [...new Set(input.entries.map(e => e.target_id))]),
+    run_state: toJsonValue(current), ...(input.map ? { act_route: input.map } : {}), ...(input.previous ? { previous_plan: input.previous } : {}) });
 }

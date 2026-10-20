@@ -9,7 +9,7 @@ import type { DeckRunRequest } from "../src/sim/build-sim-pool.js";
 import type { DirectionWeights } from "../src/v6/formats.js";
 import { detectReplan, freshReplanState } from "../src/v6/replan-triggers.js";
 afterEach(() => vi.unstubAllEnvs());
-it("delivers actual W3 targets and per-combination P=1 rows to the W4 brain task", async () => {
+it("keeps actual W3 target identities but never substitutes P=1 rows for completed-combo outcomes", async () => {
   const r = request(); r.phase = "act"; r.targets[0]!.id = "f17:TEST_BOSS";
   r.completionSources = [source({ skip: 1, take: 1 })];
   const resolve = r.completionSources[0]!.resolve;
@@ -24,9 +24,11 @@ it("delivers actual W3 targets and per-combination P=1 rows to the W4 brain task
   const combo = asRecord(asArray(asRecord(asArray(task.build_cores)[0]).combos)[0]);
   expect(combo.id).toBe("D:minimal");
   expect(combo.evaluations).toBeUndefined();
-  expect(asArray(task.direction_evaluation)).toEqual([expect.objectContaining({
-    combo_id: "D:minimal", target_id: "f17:TEST_BOSS", expected_win: 1, win_incomplete: null,
-  })]);
+  expect(task.targets).toEqual(["f17:TEST_BOSS"]);
+  expect(task).not.toHaveProperty("direction_evaluation");
+  expect(task).not.toHaveProperty("availability");
+  expect(combo).toMatchObject({ completed_results: [], unknown_reasons: ["completed_core_cache_miss"] });
+  expect(evaluation.entries[0]).toMatchObject({ combo_id: "D:minimal", target_id: "f17:TEST_BOSS", expected_win: 1, win_incomplete: null });
   expect(directionEvaluationFromProjection(table, { ...r.config, mode: "off" }, "skip")).toEqual({ id: "off", entries: [] });
 });
 it("reads W3 act and pick paired chain comparisons without marginal-error substitution", async () => {
@@ -112,13 +114,15 @@ it("turns official complete pick pairs into one T3 and two independent-evaluatio
   expect(directionEvaluationFromProjection(table, r.config, "skip", plan).comparisons).toEqual([]);
 });
 
-it("carries provider diagnostics while the P times W formula never evaluates the unused incomplete branch", async () => {
+it("carries incomplete-opening provider diagnostics into the brain without treating W0 as a loss or filtering samples", async () => {
   const r = request(), prepare = r.prepare;
   r.phase = "act";
   r.prepare = (target, sample) => sample.cards.some(c => c.id === "G") ? null : prepare(target, sample);
   const table = await new V6ProjectionEngine(new FixedRunner()).evaluate(r);
   const baseline = table.combinations.find(row => row.entry.option_id === "skip")!;
-  expect(baseline.completed_win).not.toBeNull(); expect(baseline.general_win).toBeNull();
+  expect(baseline.entry.availability).toEqual({ take: .5, skip: .5 });
+  expect(baseline.completed_win).toEqual({ value: 1, se: 0, n: r.config.samples_act });
+  expect(baseline.general_win).toBeNull();
   const sampleIds = [...baseline.completion_sample_ids];
   // Fixed provider diagnostic: current main omits prepare errors; watcher owns their propagation.
   baseline.unknown_reasons.push("unknown_opening_entry_hp_or_empirical_sample");
@@ -126,11 +130,15 @@ it("carries provider diagnostics while the P times W formula never evaluates the
   const task = directionTask({ summaries: directionSummaries("silent", 10, [], [r.directions[0]!.core], null),
     entries: evaluation.entries, projectionReasons: evaluation.projectionReasons,
     appearedCards: [], potionIds: [], floor: 5, current: null });
-  expect(asArray(task.direction_evaluation)).toEqual([expect.objectContaining({
-    win_complete: baseline.completed_win, win_incomplete: null, expected_win: .5,
-    opening: { Wk: "evaluated", W0: "not computed by formula" },
-    unknown_reasons: expect.arrayContaining(["unknown_opening_entry_hp_or_empirical_sample"]),
-  })]);
+  expect(task).not.toHaveProperty("direction_evaluation");
+  expect(task).not.toHaveProperty("availability");
+  expect(asRecord(asArray(asRecord(asArray(task.build_cores)[0]).combos)[0])).toMatchObject({
+    completed_results: [], unknown_reasons: ["completed_core_cache_miss"],
+  });
+  // The retained legacy mixture needs W0 when P<1; P*Wk=.5 would silently substitute W0=0.
+  expect(evaluation.entries[0]).toMatchObject({ win: null, win_complete: baseline.completed_win, win_incomplete: null, expected_win: null });
+  expect(JSON.stringify(task)).not.toMatch(/"(?:expected_win|win_incomplete|availability)":/);
+  expect(evaluation.projectionReasons![0]!.reasons).toContain("unknown_opening_entry_hp_or_empirical_sample");
   expect(baseline.completion_sample_ids).toEqual(sampleIds);
   expect(baseline.general_win).toBeNull();
   const copiedReasons = [...evaluation.projectionReasons![0]!.reasons];

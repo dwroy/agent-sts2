@@ -2,6 +2,7 @@ import { fileURLToPath } from "node:url";
 import { vi } from "vitest";
 import { directionSummaries } from "../src/v6/direction-plan.js";
 import { loadV6Knowledge } from "../src/v6/knowledge.js";
+import { observeV6CardReward } from "../src/v6/card-reward-scope.js";
 import { comboProjection } from "./v6-direction-core-fixtures.js";
 import { board, env, type Raw } from "./oneshot-support.js";
 import type { V6ProjectionTable } from "../src/sim/v6-projection.js";
@@ -28,6 +29,12 @@ export function situation(kind: "card" | "shop" | "rest") {
     raw.reward = { pending_card_choice: true, card_options: [0, 1, 2].map(index => ({ index, card_id: "TEST_CARD", upgraded: false })) };
   }
   const e = env(raw);
+  if (kind === "card") {
+    const fight = structuredClone(e.state);
+    fight.in_combat = true; fight.screen = "COMBAT";
+    observeV6CardReward(e.screenMemory, fight);
+    observeV6CardReward(e.screenMemory, e.state);
+  }
   e.screenMemory.runPlan = { runId: String(raw.run_id), act: 1, v6: { direction_weights: weights, potion_directions: [], checkpoint: 40 } } as typeof e.screenMemory.runPlan;
   return e;
 }
