@@ -1,0 +1,32 @@
+{
+  "scope": "directed only; no full",
+  "pid": 694118,
+  "results": [
+    {
+      "name": "tsc",
+      "command": [
+        "npx",
+        "tsc",
+        "-p",
+        "tsconfig.json",
+        "--noEmit"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 1.4592403878923506
+    },
+    {
+      "name": "vitest",
+      "command": [
+        "npx",
+        "vitest",
+        "run",
+        "tests/v6-direction-provider.test.ts",
+        "tests/v6-projection-entries.test.ts",
+        "tests/v6-prompt-summary.test.ts",
+        "--maxWorkers=1"
+      ],
+      "exit_code": 1,
+      "elapsed_seconds": 14.677297644782811
+    }
+  ]
+}

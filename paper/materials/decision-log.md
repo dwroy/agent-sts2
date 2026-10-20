@@ -5292,3 +5292,7 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
 - 2026-10-20T19:53:40.993742+08:00 ops：W8 2a1单叶manifest/patch/16原件核同，仅隔离候选机械应用tree18be，旧900 full1保留；红1/来源tsc0与2文件4过不冒联合，待W4三正式patch后同包窄原子集成/一次full，STOP保持。原件 paper/materials/20261020-W8-fastpath-contract-ops/receipt.json。
 
 - 2026-10-20T19:55:56.975297+08:00 ops：194301 fix无新增源码/提交，WT017严格干净；40旧窄提交祖先/140源码SHA和来源tsc0/6文件9项定向0已核，无需合main/live或新号；25原链/五项窄包/STOP保持，不重复dataset/full。原件 paper/materials/20261020-1951-ops/receipt.json。
+
+- 2026-10-20 19:55:13 CST [Codex v6-w4w6/五项联合三测试合同修复] 固定失败tree900复现3项旧断言，正式三测试源31a24bb2bf02fa26bac9fd284b9834e4e3f97bf9；保留旧兼容算术P=.75、Wk=1、W0=.25→.8125（非新公式），未知W0保持null，新A/B与方向题面不消费混合值，商店保原shop/plan且不准备构筑结果。tsc0、3文件19定向过、源码gitleaks0；仅最小hunk交ops与W8同包窄原子main/精确live联合完整验收，未自行main/live/full/API/对局/STOP。材料paper/materials/2026-10-20-v6-joint-contract-tests/；验证父1faf/tree900不得整支运输，旧失败原件全部保留。
+
+- 2026-10-20T20:02:19.040969+08:00 ops：W4 31a三测试与W8 2a1一叶齐，差旧900仅四测试，最新live64/458知识锁内重冻tree496948c2/2379输入SHA17053663；19:59:55唯一单worker实际tsc0/full在跑，未main/live发布或开局，绿后原授权执行/再败保STOP。原件 paper/materials/20261020-five-item-repaired-start-ops/receipt.json。

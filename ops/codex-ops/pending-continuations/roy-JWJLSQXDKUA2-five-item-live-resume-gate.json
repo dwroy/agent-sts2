@@ -1,6 +1,6 @@
 {
-  "at": "2026-10-20T19:52:57.551906+08:00",
-  "phase": "W8-one-test-repair-verified-isolated-candidate-await-W4-three-formal-patches-before-one-full",
+  "at": "2026-10-20T20:01:23.899051+08:00",
+  "phase": "all-four-repairs-ready-84-source-refrozen-live64-data-tsc0-one-complete-recheck-running",
   "completed": false,
   "authorization": {
     "path": "paper/materials/20261020-five-item-hold-ops/authorization-original.md",
@@ -64,7 +64,7 @@
   "reports_and_background_refresh_continue": true,
   "active_actor_do_not_interrupt": true,
   "Regent_paused": true,
-  "next": "original W4 three formal minimal repair patches -> atomic production plus all four repairs and refreshed latest live data -> one complete check -> authorized publish and resume only on green",
+  "next": "finite checker natural terminal; verify original changed inputs and exits; green -> exact narrow main/live publish consumer/config readback version dual notices then remove STOP and start, failure hold + watcher/Claude",
   "forwarded_source_aliases": [
     {
       "path": "paper/materials/20261020-1826-ops/authorization-original.md",
@@ -244,28 +244,29 @@
     "latest_actual_live_data_freeze_pending": true
   },
   "actual_joint_check": {
-    "at": "2026-10-20T19:13:57.259576+08:00",
-    "state": "terminal-full1-not-running-no-publication",
-    "request": "roy-all-five-exact-live-joint-20261020-1912",
-    "staged_tree": "9000141a281a094da2d1b632db38183786b1215e",
-    "input_sha256": "fd276522a6dee8536e446ed88b1e5a83df6a2e991ee0c7c0cd65ac1d3836e8e5",
-    "input_count": 2379,
-    "source_count": 83,
+    "at": "2026-10-20T20:01:23.899051+08:00",
+    "request": "roy-all-five-repaired-exact-live-joint-20261020-1956",
+    "state": "all-four-contract-repairs-integrated-actual-live-data-refrozen-tsc0-full-running-not-published",
+    "started_at": "2026-10-20T19:59:55.115526+08:00",
+    "tree": "496948c2f9a9fb4d45056aa2394940cb81e0862b",
+    "source_count": 84,
     "knowledge_count": 458,
-    "runner_pid": null,
-    "runner_start_ticks": "138672023",
-    "full_pid": null,
-    "started_at": "2026-10-20T19:13:07.487845+08:00",
+    "input_count": 2379,
+    "input_sha256": "17053663e821d3a754b6d84f4a5dc2987c1ec958a64d1295b6cd04cfeb3e1775",
+    "runner_pid": 718978,
+    "runner_start_ticks": "138952749",
+    "full_pid": 719048,
     "tsc_rc": 0,
-    "full_terminal": true,
-    "W4_input_bridge_receipt": "paper/materials/20261020-W4-input-bridge-ops/receipt.json",
-    "W8_route_bridge_receipt": "paper/materials/20261020-W8-route-bridge-ops/receipt.json",
-    "actual_live_unchanged": "64c218a04ebe029fdda0b5f25025302ebf2a4124",
-    "STOP_and_active_actor_not_modified": true,
-    "resume_only_all_five_actual_live_readback_release_and_dual_notice": true,
-    "any_failure_wait_for_Claude_Roy_decision": true,
-    "old_failed_logs_preserved": true,
-    "full_rc": 1
+    "full_terminal": false,
+    "source_W8_repair": "2a1a4bd7ae61a5ed73b2d332927fc96451a3ea14",
+    "source_W4_repairs": "31a24bb2bf02fa26bac9fd284b9834e4e3f97bf9",
+    "changed_source_delta_from_original_failed_tree": "exactly four test leaves",
+    "no_new_production_formula_or_threshold_change": true,
+    "validation_parent_1faf_not_transported": true,
+    "old_full1_preserved": "paper/materials/20261020-1935-ops/receipt.json",
+    "main_source_and_live_actor_STOP_not_changed": true,
+    "green_next": "atomic narrow source main/live integration, all five actual consumer/config readback, release and dual notices, ops remove STOP and start per Claude19:4x",
+    "new_failure": "retain STOP, inbox + watcher/Claude, no partial start"
   },
   "terminal_STOP_actual_readback": {
     "at": "2026-10-20T19:15:32+08:00",
@@ -467,10 +468,12 @@
       "receipt": "paper/materials/20261020-W8-fastpath-contract-ops/receipt.json"
     },
     "W4_other_three": {
-      "status": "formal minimal patch and manifests pending",
-      "owner": "original v6-w4w6"
+      "source": "31a24bb2bf02fa26bac9fd284b9834e4e3f97bf9",
+      "status": "formal patch SHA/blob verified, three leaves mechanically applied",
+      "receipt": "paper/materials/20261020-W4-three-contract-ops/receipt.json"
     },
     "candidate_tree_after_partial_repairs": "18be1e233fc6a614b882345f841af149eb3218a7",
-    "latest_live_data_refresh_pending_before_final_freeze": true
+    "latest_live_data_refresh_pending_before_final_freeze": false,
+    "candidate_tree_after_all_repairs": "496948c2f9a9fb4d45056aa2394940cb81e0862b"
   }
 }

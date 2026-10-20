@@ -1,0 +1,29 @@
+
+ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/v6-joint-contract-tests-20261020/agent
+
+ ❯ tests/v6-prompt-summary.test.ts (13 tests | 1 failed) 4831ms
+   × keeps 28 low-P shop choices in compatibility audit while production keeps the original brain plan 784ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/v6-prompt-summary.test.ts > keeps 28 low-P shop choices in compatibility audit while production keeps the original brain plan
+TypeError: Cannot read properties of undefined (reading 'includes')
+ ❯ runPlanCardBonus src/memory/run-plan.ts:244:18
+    242| export function runPlanCardBonus(plan: RunPlan | null | undefined, car…
+    243|   if (!plan) return { bonus: 0, why: null };
+    244|   if (plan.avoid.includes(cardId)) return { bonus: -RUN_PLAN_AVOID_MAL…
+       |                  ^
+    245|   let bonus = 0;
+    246|   const why: string[] = [];
+ ❯ collect src/hand/screens/shop.ts:146:47
+ ❯ planShop src/hand/screens/shop.ts:172:3
+ ❯ tests/v6-prompt-summary.test.ts:228:24
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed | 2 passed (3)
+      Tests  1 failed | 18 passed (19)
+   Start at  19:53:23
+   Duration  8.49s (transform 2.32s, setup 419ms, import 2.77s, tests 4.94s, environment 0ms)
+

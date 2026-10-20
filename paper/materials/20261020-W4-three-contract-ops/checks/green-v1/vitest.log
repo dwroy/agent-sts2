@@ -1,0 +1,51 @@
+
+ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/v6-joint-contract-tests-20261020/agent
+
+ ❯ tests/v6-prompt-summary.test.ts (13 tests | 1 failed) 9320ms
+   × keeps 28 low-P shop choices in compatibility audit while production keeps the original brain plan 5094ms
+ ❯ tests/v6-projection-entries.test.ts (2 tests | 1 failed) 65ms
+   × hands actual combination rows to W4 without cloning a direction maximum into each combo 44ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/v6-projection-entries.test.ts > hands actual combination rows to W4 without cloning a direction maximum into each combo
+AssertionError: expected { value: 0.2500000000000001, …(2) } to match object { value: 0.25, n: 20 }
+(1 matching property omitted from actual)
+
+- Expected
++ Received
+
+  {
+    "n": 20,
+-   "value": 0.25,
++   "value": 0.2500000000000001,
+  }
+
+ ❯ tests/v6-projection-entries.test.ts:23:27
+     21|   expect(row.entry.availability).toEqual({ take: .75, skip: .5 });
+     22|   expect(row.completed_win).toEqual({ value: 1, se: 0, n: r.config.sam…
+     23|   expect(row.general_win).toMatchObject({ value: .25, n: r.config.samp…
+       |                           ^
+     24|   expect(r.weights).toEqual({ D: 1 }); expect(table.targets.map(t => t…
+     25|   // Compatibility audit only: P*Wk+(1-P)*W0=.8125, whereas the parked…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  tests/v6-prompt-summary.test.ts > keeps 28 low-P shop choices in compatibility audit while production keeps the original brain plan
+RangeError: Invalid string length
+ ❯ tests/v6-prompt-summary.test.ts:197:28
+    195|     Object.assign(row, { completed_win: null, general_win: null, compl…
+    196|   }
+    197|   const auditBefore = JSON.stringify(table);
+       |                            ^
+    198|   const d = buildV6RoomDecision(e, input, table, "ready", knowledge);
+    199|   expect(size(d.state)).toBeLessThanOrEqual(V6_JEV_STATE_BYTES);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+
+ Test Files  2 failed | 1 passed (3)
+      Tests  2 failed | 17 passed (19)
+   Start at  19:50:33
+   Duration  13.87s (transform 2.75s, setup 574ms, import 3.27s, tests 9.50s, environment 0ms)
+

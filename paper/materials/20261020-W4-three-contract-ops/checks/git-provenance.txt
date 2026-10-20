@@ -1,0 +1,72 @@
+commit 79dc023073785d09263b7e10e667f0c55f349abe
+Author:     Roy <me@dwroy.com>
+AuthorDate: Mon Oct 19 19:53:24 2026 +0800
+Commit:     Roy <me@dwroy.com>
+CommitDate: Mon Oct 19 19:53:27 2026 +0800
+
+    Add V6 combo supply projections and offline replay
+    
+    Co-Authored-By: Codex gpt-6.1-sol <noreply@openai.com>
+    Agent: codex@xdwin1
+
+commit 4ba67366122dbea1d433ca0a0311c031e509bf9a
+Author:     Roy <me@dwroy.com>
+AuthorDate: Tue Oct 20 02:50:03 2026 +0800
+Commit:     Roy <me@dwroy.com>
+CommitDate: Tue Oct 20 03:11:21 2026 +0800
+
+    Verify compact W4 table preserves independent combination projections
+    
+    Co-Authored-By: Codex gpt-6.1-sol <noreply@openai.com>
+    Agent: codex@xdwin1
+
+commit 303bbb1ac61f95f4d8f5aeb98967bf4f4bf9ab02
+Author:     Roy <me@dwroy.com>
+AuthorDate: Tue Oct 20 08:23:44 2026 +0800
+Commit:     Roy <me@dwroy.com>
+CommitDate: Tue Oct 20 10:28:09 2026 +0800
+
+    Compute V6 projections from appearance tables with partial target caching
+    
+    Replace production supply MC and incomplete-case simulation with lookup P times completed-combination W. Reuse paired absolute samples across act, pick and bounded idle work; retain unknowns and subset coverage.
+    
+    Co-Authored-By: Codex gpt-6.1-sol <noreply@openai.com>
+    Agent: codex@xdwin1
+
+commit 8da331893d98e98e48f67af20c9756f1f9aa5efc
+Author:     Roy <me@dwroy.com>
+AuthorDate: Tue Oct 20 13:13:06 2026 +0800
+Commit:     Roy <me@dwroy.com>
+CommitDate: Tue Oct 20 13:13:06 2026 +0800
+
+    fix(v6): stage exact W3 current-boss source on published R403 data
+    
+    Exact45 leaves from805 and necessary303, tested fixed tree7d14aaaa: tsc0/full612 files5819 pass2 original skip against498 immutable R403 knowledge files. Preserve current live knowledge and use authorized natural start boundary only; no whole-main transport.
+    
+    Co-Authored-By: Codex gpt-6.1-sol <noreply@openai.com>
+
+function expected(k: Raw, g: Raw, p: number | null, formation: readonly boolean[] | null): ExpectedRaw {
+  const effect = { first: null as number | null, joint: null as number | null };
+  const field = (f: "first" | "joint") => {
+    const a = fullEstimate(k[f]), b = fullEstimate(g[f]); effect[f] = a && b ? a.value - b.value : null;
+    return k.ids.map((_, i) => p === null || p > 0 && k[f][i] == null || p < 1 && g[f][i] == null ? null
+      : p * (k[f][i] ?? 0) + (1 - p) * (g[f][i] ?? 0));
+  };
+  return { ids: k.ids, first: field("first"), joint: field("joint"), formation, effect };
+}
+function uncertainty(raw: ExpectedRaw, f: "first" | "joint"): Estimate | null {
+  const e = fullEstimate(raw[f]); if (!e) return null;
+  const supply = raw.formation && estimate(raw.formation.map(Number));
+  expect(entries[0]).toMatchObject({ combo_id: "D:minimal", combo_source: "construction-transition", expected_win: .8125, direction_value: .8125 });
+    expect.objectContaining({ expected_win: .8125 }),
+diff --git a/agent/src/sim/v6-projection.ts b/agent/src/sim/v6-projection.ts
+index fdf32f734..0094d70f9 100644
+-function expected(k: Raw, g: Raw, p: number | null, formation: readonly boolean[] | null): ExpectedRaw {
++function product(k: Raw, p: number | null): ExpectedRaw {
++  const field = (f: "first" | "joint") => k[f].map(v => p === null || v === null ? null : p * v);
+diff --git a/agent/tests/v6-projection-entries.test.ts b/agent/tests/v6-projection-entries.test.ts
+index b682c2f05..821063fb5 100644
+-  expect(entries[0]).toMatchObject({ combo_id: "D:minimal", combo_source: "construction-transition", expected_win: .8125, direction_value: .8125 });
++  expect(entries[0]).toMatchObject({ combo_id: "D:minimal", combo_source: "construction-transition", expected_win: .75, direction_value: .75 });
+-    expect.objectContaining({ expected_win: .8125 }),
++    expect.objectContaining({ expected_win: .75 }),
