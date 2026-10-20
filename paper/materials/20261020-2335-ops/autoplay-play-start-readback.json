@@ -1,0 +1,50 @@
+{
+  "autoplay_pid": 1319950,
+  "autoplay_start_ticks": "140260250",
+  "autoplay_argv": [
+    "bash",
+    "/home/dw/Projects/agent-sts2/ops/autoplay.sh",
+    "--tail-console",
+    ""
+  ],
+  "play": [
+    {
+      "pid": 1320115,
+      "start_ticks": "140260318",
+      "cwd": "/home/dw/Projects/agent-sts2/.worktrees/live/agent",
+      "argv": [
+        "node",
+        "/home/dw/Projects/agent-sts2/.worktrees/live/agent/node_modules/.bin/tsx",
+        "src/index.ts",
+        "play",
+        "--max-runs",
+        "1",
+        "--max-minutes",
+        "240",
+        ""
+      ]
+    },
+    {
+      "pid": 1320126,
+      "start_ticks": "140260322",
+      "cwd": "/home/dw/Projects/agent-sts2/.worktrees/live/agent",
+      "argv": [
+        "/home/dw/.local/node/bin/node",
+        "--require",
+        "/home/dw/Projects/agent-sts2/agent/node_modules/tsx/dist/preflight.cjs",
+        "--import",
+        "file:///home/dw/Projects/agent-sts2/agent/node_modules/tsx/dist/loader.mjs",
+        "src/index.ts",
+        "play",
+        "--max-runs",
+        "1",
+        "--max-minutes",
+        "240",
+        ""
+      ]
+    }
+  ],
+  "console": "/home/dw/Projects/agent-sts2/logs/console/20261020-233749-048a9713b+dirty.log",
+  "console_bytes": 1959,
+  "tail_summary": "mod 0.16.2 at http://127.0.0.1:8080 (protocol 2026-03-11-v1, status ready)\ngame data from cache: 596 cards, 107 monsters, 299 relics, 66 potions, 283 powers, 57 events\nPLAY mode: http://127.0.0.1:8080, model typesafe/jev-1.14\n23:37:53 note run YSRVLSKVU8DL in progress: rebuilt the run memory from its logs (542 states, 518 decisions, 0 run plans, 137 items); route plan (act 2, F18) r1c1 普通战 → r2c1 问号 → r3c1 商店 → r4c1 普通战 → r5c2 普通战 → r6c1 问号 → r7c2 休息 → r8c3 宝箱 → r9c4 商店 → r10c4 休息 → r11c3 问号 → r12c3 普通战 → r13c4 问号 → r14c5 休息 → r15c3 Boss\n23:37:53 note SL: run YSRVLSKVU8DL has 3 logged attempt(s), 2 reload(s)\n23:37:53 note SL: attempt 3 knows the first 30 draws of the fight (attempt 1, 2)\n23:37:53 note SL: attempt 3 deviates at T4, the 2nd latest question before attempt 2's death on T6: not 蛇咬 -> 火箭, 防御, potion 能量药水, 防御, 防御 again there; 1 turn through it not again (4 lines shown there never played on that board; where the failed attempts lost their HP: T4 weighs 35.3 (30 lost on it on average, the later turns' losses at 0.5 a turn), the most of the turns deviated at the fewest times (none); every line loses in every sample here (the rollout's horizon: it does not order the turns); the other turns: T2 19.3, T3 17.6, T5 10.5, T1 9.7; attempt 2's path, the failed attempt that lived longest (attempt 2 T6 (enemy HP 188), attempt 1 T5 (enemy HP 256)))\n23:37:53 note SL: tracking boss fight F33 CRUSHER+ROCKET: attempt 3 of at most 4\n23:37:54 note H1 idle preparation: {\"status\":\"prepared\",\"basis\":\"exact_observed_input_only\",\"nodes\":1872,\"partial\":false,\"reused\":false,\"budget_ms\":400}\n23:37:54 wait COMBAT: waiting on COMBAT (transition, animation, or nothing legal yet)\n23:37:54 note H1 idle preparation: {\"status\":\"prepared\",\"basis\":\"exact_observed_input_only\",\"nodes\":1872,\"partial\":false,\"reused\":true,\"budget_ms\":400}\n"
+}

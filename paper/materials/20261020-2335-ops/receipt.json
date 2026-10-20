@@ -1,0 +1,117 @@
+{
+  "at": "2026-10-20T23:40:29+08:00",
+  "event": "20261020-2335 stall no play/mod refused",
+  "crash": {
+    "run": "YSRVLSKVU8DL",
+    "release": "V6-R404",
+    "last_live_commit": "048a9713bd4be09ad5f6d3f6131e8b729f51aece",
+    "last_seen": "2026-10-20T23:27:43+08:00 SL attempt3/F33T1",
+    "failure_sequence": [
+      "23:27:44 ECONNRESET health",
+      "23:27:45 ECONNREFUSED twice",
+      "circuit breaker3;519dispatch/2fallback/errors4;not terminal run"
+    ],
+    "autoplay_exit": "entry gate78/no terminal brain fault; stale brain-wait budget for previous5Z untouched",
+    "host_windows_probe": "original34676 absent and no SlayTheSpire2.exe at all, Steam still Console1",
+    "root_cause": "unknown; process exit observed only, no crash dump/Windows fault diagnosis",
+    "not_attributed_to_unpublished_P0": true
+  },
+  "recovery": {
+    "authorization": "Roy/Claude docs/v6-plan.md§12 continuous play plus original ops stall recovery",
+    "original_broker_launch_game_rc": 0,
+    "new_windows_pid": 37624,
+    "new_creation_time": "2026-10-20T15:36:19.7354140Z",
+    "same_desktop_session": 1,
+    "same_native_profile": 1,
+    "same_base_url": "http://127.0.0.1:8080",
+    "same_game_executable_verified": true,
+    "binding_updated_after_health_profile_and_Windows_identity": true,
+    "continue_existing_save_request": "req_20261020_153721_1879_5",
+    "continue_result": "completed;runYSRVLSKVU8DL/F33 COMBAT",
+    "autoplay_pid": 1319950,
+    "autoplay_start_ticks": "140260250",
+    "play_processes": [
+      {
+        "pid": 1320115,
+        "start_ticks": "140260318",
+        "cwd": "/home/dw/Projects/agent-sts2/.worktrees/live/agent",
+        "argv": [
+          "node",
+          "/home/dw/Projects/agent-sts2/.worktrees/live/agent/node_modules/.bin/tsx",
+          "src/index.ts",
+          "play",
+          "--max-runs",
+          "1",
+          "--max-minutes",
+          "240",
+          ""
+        ]
+      },
+      {
+        "pid": 1320126,
+        "start_ticks": "140260322",
+        "cwd": "/home/dw/Projects/agent-sts2/.worktrees/live/agent",
+        "argv": [
+          "/home/dw/.local/node/bin/node",
+          "--require",
+          "/home/dw/Projects/agent-sts2/agent/node_modules/tsx/dist/preflight.cjs",
+          "--import",
+          "file:///home/dw/Projects/agent-sts2/agent/node_modules/tsx/dist/loader.mjs",
+          "src/index.ts",
+          "play",
+          "--max-runs",
+          "1",
+          "--max-minutes",
+          "240",
+          ""
+        ]
+      }
+    ],
+    "new_console": "/home/dw/Projects/agent-sts2/logs/console/20261020-233749-048a9713b+dirty.log",
+    "memory_replay": "542states/518decisions/0runplans/137items;3loggedSLattempts/2reloads preserved",
+    "first_controller_action_CST": "2026-10-20T23:38:17+08:00",
+    "post_recovery_mod": "COMBAT,YSRV,F33,nativeprofile1,ready/snapshotstable",
+    "initial_old_run_config_preserved": true,
+    "new_run_started": false
+  },
+  "evidence": [
+    {
+      "path": ".artifacts/ops-wake-20261020-2335/procs.json",
+      "sha256": "18f392549c6a02f366ba6db1735ff162d45b70dc120dd01ad8a1777fb417db95"
+    },
+    {
+      "path": ".artifacts/ops-wake-20261020-2335/win-procs.json",
+      "sha256": "4f56472a5d34353adc0b13461d674a6a503d3242380bac7a9c785f58182e9645"
+    },
+    {
+      "path": ".artifacts/ops-wake-20261020-2335/launch-request.json",
+      "sha256": "7ae8186c097f3e0def32a2a4eb4628e4d9e6ed41b02395177bb7c0545c7653c6"
+    },
+    {
+      "path": ".artifacts/ops-wake-20261020-2335/launch-game.json",
+      "sha256": "cfb1f2cc6e668225d893f5834e723aff6112c7f7253bda5e52fe162883ca0059"
+    },
+    {
+      "path": ".artifacts/ops-wake-20261020-2335/continue-existing-save-action.json",
+      "sha256": "b29a1ed4b99744775562f0a5ccec9d725e6a1be2b4b88d096b996ce37e081578"
+    },
+    {
+      "path": ".artifacts/ops-wake-20261020-2335/autoplay-start.json",
+      "sha256": "daf594200bbf550b77d04aeebd643c2d9ec4170518e72f20cfc170066c078c14"
+    },
+    {
+      "path": ".artifacts/ops-wake-20261020-2335/state-after-launch.json",
+      "sha256": "e7bcba5c6e632ccb48ec309a70bea2e9105b9409450858255af5798ddd167074"
+    },
+    {
+      "path": ".artifacts/ops-wake-20261020-2335/state-after-continue.json",
+      "sha256": "b781f4fd6faef3f62e807b70e53d1461ac581aeda0d9de95963e54e75bd6b22e"
+    }
+  ],
+  "runtime_source_live_and_release": "unchanged048a9713/R404, no candidate deployed",
+  "P0_full_and_R4": "not queried/restarted; original single full and original learner retained",
+  "P3_P4": "existing queue retained; no new full/dataset/refresh/model",
+  "STOP": "absent before/after; no new STOP",
+  "Regent": "paused/untouched",
+  "scientific_parents": "unchanged"
+}
