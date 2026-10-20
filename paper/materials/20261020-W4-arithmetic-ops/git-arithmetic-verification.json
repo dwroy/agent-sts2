@@ -1,0 +1,172 @@
+[
+  {
+    "commit": "79dc023073785d09263b7e10e667f0c55f349abe",
+    "sim_blob": "0db0ec6314f8265726c3630647a3e507148f364e",
+    "sim_SHA": "9e189fc97e8fedfc5af7b4a20df57512bad818a3573c983fcb2aca9b0c2d3cee",
+    "arithmetic_snippets": [
+      {
+        "line": 79,
+        "text": "    const a = fullEstimate(k[f]), b = fullEstimate(g[f]); effect[f] = a && b ? a.value - b.value : null;"
+      },
+      {
+        "line": 80,
+        "text": "    return k.ids.map((_, i) => p === null || p > 0 && k[f][i] == null || p < 1 && g[f][i] == null ? null"
+      },
+      {
+        "line": 81,
+        "text": "      : p * (k[f][i] ?? 0) + (1 - p) * (g[f][i] ?? 0));"
+      },
+      {
+        "line": 82,
+        "text": "  };"
+      }
+    ],
+    "test_SHA": "583988c94dc7bc8020584c7febc4db5937d93a598839fae3ea062d57bbedaf1b",
+    "expected_win_assertions": [
+      "expect(entries[0]).toMatchObject({ combo_id: \"D:minimal\", combo_source: \"construction-transition\", expected_win: .8125, direction_value: .8125 });"
+    ]
+  },
+  {
+    "commit": "4ba673661",
+    "sim_blob": "f2377ada33f0b2db8f55b74585ce6f98c322a0fe",
+    "sim_SHA": "6cbf3d9e4be625c81554364f9ba93ff3cfbbc08327cc406246627cb3b3181b9d",
+    "arithmetic_snippets": [
+      {
+        "line": 87,
+        "text": "    const a = fullEstimate(k[f]), b = fullEstimate(g[f]); effect[f] = a && b ? a.value - b.value : null;"
+      },
+      {
+        "line": 88,
+        "text": "    return k.ids.map((_, i) => p === null || p > 0 && k[f][i] == null || p < 1 && g[f][i] == null ? null"
+      },
+      {
+        "line": 89,
+        "text": "      : p * (k[f][i] ?? 0) + (1 - p) * (g[f][i] ?? 0));"
+      },
+      {
+        "line": 90,
+        "text": "  };"
+      }
+    ],
+    "test_SHA": "320fdac6df73a5bb9aafbd9b9a3e57ba76c1efd5d3cf137a783f2e9c40fd08ac",
+    "expected_win_assertions": [
+      "expect(entries[0]).toMatchObject({ combo_id: \"D:minimal\", combo_source: \"construction-transition\", expected_win: .8125, direction_value: .8125 });",
+      "expect.objectContaining({ expected_win: .8125 }),",
+      ".toEqual([expect.objectContaining({ expected_win: 1, win_incomplete: null })]);"
+    ]
+  },
+  {
+    "commit": "303bbb1ac",
+    "sim_blob": "0094d70f9b584a57a7c1516db1a813e2b9b5e442",
+    "sim_SHA": "85db4bd86aeec07c4b4bcec2e6d77b6d1e1ad2440bb74b5bff78c59956f9e617",
+    "arithmetic_snippets": [
+      {
+        "line": 88,
+        "text": "/** Lookup probabilities are fixed inputs; reported SE is conditional combat-seed error only. */"
+      },
+      {
+        "line": 89,
+        "text": "function product(k: Raw, p: number | null): ExpectedRaw {"
+      },
+      {
+        "line": 90,
+        "text": "  const field = (f: \"first\" | \"joint\") => k[f].map(v => p === null || v === null ? null : p * v);"
+      },
+      {
+        "line": 91,
+        "text": "  return { ids: k.ids, first: field(\"first\"), joint: field(\"joint\") };"
+      }
+    ],
+    "test_SHA": "bc9e34ef02f72569e3473f93eb5daad9b5f7145b2fa2f1d7b1e8ec630bce43c2",
+    "expected_win_assertions": [
+      "expect(entries[0]).toMatchObject({ combo_id: \"D:minimal\", combo_source: \"construction-transition\", expected_win: .75, direction_value: .75 });",
+      "expect.objectContaining({ expected_win: .75 }),",
+      "expect(validateProjectionEntry({ ...certain[0], expected_win: .9 }).ok).toBe(false);"
+    ]
+  },
+  {
+    "commit": "8da331893",
+    "sim_blob": "a372eaf507c6ef840d94783d3cd4668fc0fcc6ae",
+    "sim_SHA": "3eeb605aee83be4df37ed7c54f73e1f686fcf06dbb5377a6d8232315ba6d0deb",
+    "arithmetic_snippets": [
+      {
+        "line": 93,
+        "text": "/** Lookup probabilities are fixed inputs; reported SE is conditional combat-seed error only. */"
+      },
+      {
+        "line": 94,
+        "text": "function product(k: Raw, p: number | null): ExpectedRaw {"
+      },
+      {
+        "line": 95,
+        "text": "  const field = (f: \"first\" | \"joint\") => k[f].map(v => p === null || v === null ? null : p * v);"
+      },
+      {
+        "line": 96,
+        "text": "  return { ids: k.ids, first: field(\"first\"), joint: field(\"joint\") };"
+      }
+    ],
+    "test_SHA": "bc9e34ef02f72569e3473f93eb5daad9b5f7145b2fa2f1d7b1e8ec630bce43c2",
+    "expected_win_assertions": [
+      "expect(entries[0]).toMatchObject({ combo_id: \"D:minimal\", combo_source: \"construction-transition\", expected_win: .75, direction_value: .75 });",
+      "expect.objectContaining({ expected_win: .75 }),",
+      "expect(validateProjectionEntry({ ...certain[0], expected_win: .9 }).ok).toBe(false);"
+    ]
+  },
+  {
+    "commit": "9000141a281a094da2d1b632db38183786b1215e",
+    "sim_blob": "fdf32f734ae14f3d5fe8a2fcfc4b5c1f456d4193",
+    "sim_SHA": "9082db13573f415dcd31d518d2c0cdbd0ea4eb0e372ebbef2214aed29590cc60",
+    "arithmetic_snippets": [
+      {
+        "line": 87,
+        "text": "    const a = fullEstimate(k[f]), b = fullEstimate(g[f]); effect[f] = a && b ? a.value - b.value : null;"
+      },
+      {
+        "line": 88,
+        "text": "    return k.ids.map((_, i) => p === null || p > 0 && k[f][i] == null || p < 1 && g[f][i] == null ? null"
+      },
+      {
+        "line": 89,
+        "text": "      : p * (k[f][i] ?? 0) + (1 - p) * (g[f][i] ?? 0));"
+      },
+      {
+        "line": 90,
+        "text": "  };"
+      }
+    ],
+    "test_SHA": "913bd7d153e44aa22af07ae741210e2dc0fa6402f09e8268b0fc6bb84bdb306a",
+    "expected_win_assertions": [
+      "expect(entries[0]).toMatchObject({ combo_id: \"D:minimal\", combo_source: \"construction-transition\", expected_win: .8125, direction_value: .8125 });",
+      "expect(entries[0]).toMatchObject({ expected_win: .75 });"
+    ]
+  },
+  {
+    "commit": "64c218a04ebe029fdda0b5f25025302ebf2a4124",
+    "sim_blob": "fdf32f734ae14f3d5fe8a2fcfc4b5c1f456d4193",
+    "sim_SHA": "9082db13573f415dcd31d518d2c0cdbd0ea4eb0e372ebbef2214aed29590cc60",
+    "arithmetic_snippets": [
+      {
+        "line": 87,
+        "text": "    const a = fullEstimate(k[f]), b = fullEstimate(g[f]); effect[f] = a && b ? a.value - b.value : null;"
+      },
+      {
+        "line": 88,
+        "text": "    return k.ids.map((_, i) => p === null || p > 0 && k[f][i] == null || p < 1 && g[f][i] == null ? null"
+      },
+      {
+        "line": 89,
+        "text": "      : p * (k[f][i] ?? 0) + (1 - p) * (g[f][i] ?? 0));"
+      },
+      {
+        "line": 90,
+        "text": "  };"
+      }
+    ],
+    "test_SHA": "78295ca77ee23f080842103d5b652cfc7c0e42740b452d8e6ef029400d0f5fe8",
+    "expected_win_assertions": [
+      "expect(entries[0]).toMatchObject({ combo_id: \"D:minimal\", combo_source: \"construction-transition\", expected_win: .8125, direction_value: .8125 });",
+      "expect.objectContaining({ expected_win: .8125 }),"
+    ]
+  }
+]

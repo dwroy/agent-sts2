@@ -5284,3 +5284,5 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
 - 2026-10-20T19:42:32.618341+08:00 ops：原生收Claude19:4x四败接续授权，原W8一项/W4三项逐核修并合main交精确源后重组五项一次full，过即发布核号/双通知/移STOP开局，不需再问Roy；再败告watcher/Claude。旧失败保留/当前STOP保持。原件 paper/materials/20261020-1941-ops/authorization-original.md SHA256 0b36da78b9befde4fd68ddc54d73cd5885321525c2708bc47fa8344f4e933c5b。
 
 - 2026-10-20T19:45:53.809586+08:00 ops：核main仍旧方向/宽router，选择方向生产+W4必要依赖+四修复同包窄原子集成，不单运benchmark测试；fixture的calls/provider与brain_calls已分源核，等原W8/W4正式最小源，STOP/旧full1保持，不启新full。原件 paper/materials/20261020-main-atomic-coordination-ops/receipt.json。
+
+- 2026-10-20T19:50:20.807328+08:00 ops：W4 projection-entries固定算术.75*1+.25*.25=.8125及Git链核同，失败900/live sim blob同fdf32，冲突.75为遗留乘积断言；保生产兼容值不运805，等原W4三测试回归patch，同包窄集成/STOP保持。原件 paper/materials/20261020-W4-arithmetic-ops/receipt.json。

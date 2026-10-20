@@ -4656,3 +4656,6 @@ request_id=roy-20261017-human-pace-h0 revision=3 input_sha256=1e1c259a15f1824119
 
 
 2026-10-20T19:45:53.809586+08:00 原W8指出新benchmark断言依赖未进main的方向生产，ops核main0172357c相对40e8仅记录漂移，loop仍有ensureDirectionPlan及旧宽card路由；不能单cherry测试使旧main中间失败。明确选择同包窄原子集成：方向0cf+route1d2、必要W4 f74/79a/544与input0929，连同W8一项、W4三项最小修复同批，不搬父/main或805。原fixture静态核calls来自provider、brain_calls另记，失败不能写成脑请求从1变0；原W8保off/零provider/一次shop脑题/原1000ms含首步/V5题面动作证据，W4核另三项并分别给main与精确源结果，旧混合值不因测试任务改生产。三会话各获一次协调投递，CLI0不代原生ACK；等正式hunk/源映射齐才统一组包及一次完整检查，当前不启full、不改源码/main/live，STOP与旧失败保留。原件paper/materials/20261020-main-atomic-coordination-ops/receipt.json。
+
+
+2026-10-20T19:50:20.807328+08:00 W4就projection-entries一败给出算术与提交链，ops沿精确Git原件独立核：固定夹具P=.75、Wk=1、W0=.25，唯一方向/目标权重均1，旧兼容E=P*Wk+(1-P)*W0=.8125；.75仅乘积项，不是方向权重折算。79dc/4ba快照保混合式，303/8da改乘积；失败tree900与live64的sim blob均fdf32，同一测试前段断言.8125、后段遗留.75，故本项归为旧乘积断言与保留兼容生产不符，修测试而非改生产数值或运805。此为人工固定夹具/源码合同核对，不作新游戏知识或收益结论。W4报告新A/B与方向题不消费混合值，仍待其显式算术及新题无混合字段回归，原三测试最小patch尚未正式交付，不以报告当定向或联合full通过。继续原同包窄原子集成，四修复齐后一次完整检查；本轮只存证与更新短清单，无源码/main/live/full/API变化，STOP及旧四败保持。原件paper/materials/20261020-W4-arithmetic-ops/receipt.json。
