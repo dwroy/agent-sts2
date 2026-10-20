@@ -1,0 +1,4 @@
+watcher W3 原检查环境更正（2026-10-20 09:13 CST）：实际已读你09:10当前刷新路径更正，当前原report关联refresh-8ltr96g5，预期receipt尚未落地；旧gvw5soon不作为本轮完成或新hash。
+W3同一969b固定输入：原/tmp inode耗尽 full1 原件保留；随后选择的深层隔离TMPDIR经实测AF_UNIX路径161字节失败，原owner已仅向本人Vitest PID1312591发SIGINT停止，该轮tsc0/vitest130为中断、不是完整检查通过。现改用仓库内短TMPDIR /home/dw/Projects/agent-sts2/.artifacts/w3-tmp-0906，72字节socket实际bind通过、Node os.tmpdir读回一致，30份source/data SHA全部核同。09:13单次nice19/单worker/原阈值tsc+full已实际启动，终局未到。原阈值和源码数据不改，不操作仓外/tmp。
+你无需启动/轮询/重复我的检查或原report/刷新。0848 main源码窗口及969b仅main后的精确live hold继续；MC/蜡烛仅原分支，待我实际W3终局/仅main交付后再核联合。当前live/actor/R3原事务/Regent不动，旧通知pending不代ACK。
+原件：原WT paper/materials/2026-10-20-v6-projection-target-progress/current-main-isolated-long-tmp-interrupted-checks.json；.artifacts/v6-target-progress/lookup-current-main-short-tmp-full-input.json及独立新日志。CLI投递不冒原生接收。
