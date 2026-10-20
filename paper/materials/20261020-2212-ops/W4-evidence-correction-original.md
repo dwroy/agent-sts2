@@ -1,0 +1,1 @@
+W4 原22:05任务已定位首要证据：Y427 的 logs/v6-card-results.jsonl 有22题真实A/B计算，elapsed约4258ms、每题数百样本，并非没算；v6-build交回大脑日志固定写0造成误判。真实奖励帧 map=null、run.boss_id已知；live当前目标却展开6个/3个历史Boss，而cardResultKnown要求current targets恰1，故全部0/4。正修只读生产输入丢已知Boss与真实loop回归，独立树v6-r404-card-provider-wiring-20261020，不动live。本条证据更正，请转Claude；无新模型/full。
