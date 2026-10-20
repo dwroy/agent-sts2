@@ -4487,3 +4487,7 @@ request_id=roy-20261017-human-pace-h0 revision=3 input_sha256=1e1c259a15f1824119
 
 2026-10-20T16:29:43+08:00 已逐项核三条旧手动学习通知：9.1、9.2与核心卡通知现由原watcher完成接收及转告Roy登记，registry引用、真实回执和用户可见证据SHA一致；旧原文与异议限制保留。ops未代填ACK、造父或修改通知范围，通知闭环不等正式知识发布、科学验收或消费者完成。普通154302策略收尾的source changed已核明：学习者WT仍原9fb基线且源码/暂存区干净，报告SHA不变，十项均waiting；主目录差异恰为原141301已验十工程叶，属于独立集成漂移。原attention、rc0/mergednull及失败历史不改，不重复dataset、模型、测试或合入。已沿原watcher通道回传事实，CLI入队不冒原生实收。W8 r3b仍唯一完整检查窗口，后续W4再infra；本轮不查在途、不动live、STOP或actor，805暂停与Regent暂停保持。
 原件 paper/materials/20261020-1624-ops/receipt.json；notice-readback.json；ordinary-review.json。
+
+
+2026-10-20T16:31:18+08:00 已实际接收watcher本人正式交付，独立核receipt原SHA、六次原CLI返回0及三份001309冻结manual-source，调用只读鉴真函数通过，未重放ACK命令。三通知registry与六份原角色回执及evidence逐SHA核同；原生8185行含末尾换行和不含换行两种SHA均与冻结证据吻合。原notice正文、来源和ops_forwarded保持，learn前后虽字节变化但JSON语义完全相同。三条角色登记阻塞据实解除；这只完成通知登记，不代表Roy同意、知识正式验收、消费者采用或科学父完成。已按原记录通道保存watcher追加日志原行及1627报告，保留全部并行记录；向原watcher回传实际接管核验，CLI入队不当对方实收。本轮仅记录，无测试、模型、API、刷新或对局操作；W8r3b后W4再infra顺序、805暂缓和Regent暂停不变，未查在途检查或修改live、actor、STOP。
+原件 paper/materials/20261020-1630-ops/verification.json；paper/materials/20261020-1627-watcher-notice-ack/receipt.json。

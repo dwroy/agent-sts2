@@ -1,0 +1,161 @@
+{
+  "at": "2026-10-20T16:27:12.106692+08:00",
+  "native": {
+    "source": "/home/dw/.codex1/sessions/2026/10/18/rollout-2026-10-18T22-15-13-01a14f5d-da55-7831-959e-53727796115e.jsonl",
+    "line": 8185,
+    "raw_with_newline_sha256": "d6c891123a02a7312c1d67ec7f9c40c04a043e3840584f1d9a57109b101aa38b",
+    "record_without_newline_sha256": "c681b01b1333994f838dadf0ecd94491abe60a00f88d27d6bf242ac2252de842",
+    "evidence_sha256": "16b0a57bb5d88164e970ba82742d1e4bea38e6a697c9edd0bcf3f27ba3c05752",
+    "original_event_exact": true
+  },
+  "preflight_first_attempt": {
+    "status": "failed_before_any_ack",
+    "reason": "compared newline-inclusive raw SHA with original record SHA; exact record excludes terminal LF; corrected comparison preserved here"
+  },
+  "notices": [
+    {
+      "id": "0baef634d02e1ff85843c10a",
+      "source": "learner/runs/20261020-001309-44df6aab-7cfa-4379-9f73-99310f386562-fix-batch/0baef634d02e1ff85843c10a.manual-source.json",
+      "source_sha256": "762c820e61b3865769c1c3cbc725d958ae2ef44fbc0e87ab1d92d965e5152f7d",
+      "source_artifacts": {
+        "schema": "manual-learning-notice-v1",
+        "request_id": "roy-20261019-v6",
+        "task": "v6-direction-experience",
+        "batch": "v6-direction-experience-20261019-1631",
+        "character": "silent",
+        "thread_id": "01a1534e-9333-7791-b561-1140eef8390c",
+        "worktree": "/home/dw/Projects/agent-sts2/.worktrees/v6-direction-experience-20261019",
+        "original_log": {
+          "path": "learner/runs/20261019-163651-aca8de36-1a87-4109-9fa1-405535c7d209-v6-direction-experience.jsonl",
+          "sha256": "118fee18c03aaeee1ee64b8e1f32991bbe15eb66008667d6f184d034afe52cd7"
+        },
+        "input": {
+          "path": "ops/codex-ops/learner/v6-direction-experience-20261019-1631.inputs-v2.json",
+          "sha256": "eafcce346f744d91ccad7b81ea0c5e0858b48d5897e18511f251f2eba308f194"
+        },
+        "original_message": {
+          "path": "learner/runs/20261019-163651-aca8de36-1a87-4109-9fa1-405535c7d209-v6-direction-experience/disagreements.json",
+          "sha256": "1992c837d558ac507f4779f96b6da642f9f2982e2ac62ea351c23e82ab235368"
+        }
+      },
+      "before_sha256": "bc9dca712eb3f6edf555e9966c5c92a40739520d41841b61e95c60c65a5e6db6",
+      "protected_content_sha256": "c880c7926f0b5e53d6b10d270b20b3b10ac1c745943538fc288feed18b5c3830",
+      "prior_ops_forwarded": {
+        "path": "/home/dw/Projects/agent-sts2/ops/codex-ops/learning-notices/receipts/0baef634d02e1ff85843c10a.ops-forwarded.json",
+        "sha256": "ee9fbcbc275d4712957140ea0f09f85552a0e4cdf3b2116850e9dccca2c88bb0",
+        "at": 1792401326.4226396
+      },
+      "role_receipts": [
+        {
+          "stage": "watcher_received",
+          "path": ".artifacts/v6-learning-notice-watcher-20261019/0baef634d02e1ff85843c10a.watcher_received.json",
+          "sha256": "694f0f8a4083094771ac83e5fc8cd1d7fa7d4e2df7c224f2351b2e6fcd2ac275",
+          "existing": true
+        },
+        {
+          "stage": "roy_notified",
+          "path": ".artifacts/v6-learning-notice-watcher-20261019/0baef634d02e1ff85843c10a.roy_notified.json",
+          "sha256": "dd766b67ae4e15096532d46df0dee3d7c8782f0b4dceda8d69e30dbb11b8fb58",
+          "existing": true
+        }
+      ],
+      "manual_preflight_parent": null
+    },
+    {
+      "id": "f619c26f4bfa10970591beb5",
+      "source": "learner/runs/20261020-001309-44df6aab-7cfa-4379-9f73-99310f386562-fix-batch/f619c26f4bfa10970591beb5.manual-source.json",
+      "source_sha256": "0587988a698eb03bc28e441364bed231da6206d4fd3a657eda9bd54e4c9dc5ee",
+      "source_artifacts": {
+        "schema": "manual-learning-notice-v1",
+        "request_id": "roy-20261019-v6",
+        "task": "v6-reflex-distill",
+        "batch": "v6-reflex-distill-20261019-1704",
+        "character": "silent",
+        "thread_id": "01a1536c-f80e-7043-8daa-94d16f0810fa",
+        "worktree": "/home/dw/Projects/agent-sts2/.worktrees/v6-reflex-distill-20261019",
+        "original_log": {
+          "path": "learner/runs/20261019-171010-c702c588-a5c6-445c-838d-fd94eb877532-v6-reflex-distill.jsonl",
+          "sha256": "b8ccde28fb47083fb500b6c6e5945137f5e319affbc009c36d79d41b1666fd3a"
+        },
+        "input": {
+          "path": "ops/codex-ops/learner/v6-reflex-distill-20261019-1704.inputs-v2.json",
+          "sha256": "93ce6ab674e065cea857f893bc5d2cccf298dbef2ab2d449bbc1e7a8e61397eb"
+        },
+        "original_message": {
+          "path": "learner/runs/20261019-171010-c702c588-a5c6-445c-838d-fd94eb877532-v6-reflex-distill/disagreements.json",
+          "sha256": "5ecc1219526287e594bb441b9f7185c9fce56f66cf40ce95672445183b63a347"
+        }
+      },
+      "before_sha256": "59b75f3978486e679b6668a4b4c4404e8f123c34fd0f1668e32d2603be2ca4bc",
+      "protected_content_sha256": "c497e5e32f50a91ef2d98dbdda30f31cec9ee6f858803256b9937cb26a04b55f",
+      "prior_ops_forwarded": {
+        "path": "/home/dw/Projects/agent-sts2/ops/codex-ops/learning-notices/receipts/f619c26f4bfa10970591beb5.ops-forwarded.json",
+        "sha256": "def711c31df6af3117610bf415fb51a4ae5bc7822bbf9d37fd65f98843bb5a14",
+        "at": 1792403296.48732
+      },
+      "role_receipts": [
+        {
+          "stage": "watcher_received",
+          "path": ".artifacts/v6-learning-notice-watcher-20261019/f619c26f4bfa10970591beb5.watcher_received.json",
+          "sha256": "e71d72d525215dd32a7d542b65c22b35b7fb56f45b9e0a9b6a37615d9189760d",
+          "existing": true
+        },
+        {
+          "stage": "roy_notified",
+          "path": ".artifacts/v6-learning-notice-watcher-20261019/f619c26f4bfa10970591beb5.roy_notified.json",
+          "sha256": "5ccdc7d3bc94fd8464b51e67f44804f79f0a08f909b06f35fa9d9a4eff0014ad",
+          "existing": true
+        }
+      ],
+      "manual_preflight_parent": null
+    },
+    {
+      "id": "b5b53e0d8bebe1df7fb30468",
+      "source": "learner/runs/20261020-001309-44df6aab-7cfa-4379-9f73-99310f386562-fix-batch/b5b53e0d8bebe1df7fb30468.manual-source.json",
+      "source_sha256": "c5acb2b92348ccbe111dcbe9782366ef7878d6edb6d4d6070114fe0612de7dfc",
+      "source_artifacts": {
+        "schema": "manual-learning-notice-v1",
+        "request_id": "roy-20261019-v6",
+        "task": "v6-build-cores",
+        "batch": "v6-build-cores-20261019-1838",
+        "character": "silent",
+        "thread_id": "01a153ca-d781-77a3-99c8-73a9c655c8c8",
+        "worktree": "/home/dw/Projects/agent-sts2/.worktrees/v6-build-cores-20261019",
+        "original_log": {
+          "path": "learner/runs/20261019-185235-1e8a0895-970a-415b-996e-bd619c383056-v6-build-cores.jsonl",
+          "sha256": "a048f0630c2040607971f2ea0367b7227d5810b132a059f04b2e59573aec1732"
+        },
+        "input": {
+          "path": "ops/codex-ops/learner/v6-build-cores-20261019-1838.inputs-pinned.json",
+          "sha256": "3797119b9ef820567daee002693de5fd2af8b799e94a0d53b8ea2e09388f1940"
+        },
+        "original_message": {
+          "path": "learner/runs/20261019-185235-1e8a0895-970a-415b-996e-bd619c383056-v6-build-cores/disagreements.json",
+          "sha256": "89de1a46f798daf2b138362a8a05e0855544c02f139a89f67eece09c902f83ba"
+        }
+      },
+      "before_sha256": "085a8c597cc23550d1693503448ec0ac5581aa0a2efdbfb1fb6f6d69aea6c90c",
+      "protected_content_sha256": "7f06b0a3c7296a651a153f70a40d6230e325df453f5ce48e54c667eaabc2d7db",
+      "prior_ops_forwarded": {
+        "path": "/home/dw/Projects/agent-sts2/ops/codex-ops/learning-notices/receipts/b5b53e0d8bebe1df7fb30468.ops-forwarded.json",
+        "sha256": "a6bcb7ee55c573e14db91ac795c0c3dfbfd7a685f05143aa71d74ff2b1b82ef2",
+        "at": 1792410580.0637586
+      },
+      "role_receipts": [
+        {
+          "stage": "watcher_received",
+          "path": ".artifacts/v6-learning-notice-watcher-20261019/b5b53e0d8bebe1df7fb30468.watcher_received.json",
+          "sha256": "061defbdc1b2517715cf981a6122f404d5b4e5d1f0b94f65f146c6e398f7c616",
+          "existing": true
+        },
+        {
+          "stage": "roy_notified",
+          "path": ".artifacts/v6-learning-notice-watcher-20261019/b5b53e0d8bebe1df7fb30468.roy_notified.json",
+          "sha256": "4d84fcec5c6435ba228a692d7b0b5874eac7336e2b5b9bc8f9ec214c38f7810c",
+          "existing": true
+        }
+      ],
+      "manual_preflight_parent": null
+    }
+  ]
+}

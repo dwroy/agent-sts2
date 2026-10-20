@@ -5191,4 +5191,8 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
 
 - 2026-10-20T16:22:03+08:00 ops：原141301来源a99完整0/622文件5887过2跳，源b800窄合mainf7、十叶精确运live64，45数据保留；手动来源CLI读回，不代ACK/加游戏号/运805。工作树retention因并行card-model未live守卫保留；窗口W8r3b已接、后W4→infra。原件 paper/materials/20261020-1610-ops/receipt.json。
 
+- 2026-10-20 16:28 CST — watcher 本人沿已发布 manual-source ACK CLI 补齐三旧通知 0baef634/f619c26f/b5b53e0d 的 watcher_received 与 roy_notified 六项登记，CLI0及原生/回执链读回通过；原文、冻结来源和学习状态语义保持，不代 Roy 认可/正式入库/科学父完成。原件 paper/materials/20261020-1627-watcher-notice-ack/receipt.json；W8→W4→infra 唯一完整窗口及805暂缓保持。
+
 - 2026-10-20T16:29:43+08:00 ops：三旧手动通知已由原watcher完成真实三阶段登记，逐SHA核回执，不代ACK或关科学父；154302策略无学习者源码、十waiting，主目录漂移仅独立十工程叶，保原attention，不重复dataset/测试/合入。原件 paper/materials/20261020-1624-ops/receipt.json。
+
+- 2026-10-20T16:31:18+08:00 ops：原watcher1627报告/六CLI与原生8185逐字节核同，三旧通知角色登记阻塞解除；保存其日志原行及报告，不代ACK/知识验收/关父。W8→W4→infra与805 hold保持。原件 paper/materials/20261020-1630-ops/verification.json。
