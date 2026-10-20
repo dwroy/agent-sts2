@@ -1,5 +1,6 @@
 """Fixed learner workflow fixtures. Never launch engines, play or touch project state."""
 import copy
+from concurrent.futures import ThreadPoolExecutor
 import fcntl
 import importlib.util
 import json
@@ -266,11 +267,15 @@ class CodeProposals(Fixture):
                {'target_task':'v6-knowledge-publish'},
                {'ledger':['ironclad-0001']}, {'runs':['OTHER0000001']}, {'character':'ironclad'},
                {'proposal':str(self.root/'learner/runs/missing.md')}, {'rule_changes':True}]
-        for update in cases:
-            with self.subTest(update=update):
-                rejected=add({**item,**update})
-                self.assertEqual(rejected.returncode,2,rejected.stderr)
-                self.assertEqual((queue.read_bytes(),ledger.read_bytes()),before)
+        # Rejections cannot mutate either file; bound independent CLI starts without
+        # spending the outer test's fixed deadline on their serial interpreter startup.
+        with ThreadPoolExecutor(max_workers=2) as pool:
+            pending=[pool.submit(add,{**item,**update}) for update in cases]
+            for update, result in zip(cases,pending):
+                with self.subTest(update=update):
+                    rejected=result.result()
+                    self.assertEqual(rejected.returncode,2,rejected.stderr)
+                    self.assertEqual((queue.read_bytes(),ledger.read_bytes()),before)
 
 
 class ProposalConsumption(Fixture):
