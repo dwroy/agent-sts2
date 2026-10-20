@@ -4451,3 +4451,7 @@ request_id=roy-20261017-human-pace-h0 revision=3 input_sha256=1e1c259a15f1824119
 
 2026-10-20T15:22:13+08:00 已实际接收原watcher接管回执，仅核冻结launch和native-start原件，回读SHA3e188ee1、W8释放SHA8fcf8a11一致。其基线73f7056、固定树ed37d661及2331输入46c9e27f已绑定；15:20:11的runner3993740/start_ticks137275447、nice19/ionice3与15:20:12的full3993818均为原生启动回读，tsc0不等完整绿。本轮不查进程、可变status或在途日志，不重启或叠full。唯一窗口现归原watcher，须自然终局、核退出并本人明确释放后才到ops141301，再排W8夹具修正后的完整重验；原ops pending门禁同步更新。W8新报r9 tsc0、定向4文件8例通过仅按owner报告保留，不能覆盖r2三失败或提前合main/live。两原线程已获协调投递，CLI0不冒原生实收。原复盘唯一dataset及记录收尾沿既有有限进程，未重派或查询；805暂停、拿牌下一局brain、live/actor/STOP/Regent及角色ACK边界保持。
 原件 paper/materials/20261020-1520-ops/receipt.json；native-start-readback.json；W8-r9-owner-original.md。
+
+
+2026-10-20T15:24:20+08:00 已核151301-fix回报及完整64项只读审计，原工作树仍为73f7056且无已跟踪或未跟踪产品源码改动，无本批新增提交、修复或测试。22个已修工程子项逐一核为当前main祖先；这只证明相应子项已有源码，不等于整项宽父、游戏收益或实际live消费完成。普通收尾隔离、空tick与retention、手动通知来源兼容三项源码b675/ca689/082cc仍未main/live，继续原141301固定78ef联合输入事务，等待原watcher自然终局并明确释放，不重复实现、派修或另起全检。其余31项策略、4项独立架构、4项缺证或原专项保留既有owner；V6坏行项本轮报告按已有de94源码修正工程分类，不关闭数据包或消费者父要求。调度记录failed/退出0/mergednull原样保留，不把无源码处置说成已上线。本轮仅保存核验记录，无需重复dataset、生产测试或模型；原复盘有限收尾、805暂停、live/actor/STOP、Regent与角色ACK边界不动。
+原件 paper/materials/20261020-1522-ops/receipt.json；verification.json；queue-audit.json。

@@ -5174,3 +5174,5 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
 - 2026-10-20T15:20:14+08:00 ops：原复盘144301三局/账本核同，无新增纯bug，旧0496沿原提案；唯一dataset --no-raw有限收尾已启动，成功及记录提交待原终局回执。W8 r2 full1明确释放给watcher infra，再ops141301，三通知兼容pending不代ACK。原件 paper/materials/20261020-1514-ops/intake-receipt.json。
 
 - 2026-10-20T15:22:13+08:00 ops：核watcher infra静态原生启动SHA3e188ee1/树ed37/2331输入，tsc0/full未终局；唯一窗口原watcher→ops141301→W8修夹具后完整重验，r9定向不冒r2全绿。未查在途/重复full或改live。原件 paper/materials/20261020-1520-ops/receipt.json。
+
+- 2026-10-20T15:24:20+08:00 ops：原151301-fix无新增源码/修复，22既有main子项祖先核同；三项待集成修复仍原141301/78ef事务，不重测/派修/生成dataset或冒live。64项报告与原failed/rc0/mergednull保留。原件 paper/materials/20261020-1522-ops/receipt.json。
