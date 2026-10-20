@@ -1,5 +1,5 @@
 # 运维当前清单（调度器生成）
-生成：2026-10-21T02:25:44+08:00；原件索引：/home/dw/Projects/agent-sts2/ops/codex-ops/current.json SHA256 7a0be4cdc5d1e1b5897859ae3401c2722851b8b15628f072ff4847b1b90313bc
+生成：2026-10-21T02:26:08+08:00；原件索引：/home/dw/Projects/agent-sts2/ops/codex-ops/current.json SHA256 7e2c5acd950c41fb417939848442a9d408a3874425a0db671a199a3df9e6a541
 当前授权：Roy§12授权Claude主导V6、P0优先；最新Claude02:1x允许局终STOP发布窗，取代此前无条件不挂STOP。学习正常，full仍原三锁挡新dataset重任务；旧失败和来源保留，不中断现行对局。
 最高Claude02:1x：已错过T15→CSB、CSB→1ZZ自动边界；Claude已设原守候，1ZZHM2MV19YB play局终后写ops/STOP并通知ops，不另建。实核局终/STOP/无活动play后，发布已验17源+CARD=jev/REFLEXoff、消费者读回/核号双通知，再沿现有方式清STOP/拉起autoplay。后续边界包亦局终先STOP→发布→清STOP，或局中预备几十秒运输；不在局中STOP。01:3x门槛已满足不互等，第一新局质量由Claude判，异常依其下一边界指令brain；P2仍2稳定局。原文/SHA和现成发布器/恢复步骤见20261021-021x-ops/preparation.json及publication-runbook.md。
 原P3单独full626/5926过2跳、tree6650/2388输入9d17原件保留，11源仅main16aa9bd5；live叶保legacy混合/50000界，禁805。现在已并P0六叶完成17实际组合完整绿；不把旧单独绿冒后继联合。P3实际live/合格经验仍pending，REFLEXoff；原件0040-ops/receipt.json。
@@ -17,7 +17,7 @@ W4精英95材料/append已main67fc0f91、subtree d71216d7核同，不增P0门。
 模型 gpt-6.1-sol；普通 ops/学习下次自然启动 high，专项可有理由 xhigh，大脑保持 xhigh。实际生效须原生回执，不能从默认值推定。
 账号选择：/home/dw/Projects/agent-sts2/ops/codex-ops/accounts/codex1/learner；原 ops：w1H:p8 / 01a1517b-e200-7c52-b463-6ea22220c0a9；执行模式：host；辅助/学习者沙箱保持。
 不读凭据/.env/游戏二进制，不改共享配置/账号；不推送。
-main 2c789c50218a7b5f233c58c1d689a747a354106e
+main c284dad52bdd03c1a189123fca6fe205ca10a2d6
 live 4528a751f17e341a97e7ff70295ec9fba0c947e9；登记 release V6-R406（登记值不代表新树检查绿或实际采用）。
 首次另读 AGENTS/README/最新 STATE/学习协议；此后每次读本清单及事件原件。历史 handoff/decision-log 只沿事务定位，原件冲突保留并核查。
 在途批次 3（完整 owner/租约与路径见 current.json）：
@@ -38,11 +38,11 @@ human-pace 原owner=01a13dcd-83d4-7c63-b233-f93cf878ecf4，接续=01a14aae-4b03-
 - 733e3a9e9380d9155431980e disagreement watcher_received,roy_notified；/home/dw/Projects/agent-sts2/ops/codex-ops/learning-notices/733e3a9e9380d9155431980e.json
 队列 1，只按本轮已提交事件处理；前4项：
 - /home/dw/Projects/agent-sts2/ops/codex-ops/queue/1792520015273604930-fix-done.md：fix-batch 批次 20261021-014301-fix-batch 结束：exit 0；已核实合入 live：无。回报：/home/dw/Projects/agent-sts2/ops/codex-ops/learner/20261021-014301-fix-batch.out。学习者自测后自行合入，无需另
-原事务未标 completed 共185（含未知，非活进程数），最近4项：
-- /home/dw/Projects/agent-sts2/ops/codex-ops/pending-records/20261021-0213-ops.json；phase=original-lock-naturally-released-resuming-own-record-only-save
+原事务未标 completed 共184（含未知，非活进程数），最近4项：
 - /home/dw/Projects/agent-sts2/ops/codex-ops/pending-continuations/original-20261021-014301-ordinary-fixture-three-leaf.json；phase=three-uncommitted-test-leaves-frozen-await-post-P0-latest-live-host-full
 - /home/dw/Projects/agent-sts2/ops/codex-ops/pending-continuations/original-W8-P3-reflex-card-pick-20261020.json；phase=Claude021x-original-guardian-1ZZ-terminal-STOP-then-prepared17-CARDjev-publication
 - /home/dw/Projects/agent-sts2/ops/codex-ops/pending-continuations/original-W4-R404-card-provider-wiring-20261020.json；phase=Claude021x-original-guardian-1ZZ-terminal-STOP-then-prepared17-CARDjev-publication
+- /home/dw/Projects/agent-sts2/ops/codex-ops/pending-continuations/original-20261021-001302-monitor-health-six-leaf.json；phase=original-uncommitted-four-monitor-plus-two-helper-deps-frozen-full1-after-P0-gate
 最新指令短引用（完整行按offset核）：
 - offset=2019905：- 2026-10-21 02:25:13 CST 原ops记录保存阻塞：014301候选与原件已落盘，但主索引锁由原调度器tick PID1819093持有，实际索引为空；不删锁/发信号/等待轮询。本轮仅记录提交pending，原计划与精确追加已保存，下一自然记录停点沿原helper接续，不重抄原文/重跑dataset或full。原件paper/materials/20261021-0213-ops/record-index-lock
 - offset=2020319：- 2026-10-21 02:25:43 CST 原ops记录接续：保存扫描时读到main推进2c789c50，有限核验仅原调度器论文数据/普通收尾记录变化，原索引锁已自然释放且本轮三段追加均尚未入HEAD；沿原私有索引helper接续本轮记录，不覆盖并行数据或重复dataset/full。
