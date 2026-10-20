@@ -4900,3 +4900,5 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
 - 2026-10-20 08:06:50 CST [Claude 监督] live c2c54e5fb（V6-R402，含安全网 914bd7fc6、性能 8ae96db3c、W3 da184de9f、升级定义 5119bf69c、W7 c6b71d2d1、17 组合包）真实请求烟测：大脑 V6 幕初题被接受（V6 部分 59,947 字符），四类构筑题全 unknown 时改由大脑并记 v6_unknown_to_brain/T6，Nova 探针 HTTP 200、0.5–1 秒，出牌条目 19 条正常；2/4 前置方向题触及大脑 90 秒预算后降级；投影仍 372/372 unknown，已知投影时的 Jev 路径待简化投影合入后单独验收。决定恢复首局 MWMR855QHTWR（V6 开启组合，安全网兜底），经 watcher 转告 ops 移除 STOP。
 
 - 2026-10-20 08:07:11 CST [运维 codex/041302精确联合接续] 原ab96完整0提交cd2f；main新增bff8源码/历史包，原WT并入a147成4d9a，唯一host944604 checking。未借旧绿部署/重试R3，STOP/原局fault保持。原件：paper/materials/20261020-0805-ops/receipt.json。
+
+- 2026-10-20 08:08:49 CST [运维 codex/普通收尾核读] 074302本批无源码，8waiting/2duplicate祖先核同；原dataset唯一一次后因并行源码变化attention，保失败/现场/宽父，不重dataset或合入。原件：paper/materials/20261020-0808-ops/receipt.json。

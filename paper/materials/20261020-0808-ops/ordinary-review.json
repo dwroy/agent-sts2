@@ -1,0 +1,65 @@
+{
+  "original_close": {
+    "path": "ops/codex-ops/ordinary-close/20261020-074302-strategy-proposal.json",
+    "bytes": 15601,
+    "sha256": "d61dcb6fa3936a12864a972e55edfec0ca8c50a537033e22f8e0eac98a1d91ef"
+  },
+  "original_report": {
+    "path": ".worktrees/codex-strategy-silent-20261020-074302/learner/runs/20261020-074307-7989fb08-9a46-4612-8737-6aa6bc3f86d6-strategy-proposal/report.md",
+    "bytes": 9117,
+    "sha256": "bdf613b476e7352aea82310cdf4a94f95edeb60eb1a863caa46067f3e4fa1017"
+  },
+  "original_launcher_report": {
+    "path": "ops/codex-ops/learner/20261020-074302-strategy-proposal.out",
+    "bytes": 5062,
+    "sha256": "06f7803abd7f2f35f79c25a5c2ebdee02753bd75ea6d9f88ae0bfddf274dede1"
+  },
+  "source_worktree_HEAD": "820aea2854d18ea81666601cf657f89fdaf4ad29",
+  "tracked_source_worktree_clean": true,
+  "batch_has_no_source_change": true,
+  "current_main": "6cc777378c20f908a4f92525184ad5e353e6b537",
+  "changed_production_source_paths": [
+    "agent/src/sim/v6-history-pack.ts",
+    "agent/src/v6/appearance.ts",
+    "agent/tests/appearance_stats_test.py",
+    "agent/tests/v6-appearance.test.ts",
+    "agent/tests/v6_learning_loop_test.py",
+    "agent/tools/v6/freeze-history.ts",
+    "knowledge/builders/appearance_stats.py",
+    "knowledge/builders/refresh-v6-history.py"
+  ],
+  "duplicate_sources_actual_live_ancestors": [
+    {
+      "id": "silent-proposal-7932ec26ae1f0185",
+      "source_commit": "bf423c173d3be348a4ad714e1d26516df619ff41",
+      "actual_live_ancestor": true
+    },
+    {
+      "id": "silent-proposal-53b3db220508b3d9",
+      "source_commit": "a46239a29c3109ff9f69224ad77128d9929d3e9a",
+      "actual_live_ancestor": true
+    }
+  ],
+  "waiting_ids": [
+    "silent-proposal-cbf5f609bb228ee5",
+    "silent-proposal-689c132e17b5c70f",
+    "silent-proposal-f78e5877198eb14c",
+    "silent-proposal-0e0f404b9c683ace",
+    "silent-proposal-43357f4891ce898b",
+    "silent-proposal-0aab08aa64ef6f26",
+    "silent-proposal-97150100609faaec",
+    "silent-proposal-84d4c469867ba70e"
+  ],
+  "dataset_original_log": {
+    "path": "ops/codex-ops/ordinary-close/20261020-074302-strategy-proposal.dataset.log",
+    "bytes": 958,
+    "sha256": "e294255be3e04e864e4aed8dd9c053a2c45fb3ef3de5c1c3316b9ed88b644be0"
+  },
+  "dataset_original_tail": "cut at 2026-10-19T23:56:29.657Z: decisions.jsonl 2,762,926,276 B, deepseek-reasoning.jsonl 377,746,518 B, runs.jsonl 381,905 B, states.jsonl 14,614,066,060 B, fight-plans.jsonl 2,233,957 B, run-plans.jsonl 9,655,609 B, brain.jsonl 1,090,247,640 B, sl-attempts.jsonl 49,319,425 B, run-config.jsonl 2,179,756 B\ndecisions: 442,011 records, 858 runs\nscanning states.jsonl ...\nOK   decisions attributed + unattributed == play records\nOK   decisions_by_label sum == attributed decisions\nOK   escalations rows == records with escalation\nOK   every runs.jsonl id present in runs.csv\nOK   commits == git rev-list --all --count\nnote: 1 runs differ from runs.jsonl 'decisions' (see verification.json)\nrows: runs 858, decisions_by_label 28643, escalations 3600, commits 7392\n/home/dw/Projects/agent-sts2/paper/data/learning-curve-ironclad.csv: 11 row(s)\n/home/dw/Projects/agent-sts2/paper/data/learning-curve-silent.csv: 11 row(s)\nkey scan: CLEAN (no sk-<key> patterns)\n",
+  "dataset_attempts": 1,
+  "dataset_result_inferred_from_original_control_flow": "Original ordinary_close checks result.returncode before its post-dataset eligible() call; source changed reason is that post-check, not dataset failure. Canonical receipt lacks explicit dataset.rc; retained, no replacement terminal fabricated.",
+  "original_ledger_audit": {
+    "problems": 0,
+    "items": 532
+  }
+}
