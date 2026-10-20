@@ -1,0 +1,93 @@
+{
+  "at": "2026-10-20T13:13:05+08:00",
+  "actual_current_run": "UWUFHGRAJJ6J",
+  "config_ts": "2026-10-20T04:43:07.864Z",
+  "process": {
+    "pid": 2230556,
+    "started": "2026-10-20T04:43:03.983Z"
+  },
+  "code": {
+    "commit": "f563cc997814fdccd2dafe8a50d3725c62102c7f",
+    "code": "f563cc9+dirty",
+    "dirty": true,
+    "dirty_files": [
+      "notes/fight-value-backtest-silent.md",
+      "notes/monster-db-check.md"
+    ],
+    "branch": "live",
+    "worktree": "live"
+  },
+  "v6": {
+    "schema": "v6-config-v1",
+    "mode": "on",
+    "deciders": {
+      "card": "jev",
+      "potion": "jev",
+      "shop": "jev",
+      "rest": "jev"
+    },
+    "reflex": "off",
+    "admission": "interfaces_only",
+    "delivered": false,
+    "samples_pick": 20,
+    "samples_act": 100,
+    "min_known_option_ratio": 0.5,
+    "direction_min_weight": 0.1,
+    "win": {
+      "certain_win": 0.95,
+      "favored": 0.7,
+      "even": 0.3,
+      "unfavored": 0.05
+    },
+    "delta": {
+      "much_se": 2,
+      "better_se": 1,
+      "much_min": 0.05
+    },
+    "triggers": {
+      "t1_core_min": 0.3,
+      "t2_se": 2,
+      "t2_min_delta": 0.05,
+      "t2_consecutive": 2,
+      "t3_weight_max": 0.2,
+      "t5_hazard": "existing_route_projection",
+      "t6_unknown_max": 0.5,
+      "t6_fallbacks": 2,
+      "t7_checkpoint": "validated_brain_answer"
+    },
+    "budgets": {
+      "brain_soft_cap": 15,
+      "brain_ms": 90000,
+      "act_ms": 60000,
+      "pick_ms": 5000,
+      "jev_ms": 5000
+    },
+    "invalid": []
+  },
+  "console": "logs/console/20261020-124256-f563cc997+dirty.log",
+  "mod": {
+    "run_id": "UWUFHGRAJJ6J",
+    "screen": "SHOP",
+    "floor": 15
+  },
+  "config_source": {
+    "path": "logs/run-config.jsonl",
+    "offset": 2206067,
+    "bytes": 6069,
+    "sha256": "f984352bf0c2b98f54f8c38a1f5dae09a72162cc0c06f48938ccf58dc0610bc5"
+  },
+  "previous_9J6": {
+    "run_id": "9J6T70HSYPG7",
+    "terminal": "defeat F8",
+    "terminal_console": "logs/console/20261020-122453-f563cc997+dirty.log",
+    "decisions": 140,
+    "Jev_calls": 26,
+    "fallbacks": 0,
+    "errors": 0,
+    "ended_CST": "2026-10-20T12:40:46+08:00"
+  },
+  "natural_boundary_available_now": false,
+  "actor_not_signalled": true,
+  "STOP_or_DRAIN_not_created": true,
+  "new_game_not_started_by_this_wake": true
+}

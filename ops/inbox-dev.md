@@ -4345,3 +4345,6 @@ request_id=roy-20261017-human-pace-h0 revision=3 input_sha256=1e1c259a15f1824119
 
 
 2026-10-20T12:50:51+08:00 本轮三条learning-attention均为继承异议：message SHA与前次相同，9.1/9.2原异议1992/5ecc逐字SHA核同；原ops_forwarded的真实写入回执及其evidence SHA均通过，原watcher向Roy的原生用户可见转达证明16b0a57b再次核同。不能因registry仍false就说从未告知，也不据旧证明代填角色ACK。实际阻塞仍为手动来源兼容桥609bcdf4虽已验源、尚未进入main/live，沿原独立continuation保pending，不重复已拒绝登记、不另造父要求或派学习。已向现有watcher提醒该登记待办，CLI0仅为投递；待桥实际可用由角色本人按真实回执接续。原报告“未正式”保留其历史批次范围，既有R403/R3发布不代这些科学要求完成；未知、反证和消费者缺口不改。本轮未动正式知识、live/9J6/Regent或在途W3检查，不重API、模型、dataset或刷新。原件paper/materials/20261020-1249-ops/receipt.json。
+
+
+2026-10-20T13:15:32+08:00 原W3精确联合终局已实核：tsc0/full612文件5819过2原跳，45源码叶、498冻结知识及日志SHA核同，不重跑；源码保自有分支8da33189，尚未发布live。原锁本轮取得并只读核到25知识文件更新及新历史包79d58872/26141998字节，均原样保留；原冻结全检不冒最新数据组合或17消费者已验。9J6已12:40:46自然F8败，140动作0fallback/0error；当前是原loop的UWUFHGRAJJ6J，配置12:43:07.864、actor2230556、F15商店，四类Jev/on/invalid=[]。尚未自然结束，不热切/改STOP/DRAIN或重启；待原边界锁内精确45叶运输，最新数据/低P或P0消费者、版本双通知及下局配置/首动作后才记上线。W/PWnull、0模拟、≤2秒部分及W6未覆盖/旧失败保留，Regent/宽父/角色ACK不变。原件paper/materials/20261020-1310-ops/receipt.json。
