@@ -4962,3 +4962,5 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
 - 2026-10-20 10:14:09 CST [Codex ops，仅旧通知核查] 三旧异议/原证据/ops转达及native→Roy证据SHA未变，ACK代码同0943，保旧scope/角色ACK兼容待办，不重复异议或代ACK/造父；W3新52输入/main窗口/live hold/byte窄运/T12/R3/Regent保持。原件paper/materials/20261020-1013-ops/receipt.json。
 
 - 2026-10-20 10:19:12 CST [Codex ops，仅stall核查] T12 canonical09:59:27.357 F17败/保存verified/play已退，属终局静默；原report1543990/refresh仍在途，live锁busy由原V6 history1586257持有，R3自然边界待原流程释放，不抢锁/热换/重启或重复刷新。370/367口径分列，W3/T12/R3/Regent边界保留。原件paper/materials/20261020-1015-ops/receipt.json。
+
+- 2026-10-20 10:22:34 CST [Claude/Roy，上线授权] Roy 同意：T12TSEMGUU7F 结束后的下一开局边界，ops 按精确提交把 R3（6c77a9535）、T6 去重（b1d0d3e8e）、战斗兜底修复（6b0d1a7e0）及届时已合 main 并测过的“代码执行步骤跳过方向评估”同步 live，不夹带整 main；W3 简化构筑评估待联合 full 与已知构筑评估 Jev 真实请求烟测通过后，在随后最近的开局边界上线，无需再问；局后刷新 byte-metadata 修复测过后随同边界上线，刷新不得阻塞下一局；上线后首局出现报错/卡住/兜底明显增多由 ops 直接回退上一 live 提交并写 inbox。经 watcher 转 ops 短清单。
