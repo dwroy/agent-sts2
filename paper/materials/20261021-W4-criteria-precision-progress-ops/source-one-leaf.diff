@@ -1,0 +1,53 @@
+diff --git a/agent/tests/v6-card-option-loop.test.ts b/agent/tests/v6-card-option-loop.test.ts
+index dbb4d7be0..0395a27d5 100644
+--- a/agent/tests/v6-card-option-loop.test.ts
++++ b/agent/tests/v6-card-option-loop.test.ts
+@@ -14,7 +14,7 @@ import { cardResultsContext } from "../src/v6/card-results-input.js";
+ import { V6ProjectionRuntime } from "../src/v6/projection-runtime.js";
+ import { V6ProjectionEngine } from "../src/sim/v6-projection.js";
+ import { assembleV6History } from "../src/sim/v6-history-pack.js";
+-import { V6CardResultsEngine, cardResultKnown, type V6CardResults } from "../src/sim/v6-card-results.js";
++import { V6CardResultsEngine, cardResultKnown, type V6CardResults, type CombatEstimate } from "../src/sim/v6-card-results.js";
+ import { SerialDeckRunner } from "../src/sim/build-sim-pool.js";
+ import { pooledMetrics } from "./v6-build-metric-fixtures.js";
+ import { setupOneshotTests, stubJev, type Raw } from "./oneshot-support.js";
+@@ -29,6 +29,24 @@ setupOneshotTests();
+ const roots: string[] = [];
+ afterEach(() => { roots.splice(0).forEach(p => rmSync(p, { recursive: true, force: true })); vi.unstubAllEnvs(); setKnowledgeCharacter(null); });
+ const frozen = JSON.parse(readFileSync(new URL("./v6-fixtures/v6-r405-card-options.json", import.meta.url), "utf8"));
++// Match the documented wire representation exactly, including half-way rounding and nulls.
++function expectDisplayCell(cell: unknown, estimate: CombatEstimate | null) {
++  expect(cell).toEqual(estimate === null ? null : [Number(estimate.mean.toPrecision(5)),
++    estimate.se === null ? null : Number(estimate.se.toPrecision(3)), estimate.n]);
++}
++
++it("checks the display precision contract exactly at rounding boundaries and rejects corrupted cells", () => {
++  const audit = { mean: -1.59375, se: 1.125, n: 32 };
++  expectDisplayCell([-1.5938, 1.13, 32], audit);
++  expectDisplayCell([0, null, 8], { mean: 0, se: null, n: 8 });
++  expectDisplayCell(null, null);
++  for (const bad of [[-1.5937, 1.13, 32], [-1.59375, 1.13, 32], [-1.5938, 1.12, 32],
++    [-1.5938, null, 32], [-1.5938, 1.13, 31], null]) {
++    expect(() => expectDisplayCell(bad, audit)).toThrow();
++  }
++  expect(() => expectDisplayCell([0, 0, 8], { mean: 0, se: null, n: 8 })).toThrow();
++  expect(() => expectDisplayCell([0, null, 0], null)).toThrow();
++});
+ function fixture() {
+   const root = mkdtempSync(join(tmpdir(), "v6-option-")); roots.push(root); location.root = root;
+   const own = join(root, "characters/silent"), common = join(root, "common");
+@@ -108,13 +126,7 @@ it.each([["T0TP8S9MMU9Q", 2], ["RBMEQGXPE9Z2", 3]] as const)(
+         const audit = table.immediate.find(r => r.option_id === id && r.target_id === table.targets[displayed.target]!.id)!;
+         for (const [i, metric] of (JSON.parse(criteria[id]!).columns as (keyof typeof audit.paired_delta)[]).entries()) {
+           const estimate = audit.paired_delta[metric], cell = displayed.delta[i];
+-          if (!estimate) expect(cell).toBeNull();
+-          else {
+-            expect(cell[0]).toBeCloseTo(estimate.mean, Math.max(0, 4 - Math.floor(Math.log10(Math.abs(estimate.mean) || 1))));
+-            expect(cell[2]).toBe(estimate.n);
+-            if (estimate.se === null) expect(cell[1]).toBeNull();
+-            else expect(Math.abs(cell[1] - estimate.se)).toBeLessThanOrEqual(Math.max(1e-10, Math.abs(estimate.se) * .005));
+-          }
++          expectDisplayCell(cell, estimate);
+         }
+       }
+       const ids = ["card0", "card1", "card2", "skip"];
