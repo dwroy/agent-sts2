@@ -1,0 +1,156 @@
+{
+  "at": "2026-10-20T21:54:18+08:00",
+  "batch": "20261020-214302-fix-batch",
+  "state": "reviewed-no-new-source-no-commit-no-live-merge",
+  "worktree": ".worktrees/codex-fix-silent-20261020-214302",
+  "base": "e8b1ea961a3601b547a1a1c0e1b9034106087075",
+  "worktree_clean": true,
+  "queue_source": "root notes/fix-queue-v4.md (not the older tracked WT copy)",
+  "queue_items": 65,
+  "existing_narrow_fixes": 40,
+  "retained_original_items": 25,
+  "historical_extra_subitems": 11,
+  "main_ancestor_commits_independently_verified": 46,
+  "source_file_SHA_independently_verified": 154,
+  "source_diff_empty": true,
+  "report_sha256": "288982a1afb2575c41b44b9061747c5503557ceaa41681af1830f4dc23cdc38c",
+  "original_logs_SHA_verified": {
+    "tsc.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "targeted.log": "c1a5495ab455c6dd7c912874f39cbd83e326e3001541c7d138217bb99f3dd8d8",
+    "targeted-cli-option-error.log": "bc7c3e59076449259dc9fdf66a59836103c54881c7fc4be7315ab3aad5b0f79a",
+    "targeted-readonly-config-error.log": "cb3e17a2d84e22cb3575ed3046db9c427a6c8933bfd1558dfcb7bd0024ecdeb6"
+  },
+  "source_tests": {
+    "tsc": 0,
+    "targeted_files": 7,
+    "targeted_cases": 10,
+    "vitest": 0,
+    "full": false
+  },
+  "two_original_pre_test_startup_failures_kept": true,
+  "original_live": "048a9713bd4be09ad5f6d3f6131e8b729f51aece",
+  "old_sources_not_live_ancestors": [
+    {
+      "item": "infra-paper-dataset-concurrent-gzip-keyscan-20261018（非对局阻塞，纯运维脚本）",
+      "commit": "0b240cbd109a5e004f010d9659a871204c455639",
+      "is_live_ancestor": false,
+      "different_current_paths": [
+        "agent/tests/paper-dataset-publication.test.ts",
+        "ops/paper_dataset.py",
+        "ops/tests/test_paper_dataset_publication.py"
+      ]
+    },
+    {
+      "item": "infra-h0-414-host-fixed-test-stability-20261018 / a406-fixed-deadlines",
+      "commit": "87c1381a4461c81f9f948a1796600d019c544349",
+      "is_live_ancestor": false,
+      "different_current_paths": [
+        "agent/tests/build-decider.test.ts",
+        "agent/tests/fixture-http.test.ts",
+        "agent/tests/fixture-http.ts",
+        "agent/tests/global-build-fixed-inputs.test.ts",
+        "agent/tests/global-build-integration.test.ts",
+        "agent/tests/journal-replay.test.ts",
+        "agent/tests/learner-retention-fixture.test.ts",
+        "agent/tests/learner-retention.test.ts",
+        "agent/tests/loop-consumer-fixed-transport.test.ts",
+        "agent/tests/oneshot-support.ts",
+        "agent/tests/synthetic-board-fixture.ts"
+      ]
+    },
+    {
+      "item": "infra-h0-414-host-fixed-test-stability-20261018 / 21bf-fake-herdr-workspace-deadline",
+      "commit": "698d3bd20fc95e2791e6fab8d5ad4c2c9e01a5c4",
+      "is_live_ancestor": false,
+      "different_current_paths": [
+        "agent/tests/herdr-workspace-fixture.ts",
+        "agent/tests/ops-herdr.test.ts"
+      ]
+    },
+    {
+      "item": "infra-manual-learning-notice-ack-scope-20261019（非对局阻塞，原通知协议fix链）",
+      "commit": "082cc70bfab2f1f98eb67fc1d441dfd23b6962ee",
+      "is_live_ancestor": false,
+      "different_current_paths": []
+    },
+    {
+      "item": "infra-ordinary-close-candidate-failure-isolation-20261020（非对局阻塞，原自动收尾协议链）",
+      "commit": "b675eb67f3687fb137434ef9610f1503edbbe8bc",
+      "is_live_ancestor": false,
+      "different_current_paths": []
+    },
+    {
+      "item": "infra-ordinary-unassigned-tick-no-change-20261020（原普通收尾/retention协议链，非对局阻塞）",
+      "commit": "ca6897f2e433c9c3bb45d0dad46ba685d864c87d",
+      "is_live_ancestor": false,
+      "different_current_paths": []
+    },
+    {
+      "item": "沙箱自测：CLI完成回执及只读配置加载兼容",
+      "commit": "cb2dd0375f8cb5637a2813dc2845f702d6007f27",
+      "is_live_ancestor": false,
+      "different_current_paths": [
+        "agent/tests/fixture-command.py",
+        "agent/tests/fixture-command.test.ts",
+        "agent/tests/fixture-command.ts",
+        "agent/tests/knowledge-catalog.test.ts",
+        "agent/tests/sandbox-entry.test.ts",
+        "agent/tests/v6-appearance.test.ts",
+        "agent/tests/v6-combo-metrics.test.ts",
+        "agent/tests/v6-combo-simulation.test.ts",
+        "agent/tests/v6-draft.test.ts",
+        "agent/tests/v6-history-pack.test.ts"
+      ]
+    },
+    {
+      "item": "infra-h0-414-host-fixed-test-stability-20261018 / a406-fixed-deadlines（固定consumer夹具子项）",
+      "commit": "87c1381a4461c81f9f948a1796600d019c544349",
+      "is_live_ancestor": false,
+      "different_current_paths": [
+        "agent/tests/build-decider.test.ts",
+        "agent/tests/fixture-http.test.ts",
+        "agent/tests/fixture-http.ts",
+        "agent/tests/global-build-fixed-inputs.test.ts",
+        "agent/tests/global-build-integration.test.ts",
+        "agent/tests/journal-replay.test.ts",
+        "agent/tests/learner-retention-fixture.test.ts",
+        "agent/tests/learner-retention.test.ts",
+        "agent/tests/loop-consumer-fixed-transport.test.ts",
+        "agent/tests/oneshot-support.ts",
+        "agent/tests/synthetic-board-fixture.ts"
+      ]
+    },
+    {
+      "item": "infra-paper-dataset-concurrent-gzip-keyscan-20261018",
+      "commit": "0b240cbd109a5e004f010d9659a871204c455639",
+      "is_live_ancestor": false,
+      "different_current_paths": [
+        "agent/tests/paper-dataset-publication.test.ts",
+        "ops/paper_dataset.py",
+        "ops/tests/test_paper_dataset_publication.py"
+      ]
+    },
+    {
+      "item": "infra-h0-414-host-fixed-test-stability-20261018 / 21bf-fake-herdr-workspace-deadline（固定搭建成本子项）",
+      "commit": "698d3bd20fc95e2791e6fab8d5ad4c2c9e01a5c4",
+      "is_live_ancestor": false,
+      "different_current_paths": [
+        "agent/tests/herdr-workspace-fixture.ts",
+        "agent/tests/ops-herdr.test.ts"
+      ]
+    },
+    {
+      "item": "共享临时目录inode/测试生命周期/主盘TMPDIR及容量准入（限定工程子项）",
+      "commit": "4c7b8d9bf48f54163c04d8e4f4f79ae6eb402e83",
+      "is_live_ancestor": false,
+      "different_current_paths": []
+    }
+  ],
+  "unique_non_ancestor_sources": 8,
+  "duplicate_topic_rows_retained": 11,
+  "no_new_behavior_number": true,
+  "no_dataset_full_model_API_or_game_action": true,
+  "no_parent_role_ACK_or_retention_completion_claim": true,
+  "original_25_chains_not_reassigned": true,
+  "ops_initial_queue_check": "first comparison against older WT queue failed before any record mutation; corrected to the original root queue, SHA matches both audits"
+}

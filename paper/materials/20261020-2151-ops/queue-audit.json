@@ -1,0 +1,1659 @@
+{
+  "base": "e8b1ea961a3601b547a1a1c0e1b9034106087075",
+  "prior_audit": "/home/dw/Projects/agent-sts2/learner/runs/20261020-194306-37f78828-499e-4340-a5a6-cfb75b663286-fix-batch/queue-audit.json",
+  "prior_audit_sha256": "673ff71ecf21b337d393fde0840a2e48753e91896439397b8d0ac59d4514d6c4",
+  "queue_sha256": "fb2a14136bd6ae708c3e94fb356d4f97255289a43baf4761c80e16d8dc054c29",
+  "queue_identical": true,
+  "checked_files": {
+    "agent/tests/report_death_fight_test.py": "db55c40e877700efbaeeff71767cdb8452ff1de221126f8e31e3dc562e65392d",
+    "ops/report.py": "239fabfc3555fd4e4dd271f3e5b8f0aa8bf87d9bdc31197c114d9d29f17878ed",
+    "agent/tests/rollout-best-added.test.ts": "085b6d3ac3a76eeafbb743e06fa4d1285d9c6beae695d4a49325fa12a01d9579",
+    "agent/tests/rollout-live.test.ts": "90d717dc6e0b65f62c44c06ea715151a061b35aa77617b0adfe8194915dc4da1",
+    "agent/src/reflex/combat-plan.ts": "8cad97bea7bf53037f0841537b14c7630b537fd584211e28a0ba00506a82a1c1",
+    "agent/tests/silent-potion-targets.test.ts": "ff04ec895170b3b0b7f84482a2041a757b46f8d40bfecb614289e1e801e3ae39",
+    "agent/tests/silent-potion-targets-evidence.json": "6a1624dec833f2e309aee2d30c5ee7b56af303e3e33d6aae8484d54cc966e61a",
+    "agent/src/brain/engines/codex-usage.ts": "f1c59ca0c8c85e7ba5c934a84a6ee9bb27a26cd8724452a8b954186925df95d6",
+    "agent/tests/codex-usage-recovery.test.ts": "81424c655f0e92cb2ef11442115b0ab06fb5ffd20d7b42f162bb9356efd25323",
+    "agent/src/hand/loop.ts": "803965ff46f0ade840b5d04da99f510cb3f2321245d47025008ec3b2ff72c8ac",
+    "agent/src/hand/screens/selection.ts": "c4432b5fdf8c352ad4d834a87340a3ee69d69606ea705420e4b113db4228c647",
+    "agent/src/memory/journal-replay.ts": "b2273f526812f13e4c1061a8636d3105102ccd8dd566a18177b44ea16f09d848",
+    "agent/src/memory/types.ts": "ac5a1f30d81f8bc0943fa96c49b48270641c2be0fb3f4ab2e1c461560b700d7a",
+    "agent/src/reflex/card-model.ts": "46206367e6b61cbefd5759598db543c346bc1e7b1ded09f0a49607e2faf71031",
+    "agent/src/reflex/continuation-value.ts": "002277b50728ab8fd405799c0a3345e5dcb788ba8f37d5489b5fbcd9623029bb",
+    "agent/src/reflex/rollout-live.ts": "f8ad61514ea9f3919a4359edc3c32f01f326cb24139613933a98dcdfe0f7233e",
+    "agent/src/reflex/rollout.ts": "4e7dbe020d98526aa2ca033302894deb77a817916449ff7e7b1a55bc2e57d5a4",
+    "agent/src/reflex/silent-apotheosis.ts": "cd7f4956fcda62c63c585ae252b9033a0ff9622390f227fe4c256a8fffb33f0f",
+    "agent/src/reflex/silent-skittish.ts": "dbfa23ec61b30dff80b5f8158cf2f8c9da6ad8cb5e70334f9ab402689b491820",
+    "agent/src/reflex/turn-solver.ts": "1ecb3544e15ec4ef07f16bc03eb4f963839b90741dc88ec89a65cef74a7cf3eb",
+    "agent/src/sim/boss-sim.ts": "f30a0c5bdd66d63b7ccd962947735ca2dfded2eaec76dd364f5e90fec0aafac6",
+    "agent/src/sim/boss-start.ts": "01ef66ce210a3d022f1e28e34188b7005c7a88aa2b020e6f242f4030a95aee02",
+    "agent/src/sim/build-sim-facts.ts": "c86879476796b8f49dde0078923e6ba5e46e725210d23acf14a0195b6bcb652e",
+    "agent/src/sim/build-sim.ts": "e1384889748cf42f31aaab5be173e9dde4227c3a0b34a919026068ef34c9a115",
+    "agent/src/sim/double-boss-start.ts": "3241dedb92ff1ff9803df3786f15e65e669e7371756cca8668fb8c57771e97eb",
+    "agent/src/sim/quantitative-calibration.ts": "7edb1b8fa86b49f60ec2e1e4ddee1c6e065432d18ad8cf81461e97fc8242527f",
+    "agent/src/sim/quantitative-facts.ts": "12b495e8c9922b9c4412ee0a86c5226383833896306c4a283bc6e00aa19845ba",
+    "agent/src/sim/quantitative-stats.ts": "e33124df786f4060919d6713e494f9ce447b20c75113a573f7e549adf4e8a377",
+    "agent/src/sim/silent-opening.ts": "f3baa27bfac07d9f60995e37b7bbe31f7fa5baa63f18dd4fda3bc8d2c09bf502",
+    "agent/src/sl/attempts.ts": "f3f785f18c77ccc482a58b236d168780c8e010fb0bec12ec3e14ab61a8aca415",
+    "agent/src/sl/controller.ts": "675b4408fa8c6d7074c8db98f949bd14a422fd57c6bbb28a0ed438c85070b4fc",
+    "agent/src/sl/explore.ts": "2f37e85cc1c1c31e96a0d1b90db850893ec75b6cf5b4b84bf07bbb8de4e3ec43",
+    "agent/tests/ascension-observed.test.ts": "9e3d7161f1a288983b9efa2bcc97dc0b24a4e248547645daa33967d82fceaf9e",
+    "agent/tests/brain-codex-session.test.ts": "071d3559d3b67124cbcb2114bef49894a0fec347cbc47938e837cf742487e2da",
+    "agent/tests/brain-codex-usage.test.ts": "bb6f20c22566bcc8c4aba152f8a37c0e5389dff632fbd2573b5fb66c179caac5",
+    "agent/tests/ops-codex.test.ts": "2cefb9f915d9ba776a101825166ea23679697added546a51dd1a5c472fc70eac",
+    "agent/tests/ops-deferred.test.ts": "f57736987cc75f99727561f77e65fe6b32510afd572a1e8bdf5f31a2215a156d",
+    "agent/tests/quantitative.test.ts": "51394101f86fcb228348b4e84f0926a95d2e34c797de5eef7fe3b2251721bb90",
+    "agent/tests/silent-apotheosis-backflip-evidence.json": "b3049234c3f15826086521baca96cbfd60dfb7c7bf53c07a50e8598694232ea5",
+    "agent/tests/silent-apotheosis-backflip.test.ts": "92b8265b3f0d52b73555224c976d58a5cb104d1e38064a566d3de76aaeb08500",
+    "agent/tests/silent-apotheosis-footwork-evidence.json": "6a94369baed38189402ebe7703dbb56e93fa06fb45c8a2ba5ebef36841b5885d",
+    "agent/tests/silent-apotheosis-footwork.test.ts": "db08046c20a523e9b59e3ccb7df3f20313a1bd111cde2d5ac2bdfebf985b5186",
+    "agent/tests/silent-apotheosis-neutralize-evidence.json": "cf8398ada96db22b365bc1c2546dc81581daaa46fabde19ac18c171a5b23e7d1",
+    "agent/tests/silent-apotheosis-neutralize.test.ts": "9cc7983a595dec9df406dbb0d782045b3110c3aed7c819f3fab0b099a8496bb2",
+    "agent/tests/silent-apotheosis-poisoned-stab-evidence.json": "11a40365131a8bd1fee431750892af2f05423be4d19f43ef163d7a47dbc391c6",
+    "agent/tests/silent-apotheosis-poisoned-stab.test.ts": "535d47a1325a3d7174799b54b5c436e51625a9cd4cd8d00046e8cb71c6c8dc50",
+    "agent/tests/silent-apotheosis-snakebite-evidence.json": "c92db4ed2ad4591d799a7ff351fe71126c639285bab004d0a169274f70c534d5",
+    "agent/tests/silent-apotheosis-snakebite.test.ts": "973b62b4b780a680bcaa1fc62f5fa28b2deb0c2725807b965a7e6d8dd1d357e6",
+    "agent/tests/silent-apotheosis-survivor-evidence.json": "73c01fc629e8585a06d942f89fa1bc2124d44c9f94d75a177b863b1a87ace5e3",
+    "agent/tests/silent-apotheosis-survivor.test.ts": "3e72b56eba8131fda73f38e18afb6aaebdcd8a12a2ebf340fe0b681d0fee809f",
+    "agent/tests/silent-blade-dance-evidence.json": "42ac6b17ccfaac91512e9e6efba9c9b54f8e12dbbcd06a45b69081089ab06a5f",
+    "agent/tests/silent-blade-dance.test.ts": "f2ca2656e86c15c346076884fa79dddeb9511da85bdd32d1324fdca8d5d0627c",
+    "agent/tests/silent-build-win-ties.test.ts": "d25914ad4d83b3bd6f8009a296d440cb2ec03d845c3ea107c99c66deeec8237b",
+    "agent/tests/silent-cunning-evidence.json": "30791b4336e4db9e18c6edc2aacabcfd792dfdf03feb6df367386b0c5b071af6",
+    "agent/tests/silent-cunning-state.json": "5cd68e85a52bafc825a26a2f5c9f7d5c975863850572b75bb74eb89b77567d06",
+    "agent/tests/silent-cunning.test.ts": "41247716a0155c3e3b8cb013c432128db4aa0c6dff1324332e1698b1fafcf4e1",
+    "agent/tests/silent-discard-plan-evidence.json": "47a58cd5722f58e503726478542966d78362d62230d9dee864d6850ce0a7b3da",
+    "agent/tests/silent-discard-plan.test.ts": "81c578edd88a609257a3347023129ba33d48d4558cd48bf326b4cd11c6d6b587",
+    "agent/tests/silent-gardener-skittish-evidence.json": "7e3bbfa3122c116726bddff0c3c95c4735f9ab4aa3f9c7de069245b8e4548fd0",
+    "agent/tests/silent-gardener-skittish.test.ts": "11a7d5637b9b5ff84daf308c1f9ef56cb2a4647582d59f09ba5fc6ad7ae75b52",
+    "agent/tests/silent-opening-evidence.json": "4ca857515f97351bb4105fec4c826bb75530802ad3c7f61c5a8aff34e0a9e1c1",
+    "agent/tests/silent-opening.test.ts": "a52584a2f61968f48af0791c9a330cfa2c0e75f558428e34d3c19abd469aa759",
+    "agent/tests/silent-phase-reference.test.ts": "02778419a989b00199b0e80cfc1fbab2ebb0f7c0706bfc0afba93e02dab4abdf",
+    "agent/tests/silent-reattach-evidence.json": "b06a7bcbdc0454646f3c70712db1825a78156fc3855007d7d63420d4f886e86f",
+    "agent/tests/silent-reattach-reset.test.ts": "aaca99713843826328995a91110fe255abfab6cb08a59e37c4ed17894e0a4a4f",
+    "agent/tests/silent-shackling-weak-state.json": "f1b8cf626c8eb5a934932fc45dbbf11b9db69c648694ed74cd9110c085b28c35",
+    "agent/tests/silent-shackling-weak.test.ts": "b5fb802b8a0f9a3e0b64859bc2dd4efb1b0a8f4eb8a4443ff4460331ba103f12",
+    "agent/tests/silent-skittish-state.json": "813e667b7ec3e4e17f792c8cec3b5a2cfd6bfa83627bc00520a93f8fdf8731be",
+    "agent/tests/silent-skittish.test.ts": "30f266f172120e58355566a7ba300edb34afbb9e511a82fd62982ea229499a87",
+    "agent/tests/sl-giant-phase-data/yql-blast.json": "4076c874378f42a27c2038dc16c65aef45bf3aabdd26bfd2df838106e8c77b94",
+    "agent/tests/sl-giant-phase.test.ts": "e954b925c2ac29abc9c5614687ff5560414945c3cfee40077fcc36f4ba06f41c",
+    "ops/codex-ops-learn.py": "e3ed8d46869b2479c8fa4f2d3a1f5a6292059237556831c59c838e8da3acdc0b",
+    "ops/codex-ops.sh": "cab435ba62d94915b7cb2fdd5b949e1da12e8d3a0523c226e3722f08fb2fe51b",
+    "agent/tests/eval-data/versions.json": "5d2f2a00a1901b1f4046d63a56a250cd848c3015c284d946745bdbe162a4cb2c",
+    "agent/tests/eval_metrics_test.py": "0677cf1e75dc42f3046d67d43f90df656d4d1f2e1ba90efbae1e54e4ac4d8868",
+    "agent/tests/target-options.test.ts": "91a53e184797b70add5414775ff41c96ac7a866410b7c9e4b39e9fd723e009d1",
+    "agent/tests/ledger-publication-baseline.test.ts": "40ca0960b214c9ff3fd0415ac8cd9c9730d513df57726d0a4ddd6928d4f011fc",
+    "agent/tests/ledger_publication_baseline_test.py": "1b3356feb984cbaeeb032382b275c3d9294e9f2eb1c485f6372dd9a917efcf69",
+    "learner/ledger.py": "3b3071078cfb5394fc9b14f32078e4c3a559255bf9efeacf6ed17e15092b2a61",
+    "agent/tests/learner-entry.test.ts": "4473a6e802730d1b543f4cd15d712d5d9d19c7bb984eceeca1121e1016d22629",
+    "ops/codex-ops-learner.sh": "009a1aec224aa1fe2afae4dbb1720ada5eba76967279b0bf57658cb9a1e62b2e",
+    "ops/learner_entry.py": "a77f9f94d7137ef14e59326c568528618f1aa64f16b9d7fea8eca018f51a93ce",
+    "ops/tests/test_learner_entry.py": "29cab02478bebc5520979d6ff52e8a48c5c0451420d76464daa796c751d508ba",
+    "ops/tests/test_learner_launch_failures.py": "f514ebdc8ca08b450c3e047b5003a1dbcb87b53c2f53d213efe57a4ff3dff9ad",
+    "ops/tests/test_strategy_implementation.py": "8e40ef0c0bc96278e1c45ef0620123c41bca87a08f0f9ed35c75b8a6850d7979",
+    "ops/tests/test_strategy_implementation_continuation.py": "7fcc6eb901fc9637507570415da5ff0cba38bd493014bb2608e14355ef9dc25d",
+    "ops/tests/test_strategy_research_scheduling.py": "02210f9d8879779338d17f6acdb874624b3f917574c192066c06d241cab04df8",
+    "agent/src/sim/global-build-observer.ts": "ecce02a61eebb79e46e95e6f5ea818227afb72072bd585e72fcb784aef85fbc4",
+    "agent/src/sim/global-build.ts": "4daa2d07465bef20e759a28281194131a06cce43e9be606a43b1186bc7c0019b",
+    "agent/tests/adaptive_health_test.py": "1b3b26ddc4b081c745ced4f00530c271a652008193d61c94942dba0cbe8d4143",
+    "agent/tests/fixtures/h1-budget-completion.json": "5a69eda1ec70c4c70bc3465d025c5ad87bffcb21ffeeff59e77aff8992255e8d",
+    "agent/tests/global-build-observer.test.ts": "e9c80da81ed22c150fef13625aaf82a1b1ce9d17dea2947acfdafbd97a6a852d",
+    "agent/tests/global-build.test.ts": "2a936ef4a754d5574998c9e1ff3add0bc9a05ae3a770cd5199d84e0041e2c741",
+    "agent/tests/global_build_health_test.py": "ac6c1b1d51cd325a6de96e8a9fec76bcb782482a13f13d26d7624e8a8bf42b14",
+    "agent/tests/human-pace-sampling.test.ts": "0b91c8dda4a86f636ebde122ef1523bc635a121e5a853e8a80286e5fd4b065fd",
+    "ops/adaptive_health.py": "4ff7a071fd922c227842cd8b4152957cd8e90017a4b86c335a2ab3e8ecf4e19e",
+    "ops/global_build_health.py": "c156fae120daa48b455981d85c40a8fbc9d59061ff355a8b59fa36ce679f0983",
+    "agent/src/sim/boss-lines.ts": "ee25326b2f01c82cea39b4b09a78340080784b4c30527fa2b17c3e2a971e0837",
+    "agent/tests/learner-report-fixes-shape.test.ts": "6e46a0a801d731401b411bfe5674fd327205a0bf20671068543ce3bc4ea6d65e",
+    "ops/learner_checks.py": "6eaeb3297eb8beb15aff8a7ec06ab016c330e4e00d0594fd2a9c28820a07a88d",
+    "ops/tests/test_learner_report_fixes_shape.py": "f4ebe4913cde0de98452020f7f60c44ccff970f2b2419e2094838bc7f163cc81",
+    "agent/tests/unassigned-proposal-resolution.test.ts": "20f5ec8e1fe8c6121f3cdf943c05f2ce6953c9559f698225d334583e73d01bb4",
+    "ops/proposal_dispatch.py": "18c5484dd67a13dce6868fd9cf1faebe3ea146372de48cc74172050c6dbf3e5f",
+    "ops/tests/test_unassigned_proposal_resolution.py": "27ee1431351766c4f27458137277ca3eae8569805eecdd7b920ac76f036e1ced",
+    "agent/tests/brain-codex.test.ts": "aa4490b5719799bdf801b94c5f66080404918b78da9c1df9219fdd04013c1320",
+    "agent/tests/codex-stall-fixture.test.ts": "4b58364b4c13a1c8c62f1b4ff61644d472d653005b61e6c94fb9b69e26fb28f0",
+    "agent/tests/codex-stall-fixture.ts": "557b2387de75dff4e4864a0a6e1870c56f71e31359cabdabae1daebf1923015c",
+    "agent/tests/paper-dataset-publication.test.ts": "2e3ac502898988042516f4293f428bf9c480ea3c5bca7ae7233deffb9aca0142",
+    "ops/paper_dataset.py": "5bf7ad110ae9985c35c5cdb27f4059e1d24340a039fa643e9a19bb0e1853c2ec",
+    "ops/tests/test_paper_dataset_publication.py": "1db152ed93537a4fdb3823bcbba2a009fa66e0e5a034bd0cac0f1c082989825e",
+    "agent/tests/codex-abort-fixture.test.ts": "8f16a245d9610e7faaf9c5505b0fa88b94a6c62e8f9f5dfd5f7ce4545a95c852",
+    "agent/tests/build-decider.test.ts": "1dbd469af49e20ba47e480ee8dd925d6047927dcde400fec43a2861d0beb230a",
+    "agent/tests/fixture-http.test.ts": "19128891c406ca21680eb62589bb931a7243780ca987213acd8572cd32dd3331",
+    "agent/tests/fixture-http.ts": "811b1e7cc0d1859a0a64eea59e9f77463a964b1c9164f6d8ad526eb1fef7353e",
+    "agent/tests/global-build-fixed-inputs.test.ts": "31bef53c02c5b714ed55d98ed79f5e26a015c838e091dc2f589527000320e8dc",
+    "agent/tests/global-build-integration.test.ts": "841da1f6e1be134449eda538be58f22e7ca845ae0641f356274c90cce76aaafe",
+    "agent/tests/journal-replay.test.ts": "cfe307e372917af034fd34af44bc0df5c5b75da4f2c0703dbc3d8244799b1ea2",
+    "agent/tests/learner-retention-fixture.test.ts": "d99c2389881020117fdd5b245354f3f80d5170288ecf61b939170e89ec27cf71",
+    "agent/tests/learner-retention.test.ts": "473a64f6c48adf093521656373fc22bfe028dcf43814b015e5a48c34004fae9d",
+    "agent/tests/loop-consumer-fixed-transport.test.ts": "be412087e1a59601b85f3d4e213cf5a06eb284525574dcf8dac58cd5d65fd4f4",
+    "agent/tests/oneshot-support.ts": "f7375ebdbe63c02b4c0d240f0cbb5e541e08e335a4d59307e839bab857d2c866",
+    "agent/tests/synthetic-board-fixture.ts": "4535bfd0a01b04479bb09bb2ac486ebef00908e23b49e3157ec05a2ab1e70f68",
+    "agent/tests/herdr-workspace-fixture.ts": "a31baa440fcb133204ea5ba111fb78a70be6784719e71695684a6b2b66e69d59",
+    "agent/tests/ops-herdr.test.ts": "6157ab4f32069db7fbd0f82101a5fca27a75db1d6c850d7c3d2b50b53ee1440e",
+    "agent/tests/fixtures/human-pace-indifferent.json": "4533bd247906e9a6448f65d0fa11e68f7027bd55257dd4871f638321a514f9ed",
+    "agent/tests/manual-notice-ack.test.ts": "9bc4a706c9957b9287173861a86eefc4a92f98ac2126d25e9886e804567e1041",
+    "ops/learning_requests.py": "be1650c070935a162a5ed8fbd7a98164a0bd651b409624f3d5c7d4e10be8c46f",
+    "ops/tests/test_manual_notice_ack.py": "5b5712951f94eed9ea46b22d0261cb741a687a749a403731b4fe5bc34a6312a6",
+    "agent/tests/ordinary-close-isolation.test.ts": "0f21efad90e5a78db4614f4f3a21ae1e4621d58cb25f5cff429cd2a5eaa3fffe",
+    "ops/ordinary_close.py": "a1d0ecd83d1d3ed4131a89dccef2ee65d6acbaabf6171b17b9143c4adad921d3",
+    "ops/tests/test_ordinary_close.py": "eb4551c83494f4d133ceb32f96431ca060ddb78f8664824c89fe7698c871ebc7",
+    "agent/tests/v6-history-refresh-exclusions.test.ts": "cd6edd9fb7701ec848161f8edf7534978cf2c288b3d9b1d81ebc9bef11b523ae",
+    "agent/tests/v6_learning_loop_test.py": "19339960a6c40ef3565c41d2cec1c3bbcb6bcba0be036d63d6dbeaf72441852b",
+    "knowledge/builders/build-combo-metrics.py": "4c8bdcf561ad54b52a8ac53d83ad75373b87e64bb60e5cb92db3d27749fce3b4",
+    "knowledge/builders/combo_metrics.py": "d0c6703162765f1eda955953c0925395ec2f7eae2e76caff1407b17f9594568e",
+    "knowledge/builders/refresh-v6-history.py": "1b28a1f14e7269b3cd933160bacf46d8b8f3fbf2eecc585fc41ec0296323ecfa",
+    "learner/evidence_identity.py": "e1f6da7ca1a44b7de61454ee057c2f11ab0cfab758c0b878274f6fd6cda760dc",
+    "agent/tests/cadence-no-change.test.ts": "94bd26e35c60bc7407f22392ba43a92f8d8d9ae13bf43c8917f7baba0f761108",
+    "ops/learner_retention.py": "836bf1f121e1096f057f8329ac03555a3b310b00baf20e3b9d51b141975f803b",
+    "ops/tests/test_cadence_no_change.py": "8882590dd3fbe488a4cbc78cb4905009d9a13182a5e916a85e6c3ad4b9696fbf",
+    "agent/tests/fixture-command.py": "a68145ebbf646a0d9c0dd0b7fd777f39f5a417b07aad8a5a311d97c57c2c939d",
+    "agent/tests/fixture-command.test.ts": "d518125a31dc0e913e615725990fcd544bb07f7f0701f0362dcb8e0c545cd6aa",
+    "agent/tests/fixture-command.ts": "17d73f446f67bd436704e80fe8ad914c6fafd02e4d2b6867ef1bea6cf7e87d3c",
+    "agent/tests/knowledge-catalog.test.ts": "81c3c36be2fc6030be5a8cd7ba7e276f3f812aa74186df22f4b385ce6107c1dc",
+    "agent/tests/sandbox-entry.test.ts": "ec8b8daca065a1d78a150acad9113f55287c138fd78edc18f8981753bdc624d4",
+    "agent/tests/v6-appearance.test.ts": "6ecc1553db56c4b3c218fa42786b1d7303ceca98215ebc1b54a385a0a3fa1507",
+    "agent/tests/v6-combo-metrics.test.ts": "1027f2a7dd17e42238034f9a88f7bde4d372e4cb383895dc9e3b72907a8e4273",
+    "agent/tests/v6-combo-simulation.test.ts": "a4a1c28100ea1a0246ff9941826f1adca6f08b9123e4b52639919f96725326e5",
+    "agent/tests/v6-draft.test.ts": "ee73bbcc08691961ab48bc886f6efdb4e046f14d15eef839ad96149d60d68f1e",
+    "agent/tests/v6-history-pack.test.ts": "3d259078e5638f50000cd7bbfc15b4da0c24c5a23337ecbb35d5e22f37ccad3d",
+    "agent/tools/temp-root.mjs": "6e1c94defdb13148b5ab73ad988104979d859fd4692fdc405573caef43a81d9b",
+    "agent/tools/with-temp.mjs": "e86ca371fb21fa45888339733e67c66a4a3024a21997bb79bd2ae8a6d60d9619",
+    "agent/tests/temp-lifecycle.test.ts": "c7ea35cf41d6524726ac554dd4d791b830dab02f81350c4481c4600738f698b8",
+    "ops/disk_admission.py": "951344eee84cf8f5e967b59784e01e0043e1b140c2790520af119d51e3d744b7"
+  },
+  "changed_fingerprints": [
+    {
+      "path": "agent/src/hand/loop.ts",
+      "before": "18a48d176cb30bc3a10b707d4e86359bd717e8c9475075ce2e3f67d565893ec4",
+      "after": "803965ff46f0ade840b5d04da99f510cb3f2321245d47025008ec3b2ff72c8ac",
+      "item": "ascension-up：请求目标误报实际进阶"
+    },
+    {
+      "path": "agent/src/memory/types.ts",
+      "before": "4a1105831976833a527daecd4b4754ca6aa04fb95aa65919e6dbe31a11fad361",
+      "after": "ac5a1f30d81f8bc0943fa96c49b48270641c2be0fb3f4ab2e1c461560b700d7a",
+      "item": "ascension-up：请求目标误报实际进阶"
+    }
+  ],
+  "missing_files": [],
+  "commit_ancestors": {
+    "3b48088dec5fc6eafe576a1296bbdadde43432ee": true,
+    "5b56a452bb9be14d620b368ec46974c1b57901ca": true,
+    "5c7105ff0294466da8319f2934beda05c6040794": true,
+    "ec29ea34b919344b707e57ba472ea210f9c39d62": true,
+    "e784dd9f043bf87c29109573f48975f9903280d3": true,
+    "222445a9bb6bf56cb4f3ceea2cc8b20fba54128f": true,
+    "db20ec3cc6cd0e47ac014d0c523dd4ed1c781d26": true,
+    "81d6226fe2c0220be145b5ff1487acbf512153f1": true,
+    "1ffc0746d7de299fbb7856d397af9da0ab899558": true,
+    "b49112dbc106e315bd7156361d290fc4c73d29e2": true,
+    "a46239a29c3109ff9f69224ad77128d9929d3e9a": true,
+    "b9d6ed779c9e369d1f02a0e0935acbe4d1e44d14": true,
+    "c1d84804956bedbd29a7f0e81294114e18415b9d": true,
+    "6c7019e659b9655d8751002e918ea7fd7dec5041": true,
+    "66283dd9982bdd7f480da7a4d9bfefea0572a9ac": true,
+    "e5e2995d659d15af79ec8bba67a4a25c1cb7295f": true,
+    "8045d9fbf0a12523b1dbe39bbed8af06c7497b09": true,
+    "d9881ba593b0b8d701ebbe1c95626c0ebdd554c7": true,
+    "c57105ca66bd75c6d6952772dcf712399eda828b": true,
+    "dd478f0b3e5a0f234f082972d21b203dbf8229d7": true,
+    "22efae55484bc2bdcc54e847a8dc40bb4888c4e2": true,
+    "a473263eb35ce5bea8e06f1ee94f4da1ba880bc3": true,
+    "c40e43fd25c200a01f4da94a4dac8db1b34664a8": true,
+    "660b194c950f017e356a4b3da952e127c7e5c768": true,
+    "d959e176af7338ea2bca6f4ff9a39673b80e5fdf": true,
+    "4c16dab0457a61e22ef06b27e367d146cb99bab3": true,
+    "e87e6cc08bfb2c90e1961d6783cf0c2a7462aac3": true,
+    "edbbbd6ccffa40decdb6487411d80e3f688f0907": true,
+    "0b240cbd109a5e004f010d9659a871204c455639": true,
+    "a6913706952661afe1de38f290cd9434cbb91621": true,
+    "87c1381a4461c81f9f948a1796600d019c544349": true,
+    "698d3bd20fc95e2791e6fab8d5ad4c2c9e01a5c4": true,
+    "5011b4cbda9a9056a1fd146e375e3cd67b60c0a9": true,
+    "082cc70bfab2f1f98eb67fc1d441dfd23b6962ee": true,
+    "b675eb67f3687fb137434ef9610f1503edbbe8bc": true,
+    "de94aa263bfb25363c13d2968c976d8c9138f5c1": true,
+    "cd2f11496e6f8957c59ef72f70b2c6596cce6e63": true,
+    "ca6897f2e433c9c3bb45d0dad46ba685d864c87d": true,
+    "cb2dd0375f8cb5637a2813dc2845f702d6007f27": true,
+    "16ebc4aecb12a1d4b2f34ee767bb2816a3a0b466": true,
+    "6ee8e2a2c1edc31492962137b96af8c6e1d12093": true,
+    "052e586d753df2f10e478b95e72e2993eb808229": true,
+    "577f0bc424b7287910735cfdc86c253cc7ee8057": true,
+    "21a9c52484f04d510bd397959c958ec9767f1d2d": true,
+    "5c92f2aaf0b758a1a5e7d591745694004664f83a": true,
+    "4c7b8d9bf48f54163c04d8e4f4f79ae6eb402e83": true
+  },
+  "source_changes_since_prior": [
+    "agent/src/brain/brain.ts",
+    "agent/src/brain/specs.ts",
+    "agent/src/hand/loop.ts",
+    "agent/src/memory/types.ts",
+    "agent/src/sim/v6-card-results.ts",
+    "agent/src/v6/card-pick.ts",
+    "agent/src/v6/card-results-input.ts",
+    "agent/src/v6/card-reward-scope.ts",
+    "agent/src/v6/config.ts",
+    "agent/src/v6/construction-safety.ts",
+    "agent/src/v6/direction-plan.ts",
+    "agent/src/v6/direction-prompt.ts",
+    "agent/src/v6/direction-rides.ts",
+    "agent/src/v6/direction-runtime.ts",
+    "agent/src/v6/projection-input.ts",
+    "agent/src/v6/projection-runtime.ts",
+    "agent/src/v6/prompt-summary.ts",
+    "agent/src/v6/replan-triggers.ts",
+    "agent/tests/rollout.test.ts",
+    "agent/tests/v6-card-input-bridge.test.ts",
+    "agent/tests/v6-card-pick.test.ts",
+    "agent/tests/v6-card-results-input.test.ts",
+    "agent/tests/v6-card-results.test.ts",
+    "agent/tests/v6-card-reward-scope.test.ts",
+    "agent/tests/v6-card-route-scope.test.ts",
+    "agent/tests/v6-completed-core-peek.test.ts",
+    "agent/tests/v6-construction-safety.test.ts",
+    "agent/tests/v6-direction-backoff.test.ts",
+    "agent/tests/v6-direction-fastpath-benchmark.test.ts",
+    "agent/tests/v6-direction-fastpath-fixture.ts",
+    "agent/tests/v6-direction-fastpath.test.ts",
+    "agent/tests/v6-direction-plan.test.ts",
+    "agent/tests/v6-direction-prompt.test.ts",
+    "agent/tests/v6-direction-provider.test.ts",
+    "agent/tests/v6-direction-rides.test.ts",
+    "agent/tests/v6-direction-runtime.test.ts",
+    "agent/tests/v6-projection-entries.test.ts",
+    "agent/tests/v6-projection-runtime.test.ts",
+    "agent/tests/v6-prompt-summary-fixtures.ts",
+    "agent/tests/v6-prompt-summary.test.ts",
+    "eval/versions.json",
+    "ops/codex-ops/pending-continuations/roy-JWJLSQXDKUA2-five-item-live-resume-gate.json",
+    "ops/inbox-dev.md",
+    "ops/production-runtime.sh"
+  ],
+  "checkbox_items": [
+    {
+      "line": 784,
+      "item": "silent-0254：无出牌决策的死亡战斗漏记，death_fight误用上一胜战",
+      "source": "- [ ] **silent-0254：无出牌决策的死亡战斗漏记，death_fight误用上一胜战**。学习者定位ops/report.py:130以COMBAT决策开窗口，:337/:380取fights[-1]归因。静默A10 TXZ6RVMQA09D：runs.jsonl:587及自动局报误写F48 AEONGLASS，states:281563是F48胜后奖励4/62；281565—281566为F49 TEST_SUBJECT #C65开场4→0、敌111/111；本场0出牌/0COMBAT决策，只有275405 GAME_OVER finalize，22攻击未执行。证据和原始报告见learner/runs/20261007-214301-postmortem/bug-death-fight.md及本轮归档。",
+      "disposition": "已修，当前main基线已包含；只对应原工程子项，不关闭宽父",
+      "commit": "3b48088dec5fc6eafe576a1296bbdadde43432ee",
+      "changed_paths": [
+        "agent/tests/report_death_fight_test.py",
+        "ops/report.py"
+      ],
+      "current_file_sha256": {
+        "agent/tests/report_death_fight_test.py": "db55c40e877700efbaeeff71767cdb8452ff1de221126f8e31e3dc562e65392d",
+        "ops/report.py": "239fabfc3555fd4e4dd271f3e5b8f0aa8bf87d9bdc31197c114d9d29f17878ed"
+      },
+      "commit_is_base_ancestor": true
+    },
+    {
+      "line": 789,
+      "item": "silent-0256：狡诈药水确定生成未建模，容量及出刀顺序未参与方案比较",
+      "source": "- [ ] **silent-0256：狡诈药水确定生成未建模，容量及出刀顺序未参与方案比较**。学习者定位agent/src/reflex/card-model.ts:1556—1558，POTION_EFFECTS缺CUNNING_POTION导致modelPotion返回null；combat-plan.ts:3159排除模型、:3844仅直接饮用。较早首证SADL3CGYTGSR A7 F8 T1手3→6实添3升级刀，NB8KCF6HRGVF F31 T5手5→8实添3刀；WQZVENQ7DTRP A10 F33 T11第5次手8→10→10→10添2/0/0、第6次手5→8→10→10添3/2/0。按原学习者cunning-model-proposal.md/json补固定药水模型及可观察容量，验证顺序和未知边界；仅是模型缺口，正常对局已结束，不按卡死修游戏，不声称补模必能赢整场。0257容量机制及a327449c331efbc1 SL血价边界由独立策略链处理，不由运维补玩法。保留首证A7/prior=no与旧日志，原证据见learner/runs/20261007-221303-postmortem及本轮归档。已有4111ed10f08739cb提案由调度器续办，不重复派发。",
+      "disposition": "已修，现存源码与固定测试已回读；不重复实现或关闭宽父",
+      "commit": "5b56a452bb9be14d620b368ec46974c1b57901ca",
+      "test": "agent/tests/silent-cunning.test.ts",
+      "scope": "已观察Silent A10确定生成、容量与顺序分支；不扩大未观察机制",
+      "current_file_sha256": {},
+      "commit_is_base_ancestor": true
+    },
+    {
+      "line": 793,
+      "item": "silent-0260：普通紧勒后续逐牌失血漏模",
+      "source": "- [ ] **silent-0260：普通紧勒后续逐牌失血漏模**。学习者定位agent/src/reflex/card-model.ts:1043、combat-plan.ts:745、turn-solver.ts:2252，缺普通STRANGLE效果/真实STRANGLE_POWER读取/卡牌完成触发接线。Q6M2Y34MWKRE A10 F8 T4同完整三牌预测19、实际23、玩家损1相同；首证Y6GM2CHWJBEY A0 F4 T1预测27、实际29。按原proposal-strangle-bug.md/json补固定证据模型，核真实中途接续、技能选择完成及轮末消失；保留未观察升级/叠加/重放/其他角色边界，不凭模型漏4断言导致本局死亡或修后必胜。正常完局，无阻塞，沿既有silent-proposal-1b9e29122364fa68自动策略链处理，不重复派发。0261机制与0259再生/0262蛞蝓机制交学习者，运维不补游戏知识；原证据learner/runs/20261007-224302-postmortem及本轮归档。",
+      "disposition": "已修，现存源码与固定测试已回读；不重复实现或关闭宽父",
+      "commit": "5c7105ff0294466da8319f2934beda05c6040794",
+      "test": "agent/tests/silent-strangle.test.ts",
+      "scope": "普通紧勒及已观察真实power传递",
+      "current_file_sha256": {},
+      "commit_is_base_ancestor": true
+    },
+    {
+      "line": 797,
+      "item": "silent-0263：已有虚弱的意图转向后少算1伤",
+      "source": "- [ ] **silent-0263：已有虚弱的意图转向后少算1伤**。学习者定位agent/src/reflex/turn-solver.ts:2493/2546/2585；NHA2KW0RB7VP A10 F33 T2碾碎爪相同力量−2/虚弱1/同招转向后显示1→2，首战防御＋冲刺15挡预测损6、实际损7，第2次16挡预测5、实际6。保留ledger-input-rounding-bug.json、proposal-back-attack-rounding.md及六个同局固定转换；六次不当六局，原运行dirty树未存不以当前树冒充。按原提案先核底值和取整接线，底值不可追溯则明示未精确/保留waiting，不全局floor改ceil或凭显示值猜公式。末次38攻/6挡死亡预测正确，不把1点差额归为整局死因。正常完局，普通非阻塞队列，沿既有silent-proposal-cfecb5580938873d自动策略链，不重复派发。0264朝向机制、0265油灯机制及SL/精准切割提案由学习者处理，运维不补知识；原证据learner/runs/20261007-234302-postmortem和本轮归档。",
+      "disposition": "已修，现存源码与固定测试已回读；不重复实现或关闭宽父",
+      "commit": "ec29ea34b919344b707e57ba472ea210f9c39d62",
+      "test": "agent/tests/silent-crusher-facing.test.ts",
+      "scope": "已核底值窗口的取整/转向；未知模板仍保边界",
+      "current_file_sha256": {},
+      "commit_is_base_ancestor": true
+    },
+    {
+      "line": 801,
+      "item": "silent-0266：SL已尝试键排序整轮牌，丢失投斧首牌身份",
+      "source": "- [ ] **silent-0266：SL已尝试键排序整轮牌，丢失投斧首牌身份**。学习者定位agent/src/sl/explore.ts:357规范排序、:390相等判重及combat-plan.ts:2151—2152保存候选/续步身份。证据G33HU22H2543/SILENT A10 F48 T1、decisions277909/277954/278032、sl-attempts995/996/998：余像+先打与闪亮登场+先打被保存为同一canon，第四次已试集合仍排除该键，六次未实际先余像。保留canon-collision.json、raw-verification.json和proposal-sl-first-card.md/json；旧对局710dc4dc+dirty树未存，当前0d6c1a82仅定位，不冒称对局源码。正常完局，普通非阻塞队列，沿既有silent-proposal-9b4049b484730143自动策略链，先核共享租约/源码避免重复派发或实现。按原提案限定已观察的首牌未消费条件，统一候选/实际前缀/续步/饮药/tried.cards/规范及宽松判重，保留数量和目标；固定红绿及角色等价后自测实际合live再CLI登记。六次为同一局，缺余像先打整场实盘或胜局，不改变首牌偏好/HP护栏，不承诺修后通关，不把本项当整局死因；打法/机制由学习者闭环，运维不补知识。原证据learner/runs/20261008-004302-postmortem及本轮归档。",
+      "disposition": "已修，现存源码与固定测试已回读；不重复实现或关闭宽父",
+      "commit": "e784dd9f043bf87c29109573f48975f9903280d3",
+      "test": "agent/tests/silent-axe-identity.test.ts",
+      "scope": "已观察首卡身份、续步与判重",
+      "current_file_sha256": {},
+      "commit_is_base_ancestor": true
+    },
+    {
+      "line": 810,
+      "item": "silent-0271：毒胜提前返回遗漏保血候选",
+      "source": "- [ ] 学习者复盘 XTSV1U9JD34T／SILENT A10 F48 T8：decision280547直接end_turn；states286893—286896中32HP／0挡、5能量与手持凋萎，胜前实际受9伤后23HP进入F49。定位turn-solver.ts:3764在evaluate.winsFight立即返回，combat-plan.ts:3293/3296选首个无药必胜候选；已有连战估值无法比较未生成的防御候选。正常完局，交普通非阻塞修复链。",
+      "disposition": "已修，现存源码与固定测试已回读；不重复实现或关闭宽父",
+      "commit": "222445a9bb6bf56cb4f3ceea2cc8b20fba54128f",
+      "test": "agent/tests/silent-poison-win-search.test.ts",
+      "scope": "已观察第一boss毒胜继续搜索",
+      "current_file_sha256": {},
+      "commit_is_base_ancestor": true
+    },
+    {
+      "line": 817,
+      "item": "silent-0272：商店移除名单预判误报",
+      "source": "- [ ] 学习者复盘9Z9H2EXKLF3T／静默A10 F37：decisions281240/281241将REGRET悔恨写进not_on_selection_screen，大脑据此改删STRIKE_SILENT；states287619牌组索引33、287620实际移除页25项且悔恨位于索引0，281242选索引1后287621仍留悔恨。oneshot.ts:212/217按原牌组顺序截取前25份，shop.ts:520输出不可选事实、:357拒绝该目标。正常完局，交普通非阻塞队列。",
+      "disposition": "已修，现存源码与固定测试已回读；不重复实现或关闭宽父",
+      "commit": "db20ec3cc6cd0e47ac014d0c523dd4ed1c781d26",
+      "test": "agent/tests/shop-removal-preview.test.ts",
+      "scope": "预判非现场事实、实际名单差异和当前索引",
+      "current_file_sha256": {},
+      "commit_is_base_ancestor": true
+    },
+    {
+      "line": 831,
+      "item": "silent-0279：SL抽序升级改标身份",
+      "source": "- [ ] 学习者复盘GXNKW8X1XYJP／静默A10 F45 T2→T3：sl-attempts1053—1056将原抽牌堆BLADE_DANCE、ACCELERANT、OUTBREAK、SUCKER_PUNCH列为inserted，旧升级键未入手离堆，已知前缀截到19/18/19/18；states290201→290206及290214核战内改标／出口恢复，瞬时完整中间帧未记录。当前draws.ts:568/569整堆作差、:602/:657/:674归新牌／离堆；行号取复盘只读live，运行b1714285+dirty完整源码未保存。正常完局，交普通非阻塞队列，未证明影响胜负。",
+      "disposition": "游戏机制/策略及其事实传递，保留既有 strategy-proposal 链，不补游戏知识",
+      "current_file_sha256": {}
+    },
+    {
+      "line": 900,
+      "item": "非阻塞系统／测试缺口，根因未核定",
+      "source": "- [ ] **非阻塞系统／测试缺口，根因未核定**：批次20261008-144109-experience-update固定发布2b1a5f6d491f826ea1bac28f707716d109fb3e65/树bd8c1560dab59b4e07d1693b44bfcd7b6ddcb0d7完整tsc0/vitest1；301文件3428例通过、1文件1例失败、2跳过。`agent/tests/rollout-live.test.ts:132:28` 的 `addedSomewhere` 预期true实得false（未展示的rollout最佳线路应被补入题面）。原日志/home/dw/Projects/agent-sts2/ops/codex-ops/learner/20261008-144109-experience-update.fallback-bd8c1560dab59b4e07d1693b44bfcd7b6ddcb0d7.checks.log，SHA256=c75b7f764d641ca8ebe3c3f3291f12c6723175b0a2769fcb570008145d0c725d，15:46:39开始652.42秒，原字节归档paper/materials/silent/20261008-1558-exp100-checks/full-check-original.txt。",
+      "disposition": "已修，当前main基线已包含；只对应原工程子项，不关闭宽父",
+      "commit": "81d6226fe2c0220be145b5ff1487acbf512153f1",
+      "changed_paths": [
+        "agent/tests/rollout-best-added.test.ts",
+        "agent/tests/rollout-live.test.ts"
+      ],
+      "current_file_sha256": {
+        "agent/tests/rollout-best-added.test.ts": "085b6d3ac3a76eeafbb743e06fa4d1285d9c6beae695d4a49325fa12a01d9579",
+        "agent/tests/rollout-live.test.ts": "90d717dc6e0b65f62c44c06ea715151a061b35aa77617b0adfe8194915dc4da1"
+      },
+      "commit_is_base_ancestor": true
+    },
+    {
+      "line": 912,
+      "item": "silent-0308",
+      "source": "- [ ] **silent-0308**：仅转录学习者原回报，`agent/src/reflex/combat.ts:98/:250—252` 的单动作结束题面只合mod致死标志与攻击HP损失，漏接已有沙坑截止事实；`combat-plan.ts:1946`无可打逃离时亦未接入。CNKR125PFHJ5/SILENT A10 F33T6，d296795—296798四次end_turn均lethal=false，末题27血9挡、攻击损15后预测余12；s304228→304229玩家27→0、敌217血33毒→121血30毒，沙坑1后归零。T5整回合题面已有截止风险，本局正常结束，非卡死；只读定位433144fb的combat.ts blob与开局c70efc8c相同，完整dirty运行树未记录，不冒称恢复整棵运行源码。",
+      "disposition": "已修，现存源码与固定测试已回读；不重复实现或关闭宽父",
+      "commit": "1ffc0746d7de299fbb7856d397af9da0ab899558",
+      "test": "agent/tests/silent-single-action-sandpit.test.ts",
+      "scope": "单动作沙坑截止事实传递；未改SL政策",
+      "current_file_sha256": {},
+      "commit_is_base_ancestor": true
+    },
+    {
+      "line": 918,
+      "item": "silent-0311",
+      "source": "- [ ] **silent-0311**：仅转录学习者回报，`agent/src/reflex/rollout.ts:1690—1691` 恢复时仍令HP等于旧maxHp、只减库存，`:3196`按库存乘旧maxHp计剩余需求。R3AJCGQGGMR4/SILENT A10 F45T2/T6，s306415→306416、s306438→306439实见77→90→99，三台完整本体预算266、旧口径231，末场正常结束，非卡死。只读定位为live9949a5de；运行11d759cf+dirty，完整dirty源码未记录，不冒称还原运行树。",
+      "disposition": "游戏机制/策略及其事实传递，保留既有 strategy-proposal 链，不补游戏知识",
+      "current_file_sha256": {}
+    },
+    {
+      "line": 923,
+      "item": "silent-0317",
+      "source": "- [ ] **silent-0317**：仅转录学习者回报，`agent/src/reflex/card-model.ts:920` 将 calculatedGamble 限于未升级牌，`:1108` 未为升级分支写入 discardsHand/drawDiscardedHand，`turn-solver.ts:1676` 因而保留已弃旧手牌。HEMND3SMQYB8/A10/F48T3 d301206、F49末试T1 d301332—301335（s308992→308993弃7抽7）后缀无法执行，实际执行器重读新手牌另选；原局正常结束，非阻塞。首证R0HEV5E3QT6G/A0/F25T3 d209753—209757、s213813→213814；UACFSW4VDDLD/F48T2为学习者历史repeat。保持原prior=no/首证/observed。普通版0081已修、0300抽牌入口漏认drawDiscardedHand为另外旧条目，本升级分支单列。",
+      "disposition": "已修，现存源码与固定测试已回读；不重复实现或关闭宽父",
+      "commit": "b49112dbc106e315bd7156361d290fc4c73d29e2",
+      "test": "agent/tests/silent-calculated-gamble-upgraded.test.ts",
+      "scope": "已观察升级计算下注重抽",
+      "current_file_sha256": {},
+      "commit_is_base_ancestor": true
+    },
+    {
+      "line": 929,
+      "item": "silent-0319",
+      "source": "- [ ] **silent-0319**：仅转录学习者回报，`agent/src/reflex/card-model.ts:938/:942` 蛇咬模型仍限未升级且PoisonPower=7，升级版10毒列未建模。P2M3DFJ4DEZ3/A10/F49末试T3 d302596、s310380→310381实毒2→12且132血即刻不变；首证VN7RQJMJEFMX/A6/F17T3 d220682、s225086→225087实毒6→16。普通版0219已修，本升级分支单列，保持首证VN7/prior=no/observed。该轮后续中和被弃另属0268，15预测与21实净清的混合差不全归漏毒。沿 `silent-proposal-cbf5f609bb228ee5`（0319/0220）自动链，由学习者按原提案固定帧实现、自测、合入；已核静默A6/A10与现场10毒文本匹配范围，其他输入保持原边界，不改毒即时结算或SL/药水规则，不承诺整场转胜。",
+      "disposition": "游戏机制/策略及其事实传递，保留既有 strategy-proposal 链，不补游戏知识",
+      "current_file_sha256": {}
+    },
+    {
+      "line": 930,
+      "item": "silent-0320",
+      "source": "- [ ] **silent-0320**：仅转录学习者回报，`agent/src/reflex/card-model.ts:471` 未输出本线新建普通UNMOVABLE事件，`turn-solver.ts:1977/:1978` 只消费输入player.unmovableArmed，能力前缀后的首卡格挡没有翻倍。P2M3DFJ4DEZ3/A10/F48第二试T7 d302145、s309858—309861完整三牌预计14挡/损39，实新建1层后防御28挡、63→38损25；第六试前缀d302398再次14预测/28实挡，后续另加动作不能混成同线反例。首证本局/prior=unknown/observed保持；已建能力重读能算对不等于新建接线覆盖。沿 `silent-proposal-689c132e17b5c70f`（0320/0321/0005）自动链核验、实现、自测合入；可靠核对本轮首卡消费状态，不以block=0推断未消费，不倒补旧格挡、不重复倍算，未知重复建立/其他来源/跨角色边界保持，不承诺修后通关。",
+      "disposition": "游戏机制/策略及其事实传递，保留既有 strategy-proposal 链，不补游戏知识",
+      "current_file_sha256": {}
+    },
+    {
+      "line": 935,
+      "item": "silent-0322",
+      "source": "- [ ] **silent-0322**：仅转录学习者回报，`agent/src/reflex/card-model.ts:1144/:1146` APOTHEOSIS仍限未升级2费，已升级1费神化未接同线升级。PBUBM0LRTEDD/A10/F49第6次T1 d303529、s311342—311347完整神化+／暗影／步法／后空翻候选报14挡、实22挡，独立少报8挡；预测损11与实损1还含攻击预算差，不全归单因。普通神化0237／S1.apotheosis1已修分账，0322首证本局/A10/prior unknown/observed及0323机制原记录保持。沿 `silent-proposal-53b3db220508b3d9` 自动strategy-proposal链，学习者核对已见1费、固有升级全部牌、消耗模板并复用普通传播，自测合入；已升级牌不重复提升，保持当前技能触发敌力血价，未知费用修改、附魔、重放、其他角色及未观察进阶保持原范围。缺修后整场胜负对照，不承诺转胜，运维不实现机制。",
+      "disposition": "已修，现存源码与固定测试已回读；不重复实现或关闭宽父",
+      "commit": "a46239a29c3109ff9f69224ad77128d9929d3e9a",
+      "test": "agent/tests/silent-apotheosis-upgraded.test.ts",
+      "scope": "已观察一费升级神化",
+      "current_file_sha256": {},
+      "commit_is_base_ancestor": true
+    },
+    {
+      "line": 940,
+      "item": "silent-0324",
+      "source": "- [ ] **silent-0324**：转录学习者原回报，`agent/src/reflex/card-model.ts:929/:1104/:1109` 普通 BLADE_DANCE 的 Cards=3 被读为即时抽3，未接生成3张SHIV。FU8ZUQHBHNV9/A10/F8T3 d303671饮技能药水、d303672取牌，s311492显示0费且playable=true，d303673代码结束；T4 s311495→311496实付1能量添三张0费4伤小刀，311496→311499各扣4。首证按原台账为 C48LLXBGKXQ9/A0/F2T1 d205321候选抽3，F6T3 d205402/s209322→209323实际添三刀，prior no/observed保持；不是上线后repeat。本局正常阵亡，非阻塞，追加普通队列。",
+      "disposition": "已修，当前源码plainBladeDance包含A0/A10；固定测试核原FU8 F8 T3/T4；不重复实现",
+      "commit": "b9d6ed779c9e369d1f02a0e0935acbe4d1e44d14",
+      "test": "agent/tests/silent-plain-blade-dance-a0.test.ts",
+      "scope": "只覆盖已核A0/A10普通模板、T3免费取得与T4正常费用生成；未知模板和收益不外推",
+      "current_file_sha256": {},
+      "commit_is_base_ancestor": true
+    },
+    {
+      "line": 945,
+      "item": "silent-0329",
+      "source": "- [ ] **silent-0329**：转录学习者回报，`agent/src/reflex/turn-solver.ts:2330/:2332—2333`饮药分支未接爬行动物饰品所得3临时力量；定位另见`card-model.ts:1279`、`combat-plan.ts:2502`。0DJ6GFZZ0TG9/SILENT A10 F33T2 d305532、s313545→313548及T4 d305541、s313554→313560为学习者证据。T4原同线预测106伤、实净扣136，30差未全部隔离，不声明导致局败或修后必胜。首证本局/prior unknown/observed保持；更早CSBR5CRDWQNB在0063只核机制，旧同线预测预算未核。",
+      "disposition": "游戏机制/策略及其事实传递，保留既有 strategy-proposal 链，不补游戏知识",
+      "current_file_sha256": {}
+    },
+    {
+      "line": 952,
+      "item": "arch-funnel-guard",
+      "source": "- [ ] **arch-funnel-guard**：每次改变对局行为的上线后，按 eval/versions.json 版本自动比较本角色当前进阶的逐级转化率（第一幕路上 / F17 boss / 第二幕路上 / F33 boss / 第三幕路上 / F48 / F49；分母为上一级到达数）。任何一级相对上线前出现统计上可信的下降（方法由实现者定，须处理小样本噪声），自动立案交学习者归因；查不清时按回退流程回退该版本并通知 Roy（for-roy.md + inbox-dev.md）。验收只看目标关的做法改为同时看全漏斗。",
+      "disposition": "独立架构/学习任务，普通纯 bug 批次不实现",
+      "current_file_sha256": {}
+    },
+    {
+      "line": 953,
+      "item": "arch-learning-priority",
+      "source": "- [ ] **arch-learning-priority**：学习者派题（strategy-proposal、B4/B5 之外的打法学习）按\"该级损失的期望胜局\"排序（整局胜率 = 各级转化率之积，提高前面某级会给后面所有级带来更多局数）。排序依据和每轮选中的级写进台账，供论文核对。",
+      "disposition": "独立架构/学习任务，普通纯 bug 批次不实现",
+      "current_file_sha256": {}
+    },
+    {
+      "line": 954,
+      "item": "arch-unified-resource-value",
+      "source": "- [ ] **arch-unified-resource-value**：血量和药水的持有价值改为统一模型，输入为到下一次回血/休息前剩余战斗数、下一个休息点、敌人强度等通用量；双 boss（S1.double-boss1）应成为该模型的一个特例而不是独立规则。只针对单个 boss 的规则必须声明作用范围，并给出对其他各级转化率中性的证据。迁移时保证现有行为在已验证场景下等价或有证据更好；铁甲战士保持等价。",
+      "disposition": "独立架构/学习任务，普通纯 bug 批次不实现",
+      "current_file_sha256": {}
+    },
+    {
+      "line": 955,
+      "item": "inv-f33-regression",
+      "source": "- [ ] **inv-f33-regression**：归因调查（先做）——F33 boss 胜率下降、第二幕死亡增加是否与 S1.double-boss1 及后续 F48/F49 相关版本有关。对比上线前后在第一、二幕战斗中的用药率、进 F33 时的血量和药水数、死于 F33 时未用药水，按版本分组，结论写证据局号；不足以下结论就写明。结果写 notes/for-roy.md 通知 Roy。",
+      "disposition": "独立架构/学习任务，普通纯 bug 批次不实现",
+      "current_file_sha256": {}
+    },
+    {
+      "line": 959,
+      "item": "silent-0332",
+      "source": "- [ ] **silent-0332**：转录学习者原回报，VAC6Z1PZ1QJG/A10/F47休息题d309293，`agent/src/sim/boss-sim.ts:311`的`continuationInput`抛出`missing successful first-fight resources`；成功首战样本进入接续时未满足正HP资源契约，单样本异常传播使整题没有可用选项模拟数字（调用路径:334/:340）。缺触发样本，资源缺失与非正HP分支尚未隔离，具体机制根因未知；不根据契约错误猜改游戏规则。首证本局/prior unknown/observed保持。实际丢毒药、42→67并补两药后，对局继续至F48正常阵亡，无卡死；按非阻塞结构bug追加普通队列。",
+      "disposition": "游戏机制/策略及其事实传递，保留既有 strategy-proposal 链，不补游戏知识",
+      "current_file_sha256": {}
+    },
+    {
+      "line": 964,
+      "item": "silent-0334：升级隐秘匕首模型",
+      "source": "- [ ] 非阻塞：学习者报告升级 HIDDEN_DAGGERS 仍将弃二误作抽二，未覆盖弃牌/生成小刀分支；当前 live `agent/src/reflex/card-model.ts:921/929/1109`、`turn-solver.ts:1312` 只覆盖普通版。证据 ENKYQMS9W4ZD A6 F19T2、XZUJR08FW801 A10 F29T1，账本 silent-0334，原代码提案 `silent-proposal-6a5c67f606bd5af7` 已登记，沿调度器自动策略链实现并验收。旧普通版 silent-0153/S1.fix26 的关闭记录保留；不据此承诺修正能赢整场，不重复派发。原回报 `learner/runs/20261009-104301-postmortem/report.md`。",
+      "disposition": "游戏机制/策略及其事实传递，保留既有 strategy-proposal 链，不补游戏知识",
+      "current_file_sha256": {}
+    },
+    {
+      "line": 968,
+      "item": "silent-0338",
+      "source": "- [ ] **silent-0338**：仅转录学习者回报，静默A10/F49女王战致死差异注记漏列求解器已计入的奥利哈钢回合末挡。末试T2 d313188/d313190预测损10，却写no end-of-turn block；s321678/s321683为11血0挡对16攻击，s321684实1血；T4 sl1362末试判官明确19 incoming vs 1 HP + 0 block + 6 end-of-turn block。只读定位 `agent/src/reflex/turn-solver.ts:2975` 数值已计入、`:3083` endTurnGuards来源表遗漏，`combat-plan.ts:2010`因此错误解释攻击差。首证本局/prior unknown/observed保持；对局正常结束，诊断问题非阻塞，不将阵亡归因此项。",
+      "disposition": "已修，现存源码与固定测试已回读；不重复实现或关闭宽父",
+      "commit": "c1d84804956bedbd29a7f0e81294114e18415b9d",
+      "test": "agent/tests/end-turn-guard-sources.test.ts",
+      "scope": "仅补已计末挡的来源说明，数值等价",
+      "current_file_sha256": {},
+      "commit_is_base_ancestor": true
+    },
+    {
+      "line": 980,
+      "item": "silent-0339",
+      "source": "- [ ] **silent-0339**：转录学习者原回报，静默A10/F42卷轴T4毒杀后三敌退场且22/77血未降，控制台却记录蜥蜴尾巴已触发；`agent/src/reflex/combat-plan.ts:5004` 将假设复活余血20与实血22容差匹配，`:5054` 战胜入口核销，`:4915` 后续不计复活。F49第3至5次T3末18血7挡对46被判死读档，s323750/323769/323788与末次s323807 fingerprint相同，末次s323808实际到43/87；反证当轮必死，不证明修后整场能赢。原运行源码57b661f07+dirty、相关源码与学习者只读live相等，dirty知识快照未完整保留。首证本局/prior unknown/observed保持；本局正常结束，非卡死。",
+      "disposition": "游戏机制/策略及其事实传递，保留既有 strategy-proposal 链，不补游戏知识",
+      "current_file_sha256": {}
+    },
+    {
+      "line": 992,
+      "item": "silent-0344，坚韧之环延迟格挡未接入推演",
+      "source": "- [ ] **silent-0344，坚韧之环延迟格挡未接入推演**：仅转录学习者，证据 N8A2W8LH39N0 A10 F12 T7—T9。原定位 `agent/src/reflex/card-model.ts:852`（已读即时挡）、`agent/src/reflex/rollout.ts:1948`、`:2599`、`:1764`（两次轮初持续挡缺接线）。学习者原回报“坚韧之环即时格挡已读取，但后两次轮初格挡未接入持续推演；另见rollout.ts:1948、2599、1764。”；完整复盘/缺证限制与提案 `silent-proposal-8e17a61707d2ca02` 见 `learner/runs/20261009-194302-postmortem/proposal-toric.md`，另关联 silent-0289／silent-0345。非卡死/崩溃/非法动作，交原学习者策略链；运维不补游戏机制、参数或实现，不据此断言该局能转胜，完整 dirty 运行源码未复原与未知升级/重放范围保持。不重派、不标已修或 shipped。",
+      "disposition": "游戏机制/策略及其事实传递，保留既有 strategy-proposal 链，不补游戏知识",
+      "current_file_sha256": {}
+    },
+    {
+      "line": 1001,
+      "item": "silent-0347",
+      "source": "- [ ] **silent-0347**：证据局 54G5683J0E5S；定位 `agent/src/reflex/rollout-live.ts:831`；学习者原回报“组装师攻击召唤未接入五回合推演；活体召唤只读ILLUSION_MOVE”。完整证据、反例与未知范围见 `learner/runs/20261009-204303-postmortem/report.md`，原提案 silent-proposal-43156dee9f23ae43。不是卡死、崩溃或非法动作，交原学习者提案链；不由运维补机制或实现，不据此宣称该局能赢，不重派或标 shipped。",
+      "disposition": "游戏机制/策略及其事实传递，保留既有 strategy-proposal 链，不补游戏知识",
+      "current_file_sha256": {}
+    },
+    {
+      "line": 1005,
+      "item": "silent-0349",
+      "source": "- [ ] **silent-0349**：证据局 9663Y88TYK73；定位 `agent/src/reflex/turn-solver.ts:2684`；学习者原回报“已有虚弱后临时减力直接减显示攻击，末次尖啸方案报损3，实际需损5并死亡。”。完整证据、反例与未知范围见 `learner/runs/20261009-211302-postmortem/report.md`，原提案 silent-proposal-bb7597d8a1fe63ff。不是卡死、崩溃或非法动作，交原学习者提案链；不由运维补机制或实现，不据此宣称该局能赢，不重派或标 shipped。",
+      "disposition": "游戏机制/策略及其事实传递，保留既有 strategy-proposal 链，不补游戏知识",
+      "current_file_sha256": {}
+    },
+    {
+      "line": 1009,
+      "item": "core-build-notify-222802-rc2",
+      "source": "- [ ] **core-build-notify-222802-rc2**：父请求 roy-20261009-historical-core-builds；现有broker `core-build-notify 20261009-222802-fix-batch` 返回failed/rc2，报告身份实质验收及双收件箱已完成。原去重回执 `ops/codex-ops/core-notifications/e31642e05c34a680bb55838cefa71f98cfff06a420b1541652a3d40fc78c15ae.json` 无stderr，具体herdr失败原因未知；请既有修复链核查失败日志/原生命令与幂等恢复，保留首次失败与同请求+批+SHA身份，确认未发送后方可安全恢复，禁止重复派学习或将失败当成功。本轮不改源码，独立证据 `paper/materials/silent/20261009-2335-events/core-builds/native-notification-receipt.json`。",
+      "disposition": "证据不足/原专项保持",
+      "reason": "历史原生通知 rc2 无原 stderr，未证明可安全重送；不冒补送。",
+      "current_file_sha256": {}
+    },
+    {
+      "line": 1020,
+      "item": "silent-0362",
+      "source": "- [ ] **silent-0362**：仅转录学习者回报，证据 08A0GEAL8KQ5 / SILENT A10；定位 `agent/src/reflex/turn-solver.ts:2684`。静默A10双蟹两部件存活时，同线尖啸减力没有乘上已经存在的后方攻击倍率。08A0GEAL8KQ5末试T4火箭无虚弱、玩家无易伤、朝向不变，力量3→−3使背向激光57→48，实际减少9；当前live turn-solver.ts:2684仅按玩家易伤放大力量变化，算57−6=51，多报3。least-loss预计余血−20对应22−(51−9)，实际静态需损39、余血应−17，仍会死亡。只定位这笔减力传播，不混入既有虚弱或转向取整缺口，也不保证修后转胜。 原证据定位：F33T4：第6试d325594报预计剩HP−20；s334601→334602火箭力量3→−3、激光57→48，s334603为22血9挡；s334604玩家0、敌102/181。当前live agent/src/reflex/turn-solver.ts:2684—2685仅处理Vulnerable倍率。 原首证08A0GEAL8KQ5、prior=unknown、observed保持。原提案 `silent-proposal-0031b60b7dade5cf` 已经CLI登记，沿既有 strategy-proposal 链；完整证据/反例/范围见 `learner/runs/20261010-024302-postmortem/back-attack-proposal.md`（SHA256=bb19bdf4ee08c102e881e4aa936bf9f9dd00d715a62d65506ff019b6ba54df53）。原报告 `learner/runs/20261010-024302-postmortem/report.md`（SHA256=0fdf044079ff2e576da33f64f4b1a7d74b6587806258e43e57f023b40bf92b15）。局已正常结束，非卡死；不重复派发、不由运维补机制、不标implemented/shipped、不据此宣称能赢整局。",
+      "disposition": "游戏机制/策略及其事实传递，保留既有 strategy-proposal 链，不补游戏知识",
+      "current_file_sha256": {}
+    },
+    {
+      "line": 1022,
+      "item": "silent-0365",
+      "source": "- [ ] **silent-0365**：仅转录学习者回报，证据 X4M1GPAJGAB9 / SILENT A10；定位 `agent/src/reflex/combat-plan.ts:3839`。整回合题把未建模定向药水合法目标截成前两个；本局产卵虫在槽3时，毒药水可指向[0,1,2,3]却只展示槽0和1，丢失母体和第三爪牙选择。应保证合法目标可达并一致处理题目容量；这不证明早喝或改目标能赢。当前只读live combat-plan.ts:3722、3839定位。 原证据定位：F23T2：s338673合法目标[0,1,2,3]；d329458仅p0→e0/e1，母体槽3漏掉。；F23T3：s338680与d329464重复同一覆盖缺口；T4 s338684与d329468同样。；F23T5：母体改槽1后单动作d329478实际饮药，毒21→27且90HP不变，不当反事实胜局。 原首证X4M1GPAJGAB9、prior=unknown、observed保持。原提案 `silent-proposal-70c22e94eda8f8a9` 已经CLI登记，沿既有 strategy-proposal 链；完整证据/反例/范围见 `learner/runs/20261010-101302-postmortem/proposal-potion-targets.md`（SHA256=6fa5340f70b8f3594e35a11a1f106e5046e9b8e295e790687a255fbb1dac2395）。原报告 `learner/runs/20261010-101302-postmortem/report.md`（SHA256=aa653a2086af29deaae74fb1a0df140a70f7f2956082bda38d9ac7ad5478b38a）。局已正常结束，非卡死；不重复派发、不由运维补机制、不标implemented/shipped、不据此宣称能赢整局。",
+      "disposition": "已修；当前main包含Silent A10完整合法目标预留/展示，其他角色及未观察进阶保持原路径；纠正前批仍列策略pending的分类，不关闭其他提案或父要求",
+      "current_file_sha256": {
+        "agent/src/reflex/combat-plan.ts": "8cad97bea7bf53037f0841537b14c7630b537fd584211e28a0ba00506a82a1c1",
+        "agent/tests/silent-potion-targets.test.ts": "ff04ec895170b3b0b7f84482a2041a757b46f8d40bfecb614289e1e801e3ae39",
+        "agent/tests/silent-potion-targets-evidence.json": "6a1624dec833f2e309aee2d30c5ee7b56af303e3e33d6aae8484d54cc966e61a"
+      },
+      "commit": "6c7019e659b9655d8751002e918ea7fd7dec5041",
+      "commit_is_base_ancestor": true,
+      "test": "agent/tests/silent-potion-targets.test.ts",
+      "scope": "Silent A10 unsimulated potion targets"
+    },
+    {
+      "line": 1024,
+      "item": "silent-0367",
+      "source": "- [ ] **silent-0367**：仅转录学习者回报，证据 5BU7ZE1PWLSX / SILENT A10；定位 `agent/src/brain/build-facts.ts:26`。静默A10蜥蜴尾巴在仪式兽战已实际触发并被代码记为已用，大脑后续事实与摘要却只展示持有遗物及一次性效果，未传递消耗状态，休息理由继续声称保留尾巴。应把同局核实的已用状态及来源传到构筑／路线／休息事实；不修改复活触发条件，也不能据此认定回血决定或整场死亡由错误措辞造成。 原证据定位：F17T4：s338941→338942血14/77→38/77；下一T5控制台:715明确记不再计入本局复活，说明现有跟踪已识别。；F28：d329862／b10913仍以保存尾巴作为回血理由；事实、run_brief与notes没有已用字段，实际选择回血到57。；F32：d329923／b10918仍说保留尾巴；当前live agent/src/brain/build-facts.ts:26只映射原始遗物文本，run-brief.ts:57同样缺消耗状态；实际回血到26后六次双蟹无复活。 原首证5BU7ZE1PWLSX、prior=unknown、observed保持。原提案 `silent-proposal-196013f88a9d7c1c` 已经CLI登记，沿既有 strategy-proposal 链；完整证据/反例/范围见 `learner/runs/20261010-111303-postmortem/proposal-tail-state.md`（SHA256=034f2dc81622aeb1d51672d008bf76c3f115667137388e0a618b3a5e45530a06）。原报告 `learner/runs/20261010-111303-postmortem/report.md`（SHA256=a24013ab4e46759e156e491ef50a7102389b9a5a27a02f9ba441ef143b8001ba）。局已正常结束，非卡死；不重复派发、不由运维补机制、不标implemented/shipped、不据此宣称能赢整局。",
+      "disposition": "已修，现存源码与固定测试已回读；不重复实现或关闭宽父",
+      "commit": "66283dd9982bdd7f480da7a4d9bfefea0572a9ac",
+      "test": "agent/tests/silent-tail-resource.test.ts",
+      "scope": "仅已用尾巴状态事实传递；不代表0339误核销根因修复",
+      "current_file_sha256": {},
+      "commit_is_base_ancestor": true
+    },
+    {
+      "line": 1029,
+      "item": "codex-usage-credit-baseline-recovery",
+      "source": "- [ ] **codex-usage-credit-baseline-recovery**：证据SPC7NVA5K4RL F36，旧进程1009746，agent/src/brain/engines/codex-usage.ts:472/584。恢复后的account/rateLimits/read显示promax、weekly已用1%、ordinaryUsageAllowed=true、credits0，但进程内topBalance416.75189未换基线，recover仍报告credits正在花费并无限等待；只能经授权重启控制进程恢复，不能推断真实扣款。请既有修复链依据额度窗口/账户响应定义安全恢复条件并加固定回归，保留credits保护、登录/额度复检、原题暂停及无替代引擎；不得以无条件清基线绕过真实消耗。已用现有入口恢复同存档，持久代码修复尚未实施。证据paper/materials/silent/20261011-spc-f36-quota-resume/closure.json，原失败及新成功分留。",
+      "disposition": "已修，当前main基线已包含；只对应原工程子项，不关闭宽父",
+      "commit": "e5e2995d659d15af79ec8bba67a4a25c1cb7295f",
+      "changed_paths": [
+        "agent/src/brain/engines/codex-usage.ts",
+        "agent/tests/codex-usage-recovery.test.ts"
+      ],
+      "current_file_sha256": {
+        "agent/src/brain/engines/codex-usage.ts": "f1c59ca0c8c85e7ba5c934a84a6ee9bb27a26cd8724452a8b954186925df95d6",
+        "agent/tests/codex-usage-recovery.test.ts": "81424c655f0e92cb2ef11442115b0ab06fb5ffd20d7b42f162bb9356efd25323"
+      },
+      "commit_is_base_ancestor": true
+    },
+    {
+      "line": 1034,
+      "item": "ascension-up：请求目标误报实际进阶",
+      "source": "- [ ] ascension-up 把目标进阶当实玩级别：LWQYSREHMMJ7 的 run-config:330 同时记录 ascension=10/target_ascension=11，runs:694结局A10；其前SILENT选角帧 max_ascension=10/can_increase=false。ops/codex-ops-learn.py:200–224优先target_ascension生成“这一局打A11”，同一值经ascension_audit.observe造成silent:A11 queued/attempts0；agent/src/eye/run-config.ts:316没有选角max，实际hand/screens/misc.ts:153传入max钳制。应区分请求目标与实际观察进阶，以实际值生成升阶通知/结构审计，保留原错误事件与请求历史，不把目标11当新等级证据，不改变游戏设定、知识、现有对局或人工标审计done。固定输入应覆盖target11/actual10/max10不升阶及真实actual升级才通知。",
+      "disposition": "已修，当前main基线已包含；只对应原工程子项，不关闭宽父",
+      "commit": "8045d9fbf0a12523b1dbe39bbed8af06c7497b09",
+      "changed_paths": [
+        "README.md",
+        "agent/src/brain/engines/codex-usage.ts",
+        "agent/src/hand/loop.ts",
+        "agent/src/hand/screens/selection.ts",
+        "agent/src/memory/journal-replay.ts",
+        "agent/src/memory/types.ts",
+        "agent/src/reflex/card-model.ts",
+        "agent/src/reflex/combat-plan.ts",
+        "agent/src/reflex/continuation-value.ts",
+        "agent/src/reflex/rollout-live.ts",
+        "agent/src/reflex/rollout.ts",
+        "agent/src/reflex/silent-apotheosis.ts",
+        "agent/src/reflex/silent-skittish.ts",
+        "agent/src/reflex/turn-solver.ts",
+        "agent/src/sim/boss-sim.ts",
+        "agent/src/sim/boss-start.ts",
+        "agent/src/sim/build-sim-facts.ts",
+        "agent/src/sim/build-sim.ts",
+        "agent/src/sim/double-boss-start.ts",
+        "agent/src/sim/quantitative-calibration.ts",
+        "agent/src/sim/quantitative-facts.ts",
+        "agent/src/sim/quantitative-stats.ts",
+        "agent/src/sim/silent-opening.ts",
+        "agent/src/sl/attempts.ts",
+        "agent/src/sl/controller.ts",
+        "agent/src/sl/explore.ts",
+        "agent/tests/ascension-observed.test.ts",
+        "agent/tests/brain-codex-session.test.ts",
+        "agent/tests/brain-codex-usage.test.ts",
+        "agent/tests/codex-usage-recovery.test.ts",
+        "agent/tests/ops-codex.test.ts",
+        "agent/tests/ops-deferred.test.ts",
+        "agent/tests/quantitative.test.ts",
+        "agent/tests/silent-apotheosis-backflip-evidence.json",
+        "agent/tests/silent-apotheosis-backflip.test.ts",
+        "agent/tests/silent-apotheosis-footwork-evidence.json",
+        "agent/tests/silent-apotheosis-footwork.test.ts",
+        "agent/tests/silent-apotheosis-neutralize-evidence.json",
+        "agent/tests/silent-apotheosis-neutralize.test.ts",
+        "agent/tests/silent-apotheosis-poisoned-stab-evidence.json",
+        "agent/tests/silent-apotheosis-poisoned-stab.test.ts",
+        "agent/tests/silent-apotheosis-snakebite-evidence.json",
+        "agent/tests/silent-apotheosis-snakebite.test.ts",
+        "agent/tests/silent-apotheosis-survivor-evidence.json",
+        "agent/tests/silent-apotheosis-survivor.test.ts",
+        "agent/tests/silent-blade-dance-evidence.json",
+        "agent/tests/silent-blade-dance.test.ts",
+        "agent/tests/silent-build-win-ties.test.ts",
+        "agent/tests/silent-cunning-evidence.json",
+        "agent/tests/silent-cunning-state.json",
+        "agent/tests/silent-cunning.test.ts",
+        "agent/tests/silent-discard-plan-evidence.json",
+        "agent/tests/silent-discard-plan.test.ts",
+        "agent/tests/silent-gardener-skittish-evidence.json",
+        "agent/tests/silent-gardener-skittish.test.ts",
+        "agent/tests/silent-opening-evidence.json",
+        "agent/tests/silent-opening.test.ts",
+        "agent/tests/silent-phase-reference.test.ts",
+        "agent/tests/silent-reattach-evidence.json",
+        "agent/tests/silent-reattach-reset.test.ts",
+        "agent/tests/silent-shackling-weak-state.json",
+        "agent/tests/silent-shackling-weak.test.ts",
+        "agent/tests/silent-skittish-state.json",
+        "agent/tests/silent-skittish.test.ts",
+        "agent/tests/sl-giant-phase-data/yql-blast.json",
+        "agent/tests/sl-giant-phase.test.ts",
+        "agent/tools/quantitative.ts",
+        "docs/ops-assist.md",
+        "docs/quantitative-play.md",
+        "docs/v4-architecture.md",
+        "knowledge/characters/silent/boss-trust.json",
+        "knowledge/characters/silent/experience.json",
+        "ops/codex-ops-learn.py",
+        "ops/codex-ops.sh"
+      ],
+      "current_file_sha256": {
+        "agent/src/brain/engines/codex-usage.ts": "f1c59ca0c8c85e7ba5c934a84a6ee9bb27a26cd8724452a8b954186925df95d6",
+        "agent/src/hand/loop.ts": "18a48d176cb30bc3a10b707d4e86359bd717e8c9475075ce2e3f67d565893ec4",
+        "agent/src/hand/screens/selection.ts": "c4432b5fdf8c352ad4d834a87340a3ee69d69606ea705420e4b113db4228c647",
+        "agent/src/memory/journal-replay.ts": "b2273f526812f13e4c1061a8636d3105102ccd8dd566a18177b44ea16f09d848",
+        "agent/src/memory/types.ts": "4a1105831976833a527daecd4b4754ca6aa04fb95aa65919e6dbe31a11fad361",
+        "agent/src/reflex/card-model.ts": "46206367e6b61cbefd5759598db543c346bc1e7b1ded09f0a49607e2faf71031",
+        "agent/src/reflex/combat-plan.ts": "8cad97bea7bf53037f0841537b14c7630b537fd584211e28a0ba00506a82a1c1",
+        "agent/src/reflex/continuation-value.ts": "002277b50728ab8fd405799c0a3345e5dcb788ba8f37d5489b5fbcd9623029bb",
+        "agent/src/reflex/rollout-live.ts": "f8ad61514ea9f3919a4359edc3c32f01f326cb24139613933a98dcdfe0f7233e",
+        "agent/src/reflex/rollout.ts": "4e7dbe020d98526aa2ca033302894deb77a817916449ff7e7b1a55bc2e57d5a4",
+        "agent/src/reflex/silent-apotheosis.ts": "cd7f4956fcda62c63c585ae252b9033a0ff9622390f227fe4c256a8fffb33f0f",
+        "agent/src/reflex/silent-skittish.ts": "dbfa23ec61b30dff80b5f8158cf2f8c9da6ad8cb5e70334f9ab402689b491820",
+        "agent/src/reflex/turn-solver.ts": "1ecb3544e15ec4ef07f16bc03eb4f963839b90741dc88ec89a65cef74a7cf3eb",
+        "agent/src/sim/boss-sim.ts": "f30a0c5bdd66d63b7ccd962947735ca2dfded2eaec76dd364f5e90fec0aafac6",
+        "agent/src/sim/boss-start.ts": "01ef66ce210a3d022f1e28e34188b7005c7a88aa2b020e6f242f4030a95aee02",
+        "agent/src/sim/build-sim-facts.ts": "c86879476796b8f49dde0078923e6ba5e46e725210d23acf14a0195b6bcb652e",
+        "agent/src/sim/build-sim.ts": "e1384889748cf42f31aaab5be173e9dde4227c3a0b34a919026068ef34c9a115",
+        "agent/src/sim/double-boss-start.ts": "3241dedb92ff1ff9803df3786f15e65e669e7371756cca8668fb8c57771e97eb",
+        "agent/src/sim/quantitative-calibration.ts": "7edb1b8fa86b49f60ec2e1e4ddee1c6e065432d18ad8cf81461e97fc8242527f",
+        "agent/src/sim/quantitative-facts.ts": "12b495e8c9922b9c4412ee0a86c5226383833896306c4a283bc6e00aa19845ba",
+        "agent/src/sim/quantitative-stats.ts": "e33124df786f4060919d6713e494f9ce447b20c75113a573f7e549adf4e8a377",
+        "agent/src/sim/silent-opening.ts": "f3baa27bfac07d9f60995e37b7bbe31f7fa5baa63f18dd4fda3bc8d2c09bf502",
+        "agent/src/sl/attempts.ts": "f3f785f18c77ccc482a58b236d168780c8e010fb0bec12ec3e14ab61a8aca415",
+        "agent/src/sl/controller.ts": "675b4408fa8c6d7074c8db98f949bd14a422fd57c6bbb28a0ed438c85070b4fc",
+        "agent/src/sl/explore.ts": "2f37e85cc1c1c31e96a0d1b90db850893ec75b6cf5b4b84bf07bbb8de4e3ec43",
+        "agent/tests/ascension-observed.test.ts": "9e3d7161f1a288983b9efa2bcc97dc0b24a4e248547645daa33967d82fceaf9e",
+        "agent/tests/brain-codex-session.test.ts": "071d3559d3b67124cbcb2114bef49894a0fec347cbc47938e837cf742487e2da",
+        "agent/tests/brain-codex-usage.test.ts": "bb6f20c22566bcc8c4aba152f8a37c0e5389dff632fbd2573b5fb66c179caac5",
+        "agent/tests/codex-usage-recovery.test.ts": "81424c655f0e92cb2ef11442115b0ab06fb5ffd20d7b42f162bb9356efd25323",
+        "agent/tests/ops-codex.test.ts": "2cefb9f915d9ba776a101825166ea23679697added546a51dd1a5c472fc70eac",
+        "agent/tests/ops-deferred.test.ts": "f57736987cc75f99727561f77e65fe6b32510afd572a1e8bdf5f31a2215a156d",
+        "agent/tests/quantitative.test.ts": "51394101f86fcb228348b4e84f0926a95d2e34c797de5eef7fe3b2251721bb90",
+        "agent/tests/silent-apotheosis-backflip-evidence.json": "b3049234c3f15826086521baca96cbfd60dfb7c7bf53c07a50e8598694232ea5",
+        "agent/tests/silent-apotheosis-backflip.test.ts": "92b8265b3f0d52b73555224c976d58a5cb104d1e38064a566d3de76aaeb08500",
+        "agent/tests/silent-apotheosis-footwork-evidence.json": "6a94369baed38189402ebe7703dbb56e93fa06fb45c8a2ba5ebef36841b5885d",
+        "agent/tests/silent-apotheosis-footwork.test.ts": "db08046c20a523e9b59e3ccb7df3f20313a1bd111cde2d5ac2bdfebf985b5186",
+        "agent/tests/silent-apotheosis-neutralize-evidence.json": "cf8398ada96db22b365bc1c2546dc81581daaa46fabde19ac18c171a5b23e7d1",
+        "agent/tests/silent-apotheosis-neutralize.test.ts": "9cc7983a595dec9df406dbb0d782045b3110c3aed7c819f3fab0b099a8496bb2",
+        "agent/tests/silent-apotheosis-poisoned-stab-evidence.json": "11a40365131a8bd1fee431750892af2f05423be4d19f43ef163d7a47dbc391c6",
+        "agent/tests/silent-apotheosis-poisoned-stab.test.ts": "535d47a1325a3d7174799b54b5c436e51625a9cd4cd8d00046e8cb71c6c8dc50",
+        "agent/tests/silent-apotheosis-snakebite-evidence.json": "c92db4ed2ad4591d799a7ff351fe71126c639285bab004d0a169274f70c534d5",
+        "agent/tests/silent-apotheosis-snakebite.test.ts": "973b62b4b780a680bcaa1fc62f5fa28b2deb0c2725807b965a7e6d8dd1d357e6",
+        "agent/tests/silent-apotheosis-survivor-evidence.json": "73c01fc629e8585a06d942f89fa1bc2124d44c9f94d75a177b863b1a87ace5e3",
+        "agent/tests/silent-apotheosis-survivor.test.ts": "3e72b56eba8131fda73f38e18afb6aaebdcd8a12a2ebf340fe0b681d0fee809f",
+        "agent/tests/silent-blade-dance-evidence.json": "42ac6b17ccfaac91512e9e6efba9c9b54f8e12dbbcd06a45b69081089ab06a5f",
+        "agent/tests/silent-blade-dance.test.ts": "f2ca2656e86c15c346076884fa79dddeb9511da85bdd32d1324fdca8d5d0627c",
+        "agent/tests/silent-build-win-ties.test.ts": "d25914ad4d83b3bd6f8009a296d440cb2ec03d845c3ea107c99c66deeec8237b",
+        "agent/tests/silent-cunning-evidence.json": "30791b4336e4db9e18c6edc2aacabcfd792dfdf03feb6df367386b0c5b071af6",
+        "agent/tests/silent-cunning-state.json": "5cd68e85a52bafc825a26a2f5c9f7d5c975863850572b75bb74eb89b77567d06",
+        "agent/tests/silent-cunning.test.ts": "41247716a0155c3e3b8cb013c432128db4aa0c6dff1324332e1698b1fafcf4e1",
+        "agent/tests/silent-discard-plan-evidence.json": "47a58cd5722f58e503726478542966d78362d62230d9dee864d6850ce0a7b3da",
+        "agent/tests/silent-discard-plan.test.ts": "81c578edd88a609257a3347023129ba33d48d4558cd48bf326b4cd11c6d6b587",
+        "agent/tests/silent-gardener-skittish-evidence.json": "7e3bbfa3122c116726bddff0c3c95c4735f9ab4aa3f9c7de069245b8e4548fd0",
+        "agent/tests/silent-gardener-skittish.test.ts": "11a7d5637b9b5ff84daf308c1f9ef56cb2a4647582d59f09ba5fc6ad7ae75b52",
+        "agent/tests/silent-opening-evidence.json": "4ca857515f97351bb4105fec4c826bb75530802ad3c7f61c5a8aff34e0a9e1c1",
+        "agent/tests/silent-opening.test.ts": "a52584a2f61968f48af0791c9a330cfa2c0e75f558428e34d3c19abd469aa759",
+        "agent/tests/silent-phase-reference.test.ts": "02778419a989b00199b0e80cfc1fbab2ebb0f7c0706bfc0afba93e02dab4abdf",
+        "agent/tests/silent-reattach-evidence.json": "b06a7bcbdc0454646f3c70712db1825a78156fc3855007d7d63420d4f886e86f",
+        "agent/tests/silent-reattach-reset.test.ts": "aaca99713843826328995a91110fe255abfab6cb08a59e37c4ed17894e0a4a4f",
+        "agent/tests/silent-shackling-weak-state.json": "f1b8cf626c8eb5a934932fc45dbbf11b9db69c648694ed74cd9110c085b28c35",
+        "agent/tests/silent-shackling-weak.test.ts": "b5fb802b8a0f9a3e0b64859bc2dd4efb1b0a8f4eb8a4443ff4460331ba103f12",
+        "agent/tests/silent-skittish-state.json": "813e667b7ec3e4e17f792c8cec3b5a2cfd6bfa83627bc00520a93f8fdf8731be",
+        "agent/tests/silent-skittish.test.ts": "30f266f172120e58355566a7ba300edb34afbb9e511a82fd62982ea229499a87",
+        "agent/tests/sl-giant-phase-data/yql-blast.json": "4076c874378f42a27c2038dc16c65aef45bf3aabdd26bfd2df838106e8c77b94",
+        "agent/tests/sl-giant-phase.test.ts": "e954b925c2ac29abc9c5614687ff5560414945c3cfee40077fcc36f4ba06f41c",
+        "ops/codex-ops-learn.py": "e3ed8d46869b2479c8fa4f2d3a1f5a6292059237556831c59c838e8da3acdc0b",
+        "ops/codex-ops.sh": "cab435ba62d94915b7cb2fdd5b949e1da12e8d3a0523c226e3722f08fb2fe51b"
+      },
+      "commit_is_base_ancestor": true
+    },
+    {
+      "line": 1040,
+      "item": "合后检查包装器总时限与整套重跑",
+      "source": "- [ ] 框架/测试收尾：175450的merge-live.py在1200秒外层时限切断尾部paths后，已完成268文件2703例的原件仍自动整套重跑；独立paths11例补验已过，共269文件2714例，却继续长期持live-merge.lock，181302已测修复排队。重跑非零还会自动reset --merge，不能仅终止其子进程。需由框架拥有者核对现有runner/合后验收入口，保留分段已过覆盖与精确代码树、仅续失败/未运行项，显式区分时限/沙箱限制/真实失败，提供经身份校验且不触发误回退的既有所有者收尾方式；不改游戏知识/断言/预算，不手改原失败回执。证据paper/materials/20261011-1852-ops/core-check-closeout/receipt.json。",
+      "disposition": "证据不足/原专项保持",
+      "reason": "原 merge-live.py 属历史批次执行器，当前原 owner/精确分段覆盖需接续；不改变活跃发布事务。",
+      "current_file_sha256": {}
+    },
+    {
+      "line": 1041,
+      "item": "策略调度公平性归因核查",
+      "source": "- [ ] 调度公平性核查：watcher19:13冻结registry739项、pending587/waiting100/implemented38/duplicate14；可评估677项中首pending第80位。现有插入序waiting重评可能挤压新项，尚非永久饥饿证明；按真实dispatch/seen_runs/完成局时间核查后交获准框架迭代，不由本轮更改并发、队列状态或任务。原件paper/materials/20261011-ops-health-recovery/queue-observation-1913.json。",
+      "disposition": "证据不足/原专项保持",
+      "reason": "插入序观测不是永久饥饿证据，属于调度评估/架构任务。",
+      "current_file_sha256": {}
+    },
+    {
+      "line": 1110,
+      "item": "host-fixed-test-timeouts-010547：固定夹具确定性",
+      "source": "- [ ] **非对局阻塞，通用验证负载/确定性待诊断**：agent/tests/eval.test.ts:26 原120000ms用例、agent/tests/silent-apotheosis-reference.test.ts:114 原15000ms用例在010547完整宿主检查超时；实际live3f7eba0ef0c8f29bc2fbf21c8fb81d7a3cac55ee/tree36d1032b0cd248b0dac9c6d0c25a1b049db8012e，tsc通过、392文件4216项通过、2超时、2跳过。原源dcfff63e只改silent经验数据；超时本身不证明机制回归或主机负载根因。ops选择保留V4-R314并沿普通fix链有界诊断，原完整失败不关闭。证据批而非新增游戏失败局；原日志/覆盖paper/materials/20261013-0201-ops/full-checks-failure.json。",
+      "disposition": "已修，当前main基线已包含；只对应原工程子项，不关闭宽父",
+      "commit": "d9881ba593b0b8d701ebbe1c95626c0ebdd554c7",
+      "changed_paths": [
+        "agent/tests/eval-data/versions.json",
+        "agent/tests/eval_metrics_test.py"
+      ],
+      "current_file_sha256": {
+        "agent/tests/eval-data/versions.json": "5d2f2a00a1901b1f4046d63a56a250cd848c3015c284d946745bdbe162a4cb2c",
+        "agent/tests/eval_metrics_test.py": "0677cf1e75dc42f3046d67d43f90df656d4d1f2e1ba90efbae1e54e4ac4d8868"
+      },
+      "commit_is_base_ancestor": true
+    },
+    {
+      "line": 1294,
+      "item": "silent-0481",
+      "source": "- [ ] **silent-0481**：转录原学习者纯bug回报，`agent/src/hand/screens/selection.ts:311/:333` 把技能药水生成牌的“本回合免费”写成“只在本回合存在”（This card is only for this turn）。Y2K25VFDU95P/A10/F9T3 d392030 三选均0费、实选触不可及；T5 s404267重抽显示2费，T3 s404256–404259实际0费消费窗口与后续出现分列。首证回溯C48LLXBGKXQ9 F6T1 d205391；原提案 `silent-proposal-686d4e759478eebb` 已交自动链，限定已观察药水来源，未知组合/永久构筑归属及收益不补造。区别已修silent-0324刀舞模型，不重复派同题，不由ops添加游戏规则。",
+      "disposition": "游戏机制/策略及其事实传递，保留既有 strategy-proposal 链，不补游戏知识",
+      "current_file_sha256": {}
+    },
+    {
+      "line": 1304,
+      "item": "infra-target-options-fixed-fixture-timeout",
+      "source": "- [ ] **infra-target-options-fixed-fixture-timeout**：原014302-s2/R349实际tree4ba23b20完整宿主，`tests/target-options.test.ts` 的唯一EZ2L F48 T2 Queen/Torch标注候选题在原30s超时；同树正式d032f27e限定该精确题、原预算/断言下1过21未选。两旧paper-krane 15s问题仍沿既有infra-paper-krane-recorded-line-timeout，不另开同题。原full rc1/4742过2skip与3失败保留，定向3过不是全套绿，未定位数值回归或CPU单因。沿原普通固定夹具成本/performance fix链下一安全批处理，保冻结数据和生产求解/候选/药水/1000样本/原权限；不要加时限、skip、弱断言或改游戏权重，不热改当前owner输入/新派游戏研究/重启对局。证据paper/materials/20261015-0422-ops/kunai-host-failure-decision.json、kunai-three-case-supplement.json。",
+      "disposition": "已修，当前main基线已包含；只对应原工程子项，不关闭宽父",
+      "commit": "c57105ca66bd75c6d6952772dcf712399eda828b",
+      "changed_paths": [
+        "agent/tests/target-options.test.ts"
+      ],
+      "current_file_sha256": {
+        "agent/tests/target-options.test.ts": "91a53e184797b70add5414775ff41c96ac7a866410b7c9e4b39e9fd723e009d1"
+      },
+      "commit_is_base_ancestor": true
+    },
+    {
+      "line": 1308,
+      "item": "infra-ledger-status-prefix-git-divergence",
+      "source": "- [ ] **infra-ledger-status-prefix-git-divergence**（2026-10-15 05:28:18 CST，非阻塞纯数据/发布一致性）：044302普通策略原31条CLI中四条显式重复proposed；0030/0087/0279与Git相同，0094原物理前缀及学习者before快照为proposed，Git已shipped，原status来源末行20261010第159批。当前机械原行若直接纳入Git会把已交付0094降级。已保原50行/原claim/首证/先验/版本/出处，不改物理原件；仅该冲突行逐SHA另存审计，canonical纳入49原行+一次ops纯追溯CLI不设status，保Git shipped及本批报告链接。需原普通ledger/publisher owner核物理前缀、分批暂存/合并顺序和真实交付链，提供固定夹具；不要因dirty前缀或整套源码测试绿自动重新shipped/改shipped_at、游戏机制或全角色状态，勿重写旧行/假造角色ACK。证据paper/materials/20261015-0513-ops/original-repeated-status-baselines.json、canonical-trace-registration-readback.json。",
+      "disposition": "已修，当前main基线已包含；只对应原工程子项，不关闭宽父",
+      "commit": "dd478f0b3e5a0f234f082972d21b203dbf8229d7",
+      "changed_paths": [
+        "agent/tests/ledger-publication-baseline.test.ts",
+        "agent/tests/ledger_publication_baseline_test.py",
+        "learner/ledger.py"
+      ],
+      "current_file_sha256": {
+        "agent/tests/ledger-publication-baseline.test.ts": "40ca0960b214c9ff3fd0415ac8cd9c9730d513df57726d0a4ddd6928d4f011fc",
+        "agent/tests/ledger_publication_baseline_test.py": "1b3356feb984cbaeeb032382b275c3d9294e9f2eb1c485f6372dd9a917efcf69",
+        "learner/ledger.py": "3b3071078cfb5394fc9b14f32078e4c3a559255bf9efeacf6ed17e15092b2a61"
+      },
+      "commit_is_base_ancestor": true
+    },
+    {
+      "line": 1322,
+      "item": "infra-learner-launch-shared-main-config-race",
+      "source": "- [ ] **infra-learner-launch-shared-main-config-race**（2026-10-15 10:00:38 CST，非游戏阻塞纯运维）：原094301主/s2策略批两份stdout空、stderr同报共享main agent/src/core/config.ts:21:0 Unexpected \"<<\"，原P2 main-conflicts快照同位置为<<<<<<< HEAD；当前已提交config静态transform0/无冲突标记，原live P1/P3完整23501树tsc/vitest0，不能把启动失败当生产源码/账号/额度或提案缺失。失败时完整main字节未独立冻结，跨进程读取与集成窗口的具体时序仍需固定夹具核。请原普通launcher/集成纯fix链隔离稳定启动入口或在原已登记任务/租约下有界恢复共享主树暂态解析，保留原输入/线程/工作树/权限和失败，不争用或打断live全检锁、不扩大沙箱/改账号模型、绕过凭据预检或另派同提案研究。两个原batch failed/rc1/mergednull、20原ID及10:43原有界重试保持，不人工重派。证据paper/materials/20261015-0955-ops/two-strategy-startup-failures.json、shared-main-launch-conflict-readback.json及原main冲突快照；本项只登记基础设施缺口，不改机制/学习先验。",
+      "disposition": "已修，当前main基线已包含；只对应原工程子项，不关闭宽父",
+      "commit": "22efae55484bc2bdcc54e847a8dc40bb4888c4e2",
+      "changed_paths": [
+        "agent/tests/learner-entry.test.ts",
+        "ops/codex-ops-learner.sh",
+        "ops/learner_entry.py",
+        "ops/tests/test_learner_entry.py",
+        "ops/tests/test_learner_launch_failures.py",
+        "ops/tests/test_strategy_implementation.py",
+        "ops/tests/test_strategy_implementation_continuation.py",
+        "ops/tests/test_strategy_research_scheduling.py"
+      ],
+      "current_file_sha256": {
+        "agent/tests/learner-entry.test.ts": "4473a6e802730d1b543f4cd15d712d5d9d19c7bb984eceeca1121e1016d22629",
+        "ops/codex-ops-learner.sh": "009a1aec224aa1fe2afae4dbb1720ada5eba76967279b0bf57658cb9a1e62b2e",
+        "ops/learner_entry.py": "a77f9f94d7137ef14e59326c568528618f1aa64f16b9d7fea8eca018f51a93ce",
+        "ops/tests/test_learner_entry.py": "29cab02478bebc5520979d6ff52e8a48c5c0451420d76464daa796c751d508ba",
+        "ops/tests/test_learner_launch_failures.py": "f514ebdc8ca08b450c3e047b5003a1dbcb87b53c2f53d213efe57a4ff3dff9ad",
+        "ops/tests/test_strategy_implementation.py": "8e40ef0c0bc96278e1c45ef0620123c41bca87a08f0f9ed35c75b8a6850d7979",
+        "ops/tests/test_strategy_implementation_continuation.py": "7fcc6eb901fc9637507570415da5ff0cba38bd493014bb2608e14355ef9dc25d",
+        "ops/tests/test_strategy_research_scheduling.py": "02210f9d8879779338d17f6acdb874624b3f917574c192066c06d241cab04df8"
+      },
+      "commit_is_base_ancestor": true
+    },
+    {
+      "line": 1344,
+      "item": "silent-0487：非阻塞三段攻击模型缺口，仅转录学习者证据",
+      "source": "- [ ] **silent-0487：非阻塞三段攻击模型缺口，仅转录学习者证据**。JWK2C8LE4SFV SILENT A10 F48首试T5及末试T8，疯狂科学MAD_SCIENCE现场Damage12/当前13、ViolenceHits3、1力量；d403288/d403579均预计13伤，s416380→416381敌201→162、s416671→416672敌104→65，两次单动作均39，少报26。学习者定位只读livecfa1c0be agent/src/reflex/card-model.ts:905只取CalculatedHits/Repeat并回退1，:906只认两次文字；按原silent-proposal-0a0b31e284e6793e独立策略链核固定模板命中次数与未知边界，不由运维修游戏模型。关联机制silent-0488与休眠Block旧缺陷0394分账；0394三段变体及0179士兵2敏捷/勒紧组合复现分别沿原a43b16ebc696514d/ad6953c6c875117d，不把旧已修窄范围标回退/重开或降级shipped。修正后整战胜负未知，不把模型少报等同实际少打。原件learner/runs/20261016-014305-f051c87e-146b-4aa7-86d4-288461b9f317-postmortem/；不另派重复任务。 2026-10-16 02:05:15 CST",
+      "disposition": "游戏机制/策略及其事实传递，保留既有 strategy-proposal 链，不补游戏知识",
+      "current_file_sha256": {}
+    },
+    {
+      "line": 1401,
+      "item": "selection-hidden-daggers-conditional-followup-readback",
+      "source": "- [ ] **selection-hidden-daggers-conditional-followup-readback** — 2026-10-17 10:33:26 CST 原101302复盘新纯bug，非阻塞：2Q6ZYZ6JHM0M Silent A10 F8T1/T5，弃牌题j64690/64691、j64696/64697显示“没有本回合可核对的已选方案”，选择与后续战斗实际继续，未见卡死。学习者定位selection.ts:394/396仅读pausedCombatPlan/combatPlan，而loop.ts已有planBeforeSelection旁路、原执行memo在抽弃边界撤销；当前live1c8d6d2b的selection/loop与启动99737be9同字节，但完整dirty输入未复原，不外推整个运行树。沿已注册silent-proposal-59b2e430bb7521d4、账本0499/0205原自动strategy队列去重处理；若fix owner先领取，必须核原提案租约/在跑状态，已有owner时不重复实现或扩槽。修复只读条件后继事实并保原重算/合法选择，策略最优/血价/保牌收益仍交原学习者证据，不由ops补机制。验证按原F8T1/T5/F5T1双弃固定题及T6单弃对照、角色/副本/两次选择/失效与返回战斗重算守卫，自测通过原live流程；不恢复旧索引动作、不承诺整战转胜。原报告/提案及来源SHA在paper/materials/20261017-1031-ops/postmortem-readback.json；本wake只入队，不新派学习者或按卡死重启。",
+      "disposition": "已修，现存源码与固定测试已回读；不重复实现或关闭宽父",
+      "commit": "a473263eb35ce5bea8e06f1ee94f4da1ba880bc3",
+      "test": "agent/tests/silent-hidden-daggers-selection.test.ts",
+      "scope": "条件后继只读读回；旧动作仍须重算",
+      "current_file_sha256": {},
+      "commit_is_base_ancestor": true
+    },
+    {
+      "line": 1403,
+      "item": "h1-budget-completion-health-contract：预算完成诊断",
+      "source": "- [ ] 2026-10-17 11:28:13 CST **非阻塞纯工程，原H1/模块健康链 `h1-budget-completion-health-contract`**：5H83F3J0XSTE原R380运行告警已按原coverage字节截点重算完全一致。F8/F12/F19/F20配对838/260/103/504，均completion budgeted=true/status=partial/failure=false、timed_out=true且无error；旧`ops/adaptive_health.py:27`只接complete_adaptive，计4errors；`agent/src/sim/global-build.ts:156`先拒timedOut，G2同4题被包装global_required_computation_incomplete并计service_failures。21必需尝试零fail/degraded、16/16适用B3均有DPR且94适用候选0缺、20/20构筑评估/accepted和5/5结构计划无缺口，非卡死/新0332资源异常。",
+      "disposition": "已修，当前main基线已包含；只对应原工程子项，不关闭宽父",
+      "commit": "c40e43fd25c200a01f4da94a4dac8db1b34664a8",
+      "changed_paths": [
+        "agent/src/sim/build-sim.ts",
+        "agent/src/sim/global-build-observer.ts",
+        "agent/src/sim/global-build.ts",
+        "agent/tests/adaptive_health_test.py",
+        "agent/tests/fixtures/h1-budget-completion.json",
+        "agent/tests/global-build-observer.test.ts",
+        "agent/tests/global-build.test.ts",
+        "agent/tests/global_build_health_test.py",
+        "agent/tests/human-pace-sampling.test.ts",
+        "ops/adaptive_health.py",
+        "ops/global_build_health.py"
+      ],
+      "current_file_sha256": {
+        "agent/src/sim/build-sim.ts": "e1384889748cf42f31aaab5be173e9dde4227c3a0b34a919026068ef34c9a115",
+        "agent/src/sim/global-build-observer.ts": "ecce02a61eebb79e46e95e6f5ea818227afb72072bd585e72fcb784aef85fbc4",
+        "agent/src/sim/global-build.ts": "4daa2d07465bef20e759a28281194131a06cce43e9be606a43b1186bc7c0019b",
+        "agent/tests/adaptive_health_test.py": "1b3b26ddc4b081c745ced4f00530c271a652008193d61c94942dba0cbe8d4143",
+        "agent/tests/fixtures/h1-budget-completion.json": "5a69eda1ec70c4c70bc3465d025c5ad87bffcb21ffeeff59e77aff8992255e8d",
+        "agent/tests/global-build-observer.test.ts": "e9c80da81ed22c150fef13625aaf82a1b1ce9d17dea2947acfdafbd97a6a852d",
+        "agent/tests/global-build.test.ts": "2a936ef4a754d5574998c9e1ff3add0bc9a05ae3a770cd5199d84e0041e2c741",
+        "agent/tests/global_build_health_test.py": "ac6c1b1d51cd325a6de96e8a9fec76bcb782482a13f13d26d7624e8a8bf42b14",
+        "agent/tests/human-pace-sampling.test.ts": "0b91c8dda4a86f636ebde122ef1523bc635a121e5a853e8a80286e5fd4b065fd",
+        "ops/adaptive_health.py": "4ff7a071fd922c227842cd8b4152957cd8e90017a4b86c335a2ab3e8ecf4e19e",
+        "ops/global_build_health.py": "c156fae120daa48b455981d85c40a8fbc9d59061ff355a8b59fa36ce679f0983"
+      },
+      "commit_is_base_ancestor": true
+    },
+    {
+      "line": 1415,
+      "item": "h1-b2-margin-sample-identity",
+      "source": "- [ ] 2026-10-17 15:07:02 CST **非阻塞纯工程，原H1/B2模块健康链 `h1-b2-margin-sample-identity`**：2PQK67ULZY90 F33同计算键两次pending报boss margin sample identity mismatch，已完成样本字段200/请求600，第三C1 degraded0/600后继续；原三行offset/len/SHA及完整告警冻结，原coverage固定截点重算全部计数一致。此为真实样本身份/长度守卫异常，不是已修h1-budget-completion-health-contract对正常budget-partial的误报，也未见nonpositive-hp，不据此归为0332根因或已修。",
+      "disposition": "已修，当前main基线已包含；只对应原工程子项，不关闭宽父",
+      "commit": "660b194c950f017e356a4b3da952e127c7e5c768",
+      "changed_paths": [
+        "agent/src/sim/boss-lines.ts",
+        "agent/tests/human-pace-sampling.test.ts"
+      ],
+      "current_file_sha256": {
+        "agent/src/sim/boss-lines.ts": "ee25326b2f01c82cea39b4b09a78340080784b4c30527fa2b17c3e2a971e0837",
+        "agent/tests/human-pace-sampling.test.ts": "0b91c8dda4a86f636ebde122ef1523bc635a121e5a853e8a80286e5fd4b065fd"
+      },
+      "commit_is_base_ancestor": true
+    },
+    {
+      "line": 1420,
+      "item": "h1-b2-margin-sample-identity原发布续项",
+      "source": "- [ ] **h1-b2-margin-sample-identity（原151301源已核收；知识刷新阻塞待原链发布）** — 2026-10-17 15:34:31 CST source 660b194c950f017e356a4b3da952e127c7e5c768/tree a3a172184c4cdbd18493665b99a15e4bb2b30342仅boss-lines.ts和human-pace-sampling固定测试两叶。学习者最终tsc0、完整sandbox474文件4373题0、定向12过，撤源码1失败/11过、恢复12过、gitleaks0；原200候选淘汰后参考继续214的固定输入可复现，给不等长参考自身ID、共同200配对及14尾样本unmatched，原守卫/真实错误/unknown保持，不补0、不删结果、不改300最低、预算、淘汰、排序/S、SL药水或其他角色。原运行样本数组仍缺，不把固定复现当原dirty维度还原、0332根修复或B2性能解决。",
+      "disposition": "已修，当前main基线已包含；只对应原工程子项，不关闭宽父",
+      "commit": "660b194c950f017e356a4b3da952e127c7e5c768",
+      "changed_paths": [
+        "agent/src/sim/boss-lines.ts",
+        "agent/tests/human-pace-sampling.test.ts"
+      ],
+      "current_file_sha256": {
+        "agent/src/sim/boss-lines.ts": "ee25326b2f01c82cea39b4b09a78340080784b4c30527fa2b17c3e2a971e0837",
+        "agent/tests/human-pace-sampling.test.ts": "0b91c8dda4a86f636ebde122ef1523bc635a121e5a853e8a80286e5fd4b065fd"
+      },
+      "commit_is_base_ancestor": true
+    },
+    {
+      "line": 1427,
+      "item": "silent-vigor-skewer-J2VR（原学习者报告的新模型偏差，非阻塞）",
+      "source": "- [ ] **silent-vigor-skewer-J2VR（原学习者报告的新模型偏差，非阻塞）** — 2026-10-17 17:10:28 CST 原164302复盘/J2VR2DFJG8K4 Silent A10 F22T1：学习者报告赤牛8活力/串刺+双段实38、预测30，定位agent/src/reflex/turn-solver.ts:2448，账本silent-0504/0505。沿已有silent-proposal-72e0c8b41d2f5ab8原策略学习者核限定组合/撤修红恢复绿，不另开重复fix或把其他交互当已证；ops只收原证据与纯bug报告，不自行增游戏规则。资源/弃牌/SL宽项另为原a209d26d65e6f23b，未受控替线不改阈值。原报告/home/dw/Projects/agent-sts2/learner/runs/20261017-164306-b780eb2d-3939-4f81-bb54-c82c52a27985-postmortem/report.md；证据paper/materials/20261017-1706-ops/postmortem-readback.json。",
+      "disposition": "已修，现存源码与固定测试已回读；不重复实现或关闭宽父",
+      "commit": "d959e176af7338ea2bca6f4ff9a39673b80e5fdf",
+      "test": "agent/tests/silent-akabeko-skewer.test.ts",
+      "scope": "仅Silent A10已证8活力/升级串刺支付2签名",
+      "current_file_sha256": {},
+      "commit_is_base_ancestor": true
+    },
+    {
+      "line": 1431,
+      "item": "silent-0339续证（2026-10-17 20:40:08 CST，BXU0CKWKH2RU）",
+      "source": "- [ ] **silent-0339续证（2026-10-17 20:40:08 CST，BXU0CKWKH2RU）**：仅转录原学习者报告，沿第980行旧项；本局正常F48结束，非卡死。Silent A10 F28 T4 s438434–438436，猎人杀手7血/12毒后敌清空，玩家14/79→15/80；F29/F32脑题以“HP rose14→15 after a lethal read”将尾巴记used，F33第6试T10 s438785–438790却见6血8挡对22后实际40/81，反证前场已耗的记录。原报告定位combat-plan.ts:5160/5261/5313，原启动6f2a205+dirty与只读live3d691cff的尾巴函数保持，后来的赤牛六行差异不能冒当0339修复。仅追加触发证据，不由ops补芝士机制或关闭根因，不将SL截断当实死或承诺修后通关。原CLI提案silent-proposal-58ab473f6c814061（SHA81330b1d7931f4b447f1de40d9d45e6bfdf750bf901f83bfa3bff82a77f60e20）由既有strategy链查重/接续；关联0339 repeat及0340 support，不另派fix或模型。原0418/0125实线兑现提案ff33d0a397abda6b另有原链，未证新纯bug/回归，不强改出牌、药水或SL规则。证据learner/runs/20261017-201305-02c70b57-9a9d-4491-9dd6-f3e60db19506-postmortem/及paper/materials/20261017-2037-ops/。",
+      "disposition": "游戏机制/策略及其事实传递，保留既有 strategy-proposal 链，不补游戏知识",
+      "current_file_sha256": {}
+    },
+    {
+      "line": 1433,
+      "item": "H1/G2预算完成及paired-DPR来源宽项",
+      "source": "- [ ] 2026-10-17 20:54:36 CST **原模块健康/H1/G2预算完成链续证 U5W7NUE925NK（非阻塞）**：沿`v5-dpr-health-20261013`及`h1-budget-completion-health-contract`原链，F11商店G2原target报human-pace budget exhausted:G2_global_shadow，F15拿牌/F16休息报global_required_paired_DPR_missing，各1共3服务失败包装；原四行（另含F11移除）completion全budgeted/partial/failure=false，实际n71/207/39/135，90秒L2预算到期，shadow_unknown明确保留，动作均completed。原构筑2未attach均construction_evaluation_shadow过期，不能一概当接线故障；B2/B3必需26尝试0fail/0degraded，11适用B3都有DPR、63支持候选0缺且已完成口径最小300，C2零error，P1/P2/S为shadow且无缺。",
+      "disposition": "证据不足/原专项保持",
+      "reason": "预算/worker错误包装的宽根因仍待原 H1/G2 owner 核实际输入，不借单一告警更改门槛。",
+      "current_file_sha256": {}
+    },
+    {
+      "line": 1436,
+      "item": "ops-learner-recheck-report-fixes-shape-20261018（非对局阻塞，原批核验接续）",
+      "source": "- [ ] **ops-learner-recheck-report-fixes-shape-20261018（非对局阻塞，原批核验接续）** — 2026-10-18 02:09:20 CST ops/learner_checks.py:235要求fixes每项为带commit对象；20261018-011241-strategy-proposal的原生done报告为字符串fixes加source_commit/merged，source9ae48941/live祖先dddad5d67和六叶实际核同、固定生产消费40项0，但原learner-recheck实际exit2/fallback_checks空，尚未启动宿主。沿既有纯运维队列以冻结原报告验证机械兼容/明确拒绝，不篡改原完成报告或原state/失败，不放松实际commit祖先/当前六叶SHA/角色/输入守卫，不以空fixes或passed字段凑绿；原075726精确772c50f8宿主在途覆盖实际组合，不为本schema拒绝再派研究/模型或重复未变源full。源schema兼容未修、本条保持open；后续原ops可沿既有合法交付入口接实际组合检查回执，逐项保scope，不冒称原批full0。证据paper/materials/20261018-0158-ops/support-recheck-receipt.json（报告SHA固定，原raw保留）。",
+      "disposition": "已修，当前main基线已包含；只对应原工程子项，不关闭宽父",
+      "commit": "4c16dab0457a61e22ef06b27e367d146cb99bab3",
+      "changed_paths": [
+        "agent/tests/learner-report-fixes-shape.test.ts",
+        "ops/learner_checks.py",
+        "ops/tests/test_learner_report_fixes_shape.py"
+      ],
+      "current_file_sha256": {
+        "agent/tests/learner-report-fixes-shape.test.ts": "6e46a0a801d731401b411bfe5674fd327205a0bf20671068543ce3bc4ea6d65e",
+        "ops/learner_checks.py": "6eaeb3297eb8beb15aff8a7ec06ab016c330e4e00d0594fd2a9c28820a07a88d",
+        "ops/tests/test_learner_report_fixes_shape.py": "f4ebe4913cde0de98452020f7f60c44ccff970f2b2419e2094838bc7f163cc81"
+      },
+      "commit_is_base_ancestor": true
+    },
+    {
+      "line": 1438,
+      "item": "ops-learner-recheck-report-fixes-shape-20261018 原项补证（非对局阻塞）",
+      "source": "- [ ] 2026-10-18 02:21:09 CST **ops-learner-recheck-report-fixes-shape-20261018 原项补证（非对局阻塞）**：本次支撑六叶已由原075726精确772c50f8完整0验收且0508 CLI shipped，组件R391补登，不改011241原批recheck2。另ops/proposal_dispatch.py:194原unassigned_proof要求同一source commit同时为WT/live祖先；9ae48941在原WT、已窄cherry-pick为live dddad5d67，两边六叶逐SHA同，但9ae不是live祖先、dd不是原WT祖先，因此原048d提案队列仍pending。需既有普通纯运维owner以冻结原报告、原注册Markdown/局号/源SHA、精确六叶及真实宿主回执补机械兼容，不能伪造源码祖先/另造提案ID或以源码绿替当前live绿，不用空fixes/代填seen_runs/租约/其他角色ACK绕过守卫；不由ops补游戏知识或另派重复学习。原报告及pending保留，host范围与队列处置分开，未冒称implemented。",
+      "disposition": "已修，当前main基线已包含；只对应原工程子项，不关闭宽父",
+      "commit": "e87e6cc08bfb2c90e1961d6783cf0c2a7462aac3",
+      "changed_paths": [
+        "agent/tests/unassigned-proposal-resolution.test.ts",
+        "ops/proposal_dispatch.py",
+        "ops/tests/test_unassigned_proposal_resolution.py"
+      ],
+      "current_file_sha256": {
+        "agent/tests/unassigned-proposal-resolution.test.ts": "20f5ec8e1fe8c6121f3cdf943c05f2ce6953c9559f698225d334583e73d01bb4",
+        "ops/proposal_dispatch.py": "18c5484dd67a13dce6868fd9cf1faebe3ea146372de48cc74172050c6dbf3e5f",
+        "ops/tests/test_unassigned_proposal_resolution.py": "27ee1431351766c4f27458137277ca3eae8569805eecdd7b920ac76f036e1ced"
+      },
+      "commit_is_base_ancestor": true
+    },
+    {
+      "line": 1440,
+      "item": "infra-h0-414-host-fixed-test-stability-20261018",
+      "source": "- [ ] **infra-h0-414-host-fixed-test-stability-20261018**（2026-10-18 02:54:57 CST，非对局阻塞，沿既有普通fixture稳定性修复链）：原075726最终live523fbcd34667a531e40e58aae877062fc3d9b99e/tree414ea8b173ca04165fc84193f9828e4b136a17e9完整宿主rc1，536文件534过2败/5246项过2败2跳，原log SHAd70b7619c8e35e140b324120c5244a00c513e0395472d1619b254d423bfb7ab1。`agent/tests/brain-codex.test.ts:371` 原stall-twice固定进程实际first-token/last-event在1秒，硬编码预期0秒；fallback选择/两次stall其余匹配。`agent/tests/rollout-live.test.ts:57` 原5x8完整事实固定板30000ms超时，观测45935ms，未报数值断言差。不能由此认定产品回归或单因CPU；保当前窄H0源码及九原经验，不回滚其他学习/知识，不把source0当live0。优先沿原普通测试确定性/有界工作量链定位，保原fixture、断言语义、样本/预算及生产first-token/stall护栏，不加时限/skip/削断言/改游戏机制。当前原fix owner [{'batch': '20261018-021301-fix-batch', 'pid': 2517887, 'worktree': '/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261018-021301'}]不热改输入或重复开模型，下一原空槽接续；原manifest64c1f88cff9ced6315cb79523ae465e30d1013857a261882512ecfb2f9c60070只两失败精确题、单worker/原时限补验一次，不重未变full/校准。原full1与后续scope分列，0507未shipped及全部宽父保留。证据paper/materials/20261018-0252-ops/host-failure-decision.json。",
+      "disposition": "已修，当前main基线已包含；只对应原工程子项，不关闭宽父",
+      "commit": "edbbbd6ccffa40decdb6487411d80e3f688f0907",
+      "changed_paths": [
+        "agent/tests/brain-codex.test.ts",
+        "agent/tests/codex-stall-fixture.test.ts",
+        "agent/tests/codex-stall-fixture.ts"
+      ],
+      "current_file_sha256": {
+        "agent/tests/brain-codex.test.ts": "aa4490b5719799bdf801b94c5f66080404918b78da9c1df9219fdd04013c1320",
+        "agent/tests/codex-stall-fixture.test.ts": "4b58364b4c13a1c8c62f1b4ff61644d472d653005b61e6c94fb9b69e26fb28f0",
+        "agent/tests/codex-stall-fixture.ts": "557b2387de75dff4e4864a0a6e1870c56f71e31359cabdabae1daebf1923015c"
+      },
+      "commit_is_base_ancestor": true
+    },
+    {
+      "line": 1454,
+      "item": "infra-paper-dataset-concurrent-gzip-keyscan-20261018（非对局阻塞，纯运维脚本）",
+      "source": "- [ ] **infra-paper-dataset-concurrent-gzip-keyscan-20261018（非对局阻塞，纯运维脚本）** — 2026-10-18 04:14:14 CST ops/paper_dataset.py:758直接写最终raw gzip路径，:1022扫描DATA/RAW逐行读gzip但未隔离在写快照。0358复盘U6JELGQTBMHN后唯一nice19 --no-raw实际exit1，五源检查均OK后scan_for_keys抛EOFError，原异常未带具体文件名；本次冻结表generated_at=20:07:02.348Z却本请求cut=19:58:51.362Z，不能归为本次完整一致输出。只读现场04:12:45见原daily PID3022085以写方式打开paper/raw/states.jsonl.gz；这是并发写入现场，不把它冒作原未命名失败文件的确定身份。固定非游戏gzip fixture：writer尚未close时相同逐行读EOFError，close后正常读回；无新模型/游戏/模拟，无源码修改。需沿既有纯bug批次修并发发布/扫描完整性和明确失败文件回执，保所有旧快照/失败/对局数据，不把跳过损坏gzip当全库CLEAN。不由ops修非阻塞源码；本轮生成表因并发来源不一致未纳入提交，原daily继续负责，后续正常事件核完整回执及统一截点再提交，不重12分钟全量扫描或等待/另建观察器。证据paper/materials/20261018-0358-ops/paper-dataset.log、paper-keyscan-failure-investigation.json、paper-keyscan-fixed-fixture.json、paper-generated-outputs-deferred.json。",
+      "disposition": "已修，当前main基线已包含；只对应原工程子项，不关闭宽父",
+      "commit": "0b240cbd109a5e004f010d9659a871204c455639",
+      "current_batch_disposition": "复用原源码，本批已撤修红/恢复绿；完整检查及提交/合入待完成",
+      "changed_paths": [
+        "agent/tests/paper-dataset-publication.test.ts",
+        "ops/paper_dataset.py",
+        "ops/tests/test_paper_dataset_publication.py"
+      ],
+      "current_file_sha256": {
+        "agent/tests/paper-dataset-publication.test.ts": "2e3ac502898988042516f4293f428bf9c480ea3c5bca7ae7233deffb9aca0142",
+        "ops/paper_dataset.py": "5bf7ad110ae9985c35c5cdb27f4059e1d24340a039fa643e9a19bb0e1853c2ec",
+        "ops/tests/test_paper_dataset_publication.py": "1db152ed93537a4fdb3823bcbba2a009fa66e0e5a034bd0cac0f1c082989825e"
+      },
+      "commit_is_base_ancestor": true
+    },
+    {
+      "line": 1462,
+      "item": "infra-h0-414-host-fixed-test-stability-20261018 / router-timeout-max-gap-76fe29f3",
+      "source": "- [ ] **infra-h0-414-host-fixed-test-stability-20261018 / router-timeout-max-gap-76fe29f3**（2026-10-18 05:28:54 CST，原普通夹具修复链新失败题，不新建游戏学习父项）：031302六测试叶合入后的原完整宿主tree76fe29f38929f2d4ac899079a08c10cb53156d3e/commit58eaab9e完整入口rc1，540文件539过1败、5253项过1败2跳。`agent/tests/brain-codex.test.ts:400`题“codex runs watched: retries, stalls, timeouts and their trace the router's timeout leaves the evidence: what the stream had sent, and its stderr with credentials masked”在max_gap_ms=346对>=500断言停止，之后stderr保留/脱敏断言该题未达；非此前stall-twice或rollout格式题复验失败。原log SHA9298d0f170306b7175ccaf0162ae59ecb85f245704c12612bb5a50c579642867，固定源码SHAa4f07155acbf8eff48bdeae8c9594738dba3df465c7428fc5f06a693ed8ca0b3。保原真实超时、间隔/事件/脱敏验收含义和生产first-token/stall边界，用固定时钟或固定进程证据隔离夹具时序；不加时限、skip/删弱断言或改游戏/角色/模型。根因及自然产品/CPU归因未知，不借source绿/定向绿改原full1。另paper导出并发bug已由原045726 source dee6386621e8122d123a3cd0017c3e4c199f524e完成源码自测、仅运维运输待原report/builder守卫，不能重复实现该paper项或盲目叠后批034302替代测试。新失败题沿现有普通fix-batch接续，实际派发及首回复分别记，不热改在途owner。证据paper/materials/20261018-0524-ops/host-failure-decision.json。",
+      "disposition": "已修，当前main基线已包含；只对应原工程子项，不关闭宽父",
+      "commit": "a6913706952661afe1de38f290cd9434cbb91621",
+      "changed_paths": [
+        "agent/tests/brain-codex.test.ts",
+        "agent/tests/codex-abort-fixture.test.ts",
+        "agent/tests/codex-stall-fixture.ts"
+      ],
+      "current_file_sha256": {
+        "agent/tests/brain-codex.test.ts": "aa4490b5719799bdf801b94c5f66080404918b78da9c1df9219fdd04013c1320",
+        "agent/tests/codex-abort-fixture.test.ts": "8f16a245d9610e7faaf9c5505b0fa88b94a6c62e8f9f5dfd5f7ce4545a95c852",
+        "agent/tests/codex-stall-fixture.ts": "557b2387de75dff4e4864a0a6e1870c56f71e31359cabdabae1daebf1923015c"
+      },
+      "commit_is_base_ancestor": true
+    },
+    {
+      "line": 1466,
+      "item": "infra-h0-414-host-fixed-test-stability-20261018 / a406-fixed-deadlines",
+      "source": "- [ ] **infra-h0-414-host-fixed-test-stability-20261018 / a406-fixed-deadlines**（2026-10-18 06:11:48 CST，非对局阻塞，沿原普通fixture修复链）：原052912三测试叶实际live0bfadd7aa3dd650ac9a1678d139607e6f095b224/treea406c0fa6d35f720696c4e29c5617367da042287完整宿主rc1，541文件536过5败，5250项过5败2跳、1204.18s；原log SHA9cb6458ef0b04a792fddc3729265706b6bf019b1994cc4e60d88695438216274。`agent/tests/build-decider.test.ts:670`、`global-build-integration.test.ts:55`原u6ru-f22-shop/open题、`journal-replay.test.ts:335`、`route-review.test.ts:512`均为原15000ms超时；`agent/tests/learner-retention.test.ts:9`在原spawnSync 30000ms限制下status=null，stderr另有`ops/learner_checks.py:30`未关闭文件ResourceWarning，不能由warning判定超时因果。精确五题/固定源blob与全log冻结于paper/materials/20261018-0610-ops/；未报游戏数值断言差，CPU/产品/并发根因未证。原max-gap题本次不在失败名单，不等于整套或所有后继断言已由独立回执验收。保当前live和并行知识/记录，旧76fe29完整1和本次完整1各保原值，不回滚无关学习或加时限/skip/削断言/改生产模型/游戏预算。当前在途原owner []，只追加原队列供既有空槽后续拾取，不热改活批输入、不新开重复模型；仅沿本批原通道以manifest 3c59588c88f63e3ae592b4db98ad86e176cb67e4b698a6e3a076fa2fdbff259b补五个失败精确题一次，单worker/原deadline，不重未变full。原宽性能归因/回收安全及全部学习父不关，源WT未验收完成。",
+      "disposition": "已修，当前main基线已包含；只对应原工程子项，不关闭宽父",
+      "commit": "87c1381a4461c81f9f948a1796600d019c544349",
+      "current_batch_disposition": "复用原源码，本批已撤修红/恢复绿；完整检查及提交/合入待完成",
+      "changed_paths": [
+        "agent/tests/build-decider.test.ts",
+        "agent/tests/fixture-http.test.ts",
+        "agent/tests/fixture-http.ts",
+        "agent/tests/global-build-fixed-inputs.test.ts",
+        "agent/tests/global-build-integration.test.ts",
+        "agent/tests/journal-replay.test.ts",
+        "agent/tests/learner-retention-fixture.test.ts",
+        "agent/tests/learner-retention.test.ts",
+        "agent/tests/loop-consumer-fixed-transport.test.ts",
+        "agent/tests/oneshot-support.ts",
+        "agent/tests/synthetic-board-fixture.ts"
+      ],
+      "current_file_sha256": {
+        "agent/tests/build-decider.test.ts": "1dbd469af49e20ba47e480ee8dd925d6047927dcde400fec43a2861d0beb230a",
+        "agent/tests/fixture-http.test.ts": "19128891c406ca21680eb62589bb931a7243780ca987213acd8572cd32dd3331",
+        "agent/tests/fixture-http.ts": "811b1e7cc0d1859a0a64eea59e9f77463a964b1c9164f6d8ad526eb1fef7353e",
+        "agent/tests/global-build-fixed-inputs.test.ts": "31bef53c02c5b714ed55d98ed79f5e26a015c838e091dc2f589527000320e8dc",
+        "agent/tests/global-build-integration.test.ts": "841da1f6e1be134449eda538be58f22e7ca845ae0641f356274c90cce76aaafe",
+        "agent/tests/journal-replay.test.ts": "cfe307e372917af034fd34af44bc0df5c5b75da4f2c0703dbc3d8244799b1ea2",
+        "agent/tests/learner-retention-fixture.test.ts": "d99c2389881020117fdd5b245354f3f80d5170288ecf61b939170e89ec27cf71",
+        "agent/tests/learner-retention.test.ts": "473a64f6c48adf093521656373fc22bfe028dcf43814b015e5a48c34004fae9d",
+        "agent/tests/loop-consumer-fixed-transport.test.ts": "be412087e1a59601b85f3d4e213cf5a06eb284525574dcf8dac58cd5d65fd4f4",
+        "agent/tests/oneshot-support.ts": "f7375ebdbe63c02b4c0d240f0cbb5e541e08e335a4d59307e839bab857d2c866",
+        "agent/tests/synthetic-board-fixture.ts": "4535bfd0a01b04479bb09bb2ac486ebef00908e23b49e3157ec05a2ab1e70f68"
+      },
+      "commit_is_base_ancestor": true
+    },
+    {
+      "line": 1472,
+      "item": "infra-h0-414-host-fixed-test-stability-20261018 / 21bf-fake-herdr-workspace-deadline",
+      "source": "- [ ] **infra-h0-414-host-fixed-test-stability-20261018 / 21bf-fake-herdr-workspace-deadline**（2026-10-18 07:55:10 CST，非对局阻塞；沿既有普通fixture修复链）：原070101-fix-batch/file-close两叶实际live4eaad4c93ca1ea9f73b75dad4d9e719ea217a2b1/tree21bf5842187f7138369fa08c48fb5db18fb37137完整宿主rc1、943.78s，542文件541过1败、5258项过1败2跳。唯一失败`agent/tests/ops-herdr.test.ts:174`，精确题“new learner tabs follow the live ops pane when workspace labels are duplicated”，原15000ms超时；测试/fake-herdr.py/herdr-host.sh与file-close源前字节相同，完整原log SHA64195347d3d3354c1574cd9459931a8b92560dca53252998d07916165c5bf1cb及输入blob/SHA见paper/materials/20261018-0753-ops/。保留文件关闭修复和所有知识/记录，不回滚无关学习，不延长deadline/skip/弱断言或新判CPU、产品、调度根因；本次无对应ResourceWarning文本，不把旧五题不在失败列表当其根因已修。当前在途原fix owner [{'batch': '20261018-074302-fix-batch', 'pid': 3842150, 'worktree': '/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261018-074302'}]，只追加原队列，不热改活批输入/租约或派重复模型。原通道manifest3e728293b91000d5755961dfe76fa488b9422a753c11999c7062bf90b529c7f7仅补唯一失败精确题一次，原时限/单worker，即使通过也不覆盖完整1或登记整套绿；原a406 full1/五题定向0、源491/4451自测0及合后30定向0分别保，源WT验收/回收及宽性能父继续开放。",
+      "disposition": "已修，当前main基线已包含；只对应原工程子项，不关闭宽父",
+      "commit": "698d3bd20fc95e2791e6fab8d5ad4c2c9e01a5c4",
+      "current_batch_disposition": "复用原源码，本批已撤修红/恢复绿；完整检查及提交/合入待完成",
+      "changed_paths": [
+        "agent/tests/herdr-workspace-fixture.ts",
+        "agent/tests/ops-herdr.test.ts"
+      ],
+      "current_file_sha256": {
+        "agent/tests/herdr-workspace-fixture.ts": "a31baa440fcb133204ea5ba111fb78a70be6784719e71695684a6b2b66e69d59",
+        "agent/tests/ops-herdr.test.ts": "6157ab4f32069db7fbd0f82101a5fca27a75db1d6c850d7c3d2b50b53ee1440e"
+      },
+      "commit_is_base_ancestor": true
+    },
+    {
+      "line": 1478,
+      "item": "h1-budget-completion-health-contract（R394新增indifferent诊断兼容续项，原链非阻塞）",
+      "source": "- [ ] **h1-budget-completion-health-contract（R394新增indifferent诊断兼容续项，原链非阻塞）** — 2026-10-18 10:59:43 CST 原ET1QAZCV8GUP/Silent A11 module-health四流coverage定界逐字节核回、原摘要全部重算一致；唯一告警为C2 observed23/produced15/errors8。原23观测含12个complete_adaptive与11个budget partial，其中8个complete_adaptive（F4拿牌1、F17战斗7）携带Roy批准R394的silent-human-pace-v2/stop_reason=indifferent；原始动作全部completed，无sim/worker error、completion均budgeted/complete_budget/failure=false。ops/adaptive_health.py:47仍仅认eliminated/leader/max，明确拒新增indifferent，:36的partial白名单也尚未列此新标记（本8次实际均走完整分支，不据此捏造partial失败）。首个B3每候选100，B2首组100/150/200后7组中的其余6组50；实际n/轮数/淘汰与strict spread<.03全部保原值，不称300完整验收或新增独立样本。",
+      "disposition": "已修，当前main基线已包含；只对应原工程子项，不关闭宽父",
+      "commit": "5011b4cbda9a9056a1fd146e375e3cd67b60c0a9",
+      "changed_paths": [
+        "agent/tests/adaptive_health_test.py",
+        "agent/tests/fixtures/human-pace-indifferent.json",
+        "ops/adaptive_health.py"
+      ],
+      "current_file_sha256": {
+        "agent/tests/adaptive_health_test.py": "1b3b26ddc4b081c745ced4f00530c271a652008193d61c94942dba0cbe8d4143",
+        "agent/tests/fixtures/human-pace-indifferent.json": "4533bd247906e9a6448f65d0fa11e68f7027bd55257dd4871f638321a514f9ed",
+        "ops/adaptive_health.py": "4ff7a071fd922c227842cd8b4152957cd8e90017a4b86c335a2ab3e8ecf4e19e"
+      },
+      "commit_is_base_ancestor": true
+    },
+    {
+      "line": 1492,
+      "item": "infra-manual-learning-notice-ack-scope-20261019（非对局阻塞，原通知协议fix链）",
+      "source": "- [ ] 2026-10-19 23:51:33 CST **infra-manual-learning-notice-ack-scope-20261019（非对局阻塞，原通知协议fix链）**：0baef634d02e1ff85843c10a/f619c26f4bfa10970591beb5/b5b53e0d8bebe1df7fb30468为Roy一次性手动学习异议，原watcher已实际读/告Roy，六份真实角色回执保留；无注册父且旧notice缺scope，ack_request:66-67拒unknown learning request。须按原批/线程/原文SHA/角色真实回执建立窄来源兼容，保现有普通proposal/feature/legacy、token/前阶段/异源/伪送达负控；禁止原地补字段、造父/提案或代ACK消pending。修复后原watcher本人走CLI补登记；不重派学习/研究，不改变知识或开局。证据paper/materials/20261019-2349-ops/receipt.json，原失败及旧源不改。",
+      "disposition": "已修，当前main基线已包含；只对应原工程子项，不关闭宽父",
+      "commit": "082cc70bfab2f1f98eb67fc1d441dfd23b6962ee",
+      "current_batch_disposition": "复用原源码，本批已撤修红/恢复绿；完整检查及提交/合入待完成",
+      "changed_paths": [
+        "agent/tests/manual-notice-ack.test.ts",
+        "ops/learning_requests.py",
+        "ops/tests/test_manual_notice_ack.py"
+      ],
+      "current_file_sha256": {
+        "agent/tests/manual-notice-ack.test.ts": "9bc4a706c9957b9287173861a86eefc4a92f98ac2126d25e9886e804567e1041",
+        "ops/learning_requests.py": "be1650c070935a162a5ed8fbd7a98164a0bd651b409624f3d5c7d4e10be8c46f",
+        "ops/tests/test_manual_notice_ack.py": "5b5712951f94eed9ea46b22d0261cb741a687a749a403731b4fe5bc34a6312a6"
+      },
+      "commit_is_base_ancestor": true
+    },
+    {
+      "line": 1498,
+      "item": "infra-ordinary-close-candidate-failure-isolation-20261020（非对局阻塞，原自动收尾协议链）",
+      "source": "- [ ] 2026-10-20 00:33:48 CST **infra-ordinary-close-candidate-failure-isolation-20261020（非对局阻塞，原自动收尾协议链）**：close_pending在单一try中验证候选，一项source drift可使全组同写相同attention且无dataset；234302-s2原有三叶漂移；001302-s2曾在main769b原eligible通过，后因main并行W5源码推进最新亦source drift，checkout仍严格干净。需原机械owner保留每项旧失败、独立源/报告/账本/Git/异议守卫，给仍有效原候选保历史重入；保持唯一dataset、受控记录提交/真实commit及scope，不能直接清attention、借他批dataset补完成、放宽守卫或吞失败。旧源与报告不改，不派重复模型/生成器、不热改在途输入。证据paper/materials/20261020-0028-ops/receipt.json。",
+      "disposition": "已修，当前main基线已包含；只对应原工程子项，不关闭宽父",
+      "commit": "b675eb67f3687fb137434ef9610f1503edbbe8bc",
+      "current_batch_disposition": "复用原源码，本批已撤修红/恢复绿；完整检查及提交/合入待完成",
+      "changed_paths": [
+        "agent/tests/ordinary-close-isolation.test.ts",
+        "ops/ordinary_close.py",
+        "ops/tests/test_ordinary_close.py"
+      ],
+      "current_file_sha256": {
+        "agent/tests/ordinary-close-isolation.test.ts": "0f21efad90e5a78db4614f4f3a21ae1e4621d58cb25f5cff429cd2a5eaa3fffe",
+        "ops/ordinary_close.py": "a1d0ecd83d1d3ed4131a89dccef2ee65d6acbaabf6171b17b9143c4adad921d3",
+        "ops/tests/test_ordinary_close.py": "eb4551c83494f4d133ceb32f96431ca060ddb78f8664824c89fe7698c871ebc7"
+      },
+      "commit_is_base_ancestor": true
+    },
+    {
+      "line": 1504,
+      "item": "infra-v6-refresh-invalid-json-provenance-20261020（阻塞V6开启，原学习链owner）",
+      "source": "- [ ] 2026-10-20 01:20:59 CST **infra-v6-refresh-invalid-json-provenance-20261020（阻塞V6开启，原学习链owner）**：原refresh-v6-history冻结states.jsonl全源14613516359字节，行384730/384746为invalid_json，原精确offset/bytes/SHA在paper/materials/20261020-010x-ops/receipt.json。steps为空/published=null，17正式组合尚未进入计算，旧包保留。原件与首个logs布局失败保留，布局已只恢复原logs链接，不继续重跑相同输入。需原owner核原缺口归属/覆盖与严格来源契约，保留坏行、显式unknown和验证分母；不得修改历史原流、静默跳过/缩切点/放宽守卫或造17指标以开局，不热改在途任务。源码/包经原验收后接原on待办，STOP/Regent及父保持，不新调度/模型。",
+      "disposition": "已修，当前main基线已包含；只对应原工程子项，不关闭宽父",
+      "reason": "V6 冻结包/坏行来源正在原 W3/W8 链中处理，当前 live 有暂存集成；不改历史行或重建包。",
+      "commit": "de94aa263bfb25363c13d2968c976d8c9138f5c1",
+      "changed_paths": [
+        "agent/tests/v6-history-refresh-exclusions.test.ts",
+        "agent/tests/v6_learning_loop_test.py",
+        "knowledge/builders/build-combo-metrics.py",
+        "knowledge/builders/combo_metrics.py",
+        "knowledge/builders/refresh-v6-history.py",
+        "learner/evidence_identity.py",
+        "paper/materials/2026-10-20-v6-history-exclusions/checks-original/full-tested-source-manifest.json",
+        "paper/materials/2026-10-20-v6-history-exclusions/checks-original/gitleaks-manifest-finding.json",
+        "paper/materials/2026-10-20-v6-history-exclusions/checks-original/gitleaks-staged-complete.json",
+        "paper/materials/2026-10-20-v6-history-exclusions/checks-original/logs.json",
+        "paper/materials/2026-10-20-v6-history-exclusions/checks-original/source-manifest.json",
+        "paper/materials/2026-10-20-v6-history-exclusions/checks-original/vitest-cli-rejected-status.json",
+        "paper/materials/2026-10-20-v6-history-exclusions/checks-original/vitest-status.json",
+        "paper/materials/2026-10-20-v6-history-exclusions/report.md"
+      ],
+      "readback": "refresh-v6-history.py record_gap保存invalid_json字节范围/SHA；严格冻结尾与来源校验保留；v6-history-refresh-exclusions.test.ts覆盖17固定Python用例。前批缺证分类已据当前源码纠正。",
+      "current_file_sha256": {
+        "agent/tests/v6-history-refresh-exclusions.test.ts": "cd6edd9fb7701ec848161f8edf7534978cf2c288b3d9b1d81ebc9bef11b523ae",
+        "agent/tests/v6_learning_loop_test.py": "19339960a6c40ef3565c41d2cec1c3bbcb6bcba0be036d63d6dbeaf72441852b",
+        "knowledge/builders/build-combo-metrics.py": "4c8bdcf561ad54b52a8ac53d83ad75373b87e64bb60e5cb92db3d27749fce3b4",
+        "knowledge/builders/combo_metrics.py": "d0c6703162765f1eda955953c0925395ec2f7eae2e76caff1407b17f9594568e",
+        "knowledge/builders/refresh-v6-history.py": "1b28a1f14e7269b3cd933160bacf46d8b8f3fbf2eecc585fc41ec0296323ecfa",
+        "learner/evidence_identity.py": "e1f6da7ca1a44b7de61454ee057c2f11ab0cfab758c0b878274f6fd6cda760dc"
+      },
+      "commit_is_base_ancestor": true
+    },
+    {
+      "line": 1514,
+      "item": "infra-v6-publication-task-link-20261020",
+      "source": "- [ ] **infra-v6-publication-task-link-20261020**（非对局阻塞，原提案登记纯工程）：真实source_task=v6-knowledge-publish已存在批准模板/原launcher和R3批v6-knowledge-publish-r3-20261020-033408，learner/code_proposals.py TASKS未接本真实任务，原add退出2 invalid task link。保原0532/proposal/失败，沿原自动fix链做明确任务身份兼容及固定正反校验，不能假称experience-update、放开任意task或手写队列/ACK；不补游戏知识，不关闭父要求。精确命令/输入/SHA见 paper/materials/20261020-0358-ops/receipt.json 与原scratch/code-proposal-command.json；本次未派新模型。",
+      "disposition": "已修，当前main基线已包含；只对应原工程子项，不关闭宽父",
+      "commit": "cd2f11496e6f8957c59ef72f70b2c6596cce6e63",
+      "changed_paths": [],
+      "current_file_sha256": {},
+      "commit_is_base_ancestor": true
+    },
+    {
+      "line": 1518,
+      "item": "infra-ops-current-summary-budget-20261020",
+      "source": "- [ ] **infra-ops-current-summary-budget-20261020**（原纯工程链，不新派模型）：06:37原wake因ops-current>12288字节在发送前失败，05:29旧md留存/事件未送；本轮仅压缩context.summary恢复原生成0，全部授权/任务/事件/失败来源保留。请原fix owner处理短摘要长期预算/增长门禁，固定验证活批/队列/通知增长时保留关键事实和SHA原件引用；不抬12KB、不截断必要授权/失败或把旧md冒当前，不改ops prompt。恢复及原失败证据paper/materials/20261020-0637-ops/checklist-recovery.json。",
+      "disposition": "已修，当前main基线已包含；只对应原工程子项，不关闭宽父",
+      "commit": "cd2f11496e6f8957c59ef72f70b2c6596cce6e63",
+      "changed_paths": [],
+      "current_file_sha256": {},
+      "commit_is_base_ancestor": true
+    },
+    {
+      "line": 1520,
+      "item": "infra-ordinary-unassigned-tick-no-change-20261020（原普通收尾/retention协议链，非对局阻塞）",
+      "source": "- [ ] 2026-10-20 06:57:31 CST **infra-ordinary-unassigned-tick-no-change-20261020（原普通收尾/retention协议链，非对局阻塞）**：051302已有同类原件；本次064302-strategy原WT严格干净、HEAD=base b0aace、fixes=[]/merged=null、测试null、proposal_results=[]且未领取两旧提案，源码零变更。launcher failed/rc0/audit空；proposal_dispatch.no_change对无proposal_ids/proposal_repair转research_proof，reason=tick不能匹配ops冻结专题，返回None；ordinary拒not a successful ordinary batch，retention拒no verified ingestion or settled outcome。请原协议owner用固定样本覆盖合法tick报告及恶意跨树/伪指派/科学父关闭拒绝，保持原报告SHA、原pending与唯一dataset/实际入库门禁，不将tick改ops、不代填proposal_results/seen_runs/ACK或清失败。不新派研究/调度、未变源full或生产dataset代测试；本轮仅补证入队。证据paper/materials/20261020-0656-ops/receipt.json、原051302待办。",
+      "disposition": "已修，当前main基线已包含；只对应原工程子项，不关闭宽父",
+      "commit": "ca6897f2e433c9c3bb45d0dad46ba685d864c87d",
+      "current_batch_disposition": "复用原源码，本批已撤修红/恢复绿；完整检查及提交/合入待完成",
+      "changed_paths": [
+        "agent/tests/cadence-no-change.test.ts",
+        "ops/learner_retention.py",
+        "ops/proposal_dispatch.py",
+        "ops/tests/test_cadence_no_change.py"
+      ],
+      "current_file_sha256": {
+        "agent/tests/cadence-no-change.test.ts": "94bd26e35c60bc7407f22392ba43a92f8d8d9ae13bf43c8917f7baba0f761108",
+        "ops/learner_retention.py": "836bf1f121e1096f057f8329ac03555a3b310b00baf20e3b9d51b141975f803b",
+        "ops/proposal_dispatch.py": "18c5484dd67a13dce6868fd9cf1faebe3ea146372de48cc74172050c6dbf3e5f",
+        "ops/tests/test_cadence_no_change.py": "8882590dd3fbe488a4cbc78cb4905009d9a13182a5e916a85e6c3ad4b9696fbf"
+      },
+      "commit_is_base_ancestor": true
+    },
+    {
+      "line": 1522,
+      "item": "silent-0533 / 普通撕碎REND条件伤害模型缺口（非进程阻塞，原strategy-proposal链）",
+      "source": "- [ ] 2026-10-20T11:40:28+08:00 **silent-0533 / 普通撕碎REND条件伤害模型缺口（非进程阻塞，原strategy-proposal链）**：仅转录学习者已核T12TSEMGUU7F A10 F17末试T7，目标仅中毒、无敌挡/减伤及玩家力弱修正时普通撕碎实际扣15，固定原帧模型damage=10且known=true；定位agent/src/reflex/card-model.ts:910、1168。原提案silent-proposal-afa703f560808b8f已登记，交原调度器策略链，ops不重复派发或写游戏机制。升级、多负面、其他角色/进阶和修正后整战收益未验证，不外推为加5通用规则或可赢结论；source/原帧读回及限制见learner/runs/20261020-111330-a854916e-42b3-454d-bf4b-60f5ee0c579f-postmortem/report.md、rend-model-readback.json。",
+      "disposition": "游戏机制/策略及其事实传递，保留既有 strategy-proposal 链，不补游戏知识",
+      "current_file_sha256": {}
+    },
+    {
+      "line": 1528,
+      "item": "silent-0535：单动作候选目标未传播双蟹朝向",
+      "source": "- [ ] 2026-10-20T19:16:11.156692+08:00 **silent-0535 / 单动作候选目标未传播双蟹朝向（非进程阻塞，原strategy-proposal链）**：仅转录学习者核T749HZSY80X6 A10 F33 attempt4/T4，j71097四候选均报incoming_damage_after_this=34，后继实际卡牌按目标转向可见42/28交替；定位agent/src/reflex/combat.ts:163、186。原提案silent-proposal-84af8bc877ca131f已CLI登记，不重复派发，ops不补机制或改评分/SL门槛。两朝向均仍致死，不能归为可救本场；0263整线取整是不同问题。固定证据、n=1/4尝试、反例和原字节定位见paper/materials/20261020-1914-ops/single-action-facing.md，沿原学习者实施/完整检查/live消费跟进，未implemented/shipped。",
+      "disposition": "策略类；已有silent-proposal-84af8bc877ca131f，保留独立strategy-proposal链，不重复派发"
+    }
+  ],
+  "additional_fixed_sources": [
+    {
+      "key": "cli",
+      "source": "28c28db7d450113ba11bcd21d24c3a5c6e84f5c7",
+      "item": "沙箱自测：CLI完成回执及只读配置加载兼容",
+      "paths": [
+        "agent/tests/fixture-command.py",
+        "agent/tests/fixture-command.test.ts",
+        "agent/tests/fixture-command.ts",
+        "agent/tests/knowledge-catalog.test.ts",
+        "agent/tests/sandbox-entry.test.ts",
+        "agent/tests/v6-appearance.test.ts",
+        "agent/tests/v6-combo-metrics.test.ts",
+        "agent/tests/v6-combo-simulation.test.ts",
+        "agent/tests/v6-draft.test.ts",
+        "agent/tests/v6-history-pack.test.ts"
+      ],
+      "test": "agent/tests/v6-history-pack.test.ts",
+      "message": "/home/dw/Projects/agent-sts2/learner/runs/20261020-141320-bc745b0c-1922-4627-a6b2-87bbb103e13c-fix-batch/cli-commit.txt",
+      "commit": "cb2dd0375f8cb5637a2813dc2845f702d6007f27",
+      "method": "工作树逐叶等于main，canonical source为main祖先",
+      "main_acceptance": "b367e05d4",
+      "commit_is_base_ancestor": true,
+      "path_readback": [
+        {
+          "path": "agent/tests/fixture-command.py",
+          "same_source_blob": true
+        },
+        {
+          "path": "agent/tests/fixture-command.test.ts",
+          "same_source_blob": true
+        },
+        {
+          "path": "agent/tests/fixture-command.ts",
+          "same_source_blob": true
+        },
+        {
+          "path": "agent/tests/knowledge-catalog.test.ts",
+          "same_source_blob": true
+        },
+        {
+          "path": "agent/tests/sandbox-entry.test.ts",
+          "same_source_blob": true
+        },
+        {
+          "path": "agent/tests/v6-appearance.test.ts",
+          "same_source_blob": true
+        },
+        {
+          "path": "agent/tests/v6-combo-metrics.test.ts",
+          "same_source_blob": true
+        },
+        {
+          "path": "agent/tests/v6-combo-simulation.test.ts",
+          "same_source_blob": true
+        },
+        {
+          "path": "agent/tests/v6-draft.test.ts",
+          "same_source_blob": true
+        },
+        {
+          "path": "agent/tests/v6-history-pack.test.ts",
+          "same_source_blob": true
+        }
+      ],
+      "current_blobs": [
+        {
+          "path": "agent/tests/fixture-command.py",
+          "blob": "e1ae544e598533376a8d55b84f16bb2267f1ef30",
+          "same_source_blob": true
+        },
+        {
+          "path": "agent/tests/fixture-command.test.ts",
+          "blob": "b01c43216d2013de61e6059bca09ddba9824622d",
+          "same_source_blob": true
+        },
+        {
+          "path": "agent/tests/fixture-command.ts",
+          "blob": "3c981344dcce7b2e3f31a680f17866645e651781",
+          "same_source_blob": true
+        },
+        {
+          "path": "agent/tests/knowledge-catalog.test.ts",
+          "blob": "c66c2c30df0e43c65b7f120399dfcf567e43c18e",
+          "same_source_blob": true
+        },
+        {
+          "path": "agent/tests/sandbox-entry.test.ts",
+          "blob": "0754c7257e9e7367b8a86950280d19ba7145eb4c",
+          "same_source_blob": true
+        },
+        {
+          "path": "agent/tests/v6-appearance.test.ts",
+          "blob": "299031ce6661425da87c34821802f01d8ad61b98",
+          "same_source_blob": true
+        },
+        {
+          "path": "agent/tests/v6-combo-metrics.test.ts",
+          "blob": "d23a8aa490a1dcccafd2b5d82d5303a5c841c14c",
+          "same_source_blob": true
+        },
+        {
+          "path": "agent/tests/v6-combo-simulation.test.ts",
+          "blob": "f8dec1dfe29c92812b704fedd67b536225499122",
+          "same_source_blob": true
+        },
+        {
+          "path": "agent/tests/v6-draft.test.ts",
+          "blob": "aa1fa3bbfb351ce2396f5f1c565da90b17a53457",
+          "same_source_blob": true
+        },
+        {
+          "path": "agent/tests/v6-history-pack.test.ts",
+          "blob": "12c0559ab09e9ec90358d9db13cc3e89f630cd19",
+          "same_source_blob": true
+        }
+      ],
+      "current_file_sha256": {
+        "agent/tests/fixture-command.py": "a68145ebbf646a0d9c0dd0b7fd777f39f5a417b07aad8a5a311d97c57c2c939d",
+        "agent/tests/fixture-command.test.ts": "d518125a31dc0e913e615725990fcd544bb07f7f0701f0362dcb8e0c545cd6aa",
+        "agent/tests/fixture-command.ts": "17d73f446f67bd436704e80fe8ad914c6fafd02e4d2b6867ef1bea6cf7e87d3c",
+        "agent/tests/knowledge-catalog.test.ts": "81c3c36be2fc6030be5a8cd7ba7e276f3f812aa74186df22f4b385ce6107c1dc",
+        "agent/tests/sandbox-entry.test.ts": "ec8b8daca065a1d78a150acad9113f55287c138fd78edc18f8981753bdc624d4",
+        "agent/tests/v6-appearance.test.ts": "6ecc1553db56c4b3c218fa42786b1d7303ceca98215ebc1b54a385a0a3fa1507",
+        "agent/tests/v6-combo-metrics.test.ts": "1027f2a7dd17e42238034f9a88f7bde4d372e4cb383895dc9e3b72907a8e4273",
+        "agent/tests/v6-combo-simulation.test.ts": "a4a1c28100ea1a0246ff9941826f1adca6f08b9123e4b52639919f96725326e5",
+        "agent/tests/v6-draft.test.ts": "ee73bbcc08691961ab48bc886f6efdb4e046f14d15eef839ad96149d60d68f1e",
+        "agent/tests/v6-history-pack.test.ts": "3d259078e5638f50000cd7bbfc15b4da0c24c5a23337ecbb35d5e22f37ccad3d"
+      }
+    },
+    {
+      "key": "consumer",
+      "source": "ff6fd6923bcf5b1445899023a3fe95bafe033ea1",
+      "item": "infra-h0-414-host-fixed-test-stability-20261018 / a406-fixed-deadlines（固定consumer夹具子项）",
+      "paths": [
+        "agent/tests/build-decider.test.ts",
+        "agent/tests/fixture-http.test.ts",
+        "agent/tests/fixture-http.ts",
+        "agent/tests/global-build-fixed-inputs.test.ts",
+        "agent/tests/global-build-integration.test.ts",
+        "agent/tests/journal-replay.test.ts",
+        "agent/tests/learner-retention-fixture.test.ts",
+        "agent/tests/learner-retention.test.ts",
+        "agent/tests/loop-consumer-fixed-transport.test.ts",
+        "agent/tests/oneshot-support.ts",
+        "agent/tests/synthetic-board-fixture.ts"
+      ],
+      "test": "agent/tests/loop-consumer-fixed-transport.test.ts",
+      "message": "/home/dw/Projects/agent-sts2/learner/runs/20261020-141320-bc745b0c-1922-4627-a6b2-87bbb103e13c-fix-batch/consumer-commit.txt",
+      "commit": "87c1381a4461c81f9f948a1796600d019c544349",
+      "method": "工作树逐叶等于main，canonical source为main祖先",
+      "main_acceptance": "b367e05d4",
+      "commit_is_base_ancestor": true,
+      "path_readback": [
+        {
+          "path": "agent/tests/build-decider.test.ts",
+          "same_source_blob": true
+        },
+        {
+          "path": "agent/tests/fixture-http.test.ts",
+          "same_source_blob": true
+        },
+        {
+          "path": "agent/tests/fixture-http.ts",
+          "same_source_blob": true
+        },
+        {
+          "path": "agent/tests/global-build-fixed-inputs.test.ts",
+          "same_source_blob": true
+        },
+        {
+          "path": "agent/tests/global-build-integration.test.ts",
+          "same_source_blob": true
+        },
+        {
+          "path": "agent/tests/journal-replay.test.ts",
+          "same_source_blob": true
+        },
+        {
+          "path": "agent/tests/learner-retention-fixture.test.ts",
+          "same_source_blob": true
+        },
+        {
+          "path": "agent/tests/learner-retention.test.ts",
+          "same_source_blob": true
+        },
+        {
+          "path": "agent/tests/loop-consumer-fixed-transport.test.ts",
+          "same_source_blob": true
+        },
+        {
+          "path": "agent/tests/oneshot-support.ts",
+          "same_source_blob": true
+        },
+        {
+          "path": "agent/tests/synthetic-board-fixture.ts",
+          "same_source_blob": true
+        }
+      ],
+      "current_blobs": [
+        {
+          "path": "agent/tests/build-decider.test.ts",
+          "blob": "7f8d90b3adc361c884590b44f26b31907d5c813d",
+          "same_source_blob": true
+        },
+        {
+          "path": "agent/tests/fixture-http.test.ts",
+          "blob": "5ac9d86db15d862696eb702bf5a0a20373bba2fd",
+          "same_source_blob": true
+        },
+        {
+          "path": "agent/tests/fixture-http.ts",
+          "blob": "953ab01b3df406ab5a7e60d14956312be9122bc1",
+          "same_source_blob": true
+        },
+        {
+          "path": "agent/tests/global-build-fixed-inputs.test.ts",
+          "blob": "873f64f9eae1dea2687df46e6aaae5b06b95ae8d",
+          "same_source_blob": true
+        },
+        {
+          "path": "agent/tests/global-build-integration.test.ts",
+          "blob": "cba59e26cee62ddf660087bcc577487187ad66ce",
+          "same_source_blob": true
+        },
+        {
+          "path": "agent/tests/journal-replay.test.ts",
+          "blob": "1dea45dac2ed4b2d31f2229b948aa93ead470002",
+          "same_source_blob": true
+        },
+        {
+          "path": "agent/tests/learner-retention-fixture.test.ts",
+          "blob": "4ebefb7f22f6694a9c7587f55c6131fa525953b0",
+          "same_source_blob": true
+        },
+        {
+          "path": "agent/tests/learner-retention.test.ts",
+          "blob": "11a0fc3909134eb5e8145d215fe14b154a3644b9",
+          "same_source_blob": true
+        },
+        {
+          "path": "agent/tests/loop-consumer-fixed-transport.test.ts",
+          "blob": "dcc161d576d9ec55fc98285840aa25dc0680b6d0",
+          "same_source_blob": true
+        },
+        {
+          "path": "agent/tests/oneshot-support.ts",
+          "blob": "6cdfc6a6ba5411a4d5069524b4574c09e4c3964a",
+          "same_source_blob": true
+        },
+        {
+          "path": "agent/tests/synthetic-board-fixture.ts",
+          "blob": "65ebb98d9a84694e6f48ee37af2ad5b03a3a5241",
+          "same_source_blob": true
+        }
+      ],
+      "current_file_sha256": {
+        "agent/tests/build-decider.test.ts": "1dbd469af49e20ba47e480ee8dd925d6047927dcde400fec43a2861d0beb230a",
+        "agent/tests/fixture-http.test.ts": "19128891c406ca21680eb62589bb931a7243780ca987213acd8572cd32dd3331",
+        "agent/tests/fixture-http.ts": "811b1e7cc0d1859a0a64eea59e9f77463a964b1c9164f6d8ad526eb1fef7353e",
+        "agent/tests/global-build-fixed-inputs.test.ts": "31bef53c02c5b714ed55d98ed79f5e26a015c838e091dc2f589527000320e8dc",
+        "agent/tests/global-build-integration.test.ts": "841da1f6e1be134449eda538be58f22e7ca845ae0641f356274c90cce76aaafe",
+        "agent/tests/journal-replay.test.ts": "cfe307e372917af034fd34af44bc0df5c5b75da4f2c0703dbc3d8244799b1ea2",
+        "agent/tests/learner-retention-fixture.test.ts": "d99c2389881020117fdd5b245354f3f80d5170288ecf61b939170e89ec27cf71",
+        "agent/tests/learner-retention.test.ts": "473a64f6c48adf093521656373fc22bfe028dcf43814b015e5a48c34004fae9d",
+        "agent/tests/loop-consumer-fixed-transport.test.ts": "be412087e1a59601b85f3d4e213cf5a06eb284525574dcf8dac58cd5d65fd4f4",
+        "agent/tests/oneshot-support.ts": "f7375ebdbe63c02b4c0d240f0cbb5e541e08e335a4d59307e839bab857d2c866",
+        "agent/tests/synthetic-board-fixture.ts": "4535bfd0a01b04479bb09bb2ac486ebef00908e23b49e3157ec05a2ab1e70f68"
+      }
+    },
+    {
+      "key": "paper",
+      "source": "4514b1909b6b2927d55de4818591d7efd69c49bf",
+      "item": "infra-paper-dataset-concurrent-gzip-keyscan-20261018",
+      "paths": [
+        "agent/tests/paper-dataset-publication.test.ts",
+        "ops/paper_dataset.py",
+        "ops/tests/test_paper_dataset_publication.py"
+      ],
+      "test": "agent/tests/paper-dataset-publication.test.ts",
+      "message": "/home/dw/Projects/agent-sts2/learner/runs/20261020-141320-bc745b0c-1922-4627-a6b2-87bbb103e13c-fix-batch/paper-commit.txt",
+      "commit": "0b240cbd109a5e004f010d9659a871204c455639",
+      "method": "工作树逐叶等于main，canonical source为main祖先",
+      "main_acceptance": "b367e05d4",
+      "commit_is_base_ancestor": true,
+      "path_readback": [
+        {
+          "path": "agent/tests/paper-dataset-publication.test.ts",
+          "same_source_blob": true
+        },
+        {
+          "path": "ops/paper_dataset.py",
+          "same_source_blob": true
+        },
+        {
+          "path": "ops/tests/test_paper_dataset_publication.py",
+          "same_source_blob": true
+        }
+      ],
+      "current_blobs": [
+        {
+          "path": "agent/tests/paper-dataset-publication.test.ts",
+          "blob": "e5e5f5664cf55a9563abfd0f7975a5ab0e6901f1",
+          "same_source_blob": true
+        },
+        {
+          "path": "ops/paper_dataset.py",
+          "blob": "24e260a62e5a3548384b12013b4725e88f08c51a",
+          "same_source_blob": true
+        },
+        {
+          "path": "ops/tests/test_paper_dataset_publication.py",
+          "blob": "e4e7b17cc45362d288d249d2af69ae2dfa3e4e38",
+          "same_source_blob": true
+        }
+      ],
+      "current_file_sha256": {
+        "agent/tests/paper-dataset-publication.test.ts": "2e3ac502898988042516f4293f428bf9c480ea3c5bca7ae7233deffb9aca0142",
+        "ops/paper_dataset.py": "5bf7ad110ae9985c35c5cdb27f4059e1d24340a039fa643e9a19bb0e1853c2ec",
+        "ops/tests/test_paper_dataset_publication.py": "1db152ed93537a4fdb3823bcbba2a009fa66e0e5a034bd0cac0f1c082989825e"
+      }
+    },
+    {
+      "key": "herdr",
+      "source": "83cb5041bf466509b66fdf057e9f8209d8c3fd67",
+      "item": "infra-h0-414-host-fixed-test-stability-20261018 / 21bf-fake-herdr-workspace-deadline（固定搭建成本子项）",
+      "paths": [
+        "agent/tests/herdr-workspace-fixture.ts",
+        "agent/tests/ops-herdr.test.ts"
+      ],
+      "test": "agent/tests/ops-herdr.test.ts",
+      "message": "/home/dw/Projects/agent-sts2/learner/runs/20261020-141320-bc745b0c-1922-4627-a6b2-87bbb103e13c-fix-batch/herdr-commit.txt",
+      "commit": "698d3bd20fc95e2791e6fab8d5ad4c2c9e01a5c4",
+      "method": "工作树逐叶等于main，canonical source为main祖先",
+      "main_acceptance": "b367e05d4",
+      "commit_is_base_ancestor": true,
+      "path_readback": [
+        {
+          "path": "agent/tests/herdr-workspace-fixture.ts",
+          "same_source_blob": true
+        },
+        {
+          "path": "agent/tests/ops-herdr.test.ts",
+          "same_source_blob": true
+        }
+      ],
+      "current_blobs": [
+        {
+          "path": "agent/tests/herdr-workspace-fixture.ts",
+          "blob": "22ed40697b0b88aafd90c574e2651a2c343e8f67",
+          "same_source_blob": true
+        },
+        {
+          "path": "agent/tests/ops-herdr.test.ts",
+          "blob": "e0bbdd80411e662bdd1fbe0b400a6be7d60916bb",
+          "same_source_blob": true
+        }
+      ],
+      "current_file_sha256": {
+        "agent/tests/herdr-workspace-fixture.ts": "a31baa440fcb133204ea5ba111fb78a70be6784719e71695684a6b2b66e69d59",
+        "agent/tests/ops-herdr.test.ts": "6157ab4f32069db7fbd0f82101a5fca27a75db1d6c850d7c3d2b50b53ee1440e"
+      }
+    },
+    {
+      "item": "早期任务模板merge=v3过时",
+      "commit": "16ebc4aecb12a1d4b2f34ee767bb2816a3a0b466",
+      "commit_is_base_ancestor": true,
+      "current_file_sha256": {}
+    },
+    {
+      "item": "DeepSeek题面dump整读states超字符串上限",
+      "commit": "6ee8e2a2c1edc31492962137b96af8c6e1d12093",
+      "commit_is_base_ancestor": true,
+      "current_file_sha256": {}
+    },
+    {
+      "item": "失败大脑及fallback主引擎耗时漏记",
+      "commit": "052e586d753df2f10e478b95e72e2993eb808229",
+      "commit_is_base_ancestor": true,
+      "current_file_sha256": {}
+    },
+    {
+      "item": "feature根目录事件通知来源兼容",
+      "commit": "577f0bc424b7287910735cfdc86c253cc7ee8057",
+      "commit_is_base_ancestor": true,
+      "current_file_sha256": {}
+    },
+    {
+      "item": "原结束后stall误报",
+      "commit": "21a9c52484f04d510bd397959c958ec9767f1d2d",
+      "commit_is_base_ancestor": true,
+      "current_file_sha256": {}
+    },
+    {
+      "item": "core-build-notify-222802-rc2 / 原生失败诊断保存子项",
+      "commit": "5c92f2aaf0b758a1a5e7d591745694004664f83a",
+      "commit_is_base_ancestor": true,
+      "scope": "当前notify保存stdout/stderr及uncertain异常；历史无stderr rc2的原因/未送达证明仍未知，不发送、不重试原通知。",
+      "current_file_sha256": {}
+    },
+    {
+      "item": "共享临时目录inode/测试生命周期/主盘TMPDIR及容量准入（限定工程子项）",
+      "commit": "4c7b8d9bf48f54163c04d8e4f4f79ae6eb402e83",
+      "commit_is_base_ancestor": true,
+      "disposition": "当前main已修；原owner完整检查不冒称本批复验或实际live发布",
+      "paths": [
+        "agent/tools/temp-root.mjs",
+        "agent/tools/with-temp.mjs",
+        "agent/tests/temp-lifecycle.test.ts",
+        "ops/disk_admission.py",
+        "ops/learner_checks.py"
+      ],
+      "current_file_sha256": {
+        "agent/tools/temp-root.mjs": "6e1c94defdb13148b5ab73ad988104979d859fd4692fdc405573caef43a81d9b",
+        "agent/tools/with-temp.mjs": "e86ca371fb21fa45888339733e67c66a4a3024a21997bb79bd2ae8a6d60d9619",
+        "agent/tests/temp-lifecycle.test.ts": "c7ea35cf41d6524726ac554dd4d791b830dab02f81350c4481c4600738f698b8",
+        "ops/disk_admission.py": "951344eee84cf8f5e967b59784e01e0043e1b140c2790520af119d51e3d744b7",
+        "ops/learner_checks.py": "6eaeb3297eb8beb15aff8a7ec06ab016c330e4e00d0594fd2a9c28820a07a88d"
+      }
+    }
+  ]
+}
