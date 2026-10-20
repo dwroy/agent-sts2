@@ -5350,3 +5350,5 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
 - 2026-10-20 23:57:29 CST 原ops：V6-R405精确P0七源上线/live75c4a1b9，624文件5918过2跳；双通知先于原autoplay放行，T0TP8S9MMU9Q 23:49:20开局/23:49:41首局内动作，498知识保留/69后生成漂移独立核不冒full覆盖。P3十一源23:55:46唯一full启动tsc0，formats保live公式/界不夹805，REFLEX off；自然P0奖励和稳定两局/P4/R4科学闭环保留。原件paper/materials/20261020-2342-ops/receipt.json。
 
 - 2026-10-20 23:58:10 CST 原ops补核：R405首自然局T0TP8S9MMU9Q已于23:55:56正常F8败并完成终局账务，119决策、0error/0fallback；原play退出为自然终局，不触发故障回退。奖励采用率/准备耗时未由终局尾段验收，稳定两局/P2仍pending；原autoplay接续不另启，不查询在途P3。原件paper/materials/20261020-2342-ops/first-natural-run-terminal.json。
+
+- 2026-10-21 00:01:15 CST [Claude，P0 验收不通过] V6-R405（dbab11bfb）上线后 Jev 确在拿奖励牌（unknown_to_brain 0、准备约 1–1.4 s），但 A 条目缺陷：同题不同牌的“当前牌组+此牌”模拟结果逐项相同（T0TP8S9MMU9Q F2 三牌 1 组、RBMEQGXPE9Z2 F3 三牌 1 组），Jev 无法区分，首局三次全选跳过、F8 死于花园幽灵鳗（6.6 分钟）。处置：ops 下一开局边界把 V6_CARD_DECIDER 临时改回 brain（其余保留）；v6-w4w6 查缓存键/牌未入模拟/未建模牌当空白，修复后未建模牌须标 unmodelled 且加“不同牌结果应不同”回归，并核模拟对起手牌组 F2 打本幕全部精英/Boss 死亡率 100% 的悲观问题；真实循环验收后再切回 jev。
