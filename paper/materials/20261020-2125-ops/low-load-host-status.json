@@ -1,0 +1,59 @@
+{
+  "request": "roy-five-item-one-low-load-rerun-20261020-205x",
+  "state": "passed-await-original-ops-all-five-live-publication-consumer-readback-and-release",
+  "started_at": "2026-10-20T21:02:55.813348+08:00",
+  "runner_pid": 887363,
+  "runner_start_ticks": "139321063",
+  "nice": 19,
+  "worktree": "/home/dw/Projects/agent-sts2/.worktrees/ops-five-item-live-20261020-1855",
+  "allocation_base": "061ee31620c08f452bc1259bca652ad0774d647d",
+  "actual_live_base": "64c218a04ebe029fdda0b5f25025302ebf2a4124",
+  "staged_tree": "496948c2f9a9fb4d45056aa2394940cb81e0862b",
+  "source_count": 84,
+  "knowledge_count": 458,
+  "input_count": 2379,
+  "input_sha256": "17053663e821d3a754b6d84f4a5dc2987c1ec958a64d1295b6cd04cfeb3e1775",
+  "steps": [
+    {
+      "name": "tsc",
+      "command": [
+        "npx",
+        "tsc",
+        "-p",
+        "tsconfig.json",
+        "--noEmit"
+      ],
+      "started_at": "2026-10-20T21:02:55.813963+08:00",
+      "log": "/home/dw/Projects/agent-sts2/.artifacts/ops-five-item-low-load-20261020/tsc.log",
+      "pid": 899802,
+      "exit_code": 0,
+      "ended_at": "2026-10-20T21:02:57.145846+08:00",
+      "seconds": 1.3319050029385835,
+      "log_bytes": 0,
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "full",
+      "command": [
+        "node",
+        "tools/with-temp.mjs",
+        "node_modules/vitest/vitest.mjs",
+        "run",
+        "--maxWorkers=1"
+      ],
+      "started_at": "2026-10-20T21:02:57.146218+08:00",
+      "log": "/home/dw/Projects/agent-sts2/.artifacts/ops-five-item-low-load-20261020/full.log",
+      "pid": 900140,
+      "exit_code": 0,
+      "ended_at": "2026-10-20T21:22:32.962301+08:00",
+      "seconds": 1175.8160797250457,
+      "log_bytes": 400,
+      "log_sha256": "a6056924e4f30af014ca0232187783706115ffc9e23dce3fad313dac86de7d1f"
+    }
+  ],
+  "no_actual_live_or_active_actor_change": true,
+  "ended_at": "2026-10-20T21:22:33.223097+08:00",
+  "input_unchanged": true,
+  "combined_full_rc": 0,
+  "terminal_event_path": "/home/dw/Projects/agent-sts2/ops/codex-ops/queue/1792502553223429651-manual.md"
+}

@@ -1,0 +1,125 @@
+{
+  "actual_live_root": "/home/dw/Projects/agent-sts2/.worktrees/live",
+  "network": "forbidden",
+  "simulation": "not invoked",
+  "runtime_export_literals": {
+    "V6_BUILD": "on",
+    "V6_CARD_DECIDER": "jev",
+    "V6_SHOP_DECIDER": "brain",
+    "V6_REST_DECIDER": "brain",
+    "V6_POTION_DECIDER": "brain",
+    "V6_COMBAT_ENTRIES": "off",
+    "V6_DIRECTION_REPLAN": "off",
+    "V6_T1_CORE_MIN": "0",
+    "V6_T2_MIN_DELTA": "1",
+    "V6_T3_WEIGHT_MAX": "0",
+    "V6_T6_UNKNOWN_MAX": "1",
+    "V6_T6_FALLBACKS": "100"
+  },
+  "config": {
+    "schema": "v6-config-v1",
+    "mode": "on",
+    "deciders": {
+      "card": "jev",
+      "potion": "brain",
+      "shop": "brain",
+      "rest": "brain"
+    },
+    "reflex": "off",
+    "direction_replan": "off",
+    "admission": "interfaces_only",
+    "delivered": false,
+    "samples_pick": 20,
+    "samples_act": 100,
+    "min_known_option_ratio": 0.5,
+    "direction_min_weight": 0.1,
+    "win": {
+      "certain_win": 0.95,
+      "favored": 0.7,
+      "even": 0.3,
+      "unfavored": 0.05
+    },
+    "delta": {
+      "much_se": 2,
+      "better_se": 1,
+      "much_min": 0.05
+    },
+    "triggers": {
+      "t1_core_min": 0,
+      "t2_se": 2,
+      "t2_min_delta": 1,
+      "t2_consecutive": 2,
+      "t3_weight_max": 0,
+      "t5_hazard": "existing_route_projection",
+      "t6_unknown_max": 1,
+      "t6_fallbacks": 100,
+      "t7_checkpoint": "validated_brain_answer"
+    },
+    "budgets": {
+      "brain_soft_cap": 15,
+      "brain_ms": 90000,
+      "act_ms": 60000,
+      "pick_ms": 5000,
+      "jev_ms": 5000
+    },
+    "invalid": []
+  },
+  "strict_reward": {
+    "unknown_source": false,
+    "combat_to_exact_three": true,
+    "event": false
+  },
+  "history": {
+    "status": "loaded",
+    "ids": [
+      "P-toxin-footwork",
+      "P-fumes-footwork",
+      "P-flask-afterimage",
+      "P-flask-footwork",
+      "P-mixed-defense",
+      "P-toxin-mirage",
+      "D-toxin-backflip",
+      "D-fumes-backflip",
+      "D-flask-sweep",
+      "D-observed-union-fbc4b776",
+      "S-dance-accuracy",
+      "S-cloak-phantom",
+      "S-dance-afterimage",
+      "S-observed-union-35f60a95",
+      "R-acro-tingsha",
+      "R-tools-tingsha",
+      "R-acro-bandages"
+    ],
+    "sha256": "bc0290ae8354871156068817f0b88c7712af105796fb208d73a2ec03fc08bcc4",
+    "factory": "ready",
+    "all_17_ids_equal": true
+  },
+  "direction": {
+    "off": true,
+    "extra_brain_calls": 0,
+    "independent_loop_calls": false
+  },
+  "getter": {
+    "miss": null,
+    "provider_calls": 0
+  },
+  "combat_entries": {
+    "off": true,
+    "knowledge_not_deleted": true
+  },
+  "snakebite": {
+    "model_retains": true
+  },
+  "infra": {
+    "actual_owned_scope_created_and_cleaned": true,
+    "default_parent": "/home/dw/Projects/agent-sts2/.cache/t",
+    "helper_sha256": "6e1c94defdb13148b5ab73ad988104979d859fd4692fdc405573caef43a81d9b",
+    "with_temp_sha256": "e86ca371fb21fa45888339733e67c66a4a3024a21997bb79bd2ae8a6d60d9619",
+    "disk_admission_sha256": "951344eee84cf8f5e967b59784e01e0043e1b140c2790520af119d51e3d744b7"
+  },
+  "limitations": [
+    "Fixed offline consumer readback, not natural adoption or benefit proof",
+    "Existing sample sizes 2–18, prior nine HTTP200 is protocol evidence only",
+    "Shop/rest/potion remain brain; no W6 full-slot migration acceptance"
+  ]
+}

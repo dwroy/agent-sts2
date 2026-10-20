@@ -1,0 +1,311 @@
+{
+  "at": "2026-10-20T21:31:18+08:00",
+  "state": "all-five-precisely-main-integrated-live-published-release-registered-and-new-run-started",
+  "release_id": "V6-R404",
+  "behavior_commit": "eae56f79040d9c13c099160ec7d3f964510b0fd3",
+  "actual_live": "048a9713bd4be09ad5f6d3f6131e8b729f51aece",
+  "main_source_commit": "7c2e920b0ca5e3d28e2c08b770c18e3af44df614",
+  "main_registry_commit": "1d0404670441ff23e95e415c978d457ff654773d",
+  "live_source_tree": "496948c2f9a9fb4d45056aa2394940cb81e0862b",
+  "main_full_not_claimed": true,
+  "unrelated_newer_main_fixture_wiring_preserved": [
+    "agent/tests/oneshot-support.ts",
+    "ops/tests/test_disk_admission.py"
+  ],
+  "full": {
+    "request": "roy-five-item-one-low-load-rerun-20261020-205x",
+    "state": "passed-await-original-ops-all-five-live-publication-consumer-readback-and-release",
+    "started_at": "2026-10-20T21:02:55.813348+08:00",
+    "runner_pid": 887363,
+    "runner_start_ticks": "139321063",
+    "nice": 19,
+    "worktree": "/home/dw/Projects/agent-sts2/.worktrees/ops-five-item-live-20261020-1855",
+    "allocation_base": "061ee31620c08f452bc1259bca652ad0774d647d",
+    "actual_live_base": "64c218a04ebe029fdda0b5f25025302ebf2a4124",
+    "staged_tree": "496948c2f9a9fb4d45056aa2394940cb81e0862b",
+    "source_count": 84,
+    "knowledge_count": 458,
+    "input_count": 2379,
+    "input_sha256": "17053663e821d3a754b6d84f4a5dc2987c1ec958a64d1295b6cd04cfeb3e1775",
+    "steps": [
+      {
+        "name": "tsc",
+        "command": [
+          "npx",
+          "tsc",
+          "-p",
+          "tsconfig.json",
+          "--noEmit"
+        ],
+        "started_at": "2026-10-20T21:02:55.813963+08:00",
+        "log": "/home/dw/Projects/agent-sts2/.artifacts/ops-five-item-low-load-20261020/tsc.log",
+        "pid": 899802,
+        "exit_code": 0,
+        "ended_at": "2026-10-20T21:02:57.145846+08:00",
+        "seconds": 1.3319050029385835,
+        "log_bytes": 0,
+        "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "name": "full",
+        "command": [
+          "node",
+          "tools/with-temp.mjs",
+          "node_modules/vitest/vitest.mjs",
+          "run",
+          "--maxWorkers=1"
+        ],
+        "started_at": "2026-10-20T21:02:57.146218+08:00",
+        "log": "/home/dw/Projects/agent-sts2/.artifacts/ops-five-item-low-load-20261020/full.log",
+        "pid": 900140,
+        "exit_code": 0,
+        "ended_at": "2026-10-20T21:22:32.962301+08:00",
+        "seconds": 1175.8160797250457,
+        "log_bytes": 400,
+        "log_sha256": "a6056924e4f30af014ca0232187783706115ffc9e23dce3fad313dac86de7d1f"
+      }
+    ],
+    "no_actual_live_or_active_actor_change": true,
+    "ended_at": "2026-10-20T21:22:33.223097+08:00",
+    "input_unchanged": true,
+    "combined_full_rc": 0,
+    "terminal_event_path": "/home/dw/Projects/agent-sts2/ops/codex-ops/queue/1792502553223429651-manual.md"
+  },
+  "source_input_count": 2379,
+  "source_input_sha256": "17053663e821d3a754b6d84f4a5dc2987c1ec958a64d1295b6cd04cfeb3e1775",
+  "protected_knowledge_count": 458,
+  "consumer": {
+    "actual_live_root": "/home/dw/Projects/agent-sts2/.worktrees/live",
+    "network": "forbidden",
+    "simulation": "not invoked",
+    "runtime_export_literals": {
+      "V6_BUILD": "on",
+      "V6_CARD_DECIDER": "jev",
+      "V6_SHOP_DECIDER": "brain",
+      "V6_REST_DECIDER": "brain",
+      "V6_POTION_DECIDER": "brain",
+      "V6_COMBAT_ENTRIES": "off",
+      "V6_DIRECTION_REPLAN": "off",
+      "V6_T1_CORE_MIN": "0",
+      "V6_T2_MIN_DELTA": "1",
+      "V6_T3_WEIGHT_MAX": "0",
+      "V6_T6_UNKNOWN_MAX": "1",
+      "V6_T6_FALLBACKS": "100"
+    },
+    "config": {
+      "schema": "v6-config-v1",
+      "mode": "on",
+      "deciders": {
+        "card": "jev",
+        "potion": "brain",
+        "shop": "brain",
+        "rest": "brain"
+      },
+      "reflex": "off",
+      "direction_replan": "off",
+      "admission": "interfaces_only",
+      "delivered": false,
+      "samples_pick": 20,
+      "samples_act": 100,
+      "min_known_option_ratio": 0.5,
+      "direction_min_weight": 0.1,
+      "win": {
+        "certain_win": 0.95,
+        "favored": 0.7,
+        "even": 0.3,
+        "unfavored": 0.05
+      },
+      "delta": {
+        "much_se": 2,
+        "better_se": 1,
+        "much_min": 0.05
+      },
+      "triggers": {
+        "t1_core_min": 0,
+        "t2_se": 2,
+        "t2_min_delta": 1,
+        "t2_consecutive": 2,
+        "t3_weight_max": 0,
+        "t5_hazard": "existing_route_projection",
+        "t6_unknown_max": 1,
+        "t6_fallbacks": 100,
+        "t7_checkpoint": "validated_brain_answer"
+      },
+      "budgets": {
+        "brain_soft_cap": 15,
+        "brain_ms": 90000,
+        "act_ms": 60000,
+        "pick_ms": 5000,
+        "jev_ms": 5000
+      },
+      "invalid": []
+    },
+    "strict_reward": {
+      "unknown_source": false,
+      "combat_to_exact_three": true,
+      "event": false
+    },
+    "history": {
+      "status": "loaded",
+      "ids": [
+        "P-toxin-footwork",
+        "P-fumes-footwork",
+        "P-flask-afterimage",
+        "P-flask-footwork",
+        "P-mixed-defense",
+        "P-toxin-mirage",
+        "D-toxin-backflip",
+        "D-fumes-backflip",
+        "D-flask-sweep",
+        "D-observed-union-fbc4b776",
+        "S-dance-accuracy",
+        "S-cloak-phantom",
+        "S-dance-afterimage",
+        "S-observed-union-35f60a95",
+        "R-acro-tingsha",
+        "R-tools-tingsha",
+        "R-acro-bandages"
+      ],
+      "sha256": "bc0290ae8354871156068817f0b88c7712af105796fb208d73a2ec03fc08bcc4",
+      "factory": "ready",
+      "all_17_ids_equal": true
+    },
+    "direction": {
+      "off": true,
+      "extra_brain_calls": 0,
+      "independent_loop_calls": false
+    },
+    "getter": {
+      "miss": null,
+      "provider_calls": 0
+    },
+    "combat_entries": {
+      "off": true,
+      "knowledge_not_deleted": true
+    },
+    "snakebite": {
+      "model_retains": true
+    },
+    "infra": {
+      "actual_owned_scope_created_and_cleaned": true,
+      "default_parent": "/home/dw/Projects/agent-sts2/.cache/t",
+      "helper_sha256": "6e1c94defdb13148b5ab73ad988104979d859fd4692fdc405573caef43a81d9b",
+      "with_temp_sha256": "e86ca371fb21fa45888339733e67c66a4a3024a21997bb79bd2ae8a6d60d9619",
+      "disk_admission_sha256": "951344eee84cf8f5e967b59784e01e0043e1b140c2790520af119d51e3d744b7"
+    },
+    "limitations": [
+      "Fixed offline consumer readback, not natural adoption or benefit proof",
+      "Existing sample sizes 2–18, prior nine HTTP200 is protocol evidence only",
+      "Shop/rest/potion remain brain; no W6 full-slot migration acceptance"
+    ]
+  },
+  "start": {
+    "run_id": "Y427BMQH8AU6",
+    "run_config_at": "2026-10-20T13:29:38.520Z",
+    "process": {
+      "pid": 948736,
+      "started": "2026-10-20T13:29:34.871Z"
+    },
+    "cwd": "/home/dw/Projects/agent-sts2/.worktrees/live/agent",
+    "observed_live_commit": "048a9713bd4be09ad5f6d3f6131e8b729f51aece",
+    "behavior_commit": "eae56f79040d9c13c099160ec7d3f964510b0fd3",
+    "accepted_source_tree": "496948c2f9a9fb4d45056aa2394940cb81e0862b",
+    "inputs_SHA_verified": 2379,
+    "original_run_config_git_error": {
+      "commit": null,
+      "code": null,
+      "dirty": null,
+      "dirty_files": [],
+      "branch": null,
+      "worktree": "live",
+      "error": "git status failed: spawnSync git ENOBUFS"
+    },
+    "metadata_error_not_silently_rewritten": true,
+    "v6": {
+      "schema": "v6-config-v1",
+      "mode": "on",
+      "deciders": {
+        "card": "jev",
+        "potion": "brain",
+        "shop": "brain",
+        "rest": "brain"
+      },
+      "reflex": "off",
+      "direction_replan": "off",
+      "admission": "interfaces_only",
+      "delivered": false,
+      "samples_pick": 20,
+      "samples_act": 100,
+      "min_known_option_ratio": 0.5,
+      "direction_min_weight": 0.1,
+      "win": {
+        "certain_win": 0.95,
+        "favored": 0.7,
+        "even": 0.3,
+        "unfavored": 0.05
+      },
+      "delta": {
+        "much_se": 2,
+        "better_se": 1,
+        "much_min": 0.05
+      },
+      "triggers": {
+        "t1_core_min": 0,
+        "t2_se": 2,
+        "t2_min_delta": 1,
+        "t2_consecutive": 2,
+        "t3_weight_max": 0,
+        "t5_hazard": "existing_route_projection",
+        "t6_unknown_max": 1,
+        "t6_fallbacks": 100,
+        "t7_checkpoint": "validated_brain_answer"
+      },
+      "budgets": {
+        "brain_soft_cap": 15,
+        "brain_ms": 90000,
+        "act_ms": 60000,
+        "pick_ms": 5000,
+        "jev_ms": 5000
+      },
+      "invalid": []
+    },
+    "first_action": {
+      "ts": "2026-10-20T13:29:57.861Z",
+      "screen": "EVENT",
+      "label": "event/plan",
+      "decider": "codex",
+      "decision_id": "bad608c6-7a0c-4471-a161-bdb515af64b5",
+      "offset": 2967848612,
+      "bytes": 166415,
+      "action": null,
+      "result": "completed: Action completed."
+    },
+    "console": "logs/console/20261020-212926-048a9713b+dirty.log",
+    "STOP_removed": true,
+    "Regent": "paused",
+    "natural_reward_and_combat_adoption": "not yet observed; fixed offline consumer readbacks separate"
+  },
+  "notification": {
+    "at": "2026-10-20T21:29:43+08:00",
+    "release_id": "V6-R404",
+    "paths": [
+      "ops/inbox-dev.md",
+      "notes/for-roy.md"
+    ],
+    "body": "V6-R404五项已原子上线：旧泛拿牌/P上界入口改为仅实见战胜后三选一交Jev（CARD=jev），幕初/事件/商店/休息/满槽药仍大脑；SHOP/REST/POTION=brain。旧出牌小脑题面关闭（COMBAT_ENTRIES=off），回V5，85条知识保留。旧独立方向请求改原V5请求搭车（DIRECTION_REPLAN=off），90秒不变。保战斗预算并接通蛇咬Retain；临时目录改主盘独占及容量准入。相同tree496/2379输入低负载tsc0、623文件5909过2跳，旧两轮失败保留。实际live048a9713，五项离线消费者及458知识SHA核同；17组合/2–18样本不证明收益，旧expected_win仅审计不改。回退点64c218，首局报错/卡住/明显兜底则沿原授权回退并告inbox，保新知识/日志；Regent暂停。原JWJ终局STOP已核，按授权恢复。",
+    "characters": 399,
+    "publication_notice_order_exception": "mod broker output contained header plus JSON; parse error stopped first record attempt but shell proceeded to authorized autoplay-start; notices appended immediately afterward, exact times retained; no false prior-notice claim"
+  },
+  "old_failed_fulls_retained": true,
+  "expected_win_legacy_unchanged": true,
+  "paused805_whole_main_not_transported": true,
+  "no_role_ACK_or_scientific_closure": true,
+  "Regent": "paused",
+  "rollback": {
+    "previous_live": "64c218a04ebe029fdda0b5f25025302ebf2a4124",
+    "preserve_new_logs_and_knowledge": true,
+    "trigger": "first-run error/stall/material fallback rise; authorized original flow"
+  },
+  "metadata_limitation": "run-config Git status ENOBUFS; independently verify process cwd/current actual live HEAD and2379 inputs, retain original null metadata",
+  "notice_sequence_exception": "mod broker output contained header plus JSON; parse error stopped first record attempt but shell proceeded to authorized autoplay-start; notices appended immediately afterward, exact times retained; no false prior-notice claim"
+}

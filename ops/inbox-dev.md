@@ -4677,3 +4677,7 @@ request_id=roy-20261017-human-pace-h0 revision=3 input_sha256=1e1c259a15f1824119
 
 
 2026-10-20T21:10:03.838203+08:00 Roy20:5x方案B已原生接管，明确授权同tree496948c2、2379输入SHA17053663低负载重跑一次；原文与watcher来源585746d9已冻结。原learn.lock内准入标记挡新批及完成续派，原收尾/dataset/snapshot三锁挡重任务；两在途策略批次自然结束后，load1=2.33/32CPU、短区间忙碌7.76%通过门。21:02:55唯一重跑实际启动，nice19/ionice3单worker，tsc0/full900140在跑；输入、阈值和旧full1均未改，不以六次单例替代整套。终局只释放匹配本事务指纹的准入标记与锁，通过则按授权精确发布、五项读回、核号双通知及移STOP开局，再败保持等待告watcher/Claude。旧expected_win只审计、本次不动，稳定后随改名删除字段/断言。正常换行转义的误读已更正，无进程被重启或发送信号。原件paper/materials/20261020-low-load-once-ops/receipt.json。
+
+2026-10-20T21:29:43+08:00 V6-R404五项已原子上线：旧泛拿牌/P上界入口改为仅实见战胜后三选一交Jev（CARD=jev），幕初/事件/商店/休息/满槽药仍大脑；SHOP/REST/POTION=brain。旧出牌小脑题面关闭（COMBAT_ENTRIES=off），回V5，85条知识保留。旧独立方向请求改原V5请求搭车（DIRECTION_REPLAN=off），90秒不变。保战斗预算并接通蛇咬Retain；临时目录改主盘独占及容量准入。相同tree496/2379输入低负载tsc0、623文件5909过2跳，旧两轮失败保留。实际live048a9713，五项离线消费者及458知识SHA核同；17组合/2–18样本不证明收益，旧expected_win仅审计不改。回退点64c218，首局报错/卡住/明显兜底则沿原授权回退并告inbox，保新知识/日志；Regent暂停。原JWJ终局STOP已核，按授权恢复。 原件：paper/materials/20261020-2125-ops/receipt.json；.artifacts/ops-five-item-publication-20261020-2125/。
+
+2026-10-20T21:31:18+08:00 V6-R404已恢复新局Y427BMQH8AU6：run-config21:29:38.520，首实局event/plan动作21:29:57.861（CST），codex；原EVENT题/升级动作已回执，无独立方向ask初窗。STOP已移，autoplay948542/play948736，live048a9713及2379输入另核同。run-config原Git元数据采集ENOBUFS导致commit空，保原错误，以进程cwd/实际HEAD/SHA旁证，不改原日志、不冒整局验收。双通知实际21:29:42完成，首记录解析失败后启动先发生，时序例外保原件。详paper/materials/20261020-2125-ops/receipt.json。
