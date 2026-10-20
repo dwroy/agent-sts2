@@ -1,0 +1,26 @@
+
+ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/v6-r404-card-provider-wiring-20261020/agent
+
+ ❯ tests/v6-card-input-bridge.test.ts (14 tests | 1 failed | 13 skipped) 8ms
+   × keeps the R404 multi-frame replay out of the legacy single-state fixture glob 6ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/v6-card-input-bridge.test.ts > keeps the R404 multi-frame replay out of the legacy single-state fixture glob
+AssertionError: expected [ …(73) ] to not include 'v6-r404-card-rewards.json'
+ ❯ tests/v6-card-input-bridge.test.ts:65:22
+     63|   const directory = new URL("./logged-states/", import.meta.url);
+     64|   const boards = readdirSync(directory).filter(name => name.endsWith("…
+     65|   expect(boards).not.toContain("v6-r404-card-rewards.json");
+       |                      ^
+     66|   for (const name of boards) {
+     67|     const frozen = JSON.parse(readFileSync(new URL(name, directory), "…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 13 skipped (14)
+   Start at  23:03:41
+   Duration  3.01s (transform 2.36s, setup 350ms, import 2.51s, tests 8ms, environment 0ms)
+
