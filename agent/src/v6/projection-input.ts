@@ -55,8 +55,8 @@ export function v6ProjectionInputs(dir = KNOWLEDGE_DIR, now = () => new Date().t
       templates, support, cores, doubleBoss, trust, modelVersion: `v6-runtime-v1:${signature}` });
     return { run, character, ascension, asOf, directions, factory };
   }
-  return async (env: DecisionEnv, phase: "act" | "pick"): Promise<V6ProjectionInput | null> => {
-    if (v6Config().mode === "off" || env.state.in_combat) return null;
+  return async (env: DecisionEnv, phase: "act" | "pick", idleCombat = false): Promise<V6ProjectionInput | null> => {
+    if (v6Config().mode === "off" || env.state.in_combat && !idleCombat) return null;
     const raw = asRecord(env.state.run?.raw), character = str(raw.character_id).toLowerCase() as Character;
     const run = str(env.state.raw.run_id), ascension = env.state.run?.ascension ?? 0;
     if (!["silent", "ironclad", "regent", "necrobinder", "defect"].includes(character) || !run) return null;

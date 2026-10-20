@@ -14,9 +14,10 @@ export class V6IdlePrecomputer {
   schedule(request: V6ProjectionRequest): "queued" | "disabled" {
     this.generation++;
     if (request.config.mode === "off") { this.pending = null; return "disabled"; }
-    const { prepare, trust, completionSources, ...data } = request;
-    const snapshot = { ...structuredClone(data), options: [], prepare, trust, completionSources: [...completionSources] };
-    const key = v6Digest({ ...snapshot, prepare: undefined, trust: undefined,
+    const { prepare, cachedPreparation, trust, completionSources, directions, ...data } = request;
+    // Direction metrics are immutable run-start evidence, shared with foreground work.
+    const snapshot = { ...structuredClone(data), options: [], directions, prepare, cachedPreparation, trust, completionSources: [...completionSources] };
+    const key = v6Digest({ ...snapshot, directions: directions.map(d => [d.id, d.signature]), prepare: undefined, trust: undefined,
       completionSources: snapshot.completionSources.map(s => [s.kind, s.signature]) });
     this.pending = { key, request: snapshot, generation: this.generation }; return "queued";
   }

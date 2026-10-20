@@ -38,3 +38,11 @@ export function request(): V6ProjectionRequest { return { config: v6Config({ V6_
   targets: [{ id: "boss", boss: "SOUL_FYSH", act: 1, floor: 16, kind: "current", probability: 1, labels: [] }], completionSources: [source()], seed: 42, modelVersion: "fixture", contextDigest: "held-resources",
   prepare(_t, s) { const b = board(); b.meta = { ...b.meta, enc: s.cards.some(c => c.id === "A") ? "completed" : "general" }; return { input: b, maxHp: 60, bossHp: 120, labels: [] }; },
   trust: () => ({ value: "unknown", labels: ["partial_model"] }) }; }
+
+/** Minimal complete current-Boss row for consumer routing tests. */
+export function knownCurrentRows(table: import("../src/sim/v6-projection.js").V6ProjectionTable, ids: readonly string[]): void {
+  for (const option_id of ids) table.combinations.push({ combination_id: "fixture:combo", entry: {
+    option_id, target_id: table.targets.find(t => t.kind === "current")!.id, direction_id: "fixture",
+    availability: { take: .5, skip: .5 }, win_complete: { value: 1, se: 0, n: 20 }, expected_win: .5,
+  } } as never);
+}

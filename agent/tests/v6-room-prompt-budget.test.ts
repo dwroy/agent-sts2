@@ -66,7 +66,8 @@ it.each(["shop", "rest"] as const)("keeps every %s action and its continuation a
     expect(leading.opening).toEqual({ Wk: "opening unknown", W0: "opening unknown" });
     expect(view.comparison).toMatchObject({ weighted_chain: { delta: null, tier: "unknown", known_mass: null },
       current_boss: { delta: null, tier: "unknown", known_mass: null } });
-    const reasons = asArray(view.unknown_reasons ?? leading.unknown_reasons);
+    const catalog = asRecord(d.state.option_reason_catalog);
+    const reasons = asArray(view.unknown_reasons ?? leading.unknown_reasons).map(reason => catalog[String(reason)] ?? reason);
     expect(reasons).toContain(option.unknown_reason ?? "fixed_provider_unavailable");
     const resolved = d.resolve(answer(option.option.key));
     expect(resolved.fallback).toBe(false);

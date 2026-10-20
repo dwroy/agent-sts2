@@ -4,7 +4,7 @@ import { dirname, join } from "node:path";
 import { PROJECT_ROOT } from "../core/paths.js";
 import { appendJsonLine } from "../core/util/jsonl.js";
 import { array, enumeration, id, literal, nullable, number, object, optional, record, text, validate, type Infer } from "./schema.js";
-import { characterSchema, validateProjectionEntry, projectionEntrySchema } from "./formats.js";
+import { characterSchema, validateProjectionEntries, projectionEntrySchema } from "./formats.js";
 import type { V6Config } from "./config.js";
 import { asRecord } from "../core/util/json.js";
 
@@ -32,31 +32,31 @@ export class V6BuildLog {
     // Deduplicate large opaque snapshots instead of repeating megabytes for every option/target.
     const audits = new Map<string, { json: string; file: string; sha256: string; direction_id: string; combo_id: string }>();
     const snapshots = new WeakMap<object, { json: string; sha256: string }>();
-    const verified = new Set<string>();
+
     const raw = asRecord(row);
-    const entries = Array.isArray(raw.entries) ? raw.entries.map(entry => {
+    // Validate shared metric objects once, even when invalid. Never hash/stringify
+    // the same rejected snapshot again for every option and target.
+    if (!Array.isArray(raw.entries) || validateProjectionEntries(raw.entries).some(r => !r.ok))
+      return { written: false, reason: "invalid entries" };
+    const entries = raw.entries.map(entry => {
       const e = asRecord(entry);
       if (e.combo_metrics == null) return entry;
       const cached = typeof e.combo_metrics === "object" ? snapshots.get(e.combo_metrics) : undefined;
       const json = cached?.json ?? JSON.stringify(e.combo_metrics);
       if (json.length <= 32_000) return entry;
       const sha256 = cached?.sha256 ?? createHash("sha256").update(json).digest("hex");
-      if (!verified.has(sha256)) {
-        if (!validateProjectionEntry(entry).ok || unsafe(json)) return entry;
-        verified.add(sha256);
-      }
+      if (!cached && unsafe(json)) return entry;
       if (typeof e.combo_metrics === "object") snapshots.set(e.combo_metrics, { json, sha256 });
       const file = `v6-metrics/${sha256}.json`;
       audits.set(`${e.direction_id}:${e.combo_id}:${sha256}`, { json, file, sha256, direction_id: String(e.direction_id), combo_id: String(e.combo_id) });
       const { combo_metrics: _snapshot, ...numeric } = e;
       return numeric;
-    }) : raw.entries;
+    });
     const parsed = validate(v6LogSchema, audits.size ? { ...raw, entries,
       metric_audits: [...audits.values()].map(({ json: _json, ...ref }) => ref) } : row);
     if (!parsed.ok) return { written: false, reason: "invalid row" };
     const value = parsed.value;
-    if (value.mode !== this.config.mode || !Number.isFinite(Date.parse(value.ts)) || value.unknown.count > value.unknown.total
-      || value.entries.some(e => !validateProjectionEntry(e).ok)) return { written: false, reason: "inconsistent row" };
+    if (value.mode !== this.config.mode || !Number.isFinite(Date.parse(value.ts)) || value.unknown.count > value.unknown.total) return { written: false, reason: "inconsistent row" };
     try {
       const json = JSON.stringify(value);
       if (json.length > 2 * 1024 * 1024 || unsafe(json)) return { written: false, reason: "unsafe or oversized row" };

@@ -1,0 +1,1536 @@
+[
+  {
+    "line": 4252,
+    "ts": "2026-10-19T05:58:35.713Z",
+    "run": "MWMR855QHTWR",
+    "floor": 1,
+    "trigger": "start",
+    "observed_ts": "2026-10-19T05:57:41.767Z",
+    "merged_into": "event/choose",
+    "decision_id": "c9306e8b-14a3-4584-9a13-b0acdaf08c9e",
+    "plan": {
+      "runId": "MWMR855QHTWR",
+      "act": 1,
+      "floor": 1,
+      "hpPct": 0.8,
+      "trigger": "start",
+      "archetype": "Flexible damage first, then synergistic scaling and defense",
+      "want": [
+        "BLADE_DANCE",
+        "DAGGER_SPRAY",
+        "NOXIOUS_FUMES",
+        "FOOTWORK",
+        "PIERCING_WAIL",
+        "BACKFLIP"
+      ],
+      "avoid": [
+        "GRAND_FINALE",
+        "KNIFE_TRAP",
+        "NIGHTMARE"
+      ],
+      "remove": [
+        "STRIKE_SILENT",
+        "DEFEND_SILENT"
+      ],
+      "blockTarget": 8,
+      "elites": "normal",
+      "rest": "auto",
+      "bossPrep": "Bring AoE or concentrated priest damage, sustained scaling, repeatable block, and multi-hit mitigation. Preserve HP and useful potions.",
+      "summary": "Acquire efficient damage and AoE first, then scaling and defense. Remove starters after replacing their functions. Attempt elites with adequate damage, HP, and potions; do not force a core.",
+      "construction": {
+        "primary": "uncommitted",
+        "alternatives": [
+          "P",
+          "S",
+          "D"
+        ],
+        "checkpoint": 6,
+        "reason": "Only starter cards are present. Candidate combat comparisons and complete-core performance are unknown; prioritize immediate survival and damage while evaluating rewards and the random relic.",
+        "pivot_if": "Favor P with poison, Accelerant, and defense; S with shiv supply and scaling; D with repeated Footwork. Reconsider R if a discard-payoff relic appears."
+      }
+    },
+    "raw": {
+      "archetype": "Flexible damage first, then synergistic scaling and defense",
+      "want": [
+        "BLADE_DANCE",
+        "DAGGER_SPRAY",
+        "NOXIOUS_FUMES",
+        "FOOTWORK",
+        "PIERCING_WAIL",
+        "BACKFLIP"
+      ],
+      "avoid": [
+        "GRAND_FINALE",
+        "KNIFE_TRAP",
+        "NIGHTMARE"
+      ],
+      "remove": [
+        "STRIKE_SILENT",
+        "DEFEND_SILENT"
+      ],
+      "block_target": 8,
+      "elites": "normal",
+      "rest": "auto",
+      "boss_prep": "Bring AoE or concentrated priest damage, sustained scaling, repeatable block, and multi-hit mitigation. Preserve HP and useful potions.",
+      "summary": "Acquire efficient damage and AoE first, then scaling and defense. Remove starters after replacing their functions. Attempt elites with adequate damage, HP, and potions; do not force a core.",
+      "construction": {
+        "primary": "uncommitted",
+        "alternatives": [
+          "P",
+          "S",
+          "D"
+        ],
+        "checkpoint": 6,
+        "reason": "Only starter cards are present. Candidate combat comparisons and complete-core performance are unknown; prioritize immediate survival and damage while evaluating rewards and the random relic.",
+        "pivot_if": "Favor P with poison, Accelerant, and defense; S with shiv supply and scaling; D with repeated Footwork. Reconsider R if a discard-payoff relic appears."
+      }
+    },
+    "question": {
+      "label": "event/choose",
+      "latency_ms": 45959,
+      "input_tokens": 158777,
+      "output_tokens": 1708,
+      "reasoning_tokens": 1306,
+      "effort": ""
+    },
+    "memory_chars": 4291
+  },
+  {
+    "line": 4253,
+    "ts": "2026-10-19T06:16:02.197Z",
+    "run": "MWMR855QHTWR",
+    "floor": 8,
+    "trigger": "hp_drop",
+    "observed_ts": "2026-10-19T06:14:49.258Z",
+    "plan": {
+      "runId": "MWMR855QHTWR",
+      "act": 1,
+      "floor": 8,
+      "hpPct": 0.4142857142857143,
+      "trigger": "hp_drop",
+      "archetype": "Poison pressure backed by Dexterity defense",
+      "want": [
+        "NOXIOUS_FUMES",
+        "HAZE",
+        "BACKFLIP",
+        "FOOTWORK",
+        "ACCELERANT",
+        "PIERCING_WAIL"
+      ],
+      "avoid": [
+        "GRAND_FINALE",
+        "KNIFE_TRAP",
+        "NIGHTMARE",
+        "ACCURACY"
+      ],
+      "remove": [
+        "STRIKE_SILENT"
+      ],
+      "blockTarget": 8,
+      "elites": "avoid",
+      "rest": "heal",
+      "bossPrep": "Reach Kin healthy with sustained poison, upgraded Footwork, repeatable block, group mitigation, and a defensive potion. Preserve upgraded Defends.",
+      "summary": "Heal next and avoid optional elites. Add sustained poison, efficient defense, and draw; remove Strikes rather than needed block. Upgrade Footwork when safe. Boss damage gap remains unknown, so keep improving damage too—instead of assuming sufficiency merely from card counts alone or current components already held in deck today right now here presently onward."
+    },
+    "raw": {
+      "archetype": "Poison pressure backed by Dexterity defense",
+      "want": [
+        "NOXIOUS_FUMES",
+        "HAZE",
+        "BACKFLIP",
+        "FOOTWORK",
+        "ACCELERANT",
+        "PIERCING_WAIL"
+      ],
+      "avoid": [
+        "GRAND_FINALE",
+        "KNIFE_TRAP",
+        "NIGHTMARE",
+        "ACCURACY"
+      ],
+      "remove": [
+        "STRIKE_SILENT"
+      ],
+      "block_target": 8,
+      "elites": "avoid",
+      "rest": "heal",
+      "boss_prep": "Reach Kin healthy with sustained poison, upgraded Footwork, repeatable block, group mitigation, and a defensive potion. Preserve upgraded Defends.",
+      "summary": "Heal next and avoid optional elites. Add sustained poison, efficient defense, and draw; remove Strikes rather than needed block. Upgrade Footwork when safe. Boss damage gap remains unknown, so keep improving damage too—instead of assuming sufficiency merely from card counts alone or current components already held in deck today right now here presently onward."
+    },
+    "latency_ms": 72203,
+    "input_tokens": 154882,
+    "output_tokens": 2413,
+    "cache_hit_tokens": 0,
+    "reasoning_tokens": 2155,
+    "effort": "",
+    "memory_chars": 16551
+  },
+  {
+    "line": 4263,
+    "ts": "2026-10-20T00:20:22.325Z",
+    "run": "MWMR855QHTWR",
+    "floor": 14,
+    "trigger": "review",
+    "plan": {
+      "runId": "MWMR855QHTWR",
+      "act": 1,
+      "floor": 14,
+      "hpPct": 0.5428571428571428,
+      "trigger": "review",
+      "archetype": "D",
+      "want": [],
+      "avoid": [],
+      "remove": [],
+      "blockTarget": null,
+      "elites": "normal",
+      "rest": "heal",
+      "bossPrep": "",
+      "summary": "权重仅低置信策略先验：现有敏捷施毒支持D/P；本局各目标成型率、Wk/W0、期望及配对误差未知，不外推历史。",
+      "v6": {
+        "schema": "direction-weights-v1",
+        "direction_weights": {
+          "P": 0.35,
+          "D": 0.55,
+          "S": 0.04,
+          "R": 0.06
+        },
+        "potion_directions": [
+          {
+            "schema": "potion-direction-v1",
+            "potion": "POISON_POTION",
+            "tier": "normal",
+            "for": "current_boss",
+            "reason": "辅助集火；不因已有毒牌而高估收益。"
+          },
+          {
+            "schema": "potion-direction-v1",
+            "potion": "SKILL_POTION",
+            "tier": "prefer",
+            "for": "current_boss",
+            "reason": "灵活补防御或过牌，但不保证出现指定技能。"
+          },
+          {
+            "schema": "potion-direction-v1",
+            "potion": "DEXTERITY_POTION",
+            "tier": "prefer",
+            "for": "current_boss",
+            "reason": "现有多张格挡牌可利用持续敏捷。"
+          },
+          {
+            "schema": "potion-direction-v1",
+            "potion": "FIRE_POTION",
+            "tier": "prefer",
+            "for": "current_boss",
+            "reason": "帮助尽快处理随从，缓解多目标压力。"
+          },
+          {
+            "schema": "potion-direction-v1",
+            "potion": "BLOCK_POTION",
+            "tier": "prefer",
+            "for": "current_boss",
+            "reason": "填补关键回合防御缺口，保护当前血量。"
+          }
+        ],
+        "route": "keep",
+        "rest": "heal",
+        "checkpoint": 16,
+        "reason": "权重仅低置信策略先验：现有敏捷施毒支持D/P；本局各目标成型率、Wk/W0、期望及配对误差未知，不外推历史。"
+      }
+    },
+    "v6_brain_calls": 3
+  },
+  {
+    "line": 4271,
+    "ts": "2026-10-20T00:23:25.982Z",
+    "run": "MWMR855QHTWR",
+    "floor": 15,
+    "trigger": "review",
+    "plan": {
+      "runId": "MWMR855QHTWR",
+      "act": 1,
+      "floor": 15,
+      "hpPct": 0.5428571428571428,
+      "trigger": "review",
+      "archetype": "D",
+      "want": [],
+      "avoid": [],
+      "remove": [],
+      "blockTarget": null,
+      "elites": "normal",
+      "rest": "heal",
+      "bossPrep": "",
+      "summary": "D/P沿用低置信策略先验，保留原组合；全部方向×目标的成型率、Wk/W0、期望和配对误差未知；历史样本不外推。",
+      "v6": {
+        "schema": "direction-weights-v1",
+        "direction_weights": {
+          "P": 0.35,
+          "D": 0.55,
+          "S": 0.04,
+          "R": 0.06
+        },
+        "potion_directions": [
+          {
+            "schema": "potion-direction-v1",
+            "potion": "POISON_POTION",
+            "tier": "normal",
+            "for": "current_boss",
+            "reason": "辅助集火，不替代处理随从所需的即时输出。"
+          },
+          {
+            "schema": "potion-direction-v1",
+            "potion": "SKILL_POTION",
+            "tier": "prefer",
+            "for": "current_boss",
+            "reason": "灵活补充防御或过牌，不保证生成指定组件。"
+          },
+          {
+            "schema": "potion-direction-v1",
+            "potion": "DEXTERITY_POTION",
+            "tier": "prefer",
+            "for": "current_boss",
+            "reason": "现有多张格挡牌能利用持续敏捷。"
+          },
+          {
+            "schema": "potion-direction-v1",
+            "potion": "FIRE_POTION",
+            "tier": "prefer",
+            "for": "current_boss",
+            "reason": "帮助集中处理随从，降低多目标压力。"
+          },
+          {
+            "schema": "potion-direction-v1",
+            "potion": "BLOCK_POTION",
+            "tier": "prefer",
+            "for": "current_boss",
+            "reason": "保护关键回合，避免启动期间失血。"
+          }
+        ],
+        "route": "keep",
+        "rest": "heal",
+        "checkpoint": 16,
+        "reason": "D/P沿用低置信策略先验，保留原组合；全部方向×目标的成型率、Wk/W0、期望和配对误差未知；历史样本不外推。"
+      }
+    },
+    "v6_brain_calls": 5
+  },
+  {
+    "line": 4276,
+    "ts": "2026-10-20T00:24:27.683Z",
+    "run": "MWMR855QHTWR",
+    "floor": 16,
+    "trigger": "review",
+    "plan": {
+      "runId": "MWMR855QHTWR",
+      "act": 1,
+      "floor": 16,
+      "hpPct": 0.5428571428571428,
+      "trigger": "review",
+      "archetype": "D",
+      "want": [],
+      "avoid": [],
+      "remove": [],
+      "blockTarget": null,
+      "elites": "normal",
+      "rest": "heal",
+      "bossPrep": "",
+      "summary": "D/P沿用低置信先验；全部方向×目标成型率、Wk/W0、期望及配对误差未知；保留多组合原签名，历史样本不外推。",
+      "v6": {
+        "schema": "direction-weights-v1",
+        "direction_weights": {
+          "P": 0.35,
+          "D": 0.55,
+          "S": 0.04,
+          "R": 0.06
+        },
+        "potion_directions": [
+          {
+            "schema": "potion-direction-v1",
+            "potion": "POISON_POTION",
+            "tier": "normal",
+            "for": "current_boss",
+            "reason": "辅助集火，不替代处理随从的即时输出。"
+          },
+          {
+            "schema": "potion-direction-v1",
+            "potion": "SKILL_POTION",
+            "tier": "prefer",
+            "for": "current_boss",
+            "reason": "灵活补防御或过牌，不预计获得指定组件。"
+          },
+          {
+            "schema": "potion-direction-v1",
+            "potion": "DEXTERITY_POTION",
+            "tier": "prefer",
+            "for": "current_boss",
+            "reason": "现有多张格挡牌能利用持续敏捷。"
+          },
+          {
+            "schema": "potion-direction-v1",
+            "potion": "FIRE_POTION",
+            "tier": "prefer",
+            "for": "current_boss",
+            "reason": "帮助集火随从，降低多目标压力。"
+          },
+          {
+            "schema": "potion-direction-v1",
+            "potion": "BLOCK_POTION",
+            "tier": "prefer",
+            "for": "current_boss",
+            "reason": "保护启动回合，缓解首领战失血。"
+          }
+        ],
+        "route": "keep",
+        "rest": "heal",
+        "checkpoint": 18,
+        "reason": "D/P沿用低置信先验；全部方向×目标成型率、Wk/W0、期望及配对误差未知；保留多组合原签名，历史样本不外推。"
+      }
+    },
+    "v6_brain_calls": 7
+  },
+  {
+    "line": 4280,
+    "ts": "2026-10-20T01:17:05.233Z",
+    "run": "T12TSEMGUU7F",
+    "floor": 1,
+    "trigger": "act",
+    "plan": {
+      "runId": "T12TSEMGUU7F",
+      "act": 1,
+      "floor": 1,
+      "hpPct": 0.8,
+      "trigger": "act",
+      "archetype": "P",
+      "want": [],
+      "avoid": [],
+      "remove": [],
+      "blockTarget": null,
+      "elites": "normal",
+      "rest": "auto",
+      "bossPrep": "",
+      "summary": "各方向×目标的本局成型率、Wk/W0、期望及配对误差未知；等权仅为探索先验。保留原组合，不补造截断摘要或外推P历史。",
+      "v6": {
+        "schema": "direction-weights-v1",
+        "direction_weights": {
+          "P": 0.25,
+          "D": 0.25,
+          "S": 0.25,
+          "R": 0.25
+        },
+        "potion_directions": [
+          {
+            "schema": "potion-direction-v1",
+            "potion": "FIRE_POTION",
+            "tier": "prefer",
+            "for": "elite",
+            "reason": "补足前期即时伤害，不为未知终局囤积。"
+          },
+          {
+            "schema": "potion-direction-v1",
+            "potion": "ATTACK_POTION",
+            "tier": "prefer",
+            "for": "elite",
+            "reason": "起始牌组输出薄弱，优先解决眼前精英。"
+          },
+          {
+            "schema": "potion-direction-v1",
+            "potion": "BLOCK_POTION",
+            "tier": "prefer",
+            "for": "elite",
+            "reason": "缓解高压回合，减少前期掉血。"
+          },
+          {
+            "schema": "potion-direction-v1",
+            "potion": "DEXTERITY_POTION",
+            "tier": "prefer",
+            "for": "current_boss",
+            "reason": "现有防御牌较多，适合持续作战。"
+          },
+          {
+            "schema": "potion-direction-v1",
+            "potion": "SWIFT_POTION",
+            "tier": "prefer",
+            "reason": "通用过牌应急，不预设组合已经成型。"
+          },
+          {
+            "schema": "potion-direction-v1",
+            "potion": "GHOST_IN_A_JAR",
+            "tier": "prefer",
+            "reason": "应对致命回合，不强制预留未知连战。"
+          }
+        ],
+        "route": "keep",
+        "rest": "auto",
+        "checkpoint": 5,
+        "reason": "各方向×目标的本局成型率、Wk/W0、期望及配对误差未知；等权仅为探索先验。保留原组合，不补造截断摘要或外推P历史。"
+      }
+    },
+    "v6_brain_calls": 1
+  },
+  {
+    "line": 4287,
+    "ts": "2026-10-20T01:19:56.821Z",
+    "run": "T12TSEMGUU7F",
+    "floor": 2,
+    "trigger": "review",
+    "plan": {
+      "runId": "T12TSEMGUU7F",
+      "act": 1,
+      "floor": 2,
+      "hpPct": 0.7714285714285715,
+      "trigger": "review",
+      "archetype": "P",
+      "want": [],
+      "avoid": [],
+      "remove": [],
+      "blockTarget": null,
+      "elites": "normal",
+      "rest": "auto",
+      "bossPrep": "",
+      "summary": "全方向×目标的本局成型率、Wk/W0、期望及配对误差未知；低可信等权探索，保留原组合，不外推截断历史。",
+      "v6": {
+        "schema": "direction-weights-v1",
+        "direction_weights": {
+          "P": 0.25,
+          "D": 0.25,
+          "S": 0.25,
+          "R": 0.25
+        },
+        "potion_directions": [
+          {
+            "schema": "potion-direction-v1",
+            "potion": "FIRE_POTION",
+            "tier": "prefer",
+            "for": "elite",
+            "reason": "补足起始牌组即时伤害，优先解决眼前精英。"
+          },
+          {
+            "schema": "potion-direction-v1",
+            "potion": "ATTACK_POTION",
+            "tier": "prefer",
+            "for": "elite",
+            "reason": "提供前期输出，不依赖未来组件。"
+          },
+          {
+            "schema": "potion-direction-v1",
+            "potion": "BLOCK_POTION",
+            "tier": "prefer",
+            "for": "elite",
+            "reason": "缓解高压回合，保存生命。"
+          },
+          {
+            "schema": "potion-direction-v1",
+            "potion": "DEXTERITY_POTION",
+            "tier": "prefer",
+            "for": "current_boss",
+            "reason": "现有防御牌较多，可支持持续防守。"
+          },
+          {
+            "schema": "potion-direction-v1",
+            "potion": "SWIFT_POTION",
+            "tier": "prefer",
+            "reason": "通用过牌应急，不预设构筑成型。"
+          },
+          {
+            "schema": "potion-direction-v1",
+            "potion": "GHOST_IN_A_JAR",
+            "tier": "prefer",
+            "reason": "应对致命回合，不强制预留未知连战。"
+          }
+        ],
+        "route": "keep",
+        "rest": "auto",
+        "checkpoint": 5,
+        "reason": "全方向×目标的本局成型率、Wk/W0、期望及配对误差未知；低可信等权探索，保留原组合，不外推截断历史。"
+      }
+    },
+    "v6_brain_calls": 4
+  },
+  {
+    "line": 4293,
+    "ts": "2026-10-20T01:21:38.570Z",
+    "run": "T12TSEMGUU7F",
+    "floor": 3,
+    "trigger": "review",
+    "plan": {
+      "runId": "T12TSEMGUU7F",
+      "act": 1,
+      "floor": 3,
+      "hpPct": 0.7714285714285715,
+      "trigger": "review",
+      "archetype": "P",
+      "want": [],
+      "avoid": [],
+      "remove": [],
+      "blockTarget": null,
+      "elites": "normal",
+      "rest": "auto",
+      "bossPrep": "",
+      "summary": "全方向×目标成型率、Wk/W0、期望及配对误差未知；历史不外推，截断组合不补造，低可信等权并保留原组合。",
+      "v6": {
+        "schema": "direction-weights-v1",
+        "direction_weights": {
+          "P": 0.25,
+          "D": 0.25,
+          "S": 0.25,
+          "R": 0.25
+        },
+        "potion_directions": [
+          {
+            "schema": "potion-direction-v1",
+            "potion": "FIRE_POTION",
+            "tier": "prefer",
+            "for": "elite",
+            "reason": "补充即时伤害，帮助起始牌组处理精英。"
+          },
+          {
+            "schema": "potion-direction-v1",
+            "potion": "ATTACK_POTION",
+            "tier": "prefer",
+            "for": "elite",
+            "reason": "提供前期输出，不依赖未来组件。"
+          },
+          {
+            "schema": "potion-direction-v1",
+            "potion": "BLOCK_POTION",
+            "tier": "prefer",
+            "for": "elite",
+            "reason": "缓解高压回合，保存生命。"
+          },
+          {
+            "schema": "potion-direction-v1",
+            "potion": "DEXTERITY_POTION",
+            "tier": "prefer",
+            "for": "current_boss",
+            "reason": "现有防御牌较多，可支持持续防守。"
+          },
+          {
+            "schema": "potion-direction-v1",
+            "potion": "SWIFT_POTION",
+            "tier": "prefer",
+            "reason": "通用过牌应急，不预设构筑成型。"
+          },
+          {
+            "schema": "potion-direction-v1",
+            "potion": "GHOST_IN_A_JAR",
+            "tier": "prefer",
+            "reason": "应对高压回合，不强制预留未知连战。"
+          }
+        ],
+        "route": "keep",
+        "rest": "auto",
+        "checkpoint": 5,
+        "reason": "全方向×目标成型率、Wk/W0、期望及配对误差未知；历史不外推，截断组合不补造，低可信等权并保留原组合。"
+      }
+    },
+    "v6_brain_calls": 6
+  },
+  {
+    "line": 4297,
+    "ts": "2026-10-20T01:23:04.953Z",
+    "run": "T12TSEMGUU7F",
+    "floor": 4,
+    "trigger": "review",
+    "plan": {
+      "runId": "T12TSEMGUU7F",
+      "act": 1,
+      "floor": 4,
+      "hpPct": 0.7714285714285715,
+      "trigger": "review",
+      "archetype": "P",
+      "want": [],
+      "avoid": [],
+      "remove": [],
+      "blockTarget": null,
+      "elites": "normal",
+      "rest": "auto",
+      "bossPrep": "",
+      "summary": "全方向各目标成型率、Wk/W0、期望及配对误差未知；整体可信度低。历史不外推，保留原组合；等权表示暂不押方向。",
+      "v6": {
+        "schema": "direction-weights-v1",
+        "direction_weights": {
+          "P": 0.25,
+          "D": 0.25,
+          "S": 0.25,
+          "R": 0.25
+        },
+        "potion_directions": [
+          {
+            "schema": "potion-direction-v1",
+            "potion": "FIRE_POTION",
+            "tier": "prefer",
+            "for": "elite",
+            "reason": "补足即时伤害，不依赖构筑成型。"
+          },
+          {
+            "schema": "potion-direction-v1",
+            "potion": "ATTACK_POTION",
+            "tier": "prefer",
+            "for": "elite",
+            "reason": "支持当前起始牌组处理精英。"
+          },
+          {
+            "schema": "potion-direction-v1",
+            "potion": "BLOCK_POTION",
+            "tier": "prefer",
+            "for": "elite",
+            "reason": "缓解高压回合，保存生命。"
+          },
+          {
+            "schema": "potion-direction-v1",
+            "potion": "DEXTERITY_POTION",
+            "tier": "prefer",
+            "for": "current_boss",
+            "reason": "现有多张防御牌能直接受益。"
+          },
+          {
+            "schema": "potion-direction-v1",
+            "potion": "SWIFT_POTION",
+            "tier": "prefer",
+            "reason": "通用过牌应急，不预设未来组件。"
+          },
+          {
+            "schema": "potion-direction-v1",
+            "potion": "GHOST_IN_A_JAR",
+            "tier": "prefer",
+            "reason": "应对危险回合，不强制留给远期连战。"
+          }
+        ],
+        "route": "keep",
+        "rest": "auto",
+        "checkpoint": 5,
+        "reason": "全方向各目标成型率、Wk/W0、期望及配对误差未知；整体可信度低。历史不外推，保留原组合；等权表示暂不押方向。"
+      }
+    },
+    "v6_brain_calls": 8
+  },
+  {
+    "line": 4305,
+    "ts": "2026-10-20T01:26:36.627Z",
+    "run": "T12TSEMGUU7F",
+    "floor": 5,
+    "trigger": "review",
+    "plan": {
+      "runId": "T12TSEMGUU7F",
+      "act": 1,
+      "floor": 5,
+      "hpPct": 0.7571428571428571,
+      "trigger": "review",
+      "archetype": "P",
+      "want": [],
+      "avoid": [],
+      "remove": [],
+      "blockTarget": null,
+      "elites": "normal",
+      "rest": "auto",
+      "bossPrep": "",
+      "summary": "全部方向×目标的成型率、Wk/W0、期望及配对误差未知；历史不外推，保留原多组合签名，等权表示低置信、暂不押方向。",
+      "v6": {
+        "schema": "direction-weights-v1",
+        "direction_weights": {
+          "P": 0.25,
+          "D": 0.25,
+          "S": 0.25,
+          "R": 0.25
+        },
+        "potion_directions": [
+          {
+            "schema": "potion-direction-v1",
+            "potion": "FIRE_POTION",
+            "tier": "prefer",
+            "for": "elite",
+            "reason": "提供即时伤害，不依赖未来组件。"
+          },
+          {
+            "schema": "potion-direction-v1",
+            "potion": "ATTACK_POTION",
+            "tier": "prefer",
+            "for": "elite",
+            "reason": "补充当前牌组的爆发选择。"
+          },
+          {
+            "schema": "potion-direction-v1",
+            "potion": "BLOCK_POTION",
+            "tier": "prefer",
+            "for": "elite",
+            "reason": "应对高压回合，保存生命。"
+          },
+          {
+            "schema": "potion-direction-v1",
+            "potion": "DEXTERITY_POTION",
+            "tier": "prefer",
+            "for": "current_boss",
+            "reason": "现有多张防御牌可直接受益。"
+          },
+          {
+            "schema": "potion-direction-v1",
+            "potion": "SWIFT_POTION",
+            "tier": "prefer",
+            "reason": "改善关键回合抽牌，不预设构筑成型。"
+          },
+          {
+            "schema": "potion-direction-v1",
+            "potion": "GHOST_IN_A_JAR",
+            "tier": "prefer",
+            "reason": "处理危险回合，不强留至远期连战。"
+          }
+        ],
+        "route": "keep",
+        "rest": "auto",
+        "checkpoint": 8,
+        "reason": "全部方向×目标的成型率、Wk/W0、期望及配对误差未知；历史不外推，保留原多组合签名，等权表示低置信、暂不押方向。"
+      }
+    },
+    "v6_brain_calls": 10
+  },
+  {
+    "line": 4311,
+    "ts": "2026-10-20T01:29:35.667Z",
+    "run": "T12TSEMGUU7F",
+    "floor": 6,
+    "trigger": "review",
+    "plan": {
+      "runId": "T12TSEMGUU7F",
+      "act": 1,
+      "floor": 6,
+      "hpPct": 0.9,
+      "trigger": "review",
+      "archetype": "P",
+      "want": [],
+      "avoid": [],
+      "remove": [],
+      "blockTarget": null,
+      "elites": "normal",
+      "rest": "auto",
+      "bossPrep": "",
+      "summary": "全方向×目标及组合的成型率、Wk/W0、期望和配对误差未知；保留原多组合，历史口径分离，等权仅作低置信先验。",
+      "v6": {
+        "schema": "direction-weights-v1",
+        "direction_weights": {
+          "P": 0.25,
+          "D": 0.25,
+          "S": 0.25,
+          "R": 0.25
+        },
+        "potion_directions": [
+          {
+            "schema": "potion-direction-v1",
+            "potion": "FIRE_POTION",
+            "tier": "prefer",
+            "for": "elite",
+            "reason": "补充即时伤害，不依赖未来组件。"
+          },
+          {
+            "schema": "potion-direction-v1",
+            "potion": "ATTACK_POTION",
+            "tier": "prefer",
+            "for": "elite",
+            "reason": "补足当前牌组的爆发选择。"
+          },
+          {
+            "schema": "potion-direction-v1",
+            "potion": "BLOCK_POTION",
+            "tier": "prefer",
+            "for": "elite",
+            "reason": "应对高压回合，保留生命。"
+          },
+          {
+            "schema": "potion-direction-v1",
+            "potion": "DEXTERITY_POTION",
+            "tier": "prefer",
+            "for": "current_boss",
+            "reason": "现有多张防御牌可直接受益。"
+          },
+          {
+            "schema": "potion-direction-v1",
+            "potion": "SWIFT_POTION",
+            "tier": "prefer",
+            "reason": "改善关键回合抽牌，不预设循环成型。"
+          },
+          {
+            "schema": "potion-direction-v1",
+            "potion": "GHOST_IN_A_JAR",
+            "tier": "prefer",
+            "reason": "处理危险回合，不强留至远期连战。"
+          }
+        ],
+        "route": "keep",
+        "rest": "auto",
+        "checkpoint": 8,
+        "reason": "全方向×目标及组合的成型率、Wk/W0、期望和配对误差未知；保留原多组合，历史口径分离，等权仅作低置信先验。"
+      }
+    },
+    "v6_brain_calls": 12
+  },
+  {
+    "line": 4317,
+    "ts": "2026-10-20T01:31:21.919Z",
+    "run": "T12TSEMGUU7F",
+    "floor": 7,
+    "trigger": "review",
+    "plan": {
+      "runId": "T12TSEMGUU7F",
+      "act": 1,
+      "floor": 7,
+      "hpPct": 0.9,
+      "trigger": "review",
+      "archetype": "P",
+      "want": [],
+      "avoid": [],
+      "remove": [],
+      "blockTarget": null,
+      "elites": "normal",
+      "rest": "auto",
+      "bossPrep": "",
+      "summary": "全方向×目标的成型率、Wk/W0、期望及配对误差未知；等权仅低置信先验。保留原多组合，首战与含SL历史口径分离，不外推收益。",
+      "v6": {
+        "schema": "direction-weights-v1",
+        "direction_weights": {
+          "P": 0.25,
+          "D": 0.25,
+          "S": 0.25,
+          "R": 0.25
+        },
+        "potion_directions": [
+          {
+            "schema": "potion-direction-v1",
+            "potion": "FIRE_POTION",
+            "tier": "prefer",
+            "for": "elite",
+            "reason": "补充即时伤害，不依赖构筑成型。"
+          },
+          {
+            "schema": "potion-direction-v1",
+            "potion": "ATTACK_POTION",
+            "tier": "prefer",
+            "for": "elite",
+            "reason": "补充爆发选择，服务近期战斗。"
+          },
+          {
+            "schema": "potion-direction-v1",
+            "potion": "BLOCK_POTION",
+            "tier": "prefer",
+            "for": "elite",
+            "reason": "缓解高压回合，保留生命。"
+          },
+          {
+            "schema": "potion-direction-v1",
+            "potion": "DEXTERITY_POTION",
+            "tier": "prefer",
+            "for": "current_boss",
+            "reason": "现有多张防御牌可直接受益。"
+          },
+          {
+            "schema": "potion-direction-v1",
+            "potion": "SWIFT_POTION",
+            "tier": "prefer",
+            "reason": "寻找关键攻防牌，不预设抽弃循环成型。"
+          },
+          {
+            "schema": "potion-direction-v1",
+            "potion": "GHOST_IN_A_JAR",
+            "tier": "prefer",
+            "reason": "应对危险回合，不强留远期连战。"
+          }
+        ],
+        "route": "keep",
+        "rest": "auto",
+        "checkpoint": 8,
+        "reason": "全方向×目标的成型率、Wk/W0、期望及配对误差未知；等权仅低置信先验。保留原多组合，首战与含SL历史口径分离，不外推收益。"
+      }
+    },
+    "v6_brain_calls": 14
+  },
+  {
+    "line": 4320,
+    "ts": "2026-10-20T01:32:38.005Z",
+    "run": "T12TSEMGUU7F",
+    "floor": 8,
+    "trigger": "review",
+    "plan": {
+      "runId": "T12TSEMGUU7F",
+      "act": 1,
+      "floor": 8,
+      "hpPct": 0.9,
+      "trigger": "review",
+      "archetype": "P",
+      "want": [],
+      "avoid": [],
+      "remove": [],
+      "blockTarget": null,
+      "elites": "normal",
+      "rest": "auto",
+      "bossPrep": "",
+      "summary": "全方向×目标的凑齐率、Wk/W0、期望及配对误差未知；等权仅低置信先验。保留原多组合及首战/含SL分口径历史，不外推收益。",
+      "v6": {
+        "schema": "direction-weights-v1",
+        "direction_weights": {
+          "P": 0.25,
+          "D": 0.25,
+          "S": 0.25,
+          "R": 0.25
+        },
+        "potion_directions": [
+          {
+            "schema": "potion-direction-v1",
+            "potion": "FIRE_POTION",
+            "tier": "prefer",
+            "for": "elite",
+            "reason": "补充即时伤害，不依赖组合成型。"
+          },
+          {
+            "schema": "potion-direction-v1",
+            "potion": "ATTACK_POTION",
+            "tier": "prefer",
+            "for": "elite",
+            "reason": "提供近期爆发选择。"
+          },
+          {
+            "schema": "potion-direction-v1",
+            "potion": "BLOCK_POTION",
+            "tier": "prefer",
+            "for": "elite",
+            "reason": "缓解危险回合，保护生命。"
+          },
+          {
+            "schema": "potion-direction-v1",
+            "potion": "DEXTERITY_POTION",
+            "tier": "prefer",
+            "for": "current_boss",
+            "reason": "现有多张格挡牌可以直接受益。"
+          },
+          {
+            "schema": "potion-direction-v1",
+            "potion": "SWIFT_POTION",
+            "tier": "prefer",
+            "reason": "寻找关键攻防牌，不预设抽弃收益。"
+          },
+          {
+            "schema": "potion-direction-v1",
+            "potion": "GHOST_IN_A_JAR",
+            "tier": "prefer",
+            "reason": "应对危险回合，不强留远期连战。"
+          }
+        ],
+        "route": "keep",
+        "rest": "auto",
+        "checkpoint": 11,
+        "reason": "全方向×目标的凑齐率、Wk/W0、期望及配对误差未知；等权仅低置信先验。保留原多组合及首战/含SL分口径历史，不外推收益。"
+      }
+    },
+    "v6_brain_calls": 15
+  },
+  {
+    "line": 4329,
+    "ts": "2026-10-20T01:38:37.471Z",
+    "run": "T12TSEMGUU7F",
+    "floor": 11,
+    "trigger": "review",
+    "plan": {
+      "runId": "T12TSEMGUU7F",
+      "act": 1,
+      "floor": 11,
+      "hpPct": 0.05714285714285714,
+      "trigger": "review",
+      "archetype": "D",
+      "want": [],
+      "avoid": [],
+      "remove": [],
+      "blockTarget": null,
+      "elites": "normal",
+      "rest": "heal",
+      "bossPrep": "",
+      "summary": "Survival-first, low-confidence priors; all-target formation/Wk/W0/expectation/paired-error unknown. Preserve multi-cores. P-toxin-footwork history:first DPR39.857(n17),startup6(n27),formed27/372,cleared2/27,chain1/13; including-SL DPR46.333(n24),startup6(n40),formed40/372,cleared4/40,chain2/22. Historical cohorts are not current forecasts; omitted core metrics stay unknown.",
+      "v6": {
+        "schema": "direction-weights-v1",
+        "direction_weights": {
+          "P": 0.3,
+          "D": 0.4,
+          "S": 0.1,
+          "R": 0.2
+        },
+        "potion_directions": [
+          {
+            "schema": "potion-direction-v1",
+            "potion": "BLOOD_POTION",
+            "tier": "must",
+            "reason": "仅4血，优先立即恢复生命。"
+          },
+          {
+            "schema": "potion-direction-v1",
+            "potion": "FAIRY_IN_A_BOTTLE",
+            "tier": "must",
+            "reason": "当前极易暴毙，优先保命。"
+          },
+          {
+            "schema": "potion-direction-v1",
+            "potion": "GHOST_IN_A_JAR",
+            "tier": "must",
+            "reason": "应对近期致命回合，不强留远期连战。"
+          },
+          {
+            "schema": "potion-direction-v1",
+            "potion": "BLOCK_POTION",
+            "tier": "prefer",
+            "reason": "补足危险回合防御。"
+          },
+          {
+            "schema": "potion-direction-v1",
+            "potion": "REGEN_POTION",
+            "tier": "prefer",
+            "reason": "恢复续航，但不能替代即时防致死手段。"
+          },
+          {
+            "schema": "potion-direction-v1",
+            "potion": "FIRE_POTION",
+            "tier": "prefer",
+            "reason": "补充即时伤害，争取提前击杀。"
+          },
+          {
+            "schema": "potion-direction-v1",
+            "potion": "DEXTERITY_POTION",
+            "tier": "prefer",
+            "for": "current_boss",
+            "reason": "现有多张格挡牌可直接受益。"
+          }
+        ],
+        "route": "keep",
+        "rest": "heal",
+        "checkpoint": 12,
+        "reason": "Survival-first, low-confidence priors; all-target formation/Wk/W0/expectation/paired-error unknown. Preserve multi-cores. P-toxin-footwork history:first DPR39.857(n17),startup6(n27),formed27/372,cleared2/27,chain1/13; including-SL DPR46.333(n24),startup6(n40),formed40/372,cleared4/40,chain2/22. Historical cohorts are not current forecasts; omitted core metrics stay unknown."
+      }
+    },
+    "v6_brain_calls": 18
+  },
+  {
+    "line": 4335,
+    "ts": "2026-10-20T01:40:58.957Z",
+    "run": "T12TSEMGUU7F",
+    "floor": 12,
+    "trigger": "review",
+    "plan": {
+      "runId": "T12TSEMGUU7F",
+      "act": 1,
+      "floor": 12,
+      "hpPct": 0.014285714285714285,
+      "trigger": "review",
+      "archetype": "D",
+      "want": [],
+      "avoid": [],
+      "remove": [],
+      "blockTarget": null,
+      "elites": "normal",
+      "rest": "heal",
+      "bossPrep": "",
+      "summary": "1血先治疗；保留原多组合及低置信方向先验。全目标成型率、Wk/W0、期望与配对误差未知，历史样本不作当前预测。",
+      "v6": {
+        "schema": "direction-weights-v1",
+        "direction_weights": {
+          "P": 0.3,
+          "D": 0.4,
+          "S": 0.1,
+          "R": 0.2
+        },
+        "potion_directions": [
+          {
+            "schema": "potion-direction-v1",
+            "potion": "BLOOD_POTION",
+            "tier": "must",
+            "reason": "仅1血，优先即时恢复，不为远期保留。"
+          },
+          {
+            "schema": "potion-direction-v1",
+            "potion": "FAIRY_IN_A_BOTTLE",
+            "tier": "must",
+            "reason": "优先防止近期暴毙。"
+          },
+          {
+            "schema": "potion-direction-v1",
+            "potion": "GHOST_IN_A_JAR",
+            "tier": "must",
+            "reason": "用于近期致命回合，不强留首领。"
+          },
+          {
+            "schema": "potion-direction-v1",
+            "potion": "BLOCK_POTION",
+            "tier": "prefer",
+            "reason": "补足危险回合格挡，避免任何漏伤。"
+          },
+          {
+            "schema": "potion-direction-v1",
+            "potion": "REGEN_POTION",
+            "tier": "prefer",
+            "reason": "安全时恢复续航，不能替代即时防致死手段。"
+          },
+          {
+            "schema": "potion-direction-v1",
+            "potion": "FIRE_POTION",
+            "tier": "prefer",
+            "reason": "用于提前击杀，减少承受攻击的回合。"
+          },
+          {
+            "schema": "potion-direction-v1",
+            "potion": "DEXTERITY_POTION",
+            "tier": "prefer",
+            "for": "current_boss",
+            "reason": "现有多张格挡牌可受益；近期保命时亦可提前使用。"
+          }
+        ],
+        "route": "keep",
+        "rest": "heal",
+        "checkpoint": 13,
+        "reason": "1血先治疗；保留原多组合及低置信方向先验。全目标成型率、Wk/W0、期望与配对误差未知，历史样本不作当前预测。"
+      }
+    },
+    "v6_brain_calls": 20
+  },
+  {
+    "line": 4344,
+    "ts": "2026-10-20T01:44:19.121Z",
+    "run": "T12TSEMGUU7F",
+    "floor": 13,
+    "trigger": "review",
+    "plan": {
+      "runId": "T12TSEMGUU7F",
+      "act": 1,
+      "floor": 13,
+      "hpPct": 0.04285714285714286,
+      "trigger": "review",
+      "archetype": "D",
+      "want": [],
+      "avoid": [],
+      "remove": [],
+      "blockTarget": null,
+      "elites": "normal",
+      "rest": "heal",
+      "bossPrep": "",
+      "summary": "3血先治疗；沿用低置信先验、保留原多组合。全方向×目标成型率、Wk/W0、组合期望及配对误差未知，历史战绩不替代本局预测。",
+      "v6": {
+        "schema": "direction-weights-v1",
+        "direction_weights": {
+          "P": 0.3,
+          "D": 0.4,
+          "S": 0.1,
+          "R": 0.2
+        },
+        "potion_directions": [
+          {
+            "schema": "potion-direction-v1",
+            "potion": "BLOOD_POTION",
+            "tier": "must",
+            "reason": "仅3血，优先即时恢复。"
+          },
+          {
+            "schema": "potion-direction-v1",
+            "potion": "FAIRY_IN_A_BOTTLE",
+            "tier": "must",
+            "reason": "优先防止近期暴毙。"
+          },
+          {
+            "schema": "potion-direction-v1",
+            "potion": "GHOST_IN_A_JAR",
+            "tier": "must",
+            "reason": "应对近期致命回合，不强留首领。"
+          },
+          {
+            "schema": "potion-direction-v1",
+            "potion": "BLOCK_POTION",
+            "tier": "prefer",
+            "reason": "补足危险回合格挡。"
+          },
+          {
+            "schema": "potion-direction-v1",
+            "potion": "REGEN_POTION",
+            "tier": "prefer",
+            "reason": "安全时恢复，不能替代即时防致死。"
+          },
+          {
+            "schema": "potion-direction-v1",
+            "potion": "FIRE_POTION",
+            "tier": "prefer",
+            "reason": "能提前击杀时用于避免承伤。"
+          },
+          {
+            "schema": "potion-direction-v1",
+            "potion": "DEXTERITY_POTION",
+            "tier": "prefer",
+            "for": "current_boss",
+            "reason": "支持现有多张格挡牌；近期保命亦可提前使用。"
+          }
+        ],
+        "route": "keep",
+        "rest": "heal",
+        "checkpoint": 14,
+        "reason": "3血先治疗；沿用低置信先验、保留原多组合。全方向×目标成型率、Wk/W0、组合期望及配对误差未知，历史战绩不替代本局预测。"
+      }
+    },
+    "v6_brain_calls": 22
+  },
+  {
+    "line": 4349,
+    "ts": "2026-10-20T01:46:25.785Z",
+    "run": "T12TSEMGUU7F",
+    "floor": 14,
+    "trigger": "review",
+    "plan": {
+      "runId": "T12TSEMGUU7F",
+      "act": 1,
+      "floor": 14,
+      "hpPct": 0.04285714285714286,
+      "trigger": "review",
+      "archetype": "D",
+      "want": [],
+      "avoid": [],
+      "remove": [],
+      "blockTarget": null,
+      "elites": "normal",
+      "rest": "heal",
+      "bossPrep": "",
+      "summary": "3血先治疗；全部方向×目标的成型率、Wk/W0、期望及配对误差未知。沿用低置信先验、保留原多组合，不将历史战绩当作本局预测。",
+      "v6": {
+        "schema": "direction-weights-v1",
+        "direction_weights": {
+          "P": 0.3,
+          "D": 0.4,
+          "S": 0.1,
+          "R": 0.2
+        },
+        "potion_directions": [
+          {
+            "schema": "potion-direction-v1",
+            "potion": "BLOOD_POTION",
+            "tier": "must",
+            "reason": "仅3血，优先即时恢复。"
+          },
+          {
+            "schema": "potion-direction-v1",
+            "potion": "FAIRY_IN_A_BOTTLE",
+            "tier": "must",
+            "reason": "防止近期致命伤害。"
+          },
+          {
+            "schema": "potion-direction-v1",
+            "potion": "GHOST_IN_A_JAR",
+            "tier": "must",
+            "reason": "用于近期致命回合，不强留首领。"
+          },
+          {
+            "schema": "potion-direction-v1",
+            "potion": "BLOCK_POTION",
+            "tier": "prefer",
+            "reason": "补足危险回合格挡。"
+          },
+          {
+            "schema": "potion-direction-v1",
+            "potion": "REGEN_POTION",
+            "tier": "prefer",
+            "reason": "安全时恢复，不能替代即时防致死。"
+          },
+          {
+            "schema": "potion-direction-v1",
+            "potion": "FIRE_POTION",
+            "tier": "prefer",
+            "reason": "能够提前击杀并避免承伤时使用。"
+          },
+          {
+            "schema": "potion-direction-v1",
+            "potion": "DEXTERITY_POTION",
+            "tier": "prefer",
+            "for": "current_boss",
+            "reason": "支持现有格挡牌；近期保命需要时提前使用。"
+          },
+          {
+            "schema": "potion-direction-v1",
+            "potion": "COLORLESS_POTION",
+            "tier": "normal",
+            "reason": "优先寻找即时保命牌，不预设随机结果收益。"
+          }
+        ],
+        "route": "keep",
+        "rest": "heal",
+        "checkpoint": 15,
+        "reason": "3血先治疗；全部方向×目标的成型率、Wk/W0、期望及配对误差未知。沿用低置信先验、保留原多组合，不将历史战绩当作本局预测。"
+      }
+    },
+    "v6_brain_calls": 24
+  },
+  {
+    "line": 4355,
+    "ts": "2026-10-20T01:49:39.164Z",
+    "run": "T12TSEMGUU7F",
+    "floor": 15,
+    "trigger": "review",
+    "plan": {
+      "runId": "T12TSEMGUU7F",
+      "act": 1,
+      "floor": 15,
+      "hpPct": 0.04285714285714286,
+      "trigger": "review",
+      "archetype": "D",
+      "want": [],
+      "avoid": [],
+      "remove": [],
+      "blockTarget": null,
+      "elites": "normal",
+      "rest": "heal",
+      "bossPrep": "",
+      "summary": "3血先治疗；本局全方向×目标的成型率、Wk/W0、期望及配对误差未知。沿用低置信先验，不覆盖原多组合及分口径历史指标。",
+      "v6": {
+        "schema": "direction-weights-v1",
+        "direction_weights": {
+          "P": 0.3,
+          "D": 0.4,
+          "S": 0.1,
+          "R": 0.2
+        },
+        "potion_directions": [
+          {
+            "schema": "potion-direction-v1",
+            "potion": "BLOOD_POTION",
+            "tier": "must",
+            "reason": "仅3血，优先即时恢复。"
+          },
+          {
+            "schema": "potion-direction-v1",
+            "potion": "FAIRY_IN_A_BOTTLE",
+            "tier": "must",
+            "reason": "防止近期致命伤害。"
+          },
+          {
+            "schema": "potion-direction-v1",
+            "potion": "GHOST_IN_A_JAR",
+            "tier": "must",
+            "reason": "用于致命回合，不强留首领。"
+          },
+          {
+            "schema": "potion-direction-v1",
+            "potion": "BLOCK_POTION",
+            "tier": "prefer",
+            "reason": "现有保命资源，危险回合及时使用。"
+          },
+          {
+            "schema": "potion-direction-v1",
+            "potion": "REGEN_POTION",
+            "tier": "prefer",
+            "reason": "安全时恢复，不能替代即时防致死。"
+          },
+          {
+            "schema": "potion-direction-v1",
+            "potion": "DEXTERITY_POTION",
+            "tier": "prefer",
+            "for": "current_boss",
+            "reason": "支持现有格挡牌；近期保命需要时提前使用。"
+          },
+          {
+            "schema": "potion-direction-v1",
+            "potion": "FIRE_POTION",
+            "tier": "prefer",
+            "reason": "提前击杀能避免承伤时使用。"
+          },
+          {
+            "schema": "potion-direction-v1",
+            "potion": "COLORLESS_POTION",
+            "tier": "normal",
+            "reason": "寻找即时保命牌，不预设随机结果收益。"
+          }
+        ],
+        "route": "keep",
+        "rest": "heal",
+        "checkpoint": 16,
+        "reason": "3血先治疗；本局全方向×目标的成型率、Wk/W0、期望及配对误差未知。沿用低置信先验，不覆盖原多组合及分口径历史指标。"
+      }
+    },
+    "v6_brain_calls": 26
+  },
+  {
+    "line": 4358,
+    "ts": "2026-10-20T01:50:55.706Z",
+    "run": "T12TSEMGUU7F",
+    "floor": 16,
+    "trigger": "review",
+    "plan": {
+      "runId": "T12TSEMGUU7F",
+      "act": 1,
+      "floor": 16,
+      "hpPct": 0.18571428571428572,
+      "trigger": "review",
+      "archetype": "D",
+      "want": [],
+      "avoid": [],
+      "remove": [],
+      "blockTarget": null,
+      "elites": "normal",
+      "rest": "heal",
+      "bossPrep": "",
+      "summary": "全方向×目标及组合的成型率、Wk/W0、期望和配对误差未知；沿用低置信先验，保留原多组合及分口径历史，不据截断数据覆盖；13血先治疗。",
+      "v6": {
+        "schema": "direction-weights-v1",
+        "direction_weights": {
+          "P": 0.3,
+          "D": 0.4,
+          "S": 0.1,
+          "R": 0.2
+        },
+        "potion_directions": [
+          {
+            "schema": "potion-direction-v1",
+            "potion": "BLOOD_POTION",
+            "tier": "must",
+            "reason": "13血，优先即时恢复。"
+          },
+          {
+            "schema": "potion-direction-v1",
+            "potion": "FAIRY_IN_A_BOTTLE",
+            "tier": "must",
+            "for": "current_boss",
+            "reason": "降低近期致死风险。"
+          },
+          {
+            "schema": "potion-direction-v1",
+            "potion": "GHOST_IN_A_JAR",
+            "tier": "must",
+            "for": "current_boss",
+            "reason": "应对关键致命回合，不为终局强留。"
+          },
+          {
+            "schema": "potion-direction-v1",
+            "potion": "BLOCK_POTION",
+            "tier": "prefer",
+            "for": "current_boss",
+            "reason": "现有确定性防御，危险承伤回合及时使用。"
+          },
+          {
+            "schema": "potion-direction-v1",
+            "potion": "DEXTERITY_POTION",
+            "tier": "prefer",
+            "for": "current_boss",
+            "reason": "支持现有格挡牌，补足持续防御。"
+          },
+          {
+            "schema": "potion-direction-v1",
+            "potion": "REGEN_POTION",
+            "tier": "prefer",
+            "reason": "安全窗口恢复；不能替代即时防致死。"
+          },
+          {
+            "schema": "potion-direction-v1",
+            "potion": "FIRE_POTION",
+            "tier": "prefer",
+            "reason": "能够提前击杀、避免承伤时使用。"
+          },
+          {
+            "schema": "potion-direction-v1",
+            "potion": "COLORLESS_POTION",
+            "tier": "normal",
+            "for": "current_boss",
+            "reason": "寻找即时保命手段，随机结果不预计收益。"
+          }
+        ],
+        "route": "keep",
+        "rest": "heal",
+        "checkpoint": 17,
+        "reason": "全方向×目标及组合的成型率、Wk/W0、期望和配对误差未知；沿用低置信先验，保留原多组合及分口径历史，不据截断数据覆盖；13血先治疗。"
+      }
+    },
+    "v6_brain_calls": 27
+  }
+]

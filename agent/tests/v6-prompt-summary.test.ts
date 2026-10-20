@@ -74,6 +74,28 @@ it("retains all 17 real metric snapshots for numeric validation and full content
     expect(size(audit)).toBeLessThan(2 * 1024 * 1024);
   } finally { rmSync(dir, { force: true, recursive: true }); }
 });
+it("audits the larger published history snapshots once per combo within a generous latency bound", () => {
+  const history = JSON.parse(readFileSync(join(knowledge, "characters/silent/v6-history.json"), "utf8"));
+  const metrics = new Map<string, unknown>(history.data.combo_metrics.map((row: { id: string; metrics: unknown }) => [row.id, row.metrics]));
+  expect(metrics.size).toBe(17);
+  const rows = Array.from({ length: 1224 }, (_, i) => {
+    const entry = entries[i % entries.length]!;
+    return { ...entry, combo_metrics: metrics.get(entry.combo_id!) };
+  });
+  const dir = mkdtempSync(join(tmpdir(), "v6-history-metric-audit-"));
+  try {
+    const logger = new V6BuildLog(v6Config({ V6_BUILD: "shadow" }), join(dir, "v6-build.jsonl"));
+    const start = performance.now();
+    expect(logger.append({ ...logRow, entries: rows, unknown: { count: 0, total: rows.length } })).toEqual({ written: true });
+    // Production snapshots exceed the former 50,000-node guard. An invalid shared
+    // snapshot must not turn into hundreds of repeated traversals and serializations.
+    expect(performance.now() - start).toBeLessThan(5_000);
+    const audit = JSON.parse(readFileSync(join(dir, "v6-build.jsonl"), "utf8"));
+    expect(audit.entries).toHaveLength(1224);
+    expect(audit.metric_audits).toHaveLength(17);
+    expect(readdirSync(join(dir, "v6-metrics"))).toHaveLength(new Set(audit.metric_audits.map((r: { sha256: string }) => r.sha256)).size);
+  } finally { rmSync(dir, { recursive: true, force: true }); }
+}, 20_000);
 it("summarizes pooled main metrics with separate denominators and the requested A10 target", () => {
   const metrics = compactBuildMetrics(cores[0]!.combos[0]!.metrics, ["f49:AEONGLASS"]) as Raw[];
   expect(metrics.map(m => m.attempt)).toEqual(["first", "including_sl"]);
@@ -168,12 +190,33 @@ it("keeps a meaningful minimum for every one of 28 real shop choices with the pu
     expect(cmp.current_boss).toMatchObject({ delta: i === 27 ? null : { mean: -.01, se: .001, n: 20 }, tier: i === 27 ? "unknown" : "worse" });
     expect(p.direction_id).toBe("R"); expect(p.availability).toEqual({ take: .6, skip: .5 });
     expect(Number(p.availability_change)).toBeCloseTo(.1);
-    expect(view.unknown_reasons).toContain("fixture_opening_limitation");
-    if (i === 27) expect(view.unknown_reasons).toContain("fixture_incomplete_target_mass");
+    const reasons = asArray(view.unknown_reasons).map(r => asRecord(d.state.option_reason_catalog)[String(r)] ?? r);
+    expect(reasons).toContain("fixture_opening_limitation");
+    if (i === 27) expect(reasons).toContain("fixture_incomplete_target_mass");
     expect(p.opening).toEqual({ Wk: "evaluated", W0: "evaluated" });
   }
   expect(buildV6RoomDecision(e, input, table, "ready", knowledge).state).toEqual(d.state);
   expect(d.roomEntries).toHaveLength(28 * 17 * 2);
   expect(table.combinations).toHaveLength(28 * 17 * 2);
   expect(promptBudgetLabels(d.state)).toHaveLength(1);
+});
+
+it("keeps all 28 current Boss low-P bounds, trust and unknown explanations within the wire budget", () => {
+  on(); const e = situation("shop"), input = v6ShopOptions(e)!, table = shopTable(input);
+  for (const row of table.combinations) Object.assign(row.entry, { formula: "formation_times_completed",
+    availability: { take: .04, skip: .03 }, win: null, win_complete: null, win_incomplete: null, expected_win: null,
+    expected_win_bound: { lower: 0, upper: .04, reason: "low_probability_not_simulated" },
+    trust_details: { n: 43, brier: .03, bias: .02, passed: false } });
+  const d = buildV6RoomDecision(e, input, table, "ready", knowledge);
+  expect(size(d.state)).toBeLessThanOrEqual(V6_JEV_STATE_BYTES);
+  expect(size({ model: "typesafe/jev-1.14", state: d.state, questions: d.questions })).toBeLessThanOrEqual(V6_JEV_REQUEST_BYTES);
+  expect(Object.keys(asRecord(d.state.options))).toHaveLength(28);
+  for (const raw of Object.values(asRecord(d.state.options))) {
+    const row = asRecord(raw), target = asRecord(asArray(row.best_by_target)[0]);
+    expect(target).toMatchObject({ combo: expect.any(String), P: .04, W: null, PW: null, PW_bound: [0, .04] });
+    const trust = target.validation ?? asRecord(d.state.target_validation)[String(target.validation_ref)];
+    expect(trust).toMatchObject({ n: 43, brier: .03, bias: .02, passed: false });
+    const reasons = asArray(row.unknown_reasons).map(r => asRecord(d.state.option_reason_catalog)[String(r)] ?? r);
+    expect(reasons).toContain("fixture_opening_limitation");
+  }
 });

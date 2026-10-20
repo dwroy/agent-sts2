@@ -14,15 +14,19 @@ import { mkdirSync } from "node:fs";
 import { str } from "../core/util/json.js";
 import { characterSchema } from "./formats.js";
 import { validate } from "./schema.js";
+import { v6Digest } from "../sim/v6-completion.js";
+import { currentBossKnown } from "./target-values.js";
+import { copyV6Table } from "../sim/v6-table-copy.js";
 
 export interface V6ProjectionEvaluationContext { budget_ms: number; signal: AbortSignal }
 
 /** The provider owns frozen evidence/model versions; this boundary owns live scheduling only. */
 export class V6ProjectionRuntime {
   private idle: V6IdlePrecomputer;
+  private tables = new Map<string, V6ProjectionTable>();
   private pending: Promise<V6ProjectionTable | null> | null = null;
   constructor(private engine: Pick<V6ProjectionEngine, "evaluate" | "precompute">,
-    private request: (env: DecisionEnv, phase: "act" | "pick") => Promise<V6ProjectionRequest | null>,
+    private request: (env: DecisionEnv, phase: "act" | "pick", idleCombat?: boolean) => Promise<V6ProjectionRequest | null>,
     private record: (env: DecisionEnv, request: V6ProjectionRequest, table: V6ProjectionTable) => void = () => {},
     private input?: (env: DecisionEnv, phase: "act" | "pick") => Promise<V6ProjectionInput | null>) { this.idle = new V6IdlePrecomputer(engine); }
   /** W7 can replace situation.options while keeping this loop's frozen factory and actual route. */
@@ -51,28 +55,52 @@ export class V6ProjectionRuntime {
       if (expired()) return null;
       const r = await request();
       if (!r || r.config.mode === "off" || expired()) return null;
+      const cacheKey = v6Digest([r.contextDigest, r.modelVersion, r.phase, r.seed, r.weights,
+        [r.baseline, ...r.options].map(o => [o.id, o.state, o.preparationKey]), r.targets,
+        r.directions.map(d => [d.id, d.signature]), r.idealOverrides, r.appearedCards, { ...r.config, budgets: undefined }]);
+      const cached = this.tables.get(cacheKey);
+      if (cached) {
+        const hit = copyV6Table(cached);
+        hit.telemetry = { ...hit.telemetry, elapsed_ms: 0, simulations: 0, cache_hits: hit.telemetry.cache_hits + 1 };
+        this.record(env, r, hit); return hit;
+      }
       const milliseconds = Math.min(remaining(), r.phase === "act" ? r.config.budgets.act_ms : r.config.budgets.pick_ms);
-      const bounded = context ? { ...r, config: { ...r.config, budgets: { ...r.config.budgets,
-        ...(r.phase === "act" ? { act_ms: milliseconds } : { pick_ms: milliseconds }) } } } : r;
+      const foreground = { ...r, ...(r.phase === "pick" ? { currentBossFirst: true } : {}) };
+      const bounded = context ? { ...foreground, config: { ...r.config, budgets: { ...r.config.budgets,
+        ...(r.phase === "act" ? { act_ms: milliseconds } : { pick_ms: milliseconds }) } } } : foreground;
       const table = context ? await this.engine.evaluate(bounded)
-        : await withIndependentDecisionBudget("V6_projection", "direction", milliseconds, "L2", () => this.engine.evaluate(r));
-      if (expired()) return null;
-      if (table) this.record(env, bounded, table);
+        : await withIndependentDecisionBudget("V6_projection", "direction", milliseconds, "L2", () => this.engine.evaluate(bounded));
+      if (context?.signal.aborted) return null;
+      if (table) {
+        // Include resources, offers, route and brain weights; later unknown targets
+        // must not invalidate an otherwise usable current-Boss table.
+        const selectable = [r.baseline, ...r.options], known = selectable.filter(o => currentBossKnown(table, o.id)).length;
+        if (table.enabled && known >= 2 && known / selectable.length >= r.config.min_known_option_ratio) {
+          this.tables.set(cacheKey, copyV6Table(table));
+          while (this.tables.size > 8) this.tables.delete(this.tables.keys().next().value!);
+        }
+        this.record(env, bounded, table);
+      }
       return table;
     } finally { release(); }
   }
   /** Only the loop's existing idle boundary drives preparation, with no timer or extra pool. */
   async precompute(env: DecisionEnv, idleMs: number): Promise<V6ProjectionTable | null> {
-    if (v6Config().mode === "off" || env.state.in_combat || idleMs <= 0) return null;
+    if (v6Config().mode === "off" || idleMs <= 0) return null;
     if (this.pending) return this.pending;
     this.pending = (async () => {
-      const r = await this.request(env, "pick"); if (!r) return null;
+      const r = await this.request(env, "pick", true); if (!r) return null;
       const bounded = { ...r, config: { ...r.config, budgets: { ...r.config.budgets, pick_ms: Math.min(r.config.budgets.pick_ms, idleMs) } } };
       this.idle.schedule(bounded);
       const result = await withIndependentDecisionBudget("V6_precompute", "routine", bounded.config.budgets.pick_ms, "L2",
         () => this.idle.runIdle({ contextDigest: r.contextDigest, isIdle: true, available_ms: idleMs }));
       const table = result.status === "computed" ? result.table! : null;
-      if (table) this.record(env, bounded, table);
+      if (table) {
+        // New idle results can complete optional targets. Do not let a usable
+        // foreground snapshot hide that progress for the rest of the floor.
+        this.tables.clear();
+        this.record(env, bounded, table);
+      }
       return table;
     })();
     try { return await this.pending; } finally { this.pending = null; }
@@ -86,8 +114,8 @@ export function productionV6Projection(runner?: DeckSimRunner, runPlanLog?: stri
     mkdirSync(directory, { recursive: true });
     appendJsonLine(join(directory, "v6-history-snapshots.jsonl"), { schema: "v6-history-snapshot-v1", ...row });
   });
-  return new V6ProjectionRuntime(new V6ProjectionEngine(runner ?? new SerialDeckRunner()), async (env, phase) => {
-    const context = await input(env, phase); if (!context) return null;
+  return new V6ProjectionRuntime(new V6ProjectionEngine(runner ?? new SerialDeckRunner()), async (env, phase, idleCombat) => {
+    const context = await input(env, phase, idleCombat); if (!context) return null;
     const result = context.factory.create(context.situation);
     return result.status === "ready" ? result.request : null;
   }, (env, r, table) => {

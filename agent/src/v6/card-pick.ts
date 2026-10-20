@@ -6,6 +6,7 @@ import type { AnswerSet, ChoiceAnswer } from "../reflex/jev/answers.js";
 import { choiceQ } from "../reflex/jev/questions.js";
 import { v6DeltaTier, type V6ProjectionTable } from "../sim/v6-projection.js";
 import { promptProjectionEntries } from "./prompt-projection.js";
+import { targetValueSummaries } from "./target-values.js";
 import { boundedV6Jev, compactCombo, compactProjection, prioritize, promptBudgetLabels } from "./prompt-summary.js";
 import { directionCombos } from "./direction-plan.js";
 import { v6Config } from "./config.js";
@@ -98,7 +99,7 @@ export function buildV6CardPick(env: DecisionEnv, table: V6ProjectionTable | und
       availability: { take: null, skip: null }, weighted_current_boss_delta: null, weighted_joint_delta: null,
       deck_count_change: null, core_first_cast_turn: null, win_tier: "unknown", delta_tier: "unknown", direction_role: "unknown", trust: "unknown", reflex_ids: [] });
   }
-  for (const key of choices) facts[key] = { ...asRecord(facts[key]), projections: toJsonValue(entries.filter(e => e.option_id === key).map(entry => {
+  for (const key of choices) facts[key] = { ...asRecord(facts[key]), best_by_target: targetValueSummaries(table, key), projections: toJsonValue(entries.filter(e => e.option_id === key).map(entry => {
     const row = table?.combinations.find(r => r.entry.option_id === entry.option_id && r.entry.direction_id === entry.direction_id
       && r.combination_id === entry.combo_id && r.entry.target_id === entry.target_id);
     return { ...asRecord(compactProjection(entry, row?.unknown_reasons)), ...(row ? { combo_role: row.role, role_labels: row.role_labels,
@@ -122,7 +123,7 @@ export function buildV6CardPick(env: DecisionEnv, table: V6ProjectionTable | und
       ...(modelLimits.length ? { model_limits: toJsonValue(modelLimits) } : {}),
       note: "Probabilities are model estimates, not guarantees. Null means unknown. Paired deltas compare taking with skipping; missing mass is not renormalized. Core observations pool versions and ascensions, separated by first/including-SL attempt; sources describe provenance. Adjusted estimates name their target ascension. These metrics are descriptive, not causal benefits.",
       options: facts, ...(plan?.ideal_overrides ? { temporary_combos: toJsonValue(plan.ideal_overrides) } : {}) },
-    questions: { pick: choiceQ("Choose one card reward or skip. Follow direction weights; compare current-boss safety and weighted two-boss-chain deltas, completion probability and trust. Use only the supplied facts.", criteria) },
+    questions: { pick: choiceQ("Choose one card reward or skip. Use best_by_target: compare the current Boss best-combo P, W and P*W first, retaining direction weights and trust. PW_bound is an upper bound, never a point estimate. Later targets are optional; missing later mass must not erase current information. Use only the supplied facts.", criteria) },
     resolve(answers): ResolvedAction {
       const answer = cardAnswer(answers, choices), key = answer?.choice ?? fallback;
       return { intent: intents[key]!, rationale: answer ? `V6 Jev chose ${key}` : `V6 card fallback chose ${key}: current-boss gate, weighted chain delta, current-boss delta, then skip`,
@@ -142,6 +143,6 @@ export function recordCardPick(env: DecisionEnv, pick: V6CardPick, logFile: stri
     fallback: reason ?? (a ? null : `invalid_or_missing_answer:${pick.fallback}`), elapsed_ms: elapsedMs,
     cache: { hits: telemetry?.cache_hits ?? 0, misses: telemetry?.cache_misses ?? 0 },
     degradation: [...(telemetry?.degradation ?? ["projection_provider_unavailable"]), ...promptBudgetLabels(pick.decision.state)],
-    unknown: { count: pick.entries.filter(e => e.win === null).length, total: pick.entries.length },
+    unknown: { count: pick.entries.filter(e => e.win === null && !e.expected_win_bound).length, total: pick.entries.length },
     triggers: [], merged_triggers: [], skipped_triggers: [] });
 }

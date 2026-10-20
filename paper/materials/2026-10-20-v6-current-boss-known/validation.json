@@ -1,0 +1,81 @@
+{
+  "schema": "v6-current-boss-validation-v1",
+  "recorded_at": "2026-10-20T12:35:10+08:00",
+  "tested_base": "7c87092a3ee6757ba1aae5fb55a750d0a20fa6cc",
+  "rebased_base": "dd43e7b2aaea27558198533116091c1eb1b2a4b0",
+  "post_check_rebase_paths": [
+    "eval/versions.json"
+  ],
+  "post_check_source_or_test_change": false,
+  "priority": {
+    "nice": 19,
+    "max_workers": 2,
+    "play": false,
+    "live_changed": false,
+    "game_actions": 0
+  },
+  "tsc": {
+    "exit_code": 0,
+    "command": "PATH=\"$HOME/.local/node/bin:$PATH\" nice -n 19 node node_modules/typescript/bin/tsc -p tsconfig.json --noEmit",
+    "artifact": {
+      "path": ".artifacts/tsc-final-v8.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  },
+  "vitest": {
+    "exit_code": 0,
+    "command": "PATH=\"$HOME/.local/node/bin:$PATH\" TMPDIR=/var/tmp nice -n 19 node node_modules/vitest/vitest.mjs run --maxWorkers=2",
+    "files_passed": 612,
+    "tests_passed": 5819,
+    "tests_skipped": 2,
+    "duration_s": 781.09,
+    "artifact": {
+      "path": ".artifacts/vitest-full-v4.log",
+      "bytes": 398,
+      "sha256": "7b99aa0d8b918fef70f74f6bb765135bc9f8d051e185870da2b05e0b504dbebb"
+    }
+  },
+  "gitleaks_staged": {
+    "exit_code": 0,
+    "findings": 0,
+    "command": "nice -n 19 /home/dw/.local/bin/gitleaks git --pre-commit --staged --no-banner --redact --report-format json",
+    "artifact": {
+      "path": ".artifacts/gitleaks-final-v1.json",
+      "bytes": 3,
+      "sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570"
+    }
+  },
+  "interrupted_vitest": {
+    "exit_code": 130,
+    "pid": 2039543,
+    "reason": "Claude 11:59 pause for ops live55 full validation; workers and descendants independently confirmed gone",
+    "artifact": {
+      "path": ".artifacts/vitest-full-v3.log",
+      "bytes": 93,
+      "sha256": "5c7d5cb2c0bddfdbac409cf20c2f4acce3c8cbe350cfbdebb56611692ebf3e8d"
+    }
+  },
+  "final_source_diff": {
+    "path": ".artifacts/final-source.diff",
+    "bytes": 78501,
+    "sha256": "2400080d0bea71137e191f379d338b32a63631222dcb23d7e75fc26009ccd07d"
+  },
+  "real_request_receipt": {
+    "path": "paper/materials/2026-10-20-v6-current-boss-known/real-request-receipt.json",
+    "bytes": 201904,
+    "sha256": "ff301fc832508c8bdad5eb26e4f0f37997e35b8100447696a51ba4ab5880851f"
+  },
+  "source_change_after_real_requests": [
+    {
+      "path": "agent/src/v6/card-pick.ts",
+      "change": "audit unknown.count excludes expected_win_bound"
+    },
+    {
+      "path": "agent/src/hand/screens/v6-room.ts",
+      "change": "audit unknown.count excludes expected_win_bound"
+    }
+  ],
+  "real_request_limit": "All nine current-target known values are P<5% bounds or known P=0; W and point PW remain null. No full-slot W6 discard real request coverage. Preparation <=2s goal only partly reached.",
+  "retention": "Unique raw artifacts and original failed/interrupted attempts remain in this worktree; await actual main/live source publication before worktree_retention complete."
+}

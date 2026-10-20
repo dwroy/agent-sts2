@@ -189,3 +189,14 @@ it("suppresses repeated global T6 across construction kinds and restart, then re
   expect((await ensureDirectionPlan(e, brain, log, dir))?.result).toMatchObject({ ask: true, triggers: ["T6"] });
   expect(brain.askJson).toHaveBeenCalledTimes(2);
 });
+
+it("freezes role summaries for the run but applies fresh brain combos and refreshes at a new run", () => {
+  vi.stubEnv("V6_BUILD", "on"); const { dir, e } = fixture();
+  const first = v6Directions(e, dir);
+  writeFileSync(join(dir, "characters", "silent", "build-cores.json"), JSON.stringify({ schema: "build-cores-v1", character: "silent", entries: [coreFixture("CHANGED")] }));
+  expect(v6Directions(e, dir).map(d => d.id)).toEqual(first.map(d => d.id));
+  e.screenMemory.runPlan = { runId: String(e.state.raw.run_id), v6: { ideal_overrides: { TEST_A: ["SURVIVOR"] } } } as any;
+  expect(v6Directions(e, dir)[0]!.combos.some(c => c.source === "brain")).toBe(true);
+  e.state.raw.run_id = "new-run";
+  expect(v6Directions(e, dir).map(d => d.id)).toEqual(["CHANGED"]);
+});

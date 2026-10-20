@@ -948,7 +948,7 @@ async function runLoopWithBudgets(options: LoopOptions): Promise<LoopStats> {
 
     if (planned.kind === "wait") {
       const v6WaitStarted = Date.now();
-      if (v6Config().mode !== "off" && v6Projection && !state.in_combat) {
+      if (v6Config().mode !== "off" && v6Projection) {
         try { await v6Projection.precompute(env, pollIntervalMs); } catch { /* Missing evidence stays unknown. */ }
       }
       const prepared = prepareObservedCandidates(env, pollIntervalMs);

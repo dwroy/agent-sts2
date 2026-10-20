@@ -1,3 +1,4 @@
+import { currentBossKnown } from "./target-values.js";
 import { dirname, join } from "node:path";
 import { asRecord, str } from "../core/util/json.js";
 import type { Decision, DecisionEnv, ResolvedAction } from "../memory/types.js";
@@ -14,13 +15,10 @@ export interface ConstructionCoverage {
   unknown: string[];
   reason: "insufficient_known_options" | "known_ratio_below_threshold" | null;
 }
-/** Count actual selectable options, never combination rows or partial/renormalized sums. */
+/** Count selectable options by their current Boss, never by optional future/chain mass. */
 export function constructionCoverage(options: readonly string[], table?: V6ProjectionTable | null, config: V6Config = v6Config()): ConstructionCoverage {
   const ids = [...new Set(options)];
-  const unknown = ids.filter(id => !table?.enabled || !table.target_mixtures.some(row => row.option_id === id
-    && row.known_mass >= 1 - 1e-9 && row.known_mass <= 1 + 1e-9
-    && row.value !== null && Number.isFinite(row.value.value) && row.value.value >= 0 && row.value.value <= 1
-    && Number.isFinite(row.value.se) && row.value.se >= 0 && Number.isInteger(row.value.n) && row.value.n >= 2));
+  const unknown = ids.filter(id => !currentBossKnown(table, id));
   const total = ids.length, known = total - unknown.length, ratio = total ? known / total : 0;
   return { total, known, ratio, unknown,
     reason: known < 2 ? "insufficient_known_options" : ratio < config.min_known_option_ratio ? "known_ratio_below_threshold" : null };

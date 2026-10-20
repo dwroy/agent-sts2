@@ -1,3 +1,4 @@
+import { copyV6Table } from "./v6-table-copy.js";
 /** Paired combination projections. All incomplete inputs remain explicitly unknown. */
 import type { BuildState } from "../construction/types.js";
 import type { V6Config } from "../v6/config.js";
@@ -22,11 +23,15 @@ export interface V6ProjectionRequest {
   appearedCards?: readonly string[];
   /** Persist the latest act-start ranking for an engine recreated by a caller. */
   rankings?: Readonly<Record<string, readonly string[]>>;
+  /** Foreground picks simulate the current Boss; later fights reuse idle/act cache only. */
+  currentBossFirst?: boolean;
   seed: number; modelVersion: string;
   /** Includes held resources, route, frozen history/trust, current run and act identity. */
   contextDigest: string;
   prepare: (target: V6ProjectionTarget, state: BuildState, option?: V6ProjectionOption) => V6PreparedProjection | null;
-  trust: (target: V6ProjectionTarget) => { value: ProjectionEntry["trust"]; labels: string[] };
+  /** Read already prepared openings without constructing another optional target. */
+  cachedPreparation?: V6ProjectionRequest["prepare"];
+  trust: (target: V6ProjectionTarget) => { value: ProjectionEntry["trust"]; labels: string[]; details?: ProjectionEntry["trust_details"] };
 }
 type Estimate = NonNullable<ProjectionEntry["win"]>;
 type Delta = NonNullable<ProjectionEntry["paired_delta"]>;
@@ -136,7 +141,7 @@ export class V6ProjectionEngine {
   }
   clear(): void { this.samples.clear(); this.acts.clear(); this.rankings.clear(); }
   private remember<T>(map: Map<string, T>, key: string, value: T): void {
-    map.delete(key); map.set(key, structuredClone(value)); while (map.size > this.capacity) map.delete(map.keys().next().value!);
+    map.delete(key); map.set(key, map === this.acts ? copyV6Table(value as V6ProjectionTable) as T : structuredClone(value)); while (map.size > this.capacity) map.delete(map.keys().next().value!);
   }
   async precompute(r: V6ProjectionRequest): Promise<V6ProjectionTable> { return this.evaluate({ ...r, options: [] }); }
   async evaluate(r: V6ProjectionRequest): Promise<V6ProjectionTable> {
@@ -158,9 +163,9 @@ export class V6ProjectionEngine {
     const weightsValid = all.length > 0 && Object.keys(r.weights).length === all.length && all.every(d => Number.isFinite(r.weights[d.id]) && r.weights[d.id]! >= 0)
       && Math.abs(all.reduce((sum, d) => sum + r.weights[d.id]!, 0) - 1) <= .01;
     const n = r.phase === "act" ? r.config.samples_act : r.config.samples_pick;
-    const actKey = r.phase === "act" ? v6Digest({ ...r, prepare: undefined, trust: undefined,
+    const actKey = r.phase === "act" ? v6Digest({ ...r, directions: all.map(d => [d.id, d.signature]), prepare: undefined, trust: undefined,
       completionSources: r.completionSources.map(s => [s.kind, s.signature]) }) : "";
-    if (r.phase === "act" && this.acts.has(actKey)) { const hit = structuredClone(this.acts.get(actKey)!); hit.telemetry = { ...hit.telemetry,
+    if (r.phase === "act" && this.acts.has(actKey)) { const hit = copyV6Table(this.acts.get(actKey)!); hit.telemetry = { ...hit.telemetry,
       cache_hits: 0, cache_misses: 0, simulations: 0, timed_out: 0, degradation: [], timings_ms: timings,
       act_cache_hit: true, elapsed_ms: this.now() - started }; return hit; }
     const available = r.phase === "act" ? r.config.budgets.act_ms : r.config.budgets.pick_ms;
@@ -170,7 +175,7 @@ export class V6ProjectionEngine {
     const rankingKey = v6Digest([r.character, r.ascension, r.act, r.seed, r.modelVersion, all.map(d => [d.id, d.signature])]);
     const rankings = r.rankings ?? this.rankings.get(rankingKey);
     const targets = [...r.targets].sort((a, b) => Number(!!a.unknown) - Number(!!b.unknown)
-      || Number(a.kind === "future") - Number(b.kind === "future")
+      || ({ current: 0, future: 1, chain: 2 }[a.kind] - { current: 0, future: 1, chain: 2 }[b.kind])
       || (b.probability ?? -1) - (a.probability ?? -1) || a.id.localeCompare(b.id));
     // Complete one ranked combination per direction/target before a second one. Act start
     // fully evaluates only its leading two; idle/pick retain the original four-combo cap.
@@ -190,7 +195,7 @@ export class V6ProjectionEngine {
       ids.sort((a, b) => { const ai = rank.indexOf(a), bi = rank.indexOf(b);
         return (ai < 0 ? Infinity : ai) - (bi < 0 ? Infinity : bi); });
       return ids.slice(0, r.phase === "act" ? 2 : 4).map((combinationId, pass) => ({ direction, target, combinationId, pass, ti }));
-    })).sort((a, b) => a.pass - b.pass || a.ti - b.ti || (r.weights[b.direction.id] ?? 0) - (r.weights[a.direction.id] ?? 0));
+    })).sort((a, b) => a.ti - b.ti || a.pass - b.pass || (r.weights[b.direction.id] ?? 0) - (r.weights[a.direction.id] ?? 0));
     let dropped: string | null = null, stage = 0;
     const degrade = (remaining: typeof jobs) => {
       table.telemetry.timed_out++;
@@ -207,11 +212,13 @@ export class V6ProjectionEngine {
     const preparedDigests = new Map<V6PreparedProjection, string>();
     const resolved = new Set<string>();
     for (const [ji, { direction: d, target: t, combinationId }] of jobs.entries()) {
-      let reason = t.unknown ?? (stage >= 3 ? "budget_remaining_unknown" : d.id === dropped ? "budget_lowest_direction_dropped" : stage >= 2 && t.kind === "future" ? "budget_future_target_dropped" : null);
-      if (!reason && this.now() >= deadline) { reason = "deadline_exhausted"; degrade(jobs.slice(ji)); }
+      // Lookup is deterministic and cheap. A spent combat allowance must never erase known P.
+      let reason: string | null = null;
+      const budgetReason = stage >= 3 ? "budget_remaining_unknown" : d.id === dropped ? "budget_lowest_direction_dropped"
+        : stage >= 2 && t.kind === "future" ? "budget_future_target_dropped" : this.now() >= deadline ? "deadline_exhausted" : null;
       let completion = null;
       const lookupAt = performance.now();
-      if (!reason) try { completion = resolveV6Completion({ direction: d, options: structuredClone(options), target: t, samples: n, seed: r.seed,
+      try { completion = resolveV6Completion({ direction: d, options, target: t, samples: n, seed: r.seed,
         phase: r.phase, deadline, idealOverrides: r.idealOverrides, appearedCards: r.appearedCards, ranking: rankings?.[d.id],
         combinationIds: [combinationId] }, r.completionSources); }
       catch (e) { reason = `completion_provider_failed:${String(e).slice(0, 160)}`; }
@@ -222,7 +229,8 @@ export class V6ProjectionEngine {
         const resolvedKey = JSON.stringify([d.id, t.id, c?.id ?? combinationId]);
         if (resolved.has(resolvedKey)) continue;
         resolved.add(resolvedKey);
-        let error = reason;
+        const optional = r.currentBossFirst && t.kind !== "current";
+        let error = reason ?? t.unknown ?? budgetReason;
         const ids = c?.samples.map(s => s.id) ?? Array.from({ length: n }, (_, i) => `seed:${i}`);
         if (c && (ids.length !== n || new Set(ids).size !== n)) error = "invalid_paired_sample_schedule";
         if (c && options.some(o => { const p = c.availability[o.id]; return p != null && (!Number.isFinite(p) || p < 0 || p > 1); })) error = "invalid_formation_probability";
@@ -238,7 +246,7 @@ export class V6ProjectionEngine {
             try { if (!preparedCache.has(key)) {
                 if (this.now() >= deadline) { ps.push(null); continue; }
                 const at = performance.now();
-                try { preparedCache.set(key, r.prepare(t, structuredClone(state), o)); }
+                try { preparedCache.set(key, optional ? r.cachedPreparation?.(t, state, o) ?? null : r.prepare(t, structuredClone(state), o)); }
                 finally { timings.preparation += performance.now() - at; }
               }
               const input = preparedCache.get(key) ?? null;
@@ -248,7 +256,7 @@ export class V6ProjectionEngine {
             } catch { ps.push(null); errors.push("target_preparation_failed"); }
           }
           if (skip) errors.push("formation_below_5_percent_or_unknown_not_simulated");
-          else if (!skip && ps.some(x => !x)) errors.push("unknown_opening_entry_hp_or_empirical_sample");
+          else if (!skip && ps.some(x => !x)) errors.push(optional ? "optional_target_not_precomputed" : "unknown_opening_entry_hp_or_empirical_sample");
           prepared.push(ps); outcomes.push(Array.from({ length: n })); rowErrors.push(errors);
           // A fight is a pure function of its exact prepared input, model and absolute seed index.
           // Neither a new question nor 100 -> 20 samples changes an already computed fight.
@@ -287,7 +295,7 @@ export class V6ProjectionEngine {
         const fresh = new Map<string, Indexed>();
         let timeout = false;
         const combatAt = performance.now();
-        if (decks.length && this.now() < deadline) try {
+        if (decks.length && this.now() < deadline && !(r.currentBossFirst && t.kind !== "current")) try {
           const result = await this.runner.run({ base: decks[0]!, decks, stripes, orders: [null], samples: n, seed: r.seed,
             // Finish eligible paired samples before visiting another job. Dividing by all catalog
             // rows, including P<5% rows, can time out every fight without completing any estimate.
@@ -305,6 +313,7 @@ export class V6ProjectionEngine {
             if (retained.some(Boolean)) { fresh.set(key, retained); this.remember(this.samples, key, retained); }
           }
         } catch { error = "simulation_failed"; }
+        else if (decks.length && r.currentBossFirst && t.kind !== "current") error ??= "optional_target_not_precomputed";
         else if (decks.length) timeout = true;
         if (decks.length) timings[t.kind === "chain" ? "completed_relay" : "completed_single"] += performance.now() - combatAt;
         for (const [group, groupKeys] of keys.entries()) for (const [i, key] of groupKeys.entries())
@@ -324,7 +333,7 @@ export class V6ProjectionEngine {
               ...prepared[oi]!.flatMap(x => x?.labels ?? []), "raw_simulation_not_calibrated", "partial_model", "future_relics_and_potions_not_predicted", "formation_times_completed", "incomplete_win_not_computed", "se_conditional_on_lookup_probability_excludes_table_and_model_error"])],
             unknown_reasons: [...(error ? [error] : []), ...rowErrors[oi]!,
               ...(c?.unknownReasons?.[o.id] ?? [])], continuous: t.kind === "chain" ? continuousBossResult(outcomes[oi]!.filter((x): x is FightSampleResult => !!x), n, true, true)! : null };
-          entry.trust = trust.value; entry.direction_role = v6DirectionRole(d, all, o.card); entry.availability = { take: p, skip: c?.availability[r.baseline.id] ?? null };
+          entry.trust = trust.value; if (trust.details) entry.trust_details = trust.details; entry.direction_role = v6DirectionRole(d, all, o.card); entry.availability = { take: p, skip: c?.availability[r.baseline.id] ?? null };
           // Below threshold reports probability only, including exactly zero; never substitutes a simulated zero win rate.
           entry.win = p !== null && p >= .05 ? uncertainty(er, "first") : null;
           entry.joint_win = p !== null && p >= .05 && t.kind === "chain" ? uncertainty(er, "joint") : null;
@@ -337,8 +346,15 @@ export class V6ProjectionEngine {
             entry.win_incomplete = null; entry.incomplete_source = "unknown";
             entry.expected_win = (t.kind === "chain" ? entry.joint_win : entry.win)?.value ?? null;
           }
-          if (p === null) row.unknown_reasons.push("formation_unknown"); else if (p < .05) row.unknown_reasons.push("formation_below_5_percent_not_simulated");
-          if (!entry.win) row.unknown_reasons.push("expectation_unknown"); if (t.kind === "chain" && !entry.joint_win) row.unknown_reasons.push("continuous_joint_unknown");
+          if (p !== null && p < .05) {
+            entry.expected_win_bound = { lower: 0, upper: p, reason: p === 0 ? "formation_impossible" : "low_probability_not_simulated" };
+            row.model_labels.push(p === 0 ? "formation_impossible_known_zero" : "low_probability_not_simulated_expected_at_most_P");
+            // An upper bound is useful known information, never an invented conditional W or point estimate.
+            row.unknown_reasons = row.unknown_reasons.filter(x => !x.startsWith("budget_") && x !== "deadline_exhausted"
+              && x !== "formation_below_5_percent_or_unknown_not_simulated");
+          }
+          if (p === null) row.unknown_reasons.push("formation_unknown");
+          if (!entry.win && !entry.expected_win_bound) row.unknown_reasons.push("expectation_unknown"); if (t.kind === "chain" && !entry.joint_win) row.unknown_reasons.push("continuous_joint_unknown");
           if (timeout) row.unknown_reasons.push("simulation_budget_exceeded");
           const ks = c?.samples.map(s => s.states[o.id]?.cards.length); if (ks?.length && ks.every(x => x !== undefined && x === ks[0])) entry.deck_count_change = ks[0]! - r.baseline.state.cards.length;
           const complete = outcomes[oi]!.filter((x): x is FightSampleResult => !!x);
@@ -364,7 +380,7 @@ export class V6ProjectionEngine {
     timings.aggregation_pairing = performance.now() - aggregateAt;
     if (r.phase === "act") this.remember(this.rankings, rankingKey, table.rankings);
     table.telemetry.elapsed_ms = this.now() - started; table.telemetry.total_entries = table.combinations.length;
-    table.telemetry.unknown_entries = table.combinations.filter(x => !x.entry.win || r.targets.find(t => t.id === x.entry.target_id)?.kind === "chain" && !x.entry.joint_win).length;
+    table.telemetry.unknown_entries = table.combinations.filter(x => !x.entry.expected_win_bound && (!x.entry.win || r.targets.find(t => t.id === x.entry.target_id)?.kind === "chain" && !x.entry.joint_win)).length;
     table.telemetry.unknown_fraction = table.combinations.length ? table.telemetry.unknown_entries / table.combinations.length : 1;
     table.telemetry.pending_work = table.telemetry.timed_out > 0 || table.combinations.some(row => row.unknown_reasons.some(reason =>
       reason === "supply_budget_exhausted" || reason === "unknown_opening_entry_hp_or_empirical_sample" && this.now() >= deadline));

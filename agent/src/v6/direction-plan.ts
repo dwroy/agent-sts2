@@ -21,11 +21,15 @@ export interface DirectionSummary {
 export function directionSummaries(character: string, ascension: number, cores: readonly BuildCore[], templates: readonly CoreTemplate[], support: ConstructionSupport | null): DirectionSummary[] {
   const formal = cores.filter(d => d.scope.character === character && d.scope.ascensions.includes(ascension));
   const result: DirectionSummary[] = formal.map(d => {
-    const combos = d.combos.map(c => ({ id: c.id, source: "build-core-v1" as const,
-      requirements: toJsonValue(c.cards.map((r, i) => ({ id: `${c.id}:${i}`, count: r.count,
-        any: ("id" in r ? [r.id] : r.any_of).map(id => ({ kind: "card", id, upgraded: r.upgraded })) }))),
-      metrics: toJsonValue(c.metrics),
-      details: toJsonValue({ ...c, metrics: c.metrics }) }));
+    const combos = d.combos.map(c => {
+      // Metrics are an immutable published snapshot. Copy them once rather than
+      // walking the multi-megabyte evidence tree again inside details.
+      const metrics = toJsonValue(c.metrics);
+      return { id: c.id, source: "build-core-v1" as const,
+        requirements: toJsonValue(c.cards.map((r, i) => ({ id: `${c.id}:${i}`, count: r.count,
+          any: ("id" in r ? [r.id] : r.any_of).map(id => ({ kind: "card", id, upgraded: r.upgraded })) }))),
+        metrics, details: { ...asRecord(toJsonValue({ ...c, metrics: null })), metrics } };
+    });
     return { id: d.direction, name: d.name, source: "build-core-v1", components: Object.keys(d.card_pool),
       requirements: toJsonValue(combos.flatMap(c => asArray(c.requirements))), support: null,
       details: toJsonValue({ status: d.status, card_pool: d.card_pool, pivot_signals: d.pivot_signals, failure_modes: d.failure_modes,

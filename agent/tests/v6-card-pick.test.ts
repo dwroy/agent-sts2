@@ -1,3 +1,4 @@
+import { knownCurrentRows } from "./v6-projection-fixture.js";
 import { mkdtempSync, mkdirSync, writeFileSync, rmSync, readFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
@@ -56,6 +57,17 @@ it("keeps legal reward indices, English Decisions criteria and unknown per-combo
   expect(JSON.stringify(p.decision)).not.toMatch(/single.card.win|actual.brain.choice/);
   recordCardPick(e, p, join(dir, "plans.jsonl"), "fixture", {}, 2, "missing");
   expect(JSON.parse(readFileSync(join(dir, "v6-build.jsonl"), "utf8")).unknown).toEqual({ count: 12, total: 12 });
+});
+it("logs low-probability bounds as known without filling the unmeasured win", () => {
+  const { e, dir } = fixture(), pick = buildV6CardPick(e, undefined, dir)!;
+  const entry = pick.entries[0]!;
+  entry.availability.take = .01;
+  entry.expected_win_bound = { lower: 0, upper: .01, reason: "low_probability_not_simulated" };
+  expect(validateProjectionEntry(entry).ok).toBe(true);
+  recordCardPick(e, pick, join(dir, "plans.jsonl"), "low-p", {}, 1, null);
+  const row = JSON.parse(readFileSync(join(dir, "v6-build.jsonl"), "utf8"));
+  expect(row.unknown).toEqual({ count: pick.entries.length - 1, total: pick.entries.length });
+  expect(row.entries[0]).toMatchObject({ win: null, expected_win_bound: { upper: .01 } });
 });
 it("consumes W3's genuine per-combination rows including the P=1 null-W0 boundary", async () => {
   const { e, dir } = fixture(), r = request(); r.ascension = 0; r.weights = { TEST_A: 1 };
@@ -137,7 +149,7 @@ it.each(["IRONCLAD", "SILENT", "DEFECT", "NECROBINDER", "REGENT"])("%s off rewar
 });
 it.each(["success", "error", "invalid", "timeout"])("loop routes known cards to Jev, then the original brain on failure (%s)", async mode => {
   const { raw, dir } = fixture("on", "ironclad"), fake = new FakeDeepSeek(() => "card2");
-  const known = table();
+  const known = table(); knownCurrentRows(known, ["card2", "card7", "skip"]);
   for (const option_id of ["card2", "card7", "skip"]) known.target_mixtures.push({ option_id, kind: "clearance", value: { value: .5, se: .1, n: 20 }, paired_delta: null, known_mass: 1, known_value: .5, labels: [] });
   const provider = { evaluate: vi.fn(async r => ({ ...known, phase: r.phase })), precompute: vi.fn() };
   const runtime = new V6ProjectionRuntime(provider, async (_e, phase) => ({ ...request(), phase }));
@@ -185,6 +197,7 @@ it.each(["all_unknown", "one_known", "low_ratio", "brain_failed"])("routes %s re
     return "card7";
   });
   const t = table(), count = mode === "one_known" ? 1 : mode === "low_ratio" ? 2 : 0;
+  knownCurrentRows(t, ["card2", "card7"].slice(0, count));
   if (mode === "low_ratio") vi.stubEnv("V6_MIN_KNOWN_OPTION_RATIO", ".75");
   for (const option_id of ["card2", "card7"].slice(0, count)) t.target_mixtures.push({ option_id, kind: "clearance",
     value: { value: .5, se: .1, n: 20 }, paired_delta: null, known_mass: 1, known_value: .5, labels: [] });

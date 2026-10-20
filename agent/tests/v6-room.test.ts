@@ -1,3 +1,4 @@
+import { knownCurrentRows } from "./v6-projection-fixture.js";
 /** W7 fixed inventory, projection, budget and local scripted-loop contracts. */
 import { createHash } from "node:crypto";
 import { setExperienceForTests } from "../src/knowledge/experience.js";
@@ -58,6 +59,7 @@ function table(): V6ProjectionTable {
 }
 function knownRoom(kind: "shop" | "rest"): V6ProjectionTable {
   const e = room(kind), input = kind === "shop" ? v6ShopOptions(e)! : v6RestOptions(e)!, t = table();
+  knownCurrentRows(t, input.options.map(o => o.option.key));
   for (const o of input.options) t.target_mixtures.push({ option_id: o.option.key, kind: "clearance", value: { value: .5, se: .1, n: 20 }, paired_delta: null, known_mass: 1, known_value: .5, labels: [] });
   return t;
 }
@@ -292,6 +294,19 @@ it("publishes each combination with n/error/trust, leaves absent projections unk
   expect(afterPublish.roomEntries.find(e => e.option_id === "buy_card0" && e.combo_id === "TEST_A:min"))
     .toEqual(d.roomEntries.find(e => e.option_id === "buy_card0" && e.combo_id === "TEST_A:min"));
   expect((afterPublish.state.core_metrics as Raw[]).find(c => c.id === "TEST_A:min")).toBeTruthy();
+});
+it.each(["shop", "rest"] as const)("logs %s low-probability bounds as known without filling W", kind => {
+  on(); const dir = fixtureDir(), e = room(kind);
+  const input = kind === "shop" ? v6ShopOptions(e)! : v6RestOptions(e)!;
+  const decision = buildV6RoomDecision(e, input, undefined, undefined, dir);
+  const entry = decision.roomEntries[0]!;
+  entry.availability.take = .01;
+  entry.expected_win_bound = { lower: 0, upper: .01, reason: "low_probability_not_simulated" };
+  expect(validateProjectionEntry(entry).ok).toBe(true);
+  recordV6Room(e, decision, join(dir, "plans.jsonl"), "low-p", {}, false, 1);
+  const row = JSON.parse(readFileSync(join(dir, "v6-build.jsonl"), "utf8"));
+  expect(row.unknown).toEqual({ count: decision.roomEntries.length - 1, total: decision.roomEntries.length });
+  expect(row.entries[0]).toMatchObject({ win: null, expected_win_bound: { upper: .01 } });
 });
 it("fallback rejects a much-worse current boss, then ranks chain deltas and otherwise legally leaves/heals", () => {
   on(); const e = room("shop"), input = v6ShopOptions(e)!, t = table();

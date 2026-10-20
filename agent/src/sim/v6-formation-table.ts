@@ -14,6 +14,7 @@ export interface V6FormationTable {
 }
 /** Single-copy opportunity approximation; the table does not identify duplicate-copy joints. */
 function tail(probabilities: { p: number; n: number }[], count: number): number | null {
+  if (!probabilities.length || probabilities.every(x => x.p === 0 || x.n === 0)) return 0;
   if (count === 1) return 1 - probabilities.reduce((q, { p, n }) => q * (1 - p) ** n, 1);
   return null;
 }
@@ -56,8 +57,24 @@ export function v6FormationTableSource(data: { character: string; ascension: num
     && table.runs.every(r => r.run_id !== data.excludeRun && r.ended < data.asOf);
   const cards = new Map(table?.cards.map(c => [`${c.source}:${c.card_id}`, c]));
   const remaining = new Map(table?.remaining.map(r => [`${r.from_floor}:${r.target_floor}:${r.kind}`, r.median]));
+  const lookupCache = new Map<string, ReturnType<V6CompletionSource["resolve"]>>();
+  // Completion only changes the card signature. Reuse it across target floors,
+  // sample counts and potion/gold alternatives; their resources stay option-local.
+  const completedCards = new Map<string, BuildState["cards"] | null>();
+  const complete = (state: BuildState, combo: V6Combo): BuildState | null => {
+    const key = v6Digest([state.cards, state.relics, state.cap, combo.requirements]);
+    if (!completedCards.has(key)) {
+      if (completedCards.size >= 512) completedCards.delete(completedCards.keys().next().value!);
+      completedCards.set(key, v6Complete(state, combo.requirements)?.cards ?? null);
+    }
+    const cards = completedCards.get(key);
+    return cards ? { ...state, cards: cards.map(card => ({ ...card })) } : null;
+  };
   const source: V6CompletionSource = { kind, signature: data.signature, resolve(c) {
     if (c.direction.character !== data.character || !c.direction.ascensions.includes(data.ascension)) return null;
+    const key = v6Digest([c.direction.signature, c.direction.combos.map(k => [k.id, k.requirements, k.prerequisites, k.prerequisiteResolution]),
+      c.options, c.target.floor, c.samples, c.phase, c.idealOverrides, c.appearedCards, c.combinationIds, c.ranking]);
+    const hit = lookupCache.get(key); if (hit) return hit;
     const rows = combinations(c).map(combo => {
       const availability: Record<string, number | null> = {}, states: Record<string, BuildState | null> = {}, unknownReasons: Record<string, string[]> = {};
       const labels = ["lookup_probability_pooled_versions_and_ascensions", "independent_opportunities_and_missing_card_identities_approximation",
@@ -67,7 +84,7 @@ export function v6FormationTableSource(data: { character: string; ascension: num
         "alternative_membership_completed_by_deterministic_minimum_signature", ...table?.labels ?? []];
       for (const o of c.options) {
         const reasons: string[] = []; unknownReasons[o.id] = reasons;
-        const completed = v6Complete(o.state, combo.requirements);
+        const completed = complete(o.state, combo);
         const gate = completed && condition(combo, completed, c.target.floor);
         states[o.id] = completed && gate === true ? canonical(completed) : null;
         if (gate === false) { availability[o.id] = 0; continue; }
@@ -85,7 +102,10 @@ export function v6FormationTableSource(data: { character: string; ascension: num
           const held = o.state.cards.filter(x => x.id === id), wanted = completed.cards.filter(x => x.id === id);
           const add = wanted.length - held.length, up = wanted.filter(x => x.upgraded).length - held.filter(x => x.upgraded).length;
           if (add <= 0 && up <= 0) continue;
-          if (!canSmith && up > add) { reasons.push("upgrade_opportunity_capacity_unknown_or_insufficient"); break; }
+          if (!canSmith && up > add) {
+            if (smith === 0) { p = 0; break; }
+            reasons.push("upgrade_opportunity_capacity_unknown_or_insufficient"); break;
+          }
           const exposure: { p: number; n: number }[] = [], rarities = new Set<string>();
           for (const source of ["reward", "shop"] as const) {
             const n = remaining.get(`${o.state.floor}:${c.target.floor}:${source}`);
@@ -106,14 +126,16 @@ export function v6FormationTableSource(data: { character: string; ascension: num
         samples: Array.from({ length: c.samples }, (_, i) => ({ id: `seed:${i}`, states })), general: [], supply: {}, availability, unknownReasons,
         labels: [...new Set(labels)] };
     });
-    return { source: kind, signature: v6Digest([data.signature, c.target.floor, rows.map(r => r.id)]), combinations: rows,
+    const result = { source: kind, signature: v6Digest([data.signature, c.target.floor, rows.map(r => r.id)]), combinations: rows,
       labels: ["formation_times_completed", "no_incomplete_case", ...table?.labels ?? []] };
+    if (lookupCache.size >= 256) lookupCache.delete(lookupCache.keys().next().value!);
+    lookupCache.set(key, result); return result;
   } };
   source.rank = c => {
     const rows = source.resolve({ ...c, phase: "act", samples: 1, combinationIds: undefined })?.combinations;
     if (!rows) return null;
     const score = (row: typeof rows[number]) => Math.max(-Infinity, ...Object.values(row.availability).filter((p): p is number => p !== null));
-    return rows.sort((a, b) => score(b) - score(a)).map(r => r.id);
+    return [...rows].sort((a, b) => score(b) - score(a)).map(r => r.id);
   };
   return source;
 }

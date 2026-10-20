@@ -7,32 +7,34 @@ import { v6Config } from "../src/v6/config.js";
 import { detectReplan, freshReplanState } from "../src/v6/replan-triggers.js";
 import type { V6ProjectionTable } from "../src/sim/v6-projection.js";
 import type { AskDecision } from "../src/memory/types.js";
+import { knownCurrentRows } from "./v6-projection-fixture.js";
 import { board, env, setupOneshotTests } from "./oneshot-support.js";
 setupOneshotTests();
 const dirs: string[] = [];
 afterEach(() => { vi.unstubAllEnvs(); for (const d of dirs.splice(0)) rmSync(d, { recursive: true, force: true }); });
 function table(keys: string[]): V6ProjectionTable {
-  return { enabled: true, target_mixtures: keys.map(option_id => ({ option_id, kind: "clearance", known_mass: 1, known_value: .5,
-    value: { value: .5, se: .1, n: 20 }, paired_delta: null, labels: [] })) } as V6ProjectionTable;
+  const t = { enabled: true, combinations: [], targets: [{ id: "current", kind: "current", probability: 1 }], target_mixtures: [] } as unknown as V6ProjectionTable;
+  knownCurrentRows(t, keys); return t;
 }
 it.each([
   [[], ["a", "b"], "insufficient_known_options"],
   [["a"], ["a", "b"], "insufficient_known_options"],
   [["a", "b"], ["a", "b", "c", "d"], null],
   [["a", "b"], ["a", "b", "c", "d", "e"], "known_ratio_below_threshold"],
-] as const)("counts complete weighted values by offered option (%j)", (known, options, reason) => {
+] as const)("counts current Boss values by offered option (%j)", (known, options, reason) => {
   const result = constructionCoverage(options, table([...known]));
   expect(result).toMatchObject({ known: known.length, total: options.length, reason });
 });
-it("does not renormalize partial mass, use missing weighted values or count repeated combination rows", () => {
+it("does not require later target mass or count duplicate options, but rejects malformed current values", () => {
   const t = table(["a", "a", "b", "c", "d", "e"]);
-  t.target_mixtures[2]!.known_mass = .5;
-  t.target_mixtures[3]!.value = null;
-  t.target_mixtures[3]!.paired_delta = { mean: 0, se: .1, n: 20 };
-  t.target_mixtures[4]!.value!.se = NaN;
-  t.target_mixtures[5]!.value!.n = 0;
+  t.combinations[2]!.entry.availability.take = null;
+  t.combinations[3]!.entry.win_complete = null;
+  t.combinations[4]!.entry.win_complete!.se = NaN;
+  t.combinations[5]!.entry.win_complete!.n = 0;
+  t.targets.push({ id: "chain", kind: "chain", unknown: "ordered_pair_missing", probability: .69 } as never);
   expect(constructionCoverage(["a", "a", "b", "c", "d", "e", "foreign"], t)).toMatchObject({ known: 1, total: 6, reason: "insufficient_known_options" });
 });
+
 it("configures the coverage ratio and validates its range without weakening the two-option minimum", () => {
   const config = v6Config({ V6_MIN_KNOWN_OPTION_RATIO: ".75" });
   expect(constructionCoverage(["a", "b", "c"], table(["a", "b"]), config).reason).toBe("known_ratio_below_threshold");

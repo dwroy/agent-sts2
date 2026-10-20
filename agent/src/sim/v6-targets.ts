@@ -104,7 +104,7 @@ export function v6EntryHp(context: V6TargetContext, target: V6ProjectionTarget, 
 }
 /** Preserve the file's reason verbatim. A low-trust reason alone does not establish bias direction. */
 export function v6TargetTrust(character: Character, ascension: number, target: V6ProjectionTarget, data: BossTrustData | null): {
-  value: ProjectionEntry["trust"]; labels: string[];
+  value: ProjectionEntry["trust"]; labels: string[]; details?: ProjectionEntry["trust_details"];
 } {
   if (!data || data.character !== character) return { value: "unknown", labels: ["missing_own_character_boss_trust"] };
   const reasons = [data.ascension_low?.b3?.[String(ascension)], data.stage_low?.b3?.[String(target.floor)]];
@@ -120,7 +120,7 @@ export function v6TargetTrust(character: Character, ascension: number, target: V
   if (target.kind === "chain") labels.push("continuous_calibration_unknown", "partial_continuation_model");
   // Single-fight validation never certifies a continuous sequence.
   let value: ProjectionEntry["trust"] = labels.length ? "unknown" : "trusted";
-  const metrics = (data as BossTrustData & { bosses?: Record<string, { pre?: { n?: number; mean_pred?: number; actual_win?: number } }> }).bosses?.[target.boss]?.pre;
+  const metrics = (data as BossTrustData & { bosses?: Record<string, { pre?: { n?: number; brier?: number; mean_pred?: number; actual_win?: number } }> }).bosses?.[target.boss]?.pre;
   if (target.kind !== "chain" && labels.length && !target.unknown && !reasons[0] && !reasons[1]
     && labels.length === 1 && data.low_confidence_b3[target.boss] && metrics && (metrics.n ?? 0) >= data.criteria.min_fights
     && Number.isFinite(metrics.mean_pred) && Number.isFinite(metrics.actual_win)) {
@@ -128,5 +128,10 @@ export function v6TargetTrust(character: Character, ascension: number, target: V
     value = gap > 0 ? "low_optimistic" : gap < 0 ? "low_pessimistic" : "unknown";
     labels.push("bias_sign_from_own_pre_fight_validation_mean");
   }
-  return { value, labels };
+  return { value, labels, details: {
+    n: Number.isSafeInteger(metrics?.n) ? metrics!.n! : null,
+    brier: Number.isFinite(metrics?.brier) ? metrics!.brier! : null,
+    bias: Number.isFinite(metrics?.mean_pred) && Number.isFinite(metrics?.actual_win) ? metrics!.mean_pred! - metrics!.actual_win! : null,
+    passed: target.kind === "chain" || target.unknown ? null : value === "trusted",
+  } };
 }

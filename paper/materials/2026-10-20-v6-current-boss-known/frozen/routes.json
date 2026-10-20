@@ -1,0 +1,1734 @@
+[
+  {
+    "ts": "2026-10-19T06:00:13.785Z",
+    "mode": "play",
+    "screen": "MAP",
+    "session": "singleplayer/run",
+    "floor": 1,
+    "turn": null,
+    "label": "map/route-plan",
+    "decision_id": "a6a6f7d1-7dd0-47d8-be7a-fafcec31f802",
+    "decider": "codex",
+    "fingerprint": "{\"actions\":[\"save_and_quit\",\"choose_map_node\"],\"combat\":false,\"enemies\":\"\",\"event\":\"\",\"gold\":99,\"hand\":\"\",\"hp\":56,\"maxHp\":70,\"nodes\":\"0|1|2|3\",\"pendingCard\":false,\"player\":\"0:0:0\",\"potions\":\":false:false|:false:false\",\"powers\":\"\",\"rewards\":\"\",\"run\":\"MWMR855QHTWR\",\"screen\":\"MAP\",\"selection\":\"null:false\",\"shopOpen\":false,\"shopStock\":\"\",\"turn\":null}",
+    "questions": {
+      "pick": {
+        "type": "choice",
+        "instructions": "规划本幕路线。state.route_map 是本幕完整地图（每个节点的行、列、类型和连线）、你的位置、飞行靴剩余次数和 boss 节点。从 next_nodes 里的一个节点出发，每一步走到下一层（沿连线；有飞行靴时，每跳一次用掉 1 次，可以跳到下一层任意节点），一直走到 boss，按顺序列出每个节点的 id。代码按你的路线逐个节点走，只在路线走不通时再问你；之后的选牌、休息点和事件的最后一问都会附上这条路线按当时 HP 算的事实（各节点到达血量的中位数和 p75、休息点回血或锻造后的血量、到下一个休息点前的连续战斗、下一只精英和 boss 前的血量），你可以在那时保留或修改路线。state.route_map.candidate_routes 是代码按投影列的几条到 boss 的路线，每段的战斗、精英进场和到达休息点、boss 的 HP（事实，不是选项）。只回答 JSON：{\"route\": \"<节点 id，用空格分隔，从下一步一直到 boss，如 r4c1 r5c2 … r16c3>\", \"reason\": \"<30 字以内>\"} 构筑评估将组件数量与战斗兑现分列。比较拿/跳/删/升级的完整战斗DPR、配对差及误差、掉血、核心具名牌施放覆盖和首次施放回合；不能只因多一张组件就判更好，也不能只最大化DPR。抽牌稀释需看同题模拟中的施放覆盖/回合差，未知时明确说明，不能拿未施放=0回合或总动作数冒充完整循环。未来组件概率未通过对应校准时不用于数值排序；完整核心资格与最终通关率未知时不编造。若本题更新run_plan，必须给construction={primary,alternatives,checkpoint,reason,pivot_if}；primary取coreCatalog的ID，暂不押方向可填uncommitted。checkpoint为大于当前层的复查层数，reason说明证据和取舍，pivot_if说明转向条件。 Boss基准目标为S=my_dpr/boss_hp−enemy_dpr/my_hp。只在boss_relative_margin或bossMargin明确rankingEligible=true、同Boss/同窗口且原信任闸允许时比较S及配对差，较大为目标；先满足实际存活/资源约束，不能用高均值覆盖启动前死亡。unknown、缺失归属或截断不得当0分或自行心算补齐。",
+        "criteria": {
+          "r1c1": "F2 普通战（沿连线）",
+          "r1c2": "F2 普通战（沿连线）",
+          "r1c3": "F2 普通战（沿连线）",
+          "r1c5": "F2 普通战（沿连线）"
+        }
+      }
+    },
+    "chosen": {
+      "action": "choose_map_node",
+      "option_index": 0
+    },
+    "expect": {
+      "node": {
+        "row": 1,
+        "col": 1,
+        "type": "Monster"
+      },
+      "from": "decision"
+    },
+    "rationale": "Codex planned: 先补输出，避开早精英；三处营火支撑两次晚精英。 | route plan: r1c1 普通战 → r2c0 普通战 → r3c0 普通战 → r4c1 问号 → r5c0 普通战 → r6c0 普通战 → r7c0 普通战 → r8c0 休息 → r9c1 宝箱 → r10c1 精英 → r11c1 休息 → r12c1 普通战 → r13c2 精英 → r14c1 普通战 → r15c2 休息 → r16c3 Boss",
+    "confidence": null,
+    "fallback": false,
+    "reasked": false,
+    "no_jev": false,
+    "reused_answer": false,
+    "request_ids": [],
+    "latency_ms": {
+      "plan": 201,
+      "jev": 0,
+      "action": 1519,
+      "deepseek": 47633,
+      "planner": 16,
+      "pre": 1
+    },
+    "usage": {
+      "input_tokens": 157777,
+      "output_tokens": 1918,
+      "cache_hit_tokens": 0,
+      "reasoning_tokens": 1807
+    },
+    "deepseek": {
+      "by": "deepseek",
+      "direct": true,
+      "choice": "",
+      "reason": "先补输出，避开早精英；三处营火支撑两次晚精英。",
+      "latency_ms": 47633,
+      "tokens": 159695,
+      "input_tokens": 157777,
+      "output_tokens": 1918,
+      "cache_hit_tokens": 0,
+      "reasoning_tokens": 1807,
+      "effort": "",
+      "guide": "",
+      "handbook": "",
+      "memory_chars": 5759,
+      "memory_sections": {
+        "act": 2674,
+        "history": 0,
+        "now": 0,
+        "this_floor": 666,
+        "route": 28,
+        "lookahead": 85,
+        "knowledge": 2306
+      },
+      "brain": {
+        "engine": "codex",
+        "model": "gpt-6.1-sol",
+        "attempts": 1,
+        "tool_calls": []
+      }
+    },
+    "boss_sim": {
+      "construction": {
+        "schema": "construction-v1",
+        "architecture": "V5",
+        "mode": "shadow",
+        "run": "MWMR855QHTWR",
+        "floor": 1,
+        "label": "map/route-plan",
+        "status": "missing_route",
+        "data": "97c3507259cbb33439a1d65e571841dc3138f89fa5136aa74954aa6b950f5bd5",
+        "evaluation": {
+          "schema": "construction-evaluation-v1",
+          "character": "silent",
+          "run": "MWMR855QHTWR",
+          "floor": 1,
+          "label": "map/route-plan",
+          "coreCatalog": [
+            {
+              "id": "P",
+              "name": "施毒触媒与持续防御",
+              "candidate": true,
+              "requirements": [
+                {
+                  "id": "poison",
+                  "any": [
+                    {
+                      "id": "BOUNCING_FLASK",
+                      "kind": "card"
+                    },
+                    {
+                      "id": "CORROSIVE_WAVE",
+                      "kind": "card"
+                    },
+                    {
+                      "id": "DEADLY_POISON",
+                      "kind": "card"
+                    },
+                    {
+                      "id": "ENVENOM",
+                      "kind": "card"
+                    },
+                    {
+                      "id": "NOXIOUS_FUMES",
+                      "kind": "card"
+                    },
+                    {
+                      "id": "OUTBREAK",
+                      "kind": "card"
+                    },
+                    {
+                      "id": "POISONED_STAB",
+                      "kind": "card"
+                    }
+                  ],
+                  "count": 1,
+                  "distinct": false
+                },
+                {
+                  "id": "accelerant",
+                  "any": [
+                    {
+                      "id": "ACCELERANT",
+                      "kind": "card"
+                    }
+                  ],
+                  "count": 1,
+                  "distinct": false
+                },
+                {
+                  "id": "defense",
+                  "any": [
+                    {
+                      "id": "AFTERIMAGE",
+                      "kind": "card"
+                    },
+                    {
+                      "id": "FOOTWORK",
+                      "kind": "card"
+                    },
+                    {
+                      "id": "MIRAGE",
+                      "kind": "card"
+                    }
+                  ],
+                  "count": 1,
+                  "distinct": false
+                }
+              ],
+              "evidence": {
+                "runs": [
+                  "T082DRCUHRRD",
+                  "ZZMYZ5UBCG72",
+                  "LLYSRQQ35AVW",
+                  "HNX4A2WBC34W"
+                ],
+                "source": "paper/materials/silent/20261009-2335-events/core-builds/construction-templates.json",
+                "sha256": "948788b8df20a090688d7d253b067fb6946ea44d409875214d5c46d29688752b"
+              }
+            },
+            {
+              "id": "D",
+              "name": "叠敏捷多挡与持续输出",
+              "candidate": true,
+              "requirements": [
+                {
+                  "id": "dexterity",
+                  "any": [
+                    {
+                      "id": "FOOTWORK",
+                      "kind": "card"
+                    }
+                  ],
+                  "count": 2,
+                  "distinct": false
+                },
+                {
+                  "id": "block",
+                  "any": [
+                    {
+                      "id": "BACKFLIP",
+                      "kind": "card"
+                    },
+                    {
+                      "id": "DASH",
+                      "kind": "card"
+                    },
+                    {
+                      "id": "LEG_SWEEP",
+                      "kind": "card"
+                    }
+                  ],
+                  "count": 1,
+                  "distinct": false
+                },
+                {
+                  "id": "output",
+                  "any": [
+                    {
+                      "id": "BOLAS",
+                      "kind": "card"
+                    },
+                    {
+                      "id": "BOUNCING_FLASK",
+                      "kind": "card"
+                    },
+                    {
+                      "id": "CORROSIVE_WAVE",
+                      "kind": "card"
+                    },
+                    {
+                      "id": "DEADLY_POISON",
+                      "kind": "card"
+                    },
+                    {
+                      "id": "ENVENOM",
+                      "kind": "card"
+                    },
+                    {
+                      "id": "MAUL",
+                      "kind": "card"
+                    },
+                    {
+                      "id": "NOXIOUS_FUMES",
+                      "kind": "card"
+                    },
+                    {
+                      "id": "OUTBREAK",
+                      "kind": "card"
+                    },
+                    {
+                      "id": "POISONED_STAB",
+                      "kind": "card"
+                    },
+                    {
+                      "id": "SPEEDSTER",
+                      "kind": "card"
+                    }
+                  ],
+                  "count": 1,
+                  "distinct": false
+                }
+              ],
+              "evidence": {
+                "runs": [
+                  "1HC609GTLGN3",
+                  "K3676LU8B0UH",
+                  "4Y94N8RDPGPM",
+                  "25226ZFLNR1J"
+                ],
+                "source": "paper/materials/silent/20261009-2335-events/core-builds/construction-templates.json",
+                "sha256": "948788b8df20a090688d7d253b067fb6946ea44d409875214d5c46d29688752b"
+              }
+            },
+            {
+              "id": "S",
+              "name": "小刀供给增益与逐牌防御",
+              "candidate": true,
+              "requirements": [
+                {
+                  "id": "supply",
+                  "any": [
+                    {
+                      "id": "BLADE_DANCE",
+                      "kind": "card"
+                    },
+                    {
+                      "id": "CLOAK_AND_DAGGER",
+                      "kind": "card"
+                    },
+                    {
+                      "id": "FAN_OF_KNIVES",
+                      "kind": "card"
+                    },
+                    {
+                      "id": "HIDDEN_DAGGERS",
+                      "kind": "card"
+                    },
+                    {
+                      "id": "INFINITE_BLADES",
+                      "kind": "card"
+                    },
+                    {
+                      "id": "LEADING_STRIKE",
+                      "kind": "card"
+                    }
+                  ],
+                  "count": 1,
+                  "distinct": false
+                },
+                {
+                  "id": "gain",
+                  "any": [
+                    {
+                      "id": "ACCURACY",
+                      "kind": "card"
+                    },
+                    {
+                      "id": "PHANTOM_BLADES",
+                      "kind": "card"
+                    },
+                    {
+                      "id": "HELICAL_DART",
+                      "kind": "relic"
+                    },
+                    {
+                      "id": "KUNAI",
+                      "kind": "relic"
+                    },
+                    {
+                      "id": "SHURIKEN",
+                      "kind": "relic"
+                    }
+                  ],
+                  "count": 1,
+                  "distinct": false
+                },
+                {
+                  "id": "defense",
+                  "any": [
+                    {
+                      "id": "AFTERIMAGE",
+                      "kind": "card"
+                    },
+                    {
+                      "id": "FOOTWORK",
+                      "kind": "card"
+                    },
+                    {
+                      "id": "DAUGHTER_OF_THE_WIND",
+                      "kind": "relic"
+                    },
+                    {
+                      "id": "HELICAL_DART",
+                      "kind": "relic"
+                    },
+                    {
+                      "id": "KUNAI",
+                      "kind": "relic"
+                    }
+                  ],
+                  "count": 1,
+                  "distinct": false
+                }
+              ],
+              "evidence": {
+                "runs": [
+                  "KAY522KT5NXR",
+                  "CSBR5CRDWQNB",
+                  "2SU6XN2AEJRD",
+                  "YF0LXT1QSTGG"
+                ],
+                "source": "paper/materials/silent/20261009-2335-events/core-builds/construction-templates.json",
+                "sha256": "948788b8df20a090688d7d253b067fb6946ea44d409875214d5c46d29688752b"
+              }
+            },
+            {
+              "id": "R",
+              "name": "抽弃循环与遗物攻防收益",
+              "candidate": true,
+              "requirements": [
+                {
+                  "id": "discard",
+                  "any": [
+                    {
+                      "id": "ACROBATICS",
+                      "kind": "card"
+                    },
+                    {
+                      "id": "CALCULATED_GAMBLE",
+                      "kind": "card"
+                    },
+                    {
+                      "id": "DAGGER_THROW",
+                      "kind": "card"
+                    },
+                    {
+                      "id": "HAND_TRICK",
+                      "kind": "card"
+                    },
+                    {
+                      "id": "PREPARED",
+                      "kind": "card"
+                    },
+                    {
+                      "id": "SURVIVOR",
+                      "kind": "card"
+                    },
+                    {
+                      "id": "TOOLS_OF_THE_TRADE",
+                      "kind": "card"
+                    }
+                  ],
+                  "count": 2,
+                  "distinct": true
+                },
+                {
+                  "id": "key-discard",
+                  "any": [
+                    {
+                      "id": "ACROBATICS",
+                      "kind": "card"
+                    },
+                    {
+                      "id": "CALCULATED_GAMBLE",
+                      "kind": "card"
+                    },
+                    {
+                      "id": "HAND_TRICK",
+                      "kind": "card"
+                    },
+                    {
+                      "id": "TOOLS_OF_THE_TRADE",
+                      "kind": "card"
+                    }
+                  ],
+                  "count": 1,
+                  "distinct": false
+                },
+                {
+                  "id": "relic",
+                  "any": [
+                    {
+                      "id": "TINGSHA",
+                      "kind": "relic"
+                    },
+                    {
+                      "id": "TOUGH_BANDAGES",
+                      "kind": "relic"
+                    }
+                  ],
+                  "count": 1,
+                  "distinct": false
+                }
+              ],
+              "evidence": {
+                "runs": [
+                  "1LMBFGSMCWKU",
+                  "25226ZFLNR1J",
+                  "L704TLETMZBM"
+                ],
+                "source": "paper/materials/silent/20261009-2335-events/core-builds/construction-templates.json",
+                "sha256": "948788b8df20a090688d7d253b067fb6946ea44d409875214d5c46d29688752b"
+              }
+            }
+          ],
+          "simulationStatus": "unavailable",
+          "boss": null,
+          "simulationSamples": null,
+          "simulationError": null,
+          "options": {
+            "current": {
+              "inventory": {
+                "cards": 13,
+                "upgraded": 2,
+                "gold": 99,
+                "hp": 56,
+                "maxHp": 70
+              },
+              "inventoryDelta": {
+                "cards": 0,
+                "upgraded": 0,
+                "gold": 0,
+                "hp": 0,
+                "maxHp": 0
+              },
+              "unavailableReason": "本题该候选没有通过原模拟样本门槛的结果",
+              "fight": null
+            }
+          },
+          "limits": "复用本题既有boss条件模拟，不新增整战或未来路线模拟；升级、拿牌、删牌的战斗差与组件集齐率分列。DPR按完整战斗含准备轮统计，配对差保留未匹配分母；模型偏差、未建机制和完整核心资格不因采样通过而消失。"
+        },
+        "evaluation_delivery": "attached",
+        "probability_delivery": "not_attached"
+      }
+    },
+    "sl_attempt": null,
+    "sl_reloads": 0,
+    "run_id": "MWMR855QHTWR",
+    "observed_ts": "2026-10-19T05:59:25.934Z",
+    "journal": {
+      "choice": "route r1c1 普通战 → r2c0 普通战 → r3c0 普通战 → r4c1 问号 → r5c0 普通战 → r6c0 普通战 → r7c0 普通战 → r8c0 休息 → r9c1 宝箱 → r10c1 精英 → r11c1 休息 → r12c1 普通战 → r13c2 精英 → r14c1 普通战 → r15c2 休息 → r16c3 Boss",
+      "reason": "先补输出，避开早精英；三处营火支撑两次晚精英。"
+    },
+    "route_plan": {
+      "runId": "MWMR855QHTWR",
+      "act": 1,
+      "floor": 1,
+      "hpPct": 0.8,
+      "path": [
+        {
+          "row": 1,
+          "col": 1,
+          "type": "Monster",
+          "hpOnArrival": 0.8
+        },
+        {
+          "row": 2,
+          "col": 0,
+          "type": "Monster",
+          "hpOnArrival": 0.7571428571428571
+        },
+        {
+          "row": 3,
+          "col": 0,
+          "type": "Monster",
+          "hpOnArrival": 0.7142857142857143
+        },
+        {
+          "row": 4,
+          "col": 1,
+          "type": "Unknown",
+          "hpOnArrival": 0.6714285714285714
+        },
+        {
+          "row": 5,
+          "col": 0,
+          "type": "Monster",
+          "hpOnArrival": 0.6714285714285714
+        },
+        {
+          "row": 6,
+          "col": 0,
+          "type": "Monster",
+          "hpOnArrival": 0.6285714285714286
+        },
+        {
+          "row": 7,
+          "col": 0,
+          "type": "Monster",
+          "hpOnArrival": 0.5857142857142857
+        },
+        {
+          "row": 8,
+          "col": 0,
+          "type": "RestSite",
+          "hpOnArrival": 0.5428571428571428
+        },
+        {
+          "row": 9,
+          "col": 1,
+          "type": "Treasure",
+          "hpOnArrival": 0.8428571428571429
+        },
+        {
+          "row": 10,
+          "col": 1,
+          "type": "Elite",
+          "hpOnArrival": 0.8428571428571429
+        },
+        {
+          "row": 11,
+          "col": 1,
+          "type": "RestSite",
+          "hpOnArrival": 0.5285714285714286
+        },
+        {
+          "row": 12,
+          "col": 1,
+          "type": "Monster",
+          "hpOnArrival": 0.8285714285714286
+        },
+        {
+          "row": 13,
+          "col": 2,
+          "type": "Elite",
+          "hpOnArrival": 0.7857142857142857
+        },
+        {
+          "row": 14,
+          "col": 1,
+          "type": "Monster",
+          "hpOnArrival": 0.4714285714285714
+        },
+        {
+          "row": 15,
+          "col": 2,
+          "type": "RestSite",
+          "hpOnArrival": 0.42857142857142855
+        },
+        {
+          "row": 16,
+          "col": 3,
+          "type": "Boss",
+          "hpOnArrival": 0.7285714285714285
+        }
+      ],
+      "projection": {
+        "version": 1,
+        "currentNode": "r0c3",
+        "start": {
+          "hp": 56,
+          "maxHp": 70
+        },
+        "costs": {
+          "act": 1,
+          "maxHp": 70,
+          "monster": {
+            "median": 3,
+            "p75": 8.8,
+            "source": "logged A10 act-1 Monster rooms, n=1794 incl. 15 deaths"
+          },
+          "elite": {
+            "median": 22,
+            "p75": 36,
+            "source": "logged A10 act-1 Elite rooms, n=333 incl. 20 deaths"
+          },
+          "unknown": {
+            "median": 0,
+            "p75": 3,
+            "source": "logged A10 act-1 Unknown rooms, n=898 incl. 1 deaths"
+          }
+        },
+        "assumptions": {
+          "rests": "heal",
+          "bossLoss": "unmodelled"
+        },
+        "arrival": [
+          {
+            "row": 1,
+            "col": 1,
+            "type": "Monster",
+            "hp": 56,
+            "maxHp": 70
+          },
+          {
+            "row": 2,
+            "col": 0,
+            "type": "Monster",
+            "hp": 53,
+            "maxHp": 70
+          },
+          {
+            "row": 3,
+            "col": 0,
+            "type": "Monster",
+            "hp": 50,
+            "maxHp": 70
+          },
+          {
+            "row": 4,
+            "col": 1,
+            "type": "Unknown",
+            "hp": 47,
+            "maxHp": 70
+          },
+          {
+            "row": 5,
+            "col": 0,
+            "type": "Monster",
+            "hp": 47,
+            "maxHp": 70
+          },
+          {
+            "row": 6,
+            "col": 0,
+            "type": "Monster",
+            "hp": 44,
+            "maxHp": 70
+          },
+          {
+            "row": 7,
+            "col": 0,
+            "type": "Monster",
+            "hp": 41,
+            "maxHp": 70
+          },
+          {
+            "row": 8,
+            "col": 0,
+            "type": "RestSite",
+            "hp": 38,
+            "maxHp": 70
+          },
+          {
+            "row": 9,
+            "col": 1,
+            "type": "Treasure",
+            "hp": 59,
+            "maxHp": 70
+          },
+          {
+            "row": 10,
+            "col": 1,
+            "type": "Elite",
+            "hp": 59,
+            "maxHp": 70
+          },
+          {
+            "row": 11,
+            "col": 1,
+            "type": "RestSite",
+            "hp": 37,
+            "maxHp": 70
+          },
+          {
+            "row": 12,
+            "col": 1,
+            "type": "Monster",
+            "hp": 58,
+            "maxHp": 70
+          },
+          {
+            "row": 13,
+            "col": 2,
+            "type": "Elite",
+            "hp": 55,
+            "maxHp": 70
+          },
+          {
+            "row": 14,
+            "col": 1,
+            "type": "Monster",
+            "hp": 33,
+            "maxHp": 70
+          },
+          {
+            "row": 15,
+            "col": 2,
+            "type": "RestSite",
+            "hp": 30,
+            "maxHp": 70
+          },
+          {
+            "row": 16,
+            "col": 3,
+            "type": "Boss",
+            "hp": 51,
+            "maxHp": 70
+          }
+        ]
+      },
+      "summary": "r1c1 普通战 → r2c0 普通战 → r3c0 普通战 → r4c1 问号 → r5c0 普通战 → r6c0 普通战 → r7c0 普通战 → r8c0 休息 → r9c1 宝箱 → r10c1 精英 → r11c1 休息 → r12c1 普通战 → r13c2 精英 → r14c1 普通战 → r15c2 休息 → r16c3 Boss"
+    },
+    "result": "completed: Action completed.",
+    "time_budget": {
+      "schema": "decision-budget-v1",
+      "kind": "brain",
+      "key": "MWMR855QHTWR:{\"actions\":[\"save_and_quit\",\"choose_map_node\"],\"combat\":false,\"enemies\":\"\",\"event\":\"\",\"gold\":99,\"hand\":\"\",\"hp\":56,\"maxHp\":70,\"nodes\":\"0|1|2|3\",\"pendingCard\":false,\"player\":\"0:0:0\",\"potions\":\":false:false|:false:false\",\"powers\":\"\",\"rewards\":\"\",\"run\":\"MWMR855QHTWR\",\"screen\":\"MAP\",\"selection\":\"null:false\",\"shopOpen\":false,\"shopStock\":\"\",\"turn\":null}",
+      "budget_ms": 90000,
+      "entry_budget_ms": 4999.993220999997,
+      "actual_ms": 47807,
+      "turn_actual_ms": 47807,
+      "shared_actual_ms": 24,
+      "independent_actual_ms": 47783,
+      "timed_out": false,
+      "fallback": null,
+      "shadow_unknown": [],
+      "stages": [
+        {
+          "stage": "B3_current",
+          "budget_ms": 89982.745705,
+          "actual_ms": 0,
+          "timed_out": false
+        },
+        {
+          "stage": "construction_shadow",
+          "scope": "shadow",
+          "budget_ms": 89982.55393,
+          "actual_ms": 2,
+          "timed_out": false,
+          "shared_remaining_ms": 89982.55058,
+          "stages": []
+        },
+        {
+          "stage": "construction_evaluation_shadow",
+          "scope": "shadow",
+          "budget_ms": 89982.546141,
+          "actual_ms": 0,
+          "timed_out": false,
+          "shared_remaining_ms": 89982.54456099999,
+          "stages": []
+        },
+        {
+          "stage": "L2_brain",
+          "scope": "L2",
+          "budget_ms": 90000,
+          "actual_ms": 47781,
+          "timed_out": false,
+          "shared_remaining_ms": 89976.62365699999,
+          "stages": [
+            {
+              "stage": "L2_brain",
+              "budget_ms": 89999.975392,
+              "actual_ms": 47781,
+              "timed_out": false
+            }
+          ]
+        }
+      ],
+      "animation_time_included": false
+    }
+  },
+  {
+    "ts": "2026-10-20T01:18:11.805Z",
+    "mode": "play",
+    "screen": "MAP",
+    "session": "singleplayer/run",
+    "floor": 1,
+    "turn": null,
+    "label": "map/route-plan",
+    "decision_id": "e84ba285-3a04-40af-bcf2-dd877c2dc09f",
+    "decider": "codex",
+    "fingerprint": "{\"actions\":[\"save_and_quit\",\"choose_map_node\"],\"combat\":false,\"enemies\":\"\",\"event\":\"\",\"gold\":99,\"hand\":\"\",\"hp\":56,\"maxHp\":70,\"nodes\":\"0|1|2|3\",\"pendingCard\":false,\"player\":\"0:0:0\",\"potions\":\":false:false|:false:false\",\"powers\":\"\",\"rewards\":\"\",\"run\":\"T12TSEMGUU7F\",\"screen\":\"MAP\",\"selection\":\"null:false\",\"shopOpen\":false,\"shopStock\":\"\",\"turn\":null}",
+    "questions": {
+      "pick": {
+        "type": "choice",
+        "instructions": "规划本幕路线。state.route_map 是本幕完整地图（每个节点的行、列、类型和连线）、你的位置、飞行靴剩余次数和 boss 节点。从 next_nodes 里的一个节点出发，每一步走到下一层（沿连线；有飞行靴时，每跳一次用掉 1 次，可以跳到下一层任意节点），一直走到 boss，按顺序列出每个节点的 id。代码按你的路线逐个节点走，只在路线走不通时再问你；之后的选牌、休息点和事件的最后一问都会附上这条路线按当时 HP 算的事实（各节点到达血量的中位数和 p75、休息点回血或锻造后的血量、到下一个休息点前的连续战斗、下一只精英和 boss 前的血量），你可以在那时保留或修改路线。state.route_map.candidate_routes 是代码按投影列的几条到 boss 的路线，每段的战斗、精英进场和到达休息点、boss 的 HP（事实，不是选项）。只回答 JSON：{\"route\": \"<节点 id，用空格分隔，从下一步一直到 boss，如 r4c1 r5c2 … r16c3>\", \"reason\": \"<30 字以内>\"} 构筑评估将组件数量与战斗兑现分列。比较拿/跳/删/升级的完整战斗DPR、配对差及误差、掉血、核心具名牌施放覆盖和首次施放回合；不能只因多一张组件就判更好，也不能只最大化DPR。抽牌稀释需看同题模拟中的施放覆盖/回合差，未知时明确说明，不能拿未施放=0回合或总动作数冒充完整循环。未来组件概率未通过对应校准时不用于数值排序；完整核心资格与最终通关率未知时不编造。若本题更新run_plan，必须给construction={primary,alternatives,checkpoint,reason,pivot_if}；primary取coreCatalog的ID，暂不押方向可填uncommitted。checkpoint为大于当前层的复查层数，reason说明证据和取舍，pivot_if说明转向条件。 Boss基准目标为S=my_dpr/boss_hp−enemy_dpr/my_hp。只在boss_relative_margin或bossMargin明确rankingEligible=true、同Boss/同窗口且原信任闸允许时比较S及配对差，较大为目标；先满足实际存活/资源约束，不能用高均值覆盖启动前死亡。unknown、缺失归属或截断不得当0分或自行心算补齐。",
+        "criteria": {
+          "r1c0": "F2 普通战（沿连线）",
+          "r1c2": "F2 普通战（沿连线）",
+          "r1c4": "F2 普通战（沿连线）",
+          "r1c5": "F2 普通战（沿连线）"
+        }
+      }
+    },
+    "chosen": {
+      "action": "choose_map_node",
+      "option_index": 1
+    },
+    "expect": {
+      "node": {
+        "row": 1,
+        "col": 2,
+        "type": "Monster"
+      },
+      "from": "decision"
+    },
+    "rationale": "Codex planned: 双精英三营火，两次商店补强，避免早期硬拼。 | route plan: r1c2 普通战 → r2c1 问号 → r3c0 商店 → r4c1 普通战 → r5c0 普通战 → r6c0 问号 → r7c0 休息 → r8c1 精英 → r9c2 宝箱 → r10c2 休息 → r11c2 精英 → r12c2 普通战 → r13c1 商店 → r14c0 问号 → r15c1 休息 → r16c3 Boss",
+    "confidence": null,
+    "fallback": false,
+    "reasked": false,
+    "no_jev": false,
+    "reused_answer": false,
+    "request_ids": [],
+    "latency_ms": {
+      "plan": 396,
+      "jev": 0,
+      "action": 1569,
+      "deepseek": 32129,
+      "planner": 20,
+      "pre": 5906
+    },
+    "usage": {
+      "input_tokens": 10109,
+      "output_tokens": 1420,
+      "cache_hit_tokens": 0,
+      "reasoning_tokens": 1312
+    },
+    "deepseek": {
+      "by": "deepseek",
+      "direct": true,
+      "choice": "",
+      "reason": "双精英三营火，两次商店补强，避免早期硬拼。",
+      "latency_ms": 32129,
+      "tokens": 11529,
+      "input_tokens": 10109,
+      "output_tokens": 1420,
+      "cache_hit_tokens": 0,
+      "reasoning_tokens": 1312,
+      "effort": "",
+      "guide": "",
+      "handbook": "",
+      "memory_chars": 5222,
+      "memory_sections": {
+        "act": 2548,
+        "history": 0,
+        "now": 0,
+        "this_floor": 221,
+        "route": 28,
+        "lookahead": 85,
+        "knowledge": 2340
+      },
+      "brain": {
+        "engine": "codex",
+        "model": "gpt-6.1-sol",
+        "attempts": 1,
+        "tool_calls": []
+      }
+    },
+    "boss_sim": {
+      "construction": {
+        "schema": "construction-v1",
+        "architecture": "V5",
+        "mode": "shadow",
+        "run": "T12TSEMGUU7F",
+        "floor": 1,
+        "label": "map/route-plan",
+        "status": "missing_route",
+        "data": "b9f34cc64053c2d83c33897e2ff0e3f8df8e47b8deedaf09d92a1f6f0ef32421",
+        "evaluation": {
+          "schema": "construction-evaluation-v1",
+          "character": "silent",
+          "run": "T12TSEMGUU7F",
+          "floor": 1,
+          "label": "map/route-plan",
+          "coreCatalog": [
+            {
+              "id": "P",
+              "name": "施毒触媒与持续防御",
+              "candidate": true,
+              "requirements": [
+                {
+                  "id": "poison",
+                  "any": [
+                    {
+                      "id": "BOUNCING_FLASK",
+                      "kind": "card"
+                    },
+                    {
+                      "id": "CORROSIVE_WAVE",
+                      "kind": "card"
+                    },
+                    {
+                      "id": "DEADLY_POISON",
+                      "kind": "card"
+                    },
+                    {
+                      "id": "ENVENOM",
+                      "kind": "card"
+                    },
+                    {
+                      "id": "NOXIOUS_FUMES",
+                      "kind": "card"
+                    },
+                    {
+                      "id": "OUTBREAK",
+                      "kind": "card"
+                    },
+                    {
+                      "id": "POISONED_STAB",
+                      "kind": "card"
+                    }
+                  ],
+                  "count": 1,
+                  "distinct": false
+                },
+                {
+                  "id": "accelerant",
+                  "any": [
+                    {
+                      "id": "ACCELERANT",
+                      "kind": "card"
+                    }
+                  ],
+                  "count": 1,
+                  "distinct": false
+                },
+                {
+                  "id": "defense",
+                  "any": [
+                    {
+                      "id": "AFTERIMAGE",
+                      "kind": "card"
+                    },
+                    {
+                      "id": "FOOTWORK",
+                      "kind": "card"
+                    },
+                    {
+                      "id": "MIRAGE",
+                      "kind": "card"
+                    }
+                  ],
+                  "count": 1,
+                  "distinct": false
+                }
+              ],
+              "evidence": {
+                "runs": [
+                  "T082DRCUHRRD",
+                  "ZZMYZ5UBCG72",
+                  "LLYSRQQ35AVW",
+                  "HNX4A2WBC34W"
+                ],
+                "source": "paper/materials/silent/20261009-2335-events/core-builds/construction-templates.json",
+                "sha256": "948788b8df20a090688d7d253b067fb6946ea44d409875214d5c46d29688752b"
+              }
+            },
+            {
+              "id": "D",
+              "name": "叠敏捷多挡与持续输出",
+              "candidate": true,
+              "requirements": [
+                {
+                  "id": "dexterity",
+                  "any": [
+                    {
+                      "id": "FOOTWORK",
+                      "kind": "card"
+                    }
+                  ],
+                  "count": 2,
+                  "distinct": false
+                },
+                {
+                  "id": "block",
+                  "any": [
+                    {
+                      "id": "BACKFLIP",
+                      "kind": "card"
+                    },
+                    {
+                      "id": "DASH",
+                      "kind": "card"
+                    },
+                    {
+                      "id": "LEG_SWEEP",
+                      "kind": "card"
+                    }
+                  ],
+                  "count": 1,
+                  "distinct": false
+                },
+                {
+                  "id": "output",
+                  "any": [
+                    {
+                      "id": "BOLAS",
+                      "kind": "card"
+                    },
+                    {
+                      "id": "BOUNCING_FLASK",
+                      "kind": "card"
+                    },
+                    {
+                      "id": "CORROSIVE_WAVE",
+                      "kind": "card"
+                    },
+                    {
+                      "id": "DEADLY_POISON",
+                      "kind": "card"
+                    },
+                    {
+                      "id": "ENVENOM",
+                      "kind": "card"
+                    },
+                    {
+                      "id": "MAUL",
+                      "kind": "card"
+                    },
+                    {
+                      "id": "NOXIOUS_FUMES",
+                      "kind": "card"
+                    },
+                    {
+                      "id": "OUTBREAK",
+                      "kind": "card"
+                    },
+                    {
+                      "id": "POISONED_STAB",
+                      "kind": "card"
+                    },
+                    {
+                      "id": "SPEEDSTER",
+                      "kind": "card"
+                    }
+                  ],
+                  "count": 1,
+                  "distinct": false
+                }
+              ],
+              "evidence": {
+                "runs": [
+                  "1HC609GTLGN3",
+                  "K3676LU8B0UH",
+                  "4Y94N8RDPGPM",
+                  "25226ZFLNR1J"
+                ],
+                "source": "paper/materials/silent/20261009-2335-events/core-builds/construction-templates.json",
+                "sha256": "948788b8df20a090688d7d253b067fb6946ea44d409875214d5c46d29688752b"
+              }
+            },
+            {
+              "id": "S",
+              "name": "小刀供给增益与逐牌防御",
+              "candidate": true,
+              "requirements": [
+                {
+                  "id": "supply",
+                  "any": [
+                    {
+                      "id": "BLADE_DANCE",
+                      "kind": "card"
+                    },
+                    {
+                      "id": "CLOAK_AND_DAGGER",
+                      "kind": "card"
+                    },
+                    {
+                      "id": "FAN_OF_KNIVES",
+                      "kind": "card"
+                    },
+                    {
+                      "id": "HIDDEN_DAGGERS",
+                      "kind": "card"
+                    },
+                    {
+                      "id": "INFINITE_BLADES",
+                      "kind": "card"
+                    },
+                    {
+                      "id": "LEADING_STRIKE",
+                      "kind": "card"
+                    }
+                  ],
+                  "count": 1,
+                  "distinct": false
+                },
+                {
+                  "id": "gain",
+                  "any": [
+                    {
+                      "id": "ACCURACY",
+                      "kind": "card"
+                    },
+                    {
+                      "id": "PHANTOM_BLADES",
+                      "kind": "card"
+                    },
+                    {
+                      "id": "HELICAL_DART",
+                      "kind": "relic"
+                    },
+                    {
+                      "id": "KUNAI",
+                      "kind": "relic"
+                    },
+                    {
+                      "id": "SHURIKEN",
+                      "kind": "relic"
+                    }
+                  ],
+                  "count": 1,
+                  "distinct": false
+                },
+                {
+                  "id": "defense",
+                  "any": [
+                    {
+                      "id": "AFTERIMAGE",
+                      "kind": "card"
+                    },
+                    {
+                      "id": "FOOTWORK",
+                      "kind": "card"
+                    },
+                    {
+                      "id": "DAUGHTER_OF_THE_WIND",
+                      "kind": "relic"
+                    },
+                    {
+                      "id": "HELICAL_DART",
+                      "kind": "relic"
+                    },
+                    {
+                      "id": "KUNAI",
+                      "kind": "relic"
+                    }
+                  ],
+                  "count": 1,
+                  "distinct": false
+                }
+              ],
+              "evidence": {
+                "runs": [
+                  "KAY522KT5NXR",
+                  "CSBR5CRDWQNB",
+                  "2SU6XN2AEJRD",
+                  "YF0LXT1QSTGG"
+                ],
+                "source": "paper/materials/silent/20261009-2335-events/core-builds/construction-templates.json",
+                "sha256": "948788b8df20a090688d7d253b067fb6946ea44d409875214d5c46d29688752b"
+              }
+            },
+            {
+              "id": "R",
+              "name": "抽弃循环与遗物攻防收益",
+              "candidate": true,
+              "requirements": [
+                {
+                  "id": "discard",
+                  "any": [
+                    {
+                      "id": "ACROBATICS",
+                      "kind": "card"
+                    },
+                    {
+                      "id": "CALCULATED_GAMBLE",
+                      "kind": "card"
+                    },
+                    {
+                      "id": "DAGGER_THROW",
+                      "kind": "card"
+                    },
+                    {
+                      "id": "HAND_TRICK",
+                      "kind": "card"
+                    },
+                    {
+                      "id": "PREPARED",
+                      "kind": "card"
+                    },
+                    {
+                      "id": "SURVIVOR",
+                      "kind": "card"
+                    },
+                    {
+                      "id": "TOOLS_OF_THE_TRADE",
+                      "kind": "card"
+                    }
+                  ],
+                  "count": 2,
+                  "distinct": true
+                },
+                {
+                  "id": "key-discard",
+                  "any": [
+                    {
+                      "id": "ACROBATICS",
+                      "kind": "card"
+                    },
+                    {
+                      "id": "CALCULATED_GAMBLE",
+                      "kind": "card"
+                    },
+                    {
+                      "id": "HAND_TRICK",
+                      "kind": "card"
+                    },
+                    {
+                      "id": "TOOLS_OF_THE_TRADE",
+                      "kind": "card"
+                    }
+                  ],
+                  "count": 1,
+                  "distinct": false
+                },
+                {
+                  "id": "relic",
+                  "any": [
+                    {
+                      "id": "TINGSHA",
+                      "kind": "relic"
+                    },
+                    {
+                      "id": "TOUGH_BANDAGES",
+                      "kind": "relic"
+                    }
+                  ],
+                  "count": 1,
+                  "distinct": false
+                }
+              ],
+              "evidence": {
+                "runs": [
+                  "1LMBFGSMCWKU",
+                  "25226ZFLNR1J",
+                  "L704TLETMZBM"
+                ],
+                "source": "paper/materials/silent/20261009-2335-events/core-builds/construction-templates.json",
+                "sha256": "948788b8df20a090688d7d253b067fb6946ea44d409875214d5c46d29688752b"
+              }
+            }
+          ],
+          "simulationStatus": "unavailable",
+          "boss": null,
+          "simulationSamples": null,
+          "simulationError": null,
+          "options": {
+            "current": {
+              "inventory": {
+                "cards": 13,
+                "upgraded": 0,
+                "gold": 99,
+                "hp": 56,
+                "maxHp": 70
+              },
+              "inventoryDelta": {
+                "cards": 0,
+                "upgraded": 0,
+                "gold": 0,
+                "hp": 0,
+                "maxHp": 0
+              },
+              "unavailableReason": "本题该候选没有通过原模拟样本门槛的结果",
+              "fight": null
+            }
+          },
+          "limits": "复用本题既有boss条件模拟，不新增整战或未来路线模拟；升级、拿牌、删牌的战斗差与组件集齐率分列。DPR按完整战斗含准备轮统计，配对差保留未匹配分母；模型偏差、未建机制和完整核心资格不因采样通过而消失。"
+        },
+        "evaluation_delivery": "attached",
+        "probability_delivery": "not_attached"
+      }
+    },
+    "sl_attempt": null,
+    "sl_reloads": 0,
+    "run_id": "T12TSEMGUU7F",
+    "observed_ts": "2026-10-20T01:17:33.354Z",
+    "journal": {
+      "choice": "route r1c2 普通战 → r2c1 问号 → r3c0 商店 → r4c1 普通战 → r5c0 普通战 → r6c0 问号 → r7c0 休息 → r8c1 精英 → r9c2 宝箱 → r10c2 休息 → r11c2 精英 → r12c2 普通战 → r13c1 商店 → r14c0 问号 → r15c1 休息 → r16c3 Boss",
+      "reason": "双精英三营火，两次商店补强，避免早期硬拼。"
+    },
+    "route_plan": {
+      "runId": "T12TSEMGUU7F",
+      "act": 1,
+      "floor": 1,
+      "hpPct": 0.8,
+      "path": [
+        {
+          "row": 1,
+          "col": 2,
+          "type": "Monster",
+          "hpOnArrival": 0.8
+        },
+        {
+          "row": 2,
+          "col": 1,
+          "type": "Unknown",
+          "hpOnArrival": 0.7571428571428571
+        },
+        {
+          "row": 3,
+          "col": 0,
+          "type": "Shop",
+          "hpOnArrival": 0.7571428571428571
+        },
+        {
+          "row": 4,
+          "col": 1,
+          "type": "Monster",
+          "hpOnArrival": 0.7571428571428571
+        },
+        {
+          "row": 5,
+          "col": 0,
+          "type": "Monster",
+          "hpOnArrival": 0.7142857142857143
+        },
+        {
+          "row": 6,
+          "col": 0,
+          "type": "Unknown",
+          "hpOnArrival": 0.6714285714285714
+        },
+        {
+          "row": 7,
+          "col": 0,
+          "type": "RestSite",
+          "hpOnArrival": 0.6714285714285714
+        },
+        {
+          "row": 8,
+          "col": 1,
+          "type": "Elite",
+          "hpOnArrival": 0.9714285714285714
+        },
+        {
+          "row": 9,
+          "col": 2,
+          "type": "Treasure",
+          "hpOnArrival": 0.6571428571428571
+        },
+        {
+          "row": 10,
+          "col": 2,
+          "type": "RestSite",
+          "hpOnArrival": 0.6571428571428571
+        },
+        {
+          "row": 11,
+          "col": 2,
+          "type": "Elite",
+          "hpOnArrival": 0.9571428571428572
+        },
+        {
+          "row": 12,
+          "col": 2,
+          "type": "Monster",
+          "hpOnArrival": 0.6428571428571429
+        },
+        {
+          "row": 13,
+          "col": 1,
+          "type": "Shop",
+          "hpOnArrival": 0.6
+        },
+        {
+          "row": 14,
+          "col": 0,
+          "type": "Unknown",
+          "hpOnArrival": 0.6
+        },
+        {
+          "row": 15,
+          "col": 1,
+          "type": "RestSite",
+          "hpOnArrival": 0.6
+        },
+        {
+          "row": 16,
+          "col": 3,
+          "type": "Boss",
+          "hpOnArrival": 0.9
+        }
+      ],
+      "projection": {
+        "version": 1,
+        "currentNode": "r0c3",
+        "start": {
+          "hp": 56,
+          "maxHp": 70
+        },
+        "costs": {
+          "act": 1,
+          "maxHp": 70,
+          "monster": {
+            "median": 3,
+            "p75": 9,
+            "source": "logged A10 act-1 Monster rooms, n=1801 incl. 15 deaths"
+          },
+          "elite": {
+            "median": 22,
+            "p75": 36,
+            "source": "logged A10 act-1 Elite rooms, n=333 incl. 20 deaths"
+          },
+          "unknown": {
+            "median": 0,
+            "p75": 3,
+            "source": "logged A10 act-1 Unknown rooms, n=901 incl. 1 deaths"
+          }
+        },
+        "assumptions": {
+          "rests": "heal",
+          "bossLoss": "unmodelled"
+        },
+        "arrival": [
+          {
+            "row": 1,
+            "col": 2,
+            "type": "Monster",
+            "hp": 56,
+            "maxHp": 70
+          },
+          {
+            "row": 2,
+            "col": 1,
+            "type": "Unknown",
+            "hp": 53,
+            "maxHp": 70
+          },
+          {
+            "row": 3,
+            "col": 0,
+            "type": "Shop",
+            "hp": 53,
+            "maxHp": 70
+          },
+          {
+            "row": 4,
+            "col": 1,
+            "type": "Monster",
+            "hp": 53,
+            "maxHp": 70
+          },
+          {
+            "row": 5,
+            "col": 0,
+            "type": "Monster",
+            "hp": 50,
+            "maxHp": 70
+          },
+          {
+            "row": 6,
+            "col": 0,
+            "type": "Unknown",
+            "hp": 47,
+            "maxHp": 70
+          },
+          {
+            "row": 7,
+            "col": 0,
+            "type": "RestSite",
+            "hp": 47,
+            "maxHp": 70
+          },
+          {
+            "row": 8,
+            "col": 1,
+            "type": "Elite",
+            "hp": 68,
+            "maxHp": 70
+          },
+          {
+            "row": 9,
+            "col": 2,
+            "type": "Treasure",
+            "hp": 46,
+            "maxHp": 70
+          },
+          {
+            "row": 10,
+            "col": 2,
+            "type": "RestSite",
+            "hp": 46,
+            "maxHp": 70
+          },
+          {
+            "row": 11,
+            "col": 2,
+            "type": "Elite",
+            "hp": 67,
+            "maxHp": 70
+          },
+          {
+            "row": 12,
+            "col": 2,
+            "type": "Monster",
+            "hp": 45,
+            "maxHp": 70
+          },
+          {
+            "row": 13,
+            "col": 1,
+            "type": "Shop",
+            "hp": 42,
+            "maxHp": 70
+          },
+          {
+            "row": 14,
+            "col": 0,
+            "type": "Unknown",
+            "hp": 42,
+            "maxHp": 70
+          },
+          {
+            "row": 15,
+            "col": 1,
+            "type": "RestSite",
+            "hp": 42,
+            "maxHp": 70
+          },
+          {
+            "row": 16,
+            "col": 3,
+            "type": "Boss",
+            "hp": 63,
+            "maxHp": 70
+          }
+        ]
+      },
+      "summary": "r1c2 普通战 → r2c1 问号 → r3c0 商店 → r4c1 普通战 → r5c0 普通战 → r6c0 问号 → r7c0 休息 → r8c1 精英 → r9c2 宝箱 → r10c2 休息 → r11c2 精英 → r12c2 普通战 → r13c1 商店 → r14c0 问号 → r15c1 休息 → r16c3 Boss"
+    },
+    "result": "completed: Action completed.",
+    "time_budget": {
+      "schema": "decision-budget-v1",
+      "kind": "brain",
+      "key": "T12TSEMGUU7F:{\"actions\":[\"save_and_quit\",\"choose_map_node\"],\"combat\":false,\"enemies\":\"\",\"event\":\"\",\"gold\":99,\"hand\":\"\",\"hp\":56,\"maxHp\":70,\"nodes\":\"0|1|2|3\",\"pendingCard\":false,\"player\":\"0:0:0\",\"potions\":\":false:false|:false:false\",\"powers\":\"\",\"rewards\":\"\",\"run\":\"T12TSEMGUU7F\",\"screen\":\"MAP\",\"selection\":\"null:false\",\"shopOpen\":false,\"shopStock\":\"\",\"turn\":null}",
+      "budget_ms": 90000,
+      "entry_budget_ms": 4999.99423099999,
+      "actual_ms": 38408,
+      "turn_actual_ms": 38408,
+      "shared_actual_ms": 1680,
+      "independent_actual_ms": 36728,
+      "timed_out": false,
+      "fallback": null,
+      "shadow_unknown": [],
+      "stages": [
+        {
+          "stage": "V6_projection",
+          "scope": "L2",
+          "budget_ms": 5000,
+          "actual_ms": 4590,
+          "timed_out": false,
+          "shared_remaining_ms": 4730.447091999988,
+          "stages": [
+            {
+              "stage": "exact_observed_solver_cache",
+              "budget_ms": 0,
+              "actual_ms": 0,
+              "timed_out": false
+            },
+            {
+              "stage": "exact_observed_solver_cache",
+              "budget_ms": 0,
+              "actual_ms": 0,
+              "timed_out": false
+            },
+            {
+              "stage": "exact_observed_solver_cache",
+              "budget_ms": 0,
+              "actual_ms": 0,
+              "timed_out": false
+            },
+            {
+              "stage": "exact_observed_solver_cache",
+              "budget_ms": 0,
+              "actual_ms": 0,
+              "timed_out": false
+            },
+            {
+              "stage": "exact_observed_solver_cache",
+              "budget_ms": 0,
+              "actual_ms": 0,
+              "timed_out": false
+            },
+            {
+              "stage": "exact_observed_solver_cache",
+              "budget_ms": 0,
+              "actual_ms": 0,
+              "timed_out": false
+            },
+            {
+              "stage": "exact_observed_solver_cache",
+              "budget_ms": 0,
+              "actual_ms": 0,
+              "timed_out": false
+            },
+            {
+              "stage": "exact_observed_solver_cache",
+              "budget_ms": 0,
+              "actual_ms": 0,
+              "timed_out": false
+            },
+            {
+              "stage": "exact_observed_solver_cache",
+              "budget_ms": 0,
+              "actual_ms": 0,
+              "timed_out": false
+            },
+            {
+              "stage": "exact_observed_solver_cache",
+              "budget_ms": 0,
+              "actual_ms": 0,
+              "timed_out": false
+            },
+            {
+              "stage": "exact_observed_solver_cache",
+              "budget_ms": 0,
+              "actual_ms": 0,
+              "timed_out": false
+            },
+            {
+              "stage": "exact_observed_solver_cache",
+              "budget_ms": 0,
+              "actual_ms": 0,
+              "timed_out": false
+            },
+            {
+              "stage": "exact_observed_solver_cache",
+              "budget_ms": 0,
+              "actual_ms": 0,
+              "timed_out": false
+            },
+            {
+              "stage": "exact_observed_solver_cache",
+              "budget_ms": 0,
+              "actual_ms": 0,
+              "timed_out": false
+            }
+          ]
+        },
+        {
+          "stage": "B3_current",
+          "budget_ms": 88664.61296200001,
+          "actual_ms": 0,
+          "timed_out": false
+        },
+        {
+          "stage": "construction_shadow",
+          "scope": "shadow",
+          "budget_ms": 88664.547246,
+          "actual_ms": 2,
+          "timed_out": false,
+          "shared_remaining_ms": 88664.54382699999,
+          "stages": []
+        },
+        {
+          "stage": "construction_evaluation_shadow",
+          "scope": "shadow",
+          "budget_ms": 88664.53901799998,
+          "actual_ms": 0,
+          "timed_out": false,
+          "shared_remaining_ms": 88664.53744799999,
+          "stages": []
+        },
+        {
+          "stage": "L2_brain",
+          "scope": "L2",
+          "budget_ms": 90000,
+          "actual_ms": 32136,
+          "timed_out": false,
+          "shared_remaining_ms": 88320.72835199998,
+          "stages": [
+            {
+              "stage": "L2_brain",
+              "budget_ms": 89999.97808100001,
+              "actual_ms": 32136,
+              "timed_out": false
+            }
+          ]
+        }
+      ],
+      "animation_time_included": false
+    }
+  }
+]

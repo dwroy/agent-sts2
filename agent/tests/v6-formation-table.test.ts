@@ -55,12 +55,20 @@ it("does not infer duplicate-copy joints from at-least-one observations", () => 
   expect(provider(t).resolve(c)!.combinations[0]!.availability.skip).toBeNull();
   expect(provider(t).resolve(c)!.combinations[0]!.availability.take).toBeCloseTo(1 - .8 ** 1.5);
 });
+it("recognizes impossible duplicate copies with zero remaining opportunities without estimating a joint", () => {
+  const c = context([req("A", 2)]), t = table();
+  t.remaining = t.remaining.map(r => ({ ...r, median: 0 }));
+  t.cards = [];
+  const row = provider(t).resolve(c)!.combinations[0]!;
+  expect(row.availability).toEqual({ skip: 0, take: 0 });
+  expect(row.unknownReasons).toEqual({ skip: [], take: [] });
+});
 it("respects explicit prerequisites and does not manufacture upgrades from ordinary offers", () => {
   const c = context([req("A", 1, true)]), t = table();
   t.remaining = t.remaining.map(r => ({ ...r, median: r.kind === "upgrade" ? 0 : r.median }));
   t.cards = t.cards.map(r => ({ ...r, upgraded_appearances: 0 }));
   const row = provider(t).resolve(c)!.combinations[0]!;
-  expect(row.availability.skip).toBe(0); expect(row.availability.take).toBeNull();
+  expect(row.availability.skip).toBe(0); expect(row.availability.take).toBe(0);
   c.direction.combos[0]!.prerequisites = { op: "contains", field: "player.relics", value: "TEST_RELIC" };
   expect(provider().resolve(c)!.combinations[0]!.availability.skip).toBe(0);
   c.direction.combos[0]!.prerequisites = { op: "gt", field: "player.hp", value: 1 };
@@ -82,4 +90,17 @@ it("ranks by cheap formation lookup before the four-combo cap, shares completed 
   expect(out.entries.find(e => e.option_id === "skip")!.expected_win).toBeCloseTo(1 - .8 ** 2 * .5);
   expect(out.telemetry.simulations).toBe(20); // Both options complete to the same physical deck.
   expect(runner.calls).toHaveLength(1);
+});
+it("reuses completed card signatures without sharing option gold, floors or mutable results", () => {
+  const c = context([req("A")]), source = provider();
+  c.direction.combos[0]!.prerequisites = { op: "gte", field: "player.gold", value: 10 };
+  c.options = [{ id: "poor", state: { ...state(), gold: 0 } }, { id: "rich", state: { ...state(), gold: 20 } }];
+  const first = source.resolve(c)!.combinations[0]!;
+  expect(first.availability.poor).toBe(0);
+  expect(first.availability.rich).toBeGreaterThan(0);
+  first.samples[0]!.states.rich!.cards.length = 0;
+  const later = source.resolve({ ...c, target: { id: "later", floor: 17 }, samples: 1 })!.combinations[0]!;
+  expect(later.samples[0]!.states.rich!.cards).toEqual([{ id: "A", upgraded: false }]);
+  expect(later.samples[0]!.states.rich!.gold).toBe(20);
+  expect(later.samples[0]!.states.poor).toBeNull();
 });

@@ -97,6 +97,7 @@ export function createV6ProjectionFactory(snapshot: V6FactorySnapshot): V6Projec
   // One run-start factory owns its frozen supply cache across act, idle and pick requests.
   const supplies = new Map<string, ReturnType<typeof v6FormationTableSource>>();
   const openings = new Map<string, V6PreparedProjection | null>();
+  const directionCache = new Map<number, ReturnType<typeof v6Directions>>();
   return { create(supplied) { try {
     const s = { ...supplied, state: parseGameState(structuredClone(supplied.state.raw)) }, run = asRecord(s.state.run?.raw);
     const ascension = run["ascension"], floor = run["floor"], hp = run["current_hp"], maxHp = run["max_hp"], gold = run["gold"];
@@ -116,7 +117,8 @@ export function createV6ProjectionFactory(snapshot: V6FactorySnapshot): V6Projec
     const build: BuildState = { cards: cards.map(c => ({ id: str(c["card_id"]), upgraded: c["upgraded"] === true })),
       relics: relics.map(r => str(r["relic_id"])), hp: hp as number, maxHp: maxHp as number, gold: gold as number,
       floor: floor as number, cap: deckBudget(s.state)?.maximum ?? null };
-    const directions = v6Directions(character, ascension as number, templates, support, cores);
+    let directions = directionCache.get(ascension as number);
+    if (!directions) { directions = v6Directions(character, ascension as number, templates, support, cores); directionCache.set(ascension as number, directions); }
     const prior = new Set(pack.data.coverage.filter(r => r.run_id !== s.runId && r.ended < s.asOf).map(r => r.run_id));
     const observations = pack.data.observations.filter(o => prior.has(o.run_id));
     const targetBase: V6TargetContext = { character, ascension: ascension as number, act, floor: floor as number,
@@ -156,7 +158,7 @@ export function createV6ProjectionFactory(snapshot: V6FactorySnapshot): V6Projec
       // Absent checkpoints (including an empty route) use own historical entry HP.
       // Explicit null entries from an unmodelled/dead route and healing still remain unknown.
       const routeHp = s.currentRouteSignature && state.hp === build.hp ? s.currentRouteHp ?? null : null;
-      option.preparationKey = v6Digest([raw, routeEntries, routeHp, s.currentRouteSignature]);
+      option.preparationKey = v6Digest([raw["run"], routeEntries, routeHp, s.currentRouteSignature]);
       resources.set(option.id, { raw, context: { ...targetBase, ...(routeEntries ? { routeEntries } : {}) }, routeHp }); options.push(option);
     }
     const baseline = options.shift()!;
@@ -171,8 +173,8 @@ export function createV6ProjectionFactory(snapshot: V6FactorySnapshot): V6Projec
     const completionSources = [supply];
     const request: V6ProjectionRequest = { config: structuredClone(config), phase: s.phase, character, ascension: ascension as number, act,
       baseline, options, directions, weights: structuredClone(s.weights), targets, completionSources, seed: s.seed, modelVersion,
-      contextDigest: v6Digest({ raw: s.state.raw, history: [pack.content_sha256, pack.generated_at], asOf: s.asOf, run: s.runId,
-        directions, doubleBoss, trust, route: s.route?.signature, options: [baseline, ...options], ideal: s.idealOverrides,
+      contextDigest: v6Digest({ resources: run, history: [pack.content_sha256, pack.generated_at], asOf: s.asOf, run: s.runId,
+        directions: directions.map(d => [d.id, d.signature]), doubleBoss, trust, targets, route: s.route?.signature, options: [baseline, ...options], ideal: s.idealOverrides,
         appeared: s.appearedCards, rankings: s.rankings, weights: s.weights, config, seed: s.seed, modelVersion }),
       ...(s.idealOverrides ? { idealOverrides: structuredClone(s.idealOverrides) } : {}),
       ...(s.appearedCards ? { appearedCards: [...s.appearedCards] } : {}), ...(s.rankings ? { rankings: structuredClone(s.rankings) } : {}),
@@ -185,6 +187,10 @@ export function createV6ProjectionFactory(snapshot: V6FactorySnapshot): V6Projec
           currentRouteHp: resource.routeHp, doubleBoss, models }, target, completed);
         if (openings.size >= 2048) openings.delete(openings.keys().next().value!);
         openings.set(key, opening); return opening;
+      }, cachedPreparation(target, completed, option = baseline) {
+        const resource = resources.get(option.id);
+        if (!resource) return null;
+        return openings.get(v6Digest([option.preparationKey, target, completed])) ?? null;
       }, trust: target => v6TargetTrust(character, ascension as number, target, trust) };
     return { status: "ready", request, rejected_options, labels: [...pack.data.labels,
       ...(!s.route && !s.currentRouteSignature ? ["current_route_hp_unknown"] : []),

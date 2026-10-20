@@ -22,15 +22,24 @@ import { V6BuildLog } from "./log.js";
 export interface DirectionPlannerMemory {
   scheduler: ReplanState; appearedCards: string[]; relics: string[]; observed?: boolean;
 }
+// Freeze published summaries per environment/run/role/scope. Brain overrides
+// remain live and are reapplied on each read without copying metric snapshots.
+const directionSnapshots = new WeakMap<DecisionEnv["screenMemory"], { key: string; summaries: DirectionSummary[] }>();
 export function v6Directions(env: DecisionEnv, dir = KNOWLEDGE_DIR): DirectionSummary[] {
   if (v6Config().mode === "off") return [];
   const character = str(asRecord(env.state.run?.raw)["character_id"]).toLowerCase();
-  const knowledge = loadV6Knowledge(dir, character);
-  const construction = loadConstructionData(character, dir);
-  return directionSummaries(character, env.state.run?.ascension ?? 0,
-    knowledge.cores.status === "loaded" ? knowledge.cores.value : [], construction?.templates ?? [],
-    construction ? loadConstructionSupport(character, construction.templates, dir) : null)
-    .map(s => ({ ...s, combos: directionCombos(s, toJsonValue(env.screenMemory.runPlan?.runId === str(env.state.raw["run_id"]) ? env.screenMemory.runPlan.v6 : undefined)) }));
+  const ascension = env.state.run?.ascension ?? 0, run = str(env.state.raw["run_id"]);
+  const key = JSON.stringify([dir, character, ascension, run]);
+  let cached = directionSnapshots.get(env.screenMemory);
+  if (!cached || cached.key !== key) {
+    const knowledge = loadV6Knowledge(dir, character), construction = loadConstructionData(character, dir);
+    cached = { key, summaries: directionSummaries(character, ascension,
+      knowledge.cores.status === "loaded" ? knowledge.cores.value : [], construction?.templates ?? [],
+      construction ? loadConstructionSupport(character, construction.templates, dir) : null) };
+    directionSnapshots.set(env.screenMemory, cached);
+  }
+  const plan = toJsonValue(env.screenMemory.runPlan?.runId === run ? env.screenMemory.runPlan.v6 : undefined);
+  return cached.summaries.map(s => ({ ...s, combos: directionCombos(s, plan) }));
 }
 export function v6DirectionActive(env: DecisionEnv): boolean { return v6Config().mode === "on" && v6Directions(env).length > 0; }
 
