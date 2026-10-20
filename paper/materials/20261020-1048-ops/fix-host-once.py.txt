@@ -1,0 +1,32 @@
+from pathlib import Path
+import subprocess,json,hashlib,fcntl,os,time
+r=Path('/home/dw/Projects/agent-sts2');a=r/'.artifacts/ops-wake-20261020-1048';spec=json.loads((a/'fix-source-input.json').read_text());w=Path(spec['worktree']);status=a/'fix-host-status.json'
+def stamp():return subprocess.check_output(['date','-Is'],text=True).strip()
+def git(*args):return subprocess.check_output(['git','-C',str(w),*args],stderr=subprocess.PIPE)
+def save(v):
+ p=status.with_suffix('.tmp');p.write_text(json.dumps(v,ensure_ascii=False,indent=2)+'\n');os.replace(p,status)
+def sha(p):return hashlib.sha256(Path(p).read_bytes()).hexdigest()
+os.close(os.open(a/'fix-host-started-once',os.O_CREAT|os.O_EXCL|os.O_WRONLY,0o600))
+v=dict(batch=spec['batch'],state='preflight',pid=os.getpid(),start_ticks=int(Path('/proc/self/stat').read_text().rsplit(')',1)[1].split()[19]),nice=os.getpriority(os.PRIO_PROCESS,0),started_at=stamp(),combined_full_rc=None,original_source=spec['original_source'],integration_main=spec['integration_main'],staged_tree=spec['prospective_staged_tree'],input_sha256=sha(a/'fix-source-input.json'),new_model=False,new_dataset=False,main_live_integrated=False);save(v)
+try:
+ with (r/spec['shared_original_worktree_lease']).open('a') as lease,(r/spec['batch_check_lock']).open('a') as lock:
+  fcntl.flock(lease,fcntl.LOCK_EX|fcntl.LOCK_NB);fcntl.flock(lock,fcntl.LOCK_EX|fcntl.LOCK_NB)
+  def verify():
+   assert git('rev-parse','HEAD').decode().strip()==spec['original_source']
+   assert git('rev-parse','MERGE_HEAD').decode().splitlines()==spec['pending_merge_parents']
+   assert git('write-tree').decode().strip()==spec['prospective_staged_tree']
+   assert hashlib.sha256(git('diff','--cached','--binary')).hexdigest()==spec['staged_patch_sha256']
+   assert not git('diff','--name-only').strip()
+   for x in spec['owned_files']:assert sha(w/x['path'])==x['sha256'],x['path']
+  verify();env={**os.environ,'PATH':str(Path.home()/'.local/node/bin')+':'+os.environ.get('PATH',''),'TMPDIR':spec['TMPDIR']};v.update(state='checking',steps=[]);save(v)
+  for name,argv in [('tsc',['npx','tsc','-p','tsconfig.json','--noEmit']),('vitest',['npx','vitest','run','--maxWorkers=2'])]:
+   log=a/(name+'.log');step=dict(name=name,argv=argv,log=str(log.relative_to(r)),started_at=stamp());v['steps'].append(step)
+   with log.open('xb') as f:
+    child=subprocess.Popen(argv,cwd=w/'agent',env=env,stdout=f,stderr=subprocess.STDOUT);step['pid']=child.pid;save(v)
+    try:rc=child.wait(timeout=3600)
+    except subprocess.TimeoutExpired:child.terminate();rc=124
+   step.update(exit_code=rc,finished_at=stamp(),sha256=sha(log),bytes=log.stat().st_size);save(v)
+  verify();rc=0 if all(s['exit_code']==0 for s in v['steps']) else 1;v.update(state='passed' if rc==0 else 'failed',combined_full_rc=rc,finished_at=stamp());save(v)
+except Exception as e:v.update(state='blocked',reason=f'{type(e).__name__}: {e}',finished_at=stamp());save(v)
+message=f"原批次{spec['batch']}三项工程修复源911c4a144（原074302九叶字节同一+隔离入口一叶）与main{spec['integration_main']}精确联合宿主终局：state={v['state']}，combined_full_rc={v['combined_full_rc']}；原WT HEAD={spec['original_source']}，pending main={spec['integration_main']}，固定staged tree={spec['prospective_staged_tree']}；尚未main/live集成。原件{status.relative_to(r)}、fix-source-input.json及本目录tsc/vitest.log。保原failed/rc0/mergednull、沙箱130/EPERM、074302原full1/ENOSPC全部失败；不重模型/未变源full/生产dataset，不代ACK/关父。原live49固定e5523e29正在独立验收，不夹带本infra或W3，不改STOP/Regent；核终局身份后原锁窄集成，角色ACK桥必须实际main/live后再由角色本人沿真实回执登记。"
+q=r/'ops/codex-ops/queue'/f'{time.time_ns()}-learner-checks.md';tmp=q.with_suffix('.tmp');tmp.write_text(message+'\n');os.replace(tmp,q)

@@ -1,0 +1,114 @@
+{
+  "report": {
+    "path": "learner/runs/20261020-101308-1ddf3101-1c67-423c-a29c-7da78358fc99-fix-batch/report.md",
+    "bytes": 25182,
+    "sha256": "5a939c28b8664b94a9a6da619c49093c89ef254c101705a13deaf0d3be01ca1c"
+  },
+  "verification": {
+    "path": "learner/runs/20261020-101308-1ddf3101-1c67-423c-a29c-7da78358fc99-fix-batch/verification.json",
+    "bytes": 1154,
+    "sha256": "828836b0d7ada36fd0049bced0e0e61d73531b78c0657d753bdd4c74f590e06a"
+  },
+  "original_candidate": {
+    "path": "learner/runs/20261020-101308-1ddf3101-1c67-423c-a29c-7da78358fc99-fix-batch/original-candidate.json",
+    "bytes": 974,
+    "sha256": "e5370485603558d4ab16756efc734c1e2abd113cf1ec442476d507c8aa687075"
+  },
+  "source_commits": [
+    "798aeb7ceff1d0481453e5968ac152aa9386155a",
+    "e8b8c18fe887ff3fd882de0ca0ac2f427e3fe1b9",
+    "911c4a1446ca25a5e1f8fbf9518ab21d16177cf7"
+  ],
+  "original_sandbox": {
+    "base": "9884d0dc5edfca0f9ca9cc6eb1c8078918a5cda4",
+    "source": "911c4a1446ca25a5e1f8fbf9518ab21d16177cf7",
+    "ablation": {
+      "isolation": {
+        "without": 1,
+        "restored": 0
+      },
+      "cadence": {
+        "without": 1,
+        "restored": 0
+      },
+      "manual_notice": {
+        "without": 1,
+        "restored": 0
+      }
+    },
+    "focused_sandbox": {
+      "exit": 0,
+      "tsc": 0,
+      "first_phase": {
+        "files": 8,
+        "cases": 21
+      },
+      "second_phase": {
+        "files": 9,
+        "cases": 32
+      },
+      "unique_files": 9,
+      "unique_cases": 32
+    },
+    "broad_sandbox": {
+      "exit": 130,
+      "incomplete": true,
+      "observed_v6_room": {
+        "cases": 40,
+        "failed": 11
+      },
+      "retry_exit": 1,
+      "retry_reason": "listen EPERM 127.0.0.1",
+      "scope": "首轮初稿/工具源码切换前后的全量尝试未验收，保留原日志，不作为固定最终树完整检查。"
+    },
+    "gitleaks_staged": [
+      0,
+      0,
+      0
+    ],
+    "ledger_matches": {
+      "ordinary": 0,
+      "tick": 0,
+      "manual_notice_exact_id": 0
+    },
+    "ledger_updates": [],
+    "actual_role_acks": [],
+    "code_proposals": [],
+    "implementation_domains": []
+  },
+  "original_host_failure": {
+    "path": ".artifacts/ops-wake-20261020-0849/fix-host-status.json",
+    "bytes": 991,
+    "sha256": "59d9581af00168a8986d3ae3843ea841bc55caabb46bb2522fd793ed486c6c7b"
+  },
+  "fixed_source": {
+    "path": "paper/materials/20261020-1048-ops/fix-source-input.json",
+    "bytes": 3543,
+    "sha256": "39a5d7a29f8d455b8b6e860ca26b0c86c712018829bc621603911801d647f644"
+  },
+  "current_one_shot_status": {
+    "state": "checking",
+    "pid": 1756379,
+    "started_at": "2026-10-20T10:51:06+08:00",
+    "steps": [
+      {
+        "name": "tsc",
+        "started_at": "2026-10-20T10:51:07+08:00",
+        "exit_code": 0,
+        "pid": 1756458
+      },
+      {
+        "name": "vitest",
+        "started_at": "2026-10-20T10:51:09+08:00",
+        "exit_code": null,
+        "pid": 1756742
+      }
+    ]
+  },
+  "status_path": ".artifacts/ops-wake-20261020-1048/fix-host-status.json",
+  "new_model": false,
+  "new_dataset": false,
+  "main_live_integrated": false,
+  "scope": "same original engineering source now combined with current main plus one new wrapper; old unchanged-source full not rerun",
+  "role_ACK": false
+}
