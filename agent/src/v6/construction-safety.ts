@@ -28,11 +28,18 @@ export function constructionCoverage(options: readonly string[], table?: V6Proje
 export function constructionQuestion(env: DecisionEnv, decision: Decision): { kind: ConstructionKind; coverage: ConstructionCoverage } | null {
   const config = v6Config();
   if (config.mode !== "on" || env.v6BrainFallback || env.state.in_combat || decision.kind !== "ask") return null;
-  if (isV6RoomDecision(decision)) return { kind: decision.v6Room.kind,
-    coverage: constructionCoverage(decision.v6Room.options.map(o => o.option.key), decision.roomProjection) };
+  const observed = (kind: ConstructionKind, coverage: ConstructionCoverage) => {
+    const run = str(env.state.raw.run_id), previous = env.screenMemory.v6ConstructionRecovered;
+    const kinds = previous?.run === run ? previous.kinds.filter(k => k !== kind) : [];
+    if (!coverage.reason) kinds.push(kind);
+    env.screenMemory.v6ConstructionRecovered = { run, kinds };
+    return { kind, coverage };
+  };
+  if (isV6RoomDecision(decision)) return observed(decision.v6Room.kind,
+    constructionCoverage(decision.v6Room.options.map(o => o.option.key), decision.roomProjection));
   if (config.deciders.card === "jev" && (decision.v6Card || ["reward/card", "selection/add", "selection/choose"].includes(decision.label))) {
     const question = decision.questions.pick;
-    return { kind: "card_pick", coverage: constructionCoverage(question?.type === "choice" ? Object.keys(question.criteria) : [], env.v6ProjectionTable) };
+    return observed("card_pick", constructionCoverage(question?.type === "choice" ? Object.keys(question.criteria) : [], env.v6ProjectionTable));
   }
   if (config.deciders.potion === "jev" && (decision.potionJev || decision.label === "map/statue-potion"
     || asRecord(decision.state).v6_potion_decider === "jev"
@@ -40,7 +47,7 @@ export function constructionQuestion(env: DecisionEnv, decision: Decision): { ki
     // Slot noul scores and holding HP are not weighted projection values. W6 has no slot projection provider yet.
     const questions = decision.potionJev?.questions ?? decision.questions;
     const ids = Object.entries(questions).flatMap(([key, q]) => q.type === "choice" ? Object.keys(q.criteria).map(id => `${key}:${id}`) : [key]);
-    return { kind: "potion", coverage: constructionCoverage(ids) };
+    return observed("potion", constructionCoverage(ids));
   }
   return null;
 }
@@ -50,7 +57,8 @@ export function recordConstructionHandover(env: DecisionEnv, logFile: string, qu
   const config = v6Config();
   if (config.mode !== "on") return;
   const run = str(env.state.raw.run_id), character = str(asRecord(env.state.run?.raw).character_id).toLowerCase();
-  env.screenMemory.v6BrainFallbackPending = { run, questionId };
+  env.screenMemory.v6BrainFallbackPending = { run, questionId,
+    issue: { kind, reason, known: coverage.known, total: coverage.total, unknownOptions: [...coverage.unknown] } };
   new V6BuildLog(config, join(dirname(logFile), "v6-build.jsonl")).append({ schema: "v6-build-log-v1",
     ts: new Date().toISOString(), run_id: run, character, question_id: questionId, kind, mode: "on", stage: "trigger",
     event: "v6_unknown_to_brain", entries: [], jev_answer: null,

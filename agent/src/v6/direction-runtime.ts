@@ -101,6 +101,9 @@ export async function ensureDirectionPlan(env: DecisionEnv, brain: Pick<Brain, "
   const handover = screenMemory.v6BrainFallbackPending?.run === run ? screenMemory.v6BrainFallbackPending : undefined;
   const evaluation = { ...provided, id: provided?.id ?? JSON.stringify([cards, relics, actOf(state)]), entries,
     constructionHandover: provided?.constructionHandover || !!handover,
+    constructionIssue: handover?.issue ?? provided?.constructionIssue,
+    recoveredConstructionKinds: [...new Set([...(provided?.recoveredConstructionKinds ?? []),
+      ...(screenMemory.v6ConstructionRecovered?.run === run ? screenMemory.v6ConstructionRecovered.kinds : [])])],
     consecutiveJevFallbacks: Math.max(provided?.consecutiveJevFallbacks ?? 0, screenMemory.v6JevFallbackRun === run ? screenMemory.v6JevFallbacks ?? 0 : 0),
     acquiredComponentIds: [...(provided?.acquiredComponentIds ?? []), ...(m.observed ? relics.filter(id => !m.relics.includes(id)) : [])] };
   m.relics = relics;
@@ -113,11 +116,14 @@ export async function ensureDirectionPlan(env: DecisionEnv, brain: Pick<Brain, "
   const questionId = handover?.questionId ?? `direction_${act}_${floor}`;
   const result = detectReplan(m.scheduler, { act, floor, turnKey, plan: screenMemory.runPlan?.v6, evaluation, requirementIds: requirements }, config);
   if (evaluation.constructionHandover) delete screenMemory.v6BrainFallbackPending;
+  delete screenMemory.v6ConstructionRecovered;
   if (JSON.stringify(m) !== before) logRunPlan(logFile, { run, v6_state: toJsonValue(m) });
   const log = new V6BuildLog(config, join(dirname(logFile), "v6-build.jsonl"));
   if (result.triggers.length) log.append({ schema: "v6-build-log-v1", ts: new Date().toISOString(), run_id: run,
     character: str(raw["character_id"]).toLowerCase() as Character, question_id: questionId, kind: result.triggers.includes("act_start") ? "act" : "replan", stage: "trigger", mode: config.mode,
-    entries, jev_answer: null, fallback: null, elapsed_ms: 0, cache: { hits: 0, misses: 0 }, degradation: provided ? [] : ["projection_provider_unavailable"],
+    entries, jev_answer: null, fallback: null, elapsed_ms: 0, cache: { hits: 0, misses: 0 }, degradation: [
+      ...(provided ? [] : ["projection_provider_unavailable"]), ...(result.t6?.reasons.map(key => `t6_reason:${key}`) ?? []),
+      ...(result.t6?.suppressed.map(key => `t6_suppressed:${key}`) ?? [])],
     unknown: { count: entries.filter(e => e.trust === "unknown").length, total: entries.length }, triggers: result.triggers, merged_triggers: result.merged, skipped_triggers: result.skipped });
   if (!result.ask || config.mode !== "on") return { result, payload: null, stored: false };
   const data = loadV6Knowledge(dir, str(raw["character_id"]));

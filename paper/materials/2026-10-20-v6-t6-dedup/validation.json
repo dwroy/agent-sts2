@@ -1,0 +1,58 @@
+{
+  "at": "2026-10-20T09:16:49+08:00",
+  "worktree": "/home/dw/Projects/agent-sts2/.worktrees/v6-t6-dedup-20261020",
+  "integration_base": "6255288c4bd2ade106a2ce66e46b986b55e5c274",
+  "tested_agent_diff_sha256": "57847881eba43520c4ad3ea213b8b826fec867207485f2b92f16891feb44a1d9",
+  "tsc": {
+    "command": "PATH=\"$HOME/.local/node/bin:$PATH\" nice -n 10 npx tsc -p tsconfig.json --noEmit",
+    "exit_code": 0
+  },
+  "targeted": {
+    "files": 4,
+    "passed": 42,
+    "exit_code": 0
+  },
+  "full": {
+    "command": "PATH=\"$HOME/.local/node/bin:$PATH\" TMPDIR=/var/tmp nice -n 10 npx vitest run --maxWorkers=2 --reporter=verbose",
+    "files": 604,
+    "passed": 5749,
+    "skipped": 2,
+    "exit_code": 0
+  },
+  "runs": [
+    {
+      "path": ".artifacts/v6-t6-dedup/vitest.log",
+      "sha256": "d3d6ae3ba4e787215f992045840ea41a1b106cb007473846553189af4b1550f1",
+      "bytes": 237,
+      "exit_code": 130,
+      "complete": false,
+      "note": "Existing ops-herdr 15698ms > 15000ms; interrupted, incomplete."
+    },
+    {
+      "path": ".artifacts/v6-t6-dedup/vitest-serial.log",
+      "sha256": "19c023f691f68b72a9c78f943d7dde1b9f60a9bd121ec6191838ba6aec8738bf",
+      "bytes": 125838,
+      "exit_code": 1,
+      "complete": true,
+      "note": "604 files: 199 passed, 405 ENOSPC loading failures; 3448 tests passed; /tmp inode exhaustion."
+    },
+    {
+      "path": ".artifacts/v6-t6-dedup/vitest-local-tmp.log",
+      "sha256": "6f8c0811b518bcf27c4817eccb510bb28bc53d09b1c411c2a4c28f7a268238fd",
+      "bytes": 204443,
+      "exit_code": 130,
+      "complete": false,
+      "note": "Observed content-store fixture root ancestry failure under repository TMPDIR; interrupted, incomplete."
+    },
+    {
+      "path": ".artifacts/v6-t6-dedup/vitest-var-tmp.log",
+      "sha256": "2cd3cffd1e3005c3dc174d725c6be64ab6c41ff046140129d82da4d2ce7ba92e",
+      "bytes": 921984,
+      "exit_code": 0,
+      "complete": true,
+      "note": "604 files passed; 5749 tests passed, 2 original skips; duration 663.45s."
+    }
+  ],
+  "deployment": "main only; ops deploys before the next game; no live/STOP/game actions or model requests",
+  "retention": "Keep original artifacts until ops live acceptance and the original retention workflow archives this worktree."
+}
