@@ -1,5 +1,5 @@
 import { afterEach, expect, it, vi } from "vitest";
-import { mkdtempSync, mkdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
+import { mkdtempSync, mkdirSync, readFileSync, readdirSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { loadV6Knowledge } from "../src/v6/knowledge.js";
@@ -59,6 +59,16 @@ function fixture(history = true) {
   expect(loaded.status === "loaded" ? [] : loaded).toEqual([]);
   return { root, dir, e };
 }
+it("keeps the R404 multi-frame replay out of the legacy single-state fixture glob", () => {
+  const directory = new URL("./logged-states/", import.meta.url);
+  const boards = readdirSync(directory).filter(name => name.endsWith(".json") && !["game-data.json", "boss-clock-boards.json"].includes(name));
+  expect(boards).not.toContain("v6-r404-card-rewards.json");
+  for (const name of boards) {
+    const frozen = JSON.parse(readFileSync(new URL(name, directory), "utf8"));
+    expect(frozen.state, name).toEqual(expect.any(Object));
+  }
+});
+
 it("admits combat snapshots only for explicit idle preparation without bypassing off", async () => {
   const { root, e } = fixture(), event = vi.fn();
   e.state.in_combat = true;
@@ -137,7 +147,7 @@ it.each([[2, 1, 17, "WATERFALL_GIANT"], [19, 2, 33, "KAISER_CRAB"]] as const)(
     setKnowledgeCharacter("silent");
     for (const [key, value] of Object.entries({ V6_CARD_DECIDER: "jev", V6_POTION_DECIDER: "brain", V6_SHOP_DECIDER: "brain",
       V6_REST_DECIDER: "brain", V6_DIRECTION_REPLAN: "off", V6_COMBAT_ENTRIES: "off", BOSS_SIM_BUILD: "off" })) vi.stubEnv(key, value);
-    const frozen = JSON.parse(readFileSync(new URL("./logged-states/v6-r404-card-rewards.json", import.meta.url), "utf8"));
+    const frozen = JSON.parse(readFileSync(new URL("./v6-fixtures/v6-r404-card-rewards.json", import.meta.url), "utf8"));
     const rewardKnowledge = makeKnowledge({ cards: frozen.knowledge_fixture.cards }, "cache");
     const knowledge = { ...loggedKnowledge, card: (id: string | null | undefined) => rewardKnowledge.card(id) ?? loggedKnowledge.card(id) };
     setCardUpgradesForTests(frozen.knowledge_fixture.card_upgrades);
