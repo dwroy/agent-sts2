@@ -1,0 +1,153 @@
+{
+  "recorded_at": "2026-10-21 01:32:39 CST",
+  "event": "strategy-done",
+  "batch": "20261021-011301-strategy-proposal",
+  "base": "0a84a8fe2d5763c8df8c280739bc9049390d7776",
+  "worktree": ".worktrees/codex-strategy-silent-20261021-011301",
+  "worktree_clean": true,
+  "source_changed": false,
+  "tests": {
+    "tsc": null,
+    "vitest": null,
+    "cases": null
+  },
+  "merged": null,
+  "proposal_results": [
+    {
+      "id": "silent-proposal-9952ee8e8df9a0fe",
+      "state": "waiting",
+      "reason": "NHA F33 T1实见SL把斗篷线换为回响线，即时损血1→7、净扣敌8→24；后轮抽弃/动作未控制，缺完整分支及独立A10时间留出，不能拟合新SL/终局门槛。"
+    },
+    {
+      "id": "silent-proposal-47be799a87af03be",
+      "state": "waiting",
+      "reason": "P74 F23末T3弃精确切击及死亡已核；当前live已有计划失效提示、保留手牌快照，仍缺四个合法弃牌分支动态伤害/触发/费用/剩血的联合核证，不能关闭整项。"
+    },
+    {
+      "id": "silent-proposal-3a5274da3c42672a",
+      "state": "waiting",
+      "reason": "P74 F17滑溜/普通触媒和F22赢战53→9接F23已核；F22主怪15血到奖励间缺最终归零细帧，缺当前模型逐来源差额与跨战保药受控后继。"
+    },
+    {
+      "id": "silent-proposal-bc4b92d590f2c4ce",
+      "state": "waiting",
+      "reason": "G33投斧首牌身份子项源码e784dd9f043bf87c29109573f48975f9903280d3已核为live祖先；动态弃牌、完整实线归属和能力长期兑现尚未联合验收，父提案继续等待。"
+    },
+    {
+      "id": "silent-proposal-f52fbbab4dccc3b4",
+      "state": "waiting",
+      "reason": "P74 F22赢战后9血接F23失败、G33末战资源不足属于观察；缺同条件另一条路线、保药/能力先后完整后继与消费者校准，不能改资源阈值。"
+    },
+    {
+      "id": "silent-proposal-10f37c0edd3d24a6",
+      "state": "waiting",
+      "reason": "已复核P74滑溜/毒及G33末T7临时减力、T8恢复与实际挡；尚无当前生产模型逐样本全轨迹对照，开场/休息等其余子项未全覆盖，未隔离新确定数值失配。"
+    },
+    {
+      "id": "silent-proposal-3f82387e2e179703",
+      "state": "waiting",
+      "reason": "RC F33首/末T1同盘实扣敌30→23、损血4→8已核；后轮不同且无受控整战胜线或独立A10留出，不据单局改SL饱和排序/固定能力权重。"
+    },
+    {
+      "id": "silent-proposal-aee21084c991abd3",
+      "state": "waiting",
+      "reason": "BTS F31抽弃后实际选plan2为五轮4样本3胜1死，T4仍死亡；抽弃前后并非同一完整执行线，缺逐样本生产轨迹和确定模型失配，不能由一次失败重标概率。"
+    },
+    {
+      "id": "silent-proposal-df37594e9b12debf",
+      "state": "waiting",
+      "reason": "RC F33第三试T4唯一余牌被弃、原最终转向未执行已核；窄修复bf423c173d3be348a4ad714e1d26516df619ff41已是live祖先，多选可达性、整线朝向与SL收益仍待联合核证。"
+    },
+    {
+      "id": "silent-proposal-42e81c83b2e1e56b",
+      "state": "waiting",
+      "reason": "RC资源提案原文SHA已核，但本批未重算原73局/400营火统计；缺同条件路线、锻造、保药完整后继及实际消费者验证，未来营火不能作为已兑现回报。"
+    }
+  ],
+  "frozen_live": "4528a751f17e341a97e7ff70295ec9fba0c947e9",
+  "existing_live_ancestor_commits": [
+    "e784dd9f043bf87c29109573f48975f9903280d3",
+    "bf423c173d3be348a4ad714e1d26516df619ff41"
+  ],
+  "independently_checked_source_leaves": [
+    {
+      "path": "agent/src/hand/screens/selection.ts",
+      "sha256": "c4432b5fdf8c352ad4d834a87340a3ee69d69606ea705420e4b113db4228c647"
+    },
+    {
+      "path": "agent/src/hand/screens/silent-discard-facts.ts",
+      "sha256": "97a130560b461fa2831617b9b6bfb30fbe592f6270a48dd0d350b6d6d2cddbea"
+    },
+    {
+      "path": "agent/src/reflex/silent-selection-audit.ts",
+      "sha256": "2de2533b477546682ef601d0613bd1adb805e03b894f64347475bfa4e222e4db"
+    },
+    {
+      "path": "agent/src/reflex/silent-selection-dispatch.ts",
+      "sha256": "9301b47f0f6a2589ce210d7f3b9fd232854575154e1f77e471d164070003e6d6"
+    }
+  ],
+  "source_report_scope": {
+    "whole_questions": 622,
+    "model_full_read": 5,
+    "not_full_read": 617,
+    "raw_lines_rechecked_by_learner": 274,
+    "ops_does_not_claim_raw_274_recheck": true
+  },
+  "ordinary_close_exists_at_read": false,
+  "ordinary_close_not_claimed_complete": true,
+  "new_dataset_or_tests_or_model": false,
+  "new_release": false,
+  "scientific_parents_closed": false,
+  "P0_latest_authorization_preserved": "paper/materials/20261021-013x-ops/next-boundary-publication-plan.json",
+  "copies": [
+    {
+      "path": ".worktrees/codex-strategy-silent-20261021-011301/learner/runs/20261021-011306-092fe325-b5e7-4037-a018-b3ddacf77975-strategy-proposal/report.md",
+      "copy": "paper/materials/20261021-0126-ops/original-report.md",
+      "bytes": 15780,
+      "sha256": "390d6568b040bc3dabf6972c926df5bcd8a52d660444037864238208331dde75"
+    },
+    {
+      "path": ".worktrees/codex-strategy-silent-20261021-011301/learner/runs/20261021-011306-092fe325-b5e7-4037-a018-b3ddacf77975-strategy-proposal/result.json",
+      "copy": "paper/materials/20261021-0126-ops/original-result.json",
+      "bytes": 7041,
+      "sha256": "eca9bf3ea103aa1811b7692c77b63e1fa7b2befea1bbc6801cf69e06511c5899"
+    },
+    {
+      "path": ".worktrees/codex-strategy-silent-20261021-011301/learner/runs/20261021-011306-092fe325-b5e7-4037-a018-b3ddacf77975-strategy-proposal/proposal.md",
+      "copy": "paper/materials/20261021-0126-ops/original-proposal.md",
+      "bytes": 11540,
+      "sha256": "e5a8844485917624816ac8090a08c90024841495ec7155d9eb2b25bb46460aa3"
+    },
+    {
+      "path": ".worktrees/codex-strategy-silent-20261021-011301/learner/runs/20261021-011306-092fe325-b5e7-4037-a018-b3ddacf77975-strategy-proposal/live-source-audit.json",
+      "copy": "paper/materials/20261021-0126-ops/original-live-source-audit.json",
+      "bytes": 1875,
+      "sha256": "67a31d83c2515a4e6c03a30597b5f9433c7182d19660a55a8457ac808e34c20f"
+    },
+    {
+      "path": ".worktrees/codex-strategy-silent-20261021-011301/learner/runs/20261021-011306-092fe325-b5e7-4037-a018-b3ddacf77975-strategy-proposal/question-coverage.json",
+      "copy": "paper/materials/20261021-0126-ops/original-question-coverage.json",
+      "bytes": 189295,
+      "sha256": "51f83513a2d9f64c69a8c6c1e954516f7a5d1f75a0f49c0da2f57d97eec80ba6"
+    },
+    {
+      "path": ".worktrees/codex-strategy-silent-20261021-011301/learner/runs/20261021-011306-092fe325-b5e7-4037-a018-b3ddacf77975-strategy-proposal/evidence-summary.json",
+      "copy": "paper/materials/20261021-0126-ops/original-evidence-summary.json",
+      "bytes": 32826,
+      "sha256": "d42631640714f8dc57fe78c969a32af82a0692967129bce7c5d87a065288c617"
+    },
+    {
+      "path": ".worktrees/codex-strategy-silent-20261021-011301/learner/runs/20261021-011306-092fe325-b5e7-4037-a018-b3ddacf77975-strategy-proposal/evidence/evidence-manifest.json",
+      "copy": "paper/materials/20261021-0126-ops/original-evidence-manifest.json",
+      "bytes": 17527,
+      "sha256": "4db0dcf0c87a64d076ce6df6c9dd9a1a26391bf56aac234b37eac8b7d69a5382"
+    },
+    {
+      "path": ".worktrees/codex-strategy-silent-20261021-011301/learner/runs/20261021-011306-092fe325-b5e7-4037-a018-b3ddacf77975-strategy-proposal/v6-evidence/evidence-manifest.json",
+      "copy": "paper/materials/20261021-0126-ops/original-v6-evidence-manifest.json",
+      "bytes": 9186,
+      "sha256": "d6c0f0bb30d8e891035537dcef25e33bb7ed9e5c32e63e23182978815ccb4246"
+    }
+  ]
+}

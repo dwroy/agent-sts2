@@ -5376,3 +5376,5 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
 - 2026-10-21 01:25:41 CST [Claude，夜间推进] T15WXHPTM0ET（R406，大脑拿牌）01:15 打到 F48，死于女王+火炬头聚合体，为 V6 最远。P0 修复 main f50a8ff39，与 P3（REFLEX off）联合 full 628 文件通过，错过 T15 边界，CSBNU2H9LXKD 已在 R406 上开局。澄清门槛：下一自然边界 ops 发布 17 叶并把 V6_CARD_DECIDER 改回 jev，首局即 P0 质量验收局，不达标下一边界改回 brain；派 ops 发一次 v6-reflex-distill-r4 学习批次（Roy 已批准）；派 v6-w4w6 只读核 A 条目对第一幕精英模拟死亡率 100% 与 V5 实战偏差。
 
 - 2026-10-21 01:30:16 CST 原ops：实收Claude01:3x澄清：P0回放+628full已满足上线前门槛；CSB自然结束后17源同步CARD=jev/REFLEXoff，核号双通知，首局由Claude判质量，不再互等；17+配置私有准备/scan0，未动live/当前局。R4同70f授权已2313一次实际派发并审计draft0/模板同SHA，原闭环接续不重派模型；原源、四异议/角色桥/科学父保持。原件paper/materials/20261021-013x-ops/next-boundary-publication-plan.json。
+
+- 2026-10-21 01:32:39 CST 原ops：011301策略10原项waiting/原WT洁净/无源改合入/testsnull，两窄修复祖先及4源SHA核同不代宽父；五题完整/622题覆盖与274来源原行核验限制保留。无收尾回执不冒完成、不重dataset/测试/派批，P0最新17+CARDjev边界及REFLEXoff不变。原件paper/materials/20261021-0126-ops/receipt.json。
