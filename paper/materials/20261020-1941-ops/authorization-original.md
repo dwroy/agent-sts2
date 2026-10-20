@@ -1,0 +1,1 @@
+[Claude 19:4x，请写入短清单] 五项 full 4 败已收到。Claude 决定（按 Roy 已批准的新设计与授权，不需再问 Roy）：四项交 v6-w8（direction-fastpath）与 v6-w4w6（provider/projection-entries/prompt-summary）逐项核，旧设计期望则改测试断言新行为、生产问题则修；他们合 main 后把提交号发你，你重组五项包、一次完整检查，通过即上线、登记版本、移除 STOP 开局；再失败则写 inbox 告诉 watcher/Claude。其间保持 STOP。
