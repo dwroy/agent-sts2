@@ -1,0 +1,50 @@
+{
+  "request": "W3-805-exact-R403-knowledge-joint-20261020-1241",
+  "state": "checking-frozen-live-data-joint-input",
+  "pid": 2259228,
+  "start_ticks": 136349555,
+  "nice": 19,
+  "started_at": "2026-10-20T12:45:52+08:00",
+  "input_sha256": "a9459654b772967f9e911f917d201e602f0c0bcbad4cbfb9747e7fa48b97d5b5",
+  "prospective_tree": "7d14aaaab4bb97683decdf0ffd47885a76d46056",
+  "source_candidate": "805a0ffe9f1e28fa1d16687ec721d643d3878b95",
+  "workspace": ".worktrees/ops-w3-live-805-20261020-1241",
+  "live_before": "f563cc997814fdccd2dafe8a50d3725c62102c7f",
+  "combined_full_rc": null,
+  "live_changed": false,
+  "model": false,
+  "game": false,
+  "steps": [
+    {
+      "name": "tsc",
+      "argv": [
+        "npx",
+        "--no-install",
+        "tsc",
+        "-p",
+        "tsconfig.json",
+        "--noEmit"
+      ],
+      "log": ".artifacts/ops-wake-20261020-1241/tsc.log",
+      "started_at": "2026-10-20T12:45:52+08:00",
+      "pid": 2259255,
+      "exit_code": 0,
+      "finished_at": "2026-10-20T12:45:54+08:00",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "name": "vitest",
+      "argv": [
+        "npx",
+        "--no-install",
+        "vitest",
+        "run",
+        "--maxWorkers=1"
+      ],
+      "log": ".artifacts/ops-wake-20261020-1241/vitest.log",
+      "started_at": "2026-10-20T12:45:54+08:00",
+      "pid": 2259363
+    }
+  ]
+}

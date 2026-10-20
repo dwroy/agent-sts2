@@ -1,0 +1,130 @@
+{
+  "schema": "watcher-w3-current-boss-delivery-v1",
+  "recorded_at": "2026-10-20T12:39:45+08:00",
+  "watcher_session": "01a14f5d-da55-7831-959e-53727796115e",
+  "ops_session": "01a1517b-e200-7c52-b463-6ea22220c0a9",
+  "ops_pane": "w1H:p8",
+  "candidate": "805a0ffe9f1e28fa1d16687ec721d643d3878b95",
+  "parent": "dd43e7b2aaea27558198533116091c1eb1b2a4b0",
+  "main_at_readback": "ebb7849c067fe64f62c0e2e944b4eee64a38831f",
+  "candidate_in_main": true,
+  "tested_base": "7c87092a3ee6757ba1aae5fb55a750d0a20fa6cc",
+  "post_check_rebase_paths": [
+    "eval/versions.json"
+  ],
+  "checks": {
+    "tsc": {
+      "path": ".worktrees/v6-current-boss-known-20261020/.artifacts/tsc-final-v8.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "matches_validation": true,
+      "recorded_exit_code": 0
+    },
+    "vitest": {
+      "path": ".worktrees/v6-current-boss-known-20261020/.artifacts/vitest-full-v4.log",
+      "bytes": 398,
+      "sha256": "7b99aa0d8b918fef70f74f6bb765135bc9f8d051e185870da2b05e0b504dbebb",
+      "matches_validation": true,
+      "recorded_exit_code": 0
+    },
+    "gitleaks_staged": {
+      "path": ".worktrees/v6-current-boss-known-20261020/.artifacts/gitleaks-final-v1.json",
+      "bytes": 3,
+      "sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
+      "matches_validation": true,
+      "recorded_exit_code": 0
+    },
+    "interrupted_vitest": {
+      "path": ".worktrees/v6-current-boss-known-20261020/.artifacts/vitest-full-v3.log",
+      "bytes": 93,
+      "sha256": "5c7d5cb2c0bddfdbac409cf20c2f4acce3c8cbe350cfbdebb56611692ebf3e8d",
+      "matches_validation": true,
+      "recorded_exit_code": 130
+    },
+    "final_source_diff": {
+      "bytes": 78501,
+      "sha256": "2400080d0bea71137e191f379d338b32a63631222dcb23d7e75fc26009ccd07d",
+      "matches_validation": true
+    }
+  },
+  "materials": {
+    "report.md": {
+      "path": "paper/materials/2026-10-20-v6-current-boss-known/report.md",
+      "bytes": 10224,
+      "sha256": "5b65932cef912fa0b00f93801a13300338f990f34a14a6cd2ccbcb2e338fc7ca"
+    },
+    "validation.json": {
+      "path": "paper/materials/2026-10-20-v6-current-boss-known/validation.json",
+      "bytes": 3064,
+      "sha256": "e9cbb9ee9816d50e2986b129e8415f1467fadfa200364ebccbac0d70015a4be5"
+    },
+    "real-request-receipt.json": {
+      "path": "paper/materials/2026-10-20-v6-current-boss-known/real-request-receipt.json",
+      "bytes": 201904,
+      "sha256": "ff301fc832508c8bdad5eb26e4f0f37997e35b8100447696a51ba4ab5880851f"
+    }
+  },
+  "decision_log": {
+    "prior_snapshot": ".artifacts/v6-target-progress/main-log-coordination-20261020-122447/decision-log.working.md",
+    "prior_bytes": 3705627,
+    "prior_sha256": "e9bfa904f49b51dae653d6314aabc45ef7f35d00f7b6e75996547078d11404e3",
+    "current_bytes": 3706830,
+    "current_sha256": "b63d125f9ddeb846938696a52bcbfe3c8dc1c5a8a8f96544141ee095552b5ac3",
+    "prior_prefix_preserved": true,
+    "parallel_old_diff_additions": 116,
+    "parallel_old_diff_deletions": 0,
+    "parallel_old_diff_regions": 39
+  },
+  "request_summary": {
+    "cases": 9,
+    "http_200": 9,
+    "unknown_to_brain": 0,
+    "known_ratio_min": 0.9090909090909091,
+    "known_ratio_max": 1,
+    "preparation_ms_range": [
+      702.710168,
+      4826.775952
+    ],
+    "jev_ms_range": [
+      416.552126,
+      1963.224044
+    ],
+    "max_request_bytes": 21125,
+    "simulations": 0,
+    "W_and_point_PW": "null in all current-target known rows; only low-P bounds or P=0",
+    "full_slot_W6_covered": false,
+    "preparation_2s_target": "partly achieved; one warm case 2953.195857ms"
+  },
+  "runtime_authoritative_user_receipt": {
+    "release": "V6-R403",
+    "live": "f563cc997814fdccd2dafe8a50d3725c62102c7f",
+    "run_id": "9J6T70HSYPG7",
+    "resumed_cst": "2026-10-20T12:24:57.491+08:00",
+    "first_completed_action_cst": "2026-10-20T12:26:36.356+08:00",
+    "first_combat_jev_cst": "2026-10-20T12:28:20.297+08:00",
+    "formal_combat_entries": 85,
+    "initial_actions": 22,
+    "initial_fallbacks": 0,
+    "T6_triggers": 2,
+    "T6_triggers_skipped": 2,
+    "not_numeric_benefit_validation": true
+  },
+  "handoff": {
+    "status": "queued",
+    "native_ops_receipt_verified": false,
+    "live_published": false,
+    "natural_start_boundary_only": true,
+    "no_hot_change": true,
+    "new_tests_or_models_run_by_watcher": false,
+    "enqueue_exit_code": 0,
+    "queue_receipts": [
+      {
+        "path": "ops/codex-ops/queue/1792471194938323049-manual.md",
+        "bytes": 2727,
+        "sha256": "3bdb7825e050818c4cc82cd59d8256600a7598ed8a264d19aae12f8c0881438c",
+        "payload_matches": true
+      }
+    ],
+    "drain_disabled_for_this_call": true
+  }
+}
