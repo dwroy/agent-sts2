@@ -1,0 +1,1538 @@
+[
+  {
+    "decision_id": "ad83ed06-40d0-4a0d-be14-83ff94de14cb",
+    "floor": 2,
+    "ts": "2026-10-20T18:40:28.058Z",
+    "source": {
+      "offset": 3068574697,
+      "length": 5476,
+      "sha256": "a6ed616a435d683e5b31efe2513b976ec0f8e82875b3281affcd32112fd665ff"
+    },
+    "decider": "jev",
+    "result": "completed: Action completed.",
+    "fallback": false,
+    "chosen": {
+      "action": "choose_reward_card",
+      "option_index": 1
+    },
+    "expect": {
+      "option": {
+        "id": "UNTOUCHABLE"
+      },
+      "from": "decision"
+    },
+    "legacy_boss_sim_present": false,
+    "legacy_compact_entries_empty": true,
+    "A_B_source": {
+      "source": "logs/v6-card-results.jsonl",
+      "end": 5121503,
+      "offset": 4722004,
+      "length": 97621,
+      "sha256": "ba078a7ad9d10073eaa9835800c63be131163d513199d011be7055416c4e3042",
+      "snapshot": "paper/materials/20261021-0246-ops/A-B-floor-2.jsonl"
+    },
+    "current_target": "f17:SOUL_FYSH",
+    "option_card_ids": {
+      "card0": "Take SNAKEBITE",
+      "card1": "Take UNTOUCHABLE",
+      "card2": "Take POISONED_STAB",
+      "skip": "Take no card"
+    },
+    "current_rows": [
+      {
+        "option_id": "skip",
+        "target_id": "f17:SOUL_FYSH",
+        "metrics": {
+          "hp_loss": {
+            "mean": 54,
+            "se": 0,
+            "n": 26
+          },
+          "turns": {
+            "mean": 13.769230769230768,
+            "se": 0.4199182788909594,
+            "n": 26
+          },
+          "damage_per_turn": {
+            "mean": 5.800679806618719,
+            "se": 0.1457138660237711,
+            "n": 26
+          },
+          "death_rate": {
+            "mean": 1,
+            "se": 0,
+            "n": 26
+          },
+          "losing_enemy_hp_fraction": {
+            "mean": 0.6420118343195266,
+            "se": 0.010368052018554732,
+            "n": 26
+          }
+        },
+        "paired_delta": {
+          "hp_loss": {
+            "mean": 0,
+            "se": 0,
+            "n": 26
+          },
+          "turns": {
+            "mean": 0,
+            "se": 0,
+            "n": 26
+          },
+          "damage_per_turn": {
+            "mean": 0,
+            "se": 0,
+            "n": 26
+          },
+          "death_rate": {
+            "mean": 0,
+            "se": 0,
+            "n": 26
+          },
+          "losing_enemy_hp_fraction": {
+            "mean": 0,
+            "se": 0,
+            "n": 26
+          }
+        },
+        "samples": 26,
+        "requested_samples": 100,
+        "capped": 0,
+        "time_up": 0,
+        "missing": 74,
+        "trust": {
+          "value": "trusted",
+          "labels": []
+        },
+        "labels": [
+          "entry_hp_source:existing_route_projection:n=0",
+          "current_relics_and_potion_belt_only",
+          "unmodelled_relic:蛇之戒指",
+          "immediate_entry_hp_assumed_current_hp_not_route_forecast",
+          "visible_actual_boss",
+          "raw_simulation_not_calibrated",
+          "paired_delta_option_minus_skip_same_seed",
+          "losing_enemy_hp_conditional_on_loss",
+          "enemy_hp_fraction_denominator_is_sampled_encounter_opening_hp",
+          "remaining_enemy_hp_includes_later_phases_and_spawns_not_clamped_to_one",
+          "partial_sample_coverage"
+        ],
+        "unknown_reasons": []
+      },
+      {
+        "option_id": "card0",
+        "target_id": "f17:SOUL_FYSH",
+        "metrics": {
+          "hp_loss": {
+            "mean": 53.730769230769226,
+            "se": 0.26923076923076933,
+            "n": 26
+          },
+          "turns": {
+            "mean": 14.115384615384613,
+            "se": 0.3775504982094778,
+            "n": 26
+          },
+          "damage_per_turn": {
+            "mean": 8.979182619793477,
+            "se": 0.4380212424290707,
+            "n": 26
+          },
+          "death_rate": {
+            "mean": 0.9615384615384615,
+            "se": 0.038461538461538464,
+            "n": 26
+          },
+          "losing_enemy_hp_fraction": {
+            "mean": 0.44868778280542987,
+            "se": 0.024571816202682277,
+            "n": 25
+          }
+        },
+        "paired_delta": {
+          "hp_loss": {
+            "mean": -0.26923076923076933,
+            "se": 0.2692307692307692,
+            "n": 26
+          },
+          "turns": {
+            "mean": 0.3461538461538462,
+            "se": 0.5545401634682634,
+            "n": 26
+          },
+          "damage_per_turn": {
+            "mean": 3.1785028131747586,
+            "se": 0.4673092980198124,
+            "n": 26
+          },
+          "death_rate": {
+            "mean": -0.03846153846153846,
+            "se": 0.03846153846153846,
+            "n": 26
+          },
+          "losing_enemy_hp_fraction": {
+            "mean": -0.19022624434389138,
+            "se": 0.02821740160931458,
+            "n": 25
+          }
+        },
+        "samples": 26,
+        "requested_samples": 100,
+        "capped": 0,
+        "time_up": 0,
+        "missing": 74,
+        "trust": {
+          "value": "trusted",
+          "labels": []
+        },
+        "labels": [
+          "entry_hp_source:existing_route_projection:n=0",
+          "current_relics_and_potion_belt_only",
+          "unmodelled_relic:蛇之戒指",
+          "immediate_entry_hp_assumed_current_hp_not_route_forecast",
+          "visible_actual_boss",
+          "raw_simulation_not_calibrated",
+          "paired_delta_option_minus_skip_same_seed",
+          "losing_enemy_hp_conditional_on_loss",
+          "enemy_hp_fraction_denominator_is_sampled_encounter_opening_hp",
+          "remaining_enemy_hp_includes_later_phases_and_spawns_not_clamped_to_one",
+          "partial_sample_coverage"
+        ],
+        "unknown_reasons": []
+      },
+      {
+        "option_id": "card1",
+        "target_id": "f17:SOUL_FYSH",
+        "metrics": {
+          "hp_loss": {
+            "mean": 54,
+            "se": 0,
+            "n": 26
+          },
+          "turns": {
+            "mean": 14.615384615384617,
+            "se": 0.40029574865408263,
+            "n": 26
+          },
+          "damage_per_turn": {
+            "mean": 5.7057141199675145,
+            "se": 0.25040313217733534,
+            "n": 26
+          },
+          "death_rate": {
+            "mean": 1,
+            "se": 0,
+            "n": 26
+          },
+          "losing_enemy_hp_fraction": {
+            "mean": 0.6298294465715278,
+            "se": 0.01151853409341388,
+            "n": 26
+          }
+        },
+        "paired_delta": {
+          "hp_loss": {
+            "mean": 0,
+            "se": 0,
+            "n": 26
+          },
+          "turns": {
+            "mean": 0.8461538461538464,
+            "se": 0.6437684908586978,
+            "n": 26
+          },
+          "damage_per_turn": {
+            "mean": -0.09496568665120704,
+            "se": 0.2825121659874689,
+            "n": 26
+          },
+          "death_rate": {
+            "mean": 0,
+            "se": 0,
+            "n": 26
+          },
+          "losing_enemy_hp_fraction": {
+            "mean": -0.01218238774799861,
+            "se": 0.014555079379830698,
+            "n": 26
+          }
+        },
+        "samples": 26,
+        "requested_samples": 100,
+        "capped": 0,
+        "time_up": 0,
+        "missing": 74,
+        "trust": {
+          "value": "trusted",
+          "labels": []
+        },
+        "labels": [
+          "entry_hp_source:existing_route_projection:n=0",
+          "current_relics_and_potion_belt_only",
+          "unmodelled_relic:蛇之戒指",
+          "immediate_entry_hp_assumed_current_hp_not_route_forecast",
+          "visible_actual_boss",
+          "raw_simulation_not_calibrated",
+          "paired_delta_option_minus_skip_same_seed",
+          "losing_enemy_hp_conditional_on_loss",
+          "enemy_hp_fraction_denominator_is_sampled_encounter_opening_hp",
+          "remaining_enemy_hp_includes_later_phases_and_spawns_not_clamped_to_one",
+          "partial_sample_coverage"
+        ],
+        "unknown_reasons": []
+      },
+      {
+        "option_id": "card2",
+        "target_id": "f17:SOUL_FYSH",
+        "metrics": {
+          "hp_loss": {
+            "mean": 54,
+            "se": 0,
+            "n": 26
+          },
+          "turns": {
+            "mean": 14.038461538461538,
+            "se": 0.3901903647068431,
+            "n": 26
+          },
+          "damage_per_turn": {
+            "mean": 7.983112890126464,
+            "se": 0.29149139601671376,
+            "n": 26
+          },
+          "death_rate": {
+            "mean": 1,
+            "se": 0,
+            "n": 26
+          },
+          "losing_enemy_hp_fraction": {
+            "mean": 0.49860772711451445,
+            "se": 0.016283827789807644,
+            "n": 26
+          }
+        },
+        "paired_delta": {
+          "hp_loss": {
+            "mean": 0,
+            "se": 0,
+            "n": 26
+          },
+          "turns": {
+            "mean": 0.26923076923076916,
+            "se": 0.60398087669088,
+            "n": 26
+          },
+          "damage_per_turn": {
+            "mean": 2.1824330835077443,
+            "se": 0.3246581966383031,
+            "n": 26
+          },
+          "death_rate": {
+            "mean": 0,
+            "se": 0,
+            "n": 26
+          },
+          "losing_enemy_hp_fraction": {
+            "mean": -0.1434041072050122,
+            "se": 0.018248204745189206,
+            "n": 26
+          }
+        },
+        "samples": 26,
+        "requested_samples": 100,
+        "capped": 0,
+        "time_up": 0,
+        "missing": 74,
+        "trust": {
+          "value": "trusted",
+          "labels": []
+        },
+        "labels": [
+          "entry_hp_source:existing_route_projection:n=0",
+          "current_relics_and_potion_belt_only",
+          "unmodelled_relic:蛇之戒指",
+          "immediate_entry_hp_assumed_current_hp_not_route_forecast",
+          "visible_actual_boss",
+          "raw_simulation_not_calibrated",
+          "paired_delta_option_minus_skip_same_seed",
+          "losing_enemy_hp_conditional_on_loss",
+          "enemy_hp_fraction_denominator_is_sampled_encounter_opening_hp",
+          "remaining_enemy_hp_includes_later_phases_and_spawns_not_clamped_to_one",
+          "partial_sample_coverage"
+        ],
+        "unknown_reasons": []
+      }
+    ],
+    "current_samples": [
+      26,
+      26,
+      26,
+      26
+    ],
+    "DPR_in_separate_A_rows": true,
+    "A_preparation_ms": 4290,
+    "A_preparation_timed_out": false,
+    "A_B_telemetry": {
+      "elapsed_ms": 4258.3149330000015,
+      "preparation_ms": 468.95052200001373,
+      "simulation_ms": 3783.259594999996,
+      "cache_hits": 0,
+      "simulations": 709,
+      "long_term_cache": "hit",
+      "long_term_computed": 0,
+      "long_term_total": 204,
+      "pending_work": true
+    },
+    "association_limit": "A/B rows lack decision_id; exact same run/floor, pre-decision timestamp and exact option set, unique match in original alert cutoff; not a question_id identity or proof of reasoning/benefit"
+  },
+  {
+    "decision_id": "5f6c4c9a-10c2-4f34-8bde-5a1746975de7",
+    "floor": 3,
+    "ts": "2026-10-20T18:41:21.696Z",
+    "source": {
+      "offset": 3068711951,
+      "length": 5483,
+      "sha256": "38a48a504e07b64f932bd3054a2d83476aa6eb06bef77bff5a93da4276e54ab4"
+    },
+    "decider": "jev",
+    "result": "completed: Action completed.",
+    "fallback": false,
+    "chosen": {
+      "action": "choose_reward_card",
+      "option_index": 2
+    },
+    "expect": {
+      "option": {
+        "id": "ACCELERANT"
+      },
+      "from": "decision"
+    },
+    "legacy_boss_sim_present": false,
+    "legacy_compact_entries_empty": true,
+    "A_B_source": {
+      "source": "logs/v6-card-results.jsonl",
+      "end": 5121503,
+      "offset": 4819625,
+      "length": 52074,
+      "sha256": "9fe363c1510a351564723fda9aa6499d76e4f3bb7e54793bf492c1196a37c64e",
+      "snapshot": "paper/materials/20261021-0246-ops/A-B-floor-3.jsonl"
+    },
+    "current_target": "f17:SOUL_FYSH",
+    "option_card_ids": {
+      "card0": "Take TACTICIAN",
+      "card1": "Take DAGGER_SPRAY",
+      "card2": "Take ACCELERANT",
+      "skip": "Take no card"
+    },
+    "current_rows": [
+      {
+        "option_id": "skip",
+        "target_id": "f17:SOUL_FYSH",
+        "metrics": {
+          "hp_loss": {
+            "mean": 50,
+            "se": 0,
+            "n": 18
+          },
+          "turns": {
+            "mean": 14.722222222222221,
+            "se": 0.48375948458422985,
+            "n": 18
+          },
+          "damage_per_turn": {
+            "mean": 6.365983743924922,
+            "se": 0.30244841108378107,
+            "n": 18
+          },
+          "death_rate": {
+            "mean": 1,
+            "se": 0,
+            "n": 18
+          },
+          "losing_enemy_hp_fraction": {
+            "mean": 0.5811965811965812,
+            "se": 0.0164178280356143,
+            "n": 18
+          }
+        },
+        "paired_delta": {
+          "hp_loss": {
+            "mean": 0,
+            "se": 0,
+            "n": 18
+          },
+          "turns": {
+            "mean": 0,
+            "se": 0,
+            "n": 18
+          },
+          "damage_per_turn": {
+            "mean": 0,
+            "se": 0,
+            "n": 18
+          },
+          "death_rate": {
+            "mean": 0,
+            "se": 0,
+            "n": 18
+          },
+          "losing_enemy_hp_fraction": {
+            "mean": 0,
+            "se": 0,
+            "n": 18
+          }
+        },
+        "samples": 18,
+        "requested_samples": 100,
+        "capped": 0,
+        "time_up": 0,
+        "missing": 82,
+        "trust": {
+          "value": "trusted",
+          "labels": []
+        },
+        "labels": [
+          "entry_hp_source:existing_route_projection:n=0",
+          "current_relics_and_potion_belt_only",
+          "unmodelled_relic:蛇之戒指",
+          "immediate_entry_hp_assumed_current_hp_not_route_forecast",
+          "visible_actual_boss",
+          "raw_simulation_not_calibrated",
+          "paired_delta_option_minus_skip_same_seed",
+          "losing_enemy_hp_conditional_on_loss",
+          "enemy_hp_fraction_denominator_is_sampled_encounter_opening_hp",
+          "remaining_enemy_hp_includes_later_phases_and_spawns_not_clamped_to_one",
+          "partial_sample_coverage"
+        ],
+        "unknown_reasons": []
+      },
+      {
+        "option_id": "card0",
+        "target_id": "f17:SOUL_FYSH",
+        "metrics": {
+          "hp_loss": {
+            "mean": 50,
+            "se": 0,
+            "n": 18
+          },
+          "turns": {
+            "mean": 13.611111111111114,
+            "se": 0.4653966534316912,
+            "n": 18
+          },
+          "damage_per_turn": {
+            "mean": 6.743397016926428,
+            "se": 0.3209749193676373,
+            "n": 18
+          },
+          "death_rate": {
+            "mean": 1,
+            "se": 0,
+            "n": 18
+          },
+          "losing_enemy_hp_fraction": {
+            "mean": 0.5907491201608848,
+            "se": 0.016531547515522653,
+            "n": 18
+          }
+        },
+        "paired_delta": {
+          "hp_loss": {
+            "mean": 0,
+            "se": 0,
+            "n": 18
+          },
+          "turns": {
+            "mean": -1.1111111111111114,
+            "se": 0.5105993459496802,
+            "n": 18
+          },
+          "damage_per_turn": {
+            "mean": 0.3774132730015083,
+            "se": 0.36701962887043377,
+            "n": 18
+          },
+          "death_rate": {
+            "mean": 0,
+            "se": 0,
+            "n": 18
+          },
+          "losing_enemy_hp_fraction": {
+            "mean": 0.009552538964303666,
+            "se": 0.020844703615042228,
+            "n": 18
+          }
+        },
+        "samples": 18,
+        "requested_samples": 100,
+        "capped": 0,
+        "time_up": 0,
+        "missing": 82,
+        "trust": {
+          "value": "trusted",
+          "labels": []
+        },
+        "labels": [
+          "entry_hp_source:existing_route_projection:n=0",
+          "current_relics_and_potion_belt_only",
+          "unmodelled_relic:蛇之戒指",
+          "immediate_entry_hp_assumed_current_hp_not_route_forecast",
+          "visible_actual_boss",
+          "raw_simulation_not_calibrated",
+          "paired_delta_option_minus_skip_same_seed",
+          "losing_enemy_hp_conditional_on_loss",
+          "enemy_hp_fraction_denominator_is_sampled_encounter_opening_hp",
+          "remaining_enemy_hp_includes_later_phases_and_spawns_not_clamped_to_one",
+          "partial_sample_coverage"
+        ],
+        "unknown_reasons": []
+      },
+      {
+        "option_id": "card1",
+        "target_id": "f17:SOUL_FYSH",
+        "metrics": {
+          "hp_loss": {
+            "mean": 50,
+            "se": 0,
+            "n": 18
+          },
+          "turns": {
+            "mean": 13.555555555555555,
+            "se": 0.49981841292301077,
+            "n": 18
+          },
+          "damage_per_turn": {
+            "mean": 8.035310876487346,
+            "se": 0.39011066981725045,
+            "n": 18
+          },
+          "death_rate": {
+            "mean": 1,
+            "se": 0,
+            "n": 18
+          },
+          "losing_enemy_hp_fraction": {
+            "mean": 0.514831573655103,
+            "se": 0.020267480317232692,
+            "n": 18
+          }
+        },
+        "paired_delta": {
+          "hp_loss": {
+            "mean": 0,
+            "se": 0,
+            "n": 18
+          },
+          "turns": {
+            "mean": -1.166666666666667,
+            "se": 0.5557189302262113,
+            "n": 18
+          },
+          "damage_per_turn": {
+            "mean": 1.6693271325624266,
+            "se": 0.4119687163779342,
+            "n": 18
+          },
+          "death_rate": {
+            "mean": 0,
+            "se": 0,
+            "n": 18
+          },
+          "losing_enemy_hp_fraction": {
+            "mean": -0.06636500754147814,
+            "se": 0.02082900461313935,
+            "n": 18
+          }
+        },
+        "samples": 18,
+        "requested_samples": 100,
+        "capped": 0,
+        "time_up": 0,
+        "missing": 82,
+        "trust": {
+          "value": "trusted",
+          "labels": []
+        },
+        "labels": [
+          "entry_hp_source:existing_route_projection:n=0",
+          "current_relics_and_potion_belt_only",
+          "unmodelled_relic:蛇之戒指",
+          "immediate_entry_hp_assumed_current_hp_not_route_forecast",
+          "visible_actual_boss",
+          "raw_simulation_not_calibrated",
+          "paired_delta_option_minus_skip_same_seed",
+          "losing_enemy_hp_conditional_on_loss",
+          "enemy_hp_fraction_denominator_is_sampled_encounter_opening_hp",
+          "remaining_enemy_hp_includes_later_phases_and_spawns_not_clamped_to_one",
+          "partial_sample_coverage"
+        ],
+        "unknown_reasons": []
+      },
+      {
+        "option_id": "card2",
+        "target_id": "f17:SOUL_FYSH",
+        "metrics": {
+          "hp_loss": {
+            "mean": 50,
+            "se": 0,
+            "n": 18
+          },
+          "turns": {
+            "mean": 14.722222222222221,
+            "se": 0.48375948458422985,
+            "n": 18
+          },
+          "damage_per_turn": {
+            "mean": 6.159296966649907,
+            "se": 0.2821509591631349,
+            "n": 18
+          },
+          "death_rate": {
+            "mean": 1,
+            "se": 0,
+            "n": 18
+          },
+          "losing_enemy_hp_fraction": {
+            "mean": 0.5935143288084466,
+            "se": 0.0175334000106773,
+            "n": 18
+          }
+        },
+        "paired_delta": {
+          "hp_loss": {
+            "mean": 0,
+            "se": 0,
+            "n": 18
+          },
+          "turns": {
+            "mean": 0,
+            "se": 0.6859943405700354,
+            "n": 18
+          },
+          "damage_per_turn": {
+            "mean": -0.20668677727501258,
+            "se": 0.2490802835507585,
+            "n": 18
+          },
+          "death_rate": {
+            "mean": 0,
+            "se": 0,
+            "n": 18
+          },
+          "losing_enemy_hp_fraction": {
+            "mean": 0.01231774761186526,
+            "se": 0.02069301654333253,
+            "n": 18
+          }
+        },
+        "samples": 18,
+        "requested_samples": 100,
+        "capped": 0,
+        "time_up": 0,
+        "missing": 82,
+        "trust": {
+          "value": "trusted",
+          "labels": []
+        },
+        "labels": [
+          "entry_hp_source:existing_route_projection:n=0",
+          "current_relics_and_potion_belt_only",
+          "unmodelled_relic:蛇之戒指",
+          "immediate_entry_hp_assumed_current_hp_not_route_forecast",
+          "visible_actual_boss",
+          "raw_simulation_not_calibrated",
+          "paired_delta_option_minus_skip_same_seed",
+          "losing_enemy_hp_conditional_on_loss",
+          "enemy_hp_fraction_denominator_is_sampled_encounter_opening_hp",
+          "remaining_enemy_hp_includes_later_phases_and_spawns_not_clamped_to_one",
+          "partial_sample_coverage"
+        ],
+        "unknown_reasons": []
+      }
+    ],
+    "current_samples": [
+      18,
+      18,
+      18,
+      18
+    ],
+    "DPR_in_separate_A_rows": true,
+    "A_preparation_ms": 4255,
+    "A_preparation_timed_out": false,
+    "A_B_telemetry": {
+      "elapsed_ms": 4254.675489000016,
+      "preparation_ms": 861.053549000033,
+      "simulation_ms": 3389.41887199998,
+      "cache_hits": 0,
+      "simulations": 511,
+      "long_term_cache": "miss",
+      "long_term_computed": 0,
+      "long_term_total": 204,
+      "pending_work": true
+    },
+    "association_limit": "A/B rows lack decision_id; exact same run/floor, pre-decision timestamp and exact option set, unique match in original alert cutoff; not a question_id identity or proof of reasoning/benefit"
+  },
+  {
+    "decision_id": "dd137f65-1d6e-4a78-8782-06c30a6e13df",
+    "floor": 4,
+    "ts": "2026-10-20T18:42:06.730Z",
+    "source": {
+      "offset": 3068857319,
+      "length": 5383,
+      "sha256": "6285a12381c0061498de23daabc301a11761f46141b3f0561f05149ecbe67865"
+    },
+    "decider": "jev",
+    "result": "completed: Action completed.",
+    "fallback": false,
+    "chosen": {
+      "action": "skip_reward_cards"
+    },
+    "expect": null,
+    "legacy_boss_sim_present": false,
+    "legacy_compact_entries_empty": true,
+    "A_B_source": {
+      "source": "logs/v6-card-results.jsonl",
+      "end": 5121503,
+      "offset": 4871699,
+      "length": 74735,
+      "sha256": "18dbaf698e8dfdb1d68a2df09e053b52317ca37250b8436db8f417ac65d25dc5",
+      "snapshot": "paper/materials/20261021-0246-ops/A-B-floor-4.jsonl"
+    },
+    "current_target": "f17:SOUL_FYSH",
+    "option_card_ids": {
+      "card0": "Take PREPARED",
+      "card1": "Take DEFLECT",
+      "card2": "Take POUNCE",
+      "skip": "Take no card"
+    },
+    "current_rows": [
+      {
+        "option_id": "skip",
+        "target_id": "f17:SOUL_FYSH",
+        "metrics": {
+          "hp_loss": {
+            "mean": 50,
+            "se": 0,
+            "n": 34
+          },
+          "turns": {
+            "mean": 14.470588235294118,
+            "se": 0.366209309926349,
+            "n": 34
+          },
+          "damage_per_turn": {
+            "mean": 5.422932747759738,
+            "se": 0.1563570648460914,
+            "n": 34
+          },
+          "death_rate": {
+            "mean": 1,
+            "se": 0,
+            "n": 34
+          },
+          "losing_enemy_hp_fraction": {
+            "mean": 0.6481235027947833,
+            "se": 0.010533368776031019,
+            "n": 34
+          }
+        },
+        "paired_delta": {
+          "hp_loss": {
+            "mean": 0,
+            "se": 0,
+            "n": 34
+          },
+          "turns": {
+            "mean": 0,
+            "se": 0,
+            "n": 34
+          },
+          "damage_per_turn": {
+            "mean": 0,
+            "se": 0,
+            "n": 34
+          },
+          "death_rate": {
+            "mean": 0,
+            "se": 0,
+            "n": 34
+          },
+          "losing_enemy_hp_fraction": {
+            "mean": 0,
+            "se": 0,
+            "n": 34
+          }
+        },
+        "samples": 34,
+        "requested_samples": 100,
+        "capped": 0,
+        "time_up": 0,
+        "missing": 66,
+        "trust": {
+          "value": "trusted",
+          "labels": []
+        },
+        "labels": [
+          "entry_hp_source:existing_route_projection:n=0",
+          "current_relics_and_potion_belt_only",
+          "unmodelled_relic:蛇之戒指",
+          "immediate_entry_hp_assumed_current_hp_not_route_forecast",
+          "visible_actual_boss",
+          "raw_simulation_not_calibrated",
+          "paired_delta_option_minus_skip_same_seed",
+          "losing_enemy_hp_conditional_on_loss",
+          "enemy_hp_fraction_denominator_is_sampled_encounter_opening_hp",
+          "remaining_enemy_hp_includes_later_phases_and_spawns_not_clamped_to_one",
+          "partial_sample_coverage"
+        ],
+        "unknown_reasons": []
+      },
+      {
+        "option_id": "card0",
+        "target_id": "f17:SOUL_FYSH",
+        "metrics": {
+          "hp_loss": {
+            "mean": 50,
+            "se": 0,
+            "n": 34
+          },
+          "turns": {
+            "mean": 13.705882352941178,
+            "se": 0.34437007972346384,
+            "n": 34
+          },
+          "damage_per_turn": {
+            "mean": 5.787258783603939,
+            "se": 0.15703329009249897,
+            "n": 34
+          },
+          "death_rate": {
+            "mean": 1,
+            "se": 0,
+            "n": 34
+          },
+          "losing_enemy_hp_fraction": {
+            "mean": 0.645195634815012,
+            "se": 0.00877149696741234,
+            "n": 34
+          }
+        },
+        "paired_delta": {
+          "hp_loss": {
+            "mean": 0,
+            "se": 0,
+            "n": 34
+          },
+          "turns": {
+            "mean": -0.7647058823529412,
+            "se": 0.5324728299821345,
+            "n": 34
+          },
+          "damage_per_turn": {
+            "mean": 0.3643260358442018,
+            "se": 0.2202648762323675,
+            "n": 34
+          },
+          "death_rate": {
+            "mean": 0,
+            "se": 0,
+            "n": 34
+          },
+          "losing_enemy_hp_fraction": {
+            "mean": -0.0029278679797710935,
+            "se": 0.013524671634602893,
+            "n": 34
+          }
+        },
+        "samples": 34,
+        "requested_samples": 100,
+        "capped": 0,
+        "time_up": 0,
+        "missing": 66,
+        "trust": {
+          "value": "trusted",
+          "labels": []
+        },
+        "labels": [
+          "entry_hp_source:existing_route_projection:n=0",
+          "current_relics_and_potion_belt_only",
+          "unmodelled_relic:蛇之戒指",
+          "immediate_entry_hp_assumed_current_hp_not_route_forecast",
+          "visible_actual_boss",
+          "raw_simulation_not_calibrated",
+          "paired_delta_option_minus_skip_same_seed",
+          "losing_enemy_hp_conditional_on_loss",
+          "enemy_hp_fraction_denominator_is_sampled_encounter_opening_hp",
+          "remaining_enemy_hp_includes_later_phases_and_spawns_not_clamped_to_one",
+          "partial_sample_coverage"
+        ],
+        "unknown_reasons": []
+      },
+      {
+        "option_id": "card1",
+        "target_id": "f17:SOUL_FYSH",
+        "metrics": {
+          "hp_loss": {
+            "mean": 50,
+            "se": 0,
+            "n": 34
+          },
+          "turns": {
+            "mean": 14.411764705882353,
+            "se": 0.3731583346347101,
+            "n": 34
+          },
+          "damage_per_turn": {
+            "mean": 5.809227220299883,
+            "se": 0.13361027905498335,
+            "n": 34
+          },
+          "death_rate": {
+            "mean": 1,
+            "se": 0,
+            "n": 34
+          },
+          "losing_enemy_hp_fraction": {
+            "mean": 0.6252328985893001,
+            "se": 0.008846802719810695,
+            "n": 34
+          }
+        },
+        "paired_delta": {
+          "hp_loss": {
+            "mean": 0,
+            "se": 0,
+            "n": 34
+          },
+          "turns": {
+            "mean": -0.05882352941176468,
+            "se": 0.5065369060616162,
+            "n": 34
+          },
+          "damage_per_turn": {
+            "mean": 0.38629447254014715,
+            "se": 0.21515656296059243,
+            "n": 34
+          },
+          "death_rate": {
+            "mean": 0,
+            "se": 0,
+            "n": 34
+          },
+          "losing_enemy_hp_fraction": {
+            "mean": -0.022890604205483098,
+            "se": 0.012741067403484215,
+            "n": 34
+          }
+        },
+        "samples": 34,
+        "requested_samples": 100,
+        "capped": 0,
+        "time_up": 0,
+        "missing": 66,
+        "trust": {
+          "value": "trusted",
+          "labels": []
+        },
+        "labels": [
+          "entry_hp_source:existing_route_projection:n=0",
+          "current_relics_and_potion_belt_only",
+          "unmodelled_relic:蛇之戒指",
+          "immediate_entry_hp_assumed_current_hp_not_route_forecast",
+          "visible_actual_boss",
+          "raw_simulation_not_calibrated",
+          "paired_delta_option_minus_skip_same_seed",
+          "losing_enemy_hp_conditional_on_loss",
+          "enemy_hp_fraction_denominator_is_sampled_encounter_opening_hp",
+          "remaining_enemy_hp_includes_later_phases_and_spawns_not_clamped_to_one",
+          "partial_sample_coverage"
+        ],
+        "unknown_reasons": []
+      },
+      {
+        "option_id": "card2",
+        "target_id": "f17:SOUL_FYSH",
+        "metrics": {
+          "hp_loss": {
+            "mean": 50,
+            "se": 0,
+            "n": 34
+          },
+          "turns": {
+            "mean": 13.5,
+            "se": 0.34364617213364007,
+            "n": 34
+          },
+          "damage_per_turn": {
+            "mean": 6.935693372371573,
+            "se": 0.21329281055941973,
+            "n": 34
+          },
+          "death_rate": {
+            "mean": 1,
+            "se": 0,
+            "n": 34
+          },
+          "losing_enemy_hp_fraction": {
+            "mean": 0.582778812882619,
+            "se": 0.011163686262834528,
+            "n": 34
+          }
+        },
+        "paired_delta": {
+          "hp_loss": {
+            "mean": 0,
+            "se": 0,
+            "n": 34
+          },
+          "turns": {
+            "mean": -0.9705882352941179,
+            "se": 0.4537137194830488,
+            "n": 34
+          },
+          "damage_per_turn": {
+            "mean": 1.5127606246118355,
+            "se": 0.2578643899104002,
+            "n": 34
+          },
+          "death_rate": {
+            "mean": 0,
+            "se": 0,
+            "n": 34
+          },
+          "losing_enemy_hp_fraction": {
+            "mean": -0.06534468991216397,
+            "se": 0.014302814645669347,
+            "n": 34
+          }
+        },
+        "samples": 34,
+        "requested_samples": 100,
+        "capped": 0,
+        "time_up": 0,
+        "missing": 66,
+        "trust": {
+          "value": "trusted",
+          "labels": []
+        },
+        "labels": [
+          "entry_hp_source:existing_route_projection:n=0",
+          "current_relics_and_potion_belt_only",
+          "unmodelled_relic:蛇之戒指",
+          "immediate_entry_hp_assumed_current_hp_not_route_forecast",
+          "visible_actual_boss",
+          "raw_simulation_not_calibrated",
+          "paired_delta_option_minus_skip_same_seed",
+          "losing_enemy_hp_conditional_on_loss",
+          "enemy_hp_fraction_denominator_is_sampled_encounter_opening_hp",
+          "remaining_enemy_hp_includes_later_phases_and_spawns_not_clamped_to_one",
+          "partial_sample_coverage"
+        ],
+        "unknown_reasons": []
+      }
+    ],
+    "current_samples": [
+      34,
+      34,
+      34,
+      34
+    ],
+    "DPR_in_separate_A_rows": true,
+    "A_preparation_ms": 4295,
+    "A_preparation_timed_out": false,
+    "A_B_telemetry": {
+      "elapsed_ms": 4256.679245000007,
+      "preparation_ms": 455.68778600002406,
+      "simulation_ms": 3796.379574999999,
+      "cache_hits": 0,
+      "simulations": 935,
+      "long_term_cache": "hit",
+      "long_term_computed": 0,
+      "long_term_total": 204,
+      "pending_work": true
+    },
+    "association_limit": "A/B rows lack decision_id; exact same run/floor, pre-decision timestamp and exact option set, unique match in original alert cutoff; not a question_id identity or proof of reasoning/benefit"
+  },
+  {
+    "decision_id": "6badb6c9-0d2d-465c-a8bd-fc537547dd7b",
+    "floor": 8,
+    "ts": "2026-10-20T18:44:23.393Z",
+    "source": {
+      "offset": 3070002911,
+      "length": 5417,
+      "sha256": "25a76a1e8e80ec3b520882109fc28d14037a5bd1cf9ca65db05979dbf05a2aba"
+    },
+    "decider": "jev",
+    "result": "completed: Action completed.",
+    "fallback": false,
+    "chosen": {
+      "action": "skip_reward_cards"
+    },
+    "expect": null,
+    "legacy_boss_sim_present": false,
+    "legacy_compact_entries_empty": true,
+    "A_B_source": {
+      "source": "logs/v6-card-results.jsonl",
+      "end": 5121503,
+      "offset": 4946434,
+      "length": 51433,
+      "sha256": "5be4c11ae1e5705e4e4b0ff421a5549af032cb5f178bd6fbb9880175abe7819d",
+      "snapshot": "paper/materials/20261021-0246-ops/A-B-floor-8.jsonl"
+    },
+    "current_target": "f17:SOUL_FYSH",
+    "option_card_ids": {
+      "card0": "Take POISONED_STAB",
+      "card1": "Take BLADE_DANCE",
+      "card2": "Take DAGGER_THROW",
+      "skip": "Take no card"
+    },
+    "current_rows": [
+      {
+        "option_id": "skip",
+        "target_id": "f17:SOUL_FYSH",
+        "metrics": {
+          "hp_loss": {
+            "mean": 70,
+            "se": 0,
+            "n": 10
+          },
+          "turns": {
+            "mean": 16.7,
+            "se": 0.6333333333333334,
+            "n": 10
+          },
+          "damage_per_turn": {
+            "mean": 7.311082797491466,
+            "se": 0.3464861312168966,
+            "n": 10
+          },
+          "death_rate": {
+            "mean": 1,
+            "se": 0,
+            "n": 10
+          },
+          "losing_enemy_hp_fraction": {
+            "mean": 0.45248868778280543,
+            "se": 0.02351200191269969,
+            "n": 10
+          }
+        },
+        "paired_delta": {
+          "hp_loss": {
+            "mean": 0,
+            "se": 0,
+            "n": 10
+          },
+          "turns": {
+            "mean": 0,
+            "se": 0,
+            "n": 10
+          },
+          "damage_per_turn": {
+            "mean": 0,
+            "se": 0,
+            "n": 10
+          },
+          "death_rate": {
+            "mean": 0,
+            "se": 0,
+            "n": 10
+          },
+          "losing_enemy_hp_fraction": {
+            "mean": 0,
+            "se": 0,
+            "n": 10
+          }
+        },
+        "samples": 10,
+        "requested_samples": 100,
+        "capped": 0,
+        "time_up": 0,
+        "missing": 90,
+        "trust": {
+          "value": "trusted",
+          "labels": []
+        },
+        "labels": [
+          "entry_hp_source:existing_route_projection:n=0",
+          "current_relics_and_potion_belt_only",
+          "unmodelled_relic:蛇之戒指",
+          "immediate_entry_hp_assumed_current_hp_not_route_forecast",
+          "visible_actual_boss",
+          "raw_simulation_not_calibrated",
+          "paired_delta_option_minus_skip_same_seed",
+          "losing_enemy_hp_conditional_on_loss",
+          "enemy_hp_fraction_denominator_is_sampled_encounter_opening_hp",
+          "remaining_enemy_hp_includes_later_phases_and_spawns_not_clamped_to_one",
+          "partial_sample_coverage"
+        ],
+        "unknown_reasons": []
+      },
+      {
+        "option_id": "card0",
+        "target_id": "f17:SOUL_FYSH",
+        "metrics": {
+          "hp_loss": {
+            "mean": 70,
+            "se": 0,
+            "n": 10
+          },
+          "turns": {
+            "mean": 16.9,
+            "se": 0.4333333333333334,
+            "n": 10
+          },
+          "damage_per_turn": {
+            "mean": 8.907843137254902,
+            "se": 0.31393906129182614,
+            "n": 10
+          },
+          "death_rate": {
+            "mean": 1,
+            "se": 0,
+            "n": 10
+          },
+          "losing_enemy_hp_fraction": {
+            "mean": 0.32262443438914035,
+            "se": 0.017473459985299696,
+            "n": 10
+          }
+        },
+        "paired_delta": {
+          "hp_loss": {
+            "mean": 0,
+            "se": 0,
+            "n": 10
+          },
+          "turns": {
+            "mean": 0.20000000000000012,
+            "se": 0.8537498983243798,
+            "n": 10
+          },
+          "damage_per_turn": {
+            "mean": 1.5967603397634358,
+            "se": 0.49572732998564767,
+            "n": 10
+          },
+          "death_rate": {
+            "mean": 0,
+            "se": 0,
+            "n": 10
+          },
+          "losing_enemy_hp_fraction": {
+            "mean": -0.12986425339366517,
+            "se": 0.029809737404359177,
+            "n": 10
+          }
+        },
+        "samples": 10,
+        "requested_samples": 100,
+        "capped": 0,
+        "time_up": 0,
+        "missing": 90,
+        "trust": {
+          "value": "trusted",
+          "labels": []
+        },
+        "labels": [
+          "entry_hp_source:existing_route_projection:n=0",
+          "current_relics_and_potion_belt_only",
+          "unmodelled_relic:蛇之戒指",
+          "immediate_entry_hp_assumed_current_hp_not_route_forecast",
+          "visible_actual_boss",
+          "raw_simulation_not_calibrated",
+          "paired_delta_option_minus_skip_same_seed",
+          "losing_enemy_hp_conditional_on_loss",
+          "enemy_hp_fraction_denominator_is_sampled_encounter_opening_hp",
+          "remaining_enemy_hp_includes_later_phases_and_spawns_not_clamped_to_one",
+          "partial_sample_coverage"
+        ],
+        "unknown_reasons": []
+      },
+      {
+        "option_id": "card1",
+        "target_id": "f17:SOUL_FYSH",
+        "metrics": {
+          "hp_loss": {
+            "mean": 70,
+            "se": 0,
+            "n": 10
+          },
+          "turns": {
+            "mean": 16.4,
+            "se": 0.6531972647421808,
+            "n": 10
+          },
+          "damage_per_turn": {
+            "mean": 8.096960784313726,
+            "se": 0.3541976680915715,
+            "n": 10
+          },
+          "death_rate": {
+            "mean": 1,
+            "se": 0,
+            "n": 10
+          },
+          "losing_enemy_hp_fraction": {
+            "mean": 0.4063348416289592,
+            "se": 0.019100049614813548,
+            "n": 10
+          }
+        },
+        "paired_delta": {
+          "hp_loss": {
+            "mean": 0,
+            "se": 0,
+            "n": 10
+          },
+          "turns": {
+            "mean": -0.3,
+            "se": 0.931545907498808,
+            "n": 10
+          },
+          "damage_per_turn": {
+            "mean": 0.7858779868222592,
+            "se": 0.5730079975229444,
+            "n": 10
+          },
+          "death_rate": {
+            "mean": 0,
+            "se": 0,
+            "n": 10
+          },
+          "losing_enemy_hp_fraction": {
+            "mean": -0.046153846153846156,
+            "se": 0.03282267537902463,
+            "n": 10
+          }
+        },
+        "samples": 10,
+        "requested_samples": 100,
+        "capped": 0,
+        "time_up": 0,
+        "missing": 90,
+        "trust": {
+          "value": "trusted",
+          "labels": []
+        },
+        "labels": [
+          "entry_hp_source:existing_route_projection:n=0",
+          "current_relics_and_potion_belt_only",
+          "unmodelled_relic:蛇之戒指",
+          "immediate_entry_hp_assumed_current_hp_not_route_forecast",
+          "visible_actual_boss",
+          "raw_simulation_not_calibrated",
+          "paired_delta_option_minus_skip_same_seed",
+          "losing_enemy_hp_conditional_on_loss",
+          "enemy_hp_fraction_denominator_is_sampled_encounter_opening_hp",
+          "remaining_enemy_hp_includes_later_phases_and_spawns_not_clamped_to_one",
+          "partial_sample_coverage"
+        ],
+        "unknown_reasons": []
+      },
+      {
+        "option_id": "card2",
+        "target_id": "f17:SOUL_FYSH",
+        "metrics": {
+          "hp_loss": {
+            "mean": 70,
+            "se": 0,
+            "n": 10
+          },
+          "turns": {
+            "mean": 16.9,
+            "se": 0.4333333333333334,
+            "n": 10
+          },
+          "damage_per_turn": {
+            "mean": 8.377843137254903,
+            "se": 0.30001552781378854,
+            "n": 10
+          },
+          "death_rate": {
+            "mean": 1,
+            "se": 0,
+            "n": 10
+          },
+          "losing_enemy_hp_fraction": {
+            "mean": 0.36289592760181,
+            "se": 0.01692788880434172,
+            "n": 10
+          }
+        },
+        "paired_delta": {
+          "hp_loss": {
+            "mean": 0,
+            "se": 0,
+            "n": 10
+          },
+          "turns": {
+            "mean": 0.20000000000000012,
+            "se": 0.8537498983243798,
+            "n": 10
+          },
+          "damage_per_turn": {
+            "mean": 1.0667603397634358,
+            "se": 0.4967516065713284,
+            "n": 10
+          },
+          "death_rate": {
+            "mean": 0,
+            "se": 0,
+            "n": 10
+          },
+          "losing_enemy_hp_fraction": {
+            "mean": -0.08959276018099548,
+            "se": 0.030916749261704873,
+            "n": 10
+          }
+        },
+        "samples": 10,
+        "requested_samples": 100,
+        "capped": 0,
+        "time_up": 0,
+        "missing": 90,
+        "trust": {
+          "value": "trusted",
+          "labels": []
+        },
+        "labels": [
+          "entry_hp_source:existing_route_projection:n=0",
+          "current_relics_and_potion_belt_only",
+          "unmodelled_relic:蛇之戒指",
+          "immediate_entry_hp_assumed_current_hp_not_route_forecast",
+          "visible_actual_boss",
+          "raw_simulation_not_calibrated",
+          "paired_delta_option_minus_skip_same_seed",
+          "losing_enemy_hp_conditional_on_loss",
+          "enemy_hp_fraction_denominator_is_sampled_encounter_opening_hp",
+          "remaining_enemy_hp_includes_later_phases_and_spawns_not_clamped_to_one",
+          "partial_sample_coverage"
+        ],
+        "unknown_reasons": []
+      }
+    ],
+    "current_samples": [
+      10,
+      10,
+      10,
+      10
+    ],
+    "DPR_in_separate_A_rows": true,
+    "A_preparation_ms": 4259,
+    "A_preparation_timed_out": false,
+    "A_B_telemetry": {
+      "elapsed_ms": 4258.541826999979,
+      "preparation_ms": 807.4318569999887,
+      "simulation_ms": 3443.787942999974,
+      "cache_hits": 0,
+      "simulations": 260,
+      "long_term_cache": "miss",
+      "long_term_computed": 0,
+      "long_term_total": 204,
+      "pending_work": true
+    },
+    "association_limit": "A/B rows lack decision_id; exact same run/floor, pre-decision timestamp and exact option set, unique match in original alert cutoff; not a question_id identity or proof of reasoning/benefit"
+  }
+]

@@ -1533,3 +1533,9 @@ Roy：「上线后进 F48 反而降低一半，这才是关键，要找问题。
 - 2026-10-21 01:21:15 CST **infra-ordinary-close-candidate-failure-isolation-20261020 原项可靠性续证（非对局阻塞）**：011301-fix无新源码，原基线0a84a8fe的tsc0，七文件10项定向9过1败；ordinary-close-isolation.test.ts初次15061ms、单文件复跑15039ms均status=null，六项Python缺完整结束，旧包装未留child error/signal。保两败及CLI参数失败，根因未知，不据此归宿主/产品、不增15000ms、不排除断言/重复同源full；原窄实现和宽父均保持，后续原工程链定位固定夹具成本与子进程结束证据。001302监控候选沿原六叶闭环，本批已去重，不另实现/派修。原件paper/materials/20261021-0119-ops/receipt.json。
 
 - 2026-10-21 02:24:01 CST **infra-ordinary-close-candidate-failure-isolation-20261020 原项接014301夹具候选（续011301，非新任务）**：三叶原WT未提交，固定扫描回调保真实manifest/Git拒绝守卫及15000ms；源码SHA/patch/红绿/24Python/整套七败与撤源同七败已冻结。未把空fixes记无源或称完整绿；11整支冲突不运，实际R406私有三叶apply-check0不代依赖/full。原ops pending-continuations/original-20261021-014301-ordinary-fixture-three-leaf.json接续P0后原工程队列最新live组合门，不由下一批重复实现，不增时限/排除断言/改生产扫描。原件paper/materials/20261021-0213-ops/receipt.json。
+
+- 2026-10-21 02:49:12 CST **原v5-dpr-health/H1监控兼容续证（JPWMMV67SZCL，接001302六叶候选）**：原132决策/5脑题/1配置冻结复算同；四V6奖励另流A/B与同局/层/前置时间/选项集唯一匹配、有当前DPR/10–34样本/4.26–4.30s，Jev已完成而缺legacy boss_sim。原数据无decision_id的关联限制保留，不一律按开关豁免；旧V5计算3条adaptive100/请求300与首300分列，零故障/降级不代满样本。原alert保留，沿已冻001302四监控+两helper最小包最新live全检，不重复派修、降低门/排除负控或把自然质量改通过。原件paper/materials/20261021-0246-ops/receipt.json。
+
+## 学习者问题队列
+
+- [ ] 2026-10-21 02:50:37 CST **silent-elite-simulation-pessimism-20261021（Silent A10，低优先/待原策略学习流程，非fix-batch纯bug）**：Claude02:5x要求核精英模拟悲观偏差。原40局/53场含1SL censored，主口径52场实死4/52=7.7%对A30.3%、掉血偏差+10.9；BYRDONIS 0/3对74%、PHROG_PARASITE 0/7对67.4%、INFESTED_PRISM 0/3对67.7%。证据与逐局/层/原帧SHA沿paper/materials/2026-10-21-v6-elite-bias-audit/report.md、per-fight.csv、prepared-inputs.json.gz，重点局清单在paper/materials/20261021-0246-ops/elite-priority-source-runs.json。待合适原策略槽逐项核敌人模型/实际开场抽牌遗物药水/后续出牌策略并出学习者自己的校准或修正提案，不由ops补机制/权重；保真实开场51场17.5%残差、Eel反例/旧错误/相关分母/样本外未知，不认绝对偏差已证明候选排序错误。队列详情notes/learning-questions/silent-elite-simulation-pessimism-20261021.json；未派批/绑新学习线程，不冒已学习。当前R407同种子配对比较照常，不改对局/live/配置或P0/P2门。

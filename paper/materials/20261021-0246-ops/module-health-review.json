@@ -1,0 +1,538 @@
+{
+  "frozen_summary_matches_original": true,
+  "frozen_rows": {
+    "decisions": 132,
+    "brain": 5,
+    "plans": 0,
+    "config": 1
+  },
+  "configuration": {
+    "run_id": "JPWMMV67SZCL",
+    "v6": {
+      "schema": "v6-config-v1",
+      "mode": "on",
+      "deciders": {
+        "card": "jev",
+        "potion": "brain",
+        "shop": "brain",
+        "rest": "brain"
+      },
+      "reflex": "off",
+      "direction_replan": "off",
+      "admission": "interfaces_only",
+      "delivered": false,
+      "samples_pick": 20,
+      "samples_act": 100,
+      "min_known_option_ratio": 0.5,
+      "direction_min_weight": 0.1,
+      "win": {
+        "certain_win": 0.95,
+        "favored": 0.7,
+        "even": 0.3,
+        "unfavored": 0.05
+      },
+      "delta": {
+        "much_se": 2,
+        "better_se": 1,
+        "much_min": 0.05
+      },
+      "triggers": {
+        "t1_core_min": 0,
+        "t2_se": 2,
+        "t2_min_delta": 1,
+        "t2_consecutive": 2,
+        "t3_weight_max": 0,
+        "t5_hazard": "existing_route_projection",
+        "t6_unknown_max": 1,
+        "t6_fallbacks": 100,
+        "t7_checkpoint": "validated_brain_answer"
+      },
+      "budgets": {
+        "brain_soft_cap": 15,
+        "brain_ms": 90000,
+        "act_ms": 60000,
+        "pick_ms": 5000,
+        "jev_ms": 5000
+      },
+      "invalid": []
+    },
+    "construction": {
+      "architecture": "V5",
+      "schema": "construction-v1",
+      "mode": "shadow",
+      "policy": "observed-signature-completion",
+      "validation": "prospective-calibration-required",
+      "evaluation": "same-question-combat-facts"
+    },
+    "code": {
+      "commit": null,
+      "code": null,
+      "dirty": null,
+      "dirty_files": [],
+      "branch": null,
+      "worktree": "live",
+      "error": "git status failed: spawnSync git ENOBUFS"
+    }
+  },
+  "four_reward_service_readbacks": [
+    {
+      "floor": 2,
+      "current_samples": [
+        26,
+        26,
+        26,
+        26
+      ],
+      "DPR_in_separate_A_rows": true,
+      "A_preparation_ms": 4290,
+      "timed_out": false,
+      "decider": "jev",
+      "fallback": false,
+      "chosen": {
+        "action": "choose_reward_card",
+        "option_index": 1
+      },
+      "table_elapsed_ms": 4258.3149330000015
+    },
+    {
+      "floor": 3,
+      "current_samples": [
+        18,
+        18,
+        18,
+        18
+      ],
+      "DPR_in_separate_A_rows": true,
+      "A_preparation_ms": 4255,
+      "timed_out": false,
+      "decider": "jev",
+      "fallback": false,
+      "chosen": {
+        "action": "choose_reward_card",
+        "option_index": 2
+      },
+      "table_elapsed_ms": 4254.675489000016
+    },
+    {
+      "floor": 4,
+      "current_samples": [
+        34,
+        34,
+        34,
+        34
+      ],
+      "DPR_in_separate_A_rows": true,
+      "A_preparation_ms": 4295,
+      "timed_out": false,
+      "decider": "jev",
+      "fallback": false,
+      "chosen": {
+        "action": "skip_reward_cards"
+      },
+      "table_elapsed_ms": 4256.679245000007
+    },
+    {
+      "floor": 8,
+      "current_samples": [
+        10,
+        10,
+        10,
+        10
+      ],
+      "DPR_in_separate_A_rows": true,
+      "A_preparation_ms": 4259,
+      "timed_out": false,
+      "decider": "jev",
+      "fallback": false,
+      "chosen": {
+        "action": "skip_reward_cards"
+      },
+      "table_elapsed_ms": 4258.541826999979
+    }
+  ],
+  "computation": {
+    "attempts": 4,
+    "failures": 0,
+    "degraded": 0,
+    "evidence": [],
+    "alert": false,
+    "scope": "B2/B3 computation service failures; degradation permits continuation, not fault resolution."
+  },
+  "adaptive": {
+    "mode": "on",
+    "observed": 3,
+    "produced": 3,
+    "errors": 0,
+    "evaluable": 0,
+    "matched": 0,
+    "unknown": 0,
+    "complete_adaptive": 3,
+    "budgeted_partial": 0,
+    "production_evaluable": 0,
+    "production_matched": 0,
+    "agreement": null,
+    "production_agreement": null,
+    "saved_fraction": {
+      "p50": null,
+      "p90": null
+    },
+    "mismatches": [],
+    "actual_saved_fraction": {
+      "p50": 0.6666666666666666,
+      "p90": 0.6666666666666666
+    },
+    "candidate_samples": [
+      100,
+      100,
+      100,
+      100,
+      100,
+      100,
+      100,
+      100,
+      100,
+      100,
+      100,
+      100,
+      100,
+      100,
+      100,
+      100,
+      100,
+      100,
+      100,
+      100,
+      100,
+      100,
+      100,
+      100,
+      100,
+      100,
+      100
+    ],
+    "candidate_rounds": [
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1
+    ],
+    "stop_counts": {
+      "indifferent": 4,
+      "eliminated": 19,
+      "leader": 4
+    },
+    "alert": false,
+    "admission_state": "accepted",
+    "admission": "accepted source; runtime mode=on; never auto-enable",
+    "limits": "Shadow estimates and actual on-mode sample work are separate. On-mode cannot observe full-run agreement; no elapsed-time saving or game benefit inferred."
+  },
+  "pipeline": {
+    "enabled": true,
+    "evaluation_expected": 5,
+    "evaluation_attached": 5,
+    "evaluation_missing": 0,
+    "brain_evaluation": 5,
+    "accepted_evaluation": 5,
+    "accepted_choice_with_evaluation": 4,
+    "plan_due": 0,
+    "accepted_structured_plan": 0,
+    "missing_structured_plan": 0,
+    "saved_structured_plan": 0,
+    "plan_readback": 0,
+    "checkpoint_review_due": 0,
+    "probability_delivered": 0,
+    "admission": {
+      "missing_or_mismatched_prospective_calibration": 3
+    },
+    "evidence": [],
+    "alert": false,
+    "limits": "Payload delivery, accepted output and saved/read-back plans are distinct observations, not causal win-rate evidence. Missing calibration is pending, not a service failure."
+  },
+  "shadow": {
+    "readiness": {
+      "mode": "shadow",
+      "expected": 4,
+      "produced": 4,
+      "missing": 0,
+      "eligible": 4,
+      "low_trust": 0,
+      "sign_rejected": 0,
+      "brain_delivered": 0,
+      "brain_accepted": 0,
+      "ms_max": 2.8812749999997322,
+      "longest_missing_streak": 0,
+      "alert": false,
+      "limits": "Shadow is not brain delivery. Low trust and failed sign audit suppress facts without changing mandatory computation or old ranking."
+    },
+    "rank": {
+      "mode": "shadow",
+      "expected": 0,
+      "produced": 0,
+      "used": 0,
+      "fallback": 0,
+      "missing": 0,
+      "shadow_produced": 0,
+      "shadow_invalid": 0,
+      "fallback_reasons": {},
+      "longest_missing_streak": 0,
+      "alert": false,
+      "limits": "S tie ranking is conditional on paired samples, sign audit and existing model trust; not game calibration or causal benefit."
+    },
+    "build": {
+      "mode": "shadow",
+      "expected": 4,
+      "produced": 4,
+      "missing": 0,
+      "brain_delivered": 0,
+      "brain_accepted": 0,
+      "choices": 4,
+      "overrides": 2,
+      "reasons_present": 0,
+      "missing_reasons": 2,
+      "target_pending": 0,
+      "longest_missing_streak": 0,
+      "alert": false,
+      "limits": "Shadow choices do not require override reasons. Pending card targets and first shop actions do not certify complete plans or causal benefit."
+    },
+    "global": {
+      "mode": "shadow",
+      "expected": 4,
+      "covered": 4,
+      "missing": 0,
+      "invalid_shadow": 0,
+      "observations": 4,
+      "memo_hits": 0,
+      "current_dependency_unknown": 0,
+      "service_failures": 0,
+      "partial": 4,
+      "unknown": 0,
+      "budgeted_partial": 0,
+      "unknown_reasons": {
+        "offered_candidate_not_modeled": 3,
+        "校准 Brier 0.171192，高于整体 0.107560 的 1.25 倍 0.134451; 模拟每回合被打穿的血是实际的 1.33 倍": 4,
+        "模拟每回合被打穿的血是实际的 1.38 倍": 4,
+        "校准 Brier 0.139196，高于整体 0.107560 的 1.25 倍 0.134451": 4,
+        "Act3_quality_gate_and_production_trust_unknown": 12
+      },
+      "longest_missing_streak": 0,
+      "wall_ms": {
+        "n": 4,
+        "p50": 4.5,
+        "p90": 6.0,
+        "max": 6
+      },
+      "computation_wall_ms": {
+        "n": 4,
+        "p50": 4.5,
+        "p90": 6.0,
+        "max": 6
+      },
+      "memo_wall_ms": {
+        "n": 0,
+        "p50": null,
+        "p90": null,
+        "max": null
+      },
+      "future_target_wall_ms": {
+        "n": 0,
+        "p50": null,
+        "p90": null,
+        "max": null
+      },
+      "evidence": [],
+      "alert": false,
+      "admission": "pending two complete natural shadow runs and real later-Boss comparison report; never auto-enable",
+      "limits": "Declared Act3/final unknowns are coverage limitations, not zero predictions or service failures. Times are observed wall clocks with duplicate observation IDs excluded, not CPU time or a causal speedup. No calibration, whole-run win probability or role ACK inferred."
+    }
+  },
+  "diagnostics": [
+    {
+      "ts": "2026-10-20T18:38:56.639Z",
+      "schema": "build-sim-health-v1",
+      "status": "produced",
+      "availableCpus": 32,
+      "loadAverage": [
+        2.17,
+        3.84,
+        9.02
+      ],
+      "decks": 1,
+      "options": 0,
+      "deckCards": 13,
+      "deadlineMs": 10928.112335999998,
+      "orderSearch": null,
+      "comparison": {
+        "samples": 300,
+        "elapsedMs": 987,
+        "timedOut": false,
+        "workers": 24,
+        "deadlineMs": 10927.887832999999,
+        "pool": {
+          "queueMs": 0,
+          "coldStart": true,
+          "preparationMs": 15,
+          "firstReplyMs": 402,
+          "chunksPlanned": 38,
+          "chunksDispatched": 38,
+          "chunksCompleted": 38,
+          "outcomesCompleted": 300
+        }
+      },
+      "boss": "SOUL_FYSH",
+      "samples": 300,
+      "requested": 300,
+      "minimumShown": 300,
+      "timedOut": false,
+      "simMs": 1017,
+      "workers": 24
+    },
+    {
+      "ts": "2026-10-20T18:42:45.217Z",
+      "schema": "build-sim-health-v1",
+      "status": "produced",
+      "availableCpus": 32,
+      "loadAverage": [
+        4.25,
+        4.02,
+        8.05
+      ],
+      "decks": 14,
+      "options": 14,
+      "deckCards": 17,
+      "deadlineMs": 10872.464123000012,
+      "orderSearch": null,
+      "comparison": {
+        "samples": 100,
+        "elapsedMs": 2862,
+        "timedOut": false,
+        "workers": 24,
+        "deadlineMs": 10872.29666500003,
+        "pool": {
+          "queueMs": 0,
+          "coldStart": true,
+          "preparationMs": 13,
+          "firstReplyMs": 358,
+          "chunksPlanned": 182,
+          "chunksDispatched": 182,
+          "chunksCompleted": 182,
+          "outcomesCompleted": 1400
+        }
+      },
+      "boss": "SOUL_FYSH",
+      "samples": 100,
+      "requested": 300,
+      "minimumShown": 300,
+      "timedOut": false,
+      "simMs": 2954,
+      "workers": 24
+    },
+    {
+      "ts": "2026-10-20T18:43:01.935Z",
+      "schema": "build-sim-health-v1",
+      "status": "produced",
+      "availableCpus": 32,
+      "loadAverage": [
+        3.16,
+        3.78,
+        7.82
+      ],
+      "decks": 2,
+      "options": 1,
+      "deckCards": 19,
+      "deadlineMs": 10992.062921000004,
+      "orderSearch": null,
+      "comparison": {
+        "samples": 100,
+        "elapsedMs": 453,
+        "timedOut": false,
+        "workers": 24,
+        "deadlineMs": 10992.035482999985,
+        "pool": {
+          "queueMs": 0,
+          "coldStart": false,
+          "preparationMs": 0,
+          "firstReplyMs": 38,
+          "chunksPlanned": 26,
+          "chunksDispatched": 26,
+          "chunksCompleted": 26,
+          "outcomesCompleted": 200
+        }
+      },
+      "boss": "SOUL_FYSH",
+      "samples": 100,
+      "requested": 300,
+      "minimumShown": 300,
+      "timedOut": false,
+      "simMs": 460,
+      "workers": 24
+    },
+    {
+      "ts": "2026-10-20T18:43:46.146Z",
+      "schema": "build-sim-health-v1",
+      "status": "produced",
+      "availableCpus": 32,
+      "loadAverage": [
+        4.22,
+        4.01,
+        7.81
+      ],
+      "decks": 10,
+      "options": 9,
+      "deckCards": 19,
+      "deadlineMs": 10984.546453000046,
+      "orderSearch": null,
+      "comparison": {
+        "samples": 100,
+        "elapsedMs": 2170,
+        "timedOut": false,
+        "workers": 24,
+        "deadlineMs": 10984.512346000061,
+        "pool": {
+          "queueMs": 0,
+          "coldStart": false,
+          "preparationMs": 0,
+          "firstReplyMs": 45,
+          "chunksPlanned": 130,
+          "chunksDispatched": 130,
+          "chunksCompleted": 130,
+          "outcomesCompleted": 1000
+        }
+      },
+      "boss": "SOUL_FYSH",
+      "samples": 100,
+      "requested": 300,
+      "minimumShown": 300,
+      "timedOut": false,
+      "simMs": 2231,
+      "workers": 24
+    }
+  ],
+  "owner_chain": "v5-dpr-health/H1 -> existing001302 monitor six-leaf candidate; original W4 P0 quality kept separately",
+  "same_alert_reclassified_as_resolved": false,
+  "minimum_300_unchanged": true,
+  "no_new_model_or_test_or_simulation": true,
+  "no_game_or_live_or_switch_changes": true
+}
