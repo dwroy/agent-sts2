@@ -113,20 +113,26 @@ export function coreProgress(r: V6ProjectionRequest, option = r.baseline): CoreP
   }));
 }
 /** Canonical published alternative order is a construction convention, never a learned card ranking. */
-export function completedCore(state: BuildState, direction: V6Direction, combo: V6Combo, act: number): BuildState | null {
-  if (combo.prerequisiteResolution === "unknown" || combo.prerequisites && evaluatePredicate(combo.prerequisites, {
+function completeCore(state: BuildState, direction: V6Direction, combo: V6Combo, act: number): { state: BuildState | null; reason?: string } {
+  if (combo.prerequisiteResolution === "unknown") return { state: null, reason: "core_prerequisite_resolution_unknown" };
+  const predicate = combo.prerequisites ? evaluatePredicate(combo.prerequisites, {
     act, floor: state.floor, player: { hp: state.hp, max_hp: state.maxHp, gold: state.gold, relics: state.relics, deck: state.cards },
-  }) !== true) return null;
+  }) : true;
+  if (predicate !== true) return { state: null, reason: predicate === false ? "core_prerequisite_not_met" : "core_prerequisite_predicate_unknown" };
   const completed = structuredClone(state);
   for (const requirement of combo.requirements) {
     const n = missingRequirements(completed, { ...core(direction, combo), requirements: [requirement] })[0]?.count ?? 0;
     for (let i = 0; i < n; i++) {
       const card = requirement.any.find(c => c.kind === "card" && (!requirement.distinct || !completed.cards.some(k => k.id === c.id)));
-      if (!card || completed.cap !== null && completed.cards.length >= completed.cap) return null;
+      if (!card) return { state: null, reason: `core_required_resource_unavailable:${requirement.id}` };
+      if (completed.cap !== null && completed.cards.length >= completed.cap) return { state: null, reason: "core_deck_capacity_exceeded" };
       completed.cards.push({ id: card.id, upgraded: card.upgraded ?? false });
     }
   }
-  return distance(completed, direction, combo) === 0 ? completed : null;
+  return distance(completed, direction, combo) === 0 ? { state: completed } : { state: null, reason: "core_completion_unresolved" };
+}
+export function completedCore(state: BuildState, direction: V6Direction, combo: V6Combo, act: number): BuildState | null {
+  return completeCore(state, direction, combo, act).state;
 }
 
 /** One existing pool; foreground never starts completed-core work. Absolute sample IDs survive bounded slices. */
@@ -157,10 +163,13 @@ export class V6CardResultsEngine {
     }
     return prepared;
   }
-  private job(r: V6ProjectionRequest, context: CardResultsContext, target: CardCombatTarget, option: V6ProjectionOption,
+  private job(r: V6ProjectionRequest, target: CardCombatTarget, option: V6ProjectionOption,
     prepared: V6PreparedProjection | null): Job | null {
     if (!prepared || unmodelledCards(prepared).length) return null;
-    const key = v6Digest([context.fingerprint, r.seed, r.modelVersion, target, option.state, slimInput(prepared.input)]);
+    // A state change still invalidates the published snapshot. After constructing the new
+    // opening, identical complete rollout inputs may reuse exactly the same absolute samples.
+    // Never key only by core/card name: HP, card faces, potions, encounter and continuation live in input.
+    const key = v6Digest([r.seed, r.modelVersion, slimInput(prepared.input)]);
     let stored = this.samples.get(key);
     if (!stored) { stored = { key, prepared, outcomes: [] }; this.samples.set(key, stored); }
     // A bounded FIFO protects the active question and a complete 17-combo target grid.
@@ -181,6 +190,9 @@ export class V6CardResultsEngine {
       active.forEach((j, deck) => {
         result.outcomes[deck]?.[0]?.forEach((sample, i) => { if (sample && !j.stored.outcomes[i]) { j.stored.outcomes[i] = sample; simulations++; } });
       });
+      // A serial runner resolves synchronously. Let the existing model response/timeout
+      // cancel background work before scheduling another slice; never starve network I/O.
+      if (signal) await new Promise<void>(resolve => setImmediate(resolve));
       if (result.timedOut) break;
       start = end;
     }
@@ -193,7 +205,7 @@ export class V6CardResultsEngine {
     const groups = targets.map(target => {
       const at = this.now();
       const prepared = options.map(option => this.now() < deadline ? this.prepare(r, context, target, option) : null);
-      const jobs = options.map((option, i) => this.job(r, context, target, option, prepared[i]!));
+      const jobs = options.map((option, i) => this.job(r, target, option, prepared[i]!));
       hits += jobs.filter(j => j?.stored.outcomes.filter(Boolean).length).length;
       preparation += this.now() - at;
       return { target, prepared, jobs };
@@ -222,34 +234,38 @@ export class V6CardResultsEngine {
   }
   async precompute(r: V6ProjectionRequest, context: CardResultsContext, budgetMs: number, signal?: AbortSignal): Promise<void> {
     const deadline = this.now() + budgetMs, rows: CoreCombatRow[] = [];
-    const targets = r.targets.filter(t => t.kind !== "current"), cursor = this.backgroundCursor.get(context.fingerprint) ?? 0;
-    const ordered = [...targets.slice(cursor), ...targets.slice(0, cursor)];
-    // Prepare and sample one target at a time. Preparing the entire core grid can consume
-    // a cold slice without any simulation. Rotate the next slice and use only two common
-    // samples per target before extending counts, so early targets cannot starve later ones.
+    const work = r.targets.filter(t => t.kind !== "current").flatMap(target =>
+      r.directions.flatMap(direction => direction.combos.map(combo => ({ target, direction, combo }))));
+    const cursor = this.backgroundCursor.get(context.fingerprint) ?? 0;
+    const ordered = [...work.slice(cursor), ...work.slice(0, cursor)];
+    // Construct one core and immediately sample its paired baseline. A 17-core
+    // opening grid must not spend an entire background slice before its first sample.
     outer: for (let limit = Math.min(2, this.samplesPerOption);; limit = Math.min(this.samplesPerOption, limit + 8)) {
-      for (const target of ordered) {
+      for (const item of ordered) {
         if (this.now() >= deadline || signal?.aborted) break outer;
-        const base = this.job(r, context, target, r.baseline, this.prepare(r, context, target, r.baseline));
-        const combos = r.directions.flatMap(direction => direction.combos.map(combo => {
-          const completed = completedCore(r.baseline.state, direction, combo, r.act);
-          const option = { ...r.baseline, id: `${direction.id}:${combo.id}`, state: completed ?? r.baseline.state };
-          // Use the original held-resource option identity with the completed cards.
-          const prepared = completed && this.now() < deadline && !signal?.aborted
-            ? this.prepare(r, context, target, option, r.baseline) : null;
-          return { direction, combo, completed, option, prepared, job: this.job(r, context, target, option, prepared) };
-        }));
-        await this.run([...(base ? [base] : []), ...combos.flatMap(k => k.job ? [k.job] : [])], r, deadline, signal, limit);
-        for (const k of combos) {
-          const row = cardCombatRow(k.option.id, target, k.prepared, k.job?.stored.outcomes ?? [], base?.stored.outcomes ?? [],
-            r.trust(target), this.samplesPerOption, base?.prepared ?? null);
-          if (!k.completed) row.unknown_reasons.push("core_prerequisite_or_required_resource_unavailable");
-          rows.push({ ...row, direction_id: k.direction.id, combo_id: k.combo.id,
-            added_cards: k.completed?.cards.slice(r.baseline.state.cards.length) ?? [] });
-        }
-        this.backgroundCursor.set(context.fingerprint, (targets.indexOf(target) + 1) % targets.length);
+        const { target, direction, combo } = item;
+        const basePrepared = this.prepare(r, context, target, r.baseline);
+        const base = this.job(r, target, r.baseline, basePrepared);
+        const completion = completeCore(r.baseline.state, direction, combo, r.act), completed = completion.state;
+        const option = { ...r.baseline, id: `${direction.id}:${combo.id}`, state: completed ?? r.baseline.state };
+        const canPrepare = this.now() < deadline && !signal?.aborted;
+        const prepared = completed && canPrepare ? this.prepare(r, context, target, option, r.baseline) : null;
+        const job = this.job(r, target, option, prepared);
+        await this.run([...(base ? [base] : []), ...(job ? [job] : [])], r, deadline, signal, limit);
+        const row = cardCombatRow(option.id, target, prepared, job?.stored.outcomes ?? [], base?.stored.outcomes ?? [],
+          r.trust(target), this.samplesPerOption, basePrepared);
+        if (!completed || !canPrepare) row.unknown_reasons = row.unknown_reasons.filter(reason => reason !== "opening_unavailable");
+        if (!completed) row.unknown_reasons.push("core_prerequisite_or_required_resource_unavailable", completion.reason!);
+        else if (!canPrepare) row.unknown_reasons.push("background_preparation_budget_exhausted");
+        else if (prepared && row.samples < 2 && (this.now() >= deadline || signal?.aborted))
+          row.unknown_reasons.push("background_sampling_budget_exhausted");
+        const error = this.openingErrors.get(v6Digest([context.fingerprint, target, option.state, option.preparationKey]));
+        if (error) row.unknown_reasons.push(error);
+        rows.push({ ...row, direction_id: direction.id, combo_id: combo.id,
+          added_cards: completed?.cards.slice(r.baseline.state.cards.length) ?? [] });
+        this.backgroundCursor.set(context.fingerprint, (work.indexOf(item) + 1) % work.length);
       }
-      if (limit === this.samplesPerOption || !targets.length) break;
+      if (limit === this.samplesPerOption || !work.length) break;
     }
     const previous = this.longTerm.get(context.fingerprint) ?? [];
     const merged = new Map(previous.map(row => [`${row.direction_id}:${row.combo_id}:${row.target_id}`, row]));

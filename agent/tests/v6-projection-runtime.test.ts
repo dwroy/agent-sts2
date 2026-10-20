@@ -147,3 +147,35 @@ it("isolates background core work from the model budget, joins it, and never sta
   });
   expect(cardEngine.evaluate).toHaveBeenCalledOnce(); expect(cardEngine.precompute).toHaveBeenCalledOnce(); expect(record).toHaveBeenCalledOnce();
 });
+
+it.each(["resolve", "reject"])("uses the original brain wait for bounded B work and cancels on %s without joining", async mode => {
+  vi.stubEnv("V6_BUILD", "on"); vi.stubEnv("V6_CARD_DECIDER", "brain");
+  const e = env(board("xljq-f5-reward", "reward")), r = request();
+  let finish!: () => void, respond!: () => void, fail!: (error: Error) => void;
+  const original = new Promise<string>((resolve, reject) => { respond = () => resolve("original answer"); fail = reject; });
+  const cardEngine = { evaluate: vi.fn(), precompute: vi.fn(() => new Promise<void>(resolve => { finish = resolve; })) };
+  const input = vi.fn(async () => ({ factory: { create: () => ({ status: "ready", request: r }) }, situation: {} }));
+  const runtime = new V6ProjectionRuntime({ evaluate: vi.fn(), precompute: vi.fn() }, vi.fn(), undefined,
+    input as never, { engine: cardEngine as never, context: () => ({ fingerprint: "fixed" }), record: vi.fn() });
+  const parent = new DecisionBudget("original brain", "routine");
+  const result = withDecisionBudget(parent, () => runtime.duringModelWait(e, original));
+  // Attach rejection handling before settling the already-issued original request.
+  const assertion = mode === "resolve" ? expect(result).resolves.toBe("original answer") : expect(result).rejects.toThrow("original failure");
+  await vi.waitFor(() => expect(cardEngine.precompute).toHaveBeenCalledOnce());
+  expect(cardEngine.precompute.mock.calls[0]![2]).toBeGreaterThan(4500);
+  expect(cardEngine.precompute.mock.calls[0]![2]).toBeLessThanOrEqual(5000);
+  const signal = cardEngine.precompute.mock.calls[0]![3]; expect(signal.aborted).toBe(false);
+  if (mode === "resolve") respond(); else fail(new Error("original failure"));
+  await assertion; expect(signal.aborted).toBe(true); // No join: finish() has not been called.
+  expect(cardEngine.evaluate).not.toHaveBeenCalled(); expect(input).toHaveBeenCalledOnce();
+  finish(); await runtime.startCardBackground(e, 1);
+});
+
+it("does no V6 reads while wrapping the original model request with V6 off", async () => {
+  vi.stubEnv("V6_BUILD", "off");
+  const input = vi.fn(), engine = { evaluate: vi.fn(), precompute: vi.fn() };
+  const runtime = new V6ProjectionRuntime(engine, vi.fn(), undefined, input,
+    { engine: engine as never, context: vi.fn(), record: vi.fn() });
+  expect(await runtime.duringModelWait(env(board("xljq-f5-reward", "reward")), Promise.resolve(42))).toBe(42);
+  expect(input).not.toHaveBeenCalled(); expect(engine.precompute).not.toHaveBeenCalled();
+});

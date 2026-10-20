@@ -46,7 +46,8 @@ it("retains bounded partial paired rows and continues without re-running absolut
   expect(runner.calls.map(c => c.range!.from)).toEqual([0, 2, 10, 18]);
   r.weights = { D: .1 }; await engine.evaluate(r, { fingerprint: "partial" }, 30);
   expect(runner.calls).toHaveLength(4);
-  await engine.evaluate(r, { fingerprint: "HP_changed" }, 9); expect(runner.calls).toHaveLength(5);
+  // A new published snapshot is still required, but identical complete simulator inputs reuse samples.
+  await engine.evaluate(r, { fingerprint: "snapshot_changed" }, 9); expect(runner.calls).toHaveLength(4);
 });
 it("B is populated only by background calls and preserves original held-resource identity", async () => {
   const r = request(), original = r.prepare;
@@ -66,7 +67,9 @@ it("B is populated only by background calls and preserves original held-resource
   expect((await engine.evaluate(r, { fingerprint: "changed" })).long_term).toEqual([]);
 });
 it("samples B before preparing all targets and rotates interrupted slices without losing cached rows", async () => {
-  const r = request();
+  const r = request(), prepare = r.prepare;
+  // Distinct targets must have distinct effective inputs; identical inputs intentionally share samples.
+  r.prepare = (...args) => { const p = prepare(...args); if (p) p.input.solver.enemies[0]!.hp += args[0].act; return p; };
   r.targets.push(...[2, 3].map(act => ({ ...r.targets[0]!, id: `future${act}`, kind: "future" as const, act })));
   const controller = new AbortController(), runner = new Runner(() => controller.abort());
   const engine = new V6CardResultsEngine(runner, () => 0, 20), context = { fingerprint: "fair_B" };
@@ -86,17 +89,45 @@ it("samples B before preparing all targets and rotates interrupted slices withou
   expect((await engine.evaluate(r, context, 0)).long_term.map(row => [row.target_id, row.samples]))
     .toEqual([["future2", 2], ["future3", 2]]);
 });
-it("keeps useful B outcomes when cold opening preparation alone would exhaust a whole grid budget", async () => {
+it("samples a B core before constructing all 17 cold openings and resumes the next core", async () => {
   let now = 0; const r = request(), prepare = r.prepare;
-  r.targets.push(...[2, 3, 4].map(act => ({ ...r.targets[0]!, id: `future${act}`, kind: "future" as const, act })));
-  r.prepare = (...args) => { now += 10; return prepare(...args); };
-  const engine = new V6CardResultsEngine(new Runner(() => { now += 20; }), () => now, 20), context = { fingerprint: "cold_B" };
+  r.directions = Array.from({ length: 17 }, (_, i) => direction(`D${i}`, [req(`CORE${i}`)]));
+  r.targets.push({ ...r.targets[0]!, id: "future2", kind: "future", act: 2 });
+  r.prepare = (...args) => {
+    now += 10; const p = prepare(...args);
+    // These synthetic cores represent different combat inputs, rather than duplicate fixture decks.
+    if (p && args[1].cards[0]) p.input.solver.enemies[0]!.hp += Number(args[1].cards[0].id.replace("CORE", "")) + 1;
+    return p;
+  };
+  const engine = new V6CardResultsEngine(new Runner(() => { now += 20; }), () => now, 20), context = { fingerprint: "cold_17_B" };
   await engine.precompute(r, context, 35);
-  expect((await engine.evaluate(r, context, 0)).long_term.map(row => [row.target_id, row.samples])).toEqual([["future2", 2]]);
+  expect((await engine.evaluate(r, context, 0)).long_term.map(row => [row.combo_id, row.samples])).toEqual([["D0:minimal", 2]]);
   await engine.precompute(r, context, 35);
-  expect((await engine.evaluate(r, context, 0)).long_term.map(row => [row.target_id, row.samples]))
-    .toEqual([["future2", 2], ["future3", 2]]);
+  expect((await engine.evaluate(r, context, 0)).long_term.map(row => [row.combo_id, row.samples]))
+    .toEqual([["D0:minimal", 2], ["D1:minimal", 2], ["D2:minimal", 0]]);
+  expect(engine.peekCompletedCore(context.fingerprint)![2]!.unknown_reasons).toContain("background_sampling_budget_exhausted");
 });
+it("distinguishes unavailable prerequisites, resources and an exhausted preparation slice", async () => {
+  const r = request(), base = r.directions[0]!;
+  r.directions = [
+    { ...base, combos: [{ ...base.combos[0]!, id: "unknown", prerequisiteResolution: "unknown" }] },
+    { ...base, combos: [{ ...base.combos[0]!, id: "relic", requirements: [{ id: "needed_relic", count: 1, any: [{ kind: "relic", id: "ABSENT" }] }] }] },
+  ];
+  r.targets.push({ ...r.targets[0]!, id: "future", kind: "future", act: 2 });
+  const engine = new V6CardResultsEngine(new Runner(), () => 0, 2);
+  await engine.precompute(r, { fingerprint: "guard_reasons" }, 100);
+  const rows = engine.peekCompletedCore("guard_reasons")!;
+  expect(rows[0]!.unknown_reasons).toContain("core_prerequisite_resolution_unknown");
+  expect(rows[1]!.unknown_reasons).toContain("core_required_resource_unavailable:needed_relic");
+  expect(rows.every(row => row.metrics.hp_loss === null && !row.unknown_reasons.includes("opening_unavailable"))).toBe(true);
+  let now = 0; const cold = request(), prepare = cold.prepare;
+  cold.targets.push({ ...cold.targets[0]!, id: "future", kind: "future", act: 2 });
+  cold.prepare = (...args) => { now += 20; return prepare(...args); };
+  const coldEngine = new V6CardResultsEngine(new Runner(), () => now, 2);
+  await coldEngine.precompute(cold, { fingerprint: "budget_reason" }, 10);
+  expect(coldEngine.peekCompletedCore("budget_reason")![0]!.unknown_reasons).toContain("background_preparation_budget_exhausted");
+});
+
 it("does not turn capped, missing, or invalid continuous samples into deaths or survivals", () => {
   const r = request(), target = r.targets[0]!, prepared = r.prepare(target, r.baseline.state)!;
   const samples = [{ ...outcome(false), died: false, capped: true }, undefined, outcome(false)];
@@ -177,4 +208,31 @@ it("does not simulate or publish a playable unmodelled card as a blank measured 
   expect(paired.metrics.death_rate).toMatchObject({ mean: 0, n: 2 });
   expect(Object.values(paired.paired_delta).every(value => value === null)).toBe(true);
   expect(paired.unknown_reasons).toContain("baseline_unmodelled_card:UNMODELLED_FIXTURE");
+});
+
+it.each(["HP", "card face", "potion", "encounter", "continuation", "seed", "model"])(
+  "does not reuse absolute samples after %s changes the effective rollout", async change => {
+    const r = request(), runner = new Runner(), engine = new V6CardResultsEngine(runner, () => 0, 2);
+    await engine.evaluate(r, { fingerprint: "before" }); const before = runner.calls.length, prepare = r.prepare;
+    if (change === "seed") r.seed++;
+    else if (change === "model") r.modelVersion += "changed";
+    else r.prepare = (...args) => {
+      const p = prepare(...args)!;
+      if (change === "HP") p.input.solver.player.hp--;
+      if (change === "card face") p.input.piles.draw[0]!.cost++;
+      if (change === "potion") p.input.solver.potions = [{ key: "fixed-potion" }] as never;
+      if (change === "encounter") p.input.solver.enemies[0]!.hp++;
+      if (change === "continuation") p.input.continuation = { variants: [{ boss: "SECOND", count: 1,
+        input: structuredClone(p.input) }], potions: [], source: "fixed", limitation: "fixed" };
+      return p;
+    };
+    await engine.evaluate(r, { fingerprint: "after" }); expect(runner.calls.length).toBeGreaterThan(before);
+  });
+it("yields background serial slices to the original model response before starting another slice", async () => {
+  const r = request(); r.targets.push({ ...r.targets[0]!, id: "future", kind: "future", act: 2 });
+  const controller = new AbortController(), runner = new Runner();
+  const engine = new V6CardResultsEngine(runner, () => 0, 100);
+  const response = new Promise<void>(resolve => setImmediate(() => { controller.abort(); resolve(); }));
+  await engine.precompute(r, { fingerprint: "io" }, 100, controller.signal); await response;
+  expect(runner.calls).toHaveLength(1); expect(runner.calls[0]!.range).toEqual({ from: 0, to: 2 });
 });

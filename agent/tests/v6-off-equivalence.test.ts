@@ -1,9 +1,14 @@
 /** SHA256 byte baselines captured at W0 78933a38d (unchanged runtime from main 18e9ab630).
  * One fixed Ironclad board per screen, relabeled to exercise each character's existing routing.
- * Silent outcome statistics use the original W0 snapshot; other knowledge paths use missing fixtures.
+ * Silent outcomes and the three boards' Boss facts use the original W0 snapshot.
+ * Global setup preloads Boss loaders before this file's path mock; pin their caches explicitly.
+ * Other loaders use the missing-fixture path mock.
  * This checks architecture, not other roles' game knowledge.
  */
 import { createHash } from "node:crypto";
+import { setMonsterDbForTests } from "../src/knowledge/monster-db.js";
+import { setUnblockedSharesForTests } from "../src/sim/boss-clock.js";
+import frozenBossClock from "./fixtures/v6-off-boss-clock.json";
 import { setExperienceForTests } from "../src/knowledge/experience.js";
 import frozenSilentOutcomes from "./fixtures/v6-off-silent-outcome-stats.json";
 import { afterEach, expect, it, vi } from "vitest";
@@ -15,12 +20,18 @@ import { loadConfig } from "../src/core/config.js";
 vi.mock("../src/knowledge/files.js", async original => ({ ...await original<typeof import("../src/knowledge/files.js")>(),
   knowledgeFile: (_dir: string, name: string) => `/__v6_off_fixed__/${name}` }));
 setupOneshotTests();
-afterEach(() => { setExperienceForTests(null); setKnowledgeCharacter(null); vi.unstubAllEnvs(); vi.useRealTimers(); });
+afterEach(() => {
+  setMonsterDbForTests(null); setUnblockedSharesForTests(null); setExperienceForTests(null);
+  setKnowledgeCharacter(null); vi.unstubAllEnvs(); vi.useRealTimers();
+});
 const hash = (value: unknown) => createHash("sha256").update(JSON.stringify(value)).digest("hex");
 const expected = baselines as Record<string, string>;
 const cases = ["unset", "explicit_off", "off_with_all_subfeatures_requested"] as const;
 for (const character of ["ironclad", "silent", "regent"]) {
   it.each(cases)(`${character} %s preserves question bytes, resolved action and run-config identity from W0`, setting => {
+    // W0 used these Ironclad boards and cached records before relabeling the character.
+    setMonsterDbForTests(frozenBossClock.monster_db);
+    setUnblockedSharesForTests(frozenBossClock.shares);
     // W0 captured these statistics; refreshed live metadata must not alter the byte contract.
     if (character === "silent") setExperienceForTests(null, frozenSilentOutcomes);
     vi.useFakeTimers(); vi.setSystemTime(new Date("2026-10-19T00:00:00.000Z"));

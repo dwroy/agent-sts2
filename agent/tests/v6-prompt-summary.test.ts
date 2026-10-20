@@ -291,7 +291,7 @@ it("preserves every A elite and all 17 B core identities with a realistic 204-ro
     expect(option.known_current_boss).toBe(true);
     expect(immediate.map(r => asRecord(asArray(d.state.targets)[Number(r.target)]).id)).toEqual(targets.slice(0, 7).map(t => t.id));
     expect(catalog[Number(immediate[6]!.reason_ref)]).toEqual(["fixed_partial_opening_limitation"]);
-    expect(immediate[0]!.result).toEqual([[17.123, .123, 100], [8.5123, .251, 100], [19.123, .988, 100], [.12346, .0212, 100], [.35123, .0312, 12]]);
+    expect(immediate[0]!.result ?? catalog[Number(immediate[0]!.result_ref)]).toEqual([[17.123, .123, 100], [8.5123, .251, 100], [19.123, .988, 100], [.12346, .0212, 100], [.35123, .0312, 12]]);
   }
   expect(asArray(asRecord(asRecord(d.state.options).card0).advances)).toHaveLength(17);
   expect(buildV6CardPick(e, undefined, knowledge)!.decision.state).toEqual(d.state);
@@ -308,4 +308,12 @@ it("routes an impossible mandatory card catalog to the brain instead of exceedin
   expect(asRecord(result.state.prompt_budget).after).toBe(size(result.state));
   expect(promptBudgetLabels(result.state)).toContain("card_prompt_unavailable:mandatory_A_and_core_catalog_exceed_budget");
   expect(Object.keys(asRecord(result.questions.pick).criteria)).toEqual(["card0", "skip"]);
+});
+
+it("hands impossible numeric criteria to the brain without clipping cells or sending an oversized request", () => {
+  const result = boundedV6Jev({ card_result_schema: "v6-card-combat-results-v1", card_criteria_schema: "paired-criteria-v1" },
+    { pick: choiceQ("Measured comparisons", { card0: "x".repeat(24_000), skip: "Skip" }) });
+  expect(result.state.card_prompt_unavailable).toBe("mandatory_card_criteria_exceed_budget");
+  expect(Object.keys(asRecord(result.questions.pick).criteria)).toEqual(["card0", "skip"]);
+  expect(size({ model: "typesafe/jev-1.14", ...result })).toBeLessThanOrEqual(V6_JEV_REQUEST_BYTES);
 });

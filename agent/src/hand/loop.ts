@@ -1328,7 +1328,8 @@ async function runLoopWithBudgets(options: LoopOptions): Promise<LoopStats> {
               const out = plan.resolve(answer);
               return !("invalid" in out) && Boolean(out.intent);
             };
-            const { json, meta, recovered, note } = await brain.choosePlan(decision.state, question.instructions, question.criteria, { label: decision.label, memory: { ...memory } }, valid);
+            const pending = brain.choosePlan(decision.state, question.instructions, question.criteria, { label: decision.label, memory: { ...memory } }, valid);
+            const { json, meta, recovered, note } = await (v6Projection?.duringModelWait?.(env, pending) ?? pending);
             brainBy = brainDecider(meta.brain);
             takeRunPlan(json["run_plan"], meta);
             takeDirectionRide(runPlanRide ? json["run_plan"] : json);
@@ -1379,7 +1380,8 @@ async function runLoopWithBudgets(options: LoopOptions): Promise<LoopStats> {
               onEvent({ type: "note", message: `${answeredBy(meta.brain)} (${(meta.latencyMs / 1000).toFixed(1)} s) ${decision.label}: ${deepseekRecord["choice"]}${note ? ` (${note})` : ""} — ${reason}` });
             }
           } else {
-            const answer = await brain.choose(decision.state, question.instructions, question.criteria, { label: decision.label, memory: { ...memory } });
+            const pending = brain.choose(decision.state, question.instructions, question.criteria, { label: decision.label, memory: { ...memory } });
+            const answer = await (v6Projection?.duringModelWait?.(env, pending) ?? pending);
             brainBy = brainDecider(answer.brain);
             takeRunPlan(answer.runPlan, answer);
             takeDirectionRide(runPlanRide ? answer.runPlan : { v6: answer.v6 });
@@ -1590,12 +1592,11 @@ async function runLoopWithBudgets(options: LoopOptions): Promise<LoopStats> {
       const potionStarted = Date.now();
       if (cardOnly || roomOnly) stats.jevCalls += 1;
       try {
-        // Existing network wait is an idle boundary. No timer, new pool, action or foreground core fill.
-        void v6Projection?.startCardBackground(env, pollIntervalMs);
         const timedJev = potionOnly || cardOnly || roomOnly ? { model: jev.model, ask: (s: unknown, q: typeof jevQuestions) => jev.ask(s, q, Math.max(1, v6Config().budgets.jev_ms - (Date.now() - potionStarted))) } : jev;
-        const result = potionOnly ? await withPotionJevBudget(() => askJevLogged(timedJev, promptLog, promptMeta("ask"), jevState, jevQuestions))
-          : cardOnly || roomOnly ? await withConstructionJevBudget(cardOnly ? "Jev_card" : "Jev_room", () => askJevLogged(timedJev, promptLog, promptMeta("ask"), jevState, jevQuestions))
-          : await withJevRetry(() => askJevLogged(jev, promptLog, promptMeta("ask"), jevState, jevQuestions), jevRetry);
+        const pending = potionOnly ? withPotionJevBudget(() => askJevLogged(timedJev, promptLog, promptMeta("ask"), jevState, jevQuestions))
+          : cardOnly || roomOnly ? withConstructionJevBudget(cardOnly ? "Jev_card" : "Jev_room", () => askJevLogged(timedJev, promptLog, promptMeta("ask"), jevState, jevQuestions))
+          : withJevRetry(() => askJevLogged(jev, promptLog, promptMeta("ask"), jevState, jevQuestions), jevRetry);
+        const result = await (v6Projection?.duringModelWait?.(env, pending) ?? pending);
         usedJev = true;
         if (result.requestId) requestIds.push(result.requestId);
         if (!cardOnly && !roomOnly) stats.jevCalls += 1;

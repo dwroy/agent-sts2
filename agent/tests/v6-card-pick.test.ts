@@ -67,7 +67,8 @@ function delta(t: V6ProjectionTable, option: string, kind: "current_gate" | "cle
 it("keeps legal reward indices, English Decisions criteria and unknown per-combo entries", () => {
   const { e, dir } = fixture(), p = buildV6CardPick(e, undefined, dir)!;
   expect(p.choices).toEqual(["card2", "card7", "card9", "skip"]);
-  expect(p.decision.questions.pick).toMatchObject({ type: "choice", criteria: { card2: "Take TEST_CARD+", card7: "Take TEST_OTHER", card9: "Take TEST_THIRD", skip: "Take no card" } });
+  expect(p.decision.questions.pick.type).toBe("choice");
+  expect(Object.fromEntries(Object.entries(asRecord(p.decision.questions.pick).criteria as Record<string, string>).map(([k,v]) => [k, JSON.parse(v).action]))).toEqual({ card2: "Take TEST_CARD+", card7: "Take TEST_OTHER", card9: "Take TEST_THIRD", skip: "Take no card" });
   expect(p.decision.resolve(answer("card7")).intent).toEqual({ action: "choose_reward_card", option_index: 7 });
   expect(p.decision.resolve(answer("unoffered")).intent).toEqual({ action: "choose_reward_card", option_index: 2 });
   expect(p.entries).toEqual([]);
@@ -84,10 +85,11 @@ it("counts current-deck sampled outcomes even when trust and long-term cores are
   const { e, dir } = fixture(); e.v6CardResults = cardResults(["card2", "skip"]);
   const pick = buildV6CardPick(e, undefined, dir)!;
   expect(pick.decision.state).toMatchObject({ options: { card2: { known_current_boss: true,
-    immediate: [expect.objectContaining({ result: [[8, 0, 2], [4, 0, 2], [20, 0, 2], [0, 0, 2], null],
-      vs_skip: [[0, 0, 2], [0, 0, 2], [0, 0, 2], [0, 0, 2], null], trust_ref: expect.any(Number) })] },
+    immediate: [expect.objectContaining({ trust_ref: expect.any(Number) })] },
     card7: { known_current_boss: false } } });
+  expect(JSON.parse((pick.decision.questions.pick as { criteria: Record<string,string> }).criteria.card2!).A_vs_skip[0].delta).toEqual([[0,0,2], [0,0,2], [0,0,2], [0,0,2], null]);
   const row = asRecord(asArray(asRecord(asRecord(pick.decision.state.options).card2).immediate)[0]);
+  expect(row.result ?? asArray(pick.decision.state.display_catalog)[Number(row.result_ref)]).toEqual([[8, 0, 2], [4, 0, 2], [20, 0, 2], [0, 0, 2], null]);
   expect(asArray(pick.decision.state.display_catalog)[Number(row.trust_ref)]).toMatchObject({ value: "unknown" });
   recordCardPick(e, pick, join(dir, "plans.jsonl"), "current", {}, 1, null);
   const audit = JSON.parse(readFileSync(join(dir, "v6-build.jsonl"), "utf8"));
@@ -104,6 +106,29 @@ it("does not prefer earlier death when both sampled reward and skip always lose"
   expect(pick.fallback).toBe("card2");
   expect(pick.decision.resolve({}).intent).toEqual({ action: "choose_reward_card", option_index: 2 });
   expect(pick.decision.state.opening_note).toContain("earlier death");
+});
+it("reserves numeric B criteria after all seven A targets and preserves the complete request budget", () => {
+  const { e, dir } = fixture(), results = cardResults();
+  const first = results.targets[0]!;
+  results.targets = Array.from({ length: 19 }, (_, i) => ({ ...first, id: `target${i}`,
+    kind: i === 0 ? "current" as const : i < 7 ? "elite" as const : "future" as const }));
+  results.immediate = results.immediate.flatMap(row => results.targets.slice(0, 7).map(target => ({ ...row, target_id: target.id })));
+  const model = results.immediate[0]!;
+  results.long_term = ["min", "common"].flatMap(combo => results.targets.slice(7).map(target => ({ ...model,
+    direction_id: "TEST_A", combo_id: `TEST_A:${combo}`, target_id: target.id, added_cards: [{ id: "TEST_CARD", upgraded: true }] })));
+  for (const id of ["card2", "card7", "card9"]) results.progress[id] = ["min", "common"].map(combo => ({
+    direction: "TEST_A", combo: `TEST_A:${combo}`, missing_before: 2, missing_after: 1, advanced: 1 }));
+  e.v6CardResults = results;
+  const pick = buildV6CardPick(e, undefined, dir)!;
+  const criteria = (pick.decision.questions.pick as { criteria: Record<string, string> }).criteria;
+  for (const id of ["card2", "card7", "card9"]) {
+    const summary = JSON.parse(criteria[id]!);
+    expect(summary.A_vs_skip).toHaveLength(7);
+    expect(summary.B_progress).toHaveLength(2);
+    expect(summary.B_progress.every((core: { results: unknown[] }) => core.results.length > 0)).toBe(true);
+  }
+  expect(pick.decision.state.card_prompt_unavailable).toBeUndefined();
+  expect(Buffer.byteLength(JSON.stringify({ model: "typesafe/jev-1.14", state: pick.decision.state, questions: pick.decision.questions }))).toBeLessThanOrEqual(24_000);
 });
 it("consumes W3's genuine per-combination rows including the P=1 null-W0 boundary", async () => {
   const { e, dir } = fixture(), r = request(); r.ascension = 0; r.weights = { TEST_A: 1 };
