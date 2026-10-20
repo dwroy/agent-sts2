@@ -1,0 +1,12 @@
+diff --git a/paper/materials/decision-log.md b/paper/materials/decision-log.md
+index ef232cb4d..d37f72bd1 100644
+--- a/paper/materials/decision-log.md
++++ b/paper/materials/decision-log.md
+@@ -5198,3 +5198,7 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
+ - 2026-10-20T16:31:18+08:00 ops：原watcher1627报告/六CLI与原生8185逐字节核同，三旧通知角色登记阻塞解除；保存其日志原行及报告，不代ACK/知识验收/关父。W8→W4→infra与805 hold保持。原件 paper/materials/20261020-1630-ops/verification.json。
+ 
+ - 2026-10-20T16:39:09+08:00 ops：核W8r3b tsc0/full0（623文件5891过2跳）与2442输入SHA不变、三PID实际退出；唯一full窗口沿原线明交W4新条目，infra后排，CLI不冒原生启动。旧失败/中断与805 hold保留，不动live。原件 paper/materials/20261020-1637-ops/receipt.json。
++
++- 2026-10-20T16:42:29+08:00 ops：W4原生接唯一full窗，尚待W8e164实际main后冻结输入/启动；暂缓本停点记录提交免移动原集成目标，不查在途/改源或live。后infra原序。原件 paper/materials/20261020-W4-window-native-received-ops/receipt.json。
++
++- 2026-10-20T16:43:07+08:00 — V6-W8：旧公共生成器/局后统计按局缓存与增量刷新原授权窄 FF main 5cd435c4b282f3f5b73eefe54e34ea0530e00e40（原 e16464f87 在 e599ffe61 记录基线上变基；26 源 SHA 与 r3b 逐项一致）。来源完整检查 base f7d4d21a6、tree42fd17b2、2442输入SHA09d46e6e前后相同，tsc0/full0，623文件5891过2原跳；后续漂移仅并行记录，分列 integration-receipt。gitleaks0，保旧失败；main交付非live交付。W4已原生启动唯一full后续infra；本会话不重full、不运live/805、不动play/STOP/Regent。材料 paper/materials/2026-10-20-v6-refresh-legacy-incremental/；精确源码映射 checks/functional-source-input.json，main交付回执 .worktrees/v6-refresh-legacy-incremental-20261020/.artifacts/main-delivery/integration-receipt.json。

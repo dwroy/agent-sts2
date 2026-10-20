@@ -3425,3 +3425,11 @@ request_id=roy-20261017-human-pace-h0 revision=3 input_sha256=1e1c259a15f1824119
 
 2026-10-20T16:39:09+08:00 已原生实收W8释放回执并核完整终局：固定mainf7、tree42fd与2442输入前后manifest字节及SHA完全一致，tsc0/full0，623文件5891项通过2原跳过，耗时1378.643秒，原full日志SHA核同。实际检查runner、tsc、full三个PID均已不存在，原工作树无剩余检查node进程；旧r2失败、r3漂移中断和r9定向原件仍保留，未重跑未变源码。已沿原线程明确交唯一完整检查窗口给W4拿牌新条目，要求冻结最新真实输入、原阈值nice19单worker及短仓内TMPDIR；自然终局核退出后再明确释放原watcher infra。三方CLI投递成功只记入队，尚未收到W4实际启动读回，不冒已经运行。W8后续由原owner归档、核main短FF并正式交付，本轮全检通过不代源码提交、main或live发布。当前live、actor、STOP不动，805暂缓、Regent暂停及科学父边界保持。
 原件 paper/materials/20261020-1637-ops/receipt.json；verification.json；W8-window-release.json。
+
+
+2026-10-20T16:42:29+08:00 已原生收到W4确认：其已接16:37释放的唯一完整检查窗口，runner仅准备，尚未启动full；自身源码恢复和SHA核同为原owner回报，本轮未查询其工作树或冒独立核验。W4正在等待W8原任务已提交e16464f87沿原授权短FF进入main，再冻结真实联合输入并提供实际PID、树和inputSHA；不启动第二轮。ops已核该提交对象存在，但当前main尚不是其后代，因此没有把源提交、全检通过或窗口接收称为main交付、检查启动或live发布。为避免移动原W8本次集成目标，本停点暂缓提交主目录记录，原收件箱和结构化清单先据实落盘，待原集成停点续收纳；没有替owner变基、覆盖根并行叶或抢锁。已沿原W8与watcher通道同步协调，CLI仍只记入队。后续窗口仍由W4自然终局核退出后明确交给infra；805暂缓、live、actor、STOP、Regent及科学父保持。
+原件 paper/materials/20261020-W4-window-native-received-ops/receipt.json。
+
+
+2026-10-20T16:44:24+08:00 已独立核W8实际窄FF main5cd435c4，26个源文件与r3b受测manifest、tree42fd、原e164提交及新main逐项SHA一致，主目录工作字节也核同，来源全检与仅记录漂移明确分列。未重full，未把main交付称为live上线；原并行记录、旧失败和中断原件保留。W4原生固定启动回执已核base/main5cd、tree9ed4、2453输入SHA21a6，runner65082及start_ticks一致；tsc65496为0，full65597于16:42:31启动。本轮仅读取固定回执和初始manifest，不查在途进程、测试进度或full日志，不宣称完整通过。唯一窗口现属原W4，infra继续等待W4自然终局核退出及本人明确释放，已沿三方原通道同步，CLI不冒接收确认。上一停点为避免移动W8集成目标暂存的记录现接续收纳，同时保留W8新追加日志原行。live精确运输仍待原自然边界实际验收，未夹带整main或805；当前actor、STOP、Regent及科学父不动。
+原件 paper/materials/20261020-1642-ops/receipt.json；verification.json。
