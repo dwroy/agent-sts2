@@ -5252,3 +5252,5 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
 - 2026-10-20T18:29:36.714532+08:00 ops：Roy JWJ完局等待新令入最高开局门槛，已有终局STOP守候434487身份核同；五项一次精确联合完整验收/实际live读回才恢复，任一失败交Claude/Roy，不部分开局；39在途只保部分证据，W4新严格候选79a待与原W8冻结联合源。原件 paper/materials/20261020-five-item-hold-ops/receipt.json。
 
 - 2026-10-20T18:30:41.812587+08:00 ops：watcher五项等待授权957B/SHAdd1b2aff核同，与原ops直收仅抄送前缀不同，追加来源索引/短清单；已有守候不重复建，五项完整live读回才恢复，39部分绿不放行，失败交Claude/Roy，原在途full/actor不动。原件 paper/materials/20261020-1826-ops/receipt.json。
+
+- 2026-10-20T18:34:04.417520+08:00 ops：原39组合tsc0/full0=613文件5798过2跳/2363输入核同，检查PID退出、现有索引锁不动/副本树核同；唯一full窗释放回原ops，下一优先Roy五项最终联合包，六候选独立保留；不据部分绿发布或恢复，原owner终局通知已投递。原件 paper/materials/20261020-1831-ops/receipt.json。
