@@ -5448,3 +5448,7 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
 - 2026-10-21 04:15:49 CST 原ops：实收Claude04:2x，2GF自然局终原守候STOP后仅CARDjev→brain、保R407代码；私有单项补丁/语法检查0，未实际发布/核新号，P4冻结不动。P2暂停等Roy；W4 criteria/B修复及冻结真Jev验证后才议恢复。原文SHAc7ced7e2a0c9baf4dc284c731f7257ca018124fb47d41cb73a265c4279ee1e46，原件paper/materials/20261021-042x-CARD-brain-ops/receipt.json。
 
 - 2026-10-21 04:21:40 CST 原ops：041301-fix无新源/提交或合入，基线572bf468洁净、154SHA/46祖先同；原tsc0/6文件18定向过14.69秒/扫描0，不代full/live。原六叶/三叶候选去重，无ordinary回执不重dataset，最高2GF边界CARDbrain与P2暂停、P4唯一在途检查保持。原件paper/materials/20261021-0420-ops/receipt.json。
+
+- 2026-10-21 04:28:32 CST 原ops：2GF原局终STOP/无活动play核同，原锁内仅CARDjev→brain发布V6-R408/live150890f8bac0253f4e9216af3259784705c7550e，保R407 agent树及498知识叶，语法/扫描0、配置/双登记读回及双通知完成；P4冻结不动，P2暂停等Roy，随后原autoplay恢复及实际新配置读回。原件paper/materials/20261021-R407-terminal-CARDbrain-ops/publication.json。
+
+- 2026-10-21 04:31:57 CST 原ops：R408仅CARDbrain发布及原autoplay恢复已闭环到新7XS配置/首实际动作；498知识与agent树不变，旧ENOBUFS元数据和首奖励待自然读回分列。P4锁自然释放不代结果，P2暂停等Roy，无新full/dataset。原件paper/materials/20261021-R407-terminal-CARDbrain-ops/receipt.json。

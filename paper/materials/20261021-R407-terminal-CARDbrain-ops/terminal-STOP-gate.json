@@ -1,0 +1,96 @@
+{
+  "at": "2026-10-21T04:26:19.307999+08:00",
+  "run_id": "2GFAPDBDNSCR",
+  "STOP_bytes": 215,
+  "STOP_sha256": "92b77285832cb0728c48b17a10afe559ad2d1f732d9e3fc5d27724ec90442108",
+  "STOP_mtime_ns": 1792527857970720616,
+  "console": {
+    "path": "logs/console/20261021-040940-a7d07949e+dirty.log",
+    "offset": 127597,
+    "bytes": 18000,
+    "sha256": "d79461f9aa2761d50fd36e1f7acca9338b6c0cf180b8e53c7bb0865ba9e8af93"
+  },
+  "active_play": [],
+  "original_autoplay_pid": "1889333",
+  "sources": {
+    "decisions.jsonl": {
+      "path": "logs/decisions.jsonl",
+      "offset": 3100687637,
+      "bytes": 1936,
+      "sha256": "41da0a9a7de710b5767c90616a9a3da33c7de0637b9cd84363d189bf5a4d081d",
+      "run_id": "2GFAPDBDNSCR",
+      "ts": "2026-10-20T20:24:12.838Z",
+      "label": "run/finalize",
+      "chosen": {
+        "action": "continue_game_over"
+      },
+      "v6": null
+    },
+    "run-config.jsonl": {
+      "path": "logs/run-config.jsonl",
+      "offset": 2312917,
+      "bytes": 6027,
+      "sha256": "b560d551fee783ce04ebada2de144736aeb889cd30cbeedb965a1054ef5cae1f",
+      "run_id": "2GFAPDBDNSCR",
+      "ts": "2026-10-20T20:09:50.828Z",
+      "label": null,
+      "chosen": null,
+      "v6": {
+        "schema": "v6-config-v1",
+        "mode": "on",
+        "deciders": {
+          "card": "jev",
+          "potion": "brain",
+          "shop": "brain",
+          "rest": "brain"
+        },
+        "reflex": "off",
+        "direction_replan": "off",
+        "admission": "interfaces_only",
+        "delivered": false,
+        "samples_pick": 20,
+        "samples_act": 100,
+        "min_known_option_ratio": 0.5,
+        "direction_min_weight": 0.1,
+        "win": {
+          "certain_win": 0.95,
+          "favored": 0.7,
+          "even": 0.3,
+          "unfavored": 0.05
+        },
+        "delta": {
+          "much_se": 2,
+          "better_se": 1,
+          "much_min": 0.05
+        },
+        "triggers": {
+          "t1_core_min": 0,
+          "t2_se": 2,
+          "t2_min_delta": 1,
+          "t2_consecutive": 2,
+          "t3_weight_max": 0,
+          "t5_hazard": "existing_route_projection",
+          "t6_unknown_max": 1,
+          "t6_fallbacks": 100,
+          "t7_checkpoint": "validated_brain_answer"
+        },
+        "budgets": {
+          "brain_soft_cap": 15,
+          "brain_ms": 90000,
+          "act_ms": 60000,
+          "pick_ms": 5000,
+          "jev_ms": 5000
+        },
+        "invalid": []
+      }
+    }
+  },
+  "guardian": "original Claude; no duplicate",
+  "broker_read_only_client_cancelled": [
+    {
+      "pid": 2268503,
+      "kind": "own unanswered read-only broker client",
+      "start_ticks": "141981138"
+    }
+  ]
+}

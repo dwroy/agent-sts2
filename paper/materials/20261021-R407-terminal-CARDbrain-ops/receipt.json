@@ -1,0 +1,307 @@
+{
+  "at": "2026-10-21 04:31:57 CST",
+  "state": "V6-R408-published-CARDbrain-original-autoplay-and-natural-config-action-readback",
+  "authorization": "Claude04:2x plus current original boundary STOP instruction",
+  "publication": {
+    "at": "2026-10-21T04:28:32.259796+08:00",
+    "release_id": "V6-R408",
+    "behavior": {
+      "parent": "a7d07949efb03278a62050ca39447941309b4b7e",
+      "commit": "918cee1438aedcbd50456fcb4a646174758333e7",
+      "tree": "0b2abc951d4b83c8166c4f4d51d2ac7854d4149a",
+      "paths": [
+        "ops/production-runtime.sh"
+      ]
+    },
+    "live_registry": {
+      "parent": "918cee1438aedcbd50456fcb4a646174758333e7",
+      "commit": "150890f8bac0253f4e9216af3259784705c7550e",
+      "tree": "650d7a369e3c5424e58889e5694c660f50b5e081",
+      "paths": [
+        "eval/versions.json"
+      ]
+    },
+    "main": {
+      "parent": "0a2d8721d362d9c3a12997070bec49ab54f73059",
+      "commit": "e0d26e3bce46a19f0f0f30b13111389600e53ed1",
+      "tree": "c3c9962b9b6d39459cf017641a1fc9c721e7ea04",
+      "paths": [
+        "eval/versions.json",
+        "ops/production-runtime.sh"
+      ]
+    },
+    "prior_actual_live": "a7d07949efb03278a62050ca39447941309b4b7e",
+    "actual_live": "150890f8bac0253f4e9216af3259784705c7550e",
+    "delta": {
+      "V6_CARD_DECIDER": [
+        "jev",
+        "brain"
+      ]
+    },
+    "runtime_before": {
+      "V6_T1_CORE_MIN": "0",
+      "V6_T3_WEIGHT_MAX": "0",
+      "V6_COMBAT_ENTRIES": "off",
+      "V6_REST_DECIDER": "brain",
+      "V6_DIRECTION_REPLAN": "off",
+      "V6_SHOP_DECIDER": "brain",
+      "V6_T2_MIN_DELTA": "1",
+      "V6_POTION_DECIDER": "brain",
+      "V6_BUILD": "on",
+      "V6_CARD_DECIDER": "jev",
+      "V6_T6_FALLBACKS": "100",
+      "V6_REFLEX": "off",
+      "V6_T6_UNKNOWN_MAX": "1"
+    },
+    "runtime_after": {
+      "V6_T1_CORE_MIN": "0",
+      "V6_T3_WEIGHT_MAX": "0",
+      "V6_COMBAT_ENTRIES": "off",
+      "V6_REST_DECIDER": "brain",
+      "V6_DIRECTION_REPLAN": "off",
+      "V6_SHOP_DECIDER": "brain",
+      "V6_T2_MIN_DELTA": "1",
+      "V6_POTION_DECIDER": "brain",
+      "V6_BUILD": "on",
+      "V6_CARD_DECIDER": "brain",
+      "V6_T6_FALLBACKS": "100",
+      "V6_REFLEX": "off",
+      "V6_T6_UNKNOWN_MAX": "1"
+    },
+    "syntax_rc": 0,
+    "gitleaks_rc": 0,
+    "knowledge_count": 498,
+    "knowledge_bytes_unchanged": true,
+    "agent_tree_unchanged": true,
+    "source_R407_retained": true,
+    "P4_fixed_input_untouched": true,
+    "P2": "paused pending Roy",
+    "REFLEX": "off",
+    "credentials_read": false,
+    "published": true,
+    "next_run_config_and_action_readback": "pending original autoplay start"
+  },
+  "terminal_gate": {
+    "at": "2026-10-21T04:26:19.307999+08:00",
+    "run_id": "2GFAPDBDNSCR",
+    "STOP_bytes": 215,
+    "STOP_sha256": "92b77285832cb0728c48b17a10afe559ad2d1f732d9e3fc5d27724ec90442108",
+    "STOP_mtime_ns": 1792527857970720616,
+    "console": {
+      "path": "logs/console/20261021-040940-a7d07949e+dirty.log",
+      "offset": 127597,
+      "bytes": 18000,
+      "sha256": "d79461f9aa2761d50fd36e1f7acca9338b6c0cf180b8e53c7bb0865ba9e8af93"
+    },
+    "active_play": [],
+    "original_autoplay_pid": "1889333",
+    "sources": {
+      "decisions.jsonl": {
+        "path": "logs/decisions.jsonl",
+        "offset": 3100687637,
+        "bytes": 1936,
+        "sha256": "41da0a9a7de710b5767c90616a9a3da33c7de0637b9cd84363d189bf5a4d081d",
+        "run_id": "2GFAPDBDNSCR",
+        "ts": "2026-10-20T20:24:12.838Z",
+        "label": "run/finalize",
+        "chosen": {
+          "action": "continue_game_over"
+        },
+        "v6": null
+      },
+      "run-config.jsonl": {
+        "path": "logs/run-config.jsonl",
+        "offset": 2312917,
+        "bytes": 6027,
+        "sha256": "b560d551fee783ce04ebada2de144736aeb889cd30cbeedb965a1054ef5cae1f",
+        "run_id": "2GFAPDBDNSCR",
+        "ts": "2026-10-20T20:09:50.828Z",
+        "label": null,
+        "chosen": null,
+        "v6": {
+          "schema": "v6-config-v1",
+          "mode": "on",
+          "deciders": {
+            "card": "jev",
+            "potion": "brain",
+            "shop": "brain",
+            "rest": "brain"
+          },
+          "reflex": "off",
+          "direction_replan": "off",
+          "admission": "interfaces_only",
+          "delivered": false,
+          "samples_pick": 20,
+          "samples_act": 100,
+          "min_known_option_ratio": 0.5,
+          "direction_min_weight": 0.1,
+          "win": {
+            "certain_win": 0.95,
+            "favored": 0.7,
+            "even": 0.3,
+            "unfavored": 0.05
+          },
+          "delta": {
+            "much_se": 2,
+            "better_se": 1,
+            "much_min": 0.05
+          },
+          "triggers": {
+            "t1_core_min": 0,
+            "t2_se": 2,
+            "t2_min_delta": 1,
+            "t2_consecutive": 2,
+            "t3_weight_max": 0,
+            "t5_hazard": "existing_route_projection",
+            "t6_unknown_max": 1,
+            "t6_fallbacks": 100,
+            "t7_checkpoint": "validated_brain_answer"
+          },
+          "budgets": {
+            "brain_soft_cap": 15,
+            "brain_ms": 90000,
+            "act_ms": 60000,
+            "pick_ms": 5000,
+            "jev_ms": 5000
+          },
+          "invalid": []
+        }
+      }
+    },
+    "guardian": "original Claude; no duplicate",
+    "broker_read_only_client_cancelled": [
+      {
+        "pid": 2268503,
+        "kind": "own unanswered read-only broker client",
+        "start_ticks": "141981138"
+      }
+    ]
+  },
+  "resume": {
+    "at": "2026-10-21T04:28:35.286215+08:00",
+    "state": "published-original-autoplay-resumed",
+    "release_id": "V6-R408",
+    "actual_live": "150890f8bac0253f4e9216af3259784705c7550e",
+    "behavior_commit": "918cee1438aedcbd50456fcb4a646174758333e7",
+    "main_commit": "e0d26e3bce46a19f0f0f30b13111389600e53ed1",
+    "autoplay_pid": 2283493,
+    "STOP_present": false,
+    "actual_new_run_config": null,
+    "actual_new_action_readback": "pending natural log, no polling or extra model",
+    "only_runtime_delta": {
+      "V6_CARD_DECIDER": [
+        "jev",
+        "brain"
+      ]
+    },
+    "knowledge_preserved": true,
+    "source_preserved": true,
+    "P4_inflight_not_changed": true,
+    "P2": "paused pending Roy",
+    "scientific_parents_or_role_ACK_closed": false
+  },
+  "first_actual_run_config_and_action": {
+    "at": "2026-10-21T04:29:26.371443+08:00",
+    "release_id": "V6-R408",
+    "actual_live": "150890f8bac0253f4e9216af3259784705c7550e",
+    "run_id": "7XS2Y920KA6E",
+    "config_source": {
+      "path": "logs/run-config.jsonl",
+      "offset": 2318944,
+      "bytes": 6029,
+      "sha256": "696820260d24ae1b946a30b0f48aaf57bd67843bb8331dea7f8f3e5b9a5268a9",
+      "ts": "2026-10-20T20:28:43.890Z",
+      "v6": {
+        "schema": "v6-config-v1",
+        "mode": "on",
+        "deciders": {
+          "card": "brain",
+          "potion": "brain",
+          "shop": "brain",
+          "rest": "brain"
+        },
+        "reflex": "off",
+        "direction_replan": "off",
+        "admission": "interfaces_only",
+        "delivered": false,
+        "samples_pick": 20,
+        "samples_act": 100,
+        "min_known_option_ratio": 0.5,
+        "direction_min_weight": 0.1,
+        "win": {
+          "certain_win": 0.95,
+          "favored": 0.7,
+          "even": 0.3,
+          "unfavored": 0.05
+        },
+        "delta": {
+          "much_se": 2,
+          "better_se": 1,
+          "much_min": 0.05
+        },
+        "triggers": {
+          "t1_core_min": 0,
+          "t2_se": 2,
+          "t2_min_delta": 1,
+          "t2_consecutive": 2,
+          "t3_weight_max": 0,
+          "t5_hazard": "existing_route_projection",
+          "t6_unknown_max": 1,
+          "t6_fallbacks": 100,
+          "t7_checkpoint": "validated_brain_answer"
+        },
+        "budgets": {
+          "brain_soft_cap": 15,
+          "brain_ms": 90000,
+          "act_ms": 60000,
+          "pick_ms": 5000,
+          "jev_ms": 5000
+        },
+        "invalid": []
+      },
+      "code": {
+        "commit": null,
+        "code": null,
+        "dirty": null,
+        "dirty_files": [],
+        "branch": null,
+        "worktree": "live",
+        "error": "git status failed: spawnSync git ENOBUFS"
+      }
+    },
+    "first_action": {
+      "offset": 3100693222,
+      "bytes": 48687,
+      "sha256": "121da44cedddc1807d79a332455973e2a48c1376b138cc4f5f54e1e9bd38906f",
+      "ts": "2026-10-20T20:29:09.233Z",
+      "screen": "EVENT",
+      "label": "event/choose",
+      "chosen": {
+        "action": "choose_event_option",
+        "option_index": 1
+      },
+      "result": "completed: Action completed."
+    },
+    "latest_action": {
+      "ts": "2026-10-20T20:29:09.584Z",
+      "label": "event/leave",
+      "chosen": {
+        "action": "choose_event_option",
+        "option_index": 0
+      },
+      "result": "completed: Event proceeded."
+    },
+    "autoplay_pid": 2283493,
+    "STOP_present": false,
+    "reward_brain_actual_question_readback": "pending first natural reward; no synthetic API/model probe",
+    "runtime_code_metadata_not_repaired": true
+  },
+  "source_R407_preserved": true,
+  "P2": "paused-await-Roy",
+  "REFLEX": "off",
+  "P4_frozen_check_input_or_processes_changed": false,
+  "P4_full_result_not_inferred_from_lock_release": true,
+  "other_role_ACK_filled": false,
+  "scientific_parent_closed": false,
+  "quality_or_causal_benefit_claimed": false
+}
