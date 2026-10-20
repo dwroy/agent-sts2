@@ -5002,3 +5002,5 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
 - 2026-10-20T12:23:03+08:00 V6-R403实际发布：live f563cc997814fdccd2dafe8a50d3725c62102c7f，行为e7119a67/55树78040c8c完整tsc0/full609文件5790过2跳；R3/T6/快路径/预算/byte/W8后台精确集成，17ID双attempt及85R3字段读回；W3失败排除，无整main。按Roy10:26原授权自然恢复，首局异常回退2cdb；未关科学父/角色ACK，Regent暂停。原件paper/materials/20261020-1215-ops/publication.json。
 
 - 2026-10-20T12:38:02+08:00 V6-R403原9J6T70HSYPG7已于12:24:57.491续跑，首动作12:26:36.356完成，首战Jev核85正式条目；17ID/字段读回及R3账本shipped，不冒因果收益/关闭父或角色ACK。W3失败排除、Regent暂停、异常回退2cdb；原件paper/materials/20261020-1215-ops/receipt.json。
+
+- 2026-10-20T12:40:50+08:00 原12:38八事件实核：旧启动stall非当前卡死，9J6 F8真实动作继续；W3日志116新增/39处全保、FF后owner自有行交原ops保存；四无源码提案批40waiting，两个原source-drift attention及唯一dataset保留不重，无源码/发布/角色ACK/父关闭。原件paper/materials/20261020-1238-ops/receipt.json。

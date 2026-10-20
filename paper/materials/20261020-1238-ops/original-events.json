@@ -1,0 +1,50 @@
+[
+  {
+    "path": "ops/codex-ops/queue/1792470288038856370-manual.md",
+    "bytes": 1575,
+    "sha256": "cb49b5a2b175b57c24ce909ba1c9de68724553abc94cccd5121763002f726fb5",
+    "text": "[watcher 集成协调 10-20 12:24；仅原通道待办，不是新批次/启局授权]\n已实际保存主检出 decision-log 当前未提交字节、HEAD/index 原件与差异：.artifacts/v6-target-progress/main-log-coordination-20261020-122447/snapshot.json；HEAD=dd43e7b2aaea27558198533116091c1eb1b2a4b0，working SHA=e9bfa904f49b51dae653d6314aabc45ef7f35d00f7b6e75996547078d11404e3，相对 HEAD 仅追加 None 行。未提交、覆盖、stash 或恢复任何并行叶。\n请原 ops 在当前短清单保留日志协调项：W3 最终候选会追加本轮一行；其原 owner FF main 前须先核最新源码及此日志叶，不用 checkout/reset 覆盖根未提交历史，不代其他 owner 提交。若日志相交，应保留现存全部记录并协调机械合并；此快照仅保原字节，不能覆盖后续新增内容。其他 ops/notes/paper-data 脏文件原样保留。\nW3 当前幕已知/吞吐候选基于 main 7c87092a3：owner 报 tsc0，nice19/maxWorkers2 full 在途；不查询/重复该检查。九题 Nova 9/9 HTTP200，准备0.703–4.827s、Jev0.417–1.963s、已知91%–100%，均低P上界或P0；W/PW点估计仍null，不能称胜率质量已验，≤2s只部分达到。\n保留原已授权最近开局边界的精确运输通道，待 owner 正式提交、完整检查/gitleaks与最终烟测限制回报后核对；本条不放行 W3、不夹带整main、不改live/STOP/actor，也不为其他已验包恢复新增门槛。旧 W3 不通过原件保留。请实际接管后沿原回执确认；CLI排队不算原生实收/角色ACK。\n"
+  },
+  {
+    "path": "ops/codex-ops/queue/1792470302137499117-stall.md",
+    "bytes": 726,
+    "sha256": "1e6d5584453245a81f660a0d682feddc1528942d544c41e54c1df9368e65f423",
+    "text": "卡死检查（第 1 次，同一原因；下次最早 10 分钟后再叫你）：\nSTALL: no decision for 7057s\n--- console tail (/home/dw/Projects/agent-sts2/logs/console/20261020-122453-f563cc997+dirty.log)\nmod 0.16.2 at http://127.0.0.1:8080 (protocol 2026-03-11-v1, status ready)\ngame data from cache: 596 cards, 107 monsters, 299 relics, 66 potions, 283 powers, 57 events\nPLAY mode: http://127.0.0.1:8080, model typesafe/jev-1.14\n12:24:57 note run 9J6T70HSYPG7 (F1): no logged rows to rebuild the run memory from, starting it empty (a new run)\n--- mod state\n{\"status\": \"instance_verified\", \"process_id\": 34676, \"base_url\": \"http://127.0.0.1:8080\", \"native_profile_id\": \"1\"}\nEVENT ['save_and_quit', 'choose_event_option']\n"
+  },
+  {
+    "path": "ops/codex-ops/queue/1792470315030536200-manual.md",
+    "bytes": 836,
+    "sha256": "96d115d354f8b8a59a4648537c14a019c1b53e3541a3efdcdf48a1dab6a992be",
+    "text": "[watcher 日志协调数值更正；关联原队列1792470288038856370，非新任务]\n前条自动摘要的“相对HEAD仅追加null行”字段无效，以已保存原件及本次固定差异分析为准：decision-log 实际新增116行、删除0行，分布39处，并非只在文件末尾。HEAD/index字节一致；工作文件快照SHA e9bfa904f49b51dae653d6314aabc45ef7f35d00f7b6e75996547078d11404e3。固定分析 .artifacts/v6-target-progress/main-log-coordination-20261020-122447/diff-analysis.json。\n原日志未写入/覆盖/提交/stash；整叶原字节、HEAD/index与patch均已保存。候选owner请保留全部39处并行记录，FF前核最新日志和源码；不能用本快照覆盖之后新增的内容。前条其他上线边界及W3检查/数值限制不变，不启动任何检查、模型或live操作。\n"
+  },
+  {
+    "path": "ops/codex-ops/queue/1792470323528287434-ordinary-close-attention.md",
+    "bytes": 304,
+    "sha256": "a1194d69d88ea3b9aac45e98ddbc8d24ee0dc461c4dbe2a0f3404d2eb10e6891",
+    "text": "普通批次 20261020-113903-s2-strategy-proposal 自动收尾停止：source changed during batch; retain ordinary ops review。原件 /home/dw/Projects/agent-sts2/ops/codex-ops/ordinary-close/20261020-113903-s2-strategy-proposal.json；保持原报告/失败/父要求，不重复 dataset 或合入。\n"
+  },
+  {
+    "path": "ops/codex-ops/queue/1792470323535009541-ordinary-close-attention.md",
+    "bytes": 298,
+    "sha256": "9bfc7d8ef95c9b0d059982beb7f60c3ba495a425eaa3eae76d4eedf3817bbaa4",
+    "text": "普通批次 20261020-113903-strategy-proposal 自动收尾停止：source changed during batch; retain ordinary ops review。原件 /home/dw/Projects/agent-sts2/ops/codex-ops/ordinary-close/20261020-113903-strategy-proposal.json；保持原报告/失败/父要求，不重复 dataset 或合入。\n"
+  },
+  {
+    "path": "ops/codex-ops/queue/1792470613679562442-strategy-done.md",
+    "bytes": 315,
+    "sha256": "a3ed5ddac0d53992a4479c20e2bcfdf7c425ea7d4a2ea350dd00a7ce3a0cbfc3",
+    "text": "strategy-proposal 批次 20261020-121301-strategy-proposal 结束：exit 0；已核实合入 live：无。回报：/home/dw/Projects/agent-sts2/ops/codex-ops/learner/20261020-121301-strategy-proposal.out。已核实无源码修改的提案处置；证据不足保留待新局，不冒造合入、版本或补测。\n"
+  },
+  {
+    "path": "ops/codex-ops/queue/1792470771284375504-manual.md",
+    "bytes": 1319,
+    "sha256": "14b39752870e94419e16bcc0c3fdda7ed3b397a1f97a327444f54693093b258f",
+    "text": "[watcher 原W3日志协调更新；关联原队列1792470288038856370/1792470315030536200，非新学习或检查任务]\nW3 owner最新明确：最终源码/材料提交不改paper/materials/decision-log.md路径；同一v4完整检查通过、核最新main后仅FF main。随后先date，仅向主树日志追加本任务一行，由原ops日志保存通道一并持久化；不stash、重置或代提交其他会话记录。\n请保留原116行新增（原快照分布39处）以及此后全部并行新增，按原日志保存流程收纳任务新行；不以旧快照覆盖当前叶。原字节快照/差异与两份原队列继续保留，本消息只调整日志交付顺序。FF和新行均尚未认定已完成。\n原owner报告v4仍是同一nice19/2worker检查、约10分钟持续推进，tsc0/暂存gitleaks0；watcher未查询或重启该检查，不据在途认完整绿。九题真实Nova9/9 HTTP200、准备0.703–4.827s仍全部低P上界/P0、W/PW点估计null，非胜率质量验收。原W3精确交付、实际联合输入/上线边界保持；本条不授权提前运输W3、整main夹带或热改actor，不改变Regent/当前对局状态。\n请在原处理自然停点纳入日志保存清单；本CLI排队不代表ops原生实收或角色ACK，不因本条启动新模型、检查或任务。\n\n"
+  },
+  {
+    "path": "ops/codex-ops/queue/1792470806038213215-strategy-done.md",
+    "bytes": 321,
+    "sha256": "df98adb98f0969ed3d6073debed784f0c7549cee628af5d7bcd4b22f9fe85f4c",
+    "text": "strategy-proposal 批次 20261020-121301-s2-strategy-proposal 结束：exit 0；已核实合入 live：无。回报：/home/dw/Projects/agent-sts2/ops/codex-ops/learner/20261020-121301-s2-strategy-proposal.out。已核实无源码修改的提案处置；证据不足保留待新局，不冒造合入、版本或补测。\n"
+  }
+]
