@@ -1,0 +1,3 @@
+011301-fix启动器退出0，但无新增源码、提交或合入：原WT独立Git身份/基线0a84a8fe及清洁状态、source.diff为空均已核。ops逐项复核154个源码/测试SHA与原基线及WT一致、46来源提交为该基线祖先；这不代实际live完整覆盖，原读回25文件差异及8个非祖先记录保留，不据此整支运输。自测tsc0；七文件十项定向九过一败，ordinary-close-isolation首次15061ms、复跑15039ms均status=null，未完成六项Python回执；error/signal未留、根因未知，不统一归负载/产品逻辑，也不增期限、删断言或第三次重跑。原40窄修复与11历史子项只作去重，25策略/架构宽项留原链；001302四监控源与两依赖已有候选，本批正确跳过，不新造修复或派批。沿原ordinary-close工程项追加非阻塞可靠性补证，保存两败及CLI旧参数失败。仅记录，不动P0已验17叶待边界包、R406/CARDbrain/REFLEXoff或当前局，不跑full/dataset/模型、不登记版本及retention完成；Regent暂停。
+
+原件：original-report.md、original-verification.json、original-queue-audit.json、original-live-readback.json、original-targeted-first.log、original-targeted-retry.log。
