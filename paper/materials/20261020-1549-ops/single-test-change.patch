@@ -1,0 +1,23 @@
+diff --git a/agent/tests/learner-self-check.test.ts b/agent/tests/learner-self-check.test.ts
+index b090e1a39..647a2db84 100644
+--- a/agent/tests/learner-self-check.test.ts
++++ b/agent/tests/learner-self-check.test.ts
+@@ -30,7 +30,7 @@ describe("learner self-check completion", () => {
+     expect(result.batch.checks.rc).toBe(0);
+     expect(result.calls[1].slice(0, 3)).toEqual(["flock", "/fixture/ops/live-merge.lock", "bash"]);
+     expect(result.calls[1].at(-1)).toContain("npx tsc -p tsconfig.json --noEmit");
+-    expect(result.calls[1].at(-1)).toContain("npx vitest run --maxWorkers=2");
++    expect(result.calls[1].at(-1)).toMatch(/node\s+['"]?[^;\n]*\/agent\/tools\/with-temp\.mjs['"]?\s+node_modules\/vitest\/vitest\.mjs run --maxWorkers=2/);
+     expect(result.calls[1].at(-1)).not.toContain("--exclude");
+   });
+ 
+@@ -57,6 +57,8 @@ describe("learner self-check completion", () => {
+     expect(excluded).toContain("tests/mod-client.test.ts");
+     expect(excluded).not.toContain("tests/turn-start-settle.test.ts");
+     expect(excluded.every((name) => name.startsWith("tests/") && name.endsWith(".test.ts"))).toBe(true);
+-    expect(command.indexOf("npx tsc")).toBeLessThan(command.indexOf("npx vitest"));
++    const suite = "node tools/with-temp.mjs node_modules/vitest/vitest.mjs run";
++    expect(command).toContain(suite);
++    expect(command.indexOf("npx tsc")).toBeLessThan(command.indexOf(suite));
+   });
+ });

@@ -4471,3 +4471,7 @@ request_id=roy-20261017-human-pace-h0 revision=3 input_sha256=1e1c259a15f1824119
 
 2026-10-20T15:49:11+08:00 已核原watcher临时文件专项的自然终局与明确释放：tsc0/full1、620文件619过1败及5885过4败2原跳，状态与日志SHA核同，列出的5个检查PID均已不存在，原四条命令断言失败保留。ops原141301随后接管唯一窗口；原885源码与最新main9fb的差异仅记录，已在原工作树准备无冲突组合，十个修复源blob及498份知识保留，固定树a99acbf、2430输入SHA3d889f18。15:47:56实际启动nice19/ionice3有限runner，短仓TMPDIR、单worker与原阈值，tsc0且full已真实启动，尚无终局；原78ef输入及沙箱失败、负控和8处旧live整树冲突不改写。已沿三个原线程通知接管，后续W8修夹具r3、W4拿牌条目、infra修后完整重验均等自然终局核退出后明确释放，不凭CLI排队起full。未提交联合源码或运live，不夹805、不加游戏号，不代角色ACK/关科学父/提前回收；现对局、STOP、Regent及唯一dataset已完成状态保持。
 原件 paper/materials/20261020-1545-ops/receipt.json；native-start-readback.json；source-input.json。
+
+
+2026-10-20T15:52:15+08:00 已实读原watcher补回执，15:45的tsc0、单worker定向4文件14项通过，targeted日志SHAffecfde5、报告SHAf2a70150及步骤字节核同；原620文件full1和四项失败保留，定向不能替代完整重验。另在15:51只读核当前工作树，相对原ed37已有7个agent/ops变化路径，除learner-self-check断言外还有临时目录工具与测试六叶，超出事件所述一叶范围。已冻结当前路径/SHA及差异，保留原报告，不武断认定早先回执错误，也不把历史定向绿外推到新树；沿原owner索取受测输入与后增修改时间绑定。原完整重验请求仍排当前ops141301、W8修夹具r3、W4拿牌条目之后，轮到前需明确释放并核最新实际输入。未查询当前ops的status、进程或日志，也未重启或叠full。仅更新清单和证据，不提交候选源码/main/live、不加游戏号，不改当前受测输入、805暂停、STOP/actor/Regent或角色ACK，不重派模型/API、刷新或dataset。
+原件 paper/materials/20261020-1549-ops/receipt.json；targeted-receipt.json；current-source-drift.json。

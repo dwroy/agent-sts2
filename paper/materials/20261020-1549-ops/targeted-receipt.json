@@ -1,0 +1,44 @@
+{
+  "at": "2026-10-20T15:45:12.674109+08:00",
+  "full_r1_exit_unchanged": 1,
+  "change": "one test file command assertions only",
+  "full_r2_started": false,
+  "steps": [
+    {
+      "name": "tsc",
+      "command": [
+        "npx",
+        "tsc",
+        "-p",
+        "tsconfig.json",
+        "--noEmit"
+      ],
+      "started_at": "2026-10-20T15:45:05.887842+08:00",
+      "seconds": 1.13822802901268,
+      "exit_code": 0,
+      "log": "/home/dw/Projects/agent-sts2/.worktrees/infra-temp-lifecycle-20261020/.artifacts/infra-command-fixture-r2/tsc.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "targeted",
+      "command": [
+        "node",
+        "tools/with-temp.mjs",
+        "node_modules/vitest/vitest.mjs",
+        "run",
+        "--maxWorkers=1",
+        "tests/learner-self-check.test.ts",
+        "tests/temp-lifecycle.test.ts",
+        "tests/sandbox-entry.test.ts",
+        "tests/disk-admission.test.ts"
+      ],
+      "started_at": "2026-10-20T15:45:07.026295+08:00",
+      "seconds": 5.647632968146354,
+      "exit_code": 0,
+      "log": "/home/dw/Projects/agent-sts2/.worktrees/infra-temp-lifecycle-20261020/.artifacts/infra-command-fixture-r2/targeted.log",
+      "bytes": 264,
+      "sha256": "ffecfde5b3d2098715407d370e4da74566e103df82b1582228eb28e1773951e9"
+    }
+  ]
+}

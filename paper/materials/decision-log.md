@@ -5184,3 +5184,5 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
 - 2026-10-20T15:35:30+08:00 ops：实收原W4新拿牌条目完整检查申请，既定窗口watcher infra→ops141301→W8→W4，轮到前需原线明确确认；76定向/首题4选项已知仅owner进展，未认最终烟测或上线，805暂停保持。原件 paper/materials/20261020-1531-ops/W4-card-results-window-request-original.md。
 
 - 2026-10-20T15:49:11+08:00 ops：核infra full1自然终局/退出/明放，原141301精确885+main9fb固定a99/2430输入接管唯一宿主全检，tsc0/full实际启动未终局；后续W8→W4→infra待原生明确释放，不运live/805。原件 paper/materials/20261020-1545-ops/receipt.json。
+
+- 2026-10-20T15:52:15+08:00 ops：核infra历史定向4文件14过与SHA，保原full1；当前WT相对ed37七叶变化超出一叶回执，留原文/差异并请owner补时间输入绑定，不冒当前树绿。完整重验仍ops141301→W8→W4后，未查在途。原件 paper/materials/20261020-1549-ops/receipt.json。
