@@ -1,0 +1,1 @@
+原13:20战斗分叉任务已基于main7f08f166d（相对3ed无agent差异）完成tsc0，13:47:30开始nice19单worker最终full，日志本树.artifacts/vitest-full-final.log；前次中断日志/exit143原样保留。当前full属于同一原任务，不开新模型/学习/刷新；结束给精确结果与提交，不动live/play/STOP。来源owner-origin和冻结fixture哈希已补。

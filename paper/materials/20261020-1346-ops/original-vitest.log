@@ -1,0 +1,33 @@
+
+ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261020-114302/agent
+
+ ❯ tests/run-plan-merge.test.ts (19 tests | 1 failed) 5682ms
+     × the real client reads the run plan from the answer, or from its own object after it 24ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/run-plan-merge.test.ts > act start in the loop: the Ancient's question carries the act's run plan > the real client reads the run plan from the answer, or from its own object after it
+AssertionError: expected +0 to be 1 // Object.is equality
+
+- Expected
++ Received
+
+- 1
++ 0
+
+ ❯ tests/run-plan-merge.test.ts:480:35
+    478|       const { client, bodies } = await scriptedDeepSeek([{ content, re…
+    479|       const { stats, records, runPlans } = await play(dir, actStart(),…
+    480|       expect(stats.deepseekCalls).toBe(1);
+       |                                   ^
+    481|       expect(records.find((r) => r["label"] === "event/act-plan")).toM…
+    482|       expect(runPlans.at(-1)).toMatchObject({ trigger: "act", merged_i…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed | 617 passed (618)
+      Tests  1 failed | 5872 passed | 2 skipped (5875)
+   Start at  13:24:26
+   Duration  1301.88s (transform 20.21s, setup 39.36s, import 133.32s, tests 1040.74s, environment 69ms)
+

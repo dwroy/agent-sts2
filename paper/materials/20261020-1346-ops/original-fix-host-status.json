@@ -1,0 +1,56 @@
+{
+  "request": "20261020-114302-fix-batch-original-main-joint-20261020-1320",
+  "batch": "20261020-114302-fix-batch",
+  "state": "failed-retain-source-and-original-artifacts",
+  "pid": 2405031,
+  "start_ticks": 136580731,
+  "nice": 19,
+  "started_at": "2026-10-20T13:24:24+08:00",
+  "input_sha256": "1cb1c0edd0f893bc6bab4c4f161de60ffba874c4a12831a527c6461d1ffd503f",
+  "main_base": "1a56c2e1a707447496137b159f6d2ff395c021ba",
+  "source_head": "698d3bd20fc95e2791e6fab8d5ad4c2c9e01a5c4",
+  "prospective_tree": "3fd4d3683d929fc5837579c55bfe4bc868ad08cb",
+  "workspace": ".worktrees/codex-fix-silent-20261020-114302",
+  "combined_full_rc": 1,
+  "main_live_changed": false,
+  "new_model": false,
+  "new_game": false,
+  "steps": [
+    {
+      "name": "tsc",
+      "argv": [
+        "npx",
+        "--no-install",
+        "tsc",
+        "-p",
+        "tsconfig.json",
+        "--noEmit"
+      ],
+      "log": ".artifacts/ops-wake-20261020-1320/tsc.log",
+      "started_at": "2026-10-20T13:24:24+08:00",
+      "pid": 2405063,
+      "exit_code": 0,
+      "finished_at": "2026-10-20T13:24:25+08:00",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "name": "vitest",
+      "argv": [
+        "npx",
+        "--no-install",
+        "vitest",
+        "run",
+        "--maxWorkers=1"
+      ],
+      "log": ".artifacts/ops-wake-20261020-1320/vitest.log",
+      "started_at": "2026-10-20T13:24:25+08:00",
+      "pid": 2405127,
+      "exit_code": 1,
+      "finished_at": "2026-10-20T13:46:08+08:00",
+      "sha256": "deb07b3769cab87e53a30c1084b7ff6c48e1c86c54daf9d93b3bb50b1b598b63",
+      "bytes": 1382
+    }
+  ],
+  "finished_at": "2026-10-20T13:46:08+08:00"
+}

@@ -1,0 +1,60 @@
+{
+  "original_status": {
+    "path": "paper/materials/20261020-1346-ops/original-fix-host-status.json",
+    "bytes": 1717,
+    "sha256": "a318017abfca6a8418893bd08ec1754c1ebafe0df36c7f63221c7c8ca6c8bfeb"
+  },
+  "original_input": {
+    "path": ".artifacts/ops-wake-20261020-1320/fix-source-input.json",
+    "bytes": 99819,
+    "sha256": "1cb1c0edd0f893bc6bab4c4f161de60ffba874c4a12831a527c6461d1ffd503f"
+  },
+  "old_head": "698d3bd20fc95e2791e6fab8d5ad4c2c9e01a5c4",
+  "old_tree": "3fd4d3683d929fc5837579c55bfe4bc868ad08cb",
+  "verified_original_source_files": 26,
+  "verified_protected_files": 498,
+  "all_original_source_and_protected_bytes_unchanged": true,
+  "terminal": {
+    "tsc": 0,
+    "vitest": 1,
+    "files": {
+      "passed": 617,
+      "failed": 1,
+      "total": 618
+    },
+    "tests": {
+      "passed": 5872,
+      "failed": 1,
+      "skipped": 2,
+      "total": 5875
+    },
+    "failed_test": "tests/run-plan-merge.test.ts:480",
+    "assertion": "stats.deepseekCalls expected 1, actual 0",
+    "original_PIDs_absent": [
+      2405031,
+      2405140,
+      2405127
+    ]
+  },
+  "changed_input": {
+    "staged_tree": "d43e6c2304407aeeb9583d47feb706c6e255d8cd",
+    "only_new_changed_path": "agent/tests/run-plan-merge.test.ts",
+    "patch": {
+      "path": "paper/materials/20261020-1346-ops/test-transport-fix.patch",
+      "bytes": 774,
+      "sha256": "ad39babf992fc61e5d8fe39bb3166fe9caf82155d05fd3dee099634b9a1f87be"
+    },
+    "gitleaks_rc": 0,
+    "reason": "scriptedDeepSeek uses global memory-only fetch registry, while this historical loop fixture used real localhost ModClient server; use same registered fixture server, retaining unregistered-origin rejection and all existing assertions",
+    "targeted": {
+      "path": ".artifacts/ops-wake-20261020-1346/targeted.log",
+      "bytes": 268,
+      "sha256": "9df14243d0bbbcbf6fc7890a15e38d3f664e8452317e147cc4ab5e16cf4fdd03"
+    },
+    "targeted_files": 2,
+    "targeted_passed": 21,
+    "full_pass_not_claimed": true
+  },
+  "source_commit_not_created": true,
+  "main_live_not_integrated": true
+}

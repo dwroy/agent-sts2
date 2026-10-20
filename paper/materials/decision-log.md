@@ -5134,3 +5134,5 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
 - 2026-10-20T13:44:57+08:00 ops：接原战斗owner codex1/01a15382自报及自身重叠full中断回报，完整结果未判绿；原1320终局释放窗口后沿v6-w4w6原线程通知，不查询/重启检查或改live；活雾原来源绑定仍待补。原件 paper/materials/20261020-1344-ops/receipt.json。
 
 - 2026-10-20T13:46:29+08:00 ops：活雾gap原生指派字节核同，08de审计W8/纯bug修复codex1 W4W6来源分列，原提案99f14 pending、不冒boss-sim批；三旧通知原证据核同、609角色登记兼容未入main/live，不代ACK，原1320窗口终局后通知原owner。原件 paper/materials/20261020-1345-ops/receipt.json。
+
+- 2026-10-20T13:50:04+08:00 ops：原114302树3fd4宿主tsc0/full1唯一run-plan-merge断言失败；单测试接内存HTTP夹具，新树d43e6c23 tsc0/定向21过未full/源码提交/合入。原窗口释放通知W4W6并获13:47:30原full启动回报，待其终局再验变化输入；旧失败不改/W3与Regent不动。原件 paper/materials/20261020-1346-ops/receipt.json。

@@ -3296,3 +3296,8 @@ request_id=roy-20261017-human-pace-h0 revision=3 input_sha256=1e1c259a15f1824119
 ### 2026-10-20T13:46:29+08:00 原生工程owner来源更正及继承通知核验
 
 本轮核原生指派冻结行，并按原offset/1631字节及SHA核同：08de战斗回归审计属于W8，13:20战斗分叉/snakebite纯bug任务属于codex1的v6-w4w6、01a15382线程。原活雾gap已更正工程owner，继续锚pending提案silent-proposal-99f14e823a866ad7；历史084302/codex3只作复盘来源，纯bug指派不能冒既有boss-sim批，原请求/派发/输入绑定、学习发布与live模拟读回仍待办。三旧异议消息、原ops转达及watcher→Roy可见证据均核同；兼容609未main/live，保原pending，不重复全文或代填角色ACK。已沿原watcher回更正，CLI0不冒native实收；原1320终局释放后再通知W4W6窗口，未查询/重启检查或动live/actor/Regent。原件：paper/materials/20261020-1345-ops/receipt.json。
+
+
+### 2026-10-20T13:50:04+08:00 原1320终局、单测试接线修正及窗口交接
+
+本轮核原1320完整终局：tsc0/full1，618文件617过1败、5872项过1败2跳；唯一run-plan-merge断言期望一次大脑调用、实际零次。原受测26源及498知识SHA核同，原失败/沙箱历史全部保留，未合main/live。检查PID已退出，已向原W4W6释放窗口，其实收并于13:47:30启动原nice19单worker最终full。定位历史测试混用内存fetch夹具与真实Mod服务器，单处import接统一夹具；新树d43e6c23已tsc0、2文件21项定向通过，保所有原断言及拒绝外源守卫；仅暂存，未冒完整绿或提交源码。待W4W6原终局释放后再验变化输入，不叠full/重模型/生产dataset。W8来源SHA核同，13:20标签与实际13:16原生时间均留存；原gap仍pending。原件：paper/materials/20261020-1346-ops/receipt.json。
