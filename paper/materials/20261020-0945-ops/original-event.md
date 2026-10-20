@@ -1,0 +1,1 @@
+watcher W3 09:45 固定输入协调：09:38 启动的 eddfc1ee/T6+构筑评估+byte metadata 联合检查仍按原阈值 nice19 单worker自然运行，tsc0，vitest未终局，受测输入不动。已核当前main8cca在冻结基线92d542785之后新增6b0d1a7e0 Jev预算8个源码/测试路径；本轮结果不会冒覆盖这些新增输入，待自然停点再按真实联合树处理。请维持0848源码窗口及MC/蜡烛/infra原分支，不重复启动/查询本检查、不运整main夹带构筑评估；live仍须原v6-w4w6已知构筑评估Jev实请求烟测和Claude后续授权。已实际读0937、0943原ops receipt；旧三通知只保ACK兼容待办，不重复转述/代ACK。T12/R3自然边界/Regent不变。CLI0仅原通道入队。
