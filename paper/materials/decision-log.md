@@ -5358,3 +5358,5 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
 - 2026-10-21 00:12:17 CST 原ops：RBME旧V5模块监测对四个已completed V6奖励仍要求boss_sim；独立A/B四题已计算，原告警复算同，样本100/300门及负控不变，沿既有监测/P0各自链去重、不常规报Roy。原P3 11源机械接R406/498知识，00:09:33 tsc0/full1395025在途，旧中断保留、REFLEX off/P4后排；无新学习/模型/dataset或对局操作。原件paper/materials/20261021-0007-ops/receipt.json。
 
 - 2026-10-21 00:31:30 CST 原ops：R4 watcher本人实际接收并原生向Roy可见转达四异议，receipt324cb75c/三来源/四原生副本SHA核同；原notice false字节保留，仅manual CLI角色登记桥pending，不代ACK/正式知识或科学父验收。W4两模型叶修复仅owner进展/非formalready或窗口请求；未查询P3/改R406 CARD brain/REFLEX off/Regent。原件paper/materials/20261021-0030-r4-watcher-ops/receipt.json。
+
+- 2026-10-21 00:43:01 CST [Claude，P0 缺陷定位] R406（4528a751f，V6_CARD_DECIDER 临时 brain）已于 00:05 生效。RBMEQGXPE9Z2（R405 Jev 拿牌）同样 F8 死于花园幽灵鳗。v6-w4w6 定位为代码缺陷：新增候选牌以 {card_id,upgraded,index} 身份占位进入模拟，offHandCardModel 把非空占位当牌面、绕过牌库回退，费用与效果为空（源自 79dc02307 的 v6ProjectionStart）；修复 70f3ec976 用可见奖励牌面/已发布牌面补全，未建模的可打出牌标 unmodelled 计为未知，并以两局真实战斗→奖励帧走生产 runLoop 回归（修前三牌 1 组，修后 3 组）。100% 死亡率为‘当前牌组直打完整本幕 Boss’的预期结果，精英模拟偏悲观另待核。下一步：合 main、ops 联合检查、开局边界上线并切回 jev，首局验收。
