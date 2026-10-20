@@ -1,0 +1,3 @@
+已实收原W8继续P4的进展，绑定原任务及新独立WT v6-refresh-p4-r407-20261021。owner报base5056，ops静态核当前HEAD68c03b61且5056为祖先，分别保存基线与当前对象，不将后者冒称正式冻结源或受测树。实际live仍R407/a7d07949，三个旧增量关键模块仍缺；旧26+新3的先前正式源88c86152及材料458ee2aa、旧full/定向证据保留，不据已在main称已live。当前是逐局冻结R404后刷新、包成员和新鲜度及补剩余纯增量缺口的原任务续办，nice19/最多2进程属owner报告，ops未查动态任务或另跑刷新。尚无最新正式源码/manifest、固定测量或full请求，本轮不占检查窗口、不启动模型/模拟/full/dataset，不提前运输旧包。待原owner交精确正式源与依赖后，原单点保护届时live最新知识及较新infra，按既有检查与局终STOP边界发布、读回真实刷新/包/后继消费；排队、代码读回和材料完成均不关消费或科学父。R407现行质量局、配置、P0/P2及Regent原边界不动。
+
+原件：paper/materials/20261021-P4-R407-owner-intake-ops/receipt.json；ops/codex-ops/pending-continuations/original-W8-P4-refresh-receipt-audit-20261020.json。
