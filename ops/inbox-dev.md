@@ -4607,3 +4607,8 @@ request_id=roy-20261017-human-pace-h0 revision=3 input_sha256=1e1c259a15f1824119
 ### 2026-10-20T18:40:13.090313+08:00 原ops W4正式源与getter接收
 
 本轮核W4正式源5446f1813及清单、交付回执SHA，base8d62与f74拿牌A/B→79a严格来源门→544纯getter三层祖先、21项commit内容SHA/Git blob/原工作树字节全部核同。getter增量仅engine/runtime及新测试三项，静态核miss/null且不调用准备或评估；原tsc0/47定向和gitleaks日志SHA核同，严格门91定向及旧full-v2分列，仍待实际联合full。已向原W4/W8及watcher回收件，W4 getter缺项解除，W8须接正式依赖后冻结source/base/tree/manifest；loop、direction-runtime和memory重叠须机械保留搭车/off，不能整叶覆盖。联合输入仍未就绪，未重复检查、模型/API或运输live，不以源码就绪认发布、收益或恢复；五项全部live读回前不开局，805与Regent继续暂停。原件 paper/materials/20261020-W4-formal-source-ops/receipt.json。
+
+
+### 2026-10-20T18:43:04.541188+08:00 原ops W8接getter候选进展
+
+本轮核W8固定候选6f701f93f的父为W4正式5446f1813，getter三项Git blob与原源完全同；候选loop静态未见ensureDirectionPlan调用。原owner报告保留directionSnapshots、knowledge导出与onBrainWait，移除独立方向请求和预先evaluate，T3缺当前选项指纹保持unknown。静态读源不代替接线和请求节奏验收，旧full不能冒覆盖本次改动。最终定向与材料冻结仍由原W8自然完成，本轮不查其动态日志或进程；候选与依赖事实已入短清单及五项事务，但联合输入仍未就绪，正式源码、基线、树和逐叶清单待交。完整检查仅由ops在五项精确组合上执行，不另起full、API、模型或游戏；五项全部live读回前不开局，STOP、原失败、805与Regent暂停边界不变。原件 paper/materials/20261020-W8-544-integration-progress-ops/receipt.json。

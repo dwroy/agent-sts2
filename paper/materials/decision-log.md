@@ -5258,3 +5258,5 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
 - 2026-10-20T18:36:30.464019+08:00 ops：五项来源协调SHA47b919fc与原投递/39静态快照核同，joint_input_ready=false入清单；W4独立getter/依赖和W8正式冻结manifest待交，T3缺对照unknown；不重复prompt/full或部分发布/开局，原五项门槛保持。原件 paper/materials/20261020-1835-ops/receipt.json。
 
 - 2026-10-20T18:40:13.090313+08:00 ops：W4正式5446源三层依赖/21叶SHA及blob/清单与回执核同，纯getter3叶静态及原定向日志核同；依赖就绪回原W8，待保双方重叠后冻结联合输入，不冒旧full-v2覆盖新门/getter，不启动重复full/部分发布或开局。原件 paper/materials/20261020-W4-formal-source-ops/receipt.json。
+
+- 2026-10-20T18:43:04.541188+08:00 ops：W8固定6f候选父544与getter三叶blob核同，loop静态无ensureDirectionPlan调用；原owner在最终定向/冻结，正式manifest未交，joint_input_ready仍false，不查在途或启full，不冒生产节奏/实际上线；五项开局门槛保持。原件 paper/materials/20261020-W8-544-integration-progress-ops/receipt.json。

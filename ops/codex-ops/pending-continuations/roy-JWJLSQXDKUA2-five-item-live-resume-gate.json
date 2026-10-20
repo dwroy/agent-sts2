@@ -127,7 +127,12 @@
     "W4_source_manifest": "paper/materials/20261020-W4-formal-source-ops/source-manifest.json",
     "W4_source_manifest_SHA": "71366d3dcf43afde345047d18bea11e7d92d0c7c43e204594d25344bc5f29ed5",
     "W4_source_count": 21,
-    "W4_three_dependency_layers_verified": true
+    "W4_three_dependency_layers_verified": true,
+    "W8_candidate": "6f701f93f8edad159b7cc538f18c4bc35b3494f2",
+    "W8_candidate_parent": "5446f181380a5b02669cc33babf65b440b852dbc",
+    "W8_getter_dependency_applied_in_fixed_candidate_verified": true,
+    "W8_final_manifest_pending": true,
+    "W8_candidate_progress_receipt": "paper/materials/20261020-W8-544-integration-progress-ops/receipt.json"
   },
   "W4_formal_source_delivery": {
     "source": "5446f181380a5b02669cc33babf65b440b852dbc",
@@ -138,5 +143,62 @@
     "manifest_file_sha256": "71366d3dcf43afde345047d18bea11e7d92d0c7c43e204594d25344bc5f29ed5",
     "receipt": "paper/materials/20261020-W4-formal-source-ops/receipt.json",
     "full_pending": true
+  },
+  "W8_544_candidate_progress": {
+    "at": "2026-10-20T18:42:45.622161+08:00",
+    "state": "W8-candidate-actual-parent-544-verified-final-delivery-pending",
+    "source": "current user original W8 native report",
+    "candidate": "6f701f93f8edad159b7cc538f18c4bc35b3494f2",
+    "tree": "9ee510c5754265b37c0022e3554216cc5caae790",
+    "parent": "5446f181380a5b02669cc33babf65b440b852dbc",
+    "candidate_own_changed_paths": [
+      "agent/src/brain/brain.ts",
+      "agent/src/brain/specs.ts",
+      "agent/src/hand/loop.ts",
+      "agent/src/memory/types.ts",
+      "agent/src/v6/config.ts",
+      "agent/src/v6/direction-plan.ts",
+      "agent/src/v6/direction-prompt.ts",
+      "agent/src/v6/direction-rides.ts",
+      "agent/src/v6/direction-runtime.ts",
+      "agent/src/v6/replan-triggers.ts",
+      "agent/tests/v6-direction-backoff.test.ts",
+      "agent/tests/v6-direction-fastpath-fixture.ts",
+      "agent/tests/v6-direction-fastpath.test.ts",
+      "agent/tests/v6-direction-plan.test.ts",
+      "agent/tests/v6-direction-prompt.test.ts",
+      "agent/tests/v6-direction-provider.test.ts",
+      "agent/tests/v6-direction-rides.test.ts",
+      "agent/tests/v6-direction-runtime.test.ts",
+      "agent/tests/v6-projection-entries.test.ts",
+      "agent/tests/v6-prompt-summary.test.ts"
+    ],
+    "getter_three_blobs_exactly_preserved": [
+      {
+        "path": "agent/src/sim/v6-card-results.ts",
+        "same_as_original_544_blob": true,
+        "sha256": "8f66cb2549afc8aff43e7125fa6503837f9c8e27edafbc189845f77d7df3f104"
+      },
+      {
+        "path": "agent/src/v6/projection-runtime.ts",
+        "same_as_original_544_blob": true,
+        "sha256": "0626b33131a73512ad37b439b6cda49b3e8d73c4aaadacd8bd806cda077db66b"
+      },
+      {
+        "path": "agent/tests/v6-completed-core-peek.test.ts",
+        "same_as_original_544_blob": true,
+        "sha256": "16d811cc527991b2dc7c9aa252546926f4c6f91691df4e2d0f76cc9044df61f0"
+      }
+    ],
+    "candidate_loop_ensureDirectionPlan_call_count_static_only": 0,
+    "directionSnapshots_knowledge_onBrainWait_preservation": "owner reported, final merged runtime behavior not claimed by ops",
+    "standalone_direction_ask_and_pre_evaluate_removed": "owner reported; no full or actual production request-count proof",
+    "T3_option_fingerprint_missing_unknown": "owner report retained",
+    "final_source_manifest_not_yet_delivered": true,
+    "joint_input_ready": false,
+    "no_targeted_progress_or_process_query": true,
+    "no_new_full_API_model_game_or_STOP_changes": true,
+    "only_original_ops_final_five_item_full": true,
+    "Regent_paused": true
   }
 }

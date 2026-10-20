@@ -1,0 +1,1 @@
+W8 原生已接并实际将 5446f1813（父 79a/f74）变基到自身树，保留 W4 directionSnapshots/knowledge 导出/onBrainWait 三项。W8 候选 6f701f93f，正在最终定向联合检查与材料冻结；生产 loop 已无独立 direction ask/pre-evaluate，T3 无当前 option 指纹明确 unknown。会送最终 source/base/tree/逐叶 manifest，full 仍仅由 ops 五项精确组合执行；此刻不是最终就绪/全绿。
