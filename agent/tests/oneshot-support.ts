@@ -26,7 +26,8 @@ import { planDecision } from "../src/hand/screens/index.js";
 import { deckCards } from "../src/hand/screens/oneshot.js";
 import type { JsonValue } from "../src/core/util/json.js";
 import { loggedKnowledge } from "./logged.js";
-import { envelope, sendJson, startTestServer, type TestServer } from "./support.js";
+import { envelope, sendJson, type TestServer } from "./support.js";
+import { startFixtureServer as startTestServer } from "./fixture-http.js";
 
 export type Raw = Record<string, unknown>;
 

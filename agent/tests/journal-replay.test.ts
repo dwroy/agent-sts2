@@ -21,7 +21,8 @@ import { RunJournal, type JournalEntry } from "../src/memory/run-journal.js";
 import { stateLogPath } from "../src/eye/decision-log.js";
 import type { JsonValue } from "../src/core/util/json.js";
 import { baseState, combatPayload, eventPayload, mainMenuPayload, rewardCardPayload, runPayload, testKnowledge } from "./scenarios.js";
-import { envelope, sendJson, startTestServer, type TestServer } from "./support.js";
+import { envelope, sendJson, type TestServer } from "./support.js";
+import { startFixtureServer as startTestServer } from "./fixture-http.js";
 
 type Raw = Record<string, unknown>;
 type Row = Record<string, JsonValue>;

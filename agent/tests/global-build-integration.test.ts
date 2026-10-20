@@ -7,6 +7,13 @@ import type { DeckSimRunner } from "../src/sim/build-sim-pool.js";
 import type { FightSampleResult } from "../src/sim/boss-sim.js";
 import type { GlobalBossPool } from "../src/sim/global-build-pool.js";
 
+// Fixed worker receipts consume the synthetic board, not any opening-turn search result.
+vi.mock("../src/reflex/turn-solver.js", async (original) => {
+  const solver = await original<typeof import("../src/reflex/turn-solver.js")>();
+  const { captureSyntheticInput } = await import("./synthetic-board-fixture.js");
+  return { ...solver, solveTurn: captureSyntheticInput(solver) };
+});
+
 vi.mock("../src/sim/boss-trust.js", async (original) => ({ ...await original<object>(), bossTrustReason: () => null }));
 vi.mock("node:crypto", async (original) => ({ ...await original<object>(), randomUUID: () => "00000000-0000-4000-8000-000000000000" }));
 // Sequential record comparisons must observe the same host-health input.
