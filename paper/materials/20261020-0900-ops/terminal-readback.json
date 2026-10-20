@@ -1,0 +1,57 @@
+{
+  "at": "2026-10-20T09:01:50+08:00",
+  "original_autoplay_pid": 965808,
+  "original_controller_pid": 965895,
+  "controller_alive": false,
+  "original_report_pid": 1182671,
+  "original_report_descendants": [
+    {
+      "pid": 1182671,
+      "ppid": 965808,
+      "state": "S",
+      "comm": "python3",
+      "project_script": [
+        "/home/dw/Projects/agent-sts2/ops/report.py"
+      ]
+    },
+    {
+      "pid": 1191295,
+      "ppid": 1182671,
+      "state": "Z",
+      "comm": "bash",
+      "project_script": []
+    },
+    {
+      "pid": 1191296,
+      "ppid": 1182671,
+      "state": "S",
+      "comm": "bash",
+      "project_script": [
+        "/home/dw/Projects/agent-sts2/.worktrees/live/knowledge/builders/refresh.sh"
+      ]
+    },
+    {
+      "pid": 1278566,
+      "ppid": 1191296,
+      "state": "R",
+      "comm": "python3",
+      "project_script": [
+        "/home/dw/Projects/agent-sts2/.worktrees/live/knowledge/builders/build-boss-damage.py"
+      ]
+    },
+    {
+      "pid": 1278567,
+      "ppid": 1278566,
+      "state": "R",
+      "comm": "grep",
+      "project_script": []
+    }
+  ],
+  "report_refresh_still_in_progress": true,
+  "console_sha256": "3a65956bd0e0e57913954059fd7e67e9e0e9d216ac29004a4f12a58ffffe2abe",
+  "console_bytes": 63479,
+  "console_terminal_summary_sha256": "180b03df57506630501c98482455f94026c9916f8f6ce057b2be21901e834ed6",
+  "run_rows": 1,
+  "canonical_run_end": "2026-10-20T00:44:09.586Z",
+  "R3_next": "原报告/局间刷新仍在途，保持其owner与共享发布锁流程；终局已确认，待原报告完成/刷新终局后原锁窄运R3三知识叶、实际85逐字段读回并分配实际release。无新增审批或重派。"
+}
