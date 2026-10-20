@@ -4612,3 +4612,8 @@ request_id=roy-20261017-human-pace-h0 revision=3 input_sha256=1e1c259a15f1824119
 ### 2026-10-20T18:43:04.541188+08:00 原ops W8接getter候选进展
 
 本轮核W8固定候选6f701f93f的父为W4正式5446f1813，getter三项Git blob与原源完全同；候选loop静态未见ensureDirectionPlan调用。原owner报告保留directionSnapshots、knowledge导出与onBrainWait，移除独立方向请求和预先evaluate，T3缺当前选项指纹保持unknown。静态读源不代替接线和请求节奏验收，旧full不能冒覆盖本次改动。最终定向与材料冻结仍由原W8自然完成，本轮不查其动态日志或进程；候选与依赖事实已入短清单及五项事务，但联合输入仍未就绪，正式源码、基线、树和逐叶清单待交。完整检查仅由ops在五项精确组合上执行，不另起full、API、模型或游戏；五项全部live读回前不开局，STOP、原失败、805与Regent暂停边界不变。原件 paper/materials/20261020-W8-544-integration-progress-ops/receipt.json。
+
+
+### 2026-10-20T18:43:59.420940+08:00 原ops W8非最终候选静态补件
+
+本轮核watcher关于W8同一非最终候选的静态回执SHA81b9c6da，固定6f701f93f提交/tree、四项源码SHA与f74→79a→544三层祖先均与原件一致。生产loop不再引用独立方向调用，配置默认off；方向模块仍保留原缓存、知识导出及回调接口，静态存在不代表实际请求节奏已验收。原owner仍在最终定向及材料冻结，正式源码、基线、树和逐叶清单未交，final_delivery_ready与joint_input_ready继续false；本轮只把该额外来源绑定既有候选与五项事务，不把同一候选当新交付。未重复prompt、查询动态检查或新起full/API/模型/游戏，原单点窗口仍用于五项精确live联合完整验收。只有五项全部上线并实际读回才恢复开局，39部分绿及旧full-v2不代新增门/方向逻辑检查；STOP、85知识、805和Regent暂停边界不变。原件 paper/materials/20261020-1843-ops/receipt.json。

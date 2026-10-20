@@ -1,0 +1,97 @@
+{
+  "at": "2026-10-20T18:42:55.380530+08:00",
+  "role": "original-watcher",
+  "session_id": "01a14f5d-da55-7831-959e-53727796115e",
+  "event": "W8 reports getter integration and non-final candidate",
+  "source": "6f701f93f8edad159b7cc538f18c4bc35b3494f2",
+  "parent": "5446f181380a5b02669cc33babf65b440b852dbc",
+  "tree": "9ee510c5754265b37c0022e3554216cc5caae790",
+  "dependency_ancestors": {
+    "f74bccbb8ab3dd0131f3325c36eb0452afb67756": true,
+    "79a0a61c9288928c10e147d06f593e04f3c2be09": true,
+    "5446f181380a5b02669cc33babf65b440b852dbc": true
+  },
+  "static_sources": [
+    {
+      "path": "agent/src/hand/loop.ts",
+      "sha256": "589998f419e351b5ce3fd4d6476ad0b17347768a6a84cbbd683451ce650bd077",
+      "static_matching_lines": []
+    },
+    {
+      "path": "agent/src/v6/direction-runtime.ts",
+      "sha256": "bfec4d1d50811027ea9a06670b4f4bd5c3251f8e72429f68f48a12d8ba525496",
+      "static_matching_lines": [
+        {
+          "line": 29,
+          "text": "const directionSnapshots = new WeakMap<DecisionEnv[\"screenMemory\"], {"
+        },
+        {
+          "line": 36,
+          "text": "let cached = directionSnapshots.get(env.screenMemory);"
+        },
+        {
+          "line": 39,
+          "text": "directionSnapshots.set(env.screenMemory, cached);"
+        },
+        {
+          "line": 45,
+          "text": "const knowledge = v6PublishedKnowledge(env, dir), cached = directionSnapshots.get(env.screenMemory)!;"
+        },
+        {
+          "line": 97,
+          "text": "export async function ensureDirectionPlan(env: DecisionEnv, brain: Pick<Brain, \"askJson\">, logFile: string,"
+        },
+        {
+          "line": 98,
+          "text": "dir = KNOWLEDGE_DIR, onBrainWait?: () => void): Promise<DirectionPlanAttempt | null> {"
+        },
+        {
+          "line": 171,
+          "text": "peekCompletedCore?: (env: DecisionEnv) => DirectionCompletedSnapshot | null | Promise<DirectionCompletedSnapshot | null>;"
+        },
+        {
+          "line": 174,
+          "text": "try { completed = await provider?.peekCompletedCore?.(env) ?? null; } catch { /* Unavailable cache remains unknown. */ }"
+        },
+        {
+          "line": 205,
+          "text": "onBrainWait?.();"
+        }
+      ]
+    },
+    {
+      "path": "agent/src/memory/types.ts",
+      "sha256": "ac5a1f30d81f8bc0943fa96c49b48270641c2be0fb3f4ab2e1c461560b700d7a",
+      "static_matching_lines": []
+    },
+    {
+      "path": "agent/src/v6/config.ts",
+      "sha256": "67d9d25366836faf482759a5f6b73ce3dc8fdb9200be4f7235771b9dccbf6083",
+      "static_matching_lines": [
+        {
+          "line": 21,
+          "text": "const direction_replan = choice(\"V6_DIRECTION_REPLAN\", [\"off\", \"on\"], \"off\");"
+        }
+      ]
+    }
+  ],
+  "owner_report_only": {
+    "preserved": [
+      "directionSnapshots",
+      "knowledge exports",
+      "onBrainWait"
+    ],
+    "no_independent_direction_ask_or_pre_evaluate": true,
+    "T3_without_current_option_fingerprint": "unknown",
+    "final_targeted_checks_and_manifest": "in_progress"
+  },
+  "final_delivery_ready": false,
+  "joint_input_ready": false,
+  "full_window": "ops authorized five-item precise live joint only",
+  "remaining": [
+    "W8 final source/base/tree/per-leaf manifest and directed result",
+    "ops actual five-item candidate and one joint full, then actual live consumer readback"
+  ],
+  "no_test_full_api_model_game_stop_action": true,
+  "no_live_or_other_worktree_edit": true
+}
