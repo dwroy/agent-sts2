@@ -4944,3 +4944,5 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
 - 2026-10-20 09:36:06 CST [Claude/Roy，仅文档] Roy 指出“投影”不易理解；中文统一改称“构筑评估”（每个方向下每个组合的凑齐概率与凑齐后对各 Boss 的胜率），代码与英文题面暂沿用 projection 命名，稳定后再统一。docs/v6-plan.md 第 3.2 节标题与术语说明已改，各会话中文报告改用新名称。
 
 - 2026-10-20 09:38:18 CST [Claude/Roy，仅文档] Roy 同意：V6 稳定运行若干局后，把代码中构筑评估的 projection 命名统一改为 build evaluation（与 decision-projection 区分），日志与已入库格式保留旧字段兼容；在此之前不改代码命名。
+
+- 2026-10-20 09:42:04 CST [Codex ops，仅接管记录] W3原969b自然终局tsc0/full1及四冻结SHA核同；eddfc1ee/92d542785与byte metadata联合验收待原owner，MC/蜡烛/infra main协调窗口及W3 live烟测/授权hold保留，不重检查/刷新/模型、不改T12/R3/Regent。原件paper/materials/20261020-0937-ops/receipt.json。
