@@ -2,22 +2,22 @@
   "schema": "ops-original-continuation-v1",
   "batch": "20261020-141301-fix-batch",
   "completed": false,
-  "phase": "pending-original-WT-merge-exact-ten-source-host-full-queued-after-W8-then-watcher-infra",
+  "phase": "original-ops-host-full-in-progress-latest-main-fixed-a99-input",
   "source": "885a32ff0ee76c81205fe86b365083d81b73fb02",
-  "pending_main": "d637f2d28d5f3085b15092af02244228e0d6d04f",
-  "staged_tree": "78ef254b5bd5d3edc7611a042f165e18728d8fa1",
+  "pending_main": "9fb00d79eb45e8b46de1e9c02226cd9bcab647ef",
+  "staged_tree": "a99acbf03acdef213771f5b6bed223965b2ca9f3",
   "workspace": ".worktrees/codex-fix-silent-20261020-141301",
   "source_input": {
-    "path": "paper/materials/20261020-1511-ops/source-input.json",
-    "bytes": 73279,
-    "sha256": "7fe99c936ba3c29d0d2d5de69693daedc294aeb7242c169e0f5b7c1be507007e"
+    "path": "paper/materials/20261020-1545-ops/source-input.json",
+    "bytes": 459040,
+    "sha256": "54c88d554ae2304d740a79b744d18fd4134dc9b2ba8f990dbc3c4bd20c9a09d1"
   },
   "receipt": {
-    "path": "paper/materials/20261020-1511-ops/receipt.json",
-    "bytes": 956,
-    "sha256": "83f887ff8c9ef4a2c7380be84fd211d5e1d5401c31087059cd4c1954ec8c4349"
+    "path": "paper/materials/20261020-1545-ops/receipt.json",
+    "bytes": 1703,
+    "sha256": "bddaed240fdf9b11c076ff216f18a2d69a1ba3181b8722c65c498e23f3fdf8ef"
   },
-  "host_pid": null,
+  "host_pid": 4090638,
   "host_full_rc": null,
   "no_new_timer_or_model": true,
   "main_integrated": false,
@@ -29,13 +29,30 @@
   "related_original_protocol_source": "609bcdf4df012d515b702bea70f2cf985eddad50",
   "do_not_auto_close_old_parent_or_retention": true,
   "window_gate": {
-    "owner": "original watcher infra-temp-lifecycle",
-    "native_start": {
-      "path": "paper/materials/20261020-1520-ops/native-start-readback.json",
-      "bytes": 678,
-      "sha256": "3e188ee1c841d3b4d68ed6d679614c9bc04cf88dbd7a635b507697ad250cfdd2"
+    "owner": "original ops141301",
+    "infra_explicit_release_verified": {
+      "path": "paper/materials/20261020-1545-ops/infra-window-release-r1.json",
+      "bytes": 2173,
+      "sha256": "e47a2d254d1f9f5df62862ecb380796700e4c3a9588241f4fc8f0af52674d8a5"
     },
-    "must_wait_for_natural_terminal_exited_identity_and_explicit_release": true,
-    "ops_runner_not_started": true
-  }
+    "infra_known_pids_absent": true,
+    "current_runner_started": true,
+    "release_next_only_after_natural_terminal_and_exited_identity": true,
+    "next": [
+      "original W8 fixture-fixed r3",
+      "original W4 card-results",
+      "original watcher infra fixed test recheck"
+    ]
+  },
+  "prior_source_inputs": [
+    {
+      "path": "paper/materials/20261020-1511-ops/source-input.json",
+      "bytes": 73279,
+      "sha256": "7fe99c936ba3c29d0d2d5de69693daedc294aeb7242c169e0f5b7c1be507007e"
+    }
+  ],
+  "host_start_ticks": 137442004,
+  "host_full_pid": 4091050,
+  "host_status": ".artifacts/ops-wake-20261020-1545/fix-host-status.json",
+  "old_pending_tree_preserved": "78ef254b5bd5d3edc7611a042f165e18728d8fa1"
 }

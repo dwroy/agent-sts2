@@ -4467,3 +4467,7 @@ request_id=roy-20261017-human-pace-h0 revision=3 input_sha256=1e1c259a15f1824119
 
 2026-10-20T15:35:30+08:00 另已实收原W4W6拿牌结果条目任务的完整检查窗口申请，工作树v6-card-combat-results-20261020仍由原owner独立维护。其76项定向与tsc、首个真实卡奖励4/4已知、冷热准备4.43/4.29秒均按本次进展报告保存，不外推其他题面或最终烟测通过；同9冻结题只读Nova烟测由原owner接续，ops不查询、不重复API、模拟或派模型。唯一完整检查窗口按既定顺序原watcher infra、ops141301、W8修夹具重验之后才轮到W4，须前任务自然终局、退出和原生明确释放；不依据估计时间或CLI入队启动。已沿原W4及watcher线程回复顺序，轮到时由ops明确通知，当前不启动其full。新条目只处排队与原进度记录阶段，不认已main/live、发布或消费者收益；旧805/P上界版继续明确暂停，当前live/actor/STOP、Regent及角色ACK边界保持。
 原件 paper/materials/20261020-1531-ops/W4-card-results-window-request-original.md。
+
+
+2026-10-20T15:49:11+08:00 已核原watcher临时文件专项的自然终局与明确释放：tsc0/full1、620文件619过1败及5885过4败2原跳，状态与日志SHA核同，列出的5个检查PID均已不存在，原四条命令断言失败保留。ops原141301随后接管唯一窗口；原885源码与最新main9fb的差异仅记录，已在原工作树准备无冲突组合，十个修复源blob及498份知识保留，固定树a99acbf、2430输入SHA3d889f18。15:47:56实际启动nice19/ionice3有限runner，短仓TMPDIR、单worker与原阈值，tsc0且full已真实启动，尚无终局；原78ef输入及沙箱失败、负控和8处旧live整树冲突不改写。已沿三个原线程通知接管，后续W8修夹具r3、W4拿牌条目、infra修后完整重验均等自然终局核退出后明确释放，不凭CLI排队起full。未提交联合源码或运live，不夹805、不加游戏号，不代角色ACK/关科学父/提前回收；现对局、STOP、Regent及唯一dataset已完成状态保持。
+原件 paper/materials/20261020-1545-ops/receipt.json；native-start-readback.json；source-input.json。
