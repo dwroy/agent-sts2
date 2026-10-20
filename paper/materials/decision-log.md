@@ -5298,3 +5298,7 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
 - 2026-10-20T20:02:19.040969+08:00 ops：W4 31a三测试与W8 2a1一叶齐，差旧900仅四测试，最新live64/458知识锁内重冻tree496948c2/2379输入SHA17053663；19:59:55唯一单worker实际tsc0/full在跑，未main/live发布或开局，绿后原授权执行/再败保STOP。原件 paper/materials/20261020-five-item-repaired-start-ops/receipt.json。
 
 - 2026-10-20T20:27:27.377859+08:00 ops：修后五项tsc0/full1仅batch-c:443原15秒超时，623文件622过1败/5908过1败2跳，原四修复通过；tree4969/2379输入SHA1705核同/PID退出，已投原watcher转Claude，保STOP不发布/部分开局或重未变full。原件 paper/materials/20261020-2024-ops/receipt.json。
+
+- 2026-10-20 20:34:56 CST V6-W8：按Claude20:3x在自有树对live64与五项tree4969交替各3次单例batch-c:443，nice19/ionice3/单worker/原15s全部rc0；live1.719/1.733/1.695s、候选1.708/1.744/1.979s，中位+1.45%；候选2379输入SHA17053663前后核同。未复现候选回归，支持宿主负载偶发超时；直调planCombatTurn不走idleCombat，原瞬时CPU未采样。原full1保留、不冒完整绿；未改代码/阈值/live/STOP或起full。材料 paper/materials/2026-10-20-v6-batch-c-timeout/report.md。
+
+- 2026-10-20T20:39:08.686250+08:00 ops：W8 78e479/32a913仅25材料/24清单逐Git SHA核同，六单例0/候选原2379输入SHA1705保持，按指定口径偶发宿主负载/调度、历史争用源未知；原full1及STOP保持，不运eeaa验证父或重full。原件 paper/materials/20261020-W8-timeout-materials-ops/receipt.json。

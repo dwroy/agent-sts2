@@ -1,0 +1,54 @@
+{
+  "at": "2026-10-20T20:34:56.267301+08:00",
+  "task": "Claude20:3x batch-c timeout isolated comparison",
+  "owner_native_session": "01a15382-761a-76a2-922d-271169b2463c",
+  "worktree": "/home/dw/Projects/agent-sts2/.worktrees/v6-batch-c-timeout-20261020",
+  "live_ref": "64c218a04ebe029fdda0b5f25025302ebf2a4124",
+  "candidate_tree": "496948c2f9a9fb4d45056aa2394940cb81e0862b",
+  "validation_only_commit": "eeaa6ef683699c668101c29f3794674063a1b1a7",
+  "candidate_input_count": 2379,
+  "candidate_input_sha256": "17053663e821d3a754b6d84f4a5dc2987c1ec958a64d1295b6cd04cfeb3e1775",
+  "all_three_candidate_input_snapshots_match_original": true,
+  "all_six_inputs_unchanged": true,
+  "results": {
+    "live": {
+      "case_ms": [
+        1719.160902,
+        1733.1207139999997,
+        1695.3380960000004
+      ],
+      "case_median_ms": 1719.160902,
+      "wall_seconds": [
+        5.026753501966596,
+        4.976777296047658,
+        4.975821919040754
+      ]
+    },
+    "candidate": {
+      "case_ms": [
+        1707.6142529999997,
+        1744.0699879999997,
+        1978.5808770000003
+      ],
+      "case_median_ms": 1744.0699879999997,
+      "wall_seconds": [
+        5.026850452879444,
+        5.026047408115119,
+        5.8291347080376
+      ]
+    }
+  },
+  "candidate_vs_live_median_ratio": 1.0144890952155912,
+  "target_test_body_identical": true,
+  "target_body_sha256": "4264d9fc33d16ff130825733e76b2315c9ac7951f95e9aac15d8ed279fd5c736",
+  "historical_full_case_ms": 23054,
+  "original_timeout_ms": 15000,
+  "test_case_timeout_unchanged": true,
+  "code_or_test_changes": false,
+  "full_run_started": false,
+  "live_or_STOP_changes": false,
+  "conclusion": "No reproduced candidate slowdown; timing and direct call path support a transient host load/scheduling timeout. Original failure had no per-case CPU profile; exact contention source remains unknown.",
+  "all_measurement_PIDs_exited": true,
+  "node_version": "v22.23.3",
+  "vitest_version": "4.1.11"
+}

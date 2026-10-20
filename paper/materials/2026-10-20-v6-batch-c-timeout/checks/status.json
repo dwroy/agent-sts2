@@ -1,0 +1,267 @@
+{
+  "started_at": "2026-10-20T20:31:58.810539+08:00",
+  "pid": 816448,
+  "nice": 19,
+  "refs": {
+    "live": "64c218a04ebe029fdda0b5f25025302ebf2a4124",
+    "candidate": "eeaa6ef683699c668101c29f3794674063a1b1a7"
+  },
+  "candidate_tree": "496948c2f9a9fb4d45056aa2394940cb81e0862b",
+  "test_filter": "the logged elite T1 with the clock past the budget",
+  "steps": [
+    {
+      "label": "live",
+      "repeat": 1,
+      "started_at": "2026-10-20T20:31:59.656772+08:00",
+      "command": [
+        "node",
+        "node_modules/vitest/vitest.mjs",
+        "run",
+        "tests/batch-c.test.ts",
+        "--maxWorkers=1",
+        "--testNamePattern",
+        "the logged elite T1 with the clock past the budget",
+        "--reporter=json",
+        "--outputFile",
+        "/home/dw/Projects/agent-sts2/.worktrees/v6-batch-c-timeout-20261020/.artifacts/batch-c-20261020/live-1.json"
+      ],
+      "tree": "b67fdda76792cae81587a108e686e26bc2ca4c57",
+      "original_2379_match": false,
+      "input_count": 2379,
+      "input_sha256": "600f363b415e50ea9b2033817229d63621096aed48f6538b760900216fc42784",
+      "load_before": "3.41 5.19 8.31 3/2288 816500",
+      "pid": 816501,
+      "exit_code": 0,
+      "wall_seconds": 5.026753501966596,
+      "ended_at": "2026-10-20T20:32:04.689637+08:00",
+      "load_after": "3.30 5.14 8.28 3/2279 816615",
+      "host_cpu_busy_fraction": 0.09009176587301593,
+      "inputs_unchanged": true,
+      "result": {
+        "success": true,
+        "numPassedTests": 1,
+        "numFailedTests": 0,
+        "numPendingTests": 26
+      },
+      "assertions": [
+        {
+          "title": "13. The rollout's time-budget fallback is labelled a fallback, not a forecast, and never reads as \"all lines die\" (X7LUMGJK9NRM F7 T1) the logged elite T1 with the clock past the budget: no best, no 'every line loses all our HP', the cap explained",
+          "duration_ms": 1719.160902,
+          "status": "passed"
+        }
+      ]
+    },
+    {
+      "label": "candidate",
+      "repeat": 1,
+      "started_at": "2026-10-20T20:32:05.379561+08:00",
+      "command": [
+        "node",
+        "node_modules/vitest/vitest.mjs",
+        "run",
+        "tests/batch-c.test.ts",
+        "--maxWorkers=1",
+        "--testNamePattern",
+        "the logged elite T1 with the clock past the budget",
+        "--reporter=json",
+        "--outputFile",
+        "/home/dw/Projects/agent-sts2/.worktrees/v6-batch-c-timeout-20261020/.artifacts/batch-c-20261020/candidate-1.json"
+      ],
+      "tree": "496948c2f9a9fb4d45056aa2394940cb81e0862b",
+      "original_2379_match": true,
+      "input_count": 2379,
+      "input_sha256": "17053663e821d3a754b6d84f4a5dc2987c1ec958a64d1295b6cd04cfeb3e1775",
+      "load_before": "3.30 5.14 8.28 4/2274 816665",
+      "pid": 816667,
+      "exit_code": 0,
+      "wall_seconds": 5.026850452879444,
+      "ended_at": "2026-10-20T20:32:10.412337+08:00",
+      "load_after": "3.28 5.10 8.25 2/2273 816803",
+      "host_cpu_busy_fraction": 0.0935220670045741,
+      "inputs_unchanged": true,
+      "result": {
+        "success": true,
+        "numPassedTests": 1,
+        "numFailedTests": 0,
+        "numPendingTests": 26
+      },
+      "assertions": [
+        {
+          "title": "13. The rollout's time-budget fallback is labelled a fallback, not a forecast, and never reads as \"all lines die\" (X7LUMGJK9NRM F7 T1) the logged elite T1 with the clock past the budget: no best, no 'every line loses all our HP', the cap explained",
+          "duration_ms": 1707.6142529999997,
+          "status": "passed"
+        }
+      ]
+    },
+    {
+      "label": "live",
+      "repeat": 2,
+      "started_at": "2026-10-20T20:32:11.003767+08:00",
+      "command": [
+        "node",
+        "node_modules/vitest/vitest.mjs",
+        "run",
+        "tests/batch-c.test.ts",
+        "--maxWorkers=1",
+        "--testNamePattern",
+        "the logged elite T1 with the clock past the budget",
+        "--reporter=json",
+        "--outputFile",
+        "/home/dw/Projects/agent-sts2/.worktrees/v6-batch-c-timeout-20261020/.artifacts/batch-c-20261020/live-2.json"
+      ],
+      "tree": "b67fdda76792cae81587a108e686e26bc2ca4c57",
+      "original_2379_match": false,
+      "input_count": 2379,
+      "input_sha256": "600f363b415e50ea9b2033817229d63621096aed48f6538b760900216fc42784",
+      "load_before": "3.28 5.10 8.25 2/2273 816851",
+      "pid": 816852,
+      "exit_code": 0,
+      "wall_seconds": 4.976777296047658,
+      "ended_at": "2026-10-20T20:32:15.986103+08:00",
+      "load_after": "3.33 5.08 8.23 2/2275 816943",
+      "host_cpu_busy_fraction": 0.09123769163654494,
+      "inputs_unchanged": true,
+      "result": {
+        "success": true,
+        "numPassedTests": 1,
+        "numFailedTests": 0,
+        "numPendingTests": 26
+      },
+      "assertions": [
+        {
+          "title": "13. The rollout's time-budget fallback is labelled a fallback, not a forecast, and never reads as \"all lines die\" (X7LUMGJK9NRM F7 T1) the logged elite T1 with the clock past the budget: no best, no 'every line loses all our HP', the cap explained",
+          "duration_ms": 1733.1207139999997,
+          "status": "passed"
+        }
+      ]
+    },
+    {
+      "label": "candidate",
+      "repeat": 2,
+      "started_at": "2026-10-20T20:32:16.618525+08:00",
+      "command": [
+        "node",
+        "node_modules/vitest/vitest.mjs",
+        "run",
+        "tests/batch-c.test.ts",
+        "--maxWorkers=1",
+        "--testNamePattern",
+        "the logged elite T1 with the clock past the budget",
+        "--reporter=json",
+        "--outputFile",
+        "/home/dw/Projects/agent-sts2/.worktrees/v6-batch-c-timeout-20261020/.artifacts/batch-c-20261020/candidate-2.json"
+      ],
+      "tree": "496948c2f9a9fb4d45056aa2394940cb81e0862b",
+      "original_2379_match": true,
+      "input_count": 2379,
+      "input_sha256": "17053663e821d3a754b6d84f4a5dc2987c1ec958a64d1295b6cd04cfeb3e1775",
+      "load_before": "3.33 5.08 8.23 2/2275 816989",
+      "pid": 816990,
+      "exit_code": 0,
+      "wall_seconds": 5.026047408115119,
+      "ended_at": "2026-10-20T20:32:21.651046+08:00",
+      "load_after": "3.39 5.06 8.20 2/2265 817150",
+      "host_cpu_busy_fraction": 0.09094281298299844,
+      "inputs_unchanged": true,
+      "result": {
+        "success": true,
+        "numPassedTests": 1,
+        "numFailedTests": 0,
+        "numPendingTests": 26
+      },
+      "assertions": [
+        {
+          "title": "13. The rollout's time-budget fallback is labelled a fallback, not a forecast, and never reads as \"all lines die\" (X7LUMGJK9NRM F7 T1) the logged elite T1 with the clock past the budget: no best, no 'every line loses all our HP', the cap explained",
+          "duration_ms": 1744.0699879999997,
+          "status": "passed"
+        }
+      ]
+    },
+    {
+      "label": "live",
+      "repeat": 3,
+      "started_at": "2026-10-20T20:32:22.261344+08:00",
+      "command": [
+        "node",
+        "node_modules/vitest/vitest.mjs",
+        "run",
+        "tests/batch-c.test.ts",
+        "--maxWorkers=1",
+        "--testNamePattern",
+        "the logged elite T1 with the clock past the budget",
+        "--reporter=json",
+        "--outputFile",
+        "/home/dw/Projects/agent-sts2/.worktrees/v6-batch-c-timeout-20261020/.artifacts/batch-c-20261020/live-3.json"
+      ],
+      "tree": "b67fdda76792cae81587a108e686e26bc2ca4c57",
+      "original_2379_match": false,
+      "input_count": 2379,
+      "input_sha256": "600f363b415e50ea9b2033817229d63621096aed48f6538b760900216fc42784",
+      "load_before": "3.39 5.06 8.20 2/2256 817197",
+      "pid": 817198,
+      "exit_code": 0,
+      "wall_seconds": 4.975821919040754,
+      "ended_at": "2026-10-20T20:32:27.243299+08:00",
+      "load_after": "3.28 5.01 8.17 2/2269 817294",
+      "host_cpu_busy_fraction": 0.08914414133216808,
+      "inputs_unchanged": true,
+      "result": {
+        "success": true,
+        "numPassedTests": 1,
+        "numFailedTests": 0,
+        "numPendingTests": 26
+      },
+      "assertions": [
+        {
+          "title": "13. The rollout's time-budget fallback is labelled a fallback, not a forecast, and never reads as \"all lines die\" (X7LUMGJK9NRM F7 T1) the logged elite T1 with the clock past the budget: no best, no 'every line loses all our HP', the cap explained",
+          "duration_ms": 1695.3380960000004,
+          "status": "passed"
+        }
+      ]
+    },
+    {
+      "label": "candidate",
+      "repeat": 3,
+      "started_at": "2026-10-20T20:32:27.858397+08:00",
+      "command": [
+        "node",
+        "node_modules/vitest/vitest.mjs",
+        "run",
+        "tests/batch-c.test.ts",
+        "--maxWorkers=1",
+        "--testNamePattern",
+        "the logged elite T1 with the clock past the budget",
+        "--reporter=json",
+        "--outputFile",
+        "/home/dw/Projects/agent-sts2/.worktrees/v6-batch-c-timeout-20261020/.artifacts/batch-c-20261020/candidate-3.json"
+      ],
+      "tree": "496948c2f9a9fb4d45056aa2394940cb81e0862b",
+      "original_2379_match": true,
+      "input_count": 2379,
+      "input_sha256": "17053663e821d3a754b6d84f4a5dc2987c1ec958a64d1295b6cd04cfeb3e1775",
+      "load_before": "3.28 5.01 8.17 3/2277 817348",
+      "pid": 817349,
+      "exit_code": 0,
+      "wall_seconds": 5.8291347080376,
+      "ended_at": "2026-10-20T20:32:33.695345+08:00",
+      "load_after": "4.13 5.16 8.20 4/2282 817586",
+      "host_cpu_busy_fraction": 0.2920415224913495,
+      "inputs_unchanged": true,
+      "result": {
+        "success": true,
+        "numPassedTests": 1,
+        "numFailedTests": 0,
+        "numPendingTests": 26
+      },
+      "assertions": [
+        {
+          "title": "13. The rollout's time-budget fallback is labelled a fallback, not a forecast, and never reads as \"all lines die\" (X7LUMGJK9NRM F7 T1) the logged elite T1 with the clock past the budget: no best, no 'every line loses all our HP', the cap explained",
+          "duration_ms": 1978.5808770000003,
+          "status": "passed"
+        }
+      ]
+    }
+  ],
+  "ended_at": "2026-10-20T20:32:33.815494+08:00",
+  "state": "complete"
+}

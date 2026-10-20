@@ -64,7 +64,7 @@
   "reports_and_background_refresh_continue": true,
   "active_actor_do_not_interrupt": true,
   "Regent_paused": true,
-  "next": "original watcher actual receive/relay and Claude decision under19:4x; preserve fixed inputs/new single timeout/all old failures; no partial start or unchanged full repeat",
+  "next": "original Claude follow-up after W8 isolated comparison materials; keep STOP/full1 and no new full or release authorization inferred",
   "forwarded_source_aliases": [
     {
       "path": "paper/materials/20261020-1826-ops/authorization-original.md",
@@ -527,5 +527,74 @@
     "next": "report watcher/Claude per19:4x; keep STOP and fixed input; do not substitute partial green or drop failed test"
   },
   "latest_failure_delivery": "paper/materials/20261020-2024-ops/watcher-failure-delivery.json",
-  "actual_Claude_relay_and_decision_pending": true
+  "actual_Claude_relay_and_decision_pending": true,
+  "original_W8_timeout_isolation_materials": {
+    "at": "2026-10-20T20:38:16.177945+08:00",
+    "task": "original W8 Claude20:3x read-only batch-c timeout comparison",
+    "material_commits": [
+      "78e47908b49d721495d166f5189df0c40c2c8696",
+      "32a913d932c3551b05d76068d478e3d96c7ff6d3"
+    ],
+    "import_scope": "paper/materials/2026-10-20-v6-batch-c-timeout",
+    "material_leaf_count": 25,
+    "manifest_entries_verified_against_Git_SHA_and_WT": 24,
+    "six_raw_JSON_reports_and_original_failure_log_verified": true,
+    "six_targeted_measurements": [
+      {
+        "label": "live",
+        "repeat": 1,
+        "test_ms": 1719.160902,
+        "test_pid": 816501,
+        "pid_exists_now": false
+      },
+      {
+        "label": "candidate",
+        "repeat": 1,
+        "test_ms": 1707.6142529999997,
+        "test_pid": 816667,
+        "pid_exists_now": false
+      },
+      {
+        "label": "live",
+        "repeat": 2,
+        "test_ms": 1733.1207139999997,
+        "test_pid": 816852,
+        "pid_exists_now": false
+      },
+      {
+        "label": "candidate",
+        "repeat": 2,
+        "test_ms": 1744.0699879999997,
+        "test_pid": 816990,
+        "pid_exists_now": false
+      },
+      {
+        "label": "live",
+        "repeat": 3,
+        "test_ms": 1695.3380960000004,
+        "test_pid": 817198,
+        "pid_exists_now": false
+      },
+      {
+        "label": "candidate",
+        "repeat": 3,
+        "test_ms": 1978.5808770000003,
+        "test_pid": 817349,
+        "pid_exists_now": false
+      }
+    ],
+    "candidate_median_difference_percent": 1.4489095215591163,
+    "candidate_2379_manifest_exact_original_bytes": true,
+    "candidate_three_steps_original_input_SHA_before_after_verified": true,
+    "classification_as_requested_by_original_Claude": "transient host load/scheduling timeout; candidate slowdown not reproduced",
+    "historical_23s_CPU_profile_absent_exact_contention_unknown": true,
+    "live_vs_candidate_test_body_equal_whole_file_not_equal": true,
+    "original_full1_preserved_and_not_overridden_by_targeted": true,
+    "validation_commit_eeaa_not_transported": true,
+    "only_material_paths_copied_no_source_or_tests_changed": true,
+    "STOP_live_main_engineering_unchanged": true,
+    "no_new_full_or_API_or_game": "this ops intake only verifies archived results",
+    "pending": "Claude follow-up decision; no release or resume authorization inferred",
+    "archived_runner_pid_exited": 816448
+  }
 }
