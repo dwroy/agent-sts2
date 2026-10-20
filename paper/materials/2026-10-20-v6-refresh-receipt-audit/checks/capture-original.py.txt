@@ -1,0 +1,78 @@
+import datetime, gzip, hashlib, json, subprocess
+from pathlib import Path
+
+ROOT = Path('/home/dw/Projects/agent-sts2')
+WT = Path(__file__).resolve().parents[1]
+OUT = WT / 'paper/materials/2026-10-20-v6-refresh-receipt-audit/checks'
+OUT.mkdir(parents=True, exist_ok=True)
+refs = []
+
+def sha(data):
+    return hashlib.sha256(data).hexdigest()
+
+def write(name, value):
+    (OUT / name).write_text(json.dumps(value, ensure_ascii=False, indent=2) + '\n')
+
+def capture(path, name):
+    data = path.read_bytes()
+    (OUT / (name + '.gz')).write_bytes(gzip.compress(data, mtime=0))
+    refs.append(dict(source=str(path), bytes=len(data), sha256=sha(data), copy=name + '.gz'))
+    return data
+
+def git(*args, root=ROOT):
+    return subprocess.check_output(['git', '-C', str(root), *args], text=True).strip()
+
+now = datetime.datetime.now(datetime.timezone.utc).isoformat()
+live = ROOT / '.worktrees/live'
+write('identities.json', dict(captured_at=now, main=git('rev-parse', 'HEAD'), live=git('rev-parse', 'HEAD', root=live),
+     worktree=git('rev-parse', 'HEAD', root=WT), task='Claude 22:4x docs/v6-plan.md section 12 P4',
+     native_session='01a15382-761a-76a2-922d-271169b2463c', account='codex1',
+     boundary='read only production receipts; no refresh, dataset, simulation, model, play or full test'))
+
+selected = {'Y427BMQH8AU6', '5ZEPCTQKKXE4', 'YSRVLSKVU8DL'}
+run_bytes = capture(ROOT / 'logs/runs.jsonl', 'runs.jsonl')
+run_rows = [json.loads(line) for line in run_bytes.splitlines() if line]
+write('selected-runs.json', [r for r in run_rows if r.get('run_id') in selected])
+snapshots = capture(ROOT / 'logs/v6-history-snapshots.jsonl', 'history-snapshots.jsonl')
+write('selected-snapshots.json', [r for line in snapshots.splitlines() if line
+      for r in [json.loads(line)] if r.get('run_id') in selected])
+timing = capture(ROOT / 'ops/refresh-timing.jsonl', 'refresh-timing.jsonl')
+write('recent-steps.json', [json.loads(line) for line in timing.splitlines() if line][-100:])
+
+receipts = []
+for p in sorted((ROOT / 'ops/codex-ops/v6-refresh/silent').glob('*/receipt.json')):
+    r = json.loads(capture(p, p.parent.name + '-receipt.json'))
+    metrics_path = p.parent / 'combo-metrics.stdout'
+    metrics = metrics_path.read_text() if metrics_path.exists() else None
+    if metrics:
+        capture(metrics_path, p.parent.name + '-combo-metrics.stdout')
+    pack_path = p.parent / 'v6-history.json'
+    membership = {}
+    if r.get('status') == 'published' and r.get('started_at', '') >= '2026-10-20T08:00':
+        pack_bytes = pack_path.read_bytes()
+        pack = json.loads(pack_bytes)
+        membership = dict(file_sha256=sha(pack_bytes), content_sha256=pack['content_sha256'],
+              generated_at=pack['generated_at'], cutoff=pack['data']['cutoff'],
+              ended_run_membership={rid: rid in r.get('ended_runs', []) for rid in sorted(selected)},
+              combo_metric_membership={rid: [c['id'] for c in pack['data']['combo_metrics']
+                if any(rid in source['run_ids'] for metric in c['metrics'] for source in metric['sources'])]
+                for rid in sorted(selected)})
+    receipts.append(dict(name=p.parent.name, started_at=r.get('started_at'), ended_at=r.get('ended_at'),
+          status=r.get('status'), exit_code=r.get('exit_code'), steps=r.get('steps'),
+          published=r.get('published'), production_consumption=r.get('production_consumption'),
+          ended_runs=len(r.get('ended_runs', [])), incremental=r.get('incremental'),
+          index_seconds=r.get('index_seconds'), freeze_seconds=r.get('freeze_seconds'),
+          freeze_metrics=r.get('freeze_metrics'), combo_stdout=metrics, pack=membership))
+write('receipts-summary.json', sorted(receipts, key=lambda r: r.get('started_at') or ''))
+
+original = json.loads((ROOT / 'paper/materials/2026-10-20-v6-refresh-legacy-incremental/checks/functional-source-input.json').read_bytes())
+mapping = []
+for item in original['sources']:
+    row = dict(path=item['path'], prior_tested_sha256=item['sha256'])
+    for name, directory in [('main', ROOT), ('live', live), ('task', WT)]:
+        path = directory / item['path']
+        row[name] = dict(sha256=sha(path.read_bytes()), bytes=path.stat().st_size) if path.exists() else None
+    mapping.append(row)
+write('existing-incremental-source-map.json', dict(original_commit='5cd435c4b282f3f5b73eefe54e34ea0530e00e40', sources=mapping))
+write('raw-inputs.json', refs)
+print(json.dumps(dict(captured_at=now, receipt_count=len(receipts), files=len(refs), output=str(OUT))))

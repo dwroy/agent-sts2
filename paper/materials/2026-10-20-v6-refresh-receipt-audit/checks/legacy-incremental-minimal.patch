@@ -1,0 +1,2394 @@
+diff --git a/agent/tests/component_usage_test.py b/agent/tests/component_usage_test.py
+index b0ce7ec31..ccebe7b51 100644
+--- a/agent/tests/component_usage_test.py
++++ b/agent/tests/component_usage_test.py
+@@ -168,8 +168,11 @@ class Components(unittest.TestCase):
+         with mock.patch.object(report, "ROOT", str(self.root)), mock.patch.object(report, "LIVE", str(REPO)), mock.patch("subprocess.Popen") as popen:
+             report.refresh_costs()
+             args = popen.call_args.args[0]
+-            self.assertEqual(args[:4], ["nice", "-n", "19", "python3"])
++            self.assertEqual(args[:9], ["nice", "-n", "19", "ionice", "-c", "3", "flock",
++                                       str(self.root / "ops/knowledge-refresh.lock"), "python3"])
+             self.assertEqual(args[-4:], ["--root", str(self.root), "--code-root", str(REPO)])
++            for name in ("OMP_NUM_THREADS", "OPENBLAS_NUM_THREADS", "MKL_NUM_THREADS", "NUMEXPR_NUM_THREADS"):
++                self.assertEqual(popen.call_args.kwargs["env"][name], "1")
+             self.assertTrue(popen.call_args.kwargs["start_new_session"])
+             popen.return_value.wait.assert_not_called()
+         with (self.root / "ops/cost-refresh.lock").open("a") as lock:
+diff --git a/agent/tests/cost_incremental_test.py b/agent/tests/cost_incremental_test.py
+new file mode 100644
+index 000000000..f9e5552a4
+--- /dev/null
++++ b/agent/tests/cost_incremental_test.py
+@@ -0,0 +1,73 @@
++"""Fixed cost-cache append/rewrite and accounting equivalence checks."""
++import importlib.util
++import json
++from pathlib import Path
++import sys
++import tempfile
++import unittest
++from unittest.mock import patch
++
++ROOT = Path(__file__).resolve().parents[2]
++sys.path.insert(0, str(ROOT / 'eval'))
++import jsonl_cache
++import cost
++
++
++class CostCacheTest(unittest.TestCase):
++    def test_append_partial_rewrite_truncate_revision_and_corruption(self):
++        with tempfile.TemporaryDirectory() as tmp:
++            root=Path(tmp); path=root/'facts.jsonl'
++            path.write_bytes(b'{"n":1}\n{"n":')
++            cache=jsonl_cache.JsonlCache(root/'cache','one')
++            self.assertEqual(cache.rows(path,path.stat().st_size),([{'n':1}],0))
++            with path.open('ab') as out: out.write(b'2}\ninvalid\n')
++            self.assertEqual(cache.rows(path,path.stat().st_size),([{'n':1},{'n':2}],1))
++            self.assertEqual(cache.decoded,3)
++            cache.rows(path,path.stat().st_size)
++            self.assertEqual(cache.decoded,3)
++            # A fixed cut excludes later appends, even when facts were cached earlier.
++            self.assertEqual(cache.rows(path,8),([{'n':1}],0))
++            path.write_bytes(b'{"n":3}\n')
++            self.assertEqual(cache.rows(path,8),([{'n':3}],0))
++            cache.db.execute("UPDATE facts SET body='broken'"); cache.db.commit()
++            self.assertEqual(cache.rows(path,8),([{'n':3}],0))
++            cache.close()
++            cache=jsonl_cache.JsonlCache(root/'cache','two')
++            self.assertEqual(cache.rows(path,8),([{'n':3}],0))
++            self.assertEqual(cache.decoded,1); cache.close()
++
++    def test_compact_projection_preserves_accounting_and_cohort(self):
++        with tempfile.TemporaryDirectory() as tmp:
++            root=Path(tmp); (root/'logs').mkdir()
++            now='2026-10-05T12:00:00Z'
++            rows=[dict(ts=now,run_id='A',question_id='Q',engine='codex',label='act/plan',
++                       answer=dict(run_plan={'private':'large'},route=['private']),
++                       inputTokens=100,cacheHitTokens=80,outputTokens=20,
++                       usage=dict(inputTokens=100,cacheHitTokens=80,outputTokens=20),
++                       payload='PRIVATE_PROMPT'),
++                  dict(ts=now,run_id='A',question_id='BAD',engine='codex',answer=None,error='failed')]
++            (root/'logs/brain.jsonl').write_text(''.join(json.dumps(r)+'\n' for r in rows))
++            (root/'logs/runs.jsonl').write_text(json.dumps(dict(run_id='A',character='SILENT',ended=now))+'\n')
++            learner=root/'learner/runs'; learner.mkdir(parents=True)
++            (learner/'fixed.jsonl').write_text(''.join(json.dumps(r)+'\n' for r in [
++                dict(type='learner_launch',task='fixed',params=dict(character='silent',runs='A')),
++                dict(type='learner_output',text='PRIVATE_LEARNER_STREAM'),
++                dict(type='learner_summary',ts=now,wall_ms=123,summary=dict(
++                    engine='codex',sessionId='fixed',turns=1,tokens=dict(input=4,output=2))),
++            ]))
++            config=json.loads((ROOT/'eval/cost-config.json').read_text())
++            cached=cost.collect(root,config,root/'claude',root/'codex')
++            warm=cost.collect(root,config,root/'claude',root/'codex')
++            original=cost.Sources
++            with patch.object(cost,'Sources',side_effect=lambda _directory:original()):
++                # collect closes an optional cache; the plain reader must remain supported.
++                plain=cost.collect(root,config,root/'claude',root/'codex')
++            for index in (0,1,3):
++                self.assertEqual(cached[index],plain[index]);self.assertEqual(warm[index],plain[index])
++            self.assertEqual(warm[2].cache.decoded,0)
++            db=(root/'ops/component-cost-cache/facts.sqlite').read_bytes()
++            self.assertNotIn(b'PRIVATE_PROMPT',db)
++            self.assertNotIn(b'PRIVATE_LEARNER_STREAM',db)
++
++
++if __name__=='__main__': unittest.main()
+diff --git a/agent/tests/legacy-refresh-incremental.test.ts b/agent/tests/legacy-refresh-incremental.test.ts
+new file mode 100644
+index 000000000..0b550c2a9
+--- /dev/null
++++ b/agent/tests/legacy-refresh-incremental.test.ts
+@@ -0,0 +1,28 @@
++import { spawn } from "node:child_process";
++import { existsSync } from "node:fs";
++import { fileURLToPath } from "node:url";
++import { expect, it } from "vitest";
++
++const root = fileURLToPath(new URL("../../", import.meta.url));
++const duckPython = `${root}data/logdb-venv/bin/python`;
++
++it.each([
++  ["python3", "knowledge/builders/test_legacy_incremental.py", 11],
++  ["python3", "agent/tests/cost_incremental_test.py", 2],
++  ["python3", "agent/tests/report_incremental_test.py", 4],
++  [existsSync(duckPython) ? duckPython : "python3", "knowledge/builders/test_potion_incremental.py", 1],
++] as const)("keeps cached statistics equivalent to full fixed evidence: %s %s", async (python, file, count) => {
++  const result = await new Promise<{ code: number | null; output: string }>((resolve, reject) => {
++    const child = spawn("nice", ["-n", "19", python, "-B", `${root}${file}`], {
++      cwd: root, env: { ...process.env, OMP_NUM_THREADS: "1", OPENBLAS_NUM_THREADS: "1" },
++      stdio: ["ignore", "pipe", "pipe"],
++    });
++    let output = "";
++    child.stdout.on("data", (data: Buffer) => { output += data.toString(); });
++    child.stderr.on("data", (data: Buffer) => { output += data.toString(); });
++    child.on("error", reject);
++    child.on("close", (code) => resolve({ code, output }));
++  });
++  expect(result.code, result.output).toBe(0);
++  expect(result.output).toContain(`Ran ${count} test`);
++}, 45_000);
+diff --git a/agent/tests/report_incremental_test.py b/agent/tests/report_incremental_test.py
+new file mode 100644
+index 000000000..dd0559442
+--- /dev/null
++++ b/agent/tests/report_incremental_test.py
+@@ -0,0 +1,105 @@
++"""Fixed report selector equivalence, original offsets and append-only identities."""
++import importlib.util
++import fcntl
++import json
++from pathlib import Path
++import sys
++import subprocess
++import tempfile
++import unittest
++from unittest.mock import patch
++
++ROOT = Path(__file__).resolve().parents[2]
++sys.path.insert(0, str(ROOT / 'ops'))
++import report_log_cache as cache
++spec = importlib.util.spec_from_file_location('incremental_report', ROOT / 'ops/report.py')
++report = importlib.util.module_from_spec(spec)
++spec.loader.exec_module(report)
++
++
++class ReportCacheTest(unittest.TestCase):
++    def test_states_warm_append_foreign_timestamp_and_busy_fallback_match_original(self):
++        with tempfile.TemporaryDirectory() as tmp:
++            path = Path(tmp) / 'logs/states.jsonl'; path.parent.mkdir()
++            ts = '2026-01-01T00:00:00.000Z'
++            rows = [dict(ts=ts,state=dict(run_id='A',current_hp=42)),
++                    dict(ts=ts,state=dict(run_id='B',current_hp=7)),
++                    dict(ts='other',state=dict(run_id='A',in_combat=True))]
++            path.write_text(''.join(json.dumps(r)+'\n' for r in rows)+'bad\n')
++            wanted={ts}
++            expected=cache.scan_states(path,'A',wanted)
++            self.assertEqual(cache.states(path,'A',wanted),expected)
++            cache.warm_states(path)
++            self.assertEqual(cache.states(path,'A',wanted),expected)
++            with path.open('a') as out:
++                out.write(json.dumps(dict(ts='new',state=dict(run_id='A',current_hp=3)))+'\n')
++                # JSON-escaped identifiers were rejected by the original text prefilter.
++                out.write('{"ts":"escaped","state":{"run_id":"\\u0041"}}\n')
++            expected=cache.scan_states(path,'A',wanted)
++            self.assertEqual(cache.states(path,'A',wanted),expected)
++            with (path.parents[1]/'ops/report-state-cache/worker.lock').open('a') as lock:
++                fcntl.flock(lock,fcntl.LOCK_EX)
++                self.assertEqual(cache.states(path,'A',wanted),expected)
++
++    def test_cost_and_funnel_share_one_low_priority_background_slot(self):
++        with tempfile.TemporaryDirectory() as tmp:
++            root=Path(tmp); (root/'ops').mkdir(); marker=root/'entered.json'
++            with (root/'ops/knowledge-refresh.lock').open('a') as lock, (root/'worker.log').open('w') as log:
++                fcntl.flock(lock, fcntl.LOCK_EX)
++                code = ('import json,os,sys; from pathlib import Path; '
++                        'Path(sys.argv[1]).write_text(json.dumps([os.nice(0),'
++                        'os.environ["OMP_NUM_THREADS"],os.environ["OPENBLAS_NUM_THREADS"]]))')
++                with patch.object(report,'ROOT',str(root)):
++                    child=report.background_statistics([sys.executable,'-c',code,str(marker)],log)
++                try:
++                    with self.assertRaises(subprocess.TimeoutExpired): child.wait(timeout=.2)
++                    self.assertFalse(marker.exists())
++                finally:
++                    fcntl.flock(lock, fcntl.LOCK_UN)
++                self.assertEqual(child.wait(timeout=20),0)
++            self.assertEqual(json.loads(marker.read_text()),[19,'1','1'])
++
++    def test_default_run_and_legacy_foreign_game_over_match_original_selector(self):
++        with tempfile.TemporaryDirectory() as tmp:
++            path = Path(tmp) / 'logs/decisions.jsonl'; path.parent.mkdir()
++            rows = [dict(ts=str(i), mode='play', screen=screen,
++                         fingerprint=json.dumps({'run': run}) if run else '{}')
++                    for i, (run, screen) in enumerate([
++                        ('A','MAP'),('A','COMBAT'),(None,'GAME_OVER'),
++                        ('B','MAP'),('B','GAME_OVER'),('C','COMBAT')])]
++            rows.append(dict(ts='9', mode='snapshot', screen='MAP', fingerprint='{"run":"IGNORED"}'))
++            path.write_text(''.join(json.dumps(r)+'\n' for r in rows))
++            self.assertEqual(cache.decisions(path, ''), ('', [], []))
++            self.assertEqual(cache.last_run(path), 'IGNORED')
++            for chosen in ('A','B','C','MISSING',None):
++                decisions = [r for r in rows if r['mode']=='play']
++                rid = chosen or next((report.run_of(r) for r in reversed(decisions) if report.run_of(r)), None)
++                recs = [r for r in decisions if report.run_of(r)==rid]
++                tail = [] if any(r['screen']=='GAME_OVER' for r in recs) else [
++                    r for r in decisions if r['ts'] > (recs[-1]['ts'] if recs else '') and r['screen']=='GAME_OVER'][:1]
++                self.assertEqual(cache.decisions(path, chosen), (rid,recs,tail))
++            with path.open('a') as out:
++                out.write(json.dumps(dict(ts='8',mode='play',screen='MAP',fingerprint='{"run":"D"}'))+'\n')
++            self.assertEqual(cache.decisions(path)[0], 'D')
++            path.write_text(json.dumps(rows[0])+'\n')
++            self.assertEqual(cache.decisions(path)[0], 'A')
++
++    def test_plan_ambiguity_keeps_original_line_numbers_and_does_not_decode_old_rows(self):
++        with tempfile.TemporaryDirectory() as tmp:
++            path = Path(tmp) / 'logs/brain.jsonl'; path.parent.mkdir()
++            row = dict(run_id='A',label='run-plan',question_id='',engine='codex',usage={})
++            path.write_text('bad\n\n'+json.dumps(row)+'\n')
++            self.assertEqual(report.standalone_plan_costs(path,'A')['unresolved'], ['line:3:missing-question-id'])
++            original = cache.JsonlCache
++            captured = []
++            def reader(*args):
++                obj = original(*args); captured.append(obj); return obj
++            with patch.object(cache,'JsonlCache',side_effect=reader):
++                self.assertEqual(report.standalone_plan_costs(path,'A')['unresolved'], ['line:3:missing-question-id'])
++            self.assertEqual(captured[0].decoded,0)
++            with path.open('a') as out: out.write(json.dumps(row)+'\n')
++            self.assertEqual(report.standalone_plan_costs(path,'A')['unresolved'],
++                             ['line:3:missing-question-id','line:4:missing-question-id'])
++
++
++if __name__ == '__main__': unittest.main()
+diff --git a/eval/brain_source.py b/eval/brain_source.py
+index a546f3a07..523b72467 100644
+--- a/eval/brain_source.py
++++ b/eval/brain_source.py
+@@ -96,10 +96,10 @@ def classify(rows):
+             "basis": "brain.jsonl accepted verdict; legacy answer != null, no error/problems; unique question_id+engine"}
+ 
+ 
+-def load_sources(logs, run_ids=(), limit=None):
++def load_sources(logs, run_ids=(), limit=None, rows=None):
+     # Retain only classification fields, so multi-hundred-MB prompts/answers do not accumulate in memory.
+     by_run = collections.defaultdict(list)
+-    for row in jsonl(Path(logs) / "brain.jsonl", limit):
++    for row in jsonl(Path(logs) / "brain.jsonl", limit) if rows is None else rows:
+         rid = row.get("run_id")
+         if not rid:
+             continue
+diff --git a/eval/cost.py b/eval/cost.py
+index a12ea7632..7d77323e6 100644
+--- a/eval/cost.py
++++ b/eval/cost.py
+@@ -10,6 +10,7 @@ import csv
+ import datetime as dt
+ import json
+ import itertools
++import hashlib
+ import pathlib
+ import sys
+ sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent))
+@@ -55,9 +56,15 @@ def tokens(raw, exclusive=False, creation_extra=False):
+ 
+ 
+ class Sources:
+-    def __init__(self):
++    def __init__(self, cache_dir=None):
+         self.cuts = {}
+         self.bad_lines = collections.Counter()
++        self.cache = None
++        if cache_dir:
++            from jsonl_cache import JsonlCache
++            revision = hashlib.sha256(b''.join(pathlib.Path(p).read_bytes() for p in
++                                      (__file__, brain_source.__file__, pathlib.Path(__file__).with_name('jsonl_cache.py')))).hexdigest()
++            self.cache = JsonlCache(cache_dir, revision)
+ 
+     def rows(self, path):
+         path = pathlib.Path(path)
+@@ -65,6 +72,11 @@ class Sources:
+             self.cuts[str(path)] = None
+             return
+         limit = self.cuts.setdefault(str(path), path.stat().st_size)
++        if self.cache:
++            rows, bad = self.cache.rows(path, limit)
++            self.bad_lines[str(path)] += bad
++            yield from rows
++            return
+         with path.open("rb") as handle:
+             read = 0
+             for line in handle:
+@@ -122,7 +134,16 @@ def quota_periods(rows, config):
+ 
+ 
+ def collect(root, config, claude_dir=None, codex_home=None):
+-    root, sources = pathlib.Path(root), Sources()
++    root = pathlib.Path(root)
++    sources = Sources(root / 'ops/component-cost-cache')
++    try:
++        return _collect(root, config, sources, claude_dir, codex_home)
++    finally:
++        if sources.cache:
++            sources.cache.close()
++
++
++def _collect(root, config, sources, claude_dir, codex_home):
+     runs = {r["run_id"]: r for r in sources.rows(root / "logs/runs.jsonl") if r.get("run_id")}
+     starts = {}
+     for r in sources.rows(root / "logs/run-config.jsonl"):
+@@ -164,7 +185,9 @@ def collect(root, config, claude_dir=None, codex_home=None):
+         # Failed attempts still consumed wall time; their absent token usage is unknown, not an absent call.
+         add("brain:codex", "codex", r.get("ts"), tokens(r.get("usage")), rid=r.get("run_id"), ms=r.get("ms", r.get("call_ms")),
+             known=recorded, identity=("codex-call", r.get("ts"), qid, r.get("attempt"), r.get("thread_id")))
++    brain_rows = []
+     for r in sources.rows(root / "logs/brain.jsonl"):
++        brain_rows.append(r)
+         engine = str(r.get("engine", "unknown")).lower()
+         if engine == "codex" and (r.get("run_id"), r.get("question_id")) in traced:
+             continue
+@@ -284,7 +307,7 @@ def collect(root, config, claude_dir=None, codex_home=None):
+             for e in matching:
+                 e["subscription_usd"] = (e["subscription_usd"] or 0) + p["usd"] * e["total_tokens"] / total
+     brain_path = root / "logs/brain.jsonl"
+-    brain_source.annotate(runs.values(), brain_source.load_sources(root / "logs", runs.keys(), sources.cuts.get(str(brain_path), 0)))
++    brain_source.annotate(runs.values(), brain_source.load_sources(root / "logs", runs.keys(), sources.cuts.get(str(brain_path), 0), rows=brain_rows))
+     return events, runs, sources, periods
+ 
+ 
+diff --git a/eval/jsonl_cache.py b/eval/jsonl_cache.py
+new file mode 100644
+index 000000000..1bdc65517
+--- /dev/null
++++ b/eval/jsonl_cache.py
+@@ -0,0 +1,110 @@
++"""Disposable append-only cost facts; original byte prefixes remain authoritative."""
++import hashlib
++import json
++from pathlib import Path
++import sqlite3
++
++
++def project(path, row):
++    if path.parent.name == 'runs' and path.parent.parent.name == 'learner':
++        # Cost attribution reads launch and summary receipts, never streamed text.
++        return row if row.get('type') in ('learner_launch', 'learner_summary') else {}
++    if path.name in ('brain.jsonl', 'jev-prompts.jsonl'):
++        keys = ('engine','run_id','question_id','ts','usage','latency_ms','request_id',
++                'decision_id','call','input_tokens','output_tokens','label','accepted','error','problems')
++        result = {k:row[k] for k in keys if k in row}
++        for key in ('input','inputTokens','cacheRead','cached_input_tokens','cachedInputTokens',
++                    'cache_hit_tokens','cacheHitTokens','cache_read_input_tokens','cacheCreation',
++                    'cache_write_input_tokens','cacheWriteInputTokens','cacheWriteTokens',
++                    'cache_creation_input_tokens','output','outputTokens','reasoning',
++                    'reasoning_output_tokens','reasoningOutputTokens','reasoning_tokens','reasoningTokens'):
++            if key in row:
++                result[key] = row[key]
++        if path.name == 'brain.jsonl':
++            answer = row.get('answer')
++            result['answer'] = None if answer is None else {
++                'route':bool(answer.get('route')),
++                'run_plan':{} if isinstance(answer.get('run_plan'),dict) else None
++            } if isinstance(answer, dict) else True
++        return result
++    if path.name.startswith('rollout-'):
++        payload = row.get('payload') or {}
++        if payload.get('type') != 'token_count':
++            return {}
++        return {k:row[k] for k in ('timestamp','ts','payload') if k in row}
++    if isinstance(row.get('message'), dict):
++        return {**{k:row[k] for k in ('type','timestamp','requestId','uuid') if k in row},
++                'message':{k:row['message'][k] for k in ('usage','id') if k in row['message']}}
++    return row
++
++
++class JsonlCache:
++    def __init__(self, directory, revision, projector=None):
++        directory = Path(directory)
++        directory.mkdir(parents=True, exist_ok=True)
++        self.db = sqlite3.connect(directory / 'facts.sqlite', timeout=60)
++        self.db.execute('CREATE TABLE IF NOT EXISTS sources (path TEXT PRIMARY KEY, revision TEXT, end INTEGER, sha TEXT, bad INTEGER)')
++        if 'lines' not in {r[1] for r in self.db.execute('PRAGMA table_info(sources)')}:
++            self.db.execute('ALTER TABLE sources ADD COLUMN lines INTEGER NOT NULL DEFAULT 0')
++        self.db.execute('CREATE TABLE IF NOT EXISTS facts (path TEXT, off INTEGER, body TEXT, sha TEXT, PRIMARY KEY(path,off))')
++        self.revision = revision
++        self.projector = projector or (lambda path, row, ref: project(path, row))
++        self.decoded = self.reused = 0
++
++    def close(self):
++        self.db.close()
++
++    def rows(self, path, limit):
++        name, digest = str(path.resolve()), hashlib.sha256()
++        old = self.db.execute('SELECT revision,end,sha,bad,lines FROM sources WHERE path=?', (name,)).fetchone()
++        start, bad, number = 0, 0, 0
++        with path.open('rb') as source:
++            if old and old[0] == self.revision and old[1] <= limit:
++                left = old[1]
++                while left:
++                    part = source.read(min(left, 4*1024*1024))
++                    if not part:
++                        break
++                    digest.update(part); left -= len(part)
++                if not left and digest.hexdigest() == old[2]:
++                    start, bad, number = old[1], old[3], old[4]
++            if not start:
++                digest = hashlib.sha256()
++            source.seek(start)
++            with self.db:
++                if not start:
++                    self.db.execute('DELETE FROM facts WHERE path=?', (name,))
++                end = start
++                while end < limit:
++                    off = source.tell()
++                    raw = source.readline(limit-off)
++                    if not raw or not raw.endswith(b'\n'):
++                        break
++                    digest.update(raw); end += len(raw); self.decoded += 1; number += 1
++                    try:
++                        row = json.loads(raw)
++                    except (ValueError, UnicodeError):
++                        bad += 1
++                        continue
++                    if not isinstance(row, dict):
++                        continue
++                    ref = dict(offset=off, bytes=len(raw), line=number,
++                               sha256=hashlib.sha256(raw).hexdigest())
++                    body = json.dumps(self.projector(path,row,ref), separators=(',',':'))
++                    self.db.execute('INSERT INTO facts VALUES (?,?,?,?)', (name,off,body,hashlib.sha256(body.encode()).hexdigest()))
++                self.db.execute('INSERT OR REPLACE INTO sources VALUES (?,?,?,?,?,?)',
++                                (name,self.revision,end,digest.hexdigest(),bad,number))
++        result = []
++        for off,body,sha in self.db.execute('SELECT off,body,sha FROM facts WHERE path=? ORDER BY off', (name,)):
++            if hashlib.sha256(body.encode()).hexdigest() != sha:
++                with self.db:
++                    self.db.execute('DELETE FROM sources WHERE path=?', (name,))
++                return self.rows(path,limit)
++            try:
++                result.append(json.loads(body))
++            except ValueError:
++                with self.db:
++                    self.db.execute('DELETE FROM sources WHERE path=?', (name,))
++                return self.rows(path,limit)
++            self.reused += int(off < start)
++        return result, bad
+diff --git a/knowledge/builders/build-boss-damage.py b/knowledge/builders/build-boss-damage.py
+index 831b837c0..111519ae9 100644
+--- a/knowledge/builders/build-boss-damage.py
++++ b/knowledge/builders/build-boss-damage.py
+@@ -72,32 +72,7 @@ def fight_won(run, floor):
+     return last > (floor or 0) or (bool((run or {}).get("victory")) and last == (floor or 0))
+ 
+ 
+-def main() -> None:
+-    parser = argparse.ArgumentParser()
+-    parser.add_argument("--logs", default=os.path.join(ROOT, "logs"))
+-    parser.add_argument("--fights", default=None)
+-    parser.add_argument("--character", default="ironclad", help="the character's knowledge id (default ironclad)")
+-    parser.add_argument("--out", default=None, help="default knowledge/characters/<character>/boss-damage.json")
+-    args = parser.parse_args()
+-    character = character_key(args.character)
+-    args.out = args.out or os.path.join(character_dir(ROOT, character), "boss-damage.json")
+-
+-    runs = {}
+-    with open(os.path.join(args.logs, "runs.jsonl"), encoding="utf8") as handle:
+-        for line in handle:
+-            try:
+-                run = json.loads(line)
+-            except ValueError:
+-                continue
+-            runs[run.get("run_id")] = run
+-    if not any(run_character(run) == character for run in runs.values()):
+-        print(f"no {character} runs; nothing written -> {args.out}")
+-        return
+-
+-    patterns = []
+-    for enemy in BOSS_OF:
+-        patterns += ["-e", f'"enemy_id":"{enemy}"']
+-    grep = subprocess.Popen(["grep", "-F", *patterns, os.path.join(args.logs, "states.jsonl")], stdout=subprocess.PIPE)
++def extract_rows(lines, character):
+     # (run, floor) -> {turn: (hp, shown attack)} from the final attempt's first frame per turn.
+     fights = collections.defaultdict(dict)
+     meta = {}
+@@ -119,7 +94,7 @@ def main() -> None:
+     # (run, floor) -> the Insatiable fight's last frame: (Sandpit, our HP, our block, the attack it shows) (a loss's
+     # death line: NH8A A8 died on HP with the Sandpit at 2 after an Escape over damage; sandpitDeathRecord).
+     sand_last = {}
+-    for line in grep.stdout:
++    for line in lines:
+         try:
+             state = json.loads(line)["state"]
+         except (ValueError, KeyError):
+@@ -200,7 +175,51 @@ def main() -> None:
+                     shown += (intent.get("damage") or 0) * max(1, intent.get("hits") or 1)
+         fights[key][turn] = (hp, shown)
+         meta.setdefault(key, (boss, run.get("ascension")))
+-    grep.wait()
++    return {'fights': fights, 'meta': meta, 'previous_turn': previous_turn, 'giant_kills': giant_kills, 'entry_max': entry_max, 'crab_first': crab_first, 'lag_sleep': lag_sleep, 'queen_track': queen_track, 'sand_last': sand_last}
++
++
++def main() -> None:
++    parser = argparse.ArgumentParser()
++    parser.add_argument("--logs", default=os.path.join(ROOT, "logs"))
++    parser.add_argument("--fights", default=None)
++    parser.add_argument("--character", default="ironclad", help="the character's knowledge id (default ironclad)")
++    parser.add_argument("--out", default=None, help="default knowledge/characters/<character>/boss-damage.json")
++    args = parser.parse_args()
++    character = character_key(args.character)
++    args.out = args.out or os.path.join(character_dir(ROOT, character), "boss-damage.json")
++
++    runs = {}
++    with open(os.path.join(args.logs, "runs.jsonl"), encoding="utf8") as handle:
++        for line in handle:
++            try:
++                run = json.loads(line)
++            except ValueError:
++                continue
++            runs[run.get("run_id")] = run
++    if not any(run_character(run) == character for run in runs.values()):
++        print(f"no {character} runs; nothing written -> {args.out}")
++        return
++
++    from legacy_incremental import context
++    cache = context(os.path.join(args.logs, 'states.jsonl'))
++    if cache:
++        extracted = cache.boss_rows(os.path.join(args.logs, 'states.jsonl'), character, extract_rows, BOSS_OF)
++    else:
++        patterns = []
++        for enemy in BOSS_OF:
++            patterns += ['-e', f'"enemy_id":"{enemy}"']
++        grep = subprocess.Popen(['grep','-F',*patterns,os.path.join(args.logs,'states.jsonl')], stdout=subprocess.PIPE)
++        extracted = extract_rows(grep.stdout, character)
++        grep.wait()
++    fights = extracted['fights']
++    meta = extracted['meta']
++    previous_turn = extracted['previous_turn']
++    giant_kills = extracted['giant_kills']
++    entry_max = extracted['entry_max']
++    crab_first = extracted['crab_first']
++    lag_sleep = extracted['lag_sleep']
++    queen_track = extracted['queen_track']
++    sand_last = extracted['sand_last']
+ 
+     pooled = collections.defaultdict(lambda: {"shown": 0, "lost": 0, "turns": 0, "fights": 0})
+     rows = []
+diff --git a/knowledge/builders/build-card-upgrades.py b/knowledge/builders/build-card-upgrades.py
+index 912e23473..8b319d964 100644
+--- a/knowledge/builders/build-card-upgrades.py
++++ b/knowledge/builders/build-card-upgrades.py
+@@ -57,7 +57,12 @@ def clean_face(card):
+     return {key: card[key] for key in FACE_FIELDS if key in card}
+ 
+ 
+-def build(states, selected=None, audit=None):
++def build(states, selected=None, audit=None, lines=None):
++    if lines is None:
++        from legacy_incremental import context
++        cache = context(states)
++        if cache:
++            lines = cache.card_rows(states, __import__("types").SimpleNamespace(**globals()))
+     audit = audit if audit is not None else {}
+     audit["invalid_json"] = []
+     stats = collections.defaultdict(lambda: [collections.defaultdict(collections.Counter),
+@@ -66,11 +71,14 @@ def build(states, selected=None, audit=None):
+     faces = collections.defaultdict(lambda: [{}, {}])
+     needles = [f'"{card}"'.encode() for card in sorted(selected)] if selected else None
+     with Path(states).open("rb") as source:
+-        while True:
+-            off = source.tell()
+-            line = source.readline()
+-            if not line:
+-                break
++        def raw_rows():
++            while True:
++                off = source.tell()
++                line = source.readline()
++                if not line:
++                    return
++                yield off, line
++        for off, line in (raw_rows() if lines is None else lines):
+             if needles and not any(needle in line for needle in needles):
+                 continue
+             try:
+@@ -113,7 +121,7 @@ def build(states, selected=None, audit=None):
+                     # Frozen extracts retain the original raw source offset and hash.
+                     evidence = row.get("source") or {
+                         "file": "logs/states.jsonl", "off": off,
+-                        "sha256": hashlib.sha256(line).hexdigest(),
++                        "sha256": row.get("_raw_sha256") or hashlib.sha256(line).hexdigest(),
+                         "path": f"state.run.deck[{index}]",
+                     }
+                     profile = {"card": face, "runs": set(), "evidence": {
+diff --git a/knowledge/builders/build-construction-opportunities.py b/knowledge/builders/build-construction-opportunities.py
+index fe05d256a..5e769614a 100644
+--- a/knowledge/builders/build-construction-opportunities.py
++++ b/knowledge/builders/build-construction-opportunities.py
+@@ -40,28 +40,40 @@ def read_json(value):
+         return {}
+ 
+ 
+-def extract(root, logs, character, cutoff=None):
+-    runs = {}
+-    with (logs / 'runs.jsonl').open() as handle:
+-        for line in handle:
+-            row = json.loads(line)
+-            if str(row.get('character', '')).lower() == character:
+-                runs[row['run_id']] = row
+-    catalog = json.loads((root / 'data/game-data.json').read_text())['collections']['cards']
+-    names = {c['name']: c['id'] for c in catalog if c.get('name')}
+-    names.update({c['id']: c['id'] for c in catalog})
++def extract(root, logs, character, cutoff=None, prepared=None, lines=None):
++    if prepared is None:
++        from legacy_incremental import context
++        cache = context(logs / "brain.jsonl")
++        if cache:
++            return cache.construction(root, logs, character, cutoff, extract, state_lookup)
++    if prepared is None:
++        runs = {}
++        with (logs / 'runs.jsonl').open() as handle:
++            for line in handle:
++                row = json.loads(line)
++                if str(row.get('character', '')).lower() == character:
++                    runs[row['run_id']] = row
++        catalog = json.loads((root / 'data/game-data.json').read_text())['collections']['cards']
++        names = {c['name']: c['id'] for c in catalog if c.get('name')}
++        names.update({c['id']: c['id'] for c in catalog})
++    else:
++        runs, names, frames = prepared
+     rows, seen, visits = [], set(), set()
+     excluded = {'incomplete_offers': 0, 'repeat_shop_visit': 0, 'unknown_upgrade': 0}
+-    frames = state_lookup(root, character)
++    if prepared is None:
++        frames = state_lookup(root, character)
+     source = logs / 'brain.jsonl'
+     limit = source.stat().st_size
+     digest = hashlib.sha256()
+     with source.open('rb') as handle:
+-        while handle.tell() < limit:
+-            offset = handle.tell()
+-            raw = handle.readline()
+-            if not raw.endswith(b'\n') or handle.tell() > limit:
+-                break
++        def original_lines():
++            while handle.tell() < limit:
++                offset = handle.tell()
++                raw = handle.readline()
++                if not raw.endswith(b'\n') or handle.tell() > limit:
++                    return
++                yield offset, raw
++        for offset, raw in (original_lines() if lines is None else lines):
+             digest.update(raw)
+             try:
+                 row = json.loads(raw)
+diff --git a/knowledge/builders/build-fight-value.py b/knowledge/builders/build-fight-value.py
+index 6ec1bcc5e..ac898a336 100644
+--- a/knowledge/builders/build-fight-value.py
++++ b/knowledge/builders/build-fight-value.py
+@@ -202,8 +202,8 @@ def extract(states, runs_path, game_path, rows_path, character=None):
+     tmp = rows_path + ".tmp"
+     with open(tmp, "w", encoding="utf8") as out:
+         builder = RowBuilder(bmd.load_runs(runs_path), out, character)
+-        for screen, entry in bmd.iter_entries(states):
+-            builder.feed(screen, entry)
++        from legacy_incremental import consume_fights
++        consume_fights(bmd, builder, states, extra_code=__file__)
+         builder.finish()
+     os.replace(tmp, rows_path)
+     return builder
+@@ -1567,8 +1567,9 @@ def decision_flags(rows, decisions_path):
+     deciders = collections.Counter()
+     if not decisions_path or not os.path.exists(decisions_path):
+         return flags, deciders
++    from legacy_incremental import choice_lines
+     with open(decisions_path, encoding="utf8") as handle:
+-        for line in handle:
++        for line in choice_lines(decisions_path, handle):
+             if '"combat/plan-choice' not in line:
+                 continue
+             try:
+@@ -1587,6 +1588,15 @@ def decision_flags(rows, decisions_path):
+     return flags, deciders
+ 
+ 
++def training_choices_identity(rows_path, decisions_path):
++    """Ignore appended choices outside the estimator's actual training windows."""
++    rows = [row for row in load_rows(rows_path)
++            if isinstance(row["asc"], int) and row["asc"] >= MIN_ASC
++            and row["kind"] in FIGHT_KINDS]
++    flags, deciders = decision_flags(rows, decisions_path)
++    return [flags, sorted(deciders.items(), key=lambda pair: str(pair[0]))]
++
++
+ def importance(gbm, top=15):
+     total = sum(gbm.gain) or 1
+     pairs = sorted(zip(gbm.names, gbm.gain), key=lambda kv: -kv[1])[:top]
+@@ -1913,7 +1923,29 @@ def main(argv=None):
+     if args.stage in ("train", "all"):
+         os.makedirs(os.path.dirname(args.notes), exist_ok=True)
+         os.makedirs(os.path.dirname(os.path.abspath(args.out)), exist_ok=True)
+-        train(args.rows, args.decisions, args.out, args.notes, args.trees, args.gates)
++        from legacy_incremental import context
++        cache = context(args.decisions)
++        def fit():
++            train(args.rows, args.decisions, args.out, args.notes, args.trees, args.gates)
++        if cache:
++            cache.ready(args.decisions)
++            def file_sha(path):
++                digest = hashlib.sha256()
++                try:
++                    with open(path, 'rb') as source:
++                        for chunk in iter(lambda: source.read(4 * 1024 * 1024), b''):
++                            digest.update(chunk)
++                except FileNotFoundError:
++                    return None
++                return digest.hexdigest()
++            inputs = [training_choices_identity(args.rows, args.decisions), args.trees,
++                      file_sha(args.rows), file_sha(__file__),
++                      file_sha(os.path.join(ROOT, 'knowledge/common/move-model.json'))]
++            changed = cache.products('fight-value:'+character,inputs,[args.out,args.notes,args.gates],fit)
++            if not changed:
++                print('train: unchanged inputs and verified outputs; reusing completed fit')
++        else:
++            fit()
+         print(f"train: done in {time.time() - start:.0f}s -> {args.out}, {args.notes}")
+     return 0
+ 
+diff --git a/knowledge/builders/build-monster-db.py b/knowledge/builders/build-monster-db.py
+index 60bd97892..787387e0c 100644
+--- a/knowledge/builders/build-monster-db.py
++++ b/knowledge/builders/build-monster-db.py
+@@ -94,13 +94,13 @@ def pile_statuses(raw, cut):
+     return out
+ 
+ 
+-def iter_entries(path):
++def iter_entries(path, lines=None):
+     """Yield (screen, entry) for every state line worth reading, streaming the file.
+ 
+     A combat state also carries `_piles`, the status cards in its draw/discard/exhaust piles (pile_statuses),
+     read from the agent_view part that is otherwise cut before parsing."""
+     with open(path, "rb") as handle:
+-        for raw in handle:
++        for raw in (handle if lines is None else lines):
+             match = SCREEN_RE.search(raw, 0, 20000)
+             if not match or match.group(1) in SKIP_SCREENS:
+                 continue
+@@ -708,13 +708,18 @@ END_TURNS = None
+ END_TURN_RE = re.compile(rb'^\{"ts":"([^"]+)"')
+ 
+ 
+-def load_end_turns(path):
++def load_end_turns(path, lines=None):
++    if lines is None:
++        from legacy_incremental import context
++        cache = context(path)
++        if cache:
++            return cache.end_turns(path, lambda rows: load_end_turns(path, rows))
+     """The (run id, frame ts) of every end-turn decision: the frame a decision was made on has the decision's ts."""
+     if not path or not os.path.exists(path):
+         return None
+     out = set()
+     with open(path, "rb") as handle:
+-        for raw in handle:
++        for raw in (handle if lines is None else lines):
+             if b'"chosen":{"action":"end_turn"' not in raw:
+                 continue
+             ts = END_TURN_RE.match(raw)
+@@ -1662,8 +1667,8 @@ def build(states, runs_path, game_path, decisions_path=None):
+     STATUS_CARDS.clear()
+     STATUS_CARDS.update(c["id"] for c in game.get("cards") or [] if c.get("type") == "Status")
+     builder = Builder(load_runs(runs_path))
+-    for screen, entry in iter_entries(states):
+-        builder.feed(screen, entry)
++    from legacy_incremental import consume_fights
++    consume_fights(__import__("types").SimpleNamespace(**globals()), builder, states)
+     builder.finish()
+     return build_output(builder, game), {c: records_output(builder, c) for c in sorted(builder.by_character)}
+ 
+diff --git a/knowledge/builders/build-outcome-stats.py b/knowledge/builders/build-outcome-stats.py
+index f06a85f24..33df1a996 100644
+--- a/knowledge/builders/build-outcome-stats.py
++++ b/knowledge/builders/build-outcome-stats.py
+@@ -99,13 +99,18 @@ def read_runs(path, ascension, character=None):
+     return runs
+ 
+ 
+-def read_decisions(path, runs):
++def read_decisions(path, runs, lines=None):
++    if lines is None:
++        from legacy_incremental import context
++        cache = context(path)
++        if cache:
++            return cache.outcome_decisions(path, runs, lambda selected, rows: read_decisions(path, selected, rows))
+     """Per run: sorted (ts, floor, hp, max_hp, gold); event choices and rest choices (ts, floor, index)."""
+     marks = collections.defaultdict(list)
+     events = collections.defaultdict(list)
+     rests = collections.defaultdict(list)
+     with open(path, "rb") as handle:
+-        for raw in handle:
++        for raw in (handle if lines is None else lines):
+             if b'"play"' not in raw[:200]:
+                 continue
+             try:
+@@ -138,10 +143,10 @@ def read_decisions(path, runs):
+     return marks, events, rests
+ 
+ 
+-def iter_states(path):
++def iter_states(path, lines=None):
+     """Yield (screen, entry) for every non-combat state line of interest, streaming the file."""
+     with open(path, "rb") as handle:
+-        for raw in handle:
++        for raw in (handle if lines is None else lines):
+             match = SCREEN_RE.search(raw, 0, 4000)
+             if not match or match.group(1) in SKIP_SCREENS:
+                 continue
+@@ -168,7 +173,12 @@ def act_of(run):
+         return 1
+ 
+ 
+-def read_states(path, runs, table_of):
++def read_states(path, runs, table_of, entries=None):
++    if entries is None:
++        from legacy_incremental import context
++        cache = context(path)
++        if cache:
++            return cache.outcome_states(path, runs, table_of, lambda selected, iterator: read_states(path, selected, table_of, iterator), iter_states)
+     """Deck/relic acquisitions, card rewards offered, event and rest screens, highest act per run. Names (cards,
+     relics, events) are kept per table (`table_of`: run id -> table key), each from its own runs' states, as a
+     table's whole file had them before."""
+@@ -180,7 +190,7 @@ def read_states(path, runs, table_of):
+     event_screens = collections.defaultdict(list)  # run -> [(ts, floor, act, event_id, {index: (key, title)})]
+     rest_screens = collections.defaultdict(list)  # run -> [(ts, floor, act, {index: option_id}, hp, max_hp)]
+     names_by_table = collections.defaultdict(lambda: {"card": {}, "relic": {}, "event": {}})
+-    for screen, entry in iter_states(path):
++    for screen, entry in (iter_states(path) if entries is None else entries):
+         state = entry.get("state") or {}
+         run_id = state.get("run_id")
+         if run_id not in runs:
+diff --git a/knowledge/builders/build-potion-equivalents.py b/knowledge/builders/build-potion-equivalents.py
+index 5ddedb41c..05f0f9087 100644
+--- a/knowledge/builders/build-potion-equivalents.py
++++ b/knowledge/builders/build-potion-equivalents.py
+@@ -637,44 +637,87 @@ def runs_of(character, column="run_id"):
+             f"HAVING lower(coalesce(arg_max(character, off), '{LEGACY}')) = '{character}')")
+ 
+ 
+-def load_logs(con, ascensions, character=None):
++def _run_scope(character, column, run_id=..., run_ids=None):
++    own = runs_of(character, column)
++    if run_ids is not None:
++        quoted = ["'" + str(rid).replace("'", "''") + "'" for rid in run_ids if rid is not None]
++        terms = ([column + " IN (" + ",".join(quoted) + ")"] if quoted else [])
++        if None in run_ids:
++            terms.append(column + " IS NULL")
++        return own + " AND (" + " OR ".join(terms or ["FALSE"]) + ")"
++    if run_id is not ...:
++        own += " AND " + column + (" IS NULL" if run_id is None else " = '" + str(run_id).replace("'", "''") + "'")
++    return own
++
++
++def load_logs(con, ascensions, character=None, run_id=..., cache=None, run_ids=None):
++    if run_id is ... and run_ids is None:
++        from legacy_incremental import context
++        cache = cache or context(os.path.join(os.environ.get("LOGDB_LOGS", os.path.join(ROOT, "logs")), "states.jsonl"))
++        if cache:
++            return cache.potion_logs(con, ascensions, character, load_logs, fetch, runs_of)
+     ascs = ",".join(str(a) for a in sorted(set(ascensions)))
+-    own = runs_of(character)
++    partitioned = run_ids is not None
++    def scope(column="run_id"):
++        return _run_scope(character, column, run_id, run_ids)
++    own = scope()
++    prefix = "run_id AS _cache_run, " if partitioned else ""
+     turns = fetch(con, f"""
+         WITH b AS (
+           SELECT t.*, lead(enemy_hp) OVER (PARTITION BY run_id, fight_no ORDER BY turn) AS next_enemy_hp
+           FROM turns t WHERE room = 'boss' AND ascension IN ({ascs}){own})
+-        SELECT ascension, act, run_id || ':' || fight_no AS fight, turn, last_turn AS last,
++        SELECT {prefix}ascension, act, run_id || ':' || fight_no AS fight, turn, last_turn AS last,
+                CASE WHEN next_enemy_hp IS NULL THEN NULL ELSE greatest(enemy_hp - next_enemy_hp, 0) END AS dmg,
+                enemy_turn_hp_lost AS loss, intent_damage AS intent, end_block, start_energy AS energy, cards_played AS cards, cards_n
+         FROM b""")
+     fights = fetch(con, f"""
+-        SELECT ascension, act, run_id || ':' || fight_no AS fight, turns, max_hp, deck_size AS deck, outcome
++        SELECT {prefix}ascension, act, run_id || ':' || fight_no AS fight, turns, max_hp, deck_size AS deck, outcome
+         FROM fights WHERE room = 'boss' AND ascension IN ({ascs}) AND turns IS NOT NULL{own}""")
++    group = "run_id, " if partitioned else ""
+     seen = fetch(con, f"""
+         WITH s AS (SELECT DISTINCT run_id, unnest(potions) AS id FROM frames WHERE potions IS NOT NULL{own})
+-        SELECT id, count(*) AS runs FROM s GROUP BY 1""")
+-    drinks = fetch(con, f"SELECT potion_id AS id, count(*) AS n FROM decisions WHERE action = 'use_potion' AND potion_id IS NOT NULL{own} GROUP BY 1")
++        SELECT {prefix}id, count(*) AS runs FROM s GROUP BY {group}id""")
++    drinks = fetch(con, f"SELECT {prefix}potion_id AS id, count(*) AS n FROM decisions WHERE action = 'use_potion' AND potion_id IS NOT NULL{own} GROUP BY {group}potion_id")
+     boss_drinks = fetch(con, f"""
+-        WITH u AS (SELECT ascension, unnest(potions_used) AS id FROM turns WHERE room = 'boss' AND ascension IN ({ascs}){own})
+-        SELECT id, ascension, count(*) AS n FROM u GROUP BY 1, 2""")
++        WITH u AS (SELECT {group}ascension, unnest(potions_used) AS id FROM turns WHERE room = 'boss' AND ascension IN ({ascs}){own})
++        SELECT {prefix}id, ascension, count(*) AS n FROM u GROUP BY {group}id, ascension""")
+     entropic = fetch(con, f"""
+-        SELECT avg(potion_slots - len(potions) + 1) AS slots, count(*) AS n FROM frames
+-        WHERE list_contains(potions, 'ENTROPIC_BREW') AND potion_slots IS NOT NULL{own}""")
++        SELECT {prefix}avg(potion_slots - len(potions) + 1) AS slots, count(*) AS n FROM frames
++        WHERE list_contains(potions, 'ENTROPIC_BREW') AND potion_slots IS NOT NULL{own}
++        {"GROUP BY run_id" if partitioned else ""}""")
+     # Every combat question of these ascensions (the Monte Carlo summaries) and the boss drinks (the check).
+     questions = fetch(con, f"""
+         SELECT d.off, d.run_id, d.floor, d.turn, f.act, f.ascension, f.room
+         FROM decisions d JOIN fights f ON f.run_id = d.run_id AND f.floor = d.floor
+-        WHERE d.label LIKE 'combat/plan-choice%' AND f.ascension IN ({ascs}){runs_of(character, "d.run_id")} ORDER BY d.off""")
++        WHERE d.label LIKE 'combat/plan-choice%' AND f.ascension IN ({ascs}){scope("d.run_id")} ORDER BY d.off""")
+     boss_drink_rows = fetch(con, f"""
+         SELECT d.off, d.run_id, d.floor, d.turn, d.label, d.potion_id, f.act, f.ascension
+         FROM decisions d JOIN fights f ON f.run_id = d.run_id AND f.floor = d.floor AND f.room = 'boss'
+-        WHERE d.action = 'use_potion' AND d.potion_id IS NOT NULL AND f.ascension IN ({ascs}){runs_of(character, "d.run_id")} ORDER BY d.off""")
+-    last = fetch(con, f"SELECT max(last_ts) AS last, count(*) AS n FROM fights WHERE TRUE{own}")[0]
++        WHERE d.action = 'use_potion' AND d.potion_id IS NOT NULL AND f.ascension IN ({ascs}){scope("d.run_id")} ORDER BY d.off""")
++    last = fetch(con, f"SELECT {prefix}max(last_ts) AS last, count(*) AS n FROM fights WHERE TRUE{own} {"GROUP BY run_id" if partitioned else ""}")
++    if partitioned:
++        # Query each parquet source once when initially filling many run caches.
++        # Every aggregate retains run identity until the unchanged global reducer.
++        parts = {rid: dict(turns=[], fights=[], seen={}, drinks={}, boss_drinks=[],
++                          entropic=dict(slots=None, n=0), questions=[], boss_drink_rows=[],
++                          last_fight='None', all_fights=0) for rid in run_ids}
++        for key, rows in (("turns", turns), ("fights", fights), ("seen", seen), ("drinks", drinks),
++                          ("boss_drinks", boss_drinks), ("entropic", entropic), ("last", last)):
++            for source in rows:
++                row = dict(source)
++                part = parts[row.pop('_cache_run')]
++                if key == 'seen': part[key][row['id']] = row['runs']
++                elif key == 'drinks': part[key][row['id']] = row['n']
++                elif key == 'entropic': part[key] = row
++                elif key == 'last': part.update(last_fight=str(row['last']), all_fights=row['n'])
++                else: part[key].append(row)
++        for key, rows in (("questions", questions), ("boss_drink_rows", boss_drink_rows)):
++            for row in rows: parts[row['run_id']][key].append(row)
++        return parts
+     return {
+         "turns": turns, "fights": fights, "seen": {r["id"]: r["runs"] for r in seen}, "drinks": {r["id"]: r["n"] for r in drinks},
+         "boss_drinks": boss_drinks, "entropic": entropic[0], "questions": questions, "boss_drink_rows": boss_drink_rows,
+-        "last_fight": str(last["last"]), "all_fights": last["n"],
++        "last_fight": str(last[0]["last"]), "all_fights": last[0]["n"],
+     }
+ 
+ 
+@@ -683,26 +726,36 @@ def read_raw(handle, off):
+     return json.loads(handle.readline())
+ 
+ 
+-def load_shop_offers(con, states_handle, min_asc=GOLD_PRICE_MIN_ASC, character=None):
++def load_shop_offers(con, states_handle, min_asc=GOLD_PRICE_MIN_ASC, character=None, run_id=..., run_ids=None):
+     """The potion offers of the logged shop visits from `min_asc` up: [{id, rarity, price, act, asc}], one visit's offers
+     from the first of its SHOP frames (up to SHOP_FRAMES_PER_VISIT) that lists priced potions; and the visits read."""
++    from legacy_incremental import context
++    cache = context(states_handle.name)
++    if cache and run_id is ... and run_ids is None:
++        return cache.potion_shops(con, states_handle, min_asc, character, load_shop_offers, fetch, runs_of)
++    own = _run_scope(character, "si.run_id", run_id, run_ids)
+     visits = fetch(con, f"""
+         SELECT si.run_id, si.floor, any_value(si.act) AS act, any_value(r.ascension) AS asc,
+                list(si.off ORDER BY si.off) AS offs, list(si.len ORDER BY si.off) AS lens
+         FROM state_index si JOIN runs r ON r.run_id = si.run_id
+-        WHERE si.screen = 'SHOP' AND r.ascension >= {int(min_asc)}{runs_of(character, "si.run_id")} GROUP BY 1, 2 ORDER BY 1, 2""")
++        WHERE si.screen = 'SHOP' AND r.ascension >= {int(min_asc)}{own} GROUP BY 1, 2 ORDER BY 1, 2""")
+     offers = []
+     seen = 0
++    parts = {rid: ([], 0) for rid in run_ids} if run_ids is not None else None
+     for visit in visits:
+         for off, length in list(zip(visit["offs"], visit["lens"]))[:SHOP_FRAMES_PER_VISIT]:
+             states_handle.seek(off)
+             state = (json.loads(states_handle.read(length)) or {}).get("state") or {}
+             potions = [p for p in ((state.get("shop") or {}).get("potions") or []) if isinstance(p.get("price"), (int, float)) and p.get("potion_id")]
+             if potions:
++                if parts is not None:
++                    offers, seen = parts[visit['run_id']]
+                 seen += 1
+                 offers.extend({"id": p["potion_id"], "rarity": p.get("rarity"), "price": p["price"], "act": visit["act"], "asc": visit["asc"]} for p in potions)
++                if parts is not None:
++                    parts[visit['run_id']] = offers, seen
+                 break
+-    return offers, seen
++    return parts if parts is not None else (offers, seen)
+ 
+ 
+ def gold_rates(offers, visits, entry, ascensions):
+@@ -978,20 +1031,25 @@ def main(argv=None):
+     solver = solver_models()
+     names = {p["name"]: p["id"] for p in potions}
+     names.update({p["id"]: p["id"] for p in potions})
++    from legacy_incremental import context
++    cache = context(os.path.join(logs_dir, "states.jsonl"))
+     with logsync.read_lock(db, shared=True):
+-        con = logquery.connect(db, threads=2)
++        con = logquery.connect(db, threads=1)
+         has_runs = fetch(con, f"SELECT count(*) AS n FROM (SELECT 1 FROM frames WHERE TRUE{runs_of(character)} LIMIT 1)")[0]["n"]
+-        logs = load_logs(con, ascensions, character) if has_runs else None
++        logs = load_logs(con, ascensions, character, cache=cache) if has_runs else None
+     if logs is None:
+         print(f"no {character} runs in the log database; nothing written -> {args.out}")
+         return 0
+     with open(os.path.join(logs_dir, "decisions.jsonl"), "rb") as handle:
+-        mc = mc_summaries(logs["questions"], handle)
+-        checks = check_column(logs["boss_drink_rows"], logs["questions"], handle, names)
++        if cache:
++            mc, checks = cache.potion_checks(logs, handle, names, mc_summaries, check_column)
++        else:
++            mc = mc_summaries(logs["questions"], handle)
++            checks = check_column(logs["boss_drink_rows"], logs["questions"], handle, names)
+     rates, entry = build(logs, potions, cards, values, solver, ascensions, mc, checks, character)
+     # The gold rate (THIEF_COST): the logged shop visits' potion offers (states.jsonl by offset, read-only).
+     with logsync.read_lock(db, shared=True):
+-        con = logquery.connect(db, threads=2)
++        con = logquery.connect(db, threads=1)
+         with open(os.path.join(logs_dir, "states.jsonl"), "rb") as handle:
+             offers, shop_visits = load_shop_offers(con, handle, character=character)
+     gold = gold_rates(offers, shop_visits, entry, ascensions)
+diff --git a/knowledge/builders/build-room-costs.py b/knowledge/builders/build-room-costs.py
+index 8303f14c8..c3867a02f 100644
+--- a/knowledge/builders/build-room-costs.py
++++ b/knowledge/builders/build-room-costs.py
+@@ -51,14 +51,19 @@ def quantile(values, p):
+     return xs[i] + (xs[j] - xs[i]) * (k - i)
+ 
+ 
+-def scan(states_path, character=None):
++def scan(states_path, character=None, lines=None):
++    if lines is None:
++        from legacy_incremental import context
++        cache = context(states_path)
++        if cache:
++            return cache.room_scan(states_path, character, lambda rows: scan(states_path, character, rows))
+     """run id -> floor -> {first, last, type, asc, avail} from the MAP frames; run id -> death floor. With `character`,
+     only that character's MAP frames (a death floor is kept for every run: it only counts for a run with frames)."""
+     runs = collections.defaultdict(dict)
+     deaths = {}
+     first_ts = last_ts = None
+     with open(states_path, "rb") as handle:
+-        for line in handle:
++        for line in (handle if lines is None else lines):
+             head = line[:4000]
+             is_map = MAP_MARK in head
+             if not is_map and OVER_MARK not in head:
+@@ -108,14 +113,19 @@ FP_RUN_RE = re.compile(rb'\\"run\\":\\"([A-Z0-9]+)\\"')
+ FP_HP_RE = re.compile(rb'\\"hp\\":(-?\d+)')
+ 
+ 
+-def map_choices(decisions_path, fights=None):
++def map_choices(decisions_path, fights=None, lines=None):
++    if lines is None:
++        from legacy_incremental import context
++        cache = context(decisions_path)
++        if cache:
++            return cache.room_choices(decisions_path, fights, lambda rows, fs: map_choices(decisions_path, fs, rows))
+     """(run id, floor) -> the option index of the last map node chosen on that floor. With `fights` (a dict), also
+     (run id, floor) -> [HP at the first, HP at the last combat decision] for every floor with a fight."""
+     chosen = {}
+     if not os.path.exists(decisions_path):
+         return chosen
+     with open(decisions_path, "rb") as handle:
+-        for line in handle:
++        for line in (handle if lines is None else lines):
+             if fights is not None and b'"screen":"COMBAT"' in line[:400]:
+                 head = line[:3000]
+                 floor, run, hp = FLOOR_RE.search(head), FP_RUN_RE.search(head), FP_HP_RE.search(head)
+diff --git a/knowledge/builders/legacy_incremental.py b/knowledge/builders/legacy_incremental.py
+new file mode 100644
+index 000000000..9d029b52d
+--- /dev/null
++++ b/knowledge/builders/legacy_incremental.py
+@@ -0,0 +1,554 @@
++"""Disposable per-run extraction caches for the legacy after-run statistics.
++
++The original reducers still define every statistic. Cache keys include original
++byte identities, implementation and incoming fight state; interleaved runs keep
++cross-run closing order. No pickle, strategy values or inferred evidence.
++"""
++from collections import Counter, defaultdict
++import atexit
++import hashlib
++import json
++import os
++from pathlib import Path
++import sys
++import time
++
++sys.path.insert(0,str(Path(__file__).resolve().parents[2] / "learner"))
++from incremental_evidence import FrozenLogIndex, implementation, token
++
++_CONTEXTS = {}
++
++
++def pack(value):
++    if isinstance(value, Counter):
++        return ['counter', [[pack(k), pack(v)] for k, v in value.items()]]
++    if isinstance(value, defaultdict):
++        factory = value.default_factory
++        return ['defaultdict', None if factory is None else pack(factory()),
++                [[pack(k), pack(v)] for k, v in value.items()]]
++    if isinstance(value, dict):
++        return ['dict', [[pack(k), pack(v)] for k, v in value.items()]]
++    if isinstance(value, (tuple, set, frozenset)):
++        items = [pack(v) for v in value]
++        if not isinstance(value, tuple):
++            items.sort(key=lambda v: json.dumps(v, sort_keys=True))
++        return [type(value).__name__, items]
++    if isinstance(value, list):
++        return ['list', [pack(v) for v in value]]
++    if value is None or isinstance(value, (str, bool, int, float)):
++        return ['value', value]
++    if type(value).__name__ == 'Fight':
++        return ['fight', pack(value.__dict__)]
++    raise TypeError('unsupported intermediate: ' + type(value).__name__)
++
++
++def unpack(value, fight_type=None):
++    kind, *args = value
++    if kind == 'value':
++        return args[0]
++    if kind == 'fight':
++        if fight_type is None:
++            raise ValueError('fight class required')
++        fight = fight_type.__new__(fight_type)
++        fight.__dict__.update(unpack(args[0], fight_type))
++        return fight
++    if kind in ('dict', 'counter', 'defaultdict'):
++        if kind == 'defaultdict':
++            prototype, entries = args
++            out = defaultdict(None if prototype is None else lambda: unpack(prototype, fight_type))
++        else:
++            entries, = args
++            out = Counter() if kind == 'counter' else {}
++        for k, v in entries:
++            out[unpack(k, fight_type)] = unpack(v, fight_type)
++        return out
++    constructors = dict(list=list, tuple=tuple, set=set, frozenset=frozenset)
++    if kind not in constructors:
++        raise ValueError('unsupported intermediate tag')
++    return constructors[kind](unpack(v, fight_type) for v in args[0])
++
++
++def context(path):
++    directory = os.environ.get('STS2_REFRESH_CACHE_DIR')
++    if not directory or not path or not Path(path).is_file():
++        return None
++    logs = Path(path).resolve().parent
++    key = (str(Path(directory).resolve()), str(logs))
++    if key not in _CONTEXTS:
++        _CONTEXTS[key] = RunCache(Path(directory) / token(str(logs))[:16], logs)
++    return _CONTEXTS[key]
++
++
++class RunCache:
++    def __init__(self, directory, logs):
++        self.index = FrozenLogIndex(directory, logs)
++        self.logs = Path(logs)
++        self.started = time.monotonic()
++        self.streams = set()
++        self.timings = []
++        self.extractions = {}
++        self.code = implementation(__file__, Path(__file__).with_name('incremental_evidence.py'),
++                                   Path(__file__).resolve().parents[2] / 'learner/evidence_identity.py')
++        atexit.register(self.close)
++
++    def close(self):
++        if self.index is None:
++            return
++        row = dict(schema='legacy-refresh-cache-v1', pid=os.getpid(), seconds=time.monotonic()-self.started,
++                   sources={s: self.index.metadata(s) for s in sorted(self.streams)},
++                   stats=self.index.stats, phases=self.timings, extractions=self.extractions)
++        with (self.index.directory / 'timing.jsonl').open('a') as out:
++            out.write(json.dumps(row) + '\n')
++        self.index.close()
++        self.index = None
++
++    def ready(self, path):
++        stream = Path(path).stem
++        if stream not in self.streams:
++            started = time.monotonic()
++            # A writer may be appending a row. Freeze only a newline-terminated prefix.
++            with Path(path).open('rb') as source:
++                end = source.seek(0, 2)
++                while end:
++                    source.seek(max(0, end-65536))
++                    data = source.read(end-max(0, end-65536))
++                    newline = data.rfind(b'\n')
++                    if newline >= 0:
++                        end = max(0, end-65536) + newline + 1
++                        break
++                    end = max(0, end-65536)
++            self.index.update(stream, end)
++            self.streams.add(stream)
++            self.timings.append(dict(name='index:'+stream, seconds=time.monotonic()-started,
++                                     bytes=end, rows=self.index.metadata(stream)['rows']))
++        return stream
++
++    def segments(self, path):
++        stream = self.ready(path)
++        previous, refs = object(), []
++        for ref, rid, _reason in self.index.references(stream):
++            if rid != previous and refs:
++                yield previous, refs
++                refs = []
++            previous = rid
++            refs.append(ref)
++        if refs:
++            yield previous, refs
++
++    def groups(self, path, selected=None):
++        stream = self.ready(path)
++        sql = 'SELECT rid,min(offset) FROM rows WHERE stream=? GROUP BY rid ORDER BY min(offset)'
++        for rid, _off in self.index.db.execute(sql, (stream,)):
++            if selected is None or rid in selected:
++                # NULL identities remain separate evidence; never assign them to a run.
++                rows = self.index.db.execute('SELECT offset,line,bytes,sha FROM rows WHERE stream=? AND rid IS ? ORDER BY offset', (stream, rid))
++                info = self.index.metadata(stream)
++                refs = [dict(source=info['source'], offset=o, line=n, bytes=b, sha256=s) for o,n,b,s in rows]
++                yield rid, refs
++
++    def raw(self, path, refs):
++        with Path(path).open('rb') as source:
++            for ref in refs:
++                source.seek(ref['offset'])
++                raw = source.read(ref['bytes'])
++                if hashlib.sha256(raw).hexdigest() != ref['sha256']:
++                    raise ValueError('legacy indexed evidence changed')
++                yield raw
++
++    def cached(self, name, refs, produce, extra=None, code=None):
++        started = time.monotonic()
++        hits = self.index.stats['cache_hits']
++        key = [self.code, code, str(self.logs), extra,
++               [[r['offset'], r['bytes'], r['sha256']] for r in refs]]
++        result = unpack(self.index.cached('legacy:'+name, key, lambda: pack(produce())))
++        phase = self.extractions.setdefault(name,dict(seconds=0,hits=0,misses=0))
++        phase['seconds'] += time.monotonic()-started
++        phase['hits' if self.index.stats['cache_hits']>hits else 'misses'] += 1
++        return result
++
++    def products(self, name, inputs, outputs, produce):
++        """Skip unchanged batch fits; new samples still use the original estimator."""
++        def sha(path):
++            return hashlib.sha256(Path(path).read_bytes()).hexdigest()
++        stamp = self.index.directory / ('product-'+token([name,list(map(str,outputs))])+'.json')
++        key = token([self.code,name,inputs])
++        try:
++            old = json.loads(stamp.read_text())
++            if old['key']==key and old['outputs']==[sha(p) for p in outputs]:
++                return False
++        except (OSError,ValueError,KeyError,TypeError):
++            pass
++        produce()
++        temporary = stamp.with_suffix('.tmp')
++        temporary.write_text(json.dumps(dict(key=key,outputs=[sha(p) for p in outputs])))
++        temporary.replace(stamp)
++        return True
++
++    def end_turns(self, path, extract):
++        result = set()
++        for rid, refs in self.groups(path):
++            part = self.cached('end-turns', refs, lambda: extract(self.raw(path, refs)), code=implementation(Path(__file__).with_name('build-monster-db.py')))
++            result.update(part)
++        return result
++
++    def room_scan(self, path, character, extract):
++        runs, deaths, first, last = {}, {}, None, None
++        # Per-run segments preserve the original first/last timestamp semantics.
++        code = implementation(Path(__file__).with_name('build-room-costs.py'))
++        for rid, refs in self.segments(path):
++            rs, ds, lo, hi = self.cached('room-scan', refs, lambda: extract(self.raw(path, refs)), character, code)
++            for run, floors in rs.items():
++                for floor, mark in floors.items():
++                    old = runs.setdefault(run, {}).setdefault(floor, mark)
++                    old['last'] = mark['last']
++                    old['type'] = mark['type'] or old['type']
++                    old['avail'] = mark['avail'] or old['avail']
++            deaths.update(ds)
++            first = first or lo
++            last = hi or last
++        return runs, deaths, first, last
++
++    def room_choices(self, path, fights, extract):
++        chosen = {}
++        code = implementation(Path(__file__).with_name('build-room-costs.py'))
++        for rid, refs in self.segments(path):
++            def produce():
++                fs = {} if fights is not None else None
++                return extract(self.raw(path, refs), fs), fs
++            cs, fs = self.cached('room-choices', refs, produce, fights is not None, code)
++            chosen.update(cs)
++            if fights is not None:
++                for key, pair in fs.items():
++                    fights.setdefault(key, list(pair))[1] = pair[1]
++        return chosen
++
++    def outcome_decisions(self, path, runs, extract):
++        outputs = [defaultdict(list) for _ in range(3)]
++        code = implementation(Path(__file__).with_name('build-outcome-stats.py'))
++        for rid, refs in self.groups(path, runs):
++            part = self.cached('outcome-decisions', refs, lambda: extract({rid:runs[rid]}, self.raw(path, refs)), [rid,runs[rid]], code)
++            for output, rows in zip(outputs, part):
++                output.update(rows)
++        return tuple(outputs)
++
++    def outcome_states(self, path, runs, table_of, extract, iterator):
++        result = dict(acquired_cards={}, acquired_relics={}, offered={}, max_act={}, event_screens={}, rest_screens={}, names_by_table=defaultdict(lambda:dict(card={},relic={},event={})))
++        names = []
++        code = implementation(Path(__file__).with_name('build-outcome-stats.py'))
++        for rid, refs in self.groups(path, runs):
++            def produce():
++                # Name tie-breaking follows first raw offset, including interleaved runs.
++                origins = {}
++                def entries():
++                    for ref, raw in zip(refs, self.raw(path, refs)):
++                        for screen, row in iterator(path, [raw]):
++                            s = row.get('state') or {}; run = s.get('run') or {}
++                            items = [('card',c.get('card_id')) for c in run.get('deck') or []]
++                            items += [('relic',r.get('relic_id')) for r in run.get('relics') or []]
++                            if screen == 'REWARD':
++                                items += [('card',c.get('card_id')) for c in (s.get('reward') or {}).get('card_options') or []]
++                            if screen == 'EVENT':
++                                items += [('event',(s.get('event') or {}).get('event_id'))]
++                            for key in items:
++                                if key[1]: origins.setdefault(key, ref['offset'])
++                            yield screen, row
++                return extract({rid:runs[rid]}, entries()), origins
++            part, origins = self.cached('outcome-states', refs, produce, [rid,runs[rid],table_of(rid)], code)
++            for key in result:
++                if key != 'names_by_table': result[key].update(part[key])
++            for table, kinds in part['names_by_table'].items():
++                for kind, mapping in kinds.items():
++                    for ident, name in mapping.items():
++                        names.append((origins[(kind,ident)], table, kind, ident, name))
++        for _off, table, kind, ident, name in sorted(names, key=lambda r:r[0]):
++            result['names_by_table'][table][kind].setdefault(ident, name)
++        return result
++
++    def construction(self, root, logs, character, cutoff, extract, lookup):
++        from datetime import datetime, timezone
++        runs = {}
++        for raw in (logs/'runs.jsonl').read_text().splitlines():
++            row = json.loads(raw)
++            if str(row.get('character','')).lower() == character: runs[row['run_id']]=row
++        catalog = json.loads((root/'data/game-data.json').read_text())['collections']['cards']
++        names = {c['name']:c['id'] for c in catalog if c.get('name')}
++        names.update({c['id']:c['id'] for c in catalog})
++        frames = lookup(root,character)
++        self.ready(logs/'states.jsonl')
++        rows, excluded, result = [], Counter(), None
++        code = implementation(Path(__file__).with_name('build-construction-opportunities.py'))
++        for rid,refs in self.groups(logs/'brain.jsonl',runs):
++            own = {key:value for key,value in frames.items() if key[0]==rid}
++            extra = [runs[rid],names,pack(own),self.index.run_signature(rid,['states']),cutoff]
++            def produce():
++                lines = ((ref['offset'],raw) for ref,raw in zip(refs,self.raw(logs/'brain.jsonl',refs)))
++                return extract(root,logs,character,cutoff,({rid:runs[rid]},names,own),lines)
++            result = self.cached('construction',refs,produce,extra,code)
++            rows.extend(result['rows']); excluded.update(result['excluded'])
++        if result is None:
++            result=extract(root,logs,character,cutoff,({},names,{}),iter(()))
++        rows.sort(key=lambda r:r['source']['offset'])
++        meta = self.index.metadata('brain')
++        return dict(result,generated=datetime.now(timezone.utc).isoformat(),rows=rows,excluded=dict(excluded) or result['excluded'],
++                    digest=hashlib.sha256(json.dumps(rows,sort_keys=True).encode()).hexdigest(),
++                    cutoff=cutoff or max((r['ts'] for r in rows),default=''),
++                    source_digest=meta['source_sha256'],source_bytes=meta['source_size'])
++
++    def potion_partitions(self, con, fetch, character=None):
++        # LogDB can lag raw logs. Include compact table watermarks as well as raw
++        # evidence identities, so a later sync cannot reuse an incomplete query.
++        tables = ('frames','turns','fights','decisions','state_index','runs')
++        versions = implementation(*(Path(__file__).resolve().parents[2] / 'agent/tools/logdb' / f
++                                    for f in ('extract.py','sync.py','views.sql')))
++        signatures = defaultdict(dict)
++        for table in tables:
++            for row in fetch(con, 'SELECT run_id, count(*) AS n FROM '+table+' GROUP BY run_id'):
++                signatures[row['run_id']][table] = row['n']
++        for stream in ('states','decisions','runs'):
++            path = self.logs/(stream+'.jsonl')
++            if path.exists():
++                for rid,refs in self.groups(path):
++                    signatures[rid][stream+':raw'] = token([[r['offset'],r['bytes'],r['sha256']] for r in refs])
++        if character:
++            # Resolve ownership once. Repeating runs_of() inside every per-run
++            # query rescans all frames, including runs that cannot contribute.
++            from characters import LEGACY
++            owners = {row['run_id']: row['character'] for row in fetch(con,
++                "SELECT run_id, lower(coalesce(arg_max(character, off), '" + LEGACY +
++                "')) AS character FROM frames WHERE run_id IS NOT NULL GROUP BY run_id")}
++            if character == LEGACY:
++                signatures = {rid:part for rid,part in signatures.items()
++                              if owners.get(rid or '', LEGACY) == LEGACY}
++            else:
++                signatures = {rid:part for rid,part in signatures.items()
++                              if rid is not None and owners.get(rid) == character}
++        return {rid:[versions,part] for rid,part in signatures.items()}
++
++    def potion_cached(self, name, partitions, parameters, code, single, batch):
++        class Missing(Exception):
++            pass
++        result, missing = {}, []
++        def absent():
++            raise Missing()
++        for rid, signature in sorted(partitions.items(), key=lambda r: str(r[0])):
++            try:
++                result[rid] = self.cached(name, [], absent, [rid, signature, *parameters], code)
++            except Missing:
++                # This was a lookup only; count the eventual extraction once.
++                self.index.stats['cache_misses'] -= 1
++                missing.append(rid)
++        if missing:
++            started = time.monotonic()
++            values = batch(missing) if len(missing) > 1 else {missing[0]: single(missing[0])}
++            self.timings.append(dict(name=name+':query', seconds=time.monotonic()-started, runs=len(missing)))
++            for rid in missing:
++                result[rid] = self.cached(name, [], lambda: values[rid],
++                                          [rid, partitions[rid], *parameters], code)
++        return result
++
++    def potion_logs(self, con, ascensions, character, extract, fetch, scope):
++        code = implementation(Path(__file__).with_name('build-potion-equivalents.py'))
++        result = dict(turns=[],fights=[],seen=Counter(),drinks=Counter(),boss_drinks=[],
++                      entropic=dict(slots=None,n=0),questions=[],boss_drink_rows=[],last_fight='None',all_fights=0)
++        boss, weighted = Counter(), []
++        parts = self.potion_cached('potion-logs', self.potion_partitions(con,fetch,character),
++            [list(ascensions),character], code,
++            lambda rid: extract(con,ascensions,None,run_id=rid),
++            lambda ids: extract(con,ascensions,None,run_ids=ids))
++        for rid, part in sorted(parts.items(), key=lambda r: str(r[0])):
++            for key in ('turns','fights','questions','boss_drink_rows'): result[key].extend(part[key])
++            result['seen'].update(part['seen']); result['drinks'].update(part['drinks'])
++            for row in part['boss_drinks']: boss[(row['id'],row['ascension'])] += row['n']
++            if part['entropic']['n']:
++                weighted.append(part['entropic']['slots']*part['entropic']['n'])
++                result['entropic']['n'] += part['entropic']['n']
++            if part['last_fight']!='None':
++                result['last_fight']=max(result['last_fight'].replace('None',''),part['last_fight'])
++            result['all_fights'] += part['all_fights']
++        result['boss_drinks']=[dict(id=pid,ascension=asc,n=n) for (pid,asc),n in boss.items()]
++        if result['entropic']['n']: result['entropic']['slots']=sum(weighted)/result['entropic']['n']
++        for key in ('questions','boss_drink_rows'): result[key].sort(key=lambda r:r['off'])
++        return result
++
++    def potion_checks(self, logs, handle, names, mc_extract, check_extract):
++        code = implementation(Path(__file__).with_name('build-potion-equivalents.py'))
++        questions,drinks=defaultdict(list),defaultdict(list)
++        for row in logs['questions']: questions[row['run_id']].append(row)
++        for row in logs['boss_drink_rows']: drinks[row['run_id']].append(row)
++        parts=[]
++        for rid,refs in self.groups(Path(handle.name),set(questions)|set(drinks)):
++            qs,ds=questions[rid],drinks[rid]
++            def produce():
++                # Keep the original per-observation MC inputs; merge in raw-offset
++                # order before taking means, rather than averaging run averages.
++                observed=[]
++                for q in qs:
++                    handle.seek(q['off']); line=handle.readline()
++                    if b'"random"' not in line: continue
++                    row=json.loads(line)
++                    for entry in (row.get('potions') or {}).get('random') or []:
++                        if isinstance(entry.get('hp_saved_mean'),(int,float)) and isinstance(entry.get('dmg_gained_mean'),(int,float)):
++                            observed.append((q['off'],q['ascension'],entry['potion'],entry['hp_saved_mean'],entry['dmg_gained_mean']))
++                return observed,check_extract(ds,qs,handle,names)
++            parts.append(self.cached('potion-checks',refs,produce,[qs,ds,names],code))
++        samples=defaultdict(lambda:defaultdict(list)); checks=defaultdict(list)
++        for off,asc,pid,hp,dmg in sorted((row for rows,_ in parts for row in rows),key=lambda r:r[0]):
++            samples[asc][pid].append((hp,dmg))
++        for _,part in parts:
++            for key,values in part.items(): checks[key].extend(values)
++        mc={asc:{pid:dict(hp=sum(h for h,_ in values)/len(values),dmg=sum(d for _,d in values)/len(values),n=len(values))
++                 for pid,values in by.items()} for asc,by in samples.items()}
++        return mc,checks
++
++    def potion_shops(self, con, handle, minimum, character, extract, fetch, scope):
++        offers,visits=[],0
++        code = implementation(Path(__file__).with_name('build-potion-equivalents.py'))
++        parts = self.potion_cached('potion-shops', self.potion_partitions(con,fetch,character),
++            [minimum,character], code,
++            lambda rid: extract(con,handle,minimum,None,run_id=rid),
++            lambda ids: extract(con,handle,minimum,None,run_ids=ids))
++        for rid, (rows,n) in sorted(parts.items(), key=lambda r: str(r[0])):
++            offers.extend(rows);visits+=n
++        return offers,visits
++
++    def boss_rows(self, path, character, extract, bosses):
++        result = {}
++        code = implementation(Path(__file__).with_name('build-boss-damage.py'))
++        needles = [f'"enemy_id":"{enemy}"'.encode() for enemy in bosses]
++        for rid, refs in self.groups(path):
++            part = self.cached('boss-rows', refs, lambda: extract((raw for raw in self.raw(path,refs) if any(n in raw for n in needles)),character), character, code)
++            for key, mapping in part.items():
++                result.setdefault(key,{}).update(mapping)
++        return result
++
++    def card_rows(self, path, module):
++        parts = []
++        code = implementation(module.__file__)
++        for rid, refs in self.groups(path):
++            def produce():
++                seen, faces, out = set(), set(), []
++                for ref, raw in zip(refs, self.raw(path, refs)):
++                    try: row = json.loads(raw)
++                    except (ValueError, UnicodeError):
++                        out.append((ref['offset'],raw.decode('utf8',errors='surrogateescape')))
++                        continue
++                    state = row.get('state',row); run = state.get('run') or {}
++                    witnesses = []
++                    for card in module.cards(state):
++                        key = module.canonical({k:v for k,v in card.items() if k!='index'})
++                        if key not in seen:
++                            seen.add(key); witnesses.append(card)
++                    deck = []
++                    if state.get('in_combat') is False and (state.get('run_id') or run.get('run_id')):
++                        for i,card in enumerate(run.get('deck',[])):
++                            face = module.clean_face(card)
++                            key = module.canonical(face) if face else None
++                            if key and key not in faces:
++                                faces.add(key)
++                                while len(deck)<=i: deck.append({})
++                                deck[i]=card
++                    if not witnesses and not deck: continue
++                    reduced = dict(ts=row.get('ts'), _raw_sha256=ref['sha256'],state={
++                        '_cards':witnesses, 'in_combat':state.get('in_combat'), 'run_id':state.get('run_id'),
++                        'run':{**{k:run[k] for k in ('run_id','character_id','ascension','ascension_level','floor') if k in run},'deck':deck}})
++                    if row.get('source'): reduced['source']=row['source']
++                    out.append((ref['offset'], json.dumps(reduced,ensure_ascii=False,separators=(',',':'))+'\n'))
++                return out
++            parts.extend(self.cached('card-witnesses', refs, produce, code=code))
++        for off, raw in sorted(parts, key=lambda p:p[0]):
++            yield off, raw.encode('utf8',errors='surrogateescape')
++
++
++def merge_stuns(target, source, evidence_limit):
++    for eid, row in source.items():
++        out = target[eid]
++        for key, value in row.items():
++            if isinstance(value, Counter): out[key].update(value)
++            elif isinstance(value, set): out[key].update(value)
++            elif isinstance(value, list):
++                for item in value:
++                    if len(out[key]) < evidence_limit and item not in out[key]: out[key].append(item)
++            else: out[key] += value
++
++
++def consume_fights(module, builder, states, extra_code=None):
++    cache = context(states)
++    if not cache:
++        for screen, entry in module.iter_entries(states): builder.feed(screen, entry)
++        return
++    code = implementation(module.__file__, *([extra_code] if extra_code else []))
++    original_commit = builder.commit
++    mechanics = module.MECHANICS
++    original_frame = mechanics.frame
++    game_identity = token(pack([module.GAME_TYPES,module.GAME_POWER_TYPES,module.STATUS_CARDS,module.TEMPORARY_POWERS]))
++    for rid, refs in cache.segments(states):
++        started = time.monotonic()
++        # A segment can touch its own pending fights and close another open fight.
++        # Unrelated pending runs are immutable until their own next segment or finish.
++        involved = {rid, *builder.open}
++        local_await = {r:fights for r,fights in builder.await_map.items() if r in involved}
++        carry = pack((builder.open,local_await))
++        extra = dict(carry=carry, await_order=list(builder.await_map), runs={r:builder.runs.get(r) for r in involved if r},
++                     end_turns=sorted(t for t in module.END_TURNS or () if t[0] in involved),
++                     checked=module.END_TURNS is not None, ok=mechanics.ok, error=mechanics.error,
++                     game=game_identity)
++        # Commits are replayed by the original reducer, in original order. The only
++        # frame-level global accumulator is stuns; all other frame state is on Fight.
++        identity = [cache.code,code,str(cache.logs),extra,[[r['offset'],r['bytes'],r['sha256']] for r in refs]]
++        produced = False
++        def produce():
++            nonlocal produced
++            produced = True
++            committed = []
++            frames = module.Mechanics(quiet=True)
++            def frame(*args, **kwargs):
++                frames.ok = mechanics.ok
++                frames.frame(*args, **kwargs)
++                if not frames.ok:
++                    mechanics.ok,mechanics.error=frames.ok,frames.error
++            def commit(fight):
++                committed.append(dict(fight=pack(fight),ok=mechanics.ok,error=mechanics.error))
++                original_commit(fight)
++            builder.commit, mechanics.frame = commit, frame
++            try:
++                for screen, entry in module.iter_entries(states, cache.raw(states,refs)):
++                    builder.feed(screen,entry)
++                return dict(committed=committed, carry=pack((builder.open,{r:fights for r,fights in builder.await_map.items() if r in involved})),
++                            await_order=list(builder.await_map), stuns=pack(frames.stuns),ok=mechanics.ok,error=mechanics.error)
++            finally:
++                builder.commit,mechanics.frame=original_commit,original_frame
++        value = cache.index.cached('legacy:fights',identity,produce)
++        builder.open,local_await=unpack(value['carry'],module.Fight)
++        remaining = {r:fights for r,fights in builder.await_map.items() if r not in involved}
++        remaining.update(local_await)
++        builder.await_map = defaultdict(list,((r,remaining[r]) for r in value['await_order']))
++        merge_stuns(mechanics.stuns,unpack(value['stuns']),module.EVIDENCE)
++        if not produced:
++            for item in value['committed']:
++                mechanics.ok,mechanics.error=item['ok'],item['error']
++                original_commit(unpack(item['fight'],module.Fight))
++        mechanics.ok,mechanics.error=value['ok'],value['error']
++        phase = cache.extractions.setdefault('fights', dict(seconds=0,hits=0,misses=0))
++        phase['seconds'] += time.monotonic()-started
++        phase['misses' if produced else 'hits'] += 1
++
++
++def choice_lines(path, fallback):
++    cache=context(path)
++    if not cache:
++        yield from fallback
++        return
++    code=implementation(Path(__file__).with_name('build-fight-value.py'))
++    parts=[]
++    for rid,refs in cache.groups(path):
++        def produce():
++            out=[]
++            for ref,raw in zip(refs,cache.raw(path,refs)):
++                if b'"combat/plan-choice' not in raw: continue
++                try: row=json.loads(raw)
++                except ValueError: continue
++                out.append((ref['offset'],{k:row.get(k) for k in ('ts','turn','decider')}))
++            return out
++        parts.extend(cache.cached('fight-choices',refs,produce,code=code))
++    for _off,row in sorted(parts,key=lambda p:p[0]):
++        yield json.dumps(dict(row,label='combat/plan-choice'))
+diff --git a/knowledge/builders/refresh-step.py b/knowledge/builders/refresh-step.py
+index 89a4643cf..e59022ba7 100644
+--- a/knowledge/builders/refresh-step.py
++++ b/knowledge/builders/refresh-step.py
+@@ -3,6 +3,7 @@
+ from datetime import datetime, timezone
+ import json
+ import os
++import resource
+ from pathlib import Path
+ import subprocess
+ import sys
+@@ -12,9 +13,14 @@ import time
+ def main():
+     path, name, *argv = sys.argv[1:]
+     started, stamp = time.monotonic(), datetime.now(timezone.utc).isoformat()
++    before, load = resource.getrusage(resource.RUSAGE_CHILDREN), os.getloadavg()
+     result = subprocess.run(argv, check=False)
++    after = resource.getrusage(resource.RUSAGE_CHILDREN)
+     row = dict(schema='knowledge-refresh-step-v1', started_at=stamp, ended_at=datetime.now(timezone.utc).isoformat(),
+-               seconds=time.monotonic()-started, name=name, worker_pid=os.getpid(), exit_code=result.returncode)
++               seconds=time.monotonic()-started, name=name, worker_pid=os.getpid(), exit_code=result.returncode,
++               nice=os.nice(0), cpu_user_seconds=after.ru_utime-before.ru_utime,
++               cpu_system_seconds=after.ru_stime-before.ru_stime, peak_child_rss_kib=after.ru_maxrss,
++               load_start=load, load_end=os.getloadavg())
+     with Path(path).open('a') as out:
+         out.write(json.dumps(row)+'\n')
+     return result.returncode
+diff --git a/knowledge/builders/refresh.sh b/knowledge/builders/refresh.sh
+index 76223369a..9a88bb8af 100644
+--- a/knowledge/builders/refresh.sh
++++ b/knowledge/builders/refresh.sh
+@@ -33,7 +33,10 @@ done
+ mkdir -p "$ops_root/ops"
+ exec 9>"$ops_root/ops/knowledge-refresh.lock"
+ flock 9
+-step() { python3 "$B/refresh-step.py" "$ops_root/ops/refresh-timing.jsonl" "$@"; }
++# Raw extraction is incremental; cache artifacts are disposable, never knowledge.
++export STS2_REFRESH_CACHE_DIR="$ops_root/ops/legacy-refresh-cache"
++export OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 MKL_NUM_THREADS=1 NUMEXPR_NUM_THREADS=1
++step() { nice -n 19 ionice -c 3 python3 "$B/refresh-step.py" "$ops_root/ops/refresh-timing.jsonl" "$@"; }
+ # The characters to refresh: the one asked for (lower-cased: the game's SILENT is knowledge id silent), else every
+ # character with a logged run (knowledge/builders/characters.py).
+ if [[ -n "$only" ]]; then
+@@ -51,6 +54,7 @@ fi
+ step monster-db python3 "$B/build-monster-db.py" --quiet --move-model-out "$ROOT/knowledge/common/move-model.json"
+ step monster-db-check python3 "$B/monster-db-check.py" >/dev/null 2>&1
+ step card-upgrades python3 "$B/build-card-upgrades.py" >/dev/null 2>&1
++step report-state-index python3 "$ROOT/ops/report_log_cache.py" --warm-states "$ROOT/logs/states.jsonl" >/dev/null 2>&1
+ step logdb-sync nice -n 19 "$ROOT/data/logdb-venv/bin/python" "$ROOT/agent/tools/logdb/sync.py" >/dev/null 2>&1
+ v6_status=0
+ for c in $characters; do
+diff --git a/knowledge/builders/test_legacy_incremental.py b/knowledge/builders/test_legacy_incremental.py
+new file mode 100644
+index 000000000..9d7abc02a
+--- /dev/null
++++ b/knowledge/builders/test_legacy_incremental.py
+@@ -0,0 +1,232 @@
++"""Fixed-data parity for disposable legacy per-run intermediates."""
++import importlib.util
++import json
++import os
++from pathlib import Path
++import sys
++import subprocess
++import tempfile
++import unittest
++from unittest.mock import patch
++
++HERE = Path(__file__).resolve().parent
++sys.path.insert(0,str(HERE))
++import legacy_incremental as cache
++
++
++def load(name):
++    spec=importlib.util.spec_from_file_location(name.replace('-','_'),HERE/(name+'.py'))
++    module=importlib.util.module_from_spec(spec)
++    sys.modules[spec.name]=module
++    spec.loader.exec_module(module)
++    return module
++
++
++class IncrementalTest(unittest.TestCase):
++    def setUp(self):
++        self.temp=tempfile.TemporaryDirectory()
++        self.root=Path(self.temp.name)
++        self.logs=self.root/'logs'; self.logs.mkdir()
++        self.env=patch.dict(os.environ,{'STS2_REFRESH_CACHE_DIR':str(self.root/'cache')})
++        self.env.start()
++
++    def tearDown(self):
++        self.env.stop()
++        for item in cache._CONTEXTS.values(): item.close()
++        cache._CONTEXTS.clear()
++        self.temp.cleanup()
++
++    def write(self,stream,rows):
++        path=self.logs/(stream+'.jsonl')
++        path.write_text(''.join(json.dumps(row,separators=(',',':'))+'\n' for row in rows))
++        return path
++
++    def fresh(self):
++        for item in cache._CONTEXTS.values(): item.close()
++        cache._CONTEXTS.clear()
++
++    def test_step_receipt_preserves_failure_and_records_actual_priority_and_resources(self):
++        receipt=self.root/'step.jsonl'
++        result=subprocess.run(['nice','-n','19',sys.executable,str(HERE/'refresh-step.py'),
++                               str(receipt),'fixed-failure',sys.executable,'-c','raise SystemExit(5)'])
++        self.assertEqual(result.returncode,5)
++        row=json.loads(receipt.read_text())
++        self.assertEqual(row['exit_code'],5)
++        self.assertEqual(row['nice'],19)
++        self.assertGreater(row['peak_child_rss_kib'],0)
++        self.assertGreaterEqual(row['cpu_user_seconds'],0)
++        self.assertGreaterEqual(row['cpu_system_seconds'],0)
++        self.assertNotIn('argv',row)
++
++    def test_typed_codec_preserves_counter_order_tuple_keys_and_factories(self):
++        from collections import Counter,defaultdict
++        value=defaultdict(lambda:defaultdict(Counter))
++        value[('r',1)][2].update([3,4,3])
++        restored=cache.unpack(cache.pack(value))
++        self.assertEqual(restored,value)
++        restored[('new',2)][3].update([5])
++        self.assertEqual(restored[('new',2)][3].most_common(),[(5,1)])
++
++    def test_monster_all_mechanics_cold_warm_and_interleaved_parity(self):
++        mod=load('build-monster-db')
++        ends=[]; lines=list(mod._synthetic_lines(ends))
++        states=self.logs/'states.jsonl'; states.write_text('\n'.join(lines)+'\n')
++        decisions=self.write('decisions',[{'ts':ts,'run_id':rid,'chosen':{'action':'end_turn'}} for rid,ts in ends])
++        with patch.dict(os.environ,{'STS2_REFRESH_CACHE_DIR':''}): expected=mod.build(str(states),None,None,str(decisions))
++        cold=mod.build(str(states),None,None,str(decisions))
++        self.assertEqual(cold,expected)
++        self.fresh()
++        warm=mod.build(str(states),None,None,str(decisions))
++        self.assertEqual(warm,expected)
++        ctx=cache.context(states)
++        self.assertEqual(ctx.index.stats['decoded_rows'],0)
++        self.assertGreater(ctx.index.stats['cache_hits'],0)
++        self.assertEqual(ctx.index.stats['cache_misses'],0)
++
++    def test_pending_other_runs_are_not_serialized_in_every_segment(self):
++        mod=load('build-monster-db')
++        frame=next(json.loads(line) for line in mod._synthetic_lines() if json.loads(line)['screen']=='COMBAT')
++        rows=[]
++        for i in range(24):
++            row=json.loads(json.dumps(frame));row['state']['run_id']='PENDING'+str(i)
++            rows.append(row)
++        # Revisit an earlier pending run and then close it through a map. Its
++        # position among pending runs must follow the original reducer exactly.
++        revisit=json.loads(json.dumps(rows[0]));revisit['screen']='MAP'
++        revisit['state'].update(screen='MAP',in_combat=False,combat=None)
++        rows.append(revisit)
++        path=self.write('states',rows)
++        with patch.dict(os.environ,{'STS2_REFRESH_CACHE_DIR':''}): expected=mod.build(str(path),None,None,None)
++        ctx=cache.context(path);original=ctx.index.cached;sizes=[]
++        def observe(namespace,key,produce):
++            if namespace=='legacy:fights':
++                _open,pending=cache.unpack(key[3]['carry'],mod.Fight)
++                sizes.append(len(pending))
++            return original(namespace,key,produce)
++        with patch.object(ctx.index,'cached',side_effect=observe):
++            self.assertEqual(mod.build(str(path),None,None,None),expected)
++        self.assertLessEqual(max(sizes),2)
++        self.fresh()
++        self.assertEqual(mod.build(str(path),None,None,None),expected)
++
++    def test_room_interleaving_first_last_and_append_rewrite(self):
++        mod=load('build-room-costs')
++        def row(rid,hp,ts):
++            return {'ts':ts,'state':{'run_id':rid,'screen':'MAP','run':{'floor':1,'current_hp':hp,'ascension':10},'map':{}}}
++        rows=[row('A',50,'z'),row('B',40,'a'),row('A',30,'c')]
++        path=self.write('states',rows)
++        with patch.dict(os.environ,{'STS2_REFRESH_CACHE_DIR':''}): expected=mod.scan(path)
++        self.assertEqual(mod.scan(path),expected)
++        self.fresh();self.assertEqual(mod.scan(path),expected)
++        self.write('states',rows+[row('C',20,'d')]);self.fresh()
++        mod.scan(path);ctx=cache.context(path)
++        self.assertEqual(ctx.index.stats['decoded_rows'],1)
++        self.assertEqual(ctx.index.stats['cache_misses'],1)
++        self.write('states',[row('A',10,'x')]);self.fresh()
++        self.assertEqual(mod.scan(path)[0]['A'][1]['last'],10)
++        self.assertEqual(cache.context(path).index.stats['rebuilt_streams'],['states'])
++
++    def test_card_full_witness_counts_mode_faces_and_original_sha(self):
++        mod=load('build-card-upgrades')
++        fixture=HERE.parents[1]/'agent/tests/card-upgrade-data/logged-faces.jsonl'
++        rows=[json.loads(line) for line in fixture.read_text().splitlines()]
++        rows+=rows[:3]
++        path=self.write('states',rows)
++        with patch.dict(os.environ,{'STS2_REFRESH_CACHE_DIR':''}): expected=mod.build(path)
++        self.assertEqual(mod.build(path),expected)
++        self.fresh();self.assertEqual(mod.build(path),expected)
++        rows=[{'state':{'run_id':rid,'in_combat':False,'run':{'deck':[{'card_id':'FIX','upgraded':up,'energy_cost':cost,'dynamic_values':[]}]}}} for rid,up,cost in [('A',False,1),('B',False,2),('A',True,0)]]
++        path=self.write('states',rows);self.fresh()
++        with patch.dict(os.environ,{'STS2_REFRESH_CACHE_DIR':''}): expected=mod.build(path)
++        self.assertEqual(mod.build(path),expected)
++
++    def test_outcome_name_ties_and_choices_match_original(self):
++        mod=load('build-outcome-stats')
++        states=[]
++        for rid,name in [('A','first'),('B','second'),('A','later')]:
++            states.append({'state':{'run_id':rid,'screen':'REWARD','run':{'floor':1,'act_id':0,'deck':[{'card_id':'X','name':name}]},'reward':{'card_options':[]}}})
++        path=self.write('states',states)
++        runs={rid:{'ascension':10,'floor':2,'victory':False} for rid in ('A','B')}
++        dec=self.write('decisions',[{'ts':'a','mode':'play','fingerprint':json.dumps({'run':'A','hp':20}),'floor':1,'label':'rest','chosen':{'option_index':1}}])
++        with patch.dict(os.environ,{'STS2_REFRESH_CACHE_DIR':''}):
++            expected=mod.read_states(path,runs,lambda rid:10);expected_d=mod.read_decisions(dec,runs)
++        self.assertEqual(mod.read_states(path,runs,lambda rid:10),expected)
++        self.assertEqual(mod.read_decisions(dec,runs),expected_d)
++        self.fresh()
++        self.assertEqual(mod.read_states(path,runs,lambda rid:10),expected)
++        self.assertEqual(mod.read_decisions(dec,runs),expected_d)
++
++    def test_boss_final_attempt_and_interleaved_runs(self):
++        mod=load('build-boss-damage')
++        rows=[]
++        for rid,turn,hp in [('A',1,50),('B',1,40),('A',2,30),('A',1,45)]:
++            rows.append({'state':{'run_id':rid,'screen':'COMBAT','in_combat':True,'turn':turn,
++                         'run':{'floor':17,'current_hp':hp,'max_hp':70,'character_id':'SILENT'},
++                         'combat':{'player':{'current_hp':hp,'max_hp':70},'enemies':[{'enemy_id':'KIN_PRIEST','current_hp':30,'max_hp':50,'index':0}]}}})
++        path=self.write('states',rows)
++        raw=path.read_bytes().splitlines(keepends=True)
++        expected=mod.extract_rows(raw,'silent')
++        self.assertEqual(expected['fights'][('A',17)],{1:(45,0)})
++        ctx=cache.context(path)
++        self.assertEqual(ctx.boss_rows(path,'silent',mod.extract_rows,mod.BOSS_OF),expected)
++        self.fresh()
++        self.assertEqual(cache.context(path).boss_rows(path,'silent',mod.extract_rows,mod.BOSS_OF),expected)
++
++    def test_construction_offer_dedup_and_full_source_digest(self):
++        mod=load('build-construction-opportunities')
++        (self.root/'data').mkdir()
++        (self.root/'data/game-data.json').write_text(json.dumps({'collections':{'cards':[{'id':'FIX','name':'Fixed'}]}}))
++        self.write('runs',[{'run_id':r,'character':'SILENT','ascension':10} for r in ('A','B')])
++        self.write('states',[])
++        def row(rid,ts,label):
++            return dict(run_id=rid,ts=ts,label=label,engine='codex',accepted=True,
++                        payload={'facts':{'act':1,'floor':2}},options={'buy_card0':{'card':'Fixed','price':33,'upgraded':False}})
++        self.write('brain',[row('A','a','shop/plan'),row('B','b','shop/buy'),row('A','c','shop/buy')])
++        with patch.object(mod,'state_lookup',return_value={}):
++            with patch.dict(os.environ,{'STS2_REFRESH_CACHE_DIR':''}): expected=mod.extract(self.root,self.logs,'silent')
++            result=mod.extract(self.root,self.logs,'silent');self.fresh()
++            warm=mod.extract(self.root,self.logs,'silent')
++        for item in (expected,result,warm): item.pop('generated')
++        self.assertEqual(result,expected);self.assertEqual(warm,expected)
++        self.assertEqual(result['excluded']['repeat_shop_visit'],1)
++
++    def test_verified_batch_products_skip_only_unchanged_inputs_and_outputs(self):
++        path=self.write('decisions',[]);ctx=cache.context(path)
++        out=self.root/'model.json';calls=[]
++        def fit(): calls.append(1);out.write_text(str(len(calls)))
++        self.assertTrue(ctx.products('model',[1],[out],fit))
++        self.assertFalse(ctx.products('model',[1],[out],fit))
++        out.write_text('corrupt')
++        self.assertTrue(ctx.products('model',[1],[out],fit))
++        self.assertTrue(ctx.products('model',[2],[out],fit))
++        self.assertEqual(len(calls),3)
++
++        mod=load('build-fight-value')
++        rows=self.write('training',[dict(asc=10,kind='boss',t=1,ts0='a',ts1='c',
++                                        E={'hp':10},S={'hp':20})])
++        before=mod.training_choices_identity(rows,path)
++        self.assertEqual(before,[[False],[]])
++        # A new non-training choice must not refit the existing estimator.
++        self.write('decisions',[dict(label='combat/plan-choice',ts='z',turn=1,decider='jev')])
++        self.fresh()
++        self.assertEqual(mod.training_choices_identity(rows,path),before)
++        self.assertFalse(cache.context(path).products('model',[2],[out],fit))
++        # A choice inside a training turn changes the fit's evidence identity.
++        self.write('decisions',[dict(label='combat/plan-choice',ts='b',turn=1,decider='jev')])
++        self.fresh()
++        after=mod.training_choices_identity(rows,path)
++        self.assertEqual(after,[[True],[('jev',1)]])
++        self.assertTrue(cache.context(path).products('model',[after],[out],fit))
++        self.assertEqual(len(calls),4)
++
++    def test_partial_tail_and_corrupt_cache_rebuild(self):
++        mod=load('build-room-costs')
++        path=self.write('states',[{'state':{'run_id':'A','screen':'MAP','run':{'floor':1,'current_hp':20},'map':{}}}])
++        with path.open('ab') as out: out.write(b'{"unfinished":')
++        result=mod.scan(path)
++        self.fresh()
++        for obj in (self.root/'cache').rglob('*.gz'): obj.write_bytes(b'damaged')
++        self.assertEqual(mod.scan(path),result)
++        self.assertEqual(cache.context(path).index.stats['cache_misses'],1)
++
++if __name__=='__main__': unittest.main()
+diff --git a/knowledge/builders/test_potion_incremental.py b/knowledge/builders/test_potion_incremental.py
+new file mode 100644
+index 000000000..603fcbb3f
+--- /dev/null
++++ b/knowledge/builders/test_potion_incremental.py
+@@ -0,0 +1,99 @@
++"""Fixed in-memory LogDB evidence; no production database or game knowledge writes."""
++import importlib.util
++import json
++import os
++from pathlib import Path
++import sys
++import tempfile
++import unittest
++from unittest.mock import patch
++
++HERE=Path(__file__).resolve().parent
++sys.path.insert(0,str(HERE))
++import legacy_incremental as cache
++import duckdb
++
++spec=importlib.util.spec_from_file_location('potion_builder',HERE/'build-potion-equivalents.py')
++mod=importlib.util.module_from_spec(spec);spec.loader.exec_module(mod)
++
++
++class PotionIncrementalTest(unittest.TestCase):
++    def test_scoped_sql_raw_checks_and_shop_parity_append_and_warm(self):
++        with tempfile.TemporaryDirectory() as tmp:
++            root=Path(tmp); logs=root/'logs';logs.mkdir()
++            con=duckdb.connect(':memory:',config={'threads':1})
++            con.execute('CREATE TABLE frames(run_id VARCHAR,off BIGINT,character VARCHAR,potions VARCHAR[],potion_slots INTEGER)')
++            con.execute('CREATE TABLE turns(run_id VARCHAR,fight_no INTEGER,room VARCHAR,ascension INTEGER,act INTEGER,turn INTEGER,last_turn BOOLEAN,enemy_hp INTEGER,enemy_turn_hp_lost INTEGER,intent_damage INTEGER,end_block INTEGER,start_energy INTEGER,cards_played VARCHAR[],cards_n INTEGER,potions_used VARCHAR[])')
++            con.execute('CREATE TABLE fights(run_id VARCHAR,floor INTEGER,room VARCHAR,ascension INTEGER,act INTEGER,fight_no INTEGER,turns INTEGER,max_hp INTEGER,deck_size INTEGER,outcome VARCHAR,last_ts VARCHAR)')
++            con.execute('CREATE TABLE decisions(run_id VARCHAR,off BIGINT,floor INTEGER,turn INTEGER,label VARCHAR,action VARCHAR,potion_id VARCHAR)')
++            con.execute('CREATE TABLE state_index(run_id VARCHAR,floor INTEGER,act INTEGER,off BIGINT,len INTEGER,screen VARCHAR)')
++            con.execute('CREATE TABLE runs(run_id VARCHAR,ascension INTEGER)')
++            states=logs/'states.jsonl'; decisions=logs/'decisions.jsonl'
++            states.write_bytes(b'');decisions.write_bytes(b'');(logs/'runs.jsonl').write_bytes(b'')
++            def add(rid,character,number):
++                row={'state':{'run_id':rid,'shop':{'potions':[{'potion_id':'FIXED','price':number,'rarity':'Common'}]}}}
++                raw=(json.dumps(row)+'\n').encode();off=states.stat().st_size
++                with states.open('ab') as out:out.write(raw)
++                q={'run_id':rid,'potions':{'random':[{'potion':'FIXED','hp_saved_mean':number,'dmg_gained_mean':2}]}}
++                qoff=decisions.stat().st_size
++                with decisions.open('a') as out:out.write(json.dumps(q)+'\n')
++                con.execute('INSERT INTO frames VALUES (?, ?, ?, ?, 3)',[rid,off,character,['ENTROPIC_BREW','FIXED']])
++                con.execute("INSERT INTO fights VALUES (?,17,'boss',10,1,1,2,70,20,'won','2026-10-01')",[rid])
++                for turn,hp in ((1,30),(2,10)):
++                    con.execute("INSERT INTO turns VALUES (?,1,'boss',10,1,?, ?, ?,3,7,4,3,[],0,['FIXED'])",[rid,turn,turn==2,hp])
++                con.execute("INSERT INTO decisions VALUES (?,?,17,1,'combat/plan-choice','plan',NULL)",[rid,qoff])
++                con.execute("INSERT INTO state_index VALUES (?,17,1,?,?,'SHOP')",[rid,off,len(raw)])
++                con.execute('INSERT INTO runs VALUES (?,10)',[rid])
++            add('B','SILENT',20);add('A','SILENT',10);add('I','IRONCLAD',50)
++            def normalized(value):
++                if isinstance(value,dict):return {k:normalized(v) for k,v in value.items()}
++                if isinstance(value,list):return sorted((normalized(v) for v in value),key=repr)
++                return value
++            def compare():
++                with patch.dict(os.environ,{'STS2_REFRESH_CACHE_DIR':''}):
++                    expected=mod.load_logs(con,[10],'silent')
++                    with states.open('rb') as state_handle:
++                        offers=mod.load_shop_offers(con,state_handle,8,'silent')
++                    with decisions.open('rb') as handle:
++                        mc=mod.mc_summaries(expected['questions'],handle)
++                ctx=cache.context(states)
++                actual=mod.load_logs(con,[10],'silent',cache=ctx)
++                self.assertEqual(normalized(actual),normalized(expected))
++                with states.open('rb') as handle:self.assertEqual(normalized(mod.load_shop_offers(con,handle,8,'silent')),normalized(offers))
++                with decisions.open('rb') as handle:
++                    actual_mc,checks=ctx.potion_checks(actual,handle,{},mod.mc_summaries,mod.check_column)
++                self.assertEqual(actual_mc,mc);self.assertEqual(checks,{})
++                return ctx
++            with patch.dict(os.environ,{'STS2_REFRESH_CACHE_DIR':str(root/'cache')}):
++                compare()
++                for item in cache._CONTEXTS.values():item.close()
++                cache._CONTEXTS.clear()
++                warm=compare();self.assertEqual(warm.index.stats['cache_misses'],0)
++                for item in cache._CONTEXTS.values():item.close()
++                cache._CONTEXTS.clear()
++                add('C','SILENT',30)
++                newer=compare();self.assertEqual(newer.extractions['potion-logs']['misses'],1)
++                for item in cache._CONTEXTS.values():item.close()
++                cache._CONTEXTS.clear()
++            add('D','DEFECT',40);add('H',None,60);add(None,None,70)
++            # Legacy ownership includes rows without frames and NULL run ids;
++            # all-character queries retain every partition.
++            con.execute("INSERT INTO decisions VALUES ('UNFRAMED',-1,1,1,'other','use_potion','FIXED')")
++            for character in ('ironclad','defect',None):
++                with self.subTest(character=character):
++                    with patch.dict(os.environ,{'STS2_REFRESH_CACHE_DIR':''}):
++                        expected=mod.load_logs(con,[10],character)
++                        with states.open('rb') as handle:
++                            offers=mod.load_shop_offers(con,handle,8,character)
++                    with patch.dict(os.environ,{'STS2_REFRESH_CACHE_DIR':str(root/'cache')}):
++                        ctx=cache.context(states)
++                        actual=mod.load_logs(con,[10],character,cache=ctx)
++                        self.assertEqual(normalized(actual),normalized(expected))
++                        with states.open('rb') as handle:
++                            self.assertEqual(normalized(mod.load_shop_offers(con,handle,8,character)),normalized(offers))
++                        for item in cache._CONTEXTS.values():item.close()
++                        cache._CONTEXTS.clear()
++            con.close()
++
++
++if __name__=='__main__':unittest.main()
+diff --git a/ops/autoplay.sh b/ops/autoplay.sh
+index c7c13b2da..114d73c79 100644
+--- a/ops/autoplay.sh
++++ b/ops/autoplay.sh
+@@ -76,19 +76,7 @@ while [ ! -f "$OPS/STOP" ]; do
+       continue
+     fi
+   fi
+-  rid=$(python3 - <<'PY'
+-import json, os
+-last = None
+-for line in open(os.path.join(os.environ["LOGS"], "decisions.jsonl"), encoding="utf8"):
+-    try:
+-        run = json.loads(json.loads(line)["fingerprint"]).get("run")
+-    except Exception:
+-        continue
+-    if run:
+-        last = run
+-print(last or "")
+-PY
+-)
++  rid=$(nice -n 19 python3 "$OPS/report_log_cache.py" --last-run "$LOGS/decisions.jsonl")
+   console=$(ls -t "$CONSOLE"/*.log 2>/dev/null | head -1)
+   if [ -n "$rid" ] && [ -n "$console" ] && grep -qE "stopped: run [0-9]+ ended \(" "$console"; then
+     # Statistics refresh runs in the background; the next game retains the last completed packet.
+diff --git a/ops/global_build_funnel.py b/ops/global_build_funnel.py
+index 93438627c..46131326b 100644
+--- a/ops/global_build_funnel.py
++++ b/ops/global_build_funnel.py
+@@ -83,7 +83,7 @@ def freeze(root, target):
+     logsync.sync(str(root / 'logs'), db, quiet=True, wait=False)
+     exports = {}
+     with logsync.read_lock(db, shared=True):
+-        con = query.connect(db, threads=2)
++        con = query.connect(db, threads=1)
+         manifest = (Path(db) / 'manifest.json').read_bytes()
+         (target / 'logdb-manifest.json').write_bytes(manifest)
+         for table, sql in [
+diff --git a/ops/report.py b/ops/report.py
+index 5f1a558d7..031bac112 100644
+--- a/ops/report.py
++++ b/ops/report.py
+@@ -15,6 +15,7 @@ import sys
+ 
+ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+ from paths import LIVE, ROOT  # noqa: E402
++import report_log_cache  # noqa: E402
+ sys.path.insert(0, os.path.join(ROOT, "knowledge", "builders"))
+ from characters import run_character  # noqa: E402
+ DEC = os.path.join(ROOT, "logs/decisions.jsonl")
+@@ -54,33 +55,28 @@ def standalone_plan_costs(path, run_id, represented=()):
+     rows = {}
+     unknown = set()
+     if os.path.exists(path):
+-        with open(path, encoding="utf8") as handle:
+-            for line_no, line in enumerate(handle, 1):
+-                try:
+-                    row = json.loads(line)
+-                except json.JSONDecodeError:
+-                    continue
+-                if (not isinstance(row, dict) or row.get("run_id") != run_id or row.get("label") != "run-plan"
+-                        or row.get("reused") or row.get("merged_into")):
+-                    continue
+-                ident = row.get("question_id")
+-                if not isinstance(ident, str) or not ident:
+-                    unknown.add(f"line:{line_no}:missing-question-id")
+-                    continue
+-                if ident in represented:
+-                    continue
+-                usage = row.get("usage") if isinstance(row.get("usage"), dict) else {}
+-                values = (usage.get("inputTokens"), usage.get("outputTokens"), usage.get("cacheHitTokens", 0))
+-                engine = row.get("engine")
+-                if (not isinstance(engine, str) or not is_brain(engine)
+-                        or any(type(value) is not int or value < 0 for value in values)
+-                        or values[2] > values[0]):
+-                    unknown.add(ident)
+-                    continue
+-                entry = (engine, *values)
+-                if ident in rows and rows[ident] != entry:
+-                    unknown.add(ident)
+-                rows[ident] = entry
++        for line_no, row in report_log_cache.plans(path, run_id):
++            if (not isinstance(row, dict) or row.get("run_id") != run_id or row.get("label") != "run-plan"
++                    or row.get("reused") or row.get("merged_into")):
++                continue
++            ident = row.get("question_id")
++            if not isinstance(ident, str) or not ident:
++                unknown.add(f"line:{line_no}:missing-question-id")
++                continue
++            if ident in represented:
++                continue
++            usage = row.get("usage") if isinstance(row.get("usage"), dict) else {}
++            values = (usage.get("inputTokens"), usage.get("outputTokens"), usage.get("cacheHitTokens", 0))
++            engine = row.get("engine")
++            if (not isinstance(engine, str) or not is_brain(engine)
++                    or any(type(value) is not int or value < 0 for value in values)
++                    or values[2] > values[0]):
++                unknown.add(ident)
++                continue
++            entry = (engine, *values)
++            if ident in rows and rows[ident] != entry:
++                unknown.add(ident)
++            rows[ident] = entry
+     valid = {ident: entry for ident, entry in rows.items() if ident not in unknown}
+     return {"calls": len(valid), "input_tokens": sum(entry[1] for entry in valid.values()),
+             "output_tokens": sum(entry[2] for entry in valid.values()),
+@@ -140,19 +136,7 @@ def hp_of(record, states):
+ 
+ def load_run_states(path, run_id, wanted):
+     """Stream one run's frames, including fights with no action decision."""
+-    states = {}
+-    with open(path, encoding="utf8") as handle:
+-        for line in handle:
+-            if line[7:31] not in wanted and run_id not in line:
+-                continue
+-            try:
+-                entry = json.loads(line)
+-            except json.JSONDecodeError:
+-                continue
+-            state = entry.get("state") or {}
+-            if entry.get("ts") in wanted or state.get("run_id") == run_id:
+-                states[entry["ts"]] = state
+-    return states
++    return report_log_cache.states(path, run_id, wanted)
+ 
+ 
+ def fights_of(recs, states, died=False):
+@@ -293,18 +277,12 @@ def decider(record):
+ 
+ def main(*, code=None):
+     """Prints the post-mortem; returns the run's character (knowledge id; None when no state of it names a run)."""
+-    decisions = [r for r in load(DEC) if r.get("mode") == "play"]
+-    runs = [run_of(r) for r in decisions]
+-    run_id = sys.argv[1] if len(sys.argv) > 1 else next((r for r in reversed(runs) if r), None)
++    run_id, recs, tail = report_log_cache.decisions(DEC, sys.argv[1] if len(sys.argv) > 1 else None)
+     if not run_id:
+         print("no run found")
+         return
+-    recs = [r for r in decisions if run_of(r) == run_id]
+     # The GAME_OVER record has no run in its fingerprint: attach the one right after the last record.
+     # V4 (2026-09-30) logs it with the run id; then the next GAME_OVER is a later run's, not this one's.
+-    last_ts = recs[-1]["ts"] if recs else ""
+-    own_end = any(r.get("screen") == "GAME_OVER" for r in recs)
+-    tail = [] if own_end else [r for r in decisions if r["ts"] > last_ts and r.get("screen") == "GAME_OVER"][:1]
+     # Include the same run's state-only frames: automatic opening deaths have no COMBAT decision.
+     wanted = {r["ts"] for r in tail + recs}
+     states = load_run_states(STATES, run_id, wanted)
+@@ -532,9 +510,17 @@ def refresh_costs() -> None:
+     """Paper accounting is independent of the next run's knowledge refresh and never waits for it."""
+     import subprocess
+     with open(os.path.join(ROOT, "ops", "cost-refresh.log"), "a") as log:
+-        subprocess.Popen(["nice", "-n", "19", "python3", os.path.join(LIVE, "ops", "refresh-costs.py"),
+-                          "--root", ROOT, "--code-root", LIVE],
+-                         stdout=log, stderr=log, start_new_session=True)
++        background_statistics(["python3", os.path.join(LIVE, "ops", "refresh-costs.py"),
++                               "--root", ROOT, "--code-root", LIVE], log)
++
++
++def background_statistics(command, log):
++    """Share the knowledge worker's CPU slot; admission never acquires this lock."""
++    env = {**os.environ, **dict.fromkeys(("OMP_NUM_THREADS", "OPENBLAS_NUM_THREADS",
++                                        "MKL_NUM_THREADS", "NUMEXPR_NUM_THREADS"), "1")}
++    return subprocess.Popen(["nice", "-n", "19", "ionice", "-c", "3", "flock",
++                             os.path.join(ROOT, "ops/knowledge-refresh.lock"), *command],
++                            env=env, stdout=log, stderr=log, start_new_session=True)
+ 
+ 
+ def boss_sim_check(character):
+@@ -566,9 +552,8 @@ def global_build_funnel(character):
+         return
+     python = os.path.join(ROOT, 'data/logdb-venv/bin/python')
+     with open(os.path.join(ROOT, 'ops/global-build-funnel.log'), 'a') as log:
+-        subprocess.Popen(['nice', '-n', '19', python, os.path.join(ROOT, 'ops/global_build_funnel.py'),
+-                          '--root', ROOT, '--character', character],
+-                         stdout=log, stderr=log, start_new_session=True)
++        background_statistics([python, os.path.join(ROOT, 'ops/global_build_funnel.py'),
++                               '--root', ROOT, '--character', character], log)
+ 
+ 
+ if __name__ == "__main__":
+diff --git a/ops/report_log_cache.py b/ops/report_log_cache.py
+new file mode 100644
+index 000000000..f4f34f6d0
+--- /dev/null
++++ b/ops/report_log_cache.py
+@@ -0,0 +1,150 @@
++"""Append-only report selectors; original rows and line numbers remain authoritative."""
++import hashlib
++import json
++import fcntl
++from pathlib import Path
++import sys
++
++sys.path.insert(0, str(Path(__file__).resolve().parents[1] / 'eval'))
++from jsonl_cache import JsonlCache
++
++
++def legacy_run(row):
++    try:
++        return json.loads(row['fingerprint']).get('run') or None
++    except Exception:
++        return None
++
++
++def header(path, row, ref):
++    if path.name == 'states.jsonl':
++        return dict(ref=ref, run=(row.get('state') or {}).get('run_id'), ts=row.get('ts'))
++    if path.name == 'decisions.jsonl':
++        return dict(ref=ref, run=legacy_run(row), mode=row.get('mode'),
++                    ts=row.get('ts'), screen=row.get('screen'))
++    return dict(ref=ref, run=row.get('run_id'), label=row.get('label'))
++
++
++def selected_rows(path, choose, directory=None, raw_filter=None):
++    path = Path(path)
++    revision = hashlib.sha256(b''.join(p.read_bytes() for p in (
++        Path(__file__), Path(__file__).with_name('report.py'),
++        Path(__file__).resolve().parents[1] / 'eval/jsonl_cache.py'))).hexdigest()
++    cache = JsonlCache(directory or path.resolve().parents[1] / 'ops/report-log-cache', revision, header)
++    try:
++        rows, _bad = cache.rows(path, path.stat().st_size)
++        refs = choose(rows)
++        with path.open('rb') as source:
++            for ref in refs:
++                source.seek(ref['offset'])
++                raw = source.read(ref['bytes'])
++                if hashlib.sha256(raw).hexdigest() != ref['sha256']:
++                    raise ValueError('report original row changed after selection')
++                if raw_filter and not raw_filter(raw.decode('utf8')):
++                    continue
++                yield ref['line'], json.loads(raw)
++    finally:
++        cache.close()
++
++
++def decisions(path, run_id=None):
++    """Keep the old last-run and first-following-GAME_OVER selection verbatim."""
++    if not Path(path).is_file():
++        return run_id, [], []
++    chosen_run = run_id
++    own_end = False
++
++    def choose(rows):
++        nonlocal chosen_run, own_end
++        rows = [row for row in rows if row.get('mode') == 'play']
++        if chosen_run is None:
++            chosen_run = next((row['run'] for row in reversed(rows) if row['run']), None)
++        if not chosen_run:
++            return []
++        recs = [row for row in rows if row['run'] == chosen_run]
++        own_end = any(row['screen'] == 'GAME_OVER' for row in recs)
++        last_ts = recs[-1]['ts'] if recs else ''
++        tail = [] if own_end else [row for row in rows if row['ts'] > last_ts and row['screen'] == 'GAME_OVER'][:1]
++        return [row['ref'] for row in recs + tail]
++
++    selected = [row for _line, row in selected_rows(path, choose)]
++    recs = [row for row in selected if legacy_run(row) == chosen_run]
++    return chosen_run, recs, ([] if own_end else selected[len(recs):])
++
++
++def last_run(path):
++    """Autoplay used the last truthy fingerprint run across every mode."""
++    result = None
++    def choose(rows):
++        nonlocal result
++        result = next((row['run'] for row in reversed(rows) if row['run']), None)
++        return []
++    list(selected_rows(path, choose))
++    return result
++
++
++def plans(path, run_id):
++    return selected_rows(path, lambda rows: [row['ref'] for row in rows
++                                           if row['run'] == run_id and row['label'] == 'run-plan'])
++
++
++def scan_states(path, run_id, wanted):
++    states = {}
++    with open(path, encoding='utf8') as source:
++        for line in source:
++            if line[7:31] not in wanted and run_id not in line:
++                continue
++            try:
++                row = json.loads(line)
++            except json.JSONDecodeError:
++                continue
++            state = row.get('state') or {}
++            if row.get('ts') in wanted or state.get('run_id') == run_id:
++                states[row['ts']] = state
++    return states
++
++
++def states(path, run_id, wanted):
++    """Use a completed background index; a cold/busy index never delays reporting."""
++    path = Path(path)
++    directory = path.resolve().parents[1] / 'ops/report-state-cache'
++    if not (directory / 'facts.sqlite').is_file():
++        return scan_states(path, run_id, wanted)
++    with (directory / 'worker.lock').open('a') as lock:
++        try:
++            fcntl.flock(lock, fcntl.LOCK_EX | fcntl.LOCK_NB)
++        except BlockingIOError:
++            return scan_states(path, run_id, wanted)
++        def choose(rows):
++            return [row['ref'] for row in rows if row['run'] == run_id or row['ts'] in wanted]
++        result = {}
++        for _line, row in selected_rows(path, choose, directory,
++                                       lambda line: line[7:31] in wanted or run_id in line):
++            state = row.get('state') or {}
++            # The original text prefilter is narrower than parsed JSON on unusual
++            # encodings. Check it on the original bytes to preserve that behavior.
++            # Selected rows have already passed their original byte SHA check.
++            if row.get('ts') in wanted or state.get('run_id') == run_id:
++                result[row['ts']] = state
++        return result
++
++
++def warm_states(path):
++    path = Path(path)
++    directory = path.resolve().parents[1] / 'ops/report-state-cache'
++    directory.mkdir(parents=True, exist_ok=True)
++    with (directory / 'worker.lock').open('a') as lock:
++        try:
++            fcntl.flock(lock, fcntl.LOCK_EX | fcntl.LOCK_NB)
++        except BlockingIOError:
++            return
++        list(selected_rows(path, lambda rows: [], directory))
++
++
++if __name__ == '__main__':
++    if len(sys.argv) != 3 or sys.argv[1] not in ('--warm-states', '--last-run'):
++        raise SystemExit('usage: report_log_cache.py --warm-states STATES_JSONL | --last-run DECISIONS_JSONL')
++    if sys.argv[1] == '--warm-states':
++        warm_states(sys.argv[2])
++    else:
++        print(last_run(sys.argv[2]) or '')
+diff --git a/ops/tests/test_disk_admission.py b/ops/tests/test_disk_admission.py
+index 0ca189f8c..a1e6b96e2 100644
+--- a/ops/tests/test_disk_admission.py
++++ b/ops/tests/test_disk_admission.py
+@@ -113,8 +113,10 @@ class Admission(unittest.TestCase):
+     def test_terminal_loop_reports_then_holds_exactly_the_next_run(self):
+         ops = self.root / "ops"
+         (self.root / "logs/console").mkdir(parents=True)
+-        for name in ("autoplay.sh", "paths.sh"):
++        for name in ("autoplay.sh", "paths.sh", "report_log_cache.py"):
+             shutil.copy2(ROOT / "ops" / name, ops / name)
++        (self.root / "eval").mkdir()
++        shutil.copy2(ROOT / "eval/jsonl_cache.py", self.root / "eval/jsonl_cache.py")
+         run_id = "SILENT000001"
+         (self.root / "logs/decisions.jsonl").write_text(json.dumps({"fingerprint": json.dumps({"run": run_id})}) + "\n")
+         (self.root / "logs/console/fixed.log").write_text("stopped: run 1 ended (death)\n")
+diff --git a/ops/tests/test_llm_handoff.py b/ops/tests/test_llm_handoff.py
+index 4aeb3421b..bf6e79024 100644
+--- a/ops/tests/test_llm_handoff.py
++++ b/ops/tests/test_llm_handoff.py
+@@ -171,7 +171,10 @@ class Protocol(unittest.TestCase):
+ 
+     def test_drain_during_play_keeps_one_completion_report(self):
+         ops = self.root / "ops"
+-        for name in ("paths.sh", "autoplay.sh"): shutil.copy(ROOT / "ops" / name, ops / name)
++        for name in ("paths.sh", "autoplay.sh", "report_log_cache.py"):
++            shutil.copy(ROOT / "ops" / name, ops / name)
++        (self.root / "eval").mkdir()
++        shutil.copy(ROOT / "eval/jsonl_cache.py", self.root / "eval/jsonl_cache.py")
+         logs = self.root / "logs"
+         (logs / "console").mkdir(parents=True)
+         (logs / "decisions.jsonl").write_text(json.dumps({"fingerprint": json.dumps({"run": "FIXTURE"})}) + "\n")

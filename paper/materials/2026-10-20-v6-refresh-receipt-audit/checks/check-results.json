@@ -1,0 +1,59 @@
+{
+  "source": "88c861525bc35ec11f9c97b3dbc8a02867cd4fe0",
+  "source_tree": "7968e8d67e086202c8dad591d7bf23981815b751",
+  "checks": [
+    {
+      "name": "python",
+      "command": "python3 -B knowledge/builders/test_combo_metrics.py",
+      "exit": 0,
+      "tests": 45,
+      "seconds": 0.562,
+      "log": "logs/combo-targeted-final-r2.log"
+    },
+    {
+      "name": "tsc",
+      "command": "npx tsc -p tsconfig.json --noEmit",
+      "cwd": "agent",
+      "exit": 0,
+      "log": "logs/tsc-final-r2.log"
+    },
+    {
+      "name": "vitest-targeted",
+      "command": "npx vitest run tests/v6-combo-metrics.test.ts tests/legacy-refresh-incremental.test.ts --maxWorkers=1",
+      "cwd": "agent",
+      "exit": 0,
+      "files": 2,
+      "tests": 6,
+      "seconds": 4.68,
+      "log": "logs/vitest-targeted-final-r2.log"
+    },
+    {
+      "name": "source-gitleaks",
+      "exit": 0,
+      "log": "logs/source-gitleaks.log",
+      "report": "logs/source-gitleaks.json"
+    },
+    {
+      "name": "materials-gitleaks",
+      "exit": 0,
+      "log": "logs/materials-gitleaks.log",
+      "report": "logs/materials-gitleaks.json",
+      "scope": "all archived material bytes, decompressed gzip evidence, both patches, and three source leaves"
+    }
+  ],
+  "resources": {
+    "nice": 19,
+    "ionice": 3,
+    "workers": 1,
+    "TMPDIR": "/home/dw/Projects/agent-sts2/.worktrees/v6-refresh-receipt-audit-20261020/.cache/w8t",
+    "OMP_NUM_THREADS": 1,
+    "OPENBLAS_NUM_THREADS": 1
+  },
+  "retained_failures": [
+    "logs/availability-red.log",
+    "logs/availability-key-red.log",
+    "logs/combo-targeted-final.log"
+  ],
+  "full": "not run; ops owns sole window, P0 first",
+  "production_refresh": "not run"
+}

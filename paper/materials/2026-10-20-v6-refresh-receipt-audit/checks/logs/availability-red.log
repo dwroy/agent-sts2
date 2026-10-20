@@ -1,0 +1,14 @@
+E
+======================================================================
+ERROR: test_availability_uses_cached_run_contribution_even_when_combo_unformed (__main__.ComboMetricsTests.test_availability_uses_cached_run_contribution_even_when_combo_unformed)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/dw/Projects/agent-sts2/.worktrees/v6-refresh-receipt-audit-20261020/knowledge/builders/test_combo_metrics.py", line 78, in test_availability_uses_cached_run_contribution_even_when_combo_unformed
+    with patch.object(combo_metrics, 'availability_contribution', wraps=combo_metrics.availability_contribution) as collect:
+                                                                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: module 'combo_metrics' has no attribute 'availability_contribution'
+
+----------------------------------------------------------------------
+Ran 1 test in 0.040s
+
+FAILED (errors=1)

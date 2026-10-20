@@ -1,0 +1,399 @@
+diff --git a/knowledge/builders/build-combo-metrics.py b/knowledge/builders/build-combo-metrics.py
+index 537839a45..03d77fd2a 100644
+--- a/knowledge/builders/build-combo-metrics.py
++++ b/knowledge/builders/build-combo-metrics.py
+@@ -6,7 +6,7 @@ import subprocess
+ import time
+ from pathlib import Path
+ from collections import Counter, defaultdict
+-from combo_metrics import compute_combo, digest, extract, holding
++from combo_metrics import compute_combo, digest, extract, holding, prerequisite_cache_keys, prerequisite_frame_inputs
+ from combo_pooled import finalize
+ from incremental_evidence import FrozenLogIndex, implementation
+ 
+@@ -194,14 +194,12 @@ def main():
+     args.output.parent.mkdir(parents=True, exist_ok=True)
+     predicates = {c['id']: c['prerequisites'] for c in combos if c.get('prerequisites') is not None}
+     prerequisite_results = {cid: {} for cid in predicates}
++    run_keys = {r['run_id']: cache.run_signature(r['run_id'], ('runs', 'states', 'sl-attempts', 'decisions')) for r in runs} if cache else {}
++    algorithm = implementation(Path(__file__).with_name('combo_metrics.py'))
+     started = time.monotonic()
++    owners = None
+     if predicates:
+-        frames = {}
+-        for run in runs:
+-            for frame in run['states']:
+-                ids = [c['id'] for c in combos if c['id'] in predicates and holding(c['cards'], frame['state']['run'].get('deck')) is True]
+-                if ids:
+-                    frames[frame['_source']['sha256']] = dict(source=frame['_source'], combos=ids)
++        frames, owners = prerequisite_frame_inputs(runs, combos, cache, run_keys, algorithm)
+         payload = args.output.with_suffix('.prerequisites-input.json')
+         result_path = args.output.with_suffix('.prerequisites-output.json')
+         payload.write_text(json.dumps(dict(predicates=predicates, frames=list(frames.values()), cacheDirectory=str(args.cache_dir.resolve()) if args.cache_dir else None), ensure_ascii=False)+'\n')
+@@ -210,11 +208,10 @@ def main():
+         for row in json.loads(result_path.read_bytes())['rows']:
+             for cid, condition in row['conditions'].items():
+                 prerequisite_results[cid][row['source']['sha256']] = condition
++    prerequisite_keys = prerequisite_cache_keys(runs, prerequisite_results, owners) if cache and predicates else {}
+     timings['prerequisites_seconds'] = time.monotonic() - started
+     started = time.monotonic()
+     outputs = []
+-    run_keys = {r['run_id']: cache.run_signature(r['run_id'], ('runs', 'states', 'sl-attempts', 'decisions')) for r in runs} if cache else {}
+-    algorithm = implementation(Path(__file__).with_name('combo_metrics.py'))
+     for combo in combos:
+         options = dict(rules.get(combo['id'], {}), direction=directions.get(combo['id']))
+         if combo['id'] in predicates:
+@@ -223,6 +220,8 @@ def main():
+             options.update(witnesses=witnesses.get(combo['id'], []), has_definition=True)
+         if cache is not None:
+             options.update(_cache=cache, _algorithm=algorithm, _run_keys=run_keys)
++            if combo['id'] in prerequisite_keys:
++                options['_prerequisite_run_keys'] = prerequisite_keys[combo['id']]
+         metrics, audit = compute_combo(combo, runs, options)
+         outputs.append(dict(id=combo['id'], metrics=metrics, audit=audit))
+     args.output.parent.mkdir(parents=True, exist_ok=True)
+diff --git a/knowledge/builders/combo_metrics.py b/knowledge/builders/combo_metrics.py
+index b17e3a73f..dd471221a 100644
+--- a/knowledge/builders/combo_metrics.py
++++ b/knowledge/builders/combo_metrics.py
+@@ -7,6 +7,7 @@ from pathlib import Path
+ import random
+ import statistics
+ from history_boundary import timestamp, after_run_end, run_identity
++from incremental_evidence import token
+ 
+ 
+ METRICS = (
+@@ -526,6 +527,79 @@ def turn_observations(fight, active, exclusions=None):
+     return observations
+ 
+ 
++def prerequisite_frame_inputs(runs, combos, cache=None, run_keys=None, algorithm=None):
++    """Cache holding checks per run; only verified predicates remain in TypeScript."""
++    definitions = [dict(id=c['id'], cards=c['cards']) for c in combos if c.get('prerequisites') is not None]
++    frames, owners = {}, defaultdict(set)
++    for run in runs:
++        def collect():
++            rows = []
++            for frame in run['states']:
++                ids = [c['id'] for c in definitions if holding(c['cards'], frame['state']['run'].get('deck')) is True]
++                if ids:
++                    rows.append(dict(source=frame['_source'], combos=ids))
++            return rows
++        rows = collect() if cache is None else cache.cached('combo-prerequisite-frames',
++            [algorithm, definitions, run_keys[run['run_id']]], collect)
++        for row in rows:
++            sha = row['source']['sha256']
++            frames[sha] = row
++            owners[sha].add(run['run_id'])
++    return frames, owners
++
++
++def prerequisite_cache_keys(runs, results, owners=None):
++    """Partition verified predicate results once, rather than rescan per combo."""
++    if owners is None:
++        owners = defaultdict(set)
++        for run in runs:
++            for frame in run['states']:
++                owners[frame['_source']['sha256']].add(run['run_id'])
++    keys = {}
++    for combo, conditions in results.items():
++        grouped = {run['run_id']: {} for run in runs}
++        for frame, condition in conditions.items():
++            for rid in owners.get(frame, ()):
++                grouped[rid][frame] = condition
++        keys[combo] = {rid: token(rows) for rid, rows in grouped.items()}
++    return keys
++
++
++def availability_contribution(requirements, run, attempt):
++    """One run's visible offers, including runs that never formed the combo."""
++    cutoff = run['first_cut'] if attempt == 'first' else None
++    visits = defaultdict(list)
++    for row in run['states']:
++        if cutoff is not None and row['ts'] > cutoff:
++            continue
++        s = row['state']; r = s.get('run') or {}
++        act = act_index(r.get('act_id'))
++        if act is None or not isinstance(r.get('floor'), int):
++            continue
++        cards = (s.get('reward') or {}).get('card_options') if s.get('screen') == 'REWARD' else (s.get('shop') or {}).get('cards') if s.get('screen') == 'SHOP' else None
++        if not isinstance(cards, list) or not cards or any(not c.get('card_id') for c in cards):
++            continue
++        if s['screen'] == 'SHOP':
++            if any(not isinstance(c.get('is_stocked'), bool) for c in cards):
++                continue
++            cards = [c for c in cards if c['is_stocked']]
++            if not cards:
++                continue
++        visits[(act+1, r['floor'], s['screen'])].extend(cards)
++    rows = []
++    for act in sorted({a for a, _, _ in visits}):
++        visible = [c for (a, _, _), cards in visits.items() if a == act for c in cards]
++        floor = min(f for a, f, _ in visits if a == act)
++        for card, upgraded in requirements.items():
++            candidates = [c for c in visible if c['card_id'] == card]
++            needs_upgrade = all(upgraded)
++            if needs_upgrade and candidates and any(not isinstance(c.get('upgraded'), bool) for c in candidates):
++                continue
++            seen = any(not needs_upgrade or c.get('upgraded') is True for c in candidates)
++            rows.append(dict(card=card, act=act, value=int(seen), evidence=dict(run_id=run['run_id'], floor=floor)))
++    return rows
++
++
+ def compute_combo(combo, runs, options=None):
+     """Independent-run estimates, aligned with the build-core learner's method.
+ 
+@@ -552,6 +626,10 @@ def compute_combo(combo, runs, options=None):
+         raise ValueError('duplicate independent run identities')
+     metrics, audit = [], []
+     chain_ascensions = {r.get('ascension') for r in runs if any(s.get('floor') == 49 for s in r['summaries'])}
++    requirements = defaultdict(list)
++    for req in combo['cards']:
++        for cid in req.get('any_of', [req.get('id')]):
++            requirements[cid].append(req['upgraded'])
+     population = runs
+     for attempt in ('first', 'including_sl'):
+         observations = defaultdict(list)
+@@ -562,9 +640,13 @@ def compute_combo(combo, runs, options=None):
+             observations = defaultdict(list)
+             boss_samples = defaultdict(lambda: {'reached': [], 'won': []})
+             normalization_rows, simulation_cases, audit = [], [], []
++            # Availability is independent of activation/holding, so collect it
++            # before the combat contribution's early returns and cache both.
++            availability = availability_contribution(requirements, run, attempt)
+             def contribution():
+                 return dict(observations=dict(observations), boss_samples=dict(boss_samples),
+-                            normalization_rows=normalization_rows, simulation_cases=simulation_cases, audit=audit)
++                            normalization_rows=normalization_rows, simulation_cases=simulation_cases, audit=audit,
++                            availability=availability)
+             rid = run['run_id']
+             cutoff = run['first_cut'] if attempt == 'first' else None
+             states = [s for s in run['states'] if cutoff is None or s['ts'] <= cutoff]
+@@ -760,10 +842,14 @@ def compute_combo(combo, runs, options=None):
+             if cache is None:
+                 part = collect_run(run)
+             else:
+-                key = [options['_algorithm'], combo, attempt, sorted(chain_ascensions, key=str),
++                condition_key = None
++                if combo.get('prerequisites') is not None:
++                    condition_key = options['_prerequisite_run_keys'][run['run_id']] if '_prerequisite_run_keys' in options else {
++                        f['_source']['sha256']: options['prerequisite_results'].get(f['_source']['sha256']) for f in run['states']}
++                key = ['with-availability-v1', options['_algorithm'], combo, attempt, sorted(chain_ascensions, key=str),
+                        {k:v for k,v in options.items() if not k.startswith('_') and k not in ('prerequisite_results', 'witnesses')},
+                        witnesses[run['run_id']], options['_run_keys'][run['run_id']],
+-                       {f['_source']['sha256']: options.get('prerequisite_results', {}).get(f['_source']['sha256']) for f in run['states']}]
++                       condition_key]
+                 part = cache.cached('combo-run-contributions', key, lambda: collect_run(run))
+             for name, samples in part['observations'].items(): observations[name].extend(samples)
+             for boss, groups in part['boss_samples'].items():
+@@ -771,42 +857,8 @@ def compute_combo(combo, runs, options=None):
+             normalization_rows.extend(part['normalization_rows'])
+             simulation_cases.extend(part['simulation_cases'])
+             audit.extend(part['audit'])
+-        # Availability denominator includes unformed runs; require explicit
+-        # upgrade evidence when the requirement needs an upgraded card.
+-        requirements = defaultdict(list)
+-        for req in combo['cards']:
+-            for cid in req.get('any_of', [req.get('id')]):
+-                requirements[cid].append(req['upgraded'])
+-        for run in population:
+-            cutoff = run['first_cut'] if attempt == 'first' else None
+-            visits = defaultdict(list)
+-            for row in run['states']:
+-                if cutoff is not None and row['ts'] > cutoff:
+-                    continue
+-                s = row['state']; r = s.get('run') or {}
+-                act = act_index(r.get('act_id'))
+-                if act is None or not isinstance(r.get('floor'), int):
+-                    continue
+-                cards = (s.get('reward') or {}).get('card_options') if s.get('screen') == 'REWARD' else (s.get('shop') or {}).get('cards') if s.get('screen') == 'SHOP' else None
+-                if not isinstance(cards, list) or not cards or any(not c.get('card_id') for c in cards):
+-                    continue
+-                if s['screen'] == 'SHOP':
+-                    if any(not isinstance(c.get('is_stocked'), bool) for c in cards):
+-                        continue
+-                    cards = [c for c in cards if c['is_stocked']]
+-                    if not cards:
+-                        continue
+-                visits[(act+1, r['floor'], s['screen'])].extend(cards)
+-            for act in sorted({a for a, _, _ in visits}):
+-                visible = [c for (a, _, _), cards in visits.items() if a == act for c in cards]
+-                floor = min(f for a, f, _ in visits if a == act)
+-                for card, upgraded in requirements.items():
+-                    candidates = [c for c in visible if c['card_id'] == card]
+-                    needs_upgrade = all(upgraded)
+-                    if needs_upgrade and candidates and any(not isinstance(c.get('upgraded'), bool) for c in candidates):
+-                        continue
+-                    seen = any(not needs_upgrade or c.get('upgraded') is True for c in candidates)
+-                    offers[(card, act)].append((int(seen), dict(run_id=run['run_id'], floor=floor)))
++            for row in part['availability']:
++                offers[(row['card'], row['act'])].append((row['value'], row['evidence']))
+         reasons = {
+             'aoe_damage': '多敌HP推进不能区分群体技能、逐个单攻、持续效果及遗物；多敌原始观察另存audit',
+             'startup_energy': '缺少可核逐牌贡献施放的现场energy_cost；净能量变化不能代替花费',
+diff --git a/knowledge/builders/test_combo_metrics.py b/knowledge/builders/test_combo_metrics.py
+index a4a9bfa94..f18eb8fbc 100644
+--- a/knowledge/builders/test_combo_metrics.py
++++ b/knowledge/builders/test_combo_metrics.py
+@@ -8,12 +8,11 @@ import subprocess
+ import sys
+ import tempfile
+ import unittest
+-
+ from combo_normalization import normalized, offset_fit, unique_runs
+ from combo_pooled import finalize
+ from incremental_evidence import FrozenLogIndex
+ from combo_metrics import (activation, activation_frame, compute_combo, digest, enemy_delta, extract, holding,
+-                          METRICS, rate, read_rows, statistic, turn_observations)
++                          METRICS, prerequisite_cache_keys, prerequisite_frame_inputs, rate, read_rows, statistic, turn_observations)
+ 
+ HERE = Path(__file__).resolve().parent
+ SPEC = {'id': 'fixture-combo', 'cards': [{'id': 'ALPHA', 'count': 1, 'upgraded': False}]}
+@@ -64,6 +63,43 @@ def corpus():
+ 
+ 
+ class ComboMetricsTests(unittest.TestCase):
++    def test_availability_uses_cached_run_contribution_even_when_combo_unformed(self):
++        class CountedStates(list):
++            scans = 0
++
++            def __iter__(self):
++                self.scans += 1
++                return super().__iter__()
++
++        runs = corpus()
++        for row in runs[0]['states']:
++            row['state']['run']['deck'] = []
++        runs[0]['states'] = CountedStates(runs[0]['states'])
++        with tempfile.TemporaryDirectory() as directory:
++            index = FrozenLogIndex(Path(directory) / 'cache', Path(directory))
++            options = dict(activation=RULE, _cache=index, _algorithm='fixed', _run_keys={'FIXTURE': 'first'})
++            try:
++                full = compute_combo(SPEC, runs, dict(activation=RULE))
++                self.assertEqual(compute_combo(SPEC, runs, options), full)
++                runs[0]['states'].scans = 0
++                self.assertEqual(compute_combo(SPEC, runs, options), full)
++                self.assertEqual(runs[0]['states'].scans, 0)
++                extra = copy.deepcopy(runs[0])
++                extra['run_id'] = 'ADDED'
++                for row in extra['states']:
++                    row['state']['run_id'] = 'ADDED'
++                options['_run_keys']['ADDED'] = 'second'
++                combined = runs + [extra]
++                expected = compute_combo(SPEC, combined, dict(activation=RULE))
++                runs[0]['states'].scans = extra['states'].scans = 0
++                self.assertEqual(compute_combo(SPEC, combined, options), expected)
++                self.assertEqual(runs[0]['states'].scans, 0)
++                self.assertGreater(extra['states'].scans, 0)
++                available = full[0][0]['availability'][2]['offered_rate']
++                self.assertEqual((available['value'], available['n']), (1, 1))
++            finally:
++                index.close()
++
+     def test_cached_run_contributions_equal_full_and_append_only_recomputes_new_run(self):
+         with tempfile.TemporaryDirectory() as directory:
+             path = Path(directory); limits = write_logs(path)
+@@ -90,6 +126,102 @@ class ComboMetricsTests(unittest.TestCase):
+             finally:
+                 index.close()
+ 
++    def test_availability_preserves_attempt_cutoff_and_unknown_upgrade_denominators(self):
++        run = corpus()[0]
++        run['first_cut'] = stamp(11)
++        # Missing initial floor must not remove a later, valid supply observation.
++        run['states'][0]['state']['run']['floor'] = None
++        spec = dict(SPEC, cards=[dict(id='ALPHA', count=1, upgraded=True)])
++        with tempfile.TemporaryDirectory() as directory:
++            index = FrozenLogIndex(Path(directory) / 'cache', Path(directory))
++            try:
++                def calculate(key):
++                    return compute_combo(spec, [run], dict(_cache=index, _algorithm='fixed', _run_keys={'FIXTURE': key}))[0]
++                result = calculate('upgraded')
++                self.assertEqual(result[0]['availability'][2]['offered_rate']['n'], 0)
++                self.assertEqual(result[1]['availability'][2]['offered_rate']['value'], 1)
++                self.assertEqual(result[1]['availability'][2]['offered_rate']['n'], 1)
++                for row in run['states']:
++                    if row['state']['screen'] == 'REWARD':
++                        row['state']['reward']['card_options'][0].pop('upgraded', None)
++                unknown = calculate('unknown-upgrade')[1]['availability'][2]['offered_rate']
++                self.assertEqual((unknown['value'], unknown['n']), (None, 0))
++                self.assertTrue(unknown['unknown_reason'])
++                for row in run['states']:
++                    if row['state']['screen'] == 'REWARD':
++                        row['state'].update(screen='SHOP', shop=dict(cards=[
++                            dict(card_id='ALPHA', upgraded=True, is_stocked=False),
++                            dict(card_id='BETA', upgraded=False, is_stocked=True)]))
++                absent = calculate('unstocked')[1]['availability'][2]['offered_rate']
++                self.assertEqual((absent['value'], absent['n']), (0, 1))
++            finally:
++                index.close()
++
++    def test_partitioned_predicate_keys_invalidate_only_affected_run(self):
++        first = corpus()[0]
++        second = copy.deepcopy(first)
++        second['run_id'] = 'SECOND'
++        for i, row in enumerate(second['states']):
++            row['_source']['sha256'] = digest(('second-' + str(i)).encode())
++        runs = [first, second]
++        spec = dict(SPEC, prerequisites={'op': 'contains', 'field': 'player.relics', 'value': 'FIXTURE_RELIC'})
++        results = {row['_source']['sha256']: dict(value=True) for run in runs for row in run['states']}
++        with tempfile.TemporaryDirectory() as directory:
++            index = FrozenLogIndex(Path(directory) / 'cache', Path(directory))
++            try:
++                def calculate():
++                    return compute_combo(spec, runs, dict(activation=RULE, prerequisite_results=results,
++                        _cache=index, _algorithm='fixed', _run_keys={'FIXTURE': 'one', 'SECOND': 'two'},
++                        _prerequisite_run_keys=prerequisite_cache_keys(runs, {spec['id']: results})[spec['id']]))
++                expected = compute_combo(spec, runs, dict(activation=RULE, prerequisite_results=results))
++                self.assertEqual(calculate(), expected)
++                misses = index.stats['cache_misses']
++                self.assertEqual(calculate(), expected)
++                self.assertEqual(index.stats['cache_misses'], misses)
++                for row in second['states']:
++                    results[row['_source']['sha256']] = dict(value=None, unavailable={'fixture': 'not observed'})
++                self.assertEqual(calculate(), compute_combo(spec, runs, dict(activation=RULE, prerequisite_results=results)))
++                self.assertEqual(index.stats['cache_misses'] - misses, 2)
++            finally:
++                index.close()
++
++    def test_prerequisite_frame_selection_reuses_unchanged_runs_and_definitions(self):
++        class CountedStates(list):
++            scans = 0
++
++            def __iter__(self):
++                self.scans += 1
++                return super().__iter__()
++
++        first = corpus()[0]
++        first['states'] = CountedStates(first['states'])
++        second = copy.deepcopy(first)
++        second['run_id'] = 'SECOND'
++        for i, row in enumerate(second['states']):
++            row['_source']['sha256'] = digest(('second-' + str(i)).encode())
++        spec = dict(SPEC, prerequisites={'op': 'contains', 'field': 'player.relics', 'value': 'FIXTURE_RELIC'})
++        keys = {'FIXTURE': 'first', 'SECOND': 'second'}
++        with tempfile.TemporaryDirectory() as directory:
++            index = FrozenLogIndex(Path(directory) / 'cache', Path(directory))
++            try:
++                expected = prerequisite_frame_inputs([first], [spec])
++                self.assertEqual(prerequisite_frame_inputs([first], [spec], index, keys, 'fixed'), expected)
++                first['states'].scans = 0
++                frames, owners = prerequisite_frame_inputs([first], [spec], index, keys, 'fixed')
++                conditions = {sha: dict(value=True) for sha in frames}
++                prerequisite_cache_keys([first], {spec['id']: conditions}, owners)
++                self.assertEqual(first['states'].scans, 0)
++                both = [first, second]
++                expected = prerequisite_frame_inputs(both, [spec])
++                first['states'].scans = second['states'].scans = 0
++                self.assertEqual(prerequisite_frame_inputs(both, [spec], index, keys, 'fixed'), expected)
++                self.assertEqual(first['states'].scans, 0)
++                self.assertGreater(second['states'].scans, 0)
++                absent = dict(spec, cards=[dict(id='ABSENT', count=1, upgraded=False)])
++                self.assertEqual(prerequisite_frame_inputs(both, [absent], index, keys, 'fixed')[0], {})
++            finally:
++                index.close()
++
+     def test_non_null_prerequisite_cannot_be_silently_ignored(self):
+         spec = dict(SPEC, prerequisites={'op': 'contains', 'field': 'player.relics', 'value': 'FIXTURE_RELIC'})
+         with self.assertRaisesRegex(ValueError, 'source-verified'):

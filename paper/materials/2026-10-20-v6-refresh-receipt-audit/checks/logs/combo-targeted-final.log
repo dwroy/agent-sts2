@@ -1,0 +1,17 @@
+.......E.....................................
+======================================================================
+ERROR: test_cli_and_raw_witness_tampering (__main__.ComboMetricsTests.test_cli_and_raw_witness_tampering)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/dw/Projects/agent-sts2/.worktrees/v6-refresh-receipt-audit-20261020/knowledge/builders/test_combo_metrics.py", line 500, in test_cli_and_raw_witness_tampering
+    self.assertEqual(len(module.verified_witnesses(file, {SPEC['id']: SPEC}, path, limits, {'FIXTURE'})[SPEC['id']]), 1)
+                         ~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/dw/Projects/agent-sts2/.worktrees/v6-refresh-receipt-audit-20261020/knowledge/builders/build-combo-metrics.py", line 48, in verified_witnesses
+    if not w.get('definition') or holding(combos[cid]['cards'], state['run'].get('deck')) is not True:
+                                  ^^^^^^^
+NameError: name 'holding' is not defined
+
+----------------------------------------------------------------------
+Ran 45 tests in 0.438s
+
+FAILED (errors=1)

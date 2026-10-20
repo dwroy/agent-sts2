@@ -5340,3 +5340,7 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
 | 2026-10-20 23:24:08 CST | ops核231301-fix无新源/提交/合入；154SHA/46基线祖先核同，40既有窄修复+25原链保留，tsc0/6文件7定向非full；八旧来源非live祖先及逐条旧SHA原审计失败保持，failed/rc0/mergednull不改。无新检查/dataset/模型，不查询在途P0/R4；原件paper/materials/20261020-2321-ops/receipt.json。 |
 
 | 2026-10-20 23:27:01 CST | ops实际接watcher原生回执：221302历史执行源码来源限定已独立核读并按其用户可见转达陈述登记，未代外部Claude/Roy原生ACK/CLI角色确认；十waiting/0536proposed和科学父不改。P0/P3仅静态来源核验、R4不重复派，P4原待办保持，无新检查/模型/刷新；原件paper/materials/20261020-watcher-native-receipt-ops/receipt.json。 |
+
+| 2026-10-20 23:30 | V6-W8 P4：冻结核验14份后台刷新9 published/5 failed，最新381局包已含Y427且YSRV实际读回，5Z截至23:10仍排前置步骤；原公共增量26叶在main未到受核live，提供精确最小运输；新增88c861525缓存组合可得性及前置条件选帧，45 Python/tsc/2文件6定向过，完整联合与生产测时待ops在P0后执行，未改live/知识/STOP。材料：paper/materials/2026-10-20-v6-refresh-receipt-audit/。 |
+
+| 2026-10-20 23:34:24 CST | ops核P4 source88c三源、旧26运输依赖、74材料/28解压SHA，原字收W8日志；live较新磁盘夹具保留待hunk机械合。仅窄收材料，实际live联合full排P0→P3→P4，冷建/热读/CPU/fallback及后继消费者保持pending；不查P0/不启动full或刷新，不运源码/805/整main。原件paper/materials/20261020-P4-formal-ops/receipt.json。 |
