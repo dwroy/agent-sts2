@@ -64,11 +64,15 @@ export function recordConstructionHandover(env: DecisionEnv, logFile: string, qu
   const run = str(env.state.raw.run_id), character = str(asRecord(env.state.run?.raw).character_id).toLowerCase();
   env.screenMemory.v6BrainFallbackPending = { run, questionId,
     issue: { kind, reason, known: coverage.known, total: coverage.total, unknownOptions: [...coverage.unknown] } };
+  const results = kind === "card_pick" ? env.v6CardResults : null;
+  const telemetry = results?.telemetry;
   new V6BuildLog(config, join(dirname(logFile), "v6-build.jsonl")).append({ schema: "v6-build-log-v1",
     ts: new Date().toISOString(), run_id: run, character, question_id: questionId, kind, mode: "on", stage: "trigger",
     event: "v6_unknown_to_brain", entries: [], jev_answer: null,
     fallback: `${reason}; known=${coverage.known}/${coverage.total}; threshold=${config.min_known_option_ratio}`.slice(0, 300),
-    elapsed_ms: elapsed, cache: { hits: 0, misses: 0 }, degradation: ["v6_unknown_to_brain", reason.slice(0, 200)],
+    elapsed_ms: elapsed + (telemetry?.elapsed_ms ?? 0),
+    cache: { hits: telemetry?.cache_hits ?? 0, misses: Math.max(0, (results?.immediate.length ?? 0) - (telemetry?.cache_hits ?? 0)) },
+    degradation: ["v6_unknown_to_brain", reason.slice(0, 200)],
     unknown: { count: coverage.total - coverage.known, total: coverage.total }, triggers: ["T6"], merged_triggers: [], skipped_triggers: [] });
 }
 
