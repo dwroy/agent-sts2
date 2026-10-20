@@ -13,18 +13,18 @@
     },
     "game_type": "Boss",
     "game_hp_range": [
-      58,
-      59
+      62,
+      63
     ],
     "kind": "minion",
     "rooms": {
-      "boss": 124
+      "boss": 125
     },
     "acts": {
-      "1": 124
+      "1": 125
     },
     "encounters": {
-      "KIN_FOLLOWER+KIN_FOLLOWER+KIN_PRIEST": 124
+      "KIN_FOLLOWER+KIN_FOLLOWER+KIN_PRIEST": 125
     },
     "hp_by_asc": {
       "0": {
@@ -91,29 +91,29 @@
         "min": 62,
         "median": 62,
         "max": 63,
-        "n": 161
+        "n": 163
       }
     },
     "moves": {
       "BOOMERANG_MOVE": {
         "name": "回旋镖",
-        "n_seen": 537,
+        "n_seen": 542,
         "intents": {
-          "Attack": 537
+          "Attack": 542
         },
         "turns_seen": {
-          "2": 157,
-          "3": 136,
-          "5": 128,
-          "6": 51,
-          "8": 50,
+          "2": 158,
+          "3": 137,
+          "5": 129,
+          "6": 52,
+          "8": 51,
           "9": 14,
           "11": 1
         },
         "next": {
-          "POWER_DANCE_MOVE": 437
+          "POWER_DANCE_MOVE": 441
         },
-        "avg_total_shown": 8.9,
+        "avg_total_shown": 9.0,
         "damage_by_asc": {
           "0": {
             "shown": {
@@ -259,45 +259,45 @@
           "10": {
             "shown": {
               "11x2": 7,
-              "2x2": 85,
+              "2x2": 86,
               "3x2": 11,
-              "5x2": 142,
+              "5x2": 144,
               "6x2": 6,
-              "8x2": 62
+              "8x2": 64
             },
             "base_per_hit": {
-              "2": 295
+              "2": 300
             },
             "hits": {
-              "2": 313
+              "2": 318
             },
-            "n_base": 295
+            "n_base": 300
           }
         }
       },
       "POWER_DANCE_MOVE": {
         "name": "力量之舞",
-        "n_seen": 588,
+        "n_seen": 593,
         "intents": {
-          "Buff": 588
+          "Buff": 593
         },
         "turns_seen": {
-          "1": 151,
-          "3": 152,
-          "4": 120,
-          "6": 107,
-          "7": 30,
+          "1": 152,
+          "3": 153,
+          "4": 121,
+          "6": 108,
+          "7": 31,
           "9": 25,
           "10": 3
         },
         "next": {
-          "QUICK_SLASH_MOVE": 519
+          "QUICK_SLASH_MOVE": 524
         },
         "avg_total_shown": 0.0,
         "self_powers_gained": {
           "STRENGTH_POWER": {
             "2": 178,
-            "3": 191
+            "3": 196
           }
         },
         "self_powers_gained_by_asc": {
@@ -353,31 +353,31 @@
           },
           "10": {
             "STRENGTH_POWER": {
-              "3": 153
+              "3": 158
             }
           }
         }
       },
       "QUICK_SLASH_MOVE": {
         "name": "快斩",
-        "n_seen": 679,
+        "n_seen": 685,
         "intents": {
-          "Attack": 679
+          "Attack": 685
         },
         "turns_seen": {
-          "1": 160,
-          "2": 151,
-          "4": 146,
-          "5": 102,
-          "7": 82,
-          "8": 21,
+          "1": 161,
+          "2": 152,
+          "4": 147,
+          "5": 103,
+          "7": 83,
+          "8": 22,
           "10": 15,
           "11": 2
         },
         "next": {
-          "BOOMERANG_MOVE": 537
+          "BOOMERANG_MOVE": 542
         },
-        "avg_total_shown": 7.9,
+        "avg_total_shown": 8.0,
         "damage_by_asc": {
           "0": {
             "shown": {
@@ -528,21 +528,21 @@
           "10": {
             "shown": {
               "10x1": 1,
-              "11x1": 110,
-              "14x1": 22,
+              "11x1": 112,
+              "14x1": 23,
               "17x1": 1,
               "3x1": 14,
-              "5x1": 71,
+              "5x1": 72,
               "6x1": 12,
-              "8x1": 156
+              "8x1": 158
             },
             "base_per_hit": {
-              "5": 353
+              "5": 359
             },
             "hits": {
-              "1": 387
+              "1": 393
             },
-            "n_base": 353
+            "n_base": 359
           }
         }
       }
@@ -597,12 +597,12 @@
         "name": "爪牙",
         "type": "Buff",
         "description": "爪牙会在他们的领导者死亡时放弃战斗。",
-        "n_fights": 124,
+        "n_fights": 125,
         "amount_at_first_sight": {
-          "1": 124
+          "1": 125
         },
         "amount_max_in_fight": {
-          "1": 124
+          "1": 125
         },
         "amount_at_first_sight_by_asc": {
           "0": {
@@ -636,7 +636,7 @@
             "1": 16
           },
           "10": {
-            "1": 49
+            "1": 50
           }
         },
         "turn_at_first_sight_by_asc": {
@@ -671,7 +671,7 @@
             "1": 16
           },
           "10": {
-            "1": 49
+            "1": 50
           }
         }
       },
@@ -679,22 +679,22 @@
         "name": "尖啸",
         "type": "Debuff",
         "description": "在本回合结束前失去[gold]力量[/gold]。",
-        "n_fights": 25,
+        "n_fights": 26,
         "amount_at_first_sight": {
-          "6": 25
+          "6": 26
         },
         "amount_max_in_fight": {
-          "6": 25
+          "6": 26
         },
         "amount_at_first_sight_by_asc": {
           "10": {
-            "6": 25
+            "6": 26
           }
         },
         "turn_at_first_sight_by_asc": {
           "10": {
             "1": 8,
-            "2": 2,
+            "2": 3,
             "3": 10,
             "5": 4,
             "7": 1
@@ -705,12 +705,12 @@
         "name": "中毒",
         "type": "Debuff",
         "description": "中毒的生物会在自身回合开始时失去生命。中毒层数每回合减少[blue]1[/blue]。",
-        "n_fights": 39,
+        "n_fights": 40,
         "amount_at_first_sight": {
           "2": 5,
           "3": 16,
           "4": 4,
-          "5": 6,
+          "5": 7,
           "6": 4,
           "7": 3,
           "10": 1
@@ -718,7 +718,7 @@
         "amount_max_in_fight": {
           "2": 1,
           "3": 6,
-          "5": 4,
+          "5": 5,
           "6": 3,
           "7": 4,
           "8": 3,
@@ -744,7 +744,7 @@
             "2": 4,
             "3": 15,
             "4": 4,
-            "5": 6,
+            "5": 7,
             "6": 4,
             "7": 3,
             "10": 1
@@ -763,7 +763,7 @@
             "3": 8,
             "4": 3,
             "5": 2,
-            "6": 2,
+            "6": 3,
             "8": 1
           }
         }
@@ -800,11 +800,11 @@
         "name": "力量",
         "type": "Buff",
         "description": "力量会增加攻击牌造成的伤害。",
-        "n_fights": 124,
+        "n_fights": 125,
         "amount_at_first_sight": {
           "-6": 8,
           "2": 59,
-          "3": 57
+          "3": 58
         },
         "amount_max_in_fight": {
           "2": 22,
@@ -813,7 +813,7 @@
           "5": 1,
           "6": 50,
           "8": 1,
-          "9": 5,
+          "9": 6,
           "12": 1
         },
         "amount_at_first_sight_by_asc": {
@@ -849,7 +849,7 @@
           },
           "10": {
             "-6": 8,
-            "3": 41
+            "3": 42
           }
         },
         "turn_at_first_sight_by_asc": {
@@ -885,7 +885,7 @@
           },
           "10": {
             "1": 8,
-            "2": 41
+            "2": 42
           }
         }
       },
@@ -1000,14 +1000,14 @@
         "name": "虚弱",
         "type": "Debuff",
         "description": "虚弱的生物造成的攻击伤害减少[blue]25%[/blue]。",
-        "n_fights": 46,
+        "n_fights": 47,
         "amount_at_first_sight": {
-          "1": 34,
+          "1": 35,
           "2": 11,
           "3": 1
         },
         "amount_max_in_fight": {
-          "1": 29,
+          "1": 30,
           "2": 12,
           "3": 3,
           "4": 2
@@ -1030,7 +1030,7 @@
             "1": 2
           },
           "10": {
-            "1": 22,
+            "1": 23,
             "2": 11
           }
         },
@@ -1061,7 +1061,7 @@
             "3": 10,
             "4": 3,
             "5": 2,
-            "6": 1,
+            "6": 2,
             "8": 1
           }
         }
@@ -1069,11 +1069,11 @@
     },
     "provenance": {
       "first_seen": "2026-09-24T04:53:28.718Z",
-      "last_seen": "2026-10-18T07:41:41.410Z",
-      "n_runs": 124,
-      "n_instances": 311,
+      "last_seen": "2026-10-20T00:44:06.310Z",
+      "n_runs": 125,
+      "n_instances": 313,
       "n_spawned_mid_fight": 63,
-      "n_minion_instances": 311
+      "n_minion_instances": 313
     },
     "phases_by_asc": {
       "10": {
@@ -1084,15 +1084,15 @@
     "observed": {
       "powers_stripped": {
         "PIERCING_WAIL_POWER": {
-          "n": 31,
-          "fights": 6,
+          "n": 33,
+          "fights": 7,
           "amount_before": {
-            "6": 31
+            "6": 33
           },
           "move_after": {
             "POWER_DANCE_MOVE": 13,
-            "BOOMERANG_MOVE": 11,
-            "QUICK_SLASH_MOVE": 7
+            "BOOMERANG_MOVE": 12,
+            "QUICK_SLASH_MOVE": 8
           },
           "stunned_share": 0.0,
           "co_removed": {
@@ -1102,9 +1102,9 @@
           },
           "died_same_turn": 8,
           "turn_end_unclear": 0,
-          "alive_at_turn_end": 23,
+          "alive_at_turn_end": 25,
           "stunned_at_turn_end": 0,
-          "attack_before": 6,
+          "attack_before": 7,
           "attack_cancelled": 0,
           "hp_check": {
             "n": 0,
@@ -1113,11 +1113,11 @@
           "evidence": [],
           "move_before": {
             "POWER_DANCE_MOVE": 14,
-            "QUICK_SLASH_MOVE": 10,
-            "BOOMERANG_MOVE": 7
+            "QUICK_SLASH_MOVE": 11,
+            "BOOMERANG_MOVE": 8
           },
           "move_changed": 7,
-          "move_changed_share": 0.226,
+          "move_changed_share": 0.212,
           "changed_to": {
             "BOOMERANG_MOVE": 4,
             "POWER_DANCE_MOVE": 3
@@ -1128,14 +1128,14 @@
             "NRZAYVRMM7M0 F17 T3"
           ],
           "end_move": {
+            "BOOMERANG_MOVE": 9,
             "POWER_DANCE_MOVE": 9,
-            "BOOMERANG_MOVE": 8,
-            "QUICK_SLASH_MOVE": 6
+            "QUICK_SLASH_MOVE": 7
           },
           "next_move": {
             "QUICK_SLASH_MOVE": 9,
-            "POWER_DANCE_MOVE": 7,
-            "BOOMERANG_MOVE": 6
+            "POWER_DANCE_MOVE": 8,
+            "BOOMERANG_MOVE": 7
           },
           "changed_next": {},
           "revived": 20
@@ -1202,25 +1202,25 @@
           "revived": 31
         },
         "STRENGTH_POWER": {
-          "n": 78,
-          "fights": 24,
+          "n": 80,
+          "fights": 25,
           "amount_before": {
             "2": 1,
-            "3": 61,
+            "3": 63,
             "6": 16
           },
           "move_after": {
             "BOOMERANG_MOVE": 42,
-            "QUICK_SLASH_MOVE": 28,
+            "QUICK_SLASH_MOVE": 30,
             "POWER_DANCE_MOVE": 8
           },
           "stunned_share": 0.0,
           "co_removed": {},
           "died_same_turn": 27,
           "turn_end_unclear": 0,
-          "alive_at_turn_end": 51,
+          "alive_at_turn_end": 53,
           "stunned_at_turn_end": 0,
-          "attack_before": 43,
+          "attack_before": 45,
           "attack_cancelled": 22,
           "hp_check": {
             "n": 21,
@@ -1229,7 +1229,7 @@
           "evidence": [],
           "move_before": {
             "BOOMERANG_MOVE": 42,
-            "QUICK_SLASH_MOVE": 28,
+            "QUICK_SLASH_MOVE": 30,
             "POWER_DANCE_MOVE": 8
           },
           "move_changed": 0,
@@ -1238,12 +1238,12 @@
           "changed_evidence": [],
           "end_move": {
             "BOOMERANG_MOVE": 23,
-            "QUICK_SLASH_MOVE": 20,
+            "QUICK_SLASH_MOVE": 22,
             "POWER_DANCE_MOVE": 8
           },
           "next_move": {
             "POWER_DANCE_MOVE": 19,
-            "BOOMERANG_MOVE": 16,
+            "BOOMERANG_MOVE": 18,
             "QUICK_SLASH_MOVE": 7
           },
           "changed_next": {},
@@ -1300,15 +1300,15 @@
           "revived": 10
         },
         "WEAK_POWER": {
-          "n": 48,
-          "fights": 10,
+          "n": 49,
+          "fights": 11,
           "amount_before": {
-            "1": 31,
+            "1": 32,
             "2": 14,
             "3": 3
           },
           "move_after": {
-            "BOOMERANG_MOVE": 20,
+            "BOOMERANG_MOVE": 21,
             "QUICK_SLASH_MOVE": 17,
             "POWER_DANCE_MOVE": 11
           },
@@ -1320,9 +1320,9 @@
           },
           "died_same_turn": 6,
           "turn_end_unclear": 0,
-          "alive_at_turn_end": 42,
+          "alive_at_turn_end": 43,
           "stunned_at_turn_end": 0,
-          "attack_before": 31,
+          "attack_before": 32,
           "attack_cancelled": 1,
           "hp_check": {
             "n": 3,
@@ -1330,12 +1330,12 @@
           },
           "evidence": [],
           "move_before": {
-            "BOOMERANG_MOVE": 21,
+            "BOOMERANG_MOVE": 22,
             "QUICK_SLASH_MOVE": 17,
             "POWER_DANCE_MOVE": 10
           },
           "move_changed": 2,
-          "move_changed_share": 0.042,
+          "move_changed_share": 0.041,
           "changed_to": {
             "QUICK_SLASH_MOVE": 1,
             "POWER_DANCE_MOVE": 1
@@ -1345,17 +1345,17 @@
             "NRZAYVRMM7M0 F17 T1"
           ],
           "end_move": {
-            "BOOMERANG_MOVE": 19,
+            "BOOMERANG_MOVE": 20,
             "QUICK_SLASH_MOVE": 13,
             "POWER_DANCE_MOVE": 10
           },
           "next_move": {
-            "POWER_DANCE_MOVE": 17,
+            "POWER_DANCE_MOVE": 18,
             "BOOMERANG_MOVE": 13,
             "QUICK_SLASH_MOVE": 9
           },
           "changed_next": {},
-          "revived": 31
+          "revived": 32
         }
       },
       "powers_lowered": {
@@ -1480,21 +1480,21 @@
             "JR66CJ9T8H7W F17 T9"
           ],
           "alive": {
-            "turns": 1918,
+            "turns": 1958,
             "moves": {
-              "QUICK_SLASH_MOVE": 713,
-              "POWER_DANCE_MOVE": 623,
-              "BOOMERANG_MOVE": 582
+              "QUICK_SLASH_MOVE": 727,
+              "POWER_DANCE_MOVE": 636,
+              "BOOMERANG_MOVE": 595
             },
             "next": {
               "BOOMERANG_MOVE": {
-                "POWER_DANCE_MOVE": 432
+                "POWER_DANCE_MOVE": 442
               },
               "POWER_DANCE_MOVE": {
-                "QUICK_SLASH_MOVE": 522
+                "QUICK_SLASH_MOVE": 533
               },
               "QUICK_SLASH_MOVE": {
-                "BOOMERANG_MOVE": 582
+                "BOOMERANG_MOVE": 595
               }
             }
           },

@@ -13,21 +13,21 @@
     },
     "game_type": "Normal",
     "game_hp_range": [
-      53,
-      55
+      54,
+      56
     ],
     "kind": "hallway",
     "rooms": {
-      "hallway": 69,
+      "hallway": 70,
       "unknown_room": 13
     },
     "acts": {
-      "1": 82
+      "1": 83
     },
     "encounters": {
       "SLITHERING_STRANGLER+SNAPPING_JAXFRUIT": 28,
       "SLITHERING_STRANGLER+TWIG_SLIME_M": 20,
-      "LEAF_SLIME_M+SLITHERING_STRANGLER": 17,
+      "LEAF_SLIME_M+SLITHERING_STRANGLER": 18,
       "SLITHERING_STRANGLER+TWIG_SLIME_S+TWIG_SLIME_S": 7,
       "LEAF_SLIME_S+SLITHERING_STRANGLER+TWIG_SLIME_S": 6,
       "LEAF_SLIME_S+LEAF_SLIME_S+SLITHERING_STRANGLER": 4
@@ -77,32 +77,32 @@
       },
       "10": {
         "min": 54,
-        "median": 55,
+        "median": 55.0,
         "max": 56,
-        "n": 27
+        "n": 28
       }
     },
     "moves": {
       "CONSTRICT": {
         "name": "缠身",
-        "n_seen": 180,
+        "n_seen": 182,
         "intents": {
-          "Debuff": 180
+          "Debuff": 182
         },
         "turns_seen": {
-          "1": 82,
-          "3": 69,
+          "1": 83,
+          "3": 70,
           "5": 26,
           "7": 3
         },
         "next": {
-          "LASH": 79,
-          "THWACK": 73
+          "LASH": 80,
+          "THWACK": 74
         },
         "avg_total_shown": 0.0,
         "player_powers_applied": {
           "CONSTRICT_POWER": {
-            "3": 152
+            "3": 154
           }
         },
         "player_powers_applied_by_asc": {
@@ -143,20 +143,20 @@
           },
           "10": {
             "CONSTRICT_POWER": {
-              "3": 56
+              "3": 58
             }
           }
         }
       },
       "LASH": {
         "name": "甩动",
-        "n_seen": 79,
+        "n_seen": 80,
         "intents": {
-          "Attack": 79
+          "Attack": 80
         },
         "turns_seen": {
           "2": 41,
-          "4": 32,
+          "4": 33,
           "6": 6
         },
         "next": {
@@ -238,32 +238,32 @@
           },
           "10": {
             "shown": {
-              "13x1": 29,
+              "13x1": 30,
               "9x1": 2
             },
             "base_per_hit": {
-              "13": 29
+              "13": 30
             },
             "hits": {
-              "1": 31
+              "1": 32
             },
-            "n_base": 29
+            "n_base": 30
           }
         }
       },
       "THWACK": {
         "name": "重击",
-        "n_seen": 73,
+        "n_seen": 74,
         "intents": {
-          "Attack+Defend": 73
+          "Attack+Defend": 74
         },
         "turns_seen": {
-          "2": 40,
+          "2": 41,
           "4": 28,
           "6": 5
         },
         "next": {
-          "CONSTRICT": 46
+          "CONSTRICT": 47
         },
         "avg_total_shown": 7.2,
         "damage_by_asc": {
@@ -343,20 +343,20 @@
           "10": {
             "shown": {
               "6x1": 7,
-              "8x1": 18
+              "8x1": 19
             },
             "base_per_hit": {
-              "8": 18
+              "8": 19
             },
             "hits": {
-              "1": 25
+              "1": 26
             },
-            "n_base": 18
+            "n_base": 19
           }
         },
         "block_gained": {
           "2": 1,
-          "5": 41
+          "5": 42
         },
         "block_gained_by_asc": {
           "0": {
@@ -379,7 +379,7 @@
           },
           "10": {
             "2": 1,
-            "5": 18
+            "5": 19
           }
         }
       }
@@ -434,10 +434,10 @@
         "name": "中毒",
         "type": "Debuff",
         "description": "中毒的生物会在自身回合开始时失去生命。中毒层数每回合减少[blue]1[/blue]。",
-        "n_fights": 21,
+        "n_fights": 22,
         "amount_at_first_sight": {
           "2": 3,
-          "3": 8,
+          "3": 9,
           "5": 1,
           "6": 2,
           "7": 6,
@@ -446,7 +446,7 @@
         "amount_max_in_fight": {
           "3": 5,
           "4": 2,
-          "5": 3,
+          "5": 4,
           "7": 7,
           "8": 1,
           "9": 1,
@@ -459,7 +459,7 @@
           },
           "10": {
             "2": 3,
-            "3": 7,
+            "3": 8,
             "5": 1,
             "6": 2,
             "7": 6,
@@ -471,7 +471,7 @@
             "3": 1
           },
           "10": {
-            "1": 5,
+            "1": 6,
             "2": 2,
             "3": 4,
             "4": 5,
@@ -637,13 +637,13 @@
         "name": "虚弱",
         "type": "Debuff",
         "description": "虚弱的生物造成的攻击伤害减少[blue]25%[/blue]。",
-        "n_fights": 30,
+        "n_fights": 31,
         "amount_at_first_sight": {
-          "1": 21,
+          "1": 22,
           "2": 9
         },
         "amount_max_in_fight": {
-          "1": 18,
+          "1": 19,
           "2": 9,
           "4": 2,
           "5": 1
@@ -662,7 +662,7 @@
             "2": 1
           },
           "10": {
-            "1": 15,
+            "1": 16,
             "2": 8
           }
         },
@@ -683,7 +683,7 @@
             "2": 1
           },
           "10": {
-            "1": 8,
+            "1": 9,
             "2": 7,
             "3": 4,
             "4": 4
@@ -693,9 +693,9 @@
     },
     "provenance": {
       "first_seen": "2026-09-24T05:07:48.307Z",
-      "last_seen": "2026-10-19T00:23:46.870Z",
-      "n_runs": 82,
-      "n_instances": 82,
+      "last_seen": "2026-10-19T06:12:38.954Z",
+      "n_runs": 83,
+      "n_instances": 83,
       "n_spawned_mid_fight": 0,
       "n_minion_instances": 0
     },
@@ -756,22 +756,22 @@
             "3KME36ADUE4U F15 T1"
           ],
           "alive": {
-            "turns": 44,
+            "turns": 48,
             "moves": {
-              "CONSTRICT": 25,
-              "THWACK": 10,
-              "LASH": 9
+              "CONSTRICT": 27,
+              "THWACK": 11,
+              "LASH": 10
             },
             "next": {
               "CONSTRICT": {
-                "THWACK": 10,
-                "LASH": 9
+                "THWACK": 11,
+                "LASH": 10
               },
               "LASH": {
                 "CONSTRICT": 3
               },
               "THWACK": {
-                "CONSTRICT": 5
+                "CONSTRICT": 6
               }
             }
           },

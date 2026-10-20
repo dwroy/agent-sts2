@@ -13,20 +13,20 @@
     },
     "game_type": "Elite",
     "game_hp_range": [
-      17,
-      21
+      18,
+      22
     ],
     "kind": "elite",
     "rooms": {
       "elite": 150,
-      "unknown_room": 32
+      "unknown_room": 33
     },
     "acts": {
-      "1": 182
+      "1": 183
     },
     "encounters": {
       "PHROG_PARASITE": 150,
-      "WRIGGLER+WRIGGLER+WRIGGLER+WRIGGLER": 32
+      "WRIGGLER+WRIGGLER+WRIGGLER+WRIGGLER": 33
     },
     "hp_by_asc": {
       "0": {
@@ -93,22 +93,22 @@
         "min": 18,
         "median": 20.0,
         "max": 22,
-        "n": 288
+        "n": 292
       }
     },
     "moves": {
       "NASTY_BITE_MOVE": {
         "name": "污秽啃咬",
-        "n_seen": 1005,
+        "n_seen": 1012,
         "intents": {
-          "Attack": 1005
+          "Attack": 1012
         },
         "turns_seen": {
-          "1": 64,
-          "2": 61,
-          "3": 84,
-          "4": 163,
-          "5": 179,
+          "1": 66,
+          "2": 63,
+          "3": 85,
+          "4": 164,
+          "5": 180,
           "6": 159,
           "7": 135,
           "8": 77,
@@ -120,7 +120,7 @@
           "14": 1
         },
         "next": {
-          "WRIGGLE_MOVE": 500
+          "WRIGGLE_MOVE": 503
         },
         "avg_total_shown": 8.2,
         "damage_by_asc": {
@@ -274,22 +274,22 @@
           },
           "10": {
             "shown": {
-              "11x1": 54,
+              "11x1": 56,
               "13x1": 5,
               "15x1": 1,
               "5x1": 2,
               "6x1": 5,
-              "7x1": 138,
+              "7x1": 140,
               "8x1": 4,
-              "9x1": 184
+              "9x1": 187
             },
             "base_per_hit": {
-              "7": 382
+              "7": 389
             },
             "hits": {
-              "1": 393
+              "1": 400
             },
-            "n_base": 382
+            "n_base": 389
           }
         }
       },
@@ -340,15 +340,15 @@
       },
       "WRIGGLE_MOVE": {
         "name": "扭动",
-        "n_seen": 855,
+        "n_seen": 860,
         "intents": {
-          "Buff+StatusCard": 855
+          "Buff+StatusCard": 860
         },
         "turns_seen": {
-          "1": 64,
-          "2": 45,
-          "3": 72,
-          "4": 147,
+          "1": 66,
+          "2": 46,
+          "3": 73,
+          "4": 148,
           "5": 146,
           "6": 146,
           "7": 106,
@@ -360,12 +360,12 @@
           "13": 2
         },
         "next": {
-          "NASTY_BITE_MOVE": 653
+          "NASTY_BITE_MOVE": 658
         },
         "avg_total_shown": 0.0,
         "self_powers_gained": {
           "STRENGTH_POWER": {
-            "2": 645
+            "2": 649
           }
         },
         "self_powers_gained_by_asc": {
@@ -421,19 +421,19 @@
           },
           "10": {
             "STRENGTH_POWER": {
-              "2": 245
+              "2": 249
             }
           }
         },
         "status_cards": {
-          "1": 855
+          "1": 860
         },
         "status_card_ids": {
-          "INFECTION": 169
+          "INFECTION": 172
         },
         "status_card_pile": {
-          "discard": 114,
-          "draw": 55
+          "discard": 116,
+          "draw": 56
         }
       }
     },
@@ -442,20 +442,21 @@
         "name": "尖啸",
         "type": "Debuff",
         "description": "在本回合结束前失去[gold]力量[/gold]。",
-        "n_fights": 4,
+        "n_fights": 5,
         "amount_at_first_sight": {
-          "6": 4
+          "6": 5
         },
         "amount_max_in_fight": {
-          "6": 4
+          "6": 5
         },
         "amount_at_first_sight_by_asc": {
           "10": {
-            "6": 4
+            "6": 5
           }
         },
         "turn_at_first_sight_by_asc": {
           "10": {
+            "3": 1,
             "6": 2,
             "7": 2
           }
@@ -523,17 +524,17 @@
         "name": "力量",
         "type": "Buff",
         "description": "力量会增加攻击牌造成的伤害。",
-        "n_fights": 89,
+        "n_fights": 90,
         "amount_at_first_sight": {
           "-6": 3,
           "1": 1,
-          "2": 85
+          "2": 86
         },
         "amount_max_in_fight": {
           "-6": 2,
           "1": 1,
           "2": 62,
-          "4": 20,
+          "4": 21,
           "6": 4
         },
         "amount_at_first_sight_by_asc": {
@@ -567,7 +568,7 @@
           },
           "10": {
             "-6": 3,
-            "2": 32
+            "2": 33
           }
         },
         "turn_at_first_sight_by_asc": {
@@ -613,7 +614,7 @@
             "7": 2
           },
           "10": {
-            "3": 12,
+            "3": 13,
             "6": 2,
             "7": 6,
             "8": 11,
@@ -711,14 +712,14 @@
         "name": "虚弱",
         "type": "Debuff",
         "description": "虚弱的生物造成的攻击伤害减少[blue]25%[/blue]。",
-        "n_fights": 31,
+        "n_fights": 32,
         "amount_at_first_sight": {
-          "1": 22,
+          "1": 23,
           "2": 6,
           "3": 3
         },
         "amount_max_in_fight": {
-          "1": 20,
+          "1": 21,
           "2": 8,
           "3": 3
         },
@@ -738,7 +739,7 @@
             "2": 1
           },
           "10": {
-            "1": 19,
+            "1": 20,
             "2": 5,
             "3": 1
           }
@@ -760,7 +761,7 @@
           },
           "10": {
             "1": 3,
-            "4": 2,
+            "4": 3,
             "5": 4,
             "6": 4,
             "7": 3,
@@ -772,52 +773,52 @@
     },
     "provenance": {
       "first_seen": "2026-09-24T04:14:29.431Z",
-      "last_seen": "2026-10-19T05:06:51.684Z",
-      "n_runs": 171,
-      "n_instances": 728,
+      "last_seen": "2026-10-19T06:05:30.246Z",
+      "n_runs": 172,
+      "n_instances": 732,
       "n_spawned_mid_fight": 600,
       "n_minion_instances": 0
     },
     "observed": {
       "powers_stripped": {
         "STRENGTH_POWER": {
-          "n": 4,
-          "fights": 1,
+          "n": 6,
+          "fights": 2,
           "amount_before": {
-            "2": 4
+            "2": 6
           },
           "move_after": {
-            "NASTY_BITE_MOVE": 2,
-            "WRIGGLE_MOVE": 2
+            "NASTY_BITE_MOVE": 3,
+            "WRIGGLE_MOVE": 3
           },
           "stunned_share": 0.0,
           "co_removed": {},
           "died_same_turn": 0,
           "turn_end_unclear": 0,
-          "alive_at_turn_end": 4,
+          "alive_at_turn_end": 6,
           "stunned_at_turn_end": 0,
-          "attack_before": 2,
+          "attack_before": 3,
           "attack_cancelled": 0,
           "hp_check": {
-            "n": 0,
+            "n": 1,
             "landed": 0
           },
           "evidence": [],
           "move_before": {
-            "NASTY_BITE_MOVE": 2,
-            "WRIGGLE_MOVE": 2
+            "NASTY_BITE_MOVE": 3,
+            "WRIGGLE_MOVE": 3
           },
           "move_changed": 0,
           "move_changed_share": 0.0,
           "changed_to": {},
           "changed_evidence": [],
           "end_move": {
-            "NASTY_BITE_MOVE": 2,
-            "WRIGGLE_MOVE": 2
+            "NASTY_BITE_MOVE": 3,
+            "WRIGGLE_MOVE": 3
           },
           "next_move": {
-            "WRIGGLE_MOVE": 2,
-            "NASTY_BITE_MOVE": 2
+            "WRIGGLE_MOVE": 3,
+            "NASTY_BITE_MOVE": 3
           },
           "changed_next": {},
           "revived": 0
@@ -825,11 +826,11 @@
       },
       "ally_deaths": {
         "WRIGGLER": {
-          "n": 757,
-          "fights": 154,
+          "n": 763,
+          "fights": 155,
           "move_before": {
-            "WRIGGLE_MOVE": 445,
-            "NASTY_BITE_MOVE": 274,
+            "WRIGGLE_MOVE": 449,
+            "NASTY_BITE_MOVE": 276,
             "SPAWNED_MOVE": 38
           },
           "move_changed": 0,
@@ -837,7 +838,7 @@
           "changed_to": {},
           "by_move": {
             "NASTY_BITE_MOVE": {
-              "n": 274,
+              "n": 276,
               "changed_to": {}
             },
             "SPAWNED_MOVE": {
@@ -845,7 +846,7 @@
               "changed_to": {}
             },
             "WRIGGLE_MOVE": {
-              "n": 445,
+              "n": 449,
               "changed_to": {}
             }
           },
@@ -853,25 +854,25 @@
           "attack_changed": 0,
           "co_deaths": 63,
           "end_move": {
-            "WRIGGLE_MOVE": 413,
-            "NASTY_BITE_MOVE": 227,
+            "WRIGGLE_MOVE": 417,
+            "NASTY_BITE_MOVE": 229,
             "SPAWNED_MOVE": 37
           },
-          "next_n": 640,
+          "next_n": 646,
           "next_move": {
-            "NASTY_BITE_MOVE": 411,
-            "WRIGGLE_MOVE": 229
+            "NASTY_BITE_MOVE": 415,
+            "WRIGGLE_MOVE": 231
           },
           "next_after": {
             "NASTY_BITE_MOVE": {
-              "WRIGGLE_MOVE": 210
+              "WRIGGLE_MOVE": 212
             },
             "SPAWNED_MOVE": {
               "WRIGGLE_MOVE": 19,
               "NASTY_BITE_MOVE": 17
             },
             "WRIGGLE_MOVE": {
-              "NASTY_BITE_MOVE": 394
+              "NASTY_BITE_MOVE": 398
             }
           },
           "next_evidence": [
@@ -880,29 +881,29 @@
             "5L1H7N0ULL7C F15 T8"
           ],
           "alive": {
-            "turns": 1898,
+            "turns": 1909,
             "moves": {
-              "NASTY_BITE_MOVE": 926,
-              "WRIGGLE_MOVE": 816,
+              "NASTY_BITE_MOVE": 932,
+              "WRIGGLE_MOVE": 821,
               "SPAWNED_MOVE": 156
             },
             "next": {
               "NASTY_BITE_MOVE": {
-                "WRIGGLE_MOVE": 256
+                "WRIGGLE_MOVE": 257
               },
               "SPAWNED_MOVE": {
                 "NASTY_BITE_MOVE": 60,
                 "WRIGGLE_MOVE": 60
               },
               "WRIGGLE_MOVE": {
-                "NASTY_BITE_MOVE": 238
+                "NASTY_BITE_MOVE": 239
               }
             }
           },
           "dead": {
-            "turns": 113,
+            "turns": 114,
             "moves": {
-              "NASTY_BITE_MOVE": 74,
+              "NASTY_BITE_MOVE": 75,
               "WRIGGLE_MOVE": 39
             }
           }

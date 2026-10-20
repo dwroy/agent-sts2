@@ -2,8 +2,7 @@
  "meta": {
   "ascensions": [
    8,
-   9,
-   10
+   9
   ],
   "constants": {
    "DRAW_PLAY_SHARE": 0.5,
@@ -17,98 +16,37 @@
    "WEAK_FACTOR": 0.25
   },
   "doc": "docs/potion-equivalents.md",
-  "generated": "2026-10-19T00:48:46Z",
+  "generated": "2026-10-20T01:02:48Z",
   "generator": "tools/build-potion-equivalents.py",
   "gold_hp": {
-   "by_asc": {
-    "10": {
-     "1": {
-      "formula": "3.4 血（商店药水持有价值中位，n=2473）÷ 51 金币（A8+ 商店药水价格中位）",
-      "hold_hp": 3.4,
-      "n": 2473,
-      "per_gold": 0.0667
-     },
-     "2": {
-      "formula": "4.9 血（商店药水持有价值中位，n=2473）÷ 51 金币（A8+ 商店药水价格中位）",
-      "hold_hp": 4.9,
-      "n": 2473,
-      "per_gold": 0.0961
-     },
-     "3": {
-      "formula": "4.4 血（商店药水持有价值中位，n=2473）÷ 51 金币（A8+ 商店药水价格中位）",
-      "hold_hp": 4.4,
-      "n": 2473,
-      "per_gold": 0.0863
-     }
-    },
-    "8": {
-     "1": {
-      "formula": "3.4 血（商店药水持有价值中位，n=2473）÷ 51 金币（A8+ 商店药水价格中位）",
-      "hold_hp": 3.4,
-      "n": 2473,
-      "per_gold": 0.0667
-     },
-     "2": {
-      "formula": "4.9 血（商店药水持有价值中位，n=2473）÷ 51 金币（A8+ 商店药水价格中位）",
-      "hold_hp": 4.9,
-      "n": 2473,
-      "per_gold": 0.0961
-     },
-     "3": {
-      "formula": "4.4 血（商店药水持有价值中位，n=2473）÷ 51 金币（A8+ 商店药水价格中位）",
-      "hold_hp": 4.4,
-      "n": 2473,
-      "per_gold": 0.0863
-     }
-    },
-    "9": {
-     "1": {
-      "formula": "3.4 血（商店药水持有价值中位，n=2473）÷ 51 金币（A8+ 商店药水价格中位）",
-      "hold_hp": 3.4,
-      "n": 2473,
-      "per_gold": 0.0667
-     },
-     "2": {
-      "formula": "4.9 血（商店药水持有价值中位，n=2473）÷ 51 金币（A8+ 商店药水价格中位）",
-      "hold_hp": 4.9,
-      "n": 2473,
-      "per_gold": 0.0961
-     },
-     "3": {
-      "formula": "4.4 血（商店药水持有价值中位，n=2473）÷ 51 金币（A8+ 商店药水价格中位）",
-      "hold_hp": 4.4,
-      "n": 2473,
-      "per_gold": 0.0863
-     }
-    }
-   },
+   "by_asc": {},
    "formula": "gold × hold_hp ÷ price: hold_hp = the median held value (血) of the shop-offered potions in this act at this ascension, price = the median shop potion price (A8+)",
-   "note": "金币的血量价值（Dai 2026-10-02，THIEF_COST，docs/thief.md §7）：金币 ÷ A8+ 商店药水价格中位 × 本幕本进阶商店药水持有价值中位。小偷（地精佣兵 / 胖地精）带走的金币按它折血。",
+   "note": "金币的血量价值（Roy 2026-10-02，THIEF_COST，docs/thief.md §7）：金币 ÷ A8+ 商店药水价格中位 × 本幕本进阶商店药水持有价值中位。小偷（地精佣兵 / 胖地精）带走的金币按它折血。",
    "price": {
     "by_rarity": {
      "Common": {
-      "median": 50,
-      "n": 1713
+      "median": 50.0,
+      "n": 1742
      },
      "Rare": {
       "median": 100,
-      "n": 263
+      "n": 269
      },
      "Uncommon": {
       "median": 75,
-      "n": 673
+      "n": 683
      }
     },
-    "median": 51,
+    "median": 51.0,
     "min_asc": 8,
-    "n": 2649,
-    "visits": 883
+    "n": 2694,
+    "visits": 898
    }
   },
   "logs": {
-   "all_fights": 5350,
-   "boss_fights": 581,
-   "last_fight": "2026-10-19 00:38:42.463000",
+   "all_fights": 5428,
+   "boss_fights": 10,
+   "last_fight": "2026-10-20 00:44:06.310000",
    "potion_ids_seen": 51,
    "unknown_potion_ids": []
   },
@@ -117,101 +55,7 @@
  },
  "potions": {
   "AMBERGRIS": {
-   "by_asc": {
-    "10": {
-     "1": {
-      "block": 6.5,
-      "damage": 533986.8,
-      "formula": "战斗中额外一回合 ≈ 一回合的牌 6.3 张 × 每张 1.03 血（回血比例未知，没算）",
-      "hold_hp": 6.5,
-      "hp": 6.5,
-      "n": 292,
-      "source": "估"
-     },
-     "2": {
-      "block": 6.9,
-      "damage": 50.4,
-      "formula": "战斗中额外一回合 ≈ 一回合的牌 8.1 张 × 每张 0.85 血（回血比例未知，没算）",
-      "hold_hp": 6.9,
-      "hp": 6.9,
-      "n": 162,
-      "source": "估"
-     },
-     "3": {
-      "block": 0.3,
-      "damage": 2.0,
-      "formula": "战斗中额外一回合 ≈ 一回合的牌 14.4 张 × 每张 0.02 血（回血比例未知，没算）",
-      "hold_hp": 0.3,
-      "hp": 0.3,
-      "n": 117,
-      "source": "估"
-     }
-    },
-    "8": {
-     "1": {
-      "block": 6.5,
-      "damage": 533986.8,
-      "formula": "战斗中额外一回合 ≈ 一回合的牌 6.3 张 × 每张 1.03 血（回血比例未知，没算）",
-      "hold_hp": 6.5,
-      "hp": 6.5,
-      "inputs_asc": 10,
-      "n": 292,
-      "source": "估"
-     },
-     "2": {
-      "block": 6.9,
-      "damage": 50.4,
-      "formula": "战斗中额外一回合 ≈ 一回合的牌 8.1 张 × 每张 0.85 血（回血比例未知，没算）",
-      "hold_hp": 6.9,
-      "hp": 6.9,
-      "inputs_asc": 10,
-      "n": 162,
-      "source": "估"
-     },
-     "3": {
-      "block": 0.3,
-      "damage": 2.0,
-      "formula": "战斗中额外一回合 ≈ 一回合的牌 14.4 张 × 每张 0.02 血（回血比例未知，没算）",
-      "hold_hp": 0.3,
-      "hp": 0.3,
-      "inputs_asc": 10,
-      "n": 117,
-      "source": "估"
-     }
-    },
-    "9": {
-     "1": {
-      "block": 6.5,
-      "damage": 533986.8,
-      "formula": "战斗中额外一回合 ≈ 一回合的牌 6.3 张 × 每张 1.03 血（回血比例未知，没算）",
-      "hold_hp": 6.5,
-      "hp": 6.5,
-      "inputs_asc": 10,
-      "n": 292,
-      "source": "估"
-     },
-     "2": {
-      "block": 6.9,
-      "damage": 50.4,
-      "formula": "战斗中额外一回合 ≈ 一回合的牌 8.1 张 × 每张 0.85 血（回血比例未知，没算）",
-      "hold_hp": 6.9,
-      "hp": 6.9,
-      "inputs_asc": 10,
-      "n": 162,
-      "source": "估"
-     },
-     "3": {
-      "block": 0.3,
-      "damage": 2.0,
-      "formula": "战斗中额外一回合 ≈ 一回合的牌 14.4 张 × 每张 0.02 血（回血比例未知，没算）",
-      "hold_hp": 0.3,
-      "hp": 0.3,
-      "inputs_asc": 10,
-      "n": 117,
-      "source": "估"
-     }
-    }
-   },
+   "by_asc": {},
    "category": "heal",
    "description": "回复你最大生命值的[green]{HealPercent}%[/green]。在战斗中使用时，额外进行一个回合。",
    "kind": "extra_turn",
@@ -231,101 +75,7 @@
    "values": {}
   },
   "ASHWATER": {
-   "by_asc": {
-    "10": {
-     "1": {
-      "block": 0.5,
-      "damage": 42216.4,
-      "formula": "换牌（净 0 张），挑牌的好处按 1 张抽牌 0.52",
-      "hold_hp": 0.5,
-      "hp": 0.5,
-      "n": 292,
-      "source": "估"
-     },
-     "2": {
-      "block": 0.4,
-      "damage": 3.1,
-      "formula": "换牌（净 0 张），挑牌的好处按 1 张抽牌 0.43",
-      "hold_hp": 0.4,
-      "hp": 0.4,
-      "n": 162,
-      "source": "估"
-     },
-     "3": {
-      "block": 0.0,
-      "damage": 0.1,
-      "formula": "换牌（净 0 张），挑牌的好处按 1 张抽牌 0.01",
-      "hold_hp": 0.0,
-      "hp": 0.0,
-      "n": 117,
-      "source": "估"
-     }
-    },
-    "8": {
-     "1": {
-      "block": 0.5,
-      "damage": 42216.4,
-      "formula": "换牌（净 0 张），挑牌的好处按 1 张抽牌 0.52",
-      "hold_hp": 0.5,
-      "hp": 0.5,
-      "inputs_asc": 10,
-      "n": 292,
-      "source": "估"
-     },
-     "2": {
-      "block": 0.4,
-      "damage": 3.1,
-      "formula": "换牌（净 0 张），挑牌的好处按 1 张抽牌 0.43",
-      "hold_hp": 0.4,
-      "hp": 0.4,
-      "inputs_asc": 10,
-      "n": 162,
-      "source": "估"
-     },
-     "3": {
-      "block": 0.0,
-      "damage": 0.1,
-      "formula": "换牌（净 0 张），挑牌的好处按 1 张抽牌 0.01",
-      "hold_hp": 0.0,
-      "hp": 0.0,
-      "inputs_asc": 10,
-      "n": 117,
-      "source": "估"
-     }
-    },
-    "9": {
-     "1": {
-      "block": 0.5,
-      "damage": 42216.4,
-      "formula": "换牌（净 0 张），挑牌的好处按 1 张抽牌 0.52",
-      "hold_hp": 0.5,
-      "hp": 0.5,
-      "inputs_asc": 10,
-      "n": 292,
-      "source": "估"
-     },
-     "2": {
-      "block": 0.4,
-      "damage": 3.1,
-      "formula": "换牌（净 0 张），挑牌的好处按 1 张抽牌 0.43",
-      "hold_hp": 0.4,
-      "hp": 0.4,
-      "inputs_asc": 10,
-      "n": 162,
-      "source": "估"
-     },
-     "3": {
-      "block": 0.0,
-      "damage": 0.1,
-      "formula": "换牌（净 0 张），挑牌的好处按 1 张抽牌 0.01",
-      "hold_hp": 0.0,
-      "hp": 0.0,
-      "inputs_asc": 10,
-      "n": 117,
-      "source": "估"
-     }
-    }
-   },
+   "by_asc": {},
    "category": "other",
    "description": "[gold]消耗[/gold]你[gold]手牌[/gold]中的任意张牌。",
    "kind": "ashwater",
@@ -345,158 +95,14 @@
    "values": {}
   },
   "ATTACK_POTION": {
-   "by_asc": {
-    "10": {
-     "1": {
-      "block": 3.4,
-      "check": {
-       "median": 0.0,
-       "n": 11
-      },
-      "damage": 276874.1,
-      "formula": "1 张免费牌 × (1 张牌 1.03 + 1 能量 2.36)",
-      "hold_hp": 3.4,
-      "hp": 3.4,
-      "mc": {
-       "hp": 0.5,
-       "n": 400
-      },
-      "n": 292,
-      "source": "估"
-     },
-     "2": {
-      "block": 3.3,
-      "damage": 23.9,
-      "formula": "1 张免费牌 × (1 张牌 0.85 + 1 能量 2.44)",
-      "hold_hp": 3.3,
-      "hp": 3.3,
-      "mc": {
-       "hp": 2.9,
-       "n": 400
-      },
-      "n": 162,
-      "source": "估"
-     },
-     "3": {
-      "block": 2.2,
-      "check": {
-       "median": 0.0,
-       "n": 10
-      },
-      "damage": 17.5,
-      "formula": "1 张免费牌 × (1 张牌 0.02 + 1 能量 2.18)",
-      "hold_hp": 2.2,
-      "hp": 2.2,
-      "mc": {
-       "hp": 2.7,
-       "n": 400
-      },
-      "n": 117,
-      "source": "估"
-     }
-    },
-    "8": {
-     "1": {
-      "block": 3.4,
-      "damage": 276874.1,
-      "formula": "1 张免费牌 × (1 张牌 1.03 + 1 能量 2.36)",
-      "hold_hp": 3.4,
-      "hp": 3.4,
-      "inputs_asc": 10,
-      "mc": {
-       "hp": 0.0,
-       "n": 1
-      },
-      "n": 292,
-      "source": "估"
-     },
-     "2": {
-      "block": 3.3,
-      "damage": 23.9,
-      "formula": "1 张免费牌 × (1 张牌 0.85 + 1 能量 2.44)",
-      "hold_hp": 3.3,
-      "hp": 3.3,
-      "inputs_asc": 10,
-      "mc": {
-       "hp": 1.7,
-       "n": 1
-      },
-      "n": 162,
-      "source": "估"
-     },
-     "3": {
-      "block": 2.2,
-      "damage": 17.5,
-      "formula": "1 张免费牌 × (1 张牌 0.02 + 1 能量 2.18)",
-      "hold_hp": 2.2,
-      "hp": 2.2,
-      "inputs_asc": 10,
-      "mc": {
-       "hp": 1.6,
-       "n": 1
-      },
-      "n": 117,
-      "source": "估"
-     }
-    },
-    "9": {
-     "1": {
-      "block": 3.4,
-      "damage": 276874.1,
-      "formula": "1 张免费牌 × (1 张牌 1.03 + 1 能量 2.36)",
-      "hold_hp": 3.4,
-      "hp": 3.4,
-      "inputs_asc": 10,
-      "mc": {
-       "hp": 0.1,
-       "n": 1
-      },
-      "n": 292,
-      "source": "估"
-     },
-     "2": {
-      "block": 3.3,
-      "damage": 23.9,
-      "formula": "1 张免费牌 × (1 张牌 0.85 + 1 能量 2.44)",
-      "hold_hp": 3.3,
-      "hp": 3.3,
-      "inputs_asc": 10,
-      "mc": {
-       "hp": 2.8,
-       "n": 1
-      },
-      "n": 162,
-      "source": "估"
-     },
-     "3": {
-      "block": 2.2,
-      "damage": 17.5,
-      "formula": "1 张免费牌 × (1 张牌 0.02 + 1 能量 2.18)",
-      "hold_hp": 2.2,
-      "hp": 2.2,
-      "inputs_asc": 10,
-      "mc": {
-       "hp": 2.5,
-       "n": 1
-      },
-      "n": 117,
-      "source": "估"
-     }
-    }
-   },
+   "by_asc": {},
    "category": "random",
-   "check_all": {
-    "median": 0.0,
-    "n": 21
-   },
    "description": "从[blue]3[/blue]张随机攻击牌中选择[blue]1[/blue]张加入你的[gold]手牌[/gold]。这张牌在本回合可以免费打出。",
    "kind": "choice",
    "log": {
-    "boss_drinks": {
-     "10": 23
-    },
-    "drinks": 131,
-    "runs_seen": 88
+    "boss_drinks": {},
+    "drinks": 132,
+    "runs_seen": 89
    },
    "name": "攻击药水",
    "pool": "shared",
@@ -509,124 +115,12 @@
    "values": {}
   },
   "BEETLE_JUICE": {
-   "by_asc": {
-    "10": {
-     "1": {
-      "block": 8.1,
-      "check": {
-       "median": 2.1,
-       "n": 2
-      },
-      "damage": 662555.3,
-      "formula": "敌方攻击 −30% × 4 回合：每回合 min(30% × 意图, 打进来的) = 2.0 血",
-      "hold_hp": 8.1,
-      "hp": 8.1,
-      "n": 292,
-      "source": "公式"
-     },
-     "2": {
-      "block": 10.1,
-      "check": {
-       "median": 0.0,
-       "n": 2
-      },
-      "damage": 73.5,
-      "formula": "敌方攻击 −30% × 4 回合：每回合 min(30% × 意图, 打进来的) = 2.5 血",
-      "hold_hp": 10.1,
-      "hp": 10.1,
-      "n": 162,
-      "source": "公式"
-     },
-     "3": {
-      "block": 9.3,
-      "check": {
-       "median": 0.0,
-       "n": 3
-      },
-      "damage": 74.0,
-      "formula": "敌方攻击 −30% × 4 回合：每回合 min(30% × 意图, 打进来的) = 2.3 血",
-      "hold_hp": 9.3,
-      "hp": 9.3,
-      "n": 117,
-      "source": "公式"
-     }
-    },
-    "8": {
-     "1": {
-      "block": 8.1,
-      "damage": 662555.3,
-      "formula": "敌方攻击 −30% × 4 回合：每回合 min(30% × 意图, 打进来的) = 2.0 血",
-      "hold_hp": 8.1,
-      "hp": 8.1,
-      "inputs_asc": 10,
-      "n": 292,
-      "source": "公式"
-     },
-     "2": {
-      "block": 10.1,
-      "damage": 73.5,
-      "formula": "敌方攻击 −30% × 4 回合：每回合 min(30% × 意图, 打进来的) = 2.5 血",
-      "hold_hp": 10.1,
-      "hp": 10.1,
-      "inputs_asc": 10,
-      "n": 162,
-      "source": "公式"
-     },
-     "3": {
-      "block": 9.3,
-      "damage": 74.0,
-      "formula": "敌方攻击 −30% × 4 回合：每回合 min(30% × 意图, 打进来的) = 2.3 血",
-      "hold_hp": 9.3,
-      "hp": 9.3,
-      "inputs_asc": 10,
-      "n": 117,
-      "source": "公式"
-     }
-    },
-    "9": {
-     "1": {
-      "block": 8.1,
-      "damage": 662555.3,
-      "formula": "敌方攻击 −30% × 4 回合：每回合 min(30% × 意图, 打进来的) = 2.0 血",
-      "hold_hp": 8.1,
-      "hp": 8.1,
-      "inputs_asc": 10,
-      "n": 292,
-      "source": "公式"
-     },
-     "2": {
-      "block": 10.1,
-      "damage": 73.5,
-      "formula": "敌方攻击 −30% × 4 回合：每回合 min(30% × 意图, 打进来的) = 2.5 血",
-      "hold_hp": 10.1,
-      "hp": 10.1,
-      "inputs_asc": 10,
-      "n": 162,
-      "source": "公式"
-     },
-     "3": {
-      "block": 9.3,
-      "damage": 74.0,
-      "formula": "敌方攻击 −30% × 4 回合：每回合 min(30% × 意图, 打进来的) = 2.3 血",
-      "hold_hp": 9.3,
-      "hp": 9.3,
-      "inputs_asc": 10,
-      "n": 117,
-      "source": "公式"
-     }
-    }
-   },
+   "by_asc": {},
    "category": "debuff",
-   "check_all": {
-    "median": 0.0,
-    "n": 7
-   },
    "description": "敌人的攻击在下[blue]{Repeat}[/blue]个回合中造成的伤害减少[blue]{DamageDecrease}%[/blue]。",
    "kind": "shrink",
    "log": {
-    "boss_drinks": {
-     "10": 10
-    },
+    "boss_drinks": {},
     "drinks": 17,
     "runs_seen": 9
    },
@@ -644,124 +138,12 @@
    }
   },
   "BLESSING_OF_THE_FORGE": {
-   "by_asc": {
-    "10": {
-     "1": {
-      "block": 3.8,
-      "check": {
-       "median": 0.5,
-       "n": 4
-      },
-      "damage": 312034.6,
-      "formula": "手牌 5 张升级：每次打出多 25% × 1.03，约打出 3.0 次",
-      "hold_hp": 3.8,
-      "hp": 3.8,
-      "n": 292,
-      "source": "估"
-     },
-     "2": {
-      "block": 2.5,
-      "check": {
-       "median": -5.0,
-       "n": 1
-      },
-      "damage": 18.3,
-      "formula": "手牌 5 张升级：每次打出多 25% × 0.85，约打出 2.4 次",
-      "hold_hp": 2.5,
-      "hp": 2.5,
-      "n": 162,
-      "source": "估"
-     },
-     "3": {
-      "block": 0.0,
-      "check": {
-       "median": 0.0,
-       "n": 3
-      },
-      "damage": 0.3,
-      "formula": "手牌 5 张升级：每次打出多 25% × 0.02，约打出 2.0 次",
-      "hold_hp": 0.0,
-      "hp": 0.0,
-      "n": 117,
-      "source": "估"
-     }
-    },
-    "8": {
-     "1": {
-      "block": 3.8,
-      "damage": 312034.6,
-      "formula": "手牌 5 张升级：每次打出多 25% × 1.03，约打出 3.0 次",
-      "hold_hp": 3.8,
-      "hp": 3.8,
-      "inputs_asc": 10,
-      "n": 292,
-      "source": "估"
-     },
-     "2": {
-      "block": 2.5,
-      "damage": 18.3,
-      "formula": "手牌 5 张升级：每次打出多 25% × 0.85，约打出 2.4 次",
-      "hold_hp": 2.5,
-      "hp": 2.5,
-      "inputs_asc": 10,
-      "n": 162,
-      "source": "估"
-     },
-     "3": {
-      "block": 0.0,
-      "damage": 0.3,
-      "formula": "手牌 5 张升级：每次打出多 25% × 0.02，约打出 2.0 次",
-      "hold_hp": 0.0,
-      "hp": 0.0,
-      "inputs_asc": 10,
-      "n": 117,
-      "source": "估"
-     }
-    },
-    "9": {
-     "1": {
-      "block": 3.8,
-      "damage": 312034.6,
-      "formula": "手牌 5 张升级：每次打出多 25% × 1.03，约打出 3.0 次",
-      "hold_hp": 3.8,
-      "hp": 3.8,
-      "inputs_asc": 10,
-      "n": 292,
-      "source": "估"
-     },
-     "2": {
-      "block": 2.5,
-      "damage": 18.3,
-      "formula": "手牌 5 张升级：每次打出多 25% × 0.85，约打出 2.4 次",
-      "hold_hp": 2.5,
-      "hp": 2.5,
-      "inputs_asc": 10,
-      "n": 162,
-      "source": "估"
-     },
-     "3": {
-      "block": 0.0,
-      "damage": 0.3,
-      "formula": "手牌 5 张升级：每次打出多 25% × 0.02，约打出 2.0 次",
-      "hold_hp": 0.0,
-      "hp": 0.0,
-      "inputs_asc": 10,
-      "n": 117,
-      "source": "估"
-     }
-    }
-   },
+   "by_asc": {},
    "category": "other",
-   "check_all": {
-    "median": 0.0,
-    "n": 8
-   },
    "description": "在本场战斗中[gold]升级[/gold]你[gold]手牌[/gold]中的所有牌。",
    "kind": "forge",
    "log": {
-    "boss_drinks": {
-     "10": 10
-    },
+    "boss_drinks": {},
     "drinks": 51,
     "runs_seen": 41
    },
@@ -776,153 +158,14 @@
    "values": {}
   },
   "BLOCK_POTION": {
-   "by_asc": {
-    "10": {
-     "1": {
-      "block": 7.8,
-      "check": {
-       "median": 3.9,
-       "n": 18
-      },
-      "damage": 633438.6,
-      "formula": "12 格挡，挨打回合 min(12, 打进来的)",
-      "hold_hp": 7.8,
-      "hp": 7.8,
-      "inputs": {
-       "Block": 12
-      },
-      "n": 292,
-      "source": "公式"
-     },
-     "2": {
-      "block": 8.4,
-      "check": {
-       "median": 0.0,
-       "n": 20
-      },
-      "damage": 60.6,
-      "formula": "12 格挡，挨打回合 min(12, 打进来的)",
-      "hold_hp": 8.4,
-      "hp": 8.4,
-      "inputs": {
-       "Block": 12
-      },
-      "n": 162,
-      "source": "公式"
-     },
-     "3": {
-      "block": 8.2,
-      "check": {
-       "median": 0.0,
-       "n": 7
-      },
-      "damage": 65.0,
-      "formula": "12 格挡，挨打回合 min(12, 打进来的)",
-      "hold_hp": 8.2,
-      "hp": 8.2,
-      "inputs": {
-       "Block": 12
-      },
-      "n": 117,
-      "source": "公式"
-     }
-    },
-    "8": {
-     "1": {
-      "block": 7.8,
-      "damage": 633438.6,
-      "formula": "12 格挡，挨打回合 min(12, 打进来的)",
-      "hold_hp": 7.8,
-      "hp": 7.8,
-      "inputs": {
-       "Block": 12
-      },
-      "inputs_asc": 10,
-      "n": 292,
-      "source": "公式"
-     },
-     "2": {
-      "block": 8.4,
-      "damage": 60.6,
-      "formula": "12 格挡，挨打回合 min(12, 打进来的)",
-      "hold_hp": 8.4,
-      "hp": 8.4,
-      "inputs": {
-       "Block": 12
-      },
-      "inputs_asc": 10,
-      "n": 162,
-      "source": "公式"
-     },
-     "3": {
-      "block": 8.2,
-      "damage": 65.0,
-      "formula": "12 格挡，挨打回合 min(12, 打进来的)",
-      "hold_hp": 8.2,
-      "hp": 8.2,
-      "inputs": {
-       "Block": 12
-      },
-      "inputs_asc": 10,
-      "n": 117,
-      "source": "公式"
-     }
-    },
-    "9": {
-     "1": {
-      "block": 7.8,
-      "damage": 633438.6,
-      "formula": "12 格挡，挨打回合 min(12, 打进来的)",
-      "hold_hp": 7.8,
-      "hp": 7.8,
-      "inputs": {
-       "Block": 12
-      },
-      "inputs_asc": 10,
-      "n": 292,
-      "source": "公式"
-     },
-     "2": {
-      "block": 8.4,
-      "damage": 60.6,
-      "formula": "12 格挡，挨打回合 min(12, 打进来的)",
-      "hold_hp": 8.4,
-      "hp": 8.4,
-      "inputs": {
-       "Block": 12
-      },
-      "inputs_asc": 10,
-      "n": 162,
-      "source": "公式"
-     },
-     "3": {
-      "block": 8.2,
-      "damage": 65.0,
-      "formula": "12 格挡，挨打回合 min(12, 打进来的)",
-      "hold_hp": 8.2,
-      "hp": 8.2,
-      "inputs": {
-       "Block": 12
-      },
-      "inputs_asc": 10,
-      "n": 117,
-      "source": "公式"
-     }
-    }
-   },
+   "by_asc": {},
    "category": "block",
-   "check_all": {
-    "median": 0.0,
-    "n": 45
-   },
    "description": "获得[blue]{Block}[/blue]点[gold]格挡[/gold]。",
    "kind": "block",
    "log": {
-    "boss_drinks": {
-     "10": 59
-    },
-    "drinks": 186,
-    "runs_seen": 113
+    "boss_drinks": {},
+    "drinks": 189,
+    "runs_seen": 115
    },
    "name": "格挡药水",
    "pool": "shared",
@@ -937,101 +180,7 @@
    }
   },
   "BLOOD_POTION": {
-   "by_asc": {
-    "10": {
-     "1": {
-      "block": 14.0,
-      "damage": 1143860.3,
-      "formula": "回复 20% × 最大生命 70.0",
-      "hold_hp": 14.0,
-      "hp": 14.0,
-      "n": 292,
-      "source": "公式"
-     },
-     "2": {
-      "block": 14.6,
-      "damage": 105.9,
-      "formula": "回复 20% × 最大生命 73.0",
-      "hold_hp": 14.6,
-      "hp": 14.6,
-      "n": 162,
-      "source": "公式"
-     },
-     "3": {
-      "block": 15.0,
-      "damage": 119.5,
-      "formula": "回复 20% × 最大生命 75",
-      "hold_hp": 15.0,
-      "hp": 15.0,
-      "n": 117,
-      "source": "公式"
-     }
-    },
-    "8": {
-     "1": {
-      "block": 14.0,
-      "damage": 1143860.3,
-      "formula": "回复 20% × 最大生命 70.0",
-      "hold_hp": 14.0,
-      "hp": 14.0,
-      "inputs_asc": 10,
-      "n": 292,
-      "source": "公式"
-     },
-     "2": {
-      "block": 14.6,
-      "damage": 105.9,
-      "formula": "回复 20% × 最大生命 73.0",
-      "hold_hp": 14.6,
-      "hp": 14.6,
-      "inputs_asc": 10,
-      "n": 162,
-      "source": "公式"
-     },
-     "3": {
-      "block": 15.0,
-      "damage": 119.5,
-      "formula": "回复 20% × 最大生命 75",
-      "hold_hp": 15.0,
-      "hp": 15.0,
-      "inputs_asc": 10,
-      "n": 117,
-      "source": "公式"
-     }
-    },
-    "9": {
-     "1": {
-      "block": 14.0,
-      "damage": 1143860.3,
-      "formula": "回复 20% × 最大生命 70.0",
-      "hold_hp": 14.0,
-      "hp": 14.0,
-      "inputs_asc": 10,
-      "n": 292,
-      "source": "公式"
-     },
-     "2": {
-      "block": 14.6,
-      "damage": 105.9,
-      "formula": "回复 20% × 最大生命 73.0",
-      "hold_hp": 14.6,
-      "hp": 14.6,
-      "inputs_asc": 10,
-      "n": 162,
-      "source": "公式"
-     },
-     "3": {
-      "block": 15.0,
-      "damage": 119.5,
-      "formula": "回复 20% × 最大生命 75",
-      "hold_hp": 15.0,
-      "hp": 15.0,
-      "inputs_asc": 10,
-      "n": 117,
-      "source": "公式"
-     }
-    }
-   },
+   "by_asc": {},
    "category": "heal",
    "description": "回复你最大生命值的[green]{HealPercent}%[/green]。",
    "kind": "heal_pct",
@@ -1074,136 +223,12 @@
    "values": {}
   },
   "BOTTLED_POTENTIAL": {
-   "by_asc": {
-    "10": {
-     "1": {
-      "block": 0.5,
-      "check": {
-       "median": 0.0,
-       "n": 9
-      },
-      "damage": 42216.4,
-      "formula": "换牌（净 0 张），挑牌的好处按 1 张抽牌 0.52",
-      "hold_hp": 0.5,
-      "hp": 0.5,
-      "mc": {
-       "hp": -2.1,
-       "n": 150
-      },
-      "n": 292,
-      "source": "估"
-     },
-     "2": {
-      "block": 0.4,
-      "check": {
-       "median": 0.0,
-       "n": 1
-      },
-      "damage": 3.1,
-      "formula": "换牌（净 0 张），挑牌的好处按 1 张抽牌 0.43",
-      "hold_hp": 0.4,
-      "hp": 0.4,
-      "mc": {
-       "hp": -2.2,
-       "n": 150
-      },
-      "n": 162,
-      "source": "估"
-     },
-     "3": {
-      "block": 0.0,
-      "check": {
-       "median": 0.0,
-       "n": 15
-      },
-      "damage": 0.1,
-      "formula": "换牌（净 0 张），挑牌的好处按 1 张抽牌 0.01",
-      "hold_hp": 0.0,
-      "hp": 0.0,
-      "mc": {
-       "hp": -2.2,
-       "n": 150
-      },
-      "n": 117,
-      "source": "估"
-     }
-    },
-    "8": {
-     "1": {
-      "block": 0.5,
-      "damage": 42216.4,
-      "formula": "换牌（净 0 张），挑牌的好处按 1 张抽牌 0.52",
-      "hold_hp": 0.5,
-      "hp": 0.5,
-      "inputs_asc": 10,
-      "n": 292,
-      "source": "估"
-     },
-     "2": {
-      "block": 0.4,
-      "damage": 3.1,
-      "formula": "换牌（净 0 张），挑牌的好处按 1 张抽牌 0.43",
-      "hold_hp": 0.4,
-      "hp": 0.4,
-      "inputs_asc": 10,
-      "n": 162,
-      "source": "估"
-     },
-     "3": {
-      "block": 0.0,
-      "damage": 0.1,
-      "formula": "换牌（净 0 张），挑牌的好处按 1 张抽牌 0.01",
-      "hold_hp": 0.0,
-      "hp": 0.0,
-      "inputs_asc": 10,
-      "n": 117,
-      "source": "估"
-     }
-    },
-    "9": {
-     "1": {
-      "block": 0.5,
-      "damage": 42216.4,
-      "formula": "换牌（净 0 张），挑牌的好处按 1 张抽牌 0.52",
-      "hold_hp": 0.5,
-      "hp": 0.5,
-      "inputs_asc": 10,
-      "n": 292,
-      "source": "估"
-     },
-     "2": {
-      "block": 0.4,
-      "damage": 3.1,
-      "formula": "换牌（净 0 张），挑牌的好处按 1 张抽牌 0.43",
-      "hold_hp": 0.4,
-      "hp": 0.4,
-      "inputs_asc": 10,
-      "n": 162,
-      "source": "估"
-     },
-     "3": {
-      "block": 0.0,
-      "damage": 0.1,
-      "formula": "换牌（净 0 张），挑牌的好处按 1 张抽牌 0.01",
-      "hold_hp": 0.0,
-      "hp": 0.0,
-      "inputs_asc": 10,
-      "n": 117,
-      "source": "估"
-     }
-    }
-   },
+   "by_asc": {},
    "category": "draw",
-   "check_all": {
-    "median": 0.0,
-    "n": 25
-   },
    "description": "将你的所有牌洗入你的[gold]抽牌堆[/gold]。抽[blue]{Cards}[/blue]张牌。",
    "kind": "redraw",
    "log": {
-    "boss_drinks": {
-     "10": 28
-    },
+    "boss_drinks": {},
     "drinks": 39,
     "runs_seen": 17
    },
@@ -1220,148 +245,12 @@
    }
   },
   "CLARITY": {
-   "by_asc": {
-    "10": {
-     "1": {
-      "block": 2.1,
-      "check": {
-       "median": 0.5,
-       "n": 4
-      },
-      "damage": 168865.8,
-      "formula": "抽 1 + 之后 3 回合各 1 × 0.52（每张牌 1.03 血、每点能量 2.36 血、抽到的牌打出 50%）",
-      "hold_hp": 2.1,
-      "hp": 2.1,
-      "mc": {
-       "hp": 0.1,
-       "n": 118
-      },
-      "n": 292,
-      "source": "估"
-     },
-     "2": {
-      "block": 1.7,
-      "check": {
-       "median": 0.0,
-       "n": 3
-      },
-      "damage": 12.4,
-      "formula": "抽 1 + 之后 3 回合各 1 × 0.43（每张牌 0.85 血、每点能量 2.44 血、抽到的牌打出 50%）",
-      "hold_hp": 1.7,
-      "hp": 1.7,
-      "mc": {
-       "hp": 0.4,
-       "n": 118
-      },
-      "n": 162,
-      "source": "估"
-     },
-     "3": {
-      "block": 0.0,
-      "check": {
-       "median": 0.0,
-       "n": 2
-      },
-      "damage": 0.3,
-      "formula": "抽 1 + 之后 3 回合各 1 × 0.01（每张牌 0.02 血、每点能量 2.18 血、抽到的牌打出 50%）",
-      "hold_hp": 0.0,
-      "hp": 0.0,
-      "mc": {
-       "hp": 0.4,
-       "n": 118
-      },
-      "n": 117,
-      "source": "估"
-     }
-    },
-    "8": {
-     "1": {
-      "block": 2.1,
-      "damage": 168865.8,
-      "formula": "抽 1 + 之后 3 回合各 1 × 0.52（每张牌 1.03 血、每点能量 2.36 血、抽到的牌打出 50%）",
-      "hold_hp": 2.1,
-      "hp": 2.1,
-      "inputs_asc": 10,
-      "mc": {
-       "hp": -0.6,
-       "n": 2
-      },
-      "n": 292,
-      "source": "估"
-     },
-     "2": {
-      "block": 1.7,
-      "damage": 12.4,
-      "formula": "抽 1 + 之后 3 回合各 1 × 0.43（每张牌 0.85 血、每点能量 2.44 血、抽到的牌打出 50%）",
-      "hold_hp": 1.7,
-      "hp": 1.7,
-      "inputs_asc": 10,
-      "mc": {
-       "hp": -0.7,
-       "n": 2
-      },
-      "n": 162,
-      "source": "估"
-     },
-     "3": {
-      "block": 0.0,
-      "damage": 0.3,
-      "formula": "抽 1 + 之后 3 回合各 1 × 0.01（每张牌 0.02 血、每点能量 2.18 血、抽到的牌打出 50%）",
-      "hold_hp": 0.0,
-      "hp": 0.0,
-      "inputs_asc": 10,
-      "mc": {
-       "hp": -0.7,
-       "n": 2
-      },
-      "n": 117,
-      "source": "估"
-     }
-    },
-    "9": {
-     "1": {
-      "block": 2.1,
-      "damage": 168865.8,
-      "formula": "抽 1 + 之后 3 回合各 1 × 0.52（每张牌 1.03 血、每点能量 2.36 血、抽到的牌打出 50%）",
-      "hold_hp": 2.1,
-      "hp": 2.1,
-      "inputs_asc": 10,
-      "n": 292,
-      "source": "估"
-     },
-     "2": {
-      "block": 1.7,
-      "damage": 12.4,
-      "formula": "抽 1 + 之后 3 回合各 1 × 0.43（每张牌 0.85 血、每点能量 2.44 血、抽到的牌打出 50%）",
-      "hold_hp": 1.7,
-      "hp": 1.7,
-      "inputs_asc": 10,
-      "n": 162,
-      "source": "估"
-     },
-     "3": {
-      "block": 0.0,
-      "damage": 0.3,
-      "formula": "抽 1 + 之后 3 回合各 1 × 0.01（每张牌 0.02 血、每点能量 2.18 血、抽到的牌打出 50%）",
-      "hold_hp": 0.0,
-      "hp": 0.0,
-      "inputs_asc": 10,
-      "n": 117,
-      "source": "估"
-     }
-    }
-   },
+   "by_asc": {},
    "category": "draw",
-   "check_all": {
-    "median": 0.0,
-    "n": 9
-   },
    "description": "抽[blue]{Cards}[/blue]张牌。在你的下[blue]{ClarityPower}[/blue]个回合开始时，额外抽[blue]1[/blue]张牌。",
    "kind": "draw",
    "log": {
-    "boss_drinks": {
-     "10": 14
-    },
+    "boss_drinks": {},
     "drinks": 52,
     "runs_seen": 44
    },
@@ -1379,138 +268,14 @@
    }
   },
   "COLORLESS_POTION": {
-   "by_asc": {
-    "10": {
-     "1": {
-      "block": 3.4,
-      "check": {
-       "median": 0.0,
-       "n": 14
-      },
-      "damage": 276874.1,
-      "formula": "1 张免费牌 × (1 张牌 1.03 + 1 能量 2.36)",
-      "hold_hp": 3.4,
-      "hp": 3.4,
-      "mc": {
-       "hp": 0.7,
-       "n": 309
-      },
-      "n": 292,
-      "source": "估"
-     },
-     "2": {
-      "block": 3.3,
-      "check": {
-       "median": 0.0,
-       "n": 2
-      },
-      "damage": 23.9,
-      "formula": "1 张免费牌 × (1 张牌 0.85 + 1 能量 2.44)",
-      "hold_hp": 3.3,
-      "hp": 3.3,
-      "mc": {
-       "hp": 1.3,
-       "n": 309
-      },
-      "n": 162,
-      "source": "估"
-     },
-     "3": {
-      "block": 2.2,
-      "check": {
-       "median": 0.0,
-       "n": 1
-      },
-      "damage": 17.5,
-      "formula": "1 张免费牌 × (1 张牌 0.02 + 1 能量 2.18)",
-      "hold_hp": 2.2,
-      "hp": 2.2,
-      "mc": {
-       "hp": 1.3,
-       "n": 309
-      },
-      "n": 117,
-      "source": "估"
-     }
-    },
-    "8": {
-     "1": {
-      "block": 3.4,
-      "damage": 276874.1,
-      "formula": "1 张免费牌 × (1 张牌 1.03 + 1 能量 2.36)",
-      "hold_hp": 3.4,
-      "hp": 3.4,
-      "inputs_asc": 10,
-      "n": 292,
-      "source": "估"
-     },
-     "2": {
-      "block": 3.3,
-      "damage": 23.9,
-      "formula": "1 张免费牌 × (1 张牌 0.85 + 1 能量 2.44)",
-      "hold_hp": 3.3,
-      "hp": 3.3,
-      "inputs_asc": 10,
-      "n": 162,
-      "source": "估"
-     },
-     "3": {
-      "block": 2.2,
-      "damage": 17.5,
-      "formula": "1 张免费牌 × (1 张牌 0.02 + 1 能量 2.18)",
-      "hold_hp": 2.2,
-      "hp": 2.2,
-      "inputs_asc": 10,
-      "n": 117,
-      "source": "估"
-     }
-    },
-    "9": {
-     "1": {
-      "block": 3.4,
-      "damage": 276874.1,
-      "formula": "1 张免费牌 × (1 张牌 1.03 + 1 能量 2.36)",
-      "hold_hp": 3.4,
-      "hp": 3.4,
-      "inputs_asc": 10,
-      "n": 292,
-      "source": "估"
-     },
-     "2": {
-      "block": 3.3,
-      "damage": 23.9,
-      "formula": "1 张免费牌 × (1 张牌 0.85 + 1 能量 2.44)",
-      "hold_hp": 3.3,
-      "hp": 3.3,
-      "inputs_asc": 10,
-      "n": 162,
-      "source": "估"
-     },
-     "3": {
-      "block": 2.2,
-      "damage": 17.5,
-      "formula": "1 张免费牌 × (1 张牌 0.02 + 1 能量 2.18)",
-      "hold_hp": 2.2,
-      "hp": 2.2,
-      "inputs_asc": 10,
-      "n": 117,
-      "source": "估"
-     }
-    }
-   },
+   "by_asc": {},
    "category": "random",
-   "check_all": {
-    "median": 0.0,
-    "n": 17
-   },
    "description": "从[blue]3[/blue]张随机无色牌中选择[blue]1[/blue]张加入你的[gold]手牌[/gold]。这张牌在本回合可以免费打出。",
    "kind": "choice",
    "log": {
-    "boss_drinks": {
-     "10": 21
-    },
-    "drinks": 120,
-    "runs_seen": 91
+    "boss_drinks": {},
+    "drinks": 122,
+    "runs_seen": 92
    },
    "name": "无色药水",
    "pool": "shared",
@@ -1546,15 +311,10 @@
   "CUNNING_POTION": {
    "by_asc": {},
    "category": "damage",
-   "check_all": {
-    "median": 0.0,
-    "n": 2
-   },
    "description": "将[blue]{Cards}[/blue]张[gold]小刀+[/gold]加入你的[gold]手牌[/gold]。",
    "kind": null,
    "log": {
     "boss_drinks": {
-     "10": 62,
      "9": 2
     },
     "drinks": 94,
@@ -1572,136 +332,12 @@
    "values": {}
   },
   "CURE_ALL": {
-   "by_asc": {
-    "10": {
-     "1": {
-      "block": 3.4,
-      "check": {
-       "median": 0.0,
-       "n": 4
-      },
-      "damage": 276874.1,
-      "formula": "能量 1 × 2.36 + 抽 2 × 0.52（每张牌 1.03 血、每点能量 2.36 血、抽到的牌打出 50%）",
-      "hold_hp": 3.4,
-      "hp": 3.4,
-      "mc": {
-       "hp": 1.2,
-       "n": 153
-      },
-      "n": 292,
-      "source": "估"
-     },
-     "2": {
-      "block": 3.3,
-      "check": {
-       "median": 0.0,
-       "n": 7
-      },
-      "damage": 23.9,
-      "formula": "能量 1 × 2.44 + 抽 2 × 0.43（每张牌 0.85 血、每点能量 2.44 血、抽到的牌打出 50%）",
-      "hold_hp": 3.3,
-      "hp": 3.3,
-      "mc": {
-       "hp": 1.9,
-       "n": 153
-      },
-      "n": 162,
-      "source": "估"
-     },
-     "3": {
-      "block": 2.2,
-      "check": {
-       "median": 1.4,
-       "n": 8
-      },
-      "damage": 17.5,
-      "formula": "能量 1 × 2.18 + 抽 2 × 0.01（每张牌 0.02 血、每点能量 2.18 血、抽到的牌打出 50%）",
-      "hold_hp": 2.2,
-      "hp": 2.2,
-      "mc": {
-       "hp": 1.9,
-       "n": 153
-      },
-      "n": 117,
-      "source": "估"
-     }
-    },
-    "8": {
-     "1": {
-      "block": 3.4,
-      "damage": 276874.1,
-      "formula": "能量 1 × 2.36 + 抽 2 × 0.52（每张牌 1.03 血、每点能量 2.36 血、抽到的牌打出 50%）",
-      "hold_hp": 3.4,
-      "hp": 3.4,
-      "inputs_asc": 10,
-      "n": 292,
-      "source": "估"
-     },
-     "2": {
-      "block": 3.3,
-      "damage": 23.9,
-      "formula": "能量 1 × 2.44 + 抽 2 × 0.43（每张牌 0.85 血、每点能量 2.44 血、抽到的牌打出 50%）",
-      "hold_hp": 3.3,
-      "hp": 3.3,
-      "inputs_asc": 10,
-      "n": 162,
-      "source": "估"
-     },
-     "3": {
-      "block": 2.2,
-      "damage": 17.5,
-      "formula": "能量 1 × 2.18 + 抽 2 × 0.01（每张牌 0.02 血、每点能量 2.18 血、抽到的牌打出 50%）",
-      "hold_hp": 2.2,
-      "hp": 2.2,
-      "inputs_asc": 10,
-      "n": 117,
-      "source": "估"
-     }
-    },
-    "9": {
-     "1": {
-      "block": 3.4,
-      "damage": 276874.1,
-      "formula": "能量 1 × 2.36 + 抽 2 × 0.52（每张牌 1.03 血、每点能量 2.36 血、抽到的牌打出 50%）",
-      "hold_hp": 3.4,
-      "hp": 3.4,
-      "inputs_asc": 10,
-      "n": 292,
-      "source": "估"
-     },
-     "2": {
-      "block": 3.3,
-      "damage": 23.9,
-      "formula": "能量 1 × 2.44 + 抽 2 × 0.43（每张牌 0.85 血、每点能量 2.44 血、抽到的牌打出 50%）",
-      "hold_hp": 3.3,
-      "hp": 3.3,
-      "inputs_asc": 10,
-      "n": 162,
-      "source": "估"
-     },
-     "3": {
-      "block": 2.2,
-      "damage": 17.5,
-      "formula": "能量 1 × 2.18 + 抽 2 × 0.01（每张牌 0.02 血、每点能量 2.18 血、抽到的牌打出 50%）",
-      "hold_hp": 2.2,
-      "hp": 2.2,
-      "inputs_asc": 10,
-      "n": 117,
-      "source": "估"
-     }
-    }
-   },
+   "by_asc": {},
    "category": "energy",
-   "check_all": {
-    "median": 0.0,
-    "n": 19
-   },
    "description": "获得{Energy:energyIcons()}。抽[blue]{Cards}[/blue]张牌。",
    "kind": "energy_draw",
    "log": {
-    "boss_drinks": {
-     "10": 20
-    },
+    "boss_drinks": {},
     "drinks": 55,
     "runs_seen": 41
    },
@@ -1740,126 +376,14 @@
    "values": {}
   },
   "DEXTERITY_POTION": {
-   "by_asc": {
-    "10": {
-     "1": {
-      "block": 13.5,
-      "check": {
-       "median": 0.3,
-       "n": 21
-      },
-      "damage": 1106400.0,
-      "formula": "2 敏捷 × 每回合格挡牌数，每回合 min(多的格挡, 打进来的) = 1.4 血 × 10.0 回合",
-      "hold_hp": 13.5,
-      "hp": 13.5,
-      "n": 292,
-      "source": "公式"
-     },
-     "2": {
-      "block": 12.3,
-      "check": {
-       "median": 0.0,
-       "n": 7
-      },
-      "damage": 89.1,
-      "formula": "2 敏捷 × 每回合格挡牌数，每回合 min(多的格挡, 打进来的) = 1.4 血 × 9.0 回合",
-      "hold_hp": 12.3,
-      "hp": 12.3,
-      "n": 162,
-      "source": "公式"
-     },
-     "3": {
-      "block": 14.4,
-      "check": {
-       "median": 0.0,
-       "n": 22
-      },
-      "damage": 114.8,
-      "formula": "2 敏捷 × 每回合格挡牌数，每回合 min(多的格挡, 打进来的) = 1.8 血 × 8 回合",
-      "hold_hp": 14.4,
-      "hp": 14.4,
-      "n": 117,
-      "source": "公式"
-     }
-    },
-    "8": {
-     "1": {
-      "block": 13.5,
-      "damage": 1106400.0,
-      "formula": "2 敏捷 × 每回合格挡牌数，每回合 min(多的格挡, 打进来的) = 1.4 血 × 10.0 回合",
-      "hold_hp": 13.5,
-      "hp": 13.5,
-      "inputs_asc": 10,
-      "n": 292,
-      "source": "公式"
-     },
-     "2": {
-      "block": 12.3,
-      "damage": 89.1,
-      "formula": "2 敏捷 × 每回合格挡牌数，每回合 min(多的格挡, 打进来的) = 1.4 血 × 9.0 回合",
-      "hold_hp": 12.3,
-      "hp": 12.3,
-      "inputs_asc": 10,
-      "n": 162,
-      "source": "公式"
-     },
-     "3": {
-      "block": 14.4,
-      "damage": 114.8,
-      "formula": "2 敏捷 × 每回合格挡牌数，每回合 min(多的格挡, 打进来的) = 1.8 血 × 8 回合",
-      "hold_hp": 14.4,
-      "hp": 14.4,
-      "inputs_asc": 10,
-      "n": 117,
-      "source": "公式"
-     }
-    },
-    "9": {
-     "1": {
-      "block": 13.5,
-      "damage": 1106400.0,
-      "formula": "2 敏捷 × 每回合格挡牌数，每回合 min(多的格挡, 打进来的) = 1.4 血 × 10.0 回合",
-      "hold_hp": 13.5,
-      "hp": 13.5,
-      "inputs_asc": 10,
-      "n": 292,
-      "source": "公式"
-     },
-     "2": {
-      "block": 12.3,
-      "damage": 89.1,
-      "formula": "2 敏捷 × 每回合格挡牌数，每回合 min(多的格挡, 打进来的) = 1.4 血 × 9.0 回合",
-      "hold_hp": 12.3,
-      "hp": 12.3,
-      "inputs_asc": 10,
-      "n": 162,
-      "source": "公式"
-     },
-     "3": {
-      "block": 14.4,
-      "damage": 114.8,
-      "formula": "2 敏捷 × 每回合格挡牌数，每回合 min(多的格挡, 打进来的) = 1.8 血 × 8 回合",
-      "hold_hp": 14.4,
-      "hp": 14.4,
-      "inputs_asc": 10,
-      "n": 117,
-      "source": "公式"
-     }
-    }
-   },
+   "by_asc": {},
    "category": "dexterity",
-   "check_all": {
-    "median": 0.0,
-    "n": 50
-   },
    "description": "获得[blue]{DexterityPower}[/blue]点[gold]敏捷[/gold]。",
    "kind": "dex_fight",
    "log": {
-    "boss_drinks": {
-     "10": 68
-    },
-    "drinks": 207,
-    "runs_seen": 131
+    "boss_drinks": {},
+    "drinks": 216,
+    "runs_seen": 134
    },
    "name": "敏捷药水",
    "pool": "shared",
@@ -1874,128 +398,12 @@
    }
   },
   "DISTILLED_CHAOS": {
-   "by_asc": {
-    "10": {
-     "1": {
-      "block": 3.1,
-      "damage": 253298.7,
-      "formula": "免费打出牌堆顶 3 张 × 每张 1.03",
-      "hold_hp": 3.1,
-      "hp": 3.1,
-      "mc": {
-       "hp": 0.7,
-       "n": 65
-      },
-      "n": 292,
-      "source": "估"
-     },
-     "2": {
-      "block": 2.6,
-      "check": {
-       "median": 0.0,
-       "n": 1
-      },
-      "damage": 18.6,
-      "formula": "免费打出牌堆顶 3 张 × 每张 0.85",
-      "hold_hp": 2.6,
-      "hp": 2.6,
-      "mc": {
-       "hp": 1.8,
-       "n": 65
-      },
-      "n": 162,
-      "source": "估"
-     },
-     "3": {
-      "block": 0.1,
-      "damage": 0.4,
-      "formula": "免费打出牌堆顶 3 张 × 每张 0.02",
-      "hold_hp": 0.1,
-      "hp": 0.1,
-      "mc": {
-       "hp": 1.7,
-       "n": 65
-      },
-      "n": 117,
-      "source": "估"
-     }
-    },
-    "8": {
-     "1": {
-      "block": 3.1,
-      "damage": 253298.7,
-      "formula": "免费打出牌堆顶 3 张 × 每张 1.03",
-      "hold_hp": 3.1,
-      "hp": 3.1,
-      "inputs_asc": 10,
-      "n": 292,
-      "source": "估"
-     },
-     "2": {
-      "block": 2.6,
-      "damage": 18.6,
-      "formula": "免费打出牌堆顶 3 张 × 每张 0.85",
-      "hold_hp": 2.6,
-      "hp": 2.6,
-      "inputs_asc": 10,
-      "n": 162,
-      "source": "估"
-     },
-     "3": {
-      "block": 0.1,
-      "damage": 0.4,
-      "formula": "免费打出牌堆顶 3 张 × 每张 0.02",
-      "hold_hp": 0.1,
-      "hp": 0.1,
-      "inputs_asc": 10,
-      "n": 117,
-      "source": "估"
-     }
-    },
-    "9": {
-     "1": {
-      "block": 3.1,
-      "damage": 253298.7,
-      "formula": "免费打出牌堆顶 3 张 × 每张 1.03",
-      "hold_hp": 3.1,
-      "hp": 3.1,
-      "inputs_asc": 10,
-      "n": 292,
-      "source": "估"
-     },
-     "2": {
-      "block": 2.6,
-      "damage": 18.6,
-      "formula": "免费打出牌堆顶 3 张 × 每张 0.85",
-      "hold_hp": 2.6,
-      "hp": 2.6,
-      "inputs_asc": 10,
-      "n": 162,
-      "source": "估"
-     },
-     "3": {
-      "block": 0.1,
-      "damage": 0.4,
-      "formula": "免费打出牌堆顶 3 张 × 每张 0.02",
-      "hold_hp": 0.1,
-      "hp": 0.1,
-      "inputs_asc": 10,
-      "n": 117,
-      "source": "估"
-     }
-    }
-   },
+   "by_asc": {},
    "category": "random",
-   "check_all": {
-    "median": 0.0,
-    "n": 1
-   },
    "description": "打出你[gold]抽牌堆[/gold]顶部的[blue]{Repeat}[/blue]张牌。",
    "kind": "chaos",
    "log": {
-    "boss_drinks": {
-     "10": 1
-    },
+    "boss_drinks": {},
     "drinks": 18,
     "runs_seen": 18
    },
@@ -2012,116 +420,12 @@
    }
   },
   "DROPLET_OF_PRECOGNITION": {
-   "by_asc": {
-    "10": {
-     "1": {
-      "block": 1.0,
-      "damage": 84432.9,
-      "formula": "从抽牌堆挑 1 张（要付费）≈ 1 张牌 1.03",
-      "hold_hp": 1.0,
-      "hp": 1.0,
-      "n": 292,
-      "source": "估"
-     },
-     "2": {
-      "block": 0.9,
-      "damage": 6.2,
-      "formula": "从抽牌堆挑 1 张（要付费）≈ 1 张牌 0.85",
-      "hold_hp": 0.9,
-      "hp": 0.9,
-      "n": 162,
-      "source": "估"
-     },
-     "3": {
-      "block": 0.0,
-      "check": {
-       "median": 0.0,
-       "n": 3
-      },
-      "damage": 0.1,
-      "formula": "从抽牌堆挑 1 张（要付费）≈ 1 张牌 0.02",
-      "hold_hp": 0.0,
-      "hp": 0.0,
-      "n": 117,
-      "source": "估"
-     }
-    },
-    "8": {
-     "1": {
-      "block": 1.0,
-      "damage": 84432.9,
-      "formula": "从抽牌堆挑 1 张（要付费）≈ 1 张牌 1.03",
-      "hold_hp": 1.0,
-      "hp": 1.0,
-      "inputs_asc": 10,
-      "n": 292,
-      "source": "估"
-     },
-     "2": {
-      "block": 0.9,
-      "damage": 6.2,
-      "formula": "从抽牌堆挑 1 张（要付费）≈ 1 张牌 0.85",
-      "hold_hp": 0.9,
-      "hp": 0.9,
-      "inputs_asc": 10,
-      "n": 162,
-      "source": "估"
-     },
-     "3": {
-      "block": 0.0,
-      "damage": 0.1,
-      "formula": "从抽牌堆挑 1 张（要付费）≈ 1 张牌 0.02",
-      "hold_hp": 0.0,
-      "hp": 0.0,
-      "inputs_asc": 10,
-      "n": 117,
-      "source": "估"
-     }
-    },
-    "9": {
-     "1": {
-      "block": 1.0,
-      "damage": 84432.9,
-      "formula": "从抽牌堆挑 1 张（要付费）≈ 1 张牌 1.03",
-      "hold_hp": 1.0,
-      "hp": 1.0,
-      "inputs_asc": 10,
-      "n": 292,
-      "source": "估"
-     },
-     "2": {
-      "block": 0.9,
-      "damage": 6.2,
-      "formula": "从抽牌堆挑 1 张（要付费）≈ 1 张牌 0.85",
-      "hold_hp": 0.9,
-      "hp": 0.9,
-      "inputs_asc": 10,
-      "n": 162,
-      "source": "估"
-     },
-     "3": {
-      "block": 0.0,
-      "damage": 0.1,
-      "formula": "从抽牌堆挑 1 张（要付费）≈ 1 张牌 0.02",
-      "hold_hp": 0.0,
-      "hp": 0.0,
-      "inputs_asc": 10,
-      "n": 117,
-      "source": "估"
-     }
-    }
-   },
+   "by_asc": {},
    "category": "draw",
-   "check_all": {
-    "median": 0.0,
-    "n": 3
-   },
    "description": "选择你[gold]抽牌堆[/gold]中的一张牌加入你的[gold]手牌[/gold]。",
    "kind": "pick_draw",
    "log": {
-    "boss_drinks": {
-     "10": 3
-    },
+    "boss_drinks": {},
     "drinks": 21,
     "runs_seen": 19
    },
@@ -2136,122 +440,14 @@
    "values": {}
   },
   "DUPLICATOR": {
-   "by_asc": {
-    "10": {
-     "1": {
-      "block": 4.7,
-      "check": {
-       "median": 0.0,
-       "n": 8
-      },
-      "damage": 384882.3,
-      "formula": "下一张牌打两次：按一张 2 费牌 = 2 × 2.36",
-      "hold_hp": 4.7,
-      "hp": 4.7,
-      "n": 292,
-      "source": "估"
-     },
-     "2": {
-      "block": 4.9,
-      "check": {
-       "median": 0.0,
-       "n": 1
-      },
-      "damage": 35.4,
-      "formula": "下一张牌打两次：按一张 2 费牌 = 2 × 2.44",
-      "hold_hp": 4.9,
-      "hp": 4.9,
-      "n": 162,
-      "source": "估"
-     },
-     "3": {
-      "block": 4.4,
-      "damage": 34.7,
-      "formula": "下一张牌打两次：按一张 2 费牌 = 2 × 2.18",
-      "hold_hp": 4.4,
-      "hp": 4.4,
-      "n": 117,
-      "source": "估"
-     }
-    },
-    "8": {
-     "1": {
-      "block": 4.7,
-      "damage": 384882.3,
-      "formula": "下一张牌打两次：按一张 2 费牌 = 2 × 2.36",
-      "hold_hp": 4.7,
-      "hp": 4.7,
-      "inputs_asc": 10,
-      "n": 292,
-      "source": "估"
-     },
-     "2": {
-      "block": 4.9,
-      "damage": 35.4,
-      "formula": "下一张牌打两次：按一张 2 费牌 = 2 × 2.44",
-      "hold_hp": 4.9,
-      "hp": 4.9,
-      "inputs_asc": 10,
-      "n": 162,
-      "source": "估"
-     },
-     "3": {
-      "block": 4.4,
-      "damage": 34.7,
-      "formula": "下一张牌打两次：按一张 2 费牌 = 2 × 2.18",
-      "hold_hp": 4.4,
-      "hp": 4.4,
-      "inputs_asc": 10,
-      "n": 117,
-      "source": "估"
-     }
-    },
-    "9": {
-     "1": {
-      "block": 4.7,
-      "damage": 384882.3,
-      "formula": "下一张牌打两次：按一张 2 费牌 = 2 × 2.36",
-      "hold_hp": 4.7,
-      "hp": 4.7,
-      "inputs_asc": 10,
-      "n": 292,
-      "source": "估"
-     },
-     "2": {
-      "block": 4.9,
-      "damage": 35.4,
-      "formula": "下一张牌打两次：按一张 2 费牌 = 2 × 2.44",
-      "hold_hp": 4.9,
-      "hp": 4.9,
-      "inputs_asc": 10,
-      "n": 162,
-      "source": "估"
-     },
-     "3": {
-      "block": 4.4,
-      "damage": 34.7,
-      "formula": "下一张牌打两次：按一张 2 费牌 = 2 × 2.18",
-      "hold_hp": 4.4,
-      "hp": 4.4,
-      "inputs_asc": 10,
-      "n": 117,
-      "source": "估"
-     }
-    }
-   },
+   "by_asc": {},
    "category": "other",
-   "check_all": {
-    "median": 0.0,
-    "n": 9
-   },
    "description": "本回合，你打出的下一张牌会额外打出一次。",
    "kind": "duplicate",
    "log": {
-    "boss_drinks": {
-     "10": 21
-    },
-    "drinks": 76,
-    "runs_seen": 52
+    "boss_drinks": {},
+    "drinks": 78,
+    "runs_seen": 54
    },
    "name": "复制药水",
    "pool": "shared",
@@ -2264,126 +460,14 @@
    "values": {}
   },
   "ENERGY_POTION": {
-   "by_asc": {
-    "10": {
-     "1": {
-      "block": 4.7,
-      "check": {
-       "median": 0.5,
-       "n": 14
-      },
-      "damage": 384882.3,
-      "formula": "能量 2 × 每点能量 2.36 血",
-      "hold_hp": 4.7,
-      "hp": 4.7,
-      "n": 292,
-      "source": "估"
-     },
-     "2": {
-      "block": 4.9,
-      "check": {
-       "median": 0.0,
-       "n": 1
-      },
-      "damage": 35.4,
-      "formula": "能量 2 × 每点能量 2.44 血",
-      "hold_hp": 4.9,
-      "hp": 4.9,
-      "n": 162,
-      "source": "估"
-     },
-     "3": {
-      "block": 4.4,
-      "check": {
-       "median": 0.0,
-       "n": 4
-      },
-      "damage": 34.7,
-      "formula": "能量 2 × 每点能量 2.18 血",
-      "hold_hp": 4.4,
-      "hp": 4.4,
-      "n": 117,
-      "source": "估"
-     }
-    },
-    "8": {
-     "1": {
-      "block": 4.7,
-      "damage": 384882.3,
-      "formula": "能量 2 × 每点能量 2.36 血",
-      "hold_hp": 4.7,
-      "hp": 4.7,
-      "inputs_asc": 10,
-      "n": 292,
-      "source": "估"
-     },
-     "2": {
-      "block": 4.9,
-      "damage": 35.4,
-      "formula": "能量 2 × 每点能量 2.44 血",
-      "hold_hp": 4.9,
-      "hp": 4.9,
-      "inputs_asc": 10,
-      "n": 162,
-      "source": "估"
-     },
-     "3": {
-      "block": 4.4,
-      "damage": 34.7,
-      "formula": "能量 2 × 每点能量 2.18 血",
-      "hold_hp": 4.4,
-      "hp": 4.4,
-      "inputs_asc": 10,
-      "n": 117,
-      "source": "估"
-     }
-    },
-    "9": {
-     "1": {
-      "block": 4.7,
-      "damage": 384882.3,
-      "formula": "能量 2 × 每点能量 2.36 血",
-      "hold_hp": 4.7,
-      "hp": 4.7,
-      "inputs_asc": 10,
-      "n": 292,
-      "source": "估"
-     },
-     "2": {
-      "block": 4.9,
-      "damage": 35.4,
-      "formula": "能量 2 × 每点能量 2.44 血",
-      "hold_hp": 4.9,
-      "hp": 4.9,
-      "inputs_asc": 10,
-      "n": 162,
-      "source": "估"
-     },
-     "3": {
-      "block": 4.4,
-      "damage": 34.7,
-      "formula": "能量 2 × 每点能量 2.18 血",
-      "hold_hp": 4.4,
-      "hp": 4.4,
-      "inputs_asc": 10,
-      "n": 117,
-      "source": "估"
-     }
-    }
-   },
+   "by_asc": {},
    "category": "energy",
-   "check_all": {
-    "median": 0.0,
-    "n": 19
-   },
    "description": "获得{Energy:energyIcons()}。",
    "kind": "energy",
    "log": {
-    "boss_drinks": {
-     "10": 26
-    },
-    "drinks": 145,
-    "runs_seen": 107
+    "boss_drinks": {},
+    "drinks": 146,
+    "runs_seen": 108
    },
    "name": "能量药水",
    "pool": "shared",
@@ -2398,144 +482,12 @@
    }
   },
   "ENTROPIC_BREW": {
-   "by_asc": {
-    "10": {
-     "1": {
-      "block": 8.9,
-      "damage": 730359.6,
-      "formula": "空栏位平均 1.8 个（日志）× 药水池平均持有价值 5.1 血",
-      "hold_hp": 8.9,
-      "hp": 8.9,
-      "inputs": {
-       "pool_potions": 43,
-       "slots_n": 2907
-      },
-      "n": 292,
-      "source": "估"
-     },
-     "2": {
-      "block": 11.2,
-      "damage": 81.1,
-      "formula": "空栏位平均 1.8 个（日志）× 药水池平均持有价值 6.3 血",
-      "hold_hp": 11.2,
-      "hp": 11.2,
-      "inputs": {
-       "pool_potions": 43,
-       "slots_n": 2907
-      },
-      "n": 162,
-      "source": "估"
-     },
-     "3": {
-      "block": 10.2,
-      "damage": 81.4,
-      "formula": "空栏位平均 1.8 个（日志）× 药水池平均持有价值 5.8 血",
-      "hold_hp": 10.2,
-      "hp": 10.2,
-      "inputs": {
-       "pool_potions": 43,
-       "slots_n": 2907
-      },
-      "n": 117,
-      "source": "估"
-     }
-    },
-    "8": {
-     "1": {
-      "block": 8.9,
-      "damage": 730359.6,
-      "formula": "空栏位平均 1.8 个（日志）× 药水池平均持有价值 5.1 血",
-      "hold_hp": 8.9,
-      "hp": 8.9,
-      "inputs": {
-       "pool_potions": 43,
-       "slots_n": 2907
-      },
-      "inputs_asc": 10,
-      "n": 292,
-      "source": "估"
-     },
-     "2": {
-      "block": 11.2,
-      "damage": 81.1,
-      "formula": "空栏位平均 1.8 个（日志）× 药水池平均持有价值 6.3 血",
-      "hold_hp": 11.2,
-      "hp": 11.2,
-      "inputs": {
-       "pool_potions": 43,
-       "slots_n": 2907
-      },
-      "inputs_asc": 10,
-      "n": 162,
-      "source": "估"
-     },
-     "3": {
-      "block": 10.2,
-      "damage": 81.4,
-      "formula": "空栏位平均 1.8 个（日志）× 药水池平均持有价值 5.8 血",
-      "hold_hp": 10.2,
-      "hp": 10.2,
-      "inputs": {
-       "pool_potions": 43,
-       "slots_n": 2907
-      },
-      "inputs_asc": 10,
-      "n": 117,
-      "source": "估"
-     }
-    },
-    "9": {
-     "1": {
-      "block": 8.9,
-      "damage": 730359.6,
-      "formula": "空栏位平均 1.8 个（日志）× 药水池平均持有价值 5.1 血",
-      "hold_hp": 8.9,
-      "hp": 8.9,
-      "inputs": {
-       "pool_potions": 43,
-       "slots_n": 2907
-      },
-      "inputs_asc": 10,
-      "n": 292,
-      "source": "估"
-     },
-     "2": {
-      "block": 11.2,
-      "damage": 81.1,
-      "formula": "空栏位平均 1.8 个（日志）× 药水池平均持有价值 6.3 血",
-      "hold_hp": 11.2,
-      "hp": 11.2,
-      "inputs": {
-       "pool_potions": 43,
-       "slots_n": 2907
-      },
-      "inputs_asc": 10,
-      "n": 162,
-      "source": "估"
-     },
-     "3": {
-      "block": 10.2,
-      "damage": 81.4,
-      "formula": "空栏位平均 1.8 个（日志）× 药水池平均持有价值 5.8 血",
-      "hold_hp": 10.2,
-      "hp": 10.2,
-      "inputs": {
-       "pool_potions": 43,
-       "slots_n": 2907
-      },
-      "inputs_asc": 10,
-      "n": 117,
-      "source": "估"
-     }
-    }
-   },
+   "by_asc": {},
    "category": "random",
    "description": "在所有空药水栏位中获得随机药水。",
    "kind": "entropic",
    "log": {
-    "boss_drinks": {
-     "10": 32
-    },
+    "boss_drinks": {},
     "drinks": 39,
     "runs_seen": 12
    },
@@ -2571,153 +523,14 @@
    "values": {}
   },
   "EXPLOSIVE_AMPOULE": {
-   "by_asc": {
-    "10": {
-     "1": {
-      "block": 0.0,
-      "check": {
-       "median": 0.0,
-       "n": 6
-      },
-      "damage": 10.0,
-      "formula": "10 伤害 × r 0.000（群体：按 boss 单体算）",
-      "hold_hp": 0.0,
-      "hp": 0.0,
-      "inputs": {
-       "Damage": 10
-      },
-      "n": 292,
-      "source": "公式"
-     },
-     "2": {
-      "block": 1.4,
-      "check": {
-       "median": 0.0,
-       "n": 4
-      },
-      "damage": 10.0,
-      "formula": "10 伤害 × r 0.138（群体：按 boss 单体算）",
-      "hold_hp": 1.4,
-      "hp": 1.4,
-      "inputs": {
-       "Damage": 10
-      },
-      "n": 162,
-      "source": "公式"
-     },
-     "3": {
-      "block": 1.3,
-      "check": {
-       "median": 0.0,
-       "n": 7
-      },
-      "damage": 10.0,
-      "formula": "10 伤害 × r 0.125（群体：按 boss 单体算）",
-      "hold_hp": 1.3,
-      "hp": 1.3,
-      "inputs": {
-       "Damage": 10
-      },
-      "n": 117,
-      "source": "公式"
-     }
-    },
-    "8": {
-     "1": {
-      "block": 0.0,
-      "damage": 10.0,
-      "formula": "10 伤害 × r 0.000（群体：按 boss 单体算）",
-      "hold_hp": 0.0,
-      "hp": 0.0,
-      "inputs": {
-       "Damage": 10
-      },
-      "inputs_asc": 10,
-      "n": 292,
-      "source": "公式"
-     },
-     "2": {
-      "block": 1.4,
-      "damage": 10.0,
-      "formula": "10 伤害 × r 0.138（群体：按 boss 单体算）",
-      "hold_hp": 1.4,
-      "hp": 1.4,
-      "inputs": {
-       "Damage": 10
-      },
-      "inputs_asc": 10,
-      "n": 162,
-      "source": "公式"
-     },
-     "3": {
-      "block": 1.3,
-      "damage": 10.0,
-      "formula": "10 伤害 × r 0.125（群体：按 boss 单体算）",
-      "hold_hp": 1.3,
-      "hp": 1.3,
-      "inputs": {
-       "Damage": 10
-      },
-      "inputs_asc": 10,
-      "n": 117,
-      "source": "公式"
-     }
-    },
-    "9": {
-     "1": {
-      "block": 0.0,
-      "damage": 10.0,
-      "formula": "10 伤害 × r 0.000（群体：按 boss 单体算）",
-      "hold_hp": 0.0,
-      "hp": 0.0,
-      "inputs": {
-       "Damage": 10
-      },
-      "inputs_asc": 10,
-      "n": 292,
-      "source": "公式"
-     },
-     "2": {
-      "block": 1.4,
-      "damage": 10.0,
-      "formula": "10 伤害 × r 0.138（群体：按 boss 单体算）",
-      "hold_hp": 1.4,
-      "hp": 1.4,
-      "inputs": {
-       "Damage": 10
-      },
-      "inputs_asc": 10,
-      "n": 162,
-      "source": "公式"
-     },
-     "3": {
-      "block": 1.3,
-      "damage": 10.0,
-      "formula": "10 伤害 × r 0.125（群体：按 boss 单体算）",
-      "hold_hp": 1.3,
-      "hp": 1.3,
-      "inputs": {
-       "Damage": 10
-      },
-      "inputs_asc": 10,
-      "n": 117,
-      "source": "公式"
-     }
-    }
-   },
+   "by_asc": {},
    "category": "damage",
-   "check_all": {
-    "median": 0.0,
-    "n": 17
-   },
    "description": "对所有敌人造成[blue]{Damage}[/blue]点伤害。",
    "kind": "damage",
    "log": {
-    "boss_drinks": {
-     "10": 22
-    },
-    "drinks": 133,
-    "runs_seen": 96
+    "boss_drinks": {},
+    "drinks": 135,
+    "runs_seen": 98
    },
    "name": "爆炸安瓿",
    "pool": "shared",
@@ -2732,101 +545,7 @@
    }
   },
   "FAIRY_IN_A_BOTTLE": {
-   "by_asc": {
-    "10": {
-     "1": {
-      "block": 21.0,
-      "damage": 1715790.5,
-      "formula": "濒死时回复 30% × 最大生命 70.0（只在要死时起作用，估）",
-      "hold_hp": 21.0,
-      "hp": 21.0,
-      "n": 292,
-      "source": "估"
-     },
-     "2": {
-      "block": 21.9,
-      "damage": 158.9,
-      "formula": "濒死时回复 30% × 最大生命 73.0（只在要死时起作用，估）",
-      "hold_hp": 21.9,
-      "hp": 21.9,
-      "n": 162,
-      "source": "估"
-     },
-     "3": {
-      "block": 22.5,
-      "damage": 179.3,
-      "formula": "濒死时回复 30% × 最大生命 75（只在要死时起作用，估）",
-      "hold_hp": 22.5,
-      "hp": 22.5,
-      "n": 117,
-      "source": "估"
-     }
-    },
-    "8": {
-     "1": {
-      "block": 21.0,
-      "damage": 1715790.5,
-      "formula": "濒死时回复 30% × 最大生命 70.0（只在要死时起作用，估）",
-      "hold_hp": 21.0,
-      "hp": 21.0,
-      "inputs_asc": 10,
-      "n": 292,
-      "source": "估"
-     },
-     "2": {
-      "block": 21.9,
-      "damage": 158.9,
-      "formula": "濒死时回复 30% × 最大生命 73.0（只在要死时起作用，估）",
-      "hold_hp": 21.9,
-      "hp": 21.9,
-      "inputs_asc": 10,
-      "n": 162,
-      "source": "估"
-     },
-     "3": {
-      "block": 22.5,
-      "damage": 179.3,
-      "formula": "濒死时回复 30% × 最大生命 75（只在要死时起作用，估）",
-      "hold_hp": 22.5,
-      "hp": 22.5,
-      "inputs_asc": 10,
-      "n": 117,
-      "source": "估"
-     }
-    },
-    "9": {
-     "1": {
-      "block": 21.0,
-      "damage": 1715790.5,
-      "formula": "濒死时回复 30% × 最大生命 70.0（只在要死时起作用，估）",
-      "hold_hp": 21.0,
-      "hp": 21.0,
-      "inputs_asc": 10,
-      "n": 292,
-      "source": "估"
-     },
-     "2": {
-      "block": 21.9,
-      "damage": 158.9,
-      "formula": "濒死时回复 30% × 最大生命 73.0（只在要死时起作用，估）",
-      "hold_hp": 21.9,
-      "hp": 21.9,
-      "inputs_asc": 10,
-      "n": 162,
-      "source": "估"
-     },
-     "3": {
-      "block": 22.5,
-      "damage": 179.3,
-      "formula": "濒死时回复 30% × 最大生命 75（只在要死时起作用，估）",
-      "hold_hp": 22.5,
-      "hp": 22.5,
-      "inputs_asc": 10,
-      "n": 117,
-      "source": "估"
-     }
-    }
-   },
+   "by_asc": {},
    "category": "heal",
    "description": "当你的生命值将被减少至[blue]0[/blue]或以下时，改为丢弃这瓶药水，然后将你回复到你最大生命值的[blue]30%[/blue]。",
    "kind": "fairy",
@@ -2846,158 +565,20 @@
    "values": {}
   },
   "FIRE_POTION": {
-   "by_asc": {
-    "10": {
-     "1": {
-      "block": 0.0,
-      "check": {
-       "median": 0.0,
-       "n": 6
-      },
-      "damage": 20.0,
-      "formula": "20 伤害 × r 0.000",
-      "hold_hp": 0.0,
-      "hp": 0.0,
-      "inputs": {
-       "Damage": 20
-      },
-      "n": 292,
-      "source": "公式"
-     },
-     "2": {
-      "block": 2.8,
-      "check": {
-       "median": 0.0,
-       "n": 17
-      },
-      "damage": 20.0,
-      "formula": "20 伤害 × r 0.138",
-      "hold_hp": 2.8,
-      "hp": 2.8,
-      "inputs": {
-       "Damage": 20
-      },
-      "n": 162,
-      "source": "公式"
-     },
-     "3": {
-      "block": 2.5,
-      "check": {
-       "median": 0.0,
-       "n": 11
-      },
-      "damage": 20.0,
-      "formula": "20 伤害 × r 0.125",
-      "hold_hp": 2.5,
-      "hp": 2.5,
-      "inputs": {
-       "Damage": 20
-      },
-      "n": 117,
-      "source": "公式"
-     }
-    },
-    "8": {
-     "1": {
-      "block": 0.0,
-      "damage": 20.0,
-      "formula": "20 伤害 × r 0.000",
-      "hold_hp": 0.0,
-      "hp": 0.0,
-      "inputs": {
-       "Damage": 20
-      },
-      "inputs_asc": 10,
-      "n": 292,
-      "source": "公式"
-     },
-     "2": {
-      "block": 2.8,
-      "damage": 20.0,
-      "formula": "20 伤害 × r 0.138",
-      "hold_hp": 2.8,
-      "hp": 2.8,
-      "inputs": {
-       "Damage": 20
-      },
-      "inputs_asc": 10,
-      "n": 162,
-      "source": "公式"
-     },
-     "3": {
-      "block": 2.5,
-      "damage": 20.0,
-      "formula": "20 伤害 × r 0.125",
-      "hold_hp": 2.5,
-      "hp": 2.5,
-      "inputs": {
-       "Damage": 20
-      },
-      "inputs_asc": 10,
-      "n": 117,
-      "source": "公式"
-     }
-    },
-    "9": {
-     "1": {
-      "block": 0.0,
-      "damage": 20.0,
-      "formula": "20 伤害 × r 0.000",
-      "hold_hp": 0.0,
-      "hp": 0.0,
-      "inputs": {
-       "Damage": 20
-      },
-      "inputs_asc": 10,
-      "n": 292,
-      "source": "公式"
-     },
-     "2": {
-      "block": 2.8,
-      "check": {
-       "median": 0.0,
-       "n": 1
-      },
-      "damage": 20.0,
-      "formula": "20 伤害 × r 0.138",
-      "hold_hp": 2.8,
-      "hp": 2.8,
-      "inputs": {
-       "Damage": 20
-      },
-      "inputs_asc": 10,
-      "n": 162,
-      "source": "公式"
-     },
-     "3": {
-      "block": 2.5,
-      "damage": 20.0,
-      "formula": "20 伤害 × r 0.125",
-      "hold_hp": 2.5,
-      "hp": 2.5,
-      "inputs": {
-       "Damage": 20
-      },
-      "inputs_asc": 10,
-      "n": 117,
-      "source": "公式"
-     }
-    }
-   },
+   "by_asc": {},
    "category": "damage",
    "check_all": {
     "median": 0.0,
-    "n": 35
+    "n": 1
    },
    "description": "造成[blue]{Damage}[/blue]点伤害。",
    "kind": "damage",
    "log": {
     "boss_drinks": {
-     "10": 44,
      "9": 1
     },
-    "drinks": 169,
-    "runs_seen": 115
+    "drinks": 171,
+    "runs_seen": 116
    },
    "name": "火焰药水",
    "pool": "shared",
@@ -3012,126 +593,14 @@
    }
   },
   "FLEX_POTION": {
-   "by_asc": {
-    "10": {
-     "1": {
-      "block": 0.0,
-      "check": {
-       "median": 6.3,
-       "n": 6
-      },
-      "damage": 18.7,
-      "formula": "5 力量 × 本回合 3.7 段 = 18.7 伤害 × r",
-      "hold_hp": 0.0,
-      "hp": 0.0,
-      "n": 292,
-      "source": "公式"
-     },
-     "2": {
-      "block": 2.7,
-      "check": {
-       "median": 0.0,
-       "n": 6
-      },
-      "damage": 19.6,
-      "formula": "5 力量 × 本回合 3.9 段 = 19.6 伤害 × r",
-      "hold_hp": 2.7,
-      "hp": 2.7,
-      "n": 162,
-      "source": "公式"
-     },
-     "3": {
-      "block": 4.0,
-      "check": {
-       "median": 0.0,
-       "n": 6
-      },
-      "damage": 32.0,
-      "formula": "5 力量 × 本回合 6.4 段 = 32.0 伤害 × r",
-      "hold_hp": 4.0,
-      "hp": 4.0,
-      "n": 117,
-      "source": "公式"
-     }
-    },
-    "8": {
-     "1": {
-      "block": 0.0,
-      "damage": 18.7,
-      "formula": "5 力量 × 本回合 3.7 段 = 18.7 伤害 × r",
-      "hold_hp": 0.0,
-      "hp": 0.0,
-      "inputs_asc": 10,
-      "n": 292,
-      "source": "公式"
-     },
-     "2": {
-      "block": 2.7,
-      "damage": 19.6,
-      "formula": "5 力量 × 本回合 3.9 段 = 19.6 伤害 × r",
-      "hold_hp": 2.7,
-      "hp": 2.7,
-      "inputs_asc": 10,
-      "n": 162,
-      "source": "公式"
-     },
-     "3": {
-      "block": 4.0,
-      "damage": 32.0,
-      "formula": "5 力量 × 本回合 6.4 段 = 32.0 伤害 × r",
-      "hold_hp": 4.0,
-      "hp": 4.0,
-      "inputs_asc": 10,
-      "n": 117,
-      "source": "公式"
-     }
-    },
-    "9": {
-     "1": {
-      "block": 0.0,
-      "damage": 18.7,
-      "formula": "5 力量 × 本回合 3.7 段 = 18.7 伤害 × r",
-      "hold_hp": 0.0,
-      "hp": 0.0,
-      "inputs_asc": 10,
-      "n": 292,
-      "source": "公式"
-     },
-     "2": {
-      "block": 2.7,
-      "damage": 19.6,
-      "formula": "5 力量 × 本回合 3.9 段 = 19.6 伤害 × r",
-      "hold_hp": 2.7,
-      "hp": 2.7,
-      "inputs_asc": 10,
-      "n": 162,
-      "source": "公式"
-     },
-     "3": {
-      "block": 4.0,
-      "damage": 32.0,
-      "formula": "5 力量 × 本回合 6.4 段 = 32.0 伤害 × r",
-      "hold_hp": 4.0,
-      "hp": 4.0,
-      "inputs_asc": 10,
-      "n": 117,
-      "source": "公式"
-     }
-    }
-   },
+   "by_asc": {},
    "category": "strength",
-   "check_all": {
-    "median": 0.0,
-    "n": 18
-   },
    "description": "获得[blue]{StrengthPower}[/blue]点[gold]力量[/gold]。在你的这个回合结束时，失去[blue]{StrengthPower}[/blue]点[gold]力量[/gold]。",
    "kind": "strength_turn",
    "log": {
-    "boss_drinks": {
-     "10": 29
-    },
-    "drinks": 137,
-    "runs_seen": 99
+    "boss_drinks": {},
+    "drinks": 139,
+    "runs_seen": 101
    },
    "name": "肌肉药水",
    "pool": "shared",
@@ -3167,120 +636,12 @@
    "values": {}
   },
   "FORTIFIER": {
-   "by_asc": {
-    "10": {
-     "1": {
-      "block": 5.8,
-      "check": {
-       "median": 0.0,
-       "n": 19
-      },
-      "damage": 474633.9,
-      "formula": "格挡变三倍：挨打回合 min(2 × 回合末格挡（均 7.3）, 打进来的)",
-      "hold_hp": 5.8,
-      "hp": 5.8,
-      "n": 292,
-      "source": "公式"
-     },
-     "2": {
-      "block": 7.2,
-      "check": {
-       "median": 0.2,
-       "n": 1
-      },
-      "damage": 52.2,
-      "formula": "格挡变三倍：挨打回合 min(2 × 回合末格挡（均 10.5）, 打进来的)",
-      "hold_hp": 7.2,
-      "hp": 7.2,
-      "n": 162,
-      "source": "公式"
-     },
-     "3": {
-      "block": 7.7,
-      "damage": 61.5,
-      "formula": "格挡变三倍：挨打回合 min(2 × 回合末格挡（均 14.8）, 打进来的)",
-      "hold_hp": 7.7,
-      "hp": 7.7,
-      "n": 117,
-      "source": "公式"
-     }
-    },
-    "8": {
-     "1": {
-      "block": 5.8,
-      "damage": 474633.9,
-      "formula": "格挡变三倍：挨打回合 min(2 × 回合末格挡（均 7.3）, 打进来的)",
-      "hold_hp": 5.8,
-      "hp": 5.8,
-      "inputs_asc": 10,
-      "n": 292,
-      "source": "公式"
-     },
-     "2": {
-      "block": 7.2,
-      "damage": 52.2,
-      "formula": "格挡变三倍：挨打回合 min(2 × 回合末格挡（均 10.5）, 打进来的)",
-      "hold_hp": 7.2,
-      "hp": 7.2,
-      "inputs_asc": 10,
-      "n": 162,
-      "source": "公式"
-     },
-     "3": {
-      "block": 7.7,
-      "damage": 61.5,
-      "formula": "格挡变三倍：挨打回合 min(2 × 回合末格挡（均 14.8）, 打进来的)",
-      "hold_hp": 7.7,
-      "hp": 7.7,
-      "inputs_asc": 10,
-      "n": 117,
-      "source": "公式"
-     }
-    },
-    "9": {
-     "1": {
-      "block": 5.8,
-      "damage": 474633.9,
-      "formula": "格挡变三倍：挨打回合 min(2 × 回合末格挡（均 7.3）, 打进来的)",
-      "hold_hp": 5.8,
-      "hp": 5.8,
-      "inputs_asc": 10,
-      "n": 292,
-      "source": "公式"
-     },
-     "2": {
-      "block": 7.2,
-      "damage": 52.2,
-      "formula": "格挡变三倍：挨打回合 min(2 × 回合末格挡（均 10.5）, 打进来的)",
-      "hold_hp": 7.2,
-      "hp": 7.2,
-      "inputs_asc": 10,
-      "n": 162,
-      "source": "公式"
-     },
-     "3": {
-      "block": 7.7,
-      "damage": 61.5,
-      "formula": "格挡变三倍：挨打回合 min(2 × 回合末格挡（均 14.8）, 打进来的)",
-      "hold_hp": 7.7,
-      "hp": 7.7,
-      "inputs_asc": 10,
-      "n": 117,
-      "source": "公式"
-     }
-    }
-   },
+   "by_asc": {},
    "category": "block",
-   "check_all": {
-    "median": 0.0,
-    "n": 20
-   },
    "description": "将你的[gold]格挡[/gold]变为三倍。",
    "kind": "triple_block",
    "log": {
-    "boss_drinks": {
-     "10": 29
-    },
+    "boss_drinks": {},
     "drinks": 76,
     "runs_seen": 55
    },
@@ -3295,143 +656,12 @@
    "values": {}
   },
   "FOUL_POTION": {
-   "by_asc": {
-    "10": {
-     "1": {
-      "block": -12.0,
-      "damage": -980439.7,
-      "formula": "12 伤害 × r 0.000 − 自伤 12（群体：按 boss 单体算）",
-      "hold_hp": 0.0,
-      "hp": -12.0,
-      "inputs": {
-       "Damage": 12
-      },
-      "n": 292,
-      "source": "公式"
-     },
-     "2": {
-      "block": -10.3,
-      "check": {
-       "median": 5.7,
-       "n": 2
-      },
-      "damage": -75.1,
-      "formula": "12 伤害 × r 0.138 − 自伤 12（群体：按 boss 单体算）",
-      "hold_hp": 0.0,
-      "hp": -10.3,
-      "inputs": {
-       "Damage": 12
-      },
-      "n": 162,
-      "source": "公式"
-     },
-     "3": {
-      "block": -10.5,
-      "damage": -83.6,
-      "formula": "12 伤害 × r 0.125 − 自伤 12（群体：按 boss 单体算）",
-      "hold_hp": 0.0,
-      "hp": -10.5,
-      "inputs": {
-       "Damage": 12
-      },
-      "n": 117,
-      "source": "公式"
-     }
-    },
-    "8": {
-     "1": {
-      "block": -12.0,
-      "damage": -980439.7,
-      "formula": "12 伤害 × r 0.000 − 自伤 12（群体：按 boss 单体算）",
-      "hold_hp": 0.0,
-      "hp": -12.0,
-      "inputs": {
-       "Damage": 12
-      },
-      "inputs_asc": 10,
-      "n": 292,
-      "source": "公式"
-     },
-     "2": {
-      "block": -10.3,
-      "damage": -75.1,
-      "formula": "12 伤害 × r 0.138 − 自伤 12（群体：按 boss 单体算）",
-      "hold_hp": 0.0,
-      "hp": -10.3,
-      "inputs": {
-       "Damage": 12
-      },
-      "inputs_asc": 10,
-      "n": 162,
-      "source": "公式"
-     },
-     "3": {
-      "block": -10.5,
-      "damage": -83.6,
-      "formula": "12 伤害 × r 0.125 − 自伤 12（群体：按 boss 单体算）",
-      "hold_hp": 0.0,
-      "hp": -10.5,
-      "inputs": {
-       "Damage": 12
-      },
-      "inputs_asc": 10,
-      "n": 117,
-      "source": "公式"
-     }
-    },
-    "9": {
-     "1": {
-      "block": -12.0,
-      "damage": -980439.7,
-      "formula": "12 伤害 × r 0.000 − 自伤 12（群体：按 boss 单体算）",
-      "hold_hp": 0.0,
-      "hp": -12.0,
-      "inputs": {
-       "Damage": 12
-      },
-      "inputs_asc": 10,
-      "n": 292,
-      "source": "公式"
-     },
-     "2": {
-      "block": -10.3,
-      "damage": -75.1,
-      "formula": "12 伤害 × r 0.138 − 自伤 12（群体：按 boss 单体算）",
-      "hold_hp": 0.0,
-      "hp": -10.3,
-      "inputs": {
-       "Damage": 12
-      },
-      "inputs_asc": 10,
-      "n": 162,
-      "source": "公式"
-     },
-     "3": {
-      "block": -10.5,
-      "damage": -83.6,
-      "formula": "12 伤害 × r 0.125 − 自伤 12（群体：按 boss 单体算）",
-      "hold_hp": 0.0,
-      "hp": -10.5,
-      "inputs": {
-       "Damage": 12
-      },
-      "inputs_asc": 10,
-      "n": 117,
-      "source": "公式"
-     }
-    }
-   },
+   "by_asc": {},
    "category": "damage",
-   "check_all": {
-    "median": 5.7,
-    "n": 2
-   },
    "description": "对所有玩家和敌人造成[blue]{Damage}[/blue]点伤害。\n也可以投掷给[gold]商人[/gold]换取[blue]{Gold}[/blue][gold]金币[/gold]。",
    "kind": "damage",
    "log": {
-    "boss_drinks": {
-     "10": 2
-    },
+    "boss_drinks": {},
     "drinks": 8,
     "runs_seen": 10
    },
@@ -3440,7 +670,7 @@
    "rarity": "Event",
    "silent": true,
    "solver": "exact",
-   "target": "TargetedNoCreature",
+   "target": "AllEnemies",
    "timing_free": false,
    "usage": "AnyTime",
    "values": {
@@ -3448,108 +678,12 @@
    }
   },
   "FRUIT_JUICE": {
-   "by_asc": {
-    "10": {
-     "1": {
-      "block": 5,
-      "damage": 408521.5,
-      "formula": "最大生命 +5（永久，什么时候喝都一样）",
-      "hold_hp": 5,
-      "hp": 5,
-      "n": 292,
-      "source": "公式"
-     },
-     "2": {
-      "block": 5,
-      "damage": 36.3,
-      "formula": "最大生命 +5（永久，什么时候喝都一样）",
-      "hold_hp": 5,
-      "hp": 5,
-      "n": 162,
-      "source": "公式"
-     },
-     "3": {
-      "block": 5,
-      "damage": 39.8,
-      "formula": "最大生命 +5（永久，什么时候喝都一样）",
-      "hold_hp": 5,
-      "hp": 5,
-      "n": 117,
-      "source": "公式"
-     }
-    },
-    "8": {
-     "1": {
-      "block": 5,
-      "damage": 408521.5,
-      "formula": "最大生命 +5（永久，什么时候喝都一样）",
-      "hold_hp": 5,
-      "hp": 5,
-      "inputs_asc": 10,
-      "n": 292,
-      "source": "公式"
-     },
-     "2": {
-      "block": 5,
-      "damage": 36.3,
-      "formula": "最大生命 +5（永久，什么时候喝都一样）",
-      "hold_hp": 5,
-      "hp": 5,
-      "inputs_asc": 10,
-      "n": 162,
-      "source": "公式"
-     },
-     "3": {
-      "block": 5,
-      "damage": 39.8,
-      "formula": "最大生命 +5（永久，什么时候喝都一样）",
-      "hold_hp": 5,
-      "hp": 5,
-      "inputs_asc": 10,
-      "n": 117,
-      "source": "公式"
-     }
-    },
-    "9": {
-     "1": {
-      "block": 5,
-      "damage": 408521.5,
-      "formula": "最大生命 +5（永久，什么时候喝都一样）",
-      "hold_hp": 5,
-      "hp": 5,
-      "inputs_asc": 10,
-      "n": 292,
-      "source": "公式"
-     },
-     "2": {
-      "block": 5,
-      "damage": 36.3,
-      "formula": "最大生命 +5（永久，什么时候喝都一样）",
-      "hold_hp": 5,
-      "hp": 5,
-      "inputs_asc": 10,
-      "n": 162,
-      "source": "公式"
-     },
-     "3": {
-      "block": 5,
-      "damage": 39.8,
-      "formula": "最大生命 +5（永久，什么时候喝都一样）",
-      "hold_hp": 5,
-      "hp": 5,
-      "inputs_asc": 10,
-      "n": 117,
-      "source": "公式"
-     }
-    }
-   },
+   "by_asc": {},
    "category": "heal",
    "description": "获得[blue]{MaxHp}[/blue]点最大生命值。",
    "kind": "max_hp",
    "log": {
-    "boss_drinks": {
-     "10": 7
-    },
+    "boss_drinks": {},
     "drinks": 28,
     "runs_seen": 21
    },
@@ -3566,126 +700,14 @@
    }
   },
   "FYSH_OIL": {
-   "by_asc": {
-    "10": {
-     "1": {
-      "block": 7.5,
-      "check": {
-       "median": 0.1,
-       "n": 3
-      },
-      "damage": 612782.3,
-      "formula": "力量 1（0.0 血）+ 敏捷 1（7.5 血）",
-      "hold_hp": 7.5,
-      "hp": 7.5,
-      "n": 292,
-      "source": "公式"
-     },
-     "2": {
-      "block": 10.3,
-      "check": {
-       "median": 0.0,
-       "n": 3
-      },
-      "damage": 74.7,
-      "formula": "力量 1（4.4 血）+ 敏捷 1（5.9 血）",
-      "hold_hp": 10.3,
-      "hp": 10.3,
-      "n": 162,
-      "source": "公式"
-     },
-     "3": {
-      "block": 12.6,
-      "check": {
-       "median": 0.0,
-       "n": 4
-      },
-      "damage": 100.4,
-      "formula": "力量 1（5.5 血）+ 敏捷 1（7.1 血）",
-      "hold_hp": 12.6,
-      "hp": 12.6,
-      "n": 117,
-      "source": "公式"
-     }
-    },
-    "8": {
-     "1": {
-      "block": 7.5,
-      "damage": 612782.3,
-      "formula": "力量 1（0.0 血）+ 敏捷 1（7.5 血）",
-      "hold_hp": 7.5,
-      "hp": 7.5,
-      "inputs_asc": 10,
-      "n": 292,
-      "source": "公式"
-     },
-     "2": {
-      "block": 10.3,
-      "damage": 74.7,
-      "formula": "力量 1（4.4 血）+ 敏捷 1（5.9 血）",
-      "hold_hp": 10.3,
-      "hp": 10.3,
-      "inputs_asc": 10,
-      "n": 162,
-      "source": "公式"
-     },
-     "3": {
-      "block": 12.6,
-      "damage": 100.4,
-      "formula": "力量 1（5.5 血）+ 敏捷 1（7.1 血）",
-      "hold_hp": 12.6,
-      "hp": 12.6,
-      "inputs_asc": 10,
-      "n": 117,
-      "source": "公式"
-     }
-    },
-    "9": {
-     "1": {
-      "block": 7.5,
-      "damage": 612782.3,
-      "formula": "力量 1（0.0 血）+ 敏捷 1（7.5 血）",
-      "hold_hp": 7.5,
-      "hp": 7.5,
-      "inputs_asc": 10,
-      "n": 292,
-      "source": "公式"
-     },
-     "2": {
-      "block": 10.3,
-      "damage": 74.7,
-      "formula": "力量 1（4.4 血）+ 敏捷 1（5.9 血）",
-      "hold_hp": 10.3,
-      "hp": 10.3,
-      "inputs_asc": 10,
-      "n": 162,
-      "source": "公式"
-     },
-     "3": {
-      "block": 12.6,
-      "damage": 100.4,
-      "formula": "力量 1（5.5 血）+ 敏捷 1（7.1 血）",
-      "hold_hp": 12.6,
-      "hp": 12.6,
-      "inputs_asc": 10,
-      "n": 117,
-      "source": "公式"
-     }
-    }
-   },
+   "by_asc": {},
    "category": "strength",
-   "check_all": {
-    "median": 0.0,
-    "n": 10
-   },
    "description": "获得[blue]{StrengthPower}[/blue]点[gold]力量[/gold]和[blue]{DexterityPower}[/blue]点[gold]敏捷[/gold]。",
    "kind": "fysh",
    "log": {
-    "boss_drinks": {
-     "10": 18
-    },
-    "drinks": 54,
-    "runs_seen": 38
+    "boss_drinks": {},
+    "drinks": 56,
+    "runs_seen": 40
    },
    "name": "异鱼之油",
    "pool": "shared",
@@ -3701,146 +723,14 @@
    }
   },
   "GAMBLERS_BREW": {
-   "by_asc": {
-    "10": {
-     "1": {
-      "block": 0.5,
-      "check": {
-       "median": 0.7,
-       "n": 4
-      },
-      "damage": 42216.4,
-      "formula": "换牌（净 0 张），挑牌的好处按 1 张抽牌 0.52",
-      "hold_hp": 0.5,
-      "hp": 0.5,
-      "mc": {
-       "hp": 1.2,
-       "n": 79
-      },
-      "n": 292,
-      "source": "估"
-     },
-     "2": {
-      "block": 0.4,
-      "damage": 3.1,
-      "formula": "换牌（净 0 张），挑牌的好处按 1 张抽牌 0.43",
-      "hold_hp": 0.4,
-      "hp": 0.4,
-      "mc": {
-       "hp": 1.9,
-       "n": 79
-      },
-      "n": 162,
-      "source": "估"
-     },
-     "3": {
-      "block": 0.0,
-      "check": {
-       "median": 0.0,
-       "n": 1
-      },
-      "damage": 0.1,
-      "formula": "换牌（净 0 张），挑牌的好处按 1 张抽牌 0.01",
-      "hold_hp": 0.0,
-      "hp": 0.0,
-      "mc": {
-       "hp": 1.8,
-       "n": 79
-      },
-      "n": 117,
-      "source": "估"
-     }
-    },
-    "8": {
-     "1": {
-      "block": 0.5,
-      "damage": 42216.4,
-      "formula": "换牌（净 0 张），挑牌的好处按 1 张抽牌 0.52",
-      "hold_hp": 0.5,
-      "hp": 0.5,
-      "inputs_asc": 10,
-      "n": 292,
-      "source": "估"
-     },
-     "2": {
-      "block": 0.4,
-      "damage": 3.1,
-      "formula": "换牌（净 0 张），挑牌的好处按 1 张抽牌 0.43",
-      "hold_hp": 0.4,
-      "hp": 0.4,
-      "inputs_asc": 10,
-      "n": 162,
-      "source": "估"
-     },
-     "3": {
-      "block": 0.0,
-      "damage": 0.1,
-      "formula": "换牌（净 0 张），挑牌的好处按 1 张抽牌 0.01",
-      "hold_hp": 0.0,
-      "hp": 0.0,
-      "inputs_asc": 10,
-      "n": 117,
-      "source": "估"
-     }
-    },
-    "9": {
-     "1": {
-      "block": 0.5,
-      "damage": 42216.4,
-      "formula": "换牌（净 0 张），挑牌的好处按 1 张抽牌 0.52",
-      "hold_hp": 0.5,
-      "hp": 0.5,
-      "inputs_asc": 10,
-      "mc": {
-       "hp": 0.0,
-       "n": 7
-      },
-      "n": 292,
-      "source": "估"
-     },
-     "2": {
-      "block": 0.4,
-      "damage": 3.1,
-      "formula": "换牌（净 0 张），挑牌的好处按 1 张抽牌 0.43",
-      "hold_hp": 0.4,
-      "hp": 0.4,
-      "inputs_asc": 10,
-      "mc": {
-       "hp": 0.2,
-       "n": 7
-      },
-      "n": 162,
-      "source": "估"
-     },
-     "3": {
-      "block": 0.0,
-      "damage": 0.1,
-      "formula": "换牌（净 0 张），挑牌的好处按 1 张抽牌 0.01",
-      "hold_hp": 0.0,
-      "hp": 0.0,
-      "inputs_asc": 10,
-      "mc": {
-       "hp": 0.2,
-       "n": 7
-      },
-      "n": 117,
-      "source": "估"
-     }
-    }
-   },
+   "by_asc": {},
    "category": "draw",
-   "check_all": {
-    "median": 0.1,
-    "n": 5
-   },
    "description": "丢弃任意张牌，然后抽相同数量的牌。",
    "kind": "gamble",
    "log": {
-    "boss_drinks": {
-     "10": 5
-    },
-    "drinks": 38,
-    "runs_seen": 36
+    "boss_drinks": {},
+    "drinks": 40,
+    "runs_seen": 38
    },
    "name": "赌徒特酿",
    "pool": "shared",
@@ -3855,16 +745,10 @@
   "GHOST_IN_A_JAR": {
    "by_asc": {},
    "category": "block",
-   "check_all": {
-    "median": 0.0,
-    "n": 3
-   },
    "description": "获得[blue]1[/blue]层[gold]无实体[/gold]。",
    "kind": null,
    "log": {
-    "boss_drinks": {
-     "10": 29
-    },
+    "boss_drinks": {},
     "drinks": 45,
     "runs_seen": 21
    },
@@ -3880,120 +764,12 @@
    "values": {}
   },
   "GIGANTIFICATION_POTION": {
-   "by_asc": {
-    "10": {
-     "1": {
-      "block": 2.7,
-      "check": {
-       "median": 0.0,
-       "n": 9
-      },
-      "damage": 216956.4,
-      "formula": "下一张攻击三倍：多 2 × 每张攻击牌 108478.2 伤害 = 216956.4 × r",
-      "hold_hp": 2.7,
-      "hp": 2.7,
-      "n": 292,
-      "source": "公式"
-     },
-     "2": {
-      "block": 3.0,
-      "check": {
-       "median": 1.8,
-       "n": 1
-      },
-      "damage": 21.4,
-      "formula": "下一张攻击三倍：多 2 × 每张攻击牌 10.7 伤害 = 21.4 × r",
-      "hold_hp": 3.0,
-      "hp": 3.0,
-      "n": 162,
-      "source": "公式"
-     },
-     "3": {
-      "block": 1.8,
-      "damage": 14.2,
-      "formula": "下一张攻击三倍：多 2 × 每张攻击牌 7.1 伤害 = 14.2 × r",
-      "hold_hp": 1.8,
-      "hp": 1.8,
-      "n": 117,
-      "source": "公式"
-     }
-    },
-    "8": {
-     "1": {
-      "block": 2.7,
-      "damage": 216956.4,
-      "formula": "下一张攻击三倍：多 2 × 每张攻击牌 108478.2 伤害 = 216956.4 × r",
-      "hold_hp": 2.7,
-      "hp": 2.7,
-      "inputs_asc": 10,
-      "n": 292,
-      "source": "公式"
-     },
-     "2": {
-      "block": 3.0,
-      "damage": 21.4,
-      "formula": "下一张攻击三倍：多 2 × 每张攻击牌 10.7 伤害 = 21.4 × r",
-      "hold_hp": 3.0,
-      "hp": 3.0,
-      "inputs_asc": 10,
-      "n": 162,
-      "source": "公式"
-     },
-     "3": {
-      "block": 1.8,
-      "damage": 14.2,
-      "formula": "下一张攻击三倍：多 2 × 每张攻击牌 7.1 伤害 = 14.2 × r",
-      "hold_hp": 1.8,
-      "hp": 1.8,
-      "inputs_asc": 10,
-      "n": 117,
-      "source": "公式"
-     }
-    },
-    "9": {
-     "1": {
-      "block": 2.7,
-      "damage": 216956.4,
-      "formula": "下一张攻击三倍：多 2 × 每张攻击牌 108478.2 伤害 = 216956.4 × r",
-      "hold_hp": 2.7,
-      "hp": 2.7,
-      "inputs_asc": 10,
-      "n": 292,
-      "source": "公式"
-     },
-     "2": {
-      "block": 3.0,
-      "damage": 21.4,
-      "formula": "下一张攻击三倍：多 2 × 每张攻击牌 10.7 伤害 = 21.4 × r",
-      "hold_hp": 3.0,
-      "hp": 3.0,
-      "inputs_asc": 10,
-      "n": 162,
-      "source": "公式"
-     },
-     "3": {
-      "block": 1.8,
-      "damage": 14.2,
-      "formula": "下一张攻击三倍：多 2 × 每张攻击牌 7.1 伤害 = 14.2 × r",
-      "hold_hp": 1.8,
-      "hp": 1.8,
-      "inputs_asc": 10,
-      "n": 117,
-      "source": "公式"
-     }
-    }
-   },
+   "by_asc": {},
    "category": "damage",
-   "check_all": {
-    "median": 0.0,
-    "n": 10
-   },
    "description": "你打出的下一张攻击牌将会造成三倍伤害。",
    "kind": "triple_attack",
    "log": {
-    "boss_drinks": {
-     "10": 13
-    },
+    "boss_drinks": {},
     "drinks": 25,
     "runs_seen": 14
    },
@@ -4008,130 +784,14 @@
    "values": {}
   },
   "GLOWWATER_POTION": {
-   "by_asc": {
-    "10": {
-     "1": {
-      "block": 2.6,
-      "check": {
-       "median": 1.1,
-       "n": 1
-      },
-      "damage": 211082.2,
-      "formula": "消耗手牌再抽 10：净多 5 张 × 0.52",
-      "hold_hp": 2.6,
-      "hp": 2.6,
-      "mc": {
-       "hp": 0.1,
-       "n": 58
-      },
-      "n": 292,
-      "source": "估"
-     },
-     "2": {
-      "block": 2.1,
-      "damage": 15.5,
-      "formula": "消耗手牌再抽 10：净多 5 张 × 0.43",
-      "hold_hp": 2.1,
-      "hp": 2.1,
-      "mc": {
-       "hp": 0.3,
-       "n": 58
-      },
-      "n": 162,
-      "source": "估"
-     },
-     "3": {
-      "block": 0.0,
-      "damage": 0.3,
-      "formula": "消耗手牌再抽 10：净多 5 张 × 0.01",
-      "hold_hp": 0.0,
-      "hp": 0.0,
-      "mc": {
-       "hp": 0.3,
-       "n": 58
-      },
-      "n": 117,
-      "source": "估"
-     }
-    },
-    "8": {
-     "1": {
-      "block": 2.6,
-      "damage": 211082.2,
-      "formula": "消耗手牌再抽 10：净多 5 张 × 0.52",
-      "hold_hp": 2.6,
-      "hp": 2.6,
-      "inputs_asc": 10,
-      "n": 292,
-      "source": "估"
-     },
-     "2": {
-      "block": 2.1,
-      "damage": 15.5,
-      "formula": "消耗手牌再抽 10：净多 5 张 × 0.43",
-      "hold_hp": 2.1,
-      "hp": 2.1,
-      "inputs_asc": 10,
-      "n": 162,
-      "source": "估"
-     },
-     "3": {
-      "block": 0.0,
-      "damage": 0.3,
-      "formula": "消耗手牌再抽 10：净多 5 张 × 0.01",
-      "hold_hp": 0.0,
-      "hp": 0.0,
-      "inputs_asc": 10,
-      "n": 117,
-      "source": "估"
-     }
-    },
-    "9": {
-     "1": {
-      "block": 2.6,
-      "damage": 211082.2,
-      "formula": "消耗手牌再抽 10：净多 5 张 × 0.52",
-      "hold_hp": 2.6,
-      "hp": 2.6,
-      "inputs_asc": 10,
-      "n": 292,
-      "source": "估"
-     },
-     "2": {
-      "block": 2.1,
-      "damage": 15.5,
-      "formula": "消耗手牌再抽 10：净多 5 张 × 0.43",
-      "hold_hp": 2.1,
-      "hp": 2.1,
-      "inputs_asc": 10,
-      "n": 162,
-      "source": "估"
-     },
-     "3": {
-      "block": 0.0,
-      "damage": 0.3,
-      "formula": "消耗手牌再抽 10：净多 5 张 × 0.01",
-      "hold_hp": 0.0,
-      "hp": 0.0,
-      "inputs_asc": 10,
-      "n": 117,
-      "source": "估"
-     }
-    }
-   },
+   "by_asc": {},
    "category": "draw",
-   "check_all": {
-    "median": 1.1,
-    "n": 1
-   },
    "description": "[gold]消耗[/gold]你的[gold]手牌[/gold]。抽[blue]{Cards}[/blue]张牌。",
    "kind": "glowwater",
    "log": {
-    "boss_drinks": {
-     "10": 1
-    },
-    "drinks": 21,
-    "runs_seen": 21
+    "boss_drinks": {},
+    "drinks": 22,
+    "runs_seen": 22
    },
    "name": "发光水",
    "pool": "event",
@@ -4146,124 +806,12 @@
    }
   },
   "HEART_OF_IRON": {
-   "by_asc": {
-    "10": {
-     "1": {
-      "block": 10.3,
-      "check": {
-       "median": 0.0,
-       "n": 23
-      },
-      "damage": 840155.6,
-      "formula": "覆甲 7：每回合 7、6…格挡，各回合 min(当回合格挡, 打进来的) 相加（7 回合）",
-      "hold_hp": 10.3,
-      "hp": 10.3,
-      "n": 292,
-      "source": "公式"
-     },
-     "2": {
-      "block": 9.0,
-      "check": {
-       "median": 0.0,
-       "n": 7
-      },
-      "damage": 65.2,
-      "formula": "覆甲 7：每回合 7、6…格挡，各回合 min(当回合格挡, 打进来的) 相加（7 回合）",
-      "hold_hp": 9.0,
-      "hp": 9.0,
-      "n": 162,
-      "source": "公式"
-     },
-     "3": {
-      "block": 5.8,
-      "check": {
-       "median": 0.0,
-       "n": 4
-      },
-      "damage": 46.6,
-      "formula": "覆甲 7：每回合 7、6…格挡，各回合 min(当回合格挡, 打进来的) 相加（7 回合）",
-      "hold_hp": 5.8,
-      "hp": 5.8,
-      "n": 117,
-      "source": "公式"
-     }
-    },
-    "8": {
-     "1": {
-      "block": 10.3,
-      "damage": 840155.6,
-      "formula": "覆甲 7：每回合 7、6…格挡，各回合 min(当回合格挡, 打进来的) 相加（7 回合）",
-      "hold_hp": 10.3,
-      "hp": 10.3,
-      "inputs_asc": 10,
-      "n": 292,
-      "source": "公式"
-     },
-     "2": {
-      "block": 9.0,
-      "damage": 65.2,
-      "formula": "覆甲 7：每回合 7、6…格挡，各回合 min(当回合格挡, 打进来的) 相加（7 回合）",
-      "hold_hp": 9.0,
-      "hp": 9.0,
-      "inputs_asc": 10,
-      "n": 162,
-      "source": "公式"
-     },
-     "3": {
-      "block": 5.8,
-      "damage": 46.6,
-      "formula": "覆甲 7：每回合 7、6…格挡，各回合 min(当回合格挡, 打进来的) 相加（7 回合）",
-      "hold_hp": 5.8,
-      "hp": 5.8,
-      "inputs_asc": 10,
-      "n": 117,
-      "source": "公式"
-     }
-    },
-    "9": {
-     "1": {
-      "block": 10.3,
-      "damage": 840155.6,
-      "formula": "覆甲 7：每回合 7、6…格挡，各回合 min(当回合格挡, 打进来的) 相加（7 回合）",
-      "hold_hp": 10.3,
-      "hp": 10.3,
-      "inputs_asc": 10,
-      "n": 292,
-      "source": "公式"
-     },
-     "2": {
-      "block": 9.0,
-      "damage": 65.2,
-      "formula": "覆甲 7：每回合 7、6…格挡，各回合 min(当回合格挡, 打进来的) 相加（7 回合）",
-      "hold_hp": 9.0,
-      "hp": 9.0,
-      "inputs_asc": 10,
-      "n": 162,
-      "source": "公式"
-     },
-     "3": {
-      "block": 5.8,
-      "damage": 46.6,
-      "formula": "覆甲 7：每回合 7、6…格挡，各回合 min(当回合格挡, 打进来的) 相加（7 回合）",
-      "hold_hp": 5.8,
-      "hp": 5.8,
-      "inputs_asc": 10,
-      "n": 117,
-      "source": "公式"
-     }
-    }
-   },
+   "by_asc": {},
    "category": "block",
-   "check_all": {
-    "median": 0.0,
-    "n": 34
-   },
    "description": "获得[blue]{PlatingPower}[/blue]层[gold]覆甲[/gold]。",
    "kind": "plating",
    "log": {
-    "boss_drinks": {
-     "10": 50
-    },
+    "boss_drinks": {},
     "drinks": 102,
     "runs_seen": 60
    },
@@ -4301,120 +849,12 @@
    "values": {}
   },
   "LIQUID_BRONZE": {
-   "by_asc": {
-    "10": {
-     "1": {
-      "block": 0.0,
-      "check": {
-       "median": 0.0,
-       "n": 2
-      },
-      "damage": 21.8,
-      "formula": "荆棘 3 × 每回合 1 段（估）× 敌方攻击回合占 73% = 每回合 2.2 伤害，缩短 0.00 回合 × 4.5 血",
-      "hold_hp": 0.0,
-      "hp": 0.0,
-      "n": 292,
-      "source": "估"
-     },
-     "2": {
-      "block": 2.7,
-      "check": {
-       "median": 0.0,
-       "n": 1
-      },
-      "damage": 19.9,
-      "formula": "荆棘 3 × 每回合 1 段（估）× 敌方攻击回合占 78% = 每回合 2.3 伤害，缩短 0.54 回合 × 5.1 血",
-      "hold_hp": 2.7,
-      "hp": 2.7,
-      "n": 162,
-      "source": "估"
-     },
-     "3": {
-      "block": 2.4,
-      "damage": 19.3,
-      "formula": "荆棘 3 × 每回合 1 段（估）× 敌方攻击回合占 86% = 每回合 2.6 伤害，缩短 0.48 回合 × 5.0 血",
-      "hold_hp": 2.4,
-      "hp": 2.4,
-      "n": 117,
-      "source": "估"
-     }
-    },
-    "8": {
-     "1": {
-      "block": 0.0,
-      "damage": 21.8,
-      "formula": "荆棘 3 × 每回合 1 段（估）× 敌方攻击回合占 73% = 每回合 2.2 伤害，缩短 0.00 回合 × 4.5 血",
-      "hold_hp": 0.0,
-      "hp": 0.0,
-      "inputs_asc": 10,
-      "n": 292,
-      "source": "估"
-     },
-     "2": {
-      "block": 2.7,
-      "damage": 19.9,
-      "formula": "荆棘 3 × 每回合 1 段（估）× 敌方攻击回合占 78% = 每回合 2.3 伤害，缩短 0.54 回合 × 5.1 血",
-      "hold_hp": 2.7,
-      "hp": 2.7,
-      "inputs_asc": 10,
-      "n": 162,
-      "source": "估"
-     },
-     "3": {
-      "block": 2.4,
-      "damage": 19.3,
-      "formula": "荆棘 3 × 每回合 1 段（估）× 敌方攻击回合占 86% = 每回合 2.6 伤害，缩短 0.48 回合 × 5.0 血",
-      "hold_hp": 2.4,
-      "hp": 2.4,
-      "inputs_asc": 10,
-      "n": 117,
-      "source": "估"
-     }
-    },
-    "9": {
-     "1": {
-      "block": 0.0,
-      "damage": 21.8,
-      "formula": "荆棘 3 × 每回合 1 段（估）× 敌方攻击回合占 73% = 每回合 2.2 伤害，缩短 0.00 回合 × 4.5 血",
-      "hold_hp": 0.0,
-      "hp": 0.0,
-      "inputs_asc": 10,
-      "n": 292,
-      "source": "估"
-     },
-     "2": {
-      "block": 2.7,
-      "damage": 19.9,
-      "formula": "荆棘 3 × 每回合 1 段（估）× 敌方攻击回合占 78% = 每回合 2.3 伤害，缩短 0.54 回合 × 5.1 血",
-      "hold_hp": 2.7,
-      "hp": 2.7,
-      "inputs_asc": 10,
-      "n": 162,
-      "source": "估"
-     },
-     "3": {
-      "block": 2.4,
-      "damage": 19.3,
-      "formula": "荆棘 3 × 每回合 1 段（估）× 敌方攻击回合占 86% = 每回合 2.6 伤害，缩短 0.48 回合 × 5.0 血",
-      "hold_hp": 2.4,
-      "hp": 2.4,
-      "inputs_asc": 10,
-      "n": 117,
-      "source": "估"
-     }
-    }
-   },
+   "by_asc": {},
    "category": "other",
-   "check_all": {
-    "median": 0.0,
-    "n": 3
-   },
    "description": "获得[blue]{ThornsPower}[/blue]点[gold]荆棘[/gold]。",
    "kind": "thorns",
    "log": {
-    "boss_drinks": {
-     "10": 4
-    },
+    "boss_drinks": {},
     "drinks": 47,
     "runs_seen": 39
    },
@@ -4431,120 +871,12 @@
    }
   },
   "LIQUID_MEMORIES": {
-   "by_asc": {
-    "10": {
-     "1": {
-      "block": 3.4,
-      "check": {
-       "median": 0.0,
-       "n": 1
-      },
-      "damage": 276874.1,
-      "formula": "弃牌堆挑 1 张、本回合免费 ≈ 1 张牌 1.03 + 1 能量 2.36",
-      "hold_hp": 3.4,
-      "hp": 3.4,
-      "n": 292,
-      "source": "估"
-     },
-     "2": {
-      "block": 3.3,
-      "damage": 23.9,
-      "formula": "弃牌堆挑 1 张、本回合免费 ≈ 1 张牌 0.85 + 1 能量 2.44",
-      "hold_hp": 3.3,
-      "hp": 3.3,
-      "n": 162,
-      "source": "估"
-     },
-     "3": {
-      "block": 2.2,
-      "check": {
-       "median": 1.5,
-       "n": 2
-      },
-      "damage": 17.5,
-      "formula": "弃牌堆挑 1 张、本回合免费 ≈ 1 张牌 0.02 + 1 能量 2.18",
-      "hold_hp": 2.2,
-      "hp": 2.2,
-      "n": 117,
-      "source": "估"
-     }
-    },
-    "8": {
-     "1": {
-      "block": 3.4,
-      "damage": 276874.1,
-      "formula": "弃牌堆挑 1 张、本回合免费 ≈ 1 张牌 1.03 + 1 能量 2.36",
-      "hold_hp": 3.4,
-      "hp": 3.4,
-      "inputs_asc": 10,
-      "n": 292,
-      "source": "估"
-     },
-     "2": {
-      "block": 3.3,
-      "damage": 23.9,
-      "formula": "弃牌堆挑 1 张、本回合免费 ≈ 1 张牌 0.85 + 1 能量 2.44",
-      "hold_hp": 3.3,
-      "hp": 3.3,
-      "inputs_asc": 10,
-      "n": 162,
-      "source": "估"
-     },
-     "3": {
-      "block": 2.2,
-      "damage": 17.5,
-      "formula": "弃牌堆挑 1 张、本回合免费 ≈ 1 张牌 0.02 + 1 能量 2.18",
-      "hold_hp": 2.2,
-      "hp": 2.2,
-      "inputs_asc": 10,
-      "n": 117,
-      "source": "估"
-     }
-    },
-    "9": {
-     "1": {
-      "block": 3.4,
-      "damage": 276874.1,
-      "formula": "弃牌堆挑 1 张、本回合免费 ≈ 1 张牌 1.03 + 1 能量 2.36",
-      "hold_hp": 3.4,
-      "hp": 3.4,
-      "inputs_asc": 10,
-      "n": 292,
-      "source": "估"
-     },
-     "2": {
-      "block": 3.3,
-      "damage": 23.9,
-      "formula": "弃牌堆挑 1 张、本回合免费 ≈ 1 张牌 0.85 + 1 能量 2.44",
-      "hold_hp": 3.3,
-      "hp": 3.3,
-      "inputs_asc": 10,
-      "n": 162,
-      "source": "估"
-     },
-     "3": {
-      "block": 2.2,
-      "damage": 17.5,
-      "formula": "弃牌堆挑 1 张、本回合免费 ≈ 1 张牌 0.02 + 1 能量 2.18",
-      "hold_hp": 2.2,
-      "hp": 2.2,
-      "inputs_asc": 10,
-      "n": 117,
-      "source": "估"
-     }
-    }
-   },
+   "by_asc": {},
    "category": "draw",
-   "check_all": {
-    "median": 0.0,
-    "n": 3
-   },
    "description": "将你[gold]弃牌堆[/gold]中的一张牌放入你的[gold]手牌[/gold]。这张牌在本回合可以免费打出。",
    "kind": "pick_discard_free",
    "log": {
-    "boss_drinks": {
-     "10": 3
-    },
+    "boss_drinks": {},
     "drinks": 19,
     "runs_seen": 17
    },
@@ -4559,124 +891,12 @@
    "values": {}
   },
   "LUCKY_TONIC": {
-   "by_asc": {
-    "10": {
-     "1": {
-      "block": 9.7,
-      "check": {
-       "median": 0.4,
-       "n": 1
-      },
-      "damage": 790770.0,
-      "formula": "缓冲 1：挡掉下一次掉血，按挨打回合平均打进来的 9.7",
-      "hold_hp": 9.7,
-      "hp": 9.7,
-      "n": 292,
-      "source": "公式"
-     },
-     "2": {
-      "block": 11.6,
-      "check": {
-       "median": 6.6,
-       "n": 2
-      },
-      "damage": 84.1,
-      "formula": "缓冲 1：挡掉下一次掉血，按挨打回合平均打进来的 11.6",
-      "hold_hp": 11.6,
-      "hp": 11.6,
-      "n": 162,
-      "source": "公式"
-     },
-     "3": {
-      "block": 12.1,
-      "check": {
-       "median": 0.0,
-       "n": 18
-      },
-      "damage": 96.3,
-      "formula": "缓冲 1：挡掉下一次掉血，按挨打回合平均打进来的 12.1",
-      "hold_hp": 12.1,
-      "hp": 12.1,
-      "n": 117,
-      "source": "公式"
-     }
-    },
-    "8": {
-     "1": {
-      "block": 9.7,
-      "damage": 790770.0,
-      "formula": "缓冲 1：挡掉下一次掉血，按挨打回合平均打进来的 9.7",
-      "hold_hp": 9.7,
-      "hp": 9.7,
-      "inputs_asc": 10,
-      "n": 292,
-      "source": "公式"
-     },
-     "2": {
-      "block": 11.6,
-      "damage": 84.1,
-      "formula": "缓冲 1：挡掉下一次掉血，按挨打回合平均打进来的 11.6",
-      "hold_hp": 11.6,
-      "hp": 11.6,
-      "inputs_asc": 10,
-      "n": 162,
-      "source": "公式"
-     },
-     "3": {
-      "block": 12.1,
-      "damage": 96.3,
-      "formula": "缓冲 1：挡掉下一次掉血，按挨打回合平均打进来的 12.1",
-      "hold_hp": 12.1,
-      "hp": 12.1,
-      "inputs_asc": 10,
-      "n": 117,
-      "source": "公式"
-     }
-    },
-    "9": {
-     "1": {
-      "block": 9.7,
-      "damage": 790770.0,
-      "formula": "缓冲 1：挡掉下一次掉血，按挨打回合平均打进来的 9.7",
-      "hold_hp": 9.7,
-      "hp": 9.7,
-      "inputs_asc": 10,
-      "n": 292,
-      "source": "公式"
-     },
-     "2": {
-      "block": 11.6,
-      "damage": 84.1,
-      "formula": "缓冲 1：挡掉下一次掉血，按挨打回合平均打进来的 11.6",
-      "hold_hp": 11.6,
-      "hp": 11.6,
-      "inputs_asc": 10,
-      "n": 162,
-      "source": "公式"
-     },
-     "3": {
-      "block": 12.1,
-      "damage": 96.3,
-      "formula": "缓冲 1：挡掉下一次掉血，按挨打回合平均打进来的 12.1",
-      "hold_hp": 12.1,
-      "hp": 12.1,
-      "inputs_asc": 10,
-      "n": 117,
-      "source": "公式"
-     }
-    }
-   },
+   "by_asc": {},
    "category": "block",
-   "check_all": {
-    "median": 0.0,
-    "n": 21
-   },
    "description": "获得[blue]{BufferPower}[/blue]层[gold]缓冲[/gold]。",
    "kind": "buffer",
    "log": {
-    "boss_drinks": {
-     "10": 26
-    },
+    "boss_drinks": {},
     "drinks": 42,
     "runs_seen": 17
    },
@@ -4693,145 +913,14 @@
    }
   },
   "MAZALETHS_GIFT": {
-   "by_asc": {
-    "10": {
-     "1": {
-      "block": 0.0,
-      "damage": 168.4,
-      "formula": "仪式 1：平均力量 4.5 × 每回合 3.7 段 = 每回合多 16.8 伤害；战斗 10.0 回合缩短 T·X/(D+X) = 0.00 回合 × 每回合 4.5 血",
-      "hold_hp": 0.0,
-      "hp": 0.0,
-      "inputs": {
-       "extra_per_turn": 16.8
-      },
-      "n": 292,
-      "source": "公式"
-     },
-     "2": {
-      "block": 13.7,
-      "damage": 99.2,
-      "formula": "仪式 1：平均力量 4.0 × 每回合 3.9 段 = 每回合多 15.7 伤害；战斗 9.0 回合缩短 T·X/(D+X) = 2.68 回合 × 每回合 5.1 血",
-      "hold_hp": 13.7,
-      "hp": 13.7,
-      "inputs": {
-       "extra_per_turn": 15.7
-      },
-      "n": 162,
-      "source": "公式"
-     },
-     "3": {
-      "block": 14.4,
-      "check": {
-       "median": 0.0,
-       "n": 14
-      },
-      "damage": 114.9,
-      "formula": "仪式 1：平均力量 3.5 × 每回合 6.4 段 = 每回合多 22.4 伤害；战斗 8 回合缩短 T·X/(D+X) = 2.87 回合 × 每回合 5.0 血",
-      "hold_hp": 14.4,
-      "hp": 14.4,
-      "inputs": {
-       "extra_per_turn": 22.4
-      },
-      "n": 117,
-      "source": "公式"
-     }
-    },
-    "8": {
-     "1": {
-      "block": 0.0,
-      "damage": 168.4,
-      "formula": "仪式 1：平均力量 4.5 × 每回合 3.7 段 = 每回合多 16.8 伤害；战斗 10.0 回合缩短 T·X/(D+X) = 0.00 回合 × 每回合 4.5 血",
-      "hold_hp": 0.0,
-      "hp": 0.0,
-      "inputs": {
-       "extra_per_turn": 16.8
-      },
-      "inputs_asc": 10,
-      "n": 292,
-      "source": "公式"
-     },
-     "2": {
-      "block": 13.7,
-      "damage": 99.2,
-      "formula": "仪式 1：平均力量 4.0 × 每回合 3.9 段 = 每回合多 15.7 伤害；战斗 9.0 回合缩短 T·X/(D+X) = 2.68 回合 × 每回合 5.1 血",
-      "hold_hp": 13.7,
-      "hp": 13.7,
-      "inputs": {
-       "extra_per_turn": 15.7
-      },
-      "inputs_asc": 10,
-      "n": 162,
-      "source": "公式"
-     },
-     "3": {
-      "block": 14.4,
-      "damage": 114.9,
-      "formula": "仪式 1：平均力量 3.5 × 每回合 6.4 段 = 每回合多 22.4 伤害；战斗 8 回合缩短 T·X/(D+X) = 2.87 回合 × 每回合 5.0 血",
-      "hold_hp": 14.4,
-      "hp": 14.4,
-      "inputs": {
-       "extra_per_turn": 22.4
-      },
-      "inputs_asc": 10,
-      "n": 117,
-      "source": "公式"
-     }
-    },
-    "9": {
-     "1": {
-      "block": 0.0,
-      "damage": 168.4,
-      "formula": "仪式 1：平均力量 4.5 × 每回合 3.7 段 = 每回合多 16.8 伤害；战斗 10.0 回合缩短 T·X/(D+X) = 0.00 回合 × 每回合 4.5 血",
-      "hold_hp": 0.0,
-      "hp": 0.0,
-      "inputs": {
-       "extra_per_turn": 16.8
-      },
-      "inputs_asc": 10,
-      "n": 292,
-      "source": "公式"
-     },
-     "2": {
-      "block": 13.7,
-      "damage": 99.2,
-      "formula": "仪式 1：平均力量 4.0 × 每回合 3.9 段 = 每回合多 15.7 伤害；战斗 9.0 回合缩短 T·X/(D+X) = 2.68 回合 × 每回合 5.1 血",
-      "hold_hp": 13.7,
-      "hp": 13.7,
-      "inputs": {
-       "extra_per_turn": 15.7
-      },
-      "inputs_asc": 10,
-      "n": 162,
-      "source": "公式"
-     },
-     "3": {
-      "block": 14.4,
-      "damage": 114.9,
-      "formula": "仪式 1：平均力量 3.5 × 每回合 6.4 段 = 每回合多 22.4 伤害；战斗 8 回合缩短 T·X/(D+X) = 2.87 回合 × 每回合 5.0 血",
-      "hold_hp": 14.4,
-      "hp": 14.4,
-      "inputs": {
-       "extra_per_turn": 22.4
-      },
-      "inputs_asc": 10,
-      "n": 117,
-      "source": "公式"
-     }
-    }
-   },
+   "by_asc": {},
    "category": "strength",
-   "check_all": {
-    "median": 0.0,
-    "n": 14
-   },
    "description": "获得[blue]{RitualPower}[/blue]层[gold]仪式[/gold]。",
    "kind": "ritual",
    "log": {
-    "boss_drinks": {
-     "10": 18
-    },
-    "drinks": 40,
-    "runs_seen": 21
+    "boss_drinks": {},
+    "drinks": 41,
+    "runs_seen": 22
    },
    "name": "马萨雷斯的赠礼",
    "pool": "shared",
@@ -4867,128 +956,12 @@
    "values": {}
   },
   "OROBIC_ACID": {
-   "by_asc": {
-    "10": {
-     "1": {
-      "block": 10.2,
-      "damage": 830622.2,
-      "formula": "3 张免费牌 × (1 张牌 1.03 + 1 能量 2.36) + 能力牌持续部分按整场 1 力量 0.0",
-      "hold_hp": 10.2,
-      "hp": 10.2,
-      "mc": {
-       "hp": 0.2,
-       "n": 44
-      },
-      "n": 292,
-      "source": "估"
-     },
-     "2": {
-      "block": 14.3,
-      "check": {
-       "median": 0.0,
-       "n": 2
-      },
-      "damage": 103.6,
-      "formula": "3 张免费牌 × (1 张牌 0.85 + 1 能量 2.44) + 能力牌持续部分按整场 1 力量 4.4",
-      "hold_hp": 14.3,
-      "hp": 14.3,
-      "mc": {
-       "hp": 1.9,
-       "n": 44
-      },
-      "n": 162,
-      "source": "估"
-     },
-     "3": {
-      "block": 12.1,
-      "damage": 96.3,
-      "formula": "3 张免费牌 × (1 张牌 0.02 + 1 能量 2.18) + 能力牌持续部分按整场 1 力量 5.5",
-      "hold_hp": 12.1,
-      "hp": 12.1,
-      "mc": {
-       "hp": 1.7,
-       "n": 44
-      },
-      "n": 117,
-      "source": "估"
-     }
-    },
-    "8": {
-     "1": {
-      "block": 10.2,
-      "damage": 830622.2,
-      "formula": "3 张免费牌 × (1 张牌 1.03 + 1 能量 2.36) + 能力牌持续部分按整场 1 力量 0.0",
-      "hold_hp": 10.2,
-      "hp": 10.2,
-      "inputs_asc": 10,
-      "n": 292,
-      "source": "估"
-     },
-     "2": {
-      "block": 14.3,
-      "damage": 103.6,
-      "formula": "3 张免费牌 × (1 张牌 0.85 + 1 能量 2.44) + 能力牌持续部分按整场 1 力量 4.4",
-      "hold_hp": 14.3,
-      "hp": 14.3,
-      "inputs_asc": 10,
-      "n": 162,
-      "source": "估"
-     },
-     "3": {
-      "block": 12.1,
-      "damage": 96.3,
-      "formula": "3 张免费牌 × (1 张牌 0.02 + 1 能量 2.18) + 能力牌持续部分按整场 1 力量 5.5",
-      "hold_hp": 12.1,
-      "hp": 12.1,
-      "inputs_asc": 10,
-      "n": 117,
-      "source": "估"
-     }
-    },
-    "9": {
-     "1": {
-      "block": 10.2,
-      "damage": 830622.2,
-      "formula": "3 张免费牌 × (1 张牌 1.03 + 1 能量 2.36) + 能力牌持续部分按整场 1 力量 0.0",
-      "hold_hp": 10.2,
-      "hp": 10.2,
-      "inputs_asc": 10,
-      "n": 292,
-      "source": "估"
-     },
-     "2": {
-      "block": 14.3,
-      "damage": 103.6,
-      "formula": "3 张免费牌 × (1 张牌 0.85 + 1 能量 2.44) + 能力牌持续部分按整场 1 力量 4.4",
-      "hold_hp": 14.3,
-      "hp": 14.3,
-      "inputs_asc": 10,
-      "n": 162,
-      "source": "估"
-     },
-     "3": {
-      "block": 12.1,
-      "damage": 96.3,
-      "formula": "3 张免费牌 × (1 张牌 0.02 + 1 能量 2.18) + 能力牌持续部分按整场 1 力量 5.5",
-      "hold_hp": 12.1,
-      "hp": 12.1,
-      "inputs_asc": 10,
-      "n": 117,
-      "source": "估"
-     }
-    }
-   },
+   "by_asc": {},
    "category": "random",
-   "check_all": {
-    "median": 0.0,
-    "n": 2
-   },
    "description": "往你的[gold]手牌[/gold]中加入一张随机攻击牌、一张随机技能牌和一张随机能力牌。这些牌在本回合免费。",
    "kind": "choice3",
    "log": {
-    "boss_drinks": {
-     "10": 2
-    },
+    "boss_drinks": {},
     "drinks": 21,
     "runs_seen": 20
    },
@@ -5005,19 +978,14 @@
   "POISON_POTION": {
    "by_asc": {},
    "category": "damage",
-   "check_all": {
-    "median": 0.0,
-    "n": 52
-   },
    "description": "给予[blue]{PoisonPower}[/blue]层[gold]中毒[/gold]。",
    "kind": null,
    "log": {
     "boss_drinks": {
-     "10": 288,
      "9": 6
     },
-    "drinks": 427,
-    "runs_seen": 118
+    "drinks": 433,
+    "runs_seen": 120
    },
    "name": "毒药水",
    "note": "数值未知",
@@ -5031,120 +999,12 @@
    "values": {}
   },
   "POTION_OF_BINDING": {
-   "by_asc": {
-    "10": {
-     "1": {
-      "block": 4.0,
-      "check": {
-       "median": 0.2,
-       "n": 2
-      },
-      "damage": 323665.5,
-      "formula": "易伤 1 回合（183699.6 伤害 × r）+ 虚弱 1 回合（1.7 血）",
-      "hold_hp": 4.0,
-      "hp": 4.0,
-      "n": 292,
-      "source": "公式"
-     },
-     "2": {
-      "block": 4.7,
-      "damage": 34.0,
-      "formula": "易伤 1 回合（18.5 伤害 × r）+ 虚弱 1 回合（2.1 血）",
-      "hold_hp": 4.7,
-      "hp": 4.7,
-      "n": 162,
-      "source": "公式"
-     },
-     "3": {
-      "block": 4.4,
-      "check": {
-       "median": 2.4,
-       "n": 1
-      },
-      "damage": 35.4,
-      "formula": "易伤 1 回合（20.0 伤害 × r）+ 虚弱 1 回合（1.9 血）",
-      "hold_hp": 4.4,
-      "hp": 4.4,
-      "n": 117,
-      "source": "公式"
-     }
-    },
-    "8": {
-     "1": {
-      "block": 4.0,
-      "damage": 323665.5,
-      "formula": "易伤 1 回合（183699.6 伤害 × r）+ 虚弱 1 回合（1.7 血）",
-      "hold_hp": 4.0,
-      "hp": 4.0,
-      "inputs_asc": 10,
-      "n": 292,
-      "source": "公式"
-     },
-     "2": {
-      "block": 4.7,
-      "damage": 34.0,
-      "formula": "易伤 1 回合（18.5 伤害 × r）+ 虚弱 1 回合（2.1 血）",
-      "hold_hp": 4.7,
-      "hp": 4.7,
-      "inputs_asc": 10,
-      "n": 162,
-      "source": "公式"
-     },
-     "3": {
-      "block": 4.4,
-      "damage": 35.4,
-      "formula": "易伤 1 回合（20.0 伤害 × r）+ 虚弱 1 回合（1.9 血）",
-      "hold_hp": 4.4,
-      "hp": 4.4,
-      "inputs_asc": 10,
-      "n": 117,
-      "source": "公式"
-     }
-    },
-    "9": {
-     "1": {
-      "block": 4.0,
-      "damage": 323665.5,
-      "formula": "易伤 1 回合（183699.6 伤害 × r）+ 虚弱 1 回合（1.7 血）",
-      "hold_hp": 4.0,
-      "hp": 4.0,
-      "inputs_asc": 10,
-      "n": 292,
-      "source": "公式"
-     },
-     "2": {
-      "block": 4.7,
-      "damage": 34.0,
-      "formula": "易伤 1 回合（18.5 伤害 × r）+ 虚弱 1 回合（2.1 血）",
-      "hold_hp": 4.7,
-      "hp": 4.7,
-      "inputs_asc": 10,
-      "n": 162,
-      "source": "公式"
-     },
-     "3": {
-      "block": 4.4,
-      "damage": 35.4,
-      "formula": "易伤 1 回合（20.0 伤害 × r）+ 虚弱 1 回合（1.9 血）",
-      "hold_hp": 4.4,
-      "hp": 4.4,
-      "inputs_asc": 10,
-      "n": 117,
-      "source": "公式"
-     }
-    }
-   },
+   "by_asc": {},
    "category": "debuff",
-   "check_all": {
-    "median": 0.5,
-    "n": 3
-   },
    "description": "给予所有敌人[blue]{WeakPower:diff()}[/blue]层[gold]虚弱[/gold]和[blue]{VulnerablePower:diff()}[/blue]层[gold]易伤[/gold]。",
    "kind": "binding",
    "log": {
-    "boss_drinks": {
-     "10": 3
-    },
+    "boss_drinks": {},
     "drinks": 53,
     "runs_seen": 44
    },
@@ -5204,151 +1064,12 @@
    "values": {}
   },
   "POTION_SHAPED_ROCK": {
-   "by_asc": {
-    "10": {
-     "1": {
-      "block": 0.0,
-      "check": {
-       "median": 0.0,
-       "n": 6
-      },
-      "damage": 15.0,
-      "formula": "15 伤害 × r 0.000",
-      "hold_hp": 0.0,
-      "hp": 0.0,
-      "inputs": {
-       "Damage": 15
-      },
-      "n": 292,
-      "source": "公式"
-     },
-     "2": {
-      "block": 2.1,
-      "check": {
-       "median": 0.0,
-       "n": 9
-      },
-      "damage": 15.0,
-      "formula": "15 伤害 × r 0.138",
-      "hold_hp": 2.1,
-      "hp": 2.1,
-      "inputs": {
-       "Damage": 15
-      },
-      "n": 162,
-      "source": "公式"
-     },
-     "3": {
-      "block": 1.9,
-      "check": {
-       "median": 0.0,
-       "n": 25
-      },
-      "damage": 15.0,
-      "formula": "15 伤害 × r 0.125",
-      "hold_hp": 1.9,
-      "hp": 1.9,
-      "inputs": {
-       "Damage": 15
-      },
-      "n": 117,
-      "source": "公式"
-     }
-    },
-    "8": {
-     "1": {
-      "block": 0.0,
-      "damage": 15.0,
-      "formula": "15 伤害 × r 0.000",
-      "hold_hp": 0.0,
-      "hp": 0.0,
-      "inputs": {
-       "Damage": 15
-      },
-      "inputs_asc": 10,
-      "n": 292,
-      "source": "公式"
-     },
-     "2": {
-      "block": 2.1,
-      "damage": 15.0,
-      "formula": "15 伤害 × r 0.138",
-      "hold_hp": 2.1,
-      "hp": 2.1,
-      "inputs": {
-       "Damage": 15
-      },
-      "inputs_asc": 10,
-      "n": 162,
-      "source": "公式"
-     },
-     "3": {
-      "block": 1.9,
-      "damage": 15.0,
-      "formula": "15 伤害 × r 0.125",
-      "hold_hp": 1.9,
-      "hp": 1.9,
-      "inputs": {
-       "Damage": 15
-      },
-      "inputs_asc": 10,
-      "n": 117,
-      "source": "公式"
-     }
-    },
-    "9": {
-     "1": {
-      "block": 0.0,
-      "damage": 15.0,
-      "formula": "15 伤害 × r 0.000",
-      "hold_hp": 0.0,
-      "hp": 0.0,
-      "inputs": {
-       "Damage": 15
-      },
-      "inputs_asc": 10,
-      "n": 292,
-      "source": "公式"
-     },
-     "2": {
-      "block": 2.1,
-      "damage": 15.0,
-      "formula": "15 伤害 × r 0.138",
-      "hold_hp": 2.1,
-      "hp": 2.1,
-      "inputs": {
-       "Damage": 15
-      },
-      "inputs_asc": 10,
-      "n": 162,
-      "source": "公式"
-     },
-     "3": {
-      "block": 1.9,
-      "damage": 15.0,
-      "formula": "15 伤害 × r 0.125",
-      "hold_hp": 1.9,
-      "hp": 1.9,
-      "inputs": {
-       "Damage": 15
-      },
-      "inputs_asc": 10,
-      "n": 117,
-      "source": "公式"
-     }
-    }
-   },
+   "by_asc": {},
    "category": "damage",
-   "check_all": {
-    "median": 0.0,
-    "n": 40
-   },
    "description": "造成[blue]{Damage}[/blue]点伤害。",
    "kind": "damage",
    "log": {
-    "boss_drinks": {
-     "10": 51
-    },
+    "boss_drinks": {},
     "drinks": 158,
     "runs_seen": 15
    },
@@ -5386,147 +1107,12 @@
    "values": {}
   },
   "POWDERED_DEMISE": {
-   "by_asc": {
-    "10": {
-     "1": {
-      "block": 0.0,
-      "check": {
-       "median": 0.3,
-       "n": 2
-      },
-      "damage": 90.0,
-      "formula": "每回合 9 点（消亡） = 每回合多 9 伤害；战斗 10.0 回合缩短 T·X/(D+X) = 0.00 回合 × 每回合 4.5 血",
-      "hold_hp": 0.0,
-      "hp": 0.0,
-      "inputs": {
-       "extra_per_turn": 9
-      },
-      "n": 292,
-      "source": "公式"
-     },
-     "2": {
-      "block": 9.0,
-      "damage": 65.2,
-      "formula": "每回合 9 点（消亡） = 每回合多 9 伤害；战斗 9.0 回合缩短 T·X/(D+X) = 1.76 回合 × 每回合 5.1 血",
-      "hold_hp": 9.0,
-      "hp": 9.0,
-      "inputs": {
-       "extra_per_turn": 9
-      },
-      "n": 162,
-      "source": "公式"
-     },
-     "3": {
-      "block": 7.4,
-      "check": {
-       "median": 0.0,
-       "n": 13
-      },
-      "damage": 58.8,
-      "formula": "每回合 9 点（消亡） = 每回合多 9 伤害；战斗 8 回合缩短 T·X/(D+X) = 1.47 回合 × 每回合 5.0 血",
-      "hold_hp": 7.4,
-      "hp": 7.4,
-      "inputs": {
-       "extra_per_turn": 9
-      },
-      "n": 117,
-      "source": "公式"
-     }
-    },
-    "8": {
-     "1": {
-      "block": 0.0,
-      "damage": 90.0,
-      "formula": "每回合 9 点（消亡） = 每回合多 9 伤害；战斗 10.0 回合缩短 T·X/(D+X) = 0.00 回合 × 每回合 4.5 血",
-      "hold_hp": 0.0,
-      "hp": 0.0,
-      "inputs": {
-       "extra_per_turn": 9
-      },
-      "inputs_asc": 10,
-      "n": 292,
-      "source": "公式"
-     },
-     "2": {
-      "block": 9.0,
-      "damage": 65.2,
-      "formula": "每回合 9 点（消亡） = 每回合多 9 伤害；战斗 9.0 回合缩短 T·X/(D+X) = 1.76 回合 × 每回合 5.1 血",
-      "hold_hp": 9.0,
-      "hp": 9.0,
-      "inputs": {
-       "extra_per_turn": 9
-      },
-      "inputs_asc": 10,
-      "n": 162,
-      "source": "公式"
-     },
-     "3": {
-      "block": 7.4,
-      "damage": 58.8,
-      "formula": "每回合 9 点（消亡） = 每回合多 9 伤害；战斗 8 回合缩短 T·X/(D+X) = 1.47 回合 × 每回合 5.0 血",
-      "hold_hp": 7.4,
-      "hp": 7.4,
-      "inputs": {
-       "extra_per_turn": 9
-      },
-      "inputs_asc": 10,
-      "n": 117,
-      "source": "公式"
-     }
-    },
-    "9": {
-     "1": {
-      "block": 0.0,
-      "damage": 90.0,
-      "formula": "每回合 9 点（消亡） = 每回合多 9 伤害；战斗 10.0 回合缩短 T·X/(D+X) = 0.00 回合 × 每回合 4.5 血",
-      "hold_hp": 0.0,
-      "hp": 0.0,
-      "inputs": {
-       "extra_per_turn": 9
-      },
-      "inputs_asc": 10,
-      "n": 292,
-      "source": "公式"
-     },
-     "2": {
-      "block": 9.0,
-      "damage": 65.2,
-      "formula": "每回合 9 点（消亡） = 每回合多 9 伤害；战斗 9.0 回合缩短 T·X/(D+X) = 1.76 回合 × 每回合 5.1 血",
-      "hold_hp": 9.0,
-      "hp": 9.0,
-      "inputs": {
-       "extra_per_turn": 9
-      },
-      "inputs_asc": 10,
-      "n": 162,
-      "source": "公式"
-     },
-     "3": {
-      "block": 7.4,
-      "damage": 58.8,
-      "formula": "每回合 9 点（消亡） = 每回合多 9 伤害；战斗 8 回合缩短 T·X/(D+X) = 1.47 回合 × 每回合 5.0 血",
-      "hold_hp": 7.4,
-      "hp": 7.4,
-      "inputs": {
-       "extra_per_turn": 9
-      },
-      "inputs_asc": 10,
-      "n": 117,
-      "source": "公式"
-     }
-    }
-   },
+   "by_asc": {},
    "category": "damage",
-   "check_all": {
-    "median": 0.0,
-    "n": 15
-   },
    "description": "敌人在自身的每个回合结束时，失去[blue]{Demise}[/blue]点生命。",
    "kind": "demise",
    "log": {
-    "boss_drinks": {
-     "10": 23
-    },
+    "boss_drinks": {},
     "drinks": 74,
     "runs_seen": 48
    },
@@ -5543,138 +1129,14 @@
    }
   },
   "POWER_POTION": {
-   "by_asc": {
-    "10": {
-     "1": {
-      "block": 3.4,
-      "check": {
-       "median": 0.0,
-       "n": 19
-      },
-      "damage": 276874.1,
-      "formula": "1 张免费牌 × (1 张牌 1.03 + 1 能量 2.36) + 能力牌持续部分按整场 1 力量 0.0",
-      "hold_hp": 3.4,
-      "hp": 3.4,
-      "mc": {
-       "hp": 0.2,
-       "n": 1524
-      },
-      "n": 292,
-      "source": "估"
-     },
-     "2": {
-      "block": 7.7,
-      "check": {
-       "median": 0.0,
-       "n": 43
-      },
-      "damage": 55.8,
-      "formula": "1 张免费牌 × (1 张牌 0.85 + 1 能量 2.44) + 能力牌持续部分按整场 1 力量 4.4",
-      "hold_hp": 7.7,
-      "hp": 7.7,
-      "mc": {
-       "hp": 0.4,
-       "n": 1524
-      },
-      "n": 162,
-      "source": "估"
-     },
-     "3": {
-      "block": 7.7,
-      "check": {
-       "median": 0.0,
-       "n": 28
-      },
-      "damage": 61.3,
-      "formula": "1 张免费牌 × (1 张牌 0.02 + 1 能量 2.18) + 能力牌持续部分按整场 1 力量 5.5",
-      "hold_hp": 7.7,
-      "hp": 7.7,
-      "mc": {
-       "hp": 0.3,
-       "n": 1524
-      },
-      "n": 117,
-      "source": "估"
-     }
-    },
-    "8": {
-     "1": {
-      "block": 3.4,
-      "damage": 276874.1,
-      "formula": "1 张免费牌 × (1 张牌 1.03 + 1 能量 2.36) + 能力牌持续部分按整场 1 力量 0.0",
-      "hold_hp": 3.4,
-      "hp": 3.4,
-      "inputs_asc": 10,
-      "n": 292,
-      "source": "估"
-     },
-     "2": {
-      "block": 7.7,
-      "damage": 55.8,
-      "formula": "1 张免费牌 × (1 张牌 0.85 + 1 能量 2.44) + 能力牌持续部分按整场 1 力量 4.4",
-      "hold_hp": 7.7,
-      "hp": 7.7,
-      "inputs_asc": 10,
-      "n": 162,
-      "source": "估"
-     },
-     "3": {
-      "block": 7.7,
-      "damage": 61.3,
-      "formula": "1 张免费牌 × (1 张牌 0.02 + 1 能量 2.18) + 能力牌持续部分按整场 1 力量 5.5",
-      "hold_hp": 7.7,
-      "hp": 7.7,
-      "inputs_asc": 10,
-      "n": 117,
-      "source": "估"
-     }
-    },
-    "9": {
-     "1": {
-      "block": 3.4,
-      "damage": 276874.1,
-      "formula": "1 张免费牌 × (1 张牌 1.03 + 1 能量 2.36) + 能力牌持续部分按整场 1 力量 0.0",
-      "hold_hp": 3.4,
-      "hp": 3.4,
-      "inputs_asc": 10,
-      "n": 292,
-      "source": "估"
-     },
-     "2": {
-      "block": 7.7,
-      "damage": 55.8,
-      "formula": "1 张免费牌 × (1 张牌 0.85 + 1 能量 2.44) + 能力牌持续部分按整场 1 力量 4.4",
-      "hold_hp": 7.7,
-      "hp": 7.7,
-      "inputs_asc": 10,
-      "n": 162,
-      "source": "估"
-     },
-     "3": {
-      "block": 7.7,
-      "damage": 61.3,
-      "formula": "1 张免费牌 × (1 张牌 0.02 + 1 能量 2.18) + 能力牌持续部分按整场 1 力量 5.5",
-      "hold_hp": 7.7,
-      "hp": 7.7,
-      "inputs_asc": 10,
-      "n": 117,
-      "source": "估"
-     }
-    }
-   },
+   "by_asc": {},
    "category": "random",
-   "check_all": {
-    "median": 0.0,
-    "n": 90
-   },
    "description": "从[blue]3[/blue]张随机能力牌中选择[blue]1[/blue]张加入你的[gold]手牌[/gold]。这张牌在本回合可以免费打出。",
    "kind": "choice_power",
    "log": {
-    "boss_drinks": {
-     "10": 93
-    },
-    "drinks": 222,
-    "runs_seen": 123
+    "boss_drinks": {},
+    "drinks": 226,
+    "runs_seen": 125
    },
    "name": "能力药水",
    "pool": "shared",
@@ -5687,124 +1149,12 @@
    "values": {}
   },
   "RADIANT_TINCTURE": {
-   "by_asc": {
-    "10": {
-     "1": {
-      "block": 9.4,
-      "check": {
-       "median": 0.0,
-       "n": 1
-      },
-      "damage": 769764.7,
-      "formula": "能量 1 + 之后 3 回合各 1 × 每点能量 2.36 血",
-      "hold_hp": 9.4,
-      "hp": 9.4,
-      "n": 292,
-      "source": "估"
-     },
-     "2": {
-      "block": 9.7,
-      "check": {
-       "median": 0.0,
-       "n": 8
-      },
-      "damage": 70.7,
-      "formula": "能量 1 + 之后 3 回合各 1 × 每点能量 2.44 血",
-      "hold_hp": 9.7,
-      "hp": 9.7,
-      "n": 162,
-      "source": "估"
-     },
-     "3": {
-      "block": 8.7,
-      "check": {
-       "median": 0.0,
-       "n": 7
-      },
-      "damage": 69.4,
-      "formula": "能量 1 + 之后 3 回合各 1 × 每点能量 2.18 血",
-      "hold_hp": 8.7,
-      "hp": 8.7,
-      "n": 117,
-      "source": "估"
-     }
-    },
-    "8": {
-     "1": {
-      "block": 9.4,
-      "damage": 769764.7,
-      "formula": "能量 1 + 之后 3 回合各 1 × 每点能量 2.36 血",
-      "hold_hp": 9.4,
-      "hp": 9.4,
-      "inputs_asc": 10,
-      "n": 292,
-      "source": "估"
-     },
-     "2": {
-      "block": 9.7,
-      "damage": 70.7,
-      "formula": "能量 1 + 之后 3 回合各 1 × 每点能量 2.44 血",
-      "hold_hp": 9.7,
-      "hp": 9.7,
-      "inputs_asc": 10,
-      "n": 162,
-      "source": "估"
-     },
-     "3": {
-      "block": 8.7,
-      "damage": 69.4,
-      "formula": "能量 1 + 之后 3 回合各 1 × 每点能量 2.18 血",
-      "hold_hp": 8.7,
-      "hp": 8.7,
-      "inputs_asc": 10,
-      "n": 117,
-      "source": "估"
-     }
-    },
-    "9": {
-     "1": {
-      "block": 9.4,
-      "damage": 769764.7,
-      "formula": "能量 1 + 之后 3 回合各 1 × 每点能量 2.36 血",
-      "hold_hp": 9.4,
-      "hp": 9.4,
-      "inputs_asc": 10,
-      "n": 292,
-      "source": "估"
-     },
-     "2": {
-      "block": 9.7,
-      "damage": 70.7,
-      "formula": "能量 1 + 之后 3 回合各 1 × 每点能量 2.44 血",
-      "hold_hp": 9.7,
-      "hp": 9.7,
-      "inputs_asc": 10,
-      "n": 162,
-      "source": "估"
-     },
-     "3": {
-      "block": 8.7,
-      "damage": 69.4,
-      "formula": "能量 1 + 之后 3 回合各 1 × 每点能量 2.18 血",
-      "hold_hp": 8.7,
-      "hp": 8.7,
-      "inputs_asc": 10,
-      "n": 117,
-      "source": "估"
-     }
-    }
-   },
+   "by_asc": {},
    "category": "energy",
-   "check_all": {
-    "median": 0.0,
-    "n": 16
-   },
    "description": "获得{Energy:energyIcons()}。在你的下[blue]{RadiancePower}[/blue]个回合开始时，额外获得{energyPrefix:energyIcons(1)}。",
    "kind": "energy",
    "log": {
-    "boss_drinks": {
-     "10": 18
-    },
+    "boss_drinks": {},
     "drinks": 72,
     "runs_seen": 44
    },
@@ -5822,126 +1172,14 @@
    }
   },
   "REGEN_POTION": {
-   "by_asc": {
-    "10": {
-     "1": {
-      "block": 15,
-      "check": {
-       "median": 0.4,
-       "n": 8
-      },
-      "damage": 1225564.6,
-      "formula": "再生 5：5+4+3+2+1",
-      "hold_hp": 15,
-      "hp": 15,
-      "n": 292,
-      "source": "公式"
-     },
-     "2": {
-      "block": 15,
-      "check": {
-       "median": 4.8,
-       "n": 2
-      },
-      "damage": 108.9,
-      "formula": "再生 5：5+4+3+2+1",
-      "hold_hp": 15,
-      "hp": 15,
-      "n": 162,
-      "source": "公式"
-     },
-     "3": {
-      "block": 15,
-      "check": {
-       "median": 0.0,
-       "n": 9
-      },
-      "damage": 119.5,
-      "formula": "再生 5：5+4+3+2+1",
-      "hold_hp": 15,
-      "hp": 15,
-      "n": 117,
-      "source": "公式"
-     }
-    },
-    "8": {
-     "1": {
-      "block": 15,
-      "damage": 1225564.6,
-      "formula": "再生 5：5+4+3+2+1",
-      "hold_hp": 15,
-      "hp": 15,
-      "inputs_asc": 10,
-      "n": 292,
-      "source": "公式"
-     },
-     "2": {
-      "block": 15,
-      "damage": 108.9,
-      "formula": "再生 5：5+4+3+2+1",
-      "hold_hp": 15,
-      "hp": 15,
-      "inputs_asc": 10,
-      "n": 162,
-      "source": "公式"
-     },
-     "3": {
-      "block": 15,
-      "damage": 119.5,
-      "formula": "再生 5：5+4+3+2+1",
-      "hold_hp": 15,
-      "hp": 15,
-      "inputs_asc": 10,
-      "n": 117,
-      "source": "公式"
-     }
-    },
-    "9": {
-     "1": {
-      "block": 15,
-      "damage": 1225564.6,
-      "formula": "再生 5：5+4+3+2+1",
-      "hold_hp": 15,
-      "hp": 15,
-      "inputs_asc": 10,
-      "n": 292,
-      "source": "公式"
-     },
-     "2": {
-      "block": 15,
-      "damage": 108.9,
-      "formula": "再生 5：5+4+3+2+1",
-      "hold_hp": 15,
-      "hp": 15,
-      "inputs_asc": 10,
-      "n": 162,
-      "source": "公式"
-     },
-     "3": {
-      "block": 15,
-      "damage": 119.5,
-      "formula": "再生 5：5+4+3+2+1",
-      "hold_hp": 15,
-      "hp": 15,
-      "inputs_asc": 10,
-      "n": 117,
-      "source": "公式"
-     }
-    }
-   },
+   "by_asc": {},
    "category": "heal",
-   "check_all": {
-    "median": 0.0,
-    "n": 19
-   },
    "description": "获得[green]{RegenPower}[/green]层[gold]再生[/gold]。",
    "kind": "regen",
    "log": {
-    "boss_drinks": {
-     "10": 31
-    },
-    "drinks": 72,
-    "runs_seen": 54
+    "boss_drinks": {},
+    "drinks": 74,
+    "runs_seen": 56
    },
    "name": "再生药水",
    "pool": "shared",
@@ -5956,118 +1194,14 @@
    }
   },
   "SHACKLING_POTION": {
-   "by_asc": {
-    "10": {
-     "1": {
-      "block": 5.6,
-      "check": {
-       "median": 0.0,
-       "n": 9
-      },
-      "damage": 460699.4,
-      "formula": "本回合敌方每段 −7，按每回合 1 段（估）：挨打回合 min(7, 打进来的)",
-      "hold_hp": 5.6,
-      "hp": 5.6,
-      "n": 292,
-      "source": "估"
-     },
-     "2": {
-      "block": 5.8,
-      "damage": 41.8,
-      "formula": "本回合敌方每段 −7，按每回合 1 段（估）：挨打回合 min(7, 打进来的)",
-      "hold_hp": 5.8,
-      "hp": 5.8,
-      "n": 162,
-      "source": "估"
-     },
-     "3": {
-      "block": 5.6,
-      "damage": 44.4,
-      "formula": "本回合敌方每段 −7，按每回合 1 段（估）：挨打回合 min(7, 打进来的)",
-      "hold_hp": 5.6,
-      "hp": 5.6,
-      "n": 117,
-      "source": "估"
-     }
-    },
-    "8": {
-     "1": {
-      "block": 5.6,
-      "damage": 460699.4,
-      "formula": "本回合敌方每段 −7，按每回合 1 段（估）：挨打回合 min(7, 打进来的)",
-      "hold_hp": 5.6,
-      "hp": 5.6,
-      "inputs_asc": 10,
-      "n": 292,
-      "source": "估"
-     },
-     "2": {
-      "block": 5.8,
-      "damage": 41.8,
-      "formula": "本回合敌方每段 −7，按每回合 1 段（估）：挨打回合 min(7, 打进来的)",
-      "hold_hp": 5.8,
-      "hp": 5.8,
-      "inputs_asc": 10,
-      "n": 162,
-      "source": "估"
-     },
-     "3": {
-      "block": 5.6,
-      "damage": 44.4,
-      "formula": "本回合敌方每段 −7，按每回合 1 段（估）：挨打回合 min(7, 打进来的)",
-      "hold_hp": 5.6,
-      "hp": 5.6,
-      "inputs_asc": 10,
-      "n": 117,
-      "source": "估"
-     }
-    },
-    "9": {
-     "1": {
-      "block": 5.6,
-      "damage": 460699.4,
-      "formula": "本回合敌方每段 −7，按每回合 1 段（估）：挨打回合 min(7, 打进来的)",
-      "hold_hp": 5.6,
-      "hp": 5.6,
-      "inputs_asc": 10,
-      "n": 292,
-      "source": "估"
-     },
-     "2": {
-      "block": 5.8,
-      "damage": 41.8,
-      "formula": "本回合敌方每段 −7，按每回合 1 段（估）：挨打回合 min(7, 打进来的)",
-      "hold_hp": 5.8,
-      "hp": 5.8,
-      "inputs_asc": 10,
-      "n": 162,
-      "source": "估"
-     },
-     "3": {
-      "block": 5.6,
-      "damage": 44.4,
-      "formula": "本回合敌方每段 −7，按每回合 1 段（估）：挨打回合 min(7, 打进来的)",
-      "hold_hp": 5.6,
-      "hp": 5.6,
-      "inputs_asc": 10,
-      "n": 117,
-      "source": "估"
-     }
-    }
-   },
+   "by_asc": {},
    "category": "debuff",
-   "check_all": {
-    "median": 0.0,
-    "n": 9
-   },
    "description": "所有敌人在这个回合失去[blue]{StrengthPower}[/blue]点[gold]力量[/gold]。",
    "kind": "enemy_str_turn",
    "log": {
-    "boss_drinks": {
-     "10": 9
-    },
-    "drinks": 27,
-    "runs_seen": 17
+    "boss_drinks": {},
+    "drinks": 28,
+    "runs_seen": 18
    },
    "name": "镣铐药水",
    "pool": "shared",
@@ -6082,145 +1216,14 @@
    }
   },
   "SHIP_IN_A_BOTTLE": {
-   "by_asc": {
-    "10": {
-     "1": {
-      "block": 10.3,
-      "check": {
-       "median": 3.6,
-       "n": 2
-      },
-      "damage": 839907.7,
-      "formula": "10 格挡，挨打回合 min(10, 打进来的) + 下回合 10 格挡 min(10, 打进来的)",
-      "hold_hp": 10.3,
-      "hp": 10.3,
-      "inputs": {
-       "Block": 10
-      },
-      "n": 292,
-      "source": "公式"
-     },
-     "2": {
-      "block": 10.6,
-      "damage": 76.9,
-      "formula": "10 格挡，挨打回合 min(10, 打进来的) + 下回合 10 格挡 min(10, 打进来的)",
-      "hold_hp": 10.6,
-      "hp": 10.6,
-      "inputs": {
-       "Block": 10
-      },
-      "n": 162,
-      "source": "公式"
-     },
-     "3": {
-      "block": 9.9,
-      "damage": 79.0,
-      "formula": "10 格挡，挨打回合 min(10, 打进来的) + 下回合 10 格挡 min(10, 打进来的)",
-      "hold_hp": 9.9,
-      "hp": 9.9,
-      "inputs": {
-       "Block": 10
-      },
-      "n": 117,
-      "source": "公式"
-     }
-    },
-    "8": {
-     "1": {
-      "block": 10.3,
-      "damage": 839907.7,
-      "formula": "10 格挡，挨打回合 min(10, 打进来的) + 下回合 10 格挡 min(10, 打进来的)",
-      "hold_hp": 10.3,
-      "hp": 10.3,
-      "inputs": {
-       "Block": 10
-      },
-      "inputs_asc": 10,
-      "n": 292,
-      "source": "公式"
-     },
-     "2": {
-      "block": 10.6,
-      "damage": 76.9,
-      "formula": "10 格挡，挨打回合 min(10, 打进来的) + 下回合 10 格挡 min(10, 打进来的)",
-      "hold_hp": 10.6,
-      "hp": 10.6,
-      "inputs": {
-       "Block": 10
-      },
-      "inputs_asc": 10,
-      "n": 162,
-      "source": "公式"
-     },
-     "3": {
-      "block": 9.9,
-      "damage": 79.0,
-      "formula": "10 格挡，挨打回合 min(10, 打进来的) + 下回合 10 格挡 min(10, 打进来的)",
-      "hold_hp": 9.9,
-      "hp": 9.9,
-      "inputs": {
-       "Block": 10
-      },
-      "inputs_asc": 10,
-      "n": 117,
-      "source": "公式"
-     }
-    },
-    "9": {
-     "1": {
-      "block": 10.3,
-      "damage": 839907.7,
-      "formula": "10 格挡，挨打回合 min(10, 打进来的) + 下回合 10 格挡 min(10, 打进来的)",
-      "hold_hp": 10.3,
-      "hp": 10.3,
-      "inputs": {
-       "Block": 10
-      },
-      "inputs_asc": 10,
-      "n": 292,
-      "source": "公式"
-     },
-     "2": {
-      "block": 10.6,
-      "damage": 76.9,
-      "formula": "10 格挡，挨打回合 min(10, 打进来的) + 下回合 10 格挡 min(10, 打进来的)",
-      "hold_hp": 10.6,
-      "hp": 10.6,
-      "inputs": {
-       "Block": 10
-      },
-      "inputs_asc": 10,
-      "n": 162,
-      "source": "公式"
-     },
-     "3": {
-      "block": 9.9,
-      "damage": 79.0,
-      "formula": "10 格挡，挨打回合 min(10, 打进来的) + 下回合 10 格挡 min(10, 打进来的)",
-      "hold_hp": 9.9,
-      "hp": 9.9,
-      "inputs": {
-       "Block": 10
-      },
-      "inputs_asc": 10,
-      "n": 117,
-      "source": "公式"
-     }
-    }
-   },
+   "by_asc": {},
    "category": "block",
-   "check_all": {
-    "median": 3.6,
-    "n": 2
-   },
    "description": "获得[blue]{Block:diff()}[/blue]点[gold]格挡[/gold]。在下个回合开始时获得[blue]{Block:diff()}[/blue]点[gold]格挡[/gold]。",
    "kind": "block",
    "log": {
-    "boss_drinks": {
-     "10": 2
-    },
-    "drinks": 18,
-    "runs_seen": 16
+    "boss_drinks": {},
+    "drinks": 19,
+    "runs_seen": 17
    },
    "name": "瓶中船",
    "pool": "shared",
@@ -6235,155 +1238,20 @@
    }
   },
   "SKILL_POTION": {
-   "by_asc": {
-    "10": {
-     "1": {
-      "block": 3.4,
-      "check": {
-       "median": 0.0,
-       "n": 12
-      },
-      "damage": 276874.1,
-      "formula": "1 张免费牌 × (1 张牌 1.03 + 1 能量 2.36)",
-      "hold_hp": 3.4,
-      "hp": 3.4,
-      "mc": {
-       "hp": 0.8,
-       "n": 688
-      },
-      "n": 292,
-      "source": "估"
-     },
-     "2": {
-      "block": 3.3,
-      "check": {
-       "median": 0.0,
-       "n": 16
-      },
-      "damage": 23.9,
-      "formula": "1 张免费牌 × (1 张牌 0.85 + 1 能量 2.44)",
-      "hold_hp": 3.3,
-      "hp": 3.3,
-      "mc": {
-       "hp": 1.3,
-       "n": 688
-      },
-      "n": 162,
-      "source": "估"
-     },
-     "3": {
-      "block": 2.2,
-      "check": {
-       "median": 1.0,
-       "n": 13
-      },
-      "damage": 17.5,
-      "formula": "1 张免费牌 × (1 张牌 0.02 + 1 能量 2.18)",
-      "hold_hp": 2.2,
-      "hp": 2.2,
-      "mc": {
-       "hp": 1.2,
-       "n": 688
-      },
-      "n": 117,
-      "source": "估"
-     }
-    },
-    "8": {
-     "1": {
-      "block": 3.4,
-      "damage": 276874.1,
-      "formula": "1 张免费牌 × (1 张牌 1.03 + 1 能量 2.36)",
-      "hold_hp": 3.4,
-      "hp": 3.4,
-      "inputs_asc": 10,
-      "mc": {
-       "hp": 0.7,
-       "n": 15
-      },
-      "n": 292,
-      "source": "估"
-     },
-     "2": {
-      "block": 3.3,
-      "damage": 23.9,
-      "formula": "1 张免费牌 × (1 张牌 0.85 + 1 能量 2.44)",
-      "hold_hp": 3.3,
-      "hp": 3.3,
-      "inputs_asc": 10,
-      "mc": {
-       "hp": 1.3,
-       "n": 15
-      },
-      "n": 162,
-      "source": "估"
-     },
-     "3": {
-      "block": 2.2,
-      "check": {
-       "median": 5.7,
-       "n": 1
-      },
-      "damage": 17.5,
-      "formula": "1 张免费牌 × (1 张牌 0.02 + 1 能量 2.18)",
-      "hold_hp": 2.2,
-      "hp": 2.2,
-      "inputs_asc": 10,
-      "mc": {
-       "hp": 1.3,
-       "n": 15
-      },
-      "n": 117,
-      "source": "估"
-     }
-    },
-    "9": {
-     "1": {
-      "block": 3.4,
-      "damage": 276874.1,
-      "formula": "1 张免费牌 × (1 张牌 1.03 + 1 能量 2.36)",
-      "hold_hp": 3.4,
-      "hp": 3.4,
-      "inputs_asc": 10,
-      "n": 292,
-      "source": "估"
-     },
-     "2": {
-      "block": 3.3,
-      "damage": 23.9,
-      "formula": "1 张免费牌 × (1 张牌 0.85 + 1 能量 2.44)",
-      "hold_hp": 3.3,
-      "hp": 3.3,
-      "inputs_asc": 10,
-      "n": 162,
-      "source": "估"
-     },
-     "3": {
-      "block": 2.2,
-      "damage": 17.5,
-      "formula": "1 张免费牌 × (1 张牌 0.02 + 1 能量 2.18)",
-      "hold_hp": 2.2,
-      "hp": 2.2,
-      "inputs_asc": 10,
-      "n": 117,
-      "source": "估"
-     }
-    }
-   },
+   "by_asc": {},
    "category": "random",
    "check_all": {
-    "median": 0.0,
-    "n": 42
+    "median": 5.7,
+    "n": 1
    },
    "description": "从[blue]3[/blue]张随机技能牌中选择[blue]1[/blue]张加入你的[gold]手牌[/gold]。这张牌在本回合可以免费打出。",
    "kind": "choice",
    "log": {
     "boss_drinks": {
-     "10": 43,
      "8": 1
     },
-    "drinks": 168,
-    "runs_seen": 110
+    "drinks": 173,
+    "runs_seen": 112
    },
    "name": "技能药水",
    "pool": "shared",
@@ -6396,140 +1264,12 @@
    "values": {}
   },
   "SNECKO_OIL": {
-   "by_asc": {
-    "10": {
-     "1": {
-      "block": 2.6,
-      "check": {
-       "median": 3.8,
-       "n": 10
-      },
-      "damage": 211082.2,
-      "formula": "抽 7 张但手牌上限 10（手里 5）= 5 张 × 0.52；耗能随机不计",
-      "hold_hp": 2.6,
-      "hp": 2.6,
-      "mc": {
-       "hp": 0.5,
-       "n": 54
-      },
-      "n": 292,
-      "source": "估"
-     },
-     "2": {
-      "block": 2.1,
-      "damage": 15.5,
-      "formula": "抽 7 张但手牌上限 10（手里 5）= 5 张 × 0.43；耗能随机不计",
-      "hold_hp": 2.1,
-      "hp": 2.1,
-      "mc": {
-       "hp": 1.8,
-       "n": 54
-      },
-      "n": 162,
-      "source": "估"
-     },
-     "3": {
-      "block": 0.0,
-      "damage": 0.3,
-      "formula": "抽 7 张但手牌上限 10（手里 5）= 5 张 × 0.01；耗能随机不计",
-      "hold_hp": 0.0,
-      "hp": 0.0,
-      "mc": {
-       "hp": 1.7,
-       "n": 54
-      },
-      "n": 117,
-      "source": "估"
-     }
-    },
-    "8": {
-     "1": {
-      "block": 2.6,
-      "damage": 211082.2,
-      "formula": "抽 7 张但手牌上限 10（手里 5）= 5 张 × 0.52；耗能随机不计",
-      "hold_hp": 2.6,
-      "hp": 2.6,
-      "inputs_asc": 10,
-      "n": 292,
-      "source": "估"
-     },
-     "2": {
-      "block": 2.1,
-      "damage": 15.5,
-      "formula": "抽 7 张但手牌上限 10（手里 5）= 5 张 × 0.43；耗能随机不计",
-      "hold_hp": 2.1,
-      "hp": 2.1,
-      "inputs_asc": 10,
-      "n": 162,
-      "source": "估"
-     },
-     "3": {
-      "block": 0.0,
-      "damage": 0.3,
-      "formula": "抽 7 张但手牌上限 10（手里 5）= 5 张 × 0.01；耗能随机不计",
-      "hold_hp": 0.0,
-      "hp": 0.0,
-      "inputs_asc": 10,
-      "n": 117,
-      "source": "估"
-     }
-    },
-    "9": {
-     "1": {
-      "block": 2.6,
-      "damage": 211082.2,
-      "formula": "抽 7 张但手牌上限 10（手里 5）= 5 张 × 0.52；耗能随机不计",
-      "hold_hp": 2.6,
-      "hp": 2.6,
-      "inputs_asc": 10,
-      "mc": {
-       "hp": -0.3,
-       "n": 1
-      },
-      "n": 292,
-      "source": "估"
-     },
-     "2": {
-      "block": 2.1,
-      "damage": 15.5,
-      "formula": "抽 7 张但手牌上限 10（手里 5）= 5 张 × 0.43；耗能随机不计",
-      "hold_hp": 2.1,
-      "hp": 2.1,
-      "inputs_asc": 10,
-      "mc": {
-       "hp": -0.7,
-       "n": 1
-      },
-      "n": 162,
-      "source": "估"
-     },
-     "3": {
-      "block": 0.0,
-      "damage": 0.3,
-      "formula": "抽 7 张但手牌上限 10（手里 5）= 5 张 × 0.01；耗能随机不计",
-      "hold_hp": 0.0,
-      "hp": 0.0,
-      "inputs_asc": 10,
-      "mc": {
-       "hp": -0.7,
-       "n": 1
-      },
-      "n": 117,
-      "source": "估"
-     }
-    }
-   },
+   "by_asc": {},
    "category": "draw",
-   "check_all": {
-    "median": 3.8,
-    "n": 10
-   },
    "description": "抽[blue]{Cards}[/blue]张牌。在本回合随机化你[gold]手牌[/gold]中所有牌的耗能。",
    "kind": "snecko",
    "log": {
-    "boss_drinks": {
-     "10": 10
-    },
+    "boss_drinks": {},
     "drinks": 27,
     "runs_seen": 20
    },
@@ -6546,128 +1286,7 @@
    }
   },
   "SOLDIERS_STEW": {
-   "by_asc": {
-    "10": {
-     "1": {
-      "block": 0.0,
-      "damage": 64.8,
-      "formula": "每回合 1.1 次打击 × 每次 6.0 伤害（重放一次） = 每回合多 6.5 伤害；战斗 10.0 回合缩短 T·X/(D+X) = 0.00 回合 × 每回合 4.5 血",
-      "hold_hp": 0.0,
-      "hp": 0.0,
-      "inputs": {
-       "extra_per_turn": 6.5
-      },
-      "n": 292,
-      "source": "公式"
-     },
-     "2": {
-      "block": 6.6,
-      "damage": 47.7,
-      "formula": "每回合 1.0 次打击 × 每次 6.0 伤害（重放一次） = 每回合多 6.2 伤害；战斗 9.0 回合缩短 T·X/(D+X) = 1.29 回合 × 每回合 5.1 血",
-      "hold_hp": 6.6,
-      "hp": 6.6,
-      "inputs": {
-       "extra_per_turn": 6.2
-      },
-      "n": 162,
-      "source": "公式"
-     },
-     "3": {
-      "block": 6.9,
-      "damage": 55.0,
-      "formula": "每回合 1.4 次打击 × 每次 6.0 伤害（重放一次） = 每回合多 8.3 伤害；战斗 8 回合缩短 T·X/(D+X) = 1.37 回合 × 每回合 5.0 血",
-      "hold_hp": 6.9,
-      "hp": 6.9,
-      "inputs": {
-       "extra_per_turn": 8.3
-      },
-      "n": 117,
-      "source": "公式"
-     }
-    },
-    "8": {
-     "1": {
-      "block": 0.0,
-      "damage": 64.8,
-      "formula": "每回合 1.1 次打击 × 每次 6.0 伤害（重放一次） = 每回合多 6.5 伤害；战斗 10.0 回合缩短 T·X/(D+X) = 0.00 回合 × 每回合 4.5 血",
-      "hold_hp": 0.0,
-      "hp": 0.0,
-      "inputs": {
-       "extra_per_turn": 6.5
-      },
-      "inputs_asc": 10,
-      "n": 292,
-      "source": "公式"
-     },
-     "2": {
-      "block": 6.6,
-      "damage": 47.7,
-      "formula": "每回合 1.0 次打击 × 每次 6.0 伤害（重放一次） = 每回合多 6.2 伤害；战斗 9.0 回合缩短 T·X/(D+X) = 1.29 回合 × 每回合 5.1 血",
-      "hold_hp": 6.6,
-      "hp": 6.6,
-      "inputs": {
-       "extra_per_turn": 6.2
-      },
-      "inputs_asc": 10,
-      "n": 162,
-      "source": "公式"
-     },
-     "3": {
-      "block": 6.9,
-      "damage": 55.0,
-      "formula": "每回合 1.4 次打击 × 每次 6.0 伤害（重放一次） = 每回合多 8.3 伤害；战斗 8 回合缩短 T·X/(D+X) = 1.37 回合 × 每回合 5.0 血",
-      "hold_hp": 6.9,
-      "hp": 6.9,
-      "inputs": {
-       "extra_per_turn": 8.3
-      },
-      "inputs_asc": 10,
-      "n": 117,
-      "source": "公式"
-     }
-    },
-    "9": {
-     "1": {
-      "block": 0.0,
-      "damage": 64.8,
-      "formula": "每回合 1.1 次打击 × 每次 6.0 伤害（重放一次） = 每回合多 6.5 伤害；战斗 10.0 回合缩短 T·X/(D+X) = 0.00 回合 × 每回合 4.5 血",
-      "hold_hp": 0.0,
-      "hp": 0.0,
-      "inputs": {
-       "extra_per_turn": 6.5
-      },
-      "inputs_asc": 10,
-      "n": 292,
-      "source": "公式"
-     },
-     "2": {
-      "block": 6.6,
-      "damage": 47.7,
-      "formula": "每回合 1.0 次打击 × 每次 6.0 伤害（重放一次） = 每回合多 6.2 伤害；战斗 9.0 回合缩短 T·X/(D+X) = 1.29 回合 × 每回合 5.1 血",
-      "hold_hp": 6.6,
-      "hp": 6.6,
-      "inputs": {
-       "extra_per_turn": 6.2
-      },
-      "inputs_asc": 10,
-      "n": 162,
-      "source": "公式"
-     },
-     "3": {
-      "block": 6.9,
-      "damage": 55.0,
-      "formula": "每回合 1.4 次打击 × 每次 6.0 伤害（重放一次） = 每回合多 8.3 伤害；战斗 8 回合缩短 T·X/(D+X) = 1.37 回合 × 每回合 5.0 血",
-      "hold_hp": 6.9,
-      "hp": 6.9,
-      "inputs": {
-       "extra_per_turn": 8.3
-      },
-      "inputs_asc": 10,
-      "n": 117,
-      "source": "公式"
-     }
-    }
-   },
+   "by_asc": {},
    "category": "damage",
    "description": "在本场战斗中，所有名字中有“[gold]打击[/gold]”的牌获得[gold]重放[/gold]：[blue]1[/blue]。",
    "kind": "stew",
@@ -6687,126 +1306,14 @@
    "values": {}
   },
   "SPEED_POTION": {
-   "by_asc": {
-    "10": {
-     "1": {
-      "block": 5.3,
-      "check": {
-       "median": 0.1,
-       "n": 17
-      },
-      "damage": 430743.2,
-      "formula": "本回合 5 敏捷 × 格挡牌数，挨打回合 min(多的格挡, 打进来的)",
-      "hold_hp": 5.3,
-      "hp": 5.3,
-      "n": 292,
-      "source": "公式"
-     },
-     "2": {
-      "block": 5.9,
-      "check": {
-       "median": 0.0,
-       "n": 22
-      },
-      "damage": 42.7,
-      "formula": "本回合 5 敏捷 × 格挡牌数，挨打回合 min(多的格挡, 打进来的)",
-      "hold_hp": 5.9,
-      "hp": 5.9,
-      "n": 162,
-      "source": "公式"
-     },
-     "3": {
-      "block": 7.8,
-      "check": {
-       "median": 0.0,
-       "n": 8
-      },
-      "damage": 62.3,
-      "formula": "本回合 5 敏捷 × 格挡牌数，挨打回合 min(多的格挡, 打进来的)",
-      "hold_hp": 7.8,
-      "hp": 7.8,
-      "n": 117,
-      "source": "公式"
-     }
-    },
-    "8": {
-     "1": {
-      "block": 5.3,
-      "damage": 430743.2,
-      "formula": "本回合 5 敏捷 × 格挡牌数，挨打回合 min(多的格挡, 打进来的)",
-      "hold_hp": 5.3,
-      "hp": 5.3,
-      "inputs_asc": 10,
-      "n": 292,
-      "source": "公式"
-     },
-     "2": {
-      "block": 5.9,
-      "damage": 42.7,
-      "formula": "本回合 5 敏捷 × 格挡牌数，挨打回合 min(多的格挡, 打进来的)",
-      "hold_hp": 5.9,
-      "hp": 5.9,
-      "inputs_asc": 10,
-      "n": 162,
-      "source": "公式"
-     },
-     "3": {
-      "block": 7.8,
-      "damage": 62.3,
-      "formula": "本回合 5 敏捷 × 格挡牌数，挨打回合 min(多的格挡, 打进来的)",
-      "hold_hp": 7.8,
-      "hp": 7.8,
-      "inputs_asc": 10,
-      "n": 117,
-      "source": "公式"
-     }
-    },
-    "9": {
-     "1": {
-      "block": 5.3,
-      "damage": 430743.2,
-      "formula": "本回合 5 敏捷 × 格挡牌数，挨打回合 min(多的格挡, 打进来的)",
-      "hold_hp": 5.3,
-      "hp": 5.3,
-      "inputs_asc": 10,
-      "n": 292,
-      "source": "公式"
-     },
-     "2": {
-      "block": 5.9,
-      "damage": 42.7,
-      "formula": "本回合 5 敏捷 × 格挡牌数，挨打回合 min(多的格挡, 打进来的)",
-      "hold_hp": 5.9,
-      "hp": 5.9,
-      "inputs_asc": 10,
-      "n": 162,
-      "source": "公式"
-     },
-     "3": {
-      "block": 7.8,
-      "damage": 62.3,
-      "formula": "本回合 5 敏捷 × 格挡牌数，挨打回合 min(多的格挡, 打进来的)",
-      "hold_hp": 7.8,
-      "hp": 7.8,
-      "inputs_asc": 10,
-      "n": 117,
-      "source": "公式"
-     }
-    }
-   },
+   "by_asc": {},
    "category": "dexterity",
-   "check_all": {
-    "median": 0.0,
-    "n": 47
-   },
    "description": "获得[blue]{DexterityPower}[/blue]点[gold]敏捷[/gold]。在你的这个回合结束时，失去[blue]{DexterityPower}[/blue]点[gold]敏捷[/gold]。",
    "kind": "dex_turn",
    "log": {
-    "boss_drinks": {
-     "10": 60
-    },
-    "drinks": 175,
-    "runs_seen": 111
+    "boss_drinks": {},
+    "drinks": 180,
+    "runs_seen": 116
    },
    "name": "速度药水",
    "pool": "shared",
@@ -6821,122 +1328,14 @@
    }
   },
   "STABLE_SERUM": {
-   "by_asc": {
-    "10": {
-     "1": {
-      "block": 1.0,
-      "check": {
-       "median": 0.0,
-       "n": 14
-      },
-      "damage": 84432.9,
-      "formula": "保留手牌 2 回合，按每回合多 1 张抽牌 × 0.52",
-      "hold_hp": 1.0,
-      "hp": 1.0,
-      "n": 292,
-      "source": "估"
-     },
-     "2": {
-      "block": 0.9,
-      "check": {
-       "median": 0.0,
-       "n": 3
-      },
-      "damage": 6.2,
-      "formula": "保留手牌 2 回合，按每回合多 1 张抽牌 × 0.43",
-      "hold_hp": 0.9,
-      "hp": 0.9,
-      "n": 162,
-      "source": "估"
-     },
-     "3": {
-      "block": 0.0,
-      "damage": 0.1,
-      "formula": "保留手牌 2 回合，按每回合多 1 张抽牌 × 0.01",
-      "hold_hp": 0.0,
-      "hp": 0.0,
-      "n": 117,
-      "source": "估"
-     }
-    },
-    "8": {
-     "1": {
-      "block": 1.0,
-      "damage": 84432.9,
-      "formula": "保留手牌 2 回合，按每回合多 1 张抽牌 × 0.52",
-      "hold_hp": 1.0,
-      "hp": 1.0,
-      "inputs_asc": 10,
-      "n": 292,
-      "source": "估"
-     },
-     "2": {
-      "block": 0.9,
-      "damage": 6.2,
-      "formula": "保留手牌 2 回合，按每回合多 1 张抽牌 × 0.43",
-      "hold_hp": 0.9,
-      "hp": 0.9,
-      "inputs_asc": 10,
-      "n": 162,
-      "source": "估"
-     },
-     "3": {
-      "block": 0.0,
-      "damage": 0.1,
-      "formula": "保留手牌 2 回合，按每回合多 1 张抽牌 × 0.01",
-      "hold_hp": 0.0,
-      "hp": 0.0,
-      "inputs_asc": 10,
-      "n": 117,
-      "source": "估"
-     }
-    },
-    "9": {
-     "1": {
-      "block": 1.0,
-      "damage": 84432.9,
-      "formula": "保留手牌 2 回合，按每回合多 1 张抽牌 × 0.52",
-      "hold_hp": 1.0,
-      "hp": 1.0,
-      "inputs_asc": 10,
-      "n": 292,
-      "source": "估"
-     },
-     "2": {
-      "block": 0.9,
-      "damage": 6.2,
-      "formula": "保留手牌 2 回合，按每回合多 1 张抽牌 × 0.43",
-      "hold_hp": 0.9,
-      "hp": 0.9,
-      "inputs_asc": 10,
-      "n": 162,
-      "source": "估"
-     },
-     "3": {
-      "block": 0.0,
-      "damage": 0.1,
-      "formula": "保留手牌 2 回合，按每回合多 1 张抽牌 × 0.01",
-      "hold_hp": 0.0,
-      "hp": 0.0,
-      "inputs_asc": 10,
-      "n": 117,
-      "source": "估"
-     }
-    }
-   },
+   "by_asc": {},
    "category": "draw",
-   "check_all": {
-    "median": 0.0,
-    "n": 17
-   },
    "description": "[gold]保留[/gold]你的[gold]手牌[/gold][blue]{Repeat}[/blue]回合。",
    "kind": "retain",
    "log": {
-    "boss_drinks": {
-     "10": 18
-    },
-    "drinks": 47,
-    "runs_seen": 35
+    "boss_drinks": {},
+    "drinks": 48,
+    "runs_seen": 36
    },
    "name": "稳定血清",
    "pool": "shared",
@@ -6972,154 +1371,16 @@
    "values": {}
   },
   "STRENGTH_POTION": {
-   "by_asc": {
-    "10": {
-     "1": {
-      "block": 0.0,
-      "check": {
-       "median": 0.0,
-       "n": 25
-      },
-      "damage": 74.9,
-      "formula": "2 力量 × 每回合 3.7 段 = 每回合多 7.5 伤害；战斗 10.0 回合缩短 T·X/(D+X) = 0.00 回合 × 每回合 4.5 血",
-      "hold_hp": 0.0,
-      "hp": 0.0,
-      "inputs": {
-       "extra_per_turn": 7.5
-      },
-      "n": 292,
-      "source": "公式"
-     },
-     "2": {
-      "block": 8.0,
-      "check": {
-       "median": 0.0,
-       "n": 10
-      },
-      "damage": 58.3,
-      "formula": "2 力量 × 每回合 3.9 段 = 每回合多 7.8 伤害；战斗 9.0 回合缩短 T·X/(D+X) = 1.57 回合 × 每回合 5.1 血",
-      "hold_hp": 8.0,
-      "hp": 8.0,
-      "inputs": {
-       "extra_per_turn": 7.8
-      },
-      "n": 162,
-      "source": "公式"
-     },
-     "3": {
-      "block": 9.7,
-      "check": {
-       "median": 0.0,
-       "n": 8
-      },
-      "damage": 77.5,
-      "formula": "2 力量 × 每回合 6.4 段 = 每回合多 12.8 伤害；战斗 8 回合缩短 T·X/(D+X) = 1.94 回合 × 每回合 5.0 血",
-      "hold_hp": 9.7,
-      "hp": 9.7,
-      "inputs": {
-       "extra_per_turn": 12.8
-      },
-      "n": 117,
-      "source": "公式"
-     }
-    },
-    "8": {
-     "1": {
-      "block": 0.0,
-      "damage": 74.9,
-      "formula": "2 力量 × 每回合 3.7 段 = 每回合多 7.5 伤害；战斗 10.0 回合缩短 T·X/(D+X) = 0.00 回合 × 每回合 4.5 血",
-      "hold_hp": 0.0,
-      "hp": 0.0,
-      "inputs": {
-       "extra_per_turn": 7.5
-      },
-      "inputs_asc": 10,
-      "n": 292,
-      "source": "公式"
-     },
-     "2": {
-      "block": 8.0,
-      "damage": 58.3,
-      "formula": "2 力量 × 每回合 3.9 段 = 每回合多 7.8 伤害；战斗 9.0 回合缩短 T·X/(D+X) = 1.57 回合 × 每回合 5.1 血",
-      "hold_hp": 8.0,
-      "hp": 8.0,
-      "inputs": {
-       "extra_per_turn": 7.8
-      },
-      "inputs_asc": 10,
-      "n": 162,
-      "source": "公式"
-     },
-     "3": {
-      "block": 9.7,
-      "damage": 77.5,
-      "formula": "2 力量 × 每回合 6.4 段 = 每回合多 12.8 伤害；战斗 8 回合缩短 T·X/(D+X) = 1.94 回合 × 每回合 5.0 血",
-      "hold_hp": 9.7,
-      "hp": 9.7,
-      "inputs": {
-       "extra_per_turn": 12.8
-      },
-      "inputs_asc": 10,
-      "n": 117,
-      "source": "公式"
-     }
-    },
-    "9": {
-     "1": {
-      "block": 0.0,
-      "damage": 74.9,
-      "formula": "2 力量 × 每回合 3.7 段 = 每回合多 7.5 伤害；战斗 10.0 回合缩短 T·X/(D+X) = 0.00 回合 × 每回合 4.5 血",
-      "hold_hp": 0.0,
-      "hp": 0.0,
-      "inputs": {
-       "extra_per_turn": 7.5
-      },
-      "inputs_asc": 10,
-      "n": 292,
-      "source": "公式"
-     },
-     "2": {
-      "block": 8.0,
-      "check": {
-       "median": 0.0,
-       "n": 2
-      },
-      "damage": 58.3,
-      "formula": "2 力量 × 每回合 3.9 段 = 每回合多 7.8 伤害；战斗 9.0 回合缩短 T·X/(D+X) = 1.57 回合 × 每回合 5.1 血",
-      "hold_hp": 8.0,
-      "hp": 8.0,
-      "inputs": {
-       "extra_per_turn": 7.8
-      },
-      "inputs_asc": 10,
-      "n": 162,
-      "source": "公式"
-     },
-     "3": {
-      "block": 9.7,
-      "damage": 77.5,
-      "formula": "2 力量 × 每回合 6.4 段 = 每回合多 12.8 伤害；战斗 8 回合缩短 T·X/(D+X) = 1.94 回合 × 每回合 5.0 血",
-      "hold_hp": 9.7,
-      "hp": 9.7,
-      "inputs": {
-       "extra_per_turn": 12.8
-      },
-      "inputs_asc": 10,
-      "n": 117,
-      "source": "公式"
-     }
-    }
-   },
+   "by_asc": {},
    "category": "strength",
    "check_all": {
     "median": 0.0,
-    "n": 45
+    "n": 2
    },
    "description": "获得[blue]{StrengthPower}[/blue]点[gold]力量[/gold]。",
    "kind": "strength_fight",
    "log": {
     "boss_drinks": {
-     "10": 67,
      "9": 2
     },
     "drinks": 192,
@@ -7138,150 +1399,14 @@
    }
   },
   "SWIFT_POTION": {
-   "by_asc": {
-    "10": {
-     "1": {
-      "block": 1.6,
-      "check": {
-       "median": 0.2,
-       "n": 17
-      },
-      "damage": 126649.3,
-      "formula": "抽 3 × 0.52（每张牌 1.03 血、每点能量 2.36 血、抽到的牌打出 50%）",
-      "hold_hp": 1.6,
-      "hp": 1.6,
-      "mc": {
-       "hp": 0.7,
-       "n": 354
-      },
-      "n": 292,
-      "source": "估"
-     },
-     "2": {
-      "block": 1.3,
-      "check": {
-       "median": 0.0,
-       "n": 3
-      },
-      "damage": 9.3,
-      "formula": "抽 3 × 0.43（每张牌 0.85 血、每点能量 2.44 血、抽到的牌打出 50%）",
-      "hold_hp": 1.3,
-      "hp": 1.3,
-      "mc": {
-       "hp": 1.3,
-       "n": 354
-      },
-      "n": 162,
-      "source": "估"
-     },
-     "3": {
-      "block": 0.0,
-      "check": {
-       "median": 0.0,
-       "n": 5
-      },
-      "damage": 0.2,
-      "formula": "抽 3 × 0.01（每张牌 0.02 血、每点能量 2.18 血、抽到的牌打出 50%）",
-      "hold_hp": 0.0,
-      "hp": 0.0,
-      "mc": {
-       "hp": 1.2,
-       "n": 354
-      },
-      "n": 117,
-      "source": "估"
-     }
-    },
-    "8": {
-     "1": {
-      "block": 1.6,
-      "damage": 126649.3,
-      "formula": "抽 3 × 0.52（每张牌 1.03 血、每点能量 2.36 血、抽到的牌打出 50%）",
-      "hold_hp": 1.6,
-      "hp": 1.6,
-      "inputs_asc": 10,
-      "n": 292,
-      "source": "估"
-     },
-     "2": {
-      "block": 1.3,
-      "damage": 9.3,
-      "formula": "抽 3 × 0.43（每张牌 0.85 血、每点能量 2.44 血、抽到的牌打出 50%）",
-      "hold_hp": 1.3,
-      "hp": 1.3,
-      "inputs_asc": 10,
-      "n": 162,
-      "source": "估"
-     },
-     "3": {
-      "block": 0.0,
-      "damage": 0.2,
-      "formula": "抽 3 × 0.01（每张牌 0.02 血、每点能量 2.18 血、抽到的牌打出 50%）",
-      "hold_hp": 0.0,
-      "hp": 0.0,
-      "inputs_asc": 10,
-      "n": 117,
-      "source": "估"
-     }
-    },
-    "9": {
-     "1": {
-      "block": 1.6,
-      "damage": 126649.3,
-      "formula": "抽 3 × 0.52（每张牌 1.03 血、每点能量 2.36 血、抽到的牌打出 50%）",
-      "hold_hp": 1.6,
-      "hp": 1.6,
-      "inputs_asc": 10,
-      "mc": {
-       "hp": 1.4,
-       "n": 5
-      },
-      "n": 292,
-      "source": "估"
-     },
-     "2": {
-      "block": 1.3,
-      "damage": 9.3,
-      "formula": "抽 3 × 0.43（每张牌 0.85 血、每点能量 2.44 血、抽到的牌打出 50%）",
-      "hold_hp": 1.3,
-      "hp": 1.3,
-      "inputs_asc": 10,
-      "mc": {
-       "hp": 2.2,
-       "n": 5
-      },
-      "n": 162,
-      "source": "估"
-     },
-     "3": {
-      "block": 0.0,
-      "damage": 0.2,
-      "formula": "抽 3 × 0.01（每张牌 0.02 血、每点能量 2.18 血、抽到的牌打出 50%）",
-      "hold_hp": 0.0,
-      "hp": 0.0,
-      "inputs_asc": 10,
-      "mc": {
-       "hp": 2.2,
-       "n": 5
-      },
-      "n": 117,
-      "source": "估"
-     }
-    }
-   },
+   "by_asc": {},
    "category": "draw",
-   "check_all": {
-    "median": 0.0,
-    "n": 25
-   },
    "description": "抽[blue]{Cards}[/blue]张牌。",
    "kind": "draw",
    "log": {
-    "boss_drinks": {
-     "10": 28
-    },
-    "drinks": 131,
-    "runs_seen": 80
+    "boss_drinks": {},
+    "drinks": 132,
+    "runs_seen": 81
    },
    "name": "迅捷药水",
    "pool": "shared",
@@ -7296,122 +1421,14 @@
    }
   },
   "TOUCH_OF_INSANITY": {
-   "by_asc": {
-    "10": {
-     "1": {
-      "block": 13.9,
-      "check": {
-       "median": 5.5,
-       "n": 4
-      },
-      "damage": 1137913.0,
-      "formula": "一张 2 费牌整场免费：打出约 1 + (T−1)×5/牌组 23.0 = 3.0 次 × 2 能量 × 2.36",
-      "hold_hp": 13.9,
-      "hp": 13.9,
-      "n": 292,
-      "source": "估"
-     },
-     "2": {
-      "block": 11.5,
-      "check": {
-       "median": 0.0,
-       "n": 7
-      },
-      "damage": 83.3,
-      "formula": "一张 2 费牌整场免费：打出约 1 + (T−1)×5/牌组 29.5 = 2.4 次 × 2 能量 × 2.44",
-      "hold_hp": 11.5,
-      "hp": 11.5,
-      "n": 162,
-      "source": "估"
-     },
-     "3": {
-      "block": 8.6,
-      "damage": 68.5,
-      "formula": "一张 2 费牌整场免费：打出约 1 + (T−1)×5/牌组 36 = 2.0 次 × 2 能量 × 2.18",
-      "hold_hp": 8.6,
-      "hp": 8.6,
-      "n": 117,
-      "source": "估"
-     }
-    },
-    "8": {
-     "1": {
-      "block": 13.9,
-      "damage": 1137913.0,
-      "formula": "一张 2 费牌整场免费：打出约 1 + (T−1)×5/牌组 23.0 = 3.0 次 × 2 能量 × 2.36",
-      "hold_hp": 13.9,
-      "hp": 13.9,
-      "inputs_asc": 10,
-      "n": 292,
-      "source": "估"
-     },
-     "2": {
-      "block": 11.5,
-      "damage": 83.3,
-      "formula": "一张 2 费牌整场免费：打出约 1 + (T−1)×5/牌组 29.5 = 2.4 次 × 2 能量 × 2.44",
-      "hold_hp": 11.5,
-      "hp": 11.5,
-      "inputs_asc": 10,
-      "n": 162,
-      "source": "估"
-     },
-     "3": {
-      "block": 8.6,
-      "damage": 68.5,
-      "formula": "一张 2 费牌整场免费：打出约 1 + (T−1)×5/牌组 36 = 2.0 次 × 2 能量 × 2.18",
-      "hold_hp": 8.6,
-      "hp": 8.6,
-      "inputs_asc": 10,
-      "n": 117,
-      "source": "估"
-     }
-    },
-    "9": {
-     "1": {
-      "block": 13.9,
-      "damage": 1137913.0,
-      "formula": "一张 2 费牌整场免费：打出约 1 + (T−1)×5/牌组 23.0 = 3.0 次 × 2 能量 × 2.36",
-      "hold_hp": 13.9,
-      "hp": 13.9,
-      "inputs_asc": 10,
-      "n": 292,
-      "source": "估"
-     },
-     "2": {
-      "block": 11.5,
-      "damage": 83.3,
-      "formula": "一张 2 费牌整场免费：打出约 1 + (T−1)×5/牌组 29.5 = 2.4 次 × 2 能量 × 2.44",
-      "hold_hp": 11.5,
-      "hp": 11.5,
-      "inputs_asc": 10,
-      "n": 162,
-      "source": "估"
-     },
-     "3": {
-      "block": 8.6,
-      "damage": 68.5,
-      "formula": "一张 2 费牌整场免费：打出约 1 + (T−1)×5/牌组 36 = 2.0 次 × 2 能量 × 2.18",
-      "hold_hp": 8.6,
-      "hp": 8.6,
-      "inputs_asc": 10,
-      "n": 117,
-      "source": "估"
-     }
-    }
-   },
+   "by_asc": {},
    "category": "energy",
-   "check_all": {
-    "median": 0.0,
-    "n": 11
-   },
    "description": "选择你[gold]手牌[/gold]中的一张牌，使其在本场战斗可以免费打出。",
    "kind": "free_forever",
    "log": {
-    "boss_drinks": {
-     "10": 12
-    },
-    "drinks": 45,
-    "runs_seen": 36
+    "boss_drinks": {},
+    "drinks": 46,
+    "runs_seen": 37
    },
    "name": "癫狂之触",
    "pool": "shared",
@@ -7424,126 +1441,14 @@
    "values": {}
   },
   "VULNERABLE_POTION": {
-   "by_asc": {
-    "10": {
-     "1": {
-      "block": 6.7,
-      "check": {
-       "median": 0.0,
-       "n": 15
-      },
-      "damage": 551098.9,
-      "formula": "易伤 3 回合 × 我方每回合 367399.2 伤害 × 50%",
-      "hold_hp": 6.7,
-      "hp": 6.7,
-      "n": 292,
-      "source": "公式"
-     },
-     "2": {
-      "block": 7.7,
-      "check": {
-       "median": 0.0,
-       "n": 4
-      },
-      "damage": 55.6,
-      "formula": "易伤 3 回合 × 我方每回合 37.0 伤害 × 50%",
-      "hold_hp": 7.7,
-      "hp": 7.7,
-      "n": 162,
-      "source": "公式"
-     },
-     "3": {
-      "block": 7.5,
-      "check": {
-       "median": 0.0,
-       "n": 1
-      },
-      "damage": 60.1,
-      "formula": "易伤 3 回合 × 我方每回合 40.1 伤害 × 50%",
-      "hold_hp": 7.5,
-      "hp": 7.5,
-      "n": 117,
-      "source": "公式"
-     }
-    },
-    "8": {
-     "1": {
-      "block": 6.7,
-      "damage": 551098.9,
-      "formula": "易伤 3 回合 × 我方每回合 367399.2 伤害 × 50%",
-      "hold_hp": 6.7,
-      "hp": 6.7,
-      "inputs_asc": 10,
-      "n": 292,
-      "source": "公式"
-     },
-     "2": {
-      "block": 7.7,
-      "damage": 55.6,
-      "formula": "易伤 3 回合 × 我方每回合 37.0 伤害 × 50%",
-      "hold_hp": 7.7,
-      "hp": 7.7,
-      "inputs_asc": 10,
-      "n": 162,
-      "source": "公式"
-     },
-     "3": {
-      "block": 7.5,
-      "damage": 60.1,
-      "formula": "易伤 3 回合 × 我方每回合 40.1 伤害 × 50%",
-      "hold_hp": 7.5,
-      "hp": 7.5,
-      "inputs_asc": 10,
-      "n": 117,
-      "source": "公式"
-     }
-    },
-    "9": {
-     "1": {
-      "block": 6.7,
-      "damage": 551098.9,
-      "formula": "易伤 3 回合 × 我方每回合 367399.2 伤害 × 50%",
-      "hold_hp": 6.7,
-      "hp": 6.7,
-      "inputs_asc": 10,
-      "n": 292,
-      "source": "公式"
-     },
-     "2": {
-      "block": 7.7,
-      "damage": 55.6,
-      "formula": "易伤 3 回合 × 我方每回合 37.0 伤害 × 50%",
-      "hold_hp": 7.7,
-      "hp": 7.7,
-      "inputs_asc": 10,
-      "n": 162,
-      "source": "公式"
-     },
-     "3": {
-      "block": 7.5,
-      "damage": 60.1,
-      "formula": "易伤 3 回合 × 我方每回合 40.1 伤害 × 50%",
-      "hold_hp": 7.5,
-      "hp": 7.5,
-      "inputs_asc": 10,
-      "n": 117,
-      "source": "公式"
-     }
-    }
-   },
+   "by_asc": {},
    "category": "debuff",
-   "check_all": {
-    "median": 0.0,
-    "n": 20
-   },
    "description": "给予[blue]{VulnerablePower}[/blue]层[gold]易伤[/gold]。",
    "kind": "vuln",
    "log": {
-    "boss_drinks": {
-     "10": 30
-    },
-    "drinks": 125,
-    "runs_seen": 95
+    "boss_drinks": {},
+    "drinks": 127,
+    "runs_seen": 97
    },
    "name": "易伤药水",
    "pool": "shared",
@@ -7558,131 +1463,20 @@
    }
   },
   "WEAK_POTION": {
-   "by_asc": {
-    "10": {
-     "1": {
-      "block": 5.1,
-      "check": {
-       "median": 0.0,
-       "n": 13
-      },
-      "damage": 419897.7,
-      "formula": "虚弱 3 回合 × 每回合 min(25% × 敌方意图, 打进来的) = 1.7 血",
-      "hold_hp": 5.1,
-      "hp": 5.1,
-      "n": 292,
-      "source": "公式"
-     },
-     "2": {
-      "block": 6.4,
-      "check": {
-       "median": 0.0,
-       "n": 3
-      },
-      "damage": 46.4,
-      "formula": "虚弱 3 回合 × 每回合 min(25% × 敌方意图, 打进来的) = 2.1 血",
-      "hold_hp": 6.4,
-      "hp": 6.4,
-      "n": 162,
-      "source": "公式"
-     },
-     "3": {
-      "block": 5.8,
-      "check": {
-       "median": 0.0,
-       "n": 4
-      },
-      "damage": 46.2,
-      "formula": "虚弱 3 回合 × 每回合 min(25% × 敌方意图, 打进来的) = 1.9 血",
-      "hold_hp": 5.8,
-      "hp": 5.8,
-      "n": 117,
-      "source": "公式"
-     }
-    },
-    "8": {
-     "1": {
-      "block": 5.1,
-      "damage": 419897.7,
-      "formula": "虚弱 3 回合 × 每回合 min(25% × 敌方意图, 打进来的) = 1.7 血",
-      "hold_hp": 5.1,
-      "hp": 5.1,
-      "inputs_asc": 10,
-      "n": 292,
-      "source": "公式"
-     },
-     "2": {
-      "block": 6.4,
-      "check": {
-       "median": 3.7,
-       "n": 1
-      },
-      "damage": 46.4,
-      "formula": "虚弱 3 回合 × 每回合 min(25% × 敌方意图, 打进来的) = 2.1 血",
-      "hold_hp": 6.4,
-      "hp": 6.4,
-      "inputs_asc": 10,
-      "n": 162,
-      "source": "公式"
-     },
-     "3": {
-      "block": 5.8,
-      "damage": 46.2,
-      "formula": "虚弱 3 回合 × 每回合 min(25% × 敌方意图, 打进来的) = 1.9 血",
-      "hold_hp": 5.8,
-      "hp": 5.8,
-      "inputs_asc": 10,
-      "n": 117,
-      "source": "公式"
-     }
-    },
-    "9": {
-     "1": {
-      "block": 5.1,
-      "damage": 419897.7,
-      "formula": "虚弱 3 回合 × 每回合 min(25% × 敌方意图, 打进来的) = 1.7 血",
-      "hold_hp": 5.1,
-      "hp": 5.1,
-      "inputs_asc": 10,
-      "n": 292,
-      "source": "公式"
-     },
-     "2": {
-      "block": 6.4,
-      "damage": 46.4,
-      "formula": "虚弱 3 回合 × 每回合 min(25% × 敌方意图, 打进来的) = 2.1 血",
-      "hold_hp": 6.4,
-      "hp": 6.4,
-      "inputs_asc": 10,
-      "n": 162,
-      "source": "公式"
-     },
-     "3": {
-      "block": 5.8,
-      "damage": 46.2,
-      "formula": "虚弱 3 回合 × 每回合 min(25% × 敌方意图, 打进来的) = 1.9 血",
-      "hold_hp": 5.8,
-      "hp": 5.8,
-      "inputs_asc": 10,
-      "n": 117,
-      "source": "公式"
-     }
-    }
-   },
+   "by_asc": {},
    "category": "debuff",
    "check_all": {
-    "median": 0.0,
-    "n": 21
+    "median": 3.7,
+    "n": 1
    },
    "description": "给予[blue]{WeakPower}[/blue]层[gold]虚弱[/gold]。",
    "kind": "weak",
    "log": {
     "boss_drinks": {
-     "10": 34,
      "8": 1
     },
-    "drinks": 165,
-    "runs_seen": 115
+    "drinks": 166,
+    "runs_seen": 116
    },
    "name": "虚弱药水",
    "pool": "shared",
@@ -7698,227 +1492,7 @@
   }
  },
  "rates": {
-  "10": {
-   "1": {
-    "B": 7.282,
-    "C": 6.324,
-    "D": 367399.245,
-    "E": 3.045,
-    "I": 12.738,
-    "L": 4.497,
-    "L_hit": 9.678,
-    "T": 10.0,
-    "a": 3.387,
-    "b": 1.99,
-    "deck": 23.0,
-    "fights": 292,
-    "from_asc": 10,
-    "h": 3.743,
-    "hit_share": 0.489,
-    "max_hp": 70.0,
-    "r": 0.0,
-    "s": 1.08,
-    "sd": 6.001,
-    "turns_n": 2722,
-    "v_card": 1.033,
-    "v_energy": 2.355
-   },
-   "2": {
-    "B": 10.466,
-    "C": 8.125,
-    "D": 37.039,
-    "E": 3.456,
-    "I": 19.15,
-    "L": 5.104,
-    "L_hit": 11.589,
-    "T": 9.0,
-    "a": 3.46,
-    "b": 2.313,
-    "deck": 29.5,
-    "fights": 162,
-    "from_asc": 10,
-    "h": 3.922,
-    "hit_share": 0.473,
-    "max_hp": 73.0,
-    "r": 0.138,
-    "s": 1.023,
-    "sd": 6.042,
-    "turns_n": 1354,
-    "v_card": 0.854,
-    "v_energy": 2.436
-   },
-   "3": {
-    "B": 14.77,
-    "C": 14.436,
-    "D": 40.067,
-    "E": 3.789,
-    "I": 25.8,
-    "L": 5.028,
-    "L_hit": 12.09,
-    "T": 8,
-    "a": 5.642,
-    "b": 4.394,
-    "deck": 36,
-    "fights": 117,
-    "from_asc": 10,
-    "h": 6.393,
-    "hit_share": 0.484,
-    "max_hp": 75,
-    "r": 0.125,
-    "s": 1.386,
-    "sd": 5.991,
-    "turns_n": 853,
-    "v_card": 0.017,
-    "v_energy": 2.178
-   }
-  },
-  "8": {
-   "1": {
-    "B": 7.282,
-    "C": 6.324,
-    "D": 367399.245,
-    "E": 3.045,
-    "I": 12.738,
-    "L": 4.497,
-    "L_hit": 9.678,
-    "T": 10.0,
-    "a": 3.387,
-    "b": 1.99,
-    "deck": 23.0,
-    "fights": 292,
-    "from_asc": 10,
-    "h": 3.743,
-    "hit_share": 0.489,
-    "max_hp": 70.0,
-    "r": 0.0,
-    "s": 1.08,
-    "sd": 6.001,
-    "turns_n": 2722,
-    "v_card": 1.033,
-    "v_energy": 2.355
-   },
-   "2": {
-    "B": 10.466,
-    "C": 8.125,
-    "D": 37.039,
-    "E": 3.456,
-    "I": 19.15,
-    "L": 5.104,
-    "L_hit": 11.589,
-    "T": 9.0,
-    "a": 3.46,
-    "b": 2.313,
-    "deck": 29.5,
-    "fights": 162,
-    "from_asc": 10,
-    "h": 3.922,
-    "hit_share": 0.473,
-    "max_hp": 73.0,
-    "r": 0.138,
-    "s": 1.023,
-    "sd": 6.042,
-    "turns_n": 1354,
-    "v_card": 0.854,
-    "v_energy": 2.436
-   },
-   "3": {
-    "B": 14.77,
-    "C": 14.436,
-    "D": 40.067,
-    "E": 3.789,
-    "I": 25.8,
-    "L": 5.028,
-    "L_hit": 12.09,
-    "T": 8,
-    "a": 5.642,
-    "b": 4.394,
-    "deck": 36,
-    "fights": 117,
-    "from_asc": 10,
-    "h": 6.393,
-    "hit_share": 0.484,
-    "max_hp": 75,
-    "r": 0.125,
-    "s": 1.386,
-    "sd": 5.991,
-    "turns_n": 853,
-    "v_card": 0.017,
-    "v_energy": 2.178
-   }
-  },
-  "9": {
-   "1": {
-    "B": 7.282,
-    "C": 6.324,
-    "D": 367399.245,
-    "E": 3.045,
-    "I": 12.738,
-    "L": 4.497,
-    "L_hit": 9.678,
-    "T": 10.0,
-    "a": 3.387,
-    "b": 1.99,
-    "deck": 23.0,
-    "fights": 292,
-    "from_asc": 10,
-    "h": 3.743,
-    "hit_share": 0.489,
-    "max_hp": 70.0,
-    "r": 0.0,
-    "s": 1.08,
-    "sd": 6.001,
-    "turns_n": 2722,
-    "v_card": 1.033,
-    "v_energy": 2.355
-   },
-   "2": {
-    "B": 10.466,
-    "C": 8.125,
-    "D": 37.039,
-    "E": 3.456,
-    "I": 19.15,
-    "L": 5.104,
-    "L_hit": 11.589,
-    "T": 9.0,
-    "a": 3.46,
-    "b": 2.313,
-    "deck": 29.5,
-    "fights": 162,
-    "from_asc": 10,
-    "h": 3.922,
-    "hit_share": 0.473,
-    "max_hp": 73.0,
-    "r": 0.138,
-    "s": 1.023,
-    "sd": 6.042,
-    "turns_n": 1354,
-    "v_card": 0.854,
-    "v_energy": 2.436
-   },
-   "3": {
-    "B": 14.77,
-    "C": 14.436,
-    "D": 40.067,
-    "E": 3.789,
-    "I": 25.8,
-    "L": 5.028,
-    "L_hit": 12.09,
-    "T": 8,
-    "a": 5.642,
-    "b": 4.394,
-    "deck": 36,
-    "fights": 117,
-    "from_asc": 10,
-    "h": 6.393,
-    "hit_share": 0.484,
-    "max_hp": 75,
-    "r": 0.125,
-    "s": 1.386,
-    "sd": 5.991,
-    "turns_n": 853,
-    "v_card": 0.017,
-    "v_energy": 2.178
-   }
-  }
+  "8": {},
+  "9": {}
  }
 }

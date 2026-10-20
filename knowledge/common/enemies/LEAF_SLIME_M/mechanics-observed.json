@@ -13,22 +13,22 @@
     },
     "game_type": "Normal",
     "game_hp_range": [
-      32,
-      35
+      33,
+      36
     ],
     "kind": "hallway",
     "rooms": {
-      "hallway": 303,
+      "hallway": 304,
       "unknown_room": 21
     },
     "acts": {
-      "1": 324
+      "1": 325
     },
     "encounters": {
       "LEAF_SLIME_M+LEAF_SLIME_S+TWIG_SLIME_S": 163,
       "LEAF_SLIME_M+LEAF_SLIME_S+TWIG_SLIME_M+TWIG_SLIME_S": 99,
       "FLYCONID+LEAF_SLIME_M": 45,
-      "LEAF_SLIME_M+SLITHERING_STRANGLER": 17
+      "LEAF_SLIME_M+SLITHERING_STRANGLER": 18
     },
     "hp_by_asc": {
       "0": {
@@ -93,27 +93,27 @@
       },
       "10": {
         "min": 33,
-        "median": 34,
+        "median": 34.0,
         "max": 36,
-        "n": 135
+        "n": 136
       }
     },
     "moves": {
       "CLUMP_SHOT": {
         "name": "团块射击",
-        "n_seen": 575,
+        "n_seen": 578,
         "intents": {
-          "Attack": 575
+          "Attack": 578
         },
         "turns_seen": {
-          "2": 313,
-          "4": 210,
-          "6": 48,
+          "2": 314,
+          "4": 211,
+          "6": 49,
           "8": 3,
           "10": 1
         },
         "next": {
-          "STICKY_SHOT": 391
+          "STICKY_SHOT": 393
         },
         "avg_total_shown": 8.6,
         "damage_by_asc": {
@@ -245,45 +245,45 @@
               "10x1": 1,
               "13x1": 7,
               "6x1": 14,
-              "9x1": 225
+              "9x1": 228
             },
             "base_per_hit": {
-              "9": 225
+              "9": 228
             },
             "hits": {
-              "1": 247
+              "1": 250
             },
-            "n_base": 225
+            "n_base": 228
           }
         }
       },
       "STICKY_SHOT": {
         "name": "黏糊射击",
-        "n_seen": 715,
+        "n_seen": 718,
         "intents": {
-          "StatusCard": 715
+          "StatusCard": 718
         },
         "turns_seen": {
-          "1": 324,
-          "3": 268,
-          "5": 109,
+          "1": 325,
+          "3": 269,
+          "5": 110,
           "7": 12,
           "9": 1,
           "11": 1
         },
         "next": {
-          "CLUMP_SHOT": 575
+          "CLUMP_SHOT": 578
         },
         "avg_total_shown": 0.0,
         "status_cards": {
-          "2": 715
+          "2": 718
         },
         "status_card_ids": {
-          "SLIMED": 702
+          "SLIMED": 708
         },
         "status_card_pile": {
-          "discard": 574,
-          "draw": 128
+          "discard": 578,
+          "draw": 130
         }
       }
     },
@@ -361,11 +361,11 @@
         "name": "中毒",
         "type": "Debuff",
         "description": "中毒的生物会在自身回合开始时失去生命。中毒层数每回合减少[blue]1[/blue]。",
-        "n_fights": 64,
+        "n_fights": 65,
         "amount_at_first_sight": {
           "1": 1,
           "2": 8,
-          "3": 18,
+          "3": 19,
           "4": 9,
           "5": 8,
           "6": 5,
@@ -374,7 +374,7 @@
           "9": 2
         },
         "amount_max_in_fight": {
-          "3": 12,
+          "3": 13,
           "4": 6,
           "5": 14,
           "6": 4,
@@ -400,7 +400,7 @@
           "10": {
             "1": 1,
             "2": 7,
-            "3": 17,
+            "3": 18,
             "4": 9,
             "5": 8,
             "6": 5,
@@ -423,7 +423,7 @@
             "2": 20,
             "3": 11,
             "4": 8,
-            "5": 4,
+            "5": 5,
             "7": 2
           }
         }
@@ -690,9 +690,9 @@
     },
     "provenance": {
       "first_seen": "2026-09-24T04:24:14.244Z",
-      "last_seen": "2026-10-19T00:23:46.870Z",
-      "n_runs": 251,
-      "n_instances": 324,
+      "last_seen": "2026-10-19T06:12:38.954Z",
+      "n_runs": 252,
+      "n_instances": 325,
       "n_spawned_mid_fight": 0,
       "n_minion_instances": 0
     },
@@ -873,17 +873,17 @@
             "79YRPJ8TCCZ5 F15 T2"
           ],
           "alive": {
-            "turns": 44,
+            "turns": 48,
             "moves": {
-              "STICKY_SHOT": 25,
-              "CLUMP_SHOT": 19
+              "STICKY_SHOT": 27,
+              "CLUMP_SHOT": 21
             },
             "next": {
               "CLUMP_SHOT": {
-                "STICKY_SHOT": 8
+                "STICKY_SHOT": 9
               },
               "STICKY_SHOT": {
-                "CLUMP_SHOT": 19
+                "CLUMP_SHOT": 21
               }
             }
           },

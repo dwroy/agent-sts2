@@ -13,19 +13,19 @@
     },
     "game_type": "Normal",
     "game_hp_range": [
-      72,
-      72
+      76,
+      76
     ],
     "kind": "hallway",
     "rooms": {
-      "hallway": 109,
+      "hallway": 110,
       "unknown_room": 19
     },
     "acts": {
-      "1": 128
+      "1": 129
     },
     "encounters": {
-      "MAWLER": 128
+      "MAWLER": 129
     },
     "hp_by_asc": {
       "0": {
@@ -84,29 +84,29 @@
       },
       "10": {
         "min": 76,
-        "median": 76.0,
+        "median": 76,
         "max": 76,
-        "n": 58
+        "n": 59
       }
     },
     "moves": {
       "CLAW_MOVE": {
         "name": "爪击",
-        "n_seen": 250,
+        "n_seen": 252,
         "intents": {
-          "Attack": 250
+          "Attack": 252
         },
         "turns_seen": {
-          "1": 128,
+          "1": 129,
           "3": 56,
-          "4": 36,
+          "4": 37,
           "5": 18,
           "6": 9,
           "7": 2,
           "8": 1
         },
         "next": {
-          "RIP_AND_TEAR_MOVE": 118,
+          "RIP_AND_TEAR_MOVE": 120,
           "ROAR_MOVE": 79
         },
         "avg_total_shown": 10.3,
@@ -232,36 +232,36 @@
           "10": {
             "shown": {
               "3x2": 2,
-              "5x2": 88,
-              "7x2": 35
+              "5x2": 89,
+              "7x2": 36
             },
             "base_per_hit": {
-              "5": 77
+              "5": 78
             },
             "hits": {
-              "2": 125
+              "2": 127
             },
-            "n_base": 77
+            "n_base": 78
           }
         }
       },
       "RIP_AND_TEAR_MOVE": {
         "name": "狂乱撕扯",
-        "n_seen": 171,
+        "n_seen": 173,
         "intents": {
-          "Attack": 171
+          "Attack": 173
         },
         "turns_seen": {
-          "2": 62,
+          "2": 63,
           "3": 36,
           "4": 43,
-          "5": 21,
+          "5": 22,
           "6": 6,
           "7": 3
         },
         "next": {
           "CLAW_MOVE": 77,
-          "ROAR_MOVE": 36
+          "ROAR_MOVE": 37
         },
         "avg_total_shown": 19.1,
         "damage_by_asc": {
@@ -383,40 +383,40 @@
           "10": {
             "shown": {
               "12x1": 7,
-              "16x1": 35,
+              "16x1": 36,
               "18x1": 10,
-              "24x1": 42
+              "24x1": 43
             },
             "base_per_hit": {
-              "16": 35
+              "16": 36
             },
             "hits": {
-              "1": 94
+              "1": 96
             },
-            "n_base": 35
+            "n_base": 36
           }
         }
       },
       "ROAR_MOVE": {
         "name": "怒吼",
-        "n_seen": 115,
+        "n_seen": 116,
         "intents": {
-          "Debuff": 115
+          "Debuff": 116
         },
         "turns_seen": {
           "2": 66,
-          "3": 33,
+          "3": 34,
           "4": 13,
           "5": 3
         },
         "next": {
           "RIP_AND_TEAR_MOVE": 53,
-          "CLAW_MOVE": 45
+          "CLAW_MOVE": 46
         },
         "avg_total_shown": 0.0,
         "player_powers_applied": {
           "VULNERABLE_POWER": {
-            "3": 98
+            "3": 99
           }
         },
         "player_powers_applied_by_asc": {
@@ -462,7 +462,7 @@
           },
           "10": {
             "VULNERABLE_POWER": {
-              "3": 47
+              "3": 48
             }
           }
         }
@@ -517,21 +517,22 @@
         "name": "尖啸",
         "type": "Debuff",
         "description": "在本回合结束前失去[gold]力量[/gold]。",
-        "n_fights": 2,
+        "n_fights": 3,
         "amount_at_first_sight": {
-          "6": 2
+          "6": 3
         },
         "amount_max_in_fight": {
-          "6": 2
+          "6": 3
         },
         "amount_at_first_sight_by_asc": {
           "10": {
-            "6": 2
+            "6": 3
           }
         },
         "turn_at_first_sight_by_asc": {
           "10": {
             "1": 1,
+            "2": 1,
             "4": 1
           }
         }
@@ -540,10 +541,10 @@
         "name": "中毒",
         "type": "Debuff",
         "description": "中毒的生物会在自身回合开始时失去生命。中毒层数每回合减少[blue]1[/blue]。",
-        "n_fights": 46,
+        "n_fights": 47,
         "amount_at_first_sight": {
           "2": 2,
-          "3": 21,
+          "3": 22,
           "4": 2,
           "5": 7,
           "6": 4,
@@ -556,7 +557,7 @@
           "3": 3,
           "4": 4,
           "5": 9,
-          "6": 4,
+          "6": 5,
           "7": 4,
           "8": 5,
           "9": 5,
@@ -572,7 +573,7 @@
           },
           "10": {
             "2": 2,
-            "3": 20,
+            "3": 21,
             "4": 2,
             "5": 7,
             "6": 4,
@@ -588,7 +589,7 @@
           },
           "10": {
             "1": 15,
-            "2": 16,
+            "2": 17,
             "3": 7,
             "4": 3,
             "5": 2,
@@ -623,17 +624,17 @@
         "name": "力量",
         "type": "Buff",
         "description": "力量会增加攻击牌造成的伤害。",
-        "n_fights": 6,
+        "n_fights": 7,
         "amount_at_first_sight": {
           "-10": 1,
           "-9": 1,
-          "-6": 2,
+          "-6": 3,
           "1": 2
         },
         "amount_max_in_fight": {
           "-10": 1,
           "-9": 1,
-          "-6": 2,
+          "-6": 3,
           "1": 2
         },
         "amount_at_first_sight_by_asc": {
@@ -646,7 +647,7 @@
           },
           "10": {
             "-9": 1,
-            "-6": 2
+            "-6": 3
           }
         },
         "turn_at_first_sight_by_asc": {
@@ -659,6 +660,7 @@
           },
           "10": {
             "1": 1,
+            "2": 1,
             "3": 1,
             "4": 1
           }
@@ -766,14 +768,14 @@
         "name": "虚弱",
         "type": "Debuff",
         "description": "虚弱的生物造成的攻击伤害减少[blue]25%[/blue]。",
-        "n_fights": 70,
+        "n_fights": 71,
         "amount_at_first_sight": {
-          "1": 53,
+          "1": 54,
           "2": 16,
           "3": 1
         },
         "amount_max_in_fight": {
-          "1": 37,
+          "1": 38,
           "2": 24,
           "3": 9
         },
@@ -800,7 +802,7 @@
             "2": 1
           },
           "10": {
-            "1": 45,
+            "1": 46,
             "2": 12,
             "3": 1
           }
@@ -829,7 +831,7 @@
             "3": 1
           },
           "10": {
-            "1": 31,
+            "1": 32,
             "2": 15,
             "3": 12
           }
@@ -838,9 +840,9 @@
     },
     "provenance": {
       "first_seen": "2026-09-24T04:52:08.652Z",
-      "last_seen": "2026-10-19T04:03:25.935Z",
-      "n_runs": 128,
-      "n_instances": 128,
+      "last_seen": "2026-10-19T17:48:48.092Z",
+      "n_runs": 129,
+      "n_instances": 129,
       "n_spawned_mid_fight": 0,
       "n_minion_instances": 0
     }

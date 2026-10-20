@@ -1,8 +1,8 @@
 {
  "ABRASIVE": {
   "n": [
-   9,
-   5
+   49,
+   28
   ],
   "vars": {
    "ThornsPower": [
@@ -17,15 +17,15 @@
    0
   ],
   "n": [
-   4,
-   1
+   25,
+   6
   ],
   "vars": {}
  },
  "ACCELERANT": {
   "n": [
-   23,
-   24
+   160,
+   138
   ],
   "vars": {
    "Accelerant": [
@@ -36,8 +36,8 @@
  },
  "ACCURACY": {
   "n": [
-   7,
-   4
+   88,
+   12
   ],
   "vars": {
    "AccuracyPower": [
@@ -48,8 +48,8 @@
  },
  "ACROBATICS": {
   "n": [
-   19,
-   10
+   132,
+   50
   ],
   "vars": {
    "Cards": [
@@ -60,8 +60,8 @@
  },
  "ADRENALINE": {
   "n": [
-   12,
-   4
+   62,
+   20
   ],
   "vars": {
    "Energy": [
@@ -159,15 +159,15 @@
    0
   ],
   "n": [
-   3,
-   5
+   69,
+   23
   ],
   "vars": {}
  },
  "ANGER": {
   "n": [
-   183,
-   68
+   827,
+   278
   ],
   "vars": {
    "Damage": [
@@ -178,8 +178,8 @@
  },
  "ANTICIPATE": {
   "n": [
-   16,
-   11
+   86,
+   46
   ],
   "vars": {
    "DexterityPower": [
@@ -194,15 +194,98 @@
    1
   ],
   "n": [
-   2,
-   3
+   9,
+   21
+  ],
+  "vars": {}
+ },
+ "ARMAMENTS": {
+  "faces": [
+   {
+    "card": {
+     "card_id": "ARMAMENTS",
+     "card_type": "Skill",
+     "costs_x": false,
+     "dynamic_values": [
+      {
+       "base_value": 5,
+       "current_value": 5,
+       "enchanted_value": 5,
+       "is_modified": false,
+       "name": "Block",
+       "was_just_upgraded": false
+      }
+     ],
+     "energy_cost": 1,
+     "name": "武装",
+     "rarity": "Common",
+     "resolved_rules_text": "获得5点格挡。 升级你手牌中的一张牌。",
+     "rules_text": "获得{Block:diff()}点格挡。 升级你手牌中的{IfUpgraded:show:所有牌|一张牌}。",
+     "star_cost": 0,
+     "star_costs_x": false,
+     "upgraded": false
+    },
+    "evidence": {
+     "ascension": 0,
+     "character": "IRONCLAD",
+     "file": "logs/states.jsonl",
+     "floor": 6,
+     "off": 88294690,
+     "path": "state.run.deck[16]",
+     "run_id": "YWER495F5AYS",
+     "sha256": "fd3d98722b65968be744ff50bc307dcc7f2d970e3901313ac2c3dfb8a5ff6e1d",
+     "ts": "2026-09-24T07:17:44.546Z"
+    },
+    "n_runs": 14
+   },
+   {
+    "card": {
+     "card_id": "ARMAMENTS",
+     "card_type": "Skill",
+     "costs_x": false,
+     "dynamic_values": [
+      {
+       "base_value": 5,
+       "current_value": 5,
+       "enchanted_value": 5,
+       "is_modified": false,
+       "name": "Block",
+       "was_just_upgraded": false
+      }
+     ],
+     "energy_cost": 1,
+     "name": "武装+",
+     "rarity": "Common",
+     "resolved_rules_text": "获得5点格挡。 升级你手牌中的所有牌。",
+     "rules_text": "获得{Block:diff()}点格挡。 升级你手牌中的{IfUpgraded:show:所有牌|一张牌}。",
+     "star_cost": 0,
+     "star_costs_x": false,
+     "upgraded": true
+    },
+    "evidence": {
+     "ascension": 8,
+     "character": "IRONCLAD",
+     "file": "logs/states.jsonl",
+     "floor": 22,
+     "off": 3258264620,
+     "path": "state.run.deck[20]",
+     "run_id": "VNWR16YEJASM",
+     "sha256": "002f211b4fa9ab17513bf5897ca5b2036d501619575daa9ce5802fd7cf34f0dd",
+     "ts": "2026-09-28T15:39:43.455Z"
+    },
+    "n_runs": 2
+   }
+  ],
+  "n": [
+   103,
+   42
   ],
   "vars": {}
  },
  "ASHEN_STRIKE": {
   "n": [
-   83,
-   24
+   339,
+   82
   ],
   "vars": {
    "ExtraDamage": [
@@ -213,8 +296,8 @@
  },
  "ASSASSINATE": {
   "n": [
-   27,
-   15
+   130,
+   29
   ],
   "vars": {
    "Damage": [
@@ -233,15 +316,15 @@
    0
   ],
   "n": [
-   7,
-   1
+   95,
+   5
   ],
   "vars": {}
  },
  "BACKFLIP": {
   "n": [
-   141,
-   73
+   813,
+   364
   ],
   "vars": {
    "Block": [
@@ -252,8 +335,8 @@
  },
  "BACKSTAB": {
   "n": [
-   30,
-   19
+   137,
+   57
   ],
   "vars": {
    "Damage": [
@@ -268,15 +351,15 @@
    2
   ],
   "n": [
-   5,
-   3
+   32,
+   10
   ],
   "vars": {}
  },
  "BASH": {
   "n": [
-   208,
-   270
+   1142,
+   1430
   ],
   "vars": {
    "Damage": [
@@ -291,8 +374,8 @@
  },
  "BATTLE_TRANCE": {
   "n": [
-   20,
-   7
+   113,
+   34
   ],
   "vars": {
    "Cards": [
@@ -303,7 +386,7 @@
  },
  "BEAT_DOWN": {
   "n": [
-   3,
+   57,
    1
   ],
   "vars": {
@@ -315,8 +398,8 @@
  },
  "BLADE_DANCE": {
   "n": [
-   17,
-   14
+   124,
+   65
   ],
   "vars": {
    "Cards": [
@@ -327,7 +410,7 @@
  },
  "BLADE_OF_INK": {
   "n": [
-   5,
+   29,
    1
   ],
   "vars": {
@@ -339,8 +422,8 @@
  },
  "BLOODLETTING": {
   "n": [
-   19,
-   10
+   117,
+   38
   ],
   "vars": {
    "Energy": [
@@ -351,8 +434,8 @@
  },
  "BLOOD_WALL": {
   "n": [
-   75,
-   37
+   453,
+   210
   ],
   "vars": {
    "Block": [
@@ -363,8 +446,8 @@
  },
  "BLUDGEON": {
   "n": [
-   156,
-   129
+   838,
+   549
   ],
   "vars": {
    "Damage": [
@@ -375,8 +458,8 @@
  },
  "BLUR": {
   "n": [
-   38,
-   16
+   249,
+   64
   ],
   "vars": {
    "Block": [
@@ -391,15 +474,15 @@
    0
   ],
   "n": [
-   160,
-   60
+   561,
+   169
   ],
   "vars": {}
  },
  "BOLAS": {
   "n": [
-   43,
-   40
+   162,
+   84
   ],
   "vars": {
    "Damage": [
@@ -410,8 +493,8 @@
  },
  "BOUNCING_FLASK": {
   "n": [
-   32,
-   37
+   193,
+   216
   ],
   "vars": {
    "Repeat": [
@@ -422,8 +505,8 @@
  },
  "BRAND": {
   "n": [
-   10,
-   6
+   61,
+   18
   ],
   "vars": {
    "StrengthPower": [
@@ -434,8 +517,8 @@
  },
  "BREAKTHROUGH": {
   "n": [
-   113,
-   58
+   655,
+   271
   ],
   "vars": {
    "Damage": [
@@ -446,8 +529,8 @@
  },
  "BRIGHTEST_FLAME": {
   "n": [
-   5,
-   2
+   15,
+   7
   ],
   "vars": {
    "Cards": [
@@ -462,8 +545,8 @@
  },
  "BUBBLE_BUBBLE": {
   "n": [
-   48,
-   16
+   339,
+   116
   ],
   "vars": {
    "PoisonPower": [
@@ -478,15 +561,15 @@
    2
   ],
   "n": [
-   8,
-   5
+   57,
+   24
   ],
   "vars": {}
  },
  "BULLY": {
   "n": [
-   95,
-   55
+   395,
+   185
   ],
   "vars": {
    "ExtraDamage": [
@@ -497,8 +580,8 @@
  },
  "BURNING_PACT": {
   "n": [
-   16,
-   9
+   122,
+   52
   ],
   "vars": {
    "Cards": [
@@ -509,8 +592,8 @@
  },
  "BURST": {
   "n": [
-   14,
-   9
+   83,
+   46
   ],
   "vars": {
    "Skills": [
@@ -521,8 +604,8 @@
  },
  "BYRD_SWOOP": {
   "n": [
-   7,
-   2
+   23,
+   7
   ],
   "vars": {
    "Damage": [
@@ -537,8 +620,8 @@
    2
   ],
   "n": [
-   3,
-   1
+   53,
+   2
   ],
   "vars": {}
  },
@@ -609,8 +692,8 @@
  },
  "CATASTROPHE": {
   "n": [
-   4,
-   1
+   32,
+   2
   ],
   "vars": {
    "Cards": [
@@ -621,8 +704,8 @@
  },
  "CINDER": {
   "n": [
-   84,
-   30
+   356,
+   132
   ],
   "vars": {
    "Damage": [
@@ -633,8 +716,8 @@
  },
  "CLOAK_AND_DAGGER": {
   "n": [
-   110,
-   48
+   596,
+   228
   ],
   "vars": {
    "Cards": [
@@ -645,8 +728,8 @@
  },
  "COLOSSUS": {
   "n": [
-   46,
-   30
+   243,
+   127
   ],
   "vars": {
    "Block": [
@@ -657,8 +740,8 @@
  },
  "CONFLAGRATION": {
   "n": [
-   83,
-   30
+   323,
+   94
   ],
   "vars": {
    "Repeat": [
@@ -669,8 +752,8 @@
  },
  "CORROSIVE_WAVE": {
   "n": [
-   7,
-   3
+   43,
+   19
   ],
   "vars": {
    "CorrosiveWave": [
@@ -681,8 +764,8 @@
  },
  "CRIMSON_MANTLE": {
   "n": [
-   12,
-   5
+   106,
+   26
   ],
   "vars": {
    "CrimsonMantlePower": [
@@ -693,8 +776,8 @@
  },
  "CRUELTY": {
   "n": [
-   8,
-   5
+   73,
+   26
   ],
   "vars": {
    "CrueltyPower": [
@@ -705,8 +788,8 @@
  },
  "DAGGER_SPRAY": {
   "n": [
-   91,
-   47
+   532,
+   267
   ],
   "vars": {
    "Damage": [
@@ -717,8 +800,8 @@
  },
  "DAGGER_THROW": {
   "n": [
-   105,
-   47
+   585,
+   226
   ],
   "vars": {
    "Damage": [
@@ -733,15 +816,15 @@
    1
   ],
   "n": [
-   8,
-   3
+   53,
+   15
   ],
   "vars": {}
  },
  "DARK_SHACKLES": {
   "n": [
-   13,
-   6
+   77,
+   30
   ],
   "vars": {
    "StrengthLoss": [
@@ -752,8 +835,8 @@
  },
  "DASH": {
   "n": [
-   261,
-   132
+   1245,
+   517
   ],
   "vars": {
    "Block": [
@@ -768,8 +851,8 @@
  },
  "DEADLY_POISON": {
   "n": [
-   53,
-   53
+   418,
+   341
   ],
   "vars": {
    "PoisonPower": [
@@ -780,8 +863,8 @@
  },
  "DEFEND_IRONCLAD": {
   "n": [
-   128,
-   68
+   890,
+   393
   ],
   "vars": {
    "Block": [
@@ -792,8 +875,8 @@
  },
  "DEFEND_SILENT": {
   "n": [
-   258,
-   85
+   1669,
+   527
   ],
   "vars": {
    "Block": [
@@ -804,8 +887,8 @@
  },
  "DEFLECT": {
   "n": [
-   88,
-   49
+   384,
+   210
   ],
   "vars": {
    "Block": [
@@ -816,8 +899,8 @@
  },
  "DEMON_FORM": {
   "n": [
-   15,
-   14
+   83,
+   72
   ],
   "vars": {
    "StrengthPower": [
@@ -828,8 +911,8 @@
  },
  "DISMANTLE": {
   "n": [
-   160,
-   95
+   814,
+   372
   ],
   "vars": {
    "Damage": [
@@ -840,8 +923,8 @@
  },
  "DODGE_AND_ROLL": {
   "n": [
-   56,
-   32
+   344,
+   153
   ],
   "vars": {
    "Block": [
@@ -852,8 +935,8 @@
  },
  "DOMINATE": {
   "n": [
-   23,
-   13
+   154,
+   52
   ],
   "vars": {
    "VulnerablePower": [
@@ -864,8 +947,8 @@
  },
  "DRAMATIC_ENTRANCE": {
   "n": [
-   16,
-   6
+   64,
+   15
   ],
   "vars": {
    "Damage": [
@@ -876,8 +959,8 @@
  },
  "DRUM_OF_BATTLE": {
   "n": [
-   7,
-   2
+   49,
+   5
   ],
   "vars": {
    "Energy": [
@@ -888,8 +971,8 @@
  },
  "ECHOING_SLASH": {
   "n": [
-   73,
-   38
+   427,
+   198
   ],
   "vars": {
    "Damage": [
@@ -898,10 +981,75 @@
    ]
   }
  },
+ "ENLIGHTENMENT": {
+  "faces": [
+   {
+    "card": {
+     "card_id": "ENLIGHTENMENT",
+     "card_type": "Skill",
+     "costs_x": false,
+     "dynamic_values": [],
+     "energy_cost": 0,
+     "name": "开悟",
+     "rarity": "Event",
+     "resolved_rules_text": "在这个回合，你当前手牌中所有牌的耗能降低至1。 消耗。",
+     "rules_text": "在这{IfUpgraded:show:场战斗|个回合}，你当前手牌中所有牌的耗能降低至1。",
+     "star_cost": 0,
+     "star_costs_x": false,
+     "upgraded": false
+    },
+    "evidence": {
+     "ascension": 0,
+     "character": "IRONCLAD",
+     "file": "logs/states.jsonl",
+     "floor": 24,
+     "off": 110386586,
+     "path": "state.run.deck[24]",
+     "run_id": "TQCZFBK7T09Y",
+     "sha256": "1930a22e2b3522ca01e713c6fa0b55ef743646d9d695476cb8d34840b91e4766",
+     "ts": "2026-09-24T07:48:58.072Z"
+    },
+    "n_runs": 3
+   },
+   {
+    "card": {
+     "card_id": "ENLIGHTENMENT",
+     "card_type": "Skill",
+     "costs_x": false,
+     "dynamic_values": [],
+     "energy_cost": 0,
+     "name": "开悟+",
+     "rarity": "Event",
+     "resolved_rules_text": "在这场战斗，你当前手牌中所有牌的耗能降低至1。 消耗。",
+     "rules_text": "在这{IfUpgraded:show:场战斗|个回合}，你当前手牌中所有牌的耗能降低至1。",
+     "star_cost": 0,
+     "star_costs_x": false,
+     "upgraded": true
+    },
+    "evidence": {
+     "ascension": 10,
+     "character": "SILENT",
+     "file": "logs/states.jsonl",
+     "floor": 21,
+     "off": 10962337646,
+     "path": "state.run.deck[28]",
+     "run_id": "7S8HCC0M6G9W",
+     "sha256": "5d7687fa8b09f4f37758b6abfcfbd396f3b1d8b5c08ea25be4aa1d68e167060b",
+     "ts": "2026-10-10T13:08:46.116Z"
+    },
+    "n_runs": 1
+   }
+  ],
+  "n": [
+   20,
+   21
+  ],
+  "vars": {}
+ },
  "ENVENOM": {
   "n": [
-   8,
-   7
+   54,
+   34
   ],
   "vars": {
    "EnvenomPower": [
@@ -912,8 +1060,8 @@
  },
  "ESCAPE_PLAN": {
   "n": [
-   55,
-   27
+   250,
+   108
   ],
   "vars": {
    "Block": [
@@ -924,8 +1072,8 @@
  },
  "EVIL_EYE": {
   "n": [
-   58,
-   21
+   323,
+   99
   ],
   "vars": {
    "Block": [
@@ -936,8 +1084,8 @@
  },
  "EXPECT_A_FIGHT": {
   "n": [
-   111,
-   21
+   479,
+   92
   ],
   "vars": {
    "CalculatedBlock": [
@@ -956,8 +1104,8 @@
  },
  "EXPERTISE": {
   "n": [
-   12,
-   4
+   94,
+   23
   ],
   "vars": {
    "Cards": [
@@ -968,8 +1116,8 @@
  },
  "EXPOSE": {
   "n": [
-   19,
-   10
+   124,
+   47
   ],
   "vars": {
    "Power": [
@@ -980,8 +1128,8 @@
  },
  "EXTERMINATE": {
   "n": [
-   61,
-   17
+   268,
+   65
   ],
   "vars": {
    "Damage": [
@@ -991,9 +1139,13 @@
   }
  },
  "FAN_OF_KNIVES": {
+  "cost": [
+   2,
+   0
+  ],
   "n": [
-   15,
-   4
+   89,
+   12
   ],
   "vars": {
    "Shivs": [
@@ -1004,8 +1156,8 @@
  },
  "FASTEN": {
   "n": [
-   4,
-   2
+   49,
+   12
   ],
   "vars": {
    "ExtraBlock": [
@@ -1016,8 +1168,8 @@
  },
  "FEED": {
   "n": [
-   95,
-   48
+   495,
+   192
   ],
   "vars": {
    "Damage": [
@@ -1032,8 +1184,8 @@
  },
  "FEEL_NO_PAIN": {
   "n": [
-   16,
-   5
+   133,
+   26
   ],
   "vars": {
    "Power": [
@@ -1044,8 +1196,8 @@
  },
  "FIEND_FIRE": {
   "n": [
-   87,
-   27
+   400,
+   97
   ],
   "vars": {
    "Damage": [
@@ -1056,8 +1208,8 @@
  },
  "FIGHT_ME": {
   "n": [
-   157,
-   115
+   757,
+   553
   ],
   "vars": {
    "Damage": [
@@ -1072,8 +1224,8 @@
  },
  "FINESSE": {
   "n": [
-   24,
-   2
+   112,
+   5
   ],
   "vars": {
    "Block": [
@@ -1084,8 +1236,8 @@
  },
  "FINISHER": {
   "n": [
-   134,
-   40
+   469,
+   134
   ],
   "vars": {
    "Damage": [
@@ -1096,8 +1248,8 @@
  },
  "FISTICUFFS": {
   "n": [
-   39,
-   4
+   202,
+   18
   ],
   "vars": {
    "Damage": [
@@ -1108,8 +1260,8 @@
  },
  "FLAME_BARRIER": {
   "n": [
-   68,
-   34
+   393,
+   199
   ],
   "vars": {
    "Block": [
@@ -1124,8 +1276,8 @@
  },
  "FLASH_OF_STEEL": {
   "n": [
-   51,
-   7
+   220,
+   25
   ],
   "vars": {
    "Damage": [
@@ -1136,8 +1288,8 @@
  },
  "FLECHETTES": {
   "n": [
-   176,
-   25
+   648,
+   54
   ],
   "vars": {
    "Damage": [
@@ -1148,8 +1300,8 @@
  },
  "FLICK_FLACK": {
   "n": [
-   66,
-   39
+   359,
+   143
   ],
   "vars": {
    "Damage": [
@@ -1160,8 +1312,8 @@
  },
  "FOOTWORK": {
   "n": [
-   27,
-   28
+   210,
+   168
   ],
   "vars": {
    "DexterityPower": [
@@ -1172,8 +1324,8 @@
  },
  "FORGOTTEN_RITUAL": {
   "n": [
-   17,
-   7
+   117,
+   35
   ],
   "vars": {
    "Energy": [
@@ -1184,8 +1336,8 @@
  },
  "GIANT_ROCK": {
   "n": [
-   28,
-   17
+   125,
+   65
   ],
   "vars": {
    "Damage": [
@@ -1196,8 +1348,8 @@
  },
  "GRAND_FINALE": {
   "n": [
-   20,
-   13
+   117,
+   46
   ],
   "vars": {
    "Damage": [
@@ -1208,7 +1360,7 @@
  },
  "HAND_OF_GREED": {
   "n": [
-   20,
+   130,
    1
   ],
   "vars": {
@@ -1224,8 +1376,8 @@
  },
  "HAND_TRICK": {
   "n": [
-   60,
-   31
+   332,
+   152
   ],
   "vars": {
    "Block": [
@@ -1240,15 +1392,15 @@
    0
   ],
   "n": [
-   5,
-   2
+   43,
+   3
   ],
   "vars": {}
  },
  "HAZE": {
   "n": [
-   24,
-   21
+   160,
+   108
   ],
   "vars": {
    "PoisonPower": [
@@ -1263,8 +1415,8 @@
  },
  "HEADBUTT": {
   "n": [
-   168,
-   80
+   954,
+   370
   ],
   "vars": {
    "Damage": [
@@ -1279,15 +1431,15 @@
    1
   ],
   "n": [
-   9,
-   6
+   60,
+   25
   ],
   "vars": {}
  },
  "HEMOKINESIS": {
   "n": [
-   206,
-   86
+   964,
+   363
   ],
   "vars": {
    "Damage": [
@@ -1296,10 +1448,109 @@
    ]
   }
  },
+ "HIDDEN_DAGGERS": {
+  "faces": [
+   {
+    "card": {
+     "card_id": "HIDDEN_DAGGERS",
+     "card_type": "Skill",
+     "costs_x": false,
+     "dynamic_values": [
+      {
+       "base_value": 2,
+       "current_value": 2,
+       "enchanted_value": 2,
+       "is_modified": false,
+       "name": "Cards",
+       "was_just_upgraded": false
+      },
+      {
+       "base_value": 2,
+       "current_value": 2,
+       "enchanted_value": 2,
+       "is_modified": false,
+       "name": "Shivs",
+       "was_just_upgraded": false
+      }
+     ],
+     "energy_cost": 0,
+     "name": "隐秘匕首",
+     "rarity": "Uncommon",
+     "resolved_rules_text": "丢弃2张牌。 将2张小刀加入你的手牌。",
+     "rules_text": "丢弃{Cards:diff()}张牌。 将{Shivs:diff()}张{IfUpgraded:show:小刀+|小刀}加入你的手牌。",
+     "star_cost": 0,
+     "star_costs_x": false,
+     "upgraded": false
+    },
+    "evidence": {
+     "ascension": 3,
+     "character": "SILENT",
+     "file": "logs/states.jsonl",
+     "floor": 7,
+     "off": 6579735574,
+     "path": "state.run.deck[18]",
+     "run_id": "10GPK5XGHCK3",
+     "sha256": "3bdb651ee1ad7e2757b20e54de8fbfb821241756138582c984c9928b0c6a6bdc",
+     "ts": "2026-10-04T23:49:33.328Z"
+    },
+    "n_runs": 57
+   },
+   {
+    "card": {
+     "card_id": "HIDDEN_DAGGERS",
+     "card_type": "Skill",
+     "costs_x": false,
+     "dynamic_values": [
+      {
+       "base_value": 2,
+       "current_value": 2,
+       "enchanted_value": 2,
+       "is_modified": false,
+       "name": "Cards",
+       "was_just_upgraded": false
+      },
+      {
+       "base_value": 2,
+       "current_value": 2,
+       "enchanted_value": 2,
+       "is_modified": false,
+       "name": "Shivs",
+       "was_just_upgraded": false
+      }
+     ],
+     "energy_cost": 0,
+     "name": "隐秘匕首+",
+     "rarity": "Uncommon",
+     "resolved_rules_text": "丢弃2张牌。 将2张小刀+加入你的手牌。",
+     "rules_text": "丢弃{Cards:diff()}张牌。 将{Shivs:diff()}张{IfUpgraded:show:小刀+|小刀}加入你的手牌。",
+     "star_cost": 0,
+     "star_costs_x": false,
+     "upgraded": true
+    },
+    "evidence": {
+     "ascension": 6,
+     "character": "SILENT",
+     "file": "logs/states.jsonl",
+     "floor": 18,
+     "off": 6977757278,
+     "path": "state.run.deck[17]",
+     "run_id": "ENKYQMS9W4ZD",
+     "sha256": "7b5a428c9150a1ec90d2103dd243e34237d946d92401fac98a43497f97eb5325",
+     "ts": "2026-10-05T10:58:35.423Z"
+    },
+    "n_runs": 6
+   }
+  ],
+  "n": [
+   108,
+   15
+  ],
+  "vars": {}
+ },
  "HOWL_FROM_BEYOND": {
   "n": [
-   89,
-   63
+   474,
+   222
   ],
   "vars": {
    "Damage": [
@@ -1310,8 +1561,8 @@
  },
  "IMPATIENCE": {
   "n": [
-   4,
-   1
+   41,
+   4
   ],
   "vars": {
    "Cards": [
@@ -1322,8 +1573,8 @@
  },
  "IMPERVIOUS": {
   "n": [
-   40,
-   6
+   221,
+   26
   ],
   "vars": {
    "Block": [
@@ -1338,15 +1589,15 @@
    0
   ],
   "n": [
-   6,
-   3
+   57,
+   17
   ],
   "vars": {}
  },
  "INFERNO": {
   "n": [
-   16,
-   18
+   129,
+   94
   ],
   "vars": {
    "InfernoPower": [
@@ -1422,8 +1673,8 @@
  },
  "INFLAME": {
   "n": [
-   19,
-   13
+   126,
+   64
   ],
   "vars": {
    "StrengthPower": [
@@ -1434,8 +1685,8 @@
  },
  "IRON_WAVE": {
   "n": [
-   197,
-   74
+   742,
+   223
   ],
   "vars": {
    "Block": [
@@ -1449,13 +1700,9 @@
   }
  },
  "JACKPOT": {
-  "cost": [
-   0,
-   3
-  ],
   "n": [
-   14,
-   4
+   96,
+   8
   ],
   "vars": {
    "Damage": [
@@ -1466,8 +1713,8 @@
  },
  "JUGGERNAUT": {
   "n": [
-   11,
-   8
+   61,
+   43
   ],
   "vars": {
    "JuggernautPower": [
@@ -1478,8 +1725,8 @@
  },
  "LEADING_STRIKE": {
   "n": [
-   77,
-   21
+   446,
+   104
   ],
   "vars": {
    "Damage": [
@@ -1490,8 +1737,8 @@
  },
  "LEG_SWEEP": {
   "n": [
-   147,
-   123
+   893,
+   679
   ],
   "vars": {
    "Block": [
@@ -1503,6 +1750,249 @@
     3
    ]
   }
+ },
+ "MAD_SCIENCE": {
+  "faces": [
+   {
+    "card": {
+     "card_id": "MAD_SCIENCE",
+     "card_type": "Power",
+     "costs_x": false,
+     "dynamic_values": [
+      {
+       "base_value": 8,
+       "current_value": 8,
+       "enchanted_value": 8,
+       "is_modified": false,
+       "name": "Block",
+       "was_just_upgraded": false
+      },
+      {
+       "base_value": 6,
+       "current_value": 6,
+       "enchanted_value": 6,
+       "is_modified": false,
+       "name": "ChokingDamage",
+       "was_just_upgraded": false
+      },
+      {
+       "base_value": 1,
+       "current_value": 1,
+       "enchanted_value": 1,
+       "is_modified": false,
+       "name": "CuriousReduction",
+       "was_just_upgraded": false
+      },
+      {
+       "base_value": 12,
+       "current_value": 12,
+       "enchanted_value": 12,
+       "is_modified": false,
+       "name": "Damage",
+       "was_just_upgraded": false
+      },
+      {
+       "base_value": 2,
+       "current_value": 2,
+       "enchanted_value": 2,
+       "is_modified": false,
+       "name": "EnergizedEnergy",
+       "was_just_upgraded": false
+      },
+      {
+       "base_value": 2,
+       "current_value": 2,
+       "enchanted_value": 2,
+       "is_modified": false,
+       "name": "ExpertiseDexterity",
+       "was_just_upgraded": false
+      },
+      {
+       "base_value": 2,
+       "current_value": 2,
+       "enchanted_value": 2,
+       "is_modified": false,
+       "name": "ExpertiseStrength",
+       "was_just_upgraded": false
+      },
+      {
+       "base_value": 2,
+       "current_value": 2,
+       "enchanted_value": 2,
+       "is_modified": false,
+       "name": "SappingVulnerable",
+       "was_just_upgraded": false
+      },
+      {
+       "base_value": 2,
+       "current_value": 2,
+       "enchanted_value": 2,
+       "is_modified": false,
+       "name": "SappingWeak",
+       "was_just_upgraded": false
+      },
+      {
+       "base_value": 3,
+       "current_value": 3,
+       "enchanted_value": 3,
+       "is_modified": false,
+       "name": "ViolenceHits",
+       "was_just_upgraded": false
+      },
+      {
+       "base_value": 3,
+       "current_value": 3,
+       "enchanted_value": 3,
+       "is_modified": false,
+       "name": "WisdomCards",
+       "was_just_upgraded": false
+      }
+     ],
+     "energy_cost": 1,
+     "name": "疯狂科学",
+     "rarity": "Event",
+     "resolved_rules_text": "获得2点力量。 获得2点敏捷。",
+     "rules_text": "{CardType:choose(Attack|Skill|Power):造成{Damage:diff()}点伤害{Violence:{ViolenceHits:diff()}次|}。|获得{Block:diff()}点格挡。||？？？}{HasRider:{Sapping: 给予{SappingWeak:diff()}层虚弱。 给予{SappingVulnerable:diff()}层易伤。|}{Choking: 本回合，你每打出一张牌，该敌人失去{ChokingDamage:diff()}点生命。|}{Energized: 获得{EnergizedEnergy:energyIcons()}。|}{Wisdom: 抽{WisdomCards:diff()}张牌|}{Chaos: 将一张随机牌放入你的手牌，这张牌在本回合可以免费打出。|}{Expertise:获得{ExpertiseStrength:diff()}点力量。 获得{ExpertiseDexterity:diff()}点敏捷。|}{Curious:能力牌的耗能减少{CuriousReduction:diff()}{energyPrefix:energyIcons(1)}。|}{Improvement:在战斗结束时，升级你牌组中的一张随机牌。|}|{CardType:choose(Attack|Skill|Power): ？？？| ？？？|？？？|？？？}}",
+     "star_cost": 0,
+     "star_costs_x": false,
+     "upgraded": false
+    },
+    "evidence": {
+     "ascension": 8,
+     "character": "IRONCLAD",
+     "file": "logs/states.jsonl",
+     "floor": 39,
+     "off": 3367242121,
+     "path": "state.run.deck[40]",
+     "run_id": "Y3XT9EBS7U8B",
+     "sha256": "771b516875a3e7d6e4c75d34acada14c5de5c5da7c0dcfd1743d626dea158d68",
+     "ts": "2026-09-28T19:33:00.614Z"
+    },
+    "n_runs": 19
+   },
+   {
+    "card": {
+     "card_id": "MAD_SCIENCE",
+     "card_type": "Power",
+     "costs_x": false,
+     "dynamic_values": [
+      {
+       "base_value": 8,
+       "current_value": 8,
+       "enchanted_value": 8,
+       "is_modified": false,
+       "name": "Block",
+       "was_just_upgraded": false
+      },
+      {
+       "base_value": 6,
+       "current_value": 6,
+       "enchanted_value": 6,
+       "is_modified": false,
+       "name": "ChokingDamage",
+       "was_just_upgraded": false
+      },
+      {
+       "base_value": 1,
+       "current_value": 1,
+       "enchanted_value": 1,
+       "is_modified": false,
+       "name": "CuriousReduction",
+       "was_just_upgraded": false
+      },
+      {
+       "base_value": 12,
+       "current_value": 12,
+       "enchanted_value": 12,
+       "is_modified": false,
+       "name": "Damage",
+       "was_just_upgraded": false
+      },
+      {
+       "base_value": 2,
+       "current_value": 2,
+       "enchanted_value": 2,
+       "is_modified": false,
+       "name": "EnergizedEnergy",
+       "was_just_upgraded": false
+      },
+      {
+       "base_value": 2,
+       "current_value": 2,
+       "enchanted_value": 2,
+       "is_modified": false,
+       "name": "ExpertiseDexterity",
+       "was_just_upgraded": false
+      },
+      {
+       "base_value": 2,
+       "current_value": 2,
+       "enchanted_value": 2,
+       "is_modified": false,
+       "name": "ExpertiseStrength",
+       "was_just_upgraded": false
+      },
+      {
+       "base_value": 2,
+       "current_value": 2,
+       "enchanted_value": 2,
+       "is_modified": false,
+       "name": "SappingVulnerable",
+       "was_just_upgraded": false
+      },
+      {
+       "base_value": 2,
+       "current_value": 2,
+       "enchanted_value": 2,
+       "is_modified": false,
+       "name": "SappingWeak",
+       "was_just_upgraded": false
+      },
+      {
+       "base_value": 3,
+       "current_value": 3,
+       "enchanted_value": 3,
+       "is_modified": false,
+       "name": "ViolenceHits",
+       "was_just_upgraded": false
+      },
+      {
+       "base_value": 3,
+       "current_value": 3,
+       "enchanted_value": 3,
+       "is_modified": false,
+       "name": "WisdomCards",
+       "was_just_upgraded": false
+      }
+     ],
+     "energy_cost": 1,
+     "name": "疯狂科学+",
+     "rarity": "Event",
+     "resolved_rules_text": "固有。 获得2点力量。 获得2点敏捷。",
+     "rules_text": "{CardType:choose(Attack|Skill|Power):造成{Damage:diff()}点伤害{Violence:{ViolenceHits:diff()}次|}。|获得{Block:diff()}点格挡。||？？？}{HasRider:{Sapping: 给予{SappingWeak:diff()}层虚弱。 给予{SappingVulnerable:diff()}层易伤。|}{Choking: 本回合，你每打出一张牌，该敌人失去{ChokingDamage:diff()}点生命。|}{Energized: 获得{EnergizedEnergy:energyIcons()}。|}{Wisdom: 抽{WisdomCards:diff()}张牌|}{Chaos: 将一张随机牌放入你的手牌，这张牌在本回合可以免费打出。|}{Expertise:获得{ExpertiseStrength:diff()}点力量。 获得{ExpertiseDexterity:diff()}点敏捷。|}{Curious:能力牌的耗能减少{CuriousReduction:diff()}{energyPrefix:energyIcons(1)}。|}{Improvement:在战斗结束时，升级你牌组中的一张随机牌。|}|{CardType:choose(Attack|Skill|Power): ？？？| ？？？|？？？|？？？}}",
+     "star_cost": 0,
+     "star_costs_x": false,
+     "upgraded": true
+    },
+    "evidence": {
+     "ascension": 8,
+     "character": "IRONCLAD",
+     "file": "logs/states.jsonl",
+     "floor": 43,
+     "off": 4072627549,
+     "path": "state.run.deck[26]",
+     "run_id": "5HHLMV2DZ5AZ",
+     "sha256": "f4affcba865ad7118993df0966992def8ae8539e3dbc4234ca8ea943a4b8a458",
+     "ts": "2026-09-29T20:32:18.934Z"
+    },
+    "n_runs": 1
+   }
+  ],
+  "n": [
+   379,
+   41
+  ],
+  "vars": {}
  },
  "MALAISE": {
   "faces": [
@@ -1571,8 +2061,8 @@
  },
  "MANGLE": {
   "n": [
-   78,
-   7
+   300,
+   25
   ],
   "vars": {
    "Damage": [
@@ -1587,8 +2077,8 @@
  },
  "MASTER_OF_STRATEGY": {
   "n": [
-   3,
-   2
+   53,
+   7
   ],
   "vars": {
    "Cards": [
@@ -1603,15 +2093,15 @@
    1
   ],
   "n": [
-   10,
-   3
+   54,
+   12
   ],
   "vars": {}
  },
  "MAUL": {
   "n": [
-   98,
-   29
+   367,
+   111
   ],
   "vars": {
    "Damage": [
@@ -1630,15 +2120,15 @@
    1
   ],
   "n": [
-   5,
-   1
+   74,
+   3
   ],
   "vars": {}
  },
  "MEMENTO_MORI": {
   "n": [
-   66,
-   16
+   386,
+   60
   ],
   "vars": {
    "CalculatedDamage": [
@@ -1657,8 +2147,8 @@
  },
  "METAMORPHOSIS": {
   "n": [
-   7,
-   2
+   47,
+   17
   ],
   "vars": {
    "Cards": [
@@ -1673,8 +2163,8 @@
    0
   ],
   "n": [
-   68,
-   7
+   187,
+   17
   ],
   "vars": {}
  },
@@ -1795,8 +2285,8 @@
  },
  "MOLTEN_FIST": {
   "n": [
-   210,
-   78
+   932,
+   312
   ],
   "vars": {
    "Damage": [
@@ -1811,15 +2301,15 @@
    2
   ],
   "n": [
-   55,
+   222,
    1
   ],
   "vars": {}
  },
  "NEOWS_FURY": {
   "n": [
-   31,
-   3
+   120,
+   7
   ],
   "vars": {
    "Cards": [
@@ -1834,8 +2324,8 @@
  },
  "NEUTRALIZE": {
   "n": [
-   112,
-   102
+   560,
+   517
   ],
   "vars": {
    "Damage": [
@@ -1854,8 +2344,8 @@
    2
   ],
   "n": [
-   6,
-   6
+   44,
+   30
   ],
   "vars": {}
  },
@@ -1865,14 +2355,14 @@
    0
   ],
   "n": [
-   4,
-   1
+   67,
+   3
   ],
   "vars": {}
  },
  "NOT_YET": {
   "n": [
-   4,
+   43,
    2
   ],
   "vars": {
@@ -1884,8 +2374,8 @@
  },
  "NOXIOUS_FUMES": {
   "n": [
-   24,
-   26
+   178,
+   169
   ],
   "vars": {
    "PoisonPerTurn": [
@@ -1896,8 +2386,8 @@
  },
  "OFFERING": {
   "n": [
-   19,
-   9
+   84,
+   45
   ],
   "vars": {
    "Cards": [
@@ -1908,8 +2398,8 @@
  },
  "OMNISLICE": {
   "n": [
-   48,
-   3
+   219,
+   7
   ],
   "vars": {
    "Damage": [
@@ -1920,8 +2410,8 @@
  },
  "ONE_TWO_PUNCH": {
   "n": [
-   10,
-   3
+   72,
+   8
   ],
   "vars": {
    "Attacks": [
@@ -1932,8 +2422,8 @@
  },
  "OUTBREAK": {
   "n": [
-   27,
-   10
+   151,
+   53
   ],
   "vars": {
    "PoisonPower": [
@@ -1944,8 +2434,8 @@
  },
  "OUTMANEUVER": {
   "n": [
-   2,
-   2
+   16,
+   11
   ],
   "vars": {
    "Energy": [
@@ -1956,8 +2446,8 @@
  },
  "PACTS_END": {
   "n": [
-   43,
-   5
+   168,
+   13
   ],
   "vars": {
    "Damage": [
@@ -1968,8 +2458,8 @@
  },
  "PERFECTED_STRIKE": {
   "n": [
-   165,
-   105
+   844,
+   364
   ],
   "vars": {
    "ExtraDamage": [
@@ -1980,8 +2470,8 @@
  },
  "PHANTOM_BLADES": {
   "n": [
-   10,
-   4
+   77,
+   16
   ],
   "vars": {
    "PhantomBladesPower": [
@@ -1992,8 +2482,8 @@
  },
  "PIERCING_WAIL": {
   "n": [
-   26,
-   12
+   188,
+   70
   ],
   "vars": {
    "StrengthLoss": [
@@ -2004,8 +2494,8 @@
  },
  "PILLAGE": {
   "n": [
-   80,
-   23
+   365,
+   64
   ],
   "vars": {
    "Damage": [
@@ -2016,8 +2506,8 @@
  },
  "PINPOINT": {
   "n": [
-   95,
-   18
+   475,
+   66
   ],
   "vars": {
    "Damage": [
@@ -2028,8 +2518,8 @@
  },
  "POISONED_STAB": {
   "n": [
-   144,
-   114
+   869,
+   548
   ],
   "vars": {
    "Damage": [
@@ -2044,8 +2534,8 @@
  },
  "POMMEL_STRIKE": {
   "n": [
-   271,
-   166
+   1471,
+   804
   ],
   "vars": {
    "Cards": [
@@ -2060,8 +2550,8 @@
  },
  "POUNCE": {
   "n": [
-   58,
-   25
+   331,
+   121
   ],
   "vars": {
    "Damage": [
@@ -2072,8 +2562,8 @@
  },
  "PRECISE_CUT": {
   "n": [
-   136,
-   63
+   509,
+   180
   ],
   "vars": {
    "CalculatedDamage": [
@@ -2088,8 +2578,8 @@
  },
  "PREDATOR": {
   "n": [
-   114,
-   64
+   672,
+   342
   ],
   "vars": {
    "Damage": [
@@ -2100,8 +2590,8 @@
  },
  "PREPARED": {
   "n": [
-   14,
-   11
+   85,
+   37
   ],
   "vars": {
    "Cards": [
@@ -2112,8 +2602,8 @@
  },
  "PREP_TIME": {
   "n": [
-   3,
-   3
+   32,
+   12
   ],
   "vars": {
    "PrepTimePower": [
@@ -2122,10 +2612,75 @@
    ]
   }
  },
+ "PRIMAL_FORCE": {
+  "faces": [
+   {
+    "card": {
+     "card_id": "PRIMAL_FORCE",
+     "card_type": "Skill",
+     "costs_x": false,
+     "dynamic_values": [],
+     "energy_cost": 0,
+     "name": "原始力量",
+     "rarity": "Rare",
+     "resolved_rules_text": "将手牌中的所有攻击牌变化为巨石。",
+     "rules_text": "将手牌中的所有攻击牌变化为{IfUpgraded:show:巨石+|巨石}。",
+     "star_cost": 0,
+     "star_costs_x": false,
+     "upgraded": false
+    },
+    "evidence": {
+     "ascension": 6,
+     "character": "IRONCLAD",
+     "file": "logs/states.jsonl",
+     "floor": 1,
+     "off": 1308495108,
+     "path": "state.run.deck[10]",
+     "run_id": "F3SSGJ0N6YYN",
+     "sha256": "374f23c547aad388706351d3a487fe76c2386945fac31706961f4006966b36fe",
+     "ts": "2026-09-26T04:32:36.896Z"
+    },
+    "n_runs": 7
+   },
+   {
+    "card": {
+     "card_id": "PRIMAL_FORCE",
+     "card_type": "Skill",
+     "costs_x": false,
+     "dynamic_values": [],
+     "energy_cost": 0,
+     "name": "原始力量+",
+     "rarity": "Rare",
+     "resolved_rules_text": "将手牌中的所有攻击牌变化为巨石+。",
+     "rules_text": "将手牌中的所有攻击牌变化为{IfUpgraded:show:巨石+|巨石}。",
+     "star_cost": 0,
+     "star_costs_x": false,
+     "upgraded": true
+    },
+    "evidence": {
+     "ascension": 7,
+     "character": "IRONCLAD",
+     "file": "logs/states.jsonl",
+     "floor": 44,
+     "off": 1405573502,
+     "path": "state.run.deck[8]",
+     "run_id": "SUUKNZNT3KDF",
+     "sha256": "b28dfeb1dee527c60a6af4883bbf1fc84a4412fdab29d1d837a7f54ea4d0751a",
+     "ts": "2026-09-26T07:35:17.669Z"
+    },
+    "n_runs": 2
+   }
+  ],
+  "n": [
+   37,
+   17
+  ],
+  "vars": {}
+ },
  "PRODUCTION": {
   "n": [
-   10,
-   4
+   81,
+   8
   ],
   "vars": {
    "Energy": [
@@ -2134,10 +2689,75 @@
    ]
   }
  },
+ "PROLONG": {
+  "faces": [
+   {
+    "card": {
+     "card_id": "PROLONG",
+     "card_type": "Skill",
+     "costs_x": false,
+     "dynamic_values": [],
+     "energy_cost": 0,
+     "name": "延伸",
+     "rarity": "Uncommon",
+     "resolved_rules_text": "在下个回合获得等量于你当前格挡值的格挡。 消耗。",
+     "rules_text": "在下个回合获得等量于你当前格挡值的格挡。",
+     "star_cost": 0,
+     "star_costs_x": false,
+     "upgraded": false
+    },
+    "evidence": {
+     "ascension": 7,
+     "character": "SILENT",
+     "file": "logs/states.jsonl",
+     "floor": 36,
+     "off": 7085556875,
+     "path": "state.run.deck[33]",
+     "run_id": "Z6CFLDR3N4SB",
+     "sha256": "f586fc2cbdca8700eef67308fe99448f69c6a98ec9f72a5c886354b5c66d4bcc",
+     "ts": "2026-10-05T13:55:24.355Z"
+    },
+    "n_runs": 4
+   },
+   {
+    "card": {
+     "card_id": "PROLONG",
+     "card_type": "Skill",
+     "costs_x": false,
+     "dynamic_values": [],
+     "energy_cost": 0,
+     "name": "延伸+",
+     "rarity": "Uncommon",
+     "resolved_rules_text": "在下个回合获得等量于你当前格挡值的格挡。",
+     "rules_text": "在下个回合获得等量于你当前格挡值的格挡。",
+     "star_cost": 0,
+     "star_costs_x": false,
+     "upgraded": true
+    },
+    "evidence": {
+     "ascension": 10,
+     "character": "SILENT",
+     "file": "logs/states.jsonl",
+     "floor": 29,
+     "off": 9065449022,
+     "path": "state.run.deck[27]",
+     "run_id": "K2JAGKVJAWZJ",
+     "sha256": "67ecb7960a403904e96b6e8f5fc20301cd6abb47c95929ee1050659a479fb8c4",
+     "ts": "2026-10-08T00:50:11.184Z"
+    },
+    "n_runs": 2
+   }
+  ],
+  "n": [
+   37,
+   14
+  ],
+  "vars": {}
+ },
  "PROWESS": {
   "n": [
-   10,
-   3
+   68,
+   20
   ],
   "vars": {
    "DexterityPower": [
@@ -2152,8 +2772,8 @@
  },
  "PURITY": {
   "n": [
-   2,
-   1
+   36,
+   2
   ],
   "vars": {
    "Cards": [
@@ -2164,8 +2784,8 @@
  },
  "PYRE": {
   "n": [
-   18,
-   18
+   92,
+   89
   ],
   "vars": {
    "Energy": [
@@ -2176,8 +2796,8 @@
  },
  "RAGE": {
   "n": [
-   5,
-   5
+   41,
+   19
   ],
   "vars": {
    "Power": [
@@ -2188,8 +2808,8 @@
  },
  "RAMPAGE": {
   "n": [
-   100,
-   8
+   397,
+   18
   ],
   "vars": {
    "Increase": [
@@ -2200,8 +2820,8 @@
  },
  "REBOUND": {
   "n": [
-   20,
-   9
+   86,
+   34
   ],
   "vars": {
    "Damage": [
@@ -2212,8 +2832,8 @@
  },
  "REFLEX": {
   "n": [
-   14,
-   4
+   86,
+   13
   ],
   "vars": {
    "Cards": [
@@ -2224,8 +2844,8 @@
  },
  "REND": {
   "n": [
-   19,
-   5
+   139,
+   22
   ],
   "vars": {
    "CalculatedDamage": [
@@ -2244,8 +2864,8 @@
  },
  "RESTLESSNESS": {
   "n": [
-   5,
-   5
+   54,
+   21
   ],
   "vars": {
    "Cards": [
@@ -2260,8 +2880,8 @@
  },
  "RICOCHET": {
   "n": [
-   50,
-   27
+   262,
+   147
   ],
   "vars": {
    "Repeat": [
@@ -2272,8 +2892,8 @@
  },
  "ROLLING_BOULDER": {
   "n": [
-   12,
-   7
+   99,
+   42
   ],
   "vars": {
    "RollingBoulderPower": [
@@ -2284,8 +2904,8 @@
  },
  "RUPTURE": {
   "n": [
-   16,
-   9
+   112,
+   45
   ],
   "vars": {
    "StrengthPower": [
@@ -2296,8 +2916,8 @@
  },
  "SALVO": {
   "n": [
-   42,
-   3
+   174,
+   8
   ],
   "vars": {
    "Damage": [
@@ -2306,10 +2926,75 @@
    ]
   }
  },
+ "SCRAWL": {
+  "faces": [
+   {
+    "card": {
+     "card_id": "SCRAWL",
+     "card_type": "Skill",
+     "costs_x": false,
+     "dynamic_values": [],
+     "energy_cost": 1,
+     "name": "潦草急就",
+     "rarity": "Rare",
+     "resolved_rules_text": "抽牌直到抽满手牌。 消耗。",
+     "rules_text": "抽牌直到抽满手牌。",
+     "star_cost": 0,
+     "star_costs_x": false,
+     "upgraded": false
+    },
+    "evidence": {
+     "ascension": 8,
+     "character": "IRONCLAD",
+     "file": "logs/states.jsonl",
+     "floor": 29,
+     "off": 2242909516,
+     "path": "state.run.deck[28]",
+     "run_id": "X8HF0SB0XGJ1",
+     "sha256": "fd41140bc5c0560345050ec66c84690e91f02706381fae700d6844c83bb7d19b",
+     "ts": "2026-09-27T09:18:59.467Z"
+    },
+    "n_runs": 8
+   },
+   {
+    "card": {
+     "card_id": "SCRAWL",
+     "card_type": "Skill",
+     "costs_x": false,
+     "dynamic_values": [],
+     "energy_cost": 1,
+     "name": "潦草急就+",
+     "rarity": "Rare",
+     "resolved_rules_text": "保留。 抽牌直到抽满手牌。 消耗。",
+     "rules_text": "抽牌直到抽满手牌。",
+     "star_cost": 0,
+     "star_costs_x": false,
+     "upgraded": true
+    },
+    "evidence": {
+     "ascension": 10,
+     "character": "SILENT",
+     "file": "logs/states.jsonl",
+     "floor": 47,
+     "off": 11460261636,
+     "path": "state.run.deck[22]",
+     "run_id": "64VJC5XT2AT2",
+     "sha256": "692d4464f48044b1f327311b9ae14a6ba1304942ed31dca8ac5829a816f3b992",
+     "ts": "2026-10-11T12:37:56.174Z"
+    },
+    "n_runs": 1
+   }
+  ],
+  "n": [
+   75,
+   11
+  ],
+  "vars": {}
+ },
  "SECOND_WIND": {
   "n": [
-   16,
-   12
+   96,
+   96
   ],
   "vars": {
    "Block": [
@@ -2320,8 +3005,8 @@
  },
  "SEEKER_STRIKE": {
   "n": [
-   46,
-   3
+   209,
+   18
   ],
   "vars": {
    "Damage": [
@@ -2332,8 +3017,8 @@
  },
  "SERPENT_FORM": {
   "n": [
-   13,
-   5
+   87,
+   32
   ],
   "vars": {
    "SerpentFormPower": [
@@ -2344,8 +3029,8 @@
  },
  "SETUP_STRIKE": {
   "n": [
-   242,
-   92
+   1156,
+   399
   ],
   "vars": {
    "Damage": [
@@ -2364,15 +3049,15 @@
    0
   ],
   "n": [
-   17,
-   10
+   107,
+   43
   ],
   "vars": {}
  },
  "SHIV": {
   "n": [
-   156,
-   28
+   873,
+   151
   ],
   "vars": {
    "Damage": [
@@ -2383,8 +3068,8 @@
  },
  "SHOCKWAVE": {
   "n": [
-   8,
-   1
+   68,
+   2
   ],
   "vars": {
    "Power": [
@@ -2395,8 +3080,8 @@
  },
  "SHRUG_IT_OFF": {
   "n": [
-   88,
-   54
+   570,
+   296
   ],
   "vars": {
    "Block": [
@@ -2407,8 +3092,8 @@
  },
  "SIDESTEP": {
   "n": [
-   8,
-   13
+   55,
+   38
   ],
   "vars": {
    "Energy": [
@@ -2419,8 +3104,8 @@
  },
  "SKEWER": {
   "n": [
-   74,
-   43
+   350,
+   177
   ],
   "vars": {
    "Damage": [
@@ -2431,8 +3116,8 @@
  },
  "SLICE": {
   "n": [
-   102,
-   33
+   453,
+   121
   ],
   "vars": {
    "Damage": [
@@ -2443,8 +3128,8 @@
  },
  "SNAKEBITE": {
   "n": [
-   64,
-   40
+   443,
+   217
   ],
   "vars": {
    "PoisonPower": [
@@ -2538,8 +3223,8 @@
  },
  "SPITE": {
   "n": [
-   135,
-   44
+   522,
+   126
   ],
   "vars": {
    "Repeat": [
@@ -2554,15 +3239,80 @@
    1
   ],
   "n": [
-   5,
-   4
+   59,
+   22
+  ],
+  "vars": {}
+ },
+ "STOKE": {
+  "faces": [
+   {
+    "card": {
+     "card_id": "STOKE",
+     "card_type": "Skill",
+     "costs_x": false,
+     "dynamic_values": [],
+     "energy_cost": 1,
+     "name": "添柴",
+     "rarity": "Rare",
+     "resolved_rules_text": "消耗所有手牌。 每消耗一张牌，将1张随机牌加入你的手牌。",
+     "rules_text": "消耗所有手牌。 每消耗一张牌，将1张随机{IfUpgraded:show:已升级的|}牌加入你的手牌。",
+     "star_cost": 0,
+     "star_costs_x": false,
+     "upgraded": false
+    },
+    "evidence": {
+     "ascension": 0,
+     "character": "IRONCLAD",
+     "file": "logs/states.jsonl",
+     "floor": 13,
+     "off": 200937204,
+     "path": "state.run.deck[19]",
+     "run_id": "TTVYCS2ADZRM",
+     "sha256": "5172ef821ed69c3a9062e5e5f956bffa28d369b4a685a62c36e16fca1d08bf51",
+     "ts": "2026-09-24T10:57:21.609Z"
+    },
+    "n_runs": 8
+   },
+   {
+    "card": {
+     "card_id": "STOKE",
+     "card_type": "Skill",
+     "costs_x": false,
+     "dynamic_values": [],
+     "energy_cost": 1,
+     "name": "添柴+",
+     "rarity": "Rare",
+     "resolved_rules_text": "消耗所有手牌。 每消耗一张牌，将1张随机已升级的牌加入你的手牌。",
+     "rules_text": "消耗所有手牌。 每消耗一张牌，将1张随机{IfUpgraded:show:已升级的|}牌加入你的手牌。",
+     "star_cost": 0,
+     "star_costs_x": false,
+     "upgraded": true
+    },
+    "evidence": {
+     "ascension": 8,
+     "character": "IRONCLAD",
+     "file": "logs/states.jsonl",
+     "floor": 15,
+     "off": 2085032956,
+     "path": "state.run.deck[22]",
+     "run_id": "6HRZZ5BP01U0",
+     "sha256": "d4eb6eb350d88104eac2d06a086de00f89ab337b939f136c54abe4b577a409da",
+     "ts": "2026-09-27T04:53:27.281Z"
+    },
+    "n_runs": 1
+   }
+  ],
+  "n": [
+   48,
+   18
   ],
   "vars": {}
  },
  "STOMP": {
   "n": [
-   174,
-   91
+   934,
+   396
   ],
   "vars": {
    "Damage": [
@@ -2573,8 +3323,8 @@
  },
  "STONE_ARMOR": {
   "n": [
-   16,
-   12
+   123,
+   60
   ],
   "vars": {
    "PlatingPower": [
@@ -2583,10 +3333,75 @@
    ]
   }
  },
+ "STORM_OF_STEEL": {
+  "faces": [
+   {
+    "card": {
+     "card_id": "STORM_OF_STEEL",
+     "card_type": "Skill",
+     "costs_x": false,
+     "dynamic_values": [],
+     "energy_cost": 1,
+     "name": "钢铁风暴",
+     "rarity": "Rare",
+     "resolved_rules_text": "丢弃所有手牌。 每丢弃一张牌，就将一张小刀添加至你的手牌。",
+     "rules_text": "丢弃所有手牌。 每丢弃一张牌，就将一张{IfUpgraded:show:小刀+|小刀}添加至你的手牌。",
+     "star_cost": 0,
+     "star_costs_x": false,
+     "upgraded": false
+    },
+    "evidence": {
+     "ascension": 10,
+     "character": "SILENT",
+     "file": "logs/states.jsonl",
+     "floor": 17,
+     "off": 7648986013,
+     "path": "state.run.deck[21]",
+     "run_id": "0NZXA12NLDMH",
+     "sha256": "cf3f43ceed58bae377a68424c87b719c93fe486648df1769f5540883451a6959",
+     "ts": "2026-10-06T06:58:38.033Z"
+    },
+    "n_runs": 4
+   },
+   {
+    "card": {
+     "card_id": "STORM_OF_STEEL",
+     "card_type": "Skill",
+     "costs_x": false,
+     "dynamic_values": [],
+     "energy_cost": 1,
+     "name": "钢铁风暴+",
+     "rarity": "Rare",
+     "resolved_rules_text": "丢弃所有手牌。 每丢弃一张牌，就将一张小刀+添加至你的手牌。",
+     "rules_text": "丢弃所有手牌。 每丢弃一张牌，就将一张{IfUpgraded:show:小刀+|小刀}添加至你的手牌。",
+     "star_cost": 0,
+     "star_costs_x": false,
+     "upgraded": true
+    },
+    "evidence": {
+     "ascension": 10,
+     "character": "SILENT",
+     "file": "logs/states.jsonl",
+     "floor": 37,
+     "off": 11678752555,
+     "path": "state.run.deck[38]",
+     "run_id": "K643VJCTQT0J",
+     "sha256": "d959374adba9931b9904493764de77edb6e73be184f937a4dfac05593ddce0cf",
+     "ts": "2026-10-12T06:28:45.969Z"
+    },
+    "n_runs": 2
+   }
+  ],
+  "n": [
+   39,
+   17
+  ],
+  "vars": {}
+ },
  "STRANGLE": {
   "n": [
-   54,
-   36
+   281,
+   148
   ],
   "vars": {
    "Damage": [
@@ -2601,8 +3416,8 @@
  },
  "STRIKE_IRONCLAD": {
   "n": [
-   448,
-   209
+   2707,
+   1044
   ],
   "vars": {
    "Damage": [
@@ -2613,8 +3428,8 @@
  },
  "STRIKE_SILENT": {
   "n": [
-   288,
-   117
+   2048,
+   632
   ],
   "vars": {
    "Damage": [
@@ -2625,8 +3440,8 @@
  },
  "SUCKER_PUNCH": {
   "n": [
-   108,
-   58
+   658,
+   308
   ],
   "vars": {
    "Damage": [
@@ -2641,8 +3456,8 @@
  },
  "SURVIVOR": {
   "n": [
-   133,
-   39
+   830,
+   191
   ],
   "vars": {
    "Block": [
@@ -2653,8 +3468,8 @@
  },
  "SWORD_BOOMERANG": {
   "n": [
-   159,
-   117
+   720,
+   458
   ],
   "vars": {
    "Repeat": [
@@ -2665,8 +3480,8 @@
  },
  "TACTICIAN": {
   "n": [
-   7,
-   4
+   60,
+   28
   ],
   "vars": {
    "Energy": [
@@ -2677,8 +3492,8 @@
  },
  "TAUNT": {
   "n": [
-   126,
-   41
+   608,
+   193
   ],
   "vars": {
    "Block": [
@@ -2693,8 +3508,8 @@
  },
  "TEAR_ASUNDER": {
   "n": [
-   197,
-   49
+   622,
+   157
   ],
   "vars": {
    "Damage": [
@@ -2705,8 +3520,8 @@
  },
  "THE_GAMBIT": {
   "n": [
-   6,
-   1
+   52,
+   5
   ],
   "vars": {
    "Block": [
@@ -2717,8 +3532,8 @@
  },
  "THE_HUNT": {
   "n": [
-   29,
-   11
+   170,
+   42
   ],
   "vars": {
    "Damage": [
@@ -2729,8 +3544,8 @@
  },
  "THRASH": {
   "n": [
-   179,
-   75
+   632,
+   241
   ],
   "vars": {
    "Damage": [
@@ -2741,8 +3556,8 @@
  },
  "THRUMMING_HATCHET": {
   "n": [
-   68,
-   4
+   320,
+   18
   ],
   "vars": {
    "Damage": [
@@ -2753,8 +3568,8 @@
  },
  "THUNDERCLAP": {
   "n": [
-   77,
-   34
+   395,
+   151
   ],
   "vars": {
    "Damage": [
@@ -2769,15 +3584,15 @@
    0
   ],
   "n": [
-   11,
-   3
+   77,
+   11
   ],
   "vars": {}
  },
  "TORIC_TOUGHNESS": {
   "n": [
-   48,
-   5
+   297,
+   30
   ],
   "vars": {
    "Block": [
@@ -2792,15 +3607,15 @@
    1
   ],
   "n": [
-   7,
-   4
+   47,
+   22
   ],
   "vars": {}
  },
  "TREMBLE": {
   "n": [
-   18,
-   8
+   134,
+   51
   ],
   "vars": {
    "VulnerablePower": [
@@ -2811,8 +3626,8 @@
  },
  "TRUE_GRIT": {
   "n": [
-   61,
-   28
+   336,
+   163
   ],
   "vars": {
    "Block": [
@@ -2823,8 +3638,8 @@
  },
  "TWIN_STRIKE": {
   "n": [
-   346,
-   182
+   1500,
+   647
   ],
   "vars": {
    "Damage": [
@@ -2835,8 +3650,8 @@
  },
  "ULTIMATE_DEFEND": {
   "n": [
-   47,
-   9
+   252,
+   33
   ],
   "vars": {
    "Block": [
@@ -2847,8 +3662,8 @@
  },
  "ULTIMATE_STRIKE": {
   "n": [
-   93,
-   30
+   425,
+   114
   ],
   "vars": {
    "Damage": [
@@ -2863,15 +3678,15 @@
    1
   ],
   "n": [
-   10,
-   14
+   71,
+   64
   ],
   "vars": {}
  },
  "UNRELENTING": {
   "n": [
-   172,
-   98
+   901,
+   365
   ],
   "vars": {
    "Damage": [
@@ -2882,8 +3697,8 @@
  },
  "UNTOUCHABLE": {
   "n": [
-   37,
-   25
+   180,
+   126
   ],
   "vars": {
    "Block": [
@@ -2894,8 +3709,8 @@
  },
  "UPPERCUT": {
   "n": [
-   173,
-   136
+   904,
+   527
   ],
   "vars": {
    "Power": [
@@ -2906,7 +3721,7 @@
  },
  "UP_MY_SLEEVE": {
   "n": [
-   9,
+   67,
    1
   ],
   "vars": {
@@ -2918,8 +3733,8 @@
  },
  "VICIOUS": {
   "n": [
-   9,
-   4
+   73,
+   18
   ],
   "vars": {
    "Cards": [
@@ -2930,8 +3745,8 @@
  },
  "VOLLEY": {
   "n": [
-   20,
-   9
+   100,
+   40
   ],
   "vars": {
    "Damage": [
@@ -2946,15 +3761,15 @@
    1
   ],
   "n": [
-   10,
-   4
+   60,
+   23
   ],
   "vars": {}
  },
  "WHIRLWIND": {
   "n": [
-   116,
-   78
+   407,
+   286
   ],
   "vars": {
    "Damage": [

@@ -13,19 +13,19 @@
     },
     "game_type": "Normal",
     "game_hp_range": [
-      25,
-      27
+      27,
+      29
     ],
     "kind": "hallway",
     "rooms": {
-      "hallway": 419,
+      "hallway": 420,
       "unknown_room": 32
     },
     "acts": {
-      "1": 451
+      "1": 452
     },
     "encounters": {
-      "CORPSE_SLUG+CORPSE_SLUG": 330,
+      "CORPSE_SLUG+CORPSE_SLUG": 331,
       "CORPSE_SLUG+CORPSE_SLUG+CORPSE_SLUG": 121
     },
     "hp_by_asc": {
@@ -93,20 +93,20 @@
         "min": 27,
         "median": 28.0,
         "max": 29,
-        "n": 356
+        "n": 358
       }
     },
     "moves": {
       "GLOMP_MOVE": {
         "name": "扑上",
-        "n_seen": 1154,
+        "n_seen": 1156,
         "intents": {
-          "Attack": 1154
+          "Attack": 1156
         },
         "turns_seen": {
           "1": 350,
-          "2": 317,
-          "3": 239,
+          "2": 318,
+          "3": 240,
           "4": 170,
           "5": 51,
           "6": 19,
@@ -114,7 +114,7 @@
           "8": 1
         },
         "next": {
-          "GOOP_MOVE": 592,
+          "GOOP_MOVE": 594,
           "GLOMP_MOVE": 221
         },
         "avg_total_shown": 9.8,
@@ -265,44 +265,44 @@
               "14x1": 93,
               "19x1": 6,
               "6x1": 2,
-              "9x1": 335
+              "9x1": 337
             },
             "base_per_hit": {
-              "9": 432
+              "9": 434
             },
             "hits": {
-              "1": 437
+              "1": 439
             },
-            "n_base": 432
+            "n_base": 434
           }
         }
       },
       "GOOP_MOVE": {
         "name": "黏液",
-        "n_seen": 1082,
+        "n_seen": 1086,
         "intents": {
-          "Debuff": 1082
+          "Debuff": 1086
         },
         "turns_seen": {
-          "1": 320,
+          "1": 321,
           "2": 320,
-          "3": 218,
-          "4": 137,
-          "5": 63,
+          "3": 219,
+          "4": 138,
+          "5": 64,
           "6": 18,
           "7": 3,
           "8": 2,
           "9": 1
         },
         "next": {
-          "WHIP_SLAP_MOVE": 627,
-          "GOOP_MOVE": 170
+          "WHIP_SLAP_MOVE": 629,
+          "GOOP_MOVE": 171
         },
         "avg_total_shown": 0.0,
         "player_powers_applied": {
           "FRAIL_POWER": {
-            "1": 207,
-            "2": 420
+            "1": 208,
+            "2": 421
           }
         },
         "player_powers_applied_by_asc": {
@@ -368,23 +368,23 @@
           },
           "10": {
             "FRAIL_POWER": {
-              "1": 100,
-              "2": 154
+              "1": 101,
+              "2": 155
             }
           }
         }
       },
       "WHIP_SLAP_MOVE": {
         "name": "鞭打",
-        "n_seen": 1196,
+        "n_seen": 1199,
         "intents": {
-          "Attack": 1196
+          "Attack": 1199
         },
         "turns_seen": {
-          "1": 353,
-          "2": 320,
+          "1": 354,
+          "2": 321,
           "3": 274,
-          "4": 138,
+          "4": 139,
           "5": 74,
           "6": 26,
           "7": 9,
@@ -392,7 +392,7 @@
           "10": 1
         },
         "next": {
-          "GLOMP_MOVE": 583,
+          "GLOMP_MOVE": 585,
           "WHIP_SLAP_MOVE": 216
         },
         "avg_total_shown": 8.6,
@@ -542,18 +542,18 @@
             "shown": {
               "13x2": 8,
               "2x2": 5,
-              "3x2": 344,
+              "3x2": 347,
               "6x2": 2,
               "8x2": 86,
               "9x2": 2
             },
             "base_per_hit": {
-              "3": 438
+              "3": 441
             },
             "hits": {
-              "2": 447
+              "2": 450
             },
-            "n_base": 438
+            "n_base": 441
           }
         }
       }
@@ -585,21 +585,21 @@
         "name": "尖啸",
         "type": "Debuff",
         "description": "在本回合结束前失去[gold]力量[/gold]。",
-        "n_fights": 6,
+        "n_fights": 7,
         "amount_at_first_sight": {
-          "6": 6
+          "6": 7
         },
         "amount_max_in_fight": {
-          "6": 6
+          "6": 7
         },
         "amount_at_first_sight_by_asc": {
           "10": {
-            "6": 6
+            "6": 7
           }
         },
         "turn_at_first_sight_by_asc": {
           "10": {
-            "1": 2,
+            "1": 3,
             "2": 3,
             "3": 1
           }
@@ -609,10 +609,10 @@
         "name": "中毒",
         "type": "Debuff",
         "description": "中毒的生物会在自身回合开始时失去生命。中毒层数每回合减少[blue]1[/blue]。",
-        "n_fights": 50,
+        "n_fights": 51,
         "amount_at_first_sight": {
           "2": 5,
-          "3": 19,
+          "3": 20,
           "4": 4,
           "5": 6,
           "6": 4,
@@ -621,7 +621,7 @@
         },
         "amount_max_in_fight": {
           "2": 1,
-          "3": 16,
+          "3": 17,
           "4": 4,
           "5": 7,
           "6": 3,
@@ -649,7 +649,7 @@
           },
           "10": {
             "2": 5,
-            "3": 15,
+            "3": 16,
             "4": 4,
             "5": 5,
             "6": 4,
@@ -672,7 +672,7 @@
             "3": 1
           },
           "10": {
-            "1": 19,
+            "1": 20,
             "2": 14,
             "3": 7,
             "4": 4,
@@ -684,14 +684,14 @@
         "name": "饥饿",
         "type": "Buff",
         "description": "当有敌人死亡时，噬尸蛞蝓会立即吃下尸体，在本回合被[gold]击晕[/gold]然后获得[blue]1[/blue]点[gold]力量[/gold]。",
-        "n_fights": 451,
+        "n_fights": 452,
         "amount_at_first_sight": {
           "4": 237,
-          "5": 214
+          "5": 215
         },
         "amount_max_in_fight": {
           "4": 237,
-          "5": 214
+          "5": 215
         },
         "amount_at_first_sight_by_asc": {
           "0": {
@@ -725,7 +725,7 @@
             "5": 55
           },
           "10": {
-            "5": 159
+            "5": 160
           }
         },
         "turn_at_first_sight_by_asc": {
@@ -760,7 +760,7 @@
             "1": 55
           },
           "10": {
-            "1": 159
+            "1": 160
           }
         }
       },
@@ -768,9 +768,9 @@
         "name": "力量",
         "type": "Buff",
         "description": "力量会增加攻击牌造成的伤害。",
-        "n_fights": 151,
+        "n_fights": 152,
         "amount_at_first_sight": {
-          "-6": 6,
+          "-6": 7,
           "1": 4,
           "4": 62,
           "5": 78,
@@ -780,7 +780,7 @@
           "-6": 6,
           "1": 3,
           "4": 54,
-          "5": 67,
+          "5": 68,
           "6": 1,
           "7": 1,
           "8": 8,
@@ -817,7 +817,7 @@
             "5": 25
           },
           "10": {
-            "-6": 6,
+            "-6": 7,
             "5": 53,
             "10": 1
           }
@@ -864,7 +864,7 @@
             "4": 1
           },
           "10": {
-            "1": 10,
+            "1": 11,
             "2": 13,
             "3": 17,
             "4": 15,
@@ -1074,9 +1074,9 @@
     },
     "provenance": {
       "first_seen": "2026-09-24T06:26:34.905Z",
-      "last_seen": "2026-10-19T03:07:57.395Z",
-      "n_runs": 365,
-      "n_instances": 1023,
+      "last_seen": "2026-10-20T01:28:50.620Z",
+      "n_runs": 366,
+      "n_instances": 1025,
       "n_spawned_mid_fight": 0,
       "n_minion_instances": 0
     },
@@ -1193,11 +1193,11 @@
             "YWER495F5AYS F2 T2"
           ],
           "alive": {
-            "turns": 2809,
+            "turns": 2817,
             "moves": {
-              "WHIP_SLAP_MOVE": 987,
-              "GLOMP_MOVE": 932,
-              "GOOP_MOVE": 890
+              "WHIP_SLAP_MOVE": 990,
+              "GLOMP_MOVE": 934,
+              "GOOP_MOVE": 893
             },
             "next": {}
           },
