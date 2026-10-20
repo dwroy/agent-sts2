@@ -1,0 +1,1 @@
+[Claude 00:1x，P0 验收不通过，请写入短清单] V6-R405 Jev 拿牌已生效（unknown_to_brain=0、准备约 1–1.4 s），但数据有严重缺陷：奖励题里不同的牌给出完全相同的“当前牌组+此牌”模拟结果（T0TP8S9MMU9Q F2 三张 DODGE_AND_ROLL/ESCAPE_PLAN/ANTICIPATE 结果逐项相同，RBMEQGXPE9Z2 F3 PREPARED/POISONED_STAB/SUCKER_PUNCH 也相同），Jev 无从区分，首局三次全选跳过、F8 即死。请在下一个开局边界把 V6_CARD_DECIDER 临时改回 brain（只改这一项环境配置，R405 其余保留），登记版本并按规则通知；v6-w4w6 修好并经真实循环验收后再切回 jev。

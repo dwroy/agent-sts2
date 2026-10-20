@@ -1,0 +1,252 @@
+{
+  "at": "2026-10-21T00:05:53.427037+08:00",
+  "R4_launcher_rc": 0,
+  "R4_status": "audited_evidence_insufficient_no_exportable_card_pick_entries",
+  "audit_complete": true,
+  "parent_complete": false,
+  "formal_publication": false,
+  "REFLEX": "off",
+  "input_manifest_sha256": "915fb8eba10e5de59d33f38e9e7b05c4aa7ab9289f8ab810907c6e655eee79e8",
+  "covered_runs": 382,
+  "counts": {
+    "input_sha256": "915fb8eba10e5de59d33f38e9e7b05c4aa7ab9289f8ab810907c6e655eee79e8",
+    "source_unique_first_trial_reward_opportunities": 4711,
+    "condition_families": 14564,
+    "all_metric_attempts": 43692,
+    "identified": 3,
+    "draft_entries": 0,
+    "by_unit": {
+      "hp": 1,
+      "turns": 2,
+      "hp_per_turn": 0
+    },
+    "strict_interval_excludes_zero": 0,
+    "cross_zero": 3,
+    "attempt_statuses": {
+      "no_same_offer_common_support": 43668,
+      "residual_degrees_of_freedom_not_identifiable": 18,
+      "strictly_positive_cluster_error_not_identifiable": 1,
+      "identified": 3,
+      "fewer_than_two_independent_runs": 2
+    },
+    "coverage": {
+      "text_only": 243,
+      "disputed": 1
+    },
+    "export_rejections": [
+      {
+        "id": "silent-r4-b1e78db6062fc9e5e7e4-turns",
+        "reasons": [
+          "frozen_schema_requires_nonempty_source_experience_but_no_genuine_frozen_formal_source_exists",
+          "signed_evidence_counts_zero_for_zero_aggregate; cannot_fabricate_support"
+        ],
+        "audit": {
+          "path": "knowledge/characters/silent/pending/v6-reflex-distill-r4-v6-reflex-distill-r4-20261020-2313/audits/silent-r4-b1e78db6062fc9e5e7e4-turns.json",
+          "sha256": "4d686cf37a0c5f7e3f10696fbe9b287263cf05f92f1a8a7ce754b92f9f14fc5e"
+        }
+      },
+      {
+        "id": "silent-r4-d91dff3f25a8fe9f56c1-hp",
+        "reasons": [
+          "frozen_schema_requires_nonempty_source_experience_but_no_genuine_frozen_formal_source_exists"
+        ],
+        "audit": {
+          "path": "knowledge/characters/silent/pending/v6-reflex-distill-r4-v6-reflex-distill-r4-20261020-2313/audits/silent-r4-d91dff3f25a8fe9f56c1-hp.json",
+          "sha256": "06073e81379425d2d352f14aae483066790e50d71da1a46d245828a50c7a0f37"
+        }
+      },
+      {
+        "id": "silent-r4-d91dff3f25a8fe9f56c1-turns",
+        "reasons": [
+          "frozen_schema_requires_nonempty_source_experience_but_no_genuine_frozen_formal_source_exists"
+        ],
+        "audit": {
+          "path": "knowledge/characters/silent/pending/v6-reflex-distill-r4-v6-reflex-distill-r4-20261020-2313/audits/silent-r4-d91dff3f25a8fe9f56c1-turns.json",
+          "sha256": "caa735146fb3fa3f686161de884ef279b585c0ba571b8bbff72b74a475d28de3"
+        }
+      }
+    ],
+    "candidate_dispositions": {
+      "excluded_or_unknown": 635,
+      "condition_registered": 15360
+    },
+    "first_trial_inventory": {
+      "reward_opportunities": 4711,
+      "runs": 382,
+      "actual_take_opportunities": 4094,
+      "actual_skip_opportunities": 617,
+      "candidate_exposures_take": 4094,
+      "candidate_exposures_same_offer_not_taken": 10039,
+      "candidate_exposures_total": 14133,
+      "note": "候选身份×奖励机会的边际分母；不同候选有重复奖励，不能合成一个效应或当独立样本。"
+    },
+    "including_sl_inventory": {
+      "reward_opportunities": 5120,
+      "runs": 382,
+      "actual_take_opportunities": 4447,
+      "actual_skip_opportunities": 673,
+      "candidate_exposures_take": 4447,
+      "candidate_exposures_same_offer_not_taken": 10913,
+      "candidate_exposures_total": 15360,
+      "note": "候选身份×奖励机会的边际分母；不同候选有重复奖励，不能合成一个效应或当独立样本。"
+    },
+    "primary_distinct_excluded_episodes": 606,
+    "source_excluded_episodes": 197,
+    "source_and_after_cutoff_overlap": 24,
+    "outcome_dispositions": {
+      "hp_loss": {
+        "observed": 4445,
+        "unknown_or_excluded": 872,
+        "reason_counts_overlapping": {
+          "reward_source_or_three_offer_scope_unproven": 197,
+          "missing_terminal_or_crosses_first_trial_cutoff": 717,
+          "room_change_or_turn_reset_before_terminal": 350,
+          "after_first_trial_cutoff": 433,
+          "noncombat_transition_without_terminal_proof": 3,
+          "unobserved_interruption_in_raw_source": 2
+        }
+      },
+      "turns": {
+        "observed": 4445,
+        "unknown_or_excluded": 872,
+        "reason_counts_overlapping": {
+          "reward_source_or_three_offer_scope_unproven": 197,
+          "missing_terminal_or_crosses_first_trial_cutoff": 717,
+          "missing_terminal_or_noninitial_or_noncontiguous_turns": 355,
+          "after_first_trial_cutoff": 433
+        }
+      },
+      "damage_per_turn": {
+        "observed": 0,
+        "unknown_or_excluded": 5317,
+        "reason_counts_overlapping": {
+          "reward_source_or_three_offer_scope_unproven": 197,
+          "true_damage_numerator_denominator_unavailable": 5317,
+          "missing_terminal_or_crosses_first_trial_cutoff": 717,
+          "after_first_trial_cutoff": 433
+        }
+      }
+    },
+    "prior_entry_rows": 268,
+    "prior_by_origin": {
+      "r1": 13,
+      "r2": 85,
+      "r3": 85,
+      "formal": 85
+    },
+    "bootstrap_run_classification": {
+      "unknown_character_missing_raw_state": 1,
+      "excluded_other_character": 480,
+      "included_verified_silent": 382
+    },
+    "unique_estimation_opportunities": 7,
+    "unique_estimation_runs": 7,
+    "including_sl_identified_estimates": 3,
+    "first_trial_cut_modes": {
+      "predicted_death.ended_at": 289,
+      "no_predicted_death_or_retry_observed": 93
+    },
+    "predicate_attempts_exceeding_frozen_bounds": 13554
+  },
+  "independent_verification": {
+    "artifact_size_checks": 529,
+    "small_SHA_checks": 513,
+    "large_stat_only": 16,
+    "raw_contributing_reference_SHA_checks": 66,
+    "raw_contributing_bytes": 1289236,
+    "not_full_original_raw_recheck": true,
+    "learner_three_check_logs_SHA_verified": true
+  },
+  "source_tracked_clean": true,
+  "draft_entries": 0,
+  "disagreements_original": "R4-disagreements.json",
+  "watcher_forward_delivery": "watcher-forward-delivery.json",
+  "watcher_received": false,
+  "roy_notified": false,
+  "role_CLI_registration": "pending unsupported original R4 manual source scope; no fake parent or batch",
+  "automatic_continuation": false,
+  "ordinary_review": "ordinary-review.json",
+  "ordinary_results": "ten original waiting, no source/code or new integration, original attention preserved, no own dataset log or attempts field, no regeneration",
+  "P0_new_override": {
+    "original": "Claude-P0-failure-original.md",
+    "release_id": "V6-R406",
+    "publication": "R406-publication.json",
+    "only_setting": "V6_CARD_DECIDER=brain next natural run admission",
+    "current_actor_untouched": true,
+    "next_run_adoption": true,
+    "P2": "not accepted; W4 fix/real-loop then stable2required"
+  },
+  "P3": "own checker preempted for P0 priority, original partials preserved; no product failure, recompose R406 before future full",
+  "P4": "after original P3 actual combined full",
+  "Regent": "paused",
+  "old_scientific_parents": "open",
+  "R406_natural_adoption": {
+    "at": "2026-10-21T00:06:46.024549+08:00",
+    "run_id": "T15WXHPTM0ET",
+    "run_started_at": "2026-10-21T00:05:45.170+08:00",
+    "menu_first_action_at": "2026-10-21T00:05:42+08:00",
+    "first_in_run_action_at": "2026-10-21T00:06:04+08:00",
+    "live_commit": "4528a751f17e341a97e7ff70295ec9fba0c947e9",
+    "actual_config": {
+      "schema": "v6-config-v1",
+      "mode": "on",
+      "deciders": {
+        "card": "brain",
+        "potion": "brain",
+        "shop": "brain",
+        "rest": "brain"
+      },
+      "reflex": "off",
+      "direction_replan": "off",
+      "admission": "interfaces_only",
+      "delivered": false,
+      "samples_pick": 20,
+      "samples_act": 100,
+      "min_known_option_ratio": 0.5,
+      "direction_min_weight": 0.1,
+      "win": {
+        "certain_win": 0.95,
+        "favored": 0.7,
+        "even": 0.3,
+        "unfavored": 0.05
+      },
+      "delta": {
+        "much_se": 2,
+        "better_se": 1,
+        "much_min": 0.05
+      },
+      "triggers": {
+        "t1_core_min": 0,
+        "t2_se": 2,
+        "t2_min_delta": 1,
+        "t2_consecutive": 2,
+        "t3_weight_max": 0,
+        "t5_hazard": "existing_route_projection",
+        "t6_unknown_max": 1,
+        "t6_fallbacks": 100,
+        "t7_checkpoint": "validated_brain_answer"
+      },
+      "budgets": {
+        "brain_soft_cap": 15,
+        "brain_ms": 90000,
+        "act_ms": 60000,
+        "pick_ms": 5000,
+        "jev_ms": 5000
+      },
+      "invalid": []
+    },
+    "config_git_error_preserved": {
+      "commit": null,
+      "code": null,
+      "dirty": null,
+      "dirty_files": [],
+      "branch": null,
+      "worktree": "live",
+      "error": "git status failed: spawnSync git ENOBUFS"
+    },
+    "console_prefix_sha256": "3fd1cc893c1a061469d194a7cb4bdf22d7ea9e04940f1fdd346f641f3c50f670",
+    "current_original_RBME_not_interrupted": true,
+    "actual_reward_brain_call": "not yet sampled, config and event path only",
+    "other_settings_preserved": true
+  }
+}

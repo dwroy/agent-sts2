@@ -1,0 +1,87 @@
+{
+  "at": "2026-10-21T00:03:07.436072+08:00",
+  "release_id": "V6-R406",
+  "behavior": {
+    "parent": "75c4a1b9611b2566425e4aa14472c4d1c81673f2",
+    "commit": "e8f550ad6476b40d9e390b3d5cc203ab332e244a",
+    "tree": "d1699a1b3cc10b321916503c71599f3c3ea5c6a4",
+    "paths": [
+      "ops/production-runtime.sh"
+    ]
+  },
+  "main_runtime": {
+    "parent": "64cc0f8d7fe2294f5fafad56481db3f6095dc4fc",
+    "commit": "ace75a9e15d811b9d6c356e65d2ae3606e8b8537",
+    "tree": "0e4bde42e028c47425fa9a7c3f1c46461852c2eb",
+    "paths": [
+      "ops/production-runtime.sh"
+    ]
+  },
+  "registrations": {
+    "live": {
+      "parent": "e8f550ad6476b40d9e390b3d5cc203ab332e244a",
+      "commit": "4528a751f17e341a97e7ff70295ec9fba0c947e9",
+      "tree": "aa62eb471349a28bf09071446d4160750bfd198c",
+      "paths": [
+        "eval/versions.json"
+      ]
+    },
+    "main": {
+      "parent": "ace75a9e15d811b9d6c356e65d2ae3606e8b8537",
+      "commit": "ea0834138b0bfe4c84a0866a615544d0d484cdd5",
+      "tree": "e5f2e6870bda010de89041e28840dfd83f229130",
+      "paths": [
+        "eval/versions.json"
+      ]
+    }
+  },
+  "prior_actual_live": "75c4a1b9611b2566425e4aa14472c4d1c81673f2",
+  "delta": {
+    "V6_CARD_DECIDER": [
+      "jev",
+      "brain"
+    ]
+  },
+  "runtime_before": {
+    "V6_T1_CORE_MIN": "0",
+    "V6_T3_WEIGHT_MAX": "0",
+    "V6_COMBAT_ENTRIES": "off",
+    "V6_REST_DECIDER": "brain",
+    "V6_DIRECTION_REPLAN": "off",
+    "V6_SHOP_DECIDER": "brain",
+    "V6_T2_MIN_DELTA": "1",
+    "V6_POTION_DECIDER": "brain",
+    "V6_BUILD": "on",
+    "V6_CARD_DECIDER": "jev",
+    "V6_T6_FALLBACKS": "100",
+    "V6_REFLEX": "off",
+    "V6_T6_UNKNOWN_MAX": "1"
+  },
+  "runtime_after": {
+    "V6_T1_CORE_MIN": "0",
+    "V6_T3_WEIGHT_MAX": "0",
+    "V6_COMBAT_ENTRIES": "off",
+    "V6_REST_DECIDER": "brain",
+    "V6_DIRECTION_REPLAN": "off",
+    "V6_SHOP_DECIDER": "brain",
+    "V6_T2_MIN_DELTA": "1",
+    "V6_POTION_DECIDER": "brain",
+    "V6_BUILD": "on",
+    "V6_CARD_DECIDER": "brain",
+    "V6_T6_FALLBACKS": "100",
+    "V6_REFLEX": "off",
+    "V6_T6_UNKNOWN_MAX": "1"
+  },
+  "syntax_rc": 0,
+  "gitleaks_rc": 0,
+  "credentials_read": false,
+  "knowledge_working_paths_preserved": true,
+  "actual_next_run_readback": "pending natural boundary; no wait or extra watcher",
+  "current_actor_untouched": true,
+  "active_runtime_boundary": "current play keeps its original environment; only later ops/run.sh invocation sources repo runtime; no STOP or active process edit",
+  "restore_Jev_gate": "originalW4 real-loop acceptance, not source/full alone",
+  "P0_accepted": false,
+  "P2": "not started",
+  "P3": "preempted original own checker; not full result; later recompose on R406 latest knowledge",
+  "no_full_or_API_started": true
+}

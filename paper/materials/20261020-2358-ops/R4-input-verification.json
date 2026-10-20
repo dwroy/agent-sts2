@@ -1,0 +1,41 @@
+{
+  "ok": true,
+  "manifest": "/home/dw/Projects/agent-sts2/learner/runs/20261020-231417-9397e12f-7784-4fc4-b61f-becc95226a5b-v6-reflex-distill-r4/inputs/manifest.json",
+  "input_sha256": "915fb8eba10e5de59d33f38e9e7b05c4aa7ab9289f8ab810907c6e655eee79e8",
+  "runs": 382,
+  "streams": [
+    {
+      "source": "/home/dw/Projects/agent-sts2/logs/states.jsonl",
+      "counts": {
+        "included": 251470
+      },
+      "bytes": 507662799,
+      "sha256": "c47fcf130abbd31773841c68aa3c2a6b5eda056d81599e51d1cc2e5a5be28207"
+    },
+    {
+      "source": "/home/dw/Projects/agent-sts2/logs/decisions.jsonl",
+      "counts": {
+        "included": 239833
+      },
+      "bytes": 44340718,
+      "sha256": "fbf349689d935e49f6e103325e75e6f7afdb4e661f05b7b33422f153316a68af"
+    },
+    {
+      "source": "/home/dw/Projects/agent-sts2/logs/sl-attempts.jsonl",
+      "counts": {
+        "included": 2303
+      },
+      "bytes": 7181014,
+      "sha256": "b1dbebb531069897046291e3288d612a53e46fc5414ac1af01e8b5d5e8e2421d"
+    }
+  ],
+  "bootstrap_gaps": [
+    "task and character absent as explicit bootstrap fields; verified task file and run-config/ended records instead",
+    "bootstrap does not freeze raw windows or core/prior/consumer files; completed here before analysis"
+  ],
+  "all_prior_rounds_verified": [
+    "r1",
+    "r2",
+    "r3"
+  ]
+}

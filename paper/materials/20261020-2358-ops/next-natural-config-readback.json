@@ -1,0 +1,69 @@
+{
+  "ts": "2026-10-20T16:05:45.170Z",
+  "run_id": "T15WXHPTM0ET",
+  "process": {
+    "pid": 1391893,
+    "started": "2026-10-20T16:05:42.177Z"
+  },
+  "code": {
+    "commit": null,
+    "code": null,
+    "dirty": null,
+    "dirty_files": [],
+    "branch": null,
+    "worktree": "live",
+    "error": "git status failed: spawnSync git ENOBUFS"
+  },
+  "v6": {
+    "schema": "v6-config-v1",
+    "mode": "on",
+    "deciders": {
+      "card": "brain",
+      "potion": "brain",
+      "shop": "brain",
+      "rest": "brain"
+    },
+    "reflex": "off",
+    "direction_replan": "off",
+    "admission": "interfaces_only",
+    "delivered": false,
+    "samples_pick": 20,
+    "samples_act": 100,
+    "min_known_option_ratio": 0.5,
+    "direction_min_weight": 0.1,
+    "win": {
+      "certain_win": 0.95,
+      "favored": 0.7,
+      "even": 0.3,
+      "unfavored": 0.05
+    },
+    "delta": {
+      "much_se": 2,
+      "better_se": 1,
+      "much_min": 0.05
+    },
+    "triggers": {
+      "t1_core_min": 0,
+      "t2_se": 2,
+      "t2_min_delta": 1,
+      "t2_consecutive": 2,
+      "t3_weight_max": 0,
+      "t5_hazard": "existing_route_projection",
+      "t6_unknown_max": 1,
+      "t6_fallbacks": 100,
+      "t7_checkpoint": "validated_brain_answer"
+    },
+    "budgets": {
+      "brain_soft_cap": 15,
+      "brain_ms": 90000,
+      "act_ms": 60000,
+      "pick_ms": 5000,
+      "jev_ms": 5000
+    },
+    "invalid": []
+  },
+  "config_sha": "34ed7f1c7d6c",
+  "snapshot_at": "2026-10-21T00:05:53.427037+08:00",
+  "raw_line_sha256": "b3d39b631682fea6e449395dffb428e9f7bed78699a73756a50b6df0f3b9fb4c",
+  "R406_natural_adoption_verified": true
+}
