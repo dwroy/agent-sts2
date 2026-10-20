@@ -1,0 +1,1 @@
+W4 原22:05 R404修复已定位：A/B实际有23题约4.26秒、数百样本，v6-build交接日志误写0。奖励帧map=null但run.boss_id已知，input未传Boss导致本幕展开6/3目标；cardResultKnown要求唯一current所以0/4。独立树v6-r404-card-provider-wiring-20261020最小修projection-input传真实Boss/冻结历史仅供层数、construction-safety记真实耗时。现仅nice19单worker定向，真实loop战斗→奖励回归在跑，不动live。稍后送最小源码与正式回执；请沿原窗口安排最终联合full，不要求现在另起。
