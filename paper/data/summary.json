@@ -1,7 +1,7 @@
 {
   "performance_policy": "codex-successful-brain-v1",
   "include_non_codex": false,
-  "previous_snapshot": "/home/dw/Projects/agent-sts2/paper/data/history/20261020T052804787600Z",
+  "previous_snapshot": "/home/dw/Projects/agent-sts2/paper/data/history/20261020T054308754799Z",
   "performance": {
     "runs": 349,
     "finished": 348,
@@ -2665,26 +2665,25 @@
       "run_ids": []
     }
   },
-  "generated_at": "2026-10-20T05:28:04.562Z",
+  "generated_at": "2026-10-20T05:43:08.418Z",
   "source_cut_bytes": {
-    "decisions.jsonl": 2830082283,
+    "decisions.jsonl": 2838612203,
     "deepseek-reasoning.jsonl": 377746518,
     "runs.jsonl": 384540,
-    "states.jsonl": 14643048193,
+    "states.jsonl": 14648226083,
     "fight-plans.jsonl": 2233957,
-    "run-plans.jsonl": 9801883,
-    "brain.jsonl": 1097442528,
+    "run-plans.jsonl": 9826073,
+    "brain.jsonl": 1099010798,
     "sl-attempts.jsonl": 49526160,
     "run-config.jsonl": 2212136
   },
   "runs_total": 861,
   "runs_by_outcome": {
-    "defeat": 820,
+    "defeat": 821,
     "victory": 39,
-    "aborted": 1,
-    "in_progress": 1
+    "aborted": 1
   },
-  "runs_finished": 859,
+  "runs_finished": 860,
   "runs_in_runs_jsonl": 856,
   "wins": [
     {
@@ -2975,7 +2974,7 @@
     "14": 5,
     "15": 6,
     "17": 152,
-    "20": 3,
+    "20": 2,
     "21": 9,
     "22": 20,
     "23": 33,
@@ -2985,7 +2984,7 @@
     "28": 15,
     "29": 5,
     "30": 15,
-    "31": 23,
+    "31": 24,
     "33": 182,
     "35": 4,
     "37": 8,
@@ -11685,10 +11684,10 @@
   },
   "api": {
     "jev": {
-      "calls": 114503,
-      "in_tokens": 2825149115,
-      "out_tokens": 45428142,
-      "cost_usd": 120.5643,
+      "calls": 114570,
+      "in_tokens": 2826002828,
+      "out_tokens": 45439610,
+      "cost_usd": 120.6006,
       "price_per_m_tokens_usd": 0.042
     },
     "deepseek": {
@@ -11714,19 +11713,19 @@
       "note": "answered by the interactive Claude Code session via file escalation; no per-call token accounting"
     }
   },
-  "api_cost_total_usd": 135.8301,
+  "api_cost_total_usd": 135.8664,
   "decisions": {
-    "play_total": 442989,
-    "attributed_to_runs": 439672,
+    "play_total": 443141,
+    "attributed_to_runs": 439824,
     "unattributed_menu_timeline": 3317,
     "shadow": 20,
     "by_layer": {
-      "code": 224195,
-      "jev": 90709,
+      "code": 224237,
+      "jev": 90763,
       "deepseek": 12400,
       "claude": 186,
       "code-fallback": 1979,
-      "jev-plan": 92209,
+      "jev-plan": 92251,
       "deepseek-plan": 847,
       "claude-plan": 73
     },
@@ -11748,12 +11747,12 @@
       "deepseek-flash": 13468
     }
   },
-  "states_lines_scanned": 458428,
+  "states_lines_scanned": 458586,
   "console_logs": 1327,
   "commits": {
-    "total": 7494,
+    "total": 7498,
     "ref_snapshot": {
-      "HEAD": "3ed1291bc7eb46c142929602075c1454b92a39a9",
+      "HEAD": "7f08f166d9acfadd4569f667fd12570c01ff58cf",
       "refs/heads/ascension-audit-regent-a1-1": "4ab5e9f4b13eaa5b96c969ceebe79e2562222ce0",
       "refs/heads/ascension-audit-regent-a1-2": "4ab5e9f4b13eaa5b96c969ceebe79e2562222ce0",
       "refs/heads/ascension-audit-regent-a1-3": "aece9cb8e946404a9bd26552dce4fbbda5b4232a",
@@ -12794,6 +12793,8 @@
       "refs/heads/codex-strategy-silent-20261020-124302-s2": "10695b0797117fbde5e987c164a4e43ffed658c2",
       "refs/heads/codex-strategy-silent-20261020-131302": "f7b993433a22591743b5f5a552321a60ea8b409a",
       "refs/heads/codex-strategy-silent-20261020-131302-s2": "f7b993433a22591743b5f5a552321a60ea8b409a",
+      "refs/heads/codex-strategy-silent-20261020-134302": "46938d4049031d38839c1c3533a8e8b309deebe9",
+      "refs/heads/codex-strategy-silent-20261020-134302-s2": "46938d4049031d38839c1c3533a8e8b309deebe9",
       "refs/heads/codex-v5s-p1p2-shadow-20261016": "70c61acfb118ab284bb950b32495177458a76b2d",
       "refs/heads/core-decklists-entry-20261012": "d1bcd028d05f022f51c0d3b71cbff62a1d3f51ad",
       "refs/heads/dev-regent-main-sync-20261014": "a5467387402ef61c26d37720c56e72e6e5dbbcfe",
@@ -12848,7 +12849,7 @@
       "refs/heads/lifecycle-cleanup-20261013": "309b3bbc97bd55d08affee4cf8184d9a6794f41e",
       "refs/heads/live": "f563cc997814fdccd2dafe8a50d3725c62102c7f",
       "refs/heads/llm-switch-scope-20261017": "e4a07e30f86c6bb639fb4e43cc808e9d599220f3",
-      "refs/heads/main": "3ed1291bc7eb46c142929602075c1454b92a39a9",
+      "refs/heads/main": "7f08f166d9acfadd4569f667fd12570c01ff58cf",
       "refs/heads/model-sol61-20261012": "c06d1019b8dee0110c3627a012bdb865bd7e7a80",
       "refs/heads/multi-instance-climb-20261013": "84300293795474c4ea3b13e210d2a1222854d115",
       "refs/heads/ops-0010-experience111": "7954390da3772efc72b159173f6be81f7c89e5cd",
@@ -13092,7 +13093,7 @@
       "refs/heads/v6-card-appearance-20261020": "bff8feb18a940d35cab79def762db91cf98f4fb2",
       "refs/heads/v6-combat-jev-budget-20261020": "6b0d1a7e09af3d3c5da083559aef06e3532c10fb",
       "refs/heads/v6-combat-regression-audit-20261020": "08de78ace42632336eec1b1b075b9814366627a0",
-      "refs/heads/v6-combat-state-divergence-20261020": "1a56c2e1a707447496137b159f6d2ff395c021ba",
+      "refs/heads/v6-combat-state-divergence-20261020": "aaa1982b77fb1ef08e5cba8da05d1d84c183fbd8",
       "refs/heads/v6-combo-metrics-20261019": "d07184494dd556e04ab2590b1a4f299ceec1cd24",
       "refs/heads/v6-combo-metrics-pooled-20261019": "3c9d711ac41f91dff961528dd6a28290e1e0c015",
       "refs/heads/v6-current-boss-known-20261020": "805a0ffe9f1e28fa1d16687ec721d643d3878b95",
@@ -13646,6 +13647,7 @@
       "refs/storage-cache/803e00f3500145cf8a63b32f5eb40d96": "0f00847d1d3e2bf9051f7963331b5fe5a8a0007c",
       "refs/storage-cache/81f5cf61c517472b82a88ea7fe57b42a": "7e1193cef9467416bc10c8e344a49f4fd98390c7",
       "refs/storage-cache/836bc49a35f043dab0ffca4f37a8bcbc": "b68a650ab95c15a492cccac598906f32284229be",
+      "refs/storage-cache/84fd407ec5694180a72c993c672b6a51": "3ed1291bc7eb46c142929602075c1454b92a39a9",
       "refs/storage-cache/855c7f37e5294f0db7df8ee083dfab98": "1e8af775f6b90f100f20ff7c4a08dfddaba893a9",
       "refs/storage-cache/8638a1e73ff04cec8cb83a79ef6b4c6b": "b14880d1b1780d03e4c1c87b5afdc2a1e08fd456",
       "refs/storage-cache/8a2ed9922230435197dfb8bca8e4d287": "c769739b97389fdc978b6515b83a38e3cd900f67",
@@ -14437,6 +14439,7 @@
       "all-tip:e736f53939bb13fd6b223547711890e762e60da0": "e736f53939bb13fd6b223547711890e762e60da0",
       "all-tip:10695b0797117fbde5e987c164a4e43ffed658c2": "10695b0797117fbde5e987c164a4e43ffed658c2",
       "all-tip:f7b993433a22591743b5f5a552321a60ea8b409a": "f7b993433a22591743b5f5a552321a60ea8b409a",
+      "all-tip:46938d4049031d38839c1c3533a8e8b309deebe9": "46938d4049031d38839c1c3533a8e8b309deebe9",
       "all-tip:70c61acfb118ab284bb950b32495177458a76b2d": "70c61acfb118ab284bb950b32495177458a76b2d",
       "all-tip:d1bcd028d05f022f51c0d3b71cbff62a1d3f51ad": "d1bcd028d05f022f51c0d3b71cbff62a1d3f51ad",
       "all-tip:a5467387402ef61c26d37720c56e72e6e5dbbcfe": "a5467387402ef61c26d37720c56e72e6e5dbbcfe",
@@ -14488,7 +14491,7 @@
       "all-tip:309b3bbc97bd55d08affee4cf8184d9a6794f41e": "309b3bbc97bd55d08affee4cf8184d9a6794f41e",
       "all-tip:f563cc997814fdccd2dafe8a50d3725c62102c7f": "f563cc997814fdccd2dafe8a50d3725c62102c7f",
       "all-tip:e4a07e30f86c6bb639fb4e43cc808e9d599220f3": "e4a07e30f86c6bb639fb4e43cc808e9d599220f3",
-      "all-tip:3ed1291bc7eb46c142929602075c1454b92a39a9": "3ed1291bc7eb46c142929602075c1454b92a39a9",
+      "all-tip:7f08f166d9acfadd4569f667fd12570c01ff58cf": "7f08f166d9acfadd4569f667fd12570c01ff58cf",
       "all-tip:c06d1019b8dee0110c3627a012bdb865bd7e7a80": "c06d1019b8dee0110c3627a012bdb865bd7e7a80",
       "all-tip:84300293795474c4ea3b13e210d2a1222854d115": "84300293795474c4ea3b13e210d2a1222854d115",
       "all-tip:7954390da3772efc72b159173f6be81f7c89e5cd": "7954390da3772efc72b159173f6be81f7c89e5cd",
@@ -14723,7 +14726,7 @@
       "all-tip:bff8feb18a940d35cab79def762db91cf98f4fb2": "bff8feb18a940d35cab79def762db91cf98f4fb2",
       "all-tip:6b0d1a7e09af3d3c5da083559aef06e3532c10fb": "6b0d1a7e09af3d3c5da083559aef06e3532c10fb",
       "all-tip:08de78ace42632336eec1b1b075b9814366627a0": "08de78ace42632336eec1b1b075b9814366627a0",
-      "all-tip:1a56c2e1a707447496137b159f6d2ff395c021ba": "1a56c2e1a707447496137b159f6d2ff395c021ba",
+      "all-tip:aaa1982b77fb1ef08e5cba8da05d1d84c183fbd8": "aaa1982b77fb1ef08e5cba8da05d1d84c183fbd8",
       "all-tip:d07184494dd556e04ab2590b1a4f299ceec1cd24": "d07184494dd556e04ab2590b1a4f299ceec1cd24",
       "all-tip:3c9d711ac41f91dff961528dd6a28290e1e0c015": "3c9d711ac41f91dff961528dd6a28290e1e0c015",
       "all-tip:805a0ffe9f1e28fa1d16687ec721d643d3878b95": "805a0ffe9f1e28fa1d16687ec721d643d3878b95",
@@ -14799,6 +14802,7 @@
       "all-tip:6005300d298b2da200ec79b41c08491f3f857c50": "6005300d298b2da200ec79b41c08491f3f857c50",
       "all-tip:cef3c5adc84655dfd04a605647fd4d634ca6c017": "cef3c5adc84655dfd04a605647fd4d634ca6c017",
       "all-tip:fab7c90945bd4a899d411438a22952b252272aa4": "fab7c90945bd4a899d411438a22952b252272aa4",
+      "all-tip:3ed1291bc7eb46c142929602075c1454b92a39a9": "3ed1291bc7eb46c142929602075c1454b92a39a9",
       "all-tip:e00dbd473312bd05f4fa0e2fc4439baffdaba638": "e00dbd473312bd05f4fa0e2fc4439baffdaba638",
       "all-tip:6dabe946da5aefc0f185288005f32b5696f2f389": "6dabe946da5aefc0f185288005f32b5696f2f389",
       "all-tip:98a16def4370f75466b22756132d07b66a0dd88c": "98a16def4370f75466b22756132d07b66a0dd88c",
@@ -14817,7 +14821,7 @@
       "all-tip:f1f2c083ca84a9b884c0cdbf6363c47248abd0ee": "f1f2c083ca84a9b884c0cdbf6363c47248abd0ee"
     },
     "upstream": 19,
-    "experiment": 7475
+    "experiment": 7479
   },
   "postmortems": {
     "runs_with_heading": 834,
