@@ -53,7 +53,13 @@ export function v6ProjectionInputs(dir = KNOWLEDGE_DIR, now = () => new Date().t
       directions, trust, doubleBoss, catalog: env.knowledge.catalog ?? null });
     const factory = createV6ProjectionFactory({ config, character, history, knowledge: env.knowledge,
       templates, support, cores, doubleBoss, trust, modelVersion: `v6-runtime-v1:${signature}` });
-    return { run, character, ascension, asOf, directions, factory };
+    const priorRuns = new Set(history.status === "loaded"
+      ? history.value.data.coverage.filter(r => r.run_id !== run && r.ended < asOf).map(r => r.run_id) : []);
+    // History supplies only the checkpoint floor. Boss identity must come from the actual run.
+    const checkpointFloors = history.status === "loaded" ? history.value.data.observations.filter(o =>
+      priorRuns.has(o.run_id) && o.character === character && o.ascension === ascension && o.first_attempt
+      && !(doubleBoss?.act === o.act && doubleBoss.secondFloor === o.floor)).map(o => ({ act: o.act, floor: o.floor })) : [];
+    return { run, character, ascension, asOf, directions, factory, checkpointFloors };
   }
   return async (env: DecisionEnv, phase: "act" | "pick", idleCombat = false): Promise<V6ProjectionInput | null> => {
     if (v6Config().mode === "off" || env.state.in_combat && !idleCombat) return null;
@@ -80,8 +86,16 @@ export function v6ProjectionInputs(dir = KNOWLEDGE_DIR, now = () => new Date().t
     const rawBoss = str(raw.boss_id).toUpperCase().replace(/_BOSS$/, "");
     const boss = (BOSS_KEYS as readonly string[]).includes(rawBoss) ? rawBoss : bossKeyOf(rawBoss.split("+"));
     const bossNode = map?.act === act ? map.nodes.get(map.bosses[0] ?? "") : undefined;
-    const visibleBosses = boss && (BOSS_KEYS as readonly string[]).includes(boss) && bossNode
-      ? [{ act, floor: floorOfRow(map!, bossNode.row), boss }] : undefined;
+    // Reward/combat frames usually omit map. Preserve run.boss_id across that screen transition.
+    const remembered = env.screenMemory.lastMap;
+    const rememberedBoss = remembered?.runId === run && remembered.act === str(raw.act_id)
+      && remembered.floor !== null && remembered.floor <= floor ? remembered.bosses?.[0] ?? remembered.boss : undefined;
+    const historicalFloors = [...new Set(frozen.checkpointFloors.filter(p => p.act === act && p.floor >= floor).map(p => p.floor))];
+    const bossFloor = bossNode ? floorOfRow(map!, bossNode.row)
+      : rememberedBoss ? actFirstFloor(act) + rememberedBoss.row
+      : steps.find(p => p.type === "Boss")?.floor ?? (historicalFloors.length === 1 ? historicalFloors[0] : undefined);
+    const visibleBosses = boss && (BOSS_KEYS as readonly string[]).includes(boss) && bossFloor !== undefined && bossFloor >= floor
+      ? [{ act, floor: bossFloor, boss }] : undefined;
     const appearedCards = [...new Set([...env.screenMemory.v6Planner?.appearedCards ?? [],
       ...asArray(raw.deck).map(c => str(asRecord(c).card_id)), ...offers.map(c => str(c.card_id))].filter(Boolean))];
     return { factory: frozen.factory, situation: { state, phase, runId: run, asOf: frozen.asOf, seed: parseInt(v6Digest(run).slice(0, 8), 16),

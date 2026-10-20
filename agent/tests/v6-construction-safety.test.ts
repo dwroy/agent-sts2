@@ -97,3 +97,15 @@ it("uses the first legal offered card only when both models failed and the origi
   expect(unknownCardLastResort(original, { ...skip, intent: take })).toBeNull();
   expect(unknownCardLastResort({ ...original, label: "selection/remove" }, skip)).toBeNull();
 });
+
+it("preserves actual card-provider time and cache work when measured results still require the brain", () => {
+  vi.stubEnv("V6_BUILD", "on");
+  const dir = mkdtempSync(join(tmpdir(), "v6-safety-")); dirs.push(dir);
+  const e = env(board("xljq-f5-reward", "reward"));
+  e.v6CardResults = { immediate: [{}, {}, {}, {}], telemetry: { elapsed_ms: 4242, cache_hits: 3 } } as V6CardResults;
+  recordConstructionHandover(e, join(dir, "plans.jsonl"), "fixture", "card_pick",
+    constructionCoverage(["card0", "card1", "card2", "skip"]), "insufficient_known_options", 7);
+  expect(JSON.parse(readFileSync(join(dir, "v6-build.jsonl"), "utf8"))).toMatchObject({
+    event: "v6_unknown_to_brain", elapsed_ms: 4249, cache: { hits: 3, misses: 1 }, unknown: { count: 4, total: 4 },
+  });
+});
