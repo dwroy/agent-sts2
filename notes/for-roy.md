@@ -3604,3 +3604,6 @@ request_id=roy-20261017-human-pace-h0 revision=3 input_sha256=1e1c259a15f1824119
 
 
 2026-10-20T20:39:08.686250+08:00 W8超时定位两材料提交78e479/32a913已窄收：25材料叶、24条manifest的字节/SHA、Git blob和原WT核同，不运输验证父eeaa或整支。六次原始JSON各1例过、26过滤，原15秒不变；live与候选中位1719/1744ms，差1.45%，最慢1.979秒，候选2379输入与原SHA17053663三次前后同，六测试与runner均退出。未复现候选变慢，按原Claude指定口径记录宿主负载/调度偶发；历史23.054秒无瞬时CPU采样、具体争用源未知，不倒填因果。用例体相同且直调不经idleCombat，但整份batch-c文件有临时目录helper差异，二者分开保留。原full1日志逐字核同，单例六绿不替代完整检查或解锁发布；本轮只提交材料与原字append，不改工程源码、阈值、live/STOP，不新起full/API或对局。后续仍待Claude原线决定。原件paper/materials/20261020-W8-timeout-materials-ops/receipt.json。
+
+
+2026-10-20T21:10:03.838203+08:00 Roy20:5x方案B已原生接管，明确授权同tree496948c2、2379输入SHA17053663低负载重跑一次；原文与watcher来源585746d9已冻结。原learn.lock内准入标记挡新批及完成续派，原收尾/dataset/snapshot三锁挡重任务；两在途策略批次自然结束后，load1=2.33/32CPU、短区间忙碌7.76%通过门。21:02:55唯一重跑实际启动，nice19/ionice3单worker，tsc0/full900140在跑；输入、阈值和旧full1均未改，不以六次单例替代整套。终局只释放匹配本事务指纹的准入标记与锁，通过则按授权精确发布、五项读回、核号双通知及移STOP开局，再败保持等待告watcher/Claude。旧expected_win只审计、本次不动，稳定后随改名删除字段/断言。正常换行转义的误读已更正，无进程被重启或发送信号。原件paper/materials/20261020-low-load-once-ops/receipt.json。

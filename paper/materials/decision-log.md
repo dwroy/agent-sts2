@@ -5304,3 +5304,5 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
 - 2026-10-20T20:39:08.686250+08:00 ops：W8 78e479/32a913仅25材料/24清单逐Git SHA核同，六单例0/候选原2379输入SHA1705保持，按指定口径偶发宿主负载/调度、历史争用源未知；原full1及STOP保持，不运eeaa验证父或重full。原件 paper/materials/20261020-W8-timeout-materials-ops/receipt.json。
 
 - 2026-10-20 20:52:45 CST [Claude/Roy，五项包复验与旧字段] Roy 同意 Claude 建议：1) batch-c.test.ts:443 超时经 v6-w8 定向对比（候选与 live 中位差 +1.45%）判为宿主负载偶发，对同一冻结候选（tree 496948c2）在低负载下重跑一次完整检查（期间不派新学习批次、不跑 paper_dataset 等重任务），通过即上线五项并移除 STOP，再失败保持 STOP 报 Claude/Roy；2) expected_win 旧兼容字段（P·W_k+(1−P)·W_0，来自 79dc02307；去 W_0 的 P·W_k 在暂缓的 303bbb1ac）这次不动——已核实不进入任何 Jev/大脑决策、仅审计日志——待 V6 稳定后随 projection→build evaluation 改名一起删除字段及其测试断言。
+
+- 2026-10-20T21:10:03.838203+08:00 ops：Roy20:5x B明示同tree4969/2379输入SHA1705一次低负载full，原两批自然结束/load1=2.33/CPU7.76%后21:02:55实际tsc0/full在跑；原准入标记与收尾/dataset/snapshot锁隔离新重任务，旧兼容字段本次保留/稳定后随改名删，STOP至绿后实际读回核号双通知。原件 paper/materials/20261020-low-load-once-ops/receipt.json。
