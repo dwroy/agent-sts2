@@ -5144,3 +5144,5 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
 - 2026-10-20T13:56:32+08:00 ops：原W4W6环境回执4bb2/旧full日志dfc502逐SHA同，environment_blocked不作产品判定；同源功能树TMPDIR重跑仅owner报告未查询，原窗口继续保留，ops/W8依序等明确释放。原件 paper/materials/20261020-1355-ops/receipt.json。
 
 - 2026-10-20T13:57:47+08:00 ops：接W4W6原报告，长TMPDIR v2 CLI截断/ENOENT断言后仅自身PID停止，短.cache/w4t同源原阈值接续仍占窗口；不查询进度、不判完整绿，ops/W8依序等明确释放，原件 paper/materials/20261020-w4-short-tmp-ops/receipt.json。
+
+- 2026-10-20T14:08:08+08:00 ops：W8 14:10原回报未起tsc/full、仅既有单进程计时，后续短.cache/w8t；保W4W6→ops变化输入→W8检查顺序，等前两窗口实际释放再通知，不查询/叠full或改live。原件 paper/materials/20261020-w8-window-1410-ops/receipt.json。
