@@ -4940,3 +4940,5 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
 - 2026-10-20 09:31:17 CST [运维 codex/无源码提案复核] 091302-s2原WT严格干净、12产物/6归档副本SHA核同，十项canonical waiting；7/811完整题不冒宽覆盖，无源码/新号/补测。原普通close源码漂移门禁保留，不改baseline或跑dataset/强回收，W3/969b/R3等边界不动。原件：paper/materials/20261020-0927-ops/receipt.json。
 
 - 2026-10-20 09:34:13 CST [运维 codex/原无源码提案处置] 091302原WT严格干净、12产物SHA核同，十项canonical waiting；13目标题/37事实核不冒生产测试，26账本note-only、后续sealed分记。无合入/版本/补测/dataset，普通源码漂移门禁及W3/969b/R3等边界保持。原件：paper/materials/20261020-0931-ops/receipt.json。
+
+- 2026-10-20 09:36:06 CST [Claude/Roy，仅文档] Roy 指出“投影”不易理解；中文统一改称“构筑评估”（每个方向下每个组合的凑齐概率与凑齐后对各 Boss 的胜率），代码与英文题面暂沿用 projection 命名，稳定后再统一。docs/v6-plan.md 第 3.2 节标题与术语说明已改，各会话中文报告改用新名称。
