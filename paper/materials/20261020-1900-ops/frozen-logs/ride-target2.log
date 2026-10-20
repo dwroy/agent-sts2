@@ -1,0 +1,40 @@
+
+ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/v6-direction-compact-backoff-20261020/agent
+
+ ❯ tests/v6-prompt-summary.test.ts (12 tests | 1 failed) 4120ms
+   × consumes known provider rows for all published R2 combos without replacing large snapshots with unknown 459ms
+ ❯ tests/v6-direction-prompt.test.ts (5 tests | 1 failed) 34ms
+   × preserves four directions and at least one measured Boss per combo next to a 21k V5 context 14ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/v6-direction-prompt.test.ts > preserves four directions and at least one measured Boss per combo next to a 21k V5 context
+AssertionError: expected null not to be null
+ ❯ tests/v6-direction-prompt.test.ts:59:20
+     57|   const state = fitDirectionRide({ run_plan_task: { v6_direction_task:…
+     58|   const ride = directionRideTask(state)!;
+     59|   expect(ride).not.toBeNull(); expect((ride.build_cores as unknown[]))…
+       |                    ^
+     60|   expect(JSON.stringify({ ...surrounding, state }).length).toBeLessTha…
+     61|   expect(ride.compact_columns).toBeDefined();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  tests/v6-prompt-summary.test.ts > consumes known provider rows for all published R2 combos without replacing large snapshots with unknown
+AssertionError: expected "vi.fn()" to be called once, but got 0 times
+ ❯ tests/v6-prompt-summary.test.ts:53:21
+     51|       potion_directions: [], route: "keep", rest: "auto", checkpoint: …
+     52|     await ensureDirectionPlan(e, { askJson }, join(dir, "plans.jsonl")…
+     53|     expect(askJson).toHaveBeenCalledOnce();
+       |                     ^
+     54|     const audit = readFileSync(join(dir, "v6-build.jsonl"), "utf8").tr…
+     55|     const logged = audit.flatMap(row => row.entries).filter(row => row…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+
+ Test Files  2 failed | 9 passed (11)
+      Tests  2 failed | 97 passed (99)
+   Start at  18:33:09
+   Duration  20.76s (transform 2.68s, setup 893ms, import 5.10s, tests 13.54s, environment 1ms)
+

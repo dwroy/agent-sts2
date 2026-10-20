@@ -1,0 +1,33 @@
+
+ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/v6-direction-compact-backoff-20261020/agent
+
+ ❯ tests/v6-direction-fastpath.test.ts (3 tests | 1 failed) 2582ms
+   × claims all rewards and executes a complete shop plan without direction work between steps 919ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/v6-direction-fastpath.test.ts > claims all rewards and executes a complete shop plan without direction work between steps
+AssertionError: expected [] to have a length of 1 but got +0
+
+- Expected
++ Received
+
+- 1
++ 0
+
+ ❯ tests/v6-direction-fastpath.test.ts:15:29
+     13|   expect(result.reward.calls).toEqual([]);
+     14|   expect(result.shop.rows.map(r => r.label)).toEqual(["shop/plan", "sh…
+     15|   expect(result.shop.calls).toHaveLength(1); // The original shop choi…
+       |                             ^
+     16|   for (const row of [...result.reward.rows, ...result.shop.rows.slice(…
+     17|     expect(Number(row.planner_ms ?? 0) + Number(row.pre_ms ?? 0)).toBe…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed | 3 passed (4)
+      Tests  1 failed | 36 passed (37)
+   Start at  18:32:04
+   Duration  13.11s (transform 2.41s, setup 494ms, import 3.30s, tests 8.86s, environment 0ms)
+

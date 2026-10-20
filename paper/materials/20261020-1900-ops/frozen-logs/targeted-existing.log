@@ -1,0 +1,59 @@
+
+ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/v6-direction-compact-backoff-20261020/agent
+
+ ❯ tests/v6-direction-runtime.test.ts (18 tests | 2 failed) 314ms
+   × keeps joint projections, fills missing targets and rejects invalid combos 21ms
+   × uses the provider target IDs without adding legacy boss or joint placeholders 17ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/v6-direction-runtime.test.ts > keeps joint projections, fills missing targets and rejects invalid combos
+AssertionError: expected [ 'joint', 'TEST_TARGET' ] to deeply equal [ 'TEST_TARGET', 'joint' ]
+
+- Expected
++ Received
+
+  [
+-   "TEST_TARGET",
+    "joint",
++   "TEST_TARGET",
+  ]
+
+ ❯ tests/v6-direction-runtime.test.ts:92:36
+     90|   const result = await ensureDirectionPlan(e, brain, log, dir);
+     91|   expect(result?.payload).not.toHaveProperty("direction_evaluation");
+     92|   expect(result?.payload?.targets).toEqual(["TEST_TARGET", "joint"]);
+       |                                    ^
+     93|   expect(JSON.stringify(result?.payload)).not.toContain("expected_win"…
+     94|   expect(result?.result.triggers).toContain("T6");
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  tests/v6-direction-runtime.test.ts > uses the provider target IDs without adding legacy boss or joint placeholders
+AssertionError: expected [ …(2) ] to deeply equal [ 'f17:FIXTURE_CURRENT', …(1) ]
+
+- Expected
++ Received
+
+  [
+-   "f17:FIXTURE_CURRENT",
+    "f48:FIXTURE_A:then:f49:FIXTURE_B",
++   "f17:FIXTURE_CURRENT",
+  ]
+
+ ❯ tests/v6-direction-runtime.test.ts:121:36
+    119|   const brain = { askJson: vi.fn(async () => ({ json: { ...weights, po…
+    120|   const result = await ensureDirectionPlan(e, brain, log, dir);
+    121|   expect(result?.payload?.targets).toEqual(["f17:FIXTURE_CURRENT", tar…
+       |                                    ^
+    122|   expect(result?.payload).not.toHaveProperty("direction_evaluation");
+    123| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+
+ Test Files  1 failed | 4 passed (5)
+      Tests  2 failed | 37 passed (39)
+   Start at  17:53:31
+   Duration  7.89s (transform 4.20s, setup 989ms, import 5.36s, tests 775ms, environment 1ms)
+

@@ -1,0 +1,536 @@
+{
+  "schema": "watcher-w8-formal-source-static-verification-v1",
+  "created_at": "2026-10-20T18:57:49+08:00",
+  "watcher_session": "01a14f5d-da55-7831-959e-53727796115e",
+  "source": "0cfebfa878a5ac2b5c19f7b817110a7eeb3f0e74",
+  "base": "5446f181380a5b02669cc33babf65b440b852dbc",
+  "tree": "b51f91ae95cc65ee07618a0d7291235d46809504",
+  "materials_commit": "9c8e123251ddd95bf7f19eee8e04a8c4bb72275a",
+  "status": "source and frozen evidence verified; ops five-item actual joint assembly/full/live readback pending",
+  "source_manifest_sha256": "e884f27d2b962ca3258029ec2f806411081dbc3b13f25b59f1fa87ac63b60ab4",
+  "counts": {
+    "w8": 21,
+    "w4_dependency": 21,
+    "overlap": 6,
+    "unique": 36,
+    "frozen_logs": 33
+  },
+  "own_sources": [
+    {
+      "path": "agent/src/brain/brain.ts",
+      "sha256": "6d3d33694a7963df7c040ff2c74b2d54e77c1bdb6789bf81010a2bedbc02e30b",
+      "gitblob": "44fe39a813b1914cdb6032e9d86d63159a001185",
+      "matches": true
+    },
+    {
+      "path": "agent/src/brain/specs.ts",
+      "sha256": "2f40f08aa52d9f98f3133c0a39159da02f75a96e14437a03a86dd0f1dfbb66a9",
+      "gitblob": "eda609840e9023bcac83342afc2e834f6662844b",
+      "matches": true
+    },
+    {
+      "path": "agent/src/hand/loop.ts",
+      "sha256": "589998f419e351b5ce3fd4d6476ad0b17347768a6a84cbbd683451ce650bd077",
+      "gitblob": "5d05ec81baf4332b9633e05efc52a9e74e6114c7",
+      "matches": true
+    },
+    {
+      "path": "agent/src/memory/types.ts",
+      "sha256": "ac5a1f30d81f8bc0943fa96c49b48270641c2be0fb3f4ab2e1c461560b700d7a",
+      "gitblob": "a5f604d616bd1f891f8727bb2aabc87fc71aff94",
+      "matches": true
+    },
+    {
+      "path": "agent/src/v6/config.ts",
+      "sha256": "67d9d25366836faf482759a5f6b73ce3dc8fdb9200be4f7235771b9dccbf6083",
+      "gitblob": "457e98722c90414da487a4015eccf3cd41839b90",
+      "matches": true
+    },
+    {
+      "path": "agent/src/v6/direction-plan.ts",
+      "sha256": "4ef85b63a9564c8a8c26265c3907e90332ee3d7bbe2e18318df3239d8e868c8c",
+      "gitblob": "81d7f44896ff37c2c8bcc1480078db8f5a6b0e4a",
+      "matches": true
+    },
+    {
+      "path": "agent/src/v6/direction-prompt.ts",
+      "sha256": "734ecac278a617adfad47ada8c121400f60c920c1ac956fab7d6368648880367",
+      "gitblob": "f9cdb4750e802e0e8cdcd49297a622edcd6cb152",
+      "matches": true
+    },
+    {
+      "path": "agent/src/v6/direction-rides.ts",
+      "sha256": "2dac39d5c8dbd76b20a195f31067b0640be02ebb3856f989e4c27459e0919711",
+      "gitblob": "8abdf44d25e191268e82fabd955ad309b922ecee",
+      "matches": true
+    },
+    {
+      "path": "agent/src/v6/direction-runtime.ts",
+      "sha256": "bfec4d1d50811027ea9a06670b4f4bd5c3251f8e72429f68f48a12d8ba525496",
+      "gitblob": "f67bea6b7af1d08e28076219d3ca2ea168bddbea",
+      "matches": true
+    },
+    {
+      "path": "agent/src/v6/replan-triggers.ts",
+      "sha256": "4492316f4d482b779e58b6554713278912c5d1475880944b8e0aa4623a738cc0",
+      "gitblob": "bbaf1967ca7edbb3baa357df4de1bb79ef375af5",
+      "matches": true
+    },
+    {
+      "path": "agent/tests/v6-card-pick.test.ts",
+      "sha256": "4cd446e1632af868110f79774f851bc3e4778fcc8a9cc9aa711eb08b1c4c35f6",
+      "gitblob": "8558ba66bf931293f0e1fc4f76ba0e9e0d131e19",
+      "matches": true
+    },
+    {
+      "path": "agent/tests/v6-direction-backoff.test.ts",
+      "sha256": "a138262e3a98235be674f8aa70569ff9e40ae712d69870ed785fbc16dcf75c5b",
+      "gitblob": "a636ba9b1860923a32bcc5541fe9e35ff1df7088",
+      "matches": true
+    },
+    {
+      "path": "agent/tests/v6-direction-fastpath-fixture.ts",
+      "sha256": "087b22b21839451e40c798ed52dc8171b71712e62801507ce0659dd23e32f490",
+      "gitblob": "5d530f5ec5d122ec89e059bc1fb0cd21d05fc63b",
+      "matches": true
+    },
+    {
+      "path": "agent/tests/v6-direction-fastpath.test.ts",
+      "sha256": "4a2889f0ef918d24ddc724c2d94ab8dca68e9b12eccc85cd54fe11092a325636",
+      "gitblob": "be1fcaecf5c72fb8d79d50810eea44062818737c",
+      "matches": true
+    },
+    {
+      "path": "agent/tests/v6-direction-plan.test.ts",
+      "sha256": "03ee4f31c585e73d2c4cc251bc66e01e55626ef6e2fe057455f9e3344b509ce3",
+      "gitblob": "37bda1ab00922dfd5e2230a147de4e769dd83f54",
+      "matches": true
+    },
+    {
+      "path": "agent/tests/v6-direction-prompt.test.ts",
+      "sha256": "181fc7131dd635aa5b33b40597d833e9d8a9eacff8f9187694c6492a32f4bb38",
+      "gitblob": "115b5fd026eb52a668574917bbbca8c7dea0155d",
+      "matches": true
+    },
+    {
+      "path": "agent/tests/v6-direction-provider.test.ts",
+      "sha256": "36c81c7e8adb8237001a8359a43135de328d48ef6477c1c4a15f84a45b83b9c5",
+      "gitblob": "9be50ba7fbec573a6244edb207af2e3094ac23fa",
+      "matches": true
+    },
+    {
+      "path": "agent/tests/v6-direction-rides.test.ts",
+      "sha256": "dbd7b0695603eb1710f1ff86a8a8ef80bdcd854647e59659e75f0d1028142728",
+      "gitblob": "70ecd8c23f3bd77be0036a09fd582880fc45525f",
+      "matches": true
+    },
+    {
+      "path": "agent/tests/v6-direction-runtime.test.ts",
+      "sha256": "a1df7dff67040d21c6696840b3041423941197ff95883f531ad4b1592910ad49",
+      "gitblob": "e643d16990a90b6034ad9d110951431127c37c3f",
+      "matches": true
+    },
+    {
+      "path": "agent/tests/v6-projection-entries.test.ts",
+      "sha256": "a18e8d1fcba184460055d17edd1bd8f7a1c3f4b8da66562225a6019a2a6e29b4",
+      "gitblob": "29d1b50492d13d974ca358903cb5e7c75d539223",
+      "matches": true
+    },
+    {
+      "path": "agent/tests/v6-prompt-summary.test.ts",
+      "sha256": "69d3929e4b7932c9287fc49c4daf8ae8e357a6dbdfb265131b0fa76c13ffe320",
+      "gitblob": "43e6444dc82649ba5af9a5d87d1881b84f87c8c1",
+      "matches": true
+    }
+  ],
+  "dependencies": [
+    {
+      "path": "agent/src/hand/loop.ts",
+      "overlap": true,
+      "matches": true,
+      "final_sha256": "589998f419e351b5ce3fd4d6476ad0b17347768a6a84cbbd683451ce650bd077"
+    },
+    {
+      "path": "agent/src/memory/types.ts",
+      "overlap": true,
+      "matches": true,
+      "final_sha256": "ac5a1f30d81f8bc0943fa96c49b48270641c2be0fb3f4ab2e1c461560b700d7a"
+    },
+    {
+      "path": "agent/src/sim/v6-card-results.ts",
+      "overlap": false,
+      "matches": true,
+      "final_sha256": "8f66cb2549afc8aff43e7125fa6503837f9c8e27edafbc189845f77d7df3f104"
+    },
+    {
+      "path": "agent/src/v6/card-pick.ts",
+      "overlap": false,
+      "matches": true,
+      "final_sha256": "c11597d95d1bbbba1dfc97841312d52efde87760cc88e341be3a5f9d084fbbae"
+    },
+    {
+      "path": "agent/src/v6/card-results-input.ts",
+      "overlap": false,
+      "matches": true,
+      "final_sha256": "e97693610a7a0f71eb21df7d2f7d624576ce47f2d4cd66ab9fd45e98f4165de4"
+    },
+    {
+      "path": "agent/src/v6/card-reward-scope.ts",
+      "overlap": false,
+      "matches": true,
+      "final_sha256": "b41c67173a18e71326f0dbb908328e932fdf786daf2216f17f98d85628b5c00e"
+    },
+    {
+      "path": "agent/src/v6/construction-safety.ts",
+      "overlap": false,
+      "matches": true,
+      "final_sha256": "3542d0e1242c39072993fb78947dc1d405a1383e0187e096af6afc80fbbe725b"
+    },
+    {
+      "path": "agent/src/v6/direction-runtime.ts",
+      "overlap": true,
+      "matches": true,
+      "final_sha256": "bfec4d1d50811027ea9a06670b4f4bd5c3251f8e72429f68f48a12d8ba525496"
+    },
+    {
+      "path": "agent/src/v6/projection-runtime.ts",
+      "overlap": false,
+      "matches": true,
+      "final_sha256": "0626b33131a73512ad37b439b6cda49b3e8d73c4aaadacd8bd806cda077db66b"
+    },
+    {
+      "path": "agent/src/v6/prompt-summary.ts",
+      "overlap": false,
+      "matches": true,
+      "final_sha256": "85ed33a8a56ba6d09d866cf77a7d1c96c10bb466a4710ead4c5869a94f56dadf"
+    },
+    {
+      "path": "agent/tests/rollout.test.ts",
+      "overlap": false,
+      "matches": true,
+      "final_sha256": "8e3fb916f822dab709ef837a9d1f513a0d4d4f17d5281b1b781915696b65bdbe"
+    },
+    {
+      "path": "agent/tests/v6-card-pick.test.ts",
+      "overlap": true,
+      "matches": true,
+      "final_sha256": "4cd446e1632af868110f79774f851bc3e4778fcc8a9cc9aa711eb08b1c4c35f6"
+    },
+    {
+      "path": "agent/tests/v6-card-results-input.test.ts",
+      "overlap": false,
+      "matches": true,
+      "final_sha256": "77ed0ab58f41960ab3c8aa1a947dd0714cd7f829792a67b1efd8eb770e23b54d"
+    },
+    {
+      "path": "agent/tests/v6-card-results.test.ts",
+      "overlap": false,
+      "matches": true,
+      "final_sha256": "a1874b6d692db37d104c8fc1d48e0c111ada489ac3bff89ae7c22f0ef4a1dcce"
+    },
+    {
+      "path": "agent/tests/v6-card-reward-scope.test.ts",
+      "overlap": false,
+      "matches": true,
+      "final_sha256": "999bd02bb77e51ef704ad6434e30e355d9f5d4c6382220133d652f7ebb1a2826"
+    },
+    {
+      "path": "agent/tests/v6-completed-core-peek.test.ts",
+      "overlap": false,
+      "matches": true,
+      "final_sha256": "16d811cc527991b2dc7c9aa252546926f4c6f91691df4e2d0f76cc9044df61f0"
+    },
+    {
+      "path": "agent/tests/v6-construction-safety.test.ts",
+      "overlap": false,
+      "matches": true,
+      "final_sha256": "b7fedbbcda558dcd7d9213d53c153f8d7d434d9b6952ee79913026aba85dcfa7"
+    },
+    {
+      "path": "agent/tests/v6-direction-runtime.test.ts",
+      "overlap": true,
+      "matches": true,
+      "final_sha256": "a1df7dff67040d21c6696840b3041423941197ff95883f531ad4b1592910ad49"
+    },
+    {
+      "path": "agent/tests/v6-projection-runtime.test.ts",
+      "overlap": false,
+      "matches": true,
+      "final_sha256": "020e28eb12b8a76f5400a1542a5412351a666d96790371730b77bdb5bd96e8ec"
+    },
+    {
+      "path": "agent/tests/v6-prompt-summary-fixtures.ts",
+      "overlap": false,
+      "matches": true,
+      "final_sha256": "a9409bb764227bec59e1549d8a62a420913538e31313987d59e734604033ae71"
+    },
+    {
+      "path": "agent/tests/v6-prompt-summary.test.ts",
+      "overlap": true,
+      "matches": true,
+      "final_sha256": "69d3929e4b7932c9287fc49c4daf8ae8e357a6dbdfb265131b0fa76c13ffe320"
+    }
+  ],
+  "frozen_logs": [
+    {
+      "path": "paper/materials/2026-10-20-v6-direction-compact-backoff/checks/frozen-measurement.log",
+      "sha256": "5e2b5b20b5aaed7a7e66c364c5d82496912aa1071091740c5a08952a0e399377",
+      "bytes": 303,
+      "original_copy_git_match": true
+    },
+    {
+      "path": "paper/materials/2026-10-20-v6-direction-compact-backoff/checks/frozen-reproduction-r1.log",
+      "sha256": "95fe824f936ece4a41d2c52728175e180f648479aac86f0f73532cf8ad4dd52a",
+      "bytes": 102,
+      "original_copy_git_match": true
+    },
+    {
+      "path": "paper/materials/2026-10-20-v6-direction-compact-backoff/checks/gitleaks-source-final.log",
+      "sha256": "aadfbf5fc1cefbce78415a79a8a497a46800d55718c5ae8cc95afe6ef7732566",
+      "bytes": 145,
+      "original_copy_git_match": true
+    },
+    {
+      "path": "paper/materials/2026-10-20-v6-direction-compact-backoff/checks/joint-target2.log",
+      "sha256": "ef1c280134bf2ed57c1754f898820e93acf8ca55151ca912ac09fca08d584d68",
+      "bytes": 1175,
+      "original_copy_git_match": true
+    },
+    {
+      "path": "paper/materials/2026-10-20-v6-direction-compact-backoff/checks/joint-target3.log",
+      "sha256": "ca825282fb3893e658a435fe4e5583b3ca53c1920380f08c14c6216479c44c49",
+      "bytes": 581,
+      "original_copy_git_match": true
+    },
+    {
+      "path": "paper/materials/2026-10-20-v6-direction-compact-backoff/checks/joint-tsc1.log",
+      "sha256": "52f97f4b9dd17a2b44046215de66ed381effc8c82af53646196d2ae6ce1d855d",
+      "bytes": 1611,
+      "original_copy_git_match": true
+    },
+    {
+      "path": "paper/materials/2026-10-20-v6-direction-compact-backoff/checks/joint-tsc2.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0,
+      "original_copy_git_match": true
+    },
+    {
+      "path": "paper/materials/2026-10-20-v6-direction-compact-backoff/checks/joint-tsc3.log",
+      "sha256": "9b136508880b0109c9d4c5a980dcad53e0f3129571bd141d4c75806538750601",
+      "bytes": 249,
+      "original_copy_git_match": true
+    },
+    {
+      "path": "paper/materials/2026-10-20-v6-direction-compact-backoff/checks/joint-tsc4.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0,
+      "original_copy_git_match": true
+    },
+    {
+      "path": "paper/materials/2026-10-20-v6-direction-compact-backoff/checks/ride-measurement-r1.log",
+      "sha256": "238d500db836d9f85fc7c3ba0bcf30ed87595210e03b29d80c68d9b780acbc26",
+      "bytes": 689,
+      "original_copy_git_match": true
+    },
+    {
+      "path": "paper/materials/2026-10-20-v6-direction-compact-backoff/checks/ride-measurement-r2.log",
+      "sha256": "edb8ad45071e3de433fa36e0f3df0334391df4f8dba02ab11164db63316e1176",
+      "bytes": 689,
+      "original_copy_git_match": true
+    },
+    {
+      "path": "paper/materials/2026-10-20-v6-direction-compact-backoff/checks/ride-measurement-r3.log",
+      "sha256": "2c1bf0c6aa12a87219c128f60d728a017f54fc91d914ded9c6ee57fcd48a516d",
+      "bytes": 689,
+      "original_copy_git_match": true
+    },
+    {
+      "path": "paper/materials/2026-10-20-v6-direction-compact-backoff/checks/ride-target1.log",
+      "sha256": "564fb4128a29e151125d0f0fdc8c707fc4b43f20d2fe4f406c401f80eb2e44f8",
+      "bytes": 1309,
+      "original_copy_git_match": true
+    },
+    {
+      "path": "paper/materials/2026-10-20-v6-direction-compact-backoff/checks/ride-target2.log",
+      "sha256": "70538049adce89122770e9ee1eaca39e198f0b55ca4159bd182afabf2d9a8af8",
+      "bytes": 2158,
+      "original_copy_git_match": true
+    },
+    {
+      "path": "paper/materials/2026-10-20-v6-direction-compact-backoff/checks/ride-target3.log",
+      "sha256": "c3dc93db0f4a0a184a791ad662885fc6a43a9adaad502f1c103d577b77a0801d",
+      "bytes": 1216,
+      "original_copy_git_match": true
+    },
+    {
+      "path": "paper/materials/2026-10-20-v6-direction-compact-backoff/checks/ride-target4.log",
+      "sha256": "53a4081d1c7af8a96a0eb2b16e298350fe96f3b3028594b7f85660b0bff8440d",
+      "bytes": 272,
+      "original_copy_git_match": true
+    },
+    {
+      "path": "paper/materials/2026-10-20-v6-direction-compact-backoff/checks/ride-target5.log",
+      "sha256": "f8314e0d40047dd9a1765a21aefcb6a3756fd78d291aeb1094e6c9ef8dbdf766",
+      "bytes": 276,
+      "original_copy_git_match": true
+    },
+    {
+      "path": "paper/materials/2026-10-20-v6-direction-compact-backoff/checks/ride-tsc1.log",
+      "sha256": "cf67202fb3dc6019db9ea9983c91e16ca24ad28a25f0b07d66dc9b5eb2bd6011",
+      "bytes": 228,
+      "original_copy_git_match": true
+    },
+    {
+      "path": "paper/materials/2026-10-20-v6-direction-compact-backoff/checks/ride-tsc2.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0,
+      "original_copy_git_match": true
+    },
+    {
+      "path": "paper/materials/2026-10-20-v6-direction-compact-backoff/checks/ride-tsc3.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0,
+      "original_copy_git_match": true
+    },
+    {
+      "path": "paper/materials/2026-10-20-v6-direction-compact-backoff/checks/ride-tsc4.log",
+      "sha256": "cc34de6e2701660fc338dbf63c51c6038c4284fe4e9734e53bdaabcc064e71b7",
+      "bytes": 314,
+      "original_copy_git_match": true
+    },
+    {
+      "path": "paper/materials/2026-10-20-v6-direction-compact-backoff/checks/ride-tsc5.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0,
+      "original_copy_git_match": true
+    },
+    {
+      "path": "paper/materials/2026-10-20-v6-direction-compact-backoff/checks/synthetic-measurement.log",
+      "sha256": "b09b44d3103d82e7ade12329700f8f8074da7bd1cc98090bfdea225f2eecd919",
+      "bytes": 618,
+      "original_copy_git_match": true
+    },
+    {
+      "path": "paper/materials/2026-10-20-v6-direction-compact-backoff/checks/targeted-compat-r1.log",
+      "sha256": "805e5febcdb86f6e11bd349e7bc164284d8f6ba0d8100e7342d36ac78ecaaa0a",
+      "bytes": 3850,
+      "original_copy_git_match": true
+    },
+    {
+      "path": "paper/materials/2026-10-20-v6-direction-compact-backoff/checks/targeted-compat-r2.log",
+      "sha256": "937fce0033f9ae3891643f8bd6bb7d2cf7f0600835fcce3c70b93adf1987eca8",
+      "bytes": 275,
+      "original_copy_git_match": true
+    },
+    {
+      "path": "paper/materials/2026-10-20-v6-direction-compact-backoff/checks/targeted-existing-r2.log",
+      "sha256": "72f3c9542033556ff18c6e2538e624babd5bf4c7b24c78c86a7083762f0ddf8b",
+      "bytes": 272,
+      "original_copy_git_match": true
+    },
+    {
+      "path": "paper/materials/2026-10-20-v6-direction-compact-backoff/checks/targeted-existing.log",
+      "sha256": "a034adc0919458c6e512753a3804abfb28f3d749f805318cbff85c12ae77146e",
+      "bytes": 2285,
+      "original_copy_git_match": true
+    },
+    {
+      "path": "paper/materials/2026-10-20-v6-direction-compact-backoff/checks/targeted-new.log",
+      "sha256": "eb78606d330d2f1dc91ed46ec86d98e12ab65d05440f2fb91521bcbf46239c93",
+      "bytes": 271,
+      "original_copy_git_match": true
+    },
+    {
+      "path": "paper/materials/2026-10-20-v6-direction-compact-backoff/checks/targeted-r3.log",
+      "sha256": "0e0b71cca095588008e45c776e63395815226edae70da343b845819cd67f5ecc",
+      "bytes": 2696,
+      "original_copy_git_match": true
+    },
+    {
+      "path": "paper/materials/2026-10-20-v6-direction-compact-backoff/checks/targeted-r4.log",
+      "sha256": "af7527aef40666be4e8b1b12d1df0c2e11e20f27c834cde9e6b7de77b6018765",
+      "bytes": 274,
+      "original_copy_git_match": true
+    },
+    {
+      "path": "paper/materials/2026-10-20-v6-direction-compact-backoff/checks/tsc-r2.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0,
+      "original_copy_git_match": true
+    },
+    {
+      "path": "paper/materials/2026-10-20-v6-direction-compact-backoff/checks/tsc.log",
+      "sha256": "06affc83250b83ad636f4f8c3ac55f3c9131beef37f238e4c16ad2e4a34fe0fc",
+      "bytes": 2401,
+      "original_copy_git_match": true
+    },
+    {
+      "path": "paper/materials/2026-10-20-v6-direction-compact-backoff/checks/gitleaks-material-final.log",
+      "sha256": "0d86759bd634cc83128ddaa75c2e10a30c2f05f3742e21c36ccc40c35238ed66",
+      "bytes": 146,
+      "original_copy_git_match": true
+    }
+  ],
+  "report_files": [
+    {
+      "path": ".worktrees/v6-direction-compact-backoff-20261020/paper/materials/2026-10-20-v6-direction-compact-backoff/report.md",
+      "sha256": "fedffc4f61bd56ee82bb9f52ee205c34ab5d2e73098a6dbe04b2316ff5584e13",
+      "bytes": 4049
+    },
+    {
+      "path": ".worktrees/v6-direction-compact-backoff-20261020/paper/materials/2026-10-20-v6-direction-compact-backoff/interfaces.md",
+      "sha256": "a3df33d9da0382ce3b6fd7a00b581f3410b62fd996662412476ffb2a9438589f",
+      "bytes": 4744
+    },
+    {
+      "path": ".worktrees/v6-direction-compact-backoff-20261020/paper/materials/2026-10-20-v6-direction-compact-backoff/checks/source-manifest.json",
+      "sha256": "e884f27d2b962ca3258029ec2f806411081dbc3b13f25b59f1fa87ac63b60ab4",
+      "bytes": 13546
+    },
+    {
+      "path": ".worktrees/v6-direction-compact-backoff-20261020/paper/materials/2026-10-20-v6-direction-compact-backoff/checks/log-manifest.json",
+      "sha256": "6987a4777aa1f1facc7d5bb2daefd06a8d0dc7eed2d1a507de03f6bfed89a70f",
+      "bytes": 9533
+    }
+  ],
+  "owner_frozen_checks": {
+    "source": "0cfebfa878a5ac2b5c19f7b817110a7eeb3f0e74",
+    "full_started": false,
+    "tsc": {
+      "log": "joint-tsc4.log",
+      "exit_code": 0
+    },
+    "targeted": {
+      "log": "joint-target3.log",
+      "exit_code": 0,
+      "files": 13,
+      "passed": 151,
+      "seconds": 21.88,
+      "maxWorkers": 1
+    },
+    "gitleaks": {
+      "log": "gitleaks-source-final.log",
+      "exit_code": 0
+    },
+    "gitleaks_materials": {
+      "log": "gitleaks-material-final.log",
+      "exit_code": 0
+    }
+  },
+  "minimal_static_check": {
+    "loop_has_ensureDirectionPlan": false,
+    "default_off_line": [
+      "const direction_replan = choice(\"V6_DIRECTION_REPLAN\", [\"off\", \"on\"], \"off\");"
+    ]
+  },
+  "errors": [],
+  "boundaries": {
+    "new_checks_started": false,
+    "model_api_game_calls": false,
+    "live_actor_stop_config_mutated": false,
+    "joint_candidate_assembled_by_watcher": false,
+    "joint_full_pass_claimed": false,
+    "whole_main_or_805_authorized": false
+  },
+  "next": "original ops five-item exact joint candidate preserving latest knowledge; one complete joint check and actual live readback before admission per Roy hold"
+}

@@ -1,0 +1,26 @@
+
+ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/v6-direction-compact-backoff-20261020/agent
+
+ ❯ tests/v6-direction-prompt.test.ts (5 tests | 1 failed) 43ms
+   × preserves four directions and at least one measured Boss per combo next to a 21k V5 context 17ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/v6-direction-prompt.test.ts > preserves four directions and at least one measured Boss per combo next to a 21k V5 context
+AssertionError: expected null not to be null
+ ❯ tests/v6-direction-prompt.test.ts:59:20
+     57|   const state = fitDirectionRide({ run_plan_task: { v6_direction_task:…
+     58|   const ride = directionRideTask(state)!;
+     59|   expect(ride).not.toBeNull(); expect((ride.build_cores as unknown[]))…
+       |                    ^
+     60|   expect(JSON.stringify({ ...surrounding, state }).length).toBeLessTha…
+     61|   expect(ride.compact_columns).toBeDefined();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed | 1 passed (2)
+      Tests  1 failed | 16 passed (17)
+   Start at  18:35:55
+   Duration  8.22s (transform 2.42s, setup 400ms, import 2.88s, tests 4.71s, environment 0ms)
+

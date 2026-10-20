@@ -1,0 +1,29 @@
+
+ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/v6-direction-compact-backoff-20261020/agent
+
+ ❯ tests/v6-card-pick.test.ts (23 tests | 1 failed) 1644ms
+   × loop routes known cards to Jev, then the original brain on failure (success) 210ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/v6-card-pick.test.ts > loop routes known cards to Jev, then the original brain on failure (success)
+AssertionError: expected "vi.fn()" to be called with arguments: [ ObjectContaining {"phase": "act"} ]
+
+Number of calls: 0
+
+ ❯ tests/v6-card-pick.test.ts:208:53
+    206|   }
+    207|   expect(result.stats.jevCalls).toBe(1);
+    208|   if (mode === "success") expect(provider.evaluate).toHaveBeenCalledWi…
+       |                                                     ^
+    209|   if (mode === "success") expect(row).toMatchObject({ usage: { input_t…
+    210| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed | 14 passed (15)
+      Tests  1 failed | 180 passed (181)
+   Start at  18:42:21
+   Duration  24.75s (transform 2.65s, setup 1000ms, import 6.15s, tests 15.91s, environment 1ms)
+

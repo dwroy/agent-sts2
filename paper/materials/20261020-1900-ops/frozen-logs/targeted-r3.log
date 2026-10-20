@@ -1,0 +1,77 @@
+
+ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/v6-direction-compact-backoff-20261020/agent
+
+ ❯ tests/v6-direction-provider.test.ts (4 tests | 2 failed) 92ms
+   × delivers actual W3 targets and per-combination P=1 rows to the W4 brain task 32ms
+   × carries provider diagnostics while the P times W formula never evaluates the unused incomplete branch 25ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/v6-direction-provider.test.ts > delivers actual W3 targets and per-combination P=1 rows to the W4 brain task
+AssertionError: expected [] to deeply equal [ ObjectContaining{…} ]
+
+- Expected
++ Received
+
+- [
+-   ObjectContaining {
+-     "combo_id": "D:minimal",
+-     "expected_win": 1,
+-     "target_id": "f17:TEST_BOSS",
+-     "win_incomplete": null,
+-   },
+- ]
++ []
+
+ ❯ tests/v6-direction-provider.test.ts:27:46
+     25|   expect(combo.id).toBe("D:minimal");
+     26|   expect(combo.evaluations).toBeUndefined();
+     27|   expect(asArray(task.direction_evaluation)).toEqual([expect.objectCon…
+       |                                              ^
+     28|     combo_id: "D:minimal", target_id: "f17:TEST_BOSS", expected_win: 1…
+     29|   })]);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  tests/v6-direction-provider.test.ts > carries provider diagnostics while the P times W formula never evaluates the unused incomplete branch
+AssertionError: expected [] to deeply equal [ ObjectContaining{…} ]
+
+- Expected
++ Received
+
+- [
+-   ObjectContaining {
+-     "expected_win": 0.5,
+-     "opening": {
+-       "W0": "not computed by formula",
+-       "Wk": "evaluated",
+-     },
+-     "unknown_reasons": ArrayContaining [
+-       "unknown_opening_entry_hp_or_empirical_sample",
+-     ],
+-     "win_complete": {
+-       "n": 100,
+-       "se": 0,
+-       "value": 1,
+-     },
+-     "win_incomplete": null,
+-   },
+- ]
++ []
+
+ ❯ tests/v6-direction-provider.test.ts:129:46
+    127|     entries: evaluation.entries, projectionReasons: evaluation.project…
+    128|     appearedCards: [], potionIds: [], floor: 5, current: null });
+    129|   expect(asArray(task.direction_evaluation)).toEqual([expect.objectCon…
+       |                                              ^
+    130|     win_complete: baseline.completed_win, win_incomplete: null, expect…
+    131|     opening: { Wk: "evaluated", W0: "not computed by formula" },
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+
+ Test Files  1 failed | 9 passed (10)
+      Tests  2 failed | 82 passed (84)
+   Start at  18:00:40
+   Duration  10.20s (transform 2.55s, setup 998ms, import 4.31s, tests 3.53s, environment 1ms)
+
