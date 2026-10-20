@@ -5420,3 +5420,5 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
 - 2026-10-21 03:23:37 CST 原ops：3YUV原module-health冻复算同，4奖励缺legacy字段但另流A/B有DPR/n34/26/28/18、4370ms内且Jev均拿牌无fallback；旧3计算零失败/降级/超时，pipeline4/4、300门与校准/影子限制保留。原alert保留绑定H1/001302原六叶去重，不查询P4检查/改输入/派批/重启/动live或常规通知；质量门仍Claude原链。原件paper/materials/20261021-0315-ops/receipt.json。
 
 - 2026-10-21 03:25:55 CST 原ops：P4旧03:15 setup事件核同且旧PID退，原接续2036302/start_ticks141576243身份同，未读动态进度/新开检查；031314-fix无源改/WT净、154SHA/46祖先同，tsc0/首次EROFS1保留、runner定向9过分列，不冒full或live。原候选及科学父/精英队列保持，未有ordinary回执不重dataset。原件paper/materials/20261021-0324-ops/receipt.json。
+
+- 2026-10-21 03:31:42 CST [Claude，夜间推进] R407 Jev 拿牌运行稳定 2 局：JPWMMV67SZCL F17 灵魂异鱼（拿 6 跳 2）、9ZERN492CSHX F8 旧日雕像（拿 4），unknown 0、无报错；Jev 置信度多 0.1–0.2。对照 R406 大脑拿牌三局 F48/F33/F33，质量待观察。派 v6-w4w6 先只读核 Jev 选择与 A/B 指标最优选项一致率、逆指标例子与题面可比性，再做 P2。v6-w8 P4：8 局局后刷新全部成功且不阻塞开局，增量补丁 5e04a021a 待联合检查。r4 学习批次在跑。
