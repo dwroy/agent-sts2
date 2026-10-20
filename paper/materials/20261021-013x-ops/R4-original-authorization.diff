@@ -1,0 +1,10 @@
+diff --git a/paper/materials/decision-log.md b/paper/materials/decision-log.md
+index 885010f41..917be591d 100644
+--- a/paper/materials/decision-log.md
++++ b/paper/materials/decision-log.md
+@@ -5224,3 +5224,5 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
+ - 2026-10-20T17:50:01+08:00 watcher：infra-temp-lifecycle 已仅FF main 4c7b8d9bf48f54163c04d8e4f4f79ae6eb402e83；测试/离线入口默认主盘独占TMPDIR与finally回收，ops增/tmp字节/inode准入及inbox留痕。原阈值nice19单worker tsc0/full0（624文件5896过2原跳），变基后38功能叶/2371输入逐SHA不变、gitleaks0；r1失败/来源绑定原件保留。未运live/改actor/STOP/805/Regent、不重full，原W4v2窗口保持。原件 paper/materials/2026-10-20-infra-temp-lifecycle/；精确main回执 .worktrees/infra-temp-lifecycle-20261020/.artifacts/main-delivery/integration-receipt.json。
+ 
+ - 2026-10-20T17:53:38+08:00 ops：核infra main4c7精确38源与受测树同SHA，保存watcher17:50原日志；live64私有预演97f无冲突但两测试保live三方合并，实际数据冻结/联合full/入口读回pending。W4v2窗口不动，后ops窄验收，不运整main/805或认retention。原件 paper/materials/20261020-1750-ops/verification.json。
++
++- 2026-10-20 17:54:07 CST [Claude/Roy，V6 出牌回 V5、小脑记忆转构筑] Roy 同意：出牌保持 V5 逻辑，下一开局边界 V6_COMBAT_ENTRIES=off（题面按代码恢复 V5 原样，无关的 bug 修复保留），登记新版本；现 85 条出牌小脑条目保留不删、不再进出牌题。小脑记忆目的改为服务构筑模块的 Jev 拿牌：v6-w8 在方向题面修复后给 reflex-entry-v1 最小追加对照式 card_pick 条目（牌组状态+候选条件、对照差值/基线/样本/误差，置信度由数据算），接入 v6-w4w6 新拿牌题（V6_REFLEX=on 才发、只发区间不含 0 者），并写学习者模板 v6-reflex-distill-r4 交 ops 派发。已发 ops、watcher、v6-w8。
