@@ -13,6 +13,7 @@ import { v6Config } from "./config.js";
 import { postCombatCardReward } from "./card-reward-scope.js";
 import { v6Directions, v6PublishedKnowledge } from "./direction-runtime.js";
 import { KNOWLEDGE_DIR } from "../knowledge/files.js";
+import { cardCriteria, V6_CARD_CRITERIA_INSTRUCTIONS } from "./card-criteria.js";
 import { cardPickReflex } from "./card-pick-reflex.js";
 import { V6BuildLog } from "./log.js";
 import type { ProjectionEntry, Character } from "./formats.js";
@@ -112,13 +113,13 @@ export function buildV6CardPick(env: DecisionEnv, table: V6ProjectionTable | und
       || Number(b === "skip") - Number(a === "skip") || choices.indexOf(a) - choices.indexOf(b);
   })[0] ?? choices.find(key => key !== "skip") ?? choices[0]!;
   const decision: AskDecision = { kind: "ask", label: "reward/card", v6Card: true,
-    state: { card_result_schema: "v6-card-combat-results-v1", direction_weights: toJsonValue(weights),
+    state: { card_result_schema: "v6-card-combat-results-v1", card_criteria_schema: "paired-criteria-v1", direction_weights: toJsonValue(weights),
       result_columns: [...metricOrder], estimate_columns: ["mean", "se", "n"],
       targets: toJsonValue(targetMetadata), core_metrics: toJsonValue(coreMetrics),
       long_term_cache: toJsonValue(results?.telemetry.long_term_cache ?? "miss"),
       opening_note: "A uses current HP and the actual current deck plus this reward, never ideal cards or forecast route survival. B adds only missing core cards, from background cache independently of this reward. Never multiply by formation probability. Null means unknown. Raw simulation, not calibration. Each mean/SE has its own n; capped/interrupted windows and loss margins have separate denominators. Paired deltas use identical seeds. Lower HP loss/death and higher damage/turn are preferable. Fewer turns can mean faster victory OR earlier death: interpret with death, not as always better. If both die, lower remaining enemy HP and longer survival can matter. Losing enemy HP is conditional on losing, divided by opening encounter HP; later phases/spawns can make it exceed 1. Do not rank it alone. Elites are an observed pool, not spawn probabilities. Future entry HP is an assumption, not forecast inventory.",
       options: facts, ...(plan?.ideal_overrides ? { temporary_combos: toJsonValue(plan.ideal_overrides) } : {}) },
-    questions: { pick: choiceQ("Choose one card or skip using A immediate current-deck Boss and elite outcomes, paired with skip. B completed-core outcomes describe long-term directions; advances separately names combinations this card progresses and remaining cards. Compare HP loss, turns, damage/turn, death and losing-enemy HP with n, SE and trust. Do not use P*W or treat unknown as zero. Use only supplied facts.", criteria) },
+    questions: { pick: choiceQ(V6_CARD_CRITERIA_INSTRUCTIONS, cardCriteria(criteria, results)) },
     resolve(answers): ResolvedAction {
       const answer = cardAnswer(answers, choices), key = answer?.choice ?? fallback;
       return { intent: intents[key]!, rationale: answer ? `V6 Jev chose ${key}` : `V6 card fallback chose ${key}: sampled current-Boss death, HP loss and damage outcomes (brain unavailable)`,

@@ -56,7 +56,7 @@ export interface PromptBudget {
   truncated: boolean; omitted: Record<string, number>;
 }
 /** Card outcomes have a fixed catalog and metric cells, rather than optional projection rows. */
-function boundCardResults(input: Record<string, JsonValue>, limit: number, unit: "bytes" | "chars", omitted: Record<string, number>): Record<string, JsonValue> {
+function boundCardResults(input: Record<string, JsonValue>, limit: number, unit: "bytes" | "chars", omitted: Record<string, number>, minimum = false): Record<string, JsonValue> {
   const measure = unit === "bytes" ? bytes : (v: unknown) => JSON.stringify(v).length;
   const state = structuredClone(input), catalog: JsonValue[] = [], refs = new Map<string, number>();
   const ref = (value: unknown) => {
@@ -103,18 +103,32 @@ function boundCardResults(input: Record<string, JsonValue>, limit: number, unit:
     return { core: toJsonValue({ ...core, cards, outcomes: [], outcomes_omitted: [] }) as Record<string, JsonValue>, rows: available };
   });
   const comboIndex = new Map(cores.map(({ core }, i) => [String(core.id), i]));
+  const resultCounts = new Map<string, number>();
+  if (input.card_criteria_schema === "paired-criteria-v1") for (const raw of Object.values(asRecord(input.options)))
+    for (const row of asArray(asRecord(raw).immediate)) {
+      const key = JSON.stringify(asArray(asRecord(row).result).map(cell));
+      resultCounts.set(key, (resultCounts.get(key) ?? 0) + 1);
+    }
+  const immediateRows = (value: unknown) => rows(value, input.card_criteria_schema !== "paired-criteria-v1").map(row => {
+    if ((resultCounts.get(JSON.stringify(row.result)) ?? 0) < 2) return row;
+    // Share identical absolute vectors; each candidate's paired cells remain directly in its criteria.
+    const { result, ...rest } = row;
+    return { ...rest, result_ref: ref(result) };
+  });
   state.options = toJsonValue(Object.fromEntries(Object.entries(asRecord(input.options)).map(([id, raw]) => {
     const option = asRecord(raw);
     return [id, { ...optionFacts(option) as Record<string, JsonValue>,
       ...(asArray(option.reflex).length ? { reflex: option.reflex } : {}),
       // All immediate Boss and elite targets survive, including paired deltas and unknown reasons.
-      immediate: rows(option.immediate, true), advances: asArray(option.advances).map(raw => {
+      immediate: immediateRows(option.immediate), advances: asArray(option.advances).map(raw => {
         const advance = asRecord(raw);
         return [comboIndex.get(String(advance.combo)) ?? String(advance.combo), advance.advanced ?? null, advance.missing_after ?? null];
       }) }];
   })));
   state.core_metrics = cores.map(c => c.core);
   state.card_display = { target: "index into targets", refs: "indices into display_catalog", numeric_precision: "mean 5 and SE 3 significant digits; n exact; audit keeps full precision",
+    A_paired_location: input.card_criteria_schema === "paired-criteria-v1" ? "questions.pick.criteria: A_vs_skip.delta" : "options.immediate.vs_skip",
+    A_result_ref: "identical absolute result vectors shared in display_catalog; result or result_ref retains all metric cells",
     requested_samples_default: 100, advance_columns: ["core_metrics index (or combo id)", "advanced", "missing_after"],
     cards: "requirements [count, alternatives, distinct?]; string alternative is an unupgraded card; otherwise [id, upgraded|null, kind]",
     B_row_columns: ["target", "result", "vs_skip", "samples", "trust_ref", "optional exception facts"],
@@ -138,10 +152,11 @@ function boundCardResults(input: Record<string, JsonValue>, limit: number, unit:
     update();
   }
   // Round-robin by target, then brain-priority core order: no direction loses its entire catalog.
-  let excluded = 0;
+  let excluded = minimum ? cores.reduce((n, c) => n + Math.max(0, c.rows.length - 1), 0) : 0;
   // Include the counter before allocating rows, so adding it cannot displace a core's sole row.
   budget.omitted["core_metrics.outcome_details"] = cores.reduce((n, c) => n + c.rows.length, 0);
-  for (let i = 0; i < Math.max(0, ...cores.map(c => c.rows.length)); i++) for (const { core, rows: available } of cores) {
+  const rounds = Math.max(0, ...cores.map(c => c.rows.length));
+  for (let i = 0; i < (minimum ? Math.min(1, rounds) : rounds); i++) for (const { core, rows: available } of cores) {
     const row = available[i]; if (!row) continue;
     const kept = asArray(core.outcomes), missing = asArray(core.outcomes_omitted), at = missing.indexOf(row.target);
     const extra = Object.fromEntries(Object.entries(row).filter(([k]) => !["target", "result", "vs_skip", "samples", "trust_ref"].includes(k)));
@@ -301,6 +316,37 @@ export function boundV6State(input: Record<string, JsonValue>, limit: number, un
 /** Bound questions as well: potion choice criteria can contain an entire serialized option. */
 export function boundedV6Jev(state: Record<string, JsonValue>, questions: QuestionSet): { state: Record<string, JsonValue>; questions: QuestionSet } {
   const qs = structuredClone(questions);
+  if (state.card_criteria_schema === "paired-criteria-v1") {
+    // Optional numeric B copies in criteria cannot evict the shared core catalog,
+    // its first cached outcome per core, or any mandatory A target. Measure the
+    // compact view once; never serialize full published metrics during trimming.
+    const minimum = boundCardResults(state, V6_JEV_STATE_BYTES, "bytes", {}, true);
+    const questionLimit = V6_JEV_REQUEST_BYTES - bytes(minimum) - 64;
+    const criteria = Object.values(qs).filter(q => q.type === "choice").flatMap(q =>
+      Object.entries(q.criteria).flatMap(([key, value]) => {
+        if (typeof value !== "string") return [];
+        try { return [{ q, key, body: asRecord(JSON.parse(value)) }]; } catch { return []; }
+      }));
+    while (bytes({ model: "typesafe/jev-1.14", questions: qs }) > questionLimit) {
+      const donor = [...criteria].reverse().flatMap(c => [...asArray(c.body.B_progress)].reverse()
+        .map(raw => ({ ...c, core: asRecord(raw) }))).find(c => asArray(c.core.results).length > 0);
+      if (!donor) break;
+      asArray(donor.core.results).pop();
+      donor.core.numeric_targets_omitted = Number(donor.core.numeric_targets_omitted ?? 0) + 1;
+      donor.q.criteria[donor.key] = JSON.stringify(donor.body);
+    }
+    // Card criteria contain mandatory paired estimates, not disposable descriptions.
+    // Reserve their actual wire bytes and trim only the secondary shared B display.
+    const allowance = Math.min(V6_JEV_STATE_BYTES, V6_JEV_REQUEST_BYTES - bytes({ model: "typesafe/jev-1.14", questions: qs }) - 64);
+    if (allowance < 512) {
+      for (const q of Object.values(qs)) {
+        q.instructions = "Numeric criteria exceed the request budget; use the original brain decision.";
+        if (q.type === "choice") q.criteria = Object.fromEntries(Object.keys(q.criteria).map(key => [key, key]));
+      }
+      return { state: { card_prompt_unavailable: "mandatory_card_criteria_exceed_budget" }, questions: qs };
+    }
+    return { state: boundV6State(state, Math.max(0, allowance), "bytes"), questions: qs };
+  }
   const clip = (s: string, n: number) => { let out = s; while (Buffer.byteLength(out) > n) out = out.slice(0, Math.max(0, Math.floor(out.length * n / Buffer.byteLength(out)))); return out; };
   for (const q of Object.values(qs)) {
     q.instructions = clip(q.instructions, 600);
