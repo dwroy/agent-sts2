@@ -1,6 +1,6 @@
 {
-  "at": "2026-10-20T20:01:23.899051+08:00",
-  "phase": "all-four-repairs-ready-84-source-refrozen-live64-data-tsc0-one-complete-recheck-running",
+  "at": "2026-10-20T20:27:27.377859+08:00",
+  "phase": "repaired-full1-single-batch-c-timeout-fixed-input-PIDs-exited-STOP-await-Claude",
   "completed": false,
   "authorization": {
     "path": "paper/materials/20261020-five-item-hold-ops/authorization-original.md",
@@ -64,7 +64,7 @@
   "reports_and_background_refresh_continue": true,
   "active_actor_do_not_interrupt": true,
   "Regent_paused": true,
-  "next": "finite checker natural terminal; verify original changed inputs and exits; green -> exact narrow main/live publish consumer/config readback version dual notices then remove STOP and start, failure hold + watcher/Claude",
+  "next": "original watcher actual receive/relay and Claude decision under19:4x; preserve fixed inputs/new single timeout/all old failures; no partial start or unchanged full repeat",
   "forwarded_source_aliases": [
     {
       "path": "paper/materials/20261020-1826-ops/authorization-original.md",
@@ -246,18 +246,18 @@
   "actual_joint_check": {
     "at": "2026-10-20T20:01:23.899051+08:00",
     "request": "roy-all-five-repaired-exact-live-joint-20261020-1956",
-    "state": "all-four-contract-repairs-integrated-actual-live-data-refrozen-tsc0-full-running-not-published",
+    "state": "terminal-full1-not-running-no-publication",
     "started_at": "2026-10-20T19:59:55.115526+08:00",
     "tree": "496948c2f9a9fb4d45056aa2394940cb81e0862b",
     "source_count": 84,
     "knowledge_count": 458,
     "input_count": 2379,
     "input_sha256": "17053663e821d3a754b6d84f4a5dc2987c1ec958a64d1295b6cd04cfeb3e1775",
-    "runner_pid": 718978,
+    "runner_pid": null,
     "runner_start_ticks": "138952749",
-    "full_pid": 719048,
+    "full_pid": null,
     "tsc_rc": 0,
-    "full_terminal": false,
+    "full_terminal": true,
     "source_W8_repair": "2a1a4bd7ae61a5ed73b2d332927fc96451a3ea14",
     "source_W4_repairs": "31a24bb2bf02fa26bac9fd284b9834e4e3f97bf9",
     "changed_source_delta_from_original_failed_tree": "exactly four test leaves",
@@ -266,7 +266,8 @@
     "old_full1_preserved": "paper/materials/20261020-1935-ops/receipt.json",
     "main_source_and_live_actor_STOP_not_changed": true,
     "green_next": "atomic narrow source main/live integration, all five actual consumer/config readback, release and dual notices, ops remove STOP and start per Claude19:4x",
-    "new_failure": "retain STOP, inbox + watcher/Claude, no partial start"
+    "new_failure": "retain STOP, inbox + watcher/Claude, no partial start",
+    "full_rc": 1
   },
   "terminal_STOP_actual_readback": {
     "at": "2026-10-20T19:15:32+08:00",
@@ -475,5 +476,56 @@
     "candidate_tree_after_partial_repairs": "18be1e233fc6a614b882345f841af149eb3218a7",
     "latest_live_data_refresh_pending_before_final_freeze": false,
     "candidate_tree_after_all_repairs": "496948c2f9a9fb4d45056aa2394940cb81e0862b"
-  }
+  },
+  "actual_repaired_joint_terminal": {
+    "at": "2026-10-20T20:26:10.491353+08:00",
+    "request": "roy-all-five-repaired-exact-live-joint-20261020-1956",
+    "state": "verified-repaired-full1-single-old-test-timeout-STOP-await-Claude-decision",
+    "tree": "496948c2f9a9fb4d45056aa2394940cb81e0862b",
+    "input_count": 2379,
+    "input_sha256": "17053663e821d3a754b6d84f4a5dc2987c1ec958a64d1295b6cd04cfeb3e1775",
+    "inputs_before_after_and_current_bytes_verified": true,
+    "tsc_rc": 0,
+    "full_rc": 1,
+    "files": {
+      "passed": 622,
+      "failed": 1,
+      "total": 623
+    },
+    "tests": {
+      "passed": 5908,
+      "failed": 1,
+      "skipped": 2,
+      "total": 5911
+    },
+    "vitest_seconds": 1329.22,
+    "wrapper_seconds": 1329.8302263149526,
+    "full_log_sha256": "7eb931a07e32fbaa5b92ab72afaef8ab91a5da6b7ff7f329e777356f5637342f",
+    "prior_four_repaired_test_files_passed_in_this_full": true,
+    "remaining_failure": {
+      "file": "agent/tests/batch-c.test.ts",
+      "line": 443,
+      "test": "logged elite T1 past rollout budget is fallback not forecast/all-lines-die",
+      "error": "Test timed out in 15000ms",
+      "reported_case_ms": 23054,
+      "test_blob": "c031b26e659718d6d068cf86f7761de668801b18",
+      "same_blob_as_old_failed900": true,
+      "timeout_threshold_unchanged": true,
+      "root_cause_unattributed": true
+    },
+    "known_check_PIDs_exited": [
+      718978,
+      718992,
+      719048
+    ],
+    "remaining_worktree_checks": [],
+    "actual_live_unchanged": "64c218a04ebe029fdda0b5f25025302ebf2a4124",
+    "STOP_unchanged_sha256": "7203efbcf8e978828a7813f12236db4cb6cae299b8109e3d0be8e83f942809cd",
+    "no_live_main_source_release_or_game_change": true,
+    "full_slot_not_assigned_to_another_task": true,
+    "no_unchanged_full_rerun_or_new_model": true,
+    "next": "report watcher/Claude per19:4x; keep STOP and fixed input; do not substitute partial green or drop failed test"
+  },
+  "latest_failure_delivery": "paper/materials/20261020-2024-ops/watcher-failure-delivery.json",
+  "actual_Claude_relay_and_decision_pending": true
 }
