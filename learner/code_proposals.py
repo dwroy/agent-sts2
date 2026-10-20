@@ -15,7 +15,9 @@ import datetime as dt
 POLICY = 'Roy-2026-10-07-learning'
 DOMAINS = {'combat', 'potion', 'sl', 'terminal', 'structure'}
 TASKS = {'postmortem', 'experience-update', 'strategy-proposal', 'ascension-audit', 'experience-asc-audit', 'mechanics-audit',
-         'fix-batch', 'silent-double-boss', 'silent-boss-calibration', 'boss-sim-automation', 'codex-only-brain'}
+         'fix-batch', 'silent-double-boss', 'silent-boss-calibration', 'boss-sim-automation', 'codex-only-brain',
+         'v6-knowledge-publish', 'v6-direction-experience', 'v6-reflex-distill',
+         'v6-reflex-distill-r2', 'v6-reflex-distill-r3', 'v6-build-cores'}
 QUEUE = 'paper/materials/learning/code-proposals.jsonl'
 
 def now(): return dt.datetime.now().astimezone().isoformat(timespec='seconds')

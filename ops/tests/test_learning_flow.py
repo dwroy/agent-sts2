@@ -227,6 +227,51 @@ class CodeProposals(Fixture):
         ledger=(self.root/'paper/materials/learning/ledger.jsonl').read_text()
         self.assertIn(first.stdout.strip(),ledger);self.assertIn('task=strategy-proposal',ledger)
 
+    def test_publication_cli_preserves_task_identity_and_all_evidence_guards(self):
+        entry={'op':'add','id':'silent-0001','ts':'2026-10-07T00:00:00+08:00','character':'silent',
+               'kind':'fight','claim':'Fixed evidence','evidence':[{'run':RUN}], 'first_run':RUN,
+               'prior':'unknown','status':'observed','by':'learner:postmortem','asc':10}
+        ledger=self.write('paper/materials/learning/ledger.jsonl',json.dumps(entry)+'\n')
+        self.write('logs/runs.jsonl',json.dumps(self.runs[RUN])+'\n')
+        argv=[sys.executable,str(REPO/'learner/code_proposals.py'),'add','--root',str(self.root),'--character','silent']
+        def add(value):
+            return subprocess.run(argv,input=json.dumps(value),capture_output=True,text=True)
+        tasks=('v6-knowledge-publish','v6-direction-experience','v6-reflex-distill',
+               'v6-reflex-distill-r2','v6-reflex-distill-r3','v6-build-cores')
+        queue=self.root/proposals.QUEUE
+        for task in tasks:
+            with self.subTest(task=task):
+                item={**self.item,'source_task':task}
+                first=add(item)
+                self.assertEqual(first.returncode,0,first.stderr)
+                ident=first.stdout.strip()
+                saved=proposals.fold(queue)[ident]
+                self.assertEqual(saved['source_task'],task)
+                self.assertEqual(saved['target_task'],'strategy-proposal')
+                self.assertEqual(saved['state'],'pending')
+                self.assertEqual(saved['runs'],[RUN])
+                self.assertEqual(saved['ledger'],['silent-0001'])
+                rows=[json.loads(line) for line in ledger.read_text().splitlines()]
+                self.assertEqual(rows[-1]['by'],'learner:'+task)
+                self.assertIn(ident,rows[-1]['note'])
+                before=(queue.read_bytes(),ledger.read_bytes())
+                retry=add(item)
+                self.assertEqual(retry.returncode,0,retry.stderr)
+                self.assertEqual(retry.stdout,first.stdout)
+                self.assertEqual((queue.read_bytes(),ledger.read_bytes()),before)
+        self.assertEqual(len(proposals.fold(queue)),len(tasks))
+        before=(queue.read_bytes(),ledger.read_bytes())
+        cases=[{'source_task':task+'-unregistered'} for task in tasks]
+        cases += [{'source_task':'v6-*'}, {'source_task':'v6-reflex-distill-r4'},
+               {'target_task':'v6-knowledge-publish'},
+               {'ledger':['ironclad-0001']}, {'runs':['OTHER0000001']}, {'character':'ironclad'},
+               {'proposal':str(self.root/'learner/runs/missing.md')}, {'rule_changes':True}]
+        for update in cases:
+            with self.subTest(update=update):
+                rejected=add({**item,**update})
+                self.assertEqual(rejected.returncode,2,rejected.stderr)
+                self.assertEqual((queue.read_bytes(),ledger.read_bytes()),before)
+
 
 class ProposalConsumption(Fixture):
     def setUp(self):
