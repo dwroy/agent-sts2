@@ -1,0 +1,65 @@
+{
+  "tested_base": "6c8fe2ac70e29ba4f9c96eee812581e999c4112f",
+  "integration_base": "2968efc217fb8b4db56e6c4abdaae39002b6019f",
+  "intervening_files": [
+    "notes/for-roy.md",
+    "notes/ops-current-context.json",
+    "ops/inbox-dev.md",
+    "paper/materials/20261020-0749-ops/old-notices-verification.json",
+    "paper/materials/20261020-0749-ops/receipt.json",
+    "paper/materials/20261020-0749-ops/watcher-delivery.json",
+    "paper/materials/decision-log.md"
+  ],
+  "intervening_code_changes": [],
+  "tsc": {
+    "command": "PATH=~/.local/node/bin:$PATH npx tsc -p tsconfig.json --noEmit",
+    "exit_code": 0
+  },
+  "vitest": {
+    "command": "PATH=~/.local/node/bin:$PATH nice -n 19 npx vitest run --maxWorkers=2",
+    "exit_code": 0,
+    "files_passed": 601,
+    "tests_passed": 5739,
+    "tests_skipped": 2,
+    "duration_seconds": 844.81
+  },
+  "python_fixed": {
+    "tests": 10,
+    "exit_code": 0
+  },
+  "first_vitest": {
+    "exit_code": 1,
+    "files_passed": 600,
+    "files_failed": 1,
+    "reason": "existing batch-k.test.ts:209 exceeded 30000ms under concurrent load; original logs retained"
+  },
+  "isolated_retry": {
+    "command": "npx vitest run tests/batch-k.test.ts",
+    "files_passed": 1,
+    "tests_passed": 9,
+    "exit_code": 0
+  },
+  "interrupted_runs": {
+    "before_rebase_vitest": 143,
+    "worktree_audit_path_refresh": 143
+  },
+  "production_refresh": {
+    "exit_code": 0,
+    "status": "published_to_feature_worktree_only"
+  },
+  "runtime_readback": {
+    "status": "loaded",
+    "path": "../knowledge/characters/silent/v6-history.json",
+    "ms": 1272.9508999999998,
+    "content_sha256": "37d8c3af05eb92deb5024dd4cae7ad608ad434b5907dd32816a621fe5d3c8788",
+    "appearance_schema": "v6-appearance-v1",
+    "runs": 372,
+    "cards": 468,
+    "remaining": 572
+  },
+  "gitleaks": {
+    "exit_code": 0,
+    "leaks": 0,
+    "scope": "all staged code, generated history packet and materials; max target 128 MiB"
+  }
+}
