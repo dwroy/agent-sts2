@@ -1,12 +1,12 @@
 {
-  "phase": "formal29-R407-verified-single-original-full-queued-on-existing-heavy-locks",
+  "phase": "formal29-R407-single-original-full-actual-start-static-verified",
   "completed": false,
   "source": "5e04a021ab96dde4c0d97afa35a5645622ed99f5",
   "base": "ae7d48050493440f4490ed3cee80a31ac9359369",
   "tree": "7968e8d67e086202c8dad591d7bf23981815b751",
   "material_commit": "458ee2aa5eedaf7d6eef4b777e906d45f11effec",
   "source_manifest_sha256": "68ae666834ca34ffd510db4f98afbfe7bac482748057960d5b9360a27d4a0aff",
-  "receipt": "paper/materials/20261021-P4-R407-joint-ops/receipt.json",
+  "receipt": "paper/materials/20261021-0328-ops/receipt.json",
   "source_verified": 3,
   "legacy_dependency_verified": 26,
   "material_verified": 74,
@@ -17,7 +17,7 @@
   "source_worktree": "/home/dw/Projects/agent-sts2/.worktrees/v6-refresh-receipt-audit-20261020",
   "minimal_patch": "paper/materials/2026-10-20-v6-refresh-receipt-audit/checks/minimal-source.patch",
   "legacy_patch": "paper/materials/2026-10-20-v6-refresh-receipt-audit/checks/legacy-incremental-minimal.patch",
-  "next": "Original runner waits kernel file locks after existing dataset; it freezes latest knowledge and input SHA, then runs once, emits actual-start and terminal events. Do not duplicate from old setup event or poll. Only full0 + verified source/data after terminal allows narrow main and terminal STOP-window live publication/readback.",
+  "next": "Wait original terminal scheduler event without querying progress; verify PID exits and exact inputs then original narrow main/live boundary process. No duplicate full or early publication.",
   "formal_main_source_merged": false,
   "do_not_close_on_report_or_single_published_packet": true,
   "state_history": [
@@ -28,6 +28,10 @@
     {
       "phase": "original-W8-P4-R407-owner-followup-in-progress-await-formal-source-no-full-request",
       "receipt": "paper/materials/20261020-P4-formal-ops/receipt.json"
+    },
+    {
+      "phase": "formal29-R407-verified-single-original-full-queued-on-existing-heavy-locks",
+      "receipt": "paper/materials/20261021-P4-R407-joint-ops/receipt.json"
     }
   ],
   "latest_owner_followup": {
@@ -75,6 +79,55 @@
   "source_count": 29,
   "queued_runner_pid": 2036302,
   "setup_first_attempt_started_tests": false,
-  "latest_full_started": false,
-  "staged_transport_tree_before_latest_knowledge": "91e48e11eed397cabc4cb7d1642dbe094d980192"
+  "latest_full_started": true,
+  "staged_transport_tree_before_latest_knowledge": "91e48e11eed397cabc4cb7d1642dbe094d980192",
+  "actual_static_start": {
+    "at": "2026-10-21 03:31:37 CST",
+    "event": "20261021-0328-original-P4-actual-start",
+    "request": "original-W8-P4-twenty-nine-exact-R407-latest-knowledge-joint-20261021",
+    "scope": "saved static startup and Git objects only; no dynamic status/log/process query",
+    "files": [
+      {
+        "path": "paper/materials/20261021-0328-ops/native-start-readback.json",
+        "bytes": 1731,
+        "sha256": "1f59f50900b82d8809bc1187050bc6a39c49438ccfb803a835d276157790f267"
+      },
+      {
+        "path": "paper/materials/20261021-0328-ops/frozen.json",
+        "bytes": 97643,
+        "sha256": "d6e9f55a1bd2701c600263359fd805bad610be8b2de4e1022a31294cf63d36b3"
+      },
+      {
+        "path": "paper/materials/20261021-0328-ops/host-inputs-before.json",
+        "bytes": 399731,
+        "sha256": "1058987e39d5932e68168b2c8361eba38e9068dfa4fafb1063edd647f67c3516"
+      },
+      {
+        "path": "paper/materials/20261021-0328-ops/source-verification.json",
+        "bytes": 16706,
+        "sha256": "d2f58dbb840ce38ed164060bb0cf5d5eec12fd5fdb4e736ccdb45139a0652d78"
+      },
+      {
+        "path": "paper/materials/20261021-0328-ops/setup-attempt-1-status.json",
+        "bytes": 561,
+        "sha256": "c3ebf7e5e8c912cd57f2ecd55ac012b81d99adbd4edee42e77d3975b291d285b"
+      }
+    ],
+    "source_verified": 29,
+    "protected_knowledge_verified": 485,
+    "formal_data_count": 463,
+    "input_count": 2399,
+    "input_sha256": "1058987e39d5932e68168b2c8361eba38e9068dfa4fafb1063edd647f67c3516",
+    "staged_tree": "58db1f19f3b09903dd002447e5671ecd57a657d6",
+    "runner_pid_saved": 2036302,
+    "runner_start_ticks_saved": "141576243",
+    "full_pid_saved": 2074183,
+    "tsc_rc_saved": 0,
+    "full_terminal_observed": false,
+    "first_setup_ran_tests": false,
+    "only_original_request": true,
+    "live_publication": false,
+    "STOP_actor_modified": false,
+    "completed": false
+  }
 }
