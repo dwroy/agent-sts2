@@ -1,0 +1,21 @@
+{
+  "batch": "20261020-074302-fix-batch",
+  "at": "2026-10-20T08:51:37+08:00",
+  "pid": 1235468,
+  "start_ticks": 134944015,
+  "nice": 19,
+  "state": "failed",
+  "combined_full_rc": 1,
+  "source_commit": null,
+  "base": "f1f9bffeffb2748386242be2f880b78b0298ed60",
+  "prospective_tree": "4ff60bbc2bee6a3086d90837dd5fc29122b969f1",
+  "input_sha256": "71a513f93879e940b72c9616a7e020bc0ae0bcd9d89f7119ce2a847bacd686e7",
+  "log": "ops/codex-ops/learner/20261020-074302-fix-batch.host-uncommitted-4ff60bbc2bee6a3086d90837dd5fc29122b969f1.checks.log",
+  "uncommitted_source": true,
+  "new_model": false,
+  "command": "export PATH=\"$HOME/.local/node/bin:$PATH\"; nice -n 19 npx tsc -p tsconfig.json --noEmit; a=$?; nice -n 19 npx vitest run --maxWorkers=2; b=$?; [ \"$a\" = 0 ] && [ \"$b\" = 0 ]",
+  "check_pid": 1235494,
+  "started_at": "2026-10-20T08:51:37+08:00",
+  "finished_at": "2026-10-20T09:03:01+08:00",
+  "log_sha256": "deb64972ae51a35477ddd8dce5b5311cec8c87314948215165214f004001e4f5"
+}

@@ -1,0 +1,1367 @@
+{
+  "at": "2026-10-20T09:04:50+08:00",
+  "batch": "20261020-074302-fix-batch",
+  "worktree": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261020-074302",
+  "branch_HEAD": "f1f9bffeffb2748386242be2f880b78b0298ed60",
+  "fixed_staged_tree": "4ff60bbc2bee6a3086d90837dd5fc29122b969f1",
+  "owned_files": [
+    {
+      "path": "agent/tests/cadence-no-change.test.ts",
+      "bytes": 464,
+      "sha256": "94bd26e35c60bc7407f22392ba43a92f8d8d9ae13bf43c8917f7baba0f761108"
+    },
+    {
+      "path": "agent/tests/manual-notice-ack.test.ts",
+      "bytes": 469,
+      "sha256": "9bc4a706c9957b9287173861a86eefc4a92f98ac2126d25e9886e804567e1041"
+    },
+    {
+      "path": "ops/learner_retention.py",
+      "bytes": 43674,
+      "sha256": "836bf1f121e1096f057f8329ac03555a3b310b00baf20e3b9d51b141975f803b"
+    },
+    {
+      "path": "ops/learning_requests.py",
+      "bytes": 63620,
+      "sha256": "be1650c070935a162a5ed8fbd7a98164a0bd651b409624f3d5c7d4e10be8c46f"
+    },
+    {
+      "path": "ops/ordinary_close.py",
+      "bytes": 19308,
+      "sha256": "a1d0ecd83d1d3ed4131a89dccef2ee65d6acbaabf6171b17b9143c4adad921d3"
+    },
+    {
+      "path": "ops/proposal_dispatch.py",
+      "bytes": 28329,
+      "sha256": "18c5484dd67a13dce6868fd9cf1faebe3ea146372de48cc74172050c6dbf3e5f"
+    },
+    {
+      "path": "ops/tests/test_cadence_no_change.py",
+      "bytes": 7374,
+      "sha256": "8882590dd3fbe488a4cbc78cb4905009d9a13182a5e916a85e6c3ad4b9696fbf"
+    },
+    {
+      "path": "ops/tests/test_manual_notice_ack.py",
+      "bytes": 9726,
+      "sha256": "5b5712951f94eed9ea46b22d0261cb741a687a749a403731b4fe5bc34a6312a6"
+    },
+    {
+      "path": "ops/tests/test_ordinary_close.py",
+      "bytes": 27041,
+      "sha256": "eb4551c83494f4d133ceb32f96431ca060ddb78f8664824c89fe7698c871ebc7"
+    }
+  ],
+  "source_input_sha256": "71a513f93879e940b72c9616a7e020bc0ae0bcd9d89f7119ce2a847bacd686e7",
+  "host_status_sha256": "59d9581af00168a8986d3ae3843ea841bc55caabb46bb2522fd793ed486c6c7b",
+  "host_status": {
+    "batch": "20261020-074302-fix-batch",
+    "at": "2026-10-20T08:51:37+08:00",
+    "pid": 1235468,
+    "start_ticks": 134944015,
+    "nice": 19,
+    "state": "failed",
+    "combined_full_rc": 1,
+    "source_commit": null,
+    "base": "f1f9bffeffb2748386242be2f880b78b0298ed60",
+    "prospective_tree": "4ff60bbc2bee6a3086d90837dd5fc29122b969f1",
+    "input_sha256": "71a513f93879e940b72c9616a7e020bc0ae0bcd9d89f7119ce2a847bacd686e7",
+    "log": "ops/codex-ops/learner/20261020-074302-fix-batch.host-uncommitted-4ff60bbc2bee6a3086d90837dd5fc29122b969f1.checks.log",
+    "uncommitted_source": true,
+    "new_model": false,
+    "command": "export PATH=\"$HOME/.local/node/bin:$PATH\"; nice -n 19 npx tsc -p tsconfig.json --noEmit; a=$?; nice -n 19 npx vitest run --maxWorkers=2; b=$?; [ \"$a\" = 0 ] && [ \"$b\" = 0 ]",
+    "check_pid": 1235494,
+    "started_at": "2026-10-20T08:51:37+08:00",
+    "finished_at": "2026-10-20T09:03:01+08:00",
+    "log_sha256": "deb64972ae51a35477ddd8dce5b5311cec8c87314948215165214f004001e4f5"
+  },
+  "candidate_backup": {
+    "path": ".artifacts/ops-wake-20261020-0903/original-staged-candidate.patch",
+    "bytes": 57958,
+    "sha256": "874d14eed252d6d5abfb0a8698a84a86dd8de6da71c541b5042c421e9c88aa02"
+  },
+  "host_vitest": {
+    "failed_files": 250,
+    "passed_files": 355,
+    "total_files": 605,
+    "failed_tests": 3,
+    "passed_tests": 4091,
+    "skipped_tests": 2,
+    "entire_suite_passed": false
+  },
+  "failure_blocks": [
+    {
+      "test": "tests/act-route-candidates.test.ts [ tests/act-route-candidates.test.ts ]",
+      "resource_error": true,
+      "capacity_guard": false
+    },
+    {
+      "test": "tests/adaptive-replay.test.ts [ tests/adaptive-replay.test.ts ]",
+      "resource_error": true,
+      "capacity_guard": false
+    },
+    {
+      "test": "tests/adaptive-sampler.test.ts [ tests/adaptive-sampler.test.ts ]",
+      "resource_error": true,
+      "capacity_guard": false
+    },
+    {
+      "test": "tests/adaptive-shadow.test.ts [ tests/adaptive-shadow.test.ts ]",
+      "resource_error": true,
+      "capacity_guard": false
+    },
+    {
+      "test": "tests/asc-amounts.test.ts [ tests/asc-amounts.test.ts ]",
+      "resource_error": true,
+      "capacity_guard": false
+    },
+    {
+      "test": "tests/ascension-audit-output-fixture.test.ts [ tests/ascension-audit-output-fixture.test.ts ]",
+      "resource_error": true,
+      "capacity_guard": false
+    },
+    {
+      "test": "tests/boss-damage-tools.test.ts [ tests/boss-damage-tools.test.ts ]",
+      "resource_error": true,
+      "capacity_guard": false
+    },
+    {
+      "test": "tests/boss-margin-attribution.test.ts [ tests/boss-margin-attribution.test.ts ]",
+      "resource_error": true,
+      "capacity_guard": false
+    },
+    {
+      "test": "tests/boss-sim-b5.test.ts [ tests/boss-sim-b5.test.ts ]",
+      "resource_error": true,
+      "capacity_guard": false
+    },
+    {
+      "test": "tests/boss-trust.test.ts [ tests/boss-trust.test.ts ]",
+      "resource_error": true,
+      "capacity_guard": false
+    },
+    {
+      "test": "tests/brain-codex-usage-contract.test.ts [ tests/brain-codex-usage-contract.test.ts ]",
+      "resource_error": true,
+      "capacity_guard": false
+    },
+    {
+      "test": "tests/brain-codex-watchdog.test.ts [ tests/brain-codex-watchdog.test.ts ]",
+      "resource_error": true,
+      "capacity_guard": false
+    },
+    {
+      "test": "tests/brain-specs.test.ts [ tests/brain-specs.test.ts ]",
+      "resource_error": true,
+      "capacity_guard": false
+    },
+    {
+      "test": "tests/broker-response-persistence.test.ts [ tests/broker-response-persistence.test.ts ]",
+      "resource_error": true,
+      "capacity_guard": false
+    },
+    {
+      "test": "tests/build-rank.test.ts [ tests/build-rank.test.ts ]",
+      "resource_error": true,
+      "capacity_guard": false
+    },
+    {
+      "test": "tests/build-sim-cancellation.test.ts [ tests/build-sim-cancellation.test.ts ]",
+      "resource_error": true,
+      "capacity_guard": false
+    },
+    {
+      "test": "tests/card-value.test.ts [ tests/card-value.test.ts ]",
+      "resource_error": true,
+      "capacity_guard": false
+    },
+    {
+      "test": "tests/codex-abort-fixture.test.ts [ tests/codex-abort-fixture.test.ts ]",
+      "resource_error": true,
+      "capacity_guard": false
+    },
+    {
+      "test": "tests/codex-cache-engine.test.ts [ tests/codex-cache-engine.test.ts ]",
+      "resource_error": true,
+      "capacity_guard": false
+    },
+    {
+      "test": "tests/codex-cache-observation.test.ts [ tests/codex-cache-observation.test.ts ]",
+      "resource_error": true,
+      "capacity_guard": false
+    },
+    {
+      "test": "tests/codex-cache-probe.test.ts [ tests/codex-cache-probe.test.ts ]",
+      "resource_error": true,
+      "capacity_guard": false
+    },
+    {
+      "test": "tests/codex-fast.test.ts [ tests/codex-fast.test.ts ]",
+      "resource_error": true,
+      "capacity_guard": false
+    },
+    {
+      "test": "tests/codex-paid-credit-policy.test.ts [ tests/codex-paid-credit-policy.test.ts ]",
+      "resource_error": true,
+      "capacity_guard": false
+    },
+    {
+      "test": "tests/codex-stall-fixture.test.ts [ tests/codex-stall-fixture.test.ts ]",
+      "resource_error": true,
+      "capacity_guard": false
+    },
+    {
+      "test": "tests/codex-usage-recovery.test.ts [ tests/codex-usage-recovery.test.ts ]",
+      "resource_error": true,
+      "capacity_guard": false
+    },
+    {
+      "test": "tests/combat-rationale.test.ts [ tests/combat-rationale.test.ts ]",
+      "resource_error": true,
+      "capacity_guard": false
+    },
+    {
+      "test": "tests/computation-failure.test.ts [ tests/computation-failure.test.ts ]",
+      "resource_error": true,
+      "capacity_guard": false
+    },
+    {
+      "test": "tests/config.test.ts [ tests/config.test.ts ]",
+      "resource_error": true,
+      "capacity_guard": false
+    },
+    {
+      "test": "tests/construction-integration.test.ts [ tests/construction-integration.test.ts ]",
+      "resource_error": true,
+      "capacity_guard": false
+    },
+    {
+      "test": "tests/construction-support.test.ts [ tests/construction-support.test.ts ]",
+      "resource_error": true,
+      "capacity_guard": false
+    },
+    {
+      "test": "tests/continuation-diagnostics.test.ts [ tests/continuation-diagnostics.test.ts ]",
+      "resource_error": true,
+      "capacity_guard": false
+    },
+    {
+      "test": "tests/continuation-failure-worker.test.ts [ tests/continuation-failure-worker.test.ts ]",
+      "resource_error": true,
+      "capacity_guard": false
+    },
+    {
+      "test": "tests/continuation-failure.test.ts [ tests/continuation-failure.test.ts ]",
+      "resource_error": true,
+      "capacity_guard": false
+    },
+    {
+      "test": "tests/damage.test.ts [ tests/damage.test.ts ]",
+      "resource_error": true,
+      "capacity_guard": false
+    },
+    {
+      "test": "tests/deck-profile.test.ts [ tests/deck-profile.test.ts ]",
+      "resource_error": true,
+      "capacity_guard": false
+    },
+    {
+      "test": "tests/deepseek-consistency.test.ts [ tests/deepseek-consistency.test.ts ]",
+      "resource_error": true,
+      "capacity_guard": false
+    },
+    {
+      "test": "tests/enchant-text.test.ts [ tests/enchant-text.test.ts ]",
+      "resource_error": true,
+      "capacity_guard": false
+    },
+    {
+      "test": "tests/end-turn-guard-sources.test.ts [ tests/end-turn-guard-sources.test.ts ]",
+      "resource_error": true,
+      "capacity_guard": false
+    },
+    {
+      "test": "tests/event-settle.test.ts [ tests/event-settle.test.ts ]",
+      "resource_error": true,
+      "capacity_guard": false
+    },
+    {
+      "test": "tests/f48-joint-shadow.test.ts [ tests/f48-joint-shadow.test.ts ]",
+      "resource_error": true,
+      "capacity_guard": false
+    },
+    {
+      "test": "tests/fight-value.test.ts [ tests/fight-value.test.ts ]",
+      "resource_error": true,
+      "capacity_guard": false
+    },
+    {
+      "test": "tests/game-data-cache.test.ts [ tests/game-data-cache.test.ts ]",
+      "resource_error": true,
+      "capacity_guard": false
+    },
+    {
+      "test": "tests/gkb-tools.test.ts [ tests/gkb-tools.test.ts ]",
+      "resource_error": true,
+      "capacity_guard": false
+    },
+    {
+      "test": "tests/global-build-b3.test.ts [ tests/global-build-b3.test.ts ]",
+      "resource_error": true,
+      "capacity_guard": false
+    },
+    {
+      "test": "tests/global-build-observer.test.ts [ tests/global-build-observer.test.ts ]",
+      "resource_error": true,
+      "capacity_guard": false
+    },
+    {
+      "test": "tests/global-build.test.ts [ tests/global-build.test.ts ]",
+      "resource_error": true,
+      "capacity_guard": false
+    },
+    {
+      "test": "tests/historical-run-constraints.test.ts [ tests/historical-run-constraints.test.ts ]",
+      "resource_error": true,
+      "capacity_guard": false
+    },
+    {
+      "test": "tests/human-pace-adaptive.test.ts [ tests/human-pace-adaptive.test.ts ]",
+      "resource_error": true,
+      "capacity_guard": false
+    },
+    {
+      "test": "tests/human-pace-budget.test.ts [ tests/human-pace-budget.test.ts ]",
+      "resource_error": true,
+      "capacity_guard": false
+    },
+    {
+      "test": "tests/human-pace-card-policy.test.ts [ tests/human-pace-card-policy.test.ts ]",
+      "resource_error": true,
+      "capacity_guard": false
+    },
+    {
+      "test": "tests/human-pace-direction.test.ts [ tests/human-pace-direction.test.ts ]",
+      "resource_error": true,
+      "capacity_guard": false
+    },
+    {
+      "test": "tests/human-pace-jev.test.ts [ tests/human-pace-jev.test.ts ]",
+      "resource_error": true,
+      "capacity_guard": false
+    },
+    {
+      "test": "tests/human-pace-reuse.test.ts [ tests/human-pace-reuse.test.ts ]",
+      "resource_error": true,
+      "capacity_guard": false
+    },
+    {
+      "test": "tests/human-pace-shadow-observer.test.ts [ tests/human-pace-shadow-observer.test.ts ]",
+      "resource_error": true,
+      "capacity_guard": false
+    },
+    {
+      "test": "tests/human-pace-sl-budget.test.ts [ tests/human-pace-sl-budget.test.ts ]",
+      "resource_error": true,
+      "capacity_guard": false
+    },
+    {
+      "test": "tests/instance-binding.test.ts [ tests/instance-binding.test.ts ]",
+      "resource_error": true,
+      "capacity_guard": false
+    },
+    {
+      "test": "tests/jev-context-limit.test.ts [ tests/jev-context-limit.test.ts ]",
+      "resource_error": true,
+      "capacity_guard": false
+    },
+    {
+      "test": "tests/jev-context-recovery.test.ts [ tests/jev-context-recovery.test.ts ]",
+      "resource_error": true,
+      "capacity_guard": false
+    },
+    {
+      "test": "tests/jev-cost.test.ts [ tests/jev-cost.test.ts ]",
+      "resource_error": true,
+      "capacity_guard": false
+    },
+    {
+      "test": "tests/jev-decision-projection.test.ts [ tests/jev-decision-projection.test.ts ]",
+      "resource_error": true,
+      "capacity_guard": false
+    },
+    {
+      "test": "tests/jev-retry.test.ts [ tests/jev-retry.test.ts ]",
+      "resource_error": true,
+      "capacity_guard": false
+    },
+    {
+      "test": "tests/knowledge-check-a8w-builder.test.ts [ tests/knowledge-check-a8w-builder.test.ts ]",
+      "resource_error": true,
+      "capacity_guard": false
+    },
+    {
+      "test": "tests/knowledge-check-a8w-cards.test.ts [ tests/knowledge-check-a8w-cards.test.ts ]",
+      "resource_error": true,
+      "capacity_guard": false
+    },
+    {
+      "test": "tests/knowledge-check-a8w-experience.test.ts [ tests/knowledge-check-a8w-experience.test.ts ]",
+      "resource_error": true,
+      "capacity_guard": false
+    },
+    {
+      "test": "tests/knowledge-check-a8w-facts.test.ts [ tests/knowledge-check-a8w-facts.test.ts ]",
+      "resource_error": true,
+      "capacity_guard": false
+    },
+    {
+      "test": "tests/knowledge-check-a8w-guides.test.ts [ tests/knowledge-check-a8w-guides.test.ts ]",
+      "resource_error": true,
+      "capacity_guard": false
+    },
+    {
+      "test": "tests/knowledge-check-cards.test.ts [ tests/knowledge-check-cards.test.ts ]",
+      "resource_error": true,
+      "capacity_guard": false
+    },
+    {
+      "test": "tests/knowledge-check-guides.test.ts [ tests/knowledge-check-guides.test.ts ]",
+      "resource_error": true,
+      "capacity_guard": false
+    },
+    {
+      "test": "tests/knowledge-text.test.ts [ tests/knowledge-text.test.ts ]",
+      "resource_error": true,
+      "capacity_guard": false
+    },
+    {
+      "test": "tests/learner-character.test.ts [ tests/learner-character.test.ts ]",
+      "resource_error": true,
+      "capacity_guard": false
+    },
+    {
+      "test": "tests/learner-instance.test.ts [ tests/learner-instance.test.ts ]",
+      "resource_error": true,
+      "capacity_guard": false
+    },
+    {
+      "test": "tests/learner-learning-flow.test.ts [ tests/learner-learning-flow.test.ts ]",
+      "resource_error": true,
+      "capacity_guard": false
+    },
+    {
+      "test": "tests/learner-live-tasks.test.ts [ tests/learner-live-tasks.test.ts ]",
+      "resource_error": true,
+      "capacity_guard": false
+    },
+    {
+      "test": "tests/learner-paths.test.ts [ tests/learner-paths.test.ts ]",
+      "resource_error": true,
+      "capacity_guard": false
+    },
+    {
+      "test": "tests/learning-roles.test.ts [ tests/learning-roles.test.ts ]",
+      "resource_error": true,
+      "capacity_guard": false
+    },
+    {
+      "test": "tests/legacy-brain-notes.test.ts [ tests/legacy-brain-notes.test.ts ]",
+      "resource_error": true,
+      "capacity_guard": false
+    },
+    {
+      "test": "tests/lock.test.ts [ tests/lock.test.ts ]",
+      "resource_error": true,
+      "capacity_guard": false
+    },
+    {
+      "test": "tests/mcp-server.test.ts [ tests/mcp-server.test.ts ]",
+      "resource_error": true,
+      "capacity_guard": false
+    },
+    {
+      "test": "tests/mech-move-rules.test.ts [ tests/mech-move-rules.test.ts ]",
+      "resource_error": true,
+      "capacity_guard": false
+    },
+    {
+      "test": "tests/mech-rules.test.ts [ tests/mech-rules.test.ts ]",
+      "resource_error": true,
+      "capacity_guard": false
+    },
+    {
+      "test": "tests/mittens-exhaust.test.ts [ tests/mittens-exhaust.test.ts ]",
+      "resource_error": true,
+      "capacity_guard": false
+    },
+    {
+      "test": "tests/module-health.test.ts [ tests/module-health.test.ts ]",
+      "resource_error": true,
+      "capacity_guard": false
+    },
+    {
+      "test": "tests/monster-db-context.test.ts [ tests/monster-db-context.test.ts ]",
+      "resource_error": true,
+      "capacity_guard": false
+    },
+    {
+      "test": "tests/monster-db.test.ts [ tests/monster-db.test.ts ]",
+      "resource_error": true,
+      "capacity_guard": false
+    },
+    {
+      "test": "tests/monster-terminal-hp.test.ts [ tests/monster-terminal-hp.test.ts ]",
+      "resource_error": true,
+      "capacity_guard": false
+    },
+    {
+      "test": "tests/move-model-damage.test.ts [ tests/move-model-damage.test.ts ]",
+      "resource_error": true,
+      "capacity_guard": false
+    },
+    {
+      "test": "tests/named-card-facts.test.ts [ tests/named-card-facts.test.ts ]",
+      "resource_error": true,
+      "capacity_guard": false
+    },
+    {
+      "test": "tests/nova-jev.test.ts [ tests/nova-jev.test.ts ]",
+      "resource_error": true,
+      "capacity_guard": false
+    },
+    {
+      "test": "tests/ops-action-list.test.ts [ tests/ops-action-list.test.ts ]",
+      "resource_error": true,
+      "capacity_guard": false
+    },
+    {
+      "test": "tests/ops-assist.test.ts [ tests/ops-assist.test.ts ]",
+      "resource_error": true,
+      "capacity_guard": false
+    },
+    {
+      "test": "tests/ops-current-budget.test.ts [ tests/ops-current-budget.test.ts ]",
+      "resource_error": true,
+      "capacity_guard": false
+    },
+    {
+      "test": "tests/ops-eval-metrics.test.ts [ tests/ops-eval-metrics.test.ts ]",
+      "resource_error": true,
+      "capacity_guard": false
+    },
+    {
+      "test": "tests/ops-host-recovery.test.ts [ tests/ops-host-recovery.test.ts ]",
+      "resource_error": true,
+      "capacity_guard": false
+    },
+    {
+      "test": "tests/ops-mod-state-broker.test.ts [ tests/ops-mod-state-broker.test.ts ]",
+      "resource_error": true,
+      "capacity_guard": false
+    },
+    {
+      "test": "tests/ordinary-notice-ack.test.ts [ tests/ordinary-notice-ack.test.ts ]",
+      "resource_error": true,
+      "capacity_guard": false
+    },
+    {
+      "test": "tests/outcome-stats-refresh.test.ts [ tests/outcome-stats-refresh.test.ts ]",
+      "resource_error": true,
+      "capacity_guard": false
+    },
+    {
+      "test": "tests/outcome-stats.test.ts [ tests/outcome-stats.test.ts ]",
+      "resource_error": true,
+      "capacity_guard": false
+    },
+    {
+      "test": "tests/paper-snapshot-capacity.test.ts [ tests/paper-snapshot-capacity.test.ts ]",
+      "resource_error": true,
+      "capacity_guard": false
+    },
+    {
+      "test": "tests/paths.test.ts [ tests/paths.test.ts ]",
+      "resource_error": true,
+      "capacity_guard": false
+    },
+    {
+      "test": "tests/pinned-shared-experience.test.ts [ tests/pinned-shared-experience.test.ts ]",
+      "resource_error": true,
+      "capacity_guard": false
+    },
+    {
+      "test": "tests/postmortem-failure-audit.test.ts [ tests/postmortem-failure-audit.test.ts ]",
+      "resource_error": true,
+      "capacity_guard": false
+    },
+    {
+      "test": "tests/potion-unmeasured.test.ts [ tests/potion-unmeasured.test.ts ]",
+      "resource_error": true,
+      "capacity_guard": false
+    },
+    {
+      "test": "tests/pricing.test.ts [ tests/pricing.test.ts ]",
+      "resource_error": true,
+      "capacity_guard": false
+    },
+    {
+      "test": "tests/prior-delivery-proofs.test.ts [ tests/prior-delivery-proofs.test.ts ]",
+      "resource_error": true,
+      "capacity_guard": false
+    },
+    {
+      "test": "tests/quantitative-log-extract.test.ts [ tests/quantitative-log-extract.test.ts ]",
+      "resource_error": true,
+      "capacity_guard": false
+    },
+    {
+      "test": "tests/quantitative.test.ts [ tests/quantitative.test.ts ]",
+      "resource_error": true,
+      "capacity_guard": false
+    },
+    {
+      "test": "tests/questions.test.ts [ tests/questions.test.ts ]",
+      "resource_error": true,
+      "capacity_guard": false
+    },
+    {
+      "test": "tests/radiant-tincture.test.ts [ tests/radiant-tincture.test.ts ]",
+      "resource_error": true,
+      "capacity_guard": false
+    },
+    {
+      "test": "tests/record.test.ts [ tests/record.test.ts ]",
+      "resource_error": true,
+      "capacity_guard": false
+    },
+    {
+      "test": "tests/regent-launch-inspect.test.ts [ tests/regent-launch-inspect.test.ts ]",
+      "resource_error": true,
+      "capacity_guard": false
+    },
+    {
+      "test": "tests/regent-launch-solo.test.ts [ tests/regent-launch-solo.test.ts ]",
+      "resource_error": true,
+      "capacity_guard": false
+    },
+    {
+      "test": "tests/report-plan-costs.test.ts [ tests/report-plan-costs.test.ts ]",
+      "resource_error": true,
+      "capacity_guard": false
+    },
+    {
+      "test": "tests/required-build-worker.test.ts [ tests/required-build-worker.test.ts ]",
+      "resource_error": true,
+      "capacity_guard": false
+    },
+    {
+      "test": "tests/research-scheduling-fixture.test.ts [ tests/research-scheduling-fixture.test.ts ]",
+      "resource_error": true,
+      "capacity_guard": false
+    },
+    {
+      "test": "tests/reward-special.test.ts [ tests/reward-special.test.ts ]",
+      "resource_error": true,
+      "capacity_guard": false
+    },
+    {
+      "test": "tests/rollout-deadline.test.ts [ tests/rollout-deadline.test.ts ]",
+      "resource_error": true,
+      "capacity_guard": false
+    },
+    {
+      "test": "tests/route-boss-unknown.test.ts [ tests/route-boss-unknown.test.ts ]",
+      "resource_error": true,
+      "capacity_guard": false
+    },
+    {
+      "test": "tests/route-chain.test.ts [ tests/route-chain.test.ts ]",
+      "resource_error": true,
+      "capacity_guard": false
+    },
+    {
+      "test": "tests/route-map.test.ts [ tests/route-map.test.ts ]",
+      "resource_error": true,
+      "capacity_guard": false
+    },
+    {
+      "test": "tests/route-next-rest.test.ts [ tests/route-next-rest.test.ts ]",
+      "resource_error": true,
+      "capacity_guard": false
+    },
+    {
+      "test": "tests/run-plan.test.ts [ tests/run-plan.test.ts ]",
+      "resource_error": true,
+      "capacity_guard": false
+    },
+    {
+      "test": "tests/s-combat-rank.test.ts [ tests/s-combat-rank.test.ts ]",
+      "resource_error": true,
+      "capacity_guard": false
+    },
+    {
+      "test": "tests/s-decision-tools.test.ts [ tests/s-decision-tools.test.ts ]",
+      "resource_error": true,
+      "capacity_guard": false
+    },
+    {
+      "test": "tests/s-decision.test.ts [ tests/s-decision.test.ts ]",
+      "resource_error": true,
+      "capacity_guard": false
+    },
+    {
+      "test": "tests/schema.test.ts [ tests/schema.test.ts ]",
+      "resource_error": true,
+      "capacity_guard": false
+    },
+    {
+      "test": "tests/shop-removal-preview.test.ts [ tests/shop-removal-preview.test.ts ]",
+      "resource_error": true,
+      "capacity_guard": false
+    },
+    {
+      "test": "tests/silent-abrasive.test.ts [ tests/silent-abrasive.test.ts ]",
+      "resource_error": true,
+      "capacity_guard": false
+    },
+    {
+      "test": "tests/silent-aeonglass-intensity.test.ts [ tests/silent-aeonglass-intensity.test.ts ]",
+      "resource_error": true,
+      "capacity_guard": false
+    },
+    {
+      "test": "tests/silent-afterimage.test.ts [ tests/silent-afterimage.test.ts ]",
+      "resource_error": true,
+      "capacity_guard": false
+    },
+    {
+      "test": "tests/silent-anticipate.test.ts [ tests/silent-anticipate.test.ts ]",
+      "resource_error": true,
+      "capacity_guard": false
+    },
+    {
+      "test": "tests/silent-apotheosis-accelerant.test.ts [ tests/silent-apotheosis-accelerant.test.ts ]",
+      "resource_error": true,
+      "capacity_guard": false
+    },
+    {
+      "test": "tests/silent-apotheosis-backflip.test.ts [ tests/silent-apotheosis-backflip.test.ts ]",
+      "resource_error": true,
+      "capacity_guard": false
+    },
+    {
+      "test": "tests/silent-apotheosis-deadly-poison.test.ts [ tests/silent-apotheosis-deadly-poison.test.ts ]",
+      "resource_error": true,
+      "capacity_guard": false
+    },
+    {
+      "test": "tests/silent-apotheosis-footwork.test.ts [ tests/silent-apotheosis-footwork.test.ts ]",
+      "resource_error": true,
+      "capacity_guard": false
+    },
+    {
+      "test": "tests/silent-apotheosis-malaise.test.ts [ tests/silent-apotheosis-malaise.test.ts ]",
+      "resource_error": true,
+      "capacity_guard": false
+    },
+    {
+      "test": "tests/silent-apotheosis-neutralize.test.ts [ tests/silent-apotheosis-neutralize.test.ts ]",
+      "resource_error": true,
+      "capacity_guard": false
+    },
+    {
+      "test": "tests/silent-apotheosis-poisoned-stab.test.ts [ tests/silent-apotheosis-poisoned-stab.test.ts ]",
+      "resource_error": true,
+      "capacity_guard": false
+    },
+    {
+      "test": "tests/silent-apotheosis-snakebite.test.ts [ tests/silent-apotheosis-snakebite.test.ts ]",
+      "resource_error": true,
+      "capacity_guard": false
+    },
+    {
+      "test": "tests/silent-apotheosis-survivor.test.ts [ tests/silent-apotheosis-survivor.test.ts ]",
+      "resource_error": true,
+      "capacity_guard": false
+    },
+    {
+      "test": "tests/silent-apotheosis-upgraded.test.ts [ tests/silent-apotheosis-upgraded.test.ts ]",
+      "resource_error": true,
+      "capacity_guard": false
+    },
+    {
+      "test": "tests/silent-apotheosis.test.ts [ tests/silent-apotheosis.test.ts ]",
+      "resource_error": true,
+      "capacity_guard": false
+    },
+    {
+      "test": "tests/silent-axe-identity.test.ts [ tests/silent-axe-identity.test.ts ]",
+      "resource_error": true,
+      "capacity_guard": false
+    },
+    {
+      "test": "tests/silent-boss-calibration-board.test.ts [ tests/silent-boss-calibration-board.test.ts ]",
+      "resource_error": true,
+      "capacity_guard": false
+    },
+    {
+      "test": "tests/silent-boss-calibration-cli.test.ts [ tests/silent-boss-calibration-cli.test.ts ]",
+      "resource_error": true,
+      "capacity_guard": false
+    },
+    {
+      "test": "tests/silent-boss-calibration.test.ts [ tests/silent-boss-calibration.test.ts ]",
+      "resource_error": true,
+      "capacity_guard": false
+    },
+    {
+      "test": "tests/silent-boss-clock.test.ts [ tests/silent-boss-clock.test.ts ]",
+      "resource_error": true,
+      "capacity_guard": false
+    },
+    {
+      "test": "tests/silent-boss-facts.test.ts [ tests/silent-boss-facts.test.ts ]",
+      "resource_error": true,
+      "capacity_guard": false
+    },
+    {
+      "test": "tests/silent-boss-weak.test.ts [ tests/silent-boss-weak.test.ts ]",
+      "resource_error": true,
+      "capacity_guard": false
+    },
+    {
+      "test": "tests/silent-build-win-ties.test.ts [ tests/silent-build-win-ties.test.ts ]",
+      "resource_error": true,
+      "capacity_guard": false
+    },
+    {
+      "test": "tests/silent-burst.test.ts [ tests/silent-burst.test.ts ]",
+      "resource_error": true,
+      "capacity_guard": false
+    },
+    {
+      "test": "tests/silent-calculated-gamble-upgraded.test.ts [ tests/silent-calculated-gamble-upgraded.test.ts ]",
+      "resource_error": true,
+      "capacity_guard": false
+    },
+    {
+      "test": "tests/silent-calculated-gamble.test.ts [ tests/silent-calculated-gamble.test.ts ]",
+      "resource_error": true,
+      "capacity_guard": false
+    },
+    {
+      "test": "tests/silent-caltrops.test.ts [ tests/silent-caltrops.test.ts ]",
+      "resource_error": true,
+      "capacity_guard": false
+    },
+    {
+      "test": "tests/silent-controlled-opening.test.ts [ tests/silent-controlled-opening.test.ts ]",
+      "resource_error": true,
+      "capacity_guard": false
+    },
+    {
+      "test": "tests/silent-corrosive-wave.test.ts [ tests/silent-corrosive-wave.test.ts ]",
+      "resource_error": true,
+      "capacity_guard": false
+    },
+    {
+      "test": "tests/silent-dagger-sandpit-discard.test.ts [ tests/silent-dagger-sandpit-discard.test.ts ]",
+      "resource_error": true,
+      "capacity_guard": false
+    },
+    {
+      "test": "tests/silent-deck-cap.test.ts [ tests/silent-deck-cap.test.ts ]",
+      "resource_error": true,
+      "capacity_guard": false
+    },
+    {
+      "test": "tests/silent-discard-plan.test.ts [ tests/silent-discard-plan.test.ts ]",
+      "resource_error": true,
+      "capacity_guard": false
+    },
+    {
+      "test": "tests/silent-discard-snapshot.test.ts [ tests/silent-discard-snapshot.test.ts ]",
+      "resource_error": true,
+      "capacity_guard": false
+    },
+    {
+      "test": "tests/silent-envenom.test.ts [ tests/silent-envenom.test.ts ]",
+      "resource_error": true,
+      "capacity_guard": false
+    },
+    {
+      "test": "tests/silent-escape-plan.test.ts [ tests/silent-escape-plan.test.ts ]",
+      "resource_error": true,
+      "capacity_guard": false
+    },
+    {
+      "test": "tests/silent-expertise.test.ts [ tests/silent-expertise.test.ts ]",
+      "resource_error": true,
+      "capacity_guard": false
+    },
+    {
+      "test": "tests/silent-expose.test.ts [ tests/silent-expose.test.ts ]",
+      "resource_error": true,
+      "capacity_guard": false
+    },
+    {
+      "test": "tests/silent-fasten-upgrade.test.ts [ tests/silent-fasten-upgrade.test.ts ]",
+      "resource_error": true,
+      "capacity_guard": false
+    },
+    {
+      "test": "tests/silent-fasten.test.ts [ tests/silent-fasten.test.ts ]",
+      "resource_error": true,
+      "capacity_guard": false
+    },
+    {
+      "test": "tests/silent-finale-selection.test.ts [ tests/silent-finale-selection.test.ts ]",
+      "resource_error": true,
+      "capacity_guard": false
+    },
+    {
+      "test": "tests/silent-flechettes.test.ts [ tests/silent-flechettes.test.ts ]",
+      "resource_error": true,
+      "capacity_guard": false
+    },
+    {
+      "test": "tests/silent-footwork.test.ts [ tests/silent-footwork.test.ts ]",
+      "resource_error": true,
+      "capacity_guard": false
+    },
+    {
+      "test": "tests/silent-gardener-skittish.test.ts [ tests/silent-gardener-skittish.test.ts ]",
+      "resource_error": true,
+      "capacity_guard": false
+    },
+    {
+      "test": "tests/silent-haze.test.ts [ tests/silent-haze.test.ts ]",
+      "resource_error": true,
+      "capacity_guard": false
+    },
+    {
+      "test": "tests/silent-hp-recovery.test.ts [ tests/silent-hp-recovery.test.ts ]",
+      "resource_error": true,
+      "capacity_guard": false
+    },
+    {
+      "test": "tests/silent-knife-trap.test.ts [ tests/silent-knife-trap.test.ts ]",
+      "resource_error": true,
+      "capacity_guard": false
+    },
+    {
+      "test": "tests/silent-lethal-continuation.test.ts [ tests/silent-lethal-continuation.test.ts ]",
+      "resource_error": true,
+      "capacity_guard": false
+    },
+    {
+      "test": "tests/silent-malaise.test.ts [ tests/silent-malaise.test.ts ]",
+      "resource_error": true,
+      "capacity_guard": false
+    },
+    {
+      "test": "tests/silent-maul.test.ts [ tests/silent-maul.test.ts ]",
+      "resource_error": true,
+      "capacity_guard": false
+    },
+    {
+      "test": "tests/silent-metamorphosis.test.ts [ tests/silent-metamorphosis.test.ts ]",
+      "resource_error": true,
+      "capacity_guard": false
+    },
+    {
+      "test": "tests/silent-mirage.test.ts [ tests/silent-mirage.test.ts ]",
+      "resource_error": true,
+      "capacity_guard": false
+    },
+    {
+      "test": "tests/silent-obscura-summon.test.ts [ tests/silent-obscura-summon.test.ts ]",
+      "resource_error": true,
+      "capacity_guard": false
+    },
+    {
+      "test": "tests/silent-observed-intervals.test.ts [ tests/silent-observed-intervals.test.ts ]",
+      "resource_error": true,
+      "capacity_guard": false
+    },
+    {
+      "test": "tests/silent-phase-sequences.test.ts [ tests/silent-phase-sequences.test.ts ]",
+      "resource_error": true,
+      "capacity_guard": false
+    },
+    {
+      "test": "tests/silent-plain-blade-dance-a0.test.ts [ tests/silent-plain-blade-dance-a0.test.ts ]",
+      "resource_error": true,
+      "capacity_guard": false
+    },
+    {
+      "test": "tests/silent-poison-cap.test.ts [ tests/silent-poison-cap.test.ts ]",
+      "resource_error": true,
+      "capacity_guard": false
+    },
+    {
+      "test": "tests/silent-poison-coverage.test.ts [ tests/silent-poison-coverage.test.ts ]",
+      "resource_error": true,
+      "capacity_guard": false
+    },
+    {
+      "test": "tests/silent-poison-dominance.test.ts [ tests/silent-poison-dominance.test.ts ]",
+      "resource_error": true,
+      "capacity_guard": false
+    },
+    {
+      "test": "tests/silent-poison-held.test.ts [ tests/silent-poison-held.test.ts ]",
+      "resource_error": true,
+      "capacity_guard": false
+    },
+    {
+      "test": "tests/silent-potion-provenance.test.ts [ tests/silent-potion-provenance.test.ts ]",
+      "resource_error": true,
+      "capacity_guard": false
+    },
+    {
+      "test": "tests/silent-pounce-coverage.test.ts [ tests/silent-pounce-coverage.test.ts ]",
+      "resource_error": true,
+      "capacity_guard": false
+    },
+    {
+      "test": "tests/silent-precise-cut-seven.test.ts [ tests/silent-precise-cut-seven.test.ts ]",
+      "resource_error": true,
+      "capacity_guard": false
+    },
+    {
+      "test": "tests/silent-precise-cut-strength.test.ts [ tests/silent-precise-cut-strength.test.ts ]",
+      "resource_error": true,
+      "capacity_guard": false
+    },
+    {
+      "test": "tests/silent-precise-cut.test.ts [ tests/silent-precise-cut.test.ts ]",
+      "resource_error": true,
+      "capacity_guard": false
+    },
+    {
+      "test": "tests/silent-queen-ally-strength.test.ts [ tests/silent-queen-ally-strength.test.ts ]",
+      "resource_error": true,
+      "capacity_guard": false
+    },
+    {
+      "test": "tests/silent-regret.test.ts [ tests/silent-regret.test.ts ]",
+      "resource_error": true,
+      "capacity_guard": false
+    },
+    {
+      "test": "tests/silent-rest-sim-hp.test.ts [ tests/silent-rest-sim-hp.test.ts ]",
+      "resource_error": true,
+      "capacity_guard": false
+    },
+    {
+      "test": "tests/silent-rod-sandpit.test.ts [ tests/silent-rod-sandpit.test.ts ]",
+      "resource_error": true,
+      "capacity_guard": false
+    },
+    {
+      "test": "tests/silent-route-projection.test.ts [ tests/silent-route-projection.test.ts ]",
+      "resource_error": true,
+      "capacity_guard": false
+    },
+    {
+      "test": "tests/silent-sandpit-discard.test.ts [ tests/silent-sandpit-discard.test.ts ]",
+      "resource_error": true,
+      "capacity_guard": false
+    },
+    {
+      "test": "tests/silent-sapping.test.ts [ tests/silent-sapping.test.ts ]",
+      "resource_error": true,
+      "capacity_guard": false
+    },
+    {
+      "test": "tests/silent-selection-execution.test.ts [ tests/silent-selection-execution.test.ts ]",
+      "resource_error": true,
+      "capacity_guard": false
+    },
+    {
+      "test": "tests/silent-selection-potions.test.ts [ tests/silent-selection-potions.test.ts ]",
+      "resource_error": true,
+      "capacity_guard": false
+    },
+    {
+      "test": "tests/silent-selection-terminal.test.ts [ tests/silent-selection-terminal.test.ts ]",
+      "resource_error": true,
+      "capacity_guard": false
+    },
+    {
+      "test": "tests/silent-shadow-step.test.ts [ tests/silent-shadow-step.test.ts ]",
+      "resource_error": true,
+      "capacity_guard": false
+    },
+    {
+      "test": "tests/silent-shadowmeld.test.ts [ tests/silent-shadowmeld.test.ts ]",
+      "resource_error": true,
+      "capacity_guard": false
+    },
+    {
+      "test": "tests/silent-single-action-block.test.ts [ tests/silent-single-action-block.test.ts ]",
+      "resource_error": true,
+      "capacity_guard": false
+    },
+    {
+      "test": "tests/silent-single-action-sandpit.test.ts [ tests/silent-single-action-sandpit.test.ts ]",
+      "resource_error": true,
+      "capacity_guard": false
+    },
+    {
+      "test": "tests/silent-single-action-weak.test.ts [ tests/silent-single-action-weak.test.ts ]",
+      "resource_error": true,
+      "capacity_guard": false
+    },
+    {
+      "test": "tests/silent-sl-beetle.test.ts [ tests/silent-sl-beetle.test.ts ]",
+      "resource_error": true,
+      "capacity_guard": false
+    },
+    {
+      "test": "tests/silent-sl-calendar-poison.test.ts [ tests/silent-sl-calendar-poison.test.ts ]",
+      "resource_error": true,
+      "capacity_guard": false
+    },
+    {
+      "test": "tests/silent-sl-poison-stun.test.ts [ tests/silent-sl-poison-stun.test.ts ]",
+      "resource_error": true,
+      "capacity_guard": false
+    },
+    {
+      "test": "tests/silent-slippery-poison.test.ts [ tests/silent-slippery-poison.test.ts ]",
+      "resource_error": true,
+      "capacity_guard": false
+    },
+    {
+      "test": "tests/silent-smoggy-selection.test.ts [ tests/silent-smoggy-selection.test.ts ]",
+      "resource_error": true,
+      "capacity_guard": false
+    },
+    {
+      "test": "tests/silent-snakebite-preview.test.ts [ tests/silent-snakebite-preview.test.ts ]",
+      "resource_error": true,
+      "capacity_guard": false
+    },
+    {
+      "test": "tests/silent-snakebite.test.ts [ tests/silent-snakebite.test.ts ]",
+      "resource_error": true,
+      "capacity_guard": false
+    },
+    {
+      "test": "tests/silent-snecko-fumes.test.ts [ tests/silent-snecko-fumes.test.ts ]",
+      "resource_error": true,
+      "capacity_guard": false
+    },
+    {
+      "test": "tests/silent-strangle-ly.test.ts [ tests/silent-strangle-ly.test.ts ]",
+      "resource_error": true,
+      "capacity_guard": false
+    },
+    {
+      "test": "tests/silent-strangle-upgraded.test.ts [ tests/silent-strangle-upgraded.test.ts ]",
+      "resource_error": true,
+      "capacity_guard": false
+    },
+    {
+      "test": "tests/silent-strangle.test.ts [ tests/silent-strangle.test.ts ]",
+      "resource_error": true,
+      "capacity_guard": false
+    },
+    {
+      "test": "tests/silent-survivor-sandpit-discard.test.ts [ tests/silent-survivor-sandpit-discard.test.ts ]",
+      "resource_error": true,
+      "capacity_guard": false
+    },
+    {
+      "test": "tests/silent-test-subject-phase.test.ts [ tests/silent-test-subject-phase.test.ts ]",
+      "resource_error": true,
+      "capacity_guard": false
+    },
+    {
+      "test": "tests/silent-thief-unknown.test.ts [ tests/silent-thief-unknown.test.ts ]",
+      "resource_error": true,
+      "capacity_guard": false
+    },
+    {
+      "test": "tests/silent-upgrade-preview.test.ts [ tests/silent-upgrade-preview.test.ts ]",
+      "resource_error": true,
+      "capacity_guard": false
+    },
+    {
+      "test": "tests/silent-upgraded-malaise.test.ts [ tests/silent-upgraded-malaise.test.ts ]",
+      "resource_error": true,
+      "capacity_guard": false
+    },
+    {
+      "test": "tests/silent-upgraded-wave.test.ts [ tests/silent-upgraded-wave.test.ts ]",
+      "resource_error": true,
+      "capacity_guard": false
+    },
+    {
+      "test": "tests/silent-vambrace-frail.test.ts [ tests/silent-vambrace-frail.test.ts ]",
+      "resource_error": true,
+      "capacity_guard": false
+    },
+    {
+      "test": "tests/sl-draws-offtop.test.ts [ tests/sl-draws-offtop.test.ts ]",
+      "resource_error": true,
+      "capacity_guard": false
+    },
+    {
+      "test": "tests/sl-draws-pommel.test.ts [ tests/sl-draws-pommel.test.ts ]",
+      "resource_error": true,
+      "capacity_guard": false
+    },
+    {
+      "test": "tests/sl-explore-where.test.ts [ tests/sl-explore-where.test.ts ]",
+      "resource_error": true,
+      "capacity_guard": false
+    },
+    {
+      "test": "tests/sl-giant-final-resources.test.ts [ tests/sl-giant-final-resources.test.ts ]",
+      "resource_error": true,
+      "capacity_guard": false
+    },
+    {
+      "test": "tests/sl-giant-phase.test.ts [ tests/sl-giant-phase.test.ts ]",
+      "resource_error": true,
+      "capacity_guard": false
+    },
+    {
+      "test": "tests/sl-inferno-judge.test.ts [ tests/sl-inferno-judge.test.ts ]",
+      "resource_error": true,
+      "capacity_guard": false
+    },
+    {
+      "test": "tests/sl-judge-bounds.test.ts [ tests/sl-judge-bounds.test.ts ]",
+      "resource_error": true,
+      "capacity_guard": false
+    },
+    {
+      "test": "tests/subscription-usage.test.ts [ tests/subscription-usage.test.ts ]",
+      "resource_error": true,
+      "capacity_guard": false
+    },
+    {
+      "test": "tests/test-blocks.test.ts [ tests/test-blocks.test.ts ]",
+      "resource_error": true,
+      "capacity_guard": false
+    },
+    {
+      "test": "tests/v5-deck-budget.test.ts [ tests/v5-deck-budget.test.ts ]",
+      "resource_error": true,
+      "capacity_guard": false
+    },
+    {
+      "test": "tests/v6-appearance.test.ts [ tests/v6-appearance.test.ts ]",
+      "resource_error": true,
+      "capacity_guard": false
+    },
+    {
+      "test": "tests/v6-build-core-pooled.test.ts [ tests/v6-build-core-pooled.test.ts ]",
+      "resource_error": true,
+      "capacity_guard": false
+    },
+    {
+      "test": "tests/v6-build-core.test.ts [ tests/v6-build-core.test.ts ]",
+      "resource_error": true,
+      "capacity_guard": false
+    },
+    {
+      "test": "tests/v6-construction-safety.test.ts [ tests/v6-construction-safety.test.ts ]",
+      "resource_error": true,
+      "capacity_guard": false
+    },
+    {
+      "test": "tests/v6-formats.test.ts [ tests/v6-formats.test.ts ]",
+      "resource_error": true,
+      "capacity_guard": false
+    },
+    {
+      "test": "tests/v6-frozen-input.test.ts [ tests/v6-frozen-input.test.ts ]",
+      "resource_error": true,
+      "capacity_guard": false
+    },
+    {
+      "test": "tests/v6-frozen-route.test.ts [ tests/v6-frozen-route.test.ts ]",
+      "resource_error": true,
+      "capacity_guard": false
+    },
+    {
+      "test": "tests/v6-history-targets.test.ts [ tests/v6-history-targets.test.ts ]",
+      "resource_error": true,
+      "capacity_guard": false
+    },
+    {
+      "test": "tests/v6-infrastructure.test.ts [ tests/v6-infrastructure.test.ts ]",
+      "resource_error": true,
+      "capacity_guard": false
+    },
+    {
+      "test": "tests/v6-precompute.test.ts [ tests/v6-precompute.test.ts ]",
+      "resource_error": true,
+      "capacity_guard": false
+    },
+    {
+      "test": "tests/v6-predicate-context.test.ts [ tests/v6-predicate-context.test.ts ]",
+      "resource_error": true,
+      "capacity_guard": false
+    },
+    {
+      "test": "tests/v6-projection-entries.test.ts [ tests/v6-projection-entries.test.ts ]",
+      "resource_error": true,
+      "capacity_guard": false
+    },
+    {
+      "test": "tests/v6-prompt-projection.test.ts [ tests/v6-prompt-projection.test.ts ]",
+      "resource_error": true,
+      "capacity_guard": false
+    },
+    {
+      "test": "tests/v6-route-entry.test.ts [ tests/v6-route-entry.test.ts ]",
+      "resource_error": true,
+      "capacity_guard": false
+    },
+    {
+      "test": "tests/paper-dataset-git.test.ts > pins Git export and verification to one ref snapshot and fails the CLI on source mismatches",
+      "resource_error": true,
+      "capacity_guard": true
+    },
+    {
+      "test": "tests/strategy-implementation.test.ts > binds the approved implementation through the existing broker and host before model start",
+      "resource_error": true,
+      "capacity_guard": true
+    },
+    {
+      "test": "tests/worktree-storage.test.ts > evicts only idle Git copies and restores SHA verified original inputs without completing failed tasks",
+      "resource_error": true,
+      "capacity_guard": true
+    }
+  ],
+  "literal_no_space_errors": 247,
+  "capacity_guard_messages": 10,
+  "capacity_at_readback": [
+    {
+      "path": "/home/dw/Projects/agent-sts2",
+      "free_bytes": 275101642752,
+      "free_inodes": 62603442,
+      "total_inodes": 67108864
+    },
+    {
+      "path": "/tmp",
+      "free_bytes": 52704010240,
+      "free_inodes": 1570,
+      "total_inodes": 1048576
+    }
+  ],
+  "original_worktree_and_check_leases_nonblocking_free": true,
+  "gitleaks_rc": 0,
+  "source_commit": null,
+  "reason_not_committed": "Required original host full failed; keep exact staged candidate, no source acceptance or delivery without complete pass. User forbids unchanged-source full retry. /tmp is outside repository mutation scope.",
+  "main": "8c0d4b608df1df27177f6eb8f5cc55185613bf82",
+  "live": "c351dbe7b5603bbb591e0f63d88be32fa60df56f",
+  "no_environment_or_source_changes_or_full_retry": true,
+  "original_failed_rc0_mergednull_and_sandbox_results_untouched": true
+}
