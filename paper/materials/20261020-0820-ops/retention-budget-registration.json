@@ -1,0 +1,21 @@
+{
+  "command": [
+    "python3",
+    "ops/worktree_retention.py",
+    "complete",
+    "--workspace",
+    "codex-fix-silent-20261020-064302",
+    "--source",
+    "c299eaf3e49cc9b9ef7af086d5df2de51d59ed09",
+    "--main-commit",
+    "6c77a9535396d98f7802749e6399db6c52aa3e4e",
+    "--live-commit",
+    "c351dbe7b5603bbb591e0f63d88be32fa60df56f"
+  ],
+  "rc": 0,
+  "stdout": "{\"schema\": \"workspace-lifecycle-v1\", \"root\": \"/home/dw/Projects/agent-sts2\", \"worktree\": \"/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261020-064302\", \"state\": \"accepted\", \"at\": \"2026-10-20T08:24:03+08:00\", \"acceptance\": {\"source\": \"c299eaf3e49cc9b9ef7af086d5df2de51d59ed09\", \"base\": \"b0aacef4130b26ec72e6f75ee649c2d94c3d1aff\", \"main_commit\": \"6c77a9535396d98f7802749e6399db6c52aa3e4e\", \"live_commit\": \"c351dbe7b5603bbb591e0f63d88be32fa60df56f\", \"verified_source_paths\": [\"agent/src/eye/decision-log.ts\", \"agent/src/hand/loop.ts\", \"agent/src/hand/screens/v6-room-options.ts\", \"agent/src/knowledge/card-upgrades.ts\", \"agent/src/memory/types.ts\", \"agent/src/sim/v6-start.ts\", \"agent/src/v6/card-pick.ts\", \"agent/src/v6/config.ts\", \"agent/src/v6/construction-safety.ts\", \"agent/src/v6/direction-runtime.ts\", \"agent/src/v6/log.ts\", \"agent/src/v6/potion-entries.ts\", \"agent/src/v6/replan-triggers.ts\", \"agent/tests/card-upgrade-data/catalog.json\", \"agent/tests/card-upgrade-data/logged-faces.jsonl\", \"agent/tests/card-upgrade-data/upgrades.json\", \"agent/tests/card-upgrade-text.test.ts\", \"agent/tests/ops-current-budget.test.ts\", \"agent/tests/v6-card-pick.test.ts\", \"agent/tests/v6-construction-safety.test.ts\", \"agent/tests/v6-direction-runtime.test.ts\", \"agent/tests/v6-potions.test.ts\", \"agent/tests/v6-room.test.ts\", \"knowledge/builders/build-card-upgrades.py\", \"knowledge/builders/test_card_upgrades.py\", \"knowledge/common/card-upgrades.json\", \"ops/ops_current.py\", \"ops/tests/test_ops_current_budget.py\"], \"scope\": \"workspace-only; no parent request or gameplay claim closed\", \"allocation_receipt\": \"ops/codex-ops/retention/allocations/codex-fix-silent-20261020-064302.json\", \"allocation_sha256\": \"c13e3217a46f3dfe0ac3d75d949cf826abae650643477f7e63590f7d9c96c35a\"}}\n",
+  "stderr": "",
+  "no_worktree_deleted": true,
+  "041302_original_joint_workspace_retained": "e507 includes appearance source not shipped to live; original acceptance must not be forged",
+  "R3_research_workspace_retained_until_live_readback": true
+}

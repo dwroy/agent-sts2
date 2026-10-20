@@ -4904,3 +4904,5 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
 - 2026-10-20 08:08:49 CST [运维 codex/普通收尾核读] 074302本批无源码，8waiting/2duplicate祖先核同；原dataset唯一一次后因并行源码变化attention，保失败/现场/宽父，不重dataset或合入。原件：paper/materials/20261020-0808-ops/receipt.json。
 
 - 2026-10-20 08:13:21 CST [运维 codex/原保存局恢复] 核新授权4b88，原Herdr/Nova六开关恢复c2c54e5/R402同局MWMR855QHTWR，08:11:10.008 restart配置、08:12:14.607首领奖动作完成，旧STOP/fault归档；方向耗时降级继续实测，不运新源码/冒已知Jev或科学闭环。原件：paper/materials/20261020-0809-ops/receipt.json。
+
+- 2026-10-20 08:25:29 CST [运维 codex/六叶交付及R3 main发布] 联合4d9a完整0，e507源六叶窄入main/live并保各精确已验树；原R3真实CLI登记8f9bd，三知识叶main6c77/85条固定消费者读回，sidecar缺口保留。live三叶留原局自然边界，旧失败/父/ACK不代完成，沿新恢复授权不重放STOP。原件：paper/materials/20261020-0820-ops/receipt.json。
