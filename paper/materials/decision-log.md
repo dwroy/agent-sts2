@@ -5228,3 +5228,5 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
 - 2026-10-20 17:54:07 CST [Claude/Roy，V6 出牌回 V5、小脑记忆转构筑] Roy 同意：出牌保持 V5 逻辑，下一开局边界 V6_COMBAT_ENTRIES=off（题面按代码恢复 V5 原样，无关的 bug 修复保留），登记新版本；现 85 条出牌小脑条目保留不删、不再进出牌题。小脑记忆目的改为服务构筑模块的 Jev 拿牌：v6-w8 在方向题面修复后给 reflex-entry-v1 最小追加对照式 card_pick 条目（牌组状态+候选条件、对照差值/基线/样本/误差，置信度由数据算），接入 v6-w4w6 新拿牌题（V6_REFLEX=on 才发、只发区间不含 0 者），并写学习者模板 v6-reflex-distill-r4 交 ops 派发。已发 ops、watcher、v6-w8。
 
 - 2026-10-20T17:56:46+08:00 ops：记录Roy/Claude18:0x标签授权，下一自然新局仅COMBAT_ENTRIES=off恢复V5出牌，85知识/其他V6设置及无关修复保留；准备未应用补丁，实际边界验收后核live/新release/双通知/首题读回，当前不热切。原件 paper/materials/20261020-roy-v5-combat-boundary-ops/authorization-original.md。
+
+- 2026-10-20T18:01:18+08:00 ops：164301策略六暂存候选SHA冻结，原沙箱EXDEV基线/红绿原件保留，精确main六叶预演待原host槽；分组牌堆可用性限定原文及两状态字节核验经通知5978007a送watcher，后角色未代ACK，不运整main/805或关父。原件 paper/materials/20261020-1757-ops/receipt.json。

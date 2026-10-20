@@ -1,0 +1,105 @@
+{
+  "task": "strategy-proposal",
+  "character": "silent",
+  "batch": "20261020-164301-strategy-proposal",
+  "status": "blocked",
+  "base": "335764ba5c77a985d1874782424de25ff697c791",
+  "runs": [
+    "VLZ6CCT8AQ0A",
+    "8JRE1C4H4Z2W",
+    "CA5KE8GFJ9X2",
+    "5PM6JAQG6FNQ",
+    "61E2QS63Y9WU",
+    "DUZUBAJ3A8GP"
+  ],
+  "fixes": [],
+  "skipped": [],
+  "merged": null,
+  "tests": {
+    "tsc": 0,
+    "vitest": 1,
+    "cases": 6
+  },
+  "code_proposals": [
+    "silent-proposal-89354805ee4d7e77",
+    "silent-proposal-283a164780d11e69"
+  ],
+  "implementation_domains": [
+    "combat",
+    "structure"
+  ],
+  "proposal_results": [
+    {
+      "id": "silent-proposal-89354805ee4d7e77",
+      "state": "waiting",
+      "reason": "猎杀者窄补丁未提交/live；仍缺实际施放持续身份、跨SL读回及其他升级交互校准。"
+    },
+    {
+      "id": "silent-proposal-f2bfceddb1898dca",
+      "state": "waiting",
+      "reason": "VLZ F45T1只有707ms/1样本；缺同总预算、完整随机池的MC配对及成熟度曲线。"
+    },
+    {
+      "id": "silent-proposal-283a164780d11e69",
+      "state": "waiting",
+      "reason": "同源神化宽提案；窄补丁未发布，持续身份及其他升级交互未完成，不可登记duplicate。"
+    },
+    {
+      "id": "silent-proposal-ebbfe3b97548756d",
+      "state": "waiting",
+      "reason": "十五子项的属性、升级、期限，以及战斗/路线/休息消费者缺联合校准。"
+    },
+    {
+      "id": "silent-proposal-e5b87be50f28f311",
+      "state": "waiting",
+      "reason": "8JRE局部12HP换7伤已核；缺跨抽牌、重问、药水与SL的完整候选持续关联及生产校准。"
+    },
+    {
+      "id": "silent-proposal-49632bc4878fb597",
+      "state": "waiting",
+      "reason": "CA5缺正敏捷实测及力/敏/弱/独立成长四路径联合校准。"
+    },
+    {
+      "id": "silent-proposal-66532328a585941f",
+      "state": "waiting",
+      "reason": "5PM缺相同HP、构筑、药水及完整抽序下启动顺序的整战配对。"
+    },
+    {
+      "id": "silent-proposal-43a76a31ba7bdcfa",
+      "state": "waiting",
+      "reason": "61E F17首试胜；缺同起点抽序的另一完整SL线路及生产配对。"
+    },
+    {
+      "id": "silent-proposal-5264153a4a4b0e5c",
+      "state": "waiting",
+      "reason": "61E F23缺召唤/航行/复现/退场全链校准及另一目标序完整后继。"
+    },
+    {
+      "id": "silent-proposal-bddfa690a84e03d0",
+      "state": "waiting",
+      "reason": "DUZ四试败；缺同抽换序后继及唤醒/眩晕/成长全链校准。"
+    }
+  ],
+  "uncommitted_patch": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261020-164301/learner/runs/20261020-164305-b8402bfa-7d70-4359-9d53-d91261b31cb1-strategy-proposal/review-final.patch",
+  "blocked": [
+    "原沙箱入口唯一失败为content-store.test.ts:59；撤本批四份生产源码后相同断言仍失败，诊断回执明确EXDEV跨挂载硬链接。未达到提交前exit0，不创建源码提交。",
+    "锁内确认原W3-805运输禁令，main/live另有186个本批以外源码/知识差异；不整支合入live。"
+  ],
+  "questions": [
+    {
+      "claim": "旧等待记录把729帧无actual/piles快照写成缺牌堆，容易被理解为本局没有战内牌堆证据。",
+      "finding": "本批原始states的agent_view确有分组draw/discard/exhaust投影，F43T1猎杀者15→20可核；它仍不提供完整卡实例身份或确定抽序。只纠正证据可用性范围，不补胜率或自然收益。",
+      "evidence": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261020-164301/learner/runs/20261020-164305-b8402bfa-7d70-4359-9d53-d91261b31cb1-strategy-proposal/predator-grouped-pair.json",
+      "recommendation": "原ops读取本批报告后，按原ops→watcher→Roy链传递这一限定；保留旧记录，后续任务使用完整字段路径，不新增独立局分母。",
+      "affected_proposals": [
+        "silent-proposal-89354805ee4d7e77",
+        "silent-proposal-283a164780d11e69"
+      ],
+      "delivery_status": "pending_ops_watcher_roy"
+    }
+  ],
+  "gitleaks": 0,
+  "release_id": null,
+  "proposal": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261020-164301/learner/runs/20261020-164305-b8402bfa-7d70-4359-9d53-d91261b31cb1-strategy-proposal/proposal.md",
+  "report": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261020-164301/learner/runs/20261020-164305-b8402bfa-7d70-4359-9d53-d91261b31cb1-strategy-proposal/report.md"
+}

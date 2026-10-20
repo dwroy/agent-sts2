@@ -4543,3 +4543,22 @@ request_id=roy-20261017-human-pace-h0 revision=3 input_sha256=1e1c259a15f1824119
 
 2026-10-20T17:56:46+08:00 已原样冻结Roy新决定并置于短清单最高优先级：下一自然新局边界只把V6_COMBAT_ENTRIES从on改off，出牌回V5原题面，小脑条目不进出牌题，其余V6设置保持。已只读核live现有off入口会跳过条目加载并返回原V5投影，准备单项运行时补丁但未应用，避免当前局或中途resume热切。85条知识保留；战斗预算、蛇咬rollout及其他无关修复继续原精确上线，805暂停不变。原W4v2唯一full与固定输入不动，释放后将此单项配置补丁纳入原ops运输验收，再于实际新局边界核live行为提交、分配新release并双通知；当前不预分号或宣称已生效。届时核run-config开关及首个出牌请求恢复V5投影、无V6条目，登记首动作。已沿原watcher/W4线程转达授权，CLI不冒接收确认；构筑小脑另行派发，本轮不新开学习父、批次、模型或API。Regent、当前actor和STOP保持；前轮infra38源核验与私有live预演记录已保存，仍不冒实际运输完成。
 原件 paper/materials/20261020-roy-v5-combat-boundary-ops/authorization-original.md；receipt.json；next-boundary-runtime.patch。
+
+- 2026-10-20T17:59:17.379961 [ops学习通知/disagreement] silent-proposal-89354805ee4d7e77：[
+  {
+    "claim": "旧等待记录把729帧无actual/piles快照写成缺牌堆，容易被理解为本局没有战内牌堆证据。",
+    "finding": "本批原始states的agent_view确有分组draw/discard/exhaust投影，F43T1猎杀者15→20可核；它仍不提供完整卡实例身份或确定抽序。只纠正证据可用性范围，不补胜率或自然收益。",
+    "evidence": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261020-164301/learner/runs/20261020-164305-b8402bfa-7d70-4359-9d53-d91261b31cb1-strategy-proposal/predator-grouped-pair.json",
+    "recommendation": "原ops读取本批报告后，按原ops→watcher→Roy链传递这一限定；保留旧记录，后续任务使用完整字段路径，不新增独立局分母。",
+    "affected_proposals": [
+      "silent-proposal-89354805ee4d7e77",
+      "silent-proposal-283a164780d11e69"
+    ],
+    "delivery_status": "pending_ops_watcher_roy"
+  }
+]
+ 回执/home/dw/Projects/agent-sts2/ops/codex-ops/learning-notices/5978007ac8c26a658bf82f4e.json；watcher须读取并告知Roy，尚未确认用户收到。<!-- learning-notice:5978007ac8c26a658bf82f4e -->
+
+
+2026-10-20T18:01:18+08:00 已核本批六个暂存文件及补丁SHA与pending-source一致，原工作树HEAD335不变、无未暂存差异；窄实现尚未提交或上线。六固定例撤源码5败1过、恢复6过的原日志保留；沙箱tsc0、5078过1败与两次中断分列，撤四生产修改后content-store仍EXDEV，不能据此冒候选通过或归为产品根因。已准备当前main仅叠六叶的私有预演eaaaa，六目标文件基线未漂移；宿主完整验收排既有W4v2与ops infra/运行时项之后，不抢窗口或重复模型。学习者指出顶层actual/piles缺失不等agent_view无分组牌堆；两原状态offset字节SHA已直接核同，完整异议、证据和旧观点差异已原样双收件箱并交watcher，通知5978007a仅ops真实转达，后角色待真回执，不称Roy已知。十项提案仍waiting，不由窄补丁关闭持续身份、跨SL或其他校准缺口。本轮不补游戏知识、dataset或重full，805暂停、下一自然局COMBAT_ENTRIES=off及85知识保留要求继续，live/actor/STOP/Regent不动。
+原件 paper/materials/20261020-1757-ops/receipt.json；verification.json；questions.json；candidate-main-preview.json。

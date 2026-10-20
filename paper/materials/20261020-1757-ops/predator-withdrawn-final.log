@@ -1,0 +1,142 @@
+
+ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261020-164301/agent
+
+ ❯ tests/silent-apotheosis-predator.test.ts (6 tests | 5 failed) 55ms
+   × upgrades the recorded printed damage without drawing on the current turn 12ms
+   × carries the two observed extra draws to exactly the following turn 20ms
+   × matches the recorded upgraded cast and its pending two-card power 2ms
+   × reads a native pending power only for the observed role and level 8ms
+   × upgrades a later pile draw before that cast schedules its following-turn draw 8ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 5 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/silent-apotheosis-predator.test.ts > upgrades the recorded printed damage without drawing on the current turn
+AssertionError: expected { index: 1, key: 'c1', …(37) } to match object { upgraded: true, known: true, …(3) }
+(34 matching properties omitted from actual)
+
+- Expected
++ Received
+
+  {
+    "cost": 2,
+-   "damage": 20,
++   "damage": 15,
+    "draw": 0,
+-   "known": true,
+-   "upgraded": true,
++   "known": false,
++   "upgraded": false,
+  }
+
+ ❯ tests/silent-apotheosis-predator.test.ts:35:20
+     33|   const saved = JSON.stringify(original);
+     34|   const upgraded = applyApotheosisUpgrade(original);
+     35|   expect(upgraded).toMatchObject({ upgraded: true, known: true, damage…
+       |                    ^
+     36|   expect(applyApotheosisUpgrade(upgraded)).toEqual(upgraded);
+     37|   const input = board({ bossHp: 1000 }).solver;
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/5]⎯
+
+ FAIL  tests/silent-apotheosis-predator.test.ts > carries the two observed extra draws to exactly the following turn
+AssertionError: expected [ 15, 5, 5 ] to deeply equal [ 20, 7, 5 ]
+
+- Expected
++ Received
+
+  [
+-   20,
+-   7,
++   15,
++   5,
+    5,
+  ]
+
+ ❯ tests/silent-apotheosis-predator.test.ts:65:37
+     63|   const records = simulateFight(input, plan, 3, 1, false).records;
+     64|   expect(records).toHaveLength(3);
+     65|   expect(records.map((r) => r.dmg)).toEqual([20, 7, 5]);
+       |                                     ^
+     66|   expect(records[0]!.snap.pw["DRAW_CARDS_NEXT_TURN_POWER"]).toBe(2);
+     67|   expect(records[1]!.snap.pw["DRAW_CARDS_NEXT_TURN_POWER"]).toBeUndefi…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/5]⎯
+
+ FAIL  tests/silent-apotheosis-predator.test.ts > matches the recorded upgraded cast and its pending two-card power
+AssertionError: expected { index: 1, key: 'c1', …(37) } to match object { damage: 21, cost: 2, draw: +0, …(1) }
+(36 matching properties omitted from actual)
+
+- Expected
++ Received
+
+  {
+    "cost": 2,
+    "damage": 21,
+    "draw": 0,
+-   "predatorDrawNext": 2,
+  }
+
+ ❯ tests/silent-apotheosis-predator.test.ts:94:17
+     92|   const raw = evidence.upgraded;
+     93|   const model = modelHandCard(raw, raw.index, knowledge, "silent", 10);
+     94|   expect(model).toMatchObject({ damage: 21, cost: 2, draw: 0, predator…
+       |                 ^
+     95|   expect(evidence.cast_before.player.energy - evidence.cast_after.play…
+     96|   expect(evidence.cast_before.enemies[0]!.current_hp - evidence.cast_a…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/5]⎯
+
+ FAIL  tests/silent-apotheosis-predator.test.ts > reads a native pending power only for the observed role and level
+AssertionError: expected [ +0, 5, 5 ] to deeply equal [ +0, 7, 5 ]
+
+- Expected
++ Received
+
+  [
+    0,
+-   7,
++   5,
+    5,
+  ]
+
+ ❯ tests/silent-apotheosis-predator.test.ts:116:39
+    114|     const plan = replaySteps(input.solver, [])!;
+    115|     const records = simulateFight(input, plan, 3, 1, false).records;
+    116|     expect(records.map((r) => r.dmg)).toEqual([0, expected, 5]);
+       |                                       ^
+    117|   }
+    118| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/5]⎯
+
+ FAIL  tests/silent-apotheosis-predator.test.ts > upgrades a later pile draw before that cast schedules its following-turn draw
+AssertionError: expected [ +0, 19, 5, 5 ] to deeply equal [ +0, 24, 7, 5 ]
+
+- Expected
++ Received
+
+  [
+    0,
+-   24,
+-   7,
++   19,
++   5,
+    5,
+  ]
+
+ ❯ tests/silent-apotheosis-predator.test.ts:129:37
+    127|   const plan = replaySteps(input.solver, [step(input.solver.hand[0]!)]…
+    128|   const records = simulateFight(input, plan, 4, 1, false).records;
+    129|   expect(records.map((r) => r.dmg)).toEqual([0, 24, 7, 5]);
+       |                                     ^
+    130| });
+    131|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/5]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  5 failed | 1 passed (6)
+   Start at  17:26:19
+   Duration  906ms (transform 601ms, setup 316ms, import 406ms, tests 55ms, environment 0ms)
+

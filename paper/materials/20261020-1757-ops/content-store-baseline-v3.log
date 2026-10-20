@@ -1,0 +1,30 @@
+
+ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261020-164301/agent
+
+ ❯ tests/content-store.test.ts (3 tests | 1 failed | 2 skipped) 148ms
+   × the original host finalizes only after its fake model closes; storage failure=false never reruns it 147ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/content-store.test.ts > the original host finalizes only after its fake model closes; storage failure=false never reruns it
+AssertionError: expected 'retained' to be 'sealed' // Object.is equality
+
+Expected: "sealed"
+Received: "retained"
+
+ ❯ tests/content-store.test.ts:59:30
+     57|       expect(readdirSync(join(root, "ops/codex-ops/queue"))).toHaveLen…
+     58|     } else {
+     59|       expect(receipt.status).toBe("sealed");
+       |                              ^
+     60|       expect(statSync(join(receipt.files[0].content.store, receipt.fil…
+     61|         .toBe(statSync(join(scratch, "states.evidence.jsonl")).ino);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 2 skipped (3)
+   Start at  17:38:46
+   Duration  1.35s (transform 893ms, setup 327ms, import 759ms, tests 148ms, environment 0ms)
+
