@@ -151,3 +151,30 @@ it("keeps Boss rows if an optional elite opening throws, with the failure retain
   expect(cardResultKnown(results, "take")).toBe(true);
   expect(results.immediate.filter(row => row.target_id === "elite").every(row => row.unknown_reasons.includes("opening_builder_error:Error: fixed missing opening"))).toBe(true);
 });
+it("does not simulate or publish a playable unmodelled card as a blank measured option", async () => {
+  const r = request(), prepare = r.prepare;
+  r.prepare = (target, state, option) => {
+    const result = prepare(target, state, option)!;
+    if (state.cards.some(c => c.id === "A")) result.input.piles.draw.push({ ...result.input.piles.draw[0]!,
+      cardId: "UNMODELLED_FIXTURE", key: "unsupported", playable: true, type: "Skill", known: false });
+    return result;
+  };
+  const runner = new Runner(), engine = new V6CardResultsEngine(runner, () => 0, 8);
+  const table = await engine.evaluate(r, { fingerprint: "unsupported" });
+  expect(runner.calls.every(call => call.decks.every(deck => !deck.piles.draw.some(c => c.cardId === "UNMODELLED_FIXTURE")))).toBe(true);
+  const row = table.immediate.find(row => row.option_id === "take")!;
+  expect(row).toMatchObject({ samples: 0, metrics: { hp_loss: null, death_rate: null },
+    paired_delta: { hp_loss: null, death_rate: null }, unknown_reasons: expect.arrayContaining(["unmodelled_card:UNMODELLED_FIXTURE"]) });
+  expect(cardResultKnown(table, "take")).toBe(false); expect(cardResultKnown(table, "skip")).toBe(true);
+  const prepared = r.prepare(r.targets[0]!, r.options[0]!.state)!;
+  // Even stale externally supplied numbers cannot override the unsupported-card guard.
+  const samples = [outcome(true), outcome(true)];
+  expect(Object.values(cardCombatRow("take", r.targets[0]!, prepared, samples, samples, r.trust(r.targets[0]!)).metrics)
+    .every(value => value === null)).toBe(true);
+  // An unsupported baseline cannot provide a fabricated paired comparison for a supported option.
+  const baseline = prepare(r.targets[0]!, r.baseline.state)!;
+  const paired = cardCombatRow("skip", r.targets[0]!, baseline, samples, samples, r.trust(r.targets[0]!), 8, prepared);
+  expect(paired.metrics.death_rate).toMatchObject({ mean: 0, n: 2 });
+  expect(Object.values(paired.paired_delta).every(value => value === null)).toBe(true);
+  expect(paired.unknown_reasons).toContain("baseline_unmodelled_card:UNMODELLED_FIXTURE");
+});
