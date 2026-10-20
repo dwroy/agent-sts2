@@ -1,0 +1,53 @@
+
+ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261021-051301-s2/agent
+
+ ❯ tests/silent-legion-forge.test.ts (4 tests | 2 failed) 184ms
+   × the original production input predicts the observed 37 Block across the drink 136ms
+   × keeps different ascensions, enemies, enchanted faces and extra modifiers outside the new scope 2ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/silent-legion-forge.test.ts > the original production input predicts the observed 37 Block across the drink
+AssertionError: expected 50 to be 37 // Object.is equality
+
+- Expected
++ Received
+
+- 37
++ 50
+
+ ❯ tests/silent-legion-forge.test.ts:63:88
+     61| it("the original production input predicts the observed 37 Block acros…
+     62|   const input = captured("287999");
+     63|   expect(replaySteps(input, plays(input, [0, "forge", 2, 3, 4]))!.outc…
+       |                                                                                        ^
+     64| });
+     65|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  tests/silent-legion-forge.test.ts > keeps different ascensions, enemies, enchanted faces and extra modifiers outside the new scope
+AssertionError: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ tests/silent-legion-forge.test.ts:82:26
+     80|     return paelsLegionPreview(raw.run, raw.combat);
+     81|   };
+     82|   expect(test(() => {})).toBe(true);
+       |                          ^
+     83|   expect(test((raw) => { raw.run.ascension = 9; })).toBe(false);
+     84|   expect(test((raw) => { raw.run.floor = 33; })).toBe(false);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  2 failed | 2 passed (4)
+   Start at  05:38:24
+   Duration  1.91s (transform 1.31s, setup 266ms, import 1.33s, tests 184ms, environment 0ms)
+

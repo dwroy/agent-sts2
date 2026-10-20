@@ -1,0 +1,125 @@
+已完成士兵/熔炉组合的窄修复：预测格挡由 50 修正为实测 37。局部 10 项测试通过；沙箱全套有 8 项失败，撤掉补丁后同样复现，因此未提交、未合入。源码、补丁和失败日志均已保留。
+
+[报告](learner/runs/20261021-051319-e5458a0c-1ba2-456d-ab95-7bcd0b3f14bd-strategy-proposal/report.md) · [提案](learner/runs/20261021-051319-e5458a0c-1ba2-456d-ab95-7bcd0b3f14bd-strategy-proposal/proposal.md)
+
+```json
+{
+  "task": "strategy-proposal",
+  "character": "silent",
+  "batch": "20261021-051301-s2-strategy-proposal",
+  "base": "2ddf207c0fbdbde86df343661e88c8a42bdcb6c5",
+  "runs": [
+    "RC61MFQM63Y6",
+    "XTSV1U9JD34T",
+    "BTSRF7JL1W1Y",
+    "9Z9H2EXKLF3T",
+    "HMVJKM56S4Q8",
+    "F4QKG4J1AJJZ",
+    "G403VCZ3BH1B",
+    "25226ZFLNR1J",
+    "JLN5SK17W4FQ",
+    "JMH5C51RLN4E"
+  ],
+  "fixes": [],
+  "skipped": [
+    {
+      "item": "T10士兵与熔炉组合",
+      "reason": "补丁及固定回归已完成；规定沙箱套件8项基线失败，提交与合入门禁未通过，现场保留。"
+    }
+  ],
+  "merged": null,
+  "tests": {
+    "tsc": 0,
+    "vitest": 1,
+    "cases": 5196
+  },
+  "targeted_tests": {
+    "vitest": 0,
+    "files": 2,
+    "cases": 10,
+    "fails_without_fix": true
+  },
+  "ledger": ["silent-0546"],
+  "code_proposals": [
+    "silent-proposal-03754e1265894000",
+    "silent-proposal-ab055ef7dfbb44e5",
+    "silent-proposal-0129c465c6f5bd79",
+    "silent-proposal-abe9d5d0be109a9f",
+    "silent-proposal-f16527e59b5cc1e0",
+    "silent-proposal-7a8e9ccb7e646538",
+    "silent-proposal-cd9f76184de6e29a",
+    "silent-proposal-292f6731bdb9b669",
+    "silent-proposal-0802f69b28d25079",
+    "silent-proposal-763a4b9d9f17b815"
+  ],
+  "implementation_domains": ["combat", "potion"],
+  "proposal_results": [
+    {
+      "id": "silent-proposal-03754e1265894000",
+      "state": "waiting",
+      "reason": "已核RC局部窗口；八组件其余修饰窗口及联合生产回放未齐。"
+    },
+    {
+      "id": "silent-proposal-ab055ef7dfbb44e5",
+      "state": "waiting",
+      "reason": "幽灵已有live窄实现；缺其他复制对象及延后饮用的同条件完整后继。"
+    },
+    {
+      "id": "silent-proposal-0129c465c6f5bd79",
+      "state": "waiting",
+      "reason": "普通单弃、毒胜保血已有live窄实现；抽弃绑定、接管及复制后继未联合核验。"
+    },
+    {
+      "id": "silent-proposal-abe9d5d0be109a9f",
+      "state": "waiting",
+      "reason": "已核连战资源接续；缺原115局资源消费者校准和同条件干预对照。"
+    },
+    {
+      "id": "silent-proposal-f16527e59b5cc1e0",
+      "state": "waiting",
+      "reason": "已核局部减力、格挡及幽灵窗口；全部期限、多增益和留挡联合回放未齐。"
+    },
+    {
+      "id": "silent-proposal-7a8e9ccb7e646538",
+      "state": "waiting",
+      "reason": "T10窄修补丁完成，撤源码失败、恢复10项通过；沙箱8项基线失败阻止提交和合入，其他子项仍待证。"
+    },
+    {
+      "id": "silent-proposal-cd9f76184de6e29a",
+      "state": "waiting",
+      "reason": "已核十局16对跨幕端点；缺另外三支持局、原116局联合校准及同条件路线对照。"
+    },
+    {
+      "id": "silent-proposal-292f6731bdb9b669",
+      "state": "waiting",
+      "reason": "支持局7X0W3U8TVA2A不在本批，其他毒窗口不能代证。"
+    },
+    {
+      "id": "silent-proposal-0802f69b28d25079",
+      "state": "waiting",
+      "reason": "支持局MTQ0EUBJ3R6T不在本批，四次SL输入及独立验证未补齐。"
+    },
+    {
+      "id": "silent-proposal-763a4b9d9f17b815",
+      "state": "waiting",
+      "reason": "两原支持局均不在本批，十四组件和昏眩合法窗口不能跨局代证。"
+    }
+  ],
+  "pending_changes": {
+    "commit": null,
+    "patch": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261021-051301-s2/learner/runs/20261021-051319-e5458a0c-1ba2-456d-ab95-7bcd0b3f14bd-strategy-proposal/source.patch"
+  },
+  "report": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261021-051301-s2/learner/runs/20261021-051319-e5458a0c-1ba2-456d-ab95-7bcd0b3f14bd-strategy-proposal/report.md"
+}
+```
+
+== 学习者 codex / strategy-proposal ==
+状态：success；退出码 0
+模型：gpt-6.1-sol；会话：01a15b29-7354-7aa2-9360-0b771efc610d
+轮数：1；工具调用：command_execution×118 file_change×6
+token：输入 337.5k、输出 54.6k（其中推理 20.1k）、cache 读 17988.1k、cache 写 0（命中 98.2%）
+成本：未提供
+耗时：1744.4 s（墙钟）
+时间：首个事件 31.3 s、模型首个输出 36.1 s、首次工具 42.5 s、末次工具结束 1710.2 s；工具内共 1299.7 s，其余（模型生成、推理、网络）413.3 s
+codex 会话记录：AGENTS.md 已加载（/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261021-051301-s2）；模型的工具调用 exec×84；/home/dw/Projects/agent-sts2/ops/codex-ops/accounts/codex1/learner/sessions/2026/10/21/rollout-2026-10-21T05-13-25-01a15b29-7354-7aa2-9360-0b771efc610d.jsonl
+日志：/home/dw/Projects/agent-sts2/learner/runs/20261021-051319-e5458a0c-1ba2-456d-ab95-7bcd0b3f14bd-strategy-proposal.jsonl

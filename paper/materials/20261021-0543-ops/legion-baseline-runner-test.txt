@@ -1,0 +1,33 @@
+
+ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261021-051301-s2/agent
+
+ ❯ tests/silent-legion-forge.test.ts (3 tests | 1 failed) 182ms
+   × the original production input predicts the observed 37 Block across the drink 137ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/silent-legion-forge.test.ts > the original production input predicts the observed 37 Block across the drink
+AssertionError: expected 50 to be 37 // Object.is equality
+
+- Expected
++ Received
+
+- 37
++ 50
+
+ ❯ tests/silent-legion-forge.test.ts:63:88
+     61| it("the original production input predicts the observed 37 Block acros…
+     62|   const input = captured("287999");
+     63|   expect(replaySteps(input, plays(input, [0, "forge", 2, 3, 4]))!.outc…
+       |                                                                                        ^
+     64| });
+     65|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 2 passed (3)
+   Start at  05:28:58
+   Duration  1.86s (transform 1.29s, setup 284ms, import 1.27s, tests 182ms, environment 0ms)
+

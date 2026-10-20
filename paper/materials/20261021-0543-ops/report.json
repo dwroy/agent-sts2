@@ -1,0 +1,120 @@
+{
+  "task": "strategy-proposal",
+  "character": "silent",
+  "batch": "20261021-051301-s2-strategy-proposal",
+  "base": "2ddf207c0fbdbde86df343661e88c8a42bdcb6c5",
+  "runs": [
+    "RC61MFQM63Y6",
+    "XTSV1U9JD34T",
+    "BTSRF7JL1W1Y",
+    "9Z9H2EXKLF3T",
+    "HMVJKM56S4Q8",
+    "F4QKG4J1AJJZ",
+    "G403VCZ3BH1B",
+    "25226ZFLNR1J",
+    "JLN5SK17W4FQ",
+    "JMH5C51RLN4E"
+  ],
+  "fixes": [],
+  "skipped": [
+    {
+      "item": "silent-proposal-7a8e9ccb7e646538/T10-legion-forge",
+      "reason": "窄修正与固定回归已完成；规定沙箱套件8项失败，撤本补丁仍同8败，按自测0才可提交的约束未提交/合入。"
+    }
+  ],
+  "merged": null,
+  "tests": {
+    "tsc": 0,
+    "vitest": 1,
+    "cases": 5196
+  },
+  "targeted_tests": {
+    "vitest": 0,
+    "files": 2,
+    "cases": 10,
+    "fails_without_fix": true
+  },
+  "code_proposals": [
+    "silent-proposal-03754e1265894000",
+    "silent-proposal-ab055ef7dfbb44e5",
+    "silent-proposal-0129c465c6f5bd79",
+    "silent-proposal-abe9d5d0be109a9f",
+    "silent-proposal-f16527e59b5cc1e0",
+    "silent-proposal-7a8e9ccb7e646538",
+    "silent-proposal-cd9f76184de6e29a",
+    "silent-proposal-292f6731bdb9b669",
+    "silent-proposal-0802f69b28d25079",
+    "silent-proposal-763a4b9d9f17b815"
+  ],
+  "implementation_domains": [
+    "combat",
+    "potion"
+  ],
+  "proposal_results": [
+    {
+      "id": "silent-proposal-03754e1265894000",
+      "state": "waiting",
+      "reason": "RC F23逐牌/临时敏捷/折扇窗口已重核；八组件原其他窗口及联合生产回放未齐，不能以本批局部窗口关闭整项。"
+    },
+    {
+      "id": "silent-proposal-ab055ef7dfbb44e5",
+      "state": "waiting",
+      "reason": "幽灵本轮效果已有live祖先96f17377a331e50ea5b6a3fe8d2b605932ed1bd4；夜魇未兑现不等于禁用有收益，仍缺其他复制对象和延后饮用的同条件完整后继。"
+    },
+    {
+      "id": "silent-proposal-0129c465c6f5bd79",
+      "state": "waiting",
+      "reason": "普通单弃已有live祖先bf423c173d3be348a4ad714e1d26516df619ff41，毒胜保血已有222445a9bb6bf56cb4f3ceea2cc8b20fba54128f；抽弃绑定、接管首轮及复制后继未联合核验。"
+    },
+    {
+      "id": "silent-proposal-abe9d5d0be109a9f",
+      "state": "waiting",
+      "reason": "本批重核X F48T8 32→23无恢复进入F49；缺原115局全资源消费者校准和同条件改线/休息/耗药对照，不能拟合阈值。"
+    },
+    {
+      "id": "silent-proposal-f16527e59b5cc1e0",
+      "state": "waiting",
+      "reason": "B F31减力/格挡/强制弃牌和X幽灵窗口已核；全部期限、多增益及留挡跨轮生产联合回放仍不完整。"
+    },
+    {
+      "id": "silent-proposal-7a8e9ccb7e646538",
+      "state": "waiting",
+      "reason": "已完成T10士兵/熔炉子项窄修正，当前生产原帧50挡→实37挡；撤源码失败、恢复后10项通过。规定沙箱套件8败且撤本补丁仍同8败，提交/合入受阻，源码补丁留本树；其余组合/毒/持牌伤/反伤/SL和原dirty输入未全部核验，整项保持waiting。"
+    },
+    {
+      "id": "silent-proposal-cd9f76184de6e29a",
+      "state": "waiting",
+      "reason": "十局16对跨幕端点重核均符合原A9/A10观察；原请求另含3个非本批支持局及116局资源模型联合校准，本批没有同条件路线收益干预。"
+    },
+    {
+      "id": "silent-proposal-292f6731bdb9b669",
+      "state": "waiting",
+      "reason": "支持局7X0W3U8TVA2A不在本批冻结输入；本批其他毒窗口不能代证头骨组合总7毒或早用/持有价值。"
+    },
+    {
+      "id": "silent-proposal-0802f69b28d25079",
+      "state": "waiting",
+      "reason": "支持局MTQ0EUBJ3R6T不在本批；四次SL固定输入及独立时间留出验证未补齐，不能用本批其他SL拟合即时血价。"
+    },
+    {
+      "id": "silent-proposal-763a4b9d9f17b815",
+      "state": "waiting",
+      "reason": "两支持局7X0W3U8TVA2A、MTQ0EUBJ3R6T均不在本批；十四组件及昏眩合法窗口无本批精确支持，不能跨局代证。"
+    }
+  ],
+  "ledger": [
+    "silent-0546"
+  ],
+  "pending_changes": {
+    "files": [
+      "agent/src/reflex/combat-plan.ts",
+      "agent/tests/silent-legion-forge.test.ts",
+      "agent/tests/silent-legion-forge-evidence.json"
+    ],
+    "patch": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261021-051301-s2/learner/runs/20261021-051319-e5458a0c-1ba2-456d-ab95-7bcd0b3f14bd-strategy-proposal/source.patch",
+    "patch_sha256": "bda3db70ff340843ea6f83b5de20e6a3083b4c46399745b71bf8d92db5a560f0",
+    "commit": null,
+    "reason": "规定沙箱门禁未通过，源码现场保留，待原运维兜底"
+  },
+  "report": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261021-051301-s2/learner/runs/20261021-051319-e5458a0c-1ba2-456d-ab95-7bcd0b3f14bd-strategy-proposal/report.md"
+}
