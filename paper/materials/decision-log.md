@@ -5416,3 +5416,5 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
 - 2026-10-21 03:12:02 CST 原v6-w8 P4：R404起冻结窗口8终局全部进入完整历史包与17组合来源，8刷新published0/211–1500s、后继配置均早于新包发布；25分钟刷新验证后主要等live-merge发布锁，未采样CPU不冒零争用。新源5e04a021a/tree81c69058补monster可验证归约检查点与fight序列化训练行缓存；联合旧26+组合3共29叶，R407前像及最小patch逐叶隔离应用同像，保新infra。固定8局追加训练行0.597→0.273s、输出逐字节同，monster追加未加速；批量拟合/CV保留。tsc0/2文件6定向+Python13/45/gitleaks0，尚未新联合full/main/live；交ops单点完整验收后局终STOP边界窄发布，未改live/对局/知识。材料paper/materials/2026-10-21-v6-refresh-p4/。
 
 - 2026-10-21 03:20:26 CST 原ops：P4正式5e04/材料0e427仅29叶R407前像/patch9ec4/manifest68ae及tree91e48e11后像核同，395材料/326解压scan0；源未main/live。原dataset占三重准入锁，首setup未跑测试；同一请求runner2036302沿原kernel flock排队，锁后重冻最新知识/输入并唯一完整tsc/full、原事件回报，不重复检查/打断现局/刷新。绿后原锁窄main及局终STOP发布/新包读回，原失败与限制保留。原件paper/materials/20261021-P4-R407-joint-ops/receipt.json。
+
+- 2026-10-21 03:23:37 CST 原ops：3YUV原module-health冻复算同，4奖励缺legacy字段但另流A/B有DPR/n34/26/28/18、4370ms内且Jev均拿牌无fallback；旧3计算零失败/降级/超时，pipeline4/4、300门与校准/影子限制保留。原alert保留绑定H1/001302原六叶去重，不查询P4检查/改输入/派批/重启/动live或常规通知；质量门仍Claude原链。原件paper/materials/20261021-0315-ops/receipt.json。

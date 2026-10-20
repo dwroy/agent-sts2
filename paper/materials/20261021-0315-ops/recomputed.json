@@ -1,0 +1,507 @@
+{
+  "schema": "module-health-v1",
+  "at": "2026-10-20T19:22:39.561653+00:00",
+  "run_id": "3YUVLHCYAQ8L",
+  "character": "SILENT",
+  "architecture": "V5",
+  "construction_mode": "shadow",
+  "simulation_enabled": true,
+  "coverage": {
+    "decisions_complete": true,
+    "decisions": {
+      "path": "/home/dw/Projects/agent-sts2/logs/decisions.jsonl",
+      "start": 3044745006,
+      "end": 3078290352,
+      "complete": false,
+      "malformed": 0,
+      "first_ts": "2026-10-20T17:32:17.917Z"
+    },
+    "brain": {
+      "path": "/home/dw/Projects/agent-sts2/logs/brain.jsonl",
+      "start": 1112990071,
+      "end": 1146533737,
+      "complete": false,
+      "malformed": 0,
+      "first_ts": "2026-10-20T09:47:43.602Z"
+    },
+    "plans": {
+      "path": "/home/dw/Projects/agent-sts2/logs/run-plans.jsonl",
+      "start": 5993499,
+      "end": 10186843,
+      "complete": false,
+      "malformed": 0,
+      "first_ts": "2026-10-08T04:22:39.089Z"
+    },
+    "config": {
+      "path": "/home/dw/Projects/agent-sts2/logs/run-config.jsonl",
+      "start": 0,
+      "end": 2306890,
+      "complete": true,
+      "malformed": 0,
+      "first_ts": "2026-09-30T00:10:45.685Z"
+    }
+  },
+  "complete": true,
+  "construction": {
+    "missing_route": 2,
+    "predicted": 2
+  },
+  "construction_pipeline": {
+    "enabled": true,
+    "evaluation_expected": 4,
+    "evaluation_attached": 4,
+    "evaluation_missing": 0,
+    "brain_evaluation": 4,
+    "accepted_evaluation": 4,
+    "accepted_choice_with_evaluation": 3,
+    "plan_due": 0,
+    "accepted_structured_plan": 0,
+    "missing_structured_plan": 0,
+    "saved_structured_plan": 0,
+    "plan_readback": 0,
+    "checkpoint_review_due": 0,
+    "probability_delivered": 0,
+    "admission": {
+      "missing_or_mismatched_prospective_calibration": 2
+    },
+    "evidence": [],
+    "alert": false,
+    "limits": "Payload delivery, accepted output and saved/read-back plans are distinct observations, not causal win-rate evidence. Missing calibration is pending, not a service failure."
+  },
+  "s_readiness": {
+    "mode": "shadow",
+    "expected": 3,
+    "produced": 3,
+    "missing": 0,
+    "eligible": 3,
+    "low_trust": 0,
+    "sign_rejected": 0,
+    "brain_delivered": 0,
+    "brain_accepted": 0,
+    "ms_max": 1.8300650000001042,
+    "longest_missing_streak": 0,
+    "alert": false,
+    "limits": "Shadow is not brain delivery. Low trust and failed sign audit suppress facts without changing mandatory computation or old ranking."
+  },
+  "s_combat_rank": {
+    "mode": "shadow",
+    "expected": 0,
+    "produced": 0,
+    "used": 0,
+    "fallback": 0,
+    "missing": 0,
+    "shadow_produced": 0,
+    "shadow_invalid": 0,
+    "fallback_reasons": {},
+    "longest_missing_streak": 0,
+    "alert": false,
+    "limits": "S tie ranking is conditional on paired samples, sign audit and existing model trust; not game calibration or causal benefit."
+  },
+  "build_ranking": {
+    "mode": "shadow",
+    "expected": 3,
+    "produced": 3,
+    "missing": 0,
+    "brain_delivered": 0,
+    "brain_accepted": 0,
+    "choices": 3,
+    "overrides": 1,
+    "reasons_present": 0,
+    "missing_reasons": 1,
+    "target_pending": 0,
+    "longest_missing_streak": 0,
+    "alert": false,
+    "limits": "Shadow choices do not require override reasons. Pending card targets and first shop actions do not certify complete plans or causal benefit."
+  },
+  "computation": {
+    "attempts": 3,
+    "failures": 0,
+    "degraded": 0,
+    "evidence": [],
+    "alert": false,
+    "scope": "B2/B3 computation service failures; degradation permits continuation, not fault resolution."
+  },
+  "adaptive": {
+    "mode": "on",
+    "observed": 3,
+    "produced": 3,
+    "errors": 0,
+    "evaluable": 0,
+    "matched": 0,
+    "unknown": 0,
+    "complete_adaptive": 3,
+    "budgeted_partial": 0,
+    "production_evaluable": 0,
+    "production_matched": 0,
+    "agreement": null,
+    "production_agreement": null,
+    "saved_fraction": {
+      "p50": null,
+      "p90": null
+    },
+    "mismatches": [],
+    "actual_saved_fraction": {
+      "p50": 0.6666666666666666,
+      "p90": 0.6666666666666666
+    },
+    "candidate_samples": [
+      100,
+      100,
+      100,
+      100,
+      100,
+      100,
+      100,
+      100,
+      100,
+      100,
+      100,
+      100,
+      100,
+      100,
+      100,
+      100,
+      100,
+      100,
+      100,
+      100,
+      100,
+      100,
+      100,
+      100,
+      100,
+      100,
+      100,
+      100,
+      100,
+      100
+    ],
+    "candidate_rounds": [
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1
+    ],
+    "stop_counts": {
+      "leader": 2,
+      "indifferent": 7,
+      "eliminated": 21
+    },
+    "alert": false,
+    "admission_state": "accepted",
+    "admission": "accepted source; runtime mode=on; never auto-enable",
+    "limits": "Shadow estimates and actual on-mode sample work are separate. On-mode cannot observe full-run agreement; no elapsed-time saving or game benefit inferred."
+  },
+  "b3": {
+    "attempts": 7,
+    "skipped": 0,
+    "produced_dpr": 3,
+    "coverage": 0.42857142857142855,
+    "failures": {
+      "missing_simulation_record": 4
+    },
+    "unsupported": 0,
+    "applicable_attempts": 7,
+    "unsupported_only": 0,
+    "candidates": {
+      "observed": 44,
+      "unsupported": 7,
+      "with_dpr": 21,
+      "missing_dpr": 16
+    },
+    "applicable_coverage": 0.42857142857142855,
+    "longest_failure_streak": 3,
+    "trailing_failure_streak": 0,
+    "paired_samples_min": 100,
+    "ms_max": 2267
+  },
+  "brain": {
+    "observed_questions": 3,
+    "questions_with_dpr": 3,
+    "accepted_with_dpr": 3,
+    "decision_use": "unknown; delivery is not evidence of reasoning or a fixed DPR weight"
+  },
+  "global_build": {
+    "mode": "shadow",
+    "expected": 3,
+    "covered": 3,
+    "missing": 0,
+    "invalid_shadow": 0,
+    "observations": 3,
+    "memo_hits": 0,
+    "current_dependency_unknown": 0,
+    "service_failures": 0,
+    "partial": 3,
+    "unknown": 0,
+    "budgeted_partial": 0,
+    "unknown_reasons": {
+      "offered_candidate_not_modeled": 2,
+      "校准 Brier 0.171192，高于整体 0.107560 的 1.25 倍 0.134451; 模拟每回合被打穿的血是实际的 1.33 倍": 3,
+      "模拟每回合被打穿的血是实际的 1.38 倍": 3,
+      "校准 Brier 0.139196，高于整体 0.107560 的 1.25 倍 0.134451": 3,
+      "Act3_quality_gate_and_production_trust_unknown": 9
+    },
+    "longest_missing_streak": 0,
+    "wall_ms": {
+      "n": 3,
+      "p50": 6.0,
+      "p90": 6.0,
+      "max": 6
+    },
+    "computation_wall_ms": {
+      "n": 3,
+      "p50": 6.0,
+      "p90": 6.0,
+      "max": 6
+    },
+    "memo_wall_ms": {
+      "n": 0,
+      "p50": null,
+      "p90": null,
+      "max": null
+    },
+    "future_target_wall_ms": {
+      "n": 0,
+      "p50": null,
+      "p90": null,
+      "max": null
+    },
+    "evidence": [],
+    "alert": false,
+    "admission": "pending two complete natural shadow runs and real later-Boss comparison report; never auto-enable",
+    "limits": "Declared Act3/final unknowns are coverage limitations, not zero predictions or service failures. Times are observed wall clocks with duplicate observation IDs excluded, not CPU time or a causal speedup. No calibration, whole-run win probability or role ACK inferred."
+  },
+  "alert": true,
+  "failures": [
+    {
+      "ts": "2026-10-20T19:09:07.819Z",
+      "decision": "b906e70b-7693-49dd-b4a7-83489f8ea44c",
+      "floor": 2,
+      "label": "reward/card",
+      "reason": "missing_simulation_record",
+      "source": {
+        "offset": 3076494177,
+        "length": 5479,
+        "sha256": "ec78ea84c5bff233155d4e73b1c64a1753ca4892f75dff0c51ea7a50b5da3c5a"
+      },
+      "diagnostics": null,
+      "error": null,
+      "candidates": {
+        "observed": 4,
+        "unsupported": 0,
+        "with_dpr": 0,
+        "missing_dpr": 4
+      }
+    },
+    {
+      "ts": "2026-10-20T19:10:03.625Z",
+      "decision": "d6a5783e-1297-4971-a4c5-bb1243440503",
+      "floor": 3,
+      "label": "reward/card",
+      "reason": "missing_simulation_record",
+      "source": {
+        "offset": 3076665936,
+        "length": 5473,
+        "sha256": "36754c132bfa0ca255f56b005c322eda3459c3586545547a23a330fed5f2ef17"
+      },
+      "diagnostics": null,
+      "error": null,
+      "candidates": {
+        "observed": 4,
+        "unsupported": 0,
+        "with_dpr": 0,
+        "missing_dpr": 4
+      }
+    },
+    {
+      "ts": "2026-10-20T19:11:09.936Z",
+      "decision": "ccf2a424-d8d4-4c83-93a1-866fa94823a1",
+      "floor": 4,
+      "label": "reward/card",
+      "reason": "missing_simulation_record",
+      "source": {
+        "offset": 3076964228,
+        "length": 5452,
+        "sha256": "c9b9c7268377f7853535bbe3f0b41542f3ec7b40334744e2818df7761d0e8209"
+      },
+      "diagnostics": null,
+      "error": null,
+      "candidates": {
+        "observed": 4,
+        "unsupported": 0,
+        "with_dpr": 0,
+        "missing_dpr": 4
+      }
+    },
+    {
+      "ts": "2026-10-20T19:12:48.676Z",
+      "decision": "6bb51c71-802a-43cd-9363-84081b4a24d7",
+      "floor": 6,
+      "label": "reward/card",
+      "reason": "missing_simulation_record",
+      "source": {
+        "offset": 3077697335,
+        "length": 5511,
+        "sha256": "9a50896d6890c2f62b19f48364385a082e3796454d17a53889b997846a8cb964"
+      },
+      "diagnostics": null,
+      "error": null,
+      "candidates": {
+        "observed": 4,
+        "unsupported": 0,
+        "with_dpr": 0,
+        "missing_dpr": 4
+      }
+    }
+  ],
+  "diagnostics": [
+    {
+      "ts": "2026-10-20T19:07:30.080Z",
+      "schema": "build-sim-health-v1",
+      "status": "produced",
+      "availableCpus": 32,
+      "loadAverage": [
+        3.25,
+        4.53,
+        9.76
+      ],
+      "decks": 2,
+      "options": 1,
+      "deckCards": 13,
+      "deadlineMs": 10912.233057000001,
+      "orderSearch": null,
+      "comparison": {
+        "samples": 100,
+        "elapsedMs": 600,
+        "timedOut": false,
+        "workers": 24,
+        "deadlineMs": 10912.05184,
+        "pool": {
+          "queueMs": 0,
+          "coldStart": true,
+          "preparationMs": 8,
+          "firstReplyMs": 350,
+          "chunksPlanned": 26,
+          "chunksDispatched": 26,
+          "chunksCompleted": 26,
+          "outcomesCompleted": 200
+        }
+      },
+      "boss": "CEREMONIAL_BEAST",
+      "samples": 100,
+      "requested": 300,
+      "minimumShown": 300,
+      "timedOut": false,
+      "simMs": 616,
+      "workers": 24
+    },
+    {
+      "ts": "2026-10-20T19:11:40.664Z",
+      "schema": "build-sim-health-v1",
+      "status": "produced",
+      "availableCpus": 32,
+      "loadAverage": [
+        2.53,
+        3.21,
+        8.04
+      ],
+      "decks": 16,
+      "options": 16,
+      "deckCards": 16,
+      "deadlineMs": 10961.807753000001,
+      "orderSearch": null,
+      "comparison": {
+        "samples": 100,
+        "elapsedMs": 2130,
+        "timedOut": false,
+        "workers": 24,
+        "deadlineMs": 10961.703750999994,
+        "pool": {
+          "queueMs": 0,
+          "coldStart": true,
+          "preparationMs": 13,
+          "firstReplyMs": 330,
+          "chunksPlanned": 208,
+          "chunksDispatched": 208,
+          "chunksCompleted": 208,
+          "outcomesCompleted": 1600
+        }
+      },
+      "boss": "CEREMONIAL_BEAST",
+      "samples": 100,
+      "requested": 300,
+      "minimumShown": 300,
+      "timedOut": false,
+      "simMs": 2210,
+      "workers": 24
+    },
+    {
+      "ts": "2026-10-20T19:14:03.609Z",
+      "schema": "build-sim-health-v1",
+      "status": "produced",
+      "availableCpus": 32,
+      "loadAverage": [
+        1.9,
+        2.8,
+        7.4
+      ],
+      "decks": 11,
+      "options": 10,
+      "deckCards": 19,
+      "deadlineMs": 10984.641314000008,
+      "orderSearch": null,
+      "comparison": {
+        "samples": 100,
+        "elapsedMs": 2062,
+        "timedOut": false,
+        "workers": 24,
+        "deadlineMs": 10984.59463800001,
+        "pool": {
+          "queueMs": 0,
+          "coldStart": true,
+          "preparationMs": 11,
+          "firstReplyMs": 352,
+          "chunksPlanned": 143,
+          "chunksDispatched": 143,
+          "chunksCompleted": 143,
+          "outcomesCompleted": 1100
+        }
+      },
+      "boss": "CEREMONIAL_BEAST",
+      "samples": 100,
+      "requested": 300,
+      "minimumShown": 300,
+      "timedOut": false,
+      "simMs": 2119,
+      "workers": 24
+    }
+  ],
+  "unsupported": [],
+  "scope": "Service availability only; sample threshold, simulator validity and game policy unchanged."
+}

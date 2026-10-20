@@ -1,0 +1,1550 @@
+[
+  {
+    "decision_id": "b906e70b-7693-49dd-b4a7-83489f8ea44c",
+    "floor": 2,
+    "ts": "2026-10-20T19:09:07.819Z",
+    "source": {
+      "offset": 3076494177,
+      "length": 5479,
+      "sha256": "ec78ea84c5bff233155d4e73b1c64a1753ca4892f75dff0c51ea7a50b5da3c5a"
+    },
+    "decider": "jev",
+    "result": "completed: Action completed.",
+    "fallback": false,
+    "chosen": {
+      "action": "choose_reward_card",
+      "option_index": 1
+    },
+    "expect": {
+      "option": {
+        "id": "PIERCING_WAIL"
+      },
+      "from": "decision"
+    },
+    "legacy_boss_sim_present": false,
+    "legacy_compact_entries_empty": true,
+    "A_B_source": {
+      "source": "logs/v6-card-results.jsonl",
+      "end": 6471419,
+      "offset": 5658543,
+      "length": 144736,
+      "sha256": "09696878ac24f0560545498445afbc4e4054938bce749bcc05c2c816056fb943",
+      "snapshot": "paper/materials/20261021-0315-ops/A-B-floor-2.jsonl"
+    },
+    "current_target": "f17:CEREMONIAL_BEAST",
+    "option_card_ids": {
+      "card0": "Take NOXIOUS_FUMES",
+      "card1": "Take PIERCING_WAIL",
+      "card2": "Take DEFLECT",
+      "skip": "Take no card"
+    },
+    "current_rows": [
+      {
+        "option_id": "skip",
+        "target_id": "f17:CEREMONIAL_BEAST",
+        "metrics": {
+          "hp_loss": {
+            "mean": 56,
+            "se": 0,
+            "n": 34
+          },
+          "turns": {
+            "mean": 7.23529411764706,
+            "se": 0.11217206932301087,
+            "n": 34
+          },
+          "damage_per_turn": {
+            "mean": 6.144432773109243,
+            "se": 0.19390695692641144,
+            "n": 34
+          },
+          "death_rate": {
+            "mean": 1,
+            "se": 0,
+            "n": 34
+          },
+          "losing_enemy_hp_fraction": {
+            "mean": 0.8309384822631343,
+            "se": 0.005406244738924368,
+            "n": 34
+          }
+        },
+        "paired_delta": {
+          "hp_loss": {
+            "mean": 0,
+            "se": 0,
+            "n": 34
+          },
+          "turns": {
+            "mean": 0,
+            "se": 0,
+            "n": 34
+          },
+          "damage_per_turn": {
+            "mean": 0,
+            "se": 0,
+            "n": 34
+          },
+          "death_rate": {
+            "mean": 0,
+            "se": 0,
+            "n": 34
+          },
+          "losing_enemy_hp_fraction": {
+            "mean": 0,
+            "se": 0,
+            "n": 34
+          }
+        },
+        "samples": 34,
+        "requested_samples": 100,
+        "capped": 0,
+        "time_up": 0,
+        "missing": 66,
+        "trust": {
+          "value": "trusted",
+          "labels": []
+        },
+        "labels": [
+          "entry_hp_source:existing_route_projection:n=0",
+          "current_relics_and_potion_belt_only",
+          "unmodelled_relic:蛇之戒指",
+          "immediate_entry_hp_assumed_current_hp_not_route_forecast",
+          "visible_actual_boss",
+          "raw_simulation_not_calibrated",
+          "paired_delta_option_minus_skip_same_seed",
+          "losing_enemy_hp_conditional_on_loss",
+          "enemy_hp_fraction_denominator_is_sampled_encounter_opening_hp",
+          "remaining_enemy_hp_includes_later_phases_and_spawns_not_clamped_to_one",
+          "partial_sample_coverage"
+        ],
+        "unknown_reasons": []
+      },
+      {
+        "option_id": "card0",
+        "target_id": "f17:CEREMONIAL_BEAST",
+        "metrics": {
+          "hp_loss": {
+            "mean": 56,
+            "se": 0,
+            "n": 34
+          },
+          "turns": {
+            "mean": 7.294117647058823,
+            "se": 0.11585081503937199,
+            "n": 34
+          },
+          "damage_per_turn": {
+            "mean": 8.95010504201681,
+            "se": 0.29209260999208975,
+            "n": 34
+          },
+          "death_rate": {
+            "mean": 1,
+            "se": 0,
+            "n": 34
+          },
+          "losing_enemy_hp_fraction": {
+            "mean": 0.750785810507409,
+            "se": 0.008945413832021007,
+            "n": 34
+          }
+        },
+        "paired_delta": {
+          "hp_loss": {
+            "mean": 0,
+            "se": 0,
+            "n": 34
+          },
+          "turns": {
+            "mean": 0.05882352941176467,
+            "se": 0.14589557757319357,
+            "n": 34
+          },
+          "damage_per_turn": {
+            "mean": 2.8056722689075633,
+            "se": 0.31996700774673187,
+            "n": 34
+          },
+          "death_rate": {
+            "mean": 0,
+            "se": 0,
+            "n": 34
+          },
+          "losing_enemy_hp_fraction": {
+            "mean": -0.08015267175572519,
+            "se": 0.009185274374993398,
+            "n": 34
+          }
+        },
+        "samples": 34,
+        "requested_samples": 100,
+        "capped": 0,
+        "time_up": 0,
+        "missing": 66,
+        "trust": {
+          "value": "trusted",
+          "labels": []
+        },
+        "labels": [
+          "entry_hp_source:existing_route_projection:n=0",
+          "current_relics_and_potion_belt_only",
+          "unmodelled_relic:蛇之戒指",
+          "immediate_entry_hp_assumed_current_hp_not_route_forecast",
+          "visible_actual_boss",
+          "raw_simulation_not_calibrated",
+          "paired_delta_option_minus_skip_same_seed",
+          "losing_enemy_hp_conditional_on_loss",
+          "enemy_hp_fraction_denominator_is_sampled_encounter_opening_hp",
+          "remaining_enemy_hp_includes_later_phases_and_spawns_not_clamped_to_one",
+          "partial_sample_coverage"
+        ],
+        "unknown_reasons": []
+      },
+      {
+        "option_id": "card1",
+        "target_id": "f17:CEREMONIAL_BEAST",
+        "metrics": {
+          "hp_loss": {
+            "mean": 56,
+            "se": 0,
+            "n": 34
+          },
+          "turns": {
+            "mean": 7.5,
+            "se": 0.08703882797784891,
+            "n": 34
+          },
+          "damage_per_turn": {
+            "mean": 5.886554621848739,
+            "se": 0.21789320058482178,
+            "n": 34
+          },
+          "death_rate": {
+            "mean": 1,
+            "se": 0,
+            "n": 34
+          },
+          "losing_enemy_hp_fraction": {
+            "mean": 0.8326223619218679,
+            "se": 0.0053836290335619996,
+            "n": 34
+          }
+        },
+        "paired_delta": {
+          "hp_loss": {
+            "mean": 0,
+            "se": 0,
+            "n": 34
+          },
+          "turns": {
+            "mean": 0.2647058823529411,
+            "se": 0.12169937193377882,
+            "n": 34
+          },
+          "damage_per_turn": {
+            "mean": -0.2578781512605042,
+            "se": 0.2603962526210267,
+            "n": 34
+          },
+          "death_rate": {
+            "mean": 0,
+            "se": 0,
+            "n": 34
+          },
+          "losing_enemy_hp_fraction": {
+            "mean": 0.0016838796587337252,
+            "se": 0.006524272348385964,
+            "n": 34
+          }
+        },
+        "samples": 34,
+        "requested_samples": 100,
+        "capped": 0,
+        "time_up": 0,
+        "missing": 66,
+        "trust": {
+          "value": "trusted",
+          "labels": []
+        },
+        "labels": [
+          "entry_hp_source:existing_route_projection:n=0",
+          "current_relics_and_potion_belt_only",
+          "unmodelled_relic:蛇之戒指",
+          "immediate_entry_hp_assumed_current_hp_not_route_forecast",
+          "visible_actual_boss",
+          "raw_simulation_not_calibrated",
+          "paired_delta_option_minus_skip_same_seed",
+          "losing_enemy_hp_conditional_on_loss",
+          "enemy_hp_fraction_denominator_is_sampled_encounter_opening_hp",
+          "remaining_enemy_hp_includes_later_phases_and_spawns_not_clamped_to_one",
+          "partial_sample_coverage"
+        ],
+        "unknown_reasons": []
+      },
+      {
+        "option_id": "card2",
+        "target_id": "f17:CEREMONIAL_BEAST",
+        "metrics": {
+          "hp_loss": {
+            "mean": 56,
+            "se": 0,
+            "n": 34
+          },
+          "turns": {
+            "mean": 7.588235294117647,
+            "se": 0.09551107539835159,
+            "n": 34
+          },
+          "damage_per_turn": {
+            "mean": 6.632002801120448,
+            "se": 0.21480667631454253,
+            "n": 34
+          },
+          "death_rate": {
+            "mean": 1,
+            "se": 0,
+            "n": 34
+          },
+          "losing_enemy_hp_fraction": {
+            "mean": 0.8093848226313426,
+            "se": 0.005248835120644201,
+            "n": 34
+          }
+        },
+        "paired_delta": {
+          "hp_loss": {
+            "mean": 0,
+            "se": 0,
+            "n": 34
+          },
+          "turns": {
+            "mean": 0.3529411764705883,
+            "se": 0.15153612101930217,
+            "n": 34
+          },
+          "damage_per_turn": {
+            "mean": 0.48757002801120436,
+            "se": 0.27394873340658427,
+            "n": 34
+          },
+          "death_rate": {
+            "mean": 0,
+            "se": 0,
+            "n": 34
+          },
+          "losing_enemy_hp_fraction": {
+            "mean": -0.02155365963179164,
+            "se": 0.0065176841690338435,
+            "n": 34
+          }
+        },
+        "samples": 34,
+        "requested_samples": 100,
+        "capped": 0,
+        "time_up": 0,
+        "missing": 66,
+        "trust": {
+          "value": "trusted",
+          "labels": []
+        },
+        "labels": [
+          "entry_hp_source:existing_route_projection:n=0",
+          "current_relics_and_potion_belt_only",
+          "unmodelled_relic:蛇之戒指",
+          "immediate_entry_hp_assumed_current_hp_not_route_forecast",
+          "visible_actual_boss",
+          "raw_simulation_not_calibrated",
+          "paired_delta_option_minus_skip_same_seed",
+          "losing_enemy_hp_conditional_on_loss",
+          "enemy_hp_fraction_denominator_is_sampled_encounter_opening_hp",
+          "remaining_enemy_hp_includes_later_phases_and_spawns_not_clamped_to_one",
+          "partial_sample_coverage"
+        ],
+        "unknown_reasons": []
+      }
+    ],
+    "current_samples": [
+      34,
+      34,
+      34,
+      34
+    ],
+    "DPR_in_separate_A_rows": true,
+    "A_preparation_ms": 4293,
+    "A_preparation_timed_out": false,
+    "A_B_telemetry": {
+      "elapsed_ms": 4262.487047000002,
+      "preparation_ms": 464.06639500000165,
+      "simulation_ms": 3787.2177999999985,
+      "cache_hits": 0,
+      "simulations": 936,
+      "long_term_cache": "hit",
+      "long_term_computed": 0,
+      "long_term_total": 204,
+      "pending_work": true
+    },
+    "association_limit": "A/B rows lack decision_id; exact same run/floor, pre-decision timestamp and exact option set, unique match in original alert cutoff; not a question_id identity or proof of reasoning/benefit"
+  },
+  {
+    "decision_id": "d6a5783e-1297-4971-a4c5-bb1243440503",
+    "floor": 3,
+    "ts": "2026-10-20T19:10:03.625Z",
+    "source": {
+      "offset": 3076665936,
+      "length": 5473,
+      "sha256": "36754c132bfa0ca255f56b005c322eda3459c3586545547a23a330fed5f2ef17"
+    },
+    "decider": "jev",
+    "result": "completed: Action completed.",
+    "fallback": false,
+    "chosen": {
+      "action": "choose_reward_card",
+      "option_index": 1
+    },
+    "expect": {
+      "option": {
+        "id": "DODGE_AND_ROLL"
+      },
+      "from": "decision"
+    },
+    "legacy_boss_sim_present": false,
+    "legacy_compact_entries_empty": true,
+    "A_B_source": {
+      "source": "logs/v6-card-results.jsonl",
+      "end": 6471419,
+      "offset": 5803279,
+      "length": 119816,
+      "sha256": "74eb7493d0e57f1a25bae300414cb40a606ab4ea4414a0f074cb7a8d51b53a4c",
+      "snapshot": "paper/materials/20261021-0315-ops/A-B-floor-3.jsonl"
+    },
+    "current_target": "f17:CEREMONIAL_BEAST",
+    "option_card_ids": {
+      "card0": "Take SLICE",
+      "card1": "Take DODGE_AND_ROLL",
+      "card2": "Take LEADING_STRIKE",
+      "skip": "Take no card"
+    },
+    "current_rows": [
+      {
+        "option_id": "skip",
+        "target_id": "f17:CEREMONIAL_BEAST",
+        "metrics": {
+          "hp_loss": {
+            "mean": 55,
+            "se": 0,
+            "n": 26
+          },
+          "turns": {
+            "mean": 7.538461538461538,
+            "se": 0.09970370305242862,
+            "n": 26
+          },
+          "damage_per_turn": {
+            "mean": 5.625000000000001,
+            "se": 0.1898808806136257,
+            "n": 26
+          },
+          "death_rate": {
+            "mean": 1,
+            "se": 0,
+            "n": 26
+          },
+          "losing_enemy_hp_fraction": {
+            "mean": 0.8388138578978273,
+            "se": 0.00495757390938472,
+            "n": 26
+          }
+        },
+        "paired_delta": {
+          "hp_loss": {
+            "mean": 0,
+            "se": 0,
+            "n": 26
+          },
+          "turns": {
+            "mean": 0,
+            "se": 0,
+            "n": 26
+          },
+          "damage_per_turn": {
+            "mean": 0,
+            "se": 0,
+            "n": 26
+          },
+          "death_rate": {
+            "mean": 0,
+            "se": 0,
+            "n": 26
+          },
+          "losing_enemy_hp_fraction": {
+            "mean": 0,
+            "se": 0,
+            "n": 26
+          }
+        },
+        "samples": 26,
+        "requested_samples": 100,
+        "capped": 0,
+        "time_up": 0,
+        "missing": 74,
+        "trust": {
+          "value": "trusted",
+          "labels": []
+        },
+        "labels": [
+          "entry_hp_source:existing_route_projection:n=0",
+          "current_relics_and_potion_belt_only",
+          "unmodelled_relic:蛇之戒指",
+          "immediate_entry_hp_assumed_current_hp_not_route_forecast",
+          "visible_actual_boss",
+          "raw_simulation_not_calibrated",
+          "paired_delta_option_minus_skip_same_seed",
+          "losing_enemy_hp_conditional_on_loss",
+          "enemy_hp_fraction_denominator_is_sampled_encounter_opening_hp",
+          "remaining_enemy_hp_includes_later_phases_and_spawns_not_clamped_to_one",
+          "partial_sample_coverage"
+        ],
+        "unknown_reasons": []
+      },
+      {
+        "option_id": "card0",
+        "target_id": "f17:CEREMONIAL_BEAST",
+        "metrics": {
+          "hp_loss": {
+            "mean": 55,
+            "se": 0,
+            "n": 26
+          },
+          "turns": {
+            "mean": 7.153846153846154,
+            "se": 0.10658774200423861,
+            "n": 26
+          },
+          "damage_per_turn": {
+            "mean": 8.228708791208792,
+            "se": 0.20903366669880977,
+            "n": 26
+          },
+          "death_rate": {
+            "mean": 1,
+            "se": 0,
+            "n": 26
+          },
+          "losing_enemy_hp_fraction": {
+            "mean": 0.7753963593658248,
+            "se": 0.006510764044360424,
+            "n": 26
+          }
+        },
+        "paired_delta": {
+          "hp_loss": {
+            "mean": 0,
+            "se": 0,
+            "n": 26
+          },
+          "turns": {
+            "mean": -0.3846153846153846,
+            "se": 0.12498520622516861,
+            "n": 26
+          },
+          "damage_per_turn": {
+            "mean": 2.603708791208791,
+            "se": 0.30603560196343516,
+            "n": 26
+          },
+          "death_rate": {
+            "mean": 0,
+            "se": 0,
+            "n": 26
+          },
+          "losing_enemy_hp_fraction": {
+            "mean": -0.06341749853200235,
+            "se": 0.008139646542911045,
+            "n": 26
+          }
+        },
+        "samples": 26,
+        "requested_samples": 100,
+        "capped": 0,
+        "time_up": 0,
+        "missing": 74,
+        "trust": {
+          "value": "trusted",
+          "labels": []
+        },
+        "labels": [
+          "entry_hp_source:existing_route_projection:n=0",
+          "current_relics_and_potion_belt_only",
+          "unmodelled_relic:蛇之戒指",
+          "immediate_entry_hp_assumed_current_hp_not_route_forecast",
+          "visible_actual_boss",
+          "raw_simulation_not_calibrated",
+          "paired_delta_option_minus_skip_same_seed",
+          "losing_enemy_hp_conditional_on_loss",
+          "enemy_hp_fraction_denominator_is_sampled_encounter_opening_hp",
+          "remaining_enemy_hp_includes_later_phases_and_spawns_not_clamped_to_one",
+          "partial_sample_coverage"
+        ],
+        "unknown_reasons": []
+      },
+      {
+        "option_id": "card1",
+        "target_id": "f17:CEREMONIAL_BEAST",
+        "metrics": {
+          "hp_loss": {
+            "mean": 55,
+            "se": 0,
+            "n": 26
+          },
+          "turns": {
+            "mean": 7.576923076923077,
+            "se": 0.09880948137434716,
+            "n": 26
+          },
+          "damage_per_turn": {
+            "mean": 4.780219780219781,
+            "se": 0.20755162687073503,
+            "n": 26
+          },
+          "death_rate": {
+            "mean": 1,
+            "se": 0,
+            "n": 26
+          },
+          "losing_enemy_hp_fraction": {
+            "mean": 0.861714621256606,
+            "se": 0.006285224700497215,
+            "n": 26
+          }
+        },
+        "paired_delta": {
+          "hp_loss": {
+            "mean": 0,
+            "se": 0,
+            "n": 26
+          },
+          "turns": {
+            "mean": 0.03846153846153844,
+            "se": 0.1298611001241087,
+            "n": 26
+          },
+          "damage_per_turn": {
+            "mean": -0.84478021978022,
+            "se": 0.244726101243565,
+            "n": 26
+          },
+          "death_rate": {
+            "mean": 0,
+            "se": 0,
+            "n": 26
+          },
+          "losing_enemy_hp_fraction": {
+            "mean": 0.02290076335877863,
+            "se": 0.006840806050128338,
+            "n": 26
+          }
+        },
+        "samples": 26,
+        "requested_samples": 100,
+        "capped": 0,
+        "time_up": 0,
+        "missing": 74,
+        "trust": {
+          "value": "trusted",
+          "labels": []
+        },
+        "labels": [
+          "entry_hp_source:existing_route_projection:n=0",
+          "current_relics_and_potion_belt_only",
+          "unmodelled_relic:蛇之戒指",
+          "immediate_entry_hp_assumed_current_hp_not_route_forecast",
+          "visible_actual_boss",
+          "raw_simulation_not_calibrated",
+          "paired_delta_option_minus_skip_same_seed",
+          "losing_enemy_hp_conditional_on_loss",
+          "enemy_hp_fraction_denominator_is_sampled_encounter_opening_hp",
+          "remaining_enemy_hp_includes_later_phases_and_spawns_not_clamped_to_one",
+          "partial_sample_coverage"
+        ],
+        "unknown_reasons": []
+      },
+      {
+        "option_id": "card2",
+        "target_id": "f17:CEREMONIAL_BEAST",
+        "metrics": {
+          "hp_loss": {
+            "mean": 55,
+            "se": 0,
+            "n": 26
+          },
+          "turns": {
+            "mean": 7.23076923076923,
+            "se": 0.10088366960464616,
+            "n": 26
+          },
+          "damage_per_turn": {
+            "mean": 6.315247252747253,
+            "se": 0.20273091933672605,
+            "n": 26
+          },
+          "death_rate": {
+            "mean": 1,
+            "se": 0,
+            "n": 26
+          },
+          "losing_enemy_hp_fraction": {
+            "mean": 0.8260422783323546,
+            "se": 0.005717054609852299,
+            "n": 26
+          }
+        },
+        "paired_delta": {
+          "hp_loss": {
+            "mean": 0,
+            "se": 0,
+            "n": 26
+          },
+          "turns": {
+            "mean": -0.3076923076923077,
+            "se": 0.13323467750529827,
+            "n": 26
+          },
+          "damage_per_turn": {
+            "mean": 0.6902472527472527,
+            "se": 0.2796522816884287,
+            "n": 26
+          },
+          "death_rate": {
+            "mean": 0,
+            "se": 0,
+            "n": 26
+          },
+          "losing_enemy_hp_fraction": {
+            "mean": -0.012771579565472707,
+            "se": 0.007361389820928451,
+            "n": 26
+          }
+        },
+        "samples": 26,
+        "requested_samples": 100,
+        "capped": 0,
+        "time_up": 0,
+        "missing": 74,
+        "trust": {
+          "value": "trusted",
+          "labels": []
+        },
+        "labels": [
+          "entry_hp_source:existing_route_projection:n=0",
+          "current_relics_and_potion_belt_only",
+          "unmodelled_relic:蛇之戒指",
+          "immediate_entry_hp_assumed_current_hp_not_route_forecast",
+          "visible_actual_boss",
+          "raw_simulation_not_calibrated",
+          "paired_delta_option_minus_skip_same_seed",
+          "losing_enemy_hp_conditional_on_loss",
+          "enemy_hp_fraction_denominator_is_sampled_encounter_opening_hp",
+          "remaining_enemy_hp_includes_later_phases_and_spawns_not_clamped_to_one",
+          "partial_sample_coverage"
+        ],
+        "unknown_reasons": []
+      }
+    ],
+    "current_samples": [
+      26,
+      26,
+      26,
+      26
+    ],
+    "DPR_in_separate_A_rows": true,
+    "A_preparation_ms": 4294,
+    "A_preparation_timed_out": false,
+    "A_B_telemetry": {
+      "elapsed_ms": 4256.009413000022,
+      "preparation_ms": 415.2599320000445,
+      "simulation_ms": 3835.7735399999947,
+      "cache_hits": 0,
+      "simulations": 709,
+      "long_term_cache": "hit",
+      "long_term_computed": 0,
+      "long_term_total": 204,
+      "pending_work": true
+    },
+    "association_limit": "A/B rows lack decision_id; exact same run/floor, pre-decision timestamp and exact option set, unique match in original alert cutoff; not a question_id identity or proof of reasoning/benefit"
+  },
+  {
+    "decision_id": "ccf2a424-d8d4-4c83-93a1-866fa94823a1",
+    "floor": 4,
+    "ts": "2026-10-20T19:11:09.936Z",
+    "source": {
+      "offset": 3076964228,
+      "length": 5452,
+      "sha256": "c9b9c7268377f7853535bbe3f0b41542f3ec7b40334744e2818df7761d0e8209"
+    },
+    "decider": "jev",
+    "result": "completed: Action completed.",
+    "fallback": false,
+    "chosen": {
+      "action": "choose_reward_card",
+      "option_index": 1
+    },
+    "expect": {
+      "option": {
+        "id": "BLUR"
+      },
+      "from": "decision"
+    },
+    "legacy_boss_sim_present": false,
+    "legacy_compact_entries_empty": true,
+    "A_B_source": {
+      "source": "logs/v6-card-results.jsonl",
+      "end": 6471419,
+      "offset": 5923095,
+      "length": 289797,
+      "sha256": "945c842c77fa81fc28c40605515ede39050b1a78740ed7f3024390d64ebbb0c0",
+      "snapshot": "paper/materials/20261021-0315-ops/A-B-floor-4.jsonl"
+    },
+    "current_target": "f17:CEREMONIAL_BEAST",
+    "option_card_ids": {
+      "card0": "Take DAGGER_SPRAY",
+      "card1": "Take BLUR",
+      "card2": "Take DASH",
+      "skip": "Take no card"
+    },
+    "current_rows": [
+      {
+        "option_id": "skip",
+        "target_id": "f17:CEREMONIAL_BEAST",
+        "metrics": {
+          "hp_loss": {
+            "mean": 55,
+            "se": 0,
+            "n": 28
+          },
+          "turns": {
+            "mean": 7.535714285714286,
+            "se": 0.09597925890831607,
+            "n": 28
+          },
+          "damage_per_turn": {
+            "mean": 4.882653061224491,
+            "se": 0.20545350973382376,
+            "n": 28
+          },
+          "death_rate": {
+            "mean": 1,
+            "se": 0,
+            "n": 28
+          },
+          "losing_enemy_hp_fraction": {
+            "mean": 0.859732824427481,
+            "se": 0.005995236713217207,
+            "n": 28
+          }
+        },
+        "paired_delta": {
+          "hp_loss": {
+            "mean": 0,
+            "se": 0,
+            "n": 28
+          },
+          "turns": {
+            "mean": 0,
+            "se": 0,
+            "n": 28
+          },
+          "damage_per_turn": {
+            "mean": 0,
+            "se": 0,
+            "n": 28
+          },
+          "death_rate": {
+            "mean": 0,
+            "se": 0,
+            "n": 28
+          },
+          "losing_enemy_hp_fraction": {
+            "mean": 0,
+            "se": 0,
+            "n": 28
+          }
+        },
+        "samples": 28,
+        "requested_samples": 100,
+        "capped": 0,
+        "time_up": 0,
+        "missing": 72,
+        "trust": {
+          "value": "trusted",
+          "labels": []
+        },
+        "labels": [
+          "entry_hp_source:existing_route_projection:n=0",
+          "current_relics_and_potion_belt_only",
+          "unmodelled_relic:蛇之戒指",
+          "immediate_entry_hp_assumed_current_hp_not_route_forecast",
+          "visible_actual_boss",
+          "raw_simulation_not_calibrated",
+          "paired_delta_option_minus_skip_same_seed",
+          "losing_enemy_hp_conditional_on_loss",
+          "enemy_hp_fraction_denominator_is_sampled_encounter_opening_hp",
+          "remaining_enemy_hp_includes_later_phases_and_spawns_not_clamped_to_one",
+          "partial_sample_coverage"
+        ],
+        "unknown_reasons": []
+      },
+      {
+        "option_id": "card0",
+        "target_id": "f17:CEREMONIAL_BEAST",
+        "metrics": {
+          "hp_loss": {
+            "mean": 55,
+            "se": 0,
+            "n": 28
+          },
+          "turns": {
+            "mean": 7,
+            "se": 0.0890870806374748,
+            "n": 28
+          },
+          "damage_per_turn": {
+            "mean": 6.40093537414966,
+            "se": 0.21049815001255445,
+            "n": 28
+          },
+          "death_rate": {
+            "mean": 1,
+            "se": 0,
+            "n": 28
+          },
+          "losing_enemy_hp_fraction": {
+            "mean": 0.8294711014176664,
+            "se": 0.005489983770600327,
+            "n": 28
+          }
+        },
+        "paired_delta": {
+          "hp_loss": {
+            "mean": 0,
+            "se": 0,
+            "n": 28
+          },
+          "turns": {
+            "mean": -0.5357142857142857,
+            "se": 0.10889224392073209,
+            "n": 28
+          },
+          "damage_per_turn": {
+            "mean": 1.51828231292517,
+            "se": 0.295654883070301,
+            "n": 28
+          },
+          "death_rate": {
+            "mean": 0,
+            "se": 0,
+            "n": 28
+          },
+          "losing_enemy_hp_fraction": {
+            "mean": -0.03026172300981459,
+            "se": 0.007159240747169046,
+            "n": 28
+          }
+        },
+        "samples": 28,
+        "requested_samples": 100,
+        "capped": 0,
+        "time_up": 0,
+        "missing": 72,
+        "trust": {
+          "value": "trusted",
+          "labels": []
+        },
+        "labels": [
+          "entry_hp_source:existing_route_projection:n=0",
+          "current_relics_and_potion_belt_only",
+          "unmodelled_relic:蛇之戒指",
+          "immediate_entry_hp_assumed_current_hp_not_route_forecast",
+          "visible_actual_boss",
+          "raw_simulation_not_calibrated",
+          "paired_delta_option_minus_skip_same_seed",
+          "losing_enemy_hp_conditional_on_loss",
+          "enemy_hp_fraction_denominator_is_sampled_encounter_opening_hp",
+          "remaining_enemy_hp_includes_later_phases_and_spawns_not_clamped_to_one",
+          "partial_sample_coverage"
+        ],
+        "unknown_reasons": []
+      },
+      {
+        "option_id": "card1",
+        "target_id": "f17:CEREMONIAL_BEAST",
+        "metrics": {
+          "hp_loss": {
+            "mean": 55,
+            "se": 0,
+            "n": 28
+          },
+          "turns": {
+            "mean": 7.464285714285714,
+            "se": 0.0959792589083161,
+            "n": 28
+          },
+          "damage_per_turn": {
+            "mean": 4.683673469387754,
+            "se": 0.18674793641011422,
+            "n": 28
+          },
+          "death_rate": {
+            "mean": 1,
+            "se": 0,
+            "n": 28
+          },
+          "losing_enemy_hp_fraction": {
+            "mean": 0.8670937840785169,
+            "se": 0.0052788345022008465,
+            "n": 28
+          }
+        },
+        "paired_delta": {
+          "hp_loss": {
+            "mean": 0,
+            "se": 0,
+            "n": 28
+          },
+          "turns": {
+            "mean": -0.07142857142857145,
+            "se": 0.11418646484077903,
+            "n": 28
+          },
+          "damage_per_turn": {
+            "mean": -0.19897959183673472,
+            "se": 0.27644752686607754,
+            "n": 28
+          },
+          "death_rate": {
+            "mean": 0,
+            "se": 0,
+            "n": 28
+          },
+          "losing_enemy_hp_fraction": {
+            "mean": 0.007360959651035991,
+            "se": 0.007266106691254331,
+            "n": 28
+          }
+        },
+        "samples": 28,
+        "requested_samples": 100,
+        "capped": 0,
+        "time_up": 0,
+        "missing": 72,
+        "trust": {
+          "value": "trusted",
+          "labels": []
+        },
+        "labels": [
+          "entry_hp_source:existing_route_projection:n=0",
+          "current_relics_and_potion_belt_only",
+          "unmodelled_relic:蛇之戒指",
+          "immediate_entry_hp_assumed_current_hp_not_route_forecast",
+          "visible_actual_boss",
+          "raw_simulation_not_calibrated",
+          "paired_delta_option_minus_skip_same_seed",
+          "losing_enemy_hp_conditional_on_loss",
+          "enemy_hp_fraction_denominator_is_sampled_encounter_opening_hp",
+          "remaining_enemy_hp_includes_later_phases_and_spawns_not_clamped_to_one",
+          "partial_sample_coverage"
+        ],
+        "unknown_reasons": []
+      },
+      {
+        "option_id": "card2",
+        "target_id": "f17:CEREMONIAL_BEAST",
+        "metrics": {
+          "hp_loss": {
+            "mean": 55,
+            "se": 0,
+            "n": 28
+          },
+          "turns": {
+            "mean": 7.678571428571428,
+            "se": 0.10355546310079276,
+            "n": 28
+          },
+          "damage_per_turn": {
+            "mean": 7.151573129251701,
+            "se": 0.19582364127953975,
+            "n": 28
+          },
+          "death_rate": {
+            "mean": 1,
+            "se": 0,
+            "n": 28
+          },
+          "losing_enemy_hp_fraction": {
+            "mean": 0.7911668484187567,
+            "se": 0.005520797649288512,
+            "n": 28
+          }
+        },
+        "paired_delta": {
+          "hp_loss": {
+            "mean": 0,
+            "se": 0,
+            "n": 28
+          },
+          "turns": {
+            "mean": 0.14285714285714288,
+            "se": 0.13327663193449735,
+            "n": 28
+          },
+          "damage_per_turn": {
+            "mean": 2.268920068027211,
+            "se": 0.29000464430057465,
+            "n": 28
+          },
+          "death_rate": {
+            "mean": 0,
+            "se": 0,
+            "n": 28
+          },
+          "losing_enemy_hp_fraction": {
+            "mean": -0.06856597600872409,
+            "se": 0.008304557438356352,
+            "n": 28
+          }
+        },
+        "samples": 28,
+        "requested_samples": 100,
+        "capped": 0,
+        "time_up": 0,
+        "missing": 72,
+        "trust": {
+          "value": "trusted",
+          "labels": []
+        },
+        "labels": [
+          "entry_hp_source:existing_route_projection:n=0",
+          "current_relics_and_potion_belt_only",
+          "unmodelled_relic:蛇之戒指",
+          "immediate_entry_hp_assumed_current_hp_not_route_forecast",
+          "visible_actual_boss",
+          "raw_simulation_not_calibrated",
+          "paired_delta_option_minus_skip_same_seed",
+          "losing_enemy_hp_conditional_on_loss",
+          "enemy_hp_fraction_denominator_is_sampled_encounter_opening_hp",
+          "remaining_enemy_hp_includes_later_phases_and_spawns_not_clamped_to_one",
+          "partial_sample_coverage"
+        ],
+        "unknown_reasons": []
+      }
+    ],
+    "current_samples": [
+      28,
+      28,
+      28,
+      28
+    ],
+    "DPR_in_separate_A_rows": true,
+    "A_preparation_ms": 4370,
+    "A_preparation_timed_out": false,
+    "A_B_telemetry": {
+      "elapsed_ms": 4261.7621729999955,
+      "preparation_ms": 411.93830300003174,
+      "simulation_ms": 3839.8543620000128,
+      "cache_hits": 0,
+      "simulations": 773,
+      "long_term_cache": "hit",
+      "long_term_computed": 0,
+      "long_term_total": 204,
+      "pending_work": true
+    },
+    "association_limit": "A/B rows lack decision_id; exact same run/floor, pre-decision timestamp and exact option set, unique match in original alert cutoff; not a question_id identity or proof of reasoning/benefit"
+  },
+  {
+    "decision_id": "6bb51c71-802a-43cd-9363-84081b4a24d7",
+    "floor": 6,
+    "ts": "2026-10-20T19:12:48.676Z",
+    "source": {
+      "offset": 3077697335,
+      "length": 5511,
+      "sha256": "9a50896d6890c2f62b19f48364385a082e3796454d17a53889b997846a8cb964"
+    },
+    "decider": "jev",
+    "result": "completed: Action completed.",
+    "fallback": false,
+    "chosen": {
+      "action": "choose_reward_card",
+      "option_index": 2
+    },
+    "expect": {
+      "option": {
+        "id": "DODGE_AND_ROLL"
+      },
+      "from": "decision"
+    },
+    "legacy_boss_sim_present": false,
+    "legacy_compact_entries_empty": true,
+    "A_B_source": {
+      "source": "logs/v6-card-results.jsonl",
+      "end": 6471419,
+      "offset": 6212892,
+      "length": 52484,
+      "sha256": "151060b2b8b6c96f8bbcd526ee7d41034fb4cc9c3ca7be23246cb9606a56adad",
+      "snapshot": "paper/materials/20261021-0315-ops/A-B-floor-6.jsonl"
+    },
+    "current_target": "f17:CEREMONIAL_BEAST",
+    "option_card_ids": {
+      "card0": "Take ESCAPE_PLAN",
+      "card1": "Take FOOTWORK",
+      "card2": "Take DODGE_AND_ROLL",
+      "skip": "Take no card"
+    },
+    "current_rows": [
+      {
+        "option_id": "skip",
+        "target_id": "f17:CEREMONIAL_BEAST",
+        "metrics": {
+          "hp_loss": {
+            "mean": 46,
+            "se": 0,
+            "n": 18
+          },
+          "turns": {
+            "mean": 6.333333333333333,
+            "se": 0.16169041669088866,
+            "n": 18
+          },
+          "damage_per_turn": {
+            "mean": 9.06111111111111,
+            "se": 0.47633832905397705,
+            "n": 18
+          },
+          "death_rate": {
+            "mean": 1,
+            "se": 0,
+            "n": 18
+          },
+          "losing_enemy_hp_fraction": {
+            "mean": 0.7824427480916031,
+            "se": 0.01117686256703755,
+            "n": 18
+          }
+        },
+        "paired_delta": {
+          "hp_loss": {
+            "mean": 0,
+            "se": 0,
+            "n": 18
+          },
+          "turns": {
+            "mean": 0,
+            "se": 0,
+            "n": 18
+          },
+          "damage_per_turn": {
+            "mean": 0,
+            "se": 0,
+            "n": 18
+          },
+          "death_rate": {
+            "mean": 0,
+            "se": 0,
+            "n": 18
+          },
+          "losing_enemy_hp_fraction": {
+            "mean": 0,
+            "se": 0,
+            "n": 18
+          }
+        },
+        "samples": 18,
+        "requested_samples": 100,
+        "capped": 0,
+        "time_up": 0,
+        "missing": 82,
+        "trust": {
+          "value": "trusted",
+          "labels": []
+        },
+        "labels": [
+          "entry_hp_source:existing_route_projection:n=0",
+          "current_relics_and_potion_belt_only",
+          "unmodelled_relic:蛇之戒指",
+          "immediate_entry_hp_assumed_current_hp_not_route_forecast",
+          "visible_actual_boss",
+          "raw_simulation_not_calibrated",
+          "paired_delta_option_minus_skip_same_seed",
+          "losing_enemy_hp_conditional_on_loss",
+          "enemy_hp_fraction_denominator_is_sampled_encounter_opening_hp",
+          "remaining_enemy_hp_includes_later_phases_and_spawns_not_clamped_to_one",
+          "partial_sample_coverage"
+        ],
+        "unknown_reasons": []
+      },
+      {
+        "option_id": "card0",
+        "target_id": "f17:CEREMONIAL_BEAST",
+        "metrics": {
+          "hp_loss": {
+            "mean": 46,
+            "se": 0,
+            "n": 18
+          },
+          "turns": {
+            "mean": 6.5555555555555545,
+            "se": 0.18474894150460874,
+            "n": 18
+          },
+          "damage_per_turn": {
+            "mean": 9.258664021164023,
+            "se": 0.34969839768417754,
+            "n": 18
+          },
+          "death_rate": {
+            "mean": 1,
+            "se": 0,
+            "n": 18
+          },
+          "losing_enemy_hp_fraction": {
+            "mean": 0.7707803223070397,
+            "se": 0.007239702123443069,
+            "n": 18
+          }
+        },
+        "paired_delta": {
+          "hp_loss": {
+            "mean": 0,
+            "se": 0,
+            "n": 18
+          },
+          "turns": {
+            "mean": 0.2222222222222222,
+            "se": 0.24990920646150538,
+            "n": 18
+          },
+          "damage_per_turn": {
+            "mean": 0.19755291005291023,
+            "se": 0.6278925216904249,
+            "n": 18
+          },
+          "death_rate": {
+            "mean": 0,
+            "se": 0,
+            "n": 18
+          },
+          "losing_enemy_hp_fraction": {
+            "mean": -0.011662425784563196,
+            "se": 0.013327459963661366,
+            "n": 18
+          }
+        },
+        "samples": 18,
+        "requested_samples": 100,
+        "capped": 0,
+        "time_up": 0,
+        "missing": 82,
+        "trust": {
+          "value": "trusted",
+          "labels": []
+        },
+        "labels": [
+          "entry_hp_source:existing_route_projection:n=0",
+          "current_relics_and_potion_belt_only",
+          "unmodelled_relic:蛇之戒指",
+          "immediate_entry_hp_assumed_current_hp_not_route_forecast",
+          "visible_actual_boss",
+          "raw_simulation_not_calibrated",
+          "paired_delta_option_minus_skip_same_seed",
+          "losing_enemy_hp_conditional_on_loss",
+          "enemy_hp_fraction_denominator_is_sampled_encounter_opening_hp",
+          "remaining_enemy_hp_includes_later_phases_and_spawns_not_clamped_to_one",
+          "partial_sample_coverage"
+        ],
+        "unknown_reasons": []
+      },
+      {
+        "option_id": "card1",
+        "target_id": "f17:CEREMONIAL_BEAST",
+        "metrics": {
+          "hp_loss": {
+            "mean": 46,
+            "se": 0,
+            "n": 18
+          },
+          "turns": {
+            "mean": 8,
+            "se": 0.14002800840280102,
+            "n": 18
+          },
+          "damage_per_turn": {
+            "mean": 8.363425925925924,
+            "se": 0.3218735532705893,
+            "n": 18
+          },
+          "death_rate": {
+            "mean": 1,
+            "se": 0,
+            "n": 18
+          },
+          "losing_enemy_hp_fraction": {
+            "mean": 0.7444868532654794,
+            "se": 0.010753424400427815,
+            "n": 18
+          }
+        },
+        "paired_delta": {
+          "hp_loss": {
+            "mean": 0,
+            "se": 0,
+            "n": 18
+          },
+          "turns": {
+            "mean": 1.6666666666666665,
+            "se": 0.16169041669088868,
+            "n": 18
+          },
+          "damage_per_turn": {
+            "mean": -0.6976851851851851,
+            "se": 0.6282510641171669,
+            "n": 18
+          },
+          "death_rate": {
+            "mean": 0,
+            "se": 0,
+            "n": 18
+          },
+          "losing_enemy_hp_fraction": {
+            "mean": -0.03795589482612383,
+            "se": 0.016082576559369052,
+            "n": 18
+          }
+        },
+        "samples": 18,
+        "requested_samples": 100,
+        "capped": 0,
+        "time_up": 0,
+        "missing": 82,
+        "trust": {
+          "value": "trusted",
+          "labels": []
+        },
+        "labels": [
+          "entry_hp_source:existing_route_projection:n=0",
+          "current_relics_and_potion_belt_only",
+          "unmodelled_relic:蛇之戒指",
+          "immediate_entry_hp_assumed_current_hp_not_route_forecast",
+          "visible_actual_boss",
+          "raw_simulation_not_calibrated",
+          "paired_delta_option_minus_skip_same_seed",
+          "losing_enemy_hp_conditional_on_loss",
+          "enemy_hp_fraction_denominator_is_sampled_encounter_opening_hp",
+          "remaining_enemy_hp_includes_later_phases_and_spawns_not_clamped_to_one",
+          "partial_sample_coverage"
+        ],
+        "unknown_reasons": []
+      },
+      {
+        "option_id": "card2",
+        "target_id": "f17:CEREMONIAL_BEAST",
+        "metrics": {
+          "hp_loss": {
+            "mean": 46,
+            "se": 0,
+            "n": 18
+          },
+          "turns": {
+            "mean": 6.444444444444445,
+            "se": 0.1451215902691145,
+            "n": 18
+          },
+          "damage_per_turn": {
+            "mean": 8.034391534391535,
+            "se": 0.3215955130227217,
+            "n": 18
+          },
+          "death_rate": {
+            "mean": 1,
+            "se": 0,
+            "n": 18
+          },
+          "losing_enemy_hp_fraction": {
+            "mean": 0.8025869380831212,
+            "se": 0.008600211955332176,
+            "n": 18
+          }
+        },
+        "paired_delta": {
+          "hp_loss": {
+            "mean": 0,
+            "se": 0,
+            "n": 18
+          },
+          "turns": {
+            "mean": 0.11111111111111116,
+            "se": 0.19618733359220442,
+            "n": 18
+          },
+          "damage_per_turn": {
+            "mean": -1.0267195767195767,
+            "se": 0.6489982452112402,
+            "n": 18
+          },
+          "death_rate": {
+            "mean": 0,
+            "se": 0,
+            "n": 18
+          },
+          "losing_enemy_hp_fraction": {
+            "mean": 0.020144189991518242,
+            "se": 0.014973747973463796,
+            "n": 18
+          }
+        },
+        "samples": 18,
+        "requested_samples": 100,
+        "capped": 0,
+        "time_up": 0,
+        "missing": 82,
+        "trust": {
+          "value": "trusted",
+          "labels": []
+        },
+        "labels": [
+          "entry_hp_source:existing_route_projection:n=0",
+          "current_relics_and_potion_belt_only",
+          "unmodelled_relic:蛇之戒指",
+          "immediate_entry_hp_assumed_current_hp_not_route_forecast",
+          "visible_actual_boss",
+          "raw_simulation_not_calibrated",
+          "paired_delta_option_minus_skip_same_seed",
+          "losing_enemy_hp_conditional_on_loss",
+          "enemy_hp_fraction_denominator_is_sampled_encounter_opening_hp",
+          "remaining_enemy_hp_includes_later_phases_and_spawns_not_clamped_to_one",
+          "partial_sample_coverage"
+        ],
+        "unknown_reasons": []
+      }
+    ],
+    "current_samples": [
+      18,
+      18,
+      18,
+      18
+    ],
+    "DPR_in_separate_A_rows": true,
+    "A_preparation_ms": 4256,
+    "A_preparation_timed_out": false,
+    "A_B_telemetry": {
+      "elapsed_ms": 4255.387129999988,
+      "preparation_ms": 619.7903259999002,
+      "simulation_ms": 3631.690025000018,
+      "cache_hits": 0,
+      "simulations": 497,
+      "long_term_cache": "miss",
+      "long_term_computed": 0,
+      "long_term_total": 204,
+      "pending_work": true
+    },
+    "association_limit": "A/B rows lack decision_id; exact same run/floor, pre-decision timestamp and exact option set, unique match in original alert cutoff; not a question_id identity or proof of reasoning/benefit"
+  }
+]

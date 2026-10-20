@@ -1,0 +1,3 @@
+3YUV告警按原截点重取148决策/4脑题/1配置并复算，除时间逐字段同。四reward/card由Jev完成、无fallback且均拿牌；另流A/B各有唯一当幕Boss和同选项集，准备4256–4370ms、每项n34/26/28/18、DPR存在且未超时。表缺decision_id，仅以同局层/时序/选项集唯一关联。四个missing_simulation_record沿既有H1兼容链：旧监控按V5构筑架构硬查legacy boss_sim，不能据缺旧字段称A/B未算，原alert保留。另三次旧计算零故障/降级/超时，adaptive accepted n100/请求300/最低300分列，不降低300门或称满样本。pipeline评估4/4、脑接收4/选择3、计划due0；影子3产出不代交脑，低可信/校准/Act3缺口仍pending。绑定001302原六叶候选去重，待既定工程门，不追加模型或重复派修。本轮仅存证，不查/改P4在途，不重启/改live/开关/STOP、不跑模拟/full/dataset或常规通知watcher/Roy；R407质量/P2两局仍待Claude原流程。
+
+原件：paper/materials/20261021-0315-ops/receipt.json；ops/codex-ops/module-health/3YUVLHCYAQ8L-alert.json。
