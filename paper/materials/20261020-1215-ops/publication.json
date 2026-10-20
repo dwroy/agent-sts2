@@ -1,0 +1,85 @@
+{
+  "at": "2026-10-20T12:23:03+08:00",
+  "release": {
+    "at": "2026-10-20T12:21:36+08:00",
+    "release_id": "V6-R403",
+    "name": "V6.silent-r3-t6-runtime-background1",
+    "behavior_commit": "e7119a6750d3a38a4de78274e623042c1996c94f",
+    "accepted_tree": "78040c8c27ad482c77b454d8b010fddaa554c40d",
+    "actual_live_commit": "f563cc997814fdccd2dafe8a50d3725c62102c7f",
+    "main_registry_commit": "dd43e7b2aaea27558198533116091c1eb1b2a4b0",
+    "main_test_fix_commit": "7c87092a3ee6757ba1aae5fb55a750d0a20fa6cc",
+    "previous_live": "2cdb7b3dc8043180bfecec74e6b23c58d3f87a5e",
+    "live_registry_sha256": "85cd78f9bddbe0132a75b8132321ba3fb4969865e5690c41b2bfd47eae6fb150",
+    "main_registry_sha256": "85cd78f9bddbe0132a75b8132321ba3fb4969865e5690c41b2bfd47eae6fb150",
+    "live_metadata_diff_only": [
+      "eval/versions.json"
+    ],
+    "one_behavior_release": true,
+    "old_entries_preserved": true,
+    "readbacks": {
+      "R3": 85,
+      "HP_fixed_hits": 78,
+      "synthetic_tag_plumbing": 7,
+      "combo_ids": 17,
+      "attempts": [
+        "first",
+        "including_sl"
+      ],
+      "numeric_all_known": false
+    },
+    "missing_sidecar_consumer_fields": [
+      "n",
+      "design",
+      "method",
+      "G",
+      "window",
+      "censoring"
+    ],
+    "W3_excluded": true,
+    "STOP_kept": true,
+    "new_game": false
+  },
+  "accepted_full": {
+    "tsc": 0,
+    "vitest": 0,
+    "files": 609,
+    "pass_count": 5790,
+    "skips": 2,
+    "tree": "78040c8c27ad482c77b454d8b010fddaa554c40d",
+    "status": {
+      "path": ".artifacts/ops-wake-20261020-1147/live-host-status.json",
+      "bytes": 1636,
+      "sha256": "7b3a9e3fd986fb66f5b4ff71eb9a754a00dbe765028f6b0c4104c8b0e64812ca"
+    }
+  },
+  "R3_readback": {
+    "path": "paper/materials/20261020-1215-ops/live-consumer-readback.json",
+    "bytes": 187990,
+    "sha256": "1bed2e6d8b165bac522ee590aa71181d7728259e9d2ea3efbdf8784726bf292f"
+  },
+  "history_factory": {
+    "path": "paper/materials/20261020-1215-ops/history-factory-readback.json",
+    "bytes": 5951,
+    "sha256": "5ad446e16eb6f6964d9f9ac051baf7c8909126a05ba7249fd99b918bda2903da"
+  },
+  "limitations": [
+    "78 HP entries are conditional observed net loss, no causal/win improvement claim",
+    "7 tags checked with explicit synthetic plumbing only, no simulated HP effect",
+    "19 single-run noSE and340priority=null preserved",
+    "n/design/method/G/windows/censoring sidecars still not actual consumer fields",
+    "17 IDs/two attempts read through actual loader/shared factory; unknown numerical values remain unknown",
+    "W3 numeric Jev smoke failed, source303bbb not transported",
+    "History is previous completed packet, cutoff and freshness recorded at next run; no new production refresh now"
+  ],
+  "old_notices": {
+    "path": "paper/materials/20261020-1215-ops/old-notices-verification.json",
+    "bytes": 1661,
+    "sha256": "a6efd27a2d5f84cbf751a6e30f5e343d5dfbd8c0ed336b6c457d4a6950bdbcac"
+  },
+  "source_commit": "e7119a6750d3a38a4de78274e623042c1996c94f",
+  "actual_live_commit": "f563cc997814fdccd2dafe8a50d3725c62102c7f",
+  "STOP_still_present": true,
+  "actor_started": false,
+  "Regent": "paused"
+}

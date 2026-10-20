@@ -1,0 +1,117 @@
+{
+  "decisions": 22,
+  "first_ts": "2026-10-20T04:26:36.356Z",
+  "last_ts": "2026-10-20T04:28:52.024Z",
+  "fallback_count": 0,
+  "brain": [
+    {
+      "source": {
+        "path": "logs/brain.jsonl",
+        "offset": 1093504236,
+        "bytes": 81504,
+        "sha256": "8de9b043d2d7aab0dae47f3962f4097c000eeb6729fe4e6afc435ff54f3044e6"
+      },
+      "ts": "2026-10-20T04:26:36.352Z",
+      "label": "event/plan",
+      "model": "gpt-6.1-sol",
+      "effort": "xhigh",
+      "latency_ms": 25161,
+      "accepted": true
+    },
+    {
+      "source": {
+        "path": "logs/brain.jsonl",
+        "offset": 1093585740,
+        "bytes": 27098,
+        "sha256": "5162c88de2a0a5a1453b53f502c656407780f64b020fd5028360247af6a5c52a"
+      },
+      "ts": "2026-10-20T04:28:15.703Z",
+      "label": "map/route-plan",
+      "model": "gpt-6.1-sol",
+      "effort": "xhigh",
+      "latency_ms": 30680,
+      "accepted": true
+    }
+  ],
+  "v6_triggers": [
+    {
+      "source": {
+        "path": "logs/v6-build.jsonl",
+        "offset": 26020938,
+        "bytes": 220879,
+        "sha256": "ec2f29435328527c3a24c041fde8413bdaf882b514d56e6eda7ff5588f15b09f"
+      },
+      "ts": "2026-10-20T04:26:08.194Z",
+      "question_id": "direction_1_1",
+      "kind": "replan",
+      "stage": "trigger",
+      "elapsed_ms": 0,
+      "triggers": [
+        "T6"
+      ],
+      "merged_triggers": [],
+      "skipped_triggers": [
+        "T6"
+      ],
+      "degradation": [
+        "t6_reason:situation:projection_unknown:489774c6a6287e47"
+      ],
+      "unknown": {
+        "count": 292,
+        "total": 317
+      },
+      "fallback": null
+    },
+    {
+      "source": {
+        "path": "logs/v6-build.jsonl",
+        "offset": 26241817,
+        "bytes": 224688,
+        "sha256": "0d5f0693b9ece2802ac190c51f45d337be3d14d51af0e167d96099e39df08a30"
+      },
+      "ts": "2026-10-20T04:27:44.440Z",
+      "question_id": "direction_1_1",
+      "kind": "replan",
+      "stage": "trigger",
+      "elapsed_ms": 0,
+      "triggers": [
+        "T6"
+      ],
+      "merged_triggers": [],
+      "skipped_triggers": [
+        "T6"
+      ],
+      "degradation": [
+        "t6_reason:situation:projection_unknown:489774c6a6287e47"
+      ],
+      "unknown": {
+        "count": 292,
+        "total": 324
+      },
+      "fallback": null
+    }
+  ],
+  "history_snapshot": [
+    {
+      "source": {
+        "path": "logs/v6-history-snapshots.jsonl",
+        "offset": 0,
+        "bytes": 351,
+        "sha256": "737ee0a64f1f4c1d998feda32dea1b569b58fcbaf4515a677e1c6b230fbf2c28"
+      },
+      "row": {
+        "schema": "v6-history-snapshot-v1",
+        "run_id": "9J6T70HSYPG7",
+        "character": "silent",
+        "status": "loaded",
+        "loaded_at": "2026-10-20T04:24:58.020Z",
+        "cutoff": "2026-10-19T22:18:15.821Z",
+        "generated_at": "2026-10-19T22:30:46.940Z",
+        "content_sha256": "531cd98c93395888832e05d6678a65a821862ab2bf5f9ac621d89ab1e0988219",
+        "age_ms": 22002199,
+        "policy": "last_completed_packet"
+      }
+    }
+  ],
+  "limits": "finite initial window only; trigger-stage elapsed_ms is not direction evaluation latency; skipped T6 rows are not extra brain calls/code fallbacks; full-run direction latency/degradation awaits natural logs"
+}

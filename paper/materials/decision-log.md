@@ -4998,3 +4998,7 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
 - 2026-10-20T12:00:17+08:00 接W8/Claude11:59冷缓存实测暂停：PID2025282/2025297只读核均T，ops无信号操作；原owner只做代码/定向，待实际live55终局再原线恢复。未查询/重派full、动live或play；STOP/W3排除/Regent与Roy原门槛不变。原件paper/materials/20261020-1159-ops/receipt.json。
 
 - 2026-10-20T12:08:26+08:00 原W8冷缓存benchmark已结束：对照已冻结start_ticks，2025282/2025297只读均不在；ops无信号。原中断样本保留且排除耗时/code-fallback比较，待实际live55终局后原owner重跑；不查询/重派检查或启动新负载，STOP/live/Regent边界不变。原件paper/materials/20261020-1207-ops/receipt.json。
+
+- 2026-10-20T12:23:03+08:00 V6-R403实际发布：live f563cc997814fdccd2dafe8a50d3725c62102c7f，行为e7119a67/55树78040c8c完整tsc0/full609文件5790过2跳；R3/T6/快路径/预算/byte/W8后台精确集成，17ID双attempt及85R3字段读回；W3失败排除，无整main。按Roy10:26原授权自然恢复，首局异常回退2cdb；未关科学父/角色ACK，Regent暂停。原件paper/materials/20261020-1215-ops/publication.json。
+
+- 2026-10-20T12:38:02+08:00 V6-R403原9J6T70HSYPG7已于12:24:57.491续跑，首动作12:26:36.356完成，首战Jev核85正式条目；17ID/字段读回及R3账本shipped，不冒因果收益/关闭父或角色ACK。W3失败排除、Regent暂停、异常回退2cdb；原件paper/materials/20261020-1215-ops/receipt.json。

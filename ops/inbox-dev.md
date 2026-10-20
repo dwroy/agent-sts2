@@ -4330,3 +4330,9 @@ request_id=roy-20261017-human-pace-h0 revision=3 input_sha256=1e1c259a15f1824119
 
 
 2026-10-20T12:08:26+08:00 原ops已实收W8更新，暂停的自有冷缓存benchmark由原owner核start_ticks后逐一SIGTERM+SIGCONT结束。对照11:59已冻结身份：PID2025282/start136034527、PID2025297/start136034532，本次只读/proc两PID均不存在；ops未发送信号，也不按旧PID恢复或处理复用进程。清单由“暂停中”更新为“原进程已结束、中断样本保留且排除比较”；没有把中断耗时、准备速度或code-fallback计为完整样本，也不据此报性能收益或验收通过。样本留存和未启新重负载为原W8回报，本轮未改其文件或启动任务。原W8仍待实际live55固定78040c8c终局后再重跑；ops不查询/重复full，不启动scratch、生产刷新或模型。原自然运行窗口身份提醒继续，STOP、W3排除、Regent暂停及Roy原精确发布/恢复门槛保持，无live或play操作。原件paper/materials/20261020-1207-ops/receipt.json。
+
+
+2026-10-20T12:23:03+08:00 V6-R403已实际登记，live f563cc997814fdccd2dafe8a50d3725c62102c7f（行为提交e7119a6750d3a38a4de78274e623042c1996c94f，精确55树78040c8c完整tsc0/609文件5790过2跳）。旧R402仅19条出牌记忆→R3 85条：78条件HP观察＋7标签；固定消费者78原计划命中＋7合成管线通过，HP非因果收益，19单局无SE/340priority=null及sidecar n/design/method等未消费缺口保持。T6同题重复消费→去重；代码续步重复构筑评估→跳过；战斗预算保留修复；byte来源偏移计数上限→非负安全整数（游戏count不变）；局后等待全刷新→后台增量、下一局读上一完成包并记录新鲜度。来源6c77/b1d0/cb0b/6b0d/f5c0/a992及必要bff8；17组合及first/including_sl原指标通过实际加载器/共享工厂读回，数值unknown不冒全已知。W3已知Jev烟测失败，明确不带303bbb；保486知识SHA及三轮旧full1，无整main运输。按Roy10:26原授权完成通知后自然恢复；首局错误/卡住/代码兜底明显增多，直接回退实际旧live2cdb7b3dc8043180bfecec74e6b23c58d3f87a5e并报收件箱。原件paper/materials/20261020-1215-ops/publication.json；不代角色ACK/关科学父，Regent继续暂停。
+
+
+2026-10-20T12:38:02+08:00 已核V6-R403实际发布，live f563cc997814fdccd2dafe8a50d3725c62102c7f，原55叶完整tsc0/609文件5790过2跳，17ID双attempt/hash及85R3字段读回。按Roy12:23原指示续原存档9J6T70HSYPG7，实际恢复12:24:57.491 CST，首事件动作12:26:36.356完成；四类Jev与出牌条目显式开启，首战原题85正式条目核同。首批22动作零fallback仅该窗口，事件脑25.161秒、路线脑30.680秒；跳过T6不算额外脑调用，整局方向耗时/降级留自然日志。W3烟测失败排除，Regent仍暂停，异常回退2cdb。三旧通知原Roy可见证明已核，兼容登记及科学缺口保持pending，不代角色ACK。R3账本0532已按既有专题名登记shipped，旧拒绝留痕；fixture回收守卫未过，保源分支和现场。原件paper/materials/20261020-1215-ops/receipt.json。

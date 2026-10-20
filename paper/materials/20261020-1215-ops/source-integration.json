@@ -1,0 +1,78 @@
+{
+  "at": "2026-10-20T12:19:15+08:00",
+  "main_before": "e736f53939bb13fd6b223547711890e762e60da0",
+  "main_test_fix_commit": "7c87092a3ee6757ba1aae5fb55a750d0a20fa6cc",
+  "main_only_six_test_paths": [
+    "agent/tests/v6-off-equivalence.test.ts",
+    "agent/tests/v6-room.test.ts",
+    "agent/tests/fixtures/v6-off-silent-outcome-stats.json",
+    "agent/tests/build-decider.test.ts",
+    "ops/tests/test_learning_flow.py",
+    "agent/tests/v6-publication-task-link.test.ts"
+  ],
+  "live_before": "2cdb7b3dc8043180bfecec74e6b23c58d3f87a5e",
+  "live_commit": "e7119a6750d3a38a4de78274e623042c1996c94f",
+  "live_tree": "78040c8c27ad482c77b454d8b010fddaa554c40d",
+  "accepted_host": {
+    "request": "roy-live-bundle-bounded-cli-guards-20261020-1147",
+    "state": "passed-awaiting-ops-commit-readback-release",
+    "pid": 2011990,
+    "start_ticks": 136026878,
+    "nice": 19,
+    "live_before": "2cdb7b3dc8043180bfecec74e6b23c58d3f87a5e",
+    "prospective_tree": "78040c8c27ad482c77b454d8b010fddaa554c40d",
+    "input_sha256": "7459df396f045dc66b6ac307e74ad15e482e517b13393c6e27a4ac648bdd6857",
+    "combined_full_rc": 0,
+    "source_committed": false,
+    "new_model": false,
+    "new_game": false,
+    "started_at": "2026-10-20T11:52:05+08:00",
+    "original_lock": "ops/live-merge.lock",
+    "TMPDIR": "/home/dw/Projects/agent-sts2/.t/l47",
+    "steps": [
+      {
+        "name": "tsc",
+        "argv": [
+          "npx",
+          "--no-install",
+          "tsc",
+          "-p",
+          "tsconfig.json",
+          "--noEmit"
+        ],
+        "log": ".artifacts/ops-wake-20261020-1147/tsc.log",
+        "started_at": "2026-10-20T11:52:05+08:00",
+        "pid": 2012030,
+        "exit_code": 0,
+        "finished_at": "2026-10-20T11:52:07+08:00",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "bytes": 0
+      },
+      {
+        "name": "vitest",
+        "argv": [
+          "npx",
+          "--no-install",
+          "vitest",
+          "run",
+          "--maxWorkers=1"
+        ],
+        "log": ".artifacts/ops-wake-20261020-1147/vitest.log",
+        "started_at": "2026-10-20T11:52:07+08:00",
+        "pid": 2012474,
+        "exit_code": 0,
+        "finished_at": "2026-10-20T12:14:46+08:00",
+        "sha256": "e57a6b4b268318891f3c6a023c77a79cffad16b85ed99363d8cb17d94a1b119d",
+        "bytes": 373
+      }
+    ],
+    "finished_at": "2026-10-20T12:14:46+08:00"
+  },
+  "source55_and_knowledge486_SHA_match": true,
+  "gitleaks_rc": 0,
+  "W3_excluded": true,
+  "whole_main_merged": false,
+  "STOP_kept": true,
+  "release_id": null,
+  "actor_started": false
+}
