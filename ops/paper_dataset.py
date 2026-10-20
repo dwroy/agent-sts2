@@ -14,6 +14,7 @@ and reads / copies only up to that offset: the derived tables and the raw snapsh
 same cut. Re-running overwrites every output.
 """
 import collections
+import contextlib
 import csv
 import datetime as dt
 import gzip
@@ -28,6 +29,8 @@ import statistics
 import subprocess
 import sys
 import tarfile
+import tempfile
+import zlib
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from paths import LOGS, ROOT  # noqa: E402
@@ -755,8 +758,24 @@ def build():
 
 
 # ---------------------------------------------------------------- raw snapshot
+@contextlib.contextmanager
+def atomic_output(path):
+    """Publish only closed output; keep the previous archive on write failure."""
+    fd, staged = tempfile.mkstemp(prefix="." + os.path.basename(path) + ".", suffix=".tmp",
+                                  dir=os.path.dirname(path) or ".")
+    os.close(fd)
+    try:
+        yield staged
+        os.replace(staged, path)
+    finally:
+        if os.path.exists(staged):
+            os.unlink(staged)
+
+
+
 def gzip_copy(src, dst, limit=None):
-    with open(src, "rb") as fi, gzip.open(dst, "wb", compresslevel=6) as fo:
+    with atomic_output(dst) as staged, open(src, "rb") as fi, open(staged, "wb") as target, \
+            gzip.GzipFile(filename=os.path.basename(dst), mode="wb", compresslevel=6, fileobj=target) as fo:
         remaining = limit if limit is not None else float("inf")
         while remaining > 0:
             chunk = fi.read(int(min(8 << 20, remaining)))
@@ -785,14 +804,14 @@ def raw_snapshot(limits):
         if name.startswith("shadow-") and name.endswith(".jsonl"):
             gzip_copy(os.path.join(LOGS, name), os.path.join(RAW, name + ".gz"))
     for sub in ["console", "escalation"]:
-        with tarfile.open(os.path.join(RAW, sub + ".tar.gz"), "w:gz") as tf:
+        with atomic_output(os.path.join(RAW, sub + ".tar.gz")) as staged, tarfile.open(staged, "w:gz") as tf:
             tf.add(os.path.join(LOGS, sub), arcname=sub)
     files = sorted(f for f in os.listdir(RAW) if f != "SHA256SUMS")
-    with open(os.path.join(RAW, "SHA256SUMS"), "w") as fh:
+    with atomic_output(os.path.join(RAW, "SHA256SUMS")) as staged, open(staged, "w") as fh:
         for f in files:
             fh.write(f"{sha256(os.path.join(RAW, f))}  {f}\n")
     # Uncompressed-source hashes of the exact cut, for provenance.
-    with open(os.path.join(RAW, "SOURCE_CUT.json"), "w") as fh:
+    with atomic_output(os.path.join(RAW, "SOURCE_CUT.json")) as staged, open(staged, "w") as fh:
         json.dump({"cut_bytes": limits, "note": "decisions/deepseek-reasoning/runs/states were copied up to these byte offsets"}, fh, indent=2)
 
 
@@ -1010,20 +1029,24 @@ def scan_for_keys():
             p = os.path.join(base, name)
             if not os.path.isfile(p):
                 continue
-            if name.endswith(".tar.gz"):
-                with tarfile.open(p, "r:gz") as tf:
-                    for m in tf.getmembers():
-                        if m.isfile():
-                            data = tf.extractfile(m).read().decode("utf8", "replace")
-                            if KEY_RE.search(data):
-                                hits.append(f"{name}:{m.name}")
-                continue
-            opener = gzip.open if name.endswith(".gz") else open
-            with opener(p, "rt", encoding="utf8", errors="replace") as fh:
-                for line in fh:
-                    if KEY_RE.search(line):
-                        hits.append(name)
-                        break
+            try:
+                if name.endswith(".tar.gz"):
+                    with tarfile.open(p, "r:gz") as tf:
+                        for m in tf.getmembers():
+                            if m.isfile():
+                                data = tf.extractfile(m).read().decode("utf8", "replace")
+                                if KEY_RE.search(data):
+                                    hits.append(f"{name}:{m.name}")
+                    continue
+                opener = gzip.open if name.endswith(".gz") else open
+                with opener(p, "rt", encoding="utf8", errors="replace") as fh:
+                    for line in fh:
+                        if KEY_RE.search(line):
+                            hits.append(name)
+                            break
+            except (OSError, EOFError, tarfile.TarError, zlib.error) as error:
+                # Never include file contents or decoder messages in failure receipts.
+                raise RuntimeError(f"key scan failed for {p}: {type(error).__name__}") from None
     return hits
 
 
