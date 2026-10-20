@@ -5132,3 +5132,5 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
 - 2026-10-20T13:38:04+08:00 ops：活雾9S9 F12两帧原字节/SHA核同，沿pending silent-proposal-99f14e823a866ad7留学习缺口；绑定历史084302/01a14c76/codex3，原boss-sim请求及owner启动来源缺失待原通道补，不造父/派批；正式发布与live模拟消费者未验。watcher CLI0非角色ACK，原件 paper/materials/20261020-1330-ops/receipt.json。
 
 - 2026-10-20T13:44:57+08:00 ops：接原战斗owner codex1/01a15382自报及自身重叠full中断回报，完整结果未判绿；原1320终局释放窗口后沿v6-w4w6原线程通知，不查询/重启检查或改live；活雾原来源绑定仍待补。原件 paper/materials/20261020-1344-ops/receipt.json。
+
+- 2026-10-20T13:46:29+08:00 ops：活雾gap原生指派字节核同，08de审计W8/纯bug修复codex1 W4W6来源分列，原提案99f14 pending、不冒boss-sim批；三旧通知原证据核同、609角色登记兼容未入main/live，不代ACK，原1320窗口终局后通知原owner。原件 paper/materials/20261020-1345-ops/receipt.json。

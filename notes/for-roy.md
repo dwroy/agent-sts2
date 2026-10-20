@@ -3291,3 +3291,8 @@ request_id=roy-20261017-human-pace-h0 revision=3 input_sha256=1e1c259a15f1824119
 ### 2026-10-20T13:44:57+08:00 原战斗owner检查窗口协调
 
 本轮收到W8及原战斗分叉owner的窗口更正：W8仅nice19/ionice3单任务原授权测量，未启动完整full；重叠检查属于v6-w4w6原树。owner自报codex1、native01a15382-68eb-7093-b677-040c9b45767f，已仅按PID停止自身四进程并保留部分日志；不记完整通过，也不据中断判产品失败。其tsc0与4文件38项定向通过分列，最终来源证据/提交仍待交，未合main/live。原1320宿主检查2405031/2405140未操作；待原learner-checks终局及窗口释放后，沿该原线程通知，由owner按nice19单worker再做最终full，不轮询或复派。活雾缺口补记owner自报身份，原boss-sim请求/启动SHA绑定及正式发布、live模拟消费者读回仍pending。原件：paper/materials/20261020-1344-ops/receipt.json。
+
+
+### 2026-10-20T13:46:29+08:00 原生工程owner来源更正及继承通知核验
+
+本轮核原生指派冻结行，并按原offset/1631字节及SHA核同：08de战斗回归审计属于W8，13:20战斗分叉/snakebite纯bug任务属于codex1的v6-w4w6、01a15382线程。原活雾gap已更正工程owner，继续锚pending提案silent-proposal-99f14e823a866ad7；历史084302/codex3只作复盘来源，纯bug指派不能冒既有boss-sim批，原请求/派发/输入绑定、学习发布与live模拟读回仍待办。三旧异议消息、原ops转达及watcher→Roy可见证据均核同；兼容609未main/live，保原pending，不重复全文或代填角色ACK。已沿原watcher回更正，CLI0不冒native实收；原1320终局释放后再通知W4W6窗口，未查询/重启检查或动live/actor/Regent。原件：paper/materials/20261020-1345-ops/receipt.json。
