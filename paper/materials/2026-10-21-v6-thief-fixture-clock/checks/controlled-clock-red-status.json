@@ -1,0 +1,19 @@
+{
+  "command": [
+    "node",
+    "tools/with-temp.mjs",
+    "node_modules/vitest/vitest.mjs",
+    "run",
+    "tests/thief-card-value.test.ts",
+    "-t",
+    "on: the turn-2",
+    "--maxWorkers=1",
+    "--reporter=json",
+    "--outputFile=../../controlled-clock-red.json"
+  ],
+  "start": "2026-10-20T19:56:58.369273+00:00",
+  "end": "2026-10-20T19:57:06.632469+00:00",
+  "seconds": 8.263182920170948,
+  "rc": 1,
+  "purpose": "Controlled expiry branch with advancing injected clock, not a replay of the original full failure."
+}

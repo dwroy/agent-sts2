@@ -1,0 +1,40 @@
+
+ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/v6-refresh-p4-r407-20261021/.artifacts/thief-failure-r1/joint-input/agent
+
+{"diagnostic":"controlled_deadline","value":{"fight":"RPC6X61N9FQ0:1:20","card":"岩石铠甲","cardId":"STONE_ARMOR","boss":"SOUL_FYSH","bossName":"灵魂异鱼","lowTrust":null,"entryHp":54,"maxHp":80,"entrySource":"HP now (no route plan to the boss)","step":10,"samples":0,"requested":8,"timedOut":true,"ms":120008,"measures":null,"route":null,"ratio":null,"hp":null,"status":"no_samples","why":"no sample finished within the time budget"}}
+ ❯ tests/thief-card-value.test.ts (10 tests | 1 failed | 9 skipped) 4533ms
+     × on: the turn-2 decision row carries thief_card_value (岩石铠甲), computed once for the fight; off: none 4530ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/thief-card-value.test.ts > THIEF_COST: the loop computes the card's value before the question, once, and logs it > on: the turn-2 decision row carries thief_card_value (岩石铠甲), computed once for the fight; off: none
+AssertionError: expected { fight: 'RPC6X61N9FQ0:1:20', …(19) } to match object { fight: 'RPC6X61N9FQ0:1:20', …(3) }
+(16 matching properties omitted from actual)
+
+- Expected
++ Received
+
+  {
+    "boss": "SOUL_FYSH",
+    "card": "岩石铠甲",
+    "fight": "RPC6X61N9FQ0:1:20",
+-   "samples": 8,
++   "samples": 0,
+  }
+
+ ❯ tests/thief-card-value.test.ts:144:44
+    142|     process.stdout.write(JSON.stringify({ diagnostic: "controlled_dead…
+    143|     expect(logged).toHaveLength(1);
+    144|     expect(logged[0]!["thief_card_value"]).toMatchObject({ fight: "RPC…
+       |                                            ^
+    145|     expect(on.notes.filter((note) => note.startsWith("thief card value…
+    146|     const off = await play(frames(), new FakeDeepSeek(() => "skip"), {…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 9 skipped (10)
+   Start at  03:58:22
+   Duration  7.36s (transform 2.23s, setup 328ms, import 2.36s, tests 4.53s, environment 0ms)
+

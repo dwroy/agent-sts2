@@ -1,0 +1,45 @@
+
+ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/ops-p4-r407-joint-20261021/agent
+
+ ❯ tests/thief-card-value.test.ts (10 tests | 1 failed) 32175ms
+     × on: the turn-2 decision row carries thief_card_value (岩石铠甲), computed once for the fight; off: none 31367ms
+{"fixture":"two_signed_card_pick_contrasts","prompt_bytes":6817,"sent_entries":2}
+.....
+----------------------------------------------------------------------
+Ran 5 tests in 0.048s
+
+OK
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/thief-card-value.test.ts > THIEF_COST: the loop computes the card's value before the question, once, and logs it > on: the turn-2 decision row carries thief_card_value (岩石铠甲), computed once for the fight; off: none
+AssertionError: expected { fight: 'RPC6X61N9FQ0:1:20', …(19) } to match object { fight: 'RPC6X61N9FQ0:1:20', …(3) }
+(16 matching properties omitted from actual)
+
+- Expected
++ Received
+
+  {
+    "boss": "SOUL_FYSH",
+    "card": "岩石铠甲",
+    "fight": "RPC6X61N9FQ0:1:20",
+-   "samples": 8,
++   "samples": 0,
+  }
+
+ ❯ tests/thief-card-value.test.ts:141:44
+    139|     const logged = on.records.filter((record) => record["thief_card_va…
+    140|     expect(logged).toHaveLength(1);
+    141|     expect(logged[0]!["thief_card_value"]).toMatchObject({ fight: "RPC…
+       |                                            ^
+    142|     expect(on.notes.filter((note) => note.startsWith("thief card value…
+    143|     const off = await play(frames(), new FakeDeepSeek(() => "skip"), {…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed | 628 passed (629)
+      Tests  1 failed | 5935 passed | 2 skipped (5938)
+   Start at  03:26:11
+   Duration  1429.03s (transform 20.84s, setup 41.23s, import 141.72s, tests 1156.53s, environment 71ms)
+

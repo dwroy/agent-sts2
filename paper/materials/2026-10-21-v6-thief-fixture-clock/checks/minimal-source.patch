@@ -1,0 +1,46 @@
+diff --git a/agent/tests/thief-card-value.test.ts b/agent/tests/thief-card-value.test.ts
+index 3a1558e67..a4afb4518 100644
+--- a/agent/tests/thief-card-value.test.ts
++++ b/agent/tests/thief-card-value.test.ts
+@@ -11,7 +11,7 @@ import { setMonsterDbForTests } from "../src/knowledge/monster-db.js";
+ import { parseGameState } from "../src/hand/mod/schema.js";
+ import { createScreenMemory } from "../src/memory/types.js";
+ import { SerialDeckRunner } from "../src/sim/build-sim-pool.js";
+-import { cardHpOf, cardValueText, ensureThiefCardValue, thiefCardValue, THIEF_CARD_CAP_HP, type ThiefCardMeasures } from "../src/sim/thief-card-value.js";
++import { cardHpOf, cardValueText, ensureThiefCardValue, thiefCardValue, THIEF_CARD_CAP_HP, THIEF_CARD_BUDGET_MS, type ThiefCardMeasures } from "../src/sim/thief-card-value.js";
+ import { cardLoot } from "../src/reflex/thief.js";
+ import { FIXTURE_DB, FIXTURE_MM } from "./boss-sim-build-fixture.js";
+ import { readFileSync } from "node:fs";
+@@ -132,15 +132,30 @@ describe("THIEF_COST: the loop computes the card's value before the question, on
+     (t1["run"] as Raw)["gold"] = fx.fightStart.gold;
+     return [t1, t2, JSON.parse(JSON.stringify(t2)) as Raw, mainMenuPayload()];
+   }
+-  const thiefSim = { runner: new SerialDeckRunner(), samples: 8, db: FIXTURE_DB, mm: FIXTURE_MM };
++  // This fixture checks the paired result and loop logging, not host scheduling against the production deadline.
++  // Keep the real serial simulator, decks and sample count; the expiry branch below has its own advancing clock.
++  const thiefSim = { runner: new SerialDeckRunner(), samples: 8, db: FIXTURE_DB, mm: FIXTURE_MM, now: () => 0 };
+ 
+   it("on: the turn-2 decision row carries thief_card_value (岩石铠甲), computed once for the fight; off: none", async () => {
+     const on = await play(frames(), new FakeDeepSeek(() => "skip"), { thiefCost: true }, { thiefSim });
+     const logged = on.records.filter((record) => record["thief_card_value"]);
+     expect(logged).toHaveLength(1);
+-    expect(logged[0]!["thief_card_value"]).toMatchObject({ fight: "RPC6X61N9FQ0:1:20", card: "岩石铠甲", boss: "SOUL_FYSH", samples: 8 });
++    expect(logged[0]!["thief_card_value"]).toMatchObject({ fight: "RPC6X61N9FQ0:1:20", card: "岩石铠甲", boss: "SOUL_FYSH", samples: 8, requested: 8, timedOut: false });
+     expect(on.notes.filter((note) => note.startsWith("thief card value: 岩石铠甲"))).toHaveLength(1);
+     const off = await play(frames(), new FakeDeepSeek(() => "skip"), { thiefCost: false }, { thiefSim });
+     expect(off.records.some((record) => record["thief_card_value"])).toBe(false);
+   }, 120_000);
++
++  it("an exhausted simulation clock keeps the value unknown instead of inventing completed samples", async () => {
++    let clock = 0;
++    const value = await thiefCardValue(env(frames()[1]!), { id: "STONE_ARMOR", upgraded: false, name: "岩石铠甲" }, {
++      ...thiefSim,
++      now: () => { const at = clock; clock += THIEF_CARD_BUDGET_MS + 1; return at; },
++    });
++    expect(value).toMatchObject({
++      fight: "RPC6X61N9FQ0:1:20", card: "岩石铠甲", boss: "SOUL_FYSH",
++      samples: 0, requested: 8, timedOut: true, status: "no_samples", hp: null, measures: null,
++      why: "no sample finished within the time budget",
++    });
++  });
+ });

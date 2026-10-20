@@ -5436,3 +5436,7 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
 - 2026-10-21 03:52:04 CST 原ops：P4原固定tree58db1f19/2399输入1058987e终局tsc0/full1，唯一thief-card-value:141 samples8→0，PID均退/窗口释放，原W8与watcherCLI0投递待原生确认，不重未变源full/发布。P2只收0f1材料11叶及原append，合法弃药接口阻塞，POTIONbrain与R407不变。原件paper/materials/20261021-0350-ops/receipt.json。
 
 - 2026-10-21 03:56:06 CST 原ops：173ARCPHRVSS模块告警冻168决策/4脑题/1配置复算同，五奖励独立A/B有DPR/16–18样本/约4.26秒、Jev2拿3跳无fallback；旧3计算零失败降级、300门保持，pipeline4/4。并原001302兼容候选，原告警/校准限制不关闭，不重启/派模型或常规报Roy。原件paper/materials/20261021-0355-ops/receipt.json。
+
+| 2026-10-21 04:00 | W8 P4 单败：确认 thief-card-value 固定 8 样本测试耦合真实模拟时钟；7127c1528 仅注入测试时钟并另锁过期零样本/未知原因，联合2399输入仅1叶变化，tsc0/定向11过/gitleaks0；原full1与历史零样本物理原因未知保留，不冒联合绿，不改预算/断言阈值/生产，交ops单点重组验收。材料 paper/materials/2026-10-21-v6-thief-fixture-clock/。 |
+
+- 2026-10-21 04:04:30 CST 原ops：7127时钟夹具单叶核同，原P4失败2399输入仅此叶变化/其余2398同，42材料清单扫描0，旧根因unknown/full1保留；原29+1准备树4af416d9，唯一有限checker2192743沿原kernel锁重冻最新live知识后完整门，实际启动待原事件，不轮询/提前发布。原件paper/materials/20261021-P4-clock-repaired-ops/receipt.json。

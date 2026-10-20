@@ -1,0 +1,18 @@
+--- a/agent/tests/thief-card-value.test.ts
++++ b/agent/tests/thief-card-value.test.ts
+@@ -132,11 +132,14 @@
+     (t1["run"] as Raw)["gold"] = fx.fightStart.gold;
+     return [t1, t2, JSON.parse(JSON.stringify(t2)) as Raw, mainMenuPayload()];
+   }
+-  const thiefSim = { runner: new SerialDeckRunner(), samples: 8, db: FIXTURE_DB, mm: FIXTURE_MM };
++  let clock = 0;
++  const thiefSim = { runner: new SerialDeckRunner(), samples: 8, db: FIXTURE_DB, mm: FIXTURE_MM,
++    now: () => { const at = clock; clock += 15_001; return at; } };
+ 
+   it("on: the turn-2 decision row carries thief_card_value (岩石铠甲), computed once for the fight; off: none", async () => {
+     const on = await play(frames(), new FakeDeepSeek(() => "skip"), { thiefCost: true }, { thiefSim });
+     const logged = on.records.filter((record) => record["thief_card_value"]);
++    console.log(JSON.stringify({ diagnostic: "controlled_deadline", value: logged[0]?.["thief_card_value"] }));
+     expect(logged).toHaveLength(1);
+     expect(logged[0]!["thief_card_value"]).toMatchObject({ fight: "RPC6X61N9FQ0:1:20", card: "岩石铠甲", boss: "SOUL_FYSH", samples: 8 });
+     expect(on.notes.filter((note) => note.startsWith("thief card value: 岩石铠甲"))).toHaveLength(1);
