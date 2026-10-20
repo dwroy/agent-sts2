@@ -120,3 +120,6 @@ F8 的本幕结果仍受 P<5% 和前提未知限制；幕初 22/52、空闲缓�
 2026-10-20T10:35:52.474404+08:00：原 ops 10:33:50 的原生 assistant 回执已核，报告 T12 的原 report/刷新自然结束、锁已释放，STOP 阻止下一局；这证明挂起已接管，不代后续精确同步/live全检/发布完成。原件 `ops-1026-native-adoption-readback.json`。W8 main `a99232e15` 的变基后受测来源逐字节核同（`W8-main-source-readback.json`），原608文件full与变基后9文件71项保持分列，不冒新联合full。
 
 原v6-w4w6已纠正生产agent/ cwd，但三个真实拿牌题仍coverage=0/4、未发Jev，商店/F16仍在途；可复现产物与限制见 `known-jev-smoke-handoff.md`。目前不认已知构筑评估Jev烟测通过，不运输W3。
+
+
+2026-10-20 10:40:18 CST 原 v6-w4w6 烟测 owner 已给本轮终局：**不通过已知构筑评估→Jev验收**。3拿牌、4商店、2休息共9局面均已知选项0，正式门控转大脑；准备5447–7957ms。隔离9次Nova HTTP200仅协议通过，数值选择质量未验成；本轮未预热，不能外推热缓存。6个商店/休息未返回有效table的原因仍需结合限时/provider核查。完整原消息见 `known-jev-smoke-final-relay.md`；owner正式报告/提交号待补。不据此放行W3 live；已转ops并补短清单，遵循Roy10:26安排，保留STOP及原现场，不新派烟测。
