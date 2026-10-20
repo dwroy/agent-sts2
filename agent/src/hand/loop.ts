@@ -206,7 +206,8 @@ export interface LoopTotals {
   elapsedMs: number;
 }
 
-const sleep = (ms: number): Promise<void> => new Promise((resolve) => setTimeout(resolve, ms));
+// Polling, settling and animation waits never consume a combat turn's Jev reserve.
+const sleep = (ms: number): Promise<void> => outsideDecisionBudget(() => new Promise((resolve) => setTimeout(resolve, ms)));
 
 /**
  * Actions that preserve progression after a run ends, in the order to try them. The mod documents
@@ -844,7 +845,7 @@ async function runLoopWithBudgets(options: LoopOptions): Promise<LoopStats> {
         onEvent({ type: "note", message: `V6 direction plan failed: ${String(error).slice(0, 160)}` });
       }
     }
-    if (!planned && !v6DirectionActive(env) && config.runPlan === "v1" && !state.in_combat && state.screen === "MAP") {
+    if (!planned && config.runPlan === "v1" && !state.in_combat && state.screen === "MAP" && !v6DirectionActive(env)) {
       const deepseek = brain;
       if (deepseek && brainBudgetLeft("run-plan")) {
         const items = journal.itemCount;

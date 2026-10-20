@@ -1,0 +1,11 @@
+
+ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/v6-combat-jev-budget-20261020/agent
+
+ ❯ tests/learner.test.ts (47 tests | 2 failed) 632ms
+     × the permission profile: all readable, writes only for write tasks (cwd, project root, tmp), key files unreadable in both 23ms
+     × finds the key files on disk: home keys, codex login, every .env in the known places (worktrees included) 20ms
+ ❯ tests/brain-claude.test.ts (15 tests | 1 failed) 3016ms
+     × checkClaudeBin: a version line is ok; a failing exit, a missing program and a hang say why 25ms
+ ❯ tests/ops-codex.test.ts (12 tests | 2 failed) 5172ms
+     × init: codex exec with the ops profile, high, compaction limit, the prompt on stdin 22ms
+     × a worktree root grants its main checkout's .git 14ms

@@ -1,0 +1,33 @@
+
+ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/v6-combat-jev-budget-20261020/agent
+
+ ❯ tests/human-pace-animation-reserve.test.ts (1 test | 1 failed) 215ms
+   × excludes repeated exhausted-budget animation polls and skips non-combat direction loading 213ms
+
+ Test Files  1 failed (1)
+      Tests  1 failed (1)
+   Start at  09:18:41
+   Duration  3.58s (transform 2.67s, setup 424ms, import 2.80s, tests 215ms, environment 0ms)
+
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/human-pace-animation-reserve.test.ts > excludes repeated exhausted-budget animation polls and skips non-combat direction loading
+AssertionError: [{"type":"decision","record":{"ts":"2026-10-20T01:18:45.182Z","mode":"play","screen":"COMBAT","session":"singleplayer/run","floor":9,"turn":3,"label":"combat/fixture-1","decision_id":"d4e77c6b-2a22-4f1c-a247-f14ee85d719c","decider":"jev","fingerprint":"{\"actions\":[\"play_card\",\"end_turn\",\"use_potion\"],\"combat\":true,\"enemies\":\"0:42:0:true|1:48:0:true\",\"event\":\"\",\"gold\":214,\"hand\":\"0:STRIKE_R:true|1:DEFEND_R:true|2:BASH:true\",\"hp\":55,\"maxHp\":80,\"nodes\":\"\",\"pendingCard\":false,\"player\":\"3:0:0\",\"potions\":\"FIRE_POTION:true:true|:false:false\",\"powers\":\"\",\"rewards\":\"\",\"run\":\"TESTRUN123\",\"screen\":\"COMBAT\",\"selection\":\"null:false\",\"shopOpen\":false,\"shopStock\":\"\",\"turn\":3}","questions":{"pick":{"type":"choice","instructions":"fixed","criteria":{"end":"End turn"}}},"answers":{},"chosen":{"action":"end_turn"},"expect":{"turn":3,"from":"decision"},"rationale":"fixed","confidence":1,"fallback":false,"reasked":false,"no_jev":false,"reused_answer":false,"request_ids":["fixed"],"latency_ms":{"plan":0,"jev":500,"action":0,"planner":0,"pre":0},"usage":{"input_tokens":1,"output_tokens":1},"sl_attempt":null,"sl_reloads":0,"run_id":"TESTRUN123","observed_ts":"2026-10-20T01:18:44.682Z","journal":{"choice":"fixed","reason":""},"result":"completed: fixed"},"totals":{"decisions":1,"acts":1,"jevCalls":1,"inputTokens":1,"outputTokens":1,"elapsedMs":500}},{"type":"note","message":"H1 idle preparation: {\"status\":\"unknown\",\"reason\":\"decision_budget_exhausted\"}"},{"type":"wait","screen":"COMBAT","reason":"fixed animation"},{"type":"note","message":"H1 idle preparation: {\"status\":\"unknown\",\"reason\":\"decision_budget_exhausted\"}"},{"type":"wait","screen":"COMBAT","reason":"fixed animation"},{"type":"note","message":"H1 idle preparation: {\"status\":\"unknown\",\"reason\":\"decision_budget_exhausted\"}"},{"type":"wait","screen":"COMBAT","reason":"fixed animation"},{"type":"note","message":"H1 idle preparation: {\"status\":\"unknown\",\"reason\":\"decision_budget_exhausted\"}"},{"type":"wait","screen":"COMBAT","reason":"fixed animation"},{"type":"note","message":"Jev call failed (fatal): expected 900 to be greater than or equal to 2500"},{"type":"stop","reason":"Jev failure: expected 900 to be greater than or equal to 2500"}]: expected 1 to be 2 // Object.is equality
+
+- Expected
++ Received
+
+- 2
++ 1
+
+ ❯ tests/human-pace-animation-reserve.test.ts:57:58
+     55|       onEvent: event => events.push(event), maxDecisions: 2, maxMinute…
+     56|     await vi.advanceTimersByTimeAsync(15000);
+     57|     expect((await pending).acts, JSON.stringify(events)).toBe(2); expe…
+       |                                                          ^
+     58|     expect(fixture.directions).toBe(0);
+     59|     const rows = readFileSync(cfg.log.decisionLog, "utf8").trim().spli…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+

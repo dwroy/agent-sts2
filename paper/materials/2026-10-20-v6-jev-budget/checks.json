@@ -1,0 +1,31 @@
+{
+  "tsc": {
+    "exit": 0,
+    "log": "tsc-v1.log"
+  },
+  "vitest": {
+    "exit": 0,
+    "files": 605,
+    "passed": 5752,
+    "skipped": 2,
+    "duration_seconds": 662.75,
+    "log": "vitest-full-v2.log"
+  },
+  "environment_attempt": {
+    "exit": 143,
+    "log": "vitest-full-v1.log",
+    "reason": "fixture root misidentification with TMPDIR nested in worktree; preserved original"
+  },
+  "regression": {
+    "before": "animation-before.log",
+    "after": "animation-v5.log",
+    "available_ms_before": 900,
+    "available_ms_after": 2500
+  },
+  "gitleaks": {
+    "exit": 0,
+    "findings": 0,
+    "scope": "staged source and audit artifacts"
+  },
+  "natural_game_after_fix": null
+}

@@ -12,6 +12,7 @@
 import { mkdirSync } from "node:fs";
 import { basename, dirname, join } from "node:path";
 import { appendJsonLine } from "../core/util/jsonl.js";
+import { measureDecisionBudgetStage } from "../core/decision-budget.js";
 
 import type { AnswerSet } from "../reflex/jev/answers.js";
 import { classifyJevError, type JevAskResult } from "../reflex/jev/client.js";
@@ -112,7 +113,7 @@ export interface JevAsker {
  */
 export async function askJevLogged(jev: JevAsker, log: JevPromptLog | null, meta: JevPromptMeta, state: unknown, questions: QuestionSet): Promise<JevAskResult> {
   const started = Date.now();
-  const projection = meta.label.startsWith("combat/plan") ? projectCombatDecision(state, questions) : null;
+  const projection = meta.label.startsWith("combat/plan") ? measureDecisionBudgetStage("combat_jev_projection", () => projectCombatDecision(state, questions)) : null;
   const wireState = projection?.state ?? state, wireQuestions = projection?.questions ?? questions;
   try {
     return await askOnceLogged(jev, log, meta, wireState, wireQuestions, undefined, projection ?? undefined);
@@ -146,18 +147,18 @@ async function askOnceLogged(jev: JevAsker, log: JevPromptLog | null, meta: JevP
   };
   try {
     const result = await jev.ask(state, questions);
-    log?.write({ ...base, request_id: result.requestId, latency_ms: result.latencyMs, input_tokens: result.inputTokens, output_tokens: result.outputTokens, answers: result.answers });
+    measureDecisionBudgetStage("jev_prompt_log", () => log?.write({ ...base, request_id: result.requestId, latency_ms: result.latencyMs, input_tokens: result.inputTokens, output_tokens: result.outputTokens, answers: result.answers }));
     return result;
   } catch (error) {
     const failure = classifyJevError(error);
-    log?.write({
+    measureDecisionBudgetStage("jev_prompt_log", () => log?.write({
       ...base,
       request_id: null,
       latency_ms: Date.now() - started,
       input_tokens: null,
       output_tokens: null,
       error: { kind: failure.kind, status: failure.status, message: failure.message.slice(0, 300) },
-    });
+    }));
     throw error;
   }
 }
