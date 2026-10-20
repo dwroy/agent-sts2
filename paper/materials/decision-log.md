@@ -5398,3 +5398,5 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
 - 2026-10-21 02:39:13 CST 原ops：原1ZZ局终STOP窗口实核后窄发布17源码+唯一CARD=jev，登记V6-R407（行为389d2650744047aa1e0ef94cd7b07e0ff4012469/live a7d07949efb03278a62050ca39447941309b4b7e）；498知识保留/实际loader与候选牌面差异及未知保护读回/双通知完成，REFLEXoff不变。原broker124保留，同一原动作宿主确认旧循环退后移STOP拉起1889333/w1H:p14，首局质量由Claude判，P2两稳定局/科学父/Regent保持；无重full/dataset/模型。原件paper/materials/20261021-0236-P0-publication-ops/receipt.json。
 
 - 2026-10-21 02:40:29 CST 原ops：R407新局JPWMMV67SZCL实际配置CARDjev/REFLEXoff与02:38:56首局内动作读回，run-config旧ENOBUFS Git空字段保留，发布源码独立核验；第一局Claude质量仍pending，不代收益/两稳定局。原件paper/materials/20261021-0236-P0-publication-ops/first-natural-readback.json。
+
+- 2026-10-21 02:42:25 CST 原ops：021302-s2十提案waiting/无源改/testsnull，原唯一dataset日志五OK/CLEAN后因R407唯一CARD配置源码漂移触发attention；原回执不改/不重dataset或合入。六窄源码/四祖先核同不代宽父，原缺口与失败保存，现R407质量/REFLEXoff/P2两局门不动。原件paper/materials/20261021-0239-ops/receipt.json。

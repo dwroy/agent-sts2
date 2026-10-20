@@ -1,5 +1,5 @@
 # 运维当前清单（调度器生成）
-生成：2026-10-21T02:40:29+08:00；原件索引：/home/dw/Projects/agent-sts2/ops/codex-ops/current.json SHA256 fb8482c5df4e9f90fb69d7c4138230f813138e39451b37cb8c94d3ed9926625d
+生成：2026-10-21T02:42:32+08:00；原件索引：/home/dw/Projects/agent-sts2/ops/codex-ops/current.json SHA256 ec6d6dae85ab9286ea8425bee75f00513496436b5169d108f8d3c93521e8d452
 当前授权：Roy§12授权Claude主导V6、P0优先；最新Claude02:1x允许局终STOP发布窗，取代此前无条件不挂STOP。学习正常，full仍原三锁挡新dataset重任务；旧失败和来源保留，不中断现行对局。
 最高Claude原边界挂起已执行：1ZZ自然F33败后原STOP/无活动play核同，17+CARDjev已发布V6-R407/live a7d07949（行为389d2650），REFLEXoff、498知识保留、消费者读回/核号双通知完成。broker124保留；宿主原动作核旧循环退后移STOP，autoplay1889333/w1H:p14已拉起；新局JPWMMV67SZCL配置jev/off及02:38:56首动作已核，Git元数据旧ENOBUFS仍null、源码另核。第一新局为Claude质量验收，不提前判通过；同值/全跳/错误/兜底增多沿原Claude链，P2仍两稳定局。后续边界包保原局终STOP窗口法，勿在局中STOP。原件20261021-0236-P0-publication-ops/receipt.json。
 原P3单独full626/5926和17联合绿分列；11源已随17发布R407，实际loader/奖励钩子代码读回、REFLEXoff，无合格对照经验或自然质量验收，R4科学父保持。live仍保legacy混合/50000界、禁805；原件0040/0113及本次0236发布回执。
@@ -9,7 +9,7 @@ R4同一70f386b9b/roy-20261020-v6-reflex-card-pick已实际一次派发2313、23
 P4 88c861525/458ee2aa5的3源+旧26依赖、74材料/28解压SHA已核，仅材料main；保新infra/test_disk_admission，未full/live。g7含Y427、YSRV读996caf78，5Z当时前置排队；冷/热/CPU让出/战斗影响/后继消费pending。P1原214d5f2d证零独立ask却run_plan off/权重无初始化、10T4体积省略，仍未验；P5/改名/旧expectedwin删除/商休药迁移/Act3/炉石延后。
 RBME health旧DPR与真实A/B同值缺陷分列，n300门/未知保护不改、不常规报Roy；0007-ops。旧退出unknown/YSRV恢复、ordinary守卫失败和宽工具/活雾/733/七科学父保原链，不重dataset或父ACK，Regent暂停。
 001302监控四staged源/full1九败、撤源复验七败和8冲突保留；含canonical fixture-command两依赖六叶包已冻/scan0，待P0后最新base完整门，未新full/main/live。普通三候选共享dataset一次5OK/CLEAN后漂移守卫拒，原null/attention、20waiting/五局复盘/0538proposed保持，不重生成。原件20261021-0050-ops/receipt.json。
-003744两策略20waiting/无源改/testsnull、0539仅proposed；6/9窄源核同不代整轮收益。原件20261021-0056-ops/receipt.json，不重dataset。
+003744/011301旧策略waiting/0539、0540仅proposed及原覆盖限制沿0056/0126/0133原件保留。021302-s2十提案waiting/无源改/testsnull、原WT净；原唯一dataset五OK/CLEAN后因R407 CARD配置漂移被守卫拒，attention保留，六源/四祖先核同不关宽父、不重dataset。原件20261021-0239-ops/receipt.json。
 011301-fix旧两次15秒/statusnull失败保留。014301-fix确有三叶未提交ordinary夹具候选/原SHA冻存；tsc0、定向2过/Python24过，沙箱四文件七败、撤源同七败，不冒完整绿。原11整支冲突不整合；三叶对R406私有apply-check0，绑定原ordinary项待P0后最新实际组合门，不重复实现/派批。原件20261021-0213-ops/receipt.json及0119旧原件。 记录曾受原调度器index锁阻；原锁自然释放和仅论文数据漂移已核，沿原计划保存，不重任务。
 011301两策略20waiting/无源改/testsnull；窄源祖先核同，s2六题/1946及13错误/5缺决策503保留，0540仅proposed。原件0126/0133-ops/receipt.json，不重dataset/关宽父。
 W4精英95材料/append已main67fc0f91、subtree d71216d7核同，不增P0门。原owner回收rc1/retained(persistent game instance retained)，绑定未改/未accepted/回收，不重试；原件20261021-elite-bias-ops/retention-intake.json。
@@ -17,7 +17,7 @@ W4精英95材料/append已main67fc0f91、subtree d71216d7核同，不增P0门。
 模型 gpt-6.1-sol；普通 ops/学习下次自然启动 high，专项可有理由 xhigh，大脑保持 xhigh。实际生效须原生回执，不能从默认值推定。
 账号选择：/home/dw/Projects/agent-sts2/ops/codex-ops/accounts/codex1/learner；原 ops：w1H:p8 / 01a1517b-e200-7c52-b463-6ea22220c0a9；执行模式：host；辅助/学习者沙箱保持。
 不读凭据/.env/游戏二进制，不改共享配置/账号；不推送。
-main 019b9e4a88158eb114cf28476cc5643828c2bb06
+main 461d26fe79a5cbe78933251e29400a4435cf6e9c
 live a7d07949efb03278a62050ca39447941309b4b7e；登记 release V6-R407（登记值不代表新树检查绿或实际采用）。
 首次另读 AGENTS/README/最新 STATE/学习协议；此后每次读本清单及事件原件。历史 handoff/decision-log 只沿事务定位，原件冲突保留并核查。
 在途批次 1（完整 owner/租约与路径见 current.json）：
@@ -42,10 +42,10 @@ human-pace 原owner=01a13dcd-83d4-7c63-b233-f93cf878ecf4，接续=01a14aae-4b03-
 - /home/dw/Projects/agent-sts2/ops/codex-ops/pending-continuations/original-20261021-014301-ordinary-fixture-three-leaf.json；phase=three-uncommitted-test-leaves-frozen-await-post-P0-latest-live-host-full
 - /home/dw/Projects/agent-sts2/ops/codex-ops/pending-continuations/original-20261021-001302-monitor-health-six-leaf.json；phase=original-uncommitted-four-monitor-plus-two-helper-deps-frozen-full1-after-P0-gate
 最新指令短引用（完整行按offset核）：
-- offset=2020319：- 2026-10-21 02:25:43 CST 原ops记录接续：保存扫描时读到main推进2c789c50，有限核验仅原调度器论文数据/普通收尾记录变化，原索引锁已自然释放且本轮三段追加均尚未入HEAD；沿原私有索引helper接续本轮记录，不覆盖并行数据或重复dataset/full。
 - offset=2021865：- 2026-10-21 02:40:29 CST 原ops V6-R407实际开局读回：原autoplay恢复PID1889333/w1H:p14，STOP已移除；新局JPWMMV67SZCL的run-config于02:38:40明确CARD=jev、REFLEXoff/商休药brain/方向off，02:38:56完成首个局内event/choose动作。run-config Git元数据仍旧ENOBUFS/null，原字节不补写
+- offset=2022558：- 2026-10-21 02:42:25 CST 原ops：021302-s2普通收尾停在attention，ops已核原回执与报告SHA、独立WT基线及洁净状态：本批无源码/知识修改、提交或合入，十项原提案全waiting，tests三项仍null。原dataset仅一次，02:31开始、02:39结束前日志五项校验通过/CLEAN；原回执未写dataset结果字段，按控制流已越过非零返回检查后才被源码漂移守卫拒，不能改称普通自动收
 原事务文件索引数（含历史）：pending-integrations=149；pending-deliveries=16；pending-records=31；pending-continuations=28；publications=1；完整路径见 current.json，不从文件存在推定未完成/运行。
-新指令原件：ops/inbox-dev.md 当前尾段 offset=2014365, bytes=8192；本轮新授权必须由事件引用，漏项查此段，勿整份重读。
+新指令原件：ops/inbox-dev.md 当前尾段 offset=2015513, bytes=8192；本轮新授权必须由事件引用，漏项查此段，勿整份重读。
 current.json 仅按本事件 batch/request/notice id 用程序筛字段，不全文读；动态源变化后核新清单，不用旧值冒当前。
 H0/0332等科学边界、精确宿主树、未完成发布/兼容及 retention 仅沿原报告和事务回执；清单不代验收、shipped、覆盖率或消费。
 严格普通无源码成功由调度器完成账本检查、唯一 dataset 与受控记录提交，回执 ops/codex-ops/ordinary-close/；异常、异议、缺证、人工决定正常唤醒。

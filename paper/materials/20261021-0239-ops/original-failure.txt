@@ -1,0 +1,12 @@
+本批scratch审计初稿失败（保留，不属于生产源码测试）：
+audit_questions.py 第一稿直接读取 item['row']['decision_id']。
+原decisions选中行中存在无decision_id的事件，执行返回1：
+  File "audit_questions.py", line 27, in <module>
+    all_decisions[item['row']['decision_id']] = item
+KeyError: 'decision_id'
+修正为只对显式非空decision_id建索引；重跑返回0，question-audit.log保存结果。
+
+原提问文件尚未生成时，先后两次sed读取question-1.json/question-5.json返回2：
+sed: can't read .../question-1.json: No such file or directory
+sed: can't read .../question-5.json: No such file or directory
+随后完成修正提证并实际读取完整题面，未用空文件或摘要替代。
