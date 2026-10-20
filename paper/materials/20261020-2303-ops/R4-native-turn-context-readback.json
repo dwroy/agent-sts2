@@ -1,0 +1,255 @@
+{
+  "thread": "01a159e0-b0ee-76f3-87e7-30049edd441c",
+  "readback": [
+    {
+      "path": "/home/dw/Projects/agent-sts2/ops/codex-ops/accounts/codex1/learner/sessions/2026/10/20/rollout-2026-10-20T23-14-20-01a159e0-b0ee-76f3-87e7-30049edd441c.jsonl",
+      "line": 1,
+      "offset": 0,
+      "bytes": 22991,
+      "sha256": "54e97a0b610a541733f5c454843403a8bdd8716aad9bca8a9956bdc68cceda05",
+      "type": "session_meta",
+      "fields": {
+        "id": "01a159e0-b0ee-76f3-87e7-30049edd441c",
+        "cwd": "/home/dw/Projects/agent-sts2/.worktrees/v6-reflex-distill-r4-20261020-2313"
+      }
+    },
+    {
+      "path": "/home/dw/Projects/agent-sts2/ops/codex-ops/accounts/codex1/learner/sessions/2026/10/20/rollout-2026-10-20T23-14-20-01a159e0-b0ee-76f3-87e7-30049edd441c.jsonl",
+      "line": 8,
+      "offset": 53851,
+      "bytes": 6264,
+      "sha256": "f682be125d852a27d063231febfe15256d0572a83c37b77b69e75f888c455167",
+      "type": "turn_context",
+      "fields": {
+        "cwd": "/home/dw/Projects/agent-sts2/.worktrees/v6-reflex-distill-r4-20261020-2313",
+        "model": "gpt-6.1-sol",
+        "effort": "high",
+        "approval_policy": "never",
+        "sandbox_policy": {
+          "type": "workspace-write",
+          "writable_roots": [
+            "/home/dw/Projects/agent-sts2",
+            "/home/dw/Projects/agent-sts2/.git",
+            "/home/dw/Projects/agent-sts2/.git/worktrees/v6-reflex-distill-r4-20261020-2313"
+          ],
+          "network_access": false,
+          "exclude_tmpdir_env_var": false,
+          "exclude_slash_tmp": false
+        },
+        "permission_profile": {
+          "type": "managed",
+          "file_system": {
+            "type": "restricted",
+            "entries": [
+              {
+                "path": {
+                  "type": "path",
+                  "path": "/home/dw/.deepseek_api_key"
+                },
+                "access": "deny"
+              },
+              {
+                "path": {
+                  "type": "path",
+                  "path": "/home/dw/.jev_api_keys"
+                },
+                "access": "deny"
+              },
+              {
+                "path": {
+                  "type": "glob_pattern",
+                  "pattern": "/home/dw/.sts2-jev-env*"
+                },
+                "access": "deny"
+              },
+              {
+                "path": {
+                  "type": "path",
+                  "path": "/home/dw/.codex/auth.json"
+                },
+                "access": "deny"
+              },
+              {
+                "path": {
+                  "type": "path",
+                  "path": "/home/dw/.codex1/auth.json"
+                },
+                "access": "deny"
+              },
+              {
+                "path": {
+                  "type": "path",
+                  "path": "/home/dw/.deepseek_api_key"
+                },
+                "access": "deny"
+              },
+              {
+                "path": {
+                  "type": "path",
+                  "path": "/home/dw/.jev_api_keys"
+                },
+                "access": "deny"
+              },
+              {
+                "path": {
+                  "type": "path",
+                  "path": "/home/dw/.sts2-jev-env-m1"
+                },
+                "access": "deny"
+              },
+              {
+                "path": {
+                  "type": "path",
+                  "path": "/home/dw/.sts2-jev-env-v3"
+                },
+                "access": "deny"
+              },
+              {
+                "path": {
+                  "type": "path",
+                  "path": "/home/dw/.sts2-jev-env.m1-0925.bak"
+                },
+                "access": "deny"
+              },
+              {
+                "path": {
+                  "type": "path",
+                  "path": "/home/dw/.sts2-jev-env.openrouter.bak"
+                },
+                "access": "deny"
+              },
+              {
+                "path": {
+                  "type": "glob_pattern",
+                  "pattern": "/home/dw/Projects/agent-sts2/**/*.env"
+                },
+                "access": "deny"
+              },
+              {
+                "path": {
+                  "type": "glob_pattern",
+                  "pattern": "/home/dw/Projects/agent-sts2/**/.env"
+                },
+                "access": "deny"
+              },
+              {
+                "path": {
+                  "type": "path",
+                  "path": "/home/dw/Projects/agent-sts2"
+                },
+                "access": "write"
+              },
+              {
+                "path": {
+                  "type": "path",
+                  "path": "/home/dw/Projects/agent-sts2/.git"
+                },
+                "access": "write"
+              },
+              {
+                "path": {
+                  "type": "path",
+                  "path": "/home/dw/Projects/agent-sts2/.git/config"
+                },
+                "access": "read"
+              },
+              {
+                "path": {
+                  "type": "path",
+                  "path": "/home/dw/Projects/agent-sts2/.git/hooks"
+                },
+                "access": "read"
+              },
+              {
+                "path": {
+                  "type": "path",
+                  "path": "/home/dw/Projects/agent-sts2/.git/worktrees/v6-reflex-distill-r4-20261020-2313"
+                },
+                "access": "write"
+              },
+              {
+                "path": {
+                  "type": "glob_pattern",
+                  "pattern": "/home/dw/Projects/agent-sts2/agent/node_modules/**/*.env"
+                },
+                "access": "deny"
+              },
+              {
+                "path": {
+                  "type": "glob_pattern",
+                  "pattern": "/home/dw/Projects/agent-sts2/agent/node_modules/**/.env"
+                },
+                "access": "deny"
+              },
+              {
+                "path": {
+                  "type": "path",
+                  "path": "/home/dw/Projects/agent-sts2/agent/node_modules"
+                },
+                "access": "read"
+              },
+              {
+                "path": {
+                  "type": "glob_pattern",
+                  "pattern": "/home/dw/Projects/agent-sts2/data/logdb-venv/**/*.env"
+                },
+                "access": "deny"
+              },
+              {
+                "path": {
+                  "type": "glob_pattern",
+                  "pattern": "/home/dw/Projects/agent-sts2/data/logdb-venv/**/.env"
+                },
+                "access": "deny"
+              },
+              {
+                "path": {
+                  "type": "path",
+                  "path": "/home/dw/Projects/agent-sts2/data/logdb-venv"
+                },
+                "access": "read"
+              },
+              {
+                "path": {
+                  "type": "path",
+                  "path": "/home/dw/Projects/agent-sts2/.worktrees/v6-reflex-distill-r4-20261020-2313"
+                },
+                "access": "write"
+              },
+              {
+                "path": {
+                  "type": "special",
+                  "value": {
+                    "kind": "root"
+                  }
+                },
+                "access": "read"
+              },
+              {
+                "path": {
+                  "type": "special",
+                  "value": {
+                    "kind": "slash_tmp"
+                  }
+                },
+                "access": "write"
+              },
+              {
+                "path": {
+                  "type": "special",
+                  "value": {
+                    "kind": "tmpdir"
+                  }
+                },
+                "access": "write"
+              }
+            ],
+            "glob_scan_max_depth": 8
+          },
+          "network": "restricted"
+        }
+      }
+    }
+  ],
+  "model_effort_verified": true
+}

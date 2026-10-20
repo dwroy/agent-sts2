@@ -1,0 +1,572 @@
+diff --git a/agent/src/v6/card-pick-reflex.ts b/agent/src/v6/card-pick-reflex.ts
+new file mode 100644
+index 000000000..94397c18c
+--- /dev/null
++++ b/agent/src/v6/card-pick-reflex.ts
+@@ -0,0 +1,74 @@
++import { createHash } from "node:crypto";
++import type { DecisionEnv } from "../memory/types.js";
++import { contrastConfidence } from "./contrast-statistics.js";
++import { v6Config } from "./config.js";
++import type { V6Knowledge } from "./knowledge.js";
++import { evaluatePredicate } from "./predicate.js";
++import { plain, safeKey } from "./schema.js";
++
++type Row = Record<string, unknown>;
++const finite = (v: unknown): number | undefined => typeof v === "number" && Number.isFinite(v) ? v : undefined;
++const text = (v: unknown): string | undefined => typeof v === "string" && v.length > 0 ? v : undefined;
++const boolean = (v: unknown): boolean | undefined => typeof v === "boolean" ? v : undefined;
++const rows = (v: unknown): Row[] | undefined => Array.isArray(v) && v.length <= 1000 && v.every(plain) ? v : undefined;
++const compact = (row: Row): Row => Object.fromEntries(Object.entries(row).filter(([, v]) => v !== undefined));
++
++/** Actual pre-pick inventory plus already-computed results only; no simulation or history backfill. */
++export function cardPickPredicateFacts(env: DecisionEnv, option: string, candidate: Row, weights: Readonly<Record<string, number>>) {
++  const context: Row = {}, sources: Record<string, string> = {}, unavailable: Record<string, string> = {};
++  const put = (path: string, value: unknown, source: string, reason = "source_missing_or_invalid") => {
++    if (value == null) { unavailable[path] = reason; return; }
++    const parts = path.split("."); let scope = context;
++    for (const part of parts.slice(0, -1)) scope = scope[part] as Row ?? (scope[part] = {}) as Row;
++    scope[parts.at(-1)!] = value; sources[path] = source;
++  };
++  const run = env.state.run, raw = run?.raw ?? {};
++  put("act", run?.act_id != null && /^\d+$/.test(run.act_id) ? Number(run.act_id) + 1 : undefined, "state.run.act_id + 1");
++  put("floor", finite(run?.floor), "state.run.floor");
++  for (const [field, value] of [["hp", run?.current_hp], ["max_hp", run?.max_hp], ["gold", run?.gold]] as const)
++    put(`player.${field}`, finite(value), `state.run.${field === "hp" ? "current_hp" : field}`);
++  const card = (r: Row) => compact({ id: text(r["card_id"]), upgraded: boolean(r["upgraded"]), cost: finite(r["energy_cost"]) });
++  const deck = rows(raw["deck"]);
++  const validDeck = deck?.every(r => text(r["card_id"])) ? deck.map(card) : undefined;
++  put("player.deck", validDeck, "state.run.raw.deck (pre-pick physical cards)");
++  put("player.deck_size", validDeck?.length, "state.run.raw.deck.length (complete observed deck only)");
++  const relics = rows(raw["relics"]);
++  put("player.relics", relics?.every(r => text(r["relic_id"])) ? relics.map(r => r["relic_id"]) : undefined, "state.run.raw.relics[*].relic_id");
++  put("player.relic_counters", relics ? Object.fromEntries(relics.filter(r => typeof r["relic_id"] === "string" && safeKey(r["relic_id"]) && finite(r["stack"]) !== undefined)
++    .map(r => [String(r["relic_id"]), r["stack"]])) : undefined, "state.run.raw.relics[relic_id,stack] (missing stacks omitted)");
++  const cardFields = { id: "card_id", upgraded: "upgraded", cost: "energy_cost" };
++  const dto = card(candidate);
++  for (const [key, rawField] of Object.entries(cardFields)) put(`card.${key}`, dto[key], `state.raw.reward.card_options[option_id=${option}].${rawField}`);
++  put("direction_weights", Object.keys(weights).length ? weights : undefined, "current run's latest validated direction weights");
++  const progress = env.v6CardResults?.progress[option];
++  put("combos.items", progress?.map(p => ({ id: p.combo, direction: p.direction, missing_before: p.missing_before,
++    missing_after: p.missing_after, advanced: p.advanced })), "env.v6CardResults.progress[current option]", "current_option_combo_progress_unavailable");
++  // An elite pool is not the next encountered elite. Only explicitly current Bosses are upcoming facts.
++  const targets = env.v6CardResults?.targets.filter(t => t.kind === "current");
++  put("targets.items", targets?.length ? targets.map(t => ({ id: t.id, boss: t.boss, kind: t.kind, act: t.act, floor: t.floor })) : undefined,
++    "env.v6CardResults.targets[kind=current]", "no_explicit_current_boss; elite_pool_and_future_targets_are_not_observed_next_encounters");
++  unavailable["target.next_elite"] = "no_authoritative_next_elite_identity; observed_elite_pool_is_not_a_route_forecast";
++  return { context, sources, unavailable };
++}
++
++/** Legacy labels and uncontrolled numeric observations never become comparative pick advice. */
++export function cardPickReflex(env: DecisionEnv, knowledge: V6Knowledge, option: string, candidate: Row, weights: Readonly<Record<string, number>>) {
++  if (v6Config().reflex !== "on" || knowledge.reflex.status !== "loaded") return [];
++  const ascension = env.state.run?.ascension;
++  if (ascension == null || knowledge.character == null) return [];
++  const facts = cardPickPredicateFacts(env, option, candidate, weights);
++  return knowledge.reflex.value.filter(entry => {
++    const s = entry.signal;
++    return entry.applies_to === "card_pick" && entry.scope.character === knowledge.character && entry.scope.ascensions.includes(ascension)
++      && s.kind === "contrast" && (s.uncertainty.interval.lower > 0 || s.uncertainty.interval.upper < 0)
++      && evaluatePredicate(entry.predicate, facts.context) === true;
++  }).map(entry => {
++    const s = entry.signal;
++    if (s.kind !== "contrast") throw new Error("contrast filter invariant");
++    return { id: entry.id, label_en: entry.label_en, signal: s, confidence: contrastConfidence(s.value, s.se, s.n.clusters),
++      confidence_method: "two_sided_run_cluster_t_coverage_not_causal_probability", cores: entry.cores ?? [], combos: entry.combos ?? [],
++      source: { file: knowledge.reflex.path, version: entry.version, sha256: createHash("sha256").update(JSON.stringify(entry)).digest("hex"),
++        evidence_runs: [...new Set(entry.evidence.observations.map(o => o.run_id))], source_experience: entry.source_experience },
++      interpretation: "Observed adjusted take-minus-same-offer-not-taken difference; association, not causal benefit. Negative HP loss means less observed loss; fewer turns alone need not mean a better outcome." };
++  });
++}
+diff --git a/agent/src/v6/card-pick.ts b/agent/src/v6/card-pick.ts
+index 688e72dd0..ee0333b10 100644
+--- a/agent/src/v6/card-pick.ts
++++ b/agent/src/v6/card-pick.ts
+@@ -13,7 +13,7 @@ import { v6Config } from "./config.js";
+ import { postCombatCardReward } from "./card-reward-scope.js";
+ import { v6Directions, v6PublishedKnowledge } from "./direction-runtime.js";
+ import { KNOWLEDGE_DIR } from "../knowledge/files.js";
+-import { evaluatePredicate } from "./predicate.js";
++import { cardPickReflex } from "./card-pick-reflex.js";
+ import { V6BuildLog } from "./log.js";
+ import type { ProjectionEntry, Character } from "./formats.js";
+ 
+@@ -63,7 +63,7 @@ export function buildV6CardPick(env: DecisionEnv, table: V6ProjectionTable | und
+   const intents: Record<string, ActionRequest> = {}, criteria: Record<string, string> = {}, facts: Record<string, JsonValue> = {};
+   const plan = env.screenMemory.runPlan?.runId === str(env.state.raw.run_id) ? env.screenMemory.runPlan.v6 : undefined;
+   const weights = plan?.direction_weights ?? {};
+-  const knowledge = v6PublishedKnowledge(env, dir), ascension = env.state.run?.ascension ?? 0;
++  const knowledge = v6PublishedKnowledge(env, dir);
+   const entries = table?.enabled ? promptProjectionEntries(table, v6Config()).filter(e => summaries.some(s => s.id === e.direction_id
+     && directionCombos(s, toJsonValue(plan)).some(c => c.id === e.combo_id && c.source === e.combo_source))) : [];
+   if (actions.includes("choose_reward_card")) for (const [fallbackIndex, card] of offers.entries()) {
+@@ -73,12 +73,7 @@ export function buildV6CardPick(env: DecisionEnv, table: V6ProjectionTable | und
+     if (!id) continue;
+     intents[key] = { action: "choose_reward_card", option_index: index };
+     criteria[key] = `Take ${id}${bool(card.upgraded) ? "+" : ""}`;
+-    const reflex = v6Config().reflex === "on" && knowledge.reflex.status === "loaded" ? knowledge.reflex.value.filter(r =>
+-      r.applies_to === "card_pick" && r.scope.ascensions.includes(ascension)
+-      && (!r.directions || r.directions.some(d => (weights[d] ?? 0) > 0))
+-      && evaluatePredicate(r.predicate, { act: Number(str(asRecord(env.state.run?.raw).act_id, "0")) + 1,
+-        floor: env.state.run?.floor, player: { hp: env.state.run?.current_hp }, card: { id, tags: [] }, direction_weights: weights }) === true)
+-      .map(r => ({ id: r.id, label_en: r.label_en, signal: r.signal, confidence: r.confidence, n_support: r.evidence.n_support, n_contradict: r.evidence.n_contradict })) : [];
++    const reflex = cardPickReflex(env, knowledge, key, card, weights);
+     facts[key] = toJsonValue({ card: id, upgraded: bool(card.upgraded), reflex });
+   }
+   if (actions.includes("skip_reward_cards")) {
+diff --git a/agent/src/v6/contrast-statistics.ts b/agent/src/v6/contrast-statistics.ts
+new file mode 100644
+index 000000000..4173205a7
+--- /dev/null
++++ b/agent/src/v6/contrast-statistics.ts
+@@ -0,0 +1,52 @@
++/** Two-sided Student-t coverage for a run-cluster estimate, not a causal probability. */
++export function contrastConfidence(value: number, se: number, clusters: number): number {
++  if (!Number.isFinite(value) || !Number.isFinite(se) || se <= 0 || !Number.isInteger(clusters) || clusters < 2) return NaN;
++  if (value === 0) return 0;
++  const df = clusters - 1, t = Math.abs(value) / se;
++  return Math.max(0, Math.min(1, 1 - beta(df / (df + t * t), df / 2, .5)));
++}
++
++/** The learner uses the same interval convention as the strict published contract. */
++export function contrastInterval(value: number, se: number, clusters: number, level = .95): { level: number; lower: number; upper: number } {
++  if (!Number.isFinite(contrastConfidence(value, se, clusters)) || !(level > 0 && level < 1)) throw new Error("unidentifiable contrast uncertainty");
++  let lo = 0, hi = 1;
++  while (contrastConfidence(hi, 1, clusters) < level) hi *= 2;
++  for (let i = 0; i < 64; i++) {
++    const mid = (lo + hi) / 2;
++    if (contrastConfidence(mid, 1, clusters) < level) lo = mid; else hi = mid;
++  }
++  const radius = (lo + hi) / 2 * se;
++  return { level, lower: value - radius, upper: value + radius };
++}
++
++// Lanczos log-gamma and the continued fraction for the regularized incomplete beta.
++function logGamma(z: number): number {
++  const c = [676.5203681218851, -1259.1392167224028, 771.32342877765313, -176.61502916214059,
++    12.507343278686905, -.13857109526572012, 9.9843695780195716e-6, 1.5056327351493116e-7];
++  let x = .99999999999980993;
++  z -= 1;
++  for (let i = 0; i < c.length; i++) x += c[i]! / (z + i + 1);
++  const t = z + c.length - .5;
++  return .5 * Math.log(2 * Math.PI) + (z + .5) * Math.log(t) - t + Math.log(x);
++}
++function fraction(x: number, a: number, b: number): number {
++  const tiny = 1e-300;
++  const nonzero = (v: number) => Math.abs(v) < tiny ? tiny : v;
++  let c = 1, d = 1 / nonzero(1 - (a + b) * x / (a + 1)), h = d;
++  for (let m = 1; m <= 200; m++) {
++    const m2 = 2 * m;
++    let aa = m * (b - m) * x / ((a + m2 - 1) * (a + m2));
++    d = 1 / nonzero(1 + aa * d); c = nonzero(1 + aa / c); h *= d * c;
++    aa = -(a + m) * (a + b + m) * x / ((a + m2) * (a + m2 + 1));
++    d = 1 / nonzero(1 + aa * d); c = nonzero(1 + aa / c);
++    const delta = d * c; h *= delta;
++    if (Math.abs(delta - 1) < 3e-14) return h;
++  }
++  return NaN;
++}
++function beta(x: number, a: number, b: number): number {
++  if (x <= 0) return 0;
++  if (x >= 1) return 1;
++  const scale = Math.exp(logGamma(a + b) - logGamma(a) - logGamma(b) + a * Math.log(x) + b * Math.log1p(-x));
++  return x < (a + 1) / (a + b + 2) ? scale * fraction(x, a, b) / a : 1 - scale * fraction(1 - x, b, a) / b;
++}
+diff --git a/agent/src/v6/draft.ts b/agent/src/v6/draft.ts
+index d2ad9b4c1..a9f47824a 100644
+--- a/agent/src/v6/draft.ts
++++ b/agent/src/v6/draft.ts
+@@ -54,6 +54,7 @@ export function validateV6Draft(kind: "reflex" | "directions", raw: unknown, con
+       if (m.frequency.n > m.frequency.total) issues.push(`${m.reflex_id}: frequency denominator`);
+       const r = v.reflex.entries.find(r => r.id === m.reflex_id);
+       if (r && r.signal.kind !== "tag" && (m.effect_size !== r.signal.value || m.se !== (r.signal.se ?? null))) issues.push(`${m.reflex_id}: signal and audit disagree`);
++      if (r?.signal.kind === "contrast" && (m.design !== "observational" || m.n !== r.signal.n.take + r.signal.n.not_take)) issues.push(`${m.reflex_id}: contrast design/sample counts disagree`);
+     }
+   }
+   const runs = new Set(context.runIds);
+diff --git a/agent/src/v6/formats.ts b/agent/src/v6/formats.ts
+index 586957d9e..4eaeedda3 100644
+--- a/agent/src/v6/formats.ts
++++ b/agent/src/v6/formats.ts
+@@ -1,6 +1,7 @@
+ import { array, boolean, custom, enumeration, id, literal, nullable, number, object, optional, plain, record, refine, safeKey, text, validate, type Infer, type Result } from "./schema.js";
+ import type { JsonValue } from "../core/util/json.js";
+-import { predicateSchema } from "./predicate.js";
++import { cardPickDeckPredicate, predicateSchema } from "./predicate.js";
++import { contrastConfidence } from "./contrast-statistics.js";
+ 
+ const probability = number(0, 1);
+ const count = number(0, 1_000_000, true);
+@@ -146,7 +147,27 @@ export function validateProjectionEntries(values: readonly unknown[]): Result<Pr
+ 
+ const numericSignal = object({ kind: enumeration("hp", "win"), value: number(), se: optional(number(0)), unit: enumeration("hp", "probability") });
+ const tagSignal = object({ kind: literal("tag"), value: id, unit: literal("label") });
+-const signal = custom<Infer<typeof numericSignal> | Infer<typeof tagSignal>>((v, p, e) => {
++export const contrastSignalSchema = refine(object({
++  kind: literal("contrast"), design: literal("observational"), metric: enumeration("hp_loss", "turns", "damage_per_turn"),
++  value: number(), se: number(Number.MIN_VALUE), unit: enumeration("hp", "turns", "hp_per_turn"),
++  baseline: object({ treatment: literal("take_candidate"), control: literal("same_offer_not_taken"),
++    definition: text(1000), outcome_window: text(1000), adjustment: text(1000) }),
++  n: object({ take: positiveCount, not_take: positiveCount, clusters: number(2, 1_000_000, true) }),
++  uncertainty: object({ method: literal("run_cluster_t"), cluster: literal("run_id"),
++    interval: object({ level: number(.95, .99), lower: number(), upper: number() }) }),
++  audit: object({ path: text(1000), sha256: refine(text(64, 64), (v, e) => { if (!/^[a-f0-9]{64}$/.test(v)) e.push("audit.sha256: lowercase SHA256 required"); }) }),
++}), (s, e) => {
++  const expectedUnit = { hp_loss: "hp", turns: "turns", damage_per_turn: "hp_per_turn" }[s.metric];
++  if (s.unit !== expectedUnit) e.push("contrast: metric/unit mismatch");
++  if (s.n.clusters > s.n.take + s.n.not_take) e.push("contrast: clusters exceed observations");
++  const ci = s.uncertainty.interval, radius = (ci.upper - ci.lower) / 2;
++  const coverage = contrastConfidence(radius, s.se, s.n.clusters);
++  if (!(radius > 0) || Math.abs((ci.lower + ci.upper) / 2 - s.value) > 1e-8 * Math.max(1, Math.abs(s.value))
++    || !Number.isFinite(coverage) || Math.abs(coverage - ci.level) > 1e-6) e.push("contrast: interval must match run-cluster t uncertainty");
++});
++export type ContrastSignal = Infer<typeof contrastSignalSchema>;
++const signal = custom<Infer<typeof numericSignal> | Infer<typeof tagSignal> | ContrastSignal>((v, p, e) => {
++  if (plain(v) && v["kind"] === "contrast") { contrastSignalSchema.check(v, p, e); return; }
+   const tag = v && typeof v === "object" && "kind" in v && v.kind === "tag";
+   const schema = tag ? tagSignal : numericSignal;
+   schema.check(v, p, e);
+@@ -168,6 +189,12 @@ export const reflexEntrySchema = refine(object({
+   unique(v.source_experience, "source_experience", e);
+   if (v.cores) unique(v.cores, "cores", e);
+   if (v.combos) unique(v.combos, "combos", e);
++  if (v.signal.kind === "contrast") {
++    if (v.applies_to !== "card_pick") e.push("contrast: card_pick only");
++    if (!cardPickDeckPredicate(v.predicate)) e.push("contrast: every branch requires candidate identity and deck/combo condition");
++    if (Math.abs(v.confidence - contrastConfidence(v.signal.value, v.signal.se, v.signal.n.clusters)) > 1e-8) e.push("contrast: confidence must be derived from effect, SE and independent run count");
++    if (new Set(v.evidence.observations.map(o => o.run_id)).size < 2) e.push("contrast: evidence requires multiple independent runs");
++  }
+ });
+ export type ReflexEntry = Infer<typeof reflexEntrySchema>;
+ export const validateReflexEntry = (v: unknown): Result<ReflexEntry> => validate(reflexEntrySchema, v);
+diff --git a/agent/src/v6/knowledge.ts b/agent/src/v6/knowledge.ts
+index 4b04cbf56..60cf36c58 100644
+--- a/agent/src/v6/knowledge.ts
++++ b/agent/src/v6/knowledge.ts
+@@ -69,6 +69,11 @@ export function loadV6Knowledge(knowledgeDir: string, rawCharacter: string | nul
+     for (const entry of reflex.value) {
+       if (entry.directions?.some(id => !directionIds.has(id))) issues.push(`${entry.id}: unknown direction reference`);
+       if (entry.signal.kind === "tag" && !tags.has(entry.signal.value)) issues.push(`${entry.id}: unknown vocabulary tag`);
++      if (entry.signal.kind === "contrast") {
++        const coreIds = new Set(cores.status === "loaded" ? cores.value.map(c => c.direction) : []);
++        const combos = new Set(cores.status === "loaded" ? cores.value.flatMap(c => c.combos.map(combo => combo.id)) : []);
++        if (entry.cores?.some(id => !coreIds.has(id)) || entry.combos?.some(id => !combos.has(id))) issues.push(`${entry.id}: unknown published core/combo reference`);
++      }
+     }
+     if (issues.length) reflex = { status: "invalid", message: "小脑记忆引用缺失", path: reflex.path, issues };
+   }
+diff --git a/agent/src/v6/predicate.ts b/agent/src/v6/predicate.ts
+index b8ad13968..0bc99ed13 100644
+--- a/agent/src/v6/predicate.ts
++++ b/agent/src/v6/predicate.ts
+@@ -13,6 +13,7 @@ export const PREDICATE_COLLECTIONS: Readonly<Record<string, string>> = Object.fr
+   "enemies.items": "enemy", "player.hand": "card", "player.deck": "card",
+   "player.piles.draw": "card", "player.piles.discard": "card", "player.piles.exhaust": "card",
+   "potion.slots": "potion", "option.actions": "action", "rest.options": "rest_option", "shop.stock": "shop_item",
++  "combos.items": "combo", "targets.items": "target",
+ });
+ export const PREDICATE_FIELDS: Readonly<Record<string, FieldType>> = Object.freeze({
+   "enemy.intent_type": "string", "enemy.hits": "number", "enemy.total_damage": "number",
+@@ -27,6 +28,10 @@ export const PREDICATE_FIELDS: Readonly<Record<string, FieldType>> = Object.free
+   "player.hand": "collection", "player.piles": "record", "player.piles.draw": "collection",
+   "player.piles.discard": "collection", "player.piles.exhaust": "collection", "player.deck": "collection",
+   "player.relics": "tags", "player.relic_counters": "record", "player.max_hp": "number", "player.gold": "number",
++  "player.deck_size": "number", "combos.items": "collection", "combo.id": "string", "combo.direction": "string",
++  "combo.missing_before": "number", "combo.missing_after": "number", "combo.advanced": "number",
++  "targets.items": "collection", "target.id": "string", "target.boss": "string", "target.kind": "string",
++  "target.act": "number", "target.floor": "number",
+   "potion.id": "string", "potion.usable": "boolean", "potion.index": "number", "potion.occupied": "boolean", "potion.slots": "collection",
+   turn: "number", "sl.attempt": "number", "history.first_predicted_death": "record", "history.resource_handoff": "record",
+   "room.kind": "string", "rest.options": "collection", "rest_option.id": "string", "rest_option.enabled": "boolean",
+@@ -80,6 +85,23 @@ export const predicateSchema = custom<Predicate>((value, path, issues) => {
+ });
+ export const validatePredicate = (v: unknown): Result<Predicate> => validate(predicateSchema, v);
+ 
++/** Every OR branch must constrain candidate identity AND the observed deck/combo state. */
++export function cardPickDeckPredicate(p: Predicate): boolean {
++  function anchors(p: Predicate, boundCard = false): number {
++    if (p.op === "and") return p.args.reduce((bits, arg) => bits | anchors(arg, boundCard), 0);
++    if (p.op === "or") return p.args.reduce((bits, arg) => bits & anchors(arg, boundCard), 3);
++    if (p.op === "not") return 0;
++    if (p.op === "any" || p.op === "all") {
++      const bits = anchors(p.arg, boundCard || PREDICATE_COLLECTIONS[p.field] === "card");
++      return bits | (["player.deck", "combos.items"].includes(p.field) ? 2 : 0);
++    }
++    if (!("field" in p) || p.op === "exists") return 0;
++    return (!boundCard && p.field === "card.id" && p.op === "eq" ? 1 : 0)
++      | (p.field === "player.deck_size" ? 2 : 0);
++  }
++  return anchors(p) === 3;
++}
++
+ function read(context: unknown, path: string): unknown {
+   let current: unknown = context;
+   for (const part of path.split(".")) {
+diff --git a/agent/tests/v6-card-pick-reflex.test.ts b/agent/tests/v6-card-pick-reflex.test.ts
+new file mode 100644
+index 000000000..2c9a50250
+--- /dev/null
++++ b/agent/tests/v6-card-pick-reflex.test.ts
+@@ -0,0 +1,99 @@
++import { mkdtempSync, mkdirSync, writeFileSync, rmSync } from "node:fs";
++import { tmpdir } from "node:os";
++import { join } from "node:path";
++import { afterEach, expect, it, vi } from "vitest";
++import { buildV6CardPick } from "../src/v6/card-pick.js";
++import { observeV6CardReward } from "../src/v6/card-reward-scope.js";
++import { cardPickPredicateFacts, cardPickReflex } from "../src/v6/card-pick-reflex.js";
++import { loadV6Knowledge } from "../src/v6/knowledge.js";
++import { evaluatePredicate } from "../src/v6/predicate.js";
++import { asRecord } from "../src/core/util/json.js";
++import { contrastFixture } from "./v6-reflex-contrast-fixture.js";
++import { coreFixture } from "./v6-direction-core-fixtures.js";
++import { reflex } from "./v6-fixtures.js";
++import { board, env, type Raw } from "./oneshot-support.js";
++
++const dirs: string[] = [];
++afterEach(() => { vi.unstubAllEnvs(); for (const dir of dirs.splice(0)) rmSync(dir, { recursive: true, force: true }); });
++function fixture(character = "silent", entries: unknown[] = [contrastFixture()]) {
++  vi.stubEnv("CHARACTER", character); vi.stubEnv("V6_BUILD", "on"); vi.stubEnv("V6_CARD_DECIDER", "jev");
++  const dir = mkdtempSync(join(tmpdir(), "v6-pick-reflex-")); dirs.push(dir);
++  const kd = join(dir, "characters", character); mkdirSync(kd, { recursive: true });
++  writeFileSync(join(kd, "build-cores.json"), JSON.stringify({ schema: "build-cores-v1", character, entries: [{ ...coreFixture(), scope: { character, ascensions: [0] } }] }));
++  writeFileSync(join(kd, "reflex.json"), JSON.stringify({ schema: "reflex-file-v1", character, entries: entries.map(e => ({ ...asRecord(e), scope: { character, ascensions: [0] } })) }));
++  const raw = board("xljq-f5-reward", "reward");
++  Object.assign(raw.run as Raw, { character_id: character.toUpperCase(), ascension: 0, act_id: "0", floor: 8,
++    deck: [{ card_id: "TEST_ANCHOR", upgraded: true, energy_cost: 1 }, { card_id: "TEST_OTHER", upgraded: false, energy_cost: 0 }],
++    relics: [{ relic_id: "TEST_RELIC", stack: null }] });
++  raw.available_actions = ["choose_reward_card", "skip_reward_cards"];
++  raw.reward = { pending_card_choice: true, card_options: [{ index: 2, card_id: "TEST_CARD", upgraded: true },
++    { index: 7, card_id: "TEST_OTHER", upgraded: false }, { index: 9, card_id: "TEST_THIRD", upgraded: false }] };
++  const e = env(raw), combat = structuredClone(raw);
++  Object.assign(combat, { screen: "COMBAT", in_combat: true, available_actions: ["end_turn"], reward: null });
++  Object.assign(combat.combat as Raw, { hand: [], enemies: [], action_readiness: { can_use_combat_actions: true, combat_over_or_ending: false } });
++  observeV6CardReward(e.screenMemory, env(combat).state); observeV6CardReward(e.screenMemory, e.state);
++  return { dir, e, raw, knowledge: loadV6Knowledge(dir, character) };
++}
++
++it("sends only matched nonzero-interval contrasts alongside A/B with traceable evidence, even before weights initialize", () => {
++  vi.stubEnv("V6_REFLEX", "on");
++  const positive = { ...contrastFixture(4), id: "POSITIVE" }, crossing = { ...contrastFixture(.1), id: "CROSSES_ZERO" };
++  const { e, dir, knowledge } = fixture("silent", [contrastFixture(), positive, crossing, reflex]);
++  expect(knowledge.reflex.status).toBe("loaded");
++  const pick = buildV6CardPick(e, undefined, dir)!;
++  const facts = asRecord(asRecord(pick.decision.state).options), rows = asRecord(facts.card2).reflex as Raw[];
++  expect(rows.map(r => r.id)).toEqual(["TEST_CONTRAST", "POSITIVE"]);
++  // The bounded prompt intentionally omits empty arrays; unmatched advice is absent.
++  expect(asRecord(facts.card7)).not.toHaveProperty("reflex");
++  expect(asRecord(facts.card9)).not.toHaveProperty("reflex");
++  const row = rows[0]!;
++  expect(asRecord(row.source).file).toBe(join(dir, "characters/silent/reflex.json"));
++  expect(asRecord(row.source).sha256).toMatch(/^[a-f0-9]{64}$/);
++  expect(asRecord(row.signal).design).toBe("observational");
++  expect(row.cores).toEqual(["TEST_A"]); expect(row.combos).toEqual(["TEST_A:min"]);
++  expect(pick.decision.state).toHaveProperty("core_metrics");
++  const bytes = Buffer.byteLength(JSON.stringify({ state: pick.decision.state, questions: pick.decision.questions }));
++  expect(bytes).toBeLessThan(30_000);
++  process.stdout.write(JSON.stringify({ fixture: "two_signed_card_pick_contrasts", prompt_bytes: bytes, sent_entries: rows.length }) + "\n");
++});
++
++it("keeps off/shadow reward questions byte-equivalent for every character despite published contrast data", () => {
++  for (const character of ["silent", "ironclad", "regent", "necrobinder", "defect"]) {
++    vi.stubEnv("V6_REFLEX", "off"); const a = fixture(character), b = fixture(character, []);
++    const prompt = (f: typeof a) => { const p = buildV6CardPick(f.e, undefined, f.dir)!; return JSON.stringify({ state: p.decision.state, questions: p.decision.questions }); };
++    const before = prompt(a);
++    expect(before).toBe(prompt(b));
++    vi.stubEnv("V6_REFLEX", "shadow"); expect(prompt(a)).toBe(before);
++    expect(cardPickReflex(a.e, a.knowledge, "card2", { card_id: "TEST_CARD" }, {})).toEqual([]);
++  }
++});
++
++it("uses observed deck, same-option combo progress and current Boss only; missing facts stay unknown", () => {
++  const { e } = fixture();
++  const candidate = { card_id: "TEST_CARD", upgraded: true };
++  let f = cardPickPredicateFacts(e, "card2", candidate, {});
++  expect(evaluatePredicate({ op: "eq", field: "player.deck_size", value: 2 }, f.context)).toBe(true);
++  expect(evaluatePredicate({ op: "eq", field: "player.relic_counters.TEST_RELIC", value: 0 }, f.context)).toBe(null);
++  expect(evaluatePredicate({ op: "eq", field: "card.cost", value: 0 }, f.context)).toBe(null);
++  expect(f.unavailable["combos.items"]).toBe("current_option_combo_progress_unavailable");
++  e.v6CardResults = { schema: "v6-card-combat-results-v1", immediate: [], long_term: [],
++    progress: { card2: [{ direction: "TEST_A", combo: "TEST_A:min", missing_before: 2, missing_after: 1, advanced: 1 }] },
++    targets: [{ id: "f17:BOSS", boss: "TEST_BOSS", kind: "current", act: 1, floor: 17, probability: 1, labels: [] },
++      { id: "elite_pool", boss: "TEST_ELITE", kind: "elite", act: 1, floor: 9, probability: null, labels: [] }],
++    telemetry: { elapsed_ms: 0, preparation_ms: 0, simulation_ms: 0, simulations: 0, cache_hits: 0, long_term_cache: "miss", long_term_computed: 0, long_term_total: 0, pending_work: false }, labels: [] };
++  f = cardPickPredicateFacts(e, "card2", candidate, {});
++  expect(evaluatePredicate({ op: "any", field: "combos.items", arg: { op: "eq", field: "combo.missing_after", value: 1 } }, f.context)).toBe(true);
++  expect(asRecord(f.context.targets).items).toEqual([{ id: "f17:BOSS", boss: "TEST_BOSS", kind: "current", act: 1, floor: 17 }]);
++  expect(cardPickPredicateFacts(e, "card7", candidate, {}).unavailable["combos.items"]).toBeDefined();
++  delete e.state.run!.raw.deck;
++  f = cardPickPredicateFacts(e, "card2", candidate, {});
++  expect(evaluatePredicate({ op: "not", arg: { op: "eq", field: "player.deck_size", value: 0 } }, f.context)).toBe(null);
++});
++
++it("rejects unknown formal combo references and skips missing ascension instead of assuming A0", () => {
++  vi.stubEnv("V6_REFLEX", "on");
++  const bad = fixture("silent", [{ ...contrastFixture(), combos: ["UNPUBLISHED"] }]);
++  expect(bad.knowledge.reflex.status).toBe("invalid");
++  const { e, knowledge } = fixture(); e.state.run!.ascension = null;
++  expect(cardPickReflex(e, knowledge, "card2", { card_id: "TEST_CARD" }, {})).toEqual([]);
++});
+diff --git a/agent/tests/v6-reflex-contrast-fixture.ts b/agent/tests/v6-reflex-contrast-fixture.ts
+new file mode 100644
+index 000000000..27e6977b7
+--- /dev/null
++++ b/agent/tests/v6-reflex-contrast-fixture.ts
+@@ -0,0 +1,21 @@
++/** Synthetic statistical and inventory contracts, not game knowledge. */
++import { contrastConfidence, contrastInterval } from "../src/v6/contrast-statistics.js";
++import { validateReflexEntry, type ReflexEntry } from "../src/v6/formats.js";
++import { reflex } from "./v6-fixtures.js";
++
++export function contrastFixture(value = -4, se = 1, clusters = 20): ReflexEntry {
++  const raw = { ...reflex, id: "TEST_CONTRAST", directions: [], cores: ["TEST_A"], combos: ["TEST_A:min"],
++    predicate: { op: "and", args: [{ op: "eq", field: "card.id", value: "TEST_CARD" },
++      { op: "gte", field: "player.deck_size", value: 2 }] },
++    signal: { kind: "contrast", design: "observational", metric: "hp_loss", value, se, unit: "hp",
++      baseline: { treatment: "take_candidate", control: "same_offer_not_taken", definition: "Same offered candidate and matched observed pre-pick deck state",
++        outcome_window: "Next observed combat through its end; censored windows excluded and counted", adjustment: "Synthetic deck-size strata only; residual confounding remains" },
++      n: { take: clusters, not_take: clusters, clusters },
++      uncertainty: { method: "run_cluster_t", cluster: "run_id", interval: contrastInterval(value, se, clusters) },
++      audit: { path: "scratch/synthetic-contrast.json", sha256: "a".repeat(64) } },
++    evidence: { observations: [{ run_id: "SYNTHETIC_RUN_A", floor: 8 }, { run_id: "SYNTHETIC_RUN_B", floor: 9 }], n_support: 1, n_contradict: 1 },
++    confidence: contrastConfidence(value, se, clusters) };
++  const result = validateReflexEntry(raw);
++  if (!result.ok) throw new Error(result.issues.join("\n"));
++  return result.value;
++}
+diff --git a/agent/tests/v6-reflex-contrast.test.ts b/agent/tests/v6-reflex-contrast.test.ts
+new file mode 100644
+index 000000000..4b385284d
+--- /dev/null
++++ b/agent/tests/v6-reflex-contrast.test.ts
+@@ -0,0 +1,75 @@
++import { expect, it } from "vitest";
++import { contrastConfidence, contrastInterval } from "../src/v6/contrast-statistics.js";
++import { validateReflexEntry } from "../src/v6/formats.js";
++import { cardPickDeckPredicate, evaluatePredicate, validatePredicate } from "../src/v6/predicate.js";
++import { contrastFixture } from "./v6-reflex-contrast-fixture.js";
++import { reflex } from "./v6-fixtures.js";
++import { vocab } from "./v6-fixtures.js";
++import { validateV6Draft } from "../src/v6/draft.js";
++
++it("computes statistical confidence from run count and clustered SE using independent closed-form t distributions", () => {
++  for (const t of [.1, .5, 1, 2, 10]) {
++    expect(contrastConfidence(t, 1, 2)).toBeCloseTo(2 / Math.PI * Math.atan(t), 11);
++    expect(contrastConfidence(t, 1, 3)).toBeCloseTo(t / Math.sqrt(t * t + 2), 11);
++    expect(contrastConfidence(-t, 1, 3)).toBe(contrastConfidence(t, 1, 3));
++  }
++  expect(contrastInterval(0, 1, 10).upper).toBeCloseTo(2.2621571628, 8);
++  expect(contrastInterval(0, 1, 20).upper).toBeCloseTo(2.0930240544, 8);
++  expect(contrastConfidence(4, 1, 20)).toBeGreaterThan(contrastConfidence(4, 1, 3));
++  expect(contrastConfidence(4, 1, 20)).toBeGreaterThan(contrastConfidence(4, 2, 20));
++  expect(contrastConfidence(0, 1, 20)).toBe(0);
++  for (const args of [[1, 0, 20], [1, 1, 1], [NaN, 1, 20]]) expect(contrastConfidence(...args as [number, number, number])).toBeNaN();
++});
++
++it("adds a strict observational contrast without changing legacy reflex contracts", () => {
++  const entry = contrastFixture();
++  expect(validateReflexEntry(reflex).ok).toBe(true);
++  expect(validateReflexEntry(entry)).toEqual({ ok: true, value: entry });
++  const s = entry.signal; if (s.kind !== "contrast") throw new Error("fixture");
++  for (const change of [
++    { confidence: .5 }, { applies_to: "combat_line" }, { predicate: { op: "eq", field: "card.id", value: "TEST_CARD" } },
++    { evidence: { ...entry.evidence, observations: [{ run_id: "ONE_RUN", floor: 8 }, { run_id: "ONE_RUN", floor: 9 }] } },
++    { signal: { ...s, design: "causal" } }, { signal: { ...s, se: 0 } }, { signal: { ...s, unit: "turns" } },
++    { signal: { ...s, n: { ...s.n, clusters: 1 } } }, { signal: { ...s, n: { ...s.n, clusters: 100 } } },
++    { signal: { ...s, baseline: { ...s.baseline, control: "all_other_decks" } } },
++    { signal: { ...s, uncertainty: { ...s.uncertainty, cluster: "turn" } } },
++    { signal: { ...s, uncertainty: { ...s.uncertainty, interval: { ...s.uncertainty.interval, lower: -4 } } } },
++    { signal: { ...s, audit: { ...s.audit, sha256: "unknown" } } },
++  ]) expect(validateReflexEntry({ ...entry, ...change }).ok, JSON.stringify(change)).toBe(false);
++  expect(validateReflexEntry(contrastFixture(.1)).ok).toBe(true); // Stored unknown-sign evidence remains available for audit.
++  const overflow = contrastFixture(0);
++  if (overflow.signal.kind === "contrast") Object.assign(overflow.signal.uncertainty.interval, { lower: -1e308, upper: 1e308 });
++  expect(validateReflexEntry(overflow).ok).toBe(false);
++});
++
++it("requires deck context in every branch, keeping quantified deck cards distinct from the offered candidate", () => {
++  const entry = contrastFixture(), candidate = { op: "eq", field: "card.id", value: "TEST_CARD" } as const;
++  const deck = { op: "any", field: "player.deck", arg: { op: "and", args: [
++    { op: "eq", field: "card.id", value: "TEST_ANCHOR" }, { op: "eq", field: "card.upgraded", value: true }] } } as const;
++  const parse = (v: unknown) => { const r = validatePredicate(v); if (!r.ok) throw new Error(r.issues.join()); return r.value; };
++  expect(cardPickDeckPredicate(parse(deck))).toBe(false);
++  expect(cardPickDeckPredicate(parse({ op: "or", args: [entry.predicate, candidate] }))).toBe(false);
++  const p = parse({ op: "and", args: [candidate, deck] });
++  expect(cardPickDeckPredicate(p)).toBe(true);
++  expect(evaluatePredicate(p, { card: { id: "TEST_CARD" }, player: { deck: [{ id: "TEST_ANCHOR", upgraded: true }] } })).toBe(true);
++  expect(evaluatePredicate(p, { card: { id: "TEST_CARD" }, player: { deck: [{ id: "TEST_ANCHOR", upgraded: false }, { id: "OTHER", upgraded: true }] } })).toBe(false);
++  expect(evaluatePredicate(p, { card: { id: "TEST_CARD" } })).toBe(null);
++});
++
++it("reconciles observational draft counts and uncertainty with the published contrast", () => {
++  const entry = contrastFixture(), s = entry.signal;
++  if (s.kind !== "contrast") throw new Error("fixture");
++  const context = { character: "silent" as const, experienceIds: entry.source_experience, directionIds: ["TEST_A"],
++    runIds: [...entry.evidence.observations.map(o => o.run_id), "FIXTURE_RUN"] };
++  const draft = { schema: "v6-reflex-draft-v1", character: "silent", vocab,
++    reflex: { schema: "reflex-file-v1", character: "silent", entries: [entry] },
++    coverage: entry.source_experience.map(experience_id => ({ experience_id, status: "converted", reflex_ids: [entry.id], directions: [], reason: "Synthetic contract fixture" })),
++    metrics: [{ reflex_id: entry.id, n: s.n.take + s.n.not_take, method: "Synthetic run-cluster fixture", design: "observational",
++      effect_size: s.value, se: s.se, frequency: { n: 40, total: 100 }, evidence: entry.evidence.observations }],
++    missing_fields: [], limitations: ["Synthetic data only"] };
++  expect(validateV6Draft("reflex", draft, context)).toEqual({ ok: true, value: draft });
++  for (const changed of [{ n: 1 }, { design: "paired" }, { se: 2 }, { effect_size: 4 }]) {
++    const d = structuredClone(draft); Object.assign(d.metrics[0]!, changed);
++    expect(validateV6Draft("reflex", d, context).ok).toBe(false);
++  }
++});
+diff --git a/learner/tasks/v6-reflex-distill-r4.md b/learner/tasks/v6-reflex-distill-r4.md
+new file mode 100644
+index 000000000..02ebb5f74
+--- /dev/null
++++ b/learner/tasks/v6-reflex-distill-r4.md
+@@ -0,0 +1,49 @@
++---
++title: Silent 拿牌小脑记忆第四轮观察对照
++model.codex: gpt-6.1-sol
++effort.codex: high
++tools: Read, Grep, Glob, Bash, Write
++timeout_min: 240
++max_turns: 800
++characters: silent
++---
++# 任务：以牌组状态为单位的拿牌观察对照
++
++你是离线 Silent 学习者，任务 v6-reflex-distill-r4，请求 roy-20261020-v6-reflex-card-pick，批次 {{batch}}，工作树 {{worktree}}，日志 {{logs_dir}}。模板本身不派发、不续派；只由 ops 按已授权流程启动。本轮只研究战斗胜利后的三选一奖励，applies_to=card_pick。不研究出牌、商店、休息、事件拿牌或药水，不把旧出牌标签直接改名发布。
++
++先读 README.md、docs/learning-protocol.md、docs/learning-requests.md、docs/learning-code-proposals.md、docs/v6-plan.md 第 5、12 节，以及冻结源码 agent/src/v6/{formats,predicate,card-pick-reflex,contrast-statistics,draft,knowledge}.ts 和 card-reward-scope.ts。严格格式和运行时来源以该次冻结源码为准，不擅自扩字段。源码与模板只有任务要求和工程约束，不是游戏知识或效应先验。
++
++只将报告、抽取程序、审计、拒绝项和复现统计写入 {{scratch}}；草稿只写本工作树 knowledge/characters/silent/pending/v6-reflex-distill-r4-{{batch}}/。不改正式知识、代码、第二/三轮产物、共享日志或账本；不提交、不合入、不发布。交付后由 ops 沿学习要求闭环复核实际格式、正式发布与消费者读回；批次完成不等于父要求关闭或实战收益成立。
++
++## 冻结输入和机会分母
++
++先核 {{evidence}} 的 task/request_id/batch/character、路径、字节边界和 SHA256。输入包括全部已结束 Silent 局的奖励与战斗证据、正式 experience.json、已核验的小脑记忆前轮草稿及 scratch 审计、已核验的正式核心构筑卡/组合 ID、当前格式和消费者。只读 data/logdb 可以加速，但必须追到原日志，不重建共享库，不读取在途未冻结窗口。缺少候选列表、执行回执、拿牌前牌组或结果窗口时逐项记未知，不能用最终牌组、后续抽牌或中文说明倒填。
++
++为全部已结束局及全部候选奖励机会建立 inventory，记录角色、局号、层/幕、奖励来源和三选一证明、候选牌及升级、拿牌前完整牌组及升级、HP、遗物及可见计数、已知当前 Boss、原选择与实际成功执行、后续战斗窗口、首试/SL、版本、进阶、排除或删失原因。只纳入能证明战斗胜利后奖励三选一的机会；事件、商店、特殊选择或来源未知不混入。全部代码版本和进阶合并为主口径，保留来源和敏感性检查。SL 重试不增加独立局数；首试按第一次 predicted_death 截断，including_sl 单列且不冒充首试。
++
++## 对照设计与条件
++
++1. 每条以“拿牌前牌组状态 + 被提供的候选身份/升级”为条件。predicate 每个 OR 分支都要约束候选 card.id，以及真实 player.deck/player.deck_size 或 combos.items 的牌组/组合条件；不要交单卡孤立胜率。牌组 any/all 绑定的是同一张牌，不能把两张牌的身份与升级拼接。条件还可用实际层、幕、HP、遗物、组合进度和明确当前 Boss。参考 cardPickPredicateFacts 的 sources/unavailable；精英池不能当成下一只精英，尚无权威下一精英身份就写未知，不补造字段。缺组合结果缓存也保持未知。
++2. treatment 为实际成功拿取该候选；control 为同样提供该候选、在可比拿牌前状态中未拿它的机会（选择别张或跳过）。不是“所有未见过这张牌的牌组”，也不是拿后牌组与拿前牌组直接相减。列出基线定义、匹配/分层/调整变量、重叠覆盖、被排除的无对照机会、选择其他候选的构成和剩余混杂。只用选择前信息分组，不以随后是否存活或是否凑齐筛有利样本。
++3. 结果只能是实际后续战斗观察。预先明确窗口、掉血/回合/每回合伤害的定义与单位、死亡/未结束/缺日志的删失处理、药水/SL 处理，以及不能比较的情况。signal.value 统一为“拿候选减同条件未拿”的调整后差值；负掉血表示观察到更少掉血，较少回合可能是更快获胜或更早死亡，不能一律称更强。没有真实伤害分母时不从敌人起终 HP 猜伤害。
++4. 全部设计写 design=observational。只能说关联或观察差异，不宣称因果、反事实收益或“拿这张必然少掉血”。单局、无共同支持、不可识别对照/误差保留未知及原因，不能捏造 se=0、样本量或区间。
++
++## 数值必须进入 signal
++
++新增对照信号严格采用冻结 contrastSignalSchema：kind=contrast；metric=hp_loss/turns/damage_per_turn；单位分别 hp/turns/hp_per_turn；value、严格正 se；baseline 的 treatment=take_candidate、control=same_offer_not_taken，以及 definition、outcome_window、adjustment。n.take/n.not_take 是真实奖励机会数，n.clusters 是两组联合的独立局数，不能拿动作数或回合数冒充。
++
++误差按 run_id 聚类，采用有解释的按局聚类估计，保留计算程序、每局贡献和有限样本修正。signal.uncertainty.method=run_cluster_t、cluster=run_id；interval 为 value ± t 分位数 × se，level 至少 .95（最多 .99），独立局自由度为 n.clusters-1。冻结 contrastInterval 可生成同口径区间，contrastConfidence(value,se,n.clusters) 生成条目顶层 confidence，禁止固定写 .5/.8/.95。该 confidence 是近似 t 统计覆盖分数，依赖估计与聚类假设，不是因果概率、校准成功率或游戏胜率。至少两个独立局且误差可识别；局数少、选择偏差、频繁试条件和多重比较都列限制，保留反例与反方向结果。
++
++每条 signal.audit 指向完整统计审计文件并给 SHA256；审计须随草稿保存在 pending，不能仅引用会回收的 scratch 临时文件。审计必须含原始局/层/时间或偏移、输入 SHA、纳入/排除机会、两组/独立局计数、结果分子分母、匹配和误差复现、全部反例。evidence.observations 给可核原证据，覆盖多局；完整独立局清单保存在审计，不用少量示例冒充完整分母。draft.metrics 的 effect_size/se/design/n 必须与 signal 对账，n=take+not_take；frequency 单独记条件命中/全部合格奖励机会分母。
++
++条目保留 source_experience 的真实来源，关联已冻结且核实的 cores（direction ID）和 combos（真实组合 ID）；没有对应项可留空并说明原因，不造 ID，不把在途方向或 scratch 当正式关联。label_en 最多 12 个英文词，不藏数值或因果措辞。不能量化的结论留在审计/拒绝表，不为迎合新消费端制造数值标签。
++
++## 排序、验收和交付
++
++产出 v6-reflex-draft-v1，reflex 只含本轮 card_pick 对照条目，词表仍用严格 reflex-vocab-v1。全部正式经验逐条 coverage=converted/partial/text_only/disputed，说明哪些旧出牌经验不适用本任务，不删原行缩小分母。全部历史机会、已有条目和新候选都有纳入/排除/未知去向。按“条件出现频率 × 绝对观察差值”排序，附单位、符号、两组 n、独立局数、区间、范围和局限；不同单位分表，未知不补 0。保留区间跨 0 的已识别估计作审计，消费者只发区间严格不含 0 的匹配条目，不能据此只报告显著结果而隐藏全部尝试。
++
++用冻结正式经验/方向/局号生成 validation-context.json，运行 knowledge/builders/validate-v6.ts 的 reflex 严格校验，保存命令、SHA、stdout、退出码。用固定数据验证统计可复现、value/se/n/区间/confidence 对账、candidate 与 deck 同时匹配、错误/缺字段未知、关联 ID 存在、V6_REFLEX=off/shadow 不发送、跨 0 不发送、正负两方向均能发送。只用注入固定环境，不运行游戏或真实模型请求；需要消费者测试补丁时写提案交开发，不自行改代码。
++
++中文 report.md、result.json、inventory、逐经验 coverage、全部候选/拒绝/反例、排序表、审计及复现程序写 scratch，草稿写 pending。result 至少列 task/request_id/batch/character、input_sha256、complete/status、covered_runs/experience_ids、两组机会/局数与全部排除数、counts、limitations/disagreements、artifacts[{path,sha256}]、report、continuation、merged=false、published=false。异议和与旧结论冲突须明确交 ops→watcher→Roy，不能代 ACK；证据不足就保持未完成并列下一步。
++
++本轮 simulation off，不启动 boss-sim、模拟池、在线模型或学习续批；不以模拟代替观察。计算 nice19、最多两进程，不安装依赖。不开局、不运行 play、不碰 live/STOP/Regent、共享配置或游戏二进制。模板只定义研究与交付要求，不提供任何游戏知识或预设效应数值。

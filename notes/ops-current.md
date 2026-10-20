@@ -1,49 +1,49 @@
-# Silent 已停用：Roy 2026-10-19 回收指令
-
-本段取代下方历史清单的运行状态；下方原 owner、父要求、通知与事务索引继续保留，不能当作仍在执行。
-
-- 游戏停止：主仓 `ops/STOP` 保留；控制器、brain、autoplay 均已退出。没有恢复 Regent 或开启新局。
-- Silent 调度器停止且 PAUSED；原 cron 已移除；学习者和运维运行 tab 已关闭，当前 watcher 仅保留用于回报。原线程和账号未改。
-- 两个 14:13 Silent 学习批次按用户停用中断，保留原 exit 143 / failed；根队列已取消并清空；按 Roy 最新指令不保留临时归档，不重跑或假记成功。
-- 两组获批磁盘／知识库源码已在 main，后续有效修正保留；各分支未合入的候选与未提交源码保存在 `paper/materials/20261019-silent-shutdown/`。候选归档不代表启用或上线。
-- 已删除 394 个 Silent/旧运维工作树及 595 个未注册残留目录，删除错误为零；临时大归档也已删除。磁盘可用约 296.4 GiB，较本次开始净增约 165.0 GiB。最终 `paper/materials/20261019-silent-shutdown/cleanup-receipt.json` 记录实际结果；原 66 个保留检出及并行新增 nova-gateway 均保留。
-- 正式经验 244 条 main/live 字节一致；main 已补齐最新 live 观测数据，catalog 的247个来源与211个生成片段哈希全部通过。原 lost 经验批次的完整草稿与提案存 `knowledge/characters/silent/pending/20261013-100759-experience-update/`，其中2条尚未正式发布，未冒充验收或启用。
-- `silent-0332`、`roy-20261016-sl-potion-retry`、`roy-20261017-human-pace-h0` 与原未 ACK 通知继续开放；本次取消运行不构成科学验收或 Roy ACK。
-- 再次恢复前先读本回执及现存 git worktree 清单；旧 `.worktrees/live` 路径不保证存在。保留的 live 分支/旧发布号不代表当前正在运行。
-
----
-
-## 停用前清单（历史原件）
-
 # 运维当前清单（调度器生成）
-生成：2026-10-19T14:23:10+08:00；原件索引：/home/dw/Projects/agent-sts2/ops/codex-ops/current.json SHA256 359dc458598ba9a43d75dce0f0bf868b0d371782d5e39e38dd612dce2f4ebc2f
-授权：Roy 2026-10-18 16:13；只处理原事件，不轮询、不新增模型/局/计时器，regent 保持暂停。
+生成：2026-10-20T23:17:46+08:00；原件索引：/home/dw/Projects/agent-sts2/ops/codex-ops/current.json SHA256 4cc548d6f48f2c577bca5fdffd2347367826b3eb156a4d29da7b7ff05d3114af
+当前授权：Roy授权Claude主导V6，docs/v6-plan.md §12@0ee818a8f原文已冻结。对局持续运行不挂STOP，测过在自然开局边界精确上线/核号双通知；首局报错/卡住/明显兜底直接退实际上一live并inbox。P0联合最高优先，学习派发正常；full期间原三重准入锁挡新dataset等重任务，原在跑自然结束。
+P0修后单点联合实际23:12:17启动full：tree a8dcf2bd011d353bbc83f09b8e0966b779a32526，2382输入SHA81707ffc4af967ff7c11a522586dd8062b39a57cae5440887aa222bf45bf534c，498最新live知识；runner1219511/ticks140106852，tsc1219517=0，full1219595在途非完整绿。首次发布锁EAGAIN为原retention1205446；原PID退出后有限pidfd接续一次，无sleep/轮询/抢锁。固定7叶=原903五源修复+75eee包装最小运输（fixture原字节移独立目录、补fixture-http源码/固定测试），两runtime逐字等于原66dc，未夹P3/805/整main。原锁/ordinary-close、paper-dataset、tick-snapshot锁由本runner持至终局后释放；不热改输入。原件.artifacts/ops-r404-packaging-joint-20261020-2310/{frozen.json,native-start-readback.json}。
+旧P0 tree66dc/2380输入c2a785 full1完整保留：623文件618过5败、5737过2败2跳；多帧夹具被旧单state glob扫描、真实loop测试缺fixture-http运输。W4已原生实收并交75eee/source538294main、207定向过仅来源证据；不冒P0功能通过。actual live仍048a9713/V6-R404，actor/开关/STOP保持，不回退。绿后按原锁核最新live知识漂移、自然边界窄发布/实际消费者和奖励题/新release双通知；首局奖励Jev>=90%、unknown交脑近0、准备<=5s。P2仅P0实际发布后稳定2自然局才交原W4。
+P3正式source ab1f2561832b2909233bc55e52842f1bf726e5a0/tree760b9575，11源+30材料Git blob/SHA已ops核同；manifest c4a00e71。tsc0/6文件103过/gitleaks0仅来源定向，真实live联合full排P0后，未main/live/开reflex。R4模板791b8448已在独立WT v6-reflex-distill-r4-20261020-2313，按§12经原learner/run.ts一次性派发，high/240min/simulation off，仅scratch/pending，不发布知识/不合源码。原runs/run-config库存前缀已冻结；完整逐局输入manifest由学习者分析前冻结，不冒完整证据已验。第一次调度外壳在模型启动前缺旧发布任务专用字段失败，已保原件并修入口同批接续，真实thread01a159e0-b0ee-76f3-87e7-30049edd441c、gpt-6.1-sol/high已读原生turn_context；原learner受限沙箱/网络禁用核同。派发原件notes/v6-reflex-distill-r4-dispatch.json；终局由原有限启动器排原事件，不自动续批。
+P4 W8截至23:08只读初核：live确缺legacy_incremental.py/report_log_cache.py/jsonl_cache.py，main5cd的26增量叶未live。143.6/398.3/833.6s、refresh-g7ptjpbt/381 ended含Y427、5ZEP旧包及YSRV新cutoff为原owner报告，ops未重跑刷新/扫大日志。原W8继续冻结最小运输及组合availability剩余全扫；正式源/最新知识窄包排P0后，不以初核认上线。
+P1材料214d5f2d共14叶已窄收：Y427/5ZEP独立ask0，但run_plan off/权重未初始化；10次T4实际payload被体积保护仅留unknown_reason，无v6存储且原因重复，零独立调用不算方向验收。P5由Claude累计10R404局对照V5近20。改名/删expected_win、商店休息通用拿药迁移、Act3模型及炉石合并暂缓。
+R404已发布行为eae56f790/登记live048a9713bd4be09ad5f6d3f6131e8b729f51aece，84源/458知识/2379输入与tree496核同，main7c2e窄集成而非整main绿。CARD=jev仅实见同局幕层战胜恰3候选，未知来源/事件回原脑；SHOP/REST/POTION=brain，COMBAT_ENTRIES=off保85知识，DIRECTION_REPLAN=off搭原V5请求，getter miss=null零provider，90s不变；预算/蛇咬Retain/infra owned临时目录已live。离线17ID/factory等读回不代自然收益，P0奖励当前仍因Boss丢失0/4交脑，A/B确已计算，不能称未算。
+原Roy20:5x同tree496/2379SHA1705低负载唯一复验tsc/full0=623文件5909过2跳；旧full1/23.054s与六次定位保留。实际回退点live64c218，保新知识/日志。JWJ STOP已按授权解除，Y427 run-config21:29:38.520/首动作21:29:57.861；Git ENOBUFS空提交保原件，cwd/HEAD/SHA旁证不冒原字段含提交。双通知21:29:42晚于autoplay启动的时序例外保留，见paper/materials/20261020-2125-ops及R404原发布回执。
+本轮221302策略attention原件已实读：十项waiting、WT干净/无新源、测试null，源漂移在dataset前拒绝，无dataset尝试；不重复生成/合入，0536仅proposed。三个历史run-config精确字节/SHA及真实Git对象核同，dirty_files仅8知识JSON，因此不能笼统称执行源码遗失；历史动态知识/未执行后继仍缺，保旧提案并已向原watcher投递全文更正/证据/差异/下一步，CLI0仅投递，原生实收及Roy知情仍pending，未代ACK。原件paper/materials/20261020-2303-ops/receipt.json。
+旧221302-s2唯一dataset完成后源漂移拒提交、两原提案SHA冲突保持，原件2239-ops。204302双批dataset前拒绝、214302fix无新源/八旧非live来源等原件2143/2151-ops保持；不因本轮关闭科学父、旧工具/六源/活雾链/733通知或代角色ACK。Regent继续暂停；全部历史长摘要见本context.summary_history，原授权索引不变。；原件 paper/materials/20261020-0249-ops/authorization-original.md
 模型 gpt-6.1-sol；普通 ops/学习下次自然启动 high，专项可有理由 xhigh，大脑保持 xhigh。实际生效须原生回执，不能从默认值推定。
-账号选择：/home/dw/Projects/agent-sts2/ops/codex-ops/accounts/codex1/learner；原 ops：wJ:p5 / 01a1517b-e200-7c52-b463-6ea22220c0a9；执行模式：host；辅助/学习者沙箱保持。
+账号选择：/home/dw/Projects/agent-sts2/ops/codex-ops/accounts/codex1/learner；原 ops：w1H:p8 / 01a1517b-e200-7c52-b463-6ea22220c0a9；执行模式：host；辅助/学习者沙箱保持。
 不读凭据/.env/游戏二进制，不改共享配置/账号；不推送。
-main 7e9866c7fde5346af9c4b406a4b8f55aa4269664
-live 9f4245511181c6228cf63dc44700ea28ccf35730；登记 release V5-R397（登记值不代表新树检查绿或实际采用）。
+main af6977c6c9d3f9b0ad7ec5b1c446871a4a4c0bae
+live 048a9713bd4be09ad5f6d3f6131e8b729f51aece；登记 release V6-R404（登记值不代表新树检查绿或实际采用）。
 首次另读 AGENTS/README/最新 STATE/学习协议；此后每次读本清单及事件原件。历史 handoff/decision-log 只沿事务定位，原件冲突保留并核查。
-在途批次 1（完整 owner/租约与路径见 current.json）：
+在途批次 4（完整 owner/租约与路径见 current.json）：
 - 20261007-021219-strategy-proposal done strategy-proposal PID=265476；/home/dw/Projects/agent-sts2/.worktrees/codex-dev
+- 20261020-231301-strategy-proposal running strategy-proposal PID=1220407；/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261020-231301
+- 20261020-231301-s2-strategy-proposal running strategy-proposal PID=1220539；/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261020-231301-s2
+- 20261020-231301-fix-batch running fix-batch PID=1220742；/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261020-231301
+外部原owner任务（不以learn.json缺项判退出，不重复派；实际状态沿原件核）：
+- roy-five-item-exact-live-joint-20261020；thread=original ops engineering composition no new model；/home/dw/Projects/agent-sts2/.worktrees/ops-five-item-live-20261020-1855；paper/materials/20261020-low-load-once-ops/receipt.json
+- roy-next-run-off-infra39-exact-live-20261020-1802；thread=original native ops finite exact-live-source checker, no new model；/home/dw/Projects/agent-sts2/.worktrees/ops-infra-live-exact-20261020-1803；paper/materials/20261020-1831-ops/receipt.json
+- 20261020-141301-fix-batch-main-joint-20261020-1511；thread=original ops continuation, learner exited; no new model；/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261020-141301；paper/materials/20261020-1610-ops/receipt.json
+- v6-card-combat-results-20261020；thread=original v6-w4w6 per Claude1458, new task turn/model context not verified by ops；/home/dw/Projects/agent-sts2/.worktrees/v6-completed-core-peek-20261020；paper/materials/20261020-W4-formal-source-ops/receipt.json
+- v6-refresh-legacy-incremental-20261020；thread=original W8 native receipt, same authorized task; no new model；/home/dw/Projects/agent-sts2/.worktrees/v6-refresh-legacy-incremental-20261020；paper/materials/20261020-1642-ops/receipt.json
+- infra-temp-lifecycle-20261020；thread=original watcher01a14f5d-da55-7831-959e-53727796115e, declared original engineering task；/home/dw/Projects/agent-sts2/.worktrees/infra-temp-lifecycle-20261020；paper/materials/20261020-1750-ops/receipt.json
 历史 lost 8 项另存索引，不能视为活进程，不按旧PID操作或自行关闭。
-开放父要求 3：silent-0332, roy-20261016-sl-potion-retry, roy-20261017-human-pace-h0；不因本轮结束关闭。
+开放父要求 7：roy-20261012-concrete-core-decklists, ops-20261013-experience-000402-merge-recovery, roy-20261016-global-build-g1a, silent-0332, roy-20261016-sl-potion-retry, roy-20261017-human-pace-h0, roy-20261017-human-pace-support-mapping；不因本轮结束关闭。
 human-pace 原owner=01a13dcd-83d4-7c63-b233-f93cf878ecf4，接续=01a14aae-4b03-7cf1-9185-34dc3bed786f；原件 /home/dw/Projects/agent-sts2/paper/materials/20261017-human-pace-control/checkpoint.json。不据阶段状态关闭宽父。
 未确认通知 1；不得代其他角色 ACK。前8项：
 - 733e3a9e9380d9155431980e disagreement watcher_received,roy_notified；/home/dw/Projects/agent-sts2/ops/codex-ops/learning-notices/733e3a9e9380d9155431980e.json
 队列 2，只按本轮已提交事件处理；前4项：
-- /home/dw/Projects/agent-sts2/ops/codex-ops/queue/1792390989349962270-strategy-done.md：strategy-proposal 批次 20261019-141303-strategy-proposal 结束：exit 143；已核实合入 live：无。回报：/home/dw/Projects/agent-sts2/ops/codex-ops/learner/20261019-141303-strategy-p
-- /home/dw/Projects/agent-sts2/ops/codex-ops/queue/1792390989717889444-strategy-done.md：strategy-proposal 批次 20261019-141303-s2-strategy-proposal 结束：exit 143；已核实合入 live：无。回报：/home/dw/Projects/agent-sts2/ops/codex-ops/learner/20261019-141303-s2-stra
-原事务未标 completed 共125（含未知，非活进程数），最近4项：
-- /home/dw/Projects/agent-sts2/ops/codex-ops/pending-continuations/roy-20261019-current-production-boss-calibration.json；phase=same-thread-continuation-blocked-original-finish-wrapper-still-alive
-- /home/dw/Projects/agent-sts2/ops/codex-ops/pending-continuations/20261019-082914-s2-strategy-proposal.json；phase=original-service-capacity-failure-retained-awaiting-bounded-cooldown-retry
-- /home/dw/Projects/agent-sts2/ops/codex-ops/pending-continuations/codex1-20261018-2140.json；phase=controller-complete-silent-resumed-brain-postmortem-strategy-native-verified-normal-fix-pending
-- /home/dw/Projects/agent-sts2/ops/codex-ops/pending-integrations/20261018-201302-fix-batch.json；phase=storage-published-old-calibration-registration-awaiting-original-retention-live-lock
+- /home/dw/Projects/agent-sts2/ops/codex-ops/queue/1792508458862606518-ordinary-close-attention.md：普通批次 20261020-221302-strategy-proposal 自动收尾停止：source changed during batch; retain ordinary ops review。原件 /home/dw/Projects/agent-sts2/ops/codex-ops/ordinary-clo
+- /home/dw/Projects/agent-sts2/ops/codex-ops/queue/1792509009385752044-ordinary-close-attention.md：普通批次 20261020-224301-strategy-proposal 自动收尾停止：source changed during batch; retain ordinary ops review。原件 /home/dw/Projects/agent-sts2/ops/codex-ops/ordinary-clo
+原事务未标 completed 共181（含未知，非活进程数），最近4项：
+- /home/dw/Projects/agent-sts2/ops/codex-ops/pending-continuations/original-W8-P3-reflex-card-pick-20261020.json；phase=formal11-source-verified-real-live-full-after-P0-R4-one-off-original-launcher
+- /home/dw/Projects/agent-sts2/ops/codex-ops/pending-continuations/original-W4-R404-card-provider-wiring-20261020.json；phase=P0-packaging-repaired-latest-actual-live-joint-tsc0-full-running-no-publication
+- /home/dw/Projects/agent-sts2/ops/codex-ops/pending-continuations/original-W4-card-reward-only-next-package-20261020.json；phase=formal21-W4-source-plus-pure-getter-verified-await-W8-final-joint-source-and-one-actual-live-full
+- /home/dw/Projects/agent-sts2/ops/codex-ops/pending-continuations/20261020-164301-predator-source-host-fallback.json；phase=original-six-staged-candidate-frozen-EXDEV-baseline-retained-await-original-host-slot-after-W4v2-and
 最新指令短引用（完整行按offset核）：
-- offset=1713525：- 2026-10-19 12:20:53 CST [运维 codex] 已处理生产模型校准接续事件：宿主复核3874237及原finish/dataset后代仍存活，包装器start_ticks与12:19固定回执一致，未发现研究cwd下的计算worker；280/1316结果SHA未变，尚缺1036。learn.lock及本工作树租约文件此时可取锁，但原包装器退出门禁仍未满足，不能据锁空闲重复领取。未启动接续、模型或计算，未停进程、
-- offset=1715565：- 2026-10-19 14:19:02 CST [watcher Codex] Roy要求暂停游戏推进：主仓与live的ops/STOP已创建并回读；既有play-stop对经归属校验的PID1113899/1113910发送SIGTERM，控制器及本局brain子进程均已退出。原console日志logs/console/20261019-135719-9f4245511+dirty.log明确记录14:18:44 stopped
-原事务文件索引数（含历史）：pending-integrations=123；pending-deliveries=7；pending-records=9；pending-continuations=4；publications=1；完整路径见 current.json，不从文件存在推定未完成/运行。
-新指令原件：ops/inbox-dev.md 当前尾段 offset=1707938, bytes=8192；本轮新授权必须由事件引用，漏项查此段，勿整份重读。
+原事务文件索引数（含历史）：pending-integrations=149；pending-deliveries=16；pending-records=30；pending-continuations=25；publications=1；完整路径见 current.json，不从文件存在推定未完成/运行。
+新指令原件：ops/inbox-dev.md 当前尾段 offset=1968949, bytes=8192；本轮新授权必须由事件引用，漏项查此段，勿整份重读。
 current.json 仅按本事件 batch/request/notice id 用程序筛字段，不全文读；动态源变化后核新清单，不用旧值冒当前。
 H0/0332等科学边界、精确宿主树、未完成发布/兼容及 retention 仅沿原报告和事务回执；清单不代验收、shipped、覆盖率或消费。
 严格普通无源码成功由调度器完成账本检查、唯一 dataset 与受控记录提交，回执 ops/codex-ops/ordinary-close/；异常、异议、缺证、人工决定正常唤醒。
