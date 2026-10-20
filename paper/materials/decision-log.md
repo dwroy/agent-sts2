@@ -4972,3 +4972,5 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
 - 2026-10-20 10:40:18 CST [Codex watcher，W3 main交付] Roy简化构筑评估查表P/取消W0/逐目标部分结果与同种子完成牌组缓存已main303bbb1ac；原阈值nice19单worker联合tsc0/full611文件5802过2跳，52输入SHA不变，gitleaks0。F8本幕仍0/16（可识别P均低于5%等），空闲后连战43/96；原v6-w4w6真实烟测终局9/9已知选项0、不通过，9次HTTP200仅协议通过。已转原ops/补短清单，W3不据本轮进live；Roy10:26 STOP/精确同步与11:30未决边界保持，原件paper/materials/2026-10-20-v6-projection-target-progress/。
 
 - 2026-10-20 10:40:18 CST [Codex watcher，字节元数据main交付] 独立两叶f5c075924仅把历史包offset/bytes改为安全整数字节位置，游戏count/排除与终局守卫不变；11固定回归及撤码负控、联合full611/5802/2通过，旧ENOSPC/Shrink/截断失败原件保留。已main，接续刷新/live由原ops依Roy10:26精确合入；watcher未重刷/改live/启局，不把旧373局失败包认生产成功。W8后台刷新a992后入main，其旧full与变基9文件71过分列；材料f96a9b319及paper/materials/2026-10-20-v6-history-byte-metadata/。
+
+- 2026-10-20T10:47:08+08:00 原ops接管10:38六事件；STOP保持，排除原已知构筑评估Jev终局不通过的W3，精确live49叶固定e5523e29宿主tsc0/full在途，2cdb为原回退点，未提交/加号/开局；tc62旧偏移失败及两策略20waiting保留。证据paper/materials/20261020-1038-ops/receipt.json。

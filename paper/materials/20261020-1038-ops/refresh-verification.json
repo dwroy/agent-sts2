@@ -1,0 +1,69 @@
+{
+  "receipt": {
+    "path": "ops/codex-ops/v6-refresh/silent/refresh-tc62b244/receipt.json",
+    "bytes": 112172,
+    "sha256": "4fadfd28eb8b7e56c698ad93e54096f082152d79ef211d206e6755c611706e6f"
+  },
+  "status": "failed",
+  "exit_code": 1,
+  "started_at": "2026-10-20T02:12:49.604Z",
+  "ended_at": "2026-10-20T02:27:09.693Z",
+  "published": null,
+  "production_consumption": null,
+  "steps": [
+    {
+      "name": "validate-cores",
+      "exit_code": 0,
+      "started_at": "2026-10-20T02:18:11.969Z",
+      "ended_at": "2026-10-20T02:18:12.305Z",
+      "stderr": {
+        "path": "/home/dw/Projects/agent-sts2/ops/codex-ops/v6-refresh/silent/refresh-tc62b244/validate-cores.stderr",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "stdout": {
+        "path": "/home/dw/Projects/agent-sts2/ops/codex-ops/v6-refresh/silent/refresh-tc62b244/validate-cores.stdout",
+        "bytes": 247,
+        "sha256": "51028e2841a6ed6bbd533268fbccb74f98a43ec8cb9701cc28dd6a4601e99e7f"
+      }
+    },
+    {
+      "name": "combo-metrics",
+      "exit_code": 0,
+      "started_at": "2026-10-20T02:18:12.415Z",
+      "ended_at": "2026-10-20T02:27:02.619Z",
+      "stderr": {
+        "path": "/home/dw/Projects/agent-sts2/ops/codex-ops/v6-refresh/silent/refresh-tc62b244/combo-metrics.stderr",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "stdout": {
+        "path": "/home/dw/Projects/agent-sts2/ops/codex-ops/v6-refresh/silent/refresh-tc62b244/combo-metrics.stdout",
+        "bytes": 138,
+        "sha256": "2fb0611ebf0f5b352b2c9e7882a4a0cc7674a69ca33dd3f6628818461d294792"
+      }
+    },
+    {
+      "name": "v6-history",
+      "exit_code": 1,
+      "started_at": "2026-10-20T02:27:02.649Z",
+      "ended_at": "2026-10-20T02:27:09.692Z",
+      "stderr": {
+        "path": "/home/dw/Projects/agent-sts2/ops/codex-ops/v6-refresh/silent/refresh-tc62b244/v6-history.stderr",
+        "bytes": 1205,
+        "sha256": "ff84815d392c64f71ee8f2fb4bed81301ae2ba1fd78c9ed06b8f5ea36e1f0ed0"
+      },
+      "stdout": {
+        "path": "/home/dw/Projects/agent-sts2/ops/codex-ops/v6-refresh/silent/refresh-tc62b244/v6-history.stdout",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    }
+  ],
+  "cause": "old live source byte provenance offset capped at 1e9; original failed attempt retained; previous packet not overwritten",
+  "previous_packet": {
+    "path": ".worktrees/live/knowledge/characters/silent/v6-history.json",
+    "bytes": 22156507,
+    "sha256": "aea1fcc9b9927118a5f8158cadb6940576d1b8db783084edaca1d6c182f205f6"
+  }
+}
