@@ -29,6 +29,11 @@ while [[ $# -gt 0 ]]; do
   esac
   shift
 done
+# All statistics run outside admission and outside the live integration lock.
+mkdir -p "$ops_root/ops"
+exec 9>"$ops_root/ops/knowledge-refresh.lock"
+flock 9
+step() { python3 "$B/refresh-step.py" "$ops_root/ops/refresh-timing.jsonl" "$@"; }
 # The characters to refresh: the one asked for (lower-cased: the game's SILENT is knowledge id silent), else every
 # character with a logged run (knowledge/builders/characters.py).
 if [[ -n "$only" ]]; then
@@ -38,29 +43,29 @@ else
 fi
 if [[ $fight_value -eq 1 ]]; then
   for c in $characters; do
-    nice -n 10 python3 "$B/build-fight-value.py" all --character "$c"
+    step "fight-value:$c" nice -n 19 python3 "$B/build-fight-value.py" all --character "$c"
   done
-  nice -n 10 python3 "$B/build-catalog.py" --knowledge-root "$ROOT/knowledge" || exit 1
+  step catalog nice -n 19 python3 "$B/build-catalog.py" --knowledge-root "$ROOT/knowledge" || exit 1
   exit 0
 fi
-python3 "$B/build-monster-db.py" --quiet --move-model-out "$ROOT/knowledge/common/move-model.json"
-python3 "$B/monster-db-check.py" >/dev/null 2>&1
-python3 "$B/build-card-upgrades.py" >/dev/null 2>&1
-nice -n 10 "$ROOT/data/logdb-venv/bin/python" "$ROOT/agent/tools/logdb/sync.py" >/dev/null 2>&1
+step monster-db python3 "$B/build-monster-db.py" --quiet --move-model-out "$ROOT/knowledge/common/move-model.json"
+step monster-db-check python3 "$B/monster-db-check.py" >/dev/null 2>&1
+step card-upgrades python3 "$B/build-card-upgrades.py" >/dev/null 2>&1
+step logdb-sync nice -n 19 "$ROOT/data/logdb-venv/bin/python" "$ROOT/agent/tools/logdb/sync.py" >/dev/null 2>&1
 v6_status=0
 for c in $characters; do
-  python3 "$B/build-outcome-stats.py" --character "$c" >/dev/null 2>&1
+  step "outcome:$c" python3 "$B/build-outcome-stats.py" --character "$c" >/dev/null 2>&1
   if [[ "$c" == "silent" ]]; then
-    nice -n 19 "$ROOT/data/logdb-venv/bin/python" "$B/build-construction-opportunities.py" --character "$c" || echo "construction opportunity refresh failed: $c" >&2
+    step "construction-opportunities:$c" nice -n 19 "$ROOT/data/logdb-venv/bin/python" "$B/build-construction-opportunities.py" --character "$c" || echo "construction opportunity refresh failed: $c" >&2
   fi
-  python3 "$B/build-room-costs.py" --character "$c" >/dev/null 2>&1
-  python3 "$B/build-boss-damage.py" --character "$c" >/dev/null 2>&1
-  "$B/refresh-potion-equivalents.sh" --character "$c" >/dev/null 2>&1
+  step "room-costs:$c" python3 "$B/build-room-costs.py" --character "$c" >/dev/null 2>&1
+  step "boss-damage:$c" python3 "$B/build-boss-damage.py" --character "$c" >/dev/null 2>&1
+  step "potion-equivalents:$c" "$B/refresh-potion-equivalents.sh" --character "$c" >/dev/null 2>&1
   if [[ "$c" == "silent" ]]; then
-    nice -n 19 python3 "$B/refresh-v6-history.py" --root "$ROOT" --ops-root "$ops_root" --character "$c" || v6_status=1
+    step "v6-history:$c" nice -n 19 python3 "$B/refresh-v6-history.py" --root "$ROOT" --ops-root "$ops_root" --character "$c" || v6_status=1
   fi
 done
 
 # Mechanical indexing only; failure remains visible to the existing refresh owner.
-nice -n 10 python3 "$B/build-catalog.py" --knowledge-root "$ROOT/knowledge" || exit 1
+step catalog nice -n 19 python3 "$B/build-catalog.py" --knowledge-root "$ROOT/knowledge" || exit 1
 exit "$v6_status"

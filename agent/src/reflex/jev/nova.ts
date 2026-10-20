@@ -1,3 +1,4 @@
+import { measureDecisionBudgetStage } from "../../core/decision-budget.js";
 import type { Fetch } from "@typesafe-ai/sdk";
 
 const NOVA_ORIGIN = "https://llm-proxy.tapsvc.com";
@@ -39,13 +40,16 @@ export function novaJevFetch(baseURL: string | null | undefined, transport: Fetc
     let request = { ...init, redirect: "error" as const };
     if (url.pathname === "/v1/systemone") {
       if (typeof init?.body !== "string") throw new Error("nova_jev_requires_json");
-      const body = JSON.parse(init.body) as { model?: string };
-      if (!body.model) throw new Error("nova_jev_requires_model");
-      body.model = novaJevModel(body.model);
-      request = { ...request, body: JSON.stringify(body) };
+      const encoded = measureDecisionBudgetStage("jev_gateway_request_encoding", () => {
+        const body = JSON.parse(init.body as string) as { model?: string };
+        if (!body.model) throw new Error("nova_jev_requires_model");
+        body.model = novaJevModel(body.model);
+        return JSON.stringify(body);
+      });
+      request = { ...request, body: encoded };
       url.pathname = "/api/alpha/decisions";
     } else if (url.pathname !== "/v1/models") throw new Error("unsupported_nova_jev_endpoint");
-    const response = await transport(url.toString(), request);
+    const response = await measureDecisionBudgetStage("jev_http_to_headers", () => transport(url.toString(), request));
     if (!response.ok || url.pathname !== "/v1/models") return response;
     const payload = await response.json() as { data?: Array<{ id?: string }> };
     if (!Array.isArray(payload.data)) throw new Error("invalid_nova_model_catalog");

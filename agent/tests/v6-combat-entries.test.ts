@@ -3,6 +3,7 @@ import { mkdtempSync, readFileSync, rmSync, unlinkSync, writeFileSync } from "no
 import { join } from "node:path";
 import { tmpdir } from "node:os";
 import { afterEach, expect, it, vi } from "vitest";
+import * as knowledgeLoader from "../src/v6/knowledge.js";
 import { loadCombatEntries, combatEntryAudit } from "../src/reflex/jev/combat-entries.js";
 import { projectCombatDecision } from "../src/reflex/jev/combat-entry-projection.js";
 import { askJevLogged, type JevPromptRecord } from "../src/eye/jev-prompt-log.js";
@@ -149,4 +150,28 @@ it("sends the W8 projection and keeps joined evidence through a single bounded c
   expect(rows[1]!.decision_evidence).toBeUndefined();
   expect(rows[1]!.decision_projection).toEqual(rows[0]!.decision_projection);
   expect(criterion(calls[0]!.questions).combat_memory).toHaveLength(2);
+});
+
+
+it("reuses validated files, refreshes actual-state predicates and invalidates edits and missing files", () => {
+  const dir = temp(), path = installFixture(dir), state = fixedState();
+  const spy = vi.spyOn(knowledgeLoader, "loadV6Knowledge");
+  try {
+    const first = loadCombatEntries(state, dir, { V6_COMBAT_ENTRIES: "on" })!;
+    const second = loadCombatEntries(state, dir, { V6_COMBAT_ENTRIES: "on" })!;
+    expect(spy).toHaveBeenCalledTimes(1);
+    expect(second.provenance).toBe(first.provenance);
+    expect(second.predicateFacts).not.toBe(first.predicateFacts);
+    const source = JSON.parse(readFileSync(join(path, "reflex.json"), "utf8"));
+    source.entries[0].signal.value = 3.75;
+    writeFileSync(join(path, "reflex.json"), JSON.stringify(source));
+    const changed = loadCombatEntries(state, dir, { V6_COMBAT_ENTRIES: "on" })!;
+    expect(changed.entries[0]!.signal.value).toBe(3.75);
+    expect(spy).toHaveBeenCalledTimes(2);
+    unlinkSync(join(path, "reflex.json"));
+    expect(loadCombatEntries(state, dir, { V6_COMBAT_ENTRIES: "on" })).toBeNull();
+    expect(spy).toHaveBeenCalledTimes(3);
+    expect(loadCombatEntries(state, dir, { V6_COMBAT_ENTRIES: "off" })).toBeNull();
+    expect(spy).toHaveBeenCalledTimes(3);
+  } finally { spy.mockRestore(); }
 });

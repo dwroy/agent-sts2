@@ -7,9 +7,10 @@ import type { DecisionEnv } from "../memory/types.js";
 export function prepareObservedCandidates(env: DecisionEnv, idleMs: number): Record<string, unknown> | null {
   const parent = currentDecisionBudget();
   if (!parent || env.state.screen !== "COMBAT" || !env.state.in_combat) return null;
+  // Even an exhausted preparation allowance must leave the following animation wait uncharged.
+  parent.pause();
   const allowance = Math.max(0, Math.min(idleMs, parent.computationRemaining()));
   if (allowance <= 0) { parent.skip("idle_candidates"); return { status: "unknown", reason: "decision_budget_exhausted" }; }
-  parent.pause();
   const started = parent.now(), previousTiming = plannerTiming.last;
   const child = new DecisionBudget(`${parent.key}:idle`, parent.kind, parent.now, allowance, 0);
   try {

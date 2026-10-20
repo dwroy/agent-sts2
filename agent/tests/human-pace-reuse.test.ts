@@ -71,3 +71,18 @@ it("does not turn a budget-cut root death into the least-loss label used by the 
   expect(next).not.toBeNull(); expect(next?.label).not.toBe("combat/least-loss");
   expect(budget.record().fallback).toBe("partial_solver_existing_card_layer_no_death_proof");
 });
+
+
+it("pauses an exhausted idle-preparation budget before polling without spending Jev's reserve", () => {
+  let now = 0;
+  const raw = combatPayload(); (raw.run as any).character_id = "SILENT";
+  const e = env(raw, undefined, { knowledge: testKnowledge });
+  const budget = new DecisionBudget("exhausted-animation", "boss", () => now);
+  budget.charge(budget.computationRemaining());
+  expect(withDecisionBudget(budget, () => prepareObservedCandidates(e, 400)))
+    .toMatchObject({ status: "unknown", reason: "decision_budget_exhausted" });
+  expect(budget.running).toBe(false);
+  now += 4000;
+  budget.resume();
+  expect(budget.remaining()).toBe(3000);
+});

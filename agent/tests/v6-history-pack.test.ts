@@ -76,6 +76,12 @@ describe("V6 run-start frozen history", () => {
     expect(() => sealV6History(data, at(56))).toThrow("history scope");
     expect(() => assembleV6History({ ...input(), generated_at: at(20) })).toThrow("generation precedes cutoff");
   });
+  it("accepts real original-log offsets above 1 GB and rejects unsafe integers", () => {
+    const data = input(); data.opportunities.rows[0]!.source.offset = 1_500_000_000;
+    expect(assembleV6History(data).data.opportunities.rows[0]!.source.offset).toBe(1_500_000_000);
+    data.opportunities.rows[0]!.source.offset = Number.MAX_SAFE_INTEGER + 1;
+    expect(() => assembleV6History(data)).toThrow();
+  });
   it("rejects metrics whose raw provenance is absent", () => {
     const data = assembleV6History(input()).data, m = data.combo_metrics[0]!.metrics[0]!;
     m.sources.push({ version: "fixture", ascension: 0, run_ids: ["absent"], counts: { ...m.raw_counts, runs: 1 } });

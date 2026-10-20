@@ -22,12 +22,22 @@ import type { V6ProjectionRequest } from "../sim/v6-projection.js";
 import type { Character } from "./formats.js";
 
 export interface V6ProjectionInput { factory: V6ProjectionFactory; situation: V6ProjectionSituation }
+export interface V6HistorySnapshot {
+  run_id: string; character: Character; status: string; loaded_at: string; policy: "last_completed_packet";
+  cutoff?: string; generated_at?: string; content_sha256?: string; age_ms?: number;
+}
 /** One instance per loop. A restart loads a new snapshot; polls never reload a run's evidence. */
-export function v6ProjectionInputs(dir = KNOWLEDGE_DIR, now = () => new Date().toISOString()) {
+export function v6ProjectionInputs(dir = KNOWLEDGE_DIR, now = () => new Date().toISOString(), onSnapshot: (row: V6HistorySnapshot) => void = () => {}) {
   let snapshot: ReturnType<typeof freeze> | undefined;
   function freeze(env: DecisionEnv, character: Character, run: string, ascension: number) {
     const asOf = now(), config = v6Config(), knowledge = loadV6Knowledge(dir, character);
     const history = loadV6HistoryPack(dir, character, config), own = join(dir, "characters", character);
+    const freshness: V6HistorySnapshot = history.status === "loaded" ? {
+      run_id: run, character, status: history.status, loaded_at: asOf, cutoff: history.value.data.cutoff,
+      generated_at: history.value.generated_at, content_sha256: history.value.content_sha256,
+      age_ms: Math.max(0, Date.parse(asOf) - Date.parse(history.value.data.cutoff)), policy: "last_completed_packet",
+    } : { run_id: run, character, status: history.status, loaded_at: asOf, policy: "last_completed_packet" };
+    try { onSnapshot(freshness); } catch { /* Telemetry cannot invalidate a completed packet. */ }
     // The legacy loader can fall back. Only character-owned adapter inputs are admitted here.
     const construction = ["construction-templates.json", "construction-opportunities.json"].every(f => existsSync(join(own, f)))
       ? loadConstructionData(character, dir) : null;

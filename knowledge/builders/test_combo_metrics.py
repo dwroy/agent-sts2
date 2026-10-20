@@ -11,6 +11,7 @@ import unittest
 
 from combo_normalization import normalized, offset_fit, unique_runs
 from combo_pooled import finalize
+from incremental_evidence import FrozenLogIndex
 from combo_metrics import (activation, activation_frame, compute_combo, digest, enemy_delta, extract, holding,
                           METRICS, rate, read_rows, statistic, turn_observations)
 
@@ -63,6 +64,32 @@ def corpus():
 
 
 class ComboMetricsTests(unittest.TestCase):
+    def test_cached_run_contributions_equal_full_and_append_only_recomputes_new_run(self):
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory); limits = write_logs(path)
+            index = FrozenLogIndex(path / 'cache', path)
+            try:
+                def calculate():
+                    for name, limit in limits.items(): index.update(Path(name).stem, limit)
+                    runs, _ = extract(path, 'silent', limits, source_index=index, cache=index)
+                    keys = {r['run_id']: index.run_signature(r['run_id'], ['runs', 'states', 'sl-attempts', 'decisions']) for r in runs}
+                    return compute_combo(SPEC, runs, dict(activation=RULE, _cache=index, _algorithm='fixed', _run_keys=keys))
+                full = compute_combo(SPEC, extract(path, 'silent', limits)[0], dict(activation=RULE))
+                self.assertEqual(calculate(), full)
+                misses = index.stats['cache_misses']
+                self.assertEqual(calculate(), full)
+                self.assertEqual(index.stats['cache_misses'], misses)
+                for name in limits:
+                    target = path / name
+                    extra = target.read_bytes().replace(b'FIXTURE', b'NEW_RUN')
+                    with target.open('ab') as out: out.write(extra)
+                    limits[name] = target.stat().st_size
+                full = compute_combo(SPEC, extract(path, 'silent', limits)[0], dict(activation=RULE))
+                self.assertEqual(calculate(), full)
+                self.assertEqual(index.stats['cache_misses'] - misses, 3)
+            finally:
+                index.close()
+
     def test_non_null_prerequisite_cannot_be_silently_ignored(self):
         spec = dict(SPEC, prerequisites={'op': 'contains', 'field': 'player.relics', 'value': 'FIXTURE_RELIC'})
         with self.assertRaisesRegex(ValueError, 'source-verified'):

@@ -17,6 +17,7 @@ sys.path.insert(0, str(ROOT / 'knowledge/builders'))
 from evidence_identity import decision_index, associate
 from extract_evidence import extract
 from evidence_summary import summarize
+from incremental_evidence import FrozenLogIndex
 spec = importlib.util.spec_from_file_location('refresh_v6', ROOT / 'knowledge/builders/refresh-v6-history.py')
 refresh = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(refresh)
@@ -131,7 +132,7 @@ class IdentityTest(unittest.TestCase):
 def fixture(root):
     b = root / 'knowledge/builders'
     b.mkdir(parents=True)
-    for name in ('build-combo-metrics.py', 'combo_metrics.py', 'combo_pooled.py', 'combo_normalization.py', 'history_boundary.py', 'check-v6-refresh.mts', 'build-v6-history.py', 'refresh-v6-history.py', 'refresh.sh'):
+    for name in ('build-combo-metrics.py', 'combo_metrics.py', 'combo_pooled.py', 'combo_normalization.py', 'history_boundary.py', 'appearance_stats.py', 'incremental_evidence.py', 'combo-prerequisites.mts', 'check-v6-refresh.mts', 'build-v6-history.py', 'refresh-v6-history.py', 'refresh.sh', 'refresh-step.py'):
         shutil.copy2(ROOT / 'knowledge/builders' / name, b / name)
     # Production Node CLI and schemas are used read-only; no copy of a checkout.
     (root / 'agent').symlink_to(ROOT / 'agent', target_is_directory=True)
@@ -179,6 +180,76 @@ def fixture(root):
 
 
 class RefreshTest(unittest.TestCase):
+    def test_append_index_and_cache_invalidation_use_original_bytes(self):
+        with tempfile.TemporaryDirectory() as d:
+            root = Path(d)
+            logs = root / 'logs'; logs.mkdir()
+            path = logs / 'states.jsonl'
+            first = raw(dict(run_id=RUN, value=1))
+            second = raw(dict(run_id=OTHER, value=2))
+            path.write_bytes(first)
+            index = FrozenLogIndex(root / 'cache', logs)
+            try:
+                index.update('states', len(first))
+                key = index.run_signature(RUN, ['states'])
+                self.assertEqual(index.stats['decoded_rows'], 1)
+                self.assertEqual(index.cached('fixed', key, lambda: [1]), [1])
+                with path.open('ab') as out: out.write(second)
+                index.update('states', path.stat().st_size)
+                self.assertEqual(index.stats['decoded_rows'], 2)
+                self.assertEqual(index.run_signature(RUN, ['states']), key)
+                self.assertEqual(index.cached('fixed', key, lambda: self.fail('old run recomputed')), [1])
+                with path.open('ab') as out: out.write(first)
+                index.update('states', path.stat().st_size)
+                self.assertNotEqual(index.run_signature(RUN, ['states']), key)
+                # Equal-length in-place rewrites must invalidate the old index.
+                path.write_bytes(path.read_bytes().replace(b'"value": 1', b'"value": 3'))
+                index.update('states', path.stat().st_size)
+                self.assertEqual(next(index.rows('states', [RUN]))[0]['value'], 3)
+                before = index.metadata('states')
+                with path.open('ab') as out: out.write(b'{partial')
+                with self.assertRaisesRegex(ValueError, 'incomplete frozen'):
+                    index.update('states', path.stat().st_size)
+                self.assertEqual(index.metadata('states'), before)
+                for entry in (root / 'cache/objects').rglob('*.gz'): entry.write_bytes(b'broken')
+                self.assertEqual(index.cached('fixed', key, lambda: [4]), [4])
+            finally:
+                index.close()
+
+    def test_warm_freeze_matches_full_and_only_new_run_misses(self):
+        with tempfile.TemporaryDirectory() as d:
+            root = Path(d); fixture(root)
+            index = FrozenLogIndex(root / 'cache', root / 'logs')
+            try:
+                def freeze(name, cached):
+                    directory = root / name; directory.mkdir()
+                    receipt = {}
+                    inputs, _ = refresh.freeze(root, 'silent', directory, '2020-01-02T00:00:00.000Z', receipt, cached)
+                    return {key: Path(ref['path']).read_bytes().replace(str(directory).encode(), b'OUTPUT') if ref else None
+                            for key, ref in inputs.items()}, receipt
+                cold, _ = freeze('cold', index)
+                decoded = index.stats['decoded_rows']; misses = index.stats['cache_misses']
+                warm, _ = freeze('warm', index)
+                full, _ = freeze('full', None)
+                self.assertEqual(cold, warm)
+                self.assertEqual(warm, full)
+                self.assertEqual(index.stats['decoded_rows'], decoded)
+                self.assertEqual(index.stats['cache_misses'], misses)
+                new_run = 'CCCCCCCCCCCC'
+                with (root / 'logs/runs.jsonl').open('ab') as out:
+                    out.write(raw(dict(run_id=new_run, character='SILENT', ended='2020-01-01T00:10:00.000Z', ascension=10, victory=False)))
+                row = json.loads((root / 'logs/states.jsonl').read_bytes())
+                row['state']['run_id'] = new_run
+                with (root / 'logs/states.jsonl').open('ab') as out: out.write(raw(row))
+                incremental, receipt = freeze('incremental', index)
+                full, _ = freeze('full-new', None)
+                self.assertEqual(incremental, full)
+                self.assertEqual(index.stats['decoded_rows'] - decoded, 2)
+                self.assertEqual(index.stats['cache_misses'] - misses, 2)
+                self.assertEqual(receipt['ended_runs'], [RUN, new_run])
+            finally:
+                index.close()
+
     def test_terminal_rows_share_inclusive_boundary_and_exact_source_exclusions(self):
         with tempfile.TemporaryDirectory() as d:
             root = Path(d)
@@ -469,21 +540,29 @@ class RefreshTest(unittest.TestCase):
             tree = ast.parse((ROOT / 'ops/report.py').read_text())
             fun = next(n for n in tree.body if isinstance(n, ast.FunctionDef) and n.name == 'refresh_knowledge')
             import re, shlex
-            namespace = dict(ROOT=str(root), LIVE=str(root), os=os, re=re, shlex=shlex)
+            namespace = dict(ROOT=str(root), LIVE=str(root), os=os, re=re, shlex=shlex, json=json)
             exec(compile(ast.Module(body=[fun], type_ignores=[]), '<real report.refresh_knowledge>', 'exec'), namespace)
             original = subprocess.Popen
             spawned = []
+            from types import SimpleNamespace
+            from unittest.mock import Mock
+            waits = []
             def popen(argv, **kw):
                 if '--fight-value' in argv[-1]:
                     argv = [sys.executable, '-c', 'pass']
                 child = original(argv, **kw)
                 spawned.append(child)
-                return child
+                wait = Mock(side_effect=AssertionError('admission waited for refresh'))
+                waits.append(wait)
+                return SimpleNamespace(pid=child.pid, wait=wait)
             with patch.dict(os.environ, {'REFRESH_WAIT': '1', 'REFRESH_WAIT_S': '60'}), patch.object(subprocess, 'Popen', popen):
                 result = namespace['refresh_knowledge']('silent')
+            self.assertTrue(all(wait.call_count == 0 for wait in waits))
             for child in spawned:
                 child.wait(timeout=60)
-            self.assertEqual(result['exit'], 0, (root / 'ops/refresh.log').read_text())
+            self.assertIsNone(result['exit'])
+            self.assertEqual(result['status'], 'background')
+            self.assertFalse(result['admission_wait'])
             self.assertEqual(json.loads(target.read_bytes())['data']['character'], 'silent')
             receipts = list((root / 'ops/codex-ops/v6-refresh/silent').glob('*/receipt.json'))
             self.assertEqual(len(receipts), 1)

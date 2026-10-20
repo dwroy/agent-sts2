@@ -1,5 +1,7 @@
 /** W7 fixed inventory, projection, budget and local scripted-loop contracts. */
 import { createHash } from "node:crypto";
+import { setExperienceForTests } from "../src/knowledge/experience.js";
+import frozenSilentOutcomes from "./fixtures/v6-off-silent-outcome-stats.json";
 import { mkdtempSync, mkdirSync, writeFileSync, readFileSync, rmSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
@@ -34,7 +36,7 @@ vi.mock("../src/knowledge/files.js", async original => ({ ...await original<type
   KNOWLEDGE_DIR: "/__v6_room_missing__", knowledgeFile: (_dir: string, name: string) => `/__v6_off_fixed__/${name}` }));
 setupOneshotTests();
 const dirs: string[] = [];
-afterEach(() => { vi.unstubAllEnvs(); vi.useRealTimers(); for (const d of dirs.splice(0)) rmSync(d, { force: true, recursive: true }); });
+afterEach(() => { setExperienceForTests(null); vi.unstubAllEnvs(); vi.useRealTimers(); for (const d of dirs.splice(0)) rmSync(d, { force: true, recursive: true }); });
 function loopConfig(dir: string) {
   const c = loadConfig({ SL_ENABLED: "off", CHARACTER: "silent" });
   return { sl: c.sl, run: c.run, buildOneshot: "off" as const, runPlanLog: join(dir, "plans.jsonl") };
@@ -395,6 +397,8 @@ it.each(["jev", "deepseek"] as const)("credits the upgrade follow-up to its actu
 });
 
 it.each(["IRONCLAD", "SILENT", "DEFECT", "NECROBINDER", "REGENT"])("%s disabled switches preserve exact question/action bytes and never call projection", async character => {
+  // Match the original pre-W7 statistics without reading the latest production refresh.
+  if (character === "SILENT") setExperienceForTests(null, frozenSilentOutcomes);
   vi.useFakeTimers(); vi.setSystemTime(new Date("2026-10-19T00:00:00.000Z")); vi.stubEnv("CHARACTER", character.toLowerCase());
   const hashes: string[] = [];
   for (const setting of ["off", "shadow", "on"] as const) {

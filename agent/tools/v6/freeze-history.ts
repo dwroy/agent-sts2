@@ -7,6 +7,7 @@ import { asRecord } from "../../src/core/util/json.js";
 import { characterSchema } from "../../src/v6/formats.js";
 import { array, object, text, number, validate, type Schema } from "../../src/v6/schema.js";
 import { buildMetricSchema } from "../../src/v6/build-core.js";
+import { v6AppearanceSchema } from "../../src/v6/appearance.js";
 import { assembleV6History, sealV6History, v6CoverageSchema, v6FightSchema, v6FrameSchema, v6OpportunitySchema } from "../../src/sim/v6-history-pack.js";
 
 const args = process.argv.slice(2);
@@ -22,9 +23,10 @@ const character = characterResult.value, cutoff = new Date(manifest["cutoff"]).t
 const descriptors = asRecord(manifest["inputs"]), sources = [{ name: "input_manifest",
   sha256: createHash("sha256").update(manifestBytes).digest("hex"), bytes: manifestBytes.length }];
 const paths = new Map<string, string>();
-for (const name of ["coverage", "frames", "fights", "opportunities", "combo_metrics"]) {
+for (const name of ["coverage", "frames", "fights", "opportunities", "combo_metrics", "appearance"]) {
   const entry = asRecord(descriptors[name]);
   if (name === "combo_metrics" && descriptors[name] === null) continue;
+  if (name === "appearance" && descriptors[name] === undefined) continue;
   if (typeof entry["path"] !== "string" || typeof entry["sha256"] !== "string" || !/^[a-f0-9]{64}$/.test(entry["sha256"])
     || typeof entry["bytes"] !== "number" || !Number.isSafeInteger(entry["bytes"]) || entry["bytes"] < 0) throw new Error(`invalid descriptor: ${name}`);
   const path = resolve(dirname(manifestPath), entry["path"]), hash = createHash("sha256"); let bytes = 0;
@@ -80,8 +82,9 @@ const report = paths.has("combo_metrics") ? asRecord(json("combo_metrics")) : nu
 if (report && (report["schema"] !== "combo-metrics-report-v1" || report["character"] !== character)) throw new Error("combo report scope mismatch");
 const metrics = checked(comboSchema, report ? rows(report["combos"]).map(c => ({ id: c["id"], metrics: c["metrics"] })) : [], "combo metrics");
 const checkpoints = checked(array(number(0, 10000, true), 0, 100), manifest["checkpoint_floors"] ?? [], "checkpoint floors");
+const appearance = paths.has("appearance") ? checked(v6AppearanceSchema, json("appearance"), "appearance") : undefined;
 let pack = assembleV6History({ character, cutoff, generated_at: new Date().toISOString(), sources, coverage, frames, fights,
-  opportunities, combo_metrics: metrics, checkpointFloors: checkpoints });
+  opportunities, combo_metrics: metrics, ...(appearance === undefined ? {} : { appearance }), checkpointFloors: checkpoints });
 if (!report) { pack.data.labels.push("combo_metrics_missing_no_substitution"); pack = sealV6History(pack.data, pack.generated_at); }
 mkdirSync(dirname(output), { recursive: true });
 const temporary = `${output}.tmp-${process.pid}`;

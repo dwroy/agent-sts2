@@ -50,6 +50,8 @@ it("rejects an invalid answer without replacing the plan or retrying the frozen 
   await expect(ensureDirectionPlan(e, brain, log, dir)).rejects.toThrow("complete character catalog");
   expect(e.screenMemory.runPlan?.v6).toBeUndefined();
   await ensureDirectionPlan(e, brain, log, dir); expect(brain.askJson).toHaveBeenCalledTimes(1);
+  e.state.run!.floor += 1;
+  await ensureDirectionPlan(e, brain, log, dir); expect(brain.askJson).toHaveBeenCalledTimes(1);
   const measured = readFileSync(join(dir, "v6-build.jsonl"), "utf8").trim().split("\n").map(line => JSON.parse(line));
   expect(measured.filter(r => r.stage === "brain")).toEqual([expect.objectContaining({ fallback: "brain_request_failed", elapsed_ms: expect.any(Number) })]);
 });
@@ -141,7 +143,7 @@ it("forwards provider opening reasons through the actual planner and keeps unkno
   expect(e.v6DirectionEvaluation.entries[0]).toEqual(entry);
 });
 
-it("consumes a construction T6 with the same signal ID rather than counting a second handover", async () => {
+it("logs a construction T6 with its signal ID while suppressing the already handled global outage", async () => {
   vi.stubEnv("V6_BUILD", "on"); const { dir, log, e } = fixture();
   const brain = { askJson: vi.fn(async () => ({ json: { ...weights, potion_directions: [] } })) } as unknown as Pick<Brain, "askJson">;
   await ensureDirectionPlan(e, brain, log, dir);
@@ -149,9 +151,41 @@ it("consumes a construction T6 with the same signal ID rather than counting a se
   recordConstructionHandover(e, log, "handover-fixture", "card_pick", constructionCoverage(["take", "skip"]), "insufficient_known_options");
   const result = await ensureDirectionPlan(e, brain, log, dir);
   expect(result?.result.triggers).toContain("T6");
+  expect(result?.result).toMatchObject({ ask: false, skipped: ["T6"] });
+  expect(brain.askJson).toHaveBeenCalledTimes(1);
   expect(e.screenMemory.v6BrainFallbackPending).toBeUndefined();
   const rows = readFileSync(join(dir, "v6-build.jsonl"), "utf8").trim().split("\n").map(line => JSON.parse(line));
   expect(rows.filter(r => r.stage === "trigger" && r.question_id === "handover-fixture")).toHaveLength(2);
   expect(new Set(rows.filter(r => r.question_id === "handover-fixture" && r.triggers.includes("T6")).map(r => r.question_id)).size).toBe(1);
-  expect(rows.find(r => r.stage === "brain" && r.question_id === "handover-fixture")).toBeTruthy();
+  expect(rows.find(r => r.stage === "brain" && r.question_id === "handover-fixture")).toBeUndefined();
+  expect(rows.find(r => r.question_id === "handover-fixture" && r.event !== "v6_unknown_to_brain").degradation)
+    .toContain("t6_suppressed:systemic:projection_unknown");
+});
+
+it("suppresses repeated global T6 across construction kinds and restart, then rearms after provider recovery", async () => {
+  vi.stubEnv("V6_BUILD", "on"); const { dir, log, e } = fixture();
+  const brain = { askJson: vi.fn(async () => ({ json: { ...weights, ideal_overrides: {}, checkpoint: 99, potion_directions: [] } })) } as unknown as Pick<Brain, "askJson">;
+  await ensureDirectionPlan(e, brain, log, dir);
+  for (let i = 0; i < 18; i++) {
+    e.state.run!.floor += 1;
+    if (i === 9) { e.screenMemory.v6Planner = undefined; e.screenMemory.runPlan = undefined; }
+    const kind = (["card_pick", "potion", "shop", "rest"] as const)[i % 4]!;
+    recordConstructionHandover(e, log, `gap-${i}`, kind, constructionCoverage([`offered-${i}`, "skip"]), "insufficient_known_options");
+    expect((await ensureDirectionPlan(e, brain, log, dir))?.result).toMatchObject({ ask: false, skipped: ["T6"] });
+  }
+  expect(brain.askJson).toHaveBeenCalledTimes(1);
+  expect(e.screenMemory.v6Planner?.scheduler.calls).toBe(1);
+  const rows = readFileSync(join(dir, "v6-build.jsonl"), "utf8").trim().split("\n").map(line => JSON.parse(line));
+  expect(rows.filter(r => r.event === "v6_unknown_to_brain")).toHaveLength(18);
+  expect(rows.filter(r => r.skipped_triggers.includes("T6"))).toHaveLength(18);
+  e.state.run!.floor += 1;
+  const entries = ["TEST_A", "TEST_B"].flatMap(direction_id => coreFixture(direction_id).combos.flatMap(c =>
+    ["TEST_TARGET", "joint"].map(target_id => ({ ...projection, target_id, direction_id,
+      combo_id: c.id, combo_source: "build-core-v1" as const, trust: "trusted" as const }))));
+  e.v6DirectionEvaluation = { id: "recovered", entries };
+  expect((await ensureDirectionPlan(e, brain, log, dir))?.result.triggers).not.toContain("T6");
+  e.state.run!.floor += 1;
+  e.v6DirectionEvaluation = undefined;
+  expect((await ensureDirectionPlan(e, brain, log, dir))?.result).toMatchObject({ ask: true, triggers: ["T6"] });
+  expect(brain.askJson).toHaveBeenCalledTimes(2);
 });

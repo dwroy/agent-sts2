@@ -278,10 +278,38 @@ def compact(row, source):
     return dict(ts=row['ts'], state=state, _source=source)
 
 
-def extract(logs, character, limits, inventory=None, selected=None, exclusions=None):
+def extract(logs, character, limits, inventory=None, selected=None, exclusions=None, source_index=None, cache=None):
     """Normalize actual runtime JSONL; no final-deck backfill or hidden simulator."""
+    if cache is not None:
+        from incremental_evidence import implementation
+        algorithm = implementation(__file__, Path(__file__).with_name('history_boundary.py'))
+        selected_ids = dict.fromkeys(run_identity(row) for row, _ in read_rows(
+            logs / 'runs.jsonl', limits['runs.jsonl'], exclusions=exclusions)
+            if str(row.get('character', '')).lower() == character and row.get('ended')
+            and (selected is None or run_identity(row) in selected))
+        result = []
+        for rid in selected_ids:
+            boundary = [(key, {k:v for k,v in entry.items() if k != 'source_size'})
+                        for key, entry in (exclusions or {}).items() if entry.get('run_id') == rid]
+            key = [algorithm, character, source_index.run_signature(rid, ('runs', 'states', 'sl-attempts', 'decisions')),
+                   [r for r in inventory or [] if r['run_id'] == rid], boundary]
+            part = cache.cached('normalized-run', key, lambda: extract(logs, character, limits, inventory, {rid}, exclusions, source_index)[0])
+            result.extend(part)
+        # Prefixes were verified by the index. Retain whole-prefix byte evidence.
+        ranges = [dict(path=info['source'], offset=0, bytes=info['source_size'], sha256=info['source_sha256'])
+                  for stream in ('runs', 'states', 'sl-attempts', 'decisions')
+                  if (info := source_index.metadata(stream)) is not None]
+        return result, ranges
+
+    def read(path, limit, spans=None, audit=None, exclusions=None, terminal_ends=None):
+        if source_index is not None:
+            refs = source_index.references(path.stem, selected)
+            spans = [(r['offset'], r['offset'] + r['bytes']) for r, _rid, _reason in refs]
+            audit = None  # Full verified prefix evidence is emitted by the caller.
+        return read_rows(path, limit, spans, audit, exclusions, terminal_ends)
+
     audit, runs, grouped = [], {}, defaultdict(list)
-    for row, source in read_rows(logs/'runs.jsonl', limits['runs.jsonl'], audit=audit, exclusions=exclusions):
+    for row, source in read(logs/'runs.jsonl', limits['runs.jsonl'], audit=audit, exclusions=exclusions):
         if str(row.get('character', '')).lower() == character and row.get('ended') and (selected is None or row['run_id'] in selected):
             if row['run_id'] in runs and {k: v for k, v in runs[row['run_id']].items() if k != '_source'} != row:
                 raise ValueError('conflicting ended run identity')
@@ -316,12 +344,13 @@ def extract(logs, character, limits, inventory=None, selected=None, exclusions=N
     for name, target in [('sl-attempts.jsonl', summaries), ('decisions.jsonl', actions)]:
         if name not in limits:
             continue
-        for row, source in read_rows(logs/name, limits[name], ranges(name), audit, exclusions, terminal_ends):
+        for row, source in read(logs/name, limits[name], ranges(name), audit, exclusions, terminal_ends):
             if row.get('run_id') in runs:
                 if name == 'decisions.jsonl' and after_run_end(row, terminal_ends[row['run_id']]):
                     continue
-                target[row['run_id']].append(dict(row, _source=source))
-    for row, source in read_rows(logs/'states.jsonl', limits['states.jsonl'], ranges('states.jsonl'), audit, exclusions, terminal_ends):
+                kept = {k: row[k] for k in ('ts', 'chosen', 'result', 'run_id') if k in row} if name == 'decisions.jsonl' else row
+                target[row['run_id']].append(dict(kept, _source=source))
+    for row, source in read(logs/'states.jsonl', limits['states.jsonl'], ranges('states.jsonl'), audit, exclusions, terminal_ends):
         state = row.get('state') or {}
         rid = state.get('run_id')
         if rid not in runs or after_run_end(row, runs[rid]['ended']):
@@ -529,15 +558,21 @@ def compute_combo(combo, runs, options=None):
         boss_samples = defaultdict(lambda: {'reached': [], 'won': []})
         offers = defaultdict(list)
         normalization_rows, simulation_cases = [], []
-        for run in population:
+        def collect_run(run):
+            observations = defaultdict(list)
+            boss_samples = defaultdict(lambda: {'reached': [], 'won': []})
+            normalization_rows, simulation_cases, audit = [], [], []
+            def contribution():
+                return dict(observations=dict(observations), boss_samples=dict(boss_samples),
+                            normalization_rows=normalization_rows, simulation_cases=simulation_cases, audit=audit)
             rid = run['run_id']
             cutoff = run['first_cut'] if attempt == 'first' else None
             states = [s for s in run['states'] if cutoff is None or s['ts'] <= cutoff]
             if not states:
-                continue
+                return contribution()
             initial_floor = (states[0]['state'].get('run') or {}).get('floor')
             if not isinstance(initial_floor, int):
-                continue
+                return contribution()
             initial = dict(run_id=rid, floor=initial_floor)
             eligible, held, resource_rows = [], [], []
             for fight in run['fights']:
@@ -593,7 +628,7 @@ def compute_combo(combo, runs, options=None):
                              resource_observations=resource_rows, deck_size_association=[])
             audit.append(run_audit)
             if active_first is None:
-                continue
+                return contribution()
             first = active_first[1]
             ref = dict(run_id=rid, floor=first['state']['run']['floor'], turn=first['state']['turn'])
             observations['startup_turn'].append((ref['turn'], ref))
@@ -719,6 +754,23 @@ def compute_combo(combo, runs, options=None):
                 if result is not None:
                     observations['chain_won'].append((result, c_ref))
                     observations['chain_win_rate'].append((result, c_ref))
+            return contribution()
+        cache = options.get('_cache')
+        for run in population:
+            if cache is None:
+                part = collect_run(run)
+            else:
+                key = [options['_algorithm'], combo, attempt, sorted(chain_ascensions, key=str),
+                       {k:v for k,v in options.items() if not k.startswith('_') and k not in ('prerequisite_results', 'witnesses')},
+                       witnesses[run['run_id']], options['_run_keys'][run['run_id']],
+                       {f['_source']['sha256']: options.get('prerequisite_results', {}).get(f['_source']['sha256']) for f in run['states']}]
+                part = cache.cached('combo-run-contributions', key, lambda: collect_run(run))
+            for name, samples in part['observations'].items(): observations[name].extend(samples)
+            for boss, groups in part['boss_samples'].items():
+                for name, samples in groups.items(): boss_samples[boss][name].extend(samples)
+            normalization_rows.extend(part['normalization_rows'])
+            simulation_cases.extend(part['simulation_cases'])
+            audit.extend(part['audit'])
         # Availability denominator includes unformed runs; require explicit
         # upgrade evidence when the requirement needs an upgraded card.
         requirements = defaultdict(list)

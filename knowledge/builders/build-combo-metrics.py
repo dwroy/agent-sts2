@@ -3,10 +3,12 @@
 import argparse
 import json
 import subprocess
+import time
 from pathlib import Path
 from collections import Counter, defaultdict
 from combo_metrics import compute_combo, digest, extract, holding
 from combo_pooled import finalize
+from incremental_evidence import FrozenLogIndex, implementation
 
 
 def verified_witnesses(path, combos, logs, limits, run_ids):
@@ -130,6 +132,7 @@ def main():
     p.add_argument('--simulation', choices=['run','off'], default='run', help='offline single-worker A10 boss-sim; off records explicit unknowns')
     p.add_argument('--simulation-samples', type=int, default=32)
     p.add_argument('--shrink-prior-n', type=int, default=10)
+    p.add_argument('--cache-dir', type=Path, help='disposable verified per-run intermediate cache')
     p.add_argument('--output', type=Path, required=True, help='scratch/material report only; no automatic publishing')
     args = p.parse_args()
     if not 1 <= args.simulation_samples <= 10000 or not 1 <= args.shrink_prior_n <= 10000:
@@ -168,8 +171,13 @@ def main():
     exclusions = source_exclusions(manifest, args.logs, limits)
     inventory_bytes = args.run_inventory.read_bytes() if args.run_inventory else None
     inventory = json.loads(inventory_bytes) if inventory_bytes else None
+    started = time.monotonic()
+    cache = FrozenLogIndex(args.cache_dir, args.logs) if args.cache_dir else None
+    if cache is not None:
+        for name, limit in limits.items(): cache.update(Path(name).stem, limit)
     runs, ranges = extract(args.logs.resolve(), args.character, limits, inventory,
-                           set(args.run) if args.run else None, exclusions)
+                           set(args.run) if args.run else None, exclusions, cache, cache)
+    timings = dict(extract_seconds=time.monotonic() - started)
     if args.coverage:
         if inventory is None:
             p.error('--coverage requires --run-inventory')
@@ -186,6 +194,7 @@ def main():
     args.output.parent.mkdir(parents=True, exist_ok=True)
     predicates = {c['id']: c['prerequisites'] for c in combos if c.get('prerequisites') is not None}
     prerequisite_results = {cid: {} for cid in predicates}
+    started = time.monotonic()
     if predicates:
         frames = {}
         for run in runs:
@@ -195,22 +204,29 @@ def main():
                     frames[frame['_source']['sha256']] = dict(source=frame['_source'], combos=ids)
         payload = args.output.with_suffix('.prerequisites-input.json')
         result_path = args.output.with_suffix('.prerequisites-output.json')
-        payload.write_text(json.dumps(dict(predicates=predicates, frames=list(frames.values())), ensure_ascii=False)+'\n')
-        subprocess.run(['nice', '-n', '10', 'node', '--import', 'tsx', str(Path(__file__).with_name('combo-prerequisites.mts').resolve()), str(payload.resolve()), str(result_path.resolve())],
+        payload.write_text(json.dumps(dict(predicates=predicates, frames=list(frames.values()), cacheDirectory=str(args.cache_dir.resolve()) if args.cache_dir else None), ensure_ascii=False)+'\n')
+        subprocess.run(['nice', '-n', '19', 'node', '--import', 'tsx', str(Path(__file__).with_name('combo-prerequisites.mts').resolve()), str(payload.resolve()), str(result_path.resolve())],
                        cwd=Path(__file__).resolve().parents[2]/'agent', check=True)
         for row in json.loads(result_path.read_bytes())['rows']:
             for cid, condition in row['conditions'].items():
                 prerequisite_results[cid][row['source']['sha256']] = condition
+    timings['prerequisites_seconds'] = time.monotonic() - started
+    started = time.monotonic()
     outputs = []
+    run_keys = {r['run_id']: cache.run_signature(r['run_id'], ('runs', 'states', 'sl-attempts', 'decisions')) for r in runs} if cache else {}
+    algorithm = implementation(Path(__file__).with_name('combo_metrics.py'))
     for combo in combos:
         options = dict(rules.get(combo['id'], {}), direction=directions.get(combo['id']))
         if combo['id'] in predicates:
             options['prerequisite_results'] = prerequisite_results[combo['id']]
         if args.witnesses:
             options.update(witnesses=witnesses.get(combo['id'], []), has_definition=True)
+        if cache is not None:
+            options.update(_cache=cache, _algorithm=algorithm, _run_keys=run_keys)
         metrics, audit = compute_combo(combo, runs, options)
         outputs.append(dict(id=combo['id'], metrics=metrics, audit=audit))
     args.output.parent.mkdir(parents=True, exist_ok=True)
+    timings['contributions_and_reduction_seconds'] = time.monotonic() - started
     cases = {}
     for out in outputs:
         for audit in out['audit']:
@@ -225,7 +241,9 @@ def main():
         subprocess.run(['nice','-n','10','node','--import','tsx',str(script),str(payload.resolve()),str(result_path.resolve())],
                        cwd=Path(__file__).resolve().parents[2]/'agent',check=True)
         simulated = json.loads(result_path.read_bytes())
+    started = time.monotonic()
     finalize(outputs,runs,directions,simulated,args.shrink_prior_n)
+    timings['pooled_reduction_seconds'] = time.monotonic() - started
     report = dict(schema='combo-metrics-report-v1', character=args.character,
                   inputs=dict(spec_sha256=digest(spec_bytes), rules_sha256=digest(rule_bytes),
                               manifest_sha256=digest(manifest_bytes) if manifest_bytes else None,
@@ -246,7 +264,8 @@ def main():
                                'A10 simulation与实战regression分列；只复用boss-sim，不改模拟算法；缺精确A10静态数据时不回退。regression为共同进阶偏移+组合/目标截距，非因果；越界保留未知。小样本收缩单列shrinkage，原始计数不动。'])
     args.output.parent.mkdir(parents=True, exist_ok=True)
     args.output.write_text(json.dumps(report, ensure_ascii=False, indent=2, allow_nan=False)+'\n')
-    print(json.dumps({'output': str(args.output), 'runs': len(runs), 'combos': len(outputs)}, ensure_ascii=False))
+    print(json.dumps({'output': str(args.output), 'runs': len(runs), 'combos': len(outputs), 'timings': timings, 'incremental': cache.stats if cache else None}, ensure_ascii=False))
+    if cache is not None: cache.close()
 
 
 if __name__ == '__main__':

@@ -177,7 +177,9 @@ export interface SlCompute {
 
 export interface ScreenMemory {
   /** A construction handover is a T6 signal, consumed by the next direction evaluation. */
-  v6BrainFallbackPending?: { run: string; questionId: string };
+  v6BrainFallbackPending?: { run: string; questionId: string; issue?: import("../v6/replan-triggers.js").ConstructionT6Issue };
+  /** Successful coverage observations rearm only their own construction provider. */
+  v6ConstructionRecovered?: { run: string; kinds: string[] };
   /** Consecutive V6 Jev failures; direction replanning consumes this counter. */
   v6JevFallbacks?: number;
   v6JevFallbackRun?: string;

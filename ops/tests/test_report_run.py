@@ -113,6 +113,13 @@ class ReportRecovery(unittest.TestCase):
         self.refresh.assert_called_once()
         self.cost.assert_not_called(); self.boss.assert_not_called()
 
+    def test_background_refresh_does_not_block_recovery_completion(self):
+        self.refresh.return_value = {"exit": None, "status": "background", "admission_wait": False}
+        self.assertEqual(self.recovery.run(RUN)["status"], "complete")
+        self.refresh.assert_called_once_with("silent")
+        self.cost.assert_called_once()
+        self.boss.assert_called_once()
+
     def test_invalid_id_cannot_select_paths(self):
         for run in ("../escape", "AAA000000001,AAA000000002", "short"):
             with self.assertRaises(ValueError): self.recovery.run(run)

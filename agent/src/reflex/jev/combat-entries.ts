@@ -1,6 +1,8 @@
 import { createHash } from "node:crypto";
-import { relative } from "node:path";
-import { KNOWLEDGE_DIR } from "../../knowledge/files.js";
+import { realpathSync, statSync } from "node:fs";
+import { join, relative, resolve } from "node:path";
+import { characterKey, KNOWLEDGE_DIR } from "../../knowledge/files.js";
+import { measureDecisionBudgetStage } from "../../core/decision-budget.js";
 import { asRecord, toJsonValue, type JsonValue } from "../../core/util/json.js";
 import type { GameState } from "../../hand/mod/schema.js";
 import { loadV6Knowledge } from "../../v6/knowledge.js";
@@ -32,6 +34,38 @@ type WholeFightSource = { completion?: { status: string } } & ({ available: fals
 const finite = (value: unknown): number | null => typeof value === "number" && Number.isFinite(value) ? value : null;
 const hash = (value: unknown) => createHash("sha256").update(JSON.stringify(value)).digest("hex");
 
+type Loaded = ReturnType<typeof loadV6Knowledge>;
+const knowledgeCache = new Map<string, { signature: string; loaded: Loaded; provenance: Row | null }>();
+/** File identity invalidates missing files, atomic replacements, edits and redirected paths. No negative cache. */
+function cachedKnowledge(directory: string, rawCharacter: string): { loaded: Loaded; provenance: Row | null } {
+  const character = characterKey(rawCharacter);
+  const key = `${resolve(directory)}:${character}`;
+  let signature: string | null = null;
+  if (character && ["silent", "ironclad", "regent", "necrobinder", "defect"].includes(character)) {
+    try {
+      signature = [directory, join(directory, "characters", character), ...["build-cores.json", "direction-cards.json", "reflex.json", "reflex-vocab.json"]
+        .map(name => join(directory, "characters", character, name))].map(path => {
+          try { const actual = realpathSync(path), s = statSync(actual, { bigint: true });
+            return `${actual}:${s.dev}:${s.ino}:${s.size}:${s.mtimeNs}:${s.ctimeNs}`;
+          } catch (error) { if ((error as NodeJS.ErrnoException).code === "ENOENT") return `${path}:missing`; throw error; }
+        }).join("|");
+    } catch { /* The normal loader records unreadable or redirected knowledge as unavailable. */ }
+  }
+  const cached = signature === null ? undefined : knowledgeCache.get(key);
+  if (cached?.signature === signature) return cached;
+  const loaded = loadV6Knowledge(directory, rawCharacter);
+  const provenance = loaded.reflex.status === "loaded" && loaded.vocab.status === "loaded" ? {
+    reflex: { path: relative(directory, loaded.reflex.path), sha256: hash(loaded.reflex.value), encoding: "validated-entries-json", entries: loaded.reflex.value },
+    vocab: { path: relative(directory, loaded.vocab.path), sha256: hash(loaded.vocab.value), encoding: "validated-vocab-json", value: loaded.vocab.value },
+  } : null;
+  knowledgeCache.delete(key);
+  if (signature !== null && provenance) {
+    if (knowledgeCache.size >= 8) knowledgeCache.delete(knowledgeCache.keys().next().value!);
+    knowledgeCache.set(key, { signature, loaded, provenance });
+  }
+  return { loaded, provenance };
+}
+
 export interface CombatEntries {
   character: string;
   ascension: number;
@@ -49,15 +83,13 @@ export function loadCombatEntries(state: GameState, directory = KNOWLEDGE_DIR, e
   if (env["V6_COMBAT_ENTRIES"] !== "on") return null;
   const ascension = state.run?.ascension;
   if (ascension == null) return null;
-  const loaded = loadV6Knowledge(directory, String(state.run?.raw["character_id"] ?? ""));
+  const { loaded, provenance } = measureDecisionBudgetStage("v6_combat_knowledge", () =>
+    cachedKnowledge(directory, String(state.run?.raw["character_id"] ?? "")));
   if (!loaded.character || loaded.reflex.status !== "loaded" || loaded.vocab.status !== "loaded") return null;
   const predicateFacts = combatPredicateFacts(state, runtime), context = predicateFacts.context;
   return { character: loaded.character, ascension, act: finite(context["act"]), context, predicateFacts,
     entries: loaded.reflex.value, vocab: loaded.vocab.value,
-    provenance: {
-      reflex: { path: relative(directory, loaded.reflex.path), sha256: hash(loaded.reflex.value), encoding: "validated-entries-json", entries: loaded.reflex.value },
-      vocab: { path: relative(directory, loaded.vocab.path), sha256: hash(loaded.vocab.value), encoding: "validated-vocab-json", value: loaded.vocab.value },
-    },
+    provenance: provenance!,
   };
 }
 
@@ -125,6 +157,7 @@ function wholeFightAudit(plan: Plan | null, sim: WholeFightSource | null): Row {
 /** Read-only annotation: neither the candidate list nor any rank/action is changed. */
 export function combatEntryAudit(session: CombatEntries, plan: Plan | null, rollout: RolloutSource | null, sim: WholeFightSource | null,
   basis: "plan" | "potion_median" | "unmodelled" = "plan", selection?: { best: boolean; tied_with: string[] }): JsonValue {
+  return measureDecisionBudgetStage("v6_combat_predicates_and_audit", () => {
   const rolloutFacts = rolloutAudit(plan, rollout), wholeFightFacts = wholeFightAudit(plan, sim);
   const option = combatOptionFacts(plan, { rollout: rolloutFacts, whole_fight: wholeFightFacts });
   const context = { ...session.context, ...option.context };
@@ -145,6 +178,7 @@ export function combatEntryAudit(session: CombatEntries, plan: Plan | null, roll
     predicate_facts: { sources: { ...session.predicateFacts.sources, ...option.sources },
       unavailable: { ...session.predicateFacts.unavailable, ...option.unavailable } },
     ...(selection ? { selection } : {}), rollout: rolloutFacts, whole_fight: wholeFightFacts });
+  });
 }
 
 export function combatEntriesState(session: CombatEntries, hasRunPlan: boolean): JsonValue {

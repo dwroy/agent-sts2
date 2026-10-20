@@ -497,7 +497,7 @@ def ablation_arm():
 
 
 def refresh_knowledge(character=None) -> None:
-    """After each run: monster DB, per-fight move model, outcome stats. Background, unless REFRESH_WAIT=1 (autoplay.sh).
+    """Dispatch after-run statistics without delaying admission of the next run.
     `character`: the finished run's (its knowledge alone is rebuilt; None: every character with runs)."""
     import subprocess
     # Into the live worktree (.worktrees/live, agent-sts2 layout 2026-10-04; was jev-sts2-v4run), whose logs/ and data/
@@ -509,19 +509,21 @@ def refresh_knowledge(character=None) -> None:
     log = open(os.path.join(ROOT, "ops", "refresh.log"), "a")
     # fight-value (~5 min) is only a reference for Jev's history estimate and is written whole (tmp + rename, ede54d1),
     # so it runs on its own and the next run never waits for it; a run that starts meanwhile reads the previous copy.
-    fight = subprocess.Popen(["bash", "-c", f"{refresh} --fight-value >/dev/null 2>&1"],
+    fight = subprocess.Popen(["nice", "-n", "19", "bash", "-c", f"{refresh} --fight-value >/dev/null 2>&1"],
                              stdout=log, stderr=log, start_new_session=True)
-    proc = subprocess.Popen(["bash", "-c", cmd], stdout=log, stderr=log, start_new_session=True)
-    result = {"pid": proc.pid, "exit": None, "fight_value_pid": fight.pid, "fight_value": "background"}
-    # REFRESH_WAIT=1 (autoplay.sh, 2026-10-04): block until every file the next run reads is written, so the next run reads them fresh
-    # (4AWD read the old outcome-stats.json while this was still rebuilding it). Capped; past the cap it keeps going.
-    if os.environ.get("REFRESH_WAIT") == "1":
+    proc = subprocess.Popen(["nice", "-n", "19", "bash", "-c", cmd], stdout=log, stderr=log, start_new_session=True)
+    result = {"pid": proc.pid, "exit": None, "status": "background", "admission_wait": False,
+              "fight_value_pid": fight.pid, "fight_value": "background",
+              "history_policy": "last_completed_packet"}
+    # Even legacy REFRESH_WAIT callers must not block the next game (Roy 2026-10-20).
+    if character:
         try:
-            result["exit"] = proc.wait(timeout=int(os.environ.get("REFRESH_WAIT_S", "1800")))
-        except subprocess.TimeoutExpired:
-            log.write(f"refresh still running after {os.environ.get('REFRESH_WAIT_S', '1800')} s; next run starts anyway\n")
-            log.flush()
-            result["timed_out"] = True
+            with open(os.path.join(LIVE, "knowledge", "characters", character.lower(), "v6-history.json")) as source:
+                pack = json.load(source)
+            result["previous_history"] = {"cutoff": pack["data"]["cutoff"],
+                                          "generated_at": pack["generated_at"], "sha256": pack["content_sha256"]}
+        except (OSError, ValueError, KeyError, TypeError):
+            result["previous_history"] = None
     log.close()
     return result
 
