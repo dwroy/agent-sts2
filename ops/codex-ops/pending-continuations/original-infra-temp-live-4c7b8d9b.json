@@ -1,6 +1,6 @@
 {
-  "at": "2026-10-20T17:53:38+08:00",
-  "phase": "exact-38-main-source-verified-live-private-threeway-preview-ready-await-original-W4-full-v2-release",
+  "at": "2026-10-20T18:14:41.922601+08:00",
+  "phase": "actual-live64-exact39-infra-plus-combat-off-frozen-host-full-started-tsc0-await-terminal-event",
   "completed": false,
   "source_commit": "4c7b8d9bf48f54163c04d8e4f4f79ae6eb402e83",
   "main_commit": "4c7b8d9bf48f54163c04d8e4f4f79ae6eb402e83",
@@ -14,6 +14,61 @@
   "preview_patch": "paper/materials/20261020-1750-ops/live-preview.patch",
   "live_files_changed_by_ops": false,
   "two_threeway_fixture_merges_need_actual_combined_full": true,
-  "actual_live_knowledge_snapshot_and_joint_checks_pending": true,
-  "next": "原W4v2自然终局核PID退出并明确释放后，原ops核当时live/源漂移，按worktree_checkout分配本功能树、原锁冻结实际知识数据及38叶补丁，单worker原阈值tsc/full；完整0后原授权自然边界精确运输并实际入口读回，不夹整main/805，不提前retention。"
+  "actual_live_knowledge_snapshot_and_joint_checks_pending": false,
+  "next": "原有限检查自然终局后核退出/输入不漂移，按实际自然新局与live锁核源码数据漂移、发布号/双通知/消费者。新拿牌条目不夹本轮，下一包按Roy18:2x严格战后三选一及V5脑节奏约束；失败保原件。",
+  "host_static_start": {
+    "request": "roy-next-run-off-infra39-exact-live-20261020-1802",
+    "state": "running",
+    "started_at": "2026-10-20T18:07:12.349927+08:00",
+    "runner_pid": 363404,
+    "runner_start_ticks": "138277519",
+    "nice": 19,
+    "worktree": "/home/dw/Projects/agent-sts2/.worktrees/ops-infra-live-exact-20261020-1803",
+    "allocation_base": "4c7b8d9bf48f54163c04d8e4f4f79ae6eb402e83",
+    "actual_live_base": "64c218a04ebe029fdda0b5f25025302ebf2a4124",
+    "staged_tree": "afaf0b2f8d3e70afbf4f9d856a8f482c4184976d",
+    "source_count": 39,
+    "knowledge_count": 458,
+    "input_count": 2363,
+    "input_sha256": "d5e8d6c26b1260d0c812a207c3ddcbf29bbaa4760738b2c70a08fcd1f28f113a",
+    "steps": [
+      {
+        "name": "tsc",
+        "command": [
+          "npx",
+          "tsc",
+          "-p",
+          "tsconfig.json",
+          "--noEmit"
+        ],
+        "started_at": "2026-10-20T18:07:12.350550+08:00",
+        "log": "/home/dw/Projects/agent-sts2/.artifacts/ops-wake-20261020-1802/tsc.log",
+        "pid": 363407,
+        "exit_code": 0,
+        "ended_at": "2026-10-20T18:07:13.418530+08:00",
+        "seconds": 1.0679789769928902,
+        "log_bytes": 0,
+        "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "name": "full",
+        "command": [
+          "node",
+          "tools/with-temp.mjs",
+          "node_modules/vitest/vitest.mjs",
+          "run",
+          "--maxWorkers=1"
+        ],
+        "started_at": "2026-10-20T18:07:13.418838+08:00",
+        "log": "/home/dw/Projects/agent-sts2/.artifacts/ops-wake-20261020-1802/full.log",
+        "pid": 363478
+      }
+    ],
+    "no_actual_live_or_active_actor_change": true
+  },
+  "receipt": "paper/materials/20261020-1802-ops/receipt.json",
+  "new_card_entries_next_package": "paper/materials/20261020-1802-ops/roy-reward-only-182x-original.md",
+  "current_running_input_must_not_change": true,
+  "joint_full_terminal_pending": true,
+  "actual_knowledge_snapshot_count": 458
 }

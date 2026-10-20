@@ -5236,3 +5236,5 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
 - 2026-10-20T18:06:16+08:00 watcher：原字节核5978007a分组牌堆证据，已用户可见逐字告Roy并原CLI双角色ACK0，三阶段回执SHA核同/learn语义不变，不关科学父；W4v2固定625文件5908过2跳及PID退出已核，窗口沿原通道投递ops续infra精确live组合（CLI0不冒native接管）；W8方向候选仅owner进展入列，805/actor/live/Regent边界保持。原件 paper/materials/20261020-1802-watcher/receipt.json。
 
 - 2026-10-20 18:12:42 CST [Claude/Roy，V6 范围收窄] Roy：“仅仅在打赢后的3选一让jev来拿，其他的地方依然保持大脑来决策（幕初，商店，休息点等等）保持和v5一样的请求逻辑，例如商店只要一次大脑请求处理即可”。配置：V6_CARD_DECIDER=jev（仅战斗奖励选牌，新拿牌条目），SHOP/REST/POTION=brain，V6_COMBAT_ENTRIES=off；大脑请求恢复 V5 节奏（V5 每局 1 次 run-plan，V6 现 14–25 次）：过渡期 ops 用阈值环境变量压住 T1/T2/T3/T6，v6-w8 加正式开关关闭方向重算、方向概率只在 V5 原有请求中产出；商店/休息/拿药迁移新条目暂停。
+
+- 2026-10-20T18:14:41.922601+08:00 ops：接W4v2终局释放，精确live39/458知识联合宿主18:07启动tsc0/full在途；日志保全2ac790fb9，W4e2十七源核同但下一包，Roy仅战胜三选一Jev/V5脑节奏与配置入短清单，805及当前actor不动。原件 paper/materials/20261020-1802-ops/receipt.json。

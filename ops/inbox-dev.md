@@ -4562,3 +4562,8 @@ request_id=roy-20261017-human-pace-h0 revision=3 input_sha256=1e1c259a15f1824119
 
 2026-10-20T18:01:18+08:00 已核本批六个暂存文件及补丁SHA与pending-source一致，原工作树HEAD335不变、无未暂存差异；窄实现尚未提交或上线。六固定例撤源码5败1过、恢复6过的原日志保留；沙箱tsc0、5078过1败与两次中断分列，撤四生产修改后content-store仍EXDEV，不能据此冒候选通过或归为产品根因。已准备当前main仅叠六叶的私有预演eaaaa，六目标文件基线未漂移；宿主完整验收排既有W4v2与ops infra/运行时项之后，不抢窗口或重复模型。学习者指出顶层actual/piles缺失不等agent_view无分组牌堆；两原状态offset字节SHA已直接核同，完整异议、证据和旧观点差异已原样双收件箱并交watcher，通知5978007a仅ops真实转达，后角色待真回执，不称Roy已知。十项提案仍waiting，不由窄补丁关闭持续身份、跨SL或其他校准缺口。本轮不补游戏知识、dataset或重full，805暂停、下一自然局COMBAT_ENTRIES=off及85知识保留要求继续，live/actor/STOP/Regent不动。
 原件 paper/materials/20261020-1757-ops/receipt.json；verification.json；questions.json；candidate-main-preview.json。
+
+
+### 2026-10-20T18:14:41.922601+08:00 原ops精确组合与下一包范围
+
+本轮实核W4拿牌v2自然全检0及原PID退出，接管唯一窗口；18:07已在独立树启动live64精确39叶、458知识快照联合检查，tsc0、full在途，未改实际live或对局。旧基线分配的共享工具守卫失败保原件，另配1803冻结输入。W4新17源e2逐SHA同受测v2，原根日志两行完整保全提交2ac790fb9并回原线程；赶不上当前完整检查截止，按Claude要求留下一包。Roy新原文已落盘：仅战胜奖励三选一用Jev，其他沿V5大脑节奏，CARD=jev、SHOP/REST/POTION=brain、COMBAT关及五项触发阈值随条目上线；严格奖励入口和T5/T7原W4/W8开关待交，当前受测输入不变。85知识及805暂停保留，未加发布号/代ACK/关父或恢复Regent。原件 paper/materials/20261020-1802-ops/receipt.json。

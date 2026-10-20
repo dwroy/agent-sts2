@@ -1,0 +1,94 @@
+{
+  "at": "2026-10-20T18:14:41.922601+08:00",
+  "state": "ops-exact39-host-full-running-W4-next-package-reward-only-authorization-recorded",
+  "W4_original_full_v2_terminal_verification": "paper/materials/20261020-1802-ops/W4-v2-terminal-verification.json",
+  "W4_full_rc": 0,
+  "W4_source_commit_e2_17_SHA_same_as_v2": true,
+  "W4_main_FF_not_yet_assumed": true,
+  "root_original_log_saved_commit": "2ac790fb9c9775ed4c7d7c3a728844a40c9705e2",
+  "root_original_log_sha256": "5c7fe32951c246b10edd99afbef65e8e1ec9a07a08c00822d5980e226d8c514a",
+  "original_live_allocation_guard_failure_retained": true,
+  "actual_allocation": ".worktrees/ops-infra-live-exact-20261020-1803",
+  "host_static_start": {
+    "request": "roy-next-run-off-infra39-exact-live-20261020-1802",
+    "state": "running",
+    "started_at": "2026-10-20T18:07:12.349927+08:00",
+    "runner_pid": 363404,
+    "runner_start_ticks": "138277519",
+    "nice": 19,
+    "worktree": "/home/dw/Projects/agent-sts2/.worktrees/ops-infra-live-exact-20261020-1803",
+    "allocation_base": "4c7b8d9bf48f54163c04d8e4f4f79ae6eb402e83",
+    "actual_live_base": "64c218a04ebe029fdda0b5f25025302ebf2a4124",
+    "staged_tree": "afaf0b2f8d3e70afbf4f9d856a8f482c4184976d",
+    "source_count": 39,
+    "knowledge_count": 458,
+    "input_count": 2363,
+    "input_sha256": "d5e8d6c26b1260d0c812a207c3ddcbf29bbaa4760738b2c70a08fcd1f28f113a",
+    "steps": [
+      {
+        "name": "tsc",
+        "command": [
+          "npx",
+          "tsc",
+          "-p",
+          "tsconfig.json",
+          "--noEmit"
+        ],
+        "started_at": "2026-10-20T18:07:12.350550+08:00",
+        "log": "/home/dw/Projects/agent-sts2/.artifacts/ops-wake-20261020-1802/tsc.log",
+        "pid": 363407,
+        "exit_code": 0,
+        "ended_at": "2026-10-20T18:07:13.418530+08:00",
+        "seconds": 1.0679789769928902,
+        "log_bytes": 0,
+        "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "name": "full",
+        "command": [
+          "node",
+          "tools/with-temp.mjs",
+          "node_modules/vitest/vitest.mjs",
+          "run",
+          "--maxWorkers=1"
+        ],
+        "started_at": "2026-10-20T18:07:13.418838+08:00",
+        "log": "/home/dw/Projects/agent-sts2/.artifacts/ops-wake-20261020-1802/full.log",
+        "pid": 363478
+      }
+    ],
+    "no_actual_live_or_active_actor_change": true
+  },
+  "host_progress_not_queried": true,
+  "live_changed": false,
+  "new_source_committed_by_ops": false,
+  "new_release_allocated": false,
+  "W4_new_entries_missed_Claude1810_cutoff_next_package": true,
+  "next_package_authorization_original": "paper/materials/20261020-1802-ops/roy-reward-only-182x-original.md",
+  "next_package_env": {
+    "V6_BUILD": "on",
+    "V6_CARD_DECIDER": "jev",
+    "V6_SHOP_DECIDER": "brain",
+    "V6_REST_DECIDER": "brain",
+    "V6_POTION_DECIDER": "brain",
+    "V6_COMBAT_ENTRIES": "off",
+    "V6_T1_CORE_MIN": "0",
+    "V6_T2_MIN_DELTA": "1",
+    "V6_T3_WEIGHT_MAX": "0",
+    "V6_T6_UNKNOWN_MAX": "1",
+    "V6_T6_FALLBACKS": "100"
+  },
+  "strict_postcombat_three_choice_entry_verification_pending_original_W4": true,
+  "V5_brain_cadence_T5_T7_switches_pending_original_W8": true,
+  "do_not_mutate_running_39_input": true,
+  "retained_knowledge_entries": 85,
+  "W8_compression_only_owner_progress_no_full_started_by_ops": true,
+  "window_queue": [
+    "current exact39 ops finite host",
+    "original164301 precise six-source host fallback after explicit release",
+    "W8 new input after original source/peek readiness and single queue confirmation"
+  ],
+  "no_model_API_dataset_refresh_or_game_action": true,
+  "Regent_paused": true,
+  "role_ACK_or_scientific_parent_not_closed": true
+}
