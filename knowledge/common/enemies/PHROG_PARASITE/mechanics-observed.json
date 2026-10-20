@@ -18,13 +18,13 @@
     ],
     "kind": "elite",
     "rooms": {
-      "elite": 150
+      "elite": 151
     },
     "acts": {
-      "1": 150
+      "1": 151
     },
     "encounters": {
-      "PHROG_PARASITE": 150
+      "PHROG_PARASITE": 151
     },
     "hp_by_asc": {
       "0": {
@@ -89,55 +89,55 @@
       },
       "10": {
         "min": 66,
-        "median": 67,
+        "median": 67.0,
         "max": 68,
-        "n": 55
+        "n": 56
       }
     },
     "moves": {
       "INFECT_MOVE": {
         "name": "感染",
-        "n_seen": 304,
+        "n_seen": 306,
         "intents": {
-          "StatusCard": 304
+          "StatusCard": 306
         },
         "turns_seen": {
-          "1": 150,
-          "3": 126,
+          "1": 151,
+          "3": 127,
           "5": 23,
           "7": 4,
           "9": 1
         },
         "next": {
-          "LASH_MOVE": 222
+          "LASH_MOVE": 224
         },
         "avg_total_shown": 0.0,
         "status_cards": {
-          "3": 304
+          "3": 306
         },
         "status_card_ids": {
-          "INFECTION": 669
+          "INFECTION": 675
         },
         "status_card_pile": {
-          "discard": 534,
-          "draw": 135
+          "discard": 537,
+          "draw": 138
         }
       },
       "LASH_MOVE": {
         "name": "甩动",
-        "n_seen": 222,
+        "n_seen": 224,
         "intents": {
-          "Attack": 222
+          "Attack": 224
         },
         "turns_seen": {
-          "2": 149,
-          "4": 63,
+          "2": 150,
+          "4": 64,
           "6": 7,
           "8": 2,
           "10": 1
         },
         "next": {
-          "INFECT_MOVE": 154
+          "INFECT_MOVE": 155
         },
         "avg_total_shown": 17.6,
         "damage_by_asc": {
@@ -265,16 +265,16 @@
           },
           "10": {
             "shown": {
-              "3x4": 20,
-              "5x4": 85
+              "3x4": 21,
+              "5x4": 86
             },
             "base_per_hit": {
-              "5": 85
+              "5": 86
             },
             "hits": {
-              "4": 105
+              "4": 107
             },
-            "n_base": 85
+            "n_base": 86
           }
         }
       }
@@ -307,12 +307,12 @@
         "name": "寄生物",
         "type": "Buff",
         "description": "死亡时，召唤……某种东西。",
-        "n_fights": 150,
+        "n_fights": 151,
         "amount_at_first_sight": {
-          "4": 150
+          "4": 151
         },
         "amount_max_in_fight": {
-          "4": 150
+          "4": 151
         },
         "amount_at_first_sight_by_asc": {
           "0": {
@@ -346,7 +346,7 @@
             "4": 21
           },
           "10": {
-            "4": 55
+            "4": 56
           }
         },
         "turn_at_first_sight_by_asc": {
@@ -381,7 +381,7 @@
             "1": 21
           },
           "10": {
-            "1": 55
+            "1": 56
           }
         }
       },
@@ -439,14 +439,15 @@
         "name": "中毒",
         "type": "Debuff",
         "description": "中毒的生物会在自身回合开始时失去生命。中毒层数每回合减少[blue]1[/blue]。",
-        "n_fights": 46,
+        "n_fights": 47,
         "amount_at_first_sight": {
           "2": 3,
           "3": 16,
           "4": 2,
           "5": 9,
           "6": 4,
-          "7": 12
+          "7": 12,
+          "9": 1
         },
         "amount_max_in_fight": {
           "2": 1,
@@ -456,7 +457,7 @@
           "6": 4,
           "7": 6,
           "8": 3,
-          "9": 4,
+          "9": 5,
           "10": 6,
           "12": 4,
           "13": 2,
@@ -480,7 +481,8 @@
             "4": 2,
             "5": 8,
             "6": 4,
-            "7": 12
+            "7": 12,
+            "9": 1
           }
         },
         "turn_at_first_sight_by_asc": {
@@ -495,7 +497,7 @@
           },
           "10": {
             "1": 9,
-            "2": 13,
+            "2": 14,
             "3": 14,
             "5": 5,
             "7": 1,
@@ -729,15 +731,15 @@
         "name": "虚弱",
         "type": "Debuff",
         "description": "虚弱的生物造成的攻击伤害减少[blue]25%[/blue]。",
-        "n_fights": 74,
+        "n_fights": 75,
         "amount_at_first_sight": {
           "1": 57,
-          "2": 16,
+          "2": 17,
           "3": 1
         },
         "amount_max_in_fight": {
           "1": 49,
-          "2": 21,
+          "2": 22,
           "3": 2,
           "4": 2
         },
@@ -763,7 +765,7 @@
           },
           "10": {
             "1": 40,
-            "2": 12,
+            "2": 13,
             "3": 1
           }
         },
@@ -793,7 +795,7 @@
             "3": 1
           },
           "10": {
-            "1": 26,
+            "1": 27,
             "2": 16,
             "3": 10,
             "4": 1
@@ -803,9 +805,9 @@
     },
     "provenance": {
       "first_seen": "2026-09-24T04:14:29.431Z",
-      "last_seen": "2026-10-19T05:06:51.684Z",
-      "n_runs": 150,
-      "n_instances": 150,
+      "last_seen": "2026-10-20T05:06:24.466Z",
+      "n_runs": 151,
+      "n_instances": 151,
       "n_spawned_mid_fight": 0,
       "n_minion_instances": 0
     }

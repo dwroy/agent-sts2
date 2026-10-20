@@ -18,14 +18,14 @@
     ],
     "kind": "hallway",
     "rooms": {
-      "hallway": 359,
+      "hallway": 361,
       "unknown_room": 29
     },
     "acts": {
-      "1": 388
+      "1": 390
     },
     "encounters": {
-      "SHRINKER_BEETLE": 301,
+      "SHRINKER_BEETLE": 303,
       "FUZZY_WURM_CRAWLER+SHRINKER_BEETLE": 87
     },
     "hp_by_asc": {
@@ -87,29 +87,29 @@
         "min": 40,
         "median": 41,
         "max": 42,
-        "n": 159
+        "n": 161
       }
     },
     "moves": {
       "CHOMP_MOVE": {
         "name": "大啃",
-        "n_seen": 596,
+        "n_seen": 601,
         "intents": {
-          "Attack": 596
+          "Attack": 601
         },
         "turns_seen": {
-          "2": 381,
-          "4": 175,
-          "6": 33,
+          "2": 383,
+          "4": 177,
+          "6": 34,
           "8": 4,
           "10": 1,
           "12": 1,
           "14": 1
         },
         "next": {
-          "STOMP_MOVE": 422
+          "STOMP_MOVE": 426
         },
-        "avg_total_shown": 7.5,
+        "avg_total_shown": 7.6,
         "damage_by_asc": {
           "0": {
             "shown": {
@@ -227,34 +227,34 @@
           "10": {
             "shown": {
               "6x1": 14,
-              "8x1": 258
+              "8x1": 263
             },
             "base_per_hit": {
-              "8": 258
+              "8": 263
             },
             "hits": {
-              "1": 272
+              "1": 277
             },
-            "n_base": 258
+            "n_base": 263
           }
         }
       },
       "SHRINKER_MOVE": {
         "name": "缩小",
-        "n_seen": 388,
+        "n_seen": 390,
         "intents": {
-          "DebuffStrong": 388
+          "DebuffStrong": 390
         },
         "turns_seen": {
-          "1": 388
+          "1": 390
         },
         "next": {
-          "CHOMP_MOVE": 381
+          "CHOMP_MOVE": 383
         },
         "avg_total_shown": 0.0,
         "player_powers_applied": {
           "SHRINK_POWER": {
-            "-1": 381
+            "-1": 383
           }
         },
         "player_powers_applied_by_asc": {
@@ -305,20 +305,20 @@
           },
           "10": {
             "SHRINK_POWER": {
-              "-1": 155
+              "-1": 157
             }
           }
         }
       },
       "STOMP_MOVE": {
         "name": "践踏",
-        "n_seen": 422,
+        "n_seen": 426,
         "intents": {
-          "Attack": 422
+          "Attack": 426
         },
         "turns_seen": {
-          "3": 319,
-          "5": 87,
+          "3": 321,
+          "5": 89,
           "7": 12,
           "9": 1,
           "11": 1,
@@ -326,7 +326,7 @@
           "15": 1
         },
         "next": {
-          "CHOMP_MOVE": 215
+          "CHOMP_MOVE": 218
         },
         "avg_total_shown": 13.5,
         "damage_by_asc": {
@@ -445,16 +445,16 @@
           },
           "10": {
             "shown": {
-              "10x1": 9,
-              "14x1": 190
+              "10x1": 10,
+              "14x1": 193
             },
             "base_per_hit": {
-              "14": 190
+              "14": 193
             },
             "hits": {
-              "1": 199
+              "1": 203
             },
-            "n_base": 190
+            "n_base": 193
           }
         }
       }
@@ -538,14 +538,14 @@
         "name": "中毒",
         "type": "Debuff",
         "description": "中毒的生物会在自身回合开始时失去生命。中毒层数每回合减少[blue]1[/blue]。",
-        "n_fights": 57,
+        "n_fights": 58,
         "amount_at_first_sight": {
           "2": 5,
           "3": 28,
           "4": 2,
           "5": 8,
           "6": 3,
-          "7": 8,
+          "7": 9,
           "10": 1,
           "14": 1,
           "18": 1
@@ -555,7 +555,7 @@
           "4": 6,
           "5": 7,
           "6": 6,
-          "7": 8,
+          "7": 9,
           "8": 1,
           "9": 2,
           "10": 4,
@@ -580,7 +580,7 @@
             "4": 2,
             "5": 7,
             "6": 3,
-            "7": 8,
+            "7": 9,
             "18": 1
           }
         },
@@ -598,6 +598,7 @@
             "3": 4,
             "4": 2,
             "5": 3,
+            "6": 1,
             "8": 1
           }
         }
@@ -789,15 +790,15 @@
         "name": "虚弱",
         "type": "Debuff",
         "description": "虚弱的生物造成的攻击伤害减少[blue]25%[/blue]。",
-        "n_fights": 174,
+        "n_fights": 176,
         "amount_at_first_sight": {
-          "1": 159,
+          "1": 161,
           "2": 13,
           "3": 2
         },
         "amount_max_in_fight": {
-          "1": 148,
-          "2": 21,
+          "1": 149,
+          "2": 22,
           "3": 3,
           "4": 2
         },
@@ -824,7 +825,7 @@
             "1": 8
           },
           "10": {
-            "1": 132,
+            "1": 134,
             "2": 9
           }
         },
@@ -857,8 +858,8 @@
             "3": 1
           },
           "10": {
-            "1": 58,
-            "2": 55,
+            "1": 59,
+            "2": 56,
             "3": 24,
             "4": 3,
             "5": 1
@@ -868,9 +869,9 @@
     },
     "provenance": {
       "first_seen": "2026-09-24T04:08:58.795Z",
-      "last_seen": "2026-10-19T06:09:21.990Z",
-      "n_runs": 323,
-      "n_instances": 388,
+      "last_seen": "2026-10-20T05:59:56.876Z",
+      "n_runs": 325,
+      "n_instances": 390,
       "n_spawned_mid_fight": 0,
       "n_minion_instances": 0
     },

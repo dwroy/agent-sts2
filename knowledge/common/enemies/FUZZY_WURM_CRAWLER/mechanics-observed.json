@@ -18,14 +18,14 @@
     ],
     "kind": "hallway",
     "rooms": {
-      "hallway": 370,
+      "hallway": 372,
       "unknown_room": 28
     },
     "acts": {
-      "1": 398
+      "1": 400
     },
     "encounters": {
-      "FUZZY_WURM_CRAWLER": 311,
+      "FUZZY_WURM_CRAWLER": 313,
       "FUZZY_WURM_CRAWLER+SHRINKER_BEETLE": 87
     },
     "hp_by_asc": {
@@ -93,23 +93,23 @@
         "min": 58,
         "median": 59,
         "max": 59,
-        "n": 161
+        "n": 163
       }
     },
     "moves": {
       "ACID_GOOP": {
         "name": "酸液黏球",
-        "n_seen": 471,
+        "n_seen": 474,
         "intents": {
-          "Attack": 471
+          "Attack": 474
         },
         "turns_seen": {
-          "3": 387,
-          "6": 80,
+          "3": 389,
+          "6": 81,
           "9": 4
         },
         "next": {
-          "FIRST_ACID_GOOP": 292
+          "FIRST_ACID_GOOP": 295
         },
         "avg_total_shown": 13.3,
         "damage_by_asc": {
@@ -247,36 +247,36 @@
           },
           "10": {
             "shown": {
-              "13x1": 148,
+              "13x1": 149,
               "15x1": 7,
-              "20x1": 54,
+              "20x1": 55,
               "27x1": 3,
-              "9x1": 10
+              "9x1": 11
             },
             "base_per_hit": {
-              "6": 204
+              "6": 206
             },
             "hits": {
-              "1": 222
+              "1": 225
             },
-            "n_base": 204
+            "n_base": 206
           }
         }
       },
       "FIRST_ACID_GOOP": {
         "name": null,
-        "n_seen": 690,
+        "n_seen": 695,
         "intents": {
-          "Attack": 690
+          "Attack": 695
         },
         "turns_seen": {
-          "1": 398,
-          "4": 275,
-          "7": 16,
+          "1": 400,
+          "4": 277,
+          "7": 17,
           "10": 1
         },
         "next": {
-          "INHALE": 552
+          "INHALE": 555
         },
         "avg_total_shown": 8.2,
         "damage_by_asc": {
@@ -417,41 +417,41 @@
           },
           "10": {
             "shown": {
-              "13x1": 130,
+              "13x1": 131,
               "15x1": 4,
-              "20x1": 10,
+              "20x1": 11,
               "27x1": 1,
-              "6x1": 161,
+              "6x1": 164,
               "9x1": 10
             },
             "base_per_hit": {
-              "6": 302
+              "6": 306
             },
             "hits": {
-              "1": 316
+              "1": 321
             },
-            "n_base": 302
+            "n_base": 306
           }
         }
       },
       "INHALE": {
         "name": "吸入",
-        "n_seen": 552,
+        "n_seen": 555,
         "intents": {
-          "Buff": 552
+          "Buff": 555
         },
         "turns_seen": {
-          "2": 397,
-          "5": 146,
+          "2": 399,
+          "5": 147,
           "8": 9
         },
         "next": {
-          "ACID_GOOP": 471
+          "ACID_GOOP": 474
         },
         "avg_total_shown": 0.0,
         "self_powers_gained": {
           "STRENGTH_POWER": {
-            "7": 470,
+            "7": 473,
             "8": 1
           }
         },
@@ -509,7 +509,7 @@
           },
           "10": {
             "STRENGTH_POWER": {
-              "7": 222
+              "7": 225
             }
           }
         }
@@ -674,6 +674,28 @@
           }
         }
       },
+      "SHRINK_POWER": {
+        "name": "缩小",
+        "type": "Debuff",
+        "description": "这个生物的攻击伤害在3回合内减少[blue]30%[/blue]。",
+        "n_fights": 1,
+        "amount_at_first_sight": {
+          "4": 1
+        },
+        "amount_max_in_fight": {
+          "4": 1
+        },
+        "amount_at_first_sight_by_asc": {
+          "10": {
+            "4": 1
+          }
+        },
+        "turn_at_first_sight_by_asc": {
+          "10": {
+            "2": 1
+          }
+        }
+      },
       "STRANGLE_POWER": {
         "name": "紧勒",
         "type": "Debuff",
@@ -713,19 +735,19 @@
         "name": "力量",
         "type": "Buff",
         "description": "力量会增加攻击牌造成的伤害。",
-        "n_fights": 387,
+        "n_fights": 389,
         "amount_at_first_sight": {
           "-10": 1,
           "-6": 4,
           "1": 4,
-          "7": 378
+          "7": 380
         },
         "amount_max_in_fight": {
-          "7": 302,
+          "7": 303,
           "8": 3,
           "9": 1,
           "11": 1,
-          "14": 75,
+          "14": 76,
           "15": 1,
           "21": 4
         },
@@ -765,7 +787,7 @@
           },
           "10": {
             "-6": 4,
-            "7": 154
+            "7": 156
           }
         },
         "turn_at_first_sight_by_asc": {
@@ -804,7 +826,7 @@
           },
           "10": {
             "1": 4,
-            "3": 154
+            "3": 156
           }
         }
       },
@@ -934,15 +956,15 @@
         "name": "虚弱",
         "type": "Debuff",
         "description": "虚弱的生物造成的攻击伤害减少[blue]25%[/blue]。",
-        "n_fights": 185,
+        "n_fights": 187,
         "amount_at_first_sight": {
-          "1": 173,
+          "1": 175,
           "2": 7,
           "3": 5
         },
         "amount_max_in_fight": {
-          "1": 151,
-          "2": 23,
+          "1": 152,
+          "2": 24,
           "3": 10,
           "4": 1
         },
@@ -971,7 +993,7 @@
             "3": 1
           },
           "10": {
-            "1": 150,
+            "1": 152,
             "2": 5,
             "3": 2
           }
@@ -1007,8 +1029,8 @@
             "4": 2
           },
           "10": {
-            "1": 81,
-            "2": 43,
+            "1": 82,
+            "2": 44,
             "3": 23,
             "4": 3,
             "5": 4,
@@ -1019,9 +1041,9 @@
     },
     "provenance": {
       "first_seen": "2026-09-24T04:09:27.504Z",
-      "last_seen": "2026-10-19T06:09:21.990Z",
-      "n_runs": 330,
-      "n_instances": 398,
+      "last_seen": "2026-10-20T05:54:36.188Z",
+      "n_runs": 332,
+      "n_instances": 400,
       "n_spawned_mid_fight": 0,
       "n_minion_instances": 0
     },
