@@ -4662,3 +4662,6 @@ request_id=roy-20261017-human-pace-h0 revision=3 input_sha256=1e1c259a15f1824119
 
 
 2026-10-20T19:53:40.993742+08:00 W8正式2a1a4bd7单叶benchmark补丁已实收，manifest385e2ed4、patch4bdaa2b2、前后像/父/tree/blob和16份材料原件逐SHA/Git核同。只在ops五项隔离候选私有index机械应用一叶，旧tree900/full1保留，变后tree18be；生产、默认coverage、公式、main/live未改。原红灯1例、tsc0/2文件4项过分别留存；明确方向off、provider零调用、shopBrain一次shop/plan，4奖励/7商店含首步保原1000ms门并核on/off题面动作等价。固定伪模型计时不外推live，来源绿不当联合绿。仍等W4另三正式最小patch，齐后方向生产/必要依赖/四修复同包窄原子集成、一次完整检查；不单FF测试或重未变full。W8获接管投递，CLI不代原生ACK；其date记录沿本通道保存，STOP保持。原件paper/materials/20261020-W8-fastpath-contract-ops/receipt.json。
+
+
+2026-10-20T19:55:56.975297+08:00 194301 fix批次回报无新增源码、修复、提交或合入，原WT实际HEAD0172357c、top路径及工作树/未忽略文件干净均核同；没有提交受阻需要兜底。原报告列40已有窄修复、25保留项，ops逐核40提交为原基线祖先及140源码SHA一致，另11历史子项保留原报告边界；其中尚未在live采用的源码不因本审计标新上线，科学父不关闭。原tsc0与6文件9例定向0的日志SHA/退出文件已核，未跑完整套件、不包装为宿主完整绿。0533/0535等策略、独立架构及证据不足事项沿既有链，未重复派批或由ops补游戏知识。本轮只保存审计原件和记录，不重复dataset、检查、分配行为号或整main入live；五项必须修复/原窄原子包独立保持，W8单叶已接、W4三项待正式交付，STOP及Regent不动。原首次审计cwd错误与后续成功原件保留。原件paper/materials/20261020-1951-ops/receipt.json。

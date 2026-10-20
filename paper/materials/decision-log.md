@@ -5290,3 +5290,5 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
 - 2026-10-20T19:50:05+08:00 W8：按Roy18:4x/Claude19:41修方向fastpath旧期望，源码2a1a4bd7ae仅benchmark一叶；provider0、原shop/plan脑题1，off题面动作等价，原1000ms门扩至首商店及所有步骤不放宽。旧红灯保留，tsc0、2文件4定向过、gitleaks源码0；原方向输入真实时钟各步1–12ms，非live/非tree900联合验收。不单FF测试到旧main，由ops将0cf/1d2及必要W4依赖与四修复同包窄原子集成、单点完整检查；本轮不full/API/改main/live/STOP/805。材料 paper/materials/2026-10-20-v6-direction-fastpath-contract/。
 
 - 2026-10-20T19:53:40.993742+08:00 ops：W8 2a1单叶manifest/patch/16原件核同，仅隔离候选机械应用tree18be，旧900 full1保留；红1/来源tsc0与2文件4过不冒联合，待W4三正式patch后同包窄原子集成/一次full，STOP保持。原件 paper/materials/20261020-W8-fastpath-contract-ops/receipt.json。
+
+- 2026-10-20T19:55:56.975297+08:00 ops：194301 fix无新增源码/提交，WT017严格干净；40旧窄提交祖先/140源码SHA和来源tsc0/6文件9项定向0已核，无需合main/live或新号；25原链/五项窄包/STOP保持，不重复dataset/full。原件 paper/materials/20261020-1951-ops/receipt.json。
