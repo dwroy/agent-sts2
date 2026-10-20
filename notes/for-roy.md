@@ -3589,3 +3589,6 @@ request_id=roy-20261017-human-pace-h0 revision=3 input_sha256=1e1c259a15f1824119
 
 
 2026-10-20T19:50:20.807328+08:00 W4就projection-entries一败给出算术与提交链，ops沿精确Git原件独立核：固定夹具P=.75、Wk=1、W0=.25，唯一方向/目标权重均1，旧兼容E=P*Wk+(1-P)*W0=.8125；.75仅乘积项，不是方向权重折算。79dc/4ba快照保混合式，303/8da改乘积；失败tree900与live64的sim blob均fdf32，同一测试前段断言.8125、后段遗留.75，故本项归为旧乘积断言与保留兼容生产不符，修测试而非改生产数值或运805。此为人工固定夹具/源码合同核对，不作新游戏知识或收益结论。W4报告新A/B与方向题不消费混合值，仍待其显式算术及新题无混合字段回归，原三测试最小patch尚未正式交付，不以报告当定向或联合full通过。继续原同包窄原子集成，四修复齐后一次完整检查；本轮只存证与更新短清单，无源码/main/live/full/API变化，STOP及旧四败保持。原件paper/materials/20261020-W4-arithmetic-ops/receipt.json。
+
+
+2026-10-20T19:53:40.993742+08:00 W8正式2a1a4bd7单叶benchmark补丁已实收，manifest385e2ed4、patch4bdaa2b2、前后像/父/tree/blob和16份材料原件逐SHA/Git核同。只在ops五项隔离候选私有index机械应用一叶，旧tree900/full1保留，变后tree18be；生产、默认coverage、公式、main/live未改。原红灯1例、tsc0/2文件4项过分别留存；明确方向off、provider零调用、shopBrain一次shop/plan，4奖励/7商店含首步保原1000ms门并核on/off题面动作等价。固定伪模型计时不外推live，来源绿不当联合绿。仍等W4另三正式最小patch，齐后方向生产/必要依赖/四修复同包窄原子集成、一次完整检查；不单FF测试或重未变full。W8获接管投递，CLI不代原生ACK；其date记录沿本通道保存，STOP保持。原件paper/materials/20261020-W8-fastpath-contract-ops/receipt.json。

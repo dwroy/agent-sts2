@@ -1,0 +1,31 @@
+[
+  {
+    "name": "green",
+    "started": "2026-10-20T19:46:48.026654+08:00",
+    "ended": "2026-10-20T19:47:00.764355+08:00",
+    "exit": 0,
+    "elapsed_seconds": 12.737681311788037,
+    "command": [
+      "npx",
+      "vitest",
+      "run",
+      "tests/v6-direction-fastpath-benchmark.test.ts",
+      "tests/v6-direction-fastpath.test.ts",
+      "--maxWorkers=1"
+    ]
+  },
+  {
+    "name": "tsc",
+    "started": "2026-10-20T19:47:00.764736+08:00",
+    "ended": "2026-10-20T19:47:03.349107+08:00",
+    "exit": 0,
+    "elapsed_seconds": 2.5844182898290455,
+    "command": [
+      "npx",
+      "tsc",
+      "-p",
+      "tsconfig.json",
+      "--noEmit"
+    ]
+  }
+]

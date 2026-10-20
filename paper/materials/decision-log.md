@@ -5286,3 +5286,7 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
 - 2026-10-20T19:45:53.809586+08:00 ops：核main仍旧方向/宽router，选择方向生产+W4必要依赖+四修复同包窄原子集成，不单运benchmark测试；fixture的calls/provider与brain_calls已分源核，等原W8/W4正式最小源，STOP/旧full1保持，不启新full。原件 paper/materials/20261020-main-atomic-coordination-ops/receipt.json。
 
 - 2026-10-20T19:50:20.807328+08:00 ops：W4 projection-entries固定算术.75*1+.25*.25=.8125及Git链核同，失败900/live sim blob同fdf32，冲突.75为遗留乘积断言；保生产兼容值不运805，等原W4三测试回归patch，同包窄集成/STOP保持。原件 paper/materials/20261020-W4-arithmetic-ops/receipt.json。
+
+- 2026-10-20T19:50:05+08:00 W8：按Roy18:4x/Claude19:41修方向fastpath旧期望，源码2a1a4bd7ae仅benchmark一叶；provider0、原shop/plan脑题1，off题面动作等价，原1000ms门扩至首商店及所有步骤不放宽。旧红灯保留，tsc0、2文件4定向过、gitleaks源码0；原方向输入真实时钟各步1–12ms，非live/非tree900联合验收。不单FF测试到旧main，由ops将0cf/1d2及必要W4依赖与四修复同包窄原子集成、单点完整检查；本轮不full/API/改main/live/STOP/805。材料 paper/materials/2026-10-20-v6-direction-fastpath-contract/。
+
+- 2026-10-20T19:53:40.993742+08:00 ops：W8 2a1单叶manifest/patch/16原件核同，仅隔离候选机械应用tree18be，旧900 full1保留；红1/来源tsc0与2文件4过不冒联合，待W4三正式patch后同包窄原子集成/一次full，STOP保持。原件 paper/materials/20261020-W8-fastpath-contract-ops/receipt.json。

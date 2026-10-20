@@ -1,0 +1,80 @@
+{
+  "schema": "v6-w8-fastpath-contract-source-v1",
+  "created_at": "2026-10-20T19:50:05+08:00",
+  "owner": {
+    "session": "01a15382-761a-76a2-922d-271169b2463c",
+    "account": "codex1",
+    "herdr": "wJ:p1GY"
+  },
+  "source": "2a1a4bd7ae61a5ed73b2d332927fc96451a3ea14",
+  "parent": "b85d29a78fdd2064c4f7d01ec9b16e25a15140aa",
+  "tree": "440cdeb5457fadfe2f249d992cf779ca714ccbb5",
+  "changed_sources": [
+    {
+      "before": {
+        "path": "agent/tests/v6-direction-fastpath-benchmark.test.ts",
+        "bytes": 1118,
+        "sha256": "ac7d9a6a5c1f77267b3261ec659bc6a2cbf7b2014452ebe222ac781361ff7f87",
+        "blob": "3af38d5d0c3ae9313b589bb87effe8b04a2decda"
+      },
+      "after": {
+        "path": "agent/tests/v6-direction-fastpath-benchmark.test.ts",
+        "bytes": 2195,
+        "sha256": "d1bb0ab75a37005d090a58f16e67b1fba92c906b608cd88140143d315957056f",
+        "blob": "62b764cda9f6bbff2d1cda05b0a0f69ab5279132"
+      }
+    }
+  ],
+  "fixed_inputs": [
+    {
+      "path": "agent/tests/v6-direction-fastpath-fixture.ts",
+      "bytes": 2933,
+      "sha256": "087b22b21839451e40c798ed52dc8171b71712e62801507ce0659dd23e32f490",
+      "blob": "5d530f5ec5d122ec89e059bc1fb0cd21d05fc63b"
+    },
+    {
+      "path": "agent/tests/v6-direction-fastpath.test.ts",
+      "bytes": 2834,
+      "sha256": "4a2889f0ef918d24ddc724c2d94ab8dca68e9b12eccc85cd54fe11092a325636",
+      "blob": "be1fcaecf5c72fb8d79d50810eea44062818737c"
+    },
+    {
+      "path": "agent/tests/oneshot-support.ts",
+      "bytes": 12964,
+      "sha256": "f7375ebdbe63c02b4c0d240f0cbb5e541e08e335a4d59307e839bab857d2c866",
+      "blob": "e500d51c9fbf357dafc222015beb3eaa0baeee52"
+    },
+    {
+      "path": "agent/tests/scenarios.ts",
+      "bytes": 24161,
+      "sha256": "e8bf8c81e53611c3bd063011c2a1cfad1497792c5587b670bb36eccb8dd0117a",
+      "blob": "009a3b6896538d0fe1d59a94fa61ed83919dc6ff"
+    },
+    {
+      "path": "agent/tests/logged-states/oneshot/xljq-f5-reward.json",
+      "bytes": 85976,
+      "sha256": "d207da57380d0207fa1d2226f691488b2a6fbac7fa5eec91f2df28556183d8f8",
+      "blob": "9e6dc2011673bdd683239f0f69eaa6a5de07ed41"
+    },
+    {
+      "path": "agent/tests/logged-states/oneshot/u6ru-f22-shop.json",
+      "bytes": 194090,
+      "sha256": "a62dcb9f1173582cdcf71fee1e326252f4486728d43e0960f96a49f9f52b3eda",
+      "blob": "f054200b0bface2369891b81c3f271d91634a077"
+    }
+  ],
+  "source_patch_sha256": "4bdaa2b2d606d21208810a91fc796880e08cfe3999bfbf667cf78377354eb435",
+  "required_atomic_dependencies": {
+    "direction": "0cfebfa878a5ac2b5c19f7b817110a7eeb3f0e74",
+    "strict_route": "1d2d7f1cecb8329ff1590bbd533428f2a1faedb8",
+    "w4_strict_reward": "79a0a61c9288928c10e147d06f593e04f3c2be09",
+    "w4_getter": "5446f181380a5b02669cc33babf65b440b852dbc",
+    "w4_input": "0929e4a700cc712c52fa48f7372c5f39d3c67b09 via exact minimal-transport.patch, not bare cherry-pick"
+  },
+  "validation_scope": "original direction candidate with one benchmark repair; not old main and not exact ops tree900 replay",
+  "main_integration": "ops same-package narrow atomic integration; no benchmark-only FF",
+  "full_started": false,
+  "main_modified": false,
+  "live_modified": false,
+  "production_numeric_formula_modified": false
+}

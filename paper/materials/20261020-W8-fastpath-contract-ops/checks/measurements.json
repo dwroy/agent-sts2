@@ -1,0 +1,1640 @@
+{
+  "allowance_5000_ms": {
+    "reward": {
+      "calls": [],
+      "brain_calls": [],
+      "rows": [
+        {
+          "label": "reward/claim",
+          "chosen": {
+            "action": "claim_reward",
+            "option_index": 0
+          },
+          "planner_ms": 0,
+          "pre_ms": 0
+        },
+        {
+          "label": "reward/claim",
+          "chosen": {
+            "action": "claim_reward",
+            "option_index": 1
+          },
+          "planner_ms": 0,
+          "pre_ms": 0
+        },
+        {
+          "label": "reward/claim",
+          "chosen": {
+            "action": "claim_reward",
+            "option_index": 2
+          },
+          "planner_ms": 0,
+          "pre_ms": 0
+        },
+        {
+          "label": "reward/proceed",
+          "chosen": {
+            "action": "collect_rewards_and_proceed"
+          },
+          "planner_ms": 0,
+          "pre_ms": 0
+        }
+      ],
+      "actions": [
+        {
+          "action": "claim_reward",
+          "option_index": 0
+        },
+        {
+          "action": "claim_reward",
+          "option_index": 1
+        },
+        {
+          "action": "claim_reward",
+          "option_index": 2
+        },
+        {
+          "action": "collect_rewards_and_proceed"
+        }
+      ],
+      "errors": 0
+    },
+    "shop": {
+      "calls": [],
+      "brain_calls": [
+        {
+          "label": "shop/plan",
+          "state": {
+            "run_brief": {
+              "character": "铁甲战士",
+              "act": "2",
+              "floor": 22,
+              "hp": "54/80 (68%)",
+              "gold": 292,
+              "ascension": 9,
+              "deck": "27 cards | 17 attacks / 7 skills / 2 powers | 3 upgraded | 1 curses/statuses | avg cost 0.89",
+              "relics": [
+                "燃烧之血",
+                "巨大扭蛋",
+                "风箱",
+                "吊灯",
+                "手里剑",
+                "地精之角",
+                "营养汤"
+              ],
+              "relic_effects": [
+                "燃烧之血: 在战斗结束时，回复6点生命。",
+                "巨大扭蛋: 拾起时，获得?(数值未知)件随机遗物。额外将一对打击和防御，加入你的牌组。",
+                "风箱: 你在每场战斗开始时的手牌，将被升级。",
+                "吊灯: 在你的第三回合开始时，获得?(数值未知)。",
+                "手里剑: 你每在同一回合内打出3张攻击牌，获得1点力量。",
+                "地精之角: 每当有一名敌人死亡时，获得?(数值未知)并抽?(数值未知)张牌。",
+                "营养汤: 拾起时，为你牌组中的所有“打击”附魔：特兹卡塔拉的余烬"
+              ],
+              "potions": [
+                "迅捷药水: 抽3张牌。"
+              ],
+              "notes": [],
+              "relic_effects_note": "?(数值未知) marks a value the mod does not expose; the effect text around it is accurate"
+            },
+            "situation": {
+              "screen": "SHOP",
+              "gold": 292,
+              "hp": "54/80 (68%)",
+              "potion_slots": "1/2 used"
+            },
+            "stock": [
+              {
+                "kind": "relic",
+                "name": "船夹板",
+                "price": 232,
+                "affordable": true
+              },
+              {
+                "kind": "relic",
+                "name": "活动星图",
+                "price": 250,
+                "affordable": true
+              },
+              {
+                "kind": "relic",
+                "name": "拳刃",
+                "price": 171,
+                "affordable": true
+              },
+              {
+                "kind": "card",
+                "name": "剑柄打击",
+                "type": "Attack",
+                "rarity": "Common",
+                "cost": 1,
+                "price": 52,
+                "affordable": true
+              },
+              {
+                "kind": "card",
+                "name": "灰烬打击",
+                "type": "Attack",
+                "rarity": "Uncommon",
+                "cost": 1,
+                "price": 76,
+                "affordable": true
+              },
+              {
+                "kind": "card",
+                "name": "燃烧契约",
+                "type": "Skill",
+                "rarity": "Uncommon",
+                "cost": 1,
+                "price": 78,
+                "affordable": true
+              },
+              {
+                "kind": "card",
+                "name": "火焰屏障",
+                "type": "Skill",
+                "rarity": "Uncommon",
+                "cost": 2,
+                "price": 74,
+                "affordable": true
+              },
+              {
+                "kind": "card",
+                "name": "岩石铠甲",
+                "type": "Power",
+                "rarity": "Uncommon",
+                "cost": 1,
+                "price": 36,
+                "affordable": true
+              },
+              {
+                "kind": "card",
+                "name": "生产制造",
+                "type": "Skill",
+                "rarity": "Uncommon",
+                "cost": 0,
+                "price": 88,
+                "affordable": true
+              },
+              {
+                "kind": "card",
+                "name": "战略大师",
+                "type": "Skill",
+                "rarity": "Rare",
+                "cost": 0,
+                "price": 172,
+                "affordable": true
+              },
+              {
+                "kind": "potion",
+                "name": "速度药水",
+                "price": 50,
+                "affordable": true
+              },
+              {
+                "kind": "potion",
+                "name": "无色药水",
+                "price": 49,
+                "affordable": true
+              },
+              {
+                "kind": "potion",
+                "name": "敏捷药水",
+                "price": 49,
+                "affordable": true
+              }
+            ],
+            "deck": "打击 (Attack, 0E) [enchanted 特兹卡塔拉的余烬: the card costs 0, deals 3 more damage, and is Eternal (「永恒」: cannot be removed from the deck)]: 造成9点伤害。 永恒。\n打击 (Attack, 0E) [enchanted 特兹卡塔拉的余烬: the card costs 0, deals 3 more damage, and is Eternal (「永恒」: cannot be removed from the deck)]: 造成9点伤害。 永恒。\n打击 (Attack, 0E) [enchanted 特兹卡塔拉的余烬: the card costs 0, deals 3 more damage, and is Eternal (「永恒」: cannot be removed from the deck)]: 造成9点伤害。 永恒。\n打击 (Attack, 0E) [enchanted 特兹卡塔拉的余烬: the card costs 0, deals 3 more damage, and is Eternal (「永恒」: cannot be removed from the deck)]: 造成9点伤害。 永恒。\n防御 (Skill, 1E): 获得5点格挡。\n防御 (Skill, 1E): 获得5点格挡。\n防御 (Skill, 1E): 获得5点格挡。\n防御 (Skill, 1E): 获得5点格挡。\n痛击+ (Attack, 2E): 造成10点伤害。 给予3层易伤。\n进阶之灾 (Curse, -1E): 不能被打出。 虚无。 永恒。\n打击 (Attack, 0E) [enchanted 特兹卡塔拉的余烬: the card costs 0, deals 3 more damage, and is Eternal (「永恒」: cannot be removed from the deck)]: 造成9点伤害。 永恒。\n防御 (Skill, 1E): 获得5点格挡。\n双重打击 (Attack, 1E): 造成5点伤害两次。\n突破 (Attack, 1E): 失去1点生命。 对所有敌人造成9点伤害。\n剑柄打击 (Attack, 1E): 造成9点伤害。 抽1张牌。\n坚毅+ (Skill, 1E): 获得9点格挡。 消耗1张牌。\n预备打击 (Attack, 1E): 造成7点伤害。 在本回合内获得3点力量。\n耸肩无视+ (Skill, 1E): 获得11点格挡。 抽1张牌。\n双重打击 (Attack, 1E): 造成5点伤害两次。\n剑柄打击 (Attack, 1E): 造成9点伤害。 抽1张牌。\n双重打击 (Attack, 1E): 造成5点伤害两次。\n头槌 (Attack, 1E): 造成9点伤害。 将你弃牌堆中的一张牌放到抽牌堆顶部。\n地狱狂徒 (Power, 2E): 每当你抽到名字中有“打击”的牌时，对一名随机敌人打出这张牌。\n无情猛攻 (Attack, 2E): 造成14点伤害。 你打出的下一张攻击牌耗能变为0点能量。\n与我一战！ (Attack, 2E): 造成5点伤害两次。 获得3点力量。 该敌人获得1点力量。\n撕裂 (Power, 1E): 每当你在你的回合失去生命值时, 获得1点力量。\n剑柄打击 (Attack, 1E): 造成9点伤害。 抽1张牌。",
+            "your_cards": {
+              "c0": "打击 ×5 (Attack, 0E): 造成9点伤害。 永恒。 [enchanted 特兹卡塔拉的余烬: the card costs 0, deals 3 more damage, and is Eternal (「永恒」: cannot be removed from the deck)] [Eternal: cannot be removed or transformed]",
+              "c4": "防御 ×5 (Skill, 1E): 获得5点格挡。",
+              "c8": "痛击+ (Attack, 2E): 造成10点伤害。 给予3层易伤。",
+              "c9": "进阶之灾 (Curse, -1E): 不能被打出。 虚无。 永恒。 [Eternal: cannot be removed or transformed]",
+              "c12": "双重打击 ×3 (Attack, 1E): 造成5点伤害两次。",
+              "c13": "突破 (Attack, 1E): 失去1点生命。 对所有敌人造成9点伤害。",
+              "c14": "剑柄打击 ×3 (Attack, 1E): 造成9点伤害。 抽1张牌。",
+              "c15": "坚毅+ (Skill, 1E): 获得9点格挡。 消耗1张牌。",
+              "c16": "预备打击 (Attack, 1E): 造成7点伤害。 在本回合内获得3点力量。",
+              "c17": "耸肩无视+ (Skill, 1E): 获得11点格挡。 抽1张牌。",
+              "c21": "头槌 (Attack, 1E): 造成9点伤害。 将你弃牌堆中的一张牌放到抽牌堆顶部。",
+              "c22": "地狱狂徒 (Power, 2E): 每当你抽到名字中有“打击”的牌时，对一名随机敌人打出这张牌。",
+              "c23": "无情猛攻 (Attack, 2E): 造成14点伤害。 你打出的下一张攻击牌耗能变为0点能量。",
+              "c24": "与我一战！ (Attack, 2E): 造成5点伤害两次。 获得3点力量。 该敌人获得1点力量。",
+              "c25": "撕裂 (Power, 1E): 每当你在你的回合失去生命值时, 获得1点力量。"
+            },
+            "your_cards_outcome_stats": {
+              "c4": "A9 第1幕 拿了 n=1(少) 过本幕boss 100% 均终层33 / 给了没拿 无数据；第2幕 拿了 n=2(少) 过本幕boss 50% 均终层31.5 / 给了没拿 无数据",
+              "c8": "无数据",
+              "c12": "A9 第1幕 拿了 n=40 过本幕boss 70% 均终层28.2 / 给了没拿 n=14 过本幕boss 79% 均终层32.6；第2幕 拿了 n=20 过本幕boss 45% 均终层37.4 / 给了没拿 n=12 过本幕boss 58% 均终层38.8；第3幕 拿了 n=10 过本幕boss 0% 均终层45.3 / 给了没拿 n=7 过本幕boss 29% 均终层47.3",
+              "c13": "A9 第1幕 拿了 n=31 过本幕boss 81% 均终层30.7 / 给了没拿 n=22 过本幕boss 59% 均终层31.1；第2幕 拿了 n=12 过本幕boss 42% 均终层36.2 / 给了没拿 n=16 过本幕boss 50% 均终层38.2；第3幕 拿了 n=3(少) 过本幕boss 33% 均终层45 / 给了没拿 n=5 过本幕boss 0% 均终层44.4（A9 不足5局，另附 A8：拿了 n=10 过本幕boss 20% 均终层47.4 / 给了没拿 n=16 过本幕boss 25% 均终层47.1）",
+              "c14": "A9 第1幕 拿了 n=48 过本幕boss 62% 均终层26.9 / 给了没拿 n=14 过本幕boss 86% 均终层36.8；第2幕 拿了 n=25 过本幕boss 48% 均终层36.6 / 给了没拿 n=8 过本幕boss 62% 均终层39.2；第3幕 拿了 n=7 过本幕boss 14% 均终层46.6 / 给了没拿 n=8 过本幕boss 0% 均终层43.9",
+              "c15": "A9 第1幕 拿了 n=21 过本幕boss 71% 均终层27.8 / 给了没拿 n=36 过本幕boss 75% 均终层33.3；第2幕 拿了 n=5 过本幕boss 60% 均终层40.8 / 给了没拿 n=24 过本幕boss 54% 均终层38.2；第3幕 拿了 n=4(少) 过本幕boss 0% 均终层46.5 / 给了没拿 n=9 过本幕boss 11% 均终层45.7（A9 不足5局，另附 A8：拿了 n=8 过本幕boss 12% 均终层48 / 给了没拿 n=14 过本幕boss 21% 均终层46.1）",
+              "c16": "A9 第1幕 拿了 n=27 过本幕boss 78% 均终层30.8 / 给了没拿 n=22 过本幕boss 68% 均终层31.4；第2幕 拿了 n=8 过本幕boss 50% 均终层38.6 / 给了没拿 n=9 过本幕boss 78% 均终层41.1；第3幕 拿了 n=1(少) 过本幕boss 100% 均终层48 / 给了没拿 n=4(少) 过本幕boss 0% 均终层47.2（A9 不足5局，另附 A8：拿了 n=14 过本幕boss 14% 均终层45.5 / 给了没拿 n=12 过本幕boss 33% 均终层47.7）",
+              "c17": "A9 第1幕 拿了 n=49 过本幕boss 63% 均终层27.7 / 给了没拿 n=5 过本幕boss 100% 均终层43.4；第2幕 拿了 n=31 过本幕boss 42% 均终层36.1 / 给了没拿 n=3(少) 过本幕boss 33% 均终层33.7（A9 不足5局，另附 A8：拿了 n=75 过本幕boss 45% 均终层37.9 / 给了没拿 n=11 过本幕boss 36% 均终层35）；第3幕 拿了 n=8 过本幕boss 12% 均终层44.9 / 给了没拿 n=4(少) 过本幕boss 0% 均终层47.5（A9 不足5局，另附 A8：拿了 n=24 过本幕boss 21% 均终层47.5 / 给了没拿 n=5 过本幕boss 0% 均终层45.8）",
+              "c21": "A9 第1幕 拿了 n=24 过本幕boss 42% 均终层23.5 / 给了没拿 n=27 过本幕boss 78% 均终层30.4；第2幕 拿了 n=11 过本幕boss 9% 均终层31.5 / 给了没拿 n=22 过本幕boss 68% 均终层40.5；第3幕 拿了 n=1(少) 过本幕boss 0% 均终层45 / 给了没拿 n=16 过本幕boss 0% 均终层44.8（A9 不足5局，另附 A8：拿了 n=5 过本幕boss 0% 均终层46 / 给了没拿 n=18 过本幕boss 33% 均终层47.5）",
+              "c22": "A9 第1幕 拿了 n=4(少) 过本幕boss 100% 均终层29 / 给了没拿 n=5 过本幕boss 100% 均终层36.8（A9 不足5局，另附 A8：拿了 n=10 过本幕boss 100% 均终层34.6 / 给了没拿 n=15 过本幕boss 100% 均终层35.5）；第2幕 拿了 n=2(少) 过本幕boss 100% 均终层43.5 / 给了没拿 n=5 过本幕boss 100% 均终层45.8；第3幕 拿了 无数据 / 给了没拿 n=1(少) 过本幕boss 100% 均终层48",
+              "c23": "A9 第1幕 拿了 n=20 过本幕boss 80% 均终层32.3 / 给了没拿 n=6 过本幕boss 67% 均终层23.5；第2幕 拿了 n=7 过本幕boss 57% 均终层40.4 / 给了没拿 n=3(少) 过本幕boss 33% 均终层35（A9 不足5局，另附 A8：拿了 n=15 过本幕boss 33% 均终层36.6 / 给了没拿 n=10 过本幕boss 40% 均终层37.5）；第3幕 拿了 n=1(少) 过本幕boss 0% 均终层48 / 给了没拿 n=3(少) 过本幕boss 0% 均终层44.7（A9 不足5局，另附 A8：拿了 n=4(少) 过本幕boss 25% 均终层45.8 / 给了没拿 n=5 过本幕boss 40% 均终层48）",
+              "c24": "A9 第1幕 拿了 n=26 过本幕boss 85% 均终层33.8 / 给了没拿 n=1(少) 过本幕boss 100% 均终层33（A9 不足5局，另附 A8：拿了 n=36 过本幕boss 92% 均终层36.7 / 给了没拿 n=28 过本幕boss 61% 均终层28）；第2幕 拿了 n=15 过本幕boss 40% 均终层36.5 / 给了没拿 n=1(少) 过本幕boss 0% 均终层33（A9 不足5局，另附 A8：拿了 n=19 过本幕boss 37% 均终层37.6 / 给了没拿 n=8 过本幕boss 12% 均终层31）；第3幕 拿了 n=5 过本幕boss 20% 均终层47 / 给了没拿 无数据",
+              "c25": "A9 第1幕 拿了 n=8 过本幕boss 75% 均终层32.9 / 给了没拿 n=16 过本幕boss 50% 均终层26.8；第2幕 拿了 n=13 过本幕boss 38% 均终层35.8 / 给了没拿 n=5 过本幕boss 80% 均终层39.2；第3幕 拿了 n=1(少) 过本幕boss 0% 均终层48 / 给了没拿 n=1(少) 过本幕boss 0% 均终层45（A9 不足5局，另附 A8：拿了 n=13 过本幕boss 31% 均终层47.3 / 给了没拿 n=4(少) 过本幕boss 0% 均终层45.8）"
+            },
+            "facts": {
+              "act": 2,
+              "floor": 22,
+              "floors_to_act_boss": 11,
+              "ascension": 9,
+              "hp": "54/80 (68%)",
+              "gold": 292,
+              "act_boss": "KAISER_CRAB_BOSS",
+              "deck_size": 27,
+              "deck_profile": "27 张 (攻击 17/技能 7/能力 2/诅咒或状态 1) | 升级 3 | 平均费用 0.89 | 力量来源 与我一战！、撕裂、手里剑（牌面或遗物文字写明获得持续的力量）",
+              "deck": [
+                "5x STRIKE_IRONCLAD 打击 (Attack, 0 energy): 造成9点伤害。 永恒。",
+                "5x DEFEND_IRONCLAD 防御 (Skill, 1 energy): 获得5点格挡。",
+                "BASH+ 痛击+ (Attack, 2 energy): 造成10点伤害。 给予3层易伤。",
+                "ASCENDERS_BANE 进阶之灾 (Curse, -1 energy): 不能被打出。 虚无。 永恒。",
+                "3x TWIN_STRIKE 双重打击 (Attack, 1 energy): 造成5点伤害两次。",
+                "BREAKTHROUGH 突破 (Attack, 1 energy): 失去1点生命。 对所有敌人造成9点伤害。",
+                "3x POMMEL_STRIKE 剑柄打击 (Attack, 1 energy): 造成9点伤害。 抽1张牌。",
+                "TRUE_GRIT+ 坚毅+ (Skill, 1 energy): 获得9点格挡。 消耗1张牌。",
+                "SETUP_STRIKE 预备打击 (Attack, 1 energy): 造成7点伤害。 在本回合内获得3点力量。",
+                "SHRUG_IT_OFF+ 耸肩无视+ (Skill, 1 energy): 获得11点格挡。 抽1张牌。",
+                "HEADBUTT 头槌 (Attack, 1 energy): 造成9点伤害。 将你弃牌堆中的一张牌放到抽牌堆顶部。",
+                "HELLRAISER 地狱狂徒 (Power, 2 energy): 每当你抽到名字中有“打击”的牌时，对一名随机敌人打出这张牌。",
+                "UNRELENTING 无情猛攻 (Attack, 2 energy): 造成14点伤害。 你打出的下一张攻击牌耗能变为0点能量。",
+                "FIGHT_ME 与我一战！ (Attack, 2 energy): 造成5点伤害两次。 获得3点力量。 该敌人获得1点力量。",
+                "RUPTURE 撕裂 (Power, 1 energy): 每当你在你的回合失去生命值时, 获得1点力量。"
+              ],
+              "relics": [
+                "燃烧之血: 在战斗结束时，回复6点生命。",
+                "巨大扭蛋: 拾起时，获得?(数值未知)件随机遗物。额外将一对打击和防御，加入你的牌组。",
+                "风箱: 你在每场战斗开始时的手牌，将被升级。",
+                "吊灯: 在你的第三回合开始时，获得?(数值未知)。",
+                "手里剑: 你每在同一回合内打出3张攻击牌，获得1点力量。",
+                "地精之角: 每当有一名敌人死亡时，获得?(数值未知)并抽?(数值未知)张牌。",
+                "营养汤: 拾起时，为你牌组中的所有“打击”附魔：特兹卡塔拉的余烬"
+              ],
+              "potions": [
+                "SWIFT_POTION 迅捷药水: 抽3张牌。"
+              ],
+              "potion_slots": "1/2 used",
+              "act_boss_clock": {
+                "boss": "KAISER_CRAB",
+                "boss_hp": 428,
+                "boss_hp_note": "428 (A9)",
+                "expected_entry_hp": 78,
+                "survivable_turns": 7,
+                "hp_loss_per_turn": 10.5,
+                "hp_loss_per_turn_note": "its attack ~30/turn at A9 x 35% unblocked (92 logged fights)",
+                "fight_turns": 7,
+                "fight_turns_note": "min(script 8, survive ~7 at 78 HP losing ~10.5/turn: its attack ~30/turn at A9 x 35% unblocked (92 logged fights))",
+                "need_damage_per_turn": 61,
+                "deck_damage_per_turn_estimate": 34,
+                "estimate_note": "calibrated on 215 logged A8 boss fights (11 + 0.92 x the card count; typical error ~25%): cards, energy, Strength growth averaged over the fight, power damage (Inferno, Juggernaut), Vulnerable, and the boss mechanic below",
+                "gap_per_turn": 27,
+                "strength_growth": "Rupture +1 per HP loss, fed by 1 self-damage cards (~+0.1/turn)",
+                "harder_because": "two bodies: single-target damage is split; AoE hits both",
+                "boss_note": "two claws: single-target damage into the Rocket first (Laser 35, 52 from behind, plus Strength, on T4/T9), AoE into both; the survivor's +99 Block lasts one turn (logged crab fights A8 46 (17 won): Rocket died first 9/13 won, Crusher first 5/6, neither died first 3/27; A9 18 (8 won): Rocket died first 5/6 won, Crusher first 3/3, neither died first 0/9; experience crab-kill-order); Bug Sting then Laser from T3-T4"
+              },
+              "your_run_plan": null,
+              "shop_stock": [
+                {
+                  "kind": "relic",
+                  "name": "船夹板",
+                  "price": 232,
+                  "affordable": true
+                },
+                {
+                  "kind": "relic",
+                  "name": "活动星图",
+                  "price": 250,
+                  "affordable": true
+                },
+                {
+                  "kind": "relic",
+                  "name": "拳刃",
+                  "price": 171,
+                  "affordable": true
+                },
+                {
+                  "kind": "card",
+                  "name": "剑柄打击",
+                  "type": "Attack",
+                  "rarity": "Common",
+                  "cost": 1,
+                  "price": 52,
+                  "affordable": true
+                },
+                {
+                  "kind": "card",
+                  "name": "灰烬打击",
+                  "type": "Attack",
+                  "rarity": "Uncommon",
+                  "cost": 1,
+                  "price": 76,
+                  "affordable": true
+                },
+                {
+                  "kind": "card",
+                  "name": "燃烧契约",
+                  "type": "Skill",
+                  "rarity": "Uncommon",
+                  "cost": 1,
+                  "price": 78,
+                  "affordable": true
+                },
+                {
+                  "kind": "card",
+                  "name": "火焰屏障",
+                  "type": "Skill",
+                  "rarity": "Uncommon",
+                  "cost": 2,
+                  "price": 74,
+                  "affordable": true
+                },
+                {
+                  "kind": "card",
+                  "name": "岩石铠甲",
+                  "type": "Power",
+                  "rarity": "Uncommon",
+                  "cost": 1,
+                  "price": 36,
+                  "affordable": true
+                },
+                {
+                  "kind": "card",
+                  "name": "生产制造",
+                  "type": "Skill",
+                  "rarity": "Uncommon",
+                  "cost": 0,
+                  "price": 88,
+                  "affordable": true
+                },
+                {
+                  "kind": "card",
+                  "name": "战略大师",
+                  "type": "Skill",
+                  "rarity": "Rare",
+                  "cost": 0,
+                  "price": 172,
+                  "affordable": true
+                },
+                {
+                  "kind": "potion",
+                  "name": "速度药水",
+                  "price": 50,
+                  "affordable": true
+                },
+                {
+                  "kind": "potion",
+                  "name": "无色药水",
+                  "price": 49,
+                  "affordable": true
+                },
+                {
+                  "kind": "potion",
+                  "name": "敏捷药水",
+                  "price": 49,
+                  "affordable": true
+                }
+              ],
+              "card_removal": {
+                "price": 100,
+                "affordable_now": true
+              },
+              "potion_belt": "1 of 2 slots empty",
+              "unknown_value_note": "?(数值未知) marks a number the mod does not expose; the text around it is accurate",
+              "outcome_stats_basis": "outcome_stats / card_outcome_stats / option_outcome_stats = A9 数据：src/knowledge/outcome-stats.json（日志自动统计，tools/build-outcome-stats.py，生成于 2026-10-04T15:32:44，A9 共 103 局；每个进阶分开统计）；没有记录的写「无数据」。口径：n = 局数（n<5 标「少」）；过本幕boss = 这些局里打过「做这个选择时所在那一幕」boss 的比例；均终层 = 这些局的平均最终层数。卡牌「拿了」= 这一幕里牌组多了这张牌（奖励、商店、事件都算），「给了没拿」= 这一幕的卡牌奖励里给过、这一幕没拿；遗物 = 这一幕获得；事件选项 = 选了这个选项（到下一层第一次决策时的平均 HP/上限/金币变化）；休息点 = 按到达时的 HP 档。观察数据：混有「在什么局面下做这个选择」的因素，不是因果。基线（A9 全部 103 局）：到达第1幕的局过第1幕boss 68% (n=103)，到达第2幕的局过第2幕boss 44% (n=70)，到达第3幕的局过第3幕boss 10% (n=31)。A9 的一行不足5局、而 A8 的同一行够5局时，后面括号里另附那一行，标明进阶（另算，不与 A9 的合并）；A8 基线（全部 232 局）：到达第1幕的局过第1幕boss 77% (n=232)，到达第2幕的局过第2幕boss 35% (n=178)，到达第3幕的局过第3幕boss 21% (n=63)。"
+            }
+          },
+          "criteria": {
+            "buy_relic0": "{\"buy\":\"船夹板\",\"kind\":\"relic\",\"price\":232,\"text\":\"在你的第二回合开始时，获得?(数值未知)点格挡。\",\"affordable_now\":true,\"outcome_stats\":\"A9 第1幕获得 n=1(少) 过本幕boss 0% 均终层17（A9 不足5局，另附 A8：n=5 过本幕boss 100% 均终层41.6）；第2幕获得 n=1(少) 过本幕boss 100% 均终层48\"}",
+            "buy_relic1": "{\"buy\":\"活动星图\",\"kind\":\"relic\",\"price\":250,\"text\":\"每当你进入？房间的时候，回复?(数值未知)点生命。\",\"affordable_now\":true,\"outcome_stats\":\"A9 第1幕获得 n=2(少) 过本幕boss 0% 均终层17（A9 不足5局，另附 A8：n=11 过本幕boss 82% 均终层32.4）\"}",
+            "buy_relic2": "{\"buy\":\"拳刃\",\"kind\":\"relic\",\"price\":171,\"text\":\"\",\"affordable_now\":true,\"outcome_stats\":\"无数据\"}",
+            "buy_card0": "{\"buy\":\"剑柄打击\",\"kind\":\"card\",\"type\":\"Attack\",\"rarity\":\"Common\",\"cost\":1,\"price\":52,\"text\":\"造成9点伤害。 抽1张牌。\",\"affordable_now\":true,\"in_deck\":3,\"outcome_stats\":\"A9 第1幕 拿了 n=48 过本幕boss 62% 均终层26.9 / 给了没拿 n=14 过本幕boss 86% 均终层36.8；第2幕 拿了 n=25 过本幕boss 48% 均终层36.6 / 给了没拿 n=8 过本幕boss 62% 均终层39.2；第3幕 拿了 n=7 过本幕boss 14% 均终层46.6 / 给了没拿 n=8 过本幕boss 0% 均终层43.9\"}",
+            "buy_card1": "{\"buy\":\"灰烬打击\",\"kind\":\"card\",\"type\":\"Attack\",\"rarity\":\"Uncommon\",\"cost\":1,\"price\":76,\"text\":\"造成6点伤害。 你的消耗牌堆中每有一张牌，伤害增加3。\",\"affordable_now\":true,\"in_deck\":0,\"outcome_stats\":\"A9 第1幕 拿了 n=3(少) 过本幕boss 67% 均终层37 / 给了没拿 n=14 过本幕boss 86% 均终层32.9；第2幕 拿了 无数据 / 给了没拿 n=13 过本幕boss 54% 均终层38.8；第3幕 拿了 无数据 / 给了没拿 n=4(少) 过本幕boss 0% 均终层43（A9 不足5局，另附 A8：拿了 无数据 / 给了没拿 n=7 过本幕boss 43% 均终层46.1）\"}",
+            "buy_card2": "{\"buy\":\"燃烧契约\",\"kind\":\"card\",\"type\":\"Skill\",\"rarity\":\"Uncommon\",\"cost\":1,\"price\":78,\"text\":\"消耗1张牌。 抽2张牌。\",\"affordable_now\":true,\"in_deck\":0,\"outcome_stats\":\"A9 第1幕 拿了 n=6 过本幕boss 83% 均终层31.3 / 给了没拿 n=8 过本幕boss 62% 均终层27.2；第2幕 拿了 n=5 过本幕boss 20% 均终层32 / 给了没拿 n=7 过本幕boss 29% 均终层34.7；第3幕 拿了 n=2(少) 过本幕boss 0% 均终层43.5 / 给了没拿 n=1(少) 过本幕boss 0% 均终层42（A9 不足5局，另附 A8：拿了 n=9 过本幕boss 33% 均终层48 / 给了没拿 n=2(少) 过本幕boss 0% 均终层48）\"}",
+            "buy_card3": "{\"buy\":\"火焰屏障\",\"kind\":\"card\",\"type\":\"Skill\",\"rarity\":\"Uncommon\",\"cost\":2,\"price\":74,\"text\":\"获得12点格挡。 你在这个回合每受到一次攻击，都会对攻击者造成4点伤害。\",\"affordable_now\":true,\"in_deck\":0,\"outcome_stats\":\"A9 第1幕 拿了 n=14 过本幕boss 71% 均终层28.5 / 给了没拿 n=8 过本幕boss 75% 均终层29；第2幕 拿了 n=10 过本幕boss 50% 均终层36.9 / 给了没拿 n=6 过本幕boss 33% 均终层37.7；第3幕 拿了 n=7 过本幕boss 0% 均终层44.9 / 给了没拿 无数据\"}",
+            "buy_card4": "{\"buy\":\"岩石铠甲\",\"kind\":\"card\",\"type\":\"Power\",\"rarity\":\"Uncommon\",\"cost\":1,\"price\":36,\"text\":\"获得4层覆甲。 [Plating: block = stacks at your turn's end, then 1 stack less each turn; 4 stacks 4+3+2+1 = 10 block in all, not 4 every turn]\",\"affordable_now\":true,\"in_deck\":0,\"outcome_stats\":\"A9 第1幕 拿了 n=11 过本幕boss 82% 均终层31.2 / 给了没拿 n=12 过本幕boss 58% 均终层28.4；第2幕 拿了 n=10 过本幕boss 40% 均终层36.6 / 给了没拿 n=7 过本幕boss 71% 均终层41.7；第3幕 拿了 n=1(少) 过本幕boss 0% 均终层48 / 给了没拿 n=2(少) 过本幕boss 0% 均终层44（A9 不足5局，另附 A8：拿了 n=5 过本幕boss 20% 均终层47.4 / 给了没拿 n=4(少) 过本幕boss 0% 均终层47）\"}",
+            "buy_card5": "{\"buy\":\"生产制造\",\"kind\":\"card\",\"type\":\"Skill\",\"rarity\":\"Uncommon\",\"cost\":0,\"price\":88,\"text\":\"获得2点能量。 消耗。\",\"affordable_now\":true,\"in_deck\":0,\"outcome_stats\":\"无数据\"}",
+            "buy_card6": "{\"buy\":\"战略大师\",\"kind\":\"card\",\"type\":\"Skill\",\"rarity\":\"Rare\",\"cost\":0,\"price\":172,\"text\":\"抽3张牌。 消耗。\",\"affordable_now\":true,\"in_deck\":0,\"outcome_stats\":\"无数据\"}",
+            "buy_potion0": "{\"buy\":\"速度药水\",\"kind\":\"potion\",\"price\":50,\"text\":\"\",\"affordable_now\":true,\"potion_slots\":\"1 of 2 potion slots empty\"}",
+            "buy_potion1": "{\"buy\":\"无色药水\",\"kind\":\"potion\",\"price\":49,\"text\":\"\",\"affordable_now\":true,\"potion_slots\":\"1 of 2 potion slots empty\"}",
+            "buy_potion2": "{\"buy\":\"敏捷药水\",\"kind\":\"potion\",\"price\":49,\"text\":\"\",\"affordable_now\":true,\"potion_slots\":\"1 of 2 potion slots empty\"}",
+            "remove": "{\"buy\":\"card removal\",\"kind\":\"service\",\"price\":100,\"affordable_now\":true,\"text\":\"removes one card from the deck: write \\\"remove:<card key>\\\" with the card from state.your_cards\",\"not_removable_eternal\":\"打击 x5, 进阶之灾\"}",
+            "discard_potion0": "{\"discard\":\"迅捷药水\",\"slot\":0,\"text\":\"frees this potion slot\"}",
+            "leave": "{\"end\":\"stop shopping (implied after the last step)\"}"
+          },
+          "plan": true
+        }
+      ],
+      "rows": [
+        {
+          "label": "shop/plan",
+          "chosen": {
+            "action": "buy_card",
+            "option_index": 3
+          },
+          "questions": {
+            "pick": {
+              "type": "choice",
+              "instructions": "What should I buy in this shop, in what order? You decide this yourself; no other model is asked first. Code does not score or rank the options: each lists its own facts (the game's text, cost, price, the HP it leaves, what an upgrade changes) and, for a card, relic, event option or rest action, outcome_stats: how our logged runs did after that choice, with n (basis and baseline in facts.outcome_stats_basis; observational, not a verdict). facts are exact: the deck, relics, potions, HP, gold, the act boss clock (damage a turn needed vs this deck's estimate) and your own run plan. Every option is listed, skipping or leaving included. Weigh them for the whole run. Plan this whole shop visit in ONE answer: an ordered shopping list that code carries out step by step, re-checking each step against the live shop. Reply with JSON only: {\"plan\": [<steps in order>], \"reason\": \"<max 40 words>\"}. A step is an option key (buy_relicN / buy_cardN / buy_potionN), \"remove:<card key>\" to pay for the card removal and remove that card (card keys are state.your_cards), or discard_potionN to empty a potion slot first (buying a potion needs an empty slot). Leaving is implied after the last step; [] buys nothing. Unaffordable items are listed as facts (affordable_now false); gold only goes down in a shop, so the whole list must fit your gold at the listed prices (check the sum). You are asked again only if the shop changes under the plan (an item the plan still buys changes price, is gone or cannot be bought, or new stock appears in a slot the plan did not buy).",
+              "criteria": {
+                "buy_relic0": "{\"buy\":\"船夹板\",\"kind\":\"relic\",\"price\":232,\"text\":\"在你的第二回合开始时，获得?(数值未知)点格挡。\",\"affordable_now\":true,\"outcome_stats\":\"A9 第1幕获得 n=1(少) 过本幕boss 0% 均终层17（A9 不足5局，另附 A8：n=5 过本幕boss 100% 均终层41.6）；第2幕获得 n=1(少) 过本幕boss 100% 均终层48\"}",
+                "buy_relic1": "{\"buy\":\"活动星图\",\"kind\":\"relic\",\"price\":250,\"text\":\"每当你进入？房间的时候，回复?(数值未知)点生命。\",\"affordable_now\":true,\"outcome_stats\":\"A9 第1幕获得 n=2(少) 过本幕boss 0% 均终层17（A9 不足5局，另附 A8：n=11 过本幕boss 82% 均终层32.4）\"}",
+                "buy_relic2": "{\"buy\":\"拳刃\",\"kind\":\"relic\",\"price\":171,\"text\":\"\",\"affordable_now\":true,\"outcome_stats\":\"无数据\"}",
+                "buy_card0": "{\"buy\":\"剑柄打击\",\"kind\":\"card\",\"type\":\"Attack\",\"rarity\":\"Common\",\"cost\":1,\"price\":52,\"text\":\"造成9点伤害。 抽1张牌。\",\"affordable_now\":true,\"in_deck\":3,\"outcome_stats\":\"A9 第1幕 拿了 n=48 过本幕boss 62% 均终层26.9 / 给了没拿 n=14 过本幕boss 86% 均终层36.8；第2幕 拿了 n=25 过本幕boss 48% 均终层36.6 / 给了没拿 n=8 过本幕boss 62% 均终层39.2；第3幕 拿了 n=7 过本幕boss 14% 均终层46.6 / 给了没拿 n=8 过本幕boss 0% 均终层43.9\"}",
+                "buy_card1": "{\"buy\":\"灰烬打击\",\"kind\":\"card\",\"type\":\"Attack\",\"rarity\":\"Uncommon\",\"cost\":1,\"price\":76,\"text\":\"造成6点伤害。 你的消耗牌堆中每有一张牌，伤害增加3。\",\"affordable_now\":true,\"in_deck\":0,\"outcome_stats\":\"A9 第1幕 拿了 n=3(少) 过本幕boss 67% 均终层37 / 给了没拿 n=14 过本幕boss 86% 均终层32.9；第2幕 拿了 无数据 / 给了没拿 n=13 过本幕boss 54% 均终层38.8；第3幕 拿了 无数据 / 给了没拿 n=4(少) 过本幕boss 0% 均终层43（A9 不足5局，另附 A8：拿了 无数据 / 给了没拿 n=7 过本幕boss 43% 均终层46.1）\"}",
+                "buy_card2": "{\"buy\":\"燃烧契约\",\"kind\":\"card\",\"type\":\"Skill\",\"rarity\":\"Uncommon\",\"cost\":1,\"price\":78,\"text\":\"消耗1张牌。 抽2张牌。\",\"affordable_now\":true,\"in_deck\":0,\"outcome_stats\":\"A9 第1幕 拿了 n=6 过本幕boss 83% 均终层31.3 / 给了没拿 n=8 过本幕boss 62% 均终层27.2；第2幕 拿了 n=5 过本幕boss 20% 均终层32 / 给了没拿 n=7 过本幕boss 29% 均终层34.7；第3幕 拿了 n=2(少) 过本幕boss 0% 均终层43.5 / 给了没拿 n=1(少) 过本幕boss 0% 均终层42（A9 不足5局，另附 A8：拿了 n=9 过本幕boss 33% 均终层48 / 给了没拿 n=2(少) 过本幕boss 0% 均终层48）\"}",
+                "buy_card3": "{\"buy\":\"火焰屏障\",\"kind\":\"card\",\"type\":\"Skill\",\"rarity\":\"Uncommon\",\"cost\":2,\"price\":74,\"text\":\"获得12点格挡。 你在这个回合每受到一次攻击，都会对攻击者造成4点伤害。\",\"affordable_now\":true,\"in_deck\":0,\"outcome_stats\":\"A9 第1幕 拿了 n=14 过本幕boss 71% 均终层28.5 / 给了没拿 n=8 过本幕boss 75% 均终层29；第2幕 拿了 n=10 过本幕boss 50% 均终层36.9 / 给了没拿 n=6 过本幕boss 33% 均终层37.7；第3幕 拿了 n=7 过本幕boss 0% 均终层44.9 / 给了没拿 无数据\"}",
+                "buy_card4": "{\"buy\":\"岩石铠甲\",\"kind\":\"card\",\"type\":\"Power\",\"rarity\":\"Uncommon\",\"cost\":1,\"price\":36,\"text\":\"获得4层覆甲。 [Plating: block = stacks at your turn's end, then 1 stack less each turn; 4 stacks 4+3+2+1 = 10 block in all, not 4 every turn]\",\"affordable_now\":true,\"in_deck\":0,\"outcome_stats\":\"A9 第1幕 拿了 n=11 过本幕boss 82% 均终层31.2 / 给了没拿 n=12 过本幕boss 58% 均终层28.4；第2幕 拿了 n=10 过本幕boss 40% 均终层36.6 / 给了没拿 n=7 过本幕boss 71% 均终层41.7；第3幕 拿了 n=1(少) 过本幕boss 0% 均终层48 / 给了没拿 n=2(少) 过本幕boss 0% 均终层44（A9 不足5局，另附 A8：拿了 n=5 过本幕boss 20% 均终层47.4 / 给了没拿 n=4(少) 过本幕boss 0% 均终层47）\"}",
+                "buy_card5": "{\"buy\":\"生产制造\",\"kind\":\"card\",\"type\":\"Skill\",\"rarity\":\"Uncommon\",\"cost\":0,\"price\":88,\"text\":\"获得2点能量。 消耗。\",\"affordable_now\":true,\"in_deck\":0,\"outcome_stats\":\"无数据\"}",
+                "buy_card6": "{\"buy\":\"战略大师\",\"kind\":\"card\",\"type\":\"Skill\",\"rarity\":\"Rare\",\"cost\":0,\"price\":172,\"text\":\"抽3张牌。 消耗。\",\"affordable_now\":true,\"in_deck\":0,\"outcome_stats\":\"无数据\"}",
+                "buy_potion0": "{\"buy\":\"速度药水\",\"kind\":\"potion\",\"price\":50,\"text\":\"\",\"affordable_now\":true,\"potion_slots\":\"1 of 2 potion slots empty\"}",
+                "buy_potion1": "{\"buy\":\"无色药水\",\"kind\":\"potion\",\"price\":49,\"text\":\"\",\"affordable_now\":true,\"potion_slots\":\"1 of 2 potion slots empty\"}",
+                "buy_potion2": "{\"buy\":\"敏捷药水\",\"kind\":\"potion\",\"price\":49,\"text\":\"\",\"affordable_now\":true,\"potion_slots\":\"1 of 2 potion slots empty\"}",
+                "remove": "{\"buy\":\"card removal\",\"kind\":\"service\",\"price\":100,\"affordable_now\":true,\"text\":\"removes one card from the deck: write \\\"remove:<card key>\\\" with the card from state.your_cards\",\"not_removable_eternal\":\"打击 x5, 进阶之灾\"}",
+                "discard_potion0": "{\"discard\":\"迅捷药水\",\"slot\":0,\"text\":\"frees this potion slot\"}",
+                "leave": "{\"end\":\"stop shopping (implied after the last step)\"}"
+              }
+            }
+          },
+          "planner_ms": 0,
+          "pre_ms": 0
+        },
+        {
+          "label": "shop/buy",
+          "chosen": {
+            "action": "buy_potion",
+            "option_index": 2
+          },
+          "planner_ms": 0,
+          "pre_ms": 0
+        },
+        {
+          "label": "shop/buy",
+          "chosen": {
+            "action": "buy_card",
+            "option_index": 4
+          },
+          "planner_ms": 0,
+          "pre_ms": 0
+        },
+        {
+          "label": "shop/buy",
+          "chosen": {
+            "action": "buy_card",
+            "option_index": 0
+          },
+          "planner_ms": 0,
+          "pre_ms": 0
+        },
+        {
+          "label": "shop/buy",
+          "chosen": {
+            "action": "buy_card",
+            "option_index": 2
+          },
+          "planner_ms": 0,
+          "pre_ms": 0
+        },
+        {
+          "label": "shop/buy",
+          "chosen": {
+            "action": "close_shop_inventory"
+          },
+          "planner_ms": 0,
+          "pre_ms": 0
+        },
+        {
+          "label": "shop/leave",
+          "chosen": {
+            "action": "proceed"
+          },
+          "planner_ms": 0,
+          "pre_ms": 0
+        }
+      ],
+      "actions": [
+        {
+          "action": "buy_card",
+          "option_index": 3
+        },
+        {
+          "action": "buy_potion",
+          "option_index": 2
+        },
+        {
+          "action": "buy_card",
+          "option_index": 4
+        },
+        {
+          "action": "buy_card",
+          "option_index": 0
+        },
+        {
+          "action": "buy_card",
+          "option_index": 2
+        },
+        {
+          "action": "close_shop_inventory"
+        },
+        {
+          "action": "proceed"
+        }
+      ],
+      "errors": 0
+    }
+  },
+  "real_clock": {
+    "reward": {
+      "calls": [],
+      "brain_calls": [],
+      "rows": [
+        {
+          "label": "reward/claim",
+          "chosen": {
+            "action": "claim_reward",
+            "option_index": 0
+          },
+          "planner_ms": 0,
+          "pre_ms": 1
+        },
+        {
+          "label": "reward/claim",
+          "chosen": {
+            "action": "claim_reward",
+            "option_index": 1
+          },
+          "planner_ms": 0,
+          "pre_ms": 1
+        },
+        {
+          "label": "reward/claim",
+          "chosen": {
+            "action": "claim_reward",
+            "option_index": 2
+          },
+          "planner_ms": 1,
+          "pre_ms": 1
+        },
+        {
+          "label": "reward/proceed",
+          "chosen": {
+            "action": "collect_rewards_and_proceed"
+          },
+          "planner_ms": 0,
+          "pre_ms": 1
+        }
+      ],
+      "actions": [
+        {
+          "action": "claim_reward",
+          "option_index": 0
+        },
+        {
+          "action": "claim_reward",
+          "option_index": 1
+        },
+        {
+          "action": "claim_reward",
+          "option_index": 2
+        },
+        {
+          "action": "collect_rewards_and_proceed"
+        }
+      ],
+      "errors": 0
+    },
+    "shop": {
+      "calls": [],
+      "brain_calls": [
+        {
+          "label": "shop/plan",
+          "state": {
+            "run_brief": {
+              "character": "铁甲战士",
+              "act": "2",
+              "floor": 22,
+              "hp": "54/80 (68%)",
+              "gold": 292,
+              "ascension": 9,
+              "deck": "27 cards | 17 attacks / 7 skills / 2 powers | 3 upgraded | 1 curses/statuses | avg cost 0.89",
+              "relics": [
+                "燃烧之血",
+                "巨大扭蛋",
+                "风箱",
+                "吊灯",
+                "手里剑",
+                "地精之角",
+                "营养汤"
+              ],
+              "relic_effects": [
+                "燃烧之血: 在战斗结束时，回复6点生命。",
+                "巨大扭蛋: 拾起时，获得?(数值未知)件随机遗物。额外将一对打击和防御，加入你的牌组。",
+                "风箱: 你在每场战斗开始时的手牌，将被升级。",
+                "吊灯: 在你的第三回合开始时，获得?(数值未知)。",
+                "手里剑: 你每在同一回合内打出3张攻击牌，获得1点力量。",
+                "地精之角: 每当有一名敌人死亡时，获得?(数值未知)并抽?(数值未知)张牌。",
+                "营养汤: 拾起时，为你牌组中的所有“打击”附魔：特兹卡塔拉的余烬"
+              ],
+              "potions": [
+                "迅捷药水: 抽3张牌。"
+              ],
+              "notes": [],
+              "relic_effects_note": "?(数值未知) marks a value the mod does not expose; the effect text around it is accurate"
+            },
+            "situation": {
+              "screen": "SHOP",
+              "gold": 292,
+              "hp": "54/80 (68%)",
+              "potion_slots": "1/2 used"
+            },
+            "stock": [
+              {
+                "kind": "relic",
+                "name": "船夹板",
+                "price": 232,
+                "affordable": true
+              },
+              {
+                "kind": "relic",
+                "name": "活动星图",
+                "price": 250,
+                "affordable": true
+              },
+              {
+                "kind": "relic",
+                "name": "拳刃",
+                "price": 171,
+                "affordable": true
+              },
+              {
+                "kind": "card",
+                "name": "剑柄打击",
+                "type": "Attack",
+                "rarity": "Common",
+                "cost": 1,
+                "price": 52,
+                "affordable": true
+              },
+              {
+                "kind": "card",
+                "name": "灰烬打击",
+                "type": "Attack",
+                "rarity": "Uncommon",
+                "cost": 1,
+                "price": 76,
+                "affordable": true
+              },
+              {
+                "kind": "card",
+                "name": "燃烧契约",
+                "type": "Skill",
+                "rarity": "Uncommon",
+                "cost": 1,
+                "price": 78,
+                "affordable": true
+              },
+              {
+                "kind": "card",
+                "name": "火焰屏障",
+                "type": "Skill",
+                "rarity": "Uncommon",
+                "cost": 2,
+                "price": 74,
+                "affordable": true
+              },
+              {
+                "kind": "card",
+                "name": "岩石铠甲",
+                "type": "Power",
+                "rarity": "Uncommon",
+                "cost": 1,
+                "price": 36,
+                "affordable": true
+              },
+              {
+                "kind": "card",
+                "name": "生产制造",
+                "type": "Skill",
+                "rarity": "Uncommon",
+                "cost": 0,
+                "price": 88,
+                "affordable": true
+              },
+              {
+                "kind": "card",
+                "name": "战略大师",
+                "type": "Skill",
+                "rarity": "Rare",
+                "cost": 0,
+                "price": 172,
+                "affordable": true
+              },
+              {
+                "kind": "potion",
+                "name": "速度药水",
+                "price": 50,
+                "affordable": true
+              },
+              {
+                "kind": "potion",
+                "name": "无色药水",
+                "price": 49,
+                "affordable": true
+              },
+              {
+                "kind": "potion",
+                "name": "敏捷药水",
+                "price": 49,
+                "affordable": true
+              }
+            ],
+            "deck": "打击 (Attack, 0E) [enchanted 特兹卡塔拉的余烬: the card costs 0, deals 3 more damage, and is Eternal (「永恒」: cannot be removed from the deck)]: 造成9点伤害。 永恒。\n打击 (Attack, 0E) [enchanted 特兹卡塔拉的余烬: the card costs 0, deals 3 more damage, and is Eternal (「永恒」: cannot be removed from the deck)]: 造成9点伤害。 永恒。\n打击 (Attack, 0E) [enchanted 特兹卡塔拉的余烬: the card costs 0, deals 3 more damage, and is Eternal (「永恒」: cannot be removed from the deck)]: 造成9点伤害。 永恒。\n打击 (Attack, 0E) [enchanted 特兹卡塔拉的余烬: the card costs 0, deals 3 more damage, and is Eternal (「永恒」: cannot be removed from the deck)]: 造成9点伤害。 永恒。\n防御 (Skill, 1E): 获得5点格挡。\n防御 (Skill, 1E): 获得5点格挡。\n防御 (Skill, 1E): 获得5点格挡。\n防御 (Skill, 1E): 获得5点格挡。\n痛击+ (Attack, 2E): 造成10点伤害。 给予3层易伤。\n进阶之灾 (Curse, -1E): 不能被打出。 虚无。 永恒。\n打击 (Attack, 0E) [enchanted 特兹卡塔拉的余烬: the card costs 0, deals 3 more damage, and is Eternal (「永恒」: cannot be removed from the deck)]: 造成9点伤害。 永恒。\n防御 (Skill, 1E): 获得5点格挡。\n双重打击 (Attack, 1E): 造成5点伤害两次。\n突破 (Attack, 1E): 失去1点生命。 对所有敌人造成9点伤害。\n剑柄打击 (Attack, 1E): 造成9点伤害。 抽1张牌。\n坚毅+ (Skill, 1E): 获得9点格挡。 消耗1张牌。\n预备打击 (Attack, 1E): 造成7点伤害。 在本回合内获得3点力量。\n耸肩无视+ (Skill, 1E): 获得11点格挡。 抽1张牌。\n双重打击 (Attack, 1E): 造成5点伤害两次。\n剑柄打击 (Attack, 1E): 造成9点伤害。 抽1张牌。\n双重打击 (Attack, 1E): 造成5点伤害两次。\n头槌 (Attack, 1E): 造成9点伤害。 将你弃牌堆中的一张牌放到抽牌堆顶部。\n地狱狂徒 (Power, 2E): 每当你抽到名字中有“打击”的牌时，对一名随机敌人打出这张牌。\n无情猛攻 (Attack, 2E): 造成14点伤害。 你打出的下一张攻击牌耗能变为0点能量。\n与我一战！ (Attack, 2E): 造成5点伤害两次。 获得3点力量。 该敌人获得1点力量。\n撕裂 (Power, 1E): 每当你在你的回合失去生命值时, 获得1点力量。\n剑柄打击 (Attack, 1E): 造成9点伤害。 抽1张牌。",
+            "your_cards": {
+              "c0": "打击 ×5 (Attack, 0E): 造成9点伤害。 永恒。 [enchanted 特兹卡塔拉的余烬: the card costs 0, deals 3 more damage, and is Eternal (「永恒」: cannot be removed from the deck)] [Eternal: cannot be removed or transformed]",
+              "c4": "防御 ×5 (Skill, 1E): 获得5点格挡。",
+              "c8": "痛击+ (Attack, 2E): 造成10点伤害。 给予3层易伤。",
+              "c9": "进阶之灾 (Curse, -1E): 不能被打出。 虚无。 永恒。 [Eternal: cannot be removed or transformed]",
+              "c12": "双重打击 ×3 (Attack, 1E): 造成5点伤害两次。",
+              "c13": "突破 (Attack, 1E): 失去1点生命。 对所有敌人造成9点伤害。",
+              "c14": "剑柄打击 ×3 (Attack, 1E): 造成9点伤害。 抽1张牌。",
+              "c15": "坚毅+ (Skill, 1E): 获得9点格挡。 消耗1张牌。",
+              "c16": "预备打击 (Attack, 1E): 造成7点伤害。 在本回合内获得3点力量。",
+              "c17": "耸肩无视+ (Skill, 1E): 获得11点格挡。 抽1张牌。",
+              "c21": "头槌 (Attack, 1E): 造成9点伤害。 将你弃牌堆中的一张牌放到抽牌堆顶部。",
+              "c22": "地狱狂徒 (Power, 2E): 每当你抽到名字中有“打击”的牌时，对一名随机敌人打出这张牌。",
+              "c23": "无情猛攻 (Attack, 2E): 造成14点伤害。 你打出的下一张攻击牌耗能变为0点能量。",
+              "c24": "与我一战！ (Attack, 2E): 造成5点伤害两次。 获得3点力量。 该敌人获得1点力量。",
+              "c25": "撕裂 (Power, 1E): 每当你在你的回合失去生命值时, 获得1点力量。"
+            },
+            "your_cards_outcome_stats": {
+              "c4": "A9 第1幕 拿了 n=1(少) 过本幕boss 100% 均终层33 / 给了没拿 无数据；第2幕 拿了 n=2(少) 过本幕boss 50% 均终层31.5 / 给了没拿 无数据",
+              "c8": "无数据",
+              "c12": "A9 第1幕 拿了 n=40 过本幕boss 70% 均终层28.2 / 给了没拿 n=14 过本幕boss 79% 均终层32.6；第2幕 拿了 n=20 过本幕boss 45% 均终层37.4 / 给了没拿 n=12 过本幕boss 58% 均终层38.8；第3幕 拿了 n=10 过本幕boss 0% 均终层45.3 / 给了没拿 n=7 过本幕boss 29% 均终层47.3",
+              "c13": "A9 第1幕 拿了 n=31 过本幕boss 81% 均终层30.7 / 给了没拿 n=22 过本幕boss 59% 均终层31.1；第2幕 拿了 n=12 过本幕boss 42% 均终层36.2 / 给了没拿 n=16 过本幕boss 50% 均终层38.2；第3幕 拿了 n=3(少) 过本幕boss 33% 均终层45 / 给了没拿 n=5 过本幕boss 0% 均终层44.4（A9 不足5局，另附 A8：拿了 n=10 过本幕boss 20% 均终层47.4 / 给了没拿 n=16 过本幕boss 25% 均终层47.1）",
+              "c14": "A9 第1幕 拿了 n=48 过本幕boss 62% 均终层26.9 / 给了没拿 n=14 过本幕boss 86% 均终层36.8；第2幕 拿了 n=25 过本幕boss 48% 均终层36.6 / 给了没拿 n=8 过本幕boss 62% 均终层39.2；第3幕 拿了 n=7 过本幕boss 14% 均终层46.6 / 给了没拿 n=8 过本幕boss 0% 均终层43.9",
+              "c15": "A9 第1幕 拿了 n=21 过本幕boss 71% 均终层27.8 / 给了没拿 n=36 过本幕boss 75% 均终层33.3；第2幕 拿了 n=5 过本幕boss 60% 均终层40.8 / 给了没拿 n=24 过本幕boss 54% 均终层38.2；第3幕 拿了 n=4(少) 过本幕boss 0% 均终层46.5 / 给了没拿 n=9 过本幕boss 11% 均终层45.7（A9 不足5局，另附 A8：拿了 n=8 过本幕boss 12% 均终层48 / 给了没拿 n=14 过本幕boss 21% 均终层46.1）",
+              "c16": "A9 第1幕 拿了 n=27 过本幕boss 78% 均终层30.8 / 给了没拿 n=22 过本幕boss 68% 均终层31.4；第2幕 拿了 n=8 过本幕boss 50% 均终层38.6 / 给了没拿 n=9 过本幕boss 78% 均终层41.1；第3幕 拿了 n=1(少) 过本幕boss 100% 均终层48 / 给了没拿 n=4(少) 过本幕boss 0% 均终层47.2（A9 不足5局，另附 A8：拿了 n=14 过本幕boss 14% 均终层45.5 / 给了没拿 n=12 过本幕boss 33% 均终层47.7）",
+              "c17": "A9 第1幕 拿了 n=49 过本幕boss 63% 均终层27.7 / 给了没拿 n=5 过本幕boss 100% 均终层43.4；第2幕 拿了 n=31 过本幕boss 42% 均终层36.1 / 给了没拿 n=3(少) 过本幕boss 33% 均终层33.7（A9 不足5局，另附 A8：拿了 n=75 过本幕boss 45% 均终层37.9 / 给了没拿 n=11 过本幕boss 36% 均终层35）；第3幕 拿了 n=8 过本幕boss 12% 均终层44.9 / 给了没拿 n=4(少) 过本幕boss 0% 均终层47.5（A9 不足5局，另附 A8：拿了 n=24 过本幕boss 21% 均终层47.5 / 给了没拿 n=5 过本幕boss 0% 均终层45.8）",
+              "c21": "A9 第1幕 拿了 n=24 过本幕boss 42% 均终层23.5 / 给了没拿 n=27 过本幕boss 78% 均终层30.4；第2幕 拿了 n=11 过本幕boss 9% 均终层31.5 / 给了没拿 n=22 过本幕boss 68% 均终层40.5；第3幕 拿了 n=1(少) 过本幕boss 0% 均终层45 / 给了没拿 n=16 过本幕boss 0% 均终层44.8（A9 不足5局，另附 A8：拿了 n=5 过本幕boss 0% 均终层46 / 给了没拿 n=18 过本幕boss 33% 均终层47.5）",
+              "c22": "A9 第1幕 拿了 n=4(少) 过本幕boss 100% 均终层29 / 给了没拿 n=5 过本幕boss 100% 均终层36.8（A9 不足5局，另附 A8：拿了 n=10 过本幕boss 100% 均终层34.6 / 给了没拿 n=15 过本幕boss 100% 均终层35.5）；第2幕 拿了 n=2(少) 过本幕boss 100% 均终层43.5 / 给了没拿 n=5 过本幕boss 100% 均终层45.8；第3幕 拿了 无数据 / 给了没拿 n=1(少) 过本幕boss 100% 均终层48",
+              "c23": "A9 第1幕 拿了 n=20 过本幕boss 80% 均终层32.3 / 给了没拿 n=6 过本幕boss 67% 均终层23.5；第2幕 拿了 n=7 过本幕boss 57% 均终层40.4 / 给了没拿 n=3(少) 过本幕boss 33% 均终层35（A9 不足5局，另附 A8：拿了 n=15 过本幕boss 33% 均终层36.6 / 给了没拿 n=10 过本幕boss 40% 均终层37.5）；第3幕 拿了 n=1(少) 过本幕boss 0% 均终层48 / 给了没拿 n=3(少) 过本幕boss 0% 均终层44.7（A9 不足5局，另附 A8：拿了 n=4(少) 过本幕boss 25% 均终层45.8 / 给了没拿 n=5 过本幕boss 40% 均终层48）",
+              "c24": "A9 第1幕 拿了 n=26 过本幕boss 85% 均终层33.8 / 给了没拿 n=1(少) 过本幕boss 100% 均终层33（A9 不足5局，另附 A8：拿了 n=36 过本幕boss 92% 均终层36.7 / 给了没拿 n=28 过本幕boss 61% 均终层28）；第2幕 拿了 n=15 过本幕boss 40% 均终层36.5 / 给了没拿 n=1(少) 过本幕boss 0% 均终层33（A9 不足5局，另附 A8：拿了 n=19 过本幕boss 37% 均终层37.6 / 给了没拿 n=8 过本幕boss 12% 均终层31）；第3幕 拿了 n=5 过本幕boss 20% 均终层47 / 给了没拿 无数据",
+              "c25": "A9 第1幕 拿了 n=8 过本幕boss 75% 均终层32.9 / 给了没拿 n=16 过本幕boss 50% 均终层26.8；第2幕 拿了 n=13 过本幕boss 38% 均终层35.8 / 给了没拿 n=5 过本幕boss 80% 均终层39.2；第3幕 拿了 n=1(少) 过本幕boss 0% 均终层48 / 给了没拿 n=1(少) 过本幕boss 0% 均终层45（A9 不足5局，另附 A8：拿了 n=13 过本幕boss 31% 均终层47.3 / 给了没拿 n=4(少) 过本幕boss 0% 均终层45.8）"
+            },
+            "facts": {
+              "act": 2,
+              "floor": 22,
+              "floors_to_act_boss": 11,
+              "ascension": 9,
+              "hp": "54/80 (68%)",
+              "gold": 292,
+              "act_boss": "KAISER_CRAB_BOSS",
+              "deck_size": 27,
+              "deck_profile": "27 张 (攻击 17/技能 7/能力 2/诅咒或状态 1) | 升级 3 | 平均费用 0.89 | 力量来源 与我一战！、撕裂、手里剑（牌面或遗物文字写明获得持续的力量）",
+              "deck": [
+                "5x STRIKE_IRONCLAD 打击 (Attack, 0 energy): 造成9点伤害。 永恒。",
+                "5x DEFEND_IRONCLAD 防御 (Skill, 1 energy): 获得5点格挡。",
+                "BASH+ 痛击+ (Attack, 2 energy): 造成10点伤害。 给予3层易伤。",
+                "ASCENDERS_BANE 进阶之灾 (Curse, -1 energy): 不能被打出。 虚无。 永恒。",
+                "3x TWIN_STRIKE 双重打击 (Attack, 1 energy): 造成5点伤害两次。",
+                "BREAKTHROUGH 突破 (Attack, 1 energy): 失去1点生命。 对所有敌人造成9点伤害。",
+                "3x POMMEL_STRIKE 剑柄打击 (Attack, 1 energy): 造成9点伤害。 抽1张牌。",
+                "TRUE_GRIT+ 坚毅+ (Skill, 1 energy): 获得9点格挡。 消耗1张牌。",
+                "SETUP_STRIKE 预备打击 (Attack, 1 energy): 造成7点伤害。 在本回合内获得3点力量。",
+                "SHRUG_IT_OFF+ 耸肩无视+ (Skill, 1 energy): 获得11点格挡。 抽1张牌。",
+                "HEADBUTT 头槌 (Attack, 1 energy): 造成9点伤害。 将你弃牌堆中的一张牌放到抽牌堆顶部。",
+                "HELLRAISER 地狱狂徒 (Power, 2 energy): 每当你抽到名字中有“打击”的牌时，对一名随机敌人打出这张牌。",
+                "UNRELENTING 无情猛攻 (Attack, 2 energy): 造成14点伤害。 你打出的下一张攻击牌耗能变为0点能量。",
+                "FIGHT_ME 与我一战！ (Attack, 2 energy): 造成5点伤害两次。 获得3点力量。 该敌人获得1点力量。",
+                "RUPTURE 撕裂 (Power, 1 energy): 每当你在你的回合失去生命值时, 获得1点力量。"
+              ],
+              "relics": [
+                "燃烧之血: 在战斗结束时，回复6点生命。",
+                "巨大扭蛋: 拾起时，获得?(数值未知)件随机遗物。额外将一对打击和防御，加入你的牌组。",
+                "风箱: 你在每场战斗开始时的手牌，将被升级。",
+                "吊灯: 在你的第三回合开始时，获得?(数值未知)。",
+                "手里剑: 你每在同一回合内打出3张攻击牌，获得1点力量。",
+                "地精之角: 每当有一名敌人死亡时，获得?(数值未知)并抽?(数值未知)张牌。",
+                "营养汤: 拾起时，为你牌组中的所有“打击”附魔：特兹卡塔拉的余烬"
+              ],
+              "potions": [
+                "SWIFT_POTION 迅捷药水: 抽3张牌。"
+              ],
+              "potion_slots": "1/2 used",
+              "act_boss_clock": {
+                "boss": "KAISER_CRAB",
+                "boss_hp": 428,
+                "boss_hp_note": "428 (A9)",
+                "expected_entry_hp": 78,
+                "survivable_turns": 7,
+                "hp_loss_per_turn": 10.5,
+                "hp_loss_per_turn_note": "its attack ~30/turn at A9 x 35% unblocked (92 logged fights)",
+                "fight_turns": 7,
+                "fight_turns_note": "min(script 8, survive ~7 at 78 HP losing ~10.5/turn: its attack ~30/turn at A9 x 35% unblocked (92 logged fights))",
+                "need_damage_per_turn": 61,
+                "deck_damage_per_turn_estimate": 34,
+                "estimate_note": "calibrated on 215 logged A8 boss fights (11 + 0.92 x the card count; typical error ~25%): cards, energy, Strength growth averaged over the fight, power damage (Inferno, Juggernaut), Vulnerable, and the boss mechanic below",
+                "gap_per_turn": 27,
+                "strength_growth": "Rupture +1 per HP loss, fed by 1 self-damage cards (~+0.1/turn)",
+                "harder_because": "two bodies: single-target damage is split; AoE hits both",
+                "boss_note": "two claws: single-target damage into the Rocket first (Laser 35, 52 from behind, plus Strength, on T4/T9), AoE into both; the survivor's +99 Block lasts one turn (logged crab fights A8 46 (17 won): Rocket died first 9/13 won, Crusher first 5/6, neither died first 3/27; A9 18 (8 won): Rocket died first 5/6 won, Crusher first 3/3, neither died first 0/9; experience crab-kill-order); Bug Sting then Laser from T3-T4"
+              },
+              "your_run_plan": null,
+              "shop_stock": [
+                {
+                  "kind": "relic",
+                  "name": "船夹板",
+                  "price": 232,
+                  "affordable": true
+                },
+                {
+                  "kind": "relic",
+                  "name": "活动星图",
+                  "price": 250,
+                  "affordable": true
+                },
+                {
+                  "kind": "relic",
+                  "name": "拳刃",
+                  "price": 171,
+                  "affordable": true
+                },
+                {
+                  "kind": "card",
+                  "name": "剑柄打击",
+                  "type": "Attack",
+                  "rarity": "Common",
+                  "cost": 1,
+                  "price": 52,
+                  "affordable": true
+                },
+                {
+                  "kind": "card",
+                  "name": "灰烬打击",
+                  "type": "Attack",
+                  "rarity": "Uncommon",
+                  "cost": 1,
+                  "price": 76,
+                  "affordable": true
+                },
+                {
+                  "kind": "card",
+                  "name": "燃烧契约",
+                  "type": "Skill",
+                  "rarity": "Uncommon",
+                  "cost": 1,
+                  "price": 78,
+                  "affordable": true
+                },
+                {
+                  "kind": "card",
+                  "name": "火焰屏障",
+                  "type": "Skill",
+                  "rarity": "Uncommon",
+                  "cost": 2,
+                  "price": 74,
+                  "affordable": true
+                },
+                {
+                  "kind": "card",
+                  "name": "岩石铠甲",
+                  "type": "Power",
+                  "rarity": "Uncommon",
+                  "cost": 1,
+                  "price": 36,
+                  "affordable": true
+                },
+                {
+                  "kind": "card",
+                  "name": "生产制造",
+                  "type": "Skill",
+                  "rarity": "Uncommon",
+                  "cost": 0,
+                  "price": 88,
+                  "affordable": true
+                },
+                {
+                  "kind": "card",
+                  "name": "战略大师",
+                  "type": "Skill",
+                  "rarity": "Rare",
+                  "cost": 0,
+                  "price": 172,
+                  "affordable": true
+                },
+                {
+                  "kind": "potion",
+                  "name": "速度药水",
+                  "price": 50,
+                  "affordable": true
+                },
+                {
+                  "kind": "potion",
+                  "name": "无色药水",
+                  "price": 49,
+                  "affordable": true
+                },
+                {
+                  "kind": "potion",
+                  "name": "敏捷药水",
+                  "price": 49,
+                  "affordable": true
+                }
+              ],
+              "card_removal": {
+                "price": 100,
+                "affordable_now": true
+              },
+              "potion_belt": "1 of 2 slots empty",
+              "unknown_value_note": "?(数值未知) marks a number the mod does not expose; the text around it is accurate",
+              "outcome_stats_basis": "outcome_stats / card_outcome_stats / option_outcome_stats = A9 数据：src/knowledge/outcome-stats.json（日志自动统计，tools/build-outcome-stats.py，生成于 2026-10-04T15:32:44，A9 共 103 局；每个进阶分开统计）；没有记录的写「无数据」。口径：n = 局数（n<5 标「少」）；过本幕boss = 这些局里打过「做这个选择时所在那一幕」boss 的比例；均终层 = 这些局的平均最终层数。卡牌「拿了」= 这一幕里牌组多了这张牌（奖励、商店、事件都算），「给了没拿」= 这一幕的卡牌奖励里给过、这一幕没拿；遗物 = 这一幕获得；事件选项 = 选了这个选项（到下一层第一次决策时的平均 HP/上限/金币变化）；休息点 = 按到达时的 HP 档。观察数据：混有「在什么局面下做这个选择」的因素，不是因果。基线（A9 全部 103 局）：到达第1幕的局过第1幕boss 68% (n=103)，到达第2幕的局过第2幕boss 44% (n=70)，到达第3幕的局过第3幕boss 10% (n=31)。A9 的一行不足5局、而 A8 的同一行够5局时，后面括号里另附那一行，标明进阶（另算，不与 A9 的合并）；A8 基线（全部 232 局）：到达第1幕的局过第1幕boss 77% (n=232)，到达第2幕的局过第2幕boss 35% (n=178)，到达第3幕的局过第3幕boss 21% (n=63)。"
+            }
+          },
+          "criteria": {
+            "buy_relic0": "{\"buy\":\"船夹板\",\"kind\":\"relic\",\"price\":232,\"text\":\"在你的第二回合开始时，获得?(数值未知)点格挡。\",\"affordable_now\":true,\"outcome_stats\":\"A9 第1幕获得 n=1(少) 过本幕boss 0% 均终层17（A9 不足5局，另附 A8：n=5 过本幕boss 100% 均终层41.6）；第2幕获得 n=1(少) 过本幕boss 100% 均终层48\"}",
+            "buy_relic1": "{\"buy\":\"活动星图\",\"kind\":\"relic\",\"price\":250,\"text\":\"每当你进入？房间的时候，回复?(数值未知)点生命。\",\"affordable_now\":true,\"outcome_stats\":\"A9 第1幕获得 n=2(少) 过本幕boss 0% 均终层17（A9 不足5局，另附 A8：n=11 过本幕boss 82% 均终层32.4）\"}",
+            "buy_relic2": "{\"buy\":\"拳刃\",\"kind\":\"relic\",\"price\":171,\"text\":\"\",\"affordable_now\":true,\"outcome_stats\":\"无数据\"}",
+            "buy_card0": "{\"buy\":\"剑柄打击\",\"kind\":\"card\",\"type\":\"Attack\",\"rarity\":\"Common\",\"cost\":1,\"price\":52,\"text\":\"造成9点伤害。 抽1张牌。\",\"affordable_now\":true,\"in_deck\":3,\"outcome_stats\":\"A9 第1幕 拿了 n=48 过本幕boss 62% 均终层26.9 / 给了没拿 n=14 过本幕boss 86% 均终层36.8；第2幕 拿了 n=25 过本幕boss 48% 均终层36.6 / 给了没拿 n=8 过本幕boss 62% 均终层39.2；第3幕 拿了 n=7 过本幕boss 14% 均终层46.6 / 给了没拿 n=8 过本幕boss 0% 均终层43.9\"}",
+            "buy_card1": "{\"buy\":\"灰烬打击\",\"kind\":\"card\",\"type\":\"Attack\",\"rarity\":\"Uncommon\",\"cost\":1,\"price\":76,\"text\":\"造成6点伤害。 你的消耗牌堆中每有一张牌，伤害增加3。\",\"affordable_now\":true,\"in_deck\":0,\"outcome_stats\":\"A9 第1幕 拿了 n=3(少) 过本幕boss 67% 均终层37 / 给了没拿 n=14 过本幕boss 86% 均终层32.9；第2幕 拿了 无数据 / 给了没拿 n=13 过本幕boss 54% 均终层38.8；第3幕 拿了 无数据 / 给了没拿 n=4(少) 过本幕boss 0% 均终层43（A9 不足5局，另附 A8：拿了 无数据 / 给了没拿 n=7 过本幕boss 43% 均终层46.1）\"}",
+            "buy_card2": "{\"buy\":\"燃烧契约\",\"kind\":\"card\",\"type\":\"Skill\",\"rarity\":\"Uncommon\",\"cost\":1,\"price\":78,\"text\":\"消耗1张牌。 抽2张牌。\",\"affordable_now\":true,\"in_deck\":0,\"outcome_stats\":\"A9 第1幕 拿了 n=6 过本幕boss 83% 均终层31.3 / 给了没拿 n=8 过本幕boss 62% 均终层27.2；第2幕 拿了 n=5 过本幕boss 20% 均终层32 / 给了没拿 n=7 过本幕boss 29% 均终层34.7；第3幕 拿了 n=2(少) 过本幕boss 0% 均终层43.5 / 给了没拿 n=1(少) 过本幕boss 0% 均终层42（A9 不足5局，另附 A8：拿了 n=9 过本幕boss 33% 均终层48 / 给了没拿 n=2(少) 过本幕boss 0% 均终层48）\"}",
+            "buy_card3": "{\"buy\":\"火焰屏障\",\"kind\":\"card\",\"type\":\"Skill\",\"rarity\":\"Uncommon\",\"cost\":2,\"price\":74,\"text\":\"获得12点格挡。 你在这个回合每受到一次攻击，都会对攻击者造成4点伤害。\",\"affordable_now\":true,\"in_deck\":0,\"outcome_stats\":\"A9 第1幕 拿了 n=14 过本幕boss 71% 均终层28.5 / 给了没拿 n=8 过本幕boss 75% 均终层29；第2幕 拿了 n=10 过本幕boss 50% 均终层36.9 / 给了没拿 n=6 过本幕boss 33% 均终层37.7；第3幕 拿了 n=7 过本幕boss 0% 均终层44.9 / 给了没拿 无数据\"}",
+            "buy_card4": "{\"buy\":\"岩石铠甲\",\"kind\":\"card\",\"type\":\"Power\",\"rarity\":\"Uncommon\",\"cost\":1,\"price\":36,\"text\":\"获得4层覆甲。 [Plating: block = stacks at your turn's end, then 1 stack less each turn; 4 stacks 4+3+2+1 = 10 block in all, not 4 every turn]\",\"affordable_now\":true,\"in_deck\":0,\"outcome_stats\":\"A9 第1幕 拿了 n=11 过本幕boss 82% 均终层31.2 / 给了没拿 n=12 过本幕boss 58% 均终层28.4；第2幕 拿了 n=10 过本幕boss 40% 均终层36.6 / 给了没拿 n=7 过本幕boss 71% 均终层41.7；第3幕 拿了 n=1(少) 过本幕boss 0% 均终层48 / 给了没拿 n=2(少) 过本幕boss 0% 均终层44（A9 不足5局，另附 A8：拿了 n=5 过本幕boss 20% 均终层47.4 / 给了没拿 n=4(少) 过本幕boss 0% 均终层47）\"}",
+            "buy_card5": "{\"buy\":\"生产制造\",\"kind\":\"card\",\"type\":\"Skill\",\"rarity\":\"Uncommon\",\"cost\":0,\"price\":88,\"text\":\"获得2点能量。 消耗。\",\"affordable_now\":true,\"in_deck\":0,\"outcome_stats\":\"无数据\"}",
+            "buy_card6": "{\"buy\":\"战略大师\",\"kind\":\"card\",\"type\":\"Skill\",\"rarity\":\"Rare\",\"cost\":0,\"price\":172,\"text\":\"抽3张牌。 消耗。\",\"affordable_now\":true,\"in_deck\":0,\"outcome_stats\":\"无数据\"}",
+            "buy_potion0": "{\"buy\":\"速度药水\",\"kind\":\"potion\",\"price\":50,\"text\":\"\",\"affordable_now\":true,\"potion_slots\":\"1 of 2 potion slots empty\"}",
+            "buy_potion1": "{\"buy\":\"无色药水\",\"kind\":\"potion\",\"price\":49,\"text\":\"\",\"affordable_now\":true,\"potion_slots\":\"1 of 2 potion slots empty\"}",
+            "buy_potion2": "{\"buy\":\"敏捷药水\",\"kind\":\"potion\",\"price\":49,\"text\":\"\",\"affordable_now\":true,\"potion_slots\":\"1 of 2 potion slots empty\"}",
+            "remove": "{\"buy\":\"card removal\",\"kind\":\"service\",\"price\":100,\"affordable_now\":true,\"text\":\"removes one card from the deck: write \\\"remove:<card key>\\\" with the card from state.your_cards\",\"not_removable_eternal\":\"打击 x5, 进阶之灾\"}",
+            "discard_potion0": "{\"discard\":\"迅捷药水\",\"slot\":0,\"text\":\"frees this potion slot\"}",
+            "leave": "{\"end\":\"stop shopping (implied after the last step)\"}"
+          },
+          "plan": true
+        }
+      ],
+      "rows": [
+        {
+          "label": "shop/plan",
+          "chosen": {
+            "action": "buy_card",
+            "option_index": 3
+          },
+          "questions": {
+            "pick": {
+              "type": "choice",
+              "instructions": "What should I buy in this shop, in what order? You decide this yourself; no other model is asked first. Code does not score or rank the options: each lists its own facts (the game's text, cost, price, the HP it leaves, what an upgrade changes) and, for a card, relic, event option or rest action, outcome_stats: how our logged runs did after that choice, with n (basis and baseline in facts.outcome_stats_basis; observational, not a verdict). facts are exact: the deck, relics, potions, HP, gold, the act boss clock (damage a turn needed vs this deck's estimate) and your own run plan. Every option is listed, skipping or leaving included. Weigh them for the whole run. Plan this whole shop visit in ONE answer: an ordered shopping list that code carries out step by step, re-checking each step against the live shop. Reply with JSON only: {\"plan\": [<steps in order>], \"reason\": \"<max 40 words>\"}. A step is an option key (buy_relicN / buy_cardN / buy_potionN), \"remove:<card key>\" to pay for the card removal and remove that card (card keys are state.your_cards), or discard_potionN to empty a potion slot first (buying a potion needs an empty slot). Leaving is implied after the last step; [] buys nothing. Unaffordable items are listed as facts (affordable_now false); gold only goes down in a shop, so the whole list must fit your gold at the listed prices (check the sum). You are asked again only if the shop changes under the plan (an item the plan still buys changes price, is gone or cannot be bought, or new stock appears in a slot the plan did not buy).",
+              "criteria": {
+                "buy_relic0": "{\"buy\":\"船夹板\",\"kind\":\"relic\",\"price\":232,\"text\":\"在你的第二回合开始时，获得?(数值未知)点格挡。\",\"affordable_now\":true,\"outcome_stats\":\"A9 第1幕获得 n=1(少) 过本幕boss 0% 均终层17（A9 不足5局，另附 A8：n=5 过本幕boss 100% 均终层41.6）；第2幕获得 n=1(少) 过本幕boss 100% 均终层48\"}",
+                "buy_relic1": "{\"buy\":\"活动星图\",\"kind\":\"relic\",\"price\":250,\"text\":\"每当你进入？房间的时候，回复?(数值未知)点生命。\",\"affordable_now\":true,\"outcome_stats\":\"A9 第1幕获得 n=2(少) 过本幕boss 0% 均终层17（A9 不足5局，另附 A8：n=11 过本幕boss 82% 均终层32.4）\"}",
+                "buy_relic2": "{\"buy\":\"拳刃\",\"kind\":\"relic\",\"price\":171,\"text\":\"\",\"affordable_now\":true,\"outcome_stats\":\"无数据\"}",
+                "buy_card0": "{\"buy\":\"剑柄打击\",\"kind\":\"card\",\"type\":\"Attack\",\"rarity\":\"Common\",\"cost\":1,\"price\":52,\"text\":\"造成9点伤害。 抽1张牌。\",\"affordable_now\":true,\"in_deck\":3,\"outcome_stats\":\"A9 第1幕 拿了 n=48 过本幕boss 62% 均终层26.9 / 给了没拿 n=14 过本幕boss 86% 均终层36.8；第2幕 拿了 n=25 过本幕boss 48% 均终层36.6 / 给了没拿 n=8 过本幕boss 62% 均终层39.2；第3幕 拿了 n=7 过本幕boss 14% 均终层46.6 / 给了没拿 n=8 过本幕boss 0% 均终层43.9\"}",
+                "buy_card1": "{\"buy\":\"灰烬打击\",\"kind\":\"card\",\"type\":\"Attack\",\"rarity\":\"Uncommon\",\"cost\":1,\"price\":76,\"text\":\"造成6点伤害。 你的消耗牌堆中每有一张牌，伤害增加3。\",\"affordable_now\":true,\"in_deck\":0,\"outcome_stats\":\"A9 第1幕 拿了 n=3(少) 过本幕boss 67% 均终层37 / 给了没拿 n=14 过本幕boss 86% 均终层32.9；第2幕 拿了 无数据 / 给了没拿 n=13 过本幕boss 54% 均终层38.8；第3幕 拿了 无数据 / 给了没拿 n=4(少) 过本幕boss 0% 均终层43（A9 不足5局，另附 A8：拿了 无数据 / 给了没拿 n=7 过本幕boss 43% 均终层46.1）\"}",
+                "buy_card2": "{\"buy\":\"燃烧契约\",\"kind\":\"card\",\"type\":\"Skill\",\"rarity\":\"Uncommon\",\"cost\":1,\"price\":78,\"text\":\"消耗1张牌。 抽2张牌。\",\"affordable_now\":true,\"in_deck\":0,\"outcome_stats\":\"A9 第1幕 拿了 n=6 过本幕boss 83% 均终层31.3 / 给了没拿 n=8 过本幕boss 62% 均终层27.2；第2幕 拿了 n=5 过本幕boss 20% 均终层32 / 给了没拿 n=7 过本幕boss 29% 均终层34.7；第3幕 拿了 n=2(少) 过本幕boss 0% 均终层43.5 / 给了没拿 n=1(少) 过本幕boss 0% 均终层42（A9 不足5局，另附 A8：拿了 n=9 过本幕boss 33% 均终层48 / 给了没拿 n=2(少) 过本幕boss 0% 均终层48）\"}",
+                "buy_card3": "{\"buy\":\"火焰屏障\",\"kind\":\"card\",\"type\":\"Skill\",\"rarity\":\"Uncommon\",\"cost\":2,\"price\":74,\"text\":\"获得12点格挡。 你在这个回合每受到一次攻击，都会对攻击者造成4点伤害。\",\"affordable_now\":true,\"in_deck\":0,\"outcome_stats\":\"A9 第1幕 拿了 n=14 过本幕boss 71% 均终层28.5 / 给了没拿 n=8 过本幕boss 75% 均终层29；第2幕 拿了 n=10 过本幕boss 50% 均终层36.9 / 给了没拿 n=6 过本幕boss 33% 均终层37.7；第3幕 拿了 n=7 过本幕boss 0% 均终层44.9 / 给了没拿 无数据\"}",
+                "buy_card4": "{\"buy\":\"岩石铠甲\",\"kind\":\"card\",\"type\":\"Power\",\"rarity\":\"Uncommon\",\"cost\":1,\"price\":36,\"text\":\"获得4层覆甲。 [Plating: block = stacks at your turn's end, then 1 stack less each turn; 4 stacks 4+3+2+1 = 10 block in all, not 4 every turn]\",\"affordable_now\":true,\"in_deck\":0,\"outcome_stats\":\"A9 第1幕 拿了 n=11 过本幕boss 82% 均终层31.2 / 给了没拿 n=12 过本幕boss 58% 均终层28.4；第2幕 拿了 n=10 过本幕boss 40% 均终层36.6 / 给了没拿 n=7 过本幕boss 71% 均终层41.7；第3幕 拿了 n=1(少) 过本幕boss 0% 均终层48 / 给了没拿 n=2(少) 过本幕boss 0% 均终层44（A9 不足5局，另附 A8：拿了 n=5 过本幕boss 20% 均终层47.4 / 给了没拿 n=4(少) 过本幕boss 0% 均终层47）\"}",
+                "buy_card5": "{\"buy\":\"生产制造\",\"kind\":\"card\",\"type\":\"Skill\",\"rarity\":\"Uncommon\",\"cost\":0,\"price\":88,\"text\":\"获得2点能量。 消耗。\",\"affordable_now\":true,\"in_deck\":0,\"outcome_stats\":\"无数据\"}",
+                "buy_card6": "{\"buy\":\"战略大师\",\"kind\":\"card\",\"type\":\"Skill\",\"rarity\":\"Rare\",\"cost\":0,\"price\":172,\"text\":\"抽3张牌。 消耗。\",\"affordable_now\":true,\"in_deck\":0,\"outcome_stats\":\"无数据\"}",
+                "buy_potion0": "{\"buy\":\"速度药水\",\"kind\":\"potion\",\"price\":50,\"text\":\"\",\"affordable_now\":true,\"potion_slots\":\"1 of 2 potion slots empty\"}",
+                "buy_potion1": "{\"buy\":\"无色药水\",\"kind\":\"potion\",\"price\":49,\"text\":\"\",\"affordable_now\":true,\"potion_slots\":\"1 of 2 potion slots empty\"}",
+                "buy_potion2": "{\"buy\":\"敏捷药水\",\"kind\":\"potion\",\"price\":49,\"text\":\"\",\"affordable_now\":true,\"potion_slots\":\"1 of 2 potion slots empty\"}",
+                "remove": "{\"buy\":\"card removal\",\"kind\":\"service\",\"price\":100,\"affordable_now\":true,\"text\":\"removes one card from the deck: write \\\"remove:<card key>\\\" with the card from state.your_cards\",\"not_removable_eternal\":\"打击 x5, 进阶之灾\"}",
+                "discard_potion0": "{\"discard\":\"迅捷药水\",\"slot\":0,\"text\":\"frees this potion slot\"}",
+                "leave": "{\"end\":\"stop shopping (implied after the last step)\"}"
+              }
+            }
+          },
+          "planner_ms": 11,
+          "pre_ms": 1
+        },
+        {
+          "label": "shop/buy",
+          "chosen": {
+            "action": "buy_potion",
+            "option_index": 2
+          },
+          "planner_ms": 5,
+          "pre_ms": 1
+        },
+        {
+          "label": "shop/buy",
+          "chosen": {
+            "action": "buy_card",
+            "option_index": 4
+          },
+          "planner_ms": 5,
+          "pre_ms": 1
+        },
+        {
+          "label": "shop/buy",
+          "chosen": {
+            "action": "buy_card",
+            "option_index": 0
+          },
+          "planner_ms": 5,
+          "pre_ms": 1
+        },
+        {
+          "label": "shop/buy",
+          "chosen": {
+            "action": "buy_card",
+            "option_index": 2
+          },
+          "planner_ms": 5,
+          "pre_ms": 1
+        },
+        {
+          "label": "shop/buy",
+          "chosen": {
+            "action": "close_shop_inventory"
+          },
+          "planner_ms": 6,
+          "pre_ms": 2
+        },
+        {
+          "label": "shop/leave",
+          "chosen": {
+            "action": "proceed"
+          },
+          "planner_ms": 0,
+          "pre_ms": 1
+        }
+      ],
+      "actions": [
+        {
+          "action": "buy_card",
+          "option_index": 3
+        },
+        {
+          "action": "buy_potion",
+          "option_index": 2
+        },
+        {
+          "action": "buy_card",
+          "option_index": 4
+        },
+        {
+          "action": "buy_card",
+          "option_index": 0
+        },
+        {
+          "action": "buy_card",
+          "option_index": 2
+        },
+        {
+          "action": "close_shop_inventory"
+        },
+        {
+          "action": "proceed"
+        }
+      ],
+      "errors": 0
+    }
+  },
+  "baseline_off": {
+    "reward": {
+      "calls": [],
+      "brain_calls": [],
+      "rows": [
+        {
+          "label": "reward/claim",
+          "chosen": {
+            "action": "claim_reward",
+            "option_index": 0
+          },
+          "planner_ms": 0,
+          "pre_ms": 1
+        },
+        {
+          "label": "reward/claim",
+          "chosen": {
+            "action": "claim_reward",
+            "option_index": 1
+          },
+          "planner_ms": 0,
+          "pre_ms": 0
+        },
+        {
+          "label": "reward/claim",
+          "chosen": {
+            "action": "claim_reward",
+            "option_index": 2
+          },
+          "planner_ms": 0,
+          "pre_ms": 1
+        },
+        {
+          "label": "reward/proceed",
+          "chosen": {
+            "action": "collect_rewards_and_proceed"
+          },
+          "planner_ms": 0,
+          "pre_ms": 0
+        }
+      ],
+      "actions": [
+        {
+          "action": "claim_reward",
+          "option_index": 0
+        },
+        {
+          "action": "claim_reward",
+          "option_index": 1
+        },
+        {
+          "action": "claim_reward",
+          "option_index": 2
+        },
+        {
+          "action": "collect_rewards_and_proceed"
+        }
+      ],
+      "errors": 0
+    },
+    "shop": {
+      "calls": [],
+      "brain_calls": [
+        {
+          "label": "shop/plan",
+          "state": {
+            "run_brief": {
+              "character": "铁甲战士",
+              "act": "2",
+              "floor": 22,
+              "hp": "54/80 (68%)",
+              "gold": 292,
+              "ascension": 9,
+              "deck": "27 cards | 17 attacks / 7 skills / 2 powers | 3 upgraded | 1 curses/statuses | avg cost 0.89",
+              "relics": [
+                "燃烧之血",
+                "巨大扭蛋",
+                "风箱",
+                "吊灯",
+                "手里剑",
+                "地精之角",
+                "营养汤"
+              ],
+              "relic_effects": [
+                "燃烧之血: 在战斗结束时，回复6点生命。",
+                "巨大扭蛋: 拾起时，获得?(数值未知)件随机遗物。额外将一对打击和防御，加入你的牌组。",
+                "风箱: 你在每场战斗开始时的手牌，将被升级。",
+                "吊灯: 在你的第三回合开始时，获得?(数值未知)。",
+                "手里剑: 你每在同一回合内打出3张攻击牌，获得1点力量。",
+                "地精之角: 每当有一名敌人死亡时，获得?(数值未知)并抽?(数值未知)张牌。",
+                "营养汤: 拾起时，为你牌组中的所有“打击”附魔：特兹卡塔拉的余烬"
+              ],
+              "potions": [
+                "迅捷药水: 抽3张牌。"
+              ],
+              "notes": [],
+              "relic_effects_note": "?(数值未知) marks a value the mod does not expose; the effect text around it is accurate"
+            },
+            "situation": {
+              "screen": "SHOP",
+              "gold": 292,
+              "hp": "54/80 (68%)",
+              "potion_slots": "1/2 used"
+            },
+            "stock": [
+              {
+                "kind": "relic",
+                "name": "船夹板",
+                "price": 232,
+                "affordable": true
+              },
+              {
+                "kind": "relic",
+                "name": "活动星图",
+                "price": 250,
+                "affordable": true
+              },
+              {
+                "kind": "relic",
+                "name": "拳刃",
+                "price": 171,
+                "affordable": true
+              },
+              {
+                "kind": "card",
+                "name": "剑柄打击",
+                "type": "Attack",
+                "rarity": "Common",
+                "cost": 1,
+                "price": 52,
+                "affordable": true
+              },
+              {
+                "kind": "card",
+                "name": "灰烬打击",
+                "type": "Attack",
+                "rarity": "Uncommon",
+                "cost": 1,
+                "price": 76,
+                "affordable": true
+              },
+              {
+                "kind": "card",
+                "name": "燃烧契约",
+                "type": "Skill",
+                "rarity": "Uncommon",
+                "cost": 1,
+                "price": 78,
+                "affordable": true
+              },
+              {
+                "kind": "card",
+                "name": "火焰屏障",
+                "type": "Skill",
+                "rarity": "Uncommon",
+                "cost": 2,
+                "price": 74,
+                "affordable": true
+              },
+              {
+                "kind": "card",
+                "name": "岩石铠甲",
+                "type": "Power",
+                "rarity": "Uncommon",
+                "cost": 1,
+                "price": 36,
+                "affordable": true
+              },
+              {
+                "kind": "card",
+                "name": "生产制造",
+                "type": "Skill",
+                "rarity": "Uncommon",
+                "cost": 0,
+                "price": 88,
+                "affordable": true
+              },
+              {
+                "kind": "card",
+                "name": "战略大师",
+                "type": "Skill",
+                "rarity": "Rare",
+                "cost": 0,
+                "price": 172,
+                "affordable": true
+              },
+              {
+                "kind": "potion",
+                "name": "速度药水",
+                "price": 50,
+                "affordable": true
+              },
+              {
+                "kind": "potion",
+                "name": "无色药水",
+                "price": 49,
+                "affordable": true
+              },
+              {
+                "kind": "potion",
+                "name": "敏捷药水",
+                "price": 49,
+                "affordable": true
+              }
+            ],
+            "deck": "打击 (Attack, 0E) [enchanted 特兹卡塔拉的余烬: the card costs 0, deals 3 more damage, and is Eternal (「永恒」: cannot be removed from the deck)]: 造成9点伤害。 永恒。\n打击 (Attack, 0E) [enchanted 特兹卡塔拉的余烬: the card costs 0, deals 3 more damage, and is Eternal (「永恒」: cannot be removed from the deck)]: 造成9点伤害。 永恒。\n打击 (Attack, 0E) [enchanted 特兹卡塔拉的余烬: the card costs 0, deals 3 more damage, and is Eternal (「永恒」: cannot be removed from the deck)]: 造成9点伤害。 永恒。\n打击 (Attack, 0E) [enchanted 特兹卡塔拉的余烬: the card costs 0, deals 3 more damage, and is Eternal (「永恒」: cannot be removed from the deck)]: 造成9点伤害。 永恒。\n防御 (Skill, 1E): 获得5点格挡。\n防御 (Skill, 1E): 获得5点格挡。\n防御 (Skill, 1E): 获得5点格挡。\n防御 (Skill, 1E): 获得5点格挡。\n痛击+ (Attack, 2E): 造成10点伤害。 给予3层易伤。\n进阶之灾 (Curse, -1E): 不能被打出。 虚无。 永恒。\n打击 (Attack, 0E) [enchanted 特兹卡塔拉的余烬: the card costs 0, deals 3 more damage, and is Eternal (「永恒」: cannot be removed from the deck)]: 造成9点伤害。 永恒。\n防御 (Skill, 1E): 获得5点格挡。\n双重打击 (Attack, 1E): 造成5点伤害两次。\n突破 (Attack, 1E): 失去1点生命。 对所有敌人造成9点伤害。\n剑柄打击 (Attack, 1E): 造成9点伤害。 抽1张牌。\n坚毅+ (Skill, 1E): 获得9点格挡。 消耗1张牌。\n预备打击 (Attack, 1E): 造成7点伤害。 在本回合内获得3点力量。\n耸肩无视+ (Skill, 1E): 获得11点格挡。 抽1张牌。\n双重打击 (Attack, 1E): 造成5点伤害两次。\n剑柄打击 (Attack, 1E): 造成9点伤害。 抽1张牌。\n双重打击 (Attack, 1E): 造成5点伤害两次。\n头槌 (Attack, 1E): 造成9点伤害。 将你弃牌堆中的一张牌放到抽牌堆顶部。\n地狱狂徒 (Power, 2E): 每当你抽到名字中有“打击”的牌时，对一名随机敌人打出这张牌。\n无情猛攻 (Attack, 2E): 造成14点伤害。 你打出的下一张攻击牌耗能变为0点能量。\n与我一战！ (Attack, 2E): 造成5点伤害两次。 获得3点力量。 该敌人获得1点力量。\n撕裂 (Power, 1E): 每当你在你的回合失去生命值时, 获得1点力量。\n剑柄打击 (Attack, 1E): 造成9点伤害。 抽1张牌。",
+            "your_cards": {
+              "c0": "打击 ×5 (Attack, 0E): 造成9点伤害。 永恒。 [enchanted 特兹卡塔拉的余烬: the card costs 0, deals 3 more damage, and is Eternal (「永恒」: cannot be removed from the deck)] [Eternal: cannot be removed or transformed]",
+              "c4": "防御 ×5 (Skill, 1E): 获得5点格挡。",
+              "c8": "痛击+ (Attack, 2E): 造成10点伤害。 给予3层易伤。",
+              "c9": "进阶之灾 (Curse, -1E): 不能被打出。 虚无。 永恒。 [Eternal: cannot be removed or transformed]",
+              "c12": "双重打击 ×3 (Attack, 1E): 造成5点伤害两次。",
+              "c13": "突破 (Attack, 1E): 失去1点生命。 对所有敌人造成9点伤害。",
+              "c14": "剑柄打击 ×3 (Attack, 1E): 造成9点伤害。 抽1张牌。",
+              "c15": "坚毅+ (Skill, 1E): 获得9点格挡。 消耗1张牌。",
+              "c16": "预备打击 (Attack, 1E): 造成7点伤害。 在本回合内获得3点力量。",
+              "c17": "耸肩无视+ (Skill, 1E): 获得11点格挡。 抽1张牌。",
+              "c21": "头槌 (Attack, 1E): 造成9点伤害。 将你弃牌堆中的一张牌放到抽牌堆顶部。",
+              "c22": "地狱狂徒 (Power, 2E): 每当你抽到名字中有“打击”的牌时，对一名随机敌人打出这张牌。",
+              "c23": "无情猛攻 (Attack, 2E): 造成14点伤害。 你打出的下一张攻击牌耗能变为0点能量。",
+              "c24": "与我一战！ (Attack, 2E): 造成5点伤害两次。 获得3点力量。 该敌人获得1点力量。",
+              "c25": "撕裂 (Power, 1E): 每当你在你的回合失去生命值时, 获得1点力量。"
+            },
+            "your_cards_outcome_stats": {
+              "c4": "A9 第1幕 拿了 n=1(少) 过本幕boss 100% 均终层33 / 给了没拿 无数据；第2幕 拿了 n=2(少) 过本幕boss 50% 均终层31.5 / 给了没拿 无数据",
+              "c8": "无数据",
+              "c12": "A9 第1幕 拿了 n=40 过本幕boss 70% 均终层28.2 / 给了没拿 n=14 过本幕boss 79% 均终层32.6；第2幕 拿了 n=20 过本幕boss 45% 均终层37.4 / 给了没拿 n=12 过本幕boss 58% 均终层38.8；第3幕 拿了 n=10 过本幕boss 0% 均终层45.3 / 给了没拿 n=7 过本幕boss 29% 均终层47.3",
+              "c13": "A9 第1幕 拿了 n=31 过本幕boss 81% 均终层30.7 / 给了没拿 n=22 过本幕boss 59% 均终层31.1；第2幕 拿了 n=12 过本幕boss 42% 均终层36.2 / 给了没拿 n=16 过本幕boss 50% 均终层38.2；第3幕 拿了 n=3(少) 过本幕boss 33% 均终层45 / 给了没拿 n=5 过本幕boss 0% 均终层44.4（A9 不足5局，另附 A8：拿了 n=10 过本幕boss 20% 均终层47.4 / 给了没拿 n=16 过本幕boss 25% 均终层47.1）",
+              "c14": "A9 第1幕 拿了 n=48 过本幕boss 62% 均终层26.9 / 给了没拿 n=14 过本幕boss 86% 均终层36.8；第2幕 拿了 n=25 过本幕boss 48% 均终层36.6 / 给了没拿 n=8 过本幕boss 62% 均终层39.2；第3幕 拿了 n=7 过本幕boss 14% 均终层46.6 / 给了没拿 n=8 过本幕boss 0% 均终层43.9",
+              "c15": "A9 第1幕 拿了 n=21 过本幕boss 71% 均终层27.8 / 给了没拿 n=36 过本幕boss 75% 均终层33.3；第2幕 拿了 n=5 过本幕boss 60% 均终层40.8 / 给了没拿 n=24 过本幕boss 54% 均终层38.2；第3幕 拿了 n=4(少) 过本幕boss 0% 均终层46.5 / 给了没拿 n=9 过本幕boss 11% 均终层45.7（A9 不足5局，另附 A8：拿了 n=8 过本幕boss 12% 均终层48 / 给了没拿 n=14 过本幕boss 21% 均终层46.1）",
+              "c16": "A9 第1幕 拿了 n=27 过本幕boss 78% 均终层30.8 / 给了没拿 n=22 过本幕boss 68% 均终层31.4；第2幕 拿了 n=8 过本幕boss 50% 均终层38.6 / 给了没拿 n=9 过本幕boss 78% 均终层41.1；第3幕 拿了 n=1(少) 过本幕boss 100% 均终层48 / 给了没拿 n=4(少) 过本幕boss 0% 均终层47.2（A9 不足5局，另附 A8：拿了 n=14 过本幕boss 14% 均终层45.5 / 给了没拿 n=12 过本幕boss 33% 均终层47.7）",
+              "c17": "A9 第1幕 拿了 n=49 过本幕boss 63% 均终层27.7 / 给了没拿 n=5 过本幕boss 100% 均终层43.4；第2幕 拿了 n=31 过本幕boss 42% 均终层36.1 / 给了没拿 n=3(少) 过本幕boss 33% 均终层33.7（A9 不足5局，另附 A8：拿了 n=75 过本幕boss 45% 均终层37.9 / 给了没拿 n=11 过本幕boss 36% 均终层35）；第3幕 拿了 n=8 过本幕boss 12% 均终层44.9 / 给了没拿 n=4(少) 过本幕boss 0% 均终层47.5（A9 不足5局，另附 A8：拿了 n=24 过本幕boss 21% 均终层47.5 / 给了没拿 n=5 过本幕boss 0% 均终层45.8）",
+              "c21": "A9 第1幕 拿了 n=24 过本幕boss 42% 均终层23.5 / 给了没拿 n=27 过本幕boss 78% 均终层30.4；第2幕 拿了 n=11 过本幕boss 9% 均终层31.5 / 给了没拿 n=22 过本幕boss 68% 均终层40.5；第3幕 拿了 n=1(少) 过本幕boss 0% 均终层45 / 给了没拿 n=16 过本幕boss 0% 均终层44.8（A9 不足5局，另附 A8：拿了 n=5 过本幕boss 0% 均终层46 / 给了没拿 n=18 过本幕boss 33% 均终层47.5）",
+              "c22": "A9 第1幕 拿了 n=4(少) 过本幕boss 100% 均终层29 / 给了没拿 n=5 过本幕boss 100% 均终层36.8（A9 不足5局，另附 A8：拿了 n=10 过本幕boss 100% 均终层34.6 / 给了没拿 n=15 过本幕boss 100% 均终层35.5）；第2幕 拿了 n=2(少) 过本幕boss 100% 均终层43.5 / 给了没拿 n=5 过本幕boss 100% 均终层45.8；第3幕 拿了 无数据 / 给了没拿 n=1(少) 过本幕boss 100% 均终层48",
+              "c23": "A9 第1幕 拿了 n=20 过本幕boss 80% 均终层32.3 / 给了没拿 n=6 过本幕boss 67% 均终层23.5；第2幕 拿了 n=7 过本幕boss 57% 均终层40.4 / 给了没拿 n=3(少) 过本幕boss 33% 均终层35（A9 不足5局，另附 A8：拿了 n=15 过本幕boss 33% 均终层36.6 / 给了没拿 n=10 过本幕boss 40% 均终层37.5）；第3幕 拿了 n=1(少) 过本幕boss 0% 均终层48 / 给了没拿 n=3(少) 过本幕boss 0% 均终层44.7（A9 不足5局，另附 A8：拿了 n=4(少) 过本幕boss 25% 均终层45.8 / 给了没拿 n=5 过本幕boss 40% 均终层48）",
+              "c24": "A9 第1幕 拿了 n=26 过本幕boss 85% 均终层33.8 / 给了没拿 n=1(少) 过本幕boss 100% 均终层33（A9 不足5局，另附 A8：拿了 n=36 过本幕boss 92% 均终层36.7 / 给了没拿 n=28 过本幕boss 61% 均终层28）；第2幕 拿了 n=15 过本幕boss 40% 均终层36.5 / 给了没拿 n=1(少) 过本幕boss 0% 均终层33（A9 不足5局，另附 A8：拿了 n=19 过本幕boss 37% 均终层37.6 / 给了没拿 n=8 过本幕boss 12% 均终层31）；第3幕 拿了 n=5 过本幕boss 20% 均终层47 / 给了没拿 无数据",
+              "c25": "A9 第1幕 拿了 n=8 过本幕boss 75% 均终层32.9 / 给了没拿 n=16 过本幕boss 50% 均终层26.8；第2幕 拿了 n=13 过本幕boss 38% 均终层35.8 / 给了没拿 n=5 过本幕boss 80% 均终层39.2；第3幕 拿了 n=1(少) 过本幕boss 0% 均终层48 / 给了没拿 n=1(少) 过本幕boss 0% 均终层45（A9 不足5局，另附 A8：拿了 n=13 过本幕boss 31% 均终层47.3 / 给了没拿 n=4(少) 过本幕boss 0% 均终层45.8）"
+            },
+            "facts": {
+              "act": 2,
+              "floor": 22,
+              "floors_to_act_boss": 11,
+              "ascension": 9,
+              "hp": "54/80 (68%)",
+              "gold": 292,
+              "act_boss": "KAISER_CRAB_BOSS",
+              "deck_size": 27,
+              "deck_profile": "27 张 (攻击 17/技能 7/能力 2/诅咒或状态 1) | 升级 3 | 平均费用 0.89 | 力量来源 与我一战！、撕裂、手里剑（牌面或遗物文字写明获得持续的力量）",
+              "deck": [
+                "5x STRIKE_IRONCLAD 打击 (Attack, 0 energy): 造成9点伤害。 永恒。",
+                "5x DEFEND_IRONCLAD 防御 (Skill, 1 energy): 获得5点格挡。",
+                "BASH+ 痛击+ (Attack, 2 energy): 造成10点伤害。 给予3层易伤。",
+                "ASCENDERS_BANE 进阶之灾 (Curse, -1 energy): 不能被打出。 虚无。 永恒。",
+                "3x TWIN_STRIKE 双重打击 (Attack, 1 energy): 造成5点伤害两次。",
+                "BREAKTHROUGH 突破 (Attack, 1 energy): 失去1点生命。 对所有敌人造成9点伤害。",
+                "3x POMMEL_STRIKE 剑柄打击 (Attack, 1 energy): 造成9点伤害。 抽1张牌。",
+                "TRUE_GRIT+ 坚毅+ (Skill, 1 energy): 获得9点格挡。 消耗1张牌。",
+                "SETUP_STRIKE 预备打击 (Attack, 1 energy): 造成7点伤害。 在本回合内获得3点力量。",
+                "SHRUG_IT_OFF+ 耸肩无视+ (Skill, 1 energy): 获得11点格挡。 抽1张牌。",
+                "HEADBUTT 头槌 (Attack, 1 energy): 造成9点伤害。 将你弃牌堆中的一张牌放到抽牌堆顶部。",
+                "HELLRAISER 地狱狂徒 (Power, 2 energy): 每当你抽到名字中有“打击”的牌时，对一名随机敌人打出这张牌。",
+                "UNRELENTING 无情猛攻 (Attack, 2 energy): 造成14点伤害。 你打出的下一张攻击牌耗能变为0点能量。",
+                "FIGHT_ME 与我一战！ (Attack, 2 energy): 造成5点伤害两次。 获得3点力量。 该敌人获得1点力量。",
+                "RUPTURE 撕裂 (Power, 1 energy): 每当你在你的回合失去生命值时, 获得1点力量。"
+              ],
+              "relics": [
+                "燃烧之血: 在战斗结束时，回复6点生命。",
+                "巨大扭蛋: 拾起时，获得?(数值未知)件随机遗物。额外将一对打击和防御，加入你的牌组。",
+                "风箱: 你在每场战斗开始时的手牌，将被升级。",
+                "吊灯: 在你的第三回合开始时，获得?(数值未知)。",
+                "手里剑: 你每在同一回合内打出3张攻击牌，获得1点力量。",
+                "地精之角: 每当有一名敌人死亡时，获得?(数值未知)并抽?(数值未知)张牌。",
+                "营养汤: 拾起时，为你牌组中的所有“打击”附魔：特兹卡塔拉的余烬"
+              ],
+              "potions": [
+                "SWIFT_POTION 迅捷药水: 抽3张牌。"
+              ],
+              "potion_slots": "1/2 used",
+              "act_boss_clock": {
+                "boss": "KAISER_CRAB",
+                "boss_hp": 428,
+                "boss_hp_note": "428 (A9)",
+                "expected_entry_hp": 78,
+                "survivable_turns": 7,
+                "hp_loss_per_turn": 10.5,
+                "hp_loss_per_turn_note": "its attack ~30/turn at A9 x 35% unblocked (92 logged fights)",
+                "fight_turns": 7,
+                "fight_turns_note": "min(script 8, survive ~7 at 78 HP losing ~10.5/turn: its attack ~30/turn at A9 x 35% unblocked (92 logged fights))",
+                "need_damage_per_turn": 61,
+                "deck_damage_per_turn_estimate": 34,
+                "estimate_note": "calibrated on 215 logged A8 boss fights (11 + 0.92 x the card count; typical error ~25%): cards, energy, Strength growth averaged over the fight, power damage (Inferno, Juggernaut), Vulnerable, and the boss mechanic below",
+                "gap_per_turn": 27,
+                "strength_growth": "Rupture +1 per HP loss, fed by 1 self-damage cards (~+0.1/turn)",
+                "harder_because": "two bodies: single-target damage is split; AoE hits both",
+                "boss_note": "two claws: single-target damage into the Rocket first (Laser 35, 52 from behind, plus Strength, on T4/T9), AoE into both; the survivor's +99 Block lasts one turn (logged crab fights A8 46 (17 won): Rocket died first 9/13 won, Crusher first 5/6, neither died first 3/27; A9 18 (8 won): Rocket died first 5/6 won, Crusher first 3/3, neither died first 0/9; experience crab-kill-order); Bug Sting then Laser from T3-T4"
+              },
+              "your_run_plan": null,
+              "shop_stock": [
+                {
+                  "kind": "relic",
+                  "name": "船夹板",
+                  "price": 232,
+                  "affordable": true
+                },
+                {
+                  "kind": "relic",
+                  "name": "活动星图",
+                  "price": 250,
+                  "affordable": true
+                },
+                {
+                  "kind": "relic",
+                  "name": "拳刃",
+                  "price": 171,
+                  "affordable": true
+                },
+                {
+                  "kind": "card",
+                  "name": "剑柄打击",
+                  "type": "Attack",
+                  "rarity": "Common",
+                  "cost": 1,
+                  "price": 52,
+                  "affordable": true
+                },
+                {
+                  "kind": "card",
+                  "name": "灰烬打击",
+                  "type": "Attack",
+                  "rarity": "Uncommon",
+                  "cost": 1,
+                  "price": 76,
+                  "affordable": true
+                },
+                {
+                  "kind": "card",
+                  "name": "燃烧契约",
+                  "type": "Skill",
+                  "rarity": "Uncommon",
+                  "cost": 1,
+                  "price": 78,
+                  "affordable": true
+                },
+                {
+                  "kind": "card",
+                  "name": "火焰屏障",
+                  "type": "Skill",
+                  "rarity": "Uncommon",
+                  "cost": 2,
+                  "price": 74,
+                  "affordable": true
+                },
+                {
+                  "kind": "card",
+                  "name": "岩石铠甲",
+                  "type": "Power",
+                  "rarity": "Uncommon",
+                  "cost": 1,
+                  "price": 36,
+                  "affordable": true
+                },
+                {
+                  "kind": "card",
+                  "name": "生产制造",
+                  "type": "Skill",
+                  "rarity": "Uncommon",
+                  "cost": 0,
+                  "price": 88,
+                  "affordable": true
+                },
+                {
+                  "kind": "card",
+                  "name": "战略大师",
+                  "type": "Skill",
+                  "rarity": "Rare",
+                  "cost": 0,
+                  "price": 172,
+                  "affordable": true
+                },
+                {
+                  "kind": "potion",
+                  "name": "速度药水",
+                  "price": 50,
+                  "affordable": true
+                },
+                {
+                  "kind": "potion",
+                  "name": "无色药水",
+                  "price": 49,
+                  "affordable": true
+                },
+                {
+                  "kind": "potion",
+                  "name": "敏捷药水",
+                  "price": 49,
+                  "affordable": true
+                }
+              ],
+              "card_removal": {
+                "price": 100,
+                "affordable_now": true
+              },
+              "potion_belt": "1 of 2 slots empty",
+              "unknown_value_note": "?(数值未知) marks a number the mod does not expose; the text around it is accurate",
+              "outcome_stats_basis": "outcome_stats / card_outcome_stats / option_outcome_stats = A9 数据：src/knowledge/outcome-stats.json（日志自动统计，tools/build-outcome-stats.py，生成于 2026-10-04T15:32:44，A9 共 103 局；每个进阶分开统计）；没有记录的写「无数据」。口径：n = 局数（n<5 标「少」）；过本幕boss = 这些局里打过「做这个选择时所在那一幕」boss 的比例；均终层 = 这些局的平均最终层数。卡牌「拿了」= 这一幕里牌组多了这张牌（奖励、商店、事件都算），「给了没拿」= 这一幕的卡牌奖励里给过、这一幕没拿；遗物 = 这一幕获得；事件选项 = 选了这个选项（到下一层第一次决策时的平均 HP/上限/金币变化）；休息点 = 按到达时的 HP 档。观察数据：混有「在什么局面下做这个选择」的因素，不是因果。基线（A9 全部 103 局）：到达第1幕的局过第1幕boss 68% (n=103)，到达第2幕的局过第2幕boss 44% (n=70)，到达第3幕的局过第3幕boss 10% (n=31)。A9 的一行不足5局、而 A8 的同一行够5局时，后面括号里另附那一行，标明进阶（另算，不与 A9 的合并）；A8 基线（全部 232 局）：到达第1幕的局过第1幕boss 77% (n=232)，到达第2幕的局过第2幕boss 35% (n=178)，到达第3幕的局过第3幕boss 21% (n=63)。"
+            }
+          },
+          "criteria": {
+            "buy_relic0": "{\"buy\":\"船夹板\",\"kind\":\"relic\",\"price\":232,\"text\":\"在你的第二回合开始时，获得?(数值未知)点格挡。\",\"affordable_now\":true,\"outcome_stats\":\"A9 第1幕获得 n=1(少) 过本幕boss 0% 均终层17（A9 不足5局，另附 A8：n=5 过本幕boss 100% 均终层41.6）；第2幕获得 n=1(少) 过本幕boss 100% 均终层48\"}",
+            "buy_relic1": "{\"buy\":\"活动星图\",\"kind\":\"relic\",\"price\":250,\"text\":\"每当你进入？房间的时候，回复?(数值未知)点生命。\",\"affordable_now\":true,\"outcome_stats\":\"A9 第1幕获得 n=2(少) 过本幕boss 0% 均终层17（A9 不足5局，另附 A8：n=11 过本幕boss 82% 均终层32.4）\"}",
+            "buy_relic2": "{\"buy\":\"拳刃\",\"kind\":\"relic\",\"price\":171,\"text\":\"\",\"affordable_now\":true,\"outcome_stats\":\"无数据\"}",
+            "buy_card0": "{\"buy\":\"剑柄打击\",\"kind\":\"card\",\"type\":\"Attack\",\"rarity\":\"Common\",\"cost\":1,\"price\":52,\"text\":\"造成9点伤害。 抽1张牌。\",\"affordable_now\":true,\"in_deck\":3,\"outcome_stats\":\"A9 第1幕 拿了 n=48 过本幕boss 62% 均终层26.9 / 给了没拿 n=14 过本幕boss 86% 均终层36.8；第2幕 拿了 n=25 过本幕boss 48% 均终层36.6 / 给了没拿 n=8 过本幕boss 62% 均终层39.2；第3幕 拿了 n=7 过本幕boss 14% 均终层46.6 / 给了没拿 n=8 过本幕boss 0% 均终层43.9\"}",
+            "buy_card1": "{\"buy\":\"灰烬打击\",\"kind\":\"card\",\"type\":\"Attack\",\"rarity\":\"Uncommon\",\"cost\":1,\"price\":76,\"text\":\"造成6点伤害。 你的消耗牌堆中每有一张牌，伤害增加3。\",\"affordable_now\":true,\"in_deck\":0,\"outcome_stats\":\"A9 第1幕 拿了 n=3(少) 过本幕boss 67% 均终层37 / 给了没拿 n=14 过本幕boss 86% 均终层32.9；第2幕 拿了 无数据 / 给了没拿 n=13 过本幕boss 54% 均终层38.8；第3幕 拿了 无数据 / 给了没拿 n=4(少) 过本幕boss 0% 均终层43（A9 不足5局，另附 A8：拿了 无数据 / 给了没拿 n=7 过本幕boss 43% 均终层46.1）\"}",
+            "buy_card2": "{\"buy\":\"燃烧契约\",\"kind\":\"card\",\"type\":\"Skill\",\"rarity\":\"Uncommon\",\"cost\":1,\"price\":78,\"text\":\"消耗1张牌。 抽2张牌。\",\"affordable_now\":true,\"in_deck\":0,\"outcome_stats\":\"A9 第1幕 拿了 n=6 过本幕boss 83% 均终层31.3 / 给了没拿 n=8 过本幕boss 62% 均终层27.2；第2幕 拿了 n=5 过本幕boss 20% 均终层32 / 给了没拿 n=7 过本幕boss 29% 均终层34.7；第3幕 拿了 n=2(少) 过本幕boss 0% 均终层43.5 / 给了没拿 n=1(少) 过本幕boss 0% 均终层42（A9 不足5局，另附 A8：拿了 n=9 过本幕boss 33% 均终层48 / 给了没拿 n=2(少) 过本幕boss 0% 均终层48）\"}",
+            "buy_card3": "{\"buy\":\"火焰屏障\",\"kind\":\"card\",\"type\":\"Skill\",\"rarity\":\"Uncommon\",\"cost\":2,\"price\":74,\"text\":\"获得12点格挡。 你在这个回合每受到一次攻击，都会对攻击者造成4点伤害。\",\"affordable_now\":true,\"in_deck\":0,\"outcome_stats\":\"A9 第1幕 拿了 n=14 过本幕boss 71% 均终层28.5 / 给了没拿 n=8 过本幕boss 75% 均终层29；第2幕 拿了 n=10 过本幕boss 50% 均终层36.9 / 给了没拿 n=6 过本幕boss 33% 均终层37.7；第3幕 拿了 n=7 过本幕boss 0% 均终层44.9 / 给了没拿 无数据\"}",
+            "buy_card4": "{\"buy\":\"岩石铠甲\",\"kind\":\"card\",\"type\":\"Power\",\"rarity\":\"Uncommon\",\"cost\":1,\"price\":36,\"text\":\"获得4层覆甲。 [Plating: block = stacks at your turn's end, then 1 stack less each turn; 4 stacks 4+3+2+1 = 10 block in all, not 4 every turn]\",\"affordable_now\":true,\"in_deck\":0,\"outcome_stats\":\"A9 第1幕 拿了 n=11 过本幕boss 82% 均终层31.2 / 给了没拿 n=12 过本幕boss 58% 均终层28.4；第2幕 拿了 n=10 过本幕boss 40% 均终层36.6 / 给了没拿 n=7 过本幕boss 71% 均终层41.7；第3幕 拿了 n=1(少) 过本幕boss 0% 均终层48 / 给了没拿 n=2(少) 过本幕boss 0% 均终层44（A9 不足5局，另附 A8：拿了 n=5 过本幕boss 20% 均终层47.4 / 给了没拿 n=4(少) 过本幕boss 0% 均终层47）\"}",
+            "buy_card5": "{\"buy\":\"生产制造\",\"kind\":\"card\",\"type\":\"Skill\",\"rarity\":\"Uncommon\",\"cost\":0,\"price\":88,\"text\":\"获得2点能量。 消耗。\",\"affordable_now\":true,\"in_deck\":0,\"outcome_stats\":\"无数据\"}",
+            "buy_card6": "{\"buy\":\"战略大师\",\"kind\":\"card\",\"type\":\"Skill\",\"rarity\":\"Rare\",\"cost\":0,\"price\":172,\"text\":\"抽3张牌。 消耗。\",\"affordable_now\":true,\"in_deck\":0,\"outcome_stats\":\"无数据\"}",
+            "buy_potion0": "{\"buy\":\"速度药水\",\"kind\":\"potion\",\"price\":50,\"text\":\"\",\"affordable_now\":true,\"potion_slots\":\"1 of 2 potion slots empty\"}",
+            "buy_potion1": "{\"buy\":\"无色药水\",\"kind\":\"potion\",\"price\":49,\"text\":\"\",\"affordable_now\":true,\"potion_slots\":\"1 of 2 potion slots empty\"}",
+            "buy_potion2": "{\"buy\":\"敏捷药水\",\"kind\":\"potion\",\"price\":49,\"text\":\"\",\"affordable_now\":true,\"potion_slots\":\"1 of 2 potion slots empty\"}",
+            "remove": "{\"buy\":\"card removal\",\"kind\":\"service\",\"price\":100,\"affordable_now\":true,\"text\":\"removes one card from the deck: write \\\"remove:<card key>\\\" with the card from state.your_cards\",\"not_removable_eternal\":\"打击 x5, 进阶之灾\"}",
+            "discard_potion0": "{\"discard\":\"迅捷药水\",\"slot\":0,\"text\":\"frees this potion slot\"}",
+            "leave": "{\"end\":\"stop shopping (implied after the last step)\"}"
+          },
+          "plan": true
+        }
+      ],
+      "rows": [
+        {
+          "label": "shop/plan",
+          "chosen": {
+            "action": "buy_card",
+            "option_index": 3
+          },
+          "questions": {
+            "pick": {
+              "type": "choice",
+              "instructions": "What should I buy in this shop, in what order? You decide this yourself; no other model is asked first. Code does not score or rank the options: each lists its own facts (the game's text, cost, price, the HP it leaves, what an upgrade changes) and, for a card, relic, event option or rest action, outcome_stats: how our logged runs did after that choice, with n (basis and baseline in facts.outcome_stats_basis; observational, not a verdict). facts are exact: the deck, relics, potions, HP, gold, the act boss clock (damage a turn needed vs this deck's estimate) and your own run plan. Every option is listed, skipping or leaving included. Weigh them for the whole run. Plan this whole shop visit in ONE answer: an ordered shopping list that code carries out step by step, re-checking each step against the live shop. Reply with JSON only: {\"plan\": [<steps in order>], \"reason\": \"<max 40 words>\"}. A step is an option key (buy_relicN / buy_cardN / buy_potionN), \"remove:<card key>\" to pay for the card removal and remove that card (card keys are state.your_cards), or discard_potionN to empty a potion slot first (buying a potion needs an empty slot). Leaving is implied after the last step; [] buys nothing. Unaffordable items are listed as facts (affordable_now false); gold only goes down in a shop, so the whole list must fit your gold at the listed prices (check the sum). You are asked again only if the shop changes under the plan (an item the plan still buys changes price, is gone or cannot be bought, or new stock appears in a slot the plan did not buy).",
+              "criteria": {
+                "buy_relic0": "{\"buy\":\"船夹板\",\"kind\":\"relic\",\"price\":232,\"text\":\"在你的第二回合开始时，获得?(数值未知)点格挡。\",\"affordable_now\":true,\"outcome_stats\":\"A9 第1幕获得 n=1(少) 过本幕boss 0% 均终层17（A9 不足5局，另附 A8：n=5 过本幕boss 100% 均终层41.6）；第2幕获得 n=1(少) 过本幕boss 100% 均终层48\"}",
+                "buy_relic1": "{\"buy\":\"活动星图\",\"kind\":\"relic\",\"price\":250,\"text\":\"每当你进入？房间的时候，回复?(数值未知)点生命。\",\"affordable_now\":true,\"outcome_stats\":\"A9 第1幕获得 n=2(少) 过本幕boss 0% 均终层17（A9 不足5局，另附 A8：n=11 过本幕boss 82% 均终层32.4）\"}",
+                "buy_relic2": "{\"buy\":\"拳刃\",\"kind\":\"relic\",\"price\":171,\"text\":\"\",\"affordable_now\":true,\"outcome_stats\":\"无数据\"}",
+                "buy_card0": "{\"buy\":\"剑柄打击\",\"kind\":\"card\",\"type\":\"Attack\",\"rarity\":\"Common\",\"cost\":1,\"price\":52,\"text\":\"造成9点伤害。 抽1张牌。\",\"affordable_now\":true,\"in_deck\":3,\"outcome_stats\":\"A9 第1幕 拿了 n=48 过本幕boss 62% 均终层26.9 / 给了没拿 n=14 过本幕boss 86% 均终层36.8；第2幕 拿了 n=25 过本幕boss 48% 均终层36.6 / 给了没拿 n=8 过本幕boss 62% 均终层39.2；第3幕 拿了 n=7 过本幕boss 14% 均终层46.6 / 给了没拿 n=8 过本幕boss 0% 均终层43.9\"}",
+                "buy_card1": "{\"buy\":\"灰烬打击\",\"kind\":\"card\",\"type\":\"Attack\",\"rarity\":\"Uncommon\",\"cost\":1,\"price\":76,\"text\":\"造成6点伤害。 你的消耗牌堆中每有一张牌，伤害增加3。\",\"affordable_now\":true,\"in_deck\":0,\"outcome_stats\":\"A9 第1幕 拿了 n=3(少) 过本幕boss 67% 均终层37 / 给了没拿 n=14 过本幕boss 86% 均终层32.9；第2幕 拿了 无数据 / 给了没拿 n=13 过本幕boss 54% 均终层38.8；第3幕 拿了 无数据 / 给了没拿 n=4(少) 过本幕boss 0% 均终层43（A9 不足5局，另附 A8：拿了 无数据 / 给了没拿 n=7 过本幕boss 43% 均终层46.1）\"}",
+                "buy_card2": "{\"buy\":\"燃烧契约\",\"kind\":\"card\",\"type\":\"Skill\",\"rarity\":\"Uncommon\",\"cost\":1,\"price\":78,\"text\":\"消耗1张牌。 抽2张牌。\",\"affordable_now\":true,\"in_deck\":0,\"outcome_stats\":\"A9 第1幕 拿了 n=6 过本幕boss 83% 均终层31.3 / 给了没拿 n=8 过本幕boss 62% 均终层27.2；第2幕 拿了 n=5 过本幕boss 20% 均终层32 / 给了没拿 n=7 过本幕boss 29% 均终层34.7；第3幕 拿了 n=2(少) 过本幕boss 0% 均终层43.5 / 给了没拿 n=1(少) 过本幕boss 0% 均终层42（A9 不足5局，另附 A8：拿了 n=9 过本幕boss 33% 均终层48 / 给了没拿 n=2(少) 过本幕boss 0% 均终层48）\"}",
+                "buy_card3": "{\"buy\":\"火焰屏障\",\"kind\":\"card\",\"type\":\"Skill\",\"rarity\":\"Uncommon\",\"cost\":2,\"price\":74,\"text\":\"获得12点格挡。 你在这个回合每受到一次攻击，都会对攻击者造成4点伤害。\",\"affordable_now\":true,\"in_deck\":0,\"outcome_stats\":\"A9 第1幕 拿了 n=14 过本幕boss 71% 均终层28.5 / 给了没拿 n=8 过本幕boss 75% 均终层29；第2幕 拿了 n=10 过本幕boss 50% 均终层36.9 / 给了没拿 n=6 过本幕boss 33% 均终层37.7；第3幕 拿了 n=7 过本幕boss 0% 均终层44.9 / 给了没拿 无数据\"}",
+                "buy_card4": "{\"buy\":\"岩石铠甲\",\"kind\":\"card\",\"type\":\"Power\",\"rarity\":\"Uncommon\",\"cost\":1,\"price\":36,\"text\":\"获得4层覆甲。 [Plating: block = stacks at your turn's end, then 1 stack less each turn; 4 stacks 4+3+2+1 = 10 block in all, not 4 every turn]\",\"affordable_now\":true,\"in_deck\":0,\"outcome_stats\":\"A9 第1幕 拿了 n=11 过本幕boss 82% 均终层31.2 / 给了没拿 n=12 过本幕boss 58% 均终层28.4；第2幕 拿了 n=10 过本幕boss 40% 均终层36.6 / 给了没拿 n=7 过本幕boss 71% 均终层41.7；第3幕 拿了 n=1(少) 过本幕boss 0% 均终层48 / 给了没拿 n=2(少) 过本幕boss 0% 均终层44（A9 不足5局，另附 A8：拿了 n=5 过本幕boss 20% 均终层47.4 / 给了没拿 n=4(少) 过本幕boss 0% 均终层47）\"}",
+                "buy_card5": "{\"buy\":\"生产制造\",\"kind\":\"card\",\"type\":\"Skill\",\"rarity\":\"Uncommon\",\"cost\":0,\"price\":88,\"text\":\"获得2点能量。 消耗。\",\"affordable_now\":true,\"in_deck\":0,\"outcome_stats\":\"无数据\"}",
+                "buy_card6": "{\"buy\":\"战略大师\",\"kind\":\"card\",\"type\":\"Skill\",\"rarity\":\"Rare\",\"cost\":0,\"price\":172,\"text\":\"抽3张牌。 消耗。\",\"affordable_now\":true,\"in_deck\":0,\"outcome_stats\":\"无数据\"}",
+                "buy_potion0": "{\"buy\":\"速度药水\",\"kind\":\"potion\",\"price\":50,\"text\":\"\",\"affordable_now\":true,\"potion_slots\":\"1 of 2 potion slots empty\"}",
+                "buy_potion1": "{\"buy\":\"无色药水\",\"kind\":\"potion\",\"price\":49,\"text\":\"\",\"affordable_now\":true,\"potion_slots\":\"1 of 2 potion slots empty\"}",
+                "buy_potion2": "{\"buy\":\"敏捷药水\",\"kind\":\"potion\",\"price\":49,\"text\":\"\",\"affordable_now\":true,\"potion_slots\":\"1 of 2 potion slots empty\"}",
+                "remove": "{\"buy\":\"card removal\",\"kind\":\"service\",\"price\":100,\"affordable_now\":true,\"text\":\"removes one card from the deck: write \\\"remove:<card key>\\\" with the card from state.your_cards\",\"not_removable_eternal\":\"打击 x5, 进阶之灾\"}",
+                "discard_potion0": "{\"discard\":\"迅捷药水\",\"slot\":0,\"text\":\"frees this potion slot\"}",
+                "leave": "{\"end\":\"stop shopping (implied after the last step)\"}"
+              }
+            }
+          },
+          "planner_ms": 10,
+          "pre_ms": 0
+        },
+        {
+          "label": "shop/buy",
+          "chosen": {
+            "action": "buy_potion",
+            "option_index": 2
+          },
+          "planner_ms": 5,
+          "pre_ms": 1
+        },
+        {
+          "label": "shop/buy",
+          "chosen": {
+            "action": "buy_card",
+            "option_index": 4
+          },
+          "planner_ms": 5,
+          "pre_ms": 1
+        },
+        {
+          "label": "shop/buy",
+          "chosen": {
+            "action": "buy_card",
+            "option_index": 0
+          },
+          "planner_ms": 5,
+          "pre_ms": 1
+        },
+        {
+          "label": "shop/buy",
+          "chosen": {
+            "action": "buy_card",
+            "option_index": 2
+          },
+          "planner_ms": 5,
+          "pre_ms": 1
+        },
+        {
+          "label": "shop/buy",
+          "chosen": {
+            "action": "close_shop_inventory"
+          },
+          "planner_ms": 4,
+          "pre_ms": 0
+        },
+        {
+          "label": "shop/leave",
+          "chosen": {
+            "action": "proceed"
+          },
+          "planner_ms": 0,
+          "pre_ms": 1
+        }
+      ],
+      "actions": [
+        {
+          "action": "buy_card",
+          "option_index": 3
+        },
+        {
+          "action": "buy_potion",
+          "option_index": 2
+        },
+        {
+          "action": "buy_card",
+          "option_index": 4
+        },
+        {
+          "action": "buy_card",
+          "option_index": 0
+        },
+        {
+          "action": "buy_card",
+          "option_index": 2
+        },
+        {
+          "action": "close_shop_inventory"
+        },
+        {
+          "action": "proceed"
+        }
+      ],
+      "errors": 0
+    }
+  }
+}
