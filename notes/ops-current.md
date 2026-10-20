@@ -1,5 +1,5 @@
 # 运维当前清单（调度器生成）
-生成：2026-10-21T02:50:51+08:00；原件索引：/home/dw/Projects/agent-sts2/ops/codex-ops/current.json SHA256 209f41a655db0d41ae2bdfbddd3784cefb9689a142ea2895192919461af1d621
+生成：2026-10-21T02:52:44+08:00；原件索引：/home/dw/Projects/agent-sts2/ops/codex-ops/current.json SHA256 eb41c605d643a69d7e016f65f20df0f511c1ad1b8d06ddd596fbde40b9dec8a1
 当前授权：Roy§12授权Claude主导V6、P0优先；最新Claude02:1x允许局终STOP发布窗，取代此前无条件不挂STOP。学习正常，full仍原三锁挡新dataset重任务；旧失败和来源保留，不中断现行对局。
 最高Claude原边界挂起已执行：1ZZ自然F33败后原STOP/无活动play核同，17+CARDjev已发布V6-R407/live a7d07949（行为389d2650），REFLEXoff、498知识保留、消费者读回/核号双通知完成。broker124保留；宿主原动作核旧循环退后移STOP，autoplay1889333/w1H:p14已拉起；新局JPWMMV67SZCL配置jev/off及02:38:56首动作已核，Git元数据旧ENOBUFS仍null、源码另核。第一新局为Claude质量验收，不提前判通过；同值/全跳/错误/兜底增多沿原Claude链，P2仍两稳定局。后续边界包保原局终STOP窗口法，勿在局中STOP。原件20261021-0236-P0-publication-ops/receipt.json。
 P3十一源随R407已live/代码读回，REFLEXoff，无合格经验/自然验收；单独626/5926与17联合绿分列，保legacy混合/50000、禁805。原件0040/0113/0236回执。
@@ -11,13 +11,13 @@ RBME/JPW旧V5 DPR告警沿H1兼容链：JPW原冻复算同，4奖励A/B已算/�
 001302监控4staged+2canonical依赖六叶已冻，沙箱九败/撤源七败与8冲突保留，待P0后最新实际组合门，不重复实现。原普通三候选唯一dataset五OK/CLEAN后拒，20waiting/五局/0538仅proposed不重生成；原件20261021-0050-ops/receipt.json。
 003744/011301旧策略waiting/0539、0540仅proposed及原覆盖限沿0056/0126/0133原件。021302两策略共20waiting/无源改/testsnull；S2唯一dataset五OK/CLEAN后被R407 CARD漂移拒，普通批在dataset前即拒无副作用标记/本批日志，不混作共享执行或补跑。普通8源4祖先/16旧账本链接及状态版本核同，父未关；原attention及失败保留。原件20261021-0239/0243-ops/receipt.json。
 011301-fix旧两次15秒/statusnull失败保留；014301三叶未提交夹具已冻，tsc0/定向2过/Python24过、full四文件七败且撤源同七败；R406私有apply0不代门。绑定ordinary原项后排，不重复实现/放宽；原件0213/0119-ops/receipt.json，旧记录锁已自然释放。
-011301两策略原覆盖/13错误/5缺决策503及0540 proposed沿0126/0133原件，不关宽父、不重dataset。
+024301-fix无新源/提交/合入、WT净；154SHA/46基线祖先核同，tsc0/定向6文件9过非full。监控六叶/夹具三叶原候选去重，不改旧失败或关宽父；无ordinary回执时不补造收尾/重dataset。原件20261021-0251-ops/receipt.json；011301旧覆盖限仍0126/0133。
 W4精英95材料已main67fc/subtree d712，回收rc1 retained(绑定守卫未改)，原retention-intake保留。Claude02:5x已排低优先学习问题silent-elite-simulation-pessimism-20261021，原策略队列可见/重点13场局层与审计SHA绑定，待真实学习任务去重派发，不补知识或影响R407/P0/P2；notes/learning-questions.md。
 ；原件 paper/materials/20261020-0249-ops/authorization-original.md
 模型 gpt-6.1-sol；普通 ops/学习下次自然启动 high，专项可有理由 xhigh，大脑保持 xhigh。实际生效须原生回执，不能从默认值推定。
 账号选择：/home/dw/Projects/agent-sts2/ops/codex-ops/accounts/codex1/learner；原 ops：w1H:p8 / 01a1517b-e200-7c52-b463-6ea22220c0a9；执行模式：host；辅助/学习者沙箱保持。
 不读凭据/.env/游戏二进制，不改共享配置/账号；不推送。
-main 5056cf4b6de4ebdb0576ac0ae1f1648f1d606c0f
+main b86c6a28acea5dcfc23359212b4a3541d782c7c4
 live a7d07949efb03278a62050ca39447941309b4b7e；登记 release V6-R407（登记值不代表新树检查绿或实际采用）。
 首次另读 AGENTS/README/最新 STATE/学习协议；此后每次读本清单及事件原件。历史 handoff/decision-log 只沿事务定位，原件冲突保留并核查。
 在途批次 3（完整 owner/租约与路径见 current.json）：
@@ -36,8 +36,7 @@ live a7d07949efb03278a62050ca39447941309b4b7e；登记 release V6-R407（登记�
 human-pace 原owner=01a13dcd-83d4-7c63-b233-f93cf878ecf4，接续=01a14aae-4b03-7cf1-9185-34dc3bed786f；原件 /home/dw/Projects/agent-sts2/paper/materials/20261017-human-pace-control/checkpoint.json。不据阶段状态关闭宽父。
 未确认通知 1；不得代其他角色 ACK。前8项：
 - 733e3a9e9380d9155431980e disagreement watcher_received,roy_notified；/home/dw/Projects/agent-sts2/ops/codex-ops/learning-notices/733e3a9e9380d9155431980e.json
-队列 2，只按本轮已提交事件处理；前4项：
-- /home/dw/Projects/agent-sts2/ops/codex-ops/queue/1792521902408379904-module-health.md：Silent V5 JPWMMV67SZCL 模块验收异常：检查必需计算失败/故障降级、影子采样诊断、DPR缺失与construction_pipeline接线计数。证据：/home/dw/Projects/agent-sts2/ops/codex-ops/module-health/JPWMMV67SZCL-aler
+队列 1，只按本轮已提交事件处理；前4项：
 - /home/dw/Projects/agent-sts2/ops/codex-ops/queue/1792522147761989096-fix-done.md：fix-batch 批次 20261021-024301-fix-batch 结束：exit 0；已核实合入 live：无。回报：/home/dw/Projects/agent-sts2/ops/codex-ops/learner/20261021-024301-fix-batch.out。学习者自测后自行合入，无需另
 原事务未标 completed 共184（含未知，非活进程数），最近4项：
 - /home/dw/Projects/agent-sts2/ops/codex-ops/pending-continuations/original-20261021-001302-monitor-health-six-leaf.json；phase=original-uncommitted-four-monitor-plus-two-helper-deps-frozen-full1-after-P0-gate
@@ -45,10 +44,10 @@ human-pace 原owner=01a13dcd-83d4-7c63-b233-f93cf878ecf4，接续=01a14aae-4b03-
 - /home/dw/Projects/agent-sts2/ops/codex-ops/pending-continuations/original-W4-R404-card-provider-wiring-20261020.json；phase=R407-actual-next-run-CARDjev-REFLEXoff-first-action-readback-quality-Claude-pending
 - /home/dw/Projects/agent-sts2/ops/codex-ops/pending-continuations/original-20261021-014301-ordinary-fixture-three-leaf.json；phase=three-uncommitted-test-leaves-frozen-await-post-P0-latest-live-host-full
 最新指令短引用（完整行按offset核）：
-- offset=2024903：- 2026-10-21 02:49:12 CST 原ops：JPW告警按原截点重取132决策/5脑题/1配置并复算，除时间逐字段同。四reward/card由Jev完成且无fallback、两拿两跳；另流A/B有唯一当幕Boss及同选项集，准备4255–4295ms、每项n26/18/34/10且DPR存在，均未超时。表无decision_id，只按同局/层/前置时间和选项集唯一关联，不冒推理或质量验收。旧V5监控按construct
 - offset=2025928：- 2026-10-21 02:50:37 CST 原ops实收Claude02:5x：精英悲观偏差已按原审计登记低优先学习问题silent-elite-simulation-pessimism-20261021，notes/learning-questions.md及原策略入口fix-queue-v4同项绑定；优先13场来源局号/层已从原per-fight提取，完整40局来源仍原cohort。未派新模型/模拟或伪造学习父/线程，后续原
+- offset=2026690：- 2026-10-21 02:52:37 CST 原ops：024301修复批退出0，但没有新增源码、提交或合入；ops核独立WT仍为基线013723c7且跟踪文件洁净，154项源码/测试SHA与原审计相同、46个历史提交均为该基线祖先。这只支持窄修复现状，不把main祖先等同实际live或关闭策略/架构宽父。原tsc0、定向6文件9例0且无重跑、gitleaks0日志已存；没有新增修改故未重跑整套，也不拿定向通过覆盖原完整失败。00
 原事务文件索引数（含历史）：pending-integrations=149；pending-deliveries=16；pending-records=31；pending-continuations=28；publications=1；完整路径见 current.json，不从文件存在推定未完成/运行。
-新指令原件：ops/inbox-dev.md 当前尾段 offset=2018497, bytes=8192；本轮新授权必须由事件引用，漏项查此段，勿整份重读。
+新指令原件：ops/inbox-dev.md 当前尾段 offset=2019697, bytes=8192；本轮新授权必须由事件引用，漏项查此段，勿整份重读。
 current.json 仅按本事件 batch/request/notice id 用程序筛字段，不全文读；动态源变化后核新清单，不用旧值冒当前。
 H0/0332等科学边界、精确宿主树、未完成发布/兼容及 retention 仅沿原报告和事务回执；清单不代验收、shipped、覆盖率或消费。
 严格普通无源码成功由调度器完成账本检查、唯一 dataset 与受控记录提交，回执 ops/codex-ops/ordinary-close/；异常、异议、缺证、人工决定正常唤醒。
