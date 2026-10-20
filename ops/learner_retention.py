@@ -244,6 +244,18 @@ def admission(root, state_dir, state, batch_id, check_ignored=True):
         raise ValueError("invalid batch identity")
     batch = state.get("batches", {}).get(batch_id, {})
     task = batch.get("task", "postmortem")
+    pending = state_dir / 'ordinary-close' / (batch_id + '.json')
+    if pending.exists():
+        receipt = load(safe_path(root, pending))
+        if (not isinstance(receipt, dict) or receipt.get('schema') != 'ordinary-close-v1'
+                or receipt.get('batch') != batch_id or receipt.get('state') != 'closed'):
+            raise ValueError('ordinary completion is not settled; original checkout retained')
+        records = receipt.get('records', {})
+        commit = records.get('commit') if isinstance(records, dict) else None
+        dataset = receipt.get('dataset', {})
+        if (not isinstance(commit, str) or not SHA.fullmatch(commit) or not ancestor(root, commit)
+                or not isinstance(dataset, dict) or type(dataset.get('rc')) is not int or dataset['rc'] != 0):
+            raise ValueError('ordinary completion lacks its actual record commit and dataset result')
     if batch.get("rc") != 0 or batch.get("state") not in ("done", "failed"):
         raise ValueError("running, failed exit, lost or rejected batch retained")
     if batch.get("proposal_audit_errors") or batch.get("proposal_repair_needed") or batch.get("checks_pending"):

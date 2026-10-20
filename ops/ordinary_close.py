@@ -80,6 +80,8 @@ def eligible(root, directory, batch, report):
     if task != "postmortem":
         tree = Path(batch["worktree"]).resolve()
         if (tree.parent != Path(root).resolve() / ".worktrees" or tree.name == "live"
+                or not (tree / ".git").is_file() or (tree / ".git").is_symlink()
+                or git(tree, "rev-parse", "--show-toplevel") != str(tree)
                 or git(tree, "status", "--porcelain", "--untracked-files=all")
                 or git(tree, "rev-parse", "HEAD") != report.get("base")):
             raise ValueError("source worktree is not strictly clean at its original base")
@@ -135,8 +137,10 @@ def ledger_check(root, candidates):
     return {"problems": 0, "items": len(items)}
 
 
-def controlled_commit(root, directory, paths, message, verify=None):
+def controlled_commit(root, directory, paths, message, verify=None, appends=None):
     """Snapshot only approved records; keep all other dirty files and refuse any pre-staged index."""
+    if set(appends or {}) - set(paths):
+        raise ValueError("record append outside approved paths")
     root, directory = Path(root), Path(directory)
     head = git(root, "rev-parse", "HEAD")
     index = Path(git(root, "rev-parse", "--path-format=absolute", "--git-path", "index"))
@@ -147,14 +151,15 @@ def controlled_commit(root, directory, paths, message, verify=None):
             raise ValueError("pre-staged records retained; ops must decide ownership")
         with tempfile.TemporaryDirectory(prefix="ordinary-records-", dir=directory) as temp:
             temp = Path(temp)
-            snapshots = {}
+            snapshots, originals = {}, {}
             for name in paths:
                 path = root / name
                 if path.is_symlink() or not path.resolve().is_relative_to(root.resolve()):
                     raise ValueError("unsafe record path")
-                if path.exists():
-                    raw = path.read_bytes()
-                    snapshots[name] = raw
+                raw = path.read_bytes() if path.exists() else None
+                if raw is not None or name in (appends or {}):
+                    originals[name] = raw
+                    snapshots[name] = (raw or b"") + (appends or {}).get(name, b"")
             scan = record_manifest.scan_snapshots(root, directory, snapshots, head)
             private = temp / "index"
             env = {**os.environ, "GIT_INDEX_FILE": str(private)}
@@ -172,10 +177,14 @@ def controlled_commit(root, directory, paths, message, verify=None):
             if verify:
                 verify()
             # HEAD and all staged bytes are rechecked before publishing the exact cut.
-            if git(root, "rev-parse", "HEAD") != head or any((root / name).read_bytes() != raw for name, raw in snapshots.items()):
+            if git(root, "rev-parse", "HEAD") != head or any(
+                    ((root / name).read_bytes() if (root / name).exists() else None) != raw
+                    for name, raw in originals.items()):
                 raise ValueError("parallel record change; retain evidence and wake ops")
             commit = run("commit-tree", tree, "-p", head, input=(message + "\n\nCo-Authored-By: Codex gpt-6.1-sol <noreply@openai.com>\n").encode())
             run("update-ref", "HEAD", commit, head)
+            for name in appends or {}:
+                atomic(root / name, snapshots[name])
             # The empty index was locked throughout; install the matching index without touching worktree bytes.
             remaining = memoryview(private.read_bytes())
             while remaining:
@@ -200,6 +209,25 @@ def close_pending(root, directory, enqueue):
             fcntl.flock(lock, fcntl.LOCK_EX | fcntl.LOCK_NB)
         except BlockingIOError:
             return
+
+        def attention(path, row, error):
+            row.update(state="attention", reason=str(error), finished=stamp())
+            save(path, row)
+            event = enqueue("ordinary-close-attention", f"普通批次 {row['batch']} 自动收尾停止：{error}。原件 {path}；保持原报告/失败/父要求，不重复 dataset 或合入。")
+            row.update(ops_event_enqueued=True, event=event)
+            save(path, row)
+
+        def validate(row):
+            proof = eligible(root, directory, row["original_batch"], row["report"])
+            if proof["report"] != row["proof"]["report"] or proof["report_sha256"] != row["proof"]["report_sha256"]:
+                raise ValueError("completion report changed before close")
+            return ledger_check(root, [row])
+
+        class CandidateFailure(ValueError):
+            def __init__(self, path, row, error):
+                super().__init__(str(error))
+                self.path, self.row = path, row
+
         candidates = []
         for path in sorted((directory / "ordinary-close").glob("*.json")):
             if path.name.endswith(".invalid.json"):
@@ -219,21 +247,38 @@ def close_pending(root, directory, enqueue):
                     event = enqueue("ordinary-close-attention", f"普通收尾回执不可读：{path}；{error}。保留原件，交原 ops。")
                     save(side, {"state": "attention", "source": str(path), "at": stamp(), "event": event})
                 continue
-            if candidate.get("state") in ("pending", "running"):
-                candidates.append((path, candidate))
+            if candidate["state"] == "closed":
+                continue
+            if candidate["state"] == "attention":
+                # Only an untouched pre-dataset failure can re-enter the original guards.
+                # Even a null side-effect marker or an existing log requires ops inspection.
+                if (any(key in candidate for key in ("started", "dataset_attempts", "dataset", "records"))
+                        or candidate.get("reason", "").startswith("interrupted close has ambiguous side effects")
+                        or (path.parent / (candidate["batch"] + ".dataset.log")).exists()):
+                    continue
+            try:
+                if candidate["state"] == "running":
+                    raise ValueError("interrupted close has ambiguous side effects; ops must inspect original receipt")
+                audit = validate(candidate)
+            except (OSError, ValueError, KeyError, TypeError, subprocess.SubprocessError) as error:
+                if candidate["state"] != "attention":
+                    attention(path, candidate, error)
+                continue
+            if candidate["state"] == "attention":
+                # Preserve the entire old failure, including its actual event and frozen proof.
+                history = candidate.setdefault("attempt_history", [])
+                history.append({key: value for key, value in candidate.items() if key != "attempt_history"})
+                for key in ("reason", "finished", "event", "ops_event_enqueued"):
+                    candidate.pop(key, None)
+                candidate.update(state="pending", ops_event_enqueued=False)
+                save(path, candidate)
+            candidate["ledger"] = audit
+            candidates.append((path, candidate))
         if not candidates:
             return
         try:
-            if any(row["state"] == "running" for _, row in candidates):
-                raise ValueError("interrupted close has ambiguous side effects; ops must inspect original receipt")
-            for _, row in candidates:
-                eligible(root, directory, row["original_batch"], row["report"])
-                proof = row["proof"]
-                if hashlib.sha256(Path(proof["report"]).read_bytes()).hexdigest() != proof["report_sha256"]:
-                    raise ValueError("completion report changed before close")
-            audit = ledger_check(root, [row for _, row in candidates])
             for path, row in candidates:
-                row.update(state="running", ledger=audit, started=stamp(), dataset_attempts=1)
+                row.update(state="running", started=stamp(), dataset_attempts=1)
                 save(path, row)
             log = directory / "ordinary-close" / (candidates[0][1]["batch"] + ".dataset.log")
             with log.open("w") as handle:
@@ -241,31 +286,47 @@ def close_pending(root, directory, enqueue):
                                         cwd=root, stdout=handle, stderr=subprocess.STDOUT, timeout=3600)
             if result.returncode:
                 raise ValueError(f"dataset exit {result.returncode}; original log {log}")
-            for _, row in candidates:
-                eligible(root, directory, row["original_batch"], row["report"])
-            ledger_check(root, [row for _, row in candidates])
+            ready = []
+            for path, row in candidates:
+                try:
+                    validate(row)
+                except (OSError, ValueError, KeyError, TypeError, subprocess.SubprocessError) as error:
+                    attention(path, row, error)
+                else:
+                    ready.append((path, row))
+            candidates = ready
+            if not candidates:
+                return
             # Only the generator's tracked, current outputs are eligible; history/raw/knowledge stay untouched.
             generated = git(root, "ls-files", "paper/data/*", "paper/materials/*/cost.md", "paper/materials/cost.md").splitlines()
             paths = [*RECORDS, *(name for name in generated if not name.startswith("paper/data/history/"))]
-            record = root / "paper/materials/ordinary-completions.jsonl"
-            with record.open("a") as handle:
-                for path, row in candidates:
-                    handle.write(json.dumps({"at": stamp(), "batch": row["batch"], "task": row["task"], "result": "clean-no-source",
-                                             "report": row["proof"], "receipt": str(path), "ledger": audit, "dataset": str(log)}, ensure_ascii=False) + "\n")
+            record = "paper/materials/ordinary-completions.jsonl"
             def verify():
-                ledger_check(root, [row for _, row in candidates])
-                for _, row in candidates:
-                    eligible(root, directory, row["original_batch"], row["report"])
-            commit = controlled_commit(root, directory, [*paths, "paper/materials/ordinary-completions.jsonl"],
-                                       "Record clean ordinary completions: " + ", ".join(row["batch"] for _, row in candidates), verify)
+                for path, row in candidates:
+                    try:
+                        validate(row)
+                    except (OSError, ValueError, KeyError, TypeError, subprocess.SubprocessError) as error:
+                        raise CandidateFailure(path, row, error) from error
+            # Validation can race with source/report updates even at the final Git guard.
+            # Prepare record appends privately so a rejected candidate leaves no clean receipt.
+            while candidates:
+                lines = b"".join((json.dumps({"at": stamp(), "batch": row["batch"], "task": row["task"], "result": "clean-no-source",
+                                              "report": row["proof"], "receipt": str(path), "ledger": row["ledger"], "dataset": str(log)},
+                                             ensure_ascii=False) + "\n").encode() for path, row in candidates)
+                try:
+                    commit = controlled_commit(root, directory, [*paths, record],
+                                               "Record clean ordinary completions: " + ", ".join(row["batch"] for _, row in candidates),
+                                               verify, appends={record: lines})
+                    break
+                except CandidateFailure as error:
+                    attention(error.path, error.row, error)
+                    candidates = [(path, row) for path, row in candidates if path != error.path]
+            if not candidates:
+                return
             for path, row in candidates:
                 row.update(state="closed", finished=stamp(), dataset={"rc": 0, "log": str(log), "sha256": hashlib.sha256(log.read_bytes()).hexdigest()},
                            records=commit, ops_event_enqueued=False)
                 save(path, row)
         except (OSError, ValueError, KeyError, TypeError, subprocess.SubprocessError) as error:
             for path, row in candidates:
-                row.update(state="attention", reason=str(error), finished=stamp())
-                save(path, row)
-                event = enqueue("ordinary-close-attention", f"普通批次 {row['batch']} 自动收尾停止：{error}。原件 {path}；保持原报告/失败/父要求，不重复 dataset 或合入。")
-                row.update(ops_event_enqueued=True, event=event)
-                save(path, row)
+                attention(path, row, error)

@@ -46,7 +46,7 @@ def artifact(root, ref):
     return raw
 
 
-def ack_request(root, state, notice, payload):
+def ack_request(root, state, notice, payload, manual_source=None):
     """Resolve delivery ownership before writing any ACK; ordinary notices have no learning parent."""
     token = digest(canonical([notice.get("request_sha256"), notice.get("kind"), notice.get("message")]))[:24]
     feature = notice.get("source_kind") in ("feature", "boss-sim")
@@ -59,6 +59,11 @@ def ack_request(root, state, notice, payload):
         raise ValueError("notice identity or frozen content mismatch")
     request_id = notice.get("request_id")
     record = state.get("learning_requests", {}).get(request_id)
+    if manual_source is not None:
+        if record is not None or any(key in notice for key in
+                ("source_kind", "notification_only", "registered_learning_request")):
+            raise ValueError("manual provenance cannot override an existing notification scope")
+        return ack_manual_notice(root, notice, payload, manual_source)
     if record is not None:
         if feature or notice.get("notification_only") is True or notice.get("registered_learning_request") is False:
             raise ValueError("ordinary notification scope conflicts with a registered learning request")
@@ -88,6 +93,61 @@ def ack_request(root, state, notice, payload):
             or notice.get("character", character) != character
             or payload.get("character", character) != character):
         raise ValueError("unknown proposal or mismatched character/proposal SHA")
+    return None
+
+
+def ack_manual_notice(root, notice, payload, source):
+    """Authenticate old manual V6 notices without inventing a parent or editing their scope."""
+    tasks = {"v6-direction-experience", "v6-reflex-distill", "v6-build-cores"}
+    if (not isinstance(source, dict) or source.get("schema") != "manual-learning-notice-v1"
+            or source.get("request_id") != notice.get("request_id")
+            or source.get("task") not in tasks or source.get("character") != "silent"
+            or payload.get("character", "silent") != "silent"
+            or notice.get("kind") not in ("learner-dissent", "disagreement")
+            or not UUID.fullmatch(source.get("thread_id", ""))):
+        raise ValueError("manual notice request, task, character or thread mismatch")
+    root = Path(root).resolve()
+    tree = Path(source["worktree"])
+    if not tree.is_absolute() or tree.parent != root / ".worktrees":
+        raise ValueError("manual notice worktree outside project")
+
+    def read(ref, parent, suffix):
+        path = root / ref["path"]
+        if (".." in path.parts or not path.is_relative_to(parent) or path.suffix != suffix
+                or any(p.is_symlink() for p in (path, *path.parents))):
+            raise ValueError("manual notice source outside original layout")
+        return artifact(root, ref)
+
+    log = root / source["original_log"]["path"]
+    if log.parent not in (root / "learner/runs", tree / "learner/runs"):
+        raise ValueError("manual notice event log outside learner runs")
+    events = [json.loads(line) for line in read(source["original_log"], log.parent, ".jsonl").splitlines()
+              if line.strip()]
+    launches = [event for event in events if event.get("type") == "learner_launch"]
+    summaries = [event for event in events if event.get("type") == "learner_summary"]
+    threads = {event.get("thread_id") for event in events if event.get("type") == "thread.started"}
+    if len(launches) != 1 or len(summaries) != 1 or threads != {source["thread_id"]}:
+        raise ValueError("manual notice launch, completion or thread is missing or ambiguous")
+    launch = launches[0]
+    params = launch.get("params", {})
+    scratch = log.with_suffix("")
+    if (launch.get("engine") != "codex" or launch.get("task") != source["task"]
+            or launch.get("cwd") != str(tree) or params.get("worktree") != str(tree)
+            or params.get("scratch") != str(scratch) or params.get("batch") != source.get("batch")
+            or summaries[0].get("exit_code") != 0
+            or source["request_id"] not in launch.get("prompt", "")):
+        raise ValueError("manual notice original batch or completed launch mismatch")
+    inputs = source["input"]
+    if root / inputs["path"] != Path(params.get("evidence", "")):
+        raise ValueError("manual notice input is not the original launch input")
+    frozen = json.loads(read(inputs, root / "ops/codex-ops/learner", ".json"))
+    if any(frozen.get(key) != source.get(key) for key in ("request_id", "batch", "task", "character")):
+        raise ValueError("manual notice frozen input identity mismatch")
+    original = read(source["original_message"], scratch, ".json")
+    if ((root / source["original_message"]["path"]).parent != scratch
+            or notice.get("request_sha256") not in (digest(original), inputs["sha256"])
+            or not contains_original(original, notice.get("message", "").encode("utf8"), inline=True)):
+        raise ValueError("manual notice producer words or SHA mismatch")
     return None
 
 
@@ -160,7 +220,7 @@ def ack_legacy_continuation(root, state, notice, payload):
     return None
 
 
-def contains_original(original, sent):
+def contains_original(original, sent, inline=False):
     """Permit complete JSON pretty-printing, while retaining every original key and value."""
     if original and original in sent:
         return True
@@ -169,7 +229,7 @@ def contains_original(original, sent):
         if not isinstance(value, (dict, list)) or not value:
             return False
         text = sent.decode("utf8")
-        for match in re.finditer(r"(?m)^[ \t]*[\[{]", text):
+        for match in re.finditer(r"[\[{]" if inline else r"(?m)^[ \t]*[\[{]", text):
             try:
                 candidate, _ = json.JSONDecoder().raw_decode(text[match.start():].lstrip())
                 if canonical(candidate) == canonical(value):
@@ -811,7 +871,7 @@ def main():
     parser.add_argument("--stage", choices=("ops_forwarded", "watcher_received", "roy_notified"))
     parser.add_argument("--request")
     parser.add_argument("--receipt")
-    parser.add_argument("--source")
+    parser.add_argument("--source", help="feature registration source, or original manual V6 provenance for ack")
     parser.add_argument("--kind", choices=("disagreement", "blocked"), default="disagreement")
     args = parser.parse_args()
     root = Path(os.environ.get("CODEX_OPS_ROOT") or Path(__file__).resolve().parent.parent)
@@ -902,7 +962,14 @@ def main():
             if previous and not notice.get(previous):
                 parser.error("previous delivery stage has no receipt")
             try:
-                rec = ack_request(root, state, notice, payload)
+                manual_source = None
+                if args.source:
+                    source_path = root / args.source
+                    if (not source_path.resolve().is_relative_to(root.resolve())
+                            or any(p.is_symlink() for p in (source_path, *source_path.parents))):
+                        raise ValueError("manual provenance must be an original project file")
+                    manual_source = json.loads(source_path.read_bytes())
+                rec = ack_request(root, state, notice, payload, manual_source)
                 # A truthy pointer is not a verified delivery. Recheck the entire preceding chain.
                 stages = ("ops_forwarded", "watcher_received", "roy_notified")
                 for stage in stages[:stages.index(args.stage)]:
