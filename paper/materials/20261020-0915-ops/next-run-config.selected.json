@@ -1,0 +1,95 @@
+{
+  "source": "logs/run-config.jsonl",
+  "offset": 2185753,
+  "bytes": 7123,
+  "sha256": "c01f8b85aeff506b57c64bdf30711d28d4a798f38b59b65930c4f711f5d08ff0",
+  "selected_readback": {
+    "ts": "2026-10-20T01:14:48.428Z",
+    "run_id": "T12TSEMGUU7F",
+    "ascension": 10,
+    "character": "SILENT",
+    "floor": 1,
+    "restart": false,
+    "process": {
+      "pid": 1344440,
+      "started": "2026-10-20T01:14:43.617Z"
+    },
+    "code": {
+      "commit": "c351dbe7b5603bbb591e0f63d88be32fa60df56f",
+      "code": "c351dbe+dirty",
+      "dirty": true,
+      "dirty_files": [
+        "knowledge/catalog.json",
+        "knowledge/characters/silent/boss-damage.json",
+        "knowledge/characters/silent/construction-opportunities.json",
+        "knowledge/characters/silent/fight-value-gates.json",
+        "knowledge/characters/silent/fight-value.json",
+        "knowledge/characters/silent/monster-records.json",
+        "knowledge/characters/silent/outcome-stats.json",
+        "knowledge/characters/silent/potion-equivalents.json",
+        "knowledge/characters/silent/room-costs.json",
+        "knowledge/common/card-upgrades.json",
+        "knowledge/common/enemies/AEONGLASS/mechanics-observed.json",
+        "knowledge/common/enemies/ASSASSIN_RUBY_RAIDER/mechanics-observed.json",
+        "knowledge/common/enemies/AXEBOT/mechanics-observed.json",
+        "knowledge/common/enemies/AXE_RUBY_RAIDER/mechanics-observed.json",
+        "knowledge/common/enemies/BOWLBUG_EGG/mechanics-observed.json",
+        "knowledge/common/enemies/BOWLBUG_NECTAR/mechanics-observed.json",
+        "knowledge/common/enemies/BOWLBUG_ROCK/mechanics-observed.json",
+        "knowledge/common/enemies/BOWLBUG_SILK/mechanics-observed.json",
+        "knowledge/common/enemies/BRUTE_RUBY_RAIDER/mechanics-observed.json",
+        "knowledge/common/enemies/BYGONE_EFFIGY/mechanics-observed.json"
+      ],
+      "branch": "live",
+      "worktree": "live"
+    },
+    "v6": {
+      "schema": "v6-config-v1",
+      "mode": "on",
+      "deciders": {
+        "card": "jev",
+        "potion": "jev",
+        "shop": "jev",
+        "rest": "jev"
+      },
+      "reflex": "off",
+      "admission": "interfaces_only",
+      "delivered": false,
+      "samples_pick": 20,
+      "samples_act": 100,
+      "min_known_option_ratio": 0.5,
+      "direction_min_weight": 0.1,
+      "win": {
+        "certain_win": 0.95,
+        "favored": 0.7,
+        "even": 0.3,
+        "unfavored": 0.05
+      },
+      "delta": {
+        "much_se": 2,
+        "better_se": 1,
+        "much_min": 0.05
+      },
+      "triggers": {
+        "t1_core_min": 0.3,
+        "t2_se": 2,
+        "t2_min_delta": 0.05,
+        "t2_consecutive": 2,
+        "t3_weight_max": 0.2,
+        "t5_hazard": "existing_route_projection",
+        "t6_unknown_max": 0.5,
+        "t6_fallbacks": 2,
+        "t7_checkpoint": "validated_brain_answer"
+      },
+      "budgets": {
+        "brain_soft_cap": 15,
+        "brain_ms": 90000,
+        "act_ms": 60000,
+        "pick_ms": 5000,
+        "jev_ms": 5000
+      },
+      "invalid": []
+    }
+  },
+  "credentials_omitted": true
+}

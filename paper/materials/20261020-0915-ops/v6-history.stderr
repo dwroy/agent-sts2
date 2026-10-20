@@ -1,0 +1,10 @@
+/home/dw/Projects/agent-sts2/.worktrees/live/agent/tools/v6/freeze-history.ts:38
+  const result = validate(schema, value); if (!result.ok) throw new Error(`${name}: ${result.issues.slice(0, 10).join("; ")}`); return result.value;
+                                                                ^
+
+Error: opportunities: $.rows[4583].source.offset: finite integer 0..1000000000; $.rows[4584].source.offset: finite integer 0..1000000000
+    at checked (/home/dw/Projects/agent-sts2/.worktrees/live/agent/tools/v6/freeze-history.ts:38:65)
+    at <anonymous> (/home/dw/Projects/agent-sts2/.worktrees/live/agent/tools/v6/freeze-history.ts:72:23)
+    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+
+Node.js v22.23.3

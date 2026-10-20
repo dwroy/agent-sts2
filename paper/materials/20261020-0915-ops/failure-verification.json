@@ -1,0 +1,218 @@
+{
+  "at": "2026-10-20T09:18:10+08:00",
+  "refresh_receipt": {
+    "path": "ops/codex-ops/v6-refresh/silent/refresh-8ltr96g5/receipt.json",
+    "bytes": 111891,
+    "sha256": "8fd550c01b2b4247b5f60e2bef2c4950cc3164626611cfae2a31f5f4c2ee206a"
+  },
+  "status": "failed",
+  "ended_at": "2026-10-20T01:14:27.627Z",
+  "published": null,
+  "production_consumption": null,
+  "steps": [
+    {
+      "name": "validate-cores",
+      "exit": 0
+    },
+    {
+      "name": "combo-metrics",
+      "exit": 0
+    },
+    {
+      "name": "v6-history",
+      "exit": 1
+    }
+  ],
+  "frozen_small_logs_verified": [
+    {
+      "step": "validate-cores",
+      "stream": "stdout",
+      "path": "/home/dw/Projects/agent-sts2/ops/codex-ops/v6-refresh/silent/refresh-8ltr96g5/validate-cores.stdout",
+      "bytes": 247,
+      "sha256": "060ee839e48eccb0331204c2b2722d079f49c25ee79545cc20b78a05324971d9",
+      "actual_SHA_verified": true
+    },
+    {
+      "step": "validate-cores",
+      "stream": "stderr",
+      "path": "/home/dw/Projects/agent-sts2/ops/codex-ops/v6-refresh/silent/refresh-8ltr96g5/validate-cores.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "actual_SHA_verified": true
+    },
+    {
+      "step": "combo-metrics",
+      "stream": "stdout",
+      "path": "/home/dw/Projects/agent-sts2/ops/codex-ops/v6-refresh/silent/refresh-8ltr96g5/combo-metrics.stdout",
+      "bytes": 138,
+      "sha256": "dbc7c5cb0d65976d47ff241f525a22187298dcd0841f7e0bb900df2aa52ca71a",
+      "actual_SHA_verified": true
+    },
+    {
+      "step": "combo-metrics",
+      "stream": "stderr",
+      "path": "/home/dw/Projects/agent-sts2/ops/codex-ops/v6-refresh/silent/refresh-8ltr96g5/combo-metrics.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "actual_SHA_verified": true
+    },
+    {
+      "step": "v6-history",
+      "stream": "stdout",
+      "path": "/home/dw/Projects/agent-sts2/ops/codex-ops/v6-refresh/silent/refresh-8ltr96g5/v6-history.stdout",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "actual_SHA_verified": true
+    },
+    {
+      "step": "v6-history",
+      "stream": "stderr",
+      "path": "/home/dw/Projects/agent-sts2/ops/codex-ops/v6-refresh/silent/refresh-8ltr96g5/v6-history.stderr",
+      "bytes": 741,
+      "sha256": "6898187d6279dc78791b1f0c5952c4be75d0580b21f2974a59ab9381ea62063a",
+      "actual_SHA_verified": true
+    }
+  ],
+  "actual_failure": "v6OpportunitySchema source.offset uses count=number(0,1e9,true); legitimate brain.jsonl byte offsets above1GB rejected",
+  "schema_source": "agent/src/sim/v6-history-pack.ts:11,30",
+  "actual_source_ranges": [
+    {
+      "index": 4583,
+      "id": "3f47d9b753be61860c58a1d4",
+      "run_id": "MWMR855QHTWR",
+      "kind": "reward",
+      "ts": "2026-10-20T00:16:01.696Z",
+      "source_log": "logs/brain.jsonl",
+      "source": {
+        "offset": 1090247640,
+        "bytes": 83745,
+        "sha256": "d63cd33162a5cda1406a9e9bb647bf338b1bcc319a1afc7c21231505aa2f6326"
+      },
+      "actual_original_range_SHA_verified": true,
+      "original_log_not_modified": true
+    },
+    {
+      "index": 4584,
+      "id": "f864c687d6ca1ae3272ae163",
+      "run_id": "MWMR855QHTWR",
+      "kind": "shop",
+      "ts": "2026-10-20T00:21:44.215Z",
+      "source_log": "logs/brain.jsonl",
+      "source": {
+        "offset": 1090398158,
+        "bytes": 239840,
+        "sha256": "222ff8dfdecfe86a2c145224767ceb13540daf2e9d756b95bccd20096e4a1d1e"
+      },
+      "actual_original_range_SHA_verified": true,
+      "original_log_not_modified": true
+    }
+  ],
+  "valid_byte_offsets_not_capped_rounded_zeroed_or_dropped": true,
+  "combos_step_result": {
+    "runs": 373,
+    "combos": 17,
+    "exit": 0,
+    "does_not_mean_published_or_all_values_known": true
+  },
+  "source_exclusions": {
+    "count": 6,
+    "counts_by_stream": {
+      "states": 3,
+      "decisions": 3
+    },
+    "strict_after_terminal": {
+      "frame_after_run_end": 1,
+      "decision_after_run_end": 1
+    },
+    "raw_logs_untouched": true
+  },
+  "live_previous_packet": {
+    "path": ".worktrees/live/knowledge/characters/silent/v6-history.json",
+    "bytes": 22156507,
+    "sha256": "aea1fcc9b9927118a5f8158cadb6940576d1b8db783084edaca1d6c182f205f6",
+    "same_as_previous_verified_packet": true
+  },
+  "next_run_naturally_admitted_by_original_autoplay": {
+    "run_id": "T12TSEMGUU7F",
+    "config_at": "2026-10-20T01:14:48.428Z",
+    "process": {
+      "pid": 1344440,
+      "started": "2026-10-20T01:14:43.617Z"
+    },
+    "commit": "c351dbe7b5603bbb591e0f63d88be32fa60df56f",
+    "dirty": true,
+    "dirty_files": [
+      "knowledge/catalog.json",
+      "knowledge/characters/silent/boss-damage.json",
+      "knowledge/characters/silent/construction-opportunities.json",
+      "knowledge/characters/silent/fight-value-gates.json",
+      "knowledge/characters/silent/fight-value.json",
+      "knowledge/characters/silent/monster-records.json",
+      "knowledge/characters/silent/outcome-stats.json",
+      "knowledge/characters/silent/potion-equivalents.json",
+      "knowledge/characters/silent/room-costs.json",
+      "knowledge/common/card-upgrades.json",
+      "knowledge/common/enemies/AEONGLASS/mechanics-observed.json",
+      "knowledge/common/enemies/ASSASSIN_RUBY_RAIDER/mechanics-observed.json",
+      "knowledge/common/enemies/AXEBOT/mechanics-observed.json",
+      "knowledge/common/enemies/AXE_RUBY_RAIDER/mechanics-observed.json",
+      "knowledge/common/enemies/BOWLBUG_EGG/mechanics-observed.json",
+      "knowledge/common/enemies/BOWLBUG_NECTAR/mechanics-observed.json",
+      "knowledge/common/enemies/BOWLBUG_ROCK/mechanics-observed.json",
+      "knowledge/common/enemies/BOWLBUG_SILK/mechanics-observed.json",
+      "knowledge/common/enemies/BRUTE_RUBY_RAIDER/mechanics-observed.json",
+      "knowledge/common/enemies/BYGONE_EFFIGY/mechanics-observed.json"
+    ],
+    "V6": {
+      "schema": "v6-config-v1",
+      "mode": "on",
+      "deciders": {
+        "card": "jev",
+        "potion": "jev",
+        "shop": "jev",
+        "rest": "jev"
+      },
+      "reflex": "off",
+      "admission": "interfaces_only",
+      "delivered": false,
+      "samples_pick": 20,
+      "samples_act": 100,
+      "min_known_option_ratio": 0.5,
+      "direction_min_weight": 0.1,
+      "win": {
+        "certain_win": 0.95,
+        "favored": 0.7,
+        "even": 0.3,
+        "unfavored": 0.05
+      },
+      "delta": {
+        "much_se": 2,
+        "better_se": 1,
+        "much_min": 0.05
+      },
+      "triggers": {
+        "t1_core_min": 0.3,
+        "t2_se": 2,
+        "t2_min_delta": 0.05,
+        "t2_consecutive": 2,
+        "t3_weight_max": 0.2,
+        "t5_hazard": "existing_route_projection",
+        "t6_unknown_max": 0.5,
+        "t6_fallbacks": 2,
+        "t7_checkpoint": "validated_brain_answer"
+      },
+      "budgets": {
+        "brain_soft_cap": 15,
+        "brain_ms": 90000,
+        "act_ms": 60000,
+        "pick_ms": 5000,
+        "jev_ms": 5000
+      },
+      "invalid": []
+    },
+    "restart": false,
+    "source_or_actor_not_restarted_by_ops_this_wake": true
+  },
+  "R3_live_deferred": "Original MWMR report and failed refresh finished, but the same authorized autoplay already entered T12; do not hot-replace uncached live entries. Continue original R3 at next natural boundary, no new approval condition.",
+  "new_refresh_model_check_or_dataset": false
+}

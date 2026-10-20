@@ -1,0 +1,190 @@
+{
+  "at": "2026-10-20T09:20:17+08:00",
+  "event": "2026-10-20 09:15 knowledge-refresh-failed",
+  "native_ops": "01a1517b-e200-7c52-b463-6ea22220c0a9 / w1H:p8",
+  "outcome": "original-refresh-failed-legitimate-byte-offset-over-schema-cap-previous-live-packet-preserved",
+  "original_refresh": "ops/codex-ops/v6-refresh/silent/refresh-8ltr96g5/receipt.json",
+  "original_terminal": {
+    "path": "paper/materials/20261020-0915-ops/refresh-receipt.original.json",
+    "bytes": 111891,
+    "sha256": "8fd550c01b2b4247b5f60e2bef2c4950cc3164626611cfae2a31f5f4c2ee206a"
+  },
+  "failure_evidence": {
+    "path": "paper/materials/20261020-0915-ops/failure-verification.json",
+    "bytes": 7502,
+    "sha256": "b8c879d68c32a6527f92cc04427d9cec788aa2066536747fa71fdc73137111c2"
+  },
+  "actual_stderr": {
+    "path": "paper/materials/20261020-0915-ops/v6-history.stderr",
+    "bytes": 741,
+    "sha256": "6898187d6279dc78791b1f0c5952c4be75d0580b21f2974a59ab9381ea62063a"
+  },
+  "frozen_input_manifest": {
+    "path": "paper/materials/20261020-0915-ops/history-inputs.original.json",
+    "bytes": 1186,
+    "sha256": "bd0624089d101abb5f418cd6b1639c997baf1dd65262de7abdcf27d24409d1e1"
+  },
+  "six_exclusion_original": {
+    "path": "paper/materials/20261020-0915-ops/source-exclusions.original.jsonl",
+    "bytes": 2206,
+    "sha256": "2998fd62360987296fb0dae9241213fb70fa99749ce55d22bb7a488b2f88db0a"
+  },
+  "next_run_config_selected": {
+    "path": "paper/materials/20261020-0915-ops/next-run-config.selected.json",
+    "bytes": 3103,
+    "sha256": "d6469f0a83056ffb6489501883a8d46b2137d829826d997c6401ef3ca948b7ee"
+  },
+  "watcher_delivery": {
+    "path": "paper/materials/20261020-0915-ops/watcher-delivery.json",
+    "bytes": 2301,
+    "sha256": "8dc683b5f38c1541b51964c8a5d434631f4924b0d0b81f1c3347cc5462ed095f"
+  },
+  "new_CLI0_not_native_read_or_role_ACK": true,
+  "original_refresh_ended": "2026-10-20T01:14:27.627Z",
+  "original_report_finished_log": "2026-10-20 09:14:30 finished run MWMR855QHTWR",
+  "steps": [
+    {
+      "name": "validate-cores",
+      "exit": 0
+    },
+    {
+      "name": "combo-metrics",
+      "exit": 0
+    },
+    {
+      "name": "v6-history",
+      "exit": 1
+    }
+  ],
+  "new_packet_published": false,
+  "previous_live_packet_sha256": "aea1fcc9b9927118a5f8158cadb6940576d1b8db783084edaca1d6c182f205f6",
+  "source_offsets": [
+    {
+      "index": 4583,
+      "id": "3f47d9b753be61860c58a1d4",
+      "run_id": "MWMR855QHTWR",
+      "kind": "reward",
+      "ts": "2026-10-20T00:16:01.696Z",
+      "source_log": "logs/brain.jsonl",
+      "source": {
+        "offset": 1090247640,
+        "bytes": 83745,
+        "sha256": "d63cd33162a5cda1406a9e9bb647bf338b1bcc319a1afc7c21231505aa2f6326"
+      },
+      "actual_original_range_SHA_verified": true,
+      "original_log_not_modified": true
+    },
+    {
+      "index": 4584,
+      "id": "f864c687d6ca1ae3272ae163",
+      "run_id": "MWMR855QHTWR",
+      "kind": "shop",
+      "ts": "2026-10-20T00:21:44.215Z",
+      "source_log": "logs/brain.jsonl",
+      "source": {
+        "offset": 1090398158,
+        "bytes": 239840,
+        "sha256": "222ff8dfdecfe86a2c145224767ceb13540daf2e9d756b95bccd20096e4a1d1e"
+      },
+      "actual_original_range_SHA_verified": true,
+      "original_log_not_modified": true
+    }
+  ],
+  "engineering_issue": "source.offset reuses count max1e9; actual safe integer byte offsets1090247640 and1090398158 fail validation. Do not drop valid rows or alter raw bytes.",
+  "engineering_continuation": "已转原watcher工程线，在当前W3固定检查自然停点后接精确byte offset/bytes schema边界修复与固定正反校验；不热改在途30输入，不新派模型/刷新或重复未变源full。修复未实现/验收，不据CLI投递冒交付。",
+  "publication_lock_free_at_one_completion_event_probe": true,
+  "current_mod_single_readback": {
+    "run_id": "T12TSEMGUU7F",
+    "screen": "EVENT",
+    "ascension": 10,
+    "native_profile_id": 1,
+    "prior_report_pid1182671_exited": true
+  },
+  "current_run_config": {
+    "run_id": "T12TSEMGUU7F",
+    "config_at": "2026-10-20T01:14:48.428Z",
+    "process": {
+      "pid": 1344440,
+      "started": "2026-10-20T01:14:43.617Z"
+    },
+    "commit": "c351dbe7b5603bbb591e0f63d88be32fa60df56f",
+    "dirty": true,
+    "dirty_files": [
+      "knowledge/catalog.json",
+      "knowledge/characters/silent/boss-damage.json",
+      "knowledge/characters/silent/construction-opportunities.json",
+      "knowledge/characters/silent/fight-value-gates.json",
+      "knowledge/characters/silent/fight-value.json",
+      "knowledge/characters/silent/monster-records.json",
+      "knowledge/characters/silent/outcome-stats.json",
+      "knowledge/characters/silent/potion-equivalents.json",
+      "knowledge/characters/silent/room-costs.json",
+      "knowledge/common/card-upgrades.json",
+      "knowledge/common/enemies/AEONGLASS/mechanics-observed.json",
+      "knowledge/common/enemies/ASSASSIN_RUBY_RAIDER/mechanics-observed.json",
+      "knowledge/common/enemies/AXEBOT/mechanics-observed.json",
+      "knowledge/common/enemies/AXE_RUBY_RAIDER/mechanics-observed.json",
+      "knowledge/common/enemies/BOWLBUG_EGG/mechanics-observed.json",
+      "knowledge/common/enemies/BOWLBUG_NECTAR/mechanics-observed.json",
+      "knowledge/common/enemies/BOWLBUG_ROCK/mechanics-observed.json",
+      "knowledge/common/enemies/BOWLBUG_SILK/mechanics-observed.json",
+      "knowledge/common/enemies/BRUTE_RUBY_RAIDER/mechanics-observed.json",
+      "knowledge/common/enemies/BYGONE_EFFIGY/mechanics-observed.json"
+    ],
+    "V6": {
+      "schema": "v6-config-v1",
+      "mode": "on",
+      "deciders": {
+        "card": "jev",
+        "potion": "jev",
+        "shop": "jev",
+        "rest": "jev"
+      },
+      "reflex": "off",
+      "admission": "interfaces_only",
+      "delivered": false,
+      "samples_pick": 20,
+      "samples_act": 100,
+      "min_known_option_ratio": 0.5,
+      "direction_min_weight": 0.1,
+      "win": {
+        "certain_win": 0.95,
+        "favored": 0.7,
+        "even": 0.3,
+        "unfavored": 0.05
+      },
+      "delta": {
+        "much_se": 2,
+        "better_se": 1,
+        "much_min": 0.05
+      },
+      "triggers": {
+        "t1_core_min": 0.3,
+        "t2_se": 2,
+        "t2_min_delta": 0.05,
+        "t2_consecutive": 2,
+        "t3_weight_max": 0.2,
+        "t5_hazard": "existing_route_projection",
+        "t6_unknown_max": 0.5,
+        "t6_fallbacks": 2,
+        "t7_checkpoint": "validated_brain_answer"
+      },
+      "budgets": {
+        "brain_soft_cap": 15,
+        "brain_ms": 90000,
+        "act_ms": 60000,
+        "pick_ms": 5000,
+        "jev_ms": 5000
+      },
+      "invalid": []
+    },
+    "restart": false,
+    "source_or_actor_not_restarted_by_ops_this_wake": true
+  },
+  "main": "19457238226845e7c459a1b5283f2dde7821b32e",
+  "live": "c351dbe7b5603bbb591e0f63d88be32fa60df56f",
+  "behavior_release_remains": "V6-R402",
+  "R3_next": "原MWMR报告/失败刷新已终局且原锁释放，但原授权autoplay已自然开启T12TSEMGUU7F；保持当前局与未缓存知识，R3沿原授权在下一自然边界窄运/85逐字段live读回/实际编号，不能现在热换。没有新增审批要求。",
+  "no_source_knowledge_packet_refresh_model_game_marker_or_STOP_mutation": true,
+  "969b_live_hold_W3_main_window_MC_Candle_branches_infra_failures_Regent_and_ACK_pending_preserved": true
+}
