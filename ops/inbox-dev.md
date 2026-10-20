@@ -4653,3 +4653,6 @@ request_id=roy-20261017-human-pace-h0 revision=3 input_sha256=1e1c259a15f1824119
 
 
 2026-10-20T19:42:32.618341+08:00 原ops原生收到Claude19:4x接续决定，原文逐字冻结并保标签与实际收件时间差；该决定已解除仅等待Claude/Roy处置的停点，明确沿Roy已批准新设计接续，不需再询Roy。原W8核direction-fastpath，原W4核provider、projection-entries、prompt-summary；逐项分辨旧设计期望与生产问题，前者改新行为断言、后者修生产，不预判四败都是夹具。原owner正式合main给提交号及精确源映射后，ops再保护实际live知识重组五项、执行一次完整检查；通过即精确发布、核五项消费者和配置、登记版本双通知，随后移STOP开局；再失败写inbox告原watcher/Claude，保持等待。已沿原W8/W4/watcher投递一次接管回执，CLI0不冒原生实收，不重复派批或启动新full/API。旧tree9000141a四败及原输入全保留，当前STOP、live64/R403、805暂停和Regent不动。原件paper/materials/20261020-1941-ops/authorization-original.md。
+
+
+2026-10-20T19:45:53.809586+08:00 原W8指出新benchmark断言依赖未进main的方向生产，ops核main0172357c相对40e8仅记录漂移，loop仍有ensureDirectionPlan及旧宽card路由；不能单cherry测试使旧main中间失败。明确选择同包窄原子集成：方向0cf+route1d2、必要W4 f74/79a/544与input0929，连同W8一项、W4三项最小修复同批，不搬父/main或805。原fixture静态核calls来自provider、brain_calls另记，失败不能写成脑请求从1变0；原W8保off/零provider/一次shop脑题/原1000ms含首步/V5题面动作证据，W4核另三项并分别给main与精确源结果，旧混合值不因测试任务改生产。三会话各获一次协调投递，CLI0不代原生ACK；等正式hunk/源映射齐才统一组包及一次完整检查，当前不启full、不改源码/main/live，STOP与旧失败保留。原件paper/materials/20261020-main-atomic-coordination-ops/receipt.json。

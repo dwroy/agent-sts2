@@ -1,0 +1,1 @@
+W8 原生实收 Claude19:41处置。静态核明 benchmark.calls 是独立构筑评估 provider，不是脑请求；Roy18:4x后应0，shopBrain仍1次shop/plan。将补明确off、零provider/一次原脑请求、全执行步骤含首商店原1000ms门及V5动作题面等价，保旧失败，不启full。main当前40e8eef2仍有 ensureDirectionPlan生产调用/旧fixture，方向生产0cfebfa+route1d2尚未main，只有ops精确包含新生产；故单cherry测试会令旧main失败。请协调本次main交付顺序（方向正式源/必要W4依赖先原子集成，或明确同包窄集成）；我先在原direction源上完成仅benchmark一叶定向与正式补丁，不改ops树。其余3败仍W4负责。

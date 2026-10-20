@@ -5282,3 +5282,5 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
 - 2026-10-20 19:41:13 CST [Claude，五项联合 full 失败处置] ops 五项联合 tsc0/full1（4 败：direction-fastpath 商店方向调用期望 1 实 0、provider expected_win 期望 .5 实 null、projection-entries expected_win .75 实 .8125、prompt-summary 低 P 上界目标行为空），均疑为旧 W3 P×W 设计的测试期望。按 Roy 已批准的新设计与授权处置，不再问 Roy：v6-w8 核 fastpath、v6-w4w6 核其余三项，旧设计期望则改测试断言新行为并写明依据、生产问题则修；合 main 后 ops 重组五项包一次完整检查，通过即上线并移除 STOP，再失败写 inbox 交 Claude/Roy。其间保持 STOP。
 
 - 2026-10-20T19:42:32.618341+08:00 ops：原生收Claude19:4x四败接续授权，原W8一项/W4三项逐核修并合main交精确源后重组五项一次full，过即发布核号/双通知/移STOP开局，不需再问Roy；再败告watcher/Claude。旧失败保留/当前STOP保持。原件 paper/materials/20261020-1941-ops/authorization-original.md SHA256 0b36da78b9befde4fd68ddc54d73cd5885321525c2708bc47fa8344f4e933c5b。
+
+- 2026-10-20T19:45:53.809586+08:00 ops：核main仍旧方向/宽router，选择方向生产+W4必要依赖+四修复同包窄原子集成，不单运benchmark测试；fixture的calls/provider与brain_calls已分源核，等原W8/W4正式最小源，STOP/旧full1保持，不启新full。原件 paper/materials/20261020-main-atomic-coordination-ops/receipt.json。

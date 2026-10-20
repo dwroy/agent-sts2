@@ -1,0 +1,1 @@
+W4 已实际接收 Claude19:4x 三项测试任务；新树 v6-joint-contract-tests-20261020（base40e8）。正在只读比对失败精确tree900与main，不启动full/API。已确认 projection-entries 同测试有 .8125/.75 矛盾，旧联合接口实际保留 P*Wk+(1-P)*W0；新A/B题面不消费混合值。将交最小测试hunk/源映射并分别核main与精确联合源，不把main定向冒联合full。

@@ -1,0 +1,37 @@
+{
+  "at": "2026-10-20T19:44:57.112546+08:00",
+  "choice": "same-package narrow atomic main integration; never benchmark test only on old production",
+  "main_observed": "0172357c95dfa121b21ffde99926ad1d015900f3",
+  "main_loop_sha256": "18a48d176cb30bc3a10b707d4e86359bd717e8c9475075ce2e3f67d565893ec4",
+  "only_record_drift_from_reported_main": [
+    "notes/for-roy.md",
+    "notes/ops-current-context.json",
+    "ops/codex-ops/pending-continuations/roy-JWJLSQXDKUA2-five-item-live-resume-gate.json",
+    "ops/inbox-dev.md",
+    "paper/materials/20261020-1941-ops/authorization-original.md",
+    "paper/materials/20261020-1941-ops/receipt.json",
+    "paper/materials/20261020-1941-ops/sts2-watcher-decision-delivery.json",
+    "paper/materials/20261020-1941-ops/v6-w4w6-decision-delivery.json",
+    "paper/materials/20261020-1941-ops/v6-w8-decision-delivery.json",
+    "paper/materials/decision-log.md"
+  ],
+  "main_old_production_calls_verified": [
+    "ensureDirectionPlan",
+    "routeV6CardDecision"
+  ],
+  "original_direction_source": "0cfebfa878a5ac2b5c19f7b817110a7eeb3f0e74",
+  "strict_route_source": "1d2d7f1cecb8329ff1590bbd533428f2a1faedb8",
+  "required_W4_base_source": "5446f181380a5b02669cc33babf65b440b852dbc",
+  "minimal_input_transport": "0929e4a700cc712c52fa48f7372c5f39d3c67b09 exact legacy-to-final patch, not plain cherry-pick",
+  "await_original_sources": [
+    "W8 benchmark one-leaf minimal patch with old threshold, source and combined contract evidence",
+    "W4 three failure minimal patches with main and exact joint evidence"
+  ],
+  "main_atomically_include_production_dependencies_and_repairs": true,
+  "ops_single_integration_coordinator": true,
+  "full_only_after_all_changed_sources_ready": true,
+  "no_full_or_source_main_or_live_changes_this_turn": true,
+  "prior_full1_and_input_unchanged": true,
+  "no_paused805_or_whole_main_transport": true,
+  "STOP_kept_and_no_new_model": true
+}
