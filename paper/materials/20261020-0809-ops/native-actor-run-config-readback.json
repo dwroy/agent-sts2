@@ -1,0 +1,82 @@
+{
+  "actual_resume_observed_at": "2026-10-20T00:11:10.008Z",
+  "same_original_run_id": "MWMR855QHTWR",
+  "same_run_restart": true,
+  "floor": 13,
+  "ascension": 10,
+  "actual_live_commit": "c2c54e5fb4453321cb6dcd304de00e9a3ac2422c",
+  "live_dirty": false,
+  "release_id": "V6-R402",
+  "native_herdr_actor": {
+    "pane": "w1H:p14",
+    "autoplay_pid": 965808,
+    "controller_pid": 965895,
+    "controller_cwd": "/home/dw/Projects/agent-sts2/.worktrees/live/agent",
+    "controller_start_ticks": 134700958,
+    "command_identifies_play": true
+  },
+  "actual_v6_config": {
+    "schema": "v6-config-v1",
+    "mode": "on",
+    "deciders": {
+      "card": "jev",
+      "potion": "jev",
+      "shop": "jev",
+      "rest": "jev"
+    },
+    "reflex": "off",
+    "admission": "interfaces_only",
+    "delivered": false,
+    "samples_pick": 20,
+    "samples_act": 100,
+    "min_known_option_ratio": 0.5,
+    "direction_min_weight": 0.1,
+    "win": {
+      "certain_win": 0.95,
+      "favored": 0.7,
+      "even": 0.3,
+      "unfavored": 0.05
+    },
+    "delta": {
+      "much_se": 2,
+      "better_se": 1,
+      "much_min": 0.05
+    },
+    "triggers": {
+      "t1_core_min": 0.3,
+      "t2_se": 2,
+      "t2_min_delta": 0.05,
+      "t2_consecutive": 2,
+      "t3_weight_max": 0.2,
+      "t5_hazard": "existing_route_projection",
+      "t6_unknown_max": 0.5,
+      "t6_fallbacks": 2,
+      "t7_checkpoint": "validated_brain_answer"
+    },
+    "budgets": {
+      "brain_soft_cap": 15,
+      "brain_ms": 90000,
+      "act_ms": 60000,
+      "pick_ms": 5000,
+      "jev_ms": 5000
+    },
+    "invalid": []
+  },
+  "COMBAT_ENTRIES_explicit_in_new_actor_shell": "on",
+  "COMBAT_ENTRIES_Jev_prompt_readback": "pending first combat prompt; run-config has no dedicated field",
+  "brain_requested_model": "gpt-6.1-sol",
+  "brain_requested_effort": "xhigh",
+  "actual_native_brain_turn_context": "not yet observed after recovery; config intent only",
+  "actual_model_names": {
+    "jev": "typesafe/jev-1.14",
+    "deepseek": "deepseek/deepseek-flash"
+  },
+  "Nova_actor_origin_verified": true,
+  "STOP_removed": true,
+  "old_fault_marker_preserved_sha256": "1e8ee3a27fbdcabe9c5a2698e2b70bc909147f13d45ff3792779613ffc92ed30",
+  "first_action_receipt": "first-real-action.json",
+  "post_resume_direction_elapsed_and_degradation": "not yet recorded; keep unknown, do not use smoke 2/4 as live-run count",
+  "known_projection_Jev": "not yet tested; only reported smoke unknown fallback accepted",
+  "no_main_live_sync_or_history_refresh": true,
+  "first_action_observed_at": "2026-10-20T00:12:14.607Z"
+}
