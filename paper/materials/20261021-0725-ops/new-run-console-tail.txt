@@ -1,0 +1,54 @@
+tached, probability=absent, 0 ms
+07:25:36 note Codex decides map/route-plan (3 options, floor 1, run context 5247 chars)
+07:26:02 note Codex (26.1 s) map/route-plan:  — 四火两店支撑两精英，兼顾补强与续航
+07:26:03 MAP             map/route-plan       -> choose_map_node (option_index=1) jev 0 ms | 10091 in
+         Codex planned: 四火两店支撑两精英，兼顾补强与续航 | route plan: r1c3 普通战 → r2c4 问号 → r3c4 普通战 → r4c5 普通战 → r5c5 普通战 → r6c5 休息 → r7c5 精英 → r8c4 休息 → r9c3 宝箱 → r10c3 商店 → r11c2 普通战 → r12c1 休息 → r13c2 精英 → r14c2 商店 → r15c3 休息 → r16c3 Boss
+07:26:03 note H1 idle preparation: {"status":"unknown","reason":"next_solver_input_not_observed_or_not_ready","budget_ms":400}
+07:26:03 wait COMBAT: waiting on COMBAT (transition, animation, or nothing legal yet)
+07:26:04 note H1 idle preparation: {"status":"unknown","reason":"next_solver_input_not_observed_or_not_ready","budget_ms":400}
+07:26:04 note H1 idle preparation: {"status":"unknown","reason":"next_solver_input_not_observed_or_not_ready","budget_ms":400}
+07:26:05 note H1 idle preparation: {"status":"unknown","reason":"next_solver_input_not_observed_or_not_ready","budget_ms":400}
+07:26:05 note H1 idle preparation: {"status":"prepared","basis":"exact_observed_input_only","nodes":24,"partial":false,"reused":false,"budget_ms":400}
+07:26:08 COMBAT          combat/plan-choice   -> play_card (card_index=0, target_index=0) conf 0.94 jev 2.04 s | 3835 in
+         Jev chose plan 1/3 (打击 -> 蟾蜍蝌蚪 #1, 打击 -> 蟾蜍蝌蚪 #1, 防御) with confidence 0.94; code rank 1
+07:26:09 note H1 idle preparation: {"status":"unknown","reason":"next_solver_input_not_observed_or_not_ready","budget_ms":400}
+07:26:09 wait COMBAT: waiting on COMBAT (transition, animation, or nothing legal yet)
+07:26:09 COMBAT          combat/plan-continue -> play_card (card_index=0, target_index=0) jev 0 ms | 0 in
+         continuing the Jev-chosen plan: 打击 -> 蟾蜍蝌蚪 #1
+07:26:09 note H1 idle preparation: {"status":"unknown","reason":"next_solver_input_not_observed_or_not_ready","budget_ms":400}
+07:26:09 wait COMBAT: waiting on COMBAT (transition, animation, or nothing legal yet)
+07:26:10 COMBAT          combat/plan-continue -> play_card (card_index=2) jev 0 ms | 0 in
+         continuing the Jev-chosen plan: 防御
+07:26:10 note H1 idle preparation: {"status":"unknown","reason":"next_solver_input_not_observed_or_not_ready","budget_ms":400}
+07:26:10 wait COMBAT: waiting on COMBAT (transition, animation, or nothing legal yet)
+07:26:11 COMBAT          combat/plan          -> end_turn jev 0 ms | 0 in
+         code plan (only line): end turn; hp -3, dmg 0
+07:26:11 note H1 idle preparation: {"status":"unknown","reason":"next_solver_input_not_observed_or_not_ready","budget_ms":400}
+07:26:11 wait COMBAT: waiting on COMBAT (transition, animation, or nothing legal yet)
+07:26:12 note H1 idle preparation: {"status":"unknown","reason":"next_solver_input_not_observed_or_not_ready","budget_ms":400}
+07:26:12 note H1 idle preparation: {"status":"unknown","reason":"next_solver_input_not_observed_or_not_ready","budget_ms":400}
+07:26:13 note H1 idle preparation: {"status":"unknown","reason":"next_solver_input_not_observed_or_not_ready","budget_ms":400}
+07:26:13 note H1 idle preparation: {"status":"unknown","reason":"next_solver_input_not_observed_or_not_ready","budget_ms":400}
+07:26:13 note H1 idle preparation: {"status":"unknown","reason":"next_solver_input_not_observed_or_not_ready","budget_ms":400}
+07:26:14 note H1 idle preparation: {"status":"unknown","reason":"next_solver_input_not_observed_or_not_ready","budget_ms":400}
+07:26:14 note H1 idle preparation: {"status":"unknown","reason":"next_solver_input_not_observed_or_not_ready","budget_ms":400}
+07:26:15 note H1 idle preparation: {"status":"prepared","basis":"exact_observed_input_only","nodes":83,"partial":false,"reused":false,"budget_ms":400}
+07:26:18 COMBAT          combat/plan-choice   -> play_card (card_index=0) conf 0.97 jev 2.20 s | 5627 in
+         Jev chose plan 5/5 (防御, 中和 -> 蟾蜍蝌蚪 #1, 打击 -> 蟾蜍蝌蚪 #1, 生存者) with confidence 0.97; code rank - (rollout's best line, added)
+07:26:18 note H1 idle preparation: {"status":"unknown","reason":"next_solver_input_not_observed_or_not_ready","budget_ms":400}
+07:26:18 wait COMBAT: waiting on COMBAT (transition, animation, or nothing legal yet)
+07:26:19 COMBAT          combat/plan-continue -> play_card (card_index=1, target_index=0) jev 0 ms | 0 in
+         continuing the Jev-chosen plan: 中和 -> 蟾蜍蝌蚪 #1
+07:26:19 note H1 idle preparation: {"status":"unknown","reason":"next_solver_input_not_observed_or_not_ready","budget_ms":400}
+07:26:19 wait COMBAT: waiting on COMBAT (transition, animation, or nothing legal yet)
+07:26:20 COMBAT          combat/plan-continue -> play_card (card_index=2, target_index=0) jev 0 ms | 0 in
+         continuing the Jev-chosen plan: 打击 -> 蟾蜍蝌蚪 #1
+07:26:20 note H1 idle preparation: {"status":"unknown","reason":"next_solver_input_not_observed_or_not_ready","budget_ms":400}
+07:26:20 wait COMBAT: waiting on COMBAT (transition, animation, or nothing legal yet)
+07:26:21 COMBAT          combat/plan-continue -> play_card (card_index=0) jev 0 ms | 0 in
+         continuing the Jev-chosen plan: 生存者
+07:26:21 note H1 idle preparation: {"status":"unknown","reason":"next_solver_input_not_observed_or_not_ready","budget_ms":400}
+07:26:21 wait COMBAT: waiting on COMBAT (transition, animation, or nothing legal yet)
+07:26:21 note H1 idle preparation: {"status":"unknown","reason":"next_solver_input_not_observed_or_not_ready","budget_ms":400}
+07:26:22 note H1 idle preparation: {"status":"unknown","reason":"next_solver_input_not_observed_or_not_ready","budget_ms":400}
+07:26:22 note H1 idle preparation: {"status":"unknown","reason":"next_solver_input_not_observed_or_not_ready","budget_ms":400}

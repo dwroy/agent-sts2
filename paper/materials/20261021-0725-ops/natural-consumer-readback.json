@@ -1,0 +1,238 @@
+{
+  "at": "2026-10-21T07:26:22+08:00",
+  "run_id": "CESK0EFSJ2C4",
+  "config": {
+    "schema": "v6-config-v1",
+    "mode": "on",
+    "deciders": {
+      "card": "brain",
+      "potion": "brain",
+      "shop": "brain",
+      "rest": "brain"
+    },
+    "reflex": "off",
+    "direction_replan": "off",
+    "admission": "interfaces_only",
+    "delivered": false,
+    "samples_pick": 20,
+    "samples_act": 100,
+    "min_known_option_ratio": 0.5,
+    "direction_min_weight": 0.1,
+    "win": {
+      "certain_win": 0.95,
+      "favored": 0.7,
+      "even": 0.3,
+      "unfavored": 0.05
+    },
+    "delta": {
+      "much_se": 2,
+      "better_se": 1,
+      "much_min": 0.05
+    },
+    "triggers": {
+      "t1_core_min": 0,
+      "t2_se": 2,
+      "t2_min_delta": 1,
+      "t2_consecutive": 2,
+      "t3_weight_max": 0,
+      "t5_hazard": "existing_route_projection",
+      "t6_unknown_max": 1,
+      "t6_fallbacks": 100,
+      "t7_checkpoint": "validated_brain_answer"
+    },
+    "budgets": {
+      "brain_soft_cap": 15,
+      "brain_ms": 90000,
+      "act_ms": 60000,
+      "pick_ms": 5000,
+      "jev_ms": 5000
+    },
+    "invalid": []
+  },
+  "original_code_metadata": {
+    "commit": null,
+    "code": null,
+    "dirty": null,
+    "dirty_files": [],
+    "branch": null,
+    "worktree": "live",
+    "error": "git status failed: spawnSync git ENOBUFS"
+  },
+  "code_metadata_not_rewritten": true,
+  "actual_live_independently_git_verified": "cf4aff4ceebd958ad70b1512cc886c45bd8092aa",
+  "evidence": [
+    {
+      "path": "logs/run-config.jsonl",
+      "offset": 2349089,
+      "bytes": 6029,
+      "sha256": "2d096d7a44f3764524c23313719491a1f2a8cbd45129be11f575c26c1ffcca09",
+      "frozen": "run-config.jsonl.window-0.json",
+      "ts": "2026-10-20T23:25:14.468Z",
+      "run_id": "CESK0EFSJ2C4",
+      "label": null,
+      "chosen": null
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 3172119945,
+      "bytes": 71498,
+      "sha256": "6b37f2755450cbaf5f7fc2657256e50886df4e3de3b6cd27dcb9bf1723eb28f8",
+      "frozen": "decisions.jsonl.window-0.json",
+      "ts": "2026-10-20T23:25:35.451Z",
+      "run_id": "CESK0EFSJ2C4",
+      "label": "event/choose",
+      "chosen": {
+        "action": "choose_event_option",
+        "option_index": 0
+      }
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 3172265031,
+      "bytes": 2026,
+      "sha256": "3faa63f23eb9b040615476e7d3212c6ae9af096a2df7a6649c866a72b38f1926",
+      "frozen": "decisions.jsonl.window-1.json",
+      "ts": "2026-10-20T23:26:21.156Z",
+      "run_id": "CESK0EFSJ2C4",
+      "label": "combat/plan-continue",
+      "chosen": {
+        "action": "play_card",
+        "card_index": 0
+      }
+    },
+    {
+      "path": "logs/v6-core-cache.jsonl",
+      "offset": 0,
+      "bytes": 440,
+      "sha256": "918e501afed3baf426f7d0f59ec67f99e7e6f9dec57eb74df06940677cb68ea8",
+      "frozen": "v6-core-cache.jsonl.window-0.json",
+      "ts": "2026-10-20T23:25:21.069Z",
+      "run_id": "CESK0EFSJ2C4",
+      "label": null,
+      "chosen": null
+    },
+    {
+      "path": "logs/v6-core-cache.jsonl",
+      "offset": 1302,
+      "bytes": 407,
+      "sha256": "8964adc6a06384fc15f29634ff38fd83b47044a465e8c8709ca8cad68bc670b9",
+      "frozen": "v6-core-cache.jsonl.window-1.json",
+      "ts": "2026-10-20T23:26:18.541Z",
+      "run_id": "CESK0EFSJ2C4",
+      "label": null,
+      "chosen": null
+    },
+    {
+      "path": "logs/console/20261021-072503-cf4aff4ce+dirty.log",
+      "offset": 1915,
+      "bytes": 6000,
+      "sha256": "710ad1deefe661608f788ed7897f36ac80ffc09f746def71dce65f36b5fab6ff",
+      "frozen": "new-run-console-tail.txt"
+    }
+  ],
+  "observed_actions": [
+    {
+      "ts": "2026-10-20T23:26:19.269Z",
+      "label": "combat/plan-continue",
+      "chosen": {
+        "action": "play_card",
+        "card_index": 1,
+        "target_index": 0
+      }
+    },
+    {
+      "ts": "2026-10-20T23:26:20.254Z",
+      "label": "combat/plan-continue",
+      "chosen": {
+        "action": "play_card",
+        "card_index": 2,
+        "target_index": 0
+      }
+    },
+    {
+      "ts": "2026-10-20T23:26:21.156Z",
+      "label": "combat/plan-continue",
+      "chosen": {
+        "action": "play_card",
+        "card_index": 0
+      }
+    }
+  ],
+  "actual_first_in_run_action_seen": true,
+  "natural_core_cache_events": [
+    {
+      "ts": "2026-10-20T23:25:21.069Z",
+      "run_id": "CESK0EFSJ2C4",
+      "floor": 1,
+      "fingerprint": "798efc676a364218e4b7c905f374f8eb878fe860d155ec8b16ed2392ec003702",
+      "elapsed_ms": 5004.20467,
+      "preparation_ms": 2035.285567,
+      "allowance_ms": 5000,
+      "aborted": false,
+      "rows": 82,
+      "sampled_rows": 69,
+      "unknown_reasons": {
+        "insufficient_samples": 13,
+        "core_prerequisite_or_required_resource_unavailable": 12,
+        "core_prerequisite_not_met": 12,
+        "background_sampling_budget_exhausted": 1
+      }
+    },
+    {
+      "ts": "2026-10-20T23:25:41.203Z",
+      "run_id": "CESK0EFSJ2C4",
+      "floor": 1,
+      "fingerprint": "1102981e479beff0fa32f5dfc26e641657db2aca1920e89d284e6bba0f3b6488",
+      "elapsed_ms": 5012.854713000001,
+      "preparation_ms": 320.6836199999998,
+      "allowance_ms": 5000,
+      "aborted": false,
+      "rows": 139,
+      "sampled_rows": 114,
+      "unknown_reasons": {
+        "insufficient_samples": 25,
+        "core_prerequisite_or_required_resource_unavailable": 24,
+        "core_prerequisite_not_met": 24,
+        "background_sampling_budget_exhausted": 1
+      }
+    },
+    {
+      "ts": "2026-10-20T23:26:08.725Z",
+      "run_id": "CESK0EFSJ2C4",
+      "floor": 2,
+      "fingerprint": "209866d71e39469c7af644bc3e381a1e3f9a120108358778bbf095a36cabb997",
+      "elapsed_ms": 2043.2339150000043,
+      "preparation_ms": 307.710067,
+      "allowance_ms": 5000,
+      "aborted": true,
+      "rows": 159,
+      "sampled_rows": 132,
+      "unknown_reasons": {
+        "insufficient_samples": 27,
+        "core_prerequisite_or_required_resource_unavailable": 27,
+        "core_prerequisite_not_met": 27
+      }
+    },
+    {
+      "ts": "2026-10-20T23:26:18.541Z",
+      "run_id": "CESK0EFSJ2C4",
+      "floor": 2,
+      "fingerprint": "d2c0f51c18cbdbb56695b47fed3734c89fb5de84b74846f06d18857caa715ec6",
+      "elapsed_ms": 2205.786494,
+      "preparation_ms": 352.9316569999937,
+      "allowance_ms": 5000,
+      "aborted": true,
+      "rows": 176,
+      "sampled_rows": 146,
+      "unknown_reasons": {
+        "insufficient_samples": 30,
+        "core_prerequisite_or_required_resource_unavailable": 30,
+        "core_prerequisite_not_met": 30
+      }
+    }
+  ],
+  "cache_audit_seen": true,
+  "pure_getter_numeric_consumption": "pending actual next original brain question; audit counts are not consumer numeric/quality acceptance",
+  "latency_note": "first background elapsed5004.20467ms versus5000ms allowance is retained; not all latency/performance passed",
+  "no_new_model_simulation_refresh": true
+}
