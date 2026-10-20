@@ -1,0 +1,1 @@
+W4W6 P0 00:3x续报（原任务，非窗口请求）：两局真实COMBAT→REWARD循环+实际模拟回归已过（3文件14例/14.29s，Jev仅桩不发API）。确认缓存含候选、牌已入deck；根因在v6-start把新增牌物化成身份占位对象，导致offHandCardModel跳过牌面回退、费用/效果为空。当前仅改sim/v6-start.ts及自有sim/v6-card-results.ts，补未建模牌明确unknown/禁止空白结果。尚补保护测试/tsc/gitleaks与正式manifest，不称formalready或质量通过，不另起full。RBME health旧DPR告警与A/B同值分开；实耗4255–4260ms/样本34/26/26/42原口径保留。R406 CARDbrain/对局/live均不动，正式最小源随后原线交你。
