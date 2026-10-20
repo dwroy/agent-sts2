@@ -3251,3 +3251,6 @@ request_id=roy-20261017-human-pace-h0 revision=3 input_sha256=1e1c259a15f1824119
 
 
 2026-10-20T11:53:24+08:00 原ops核11:47终局：live53固定369f完整tsc0/full1，609文件608过1败、5789过1败2跳；唯一白名单CLI守卫子进程在原15秒上限后status=null，准确signal未捕获。旧路线/四字节断言已过，53叶/486知识SHA同。原Python单项约2.2秒过，不证明超时唯一因果；只补两测试叶，将互不写入的拒绝CLI最多2并发，正向/去重/全部证据及字节断言不变，wrapper补错误与信号诊断，15秒不抬。正确WT定向1项过；两次误cwd诊断失败保留，不冒候选验收。原锁内新55树78040c8c，nice19单worker实际宿主PID2011990已起，tsc0/full在途；三轮旧full1全留。STOP/W3排除/Regent保持，未源码提交、核号或开局。已投原watcher，CLI0非实读；完整0后原精确集成/17ID及hash/R3字段/版本双记录，再沿Roy授权恢复。原件paper/materials/20261020-1147-ops/receipt.json。
+
+
+2026-10-20T11:55:40+08:00 原ops核11:54原复盘收尾终局：原dataset退出0，记录提交2b9d193d3ab1a2a45eb3510507f201e418a6062c确为当前main祖先，588项均记录或生成数据，没有源码/正式知识改动。冻结切点03:41:12.461Z，所有生成输出SHA与该提交逐项一致，MWMR855QHTWR和T12TSEMGUU7F均has_postmortem=1；ledger534项0问题，gitleaks无泄漏。原verification仍保留KF9HMZKTFC3V的决策数879/880差异，不把源检查通过写成无历史差异。silent-0533已在非阻塞fix队列且有原策略提案，本轮不重派或补机制。仅登记这两局记录/dataset阶段完成，不代正式经验、自然采用、角色ACK或科学父结案；事件中live53是旧描述，实际独立55树7804验收不混算、不查询或重跑。STOP、原live回退点与Regent暂停保持；不重复dataset、模型或开局。原件paper/materials/20261020-1154-ops/receipt.json。
