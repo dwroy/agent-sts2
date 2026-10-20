@@ -1,0 +1,42 @@
+
+ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/v6-r404-card-provider-wiring-20261020/agent
+
+ ❯ tests/v6-card-input-bridge.test.ts (13 tests | 2 failed) 475ms
+   × routes the real R404 F2 combat-to-reward loop through production input, factory, A and Jev 266ms
+   × routes the real R404 F19 combat-to-reward loop through production input, factory, A and Jev 99ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/v6-card-input-bridge.test.ts > routes the real R404 F2 combat-to-reward loop through production input, factory, A and Jev
+ FAIL  tests/v6-card-input-bridge.test.ts > routes the real R404 F19 combat-to-reward loop through production input, factory, A and Jev
+AssertionError: expected [ false, false, false, true ] to deeply equal [ true, true, true, true ]
+
+- Expected
++ Received
+
+  [
+-   true,
+-   true,
+-   true,
++   false,
++   false,
++   false,
+    true,
+  ]
+
+ ❯ tests/v6-card-input-bridge.test.ts:171:93
+    169|       expect(tables).toHaveLength(1);
+    170|       expect(tables[0]!.targets.filter(t => t.kind === "current")).toM…
+    171|       expect(["card0", "card1", "card2", "skip"].map(id => cardResultK…
+       |                                                                                             ^
+    172|       expect(stats).toMatchObject({ decisions: 1, jevCalls: 1, deepsee…
+    173|       expect(ask).toHaveBeenCalledTimes(1);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+
+ Test Files  1 failed | 1 passed (2)
+      Tests  2 failed | 23 passed (25)
+   Start at  22:21:29
+   Duration  4.64s (transform 2.83s, setup 494ms, import 3.34s, tests 509ms, environment 0ms)
+

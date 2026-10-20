@@ -1,0 +1,152 @@
+
+ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/v6-r404-card-provider-wiring-20261020/agent
+
+ ❯ tests/v6-card-input-bridge.test.ts (13 tests | 4 failed) 701ms
+   × preserves the actual run Boss on map-less reward and idle combat frames 20ms
+   × uses only same-run, same-act, already observed map memory for a missing Boss floor 11ms
+   × routes the real R404 F2 combat-to-reward loop through production input, factory, A and Jev 418ms
+   × routes the real R404 F19 combat-to-reward loop through production input, factory, A and Jev 127ms
+ ❯ tests/v6-construction-safety.test.ts (12 tests | 1 failed) 47ms
+   × preserves actual card-provider time and cache work when measured results still require the brain 13ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 5 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/v6-card-input-bridge.test.ts > preserves the actual run Boss on map-less reward and idle combat frames
+AssertionError: expected undefined to deeply equal [ { act: 1, floor: 17, …(1) } ]
+
+- Expected:
+[
+  {
+    "act": 1,
+    "boss": "WATERFALL_GIANT",
+    "floor": 17,
+  },
+]
+
++ Received:
+undefined
+
+ ❯ tests/v6-card-input-bridge.test.ts:108:61
+    106|   e.state.run!.raw.boss_id = "WATERFALL_GIANT_BOSS";
+    107|   const input = v6ProjectionInputs(root);
+    108|   expect((await input(e, "pick"))!.situation.visibleBosses).toEqual([{…
+       |                                                             ^
+    109|   e.state.in_combat = true;
+    110|   expect((await input(e, "pick", true))!.situation.visibleBosses).toEq…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/5]⎯
+
+ FAIL  tests/v6-card-input-bridge.test.ts > uses only same-run, same-act, already observed map memory for a missing Boss floor
+AssertionError: expected undefined to deeply equal [ { act: 1, floor: 17, …(1) } ]
+
+- Expected:
+[
+  {
+    "act": 1,
+    "boss": "SOUL_FYSH",
+    "floor": 17,
+  },
+]
+
++ Received:
+undefined
+
+ ❯ tests/v6-card-input-bridge.test.ts:119:61
+    117|     floor: 1, nodes: [], available: [], boss: { row: 16, col: 0 } };
+    118|   const input = v6ProjectionInputs(root);
+    119|   expect((await input(e, "pick"))!.situation.visibleBosses).toEqual([{…
+       |                                                             ^
+    120|   for (const invalid of [{ runId: "another-run" }, { act: "another-act…
+    121|     const original = { ...e.screenMemory.lastMap };
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/5]⎯
+
+ FAIL  tests/v6-card-input-bridge.test.ts > routes the real R404 F2 combat-to-reward loop through production input, factory, A and Jev
+AssertionError: expected undefined to deeply equal [ { act: 1, floor: 17, …(1) } ]
+
+- Expected:
+[
+  {
+    "act": 1,
+    "boss": "WATERFALL_GIANT",
+    "floor": 17,
+  },
+]
+
++ Received:
+undefined
+
+ ❯ tests/v6-card-input-bridge.test.ts:174:54
+    172|         onEvent: event => { if (event.type === "note") notes.push(even…
+    173|       expect(visible.length, JSON.stringify({ stats, actions, notes, p…
+    174|       for (const targets of visible) expect(targets).toEqual([{ act, f…
+       |                                                      ^
+    175|       expect(tables.length).toBeGreaterThan(0);
+    176|       // The loop may discard a stale combat decision while the reward…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/5]⎯
+
+ FAIL  tests/v6-card-input-bridge.test.ts > routes the real R404 F19 combat-to-reward loop through production input, factory, A and Jev
+AssertionError: expected undefined to deeply equal [ { act: 2, floor: 33, …(1) } ]
+
+- Expected:
+[
+  {
+    "act": 2,
+    "boss": "KAISER_CRAB",
+    "floor": 33,
+  },
+]
+
++ Received:
+undefined
+
+ ❯ tests/v6-card-input-bridge.test.ts:174:54
+    172|         onEvent: event => { if (event.type === "note") notes.push(even…
+    173|       expect(visible.length, JSON.stringify({ stats, actions, notes, p…
+    174|       for (const targets of visible) expect(targets).toEqual([{ act, f…
+       |                                                      ^
+    175|       expect(tables.length).toBeGreaterThan(0);
+    176|       // The loop may discard a stale combat decision while the reward…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/5]⎯
+
+ FAIL  tests/v6-construction-safety.test.ts > preserves actual card-provider time and cache work when measured results still require the brain
+AssertionError: expected { schema: 'v6-build-log-v1', …(18) } to match object { event: 'v6_unknown_to_brain', …(3) }
+(15 matching properties omitted from actual)
+
+- Expected
++ Received
+
+@@ -1,11 +1,11 @@
+  {
+    "cache": {
+-     "hits": 3,
+-     "misses": 1,
++     "hits": 0,
++     "misses": 0,
+    },
+-   "elapsed_ms": 4249,
++   "elapsed_ms": 7,
+    "event": "v6_unknown_to_brain",
+    "unknown": {
+      "count": 4,
+      "total": 4,
+    },
+
+ ❯ tests/v6-construction-safety.test.ts:108:73
+    106|   recordConstructionHandover(e, join(dir, "plans.jsonl"), "fixture", "…
+    107|     constructionCoverage(["card0", "card1", "card2", "skip"]), "insuff…
+    108|   expect(JSON.parse(readFileSync(join(dir, "v6-build.jsonl"), "utf8"))…
+       |                                                                         ^
+    109|     event: "v6_unknown_to_brain", elapsed_ms: 4249, cache: { hits: 3, …
+    110|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/5]⎯
+
+
+ Test Files  2 failed (2)
+      Tests  5 failed | 20 passed (25)
+   Start at  22:23:35
+   Duration  5.87s (transform 3.56s, setup 522ms, import 4.27s, tests 748ms, environment 0ms)
+

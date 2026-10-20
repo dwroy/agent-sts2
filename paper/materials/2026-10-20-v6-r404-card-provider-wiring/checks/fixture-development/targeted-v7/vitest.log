@@ -1,0 +1,77 @@
+
+ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/v6-r404-card-provider-wiring-20261020/agent
+
+ ❯ tests/v6-card-input-bridge.test.ts (13 tests | 2 failed) 508ms
+   × routes the real R404 F2 combat-to-reward loop through production input, factory, A and Jev 292ms
+   × routes the real R404 F19 combat-to-reward loop through production input, factory, A and Jev 113ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/v6-card-input-bridge.test.ts > routes the real R404 F2 combat-to-reward loop through production input, factory, A and Jev
+AssertionError: {"stats":{"decisions":1,"jevCalls":1,"deepseekCalls":0,"deepseekTokens":0,"claudeCalls":0,"debounced":0,"staleSkips":0,"fallbacks":0,"acts":1,"waits":0,"unsupported":0,"errors":0,"inputTokens":100,"outputTokens":10,"runs":[],"runsCompleted":0,"stoppedBecause":"decision cap reached (1)","elapsedMs":266,"logPath":"/home/dw/Projects/agent-sts2/.worktrees/v6-r404-card-provider-wiring-20261020/.cache/t/v6-input-O1bb5p/decisions.jsonl","brainPausedMs":0,"activeElapsedMs":266},"actions":[{"action":"choose_reward_card","option_index":0}],"notes":["state changed while deciding; re-planning"],"polls":5}: expected [ …(2) ] to deeply equal [ [ { act: 1, floor: 17, …(1) } ] ]
+
+- Expected
++ Received
+
+@@ -4,6 +4,13 @@
+        "act": 1,
+        "boss": "WATERFALL_GIANT",
+        "floor": 17,
+      },
+    ],
++   [
++     {
++       "act": 1,
++       "boss": "WATERFALL_GIANT",
++       "floor": 17,
++     },
++   ],
+  ]
+
+ ❯ tests/v6-card-input-bridge.test.ts:173:73
+    171|         v6Projection: runtime, restoreRun: false, maxDecisions: 1, max…
+    172|         onEvent: event => { if (event.type === "note") notes.push(even…
+    173|       expect(visible, JSON.stringify({ stats, actions, notes, polls })…
+       |                                                                         ^
+    174|       expect(tables).toHaveLength(1);
+    175|       expect(tables[0]!.targets.filter(t => t.kind === "current")).toM…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  tests/v6-card-input-bridge.test.ts > routes the real R404 F19 combat-to-reward loop through production input, factory, A and Jev
+AssertionError: {"stats":{"decisions":1,"jevCalls":1,"deepseekCalls":0,"deepseekTokens":0,"claudeCalls":0,"debounced":0,"staleSkips":0,"fallbacks":0,"acts":1,"waits":0,"unsupported":0,"errors":0,"inputTokens":100,"outputTokens":10,"runs":[],"runsCompleted":0,"stoppedBecause":"decision cap reached (1)","elapsedMs":105,"logPath":"/home/dw/Projects/agent-sts2/.worktrees/v6-r404-card-provider-wiring-20261020/.cache/t/v6-input-iyDJLg/decisions.jsonl","brainPausedMs":0,"activeElapsedMs":105},"actions":[{"action":"choose_reward_card","option_index":0}],"notes":["state changed while deciding; re-planning"],"polls":5}: expected [ …(2) ] to deeply equal [ [ { act: 2, floor: 33, …(1) } ] ]
+
+- Expected
++ Received
+
+@@ -4,6 +4,13 @@
+        "act": 2,
+        "boss": "KAISER_CRAB",
+        "floor": 33,
+      },
+    ],
++   [
++     {
++       "act": 2,
++       "boss": "KAISER_CRAB",
++       "floor": 33,
++     },
++   ],
+  ]
+
+ ❯ tests/v6-card-input-bridge.test.ts:173:73
+    171|         v6Projection: runtime, restoreRun: false, maxDecisions: 1, max…
+    172|         onEvent: event => { if (event.type === "note") notes.push(even…
+    173|       expect(visible, JSON.stringify({ stats, actions, notes, polls })…
+       |                                                                         ^
+    174|       expect(tables).toHaveLength(1);
+    175|       expect(tables[0]!.targets.filter(t => t.kind === "current")).toM…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+
+ Test Files  1 failed | 1 passed (2)
+      Tests  2 failed | 23 passed (25)
+   Start at  22:22:42
+   Duration  4.55s (transform 2.69s, setup 437ms, import 3.28s, tests 549ms, environment 0ms)
+

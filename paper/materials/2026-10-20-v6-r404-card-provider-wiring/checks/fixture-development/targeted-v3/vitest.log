@@ -1,0 +1,69 @@
+
+ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/v6-r404-card-provider-wiring-20261020/agent
+
+ ❯ tests/v6-card-input-bridge.test.ts (13 tests | 2 failed) 523ms
+   × routes the real R404 F2 combat-to-reward loop through production input, factory, A and Jev 202ms
+   × routes the real R404 F19 combat-to-reward loop through production input, factory, A and Jev 17ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/v6-card-input-bridge.test.ts > routes the real R404 F2 combat-to-reward loop through production input, factory, A and Jev
+AssertionError: expected [] to deeply equal [ [ { act: 1, floor: 17, …(1) } ] ]
+
+- Expected
++ Received
+
+- [
+-   [
+-     {
+-       "act": 1,
+-       "boss": "WATERFALL_GIANT",
+-       "floor": 17,
+-     },
+-   ],
+- ]
++ []
+
+ ❯ tests/v6-card-input-bridge.test.ts:166:23
+    164|         v6Projection: runtime, restoreRun: false, maxDecisions: 1, max…
+    165|         onEvent: event => { if (event.type === "note") notes.push(even…
+    166|       expect(visible).toEqual([[{ act, floor: bossFloor, boss }]]);
+       |                       ^
+    167|       expect(tables).toHaveLength(1);
+    168|       expect(tables[0]!.targets.filter(t => t.kind === "current")).toM…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  tests/v6-card-input-bridge.test.ts > routes the real R404 F19 combat-to-reward loop through production input, factory, A and Jev
+AssertionError: expected [] to deeply equal [ [ { act: 2, floor: 33, …(1) } ] ]
+
+- Expected
++ Received
+
+- [
+-   [
+-     {
+-       "act": 2,
+-       "boss": "KAISER_CRAB",
+-       "floor": 33,
+-     },
+-   ],
+- ]
++ []
+
+ ❯ tests/v6-card-input-bridge.test.ts:166:23
+    164|         v6Projection: runtime, restoreRun: false, maxDecisions: 1, max…
+    165|         onEvent: event => { if (event.type === "note") notes.push(even…
+    166|       expect(visible).toEqual([[{ act, floor: bossFloor, boss }]]);
+       |                       ^
+    167|       expect(tables).toHaveLength(1);
+    168|       expect(tables[0]!.targets.filter(t => t.kind === "current")).toM…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+
+ Test Files  1 failed | 1 passed (2)
+      Tests  2 failed | 23 passed (25)
+   Start at  22:18:42
+   Duration  6.43s (transform 4.17s, setup 501ms, import 5.00s, tests 570ms, environment 0ms)
+
