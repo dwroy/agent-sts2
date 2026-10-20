@@ -1,5 +1,5 @@
 # 运维当前清单（调度器生成）
-生成：2026-10-21T01:51:27+08:00；原件索引：/home/dw/Projects/agent-sts2/ops/codex-ops/current.json SHA256 4e3c51061c771b32514c330a7265dcff7b84dbb6a03fd60ed89d26a9f1b46966
+生成：2026-10-21T01:53:40+08:00；原件索引：/home/dw/Projects/agent-sts2/ops/codex-ops/current.json SHA256 4f87e16ad838d9015a73eb8735340796a97dbcbae101070e0ccf45ff183b8730
 当前授权：Roy§12授权Claude主导V6、持续对局不挂STOP，P0最高优先；学习正常、联合检查原三锁挡新dataset重任务，原在跑自然结束。最新P0采用以下Claude01:3x澄清，旧00:1x条件保历史不再阻塞。
 最高Claude01:3x：P0上线前门槛已满足（真实runLoop回放+联合628文件通过），不再等上线后质量才开jev。CSBNU2H9LXKD自然结束后，精确发布已验17源并同时CARD brain→jev，REFLEX仍off；核版本/双通知，第一新局就是P0质量验收局，由Claude判。若同题不同牌同值/全跳/错误/兜底增多，报告Claude，依其指令下一边界回brain。当前R406/live4528a751保持、旧R405失败不改写，P2仍等2稳定自然局。授权原文/SHA及18叶准备见20261021-013x-ops/next-boundary-publication-plan.json。
 原P3单独full626/5926过2跳、tree6650/2388输入9d17原件保留，11源仅main16aa9bd5；live叶保legacy混合/50000界，禁805。现在已并P0六叶完成17实际组合完整绿；不把旧单独绿冒后继联合。P3实际live/合格经验仍pending，REFLEXoff；原件0040-ops/receipt.json。
@@ -16,7 +16,7 @@ W4精英偏差66ff0722只收95材料/授权append，SHA核同/解压scan0；52�
 模型 gpt-6.1-sol；普通 ops/学习下次自然启动 high，专项可有理由 xhigh，大脑保持 xhigh。实际生效须原生回执，不能从默认值推定。
 账号选择：/home/dw/Projects/agent-sts2/ops/codex-ops/accounts/codex1/learner；原 ops：w1H:p8 / 01a1517b-e200-7c52-b463-6ea22220c0a9；执行模式：host；辅助/学习者沙箱保持。
 不读凭据/.env/游戏二进制，不改共享配置/账号；不推送。
-main c067cb3009ada3dc15b54be46300ff4379fa03c7
+main 67fc0f91e2dba5c626b1b0ba31eb7e60e7725af3
 live 4528a751f17e341a97e7ff70295ec9fba0c947e9；登记 release V6-R406（登记值不代表新树检查绿或实际采用）。
 首次另读 AGENTS/README/最新 STATE/学习协议；此后每次读本清单及事件原件。历史 handoff/decision-log 只沿事务定位，原件冲突保留并核查。
 在途批次 4（完整 owner/租约与路径见 current.json）：
@@ -43,10 +43,10 @@ human-pace 原owner=01a13dcd-83d4-7c63-b233-f93cf878ecf4，接续=01a14aae-4b03-
 - /home/dw/Projects/agent-sts2/ops/codex-ops/pending-continuations/original-20261021-001302-monitor-health-six-leaf.json；phase=original-uncommitted-four-monitor-plus-two-helper-deps-frozen-full1-after-P0-gate
 - /home/dw/Projects/agent-sts2/ops/codex-ops/pending-continuations/original-W8-P4-refresh-receipt-audit-20261020.json；phase=formal-new3-plus-legacy26-source-verified-await-single-full-after-P0-and-P3
 最新指令短引用（完整行按offset核）：
-- offset=2012893：- 2026-10-21 01:32:39 CST 原ops：011301策略批退出0，十个原提案全部waiting；ops已核result、完整报告、独立WT清洁及基线0a84a8fe未变，无源码/正式知识、新提交或live合入，tests三项null，不补称绿或分配版本。投斧首牌身份及生存者唯一余牌弃除两窄提交为冻结R406祖先，四个相关源码叶逐SHA相同；它们不代动态弃牌、整线归属及长期兑现的宽项验收，也不重复实现。学习者完整读五
 - offset=2014037：- 2026-10-21 01:34:28 CST 原ops：011301-s2策略批退出0，十个原提案全部waiting；独立WT身份、基线0a84a8fe及清洁状态已核，无源码/正式知识修改、提交或合入，tests三项null，不补测、不分配版本。ops逐SHA核交付清单、五个相关源码叶与冻结R406字节一致，五个窄提交为其祖先；它们不代复制后继、动态弃牌、完整资源消费者及宽父联合验收。学习者六题完整、1946题机械索引，保留13错
+- offset=2015424：- 2026-10-21 01:51:48 CST 原ops：实收W4只读精英偏差材料66ff0722，仅取指定子树95叶及授权decision-log.append；manifest db82aa9c、report848cd3fe、各叶长度/SHA与Git blob核同，压缩原件解压扫描0。没有整cherry父/分支根日志，保并行记录。报告40局V5/53精英，1场首试结局censored后52场实战死亡7.7%对A模拟30.3%、净
 原事务文件索引数（含历史）：pending-integrations=149；pending-deliveries=16；pending-records=30；pending-continuations=27；publications=1；完整路径见 current.json，不从文件存在推定未完成/运行。
-新指令原件：ops/inbox-dev.md 当前尾段 offset=2007231, bytes=8192；本轮新授权必须由事件引用，漏项查此段，勿整份重读。
+新指令原件：ops/inbox-dev.md 当前尾段 offset=2008419, bytes=8192；本轮新授权必须由事件引用，漏项查此段，勿整份重读。
 current.json 仅按本事件 batch/request/notice id 用程序筛字段，不全文读；动态源变化后核新清单，不用旧值冒当前。
 H0/0332等科学边界、精确宿主树、未完成发布/兼容及 retention 仅沿原报告和事务回执；清单不代验收、shipped、覆盖率或消费。
 严格普通无源码成功由调度器完成账本检查、唯一 dataset 与受控记录提交，回执 ops/codex-ops/ordinary-close/；异常、异议、缺证、人工决定正常唤醒。
