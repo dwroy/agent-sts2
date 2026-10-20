@@ -5135,3 +5135,5 @@ request_id=roy-20261017-human-pace-h0 revision=3 input_sha256=1e1c259a15f1824119
 - 2026-10-21 05:55:14 CST 原ops实读watcher criteria终局/单叶续报回执，原更新/ops终局SHA及3512B patch核同，584B原追加原字收纳；不扩大watcher仅静态范围或代Claude/Roy ACK。正式源仍待B同包，原full1/0of204/三均值反例保留，CARDbrain/REFLEXoff与P2暂停不动，不新检查/任务/模型。原件paper/materials/20261021-criteria-terminal-watcher-ops/receipt.json。
 
 - 2026-10-21 05:58:39 CST 原ops核051301-s2原宿主唯一静态启动，tsc0/full2560147、treeeaec4345/2394输入54d20513/498知识同；原三叶+W0两测试隔离，不夹criteria/B/P4/014301/805。仅静态来源核验，不查动态/改输入/叠full；保沙箱8败、十waiting/0546 proposed，不认完整绿或发布，R408 brain/off不动。原件paper/materials/20261021-0557-ops/receipt.json。
+
+- 2026-10-21 06:22:45 CST 原ops核051301-s2宿主tsc0/full1=628文件过1败/5935项过1败2跳，唯一card摘要17.613s越原5s，treeeaec4345/2394输入54d20513同且原PID退/窗口释放。原阈值候选/撤唯一生产叶各三例绿，冷183.8/241.2ms，九组状态hash/请求字节同，finally输入恢复；原full慢因仍unknown，不据定向放行或重未变源full，报watcher/Claude接续，R408 brain/off不动。原件paper/materials/20261021-0620-ops/receipt.json。

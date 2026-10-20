@@ -1,0 +1,27 @@
+
+ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/ops-strategy-051301-s2-legion-r408-joint-20261021/agent
+
+{"fixture":"two_signed_card_pick_contrasts","prompt_bytes":6817,"sent_entries":2}
+.....
+----------------------------------------------------------------------
+Ran 5 tests in 0.042s
+
+OK
+ ❯ tests/v6-prompt-summary-perf.test.ts (3 tests | 1 failed) 28394ms
+   × measures fixed card summary construction 18528ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/v6-prompt-summary-perf.test.ts > measures fixed card summary construction
+AssertionError: expected 17612.75003 to be less than 5000
+ ❯ tests/v6-prompt-summary-perf.test.ts:41:24
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed | 628 passed (629)
+      Tests  1 failed | 5935 passed | 2 skipped (5938)
+   Start at  05:55:05
+   Duration  1340.01s (transform 17.09s, setup 36.12s, import 120.44s, tests 1098.73s, environment 64ms)
+

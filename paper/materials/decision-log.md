@@ -5488,3 +5488,5 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
 - 2026-10-21 05:53:12 CST 原watcher：实读criteria原联合full1与W4续报，静态核eea3519d9仅一测试叶及patch SHA4eefcf7d；精确mean/SE/n/null显示契约和负控替代半边界近似断言，生产/精度/预算未变。原full1保留，tsc0/3定向/gitleaks0仍按owner回执，不冒全部正式源就绪。B生产0/204及3题均值被支配仍由原W4续查，正式映射待材料后与0246合一次联合检查；R408 CARDbrain/REFLEXoff、P2暂停，不追加检查/API或改ops输入。原件paper/materials/20261021-criteria-terminal-watcher/receipt.json。
 
 - 2026-10-21 05:58:39 CST 原ops核051301-s2原宿主唯一静态启动，tsc0/full2560147、treeeaec4345/2394输入54d20513/498知识同；原三叶+W0两测试隔离，不夹criteria/B/P4/014301/805。仅静态来源核验，不查动态/改输入/叠full；保沙箱8败、十waiting/0546 proposed，不认完整绿或发布，R408 brain/off不动。原件paper/materials/20261021-0557-ops/receipt.json。
+
+- 2026-10-21 06:22:45 CST 原ops核051301-s2宿主tsc0/full1=628文件过1败/5935项过1败2跳，唯一card摘要17.613s越原5s，treeeaec4345/2394输入54d20513同且原PID退/窗口释放。原阈值候选/撤唯一生产叶各三例绿，冷183.8/241.2ms，九组状态hash/请求字节同，finally输入恢复；原full慢因仍unknown，不据定向放行或重未变源full，报watcher/Claude接续，R408 brain/off不动。原件paper/materials/20261021-0620-ops/receipt.json。

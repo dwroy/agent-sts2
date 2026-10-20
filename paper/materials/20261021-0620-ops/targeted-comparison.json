@@ -1,0 +1,53 @@
+{
+  "started_at": "2026-10-21T06:21:11.255089+08:00",
+  "original_fixed_tree": "eaec434573d044367a5d664e44f18d1e5d36a2ef",
+  "original_fixed_input_sha256": "54d205130c4cc9b6f94d0437c804a48120afd20457a9bdd28c5e085d7d2527c4",
+  "old_full_failure_retained": true,
+  "test_source_budget_threshold_unchanged": true,
+  "new_full": false,
+  "same_frozen_knowledge": true,
+  "baseline_scope": "only remove original learner combat-plan production leaf; candidate new tests and W0 fixed test source unchanged; not an actual-live full run",
+  "ended_at": "2026-10-21T06:21:22.634567+08:00",
+  "steps": [
+    {
+      "label": "candidate",
+      "started_at": "2026-10-21T06:21:11.256129+08:00",
+      "source_sha256": "3c8f111ac2909d9ea681dd4f67cb190a7460fe099b649bb0d61bc114075b122b",
+      "command": [
+        "node",
+        "tools/with-temp.mjs",
+        "node_modules/vitest/vitest.mjs",
+        "run",
+        "tests/v6-prompt-summary-perf.test.ts",
+        "--maxWorkers=1"
+      ],
+      "log": "/home/dw/Projects/agent-sts2/.artifacts/ops-wake-20261021-0620/candidate.log",
+      "pid": 2639491,
+      "rc": 0,
+      "seconds": 5.243084240006283,
+      "ended_at": "2026-10-21T06:21:16.499419+08:00",
+      "log_sha256": "6b1acf8a87349f989ade07244d60919114004f50bfb191b13c3706555f8a6b7c"
+    },
+    {
+      "label": "production-leaf-withdrawn",
+      "started_at": "2026-10-21T06:21:16.500196+08:00",
+      "source_sha256": "8cad97bea7bf53037f0841537b14c7630b537fd584211e28a0ba00506a82a1c1",
+      "command": [
+        "node",
+        "tools/with-temp.mjs",
+        "node_modules/vitest/vitest.mjs",
+        "run",
+        "tests/v6-prompt-summary-perf.test.ts",
+        "--maxWorkers=1"
+      ],
+      "log": "/home/dw/Projects/agent-sts2/.artifacts/ops-wake-20261021-0620/production-leaf-withdrawn.log",
+      "pid": 2639668,
+      "rc": 0,
+      "seconds": 6.0194611449260265,
+      "ended_at": "2026-10-21T06:21:22.519860+08:00",
+      "log_sha256": "ea8ff1c3cff81627b7536aaf1c542f652cdd5f4d84d8b74fb378632f7355dba5"
+    }
+  ],
+  "original_2394_restored_exactly": true,
+  "no_source_or_threshold_change": true
+}
