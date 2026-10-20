@@ -4381,3 +4381,8 @@ request_id=roy-20261017-human-pace-h0 revision=3 input_sha256=1e1c259a15f1824119
 ### 2026-10-20T13:55:27+08:00 原来源核验、策略存储阻塞及重启诊断
 
 本轮核owner-origin旧快照、原生launch/task/turn/user四行及3份冻结输入均同SHA；当前来源文件已增字节，与旧快照分列，纯bug归属完整，活雾boss-sim链接仍缺、原提案pending。134302策略out实际blocked、report未生成、十提案waiting，launcher0不能冒任务完成；单次核原WT无遗留进程，无源码可合。重启原件明确三次tsx因/tmp IPC ENOSPC退出，根盘仍有空间；原UWUF已F31败、562动作0兜底0错误，原循环13:50:06自然开TR224PCKENSM，当前COMBAT/四Jevon，未另开局/改actor。底层tmp压力未修，沿原存储项留后续，未清共享tmp。W3等TR自然边界；full顺序原W4→ops变化输入→通知原W8，不叠检查或派模型。原件：paper/materials/20261020-1350-ops/receipt.json。
+
+
+### 2026-10-20T13:56:32+08:00 原环境回执核同及窗口继续保留
+
+本轮仅接原检查窗口协调，实读并逐SHA核同W4W6的full-final-enospc回执及13:47:30旧日志，冻结到本轮材料。原exit1明确environment_blocked，共享/tmp当时仅99个可用inode；加载错误及少量已运行项分列保存，不能当作产品完整通过或产品失败。与先前owner报告一致：仍沿同源码7f08f166d、功能树内TMPDIR、nice19单worker重跑；本ops未查该重跑进程、日志、启动或终局，不以回执存在冒实际已启动。原窗口继续由W4W6占用，ops d43e6c23变化输入全检随后，两个窗口均释放后再通知原W8，不能因旧环境退出而抢先叠full。已更新短清单及原待验事务，原失败/学习缺口不改，不清共享/tmp、不新派模型/批次/刷新，live/STOP/actor与Regent均保持。原件：paper/materials/20261020-1355-ops/receipt.json。
