@@ -4315,3 +4315,6 @@ request_id=roy-20261017-human-pace-h0 revision=3 input_sha256=1e1c259a15f1824119
 
 
 2026-10-20T11:36:05+08:00 原ops已实收W8 11:35自然运行窗口协调。当前STOP仍在，T12TSEMGUU7F已终局、原actor退出，没有可供并发实测的在途对局；上一自然运行是V6-R402/c351，console为logs/console/20261020-091435-c351dbe7b+dirty.log，仅作历史对照。下一窗口须当前53叶固定369f8d20完整验收、精确提交、消费者读回及核号后，沿Roy10:26既有授权自然恢复，时间与新run_id尚不能确认。已将原W8提醒写入清单：实际启动时给run_id、run-config时间、live完整提交/发布号、console及共享JSONL字节边界，再由原W8做一次nice19串行scratch准备耗时/code-fallback对照。此刻不启动scratch、不重复生产刷新或模型，不提前开局/移STOP；W3排除、Regent暂停保持。原件paper/materials/20261020-1135-ops/receipt.json。
+
+
+2026-10-20T11:52:45+08:00 原ops核复盘批20261020-111302退出0，MWMR855QHTWR与T12TSEMGUU7F两节各唯一，原lessons前缀不动；本批24条账本追加及两原CLI提案已核，账本534项0问题。并行普通收尾b82c已将lessons/账本/提案原字节纳main，本轮不重复追加、不代其他批结案。新增普通撕碎条件伤害模型缺口silent-0533已入非阻塞fix队列，沿原silent-proposal-afa703f560808b8f策略链；限学习者所核单毒窗口，不补通用机制、修后胜率或重复派发。唯一一次nice19 paper_dataset --no-raw已退出0、源检查通过，两局均标有复盘，冻结切点/旧快照/输出SHA已留。前置索引误含历史目录已自然结束，保护检查未发终止信号，生成器未重跑。仅提交记录/生成数据，无源码或正式经验改动，不加release、不关科学父/代ACK；STOP、原live联合检查及Regent暂停保持。原件paper/materials/20261020-1139-ops/receipt.json。

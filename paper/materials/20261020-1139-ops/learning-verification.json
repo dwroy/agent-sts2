@@ -1,0 +1,117 @@
+{
+  "report": {
+    "path": "learner/runs/20261020-111330-a854916e-42b3-454d-bf4b-60f5ee0c579f-postmortem/report.md",
+    "bytes": 13122,
+    "sha256": "24da0536384c9dc19fc1ab0abdeded55f0a9b243f0aae29b3063bd45e800edab"
+  },
+  "output": {
+    "path": "ops/codex-ops/learner/20261020-111302.out",
+    "bytes": 3179,
+    "sha256": "dc9d6e8612f3f73a056d06e7497e5f8378049bec245aad2a8c2f14e083237e4a"
+  },
+  "stderr": {
+    "path": "ops/codex-ops/learner/20261020-111302.err",
+    "bytes": 13992,
+    "sha256": "e246f1dac7bd699c620d670c92293691ca08f17146846756fe40fd9589f8f781"
+  },
+  "original_lessons_prefix_unchanged": true,
+  "new_lessons_sections": [
+    "MWMR855QHTWR",
+    "T12TSEMGUU7F"
+  ],
+  "new_lessons_lines": 125,
+  "ledger": {
+    "path": "paper/materials/learning/ledger.jsonl",
+    "bytes": 26122176,
+    "sha256": "cd732f62f272959f1cbaadcb6477ca9218de1f62de147d71a2fd613793d94fdc"
+  },
+  "postmortem_ledger_lines": 24,
+  "parallel_ledger_lines_preserved": 37,
+  "ledger_added": [
+    "silent-0533",
+    "silent-0534"
+  ],
+  "ledger_updated": [
+    "silent-0005",
+    "silent-0418",
+    "silent-0278",
+    "silent-0012",
+    "silent-0209",
+    "silent-0020",
+    "silent-0011",
+    "silent-0046",
+    "silent-0211",
+    "silent-0259"
+  ],
+  "code_proposals": [
+    "silent-proposal-6f6eb897c8450b80",
+    "silent-proposal-afa703f560808b8f"
+  ],
+  "code_proposal_rows": [
+    {
+      "op": "add",
+      "id": "silent-proposal-6f6eb897c8450b80",
+      "ts": "2026-10-20T11:35:38+08:00",
+      "character": "silent",
+      "ledger": [
+        "silent-0005",
+        "silent-0418",
+        "silent-0278",
+        "silent-0012"
+      ],
+      "runs": [
+        "MWMR855QHTWR"
+      ],
+      "source_task": "postmortem",
+      "target_task": "strategy-proposal",
+      "domains": [
+        "combat",
+        "potion",
+        "terminal"
+      ],
+      "summary": "同族末轮弃后继、施毒与残药按实线分账；仅固定审计补证，未证在线规则需改",
+      "proposal": "/home/dw/Projects/agent-sts2/learner/runs/20261020-111330-a854916e-42b3-454d-bf4b-60f5ee0c579f-postmortem/proposal-MWMR855QHTWR.md",
+      "rule_changes": false,
+      "authorization": "Roy-2026-10-07-learning",
+      "proposal_sha256": "a80391011ca58da68c54781cffae705b256f8570f1a1e53765892a4d689ca860",
+      "state": "pending"
+    },
+    {
+      "op": "add",
+      "id": "silent-proposal-afa703f560808b8f",
+      "ts": "2026-10-20T11:35:40+08:00",
+      "character": "silent",
+      "ledger": [
+        "silent-0533",
+        "silent-0534",
+        "silent-0209",
+        "silent-0020",
+        "silent-0011",
+        "silent-0046",
+        "silent-0211",
+        "silent-0259"
+      ],
+      "runs": [
+        "T12TSEMGUU7F"
+      ],
+      "source_task": "postmortem",
+      "target_task": "strategy-proposal",
+      "domains": [
+        "combat",
+        "potion",
+        "terminal"
+      ],
+      "summary": "修普通撕碎单毒条件漏算5且known=true的缺口；固定核赢战资源、再生兑现和SL入口，不改未观察规则",
+      "proposal": "/home/dw/Projects/agent-sts2/learner/runs/20261020-111330-a854916e-42b3-454d-bf4b-60f5ee0c579f-postmortem/proposal-T12TSEMGUU7F.md",
+      "rule_changes": true,
+      "authorization": "Roy-2026-10-07-learning",
+      "proposal_sha256": "4e2039c4ce40e229192ccaefb9942d159e5a7def2a1cf6124cd1f66add531b47",
+      "state": "pending"
+    }
+  ],
+  "source_changed": false,
+  "rule_changed": false,
+  "live_publication": false,
+  "STOP_untouched": true,
+  "fix_queue": "silent-0533 recorded nonblocking, original strategy proposal chain; no duplicate dispatch"
+}
