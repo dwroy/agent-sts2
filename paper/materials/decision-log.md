@@ -5274,3 +5274,5 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
 - 2026-10-20T19:16:11.156692+08:00 ops：三局184312复盘/账本/提案核同；0535非阻塞转向接线沿84af8bc8原链入fix-queue，唯一dataset有限收尾接续；JWJ终局STOP实际核同保持，五项full不动。原件 paper/materials/20261020-1914-ops/learning-verification.json。
 
 - 2026-10-20T19:27:45+08:00 ops：复盘184312三局账本/提案核同，0535非阻塞入原84af8bc8链；唯一dataset --no-raw完整0，三局复盘标记通过，保存自身记录/生成数据及指定lessons/ledger。五项full/STOP/805/Regent保持。原件 paper/materials/20261020-1914-ops/receipt.json。
+
+- 2026-10-20T19:30:47.595334+08:00 ops：184312三局唯一dataset0/cc91e734记录已独立核SHA与Git blob，原收尾PID退出；仅记录数据完成，不重dataset/查在途full，0535原链及五项STOP/805/Regent保持。原件 paper/materials/20261020-1930-ops/receipt.json。
