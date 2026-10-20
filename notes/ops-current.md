@@ -1,7 +1,8 @@
 # 运维当前清单（调度器生成）
-生成：2026-10-21T04:51:56+08:00；原件索引：/home/dw/Projects/agent-sts2/ops/codex-ops/current.json SHA256 26fc368ec81ee818af9682eb15601082ea1563de292a83e522d1c86dc3badd92
+生成：2026-10-21T05:07:01+08:00；原件索引：/home/dw/Projects/agent-sts2/ops/codex-ops/current.json SHA256 651fa9c53de8b264fd5ad1d4b654e0275a4a299b0ba4e5609f8781eea0ae99cb
 当前授权：Roy§12授权Claude主导V6、P0优先；最新Claude02:1x允许局终STOP发布窗，取代此前无条件不挂STOP。学习正常，full仍原三锁挡新dataset重任务；旧失败和来源保留，不中断现行对局。
 最高Claude04:2x局终指示已执行：2GF结束/原STOP/无活动play核同，仅CARDjev→brain已发布V6-R408/live150890f8(行为918cee14)，保R407 agent树/498知识和其余开关。核号/双通知/配置读回后清STOP，原autoplay2283493恢复；新局7XS2Y920KA6E CARDbrain/REFLEXoff及04:29:09首实际动作已核，首奖励脑题待自然读回。旧ENOBUFS Git空字段保留。W4 criteria汇总/无区分标记+B空修复及冻结题真Jev验证后再恢复jev；P2暂停等Roy。原件20261021-R407-terminal-CARDbrain-ops/receipt.json。
+W4 criteria正式024612ef八叶前像同R408，72材料/71清单及11gz核同；原78定向/16请求不代联合绿，8/12诊断有3均值反例，B正式0/204仍miss。P0优先：仅八叶+W0两测试隔离依赖，唯一runner2387940已提交原内核准入，尚无full实际启动回执，等原事件不轮询/叠full；不夹P4生产/014301未提交源。CARDbrain/REFLEXoff保留，Claude另判质量/恢复jev；20261021-W4-criteria-joint-ops/receipt.json。
 P0六+P3十一已随R407发布，628文件5932过2跳/tree297cb270/2391输入2529b688及PID退出保留；498知识/loader85combat_line、零cardcontrast，REFLEXoff，不冒质量或收益。P3独立绿分列，禁805，原0113/0236回执。
 R4同一70f386b9b/roy-20261020-v6-reflex-card-pick已2313一次派完rc0；模板791b8448不变，不重派。三估计CI跨0/缺source_experience/draft0、85combat_line保留；watcher已向Roy转四异议，仅CLI桥pending，科学父/正式消费未关，REFLEXoff。原013x/R4-once-only-dedup及2358/0030回执。
 P4修后原tree562/2399输入98034135 tsc0/full1七败保留、PID退/窗口释放。正式88b51030b两测试叶及103材料已逐SHA/blob核同，W0独立重建/54原帧/27动作字节同；原tsc0/75定向过仅来源结果。ordinary仍014301正式依赖pending，齐备后才原单点联合full，不重复实现/夹包。R408 CARDbrain/REFLEXoff/P2暂停不动。原0430及20261021-P4-off-formal-ops回执。
@@ -15,13 +16,11 @@ P2材料0f1/0350回执保留，6满槽奖励缺合法弃药接口；最新Claude
 模型 gpt-6.1-sol；普通 ops/学习下次自然启动 high，专项可有理由 xhigh，大脑保持 xhigh。实际生效须原生回执，不能从默认值推定。
 账号选择：/home/dw/Projects/agent-sts2/ops/codex-ops/accounts/codex1/learner；原 ops：w1H:p8 / 01a1517b-e200-7c52-b463-6ea22220c0a9；执行模式：host；辅助/学习者沙箱保持。
 不读凭据/.env/游戏二进制，不改共享配置/账号；不推送。
-main c849d90082a353a6cdf409f6efcba689db744b62
+main c9d4040e6ef991ce56084c13a5599760baa784b2
 live 150890f8bac0253f4e9216af3259784705c7550e；登记 release V6-R408（登记值不代表新树检查绿或实际采用）。
 首次另读 AGENTS/README/最新 STATE/学习协议；此后每次读本清单及事件原件。历史 handoff/decision-log 只沿事务定位，原件冲突保留并核查。
-在途批次 3（完整 owner/租约与路径见 current.json）：
+在途批次 1（完整 owner/租约与路径见 current.json）：
 - 20261007-021219-strategy-proposal done strategy-proposal PID=265476；/home/dw/Projects/agent-sts2/.worktrees/codex-dev
-- 20261021-044302-strategy-proposal running strategy-proposal PID=2323123；/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261021-044302
-- 20261021-044302-s2-strategy-proposal running strategy-proposal PID=2323254；/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261021-044302-s2
 外部原owner任务（不以learn.json缺项判退出，不重复派；实际状态沿原件核）：
 - roy-five-item-exact-live-joint-20261020；thread=original ops engineering composition no new model；/home/dw/Projects/agent-sts2/.worktrees/ops-five-item-live-20261020-1855；paper/materials/20261020-low-load-once-ops/receipt.json
 - roy-next-run-off-infra39-exact-live-20261020-1802；thread=original native ops finite exact-live-source checker, no new model；/home/dw/Projects/agent-sts2/.worktrees/ops-infra-live-exact-20261020-1803；paper/materials/20261020-1831-ops/receipt.json
@@ -35,16 +34,16 @@ human-pace 原owner=01a13dcd-83d4-7c63-b233-f93cf878ecf4，接续=01a14aae-4b03-
 未确认通知 1；不得代其他角色 ACK。前8项：
 - 733e3a9e9380d9155431980e disagreement watcher_received,roy_notified；/home/dw/Projects/agent-sts2/ops/codex-ops/learning-notices/733e3a9e9380d9155431980e.json
 队列 0，只按本轮已提交事件处理；前4项：
-原事务未标 completed 共184（含未知，非活进程数），最近4项：
+原事务未标 completed 共185（含未知，非活进程数），最近4项：
+- /home/dw/Projects/agent-sts2/ops/codex-ops/pending-continuations/original-W4-card-criteria-20261021.json；phase=original-single-controller-submitted-to-kernel-admission-no-actual-full-start-readback-yet
 - /home/dw/Projects/agent-sts2/ops/codex-ops/pending-continuations/original-W8-P4-refresh-receipt-audit-20261020.json；phase=formal29-plus-clock1-plus-off2-await-original014301-formal-dependency-before-single-joint
 - /home/dw/Projects/agent-sts2/ops/codex-ops/pending-continuations/original-20261021-014301-ordinary-fixture-three-leaf.json；phase=three-uncommitted-test-leaves-frozen-await-post-P0-latest-live-host-full
 - /home/dw/Projects/agent-sts2/ops/codex-ops/pending-continuations/original-W4-R404-card-provider-wiring-20261020.json；phase=R408-CARDbrain-published-and-new-natural-run-config-action-readback
-- /home/dw/Projects/agent-sts2/ops/codex-ops/pending-continuations/original-20261021-001302-monitor-health-six-leaf.json；phase=original-uncommitted-four-monitor-plus-two-helper-deps-frozen-full1-after-P0-gate
 最新指令短引用（完整行按offset核）：
-- offset=2046645：- 2026-10-21 04:42:46 CST 原ops实收W8 P4续报：同2399复现6红3绿、只换旧48知识九绿；所报差异仅shop act_boss_clock及note、resolved动作相同，加载栈指向mock前真实monster-db。W0固定缓存九绿且golden不改，仍待正式两叶source/manifest/patch及定向原件，ops未独立重验/未认联合绿，不起full或运输。原七败保留，014301依赖原链
 - offset=2047254：- 2026-10-21 04:51:51 CST 原ops已实读正式P4 off两叶88b51030b：103材料/两源前后像/54帧核同，独立W0重建及27动作字节同，原tsc0/75定向绿不代联合full。材料窄收、原七败保留；ordinary014301正式依赖仍pending，未启动full或发布，R408 CARDbrain/REFLEXoff不动。原件paper/materials/20261021-P4-off-form
-原事务文件索引数（含历史）：pending-integrations=149；pending-deliveries=16；pending-records=34；pending-continuations=28；publications=1；完整路径见 current.json，不从文件存在推定未完成/运行。
-新指令原件：ops/inbox-dev.md 当前尾段 offset=2039443, bytes=8192；本轮新授权必须由事件引用，漏项查此段，勿整份重读。
+- offset=2047636：- 2026-10-21 05:06:57 CST 原ops实读W4 criteria024612ef八叶/72材料(71清单项)及11gz核同，原16真请求/78定向非联合绿；8/12有三均值反例，B正式runtime0/204仍miss。独立R408树仅八叶+已核W0两测试依赖，唯一runner2387940提交原锁准入，尚未核实际full启动；不夹P4生产/014301未提交源，不自动恢复jev，CARDbrain/REFLEXo
+原事务文件索引数（含历史）：pending-integrations=149；pending-deliveries=16；pending-records=34；pending-continuations=29；publications=1；完整路径见 current.json，不从文件存在推定未完成/运行。
+新指令原件：ops/inbox-dev.md 当前尾段 offset=2039919, bytes=8192；本轮新授权必须由事件引用，漏项查此段，勿整份重读。
 current.json 仅按本事件 batch/request/notice id 用程序筛字段，不全文读；动态源变化后核新清单，不用旧值冒当前。
 H0/0332等科学边界、精确宿主树、未完成发布/兼容及 retention 仅沿原报告和事务回执；清单不代验收、shipped、覆盖率或消费。
 严格普通无源码成功由调度器完成账本检查、唯一 dataset 与受控记录提交，回执 ops/codex-ops/ordinary-close/；异常、异议、缺证、人工决定正常唤醒。

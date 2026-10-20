@@ -1,0 +1,26 @@
+
+ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/v6-card-criteria-20261021/agent
+
+ ❯ tests/v6-prompt-summary.test.ts (13 tests | 1 failed) 4281ms
+   × preserves every A elite and all 17 B core identities with a realistic 204-row cached target grid 188ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/v6-prompt-summary.test.ts > preserves every A elite and all 17 B core identities with a realistic 204-row cached target grid
+AssertionError: {"bytes":14162,"budget":{"limit":14191,"unit":"bytes","before":156514,"after":14162,"truncated":true,"omitted":{"core_metrics.outcome_details":202}},"rows":[["R-acro-tingsha",1],["R-tools-tingsha",1],["R-acro-bandages",0],["P-toxin-footwork",0],["P-fumes-footwork",0],["P-flask-afterimage",0],["P-flask-footwork",0],["P-mixed-defense",0],["P-toxin-mirage",0],["D-toxin-backflip",0],["D-fumes-backflip",0],["D-flask-sweep",0],["D-observed-union-fbc4b776",0],["S-dance-accuracy",0],["S-cloak-phantom",0],["S-dance-afterimage",0],["S-observed-union-35f60a95",0]]}: expected 0 to be greater than 0
+ ❯ tests/v6-prompt-summary.test.ts:279:174
+    277|       .toEqual(asArray(original.requirements).map(raw => asArray(asRec…
+    278|     // Checking only combo ids allowed the production bug to pass with…
+    279|     expect(asArray(combo.outcomes).length, JSON.stringify({ bytes: siz…
+       |                                                                                                                                                                              ^
+    280|     expect(asArray(combo.outcomes).length + asArray(combo.outcomes_omi…
+    281|     for (const outcome of asArray(combo.outcomes)) {
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 12 passed (13)
+   Start at  04:28:16
+   Duration  7.53s (transform 2.44s, setup 336ms, import 2.77s, tests 4.28s, environment 0ms)
+

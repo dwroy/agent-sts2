@@ -1,0 +1,376 @@
+diff --git a/agent/src/sim/v6-card-results.ts b/agent/src/sim/v6-card-results.ts
+index 7680bfcc1..f1ddf5bf4 100644
+--- a/agent/src/sim/v6-card-results.ts
++++ b/agent/src/sim/v6-card-results.ts
+@@ -113,20 +113,26 @@ export function coreProgress(r: V6ProjectionRequest, option = r.baseline): CoreP
+   }));
+ }
+ /** Canonical published alternative order is a construction convention, never a learned card ranking. */
+-export function completedCore(state: BuildState, direction: V6Direction, combo: V6Combo, act: number): BuildState | null {
+-  if (combo.prerequisiteResolution === "unknown" || combo.prerequisites && evaluatePredicate(combo.prerequisites, {
++function completeCore(state: BuildState, direction: V6Direction, combo: V6Combo, act: number): { state: BuildState | null; reason?: string } {
++  if (combo.prerequisiteResolution === "unknown") return { state: null, reason: "core_prerequisite_resolution_unknown" };
++  const predicate = combo.prerequisites ? evaluatePredicate(combo.prerequisites, {
+     act, floor: state.floor, player: { hp: state.hp, max_hp: state.maxHp, gold: state.gold, relics: state.relics, deck: state.cards },
+-  }) !== true) return null;
++  }) : true;
++  if (predicate !== true) return { state: null, reason: predicate === false ? "core_prerequisite_not_met" : "core_prerequisite_predicate_unknown" };
+   const completed = structuredClone(state);
+   for (const requirement of combo.requirements) {
+     const n = missingRequirements(completed, { ...core(direction, combo), requirements: [requirement] })[0]?.count ?? 0;
+     for (let i = 0; i < n; i++) {
+       const card = requirement.any.find(c => c.kind === "card" && (!requirement.distinct || !completed.cards.some(k => k.id === c.id)));
+-      if (!card || completed.cap !== null && completed.cards.length >= completed.cap) return null;
++      if (!card) return { state: null, reason: `core_required_resource_unavailable:${requirement.id}` };
++      if (completed.cap !== null && completed.cards.length >= completed.cap) return { state: null, reason: "core_deck_capacity_exceeded" };
+       completed.cards.push({ id: card.id, upgraded: card.upgraded ?? false });
+     }
+   }
+-  return distance(completed, direction, combo) === 0 ? completed : null;
++  return distance(completed, direction, combo) === 0 ? { state: completed } : { state: null, reason: "core_completion_unresolved" };
++}
++export function completedCore(state: BuildState, direction: V6Direction, combo: V6Combo, act: number): BuildState | null {
++  return completeCore(state, direction, combo, act).state;
+ }
+ 
+ /** One existing pool; foreground never starts completed-core work. Absolute sample IDs survive bounded slices. */
+@@ -222,34 +228,38 @@ export class V6CardResultsEngine {
+   }
+   async precompute(r: V6ProjectionRequest, context: CardResultsContext, budgetMs: number, signal?: AbortSignal): Promise<void> {
+     const deadline = this.now() + budgetMs, rows: CoreCombatRow[] = [];
+-    const targets = r.targets.filter(t => t.kind !== "current"), cursor = this.backgroundCursor.get(context.fingerprint) ?? 0;
+-    const ordered = [...targets.slice(cursor), ...targets.slice(0, cursor)];
+-    // Prepare and sample one target at a time. Preparing the entire core grid can consume
+-    // a cold slice without any simulation. Rotate the next slice and use only two common
+-    // samples per target before extending counts, so early targets cannot starve later ones.
++    const work = r.targets.filter(t => t.kind !== "current").flatMap(target =>
++      r.directions.flatMap(direction => direction.combos.map(combo => ({ target, direction, combo }))));
++    const cursor = this.backgroundCursor.get(context.fingerprint) ?? 0;
++    const ordered = [...work.slice(cursor), ...work.slice(0, cursor)];
++    // Construct one core and immediately sample its paired baseline. A 17-core
++    // opening grid must not spend an entire background slice before its first sample.
+     outer: for (let limit = Math.min(2, this.samplesPerOption);; limit = Math.min(this.samplesPerOption, limit + 8)) {
+-      for (const target of ordered) {
++      for (const item of ordered) {
+         if (this.now() >= deadline || signal?.aborted) break outer;
+-        const base = this.job(r, context, target, r.baseline, this.prepare(r, context, target, r.baseline));
+-        const combos = r.directions.flatMap(direction => direction.combos.map(combo => {
+-          const completed = completedCore(r.baseline.state, direction, combo, r.act);
+-          const option = { ...r.baseline, id: `${direction.id}:${combo.id}`, state: completed ?? r.baseline.state };
+-          // Use the original held-resource option identity with the completed cards.
+-          const prepared = completed && this.now() < deadline && !signal?.aborted
+-            ? this.prepare(r, context, target, option, r.baseline) : null;
+-          return { direction, combo, completed, option, prepared, job: this.job(r, context, target, option, prepared) };
+-        }));
+-        await this.run([...(base ? [base] : []), ...combos.flatMap(k => k.job ? [k.job] : [])], r, deadline, signal, limit);
+-        for (const k of combos) {
+-          const row = cardCombatRow(k.option.id, target, k.prepared, k.job?.stored.outcomes ?? [], base?.stored.outcomes ?? [],
+-            r.trust(target), this.samplesPerOption, base?.prepared ?? null);
+-          if (!k.completed) row.unknown_reasons.push("core_prerequisite_or_required_resource_unavailable");
+-          rows.push({ ...row, direction_id: k.direction.id, combo_id: k.combo.id,
+-            added_cards: k.completed?.cards.slice(r.baseline.state.cards.length) ?? [] });
+-        }
+-        this.backgroundCursor.set(context.fingerprint, (targets.indexOf(target) + 1) % targets.length);
++        const { target, direction, combo } = item;
++        const basePrepared = this.prepare(r, context, target, r.baseline);
++        const base = this.job(r, context, target, r.baseline, basePrepared);
++        const completion = completeCore(r.baseline.state, direction, combo, r.act), completed = completion.state;
++        const option = { ...r.baseline, id: `${direction.id}:${combo.id}`, state: completed ?? r.baseline.state };
++        const canPrepare = this.now() < deadline && !signal?.aborted;
++        const prepared = completed && canPrepare ? this.prepare(r, context, target, option, r.baseline) : null;
++        const job = this.job(r, context, target, option, prepared);
++        await this.run([...(base ? [base] : []), ...(job ? [job] : [])], r, deadline, signal, limit);
++        const row = cardCombatRow(option.id, target, prepared, job?.stored.outcomes ?? [], base?.stored.outcomes ?? [],
++          r.trust(target), this.samplesPerOption, basePrepared);
++        if (!completed || !canPrepare) row.unknown_reasons = row.unknown_reasons.filter(reason => reason !== "opening_unavailable");
++        if (!completed) row.unknown_reasons.push("core_prerequisite_or_required_resource_unavailable", completion.reason!);
++        else if (!canPrepare) row.unknown_reasons.push("background_preparation_budget_exhausted");
++        else if (prepared && row.samples < 2 && (this.now() >= deadline || signal?.aborted))
++          row.unknown_reasons.push("background_sampling_budget_exhausted");
++        const error = this.openingErrors.get(v6Digest([context.fingerprint, target, option.state, option.preparationKey]));
++        if (error) row.unknown_reasons.push(error);
++        rows.push({ ...row, direction_id: direction.id, combo_id: combo.id,
++          added_cards: completed?.cards.slice(r.baseline.state.cards.length) ?? [] });
++        this.backgroundCursor.set(context.fingerprint, (work.indexOf(item) + 1) % work.length);
+       }
+-      if (limit === this.samplesPerOption || !targets.length) break;
++      if (limit === this.samplesPerOption || !work.length) break;
+     }
+     const previous = this.longTerm.get(context.fingerprint) ?? [];
+     const merged = new Map(previous.map(row => [`${row.direction_id}:${row.combo_id}:${row.target_id}`, row]));
+diff --git a/agent/src/v6/card-criteria.ts b/agent/src/v6/card-criteria.ts
+new file mode 100644
+index 000000000..6c2e19e38
+--- /dev/null
++++ b/agent/src/v6/card-criteria.ts
+@@ -0,0 +1,43 @@
++/** Decisions consumes criteria directly. Keep measured comparisons beside each legal choice. */
++import type { CardCombatRow, CombatEstimate, CombatMetric, V6CardResults } from "../sim/v6-card-results.js";
++
++const fields: CombatMetric[] = ["death_rate", "hp_loss", "damage_per_turn", "turns", "losing_enemy_hp_fraction"];
++export const V6_CARD_CRITERIA_INSTRUCTIONS = "Choose from the numeric criteria. Every delta is option minus skip on identical seeds; target indexes state.targets; columns orders the five metrics; each cell is [mean,SE,n]. Prefer lower death/HP loss and higher damage/turn across the current Boss and observed elite pool. Turns alone are not better: when all die, longer survival and lower losing-enemy HP can matter. equal_option_means gives column indices for non-discriminating absolute means, not equal uncertainty. B lists completed-core future outcomes and cards_missing, independent of A. Never multiply by P; unknown is not zero. Use supplied facts and uncertainty.";
++const cell = (x: CombatEstimate | null) => x ? [Number(x.mean.toPrecision(5)), x.se === null ? null : Number(x.se.toPrecision(3)), x.n] : null;
++const measures = (r: CardCombatRow, paired: boolean) => fields.map(k => cell((paired ? r.paired_delta : r.metrics)[k]));
++
++export function cardCriteria(names: Record<string, string>, results: V6CardResults | null | undefined): Record<string, string> {
++  const target = (id: string) => { const i = results?.targets.findIndex(t => t.id === id) ?? -1; return i < 0 ? id : i; };
++  const choices = Object.keys(names), bodies: Record<string, Record<string, unknown>> = {};
++  const same = new Map<string, string[]>();
++  for (const target of results?.targets.filter(t => t.kind === "current" || t.kind === "elite") ?? []) {
++    const rows = choices.map(id => results?.immediate.find(r => r.option_id === id && r.target_id === target.id));
++    same.set(target.id, fields.filter(k => rows.every(r => r?.metrics[k]) && new Set(rows.map(r => r!.metrics[k]!.mean)).size === 1));
++  }
++  for (const id of choices) {
++    bodies[id] = { action: names[id], columns: fields, A_vs_skip: results?.immediate.filter(r => r.option_id === id).map(r => ({
++      target: target(r.target_id), delta: measures(r, true),
++      ...(same.get(r.target_id)?.length ? { equal_option_means: same.get(r.target_id)!.map(k => fields.indexOf(k as CombatMetric)) } : {}),
++      ...(r.metrics.death_rate?.mean === 1 ? { all_sampled_fights_lost: true } : {}),
++      ...(r.unknown_reasons.length ? { unknown: r.unknown_reasons } : {}),
++    })) ?? [], B_progress: results?.progress[id]?.filter(p => p.advanced > 0).map(p => ({
++      direction: p.direction, core: p.combo, advanced: p.advanced, cards_missing: p.missing_after,
++      results: [], unknown: results.long_term.some(r => r.direction_id === p.direction && r.combo_id === p.combo) ? [...new Set(results.long_term.filter(r => r.direction_id === p.direction && r.combo_id === p.combo).flatMap(r => r.unknown_reasons))] : ["completed_core_cache_miss"],
++    })) ?? [] };
++  }
++  // A and progress are mandatory. Allocate optional B numeric rows fairly without cutting a number/string mid-cell.
++  const pending = choices.map(id => {
++    const cores = (bodies[id]!.B_progress as Record<string, unknown>[]).map(core => ({ core,
++      rows: (results?.long_term ?? []).filter(r => r.direction_id === core.direction && r.combo_id === core.core && fields.some(k => r.metrics[k])) }));
++    return { id, rows: Array.from({ length: Math.max(0, ...cores.map(c => c.rows.length)) }, (_, i) =>
++      cores.flatMap(c => c.rows[i] ? [{ core: c.core, row: c.rows[i]! }] : [])).flat() };
++  });
++  const size = () => Buffer.byteLength(JSON.stringify(bodies));
++  for (let i = 0; i < Math.max(0, ...pending.map(p => p.rows.length)); i++) for (const p of pending) {
++    const item = p.rows[i]; if (!item) continue;
++    const rows = item.core.results as unknown[];
++    rows.push({ target: target(item.row.target_id), result: measures(item.row, false), vs_current_deck: measures(item.row, true), trust: item.row.trust });
++    if (size() > 6_000) { rows.pop(); item.core.numeric_targets_omitted = Number(item.core.numeric_targets_omitted ?? 0) + 1; }
++  }
++  return Object.fromEntries(choices.map(id => [id, JSON.stringify(bodies[id])]));
++}
+diff --git a/agent/src/v6/card-pick.ts b/agent/src/v6/card-pick.ts
+index ee0333b10..6dd85037f 100644
+--- a/agent/src/v6/card-pick.ts
++++ b/agent/src/v6/card-pick.ts
+@@ -13,6 +13,7 @@ import { v6Config } from "./config.js";
+ import { postCombatCardReward } from "./card-reward-scope.js";
+ import { v6Directions, v6PublishedKnowledge } from "./direction-runtime.js";
+ import { KNOWLEDGE_DIR } from "../knowledge/files.js";
++import { cardCriteria, V6_CARD_CRITERIA_INSTRUCTIONS } from "./card-criteria.js";
+ import { cardPickReflex } from "./card-pick-reflex.js";
+ import { V6BuildLog } from "./log.js";
+ import type { ProjectionEntry, Character } from "./formats.js";
+@@ -112,13 +113,13 @@ export function buildV6CardPick(env: DecisionEnv, table: V6ProjectionTable | und
+       || Number(b === "skip") - Number(a === "skip") || choices.indexOf(a) - choices.indexOf(b);
+   })[0] ?? choices.find(key => key !== "skip") ?? choices[0]!;
+   const decision: AskDecision = { kind: "ask", label: "reward/card", v6Card: true,
+-    state: { card_result_schema: "v6-card-combat-results-v1", direction_weights: toJsonValue(weights),
++    state: { card_result_schema: "v6-card-combat-results-v1", card_criteria_schema: "paired-criteria-v1", direction_weights: toJsonValue(weights),
+       result_columns: [...metricOrder], estimate_columns: ["mean", "se", "n"],
+       targets: toJsonValue(targetMetadata), core_metrics: toJsonValue(coreMetrics),
+       long_term_cache: toJsonValue(results?.telemetry.long_term_cache ?? "miss"),
+       opening_note: "A uses current HP and the actual current deck plus this reward, never ideal cards or forecast route survival. B adds only missing core cards, from background cache independently of this reward. Never multiply by formation probability. Null means unknown. Raw simulation, not calibration. Each mean/SE has its own n; capped/interrupted windows and loss margins have separate denominators. Paired deltas use identical seeds. Lower HP loss/death and higher damage/turn are preferable. Fewer turns can mean faster victory OR earlier death: interpret with death, not as always better. If both die, lower remaining enemy HP and longer survival can matter. Losing enemy HP is conditional on losing, divided by opening encounter HP; later phases/spawns can make it exceed 1. Do not rank it alone. Elites are an observed pool, not spawn probabilities. Future entry HP is an assumption, not forecast inventory.",
+       options: facts, ...(plan?.ideal_overrides ? { temporary_combos: toJsonValue(plan.ideal_overrides) } : {}) },
+-    questions: { pick: choiceQ("Choose one card or skip using A immediate current-deck Boss and elite outcomes, paired with skip. B completed-core outcomes describe long-term directions; advances separately names combinations this card progresses and remaining cards. Compare HP loss, turns, damage/turn, death and losing-enemy HP with n, SE and trust. Do not use P*W or treat unknown as zero. Use only supplied facts.", criteria) },
++    questions: { pick: choiceQ(V6_CARD_CRITERIA_INSTRUCTIONS, cardCriteria(criteria, results)) },
+     resolve(answers): ResolvedAction {
+       const answer = cardAnswer(answers, choices), key = answer?.choice ?? fallback;
+       return { intent: intents[key]!, rationale: answer ? `V6 Jev chose ${key}` : `V6 card fallback chose ${key}: sampled current-Boss death, HP loss and damage outcomes (brain unavailable)`,
+diff --git a/agent/src/v6/prompt-summary.ts b/agent/src/v6/prompt-summary.ts
+index 53752a7a4..2039c6cab 100644
+--- a/agent/src/v6/prompt-summary.ts
++++ b/agent/src/v6/prompt-summary.ts
+@@ -103,18 +103,32 @@ function boundCardResults(input: Record<string, JsonValue>, limit: number, unit:
+     return { core: toJsonValue({ ...core, cards, outcomes: [], outcomes_omitted: [] }) as Record<string, JsonValue>, rows: available };
+   });
+   const comboIndex = new Map(cores.map(({ core }, i) => [String(core.id), i]));
++  const resultCounts = new Map<string, number>();
++  if (input.card_criteria_schema === "paired-criteria-v1") for (const raw of Object.values(asRecord(input.options)))
++    for (const row of asArray(asRecord(raw).immediate)) {
++      const key = JSON.stringify(asArray(asRecord(row).result).map(cell));
++      resultCounts.set(key, (resultCounts.get(key) ?? 0) + 1);
++    }
++  const immediateRows = (value: unknown) => rows(value, input.card_criteria_schema !== "paired-criteria-v1").map(row => {
++    if ((resultCounts.get(JSON.stringify(row.result)) ?? 0) < 2) return row;
++    // Share identical absolute vectors; each candidate's paired cells remain directly in its criteria.
++    const { result, ...rest } = row;
++    return { ...rest, result_ref: ref(result) };
++  });
+   state.options = toJsonValue(Object.fromEntries(Object.entries(asRecord(input.options)).map(([id, raw]) => {
+     const option = asRecord(raw);
+     return [id, { ...optionFacts(option) as Record<string, JsonValue>,
+       ...(asArray(option.reflex).length ? { reflex: option.reflex } : {}),
+       // All immediate Boss and elite targets survive, including paired deltas and unknown reasons.
+-      immediate: rows(option.immediate, true), advances: asArray(option.advances).map(raw => {
++      immediate: immediateRows(option.immediate), advances: asArray(option.advances).map(raw => {
+         const advance = asRecord(raw);
+         return [comboIndex.get(String(advance.combo)) ?? String(advance.combo), advance.advanced ?? null, advance.missing_after ?? null];
+       }) }];
+   })));
+   state.core_metrics = cores.map(c => c.core);
+   state.card_display = { target: "index into targets", refs: "indices into display_catalog", numeric_precision: "mean 5 and SE 3 significant digits; n exact; audit keeps full precision",
++    A_paired_location: input.card_criteria_schema === "paired-criteria-v1" ? "questions.pick.criteria: A_vs_skip.delta" : "options.immediate.vs_skip",
++    A_result_ref: "identical absolute result vectors shared in display_catalog; result or result_ref retains all metric cells",
+     requested_samples_default: 100, advance_columns: ["core_metrics index (or combo id)", "advanced", "missing_after"],
+     cards: "requirements [count, alternatives, distinct?]; string alternative is an unupgraded card; otherwise [id, upgraded|null, kind]",
+     B_row_columns: ["target", "result", "vs_skip", "samples", "trust_ref", "optional exception facts"],
+@@ -301,6 +315,19 @@ export function boundV6State(input: Record<string, JsonValue>, limit: number, un
+ /** Bound questions as well: potion choice criteria can contain an entire serialized option. */
+ export function boundedV6Jev(state: Record<string, JsonValue>, questions: QuestionSet): { state: Record<string, JsonValue>; questions: QuestionSet } {
+   const qs = structuredClone(questions);
++  if (state.card_criteria_schema === "paired-criteria-v1") {
++    // Card criteria contain mandatory paired estimates, not disposable descriptions.
++    // Reserve their actual wire bytes and trim only the secondary shared B display.
++    const allowance = Math.min(V6_JEV_STATE_BYTES, V6_JEV_REQUEST_BYTES - bytes({ model: "typesafe/jev-1.14", questions: qs }) - 64);
++    if (allowance < 512) {
++      for (const q of Object.values(qs)) {
++        q.instructions = "Numeric criteria exceed the request budget; use the original brain decision.";
++        if (q.type === "choice") q.criteria = Object.fromEntries(Object.keys(q.criteria).map(key => [key, key]));
++      }
++      return { state: { card_prompt_unavailable: "mandatory_card_criteria_exceed_budget" }, questions: qs };
++    }
++    return { state: boundV6State(state, Math.max(0, allowance), "bytes"), questions: qs };
++  }
+   const clip = (s: string, n: number) => { let out = s; while (Buffer.byteLength(out) > n) out = out.slice(0, Math.max(0, Math.floor(out.length * n / Buffer.byteLength(out)))); return out; };
+   for (const q of Object.values(qs)) {
+     q.instructions = clip(q.instructions, 600);
+diff --git a/agent/tests/v6-card-option-loop.test.ts b/agent/tests/v6-card-option-loop.test.ts
+index 3c58d95a1..dbb4d7be0 100644
+--- a/agent/tests/v6-card-option-loop.test.ts
++++ b/agent/tests/v6-card-option-loop.test.ts
+@@ -91,10 +91,32 @@ it.each([["T0TP8S9MMU9Q", 2], ["RBMEQGXPE9Z2", 3]] as const)(
+         onEvent: event => { if (event.type === "note") notes.push(event.message); } });
+       expect(stats, notes.join("\n")).toMatchObject({ decisions: 1, jevCalls: 1, deepseekCalls: 0 });
+       expect(ask).toHaveBeenCalledTimes(1);
++      const criteria = (ask.mock.calls[0]![1].pick as { criteria: Record<string,string> }).criteria;
++      for (const id of ["card0", "card1", "card2", "skip"]) {
++        const summary = JSON.parse(criteria[id]!);
++        expect(summary.A_vs_skip.length).toBeGreaterThan(0);
++        expect(summary.A_vs_skip[0].delta[0][2]).toBeGreaterThanOrEqual(2);
++        expect(criteria[id]!.length).toBeGreaterThan(600); // Numeric criteria must survive the shared limiter.
++      }
+       expect(actions).toEqual([{ action: "choose_reward_card", option_index: 0 }]);
+       expect(notes.filter(n => n.includes("v6_unknown_to_brain"))).toEqual([]);
+       expect(tables.length, JSON.stringify({ stats, actions, notes, polls })).toBeGreaterThan(0);
+       const table = tables.at(-1)!, target = table.targets.find(t => t.kind === "current")!;
++      expect(Buffer.byteLength(JSON.stringify({ model: jev.model, state: ask.mock.calls[0]![0], questions: ask.mock.calls[0]![1] }))).toBeLessThanOrEqual(24_000);
++      // Compare the transported criteria with the simulator's audit, through the real loop and limiter.
++      for (const id of ["card0", "card1", "card2", "skip"]) for (const displayed of JSON.parse(criteria[id]!).A_vs_skip) {
++        const audit = table.immediate.find(r => r.option_id === id && r.target_id === table.targets[displayed.target]!.id)!;
++        for (const [i, metric] of (JSON.parse(criteria[id]!).columns as (keyof typeof audit.paired_delta)[]).entries()) {
++          const estimate = audit.paired_delta[metric], cell = displayed.delta[i];
++          if (!estimate) expect(cell).toBeNull();
++          else {
++            expect(cell[0]).toBeCloseTo(estimate.mean, Math.max(0, 4 - Math.floor(Math.log10(Math.abs(estimate.mean) || 1))));
++            expect(cell[2]).toBe(estimate.n);
++            if (estimate.se === null) expect(cell[1]).toBeNull();
++            else expect(Math.abs(cell[1] - estimate.se)).toBeLessThanOrEqual(Math.max(1e-10, Math.abs(estimate.se) * .005));
++          }
++        }
++      }
+       const ids = ["card0", "card1", "card2", "skip"];
+       expect(ids.map(id => cardResultKnown(table, id))).toEqual([true, true, true, true]);
+       const rows = ids.map(id => table.immediate.find(r => r.option_id === id && r.target_id === target.id)!);
+diff --git a/agent/tests/v6-card-pick.test.ts b/agent/tests/v6-card-pick.test.ts
+index 7ae337bc7..c9aaa3510 100644
+--- a/agent/tests/v6-card-pick.test.ts
++++ b/agent/tests/v6-card-pick.test.ts
+@@ -67,7 +67,8 @@ function delta(t: V6ProjectionTable, option: string, kind: "current_gate" | "cle
+ it("keeps legal reward indices, English Decisions criteria and unknown per-combo entries", () => {
+   const { e, dir } = fixture(), p = buildV6CardPick(e, undefined, dir)!;
+   expect(p.choices).toEqual(["card2", "card7", "card9", "skip"]);
+-  expect(p.decision.questions.pick).toMatchObject({ type: "choice", criteria: { card2: "Take TEST_CARD+", card7: "Take TEST_OTHER", card9: "Take TEST_THIRD", skip: "Take no card" } });
++  expect(p.decision.questions.pick.type).toBe("choice");
++  expect(Object.fromEntries(Object.entries(asRecord(p.decision.questions.pick).criteria as Record<string, string>).map(([k,v]) => [k, JSON.parse(v).action]))).toEqual({ card2: "Take TEST_CARD+", card7: "Take TEST_OTHER", card9: "Take TEST_THIRD", skip: "Take no card" });
+   expect(p.decision.resolve(answer("card7")).intent).toEqual({ action: "choose_reward_card", option_index: 7 });
+   expect(p.decision.resolve(answer("unoffered")).intent).toEqual({ action: "choose_reward_card", option_index: 2 });
+   expect(p.entries).toEqual([]);
+@@ -84,10 +85,11 @@ it("counts current-deck sampled outcomes even when trust and long-term cores are
+   const { e, dir } = fixture(); e.v6CardResults = cardResults(["card2", "skip"]);
+   const pick = buildV6CardPick(e, undefined, dir)!;
+   expect(pick.decision.state).toMatchObject({ options: { card2: { known_current_boss: true,
+-    immediate: [expect.objectContaining({ result: [[8, 0, 2], [4, 0, 2], [20, 0, 2], [0, 0, 2], null],
+-      vs_skip: [[0, 0, 2], [0, 0, 2], [0, 0, 2], [0, 0, 2], null], trust_ref: expect.any(Number) })] },
++    immediate: [expect.objectContaining({ trust_ref: expect.any(Number) })] },
+     card7: { known_current_boss: false } } });
++  expect(JSON.parse((pick.decision.questions.pick as { criteria: Record<string,string> }).criteria.card2!).A_vs_skip[0].delta).toEqual([[0,0,2], [0,0,2], [0,0,2], [0,0,2], null]);
+   const row = asRecord(asArray(asRecord(asRecord(pick.decision.state.options).card2).immediate)[0]);
++  expect(row.result ?? asArray(pick.decision.state.display_catalog)[Number(row.result_ref)]).toEqual([[8, 0, 2], [4, 0, 2], [20, 0, 2], [0, 0, 2], null]);
+   expect(asArray(pick.decision.state.display_catalog)[Number(row.trust_ref)]).toMatchObject({ value: "unknown" });
+   recordCardPick(e, pick, join(dir, "plans.jsonl"), "current", {}, 1, null);
+   const audit = JSON.parse(readFileSync(join(dir, "v6-build.jsonl"), "utf8"));
+diff --git a/agent/tests/v6-card-results.test.ts b/agent/tests/v6-card-results.test.ts
+index aca68b6f2..87a2574de 100644
+--- a/agent/tests/v6-card-results.test.ts
++++ b/agent/tests/v6-card-results.test.ts
+@@ -86,17 +86,40 @@ it("samples B before preparing all targets and rotates interrupted slices withou
+   expect((await engine.evaluate(r, context, 0)).long_term.map(row => [row.target_id, row.samples]))
+     .toEqual([["future2", 2], ["future3", 2]]);
+ });
+-it("keeps useful B outcomes when cold opening preparation alone would exhaust a whole grid budget", async () => {
++it("samples a B core before constructing all 17 cold openings and resumes the next core", async () => {
+   let now = 0; const r = request(), prepare = r.prepare;
+-  r.targets.push(...[2, 3, 4].map(act => ({ ...r.targets[0]!, id: `future${act}`, kind: "future" as const, act })));
++  r.directions = Array.from({ length: 17 }, (_, i) => direction(`D${i}`, [req(`CORE${i}`)]));
++  r.targets.push({ ...r.targets[0]!, id: "future2", kind: "future", act: 2 });
+   r.prepare = (...args) => { now += 10; return prepare(...args); };
+-  const engine = new V6CardResultsEngine(new Runner(() => { now += 20; }), () => now, 20), context = { fingerprint: "cold_B" };
++  const engine = new V6CardResultsEngine(new Runner(() => { now += 20; }), () => now, 20), context = { fingerprint: "cold_17_B" };
+   await engine.precompute(r, context, 35);
+-  expect((await engine.evaluate(r, context, 0)).long_term.map(row => [row.target_id, row.samples])).toEqual([["future2", 2]]);
++  expect((await engine.evaluate(r, context, 0)).long_term.map(row => [row.combo_id, row.samples])).toEqual([["D0:minimal", 2]]);
+   await engine.precompute(r, context, 35);
+-  expect((await engine.evaluate(r, context, 0)).long_term.map(row => [row.target_id, row.samples]))
+-    .toEqual([["future2", 2], ["future3", 2]]);
++  expect((await engine.evaluate(r, context, 0)).long_term.map(row => [row.combo_id, row.samples]))
++    .toEqual([["D0:minimal", 2], ["D1:minimal", 2], ["D2:minimal", 0]]);
++  expect(engine.peekCompletedCore(context.fingerprint)![2]!.unknown_reasons).toContain("background_sampling_budget_exhausted");
++});
++it("distinguishes unavailable prerequisites, resources and an exhausted preparation slice", async () => {
++  const r = request(), base = r.directions[0]!;
++  r.directions = [
++    { ...base, combos: [{ ...base.combos[0]!, id: "unknown", prerequisiteResolution: "unknown" }] },
++    { ...base, combos: [{ ...base.combos[0]!, id: "relic", requirements: [{ id: "needed_relic", count: 1, any: [{ kind: "relic", id: "ABSENT" }] }] }] },
++  ];
++  r.targets.push({ ...r.targets[0]!, id: "future", kind: "future", act: 2 });
++  const engine = new V6CardResultsEngine(new Runner(), () => 0, 2);
++  await engine.precompute(r, { fingerprint: "guard_reasons" }, 100);
++  const rows = engine.peekCompletedCore("guard_reasons")!;
++  expect(rows[0]!.unknown_reasons).toContain("core_prerequisite_resolution_unknown");
++  expect(rows[1]!.unknown_reasons).toContain("core_required_resource_unavailable:needed_relic");
++  expect(rows.every(row => row.metrics.hp_loss === null && !row.unknown_reasons.includes("opening_unavailable"))).toBe(true);
++  let now = 0; const cold = request(), prepare = cold.prepare;
++  cold.targets.push({ ...cold.targets[0]!, id: "future", kind: "future", act: 2 });
++  cold.prepare = (...args) => { now += 20; return prepare(...args); };
++  const coldEngine = new V6CardResultsEngine(new Runner(), () => now, 2);
++  await coldEngine.precompute(cold, { fingerprint: "budget_reason" }, 10);
++  expect(coldEngine.peekCompletedCore("budget_reason")![0]!.unknown_reasons).toContain("background_preparation_budget_exhausted");
+ });
++
+ it("does not turn capped, missing, or invalid continuous samples into deaths or survivals", () => {
+   const r = request(), target = r.targets[0]!, prepared = r.prepare(target, r.baseline.state)!;
+   const samples = [{ ...outcome(false), died: false, capped: true }, undefined, outcome(false)];
+diff --git a/agent/tests/v6-prompt-summary.test.ts b/agent/tests/v6-prompt-summary.test.ts
+index f44afd483..4f11e4325 100644
+--- a/agent/tests/v6-prompt-summary.test.ts
++++ b/agent/tests/v6-prompt-summary.test.ts
+@@ -291,7 +291,7 @@ it("preserves every A elite and all 17 B core identities with a realistic 204-ro
+     expect(option.known_current_boss).toBe(true);
+     expect(immediate.map(r => asRecord(asArray(d.state.targets)[Number(r.target)]).id)).toEqual(targets.slice(0, 7).map(t => t.id));
+     expect(catalog[Number(immediate[6]!.reason_ref)]).toEqual(["fixed_partial_opening_limitation"]);
+-    expect(immediate[0]!.result).toEqual([[17.123, .123, 100], [8.5123, .251, 100], [19.123, .988, 100], [.12346, .0212, 100], [.35123, .0312, 12]]);
++    expect(immediate[0]!.result ?? catalog[Number(immediate[0]!.result_ref)]).toEqual([[17.123, .123, 100], [8.5123, .251, 100], [19.123, .988, 100], [.12346, .0212, 100], [.35123, .0312, 12]]);
+   }
+   expect(asArray(asRecord(asRecord(d.state.options).card0).advances)).toHaveLength(17);
+   expect(buildV6CardPick(e, undefined, knowledge)!.decision.state).toEqual(d.state);
+@@ -309,3 +309,11 @@ it("routes an impossible mandatory card catalog to the brain instead of exceedin
+   expect(promptBudgetLabels(result.state)).toContain("card_prompt_unavailable:mandatory_A_and_core_catalog_exceed_budget");
+   expect(Object.keys(asRecord(result.questions.pick).criteria)).toEqual(["card0", "skip"]);
+ });
++
++it("hands impossible numeric criteria to the brain without clipping cells or sending an oversized request", () => {
++  const result = boundedV6Jev({ card_result_schema: "v6-card-combat-results-v1", card_criteria_schema: "paired-criteria-v1" },
++    { pick: choiceQ("Measured comparisons", { card0: "x".repeat(24_000), skip: "Skip" }) });
++  expect(result.state.card_prompt_unavailable).toBe("mandatory_card_criteria_exceed_budget");
++  expect(Object.keys(asRecord(result.questions.pick).criteria)).toEqual(["card0", "skip"]);
++  expect(size({ model: "typesafe/jev-1.14", ...result })).toBeLessThanOrEqual(V6_JEV_REQUEST_BYTES);
++});

@@ -5117,3 +5117,5 @@ request_id=roy-20261017-human-pace-h0 revision=3 input_sha256=1e1c259a15f1824119
 - 2026-10-21 04:42:46 CST 原ops实收W8 P4续报：同2399复现6红3绿、只换旧48知识九绿；所报差异仅shop act_boss_clock及note、resolved动作相同，加载栈指向mock前真实monster-db。W0固定缓存九绿且golden不改，仍待正式两叶source/manifest/patch及定向原件，ops未独立重验/未认联合绿，不起full或运输。原七败保留，014301依赖原链统筹；R408 brain/off与P2暂停不动。原文SHAeb6f1c851bfb1a9e14eb8405cdf7080c84b07edc90332beb56d02e7868e51e3c，原件paper/materials/20261021-0436-ops/W8-off-equivalence-owner-progress-intake.json。
 
 - 2026-10-21 04:51:51 CST 原ops已实读正式P4 off两叶88b51030b：103材料/两源前后像/54帧核同，独立W0重建及27动作字节同，原tsc0/75定向绿不代联合full。材料窄收、原七败保留；ordinary014301正式依赖仍pending，未启动full或发布，R408 CARDbrain/REFLEXoff不动。原件paper/materials/20261021-P4-off-formal-ops/receipt.json。
+
+- 2026-10-21 05:06:57 CST 原ops实读W4 criteria024612ef八叶/72材料(71清单项)及11gz核同，原16真请求/78定向非联合绿；8/12有三均值反例，B正式runtime0/204仍miss。独立R408树仅八叶+已核W0两测试依赖，唯一runner2387940提交原锁准入，尚未核实际full启动；不夹P4生产/014301未提交源，不自动恢复jev，CARDbrain/REFLEXoff、P2暂停保持。原件paper/materials/20261021-W4-criteria-joint-ops/receipt.json。

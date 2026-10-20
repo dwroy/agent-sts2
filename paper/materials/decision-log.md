@@ -5462,3 +5462,7 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
 - 2026-10-21 04:51:51 CST 原ops：P4 off正式88b51030b两叶运输与103材料核同，独立W0提取/27动作字节同；只收材料及原append，原014301正式依赖待齐，不重复实现/起full/认联合绿或运输父/805。R408不动；原件paper/materials/20261021-P4-off-formal-ops/receipt.json。
 
 - 2026-10-21 04:47:55 CST W8 P4 off六例：同2399输入复现6败3过；27帧resolved逐字同，差异仅商店Boss事实（铁甲10.5→10.6及说明，静默19→20），仅换旧common/monster-db即可9过；全局setup早于mock预载真实DB，固定W0缓存修复88b51030b仅两测试叶、不改golden/生产/知识/预算。联合隔离输入tsc0、4文件75过、源码gitleaks0，原full1/无效准备实验保留；ordinary-close仍原014301独立pending，完整联合与发布交ops，不动R408 CARDbrain/REFLEXoff。材料paper/materials/2026-10-21-v6-off-boss-fixture/。
+
+- 2026-10-21 05:06:57 CST 原ops：W4 criteria正式八叶及72材料核同，B正式miss/均值反例保留；P0优先独立R408八叶+W0两测试依赖，唯一2387940提交内核准入，尚无实际full回执，不叠full/夹P4/014301或805。CARDbrain/REFLEXoff不变，质量由Claude判；原件paper/materials/20261021-W4-criteria-joint-ops/receipt.json。
+
+- 2026-10-21 05:00:53 CST W4 criteria：正式源024612ef7（8叶，tree9fcaacea2），仅严格战后奖励选牌将A同种子相对skip五指标mean/SE/n及B进度/可用结果放入Nova criteria，保24KB与原脑安全门；B按组合轮转冷采样并明确前提/预算原因。tsc0、78定向过、16真实Nova全成功/无400超时、最大23909B；R407原12题排序一致8/12、保守误差明确逆指标0但3题均值被支配，生产新2题准备含题面4.54/4.94s、Boss已知4/4，B生产仍miss不冒手工预热为通过；局部gitleaks核80条局号楼层误报后0。交ops单点联合full/边界上线，未main/live/开jev；R408 brain与P2暂停保持。材料paper/materials/2026-10-21-v6-card-criteria/。

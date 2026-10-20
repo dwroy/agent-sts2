@@ -1,0 +1,113 @@
+
+ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/v6-card-criteria-20261021/agent
+
+ ❯ tests/v6-prompt-summary.test.ts (13 tests | 1 failed) 4296ms
+   × preserves every A elite and all 17 B core identities with a realistic 204-row cached target grid 207ms
+ ❯ tests/v6-card-pick.test.ts (23 tests | 1 failed) 1617ms
+   × counts current-deck sampled outcomes even when trust and long-term cores are unknown 30ms
+ ❯ tests/v6-card-results.test.ts (13 tests | 1 failed) 79ms
+   × samples a B core before constructing all 17 cold openings and resumes the next core 15ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 3 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/v6-card-pick.test.ts > counts current-deck sampled outcomes even when trust and long-term cores are unknown
+AssertionError: expected { …(13) } to match object { options: { card2: { …(2) }, …(1) } }
+(46 matching properties omitted from actual)
+
+- Expected
++ Received
+
+@@ -1,33 +1,13 @@
+  {
+    "options": {
+      "card2": {
+        "immediate": [
+          {
+-           "result": [
+-             [
+-               8,
+-               0,
+-               2,
+-             ],
+-             [
+-               4,
+-               0,
+-               2,
+-             ],
+-             [
+-               20,
+-               0,
+-               2,
+-             ],
+-             [
+-               0,
+-               0,
+-               2,
+-             ],
+-             null,
+-           ],
++           "result_ref": 1,
++           "samples": 2,
++           "target": 0,
+            "trust_ref": 0,
+          },
+        ],
+        "known_current_boss": true,
+      },
+
+ ❯ tests/v6-card-pick.test.ts:87:31
+     85|   const { e, dir } = fixture(); e.v6CardResults = cardResults(["card2"…
+     86|   const pick = buildV6CardPick(e, undefined, dir)!;
+     87|   expect(pick.decision.state).toMatchObject({ options: { card2: { know…
+       |                               ^
+     88|     immediate: [expect.objectContaining({ result: [[8, 0, 2], [4, 0, 2…
+     89|       trust_ref: expect.any(Number) })] },
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/3]⎯
+
+ FAIL  tests/v6-card-results.test.ts > samples a B core before constructing all 17 cold openings and resumes the next core
+AssertionError: expected [ [ 'D0:minimal', 2 ], …(2) ] to deeply equal [ [ 'D0:minimal', 2 ], …(1) ]
+
+- Expected
++ Received
+
+@@ -5,6 +5,10 @@
+    ],
+    [
+      "D1:minimal",
+      2,
+    ],
++   [
++     "D2:minimal",
++     0,
++   ],
+  ]
+
+ ❯ tests/v6-card-results.test.ts:99:6
+     97|   await engine.precompute(r, context, 35);
+     98|   expect((await engine.evaluate(r, context, 0)).long_term.map(row => […
+     99|     .toEqual([["D0:minimal", 2], ["D1:minimal", 2]]);
+       |      ^
+    100| });
+    101| it("distinguishes unavailable prerequisites, resources and an exhauste…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/3]⎯
+
+ FAIL  tests/v6-prompt-summary.test.ts > preserves every A elite and all 17 B core identities with a realistic 204-row cached target grid
+AssertionError: {"bytes":14031,"budget":{"limit":14191,"unit":"bytes","before":156514,"after":14031,"truncated":true,"omitted":{"core_metrics.outcome_details":191}},"rows":[["R-acro-tingsha",1],["R-tools-tingsha",1],["R-acro-bandages",1],["P-toxin-footwork",1],["P-fumes-footwork",1],["P-flask-afterimage",1],["P-flask-footwork",1],["P-mixed-defense",1],["P-toxin-mirage",1],["D-toxin-backflip",1],["D-fumes-backflip",1],["D-flask-sweep",1],["D-observed-union-fbc4b776",1],["S-dance-accuracy",0],["S-cloak-phantom",0],["S-dance-afterimage",0],["S-observed-union-35f60a95",0]]}: expected 0 to be greater than 0
+ ❯ tests/v6-prompt-summary.test.ts:279:174
+    277|       .toEqual(asArray(original.requirements).map(raw => asArray(asRec…
+    278|     // Checking only combo ids allowed the production bug to pass with…
+    279|     expect(asArray(combo.outcomes).length, JSON.stringify({ bytes: siz…
+       |                                                                                                                                                                              ^
+    280|     expect(asArray(combo.outcomes).length + asArray(combo.outcomes_omi…
+    281|     for (const outcome of asArray(combo.outcomes)) {
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/3]⎯
+
+
+ Test Files  3 failed | 1 passed (4)
+      Tests  3 failed | 48 passed (51)
+   Start at  04:29:29
+   Duration  19.91s (transform 2.83s, setup 582ms, import 3.97s, tests 14.83s, environment 0ms)
+

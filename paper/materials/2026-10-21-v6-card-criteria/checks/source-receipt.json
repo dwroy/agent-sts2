@@ -1,0 +1,112 @@
+{
+  "owner": "v6-w4w6 / codex1 / 01a15382-68eb-7093-b677-040c9b45767f",
+  "prepared_at": "2026-10-21T05:00:53.876611+08:00",
+  "source": "024612ef747f63d4a86eb6f57ff2d39f78795d5e",
+  "base": "572bf468bae3e248fbb6778e6b922f15baa5cc75",
+  "tree": "9fcaacea25bd928726994b2581996a3f90d472e7",
+  "manifest": {
+    "path": "checks/source-manifest.json",
+    "sha256": "d697c1527c3f68a8ab493fe61b1b5e40a9131be0502d994562d360281a0a316f"
+  },
+  "minimal_patch": {
+    "path": "checks/minimal-source.patch",
+    "sha256": "3c7df8489b434c6d1e91f1a40d75da881b5e4ec30d2e2cc6d5a118979a57c5d4"
+  },
+  "source_paths": [
+    "agent/src/sim/v6-card-results.ts",
+    "agent/src/v6/card-criteria.ts",
+    "agent/src/v6/card-pick.ts",
+    "agent/src/v6/prompt-summary.ts",
+    "agent/tests/v6-card-option-loop.test.ts",
+    "agent/tests/v6-card-pick.test.ts",
+    "agent/tests/v6-card-results.test.ts",
+    "agent/tests/v6-prompt-summary.test.ts"
+  ],
+  "necessary_existing_dependencies": "Existing R408 strict reward source gate, P0 real-loop provider wiring, idleCombat/BOSS_KEYS input bridge, W8 off/piggyback/pure getter, P3 card-pick-reflex; no parent/main/805 transport. All eight base preimages match observed R408 150890f8 at manifest comparison time.",
+  "checks": {
+    "tsc-r9.log": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "directed-r9.log": {
+      "sha256": "386ef201b52685b57d09a9bb3de3f78b38f7ba062789c60b69b5022580a2bcf3"
+    },
+    "dependency-r1.log": {
+      "sha256": "ea48614b81e3232ef7b6777e65b2ac99efda01bd51f79447474a4be870eae266"
+    },
+    "gitleaks-source.log": {
+      "sha256": "1a81fb001bef90979d3bf96b84fb49ead37f4b5f50944d5f935e27e38db275f5"
+    },
+    "gitleaks-materials.log": {
+      "sha256": "ed2f8f8bad02f181fb7c821a860d97f0db2100a47bf15d9e8967a00f2523720a"
+    },
+    "gitleaks-unpacked.log": {
+      "sha256": "e9d9c991376bc533790d406c91090696faf69fb38f1737466f51019c30ef32f5"
+    },
+    "gitleaks-source-r2.log": {
+      "sha256": "25a651665455a537a039f828dd88456c69505f59e8262ce9789c1568c76ad33c"
+    },
+    "gitleaks-materials-r2.log": {
+      "sha256": "5e842de1ccdf51a4e9422e96a32f19bd2e18c78b7cc06c0991f22cf93fa19ed7"
+    },
+    "gitleaks-unpacked-r2.log": {
+      "sha256": "76650d1fb0336336ce24bb9e2ef02f7c3a97783ea92b74127fd4dd7cf42b91c5"
+    },
+    "run-r1.log": {
+      "sha256": "db2ccf014b239b46ae2d6df1c243434f48a2fb661dd5cf11911aceeabf197c59"
+    },
+    "run-r2.log": {
+      "sha256": "bc2fb4eb5cde3b3b176afdcfee057a333d733b638dc1e06bd2225e71a7627fdf"
+    },
+    "runtime-r1.log": {
+      "sha256": "a7eaec17d92f822e5fa032d089c489335703f0cc31343d83b3287348d04dddf3"
+    },
+    "runtime-nova-r1.log": {
+      "sha256": "29114d9a357785610d65940c1330db31447afc4e1282bc79ca3fe6e2cba8a5f3"
+    },
+    "analysis-r3.log": {
+      "sha256": "e9096821bf30763da23f468a2254508323a92729bafe1382b53f8973cd2f5a9c"
+    }
+  },
+  "nova": {
+    "requests": 16,
+    "situations": 14,
+    "success": 16,
+    "http_400": 0,
+    "timeout": 0,
+    "R407": {
+      "questions": 12,
+      "matches_primary": 8,
+      "strong_conflicts": 0
+    },
+    "strong_conflicts_all": 0,
+    "primary_not_fully_rankable": [
+      "runtime:7XS2Y920KA6E-f6"
+    ],
+    "wire_max_bytes": 23909,
+    "jev_ms_min": 554.892361000002,
+    "jev_ms_max": 1483.1135419999991,
+    "display_mismatches": 0
+  },
+  "production_new_frames": {
+    "preparation_plus_format_ms": [
+      4540.254916,
+      4935.464615999999
+    ],
+    "known_current_boss_options": [
+      "4/4",
+      "4/4"
+    ],
+    "B_cache": [
+      "miss",
+      "miss"
+    ],
+    "F6_primary_diagnostic": "unrankable because some elite results unknown; Boss-only best skip; Nova card2; not silently renormalized"
+  },
+  "limitations": [
+    "Three R407 choices are mean-dominated, despite zero conflicts under the explicitly conservative error rule. Not a quality/benefit proof.",
+    "B incremental grid can produce numbers under manual same-fingerprint warm slices, but existing production 400ms background window and strict changing state fingerprint still miss. No cache guard relaxed, no foreground B or extra brain request.",
+    "Two direct-engine diagnostic preparations exceed 5s; those bypass runtime accounting and are preserved separately from <=5s production provider replays.",
+    "Full validation and atomic main/live transport reserved for ops current exact combination; no full run or self-FF by this owner.",
+    "R408 CARD remains brain; P2 paused. No play, actions, live/STOP/config/knowledge edits."
+  ]
+}
