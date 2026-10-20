@@ -1,6 +1,6 @@
 # W2.2 出现概率表接口（2026-10-20）
 
-生产接口冻结；提交号待完整检查及合入后在 report.md 登记。
+生产接口冻结；实现提交 `bff8feb18a940d35cab79def762db91cf98f4fb2`，已完整检查并快进合入 main。生成历史包随同提交，W3 可按下列合同接入。
 
 - TS 导出：`agent/src/v6/appearance.ts` 的 `v6AppearanceSchema`、`V6Appearance`、`V6AppearanceCard`、`V6RemainingOpportunity`、`V6AppearanceSource`、`V6OpportunityKind`。
 - 历史包：`V6HistoryPack.data.appearance?: V6Appearance`，内部 `schema="v6-appearance-v1"`。追加可选字段；旧包缺字段保持原字节与摘要，不能以旧供给表、MC、W0 或其他角色补值。

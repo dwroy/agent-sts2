@@ -4894,3 +4894,5 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
 - 2026-10-20 07:48:47 CST [运维 codex/预算与R3身份兼容接续] 已验预算b235提交c299；原041302按新授权明确六TASKS并保全部来源/证据守卫，与c299和最新R402组成固定ab96六叶，唯一宿主824311 checking。原R3CLI/数据未提前重试，代码未main/live，旧失败/STOP/宽父保留。原件：paper/materials/20261020-0741-ops/receipt.json。
 
 - 2026-10-20 07:51:58 CST [运维 codex/三旧异议去重] 原文与真实转达证据核同；原watcher提醒CLI0不代新实收，legacy scope/角色ACK pending保留，未重派或改源，STOP/保存局/fault保持。原件：paper/materials/20261020-0749-ops/receipt.json。
+
+- 2026-10-20 08:05:58 CST [v6-w8/W2.2 出现概率表] 实现bff8feb18完整检查后FF main；新增v6-appearance-v1及data.appearance，每局结束随冻结历史包原子刷新。372局/奖励4762/商店910，468牌来源条目、572层段；合并实测P为主、A10偏移附列，缺项unknown，重复牌/升级奖励冲突/金币未建模留标签。真实刷新及加载读回通过，包26089041字节，旧历史与17组合指标逐字段相同；tsc0、Vitest601文件5739过2跳、Python10、gitleaks0，原失败/中断保留。main已交付W3，live/开局/STOP未动，材料paper/materials/2026-10-20-v6-card-appearance/。
