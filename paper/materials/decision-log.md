@@ -5302,3 +5302,5 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
 - 2026-10-20 20:34:56 CST V6-W8：按Claude20:3x在自有树对live64与五项tree4969交替各3次单例batch-c:443，nice19/ionice3/单worker/原15s全部rc0；live1.719/1.733/1.695s、候选1.708/1.744/1.979s，中位+1.45%；候选2379输入SHA17053663前后核同。未复现候选回归，支持宿主负载偶发超时；直调planCombatTurn不走idleCombat，原瞬时CPU未采样。原full1保留、不冒完整绿；未改代码/阈值/live/STOP或起full。材料 paper/materials/2026-10-20-v6-batch-c-timeout/report.md。
 
 - 2026-10-20T20:39:08.686250+08:00 ops：W8 78e479/32a913仅25材料/24清单逐Git SHA核同，六单例0/候选原2379输入SHA1705保持，按指定口径偶发宿主负载/调度、历史争用源未知；原full1及STOP保持，不运eeaa验证父或重full。原件 paper/materials/20261020-W8-timeout-materials-ops/receipt.json。
+
+- 2026-10-20 20:52:45 CST [Claude/Roy，五项包复验与旧字段] Roy 同意 Claude 建议：1) batch-c.test.ts:443 超时经 v6-w8 定向对比（候选与 live 中位差 +1.45%）判为宿主负载偶发，对同一冻结候选（tree 496948c2）在低负载下重跑一次完整检查（期间不派新学习批次、不跑 paper_dataset 等重任务），通过即上线五项并移除 STOP，再失败保持 STOP 报 Claude/Roy；2) expected_win 旧兼容字段（P·W_k+(1−P)·W_0，来自 79dc02307；去 W_0 的 P·W_k 在暂缓的 303bbb1ac）这次不动——已核实不进入任何 Jev/大脑决策、仅审计日志——待 V6 稳定后随 projection→build evaluation 改名一起删除字段及其测试断言。
