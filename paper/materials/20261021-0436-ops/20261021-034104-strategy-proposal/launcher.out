@@ -1,0 +1,116 @@
+十项提案均保留 `waiting`：完整后继和对照证据不足，另有五份原提案正文未恢复。本批未改源码、未提交或合入，测试未运行。账本 `silent-0544` 为 proposed；工作树干净，gitleaks 通过。
+
+材料：[报告](learner/runs/20261021-034108-2bd09e98-18bf-4244-8df2-ceb6891be1c9-strategy-proposal/report.md) · [提案](learner/runs/20261021-034108-2bd09e98-18bf-4244-8df2-ceb6891be1c9-strategy-proposal/proposal.md)
+
+```json
+{
+  "task": "strategy-proposal",
+  "character": "silent",
+  "batch": "20261021-034104-strategy-proposal",
+  "base": "819b1cdbe7a54a860e654a6b8ab3e23497d2d01e",
+  "runs": [
+    "751FN9QM9MHQ",
+    "KV0JHNJCKXLS",
+    "YQL8RZ8BWN1E",
+    "L9SGRBB5R698",
+    "PU80F84P6HPN",
+    "KEN58SH9SLZ6"
+  ],
+  "fixes": [],
+  "skipped": [
+    "silent-proposal-366288801d9150d9",
+    "silent-proposal-85929bdfc8a3fc1b",
+    "silent-proposal-efd9f83ee9e1a6dc",
+    "silent-proposal-131042659448ae74",
+    "silent-proposal-990f054036609447",
+    "silent-proposal-e18d3f18e6cac2a0",
+    "silent-proposal-9733bb80f445aeae",
+    "silent-proposal-c51468c5e8ba6668",
+    "silent-proposal-86a7db08d1a31976",
+    "silent-proposal-e282a9131b99129a"
+  ],
+  "merged": null,
+  "tests": {
+    "tsc": null,
+    "vitest": null,
+    "cases": null
+  },
+  "code_proposals": [
+    "silent-proposal-366288801d9150d9",
+    "silent-proposal-85929bdfc8a3fc1b",
+    "silent-proposal-efd9f83ee9e1a6dc",
+    "silent-proposal-131042659448ae74",
+    "silent-proposal-990f054036609447",
+    "silent-proposal-e18d3f18e6cac2a0",
+    "silent-proposal-9733bb80f445aeae",
+    "silent-proposal-c51468c5e8ba6668",
+    "silent-proposal-86a7db08d1a31976",
+    "silent-proposal-e282a9131b99129a"
+  ],
+  "implementation_domains": [],
+  "proposal_results": [
+    {
+      "id": "silent-proposal-366288801d9150d9",
+      "state": "waiting",
+      "reason": "局部血价已核；缺确定弃牌后的整轮来源联合验收、受控完整后继及独立验证。"
+    },
+    {
+      "id": "silent-proposal-85929bdfc8a3fc1b",
+      "state": "waiting",
+      "reason": "未知药价已有展示；缺同盘无药完整实战及留肌肉药至Boss对照。"
+    },
+    {
+      "id": "silent-proposal-efd9f83ee9e1a6dc",
+      "state": "waiting",
+      "reason": "原Markdown未恢复；整轮结算、受控后继及独立验证不足。"
+    },
+    {
+      "id": "silent-proposal-131042659448ae74",
+      "state": "waiting",
+      "reason": "原Markdown未恢复；九类经验逐来源收益、路线休息及跨战留药联合验证不齐。"
+    },
+    {
+      "id": "silent-proposal-990f054036609447",
+      "state": "waiting",
+      "reason": "原Markdown未恢复；缺知识恶魔全战毛伤、回血归属、删毒对照及受控后继。"
+    },
+    {
+      "id": "silent-proposal-e18d3f18e6cac2a0",
+      "state": "waiting",
+      "reason": "阶段事实已有窄实现；缺新排序及提前用药的受控整战，残血置0可能改变平局选线。"
+    },
+    {
+      "id": "silent-proposal-9733bb80f445aeae",
+      "state": "waiting",
+      "reason": "原Markdown未恢复；阶段展示不代SL排序、用药与路线休息联合验证。"
+    },
+    {
+      "id": "silent-proposal-c51468c5e8ba6668",
+      "state": "waiting",
+      "reason": "七组耗药及技能药实际选牌已核；缺完整随机收益归属、不喝及留药整战对照。"
+    },
+    {
+      "id": "silent-proposal-86a7db08d1a31976",
+      "state": "waiting",
+      "reason": "T10局部6血换2扣敌血已核；缺T5能力兑现完整验收、受控后继及独立验证。"
+    },
+    {
+      "id": "silent-proposal-e282a9131b99129a",
+      "state": "waiting",
+      "reason": "原Markdown未恢复；首步回执不代整轮结算，缺能力兑现、受控后继及时间留出验证。"
+    }
+  ],
+  "report": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261021-034104/learner/runs/20261021-034108-2bd09e98-18bf-4244-8df2-ceb6891be1c9-strategy-proposal/report.md"
+}
+```
+
+== 学习者 codex / strategy-proposal ==
+状态：success；退出码 0
+模型：gpt-6.1-sol；会话：01a15ad5-0460-7870-bcc0-cfe9bdc35f4e
+轮数：1；工具调用：command_execution×61 file_change×4
+token：输入 258.2k、输出 33.1k（其中推理 7196）、cache 读 7220.1k、cache 写 0（命中 96.5%）
+成本：未提供
+耗时：1054.1 s（墙钟）
+时间：首个事件 42.5 s、模型首个输出 46.6 s、首次工具 54.0 s、末次工具结束 1026.0 s；工具内共 834.4 s，其余（模型生成、推理、网络）177.2 s
+codex 会话记录：AGENTS.md 已加载（/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261021-034104）；模型的工具调用 exec×46；/home/dw/Projects/agent-sts2/ops/codex-ops/accounts/codex1/learner/sessions/2026/10/21/rollout-2026-10-21T03-41-12-01a15ad5-0460-7870-bcc0-cfe9bdc35f4e.jsonl
+日志：/home/dw/Projects/agent-sts2/learner/runs/20261021-034108-2bd09e98-18bf-4244-8df2-ceb6891be1c9-strategy-proposal.jsonl
