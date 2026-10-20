@@ -5230,3 +5230,5 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
 - 2026-10-20T17:56:46+08:00 ops：记录Roy/Claude18:0x标签授权，下一自然新局仅COMBAT_ENTRIES=off恢复V5出牌，85知识/其他V6设置及无关修复保留；准备未应用补丁，实际边界验收后核live/新release/双通知/首题读回，当前不热切。原件 paper/materials/20261020-roy-v5-combat-boundary-ops/authorization-original.md。
 
 - 2026-10-20T18:01:18+08:00 ops：164301策略六暂存候选SHA冻结，原沙箱EXDEV基线/红绿原件保留，精确main六叶预演待原host槽；分组牌堆可用性限定原文及两状态字节核验经通知5978007a送watcher，后角色未代ACK，不运整main/805或关父。原件 paper/materials/20261020-1757-ops/receipt.json。
+
+- 2026-10-20 18:04:07 CST [Claude/Roy，术语对齐，仅文档] Roy：给 Jev 的经验条目统称小脑经验（reflex 经验/小脑记忆），覆盖出牌与构筑（拿牌、删牌、拿药等）；目前只有构筑启用小脑经验 + Jev，出牌保持 V5。条目来源分代码计算的量化条目与学习者提炼的对照条目。docs/v6-plan.md 第 5 节已补术语说明。
