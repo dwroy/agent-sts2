@@ -332,14 +332,85 @@ def research_proof(report,batch,root):
             'covered_runs':sorted(covered),'exclusions':exclusions}
 
 
+def cadence_proof(report, batch, root):
+    """A registered cadence review may finish without acquiring or resolving a proposal."""
+    if (batch.get('reason') != 'tick' or batch.get('proposal_ids') or batch.get('proposal_repair')
+            or any(batch.get(key) for key in ('research_request', 'implementation_request', 'feature_request',
+                                             'learning_request', 'boss_sim', 'continuation_parent_batch'))
+            or any(report.get(key) for key in ('commit', 'source_commit', 'published_commit', 'needs_decision',
+                                              'questions', 'disagreements', 'blocked', 'bugs'))
+            or report.get('proposal_results') != []
+            or report.get('tests') != {'tsc': None, 'vitest': None, 'cases': None}):
+        return None
+    character = batch.get('character')
+    progress = batch.get('strategy_progress', {})
+    if (not isinstance(character, str) or not re.fullmatch('[a-z][a-z0-9_]*', character)
+            or not isinstance(progress, dict)
+            or any(type(progress.get(key)) is not int for key in ('ascension', 'runs'))
+            or progress['ascension'] < 0 or progress['runs'] <= 0
+            or batch.get('key') != f"{character}:A{progress['ascension']}:{progress['runs']}"):
+        return None
+    runs = batch.get('runs')
+    if (not isinstance(runs, list) or not 1 <= len(runs) <= 10
+            or any(not isinstance(run, str) or not re.fullmatch('[A-Z0-9]{12}', run) for run in runs)
+            or len(set(runs)) != len(runs) or progress['runs'] < len(runs)
+            or report.get('runs') != runs or report.get('character') != character):
+        return None
+    project = Path(root).resolve()
+    tree = Path(batch['worktree']).resolve()
+    match = re.fullmatch('codex-strategy-' + re.escape(character) + r'-([0-9]{8}-[0-9]{6})', tree.name)
+    if (not match or tree.parent != project / '.worktrees' or not (tree / '.git').is_file()
+            or (tree / '.git').is_symlink() or report.get('batch') != match[1] + '-strategy-proposal'):
+        return None
+    if Path(subprocess.check_output(['git', '-C', str(tree), 'rev-parse', '--show-toplevel'], text=True).strip()) != tree:
+        return None
+    original = batch.get('ordinary_baseline')
+    baseline = original.get('head') if isinstance(original, dict) else None
+    base = report.get('base')
+    if (not isinstance(baseline, str) or not re.fullmatch('[0-9a-f]{40}', baseline)
+            or not isinstance(base, str) or not re.fullmatch('[0-9a-f]{40}', base)):
+        return None
+    if (subprocess.run(['git', '-C', str(tree), 'merge-base', '--is-ancestor', baseline, base],
+                       stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL).returncode
+            or subprocess.run(['git', '-C', str(tree), 'diff', '--quiet', baseline, base, '--', *RESEARCH_SOURCE_PATHS],
+                              stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL).returncode):
+        return None
+    path = Path(report['report']).resolve()
+    allowed = tree / 'learner/runs'
+    if not path.is_relative_to(allowed) or path.suffix != '.md':
+        return None
+    raw = path.read_bytes()
+    saved = None
+    for block in reversed(re.findall(r'```json\s*([\s\S]*?)```', raw.decode())):
+        try:
+            value = json.loads(block)
+        except ValueError:
+            continue
+        if isinstance(value, dict) and value.get('task') == 'strategy-proposal':
+            saved = value
+            break
+    keys = ('task', 'character', 'batch', 'base', 'runs', 'fixes', 'merged', 'tests', 'proposal_results',
+            'code_proposals', 'implementation_domains')
+    if not saved or any(saved.get(key) != report.get(key) for key in keys):
+        return None
+    return {'batch': report['batch'], 'dispatch_base': baseline, 'progress': dict(progress),
+            'report_sha256': hashlib.sha256(raw).hexdigest(), 'no_proposal_resolution': True}
+
+
+
 def no_change(report,batch,root):
     if batch.get('task')!='strategy-proposal' or report.get('fixes')!=[] or report.get('merged') is not None:
         return None
     try:
         research=None
+        cadence=None
         if not (batch.get('proposal_ids') or batch.get('proposal_repair')):
-            research=research_proof(report,batch,root)
-            if not research: return None
+            if batch.get('reason') == 'tick':
+                cadence=cadence_proof(report,batch,root)
+                if not cadence: return None
+            else:
+                research=research_proof(report,batch,root)
+                if not research: return None
         rows=results(report,batch)
         if batch.get('proposal_repair') and not report.get('code_proposals'): return None
         if any(r['state']=='implemented' for r in rows): return None
@@ -361,6 +432,8 @@ def no_change(report,batch,root):
         path=Path(raw_path).resolve()
         if not allowed.is_relative_to(resolved_tree) or not path.is_relative_to(allowed) or path.suffix!='.md' or not path.is_file(): return None
         proof={'base':base,'report':str(path),'dispositions':rows}
+        if cadence:
+            proof['cadence']=cadence
         if research:
             proof['research']={**research,'report_sha256':hashlib.sha256(path.read_bytes()).hexdigest()}
         return proof
