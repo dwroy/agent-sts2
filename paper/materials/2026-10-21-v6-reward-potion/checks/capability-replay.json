@@ -1,0 +1,64 @@
+{
+  "scope": "Frozen production state and production execution gate only; no HTTP, model, simulation or action dispatch",
+  "run_id": "T15WXHPTM0ET",
+  "floor": 40,
+  "available_actions": [
+    "save_and_quit",
+    "resolve_rewards",
+    "collect_rewards_and_proceed",
+    "claim_reward"
+  ],
+  "incoming": [
+    {
+      "index": 1,
+      "reward_type": "Potion",
+      "description": "稳定血清",
+      "claimable": true
+    }
+  ],
+  "discardable_slots": 0,
+  "gate_results": [
+    {
+      "slot": 0,
+      "id": "RADIANT_TINCTURE",
+      "combat": {
+        "ok": true,
+        "reason": "legal"
+      },
+      "reward": {
+        "ok": false,
+        "kind": "legality",
+        "reason": "\"discard_potion\" is not in available_actions (save_and_quit, resolve_rewards, collect_rewards_and_proceed, claim_reward)"
+      }
+    },
+    {
+      "slot": 1,
+      "id": "DEXTERITY_POTION",
+      "combat": {
+        "ok": true,
+        "reason": "legal"
+      },
+      "reward": {
+        "ok": false,
+        "kind": "legality",
+        "reason": "\"discard_potion\" is not in available_actions (save_and_quit, resolve_rewards, collect_rewards_and_proceed, claim_reward)"
+      }
+    }
+  ],
+  "source_readback": [
+    {
+      "phase": "combat",
+      "offset": 14796891798,
+      "bytes": 44662,
+      "sha256": "359ddf646542a4511b57b33a5463c1752b389820069bab634109d61862f159bf",
+      "ts": "2026-10-20T16:59:22.318Z"
+    },
+    {
+      "phase": "reward",
+      "offset": 14796936460,
+      "bytes": 31921,
+      "sha256": "c9ae9c89aa66aec2358f4ca820731e6e866f3675cbc6a0aa1827951aa7481a39",
+      "ts": "2026-10-20T16:59:23.971Z"
+    }
+  ]
+}

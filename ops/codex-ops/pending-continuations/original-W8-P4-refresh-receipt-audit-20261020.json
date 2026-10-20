@@ -1,12 +1,12 @@
 {
-  "phase": "formal29-R407-single-original-full-actual-start-static-verified",
+  "phase": "formal29-R407-full1-single-samples8-actual0-retain-source-await-original-owner",
   "completed": false,
   "source": "5e04a021ab96dde4c0d97afa35a5645622ed99f5",
   "base": "ae7d48050493440f4490ed3cee80a31ac9359369",
   "tree": "7968e8d67e086202c8dad591d7bf23981815b751",
   "material_commit": "458ee2aa5eedaf7d6eef4b777e906d45f11effec",
   "source_manifest_sha256": "68ae666834ca34ffd510db4f98afbfe7bac482748057960d5b9360a27d4a0aff",
-  "receipt": "paper/materials/20261021-0328-ops/receipt.json",
+  "receipt": "paper/materials/20261021-0350-ops/receipt.json",
   "source_verified": 3,
   "legacy_dependency_verified": 26,
   "material_verified": 74,
@@ -17,7 +17,7 @@
   "source_worktree": "/home/dw/Projects/agent-sts2/.worktrees/v6-refresh-receipt-audit-20261020",
   "minimal_patch": "paper/materials/2026-10-20-v6-refresh-receipt-audit/checks/minimal-source.patch",
   "legacy_patch": "paper/materials/2026-10-20-v6-refresh-receipt-audit/checks/legacy-incremental-minimal.patch",
-  "next": "Wait original terminal scheduler event without querying progress; verify PID exits and exact inputs then original narrow main/live boundary process. No duplicate full or early publication.",
+  "next": "Original W8 diagnose exact single failure, preserve thresholds/logs/knowledge; await minimal repaired formal source and original ops single queue. Do not rerun unchanged full or publish. Claude native receipt pending via original watcher.",
   "formal_main_source_merged": false,
   "do_not_close_on_report_or_single_published_packet": true,
   "state_history": [
@@ -32,6 +32,10 @@
     {
       "phase": "formal29-R407-verified-single-original-full-queued-on-existing-heavy-locks",
       "receipt": "paper/materials/20261021-P4-R407-joint-ops/receipt.json"
+    },
+    {
+      "phase": "formal29-R407-single-original-full-actual-start-static-verified",
+      "receipt": "paper/materials/20261021-0328-ops/receipt.json"
     }
   ],
   "latest_owner_followup": {
@@ -129,5 +133,99 @@
     "live_publication": false,
     "STOP_actor_modified": false,
     "completed": false
-  }
+  },
+  "latest_full_terminal": {
+    "request": "original-W8-P4-twenty-nine-exact-R407-latest-knowledge-joint-20261021",
+    "state": "failed-retain-fixed-P4-input-and-current-R407-report-original-W8-watcher",
+    "tree": "58db1f19f3b09903dd002447e5671ecd57a657d6",
+    "input_count": 2399,
+    "input_sha256": "1058987e39d5932e68168b2c8361eba38e9068dfa4fafb1063edd647f67c3516",
+    "unchanged": true,
+    "protected_knowledge": 485,
+    "formal_data": 463,
+    "source_count": 29,
+    "tsc_rc": 0,
+    "full_rc": 1,
+    "full_files": {
+      "passed": 628,
+      "failed": 1,
+      "total": 629
+    },
+    "tests": {
+      "passed": 5935,
+      "failed": 1,
+      "skipped": 2,
+      "total": 5938
+    },
+    "seconds": 1429.5982163101435,
+    "full_sha256": "c97e4d64a866879350e185ba4f31ac273b04236b9d2772d0f731a0621f04fb41",
+    "failure": "agent/tests/thief-card-value.test.ts:141 expected samples 8, actual 0; one failed case, root cause unknown",
+    "old_PID_presence": {
+      "2036302": false,
+      "2074095": false,
+      "2074183": false
+    },
+    "original_WT_remaining_check_processes": [],
+    "original_locks_reported_released": true,
+    "no_repeat_full": true,
+    "actual_live_published": false,
+    "files": [
+      {
+        "path": "paper/materials/20261021-0350-ops/P4-host-status.json",
+        "bytes": 2319,
+        "sha256": "29e57960de93edab73f16be09f0907a1ba53c543c6f6ad5db6794f2013d8f941"
+      },
+      {
+        "path": "paper/materials/20261021-0350-ops/P4-host-inputs-before.json",
+        "bytes": 399731,
+        "sha256": "1058987e39d5932e68168b2c8361eba38e9068dfa4fafb1063edd647f67c3516"
+      },
+      {
+        "path": "paper/materials/20261021-0350-ops/P4-host-inputs-after.json",
+        "bytes": 399731,
+        "sha256": "1058987e39d5932e68168b2c8361eba38e9068dfa4fafb1063edd647f67c3516"
+      },
+      {
+        "path": "paper/materials/20261021-0350-ops/P4-tsc.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "path": "paper/materials/20261021-0350-ops/P4-full.log",
+        "bytes": 1864,
+        "sha256": "c97e4d64a866879350e185ba4f31ac273b04236b9d2772d0f731a0621f04fb41"
+      },
+      {
+        "path": "paper/materials/20261021-0350-ops/P4-native-start-readback.json",
+        "bytes": 1731,
+        "sha256": "1f59f50900b82d8809bc1187050bc6a39c49438ccfb803a835d276157790f267"
+      },
+      {
+        "path": "paper/materials/20261021-0350-ops/P4-frozen.json",
+        "bytes": 97643,
+        "sha256": "d6e9f55a1bd2701c600263359fd805bad610be8b2de4e1022a31294cf63d36b3"
+      }
+    ]
+  },
+  "full_window_released": true,
+  "original_owner_delivery": [
+    {
+      "target": "v6-w8",
+      "native_session": "01a15382-761a-76a2-922d-271169b2463c",
+      "cli_exit": 0,
+      "actual_native_received": false,
+      "Claude_received": false,
+      "message": "paper/materials/20261021-0350-ops/v6-w8-message.md",
+      "sent_UTC": "2026-10-20T19:51:18.191339+00:00"
+    },
+    {
+      "target": "sts2-watcher",
+      "native_session": "01a14f5d-da55-7831-959e-53727796115e",
+      "cli_exit": 0,
+      "actual_native_received": false,
+      "Claude_received": false,
+      "message": "paper/materials/20261021-0350-ops/sts2-watcher-message.md",
+      "sent_UTC": "2026-10-20T19:51:18.500933+00:00"
+    }
+  ]
 }

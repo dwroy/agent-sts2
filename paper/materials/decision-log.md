@@ -5430,3 +5430,7 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
 - 2026-10-21 03:42:54 CST 原ops：只读质量2c4b材料16叶/36原行SHA及12动作已核，A诊断0/12与B全未知/60of84饱和及非因果限制保留；原指定append原字收纳，无源码/知识/live运输，不加P0门。P2仅满槽战后奖励药水，后续原单点联合/局终STOP边界，P4原检查不动。原件paper/materials/20261021-R407-quality-ops/receipt.json。
 
 - 2026-10-21 03:47:25 CST 原ops：034104-fix无新源/提交或合入，WT基线819b1cdb洁净、154SHA/46祖先核同；tsc0/6文件41定向过16.89秒/扫描0分列，不代完整门或live。原六叶/三叶候选和P4顺序保持，无ordinary回执不重dataset。原件paper/materials/20261021-0346-ops/receipt.json。
+
+- 2026-10-21 03:49:25 CST Codex v6-w4w6：按Claude03:3x完成R407只读拿牌质量材料2c4b12ada后开始P2；真实满槽药水奖励有界6局面全部无discard_potion/槽can_discard=false，T15 F40原战斗→奖励用生产gate复现由可丢变拒绝且弃药槽0，四生产叶与实际live逐SHA同。未绕门/改夹具能力/改代码知识或live，未MC/API/full；P2先丢后领尚不能真实循环验收，交Claude/watcher协调mod合法弃药能力与药水身份接口，材料paper/materials/2026-10-21-v6-reward-potion/report.md。
+
+- 2026-10-21 03:52:04 CST 原ops：P4原固定tree58db1f19/2399输入1058987e终局tsc0/full1，唯一thief-card-value:141 samples8→0，PID均退/窗口释放，原W8与watcherCLI0投递待原生确认，不重未变源full/发布。P2只收0f1材料11叶及原append，合法弃药接口阻塞，POTIONbrain与R407不变。原件paper/materials/20261021-0350-ops/receipt.json。
