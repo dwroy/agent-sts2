@@ -1,0 +1,107 @@
+{
+  "at": "2026-10-20T16:45:31+08:00",
+  "batch": "20261020-161301-s2-strategy-proposal",
+  "original_state": "attention",
+  "original_reason": "source changed during batch; retain ordinary ops review",
+  "original_receipt_sha256": "47580e03626923cd5eff4608932908d64c9c4ee03c1ef9d7f2a443f9882fd9eb",
+  "baseline": "f7d4d21a6b5a52bf635f040af0dced279c9c0b0c",
+  "proof_head": "29f768741880c79dd7b2d539a3288d82a1236232",
+  "proof_head_source_diff": [],
+  "actual_main": "335764ba5c77a985d1874782424de25ff697c791",
+  "actual_source_drift_paths": [
+    "agent/tests/component_usage_test.py",
+    "agent/tests/cost_incremental_test.py",
+    "agent/tests/legacy-refresh-incremental.test.ts",
+    "agent/tests/report_incremental_test.py",
+    "eval/brain_source.py",
+    "eval/cost.py",
+    "eval/jsonl_cache.py",
+    "knowledge/builders/build-boss-damage.py",
+    "knowledge/builders/build-card-upgrades.py",
+    "knowledge/builders/build-construction-opportunities.py",
+    "knowledge/builders/build-fight-value.py",
+    "knowledge/builders/build-monster-db.py",
+    "knowledge/builders/build-outcome-stats.py",
+    "knowledge/builders/build-potion-equivalents.py",
+    "knowledge/builders/build-room-costs.py",
+    "knowledge/builders/legacy_incremental.py",
+    "knowledge/builders/refresh-step.py",
+    "knowledge/builders/refresh.sh",
+    "knowledge/builders/test_legacy_incremental.py",
+    "knowledge/builders/test_potion_incremental.py",
+    "ops/autoplay.sh",
+    "ops/global_build_funnel.py",
+    "ops/report.py",
+    "ops/report_log_cache.py",
+    "ops/tests/test_disk_admission.py",
+    "ops/tests/test_llm_handoff.py"
+  ],
+  "drift_origin": "independent original W8 26 source main delivery 5cd435c4; source mapping verified, not learner changes",
+  "source_origin_verification": "paper/materials/20261020-1642-ops/verification.json",
+  "learner_worktree_HEAD": "f7d4d21a6b5a52bf635f040af0dced279c9c0b0c",
+  "tracked_and_index_and_product_untracked_clean": true,
+  "report": {
+    "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261020-161301-s2/learner/runs/20261020-161306-0d9c2235-9364-4df2-9b12-2934b56766a1-strategy-proposal/report.md",
+    "bytes": 19574,
+    "sha256": "7c70adb10b8b035e111d8c00b071d8fc6721bce876f1744cf14f7cbe1a4c9b74"
+  },
+  "proposal_results": [
+    {
+      "id": "silent-proposal-2631859b524e0652",
+      "state": "waiting",
+      "reason": "缺混合多副本、真插牌或洗牌同帧的唯一版本配对，以及已知抽序消费者联合回放。"
+    },
+    {
+      "id": "silent-proposal-b13fda1dfeb37927",
+      "state": "waiting",
+      "reason": "缺复活逐击过程、前三试真实离场结算、逐药槽来源及替路线或提前用药的受控完整后继。"
+    },
+    {
+      "id": "silent-proposal-d7b8d36cf3d0303d",
+      "state": "waiting",
+      "reason": "普通单弃已有窄实现；新增凋萎的可弃实体、弃牌完成后余像与持牌伤顺序仍缺联合消费者校准。"
+    },
+    {
+      "id": "silent-proposal-c873d6543c414f92",
+      "state": "waiting",
+      "reason": "候选快照和单动作回执已有，但跨重问父子候选、SL撤回与整轮血药归属尚未完成联合验收。"
+    },
+    {
+      "id": "silent-proposal-dfbf51502f30c9b1",
+      "state": "waiting",
+      "reason": "7伤候选含未建模侧步；整场模拟零胜并列且五轮死亡数不同，缺完整受控替线后继。"
+    },
+    {
+      "id": "silent-proposal-c2888032d1337388",
+      "state": "waiting",
+      "reason": "原十八来源局仅七局属于本批；十五关联机制的全部入口、组合和消费者尚未联合校准。"
+    },
+    {
+      "id": "silent-proposal-042ee2299084b528",
+      "state": "waiting",
+      "reason": "同样本续战资源传递已有源码；奖励转移、实际次战开场及路线和休息消费者仍缺联合校准。"
+    },
+    {
+      "id": "silent-proposal-8cd3db3bad5f34f1",
+      "state": "waiting",
+      "reason": "缺同入口、同预算、同抽序的原线与替线完整整战后继，无法认证整轮收益或修改SL边界。"
+    },
+    {
+      "id": "silent-proposal-43fe170707574455",
+      "state": "waiting",
+      "reason": "原证据ZTRGYYMLR8SC不在本批十局；稳定敌实例、精确退场和构筑计划兑现链未完成本批核验。"
+    },
+    {
+      "id": "silent-proposal-3f5a665dca133a8c",
+      "state": "waiting",
+      "reason": "原证据ZTRGYYMLR8SC不在本批十局；其完整重问归属及原/替线同预算后继仍未核验。"
+    }
+  ],
+  "no_new_implementation": true,
+  "tests": {
+    "tsc": null,
+    "vitest": null,
+    "cases": null
+  },
+  "no_ops_dataset_full_model_merge_or_parent_ACK_changes": true
+}

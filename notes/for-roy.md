@@ -3433,3 +3433,7 @@ request_id=roy-20261017-human-pace-h0 revision=3 input_sha256=1e1c259a15f1824119
 
 2026-10-20T16:44:24+08:00 已独立核W8实际窄FF main5cd435c4，26个源文件与r3b受测manifest、tree42fd、原e164提交及新main逐项SHA一致，主目录工作字节也核同，来源全检与仅记录漂移明确分列。未重full，未把main交付称为live上线；原并行记录、旧失败和中断原件保留。W4原生固定启动回执已核base/main5cd、tree9ed4、2453输入SHA21a6，runner65082及start_ticks一致；tsc65496为0，full65597于16:42:31启动。本轮仅读取固定回执和初始manifest，不查在途进程、测试进度或full日志，不宣称完整通过。唯一窗口现属原W4，infra继续等待W4自然终局核退出及本人明确释放，已沿三方原通道同步，CLI不冒接收确认。上一停点为避免移动W8集成目标暂存的记录现接续收纳，同时保留W8新追加日志原行。live精确运输仍待原自然边界实际验收，未夹带整main或805；当前actor、STOP、Regent及科学父不动。
 原件 paper/materials/20261020-1642-ops/receipt.json；verification.json。
+
+
+2026-10-20T16:45:31+08:00 已核普通161301-s2策略批次原报告SHA一致、退出0且merged为null，十项提案全部waiting，实施领域和修复列表为空，tsc/vitest/cases保持原null，没有将未运行检查填成通过。学习者工作树HEAD仍原f7基线，跟踪文件、暂存区和产品目录未跟踪项均干净。原proof所在29f主目录当时尚无源码差异；自动收尾期间后来加入的26个源文件，精确对应原W8已验r3b并独立合main5cd的统计/公共刷新增量实现，已与其来源映射核同，不属于本学习者改源或新增策略。原attention及source changed原因据实保留，另记本次人工核验，不覆盖历史失败，不重dataset、模型、测试或合入，不分配行为发布号。十项继续沿原提案队列等待满足各自缺口的本角色新证据，报告、分析脚本与原现场不回收，科学父及角色ACK不代关。W4唯一full仍按已核固定输入运行，infra后排；本轮不查询在途进度，不改live、actor、STOP、805暂缓或Regent暂停。
+原件 paper/materials/20261020-1643-ops/receipt.json；verification.json；原ordinary-close回执保留。

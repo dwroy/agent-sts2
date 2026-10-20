@@ -5204,3 +5204,5 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
 - 2026-10-20T16:43:07+08:00 — V6-W8：旧公共生成器/局后统计按局缓存与增量刷新原授权窄 FF main 5cd435c4b282f3f5b73eefe54e34ea0530e00e40（原 e16464f87 在 e599ffe61 记录基线上变基；26 源 SHA 与 r3b 逐项一致）。来源完整检查 base f7d4d21a6、tree42fd17b2、2442输入SHA09d46e6e前后相同，tsc0/full0，623文件5891过2原跳；后续漂移仅并行记录，分列 integration-receipt。gitleaks0，保旧失败；main交付非live交付。W4已原生启动唯一full后续infra；本会话不重full、不运live/805、不动play/STOP/Regent。材料 paper/materials/2026-10-20-v6-refresh-legacy-incremental/；精确源码映射 checks/functional-source-input.json，main交付回执 .worktrees/v6-refresh-legacy-incremental-20261020/.artifacts/main-delivery/integration-receipt.json。
 
 - 2026-10-20T16:44:24+08:00 ops：核W8 main5cd26源逐SHA同r3b受测输入，未运live；W4唯一full静态启动base5cd/tree9ed4/2453SHA21a6，tsc0/full未终局，不查在途，后infra。收纳前停点记录及W8原日志行。原件 paper/materials/20261020-1642-ops/verification.json。
+
+- 2026-10-20T16:45:31+08:00 ops：161301-s2策略WT基线干净/报告SHA同、十waiting；自动收尾源码漂移仅独立W8 main5cd26源，保原attention/失败/父，不重dataset/测试/合入。W4唯一full及infra后序不动。原件 paper/materials/20261020-1643-ops/receipt.json。
