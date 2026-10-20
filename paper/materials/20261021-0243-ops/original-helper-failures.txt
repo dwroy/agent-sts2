@@ -1,0 +1,3 @@
+audit_evidence.py first run: rc1 KeyError decision_id (historical selected decision without decision_id).
+audit_evidence.py second run: rc1 AttributeError str.get (request.questions is a dict).
+Corrected only this scratch helper: skip missing decision_id when indexing, support dict questions. Final run rc0. No production code or test contract changed.
