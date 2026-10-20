@@ -1,0 +1,442 @@
+{
+  "at": "2026-10-21T00:09:12.409393+08:00",
+  "original_frozen_recompute_equal": true,
+  "rows": {
+    "decisions": 166,
+    "brain": 4,
+    "plans": 0,
+    "config": 1
+  },
+  "configuration": {
+    "run_id": "RBMEQGXPE9Z2",
+    "v6": {
+      "schema": "v6-config-v1",
+      "mode": "on",
+      "deciders": {
+        "card": "jev",
+        "potion": "brain",
+        "shop": "brain",
+        "rest": "brain"
+      },
+      "reflex": "off",
+      "direction_replan": "off",
+      "admission": "interfaces_only",
+      "delivered": false,
+      "samples_pick": 20,
+      "samples_act": 100,
+      "min_known_option_ratio": 0.5,
+      "direction_min_weight": 0.1,
+      "win": {
+        "certain_win": 0.95,
+        "favored": 0.7,
+        "even": 0.3,
+        "unfavored": 0.05
+      },
+      "delta": {
+        "much_se": 2,
+        "better_se": 1,
+        "much_min": 0.05
+      },
+      "triggers": {
+        "t1_core_min": 0,
+        "t2_se": 2,
+        "t2_min_delta": 1,
+        "t2_consecutive": 2,
+        "t3_weight_max": 0,
+        "t5_hazard": "existing_route_projection",
+        "t6_unknown_max": 1,
+        "t6_fallbacks": 100,
+        "t7_checkpoint": "validated_brain_answer"
+      },
+      "budgets": {
+        "brain_soft_cap": 15,
+        "brain_ms": 90000,
+        "act_ms": 60000,
+        "pick_ms": 5000,
+        "jev_ms": 5000
+      },
+      "invalid": []
+    },
+    "construction": {
+      "architecture": "V5",
+      "schema": "construction-v1",
+      "mode": "shadow",
+      "policy": "observed-signature-completion",
+      "validation": "prospective-calibration-required",
+      "evaluation": "same-question-combat-facts"
+    },
+    "code": {
+      "commit": null,
+      "code": null,
+      "dirty": null,
+      "dirty_files": [],
+      "branch": null,
+      "worktree": "live",
+      "error": "git status failed: spawnSync git ENOBUFS"
+    }
+  },
+  "B3_failures": [
+    {
+      "floor": 2,
+      "decision": "3c9157b7-de6d-441f-aadb-f591777a6709",
+      "source": {
+        "offset": 3011106753,
+        "length": 5466,
+        "sha256": "ddf4a69f8685550ae6f477892565c606abd923399cbbd0fe5dcac0df6bcb3e2f"
+      },
+      "decider": "jev",
+      "v6_card": {
+        "entries": []
+      },
+      "question_instruction": "Choose one card or skip using A immediate current-deck Boss and elite outcomes, paired with skip. B completed-core outcomes describe long-term directions; advances separately names combinations this card progresses and remaining cards. Compare HP loss, turns, damage/turn, death and losing-enemy HP with n, SE and trust. Do not use P*W or treat unknown as zero. Use only supplied facts.",
+      "boss_sim_present": false,
+      "actual_result": "completed: Action completed."
+    },
+    {
+      "floor": 3,
+      "decision": "8ba4360e-0e42-42bf-808d-6f8ae5114237",
+      "source": {
+        "offset": 3011274163,
+        "length": 5385,
+        "sha256": "aaa734096cc73d2b72f90787d1a8e0bf3d91cb7a64979473f1f96de40410749e"
+      },
+      "decider": "jev",
+      "v6_card": {
+        "entries": []
+      },
+      "question_instruction": "Choose one card or skip using A immediate current-deck Boss and elite outcomes, paired with skip. B completed-core outcomes describe long-term directions; advances separately names combinations this card progresses and remaining cards. Compare HP loss, turns, damage/turn, death and losing-enemy HP with n, SE and trust. Do not use P*W or treat unknown as zero. Use only supplied facts.",
+      "boss_sim_present": false,
+      "actual_result": "completed: Action completed."
+    },
+    {
+      "floor": 4,
+      "decision": "bf03740a-85bf-4658-a9d0-1b74a7b9b581",
+      "source": {
+        "offset": 3011415401,
+        "length": 5398,
+        "sha256": "6878882a6377cd58ae273414d107cc75f361b19bacd254734ee47e7cde18f124"
+      },
+      "decider": "jev",
+      "v6_card": {
+        "entries": []
+      },
+      "question_instruction": "Choose one card or skip using A immediate current-deck Boss and elite outcomes, paired with skip. B completed-core outcomes describe long-term directions; advances separately names combinations this card progresses and remaining cards. Compare HP loss, turns, damage/turn, death and losing-enemy HP with n, SE and trust. Do not use P*W or treat unknown as zero. Use only supplied facts.",
+      "boss_sim_present": false,
+      "actual_result": "completed: Action completed."
+    },
+    {
+      "floor": 6,
+      "decision": "ad9711ff-1a5a-4c9f-8b73-cc5cc4848943",
+      "source": {
+        "offset": 3011713840,
+        "length": 5494,
+        "sha256": "2808d399a2b37b3dbaec4c054b3c601b035bb5e443e1d201e362c4d4053288d5"
+      },
+      "decider": "jev",
+      "v6_card": {
+        "entries": []
+      },
+      "question_instruction": "Choose one card or skip using A immediate current-deck Boss and elite outcomes, paired with skip. B completed-core outcomes describe long-term directions; advances separately names combinations this card progresses and remaining cards. Compare HP loss, turns, damage/turn, death and losing-enemy HP with n, SE and trust. Do not use P*W or treat unknown as zero. Use only supplied facts.",
+      "boss_sim_present": false,
+      "actual_result": "completed: Action completed."
+    }
+  ],
+  "diagnostics": [
+    {
+      "ts": "2026-10-20T15:57:18.705Z",
+      "schema": "build-sim-health-v1",
+      "status": "produced",
+      "availableCpus": 32,
+      "loadAverage": [
+        5.55,
+        10.12,
+        13.99
+      ],
+      "decks": 5,
+      "options": 4,
+      "deckCards": 13,
+      "deadlineMs": 10917.483647000001,
+      "orderSearch": null,
+      "comparison": {
+        "samples": 100,
+        "elapsedMs": 1325,
+        "timedOut": false,
+        "workers": 24,
+        "deadlineMs": 10917.314330000001,
+        "pool": {
+          "queueMs": 0,
+          "coldStart": true,
+          "preparationMs": 10,
+          "firstReplyMs": 395,
+          "chunksPlanned": 65,
+          "chunksDispatched": 65,
+          "chunksCompleted": 65,
+          "outcomesCompleted": 500
+        }
+      },
+      "boss": "WATERFALL_GIANT",
+      "samples": 100,
+      "requested": 300,
+      "minimumShown": 300,
+      "timedOut": false,
+      "simMs": 1356,
+      "workers": 24
+    },
+    {
+      "ts": "2026-10-20T16:01:58.295Z",
+      "schema": "build-sim-health-v1",
+      "status": "produced",
+      "availableCpus": 32,
+      "loadAverage": [
+        3.38,
+        6.95,
+        11.88
+      ],
+      "decks": 2,
+      "options": 1,
+      "deckCards": 14,
+      "deadlineMs": 10990.102236999985,
+      "orderSearch": null,
+      "comparison": {
+        "samples": 100,
+        "elapsedMs": 960,
+        "timedOut": false,
+        "workers": 24,
+        "deadlineMs": 10989.981495999964,
+        "pool": {
+          "queueMs": 0,
+          "coldStart": true,
+          "preparationMs": 10,
+          "firstReplyMs": 359,
+          "chunksPlanned": 26,
+          "chunksDispatched": 26,
+          "chunksCompleted": 26,
+          "outcomesCompleted": 200
+        }
+      },
+      "boss": "WATERFALL_GIANT",
+      "samples": 100,
+      "requested": 300,
+      "minimumShown": 300,
+      "timedOut": false,
+      "simMs": 970,
+      "workers": 24
+    },
+    {
+      "ts": "2026-10-20T16:03:37.969Z",
+      "schema": "build-sim-health-v1",
+      "status": "produced",
+      "availableCpus": 32,
+      "loadAverage": [
+        3.18,
+        5.42,
+        10.56
+      ],
+      "decks": 9,
+      "options": 8,
+      "deckCards": 15,
+      "deadlineMs": 10993.14709100005,
+      "orderSearch": null,
+      "comparison": {
+        "samples": 100,
+        "elapsedMs": 1026,
+        "timedOut": false,
+        "workers": 24,
+        "deadlineMs": 10993.109094000014,
+        "pool": {
+          "queueMs": 0,
+          "coldStart": true,
+          "preparationMs": 9,
+          "firstReplyMs": 325,
+          "chunksPlanned": 117,
+          "chunksDispatched": 117,
+          "chunksCompleted": 117,
+          "outcomesCompleted": 900
+        }
+      },
+      "boss": "WATERFALL_GIANT",
+      "samples": 100,
+      "requested": 300,
+      "minimumShown": 300,
+      "timedOut": false,
+      "simMs": 1079,
+      "workers": 24
+    }
+  ],
+  "mandatory_computation": {
+    "attempts": 3,
+    "failures": 0,
+    "degraded": 0,
+    "evidence": [],
+    "alert": false,
+    "scope": "B2/B3 computation service failures; degradation permits continuation, not fault resolution."
+  },
+  "adaptive": {
+    "mode": "on",
+    "observed": 3,
+    "produced": 3,
+    "errors": 0,
+    "evaluable": 0,
+    "matched": 0,
+    "unknown": 0,
+    "complete_adaptive": 3,
+    "budgeted_partial": 0,
+    "production_evaluable": 0,
+    "production_matched": 0,
+    "agreement": null,
+    "production_agreement": null,
+    "saved_fraction": {
+      "p50": null,
+      "p90": null
+    },
+    "mismatches": [],
+    "actual_saved_fraction": {
+      "p50": 0.6666666666666666,
+      "p90": 0.6666666666666666
+    },
+    "candidate_samples": [
+      100,
+      100,
+      100,
+      100,
+      100,
+      100,
+      100,
+      100,
+      100,
+      100,
+      100,
+      100,
+      100,
+      100,
+      100,
+      100
+    ],
+    "candidate_rounds": [
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1
+    ],
+    "stop_counts": {
+      "indifferent": 3,
+      "eliminated": 9,
+      "leader": 4
+    },
+    "alert": false,
+    "admission_state": "accepted",
+    "admission": "accepted source; runtime mode=on; never auto-enable",
+    "limits": "Shadow estimates and actual on-mode sample work are separate. On-mode cannot observe full-run agreement; no elapsed-time saving or game benefit inferred."
+  },
+  "pipeline": {
+    "enabled": true,
+    "evaluation_expected": 4,
+    "evaluation_attached": 4,
+    "evaluation_missing": 0,
+    "brain_evaluation": 4,
+    "accepted_evaluation": 4,
+    "accepted_choice_with_evaluation": 3,
+    "plan_due": 0,
+    "accepted_structured_plan": 0,
+    "missing_structured_plan": 0,
+    "saved_structured_plan": 0,
+    "plan_readback": 0,
+    "checkpoint_review_due": 0,
+    "probability_delivered": 0,
+    "admission": {
+      "missing_or_mismatched_prospective_calibration": 2
+    },
+    "evidence": [],
+    "alert": false,
+    "limits": "Payload delivery, accepted output and saved/read-back plans are distinct observations, not causal win-rate evidence. Missing calibration is pending, not a service failure."
+  },
+  "limits": [
+    "four completed V6 A/B rewards have no legacy boss_sim/quantitative_fight DPR record; current V5 monitor unconditionally requires those under construction architecture V5",
+    "does not prove A/B content delivered or correct; known current P0 identical-candidate defect is separately owned W4 and R406 CARD brain override already active",
+    "three separate V5 computation records have n100/requested300/minimumShown300, adaptive completion original accepted indifferent/eliminated/leader; not 300-sample full acceptance",
+    "no mandatory computation failure/degraded/timeout observed in this frozen report; CPU load observations not a root cause",
+    "bounded coverage complete flags retain original meanings, no changed threshold or rule"
+  ],
+  "sourcepins": {
+    "ops/module_health.py": "8832bc5128509407a96f8169d14e1ca3ff6febf3cb56a5971e03933e3d18ce07",
+    "ops/adaptive_health.py": "4ff7a071fd922c227842cd8b4152957cd8e90017a4b86c335a2ab3e8ecf4e19e",
+    "agent/src/v6/card-pick.ts": "c11597d95d1bbbba1dfc97841312d52efde87760cc88e341be3a5f9d084fbbae",
+    "agent/src/v6/card-reward-scope.ts": "b41c67173a18e71326f0dbb908328e932fdf786daf2216f17f98d85628b5c00e",
+    "agent/src/v6/construction-safety.ts": "087c4a549db4dd01fc5ce1bc3dbab46662052ad2bbe0773ee1b18d1b78172236"
+  },
+  "current_owner": "original v6-w4w6 P0 candidate-results fix; legacy monitor compatibility follows existing v5-dpr-health/H1 module-health chain, no duplicate dispatch",
+  "separate_V6_stream": {
+    "actual_rows": 4,
+    "elapsed_ms": [
+      4260.084349000012,
+      4256.8988750000135,
+      4255.916232999996,
+      4255.319230000023
+    ],
+    "actual_Boss_n": [
+      [
+        34,
+        34,
+        34,
+        34
+      ],
+      [
+        26,
+        26,
+        26,
+        26
+      ],
+      [
+        26,
+        26,
+        26,
+        26
+      ],
+      [
+        42,
+        42,
+        42,
+        42
+      ]
+    ],
+    "source_refs": [
+      {
+        "path": "/home/dw/Projects/agent-sts2/logs/v6-card-results.jsonl",
+        "offset": 4425258,
+        "length": 75111,
+        "sha256": "08a1aebd2b650a08183aee1c1ad8b5ab663592d99c8e8e39e87734849336c7ca"
+      },
+      {
+        "path": "/home/dw/Projects/agent-sts2/logs/v6-card-results.jsonl",
+        "offset": 4500369,
+        "length": 73471,
+        "sha256": "c964376eaf22bfa23822e8978692c94aaee9d32fc08621661eea4a40becf7571"
+      },
+      {
+        "path": "/home/dw/Projects/agent-sts2/logs/v6-card-results.jsonl",
+        "offset": 4573840,
+        "length": 51836,
+        "sha256": "c34803b5ec174c535a338e2595d9dcb3d05d0f787d4e4b0e34a6381290f9a1f9"
+      },
+      {
+        "path": "/home/dw/Projects/agent-sts2/logs/v6-card-results.jsonl",
+        "offset": 4625676,
+        "length": 96328,
+        "sha256": "a403c26e810a151f5e2f3dcec71d431a9c039c7594ac8d37be02aaf6a53d2421"
+      }
+    ],
+    "computation_is_not_consumer_validity": true
+  }
+}

@@ -5354,3 +5354,5 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
 - 2026-10-21 00:01:15 CST [Claude，P0 验收不通过] V6-R405（dbab11bfb）上线后 Jev 确在拿奖励牌（unknown_to_brain 0、准备约 1–1.4 s），但 A 条目缺陷：同题不同牌的“当前牌组+此牌”模拟结果逐项相同（T0TP8S9MMU9Q F2 三牌 1 组、RBMEQGXPE9Z2 F3 三牌 1 组），Jev 无法区分，首局三次全选跳过、F8 死于花园幽灵鳗（6.6 分钟）。处置：ops 下一开局边界把 V6_CARD_DECIDER 临时改回 brain（其余保留）；v6-w4w6 查缓存键/牌未入模拟/未建模牌当空白，修复后未建模牌须标 unmodelled 且加“不同牌结果应不同”回归，并核模拟对起手牌组 F2 打本幕全部精英/Boss 死亡率 100% 的悲观问题；真实循环验收后再切回 jev。
 
 - 2026-10-21 00:07:25 CST 原ops：V6-R406仅CARD jev→brain供自然新局，live4528a751/行为e8f550ad，T15WXHPTM0ET 00:05:45已读brain/00:06:04首动作；按Claude00:1x R405候选模拟相同验收失败，其余保留。P3自有full按PID中止保未完成非产品失败，待R406重组；R4空草稿0/3估计跨0/缺来源，四异议原文交watcher，父/ACK pending，REFLEX off不续派。224301-s2十waiting守卫拒保留，不重dataset。原件paper/materials/20261020-2358-ops/receipt.json。
+
+- 2026-10-21 00:12:17 CST 原ops：RBME旧V5模块监测对四个已completed V6奖励仍要求boss_sim；独立A/B四题已计算，原告警复算同，样本100/300门及负控不变，沿既有监测/P0各自链去重、不常规报Roy。原P3 11源机械接R406/498知识，00:09:33 tsc0/full1395025在途，旧中断保留、REFLEX off/P4后排；无新学习/模型/dataset或对局操作。原件paper/materials/20261021-0007-ops/receipt.json。

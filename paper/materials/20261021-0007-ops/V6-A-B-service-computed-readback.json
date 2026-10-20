@@ -1,0 +1,1401 @@
+{
+  "at": "2026-10-21T00:10:53.543666+08:00",
+  "source_cut_bytes": 4722004,
+  "refs": [
+    {
+      "path": "/home/dw/Projects/agent-sts2/logs/v6-card-results.jsonl",
+      "offset": 4425258,
+      "length": 75111,
+      "sha256": "08a1aebd2b650a08183aee1c1ad8b5ab663592d99c8e8e39e87734849336c7ca"
+    },
+    {
+      "path": "/home/dw/Projects/agent-sts2/logs/v6-card-results.jsonl",
+      "offset": 4500369,
+      "length": 73471,
+      "sha256": "c964376eaf22bfa23822e8978692c94aaee9d32fc08621661eea4a40becf7571"
+    },
+    {
+      "path": "/home/dw/Projects/agent-sts2/logs/v6-card-results.jsonl",
+      "offset": 4573840,
+      "length": 51836,
+      "sha256": "c34803b5ec174c535a338e2595d9dcb3d05d0f787d4e4b0e34a6381290f9a1f9"
+    },
+    {
+      "path": "/home/dw/Projects/agent-sts2/logs/v6-card-results.jsonl",
+      "offset": 4625676,
+      "length": 96328,
+      "sha256": "a403c26e810a151f5e2f3dcec71d431a9c039c7594ac8d37be02aaf6a53d2421"
+    }
+  ],
+  "rows": [
+    {
+      "ts": "2026-10-20T15:58:48.186Z",
+      "run_id": "RBMEQGXPE9Z2",
+      "floor": 2,
+      "telemetry": {
+        "elapsed_ms": 4260.084349000012,
+        "preparation_ms": 419.79548499998054,
+        "simulation_ms": 3832.1839920000057,
+        "cache_hits": 0,
+        "simulations": 940,
+        "long_term_cache": "hit",
+        "long_term_computed": 0,
+        "long_term_total": 204,
+        "pending_work": true
+      },
+      "current_actual_Boss_rows": [
+        {
+          "option_id": "skip",
+          "target_id": "f17:WATERFALL_GIANT",
+          "metrics": {
+            "hp_loss": {
+              "mean": 49,
+              "se": 0,
+              "n": 34
+            },
+            "turns": {
+              "mean": 16.500000000000007,
+              "se": 0.43314132589680654,
+              "n": 34
+            },
+            "damage_per_turn": {
+              "mean": 7.712379853902345,
+              "se": 0.12769416360027422,
+              "n": 34
+            },
+            "death_rate": {
+              "mean": 1,
+              "se": 0,
+              "n": 34
+            },
+            "losing_enemy_hp_fraction": {
+              "mean": 0.6847058823529413,
+              "se": 0.010693554242545436,
+              "n": 34
+            }
+          },
+          "paired_delta": {
+            "hp_loss": {
+              "mean": 0,
+              "se": 0,
+              "n": 34
+            },
+            "turns": {
+              "mean": 0,
+              "se": 0,
+              "n": 34
+            },
+            "damage_per_turn": {
+              "mean": 0,
+              "se": 0,
+              "n": 34
+            },
+            "death_rate": {
+              "mean": 0,
+              "se": 0,
+              "n": 34
+            },
+            "losing_enemy_hp_fraction": {
+              "mean": 0,
+              "se": 0,
+              "n": 34
+            }
+          },
+          "samples": 34,
+          "requested_samples": 100,
+          "capped": 0,
+          "time_up": 0,
+          "missing": 66,
+          "trust": {
+            "value": "trusted",
+            "labels": []
+          },
+          "labels": [
+            "entry_hp_source:existing_route_projection:n=0",
+            "current_relics_and_potion_belt_only",
+            "unmodelled_relic:蛇之戒指",
+            "immediate_entry_hp_assumed_current_hp_not_route_forecast",
+            "visible_actual_boss",
+            "raw_simulation_not_calibrated",
+            "paired_delta_option_minus_skip_same_seed",
+            "losing_enemy_hp_conditional_on_loss",
+            "enemy_hp_fraction_denominator_is_sampled_encounter_opening_hp",
+            "remaining_enemy_hp_includes_later_phases_and_spawns_not_clamped_to_one",
+            "partial_sample_coverage"
+          ],
+          "unknown_reasons": []
+        },
+        {
+          "option_id": "card0",
+          "target_id": "f17:WATERFALL_GIANT",
+          "metrics": {
+            "hp_loss": {
+              "mean": 49,
+              "se": 0,
+              "n": 34
+            },
+            "turns": {
+              "mean": 15.558823529411764,
+              "se": 0.4570524343607188,
+              "n": 34
+            },
+            "damage_per_turn": {
+              "mean": 7.664568915801617,
+              "se": 0.12769859503490166,
+              "n": 34
+            },
+            "death_rate": {
+              "mean": 1,
+              "se": 0,
+              "n": 34
+            },
+            "losing_enemy_hp_fraction": {
+              "mean": 0.7100000000000001,
+              "se": 0.00867105332560013,
+              "n": 34
+            }
+          },
+          "paired_delta": {
+            "hp_loss": {
+              "mean": 0,
+              "se": 0,
+              "n": 34
+            },
+            "turns": {
+              "mean": -0.9411764705882353,
+              "se": 0.5204227961540903,
+              "n": 34
+            },
+            "damage_per_turn": {
+              "mean": -0.04781093810073056,
+              "se": 0.1565391857321502,
+              "n": 34
+            },
+            "death_rate": {
+              "mean": 0,
+              "se": 0,
+              "n": 34
+            },
+            "losing_enemy_hp_fraction": {
+              "mean": 0.025294117647058825,
+              "se": 0.01050010859902796,
+              "n": 34
+            }
+          },
+          "samples": 34,
+          "requested_samples": 100,
+          "capped": 0,
+          "time_up": 0,
+          "missing": 66,
+          "trust": {
+            "value": "trusted",
+            "labels": []
+          },
+          "labels": [
+            "entry_hp_source:existing_route_projection:n=0",
+            "current_relics_and_potion_belt_only",
+            "unmodelled_relic:蛇之戒指",
+            "immediate_entry_hp_assumed_current_hp_not_route_forecast",
+            "visible_actual_boss",
+            "raw_simulation_not_calibrated",
+            "paired_delta_option_minus_skip_same_seed",
+            "losing_enemy_hp_conditional_on_loss",
+            "enemy_hp_fraction_denominator_is_sampled_encounter_opening_hp",
+            "remaining_enemy_hp_includes_later_phases_and_spawns_not_clamped_to_one",
+            "partial_sample_coverage"
+          ],
+          "unknown_reasons": []
+        },
+        {
+          "option_id": "card1",
+          "target_id": "f17:WATERFALL_GIANT",
+          "metrics": {
+            "hp_loss": {
+              "mean": 49,
+              "se": 0,
+              "n": 34
+            },
+            "turns": {
+              "mean": 16.5,
+              "se": 0.453251277044646,
+              "n": 34
+            },
+            "damage_per_turn": {
+              "mean": 7.468018550557478,
+              "se": 0.13438485734963626,
+              "n": 34
+            },
+            "death_rate": {
+              "mean": 1,
+              "se": 0,
+              "n": 34
+            },
+            "losing_enemy_hp_fraction": {
+              "mean": 0.7002352941176471,
+              "se": 0.011586384752302791,
+              "n": 34
+            }
+          },
+          "paired_delta": {
+            "hp_loss": {
+              "mean": 0,
+              "se": 0,
+              "n": 34
+            },
+            "turns": {
+              "mean": -1.3877787807814457e-17,
+              "se": 0.49417281756338877,
+              "n": 34
+            },
+            "damage_per_turn": {
+              "mean": -0.24436130334486747,
+              "se": 0.15521016986834507,
+              "n": 34
+            },
+            "death_rate": {
+              "mean": 0,
+              "se": 0,
+              "n": 34
+            },
+            "losing_enemy_hp_fraction": {
+              "mean": 0.01552941176470589,
+              "se": 0.010745826640402911,
+              "n": 34
+            }
+          },
+          "samples": 34,
+          "requested_samples": 100,
+          "capped": 0,
+          "time_up": 0,
+          "missing": 66,
+          "trust": {
+            "value": "trusted",
+            "labels": []
+          },
+          "labels": [
+            "entry_hp_source:existing_route_projection:n=0",
+            "current_relics_and_potion_belt_only",
+            "unmodelled_relic:蛇之戒指",
+            "immediate_entry_hp_assumed_current_hp_not_route_forecast",
+            "visible_actual_boss",
+            "raw_simulation_not_calibrated",
+            "paired_delta_option_minus_skip_same_seed",
+            "losing_enemy_hp_conditional_on_loss",
+            "enemy_hp_fraction_denominator_is_sampled_encounter_opening_hp",
+            "remaining_enemy_hp_includes_later_phases_and_spawns_not_clamped_to_one",
+            "partial_sample_coverage"
+          ],
+          "unknown_reasons": []
+        },
+        {
+          "option_id": "card2",
+          "target_id": "f17:WATERFALL_GIANT",
+          "metrics": {
+            "hp_loss": {
+              "mean": 49,
+              "se": 0,
+              "n": 34
+            },
+            "turns": {
+              "mean": 16.5,
+              "se": 0.453251277044646,
+              "n": 34
+            },
+            "damage_per_turn": {
+              "mean": 7.468018550557478,
+              "se": 0.13438485734963626,
+              "n": 34
+            },
+            "death_rate": {
+              "mean": 1,
+              "se": 0,
+              "n": 34
+            },
+            "losing_enemy_hp_fraction": {
+              "mean": 0.7002352941176471,
+              "se": 0.011586384752302791,
+              "n": 34
+            }
+          },
+          "paired_delta": {
+            "hp_loss": {
+              "mean": 0,
+              "se": 0,
+              "n": 34
+            },
+            "turns": {
+              "mean": -1.3877787807814457e-17,
+              "se": 0.49417281756338877,
+              "n": 34
+            },
+            "damage_per_turn": {
+              "mean": -0.24436130334486747,
+              "se": 0.15521016986834507,
+              "n": 34
+            },
+            "death_rate": {
+              "mean": 0,
+              "se": 0,
+              "n": 34
+            },
+            "losing_enemy_hp_fraction": {
+              "mean": 0.01552941176470589,
+              "se": 0.010745826640402911,
+              "n": 34
+            }
+          },
+          "samples": 34,
+          "requested_samples": 100,
+          "capped": 0,
+          "time_up": 0,
+          "missing": 66,
+          "trust": {
+            "value": "trusted",
+            "labels": []
+          },
+          "labels": [
+            "entry_hp_source:existing_route_projection:n=0",
+            "current_relics_and_potion_belt_only",
+            "unmodelled_relic:蛇之戒指",
+            "immediate_entry_hp_assumed_current_hp_not_route_forecast",
+            "visible_actual_boss",
+            "raw_simulation_not_calibrated",
+            "paired_delta_option_minus_skip_same_seed",
+            "losing_enemy_hp_conditional_on_loss",
+            "enemy_hp_fraction_denominator_is_sampled_encounter_opening_hp",
+            "remaining_enemy_hp_includes_later_phases_and_spawns_not_clamped_to_one",
+            "partial_sample_coverage"
+          ],
+          "unknown_reasons": []
+        }
+      ]
+    },
+    {
+      "ts": "2026-10-20T15:59:46.302Z",
+      "run_id": "RBMEQGXPE9Z2",
+      "floor": 3,
+      "telemetry": {
+        "elapsed_ms": 4256.8988750000135,
+        "preparation_ms": 450.0217710000579,
+        "simulation_ms": 3802.4330929999996,
+        "cache_hits": 0,
+        "simulations": 717,
+        "long_term_cache": "hit",
+        "long_term_computed": 0,
+        "long_term_total": 204,
+        "pending_work": true
+      },
+      "current_actual_Boss_rows": [
+        {
+          "option_id": "skip",
+          "target_id": "f17:WATERFALL_GIANT",
+          "metrics": {
+            "hp_loss": {
+              "mean": 47,
+              "se": 0,
+              "n": 26
+            },
+            "turns": {
+              "mean": 16.03846153846154,
+              "se": 0.5068174280008964,
+              "n": 26
+            },
+            "damage_per_turn": {
+              "mean": 7.286216309266182,
+              "se": 0.1338924567477614,
+              "n": 26
+            },
+            "death_rate": {
+              "mean": 1,
+              "se": 0,
+              "n": 26
+            },
+            "losing_enemy_hp_fraction": {
+              "mean": 0.722,
+              "se": 0.012567601815168056,
+              "n": 26
+            }
+          },
+          "paired_delta": {
+            "hp_loss": {
+              "mean": 0,
+              "se": 0,
+              "n": 26
+            },
+            "turns": {
+              "mean": 0,
+              "se": 0,
+              "n": 26
+            },
+            "damage_per_turn": {
+              "mean": 0,
+              "se": 0,
+              "n": 26
+            },
+            "death_rate": {
+              "mean": 0,
+              "se": 0,
+              "n": 26
+            },
+            "losing_enemy_hp_fraction": {
+              "mean": 0,
+              "se": 0,
+              "n": 26
+            }
+          },
+          "samples": 26,
+          "requested_samples": 100,
+          "capped": 0,
+          "time_up": 0,
+          "missing": 74,
+          "trust": {
+            "value": "trusted",
+            "labels": []
+          },
+          "labels": [
+            "entry_hp_source:existing_route_projection:n=0",
+            "current_relics_and_potion_belt_only",
+            "unmodelled_relic:蛇之戒指",
+            "immediate_entry_hp_assumed_current_hp_not_route_forecast",
+            "visible_actual_boss",
+            "raw_simulation_not_calibrated",
+            "paired_delta_option_minus_skip_same_seed",
+            "losing_enemy_hp_conditional_on_loss",
+            "enemy_hp_fraction_denominator_is_sampled_encounter_opening_hp",
+            "remaining_enemy_hp_includes_later_phases_and_spawns_not_clamped_to_one",
+            "partial_sample_coverage"
+          ],
+          "unknown_reasons": []
+        },
+        {
+          "option_id": "card0",
+          "target_id": "f17:WATERFALL_GIANT",
+          "metrics": {
+            "hp_loss": {
+              "mean": 47,
+              "se": 0,
+              "n": 26
+            },
+            "turns": {
+              "mean": 14.653846153846155,
+              "se": 0.4897167397660617,
+              "n": 26
+            },
+            "damage_per_turn": {
+              "mean": 7.489335664335664,
+              "se": 0.16099141175748544,
+              "n": 26
+            },
+            "death_rate": {
+              "mean": 1,
+              "se": 0,
+              "n": 26
+            },
+            "losing_enemy_hp_fraction": {
+              "mean": 0.7363076923076923,
+              "se": 0.010465881451469485,
+              "n": 26
+            }
+          },
+          "paired_delta": {
+            "hp_loss": {
+              "mean": 0,
+              "se": 0,
+              "n": 26
+            },
+            "turns": {
+              "mean": -1.3846153846153846,
+              "se": 0.6228394609229897,
+              "n": 26
+            },
+            "damage_per_turn": {
+              "mean": 0.20311935506948278,
+              "se": 0.20714145788822821,
+              "n": 26
+            },
+            "death_rate": {
+              "mean": 0,
+              "se": 0,
+              "n": 26
+            },
+            "losing_enemy_hp_fraction": {
+              "mean": 0.014307692307692313,
+              "se": 0.012067855488639007,
+              "n": 26
+            }
+          },
+          "samples": 26,
+          "requested_samples": 100,
+          "capped": 0,
+          "time_up": 0,
+          "missing": 74,
+          "trust": {
+            "value": "trusted",
+            "labels": []
+          },
+          "labels": [
+            "entry_hp_source:existing_route_projection:n=0",
+            "current_relics_and_potion_belt_only",
+            "unmodelled_relic:蛇之戒指",
+            "immediate_entry_hp_assumed_current_hp_not_route_forecast",
+            "visible_actual_boss",
+            "raw_simulation_not_calibrated",
+            "paired_delta_option_minus_skip_same_seed",
+            "losing_enemy_hp_conditional_on_loss",
+            "enemy_hp_fraction_denominator_is_sampled_encounter_opening_hp",
+            "remaining_enemy_hp_includes_later_phases_and_spawns_not_clamped_to_one",
+            "partial_sample_coverage"
+          ],
+          "unknown_reasons": []
+        },
+        {
+          "option_id": "card1",
+          "target_id": "f17:WATERFALL_GIANT",
+          "metrics": {
+            "hp_loss": {
+              "mean": 47,
+              "se": 0,
+              "n": 26
+            },
+            "turns": {
+              "mean": 14.653846153846155,
+              "se": 0.4897167397660617,
+              "n": 26
+            },
+            "damage_per_turn": {
+              "mean": 7.489335664335664,
+              "se": 0.16099141175748544,
+              "n": 26
+            },
+            "death_rate": {
+              "mean": 1,
+              "se": 0,
+              "n": 26
+            },
+            "losing_enemy_hp_fraction": {
+              "mean": 0.7363076923076923,
+              "se": 0.010465881451469485,
+              "n": 26
+            }
+          },
+          "paired_delta": {
+            "hp_loss": {
+              "mean": 0,
+              "se": 0,
+              "n": 26
+            },
+            "turns": {
+              "mean": -1.3846153846153846,
+              "se": 0.6228394609229897,
+              "n": 26
+            },
+            "damage_per_turn": {
+              "mean": 0.20311935506948278,
+              "se": 0.20714145788822821,
+              "n": 26
+            },
+            "death_rate": {
+              "mean": 0,
+              "se": 0,
+              "n": 26
+            },
+            "losing_enemy_hp_fraction": {
+              "mean": 0.014307692307692313,
+              "se": 0.012067855488639007,
+              "n": 26
+            }
+          },
+          "samples": 26,
+          "requested_samples": 100,
+          "capped": 0,
+          "time_up": 0,
+          "missing": 74,
+          "trust": {
+            "value": "trusted",
+            "labels": []
+          },
+          "labels": [
+            "entry_hp_source:existing_route_projection:n=0",
+            "current_relics_and_potion_belt_only",
+            "unmodelled_relic:蛇之戒指",
+            "immediate_entry_hp_assumed_current_hp_not_route_forecast",
+            "visible_actual_boss",
+            "raw_simulation_not_calibrated",
+            "paired_delta_option_minus_skip_same_seed",
+            "losing_enemy_hp_conditional_on_loss",
+            "enemy_hp_fraction_denominator_is_sampled_encounter_opening_hp",
+            "remaining_enemy_hp_includes_later_phases_and_spawns_not_clamped_to_one",
+            "partial_sample_coverage"
+          ],
+          "unknown_reasons": []
+        },
+        {
+          "option_id": "card2",
+          "target_id": "f17:WATERFALL_GIANT",
+          "metrics": {
+            "hp_loss": {
+              "mean": 47,
+              "se": 0,
+              "n": 26
+            },
+            "turns": {
+              "mean": 14.653846153846155,
+              "se": 0.4897167397660617,
+              "n": 26
+            },
+            "damage_per_turn": {
+              "mean": 7.489335664335664,
+              "se": 0.16099141175748544,
+              "n": 26
+            },
+            "death_rate": {
+              "mean": 1,
+              "se": 0,
+              "n": 26
+            },
+            "losing_enemy_hp_fraction": {
+              "mean": 0.7363076923076923,
+              "se": 0.010465881451469485,
+              "n": 26
+            }
+          },
+          "paired_delta": {
+            "hp_loss": {
+              "mean": 0,
+              "se": 0,
+              "n": 26
+            },
+            "turns": {
+              "mean": -1.3846153846153846,
+              "se": 0.6228394609229897,
+              "n": 26
+            },
+            "damage_per_turn": {
+              "mean": 0.20311935506948278,
+              "se": 0.20714145788822821,
+              "n": 26
+            },
+            "death_rate": {
+              "mean": 0,
+              "se": 0,
+              "n": 26
+            },
+            "losing_enemy_hp_fraction": {
+              "mean": 0.014307692307692313,
+              "se": 0.012067855488639007,
+              "n": 26
+            }
+          },
+          "samples": 26,
+          "requested_samples": 100,
+          "capped": 0,
+          "time_up": 0,
+          "missing": 74,
+          "trust": {
+            "value": "trusted",
+            "labels": []
+          },
+          "labels": [
+            "entry_hp_source:existing_route_projection:n=0",
+            "current_relics_and_potion_belt_only",
+            "unmodelled_relic:蛇之戒指",
+            "immediate_entry_hp_assumed_current_hp_not_route_forecast",
+            "visible_actual_boss",
+            "raw_simulation_not_calibrated",
+            "paired_delta_option_minus_skip_same_seed",
+            "losing_enemy_hp_conditional_on_loss",
+            "enemy_hp_fraction_denominator_is_sampled_encounter_opening_hp",
+            "remaining_enemy_hp_includes_later_phases_and_spawns_not_clamped_to_one",
+            "partial_sample_coverage"
+          ],
+          "unknown_reasons": []
+        }
+      ]
+    },
+    {
+      "ts": "2026-10-20T16:00:50.947Z",
+      "run_id": "RBMEQGXPE9Z2",
+      "floor": 4,
+      "telemetry": {
+        "elapsed_ms": 4255.916232999996,
+        "preparation_ms": 460.59039600001415,
+        "simulation_ms": 3791.3135699999984,
+        "cache_hits": 0,
+        "simulations": 725,
+        "long_term_cache": "miss",
+        "long_term_computed": 0,
+        "long_term_total": 204,
+        "pending_work": true
+      },
+      "current_actual_Boss_rows": [
+        {
+          "option_id": "skip",
+          "target_id": "f17:WATERFALL_GIANT",
+          "metrics": {
+            "hp_loss": {
+              "mean": 27,
+              "se": 0,
+              "n": 26
+            },
+            "turns": {
+              "mean": 15.92307692307692,
+              "se": 0.6746465215163292,
+              "n": 26
+            },
+            "damage_per_turn": {
+              "mean": 8.04974358974359,
+              "se": 0.16856528047141747,
+              "n": 26
+            },
+            "death_rate": {
+              "mean": 1,
+              "se": 0,
+              "n": 26
+            },
+            "losing_enemy_hp_fraction": {
+              "mean": 0.6798461538461539,
+              "se": 0.013892742134786376,
+              "n": 26
+            }
+          },
+          "paired_delta": {
+            "hp_loss": {
+              "mean": 0,
+              "se": 0,
+              "n": 26
+            },
+            "turns": {
+              "mean": 0,
+              "se": 0,
+              "n": 26
+            },
+            "damage_per_turn": {
+              "mean": 0,
+              "se": 0,
+              "n": 26
+            },
+            "death_rate": {
+              "mean": 0,
+              "se": 0,
+              "n": 26
+            },
+            "losing_enemy_hp_fraction": {
+              "mean": 0,
+              "se": 0,
+              "n": 26
+            }
+          },
+          "samples": 26,
+          "requested_samples": 100,
+          "capped": 0,
+          "time_up": 0,
+          "missing": 74,
+          "trust": {
+            "value": "trusted",
+            "labels": []
+          },
+          "labels": [
+            "entry_hp_source:existing_route_projection:n=0",
+            "current_relics_and_potion_belt_only",
+            "unmodelled_relic:蛇之戒指",
+            "immediate_entry_hp_assumed_current_hp_not_route_forecast",
+            "visible_actual_boss",
+            "raw_simulation_not_calibrated",
+            "paired_delta_option_minus_skip_same_seed",
+            "losing_enemy_hp_conditional_on_loss",
+            "enemy_hp_fraction_denominator_is_sampled_encounter_opening_hp",
+            "remaining_enemy_hp_includes_later_phases_and_spawns_not_clamped_to_one",
+            "partial_sample_coverage"
+          ],
+          "unknown_reasons": []
+        },
+        {
+          "option_id": "card0",
+          "target_id": "f17:WATERFALL_GIANT",
+          "metrics": {
+            "hp_loss": {
+              "mean": 27,
+              "se": 0,
+              "n": 26
+            },
+            "turns": {
+              "mean": 13.961538461538463,
+              "se": 0.816146233561249,
+              "n": 26
+            },
+            "damage_per_turn": {
+              "mean": 7.92906162464986,
+              "se": 0.16144281854037265,
+              "n": 26
+            },
+            "death_rate": {
+              "mean": 1,
+              "se": 0,
+              "n": 26
+            },
+            "losing_enemy_hp_fraction": {
+              "mean": 0.7270769230769231,
+              "se": 0.013409172873811544,
+              "n": 26
+            }
+          },
+          "paired_delta": {
+            "hp_loss": {
+              "mean": 0,
+              "se": 0,
+              "n": 26
+            },
+            "turns": {
+              "mean": -1.9615384615384617,
+              "se": 1.108680115106759,
+              "n": 26
+            },
+            "damage_per_turn": {
+              "mean": -0.12068196509372978,
+              "se": 0.21394678808135587,
+              "n": 26
+            },
+            "death_rate": {
+              "mean": 0,
+              "se": 0,
+              "n": 26
+            },
+            "losing_enemy_hp_fraction": {
+              "mean": 0.04723076923076926,
+              "se": 0.01779890296466504,
+              "n": 26
+            }
+          },
+          "samples": 26,
+          "requested_samples": 100,
+          "capped": 0,
+          "time_up": 0,
+          "missing": 74,
+          "trust": {
+            "value": "trusted",
+            "labels": []
+          },
+          "labels": [
+            "entry_hp_source:existing_route_projection:n=0",
+            "current_relics_and_potion_belt_only",
+            "unmodelled_relic:蛇之戒指",
+            "immediate_entry_hp_assumed_current_hp_not_route_forecast",
+            "visible_actual_boss",
+            "raw_simulation_not_calibrated",
+            "paired_delta_option_minus_skip_same_seed",
+            "losing_enemy_hp_conditional_on_loss",
+            "enemy_hp_fraction_denominator_is_sampled_encounter_opening_hp",
+            "remaining_enemy_hp_includes_later_phases_and_spawns_not_clamped_to_one",
+            "partial_sample_coverage"
+          ],
+          "unknown_reasons": []
+        },
+        {
+          "option_id": "card1",
+          "target_id": "f17:WATERFALL_GIANT",
+          "metrics": {
+            "hp_loss": {
+              "mean": 27,
+              "se": 0,
+              "n": 26
+            },
+            "turns": {
+              "mean": 13.961538461538463,
+              "se": 0.816146233561249,
+              "n": 26
+            },
+            "damage_per_turn": {
+              "mean": 7.92906162464986,
+              "se": 0.16144281854037265,
+              "n": 26
+            },
+            "death_rate": {
+              "mean": 1,
+              "se": 0,
+              "n": 26
+            },
+            "losing_enemy_hp_fraction": {
+              "mean": 0.7270769230769231,
+              "se": 0.013409172873811544,
+              "n": 26
+            }
+          },
+          "paired_delta": {
+            "hp_loss": {
+              "mean": 0,
+              "se": 0,
+              "n": 26
+            },
+            "turns": {
+              "mean": -1.9615384615384617,
+              "se": 1.108680115106759,
+              "n": 26
+            },
+            "damage_per_turn": {
+              "mean": -0.12068196509372978,
+              "se": 0.21394678808135587,
+              "n": 26
+            },
+            "death_rate": {
+              "mean": 0,
+              "se": 0,
+              "n": 26
+            },
+            "losing_enemy_hp_fraction": {
+              "mean": 0.04723076923076926,
+              "se": 0.01779890296466504,
+              "n": 26
+            }
+          },
+          "samples": 26,
+          "requested_samples": 100,
+          "capped": 0,
+          "time_up": 0,
+          "missing": 74,
+          "trust": {
+            "value": "trusted",
+            "labels": []
+          },
+          "labels": [
+            "entry_hp_source:existing_route_projection:n=0",
+            "current_relics_and_potion_belt_only",
+            "unmodelled_relic:蛇之戒指",
+            "immediate_entry_hp_assumed_current_hp_not_route_forecast",
+            "visible_actual_boss",
+            "raw_simulation_not_calibrated",
+            "paired_delta_option_minus_skip_same_seed",
+            "losing_enemy_hp_conditional_on_loss",
+            "enemy_hp_fraction_denominator_is_sampled_encounter_opening_hp",
+            "remaining_enemy_hp_includes_later_phases_and_spawns_not_clamped_to_one",
+            "partial_sample_coverage"
+          ],
+          "unknown_reasons": []
+        },
+        {
+          "option_id": "card2",
+          "target_id": "f17:WATERFALL_GIANT",
+          "metrics": {
+            "hp_loss": {
+              "mean": 27,
+              "se": 0,
+              "n": 26
+            },
+            "turns": {
+              "mean": 13.961538461538463,
+              "se": 0.816146233561249,
+              "n": 26
+            },
+            "damage_per_turn": {
+              "mean": 7.92906162464986,
+              "se": 0.16144281854037265,
+              "n": 26
+            },
+            "death_rate": {
+              "mean": 1,
+              "se": 0,
+              "n": 26
+            },
+            "losing_enemy_hp_fraction": {
+              "mean": 0.7270769230769231,
+              "se": 0.013409172873811544,
+              "n": 26
+            }
+          },
+          "paired_delta": {
+            "hp_loss": {
+              "mean": 0,
+              "se": 0,
+              "n": 26
+            },
+            "turns": {
+              "mean": -1.9615384615384617,
+              "se": 1.108680115106759,
+              "n": 26
+            },
+            "damage_per_turn": {
+              "mean": -0.12068196509372978,
+              "se": 0.21394678808135587,
+              "n": 26
+            },
+            "death_rate": {
+              "mean": 0,
+              "se": 0,
+              "n": 26
+            },
+            "losing_enemy_hp_fraction": {
+              "mean": 0.04723076923076926,
+              "se": 0.01779890296466504,
+              "n": 26
+            }
+          },
+          "samples": 26,
+          "requested_samples": 100,
+          "capped": 0,
+          "time_up": 0,
+          "missing": 74,
+          "trust": {
+            "value": "trusted",
+            "labels": []
+          },
+          "labels": [
+            "entry_hp_source:existing_route_projection:n=0",
+            "current_relics_and_potion_belt_only",
+            "unmodelled_relic:蛇之戒指",
+            "immediate_entry_hp_assumed_current_hp_not_route_forecast",
+            "visible_actual_boss",
+            "raw_simulation_not_calibrated",
+            "paired_delta_option_minus_skip_same_seed",
+            "losing_enemy_hp_conditional_on_loss",
+            "enemy_hp_fraction_denominator_is_sampled_encounter_opening_hp",
+            "remaining_enemy_hp_includes_later_phases_and_spawns_not_clamped_to_one",
+            "partial_sample_coverage"
+          ],
+          "unknown_reasons": []
+        }
+      ]
+    },
+    {
+      "ts": "2026-10-20T16:03:17.590Z",
+      "run_id": "RBMEQGXPE9Z2",
+      "floor": 6,
+      "telemetry": {
+        "elapsed_ms": 4255.319230000023,
+        "preparation_ms": 425.012199000048,
+        "simulation_ms": 3826.1949480000185,
+        "cache_hits": 0,
+        "simulations": 1157,
+        "long_term_cache": "hit",
+        "long_term_computed": 0,
+        "long_term_total": 204,
+        "pending_work": true
+      },
+      "current_actual_Boss_rows": [
+        {
+          "option_id": "skip",
+          "target_id": "f17:WATERFALL_GIANT",
+          "metrics": {
+            "hp_loss": {
+              "mean": 20,
+              "se": 0,
+              "n": 42
+            },
+            "turns": {
+              "mean": 10.428571428571427,
+              "se": 0.40773994972322575,
+              "n": 42
+            },
+            "damage_per_turn": {
+              "mean": 7.648708265357427,
+              "se": 0.1468244098468564,
+              "n": 42
+            },
+            "death_rate": {
+              "mean": 1,
+              "se": 0,
+              "n": 42
+            },
+            "losing_enemy_hp_fraction": {
+              "mean": 0.8023809523809525,
+              "se": 0.00970655108718204,
+              "n": 42
+            }
+          },
+          "paired_delta": {
+            "hp_loss": {
+              "mean": 0,
+              "se": 0,
+              "n": 42
+            },
+            "turns": {
+              "mean": 0,
+              "se": 0,
+              "n": 42
+            },
+            "damage_per_turn": {
+              "mean": 0,
+              "se": 0,
+              "n": 42
+            },
+            "death_rate": {
+              "mean": 0,
+              "se": 0,
+              "n": 42
+            },
+            "losing_enemy_hp_fraction": {
+              "mean": 0,
+              "se": 0,
+              "n": 42
+            }
+          },
+          "samples": 42,
+          "requested_samples": 100,
+          "capped": 0,
+          "time_up": 0,
+          "missing": 58,
+          "trust": {
+            "value": "trusted",
+            "labels": []
+          },
+          "labels": [
+            "entry_hp_source:existing_route_projection:n=0",
+            "current_relics_and_potion_belt_only",
+            "unmodelled_relic:蛇之戒指",
+            "immediate_entry_hp_assumed_current_hp_not_route_forecast",
+            "visible_actual_boss",
+            "raw_simulation_not_calibrated",
+            "paired_delta_option_minus_skip_same_seed",
+            "losing_enemy_hp_conditional_on_loss",
+            "enemy_hp_fraction_denominator_is_sampled_encounter_opening_hp",
+            "remaining_enemy_hp_includes_later_phases_and_spawns_not_clamped_to_one",
+            "partial_sample_coverage"
+          ],
+          "unknown_reasons": []
+        },
+        {
+          "option_id": "card0",
+          "target_id": "f17:WATERFALL_GIANT",
+          "metrics": {
+            "hp_loss": {
+              "mean": 20,
+              "se": 0,
+              "n": 42
+            },
+            "turns": {
+              "mean": 8.309523809523812,
+              "se": 0.33992568573329207,
+              "n": 42
+            },
+            "damage_per_turn": {
+              "mean": 7.887886518243662,
+              "se": 0.16506133549281388,
+              "n": 42
+            },
+            "death_rate": {
+              "mean": 1,
+              "se": 0,
+              "n": 42
+            },
+            "losing_enemy_hp_fraction": {
+              "mean": 0.8321904761904761,
+              "se": 0.006717048714452818,
+              "n": 42
+            }
+          },
+          "paired_delta": {
+            "hp_loss": {
+              "mean": 0,
+              "se": 0,
+              "n": 42
+            },
+            "turns": {
+              "mean": -2.119047619047618,
+              "se": 0.5612355510220182,
+              "n": 42
+            },
+            "damage_per_turn": {
+              "mean": 0.23917825288623615,
+              "se": 0.20634582185514694,
+              "n": 42
+            },
+            "death_rate": {
+              "mean": 0,
+              "se": 0,
+              "n": 42
+            },
+            "losing_enemy_hp_fraction": {
+              "mean": 0.029809523809523824,
+              "se": 0.010209605716730746,
+              "n": 42
+            }
+          },
+          "samples": 42,
+          "requested_samples": 100,
+          "capped": 0,
+          "time_up": 0,
+          "missing": 58,
+          "trust": {
+            "value": "trusted",
+            "labels": []
+          },
+          "labels": [
+            "entry_hp_source:existing_route_projection:n=0",
+            "current_relics_and_potion_belt_only",
+            "unmodelled_relic:蛇之戒指",
+            "immediate_entry_hp_assumed_current_hp_not_route_forecast",
+            "visible_actual_boss",
+            "raw_simulation_not_calibrated",
+            "paired_delta_option_minus_skip_same_seed",
+            "losing_enemy_hp_conditional_on_loss",
+            "enemy_hp_fraction_denominator_is_sampled_encounter_opening_hp",
+            "remaining_enemy_hp_includes_later_phases_and_spawns_not_clamped_to_one",
+            "partial_sample_coverage"
+          ],
+          "unknown_reasons": []
+        },
+        {
+          "option_id": "card1",
+          "target_id": "f17:WATERFALL_GIANT",
+          "metrics": {
+            "hp_loss": {
+              "mean": 20,
+              "se": 0,
+              "n": 42
+            },
+            "turns": {
+              "mean": 8.309523809523812,
+              "se": 0.33992568573329207,
+              "n": 42
+            },
+            "damage_per_turn": {
+              "mean": 7.887886518243662,
+              "se": 0.16506133549281388,
+              "n": 42
+            },
+            "death_rate": {
+              "mean": 1,
+              "se": 0,
+              "n": 42
+            },
+            "losing_enemy_hp_fraction": {
+              "mean": 0.8321904761904761,
+              "se": 0.006717048714452818,
+              "n": 42
+            }
+          },
+          "paired_delta": {
+            "hp_loss": {
+              "mean": 0,
+              "se": 0,
+              "n": 42
+            },
+            "turns": {
+              "mean": -2.119047619047618,
+              "se": 0.5612355510220182,
+              "n": 42
+            },
+            "damage_per_turn": {
+              "mean": 0.23917825288623615,
+              "se": 0.20634582185514694,
+              "n": 42
+            },
+            "death_rate": {
+              "mean": 0,
+              "se": 0,
+              "n": 42
+            },
+            "losing_enemy_hp_fraction": {
+              "mean": 0.029809523809523824,
+              "se": 0.010209605716730746,
+              "n": 42
+            }
+          },
+          "samples": 42,
+          "requested_samples": 100,
+          "capped": 0,
+          "time_up": 0,
+          "missing": 58,
+          "trust": {
+            "value": "trusted",
+            "labels": []
+          },
+          "labels": [
+            "entry_hp_source:existing_route_projection:n=0",
+            "current_relics_and_potion_belt_only",
+            "unmodelled_relic:蛇之戒指",
+            "immediate_entry_hp_assumed_current_hp_not_route_forecast",
+            "visible_actual_boss",
+            "raw_simulation_not_calibrated",
+            "paired_delta_option_minus_skip_same_seed",
+            "losing_enemy_hp_conditional_on_loss",
+            "enemy_hp_fraction_denominator_is_sampled_encounter_opening_hp",
+            "remaining_enemy_hp_includes_later_phases_and_spawns_not_clamped_to_one",
+            "partial_sample_coverage"
+          ],
+          "unknown_reasons": []
+        },
+        {
+          "option_id": "card2",
+          "target_id": "f17:WATERFALL_GIANT",
+          "metrics": {
+            "hp_loss": {
+              "mean": 20,
+              "se": 0,
+              "n": 42
+            },
+            "turns": {
+              "mean": 9.190476190476192,
+              "se": 0.4712871830117924,
+              "n": 42
+            },
+            "damage_per_turn": {
+              "mean": 7.96933879612451,
+              "se": 0.1975847623566131,
+              "n": 42
+            },
+            "death_rate": {
+              "mean": 1,
+              "se": 0,
+              "n": 42
+            },
+            "losing_enemy_hp_fraction": {
+              "mean": 0.8163809523809523,
+              "se": 0.009057626350199516,
+              "n": 42
+            }
+          },
+          "paired_delta": {
+            "hp_loss": {
+              "mean": 0,
+              "se": 0,
+              "n": 42
+            },
+            "turns": {
+              "mean": -1.238095238095238,
+              "se": 0.4877232938800189,
+              "n": 42
+            },
+            "damage_per_turn": {
+              "mean": 0.32063053076708553,
+              "se": 0.20740887618695442,
+              "n": 42
+            },
+            "death_rate": {
+              "mean": 0,
+              "se": 0,
+              "n": 42
+            },
+            "losing_enemy_hp_fraction": {
+              "mean": 0.014000000000000004,
+              "se": 0.010887877519853918,
+              "n": 42
+            }
+          },
+          "samples": 42,
+          "requested_samples": 100,
+          "capped": 0,
+          "time_up": 0,
+          "missing": 58,
+          "trust": {
+            "value": "trusted",
+            "labels": []
+          },
+          "labels": [
+            "entry_hp_source:existing_route_projection:n=0",
+            "current_relics_and_potion_belt_only",
+            "unmodelled_relic:蛇之戒指",
+            "immediate_entry_hp_assumed_current_hp_not_route_forecast",
+            "visible_actual_boss",
+            "raw_simulation_not_calibrated",
+            "paired_delta_option_minus_skip_same_seed",
+            "losing_enemy_hp_conditional_on_loss",
+            "enemy_hp_fraction_denominator_is_sampled_encounter_opening_hp",
+            "remaining_enemy_hp_includes_later_phases_and_spawns_not_clamped_to_one",
+            "partial_sample_coverage"
+          ],
+          "unknown_reasons": []
+        }
+      ]
+    }
+  ],
+  "limits": "actual computation and metrics exist in separate V6 stream; cannot infer consumer correctness or solve known identical-candidate P0 defect, do not combine sample counts/elapsed phases with legacy V5 diagnostics"
+}

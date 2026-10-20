@@ -5031,3 +5031,5 @@ request_id=roy-20261017-human-pace-h0 revision=3 input_sha256=1e1c259a15f1824119
 证据与核验回执paper/materials/20261020-2358-ops/receipt.json；三个估计均跨0且无真实来源，草稿0，维持REFLEX off。原角色CLI登记因R4手动task尚无匹配来源桥保持pending，不冒已送达Roy。
 
 - 2026-10-21 00:07:25 CST 原ops：已核224301-s2原收尾attention：六局十项waiting、原WT干净/报告SHA同，保源码漂移守卫及父要求，无本候选dataset日志，不重复生成或合入。R4退出0、382局5317奖励形态/首试4711，43692尝试仅3估计且区间全跨0，又缺真实source_experience，最终草稿0；529产物核大小、513小SHA及66贡献原字节核同，16大产物不重读，原检查不冒全量复验。四异议原文已双写并投递现watcher，实际实收/Roy告知及R4手动CLI来源桥仍pending，不造父/代ACK/续批/开reflex。期间接Claude00:1x验收失败指令，按自有PID中止P3保原未完成日志，仅将后续CARD改brain、登记V6-R406；T15WXHPTM0ET 00:05:45开局已读brain，00:06:04首动作，其余R405保留。P0须原W4真实loop验收，P2未开；原件paper/materials/20261020-2358-ops/receipt.json。
+
+- 2026-10-21 00:12:17 CST 原ops：RBME模块告警按原冻结窗口复算一致，166决策/4脑题中四个缺记录均为已完成V6奖励无旧boss_sim；另流四题A/B确有计算和DPR，约4255–4260ms，不能称未算或据此认候选内容正确。三次旧V5必需计算零失败/降级/超时，实际100样本与请求/最低300及自适应口径分列，未降低门槛；pipeline四项评估均送达。监控兼容缺口沿既有v5-dpr-health/H1链追加负控，与原W4 P0同值缺陷分开去重，仅给原owner证据，不常规报watcher/Roy或新派学习。P3沿原WT保11源，在R406与最新498知识重冻，tsc0、00:09:33启动唯一单worker full，旧中断不冒绿/产品失败；不改当前局、REFLEX或R4，P4仍后排。原件paper/materials/20261021-0007-ops/receipt.json。

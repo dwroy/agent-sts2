@@ -1,0 +1,92 @@
+{
+  "at": "2026-10-21T00:11:40.484625+08:00",
+  "event_ids": [
+    "module-health-RBMEQGXPE9Z2",
+    "original-P3-preemption-followup"
+  ],
+  "module_health": {
+    "original_recomputed_equal": true,
+    "review": "module-health-review.json",
+    "actual_V6_computations": 4,
+    "service_gap": "legacy V5 monitor expects boss_sim for new V6 rewards",
+    "known_P0_quality_defect": "separate original W4 owner; not verified by mere DPR availability",
+    "mandatory_computation": {
+      "attempts": 3,
+      "failures": 0,
+      "degraded": 0
+    },
+    "construction_pipeline": {
+      "expected": 4,
+      "attached": 4,
+      "brain_evaluation": 4,
+      "accepted": 4,
+      "accepted_choice": 3
+    },
+    "legacy_actual_paired": 100,
+    "legacy_minimum_unchanged": 300,
+    "adaptive_original_accepted": true,
+    "threshold_lowered": false,
+    "CPU_root_cause": "unknown; no attribution from load averages",
+    "alert_original_retained": true,
+    "no_routine_watcher_Roy_report": true,
+    "current_owner": "original v6-w4w6 P0 and existing v5-dpr-health/H1 monitor chain; no duplicate dispatch"
+  },
+  "P3_static_start": {
+    "request": "original-W8-P3-reflex-card-pick-exact-R406-live-joint-20261021-0007",
+    "state": "running",
+    "started_at": "2026-10-21T00:09:32.526382+08:00",
+    "runner_pid": 1394913,
+    "runner_start_ticks": "140450458",
+    "nice": 19,
+    "worktree": "/home/dw/Projects/agent-sts2/.worktrees/ops-p3-reflex-joint-20261020-2349",
+    "actual_live_base": "4528a751f17e341a97e7ff70295ec9fba0c947e9",
+    "allocation_base": "75c4a1b9611b2566425e4aa14472c4d1c81673f2",
+    "staged_tree": "6650caa5542a8f7012baff3eb6d081ce918207a4",
+    "source_count": 11,
+    "knowledge_count": 498,
+    "input_count": 2388,
+    "input_sha256": "9d17d1cbcc585afe7c4c6d1bf49c8e05721c6cd85a2a471a4866d7e36db656b8",
+    "steps": [
+      {
+        "name": "tsc",
+        "command": [
+          "npx",
+          "tsc",
+          "-p",
+          "tsconfig.json",
+          "--noEmit"
+        ],
+        "started_at": "2026-10-21T00:09:32.527057+08:00",
+        "log": "/home/dw/Projects/agent-sts2/.artifacts/ops-P3-reflex-R406-joint-20261021-0007/tsc.log",
+        "pid": 1394946,
+        "exit_code": 0,
+        "ended_at": "2026-10-21T00:09:33.660367+08:00",
+        "seconds": 1.1333160768263042,
+        "log_bytes": 0,
+        "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "name": "full",
+        "command": [
+          "node",
+          "tools/with-temp.mjs",
+          "node_modules/vitest/vitest.mjs",
+          "run",
+          "--maxWorkers=1"
+        ],
+        "started_at": "2026-10-21T00:09:33.660676+08:00",
+        "log": "/home/dw/Projects/agent-sts2/.artifacts/ops-P3-reflex-R406-joint-20261021-0007/full.log",
+        "pid": 1395025
+      }
+    ],
+    "held_original_lock": "ops/live-merge.lock",
+    "window_preflight_other_vitest_PIDs": [],
+    "no_actual_live_or_active_actor_change": true
+  },
+  "P3_source11_unchanged": true,
+  "P3_prior_R405_partial": "retained preempted, not failed/passed",
+  "P3_actual_live_write": false,
+  "P4": "queued after original P3",
+  "R4": "draft0/pending notices remain, not redispatched",
+  "no_new_model_simulation_API_dataset_or_play": true
+}
