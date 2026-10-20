@@ -1,0 +1,35 @@
+23:55:45 COMBAT          combat/play          -> play_card (card_index=0) conf 0.48 jev 754 ms | 2160 in
+         Jev chose c0 (Play 防御) with confidence 0.48
+23:55:45 note H1 idle preparation: {"status":"unknown","reason":"next_solver_input_not_observed_or_not_ready","budget_ms":400}
+23:55:45 wait COMBAT: waiting on COMBAT (transition, animation, or nothing legal yet)
+23:55:47 COMBAT          combat/play          -> use_potion (target_index=0, option_index=0) conf 0.05 jev 792 ms | 1997 in
+         Jev chose p0->e0 (Drink 毒药水 on 花园幽灵鳗) with confidence 0.05
+23:55:47 COMBAT          combat/least-loss    -> end_turn jev 0 ms | 0 in
+         every simulated line dies; playing the one that keeps the most HP (-10): end turn
+23:55:48 note H1 idle preparation: {"status":"unknown","reason":"next_solver_input_not_observed_or_not_ready","budget_ms":400}
+23:55:48 wait COMBAT: waiting on COMBAT (transition, animation, or nothing legal yet)
+23:55:48 note H1 idle preparation: {"status":"unknown","reason":"next_solver_input_not_observed_or_not_ready","budget_ms":400}
+23:55:48 note H1 idle preparation: {"status":"unknown","reason":"next_solver_input_not_observed_or_not_ready","budget_ms":400}
+23:55:49 note H1 idle preparation: {"status":"unknown","reason":"next_solver_input_not_observed_or_not_ready","budget_ms":400}
+23:55:49 note H1 idle preparation: {"status":"unknown","reason":"next_solver_input_not_observed_or_not_ready","budget_ms":400}
+23:55:50 note H1 idle preparation: {"status":"unknown","reason":"next_solver_input_not_observed_or_not_ready","budget_ms":400}
+23:55:50 note H1 idle preparation: {"status":"unknown","reason":"next_solver_input_not_observed_or_not_ready","budget_ms":400}
+23:55:50 note H1 idle preparation: {"status":"unknown","reason":"next_solver_input_not_observed_or_not_ready","budget_ms":400}
+23:55:51 note H1 idle preparation: {"status":"unknown","reason":"next_solver_input_not_observed_or_not_ready","budget_ms":400}
+23:55:51 note H1 idle preparation: {"status":"unknown","reason":"next_solver_input_not_observed_or_not_ready","budget_ms":400}
+23:55:52 combat ended — total token usage: 118 decisions, 34 Jev calls, 176,692 in / 2,381 out tokens (≈ $0.0074)
+23:55:52 note run ended (defeat): finishing the score/unlock bookkeeping, then stopping
+23:55:56 GAME_OVER       run/finalize         -> continue_game_over jev 0 ms | 0 in
+         defeat: saving the result with continue_game_over before stopping
+23:55:56 stop run 1 ended (defeat); stopping as requested
+
+summary
+  decisions 119 (119 dispatched, 0 fallbacks)
+  runs:
+  #1 defeat — 116 decisions, 34 Jev calls, 176,692 in / 2,381 out tokens (≈ $0.0074), reached floor 8, 396.22 s
+  119 decisions | 34 Jev calls | 176,692 in / 2,381 out tokens | ≈ $0.0074 | 402.24 s
+  debounce: 0 answers reused, 1 calls skipped as stale
+  waits 276 | unsupported 0 | errors 0
+  runs completed 1 | elapsed 402.24 s
+  stopped: run 1 ended (defeat); stopping as requested
+  log: /home/dw/Projects/agent-sts2/.worktrees/live/logs/decisions.jsonl
