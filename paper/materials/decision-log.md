@@ -5505,3 +5505,5 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
 - 2026-10-21T07:21:56+08:00 原071302-fix无源码提交/live合入，154路径逐SHA同、51历史映射/46祖先及原候选引用核同；153沿前批、loop三等待钩子为既有W4。tsc0/六文件26定向过14.90s，EROFS首错保留，不冒full；无受阻源码可兜底，不补dataset/空合并或关父。原件paper/materials/20261021-0720-ops/receipt.json。
 - 2026-10-21T07:24:14+08:00 原W4累计11+W0两测试完整0后自然局CLCR3DUH66HK结束，精确main/live发布V6-R409，CARDbrain/REFLEXoff和最新知识保留；原软件628文件5948过2跳及限制分列，实际loader/门/getter读回、自然缓存审计待首局；原件paper/materials/20261021-0705-ops/publication.json。
 - 2026-10-21T07:27:00+08:00 原ops核R409实际livecf4aff4c/行为6242b3a7精确13叶、498知识及双通知一次；CLCR自然终局后发布并恢复原autoplay。CESK配置brain/off、局内真实动作和自然cache审计已读，首5004.2ms/82行69sampled、后176/146，不冒数值消费或质量/全性能绿；切jev等Roy。原件paper/materials/20261021-0725-ops/receipt.json。
+
+- 2026-10-21 07:56:43 CST [Claude，推进] V6-R409（6242b3a73/cf4aff4ce，Jev 题面 criteria 汇总 + B 等待期缓存修复）已上线，CARD 保持 brain。CLCR3DUH66HK F27 死于感染棱柱。派 v6-w4w6 用 R408/R409 大脑拿牌局真实奖励帧做影子评估（真实 Nova 请求不执行）：Jev 与指标最优一致率、与大脑选择一致率及优劣、B 有值比例、拿/跳比例，供 Roy 决定是否切回 jev。
