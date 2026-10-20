@@ -3547,3 +3547,8 @@ request_id=roy-20261017-human-pace-h0 revision=3 input_sha256=1e1c259a15f1824119
 ### 2026-10-20T18:43:59.420940+08:00 原ops W8非最终候选静态补件
 
 本轮核watcher关于W8同一非最终候选的静态回执SHA81b9c6da，固定6f701f93f提交/tree、四项源码SHA与f74→79a→544三层祖先均与原件一致。生产loop不再引用独立方向调用，配置默认off；方向模块仍保留原缓存、知识导出及回调接口，静态存在不代表实际请求节奏已验收。原owner仍在最终定向及材料冻结，正式源码、基线、树和逐叶清单未交，final_delivery_ready与joint_input_ready继续false；本轮只把该额外来源绑定既有候选与五项事务，不把同一候选当新交付。未重复prompt、查询动态检查或新起full/API/模型/游戏，原单点窗口仍用于五项精确live联合完整验收。只有五项全部上线并实际读回才恢复开局，39部分绿及旧full-v2不代新增门/方向逻辑检查；STOP、85知识、805和Regent暂停边界不变。原件 paper/materials/20261020-1843-ops/receipt.json。
+
+
+### 2026-10-20T19:03:46.695647+08:00 原ops五项精确源码合成及冻结前阻塞
+
+本轮核W8正式0cf源与e884清单，21叶及W4依赖21叶SHA/blob全同，六交叉合36唯一源。已分配独立树，以live64接已验infra39、新36及蛇咬5，形成80源码候选；11处冲突按新A/B和搭车块保live非重叠，拒夹暂停805辅助模块，保旧默认覆盖判定而新奖励显式用A结果。准备tsc先后1/1/0，机械括号错误和一次通知口误已更正，原失败全部保留。冻结前原owner又核两处生产缺口：W4补等待期input第三参数及规范Boss key，W8移除旧宽选牌路由并限v6Card，分别在原树给最小补丁，不互改。一次取live锁EAGAIN，核属原retention进程，未抢锁或停止它。实际知识与联合输入尚未最终冻结，完整检查未启动；已回原owner及watcher具体阻塞，五项全live读回前不开局，未动STOP/actor/Regent。原件 paper/materials/20261020-five-item-joint-ops/receipt.json。
