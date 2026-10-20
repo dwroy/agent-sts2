@@ -1,12 +1,65 @@
 {
-  "phase": "formal11-source-verified-real-live-full-after-P0-R4-one-off-original-launcher",
+  "phase": "actual-R405-latest-knowledge-exact-full-running-reflex-off",
   "completed": false,
   "source": "ab1f2561832b2909233bc55e52842f1bf726e5a0",
   "manifest_sha256": "c4a00e71da55f2f5cef44c57e801678b858927de9aed98b8011d97d3bd07b685",
   "source_worktree": "/home/dw/Projects/agent-sts2/.worktrees/v6-reflex-card-pick-20261020",
-  "receipt": "paper/materials/20261020-2303-ops/receipt.json",
+  "receipt": "paper/materials/20261020-2342-ops/receipt.json",
   "learning_dispatch": "notes/v6-reflex-distill-r4-dispatch.json",
   "live_published": false,
   "reflex_on": false,
-  "next": "P0 first; then exact actual-live P3 full; independently verify R4 pending/report/evidence before formal knowledge publication and live consumers; do not close on source/template/batch exit"
+  "next": "P0 first; then exact actual-live P3 full; independently verify R4 pending/report/evidence before formal knowledge publication and live consumers; do not close on source/template/batch exit",
+  "updated_at": "2026-10-20T23:56:47.802152+08:00",
+  "static_start": {
+    "request": "original-W8-P3-reflex-card-pick-exact-R405-live-joint-20261020-2349",
+    "state": "running",
+    "started_at": "2026-10-20T23:55:45.220299+08:00",
+    "runner_pid": 1369496,
+    "runner_start_ticks": "140367727",
+    "nice": 19,
+    "worktree": "/home/dw/Projects/agent-sts2/.worktrees/ops-p3-reflex-joint-20261020-2349",
+    "actual_live_base": "75c4a1b9611b2566425e4aa14472c4d1c81673f2",
+    "allocation_base": "75c4a1b9611b2566425e4aa14472c4d1c81673f2",
+    "staged_tree": "255b945d03b8d42172f722adb2d824a9a07f15df",
+    "source_count": 11,
+    "knowledge_count": 498,
+    "input_count": 2388,
+    "input_sha256": "e500f2f2ff25eb25b72dcaf645f5e884860e8786fff6e29ee2f908982e9a1293",
+    "steps": [
+      {
+        "name": "tsc",
+        "command": [
+          "npx",
+          "tsc",
+          "-p",
+          "tsconfig.json",
+          "--noEmit"
+        ],
+        "started_at": "2026-10-20T23:55:45.220883+08:00",
+        "log": "/home/dw/Projects/agent-sts2/.artifacts/ops-P3-reflex-joint-20261020-2349/tsc.log",
+        "pid": 1369526,
+        "exit_code": 0,
+        "ended_at": "2026-10-20T23:55:46.498603+08:00",
+        "seconds": 1.277735257986933,
+        "log_bytes": 0,
+        "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "name": "full",
+        "command": [
+          "node",
+          "tools/with-temp.mjs",
+          "node_modules/vitest/vitest.mjs",
+          "run",
+          "--maxWorkers=1"
+        ],
+        "started_at": "2026-10-20T23:55:46.498938+08:00",
+        "log": "/home/dw/Projects/agent-sts2/.artifacts/ops-P3-reflex-joint-20261020-2349/full.log",
+        "pid": 1369609
+      }
+    ],
+    "held_original_lock": "ops/live-merge.lock",
+    "window_preflight_other_vitest_PIDs": [],
+    "no_actual_live_or_active_actor_change": true
+  }
 }

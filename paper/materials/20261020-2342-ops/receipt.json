@@ -1,0 +1,229 @@
+{
+  "at": "2026-10-20T23:56:47.802152+08:00",
+  "P0_release": "V6-R405",
+  "actual_live": "75c4a1b9611b2566425e4aa14472c4d1c81673f2",
+  "behavior": "dbab11bfb3c33df673655ea1a77f2d3213aa0117",
+  "actual_previous_live": "048a9713bd4be09ad5f6d3f6131e8b729f51aece",
+  "accepted_full": {
+    "request": "original-W4-R404-test-packaging-repaired-actual-live-joint-20261020-2310",
+    "state": "passed-await-original-ops-next-natural-boundary-exact-publication-consumer-and-reward-readback",
+    "started_at": "2026-10-20T23:12:15.957054+08:00",
+    "runner_pid": 1219511,
+    "runner_start_ticks": "140106852",
+    "nice": 19,
+    "worktree": "/home/dw/Projects/agent-sts2/.worktrees/ops-r404-packaging-joint-20261020-2310",
+    "actual_live_base": "048a9713bd4be09ad5f6d3f6131e8b729f51aece",
+    "allocation_base": "048a9713bd4be09ad5f6d3f6131e8b729f51aece",
+    "staged_tree": "a8dcf2bd011d353bbc83f09b8e0966b779a32526",
+    "source_count": 7,
+    "knowledge_count": 498,
+    "input_count": 2382,
+    "input_sha256": "81707ffc4af967ff7c11a522586dd8062b39a57cae5440887aa222bf45bf534c",
+    "steps": [
+      {
+        "name": "tsc",
+        "command": [
+          "npx",
+          "tsc",
+          "-p",
+          "tsconfig.json",
+          "--noEmit"
+        ],
+        "started_at": "2026-10-20T23:12:15.957653+08:00",
+        "log": "/home/dw/Projects/agent-sts2/.artifacts/ops-r404-packaging-joint-20261020-2310/tsc.log",
+        "pid": 1219517,
+        "exit_code": 0,
+        "ended_at": "2026-10-20T23:12:17.232481+08:00",
+        "seconds": 1.2748393740039319,
+        "log_bytes": 0,
+        "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "name": "full",
+        "command": [
+          "node",
+          "tools/with-temp.mjs",
+          "node_modules/vitest/vitest.mjs",
+          "run",
+          "--maxWorkers=1"
+        ],
+        "started_at": "2026-10-20T23:12:17.232826+08:00",
+        "log": "/home/dw/Projects/agent-sts2/.artifacts/ops-r404-packaging-joint-20261020-2310/full.log",
+        "pid": 1219595,
+        "exit_code": 0,
+        "ended_at": "2026-10-20T23:37:54.067294+08:00",
+        "seconds": 1536.834484884981,
+        "log_bytes": 407,
+        "log_sha256": "7677b5c857dab3c935a23a4dfe43881b8bbfbcdcc4b09016e92bd0466f2fe7b1"
+      }
+    ],
+    "held_original_lock": "ops/live-merge.lock",
+    "window_preflight_other_vitest_PIDs": [],
+    "no_actual_live_or_active_actor_change": true,
+    "ended_at": "2026-10-20T23:37:54.233444+08:00",
+    "input_unchanged": true,
+    "combined_full_rc": 0,
+    "heavy_admission_locks_released": true,
+    "original_full_window_lock_released": true,
+    "terminal_event_path": "/home/dw/Projects/agent-sts2/ops/codex-ops/queue/1792510674234090403-manual.md"
+  },
+  "seven_sources_only": true,
+  "latest_knowledge_preserved": 498,
+  "generated_data_drift_leaves": 69,
+  "later_data_not_covered_by_source_full": true,
+  "offline_live_consumer": "unique actual Boss in frozen F2/F19 with actual current history, 17combo IDs; no simulation or network",
+  "dual_notified_before_original_autoplay_release": true,
+  "natural_run_id": "T0TP8S9MMU9Q",
+  "natural_run_started_at": "2026-10-20T23:49:20.090+08:00",
+  "first_new_run_action_at": "2026-10-20T23:49:41+08:00",
+  "run_config_git_metadata": "ENOBUFS/null retained; source proved independently, not repaired in old config",
+  "natural_reward_acceptance": "pending Jev>=90%, unknown near0, preparation<=5s; P2 after2stable runs",
+  "P3_static_start": {
+    "request": "original-W8-P3-reflex-card-pick-exact-R405-live-joint-20261020-2349",
+    "state": "running",
+    "started_at": "2026-10-20T23:55:45.220299+08:00",
+    "runner_pid": 1369496,
+    "runner_start_ticks": "140367727",
+    "nice": 19,
+    "worktree": "/home/dw/Projects/agent-sts2/.worktrees/ops-p3-reflex-joint-20261020-2349",
+    "actual_live_base": "75c4a1b9611b2566425e4aa14472c4d1c81673f2",
+    "allocation_base": "75c4a1b9611b2566425e4aa14472c4d1c81673f2",
+    "staged_tree": "255b945d03b8d42172f722adb2d824a9a07f15df",
+    "source_count": 11,
+    "knowledge_count": 498,
+    "input_count": 2388,
+    "input_sha256": "e500f2f2ff25eb25b72dcaf645f5e884860e8786fff6e29ee2f908982e9a1293",
+    "steps": [
+      {
+        "name": "tsc",
+        "command": [
+          "npx",
+          "tsc",
+          "-p",
+          "tsconfig.json",
+          "--noEmit"
+        ],
+        "started_at": "2026-10-20T23:55:45.220883+08:00",
+        "log": "/home/dw/Projects/agent-sts2/.artifacts/ops-P3-reflex-joint-20261020-2349/tsc.log",
+        "pid": 1369526,
+        "exit_code": 0,
+        "ended_at": "2026-10-20T23:55:46.498603+08:00",
+        "seconds": 1.277735257986933,
+        "log_bytes": 0,
+        "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "name": "full",
+        "command": [
+          "node",
+          "tools/with-temp.mjs",
+          "node_modules/vitest/vitest.mjs",
+          "run",
+          "--maxWorkers=1"
+        ],
+        "started_at": "2026-10-20T23:55:46.498938+08:00",
+        "log": "/home/dw/Projects/agent-sts2/.artifacts/ops-P3-reflex-joint-20261020-2349/full.log",
+        "pid": 1369609
+      }
+    ],
+    "held_original_lock": "ops/live-merge.lock",
+    "window_preflight_other_vitest_PIDs": [],
+    "no_actual_live_or_active_actor_change": true
+  },
+  "P3_activation": "REFLEX remains off; full only, no live/main deployment",
+  "P4": "queued after P3 latest-live/knowledge exact old26+new3, preserve newer infra",
+  "R4": "already original one-off dispatched; no query/repeat",
+  "watcher_actual_receipt": "watcher本人实际核P4 source88c861525/materials458ee2aa5的3源/26映射/74材料/28解压证据SHA与Git；仍不代联合full/live。实读2335恢复receipt SHA cc769e0f30eb6ed4f6546a686b905747faaaf9b1ab5679642e0c1f4c66b5e0b2及8证据：YSRV F33 SL3、23:38:17首出牌；退出根因unknown，不归未发布P0，旧5Z brain-wait未清。其用户可见转达陈述单列，不代Claude/Roy ACK。原P0→P3→P4队列、Regent/科学父不变。",
+  "files": [
+    {
+      "path": ".artifacts/ops-r404-P0-publication-20261020-2342/source-integration.json",
+      "bytes": 827,
+      "sha256": "3bac2f878af52eb3e6d1034ff4af6a66f50efeff7e3e48da41f92314eeb17f4e",
+      "saved": "source-integration.json"
+    },
+    {
+      "path": ".artifacts/ops-r404-P0-publication-20261020-2342/release-registration.json",
+      "bytes": 3725,
+      "sha256": "5a3bbc03765ee34db468169248d4dbba4b5e3bbc1afe62bd6daad98a05b58be8",
+      "saved": "release-registration.json"
+    },
+    {
+      "path": ".artifacts/ops-r404-P0-publication-20261020-2342/actual-live-consumer.json",
+      "bytes": 4560,
+      "sha256": "41a8848119aee994c4a8fddfac49433cb074d0f66d46f08e61a0945792ead95c",
+      "saved": "actual-live-consumer.json"
+    },
+    {
+      "path": ".artifacts/ops-r404-P0-publication-20261020-2342/pre-publication-verification.json",
+      "bytes": 5312,
+      "sha256": "d10181b13ae0c8ebd1d7a0dd7a9728916d3083629adfd0bb67237c0303a56337",
+      "saved": "pre-publication-verification.json"
+    },
+    {
+      "path": ".artifacts/ops-r404-P0-publication-20261020-2342/boundary-gate.json",
+      "bytes": 883,
+      "sha256": "a00c9b4edba0f10ce832543460033583383ec5f06d76b4731857639c198951c8",
+      "saved": "boundary-gate.json"
+    },
+    {
+      "path": ".artifacts/ops-r404-P0-publication-20261020-2342/boundary-release.json",
+      "bytes": 310,
+      "sha256": "286b6feae3bff0845e27cd057c9b69e1d390ffa35f21ce396586c5aed1361835",
+      "saved": "boundary-release.json"
+    },
+    {
+      "path": ".artifacts/ops-r404-P0-publication-20261020-2342/publication-notice-additions.json",
+      "bytes": 3216,
+      "sha256": "14d2b65aa97e4b32f25d6e91d540e63cad444e3a1cbf933a7b65294e22d9a9b6",
+      "saved": "publication-notice-additions.json"
+    },
+    {
+      "path": ".artifacts/ops-r404-P0-publication-20261020-2342/next-run-initial-readback.json",
+      "bytes": 24918,
+      "sha256": "e2bda9d9ae3f98adb623782600940a188c2191d9dd92c6ac5e385ac26cb13d55",
+      "saved": "next-run-initial-readback.json"
+    },
+    {
+      "path": ".artifacts/ops-r404-packaging-joint-20261020-2310/host-status.json",
+      "bytes": 2377,
+      "sha256": "19b0ac5642b517ae48c2d9fe5cad461e9f0fef0c19106efffc772b15c3ade162",
+      "saved": "host-status.json"
+    },
+    {
+      "path": ".artifacts/ops-r404-packaging-joint-20261020-2310/full.log",
+      "bytes": 407,
+      "sha256": "7677b5c857dab3c935a23a4dfe43881b8bbfbcdcc4b09016e92bd0466f2fe7b1",
+      "saved": "full.log"
+    },
+    {
+      "path": ".artifacts/ops-P3-reflex-joint-20261020-2349/native-start-readback.json",
+      "bytes": 1749,
+      "sha256": "cf8cee81a3f4861223bbcb7df277c7b339d7afc766c8c218d62798d018229828",
+      "saved": "P3-native-start-readback.json"
+    },
+    {
+      "path": ".artifacts/ops-P3-reflex-joint-20261020-2349/formats-nonoverlap-proof.json",
+      "bytes": 537,
+      "sha256": "c04faca09c79b07afcad61dc8c8a2cff9f831112bd610f340e691a5a7cd8fc6b",
+      "saved": "P3-formats-nonoverlap-proof.json"
+    },
+    {
+      "path": ".artifacts/ops-P3-reflex-joint-20261020-2349/formal-wholeimage-nonoverlap.json",
+      "bytes": 231,
+      "sha256": "fc5439a2039eabc355a8f893e80e551ace9c15b70441018b079fa5db259106bd",
+      "saved": "P3-formal-wholeimage-nonoverlap.json"
+    },
+    {
+      "path": ".artifacts/ops-P3-reflex-joint-20261020-2349/admission-knowledge-drift-before-tests.log",
+      "bytes": 439,
+      "sha256": "3a13cf97c1842176f8ccb37319f7900d28c5059ff2ef1f014e28e6919c05360a",
+      "saved": "P3-admission-knowledge-drift-before-tests.log"
+    },
+    {
+      "path": ".artifacts/ops-P3-reflex-joint-20261020-2349/controller-start-r2.json",
+      "bytes": 254,
+      "sha256": "bf10e3cf61a22a0737d78be7cef8770d21fdcac1b3f8906612c466fd802421a6",
+      "saved": "P3-controller-start-r2.json"
+    }
+  ]
+}

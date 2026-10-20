@@ -5346,3 +5346,5 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
 | 2026-10-20 23:34:24 CST | ops核P4 source88c三源、旧26运输依赖、74材料/28解压SHA，原字收W8日志；live较新磁盘夹具保留待hunk机械合。仅窄收材料，实际live联合full排P0→P3→P4，冷建/热读/CPU/fallback及后继消费者保持pending；不查P0/不启动full或刷新，不运源码/805/整main。原件paper/materials/20261020-P4-formal-ops/receipt.json。 |
 
 | 2026-10-20 23:41:15 CST | ops恢复游戏进程退出后的原YSRV存档：34676退出/mod拒接，原broker重开游戏37624并核原exe/8080/profile1，更新绑定后continue实回F33；autoplay1319950/play1320126续同R404，23:38:17首出牌，原SL/记忆保留。根因未知不归未发布P0，无新局/新release/回退/STOP/Regent变化；原件paper/materials/20261020-2335-ops/receipt.json。 |
+
+- 2026-10-20 23:57:29 CST 原ops：V6-R405精确P0七源上线/live75c4a1b9，624文件5918过2跳；双通知先于原autoplay放行，T0TP8S9MMU9Q 23:49:20开局/23:49:41首局内动作，498知识保留/69后生成漂移独立核不冒full覆盖。P3十一源23:55:46唯一full启动tsc0，formats保live公式/界不夹805，REFLEX off；自然P0奖励和稳定两局/P4/R4科学闭环保留。原件paper/materials/20261020-2342-ops/receipt.json。

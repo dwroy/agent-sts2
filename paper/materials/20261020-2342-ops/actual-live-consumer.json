@@ -1,0 +1,170 @@
+{
+  "codeRoot": "/home/dw/Projects/agent-sts2/.worktrees/live",
+  "knowledgeRoot": "/home/dw/Projects/agent-sts2/.worktrees/live/knowledge",
+  "config": {
+    "schema": "v6-config-v1",
+    "mode": "on",
+    "deciders": {
+      "card": "jev",
+      "potion": "brain",
+      "shop": "brain",
+      "rest": "brain"
+    },
+    "reflex": "off",
+    "direction_replan": "off",
+    "admission": "interfaces_only",
+    "delivered": false,
+    "samples_pick": 20,
+    "samples_act": 100,
+    "min_known_option_ratio": 0.5,
+    "direction_min_weight": 0.1,
+    "win": {
+      "certain_win": 0.95,
+      "favored": 0.7,
+      "even": 0.3,
+      "unfavored": 0.05
+    },
+    "delta": {
+      "much_se": 2,
+      "better_se": 1,
+      "much_min": 0.05
+    },
+    "triggers": {
+      "t1_core_min": 0,
+      "t2_se": 2,
+      "t2_min_delta": 1,
+      "t2_consecutive": 2,
+      "t3_weight_max": 0,
+      "t5_hazard": "existing_route_projection",
+      "t6_unknown_max": 1,
+      "t6_fallbacks": 100,
+      "t7_checkpoint": "validated_brain_answer"
+    },
+    "budgets": {
+      "brain_soft_cap": 15,
+      "brain_ms": 90000,
+      "act_ms": 60000,
+      "pick_ms": 5000,
+      "jev_ms": 5000
+    },
+    "invalid": []
+  },
+  "settings": {
+    "V6_BUILD": "on",
+    "V6_CARD_DECIDER": "jev",
+    "V6_SHOP_DECIDER": "brain",
+    "V6_REST_DECIDER": "brain",
+    "V6_POTION_DECIDER": "brain",
+    "V6_COMBAT_ENTRIES": "off",
+    "V6_DIRECTION_REPLAN": "off",
+    "V6_T1_CORE_MIN": "0",
+    "V6_T2_MIN_DELTA": "1",
+    "V6_T3_WEIGHT_MAX": "0",
+    "V6_T6_UNKNOWN_MAX": "1",
+    "V6_T6_FALLBACKS": "100"
+  },
+  "history": {
+    "status": "loaded",
+    "ids": [
+      "P-toxin-footwork",
+      "P-fumes-footwork",
+      "P-flask-afterimage",
+      "P-flask-footwork",
+      "P-mixed-defense",
+      "P-toxin-mirage",
+      "D-toxin-backflip",
+      "D-fumes-backflip",
+      "D-flask-sweep",
+      "D-observed-union-fbc4b776",
+      "S-dance-accuracy",
+      "S-cloak-phantom",
+      "S-dance-afterimage",
+      "S-observed-union-35f60a95",
+      "R-acro-tingsha",
+      "R-tools-tingsha",
+      "R-acro-bandages"
+    ],
+    "content_sha256": "a55900d7fdef0b90b6bc4d7807004821fa2c5a90f964f92cc8642a83a9d38061"
+  },
+  "rewards": [
+    {
+      "floor": 2,
+      "strict_post_combat_three": true,
+      "visible": [
+        {
+          "act": 1,
+          "floor": 17,
+          "boss": "WATERFALL_GIANT"
+        }
+      ],
+      "factory": "ready",
+      "current": [
+        {
+          "id": "f17:WATERFALL_GIANT",
+          "boss": "WATERFALL_GIANT",
+          "act": 1,
+          "floor": 17,
+          "kind": "current",
+          "probability": 1,
+          "labels": [
+            "visible_actual_boss"
+          ]
+        }
+      ],
+      "history_snapshot": {
+        "run_id": "Y427BMQH8AU6",
+        "character": "silent",
+        "status": "loaded",
+        "loaded_at": "2026-10-20T15:47:59.612Z",
+        "cutoff": "2026-10-20T15:12:54.570Z",
+        "generated_at": "2026-10-20T15:18:40.842Z",
+        "content_sha256": "a55900d7fdef0b90b6bc4d7807004821fa2c5a90f964f92cc8642a83a9d38061",
+        "age_ms": 2105042,
+        "policy": "last_completed_packet"
+      }
+    },
+    {
+      "floor": 19,
+      "strict_post_combat_three": true,
+      "visible": [
+        {
+          "act": 2,
+          "floor": 33,
+          "boss": "KAISER_CRAB"
+        }
+      ],
+      "factory": "ready",
+      "current": [
+        {
+          "id": "f33:KAISER_CRAB",
+          "boss": "KAISER_CRAB",
+          "act": 2,
+          "floor": 33,
+          "kind": "current",
+          "probability": 1,
+          "labels": [
+            "visible_actual_boss"
+          ]
+        }
+      ],
+      "history_snapshot": {
+        "run_id": "Y427BMQH8AU6",
+        "character": "silent",
+        "status": "loaded",
+        "loaded_at": "2026-10-20T15:48:01.650Z",
+        "cutoff": "2026-10-20T15:12:54.570Z",
+        "generated_at": "2026-10-20T15:18:40.842Z",
+        "content_sha256": "a55900d7fdef0b90b6bc4d7807004821fa2c5a90f964f92cc8642a83a9d38061",
+        "age_ms": 2107080,
+        "policy": "last_completed_packet"
+      }
+    }
+  ],
+  "network": "forbidden",
+  "simulation": "not invoked",
+  "limitations": [
+    "Input/factory/strict-scope readback on frozen real reward frames with current live history; no new outcomes or API/model calls",
+    "Full check covers original frozen 2382 inputs; subsequent generated knowledge is preserved and loader/factory-read only",
+    "Natural next-run reward Jev>=90%, unknown near0, preparation<=5s and two stable runs remain pending"
+  ]
+}

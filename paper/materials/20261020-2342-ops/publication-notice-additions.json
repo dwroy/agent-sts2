@@ -1,0 +1,14 @@
+{
+  "at": "2026-10-20 23:49:03 CST",
+  "release_id": "V6-R405",
+  "additions": {
+    "notes/for-roy.md": "\n- 2026-10-20 23:49:03 CST 实际上线 V6-R405（P0奖励Boss接线；行为dbab11bfb3c33df673655ea1a77f2d3213aa0117，live75c4a1b9611b2566425e4aa14472c4d1c81673f2）：旧规则在奖励map=null时漏run.boss_id，当前Boss展开为多目标而全未知交脑，且交接日志误记准备0ms；新规则保已知实际Boss，只从同局已见map/route或同角色同进阶历史checkpoint取层，歧义仍unknown，交脑记录真实耗时/cache。证据为W4 source903fbfabb/e7e2b0117及75eee/main538294包装修正、冻结真实F2/F19奖励帧；纯接线bug不新增机制或账本知识。原七源精确联合tsc0/full624文件5918过2原跳，treea8dc/2382输入SHA81707ffc；当前live消费者两帧各唯一actual Boss及17组合读回，无网络/模拟。498当前知识逐SHA保留，69后续生成数据漂移独立加载验证，未覆盖或借本次源full冒其完整复验；旧full1保留。配置CARD=jev仅战胜三选一，SHOP/REST/POTION=brain、COMBAT_ENTRIES/DIRECTION_REPLAN=off、REFLEX=off、90s及质量门不变。预期首自然局奖励Jev≥90%、unknown近0、准备≤5s，无错误/兜底增多；尚未证明自然采用/收益，P2仍须稳定2局。首局异常按授权退实际上一live048a9713并保后续知识/日志、inbox告watcher/Claude；Regent暂停。原件 .artifacts/ops-r404-P0-publication-20261020-2342/release-registration.json、actual-live-consumer.json。\n",
+    "ops/inbox-dev.md": "\n- 2026-10-20 23:49:03 CST 实际上线 V6-R405（P0奖励Boss接线；行为dbab11bfb3c33df673655ea1a77f2d3213aa0117，live75c4a1b9611b2566425e4aa14472c4d1c81673f2）：旧规则在奖励map=null时漏run.boss_id，当前Boss展开为多目标而全未知交脑，且交接日志误记准备0ms；新规则保已知实际Boss，只从同局已见map/route或同角色同进阶历史checkpoint取层，歧义仍unknown，交脑记录真实耗时/cache。证据为W4 source903fbfabb/e7e2b0117及75eee/main538294包装修正、冻结真实F2/F19奖励帧；纯接线bug不新增机制或账本知识。原七源精确联合tsc0/full624文件5918过2原跳，treea8dc/2382输入SHA81707ffc；当前live消费者两帧各唯一actual Boss及17组合读回，无网络/模拟。498当前知识逐SHA保留，69后续生成数据漂移独立加载验证，未覆盖或借本次源full冒其完整复验；旧full1保留。配置CARD=jev仅战胜三选一，SHOP/REST/POTION=brain、COMBAT_ENTRIES/DIRECTION_REPLAN=off、REFLEX=off、90s及质量门不变。预期首自然局奖励Jev≥90%、unknown近0、准备≤5s，无错误/兜底增多；尚未证明自然采用/收益，P2仍须稳定2局。首局异常按授权退实际上一live048a9713并保后续知识/日志、inbox告watcher/Claude；Regent暂停。原件 .artifacts/ops-r404-P0-publication-20261020-2342/release-registration.json、actual-live-consumer.json。\n"
+  },
+  "offsets_before": {
+    "notes/for-roy.md": 1629080,
+    "ops/inbox-dev.md": 1983490
+  },
+  "actor_still_paused_when_written": true,
+  "notice_sha256": "49d5e537ce4bfb90f17fd314560724ce74196df21590a7645b55f0f520508ed7"
+}

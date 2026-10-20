@@ -1,0 +1,614 @@
+{
+  "console": "/home/dw/Projects/agent-sts2/logs/console/20261020-234908-75c4a1b96+dirty.log",
+  "console_prefix": "mod 0.16.2 at http://127.0.0.1:8080 (protocol 2026-03-11-v1, status ready)\ngame data from cache: 596 cards, 107 monsters, 299 relics, 66 potions, 283 powers, 57 events\nPLAY mode: http://127.0.0.1:8080, model typesafe/jev-1.14\n23:49:17 MAIN_MENU       menu/new_run         -> open_character_select jev 0 ms | 0 in\n         starting a new run\n23:49:17 CHARACTER_SELECT character/select     -> select_character (option_index=2) jev 0 ms | 0 in\n         selecting SILENT (CHARACTER)\n23:49:20 CHARACTER_SELECT character/embark     -> embark jev 0 ms | 0 in\n         character chosen; setting off\n23:49:20 note run T0TP8S9MMU9Q (F1): no logged rows to rebuild the run memory from, starting it empty (a new run)\n23:49:22 note boss sim on event/choose: 300 samples per option, 1386 ms\n23:49:22 note V5 construction shadow: missing_route, evaluation=attached, probability=absent, 0 ms\n23:49:22 note Codex decides event/choose (3 options, floor 1, run context 4531 chars)\n23:49:40 note Codex (18.4 s) event/choose: o0 — Repeatable upgrades provide run-long value without an eternal curse; Fishing Rod also has the strongest observed average finish.\n23:49:41 note action came back completed; waited for the board to settle\n23:49:41 EVENT           event/choose         -> choose_event_option (option_index=0) jev 0 ms | 10557 in\n         Codex decided o0: Repeatable upgrades provide run-long value without an eternal curse; Fishing Rod also has the strongest observed average finish. | Codex chose 钓鱼竿 (code's fallback order: 0, rank 1 of 3; not shown to Codex)\n23:49:41 note action came back completed; waited for the board to settle\n23:49:41 EVENT           event/leave          -> choose_event_option (option_index=0) jev 0 ms | 0 in\n         the event is finished; taking the proceed option\n23:49:41 note V5 construction shadow: missing_route, evaluation=attached, probability=absent, 0 ms\n23:49:41 note Codex decides map/route-plan (3 options, floor 1, run context 5262 chars)\n23:50:18 note Codex (37.0 s) map/route-plan:  — 三营火护航双精英，六场普战兑现钓竿，末段商店补强。\n23:50:20 MAP             map/route-plan       -> choose_map_node (option_index=1) jev 0 ms | 10349 in\n         Codex planned: 三营火护航双精英，六场普战兑现钓竿，末段商店补强。 | route plan: r1c3 普通战 → r2c2 普通战 → r3c2 问号 → r4c2 普通战 → r5c3 问号 → r6c3 休息 → r7c3 精英 → r8c3 休息 → r9c2 宝箱 → r10c2 精英 → r11c2 普通战 → r12c2 普通战 → r13c1 普通战 → r14c2 商店 → r15c2 休息 → r16c3 Boss\n23:50:20 note H1 idle preparation: {\"status\":\"unknown\",\"reason\":\"next_solver_input_not_observed_or_not_ready\",\"budget_ms\":400}\n23:50:20 wait COMBAT: waiting on COMBAT (transition, animation, or nothing legal yet)\n23:50:20 note H1 idle preparation: {\"status\":\"unknown\",\"reason\":\"next_solver_input_not_observed_or_not_ready\",\"budget_ms\":400}\n23:50:20 note H1 idle preparation: {\"status\":\"unknown\",\"reason\":\"next_solver_input_not_observed_or_not_ready\",\"budget_ms\":400}\n23:50:21 note H1 idle preparation: {\"status\":\"unknown\",\"reason\":\"next_solver_input_not_observed_or_not_ready\",\"budget_ms\":400}\n23:50:21 note H1 idle preparation: {\"status\":\"prepared\",\"basis\":\"exact_observed_input_only\",\"nodes\":28,\"partial\":false,\"reused\":false,\"budget_ms\":400}\n23:50:26 COMBAT          combat/plan-choice   -> play_card (card_index=2, target_index=0) conf 0.80 jev 3.88 s | 6256 in\n         Jev chose plan 4/6 (中和 -> 海洋混混, 防御, 生存者) with confidence 0.80; code rank 4\n23:50:26 note H1 idle preparation: {\"status\":\"unknown\",\"reason\":\"next_solver_input_not_observed_or_not_ready\",\"budget_ms\":400}\n23:50:26 wait COMBAT: waiting on COMBAT (transition, animation, or nothing legal yet)\n23:50:27 COMBAT          combat/plan-continue -> play_card (card_index=3) jev 0 ms | 0 in\n         continuing the Jev-chosen plan: 防御\n23:50:27 note H1 idle preparation: {\"status\":\"unknown\",\"reason\":\"next_solver_input_not_observed_or_not_ready\",\"budget_ms\":400}\n23:50:27 wait COMBAT: waiting on COMBAT (transition, animation, or nothing legal yet)\n23:50:28 note action came back pending; waited for the board to settle\n23:50:28 COMBAT          combat/plan-continue -> play_card (card_index=3) jev 0 ms | 0 in\n         continuing the Jev-chosen plan: 生存者\n23:50:30 CARD_SELECTION  selection/choose     -> select_deck_card (option_index=1) conf 0.55 jev 1.33 s | 5211 in\n         Jev chose 进阶之灾 with confidence 0.55\n23:50:32 COMBAT          combat/plan-choice   -> play_card (card_index=0, target_index=0) conf 0.98 jev 1.16 s | 2923 in\n         Jev chose plan 1/2 (打击 -> 海洋混混) with confidence 0.98; code rank 1\n23:50:32 note H1 idle preparation: {\"status\":\"unknown\",\"reason\":\"next_solver_input_not_observed_or_not_ready\",\"budget_ms\":400}\n23:50:32 wait COMBAT: waiting on COMBAT (transition, animation, or nothing legal yet)\n23:50:33 COMBAT          combat/plan          -> end_turn jev 0 ms | 0 in\n         code plan (only line): end turn; hp -0, dmg 0\n23:50:33 note H1 idle preparation: {\"status\":\"unknown\",\"reason\":\"next_solver_input_not_observed_or_not_ready\",\"budget_ms\":400}\n23:50:33 wait COMBAT: waiting on COMBAT (transition, animation, or nothing legal yet)\n23:50:33 note H1 idle preparation: {\"status\":\"unknown\",\"reason\":\"next_solver_input_not_observed_or_not_ready\",\"budget_ms\":400}\n23:50:34 note H1 idle preparation: {\"status\":\"unknown\",\"reason\":\"next_solver_input_not_observed_or_not_ready\",\"budget_ms\":400}\n23:50:34 note H1 idle preparation: {\"status\":\"unknown\",\"reason\":\"next_solver_input_not_observed_or_not_ready\",\"budget_ms\":400}\n23:50:35 note H1 idle preparation: {\"status\":\"unknown\",\"reason\":\"next_solver_input_not_observed_or_not_ready\",\"budget_ms\":400}\n23:50:35 note H1 idle preparation: {\"status\":\"unknown\",\"reason\":\"next_solver_input_not_observed_or_not_ready\",\"budget_ms\":400}\n23:50:35 note H1 idle preparation: {\"status\":\"unknown\",\"reason\":\"next_solver_input_not_observed_or_not_ready\",\"budget_ms\":400}\n23:50:36 note H1 idle preparation: {\"status\":\"prepared\",\"basis\":\"exact_observed_input_only\",\"nodes\":9,\"partial\":false,\"reused\":false,\"budget_ms\":400}\n23:50:38 COMBAT          combat/plan-choice   -> play_card (card_index=0) con",
+  "config_last_rows": [
+    {
+      "ts": "2026-10-20T14:47:16.686Z",
+      "run_id": "YSRVLSKVU8DL",
+      "ascension": 10,
+      "character": "SILENT",
+      "floor": 1,
+      "restart": false,
+      "process": {
+        "pid": 1142465,
+        "started": "2026-10-20T14:47:13.048Z"
+      },
+      "code": {
+        "commit": null,
+        "code": null,
+        "dirty": null,
+        "dirty_files": [],
+        "branch": null,
+        "worktree": "live",
+        "error": "git status failed: spawnSync git ENOBUFS"
+      },
+      "v6": {
+        "schema": "v6-config-v1",
+        "mode": "on",
+        "deciders": {
+          "card": "jev",
+          "potion": "brain",
+          "shop": "brain",
+          "rest": "brain"
+        },
+        "reflex": "off",
+        "direction_replan": "off",
+        "admission": "interfaces_only",
+        "delivered": false,
+        "samples_pick": 20,
+        "samples_act": 100,
+        "min_known_option_ratio": 0.5,
+        "direction_min_weight": 0.1,
+        "win": {
+          "certain_win": 0.95,
+          "favored": 0.7,
+          "even": 0.3,
+          "unfavored": 0.05
+        },
+        "delta": {
+          "much_se": 2,
+          "better_se": 1,
+          "much_min": 0.05
+        },
+        "triggers": {
+          "t1_core_min": 0,
+          "t2_se": 2,
+          "t2_min_delta": 1,
+          "t2_consecutive": 2,
+          "t3_weight_max": 0,
+          "t5_hazard": "existing_route_projection",
+          "t6_unknown_max": 1,
+          "t6_fallbacks": 100,
+          "t7_checkpoint": "validated_brain_answer"
+        },
+        "budgets": {
+          "brain_soft_cap": 15,
+          "brain_ms": 90000,
+          "act_ms": 60000,
+          "pick_ms": 5000,
+          "jev_ms": 5000
+        },
+        "invalid": []
+      },
+      "brain": {
+        "active": true,
+        "engine": "codex",
+        "by_prefix": {},
+        "fallback": null,
+        "reask": null,
+        "tools": null,
+        "log": "/home/dw/Projects/agent-sts2/.worktrees/live/logs/brain.jsonl",
+        "engines": {
+          "codex": {
+            "model": "gpt-6.1-sol",
+            "model_by_prefix": {},
+            "timeout_ms": 600000,
+            "effort": "xhigh",
+            "reask": null,
+            "tools": false,
+            "max_calls": null
+          }
+        },
+        "codex": {
+          "mode": "exec",
+          "service_tier": "default",
+          "context_window": 512000,
+          "auto_compact_token_limit": 460800,
+          "summary": "auto",
+          "stall_ms": 120000,
+          "first_token_ms": null,
+          "stall_retries": 1,
+          "schema_fields": "used",
+          "route_reason": "drop",
+          "route_pattern": true,
+          "accept_cut": true,
+          "max_field_chars": 600,
+          "max_answer_blanks": 100
+        }
+      },
+      "knowledge": {
+        "prefix": "off",
+        "ascension": 10,
+        "prefix_sha": null,
+        "prefix_chars": null,
+        "prefix_tokens_est": null,
+        "system_sha": "38986474dcec",
+        "system_chars": 1924,
+        "experience_version": "2026-10-18.h0-r3-queen1"
+      },
+      "deepseek": {
+        "model": "deepseek/deepseek-flash",
+        "max_calls": 300,
+        "timeout_ms": 30000,
+        "reasoning_effort": "max",
+        "combat_reasoning_effort": "high",
+        "effort_by_label": null
+      },
+      "jev": {
+        "enabled": true,
+        "model": "typesafe/jev-1.14",
+        "context": "off",
+        "strict": true,
+        "prompt_log": "/home/dw/Projects/agent-sts2/.worktrees/live/logs/jev-prompts.jsonl"
+      },
+      "human_pace": {
+        "schema": "human-pace-h1-v1",
+        "budgets": {
+          "ordinary": 10000,
+          "elite": 15000,
+          "boss": 60000,
+          "retry": 10000,
+          "routine": 5000,
+          "brain": 90000,
+          "direction": 60000
+        },
+        "model_effort": "xhigh",
+        "required_full_replaced": true
+      },
+      "human_pace_h2": {
+        "schema": "human-pace-h2-shadow-v1",
+        "mode": "shadow",
+        "requested": "shadow",
+        "delivered": false,
+        "direction_budget_ms": 60000,
+        "card_budget_ms": 5000,
+        "jev_budget_ms": 1000,
+        "actual_selector": "existing_brain_and_gates_unchanged"
+      },
+      "loop": {
+        "mode": "play",
+        "combat_planner": "turn",
+        "build_decider": "deepseek",
+        "build_oneshot": "on",
+        "boss_sim_build": "on",
+        "s_readiness": "shadow",
+        "s_combat_rank": "shadow",
+        "s_build_rank": "shadow",
+        "global_build_eval": "shadow",
+        "global_build_requested": "shadow",
+        "global_build_admission": "pending_two_natural_shadow",
+        "s_build_sort": "shadow",
+        "sim_failure_exit": "on",
+        "sim_failure_retries": 2,
+        "sim_adaptive": "on",
+        "sim_adaptive_requested": "on",
+        "sim_adaptive_admission": "accepted",
+        "boss_sim_completion": "required-full-paired-v1",
+        "boss_sim_build_requested": "on",
+        "combat_deepseek": "off",
+        "thief_facts": true,
+        "thief_cost": true,
+        "mech_rules": true,
+        "mech_move_rules": true,
+        "mech_death_move": true,
+        "passive_pieces": true,
+        "sandpit_start": true,
+        "fight_plan": "off",
+        "run_plan": "off",
+        "run_plan_merge": true,
+        "escalation": [
+          "claude",
+          "deepseek"
+        ],
+        "confidence": {
+          "act": 0.55,
+          "strong": 0.75
+        },
+        "run_start": "auto",
+        "character": "SILENT"
+      },
+      "operator_constraints": {
+        "id": "roy-20261013-v5-no-deck-cap",
+        "max_permanent_cards": null,
+        "activation": "V5: Roy removed the fixed permanent deck-size limit"
+      },
+      "construction": {
+        "architecture": "V5",
+        "schema": "construction-v1",
+        "mode": "shadow",
+        "policy": "observed-signature-completion",
+        "validation": "prospective-calibration-required",
+        "evaluation": "same-question-combat-facts"
+      },
+      "target_ascension": null,
+      "arm": null,
+      "sl": {
+        "enabled": true,
+        "boss_retries": 5,
+        "elite_retries": 3,
+        "act3_low_hp": true,
+        "act3_low_hp_pct": 50,
+        "act2_low_hp": true,
+        "act2_low_hp_pct": 50,
+        "retry_show_sim": true,
+        "retry_memo": true,
+        "retry_known_draws": true,
+        "retry_compute": {
+          "rollout_samples": 24,
+          "rollout_budget_ms": 20000,
+          "turn_budget_ms": 30000,
+          "mc_samples": 36,
+          "mc_budget_ms": 1200,
+          "boss_sim_samples": 1200
+        },
+        "judge_known_draws": true,
+        "judge_any_draw": true,
+        "reload_early": true,
+        "reload_on_revive": false,
+        "retry_known_inserts": true,
+        "retry_known_top": true,
+        "retry_explore": true,
+        "retry_explore_b2": true,
+        "retry_explore_boss_potions": true,
+        "retry_explore_order": true,
+        "retry_explore_replay": true,
+        "retry_explore_replay_plays": true,
+        "retry_explore_replay_deviate": true,
+        "retry_explore_key_counters": true,
+        "retry_explore_second": true,
+        "retry_explore_replay_order": true,
+        "retry_explore_replay_code": true,
+        "retry_explore_target_turn": true,
+        "retry_explore_rearm": true,
+        "retry_explore_wasted": true,
+        "retry_explore_anchor": true,
+        "retry_explore_canon": true,
+        "retry_explore_turn": true,
+        "retry_explore_whole": true,
+        "retry_explore_where": true,
+        "retry_explore_potion": true,
+        "retry_known_picks": true,
+        "retry_known_off_top": true,
+        "retry_known_hand_order": true,
+        "step_timeout_ms": 60000,
+        "log": "/home/dw/Projects/agent-sts2/.worktrees/live/logs/sl-attempts.jsonl",
+        "elites": [],
+        "elites_date": ""
+      },
+      "codex_check": {
+        "bin": "/home/dw/.local/node/bin/codex",
+        "ok": true,
+        "version": "codex-cli 0.163.0"
+      },
+      "codex_usage": {
+        "stop_pct": 80,
+        "every_calls": 3,
+        "every_min": 10,
+        "required": true,
+        "paid_credits": "main-silent-codex1-20261015",
+        "start": {
+          "engine": "codex",
+          "read_at": "2026-10-20T14:47:11.814Z",
+          "read_ms": 848,
+          "plan": "pro",
+          "used_pct": 14,
+          "window": "codex/primary",
+          "window_min": 10080,
+          "resets_at": "2026-10-27T06:32:08.000Z",
+          "credits": 35423.351363,
+          "ordinary_usage_allowed": true,
+          "reached_type": null
+        },
+        "last": {
+          "engine": "codex",
+          "read_at": "2026-10-20T14:47:11.814Z",
+          "read_ms": 848,
+          "plan": "pro",
+          "used_pct": 14,
+          "window": "codex/primary",
+          "window_min": 10080,
+          "resets_at": "2026-10-27T06:32:08.000Z",
+          "credits": 35423.351363,
+          "ordinary_usage_allowed": true,
+          "reached_type": null
+        },
+        "calls_since_read": 0
+      },
+      "config_sha": "2a46d489b6c3"
+    },
+    {
+      "ts": "2026-10-20T15:49:20.090Z",
+      "run_id": "T0TP8S9MMU9Q",
+      "ascension": 10,
+      "character": "SILENT",
+      "floor": 1,
+      "restart": false,
+      "process": {
+        "pid": 1357442,
+        "started": "2026-10-20T15:49:16.921Z"
+      },
+      "code": {
+        "commit": null,
+        "code": null,
+        "dirty": null,
+        "dirty_files": [],
+        "branch": null,
+        "worktree": "live",
+        "error": "git status failed: spawnSync git ENOBUFS"
+      },
+      "v6": {
+        "schema": "v6-config-v1",
+        "mode": "on",
+        "deciders": {
+          "card": "jev",
+          "potion": "brain",
+          "shop": "brain",
+          "rest": "brain"
+        },
+        "reflex": "off",
+        "direction_replan": "off",
+        "admission": "interfaces_only",
+        "delivered": false,
+        "samples_pick": 20,
+        "samples_act": 100,
+        "min_known_option_ratio": 0.5,
+        "direction_min_weight": 0.1,
+        "win": {
+          "certain_win": 0.95,
+          "favored": 0.7,
+          "even": 0.3,
+          "unfavored": 0.05
+        },
+        "delta": {
+          "much_se": 2,
+          "better_se": 1,
+          "much_min": 0.05
+        },
+        "triggers": {
+          "t1_core_min": 0,
+          "t2_se": 2,
+          "t2_min_delta": 1,
+          "t2_consecutive": 2,
+          "t3_weight_max": 0,
+          "t5_hazard": "existing_route_projection",
+          "t6_unknown_max": 1,
+          "t6_fallbacks": 100,
+          "t7_checkpoint": "validated_brain_answer"
+        },
+        "budgets": {
+          "brain_soft_cap": 15,
+          "brain_ms": 90000,
+          "act_ms": 60000,
+          "pick_ms": 5000,
+          "jev_ms": 5000
+        },
+        "invalid": []
+      },
+      "brain": {
+        "active": true,
+        "engine": "codex",
+        "by_prefix": {},
+        "fallback": null,
+        "reask": null,
+        "tools": null,
+        "log": "/home/dw/Projects/agent-sts2/.worktrees/live/logs/brain.jsonl",
+        "engines": {
+          "codex": {
+            "model": "gpt-6.1-sol",
+            "model_by_prefix": {},
+            "timeout_ms": 600000,
+            "effort": "xhigh",
+            "reask": null,
+            "tools": false,
+            "max_calls": null
+          }
+        },
+        "codex": {
+          "mode": "exec",
+          "service_tier": "default",
+          "context_window": 512000,
+          "auto_compact_token_limit": 460800,
+          "summary": "auto",
+          "stall_ms": 120000,
+          "first_token_ms": null,
+          "stall_retries": 1,
+          "schema_fields": "used",
+          "route_reason": "drop",
+          "route_pattern": true,
+          "accept_cut": true,
+          "max_field_chars": 600,
+          "max_answer_blanks": 100
+        }
+      },
+      "knowledge": {
+        "prefix": "off",
+        "ascension": 10,
+        "prefix_sha": null,
+        "prefix_chars": null,
+        "prefix_tokens_est": null,
+        "system_sha": "38986474dcec",
+        "system_chars": 1924,
+        "experience_version": "2026-10-18.h0-r3-queen1"
+      },
+      "deepseek": {
+        "model": "deepseek/deepseek-flash",
+        "max_calls": 300,
+        "timeout_ms": 30000,
+        "reasoning_effort": "max",
+        "combat_reasoning_effort": "high",
+        "effort_by_label": null
+      },
+      "jev": {
+        "enabled": true,
+        "model": "typesafe/jev-1.14",
+        "context": "off",
+        "strict": true,
+        "prompt_log": "/home/dw/Projects/agent-sts2/.worktrees/live/logs/jev-prompts.jsonl"
+      },
+      "human_pace": {
+        "schema": "human-pace-h1-v1",
+        "budgets": {
+          "ordinary": 10000,
+          "elite": 15000,
+          "boss": 60000,
+          "retry": 10000,
+          "routine": 5000,
+          "brain": 90000,
+          "direction": 60000
+        },
+        "model_effort": "xhigh",
+        "required_full_replaced": true
+      },
+      "human_pace_h2": {
+        "schema": "human-pace-h2-shadow-v1",
+        "mode": "shadow",
+        "requested": "shadow",
+        "delivered": false,
+        "direction_budget_ms": 60000,
+        "card_budget_ms": 5000,
+        "jev_budget_ms": 1000,
+        "actual_selector": "existing_brain_and_gates_unchanged"
+      },
+      "loop": {
+        "mode": "play",
+        "combat_planner": "turn",
+        "build_decider": "deepseek",
+        "build_oneshot": "on",
+        "boss_sim_build": "on",
+        "s_readiness": "shadow",
+        "s_combat_rank": "shadow",
+        "s_build_rank": "shadow",
+        "global_build_eval": "shadow",
+        "global_build_requested": "shadow",
+        "global_build_admission": "pending_two_natural_shadow",
+        "s_build_sort": "shadow",
+        "sim_failure_exit": "on",
+        "sim_failure_retries": 2,
+        "sim_adaptive": "on",
+        "sim_adaptive_requested": "on",
+        "sim_adaptive_admission": "accepted",
+        "boss_sim_completion": "required-full-paired-v1",
+        "boss_sim_build_requested": "on",
+        "combat_deepseek": "off",
+        "thief_facts": true,
+        "thief_cost": true,
+        "mech_rules": true,
+        "mech_move_rules": true,
+        "mech_death_move": true,
+        "passive_pieces": true,
+        "sandpit_start": true,
+        "fight_plan": "off",
+        "run_plan": "off",
+        "run_plan_merge": true,
+        "escalation": [
+          "claude",
+          "deepseek"
+        ],
+        "confidence": {
+          "act": 0.55,
+          "strong": 0.75
+        },
+        "run_start": "auto",
+        "character": "SILENT"
+      },
+      "operator_constraints": {
+        "id": "roy-20261013-v5-no-deck-cap",
+        "max_permanent_cards": null,
+        "activation": "V5: Roy removed the fixed permanent deck-size limit"
+      },
+      "construction": {
+        "architecture": "V5",
+        "schema": "construction-v1",
+        "mode": "shadow",
+        "policy": "observed-signature-completion",
+        "validation": "prospective-calibration-required",
+        "evaluation": "same-question-combat-facts"
+      },
+      "target_ascension": null,
+      "arm": null,
+      "sl": {
+        "enabled": true,
+        "boss_retries": 5,
+        "elite_retries": 3,
+        "act3_low_hp": true,
+        "act3_low_hp_pct": 50,
+        "act2_low_hp": true,
+        "act2_low_hp_pct": 50,
+        "retry_show_sim": true,
+        "retry_memo": true,
+        "retry_known_draws": true,
+        "retry_compute": {
+          "rollout_samples": 24,
+          "rollout_budget_ms": 20000,
+          "turn_budget_ms": 30000,
+          "mc_samples": 36,
+          "mc_budget_ms": 1200,
+          "boss_sim_samples": 1200
+        },
+        "judge_known_draws": true,
+        "judge_any_draw": true,
+        "reload_early": true,
+        "reload_on_revive": false,
+        "retry_known_inserts": true,
+        "retry_known_top": true,
+        "retry_explore": true,
+        "retry_explore_b2": true,
+        "retry_explore_boss_potions": true,
+        "retry_explore_order": true,
+        "retry_explore_replay": true,
+        "retry_explore_replay_plays": true,
+        "retry_explore_replay_deviate": true,
+        "retry_explore_key_counters": true,
+        "retry_explore_second": true,
+        "retry_explore_replay_order": true,
+        "retry_explore_replay_code": true,
+        "retry_explore_target_turn": true,
+        "retry_explore_rearm": true,
+        "retry_explore_wasted": true,
+        "retry_explore_anchor": true,
+        "retry_explore_canon": true,
+        "retry_explore_turn": true,
+        "retry_explore_whole": true,
+        "retry_explore_where": true,
+        "retry_explore_potion": true,
+        "retry_known_picks": true,
+        "retry_known_off_top": true,
+        "retry_known_hand_order": true,
+        "step_timeout_ms": 60000,
+        "log": "/home/dw/Projects/agent-sts2/.worktrees/live/logs/sl-attempts.jsonl",
+        "elites": [],
+        "elites_date": ""
+      },
+      "codex_check": {
+        "bin": "/home/dw/.local/node/bin/codex",
+        "ok": true,
+        "version": "codex-cli 0.163.0"
+      },
+      "codex_usage": {
+        "stop_pct": 80,
+        "every_calls": 3,
+        "every_min": 10,
+        "required": true,
+        "paid_credits": "main-silent-codex1-20261015",
+        "start": {
+          "engine": "codex",
+          "read_at": "2026-10-20T15:49:15.352Z",
+          "read_ms": 1102,
+          "plan": "pro",
+          "used_pct": 17,
+          "window": "codex/primary",
+          "window_min": 10080,
+          "resets_at": "2026-10-27T06:32:08.000Z",
+          "credits": 35423.351363,
+          "ordinary_usage_allowed": true,
+          "reached_type": null
+        },
+        "last": {
+          "engine": "codex",
+          "read_at": "2026-10-20T15:49:15.352Z",
+          "read_ms": 1102,
+          "plan": "pro",
+          "used_pct": 17,
+          "window": "codex/primary",
+          "window_min": 10080,
+          "resets_at": "2026-10-27T06:32:08.000Z",
+          "credits": 35423.351363,
+          "ordinary_usage_allowed": true,
+          "reached_type": null
+        },
+        "calls_since_read": 0
+      },
+      "config_sha": "2a46d489b6c3"
+    }
+  ]
+}
