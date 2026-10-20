@@ -1,0 +1,144 @@
+{
+  "base": "b82c4a49a04cb844df9dbf6da2f273b90e80e236",
+  "branch": "codex-fix-silent-20261020-114302",
+  "phase": "four fixes committed, final checks green; live merge preflight conflicts retained",
+  "session": null,
+  "command": "SANDBOX_WORKERS=1 bash tools/test-sandbox.sh --configLoader runner",
+  "log": "herdr-sandbox.log",
+  "origin": "2a778b13ac1ead79afef957d4708c1df5dfd3757",
+  "negative_control": {
+    "rc": 1,
+    "files": 3,
+    "failed": 5,
+    "passed": 12,
+    "log": "consumer-without-fix.log"
+  },
+  "herdr_stash": "6e8aa9441891286a04e321ef23b38e2fbcd6ac48",
+  "herdr_negative": {
+    "rc": 1,
+    "log": "herdr-final-without-fix.log",
+    "assertion": "six host calls, expected three"
+  },
+  "herdr_first_positive": {
+    "rc": 0,
+    "cases": 1,
+    "log": "herdr-fixed-runner.log"
+  },
+  "paper_next": {
+    "origin": "dee6386621e8122d123a3cd0017c3e4c199f524e",
+    "patch": "paper-publication.patch",
+    "test": "paper-publication-test.py.txt",
+    "wrapper": "paper-publication-wrapper.ts.txt",
+    "preserve": "current CODEX_OPS_DIR/paper-dataset.lock and build_locked"
+  },
+  "commits": [
+    {
+      "item": "sandbox CLI completion receipts and read-only config loading",
+      "commit": "28c28db7d450113ba11bcd21d24c3a5c6e84f5c7",
+      "negative": "cli-negative-control.log",
+      "positive": "joint-infra-sandbox.log"
+    },
+    {
+      "item": "a406 offline consumer fixtures",
+      "commit": "ff6fd6923bcf5b1445899023a3fe95bafe033ea1",
+      "negative": "consumer-without-fix.log",
+      "positive": "consumer-final-sandbox.log"
+    },
+    {
+      "item": "atomic paper archives and named scan failures",
+      "commit": "4514b1909b6b2927d55de4818591d7efd69c49bf",
+      "negative": "paper-without-fix.log",
+      "positive": "paper-sandbox-retry.log"
+    },
+    {
+      "item": "infra-h0-414-host-fixed-test-stability-20261018 / 21bf-fake-herdr-workspace-deadline（固定搭建成本子项）",
+      "commit": "83cb5041bf466509b66fdf057e9f8209d8c3fd67",
+      "negative": "herdr-final-without-fix.log",
+      "positive": "herdr-sandbox.log"
+    }
+  ],
+  "live": "untouched; original ops staged composition, lock preflight rc75",
+  "versions": "none; test-only/tools-only changes do not change gameplay",
+  "ledger": "keyword queries saved; no corresponding bug-infra claims; do not update unrelated silent-0130/0332",
+  "prior_failures": [
+    "baseline-sandbox.log EROFS config loader",
+    "herdr-fixed-first.log EROFS config loader",
+    "sandbox-before-transport-interrupted.log V6 socket fixture failures, intentionally interrupted rc130"
+  ],
+  "pending_existing_owner": [
+    "798aeb7ce",
+    "e8b8c18fe",
+    "911c4a144",
+    "609bcdf4"
+  ],
+  "code_proposals": [],
+  "implementation_domains": [],
+  "cli_negative": {
+    "log": "cli-negative-control.log",
+    "rc": 1,
+    "failed": 15,
+    "passed": 33
+  },
+  "cli_positive": {
+    "log": "cli-fixtures-first.log",
+    "rc": 0,
+    "files": 8,
+    "cases": 48
+  },
+  "consumer_first_full": {
+    "log": "consumer-sandbox.log",
+    "rc": 1,
+    "files": 563,
+    "passed": 5020,
+    "failed": 15,
+    "cause": "sandbox CLI/config execution; no gameplay assertion failure"
+  },
+  "joint_infra_full": {
+    "tsc": 0,
+    "vitest": 0,
+    "files": 565,
+    "cases": 5050,
+    "log": "joint-infra-sandbox.log",
+    "scope": "joint checked workspace; consumer fixture changes were staged and committed separately"
+  },
+  "paper_failed_full": {
+    "tsc": 0,
+    "vitest": 1,
+    "files": 565,
+    "passed": 5037,
+    "failed": 3,
+    "log": "paper-sandbox.log"
+  },
+  "paper_targeted_retry": {
+    "vitest": 0,
+    "files": 2,
+    "cases": 3,
+    "log": "paper-failed-cases-retry.log"
+  },
+  "retried_cases": [
+    "ops-mod-state.test.ts::does not report ready for unsuccessful",
+    "ops-mod-state.test.ts::does not report ready for missing ok",
+    "v6-prompt-summary-perf.test.ts::measures fixed card summary construction"
+  ],
+  "paper_full": {
+    "tsc": 0,
+    "vitest": 0,
+    "files": 566,
+    "cases": 5051,
+    "log": "paper-sandbox-retry.log"
+  },
+  "herdr_restored": {
+    "rc": 0,
+    "log": "herdr-final-restored.log",
+    "cases": 1
+  },
+  "merged": null,
+  "merge_conflicts": [
+    "agent/tests/v6-appearance.test.ts",
+    "notes/for-roy.md",
+    "notes/ops-current-context.json",
+    "ops/inbox-dev.md",
+    "paper/materials/decision-log.md"
+  ],
+  "report": "/home/dw/Projects/agent-sts2/learner/runs/20261020-114322-5781b36b-4192-4db7-8a06-7da86c63e865-fix-batch/report.md"
+}

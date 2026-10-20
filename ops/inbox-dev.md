@@ -4348,3 +4348,6 @@ request_id=roy-20261017-human-pace-h0 revision=3 input_sha256=1e1c259a15f1824119
 
 
 2026-10-20T13:15:32+08:00 原W3精确联合终局已实核：tsc0/full612文件5819过2原跳，45源码叶、498冻结知识及日志SHA核同，不重跑；源码保自有分支8da33189，尚未发布live。原锁本轮取得并只读核到25知识文件更新及新历史包79d58872/26141998字节，均原样保留；原冻结全检不冒最新数据组合或17消费者已验。9J6已12:40:46自然F8败，140动作0fallback/0error；当前是原loop的UWUFHGRAJJ6J，配置12:43:07.864、actor2230556、F15商店，四类Jev/on/invalid=[]。尚未自然结束，不热切/改STOP/DRAIN或重启；待原边界锁内精确45叶运输，最新数据/低P或P0消费者、版本双通知及下局配置/首动作后才记上线。W/PWnull、0模拟、≤2秒部分及W6未覆盖/旧失败保留，Regent/宽父/角色ACK不变。原件paper/materials/20261020-1310-ops/receipt.json。
+
+
+2026-10-20T13:26:48+08:00 原114302批次4项均为测试/工具修复，报告与完成回执SHA核同，原沙箱tsc0/566文件5051例及负控、重跑、EROFS/EPERM/中断130原件保留；failed/rc0/mergednull不改写。整分支5冲突来自旧基线与并行记录，原源码83cb保备份；仅4提交无冲突接最新main1a56，新源698d3bd2、树3fd4d368，26叶每提交patch-id相同，4记录叶未入差分，当前隔离夹具保留。paper工具的main/build_locked函数逐字不变，不执行生产dataset。宿主仅对这次新源码组合以nice19单worker/原阈值跑完整tsc/vitest，PID2405031，终局由原learner-checks队列接续；不借沙箱绿冒宿主完整绿。完整0后窄集成，纯工具不分行为号；不夹ACK旧链或W3自然边界，不另派模型/刷新/开局或关宽父/代ACK，Regent暂停。原件paper/materials/20261020-1320-ops/receipt.json。
