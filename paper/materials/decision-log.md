@@ -4958,3 +4958,5 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
 - 2026-10-20 10:05:33 CST [Codex ops，仅策略回报核查] 094301-s2严格干净/10提案waiting；84产物、10归档原文SHA及31账本受保护字段核同，无源码/测试/合入/版本，普通收尾source changed保留人工待办，不重复dataset/学习/检查或假完成。W3/T12/R3/Regent不变。原件paper/materials/20261020-1002-ops/receipt.json。
 
 - 2026-10-20 10:07:56 CST [Codex ops，仅联合检查接管] 核旧39输入607文件5774过2跳完整0及冻结SHA；新213d/8f85/tree3f60的52输入覆盖新增13路径，新full仍在途，不查询/重启。0848源码窗口、W3 live烟测授权hold及byte实际main后两叶窄运边界保持，不提前刷新/运源码；T12/R3/Regent不变。原件paper/materials/20261020-1006-ops/receipt.json。
+
+- 2026-10-20 10:14:09 CST [Codex ops，仅旧通知核查] 三旧异议/原证据/ops转达及native→Roy证据SHA未变，ACK代码同0943，保旧scope/角色ACK兼容待办，不重复异议或代ACK/造父；W3新52输入/main窗口/live hold/byte窄运/T12/R3/Regent保持。原件paper/materials/20261020-1013-ops/receipt.json。
