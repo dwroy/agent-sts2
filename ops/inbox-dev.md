@@ -4406,3 +4406,8 @@ request_id=roy-20261017-human-pace-h0 revision=3 input_sha256=1e1c259a15f1824119
 ### 2026-10-20T14:23:50+08:00 原W4释放核验及ops变化输入完整检查接管
 
 本轮接W4W6明确释放独占窗口，实核v3终局日志SHA及五份受测源码同：613文件、5830项通过、2跳过，原四runner均退出；旧ENOSPC、长路径断言及中断历史保留，不冒源已main/live。ops已沿原排队接单点测试接线修复，固定staged树d43e6c23、27源叶与498保护知识SHA核同；旧基线至当前main仅记录变化，本轮未混入尚待交付的战斗源码。唯一完整tsc/vitest按nice19单worker及短.t/f1421实际启动PID3694693，启动回执tsc0/full在途；旧3fd4失败不覆盖，新输入不冒完整绿或源码提交。已向原W4与W8回投窗口接管，CLI0不代native实收。等待原learner-checks终局后确认释放再通知W8，过程中不轮询、不叠full/派模型/API/刷新/dataset，live/对局及Regent不动。原件：paper/materials/20261020-1421-ops/receipt.json。
+
+
+### 2026-10-20T14:28:09+08:00 原W4源main交付及精确live待办
+
+本轮核原W4W6纯bug源e210已实际FF main，五受测文件的工作字节与提交blob逐SHA同，validation全部保留日志SHA核同：tsc0、613文件5830过2跳。改动仅接已发布Silent蛇咬Retain到后续手牌；主动弃牌/多副本等回归与铁甲等价限制保留，未新增知识、采样预算或策略。原有限8/8不当必胜，活雾召唤仍锚99f14 pending，源修复完成不关学习父。宿主实核当前TR224PCKENSM F17奖励页/livef563，未到自然开局边界；已留精确两运行时加三测试输入的运输待办，保最新知识/历史包和W3限制，实际联合验收/模拟消费者/核号后才记上线与回收。当前ops d43全检未查未改，不冒覆盖新联合；W8仍后续排队。本轮无新full/模型/刷新/dataset/对局操作。原件：paper/materials/20261020-W4-main-delivery-1425-ops/receipt.json。
