@@ -1,0 +1,151 @@
+{
+  "recorded_at": "2026-10-20T09:44:35.104233+08:00",
+  "notices": [
+    {
+      "notice_id": "0baef634d02e1ff85843c10a",
+      "notice_snapshot": {
+        "path": "ops/codex-ops/learning-notices/0baef634d02e1ff85843c10a.json",
+        "bytes": 4627,
+        "sha256": "21f9108942321d5a8860590631ef061b330d7522f5b1793e2b73a795b4235625"
+      },
+      "message_sha256": "b901a2de0949ad35076a535a065c0099111a8b69ca8502b687957493ef3b292f",
+      "original_queue": {
+        "path": "ops/codex-ops/queue/1792460581990891036-learning-attention.md",
+        "bytes": 4398,
+        "sha256": "9e879314be1f2892a7c42b32ee8dc25782ce2c7b47040cb622eae64af8feb264"
+      },
+      "original_ops_forwarded": {
+        "path": "ops/codex-ops/learning-notices/receipts/0baef634d02e1ff85843c10a.ops-forwarded.json",
+        "bytes": 339,
+        "sha256": "ee9fbcbc275d4712957140ea0f09f85552a0e4cdf3b2116850e9dccca2c88bb0"
+      },
+      "inbox_delivery_evidence": {
+        "path": "ops/codex-ops/learning-notices/receipts/0baef634d02e1ff85843c10a.inbox.json",
+        "bytes": 4411,
+        "sha256": "5264b835a5ebda3658643bafc5b05b39f212e2e337a0b82c39d9d4971bb5e3b8"
+      },
+      "watcher_received_cli": false,
+      "roy_notified_cli": false,
+      "legacy_scope": {
+        "source_kind": null,
+        "notification_only": null,
+        "registered_learning_request": null
+      },
+      "request_id": "roy-20261019-v6",
+      "question_original": "9.1手动学习批次已退出0，以下是学习者异议原文（不改正式知识；未正式发布）。来源 /home/dw/Projects/agent-sts2/learner/runs/20261019-163651-aca8de36-1a87-4109-9fa1-405535c7d209-v6-direction-experience/disagreements.json SHA256 1992c837d558ac507f4779f96b6da642f9f2982e2ac62ea351c23e82ab235368；report.md 同目录。\n{\n  \"items\": [\n    {\n      \"id\": \"D1\",\n      \"prior\": \"历史181局窗口P/D的A10整局最终0胜；若把该快照沿用为当前全历史事实\",\n      \"evidence\": \"historical-signature-reconciliation.json + first-formations.json；7S8HCC0M6G9W/KF9HMZKTFC3V/LKC9YXKZWTKR/9GTFF6DC500L/UPAB38G2PA02原SL与状态\",\n      \"finding\": \"旧窗口复算完全一致；新冻结A10的P签名101局有4个最终通关（首试1），D签名50局有2个（首试1），LKC重叠。只是新增个案，不否定旧快照，也不证明稳定模板/组件因果。\",\n      \"unresolved\": \"版本/路线/药水/SL与混合组件贡献未隔离；同版本配对和稳定性未知\",\n      \"ledger_ids\": [\n        \"silent-0352\",\n        \"silent-0353\"\n      ]\n    },\n    {\n      \"id\": \"D2\",\n      \"prior\": \"V6格式要求每检查点理想牌组与升级/删牌优先级；历史另有5套目标牌表\",\n      \"evidence\": \"本批冻结具体牌表report.md的原样/目标区分；checkpoints中的真实当时状态源SHA\",\n      \"finding\": \"原样、未执行替换与理想值必须分列；本批理想/排序留null，不能用字段要求或抽象缩牌计算补答案。4方向与5个具体实例可并存。\",\n      \"unresolved\": \"各检查点可达最优组装、移除损失和升级对照未知\",\n      \"ledger_ids\": [\n        \"silent-0385\"\n      ]\n    },\n    {\n      \"id\": \"D3\",\n      \"prior\": \"单步法+持有夜魇可作完整D代理；或R主选0即可判R无效\",\n      \"evidence\": \"旧discarded-candidates.json；4Y94N8RDPGPM实际复制毒牌；54G实际复制步法；silent-0493的LTQ原选择边界\",\n      \"finding\": \"沿用已更正双永久步法签名；实际复制另记执行。R不因未被选择而放弃，铜钹和绷带保留非等价子分支。\",\n      \"unresolved\": \"复制的等待/支付/存活代价和R完整循环/整局收益缺受控重复\",\n      \"ledger_ids\": [\n        \"silent-0353\",\n        \"silent-0355\",\n        \"silent-0493\"\n      ]\n    },\n    {\n      \"id\": \"D4\",\n      \"prior\": \"核心/支撑组件已共现或局部挡/供能兑现即可当成型有效\",\n      \"evidence\": \"support-source-verification.json的四组原状态与SL端点\",\n      \"finding\": \"P/S/R均实死，D判死而非实死；四个局部支撑关系不能升级为必要充分或胜率增益。R重放下肾上腺素净+2能不能移作普通单放参数。\",\n      \"unresolved\": \"升级差、无重放差、去件/替换后的整战结果未知\",\n      \"ledger_ids\": [\n        \"silent-0508\"\n      ]\n    },\n    {\n      \"id\": \"D5\",\n      \"prior\": \"账本observed或pending文档含active字段就等正式经验\",\n      \"evidence\": \"pending/candidate.json包装status=pending-unverified与not_in_published_ids；正式experience实际244条\",\n      \"finding\": \"佩尔之泪/癫狂之触保留pending；账本0451/0452已存在也不能冒称消费者已读回。\",\n      \"unresolved\": \"原批lost后验收/正式发布未在本批范围补办\",\n      \"ledger_ids\": [\n        \"silent-0451\",\n        \"silent-0452\"\n      ]\n    }\n  ],\n  \"delivery\": \"供原ops→watcher→Roy转达；本批不代填ACK，不宣称已发送或已收到\"\n}\n\n本批为Roy一次性手动派发，不登记自动学习父请求、不恢复调度。原owner继续处理；watcher/Roy确认保持pending，不代填。",
+      "next_step": "Original manual-source compatibility source must actually pass and reach main/live; actual roles then register using preserved native evidence. No replacement parent or notice scope rewrite."
+    },
+    {
+      "notice_id": "f619c26f4bfa10970591beb5",
+      "notice_snapshot": {
+        "path": "ops/codex-ops/learning-notices/f619c26f4bfa10970591beb5.json",
+        "bytes": 4424,
+        "sha256": "123e94c19701a39f9741fbf578c4071c90bf672060f505e7312b9e7e70d36d0e"
+      },
+      "message_sha256": "079d1ccd40b005ab012a2f78b4fdf922eed1503dbede1298a07f22d24ad9b741",
+      "original_queue": {
+        "path": "ops/codex-ops/queue/1792460581991925339-learning-attention.md",
+        "bytes": 4236,
+        "sha256": "ea7d699de924da7e7b2340713440dfdd8699436b343fdf27b31120417fc0f695"
+      },
+      "original_ops_forwarded": {
+        "path": "ops/codex-ops/learning-notices/receipts/f619c26f4bfa10970591beb5.ops-forwarded.json",
+        "bytes": 339,
+        "sha256": "def711c31df6af3117610bf415fb51a4ae5bc7822bbf9d37fd65f98843bb5a14"
+      },
+      "inbox_delivery_evidence": {
+        "path": "ops/codex-ops/learning-notices/receipts/f619c26f4bfa10970591beb5.inbox.json",
+        "bytes": 4209,
+        "sha256": "77c21d7d61443fc79f9737102f74a2b28024cabbabe0409dce50b42d3aec7622"
+      },
+      "watcher_received_cli": false,
+      "roy_notified_cli": false,
+      "legacy_scope": {
+        "source_kind": null,
+        "notification_only": null,
+        "registered_learning_request": null
+      },
+      "request_id": "roy-20261019-v6",
+      "question_original": "9.2 v6-reflex-distill 手动批次17:41:42正常退出0，未超时。独立核431冻结输入、84产物引用及8483原证据SHA和原日志字节一致；244正式经验逐条映射：21 partial、222 text_only、1 retired重复身份disputed。13 combat_line仅描述tag，无数值效应或排序；32 DTO字段缺口，card_pick/potion/rest/shop均0条。正式知识未改，ledger silent-0524仅proposed，不宣称W2知识验收或消费者完成。\n以下为学习者异议原文，source=/home/dw/Projects/agent-sts2/learner/runs/20261019-171010-c702c588-a5c6-445c-838d-fd94eb877532-v6-reflex-distill/disagreements.json SHA256 5ecc1219526287e594bb441b9f7185c9fce56f66cf40ce95672445183b63a347：\n[\n  {\n    \"id\": \"retired-duplicate\",\n    \"prior\": \"把全部正式库条目都作为active小脑规则转换。\",\n    \"new_evidence\": \"silent-louse-poison-window-sl-observation实际retired；retired_reason明确合入silent-louse-progenitor-strength-growth且未被反证。\",\n    \"affected_experience_ids\": [\n      \"silent-louse-poison-window-sl-observation\"\n    ],\n    \"impact\": \"disputed只指重复适用身份已过时，不把四次失败改成四个独立样本或事实错误。\",\n    \"unknown\": \"未重做原单局所有排列；不主张必死或禁牌。\",\n    \"source\": \"/home/dw/Projects/agent-sts2/knowledge/characters/silent/experience.json\",\n    \"new_discovery\": false,\n    \"forwarding\": \"仅报告，供ops→watcher→Roy原通道接续；未排队或代填ACK。\"\n  },\n  {\n    \"id\": \"nightmare-not-double-footwork\",\n    \"prior\": \"把持有单步法+夜魇当作已完成双步法D签名。\",\n    \"new_evidence\": \"冻结historical-core-builds报告已撤该代理签名；4Y94N8RDPGPM复制实际对象是毒牌，不能由持有复制技能推已经复制步法。\",\n    \"affected_experience_ids\": [\n      \"silent-core-dexterity-defense-observation\",\n      \"silent-nightmare-next-turn-copies\"\n    ],\n    \"impact\": \"D仍candidate，方向附加关系不能证明已建或等价替代；本批未生成card_pick偏好。\",\n    \"unknown\": \"缺同状态移除/替代的实战对照。\",\n    \"source\": \"/home/dw/Projects/agent-sts2/paper/materials/silent/20261009-2335-events/core-builds/report.md\",\n    \"new_discovery\": false,\n    \"forwarding\": \"保留旧异议，不代原owner关闭要求。\"\n  },\n  {\n    \"id\": \"model-not-live-effect\",\n    \"prior\": \"把独立Boss模型、功能包模拟或状态窄修当作自然拿牌/整局胜率收益。\",\n    \"new_evidence\": \"正式核心经验与H0限定已保留首试/SL、模型指纹、质量闸未通过与F49联合未知；double-boss.value源为4局/8192模拟。\",\n    \"affected_experience_ids\": [\n      \"silent-core-poison-defense-observation\",\n      \"silent-double-boss-resource-handoff\",\n      \"silent-g1a-fixed-production-boundary\"\n    ],\n    \"impact\": \"无可交付hp/win效应条目，全部impact_score未知；不将0/24模型结果用作必死/SL门槛。\",\n    \"unknown\": \"自然取得、连续两王与反事实效应仍未验证。\",\n    \"source\": \"/home/dw/Projects/agent-sts2/knowledge/characters/silent/double-boss.json\",\n    \"new_discovery\": false,\n    \"forwarding\": \"只保留限制供原通道转达，不声称新异议已送达。\"\n  }\n]\n\n本批仅一次性手动派发，不登记自动学习父请求、不派续批、不改正式知识。原owner继续处理；watcher/Roy确认保持pending，不代填。W3在独立树保留未完代码，按学习批次有结果即停点向Claude回报。",
+      "next_step": "Original manual-source compatibility source must actually pass and reach main/live; actual roles then register using preserved native evidence. No replacement parent or notice scope rewrite."
+    },
+    {
+      "notice_id": "b5b53e0d8bebe1df7fb30468",
+      "notice_snapshot": {
+        "path": "ops/codex-ops/learning-notices/b5b53e0d8bebe1df7fb30468.json",
+        "bytes": 2343,
+        "sha256": "83ef78affae535e3bff6f9e8530b253f272dda72dde06fa235850c7c70163047"
+      },
+      "message_sha256": "c8b21adc6626109ccaa6d2856ae174a7b3a3cb5277632855b9053ec7c84464a4",
+      "original_queue": {
+        "path": "ops/codex-ops/queue/1792460581992406133-learning-attention.md",
+        "bytes": 2306,
+        "sha256": "ce8754ef8d9434835f5e92393dc1330d62951e9468eadecea7b2f6c7fbb0b914"
+      },
+      "original_ops_forwarded": {
+        "path": "ops/codex-ops/learning-notices/receipts/b5b53e0d8bebe1df7fb30468.ops-forwarded.json",
+        "bytes": 339,
+        "sha256": "a6bcb7ee55c573e14db91ac795c0c3dfbfd7a685f05143aa71d74ff2b1b82ef2"
+      },
+      "inbox_delivery_evidence": {
+        "path": "ops/codex-ops/learning-notices/receipts/b5b53e0d8bebe1df7fb30468.inbox.json",
+        "bytes": 2127,
+        "sha256": "4efda813c80d463d46af214a9ddbf97fe049177a4a4d86c7485e8df4e22d8f80"
+      },
+      "watcher_received_cli": false,
+      "roy_notified_cli": false,
+      "legacy_scope": {
+        "source_kind": null,
+        "notification_only": null,
+        "registered_learning_request": null
+      },
+      "request_id": "roy-20261019-v6",
+      "question_original": "v6-build-cores-20261019-1838 已退出0，372局/244经验覆盖及645冻结输入、138产物SHA、262073原字节段独立核验通过；4方向14组合仅pending，12缺证类别、ledger silent-0525..0528仅proposed，正式知识未改。学习者异议原文：[\"prior：将9.1的持有签名视为第6节完整成型。新证据：本轮逐牌实出/能力/后继收益见证比持有集合更窄，逐组合全部未生效和失败局留存。影响：旧签名统计不能直接复制为新组合的formed_runs/startup_turn。未知：漏帧/重放边界中的真实首次及独立组件因果。沿ops→watcher→Roy转达，本批不代填ACK。\", \"prior：必须填齐四种组合类型或理想升级/转向规则。新证据：冻结观察没有最小充分、全牌池穷举或可比最高DPR对照。影响：保留有实效候选并逐方向missing三种类型；不以格式目标生成牌表。未知：受控实战比较结果。\", \"prior：R的纯cards条目可直接表示完整核心。新证据：本角色冻结经验和实弃见证均带TINGSHA/TOUGH_BANDAGES前提，两遗物不同收益。影响：R候选必须连同fits条件读，现schema无可执行遗物门槛，不能宣称消费者已可用。未知：去遗物反事实和未来格式承载方式。\"]。来源：learner/runs/20261019-185235-1e8a0895-970a-415b-996e-bd619c383056-v6-build-cores/report.md；开发验收：paper/materials/2026-10-19-v6-build-cores-audit/report.md。未验证因果结论/消费者可用，父要求不关闭，不续派或恢复游戏。",
+      "next_step": "Original manual-source compatibility source must actually pass and reach main/live; actual roles then register using preserved native evidence. No replacement parent or notice scope rewrite."
+    }
+  ],
+  "original_sources": [
+    {
+      "path": "learner/runs/20261019-163651-aca8de36-1a87-4109-9fa1-405535c7d209-v6-direction-experience/disagreements.json",
+      "bytes": 3144,
+      "sha256": "1992c837d558ac507f4779f96b6da642f9f2982e2ac62ea351c23e82ab235368",
+      "matches_event_SHA": true
+    },
+    {
+      "path": "learner/runs/20261019-171010-c702c588-a5c6-445c-838d-fd94eb877532-v6-reflex-distill/disagreements.json",
+      "bytes": 2526,
+      "sha256": "5ecc1219526287e594bb441b9f7185c9fce56f66cf40ce95672445183b63a347",
+      "matches_event_SHA": true
+    },
+    {
+      "path": "learner/runs/20261019-185235-1e8a0895-970a-415b-996e-bd619c383056-v6-build-cores/report.md",
+      "bytes": 17552,
+      "sha256": "f98174d7c8727c0ad6416e57b35c8e0128b27d07a0433d73239ca72619972669",
+      "event_supplied_report_SHA": false,
+      "verification_scope": "Read and freeze actual report bytes; do not treat notice request_sha256 as report SHA"
+    }
+  ],
+  "prior_verification": {
+    "path": "paper/materials/20261020-0843-ops/old-notices-verification.json",
+    "bytes": 2422,
+    "sha256": "912da36f0c81e02e762727632c8567e72fd388926a2368267900771d9e7bfc64"
+  },
+  "actual_prior_native_watcher_to_Roy": {
+    "path": ".artifacts/v6-learning-notice-watcher-20261019/native-roy-notification.json",
+    "bytes": 2024,
+    "sha256": "16b0a57bb5d88164e970ba82742d1e4bea38e6a697c9edd0bcf3f27ba3c05752"
+  },
+  "ACK_compatibility_source": {
+    "path": "ops/learning_requests.py",
+    "bytes": 59134,
+    "sha256": "2bd6d3e6a7ea6cc7a71b6eb999ea738e2f7772df75baeeb93befcf6c9b617d84"
+  },
+  "ACK_scope_read_only_findings": "ack_request requires explicit notification_only/registered_learning_request for absent parent; legacy notices lack these. No production retry/mutation. Six TASKS whitelist delivery is separate.",
+  "manual_source_patch_original_failed_receipt": {
+    "path": "paper/materials/20261020-0903-ops/receipt.json",
+    "bytes": 3170,
+    "sha256": "2c0581a41cc891ec5733c4efc272b7786497a7e3bcc7851887ed087d2ef4ac7c"
+  },
+  "no_role_ACK_written": true,
+  "no_parent_created": true
+}
