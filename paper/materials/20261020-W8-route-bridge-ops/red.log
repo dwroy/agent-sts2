@@ -1,0 +1,93 @@
+
+ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/v6-direction-compact-backoff-20261020/agent
+
+ ❯ tests/v6-card-route-scope.test.ts (5 tests | 5 failed) 484ms
+   × does not treat an unmarked reward/card as a V6 card question 9ms
+   × does not treat an unmarked selection/add as a V6 card question 2ms
+   × does not treat an unmarked selection/choose as a V6 card question 2ms
+   × keeps noncombat selection/add on the original V5 brain path without a V6 handover 309ms
+   × keeps noncombat selection/choose on the original V5 brain path without a V6 handover 159ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 5 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/v6-card-route-scope.test.ts > does not treat an unmarked reward/card as a V6 card question
+ FAIL  tests/v6-card-route-scope.test.ts > does not treat an unmarked selection/add as a V6 card question
+ FAIL  tests/v6-card-route-scope.test.ts > does not treat an unmarked selection/choose as a V6 card question
+AssertionError: expected { kind: 'card_pick', …(1) } to be null
+
+- Expected:
+null
+
++ Received:
+{
+  "coverage": {
+    "known": 0,
+    "ratio": 0,
+    "reason": "insufficient_known_options",
+    "total": 2,
+    "unknown": [
+      "card0",
+      "card1",
+    ],
+  },
+  "kind": "card_pick",
+}
+
+ ❯ tests/v6-card-route-scope.test.ts:28:45
+     26|     questions: { pick: { type: "choice", criteria: { card0: "a", card1…
+     27|   const before = JSON.stringify(e.screenMemory);
+     28|   expect(constructionQuestion(e, decision)).toBeNull();
+       |                                             ^
+     29|   expect(JSON.stringify(e.screenMemory)).toBe(before);
+     30| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/5]⎯
+
+ FAIL  tests/v6-card-route-scope.test.ts > keeps noncombat selection/add on the original V5 brain path without a V6 handover
+AssertionError: expected [ Array(1) ] to deeply equal []
+
+- Expected
++ Received
+
+- []
++ [
++   "v6_unknown_to_brain: selection/add: insufficient_known_options (0/3 known options)",
++ ]
+
+ ❯ tests/v6-card-route-scope.test.ts:49:77
+     47|   expect(actual.actions).toEqual(baseline.actions);
+     48|   expect(brain.calls.filter(call => call.label === `selection/${task}`…
+     49|   expect(actual.notes.filter(note => note.includes("v6_unknown_to_brai…
+       |                                                                             ^
+     50|   expect(ask).not.toHaveBeenCalled();
+     51|   expect(evaluateCard).not.toHaveBeenCalled();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/5]⎯
+
+ FAIL  tests/v6-card-route-scope.test.ts > keeps noncombat selection/choose on the original V5 brain path without a V6 handover
+AssertionError: expected [ Array(1) ] to deeply equal []
+
+- Expected
++ Received
+
+- []
++ [
++   "v6_unknown_to_brain: selection/choose: insufficient_known_options (0/3 known options)",
++ ]
+
+ ❯ tests/v6-card-route-scope.test.ts:49:77
+     47|   expect(actual.actions).toEqual(baseline.actions);
+     48|   expect(brain.calls.filter(call => call.label === `selection/${task}`…
+     49|   expect(actual.notes.filter(note => note.includes("v6_unknown_to_brai…
+       |                                                                             ^
+     50|   expect(ask).not.toHaveBeenCalled();
+     51|   expect(evaluateCard).not.toHaveBeenCalled();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/5]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  5 failed (5)
+   Start at  19:05:20
+   Duration  3.60s (transform 2.43s, setup 389ms, import 2.55s, tests 484ms, environment 0ms)
+

@@ -1,0 +1,92 @@
+{
+  "schema": "v6-w8-card-route-scope-increment-v1",
+  "created_at": "2026-10-20T19:06:59.247906+08:00",
+  "source": "1d2d7f1cecb8329ff1590bbd533428f2a1faedb8",
+  "base": "9c8e123251ddd95bf7f19eee8e04a8c4bb72275a",
+  "tree": "857e191acd02d907be59c019b40fbe54025b488b",
+  "previous_functional_source": "0cfebfa878a5ac2b5c19f7b817110a7eeb3f0e74",
+  "owner": {
+    "session": "01a15382-761a-76a2-922d-271169b2463c",
+    "account": "codex1",
+    "herdr": "wJ:p1GY"
+  },
+  "status": "source frozen; not main/live; exact joint full pending with ops",
+  "sources": [
+    {
+      "path": "agent/src/hand/loop.ts",
+      "bytes": 154368,
+      "sha256": "24036bd57506b6d8ad79c3053b704310df97960804ad2f8973935708200b3c53",
+      "gitblob": "7396665304eb11c80cfc31dc7cd0edeabffaa14b"
+    },
+    {
+      "path": "agent/src/v6/construction-safety.ts",
+      "bytes": 5595,
+      "sha256": "ac5baf5ad52fbe69f4f7140d9f0a63614dc25a924b7dbf5e7eb6c0b233ca49b9",
+      "gitblob": "b3b46101e084ea7f57dd7588845fb03ea34de089"
+    },
+    {
+      "path": "agent/tests/v6-card-route-scope.test.ts",
+      "bytes": 2951,
+      "sha256": "99f786674ec13a7079838951e4d0b0dd31671bed3f2c6d56d09da22e6afedbfb",
+      "gitblob": "c234f78be8a81ca6b154e858f3b7baf471a090a0"
+    }
+  ],
+  "patch_sha256": "29d13bec93815585c68fe211809d5e4ec5c3cb25a3f4c673413a886ece0e153a",
+  "checks": {
+    "before": "same test on base: five failures, including both noncombat labels first routed through V6 unknown-to-brain",
+    "after": "tsc0; five targeted files / 66 tests pass; gitleaks0; no full/API/model/play"
+  },
+  "logs": [
+    {
+      "file": "gitleaks.exit",
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+      "bytes": 2
+    },
+    {
+      "file": "gitleaks.log",
+      "sha256": "f0f41fc0ae6448ec3ff456223bb48971be13cd496b63506c6d16befb6677bb43",
+      "bytes": 106
+    },
+    {
+      "file": "red.exit",
+      "sha256": "4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865",
+      "bytes": 2
+    },
+    {
+      "file": "red.log",
+      "sha256": "9d109ff8916154bf5f0b487c681556187970b5bfca6f218c0a6fc703e933c533",
+      "bytes": 3601
+    },
+    {
+      "file": "results.json",
+      "sha256": "e9963c19fc7d4ef3958ce1c6537c4295cc72fe9cf866f50b8ae263ba36b1a36a",
+      "bytes": 322
+    },
+    {
+      "file": "target.exit",
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+      "bytes": 2
+    },
+    {
+      "file": "target.log",
+      "sha256": "cebb43b05c474d609919713471d354f34cc09700fe8604501c7c75b6bf09b18a",
+      "bytes": 272
+    },
+    {
+      "file": "tsc.exit",
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+      "bytes": 2
+    },
+    {
+      "file": "tsc.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    }
+  ],
+  "integration": {
+    "apply": "only this 3-leaf increment; apply two source hunks mechanically onto ops composed leaves; copy new test exactly",
+    "preserve": "ops live64 constructionCoverage weighted default; direction rides; strict reward scope; pure getter; no805",
+    "do_not_copy": "whole construction-safety.ts from source (its unchanged target-values dependency is outside the live package)",
+    "pending": "W4 projection-input idleCombat/canonical Boss incremental source; ops one exact five-item joint full and live readback"
+  }
+}

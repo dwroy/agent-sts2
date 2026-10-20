@@ -3562,3 +3562,8 @@ request_id=roy-20261017-human-pace-h0 revision=3 input_sha256=1e1c259a15f1824119
 ### 2026-10-20T19:07:35.824581+08:00 原ops普通收尾并行记录核验
 
 本轮核184312-s2普通收尾attention原件及报告SHA：学习者原基线工作树干净，十项均waiting，无新增源码、测试或合入。唯一dataset已实际运行一次，原日志校验与清钥扫描结束；从控制流及失败位置核定它已返回0，停止在受控记录提交的parallel record change守卫。保留原attention、报告、失败与父要求，不重新运行生成器或自动收尾，也不把原策略缺证改成已完成。原proof到当前HEAD仅记录变化，无执行源码提交；并行账本和论文数据仍原样保留，不接管未知归属字节，不猜测具体哪一笔并行写入触发守卫。上一轮1900记录已在主索引自然释放后沿原私有计划提交c86da6b5，并登记回收该待提交项；没有清锁或覆盖并行叶。五项联合包两处生产桥接仍待原owner，未开full/模型/API/游戏，live、STOP及Regent边界不变。原件 paper/materials/20261020-1905-ops/receipt.json。
+
+
+### 2026-10-20T19:14:16.013792+08:00 五项精确联合输入冻结并实际启动
+
+原ops实收并核W8最小路由1d2三叶、W4入口0929两叶的manifest、patch及Git后像；按旧前像机械应用，移旧宽路由、保默认weighted谓词，补齐idleCombat与规范Boss/复合别名依赖，不夹805或父main。发布锁内核live仍64c218，458知识前后SHA一致；最终83源码/测试叶、固定tree9000141a、2379输入SHAfd276522。19:13:07启动唯一nice19/ionice3单worker完整联合检查，runner561527/ticks138672023，tsc0、full561870在跑，尚非完整绿/实际上线。原红例、准备失败与定向证据保留；三原owner已获启动投递，CLI不代原生ACK。保持Roy五项全部live消费/配置读回、登记版本双通知后才恢复；失败写inbox告watcher/Claude，由Claude与Roy决定，不部分开局。原件paper/materials/20261020-five-item-final-start-ops/receipt.json。

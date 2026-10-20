@@ -1,0 +1,96 @@
+diff --git a/agent/src/hand/loop.ts b/agent/src/hand/loop.ts
+index 5d05ec81b..739666530 100644
+--- a/agent/src/hand/loop.ts
++++ b/agent/src/hand/loop.ts
+@@ -64,7 +64,6 @@ import { OUTCOME_BASIS_KEY } from "../knowledge/outcome-facts.js";
+ import { BUILD_SIM_MIN_SHOWN, bossEvaluationPending, withBossSim, type BuildSimSetup } from "../sim/build-sim-facts.js";
+ import { buildRankingSelection, rankingOverrideProblems } from "../sim/build-ranking-choice.js";
+ import { shopPlanList } from "../brain/specs.js";
+-import { routeV6CardDecision } from "../v6/card-routing.js";
+ import { observeDirectionRide, attachDirectionRide, directionRideTask, fitDirectionRide, acceptDirectionRide, finishDirectionRide } from "../v6/direction-rides.js";
+ import { buildV6CardPick, recordCardPick, v6CardActive } from "../v6/card-pick.js";
+ import { observeV6CardReward, restoreV6CardReward } from "../v6/card-reward-scope.js";
+@@ -944,7 +943,7 @@ async function runLoopWithBudgets(options: LoopOptions): Promise<LoopStats> {
+     }
+     let v6CardPick = buildV6CardPick(env);
+     let decision = env.v6BrainFallback ? planned.decision : v6Config().mode === "on" && v6CardPick ? v6CardPick.decision
+-      : routeV6CardDecision(await prepareV6RoomDecision(planned.decision, env, v6RoomProjection), state.in_combat);
++      : await prepareV6RoomDecision(planned.decision, env, v6RoomProjection);
+     const construction = constructionQuestion(env, decision);
+     const handover = (reason: string, elapsed = 0): void => {
+       if (!construction || v6HandoverState.current) return;
+diff --git a/agent/src/v6/construction-safety.ts b/agent/src/v6/construction-safety.ts
+index 47d686167..b3b46101e 100644
+--- a/agent/src/v6/construction-safety.ts
++++ b/agent/src/v6/construction-safety.ts
+@@ -37,10 +37,10 @@ export function constructionQuestion(env: DecisionEnv, decision: Decision): { ki
+   };
+   if (isV6RoomDecision(decision)) return observed(decision.v6Room.kind,
+     constructionCoverage(decision.v6Room.options.map(o => o.option.key), decision.roomProjection));
+-  if (config.deciders.card === "jev" && (decision.v6Card || ["reward/card", "selection/add", "selection/choose"].includes(decision.label))) {
++  if (config.deciders.card === "jev" && decision.v6Card) {
+     const question = decision.questions.pick;
+     const coverage = constructionCoverage(question?.type === "choice" ? Object.keys(question.criteria) : [], env.v6ProjectionTable,
+-      config, decision.v6Card || decision.label === "reward/card" ? id => cardResultKnown(env.v6CardResults, id) : undefined);
++      config, id => cardResultKnown(env.v6CardResults, id));
+     if (asRecord(decision.state).card_prompt_unavailable) coverage.reason = "prompt_budget_exceeded";
+     return observed("card_pick", coverage);
+   }
+diff --git a/agent/tests/v6-card-route-scope.test.ts b/agent/tests/v6-card-route-scope.test.ts
+new file mode 100644
+index 000000000..c234f78be
+--- /dev/null
++++ b/agent/tests/v6-card-route-scope.test.ts
+@@ -0,0 +1,52 @@
++import { afterEach, expect, it, vi } from "vitest";
++import { constructionQuestion } from "../src/v6/construction-safety.js";
++import type { AskDecision } from "../src/memory/types.js";
++import { board, decide, env, FakeDeepSeek, play, setupOneshotTests, type Raw } from "./oneshot-support.js";
++
++setupOneshotTests();
++afterEach(() => vi.unstubAllEnvs());
++
++function selection(task: "add" | "choose"): Raw {
++  const raw = board("xljq-f5-reward", "reward");
++  const cards = (raw.reward as Raw).card_options;
++  raw.screen = "CARD_SELECTION";
++  raw.in_combat = false;
++  raw.available_actions = ["select_deck_card"];
++  raw.reward = null;
++  raw.selection = { kind: task === "add" ? "deck_card_select" : "choose_card_select",
++    prompt: task === "add" ? "Choose a card to add to your deck." : "Choose a card.",
++    min_select: 1, max_select: 1, selected_count: 0, can_confirm: false, cards };
++  return raw;
++}
++
++it.each(["reward/card", "selection/add", "selection/choose"])("does not treat an unmarked %s as a V6 card question", label => {
++  vi.stubEnv("V6_BUILD", "on"); vi.stubEnv("V6_CARD_DECIDER", "jev");
++  const e = env(board("xljq-f5-reward", "reward"));
++  const decision = { kind: "ask", label, state: {},
++    questions: { pick: { type: "choice", criteria: { card0: "a", card1: "b" } } } } as unknown as AskDecision;
++  const before = JSON.stringify(e.screenMemory);
++  expect(constructionQuestion(e, decision)).toBeNull();
++  expect(JSON.stringify(e.screenMemory)).toBe(before);
++});
++
++it.each(["add", "choose"] as const)("keeps noncombat selection/%s on the original V5 brain path without a V6 handover", async task => {
++  vi.stubEnv("V6_BUILD", "on"); vi.stubEnv("V6_CARD_DECIDER", "brain");
++  const raw = selection(task), original = JSON.stringify(decide(env(raw)));
++  const originalBrain = new FakeDeepSeek(() => "card0");
++  const baseline = await play([raw], originalBrain, { buildOneshot: "off", buildDecider: "deepseek" }, { maxDecisions: 1 });
++  const originalCall = originalBrain.calls.filter(call => call.label === `selection/${task}`);
++  expect(originalCall).toHaveLength(1);
++  vi.stubEnv("V6_CARD_DECIDER", "jev");
++  expect(JSON.stringify(decide(env(raw)))).toBe(original);
++  const brain = new FakeDeepSeek(() => "card0"), ask = vi.fn(async () => { throw Error("noncombat selection reached Jev"); });
++  const evaluateCard = vi.fn();
++  const actual = await play([raw], brain, { buildOneshot: "off", buildDecider: "deepseek" }, {
++    maxDecisions: 1, jev: { model: "fixture", ask } as never, v6Projection: { evaluateCard } as never,
++  });
++  expect(actual.actions).toEqual([{ action: "select_deck_card", option_index: 0 }]);
++  expect(actual.actions).toEqual(baseline.actions);
++  expect(brain.calls.filter(call => call.label === `selection/${task}`)).toEqual(originalCall);
++  expect(actual.notes.filter(note => note.includes("v6_unknown_to_brain"))).toEqual([]);
++  expect(ask).not.toHaveBeenCalled();
++  expect(evaluateCard).not.toHaveBeenCalled();
++});

@@ -1,0 +1,108 @@
+
+ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/v6-card-input-bridge-20261020/agent
+
+ ❯ tests/v6-projection-input.test.ts (14 tests | 6 failed | 6 skipped) 73ms
+   × admits combat snapshots only for explicit idle preparation without bypassing off 18ms
+   × preserves the visible boss THE_KIN in the real production input 11ms
+   × preserves the visible boss THE_KIN_BOSS in the real production input 6ms
+   × preserves the visible boss KAISER_CRAB in the real production input 7ms
+   × preserves the visible boss KAISER_CRAB_BOSS in the real production input 8ms
+   × preserves the visible boss SOUL_FYSH_BOSS in the real production input 7ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 6 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/v6-projection-input.test.ts > admits combat snapshots only for explicit idle preparation without bypassing off
+AssertionError: expected null not to be null
+ ❯ tests/v6-projection-input.test.ts:130:20
+    128|   expect(event).not.toHaveBeenCalled();
+    129|   const idle = await input(e, "pick", true);
+    130|   expect(idle).not.toBeNull();
+       |                    ^
+    131|   expect(idle!.situation.state).toBe(e.state);
+    132|   expect(idle!.situation.options).toEqual([]);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/6]⎯
+
+ FAIL  tests/v6-projection-input.test.ts > preserves the visible boss THE_KIN in the real production input
+ FAIL  tests/v6-projection-input.test.ts > preserves the visible boss THE_KIN_BOSS in the real production input
+AssertionError: expected undefined to deeply equal [ { act: 1, floor: 17, …(1) } ]
+
+- Expected:
+[
+  {
+    "act": 1,
+    "boss": "THE_KIN",
+    "floor": 17,
+  },
+]
+
++ Received:
+undefined
+
+ ❯ tests/v6-projection-input.test.ts:147:44
+    145|       boss_node: { row: 16, col: 0 }, available_nodes: [], current_nod…
+    146|     const input = await v6ProjectionInputs(root)(e, "pick");
+    147|     expect(input!.situation.visibleBosses).toEqual([{ act: 1, floor: 1…
+       |                                            ^
+    148|       boss: boss === "CRUSHER+ROCKET" ? "KAISER_CRAB" : boss.replace(/…
+    149|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/6]⎯
+
+ FAIL  tests/v6-projection-input.test.ts > preserves the visible boss KAISER_CRAB in the real production input
+ FAIL  tests/v6-projection-input.test.ts > preserves the visible boss KAISER_CRAB_BOSS in the real production input
+AssertionError: expected undefined to deeply equal [ { act: 1, floor: 17, …(1) } ]
+
+- Expected:
+[
+  {
+    "act": 1,
+    "boss": "KAISER_CRAB",
+    "floor": 17,
+  },
+]
+
++ Received:
+undefined
+
+ ❯ tests/v6-projection-input.test.ts:147:44
+    145|       boss_node: { row: 16, col: 0 }, available_nodes: [], current_nod…
+    146|     const input = await v6ProjectionInputs(root)(e, "pick");
+    147|     expect(input!.situation.visibleBosses).toEqual([{ act: 1, floor: 1…
+       |                                            ^
+    148|       boss: boss === "CRUSHER+ROCKET" ? "KAISER_CRAB" : boss.replace(/…
+    149|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/6]⎯
+
+ FAIL  tests/v6-projection-input.test.ts > preserves the visible boss SOUL_FYSH_BOSS in the real production input
+AssertionError: expected undefined to deeply equal [ { act: 1, floor: 17, …(1) } ]
+
+- Expected:
+[
+  {
+    "act": 1,
+    "boss": "SOUL_FYSH",
+    "floor": 17,
+  },
+]
+
++ Received:
+undefined
+
+ ❯ tests/v6-projection-input.test.ts:147:44
+    145|       boss_node: { row: 16, col: 0 }, available_nodes: [], current_nod…
+    146|     const input = await v6ProjectionInputs(root)(e, "pick");
+    147|     expect(input!.situation.visibleBosses).toEqual([{ act: 1, floor: 1…
+       |                                            ^
+    148|       boss: boss === "CRUSHER+ROCKET" ? "KAISER_CRAB" : boss.replace(/…
+    149|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/6]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  6 failed | 2 passed | 6 skipped (14)
+   Start at  19:04:06
+   Duration  3.10s (transform 2.38s, setup 344ms, import 2.53s, tests 73ms, environment 0ms)
+

@@ -1,0 +1,48 @@
+{
+  "source": "0929e4a700cc712c52fa48f7372c5f39d3c67b09",
+  "base": "061ee31620c08f452bc1259bca652ad0774d647d",
+  "tree": "64654231159b5c491155fca0144fc1b6f847dae3",
+  "worktree": "/home/dw/Projects/agent-sts2/.worktrees/v6-card-input-bridge-20261020",
+  "leaves": [
+    {
+      "path": "agent/src/v6/projection-input.ts",
+      "sha256": "4f404ed791f57ac7e24599d5a51bd7bb4dac63f52edd369ec9831a9457dec88c",
+      "git_blob": "d06e051e93e04409bfc24857e0c67abdfedf7048",
+      "bytes": 8308
+    },
+    {
+      "path": "agent/tests/v6-card-input-bridge.test.ts",
+      "sha256": "6549fcd2a241a75ab9c89b5ffb5f7ee14184072c53c9cf698540205a51c98727",
+      "git_blob": "8b75ea613040ed7069a3f01dcd5d10e95e99f1f9",
+      "bytes": 5284
+    }
+  ],
+  "transport": {
+    "method": "Apply the frozen legacy-to-final patch, or copy only these two exact leaves. Do not merge the source base.",
+    "patch": "checks/minimal-transport.patch",
+    "patch_sha256": "a3693be3a8eb786d5290d9298430cda02c52c2e744919941caa4d41078b5f3da",
+    "runtime_preimage_sha256": "d4b771998ef21e798588bd782196b1c6e21014f37578e847d02b8eed4136ec59",
+    "runtime_preimage_origin": "Read-only snapshot of ops-five-item-live-20261020-1855/agent/src/v6/projection-input.ts before the W4 patch.",
+    "note": "The source base already contains idleCombat admission and canonical BOSS_KEYS handling; this source commit adds the composite-alias compatibility fix and the independent production-input test. A plain cherry-pick onto the legacy live leaf does not transport the two pre-existing required hunks."
+  },
+  "validation": {
+    "tsc": {
+      "rc": 0,
+      "elapsed_seconds": 1.064,
+      "log": "checks/input-bridge-final-2/tsc.log"
+    },
+    "vitest": {
+      "rc": 0,
+      "files_passed": 2,
+      "tests_passed": 14,
+      "vitest_seconds": 3.61,
+      "log": "checks/input-bridge-final-2/vitest.log"
+    },
+    "gitleaks_source_files": {
+      "rc": 0,
+      "detail": "checks/input-bridge-final-2/gitleaks.json"
+    },
+    "full": "not run; reserved for ops exact five-item joint candidate",
+    "api_requests": 0
+  }
+}

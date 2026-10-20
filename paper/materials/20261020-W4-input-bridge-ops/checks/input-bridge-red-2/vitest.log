@@ -1,0 +1,39 @@
+
+ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/v6-card-input-bridge-20261020/agent
+
+ ❯ tests/v6-projection-input.test.ts (14 tests | 1 failed | 6 skipped) 82ms
+   × preserves the visible boss CRUSHER+ROCKET in the real production input 13ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/v6-projection-input.test.ts > preserves the visible boss CRUSHER+ROCKET in the real production input
+AssertionError: expected undefined to deeply equal [ { act: 1, floor: 17, …(1) } ]
+
+- Expected:
+[
+  {
+    "act": 1,
+    "boss": "KAISER_CRAB",
+    "floor": 17,
+  },
+]
+
++ Received:
+undefined
+
+ ❯ tests/v6-projection-input.test.ts:147:44
+    145|       boss_node: { row: 16, col: 0 }, available_nodes: [], current_nod…
+    146|     const input = await v6ProjectionInputs(root)(e, "pick");
+    147|     expect(input!.situation.visibleBosses).toEqual([{ act: 1, floor: 1…
+       |                                            ^
+    148|       boss: boss === "CRUSHER+ROCKET" ? "KAISER_CRAB" : boss.replace(/…
+    149|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 7 passed | 6 skipped (14)
+   Start at  19:03:40
+   Duration  3.21s (transform 2.46s, setup 349ms, import 2.64s, tests 82ms, environment 0ms)
+
