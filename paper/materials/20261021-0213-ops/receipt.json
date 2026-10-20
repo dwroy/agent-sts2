@@ -1,0 +1,96 @@
+{
+  "schema": "ops-fix-intake-v1",
+  "at": "2026-10-21 02:24:01 CST",
+  "batch": "20261021-014301-fix-batch",
+  "launcher_exit": 0,
+  "state": "candidate-preserved-await-post-P0-actual-live-full-gate",
+  "candidate_test_only": true,
+  "source_commit": null,
+  "merged": null,
+  "new_scientific_parent": false,
+  "original_item": "infra-ordinary-close-candidate-failure-isolation-20261020",
+  "prior_receipt": "paper/materials/20261021-0119-ops/receipt.json",
+  "original_thread": "01a15a69-081a-7923-823e-14ed19b02c3b",
+  "source_readback": "paper/materials/20261021-0213-ops/source-readback.json",
+  "verification": {
+    "with_fix": {
+      "exit": 0,
+      "files": 1,
+      "cases": 2
+    },
+    "without_fix": {
+      "exit": 1,
+      "files": 1,
+      "cases": 2,
+      "passed": 1,
+      "failed": 1,
+      "failure": "新增扫描失败负控在旧夹具中缺少固定扫描入口；原六场景本次撤修验证未超时。"
+    },
+    "restored": {
+      "exit": 0,
+      "files": 1,
+      "cases": 2
+    },
+    "python_suite": {
+      "exit": 0,
+      "cases": 24
+    },
+    "gitleaks": 0,
+    "sandbox": {
+      "state": "finished",
+      "command": "SANDBOX_WORKERS=1 nice -n 19 bash tools/test-sandbox.sh --configLoader runner",
+      "exit": 1,
+      "tsc": 0,
+      "files": 585,
+      "passed_files": 581,
+      "failed_files": 4,
+      "cases": 5193,
+      "passed_cases": 5186,
+      "failed_cases": 7,
+      "seconds": 1243.2,
+      "paths_phase_ran": false
+    },
+    "baseline_failed_files": {
+      "exit": 1,
+      "files": 4,
+      "cases": 15,
+      "passed": 8,
+      "failed": 7,
+      "fixture_fix_removed": true,
+      "restored_source_matches_manifest": true
+    },
+    "merge_preflight": {
+      "check": "read-only merge-tree preflight of baseline; not publication",
+      "base": "c067cb3009ada3dc15b54be46300ff4379fa03c7",
+      "live": "4528a751f17e341a97e7ff70295ec9fba0c947e9",
+      "rc": 1,
+      "live_modified": false
+    }
+  },
+  "evidence_manifest": "paper/materials/20261021-0213-ops/evidence-manifest.json",
+  "full_failures_retained": true,
+  "actual_live": "4528a751f17e341a97e7ff70295ec9fba0c947e9",
+  "narrow_private_index_apply_check_rc": 0,
+  "dependency_or_full_acceptance": false,
+  "followup": "P0 publication first; then original post-P0 engineering queue freezes latest main/live, preserves actual knowledge and mechanically integrates exact test hunks for full host gate; no duplicate learner implementation",
+  "new_checks_run": false,
+  "dataset_run": false,
+  "behavior_version_added": false,
+  "other_role_ack_filled": false,
+  "record_commit": null,
+  "record_blocker": {
+    "at": "2026-10-21 02:25:13 CST",
+    "state": "original-lock-released-naturally-main-record-only-drift-verified",
+    "holder_pid": 1819093,
+    "holder_command": "python3 /home/dw/Projects/agent-sts2/ops/codex-ops-learn.py tick",
+    "lock_bytes_at_read": 0,
+    "fuser_rc": 0,
+    "index_paths_at_read": [],
+    "lock_removed_or_signalled": false,
+    "new_timer_or_poll": false,
+    "record_plan": ".artifacts/ops-wake-20261021-0213/record-plan.json",
+    "record_helper": ".artifacts/ops-wake-20261021-0213/commit-own-records.py",
+    "resolution_at": "2026-10-21 02:25:43 CST",
+    "new_main": "2c789c50218a7b5f233c58c1d689a747a354106e"
+  }
+}

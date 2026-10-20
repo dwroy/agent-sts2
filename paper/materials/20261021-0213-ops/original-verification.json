@@ -1,0 +1,55 @@
+{
+  "with_fix": {
+    "exit": 0,
+    "files": 1,
+    "cases": 2
+  },
+  "without_fix": {
+    "exit": 1,
+    "files": 1,
+    "cases": 2,
+    "passed": 1,
+    "failed": 1,
+    "failure": "新增扫描失败负控在旧夹具中缺少固定扫描入口；原六场景本次撤修验证未超时。"
+  },
+  "restored": {
+    "exit": 0,
+    "files": 1,
+    "cases": 2
+  },
+  "python_suite": {
+    "exit": 0,
+    "cases": 24
+  },
+  "gitleaks": 0,
+  "sandbox": {
+    "state": "finished",
+    "command": "SANDBOX_WORKERS=1 nice -n 19 bash tools/test-sandbox.sh --configLoader runner",
+    "exit": 1,
+    "tsc": 0,
+    "files": 585,
+    "passed_files": 581,
+    "failed_files": 4,
+    "cases": 5193,
+    "passed_cases": 5186,
+    "failed_cases": 7,
+    "seconds": 1243.2,
+    "paths_phase_ran": false
+  },
+  "baseline_failed_files": {
+    "exit": 1,
+    "files": 4,
+    "cases": 15,
+    "passed": 8,
+    "failed": 7,
+    "fixture_fix_removed": true,
+    "restored_source_matches_manifest": true
+  },
+  "merge_preflight": {
+    "check": "read-only merge-tree preflight of baseline; not publication",
+    "base": "c067cb3009ada3dc15b54be46300ff4379fa03c7",
+    "live": "4528a751f17e341a97e7ff70295ec9fba0c947e9",
+    "rc": 1,
+    "live_modified": false
+  }
+}

@@ -1,0 +1,84 @@
+diff --git a/agent/tests/ordinary-close-isolation.test.ts b/agent/tests/ordinary-close-isolation.test.ts
+index 19805e5a3..6f90feae0 100644
+--- a/agent/tests/ordinary-close-isolation.test.ts
++++ b/agent/tests/ordinary-close-isolation.test.ts
+@@ -15,3 +15,15 @@ it("isolates failed candidates and revalidates preserved preflight failures befo
+   expect(result.stderr).toContain("Ran 6 tests");
+   expect(result.stderr).toContain("OK");
+ });
++
++it("keeps scanner rejection as a real manifest and Git publication failure in bounded fixtures", () => {
++  const result = spawnSync("nice", ["-n", "19", "python3", "-B", "../ops/tests/test_ordinary_close_scanner.py",
++    "FixedScanner.test_fixed_scanner_failure_keeps_real_manifest_and_blocks_commit"], {
++    encoding: "utf8", timeout: 15_000,
++  });
++  expect([undefined, "EPERM"]).toContain((result.error as NodeJS.ErrnoException | undefined)?.code);
++  expect(result.signal, result.stdout + result.stderr).toBeNull();
++  expect(result.status, result.stdout + result.stderr).toBe(0);
++  expect(result.stderr).toContain("Ran 1 test");
++  expect(result.stderr).toContain("OK");
++});
+diff --git a/ops/tests/test_ordinary_close.py b/ops/tests/test_ordinary_close.py
+index 824d8356a..64212c783 100644
+--- a/ops/tests/test_ordinary_close.py
++++ b/ops/tests/test_ordinary_close.py
+@@ -1,5 +1,6 @@
+ """Fixed Git/ledger/dataset fixtures; no production logs, credentials, models or games."""
+ import copy
++from functools import partial
+ import importlib.util
+ import json
+ import os
+@@ -19,6 +20,15 @@ import ops_current
+ 
+ class OrdinaryClose(unittest.TestCase):
+     def setUp(self):
++        # Exercise real manifests and Git guards without repeated external scanner startup.
++        self.scanner = unittest.mock.Mock(return_value=0)
++        scan = patch.object(close.record_manifest, "scan_snapshots",
++                            partial(close.record_manifest.scan_snapshots, scanner=self.scanner))
++        identity = patch.object(close.record_manifest, "scanner_identity", return_value=("a" * 64, True))
++        scan.start()
++        identity.start()
++        self.addCleanup(scan.stop)
++        self.addCleanup(identity.stop)
+         self.temp = tempfile.TemporaryDirectory()
+         self.addCleanup(self.temp.cleanup)
+         self.root = Path(self.temp.name)
+diff --git a/ops/tests/test_ordinary_close_scanner.py b/ops/tests/test_ordinary_close_scanner.py
+new file mode 100644
+index 000000000..5b4990e52
+--- /dev/null
++++ b/ops/tests/test_ordinary_close_scanner.py
+@@ -0,0 +1,31 @@
++"""Scanner-boundary regression for the bounded ordinary completion fixtures."""
++import json
++from pathlib import Path
++import sys
++
++sys.path.insert(0, str(Path(__file__).resolve().parent))
++from test_ordinary_close import OrdinaryClose
++
++
++class FixedScanner(OrdinaryClose):
++    def test_fixed_scanner_failure_keeps_real_manifest_and_blocks_commit(self):
++        self.scanner.return_value = 7
++        self.assertTrue(self.offer())
++        self.process()
++        row = self.receipt()
++        self.assertEqual(row["state"], "attention")
++        self.assertIn("precise leaf scan failed", row["reason"])
++        self.scanner.assert_called()
++        manifest = json.loads(next((self.directory / "record-scans/runs").glob("*/manifest.json")).read_text())
++        self.assertEqual(manifest["state"], "failed")
++        self.assertEqual(manifest["files"][0]["rc"], 7)
++        self.assertEqual(self.git("rev-parse", "HEAD"), self.head)
++        self.assertEqual(self.git("diff", "--cached", "--name-only"), "")
++        self.assertFalse((self.root / ".git/index.lock").exists())
++        self.assertEqual((self.root / "dataset.counter").read_text(), "1")
++        self.assertEqual(len(self.events), 1)
++
++
++if __name__ == "__main__":
++    import unittest
++    unittest.main()

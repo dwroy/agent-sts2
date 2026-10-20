@@ -1,0 +1,52 @@
+
+ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261021-014301/agent
+
+ ❯ tests/ordinary-close-isolation.test.ts (2 tests | 1 failed) 2954ms
+   × keeps scanner rejection as a real manifest and Git publication failure in bounded fixtures 408ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/ordinary-close-isolation.test.ts > keeps scanner rejection as a real manifest and Git publication failure in bounded fixtures
+AssertionError: .
+----------------------------------------------------------------------
+Ran 1 test in 0.266s
+
+OK
+: expected Error: spawnSync nice EPERM { …(5) } to be undefined
+
+- Expected:
+undefined
+
++ Received:
+Error {
+  "message": "spawnSync nice EPERM",
+  "errno": -1,
+  "code": "EPERM",
+  "syscall": "spawnSync nice",
+  "path": "nice",
+  "spawnargs": [
+    "-n",
+    "19",
+    "python3",
+    "-B",
+    "../ops/tests/test_ordinary_close_scanner.py",
+    "FixedScanner.test_fixed_scanner_failure_keeps_real_manifest_and_blocks_commit",
+  ],
+}
+
+ ❯ tests/ordinary-close-isolation.test.ts:24:55
+     22|     encoding: "utf8", timeout: 15_000,
+     23|   });
+     24|   expect(result.error, result.stdout + result.stderr).toBeUndefined();
+       |                                                       ^
+     25|   expect(result.signal, result.stdout + result.stderr).toBeNull();
+     26|   expect(result.status, result.stdout + result.stderr).toBe(0);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 1 passed (2)
+   Start at  01:48:27
+   Duration  3.55s (transform 336ms, setup 398ms, import 16ms, tests 2.95s, environment 0ms)
+

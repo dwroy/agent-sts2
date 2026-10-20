@@ -1,0 +1,47 @@
+
+ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261021-014301/agent
+
+ ❯ tests/ordinary-close-isolation.test.ts (2 tests | 1 failed) 11799ms
+   × keeps scanner rejection as a real manifest and Git publication failure in bounded fixtures 314ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/ordinary-close-isolation.test.ts > keeps scanner rejection as a real manifest and Git publication failure in bounded fixtures
+AssertionError: E
+======================================================================
+ERROR: test_fixed_scanner_failure_keeps_real_manifest_and_blocks_commit (__main__.FixedScanner.test_fixed_scanner_failure_keeps_real_manifest_and_blocks_commit)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261021-014301/agent/../ops/tests/test_ordinary_close_scanner.py", line 12, in test_fixed_scanner_failure_keeps_real_manifest_and_blocks_commit
+    self.scanner.return_value = 7
+    ^^^^^^^^^^^^
+AttributeError: 'FixedScanner' object has no attribute 'scanner'
+
+----------------------------------------------------------------------
+Ran 1 test in 0.146s
+
+FAILED (errors=1)
+: expected 1 to be +0 // Object.is equality
+
+- Expected
++ Received
+
+- 0
++ 1
+
+ ❯ tests/ordinary-close-isolation.test.ts:26:56
+     24|   expect([undefined, "EPERM"]).toContain((result.error as NodeJS.Errno…
+     25|   expect(result.signal, result.stdout + result.stderr).toBeNull();
+     26|   expect(result.status, result.stdout + result.stderr).toBe(0);
+       |                                                        ^
+     27|   expect(result.stderr).toContain("Ran 1 test");
+     28|   expect(result.stderr).toContain("OK");
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 1 passed (2)
+   Start at  01:49:45
+   Duration  12.29s (transform 253ms, setup 301ms, import 8ms, tests 11.80s, environment 0ms)
+

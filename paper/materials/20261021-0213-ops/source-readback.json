@@ -1,0 +1,47 @@
+{
+  "candidate": {
+    "item": "infra-ordinary-close-candidate-failure-isolation-20261020 / ordinary-close-isolation 固定夹具成本续项",
+    "state": "uncommitted-full-check-blocked",
+    "commit": null,
+    "base": "c067cb3009ada3dc15b54be46300ff4379fa03c7",
+    "test": "agent/tests/ordinary-close-isolation.test.ts: keeps scanner rejection as a real manifest and Git publication failure in bounded fixtures",
+    "fails_without_fix": true,
+    "reason": "源码候选已完成但未提交：原固定场景真实扫描器启动占单题3.38秒中的2.92秒；改用固定扫描回调，保留真实manifest/Git守卫并新增拒绝扫描不发布回归。撤夹具修复1失败/1通过，恢复2通过；原六场景断言及15000ms限制不变，24项Python全部通过。提交前沙箱整套7败，撤夹具后4个失败文件仍7败；按必须整套0的要求保留源码候选，未提交。",
+    "files": {
+      "ops/tests/test_ordinary_close.py": "7a4f2d61d1f664318b0cce8eb442cc6ed8a5bb592ebb3c05710b68092b495ba7",
+      "agent/tests/ordinary-close-isolation.test.ts": "d3652c9a151a17bc91afdfa1ca2a7b1df97eaa0c0d7e5a5eee1ce81600a7244e",
+      "ops/tests/test_ordinary_close_scanner.py": "72aceb3337bac9fa0b8c2d2ed783f191ac78742da03bcbcd346aa6ce6aca99e1"
+    },
+    "patch": "source.diff",
+    "ledger_search": "bug-infra --text ordinary: 0 items; no new ledger row",
+    "merged": null
+  },
+  "wt_head": "c067cb3009ada3dc15b54be46300ff4379fa03c7",
+  "status": " M agent/tests/ordinary-close-isolation.test.ts\n M ops/tests/test_ordinary_close.py\n",
+  "sources": {
+    "ops/tests/test_ordinary_close.py": {
+      "sha256": "7a4f2d61d1f664318b0cce8eb442cc6ed8a5bb592ebb3c05710b68092b495ba7",
+      "bytes": 27613,
+      "base_blob": "824d8356a354b5fcfe0476151cfcfe6462452ef2"
+    },
+    "agent/tests/ordinary-close-isolation.test.ts": {
+      "sha256": "d3652c9a151a17bc91afdfa1ca2a7b1df97eaa0c0d7e5a5eee1ce81600a7244e",
+      "bytes": 1700,
+      "base_blob": "19805e5a38ad04c1794c6455c915b8e353fbe525"
+    },
+    "ops/tests/test_ordinary_close_scanner.py": {
+      "sha256": "72aceb3337bac9fa0b8c2d2ed783f191ac78742da03bcbcd346aa6ce6aca99e1",
+      "bytes": 1251,
+      "base_blob": null
+    }
+  },
+  "live": "4528a751f17e341a97e7ff70295ec9fba0c947e9",
+  "actual_live_narrow_apply_check": {
+    "rc": 0,
+    "stdout": "",
+    "stderr": "",
+    "mutated_real_index": false,
+    "full_pass": false
+  },
+  "ordinary_close_receipt_exists": false
+}

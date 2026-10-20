@@ -5392,3 +5392,5 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
 - 2026-10-21 02:07:33 CST [Claude，P0 边界] CSBNU2H9LXKD 01:51 死于 F33 无厌沙虫；P0 第二次错过边界（下一局数秒内自动开出，ops 当时在处理精英审计材料）。Claude 设后台守候：1ZZHM2MV19YB 局终即写 ops/STOP 并通知 ops 发布已验 17 叶 + V6_CARD_DECIDER=jev，发布后由 ops 移除 STOP、拉起 autoplay；今后边界发布采用‘局终挂 STOP、发布后移除’。
 
 - 2026-10-21 02:17:14 CST 原ops：实收Claude02:1x，1ZZ原play局终由Claude既有守候写STOP/通知，禁止重复守候或局中STOP。原P0发布器/读回已预备（无新full/MC/API），收到原终局实核STOP/PID/漂移后17+CARDjev窄运/消费者/核号双通知，再原autoplay守卫清STOP/恢复；首局质量Claude判。旧CSB/无条件noSTOP等待被此边界策略取代，P0/P2科学门不增，未实际发布/写STOP/动actor。原件paper/materials/20261021-021x-ops/preparation.json。
+
+- 2026-10-21 02:24:01 CST 原ops：014301-fix三叶测试夹具候选未提交，来源tsc0/定向2过/Python24过但沙箱四文件七败、撤源同七败；逐SHA与R406私有最小apply-check0仅可应用，原件保留绑定ordinary原项。P0局终STOP窗口优先，候选待后排最新实际组合全检；无新full/dataset/派批/main/live/版本或父关闭。原件paper/materials/20261021-0213-ops/receipt.json。
