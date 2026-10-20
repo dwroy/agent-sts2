@@ -1,0 +1,1919 @@
+[
+  {
+    "decision_id": "e1ed3087-dd41-4fff-8e90-d7da9e01c09f",
+    "floor": 2,
+    "ts": "2026-10-20T19:48:29.887Z",
+    "source": {
+      "offset": 3088933481,
+      "length": 5397,
+      "sha256": "d6e2c9f220fdd935591f39405f53cc021b697e02c3918dc8c9d0ead2e510d0a9"
+    },
+    "decider": "jev",
+    "result": "completed: Action completed.",
+    "fallback": false,
+    "chosen": {
+      "action": "skip_reward_cards"
+    },
+    "expect": null,
+    "legacy_boss_sim_present": false,
+    "legacy_compact_entries_empty": true,
+    "A_B_source": {
+      "source": "logs/v6-card-results.jsonl",
+      "end": 7236890,
+      "offset": 6756404,
+      "length": 160674,
+      "sha256": "2691f82aa545e4bed76fbc0affe5ee5c68974fe0e5d73e7f07f3566f15006821",
+      "snapshot": "paper/materials/20261021-0355-ops/A-B-floor-2.jsonl"
+    },
+    "current_target": "f17:LAGAVULIN_MATRIARCH",
+    "option_card_ids": {
+      "card0": "Take PIERCING_WAIL",
+      "card1": "Take FLICK_FLACK",
+      "card2": "Take SUCKER_PUNCH",
+      "skip": "Take no card"
+    },
+    "current_rows": [
+      {
+        "option_id": "skip",
+        "target_id": "f17:LAGAVULIN_MATRIARCH",
+        "metrics": {
+          "hp_loss": {
+            "mean": 52,
+            "se": 0,
+            "n": 18
+          },
+          "turns": {
+            "mean": 11.944444444444445,
+            "se": 0.12711536169135115,
+            "n": 18
+          },
+          "damage_per_turn": {
+            "mean": 3.4259971509971505,
+            "se": 0.19115524765184366,
+            "n": 18
+          },
+          "death_rate": {
+            "mean": 1,
+            "se": 0,
+            "n": 18
+          },
+          "losing_enemy_hp_fraction": {
+            "mean": 0.8254649499284692,
+            "se": 0.008562626683011807,
+            "n": 18
+          }
+        },
+        "paired_delta": {
+          "hp_loss": {
+            "mean": 0,
+            "se": 0,
+            "n": 18
+          },
+          "turns": {
+            "mean": 0,
+            "se": 0,
+            "n": 18
+          },
+          "damage_per_turn": {
+            "mean": 0,
+            "se": 0,
+            "n": 18
+          },
+          "death_rate": {
+            "mean": 0,
+            "se": 0,
+            "n": 18
+          },
+          "losing_enemy_hp_fraction": {
+            "mean": 0,
+            "se": 0,
+            "n": 18
+          }
+        },
+        "samples": 18,
+        "requested_samples": 100,
+        "capped": 0,
+        "time_up": 0,
+        "missing": 82,
+        "trust": {
+          "value": "trusted",
+          "labels": []
+        },
+        "labels": [
+          "entry_hp_source:existing_route_projection:n=0",
+          "current_relics_and_potion_belt_only",
+          "unmodelled_relic:蛇之戒指",
+          "immediate_entry_hp_assumed_current_hp_not_route_forecast",
+          "visible_actual_boss",
+          "raw_simulation_not_calibrated",
+          "paired_delta_option_minus_skip_same_seed",
+          "losing_enemy_hp_conditional_on_loss",
+          "enemy_hp_fraction_denominator_is_sampled_encounter_opening_hp",
+          "remaining_enemy_hp_includes_later_phases_and_spawns_not_clamped_to_one",
+          "partial_sample_coverage"
+        ],
+        "unknown_reasons": []
+      },
+      {
+        "option_id": "card0",
+        "target_id": "f17:LAGAVULIN_MATRIARCH",
+        "metrics": {
+          "hp_loss": {
+            "mean": 52,
+            "se": 0,
+            "n": 18
+          },
+          "turns": {
+            "mean": 12.055555555555555,
+            "se": 0.055555555555555566,
+            "n": 18
+          },
+          "damage_per_turn": {
+            "mean": 2.9419515669515666,
+            "se": 0.1275556199321396,
+            "n": 18
+          },
+          "death_rate": {
+            "mean": 1,
+            "se": 0,
+            "n": 18
+          },
+          "losing_enemy_hp_fraction": {
+            "mean": 0.8478779208392943,
+            "se": 0.006484093957585023,
+            "n": 18
+          }
+        },
+        "paired_delta": {
+          "hp_loss": {
+            "mean": 0,
+            "se": 0,
+            "n": 18
+          },
+          "turns": {
+            "mean": 0.1111111111111111,
+            "se": 0.13741043164463163,
+            "n": 18
+          },
+          "damage_per_turn": {
+            "mean": -0.484045584045584,
+            "se": 0.2189999986515575,
+            "n": 18
+          },
+          "death_rate": {
+            "mean": 0,
+            "se": 0,
+            "n": 18
+          },
+          "losing_enemy_hp_fraction": {
+            "mean": 0.022412970910825,
+            "se": 0.010663803085559509,
+            "n": 18
+          }
+        },
+        "samples": 18,
+        "requested_samples": 100,
+        "capped": 0,
+        "time_up": 0,
+        "missing": 82,
+        "trust": {
+          "value": "trusted",
+          "labels": []
+        },
+        "labels": [
+          "entry_hp_source:existing_route_projection:n=0",
+          "current_relics_and_potion_belt_only",
+          "unmodelled_relic:蛇之戒指",
+          "immediate_entry_hp_assumed_current_hp_not_route_forecast",
+          "visible_actual_boss",
+          "raw_simulation_not_calibrated",
+          "paired_delta_option_minus_skip_same_seed",
+          "losing_enemy_hp_conditional_on_loss",
+          "enemy_hp_fraction_denominator_is_sampled_encounter_opening_hp",
+          "remaining_enemy_hp_includes_later_phases_and_spawns_not_clamped_to_one",
+          "partial_sample_coverage"
+        ],
+        "unknown_reasons": []
+      },
+      {
+        "option_id": "card1",
+        "target_id": "f17:LAGAVULIN_MATRIARCH",
+        "metrics": {
+          "hp_loss": {
+            "mean": 52,
+            "se": 0,
+            "n": 18
+          },
+          "turns": {
+            "mean": 11.38888888888889,
+            "se": 0.24439987710180694,
+            "n": 18
+          },
+          "damage_per_turn": {
+            "mean": 3.8000000000000003,
+            "se": 0.15839495418267005,
+            "n": 18
+          },
+          "death_rate": {
+            "mean": 1,
+            "se": 0,
+            "n": 18
+          },
+          "losing_enemy_hp_fraction": {
+            "mean": 0.8161659513590843,
+            "se": 0.005735594622245432,
+            "n": 18
+          }
+        },
+        "paired_delta": {
+          "hp_loss": {
+            "mean": 0,
+            "se": 0,
+            "n": 18
+          },
+          "turns": {
+            "mean": -0.5555555555555556,
+            "se": 0.2826372328162046,
+            "n": 18
+          },
+          "damage_per_turn": {
+            "mean": 0.37400284900284897,
+            "se": 0.2608473924858277,
+            "n": 18
+          },
+          "death_rate": {
+            "mean": 0,
+            "se": 0,
+            "n": 18
+          },
+          "losing_enemy_hp_fraction": {
+            "mean": -0.009298998569384834,
+            "se": 0.010117464375292873,
+            "n": 18
+          }
+        },
+        "samples": 18,
+        "requested_samples": 100,
+        "capped": 0,
+        "time_up": 0,
+        "missing": 82,
+        "trust": {
+          "value": "trusted",
+          "labels": []
+        },
+        "labels": [
+          "entry_hp_source:existing_route_projection:n=0",
+          "current_relics_and_potion_belt_only",
+          "unmodelled_relic:蛇之戒指",
+          "immediate_entry_hp_assumed_current_hp_not_route_forecast",
+          "visible_actual_boss",
+          "raw_simulation_not_calibrated",
+          "paired_delta_option_minus_skip_same_seed",
+          "losing_enemy_hp_conditional_on_loss",
+          "enemy_hp_fraction_denominator_is_sampled_encounter_opening_hp",
+          "remaining_enemy_hp_includes_later_phases_and_spawns_not_clamped_to_one",
+          "partial_sample_coverage"
+        ],
+        "unknown_reasons": []
+      },
+      {
+        "option_id": "card2",
+        "target_id": "f17:LAGAVULIN_MATRIARCH",
+        "metrics": {
+          "hp_loss": {
+            "mean": 52,
+            "se": 0,
+            "n": 18
+          },
+          "turns": {
+            "mean": 12.333333333333332,
+            "se": 0.11433239009500588,
+            "n": 18
+          },
+          "damage_per_turn": {
+            "mean": 4.318019943019943,
+            "se": 0.1620298545177259,
+            "n": 18
+          },
+          "death_rate": {
+            "mean": 1,
+            "se": 0,
+            "n": 18
+          },
+          "losing_enemy_hp_fraction": {
+            "mean": 0.7713400095374343,
+            "se": 0.00883121987345463,
+            "n": 18
+          }
+        },
+        "paired_delta": {
+          "hp_loss": {
+            "mean": 0,
+            "se": 0,
+            "n": 18
+          },
+          "turns": {
+            "mean": 0.38888888888888884,
+            "se": 0.16447358865570746,
+            "n": 18
+          },
+          "damage_per_turn": {
+            "mean": 0.892022792022792,
+            "se": 0.28075573451931213,
+            "n": 18
+          },
+          "death_rate": {
+            "mean": 0,
+            "se": 0,
+            "n": 18
+          },
+          "losing_enemy_hp_fraction": {
+            "mean": -0.05412494039103482,
+            "se": 0.012630747790414688,
+            "n": 18
+          }
+        },
+        "samples": 18,
+        "requested_samples": 100,
+        "capped": 0,
+        "time_up": 0,
+        "missing": 82,
+        "trust": {
+          "value": "trusted",
+          "labels": []
+        },
+        "labels": [
+          "entry_hp_source:existing_route_projection:n=0",
+          "current_relics_and_potion_belt_only",
+          "unmodelled_relic:蛇之戒指",
+          "immediate_entry_hp_assumed_current_hp_not_route_forecast",
+          "visible_actual_boss",
+          "raw_simulation_not_calibrated",
+          "paired_delta_option_minus_skip_same_seed",
+          "losing_enemy_hp_conditional_on_loss",
+          "enemy_hp_fraction_denominator_is_sampled_encounter_opening_hp",
+          "remaining_enemy_hp_includes_later_phases_and_spawns_not_clamped_to_one",
+          "partial_sample_coverage"
+        ],
+        "unknown_reasons": []
+      }
+    ],
+    "current_samples": [
+      18,
+      18,
+      18,
+      18
+    ],
+    "DPR_in_separate_A_rows": true,
+    "A_preparation_ms": 4287,
+    "A_preparation_timed_out": false,
+    "A_B_telemetry": {
+      "elapsed_ms": 4261.413621000014,
+      "preparation_ms": 589.405540000007,
+      "simulation_ms": 3663.7617279999977,
+      "cache_hits": 0,
+      "simulations": 479,
+      "long_term_cache": "hit",
+      "long_term_computed": 0,
+      "long_term_total": 204,
+      "pending_work": true
+    },
+    "association_limit": "A/B rows lack decision_id; exact same run/floor, pre-decision timestamp and exact option set, unique match in original alert cutoff; not a question_id identity or proof of reasoning/benefit"
+  },
+  {
+    "decision_id": "000f26bd-fd67-43c4-b1e5-83525cfe0b98",
+    "floor": 4,
+    "ts": "2026-10-20T19:50:08.808Z",
+    "source": {
+      "offset": 3089597960,
+      "length": 5468,
+      "sha256": "1b1acc759646b0f9dd13188e893df68e4afa3bafb3df0f2886bf683496932379"
+    },
+    "decider": "jev",
+    "result": "completed: Action completed.",
+    "fallback": false,
+    "chosen": {
+      "action": "choose_reward_card",
+      "option_index": 1
+    },
+    "expect": {
+      "option": {
+        "id": "LEG_SWEEP"
+      },
+      "from": "decision"
+    },
+    "legacy_boss_sim_present": false,
+    "legacy_compact_entries_empty": true,
+    "A_B_source": {
+      "source": "logs/v6-card-results.jsonl",
+      "end": 7236890,
+      "offset": 6917078,
+      "length": 51986,
+      "sha256": "40dcd205c3a460ccd86c35e3397c57872c373424e658639879c1c1c05481f6b8",
+      "snapshot": "paper/materials/20261021-0355-ops/A-B-floor-4.jsonl"
+    },
+    "current_target": "f17:LAGAVULIN_MATRIARCH",
+    "option_card_ids": {
+      "card0": "Take SLICE",
+      "card1": "Take LEG_SWEEP",
+      "card2": "Take PREPARED",
+      "skip": "Take no card"
+    },
+    "current_rows": [
+      {
+        "option_id": "skip",
+        "target_id": "f17:LAGAVULIN_MATRIARCH",
+        "metrics": {
+          "hp_loss": {
+            "mean": 52,
+            "se": 0,
+            "n": 16
+          },
+          "turns": {
+            "mean": 12.125000000000002,
+            "se": 0.17969882210706523,
+            "n": 16
+          },
+          "damage_per_turn": {
+            "mean": 3.2978365384615387,
+            "se": 0.152755514429641,
+            "n": 16
+          },
+          "death_rate": {
+            "mean": 1,
+            "se": 0,
+            "n": 16
+          },
+          "losing_enemy_hp_fraction": {
+            "mean": 0.8291309012875536,
+            "se": 0.007290020473011927,
+            "n": 16
+          }
+        },
+        "paired_delta": {
+          "hp_loss": {
+            "mean": 0,
+            "se": 0,
+            "n": 16
+          },
+          "turns": {
+            "mean": 0,
+            "se": 0,
+            "n": 16
+          },
+          "damage_per_turn": {
+            "mean": 0,
+            "se": 0,
+            "n": 16
+          },
+          "death_rate": {
+            "mean": 0,
+            "se": 0,
+            "n": 16
+          },
+          "losing_enemy_hp_fraction": {
+            "mean": 0,
+            "se": 0,
+            "n": 16
+          }
+        },
+        "samples": 16,
+        "requested_samples": 100,
+        "capped": 0,
+        "time_up": 0,
+        "missing": 84,
+        "trust": {
+          "value": "trusted",
+          "labels": []
+        },
+        "labels": [
+          "entry_hp_source:existing_route_projection:n=0",
+          "current_relics_and_potion_belt_only",
+          "unmodelled_relic:蛇之戒指",
+          "immediate_entry_hp_assumed_current_hp_not_route_forecast",
+          "visible_actual_boss",
+          "raw_simulation_not_calibrated",
+          "paired_delta_option_minus_skip_same_seed",
+          "losing_enemy_hp_conditional_on_loss",
+          "enemy_hp_fraction_denominator_is_sampled_encounter_opening_hp",
+          "remaining_enemy_hp_includes_later_phases_and_spawns_not_clamped_to_one",
+          "partial_sample_coverage"
+        ],
+        "unknown_reasons": []
+      },
+      {
+        "option_id": "card0",
+        "target_id": "f17:LAGAVULIN_MATRIARCH",
+        "metrics": {
+          "hp_loss": {
+            "mean": 52,
+            "se": 0,
+            "n": 16
+          },
+          "turns": {
+            "mean": 11.9375,
+            "se": 0.14343262065048754,
+            "n": 16
+          },
+          "damage_per_turn": {
+            "mean": 4.705528846153845,
+            "se": 0.2935399763446922,
+            "n": 16
+          },
+          "death_rate": {
+            "mean": 1,
+            "se": 0,
+            "n": 16
+          },
+          "losing_enemy_hp_fraction": {
+            "mean": 0.7599248927038627,
+            "se": 0.014085215034059819,
+            "n": 16
+          }
+        },
+        "paired_delta": {
+          "hp_loss": {
+            "mean": 0,
+            "se": 0,
+            "n": 16
+          },
+          "turns": {
+            "mean": -0.1875,
+            "se": 0.20854156260403664,
+            "n": 16
+          },
+          "damage_per_turn": {
+            "mean": 1.4076923076923076,
+            "se": 0.36237571267051666,
+            "n": 16
+          },
+          "death_rate": {
+            "mean": 0,
+            "se": 0,
+            "n": 16
+          },
+          "losing_enemy_hp_fraction": {
+            "mean": -0.06920600858369097,
+            "se": 0.01719809038186573,
+            "n": 16
+          }
+        },
+        "samples": 16,
+        "requested_samples": 100,
+        "capped": 0,
+        "time_up": 0,
+        "missing": 84,
+        "trust": {
+          "value": "trusted",
+          "labels": []
+        },
+        "labels": [
+          "entry_hp_source:existing_route_projection:n=0",
+          "current_relics_and_potion_belt_only",
+          "unmodelled_relic:蛇之戒指",
+          "immediate_entry_hp_assumed_current_hp_not_route_forecast",
+          "visible_actual_boss",
+          "raw_simulation_not_calibrated",
+          "paired_delta_option_minus_skip_same_seed",
+          "losing_enemy_hp_conditional_on_loss",
+          "enemy_hp_fraction_denominator_is_sampled_encounter_opening_hp",
+          "remaining_enemy_hp_includes_later_phases_and_spawns_not_clamped_to_one",
+          "partial_sample_coverage"
+        ],
+        "unknown_reasons": []
+      },
+      {
+        "option_id": "card1",
+        "target_id": "f17:LAGAVULIN_MATRIARCH",
+        "metrics": {
+          "hp_loss": {
+            "mean": 52,
+            "se": 0,
+            "n": 16
+          },
+          "turns": {
+            "mean": 14.0625,
+            "se": 0.3091486966924924,
+            "n": 16
+          },
+          "damage_per_turn": {
+            "mean": 2.4741586538461533,
+            "se": 0.19643671490898568,
+            "n": 16
+          },
+          "death_rate": {
+            "mean": 1,
+            "se": 0,
+            "n": 16
+          },
+          "losing_enemy_hp_fraction": {
+            "mean": 0.8524678111587984,
+            "se": 0.010692891378752985,
+            "n": 16
+          }
+        },
+        "paired_delta": {
+          "hp_loss": {
+            "mean": 0,
+            "se": 0,
+            "n": 16
+          },
+          "turns": {
+            "mean": 1.9375,
+            "se": 0.34723611083334444,
+            "n": 16
+          },
+          "damage_per_turn": {
+            "mean": -0.8236778846153846,
+            "se": 0.26617787838653656,
+            "n": 16
+          },
+          "death_rate": {
+            "mean": 0,
+            "se": 0,
+            "n": 16
+          },
+          "losing_enemy_hp_fraction": {
+            "mean": 0.023336909871244656,
+            "se": 0.01336095429765265,
+            "n": 16
+          }
+        },
+        "samples": 16,
+        "requested_samples": 100,
+        "capped": 0,
+        "time_up": 0,
+        "missing": 84,
+        "trust": {
+          "value": "trusted",
+          "labels": []
+        },
+        "labels": [
+          "entry_hp_source:existing_route_projection:n=0",
+          "current_relics_and_potion_belt_only",
+          "unmodelled_relic:蛇之戒指",
+          "immediate_entry_hp_assumed_current_hp_not_route_forecast",
+          "visible_actual_boss",
+          "raw_simulation_not_calibrated",
+          "paired_delta_option_minus_skip_same_seed",
+          "losing_enemy_hp_conditional_on_loss",
+          "enemy_hp_fraction_denominator_is_sampled_encounter_opening_hp",
+          "remaining_enemy_hp_includes_later_phases_and_spawns_not_clamped_to_one",
+          "partial_sample_coverage"
+        ],
+        "unknown_reasons": []
+      },
+      {
+        "option_id": "card2",
+        "target_id": "f17:LAGAVULIN_MATRIARCH",
+        "metrics": {
+          "hp_loss": {
+            "mean": 52,
+            "se": 0,
+            "n": 16
+          },
+          "turns": {
+            "mean": 12.0625,
+            "se": 0.062499999999999986,
+            "n": 16
+          },
+          "damage_per_turn": {
+            "mean": 3.0809294871794872,
+            "se": 0.20614554331597348,
+            "n": 16
+          },
+          "death_rate": {
+            "mean": 1,
+            "se": 0,
+            "n": 16
+          },
+          "losing_enemy_hp_fraction": {
+            "mean": 0.8406652360515021,
+            "se": 0.010504615153700034,
+            "n": 16
+          }
+        },
+        "paired_delta": {
+          "hp_loss": {
+            "mean": 0,
+            "se": 0,
+            "n": 16
+          },
+          "turns": {
+            "mean": -0.06250000000000001,
+            "se": 0.19297560294849017,
+            "n": 16
+          },
+          "damage_per_turn": {
+            "mean": -0.21690705128205132,
+            "se": 0.28511614766206056,
+            "n": 16
+          },
+          "death_rate": {
+            "mean": 0,
+            "se": 0,
+            "n": 16
+          },
+          "losing_enemy_hp_fraction": {
+            "mean": 0.011534334763948523,
+            "se": 0.01363811568550017,
+            "n": 16
+          }
+        },
+        "samples": 16,
+        "requested_samples": 100,
+        "capped": 0,
+        "time_up": 0,
+        "missing": 84,
+        "trust": {
+          "value": "trusted",
+          "labels": []
+        },
+        "labels": [
+          "entry_hp_source:existing_route_projection:n=0",
+          "current_relics_and_potion_belt_only",
+          "unmodelled_relic:蛇之戒指",
+          "immediate_entry_hp_assumed_current_hp_not_route_forecast",
+          "visible_actual_boss",
+          "raw_simulation_not_calibrated",
+          "paired_delta_option_minus_skip_same_seed",
+          "losing_enemy_hp_conditional_on_loss",
+          "enemy_hp_fraction_denominator_is_sampled_encounter_opening_hp",
+          "remaining_enemy_hp_includes_later_phases_and_spawns_not_clamped_to_one",
+          "partial_sample_coverage"
+        ],
+        "unknown_reasons": []
+      }
+    ],
+    "current_samples": [
+      16,
+      16,
+      16,
+      16
+    ],
+    "DPR_in_separate_A_rows": true,
+    "A_preparation_ms": 4257,
+    "A_preparation_timed_out": false,
+    "A_B_telemetry": {
+      "elapsed_ms": 4255.838957,
+      "preparation_ms": 589.8434960000159,
+      "simulation_ms": 3661.430712000001,
+      "cache_hits": 0,
+      "simulations": 425,
+      "long_term_cache": "miss",
+      "long_term_computed": 0,
+      "long_term_total": 204,
+      "pending_work": true
+    },
+    "association_limit": "A/B rows lack decision_id; exact same run/floor, pre-decision timestamp and exact option set, unique match in original alert cutoff; not a question_id identity or proof of reasoning/benefit"
+  },
+  {
+    "decision_id": "5317af46-26a5-486f-9edc-61c9030598ac",
+    "floor": 5,
+    "ts": "2026-10-20T19:50:58.108Z",
+    "source": {
+      "offset": 3089758605,
+      "length": 5384,
+      "sha256": "6b9e0e696753937a1599a93f7a5057b472afe18d51030393396816decc4de007"
+    },
+    "decider": "jev",
+    "result": "completed: Action completed.",
+    "fallback": false,
+    "chosen": {
+      "action": "skip_reward_cards"
+    },
+    "expect": null,
+    "legacy_boss_sim_present": false,
+    "legacy_compact_entries_empty": true,
+    "A_B_source": {
+      "source": "logs/v6-card-results.jsonl",
+      "end": 7236890,
+      "offset": 6969064,
+      "length": 74955,
+      "sha256": "04c42e7da05d0e7b4de3353d2edd904d174cd4266e3b8a02b51a6343dfacdf12",
+      "snapshot": "paper/materials/20261021-0355-ops/A-B-floor-5.jsonl"
+    },
+    "current_target": "f17:LAGAVULIN_MATRIARCH",
+    "option_card_ids": {
+      "card0": "Take ACCURACY",
+      "card1": "Take POUNCE",
+      "card2": "Take BOUNCING_FLASK",
+      "skip": "Take no card"
+    },
+    "current_rows": [
+      {
+        "option_id": "skip",
+        "target_id": "f17:LAGAVULIN_MATRIARCH",
+        "metrics": {
+          "hp_loss": {
+            "mean": 43,
+            "se": 0,
+            "n": 18
+          },
+          "turns": {
+            "mean": 12.944444444444443,
+            "se": 0.12711536169135118,
+            "n": 18
+          },
+          "damage_per_turn": {
+            "mean": 2.571072446072446,
+            "se": 0.19581469637974055,
+            "n": 18
+          },
+          "death_rate": {
+            "mean": 1,
+            "se": 0,
+            "n": 18
+          },
+          "losing_enemy_hp_fraction": {
+            "mean": 0.8583690987124462,
+            "se": 0.010032322908912728,
+            "n": 18
+          }
+        },
+        "paired_delta": {
+          "hp_loss": {
+            "mean": 0,
+            "se": 0,
+            "n": 18
+          },
+          "turns": {
+            "mean": 0,
+            "se": 0,
+            "n": 18
+          },
+          "damage_per_turn": {
+            "mean": 0,
+            "se": 0,
+            "n": 18
+          },
+          "death_rate": {
+            "mean": 0,
+            "se": 0,
+            "n": 18
+          },
+          "losing_enemy_hp_fraction": {
+            "mean": 0,
+            "se": 0,
+            "n": 18
+          }
+        },
+        "samples": 18,
+        "requested_samples": 100,
+        "capped": 0,
+        "time_up": 0,
+        "missing": 82,
+        "trust": {
+          "value": "trusted",
+          "labels": []
+        },
+        "labels": [
+          "entry_hp_source:existing_route_projection:n=0",
+          "current_relics_and_potion_belt_only",
+          "unmodelled_relic:蛇之戒指",
+          "immediate_entry_hp_assumed_current_hp_not_route_forecast",
+          "visible_actual_boss",
+          "raw_simulation_not_calibrated",
+          "paired_delta_option_minus_skip_same_seed",
+          "losing_enemy_hp_conditional_on_loss",
+          "enemy_hp_fraction_denominator_is_sampled_encounter_opening_hp",
+          "remaining_enemy_hp_includes_later_phases_and_spawns_not_clamped_to_one",
+          "partial_sample_coverage"
+        ],
+        "unknown_reasons": []
+      },
+      {
+        "option_id": "card0",
+        "target_id": "f17:LAGAVULIN_MATRIARCH",
+        "metrics": {
+          "hp_loss": {
+            "mean": 43,
+            "se": 0,
+            "n": 18
+          },
+          "turns": {
+            "mean": 12.666666666666666,
+            "se": 0.1143323900950059,
+            "n": 18
+          },
+          "damage_per_turn": {
+            "mean": 2.977207977207977,
+            "se": 0.2268708428745645,
+            "n": 18
+          },
+          "death_rate": {
+            "mean": 1,
+            "se": 0,
+            "n": 18
+          },
+          "losing_enemy_hp_fraction": {
+            "mean": 0.8390557939914163,
+            "se": 0.011628844874645397,
+            "n": 18
+          }
+        },
+        "paired_delta": {
+          "hp_loss": {
+            "mean": 0,
+            "se": 0,
+            "n": 18
+          },
+          "turns": {
+            "mean": -0.2777777777777778,
+            "se": 0.13541404807255333,
+            "n": 18
+          },
+          "damage_per_turn": {
+            "mean": 0.406135531135531,
+            "se": 0.2916326226982334,
+            "n": 18
+          },
+          "death_rate": {
+            "mean": 0,
+            "se": 0,
+            "n": 18
+          },
+          "losing_enemy_hp_fraction": {
+            "mean": -0.01931330472103005,
+            "se": 0.015271834125887162,
+            "n": 18
+          }
+        },
+        "samples": 18,
+        "requested_samples": 100,
+        "capped": 0,
+        "time_up": 0,
+        "missing": 82,
+        "trust": {
+          "value": "trusted",
+          "labels": []
+        },
+        "labels": [
+          "entry_hp_source:existing_route_projection:n=0",
+          "current_relics_and_potion_belt_only",
+          "unmodelled_relic:蛇之戒指",
+          "immediate_entry_hp_assumed_current_hp_not_route_forecast",
+          "visible_actual_boss",
+          "raw_simulation_not_calibrated",
+          "paired_delta_option_minus_skip_same_seed",
+          "losing_enemy_hp_conditional_on_loss",
+          "enemy_hp_fraction_denominator_is_sampled_encounter_opening_hp",
+          "remaining_enemy_hp_includes_later_phases_and_spawns_not_clamped_to_one",
+          "partial_sample_coverage"
+        ],
+        "unknown_reasons": []
+      },
+      {
+        "option_id": "card1",
+        "target_id": "f17:LAGAVULIN_MATRIARCH",
+        "metrics": {
+          "hp_loss": {
+            "mean": 43,
+            "se": 0,
+            "n": 18
+          },
+          "turns": {
+            "mean": 12.777777777777779,
+            "se": 0.1524431867933412,
+            "n": 18
+          },
+          "damage_per_turn": {
+            "mean": 3.510378510378511,
+            "se": 0.22901848033591646,
+            "n": 18
+          },
+          "death_rate": {
+            "mean": 1,
+            "se": 0,
+            "n": 18
+          },
+          "losing_enemy_hp_fraction": {
+            "mean": 0.8090128755364807,
+            "se": 0.011120810452680957,
+            "n": 18
+          }
+        },
+        "paired_delta": {
+          "hp_loss": {
+            "mean": 0,
+            "se": 0,
+            "n": 18
+          },
+          "turns": {
+            "mean": -0.16666666666666669,
+            "se": 0.18523964340873714,
+            "n": 18
+          },
+          "damage_per_turn": {
+            "mean": 0.9393060643060642,
+            "se": 0.25591925681731253,
+            "n": 18
+          },
+          "death_rate": {
+            "mean": 0,
+            "se": 0,
+            "n": 18
+          },
+          "losing_enemy_hp_fraction": {
+            "mean": -0.04935622317596566,
+            "se": 0.012497127574282348,
+            "n": 18
+          }
+        },
+        "samples": 18,
+        "requested_samples": 100,
+        "capped": 0,
+        "time_up": 0,
+        "missing": 82,
+        "trust": {
+          "value": "trusted",
+          "labels": []
+        },
+        "labels": [
+          "entry_hp_source:existing_route_projection:n=0",
+          "current_relics_and_potion_belt_only",
+          "unmodelled_relic:蛇之戒指",
+          "immediate_entry_hp_assumed_current_hp_not_route_forecast",
+          "visible_actual_boss",
+          "raw_simulation_not_calibrated",
+          "paired_delta_option_minus_skip_same_seed",
+          "losing_enemy_hp_conditional_on_loss",
+          "enemy_hp_fraction_denominator_is_sampled_encounter_opening_hp",
+          "remaining_enemy_hp_includes_later_phases_and_spawns_not_clamped_to_one",
+          "partial_sample_coverage"
+        ],
+        "unknown_reasons": []
+      },
+      {
+        "option_id": "card2",
+        "target_id": "f17:LAGAVULIN_MATRIARCH",
+        "metrics": {
+          "hp_loss": {
+            "mean": 43,
+            "se": 0,
+            "n": 18
+          },
+          "turns": {
+            "mean": 11.5,
+            "se": 0.35470691206128513,
+            "n": 18
+          },
+          "damage_per_turn": {
+            "mean": 9.429079254079255,
+            "se": 0.645559375447187,
+            "n": 18
+          },
+          "death_rate": {
+            "mean": 1,
+            "se": 0,
+            "n": 18
+          },
+          "losing_enemy_hp_fraction": {
+            "mean": 0.5419647114926085,
+            "se": 0.02950269381852045,
+            "n": 18
+          }
+        },
+        "paired_delta": {
+          "hp_loss": {
+            "mean": 0,
+            "se": 0,
+            "n": 18
+          },
+          "turns": {
+            "mean": -1.4444444444444446,
+            "se": 0.3256187897276118,
+            "n": 18
+          },
+          "damage_per_turn": {
+            "mean": 6.858006808006807,
+            "se": 0.6999032122669525,
+            "n": 18
+          },
+          "death_rate": {
+            "mean": 0,
+            "se": 0,
+            "n": 18
+          },
+          "losing_enemy_hp_fraction": {
+            "mean": -0.3164043872198378,
+            "se": 0.03324232938859363,
+            "n": 18
+          }
+        },
+        "samples": 18,
+        "requested_samples": 100,
+        "capped": 0,
+        "time_up": 0,
+        "missing": 82,
+        "trust": {
+          "value": "trusted",
+          "labels": []
+        },
+        "labels": [
+          "entry_hp_source:existing_route_projection:n=0",
+          "current_relics_and_potion_belt_only",
+          "unmodelled_relic:蛇之戒指",
+          "immediate_entry_hp_assumed_current_hp_not_route_forecast",
+          "visible_actual_boss",
+          "raw_simulation_not_calibrated",
+          "paired_delta_option_minus_skip_same_seed",
+          "losing_enemy_hp_conditional_on_loss",
+          "enemy_hp_fraction_denominator_is_sampled_encounter_opening_hp",
+          "remaining_enemy_hp_includes_later_phases_and_spawns_not_clamped_to_one",
+          "partial_sample_coverage"
+        ],
+        "unknown_reasons": []
+      }
+    ],
+    "current_samples": [
+      18,
+      18,
+      18,
+      18
+    ],
+    "DPR_in_separate_A_rows": true,
+    "A_preparation_ms": 4291,
+    "A_preparation_timed_out": false,
+    "A_B_telemetry": {
+      "elapsed_ms": 4254.96061899999,
+      "preparation_ms": 431.54306199998246,
+      "simulation_ms": 3819.8509429999976,
+      "cache_hits": 0,
+      "simulations": 502,
+      "long_term_cache": "hit",
+      "long_term_computed": 0,
+      "long_term_total": 204,
+      "pending_work": true
+    },
+    "association_limit": "A/B rows lack decision_id; exact same run/floor, pre-decision timestamp and exact option set, unique match in original alert cutoff; not a question_id identity or proof of reasoning/benefit"
+  },
+  {
+    "decision_id": "4aaab3de-c7da-44bc-ad1e-451f7a64813f",
+    "floor": 6,
+    "ts": "2026-10-20T19:52:23.633Z",
+    "source": {
+      "offset": 3089976296,
+      "length": 5391,
+      "sha256": "e0d86712697d701d5e981affa14ee637d4be2c16dfe5ced610452fe2695bd266"
+    },
+    "decider": "jev",
+    "result": "completed: Action completed.",
+    "fallback": false,
+    "chosen": {
+      "action": "skip_reward_cards"
+    },
+    "expect": null,
+    "legacy_boss_sim_present": false,
+    "legacy_compact_entries_empty": true,
+    "A_B_source": {
+      "source": "logs/v6-card-results.jsonl",
+      "end": 7236890,
+      "offset": 7044019,
+      "length": 97072,
+      "sha256": "62e551bacc8c4e9dff5966ea18a142ce8a1dd391cf2ff2e19b85b1691e43dca2",
+      "snapshot": "paper/materials/20261021-0355-ops/A-B-floor-6.jsonl"
+    },
+    "current_target": "f17:LAGAVULIN_MATRIARCH",
+    "option_card_ids": {
+      "card0": "Take FLECHETTES",
+      "card1": "Take LEADING_STRIKE",
+      "card2": "Take EXPOSE",
+      "skip": "Take no card"
+    },
+    "current_rows": [
+      {
+        "option_id": "skip",
+        "target_id": "f17:LAGAVULIN_MATRIARCH",
+        "metrics": {
+          "hp_loss": {
+            "mean": 41,
+            "se": 0,
+            "n": 18
+          },
+          "turns": {
+            "mean": 12.833333333333334,
+            "se": 0.09038769075777345,
+            "n": 18
+          },
+          "damage_per_turn": {
+            "mean": 2.582977207977208,
+            "se": 0.19297860192369315,
+            "n": 18
+          },
+          "death_rate": {
+            "mean": 1,
+            "se": 0,
+            "n": 18
+          },
+          "losing_enemy_hp_fraction": {
+            "mean": 0.8583690987124462,
+            "se": 0.010032322908912728,
+            "n": 18
+          }
+        },
+        "paired_delta": {
+          "hp_loss": {
+            "mean": 0,
+            "se": 0,
+            "n": 18
+          },
+          "turns": {
+            "mean": 0,
+            "se": 0,
+            "n": 18
+          },
+          "damage_per_turn": {
+            "mean": 0,
+            "se": 0,
+            "n": 18
+          },
+          "death_rate": {
+            "mean": 0,
+            "se": 0,
+            "n": 18
+          },
+          "losing_enemy_hp_fraction": {
+            "mean": 0,
+            "se": 0,
+            "n": 18
+          }
+        },
+        "samples": 18,
+        "requested_samples": 100,
+        "capped": 0,
+        "time_up": 0,
+        "missing": 82,
+        "trust": {
+          "value": "trusted",
+          "labels": []
+        },
+        "labels": [
+          "entry_hp_source:existing_route_projection:n=0",
+          "current_relics_and_potion_belt_only",
+          "unmodelled_relic:蛇之戒指",
+          "immediate_entry_hp_assumed_current_hp_not_route_forecast",
+          "visible_actual_boss",
+          "raw_simulation_not_calibrated",
+          "paired_delta_option_minus_skip_same_seed",
+          "losing_enemy_hp_conditional_on_loss",
+          "enemy_hp_fraction_denominator_is_sampled_encounter_opening_hp",
+          "remaining_enemy_hp_includes_later_phases_and_spawns_not_clamped_to_one",
+          "partial_sample_coverage"
+        ],
+        "unknown_reasons": []
+      },
+      {
+        "option_id": "card0",
+        "target_id": "f17:LAGAVULIN_MATRIARCH",
+        "metrics": {
+          "hp_loss": {
+            "mean": 41,
+            "se": 0,
+            "n": 18
+          },
+          "turns": {
+            "mean": 12.500000000000002,
+            "se": 0.23221018200641208,
+            "n": 18
+          },
+          "damage_per_turn": {
+            "mean": 3.073616198616199,
+            "se": 0.24607008467163757,
+            "n": 18
+          },
+          "death_rate": {
+            "mean": 1,
+            "se": 0,
+            "n": 18
+          },
+          "losing_enemy_hp_fraction": {
+            "mean": 0.8369098712446352,
+            "se": 0.012158991279075663,
+            "n": 18
+          }
+        },
+        "paired_delta": {
+          "hp_loss": {
+            "mean": 0,
+            "se": 0,
+            "n": 18
+          },
+          "turns": {
+            "mean": -0.33333333333333337,
+            "se": 0.2286647801900118,
+            "n": 18
+          },
+          "damage_per_turn": {
+            "mean": 0.4906389906389905,
+            "se": 0.2571926193687734,
+            "n": 18
+          },
+          "death_rate": {
+            "mean": 0,
+            "se": 0,
+            "n": 18
+          },
+          "losing_enemy_hp_fraction": {
+            "mean": -0.021459227467811166,
+            "se": 0.012696635505826965,
+            "n": 18
+          }
+        },
+        "samples": 18,
+        "requested_samples": 100,
+        "capped": 0,
+        "time_up": 0,
+        "missing": 82,
+        "trust": {
+          "value": "trusted",
+          "labels": []
+        },
+        "labels": [
+          "entry_hp_source:existing_route_projection:n=0",
+          "current_relics_and_potion_belt_only",
+          "unmodelled_relic:蛇之戒指",
+          "immediate_entry_hp_assumed_current_hp_not_route_forecast",
+          "visible_actual_boss",
+          "raw_simulation_not_calibrated",
+          "paired_delta_option_minus_skip_same_seed",
+          "losing_enemy_hp_conditional_on_loss",
+          "enemy_hp_fraction_denominator_is_sampled_encounter_opening_hp",
+          "remaining_enemy_hp_includes_later_phases_and_spawns_not_clamped_to_one",
+          "partial_sample_coverage"
+        ],
+        "unknown_reasons": []
+      },
+      {
+        "option_id": "card1",
+        "target_id": "f17:LAGAVULIN_MATRIARCH",
+        "metrics": {
+          "hp_loss": {
+            "mean": 41,
+            "se": 0,
+            "n": 18
+          },
+          "turns": {
+            "mean": 12.611111111111112,
+            "se": 0.23064117632148878,
+            "n": 18
+          },
+          "damage_per_turn": {
+            "mean": 3.013431013431014,
+            "se": 0.25131635884401604,
+            "n": 18
+          },
+          "death_rate": {
+            "mean": 1,
+            "se": 0,
+            "n": 18
+          },
+          "losing_enemy_hp_fraction": {
+            "mean": 0.8390557939914162,
+            "se": 0.012199766426519468,
+            "n": 18
+          }
+        },
+        "paired_delta": {
+          "hp_loss": {
+            "mean": 0,
+            "se": 0,
+            "n": 18
+          },
+          "turns": {
+            "mean": -0.22222222222222227,
+            "se": 0.22222222222222224,
+            "n": 18
+          },
+          "damage_per_turn": {
+            "mean": 0.4304538054538054,
+            "se": 0.27429190115445296,
+            "n": 18
+          },
+          "death_rate": {
+            "mean": 0,
+            "se": 0,
+            "n": 18
+          },
+          "losing_enemy_hp_fraction": {
+            "mean": -0.01931330472103006,
+            "se": 0.01341699534529758,
+            "n": 18
+          }
+        },
+        "samples": 18,
+        "requested_samples": 100,
+        "capped": 0,
+        "time_up": 0,
+        "missing": 82,
+        "trust": {
+          "value": "trusted",
+          "labels": []
+        },
+        "labels": [
+          "entry_hp_source:existing_route_projection:n=0",
+          "current_relics_and_potion_belt_only",
+          "unmodelled_relic:蛇之戒指",
+          "immediate_entry_hp_assumed_current_hp_not_route_forecast",
+          "visible_actual_boss",
+          "raw_simulation_not_calibrated",
+          "paired_delta_option_minus_skip_same_seed",
+          "losing_enemy_hp_conditional_on_loss",
+          "enemy_hp_fraction_denominator_is_sampled_encounter_opening_hp",
+          "remaining_enemy_hp_includes_later_phases_and_spawns_not_clamped_to_one",
+          "partial_sample_coverage"
+        ],
+        "unknown_reasons": []
+      },
+      {
+        "option_id": "card2",
+        "target_id": "f17:LAGAVULIN_MATRIARCH",
+        "metrics": {
+          "hp_loss": {
+            "mean": 41,
+            "se": 0,
+            "n": 18
+          },
+          "turns": {
+            "mean": 12.722222222222223,
+            "se": 0.10863248456597822,
+            "n": 18
+          },
+          "damage_per_turn": {
+            "mean": 3.2061965811965814,
+            "se": 0.24178825991545316,
+            "n": 18
+          },
+          "death_rate": {
+            "mean": 1,
+            "se": 0,
+            "n": 18
+          },
+          "losing_enemy_hp_fraction": {
+            "mean": 0.8259418216499761,
+            "se": 0.012283224999783744,
+            "n": 18
+          }
+        },
+        "paired_delta": {
+          "hp_loss": {
+            "mean": 0,
+            "se": 0,
+            "n": 18
+          },
+          "turns": {
+            "mean": -0.1111111111111111,
+            "se": 0.11111111111111113,
+            "n": 18
+          },
+          "damage_per_turn": {
+            "mean": 0.6232193732193732,
+            "se": 0.3113977708392779,
+            "n": 18
+          },
+          "death_rate": {
+            "mean": 0,
+            "se": 0,
+            "n": 18
+          },
+          "losing_enemy_hp_fraction": {
+            "mean": -0.03242727706247019,
+            "se": 0.01625689530130222,
+            "n": 18
+          }
+        },
+        "samples": 18,
+        "requested_samples": 100,
+        "capped": 0,
+        "time_up": 0,
+        "missing": 82,
+        "trust": {
+          "value": "trusted",
+          "labels": []
+        },
+        "labels": [
+          "entry_hp_source:existing_route_projection:n=0",
+          "current_relics_and_potion_belt_only",
+          "unmodelled_relic:蛇之戒指",
+          "immediate_entry_hp_assumed_current_hp_not_route_forecast",
+          "visible_actual_boss",
+          "raw_simulation_not_calibrated",
+          "paired_delta_option_minus_skip_same_seed",
+          "losing_enemy_hp_conditional_on_loss",
+          "enemy_hp_fraction_denominator_is_sampled_encounter_opening_hp",
+          "remaining_enemy_hp_includes_later_phases_and_spawns_not_clamped_to_one",
+          "partial_sample_coverage"
+        ],
+        "unknown_reasons": []
+      }
+    ],
+    "current_samples": [
+      18,
+      18,
+      18,
+      18
+    ],
+    "DPR_in_separate_A_rows": true,
+    "A_preparation_ms": 4282,
+    "A_preparation_timed_out": false,
+    "A_B_telemetry": {
+      "elapsed_ms": 4255.189330999972,
+      "preparation_ms": 431.5741689999704,
+      "simulation_ms": 3819.9159980000113,
+      "cache_hits": 0,
+      "simulations": 491,
+      "long_term_cache": "hit",
+      "long_term_computed": 0,
+      "long_term_total": 204,
+      "pending_work": true
+    },
+    "association_limit": "A/B rows lack decision_id; exact same run/floor, pre-decision timestamp and exact option set, unique match in original alert cutoff; not a question_id identity or proof of reasoning/benefit"
+  },
+  {
+    "decision_id": "ef259587-004e-40d5-a1b2-d7d00da39e0e",
+    "floor": 8,
+    "ts": "2026-10-20T19:54:52.087Z",
+    "source": {
+      "offset": 3090473210,
+      "length": 5460,
+      "sha256": "bc36d34711e91361a30b683924ec8515a34c9f2e0731bcaf29fbd6bdb5f0e90f"
+    },
+    "decider": "jev",
+    "result": "completed: Action completed.",
+    "fallback": false,
+    "chosen": {
+      "action": "choose_reward_card",
+      "option_index": 2
+    },
+    "expect": {
+      "option": {
+        "id": "ACCURACY"
+      },
+      "from": "decision"
+    },
+    "legacy_boss_sim_present": false,
+    "legacy_compact_entries_empty": true,
+    "A_B_source": {
+      "source": "logs/v6-card-results.jsonl",
+      "end": 7236890,
+      "offset": 7141091,
+      "length": 95799,
+      "sha256": "712fe2d038001adcd19a7954f0fbdbd4b7ebbd8293d8e6dfabc8135fc03b1440",
+      "snapshot": "paper/materials/20261021-0355-ops/A-B-floor-8.jsonl"
+    },
+    "current_target": "f17:LAGAVULIN_MATRIARCH",
+    "option_card_ids": {
+      "card0": "Take DEFLECT",
+      "card1": "Take PIERCING_WAIL",
+      "card2": "Take ACCURACY",
+      "skip": "Take no card"
+    },
+    "current_rows": [
+      {
+        "option_id": "skip",
+        "target_id": "f17:LAGAVULIN_MATRIARCH",
+        "metrics": {
+          "hp_loss": {
+            "mean": 18,
+            "se": 0,
+            "n": 18
+          },
+          "turns": {
+            "mean": 9.83333333333333,
+            "se": 0.36380343755449956,
+            "n": 18
+          },
+          "damage_per_turn": {
+            "mean": 3.4492283950617284,
+            "se": 0.23424911987705432,
+            "n": 18
+          },
+          "death_rate": {
+            "mean": 1,
+            "se": 0,
+            "n": 18
+          },
+          "losing_enemy_hp_fraction": {
+            "mean": 0.857176919408679,
+            "se": 0.00842660803389237,
+            "n": 18
+          }
+        },
+        "paired_delta": {
+          "hp_loss": {
+            "mean": 0,
+            "se": 0,
+            "n": 18
+          },
+          "turns": {
+            "mean": 0,
+            "se": 0,
+            "n": 18
+          },
+          "damage_per_turn": {
+            "mean": 0,
+            "se": 0,
+            "n": 18
+          },
+          "death_rate": {
+            "mean": 0,
+            "se": 0,
+            "n": 18
+          },
+          "losing_enemy_hp_fraction": {
+            "mean": 0,
+            "se": 0,
+            "n": 18
+          }
+        },
+        "samples": 18,
+        "requested_samples": 100,
+        "capped": 0,
+        "time_up": 0,
+        "missing": 82,
+        "trust": {
+          "value": "trusted",
+          "labels": []
+        },
+        "labels": [
+          "entry_hp_source:existing_route_projection:n=0",
+          "current_relics_and_potion_belt_only",
+          "unmodelled_relic:蛇之戒指",
+          "immediate_entry_hp_assumed_current_hp_not_route_forecast",
+          "visible_actual_boss",
+          "raw_simulation_not_calibrated",
+          "paired_delta_option_minus_skip_same_seed",
+          "losing_enemy_hp_conditional_on_loss",
+          "enemy_hp_fraction_denominator_is_sampled_encounter_opening_hp",
+          "remaining_enemy_hp_includes_later_phases_and_spawns_not_clamped_to_one",
+          "partial_sample_coverage"
+        ],
+        "unknown_reasons": []
+      },
+      {
+        "option_id": "card0",
+        "target_id": "f17:LAGAVULIN_MATRIARCH",
+        "metrics": {
+          "hp_loss": {
+            "mean": 18,
+            "se": 0,
+            "n": 18
+          },
+          "turns": {
+            "mean": 10.000000000000002,
+            "se": 0.39605901719066977,
+            "n": 18
+          },
+          "damage_per_turn": {
+            "mean": 3.804748338081671,
+            "se": 0.32422234969996494,
+            "n": 18
+          },
+          "death_rate": {
+            "mean": 1,
+            "se": 0,
+            "n": 18
+          },
+          "losing_enemy_hp_fraction": {
+            "mean": 0.8412017167381973,
+            "se": 0.011323304009194545,
+            "n": 18
+          }
+        },
+        "paired_delta": {
+          "hp_loss": {
+            "mean": 0,
+            "se": 0,
+            "n": 18
+          },
+          "turns": {
+            "mean": 0.16666666666666674,
+            "se": 0.573089323359823,
+            "n": 18
+          },
+          "damage_per_turn": {
+            "mean": 0.35551994301994305,
+            "se": 0.4242377994225937,
+            "n": 18
+          },
+          "death_rate": {
+            "mean": 0,
+            "se": 0,
+            "n": 18
+          },
+          "losing_enemy_hp_fraction": {
+            "mean": -0.015975202670481633,
+            "se": 0.0149151112761406,
+            "n": 18
+          }
+        },
+        "samples": 18,
+        "requested_samples": 100,
+        "capped": 0,
+        "time_up": 0,
+        "missing": 82,
+        "trust": {
+          "value": "trusted",
+          "labels": []
+        },
+        "labels": [
+          "entry_hp_source:existing_route_projection:n=0",
+          "current_relics_and_potion_belt_only",
+          "unmodelled_relic:蛇之戒指",
+          "immediate_entry_hp_assumed_current_hp_not_route_forecast",
+          "visible_actual_boss",
+          "raw_simulation_not_calibrated",
+          "paired_delta_option_minus_skip_same_seed",
+          "losing_enemy_hp_conditional_on_loss",
+          "enemy_hp_fraction_denominator_is_sampled_encounter_opening_hp",
+          "remaining_enemy_hp_includes_later_phases_and_spawns_not_clamped_to_one",
+          "partial_sample_coverage"
+        ],
+        "unknown_reasons": []
+      },
+      {
+        "option_id": "card1",
+        "target_id": "f17:LAGAVULIN_MATRIARCH",
+        "metrics": {
+          "hp_loss": {
+            "mean": 18,
+            "se": 0,
+            "n": 18
+          },
+          "turns": {
+            "mean": 10.444444444444445,
+            "se": 0.381107966983353,
+            "n": 18
+          },
+          "damage_per_turn": {
+            "mean": 3.3815764482431154,
+            "se": 0.35981413826182135,
+            "n": 18
+          },
+          "death_rate": {
+            "mean": 1,
+            "se": 0,
+            "n": 18
+          },
+          "losing_enemy_hp_fraction": {
+            "mean": 0.8564616118264187,
+            "se": 0.011970502752565521,
+            "n": 18
+          }
+        },
+        "paired_delta": {
+          "hp_loss": {
+            "mean": 0,
+            "se": 0,
+            "n": 18
+          },
+          "turns": {
+            "mean": 0.6111111111111113,
+            "se": 0.6057399131731692,
+            "n": 18
+          },
+          "damage_per_turn": {
+            "mean": -0.06765194681861339,
+            "se": 0.46810473540835,
+            "n": 18
+          },
+          "death_rate": {
+            "mean": 0,
+            "se": 0,
+            "n": 18
+          },
+          "losing_enemy_hp_fraction": {
+            "mean": -0.0007153075822603754,
+            "se": 0.015661037403776123,
+            "n": 18
+          }
+        },
+        "samples": 18,
+        "requested_samples": 100,
+        "capped": 0,
+        "time_up": 0,
+        "missing": 82,
+        "trust": {
+          "value": "trusted",
+          "labels": []
+        },
+        "labels": [
+          "entry_hp_source:existing_route_projection:n=0",
+          "current_relics_and_potion_belt_only",
+          "unmodelled_relic:蛇之戒指",
+          "immediate_entry_hp_assumed_current_hp_not_route_forecast",
+          "visible_actual_boss",
+          "raw_simulation_not_calibrated",
+          "paired_delta_option_minus_skip_same_seed",
+          "losing_enemy_hp_conditional_on_loss",
+          "enemy_hp_fraction_denominator_is_sampled_encounter_opening_hp",
+          "remaining_enemy_hp_includes_later_phases_and_spawns_not_clamped_to_one",
+          "partial_sample_coverage"
+        ],
+        "unknown_reasons": []
+      },
+      {
+        "option_id": "card2",
+        "target_id": "f17:LAGAVULIN_MATRIARCH",
+        "metrics": {
+          "hp_loss": {
+            "mean": 18,
+            "se": 0,
+            "n": 18
+          },
+          "turns": {
+            "mean": 10.277777777777777,
+            "se": 0.40265098297234847,
+            "n": 18
+          },
+          "damage_per_turn": {
+            "mean": 3.613425925925926,
+            "se": 0.37426790813268596,
+            "n": 18
+          },
+          "death_rate": {
+            "mean": 1,
+            "se": 0,
+            "n": 18
+          },
+          "losing_enemy_hp_fraction": {
+            "mean": 0.8483547925608013,
+            "se": 0.011684358965317988,
+            "n": 18
+          }
+        },
+        "paired_delta": {
+          "hp_loss": {
+            "mean": 0,
+            "se": 0,
+            "n": 18
+          },
+          "turns": {
+            "mean": 0.4444444444444446,
+            "se": 0.584227450459779,
+            "n": 18
+          },
+          "damage_per_turn": {
+            "mean": 0.1641975308641976,
+            "se": 0.4913417050785371,
+            "n": 18
+          },
+          "death_rate": {
+            "mean": 0,
+            "se": 0,
+            "n": 18
+          },
+          "losing_enemy_hp_fraction": {
+            "mean": -0.008822126847877915,
+            "se": 0.014624383732338967,
+            "n": 18
+          }
+        },
+        "samples": 18,
+        "requested_samples": 100,
+        "capped": 0,
+        "time_up": 0,
+        "missing": 82,
+        "trust": {
+          "value": "trusted",
+          "labels": []
+        },
+        "labels": [
+          "entry_hp_source:existing_route_projection:n=0",
+          "current_relics_and_potion_belt_only",
+          "unmodelled_relic:蛇之戒指",
+          "immediate_entry_hp_assumed_current_hp_not_route_forecast",
+          "visible_actual_boss",
+          "raw_simulation_not_calibrated",
+          "paired_delta_option_minus_skip_same_seed",
+          "losing_enemy_hp_conditional_on_loss",
+          "enemy_hp_fraction_denominator_is_sampled_encounter_opening_hp",
+          "remaining_enemy_hp_includes_later_phases_and_spawns_not_clamped_to_one",
+          "partial_sample_coverage"
+        ],
+        "unknown_reasons": []
+      }
+    ],
+    "current_samples": [
+      18,
+      18,
+      18,
+      18
+    ],
+    "DPR_in_separate_A_rows": true,
+    "A_preparation_ms": 4291,
+    "A_preparation_timed_out": false,
+    "A_B_telemetry": {
+      "elapsed_ms": 4258.798347999982,
+      "preparation_ms": 453.68782199989073,
+      "simulation_ms": 3797.655688000028,
+      "cache_hits": 0,
+      "simulations": 483,
+      "long_term_cache": "hit",
+      "long_term_computed": 0,
+      "long_term_total": 204,
+      "pending_work": true
+    },
+    "association_limit": "A/B rows lack decision_id; exact same run/floor, pre-decision timestamp and exact option set, unique match in original alert cutoff; not a question_id identity or proof of reasoning/benefit"
+  }
+]

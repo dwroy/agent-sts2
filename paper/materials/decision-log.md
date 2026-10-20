@@ -5434,3 +5434,5 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
 - 2026-10-21 03:49:25 CST Codex v6-w4w6：按Claude03:3x完成R407只读拿牌质量材料2c4b12ada后开始P2；真实满槽药水奖励有界6局面全部无discard_potion/槽can_discard=false，T15 F40原战斗→奖励用生产gate复现由可丢变拒绝且弃药槽0，四生产叶与实际live逐SHA同。未绕门/改夹具能力/改代码知识或live，未MC/API/full；P2先丢后领尚不能真实循环验收，交Claude/watcher协调mod合法弃药能力与药水身份接口，材料paper/materials/2026-10-21-v6-reward-potion/report.md。
 
 - 2026-10-21 03:52:04 CST 原ops：P4原固定tree58db1f19/2399输入1058987e终局tsc0/full1，唯一thief-card-value:141 samples8→0，PID均退/窗口释放，原W8与watcherCLI0投递待原生确认，不重未变源full/发布。P2只收0f1材料11叶及原append，合法弃药接口阻塞，POTIONbrain与R407不变。原件paper/materials/20261021-0350-ops/receipt.json。
+
+- 2026-10-21 03:56:06 CST 原ops：173ARCPHRVSS模块告警冻168决策/4脑题/1配置复算同，五奖励独立A/B有DPR/16–18样本/约4.26秒、Jev2拿3跳无fallback；旧3计算零失败降级、300门保持，pipeline4/4。并原001302兼容候选，原告警/校准限制不关闭，不重启/派模型或常规报Roy。原件paper/materials/20261021-0355-ops/receipt.json。

@@ -1,0 +1,3 @@
+173ARCPHRVSS告警原168决策、4脑题、1配置已按原字节窗口冻结，复算与原告警一致，不冒全文历史快照。五个战后奖励F2/4/5/6/8在独立A/B表均有DPR与唯一当前目标，样本分别18/16/18/18/18，准备4257–4291ms，全部Jev完成、无超时或fallback，实际2拿3跳；表无decision_id，只按同局层、前置时序及精确选项集合唯一关联，不能冒推理或质量收益。旧V5监控因缺boss_sim记录报五次missing，原alert保留，补证沿H1/001302六叶兼容候选，不仅凭V6开关豁免故障。旧三次计算零失败、零降级且无超时，adaptive每候选100/请求及minimum300保持，不把adaptive口径改成满300。pipeline期望/附带4/4、脑接收4、选择附带3，plan_due0；三项shadow有产物但未进脑，缺前瞻校准和Act3质量仍pending，不转服务或科学父已验。本轮只核原件、冻结和记录，不降低门槛、不重启局、不派模型或重算模拟；不常规报watcher/Roy，R407配置、Regent及P4原失败处理保持。
+
+原件：ops/codex-ops/module-health/173ARCPHRVSS-alert.json；本目录module-health-review.json、A-B-service-readback.json。

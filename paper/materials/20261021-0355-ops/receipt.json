@@ -1,0 +1,220 @@
+{
+  "at": "2026-10-21 03:56:06 CST",
+  "event": "173ARCPHRVSS-module-health",
+  "run_id": "173ARCPHRVSS",
+  "original_alert_unchanged": true,
+  "frozen_summary_matches_original": true,
+  "frozen_rows": {
+    "decisions": 168,
+    "brain": 4,
+    "plans": 0,
+    "config": 1
+  },
+  "reward_service_rows": [
+    {
+      "floor": 2,
+      "current_samples": [
+        18,
+        18,
+        18,
+        18
+      ],
+      "DPR_in_separate_A_rows": true,
+      "A_preparation_ms": 4287,
+      "timed_out": false,
+      "decider": "jev",
+      "fallback": false,
+      "chosen": {
+        "action": "skip_reward_cards"
+      },
+      "table_elapsed_ms": 4261.413621000014
+    },
+    {
+      "floor": 4,
+      "current_samples": [
+        16,
+        16,
+        16,
+        16
+      ],
+      "DPR_in_separate_A_rows": true,
+      "A_preparation_ms": 4257,
+      "timed_out": false,
+      "decider": "jev",
+      "fallback": false,
+      "chosen": {
+        "action": "choose_reward_card",
+        "option_index": 1
+      },
+      "table_elapsed_ms": 4255.838957
+    },
+    {
+      "floor": 5,
+      "current_samples": [
+        18,
+        18,
+        18,
+        18
+      ],
+      "DPR_in_separate_A_rows": true,
+      "A_preparation_ms": 4291,
+      "timed_out": false,
+      "decider": "jev",
+      "fallback": false,
+      "chosen": {
+        "action": "skip_reward_cards"
+      },
+      "table_elapsed_ms": 4254.96061899999
+    },
+    {
+      "floor": 6,
+      "current_samples": [
+        18,
+        18,
+        18,
+        18
+      ],
+      "DPR_in_separate_A_rows": true,
+      "A_preparation_ms": 4282,
+      "timed_out": false,
+      "decider": "jev",
+      "fallback": false,
+      "chosen": {
+        "action": "skip_reward_cards"
+      },
+      "table_elapsed_ms": 4255.189330999972
+    },
+    {
+      "floor": 8,
+      "current_samples": [
+        18,
+        18,
+        18,
+        18
+      ],
+      "DPR_in_separate_A_rows": true,
+      "A_preparation_ms": 4291,
+      "timed_out": false,
+      "decider": "jev",
+      "fallback": false,
+      "chosen": {
+        "action": "choose_reward_card",
+        "option_index": 2
+      },
+      "table_elapsed_ms": 4258.798347999982
+    }
+  ],
+  "owner_chain": "original H1/v5-dpr-health -> 001302 six-leaf monitor candidate; P0 quality remains original W4/Claude",
+  "computation": {
+    "attempts": 3,
+    "failures": 0,
+    "degraded": 0,
+    "evidence": [],
+    "alert": false,
+    "scope": "B2/B3 computation service failures; degradation permits continuation, not fault resolution."
+  },
+  "construction_pipeline": {
+    "enabled": true,
+    "evaluation_expected": 4,
+    "evaluation_attached": 4,
+    "evaluation_missing": 0,
+    "brain_evaluation": 4,
+    "accepted_evaluation": 4,
+    "accepted_choice_with_evaluation": 3,
+    "plan_due": 0,
+    "accepted_structured_plan": 0,
+    "missing_structured_plan": 0,
+    "saved_structured_plan": 0,
+    "plan_readback": 0,
+    "checkpoint_review_due": 0,
+    "probability_delivered": 0,
+    "admission": {
+      "missing_or_mismatched_prospective_calibration": 2
+    },
+    "evidence": [],
+    "alert": false,
+    "limits": "Payload delivery, accepted output and saved/read-back plans are distinct observations, not causal win-rate evidence. Missing calibration is pending, not a service failure."
+  },
+  "minimum_300_unchanged": true,
+  "no_new_model_test_simulation": true,
+  "live_actor_STOP_config_modified": false,
+  "watcher_Roy_routine_notified": false,
+  "original_alert_resolved": false,
+  "files": [
+    {
+      "path": "paper/materials/20261021-0355-ops/A-B-byte-manifest.json",
+      "bytes": 1349,
+      "sha256": "8653f15e4bc24ea07b47f62d410c988dc686dd605a817af92a0e93f83f2ca0f8"
+    },
+    {
+      "path": "paper/materials/20261021-0355-ops/decisions-frozen.json",
+      "bytes": 2853011,
+      "sha256": "97640a8ad9eca546295e0b9d4b60815d430074d21800b22f08b33d405c9a425f"
+    },
+    {
+      "path": "paper/materials/20261021-0355-ops/A-B-floor-2.jsonl",
+      "bytes": 160674,
+      "sha256": "2691f82aa545e4bed76fbc0affe5ee5c68974fe0e5d73e7f07f3566f15006821"
+    },
+    {
+      "path": "paper/materials/20261021-0355-ops/report.md",
+      "bytes": 1196,
+      "sha256": "8a12728a66b8c5ff219ec8e7376328f5a19d23c00b146aef7060afec8365fb56"
+    },
+    {
+      "path": "paper/materials/20261021-0355-ops/module-health-review.json",
+      "bytes": 12593,
+      "sha256": "030511de5cd310758e2aba8988a443e8a2f861bb519966419b2f562ecc16ca35"
+    },
+    {
+      "path": "paper/materials/20261021-0355-ops/original-alert.json",
+      "bytes": 13288,
+      "sha256": "384573182e6e9cd78c25a3c451043e2dc301503c6456171543ce6337d4156b87"
+    },
+    {
+      "path": "paper/materials/20261021-0355-ops/A-B-floor-6.jsonl",
+      "bytes": 97072,
+      "sha256": "62e551bacc8c4e9dff5966ea18a142ce8a1dd391cf2ff2e19b85b1691e43dca2"
+    },
+    {
+      "path": "paper/materials/20261021-0355-ops/A-B-floor-5.jsonl",
+      "bytes": 74955,
+      "sha256": "04c42e7da05d0e7b4de3353d2edd904d174cd4266e3b8a02b51a6343dfacdf12"
+    },
+    {
+      "path": "paper/materials/20261021-0355-ops/plans-frozen.json",
+      "bytes": 3,
+      "sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570"
+    },
+    {
+      "path": "paper/materials/20261021-0355-ops/config-frozen.json",
+      "bytes": 8685,
+      "sha256": "cd6ebc854a6e1418887a8808f43066c12245a40f99dbdba270e765a177e831cf"
+    },
+    {
+      "path": "paper/materials/20261021-0355-ops/A-B-floor-8.jsonl",
+      "bytes": 95799,
+      "sha256": "712fe2d038001adcd19a7954f0fbdbd4b7ebbd8293d8e6dfabc8135fc03b1440"
+    },
+    {
+      "path": "paper/materials/20261021-0355-ops/recomputed.json",
+      "bytes": 13232,
+      "sha256": "1042bf66dd7f9f04db940b7ed5db549c813bbc6913a5fafe3e59217cb802819c"
+    },
+    {
+      "path": "paper/materials/20261021-0355-ops/A-B-floor-4.jsonl",
+      "bytes": 51986,
+      "sha256": "40dcd205c3a460ccd86c35e3397c57872c373424e658639879c1c1c05481f6b8"
+    },
+    {
+      "path": "paper/materials/20261021-0355-ops/A-B-service-readback.json",
+      "bytes": 54288,
+      "sha256": "fb5d78090b338775776df100b9a8b6966938c7cbfa3a6c7d9092d776718a5d49"
+    },
+    {
+      "path": "paper/materials/20261021-0355-ops/brain-frozen.json",
+      "bytes": 422906,
+      "sha256": "ceb1232ac303a0308464dd57f360ef0a6e56eec2c8a6628f4d0fae9cc1222b01"
+    }
+  ]
+}
