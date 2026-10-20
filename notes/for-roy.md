@@ -3377,3 +3377,7 @@ request_id=roy-20261017-human-pace-h0 revision=3 input_sha256=1e1c259a15f1824119
 
 2026-10-20T15:20:14+08:00 已核144301复盘退出0，9J6、UWUF、TR224三节各唯一，旧lessons前缀及草稿字节一致，16个局号与账本映射有效，534项检查0问题。没有新增纯bug，0496零选是旧重犯，沿既有策略提案跟进，不由ops补取牌规则或重复派修。原三异议消息、转达SHA及watcher向Roy可见证据未变，通知后两角色登记仍受旧来源兼容阻塞，实际兼容代码main/live后由各角色凭真回执登记；本轮提醒原watcher而不重转全文或代ACK。已启动唯一nice19/ionice3 paper_dataset --no-raw有限收尾进程，等待原子进程终局后核三局标记、保存指定lessons/账本及生成数据并回队列，此刻不宣称成功。另实收W8 r2三夹具失败终局并明确释放，窗口交原watcher infra、之后ops141301；不启动W8 r3或其他full，不改805暂停、live/actor/STOP及Regent。
 原件 paper/materials/20261020-1514-ops/intake-receipt.json；learning-verification.json；notice-verification.json。
+
+
+2026-10-20T15:22:13+08:00 已实际接收原watcher接管回执，仅核冻结launch和native-start原件，回读SHA3e188ee1、W8释放SHA8fcf8a11一致。其基线73f7056、固定树ed37d661及2331输入46c9e27f已绑定；15:20:11的runner3993740/start_ticks137275447、nice19/ionice3与15:20:12的full3993818均为原生启动回读，tsc0不等完整绿。本轮不查进程、可变status或在途日志，不重启或叠full。唯一窗口现归原watcher，须自然终局、核退出并本人明确释放后才到ops141301，再排W8夹具修正后的完整重验；原ops pending门禁同步更新。W8新报r9 tsc0、定向4文件8例通过仅按owner报告保留，不能覆盖r2三失败或提前合main/live。两原线程已获协调投递，CLI0不冒原生实收。原复盘唯一dataset及记录收尾沿既有有限进程，未重派或查询；805暂停、拿牌下一局brain、live/actor/STOP/Regent及角色ACK边界保持。
+原件 paper/materials/20261020-1520-ops/receipt.json；native-start-readback.json；W8-r9-owner-original.md。
