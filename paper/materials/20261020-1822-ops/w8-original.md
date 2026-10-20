@@ -1,0 +1,1 @@
+W8 原生实收 Claude18:4x/Roy搭车决定：生产loop将彻底移除单独ensureDirectionPlan调用及为方向预先evaluate；默认V6_DIRECTION_REPLAN=off。开局/幕初随V5原请求回答方向权重；T3/T4仅持久标记，在下一次原有商店/休息/事件/路线脑题附可选v6字段，合法才替换，Jev拿牌读最近值，90s不动。当前只定向/tsc，full仍排ops单点窗。W4请保留独立peek getter接口补丁；我不改你树。CLI投递不冒native接收。

@@ -102,6 +102,23 @@
         "sha256": "648cc178234e6603beb33d6a9dd94a56cf2805b5bad3d830d5384db3b7d775c5",
         "relay_time_label": "Roy18:2x; host intake18:13, label retained",
         "received_at": "2026-10-20T18:14:41.922601+08:00"
+      },
+      {
+        "path": "paper/materials/20261020-1822-ops/roy-original.md",
+        "original_path": ".artifacts/watcher-20261020-1820-direction-cadence/roy-original.md",
+        "bytes": 363,
+        "sha256": "0f45aac9a9107c0427a7dde9baa3465d37ed43633e5bcc74d93a94c066dadd6d",
+        "scope": "Roy方向仅V5原有开局run-plan/每幕act-plan及下一原有脑题搭车；不独立方向ask/预evaluate，原W8任务；待正式源/联合验收，当前39输入不变",
+        "original_text": "[抄送 watcher，Claude 18:4x] Roy 批准：V6 方向更新不再单独请求大脑；方向概率只在 V5 原有的开局 run-plan 与每幕 act-plan 中产出；需要转向时在下一次本就会发的大脑请求（商店/休息/事件/路线）中附带更新。已派 v6-w8 并入方向开关与题面精简。每局大脑请求次数回到 V5 水平。",
+        "relay_time_label": "Claude18:4x",
+        "watcher_received_at": "2026-10-20T18:22:42.736877+08:00",
+        "ops_received_at": "2026-10-20T18:23:28.312540+08:00",
+        "W8_receipt": {
+          "path": "paper/materials/20261020-1822-ops/w8-original.md",
+          "original_path": ".artifacts/watcher-20261020-1820-direction-cadence/w8-original.md",
+          "bytes": 498,
+          "sha256": "ba9f4d610f17ebf38553d5f1459c31e763972930d58f132717904a9cf5f0e743"
+        }
       }
     ],
     "active_operational_addendum": {
@@ -110,7 +127,7 @@
       "sha256": "f986b3d46d6e63c489ef695a987b14b64316359cfca2a212d00025ec6959ce85"
     }
   },
-  "summary": "当前唯一full归原ops：W4v2已自然tsc0/full0（625文件5908过2跳）且PID退出核实后，18:07:13启动精确live39组合，live64c218/treeafaf0b2f/2363输入SHAd5e8、458知识冻结，tsc0/full363478在途，runner363404/nice19/ionice3/单worker。原件paper/materials/20261020-1802-ops/receipt.json。不查询进度/重启/变输入，终局事件后核退出再释放原164301六源host；W8新压缩待正式输入就绪排单点队列。\nRoy18:2x最新：仅战胜后的奖励三选一交Jev用W4新A/B，其他含幕初/商店/休息/选药沿V5脑节奏、商店一次脑请求。新条目同包CARD=jev、SHOP/REST/POTION=brain、COMBAT_ENTRIES=off；T1_CORE_MIN=0/T2_MIN_DELTA=1/T3_WEIGHT_MAX=0/T6_UNKNOWN_MAX=1/T6_FALLBACKS=100，T5/T7待原W8正式开关；W4严格postcombat三选一入口仍须实核。原文paper/materials/20261020-1802-ops/roy-reward-only-182x-original.md。当前39检查先于18:10截止，条目留下一包，不改在途输入；当前actor与中途resume不热切。85知识不删，805/8da暂停不运输，实际自然新局核号/双通知/首题读回才认上线。\nW4旧17源e2/full-v2绿仅来源检查，原owner最新报594bc5e75仍只按REWARD+pending_card_choice、可能误放事件奖励，故继续hold不运live；原任务正补战胜来源凭据+恰三选项固定回归，未知来源回大脑，最终提交/联合验收待交。SHOP/REST/POTION A/B迁移按Roy暂停。根日志两行已完整保全main2ac790fb9并回原W4，无覆盖/stash。原v1白名单失败/旧摘要丢B及精英A失败保留；source full不冒当前live组合或收益绿。\ninfra38源main4c7/full-r2绿已核，实际候选加一运行配置叶共39，两测试三方合并保原live接线；原old-live分配共享manifest守卫失败保现场，另配1803合法树并冻实际知识，无live写入。W4蛇咬e210的5源、W8旧增量5cd的26源、114302旧27工具均main已验/live独立pending，不夹当前39、整main或805。W8新压缩/退避仅原owner进展，90s不动，待W4/peek正式输入。\n141301十工程叶已精确main f7/live64，45并行知识保留，无行为新号；retention因并行card-model未交付保整树。164301策略六暂存候选未提交：EXDEV基线/撤红恢复绿保留，待原host槽，不重复沙箱/模型；分组牌堆限定通知5978007a沿原watcher→Roy，科学父/异议不随角色登记关闭。三旧manual通知角色登记已核解除，旧733另沿真实registry，不代ACK。\n活雾silent-proposal-99f14e823a866ad7学习/正式发布/live sim消费仍pending；原工程owner W4W6来源已核，boss-sim request/dispatch/batch未匹配，不造父/派批。蛇咬/有限8样本修复不代知识结案。复盘MWMR/T12与144301三局唯一dataset均已0，不再生成；限定旧tmp清理已完，不动共享/tmp/tsx-1000/在用/证据不足。154302、161301-s2无源漂移attention与164301-fix旧失败/负控原件保留，其他owner源码未交付沿原事务。现live R403、actor/STOP未改，Regent继续暂停。\n18:15五事件已核：174301策略原WT基线干净/十waiting，无源/测试/合入，不重dataset；5978007a三阶段真实回执及原生发送接收字节SHA已独立核同，转达登记已完，不代科学结案。watcher18:06日志2行已在2ac保存，正式报告SHA4ffb6330沿本轮记录通道保存。W8原报新V6_DIRECTION_REPLAN默认off（不T1–T7/独立方向ask，权重随V5同答并留存）仅在做，待正式交付/实际联合验收，90s未改。原件paper/materials/20261020-1815-ops/receipt.json。\n181302-fix已核原WT基线干净无源：64队列/39既有main子项与原源SHA、附加工程祖先及日志核同，25项保留；tsc0/5文件5定向过不冒full绿，无源码提交/合入受阻。旧live待办保持，不重测试/dataset。W8新报生产loop移除独立ensureDirectionPlan/方向预evaluate，T3/T4只标记后随原有脑题合法权重更新，90s不变；仅在做，待正式源/联合验收。原件paper/materials/20261020-1820-ops/receipt.json。",
+  "summary": "当前唯一full归原ops：W4v2已自然tsc0/full0（625文件5908过2跳）且PID退出核实后，18:07:13启动精确live39组合，live64c218/treeafaf0b2f/2363输入SHAd5e8、458知识冻结，tsc0/full363478在途，runner363404/nice19/ionice3/单worker。原件paper/materials/20261020-1802-ops/receipt.json。不查询进度/重启/变输入，终局事件后核退出再释放原164301六源host；W8新压缩待正式输入就绪排单点队列。\nRoy18:2x最新：仅战胜后的奖励三选一交Jev用W4新A/B，其他含幕初/商店/休息/选药沿V5脑节奏、商店一次脑请求。新条目同包CARD=jev、SHOP/REST/POTION=brain、COMBAT_ENTRIES=off；T1_CORE_MIN=0/T2_MIN_DELTA=1/T3_WEIGHT_MAX=0/T6_UNKNOWN_MAX=1/T6_FALLBACKS=100，T5/T7待原W8正式开关；W4严格postcombat三选一入口仍须实核。原文paper/materials/20261020-1802-ops/roy-reward-only-182x-original.md。当前39检查先于18:10截止，条目留下一包，不改在途输入；当前actor与中途resume不热切。85知识不删，805/8da暂停不运输，实际自然新局核号/双通知/首题读回才认上线。\nW4旧17源e2/full-v2绿仅来源检查，原owner最新报594bc5e75仍只按REWARD+pending_card_choice、可能误放事件奖励，故继续hold不运live；原任务正补战胜来源凭据+恰三选项固定回归，未知来源回大脑，最终提交/联合验收待交。SHOP/REST/POTION A/B迁移按Roy暂停。根日志两行已完整保全main2ac790fb9并回原W4，无覆盖/stash。原v1白名单失败/旧摘要丢B及精英A失败保留；source full不冒当前live组合或收益绿。\ninfra38源main4c7/full-r2绿已核，实际候选加一运行配置叶共39，两测试三方合并保原live接线；原old-live分配共享manifest守卫失败保现场，另配1803合法树并冻实际知识，无live写入。W4蛇咬e210的5源、W8旧增量5cd的26源、114302旧27工具均main已验/live独立pending，不夹当前39、整main或805。W8新压缩/退避仅原owner进展，90s不动，待W4/peek正式输入。\n141301十工程叶已精确main f7/live64，45并行知识保留，无行为新号；retention因并行card-model未交付保整树。164301策略六暂存候选未提交：EXDEV基线/撤红恢复绿保留，待原host槽，不重复沙箱/模型；分组牌堆限定通知5978007a沿原watcher→Roy，科学父/异议不随角色登记关闭。三旧manual通知角色登记已核解除，旧733另沿真实registry，不代ACK。\n活雾silent-proposal-99f14e823a866ad7学习/正式发布/live sim消费仍pending；原工程owner W4W6来源已核，boss-sim request/dispatch/batch未匹配，不造父/派批。蛇咬/有限8样本修复不代知识结案。复盘MWMR/T12与144301三局唯一dataset均已0，不再生成；限定旧tmp清理已完，不动共享/tmp/tsx-1000/在用/证据不足。154302、161301-s2无源漂移attention与164301-fix旧失败/负控原件保留，其他owner源码未交付沿原事务。现live R403、actor/STOP未改，Regent继续暂停。\n18:15五事件已核：174301策略原WT基线干净/十waiting，无源/测试/合入，不重dataset；5978007a三阶段真实回执及原生发送接收字节SHA已独立核同，转达登记已完，不代科学结案。watcher18:06日志2行已在2ac保存，正式报告SHA4ffb6330沿本轮记录通道保存。W8原报新V6_DIRECTION_REPLAN默认off（不T1–T7/独立方向ask，权重随V5同答并留存）仅在做，待正式交付/实际联合验收，90s未改。原件paper/materials/20261020-1815-ops/receipt.json。\n181302-fix已核原WT基线干净无源：64队列/39既有main子项与原源SHA、附加工程祖先及日志核同，25项保留；tsc0/5文件5定向过不冒full绿，无源码提交/合入受阻。旧live待办保持，不重测试/dataset。W8新报生产loop移除独立ensureDirectionPlan/方向预evaluate，T3/T4只标记后随原有脑题合法权重更新，90s不变；仅在做，待正式源/联合验收。原件paper/materials/20261020-1820-ops/receipt.json。\nRoy方向节奏授权原文（标签18:4x，watcher实收18:22:42分列）：[抄送 watcher，Claude 18:4x] Roy 批准：V6 方向更新不再单独请求大脑；方向概率只在 V5 原有的开局 run-plan 与每幕 act-plan 中产出；需要转向时在下一次本就会发的大脑请求（商店/休息/事件/路线）中附带更新。已派 v6-w8 并入方向开关与题面精简。每局大脑请求次数回到 V5 水平。\n授权原件 paper/materials/20261020-1822-ops/roy-original.md SHA256 0f45aac9a9107c0427a7dde9baa3465d37ed43633e5bcc74d93a94c066dadd6d；W8接管回执 paper/materials/20261020-1822-ops/w8-original.md SHA256 ba9f4d610f17ebf38553d5f1459c31e763972930d58f132717904a9cf5f0e743。无独立方向ask/预evaluate；T3/T4仅持久标记，下次原有商店/休息/事件/路线脑题附可选权重且合法才替换，Jev拿牌读最近值，90s不变。原W8正式源码/联合验收待交，不据此称生产已恢复V5请求数；当前39冻输入/原队列不变。",
   "takeover_receipt": "paper/materials/20261019-2215-ops/receipt.json",
   "external_tasks": [
     {
@@ -2781,7 +2798,25 @@
     "T3_T4_persistent_marks_next_existing_brain_request_reported": true,
     "valid_optional_weights_only_reported": true,
     "formal_delivery_and_actual_combined_full_pending": true,
-    "owner_relay_label": "Claude18:4x label retained; ops actual intake18:2x"
+    "owner_relay_label": "Claude18:4x label retained; ops actual intake18:2x",
+    "roy_authorization": {
+      "path": "paper/materials/20261020-1822-ops/roy-original.md",
+      "original_path": ".artifacts/watcher-20261020-1820-direction-cadence/roy-original.md",
+      "bytes": 363,
+      "sha256": "0f45aac9a9107c0427a7dde9baa3465d37ed43633e5bcc74d93a94c066dadd6d",
+      "scope": "Roy方向仅V5原有开局run-plan/每幕act-plan及下一原有脑题搭车；不独立方向ask/预evaluate，原W8任务；待正式源/联合验收，当前39输入不变",
+      "original_text": "[抄送 watcher，Claude 18:4x] Roy 批准：V6 方向更新不再单独请求大脑；方向概率只在 V5 原有的开局 run-plan 与每幕 act-plan 中产出；需要转向时在下一次本就会发的大脑请求（商店/休息/事件/路线）中附带更新。已派 v6-w8 并入方向开关与题面精简。每局大脑请求次数回到 V5 水平。",
+      "relay_time_label": "Claude18:4x",
+      "watcher_received_at": "2026-10-20T18:22:42.736877+08:00",
+      "ops_received_at": "2026-10-20T18:23:28.312540+08:00",
+      "W8_receipt": {
+        "path": "paper/materials/20261020-1822-ops/w8-original.md",
+        "original_path": ".artifacts/watcher-20261020-1820-direction-cadence/w8-original.md",
+        "bytes": 498,
+        "sha256": "ba9f4d610f17ebf38553d5f1459c31e763972930d58f132717904a9cf5f0e743"
+      }
+    },
+    "formal_source_and_actual_V5_request_count_acceptance_pending": true
   },
   "notice_5978007a_role_completion": {
     "verified_at": "2026-10-20T18:17:06.376549+08:00",
@@ -2789,5 +2824,22 @@
     "all_three_roles_and_native_offsets_verified": true,
     "not_scientific_parent_completion": true,
     "repeated_ACK_or_forwarding": false
+  },
+  "direction_cadence_authorization": {
+    "path": "paper/materials/20261020-1822-ops/roy-original.md",
+    "original_path": ".artifacts/watcher-20261020-1820-direction-cadence/roy-original.md",
+    "bytes": 363,
+    "sha256": "0f45aac9a9107c0427a7dde9baa3465d37ed43633e5bcc74d93a94c066dadd6d",
+    "scope": "Roy方向仅V5原有开局run-plan/每幕act-plan及下一原有脑题搭车；不独立方向ask/预evaluate，原W8任务；待正式源/联合验收，当前39输入不变",
+    "original_text": "[抄送 watcher，Claude 18:4x] Roy 批准：V6 方向更新不再单独请求大脑；方向概率只在 V5 原有的开局 run-plan 与每幕 act-plan 中产出；需要转向时在下一次本就会发的大脑请求（商店/休息/事件/路线）中附带更新。已派 v6-w8 并入方向开关与题面精简。每局大脑请求次数回到 V5 水平。",
+    "relay_time_label": "Claude18:4x",
+    "watcher_received_at": "2026-10-20T18:22:42.736877+08:00",
+    "ops_received_at": "2026-10-20T18:23:28.312540+08:00",
+    "W8_receipt": {
+      "path": "paper/materials/20261020-1822-ops/w8-original.md",
+      "original_path": ".artifacts/watcher-20261020-1820-direction-cadence/w8-original.md",
+      "bytes": 498,
+      "sha256": "ba9f4d610f17ebf38553d5f1459c31e763972930d58f132717904a9cf5f0e743"
+    }
   }
 }

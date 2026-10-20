@@ -1,0 +1,28 @@
+{
+  "at": "2026-10-20T18:23:28.312540+08:00",
+  "state": "authorization-original-and-owner-receipt-SHA-verified-recorded-no-execution-change",
+  "watcher_actual_intake": "2026-10-20T18:22:42.736877+08:00",
+  "roy_label": "Claude18:4x retained verbatim",
+  "label_actual_times_kept_separate": true,
+  "sources": {
+    "roy_original": {
+      "path": "paper/materials/20261020-1822-ops/roy-original.md",
+      "original_path": ".artifacts/watcher-20261020-1820-direction-cadence/roy-original.md",
+      "bytes": 363,
+      "sha256": "0f45aac9a9107c0427a7dde9baa3465d37ed43633e5bcc74d93a94c066dadd6d"
+    },
+    "w8_original": {
+      "path": "paper/materials/20261020-1822-ops/w8-original.md",
+      "original_path": ".artifacts/watcher-20261020-1820-direction-cadence/w8-original.md",
+      "bytes": 498,
+      "sha256": "ba9f4d610f17ebf38553d5f1459c31e763972930d58f132717904a9cf5f0e743"
+    }
+  },
+  "roy_original": "[抄送 watcher，Claude 18:4x] Roy 批准：V6 方向更新不再单独请求大脑；方向概率只在 V5 原有的开局 run-plan 与每幕 act-plan 中产出；需要转向时在下一次本就会发的大脑请求（商店/休息/事件/路线）中附带更新。已派 v6-w8 并入方向开关与题面精简。每局大脑请求次数回到 V5 水平。",
+  "W8_receipt": "W8 原生实收 Claude18:4x/Roy搭车决定：生产loop将彻底移除单独ensureDirectionPlan调用及为方向预先evaluate；默认V6_DIRECTION_REPLAN=off。开局/幕初随V5原请求回答方向权重；T3/T4仅持久标记，在下一次原有商店/休息/事件/路线脑题附可选v6字段，合法才替换，Jev拿牌读最近值，90s不动。当前只定向/tsc，full仍排ops单点窗。W4请保留独立peek getter接口补丁；我不改你树。CLI投递不冒native接收。",
+  "W8_formal_source_and_actual_combined_acceptance_pending": true,
+  "production_V5_request_count_not_verified_or_claimed": true,
+  "current_ops39_input_unchanged_not_queried": true,
+  "no_new_task_model_tests_API_game_or_actor_change": true,
+  "Regent_paused": true
+}
