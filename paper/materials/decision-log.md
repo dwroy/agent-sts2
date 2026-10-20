@@ -4984,3 +4984,5 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
 - 2026-10-20T11:14:17+08:00 原101302-fix精确5ef4宿主tsc0/full0（614文件5807过2跳），原WT提交609bcdf4；原live锁忙保精确10叶待独立集成，不夹带V6当前52叶、不加恢复门槛，旧失败/角色ACK/STOP边界保留。原件paper/materials/20261020-1111-ops/receipt.json。
 
 - 2026-10-20T11:17:24+08:00 原ops核三旧通知原文/来源/ops投递SHA未变及既有原生watcher→Roy证据；仅提醒原ACK兼容待办，609bcdf4已验未main/live，保pending/父/角色ACK，不重复异议或检查派发。原件paper/materials/20261020-1115-ops/receipt.json。
+
+- 2026-10-20T11:31:35+08:00 原live52树1e730 tsc0/full1（609文件608过1败/唯一路线15秒超时）保留；仅隔离测试runPlanLog一叶，原28项定向过，新live53树369f8d20有限完整复验在途，tsc0。STOP/W3排除保持，未提交/核号/开局。原件paper/materials/20261020-1125-ops/receipt.json。

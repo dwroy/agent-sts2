@@ -1,0 +1,36 @@
+diff --git a/agent/tests/build-decider.test.ts b/agent/tests/build-decider.test.ts
+index 950662629..b385a9ee1 100644
+--- a/agent/tests/build-decider.test.ts
++++ b/agent/tests/build-decider.test.ts
+@@ -5,7 +5,7 @@
+  * followed by code.
+  */
+ 
+-import { readFileSync, rmSync } from "node:fs";
++import { mkdtempSync, readFileSync, rmSync } from "node:fs";
+ import { tmpdir } from "node:os";
+ import { join } from "node:path";
+ import { afterEach, describe, expect, it } from "vitest";
+@@ -376,16 +376,19 @@ const servers: TestServer[] = [];
+ const logs: string[] = [];
+ afterEach(async () => {
+   await Promise.all(servers.splice(0).map((server) => server.close()));
+-  for (const path of logs.splice(0)) rmSync(path, { force: true });
++  for (const path of logs.splice(0)) rmSync(path, { recursive: true, force: true });
+ });
+ 
+ function loopConfig(over: Partial<AppConfig> = {}): AppConfig {
+-  const path = join(tmpdir(), `jev-sts2-build-${Date.now()}-${Math.random().toString(16).slice(2)}.jsonl`);
+-  logs.push(path);
++  // Keep restart recovery and its sidecar logs inside this fixed-data test session.
++  const directory = mkdtempSync(join(tmpdir(), "jev-sts2-build-"));
++  const path = join(directory, "decisions.jsonl");
++  logs.push(directory);
+   const base = loadConfig({} as NodeJS.ProcessEnv);
+   return {
+     ...base,
+     combatPlanner: "turn",
++    runPlanLog: join(directory, "run-plans.jsonl"),
+     deepseek: { apiKey: "test", baseUrl: "http://127.0.0.1:9", model: "fake", maxCalls: 50, timeoutMs: 100, guideFile: "", handbookFile: "", reasoningEffort: "off", combatReasoningEffort: "", reasoningLog: "" },
+     escalation: { ...base.escalation, chain: ["deepseek"] },
+     log: { ...base.log, decisionLog: path },

@@ -1,0 +1,84 @@
+{
+  "previous_input": {
+    "path": ".artifacts/ops-wake-20261020-1059/live-source-input.json",
+    "bytes": 99502,
+    "sha256": "fc3ecaf7f967651ace7328dea17fb75ba4c43868ae3566af744caf82c9ebf2b1"
+  },
+  "previous_terminal": {
+    "path": ".artifacts/ops-wake-20261020-1059/live-host-status.json",
+    "bytes": 1580,
+    "sha256": "acf28e467e50e2ec7f70f915d8f84b352cad088bc68605105f89193bc709f7d5"
+  },
+  "previous_full": {
+    "path": ".artifacts/ops-wake-20261020-1059/vitest.log",
+    "bytes": 1334,
+    "sha256": "d8a9dc18fd72d18ea8e3d316641958ec5f331a8f626d37004e9d63175092115b"
+  },
+  "result": {
+    "tsc": 0,
+    "vitest": 1,
+    "files": 609,
+    "passed_files": 608,
+    "failed_files": 1,
+    "passed_tests": 5789,
+    "failed_tests": 1,
+    "skips": 2,
+    "sole_failure": "build-decider route planned once/replan: 15000ms timeout (15082ms)",
+    "earlier_four_byte_assertions": "passed this full"
+  },
+  "earlier_failed_tree": "e5523e29fafbf22989c06fbd3fbb9fdc46a4b161",
+  "diagnostic_original": {
+    "path": ".artifacts/ops-wake-20261020-1125/targeted-original-native-output.txt",
+    "bytes": 199,
+    "sha256": "10d5d9ac259cbe92f579470f346690bd2be6a00dbd47efdc6cb77a5f4047e34e"
+  },
+  "diagnostic_original_scope": "targeted1 pass/27 filtered in isolated WT, native output transcription only",
+  "fixed_targeted": {
+    "path": ".artifacts/ops-wake-20261020-1125/build-decider-fixed.log",
+    "bytes": 267,
+    "sha256": "60593d5a6f2430d8adf50e3520d2e998b6b8c728e244e47b47b01435acb96ea8"
+  },
+  "fixed_targeted_result": "28/28 original tests passed, exit0",
+  "fixed_input_violation": {
+    "config_default": "RUN_PLAN_LOG unset -> repository logs/run-plans.jsonl",
+    "shared_live_log_bytes": 9728574,
+    "isolated_worktree_default_log_existed": false,
+    "actual_causal_limit": "Confirmed external production history dependency; timeout sole cause is not proven by the targeted pass",
+    "production_logs_modified_by_this_fix": false
+  },
+  "fix": {
+    "path": "agent/tests/build-decider.test.ts",
+    "patch": {
+      "path": "paper/materials/20261020-1125-ops/route-log-isolation.patch",
+      "bytes": 1733,
+      "sha256": "fd128419f3413db664b840b7a0f181868f773b2fe79a66316321d8f5e32ee469"
+    },
+    "scope": "unique per-test temporary directory; isolate run plans and sidecar logs; cleanup only owned directory",
+    "assertions_same": true,
+    "original_restoreRun_preserved": true,
+    "original_timeout_preserved": true
+  },
+  "previous52_SHA_unchanged": true,
+  "protected486_SHA_unchanged": true,
+  "new_input": {
+    "path": ".artifacts/ops-wake-20261020-1125/live-source-input.json",
+    "bytes": 100152,
+    "sha256": "0af929d15b1a17807229cf8f3331c88aaf09e2579f8df6839e50869dca086636"
+  },
+  "new_staged_tree": "369f8d2060b55852a111c86d0eda439c8f457ae7",
+  "new_paths": 53,
+  "source_committed": false,
+  "gitleaks": {
+    "path": ".artifacts/ops-wake-20261020-1125/gitleaks.log",
+    "bytes": 83,
+    "sha256": "35dc8d8da9e378da559c3610d8a2e7feccc47a30114371a0bb2ca9f0986ab939"
+  },
+  "gitleaks_rc": 0,
+  "new_full": "one finite actual live check on changed test input, ongoing",
+  "host_pid": 1897732,
+  "status_path": ".artifacts/ops-wake-20261020-1125/live-host-status.json",
+  "new_model": false,
+  "new_API": false,
+  "new_dataset": false,
+  "new_refresh": false
+}

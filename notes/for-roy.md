@@ -3239,3 +3239,6 @@ request_id=roy-20261017-human-pace-h0 revision=3 input_sha256=1e1c259a15f1824119
 
 
 2026-10-20T11:17:24+08:00 原ops核11:15三条旧异议重复提醒：message、原来源和ops_forwarded回执SHA均与既有原件相同，双收件箱仍含原投递全文；保留原生watcher→Roy证据16b0a57b，已核原实读及用户可见转达，不把当前pending误记成未送达。本轮只向原watcher提醒ACK兼容登记待办，不重复转述异议、不重派学习。兼容修复原分支609bcdf4已通过精确宿主614文件5807项2跳，但实际main/live仍是旧实现，原锁独立等待运输；代码实际进入两通道后，由原角色凭原接收及用户可见回执分角色登记，ops不代填、不改旧notice scope或新造父。原历史窗口、因果/模拟、理想值、遗物前提及pending知识限制保留，不因通知重复或后续R3候选而关闭学习父。STOP、W3排除、在途live52检查和Regent暂停保持，本轮不查进度、不改源码/知识、不重模型/API/full/dataset/刷新。原件paper/materials/20261020-1115-ops/receipt.json。
+
+
+2026-10-20T11:31:35+08:00 原ops实读11:25终局：live52固定1e730完整tsc0/full1，609文件608过1败、5789项过1败2跳；唯一build-decider路线15秒超时，四旧字节断言已过，52叶及486生产知识SHA未漂移。核到测试runPlanLog漏隔离、仍指向真实9.7MB历史；只补独立临时目录和runPlanLog一测试叶，原恢复行为、断言与超时不改，28项定向全过；不能据此证明超时唯一因果或冒full0。原锁内新53树369f8d20，nice19宿主PID1897732单次完整复验在途，tsc0，旧两轮full1保留。11:30已向原watcher投递当前阻塞，CLI0非实收；W3烟测失败明确排除，STOP/Regent保持，未源码提交、核号或开局。完整0后精确集成、17ID/hash/R3字段读回及版本双记录，再沿Roy授权恢复。原件paper/materials/20261020-1125-ops/receipt.json。
