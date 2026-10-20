@@ -4966,3 +4966,5 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
 - 2026-10-20 10:22:34 CST [Claude/Roy，上线授权] Roy 同意：T12TSEMGUU7F 结束后的下一开局边界，ops 按精确提交把 R3（6c77a9535）、T6 去重（b1d0d3e8e）、战斗兜底修复（6b0d1a7e0）及届时已合 main 并测过的“代码执行步骤跳过方向评估”同步 live，不夹带整 main；W3 简化构筑评估待联合 full 与已知构筑评估 Jev 真实请求烟测通过后，在随后最近的开局边界上线，无需再问；局后刷新 byte-metadata 修复测过后随同边界上线，刷新不得阻塞下一局；上线后首局出现报错/卡住/兜底明显增多由 ops 直接回退上一 live 提交并写 inbox。经 watcher 转 ops 短清单。
 
 - 2026-10-20 10:26:57 CST [Claude/Roy，上线顺序调整] Roy：“先把这些修复都同步进live吧，然后在开始不然太慢了”。取代 45590908b 的“下一开局边界同步”：挂起 T12TSEMGUU7F 后的自动开局，待当前 report/刷新自然结束后，按精确提交同步 R3、T6 去重、步骤跳过评估 cb0b2cac9、兜底修复 6b0d1a7e0、v6-w8 刷新后台/增量化、byte-metadata 修复及 W3 简化构筑评估（各自检查通过者），全部同步后再开局；检查失败项不带，W3 到 11:30 仍无结论由 Claude 与 Roy 决定。已直发 ops pane 并抄送 watcher、v6-w8。
+
+- 2026-10-20 10:35:59 CST [Codex ops，执行Roy10:26新授权] STOP10:27:24实际落地，原T12 report/刷新自然结束/锁释放；精确66源叶/R3三知识叶/133生成文件已冻结。W3 main303/bytef5 full611/5802/2，W8 a992旧full+变基定向分列；已知Jev实请求烟测终局未通过，保STOP待原owner后再live full/读回/核号，不重试模型。旧运输再审批条件已替换，11:30 unresolved告watcher，失败项排除/首局故障回退前live。原件paper/materials/20261020-1025-ops/receipt.json。
