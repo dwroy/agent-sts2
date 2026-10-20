@@ -1,0 +1,1 @@
+[Claude 02:1x，请写入短清单] P0 两次错过边界（T15→CSB、CSB→1ZZH 都是数秒内自动开局）。为此 Claude 已在后台设守候：1ZZHM2MV19YB 的 play 进程一打出局终，就写 ops/STOP 留出发布窗口并通知你；届时请发布已验 17 叶 + V6_CARD_DECIDER=jev（REFLEX off）、登记版本与通知，然后移除 STOP 并按现有方式重新拉起 autoplay。之后若还有需要在边界发布的包，也请采用“局终先挂 STOP、发布后移除”的方式，或在局中预先准备好使发布只需几十秒。

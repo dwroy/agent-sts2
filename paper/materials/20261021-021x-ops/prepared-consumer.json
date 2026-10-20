@@ -1,0 +1,160 @@
+{
+  "config": {
+    "schema": "v6-config-v1",
+    "mode": "on",
+    "deciders": {
+      "card": "jev",
+      "potion": "brain",
+      "shop": "brain",
+      "rest": "brain"
+    },
+    "reflex": "off",
+    "direction_replan": "off",
+    "admission": "interfaces_only",
+    "delivered": false,
+    "samples_pick": 20,
+    "samples_act": 100,
+    "min_known_option_ratio": 0.5,
+    "direction_min_weight": 0.1,
+    "win": {
+      "certain_win": 0.95,
+      "favored": 0.7,
+      "even": 0.3,
+      "unfavored": 0.05
+    },
+    "delta": {
+      "much_se": 2,
+      "better_se": 1,
+      "much_min": 0.05
+    },
+    "triggers": {
+      "t1_core_min": 0,
+      "t2_se": 2,
+      "t2_min_delta": 1,
+      "t2_consecutive": 2,
+      "t3_weight_max": 0,
+      "t5_hazard": "existing_route_projection",
+      "t6_unknown_max": 1,
+      "t6_fallbacks": 100,
+      "t7_checkpoint": "validated_brain_answer"
+    },
+    "budgets": {
+      "brain_soft_cap": 15,
+      "brain_ms": 90000,
+      "act_ms": 60000,
+      "pick_ms": 5000,
+      "jev_ms": 5000
+    },
+    "invalid": []
+  },
+  "settings": {
+    "V6_REFLEX": "off",
+    "V6_BUILD": "on",
+    "V6_CARD_DECIDER": "jev",
+    "V6_SHOP_DECIDER": "brain",
+    "V6_REST_DECIDER": "brain",
+    "V6_POTION_DECIDER": "brain",
+    "V6_COMBAT_ENTRIES": "off",
+    "V6_DIRECTION_REPLAN": "off",
+    "V6_T1_CORE_MIN": "0",
+    "V6_T2_MIN_DELTA": "1",
+    "V6_T3_WEIGHT_MAX": "0",
+    "V6_T6_UNKNOWN_MAX": "1",
+    "V6_T6_FALLBACKS": "100"
+  },
+  "formal_knowledge": {
+    "loaded": "loaded",
+    "combat_line": 85,
+    "card_pick_contrast": 0,
+    "off_emitted": 0
+  },
+  "files": {
+    "/home/dw/Projects/agent-sts2/.worktrees/live/knowledge/characters/silent/build-cores.json": "51c757a11ded9db2619466104f284a7d8a2490e10a621e0b367640e82a81df36",
+    "/home/dw/Projects/agent-sts2/.worktrees/live/knowledge/characters/silent/reflex.json": "d489acc71907783ef889a60e6a5672135052ecf6489db3b41ea87ecc4901c776",
+    "/home/dw/Projects/agent-sts2/.worktrees/live/knowledge/characters/silent/reflex-vocab.json": "561d34d506aa4b8768531f51811aa80a3642bac0838dd32bea802167bf9891db"
+  },
+  "frozen_reward_model_faces": [
+    {
+      "run_id": "T0TP8S9MMU9Q",
+      "floor": 2,
+      "models": [
+        {
+          "card_id": "DODGE_AND_ROLL",
+          "known": true,
+          "semantics": {
+            "type": "Skill",
+            "cost": 1,
+            "damage": null,
+            "block": 4,
+            "draw": 0
+          }
+        },
+        {
+          "card_id": "ESCAPE_PLAN",
+          "known": true,
+          "semantics": {
+            "type": "Skill",
+            "cost": 0,
+            "damage": null,
+            "block": 3,
+            "draw": 1
+          }
+        },
+        {
+          "card_id": "ANTICIPATE",
+          "known": true,
+          "semantics": {
+            "type": "Skill",
+            "cost": 0,
+            "damage": null,
+            "block": 0,
+            "draw": 0
+          }
+        }
+      ]
+    },
+    {
+      "run_id": "RBMEQGXPE9Z2",
+      "floor": 3,
+      "models": [
+        {
+          "card_id": "PREPARED",
+          "known": true,
+          "semantics": {
+            "type": "Skill",
+            "cost": 0,
+            "damage": null,
+            "block": 0,
+            "draw": 1
+          }
+        },
+        {
+          "card_id": "POISONED_STAB",
+          "known": true,
+          "semantics": {
+            "type": "Attack",
+            "cost": 1,
+            "damage": 6,
+            "block": 0,
+            "draw": 0
+          }
+        },
+        {
+          "card_id": "SUCKER_PUNCH",
+          "known": true,
+          "semantics": {
+            "type": "Attack",
+            "cost": 1,
+            "damage": 8,
+            "block": 0,
+            "draw": 0
+          }
+        }
+      ]
+    }
+  ],
+  "unsupported_playable_card_explicitly_unknown": true,
+  "network": "forbidden",
+  "simulation": "not invoked",
+  "scope": "Exact deployed modules plus current formal loader and frozen observed faces; no reward outcome simulation/API/game action or natural quality acceptance. First published natural run is judged by Claude."
+}

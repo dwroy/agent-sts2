@@ -5390,3 +5390,5 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
 - 2026-10-21 01:55:16 CST 原ops：W4原生实收精英材料main67fc并核subtree d71216d7；原retention complete rc1/retained（persistent game instance retained），instance-binding guard未改、未accepted或删除WT。仅保存原回执/SHA，不重试/绕守卫；材料main完成与retained分记，不改P0/P2/live边界。原件paper/materials/20261021-elite-bias-ops/retention-intake.json。
 
 - 2026-10-21 02:07:33 CST [Claude，P0 边界] CSBNU2H9LXKD 01:51 死于 F33 无厌沙虫；P0 第二次错过边界（下一局数秒内自动开出，ops 当时在处理精英审计材料）。Claude 设后台守候：1ZZHM2MV19YB 局终即写 ops/STOP 并通知 ops 发布已验 17 叶 + V6_CARD_DECIDER=jev，发布后由 ops 移除 STOP、拉起 autoplay；今后边界发布采用‘局终挂 STOP、发布后移除’。
+
+- 2026-10-21 02:17:14 CST 原ops：实收Claude02:1x，1ZZ原play局终由Claude既有守候写STOP/通知，禁止重复守候或局中STOP。原P0发布器/读回已预备（无新full/MC/API），收到原终局实核STOP/PID/漂移后17+CARDjev窄运/消费者/核号双通知，再原autoplay守卫清STOP/恢复；首局质量Claude判。旧CSB/无条件noSTOP等待被此边界策略取代，P0/P2科学门不增，未实际发布/写STOP/动actor。原件paper/materials/20261021-021x-ops/preparation.json。
