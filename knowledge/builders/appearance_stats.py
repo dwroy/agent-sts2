@@ -44,6 +44,25 @@ class AppearanceCollector:
         self.floor_evidence = []
         self.excluded = Counter()
 
+    def snapshot(self):
+        """Serializable per-run sufficient observations; never a fitted probability."""
+        return dict(events=self.events, floors={k: sorted(v) for k, v in self.floors.items()},
+                    bosses=sorted(self.bosses), bad=[[list(k), sorted(v)] for k, v in self.bad.items()],
+                    cards={k: sorted(v) for k, v in self.cards.items()},
+                    floor_evidence=self.floor_evidence, excluded=dict(self.excluded))
+
+    def merge(self, snapshot):
+        self.events.extend(snapshot['events'])
+        self.floor_evidence.extend(snapshot['floor_evidence'])
+        self.bosses.update(snapshot['bosses'])
+        self.excluded.update(snapshot['excluded'])
+        for key, values in snapshot['floors'].items():
+            self.floors[key].update(values)
+        for key, values in snapshot['cards'].items():
+            self.cards[key].update(values)
+        for key, values in snapshot['bad']:
+            self.bad[tuple(key)].update(values)
+
     def observe(self, rid, ts, state, ref):
         run = self.coverage[rid]
         if ts > run['ended'] or run['first_stop'] and ts > run['first_stop']['ts']:

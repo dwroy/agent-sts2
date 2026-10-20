@@ -1,0 +1,21 @@
+import importlib.util,json,sys,time,subprocess
+from pathlib import Path
+sys.path.insert(0,str(Path.cwd()/'knowledge/builders'))
+spec=importlib.util.spec_from_file_location('freeze',Path.cwd()/'knowledge/builders/refresh-v6-history.py');m=importlib.util.module_from_spec(spec);spec.loader.exec_module(m)
+from incremental_evidence import FrozenLogIndex
+base=Path.cwd()/'.artifacts/refresh-benchmark';root=base/'readonly-root';root.mkdir(exist_ok=True)
+for name in ('logs','knowledge'):
+    target=root/name
+    if not target.exists():target.symlink_to(Path('/home/dw/Projects/agent-sts2')/name,target_is_directory=True)
+for variant in ('cold','warm'):
+    out=base/variant;out.mkdir(exist_ok=True);receipt={};t=time.monotonic()
+    index=FrozenLogIndex(base/'cache',root/'logs')
+    try:inputs,limits=m.freeze(root,'silent',out,m.now(),receipt,index);receipt.update(freeze_seconds=time.monotonic()-t,incremental=dict(index.stats))
+    finally:index.close()
+    manifest=out/'logs.json';m.write(manifest,dict(log_byte_limits=limits,source_exclusions=receipt['source_exclusions']))
+    cmd=[sys.executable,'knowledge/builders/build-combo-metrics.py','--logs',str(root/'logs'),'--spec',str(root/'knowledge/characters/silent/build-cores.json'),'--character','silent','--manifest',str(manifest),'--simulation','off','--cache-dir',str(base/'cache'),'--output',str(out/'combo.json')]
+    for rid in receipt['ended_runs']:cmd+=['--run',rid]
+    t=time.monotonic();r=subprocess.run(cmd,text=True,capture_output=True);receipt.update(combo_seconds=time.monotonic()-t,combo_exit=r.returncode,combo_stdout=r.stdout,combo_stderr=r.stderr)
+    m.write(out/'receipt.json',receipt)
+    print(json.dumps(dict(variant=variant,freeze_seconds=receipt['freeze_seconds'],incremental=receipt['incremental'],combo_seconds=receipt['combo_seconds'],combo_exit=r.returncode,stdout=r.stdout,stderr=r.stderr[-2000:])),flush=True)
+    if r.returncode:break

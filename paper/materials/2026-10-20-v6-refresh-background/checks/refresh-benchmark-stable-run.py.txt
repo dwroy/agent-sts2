@@ -1,0 +1,8 @@
+import os,time
+from pathlib import Path
+while True:
+ try: os.kill(1454145,0)
+ except ProcessLookupError: break
+ time.sleep(1)
+source=Path('.artifacts/refresh-benchmark/run.py').read_text().replace("for variant in ('cold','warm'):","for variant in ('stable-warm',):")
+exec(compile(source, '.artifacts/refresh-benchmark/run.py', 'exec'))

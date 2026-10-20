@@ -1,0 +1,10 @@
+import subprocess,time,json,datetime
+from pathlib import Path
+root=Path('/home/dw/Projects/agent-sts2'); here=Path.cwd(); out=here/'.artifacts/legacy-timings'; b=here/'knowledge/builders'; logs=root/'logs'
+commands=[('monster-db',['python3',str(b/'build-monster-db.py'),'--states',str(logs/'states.jsonl'),'--runs',str(logs/'runs.jsonl'),'--decisions',str(logs/'decisions.jsonl'),'--game-data',str(root/'data/game-data.json'),'--out',str(out/'monster-db.json'),'--records-out',str(out/'{character}-records.json'),'--move-model-out',str(out/'move-model.json'),'--quiet']),('card-upgrades',['python3',str(b/'build-card-upgrades.py'),str(logs/'states.jsonl'),'--out',str(out/'card-upgrades.json')]),('outcome',['python3',str(b/'build-outcome-stats.py'),'--logs',str(logs),'--character','silent','--out',str(out/'outcome.json')]),('room-costs',['python3',str(b/'build-room-costs.py'),'--logs',str(logs),'--character','silent','--out',str(out/'room-costs.json')]),('boss-damage',['python3',str(b/'build-boss-damage.py'),'--logs',str(logs),'--character','silent','--out',str(out/'boss-damage.json')])]
+rows=[]
+for name,cmd in commands:
+ t=time.monotonic(); started=datetime.datetime.now().astimezone().isoformat()
+ with (out/(name+'.log')).open('w') as f:r=subprocess.run(cmd,stdout=f,stderr=subprocess.STDOUT)
+ rows.append(dict(name=name,started_at=started,seconds=time.monotonic()-t,exit_code=r.returncode,mode='readonly sources; scratch outputs; current measurement, not historical timing'))
+ (out/'receipt.json').write_text(json.dumps(rows,indent=2)+'\n');print(json.dumps(rows[-1]),flush=True)

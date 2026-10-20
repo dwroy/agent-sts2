@@ -1,0 +1,209 @@
+{
+  "cold": {
+    "freeze_seconds": 438.7416637898423,
+    "index_seconds": 264.6856225559022,
+    "incremental": {
+      "decoded_rows": 903484,
+      "indexed_rows": 903484,
+      "rebuilt_streams": [
+        "runs",
+        "states",
+        "sl-attempts",
+        "decisions"
+      ],
+      "cache_hits": 0,
+      "cache_misses": 746
+    },
+    "runs": 373,
+    "receipt": {
+      "path": ".artifacts/refresh-benchmark/cold/receipt.json",
+      "sha256": "bc8894d6da1ea39a4330544e5a825a9e9c23a0c046281adbb3df77800dc7af7f",
+      "preserved_copy": "receipts/cold.json"
+    },
+    "log_byte_limits": {
+      "runs.jsonl": 382754,
+      "states.jsonl": 14623284913,
+      "sl-attempts.jsonl": 49391038,
+      "decisions.jsonl": 2781439743
+    },
+    "source_sha256": {
+      "runs": "d30c4f6ca815e323543ac99dc803155c8e34eaef965f02902d86b6b337739d78",
+      "states": "75be6591be0d4d4f71c63790b8a2c386b950573c1daad4ae3fe9548965e00213",
+      "sl-attempts": "b9aaebf30c7735e531d9a32690380a49cf2efbbddfea20eafc71b8d75f8d8407",
+      "decisions": "e2dd0ca8c0eafcadaa5274e09433114f36fb6dd976183e6340568aa21a654b12"
+    },
+    "combo_seconds": 533.2912270929664,
+    "combo_exit": 0,
+    "prerequisites": {
+      "prerequisite_cache": {
+        "hits": 0,
+        "misses": 31711
+      }
+    },
+    "combo": {
+      "output": "/home/dw/Projects/agent-sts2/.worktrees/v6-refresh-background-incremental-20261020/.artifacts/refresh-benchmark/cold/combo.json",
+      "runs": 373,
+      "combos": 17,
+      "timings": {
+        "extract_seconds": 228.42576454696245,
+        "prerequisites_seconds": 38.01658260496333,
+        "contributions_and_reduction_seconds": 257.481300012907,
+        "pooled_reduction_seconds": 0.13692455017007887
+      },
+      "incremental": {
+        "decoded_rows": 0,
+        "indexed_rows": 903484,
+        "rebuilt_streams": [],
+        "cache_hits": 0,
+        "cache_misses": 13055
+      }
+    }
+  },
+  "warm": {
+    "freeze_seconds": 31.30669144890271,
+    "index_seconds": 11.36166087212041,
+    "incremental": {
+      "decoded_rows": 368,
+      "indexed_rows": 903852,
+      "rebuilt_streams": [],
+      "cache_hits": 746,
+      "cache_misses": 0
+    },
+    "runs": 373,
+    "receipt": {
+      "path": ".artifacts/refresh-benchmark/warm/receipt.json",
+      "sha256": "105ed1f5bbee80e8131e844f6433d867332b04d44d058848c78b73e685a19a0f",
+      "preserved_copy": "receipts/warm.json"
+    },
+    "log_byte_limits": {
+      "runs.jsonl": 382754,
+      "states.jsonl": 14629074316,
+      "sl-attempts.jsonl": 49458894,
+      "decisions.jsonl": 2801043276
+    },
+    "source_sha256": {
+      "runs": "d30c4f6ca815e323543ac99dc803155c8e34eaef965f02902d86b6b337739d78",
+      "states": "7e26e869c6710d3ab91dd613fcfbbeccce65287c70da3cb4951b13a6d2e33097",
+      "sl-attempts": "36e596c8c3c083a72cc5162ef63ae17a64816200ba72b78ba2b65ad73702d663",
+      "decisions": "b3c91703bff9978b40ca2f2e807ef66c850d6bde394ed96bfe507d380a41feb2"
+    },
+    "combo_seconds": 352.69274337706156,
+    "combo_exit": 0,
+    "prerequisites": {
+      "prerequisite_cache": {
+        "hits": 31711,
+        "misses": 0
+      }
+    },
+    "combo": {
+      "output": "/home/dw/Projects/agent-sts2/.worktrees/v6-refresh-background-incremental-20261020/.artifacts/refresh-benchmark/warm/combo.json",
+      "runs": 373,
+      "combos": 17,
+      "timings": {
+        "extract_seconds": 227.86752900504507,
+        "prerequisites_seconds": 16.65314995497465,
+        "contributions_and_reduction_seconds": 101.6371220999863,
+        "pooled_reduction_seconds": 0.1633197150658816
+      },
+      "incremental": {
+        "decoded_rows": 0,
+        "indexed_rows": 903852,
+        "rebuilt_streams": [],
+        "cache_hits": 12682,
+        "cache_misses": 373
+      }
+    }
+  },
+  "stable-warm": {
+    "freeze_seconds": 166.1036329709459,
+    "index_seconds": 10.395965496078134,
+    "incremental": {
+      "decoded_rows": 28,
+      "indexed_rows": 903880,
+      "rebuilt_streams": [],
+      "cache_hits": 0,
+      "cache_misses": 748
+    },
+    "runs": 374,
+    "receipt": {
+      "path": ".artifacts/refresh-benchmark/stable-warm/receipt.json",
+      "sha256": "9bee87ce1416d051a0cddf63ac7ade2a6d55a25a3614a14e98838b51da0afc5b",
+      "preserved_copy": "receipts/stable-warm.json"
+    },
+    "log_byte_limits": {
+      "runs.jsonl": 383757,
+      "states.jsonl": 14629491711,
+      "sl-attempts.jsonl": 49484621,
+      "decisions.jsonl": 2801705241
+    },
+    "source_sha256": {
+      "runs": "f5169fd0d840e47be82c3a96e76c6659b3d2ff3ebd9e51f18457192309dc8152",
+      "states": "6d55c2c2155ae3e5943938e0098cd339198de4ba1f906df28d3357f4d6de05a9",
+      "sl-attempts": "d5a229343082c2a15a14d1fdfef10ec3f29ce41889a5cb0ef9b774fc2bfee97b",
+      "decisions": "3c125401ce8c2d9455df225b9916f99cf475e93d96c9d0d45ef3291c4c5c4cea"
+    },
+    "combo_seconds": 168.31749588204548,
+    "combo_exit": 0,
+    "prerequisites": {
+      "prerequisite_cache": {
+        "hits": 31711,
+        "misses": 0
+      }
+    },
+    "combo": {
+      "output": "/home/dw/Projects/agent-sts2/.worktrees/v6-refresh-background-incremental-20261020/.artifacts/refresh-benchmark/stable-warm/combo.json",
+      "runs": 374,
+      "combos": 17,
+      "timings": {
+        "extract_seconds": 60.4522811290808,
+        "prerequisites_seconds": 11.653592551127076,
+        "contributions_and_reduction_seconds": 89.61571499006823,
+        "pooled_reduction_seconds": 0.1581589519046247
+      },
+      "incremental": {
+        "decoded_rows": 0,
+        "indexed_rows": 903880,
+        "rebuilt_streams": [],
+        "cache_hits": 13055,
+        "cache_misses": 35
+      }
+    }
+  },
+  "final-freeze": {
+    "freeze_seconds": 33.37911973381415,
+    "index_seconds": 10.59528147103265,
+    "incremental": {
+      "decoded_rows": 0,
+      "indexed_rows": 903880,
+      "rebuilt_streams": [],
+      "cache_hits": 748,
+      "cache_misses": 0
+    },
+    "runs": 374,
+    "receipt": {
+      "path": ".artifacts/refresh-benchmark/final-freeze/receipt.json",
+      "sha256": "d6ba1b37003d6d1d8c65bc5ca20e11f3252dfce06ae4ceb8cf89b358240d8389",
+      "preserved_copy": "receipts/final-freeze.json"
+    },
+    "log_byte_limits": {
+      "runs.jsonl": 383757,
+      "states.jsonl": 14629491711,
+      "sl-attempts.jsonl": 49484621,
+      "decisions.jsonl": 2801705241
+    },
+    "source_sha256": {
+      "runs": "f5169fd0d840e47be82c3a96e76c6659b3d2ff3ebd9e51f18457192309dc8152",
+      "states": "6d55c2c2155ae3e5943938e0098cd339198de4ba1f906df28d3357f4d6de05a9",
+      "sl-attempts": "d5a229343082c2a15a14d1fdfef10ec3f29ce41889a5cb0ef9b774fc2bfee97b",
+      "decisions": "3c125401ce8c2d9455df225b9916f99cf475e93d96c9d0d45ef3291c4c5c4cea"
+    }
+  },
+  "measurement_limits": [
+    "All commands used nice 19 and scratch outputs with simulation off; production files were not published.",
+    "cold/warm share a long-lived freeze import; final source-path cache identity was loaded on stable-warm, invalidating the freeze cache once.",
+    "warm normalized cache invalidated after implementation SHA changed during cold CLI run; it is not the stable steady state.",
+    "stable-warm added run T12TSEMGUU7F; 13055 old combo objects hit and only 35 objects missed. final-freeze is a separate all-hit measurement, not an end-to-end refresh duration.",
+    "Full prefixes still read as bytes for identity; cache serialization, source verification, final reduction and availability traverse old compact evidence.",
+    "Historical refresh, new cold, new transition and new stable measurements ran under different machine load; no paired causal speedup claim."
+  ]
+}

@@ -8,6 +8,9 @@ import { currentDecisionBudget, withIndependentDecisionBudget } from "../core/de
 import { dirname, join } from "node:path";
 import { v6ProjectionLog } from "../sim/v6-projection-log.js";
 import { V6BuildLog } from "./log.js";
+import { PROJECT_ROOT } from "../core/paths.js";
+import { appendJsonLine } from "../core/util/jsonl.js";
+import { mkdirSync } from "node:fs";
 import { str } from "../core/util/json.js";
 import { characterSchema } from "./formats.js";
 import { validate } from "./schema.js";
@@ -78,7 +81,11 @@ export class V6ProjectionRuntime {
 /** Off mode does not allocate a runner or read any V6 files. */
 export function productionV6Projection(runner?: DeckSimRunner, runPlanLog?: string): V6ProjectionRuntime | undefined {
   if (v6Config().mode === "off") return undefined;
-  const input = v6ProjectionInputs();
+  const input = v6ProjectionInputs(undefined, undefined, row => {
+    const directory = runPlanLog ? dirname(runPlanLog) : join(PROJECT_ROOT, "logs");
+    mkdirSync(directory, { recursive: true });
+    appendJsonLine(join(directory, "v6-history-snapshots.jsonl"), { schema: "v6-history-snapshot-v1", ...row });
+  });
   return new V6ProjectionRuntime(new V6ProjectionEngine(runner ?? new SerialDeckRunner()), async (env, phase) => {
     const context = await input(env, phase); if (!context) return null;
     const result = context.factory.create(context.situation);

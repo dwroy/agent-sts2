@@ -218,10 +218,10 @@ class Recovery:
                 with dest.open("x") as out: out.write((attempt / "report.md").read_text())
                 receipt.update(status="refreshing", report=str(dest), report_sha256=digest(dest), report_exit=0, summary=indexed[0])
                 save()
-                os.environ["REFRESH_WAIT"] = "1"
                 receipt["refresh"] = report.refresh_knowledge(character)
                 save()
-                if receipt["refresh"].get("exit") != 0: raise ValueError("required refresh did not finish successfully; retain indexed run")
+                if receipt["refresh"].get("exit") != 0 and receipt["refresh"].get("status") != "background":
+                    raise ValueError("refresh dispatch failed; retain indexed run")
                 report.refresh_costs()
                 report.boss_sim_check(character)
                 receipt.update(status="complete", completed_at=stamp(), costs="background requested", boss_check="original dispatcher invoked")

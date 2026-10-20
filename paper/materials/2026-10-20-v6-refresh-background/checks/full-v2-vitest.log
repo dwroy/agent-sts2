@@ -1,0 +1,101 @@
+
+ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/v6-refresh-background-incremental-20261020/agent
+
+.....
+----------------------------------------------------------------------
+Ran 5 tests in 0.054s
+
+OK
+ ❯ tests/ops-current-events.test.ts (2 tests | 1 failed) 2998ms
+   × guards ordinary completion, records, source changes and short checklist using fixed local inputs 2996ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/ops-current-events.test.ts > guards ordinary completion, records, source changes and short checklist using fixed local inputs
+AssertionError: .F.......FF.F..E
+======================================================================
+ERROR: test_two_candidates_share_one_dataset (__main__.OrdinaryClose.test_two_candidates_share_one_dataset)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/dw/Projects/agent-sts2/.worktrees/v6-refresh-background-incremental-20261020/agent/../ops/tests/test_ordinary_close.py", line 88, in test_two_candidates_share_one_dataset
+    self.assertEqual(self.receipt()["records"]["commit"], self.receipt("20261018-170001")["records"]["commit"])
+                     ~~~~~~~~~~~~~~^^^^^^^^^^^
+KeyError: 'records'
+
+======================================================================
+FAIL: test_clean_real_validator_single_dataset_commit_and_no_wake (__main__.OrdinaryClose.test_clean_real_validator_single_dataset_commit_and_no_wake)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/dw/Projects/agent-sts2/.worktrees/v6-refresh-background-incremental-20261020/agent/../ops/tests/test_ordinary_close.py", line 72, in test_clean_real_validator_single_dataset_commit_and_no_wake
+    self.assertEqual(receipt["state"], "closed", receipt)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 'attention' != 'closed'
+- attention
++ closed
+ : {'schema': 'ordinary-close-v1', 'batch': '20261018-170000', 'state': 'attention', 'at': '2026-10-20T10:07:17+08:00', 'task': 'postmortem', 'runs': ['SILENT000001'], 'proof': {'head': '833bfac74ea293169f0505e3f42b15e231086a49', 'report': '/home/dw/Projects/agent-sts2/.t/tmpns0j8vl6/learner/runs/fixed/report.md', 'report_sha256': 'b39be62d37951e3d17e4d519958315d21f43743fd6ab290df07a799d766d14cb'}, 'event_kind': 'learner-done', 'event_text': '原完成事件', 'original_batch': {'task': 'postmortem', 'character': 'silent', 'state': 'done', 'rc': 0, 'runs': ['SILENT000001'], 'missing': [], 'ordinary_baseline': {'head': '833bfac74ea293169f0505e3f42b15e231086a49', 'notices': [], 'ledger': {'bytes': 392, 'sha256': '3e4745648a19ba31ec507f114c541a0f3fef047b85b76bff7d971fadbf2a7789'}}}, 'report': {'task': 'postmortem', 'appended': ['SILENT000001'], 'skipped': [], 'bugs': [], 'ledger': {'check': 0}, 'code_proposals': [], 'report': '/home/dw/Projects/agent-sts2/.t/tmpns0j8vl6/learner/runs/fixed/report.md'}, 'ops_event_enqueued': True, 'model_calls': 0, 'game_actions': 0, 'ledger': {'problems': 0, 'items': 1}, 'started': '2026-10-20T10:07:17+08:00', 'dataset_attempts': 1, 'reason': 'gitleaks unavailable; retain scan inputs', 'finished': '2026-10-20T10:07:17+08:00', 'event': None}
+
+======================================================================
+FAIL: test_original_finish_cli_closes_clean_postmortem_without_enqueue (__main__.OrdinaryClose.test_original_finish_cli_closes_clean_postmortem_without_enqueue)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/dw/Projects/agent-sts2/.worktrees/v6-refresh-background-incremental-20261020/agent/../ops/tests/test_ordinary_close.py", line 104, in test_original_finish_cli_closes_clean_postmortem_without_enqueue
+    self.assertEqual(self.receipt()["state"], "closed")
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 'attention' != 'closed'
+- attention
++ closed
+
+
+======================================================================
+FAIL: test_original_fix_finish_uses_existing_no_change_guard_before_suppressing_event (__main__.OrdinaryClose.test_original_fix_finish_uses_existing_no_change_guard_before_suppressing_event)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/dw/Projects/agent-sts2/.worktrees/v6-refresh-background-incremental-20261020/agent/../ops/tests/test_ordinary_close.py", line 134, in test_original_fix_finish_uses_existing_no_change_guard_before_suppressing_event
+    self.assertEqual(self.receipt()["state"], "closed")
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 'attention' != 'closed'
+- attention
++ closed
+
+
+======================================================================
+FAIL: test_parallel_record_change_rejects_stale_commit_and_leaves_index_unlocked (__main__.OrdinaryClose.test_parallel_record_change_rejects_stale_commit_and_leaves_index_unlocked)
+----------------------------------------------------------------------
+ValueError: gitleaks unavailable; retain scan inputs
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/dw/Projects/agent-sts2/.worktrees/v6-refresh-background-incremental-20261020/agent/../ops/tests/test_ordinary_close.py", line 237, in test_parallel_record_change_rejects_stale_commit_and_leaves_index_unlocked
+    with self.assertRaisesRegex(ValueError, "parallel record change"):
+         ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: "parallel record change" does not match "gitleaks unavailable; retain scan inputs"
+
+----------------------------------------------------------------------
+Ran 16 tests in 2.887s
+
+FAILED (failures=4, errors=1)
+: expected 1 to be +0 // Object.is equality
+
+- Expected
++ Received
+
+- 0
++ 1
+
+ ❯ tests/ops-current-events.test.ts:9:56
+      7| it("guards ordinary completion, records, source changes and short chec…
+      8|   const result = spawnSync("python3", ["-B", "../ops/tests/test_ordina…
+      9|   expect(result.status, result.stdout + result.stderr).toBe(0);
+       |                                                        ^
+     10| }, 125_000);
+     11|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed | 607 passed (608)
+      Tests  1 failed | 5778 passed | 2 skipped (5781)
+   Start at  09:57:11
+   Duration  642.62s (transform 17.20s, setup 34.73s, import 116.88s, tests 1052.03s, environment 62ms)
+

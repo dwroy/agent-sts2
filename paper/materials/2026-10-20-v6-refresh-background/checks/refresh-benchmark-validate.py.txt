@@ -1,0 +1,17 @@
+import json,sys,time,subprocess,hashlib,os
+from pathlib import Path
+sys.path.insert(0,str(Path.cwd()/'knowledge/builders'))
+sys.path.insert(0,str(Path.cwd()/'learner'))
+from incremental_evidence import prefix_hash
+root=Path.cwd();base=root/'.artifacts/refresh-benchmark';d=base/'cold';inputs={}
+for k,name in dict(coverage='coverage.json',frames='frames.jsonl',fights='fights.json',opportunities='opportunities.json',appearance='appearance.json',combo_metrics='combo.json').items():
+ p=d/name;raw=p.read_bytes();inputs[k]=dict(path=str(p),bytes=len(raw),sha256=hashlib.sha256(raw).hexdigest())
+cutoff=json.loads((d/'appearance.json').read_bytes())['cutoff']; manifest=d/'history-inputs.json';manifest.write_text(json.dumps(dict(schema='v6-history-inputs-v1',character='silent',cutoff=cutoff,inputs=inputs))+'\n')
+receipt={};env=dict(os.environ,PATH=str(Path.home()/'.local/node/bin')+':'+os.environ['PATH'])
+for name,cmd in [('assemble',['python3',str(root/'knowledge/builders/build-v6-history.py'),'--manifest',str(manifest),'--out',str(d/'v6-history.json')]),('validate',['node','--import','tsx',str(root/'knowledge/builders/check-v6-refresh.mts'),'history',str(d/'v6-history.json'),'silent'])]:
+ t=time.monotonic();r=subprocess.run(cmd,capture_output=True,text=True,env=env,cwd=root/'agent');receipt[name]=dict(seconds=time.monotonic()-t,exit_code=r.returncode,stdout=r.stdout,stderr=r.stderr);(d/'validation.json').write_text(json.dumps(receipt,indent=2)+'\n');print(json.dumps(dict(name=name,**receipt[name])),flush=True)
+ if r.returncode:raise SystemExit(r.returncode)
+t=time.monotonic();sources=json.loads((d/'receipt.json').read_text())['sources']; result={}
+for stream,before in sources.items():result[stream]=prefix_hash(Path(before['source']),before['source_size'])==before['source_sha256']
+receipt['raw_prefix_verify']=dict(seconds=time.monotonic()-t,matched=result);receipt['output']=dict(bytes=(d/'v6-history.json').stat().st_size,sha256=hashlib.sha256((d/'v6-history.json').read_bytes()).hexdigest());(d/'validation.json').write_text(json.dumps(receipt,indent=2)+'\n');print(json.dumps(dict(name='raw_prefix_verify',**receipt['raw_prefix_verify'])),flush=True)
+if not all(result.values()):raise SystemExit('raw prefix changed')

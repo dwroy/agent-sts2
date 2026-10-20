@@ -1,0 +1,14 @@
+import os,subprocess,time,json,hashlib
+from pathlib import Path
+from datetime import datetime,timezone
+root=Path.cwd();out=root/'.artifacts/post-w3'; env=dict(os.environ,PATH='/home/dw/.local/node/bin:/home/dw/.local/bin:/usr/local/bin:/usr/bin:/bin',TMPDIR='/home/dw/Projects/agent-sts2/.t')
+base=subprocess.check_output(['git','merge-base','HEAD','main'],text=True).strip()
+paths=subprocess.check_output(['git','diff','--name-only',base,'HEAD'],text=True).splitlines()
+sources={f:dict(sha256=hashlib.sha256((root/f).read_bytes()).hexdigest(),bytes=(root/f).stat().st_size) for f in paths if f.startswith(('agent/','knowledge/','ops/'))}
+(out/'checked-sources.json').write_text(json.dumps(sources,indent=2)+'\n')
+rows=[]
+for name,args,cwd in [('tsc',['npx','tsc','-p','tsconfig.json','--noEmit'],root/'agent'),('related',['npx','vitest','run','--maxWorkers=2','tests/v6-history-pack.test.ts','tests/v6-history-byte-metadata.test.ts','tests/v6-history-refresh-exclusions.test.ts','tests/v6-projection-input.test.ts','tests/v6-projection-runtime.test.ts','tests/v6-projection.test.ts','tests/v6-projection-progress.test.ts','tests/v6-history-targets.test.ts','tests/ops-host-recovery.test.ts'],root/'agent')]:
+ t=time.monotonic();row=dict(name=name,started_at=datetime.now(timezone.utc).isoformat())
+ with (out/(name+'.log')).open('w') as f:r=subprocess.run(args,cwd=cwd,env=env,stdout=f,stderr=subprocess.STDOUT)
+ row.update(exit_code=r.returncode,seconds=time.monotonic()-t,ended_at=datetime.now(timezone.utc).isoformat());rows.append(row);(out/'checks.json').write_text(json.dumps(dict(base=base,checks=rows),indent=2)+'\n');print(json.dumps(row),flush=True)
+ if r.returncode:raise SystemExit(r.returncode)

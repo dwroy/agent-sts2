@@ -1,0 +1,78 @@
+[
+  {
+    "source": "ops/codex-ops/v6-refresh/silent/refresh-8ltr96g5/receipt.json",
+    "sha256": "8fd550c01b2b4247b5f60e2bef2c4950cc3164626611cfae2a31f5f4c2ee206a",
+    "status": "failed",
+    "error": "RuntimeError: v6-history failed with exit 1",
+    "started_at": "2026-10-20T01:02:48.848Z",
+    "ended_at": "2026-10-20T01:14:27.627Z",
+    "ended_runs": 373,
+    "steps": [
+      {
+        "name": "validate-cores",
+        "started_at": "2026-10-20T01:06:04.813Z",
+        "ended_at": "2026-10-20T01:06:05.329Z",
+        "exit_code": 0
+      },
+      {
+        "name": "combo-metrics",
+        "started_at": "2026-10-20T01:06:05.418Z",
+        "ended_at": "2026-10-20T01:14:18.619Z",
+        "exit_code": 0
+      },
+      {
+        "name": "v6-history",
+        "started_at": "2026-10-20T01:14:18.651Z",
+        "ended_at": "2026-10-20T01:14:27.627Z",
+        "exit_code": 1
+      }
+    ],
+    "log_byte_limits": {
+      "runs.jsonl": 382754,
+      "states.jsonl": 14618135916,
+      "sl-attempts.jsonl": 49391038,
+      "decisions.jsonl": 2776381218
+    }
+  },
+  {
+    "source": "ops/codex-ops/v6-refresh/silent/refresh-gvw5soon/receipt.json",
+    "sha256": "2ef8f809edae2e2989430dab32c75c14bb20a000ce2504d97cc224e5f950b4f2",
+    "status": "published",
+    "error": null,
+    "started_at": "2026-10-19T23:39:46.535Z",
+    "ended_at": "2026-10-20T00:00:08.346Z",
+    "ended_runs": 372,
+    "steps": [
+      {
+        "name": "validate-cores",
+        "started_at": "2026-10-19T23:44:02.762Z",
+        "ended_at": "2026-10-19T23:44:03.700Z",
+        "exit_code": 0
+      },
+      {
+        "name": "combo-metrics",
+        "started_at": "2026-10-19T23:44:03.804Z",
+        "ended_at": "2026-10-19T23:55:58.233Z",
+        "exit_code": 0
+      },
+      {
+        "name": "v6-history",
+        "started_at": "2026-10-19T23:55:58.272Z",
+        "ended_at": "2026-10-19T23:56:10.983Z",
+        "exit_code": 0
+      },
+      {
+        "name": "validate-history",
+        "started_at": "2026-10-19T23:56:10.984Z",
+        "ended_at": "2026-10-19T23:56:12.283Z",
+        "exit_code": 0
+      }
+    ],
+    "log_byte_limits": {
+      "runs.jsonl": 381905,
+      "states.jsonl": 14614066060,
+      "sl-attempts.jsonl": 49319425,
+      "decisions.jsonl": 2762926276
+    }
+  }
+]

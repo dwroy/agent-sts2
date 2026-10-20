@@ -9,6 +9,7 @@ from collections import Counter, defaultdict
 from datetime import datetime, timezone
 import fcntl
 import hashlib
+import heapq
 import json
 import os
 from pathlib import Path
@@ -22,6 +23,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[2] / 'learner'))
 from evidence_identity import scan, run_identity, identities
 from history_boundary import timestamp, after_run_end
 from appearance_stats import AppearanceCollector
+from incremental_evidence import FrozenLogIndex, implementation, prefix_hash
 
 STREAMS = ('runs', 'states', 'sl-attempts', 'decisions')
 
@@ -53,11 +55,22 @@ def strict_rows(path, limit, info, on_gap=None):
         raise ValueError(f'incomplete frozen source: {path}; {info}')
 
 
-def freeze(root, character, directory, cutoff, receipt):
+def freeze(root, character, directory, cutoff, receipt, index=None):
     logs = root / 'logs'
     limits = {s + '.jsonl': (logs / (s + '.jsonl')).stat().st_size if (logs / (s + '.jsonl')).exists() else None for s in STREAMS}
     receipt['log_byte_limits'] = limits
     receipt['sources'] = {}
+    if index is not None:
+        started = time.monotonic()
+        for stream in STREAMS:
+            receipt['sources'][stream] = index.update(stream, limits[stream + '.jsonl'])
+        receipt['index_seconds'] = time.monotonic() - started
+
+    def rows(stream, info, gap):
+        if index is None:
+            return strict_rows(logs / (stream + '.jsonl'), limits[stream + '.jsonl'], info, gap)
+        info.update(index.metadata(stream))
+        return index.rows(stream, on_gap=gap)
     exclusions = directory / 'excluded-source-rows.jsonl'
     exclusions.write_bytes(b'')
     exclusion_sha = hashlib.sha256()
@@ -81,7 +94,7 @@ def freeze(root, character, directory, cutoff, receipt):
     runs, summaries, entries = {}, defaultdict(list), {}
     excluded = Counter()
     info = receipt['sources']['runs'] = {}
-    for row, ref in strict_rows(logs / 'runs.jsonl', limits['runs.jsonl'], info, record_gap):
+    for row, ref in rows('runs', info, record_gap):
         if not isinstance(row, dict) or str(row.get('character', '')).lower() != character or not row.get('ended'):
             continue
         ended = timestamp(row['ended'])
@@ -99,7 +112,7 @@ def freeze(root, character, directory, cutoff, receipt):
     if not runs:
         raise ValueError('no complete own ended run evidence; keep previous history')
     info = receipt['sources']['sl-attempts'] = {}
-    for row, ref in strict_rows(logs / 'sl-attempts.jsonl', limits['sl-attempts.jsonl'], info, record_gap):
+    for row, ref in rows('sl-attempts', info, record_gap):
         rid = run_identity(row)
         if rid not in runs:
             continue
@@ -122,56 +135,94 @@ def freeze(root, character, directory, cutoff, receipt):
     appearance = AppearanceCollector(character, cutoff, runs, coverage)
     frames = directory / 'frames.jsonl'
     refs = directory / 'frame-sources.jsonl'
-    info = receipt['sources']['states'] = {}
-    with frames.open('w') as out, refs.open('w') as raw_refs:
-        for row, ref in strict_rows(logs / 'states.jsonl', limits['states.jsonl'], info, record_gap):
+    info = receipt['sources']['states'] = index.metadata('states') if index is not None else {}
+    grouped = defaultdict(list)
+    if index is None:
+        for row, ref in rows('states', info, record_gap):
             rid = run_identity(row)
-            if rid not in runs:
-                continue
-            s = row.get('state') or {}
-            r = s.get('run') or {}
-            if str(r.get('character_id', '')).lower() != character:
-                raise ValueError('state character mismatch')
-            ts = timestamp(row['ts'])
-            if ts > runs[rid]['ended']:
-                excluded['frame_after_run_end'] += 1
-                record_gap(dict(ref, reason='frame_after_run_end', run_id=rid, ts=ts, run_ended=runs[rid]['ended']))
-                continue
-            appearance.observe(rid, ts, s, ref)
-            try:
-                deck = [{'id': c['card_id'], 'upgraded': c['upgraded']} for c in r['deck']]
-                if (any(not isinstance(c['id'], str) or type(c['upgraded']) is not bool for c in deck)
-                    or any(type(r.get(k)) not in (int, float) for k in ('current_hp', 'max_hp', 'gold'))
-                    or type(r.get('floor')) is not int or not isinstance(r.get('act_id'), (str, int))
-                    or not isinstance(s.get('screen'), str)):
-                    raise ValueError('incomplete frame')
-            except (KeyError, TypeError, ValueError):
-                excluded['incomplete_frame'] += 1
-                continue
-            frame = dict(run_id=rid, ts=ts, floor=r['floor'], act_id=str(r['act_id']), screen=s['screen'],
-                         hp=r['current_hp'], max_hp=r['max_hp'], gold=r['gold'], deck=deck)
-            for key in ('in_combat', 'turn'):
-                if key in s:
-                    frame[key] = s[key]
-            if r.get('boss_id'):
-                frame['boss_id'] = r['boss_id']
-            out.write(json.dumps(frame) + '\n')
-            raw_refs.write(json.dumps(dict(run_id=rid, source=ref)) + '\n')
-            for i, item in enumerate(summaries[rid]):
-                a = item['row']
-                if (a.get('fight_kind') == 'boss' and a.get('floor') == frame['floor'] and frame.get('in_combat') and frame.get('turn') == 1
-                    and timestamp(a['started_at']) <= ts <= timestamp(a['ended_at'])):
-                    key = (rid, i)
-                    if key not in entries or ts < entries[key]['ts']:
-                        entries[key] = dict(ts=ts, hp=frame['hp'], max_hp=frame['max_hp'])
-    info = receipt['sources']['decisions'] = {}
-    # Validate the decision prefix too: the existing combo CLI reopens the same frozen cuts.
-    for row, ref in strict_rows(logs / 'decisions.jsonl', limits['decisions.jsonl'], info, record_gap):
-        rid = run_identity(row)
-        if rid in runs and after_run_end(row, runs[rid]['ended']):
-            excluded['decision_after_run_end'] += 1
-            record_gap(dict(ref, reason='decision_after_run_end', run_id=rid,
-                            ts=timestamp(row['ts']), run_ended=runs[rid]['ended']))
+            if rid in runs:
+                grouped[rid].append((row, ref))
+    else:
+        for ref, _rid, reason in index.references('states'):
+            if reason:
+                record_gap(dict(ref, reason=reason))
+    algorithm = implementation(__file__, Path(__file__).with_name('appearance_stats.py'), Path(__file__).with_name('history_boundary.py'))
+    captured_runs = []
+    for rid in runs:
+        def collect():
+            captured, entries, gaps, excluded = [], {}, [], Counter()
+            appearance = AppearanceCollector(character, cutoff, {rid: runs[rid]}, [c for c in coverage if c['run_id'] == rid])
+            source_rows = index.rows('states', [rid]) if index is not None else grouped[rid]
+            for row, ref in source_rows:
+                s = row.get('state') or {}
+                r = s.get('run') or {}
+                if str(r.get('character_id', '')).lower() != character:
+                    raise ValueError('state character mismatch')
+                ts = timestamp(row['ts'])
+                if ts > runs[rid]['ended']:
+                    excluded['frame_after_run_end'] += 1
+                    gaps.append(dict(ref, reason='frame_after_run_end', run_id=rid, ts=ts, run_ended=runs[rid]['ended']))
+                    continue
+                appearance.observe(rid, ts, s, ref)
+                try:
+                    deck = [{'id': c['card_id'], 'upgraded': c['upgraded']} for c in r['deck']]
+                    if (any(not isinstance(c['id'], str) or type(c['upgraded']) is not bool for c in deck)
+                        or any(type(r.get(k)) not in (int, float) for k in ('current_hp', 'max_hp', 'gold'))
+                        or type(r.get('floor')) is not int or not isinstance(r.get('act_id'), (str, int))
+                        or not isinstance(s.get('screen'), str)):
+                        raise ValueError('incomplete frame')
+                except (KeyError, TypeError, ValueError):
+                    excluded['incomplete_frame'] += 1
+                    continue
+                frame = dict(run_id=rid, ts=ts, floor=r['floor'], act_id=str(r['act_id']), screen=s['screen'],
+                             hp=r['current_hp'], max_hp=r['max_hp'], gold=r['gold'], deck=deck)
+                for key in ('in_combat', 'turn'):
+                    if key in s:
+                        frame[key] = s[key]
+                if r.get('boss_id'):
+                    frame['boss_id'] = r['boss_id']
+                captured.append(dict(frame=frame, source=ref))
+                for i, item in enumerate(summaries[rid]):
+                    a = item['row']
+                    if (a.get('fight_kind') == 'boss' and a.get('floor') == frame['floor'] and frame.get('in_combat') and frame.get('turn') == 1
+                        and timestamp(a['started_at']) <= ts <= timestamp(a['ended_at'])):
+                        key = i
+                        if key not in entries or ts < entries[key]['ts']:
+                            entries[key] = dict(ts=ts, hp=frame['hp'], max_hp=frame['max_hp'])
+            return dict(frames=captured, entries={str(k): v for k, v in entries.items()}, gaps=gaps,
+                        excluded=dict(excluded), appearance=appearance.snapshot())
+        part = index.cached('freeze-run', [algorithm, character, index.run_signature(rid, ('runs', 'sl-attempts', 'states'))], collect) if index is not None else collect()
+        captured_runs.append(part['frames'])
+        entries.update({(rid, int(k)): v for k, v in part['entries'].items()})
+        excluded.update(part['excluded'])
+        appearance.merge(part['appearance'])
+        for gap in part['gaps']:
+            record_gap(dict(gap, source_size=limits['states.jsonl']))
+    with frames.open('w') as out, refs.open('w') as raw_refs:
+        for item in heapq.merge(*captured_runs, key=lambda item: item['source']['offset']):
+            out.write(json.dumps(item['frame']) + '\n')
+            raw_refs.write(json.dumps(dict(run_id=item['frame']['run_id'], source=dict(item['source'], source_size=limits['states.jsonl']))) + '\n')
+    info = receipt['sources']['decisions'] = index.metadata('decisions') if index is not None else {}
+    if index is None:
+        decision_rows = rows('decisions', info, record_gap)
+        for row, ref in decision_rows:
+            rid = run_identity(row)
+            if rid in runs and after_run_end(row, runs[rid]['ended']):
+                excluded['decision_after_run_end'] += 1
+                record_gap(dict(ref, reason='decision_after_run_end', run_id=rid,
+                                ts=timestamp(row['ts']), run_ended=runs[rid]['ended']))
+    else:
+        for ref, _rid, reason in index.references('decisions'):
+            if reason:
+                record_gap(dict(ref, reason=reason))
+        for rid in runs:
+            def decisions():
+                return [dict(ref, reason='decision_after_run_end', run_id=rid, ts=timestamp(row['ts']), run_ended=runs[rid]['ended'])
+                        for row, ref in index.rows('decisions', [rid]) if after_run_end(row, runs[rid]['ended'])]
+            gaps = index.cached('decision-exclusions', [algorithm, index.run_signature(rid, ('runs', 'decisions'))], decisions)
+            excluded['decision_after_run_end'] += len(gaps)
+            for gap in gaps:
+                record_gap(dict(gap, source_size=limits['decisions.jsonl']))
     fights = []
     for rid, items in summaries.items():
         for i, item in enumerate(items):
@@ -232,6 +283,7 @@ def refresh(root, ops_root, character, run_command=None):
 
     def command(name, argv):
         step = dict(name=name, argv=list(map(str, argv)), started_at=now(), exit_code=None)
+        started = time.monotonic()
         receipt['steps'].append(step)
         try:
             with (directory / (name + '.stdout')).open('wb') as out, (directory / (name + '.stderr')).open('wb') as err:
@@ -242,20 +294,27 @@ def refresh(root, ops_root, character, run_command=None):
             raise
         finally:
             step.update(ended_at=now(), stdout=descriptor(directory / (name + '.stdout')),
-                        stderr=descriptor(directory / (name + '.stderr')))
+                        stderr=descriptor(directory / (name + '.stderr')), seconds=time.monotonic() - started)
         if result.returncode:
             raise RuntimeError(f'{name} failed with exit {result.returncode}')
 
     try:
         if node is None:
             raise ValueError('node unavailable; do not install dependencies')
-        # Use the existing publication lock, shared with main/live integration.
-        with (ops_root / 'ops/live-merge.lock').open('a') as lock:
+        # Statistics have their own worker lock; never hold the integration lock during computation.
+        with (parent / 'refresh.lock').open('a') as lock:
             fcntl.flock(lock, fcntl.LOCK_EX)
             own = root / 'knowledge/characters' / character
             if own.resolve() != root / 'knowledge/characters' / character or any((own / name).is_symlink() for name in ('build-cores.json', 'v6-history.json', 'construction-opportunities.json')):
                 raise ValueError('redirected character knowledge path')
-            inputs, limits = freeze(root, character, directory, receipt['started_at'], receipt)
+            index = FrozenLogIndex(parent / 'cache', root / 'logs')
+            started = time.monotonic()
+            try:
+                inputs, limits = freeze(root, character, directory, receipt['started_at'], receipt, index)
+                receipt['freeze_seconds'] = time.monotonic() - started
+                receipt['incremental'] = index.stats
+            finally:
+                index.close()
             log_manifest = directory / 'logs.json'
             write(log_manifest, dict(log_byte_limits=limits, source_exclusions=receipt['source_exclusions']))
             spec = root / 'knowledge/characters' / character / 'build-cores.json'
@@ -275,7 +334,7 @@ def refresh(root, ops_root, character, run_command=None):
                 combo = directory / 'combo-metrics.json'
                 argv = [sys.executable, root / 'knowledge/builders/build-combo-metrics.py', '--logs', root / 'logs',
                         '--spec', frozen_spec, '--character', character, '--manifest', log_manifest,
-                        '--simulation', 'off', '--output', combo]
+                        '--simulation', 'off', '--cache-dir', parent / 'cache', '--output', combo]
                 for rid in receipt['ended_runs']:
                     argv += ['--run', rid]
                 command('combo-metrics', argv)
@@ -296,19 +355,13 @@ def refresh(root, ops_root, character, run_command=None):
                 raise ValueError('history output scope mismatch')
             # Detect modifications to frozen prefixes; appended future rows are deliberately ignored.
             # Exclusions were already recorded in full; the second scan checks every raw byte, including gaps.
+            started = time.monotonic()
             for stream, before in receipt['sources'].items():
-                after = {}
-                for _row, _ref in strict_rows(root / 'logs' / (stream + '.jsonl'), before['source_size'], after, on_gap=lambda _gap: None):
-                    pass
-                if after['source_sha256'] != before['source_sha256']:
+                if prefix_hash(root / 'logs' / (stream + '.jsonl'), before['source_size']) != before['source_sha256']:
                     raise ValueError('frozen source changed: ' + stream)
+            receipt['verify_prefix_seconds'] = time.monotonic() - started
             receipt['output'] = descriptor(output)
             target = root / 'knowledge/characters' / character / 'v6-history.json'
-            receipt['previous'] = descriptor(target) if target.exists() else None
-            if target.exists():
-                previous = directory / 'previous-v6-history.json'
-                previous.write_bytes(target.read_bytes())
-                receipt['rollback_copy'] = descriptor(previous)
             fd, temporary = tempfile.mkstemp(prefix='.v6-history-', dir=target.parent)
             try:
                 with os.fdopen(fd, 'wb') as out:
@@ -316,7 +369,22 @@ def refresh(root, ops_root, character, run_command=None):
                     out.flush()
                     os.fsync(out.fileno())
                     os.fchmod(out.fileno(), 0o644)
-                os.replace(temporary, target)
+                with (ops_root / 'ops/live-merge.lock').open('a') as publication:
+                    fcntl.flock(publication, fcntl.LOCK_EX)
+                    if receipt.get('spec_source') and descriptor(spec)['sha256'] != receipt['spec_source']['sha256']:
+                        raise ValueError('formal core changed while computing; retain previous packet')
+                    receipt['previous'] = descriptor(target) if target.exists() else None
+                    if target.exists():
+                        previous = directory / 'previous-v6-history.json'
+                        previous.write_bytes(target.read_bytes())
+                        receipt['rollback_copy'] = descriptor(previous)
+                        try:
+                            prior_cutoff = json.loads(previous.read_bytes())['data']['cutoff']
+                        except (ValueError, KeyError, TypeError):
+                            prior_cutoff = None
+                        if prior_cutoff and prior_cutoff > pack['data']['cutoff']:
+                            raise ValueError('newer history already published')
+                    os.replace(temporary, target)
             finally:
                 Path(temporary).unlink(missing_ok=True)
             receipt.update(status='published', published=dict(path=str(target), sha256=receipt['output']['sha256'], at=now()))

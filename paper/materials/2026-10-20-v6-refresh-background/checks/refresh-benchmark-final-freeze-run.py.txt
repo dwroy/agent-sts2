@@ -1,0 +1,14 @@
+import os,time
+from pathlib import Path
+while True:
+ try: os.kill(1562031,0)
+ except ProcessLookupError: break
+ time.sleep(1)
+source=Path('.artifacts/refresh-benchmark/run.py').read_text().split("for variant in ('cold','warm'):")[0]
+exec(compile(source, '.artifacts/refresh-benchmark/run.py', 'exec'))
+out=base/'final-freeze';out.mkdir(exist_ok=True);receipt={};t=time.monotonic();index=FrozenLogIndex(base/'cache',root/'logs')
+try:
+ inputs,limits=m.freeze(root,'silent',out,m.now(),receipt,index);receipt.update(freeze_seconds=time.monotonic()-t,incremental=dict(index.stats))
+finally:index.close()
+m.write(out/'receipt.json',receipt)
+print(json.dumps(dict(freeze_seconds=receipt['freeze_seconds'],incremental=receipt['incremental'],ended_runs=len(receipt['ended_runs']))),flush=True)

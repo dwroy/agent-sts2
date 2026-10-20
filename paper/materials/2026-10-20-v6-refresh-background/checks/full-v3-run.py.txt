@@ -1,0 +1,11 @@
+import subprocess,json,time,os
+from pathlib import Path
+from datetime import datetime,timezone
+root=Path.cwd();out=root/'.artifacts/full-v3';env=dict(os.environ,TMPDIR='/home/dw/Projects/agent-sts2/.t', PATH='/home/dw/.local/node/bin:/home/dw/.local/bin:/usr/local/bin:/usr/bin:/bin')
+checks=[]
+for name,argv in [('tsc',['npx','tsc','-p','tsconfig.json','--noEmit']),('vitest',['npx','vitest','run','--maxWorkers=2'])]:
+    row=dict(name=name,started_at=datetime.now(timezone.utc).isoformat());t=time.monotonic()
+    with (out/(name+'.log')).open('w') as log:r=subprocess.run(argv,cwd=root/'agent',env=env,stdout=log,stderr=subprocess.STDOUT)
+    row.update(exit_code=r.returncode,seconds=time.monotonic()-t,ended_at=datetime.now(timezone.utc).isoformat());checks.append(row)
+    (out/'checks.json').write_text(json.dumps(checks,indent=2)+'\n');print(json.dumps(row),flush=True)
+    if r.returncode:break

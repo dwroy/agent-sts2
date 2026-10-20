@@ -104,3 +104,15 @@ it("shares the frozen factory while W7 replaces resource options without changin
   vi.stubEnv("V6_BUILD", "off");
   expect(await input(e, "pick")).toBeNull();
 });
+
+it("logs the freshness of the completed packet once per run, with zero disabled reads", async () => {
+  const { root, e } = fixture(); const event = vi.fn();
+  const load = v6ProjectionInputs(root, () => "2020-01-02T00:00:00.000Z", event);
+  await load(e, "pick"); await load(e, "act");
+  expect(event).toHaveBeenCalledTimes(1);
+  expect(event).toHaveBeenCalledWith(expect.objectContaining({
+    status: "loaded", cutoff: "2020-01-01T00:00:00.000Z", age_ms: 86_400_000, policy: "last_completed_packet",
+  }));
+  vi.stubEnv("V6_BUILD", "off"); await v6ProjectionInputs("/must/not/read")(e, "pick");
+  expect(event).toHaveBeenCalledTimes(1);
+});
