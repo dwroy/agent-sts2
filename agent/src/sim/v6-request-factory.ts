@@ -11,15 +11,14 @@ import { deckBudget } from "../memory/run-constraints.js";
 import type { BuildCore } from "../v6/build-core.js";
 import type { V6Config } from "../v6/config.js";
 import type { Character } from "../v6/formats.js";
-import type { BossTrustData } from "./boss-trust.js";
-import { bossKeyOf } from "./boss-lines.js";
-import type { SyntheticStartOptions } from "./boss-start.js";
+import { BOSS_KEYS, type BossTrustData } from "./boss-trust.js";
+import { bossKey, type SyntheticStartOptions } from "./boss-start.js";
 import { v6Digest, v6Directions, type V6ProjectionOption } from "./v6-completion.js";
 import type { V6HistoryLoad } from "./v6-history-pack.js";
 import type { V6PreparedProjection, V6ProjectionRequest } from "./v6-projection.js";
 import { projectV6RouteEntries, type V6RouteInput, type V6RouteEntryTable } from "./v6-route-entry.js";
 import { v6ProjectionStart } from "./v6-start.js";
-import { v6SupplySource } from "./v6-supply.js";
+import { v6FormationTableSource, type V6FormationTable } from "./v6-formation-table.js";
 import { v6ProjectionTargets, v6TargetTrust, type V6TargetContext } from "./v6-targets.js";
 
 export type V6ProjectionChange = Exclude<BuildAction, { kind: "relic" }> | {
@@ -96,7 +95,7 @@ export function createV6ProjectionFactory(snapshot: V6FactorySnapshot): V6Projec
     const metric = pack.data.combo_metrics.find(m => m.id === combo.id); if (metric) combo.metrics = structuredClone(metric.metrics);
   }
   // One run-start factory owns its frozen supply cache across act, idle and pick requests.
-  const supplies = new Map<string, ReturnType<typeof v6SupplySource>>();
+  const supplies = new Map<string, ReturnType<typeof v6FormationTableSource>>();
   const openings = new Map<string, V6PreparedProjection | null>();
   return { create(supplied) { try {
     const s = { ...supplied, state: parseGameState(structuredClone(supplied.state.raw)) }, run = asRecord(s.state.run?.raw);
@@ -123,12 +122,13 @@ export function createV6ProjectionFactory(snapshot: V6FactorySnapshot): V6Projec
     const targetBase: V6TargetContext = { character, ascension: ascension as number, act, floor: floor as number,
       visible: structuredClone(s.visibleBosses ?? []), observations, excludeRun: s.runId, doubleBoss };
     if (!targetBase.visible.some(v => v.act === act) && str(run["boss_id"])) {
-      const boss = bossKeyOf([str(run["boss_id"])]), routeFloor = s.route?.steps.find(t => t.act === act && t.type === "Boss")?.floor;
+      const boss = bossKey(str(run["boss_id"])), routeFloor = s.route?.steps.find(t => t.act === act && t.type === "Boss")?.floor;
       const floors = [...new Set(observations.filter(o => o.act === act && o.ascension === ascension
         && (!doubleBoss || o.floor !== doubleBoss.secondFloor)).map(o => o.floor))];
       const bossFloor = routeFloor ?? (doubleBoss?.character === character && doubleBoss.ascension === ascension && doubleBoss.act === act
         ? doubleBoss.firstFloor : floors.length === 1 ? floors[0] : undefined);
-      if (boss && bossFloor !== undefined) targetBase.visible = [...targetBase.visible, { act, floor: bossFloor, boss }];
+      if ((BOSS_KEYS as readonly string[]).includes(boss) && bossFloor !== undefined)
+        targetBase.visible = [...targetBase.visible, { act, floor: bossFloor, boss }];
     }
     const targets = v6ProjectionTargets(targetBase), resources = new Map<string, { raw: GameState["raw"]; context: V6TargetContext; routeHp: number | null }>();
     const options: V6ProjectionOption[] = [], rejected_options: { id: string; reason: string }[] = [];
@@ -163,9 +163,9 @@ export function createV6ProjectionFactory(snapshot: V6FactorySnapshot): V6Projec
     const historySignature = v6Digest([pack.content_sha256, s.asOf, s.runId]);
     const supplyKey = `${historySignature}:${ascension}`;
     let supply = supplies.get(supplyKey);
-    if (!supply) { supply = v6SupplySource({ character, ascension: ascension as number,
-      opportunities: { ...pack.data.opportunities, rows: pack.data.opportunities.rows.filter(o => prior.has(o.run)) },
-      histories: pack.data.histories.filter(h => prior.has(h.run)), excludeRun: s.runId, asOf: s.asOf, signature: historySignature, draws: 200 });
+    if (!supply) { supply = v6FormationTableSource({ character, ascension: ascension as number,
+      table: (pack.data as typeof pack.data & { appearance?: V6FormationTable }).appearance,
+      excludeRun: s.runId, asOf: s.asOf, signature: historySignature });
       if (supplies.size >= 4) supplies.delete(supplies.keys().next().value!); supplies.set(supplyKey, supply);
     }
     const completionSources = [supply];

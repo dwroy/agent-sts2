@@ -10,7 +10,7 @@ import { v6DeltaTier } from "../sim/v6-projection.js";
 export const V6_JEV_STATE_BYTES = 22_000;
 export const V6_JEV_REQUEST_BYTES = 24_000;
 export const V6_BRAIN_CHARS = 64_000;
-export const V6_OPENING_NOTE = "Wk is the completed-combo branch; W0 is the incomplete empirical branch. 'opening unknown' means an evaluated opening outcome is unavailable or unreported; provider reasons do not necessarily identify its cause. Missing upgrade models remain unknown; more compute cannot supply a model. Null is not zero. Retain failed samples; never substitute Wk for W0.";
+export const V6_OPENING_NOTE = "For formula=formation_times_completed, P is the frozen appearance lookup, Wk is the completed-combo simulation and expected_win=P*Wk; W0 is deliberately not computed. SE describes combat seeds conditional on P, excluding lookup and model error. Legacy rows without formula retain their empirical incomplete branch W0. 'opening unknown' means unavailable or unreported, not zero. Missing upgrade models remain unknown. Keep failed samples and computed-subset coverage; never substitute Wk for W0.";
 const bytes = (v: unknown) => Buffer.byteLength(JSON.stringify(v));
 const stat = (v: unknown): JsonValue => {
   const s = asRecord(v);
@@ -44,7 +44,7 @@ export function compactProjection(entry: ProjectionEntry, reasons?: readonly str
   const { combo_metrics: _audit, ...fields } = entry;
   return toJsonValue({ ...fields,
     // A missing estimate is not proof of an opening-construction failure, including P=1's unused W0.
-    opening: { Wk: entry.win_complete ? "evaluated" : "opening unknown", W0: entry.win_incomplete ? "evaluated" : "opening unknown" },
+    opening: { Wk: entry.win_complete ? "evaluated" : "opening unknown", W0: entry.formula ? "not computed by formula" : entry.win_incomplete ? "evaluated" : "opening unknown" },
     ...(reasons?.length ? { unknown_reasons: [...reasons] } : {}) });
 }
 export function prioritize<T>(rows: readonly T[], weights: Readonly<Record<string, number>>, direction: (v: T) => string, score: (v: T) => number = () => 0): T[] {
@@ -83,6 +83,8 @@ function optionMinimum(key: string, value: unknown, mixtures: readonly unknown[]
     projections: [{ direction_id: leading.direction_id ?? null, combo_id: leading.combo_id ?? null, target_id: leading.target_id ?? null,
       availability: { take: availability.take ?? null, skip: availability.skip ?? null },
       availability_change: typeof availability.take === "number" && typeof availability.skip === "number" ? availability.take - availability.skip : null,
+      ...(leading.formula === "formation_times_completed" ? { formula: leading.formula, win_complete: leading.win_complete ?? null,
+        expected_win: leading.expected_win ?? null, combination_coverage: leading.combination_coverage ?? null } : {}),
       ...(leading.opening ? { opening: leading.opening } : {}) }],
     unknown_reasons: reasons }) as Record<string, JsonValue>;
 }

@@ -7,6 +7,8 @@ import { v6Config } from "../src/v6/config.js";
 import { sealV6History } from "../src/sim/v6-history-pack.js";
 import { createV6ProjectionFactory, type V6FactorySnapshot, type V6ProjectionSituation } from "../src/sim/v6-request-factory.js";
 import { V6ProjectionEngine } from "../src/sim/v6-projection.js";
+import { slimInput } from "../src/sim/boss-sim.js";
+import { v6Complete } from "../src/sim/v6-supply.js";
 import { FixedRunner, request, source } from "./v6-projection-fixture.js";
 import { FIXTURE_DB, FIXTURE_MM } from "./boss-sim-build-fixture.js";
 import { board, setupOneshotTests } from "./oneshot-support.js";
@@ -148,4 +150,23 @@ it("engine preparation cache distinguishes held potion changes with identical co
   r.prepare = (target, state, option) => { seen.push(option!.id); return prepare(target, state, option); };
   await new V6ProjectionEngine(new FixedRunner()).evaluate(r);
   expect(new Set(seen)).toEqual(new Set(["skip", "take"]));
+});
+it("shares the actual completed combat input when taking a missing combination member", () => {
+  const { snapshot, situation, run, raw } = fixture();
+  const requirements = snapshot.templates[0]!.requirements;
+  const id = requirements[0]!.any[0]!.id;
+  run["deck"] = asArray(run["deck"]).filter(c => asRecord(c)["card_id"] !== id);
+  situation.state = parseGameState(raw);
+  situation.options = [{ id: "member", changes: [{ kind: "add", card: { id, upgraded: false }, price: 0 }] }];
+  const ready = createV6ProjectionFactory(snapshot).create(situation);
+  expect(ready.status).toBe("ready"); if (ready.status !== "ready") return;
+  const r = ready.request, target = r.targets[0]!, member = r.options[0]!;
+  const complete = (o: typeof member) => {
+    const s = v6Complete(o.state, requirements)!;
+    s.cards.sort((a, b) => a.id.localeCompare(b.id) || Number(a.upgraded) - Number(b.upgraded));
+    return r.prepare(target, s, o);
+  };
+  const skip = complete(r.baseline), take = complete(member);
+  expect(skip).not.toBeNull(); expect(take).not.toBeNull();
+  expect(slimInput(skip!.input)).toEqual(slimInput(take!.input));
 });

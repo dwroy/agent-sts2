@@ -55,7 +55,7 @@ export interface ContinuousBossResult {
 }
 
 /** Raw two-stage rates never borrow a single-fight calibration or an independent second-fight rate. */
-export function continuousBossResult(outcomes: FightSampleResult[], expectedSamples = outcomes.length, required = false): ContinuousBossResult | undefined {
+export function continuousBossResult(outcomes: FightSampleResult[], expectedSamples = outcomes.length, required = false, terminalFirstLossKnown = false): ContinuousBossResult | undefined {
   if (!required && !outcomes.some((outcome) => outcome.sequence)) return undefined;
   const missingSamples = Math.max(0, expectedSamples - outcomes.length);
   const firstWins = outcomes.filter((outcome) => outcome.sequence?.firstWon);
@@ -70,11 +70,15 @@ export function continuousBossResult(outcomes: FightSampleResult[], expectedSamp
   });
   const firstReason = !expectedSamples ? "no_samples" : firstUnknown ? "missing_or_unfinished_first_samples" : null;
   const secondReason = firstReason ?? (!firstWins.length ? "no_first_win_samples" : secondUnknown ? "missing_resources_or_unfinished_second_samples" : null);
+  // W3 may explicitly count terminal first-fight losses as known joint failures.
+  // Other consumers retain their original no-survivor unknown semantics.
+  const jointReason = terminalFirstLossKnown
+    ? firstReason ?? (secondUnknown ? "missing_resources_or_unfinished_second_samples" : null) : secondReason;
   return {
     schema: "continuous-boss-result-v1", scope: "raw_simulation", samples: outcomes.length, expectedSamples, missingSamples,
     first: rate(firstWins.length, expectedSamples, firstUnknown, firstReason),
     secondGivenFirstWin: rate(secondWins, firstWins.length, secondUnknown, secondReason),
-    joint: rate(secondWins, expectedSamples, firstUnknown + secondUnknown, secondReason),
+    joint: rate(secondWins, expectedSamples, firstUnknown + secondUnknown, jointReason),
     calibration: { status: "unknown", singleFightMapApplied: false }, S: { status: "unknown", value: null },
     resourceModel: { transfer: "same_sample", rewardsBetweenFights: "unknown", actualSecondOpening: "unknown", unobservedOpeningEffects: "unknown" },
     traces: outcomes.flatMap((outcome) => outcome.sequence ? [outcome.sequence] : []).slice(0, 3),

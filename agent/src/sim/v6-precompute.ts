@@ -41,8 +41,11 @@ export class V6IdlePrecomputer {
     this.pending = null;
     const active = Promise.resolve().then(async (): Promise<V6IdleResult> => {
       const table = await this.engine.precompute(job.request);
-      return job.generation === this.generation ? { status: "computed", key: job.key, table }
-        : { status: "discarded", key: job.key };
+      if (job.generation !== this.generation) return { status: "discarded", key: job.key };
+      // The next existing idle boundary continues cached absolute samples. Never spin or
+      // retry permanent missing evidence, and never overwrite a newer snapshot.
+      if (table?.telemetry?.pending_work && !this.pending) this.pending = job;
+      return { status: "computed", key: job.key, table };
     });
     this.active = active;
     try { return await active; } finally { if (this.active === active) this.active = null; }

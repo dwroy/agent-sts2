@@ -36,7 +36,7 @@ export function v6ProjectionTargets(context: V6TargetContext): V6ProjectionTarge
     const visible = context.visible.find(v => v.act === act);
     const at = rows.filter(o => o.act === act && o.floor >= context.floor && (!model || o.floor !== model.secondFloor));
     const floor = visible?.floor ?? (at.length && at.every(o => o.floor === at[0]!.floor) ? at[0]!.floor : null);
-    const bosses = visible ? [visible.boss] : [...new Set(at.filter(o => o.floor === floor).map(o => o.boss))].sort();
+    const bosses = visible ? [visible.boss] : act === context.act ? [] : [...new Set(at.filter(o => o.floor === floor).map(o => o.boss))].sort();
     const kind = act === context.act ? "current" : "future";
     if (!bosses.length || floor === null) {
       targets.push({ id: `act${act}:unknown`, boss: "unknown", act, floor: floor ?? -1, kind, probability: null,

@@ -12,14 +12,14 @@ it("hands actual combination rows to W4 without cloning a direction maximum into
   provider.resolve = c => { const out = resolve(c)!; out.combinations[0]!.id = d.combos[0]!.id; return out; };
   const table = await new V6ProjectionEngine(new FixedRunner()).evaluate(r), entries = v6ProjectionEntries(table, r.config, "take");
   expect(entries).toHaveLength(2); expect(entries.every(e => validateProjectionEntry(e).ok)).toBe(true);
-  expect(entries[0]).toMatchObject({ combo_id: "D:minimal", combo_source: "construction-transition", expected_win: .8125, direction_value: .8125 });
+  expect(entries[0]).toMatchObject({ combo_id: "D:minimal", combo_source: "construction-transition", expected_win: .75, direction_value: .75 });
   const task = directionTask({ summaries: directionSummaries("silent", 10, [], [d.core], null), entries, appearedCards: [], potionIds: [], floor: 5, current: null });
   const combo = asRecord(asArray(asRecord(asArray(task["build_cores"])[0])["combos"])[0]);
   expect(combo["evaluations"]).toBeUndefined();
   const evaluations = asArray(task["direction_evaluation"]).map(asRecord);
   expect(evaluations.map(e => e["combo_id"])).toEqual(entries.map(e => e.combo_id));
   expect(evaluations.filter(e => e["combo_id"] === combo["id"])).toEqual([
-    expect.objectContaining({ expected_win: .8125 }),
+    expect.objectContaining({ expected_win: .75 }),
   ]);
   expect(v6ProjectionEntries(table, { ...r.config, mode: "off" })).toEqual([]);
 });
@@ -37,4 +37,6 @@ it("precomputes baseline simulations for reuse and preserves the P=1 boundary in
   expect(evaluations).toHaveLength(certain.length);
   expect(evaluations.every(e => e["expected_win"] === 1 && e["win_incomplete"] === null)).toBe(true);
   expect(validateProjectionEntry({ ...certain[0], availability: { take: .5, skip: .5 } }).ok).toBe(false);
+  expect(validateProjectionEntry({ ...certain[0], win_incomplete: { value: .5, se: .1, n: 20 }, incomplete_source: "empirical" }).ok).toBe(false);
+  expect(validateProjectionEntry({ ...certain[0], expected_win: .9 }).ok).toBe(false);
 });

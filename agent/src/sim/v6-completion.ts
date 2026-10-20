@@ -73,9 +73,13 @@ export interface V6CompletionContext {
   idealOverrides?: Readonly<Record<string, readonly string[]>>;
   appearedCards?: readonly string[];
   ranking?: readonly string[];
+  /** Resolve a bounded catalog slice before spending supply/combat time on another direction. */
+  combinationIds?: readonly string[];
 }
 export interface V6CompletionSource {
   kind: string; signature: string;
+  /** Cheap deterministic ranking before the bounded combat slice; never runs supply MC. */
+  rank?(context: V6CompletionContext): readonly string[] | null;
   /** Bounded, synchronous preparation from immutable inputs; no I/O or simulation. */
   resolve(context: V6CompletionContext): V6CompletionSet | null;
 }

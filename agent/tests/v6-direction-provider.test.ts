@@ -112,7 +112,7 @@ it("turns official complete pick pairs into one T3 and two independent-evaluatio
   expect(directionEvaluationFromProjection(table, r.config, "skip", plan).comparisons).toEqual([]);
 });
 
-it("carries incomplete-opening provider diagnostics into the brain without treating W0 as a loss or filtering samples", async () => {
+it("carries provider diagnostics while the P times W formula never evaluates the unused incomplete branch", async () => {
   const r = request(), prepare = r.prepare;
   r.phase = "act";
   r.prepare = (target, sample) => sample.cards.some(c => c.id === "G") ? null : prepare(target, sample);
@@ -127,8 +127,8 @@ it("carries incomplete-opening provider diagnostics into the brain without treat
     entries: evaluation.entries, projectionReasons: evaluation.projectionReasons,
     appearedCards: [], potionIds: [], floor: 5, current: null });
   expect(asArray(task.direction_evaluation)).toEqual([expect.objectContaining({
-    win_complete: baseline.completed_win, win_incomplete: null, expected_win: null,
-    opening: { Wk: "evaluated", W0: "opening unknown" },
+    win_complete: baseline.completed_win, win_incomplete: null, expected_win: .5,
+    opening: { Wk: "evaluated", W0: "not computed by formula" },
     unknown_reasons: expect.arrayContaining(["unknown_opening_entry_hp_or_empirical_sample"]),
   })]);
   expect(baseline.completion_sample_ids).toEqual(sampleIds);

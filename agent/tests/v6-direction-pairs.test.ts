@@ -32,12 +32,12 @@ describe("V6 pick direction comparisons", () => {
     const r = pairedRequest(), t = await new V6ProjectionEngine(new PairedRunner()).evaluate(r);
     const take = t.pick_direction_comparisons.find(x => x.option_id === "take" && x.direction_id === "B")!;
     expect(take.reference_direction_id).toBe("D"); expect(take.known_mass).toBe(1);
-    expect(take.joint_paired_delta?.mean).toBeCloseTo(.1875); expect(take.joint_paired_delta?.n).toBe(20);
-    expect(take.joint_paired_delta!.se).toBeGreaterThan(0);
+    expect(take.joint_paired_delta?.mean).toBeCloseTo(.25); expect(take.joint_paired_delta?.n).toBe(20);
+    expect(take.joint_paired_delta!.se).toBe(0); // Both completed decks win on every combat seed; P is a fixed lookup.
     // Identical target worlds are perfectly correlated, rather than independent measurements.
     expect(take.joint_paired_delta!.se).toBeCloseTo(take.targets[0]!.joint_paired_delta!.se, 12);
     const skip = t.pick_direction_comparisons.find(x => x.option_id === "skip" && x.direction_id === "B")!;
-    expect(skip.joint_paired_delta?.mean).toBeCloseTo(.375);
+    expect(skip.joint_paired_delta?.mean).toBeCloseTo(.5);
     const self = t.pick_direction_comparisons.find(x => x.option_id === "take" && x.direction_id === "D")!;
     expect(self.joint_paired_delta).toEqual({ mean: 0, se: 0, n: 20 });
     expect(r.weights).toEqual({ D: .6, B: .4 });

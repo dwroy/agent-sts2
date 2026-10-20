@@ -43,7 +43,7 @@ it("feeds W3 a character-owned frozen snapshot and reloads only for another run"
   const { root, dir, e } = fixture(), load = v6ProjectionRequests(root);
   const first = (await load(e, "act"))!;
   expect(first.directions.map(d => d.id)).toEqual(["TEST"]); expect(first.completionSources).toHaveLength(1);
-  expect(first.targets).toEqual(expect.arrayContaining([expect.objectContaining({ floor: 17, boss: "SOUL_FYSH" })]));
+  expect(first.targets).toEqual(expect.arrayContaining([expect.objectContaining({ kind: "current", floor: 17, boss: "SOUL_FYSH" })]));
   expect(first.options).toEqual([]);
   writeFileSync(join(dir, "v6-history.json"), "invalid replacement");
   const same = (await load(e, "pick"))!;
@@ -52,6 +52,16 @@ it("feeds W3 a character-owned frozen snapshot and reloads only for another run"
   expect(await load(e, "pick")).toBeNull();
   e.state.run!.raw.character_id = "IRONCLAD";
   expect(await load(e, "act")).toBeNull();
+});
+it("keeps the actual suffixed boss identity without a map and never selects a historical boss instead", async () => {
+  const { root, e } = fixture();
+  e.state.run!.raw.boss_id = "THE_KIN_BOSS";
+  const kin = (await v6ProjectionRequests(root)(e, "pick"))!;
+  expect(kin.targets.find(t => t.kind === "current")).toMatchObject({ boss: "THE_KIN", floor: 17 });
+  e.state.run!.raw.boss_id = "UNOBSERVED_BOSS";
+  const unknown = (await v6ProjectionRequests(root)(e, "pick"))!;
+  expect(unknown.targets.find(t => t.kind === "current")?.unknown?.length).toBeGreaterThan(0);
+  expect(unknown.targets.find(t => t.kind === "current")?.boss).not.toBe("SOUL_FYSH");
 });
 it("keeps disabled loading and missing production evidence explicit", async () => {
   const { root, e } = fixture(false); vi.stubEnv("V6_BUILD", "off");

@@ -14,7 +14,7 @@ import { actPlan, mapFromState, routeCosts } from "../hand/screens/route-plan.js
 import { actFirstFloor, floorOfRow } from "../sim/route-map.js";
 import { bossKeyOf } from "../sim/boss-lines.js";
 import { loadDoubleBossModel } from "../knowledge/double-boss.js";
-import { loadBossTrust } from "../sim/boss-trust.js";
+import { BOSS_KEYS, loadBossTrust } from "../sim/boss-trust.js";
 import { loadV6HistoryPack } from "../sim/v6-history-pack.js";
 import { v6Directions, v6Digest } from "../sim/v6-completion.js";
 import { createV6ProjectionFactory, type V6SituationOption, type V6ProjectionFactory, type V6ProjectionSituation } from "../sim/v6-request-factory.js";
@@ -67,8 +67,11 @@ export function v6ProjectionInputs(dir = KNOWLEDGE_DIR, now = () => new Date().t
     const steps = (selected?.path ?? []).map(p => ({ act, floor: actFirstFloor(act) + p.row, type: p.type })).filter(p => p.floor > floor);
     const costs = { [act]: routeCosts(env, act) };
     const signature = v6Digest({ run, floor, act, hp: state.run?.current_hp, maxHp: state.run?.max_hp, steps, costs });
-    const boss = bossKeyOf(str(raw.boss_id).split("+")), bossNode = map?.act === act ? map.nodes.get(map.bosses[0] ?? "") : undefined;
-    const visibleBosses = boss && bossNode ? [{ act, floor: floorOfRow(map!, bossNode.row), boss }] : undefined;
+    const rawBoss = str(raw.boss_id).toUpperCase().replace(/_BOSS$/, "");
+    const boss = (BOSS_KEYS as readonly string[]).includes(rawBoss) ? rawBoss : bossKeyOf([rawBoss]);
+    const bossNode = map?.act === act ? map.nodes.get(map.bosses[0] ?? "") : undefined;
+    const visibleBosses = boss && (BOSS_KEYS as readonly string[]).includes(boss) && bossNode
+      ? [{ act, floor: floorOfRow(map!, bossNode.row), boss }] : undefined;
     const appearedCards = [...new Set([...env.screenMemory.v6Planner?.appearedCards ?? [],
       ...asArray(raw.deck).map(c => str(asRecord(c).card_id)), ...offers.map(c => str(c.card_id))].filter(Boolean))];
     return { factory: frozen.factory, situation: { state, phase, runId: run, asOf: frozen.asOf, seed: parseInt(v6Digest(run).slice(0, 8), 16),
