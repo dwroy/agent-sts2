@@ -83,7 +83,7 @@ def freeze(root, target):
     logsync.sync(str(root / 'logs'), db, quiet=True, wait=False)
     exports = {}
     with logsync.read_lock(db, shared=True):
-        con = query.connect(db, threads=2)
+        con = query.connect(db, threads=1)
         manifest = (Path(db) / 'manifest.json').read_bytes()
         (target / 'logdb-manifest.json').write_bytes(manifest)
         for table, sql in [

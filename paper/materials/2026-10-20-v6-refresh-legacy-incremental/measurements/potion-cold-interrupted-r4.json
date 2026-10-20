@@ -1,0 +1,19 @@
+{
+  "at": "2026-10-20T13:44:46.179085+08:00",
+  "state": "interrupted-not-valid-timing",
+  "reason": "Cold per-run SQL repeats parquet scans; replace cold cache extraction with one partitioned batch SQL query. Own PID verification only.",
+  "processes": [
+    {
+      "pid": 2448848,
+      "cmd": "python3 .artifacts/legacy-benchmark/followup-r4.py "
+    },
+    {
+      "pid": 2455258,
+      "cmd": "python3 /home/dw/Projects/agent-sts2/.worktrees/v6-refresh-legacy-incremental-20261020/.artifacts/legacy-benchmark/extra-r4.py potion cold "
+    },
+    {
+      "pid": 2455259,
+      "cmd": "/home/dw/Projects/agent-sts2/data/logdb-venv/bin/python /home/dw/Projects/agent-sts2/.worktrees/v6-refresh-legacy-incremental-20261020/knowledge/builders/build-potion-equivalents.py --db /home/dw/Projects/agent-sts2/data/logdb --logs /home/dw/Projects/agent-sts2/logs --no-sync --ascensions 10 --character silent --out /home/dw/Projects/agent-sts2/.worktrees/v6-refresh-legacy-incremental-20261020/.artifacts/legacy-benchmark/extra-r4/potion.json "
+    }
+  ]
+}

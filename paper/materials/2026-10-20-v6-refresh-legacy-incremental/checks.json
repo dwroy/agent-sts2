@@ -1,0 +1,129 @@
+{
+  "tsc": {
+    "status": "passed",
+    "attempt": "full-r3b",
+    "exit_code": 0,
+    "seconds": 1.1100511390250176,
+    "receipt": "checks/full-r3b-receipt.json"
+  },
+  "full_vitest": {
+    "status": "passed",
+    "attempt": "full-r3b",
+    "exit_code": 0,
+    "passed_files": 623,
+    "failed_files": 0,
+    "passed_tests": 5891,
+    "failed_tests": 0,
+    "skipped_tests": 2,
+    "seconds": 1378.6425520901103,
+    "vitest_reported_seconds": 1377.76,
+    "input_count": 2442,
+    "input_sha256": "09d46e6eb98857701bf73f3467ecaa5446aa2178adb0f9c6e7c22c14620ee0f1",
+    "input_unchanged": true,
+    "base_commit": "f7d4d21a6b5a52bf635f040af0dced279c9c0b0c",
+    "staged_tree": "42fd17b2a7a3734e45e4058ead888ceb461b446d",
+    "receipt": "checks/full-r3b-receipt.json",
+    "log": "checks/full-r3b.txt",
+    "window_released": "checks/full-r3b-window-release.json"
+  },
+  "targeted": {
+    "status": "passed",
+    "files": 8,
+    "tests": 33,
+    "seconds": 6.73,
+    "log": {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/v6-refresh-legacy-incremental-20261020/.artifacts/legacy-targeted-r7.log",
+      "bytes": 273,
+      "sha256": "25b03a32566f544786ea25c1b2170c6c97b20e7293cdd8e981d39434a9bcf590"
+    }
+  },
+  "training_identity_fixed": {
+    "status": "passed",
+    "python_tests": 11,
+    "log": {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/v6-refresh-legacy-incremental-20261020/.artifacts/legacy-python-r8.log",
+      "bytes": 110,
+      "sha256": "0adaa01cb11b8405b8e59db339f9cadac6fcc101639c185fdf56abdfd0b2287d"
+    }
+  },
+  "retained_failure": {
+    "status": "failed_then_fixed",
+    "reason": "Incorrect helper dependency path introduced during review, reverted before r7. Original failure retained.",
+    "log": {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/v6-refresh-legacy-incremental-20261020/.artifacts/legacy-targeted-r6.log",
+      "bytes": 29816,
+      "sha256": "361c637b6b5baba0efb372dbb9c96a0a0b7d35e41aa0f50054c329a315a7cfe0"
+    }
+  },
+  "gitleaks": {
+    "status": "passed_current_staged_pending_full_recheck",
+    "exit_code": 0,
+    "findings": 0,
+    "scanned_bytes": 1583487,
+    "report": "checks/gitleaks-r9.json",
+    "report_sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570"
+  },
+  "main_integration": {
+    "status": "checks_passed_pending_source_commit_and_main_rebase",
+    "tested_base": "f7d4d21a6b5a52bf635f040af0dced279c9c0b0c",
+    "no_live_change": true
+  },
+  "fixture_recheck": {
+    "status": "passed",
+    "files": 4,
+    "tests": 8,
+    "seconds": 7.185680235968903,
+    "vitest_seconds": 6.48,
+    "input_unchanged": true,
+    "receipt": "checks/targeted-r9-receipt.json",
+    "log": "checks/targeted-r9.txt",
+    "production_source_changed": false,
+    "changes": [
+      "Check ionice/shared lock/thread caps in the original background-cost assertion.",
+      "Copy real report_log_cache.py and jsonl_cache.py into isolated autoplay lifecycle fixtures."
+    ],
+    "thresholds_unchanged": true
+  },
+  "startup_failure": {
+    "status": "retained",
+    "reason": "Unsupported --minWorkers flag, no tests executed. Removed for r2.",
+    "receipt": "checks/full-startup-r1-receipt.json",
+    "log": "checks/full-startup-r1.txt"
+  },
+  "retained_full_r2": {
+    "status": "failed_r2_fixture_fixes_awaiting_full_recheck_window",
+    "exit_code": 1,
+    "passed_files": 617,
+    "failed_files": 3,
+    "passed_tests": 5885,
+    "failed_tests": 3,
+    "skipped_tests": 2,
+    "seconds": 1386.7296984381974,
+    "input_unchanged": true,
+    "receipt": "checks/full-r2-receipt.json",
+    "log": "checks/full-r2.txt",
+    "window_released": "checks/window-release-r2.json"
+  },
+  "retained_fixture_tsc_r9": {
+    "status": "passed",
+    "attempt": "targeted-r9",
+    "exit_code": 0,
+    "seconds": 1.2476209830492735,
+    "receipt": "checks/targeted-r9-receipt.json"
+  },
+  "retained_interruption_r3": {
+    "status": "interrupted_for_preflight_main_code_drift",
+    "exit_code": -15,
+    "receipt": "checks/full-r3-interrupted-receipt.json",
+    "evidence": "checks/full-r3-interrupted-main-drift-interruption.json",
+    "not_a_test_acceptance": true
+  },
+  "gitleaks_current": {
+    "status": "passed",
+    "exit_code": 0,
+    "findings": 0,
+    "scanned_bytes": 3225144,
+    "report": "checks/gitleaks-r3b.json",
+    "report_sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570"
+  }
+}

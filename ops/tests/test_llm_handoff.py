@@ -171,7 +171,10 @@ class Protocol(unittest.TestCase):
 
     def test_drain_during_play_keeps_one_completion_report(self):
         ops = self.root / "ops"
-        for name in ("paths.sh", "autoplay.sh"): shutil.copy(ROOT / "ops" / name, ops / name)
+        for name in ("paths.sh", "autoplay.sh", "report_log_cache.py"):
+            shutil.copy(ROOT / "ops" / name, ops / name)
+        (self.root / "eval").mkdir()
+        shutil.copy(ROOT / "eval/jsonl_cache.py", self.root / "eval/jsonl_cache.py")
         logs = self.root / "logs"
         (logs / "console").mkdir(parents=True)
         (logs / "decisions.jsonl").write_text(json.dumps({"fingerprint": json.dumps({"run": "FIXTURE"})}) + "\n")

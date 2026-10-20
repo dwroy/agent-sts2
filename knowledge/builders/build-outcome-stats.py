@@ -99,13 +99,18 @@ def read_runs(path, ascension, character=None):
     return runs
 
 
-def read_decisions(path, runs):
+def read_decisions(path, runs, lines=None):
+    if lines is None:
+        from legacy_incremental import context
+        cache = context(path)
+        if cache:
+            return cache.outcome_decisions(path, runs, lambda selected, rows: read_decisions(path, selected, rows))
     """Per run: sorted (ts, floor, hp, max_hp, gold); event choices and rest choices (ts, floor, index)."""
     marks = collections.defaultdict(list)
     events = collections.defaultdict(list)
     rests = collections.defaultdict(list)
     with open(path, "rb") as handle:
-        for raw in handle:
+        for raw in (handle if lines is None else lines):
             if b'"play"' not in raw[:200]:
                 continue
             try:
@@ -138,10 +143,10 @@ def read_decisions(path, runs):
     return marks, events, rests
 
 
-def iter_states(path):
+def iter_states(path, lines=None):
     """Yield (screen, entry) for every non-combat state line of interest, streaming the file."""
     with open(path, "rb") as handle:
-        for raw in handle:
+        for raw in (handle if lines is None else lines):
             match = SCREEN_RE.search(raw, 0, 4000)
             if not match or match.group(1) in SKIP_SCREENS:
                 continue
@@ -168,7 +173,12 @@ def act_of(run):
         return 1
 
 
-def read_states(path, runs, table_of):
+def read_states(path, runs, table_of, entries=None):
+    if entries is None:
+        from legacy_incremental import context
+        cache = context(path)
+        if cache:
+            return cache.outcome_states(path, runs, table_of, lambda selected, iterator: read_states(path, selected, table_of, iterator), iter_states)
     """Deck/relic acquisitions, card rewards offered, event and rest screens, highest act per run. Names (cards,
     relics, events) are kept per table (`table_of`: run id -> table key), each from its own runs' states, as a
     table's whole file had them before."""
@@ -180,7 +190,7 @@ def read_states(path, runs, table_of):
     event_screens = collections.defaultdict(list)  # run -> [(ts, floor, act, event_id, {index: (key, title)})]
     rest_screens = collections.defaultdict(list)  # run -> [(ts, floor, act, {index: option_id}, hp, max_hp)]
     names_by_table = collections.defaultdict(lambda: {"card": {}, "relic": {}, "event": {}})
-    for screen, entry in iter_states(path):
+    for screen, entry in (iter_states(path) if entries is None else entries):
         state = entry.get("state") or {}
         run_id = state.get("run_id")
         if run_id not in runs:

@@ -202,8 +202,8 @@ def extract(states, runs_path, game_path, rows_path, character=None):
     tmp = rows_path + ".tmp"
     with open(tmp, "w", encoding="utf8") as out:
         builder = RowBuilder(bmd.load_runs(runs_path), out, character)
-        for screen, entry in bmd.iter_entries(states):
-            builder.feed(screen, entry)
+        from legacy_incremental import consume_fights
+        consume_fights(bmd, builder, states, extra_code=__file__)
         builder.finish()
     os.replace(tmp, rows_path)
     return builder
@@ -1567,8 +1567,9 @@ def decision_flags(rows, decisions_path):
     deciders = collections.Counter()
     if not decisions_path or not os.path.exists(decisions_path):
         return flags, deciders
+    from legacy_incremental import choice_lines
     with open(decisions_path, encoding="utf8") as handle:
-        for line in handle:
+        for line in choice_lines(decisions_path, handle):
             if '"combat/plan-choice' not in line:
                 continue
             try:
@@ -1585,6 +1586,15 @@ def decision_flags(rows, decisions_path):
                     deciders[d.get("decider")] += 1
                 flags[i] = True
     return flags, deciders
+
+
+def training_choices_identity(rows_path, decisions_path):
+    """Ignore appended choices outside the estimator's actual training windows."""
+    rows = [row for row in load_rows(rows_path)
+            if isinstance(row["asc"], int) and row["asc"] >= MIN_ASC
+            and row["kind"] in FIGHT_KINDS]
+    flags, deciders = decision_flags(rows, decisions_path)
+    return [flags, sorted(deciders.items(), key=lambda pair: str(pair[0]))]
 
 
 def importance(gbm, top=15):
@@ -1913,7 +1923,29 @@ def main(argv=None):
     if args.stage in ("train", "all"):
         os.makedirs(os.path.dirname(args.notes), exist_ok=True)
         os.makedirs(os.path.dirname(os.path.abspath(args.out)), exist_ok=True)
-        train(args.rows, args.decisions, args.out, args.notes, args.trees, args.gates)
+        from legacy_incremental import context
+        cache = context(args.decisions)
+        def fit():
+            train(args.rows, args.decisions, args.out, args.notes, args.trees, args.gates)
+        if cache:
+            cache.ready(args.decisions)
+            def file_sha(path):
+                digest = hashlib.sha256()
+                try:
+                    with open(path, 'rb') as source:
+                        for chunk in iter(lambda: source.read(4 * 1024 * 1024), b''):
+                            digest.update(chunk)
+                except FileNotFoundError:
+                    return None
+                return digest.hexdigest()
+            inputs = [training_choices_identity(args.rows, args.decisions), args.trees,
+                      file_sha(args.rows), file_sha(__file__),
+                      file_sha(os.path.join(ROOT, 'knowledge/common/move-model.json'))]
+            changed = cache.products('fight-value:'+character,inputs,[args.out,args.notes,args.gates],fit)
+            if not changed:
+                print('train: unchanged inputs and verified outputs; reusing completed fit')
+        else:
+            fit()
         print(f"train: done in {time.time() - start:.0f}s -> {args.out}, {args.notes}")
     return 0
 

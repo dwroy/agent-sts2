@@ -33,7 +33,10 @@ done
 mkdir -p "$ops_root/ops"
 exec 9>"$ops_root/ops/knowledge-refresh.lock"
 flock 9
-step() { python3 "$B/refresh-step.py" "$ops_root/ops/refresh-timing.jsonl" "$@"; }
+# Raw extraction is incremental; cache artifacts are disposable, never knowledge.
+export STS2_REFRESH_CACHE_DIR="$ops_root/ops/legacy-refresh-cache"
+export OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 MKL_NUM_THREADS=1 NUMEXPR_NUM_THREADS=1
+step() { nice -n 19 ionice -c 3 python3 "$B/refresh-step.py" "$ops_root/ops/refresh-timing.jsonl" "$@"; }
 # The characters to refresh: the one asked for (lower-cased: the game's SILENT is knowledge id silent), else every
 # character with a logged run (knowledge/builders/characters.py).
 if [[ -n "$only" ]]; then
@@ -51,6 +54,7 @@ fi
 step monster-db python3 "$B/build-monster-db.py" --quiet --move-model-out "$ROOT/knowledge/common/move-model.json"
 step monster-db-check python3 "$B/monster-db-check.py" >/dev/null 2>&1
 step card-upgrades python3 "$B/build-card-upgrades.py" >/dev/null 2>&1
+step report-state-index python3 "$ROOT/ops/report_log_cache.py" --warm-states "$ROOT/logs/states.jsonl" >/dev/null 2>&1
 step logdb-sync nice -n 19 "$ROOT/data/logdb-venv/bin/python" "$ROOT/agent/tools/logdb/sync.py" >/dev/null 2>&1
 v6_status=0
 for c in $characters; do

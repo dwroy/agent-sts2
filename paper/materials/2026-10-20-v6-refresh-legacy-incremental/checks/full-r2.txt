@@ -1,0 +1,149 @@
+
+ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/v6-refresh-legacy-incremental-20261020/agent
+
+ ❯ tests/component-usage.test.ts (1 test | 1 failed) 2164ms
+   × syncs component logs, derives counter deltas and refreshes paper costs on fixed fixtures 2163ms
+ ❯ tests/account-drain.test.ts (2 tests | 1 failed) 799ms
+   × validates drain lifecycle: test_llm_handoff.py 583ms
+ ❯ tests/disk-admission.test.ts (1 test | 1 failed) 15235ms
+   × enforces approved capacity gates in the original tick and only at a finished-run boundary 15233ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 3 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/account-drain.test.ts > validates drain lifecycle: test_llm_handoff.py
+AssertionError: ......E.........
+======================================================================
+ERROR: test_drain_during_play_keeps_one_completion_report (__main__.Protocol.test_drain_during_play_keeps_one_completion_report)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/dw/Projects/agent-sts2/.worktrees/v6-refresh-legacy-incremental-20261020/agent/../ops/tests/test_llm_handoff.py", line 192, in test_drain_during_play_keeps_one_completion_report
+    self.assertEqual((logs / "reports").read_text(), "reported\n")
+                     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "/usr/lib/python3.14/pathlib/__init__.py", line 788, in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors, newline=newline) as f:
+         ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.14/pathlib/__init__.py", line 772, in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/home/dw/Projects/agent-sts2/.cache/w8t/tmp_lptnq47/logs/reports'
+
+----------------------------------------------------------------------
+Ran 16 tests in 0.456s
+
+FAILED (errors=1)
+: expected 1 to be +0 // Object.is equality
+
+- Expected
++ Received
+
+- 0
++ 1
+
+ ❯ tests/account-drain.test.ts:13:38
+     11|     child.on("close", (code) => resolve({ code, output }));
+     12|   });
+     13|   expect(result.code, result.output).toBe(0);
+       |                                      ^
+     14|   expect(result.output).toContain(`Ran ${count} tests`);
+     15| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/3]⎯
+
+ FAIL  tests/component-usage.test.ts > syncs component logs, derives counter deltas and refreshes paper costs on fixed fixtures
+AssertionError: <frozen site>:107: RuntimeWarning: Unexpected value in sys.prefix, expected /home/dw/Projects/agent-sts2/.worktrees/v6-refresh-legacy-incremental-20261020/data/logdb-venv, got /home/dw/Projects/agent-sts2/.worktrees/v6-refresh-legacy-incremental-20261020/agent/../data/logdb-venv
+<frozen site>:107: RuntimeWarning: Unexpected value in sys.exec_prefix, expected /home/dw/Projects/agent-sts2/.worktrees/v6-refresh-legacy-incremental-20261020/data/logdb-venv, got /home/dw/Projects/agent-sts2/.worktrees/v6-refresh-legacy-incremental-20261020/agent/../data/logdb-venv
+.....F...
+======================================================================
+FAIL: test_post_run_refresh_is_background_and_busy_lock_skips (__main__.Components.test_post_run_refresh_is_background_and_busy_lock_skips)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/dw/Projects/agent-sts2/.worktrees/v6-refresh-legacy-incremental-20261020/agent/tests/component_usage_test.py", line 171, in test_post_run_refresh_is_background_and_busy_lock_skips
+    self.assertEqual(args[:4], ["nice", "-n", "19", "python3"])
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Lists differ: ['nice', '-n', '19', 'ionice'] != ['nice', '-n', '19', 'python3']
+
+First differing element 3:
+'ionice'
+'python3'
+
+- ['nice', '-n', '19', 'ionice']
+?                       ^  ^^^
+
++ ['nice', '-n', '19', 'python3']
+?                       ^^^^  ^
+
+
+----------------------------------------------------------------------
+Ran 9 tests in 1.982s
+
+FAILED (failures=1)
+: expected 1 to be +0 // Object.is equality
+
+- Expected
++ Received
+
+- 0
++ 1
+
+ ❯ tests/component-usage.test.ts:14:38
+     12|     child.on("close", (code) => resolve({ code, output }));
+     13|   });
+     14|   expect(result.code, result.output).toBe(0);
+       |                                      ^
+     15|   expect(result.output).toContain("Ran 9 tests");
+     16| }, 20_000);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/3]⎯
+
+ FAIL  tests/disk-admission.test.ts > enforces approved capacity gates in the original tick and only at a finished-run boundary
+AssertionError: .......E
+======================================================================
+ERROR: test_terminal_loop_reports_then_holds_exactly_the_next_run (__main__.Admission.test_terminal_loop_reports_then_holds_exactly_the_next_run)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/dw/Projects/agent-sts2/.worktrees/v6-refresh-legacy-incremental-20261020/agent/../ops/tests/test_disk_admission.py", line 125, in test_terminal_loop_reports_then_holds_exactly_the_next_run
+    result = subprocess.run(["bash", str(ops / "autoplay.sh")], capture_output=True, text=True,
+                            env={"PATH": "/usr/bin:/bin", "HOME": str(self.root)}, timeout=15)
+  File "/usr/lib/python3.14/subprocess.py", line 557, in run
+    stdout, stderr = process.communicate(input, timeout=timeout)
+                     ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.14/subprocess.py", line 1221, in communicate
+    stdout, stderr = self._communicate(input, endtime, timeout)
+                     ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.14/subprocess.py", line 2154, in _communicate
+    self._check_timeout(endtime, orig_timeout, stdout, stderr)
+    ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.14/subprocess.py", line 1268, in _check_timeout
+    raise TimeoutExpired(
+    ...<2 lines>...
+            stderr=b''.join(stderr_seq) if stderr_seq else None)
+subprocess.TimeoutExpired: Command '['bash', '/home/dw/Projects/agent-sts2/.cache/w8t/tmph4hzosob/ops/autoplay.sh']' timed out after 15 seconds
+
+----------------------------------------------------------------------
+Ran 8 tests in 15.116s
+
+FAILED (errors=1)
+: expected 1 to be +0 // Object.is equality
+
+- Expected
++ Received
+
+- 0
++ 1
+
+ ❯ tests/disk-admission.test.ts:8:56
+      6|     encoding: "utf8", timeout: 35_000,
+      7|   });
+      8|   expect(result.status, result.stdout + result.stderr).toBe(0);
+       |                                                        ^
+      9|   expect(result.stderr).toContain("Ran 8 tests");
+     10| }, 40_000);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/3]⎯
+
+
+ Test Files  3 failed | 617 passed (620)
+      Tests  3 failed | 5885 passed | 2 skipped (5890)
+   Start at  14:54:29
+   Duration  1385.63s (transform 20.02s, setup 43.81s, import 130.37s, tests 1119.58s, environment 66ms)
+

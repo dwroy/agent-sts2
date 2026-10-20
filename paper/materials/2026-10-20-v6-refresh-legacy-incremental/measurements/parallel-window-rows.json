@@ -1,0 +1,2889 @@
+[
+  {
+    "ts": "2026-10-20T04:26:36.356Z",
+    "screen": "EVENT",
+    "decider": "codex",
+    "latency": {
+      "plan": 2866,
+      "jev": 0,
+      "action": 243,
+      "deepseek": 25161,
+      "planner": 222,
+      "pre": 70595
+    },
+    "stages": {
+      "V6_projection": 59589.0,
+      "P1_readiness_shadow": 2.0,
+      "C2_sampling_shadow": 0.0,
+      "P2_S_build_counterfactual": 16.0,
+      "C2_ranking_counterfactual": 0.0,
+      "G2_global_shadow": 13.0,
+      "B3_current": 1928.0,
+      "construction_shadow": 5.0,
+      "construction_evaluation_shadow": 0.0,
+      "L2_brain": 25359.0
+    },
+    "fallback": null,
+    "timed_out": false,
+    "turn_actual_ms": 98428,
+    "jev_reserve_ms": null
+  },
+  {
+    "ts": "2026-10-20T04:26:36.782Z",
+    "screen": "EVENT",
+    "decider": "code",
+    "latency": {
+      "plan": 0,
+      "jev": 0,
+      "action": 255,
+      "planner": 0,
+      "pre": 4
+    },
+    "stages": {},
+    "fallback": null,
+    "timed_out": false,
+    "turn_actual_ms": 2,
+    "jev_reserve_ms": null
+  },
+  {
+    "ts": "2026-10-20T04:28:15.707Z",
+    "screen": "MAP",
+    "decider": "codex",
+    "latency": {
+      "plan": 524,
+      "jev": 0,
+      "action": 1505,
+      "deepseek": 30680,
+      "planner": 33,
+      "pre": 67318
+    },
+    "stages": {
+      "V6_projection": 59602.0,
+      "B3_current": 0.0,
+      "construction_shadow": 3.0,
+      "construction_evaluation_shadow": 0.0,
+      "L2_brain": 30692.0
+    },
+    "fallback": null,
+    "timed_out": false,
+    "turn_actual_ms": 98524,
+    "jev_reserve_ms": null
+  },
+  {
+    "ts": "2026-10-20T04:28:20.897Z",
+    "screen": "COMBAT",
+    "decider": "jev",
+    "latency": {
+      "plan": 57,
+      "jev": 592,
+      "action": 299,
+      "planner": 754,
+      "pre": 1
+    },
+    "stages": {
+      "combat_computation": 754.0,
+      "exact_observed_solver_cache": 0.0,
+      "v6_combat_knowledge": 1.0,
+      "v6_combat_predicates_and_audit": 4.0,
+      "combat_jev_projection": 14.0,
+      "jev_gateway_request_encoding": 0.0,
+      "jev_http_to_headers": 584.0,
+      "Jev": 592.0,
+      "jev_prompt_log": 4.0
+    },
+    "fallback": null,
+    "timed_out": false,
+    "turn_actual_ms": 1389,
+    "jev_reserve_ms": 3000
+  },
+  {
+    "ts": "2026-10-20T04:28:21.734Z",
+    "screen": "COMBAT",
+    "decider": "code",
+    "latency": {
+      "plan": 0,
+      "jev": 0,
+      "action": 256,
+      "planner": 3,
+      "pre": 1
+    },
+    "stages": {
+      "combat_computation": 3.0
+    },
+    "fallback": null,
+    "timed_out": false,
+    "turn_actual_ms": 1394,
+    "jev_reserve_ms": 3000
+  },
+  {
+    "ts": "2026-10-20T04:28:22.579Z",
+    "screen": "COMBAT",
+    "decider": "code",
+    "latency": {
+      "plan": 0,
+      "jev": 0,
+      "action": 449,
+      "planner": 3,
+      "pre": 1
+    },
+    "stages": {
+      "combat_computation": 2.0
+    },
+    "fallback": null,
+    "timed_out": false,
+    "turn_actual_ms": 1398,
+    "jev_reserve_ms": 3000
+  },
+  {
+    "ts": "2026-10-20T04:28:24.110Z",
+    "screen": "CARD_SELECTION",
+    "decider": "jev",
+    "latency": {
+      "plan": 15,
+      "jev": 926,
+      "action": 301,
+      "planner": 4,
+      "pre": 1
+    },
+    "stages": {
+      "combat_computation": 4.0,
+      "jev_gateway_request_encoding": 0.0,
+      "jev_http_to_headers": 923.0,
+      "Jev": 926.0,
+      "jev_prompt_log": 0.0
+    },
+    "fallback": null,
+    "timed_out": false,
+    "turn_actual_ms": 2330,
+    "jev_reserve_ms": 3000
+  },
+  {
+    "ts": "2026-10-20T04:28:24.512Z",
+    "screen": "COMBAT",
+    "decider": "code",
+    "latency": {
+      "plan": 0,
+      "jev": 0,
+      "action": 730,
+      "planner": 4,
+      "pre": 1
+    },
+    "stages": {
+      "combat_computation": 4.0
+    },
+    "fallback": null,
+    "timed_out": false,
+    "turn_actual_ms": 2334,
+    "jev_reserve_ms": 3000
+  },
+  {
+    "ts": "2026-10-20T04:28:29.576Z",
+    "screen": "COMBAT",
+    "decider": "code",
+    "latency": {
+      "plan": 0,
+      "jev": 0,
+      "action": 211,
+      "planner": 3,
+      "pre": 1
+    },
+    "stages": {
+      "combat_computation": 3.0,
+      "exact_observed_solver_cache": 0.0
+    },
+    "fallback": null,
+    "timed_out": false,
+    "turn_actual_ms": 15,
+    "jev_reserve_ms": 3000
+  },
+  {
+    "ts": "2026-10-20T04:28:30.353Z",
+    "screen": "COMBAT",
+    "decider": "code",
+    "latency": {
+      "plan": 1,
+      "jev": 0,
+      "action": 367,
+      "planner": 2,
+      "pre": 1
+    },
+    "stages": {
+      "combat_computation": 2.0
+    },
+    "fallback": null,
+    "timed_out": false,
+    "turn_actual_ms": 19,
+    "jev_reserve_ms": 3000
+  },
+  {
+    "ts": "2026-10-20T04:28:31.240Z",
+    "screen": "COMBAT",
+    "decider": "code",
+    "latency": {
+      "plan": 0,
+      "jev": 0,
+      "action": 248,
+      "planner": 2,
+      "pre": 1
+    },
+    "stages": {
+      "combat_computation": 2.0
+    },
+    "fallback": null,
+    "timed_out": false,
+    "turn_actual_ms": 22,
+    "jev_reserve_ms": 3000
+  },
+  {
+    "ts": "2026-10-20T04:28:32.043Z",
+    "screen": "COMBAT",
+    "decider": "code",
+    "latency": {
+      "plan": 1,
+      "jev": 0,
+      "action": 242,
+      "planner": 1,
+      "pre": 1
+    },
+    "stages": {
+      "combat_computation": 1.0
+    },
+    "fallback": null,
+    "timed_out": false,
+    "turn_actual_ms": 24,
+    "jev_reserve_ms": 3000
+  },
+  {
+    "ts": "2026-10-20T04:28:32.816Z",
+    "screen": "COMBAT",
+    "decider": "code",
+    "latency": {
+      "plan": 0,
+      "jev": 0,
+      "action": 697,
+      "planner": 1,
+      "pre": 1
+    },
+    "stages": {
+      "combat_computation": 1.0
+    },
+    "fallback": null,
+    "timed_out": false,
+    "turn_actual_ms": 26,
+    "jev_reserve_ms": 3000
+  },
+  {
+    "ts": "2026-10-20T04:28:40.368Z",
+    "screen": "COMBAT",
+    "decider": "jev",
+    "latency": {
+      "plan": 49,
+      "jev": 889,
+      "action": 261,
+      "planner": 304,
+      "pre": 1
+    },
+    "stages": {
+      "combat_computation": 305.0,
+      "exact_observed_solver_cache": 0.0,
+      "v6_combat_knowledge": 1.0,
+      "v6_combat_predicates_and_audit": 10.0,
+      "combat_jev_projection": 14.0,
+      "jev_gateway_request_encoding": 0.0,
+      "jev_http_to_headers": 887.0,
+      "Jev": 889.0,
+      "jev_prompt_log": 5.0
+    },
+    "fallback": null,
+    "timed_out": false,
+    "turn_actual_ms": 1251,
+    "jev_reserve_ms": 3000
+  },
+  {
+    "ts": "2026-10-20T04:28:42.397Z",
+    "screen": "COMBAT",
+    "decider": "jev",
+    "latency": {
+      "plan": 29,
+      "jev": 1041,
+      "action": 596,
+      "planner": 137,
+      "pre": 1
+    },
+    "stages": {
+      "combat_computation": 137.0,
+      "exact_observed_solver_cache": 0.0,
+      "v6_combat_knowledge": 0.0,
+      "v6_combat_predicates_and_audit": 3.0,
+      "combat_jev_projection": 12.0,
+      "jev_gateway_request_encoding": 0.0,
+      "jev_http_to_headers": 1040.0,
+      "Jev": 1041.0,
+      "jev_prompt_log": 4.0
+    },
+    "fallback": null,
+    "timed_out": false,
+    "turn_actual_ms": 2449,
+    "jev_reserve_ms": 3000
+  },
+  {
+    "ts": "2026-10-20T04:28:43.569Z",
+    "screen": "COMBAT",
+    "decider": "code",
+    "latency": {
+      "plan": 0,
+      "jev": 0,
+      "action": 344,
+      "planner": 3,
+      "pre": 1
+    },
+    "stages": {
+      "combat_computation": 3.0
+    },
+    "fallback": null,
+    "timed_out": false,
+    "turn_actual_ms": 2453,
+    "jev_reserve_ms": 3000
+  },
+  {
+    "ts": "2026-10-20T04:28:44.431Z",
+    "screen": "COMBAT",
+    "decider": "code",
+    "latency": {
+      "plan": 0,
+      "jev": 0,
+      "action": 244,
+      "planner": 2,
+      "pre": 1
+    },
+    "stages": {
+      "combat_computation": 2.0
+    },
+    "fallback": null,
+    "timed_out": false,
+    "turn_actual_ms": 2456,
+    "jev_reserve_ms": 3000
+  },
+  {
+    "ts": "2026-10-20T04:28:45.245Z",
+    "screen": "COMBAT",
+    "decider": "code",
+    "latency": {
+      "plan": 0,
+      "jev": 0,
+      "action": 730,
+      "planner": 2,
+      "pre": 1
+    },
+    "stages": {
+      "combat_computation": 2.0
+    },
+    "fallback": null,
+    "timed_out": false,
+    "turn_actual_ms": 2459,
+    "jev_reserve_ms": 3000
+  },
+  {
+    "ts": "2026-10-20T04:28:49.833Z",
+    "screen": "COMBAT",
+    "decider": "code",
+    "latency": {
+      "plan": 0,
+      "jev": 0,
+      "action": 178,
+      "planner": 3,
+      "pre": 1
+    },
+    "stages": {
+      "combat_computation": 3.0,
+      "exact_observed_solver_cache": 0.0
+    },
+    "fallback": null,
+    "timed_out": false,
+    "turn_actual_ms": 10,
+    "jev_reserve_ms": 3000
+  },
+  {
+    "ts": "2026-10-20T04:28:51.727Z",
+    "screen": "REWARD",
+    "decider": "code",
+    "latency": {
+      "plan": 1,
+      "jev": 0,
+      "action": 47,
+      "planner": 1,
+      "pre": 2
+    },
+    "stages": {},
+    "fallback": null,
+    "timed_out": false,
+    "turn_actual_ms": 3,
+    "jev_reserve_ms": null
+  },
+  {
+    "ts": "2026-10-20T04:28:51.877Z",
+    "screen": "REWARD",
+    "decider": "code",
+    "latency": {
+      "plan": 0,
+      "jev": 0,
+      "action": 47,
+      "planner": 0,
+      "pre": 3
+    },
+    "stages": {},
+    "fallback": null,
+    "timed_out": false,
+    "turn_actual_ms": 2,
+    "jev_reserve_ms": null
+  },
+  {
+    "ts": "2026-10-20T04:28:52.024Z",
+    "screen": "REWARD",
+    "decider": "code",
+    "latency": {
+      "plan": 0,
+      "jev": 0,
+      "action": 53,
+      "planner": 1,
+      "pre": 2
+    },
+    "stages": {},
+    "fallback": null,
+    "timed_out": false,
+    "turn_actual_ms": 2,
+    "jev_reserve_ms": null
+  },
+  {
+    "ts": "2026-10-20T04:31:21.635Z",
+    "screen": "REWARD",
+    "decider": "codex",
+    "latency": {
+      "plan": 5612,
+      "jev": 0,
+      "action": 64,
+      "deepseek": 17735,
+      "planner": 1077,
+      "pre": 124562
+    },
+    "stages": {
+      "V6_projection": 64171.0,
+      "L2_brain": 70190.0,
+      "v6_combat_knowledge": 0.0,
+      "v6_combat_predicates_and_audit": 4.0,
+      "P1_readiness_shadow": 1.0,
+      "C2_sampling_shadow": 0.0,
+      "P2_S_build_counterfactual": 7.0,
+      "C2_ranking_counterfactual": 0.0,
+      "G2_global_shadow": 4.0,
+      "B3_current": 1961.0,
+      "construction_shadow": 2001.0,
+      "construction_evaluation_shadow": 0.0
+    },
+    "fallback": null,
+    "timed_out": false,
+    "turn_actual_ms": 149417,
+    "jev_reserve_ms": null
+  },
+  {
+    "ts": "2026-10-20T04:31:22.728Z",
+    "screen": "REWARD",
+    "decider": "code",
+    "latency": {
+      "plan": 0,
+      "jev": 0,
+      "action": 68,
+      "planner": 0,
+      "pre": 1
+    },
+    "stages": {},
+    "fallback": null,
+    "timed_out": false,
+    "turn_actual_ms": 1,
+    "jev_reserve_ms": null
+  },
+  {
+    "ts": "2026-10-20T04:31:22.920Z",
+    "screen": "MAP",
+    "decider": "code",
+    "latency": {
+      "plan": 1,
+      "jev": 0,
+      "action": 1155,
+      "planner": 6,
+      "pre": 1
+    },
+    "stages": {},
+    "fallback": null,
+    "timed_out": false,
+    "turn_actual_ms": 6,
+    "jev_reserve_ms": null
+  },
+  {
+    "ts": "2026-10-20T04:31:29.171Z",
+    "screen": "COMBAT",
+    "decider": "jev",
+    "latency": {
+      "plan": 53,
+      "jev": 1234,
+      "action": 235,
+      "planner": 1060,
+      "pre": 0
+    },
+    "stages": {
+      "combat_computation": 1060.0,
+      "exact_observed_solver_cache": 0.0,
+      "v6_combat_knowledge": 0.0,
+      "v6_combat_predicates_and_audit": 11.0,
+      "combat_jev_projection": 19.0,
+      "jev_gateway_request_encoding": 0.0,
+      "jev_http_to_headers": 1231.0,
+      "Jev": 1234.0,
+      "jev_prompt_log": 5.0
+    },
+    "fallback": null,
+    "timed_out": false,
+    "turn_actual_ms": 2434,
+    "jev_reserve_ms": 3000
+  },
+  {
+    "ts": "2026-10-20T04:31:29.958Z",
+    "screen": "COMBAT",
+    "decider": "code",
+    "latency": {
+      "plan": 0,
+      "jev": 0,
+      "action": 363,
+      "planner": 2,
+      "pre": 1
+    },
+    "stages": {
+      "combat_computation": 2.0
+    },
+    "fallback": null,
+    "timed_out": false,
+    "turn_actual_ms": 2438,
+    "jev_reserve_ms": 3000
+  },
+  {
+    "ts": "2026-10-20T04:31:30.870Z",
+    "screen": "COMBAT",
+    "decider": "code",
+    "latency": {
+      "plan": 0,
+      "jev": 0,
+      "action": 682,
+      "planner": 2,
+      "pre": 0
+    },
+    "stages": {
+      "combat_computation": 2.0
+    },
+    "fallback": null,
+    "timed_out": false,
+    "turn_actual_ms": 2441,
+    "jev_reserve_ms": 3000
+  },
+  {
+    "ts": "2026-10-20T04:31:31.656Z",
+    "screen": "COMBAT",
+    "decider": "code",
+    "latency": {
+      "plan": 0,
+      "jev": 0,
+      "action": 450,
+      "planner": 1,
+      "pre": 1
+    },
+    "stages": {
+      "combat_computation": 2.0
+    },
+    "fallback": null,
+    "timed_out": false,
+    "turn_actual_ms": 2443,
+    "jev_reserve_ms": 3000
+  },
+  {
+    "ts": "2026-10-20T04:31:33.292Z",
+    "screen": "CARD_SELECTION",
+    "decider": "jev",
+    "latency": {
+      "plan": 31,
+      "jev": 1024,
+      "action": 278,
+      "planner": 7,
+      "pre": 0
+    },
+    "stages": {
+      "combat_computation": 6.0,
+      "jev_gateway_request_encoding": 0.0,
+      "jev_http_to_headers": 1022.0,
+      "Jev": 1024.0,
+      "jev_prompt_log": 0.0
+    },
+    "fallback": null,
+    "timed_out": false,
+    "turn_actual_ms": 3479,
+    "jev_reserve_ms": 3000
+  },
+  {
+    "ts": "2026-10-20T04:31:33.715Z",
+    "screen": "COMBAT",
+    "decider": "code",
+    "latency": {
+      "plan": 0,
+      "jev": 0,
+      "action": 714,
+      "planner": 4,
+      "pre": 1
+    },
+    "stages": {
+      "combat_computation": 4.0
+    },
+    "fallback": null,
+    "timed_out": false,
+    "turn_actual_ms": 3484,
+    "jev_reserve_ms": 3000
+  },
+  {
+    "ts": "2026-10-20T04:31:39.595Z",
+    "screen": "COMBAT",
+    "decider": "jev",
+    "latency": {
+      "plan": 32,
+      "jev": 475,
+      "action": 243,
+      "planner": 345,
+      "pre": 1
+    },
+    "stages": {
+      "combat_computation": 345.0,
+      "exact_observed_solver_cache": 0.0,
+      "v6_combat_knowledge": 0.0,
+      "v6_combat_predicates_and_audit": 3.0,
+      "combat_jev_projection": 9.0,
+      "jev_gateway_request_encoding": 0.0,
+      "jev_http_to_headers": 474.0,
+      "Jev": 475.0,
+      "jev_prompt_log": 4.0
+    },
+    "fallback": null,
+    "timed_out": false,
+    "turn_actual_ms": 852,
+    "jev_reserve_ms": 3000
+  },
+  {
+    "ts": "2026-10-20T04:31:40.351Z",
+    "screen": "COMBAT",
+    "decider": "code",
+    "latency": {
+      "plan": 0,
+      "jev": 0,
+      "action": 366,
+      "planner": 2,
+      "pre": 1
+    },
+    "stages": {
+      "combat_computation": 2.0
+    },
+    "fallback": null,
+    "timed_out": false,
+    "turn_actual_ms": 856,
+    "jev_reserve_ms": 3000
+  },
+  {
+    "ts": "2026-10-20T04:31:41.250Z",
+    "screen": "COMBAT",
+    "decider": "code",
+    "latency": {
+      "plan": 0,
+      "jev": 0,
+      "action": 466,
+      "planner": 2,
+      "pre": 2
+    },
+    "stages": {
+      "combat_computation": 2.0
+    },
+    "fallback": null,
+    "timed_out": false,
+    "turn_actual_ms": 859,
+    "jev_reserve_ms": 3000
+  },
+  {
+    "ts": "2026-10-20T04:31:42.234Z",
+    "screen": "COMBAT",
+    "decider": "code",
+    "latency": {
+      "plan": 1,
+      "jev": 0,
+      "action": 732,
+      "planner": 2,
+      "pre": 0
+    },
+    "stages": {
+      "combat_computation": 2.0
+    },
+    "fallback": null,
+    "timed_out": false,
+    "turn_actual_ms": 862,
+    "jev_reserve_ms": 3000
+  },
+  {
+    "ts": "2026-10-20T04:31:48.367Z",
+    "screen": "COMBAT",
+    "decider": "jev",
+    "latency": {
+      "plan": 35,
+      "jev": 962,
+      "action": 236,
+      "planner": 95,
+      "pre": 1
+    },
+    "stages": {
+      "combat_computation": 95.0,
+      "exact_observed_solver_cache": 0.0,
+      "v6_combat_knowledge": 0.0,
+      "v6_combat_predicates_and_audit": 4.0,
+      "combat_jev_projection": 13.0,
+      "jev_gateway_request_encoding": 0.0,
+      "jev_http_to_headers": 961.0,
+      "Jev": 962.0,
+      "jev_prompt_log": 3.0
+    },
+    "fallback": null,
+    "timed_out": false,
+    "turn_actual_ms": 1087,
+    "jev_reserve_ms": 3000
+  },
+  {
+    "ts": "2026-10-20T04:31:49.124Z",
+    "screen": "COMBAT",
+    "decider": "code",
+    "latency": {
+      "plan": 0,
+      "jev": 0,
+      "action": 237,
+      "planner": 1,
+      "pre": 1
+    },
+    "stages": {
+      "combat_computation": 1.0
+    },
+    "fallback": null,
+    "timed_out": false,
+    "turn_actual_ms": 1089,
+    "jev_reserve_ms": 3000
+  },
+  {
+    "ts": "2026-10-20T04:31:49.882Z",
+    "screen": "COMBAT",
+    "decider": "code",
+    "latency": {
+      "plan": 0,
+      "jev": 0,
+      "action": 469,
+      "planner": 1,
+      "pre": 1
+    },
+    "stages": {
+      "combat_computation": 2.0
+    },
+    "fallback": null,
+    "timed_out": false,
+    "turn_actual_ms": 1091,
+    "jev_reserve_ms": 3000
+  },
+  {
+    "ts": "2026-10-20T04:31:51.311Z",
+    "screen": "COMBAT",
+    "decider": "jev",
+    "latency": {
+      "plan": 35,
+      "jev": 364,
+      "action": 729,
+      "planner": 45,
+      "pre": 1
+    },
+    "stages": {
+      "combat_computation": 46.0,
+      "v6_combat_knowledge": 0.0,
+      "v6_combat_predicates_and_audit": 2.0,
+      "combat_jev_projection": 10.0,
+      "jev_gateway_request_encoding": 0.0,
+      "jev_http_to_headers": 364.0,
+      "Jev": 365.0,
+      "jev_prompt_log": 3.0
+    },
+    "fallback": null,
+    "timed_out": false,
+    "turn_actual_ms": 1517,
+    "jev_reserve_ms": 3000
+  },
+  {
+    "ts": "2026-10-20T04:31:56.326Z",
+    "screen": "COMBAT",
+    "decider": "code",
+    "latency": {
+      "plan": 0,
+      "jev": 0,
+      "action": 269,
+      "planner": 2,
+      "pre": 1
+    },
+    "stages": {
+      "combat_computation": 2.0,
+      "exact_observed_solver_cache": 0.0
+    },
+    "fallback": null,
+    "timed_out": false,
+    "turn_actual_ms": 10,
+    "jev_reserve_ms": 3000
+  },
+  {
+    "ts": "2026-10-20T04:31:57.108Z",
+    "screen": "COMBAT",
+    "decider": "code",
+    "latency": {
+      "plan": 0,
+      "jev": 0,
+      "action": 367,
+      "planner": 2,
+      "pre": 1
+    },
+    "stages": {
+      "combat_computation": 2.0
+    },
+    "fallback": null,
+    "timed_out": false,
+    "turn_actual_ms": 13,
+    "jev_reserve_ms": 3000
+  },
+  {
+    "ts": "2026-10-20T04:31:58.010Z",
+    "screen": "COMBAT",
+    "decider": "code",
+    "latency": {
+      "plan": 0,
+      "jev": 0,
+      "action": 583,
+      "planner": 1,
+      "pre": 1
+    },
+    "stages": {
+      "combat_computation": 1.0
+    },
+    "fallback": null,
+    "timed_out": false,
+    "turn_actual_ms": 15,
+    "jev_reserve_ms": 3000
+  },
+  {
+    "ts": "2026-10-20T04:31:58.685Z",
+    "screen": "CARD_SELECTION",
+    "decider": "code",
+    "latency": {
+      "plan": 0,
+      "jev": 0,
+      "action": 347,
+      "planner": 0,
+      "pre": 0
+    },
+    "stages": {
+      "combat_computation": 0.0
+    },
+    "fallback": null,
+    "timed_out": false,
+    "turn_actual_ms": 16,
+    "jev_reserve_ms": 3000
+  },
+  {
+    "ts": "2026-10-20T04:31:59.126Z",
+    "screen": "COMBAT",
+    "decider": "code",
+    "latency": {
+      "plan": 0,
+      "jev": 0,
+      "action": 699,
+      "planner": 2,
+      "pre": 0
+    },
+    "stages": {
+      "combat_computation": 2.0
+    },
+    "fallback": null,
+    "timed_out": false,
+    "turn_actual_ms": 18,
+    "jev_reserve_ms": 3000
+  },
+  {
+    "ts": "2026-10-20T04:32:01.804Z",
+    "screen": "REWARD",
+    "decider": "code",
+    "latency": {
+      "plan": 0,
+      "jev": 0,
+      "action": 53,
+      "planner": 0,
+      "pre": 1
+    },
+    "stages": {},
+    "fallback": null,
+    "timed_out": false,
+    "turn_actual_ms": 0,
+    "jev_reserve_ms": null
+  },
+  {
+    "ts": "2026-10-20T04:32:01.955Z",
+    "screen": "REWARD",
+    "decider": "code",
+    "latency": {
+      "plan": 0,
+      "jev": 0,
+      "action": 51,
+      "planner": 0,
+      "pre": 1
+    },
+    "stages": {},
+    "fallback": null,
+    "timed_out": false,
+    "turn_actual_ms": 1,
+    "jev_reserve_ms": null
+  },
+  {
+    "ts": "2026-10-20T04:33:17.164Z",
+    "screen": "REWARD",
+    "decider": "codex",
+    "latency": {
+      "plan": 4374,
+      "jev": 0,
+      "action": 75,
+      "deepseek": 18492,
+      "planner": 990,
+      "pre": 50720
+    },
+    "stages": {
+      "V6_projection": 4978.0,
+      "L2_brain": 61019.0,
+      "P1_readiness_shadow": 1.0,
+      "C2_sampling_shadow": 0.0,
+      "P2_S_build_counterfactual": 2.0,
+      "C2_ranking_counterfactual": 0.0,
+      "G2_global_shadow": 3.0,
+      "B3_current": 2079.0,
+      "construction_shadow": 1731.0,
+      "construction_evaluation_shadow": 0.0
+    },
+    "fallback": null,
+    "timed_out": false,
+    "turn_actual_ms": 75044,
+    "jev_reserve_ms": null
+  },
+  {
+    "ts": "2026-10-20T04:33:18.186Z",
+    "screen": "REWARD",
+    "decider": "code",
+    "latency": {
+      "plan": 0,
+      "jev": 0,
+      "action": 86,
+      "planner": 0,
+      "pre": 1
+    },
+    "stages": {},
+    "fallback": null,
+    "timed_out": false,
+    "turn_actual_ms": 0,
+    "jev_reserve_ms": null
+  },
+  {
+    "ts": "2026-10-20T04:33:18.382Z",
+    "screen": "MAP",
+    "decider": "code",
+    "latency": {
+      "plan": 0,
+      "jev": 0,
+      "action": 1165,
+      "planner": 2,
+      "pre": 0
+    },
+    "stages": {},
+    "fallback": null,
+    "timed_out": false,
+    "turn_actual_ms": 3,
+    "jev_reserve_ms": null
+  },
+  {
+    "ts": "2026-10-20T04:33:23.521Z",
+    "screen": "COMBAT",
+    "decider": "jev",
+    "latency": {
+      "plan": 40,
+      "jev": 846,
+      "action": 393,
+      "planner": 392,
+      "pre": 0
+    },
+    "stages": {
+      "combat_computation": 391.0,
+      "exact_observed_solver_cache": 0.0,
+      "v6_combat_knowledge": 0.0,
+      "v6_combat_predicates_and_audit": 6.0,
+      "combat_jev_projection": 11.0,
+      "jev_gateway_request_encoding": 0.0,
+      "jev_http_to_headers": 845.0,
+      "Jev": 846.0,
+      "jev_prompt_log": 5.0
+    },
+    "fallback": null,
+    "timed_out": false,
+    "turn_actual_ms": 1276,
+    "jev_reserve_ms": 3000
+  },
+  {
+    "ts": "2026-10-20T04:33:24.443Z",
+    "screen": "COMBAT",
+    "decider": "code",
+    "latency": {
+      "plan": 0,
+      "jev": 0,
+      "action": 216,
+      "planner": 5,
+      "pre": 1
+    },
+    "stages": {
+      "combat_computation": 5.0
+    },
+    "fallback": null,
+    "timed_out": false,
+    "turn_actual_ms": 1283,
+    "jev_reserve_ms": 3000
+  },
+  {
+    "ts": "2026-10-20T04:33:25.234Z",
+    "screen": "COMBAT",
+    "decider": "code",
+    "latency": {
+      "plan": 0,
+      "jev": 0,
+      "action": 215,
+      "planner": 2,
+      "pre": 0
+    },
+    "stages": {
+      "combat_computation": 1.0
+    },
+    "fallback": null,
+    "timed_out": false,
+    "turn_actual_ms": 1285,
+    "jev_reserve_ms": 3000
+  },
+  {
+    "ts": "2026-10-20T04:33:25.978Z",
+    "screen": "COMBAT",
+    "decider": "code",
+    "latency": {
+      "plan": 0,
+      "jev": 0,
+      "action": 351,
+      "planner": 2,
+      "pre": 1
+    },
+    "stages": {
+      "combat_computation": 2.0
+    },
+    "fallback": null,
+    "timed_out": false,
+    "turn_actual_ms": 1288,
+    "jev_reserve_ms": 3000
+  },
+  {
+    "ts": "2026-10-20T04:33:26.890Z",
+    "screen": "COMBAT",
+    "decider": "code",
+    "latency": {
+      "plan": 0,
+      "jev": 0,
+      "action": 703,
+      "planner": 4,
+      "pre": 2
+    },
+    "stages": {
+      "combat_computation": 4.0
+    },
+    "fallback": null,
+    "timed_out": false,
+    "turn_actual_ms": 1293,
+    "jev_reserve_ms": 3000
+  },
+  {
+    "ts": "2026-10-20T04:33:32.417Z",
+    "screen": "COMBAT",
+    "decider": "jev",
+    "latency": {
+      "plan": 42,
+      "jev": 644,
+      "action": 596,
+      "planner": 191,
+      "pre": 1
+    },
+    "stages": {
+      "combat_computation": 190.0,
+      "exact_observed_solver_cache": 0.0,
+      "v6_combat_knowledge": 0.0,
+      "v6_combat_predicates_and_audit": 6.0,
+      "combat_jev_projection": 15.0,
+      "jev_gateway_request_encoding": 0.0,
+      "jev_http_to_headers": 641.0,
+      "Jev": 644.0,
+      "jev_prompt_log": 6.0
+    },
+    "fallback": null,
+    "timed_out": false,
+    "turn_actual_ms": 866,
+    "jev_reserve_ms": 3000
+  },
+  {
+    "ts": "2026-10-20T04:33:33.124Z",
+    "screen": "CARD_SELECTION",
+    "decider": "code",
+    "latency": {
+      "plan": 0,
+      "jev": 0,
+      "action": 346,
+      "planner": 1,
+      "pre": 1
+    },
+    "stages": {
+      "combat_computation": 1.0
+    },
+    "fallback": null,
+    "timed_out": false,
+    "turn_actual_ms": 867,
+    "jev_reserve_ms": 3000
+  },
+  {
+    "ts": "2026-10-20T04:33:34.677Z",
+    "screen": "COMBAT",
+    "decider": "jev",
+    "latency": {
+      "plan": 34,
+      "jev": 938,
+      "action": 242,
+      "planner": 79,
+      "pre": 1
+    },
+    "stages": {
+      "combat_computation": 80.0,
+      "v6_combat_knowledge": 0.0,
+      "v6_combat_predicates_and_audit": 3.0,
+      "combat_jev_projection": 14.0,
+      "jev_gateway_request_encoding": 0.0,
+      "jev_http_to_headers": 937.0,
+      "Jev": 939.0,
+      "jev_prompt_log": 4.0
+    },
+    "fallback": null,
+    "timed_out": false,
+    "turn_actual_ms": 1905,
+    "jev_reserve_ms": 3000
+  },
+  {
+    "ts": "2026-10-20T04:33:35.493Z",
+    "screen": "COMBAT",
+    "decider": "code",
+    "latency": {
+      "plan": 0,
+      "jev": 0,
+      "action": 460,
+      "planner": 2,
+      "pre": 1
+    },
+    "stages": {
+      "combat_computation": 2.0
+    },
+    "fallback": null,
+    "timed_out": false,
+    "turn_actual_ms": 1908,
+    "jev_reserve_ms": 3000
+  },
+  {
+    "ts": "2026-10-20T04:33:36.453Z",
+    "screen": "CARD_SELECTION",
+    "decider": "jev",
+    "latency": {
+      "plan": 49,
+      "jev": 351,
+      "action": 299,
+      "planner": 2,
+      "pre": 1
+    },
+    "stages": {
+      "combat_computation": 2.0,
+      "jev_gateway_request_encoding": 0.0,
+      "jev_http_to_headers": 350.0,
+      "Jev": 351.0,
+      "jev_prompt_log": 0.0
+    },
+    "fallback": null,
+    "timed_out": false,
+    "turn_actual_ms": 2263,
+    "jev_reserve_ms": 3000
+  },
+  {
+    "ts": "2026-10-20T04:33:36.864Z",
+    "screen": "COMBAT",
+    "decider": "code",
+    "latency": {
+      "plan": 0,
+      "jev": 0,
+      "action": 718,
+      "planner": 2,
+      "pre": 1
+    },
+    "stages": {
+      "combat_computation": 2.0
+    },
+    "fallback": null,
+    "timed_out": false,
+    "turn_actual_ms": 2265,
+    "jev_reserve_ms": 3000
+  },
+  {
+    "ts": "2026-10-20T04:33:41.877Z",
+    "screen": "COMBAT",
+    "decider": "code",
+    "latency": {
+      "plan": 0,
+      "jev": 0,
+      "action": 228,
+      "planner": 3,
+      "pre": 1
+    },
+    "stages": {
+      "combat_computation": 3.0,
+      "exact_observed_solver_cache": 0.0
+    },
+    "fallback": null,
+    "timed_out": false,
+    "turn_actual_ms": 16,
+    "jev_reserve_ms": 3000
+  },
+  {
+    "ts": "2026-10-20T04:33:42.661Z",
+    "screen": "COMBAT",
+    "decider": "code",
+    "latency": {
+      "plan": 1,
+      "jev": 0,
+      "action": 158,
+      "planner": 1,
+      "pre": 2
+    },
+    "stages": {
+      "combat_computation": 2.0
+    },
+    "fallback": null,
+    "timed_out": false,
+    "turn_actual_ms": 19,
+    "jev_reserve_ms": 3000
+  },
+  {
+    "ts": "2026-10-20T04:33:44.589Z",
+    "screen": "REWARD",
+    "decider": "code",
+    "latency": {
+      "plan": 0,
+      "jev": 0,
+      "action": 48,
+      "planner": 1,
+      "pre": 0
+    },
+    "stages": {},
+    "fallback": null,
+    "timed_out": false,
+    "turn_actual_ms": 0,
+    "jev_reserve_ms": null
+  },
+  {
+    "ts": "2026-10-20T04:33:44.737Z",
+    "screen": "REWARD",
+    "decider": "code",
+    "latency": {
+      "plan": 0,
+      "jev": 0,
+      "action": 47,
+      "planner": 0,
+      "pre": 1
+    },
+    "stages": {},
+    "fallback": null,
+    "timed_out": false,
+    "turn_actual_ms": 0,
+    "jev_reserve_ms": null
+  },
+  {
+    "ts": "2026-10-20T04:33:44.887Z",
+    "screen": "REWARD",
+    "decider": "code",
+    "latency": {
+      "plan": 0,
+      "jev": 0,
+      "action": 69,
+      "planner": 0,
+      "pre": 1
+    },
+    "stages": {},
+    "fallback": null,
+    "timed_out": false,
+    "turn_actual_ms": 0,
+    "jev_reserve_ms": null
+  },
+  {
+    "ts": "2026-10-20T04:34:14.122Z",
+    "screen": "REWARD",
+    "decider": "codex",
+    "latency": {
+      "plan": 4828,
+      "jev": 0,
+      "action": 57,
+      "deepseek": 15516,
+      "planner": 839,
+      "pre": 7303
+    },
+    "stages": {
+      "V6_projection": 4548.0,
+      "v6_combat_knowledge": 0.0,
+      "v6_combat_predicates_and_audit": 5.0,
+      "P1_readiness_shadow": 1.0,
+      "C2_sampling_shadow": 0.0,
+      "P2_S_build_counterfactual": 3.0,
+      "C2_ranking_counterfactual": 0.0,
+      "G2_global_shadow": 4.0,
+      "B3_current": 1590.0,
+      "construction_shadow": 1846.0,
+      "construction_evaluation_shadow": 0.0,
+      "L2_brain": 16454.0
+    },
+    "fallback": null,
+    "timed_out": false,
+    "turn_actual_ms": 29038,
+    "jev_reserve_ms": null
+  },
+  {
+    "ts": "2026-10-20T04:34:15.174Z",
+    "screen": "REWARD",
+    "decider": "code",
+    "latency": {
+      "plan": 0,
+      "jev": 0,
+      "action": 93,
+      "planner": 0,
+      "pre": 1
+    },
+    "stages": {},
+    "fallback": null,
+    "timed_out": false,
+    "turn_actual_ms": 0,
+    "jev_reserve_ms": null
+  },
+  {
+    "ts": "2026-10-20T04:34:15.372Z",
+    "screen": "MAP",
+    "decider": "code",
+    "latency": {
+      "plan": 0,
+      "jev": 0,
+      "action": 1168,
+      "planner": 1,
+      "pre": 1
+    },
+    "stages": {},
+    "fallback": null,
+    "timed_out": false,
+    "turn_actual_ms": 2,
+    "jev_reserve_ms": null
+  },
+  {
+    "ts": "2026-10-20T04:34:16.674Z",
+    "screen": "SHOP",
+    "decider": "code",
+    "latency": {
+      "plan": 0,
+      "jev": 0,
+      "action": 44,
+      "planner": 1,
+      "pre": 1
+    },
+    "stages": {},
+    "fallback": null,
+    "timed_out": false,
+    "turn_actual_ms": 1,
+    "jev_reserve_ms": null
+  },
+  {
+    "ts": "2026-10-20T04:35:48.727Z",
+    "screen": "SHOP",
+    "decider": "codex",
+    "latency": {
+      "plan": 12208,
+      "jev": 0,
+      "action": 43,
+      "deepseek": 19209,
+      "planner": 2605,
+      "pre": 43669
+    },
+    "stages": {
+      "V6_projection": 4558.0,
+      "L2_brain": 56390.0,
+      "V6_shop_projection": 14208.0,
+      "v6_combat_knowledge": 1.0,
+      "v6_combat_predicates_and_audit": 21.0,
+      "P1_readiness_shadow": 4.0,
+      "C2_sampling_shadow": 0.0,
+      "P2_S_build_counterfactual": 13.0,
+      "C2_ranking_counterfactual": 0.0,
+      "G2_global_shadow": 8.0,
+      "B3_current": 6403.0,
+      "construction_shadow": 5287.0,
+      "construction_evaluation_shadow": 0.0
+    },
+    "fallback": null,
+    "timed_out": true,
+    "turn_actual_ms": 91855,
+    "jev_reserve_ms": null
+  },
+  {
+    "ts": "2026-10-20T04:36:02.051Z",
+    "screen": "SHOP",
+    "decider": "codex",
+    "latency": {
+      "plan": 0,
+      "jev": 0,
+      "action": 44,
+      "planner": 520,
+      "pre": 6067
+    },
+    "stages": {
+      "V6_projection": 4537.0,
+      "V6_shop_projection": 6579.0
+    },
+    "fallback": null,
+    "timed_out": true,
+    "turn_actual_ms": 13168,
+    "jev_reserve_ms": null
+  },
+  {
+    "ts": "2026-10-20T04:36:02.196Z",
+    "screen": "SHOP",
+    "decider": "code",
+    "latency": {
+      "plan": 0,
+      "jev": 0,
+      "action": 55,
+      "planner": 0,
+      "pre": 1
+    },
+    "stages": {},
+    "fallback": null,
+    "timed_out": false,
+    "turn_actual_ms": 0,
+    "jev_reserve_ms": null
+  },
+  {
+    "ts": "2026-10-20T04:36:02.402Z",
+    "screen": "MAP",
+    "decider": "code",
+    "latency": {
+      "plan": 0,
+      "jev": 0,
+      "action": 1311,
+      "planner": 2,
+      "pre": 1
+    },
+    "stages": {},
+    "fallback": null,
+    "timed_out": false,
+    "turn_actual_ms": 3,
+    "jev_reserve_ms": null
+  },
+  {
+    "ts": "2026-10-20T04:36:08.591Z",
+    "screen": "COMBAT",
+    "decider": "jev",
+    "latency": {
+      "plan": 47,
+      "jev": 1195,
+      "action": 237,
+      "planner": 1027,
+      "pre": 1
+    },
+    "stages": {
+      "combat_computation": 1027.0,
+      "exact_observed_solver_cache": 0.0,
+      "v6_combat_knowledge": 0.0,
+      "v6_combat_predicates_and_audit": 21.0,
+      "combat_jev_projection": 14.0,
+      "jev_gateway_request_encoding": 0.0,
+      "jev_http_to_headers": 1192.0,
+      "Jev": 1195.0,
+      "jev_prompt_log": 6.0
+    },
+    "fallback": null,
+    "timed_out": false,
+    "turn_actual_ms": 2264,
+    "jev_reserve_ms": 3000
+  },
+  {
+    "ts": "2026-10-20T04:36:09.347Z",
+    "screen": "COMBAT",
+    "decider": "code",
+    "latency": {
+      "plan": 0,
+      "jev": 0,
+      "action": 369,
+      "planner": 2,
+      "pre": 1
+    },
+    "stages": {
+      "combat_computation": 2.0
+    },
+    "fallback": null,
+    "timed_out": false,
+    "turn_actual_ms": 2267,
+    "jev_reserve_ms": 3000
+  },
+  {
+    "ts": "2026-10-20T04:36:10.231Z",
+    "screen": "COMBAT",
+    "decider": "code",
+    "latency": {
+      "plan": 0,
+      "jev": 0,
+      "action": 552,
+      "planner": 1,
+      "pre": 1
+    },
+    "stages": {
+      "combat_computation": 1.0
+    },
+    "fallback": null,
+    "timed_out": false,
+    "turn_actual_ms": 2270,
+    "jev_reserve_ms": 3000
+  },
+  {
+    "ts": "2026-10-20T04:36:10.886Z",
+    "screen": "CARD_SELECTION",
+    "decider": "code",
+    "latency": {
+      "plan": 0,
+      "jev": 0,
+      "action": 315,
+      "planner": 1,
+      "pre": 2
+    },
+    "stages": {
+      "combat_computation": 2.0
+    },
+    "fallback": null,
+    "timed_out": false,
+    "turn_actual_ms": 2272,
+    "jev_reserve_ms": 3000
+  },
+  {
+    "ts": "2026-10-20T04:36:12.331Z",
+    "screen": "COMBAT",
+    "decider": "jev",
+    "latency": {
+      "plan": 45,
+      "jev": 598,
+      "action": 226,
+      "planner": 376,
+      "pre": 1
+    },
+    "stages": {
+      "combat_computation": 376.0,
+      "exact_observed_solver_cache": 0.0,
+      "v6_combat_knowledge": 0.0,
+      "v6_combat_predicates_and_audit": 3.0,
+      "combat_jev_projection": 14.0,
+      "jev_gateway_request_encoding": 0.0,
+      "jev_http_to_headers": 596.0,
+      "Jev": 598.0,
+      "jev_prompt_log": 6.0
+    },
+    "fallback": null,
+    "timed_out": false,
+    "turn_actual_ms": 3266,
+    "jev_reserve_ms": 3000
+  },
+  {
+    "ts": "2026-10-20T04:36:13.073Z",
+    "screen": "COMBAT",
+    "decider": "code",
+    "latency": {
+      "plan": 0,
+      "jev": 0,
+      "action": 588,
+      "planner": 2,
+      "pre": 1
+    },
+    "stages": {
+      "combat_computation": 1.0
+    },
+    "fallback": null,
+    "timed_out": false,
+    "turn_actual_ms": 3269,
+    "jev_reserve_ms": 3000
+  },
+  {
+    "ts": "2026-10-20T04:36:14.177Z",
+    "screen": "COMBAT",
+    "decider": "code",
+    "latency": {
+      "plan": 0,
+      "jev": 0,
+      "action": 368,
+      "planner": 2,
+      "pre": 1
+    },
+    "stages": {
+      "combat_computation": 2.0
+    },
+    "fallback": null,
+    "timed_out": false,
+    "turn_actual_ms": 3272,
+    "jev_reserve_ms": 3000
+  },
+  {
+    "ts": "2026-10-20T04:36:15.099Z",
+    "screen": "COMBAT",
+    "decider": "code",
+    "latency": {
+      "plan": 0,
+      "jev": 0,
+      "action": 698,
+      "planner": 3,
+      "pre": 1
+    },
+    "stages": {
+      "combat_computation": 2.0
+    },
+    "fallback": null,
+    "timed_out": false,
+    "turn_actual_ms": 3276,
+    "jev_reserve_ms": 3000
+  },
+  {
+    "ts": "2026-10-20T04:36:21.313Z",
+    "screen": "COMBAT",
+    "decider": "jev",
+    "latency": {
+      "plan": 28,
+      "jev": 754,
+      "action": 250,
+      "planner": 405,
+      "pre": 1
+    },
+    "stages": {
+      "combat_computation": 405.0,
+      "exact_observed_solver_cache": 0.0,
+      "v6_combat_knowledge": 0.0,
+      "v6_combat_predicates_and_audit": 9.0,
+      "combat_jev_projection": 11.0,
+      "jev_gateway_request_encoding": 0.0,
+      "jev_http_to_headers": 752.0,
+      "Jev": 754.0,
+      "jev_prompt_log": 4.0
+    },
+    "fallback": null,
+    "timed_out": false,
+    "turn_actual_ms": 1184,
+    "jev_reserve_ms": 3000
+  },
+  {
+    "ts": "2026-10-20T04:36:22.083Z",
+    "screen": "COMBAT",
+    "decider": "code",
+    "latency": {
+      "plan": 0,
+      "jev": 0,
+      "action": 361,
+      "planner": 2,
+      "pre": 1
+    },
+    "stages": {
+      "combat_computation": 2.0
+    },
+    "fallback": null,
+    "timed_out": false,
+    "turn_actual_ms": 1187,
+    "jev_reserve_ms": 3000
+  },
+  {
+    "ts": "2026-10-20T04:36:22.963Z",
+    "screen": "COMBAT",
+    "decider": "code",
+    "latency": {
+      "plan": 0,
+      "jev": 0,
+      "action": 392,
+      "planner": 2,
+      "pre": 1
+    },
+    "stages": {
+      "combat_computation": 2.0
+    },
+    "fallback": null,
+    "timed_out": false,
+    "turn_actual_ms": 1191,
+    "jev_reserve_ms": 3000
+  },
+  {
+    "ts": "2026-10-20T04:36:23.892Z",
+    "screen": "COMBAT",
+    "decider": "code",
+    "latency": {
+      "plan": 0,
+      "jev": 0,
+      "action": 730,
+      "planner": 2,
+      "pre": 1
+    },
+    "stages": {
+      "combat_computation": 3.0
+    },
+    "fallback": null,
+    "timed_out": false,
+    "turn_actual_ms": 1195,
+    "jev_reserve_ms": 3000
+  },
+  {
+    "ts": "2026-10-20T04:36:30.529Z",
+    "screen": "COMBAT",
+    "decider": "jev",
+    "latency": {
+      "plan": 39,
+      "jev": 618,
+      "action": 344,
+      "planner": 87,
+      "pre": 1
+    },
+    "stages": {
+      "combat_computation": 87.0,
+      "exact_observed_solver_cache": 0.0,
+      "v6_combat_knowledge": 0.0,
+      "v6_combat_predicates_and_audit": 3.0,
+      "combat_jev_projection": 8.0,
+      "jev_gateway_request_encoding": 0.0,
+      "jev_http_to_headers": 617.0,
+      "Jev": 618.0,
+      "jev_prompt_log": 3.0
+    },
+    "fallback": null,
+    "timed_out": false,
+    "turn_actual_ms": 735,
+    "jev_reserve_ms": 3000
+  },
+  {
+    "ts": "2026-10-20T04:36:31.396Z",
+    "screen": "COMBAT",
+    "decider": "code",
+    "latency": {
+      "plan": 0,
+      "jev": 0,
+      "action": 246,
+      "planner": 1,
+      "pre": 1
+    },
+    "stages": {
+      "combat_computation": 1.0
+    },
+    "fallback": null,
+    "timed_out": false,
+    "turn_actual_ms": 738,
+    "jev_reserve_ms": 3000
+  },
+  {
+    "ts": "2026-10-20T04:36:32.164Z",
+    "screen": "COMBAT",
+    "decider": "code",
+    "latency": {
+      "plan": 0,
+      "jev": 0,
+      "action": 726,
+      "planner": 2,
+      "pre": 0
+    },
+    "stages": {
+      "combat_computation": 2.0
+    },
+    "fallback": null,
+    "timed_out": false,
+    "turn_actual_ms": 741,
+    "jev_reserve_ms": 3000
+  },
+  {
+    "ts": "2026-10-20T04:36:35.924Z",
+    "screen": "COMBAT",
+    "decider": "code",
+    "latency": {
+      "plan": 0,
+      "jev": 0,
+      "action": 249,
+      "planner": 2,
+      "pre": 1
+    },
+    "stages": {
+      "combat_computation": 2.0,
+      "exact_observed_solver_cache": 0.0
+    },
+    "fallback": null,
+    "timed_out": false,
+    "turn_actual_ms": 10,
+    "jev_reserve_ms": 3000
+  },
+  {
+    "ts": "2026-10-20T04:36:36.693Z",
+    "screen": "COMBAT",
+    "decider": "code",
+    "latency": {
+      "plan": 0,
+      "jev": 0,
+      "action": 371,
+      "planner": 1,
+      "pre": 1
+    },
+    "stages": {
+      "combat_computation": 1.0
+    },
+    "fallback": null,
+    "timed_out": false,
+    "turn_actual_ms": 12,
+    "jev_reserve_ms": 3000
+  },
+  {
+    "ts": "2026-10-20T04:36:37.578Z",
+    "screen": "COMBAT",
+    "decider": "code",
+    "latency": {
+      "plan": 0,
+      "jev": 0,
+      "action": 136,
+      "planner": 1,
+      "pre": 1
+    },
+    "stages": {
+      "combat_computation": 1.0
+    },
+    "fallback": null,
+    "timed_out": false,
+    "turn_actual_ms": 15,
+    "jev_reserve_ms": 3000
+  },
+  {
+    "ts": "2026-10-20T04:36:39.298Z",
+    "screen": "REWARD",
+    "decider": "code",
+    "latency": {
+      "plan": 0,
+      "jev": 0,
+      "action": 50,
+      "planner": 0,
+      "pre": 1
+    },
+    "stages": {},
+    "fallback": null,
+    "timed_out": false,
+    "turn_actual_ms": 0,
+    "jev_reserve_ms": null
+  },
+  {
+    "ts": "2026-10-20T04:36:39.483Z",
+    "screen": "REWARD",
+    "decider": "code",
+    "latency": {
+      "plan": 0,
+      "jev": 0,
+      "action": 49,
+      "planner": 1,
+      "pre": 0
+    },
+    "stages": {},
+    "fallback": null,
+    "timed_out": false,
+    "turn_actual_ms": 0,
+    "jev_reserve_ms": null
+  },
+  {
+    "ts": "2026-10-20T04:36:39.613Z",
+    "screen": "REWARD",
+    "decider": "code",
+    "latency": {
+      "plan": 0,
+      "jev": 0,
+      "action": 67,
+      "planner": 0,
+      "pre": 0
+    },
+    "stages": {},
+    "fallback": null,
+    "timed_out": false,
+    "turn_actual_ms": 0,
+    "jev_reserve_ms": null
+  },
+  {
+    "ts": "2026-10-20T04:37:42.580Z",
+    "screen": "REWARD",
+    "decider": "codex",
+    "latency": {
+      "plan": 3736,
+      "jev": 0,
+      "action": 53,
+      "deepseek": 13158,
+      "planner": 871,
+      "pre": 44584
+    },
+    "stages": {
+      "V6_projection": 4556.0,
+      "L2_brain": 50552.0,
+      "P1_readiness_shadow": 1.0,
+      "C2_sampling_shadow": 0.0,
+      "P2_S_build_counterfactual": 3.0,
+      "C2_ranking_counterfactual": 0.0,
+      "G2_global_shadow": 4.0,
+      "B3_current": 1463.0,
+      "construction_shadow": 1746.0,
+      "construction_evaluation_shadow": 0.0
+    },
+    "fallback": null,
+    "timed_out": false,
+    "turn_actual_ms": 62767,
+    "jev_reserve_ms": null
+  },
+  {
+    "ts": "2026-10-20T04:37:43.122Z",
+    "screen": "REWARD",
+    "decider": "code",
+    "latency": {
+      "plan": 0,
+      "jev": 0,
+      "action": 57,
+      "planner": 0,
+      "pre": 1
+    },
+    "stages": {},
+    "fallback": null,
+    "timed_out": false,
+    "turn_actual_ms": 0,
+    "jev_reserve_ms": null
+  },
+  {
+    "ts": "2026-10-20T04:37:43.299Z",
+    "screen": "MAP",
+    "decider": "code",
+    "latency": {
+      "plan": 0,
+      "jev": 0,
+      "action": 1064,
+      "planner": 2,
+      "pre": 0
+    },
+    "stages": {},
+    "fallback": null,
+    "timed_out": false,
+    "turn_actual_ms": 2,
+    "jev_reserve_ms": null
+  },
+  {
+    "ts": "2026-10-20T04:39:14.904Z",
+    "screen": "REST",
+    "decider": "codex",
+    "latency": {
+      "plan": 6848,
+      "jev": 0,
+      "action": 58,
+      "deepseek": 34530,
+      "planner": 478,
+      "pre": 39880
+    },
+    "stages": {
+      "V6_projection": 4594.0,
+      "L2_brain": 68901.0,
+      "V6_rest_projection": 8682.0,
+      "P1_readiness_shadow": 1.0,
+      "C2_sampling_shadow": 0.0,
+      "P2_S_build_counterfactual": 6.0,
+      "C2_ranking_counterfactual": 0.0,
+      "G2_global_shadow": 5.0,
+      "B3_current": 3159.0,
+      "construction_shadow": 2422.0,
+      "construction_evaluation_shadow": 0.0
+    },
+    "fallback": null,
+    "timed_out": true,
+    "turn_actual_ms": 90400,
+    "jev_reserve_ms": null
+  },
+  {
+    "ts": "2026-10-20T04:39:15.081Z",
+    "screen": "REST",
+    "decider": "code",
+    "latency": {
+      "plan": 0,
+      "jev": 0,
+      "action": 87,
+      "planner": 0,
+      "pre": 1
+    },
+    "stages": {},
+    "fallback": null,
+    "timed_out": false,
+    "turn_actual_ms": 0,
+    "jev_reserve_ms": null
+  },
+  {
+    "ts": "2026-10-20T04:39:15.268Z",
+    "screen": "MAP",
+    "decider": "code",
+    "latency": {
+      "plan": 0,
+      "jev": 0,
+      "action": 1101,
+      "planner": 1,
+      "pre": 1
+    },
+    "stages": {},
+    "fallback": null,
+    "timed_out": false,
+    "turn_actual_ms": 1,
+    "jev_reserve_ms": null
+  },
+  {
+    "ts": "2026-10-20T04:39:20.046Z",
+    "screen": "COMBAT",
+    "decider": "jev",
+    "latency": {
+      "plan": 28,
+      "jev": 543,
+      "action": 365,
+      "planner": 418,
+      "pre": 0
+    },
+    "stages": {
+      "combat_computation": 418.0,
+      "exact_observed_solver_cache": 0.0,
+      "v6_combat_knowledge": 0.0,
+      "v6_combat_predicates_and_audit": 3.0,
+      "combat_jev_projection": 9.0,
+      "jev_gateway_request_encoding": 0.0,
+      "jev_http_to_headers": 542.0,
+      "Jev": 543.0,
+      "jev_prompt_log": 4.0
+    },
+    "fallback": null,
+    "timed_out": false,
+    "turn_actual_ms": 994,
+    "jev_reserve_ms": 3000
+  },
+  {
+    "ts": "2026-10-20T04:39:20.925Z",
+    "screen": "COMBAT",
+    "decider": "code",
+    "latency": {
+      "plan": 1,
+      "jev": 0,
+      "action": 365,
+      "planner": 2,
+      "pre": 1
+    },
+    "stages": {
+      "combat_computation": 2.0
+    },
+    "fallback": null,
+    "timed_out": false,
+    "turn_actual_ms": 998,
+    "jev_reserve_ms": 3000
+  },
+  {
+    "ts": "2026-10-20T04:39:21.808Z",
+    "screen": "COMBAT",
+    "decider": "code",
+    "latency": {
+      "plan": 1,
+      "jev": 0,
+      "action": 713,
+      "planner": 2,
+      "pre": 1
+    },
+    "stages": {
+      "combat_computation": 2.0
+    },
+    "fallback": null,
+    "timed_out": false,
+    "turn_actual_ms": 1001,
+    "jev_reserve_ms": 3000
+  },
+  {
+    "ts": "2026-10-20T04:39:26.928Z",
+    "screen": "COMBAT",
+    "decider": "jev",
+    "latency": {
+      "plan": 40,
+      "jev": 638,
+      "action": 252,
+      "planner": 289,
+      "pre": 0
+    },
+    "stages": {
+      "combat_computation": 289.0,
+      "exact_observed_solver_cache": 0.0,
+      "v6_combat_knowledge": 0.0,
+      "v6_combat_predicates_and_audit": 6.0,
+      "combat_jev_projection": 11.0,
+      "jev_gateway_request_encoding": 0.0,
+      "jev_http_to_headers": 636.0,
+      "Jev": 638.0,
+      "jev_prompt_log": 4.0
+    },
+    "fallback": null,
+    "timed_out": false,
+    "turn_actual_ms": 950,
+    "jev_reserve_ms": 3000
+  },
+  {
+    "ts": "2026-10-20T04:39:27.719Z",
+    "screen": "COMBAT",
+    "decider": "code",
+    "latency": {
+      "plan": 0,
+      "jev": 0,
+      "action": 245,
+      "planner": 2,
+      "pre": 1
+    },
+    "stages": {
+      "combat_computation": 2.0
+    },
+    "fallback": null,
+    "timed_out": false,
+    "turn_actual_ms": 953,
+    "jev_reserve_ms": 3000
+  },
+  {
+    "ts": "2026-10-20T04:39:28.500Z",
+    "screen": "COMBAT",
+    "decider": "code",
+    "latency": {
+      "plan": 0,
+      "jev": 0,
+      "action": 211,
+      "planner": 2,
+      "pre": 1
+    },
+    "stages": {
+      "combat_computation": 1.0
+    },
+    "fallback": null,
+    "timed_out": false,
+    "turn_actual_ms": 956,
+    "jev_reserve_ms": 3000
+  },
+  {
+    "ts": "2026-10-20T04:39:29.259Z",
+    "screen": "COMBAT",
+    "decider": "code",
+    "latency": {
+      "plan": 1,
+      "jev": 0,
+      "action": 695,
+      "planner": 2,
+      "pre": 1
+    },
+    "stages": {
+      "combat_computation": 3.0
+    },
+    "fallback": null,
+    "timed_out": false,
+    "turn_actual_ms": 960,
+    "jev_reserve_ms": 3000
+  },
+  {
+    "ts": "2026-10-20T04:39:34.830Z",
+    "screen": "COMBAT",
+    "decider": "jev",
+    "latency": {
+      "plan": 29,
+      "jev": 652,
+      "action": 373,
+      "planner": 317,
+      "pre": 1
+    },
+    "stages": {
+      "combat_computation": 317.0,
+      "exact_observed_solver_cache": 0.0,
+      "v6_combat_knowledge": 0.0,
+      "v6_combat_predicates_and_audit": 7.0,
+      "combat_jev_projection": 10.0,
+      "jev_gateway_request_encoding": 0.0,
+      "jev_http_to_headers": 651.0,
+      "Jev": 652.0,
+      "jev_prompt_log": 4.0
+    },
+    "fallback": null,
+    "timed_out": false,
+    "turn_actual_ms": 993,
+    "jev_reserve_ms": 3000
+  },
+  {
+    "ts": "2026-10-20T04:39:35.718Z",
+    "screen": "COMBAT",
+    "decider": "code",
+    "latency": {
+      "plan": 0,
+      "jev": 0,
+      "action": 269,
+      "planner": 2,
+      "pre": 0
+    },
+    "stages": {
+      "combat_computation": 1.0
+    },
+    "fallback": null,
+    "timed_out": false,
+    "turn_actual_ms": 996,
+    "jev_reserve_ms": 3000
+  },
+  {
+    "ts": "2026-10-20T04:39:36.502Z",
+    "screen": "COMBAT",
+    "decider": "code",
+    "latency": {
+      "plan": 0,
+      "jev": 0,
+      "action": 233,
+      "planner": 1,
+      "pre": 1
+    },
+    "stages": {
+      "combat_computation": 1.0
+    },
+    "fallback": null,
+    "timed_out": false,
+    "turn_actual_ms": 999,
+    "jev_reserve_ms": 3000
+  },
+  {
+    "ts": "2026-10-20T04:39:37.252Z",
+    "screen": "COMBAT",
+    "decider": "code",
+    "latency": {
+      "plan": 1,
+      "jev": 0,
+      "action": 230,
+      "planner": 1,
+      "pre": 0
+    },
+    "stages": {
+      "combat_computation": 1.0
+    },
+    "fallback": null,
+    "timed_out": false,
+    "turn_actual_ms": 1001,
+    "jev_reserve_ms": 3000
+  },
+  {
+    "ts": "2026-10-20T04:39:37.987Z",
+    "screen": "COMBAT",
+    "decider": "code",
+    "latency": {
+      "plan": 0,
+      "jev": 0,
+      "action": 698,
+      "planner": 2,
+      "pre": 0
+    },
+    "stages": {
+      "combat_computation": 1.0
+    },
+    "fallback": null,
+    "timed_out": false,
+    "turn_actual_ms": 1003,
+    "jev_reserve_ms": 3000
+  },
+  {
+    "ts": "2026-10-20T04:39:47.389Z",
+    "screen": "COMBAT",
+    "decider": "jev",
+    "latency": {
+      "plan": 34,
+      "jev": 2766,
+      "action": 380,
+      "planner": 343,
+      "pre": 1
+    },
+    "stages": {
+      "combat_computation": 343.0,
+      "exact_observed_solver_cache": 0.0,
+      "v6_combat_knowledge": 0.0,
+      "v6_combat_predicates_and_audit": 2.0,
+      "combat_jev_projection": 10.0,
+      "jev_gateway_request_encoding": 0.0,
+      "jev_http_to_headers": 2765.0,
+      "Jev": 2766.0,
+      "jev_prompt_log": 4.0
+    },
+    "fallback": null,
+    "timed_out": false,
+    "turn_actual_ms": 3141,
+    "jev_reserve_ms": 3000
+  },
+  {
+    "ts": "2026-10-20T04:39:48.294Z",
+    "screen": "COMBAT",
+    "decider": "code",
+    "latency": {
+      "plan": 1,
+      "jev": 0,
+      "action": 234,
+      "planner": 1,
+      "pre": 0
+    },
+    "stages": {
+      "combat_computation": 1.0
+    },
+    "fallback": null,
+    "timed_out": false,
+    "turn_actual_ms": 3143,
+    "jev_reserve_ms": 3000
+  },
+  {
+    "ts": "2026-10-20T04:39:49.046Z",
+    "screen": "COMBAT",
+    "decider": "code",
+    "latency": {
+      "plan": 1,
+      "jev": 0,
+      "action": 725,
+      "planner": 2,
+      "pre": 1
+    },
+    "stages": {
+      "combat_computation": 2.0
+    },
+    "fallback": null,
+    "timed_out": false,
+    "turn_actual_ms": 3147,
+    "jev_reserve_ms": 3000
+  },
+  {
+    "ts": "2026-10-20T04:39:54.676Z",
+    "screen": "COMBAT",
+    "decider": "jev",
+    "latency": {
+      "plan": 46,
+      "jev": 1075,
+      "action": 353,
+      "planner": 357,
+      "pre": 1
+    },
+    "stages": {
+      "combat_computation": 357.0,
+      "exact_observed_solver_cache": 0.0,
+      "v6_combat_knowledge": 0.0,
+      "v6_combat_predicates_and_audit": 6.0,
+      "combat_jev_projection": 17.0,
+      "jev_gateway_request_encoding": 0.0,
+      "jev_http_to_headers": 1073.0,
+      "Jev": 1075.0,
+      "jev_prompt_log": 6.0
+    },
+    "fallback": null,
+    "timed_out": false,
+    "turn_actual_ms": 1466,
+    "jev_reserve_ms": 3000
+  },
+  {
+    "ts": "2026-10-20T04:39:55.556Z",
+    "screen": "COMBAT",
+    "decider": "code",
+    "latency": {
+      "plan": 0,
+      "jev": 0,
+      "action": 359,
+      "planner": 2,
+      "pre": 1
+    },
+    "stages": {
+      "combat_computation": 2.0
+    },
+    "fallback": null,
+    "timed_out": false,
+    "turn_actual_ms": 1469,
+    "jev_reserve_ms": 3000
+  },
+  {
+    "ts": "2026-10-20T04:39:56.437Z",
+    "screen": "COMBAT",
+    "decider": "code",
+    "latency": {
+      "plan": 0,
+      "jev": 0,
+      "action": 463,
+      "planner": 2,
+      "pre": 1
+    },
+    "stages": {
+      "combat_computation": 2.0
+    },
+    "fallback": null,
+    "timed_out": false,
+    "turn_actual_ms": 1472,
+    "jev_reserve_ms": 3000
+  },
+  {
+    "ts": "2026-10-20T04:39:57.441Z",
+    "screen": "CARD_SELECTION",
+    "decider": "jev",
+    "latency": {
+      "plan": 27,
+      "jev": 407,
+      "action": 304,
+      "planner": 4,
+      "pre": 1
+    },
+    "stages": {
+      "combat_computation": 4.0,
+      "jev_gateway_request_encoding": 0.0,
+      "jev_http_to_headers": 406.0,
+      "Jev": 407.0,
+      "jev_prompt_log": 0.0
+    },
+    "fallback": null,
+    "timed_out": false,
+    "turn_actual_ms": 1885,
+    "jev_reserve_ms": 3000
+  },
+  {
+    "ts": "2026-10-20T04:39:57.858Z",
+    "screen": "COMBAT",
+    "decider": "code",
+    "latency": {
+      "plan": 0,
+      "jev": 0,
+      "action": 719,
+      "planner": 2,
+      "pre": 1
+    },
+    "stages": {
+      "combat_computation": 2.0
+    },
+    "fallback": null,
+    "timed_out": false,
+    "turn_actual_ms": 1888,
+    "jev_reserve_ms": 3000
+  },
+  {
+    "ts": "2026-10-20T04:40:03.702Z",
+    "screen": "COMBAT",
+    "decider": "jev",
+    "latency": {
+      "plan": 62,
+      "jev": 573,
+      "action": 570,
+      "planner": 208,
+      "pre": 1
+    },
+    "stages": {
+      "combat_computation": 209.0,
+      "exact_observed_solver_cache": 0.0,
+      "v6_combat_knowledge": 0.0,
+      "v6_combat_predicates_and_audit": 4.0,
+      "combat_jev_projection": 11.0,
+      "jev_gateway_request_encoding": 0.0,
+      "jev_http_to_headers": 572.0,
+      "Jev": 573.0,
+      "jev_prompt_log": 4.0
+    },
+    "fallback": null,
+    "timed_out": false,
+    "turn_actual_ms": 808,
+    "jev_reserve_ms": 3000
+  },
+  {
+    "ts": "2026-10-20T04:40:04.836Z",
+    "screen": "COMBAT",
+    "decider": "code",
+    "latency": {
+      "plan": 0,
+      "jev": 0,
+      "action": 625,
+      "planner": 2,
+      "pre": 1
+    },
+    "stages": {
+      "combat_computation": 2.0
+    },
+    "fallback": null,
+    "timed_out": false,
+    "turn_actual_ms": 811,
+    "jev_reserve_ms": 3000
+  },
+  {
+    "ts": "2026-10-20T04:40:05.559Z",
+    "screen": "CARD_SELECTION",
+    "decider": "code",
+    "latency": {
+      "plan": 0,
+      "jev": 0,
+      "action": 410,
+      "planner": 0,
+      "pre": 1
+    },
+    "stages": {
+      "combat_computation": 0.0
+    },
+    "fallback": null,
+    "timed_out": false,
+    "turn_actual_ms": 811,
+    "jev_reserve_ms": 3000
+  },
+  {
+    "ts": "2026-10-20T04:40:06.085Z",
+    "screen": "COMBAT",
+    "decider": "code",
+    "latency": {
+      "plan": 1,
+      "jev": 0,
+      "action": 255,
+      "planner": 3,
+      "pre": 1
+    },
+    "stages": {
+      "combat_computation": 4.0
+    },
+    "fallback": null,
+    "timed_out": false,
+    "turn_actual_ms": 815,
+    "jev_reserve_ms": 3000
+  },
+  {
+    "ts": "2026-10-20T04:40:06.871Z",
+    "screen": "COMBAT",
+    "decider": "code",
+    "latency": {
+      "plan": 0,
+      "jev": 0,
+      "action": 728,
+      "planner": 2,
+      "pre": 1
+    },
+    "stages": {
+      "combat_computation": 2.0
+    },
+    "fallback": null,
+    "timed_out": false,
+    "turn_actual_ms": 819,
+    "jev_reserve_ms": 3000
+  },
+  {
+    "ts": "2026-10-20T04:40:11.929Z",
+    "screen": "COMBAT",
+    "decider": "code",
+    "latency": {
+      "plan": 1,
+      "jev": 0,
+      "action": 250,
+      "planner": 2,
+      "pre": 1
+    },
+    "stages": {
+      "combat_computation": 2.0,
+      "exact_observed_solver_cache": 0.0
+    },
+    "fallback": null,
+    "timed_out": false,
+    "turn_actual_ms": 15,
+    "jev_reserve_ms": 3000
+  },
+  {
+    "ts": "2026-10-20T04:40:12.730Z",
+    "screen": "COMBAT",
+    "decider": "code",
+    "latency": {
+      "plan": 1,
+      "jev": 0,
+      "action": 697,
+      "planner": 3,
+      "pre": 0
+    },
+    "stages": {
+      "combat_computation": 3.0
+    },
+    "fallback": null,
+    "timed_out": false,
+    "turn_actual_ms": 20,
+    "jev_reserve_ms": 3000
+  },
+  {
+    "ts": "2026-10-20T04:40:18.461Z",
+    "screen": "COMBAT",
+    "decider": "jev",
+    "latency": {
+      "plan": 30,
+      "jev": 599,
+      "action": 352,
+      "planner": 115,
+      "pre": 1
+    },
+    "stages": {
+      "combat_computation": 115.0,
+      "exact_observed_solver_cache": 0.0,
+      "v6_combat_knowledge": 0.0,
+      "v6_combat_predicates_and_audit": 2.0,
+      "combat_jev_projection": 8.0,
+      "jev_gateway_request_encoding": 0.0,
+      "jev_http_to_headers": 599.0,
+      "Jev": 599.0,
+      "jev_prompt_log": 4.0
+    },
+    "fallback": null,
+    "timed_out": false,
+    "turn_actual_ms": 736,
+    "jev_reserve_ms": 3000
+  },
+  {
+    "ts": "2026-10-20T04:40:19.335Z",
+    "screen": "COMBAT",
+    "decider": "code",
+    "latency": {
+      "plan": 0,
+      "jev": 0,
+      "action": 234,
+      "planner": 2,
+      "pre": 1
+    },
+    "stages": {
+      "combat_computation": 2.0
+    },
+    "fallback": null,
+    "timed_out": false,
+    "turn_actual_ms": 740,
+    "jev_reserve_ms": 3000
+  },
+  {
+    "ts": "2026-10-20T04:40:20.083Z",
+    "screen": "COMBAT",
+    "decider": "code",
+    "latency": {
+      "plan": 0,
+      "jev": 0,
+      "action": 716,
+      "planner": 2,
+      "pre": 1
+    },
+    "stages": {
+      "combat_computation": 2.0
+    },
+    "fallback": null,
+    "timed_out": false,
+    "turn_actual_ms": 744,
+    "jev_reserve_ms": 3000
+  },
+  {
+    "ts": "2026-10-20T04:40:25.832Z",
+    "screen": "COMBAT",
+    "decider": "jev",
+    "latency": {
+      "plan": 38,
+      "jev": 980,
+      "action": 367,
+      "planner": 105,
+      "pre": 1
+    },
+    "stages": {
+      "combat_computation": 105.0,
+      "exact_observed_solver_cache": 0.0,
+      "v6_combat_knowledge": 0.0,
+      "v6_combat_predicates_and_audit": 2.0,
+      "combat_jev_projection": 7.0,
+      "jev_gateway_request_encoding": 0.0,
+      "jev_http_to_headers": 979.0,
+      "Jev": 980.0,
+      "jev_prompt_log": 4.0
+    },
+    "fallback": null,
+    "timed_out": false,
+    "turn_actual_ms": 1105,
+    "jev_reserve_ms": 3000
+  },
+  {
+    "ts": "2026-10-20T04:40:26.751Z",
+    "screen": "COMBAT",
+    "decider": "code",
+    "latency": {
+      "plan": 0,
+      "jev": 0,
+      "action": 247,
+      "planner": 2,
+      "pre": 0
+    },
+    "stages": {
+      "combat_computation": 1.0
+    },
+    "fallback": null,
+    "timed_out": false,
+    "turn_actual_ms": 1108,
+    "jev_reserve_ms": 3000
+  },
+  {
+    "ts": "2026-10-20T04:40:27.541Z",
+    "screen": "COMBAT",
+    "decider": "code",
+    "latency": {
+      "plan": 1,
+      "jev": 0,
+      "action": 371,
+      "planner": 1,
+      "pre": 1
+    },
+    "stages": {
+      "combat_computation": 1.0
+    },
+    "fallback": null,
+    "timed_out": false,
+    "turn_actual_ms": 1112,
+    "jev_reserve_ms": 3000
+  },
+  {
+    "ts": "2026-10-20T04:40:28.424Z",
+    "screen": "COMBAT",
+    "decider": "code",
+    "latency": {
+      "plan": 0,
+      "jev": 0,
+      "action": 700,
+      "planner": 3,
+      "pre": 1
+    },
+    "stages": {
+      "combat_computation": 3.0
+    },
+    "fallback": null,
+    "timed_out": false,
+    "turn_actual_ms": 1116,
+    "jev_reserve_ms": 3000
+  },
+  {
+    "ts": "2026-10-20T04:40:34.285Z",
+    "screen": "COMBAT",
+    "decider": "code",
+    "latency": {
+      "plan": 0,
+      "jev": 0,
+      "action": 229,
+      "planner": 4,
+      "pre": 1
+    },
+    "stages": {
+      "combat_computation": 4.0,
+      "exact_observed_solver_cache": 0.0
+    },
+    "fallback": null,
+    "timed_out": false,
+    "turn_actual_ms": 19,
+    "jev_reserve_ms": 3000
+  },
+  {
+    "ts": "2026-10-20T04:40:35.055Z",
+    "screen": "COMBAT",
+    "decider": "code",
+    "latency": {
+      "plan": 0,
+      "jev": 0,
+      "action": 211,
+      "planner": 2,
+      "pre": 1
+    },
+    "stages": {
+      "combat_computation": 1.0
+    },
+    "fallback": null,
+    "timed_out": false,
+    "turn_actual_ms": 22,
+    "jev_reserve_ms": 3000
+  },
+  {
+    "ts": "2026-10-20T04:40:35.815Z",
+    "screen": "COMBAT",
+    "decider": "code",
+    "latency": {
+      "plan": 0,
+      "jev": 0,
+      "action": 221,
+      "planner": 2,
+      "pre": 1
+    },
+    "stages": {
+      "combat_computation": 2.0
+    },
+    "fallback": null,
+    "timed_out": false,
+    "turn_actual_ms": 25,
+    "jev_reserve_ms": 3000
+  },
+  {
+    "ts": "2026-10-20T04:40:36.588Z",
+    "screen": "COMBAT",
+    "decider": "code",
+    "latency": {
+      "plan": 0,
+      "jev": 0,
+      "action": 210,
+      "planner": 2,
+      "pre": 1
+    },
+    "stages": {
+      "combat_computation": 2.0
+    },
+    "fallback": null,
+    "timed_out": false,
+    "turn_actual_ms": 29,
+    "jev_reserve_ms": 3000
+  },
+  {
+    "ts": "2026-10-20T04:40:40.233Z",
+    "screen": "COMBAT",
+    "decider": "code",
+    "latency": {
+      "plan": 1,
+      "jev": 0,
+      "action": 685,
+      "planner": 1,
+      "pre": 1
+    },
+    "stages": {
+      "combat_computation": 1.0
+    },
+    "fallback": null,
+    "timed_out": false,
+    "turn_actual_ms": 48,
+    "jev_reserve_ms": 3000
+  },
+  {
+    "ts": "2026-10-20T04:40:42.300Z",
+    "screen": "GAME_OVER",
+    "decider": "code",
+    "latency": {
+      "plan": 0,
+      "jev": 0,
+      "action": 3930
+    },
+    "stages": {},
+    "fallback": null,
+    "timed_out": false,
+    "turn_actual_ms": 0,
+    "jev_reserve_ms": null
+  }
+]

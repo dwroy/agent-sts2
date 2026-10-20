@@ -1,0 +1,117 @@
+{
+  "schema": "original-task-source-binding-v1",
+  "captured_at": "2026-10-20T13:46:23.696792+08:00",
+  "scope": "Read-only source clarification; no new model, dispatch, request, knowledge or parent requirement.",
+  "current_task": {
+    "owner": "v6-w4w6",
+    "account": "codex1",
+    "home": "/home/dw/.codex1",
+    "thread": "01a15382-68eb-7093-b677-040c9b45767f",
+    "pane": "wJ:p1GX",
+    "process_pid": 1451060,
+    "assignment": {
+      "reference": {
+        "path": "/home/dw/.codex1/sessions/2026/10/19/rollout-2026-10-19T17-33-37-01a15382-68eb-7093-b677-040c9b45767f.jsonl",
+        "line": 19561,
+        "offset": 80725517,
+        "bytes": 1631,
+        "sha256": "3041ef29fee4a6a608a7d59b4b9c9965edc35a75adf1bc6a66f2288a7f29aeeb",
+        "timestamp": "2026-10-20T05:16:22.518Z"
+      },
+      "text": "[Claude 13:20，新任务：纯 bug 排查] v6-w8 的战斗回归报告（分支 v6-combat-regression-audit-20261020，提交 08de78ace，paper/materials/2026-10-20-v6-combat-regression/）发现 9J6T70HSYPG7 F8 TERROR_EEL 精英战：后续推演“8/8 获胜”，实战却在下一回合死亡（V5 也有反例）。这直接导致该局死亡。请查模拟状态与实际游戏状态在哪一步分叉（敌人意图/伤害、格挡、能力、抽牌/弃牌、毒层、回合结束效果等），用该局与 V5 反例的原始帧复现，判定是代码 bug（状态读取/模拟实现）还是需要学习者处理的机制知识缺口。纯 bug 就修并加固定数据回归测试，tsc/vitest 通过后合 main，提交号发 watcher 与 ops 按授权在开局边界上线；机制缺口则写成学习者问题交 watcher，不自行改知识。对局在跑：nice 19、≤2 进程。W6 满槽逐槽评估放在这之后。"
+    },
+    "native_turn": {
+      "reference": {
+        "path": "/home/dw/.codex1/sessions/2026/10/19/rollout-2026-10-19T17-33-37-01a15382-68eb-7093-b677-040c9b45767f.jsonl",
+        "line": 19574,
+        "offset": 80942687,
+        "bytes": 1995,
+        "sha256": "e3f2c6c6081bfdfa1d26ba082de47d0a93b24b2d6794607b63101a0edba61061",
+        "timestamp": "2026-10-20T05:17:13.217Z"
+      },
+      "fields": {
+        "turn_id": "01a157bd-3e39-74e2-a796-1583ef67faa7",
+        "cwd": "/home/dw/Projects/agent-sts2",
+        "model": "gpt-6.1-sol",
+        "effort": "xhigh",
+        "approval_policy": "never"
+      }
+    },
+    "native_prefix": {
+      "path": "/home/dw/.codex1/sessions/2026/10/19/rollout-2026-10-19T17-33-37-01a15382-68eb-7093-b677-040c9b45767f.jsonl",
+      "bytes": 84732200,
+      "sha256": "933c3b19709302283f7123097efe4574039cd2018e63f4a8fc566affa48f828d"
+    },
+    "time_note": "Message labels the assignment 13:20; actual native received timestamp is 2026-10-20T05:16:22.518Z (13:16:22.518 CST). Preserve both; do not rewrite."
+  },
+  "reporter": {
+    "owner": "v6-w8",
+    "account": "codex1",
+    "thread": "01a15382-761a-76a2-922d-271169b2463c",
+    "pane": "wJ:p1GY",
+    "process_pid": 1451357,
+    "relation": "W8 authored the preceding combat regression audit 08de78ace; W4W6 received the subsequent state-divergence repair assignment."
+  },
+  "boss_sim": {
+    "state": "not-found-in-original-ops-inventory",
+    "inventory": "ops reports 7 requirements and 22 original boss-sim batches with no Living Fog match",
+    "request": null,
+    "dispatch": null,
+    "batch": null,
+    "owner_thread": null,
+    "owner_account": null,
+    "limitation": "No corresponding original boss-sim request/dispatch/batch was found in that scoped inventory. This engineering task is not a boss-sim learning dispatch. No universal absence claim beyond that inventory."
+  },
+  "pending": {
+    "id": "silent-proposal-99f14e823a866ad7",
+    "state": "pending",
+    "history_only": {
+      "batch": "20261018-084302 postmortem",
+      "account": "codex3",
+      "thread": "01a14c76-8b67-75c3-8767-3bde1bd2d9ef"
+    },
+    "closed": false
+  },
+  "references": [
+    {
+      "path": "/home/dw/Projects/agent-sts2/paper/materials/20261020-1330-ops/receipt.json",
+      "bytes": 2317,
+      "sha256": "b4ef44a4e732e4dcc8f1f9d14ddc559c77042656145e8649c14253f6180debb1"
+    },
+    {
+      "path": "/home/dw/Projects/agent-sts2/ops/codex-ops/pending-learning/silent-proposal-99f14e823a866ad7-living-fog.json",
+      "bytes": 4817,
+      "sha256": "797dcef8eb99aa6ee1559a6f215b8a054ee4642a5f25edd10e228cfd3536450a"
+    },
+    {
+      "path": "/home/dw/Projects/agent-sts2/paper/materials/20261020-1330-ops/dedup-and-origin-binding.json",
+      "bytes": 3491,
+      "sha256": "463fbbdd19dd988099d184d26a1682b1b706b6e1cef7277b4d87386e2a40331a"
+    },
+    {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/v6-combat-state-divergence-20261020/agent/tests/combat-state-divergence-evidence.json",
+      "bytes": 186455,
+      "sha256": "3d1e49eb7dbeb45640fe85ac26440727188b49fec22063401646733130e1b687"
+    },
+    {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/v6-combat-state-divergence-20261020/paper/materials/2026-10-20-v6-combat-state-divergence/evidence-manifest.json",
+      "bytes": 4221,
+      "sha256": "49841ad4afcc258cc6e5c54c9fcbf0d934ddf80f972473e411738c9807f5d322"
+    },
+    {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/v6-combat-state-divergence-20261020/paper/materials/2026-10-20-v6-combat-state-divergence/frozen-samples.json",
+      "bytes": 211665,
+      "sha256": "92fe40e6549b557028b0c41548282a2b6e7f6367b1a5d6dbfc55c9814003d418"
+    }
+  ],
+  "delivery": {
+    "channel": "herdr agent prompt",
+    "targets": [
+      "sts2-watcher",
+      "v6-w4w6",
+      "w1H:p8"
+    ],
+    "exit_code": 0,
+    "semantic_ack_verified": false
+  }
+}

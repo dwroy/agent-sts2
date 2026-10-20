@@ -113,8 +113,10 @@ class Admission(unittest.TestCase):
     def test_terminal_loop_reports_then_holds_exactly_the_next_run(self):
         ops = self.root / "ops"
         (self.root / "logs/console").mkdir(parents=True)
-        for name in ("autoplay.sh", "paths.sh"):
+        for name in ("autoplay.sh", "paths.sh", "report_log_cache.py"):
             shutil.copy2(ROOT / "ops" / name, ops / name)
+        (self.root / "eval").mkdir()
+        shutil.copy2(ROOT / "eval/jsonl_cache.py", self.root / "eval/jsonl_cache.py")
         run_id = "SILENT000001"
         (self.root / "logs/decisions.jsonl").write_text(json.dumps({"fingerprint": json.dumps({"run": run_id})}) + "\n")
         (self.root / "logs/console/fixed.log").write_text("stopped: run 1 ended (death)\n")

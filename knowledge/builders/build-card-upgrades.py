@@ -57,7 +57,12 @@ def clean_face(card):
     return {key: card[key] for key in FACE_FIELDS if key in card}
 
 
-def build(states, selected=None, audit=None):
+def build(states, selected=None, audit=None, lines=None):
+    if lines is None:
+        from legacy_incremental import context
+        cache = context(states)
+        if cache:
+            lines = cache.card_rows(states, __import__("types").SimpleNamespace(**globals()))
     audit = audit if audit is not None else {}
     audit["invalid_json"] = []
     stats = collections.defaultdict(lambda: [collections.defaultdict(collections.Counter),
@@ -66,11 +71,14 @@ def build(states, selected=None, audit=None):
     faces = collections.defaultdict(lambda: [{}, {}])
     needles = [f'"{card}"'.encode() for card in sorted(selected)] if selected else None
     with Path(states).open("rb") as source:
-        while True:
-            off = source.tell()
-            line = source.readline()
-            if not line:
-                break
+        def raw_rows():
+            while True:
+                off = source.tell()
+                line = source.readline()
+                if not line:
+                    return
+                yield off, line
+        for off, line in (raw_rows() if lines is None else lines):
             if needles and not any(needle in line for needle in needles):
                 continue
             try:
@@ -113,7 +121,7 @@ def build(states, selected=None, audit=None):
                     # Frozen extracts retain the original raw source offset and hash.
                     evidence = row.get("source") or {
                         "file": "logs/states.jsonl", "off": off,
-                        "sha256": hashlib.sha256(line).hexdigest(),
+                        "sha256": row.get("_raw_sha256") or hashlib.sha256(line).hexdigest(),
                         "path": f"state.run.deck[{index}]",
                     }
                     profile = {"card": face, "runs": set(), "evidence": {

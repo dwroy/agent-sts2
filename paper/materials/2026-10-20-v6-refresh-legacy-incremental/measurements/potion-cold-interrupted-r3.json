@@ -1,0 +1,18 @@
+{
+  "at": "2026-10-20T13:37:56.547181+08:00",
+  "reason": "Repeated all-history character SQL per run; stop own cold sample before optimizing. Not a valid timing.",
+  "processes": [
+    {
+      "pid": 2429626,
+      "cmd": "python3 .artifacts/legacy-benchmark/followup-r3.py "
+    },
+    {
+      "pid": 2429954,
+      "cmd": "python3 /home/dw/Projects/agent-sts2/.worktrees/v6-refresh-legacy-incremental-20261020/.artifacts/legacy-benchmark/extra-r2.py potion cold "
+    },
+    {
+      "pid": 2429955,
+      "cmd": "/home/dw/Projects/agent-sts2/data/logdb-venv/bin/python /home/dw/Projects/agent-sts2/.worktrees/v6-refresh-legacy-incremental-20261020/knowledge/builders/build-potion-equivalents.py --db /home/dw/Projects/agent-sts2/data/logdb --logs /home/dw/Projects/agent-sts2/logs --no-sync --ascensions 10 --character silent --out /home/dw/Projects/agent-sts2/.worktrees/v6-refresh-legacy-incremental-20261020/.artifacts/legacy-benchmark/extra-r2/potion.json "
+    }
+  ]
+}

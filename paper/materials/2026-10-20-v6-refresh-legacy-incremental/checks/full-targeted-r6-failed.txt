@@ -1,0 +1,357 @@
+
+ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/v6-refresh-legacy-incremental-20261020/agent
+
+ ❯ tests/legacy-refresh-incremental.test.ts (4 tests | 2 failed) 1411ms
+   × keeps cached statistics equivalent to full fixed evidence: python3 knowledge/builders/test_legacy_incremental.py 346ms
+   × keeps cached statistics equivalent to full fixed evidence: /home/dw/Projects/agent-sts2/.worktrees/v6-refresh-legacy-incremental-20261020/data/logdb-venv/bin/python knowledge/builders/test_potion_incremental.py 395ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/legacy-refresh-incremental.test.ts > keeps cached statistics equivalent to full fixed evidence: python3 knowledge/builders/test_legacy_incremental.py
+AssertionError: EEE/usr/lib/python3.14/collections/__init__.py:613: ResourceWarning: unclosed database in <sqlite3.Connection object at 0x7f3e3f5cae30>
+  super().__init__()
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/usr/lib/python3.14/collections/__init__.py:613: ResourceWarning: unclosed database in <sqlite3.Connection object at 0x7f3e3f5cb100>
+  super().__init__()
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/usr/lib/python3.14/collections/__init__.py:613: ResourceWarning: unclosed database in <sqlite3.Connection object at 0x7f3e3f5cb5b0>
+  super().__init__()
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+build-monster-db: observed-mechanics mining failed, `observed` skipped: FileNotFoundError: [Errno 2] No such file or directory: '/home/dw/Projects/agent-sts2/.worktrees/v6-refresh-legacy-incremental-20261020/learner/incremental_evidence.py'
+EEE/home/dw/Projects/agent-sts2/.worktrees/v6-refresh-legacy-incremental-20261020/knowledge/builders/build-monster-db.py:852: ResourceWarning: unclosed database in <sqlite3.Connection object at 0x7f3e3f5cbe20>
+  prev = att["last"].get(turn)
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/home/dw/Projects/agent-sts2/.worktrees/v6-refresh-legacy-incremental-20261020/knowledge/builders/build-monster-db.py:852: ResourceWarning: unclosed database in <sqlite3.Connection object at 0x7f3e3f5cb5b0>
+  prev = att["last"].get(turn)
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/home/dw/Projects/agent-sts2/.worktrees/v6-refresh-legacy-incremental-20261020/knowledge/builders/build-monster-db.py:852: ResourceWarning: unclosed database in <sqlite3.Connection object at 0x7f3e3f4e5d50>
+  prev = att["last"].get(turn)
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/home/dw/Projects/agent-sts2/.worktrees/v6-refresh-legacy-incremental-20261020/knowledge/builders/build-monster-db.py:852: ResourceWarning: unclosed database in <sqlite3.Connection object at 0x7f3e3f4e63e0>
+  prev = att["last"].get(turn)
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+EE..E
+======================================================================
+ERROR: test_boss_final_attempt_and_interleaved_runs (__main__.IncrementalTest.test_boss_final_attempt_and_interleaved_runs)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/dw/Projects/agent-sts2/.worktrees/v6-refresh-legacy-incremental-20261020/knowledge/builders/test_legacy_incremental.py", line 170, in test_boss_final_attempt_and_interleaved_runs
+    ctx=cache.context(path)
+  File "/home/dw/Projects/agent-sts2/.worktrees/v6-refresh-legacy-incremental-20261020/knowledge/builders/legacy_incremental.py", line 78, in context
+    _CONTEXTS[key] = RunCache(Path(directory) / token(str(logs))[:16], logs)
+                     ~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/dw/Projects/agent-sts2/.worktrees/v6-refresh-legacy-incremental-20261020/knowledge/builders/legacy_incremental.py", line 90, in __init__
+    self.code = implementation(__file__, Path(__file__).resolve().parents[2] / 'learner/incremental_evidence.py',
+                ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                               Path(__file__).resolve().parents[2] / 'learner/evidence_identity.py')
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/dw/Projects/agent-sts2/.worktrees/v6-refresh-legacy-incremental-20261020/knowledge/builders/incremental_evidence.py", line 22, in implementation
+    return token([(str(Path(p).name), hashlib.sha256(Path(p).read_bytes()).hexdigest()) for p in paths])
+                                                     ~~~~~~~~~~~~~~~~~~^^
+  File "/usr/lib/python3.14/pathlib/__init__.py", line 778, in read_bytes
+    with self.open(mode='rb', buffering=0) as f:
+         ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.14/pathlib/__init__.py", line 772, in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/home/dw/Projects/agent-sts2/.worktrees/v6-refresh-legacy-incremental-20261020/learner/incremental_evidence.py'
+
+======================================================================
+ERROR: test_card_full_witness_counts_mode_faces_and_original_sha (__main__.IncrementalTest.test_card_full_witness_counts_mode_faces_and_original_sha)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/dw/Projects/agent-sts2/.worktrees/v6-refresh-legacy-incremental-20261020/knowledge/builders/test_legacy_incremental.py", line 136, in test_card_full_witness_counts_mode_faces_and_original_sha
+    self.assertEqual(mod.build(path),expected)
+                     ~~~~~~~~~^^^^^^
+  File "/home/dw/Projects/agent-sts2/.worktrees/v6-refresh-legacy-incremental-20261020/knowledge/builders/build-card-upgrades.py", line 63, in build
+    cache = context(states)
+  File "/home/dw/Projects/agent-sts2/.worktrees/v6-refresh-legacy-incremental-20261020/knowledge/builders/legacy_incremental.py", line 78, in context
+    _CONTEXTS[key] = RunCache(Path(directory) / token(str(logs))[:16], logs)
+                     ~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/dw/Projects/agent-sts2/.worktrees/v6-refresh-legacy-incremental-20261020/knowledge/builders/legacy_incremental.py", line 90, in __init__
+    self.code = implementation(__file__, Path(__file__).resolve().parents[2] / 'learner/incremental_evidence.py',
+                ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                               Path(__file__).resolve().parents[2] / 'learner/evidence_identity.py')
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/dw/Projects/agent-sts2/.worktrees/v6-refresh-legacy-incremental-20261020/knowledge/builders/incremental_evidence.py", line 22, in implementation
+    return token([(str(Path(p).name), hashlib.sha256(Path(p).read_bytes()).hexdigest()) for p in paths])
+                                                     ~~~~~~~~~~~~~~~~~~^^
+  File "/usr/lib/python3.14/pathlib/__init__.py", line 778, in read_bytes
+    with self.open(mode='rb', buffering=0) as f:
+         ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.14/pathlib/__init__.py", line 772, in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/home/dw/Projects/agent-sts2/.worktrees/v6-refresh-legacy-incremental-20261020/learner/incremental_evidence.py'
+
+======================================================================
+ERROR: test_construction_offer_dedup_and_full_source_digest (__main__.IncrementalTest.test_construction_offer_dedup_and_full_source_digest)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/dw/Projects/agent-sts2/.worktrees/v6-refresh-legacy-incremental-20261020/knowledge/builders/test_legacy_incremental.py", line 187, in test_construction_offer_dedup_and_full_source_digest
+    result=mod.extract(self.root,self.logs,'silent');self.fresh()
+  File "/home/dw/Projects/agent-sts2/.worktrees/v6-refresh-legacy-incremental-20261020/knowledge/builders/build-construction-opportunities.py", line 46, in extract
+    cache = context(logs / "brain.jsonl")
+  File "/home/dw/Projects/agent-sts2/.worktrees/v6-refresh-legacy-incremental-20261020/knowledge/builders/legacy_incremental.py", line 78, in context
+    _CONTEXTS[key] = RunCache(Path(directory) / token(str(logs))[:16], logs)
+                     ~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/dw/Projects/agent-sts2/.worktrees/v6-refresh-legacy-incremental-20261020/knowledge/builders/legacy_incremental.py", line 90, in __init__
+    self.code = implementation(__file__, Path(__file__).resolve().parents[2] / 'learner/incremental_evidence.py',
+                ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                               Path(__file__).resolve().parents[2] / 'learner/evidence_identity.py')
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/dw/Projects/agent-sts2/.worktrees/v6-refresh-legacy-incremental-20261020/knowledge/builders/incremental_evidence.py", line 22, in implementation
+    return token([(str(Path(p).name), hashlib.sha256(Path(p).read_bytes()).hexdigest()) for p in paths])
+                                                     ~~~~~~~~~~~~~~~~~~^^
+  File "/usr/lib/python3.14/pathlib/__init__.py", line 778, in read_bytes
+    with self.open(mode='rb', buffering=0) as f:
+         ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.14/pathlib/__init__.py", line 772, in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/home/dw/Projects/agent-sts2/.worktrees/v6-refresh-legacy-incremental-20261020/learner/incremental_evidence.py'
+
+======================================================================
+ERROR: test_monster_all_mechanics_cold_warm_and_interleaved_parity (__main__.IncrementalTest.test_monster_all_mechanics_cold_warm_and_interleaved_parity)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/dw/Projects/agent-sts2/.worktrees/v6-refresh-legacy-incremental-20261020/knowledge/builders/test_legacy_incremental.py", line 76, in test_monster_all_mechanics_cold_warm_and_interleaved_parity
+    cold=mod.build(str(states),None,None,str(decisions))
+  File "/home/dw/Projects/agent-sts2/.worktrees/v6-refresh-legacy-incremental-20261020/knowledge/builders/build-monster-db.py", line 1671, in build
+    consume_fights(__import__("types").SimpleNamespace(**globals()), builder, states)
+    ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/dw/Projects/agent-sts2/.worktrees/v6-refresh-legacy-incremental-20261020/knowledge/builders/legacy_incremental.py", line 475, in consume_fights
+    cache = context(states)
+  File "/home/dw/Projects/agent-sts2/.worktrees/v6-refresh-legacy-incremental-20261020/knowledge/builders/legacy_incremental.py", line 78, in context
+    _CONTEXTS[key] = RunCache(Path(directory) / token(str(logs))[:16], logs)
+                     ~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/dw/Projects/agent-sts2/.worktrees/v6-refresh-legacy-incremental-20261020/knowledge/builders/legacy_incremental.py", line 90, in __init__
+    self.code = implementation(__file__, Path(__file__).resolve().parents[2] / 'learner/incremental_evidence.py',
+                ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                               Path(__file__).resolve().parents[2] / 'learner/evidence_identity.py')
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/dw/Projects/agent-sts2/.worktrees/v6-refresh-legacy-incremental-20261020/knowledge/builders/incremental_evidence.py", line 22, in implementation
+    return token([(str(Path(p).name), hashlib.sha256(Path(p).read_bytes()).hexdigest()) for p in paths])
+                                                     ~~~~~~~~~~~~~~~~~~^^
+  File "/usr/lib/python3.14/pathlib/__init__.py", line 778, in read_bytes
+    with self.open(mode='rb', buffering=0) as f:
+         ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.14/pathlib/__init__.py", line 772, in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/home/dw/Projects/agent-sts2/.worktrees/v6-refresh-legacy-incremental-20261020/learner/incremental_evidence.py'
+
+======================================================================
+ERROR: test_outcome_name_ties_and_choices_match_original (__main__.IncrementalTest.test_outcome_name_ties_and_choices_match_original)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/dw/Projects/agent-sts2/.worktrees/v6-refresh-legacy-incremental-20261020/knowledge/builders/test_legacy_incremental.py", line 153, in test_outcome_name_ties_and_choices_match_original
+    self.assertEqual(mod.read_states(path,runs,lambda rid:10),expected)
+                     ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/dw/Projects/agent-sts2/.worktrees/v6-refresh-legacy-incremental-20261020/knowledge/builders/build-outcome-stats.py", line 179, in read_states
+    cache = context(path)
+  File "/home/dw/Projects/agent-sts2/.worktrees/v6-refresh-legacy-incremental-20261020/knowledge/builders/legacy_incremental.py", line 78, in context
+    _CONTEXTS[key] = RunCache(Path(directory) / token(str(logs))[:16], logs)
+                     ~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/dw/Projects/agent-sts2/.worktrees/v6-refresh-legacy-incremental-20261020/knowledge/builders/legacy_incremental.py", line 90, in __init__
+    self.code = implementation(__file__, Path(__file__).resolve().parents[2] / 'learner/incremental_evidence.py',
+                ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                               Path(__file__).resolve().parents[2] / 'learner/evidence_identity.py')
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/dw/Projects/agent-sts2/.worktrees/v6-refresh-legacy-incremental-20261020/knowledge/builders/incremental_evidence.py", line 22, in implementation
+    return token([(str(Path(p).name), hashlib.sha256(Path(p).read_bytes()).hexdigest()) for p in paths])
+                                                     ~~~~~~~~~~~~~~~~~~^^
+  File "/usr/lib/python3.14/pathlib/__init__.py", line 778, in read_bytes
+    with self.open(mode='rb', buffering=0) as f:
+         ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.14/pathlib/__init__.py", line 772, in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/home/dw/Projects/agent-sts2/.worktrees/v6-refresh-legacy-incremental-20261020/learner/incremental_evidence.py'
+
+======================================================================
+ERROR: test_partial_tail_and_corrupt_cache_rebuild (__main__.IncrementalTest.test_partial_tail_and_corrupt_cache_rebuild)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/dw/Projects/agent-sts2/.worktrees/v6-refresh-legacy-incremental-20261020/knowledge/builders/test_legacy_incremental.py", line 208, in test_partial_tail_and_corrupt_cache_rebuild
+    result=mod.scan(path)
+  File "/home/dw/Projects/agent-sts2/.worktrees/v6-refresh-legacy-incremental-20261020/knowledge/builders/build-room-costs.py", line 57, in scan
+    cache = context(states_path)
+  File "/home/dw/Projects/agent-sts2/.worktrees/v6-refresh-legacy-incremental-20261020/knowledge/builders/legacy_incremental.py", line 78, in context
+    _CONTEXTS[key] = RunCache(Path(directory) / token(str(logs))[:16], logs)
+                     ~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/dw/Projects/agent-sts2/.worktrees/v6-refresh-legacy-incremental-20261020/knowledge/builders/legacy_incremental.py", line 90, in __init__
+    self.code = implementation(__file__, Path(__file__).resolve().parents[2] / 'learner/incremental_evidence.py',
+                ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                               Path(__file__).resolve().parents[2] / 'learner/evidence_identity.py')
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/dw/Projects/agent-sts2/.worktrees/v6-refresh-legacy-incremental-20261020/knowledge/builders/incremental_evidence.py", line 22, in implementation
+    return token([(str(Path(p).name), hashlib.sha256(Path(p).read_bytes()).hexdigest()) for p in paths])
+                                                     ~~~~~~~~~~~~~~~~~~^^
+  File "/usr/lib/python3.14/pathlib/__init__.py", line 778, in read_bytes
+    with self.open(mode='rb', buffering=0) as f:
+         ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.14/pathlib/__init__.py", line 772, in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/home/dw/Projects/agent-sts2/.worktrees/v6-refresh-legacy-incremental-20261020/learner/incremental_evidence.py'
+
+======================================================================
+ERROR: test_pending_other_runs_are_not_serialized_in_every_segment (__main__.IncrementalTest.test_pending_other_runs_are_not_serialized_in_every_segment)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/dw/Projects/agent-sts2/.worktrees/v6-refresh-legacy-incremental-20261020/knowledge/builders/test_legacy_incremental.py", line 100, in test_pending_other_runs_are_not_serialized_in_every_segment
+    ctx=cache.context(path);original=ctx.index.cached;sizes=[]
+  File "/home/dw/Projects/agent-sts2/.worktrees/v6-refresh-legacy-incremental-20261020/knowledge/builders/legacy_incremental.py", line 78, in context
+    _CONTEXTS[key] = RunCache(Path(directory) / token(str(logs))[:16], logs)
+                     ~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/dw/Projects/agent-sts2/.worktrees/v6-refresh-legacy-incremental-20261020/knowledge/builders/legacy_incremental.py", line 90, in __init__
+    self.code = implementation(__file__, Path(__file__).resolve().parents[2] / 'learner/incremental_evidence.py',
+                ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                               Path(__file__).resolve().parents[2] / 'learner/evidence_identity.py')
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/dw/Projects/agent-sts2/.worktrees/v6-refresh-legacy-incremental-20261020/knowledge/builders/incremental_evidence.py", line 22, in implementation
+    return token([(str(Path(p).name), hashlib.sha256(Path(p).read_bytes()).hexdigest()) for p in paths])
+                                                     ~~~~~~~~~~~~~~~~~~^^
+  File "/usr/lib/python3.14/pathlib/__init__.py", line 778, in read_bytes
+    with self.open(mode='rb', buffering=0) as f:
+         ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.14/pathlib/__init__.py", line 772, in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/home/dw/Projects/agent-sts2/.worktrees/v6-refresh-legacy-incremental-20261020/learner/incremental_evidence.py'
+
+======================================================================
+ERROR: test_room_interleaving_first_last_and_append_rewrite (__main__.IncrementalTest.test_room_interleaving_first_last_and_append_rewrite)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/dw/Projects/agent-sts2/.worktrees/v6-refresh-legacy-incremental-20261020/knowledge/builders/test_legacy_incremental.py", line 119, in test_room_interleaving_first_last_and_append_rewrite
+    self.assertEqual(mod.scan(path),expected)
+                     ~~~~~~~~^^^^^^
+  File "/home/dw/Projects/agent-sts2/.worktrees/v6-refresh-legacy-incremental-20261020/knowledge/builders/build-room-costs.py", line 57, in scan
+    cache = context(states_path)
+  File "/home/dw/Projects/agent-sts2/.worktrees/v6-refresh-legacy-incremental-20261020/knowledge/builders/legacy_incremental.py", line 78, in context
+    _CONTEXTS[key] = RunCache(Path(directory) / token(str(logs))[:16], logs)
+                     ~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/dw/Projects/agent-sts2/.worktrees/v6-refresh-legacy-incremental-20261020/knowledge/builders/legacy_incremental.py", line 90, in __init__
+    self.code = implementation(__file__, Path(__file__).resolve().parents[2] / 'learner/incremental_evidence.py',
+                ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                               Path(__file__).resolve().parents[2] / 'learner/evidence_identity.py')
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/dw/Projects/agent-sts2/.worktrees/v6-refresh-legacy-incremental-20261020/knowledge/builders/incremental_evidence.py", line 22, in implementation
+    return token([(str(Path(p).name), hashlib.sha256(Path(p).read_bytes()).hexdigest()) for p in paths])
+                                                     ~~~~~~~~~~~~~~~~~~^^
+  File "/usr/lib/python3.14/pathlib/__init__.py", line 778, in read_bytes
+    with self.open(mode='rb', buffering=0) as f:
+         ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.14/pathlib/__init__.py", line 772, in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/home/dw/Projects/agent-sts2/.worktrees/v6-refresh-legacy-incremental-20261020/learner/incremental_evidence.py'
+
+======================================================================
+ERROR: test_verified_batch_products_skip_only_unchanged_inputs_and_outputs (__main__.IncrementalTest.test_verified_batch_products_skip_only_unchanged_inputs_and_outputs)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/dw/Projects/agent-sts2/.worktrees/v6-refresh-legacy-incremental-20261020/knowledge/builders/test_legacy_incremental.py", line 194, in test_verified_batch_products_skip_only_unchanged_inputs_and_outputs
+    path=self.write('decisions',[]);ctx=cache.context(path)
+                                        ~~~~~~~~~~~~~^^^^^^
+  File "/home/dw/Projects/agent-sts2/.worktrees/v6-refresh-legacy-incremental-20261020/knowledge/builders/legacy_incremental.py", line 78, in context
+    _CONTEXTS[key] = RunCache(Path(directory) / token(str(logs))[:16], logs)
+                     ~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/dw/Projects/agent-sts2/.worktrees/v6-refresh-legacy-incremental-20261020/knowledge/builders/legacy_incremental.py", line 90, in __init__
+    self.code = implementation(__file__, Path(__file__).resolve().parents[2] / 'learner/incremental_evidence.py',
+                ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                               Path(__file__).resolve().parents[2] / 'learner/evidence_identity.py')
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/dw/Projects/agent-sts2/.worktrees/v6-refresh-legacy-incremental-20261020/knowledge/builders/incremental_evidence.py", line 22, in implementation
+    return token([(str(Path(p).name), hashlib.sha256(Path(p).read_bytes()).hexdigest()) for p in paths])
+                                                     ~~~~~~~~~~~~~~~~~~^^
+  File "/usr/lib/python3.14/pathlib/__init__.py", line 778, in read_bytes
+    with self.open(mode='rb', buffering=0) as f:
+         ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.14/pathlib/__init__.py", line 772, in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/home/dw/Projects/agent-sts2/.worktrees/v6-refresh-legacy-incremental-20261020/learner/incremental_evidence.py'
+
+----------------------------------------------------------------------
+Ran 11 tests in 0.132s
+
+FAILED (errors=9)
+: expected 1 to be +0 // Object.is equality
+
+- Expected
++ Received
+
+- 0
++ 1
+
+ ❯ tests/legacy-refresh-incremental.test.ts:26:38
+     24|     child.on("close", (code) => resolve({ code, output }));
+     25|   });
+     26|   expect(result.code, result.output).toBe(0);
+       |                                      ^
+     27|   expect(result.output).toContain(`Ran ${count} test`);
+     28| }, 45_000);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  tests/legacy-refresh-incremental.test.ts > keeps cached statistics equivalent to full fixed evidence: /home/dw/Projects/agent-sts2/.worktrees/v6-refresh-legacy-incremental-20261020/data/logdb-venv/bin/python knowledge/builders/test_potion_incremental.py
+AssertionError: E
+======================================================================
+ERROR: test_scoped_sql_raw_checks_and_shop_parity_append_and_warm (__main__.PotionIncrementalTest.test_scoped_sql_raw_checks_and_shop_parity_append_and_warm)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/dw/Projects/agent-sts2/.worktrees/v6-refresh-legacy-incremental-20261020/knowledge/builders/test_potion_incremental.py", line 68, in test_scoped_sql_raw_checks_and_shop_parity_append_and_warm
+    compare()
+    ~~~~~~~^^
+  File "/home/dw/Projects/agent-sts2/.worktrees/v6-refresh-legacy-incremental-20261020/knowledge/builders/test_potion_incremental.py", line 59, in compare
+    ctx=cache.context(states)
+  File "/home/dw/Projects/agent-sts2/.worktrees/v6-refresh-legacy-incremental-20261020/knowledge/builders/legacy_incremental.py", line 78, in context
+    _CONTEXTS[key] = RunCache(Path(directory) / token(str(logs))[:16], logs)
+                     ~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/dw/Projects/agent-sts2/.worktrees/v6-refresh-legacy-incremental-20261020/knowledge/builders/legacy_incremental.py", line 90, in __init__
+    self.code = implementation(__file__, Path(__file__).resolve().parents[2] / 'learner/incremental_evidence.py',
+                ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                               Path(__file__).resolve().parents[2] / 'learner/evidence_identity.py')
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/dw/Projects/agent-sts2/.worktrees/v6-refresh-legacy-incremental-20261020/knowledge/builders/incremental_evidence.py", line 22, in implementation
+    return token([(str(Path(p).name), hashlib.sha256(Path(p).read_bytes()).hexdigest()) for p in paths])
+                                                     ~~~~~~~~~~~~~~~~~~^^
+  File "/usr/lib/python3.14/pathlib/__init__.py", line 778, in read_bytes
+    with self.open(mode='rb', buffering=0) as f:
+         ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.14/pathlib/__init__.py", line 772, in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/home/dw/Projects/agent-sts2/.worktrees/v6-refresh-legacy-incremental-20261020/learner/incremental_evidence.py'
+
+----------------------------------------------------------------------
+Ran 1 test in 0.093s
+
+FAILED (errors=1)
+: expected 1 to be +0 // Object.is equality
+
+- Expected
++ Received
+
+- 0
++ 1
+
+ ❯ tests/legacy-refresh-incremental.test.ts:26:38
+     24|     child.on("close", (code) => resolve({ code, output }));
+     25|   });
+     26|   expect(result.code, result.output).toBe(0);
+       |                                      ^
+     27|   expect(result.output).toContain(`Ran ${count} test`);
+     28| }, 45_000);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+
+ Test Files  1 failed | 7 passed (8)
+      Tests  2 failed | 31 passed (33)
+   Start at  13:50:30
+   Duration  9.66s (transform 2.36s, setup 1.55s, import 1.91s, tests 4.86s, environment 1ms)
+

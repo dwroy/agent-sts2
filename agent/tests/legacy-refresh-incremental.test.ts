@@ -1,0 +1,28 @@
+import { spawn } from "node:child_process";
+import { existsSync } from "node:fs";
+import { fileURLToPath } from "node:url";
+import { expect, it } from "vitest";
+
+const root = fileURLToPath(new URL("../../", import.meta.url));
+const duckPython = `${root}data/logdb-venv/bin/python`;
+
+it.each([
+  ["python3", "knowledge/builders/test_legacy_incremental.py", 11],
+  ["python3", "agent/tests/cost_incremental_test.py", 2],
+  ["python3", "agent/tests/report_incremental_test.py", 4],
+  [existsSync(duckPython) ? duckPython : "python3", "knowledge/builders/test_potion_incremental.py", 1],
+] as const)("keeps cached statistics equivalent to full fixed evidence: %s %s", async (python, file, count) => {
+  const result = await new Promise<{ code: number | null; output: string }>((resolve, reject) => {
+    const child = spawn("nice", ["-n", "19", python, "-B", `${root}${file}`], {
+      cwd: root, env: { ...process.env, OMP_NUM_THREADS: "1", OPENBLAS_NUM_THREADS: "1" },
+      stdio: ["ignore", "pipe", "pipe"],
+    });
+    let output = "";
+    child.stdout.on("data", (data: Buffer) => { output += data.toString(); });
+    child.stderr.on("data", (data: Buffer) => { output += data.toString(); });
+    child.on("error", reject);
+    child.on("close", (code) => resolve({ code, output }));
+  });
+  expect(result.code, result.output).toBe(0);
+  expect(result.output).toContain(`Ran ${count} test`);
+}, 45_000);

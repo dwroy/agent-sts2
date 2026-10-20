@@ -1,0 +1,54 @@
+{
+  "started_at": "2026-10-20T07:19:15.909929+00:00",
+  "runner_pid": 3991338,
+  "base_commit": "b367e05d46128849f14b84d12e9180400e4dcaf4",
+  "staged_tree": "c5af8c14c82eec86cd394505522cd546751cd3e5",
+  "nice": 19,
+  "tmpdir": "/home/dw/Projects/agent-sts2/.cache/w8t",
+  "input_count": 2436,
+  "input_sha256": "50feafe3a11829d2980fff983cdc141cd4b2dd7a8ac0ebb62bc9f4df8c54e8d7",
+  "steps": [
+    {
+      "name": "tsc",
+      "command": [
+        "npx",
+        "tsc",
+        "-p",
+        "tsconfig.json",
+        "--noEmit"
+      ],
+      "started_at": "2026-10-20T07:19:15.997555+00:00",
+      "log": "/home/dw/Projects/agent-sts2/.worktrees/v6-refresh-legacy-incremental-20261020/.artifacts/targeted-r9/tsc.log",
+      "pid": 3991349,
+      "exit_code": 0,
+      "ended_at": "2026-10-20T07:19:17.245186+00:00",
+      "seconds": 1.2476209830492735,
+      "log_bytes": 0,
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "targeted",
+      "command": [
+        "npx",
+        "vitest",
+        "run",
+        "--maxWorkers=1",
+        "tests/component-usage.test.ts",
+        "tests/account-drain.test.ts",
+        "tests/disk-admission.test.ts",
+        "tests/legacy-refresh-incremental.test.ts"
+      ],
+      "started_at": "2026-10-20T07:19:17.245614+00:00",
+      "log": "/home/dw/Projects/agent-sts2/.worktrees/v6-refresh-legacy-incremental-20261020/.artifacts/targeted-r9/targeted.log",
+      "pid": 3991472,
+      "exit_code": 0,
+      "ended_at": "2026-10-20T07:19:24.431289+00:00",
+      "seconds": 7.185680235968903,
+      "log_bytes": 270,
+      "log_sha256": "a20283a143a430d0383bb95104a072bb95291e69213fcb8b9a3835c95de4fb46"
+    }
+  ],
+  "ended_at": "2026-10-20T07:19:24.640600+00:00",
+  "input_unchanged": true,
+  "after_input_sha256": "50feafe3a11829d2980fff983cdc141cd4b2dd7a8ac0ebb62bc9f4df8c54e8d7"
+}

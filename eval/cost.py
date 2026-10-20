@@ -10,6 +10,7 @@ import csv
 import datetime as dt
 import json
 import itertools
+import hashlib
 import pathlib
 import sys
 sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent))
@@ -55,9 +56,15 @@ def tokens(raw, exclusive=False, creation_extra=False):
 
 
 class Sources:
-    def __init__(self):
+    def __init__(self, cache_dir=None):
         self.cuts = {}
         self.bad_lines = collections.Counter()
+        self.cache = None
+        if cache_dir:
+            from jsonl_cache import JsonlCache
+            revision = hashlib.sha256(b''.join(pathlib.Path(p).read_bytes() for p in
+                                      (__file__, brain_source.__file__, pathlib.Path(__file__).with_name('jsonl_cache.py')))).hexdigest()
+            self.cache = JsonlCache(cache_dir, revision)
 
     def rows(self, path):
         path = pathlib.Path(path)
@@ -65,6 +72,11 @@ class Sources:
             self.cuts[str(path)] = None
             return
         limit = self.cuts.setdefault(str(path), path.stat().st_size)
+        if self.cache:
+            rows, bad = self.cache.rows(path, limit)
+            self.bad_lines[str(path)] += bad
+            yield from rows
+            return
         with path.open("rb") as handle:
             read = 0
             for line in handle:
@@ -122,7 +134,16 @@ def quota_periods(rows, config):
 
 
 def collect(root, config, claude_dir=None, codex_home=None):
-    root, sources = pathlib.Path(root), Sources()
+    root = pathlib.Path(root)
+    sources = Sources(root / 'ops/component-cost-cache')
+    try:
+        return _collect(root, config, sources, claude_dir, codex_home)
+    finally:
+        if sources.cache:
+            sources.cache.close()
+
+
+def _collect(root, config, sources, claude_dir, codex_home):
     runs = {r["run_id"]: r for r in sources.rows(root / "logs/runs.jsonl") if r.get("run_id")}
     starts = {}
     for r in sources.rows(root / "logs/run-config.jsonl"):
@@ -164,7 +185,9 @@ def collect(root, config, claude_dir=None, codex_home=None):
         # Failed attempts still consumed wall time; their absent token usage is unknown, not an absent call.
         add("brain:codex", "codex", r.get("ts"), tokens(r.get("usage")), rid=r.get("run_id"), ms=r.get("ms", r.get("call_ms")),
             known=recorded, identity=("codex-call", r.get("ts"), qid, r.get("attempt"), r.get("thread_id")))
+    brain_rows = []
     for r in sources.rows(root / "logs/brain.jsonl"):
+        brain_rows.append(r)
         engine = str(r.get("engine", "unknown")).lower()
         if engine == "codex" and (r.get("run_id"), r.get("question_id")) in traced:
             continue
@@ -284,7 +307,7 @@ def collect(root, config, claude_dir=None, codex_home=None):
             for e in matching:
                 e["subscription_usd"] = (e["subscription_usd"] or 0) + p["usd"] * e["total_tokens"] / total
     brain_path = root / "logs/brain.jsonl"
-    brain_source.annotate(runs.values(), brain_source.load_sources(root / "logs", runs.keys(), sources.cuts.get(str(brain_path), 0)))
+    brain_source.annotate(runs.values(), brain_source.load_sources(root / "logs", runs.keys(), sources.cuts.get(str(brain_path), 0), rows=brain_rows))
     return events, runs, sources, periods
 
 

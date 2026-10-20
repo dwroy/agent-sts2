@@ -40,28 +40,40 @@ def read_json(value):
         return {}
 
 
-def extract(root, logs, character, cutoff=None):
-    runs = {}
-    with (logs / 'runs.jsonl').open() as handle:
-        for line in handle:
-            row = json.loads(line)
-            if str(row.get('character', '')).lower() == character:
-                runs[row['run_id']] = row
-    catalog = json.loads((root / 'data/game-data.json').read_text())['collections']['cards']
-    names = {c['name']: c['id'] for c in catalog if c.get('name')}
-    names.update({c['id']: c['id'] for c in catalog})
+def extract(root, logs, character, cutoff=None, prepared=None, lines=None):
+    if prepared is None:
+        from legacy_incremental import context
+        cache = context(logs / "brain.jsonl")
+        if cache:
+            return cache.construction(root, logs, character, cutoff, extract, state_lookup)
+    if prepared is None:
+        runs = {}
+        with (logs / 'runs.jsonl').open() as handle:
+            for line in handle:
+                row = json.loads(line)
+                if str(row.get('character', '')).lower() == character:
+                    runs[row['run_id']] = row
+        catalog = json.loads((root / 'data/game-data.json').read_text())['collections']['cards']
+        names = {c['name']: c['id'] for c in catalog if c.get('name')}
+        names.update({c['id']: c['id'] for c in catalog})
+    else:
+        runs, names, frames = prepared
     rows, seen, visits = [], set(), set()
     excluded = {'incomplete_offers': 0, 'repeat_shop_visit': 0, 'unknown_upgrade': 0}
-    frames = state_lookup(root, character)
+    if prepared is None:
+        frames = state_lookup(root, character)
     source = logs / 'brain.jsonl'
     limit = source.stat().st_size
     digest = hashlib.sha256()
     with source.open('rb') as handle:
-        while handle.tell() < limit:
-            offset = handle.tell()
-            raw = handle.readline()
-            if not raw.endswith(b'\n') or handle.tell() > limit:
-                break
+        def original_lines():
+            while handle.tell() < limit:
+                offset = handle.tell()
+                raw = handle.readline()
+                if not raw.endswith(b'\n') or handle.tell() > limit:
+                    return
+                yield offset, raw
+        for offset, raw in (original_lines() if lines is None else lines):
             digest.update(raw)
             try:
                 row = json.loads(raw)

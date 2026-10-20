@@ -76,19 +76,7 @@ while [ ! -f "$OPS/STOP" ]; do
       continue
     fi
   fi
-  rid=$(python3 - <<'PY'
-import json, os
-last = None
-for line in open(os.path.join(os.environ["LOGS"], "decisions.jsonl"), encoding="utf8"):
-    try:
-        run = json.loads(json.loads(line)["fingerprint"]).get("run")
-    except Exception:
-        continue
-    if run:
-        last = run
-print(last or "")
-PY
-)
+  rid=$(nice -n 19 python3 "$OPS/report_log_cache.py" --last-run "$LOGS/decisions.jsonl")
   console=$(ls -t "$CONSOLE"/*.log 2>/dev/null | head -1)
   if [ -n "$rid" ] && [ -n "$console" ] && grep -qE "stopped: run [0-9]+ ended \(" "$console"; then
     # Statistics refresh runs in the background; the next game retains the last completed packet.
