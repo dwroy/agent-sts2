@@ -5136,3 +5136,5 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
 - 2026-10-20T13:46:29+08:00 ops：活雾gap原生指派字节核同，08de审计W8/纯bug修复codex1 W4W6来源分列，原提案99f14 pending、不冒boss-sim批；三旧通知原证据核同、609角色登记兼容未入main/live，不代ACK，原1320窗口终局后通知原owner。原件 paper/materials/20261020-1345-ops/receipt.json。
 
 - 2026-10-20T13:50:04+08:00 ops：原114302树3fd4宿主tsc0/full1唯一run-plan-merge断言失败；单测试接内存HTTP夹具，新树d43e6c23 tsc0/定向21过未full/源码提交/合入。原窗口释放通知W4W6并获13:47:30原full启动回报，待其终局再验变化输入；旧失败不改/W3与Regent不动。原件 paper/materials/20261020-1346-ops/receipt.json。
+
+- 2026-10-20T13:50:47+08:00 ops：原W4W6报加载ENOSPC/full1，原窗口仍占，同源改功能树TMPDIR nice19单worker接续；不判产品结果、不清共享tmp，ops变化输入full继续等原终局释放。原件 paper/materials/20261020-1351-ops/receipt.json。
