@@ -76,7 +76,7 @@
     }
   ],
   "latest_source_receipt": "paper/materials/20261020-1826-ops/receipt.json",
-  "terminal_STOP_readback_pending": true,
+  "terminal_STOP_readback_pending": false,
   "partial39_terminal": {
     "at": "2026-10-20T18:33:33.292711+08:00",
     "request": "roy-next-run-off-infra39-exact-live-20261020-1802",
@@ -262,5 +262,19 @@
     "resume_only_all_five_actual_live_readback_release_and_dual_notice": true,
     "any_failure_wait_for_Claude_Roy_decision": true,
     "old_failed_logs_preserved": true
+  },
+  "terminal_STOP_actual_readback": {
+    "at": "2026-10-20T19:15:32+08:00",
+    "STOP": {
+      "path": "ops/STOP",
+      "bytes": 284,
+      "sha256": "7203efbcf8e978828a7813f12236db4cb6cae299b8109e3d0be8e83f942809cd"
+    },
+    "content": "2026-10-20T18:33:52+08:00 Roy/Claude: hold after JWJLSQXDKUA2 ended; resume only after the reward-only Jev card entries, V6_COMBAT_ENTRIES=off, V6_DIRECTION_REPLAN=off with slimmed direction prompt, Snakebite rollout fix and infra bundle are live (decision-log 004f39a96, fec8fde1f).\n",
+    "console": "logs/console/20261020-172201-64c218a04+dirty.log",
+    "terminal_marker_offset": 366677,
+    "terminal_marker": "stopped: run 1 ended (defeat); stopping as requested",
+    "terminal_marker_sha256": "59a18c24517d2eec874043b93db93a17c30503ea454486d6e48aecf185e2cb4f",
+    "STOP_not_modified": true
   }
 }

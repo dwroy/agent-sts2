@@ -4637,3 +4637,6 @@ request_id=roy-20261017-human-pace-h0 revision=3 input_sha256=1e1c259a15f1824119
 ### 2026-10-20T19:14:16.013792+08:00 五项精确联合输入冻结并实际启动
 
 原ops实收并核W8最小路由1d2三叶、W4入口0929两叶的manifest、patch及Git后像；按旧前像机械应用，移旧宽路由、保默认weighted谓词，补齐idleCombat与规范Boss/复合别名依赖，不夹805或父main。发布锁内核live仍64c218，458知识前后SHA一致；最终83源码/测试叶、固定tree9000141a、2379输入SHAfd276522。19:13:07启动唯一nice19/ionice3单worker完整联合检查，runner561527/ticks138672023，tsc0、full561870在跑，尚非完整绿/实际上线。原红例、准备失败与定向证据保留；三原owner已获启动投递，CLI不代原生ACK。保持Roy五项全部live消费/配置读回、登记版本双通知后才恢复；失败写inbox告watcher/Claude，由Claude与Roy决定，不部分开局。原件paper/materials/20261020-five-item-final-start-ops/receipt.json。
+
+
+2026-10-20T19:16:11.156692+08:00 三局T749、KYJ、JWJ复盘各唯一，原lessons前缀SHA及九组账本映射已核，ledger check为0；三提案原Markdown SHA与注册表一致，未声明源码合入。新增silent-0535为单动作候选目标未传播双蟹朝向的非阻塞接线缺口，已追加fix-queue并沿84af8bc8原策略链，不重复派发或由ops补机制；两朝向仍死，不称可救本场。其余药水/SL和沙坑双结束线归原学习链，收益缺证保持原状。本批准备唯一nice19低优先级paper_dataset --no-raw及有限记录收尾，结束后保日志、快照和生成表；不重复已有184312-s2的独立收尾。另核JWJ在18:33:52自然结束，原守候STOP正文与console核同、保持挂起；五项联合full固定输入不动，不查询或叠full，不凭复盘完毕发布或开局。角色ACK、科学父和Regent保持。原件paper/materials/20261020-1914-ops/learning-verification.json。
