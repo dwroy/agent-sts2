@@ -1,0 +1,484 @@
+{
+  "snapshot_scope": "Matching run IDs, frozen per-file byte bounds in raw indices; second run is partial through 2026-10-20T14:35:15.734Z, not a terminal audit.",
+  "runs": {
+    "Y427BMQH8AU6": {
+      "config_ts": "2026-10-20T13:29:38.520Z",
+      "run_plan": "off",
+      "run_plan_merge": true,
+      "v6": {
+        "schema": "v6-config-v1",
+        "mode": "on",
+        "deciders": {
+          "card": "jev",
+          "potion": "brain",
+          "shop": "brain",
+          "rest": "brain"
+        },
+        "reflex": "off",
+        "direction_replan": "off",
+        "admission": "interfaces_only",
+        "delivered": false,
+        "samples_pick": 20,
+        "samples_act": 100,
+        "min_known_option_ratio": 0.5,
+        "direction_min_weight": 0.1,
+        "win": {
+          "certain_win": 0.95,
+          "favored": 0.7,
+          "even": 0.3,
+          "unfavored": 0.05
+        },
+        "delta": {
+          "much_se": 2,
+          "better_se": 1,
+          "much_min": 0.05
+        },
+        "triggers": {
+          "t1_core_min": 0,
+          "t2_se": 2,
+          "t2_min_delta": 1,
+          "t2_consecutive": 2,
+          "t3_weight_max": 0,
+          "t5_hazard": "existing_route_projection",
+          "t6_unknown_max": 1,
+          "t6_fallbacks": 100,
+          "t7_checkpoint": "validated_brain_answer"
+        },
+        "budgets": {
+          "brain_soft_cap": 15,
+          "brain_ms": 90000,
+          "act_ms": 60000,
+          "pick_ms": 5000,
+          "jev_ms": 5000
+        },
+        "invalid": []
+      },
+      "brain_requests": 40,
+      "brain_labels": {
+        "event/plan": 1,
+        "map/route-plan": 1,
+        "reward/card": 24,
+        "event/choose": 3,
+        "selection/add": 1,
+        "rest/plan": 7,
+        "shop/plan": 2,
+        "event/act-plan": 1
+      },
+      "codex_call_labels": {
+        "event/plan": 1,
+        "map/route-plan": 1,
+        "reward/card": 24,
+        "event/choose": 3,
+        "selection/add": 1,
+        "rest/plan": 7,
+        "shop/plan": 2,
+        "event/act-plan": 1
+      },
+      "independent_direction_requests": 0,
+      "answers_with_weights": 0,
+      "stored_plans": 0,
+      "ride_stages": {
+        "baseline": 1,
+        "marked": 32,
+        "prepared": 9
+      },
+      "prepared": [
+        {
+          "ts": "2026-10-20T13:41:16.594Z",
+          "run": "Y427BMQH8AU6",
+          "floor": 13,
+          "v6_direction_ride": {
+            "stage": "prepared",
+            "label": "rest/plan",
+            "reasons": [
+              "T4:card:BACKFLIP:1"
+            ]
+          }
+        },
+        {
+          "ts": "2026-10-20T13:44:41.580Z",
+          "run": "Y427BMQH8AU6",
+          "floor": 16,
+          "v6_direction_ride": {
+            "stage": "prepared",
+            "label": "rest/plan",
+            "reasons": [
+              "T4:card:BACKFLIP:1"
+            ]
+          }
+        },
+        {
+          "ts": "2026-10-20T13:46:56.471Z",
+          "run": "Y427BMQH8AU6",
+          "floor": 18,
+          "v6_direction_ride": {
+            "stage": "prepared",
+            "label": "event/act-plan",
+            "reasons": [
+              "T4:card:BACKFLIP:1"
+            ]
+          }
+        },
+        {
+          "ts": "2026-10-20T13:54:54.666Z",
+          "run": "Y427BMQH8AU6",
+          "floor": 22,
+          "v6_direction_ride": {
+            "stage": "prepared",
+            "label": "shop/plan",
+            "reasons": [
+              "T4:card:BACKFLIP:1",
+              "T4:card:BLADE_DANCE:1",
+              "T4:card:BACKFLIP:2",
+              "T4:card:BACKFLIP:3"
+            ]
+          }
+        },
+        {
+          "ts": "2026-10-20T13:55:21.409Z",
+          "run": "Y427BMQH8AU6",
+          "floor": 23,
+          "v6_direction_ride": {
+            "stage": "prepared",
+            "label": "event/choose",
+            "reasons": [
+              "T4:card:BACKFLIP:1",
+              "T4:card:BLADE_DANCE:1",
+              "T4:card:BACKFLIP:2",
+              "T4:card:BACKFLIP:3",
+              "T4:card:FOOTWORK:1",
+              "T4:card:BACKFLIP:4"
+            ]
+          }
+        },
+        {
+          "ts": "2026-10-20T13:55:50.805Z",
+          "run": "Y427BMQH8AU6",
+          "floor": 24,
+          "v6_direction_ride": {
+            "stage": "prepared",
+            "label": "rest/plan",
+            "reasons": [
+              "T4:card:BACKFLIP:1",
+              "T4:card:BLADE_DANCE:1",
+              "T4:card:BACKFLIP:2",
+              "T4:card:BACKFLIP:3",
+              "T4:card:FOOTWORK:1",
+              "T4:card:BACKFLIP:4"
+            ]
+          }
+        },
+        {
+          "ts": "2026-10-20T13:56:17.489Z",
+          "run": "Y427BMQH8AU6",
+          "floor": 25,
+          "v6_direction_ride": {
+            "stage": "prepared",
+            "label": "event/choose",
+            "reasons": [
+              "T4:card:BACKFLIP:1",
+              "T4:card:BLADE_DANCE:1",
+              "T4:card:BACKFLIP:2",
+              "T4:card:BACKFLIP:3",
+              "T4:card:FOOTWORK:1",
+              "T4:card:BACKFLIP:4"
+            ]
+          }
+        },
+        {
+          "ts": "2026-10-20T13:56:44.877Z",
+          "run": "Y427BMQH8AU6",
+          "floor": 27,
+          "v6_direction_ride": {
+            "stage": "prepared",
+            "label": "rest/plan",
+            "reasons": [
+              "T4:card:BACKFLIP:1",
+              "T4:card:BLADE_DANCE:1",
+              "T4:card:BACKFLIP:2",
+              "T4:card:BACKFLIP:3",
+              "T4:card:FOOTWORK:1",
+              "T4:card:BACKFLIP:4"
+            ]
+          }
+        },
+        {
+          "ts": "2026-10-20T14:08:00.319Z",
+          "run": "Y427BMQH8AU6",
+          "floor": 32,
+          "v6_direction_ride": {
+            "stage": "prepared",
+            "label": "rest/plan",
+            "reasons": [
+              "T4:card:BACKFLIP:1",
+              "T4:card:BLADE_DANCE:1",
+              "T4:card:BACKFLIP:2",
+              "T4:card:BACKFLIP:3",
+              "T4:card:FOOTWORK:1",
+              "T4:card:BACKFLIP:4",
+              "T4:card:ACCELERANT:1",
+              "T4:card:MIRAGE:1"
+            ]
+          }
+        }
+      ],
+      "carried": [
+        {
+          "ts": "2026-10-20T13:41:25.588Z",
+          "question_id": "mvgpzl02-948736-14",
+          "label": "rest/plan",
+          "task": [
+            {
+              "unknown_reason": "direction_ride_required_context_exceeds_remaining_30000_char_budget"
+            }
+          ],
+          "answer_keys": [
+            "choice",
+            "reason"
+          ],
+          "answer_has_weights": false
+        },
+        {
+          "ts": "2026-10-20T13:44:56.195Z",
+          "question_id": "mvgpzl02-948736-18",
+          "label": "rest/plan",
+          "task": [
+            {
+              "unknown_reason": "direction_ride_required_context_exceeds_remaining_30000_char_budget"
+            }
+          ],
+          "answer_keys": [
+            "choice",
+            "reason"
+          ],
+          "answer_has_weights": false
+        },
+        {
+          "ts": "2026-10-20T13:47:55.745Z",
+          "question_id": "mvgpzl02-948736-20",
+          "label": "event/act-plan",
+          "task": [
+            {
+              "unknown_reason": "direction_ride_required_context_exceeds_remaining_30000_char_budget"
+            }
+          ],
+          "answer_keys": [
+            "choice",
+            "reason",
+            "route",
+            "cards"
+          ],
+          "answer_has_weights": false
+        },
+        {
+          "ts": "2026-10-20T13:55:14.678Z",
+          "question_id": "mvgpzl02-948736-27",
+          "label": "shop/plan",
+          "task": [
+            {
+              "unknown_reason": "direction_ride_required_context_exceeds_remaining_30000_char_budget"
+            }
+          ],
+          "answer_keys": [
+            "plan",
+            "reason"
+          ],
+          "answer_has_weights": false
+        },
+        {
+          "ts": "2026-10-20T13:55:38.607Z",
+          "question_id": "mvgpzl02-948736-28",
+          "label": "event/choose",
+          "task": [
+            {
+              "unknown_reason": "direction_ride_required_context_exceeds_remaining_30000_char_budget"
+            }
+          ],
+          "answer_keys": [
+            "choice",
+            "reason",
+            "route"
+          ],
+          "answer_has_weights": false
+        },
+        {
+          "ts": "2026-10-20T13:56:12.637Z",
+          "question_id": "mvgpzl02-948736-29",
+          "label": "rest/plan",
+          "task": [
+            {
+              "unknown_reason": "direction_ride_required_context_exceeds_remaining_30000_char_budget"
+            }
+          ],
+          "answer_keys": [
+            "choice",
+            "reason",
+            "route"
+          ],
+          "answer_has_weights": false
+        },
+        {
+          "ts": "2026-10-20T13:56:32.877Z",
+          "question_id": "mvgpzl02-948736-30",
+          "label": "event/choose",
+          "task": [
+            {
+              "unknown_reason": "direction_ride_required_context_exceeds_remaining_30000_char_budget"
+            }
+          ],
+          "answer_keys": [
+            "choice",
+            "reason",
+            "route"
+          ],
+          "answer_has_weights": false
+        },
+        {
+          "ts": "2026-10-20T13:57:11.917Z",
+          "question_id": "mvgpzl02-948736-31",
+          "label": "rest/plan",
+          "task": [
+            {
+              "unknown_reason": "direction_ride_required_context_exceeds_remaining_30000_char_budget"
+            }
+          ],
+          "answer_keys": [
+            "choice",
+            "reason",
+            "route"
+          ],
+          "answer_has_weights": false
+        },
+        {
+          "ts": "2026-10-20T14:08:19.797Z",
+          "question_id": "mvgpzl02-948736-40",
+          "label": "rest/plan",
+          "task": [
+            {
+              "unknown_reason": "direction_ride_required_context_exceeds_remaining_30000_char_budget"
+            }
+          ],
+          "answer_keys": [
+            "choice",
+            "reason"
+          ],
+          "answer_has_weights": false
+        }
+      ],
+      "last_brain_ts": "2026-10-20T14:08:19.797Z"
+    },
+    "5ZEPCTQKKXE4": {
+      "config_ts": "2026-10-20T14:18:45.064Z",
+      "run_plan": "off",
+      "run_plan_merge": true,
+      "v6": {
+        "schema": "v6-config-v1",
+        "mode": "on",
+        "deciders": {
+          "card": "jev",
+          "potion": "brain",
+          "shop": "brain",
+          "rest": "brain"
+        },
+        "reflex": "off",
+        "direction_replan": "off",
+        "admission": "interfaces_only",
+        "delivered": false,
+        "samples_pick": 20,
+        "samples_act": 100,
+        "min_known_option_ratio": 0.5,
+        "direction_min_weight": 0.1,
+        "win": {
+          "certain_win": 0.95,
+          "favored": 0.7,
+          "even": 0.3,
+          "unfavored": 0.05
+        },
+        "delta": {
+          "much_se": 2,
+          "better_se": 1,
+          "much_min": 0.05
+        },
+        "triggers": {
+          "t1_core_min": 0,
+          "t2_se": 2,
+          "t2_min_delta": 1,
+          "t2_consecutive": 2,
+          "t3_weight_max": 0,
+          "t5_hazard": "existing_route_projection",
+          "t6_unknown_max": 1,
+          "t6_fallbacks": 100,
+          "t7_checkpoint": "validated_brain_answer"
+        },
+        "budgets": {
+          "brain_soft_cap": 15,
+          "brain_ms": 90000,
+          "act_ms": 60000,
+          "pick_ms": 5000,
+          "jev_ms": 5000
+        },
+        "invalid": []
+      },
+      "brain_requests": 18,
+      "brain_labels": {
+        "event/plan": 1,
+        "map/route-plan": 1,
+        "reward/card": 8,
+        "event/choose": 2,
+        "rest/plan": 3,
+        "shop/plan": 2,
+        "selection/remove": 1
+      },
+      "codex_call_labels": {
+        "event/plan": 1,
+        "map/route-plan": 1,
+        "reward/card": 8,
+        "event/choose": 2,
+        "rest/plan": 3,
+        "shop/plan": 2,
+        "selection/remove": 1
+      },
+      "independent_direction_requests": 0,
+      "answers_with_weights": 0,
+      "stored_plans": 0,
+      "ride_stages": {
+        "baseline": 1,
+        "marked": 15,
+        "prepared": 1
+      },
+      "prepared": [
+        {
+          "ts": "2026-10-20T14:35:03.741Z",
+          "run": "5ZEPCTQKKXE4",
+          "floor": 16,
+          "v6_direction_ride": {
+            "stage": "prepared",
+            "label": "rest/plan",
+            "reasons": [
+              "T4:card:CLOAK_AND_DAGGER:1",
+              "T4:card:LEG_SWEEP:1"
+            ]
+          }
+        }
+      ],
+      "carried": [
+        {
+          "ts": "2026-10-20T14:35:15.734Z",
+          "question_id": "mvgrqq7e-1073463-18",
+          "label": "rest/plan",
+          "task": [
+            {
+              "unknown_reason": "direction_ride_required_context_exceeds_remaining_30000_char_budget"
+            }
+          ],
+          "answer_keys": [
+            "choice",
+            "reason"
+          ],
+          "answer_has_weights": false
+        }
+      ],
+      "last_brain_ts": "2026-10-20T14:35:15.734Z"
+    }
+  }
+}

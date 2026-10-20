@@ -1,0 +1,1 @@
+W8 P1初核：R404 Y427/5ZEP独立方向请求0，但两局loop.run_plan=off、方向概率未初始化。10次T4搭车prepared的实际payload全被体积保护替成单独unknown_reason，均未存储v6且原因重复。原件冻结自有树v6-r404-direction-verification-20261020/.artifacts/p1，正归档报告发Claude；不改live/开关、不起full/API/模型。勿将零独立调用当方向概率/搭车验收通过。

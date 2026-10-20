@@ -1,0 +1,55 @@
+{
+  "main_source": "e7e2b011731c3fd913f13f4179b4fba4632c9e2a",
+  "main_materials": "66781bcf32b92e895bee16a07aa133a0fb89db24",
+  "source_origin": "903fbfabbc05bba2cdf83685dc9a88d30f470228",
+  "source_tree": "18fa944026f619e8e76f79d97d78c6a3c7cbf404",
+  "five_leaves": [
+    {
+      "path": "agent/src/v6/projection-input.ts",
+      "sha256": "2336c83542b1ef1c1c064a60a9cb1947870d1898e7b6e777455a45b936de5745",
+      "git_blob": "2e734cc14d928fc0d1850ad0c7b974ef20c31b56"
+    },
+    {
+      "path": "agent/src/v6/construction-safety.ts",
+      "sha256": "087c4a549db4dd01fc5ce1bc3dbab46662052ad2bbe0773ee1b18d1b78172236",
+      "git_blob": "40fd04a1971559cea320883d75f58a8c34766747"
+    },
+    {
+      "path": "agent/tests/v6-card-input-bridge.test.ts",
+      "sha256": "4e2f7f681802d3bcc67d33a1176ef1d798e63f8ece364374ee3502f80f46c053",
+      "git_blob": "c14bb7f4b43031bb03be2bf56fe5aa5d896d4d07"
+    },
+    {
+      "path": "agent/tests/v6-construction-safety.test.ts",
+      "sha256": "f436598bf0f7d1ced7a0ddee8fa401de1bfcf14bc4adc541ae8cc277d1d8f55a",
+      "git_blob": "10a946ed0ceef936da76d232bdb335a74c5aacef"
+    },
+    {
+      "path": "agent/tests/logged-states/v6-r404-card-rewards.json",
+      "sha256": "2a2333fc8f227424a13bc8d61238b6a32487fdeeb49846a43342a0382d8b1bb5",
+      "git_blob": "ee424e419d0f54cb2604becb03b90e5975d5605c"
+    }
+  ],
+  "main_integration_base": "0ee818a8f6d2e0fcd840f658a5c462d0b81112bd",
+  "checks": "tsc0/8files96pass/gitleaks0 exact five leaves; original ops actual-live joint full already started, not terminal",
+  "live_changed": false,
+  "P2": "blocked until P0 published and stable for two natural runs; no work started",
+  "at": "2026-10-20T22:39:54+08:00",
+  "authorization": "Claude22:4x / docs/v6-plan.md section12 / 0ee818a8f",
+  "ops_delivery": "herdr agent prompt ops, CLI agent_prompted; native acknowledgement not yet read",
+  "watcher_delivery": "herdr agent prompt sts2-watcher, CLI agent_prompted; native acknowledgement not yet read",
+  "acceptance": {
+    "reward_jev_fraction_min": 0.9,
+    "unknown_to_brain": "near zero",
+    "prepare_ms_max": 5000,
+    "runtime_errors": 0,
+    "fallback_increase": false
+  },
+  "original_ops_window": {
+    "staged_tree": "66dc290c93f50ac981583df9b36a66717ee51a94",
+    "input_count": 2380,
+    "input_sha256": "c2a785594fb92b512721b338a7835d7ca40218a1a34723bceaf503b205356067",
+    "status": "static start read; terminal not read; no second checker"
+  },
+  "delivery_metadata_correction": "Initial CLI included an incorrect expanded suffix after correct short SHA e7e2b0117; immediate follow-up supplied the git-verified full source hash above. No incorrect object was used for integration."
+}

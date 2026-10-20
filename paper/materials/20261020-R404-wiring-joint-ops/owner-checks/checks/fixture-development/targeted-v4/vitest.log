@@ -1,0 +1,69 @@
+
+ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/v6-r404-card-provider-wiring-20261020/agent
+
+ ❯ tests/v6-card-input-bridge.test.ts (13 tests | 2 failed) 170ms
+   × routes the real R404 F2 combat-to-reward loop through production input, factory, A and Jev 68ms
+   × routes the real R404 F19 combat-to-reward loop through production input, factory, A and Jev 12ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/v6-card-input-bridge.test.ts > routes the real R404 F2 combat-to-reward loop through production input, factory, A and Jev
+AssertionError: {"stats":{"decisions":0,"jevCalls":0,"deepseekCalls":0,"deepseekTokens":0,"claudeCalls":0,"debounced":0,"staleSkips":0,"fallbacks":0,"acts":0,"waits":0,"unsupported":0,"errors":0,"inputTokens":0,"outputTokens":0,"runs":[],"runsCompleted":0,"stoppedBecause":"the run on screen is Silent (silent) but this process plays Ironclad (CHARACTER silent) and reads its knowledge: abandon or finish that run by hand, or set CHARACTER to it","elapsedMs":49,"logPath":"/home/dw/Projects/agent-sts2/.worktrees/v6-r404-card-provider-wiring-20261020/.cache/t/v6-input-j5OoiZ/decisions.jsonl","brainPausedMs":0,"activeElapsedMs":49},"actions":[],"notes":[],"polls":1}: expected [] to deeply equal [ [ { act: 1, floor: 17, …(1) } ] ]
+
+- Expected
++ Received
+
+- [
+-   [
+-     {
+-       "act": 1,
+-       "boss": "WATERFALL_GIANT",
+-       "floor": 17,
+-     },
+-   ],
+- ]
++ []
+
+ ❯ tests/v6-card-input-bridge.test.ts:166:73
+    164|         v6Projection: runtime, restoreRun: false, maxDecisions: 1, max…
+    165|         onEvent: event => { if (event.type === "note") notes.push(even…
+    166|       expect(visible, JSON.stringify({ stats, actions, notes, polls })…
+       |                                                                         ^
+    167|       expect(tables).toHaveLength(1);
+    168|       expect(tables[0]!.targets.filter(t => t.kind === "current")).toM…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  tests/v6-card-input-bridge.test.ts > routes the real R404 F19 combat-to-reward loop through production input, factory, A and Jev
+AssertionError: {"stats":{"decisions":0,"jevCalls":0,"deepseekCalls":0,"deepseekTokens":0,"claudeCalls":0,"debounced":0,"staleSkips":0,"fallbacks":0,"acts":0,"waits":0,"unsupported":0,"errors":0,"inputTokens":0,"outputTokens":0,"runs":[],"runsCompleted":0,"stoppedBecause":"the run on screen is Silent (silent) but this process plays Ironclad (CHARACTER silent) and reads its knowledge: abandon or finish that run by hand, or set CHARACTER to it","elapsedMs":4,"logPath":"/home/dw/Projects/agent-sts2/.worktrees/v6-r404-card-provider-wiring-20261020/.cache/t/v6-input-OBBTAi/decisions.jsonl","brainPausedMs":0,"activeElapsedMs":4},"actions":[],"notes":[],"polls":1}: expected [] to deeply equal [ [ { act: 2, floor: 33, …(1) } ] ]
+
+- Expected
++ Received
+
+- [
+-   [
+-     {
+-       "act": 2,
+-       "boss": "KAISER_CRAB",
+-       "floor": 33,
+-     },
+-   ],
+- ]
++ []
+
+ ❯ tests/v6-card-input-bridge.test.ts:166:73
+    164|         v6Projection: runtime, restoreRun: false, maxDecisions: 1, max…
+    165|         onEvent: event => { if (event.type === "note") notes.push(even…
+    166|       expect(visible, JSON.stringify({ stats, actions, notes, polls })…
+       |                                                                         ^
+    167|       expect(tables).toHaveLength(1);
+    168|       expect(tables[0]!.targets.filter(t => t.kind === "current")).toM…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  2 failed | 11 passed (13)
+   Start at  22:18:58
+   Duration  3.36s (transform 2.52s, setup 355ms, import 2.69s, tests 170ms, environment 0ms)
+

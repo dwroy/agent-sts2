@@ -1,0 +1,71 @@
+{
+  "source": "903fbfabbc05bba2cdf83685dc9a88d30f470228",
+  "base": "292a856e0b9aaa56127ac46b061a24586c798ee6",
+  "tree": "18fa944026f619e8e76f79d97d78c6a3c7cbf404",
+  "live_baseline": "048a9713bd4be09ad5f6d3f6131e8b729f51aece",
+  "behavior_release": "V6-R404/eae56f790",
+  "files": [
+    {
+      "path": "agent/src/v6/projection-input.ts",
+      "bytes": 9683,
+      "sha256": "2336c83542b1ef1c1c064a60a9cb1947870d1898e7b6e777455a45b936de5745",
+      "git_blob": "2e734cc14d928fc0d1850ad0c7b974ef20c31b56",
+      "base_before_sha256": "4f404ed791f57ac7e24599d5a51bd7bb4dac63f52edd369ec9831a9457dec88c",
+      "live_before_sha256": "4f404ed791f57ac7e24599d5a51bd7bb4dac63f52edd369ec9831a9457dec88c",
+      "runtime": true
+    },
+    {
+      "path": "agent/src/v6/construction-safety.ts",
+      "bytes": 6128,
+      "sha256": "087c4a549db4dd01fc5ce1bc3dbab46662052ad2bbe0773ee1b18d1b78172236",
+      "git_blob": "40fd04a1971559cea320883d75f58a8c34766747",
+      "base_before_sha256": "556f179285618f368efefbb1342c09cddf76f342047027f838831146240b52ab",
+      "live_before_sha256": "556f179285618f368efefbb1342c09cddf76f342047027f838831146240b52ab",
+      "runtime": true
+    },
+    {
+      "path": "agent/tests/v6-card-input-bridge.test.ts",
+      "bytes": 12484,
+      "sha256": "4e2f7f681802d3bcc67d33a1176ef1d798e63f8ece364374ee3502f80f46c053",
+      "git_blob": "c14bb7f4b43031bb03be2bf56fe5aa5d896d4d07",
+      "base_before_sha256": "6549fcd2a241a75ab9c89b5ffb5f7ee14184072c53c9cf698540205a51c98727",
+      "live_before_sha256": "6549fcd2a241a75ab9c89b5ffb5f7ee14184072c53c9cf698540205a51c98727",
+      "runtime": false
+    },
+    {
+      "path": "agent/tests/v6-construction-safety.test.ts",
+      "bytes": 7882,
+      "sha256": "f436598bf0f7d1ced7a0ddee8fa401de1bfcf14bc4adc541ae8cc277d1d8f55a",
+      "git_blob": "10a946ed0ceef936da76d232bdb335a74c5aacef",
+      "base_before_sha256": "2892ad24c3eb8634cf16a34a92d8e19de345f0f66bdaff039ae7d9218574c10a",
+      "live_before_sha256": "2892ad24c3eb8634cf16a34a92d8e19de345f0f66bdaff039ae7d9218574c10a",
+      "runtime": false
+    },
+    {
+      "path": "agent/tests/logged-states/v6-r404-card-rewards.json",
+      "bytes": 172827,
+      "sha256": "2a2333fc8f227424a13bc8d61238b6a32487fdeeb49846a43342a0382d8b1bb5",
+      "git_blob": "ee424e419d0f54cb2604becb03b90e5975d5605c",
+      "base_before_sha256": null,
+      "live_before_sha256": null,
+      "runtime": false
+    }
+  ],
+  "required_dependencies": "Existing R404 strict reward A/B input/runtime/gate; no additional sim/factory/805 dependencies. Both runtime preimages exactly match the current live files.",
+  "transport": "Use minimal-source.patch (two runtime + three fixed-test leaves) or exact five postimages. Do not merge/cherry-pick the base or whole main.",
+  "checks": {
+    "tsc": 0,
+    "targeted_vitest": {
+      "exit": 0,
+      "files": 8,
+      "passed": 96,
+      "duration_seconds": 13.14
+    },
+    "source_gitleaks": 0,
+    "full": "pending: original ops single combined live window; no owner full run"
+  },
+  "patches": {
+    "minimal-runtime.patch": "845c4847214390bd3535d615402b3bf1e99c83664776358da83c102391eaa4b7",
+    "minimal-source.patch": "07806dd08d85454e82c95e95ae692510bd05a079a93f8aa4bf2a382a6a9b73bf"
+  }
+}

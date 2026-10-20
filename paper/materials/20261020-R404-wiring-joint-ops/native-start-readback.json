@@ -1,0 +1,52 @@
+{
+  "request": "original-W4-R404-provider-wiring-five-exact-live-joint-20261020",
+  "state": "running",
+  "started_at": "2026-10-20T22:35:08.770289+08:00",
+  "runner_pid": 1111701,
+  "runner_start_ticks": "139884141",
+  "nice": 19,
+  "worktree": "/home/dw/Projects/agent-sts2/.worktrees/ops-r404-wiring-joint-20261020",
+  "actual_live_base": "048a9713bd4be09ad5f6d3f6131e8b729f51aece",
+  "allocation_base": "048a9713bd4be09ad5f6d3f6131e8b729f51aece",
+  "staged_tree": "66dc290c93f50ac981583df9b36a66717ee51a94",
+  "source_count": 5,
+  "knowledge_count": 498,
+  "input_count": 2380,
+  "input_sha256": "c2a785594fb92b512721b338a7835d7ca40218a1a34723bceaf503b205356067",
+  "steps": [
+    {
+      "name": "tsc",
+      "command": [
+        "npx",
+        "tsc",
+        "-p",
+        "tsconfig.json",
+        "--noEmit"
+      ],
+      "started_at": "2026-10-20T22:35:08.770889+08:00",
+      "log": "/home/dw/Projects/agent-sts2/.artifacts/ops-r404-wiring-joint-20261020/tsc.log",
+      "pid": 1111706,
+      "exit_code": 0,
+      "ended_at": "2026-10-20T22:35:10.017624+08:00",
+      "seconds": 1.2467489738482982,
+      "log_bytes": 0,
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "full",
+      "command": [
+        "node",
+        "tools/with-temp.mjs",
+        "node_modules/vitest/vitest.mjs",
+        "run",
+        "--maxWorkers=1"
+      ],
+      "started_at": "2026-10-20T22:35:10.017916+08:00",
+      "log": "/home/dw/Projects/agent-sts2/.artifacts/ops-r404-wiring-joint-20261020/full.log",
+      "pid": 1111768
+    }
+  ],
+  "held_original_lock": "ops/live-merge.lock",
+  "window_preflight_other_vitest_PIDs": [],
+  "no_actual_live_or_active_actor_change": true
+}
