@@ -1,0 +1,44 @@
+diff --git a/agent/tests/v6-publication-task-link.test.ts b/agent/tests/v6-publication-task-link.test.ts
+index 623713e9a..3dfaf4c7f 100644
+--- a/agent/tests/v6-publication-task-link.test.ts
++++ b/agent/tests/v6-publication-task-link.test.ts
+@@ -6,6 +6,6 @@ it("registers exact V6 publication and study tasks while preserving evidence gua
+     "CodeProposals.test_publication_cli_preserves_task_identity_and_all_evidence_guards"], {
+     encoding: "utf8", timeout: 15_000,
+   });
+-  expect(result.status, result.stdout + result.stderr).toBe(0);
++  expect(result.status, JSON.stringify({ error: result.error?.message, signal: result.signal, stdout: result.stdout, stderr: result.stderr })).toBe(0);
+   expect(result.stderr).toContain("Ran 1 test");
+ });
+diff --git a/ops/tests/test_learning_flow.py b/ops/tests/test_learning_flow.py
+index 7105cb861..6cb403386 100644
+--- a/ops/tests/test_learning_flow.py
++++ b/ops/tests/test_learning_flow.py
+@@ -1,5 +1,6 @@
+ """Fixed learner workflow fixtures. Never launch engines, play or touch project state."""
+ import copy
++from concurrent.futures import ThreadPoolExecutor
+ import fcntl
+ import importlib.util
+ import json
+@@ -266,11 +267,15 @@ class CodeProposals(Fixture):
+                {'target_task':'v6-knowledge-publish'},
+                {'ledger':['ironclad-0001']}, {'runs':['OTHER0000001']}, {'character':'ironclad'},
+                {'proposal':str(self.root/'learner/runs/missing.md')}, {'rule_changes':True}]
+-        for update in cases:
+-            with self.subTest(update=update):
+-                rejected=add({**item,**update})
+-                self.assertEqual(rejected.returncode,2,rejected.stderr)
+-                self.assertEqual((queue.read_bytes(),ledger.read_bytes()),before)
++        # Rejections cannot mutate either file; bound independent CLI starts without
++        # spending the outer test's fixed deadline on their serial interpreter startup.
++        with ThreadPoolExecutor(max_workers=2) as pool:
++            pending=[pool.submit(add,{**item,**update}) for update in cases]
++            for update, result in zip(cases,pending):
++                with self.subTest(update=update):
++                    rejected=result.result()
++                    self.assertEqual(rejected.returncode,2,rejected.stderr)
++                    self.assertEqual((queue.read_bytes(),ledger.read_bytes()),before)
+ 
+ 
+ class ProposalConsumption(Fixture):

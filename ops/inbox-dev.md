@@ -4318,3 +4318,6 @@ request_id=roy-20261017-human-pace-h0 revision=3 input_sha256=1e1c259a15f1824119
 
 
 2026-10-20T11:52:45+08:00 原ops核复盘批20261020-111302退出0，MWMR855QHTWR与T12TSEMGUU7F两节各唯一，原lessons前缀不动；本批24条账本追加及两原CLI提案已核，账本534项0问题。并行普通收尾b82c已将lessons/账本/提案原字节纳main，本轮不重复追加、不代其他批结案。新增普通撕碎条件伤害模型缺口silent-0533已入非阻塞fix队列，沿原silent-proposal-afa703f560808b8f策略链；限学习者所核单毒窗口，不补通用机制、修后胜率或重复派发。唯一一次nice19 paper_dataset --no-raw已退出0、源检查通过，两局均标有复盘，冻结切点/旧快照/输出SHA已留。前置索引误含历史目录已自然结束，保护检查未发终止信号，生成器未重跑。仅提交记录/生成数据，无源码或正式经验改动，不加release、不关科学父/代ACK；STOP、原live联合检查及Regent暂停保持。原件paper/materials/20261020-1139-ops/receipt.json。
+
+
+2026-10-20T11:53:24+08:00 原ops核11:47终局：live53固定369f完整tsc0/full1，609文件608过1败、5789过1败2跳；唯一白名单CLI守卫子进程在原15秒上限后status=null，准确signal未捕获。旧路线/四字节断言已过，53叶/486知识SHA同。原Python单项约2.2秒过，不证明超时唯一因果；只补两测试叶，将互不写入的拒绝CLI最多2并发，正向/去重/全部证据及字节断言不变，wrapper补错误与信号诊断，15秒不抬。正确WT定向1项过；两次误cwd诊断失败保留，不冒候选验收。原锁内新55树78040c8c，nice19单worker实际宿主PID2011990已起，tsc0/full在途；三轮旧full1全留。STOP/W3排除/Regent保持，未源码提交、核号或开局。已投原watcher，CLI0非实读；完整0后原精确集成/17ID及hash/R3字段/版本双记录，再沿Roy授权恢复。原件paper/materials/20261020-1147-ops/receipt.json。
