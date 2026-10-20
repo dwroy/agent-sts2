@@ -1,0 +1,69 @@
+{
+  "at": "2026-10-20T17:56:46+08:00",
+  "phase": "authorized-next-natural-new-run-combat-entries-off-await-actual-boundary-runtime-publication-release-readback",
+  "completed": false,
+  "authorization": {
+    "path": "paper/materials/20261020-roy-v5-combat-boundary-ops/authorization-original.md",
+    "sha256": "80610bbd6fad58c0e874483b0f34399dd15eeb994edbf0ac70d3db8f139f73f5",
+    "received_at": "2026-10-20T17:56:46+08:00",
+    "relay_time_label": "18:0x, retained verbatim despite current host receipt time",
+    "source": "current user Claude relay of Roy decision"
+  },
+  "old_runtime_override": {
+    "original": {
+      "path": "paper/materials/20261020-1450-ops/claude-1458-original.md",
+      "bytes": 663,
+      "sha256": "730748974415e1c9331faf34a515bc819a0a96ab5ee3f0ec5e5085c9ccfa62f7"
+    },
+    "W3_805_hold": true,
+    "next_natural_run_env": {
+      "V6_BUILD": "on",
+      "V6_CARD_DECIDER": "brain",
+      "V6_POTION_DECIDER": "jev",
+      "V6_SHOP_DECIDER": "jev",
+      "V6_REST_DECIDER": "jev",
+      "V6_COMBAT_ENTRIES": "on"
+    },
+    "actual_active_actor_env_not_changed": true,
+    "other_sources_natural_boundary_authorized": true
+  },
+  "next_natural_run_env": {
+    "V6_BUILD": "on",
+    "V6_CARD_DECIDER": "brain",
+    "V6_POTION_DECIDER": "jev",
+    "V6_SHOP_DECIDER": "jev",
+    "V6_REST_DECIDER": "jev",
+    "V6_COMBAT_ENTRIES": "off"
+  },
+  "only_new_change": {
+    "V6_COMBAT_ENTRIES": {
+      "old": "on",
+      "new": "off"
+    }
+  },
+  "apply_to_active_actor": false,
+  "mid_run_resume_must_keep_original_config": true,
+  "knowledge_85_entries_keep_unchanged": true,
+  "retain_or_deliver_unrelated_fixes": [
+    "6b0d1a7e0",
+    "e2103b3a9",
+    "other already authorized exact fixes"
+  ],
+  "W3_805_hold": true,
+  "source_existing_off_gates": [
+    {
+      "path": "agent/src/reflex/jev/combat-entries.ts",
+      "sha256": "388d671400b7805ae9b0b52493f91f2e277782bc7c73d42ae8e8af5fd99b1b9b"
+    },
+    {
+      "path": "agent/src/reflex/jev/combat-entry-projection.ts",
+      "sha256": "585b2ef9ff9e992798c90be4cdc298ab2bf5ea528afe48a758e61e6f02dc909c"
+    }
+  ],
+  "concrete_runtime_patch": "paper/materials/20261020-roy-v5-combat-boundary-ops/next-boundary-runtime.patch",
+  "patch_applied": false,
+  "runtime_patch_base_sha256": "6237da9b6f47ac6716d9272da25c1dd6bb930eebad6f093e5ec6c1d3157e371d",
+  "release_id": null,
+  "release_policy": "实际新局边界在原live-merge.lock内核实际live行为提交，按全局release映射最大序号+1，同批合号；不预分号或复用R403冒已切换",
+  "next": "原W4v2自然终局释放后，原ops隔离树把运行时单项补丁与精确运输输入合并验收；仅实际自然新run边界应用，保85知识与其他V6设置；核新局run-config COMBAT=off/首个出牌请求V5原投影无v6_combat_entries/首动作，再双通知及登记版本；无新学习批次。"
+}

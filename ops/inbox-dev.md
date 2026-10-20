@@ -4539,3 +4539,7 @@ request_id=roy-20261017-human-pace-h0 revision=3 input_sha256=1e1c259a15f1824119
 
 2026-10-20T17:53:38+08:00 已核infra实际main4c7的38功能叶，与原f4b受测树、旧685源及当前主目录逐SHA一致；来源r2全检与记录变基分列，未重跑检查。原17:50日志前缀及追加行SHA核同，本轮保存。live64精确38叶私有预演已准备97f树，两处测试辅助文件三方合并保留live原接线，无冲突，未夹带整main或W3/W4/W8实现。因这两处合并形成新组合，来源full0不冒实际live联合绿；当前live并行知识尚未冻结，live文件、索引和HEAD均未改。已沿双方原线程预约W4v2自然终局核退出并明确释放后的原ops工程检查窗口，再按当时实际live输入、原锁及隔离功能树做完整验收。38叶包含临时目录归属清理与/tmp严格大于1GiB、16384 inode准入，但实际live入口读回及运输仍pending，不据main交付记完成或retention。本轮未起full、模型/API、刷新或对局，W4固定检查不动；805、现actor、STOP、Regent和发布号保持。
 原件 paper/materials/20261020-1750-ops/receipt.json；verification.json；live-preview.json。
+
+
+2026-10-20T17:56:46+08:00 已原样冻结Roy新决定并置于短清单最高优先级：下一自然新局边界只把V6_COMBAT_ENTRIES从on改off，出牌回V5原题面，小脑条目不进出牌题，其余V6设置保持。已只读核live现有off入口会跳过条目加载并返回原V5投影，准备单项运行时补丁但未应用，避免当前局或中途resume热切。85条知识保留；战斗预算、蛇咬rollout及其他无关修复继续原精确上线，805暂停不变。原W4v2唯一full与固定输入不动，释放后将此单项配置补丁纳入原ops运输验收，再于实际新局边界核live行为提交、分配新release并双通知；当前不预分号或宣称已生效。届时核run-config开关及首个出牌请求恢复V5投影、无V6条目，登记首动作。已沿原watcher/W4线程转达授权，CLI不冒接收确认；构筑小脑另行派发，本轮不新开学习父、批次、模型或API。Regent、当前actor和STOP保持；前轮infra38源核验与私有live预演记录已保存，仍不冒实际运输完成。
+原件 paper/materials/20261020-roy-v5-combat-boundary-ops/authorization-original.md；receipt.json；next-boundary-runtime.patch。

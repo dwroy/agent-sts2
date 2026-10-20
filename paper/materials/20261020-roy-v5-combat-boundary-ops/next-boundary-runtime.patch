@@ -1,0 +1,11 @@
+--- a/ops/production-runtime.sh
++++ b/ops/production-runtime.sh
+@@ -7,6 +7,8 @@
+ # The restored primary instance retains its authorized actor after the old checkout was retired.
+ if [ "${ROOT:-}" = /home/dw/Projects/agent-sts2 ]; then
+   export CHARACTER=SILENT BRAIN_ENGINE=codex BRAIN_FALLBACK=none
++  # Roy: apply only when ops publishes this at the next natural new-run boundary.
++  export V6_COMBAT_ENTRIES=off
+ fi
+ export V6_BUILD="${V6_BUILD:-off}" V6_REFLEX="${V6_REFLEX:-off}"
+ export V6_CARD_DECIDER="${V6_CARD_DECIDER:-brain}" V6_POTION_DECIDER="${V6_POTION_DECIDER:-brain}"
