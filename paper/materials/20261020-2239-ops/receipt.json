@@ -1,0 +1,106 @@
+{
+  "at": "2026-10-20T22:47:12+08:00",
+  "batch": "20261020-221302-s2-strategy-proposal",
+  "state": "ops-reviewed-original-attention-retained-post-dataset-source-change",
+  "original_sha256": "5b6ab026bc64a2ca1726ab7c05b00f3595725959c67ac44683610ad2506d9701",
+  "original_report_sha256": "8605abbabb3e327bab07f9e32f6d7297807e36e791bb98c09f53576c7d920405",
+  "WT_clean_at_original_base": true,
+  "baseline": "260ad020f83b7cb49eda94ec80f942fbe20f354b",
+  "proof_HEAD": "526c36a9f1b06455d7137d94025d21d54bdcb09f",
+  "baseline_to_proof_source_delta": [],
+  "proof_to_now_source_delta": [
+    "agent/src/v6/construction-safety.ts",
+    "agent/src/v6/projection-input.ts",
+    "agent/tests/logged-states/v6-r404-card-rewards.json",
+    "agent/tests/v6-card-input-bridge.test.ts",
+    "agent/tests/v6-construction-safety.test.ts"
+  ],
+  "actual_delta_exactly_P0_five_source": true,
+  "waiting_proposals": [
+    {
+      "id": "silent-proposal-a25e259862a1fd3e",
+      "state": "waiting",
+      "reason": "缺保留原路线、提早休息或留药至后战的同资源完整后继，不能拟持有价或终局血线。"
+    },
+    {
+      "id": "silent-proposal-fab06d987903ee52",
+      "state": "waiting",
+      "reason": "缺保留启毒与原爆发在相同抽序、药时点下的整战配对，不能修改首轮换牌或启毒权重。"
+    },
+    {
+      "id": "silent-proposal-54f7ee6b632cab26",
+      "state": "waiting",
+      "reason": "已有营火条件展示；缺原投影完整输入版本到实际路线及休息消费者的配对。"
+    },
+    {
+      "id": "silent-proposal-00a6a10b15a62b38",
+      "state": "waiting",
+      "reason": "缺13项机制的联合入口、结算中间帧及消费者配对，未定位新的可复现数值错误。"
+    },
+    {
+      "id": "silent-proposal-b643d5b644ec7c64",
+      "state": "waiting",
+      "reason": "缺原候选同抽序完整执行后继及整战校准，有限模拟结果不足以改变SL判据。"
+    },
+    {
+      "id": "silent-proposal-dce02af8d115b477",
+      "state": "waiting",
+      "reason": "缺替代路线或留药的受控后战结局和联合终局消费者，不能拟新终局或药水常数。"
+    },
+    {
+      "id": "silent-proposal-6ce31508b40aa87f",
+      "state": "waiting",
+      "reason": "护栏及SL替换后均抽牌重问；原候选整线未受控执行，旧预测与新线实损之差不能作为收益。"
+    },
+    {
+      "id": "silent-proposal-ca596a0c614d90c6",
+      "state": "waiting",
+      "reason": "已有动态力量入口；缺同资源启动与不启动的完整后继和消费者追踪，不能强制加启动奖励。"
+    },
+    {
+      "id": "silent-proposal-4c28c13316c0d88e",
+      "state": "waiting",
+      "reason": "十一项机制尚缺联合消费者认证；已有窄实现不覆盖整项，留存稿SHA与登记SHA失配。"
+    },
+    {
+      "id": "silent-proposal-51d8fe5060c677e8",
+      "state": "waiting",
+      "reason": "目标、多步行动及抽牌共同变化，缺原候选受控整战后继；留存稿SHA与登记SHA失配。"
+    }
+  ],
+  "source_tests": {
+    "tsc": null,
+    "vitest": null,
+    "cases": null
+  },
+  "original_dataset_attempts": 1,
+  "original_dataset_log_sha256": "9d68e5efd524c8aa5154e2e31aebd583d259bbe7a4edeef0a59eeb94c139fa0d",
+  "dataset_success_evidence": "ordinary_close proceeds to validate only after subprocess returncode0; candidate attention has post-run source-change reason after dataset_attempts1, log all invariants and CLEAN; no original explicit dataset_rc field fabricated",
+  "dataset_rc0_inferred_from_original_control_flow": true,
+  "dataset_not_repeated": true,
+  "no_generated_data_parallel_records_source_merge_or_release_adopted": true,
+  "proposal_source_conflicts": [
+    {
+      "id": "silent-proposal-4c28c13316c0d88e",
+      "source": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261020-014302/learner/runs/20261020-014331-282a445e-412c-4b00-a8b7-8f73d638c43a-strategy-proposal/proposal-originals/silent-proposal-4c28c13316c0d88e.archive-mismatch.md",
+      "bytes": 6171,
+      "sha256": "961cc57d5de58d33d5ba6a33034422fe6e1650439708f72c3d25c8c93386a1d0",
+      "registered_sha256": "b096eae70881445df69a6168d01c8608795224c702ad1df437b0d2452de53608",
+      "matches": false,
+      "source_still_present": true
+    },
+    {
+      "id": "silent-proposal-51d8fe5060c677e8",
+      "source": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261020-014302/learner/runs/20261020-014331-282a445e-412c-4b00-a8b7-8f73d638c43a-strategy-proposal/proposal-originals/silent-proposal-51d8fe5060c677e8.archive-mismatch.md",
+      "bytes": 5774,
+      "sha256": "c9b3432cce46597cd191f56ce148f924b3c9e9ec7452c1e4acd6e219b4048d39",
+      "registered_sha256": "d929cd8cebf26e362413ee7d964a308f25ed72602b9de9c159cb8e693c0e5504",
+      "matches": false,
+      "source_still_present": true
+    }
+  ],
+  "conflicts_left_pending_for_original_provenance": true,
+  "no_parent_closure_or_role_ACK": true,
+  "no_P0_dynamic_progress_query_or_input_change": true,
+  "existing_R404_play_STOP_Regent_unchanged": true
+}
