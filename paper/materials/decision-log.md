@@ -4932,3 +4932,5 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
 - 2026-10-20 09:12:00 CST [运维 codex/原报告刷新持锁] MWMR保存终局/console SHA不变，09:10:24原报告已到8ltr96g5组合指标且live-merge.lock忙，R3沿原事务等待不抢锁/重刷。旧gvw回执误取已保留并更正原watcher；不冒刷新/发布完成，既有main/live边界保持。原件：paper/materials/20261020-0910-ops/receipt.json。
 
 - 2026-10-20 09:15:25 CST [运维 codex/W3环境更正] 长TMPDIR轮tsc0/vitest130中断原件核同，不记完整绿；短树内TMPDIR/30源码数据SHA同，原owner09:13单worker原阈值full已启未终局。ops不查/重复在途检查或原刷新，0848/969b/R3/Regent及ACK边界保持。原件：paper/materials/20261020-0913-ops/receipt.json。
+
+- 2026-10-20 09:19:01 CST [v6-w4w6/T6 按幕同因去重] b1d0d3e8e 已完整检查并 FF main：系统性投影缺数同因每幕仅预留一次方向重规划，后续保留 T6/抑制日志；具体局面缺口另记，投影恢复或换幕重新触发，状态可重启恢复，其余触发及逐题大脑安全回退不变。固定 18 次缺数仅 1 次方向调用；tsc0、完整 Vitest 604 文件/5749 通过/2 原跳过（TMPDIR=/var/tmp，原超时/ENOSPC/夹具目录失败记录保留）、gitleaks0。材料 paper/materials/2026-10-20-v6-t6-dedup/；仅 main，ops 下一局前同步 live，本局不热切，未动 STOP/对局/运维 prompt。
