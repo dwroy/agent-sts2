@@ -4950,3 +4950,5 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
 - 2026-10-20 09:45:00 CST [Codex ops，仅通知核查] 三旧异议原文/转达证据核同，native watcher→Roy证据16b0a57b保留；当前旧scope/角色ACK pending不冒未读，原074302兼容源full1未交付，不代ACK/造父/重复学习。W3/T12/R3/Regent不变。原件paper/materials/20261020-0943-ops/receipt.json。
 
 - 2026-10-20 09:46:52 CST [Codex ops，仅固定输入协调] 核92d→8cca中6b0d Jev预算新增8源码/测试路径，不冒eddfc1ee在途检查覆盖；原owner自然停点后核联合，0848 main窗口/W3 live烟测授权hold保留，不查询/重启检查或运源码，T12/R3/Regent不变。原件paper/materials/20261020-0945-ops/receipt.json。
+
+- 2026-10-20 09:53:32 CST [Codex v6-w4w6，已合 main、待下一局 live] Claude/Roy 授权的非战斗执行快路径 cb0b2cac9：构筑评估/方向检查仅留真实决策点，已规划执行步骤跳过；新增资源/候选/路线/方向指纹缓存（含 unknown）。固定奖励4→0次、商店7→1次，执行步骤评估等待5000→0ms，本地真实时钟调度1–6ms（非live端到端）。T6同因按幕去重 b1d0d3e8e 保留；tsc0、完整608文件/5777通过/2原跳过、gitleaks提交扫描0发现；变基562ff61f3后无受检源码变化。不动live/STOP/当前局/知识，由ops下一局前同步与核发布号。材料 paper/materials/2026-10-20-v6-direction-fastpath/report.md。
