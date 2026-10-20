@@ -1,0 +1,21 @@
+{
+  "batch": "20261020-081302-strategy-proposal",
+  "at": "2026-10-20T08:41:05+08:00",
+  "pid": 1152153,
+  "start_ticks": 134880858,
+  "nice": 19,
+  "state": "passed",
+  "combined_full_rc": 0,
+  "source_commit": null,
+  "base": "09f87be8023d0754ebed5bbe462a430cc198d28d",
+  "prospective_tree": "733ee9d6e7ca18a27a2f57a134de63e0c40ddb2f",
+  "input_sha256": "d02474138f0a348717f80275341e7e9da3ec2f8d39e150d288f5abd4b2264a7f",
+  "log": "ops/codex-ops/learner/20261020-081302-strategy-proposal.host-uncommitted-733ee9d6e7ca18a27a2f57a134de63e0c40ddb2f.checks.log",
+  "uncommitted_source": true,
+  "new_model": false,
+  "command": "export PATH=\"$HOME/.local/node/bin:$PATH\"; nice -n 19 npx tsc -p tsconfig.json --noEmit; a=$?; nice -n 19 npx vitest run --maxWorkers=2; b=$?; [ \"$a\" = 0 ] && [ \"$b\" = 0 ]",
+  "check_pid": 1152190,
+  "started_at": "2026-10-20T08:41:05+08:00",
+  "finished_at": "2026-10-20T08:54:53+08:00",
+  "log_sha256": "7b43d5301f18132edd813f064e617662814e4cae9f7098710ddec47b49fe34a3"
+}

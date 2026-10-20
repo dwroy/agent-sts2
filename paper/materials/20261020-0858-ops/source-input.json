@@ -1,0 +1,96 @@
+{
+  "batch": "20261020-081302-strategy-proposal",
+  "worktree": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261020-081302",
+  "original_base": "03e9f5b610d7d6ada444e1a2224a42f2c83a611c",
+  "rebased_base": "09f87be8023d0754ebed5bbe462a430cc198d28d",
+  "prospective_staged_tree": "733ee9d6e7ca18a27a2f57a134de63e0c40ddb2f",
+  "staged_patch_sha256": "aeeac0bec8a0c809d2d6520fdb1af642e29e77f72e13b8deaee327a38f39ba49",
+  "original_candidate_patch_sha256": "aeeac0bec8a0c809d2d6520fdb1af642e29e77f72e13b8deaee327a38f39ba49",
+  "owned_files": [
+    {
+      "path": "agent/src/hand/screens/rest.ts",
+      "bytes": 36557,
+      "sha256": "a4bd5db099f1a207270896ac0d7bafc61a7cf91c7b9b5972c1ee3721d6ccdb04"
+    },
+    {
+      "path": "agent/tests/silent-candle-positive-evidence.json",
+      "bytes": 89814,
+      "sha256": "e887f26b973ec3c30dcddfd37fb9d9de69072a7f44313d1be4f8c4f12c258c92"
+    },
+    {
+      "path": "agent/tests/silent-candle-positive-rest.test.ts",
+      "bytes": 2502,
+      "sha256": "5af9bf8670680c3601b415d490bed129a7285ea8a1076b5bd251d249ae1b0d3f"
+    },
+    {
+      "path": "agent/tests/silent-candle-rest.test.ts",
+      "bytes": 8116,
+      "sha256": "02710c8ccc2cc904f37f3e4aec3e2cd56fb60845109eb1dc576b1e06580dd9fb"
+    }
+  ],
+  "shared_original_worktree_lease": "ops/codex-ops/learner/codex-strategy-silent-20261020-081302.lock",
+  "pending_merge_parents": [],
+  "original_proposal_id": "silent-proposal-167b20d3b7105257",
+  "ledger": [
+    "silent-0328"
+  ],
+  "original_task_thread": "01a156a7-a31d-7251-b962-53616104d0c4",
+  "original_report": ".worktrees/codex-strategy-silent-20261020-081302/learner/runs/20261020-081306-f8f78ad7-e106-4853-85e2-9d2c1fc4344b-strategy-proposal/report.md",
+  "original_candidate_source": ".worktrees/codex-strategy-silent-20261020-081302/learner/runs/20261020-081306-f8f78ad7-e106-4853-85e2-9d2c1fc4344b-strategy-proposal/candidate-source.json",
+  "original_validation": {
+    "negative": {
+      "exit": 1,
+      "failed": 1,
+      "passed": 1,
+      "log": "candle-negative-fixed.log"
+    },
+    "positive": {
+      "exit": 0,
+      "files": 2,
+      "passed": 10,
+      "log": "candle-positive.log"
+    },
+    "consumer": {
+      "exit": 0,
+      "files": 2,
+      "passed": 12,
+      "log": "candle-consumer.log"
+    },
+    "sandbox_first": {
+      "exit": 1,
+      "tsc": 0,
+      "vitest": 1,
+      "files_failed": 14,
+      "files_passed": 536,
+      "tests_failed": 40,
+      "tests_passed": 4885,
+      "errors": 21,
+      "log": "sandbox-tests.log"
+    },
+    "sandbox_retry": {
+      "exit": 1,
+      "tsc": 0,
+      "vitest": 1,
+      "workers": 1,
+      "bail": 1,
+      "files_failed": 1,
+      "files_total_selected": 550,
+      "tests_failed": 1,
+      "tests_passed": 24,
+      "tests_total_in_file": 40,
+      "errors": 1,
+      "complete_suite": false,
+      "reason": "listen EPERM 127.0.0.1; v6-room local scripted shop loop timed out at 15000ms",
+      "log": "sandbox-retry.log"
+    },
+    "gitleaks": 0,
+    "diff_check": 0,
+    "commit": null,
+    "merged": null
+  },
+  "original_failed_rc0_mergednull_preserved": true,
+  "original_candidate_bytes_unchanged_after_FF": true,
+  "integration_live": "c351dbe7b5603bbb591e0f63d88be32fa60df56f",
+  "no_source_commit_or_integration_yet": true,
+  "reason": "Original learner staged four Candle 1-to-6 conditional-reference source/test leaves but did not commit after two sandbox failures; original full failures and incomplete bail retry retained. Preserve exact patch/four SHA, FF same original WT to current main and stage unchanged candidate for one required host full. No new model or research; 969b live hold and R3 natural boundary remain."
+}
