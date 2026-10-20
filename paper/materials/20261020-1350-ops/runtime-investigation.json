@@ -1,0 +1,92 @@
+{
+  "at": "2026-10-20T13:53:49+08:00",
+  "restart_cause": "observed tsx IPC startup listen ENOSPC in shared /tmp; root filesystem has capacity; no product combat failure inferred",
+  "startup_failure_consoles": [
+    {
+      "path": "paper/materials/20261020-1350-ops/20261020-134738-f563cc997+dirty.log",
+      "bytes": 782,
+      "sha256": "aa28f01fbb5ac3319c0b5834c7b8cd5159be0a273fc57770dda1f06395c6119b"
+    },
+    {
+      "path": "paper/materials/20261020-1350-ops/20261020-134825-f563cc997+dirty.log",
+      "bytes": 782,
+      "sha256": "b27522783216aacab513199aab94af81e67a2ae1cd1a9e3c070876d2d30df29f"
+    },
+    {
+      "path": "paper/materials/20261020-1350-ops/20261020-134911-f563cc997+dirty.log",
+      "bytes": 782,
+      "sha256": "ff69c79e2959cfc39011b6ba5109bbffcb126393559bc57635bf705cf9ec0653"
+    }
+  ],
+  "filesystems": [
+    {
+      "path": "/home/dw/Projects/agent-sts2",
+      "available_bytes": 247992397824,
+      "inodes": 67108864,
+      "free_inodes": 62319567
+    },
+    {
+      "path": "/tmp",
+      "available_bytes": 52611006464,
+      "inodes": 1048576,
+      "free_inodes": 218
+    }
+  ],
+  "old_run_terminal": {
+    "run_id": "UWUFHGRAJJ6J",
+    "console": {
+      "path": "paper/materials/20261020-1350-ops/previous-run-console-tail.log",
+      "bytes": 10000,
+      "sha256": "f72de8769b393a0b6f99110eacb70a33959975419a928162be714fa6b2d5bfe8"
+    },
+    "ended": "2026-10-20T13:45:12+08:00",
+    "floor": 31,
+    "outcome": "defeat",
+    "dispatched_actions": 562,
+    "fallbacks": 0,
+    "errors": 0
+  },
+  "current_run": {
+    "run_id": "TR224PCKENSM",
+    "screen": "COMBAT",
+    "floor": 2,
+    "start": "2026-10-20T13:50:06.248+08:00",
+    "console": {
+      "path": "paper/materials/20261020-1350-ops/current-console-tail.log",
+      "bytes": 4533,
+      "sha256": "b8d747c9475c4f56180060fbfd6cc65a418451411df7bc514dc0c43af9d8eb92"
+    },
+    "config": {
+      "path": "paper/materials/20261020-1350-ops/actual-run-config-selected.json",
+      "bytes": 2761,
+      "sha256": "f37fd1b5c91207590c4c8df30fb731e1cc62afffef86ce434b8c3e04acd367c2"
+    },
+    "state": {
+      "path": "paper/materials/20261020-1350-ops/mod-state.json",
+      "bytes": 34533,
+      "sha256": "ae844eba91f5b850104c934822138183da239a8cf4661f39e0bac5b9ca59c952"
+    },
+    "processes": [
+      {
+        "pid": 2129291,
+        "present": true,
+        "start_ticks": "136217055",
+        "state": "S",
+        "cwd": "/home/dw/Projects/agent-sts2"
+      },
+      {
+        "pid": 2501069,
+        "present": true,
+        "start_ticks": "136734293",
+        "state": "S",
+        "cwd": "/home/dw/Projects/agent-sts2/.worktrees/live/agent"
+      }
+    ]
+  },
+  "controller_not_restarted_by_ops": true,
+  "no_game_action_or_stop_or_fault_clear": true,
+  "W3_not_transported_midrun": true,
+  "shared_tmp_not_cleaned": true,
+  "followup": "existing storage engineering item: repository-local short TMPDIR for future launcher admission, test guarded fallback before deployment; active actor untouched, no new full while W4W6 owns window",
+  "not_claiming_underlying_tmp_exhaustion_repaired": true
+}

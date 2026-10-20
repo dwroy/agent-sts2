@@ -1,0 +1,44 @@
+mod 0.16.2 at http://127.0.0.1:8080 (protocol 2026-03-11-v1, status ready)
+game data from cache: 596 cards, 107 monsters, 299 relics, 66 potions, 283 powers, 57 events
+PLAY mode: http://127.0.0.1:8080, model typesafe/jev-1.14
+13:50:02 MAIN_MENU       menu/new_run         -> open_character_select jev 0 ms | 0 in
+         starting a new run
+13:50:02 CHARACTER_SELECT character/select     -> select_character (option_index=2) jev 0 ms | 0 in
+         selecting SILENT (CHARACTER)
+13:50:06 CHARACTER_SELECT character/embark     -> embark jev 0 ms | 0 in
+         character chosen; setting off
+13:50:06 note run TR224PCKENSM (F1): no logged rows to rebuild the run memory from, starting it empty (a new run)
+13:52:24 note V6 direction plan stored (act_start,T6)
+13:52:24 note boss sim on event/plan: 100 samples per option, 694 ms
+13:52:24 note V5 construction shadow: missing_route, evaluation=attached, probability=absent, 0 ms
+13:52:25 note Codex decides event/plan (6 options, floor 1, run context 9149 chars)
+13:52:36 note Codex (11.0 s) event/plan: o1 — Extra opening draw and energy against every elite provides reliable, permanent value and supports relic farming without transformation variance or a curse.
+13:52:36 note action came back completed; waited for the board to settle
+13:52:36 EVENT           event/plan           -> choose_event_option (option_index=1) jev 0 ms | 27355 in
+         Codex decided o1: Extra opening draw and energy against every elite provides reliable, permanent value and supports relic farming without transformation variance or a curse. | Codex chose 轰鸣海螺 (code's fallback order: 0, rank 5 of 6; not shown to Codex)
+13:52:36 note action came back completed; waited for the board to settle
+13:52:36 EVENT           event/leave          -> choose_event_option (option_index=0) jev 0 ms | 0 in
+         the event is finished; taking the proceed option
+13:52:43 note V5 construction shadow: missing_route, evaluation=attached, probability=absent, 0 ms
+13:52:43 note Codex decides map/route-plan (3 options, floor 1, run context 5534 chars)
+13:53:42 note Codex (58.8 s) map/route-plan:  — 商店补强、三火续航，海螺助打双精英
+13:53:43 MAP             map/route-plan       -> choose_map_node (option_index=2) jev 0 ms | 10380 in
+         Codex planned: 商店补强、三火续航，海螺助打双精英 | route plan: r1c5 普通战 → r2c6 问号 → r3c6 普通战 → r4c6 问号 → r5c6 普通战 → r6c6 商店 → r7c5 问号 → r8c4 休息 → r9c3 宝箱 → r10c3 问号 → r11c2 休息 → r12c1 精英 → r13c1 普通战 → r14c0 精英 → r15c0 休息 → r16c3 Boss
+13:53:43 note H1 idle preparation: {"status":"unknown","reason":"next_solver_input_not_observed_or_not_ready","budget_ms":400}
+13:53:43 wait COMBAT: waiting on COMBAT (transition, animation, or nothing legal yet)
+13:53:44 note H1 idle preparation: {"status":"unknown","reason":"next_solver_input_not_observed_or_not_ready","budget_ms":400}
+13:53:44 note H1 idle preparation: {"status":"unknown","reason":"next_solver_input_not_observed_or_not_ready","budget_ms":400}
+13:53:45 note H1 idle preparation: {"status":"unknown","reason":"next_solver_input_not_observed_or_not_ready","budget_ms":400}
+13:53:45 note H1 idle preparation: {"status":"prepared","basis":"exact_observed_input_only","nodes":9,"partial":false,"reused":false,"budget_ms":400}
+13:53:47 COMBAT          combat/plan-choice   -> play_card (card_index=0, target_index=0) conf 0.48 jev 463 ms | 4075 in
+         Jev chose plan 2/2 (打击 -> 毛绒伏地虫, 防御, 防御) with confidence 0.48; code rank 2
+13:53:47 note H1 idle preparation: {"status":"unknown","reason":"next_solver_input_not_observed_or_not_ready","budget_ms":400}
+13:53:47 wait COMBAT: waiting on COMBAT (transition, animation, or nothing legal yet)
+13:53:47 COMBAT          combat/plan-continue -> play_card (card_index=0) jev 0 ms | 0 in
+         continuing the Jev-chosen plan: 防御
+13:53:47 note H1 idle preparation: {"status":"unknown","reason":"next_solver_input_not_observed_or_not_ready","budget_ms":400}
+13:53:47 wait COMBAT: waiting on COMBAT (transition, animation, or nothing legal yet)
+13:53:48 COMBAT          combat/plan-continue -> play_card (card_index=0) jev 0 ms | 0 in
+         continuing the Jev-chosen plan: 防御
+13:53:48 note H1 idle preparation: {"status":"unknown","reason":"next_solver_input_not_observed_or_not_ready","budget_ms":400}
+13:53:48 wait COMBAT: waiting on COMBAT (transition, animation, or nothing legal yet)

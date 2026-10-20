@@ -1,0 +1,89 @@
+{
+  "ts": "2026-10-20T05:50:06.248Z",
+  "run_id": "TR224PCKENSM",
+  "ascension": 10,
+  "character": "SILENT",
+  "floor": 1,
+  "restart": false,
+  "process": {
+    "pid": 2501069,
+    "started": "2026-10-20T05:50:02.600Z"
+  },
+  "code": {
+    "commit": "f563cc997814fdccd2dafe8a50d3725c62102c7f",
+    "code": "f563cc9+dirty",
+    "dirty": true,
+    "dirty_files": [
+      "knowledge/catalog.json",
+      "knowledge/characters/silent/construction-opportunities.json",
+      "knowledge/characters/silent/fight-value-gates.json",
+      "knowledge/characters/silent/fight-value.json",
+      "knowledge/characters/silent/monster-records.json",
+      "knowledge/characters/silent/outcome-stats.json",
+      "knowledge/characters/silent/room-costs.json",
+      "knowledge/characters/silent/v6-history.json",
+      "knowledge/common/enemies/CORPSE_SLUG/mechanics-observed.json",
+      "knowledge/common/enemies/CORPSE_SLUG/model-observed.json",
+      "knowledge/common/enemies/FAT_GREMLIN/mechanics-observed.json",
+      "knowledge/common/enemies/FAT_GREMLIN/model-observed.json",
+      "knowledge/common/enemies/GREMLIN_MERC/mechanics-observed.json",
+      "knowledge/common/enemies/GREMLIN_MERC/model-observed.json",
+      "knowledge/common/enemies/MYSTERIOUS_KNIGHT/mechanics-observed.json",
+      "knowledge/common/enemies/SLUDGE_SPINNER/mechanics-observed.json",
+      "knowledge/common/enemies/SLUDGE_SPINNER/model-observed.json",
+      "knowledge/common/enemies/SNEAKY_GREMLIN/mechanics-observed.json",
+      "knowledge/common/enemies/SNEAKY_GREMLIN/model-observed.json",
+      "knowledge/common/enemies/TERROR_EEL/mechanics-observed.json"
+    ],
+    "branch": "live",
+    "worktree": "live"
+  },
+  "v6": {
+    "schema": "v6-config-v1",
+    "mode": "on",
+    "deciders": {
+      "card": "jev",
+      "potion": "jev",
+      "shop": "jev",
+      "rest": "jev"
+    },
+    "reflex": "off",
+    "admission": "interfaces_only",
+    "delivered": false,
+    "samples_pick": 20,
+    "samples_act": 100,
+    "min_known_option_ratio": 0.5,
+    "direction_min_weight": 0.1,
+    "win": {
+      "certain_win": 0.95,
+      "favored": 0.7,
+      "even": 0.3,
+      "unfavored": 0.05
+    },
+    "delta": {
+      "much_se": 2,
+      "better_se": 1,
+      "much_min": 0.05
+    },
+    "triggers": {
+      "t1_core_min": 0.3,
+      "t2_se": 2,
+      "t2_min_delta": 0.05,
+      "t2_consecutive": 2,
+      "t3_weight_max": 0.2,
+      "t5_hazard": "existing_route_projection",
+      "t6_unknown_max": 0.5,
+      "t6_fallbacks": 2,
+      "t7_checkpoint": "validated_brain_answer"
+    },
+    "budgets": {
+      "brain_soft_cap": 15,
+      "brain_ms": 90000,
+      "act_ms": 60000,
+      "pick_ms": 5000,
+      "jev_ms": 5000
+    },
+    "invalid": []
+  },
+  "config_sha": "afa86f525462"
+}

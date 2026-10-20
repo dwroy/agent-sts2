@@ -3306,3 +3306,8 @@ request_id=roy-20261017-human-pace-h0 revision=3 input_sha256=1e1c259a15f1824119
 ### 2026-10-20T13:50:47+08:00 原W4W6环境失败及检查窗口续占
 
 本轮接原W4W6检查窗口更正：13:47:30至13:49:49的最终full退出1，原owner报告共享/tmp仅余99个inode，612文件在加载阶段报ENOSPC。此为owner已保原日志及环境回执的报告，本ops未独立查询其进程、磁盘或测试进度；不把加载失败记为产品通过或产品断言失败。原owner不清共享/tmp，将同一源码7f08f166d改用功能树内TMPDIR，继续nice19单worker原任务检查，窗口仍由其占用。原ops的d43e6c23测试接线补丁仅保既有tsc0/21项定向通过，完整验收继续pending，不能以对方环境失败当作窗口释放或本补丁全绿。已更新原短清单、窗口接续和待验事务；不重full、不新派模型、不改live/STOP/play，W3自然边界及Regent保持。原件：paper/materials/20261020-1351-ops/receipt.json。
+
+
+### 2026-10-20T13:55:27+08:00 原来源核验、策略存储阻塞及重启诊断
+
+本轮核owner-origin旧快照、原生launch/task/turn/user四行及3份冻结输入均同SHA；当前来源文件已增字节，与旧快照分列，纯bug归属完整，活雾boss-sim链接仍缺、原提案pending。134302策略out实际blocked、report未生成、十提案waiting，launcher0不能冒任务完成；单次核原WT无遗留进程，无源码可合。重启原件明确三次tsx因/tmp IPC ENOSPC退出，根盘仍有空间；原UWUF已F31败、562动作0兜底0错误，原循环13:50:06自然开TR224PCKENSM，当前COMBAT/四Jevon，未另开局/改actor。底层tmp压力未修，沿原存储项留后续，未清共享tmp。W3等TR自然边界；full顺序原W4→ops变化输入→通知原W8，不叠检查或派模型。原件：paper/materials/20261020-1350-ops/receipt.json。
