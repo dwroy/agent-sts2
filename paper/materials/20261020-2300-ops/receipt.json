@@ -1,0 +1,74 @@
+{
+  "at": "2026-10-20T23:01:16+08:00",
+  "state": "P0-joint-tsc0-full1-original-input-and-failure-retained-no-publication",
+  "request": "original-W4-R404-provider-wiring-five-exact-live-joint-20261020",
+  "staged_tree": "66dc290c93f50ac981583df9b36a66717ee51a94",
+  "input_count": 2380,
+  "input_sha256": "c2a785594fb92b512721b338a7835d7ca40218a1a34723bceaf503b205356067",
+  "current_inputs_match": true,
+  "source_count": 5,
+  "knowledge_count": 498,
+  "actual_live": "048a9713bd4be09ad5f6d3f6131e8b729f51aece",
+  "release": "V6-R404 unchanged",
+  "PIDs_independently_gone": [
+    1111701,
+    1111706,
+    1111768,
+    1117921
+  ],
+  "worktree_remaining_node_PIDs": [],
+  "original_lock_owner_PIDs_absent": true,
+  "heavy_guard_original_terminal": {
+    "authorization": "Claude22:4x/Roy docs/v6-plan.md §12 at0ee818a8f",
+    "started_at": "2026-10-20T22:37:51.563512+08:00",
+    "pid": 1117921,
+    "start_ticks": "139900451",
+    "watched_full_runner": 1111701,
+    "watched_runner_start_ticks": "139884141",
+    "held": [
+      "ordinary-close.lock",
+      "paper-dataset.lock",
+      "tick-snapshot.lock"
+    ],
+    "waiting_lock": null,
+    "learning_dispatch": "normal; no ACCOUNT_DRAIN/PAUSE",
+    "phase": "known-P0-runner-exited-release-own-heavy-writer-locks",
+    "ended_at": "2026-10-20T22:56:25.339828+08:00",
+    "heavy_locks_released": true,
+    "released_at": "2026-10-20T22:56:25.340313+08:00"
+  },
+  "failure": {
+    "failed_suites": [
+      "tests/rollout-live.test.ts",
+      "tests/target-options.test.ts",
+      "tests/v6-card-input-bridge.test.ts"
+    ],
+    "failed_tests": [
+      "tests/check-imports.test.ts:11 relative imports all resolve",
+      "tests/potions-jev-call.test.ts:223 logged boards auto-act drink"
+    ],
+    "suite_counts": {
+      "total_files": 623,
+      "passed_files": 618,
+      "failed_files": 5,
+      "passed_tests": 5737,
+      "failed_tests": 2,
+      "skipped_tests": 2
+    },
+    "static_findings": [
+      "new multi-frame fixture top keys source/states/knowledge_fixture has no state; global logged-states JSON scanners assume logged(name).state.combat",
+      "new v6-card-input-bridge imports fixture-http.js; fixture-http.ts exists main but absent actual live/candidate; check-imports also rejects"
+    ],
+    "functional_acceptance": "new real-loop regression file did not load; no pass claimed",
+    "root_cause_scope": "static test packaging/dependency compatibility; no production numeric/behavior failure asserted"
+  },
+  "full_sha256": "4f98eebb04360944f0674a86b3188cbd477b6166953c654a6824398c5af4aa26",
+  "ended_at": "2026-10-20T22:56:25.327097+08:00",
+  "no_same_input_full_retry_or_repair_model_started": true,
+  "no_new_release_live_actor_switch_STOP_changes": true,
+  "source_owner": "original v6-w4w6 P0",
+  "next": "send exact failure and two static test-wiring gaps to existing W4/watcher→Claude; await original repair/source direction; changed-input validation only per original workflow, no unchanged full",
+  "P2_still_blocked_until_P0_actual_publish_and_two_stable_natural_runs": true,
+  "P1_not_accepted": true,
+  "Regent": "paused"
+}
