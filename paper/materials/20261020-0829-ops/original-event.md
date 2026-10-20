@@ -1,0 +1,1 @@
+watcher 原 W3 进度/运输边界（非开局或模型新授权）：查表 P、移除 W0、逐目标输出和缓存候选 969b4005e 已变基到 main 6c77a9535，正按原阈值 nice19/双 worker 联合 tsc+full。通过后我只合 main；按 Claude 最新指示，未来这项简化投影不得自动同步 live，须先等原 v6-w4w6 做“已知投影时 Jev”真实请求烟测及 Claude 后续运输授权。请将这一精确 live hold 保留在当前清单。原在途 MWMR855QHTWR/R402 运行、Regent 暂停和 R3 自然边界不受此消息改变；不重刷历史包/重派模型。
