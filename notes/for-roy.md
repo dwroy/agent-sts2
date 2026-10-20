@@ -3532,3 +3532,8 @@ request_id=roy-20261017-human-pace-h0 revision=3 input_sha256=1e1c259a15f1824119
 ### 2026-10-20T18:36:30.464019+08:00 原ops五项联合来源未齐回读
 
 本轮实核watcher五项来源协调原件SHA47b919fc及原通道投递文件，联合输入仍未就绪；W4严格奖励79a对象虽在，独立peek最小正式提交及必要依赖映射待原owner交付，W8方向off搭车和题面精简仍在原树收尾，最终source/base/tree/manifest须接该getter后冻结。已把具体缺项及joint_input_ready=false写入短清单和原五项事务，T3缺合法对照继续unknown，不以投递0冒原生接管或最终源。回执内39终局静态旧快照逐字段核同当前证据，仅后续增加通过数及耗时统计，原SHA与原字节分列保留；不重新查询检查进程或动态状态。唯一窗口仍预留原ops五项精确联合，不重复催派W4/W8或启动full、模型、API、游戏，五项全live读回才解除等待，805/整main禁运、164301六源独立及Regent暂停不变。原件 paper/materials/20261020-1835-ops/receipt.json。
+
+
+### 2026-10-20T18:40:13.090313+08:00 原ops W4正式源与getter接收
+
+本轮核W4正式源5446f1813及清单、交付回执SHA，base8d62与f74拿牌A/B→79a严格来源门→544纯getter三层祖先、21项commit内容SHA/Git blob/原工作树字节全部核同。getter增量仅engine/runtime及新测试三项，静态核miss/null且不调用准备或评估；原tsc0/47定向和gitleaks日志SHA核同，严格门91定向及旧full-v2分列，仍待实际联合full。已向原W4/W8及watcher回收件，W4 getter缺项解除，W8须接正式依赖后冻结source/base/tree/manifest；loop、direction-runtime和memory重叠须机械保留搭车/off，不能整叶覆盖。联合输入仍未就绪，未重复检查、模型/API或运输live，不以源码就绪认发布、收益或恢复；五项全部live读回前不开局，805与Regent继续暂停。原件 paper/materials/20261020-W4-formal-source-ops/receipt.json。
