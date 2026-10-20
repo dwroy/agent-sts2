@@ -4303,3 +4303,6 @@ request_id=roy-20261017-human-pace-h0 revision=3 input_sha256=1e1c259a15f1824119
 
 
 2026-10-20T11:10:31+08:00 原ops核10:59终局：原live固定e552完整tsc0/full1，609文件607过2败、4断言均Silent V6-off休息题旧SHA不符；49运输叶与486生产知识SHA全同，非超时或ENOSPC。隔离同树复现4败，确认刷新后的outcome-stats元数据漏入固定字节题；原W0/7aa/main统计同blob c9bd0c03。只给两测试显式注入原298219字节历史统计夹具，原SHA断言及阈值不改，定向49项全过，生产源码及知识不回退。已原锁加入这3测试叶，新live52固定树1e7302ec，单次nice19宿主全检PID1824045在途，原失败及诊断保留；这是变化输入复验。STOP/W3排除/Regent保持，未提交、核号或开局；完整0后核精确提交、消费者17ID/hash/R3字段、版本和双通知，再按Roy授权恢复。不重模型/API/刷新/生产dataset，不代ACK或关父。原件paper/materials/20261020-1059-ops/receipt.json。
+
+
+2026-10-20T11:14:17+08:00 原ops核11:11宿主终局：原101302-fix三项工程修复与main e700固定5ef4，tsc0、完整614文件5807项通过2原跳，日志/输入/10叶SHA全同；原WT已提交609bcdf4df012d515b702bea70f2cf985eddad50，提交树等于受测树，gitleaks0。当前main仅记录漂移；原live发布锁仍由既有52叶1e730检查持有，本轮登记精确10叶单独待集成，不抢锁、不夹带infra或W3进当前V6发布，不作为恢复新增门槛。三项为普通候选隔离、合法空tick/回收门禁、原手动通知来源兼容；桥必须实际main/live后由原角色按真实回执ACK。原failed/rc0/mergednull、sandbox130/EPERM、074302 full1/ENOSPC全保留，不重模型/未变源full/生产dataset或刷新，不代ACK/关父。STOP/W3排除/Regent保持；e552为失败历史，当前1e730检查不查询不重复。原件paper/materials/20261020-1111-ops/receipt.json。
