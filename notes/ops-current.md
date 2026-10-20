@@ -1,5 +1,5 @@
 # 运维当前清单（调度器生成）
-生成：2026-10-21T01:53:40+08:00；原件索引：/home/dw/Projects/agent-sts2/ops/codex-ops/current.json SHA256 4f87e16ad838d9015a73eb8735340796a97dbcbae101070e0ccf45ff183b8730
+生成：2026-10-21T01:55:16+08:00；原件索引：/home/dw/Projects/agent-sts2/ops/codex-ops/current.json SHA256 cff911653c5948b7c07aadf63762c3b4eaa2984b1e6011db3199bb04ed6e80e6
 当前授权：Roy§12授权Claude主导V6、持续对局不挂STOP，P0最高优先；学习正常、联合检查原三锁挡新dataset重任务，原在跑自然结束。最新P0采用以下Claude01:3x澄清，旧00:1x条件保历史不再阻塞。
 最高Claude01:3x：P0上线前门槛已满足（真实runLoop回放+联合628文件通过），不再等上线后质量才开jev。CSBNU2H9LXKD自然结束后，精确发布已验17源并同时CARD brain→jev，REFLEX仍off；核版本/双通知，第一新局就是P0质量验收局，由Claude判。若同题不同牌同值/全跳/错误/兜底增多，报告Claude，依其指令下一边界回brain。当前R406/live4528a751保持、旧R405失败不改写，P2仍等2稳定自然局。授权原文/SHA及18叶准备见20261021-013x-ops/next-boundary-publication-plan.json。
 原P3单独full626/5926过2跳、tree6650/2388输入9d17原件保留，11源仅main16aa9bd5；live叶保legacy混合/50000界，禁805。现在已并P0六叶完成17实际组合完整绿；不把旧单独绿冒后继联合。P3实际live/合格经验仍pending，REFLEXoff；原件0040-ops/receipt.json。
@@ -12,11 +12,11 @@ RBME health旧DPR与真实A/B同值缺陷分列，n300门/未知保护不改、�
 003744两策略各10waiting/无源码/合入/testsnull，原WT干净；原报告及6/9窄源与R406快照核同，缺整轮/受控后继与6旧正文不补造；0539仅proposed。读取时无ordinary-close回执，沿原收尾链、不重dataset；20261021-0056-ops/receipt.json。
 011301-fix无源码/原WT洁净，154SHA/46基线祖先核同；tsc0、定向9过1败及复跑约15秒/statusnull，error/signal缺、根因unknown，不重测/放宽。原ordinary-close项续证，001302监控候选不重复；25live文件差异/8非祖先不冒缺补丁，20261021-0119-ops/receipt.json。
 011301两策略共20waiting/无源改/testsnull/原WT洁净；普通4源2祖先、s2五源五祖先核同不关宽父。s2六题/1946索引、13错误/5无决策503缺口保留，0540仅proposed；普通五题/622及274原行属来源口径。未有各收尾回执不冒完成/重dataset；原件0126-ops、0133-ops/receipt.json。
-W4精英偏差66ff0722只收95材料/授权append，SHA核同/解压scan0；52实战7.7%对A30.3%、同51真实开场17.5%对7.8%仅owner诊断，不校准机制/收益、不增P0门槛或学习/full。原件2026-10-21-v6-elite-bias-audit/及20261021-elite-bias-ops/material-import-verification.json，P0/P2原边界不动。；原件 paper/materials/20261020-0249-ops/authorization-original.md
+W4精英偏差66ff0722的95材料/append已main67fc0f91，subtree d71216d7/SHA/scan0；不增P0门槛、不运源码/live。原owner实收后retention complete rc1/retained：persistent game instance retained；原instance-binding守卫未改、未accepted/回收，不重试。原件20261021-elite-bias-ops/retention-intake.json，原统计/反例及P0/P2边界保留。；原件 paper/materials/20261020-0249-ops/authorization-original.md
 模型 gpt-6.1-sol；普通 ops/学习下次自然启动 high，专项可有理由 xhigh，大脑保持 xhigh。实际生效须原生回执，不能从默认值推定。
 账号选择：/home/dw/Projects/agent-sts2/ops/codex-ops/accounts/codex1/learner；原 ops：w1H:p8 / 01a1517b-e200-7c52-b463-6ea22220c0a9；执行模式：host；辅助/学习者沙箱保持。
 不读凭据/.env/游戏二进制，不改共享配置/账号；不推送。
-main 67fc0f91e2dba5c626b1b0ba31eb7e60e7725af3
+main b4e23a86c58dbd6d4d8a60b32df448a65f004092
 live 4528a751f17e341a97e7ff70295ec9fba0c947e9；登记 release V6-R406（登记值不代表新树检查绿或实际采用）。
 首次另读 AGENTS/README/最新 STATE/学习协议；此后每次读本清单及事件原件。历史 handoff/decision-log 只沿事务定位，原件冲突保留并核查。
 在途批次 4（完整 owner/租约与路径见 current.json）：

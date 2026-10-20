@@ -1,0 +1,3 @@
+实读W4回收回执，原source66ff0722、main67fc0f91及材料子树d71216d7与Git对象一致；95材料和授权追加行已落main的事实不变。原owner沿worktree_retention.py complete返回rc1，state=retained、reason=persistent game instance retained；原回执注明受跟踪ops/instance-binding.json存在且未改，lifecycle_accepted=false、physical_cleanup=false。本轮只将原字节及SHA另存主记录，不读改绑定内容、不移除守卫、不强制accepted、不重试命令或删除工作树。材料入main、owner原生实收与回收受阻分别登记，不能把rc1冒登记成功，也不把guard拒绝当材料校验失败。后续保留原调度器及守卫事实，不另派任务、模拟、full或模型，不改live/知识/配置/STOP/actor；精英诊断仍不增加P0前置门槛，P0的CSB后17源加CARDjev、REFLEXoff及P2两稳定局条件保持，Regent暂停。
+
+原件：retention-receipt.json；源路径及SHA见retention-intake.json。

@@ -5386,3 +5386,5 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
 - 2026-10-21 01:51:48 CST 原ops：W4精英偏差66ff0722只纳95材料子树及授权append，逐Git blob/manifest/report SHA核同、解压扫描0；报告52场/共同51场口径、censored/helper失败/反例及模型偏差限制保留，非机制/候选排序收益验收。本轮无源码/live/full/学习派批，P0已满足上线前门槛/CSB后17+CARDjev及P2两局门不变，不据材料登记回收完成。原件paper/materials/20261021-elite-bias-ops/material-import-verification.json。
 
 - 2026-10-21 01:53:39 CST 原ops：精英偏差95材料及owner append已仅落main 67fc0f91e2dba5c626b1b0ba31eb7e60e7725af3，指定子树Git tree与66ff0722完全同，原W4/watcher回送CLI0、非原生ACK；无源码/live运输或检查，未标物理回收/retention完成。原件paper/materials/20261021-elite-bias-ops/receipt.json。
+
+- 2026-10-21 01:55:16 CST 原ops：W4原生实收精英材料main67fc并核subtree d71216d7；原retention complete rc1/retained（persistent game instance retained），instance-binding guard未改、未accepted或删除WT。仅保存原回执/SHA，不重试/绕守卫；材料main完成与retained分记，不改P0/P2/live边界。原件paper/materials/20261021-elite-bias-ops/retention-intake.json。
