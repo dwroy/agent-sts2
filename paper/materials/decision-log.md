@@ -5278,3 +5278,5 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
 - 2026-10-20T19:30:47.595334+08:00 ops：184312三局唯一dataset0/cc91e734记录已独立核SHA与Git blob，原收尾PID退出；仅记录数据完成，不重dataset/查在途full，0535原链及五项STOP/805/Regent保持。原件 paper/materials/20261020-1930-ops/receipt.json。
 
 - 2026-10-20T19:37:12.738833+08:00 ops：五项唯一联合tsc0/full1，623文件619过4败/5905项过4败2跳，tree9000141a/2379输入SHAfd276522核同、检查PID退出；保STOP，已投原watcher转Claude/Roy待决定，不发布/部分开局/重未变full。原件 paper/materials/20261020-1935-ops/receipt.json。
+
+- 2026-10-20 19:41:13 CST [Claude，五项联合 full 失败处置] ops 五项联合 tsc0/full1（4 败：direction-fastpath 商店方向调用期望 1 实 0、provider expected_win 期望 .5 实 null、projection-entries expected_win .75 实 .8125、prompt-summary 低 P 上界目标行为空），均疑为旧 W3 P×W 设计的测试期望。按 Roy 已批准的新设计与授权处置，不再问 Roy：v6-w8 核 fastpath、v6-w4w6 核其余三项，旧设计期望则改测试断言新行为并写明依据、生产问题则修；合 main 后 ops 重组五项包一次完整检查，通过即上线并移除 STOP，再失败写 inbox 交 Claude/Roy。其间保持 STOP。
