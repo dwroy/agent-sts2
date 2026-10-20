@@ -1,0 +1,53 @@
+"unknown","reason":"next_solver_input_not_observed_or_not_ready","budget_ms":400}
+01:14:08 note H1 idle preparation: {"status":"unknown","reason":"next_solver_input_not_observed_or_not_ready","budget_ms":400}
+01:14:08 note H1 idle preparation: {"status":"unknown","reason":"next_solver_input_not_observed_or_not_ready","budget_ms":400}
+01:14:09 note H1 idle preparation: {"status":"unknown","reason":"next_solver_input_not_observed_or_not_ready","budget_ms":400}
+01:14:09 note H1 idle preparation: {"status":"unknown","reason":"next_solver_input_not_observed_or_not_ready","budget_ms":400}
+01:14:09 note H1 idle preparation: {"status":"unknown","reason":"next_solver_input_not_observed_or_not_ready","budget_ms":400}
+01:14:10 note H1 idle preparation: {"status":"unknown","reason":"next_solver_input_not_observed_or_not_ready","budget_ms":400}
+01:14:10 note H1 idle preparation: {"status":"prepared","basis":"exact_observed_input_only","nodes":22,"partial":false,"reused":false,"budget_ms":400}
+01:14:11 COMBAT          combat/least-loss    -> play_card (card_index=4) jev 0 ms | 0 in
+         every simulated line dies; drawing first for a kill or block the hand does not have (then re-planning), on the most-damage line (dmg 13): 斗篷与匕首+, 蛇咬 -> 女王
+01:14:12 note H1 idle preparation: {"status":"unknown","reason":"next_solver_input_not_observed_or_not_ready","budget_ms":400}
+01:14:12 wait COMBAT: waiting on COMBAT (transition, animation, or nothing legal yet)
+01:14:12 COMBAT          combat/least-loss    -> play_card (card_index=1) jev 0 ms | 0 in
+         every simulated line dies; playing the one that keeps the most HP (-1): 防御, 尖啸, 小刀 -> 火炬头聚合体, 小刀 -> 火炬头聚合体
+01:14:12 note H1 idle preparation: {"status":"unknown","reason":"next_solver_input_not_observed_or_not_ready","budget_ms":400}
+01:14:12 wait COMBAT: waiting on COMBAT (transition, animation, or nothing legal yet)
+01:14:14 COMBAT          combat/plan-continue -> play_card (card_index=3) jev 0 ms | 0 in
+         continuing the code-chosen plan: 尖啸
+         completed: Action completed.
+         progress: 819 decisions | 165 Jev calls | 1,752,991 in / 9,849 out tokens | ≈ $0.0736 | 4114.37 s
+01:14:14 note H1 idle preparation: {"status":"unknown","reason":"next_solver_input_not_observed_or_not_ready","budget_ms":400}
+01:14:14 wait COMBAT: waiting on COMBAT (transition, animation, or nothing legal yet)
+01:14:14 COMBAT          combat/plan-continue -> play_card (card_index=3, target_index=0) jev 0 ms | 0 in
+         continuing the code-chosen plan: 小刀 -> 火炬头聚合体
+01:14:14 note H1 idle preparation: {"status":"unknown","reason":"next_solver_input_not_observed_or_not_ready","budget_ms":400}
+01:14:14 wait COMBAT: waiting on COMBAT (transition, animation, or nothing legal yet)
+01:14:15 COMBAT          combat/plan-continue -> play_card (card_index=3, target_index=0) jev 0 ms | 0 in
+         continuing the code-chosen plan: 小刀 -> 火炬头聚合体
+01:14:15 note H1 idle preparation: {"status":"unknown","reason":"next_solver_input_not_observed_or_not_ready","budget_ms":400}
+01:14:15 wait COMBAT: waiting on COMBAT (transition, animation, or nothing legal yet)
+01:14:16 note SL: certain death foreseen at F48 T7 attempt 4/4 (nothing left to play or drink; 15 incoming vs 5 HP + 7 block + 0 end-of-turn block); no retry left, the turn ends as usual
+01:14:17 COMBAT          combat/least-loss    -> end_turn jev 0 ms | 0 in
+         every simulated line dies; playing the one that keeps the most HP (-3): end turn
+01:14:17 note H1 idle preparation: {"status":"unknown","reason":"next_solver_input_not_observed_or_not_ready","budget_ms":400}
+01:14:17 wait COMBAT: waiting on COMBAT (transition, animation, or nothing legal yet)
+01:14:17 note H1 idle preparation: {"status":"unknown","reason":"next_solver_input_not_observed_or_not_ready","budget_ms":400}
+01:14:17 note H1 idle preparation: {"status":"unknown","reason":"next_solver_input_not_observed_or_not_ready","budget_ms":400}
+01:14:18 combat ended — total token usage: 822 decisions, 165 Jev calls, 1,752,991 in / 9,849 out tokens (≈ $0.0736)
+01:14:18 note run ended (defeat): finishing the score/unlock bookkeeping, then stopping
+01:14:23 GAME_OVER       run/finalize         -> continue_game_over jev 0 ms | 0 in
+         defeat: saving the result with continue_game_over before stopping
+01:14:23 stop run 1 ended (defeat); stopping as requested
+
+summary
+  decisions 823 (823 dispatched, 0 fallbacks)
+  runs:
+  #1 defeat — 820 decisions, 165 Jev calls, 1,752,991 in / 9,849 out tokens (≈ $0.0736), reached floor 48, 4118.55 s
+  823 decisions | 165 Jev calls | 1,752,991 in / 9,849 out tokens | ≈ $0.0736 | 4124.03 s
+  debounce: 0 answers reused, 2 calls skipped as stale
+  waits 2027 | unsupported 0 | errors 9
+  runs completed 1 | elapsed 4124.03 s
+  stopped: run 1 ended (defeat); stopping as requested
+  log: /home/dw/Projects/agent-sts2/.worktrees/live/logs/decisions.jsonl

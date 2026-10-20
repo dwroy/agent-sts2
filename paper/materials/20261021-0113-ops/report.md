@@ -1,0 +1,3 @@
+原P0六叶与P3关闭式十一叶联合tsc/full0：628文件5932过、2原跳；2391输入前后字节同且当前逐SHA核同，日志与固定tree297cb270身份一致，原PID退出、受测树无检查node。P0六叶已窄合main f50a8ff39，十七叶运输补丁核前像/后像并预检通过；未夹805、父/main、P4、工厂或知识。核验期间T15自然F48败局结束，原循环已入CSBNU2H9LXKD，故保live4528a751/R406及CARDbrain/REFLEXoff，不热运、不分号。最新知识31叶漂移原样保留；候选loader读实际库85combat_line、0合格拿牌对照、off输出0，仅属预发布读回，不冒实际live或自然质量。原W4/W8/watcher身份已核并各投递一次终局/待边界回执，CLI0不代原生ACK。下次自然边界沿锁复核漂移、精确发布/消费者/候选差异与未知保护、核号双通知；恢复jev及P2仍按原验收条件。P4/监控后排，不新full、模型或轮询；旧失败、R4空草稿/异议与科学父保留，Regent暂停。
+
+原件：prepared-publication.json、joint-host-status.json、joint-host-inputs-before.json、joint-full.log、P0-main-source-integration.json；候选读回prepublication-consumer.json。
