@@ -8,7 +8,7 @@
   "test_isolation_count": 2,
   "request": "original-W4-criteria-eight-plus-fixed-off-two-exact-R408-joint-20261021",
   "runner_pid": 2387940,
-  "phase": "running-static-start-verified-await-original-terminal-event",
+  "phase": "failed-one-rounding-assertion-fixed-input-retained-original-window-released",
   "source_intake": "/home/dw/Projects/agent-sts2/paper/materials/20261021-W4-criteria-joint-ops/source-intake.json",
   "launch": "/home/dw/Projects/agent-sts2/paper/materials/20261021-W4-criteria-joint-ops/launch.json",
   "actual_start_receipt": "/home/dw/Projects/agent-sts2/.artifacts/ops-W4-criteria-R408-joint-20261021/native-start-readback.json",
@@ -19,7 +19,7 @@
   "P2": "paused pending Roy",
   "B_actual_runtime": "0/204 miss, not accepted",
   "quality_acceptance": "Claude decision pending; not implied by source or full",
-  "next_step": "await original terminal scheduler event without polling; then verify fixed identity and PID exit; no repeated full or automatic jev restoration",
+  "next_step": "deliver exact failure to originalW4 and watcher/Claude; original owner verify formatting contract and formal minimal fix; do not repeat unchanged full or auto restore jev",
   "actual_static_start": {
     "at": "2026-10-21T05:11:07.170502+08:00",
     "request": "original-W4-criteria-eight-plus-fixed-off-two-exact-R408-joint-20261021",
@@ -46,5 +46,79 @@
     "REFLEX": "off",
     "P2": "paused pending Roy",
     "role_ACK_or_scientific_parent_closed": false
+  },
+  "terminal_receipt": "/home/dw/Projects/agent-sts2/paper/materials/20261021-0535-ops/receipt.json",
+  "terminal": {
+    "at": "2026-10-21T05:36:32.993696+08:00",
+    "request": "original-W4-criteria-eight-plus-fixed-off-two-exact-R408-joint-20261021",
+    "state": "failed-original-fixed-input-retained-and-window-released-await-W4-original-fix",
+    "tsc": 0,
+    "full": 1,
+    "files_passed": 627,
+    "files_failed": 1,
+    "tests_passed": 5933,
+    "tests_failed": 1,
+    "tests_skipped": 2,
+    "full_seconds": 1382.496923534898,
+    "full_sha256": "270d818d6061537d6c240d44d4a4e8cd2b0361d82496cb7a37129aef35b8a7cf",
+    "tree": "e0a2e2463f5ef0e423649206a7fa62280cbb48bc",
+    "input_count": 2393,
+    "input_sha256": "7a3f7a453f1fcab6ce0f4eba326e70525f3293cd7caa242d851981cc31e856d7",
+    "input_bytes_unchanged": true,
+    "protected_knowledge": 498,
+    "formal_data": 463,
+    "pid_exit_observed": [
+      {
+        "pid": 2387940,
+        "exists": false
+      },
+      {
+        "pid": 2390642,
+        "exists": false
+      },
+      {
+        "pid": 2390915,
+        "exists": false
+      }
+    ],
+    "worktree_remaining_check_pids": [],
+    "original_window_released": true,
+    "live_unchanged": "150890f8bac0253f4e9216af3259784705c7550e",
+    "failure": {
+      "file": "agent/tests/v6-card-option-loop.test.ts",
+      "line": 113,
+      "test": "real RBMEQGXPE9Z2 F3 combat-to-reward loop",
+      "displayed": -1.5938,
+      "audit": -1.59375,
+      "observed_difference": 5.0000000000105516e-05,
+      "assertion_limit": 4.9999999999999996e-05,
+      "status": "observed rounding assertion boundary; owner must verify test contract vs production; no tolerance/production changes by ops"
+    },
+    "watcher_receipt_sha256": "2dca1df0c5ab7c6f1c5aa15dabf25f2402c5322d94457ac045c2369cc08b021b",
+    "watcher_append_sha256": "cba5a48ff793f3cd6481a7bd1b8c5dbec426bd3b8445d9871c33d3e769d82b74",
+    "watcher_original_static_only_preserved": true,
+    "CARD": "brain",
+    "REFLEX": "off",
+    "P2": "paused pending Roy",
+    "B_actual_runtime": "0/204 miss, not accepted",
+    "source_published": false,
+    "new_full_started": false,
+    "scientific_parent_or_other_role_ACK_closed": false
+  },
+  "original_owner_and_watcher_delivery": {
+    "results": [
+      {
+        "name": "v6-w4w6",
+        "CLI_rc": 0,
+        "native_ACK": false
+      },
+      {
+        "name": "sts2-watcher",
+        "CLI_rc": 0,
+        "native_ACK": false
+      }
+    ],
+    "receipt": "paper/materials/20261021-0535-ops/delivery-summary.json",
+    "Claude_native_receipt": "pending"
   }
 }

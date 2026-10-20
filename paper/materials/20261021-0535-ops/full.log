@@ -1,0 +1,32 @@
+
+ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/ops-w4-criteria-r408-joint-20261021/agent
+
+ ❯ tests/v6-card-option-loop.test.ts (2 tests | 1 failed) 8973ms
+   × keeps observed candidate faces distinct through the real RBMEQGXPE9Z2 F3 combat-to-reward loop and simulator 4117ms
+{"fixture":"two_signed_card_pick_contrasts","prompt_bytes":7844,"sent_entries":2}
+.....
+----------------------------------------------------------------------
+Ran 5 tests in 0.049s
+
+OK
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/v6-card-option-loop.test.ts > keeps observed candidate faces distinct through the real RBMEQGXPE9Z2 F3 combat-to-reward loop and simulator
+AssertionError: expected -1.5938 to be close to -1.59375, received difference is 0.000050000000000105516, but expected 0.000049999999999999996
+ ❯ tests/v6-card-option-loop.test.ts:113:29
+    111|           if (!estimate) expect(cell).toBeNull();
+    112|           else {
+    113|             expect(cell[0]).toBeCloseTo(estimate.mean, Math.max(0, 4 -…
+       |                             ^
+    114|             expect(cell[2]).toBe(estimate.n);
+    115|             if (estimate.se === null) expect(cell[1]).toBeNull();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed | 627 passed (628)
+      Tests  1 failed | 5933 passed | 2 skipped (5936)
+   Start at  05:08:22
+   Duration  1381.94s (transform 17.53s, setup 32.96s, import 121.20s, tests 1150.46s, environment 62ms)
+

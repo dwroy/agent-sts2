@@ -5470,3 +5470,7 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
 - 2026-10-21 05:11:07 CST 原ops：W4 criteria八叶+W0两测试依赖R408唯一联合静态启动实核tsc0/full2390915，treee0a2e246/2393输入7a3f7a45/498知识同，未查动态或认终局绿；不叠full/改输入/自动恢复jev，R408不动。原件paper/materials/20261021-0510-ops/receipt.json。
 
 - 2026-10-21 05:37:07 CST [Claude，夜间推进] 7XS2Y920KA6E（R408 大脑拿牌）F48 死于实验体 #C97。v6-w4w6 题面改进 024612ef7：冻结 R407 12 题与 A 指标一致率 0/12→8/12、仍 3 题被支配，真实 Nova 16/16 成功、准备 4.5–4.9 s，B 生产缓存仍未命中——判部分达标：代码可进联合检查，上线保持 CARD=brain，是否切回 jev 留 Roy 决定；v6-w4w6 续修 B 并分析剩余 3 题。r4 学习批次无合格 card_pick 对照条目（三估计 CI 跨 0），学习者四项异议已转 Roy。P4 修后联合 full 7 败，v6-w8 修夹具中。
+
+- 2026-10-21 05:36:32 CST 原ops：W4 criteria完整检查tsc0/full1唯一循环113行舍入比较边界，固定treee0a2e246/2393输入7a3f7a45同，PID退出/窗口释放；保原失败告W4/watcher/Claude，不重源full/放宽或发布，R408 brain/off不动；窄收watcher静态回执及575B追加。原件paper/materials/20261021-0535-ops/receipt.json。
+
+- 2026-10-21 05:34:03 CST 原watcher：静态核W4 criteria024612ef/8176954b的8源码、71材料、11压缩原件及14日志SHA同；16真请求200仅协议与题面候选就绪，12题诊断8/12但3题均值被支配，生产B仍0/204，不能称完整质量/收益通过或自动开jev。已核W8 off两测试叶原件，旧P4失败/ordinary原014301链保留；原ops唯一2393输入联合仅静态启动已核，不查询动态/不认终局绿、不追加检查。R408 CARDbrain/REFLEXoff、P2暂停保持。原件paper/materials/20261021-P2-P4-watcher/receipt.json。

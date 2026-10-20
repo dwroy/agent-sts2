@@ -5121,3 +5121,5 @@ request_id=roy-20261017-human-pace-h0 revision=3 input_sha256=1e1c259a15f1824119
 - 2026-10-21 05:06:57 CST 原ops实读W4 criteria024612ef八叶/72材料(71清单项)及11gz核同，原16真请求/78定向非联合绿；8/12有三均值反例，B正式runtime0/204仍miss。独立R408树仅八叶+已核W0两测试依赖，唯一runner2387940提交原锁准入，尚未核实际full启动；不夹P4生产/014301未提交源，不自动恢复jev，CARDbrain/REFLEXoff、P2暂停保持。原件paper/materials/20261021-W4-criteria-joint-ops/receipt.json。
 
 - 2026-10-21 05:11:07 CST 原ops已核W4 criteria唯一静态启动：runner2387940/full2390915、tsc0、treee0a2e246/2393输入7a3f7a45、498知识/463正式数据及十源后像同。只核静态原件，不查动态日志/进程、不叠full或改输入；原排队更新为在跑，未认终局绿/发布。B仍miss/质量归Claude，R408 CARDbrain/REFLEXoff保持。原件paper/materials/20261021-0510-ops/receipt.json。
+
+- 2026-10-21 05:36:32 CST 原ops核criteria终局tsc0/full1=627文件过1败/5933项过1败2跳，唯一v6-card-option-loop:113显示-1.5938/审计-1.59375舍入边界；treee0a2e246/2393输入7a3f7a45前后同、原PID已退/窗口释放。原件保全交W4核契约并经watcher告Claude，不重未变源full/放宽断言/发布或切jev。R408 CARDbrain/REFLEXoff、B miss及P2暂停保持。watcher新静态回执/原575B追加SHA核同。原件paper/materials/20261021-0535-ops/receipt.json。
