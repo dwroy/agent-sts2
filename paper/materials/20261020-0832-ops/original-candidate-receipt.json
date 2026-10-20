@@ -1,0 +1,75 @@
+{
+  "task": "strategy-proposal",
+  "character": "silent",
+  "batch": "20261020-074302-s2-strategy-proposal",
+  "base": "820aea2854d18ea81666601cf657f89fdaf4ad29",
+  "proposal_id": "silent-proposal-e7ed37db21fc698a",
+  "ledger": [
+    "silent-0324"
+  ],
+  "source_hashes": {
+    "agent/src/reflex/combat-plan.ts": "b7114c0b0954eca28a70330b84bb635b75342dbb651324c53bd94eda47375ce1",
+    "agent/tests/silent-blade-dance-potion.test.ts": "2d13858c33ec5afbf1bd501183066be54d6e673b6a812f2bdac54edb8e37b637"
+  },
+  "patch": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261020-074302-s2/learner/runs/20261020-074307-d7fe9bd7-146b-4504-8487-e228f3f0759b-strategy-proposal/candidate.patch",
+  "fixed_results": {
+    "red": 1,
+    "restored": 0,
+    "cases": 3
+  },
+  "tsc": 0,
+  "vitest": 1,
+  "gitleaks": 0,
+  "commit": null,
+  "merged": null,
+  "full_check_pending": false,
+  "sandbox_full_log": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261020-074302-s2/learner/runs/20261020-074307-d7fe9bd7-146b-4504-8487-e228f3f0759b-strategy-proposal/sandbox-full.log",
+  "full_test_results": {
+    "command": "bash tools/test-sandbox.sh --configLoader runner",
+    "workers": 1,
+    "tsc": 0,
+    "vitest": 1,
+    "script_exit": 1,
+    "files": {
+      "passed": 539,
+      "failed": 10,
+      "total": 549
+    },
+    "cases": {
+      "passed": 4887,
+      "failed": 34,
+      "total": 4921
+    },
+    "unhandled_listen_eperm": 21,
+    "duration_seconds": 1688.59,
+    "paths_second_stage_ran": false,
+    "failures": {
+      "spawn_sync_eperm": 10,
+      "storage_exdev_assertion": 1,
+      "tsx_ipc_eperm_assertion": 1,
+      "listen_eperm_timeouts": 21,
+      "vite_erofs": 1
+    },
+    "fixed_regression": {
+      "red_exit": 1,
+      "red_failed": 2,
+      "red_passed": 1,
+      "restored_exit": 0,
+      "restored_passed": 3
+    },
+    "diagnostic": {
+      "exit": 1,
+      "files_failed": 2,
+      "tests_failed": 2,
+      "tests_passed": 19,
+      "storage_error": "EXDEV invalid cross-device link",
+      "v6_draft_error": "tsx IPC listen EPERM"
+    },
+    "retry_full": false,
+    "retry_reason": "超时对应21个listen EPERM，不是高负载性能超时；未重复全套或改排除名单。两项未解释断言仅定向诊断一次，原结果保留。",
+    "ledger_check": 0
+  },
+  "status": "waiting_host_checks",
+  "source_unchanged": true,
+  "ledger_check": 0
+}
