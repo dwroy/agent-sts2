@@ -1,6 +1,6 @@
 {
-  "at": "2026-10-20T19:13:57.259576+08:00",
-  "phase": "final-five-item-83-source-live64-458-data-frozen-tsc0-one-full-running-no-release",
+  "at": "2026-10-20T19:37:12.738833+08:00",
+  "phase": "final-five-item-full1-inputs-unchanged-PIDs-exited-STOP-await-Claude-Roy-decision",
   "completed": false,
   "authorization": {
     "path": "paper/materials/20261020-five-item-hold-ops/authorization-original.md",
@@ -61,7 +61,7 @@
   "reports_and_background_refresh_continue": true,
   "active_actor_do_not_interrupt": true,
   "Regent_paused": true,
-  "next": "finite checker natural terminal event; verify PID exits and original fixed inputs; all-green then precise publication and all five actual consumers/release/notices; any failure wait for Claude/Roy",
+  "next": "original watcher actually receive/relay and Claude/Roy decide; retain fixed source and all failed assertions; no partial publication/start or unchanged full rerun",
   "forwarded_source_aliases": [
     {
       "path": "paper/materials/20261020-1826-ops/authorization-original.md",
@@ -242,26 +242,27 @@
   },
   "actual_joint_check": {
     "at": "2026-10-20T19:13:57.259576+08:00",
-    "state": "actual-five-item-fixed-source-data-tsc0-full-running-no-live-publication",
+    "state": "terminal-full1-not-running-no-publication",
     "request": "roy-all-five-exact-live-joint-20261020-1912",
     "staged_tree": "9000141a281a094da2d1b632db38183786b1215e",
     "input_sha256": "fd276522a6dee8536e446ed88b1e5a83df6a2e991ee0c7c0cd65ac1d3836e8e5",
     "input_count": 2379,
     "source_count": 83,
     "knowledge_count": 458,
-    "runner_pid": 561527,
+    "runner_pid": null,
     "runner_start_ticks": "138672023",
-    "full_pid": 561870,
+    "full_pid": null,
     "started_at": "2026-10-20T19:13:07.487845+08:00",
     "tsc_rc": 0,
-    "full_terminal": false,
+    "full_terminal": true,
     "W4_input_bridge_receipt": "paper/materials/20261020-W4-input-bridge-ops/receipt.json",
     "W8_route_bridge_receipt": "paper/materials/20261020-W8-route-bridge-ops/receipt.json",
     "actual_live_unchanged": "64c218a04ebe029fdda0b5f25025302ebf2a4124",
     "STOP_and_active_actor_not_modified": true,
     "resume_only_all_five_actual_live_readback_release_and_dual_notice": true,
     "any_failure_wait_for_Claude_Roy_decision": true,
-    "old_failed_logs_preserved": true
+    "old_failed_logs_preserved": true,
+    "full_rc": 1
   },
   "terminal_STOP_actual_readback": {
     "at": "2026-10-20T19:15:32+08:00",
@@ -276,5 +277,70 @@
     "terminal_marker": "stopped: run 1 ended (defeat); stopping as requested",
     "terminal_marker_sha256": "59a18c24517d2eec874043b93db93a17c30503ea454486d6e48aecf185e2cb4f",
     "STOP_not_modified": true
-  }
+  },
+  "actual_joint_terminal": {
+    "at": "2026-10-20T19:36:21.795933+08:00",
+    "request": "roy-all-five-exact-live-joint-20261020-1912",
+    "state": "verified-full1-fixed-input-retained-STOP-await-Claude-Roy-decision",
+    "source_tree": "9000141a281a094da2d1b632db38183786b1215e",
+    "input_count": 2379,
+    "input_sha256": "fd276522a6dee8536e446ed88b1e5a83df6a2e991ee0c7c0cd65ac1d3836e8e5",
+    "before_after_and_current_candidate_verified": true,
+    "tsc_rc": 0,
+    "full_rc": 1,
+    "files": {
+      "passed": 619,
+      "failed": 4,
+      "total": 623
+    },
+    "tests": {
+      "passed": 5905,
+      "failed": 4,
+      "skipped": 2,
+      "total": 5911
+    },
+    "vitest_seconds": 1257.7,
+    "wrapper_seconds": 1258.340550612891,
+    "full_log_sha256": "1f531c3ca6699edcb57eaa95bcd98026eca3db149bb888ddd18fdadb7e54cf03",
+    "failures": [
+      {
+        "file": "agent/tests/v6-direction-fastpath-benchmark.test.ts",
+        "line": 16,
+        "expected": "shop direction calls length 1",
+        "actual": "length 0"
+      },
+      {
+        "file": "agent/tests/v6-direction-provider.test.ts",
+        "line": 136,
+        "expected": "expected_win 0.5",
+        "actual": "null"
+      },
+      {
+        "file": "agent/tests/v6-projection-entries.test.ts",
+        "line": 22,
+        "expected": "expected_win 0.75",
+        "actual": "0.8125"
+      },
+      {
+        "file": "agent/tests/v6-prompt-summary.test.ts",
+        "line": 198,
+        "expected": "28 current Boss low-P bounds target record",
+        "actual": "empty target record {}"
+      }
+    ],
+    "cause_not_yet_attributed_to_fixture_or_production": true,
+    "known_check_PIDs_exited": [
+      561527,
+      561582,
+      561870
+    ],
+    "worktree_remaining_check_processes": [],
+    "full_window_no_longer_running_not_assigned_to_another_task": true,
+    "unchanged_actual_live": "64c218a04ebe029fdda0b5f25025302ebf2a4124",
+    "unchanged_STOP_sha256": "7203efbcf8e978828a7813f12236db4cb6cae299b8109e3d0be8e83f942809cd",
+    "no_live_publication_release_resume_new_full_or_model": true,
+    "required_next": "notify original watcher; relay to Claude/Roy for decision; preserve all failures and fixed inputs; no partial launch"
+  },
+  "watcher_failure_delivery": "paper/materials/20261020-1935-ops/watcher-failure-delivery.json",
+  "Claude_Roy_actual_relay_and_decision_pending": true
 }

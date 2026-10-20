@@ -3577,3 +3577,6 @@ request_id=roy-20261017-human-pace-h0 revision=3 input_sha256=1e1c259a15f1824119
 
 
 2026-10-20T19:30:47.595334+08:00 原复盘184312三局唯一dataset及记录收尾已核：dataset退出0、调用一次，源检查与三局复盘标记齐；日志字节/SHA、key scan CLEAN及正式材料SHA均与cc91e734提交Git blob一致，记录提交已为当前main祖先，原收尾PID582624已退出。原receipt的await-record-commit保留为提交前历史快照，终局由close-status和本次独立回执绑定，不改写旧原件。生成表、旧快照和用户指定lessons/ledger均沿原记录通道保存，仅记录/数据变化；不重复dataset、补测或生产刷新。0535仍为非阻塞目标朝向接线提案，沿84af原策略链继续，报告/记录完成不算源码实现、live消费或自然收益，其他两个策略提案及科学父保原状。五项固定输入唯一full不查询、不重启或叠跑；JWJ终局STOP保持，实际live/actor/805暂缓与Regent不动，仍须五项联合通过并实际发布读回后才可开局。原件paper/materials/20261020-1930-ops/receipt.json。
+
+
+2026-10-20T19:37:12.738833+08:00 五项唯一真实联合检查自然终局tsc0/full1，623文件619过4败，5905项过4败2跳，Vitest1257.70秒。固定tree9000141a、2379输入SHAfd276522前后与当前实树全同，458知识保护；runner561527、tsc561582、full561870均退出，原功能树无剩余检查进程。四失败分别为商店方向调用期望1实0、provider的expected_win期望.5实null、投影期望.75实.8125及旧低P摘要目标行为空，尚未归为纯夹具或生产问题，不删断言/抬阈值/重未变full。原失败日志SHA1f531c3c及输入完整保存；已向原watcher投递请转Claude/Roy，CLI0不代原生收到或决定，本项目Claude未在Herdr列表故不误投其他项目。按Roy新门槛保持STOP、实际live64/R403及Regent，未发布加号或部分开局；下一步等Claude/Roy决定接续，旧39绿不能替代本失败。原件paper/materials/20261020-1935-ops/receipt.json。
