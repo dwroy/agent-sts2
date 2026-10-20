@@ -1,0 +1,49 @@
+{
+  "at": "2026-10-20T17:13:16.085698+08:00",
+  "base": "5955880a8adeeb5e06bd1d9b2c6433dd780f6d95",
+  "tree": "f4b158dfe7f96eeb0ff3faef2700560bbaa948ab",
+  "input_count": 2371,
+  "input_sha256": "ca9dbf359741fea1fcd5892f0e18f4ed1f023270101ff7bfa218c04655e6d8a2",
+  "status_sha256": "72bda0c0d1e0b395d739ad30f5f9f603e03038ef6fb4646f3f32b228923d72bf",
+  "runner": {
+    "pid": 166767,
+    "start_ticks": "137952731",
+    "nice": "19",
+    "cmdline": "/usr/bin/python3 /home/dw/Projects/agent-sts2/.worktrees/infra-temp-lifecycle-20261020/.artifacts/full-infra-r2/runner.py "
+  },
+  "steps": [
+    {
+      "name": "tsc",
+      "command": [
+        "npx",
+        "tsc",
+        "-p",
+        "tsconfig.json",
+        "--noEmit"
+      ],
+      "started_at": "2026-10-20T17:13:04.279482+08:00",
+      "log": "/home/dw/Projects/agent-sts2/.worktrees/infra-temp-lifecycle-20261020/.artifacts/full-infra-r2/tsc.log",
+      "pid": 166770,
+      "exit_code": 0,
+      "ended_at": "2026-10-20T17:13:05.456005+08:00",
+      "seconds": 1.1763391660060734,
+      "log_bytes": 0,
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "full",
+      "command": [
+        "node",
+        "tools/with-temp.mjs",
+        "node_modules/vitest/vitest.mjs",
+        "run",
+        "--maxWorkers=1"
+      ],
+      "started_at": "2026-10-20T17:13:05.456316+08:00",
+      "log": "/home/dw/Projects/agent-sts2/.worktrees/infra-temp-lifecycle-20261020/.artifacts/full-infra-r2/full.log",
+      "pid": 166878
+    }
+  ],
+  "next_window": "original W4 card-combat-results full-v2",
+  "ionice": "idle"
+}

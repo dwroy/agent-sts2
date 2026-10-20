@@ -4519,3 +4519,11 @@ request_id=roy-20261017-human-pace-h0 revision=3 input_sha256=1e1c259a15f1824119
 
 2026-10-20T17:09:16+08:00 已原生实收并独立核W4首轮终局：固定5cd/tree9ed4、2453输入SHA21a6前后manifest逐字节相同；tsc0/full1，625文件624过1败、5905项过1败2原跳。唯一失败为rollout第439行精确消费者导入白名单多出card-results-input，full日志SHA核同，原失败与未修受测输入保留，不用tsc或既有定向冒全绿。Vitest耗时1482.19秒、包装器1482.923秒分别记录，未混口径。runner、tsc、full及两已知node共五PID实际均不存在，原工作树无残留检查进程；已沿原线程明确交唯一full窗口给watcher infra，要求核最新实际输入、保六未跟踪原叶、原阈值单worker检查，CLI入队不冒已经启动。W4只沿原任务做断言修正和原授权烟测，修后最终full排infra自然终局核退出并明确释放之后，不重复派任务或叠检查。本轮未改代码、知识、预算或阈值，不做dataset、刷新、模型/API、合入或对局操作；未提交/运live的新拿牌条目仍pending，805暂缓与Regent暂停保持。
 原件 paper/materials/20261020-W4-full-v1-terminal-ops/receipt.json；verification.json；W4-full.log。
+
+
+2026-10-20T17:13:18+08:00 已原生接收W4原14:58任务进展，完整检查窗口已沿原顺序释放给infra，W4不叠第二full。首轮rollout第439行白名单失败原件继续保留；最小精确修正定向通过仅为原owner回报，本轮没有读取其新测试日志或扩大验证范围，也不把定向结果改写成首轮full通过。九题原请求烟测虽报告HTTP均200、耗时和字节在限内，owner复核发现共用card-schema摘要裁剪丢长期组合B与精英A条目，因此功能验收明确未通过；协议成功与题面完整性分开记录，不将缺失条目解释成未知值或已交消费者。原owner正在修摘要与固定回归，下一完整复验应冻结包括这部分变化的真实联合输入，待infra自然终局核PID退出并明确释放后再跑full-v2，不复用旧输入的通过范围。本轮只保存原文、回执和短清单，不改源码、游戏知识、预算或阈值，不新派模型、API、检查或刷新，不据该进展合main/live或分配发布号。805继续暂缓，当前局、actor、STOP、Regent与科学父保持。
+原件 paper/materials/20261020-W4-schema-progress-ops/receipt.json；owner-original.md。
+
+
+2026-10-20T17:15:33+08:00 已核infra r2固定启动：基线595、treef4b、2371输入SHAca9d与初始manifest一致，六个此前未跟踪temp源叶均已纳入清单及固定Git树，逐SHA核同。runner166767/start_ticks、nice19和idle优先级见静态回读，tsc166770退出0，with-temp单worker full166878于17:13:05.456启动；当前main相对受测基线只有记录漂移。本轮只读启动原件、初始清单及固定Git对象，不查在途进程、动态status或full日志，不把启动或tsc0当完整绿。唯一窗口现归原watcher infra，自然终局核退出并本人明放后再交W4 full-v2；W4摘要缺B/精英A的功能烟测阻塞及首轮失败保留。原infra四断言失败、14项定向和事后来源绑定不覆盖。已沿双方原通道回实际接管，CLI不冒实收；上一停点锁阻的原文与回执本轮收纳，保并行记录。本轮无新full、模型/API、dataset、刷新或合入；live、actor、STOP、805暂缓、Regent及角色ACK保持。
+原件 paper/materials/20261020-1713-infra-ops/receipt.json；verification.json；原native-start-readback.json。

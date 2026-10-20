@@ -1,0 +1,22 @@
+{
+  "at": "2026-10-20T17:13:38+08:00",
+  "phase": "previous-original-index-lock-released-records-collected-next-natural-stop",
+  "completed": true,
+  "receipt": "paper/materials/20261020-W4-schema-progress-ops/receipt.json",
+  "record_plan": ".artifacts/ops-wake-20261020-W4-schema-progress/record-plan.json",
+  "commit_helper": ".artifacts/ops-wake-20261020-W4-schema-progress/commit-own-records.py",
+  "original_parent": "5955880a8adeeb5e06bd1d9b2c6433dd780f6d95",
+  "own_additions": {
+    "ops/inbox-dev.md": "\n\n2026-10-20T17:13:18+08:00 已原生接收W4原14:58任务进展，完整检查窗口已沿原顺序释放给infra，W4不叠第二full。首轮rollout第439行白名单失败原件继续保留；最小精确修正定向通过仅为原owner回报，本轮没有读取其新测试日志或扩大验证范围，也不把定向结果改写成首轮full通过。九题原请求烟测虽报告HTTP均200、耗时和字节在限内，owner复核发现共用card-schema摘要裁剪丢长期组合B与精英A条目，因此功能验收明确未通过；协议成功与题面完整性分开记录，不将缺失条目解释成未知值或已交消费者。原owner正在修摘要与固定回归，下一完整复验应冻结包括这部分变化的真实联合输入，待infra自然终局核PID退出并明确释放后再跑full-v2，不复用旧输入的通过范围。本轮只保存原文、回执和短清单，不改源码、游戏知识、预算或阈值，不新派模型、API、检查或刷新，不据该进展合main/live或分配发布号。805继续暂缓，当前局、actor、STOP、Regent与科学父保持。\n原件 paper/materials/20261020-W4-schema-progress-ops/receipt.json；owner-original.md。\n",
+    "notes/for-roy.md": "\n\n2026-10-20T17:13:18+08:00 已原生接收W4原14:58任务进展，完整检查窗口已沿原顺序释放给infra，W4不叠第二full。首轮rollout第439行白名单失败原件继续保留；最小精确修正定向通过仅为原owner回报，本轮没有读取其新测试日志或扩大验证范围，也不把定向结果改写成首轮full通过。九题原请求烟测虽报告HTTP均200、耗时和字节在限内，owner复核发现共用card-schema摘要裁剪丢长期组合B与精英A条目，因此功能验收明确未通过；协议成功与题面完整性分开记录，不将缺失条目解释成未知值或已交消费者。原owner正在修摘要与固定回归，下一完整复验应冻结包括这部分变化的真实联合输入，待infra自然终局核PID退出并明确释放后再跑full-v2，不复用旧输入的通过范围。本轮只保存原文、回执和短清单，不改源码、游戏知识、预算或阈值，不新派模型、API、检查或刷新，不据该进展合main/live或分配发布号。805继续暂缓，当前局、actor、STOP、Regent与科学父保持。\n原件 paper/materials/20261020-W4-schema-progress-ops/receipt.json；owner-original.md。\n",
+    "paper/materials/decision-log.md": "\n- 2026-10-20T17:13:18+08:00 ops：W4原任务报告白名单定向修正过，九题HTTP200但card-schema裁剪缺B/精英A导致功能验收未过；摘要/固定测试续修，full-v2待infra自然终局明放，不据协议绿上线。原件 paper/materials/20261020-W4-schema-progress-ops/receipt.json。\n"
+  },
+  "own_files": [
+    "paper/materials/20261020-W4-schema-progress-ops/owner-original.md",
+    "paper/materials/20261020-W4-schema-progress-ops/receipt.json",
+    "notes/ops-current-context.json",
+    "paper/materials/20261020-W4-schema-progress-ops/watcher-progress-delivery.json"
+  ],
+  "next": "原下一自然记录停点核main/索引，沿原保存通道提交本轮原件和追加；保之后并行短清单，不抢锁、不轮询/新timer/模型。",
+  "collected_by": "paper/materials/20261020-1713-infra-ops/receipt.json"
+}
