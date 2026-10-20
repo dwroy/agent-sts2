@@ -1,0 +1,101 @@
+10 项提案均保留 `waiting`，具体缺证已逐项记录。核验了 7,574 条原行，完整读取 10/579 条 Jev 题面；26 条账本追溯已读回，gitleaks 通过。未修改源码、未合入 live，工作树干净。
+
+[提案](/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261020-141301/learner/runs/20261020-141318-161b2063-3fad-40f7-b868-12ce451c02bd-strategy-proposal/proposal.md) · [报告](/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261020-141301/learner/runs/20261020-141318-161b2063-3fad-40f7-b868-12ce451c02bd-strategy-proposal/report.md)
+
+```json
+{
+  "task": "strategy-proposal",
+  "character": "silent",
+  "batch": "20261020-141301-strategy-proposal",
+  "base": "079874c93e34de578bc3a97c7f04a9e7baf42534",
+  "runs": [
+    "VLZ6CCT8AQ0A",
+    "8JRE1C4H4Z2W",
+    "CA5KE8GFJ9X2",
+    "5PM6JAQG6FNQ",
+    "61E2QS63Y9WU",
+    "DUZUBAJ3A8GP"
+  ],
+  "fixes": [],
+  "skipped": [],
+  "merged": null,
+  "tests": {"tsc": null, "vitest": null, "cases": null},
+  "code_proposals": [
+    "silent-proposal-89354805ee4d7e77",
+    "silent-proposal-f2bfceddb1898dca",
+    "silent-proposal-283a164780d11e69",
+    "silent-proposal-ebbfe3b97548756d",
+    "silent-proposal-e5b87be50f28f311",
+    "silent-proposal-49632bc4878fb597",
+    "silent-proposal-66532328a585941f",
+    "silent-proposal-43a76a31ba7bdcfa",
+    "silent-proposal-5264153a4a4b0e5c",
+    "silent-proposal-bddfa690a84e03d0"
+  ],
+  "implementation_domains": [],
+  "proposal_results": [
+    {
+      "id": "silent-proposal-89354805ee4d7e77",
+      "state": "waiting",
+      "reason": "缺实际施放持续身份、跨抽牌和SL的生产读回，以及未覆盖升级交互校准；现有窄实现不足以关闭整项。"
+    },
+    {
+      "id": "silent-proposal-f2bfceddb1898dca",
+      "state": "waiting",
+      "reason": "缺完整冻结随机池、同起点同总预算MC配对及样本成熟度曲线，不能据单题707ms制定新预算。"
+    },
+    {
+      "id": "silent-proposal-283a164780d11e69",
+      "state": "waiting",
+      "reason": "同源神化任务仍缺实际施放持续身份和升级交互生产校准，不能仅因题意相同登记duplicate。"
+    },
+    {
+      "id": "silent-proposal-ebbfe3b97548756d",
+      "state": "waiting",
+      "reason": "缺十五子项属性、升级、状态期限及战斗、路线、休息消费者的联合固定校准。"
+    },
+    {
+      "id": "silent-proposal-e5b87be50f28f311",
+      "state": "waiting",
+      "reason": "缺跨抽牌、重问、选牌、药水和SL的完整候选持续归属及全过程生产校准；113片段不认证整条候选收益。"
+    },
+    {
+      "id": "silent-proposal-49632bc4878fb597",
+      "state": "waiting",
+      "reason": "本局缺正敏捷实测，力量、正负敏捷、虚弱与蚌独立成长尚未联合生产校准。"
+    },
+    {
+      "id": "silent-proposal-66532328a585941f",
+      "state": "waiting",
+      "reason": "缺相同HP、牌组、药水和完整抽序下不同启动顺序的受控整战对照及收益函数。"
+    },
+    {
+      "id": "silent-proposal-43a76a31ba7bdcfa",
+      "state": "waiting",
+      "reason": "缺A10同起始HP、构筑和抽序下的完整生产整战配对及另一可核SL线路。"
+    },
+    {
+      "id": "silent-proposal-5264153a4a4b0e5c",
+      "state": "waiting",
+      "reason": "缺A10召唤、航行、复现、退场全链生产校准及另一目标序完整后继。"
+    },
+    {
+      "id": "silent-proposal-bddfa690a84e03d0",
+      "state": "waiting",
+      "reason": "缺失血唤醒、眩晕接续、同进阶成长的生产全链校准及同抽换序后继；四次相关失败不足以拟合新排序。"
+    }
+  ],
+  "report": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261020-141301/learner/runs/20261020-141318-161b2063-3fad-40f7-b868-12ce451c02bd-strategy-proposal/report.md"
+}
+```
+
+== 学习者 codex / strategy-proposal ==
+状态：success；退出码 0
+模型：gpt-6.1-sol；会话：01a157f1-710e-7931-9358-1ae004a0e5ec
+轮数：1；工具调用：command_execution×58 file_change×4
+token：输入 263.1k、输出 37.4k（其中推理 8379）、cache 读 7672.3k、cache 写 0（命中 96.7%）
+成本：未提供
+耗时：1188.4 s（墙钟）
+时间：首个事件 42.0 s、模型首个输出 46.7 s、首次工具 50.1 s、末次工具结束 1158.7 s；工具内共 635.8 s，其余（模型生成、推理、网络）510.6 s
+codex 会话记录：AGENTS.md 已加载（/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261020-141301）；模型的工具调用 exec×51；/home/dw/Projects/agent-sts2/ops/codex-ops/accounts/codex1/learner/sessions/2026/10/20/rollout-2026-10-20T14-13-23-01a157f1-710e-7931-9358-1ae004a0e5ec.jsonl
+日志：/home/dw/Projects/agent-sts2/learner/runs/20261020-141318-161b2063-3fad-40f7-b868-12ce451c02bd-strategy-proposal.jsonl
