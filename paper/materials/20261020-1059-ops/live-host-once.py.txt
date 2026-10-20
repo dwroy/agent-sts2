@@ -1,0 +1,37 @@
+from pathlib import Path
+import subprocess,json,hashlib,fcntl,os,time,sys
+r=Path('/home/dw/Projects/agent-sts2'); a=r/'.artifacts/ops-wake-20261020-1059'; w=r/'.worktrees/live'; spec=json.loads((a/'live-source-input.json').read_text()); status=a/'live-host-status.json'
+lockfd=int(sys.argv[1])
+def stamp():return subprocess.check_output(['date','-Is'],text=True).strip()
+def git(*args):return subprocess.check_output(['git','-C',str(w),*args],stderr=subprocess.PIPE)
+def save(x):
+ p=status.with_suffix('.tmp');p.write_text(json.dumps(x,ensure_ascii=False,indent=2)+'\n');os.replace(p,status)
+def digest(p):return hashlib.sha256(Path(p).read_bytes()).hexdigest()
+os.close(os.open(a/'live-host-started-once',os.O_CREAT|os.O_EXCL|os.O_WRONLY,0o600))
+v=dict(request=spec['request'],state='preflight',pid=os.getpid(),start_ticks=int(Path('/proc/self/stat').read_text().rsplit(')',1)[1].split()[19]),nice=os.getpriority(os.PRIO_PROCESS,0),live_before=spec['live_before'],prospective_tree=spec['prospective_tree'],input_sha256=digest(a/'live-source-input.json'),combined_full_rc=None,source_committed=False,new_model=False,new_game=False,started_at=stamp(),original_lock='ops/live-merge.lock',TMPDIR=spec['TMPDIR']);save(v)
+try:
+ assert git('rev-parse','HEAD').decode().strip()==spec['live_before']
+ assert git('write-tree').decode().strip()==spec['prospective_tree']
+ assert (r/'ops/STOP').is_file()
+ for row in spec['staged_files']:assert digest(w/row['path'])==row['sha256'],row['path']
+ env=os.environ.copy();env['PATH']=str(Path.home()/'.local/node/bin')+':'+env.get('PATH','');env['TMPDIR']=spec['TMPDIR']
+ v['state']='checking';v['steps']=[];save(v)
+ for name,argv in [('tsc',['npx','tsc','-p','tsconfig.json','--noEmit']),('vitest',['npx','vitest','run','--maxWorkers=2'])]:
+  log=a/(name+'.log');step=dict(name=name,argv=argv,log=str(log.relative_to(r)),started_at=stamp());v['steps'].append(step)
+  with log.open('xb') as out:
+   child=subprocess.Popen(argv,cwd=w/'agent',env=env,stdout=out,stderr=subprocess.STDOUT);step['pid']=child.pid;save(v)
+   try:rc=child.wait(timeout=3600)
+   except subprocess.TimeoutExpired:child.terminate();rc=124
+  step.update(exit_code=rc,finished_at=stamp(),sha256=digest(log),bytes=log.stat().st_size);save(v)
+ assert git('rev-parse','HEAD').decode().strip()==spec['live_before']
+ assert git('write-tree').decode().strip()==spec['prospective_tree']
+ for row in spec['staged_files']:assert digest(w/row['path'])==row['sha256'],row['path']
+ for row in spec['protected_live_files']:assert digest(w/row['path'])==row['sha256'],row['path']
+ rc=0 if all(s['exit_code']==0 for s in v['steps']) else 1
+ v.update(state='passed-awaiting-ops-commit-readback-release' if rc==0 else 'failed-retain-staged-input-STOP',combined_full_rc=rc,finished_at=stamp());save(v)
+except Exception as e:
+ v.update(state='blocked',reason=f'{type(e).__name__}: {e}',finished_at=stamp());save(v)
+finally:
+ os.close(lockfd)
+message=f"Roy10:26原精确live同步补固定统计夹具后的联合检查终局：request={spec['request']}，state={v['state']}，combined_full_rc={v['combined_full_rc']}；原live={spec['live_before']}，新固定staged tree={spec['prospective_tree']}。原e552完整full1=609文件607过2败/4断言失败保留，本次仅两测试显式冻结原W0统计+298219字节历史夹具三叶变化，所有旧字节SHA断言/阈值不变，49原运输叶其余内容和486生产知识SHA保留；不是未变源重full。原件{status.relative_to(r)}、{(a/'live-source-input.json').relative_to(r)}，功能WT ops-v6-off-fixture-20261020-1059。W3原已知构筑评估Jev烟测不通过仍排除。STOP保持，本任务未提交/加号/开局；请原ops完整0后原锁核新树、测试修复三叶精确提交/集成、实际消费者17ID/hash与R3字段读回/核号，再沿原Roy授权解除挂起。失败保原件，不重模型/API/生产dataset/未变源full，不代ACK/关父或恢复Regent；首局错/卡/明显兜底按原实际回退点处理。"
+q=r/'ops/codex-ops/queue'/f'{time.time_ns()}-manual.md';tmp=q.with_suffix('.tmp');tmp.write_text(message+'\n');os.replace(tmp,q)

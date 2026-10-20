@@ -4300,3 +4300,6 @@ request_id=roy-20261017-human-pace-h0 revision=3 input_sha256=1e1c259a15f1824119
 
 
 2026-10-20T10:52:20+08:00 原ops实读10:48三事件，正式烟测提交e4bea746仅38项材料；原工作树报告路径已缺失，已从保留Git blob读全文，10135字节与f5b232a6完整SHA匹配并绑定原阻塞。W3本轮仍不通过：9题已知选项全0回大脑，6房间无有效表，W6独立逐槽题未覆盖且无provider；9次HTTP200仅协议通过，不冒数值选择质量。STOP及原live49固定e552宿主检查保持，本轮不查询、重启或夹带其他源码。本批fix三提交911c源已核九旧叶与074302同blob，另隔离测试入口一叶；原WT无冲突待合main e700，固定5ef4，nice19单次宿主全检PID1756379在途，终局走原队列。定向32过、完整沙箱中断130/EPERM及旧host ENOSPC全保留；尚未main/live集成，不代角色ACK或关父，不重模型/API/刷新，Regent暂停。原件paper/materials/20261020-1048-ops/receipt.json。
+
+
+2026-10-20T11:10:31+08:00 原ops核10:59终局：原live固定e552完整tsc0/full1，609文件607过2败、4断言均Silent V6-off休息题旧SHA不符；49运输叶与486生产知识SHA全同，非超时或ENOSPC。隔离同树复现4败，确认刷新后的outcome-stats元数据漏入固定字节题；原W0/7aa/main统计同blob c9bd0c03。只给两测试显式注入原298219字节历史统计夹具，原SHA断言及阈值不改，定向49项全过，生产源码及知识不回退。已原锁加入这3测试叶，新live52固定树1e7302ec，单次nice19宿主全检PID1824045在途，原失败及诊断保留；这是变化输入复验。STOP/W3排除/Regent保持，未提交、核号或开局；完整0后核精确提交、消费者17ID/hash/R3字段、版本和双通知，再按Roy授权恢复。不重模型/API/刷新/生产dataset，不代ACK或关父。原件paper/materials/20261020-1059-ops/receipt.json。

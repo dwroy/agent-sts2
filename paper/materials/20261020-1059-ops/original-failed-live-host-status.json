@@ -1,0 +1,53 @@
+{
+  "request": "roy-live-bundle-excluding-W3-20261020-1038",
+  "state": "failed-retain-staged-input-STOP",
+  "pid": 1741199,
+  "start_ticks": 135624190,
+  "nice": 19,
+  "live_before": "2cdb7b3dc8043180bfecec74e6b23c58d3f87a5e",
+  "prospective_tree": "e5523e29fafbf22989c06fbd3fbb9fdc46a4b161",
+  "input_sha256": "ae75b5d09d1508a772223d19b006ee1ed789eb20f782ada91e04600f020e6237",
+  "combined_full_rc": 1,
+  "source_committed": false,
+  "new_model": false,
+  "new_game": false,
+  "started_at": "2026-10-20T10:44:58+08:00",
+  "original_lock": "ops/live-merge.lock",
+  "TMPDIR": "/home/dw/Projects/agent-sts2/.t/l38",
+  "steps": [
+    {
+      "name": "tsc",
+      "argv": [
+        "npx",
+        "tsc",
+        "-p",
+        "tsconfig.json",
+        "--noEmit"
+      ],
+      "log": ".artifacts/ops-wake-20261020-1038/tsc.log",
+      "started_at": "2026-10-20T10:44:58+08:00",
+      "pid": 1741206,
+      "exit_code": 0,
+      "finished_at": "2026-10-20T10:45:00+08:00",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "name": "vitest",
+      "argv": [
+        "npx",
+        "vitest",
+        "run",
+        "--maxWorkers=2"
+      ],
+      "log": ".artifacts/ops-wake-20261020-1038/vitest.log",
+      "started_at": "2026-10-20T10:45:00+08:00",
+      "pid": 1741346,
+      "exit_code": 1,
+      "finished_at": "2026-10-20T10:57:07+08:00",
+      "sha256": "581296719bba51ca6f51cb0abe5b680b4cf8a23059ff65bdbaa4e4f1d4560660",
+      "bytes": 2769
+    }
+  ],
+  "finished_at": "2026-10-20T10:57:07+08:00"
+}

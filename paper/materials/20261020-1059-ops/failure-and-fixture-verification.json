@@ -1,0 +1,104 @@
+{
+  "failed_host": {
+    "path": ".artifacts/ops-wake-20261020-1038/live-host-status.json",
+    "bytes": 1571,
+    "sha256": "2e41bd3889a2de06b27150325fc49c00e80a4c790812fe8201081e7d1f73a6fc"
+  },
+  "failed_log": {
+    "path": ".artifacts/ops-wake-20261020-1038/vitest.log",
+    "bytes": 2769,
+    "sha256": "581296719bba51ca6f51cb0abe5b680b4cf8a23059ff65bdbaa4e4f1d4560660"
+  },
+  "failed_full": {
+    "tsc": 0,
+    "vitest": 1,
+    "files": 609,
+    "files_passed": 607,
+    "files_failed": 2,
+    "tests_failed": 4,
+    "tests_passed": 5786,
+    "skips": 2
+  },
+  "original_49_and_486_protected_SHA_verified": true,
+  "root_main_targeted": {
+    "commit": "ae1c5b55ce4c713031015b24e038db929ca57abe",
+    "files": 2,
+    "tests": 49,
+    "exit": 0,
+    "native_tool_output_chunk": "962922",
+    "scope": "targeted diagnostic only"
+  },
+  "same_tree_reproduction": "e5523e29fafbf22989c06fbd3fbb9fdc46a4b161",
+  "red": {
+    "path": ".artifacts/ops-wake-20261020-1059/diagnostic-red.log",
+    "bytes": 2688,
+    "sha256": "0202329cd9d10d0899c2d8f04f9a9c54b25ac73df9dbd1c6c07632ae9ca68624"
+  },
+  "red_result": "4 failed / 45 passed",
+  "discarded_empty_table_experiment": {
+    "log": {
+      "path": ".artifacts/ops-wake-20261020-1059/diagnostic-isolated-v2.log",
+      "bytes": 8415,
+      "sha256": "39c10e256b69612bc1ef08c580882afe7ae8fc593e0d3e43cafb8858eaa7415a"
+    },
+    "result": "14 baseline failures; not accepted"
+  },
+  "fixed_targeted": {
+    "path": ".artifacts/ops-wake-20261020-1059/targeted-fixed.log",
+    "bytes": 267,
+    "sha256": "e076052c27529895264791b9234e3043123532b2998f0d5c421fd3fe521e8cbb"
+  },
+  "fixed_targeted_result": "49 passed / 2 files / exit0",
+  "root_cause": "Refreshed Silent outcome-stats metadata leaked into fixed W0/W7 byte questions. Explicit original W0 statistics restore the existing baselines.",
+  "fixture_provenance": {
+    "path": "paper/materials/20261020-1059-ops/fixture-provenance.json",
+    "bytes": 414,
+    "sha256": "aed82cb090b09e6af4c5b3d9afbf2a711fc0b6868e57e68642f5e50c84fc0c12"
+  },
+  "assertions_unchanged": {
+    "v6-off-equivalence.test.ts": true,
+    "v6-room.test.ts": true
+  },
+  "test_patch": {
+    "path": "paper/materials/20261020-1059-ops/test-only-fix.patch",
+    "bytes": 4562,
+    "sha256": "76af20f0b5c287ccddedc4368aef88ad70e6a2244569b6f5a71284a9d2c693f5"
+  },
+  "new_input": {
+    "path": ".artifacts/ops-wake-20261020-1059/live-source-input.json",
+    "bytes": 99502,
+    "sha256": "fc3ecaf7f967651ace7328dea17fb75ba4c43868ae3566af744caf82c9ebf2b1"
+  },
+  "new_tree": "1e7302ec6125ee2bd7b512af16625d4654de76ab",
+  "new_paths": 52,
+  "changed_test_leaves": [
+    {
+      "path": "agent/tests/v6-off-equivalence.test.ts",
+      "sha256": "f5a7988c73513e828740f83bf18ed1e14428182cc671cc0d58a55ca8ce5946f3",
+      "bytes": 3638
+    },
+    {
+      "path": "agent/tests/v6-room.test.ts",
+      "sha256": "148884c2711d860415c60fbd3b422384c7d6abbc2050895787414cbcf6c4842b",
+      "bytes": 36824
+    },
+    {
+      "path": "agent/tests/fixtures/v6-off-silent-outcome-stats.json",
+      "sha256": "c9bd0c030d65b80c3bd263a19177f0e79877ad6103473cfbd6e0d3ac3ec188c4",
+      "bytes": 298219
+    }
+  ],
+  "unchanged_production_transport_leaves": 49,
+  "protected_knowledge_unchanged": 486,
+  "gitleaks_rc": 0,
+  "new_full": "actual live on changed test inputs, in progress",
+  "host_pid": 1824045,
+  "status_path": ".artifacts/ops-wake-20261020-1059/live-host-status.json",
+  "fixture_worktree": "/home/dw/Projects/agent-sts2/.worktrees/ops-v6-off-fixture-20261020-1059",
+  "source_committed": false,
+  "release_id": null,
+  "new_model": false,
+  "new_game": false,
+  "new_dataset": false,
+  "new_refresh": false
+}

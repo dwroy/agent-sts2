@@ -4978,3 +4978,5 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
 - 2026-10-20T10:52:20+08:00 原ops实读正式烟测e4bea746并核report SHA，W3排除/STOP/原live49检查保持；101302-fix原911c三修复与main e700固定5ef4宿主全检在途，保旧failed/rc0/mergednull/130/EPERM/ENOSPC，不代ACK或关父。原件paper/materials/20261020-1048-ops/receipt.json。
 
 - 2026-10-20 11:01:33 CST [Claude，V6 W3 修正派发] 已知构筑评估 Jev 烟测 e4bea7460 不通过（9/9 已知选项 0，780 行仅 4–5 行有值，准备 5.4–8 s）。按 Roy 已定设计（查表 P、无 W_0、幕 Boss 用已知 Boss、第三幕模型不准不成卡点）派 v6-w4w6 基于 main 303bbb1ac 修：选项已知=当前幕 Boss 目标有值，后续幕/连战缺值只作附加未知条目；P<5% 记已知低值上界；信任门不过的目标照给 W 带可信标签；修 formation_unknown；幕初/战斗中后台预计算并指纹缓存，准备目标 ≤2 s，超时不丢整表；安全门阈值不变。同 9 局面重测通过后按授权上线。不含 W3 的精确 live 包测完即开局。
+
+- 2026-10-20T11:10:31+08:00 原live49 e552完整tsc0/full1（609文件607过2败/4字节断言），保原失败；仅冻结两测试原W0统计三叶修复，定向49过，actual live52新树1e730宿主全检在途。STOP/W3排除保持，未提交/核号/开局；原件paper/materials/20261020-1059-ops/receipt.json。
