@@ -1,0 +1,38 @@
+         every simulated line dies; playing the one that keeps the most HP (-3): 呼唤, 呼唤, 打击 -> 灵魂异鱼, 中和+ -> 灵魂异鱼
+09:59:20 note H1 idle preparation: {"status":"unknown","reason":"next_solver_input_not_observed_or_not_ready","budget_ms":400}
+09:59:20 wait COMBAT: waiting on COMBAT (transition, animation, or nothing legal yet)
+09:59:21 COMBAT          combat/plan-continue -> play_card (card_index=2) jev 0 ms | 0 in
+         continuing the code-chosen plan: 呼唤
+09:59:21 note H1 idle preparation: {"status":"unknown","reason":"next_solver_input_not_observed_or_not_ready","budget_ms":400}
+09:59:21 wait COMBAT: waiting on COMBAT (transition, animation, or nothing legal yet)
+09:59:22 COMBAT          combat/plan-continue -> play_card (card_index=2, target_index=0) jev 0 ms | 0 in
+         continuing the code-chosen plan: 打击 -> 灵魂异鱼
+09:59:22 note H1 idle preparation: {"status":"unknown","reason":"next_solver_input_not_observed_or_not_ready","budget_ms":400}
+09:59:22 wait COMBAT: waiting on COMBAT (transition, animation, or nothing legal yet)
+09:59:23 COMBAT          combat/plan-continue -> play_card (card_index=2, target_index=0) jev 0 ms | 0 in
+         continuing the code-chosen plan: 中和+ -> 灵魂异鱼
+09:59:24 note H1 idle preparation: {"status":"unknown","reason":"next_solver_input_not_observed_or_not_ready","budget_ms":400}
+09:59:24 wait COMBAT: waiting on COMBAT (transition, animation, or nothing legal yet)
+09:59:24 note SL: certain death foreseen at F17 T8 attempt 4/4 (nothing left to play or drink; 9 incoming vs 6 HP + 0 block + 0 end-of-turn block); no retry left, the turn ends as usual
+09:59:25 COMBAT          combat/least-loss    -> end_turn jev 0 ms | 0 in
+         every simulated line dies; playing the one that keeps the most HP (-3): end turn
+09:59:25 note H1 idle preparation: {"status":"unknown","reason":"next_solver_input_not_observed_or_not_ready","budget_ms":400}
+09:59:25 wait COMBAT: waiting on COMBAT (transition, animation, or nothing legal yet)
+09:59:26 note H1 idle preparation: {"status":"unknown","reason":"next_solver_input_not_observed_or_not_ready","budget_ms":400}
+09:59:26 note H1 idle preparation: {"status":"unknown","reason":"next_solver_input_not_observed_or_not_ready","budget_ms":400}
+09:59:27 combat ended — total token usage: 369 decisions, 106 Jev calls, 871,441 in / 5,045 out tokens (≈ $0.0366)
+09:59:27 note run ended (defeat): finishing the score/unlock bookkeeping, then stopping
+09:59:31 GAME_OVER       run/finalize         -> continue_game_over jev 0 ms | 0 in
+         defeat: saving the result with continue_game_over before stopping
+09:59:31 stop run 1 ended (defeat); stopping as requested
+
+summary
+  decisions 370 (370 dispatched, 0 fallbacks)
+  runs:
+  #1 defeat — 367 decisions, 106 Jev calls, 871,441 in / 5,045 out tokens (≈ $0.0366), reached floor 17, 2683.37 s
+  370 decisions | 106 Jev calls | 871,441 in / 5,045 out tokens | ≈ $0.0366 | 2690.65 s
+  debounce: 0 answers reused, 0 calls skipped as stale
+  waits 671 | unsupported 0 | errors 0
+  runs completed 1 | elapsed 2690.65 s
+  stopped: run 1 ended (defeat); stopping as requested
+  log: /home/dw/Projects/agent-sts2/.worktrees/live/logs/decisions.jsonl

@@ -1,0 +1,64 @@
+[
+  {
+    "source": "logs/decisions.jsonl",
+    "offset": 2801703293,
+    "bytes": 1948,
+    "sha256": "e04b7341e5c11c770c5c332856781ad87cd1e6e7d6b47ad4846d05cc6df0f11e",
+    "row": {
+      "ts": "2026-10-20T01:59:27.357Z",
+      "mode": "play",
+      "screen": "GAME_OVER",
+      "session": "singleplayer/run",
+      "floor": 17,
+      "turn": 8,
+      "label": "run/finalize",
+      "decision_id": "3adab1f6-0efc-40ae-ad90-6e1a7cf57b40",
+      "decider": "code",
+      "fingerprint": "{\"actions\":[\"continue_game_over\"],\"combat\":false,\"enemies\":\"0:29:0:true\",\"event\":\"\",\"gold\":28,\"hand\":\"0:SNAKEBITE:false\",\"hp\":0,\"maxHp\":70,\"nodes\":\"\",\"pendingCard\":false,\"player\":\"0:0:0\",\"potions\":\":false:false|:false:false\",\"powers\":\"\",\"rewards\":\"\",\"run\":\"T12TSEMGUU7F\",\"screen\":\"GAME_OVER\",\"selection\":\"null:false\",\"shopOpen\":false,\"shopStock\":\"\",\"turn\":8}",
+      "chosen": {
+        "action": "continue_game_over"
+      },
+      "rationale": "defeat: saving the result with continue_game_over before stopping",
+      "confidence": null,
+      "fallback": false,
+      "reasked": false,
+      "no_jev": false,
+      "reused_answer": false,
+      "request_ids": [],
+      "latency_ms": {
+        "plan": 0,
+        "jev": 0,
+        "action": 4312
+      },
+      "usage": {
+        "input_tokens": 0,
+        "output_tokens": 0
+      },
+      "sl_attempt": null,
+      "sl_reloads": 3,
+      "run_id": "T12TSEMGUU7F",
+      "observed_ts": "2026-10-20T01:59:27.356Z",
+      "journal": {
+        "choice": "defeat: saving the result with continue_game_over before stopping",
+        "reason": ""
+      },
+      "result": "completed: Action completed.",
+      "time_budget": {
+        "schema": "decision-budget-v1",
+        "kind": "routine",
+        "key": "T12TSEMGUU7F:{\"actions\":[\"continue_game_over\"],\"combat\":false,\"enemies\":\"0:29:0:true\",\"event\":\"\",\"gold\":28,\"hand\":\"0:SNAKEBITE:false\",\"hp\":0,\"maxHp\":70,\"nodes\":\"\",\"pendingCard\":false,\"player\":\"0:0:0\",\"potions\":\":false:false|:false:false\",\"powers\":\"\",\"rewards\":\"\",\"run\":\"T12TSEMGUU7F\",\"screen\":\"GAME_OVER\",\"selection\":\"null:false\",\"shopOpen\":false,\"shopStock\":\"\",\"turn\":8}",
+        "budget_ms": 5000,
+        "entry_budget_ms": 4999.994429999962,
+        "actual_ms": 0,
+        "turn_actual_ms": 0,
+        "shared_actual_ms": 0,
+        "independent_actual_ms": 0,
+        "timed_out": false,
+        "fallback": null,
+        "shadow_unknown": [],
+        "stages": [],
+        "animation_time_included": false
+      }
+    }
+  }
+]
