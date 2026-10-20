@@ -5501,3 +5501,4 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
 
 - 2026-10-21 07:10:33 CST [Claude，夜间推进] B 长期结果修复 9805c160f（等待期调度、样本缓存复用、题面预算分配）：两道冻结真题 B 有 43/32 行数值、覆盖 14/17 组合；旧 238 行全为样本不足（89 行开场不可用，含 42 行前提不足）；剩余 3 题按五指标与误差不能判严格逆指标。与题面改进 024612ef7 已集成 main 715a5d9e7，待联合检查，上线保持 CARD=brain，是否切回 jev 待 Roy。战绩：大脑拿牌（R404/R406/R408）十局 F33/22/33/48/33/33/48/48/17/14，中位 F33；Jev 拿牌 R407 五局 F17/8/33/17/15，中位 F17。
 - 2026-10-21T07:11:25+08:00 原W4累计11+W0两测试联合tsc/full0，628文件5948过2跳、tree0b46/2393输入6eba同/PID退；13叶窄合main715a5d9e7。CLCR在途保持liveR408，已备一次内核退出事件边界发布，不打断play/不轮询；CARDbrain/REFLEXoff、jev等Roy及全部质量限制保留。原件paper/materials/20261021-0705-ops/receipt.json。
+- 2026-10-21T07:14:27+08:00 原ops核061302-s2/061302/063443双策略四ordinary attention：报告SHA同、三树干净/30waiting、四复盘无新bug；offer原源码同而关闭复核遇已验main715a十三叶漂移，原失败/父项保留，不重dataset/补测/合入或核号。原件paper/materials/20261021-0713-ops/ordinary-source-drift-review.json。

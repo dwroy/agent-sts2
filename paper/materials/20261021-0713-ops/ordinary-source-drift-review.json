@@ -1,0 +1,424 @@
+{
+  "at": "2026-10-21T07:14:27+08:00",
+  "review_head": "239c2e66fc47ee9d31fca0a390314293af1eb74e",
+  "batches": [
+    {
+      "batch": "20261021-061302-s2-strategy-proposal",
+      "task": "strategy-proposal",
+      "receipt_sha256": "431291397515b226d1517b49c62015b1f603ba3a19d47668373ac2850937793b",
+      "original_report": ".worktrees/codex-strategy-silent-20261021-061302-s2/learner/runs/20261021-061307-f0f55a66-5194-4b8e-8ba5-9ac80a4a66d1-strategy-proposal/report.md",
+      "report_sha256": "fb08472f2583372cba005786cdfd533b42114feb1433561024ed6c2cc7f44848",
+      "baseline_head": "8a0b99c946e8dea9d47d08f48526db2832c85194",
+      "offered_proof_head": "dcd64377753da5cdab141a107cb1762fd96a8745",
+      "review_head": "239c2e66fc47ee9d31fca0a390314293af1eb74e",
+      "source_delta_at_offer": [],
+      "source_delta_at_current_review": [
+        "agent/src/hand/loop.ts",
+        "agent/src/sim/v6-card-results.ts",
+        "agent/src/v6/card-criteria.ts",
+        "agent/src/v6/card-pick.ts",
+        "agent/src/v6/projection-runtime.ts",
+        "agent/src/v6/prompt-summary.ts",
+        "agent/tests/fixtures/v6-off-boss-clock.json",
+        "agent/tests/v6-card-option-loop.test.ts",
+        "agent/tests/v6-card-pick.test.ts",
+        "agent/tests/v6-card-results.test.ts",
+        "agent/tests/v6-off-equivalence.test.ts",
+        "agent/tests/v6-projection-runtime.test.ts",
+        "agent/tests/v6-prompt-summary.test.ts"
+      ],
+      "source_delta_matches_accepted_main_715a": true,
+      "source_delta_sha256": {
+        "agent/src/hand/loop.ts": "17cef9be519859830839163887f71c9952e64e79c8f8884fdf39cf5d7a9452a9",
+        "agent/src/sim/v6-card-results.ts": "aebc3772ae943f5a6e842cdf6558e423bc5848684eb809d1249fe23baa200316",
+        "agent/src/v6/card-criteria.ts": "c10e0affaf9e285d1249d5bc46f0b8ed133ca9e063f29268181599b32e64921b",
+        "agent/src/v6/card-pick.ts": "496ce31c3449f3ce5f14b60964b6fa098191c1477df9d4e1f3a3b37bed4629ed",
+        "agent/src/v6/projection-runtime.ts": "b27312a4e5b8a3f295d1ea946aaee981402e5877b283e79f455455382394872c",
+        "agent/src/v6/prompt-summary.ts": "97d3b431bf66195dce219cf0871a65d1e8837cc6a544efa414c838dfc622e73b",
+        "agent/tests/fixtures/v6-off-boss-clock.json": "5c460f5a0ada2b8f79b03bf7f95201630678fa394a1a4067ff41e78e0602cb07",
+        "agent/tests/v6-card-option-loop.test.ts": "e0281fdeab47b36d8dd05fa95b11312b58ecd3a36501ab77af12592a6f738be7",
+        "agent/tests/v6-card-pick.test.ts": "b8f1973553b79545299f8385d8b44d314e6954b701762c7b30b367fdac1b3a27",
+        "agent/tests/v6-card-results.test.ts": "8d8aa363c190159e788b131bfa352ce0dedc2dc3353a8a8d5c28c642efc4944a",
+        "agent/tests/v6-off-equivalence.test.ts": "ab6779c1382b522fd76e1a6c44b61bbfee86918b5d85de028502394123c01a1d",
+        "agent/tests/v6-projection-runtime.test.ts": "3ee2001dd7566c219a7c7c85bc4d10fc7ebf35f8686f75f172388b843e1a9953",
+        "agent/tests/v6-prompt-summary.test.ts": "e3da912776f34ba7e97a7f314e1b63121b6c5a0b3e2ceb63d6bf65049ed97ee2"
+      },
+      "reason": "source changed during batch; retain ordinary ops review",
+      "original_attention_receipt_preserved": true,
+      "dataset_started_field": null,
+      "record_commit": null,
+      "bugs": [],
+      "source_fixes": [],
+      "reported_merge": null,
+      "proposals": [
+        {
+          "id": "silent-proposal-92920295a648b540",
+          "state": "waiting",
+          "reason": "局部少损3亦少伤9；缺保持后继抽序的完整两战配对与独立校准。"
+        },
+        {
+          "id": "silent-proposal-a327449c331efbc1",
+          "state": "waiting",
+          "reason": "血价和沙坑相反边界已核；缺可分离其影响的受控后继，不能改探索排序。"
+        },
+        {
+          "id": "silent-proposal-a099e89437e942bb",
+          "state": "waiting",
+          "reason": "42饮容量已核，容量子实现已在live；保留、跨选择重规划和SL恢复的联合验收未齐。"
+        },
+        {
+          "id": "silent-proposal-47910f82a1fdd98f",
+          "state": "waiting",
+          "reason": "开场与差额子实现已在live；缺连续替线和持药价值后继配对。"
+        },
+        {
+          "id": "silent-proposal-f1374df72d8e6a25",
+          "state": "waiting",
+          "reason": "早饮完整题及实际资源链已核；缺早饮或留药的完整后继与时间留出验证。"
+        },
+        {
+          "id": "silent-proposal-38a49e6c97f31eea",
+          "state": "waiting",
+          "reason": "普通紧勒子实现已在live；再生、临时药、荆棘反杀、重接及SL分支联合验收未齐。"
+        },
+        {
+          "id": "silent-proposal-ef0e38a5dbd3bc07",
+          "state": "waiting",
+          "reason": "实际资源链已核；原109局分母未重算，缺事件、休息和路线替线后继配对。"
+        },
+        {
+          "id": "silent-proposal-7f820c02d39bfaea",
+          "state": "waiting",
+          "reason": "弃牌后实线血价已核；完整原答跨弃牌计划、同预算排序及后继未联合验收。"
+        },
+        {
+          "id": "silent-proposal-04b6b430759815ed",
+          "state": "waiting",
+          "reason": "已定位17类原窗口及额外候选；缺可靠首次消费状态链和换战、重读、SL恢复联合验证。"
+        },
+        {
+          "id": "silent-proposal-03754e1265894000",
+          "state": "waiting",
+          "reason": "RC F23局部链已核；其余组件窗口尚未逐项生产联合回放，不能关闭复合提案。"
+        }
+      ],
+      "worktree_HEAD": "8a0b99c946e8dea9d47d08f48526db2832c85194",
+      "worktree_clean": true
+    },
+    {
+      "batch": "20261021-061302",
+      "task": "postmortem",
+      "receipt_sha256": "fff6b0d2b4380891748ebb8da74c6c656fea16f6cf552aec7cd6feb78605253a",
+      "original_report": "learner/runs/20261021-061306-36c9a3d7-2a10-4d91-b8f2-7a0a4293c572-postmortem/report.md",
+      "report_sha256": "03fd99e8abd855f753d12d4f85336d8199040b442c5152843edbce679bbfa629",
+      "baseline_head": "8a0b99c946e8dea9d47d08f48526db2832c85194",
+      "offered_proof_head": "984232f21e7ab608a488142c88a9982028d808ef",
+      "review_head": "239c2e66fc47ee9d31fca0a390314293af1eb74e",
+      "source_delta_at_offer": [],
+      "source_delta_at_current_review": [
+        "agent/src/hand/loop.ts",
+        "agent/src/sim/v6-card-results.ts",
+        "agent/src/v6/card-criteria.ts",
+        "agent/src/v6/card-pick.ts",
+        "agent/src/v6/projection-runtime.ts",
+        "agent/src/v6/prompt-summary.ts",
+        "agent/tests/fixtures/v6-off-boss-clock.json",
+        "agent/tests/v6-card-option-loop.test.ts",
+        "agent/tests/v6-card-pick.test.ts",
+        "agent/tests/v6-card-results.test.ts",
+        "agent/tests/v6-off-equivalence.test.ts",
+        "agent/tests/v6-projection-runtime.test.ts",
+        "agent/tests/v6-prompt-summary.test.ts"
+      ],
+      "source_delta_matches_accepted_main_715a": true,
+      "source_delta_sha256": {
+        "agent/src/hand/loop.ts": "17cef9be519859830839163887f71c9952e64e79c8f8884fdf39cf5d7a9452a9",
+        "agent/src/sim/v6-card-results.ts": "aebc3772ae943f5a6e842cdf6558e423bc5848684eb809d1249fe23baa200316",
+        "agent/src/v6/card-criteria.ts": "c10e0affaf9e285d1249d5bc46f0b8ed133ca9e063f29268181599b32e64921b",
+        "agent/src/v6/card-pick.ts": "496ce31c3449f3ce5f14b60964b6fa098191c1477df9d4e1f3a3b37bed4629ed",
+        "agent/src/v6/projection-runtime.ts": "b27312a4e5b8a3f295d1ea946aaee981402e5877b283e79f455455382394872c",
+        "agent/src/v6/prompt-summary.ts": "97d3b431bf66195dce219cf0871a65d1e8837cc6a544efa414c838dfc622e73b",
+        "agent/tests/fixtures/v6-off-boss-clock.json": "5c460f5a0ada2b8f79b03bf7f95201630678fa394a1a4067ff41e78e0602cb07",
+        "agent/tests/v6-card-option-loop.test.ts": "e0281fdeab47b36d8dd05fa95b11312b58ecd3a36501ab77af12592a6f738be7",
+        "agent/tests/v6-card-pick.test.ts": "b8f1973553b79545299f8385d8b44d314e6954b701762c7b30b367fdac1b3a27",
+        "agent/tests/v6-card-results.test.ts": "8d8aa363c190159e788b131bfa352ce0dedc2dc3353a8a8d5c28c642efc4944a",
+        "agent/tests/v6-off-equivalence.test.ts": "ab6779c1382b522fd76e1a6c44b61bbfee86918b5d85de028502394123c01a1d",
+        "agent/tests/v6-projection-runtime.test.ts": "3ee2001dd7566c219a7c7c85bc4d10fc7ebf35f8686f75f172388b843e1a9953",
+        "agent/tests/v6-prompt-summary.test.ts": "e3da912776f34ba7e97a7f314e1b63121b6c5a0b3e2ceb63d6bf65049ed97ee2"
+      },
+      "reason": "source changed during batch; retain ordinary ops review",
+      "original_attention_receipt_preserved": true,
+      "dataset_started_field": null,
+      "record_commit": null,
+      "bugs": [],
+      "source_fixes": [],
+      "reported_merge": null,
+      "proposals": [
+        "silent-proposal-e02c07505d2a55be",
+        "silent-proposal-bcebf7dc455c16f1",
+        "silent-proposal-8575cac31cbb802b",
+        "silent-proposal-18eb26e33c393bda"
+      ],
+      "appended": [
+        "3YUVLHCYAQ8L",
+        "173ARCPHRVSS",
+        "2GFAPDBDNSCR",
+        "7XS2Y920KA6E"
+      ],
+      "ledger": {
+        "added": [],
+        "updated": [
+          "silent-0011",
+          "silent-0019",
+          "silent-0020",
+          "silent-0027",
+          "silent-0028",
+          "silent-0030",
+          "silent-0062",
+          "silent-0125",
+          "silent-0211",
+          "silent-0418"
+        ],
+        "repeats": [],
+        "check": 0
+      },
+      "ledger_check_sha256": "86aa42b0525cfe91f7dce03301c74e344e8545cd7007611a5cbc3b91104c8ebb",
+      "new_code_proposals": [
+        "silent-proposal-e02c07505d2a55be",
+        "silent-proposal-bcebf7dc455c16f1",
+        "silent-proposal-8575cac31cbb802b",
+        "silent-proposal-18eb26e33c393bda"
+      ]
+    },
+    {
+      "batch": "20261021-063443-s2-strategy-proposal",
+      "task": "strategy-proposal",
+      "receipt_sha256": "8b67d2ad54ad2a0843fd3c83faceb46e3d85a892bf8d14749e5956fd86a4a2e7",
+      "original_report": ".worktrees/codex-strategy-silent-20261021-063443-s2/learner/runs/20261021-063448-77d12542-6f53-431b-b6a1-0fa00eb8cdc5-strategy-proposal/report.md",
+      "report_sha256": "11acbe8c3ef80ed5bade41a2154d6340cd4b640c33c7c607a810b0c3516db4cc",
+      "baseline_head": "984232f21e7ab608a488142c88a9982028d808ef",
+      "offered_proof_head": "f57be0b56b937b7656b170ddd3bdd141beab3808",
+      "review_head": "239c2e66fc47ee9d31fca0a390314293af1eb74e",
+      "source_delta_at_offer": [],
+      "source_delta_at_current_review": [
+        "agent/src/hand/loop.ts",
+        "agent/src/sim/v6-card-results.ts",
+        "agent/src/v6/card-criteria.ts",
+        "agent/src/v6/card-pick.ts",
+        "agent/src/v6/projection-runtime.ts",
+        "agent/src/v6/prompt-summary.ts",
+        "agent/tests/fixtures/v6-off-boss-clock.json",
+        "agent/tests/v6-card-option-loop.test.ts",
+        "agent/tests/v6-card-pick.test.ts",
+        "agent/tests/v6-card-results.test.ts",
+        "agent/tests/v6-off-equivalence.test.ts",
+        "agent/tests/v6-projection-runtime.test.ts",
+        "agent/tests/v6-prompt-summary.test.ts"
+      ],
+      "source_delta_matches_accepted_main_715a": true,
+      "source_delta_sha256": {
+        "agent/src/hand/loop.ts": "17cef9be519859830839163887f71c9952e64e79c8f8884fdf39cf5d7a9452a9",
+        "agent/src/sim/v6-card-results.ts": "aebc3772ae943f5a6e842cdf6558e423bc5848684eb809d1249fe23baa200316",
+        "agent/src/v6/card-criteria.ts": "c10e0affaf9e285d1249d5bc46f0b8ed133ca9e063f29268181599b32e64921b",
+        "agent/src/v6/card-pick.ts": "496ce31c3449f3ce5f14b60964b6fa098191c1477df9d4e1f3a3b37bed4629ed",
+        "agent/src/v6/projection-runtime.ts": "b27312a4e5b8a3f295d1ea946aaee981402e5877b283e79f455455382394872c",
+        "agent/src/v6/prompt-summary.ts": "97d3b431bf66195dce219cf0871a65d1e8837cc6a544efa414c838dfc622e73b",
+        "agent/tests/fixtures/v6-off-boss-clock.json": "5c460f5a0ada2b8f79b03bf7f95201630678fa394a1a4067ff41e78e0602cb07",
+        "agent/tests/v6-card-option-loop.test.ts": "e0281fdeab47b36d8dd05fa95b11312b58ecd3a36501ab77af12592a6f738be7",
+        "agent/tests/v6-card-pick.test.ts": "b8f1973553b79545299f8385d8b44d314e6954b701762c7b30b367fdac1b3a27",
+        "agent/tests/v6-card-results.test.ts": "8d8aa363c190159e788b131bfa352ce0dedc2dc3353a8a8d5c28c642efc4944a",
+        "agent/tests/v6-off-equivalence.test.ts": "ab6779c1382b522fd76e1a6c44b61bbfee86918b5d85de028502394123c01a1d",
+        "agent/tests/v6-projection-runtime.test.ts": "3ee2001dd7566c219a7c7c85bc4d10fc7ebf35f8686f75f172388b843e1a9953",
+        "agent/tests/v6-prompt-summary.test.ts": "e3da912776f34ba7e97a7f314e1b63121b6c5a0b3e2ceb63d6bf65049ed97ee2"
+      },
+      "reason": "source changed during batch; retain ordinary ops review",
+      "original_attention_receipt_preserved": true,
+      "dataset_started_field": null,
+      "record_commit": null,
+      "bugs": [],
+      "source_fixes": [],
+      "reported_merge": null,
+      "proposals": [
+        {
+          "id": "silent-proposal-c20b5139dd0dff71",
+          "state": "waiting",
+          "reason": "Haze已有live子实现；缺原dirty移动表及污染、虚弱、格挡联合生产校准。"
+        },
+        {
+          "id": "silent-proposal-ae9e692d680e3819",
+          "state": "waiting",
+          "reason": "缺遗忘死亡返敏分支、逐实体抢夺累计来源及完整目标顺序对照。"
+        },
+        {
+          "id": "silent-proposal-52f1e1bd2e7db0ed",
+          "state": "waiting",
+          "reason": "缺原dirty A10移动表、覆甲减层条件隔离及联合消费者校准。"
+        },
+        {
+          "id": "silent-proposal-6dd8bbff876be528",
+          "state": "waiting",
+          "reason": "增长路径已有；缺跨召唤代际稳定身份、原移动表及连续联合回放。"
+        },
+        {
+          "id": "silent-proposal-578e415a259e6835",
+          "state": "waiting",
+          "reason": "沙虫当轮血价已核；缺跨抽弃、生成、用药、护栏和SL恢复至终止的统一执行归属。"
+        },
+        {
+          "id": "silent-proposal-c0767768bf6a7ab1",
+          "state": "waiting",
+          "reason": "实验体当轮血价及覆盖结束已核；缺未执行续步完整归属和独立受控后继。"
+        },
+        {
+          "id": "silent-proposal-a46bdb7fe711d79a",
+          "state": "waiting",
+          "reason": "阶段、零毒触媒及格挡时序已核；缺完整候选联合校准与后移验证。"
+        },
+        {
+          "id": "silent-proposal-1044224808015e5c",
+          "state": "waiting",
+          "reason": "双蟹血价已核，药瓶实际毒落点异于预测；缺完整后继配对和独立留出。"
+        },
+        {
+          "id": "silent-proposal-7cbc6005db712ba9",
+          "state": "waiting",
+          "reason": "局部机制已核；缺抽弃后完整候选传播、逐来源消费者认证及历史分母复验。"
+        },
+        {
+          "id": "silent-proposal-c59f592f1427a67e",
+          "state": "waiting",
+          "reason": "六局局部窗口不能替代原101局资源审计；缺整线执行归属、逐来源资源账和受控后继。"
+        }
+      ],
+      "worktree_HEAD": "984232f21e7ab608a488142c88a9982028d808ef",
+      "worktree_clean": true
+    },
+    {
+      "batch": "20261021-063443-strategy-proposal",
+      "task": "strategy-proposal",
+      "receipt_sha256": "975779e37fd88b469af0cc82631451fdfae411764efd20e39e20db62f7c6c0c8",
+      "original_report": ".worktrees/codex-strategy-silent-20261021-063443/learner/runs/20261021-063448-3fa0f779-7c54-4944-9ee6-120c3110c792-strategy-proposal/report.md",
+      "report_sha256": "dc8986df1511324c248809e84a472eba362d97ffcd6a1430380282a5f746ce6d",
+      "baseline_head": "984232f21e7ab608a488142c88a9982028d808ef",
+      "offered_proof_head": "f57be0b56b937b7656b170ddd3bdd141beab3808",
+      "review_head": "239c2e66fc47ee9d31fca0a390314293af1eb74e",
+      "source_delta_at_offer": [],
+      "source_delta_at_current_review": [
+        "agent/src/hand/loop.ts",
+        "agent/src/sim/v6-card-results.ts",
+        "agent/src/v6/card-criteria.ts",
+        "agent/src/v6/card-pick.ts",
+        "agent/src/v6/projection-runtime.ts",
+        "agent/src/v6/prompt-summary.ts",
+        "agent/tests/fixtures/v6-off-boss-clock.json",
+        "agent/tests/v6-card-option-loop.test.ts",
+        "agent/tests/v6-card-pick.test.ts",
+        "agent/tests/v6-card-results.test.ts",
+        "agent/tests/v6-off-equivalence.test.ts",
+        "agent/tests/v6-projection-runtime.test.ts",
+        "agent/tests/v6-prompt-summary.test.ts"
+      ],
+      "source_delta_matches_accepted_main_715a": true,
+      "source_delta_sha256": {
+        "agent/src/hand/loop.ts": "17cef9be519859830839163887f71c9952e64e79c8f8884fdf39cf5d7a9452a9",
+        "agent/src/sim/v6-card-results.ts": "aebc3772ae943f5a6e842cdf6558e423bc5848684eb809d1249fe23baa200316",
+        "agent/src/v6/card-criteria.ts": "c10e0affaf9e285d1249d5bc46f0b8ed133ca9e063f29268181599b32e64921b",
+        "agent/src/v6/card-pick.ts": "496ce31c3449f3ce5f14b60964b6fa098191c1477df9d4e1f3a3b37bed4629ed",
+        "agent/src/v6/projection-runtime.ts": "b27312a4e5b8a3f295d1ea946aaee981402e5877b283e79f455455382394872c",
+        "agent/src/v6/prompt-summary.ts": "97d3b431bf66195dce219cf0871a65d1e8837cc6a544efa414c838dfc622e73b",
+        "agent/tests/fixtures/v6-off-boss-clock.json": "5c460f5a0ada2b8f79b03bf7f95201630678fa394a1a4067ff41e78e0602cb07",
+        "agent/tests/v6-card-option-loop.test.ts": "e0281fdeab47b36d8dd05fa95b11312b58ecd3a36501ab77af12592a6f738be7",
+        "agent/tests/v6-card-pick.test.ts": "b8f1973553b79545299f8385d8b44d314e6954b701762c7b30b367fdac1b3a27",
+        "agent/tests/v6-card-results.test.ts": "8d8aa363c190159e788b131bfa352ce0dedc2dc3353a8a8d5c28c642efc4944a",
+        "agent/tests/v6-off-equivalence.test.ts": "ab6779c1382b522fd76e1a6c44b61bbfee86918b5d85de028502394123c01a1d",
+        "agent/tests/v6-projection-runtime.test.ts": "3ee2001dd7566c219a7c7c85bc4d10fc7ebf35f8686f75f172388b843e1a9953",
+        "agent/tests/v6-prompt-summary.test.ts": "e3da912776f34ba7e97a7f314e1b63121b6c5a0b3e2ceb63d6bf65049ed97ee2"
+      },
+      "reason": "source changed during batch; retain ordinary ops review",
+      "original_attention_receipt_preserved": true,
+      "dataset_started_field": null,
+      "record_commit": null,
+      "bugs": [],
+      "source_fixes": [],
+      "reported_merge": null,
+      "proposals": [
+        {
+          "id": "silent-proposal-89354805ee4d7e77",
+          "state": "waiting",
+          "reason": "已有窄升级实现；缺实际施放持续身份、未覆盖交互和消费者联合校准。"
+        },
+        {
+          "id": "silent-proposal-f2bfceddb1898dca",
+          "state": "waiting",
+          "reason": "缺同起点、同随机池、同总预算的MC配对及成熟度曲线。"
+        },
+        {
+          "id": "silent-proposal-283a164780d11e69",
+          "state": "waiting",
+          "reason": "同源原文SHA已核；完整施放追踪及消费者验收仍缺。"
+        },
+        {
+          "id": "silent-proposal-ebbfe3b97548756d",
+          "state": "waiting",
+          "reason": "十五子项的属性、升级、期限及战斗、路线、休息联合校准未完成。"
+        },
+        {
+          "id": "silent-proposal-e5b87be50f28f311",
+          "state": "waiting",
+          "reason": "缺跨抽牌、药水、重规划和SL的整候选持续执行归属验证。"
+        },
+        {
+          "id": "silent-proposal-49632bc4878fb597",
+          "state": "waiting",
+          "reason": "CA5无正敏捷实测；四条属性与成长路径缺联合生产校准。"
+        },
+        {
+          "id": "silent-proposal-66532328a585941f",
+          "state": "waiting",
+          "reason": "缺同资源、完整抽序下不同启动顺序的受控整战对照及收益函数。"
+        },
+        {
+          "id": "silent-proposal-43a76a31ba7bdcfa",
+          "state": "waiting",
+          "reason": "缺同起始HP、构筑和完整抽序的另一完整SL线路及配对校准。"
+        },
+        {
+          "id": "silent-proposal-5264153a4a4b0e5c",
+          "state": "waiting",
+          "reason": "完整原请求未逐字复核；缺召唤、航行、复现、退场全链校准及另一目标后继。"
+        },
+        {
+          "id": "silent-proposal-bddfa690a84e03d0",
+          "state": "waiting",
+          "reason": "缺睡眠、唤醒、眩晕、成长全链校准及同抽换序后继；前三次T6明确未派发。"
+        }
+      ],
+      "worktree_HEAD": "984232f21e7ab608a488142c88a9982028d808ef",
+      "worktree_clean": true
+    }
+  ],
+  "manual_review": "preserve reports and original guard failures; no source by these learners; later accepted thirteen-leaf main integration is a real source change for close guard; do not retry dataset or merge",
+  "source_paths": [
+    "agent/src",
+    "agent/tools",
+    "agent/tests",
+    "agent/package*.json",
+    "agent/tsconfig*.json",
+    "agent/vitest*",
+    "learner/*.ts",
+    "learner/*.py",
+    "learner/lib",
+    "learner/tasks",
+    "ops/*.sh",
+    "ops/*.py",
+    "ops/codex",
+    "eval/*.py",
+    "eval/*.ts",
+    "eval/cost-config.json",
+    "knowledge/builders"
+  ],
+  "science_parents_closed": false,
+  "role_ACK": false,
+  "new_full_model_dataset": false,
+  "original_boundary_controller_unchanged": true
+}
