@@ -5142,3 +5142,5 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
 - 2026-10-20T13:55:27+08:00 ops：13:50三事件已核，纯bug原生来源/fixture齐但boss-sim缺口pending；134302策略blocked无源可合；三tsx启动/tmp ENOSPC保留，原循环已自然TR224局，不操作actor，原存储项补后续、full W4→ops→W8排队，W3等新局自然边界。原件 paper/materials/20261020-1350-ops/receipt.json。
 
 - 2026-10-20T13:56:32+08:00 ops：原W4W6环境回执4bb2/旧full日志dfc502逐SHA同，environment_blocked不作产品判定；同源功能树TMPDIR重跑仅owner报告未查询，原窗口继续保留，ops/W8依序等明确释放。原件 paper/materials/20261020-1355-ops/receipt.json。
+
+- 2026-10-20T13:57:47+08:00 ops：接W4W6原报告，长TMPDIR v2 CLI截断/ENOENT断言后仅自身PID停止，短.cache/w4t同源原阈值接续仍占窗口；不查询进度、不判完整绿，ops/W8依序等明确释放，原件 paper/materials/20261020-w4-short-tmp-ops/receipt.json。

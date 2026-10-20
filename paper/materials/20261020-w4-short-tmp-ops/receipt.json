@@ -1,0 +1,42 @@
+{
+  "at": "2026-10-20T13:57:47+08:00",
+  "scope": "original W4W6 owner report only; retry processes/logs not queried",
+  "source": {
+    "path": "paper/materials/20261020-w4-short-tmp-ops/owner-message-original.md",
+    "bytes": 383,
+    "sha256": "3dcb76f76490b815646e464f6946b10007cb5d62e4c485d27f81ee83cc8709a7"
+  },
+  "owner": "codex1/v6-w4w6/01a15382-68eb-7093-b677-040c9b45767f",
+  "attempts": [
+    {
+      "label": "13:47 full",
+      "reported_result": "ENOSPC shared /tmp inode exhaustion",
+      "prior_verified_receipt": "paper/materials/20261020-1355-ops/receipt.json"
+    },
+    {
+      "label": "13:50 v2 long TMPDIR",
+      "reported_failure": "CLI error truncated at200 characters; ENOENT assertion failure",
+      "reported_stop": "only original owner own PIDs stopped; logs preserved",
+      "scope": "owner diagnosis retained, not independently verified; interrupted, not complete green"
+    },
+    {
+      "label": "short repository .cache/w4t",
+      "reported_plan": "targeted confirmation then same source/threshold nice19 maxWorkers1 full",
+      "actual_start_or_progress_not_queried": true
+    }
+  ],
+  "source_and_threshold_reported_unchanged": true,
+  "window_released": false,
+  "owner_will_notify": [
+    "original ops",
+    "original W8"
+  ],
+  "queue": [
+    "W4W6 original short TMPDIR check",
+    "ops staged d43e6c23 changed-input full after explicit W4 release",
+    "notify original W8 after both windows release"
+  ],
+  "no_new_ops_full_model_or_timer": true,
+  "no_shared_tmp_cleanup": true,
+  "no_live_STOP_actor_Regent_changes": true
+}

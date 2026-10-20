@@ -1,0 +1,1 @@
+W4W6 战斗分叉检查窗口续报：13:47 full 因共享 /tmp inode 用尽失败；13:50 v2 换长 TMPDIR 后确认 CLI 错误 200 字符截断导致 ENOENT 断言失败，已只按自有 PID 停下并保留日志。现在用短的仓库内 .cache/w4t 定向确认后继续 nice19/maxWorkers1 full；源码与阈值未改。窗口尚未释放，完成时会同时告 ops 与 W8。

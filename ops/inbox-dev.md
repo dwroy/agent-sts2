@@ -4386,3 +4386,8 @@ request_id=roy-20261017-human-pace-h0 revision=3 input_sha256=1e1c259a15f1824119
 ### 2026-10-20T13:56:32+08:00 原环境回执核同及窗口继续保留
 
 本轮仅接原检查窗口协调，实读并逐SHA核同W4W6的full-final-enospc回执及13:47:30旧日志，冻结到本轮材料。原exit1明确environment_blocked，共享/tmp当时仅99个可用inode；加载错误及少量已运行项分列保存，不能当作产品完整通过或产品失败。与先前owner报告一致：仍沿同源码7f08f166d、功能树内TMPDIR、nice19单worker重跑；本ops未查该重跑进程、日志、启动或终局，不以回执存在冒实际已启动。原窗口继续由W4W6占用，ops d43e6c23变化输入全检随后，两个窗口均释放后再通知原W8，不能因旧环境退出而抢先叠full。已更新短清单及原待验事务，原失败/学习缺口不改，不清共享/tmp、不新派模型/批次/刷新，live/STOP/actor与Regent均保持。原件：paper/materials/20261020-1355-ops/receipt.json。
+
+
+### 2026-10-20T13:57:47+08:00 原W4W6短TMPDIR接续及窗口续占
+
+本轮接原W4W6窗口续报，将三段分别保留：13:47原full共享/tmp inode耗尽的ENOSPC，旧回执与日志此前已核；13:50 v2长TMPDIR下原owner报告CLI错误被200字符截断，导致ENOENT断言失败，已仅停自身PID并保留部分日志；现改短的仓库内.cache/w4t，定向确认后接同源码、同阈值nice19单worker完整检查。后两段本ops只收原报告，不查询原进程、重跑日志、实际启动或终局，不把中断或路径相关断言冒作产品完整结果。窗口尚未释放，原owner完成后会同时通知ops与W8；ops d43e6c23变化输入full继续排队，之后再通知原W8验最新main，不能因旧退出抢先启动。已更新短清单与原待验事务；不清共享/tmp，不派模型/批次或新定时器，live/STOP/actor及Regent保持。原件：paper/materials/20261020-w4-short-tmp-ops/receipt.json。
