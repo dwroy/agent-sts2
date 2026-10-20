@@ -1,0 +1,4190 @@
+{
+  "started_at": "2026-10-20T00:12:10.324Z",
+  "no_network": true,
+  "no_game_actions": true,
+  "stages": [],
+  "limitations": [
+    "One frozen F8 reward board, current 17/17 history metrics, formal R2 cards; canonical appearance on main bff8feb18, original F8 game state.",
+    "Uniform direction weights; no frozen V6 brain answer or chosen route exists for this pre-V6 board.",
+    "Retrospective current frozen history cutoff; not a leakage-free estimate of historical decisions.",
+    "BuildSimPool(2) nice19 CPU measurements; no model/Jev request or live mutation.",
+    "Canonical appearance is loaded through the production factory without injection; no combat simulation is run."
+  ],
+  "input": {
+    "file": "card-1.json",
+    "sha256": "939adc5524b69a399d736ed2cdf1c37b6df6ec284aa70f61f7b8a15d880690f9"
+  },
+  "v6-history.json": {
+    "bytes": 26089041,
+    "sha256": "f96faacf08ac61949a4d5ab2936e729ede17cad4e51384df378483269c7dd07c"
+  },
+  "build-cores.json": {
+    "bytes": 7903933,
+    "sha256": "377920574ce7859f5e39dd01aad495947140226777e742251ac850004ae0cbe6"
+  },
+  "snapshot_ms": 2748.372218,
+  "factory_ms": 308.25108100000034,
+  "completion_sources": [
+    "historical_appearance_lookup_v1"
+  ],
+  "scope": {
+    "seed": 240896327,
+    "targets": [
+      {
+        "id": "f17:THE_KIN",
+        "boss": "THE_KIN",
+        "act": 1,
+        "floor": 17,
+        "kind": "current",
+        "probability": 1,
+        "labels": [
+          "visible_actual_boss"
+        ]
+      },
+      {
+        "id": "f33:KAISER_CRAB",
+        "boss": "KAISER_CRAB",
+        "act": 2,
+        "floor": 33,
+        "kind": "future",
+        "probability": 0.3380281690140845,
+        "labels": [
+          "observed_independent_first_attempt_runs_not_spawn_distribution"
+        ]
+      },
+      {
+        "id": "f33:KNOWLEDGE_DEMON",
+        "boss": "KNOWLEDGE_DEMON",
+        "act": 2,
+        "floor": 33,
+        "kind": "future",
+        "probability": 0.3028169014084507,
+        "labels": [
+          "observed_independent_first_attempt_runs_not_spawn_distribution"
+        ]
+      },
+      {
+        "id": "f33:THE_INSATIABLE",
+        "boss": "THE_INSATIABLE",
+        "act": 2,
+        "floor": 33,
+        "kind": "future",
+        "probability": 0.3591549295774648,
+        "labels": [
+          "observed_independent_first_attempt_runs_not_spawn_distribution"
+        ]
+      },
+      {
+        "id": "f48:AEONGLASS",
+        "boss": "AEONGLASS",
+        "act": 3,
+        "floor": 48,
+        "kind": "future",
+        "probability": 0.4426229508196721,
+        "labels": [
+          "observed_independent_first_attempt_runs_not_spawn_distribution"
+        ]
+      },
+      {
+        "id": "f48:QUEEN",
+        "boss": "QUEEN",
+        "act": 3,
+        "floor": 48,
+        "kind": "future",
+        "probability": 0.29508196721311475,
+        "labels": [
+          "observed_independent_first_attempt_runs_not_spawn_distribution"
+        ]
+      },
+      {
+        "id": "f48:TEST_SUBJECT",
+        "boss": "TEST_SUBJECT",
+        "act": 3,
+        "floor": 48,
+        "kind": "future",
+        "probability": 0.26229508196721313,
+        "labels": [
+          "observed_independent_first_attempt_runs_not_spawn_distribution"
+        ]
+      },
+      {
+        "id": "f48:AEONGLASS:then:f49:QUEEN",
+        "boss": "AEONGLASS",
+        "secondBoss": "QUEEN",
+        "secondFloor": 49,
+        "act": 3,
+        "floor": 48,
+        "kind": "chain",
+        "probability": 0.06557377049180328,
+        "labels": [
+          "observed_ordered_pair_frequency_selected_reached_first_boss_cohort",
+          "仅4局F49、实际胜0；时间验证2局均败，连续模拟未校准，只作备战和出牌参考，不能判必死或触发SL。HP>60夹在样本边界；其他药水/遗物未建模影响不确定。"
+        ]
+      },
+      {
+        "id": "f48:AEONGLASS:then:f49:TEST_SUBJECT",
+        "boss": "AEONGLASS",
+        "secondBoss": "TEST_SUBJECT",
+        "secondFloor": 49,
+        "act": 3,
+        "floor": 48,
+        "kind": "chain",
+        "probability": 0.09836065573770492,
+        "labels": [
+          "observed_ordered_pair_frequency_selected_reached_first_boss_cohort",
+          "仅4局F49、实际胜0；时间验证2局均败，连续模拟未校准，只作备战和出牌参考，不能判必死或触发SL。HP>60夹在样本边界；其他药水/遗物未建模影响不确定。"
+        ]
+      },
+      {
+        "id": "f48:QUEEN:then:f49:AEONGLASS",
+        "boss": "QUEEN",
+        "secondBoss": "AEONGLASS",
+        "secondFloor": 49,
+        "act": 3,
+        "floor": 48,
+        "kind": "chain",
+        "probability": 0.04918032786885246,
+        "labels": [
+          "observed_ordered_pair_frequency_selected_reached_first_boss_cohort",
+          "仅4局F49、实际胜0；时间验证2局均败，连续模拟未校准，只作备战和出牌参考，不能判必死或触发SL。HP>60夹在样本边界；其他药水/遗物未建模影响不确定。"
+        ]
+      },
+      {
+        "id": "f48:QUEEN:then:f49:TEST_SUBJECT",
+        "boss": "QUEEN",
+        "secondBoss": "TEST_SUBJECT",
+        "secondFloor": 49,
+        "act": 3,
+        "floor": 48,
+        "kind": "chain",
+        "probability": 0.06557377049180328,
+        "labels": [
+          "observed_ordered_pair_frequency_selected_reached_first_boss_cohort",
+          "仅4局F49、实际胜0；时间验证2局均败，连续模拟未校准，只作备战和出牌参考，不能判必死或触发SL。HP>60夹在样本边界；其他药水/遗物未建模影响不确定。"
+        ]
+      },
+      {
+        "id": "f48:TEST_SUBJECT:then:f49:QUEEN",
+        "boss": "TEST_SUBJECT",
+        "secondBoss": "QUEEN",
+        "secondFloor": 49,
+        "act": 3,
+        "floor": 48,
+        "kind": "chain",
+        "probability": 0.03278688524590164,
+        "labels": [
+          "observed_ordered_pair_frequency_selected_reached_first_boss_cohort",
+          "仅4局F49、实际胜0；时间验证2局均败，连续模拟未校准，只作备战和出牌参考，不能判必死或触发SL。HP>60夹在样本边界；其他药水/遗物未建模影响不确定。"
+        ]
+      },
+      {
+        "id": "f48:then:f49:unknown",
+        "boss": "unknown",
+        "secondBoss": "unknown",
+        "secondFloor": 49,
+        "act": 3,
+        "floor": 48,
+        "kind": "chain",
+        "probability": 0.6885245901639344,
+        "labels": [
+          "仅4局F49、实际胜0；时间验证2局均败，连续模拟未校准，只作备战和出牌参考，不能判必死或触发SL。HP>60夹在样本边界；其他药水/遗物未建模影响不确定。"
+        ],
+        "unknown": "ordered_pair_unobserved_in_first_boss_cohort"
+      }
+    ],
+    "options": [
+      {
+        "id": "skip"
+      },
+      {
+        "id": "card0",
+        "card": {
+          "id": "FOOTWORK",
+          "upgraded": false
+        }
+      },
+      {
+        "id": "card1",
+        "card": {
+          "id": "REFLEX",
+          "upgraded": false
+        }
+      },
+      {
+        "id": "card2",
+        "card": {
+          "id": "CALCULATED_GAMBLE",
+          "upgraded": false
+        }
+      }
+    ],
+    "directions": [
+      {
+        "id": "P",
+        "combos": [
+          "P-toxin-footwork",
+          "P-fumes-footwork",
+          "P-flask-afterimage",
+          "P-flask-footwork",
+          "P-mixed-defense",
+          "P-toxin-mirage"
+        ]
+      },
+      {
+        "id": "D",
+        "combos": [
+          "D-toxin-backflip",
+          "D-fumes-backflip",
+          "D-flask-sweep",
+          "D-observed-union-fbc4b776"
+        ]
+      },
+      {
+        "id": "S",
+        "combos": [
+          "S-dance-accuracy",
+          "S-cloak-phantom",
+          "S-dance-afterimage",
+          "S-observed-union-35f60a95"
+        ]
+      },
+      {
+        "id": "R",
+        "combos": [
+          "R-acro-tingsha",
+          "R-tools-tingsha",
+          "R-acro-bandages"
+        ]
+      }
+    ]
+  },
+  "targets": [
+    {
+      "target": "f17:THE_KIN",
+      "kind": "current",
+      "rows": [
+        {
+          "direction": "P",
+          "combo": "P-toxin-footwork",
+          "p": {
+            "skip": 0.00044759603818579575,
+            "card0": 0.005052164353118648,
+            "card1": 0.00044759603818579575,
+            "card2": 0.00044759603818579575
+          },
+          "reasons": {
+            "skip": [],
+            "card0": [],
+            "card1": [],
+            "card2": []
+          }
+        },
+        {
+          "direction": "P",
+          "combo": "P-fumes-footwork",
+          "p": {
+            "skip": 0.00014819502322419614,
+            "card0": 0.0016727261855970415,
+            "card1": 0.00014819502322419614,
+            "card2": 0.00014819502322419614
+          },
+          "reasons": {
+            "skip": [],
+            "card0": [],
+            "card1": [],
+            "card2": []
+          }
+        },
+        {
+          "direction": "P",
+          "combo": "P-flask-afterimage",
+          "p": {
+            "skip": 0.00005564172919682427,
+            "card0": 0.00005564172919682427,
+            "card1": 0.00005564172919682427,
+            "card2": 0.00005564172919682427
+          },
+          "reasons": {
+            "skip": [],
+            "card0": [],
+            "card1": [],
+            "card2": []
+          }
+        },
+        {
+          "direction": "P",
+          "combo": "P-flask-footwork",
+          "p": {
+            "skip": 0.00014929463983616597,
+            "card0": 0.0016851379215713108,
+            "card1": 0.00014929463983616597,
+            "card2": 0.00014929463983616597
+          },
+          "reasons": {
+            "skip": [],
+            "card0": [],
+            "card1": [],
+            "card2": []
+          }
+        },
+        {
+          "direction": "P",
+          "combo": "P-mixed-defense",
+          "p": {
+            "skip": 2.677713117824477e-7,
+            "card0": 0.000003022423258388065,
+            "card1": 2.677713117824477e-7,
+            "card2": 2.677713117824477e-7
+          },
+          "reasons": {
+            "skip": [],
+            "card0": [],
+            "card1": [],
+            "card2": []
+          }
+        },
+        {
+          "direction": "P",
+          "combo": "P-toxin-mirage",
+          "p": {
+            "skip": 0.0018551684293733749,
+            "card0": 0.0018551684293733749,
+            "card1": 0.0018551684293733749,
+            "card2": 0.0018551684293733749
+          },
+          "reasons": {
+            "skip": [],
+            "card0": [],
+            "card1": [],
+            "card2": []
+          }
+        },
+        {
+          "direction": "D",
+          "combo": "D-toxin-backflip",
+          "p": {
+            "skip": null,
+            "card0": 0.004766001101540178,
+            "card1": null,
+            "card2": null
+          },
+          "reasons": {
+            "skip": [
+              "duplicate_missing_copies_joint_probability_unknown"
+            ],
+            "card0": [],
+            "card1": [
+              "duplicate_missing_copies_joint_probability_unknown"
+            ],
+            "card2": [
+              "duplicate_missing_copies_joint_probability_unknown"
+            ]
+          }
+        },
+        {
+          "direction": "D",
+          "combo": "D-fumes-backflip",
+          "p": {
+            "skip": null,
+            "card0": 0.00157798010632996,
+            "card1": null,
+            "card2": null
+          },
+          "reasons": {
+            "skip": [
+              "duplicate_missing_copies_joint_probability_unknown"
+            ],
+            "card0": [],
+            "card1": [
+              "duplicate_missing_copies_joint_probability_unknown"
+            ],
+            "card2": [
+              "duplicate_missing_copies_joint_probability_unknown"
+            ]
+          }
+        },
+        {
+          "direction": "D",
+          "combo": "D-flask-sweep",
+          "p": {
+            "skip": null,
+            "card0": 0.0006602150021259897,
+            "card1": null,
+            "card2": null
+          },
+          "reasons": {
+            "skip": [
+              "duplicate_missing_copies_joint_probability_unknown"
+            ],
+            "card0": [],
+            "card1": [
+              "duplicate_missing_copies_joint_probability_unknown"
+            ],
+            "card2": [
+              "duplicate_missing_copies_joint_probability_unknown"
+            ]
+          }
+        },
+        {
+          "direction": "D",
+          "combo": "D-observed-union-fbc4b776",
+          "p": {
+            "skip": null,
+            "card0": 0.000035516549240952866,
+            "card1": null,
+            "card2": null
+          },
+          "reasons": {
+            "skip": [
+              "duplicate_missing_copies_joint_probability_unknown"
+            ],
+            "card0": [],
+            "card1": [
+              "duplicate_missing_copies_joint_probability_unknown"
+            ],
+            "card2": [
+              "duplicate_missing_copies_joint_probability_unknown"
+            ]
+          }
+        },
+        {
+          "direction": "S",
+          "combo": "S-dance-accuracy",
+          "p": {
+            "skip": 0.0003578854906030231,
+            "card0": 0.004039571765316736,
+            "card1": 0.0003578854906030231,
+            "card2": 0.0003578854906030231
+          },
+          "reasons": {
+            "skip": [],
+            "card0": [],
+            "card1": [],
+            "card2": []
+          }
+        },
+        {
+          "direction": "S",
+          "combo": "S-cloak-phantom",
+          "p": {
+            "skip": 0.00045170471681991786,
+            "card0": 0.005098540366226063,
+            "card1": 0.00045170471681991786,
+            "card2": 0.00045170471681991786
+          },
+          "reasons": {
+            "skip": [],
+            "card0": [],
+            "card1": [],
+            "card2": []
+          }
+        },
+        {
+          "direction": "S",
+          "combo": "S-dance-afterimage",
+          "p": {
+            "skip": 0.0006011860872369786,
+            "card0": 0.0006011860872369786,
+            "card1": 0.0006011860872369786,
+            "card2": 0.0006011860872369786
+          },
+          "reasons": {
+            "skip": [],
+            "card0": [],
+            "card1": [],
+            "card2": []
+          }
+        },
+        {
+          "direction": "S",
+          "combo": "S-observed-union-35f60a95",
+          "p": {
+            "skip": 0.000011817055029559682,
+            "card0": 0.000133383004061356,
+            "card1": 0.000011817055029559682,
+            "card2": 0.000011817055029559682
+          },
+          "reasons": {
+            "skip": [],
+            "card0": [],
+            "card1": [],
+            "card2": []
+          }
+        },
+        {
+          "direction": "R",
+          "combo": "R-acro-tingsha",
+          "p": {
+            "skip": 0,
+            "card0": 0,
+            "card1": 0,
+            "card2": 0
+          },
+          "reasons": {
+            "skip": [],
+            "card0": [],
+            "card1": [],
+            "card2": []
+          }
+        },
+        {
+          "direction": "R",
+          "combo": "R-tools-tingsha",
+          "p": {
+            "skip": 0,
+            "card0": 0,
+            "card1": 0,
+            "card2": 0
+          },
+          "reasons": {
+            "skip": [],
+            "card0": [],
+            "card1": [],
+            "card2": []
+          }
+        },
+        {
+          "direction": "R",
+          "combo": "R-acro-bandages",
+          "p": {
+            "skip": 0,
+            "card0": 0,
+            "card1": 0,
+            "card2": 0
+          },
+          "reasons": {
+            "skip": [],
+            "card0": [],
+            "card1": [],
+            "card2": []
+          }
+        }
+      ]
+    },
+    {
+      "target": "f33:KAISER_CRAB",
+      "kind": "future",
+      "rows": [
+        {
+          "direction": "P",
+          "combo": "P-toxin-footwork",
+          "p": {
+            "skip": 0.09815870794652715,
+            "card0": 0.19787016283616274,
+            "card1": 0.09815870794652715,
+            "card2": 0.09815870794652715
+          },
+          "reasons": {
+            "skip": [],
+            "card0": [],
+            "card1": [],
+            "card2": []
+          }
+        },
+        {
+          "direction": "P",
+          "combo": "P-fumes-footwork",
+          "p": {
+            "skip": 0.062777692124867,
+            "card0": 0.12654844815187288,
+            "card1": 0.062777692124867,
+            "card2": 0.062777692124867
+          },
+          "reasons": {
+            "skip": [],
+            "card0": [],
+            "card1": [],
+            "card2": []
+          }
+        },
+        {
+          "direction": "P",
+          "combo": "P-flask-afterimage",
+          "p": {
+            "skip": 0.009507610839352807,
+            "card0": 0.009507610839352807,
+            "card1": 0.009507610839352807,
+            "card2": 0.009507610839352807
+          },
+          "reasons": {
+            "skip": [],
+            "card0": [],
+            "card1": [],
+            "card2": []
+          }
+        },
+        {
+          "direction": "P",
+          "combo": "P-flask-footwork",
+          "p": {
+            "skip": 0.0437321230570572,
+            "card0": 0.08815603313752836,
+            "card1": 0.0437321230570572,
+            "card2": 0.0437321230570572
+          },
+          "reasons": {
+            "skip": [],
+            "card0": [],
+            "card1": [],
+            "card2": []
+          }
+        },
+        {
+          "direction": "P",
+          "combo": "P-mixed-defense",
+          "p": {
+            "skip": 0.004333894077489644,
+            "card0": 0.008736344892546002,
+            "card1": 0.004333894077489644,
+            "card2": 0.004333894077489644
+          },
+          "reasons": {
+            "skip": [],
+            "card0": [],
+            "card1": [],
+            "card2": []
+          }
+        },
+        {
+          "direction": "P",
+          "combo": "P-toxin-mirage",
+          "p": {
+            "skip": 0.09521203065079782,
+            "card0": 0.09521203065079782,
+            "card1": 0.09521203065079782,
+            "card2": 0.09521203065079782
+          },
+          "reasons": {
+            "skip": [],
+            "card0": [],
+            "card1": [],
+            "card2": []
+          }
+        },
+        {
+          "direction": "D",
+          "combo": "D-toxin-backflip",
+          "p": {
+            "skip": null,
+            "card0": 0.21650960324950258,
+            "card1": null,
+            "card2": null
+          },
+          "reasons": {
+            "skip": [
+              "duplicate_missing_copies_joint_probability_unknown"
+            ],
+            "card0": [],
+            "card1": [
+              "duplicate_missing_copies_joint_probability_unknown"
+            ],
+            "card2": [
+              "duplicate_missing_copies_joint_probability_unknown"
+            ]
+          }
+        },
+        {
+          "direction": "D",
+          "combo": "D-fumes-backflip",
+          "p": {
+            "skip": null,
+            "card0": 0.13846935742347716,
+            "card1": null,
+            "card2": null
+          },
+          "reasons": {
+            "skip": [
+              "duplicate_missing_copies_joint_probability_unknown"
+            ],
+            "card0": [],
+            "card1": [
+              "duplicate_missing_copies_joint_probability_unknown"
+            ],
+            "card2": [
+              "duplicate_missing_copies_joint_probability_unknown"
+            ]
+          }
+        },
+        {
+          "direction": "D",
+          "combo": "D-flask-sweep",
+          "p": {
+            "skip": null,
+            "card0": 0.050789480214651316,
+            "card1": null,
+            "card2": null
+          },
+          "reasons": {
+            "skip": [
+              "duplicate_missing_copies_joint_probability_unknown"
+            ],
+            "card0": [],
+            "card1": [
+              "duplicate_missing_copies_joint_probability_unknown"
+            ],
+            "card2": [
+              "duplicate_missing_copies_joint_probability_unknown"
+            ]
+          }
+        },
+        {
+          "direction": "D",
+          "combo": "D-observed-union-fbc4b776",
+          "p": {
+            "skip": null,
+            "card0": 0.022166769759792208,
+            "card1": null,
+            "card2": null
+          },
+          "reasons": {
+            "skip": [
+              "duplicate_missing_copies_joint_probability_unknown"
+            ],
+            "card0": [],
+            "card1": [
+              "duplicate_missing_copies_joint_probability_unknown"
+            ],
+            "card2": [
+              "duplicate_missing_copies_joint_probability_unknown"
+            ]
+          }
+        },
+        {
+          "direction": "S",
+          "combo": "S-dance-accuracy",
+          "p": {
+            "skip": 0.09505025976021607,
+            "card0": 0.19160409473420473,
+            "card1": 0.09505025976021607,
+            "card2": 0.09505025976021607
+          },
+          "reasons": {
+            "skip": [],
+            "card0": [],
+            "card1": [],
+            "card2": []
+          }
+        },
+        {
+          "direction": "S",
+          "combo": "S-cloak-phantom",
+          "p": {
+            "skip": 0.10198471490844763,
+            "card0": 0.20558269936404683,
+            "card1": 0.10198471490844763,
+            "card2": 0.10198471490844763
+          },
+          "reasons": {
+            "skip": [],
+            "card0": [],
+            "card1": [],
+            "card2": []
+          }
+        },
+        {
+          "direction": "S",
+          "combo": "S-dance-afterimage",
+          "p": {
+            "skip": 0.03192590391151485,
+            "card0": 0.03192590391151485,
+            "card1": 0.03192590391151485,
+            "card2": 0.03192590391151485
+          },
+          "reasons": {
+            "skip": [],
+            "card0": [],
+            "card1": [],
+            "card2": []
+          }
+        },
+        {
+          "direction": "S",
+          "combo": "S-observed-union-35f60a95",
+          "p": {
+            "skip": 0.010251151824965924,
+            "card0": 0.02066446394108225,
+            "card1": 0.010251151824965924,
+            "card2": 0.010251151824965924
+          },
+          "reasons": {
+            "skip": [],
+            "card0": [],
+            "card1": [],
+            "card2": []
+          }
+        },
+        {
+          "direction": "R",
+          "combo": "R-acro-tingsha",
+          "p": {
+            "skip": 0,
+            "card0": 0,
+            "card1": 0,
+            "card2": 0
+          },
+          "reasons": {
+            "skip": [],
+            "card0": [],
+            "card1": [],
+            "card2": []
+          }
+        },
+        {
+          "direction": "R",
+          "combo": "R-tools-tingsha",
+          "p": {
+            "skip": 0,
+            "card0": 0,
+            "card1": 0,
+            "card2": 0
+          },
+          "reasons": {
+            "skip": [],
+            "card0": [],
+            "card1": [],
+            "card2": []
+          }
+        },
+        {
+          "direction": "R",
+          "combo": "R-acro-bandages",
+          "p": {
+            "skip": 0,
+            "card0": 0,
+            "card1": 0,
+            "card2": 0
+          },
+          "reasons": {
+            "skip": [],
+            "card0": [],
+            "card1": [],
+            "card2": []
+          }
+        }
+      ]
+    },
+    {
+      "target": "f33:KNOWLEDGE_DEMON",
+      "kind": "future",
+      "rows": [
+        {
+          "direction": "P",
+          "combo": "P-toxin-footwork",
+          "p": {
+            "skip": 0.09815870794652715,
+            "card0": 0.19787016283616274,
+            "card1": 0.09815870794652715,
+            "card2": 0.09815870794652715
+          },
+          "reasons": {
+            "skip": [],
+            "card0": [],
+            "card1": [],
+            "card2": []
+          }
+        },
+        {
+          "direction": "P",
+          "combo": "P-fumes-footwork",
+          "p": {
+            "skip": 0.062777692124867,
+            "card0": 0.12654844815187288,
+            "card1": 0.062777692124867,
+            "card2": 0.062777692124867
+          },
+          "reasons": {
+            "skip": [],
+            "card0": [],
+            "card1": [],
+            "card2": []
+          }
+        },
+        {
+          "direction": "P",
+          "combo": "P-flask-afterimage",
+          "p": {
+            "skip": 0.009507610839352807,
+            "card0": 0.009507610839352807,
+            "card1": 0.009507610839352807,
+            "card2": 0.009507610839352807
+          },
+          "reasons": {
+            "skip": [],
+            "card0": [],
+            "card1": [],
+            "card2": []
+          }
+        },
+        {
+          "direction": "P",
+          "combo": "P-flask-footwork",
+          "p": {
+            "skip": 0.0437321230570572,
+            "card0": 0.08815603313752836,
+            "card1": 0.0437321230570572,
+            "card2": 0.0437321230570572
+          },
+          "reasons": {
+            "skip": [],
+            "card0": [],
+            "card1": [],
+            "card2": []
+          }
+        },
+        {
+          "direction": "P",
+          "combo": "P-mixed-defense",
+          "p": {
+            "skip": 0.004333894077489644,
+            "card0": 0.008736344892546002,
+            "card1": 0.004333894077489644,
+            "card2": 0.004333894077489644
+          },
+          "reasons": {
+            "skip": [],
+            "card0": [],
+            "card1": [],
+            "card2": []
+          }
+        },
+        {
+          "direction": "P",
+          "combo": "P-toxin-mirage",
+          "p": {
+            "skip": 0.09521203065079782,
+            "card0": 0.09521203065079782,
+            "card1": 0.09521203065079782,
+            "card2": 0.09521203065079782
+          },
+          "reasons": {
+            "skip": [],
+            "card0": [],
+            "card1": [],
+            "card2": []
+          }
+        },
+        {
+          "direction": "D",
+          "combo": "D-toxin-backflip",
+          "p": {
+            "skip": null,
+            "card0": 0.21650960324950258,
+            "card1": null,
+            "card2": null
+          },
+          "reasons": {
+            "skip": [
+              "duplicate_missing_copies_joint_probability_unknown"
+            ],
+            "card0": [],
+            "card1": [
+              "duplicate_missing_copies_joint_probability_unknown"
+            ],
+            "card2": [
+              "duplicate_missing_copies_joint_probability_unknown"
+            ]
+          }
+        },
+        {
+          "direction": "D",
+          "combo": "D-fumes-backflip",
+          "p": {
+            "skip": null,
+            "card0": 0.13846935742347716,
+            "card1": null,
+            "card2": null
+          },
+          "reasons": {
+            "skip": [
+              "duplicate_missing_copies_joint_probability_unknown"
+            ],
+            "card0": [],
+            "card1": [
+              "duplicate_missing_copies_joint_probability_unknown"
+            ],
+            "card2": [
+              "duplicate_missing_copies_joint_probability_unknown"
+            ]
+          }
+        },
+        {
+          "direction": "D",
+          "combo": "D-flask-sweep",
+          "p": {
+            "skip": null,
+            "card0": 0.050789480214651316,
+            "card1": null,
+            "card2": null
+          },
+          "reasons": {
+            "skip": [
+              "duplicate_missing_copies_joint_probability_unknown"
+            ],
+            "card0": [],
+            "card1": [
+              "duplicate_missing_copies_joint_probability_unknown"
+            ],
+            "card2": [
+              "duplicate_missing_copies_joint_probability_unknown"
+            ]
+          }
+        },
+        {
+          "direction": "D",
+          "combo": "D-observed-union-fbc4b776",
+          "p": {
+            "skip": null,
+            "card0": 0.022166769759792208,
+            "card1": null,
+            "card2": null
+          },
+          "reasons": {
+            "skip": [
+              "duplicate_missing_copies_joint_probability_unknown"
+            ],
+            "card0": [],
+            "card1": [
+              "duplicate_missing_copies_joint_probability_unknown"
+            ],
+            "card2": [
+              "duplicate_missing_copies_joint_probability_unknown"
+            ]
+          }
+        },
+        {
+          "direction": "S",
+          "combo": "S-dance-accuracy",
+          "p": {
+            "skip": 0.09505025976021607,
+            "card0": 0.19160409473420473,
+            "card1": 0.09505025976021607,
+            "card2": 0.09505025976021607
+          },
+          "reasons": {
+            "skip": [],
+            "card0": [],
+            "card1": [],
+            "card2": []
+          }
+        },
+        {
+          "direction": "S",
+          "combo": "S-cloak-phantom",
+          "p": {
+            "skip": 0.10198471490844763,
+            "card0": 0.20558269936404683,
+            "card1": 0.10198471490844763,
+            "card2": 0.10198471490844763
+          },
+          "reasons": {
+            "skip": [],
+            "card0": [],
+            "card1": [],
+            "card2": []
+          }
+        },
+        {
+          "direction": "S",
+          "combo": "S-dance-afterimage",
+          "p": {
+            "skip": 0.03192590391151485,
+            "card0": 0.03192590391151485,
+            "card1": 0.03192590391151485,
+            "card2": 0.03192590391151485
+          },
+          "reasons": {
+            "skip": [],
+            "card0": [],
+            "card1": [],
+            "card2": []
+          }
+        },
+        {
+          "direction": "S",
+          "combo": "S-observed-union-35f60a95",
+          "p": {
+            "skip": 0.010251151824965924,
+            "card0": 0.02066446394108225,
+            "card1": 0.010251151824965924,
+            "card2": 0.010251151824965924
+          },
+          "reasons": {
+            "skip": [],
+            "card0": [],
+            "card1": [],
+            "card2": []
+          }
+        },
+        {
+          "direction": "R",
+          "combo": "R-acro-tingsha",
+          "p": {
+            "skip": 0,
+            "card0": 0,
+            "card1": 0,
+            "card2": 0
+          },
+          "reasons": {
+            "skip": [],
+            "card0": [],
+            "card1": [],
+            "card2": []
+          }
+        },
+        {
+          "direction": "R",
+          "combo": "R-tools-tingsha",
+          "p": {
+            "skip": 0,
+            "card0": 0,
+            "card1": 0,
+            "card2": 0
+          },
+          "reasons": {
+            "skip": [],
+            "card0": [],
+            "card1": [],
+            "card2": []
+          }
+        },
+        {
+          "direction": "R",
+          "combo": "R-acro-bandages",
+          "p": {
+            "skip": 0,
+            "card0": 0,
+            "card1": 0,
+            "card2": 0
+          },
+          "reasons": {
+            "skip": [],
+            "card0": [],
+            "card1": [],
+            "card2": []
+          }
+        }
+      ]
+    },
+    {
+      "target": "f33:THE_INSATIABLE",
+      "kind": "future",
+      "rows": [
+        {
+          "direction": "P",
+          "combo": "P-toxin-footwork",
+          "p": {
+            "skip": 0.09815870794652715,
+            "card0": 0.19787016283616274,
+            "card1": 0.09815870794652715,
+            "card2": 0.09815870794652715
+          },
+          "reasons": {
+            "skip": [],
+            "card0": [],
+            "card1": [],
+            "card2": []
+          }
+        },
+        {
+          "direction": "P",
+          "combo": "P-fumes-footwork",
+          "p": {
+            "skip": 0.062777692124867,
+            "card0": 0.12654844815187288,
+            "card1": 0.062777692124867,
+            "card2": 0.062777692124867
+          },
+          "reasons": {
+            "skip": [],
+            "card0": [],
+            "card1": [],
+            "card2": []
+          }
+        },
+        {
+          "direction": "P",
+          "combo": "P-flask-afterimage",
+          "p": {
+            "skip": 0.009507610839352807,
+            "card0": 0.009507610839352807,
+            "card1": 0.009507610839352807,
+            "card2": 0.009507610839352807
+          },
+          "reasons": {
+            "skip": [],
+            "card0": [],
+            "card1": [],
+            "card2": []
+          }
+        },
+        {
+          "direction": "P",
+          "combo": "P-flask-footwork",
+          "p": {
+            "skip": 0.0437321230570572,
+            "card0": 0.08815603313752836,
+            "card1": 0.0437321230570572,
+            "card2": 0.0437321230570572
+          },
+          "reasons": {
+            "skip": [],
+            "card0": [],
+            "card1": [],
+            "card2": []
+          }
+        },
+        {
+          "direction": "P",
+          "combo": "P-mixed-defense",
+          "p": {
+            "skip": 0.004333894077489644,
+            "card0": 0.008736344892546002,
+            "card1": 0.004333894077489644,
+            "card2": 0.004333894077489644
+          },
+          "reasons": {
+            "skip": [],
+            "card0": [],
+            "card1": [],
+            "card2": []
+          }
+        },
+        {
+          "direction": "P",
+          "combo": "P-toxin-mirage",
+          "p": {
+            "skip": 0.09521203065079782,
+            "card0": 0.09521203065079782,
+            "card1": 0.09521203065079782,
+            "card2": 0.09521203065079782
+          },
+          "reasons": {
+            "skip": [],
+            "card0": [],
+            "card1": [],
+            "card2": []
+          }
+        },
+        {
+          "direction": "D",
+          "combo": "D-toxin-backflip",
+          "p": {
+            "skip": null,
+            "card0": 0.21650960324950258,
+            "card1": null,
+            "card2": null
+          },
+          "reasons": {
+            "skip": [
+              "duplicate_missing_copies_joint_probability_unknown"
+            ],
+            "card0": [],
+            "card1": [
+              "duplicate_missing_copies_joint_probability_unknown"
+            ],
+            "card2": [
+              "duplicate_missing_copies_joint_probability_unknown"
+            ]
+          }
+        },
+        {
+          "direction": "D",
+          "combo": "D-fumes-backflip",
+          "p": {
+            "skip": null,
+            "card0": 0.13846935742347716,
+            "card1": null,
+            "card2": null
+          },
+          "reasons": {
+            "skip": [
+              "duplicate_missing_copies_joint_probability_unknown"
+            ],
+            "card0": [],
+            "card1": [
+              "duplicate_missing_copies_joint_probability_unknown"
+            ],
+            "card2": [
+              "duplicate_missing_copies_joint_probability_unknown"
+            ]
+          }
+        },
+        {
+          "direction": "D",
+          "combo": "D-flask-sweep",
+          "p": {
+            "skip": null,
+            "card0": 0.050789480214651316,
+            "card1": null,
+            "card2": null
+          },
+          "reasons": {
+            "skip": [
+              "duplicate_missing_copies_joint_probability_unknown"
+            ],
+            "card0": [],
+            "card1": [
+              "duplicate_missing_copies_joint_probability_unknown"
+            ],
+            "card2": [
+              "duplicate_missing_copies_joint_probability_unknown"
+            ]
+          }
+        },
+        {
+          "direction": "D",
+          "combo": "D-observed-union-fbc4b776",
+          "p": {
+            "skip": null,
+            "card0": 0.022166769759792208,
+            "card1": null,
+            "card2": null
+          },
+          "reasons": {
+            "skip": [
+              "duplicate_missing_copies_joint_probability_unknown"
+            ],
+            "card0": [],
+            "card1": [
+              "duplicate_missing_copies_joint_probability_unknown"
+            ],
+            "card2": [
+              "duplicate_missing_copies_joint_probability_unknown"
+            ]
+          }
+        },
+        {
+          "direction": "S",
+          "combo": "S-dance-accuracy",
+          "p": {
+            "skip": 0.09505025976021607,
+            "card0": 0.19160409473420473,
+            "card1": 0.09505025976021607,
+            "card2": 0.09505025976021607
+          },
+          "reasons": {
+            "skip": [],
+            "card0": [],
+            "card1": [],
+            "card2": []
+          }
+        },
+        {
+          "direction": "S",
+          "combo": "S-cloak-phantom",
+          "p": {
+            "skip": 0.10198471490844763,
+            "card0": 0.20558269936404683,
+            "card1": 0.10198471490844763,
+            "card2": 0.10198471490844763
+          },
+          "reasons": {
+            "skip": [],
+            "card0": [],
+            "card1": [],
+            "card2": []
+          }
+        },
+        {
+          "direction": "S",
+          "combo": "S-dance-afterimage",
+          "p": {
+            "skip": 0.03192590391151485,
+            "card0": 0.03192590391151485,
+            "card1": 0.03192590391151485,
+            "card2": 0.03192590391151485
+          },
+          "reasons": {
+            "skip": [],
+            "card0": [],
+            "card1": [],
+            "card2": []
+          }
+        },
+        {
+          "direction": "S",
+          "combo": "S-observed-union-35f60a95",
+          "p": {
+            "skip": 0.010251151824965924,
+            "card0": 0.02066446394108225,
+            "card1": 0.010251151824965924,
+            "card2": 0.010251151824965924
+          },
+          "reasons": {
+            "skip": [],
+            "card0": [],
+            "card1": [],
+            "card2": []
+          }
+        },
+        {
+          "direction": "R",
+          "combo": "R-acro-tingsha",
+          "p": {
+            "skip": 0,
+            "card0": 0,
+            "card1": 0,
+            "card2": 0
+          },
+          "reasons": {
+            "skip": [],
+            "card0": [],
+            "card1": [],
+            "card2": []
+          }
+        },
+        {
+          "direction": "R",
+          "combo": "R-tools-tingsha",
+          "p": {
+            "skip": 0,
+            "card0": 0,
+            "card1": 0,
+            "card2": 0
+          },
+          "reasons": {
+            "skip": [],
+            "card0": [],
+            "card1": [],
+            "card2": []
+          }
+        },
+        {
+          "direction": "R",
+          "combo": "R-acro-bandages",
+          "p": {
+            "skip": 0,
+            "card0": 0,
+            "card1": 0,
+            "card2": 0
+          },
+          "reasons": {
+            "skip": [],
+            "card0": [],
+            "card1": [],
+            "card2": []
+          }
+        }
+      ]
+    },
+    {
+      "target": "f48:AEONGLASS",
+      "kind": "future",
+      "rows": [
+        {
+          "direction": "P",
+          "combo": "P-toxin-footwork",
+          "p": {
+            "skip": 0.3284775630557091,
+            "card0": 0.46093966050276697,
+            "card1": 0.3284775630557091,
+            "card2": 0.3284775630557091
+          },
+          "reasons": {
+            "skip": [],
+            "card0": [],
+            "card1": [],
+            "card2": []
+          }
+        },
+        {
+          "direction": "P",
+          "combo": "P-fumes-footwork",
+          "p": {
+            "skip": 0.24773611472927412,
+            "card0": 0.34763835786926955,
+            "card1": 0.24773611472927412,
+            "card2": 0.24773611472927412
+          },
+          "reasons": {
+            "skip": [],
+            "card0": [],
+            "card1": [],
+            "card2": []
+          }
+        },
+        {
+          "direction": "P",
+          "combo": "P-flask-afterimage",
+          "p": {
+            "skip": 0.04129322934211611,
+            "card0": 0.04129322934211611,
+            "card1": 0.04129322934211611,
+            "card2": 0.04129322934211611
+          },
+          "reasons": {
+            "skip": [],
+            "card0": [],
+            "card1": [],
+            "card2": []
+          }
+        },
+        {
+          "direction": "P",
+          "combo": "P-flask-footwork",
+          "p": {
+            "skip": 0.1755497954121863,
+            "card0": 0.24634213169957017,
+            "card1": 0.1755497954121863,
+            "card2": 0.1755497954121863
+          },
+          "reasons": {
+            "skip": [],
+            "card0": [],
+            "card1": [],
+            "card2": []
+          }
+        },
+        {
+          "direction": "P",
+          "combo": "P-mixed-defense",
+          "p": {
+            "skip": 0.0479612392524975,
+            "card0": 0.06730212295988339,
+            "card1": 0.0479612392524975,
+            "card2": 0.0479612392524975
+          },
+          "reasons": {
+            "skip": [],
+            "card0": [],
+            "card1": [],
+            "card2": []
+          }
+        },
+        {
+          "direction": "P",
+          "combo": "P-toxin-mirage",
+          "p": {
+            "skip": 0.26168350221990466,
+            "card0": 0.26168350221990466,
+            "card1": 0.26168350221990466,
+            "card2": 0.26168350221990466
+          },
+          "reasons": {
+            "skip": [],
+            "card0": [],
+            "card1": [],
+            "card2": []
+          }
+        },
+        {
+          "direction": "D",
+          "combo": "D-toxin-backflip",
+          "p": {
+            "skip": null,
+            "card0": 0.4982954135168944,
+            "card1": null,
+            "card2": null
+          },
+          "reasons": {
+            "skip": [
+              "duplicate_missing_copies_joint_probability_unknown"
+            ],
+            "card0": [],
+            "card1": [
+              "duplicate_missing_copies_joint_probability_unknown"
+            ],
+            "card2": [
+              "duplicate_missing_copies_joint_probability_unknown"
+            ]
+          }
+        },
+        {
+          "direction": "D",
+          "combo": "D-fumes-backflip",
+          "p": {
+            "skip": null,
+            "card0": 0.3758118776324345,
+            "card1": null,
+            "card2": null
+          },
+          "reasons": {
+            "skip": [
+              "duplicate_missing_copies_joint_probability_unknown"
+            ],
+            "card0": [],
+            "card1": [
+              "duplicate_missing_copies_joint_probability_unknown"
+            ],
+            "card2": [
+              "duplicate_missing_copies_joint_probability_unknown"
+            ]
+          }
+        },
+        {
+          "direction": "D",
+          "combo": "D-flask-sweep",
+          "p": {
+            "skip": null,
+            "card0": 0.1630042423991474,
+            "card1": null,
+            "card2": null
+          },
+          "reasons": {
+            "skip": [
+              "duplicate_missing_copies_joint_probability_unknown"
+            ],
+            "card0": [],
+            "card1": [
+              "duplicate_missing_copies_joint_probability_unknown"
+            ],
+            "card2": [
+              "duplicate_missing_copies_joint_probability_unknown"
+            ]
+          }
+        },
+        {
+          "direction": "D",
+          "combo": "D-observed-union-fbc4b776",
+          "p": {
+            "skip": null,
+            "card0": 0.1139788222290837,
+            "card1": null,
+            "card2": null
+          },
+          "reasons": {
+            "skip": [
+              "duplicate_missing_copies_joint_probability_unknown"
+            ],
+            "card0": [],
+            "card1": [
+              "duplicate_missing_copies_joint_probability_unknown"
+            ],
+            "card2": [
+              "duplicate_missing_copies_joint_probability_unknown"
+            ]
+          }
+        },
+        {
+          "direction": "S",
+          "combo": "S-dance-accuracy",
+          "p": {
+            "skip": 0.32541008457570136,
+            "card0": 0.4566351884529226,
+            "card1": 0.32541008457570136,
+            "card2": 0.32541008457570136
+          },
+          "reasons": {
+            "skip": [],
+            "card0": [],
+            "card1": [],
+            "card2": []
+          }
+        },
+        {
+          "direction": "S",
+          "combo": "S-cloak-phantom",
+          "p": {
+            "skip": 0.3389473269894281,
+            "card0": 0.4756314689424627,
+            "card1": 0.3389473269894281,
+            "card2": 0.3389473269894281
+          },
+          "reasons": {
+            "skip": [],
+            "card0": [],
+            "card1": [],
+            "card2": []
+          }
+        },
+        {
+          "direction": "S",
+          "combo": "S-dance-afterimage",
+          "p": {
+            "skip": 0.09265056449496117,
+            "card0": 0.09265056449496117,
+            "card1": 0.09265056449496117,
+            "card2": 0.09265056449496117
+          },
+          "reasons": {
+            "skip": [],
+            "card0": [],
+            "card1": [],
+            "card2": []
+          }
+        },
+        {
+          "direction": "S",
+          "combo": "S-observed-union-35f60a95",
+          "p": {
+            "skip": 0.05454703651346734,
+            "card0": 0.07654371354333718,
+            "card1": 0.05454703651346734,
+            "card2": 0.05454703651346734
+          },
+          "reasons": {
+            "skip": [],
+            "card0": [],
+            "card1": [],
+            "card2": []
+          }
+        },
+        {
+          "direction": "R",
+          "combo": "R-acro-tingsha",
+          "p": {
+            "skip": 0,
+            "card0": 0,
+            "card1": 0,
+            "card2": 0
+          },
+          "reasons": {
+            "skip": [],
+            "card0": [],
+            "card1": [],
+            "card2": []
+          }
+        },
+        {
+          "direction": "R",
+          "combo": "R-tools-tingsha",
+          "p": {
+            "skip": 0,
+            "card0": 0,
+            "card1": 0,
+            "card2": 0
+          },
+          "reasons": {
+            "skip": [],
+            "card0": [],
+            "card1": [],
+            "card2": []
+          }
+        },
+        {
+          "direction": "R",
+          "combo": "R-acro-bandages",
+          "p": {
+            "skip": 0,
+            "card0": 0,
+            "card1": 0,
+            "card2": 0
+          },
+          "reasons": {
+            "skip": [],
+            "card0": [],
+            "card1": [],
+            "card2": []
+          }
+        }
+      ]
+    },
+    {
+      "target": "f48:QUEEN",
+      "kind": "future",
+      "rows": [
+        {
+          "direction": "P",
+          "combo": "P-toxin-footwork",
+          "p": {
+            "skip": 0.3284775630557091,
+            "card0": 0.46093966050276697,
+            "card1": 0.3284775630557091,
+            "card2": 0.3284775630557091
+          },
+          "reasons": {
+            "skip": [],
+            "card0": [],
+            "card1": [],
+            "card2": []
+          }
+        },
+        {
+          "direction": "P",
+          "combo": "P-fumes-footwork",
+          "p": {
+            "skip": 0.24773611472927412,
+            "card0": 0.34763835786926955,
+            "card1": 0.24773611472927412,
+            "card2": 0.24773611472927412
+          },
+          "reasons": {
+            "skip": [],
+            "card0": [],
+            "card1": [],
+            "card2": []
+          }
+        },
+        {
+          "direction": "P",
+          "combo": "P-flask-afterimage",
+          "p": {
+            "skip": 0.04129322934211611,
+            "card0": 0.04129322934211611,
+            "card1": 0.04129322934211611,
+            "card2": 0.04129322934211611
+          },
+          "reasons": {
+            "skip": [],
+            "card0": [],
+            "card1": [],
+            "card2": []
+          }
+        },
+        {
+          "direction": "P",
+          "combo": "P-flask-footwork",
+          "p": {
+            "skip": 0.1755497954121863,
+            "card0": 0.24634213169957017,
+            "card1": 0.1755497954121863,
+            "card2": 0.1755497954121863
+          },
+          "reasons": {
+            "skip": [],
+            "card0": [],
+            "card1": [],
+            "card2": []
+          }
+        },
+        {
+          "direction": "P",
+          "combo": "P-mixed-defense",
+          "p": {
+            "skip": 0.0479612392524975,
+            "card0": 0.06730212295988339,
+            "card1": 0.0479612392524975,
+            "card2": 0.0479612392524975
+          },
+          "reasons": {
+            "skip": [],
+            "card0": [],
+            "card1": [],
+            "card2": []
+          }
+        },
+        {
+          "direction": "P",
+          "combo": "P-toxin-mirage",
+          "p": {
+            "skip": 0.26168350221990466,
+            "card0": 0.26168350221990466,
+            "card1": 0.26168350221990466,
+            "card2": 0.26168350221990466
+          },
+          "reasons": {
+            "skip": [],
+            "card0": [],
+            "card1": [],
+            "card2": []
+          }
+        },
+        {
+          "direction": "D",
+          "combo": "D-toxin-backflip",
+          "p": {
+            "skip": null,
+            "card0": 0.4982954135168944,
+            "card1": null,
+            "card2": null
+          },
+          "reasons": {
+            "skip": [
+              "duplicate_missing_copies_joint_probability_unknown"
+            ],
+            "card0": [],
+            "card1": [
+              "duplicate_missing_copies_joint_probability_unknown"
+            ],
+            "card2": [
+              "duplicate_missing_copies_joint_probability_unknown"
+            ]
+          }
+        },
+        {
+          "direction": "D",
+          "combo": "D-fumes-backflip",
+          "p": {
+            "skip": null,
+            "card0": 0.3758118776324345,
+            "card1": null,
+            "card2": null
+          },
+          "reasons": {
+            "skip": [
+              "duplicate_missing_copies_joint_probability_unknown"
+            ],
+            "card0": [],
+            "card1": [
+              "duplicate_missing_copies_joint_probability_unknown"
+            ],
+            "card2": [
+              "duplicate_missing_copies_joint_probability_unknown"
+            ]
+          }
+        },
+        {
+          "direction": "D",
+          "combo": "D-flask-sweep",
+          "p": {
+            "skip": null,
+            "card0": 0.1630042423991474,
+            "card1": null,
+            "card2": null
+          },
+          "reasons": {
+            "skip": [
+              "duplicate_missing_copies_joint_probability_unknown"
+            ],
+            "card0": [],
+            "card1": [
+              "duplicate_missing_copies_joint_probability_unknown"
+            ],
+            "card2": [
+              "duplicate_missing_copies_joint_probability_unknown"
+            ]
+          }
+        },
+        {
+          "direction": "D",
+          "combo": "D-observed-union-fbc4b776",
+          "p": {
+            "skip": null,
+            "card0": 0.1139788222290837,
+            "card1": null,
+            "card2": null
+          },
+          "reasons": {
+            "skip": [
+              "duplicate_missing_copies_joint_probability_unknown"
+            ],
+            "card0": [],
+            "card1": [
+              "duplicate_missing_copies_joint_probability_unknown"
+            ],
+            "card2": [
+              "duplicate_missing_copies_joint_probability_unknown"
+            ]
+          }
+        },
+        {
+          "direction": "S",
+          "combo": "S-dance-accuracy",
+          "p": {
+            "skip": 0.32541008457570136,
+            "card0": 0.4566351884529226,
+            "card1": 0.32541008457570136,
+            "card2": 0.32541008457570136
+          },
+          "reasons": {
+            "skip": [],
+            "card0": [],
+            "card1": [],
+            "card2": []
+          }
+        },
+        {
+          "direction": "S",
+          "combo": "S-cloak-phantom",
+          "p": {
+            "skip": 0.3389473269894281,
+            "card0": 0.4756314689424627,
+            "card1": 0.3389473269894281,
+            "card2": 0.3389473269894281
+          },
+          "reasons": {
+            "skip": [],
+            "card0": [],
+            "card1": [],
+            "card2": []
+          }
+        },
+        {
+          "direction": "S",
+          "combo": "S-dance-afterimage",
+          "p": {
+            "skip": 0.09265056449496117,
+            "card0": 0.09265056449496117,
+            "card1": 0.09265056449496117,
+            "card2": 0.09265056449496117
+          },
+          "reasons": {
+            "skip": [],
+            "card0": [],
+            "card1": [],
+            "card2": []
+          }
+        },
+        {
+          "direction": "S",
+          "combo": "S-observed-union-35f60a95",
+          "p": {
+            "skip": 0.05454703651346734,
+            "card0": 0.07654371354333718,
+            "card1": 0.05454703651346734,
+            "card2": 0.05454703651346734
+          },
+          "reasons": {
+            "skip": [],
+            "card0": [],
+            "card1": [],
+            "card2": []
+          }
+        },
+        {
+          "direction": "R",
+          "combo": "R-acro-tingsha",
+          "p": {
+            "skip": 0,
+            "card0": 0,
+            "card1": 0,
+            "card2": 0
+          },
+          "reasons": {
+            "skip": [],
+            "card0": [],
+            "card1": [],
+            "card2": []
+          }
+        },
+        {
+          "direction": "R",
+          "combo": "R-tools-tingsha",
+          "p": {
+            "skip": 0,
+            "card0": 0,
+            "card1": 0,
+            "card2": 0
+          },
+          "reasons": {
+            "skip": [],
+            "card0": [],
+            "card1": [],
+            "card2": []
+          }
+        },
+        {
+          "direction": "R",
+          "combo": "R-acro-bandages",
+          "p": {
+            "skip": 0,
+            "card0": 0,
+            "card1": 0,
+            "card2": 0
+          },
+          "reasons": {
+            "skip": [],
+            "card0": [],
+            "card1": [],
+            "card2": []
+          }
+        }
+      ]
+    },
+    {
+      "target": "f48:TEST_SUBJECT",
+      "kind": "future",
+      "rows": [
+        {
+          "direction": "P",
+          "combo": "P-toxin-footwork",
+          "p": {
+            "skip": 0.3284775630557091,
+            "card0": 0.46093966050276697,
+            "card1": 0.3284775630557091,
+            "card2": 0.3284775630557091
+          },
+          "reasons": {
+            "skip": [],
+            "card0": [],
+            "card1": [],
+            "card2": []
+          }
+        },
+        {
+          "direction": "P",
+          "combo": "P-fumes-footwork",
+          "p": {
+            "skip": 0.24773611472927412,
+            "card0": 0.34763835786926955,
+            "card1": 0.24773611472927412,
+            "card2": 0.24773611472927412
+          },
+          "reasons": {
+            "skip": [],
+            "card0": [],
+            "card1": [],
+            "card2": []
+          }
+        },
+        {
+          "direction": "P",
+          "combo": "P-flask-afterimage",
+          "p": {
+            "skip": 0.04129322934211611,
+            "card0": 0.04129322934211611,
+            "card1": 0.04129322934211611,
+            "card2": 0.04129322934211611
+          },
+          "reasons": {
+            "skip": [],
+            "card0": [],
+            "card1": [],
+            "card2": []
+          }
+        },
+        {
+          "direction": "P",
+          "combo": "P-flask-footwork",
+          "p": {
+            "skip": 0.1755497954121863,
+            "card0": 0.24634213169957017,
+            "card1": 0.1755497954121863,
+            "card2": 0.1755497954121863
+          },
+          "reasons": {
+            "skip": [],
+            "card0": [],
+            "card1": [],
+            "card2": []
+          }
+        },
+        {
+          "direction": "P",
+          "combo": "P-mixed-defense",
+          "p": {
+            "skip": 0.0479612392524975,
+            "card0": 0.06730212295988339,
+            "card1": 0.0479612392524975,
+            "card2": 0.0479612392524975
+          },
+          "reasons": {
+            "skip": [],
+            "card0": [],
+            "card1": [],
+            "card2": []
+          }
+        },
+        {
+          "direction": "P",
+          "combo": "P-toxin-mirage",
+          "p": {
+            "skip": 0.26168350221990466,
+            "card0": 0.26168350221990466,
+            "card1": 0.26168350221990466,
+            "card2": 0.26168350221990466
+          },
+          "reasons": {
+            "skip": [],
+            "card0": [],
+            "card1": [],
+            "card2": []
+          }
+        },
+        {
+          "direction": "D",
+          "combo": "D-toxin-backflip",
+          "p": {
+            "skip": null,
+            "card0": 0.4982954135168944,
+            "card1": null,
+            "card2": null
+          },
+          "reasons": {
+            "skip": [
+              "duplicate_missing_copies_joint_probability_unknown"
+            ],
+            "card0": [],
+            "card1": [
+              "duplicate_missing_copies_joint_probability_unknown"
+            ],
+            "card2": [
+              "duplicate_missing_copies_joint_probability_unknown"
+            ]
+          }
+        },
+        {
+          "direction": "D",
+          "combo": "D-fumes-backflip",
+          "p": {
+            "skip": null,
+            "card0": 0.3758118776324345,
+            "card1": null,
+            "card2": null
+          },
+          "reasons": {
+            "skip": [
+              "duplicate_missing_copies_joint_probability_unknown"
+            ],
+            "card0": [],
+            "card1": [
+              "duplicate_missing_copies_joint_probability_unknown"
+            ],
+            "card2": [
+              "duplicate_missing_copies_joint_probability_unknown"
+            ]
+          }
+        },
+        {
+          "direction": "D",
+          "combo": "D-flask-sweep",
+          "p": {
+            "skip": null,
+            "card0": 0.1630042423991474,
+            "card1": null,
+            "card2": null
+          },
+          "reasons": {
+            "skip": [
+              "duplicate_missing_copies_joint_probability_unknown"
+            ],
+            "card0": [],
+            "card1": [
+              "duplicate_missing_copies_joint_probability_unknown"
+            ],
+            "card2": [
+              "duplicate_missing_copies_joint_probability_unknown"
+            ]
+          }
+        },
+        {
+          "direction": "D",
+          "combo": "D-observed-union-fbc4b776",
+          "p": {
+            "skip": null,
+            "card0": 0.1139788222290837,
+            "card1": null,
+            "card2": null
+          },
+          "reasons": {
+            "skip": [
+              "duplicate_missing_copies_joint_probability_unknown"
+            ],
+            "card0": [],
+            "card1": [
+              "duplicate_missing_copies_joint_probability_unknown"
+            ],
+            "card2": [
+              "duplicate_missing_copies_joint_probability_unknown"
+            ]
+          }
+        },
+        {
+          "direction": "S",
+          "combo": "S-dance-accuracy",
+          "p": {
+            "skip": 0.32541008457570136,
+            "card0": 0.4566351884529226,
+            "card1": 0.32541008457570136,
+            "card2": 0.32541008457570136
+          },
+          "reasons": {
+            "skip": [],
+            "card0": [],
+            "card1": [],
+            "card2": []
+          }
+        },
+        {
+          "direction": "S",
+          "combo": "S-cloak-phantom",
+          "p": {
+            "skip": 0.3389473269894281,
+            "card0": 0.4756314689424627,
+            "card1": 0.3389473269894281,
+            "card2": 0.3389473269894281
+          },
+          "reasons": {
+            "skip": [],
+            "card0": [],
+            "card1": [],
+            "card2": []
+          }
+        },
+        {
+          "direction": "S",
+          "combo": "S-dance-afterimage",
+          "p": {
+            "skip": 0.09265056449496117,
+            "card0": 0.09265056449496117,
+            "card1": 0.09265056449496117,
+            "card2": 0.09265056449496117
+          },
+          "reasons": {
+            "skip": [],
+            "card0": [],
+            "card1": [],
+            "card2": []
+          }
+        },
+        {
+          "direction": "S",
+          "combo": "S-observed-union-35f60a95",
+          "p": {
+            "skip": 0.05454703651346734,
+            "card0": 0.07654371354333718,
+            "card1": 0.05454703651346734,
+            "card2": 0.05454703651346734
+          },
+          "reasons": {
+            "skip": [],
+            "card0": [],
+            "card1": [],
+            "card2": []
+          }
+        },
+        {
+          "direction": "R",
+          "combo": "R-acro-tingsha",
+          "p": {
+            "skip": 0,
+            "card0": 0,
+            "card1": 0,
+            "card2": 0
+          },
+          "reasons": {
+            "skip": [],
+            "card0": [],
+            "card1": [],
+            "card2": []
+          }
+        },
+        {
+          "direction": "R",
+          "combo": "R-tools-tingsha",
+          "p": {
+            "skip": 0,
+            "card0": 0,
+            "card1": 0,
+            "card2": 0
+          },
+          "reasons": {
+            "skip": [],
+            "card0": [],
+            "card1": [],
+            "card2": []
+          }
+        },
+        {
+          "direction": "R",
+          "combo": "R-acro-bandages",
+          "p": {
+            "skip": 0,
+            "card0": 0,
+            "card1": 0,
+            "card2": 0
+          },
+          "reasons": {
+            "skip": [],
+            "card0": [],
+            "card1": [],
+            "card2": []
+          }
+        }
+      ]
+    },
+    {
+      "target": "f48:AEONGLASS:then:f49:QUEEN",
+      "kind": "chain",
+      "rows": [
+        {
+          "direction": "P",
+          "combo": "P-toxin-footwork",
+          "p": {
+            "skip": 0.3284775630557091,
+            "card0": 0.46093966050276697,
+            "card1": 0.3284775630557091,
+            "card2": 0.3284775630557091
+          },
+          "reasons": {
+            "skip": [],
+            "card0": [],
+            "card1": [],
+            "card2": []
+          }
+        },
+        {
+          "direction": "P",
+          "combo": "P-fumes-footwork",
+          "p": {
+            "skip": 0.24773611472927412,
+            "card0": 0.34763835786926955,
+            "card1": 0.24773611472927412,
+            "card2": 0.24773611472927412
+          },
+          "reasons": {
+            "skip": [],
+            "card0": [],
+            "card1": [],
+            "card2": []
+          }
+        },
+        {
+          "direction": "P",
+          "combo": "P-flask-afterimage",
+          "p": {
+            "skip": 0.04129322934211611,
+            "card0": 0.04129322934211611,
+            "card1": 0.04129322934211611,
+            "card2": 0.04129322934211611
+          },
+          "reasons": {
+            "skip": [],
+            "card0": [],
+            "card1": [],
+            "card2": []
+          }
+        },
+        {
+          "direction": "P",
+          "combo": "P-flask-footwork",
+          "p": {
+            "skip": 0.1755497954121863,
+            "card0": 0.24634213169957017,
+            "card1": 0.1755497954121863,
+            "card2": 0.1755497954121863
+          },
+          "reasons": {
+            "skip": [],
+            "card0": [],
+            "card1": [],
+            "card2": []
+          }
+        },
+        {
+          "direction": "P",
+          "combo": "P-mixed-defense",
+          "p": {
+            "skip": 0.0479612392524975,
+            "card0": 0.06730212295988339,
+            "card1": 0.0479612392524975,
+            "card2": 0.0479612392524975
+          },
+          "reasons": {
+            "skip": [],
+            "card0": [],
+            "card1": [],
+            "card2": []
+          }
+        },
+        {
+          "direction": "P",
+          "combo": "P-toxin-mirage",
+          "p": {
+            "skip": 0.26168350221990466,
+            "card0": 0.26168350221990466,
+            "card1": 0.26168350221990466,
+            "card2": 0.26168350221990466
+          },
+          "reasons": {
+            "skip": [],
+            "card0": [],
+            "card1": [],
+            "card2": []
+          }
+        },
+        {
+          "direction": "D",
+          "combo": "D-toxin-backflip",
+          "p": {
+            "skip": null,
+            "card0": 0.4982954135168944,
+            "card1": null,
+            "card2": null
+          },
+          "reasons": {
+            "skip": [
+              "duplicate_missing_copies_joint_probability_unknown"
+            ],
+            "card0": [],
+            "card1": [
+              "duplicate_missing_copies_joint_probability_unknown"
+            ],
+            "card2": [
+              "duplicate_missing_copies_joint_probability_unknown"
+            ]
+          }
+        },
+        {
+          "direction": "D",
+          "combo": "D-fumes-backflip",
+          "p": {
+            "skip": null,
+            "card0": 0.3758118776324345,
+            "card1": null,
+            "card2": null
+          },
+          "reasons": {
+            "skip": [
+              "duplicate_missing_copies_joint_probability_unknown"
+            ],
+            "card0": [],
+            "card1": [
+              "duplicate_missing_copies_joint_probability_unknown"
+            ],
+            "card2": [
+              "duplicate_missing_copies_joint_probability_unknown"
+            ]
+          }
+        },
+        {
+          "direction": "D",
+          "combo": "D-flask-sweep",
+          "p": {
+            "skip": null,
+            "card0": 0.1630042423991474,
+            "card1": null,
+            "card2": null
+          },
+          "reasons": {
+            "skip": [
+              "duplicate_missing_copies_joint_probability_unknown"
+            ],
+            "card0": [],
+            "card1": [
+              "duplicate_missing_copies_joint_probability_unknown"
+            ],
+            "card2": [
+              "duplicate_missing_copies_joint_probability_unknown"
+            ]
+          }
+        },
+        {
+          "direction": "D",
+          "combo": "D-observed-union-fbc4b776",
+          "p": {
+            "skip": null,
+            "card0": 0.1139788222290837,
+            "card1": null,
+            "card2": null
+          },
+          "reasons": {
+            "skip": [
+              "duplicate_missing_copies_joint_probability_unknown"
+            ],
+            "card0": [],
+            "card1": [
+              "duplicate_missing_copies_joint_probability_unknown"
+            ],
+            "card2": [
+              "duplicate_missing_copies_joint_probability_unknown"
+            ]
+          }
+        },
+        {
+          "direction": "S",
+          "combo": "S-dance-accuracy",
+          "p": {
+            "skip": 0.32541008457570136,
+            "card0": 0.4566351884529226,
+            "card1": 0.32541008457570136,
+            "card2": 0.32541008457570136
+          },
+          "reasons": {
+            "skip": [],
+            "card0": [],
+            "card1": [],
+            "card2": []
+          }
+        },
+        {
+          "direction": "S",
+          "combo": "S-cloak-phantom",
+          "p": {
+            "skip": 0.3389473269894281,
+            "card0": 0.4756314689424627,
+            "card1": 0.3389473269894281,
+            "card2": 0.3389473269894281
+          },
+          "reasons": {
+            "skip": [],
+            "card0": [],
+            "card1": [],
+            "card2": []
+          }
+        },
+        {
+          "direction": "S",
+          "combo": "S-dance-afterimage",
+          "p": {
+            "skip": 0.09265056449496117,
+            "card0": 0.09265056449496117,
+            "card1": 0.09265056449496117,
+            "card2": 0.09265056449496117
+          },
+          "reasons": {
+            "skip": [],
+            "card0": [],
+            "card1": [],
+            "card2": []
+          }
+        },
+        {
+          "direction": "S",
+          "combo": "S-observed-union-35f60a95",
+          "p": {
+            "skip": 0.05454703651346734,
+            "card0": 0.07654371354333718,
+            "card1": 0.05454703651346734,
+            "card2": 0.05454703651346734
+          },
+          "reasons": {
+            "skip": [],
+            "card0": [],
+            "card1": [],
+            "card2": []
+          }
+        },
+        {
+          "direction": "R",
+          "combo": "R-acro-tingsha",
+          "p": {
+            "skip": 0,
+            "card0": 0,
+            "card1": 0,
+            "card2": 0
+          },
+          "reasons": {
+            "skip": [],
+            "card0": [],
+            "card1": [],
+            "card2": []
+          }
+        },
+        {
+          "direction": "R",
+          "combo": "R-tools-tingsha",
+          "p": {
+            "skip": 0,
+            "card0": 0,
+            "card1": 0,
+            "card2": 0
+          },
+          "reasons": {
+            "skip": [],
+            "card0": [],
+            "card1": [],
+            "card2": []
+          }
+        },
+        {
+          "direction": "R",
+          "combo": "R-acro-bandages",
+          "p": {
+            "skip": 0,
+            "card0": 0,
+            "card1": 0,
+            "card2": 0
+          },
+          "reasons": {
+            "skip": [],
+            "card0": [],
+            "card1": [],
+            "card2": []
+          }
+        }
+      ]
+    },
+    {
+      "target": "f48:AEONGLASS:then:f49:TEST_SUBJECT",
+      "kind": "chain",
+      "rows": [
+        {
+          "direction": "P",
+          "combo": "P-toxin-footwork",
+          "p": {
+            "skip": 0.3284775630557091,
+            "card0": 0.46093966050276697,
+            "card1": 0.3284775630557091,
+            "card2": 0.3284775630557091
+          },
+          "reasons": {
+            "skip": [],
+            "card0": [],
+            "card1": [],
+            "card2": []
+          }
+        },
+        {
+          "direction": "P",
+          "combo": "P-fumes-footwork",
+          "p": {
+            "skip": 0.24773611472927412,
+            "card0": 0.34763835786926955,
+            "card1": 0.24773611472927412,
+            "card2": 0.24773611472927412
+          },
+          "reasons": {
+            "skip": [],
+            "card0": [],
+            "card1": [],
+            "card2": []
+          }
+        },
+        {
+          "direction": "P",
+          "combo": "P-flask-afterimage",
+          "p": {
+            "skip": 0.04129322934211611,
+            "card0": 0.04129322934211611,
+            "card1": 0.04129322934211611,
+            "card2": 0.04129322934211611
+          },
+          "reasons": {
+            "skip": [],
+            "card0": [],
+            "card1": [],
+            "card2": []
+          }
+        },
+        {
+          "direction": "P",
+          "combo": "P-flask-footwork",
+          "p": {
+            "skip": 0.1755497954121863,
+            "card0": 0.24634213169957017,
+            "card1": 0.1755497954121863,
+            "card2": 0.1755497954121863
+          },
+          "reasons": {
+            "skip": [],
+            "card0": [],
+            "card1": [],
+            "card2": []
+          }
+        },
+        {
+          "direction": "P",
+          "combo": "P-mixed-defense",
+          "p": {
+            "skip": 0.0479612392524975,
+            "card0": 0.06730212295988339,
+            "card1": 0.0479612392524975,
+            "card2": 0.0479612392524975
+          },
+          "reasons": {
+            "skip": [],
+            "card0": [],
+            "card1": [],
+            "card2": []
+          }
+        },
+        {
+          "direction": "P",
+          "combo": "P-toxin-mirage",
+          "p": {
+            "skip": 0.26168350221990466,
+            "card0": 0.26168350221990466,
+            "card1": 0.26168350221990466,
+            "card2": 0.26168350221990466
+          },
+          "reasons": {
+            "skip": [],
+            "card0": [],
+            "card1": [],
+            "card2": []
+          }
+        },
+        {
+          "direction": "D",
+          "combo": "D-toxin-backflip",
+          "p": {
+            "skip": null,
+            "card0": 0.4982954135168944,
+            "card1": null,
+            "card2": null
+          },
+          "reasons": {
+            "skip": [
+              "duplicate_missing_copies_joint_probability_unknown"
+            ],
+            "card0": [],
+            "card1": [
+              "duplicate_missing_copies_joint_probability_unknown"
+            ],
+            "card2": [
+              "duplicate_missing_copies_joint_probability_unknown"
+            ]
+          }
+        },
+        {
+          "direction": "D",
+          "combo": "D-fumes-backflip",
+          "p": {
+            "skip": null,
+            "card0": 0.3758118776324345,
+            "card1": null,
+            "card2": null
+          },
+          "reasons": {
+            "skip": [
+              "duplicate_missing_copies_joint_probability_unknown"
+            ],
+            "card0": [],
+            "card1": [
+              "duplicate_missing_copies_joint_probability_unknown"
+            ],
+            "card2": [
+              "duplicate_missing_copies_joint_probability_unknown"
+            ]
+          }
+        },
+        {
+          "direction": "D",
+          "combo": "D-flask-sweep",
+          "p": {
+            "skip": null,
+            "card0": 0.1630042423991474,
+            "card1": null,
+            "card2": null
+          },
+          "reasons": {
+            "skip": [
+              "duplicate_missing_copies_joint_probability_unknown"
+            ],
+            "card0": [],
+            "card1": [
+              "duplicate_missing_copies_joint_probability_unknown"
+            ],
+            "card2": [
+              "duplicate_missing_copies_joint_probability_unknown"
+            ]
+          }
+        },
+        {
+          "direction": "D",
+          "combo": "D-observed-union-fbc4b776",
+          "p": {
+            "skip": null,
+            "card0": 0.1139788222290837,
+            "card1": null,
+            "card2": null
+          },
+          "reasons": {
+            "skip": [
+              "duplicate_missing_copies_joint_probability_unknown"
+            ],
+            "card0": [],
+            "card1": [
+              "duplicate_missing_copies_joint_probability_unknown"
+            ],
+            "card2": [
+              "duplicate_missing_copies_joint_probability_unknown"
+            ]
+          }
+        },
+        {
+          "direction": "S",
+          "combo": "S-dance-accuracy",
+          "p": {
+            "skip": 0.32541008457570136,
+            "card0": 0.4566351884529226,
+            "card1": 0.32541008457570136,
+            "card2": 0.32541008457570136
+          },
+          "reasons": {
+            "skip": [],
+            "card0": [],
+            "card1": [],
+            "card2": []
+          }
+        },
+        {
+          "direction": "S",
+          "combo": "S-cloak-phantom",
+          "p": {
+            "skip": 0.3389473269894281,
+            "card0": 0.4756314689424627,
+            "card1": 0.3389473269894281,
+            "card2": 0.3389473269894281
+          },
+          "reasons": {
+            "skip": [],
+            "card0": [],
+            "card1": [],
+            "card2": []
+          }
+        },
+        {
+          "direction": "S",
+          "combo": "S-dance-afterimage",
+          "p": {
+            "skip": 0.09265056449496117,
+            "card0": 0.09265056449496117,
+            "card1": 0.09265056449496117,
+            "card2": 0.09265056449496117
+          },
+          "reasons": {
+            "skip": [],
+            "card0": [],
+            "card1": [],
+            "card2": []
+          }
+        },
+        {
+          "direction": "S",
+          "combo": "S-observed-union-35f60a95",
+          "p": {
+            "skip": 0.05454703651346734,
+            "card0": 0.07654371354333718,
+            "card1": 0.05454703651346734,
+            "card2": 0.05454703651346734
+          },
+          "reasons": {
+            "skip": [],
+            "card0": [],
+            "card1": [],
+            "card2": []
+          }
+        },
+        {
+          "direction": "R",
+          "combo": "R-acro-tingsha",
+          "p": {
+            "skip": 0,
+            "card0": 0,
+            "card1": 0,
+            "card2": 0
+          },
+          "reasons": {
+            "skip": [],
+            "card0": [],
+            "card1": [],
+            "card2": []
+          }
+        },
+        {
+          "direction": "R",
+          "combo": "R-tools-tingsha",
+          "p": {
+            "skip": 0,
+            "card0": 0,
+            "card1": 0,
+            "card2": 0
+          },
+          "reasons": {
+            "skip": [],
+            "card0": [],
+            "card1": [],
+            "card2": []
+          }
+        },
+        {
+          "direction": "R",
+          "combo": "R-acro-bandages",
+          "p": {
+            "skip": 0,
+            "card0": 0,
+            "card1": 0,
+            "card2": 0
+          },
+          "reasons": {
+            "skip": [],
+            "card0": [],
+            "card1": [],
+            "card2": []
+          }
+        }
+      ]
+    },
+    {
+      "target": "f48:QUEEN:then:f49:AEONGLASS",
+      "kind": "chain",
+      "rows": [
+        {
+          "direction": "P",
+          "combo": "P-toxin-footwork",
+          "p": {
+            "skip": 0.3284775630557091,
+            "card0": 0.46093966050276697,
+            "card1": 0.3284775630557091,
+            "card2": 0.3284775630557091
+          },
+          "reasons": {
+            "skip": [],
+            "card0": [],
+            "card1": [],
+            "card2": []
+          }
+        },
+        {
+          "direction": "P",
+          "combo": "P-fumes-footwork",
+          "p": {
+            "skip": 0.24773611472927412,
+            "card0": 0.34763835786926955,
+            "card1": 0.24773611472927412,
+            "card2": 0.24773611472927412
+          },
+          "reasons": {
+            "skip": [],
+            "card0": [],
+            "card1": [],
+            "card2": []
+          }
+        },
+        {
+          "direction": "P",
+          "combo": "P-flask-afterimage",
+          "p": {
+            "skip": 0.04129322934211611,
+            "card0": 0.04129322934211611,
+            "card1": 0.04129322934211611,
+            "card2": 0.04129322934211611
+          },
+          "reasons": {
+            "skip": [],
+            "card0": [],
+            "card1": [],
+            "card2": []
+          }
+        },
+        {
+          "direction": "P",
+          "combo": "P-flask-footwork",
+          "p": {
+            "skip": 0.1755497954121863,
+            "card0": 0.24634213169957017,
+            "card1": 0.1755497954121863,
+            "card2": 0.1755497954121863
+          },
+          "reasons": {
+            "skip": [],
+            "card0": [],
+            "card1": [],
+            "card2": []
+          }
+        },
+        {
+          "direction": "P",
+          "combo": "P-mixed-defense",
+          "p": {
+            "skip": 0.0479612392524975,
+            "card0": 0.06730212295988339,
+            "card1": 0.0479612392524975,
+            "card2": 0.0479612392524975
+          },
+          "reasons": {
+            "skip": [],
+            "card0": [],
+            "card1": [],
+            "card2": []
+          }
+        },
+        {
+          "direction": "P",
+          "combo": "P-toxin-mirage",
+          "p": {
+            "skip": 0.26168350221990466,
+            "card0": 0.26168350221990466,
+            "card1": 0.26168350221990466,
+            "card2": 0.26168350221990466
+          },
+          "reasons": {
+            "skip": [],
+            "card0": [],
+            "card1": [],
+            "card2": []
+          }
+        },
+        {
+          "direction": "D",
+          "combo": "D-toxin-backflip",
+          "p": {
+            "skip": null,
+            "card0": 0.4982954135168944,
+            "card1": null,
+            "card2": null
+          },
+          "reasons": {
+            "skip": [
+              "duplicate_missing_copies_joint_probability_unknown"
+            ],
+            "card0": [],
+            "card1": [
+              "duplicate_missing_copies_joint_probability_unknown"
+            ],
+            "card2": [
+              "duplicate_missing_copies_joint_probability_unknown"
+            ]
+          }
+        },
+        {
+          "direction": "D",
+          "combo": "D-fumes-backflip",
+          "p": {
+            "skip": null,
+            "card0": 0.3758118776324345,
+            "card1": null,
+            "card2": null
+          },
+          "reasons": {
+            "skip": [
+              "duplicate_missing_copies_joint_probability_unknown"
+            ],
+            "card0": [],
+            "card1": [
+              "duplicate_missing_copies_joint_probability_unknown"
+            ],
+            "card2": [
+              "duplicate_missing_copies_joint_probability_unknown"
+            ]
+          }
+        },
+        {
+          "direction": "D",
+          "combo": "D-flask-sweep",
+          "p": {
+            "skip": null,
+            "card0": 0.1630042423991474,
+            "card1": null,
+            "card2": null
+          },
+          "reasons": {
+            "skip": [
+              "duplicate_missing_copies_joint_probability_unknown"
+            ],
+            "card0": [],
+            "card1": [
+              "duplicate_missing_copies_joint_probability_unknown"
+            ],
+            "card2": [
+              "duplicate_missing_copies_joint_probability_unknown"
+            ]
+          }
+        },
+        {
+          "direction": "D",
+          "combo": "D-observed-union-fbc4b776",
+          "p": {
+            "skip": null,
+            "card0": 0.1139788222290837,
+            "card1": null,
+            "card2": null
+          },
+          "reasons": {
+            "skip": [
+              "duplicate_missing_copies_joint_probability_unknown"
+            ],
+            "card0": [],
+            "card1": [
+              "duplicate_missing_copies_joint_probability_unknown"
+            ],
+            "card2": [
+              "duplicate_missing_copies_joint_probability_unknown"
+            ]
+          }
+        },
+        {
+          "direction": "S",
+          "combo": "S-dance-accuracy",
+          "p": {
+            "skip": 0.32541008457570136,
+            "card0": 0.4566351884529226,
+            "card1": 0.32541008457570136,
+            "card2": 0.32541008457570136
+          },
+          "reasons": {
+            "skip": [],
+            "card0": [],
+            "card1": [],
+            "card2": []
+          }
+        },
+        {
+          "direction": "S",
+          "combo": "S-cloak-phantom",
+          "p": {
+            "skip": 0.3389473269894281,
+            "card0": 0.4756314689424627,
+            "card1": 0.3389473269894281,
+            "card2": 0.3389473269894281
+          },
+          "reasons": {
+            "skip": [],
+            "card0": [],
+            "card1": [],
+            "card2": []
+          }
+        },
+        {
+          "direction": "S",
+          "combo": "S-dance-afterimage",
+          "p": {
+            "skip": 0.09265056449496117,
+            "card0": 0.09265056449496117,
+            "card1": 0.09265056449496117,
+            "card2": 0.09265056449496117
+          },
+          "reasons": {
+            "skip": [],
+            "card0": [],
+            "card1": [],
+            "card2": []
+          }
+        },
+        {
+          "direction": "S",
+          "combo": "S-observed-union-35f60a95",
+          "p": {
+            "skip": 0.05454703651346734,
+            "card0": 0.07654371354333718,
+            "card1": 0.05454703651346734,
+            "card2": 0.05454703651346734
+          },
+          "reasons": {
+            "skip": [],
+            "card0": [],
+            "card1": [],
+            "card2": []
+          }
+        },
+        {
+          "direction": "R",
+          "combo": "R-acro-tingsha",
+          "p": {
+            "skip": 0,
+            "card0": 0,
+            "card1": 0,
+            "card2": 0
+          },
+          "reasons": {
+            "skip": [],
+            "card0": [],
+            "card1": [],
+            "card2": []
+          }
+        },
+        {
+          "direction": "R",
+          "combo": "R-tools-tingsha",
+          "p": {
+            "skip": 0,
+            "card0": 0,
+            "card1": 0,
+            "card2": 0
+          },
+          "reasons": {
+            "skip": [],
+            "card0": [],
+            "card1": [],
+            "card2": []
+          }
+        },
+        {
+          "direction": "R",
+          "combo": "R-acro-bandages",
+          "p": {
+            "skip": 0,
+            "card0": 0,
+            "card1": 0,
+            "card2": 0
+          },
+          "reasons": {
+            "skip": [],
+            "card0": [],
+            "card1": [],
+            "card2": []
+          }
+        }
+      ]
+    },
+    {
+      "target": "f48:QUEEN:then:f49:TEST_SUBJECT",
+      "kind": "chain",
+      "rows": [
+        {
+          "direction": "P",
+          "combo": "P-toxin-footwork",
+          "p": {
+            "skip": 0.3284775630557091,
+            "card0": 0.46093966050276697,
+            "card1": 0.3284775630557091,
+            "card2": 0.3284775630557091
+          },
+          "reasons": {
+            "skip": [],
+            "card0": [],
+            "card1": [],
+            "card2": []
+          }
+        },
+        {
+          "direction": "P",
+          "combo": "P-fumes-footwork",
+          "p": {
+            "skip": 0.24773611472927412,
+            "card0": 0.34763835786926955,
+            "card1": 0.24773611472927412,
+            "card2": 0.24773611472927412
+          },
+          "reasons": {
+            "skip": [],
+            "card0": [],
+            "card1": [],
+            "card2": []
+          }
+        },
+        {
+          "direction": "P",
+          "combo": "P-flask-afterimage",
+          "p": {
+            "skip": 0.04129322934211611,
+            "card0": 0.04129322934211611,
+            "card1": 0.04129322934211611,
+            "card2": 0.04129322934211611
+          },
+          "reasons": {
+            "skip": [],
+            "card0": [],
+            "card1": [],
+            "card2": []
+          }
+        },
+        {
+          "direction": "P",
+          "combo": "P-flask-footwork",
+          "p": {
+            "skip": 0.1755497954121863,
+            "card0": 0.24634213169957017,
+            "card1": 0.1755497954121863,
+            "card2": 0.1755497954121863
+          },
+          "reasons": {
+            "skip": [],
+            "card0": [],
+            "card1": [],
+            "card2": []
+          }
+        },
+        {
+          "direction": "P",
+          "combo": "P-mixed-defense",
+          "p": {
+            "skip": 0.0479612392524975,
+            "card0": 0.06730212295988339,
+            "card1": 0.0479612392524975,
+            "card2": 0.0479612392524975
+          },
+          "reasons": {
+            "skip": [],
+            "card0": [],
+            "card1": [],
+            "card2": []
+          }
+        },
+        {
+          "direction": "P",
+          "combo": "P-toxin-mirage",
+          "p": {
+            "skip": 0.26168350221990466,
+            "card0": 0.26168350221990466,
+            "card1": 0.26168350221990466,
+            "card2": 0.26168350221990466
+          },
+          "reasons": {
+            "skip": [],
+            "card0": [],
+            "card1": [],
+            "card2": []
+          }
+        },
+        {
+          "direction": "D",
+          "combo": "D-toxin-backflip",
+          "p": {
+            "skip": null,
+            "card0": 0.4982954135168944,
+            "card1": null,
+            "card2": null
+          },
+          "reasons": {
+            "skip": [
+              "duplicate_missing_copies_joint_probability_unknown"
+            ],
+            "card0": [],
+            "card1": [
+              "duplicate_missing_copies_joint_probability_unknown"
+            ],
+            "card2": [
+              "duplicate_missing_copies_joint_probability_unknown"
+            ]
+          }
+        },
+        {
+          "direction": "D",
+          "combo": "D-fumes-backflip",
+          "p": {
+            "skip": null,
+            "card0": 0.3758118776324345,
+            "card1": null,
+            "card2": null
+          },
+          "reasons": {
+            "skip": [
+              "duplicate_missing_copies_joint_probability_unknown"
+            ],
+            "card0": [],
+            "card1": [
+              "duplicate_missing_copies_joint_probability_unknown"
+            ],
+            "card2": [
+              "duplicate_missing_copies_joint_probability_unknown"
+            ]
+          }
+        },
+        {
+          "direction": "D",
+          "combo": "D-flask-sweep",
+          "p": {
+            "skip": null,
+            "card0": 0.1630042423991474,
+            "card1": null,
+            "card2": null
+          },
+          "reasons": {
+            "skip": [
+              "duplicate_missing_copies_joint_probability_unknown"
+            ],
+            "card0": [],
+            "card1": [
+              "duplicate_missing_copies_joint_probability_unknown"
+            ],
+            "card2": [
+              "duplicate_missing_copies_joint_probability_unknown"
+            ]
+          }
+        },
+        {
+          "direction": "D",
+          "combo": "D-observed-union-fbc4b776",
+          "p": {
+            "skip": null,
+            "card0": 0.1139788222290837,
+            "card1": null,
+            "card2": null
+          },
+          "reasons": {
+            "skip": [
+              "duplicate_missing_copies_joint_probability_unknown"
+            ],
+            "card0": [],
+            "card1": [
+              "duplicate_missing_copies_joint_probability_unknown"
+            ],
+            "card2": [
+              "duplicate_missing_copies_joint_probability_unknown"
+            ]
+          }
+        },
+        {
+          "direction": "S",
+          "combo": "S-dance-accuracy",
+          "p": {
+            "skip": 0.32541008457570136,
+            "card0": 0.4566351884529226,
+            "card1": 0.32541008457570136,
+            "card2": 0.32541008457570136
+          },
+          "reasons": {
+            "skip": [],
+            "card0": [],
+            "card1": [],
+            "card2": []
+          }
+        },
+        {
+          "direction": "S",
+          "combo": "S-cloak-phantom",
+          "p": {
+            "skip": 0.3389473269894281,
+            "card0": 0.4756314689424627,
+            "card1": 0.3389473269894281,
+            "card2": 0.3389473269894281
+          },
+          "reasons": {
+            "skip": [],
+            "card0": [],
+            "card1": [],
+            "card2": []
+          }
+        },
+        {
+          "direction": "S",
+          "combo": "S-dance-afterimage",
+          "p": {
+            "skip": 0.09265056449496117,
+            "card0": 0.09265056449496117,
+            "card1": 0.09265056449496117,
+            "card2": 0.09265056449496117
+          },
+          "reasons": {
+            "skip": [],
+            "card0": [],
+            "card1": [],
+            "card2": []
+          }
+        },
+        {
+          "direction": "S",
+          "combo": "S-observed-union-35f60a95",
+          "p": {
+            "skip": 0.05454703651346734,
+            "card0": 0.07654371354333718,
+            "card1": 0.05454703651346734,
+            "card2": 0.05454703651346734
+          },
+          "reasons": {
+            "skip": [],
+            "card0": [],
+            "card1": [],
+            "card2": []
+          }
+        },
+        {
+          "direction": "R",
+          "combo": "R-acro-tingsha",
+          "p": {
+            "skip": 0,
+            "card0": 0,
+            "card1": 0,
+            "card2": 0
+          },
+          "reasons": {
+            "skip": [],
+            "card0": [],
+            "card1": [],
+            "card2": []
+          }
+        },
+        {
+          "direction": "R",
+          "combo": "R-tools-tingsha",
+          "p": {
+            "skip": 0,
+            "card0": 0,
+            "card1": 0,
+            "card2": 0
+          },
+          "reasons": {
+            "skip": [],
+            "card0": [],
+            "card1": [],
+            "card2": []
+          }
+        },
+        {
+          "direction": "R",
+          "combo": "R-acro-bandages",
+          "p": {
+            "skip": 0,
+            "card0": 0,
+            "card1": 0,
+            "card2": 0
+          },
+          "reasons": {
+            "skip": [],
+            "card0": [],
+            "card1": [],
+            "card2": []
+          }
+        }
+      ]
+    },
+    {
+      "target": "f48:TEST_SUBJECT:then:f49:QUEEN",
+      "kind": "chain",
+      "rows": [
+        {
+          "direction": "P",
+          "combo": "P-toxin-footwork",
+          "p": {
+            "skip": 0.3284775630557091,
+            "card0": 0.46093966050276697,
+            "card1": 0.3284775630557091,
+            "card2": 0.3284775630557091
+          },
+          "reasons": {
+            "skip": [],
+            "card0": [],
+            "card1": [],
+            "card2": []
+          }
+        },
+        {
+          "direction": "P",
+          "combo": "P-fumes-footwork",
+          "p": {
+            "skip": 0.24773611472927412,
+            "card0": 0.34763835786926955,
+            "card1": 0.24773611472927412,
+            "card2": 0.24773611472927412
+          },
+          "reasons": {
+            "skip": [],
+            "card0": [],
+            "card1": [],
+            "card2": []
+          }
+        },
+        {
+          "direction": "P",
+          "combo": "P-flask-afterimage",
+          "p": {
+            "skip": 0.04129322934211611,
+            "card0": 0.04129322934211611,
+            "card1": 0.04129322934211611,
+            "card2": 0.04129322934211611
+          },
+          "reasons": {
+            "skip": [],
+            "card0": [],
+            "card1": [],
+            "card2": []
+          }
+        },
+        {
+          "direction": "P",
+          "combo": "P-flask-footwork",
+          "p": {
+            "skip": 0.1755497954121863,
+            "card0": 0.24634213169957017,
+            "card1": 0.1755497954121863,
+            "card2": 0.1755497954121863
+          },
+          "reasons": {
+            "skip": [],
+            "card0": [],
+            "card1": [],
+            "card2": []
+          }
+        },
+        {
+          "direction": "P",
+          "combo": "P-mixed-defense",
+          "p": {
+            "skip": 0.0479612392524975,
+            "card0": 0.06730212295988339,
+            "card1": 0.0479612392524975,
+            "card2": 0.0479612392524975
+          },
+          "reasons": {
+            "skip": [],
+            "card0": [],
+            "card1": [],
+            "card2": []
+          }
+        },
+        {
+          "direction": "P",
+          "combo": "P-toxin-mirage",
+          "p": {
+            "skip": 0.26168350221990466,
+            "card0": 0.26168350221990466,
+            "card1": 0.26168350221990466,
+            "card2": 0.26168350221990466
+          },
+          "reasons": {
+            "skip": [],
+            "card0": [],
+            "card1": [],
+            "card2": []
+          }
+        },
+        {
+          "direction": "D",
+          "combo": "D-toxin-backflip",
+          "p": {
+            "skip": null,
+            "card0": 0.4982954135168944,
+            "card1": null,
+            "card2": null
+          },
+          "reasons": {
+            "skip": [
+              "duplicate_missing_copies_joint_probability_unknown"
+            ],
+            "card0": [],
+            "card1": [
+              "duplicate_missing_copies_joint_probability_unknown"
+            ],
+            "card2": [
+              "duplicate_missing_copies_joint_probability_unknown"
+            ]
+          }
+        },
+        {
+          "direction": "D",
+          "combo": "D-fumes-backflip",
+          "p": {
+            "skip": null,
+            "card0": 0.3758118776324345,
+            "card1": null,
+            "card2": null
+          },
+          "reasons": {
+            "skip": [
+              "duplicate_missing_copies_joint_probability_unknown"
+            ],
+            "card0": [],
+            "card1": [
+              "duplicate_missing_copies_joint_probability_unknown"
+            ],
+            "card2": [
+              "duplicate_missing_copies_joint_probability_unknown"
+            ]
+          }
+        },
+        {
+          "direction": "D",
+          "combo": "D-flask-sweep",
+          "p": {
+            "skip": null,
+            "card0": 0.1630042423991474,
+            "card1": null,
+            "card2": null
+          },
+          "reasons": {
+            "skip": [
+              "duplicate_missing_copies_joint_probability_unknown"
+            ],
+            "card0": [],
+            "card1": [
+              "duplicate_missing_copies_joint_probability_unknown"
+            ],
+            "card2": [
+              "duplicate_missing_copies_joint_probability_unknown"
+            ]
+          }
+        },
+        {
+          "direction": "D",
+          "combo": "D-observed-union-fbc4b776",
+          "p": {
+            "skip": null,
+            "card0": 0.1139788222290837,
+            "card1": null,
+            "card2": null
+          },
+          "reasons": {
+            "skip": [
+              "duplicate_missing_copies_joint_probability_unknown"
+            ],
+            "card0": [],
+            "card1": [
+              "duplicate_missing_copies_joint_probability_unknown"
+            ],
+            "card2": [
+              "duplicate_missing_copies_joint_probability_unknown"
+            ]
+          }
+        },
+        {
+          "direction": "S",
+          "combo": "S-dance-accuracy",
+          "p": {
+            "skip": 0.32541008457570136,
+            "card0": 0.4566351884529226,
+            "card1": 0.32541008457570136,
+            "card2": 0.32541008457570136
+          },
+          "reasons": {
+            "skip": [],
+            "card0": [],
+            "card1": [],
+            "card2": []
+          }
+        },
+        {
+          "direction": "S",
+          "combo": "S-cloak-phantom",
+          "p": {
+            "skip": 0.3389473269894281,
+            "card0": 0.4756314689424627,
+            "card1": 0.3389473269894281,
+            "card2": 0.3389473269894281
+          },
+          "reasons": {
+            "skip": [],
+            "card0": [],
+            "card1": [],
+            "card2": []
+          }
+        },
+        {
+          "direction": "S",
+          "combo": "S-dance-afterimage",
+          "p": {
+            "skip": 0.09265056449496117,
+            "card0": 0.09265056449496117,
+            "card1": 0.09265056449496117,
+            "card2": 0.09265056449496117
+          },
+          "reasons": {
+            "skip": [],
+            "card0": [],
+            "card1": [],
+            "card2": []
+          }
+        },
+        {
+          "direction": "S",
+          "combo": "S-observed-union-35f60a95",
+          "p": {
+            "skip": 0.05454703651346734,
+            "card0": 0.07654371354333718,
+            "card1": 0.05454703651346734,
+            "card2": 0.05454703651346734
+          },
+          "reasons": {
+            "skip": [],
+            "card0": [],
+            "card1": [],
+            "card2": []
+          }
+        },
+        {
+          "direction": "R",
+          "combo": "R-acro-tingsha",
+          "p": {
+            "skip": 0,
+            "card0": 0,
+            "card1": 0,
+            "card2": 0
+          },
+          "reasons": {
+            "skip": [],
+            "card0": [],
+            "card1": [],
+            "card2": []
+          }
+        },
+        {
+          "direction": "R",
+          "combo": "R-tools-tingsha",
+          "p": {
+            "skip": 0,
+            "card0": 0,
+            "card1": 0,
+            "card2": 0
+          },
+          "reasons": {
+            "skip": [],
+            "card0": [],
+            "card1": [],
+            "card2": []
+          }
+        },
+        {
+          "direction": "R",
+          "combo": "R-acro-bandages",
+          "p": {
+            "skip": 0,
+            "card0": 0,
+            "card1": 0,
+            "card2": 0
+          },
+          "reasons": {
+            "skip": [],
+            "card0": [],
+            "card1": [],
+            "card2": []
+          }
+        }
+      ]
+    },
+    {
+      "target": "f48:then:f49:unknown",
+      "kind": "chain",
+      "rows": [
+        {
+          "direction": "P",
+          "combo": "P-toxin-footwork",
+          "p": {
+            "skip": 0.3284775630557091,
+            "card0": 0.46093966050276697,
+            "card1": 0.3284775630557091,
+            "card2": 0.3284775630557091
+          },
+          "reasons": {
+            "skip": [],
+            "card0": [],
+            "card1": [],
+            "card2": []
+          }
+        },
+        {
+          "direction": "P",
+          "combo": "P-fumes-footwork",
+          "p": {
+            "skip": 0.24773611472927412,
+            "card0": 0.34763835786926955,
+            "card1": 0.24773611472927412,
+            "card2": 0.24773611472927412
+          },
+          "reasons": {
+            "skip": [],
+            "card0": [],
+            "card1": [],
+            "card2": []
+          }
+        },
+        {
+          "direction": "P",
+          "combo": "P-flask-afterimage",
+          "p": {
+            "skip": 0.04129322934211611,
+            "card0": 0.04129322934211611,
+            "card1": 0.04129322934211611,
+            "card2": 0.04129322934211611
+          },
+          "reasons": {
+            "skip": [],
+            "card0": [],
+            "card1": [],
+            "card2": []
+          }
+        },
+        {
+          "direction": "P",
+          "combo": "P-flask-footwork",
+          "p": {
+            "skip": 0.1755497954121863,
+            "card0": 0.24634213169957017,
+            "card1": 0.1755497954121863,
+            "card2": 0.1755497954121863
+          },
+          "reasons": {
+            "skip": [],
+            "card0": [],
+            "card1": [],
+            "card2": []
+          }
+        },
+        {
+          "direction": "P",
+          "combo": "P-mixed-defense",
+          "p": {
+            "skip": 0.0479612392524975,
+            "card0": 0.06730212295988339,
+            "card1": 0.0479612392524975,
+            "card2": 0.0479612392524975
+          },
+          "reasons": {
+            "skip": [],
+            "card0": [],
+            "card1": [],
+            "card2": []
+          }
+        },
+        {
+          "direction": "P",
+          "combo": "P-toxin-mirage",
+          "p": {
+            "skip": 0.26168350221990466,
+            "card0": 0.26168350221990466,
+            "card1": 0.26168350221990466,
+            "card2": 0.26168350221990466
+          },
+          "reasons": {
+            "skip": [],
+            "card0": [],
+            "card1": [],
+            "card2": []
+          }
+        },
+        {
+          "direction": "D",
+          "combo": "D-toxin-backflip",
+          "p": {
+            "skip": null,
+            "card0": 0.4982954135168944,
+            "card1": null,
+            "card2": null
+          },
+          "reasons": {
+            "skip": [
+              "duplicate_missing_copies_joint_probability_unknown"
+            ],
+            "card0": [],
+            "card1": [
+              "duplicate_missing_copies_joint_probability_unknown"
+            ],
+            "card2": [
+              "duplicate_missing_copies_joint_probability_unknown"
+            ]
+          }
+        },
+        {
+          "direction": "D",
+          "combo": "D-fumes-backflip",
+          "p": {
+            "skip": null,
+            "card0": 0.3758118776324345,
+            "card1": null,
+            "card2": null
+          },
+          "reasons": {
+            "skip": [
+              "duplicate_missing_copies_joint_probability_unknown"
+            ],
+            "card0": [],
+            "card1": [
+              "duplicate_missing_copies_joint_probability_unknown"
+            ],
+            "card2": [
+              "duplicate_missing_copies_joint_probability_unknown"
+            ]
+          }
+        },
+        {
+          "direction": "D",
+          "combo": "D-flask-sweep",
+          "p": {
+            "skip": null,
+            "card0": 0.1630042423991474,
+            "card1": null,
+            "card2": null
+          },
+          "reasons": {
+            "skip": [
+              "duplicate_missing_copies_joint_probability_unknown"
+            ],
+            "card0": [],
+            "card1": [
+              "duplicate_missing_copies_joint_probability_unknown"
+            ],
+            "card2": [
+              "duplicate_missing_copies_joint_probability_unknown"
+            ]
+          }
+        },
+        {
+          "direction": "D",
+          "combo": "D-observed-union-fbc4b776",
+          "p": {
+            "skip": null,
+            "card0": 0.1139788222290837,
+            "card1": null,
+            "card2": null
+          },
+          "reasons": {
+            "skip": [
+              "duplicate_missing_copies_joint_probability_unknown"
+            ],
+            "card0": [],
+            "card1": [
+              "duplicate_missing_copies_joint_probability_unknown"
+            ],
+            "card2": [
+              "duplicate_missing_copies_joint_probability_unknown"
+            ]
+          }
+        },
+        {
+          "direction": "S",
+          "combo": "S-dance-accuracy",
+          "p": {
+            "skip": 0.32541008457570136,
+            "card0": 0.4566351884529226,
+            "card1": 0.32541008457570136,
+            "card2": 0.32541008457570136
+          },
+          "reasons": {
+            "skip": [],
+            "card0": [],
+            "card1": [],
+            "card2": []
+          }
+        },
+        {
+          "direction": "S",
+          "combo": "S-cloak-phantom",
+          "p": {
+            "skip": 0.3389473269894281,
+            "card0": 0.4756314689424627,
+            "card1": 0.3389473269894281,
+            "card2": 0.3389473269894281
+          },
+          "reasons": {
+            "skip": [],
+            "card0": [],
+            "card1": [],
+            "card2": []
+          }
+        },
+        {
+          "direction": "S",
+          "combo": "S-dance-afterimage",
+          "p": {
+            "skip": 0.09265056449496117,
+            "card0": 0.09265056449496117,
+            "card1": 0.09265056449496117,
+            "card2": 0.09265056449496117
+          },
+          "reasons": {
+            "skip": [],
+            "card0": [],
+            "card1": [],
+            "card2": []
+          }
+        },
+        {
+          "direction": "S",
+          "combo": "S-observed-union-35f60a95",
+          "p": {
+            "skip": 0.05454703651346734,
+            "card0": 0.07654371354333718,
+            "card1": 0.05454703651346734,
+            "card2": 0.05454703651346734
+          },
+          "reasons": {
+            "skip": [],
+            "card0": [],
+            "card1": [],
+            "card2": []
+          }
+        },
+        {
+          "direction": "R",
+          "combo": "R-acro-tingsha",
+          "p": {
+            "skip": 0,
+            "card0": 0,
+            "card1": 0,
+            "card2": 0
+          },
+          "reasons": {
+            "skip": [],
+            "card0": [],
+            "card1": [],
+            "card2": []
+          }
+        },
+        {
+          "direction": "R",
+          "combo": "R-tools-tingsha",
+          "p": {
+            "skip": 0,
+            "card0": 0,
+            "card1": 0,
+            "card2": 0
+          },
+          "reasons": {
+            "skip": [],
+            "card0": [],
+            "card1": [],
+            "card2": []
+          }
+        },
+        {
+          "direction": "R",
+          "combo": "R-acro-bandages",
+          "p": {
+            "skip": 0,
+            "card0": 0,
+            "card1": 0,
+            "card2": 0
+          },
+          "reasons": {
+            "skip": [],
+            "card0": [],
+            "card1": [],
+            "card2": []
+          }
+        }
+      ]
+    }
+  ],
+  "ended_at": "2026-10-20T00:12:13.751Z"
+}

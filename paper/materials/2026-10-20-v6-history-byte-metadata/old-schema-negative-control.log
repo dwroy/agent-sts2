@@ -1,0 +1,27 @@
+
+ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/v6-history-byte-metadata-20261020/agent
+
+ ❯ tests/v6-history-byte-metadata.test.ts (11 tests | 1 failed | 10 skipped) 8ms
+     × seals and loads both real >1GB offsets without losing a row, byte range, or SHA 6ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/v6-history-byte-metadata.test.ts > V6 frozen-history byte provenance > seals and loads both real >1GB offsets without losing a row, byte range, or SHA
+Error: $.data.sources[0].bytes: finite integer 0..1000000000; $.data.sources[1].bytes: finite integer 0..1000000000; $.data.sources[2].bytes: finite integer 0..1000000000; $.data.sources[3].bytes: finite integer 0..1000000000; $.data.opportunities.rows[0].source.offset: finite integer 0..1000000000; $.data.opportunities.rows[1].source.offset: finite integer 0..1000000000
+ ❯ sealV6History src/sim/v6-history-pack.ts:84:25
+     82|   const pack = { schema: "v6-frozen-history-v1" as const, generated_at…
+     83|   const result = validate(v6HistoryPackSchema, pack);
+     84|   if (!result.ok) throw new Error(result.issues.join("; "));
+       |                         ^
+     85|   if (Date.parse(generated_at) < Date.parse(result.value.data.cutoff))…
+     86|   return result.value;
+ ❯ tests/v6-history-byte-metadata.test.ts:31:36
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 10 skipped (11)
+   Start at  09:37:41
+   Duration  561ms (transform 346ms, setup 355ms, import 71ms, tests 8ms, environment 0ms)
+

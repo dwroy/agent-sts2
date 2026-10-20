@@ -1,0 +1,418 @@
+{
+  "started_at": "2026-10-19T23:54:20.956Z",
+  "no_network": true,
+  "no_game_actions": true,
+  "stages": [
+    {
+      "target": "f17:THE_KIN",
+      "combo": "P-toxin-footwork",
+      "samples": 20,
+      "unbounded_computation_budget": true,
+      "supply_mc_ms": 0,
+      "incomplete_case_ms": 0,
+      "formation_lookup_ms": 3.7547129999998106,
+      "actual_p": {
+        "skip": 0.00044759603818579575,
+        "card0": 0.005052164353118648
+      },
+      "reasons": {
+        "skip": [],
+        "card0": []
+      },
+      "preparation_ms": 360.74877400000014,
+      "prepared_sha256": "3ccebb05108233a6186eda6134ff1b925edb717e2afedda87547384fdd582330",
+      "in_combo_option_shared_input": true,
+      "completed_deck_ms": 2530.6738710000004,
+      "first_wins": 0,
+      "second_played": 0,
+      "terminal_n": 20,
+      "timed_out": false,
+      "relay": null,
+      "w_k": 0,
+      "product": 0,
+      "paired_delta": 0,
+      "aggregate_pairing_ms": 0.09795300000041607
+    },
+    {
+      "target": "f48:AEONGLASS:then:f49:QUEEN",
+      "combo": "P-toxin-footwork",
+      "samples": 20,
+      "unbounded_computation_budget": true,
+      "supply_mc_ms": 0,
+      "incomplete_case_ms": 0,
+      "formation_lookup_ms": 1.22668799999974,
+      "actual_p": {
+        "skip": 0.3284775630557091,
+        "card0": 0.46093966050276697
+      },
+      "reasons": {
+        "skip": [],
+        "card0": []
+      },
+      "preparation_ms": 170.36745799999971,
+      "prepared_sha256": "31bc14fa156468a86fe43ad08ab6fc5b1fa33091ca86018dfc690db07dc3296b",
+      "in_combo_option_shared_input": true,
+      "completed_deck_ms": 329.11212799999976,
+      "first_wins": 0,
+      "second_played": 0,
+      "terminal_n": 20,
+      "timed_out": false,
+      "relay": {
+        "schema": "continuous-boss-result-v1",
+        "scope": "raw_simulation",
+        "samples": 20,
+        "expectedSamples": 20,
+        "missingSamples": 0,
+        "first": {
+          "value": 0,
+          "wins": 0,
+          "samples": 20,
+          "unknown": 0,
+          "reason": null
+        },
+        "secondGivenFirstWin": {
+          "value": null,
+          "wins": 0,
+          "samples": 0,
+          "unknown": 0,
+          "reason": "no_first_win_samples"
+        },
+        "joint": {
+          "value": 0,
+          "wins": 0,
+          "samples": 20,
+          "unknown": 0,
+          "reason": null
+        },
+        "calibration": {
+          "status": "unknown",
+          "singleFightMapApplied": false
+        },
+        "S": {
+          "status": "unknown",
+          "value": null
+        },
+        "resourceModel": {
+          "transfer": "same_sample",
+          "rewardsBetweenFights": "unknown",
+          "actualSecondOpening": "unknown",
+          "unobservedOpeningEffects": "unknown"
+        },
+        "traces": [
+          {
+            "seed": 943228020,
+            "firstWon": false,
+            "firstDied": true,
+            "firstCapped": false,
+            "firstTimeUp": false,
+            "firstHp": -9,
+            "firstPotions": [],
+            "secondBoss": null,
+            "firstTurns": 5,
+            "secondWon": null,
+            "secondDied": null,
+            "firstResources": null,
+            "secondEntry": null,
+            "openingHpLoss": null
+          },
+          {
+            "seed": 1639100845,
+            "firstWon": false,
+            "firstDied": true,
+            "firstCapped": false,
+            "firstTimeUp": false,
+            "firstHp": -6,
+            "firstPotions": [],
+            "secondBoss": null,
+            "firstTurns": 5,
+            "secondWon": null,
+            "secondDied": null,
+            "firstResources": null,
+            "secondEntry": null,
+            "openingHpLoss": null
+          },
+          {
+            "seed": 2334973670,
+            "firstWon": false,
+            "firstDied": true,
+            "firstCapped": false,
+            "firstTimeUp": false,
+            "firstHp": -12,
+            "firstPotions": [],
+            "secondBoss": null,
+            "firstTurns": 5,
+            "secondWon": null,
+            "secondDied": null,
+            "firstResources": null,
+            "secondEntry": null,
+            "openingHpLoss": null
+          }
+        ]
+      },
+      "w_k": 0,
+      "product": 0,
+      "paired_delta": 0,
+      "aggregate_pairing_ms": 0.6503309999998237
+    }
+  ],
+  "limitations": [
+    "One frozen F8 reward board, current 17/17 history metrics, formal R2 cards; current main Strangle and stock-note source.",
+    "Uniform direction weights; no frozen V6 brain answer or chosen route exists for this pre-V6 board.",
+    "Retrospective current frozen history cutoff; not a leakage-free estimate of historical decisions.",
+    "BuildSimPool(2) nice19 CPU measurements; no model/Jev request or live mutation.",
+    "Standalone frozen appearance table from the same W8 refresh; other history/metrics are R400. Not a production package publication.",
+    "Diagnostic W_k is timed even when P<5%; production keeps its threshold. Single skip option and one named combo, not a performance guarantee for all directions."
+  ],
+  "input": {
+    "file": "card-1.json",
+    "sha256": "939adc5524b69a399d736ed2cdf1c37b6df6ec284aa70f61f7b8a15d880690f9"
+  },
+  "v6-history.json": {
+    "bytes": 22156507,
+    "sha256": "aea1fcc9b9927118a5f8158cadb6940576d1b8db783084edaca1d6c182f205f6"
+  },
+  "build-cores.json": {
+    "bytes": 7903933,
+    "sha256": "377920574ce7859f5e39dd01aad495947140226777e742251ac850004ae0cbe6"
+  },
+  "snapshot_ms": 2424.4351530000004,
+  "factory_ms": 395.23357499999975,
+  "appearance": {
+    "path": "/home/dw/Projects/agent-sts2/ops/codex-ops/v6-refresh/silent/refresh-gvw5soon/appearance.json",
+    "bytes": 4308839,
+    "sha256": "39fd79f61f12dae108755070484be96a90dd9b8ba8896663679db75b6c74ad88",
+    "cutoff": "2026-10-19T23:39:46.535Z"
+  },
+  "scope": {
+    "seed": 240896327,
+    "targets": [
+      {
+        "id": "f17:THE_KIN",
+        "boss": "THE_KIN",
+        "act": 1,
+        "floor": 17,
+        "kind": "current",
+        "probability": 1,
+        "labels": [
+          "visible_actual_boss"
+        ]
+      },
+      {
+        "id": "f33:KAISER_CRAB",
+        "boss": "KAISER_CRAB",
+        "act": 2,
+        "floor": 33,
+        "kind": "future",
+        "probability": 0.3380281690140845,
+        "labels": [
+          "observed_independent_first_attempt_runs_not_spawn_distribution"
+        ]
+      },
+      {
+        "id": "f33:KNOWLEDGE_DEMON",
+        "boss": "KNOWLEDGE_DEMON",
+        "act": 2,
+        "floor": 33,
+        "kind": "future",
+        "probability": 0.3028169014084507,
+        "labels": [
+          "observed_independent_first_attempt_runs_not_spawn_distribution"
+        ]
+      },
+      {
+        "id": "f33:THE_INSATIABLE",
+        "boss": "THE_INSATIABLE",
+        "act": 2,
+        "floor": 33,
+        "kind": "future",
+        "probability": 0.3591549295774648,
+        "labels": [
+          "observed_independent_first_attempt_runs_not_spawn_distribution"
+        ]
+      },
+      {
+        "id": "f48:AEONGLASS",
+        "boss": "AEONGLASS",
+        "act": 3,
+        "floor": 48,
+        "kind": "future",
+        "probability": 0.4426229508196721,
+        "labels": [
+          "observed_independent_first_attempt_runs_not_spawn_distribution"
+        ]
+      },
+      {
+        "id": "f48:QUEEN",
+        "boss": "QUEEN",
+        "act": 3,
+        "floor": 48,
+        "kind": "future",
+        "probability": 0.29508196721311475,
+        "labels": [
+          "observed_independent_first_attempt_runs_not_spawn_distribution"
+        ]
+      },
+      {
+        "id": "f48:TEST_SUBJECT",
+        "boss": "TEST_SUBJECT",
+        "act": 3,
+        "floor": 48,
+        "kind": "future",
+        "probability": 0.26229508196721313,
+        "labels": [
+          "observed_independent_first_attempt_runs_not_spawn_distribution"
+        ]
+      },
+      {
+        "id": "f48:AEONGLASS:then:f49:QUEEN",
+        "boss": "AEONGLASS",
+        "secondBoss": "QUEEN",
+        "secondFloor": 49,
+        "act": 3,
+        "floor": 48,
+        "kind": "chain",
+        "probability": 0.06557377049180328,
+        "labels": [
+          "observed_ordered_pair_frequency_selected_reached_first_boss_cohort",
+          "仅4局F49、实际胜0；时间验证2局均败，连续模拟未校准，只作备战和出牌参考，不能判必死或触发SL。HP>60夹在样本边界；其他药水/遗物未建模影响不确定。"
+        ]
+      },
+      {
+        "id": "f48:AEONGLASS:then:f49:TEST_SUBJECT",
+        "boss": "AEONGLASS",
+        "secondBoss": "TEST_SUBJECT",
+        "secondFloor": 49,
+        "act": 3,
+        "floor": 48,
+        "kind": "chain",
+        "probability": 0.09836065573770492,
+        "labels": [
+          "observed_ordered_pair_frequency_selected_reached_first_boss_cohort",
+          "仅4局F49、实际胜0；时间验证2局均败，连续模拟未校准，只作备战和出牌参考，不能判必死或触发SL。HP>60夹在样本边界；其他药水/遗物未建模影响不确定。"
+        ]
+      },
+      {
+        "id": "f48:QUEEN:then:f49:AEONGLASS",
+        "boss": "QUEEN",
+        "secondBoss": "AEONGLASS",
+        "secondFloor": 49,
+        "act": 3,
+        "floor": 48,
+        "kind": "chain",
+        "probability": 0.04918032786885246,
+        "labels": [
+          "observed_ordered_pair_frequency_selected_reached_first_boss_cohort",
+          "仅4局F49、实际胜0；时间验证2局均败，连续模拟未校准，只作备战和出牌参考，不能判必死或触发SL。HP>60夹在样本边界；其他药水/遗物未建模影响不确定。"
+        ]
+      },
+      {
+        "id": "f48:QUEEN:then:f49:TEST_SUBJECT",
+        "boss": "QUEEN",
+        "secondBoss": "TEST_SUBJECT",
+        "secondFloor": 49,
+        "act": 3,
+        "floor": 48,
+        "kind": "chain",
+        "probability": 0.06557377049180328,
+        "labels": [
+          "observed_ordered_pair_frequency_selected_reached_first_boss_cohort",
+          "仅4局F49、实际胜0；时间验证2局均败，连续模拟未校准，只作备战和出牌参考，不能判必死或触发SL。HP>60夹在样本边界；其他药水/遗物未建模影响不确定。"
+        ]
+      },
+      {
+        "id": "f48:TEST_SUBJECT:then:f49:QUEEN",
+        "boss": "TEST_SUBJECT",
+        "secondBoss": "QUEEN",
+        "secondFloor": 49,
+        "act": 3,
+        "floor": 48,
+        "kind": "chain",
+        "probability": 0.03278688524590164,
+        "labels": [
+          "observed_ordered_pair_frequency_selected_reached_first_boss_cohort",
+          "仅4局F49、实际胜0；时间验证2局均败，连续模拟未校准，只作备战和出牌参考，不能判必死或触发SL。HP>60夹在样本边界；其他药水/遗物未建模影响不确定。"
+        ]
+      },
+      {
+        "id": "f48:then:f49:unknown",
+        "boss": "unknown",
+        "secondBoss": "unknown",
+        "secondFloor": 49,
+        "act": 3,
+        "floor": 48,
+        "kind": "chain",
+        "probability": 0.6885245901639344,
+        "labels": [
+          "仅4局F49、实际胜0；时间验证2局均败，连续模拟未校准，只作备战和出牌参考，不能判必死或触发SL。HP>60夹在样本边界；其他药水/遗物未建模影响不确定。"
+        ],
+        "unknown": "ordered_pair_unobserved_in_first_boss_cohort"
+      }
+    ],
+    "options": [
+      {
+        "id": "skip"
+      },
+      {
+        "id": "card0",
+        "card": {
+          "id": "FOOTWORK",
+          "upgraded": false
+        }
+      },
+      {
+        "id": "card1",
+        "card": {
+          "id": "REFLEX",
+          "upgraded": false
+        }
+      },
+      {
+        "id": "card2",
+        "card": {
+          "id": "CALCULATED_GAMBLE",
+          "upgraded": false
+        }
+      }
+    ],
+    "directions": [
+      {
+        "id": "P",
+        "combos": [
+          "P-toxin-footwork",
+          "P-fumes-footwork",
+          "P-flask-afterimage",
+          "P-flask-footwork",
+          "P-mixed-defense",
+          "P-toxin-mirage"
+        ]
+      },
+      {
+        "id": "D",
+        "combos": [
+          "D-toxin-backflip",
+          "D-fumes-backflip",
+          "D-flask-sweep",
+          "D-observed-union-fbc4b776"
+        ]
+      },
+      {
+        "id": "S",
+        "combos": [
+          "S-dance-accuracy",
+          "S-cloak-phantom",
+          "S-dance-afterimage",
+          "S-observed-union-35f60a95"
+        ]
+      },
+      {
+        "id": "R",
+        "combos": [
+          "R-acro-tingsha",
+          "R-tools-tingsha",
+          "R-acro-bandages"
+        ]
+      }
+    ]
+  },
+  "ended_at": "2026-10-19T23:54:27.342Z"
+}
