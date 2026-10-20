@@ -1,0 +1,68 @@
+{
+  "at": "2026-10-21 05:53:12 CST",
+  "watcher_native": "01a14f5d-da55-7831-959e-53727796115e",
+  "scope": "original criteria terminal and owner progress; static verification only",
+  "original_update": {
+    "path": "paper/materials/20261021-criteria-terminal-watcher/original-W4-update.md",
+    "bytes": 787,
+    "sha256": "75888ba989a8fa3854d098bd128ee45e643a74d6d8ef92410e69f0a9fb5d5fc4"
+  },
+  "ops_saved_terminal_receipt": {
+    "path": "paper/materials/20261021-0535-ops/receipt.json",
+    "bytes": 2375,
+    "sha256": "cb6c46b0bad91c67ca5bf4360f6562a4bf00f6f6a12f10dd42880644d78b3782",
+    "verification": "saved receipt read earlier in this turn; full log and PID exit not independently checked by watcher"
+  },
+  "ops_terminal_attributed": {
+    "tsc": 0,
+    "full": 1,
+    "files_pass": 627,
+    "files_fail": 1,
+    "tests_pass": 5933,
+    "tests_fail": 1,
+    "tests_skip": 2,
+    "tree": "e0a2e2463f5ef0e423649206a7fa62280cbb48bc",
+    "inputs": 2393,
+    "input_sha256": "7a3f7a453f1fcab6ce0f4eba326e70525f3293cd7caa242d851981cc31e856d7",
+    "failure": "tests/v6-card-option-loop.test.ts:113; display -1.5938 vs audit -1.59375 at toBeCloseTo half boundary",
+    "old_failure_retained": true
+  },
+  "source_static_verified": {
+    "commit": "eea3519d9da0b83cb10f7bb9a6f0223775c73819",
+    "parent": "8176954bf6f33bdd6b4ee8fbe567601cfb7534ff",
+    "dependency": "024612ef747f63d4a86eb6f57ff2d39f78795d5e",
+    "changed_paths": [
+      "agent/tests/v6-card-option-loop.test.ts"
+    ],
+    "patch": ".worktrees/v6-card-criteria-20261021/.artifacts/criteria-precision-r1/minimal-source.patch",
+    "patch_bytes": 3512,
+    "patch_sha256": "4eefcf7db11454ad4d92ae435d295f850261c2fe31a20b4c701af2e2675183b2",
+    "verification": "Git metadata and complete saved patch read earlier in this turn",
+    "contract": "exact Number(mean.toPrecision(5)), Number(SE.toPrecision(3)), n and null; negative controls",
+    "production_precision_budget_changed": false
+  },
+  "owner_checks_attributed_only": {
+    "tsc": 0,
+    "directed_cases": 3,
+    "seconds": 11.91,
+    "gitleaks": 0,
+    "logs_independently_read": false
+  },
+  "formal_combined_source_ready": false,
+  "pending": [
+    "B production 0/204 cache miss investigation",
+    "three mean-dominated choices explanation",
+    "formal mapping with follow-up material",
+    "single combined check with criteria0246 via original ops queue"
+  ],
+  "configuration_retained": {
+    "release": "V6-R408",
+    "CARD": "brain",
+    "REFLEX": "off",
+    "P2": "paused"
+  },
+  "watcher_started_tests_full_model_api_or_changed_ops_input": false,
+  "decision_log_append_sha256": "7da2bf26ed47ee7e09e6cc334aa5e02f1a17699b4c9d4faf7e75095473bc80c5",
+  "native_Claude_receipt_claimed": false,
+  "other_role_ACK_claimed": false
+}
