@@ -5458,3 +5458,7 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
 - 2026-10-21 04:40:12 CST 原ops：三策略批无源/合入、30waiting/47账本关联读回，0544仅proposed；两ordinary均dataset前源码guard停止、无副作用标记，当前仅R408 CARD配置授权漂移，原validate HEAD未单存不倒填。原件/失败保留，不重dataset/测试或关父，当前R408及P4原修复链不动。原件paper/materials/20261021-0436-ops/receipt.json。
 
 - 2026-10-21 04:42:46 CST 原ops：实收W8 P4 off六例仅缓存/mock加载字节差异的原任务进展及W0固定缓存九绿/golden不改报告；仅owner报告，正式两叶source仍待交付，不新full/改ops树/发布，原014301链及七败保留。原件paper/materials/20261021-0436-ops/W8-off-equivalence-owner-progress-intake.json。
+
+- 2026-10-21 04:51:51 CST 原ops：P4 off正式88b51030b两叶运输与103材料核同，独立W0提取/27动作字节同；只收材料及原append，原014301正式依赖待齐，不重复实现/起full/认联合绿或运输父/805。R408不动；原件paper/materials/20261021-P4-off-formal-ops/receipt.json。
+
+- 2026-10-21 04:47:55 CST W8 P4 off六例：同2399输入复现6败3过；27帧resolved逐字同，差异仅商店Boss事实（铁甲10.5→10.6及说明，静默19→20），仅换旧common/monster-db即可9过；全局setup早于mock预载真实DB，固定W0缓存修复88b51030b仅两测试叶、不改golden/生产/知识/预算。联合隔离输入tsc0、4文件75过、源码gitleaks0，原full1/无效准备实验保留；ordinary-close仍原014301独立pending，完整联合与发布交ops，不动R408 CARDbrain/REFLEXoff。材料paper/materials/2026-10-21-v6-off-boss-fixture/。

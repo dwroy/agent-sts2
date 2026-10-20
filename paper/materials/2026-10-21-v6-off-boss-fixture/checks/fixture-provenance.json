@@ -1,0 +1,41 @@
+{
+  "commit": "78933a38d3349ec0b16615d852da89e5eee13871",
+  "files": [
+    {
+      "path": "knowledge/common/monster-db.json",
+      "sha256": "8f6c2d0409eb012b14bd31e24c431ea5d9a421e7fb58c3363dfd5dc3536e704c",
+      "git_blob": "4d497d5d18397f3ddd9a13c4b1219f819469119c",
+      "bytes": 2403278
+    },
+    {
+      "path": "knowledge/characters/ironclad/monster-records.json",
+      "sha256": "7b322116e66a38a0db356c14ec495948a631b8532858c7dbee59883d4ad8680b",
+      "git_blob": "76117a024e15499672c4af06e078b057c2e4759b",
+      "bytes": 892388
+    },
+    {
+      "path": "knowledge/characters/ironclad/boss-damage.json",
+      "sha256": "4015b526b4a34217c4d9c0254f7ba0b6f7a919615d2b88015b7c1801506fa2c9",
+      "git_blob": "533ac28fef8ffd0290e15345c9d6f798e0f0ff90",
+      "bytes": 52288
+    }
+  ],
+  "selection": {
+    "bosses": [
+      "KAISER_CRAB",
+      "SOUL_FYSH",
+      "THE_KIN"
+    ],
+    "monsters": [
+      "CRUSHER",
+      "ROCKET",
+      "KIN_PRIEST",
+      "KIN_FOLLOWER",
+      "SOUL_FYSH"
+    ],
+    "encounters": "original keys whose + separated monster IDs intersect the selected monsters",
+    "records": "merge original Ironclad threat_by_asc into each selected common monster row; original top-level bosses and encounters",
+    "shares": "original Ironclad boss-damage rows for the same three bosses"
+  },
+  "policy": "data extracted from immutable W0 Git; no numerical edits, formal knowledge unchanged"
+}

@@ -1,0 +1,24 @@
+{
+  "command": [
+    "nice",
+    "-n",
+    "19",
+    "ionice",
+    "-c",
+    "3",
+    "node",
+    "node_modules/vitest/vitest.mjs",
+    "run",
+    "tests/v6-off-equivalence.test.ts",
+    "tests/monster-db.test.ts",
+    "tests/oneshot-shop.test.ts",
+    "tests/thief-card-value.test.ts",
+    "--maxWorkers=1",
+    "--reporter=json",
+    "--outputFile=/home/dw/Projects/agent-sts2/.worktrees/v6-refresh-p4-r407-20261021/.artifacts/off-equivalence-r1/fixed-targeted.json"
+  ],
+  "cwd": "/home/dw/Projects/agent-sts2/.worktrees/v6-refresh-p4-r407-20261021/.artifacts/off-equivalence-r1/joint-input/agent",
+  "exit_code": 0,
+  "duration_s": 15.990489167859778,
+  "recorded_at": "2026-10-21T04:43:07.577310+08:00"
+}

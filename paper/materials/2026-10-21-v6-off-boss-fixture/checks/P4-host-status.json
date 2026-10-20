@@ -1,0 +1,63 @@
+{
+  "request": "original-W8-P4-single-fixture-clock-repaired-exact-R407-joint-20261021",
+  "state": "failed-retain-fixed-P4-input-and-current-R407-report-original-W8-watcher",
+  "started_at": "2026-10-21T04:05:19.449368+08:00",
+  "runner_pid": 2192743,
+  "runner_start_ticks": "141854213",
+  "nice": 19,
+  "worktree": "/home/dw/Projects/agent-sts2/.worktrees/ops-p4-r407-joint-20261021",
+  "actual_live_base": "a7d07949efb03278a62050ca39447941309b4b7e",
+  "allocation_base": "a7d07949efb03278a62050ca39447941309b4b7e",
+  "staged_tree": "5628371e35d26465df06514f7f4384c269fd1182",
+  "source_count": 30,
+  "knowledge_count": 485,
+  "input_count": 2399,
+  "input_sha256": "980341350cc5dece633f10d76f9a302268a406a9260797697fb26a11d8711c6b",
+  "steps": [
+    {
+      "name": "tsc",
+      "command": [
+        "npx",
+        "tsc",
+        "-p",
+        "tsconfig.json",
+        "--noEmit"
+      ],
+      "started_at": "2026-10-21T04:05:19.450017+08:00",
+      "log": "/home/dw/Projects/agent-sts2/.artifacts/ops-P4-clock-repaired-joint-20261021/tsc.log",
+      "pid": 2195890,
+      "exit_code": 0,
+      "ended_at": "2026-10-21T04:05:20.587266+08:00",
+      "seconds": 1.1372793591581285,
+      "log_bytes": 0,
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "full",
+      "command": [
+        "node",
+        "tools/with-temp.mjs",
+        "node_modules/vitest/vitest.mjs",
+        "run",
+        "--maxWorkers=1"
+      ],
+      "started_at": "2026-10-21T04:05:20.587601+08:00",
+      "log": "/home/dw/Projects/agent-sts2/.artifacts/ops-P4-clock-repaired-joint-20261021/full.log",
+      "pid": 2196201,
+      "exit_code": 1,
+      "ended_at": "2026-10-21T04:28:30.859993+08:00",
+      "seconds": 1390.2724027130753,
+      "log_bytes": 4761,
+      "log_sha256": "4b3e54cb3c77a8d73168853bfb227863e12aa1e61681954ea3cb5d6faa63eda1"
+    }
+  ],
+  "held_original_lock": "ops/live-merge.lock",
+  "window_preflight_other_vitest_PIDs": [],
+  "no_actual_live_or_active_actor_change": true,
+  "ended_at": "2026-10-21T04:28:31.026300+08:00",
+  "input_unchanged": true,
+  "combined_full_rc": 1,
+  "heavy_admission_locks_released": true,
+  "original_full_window_lock_released": true,
+  "terminal_event_path": "/home/dw/Projects/agent-sts2/ops/codex-ops/queue/1792528111026766927-manual.md"
+}

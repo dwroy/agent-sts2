@@ -1,0 +1,21 @@
+{
+  "exit_code": 0,
+  "duration_s": 22.935084557859227,
+  "old_common_sha256": "1057d95ed66877cc23fa2d62523699f0778ccb3015c1f82d82183d8b0d79016e",
+  "current_common_sha256": "ef2e9210cb8fa469906d6bcce5b277847d69e4488758cb4a445cfb0f75c2a9b6",
+  "command": [
+    "nice",
+    "-n",
+    "19",
+    "ionice",
+    "-c",
+    "3",
+    "node",
+    "node_modules/vitest/vitest.mjs",
+    "run",
+    "tests/v6-off-equivalence.test.ts",
+    "--maxWorkers=1",
+    "--reporter=json",
+    "--outputFile=/home/dw/Projects/agent-sts2/.worktrees/v6-refresh-p4-r407-20261021/.artifacts/off-equivalence-r1/only-common-previous-result.json"
+  ]
+}

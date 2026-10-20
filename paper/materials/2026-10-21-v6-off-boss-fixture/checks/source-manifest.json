@@ -1,0 +1,53 @@
+{
+  "generated_at": "2026-10-21T04:45:27.444299+08:00",
+  "native_session": "01a15382-761a-76a2-922d-271169b2463c",
+  "account": "codex1",
+  "source": "88b51030b906700aa30ea2e8f79eb10be2b623bb",
+  "parent": "6473cbc394069ca026045a8026c8752afd07eb29",
+  "tree": "5c97360ba5805d6b0b4e1ffb67f5088e568000ef",
+  "task_branch": "v6-refresh-p4-r407-20261021",
+  "transport_base_tree": "5628371e35d26465df06514f7f4384c269fd1182",
+  "transport_mode": "only the two-leaf minimal patch; do not transport parent branch, whole source tree, runtime, knowledge or config",
+  "entries": [
+    {
+      "path": "agent/tests/v6-off-equivalence.test.ts",
+      "before": {
+        "blob": "3acb6b8868e2a3e86f6f1b11c18e3124dc0b90ef",
+        "sha256": "f5a7988c73513e828740f83bf18ed1e14428182cc671cc0d58a55ca8ce5946f3",
+        "bytes": 3638
+      },
+      "after": {
+        "blob": "aac585c21efad85fee7c2ebf4f97b2980ee64e1c",
+        "sha256": "ab6779c1382b522fd76e1a6c44b61bbfee86918b5d85de028502394123c01a1d",
+        "bytes": 4238
+      }
+    },
+    {
+      "path": "agent/tests/fixtures/v6-off-boss-clock.json",
+      "before": null,
+      "after": {
+        "blob": "4e5adaaf456b26c0a73c62ce07e1d0e8a6d718aa",
+        "sha256": "5c460f5a0ada2b8f79b03bf7f95201630678fa394a1a4067ff41e78e0602cb07",
+        "bytes": 257292
+      }
+    }
+  ],
+  "minimal_patch_sha256": "4844612ec3c7b4934cc0170fdcfcb97f3e342ff55f7bfcfc151abcc293b6c70b",
+  "dependencies": {
+    "runtime_additions": [],
+    "existing_test_setters": [
+      "setMonsterDbForTests (knowledge/monster-db.ts)",
+      "setUnblockedSharesForTests (sim/boss-clock.ts)"
+    ],
+    "ordinary_close": "independent original 014301 fixture task; not included"
+  },
+  "checks": {
+    "tsc": 0,
+    "targeted_files": 4,
+    "targeted_passed": 75,
+    "targeted_failed": 0,
+    "gitleaks_source_findings": 0,
+    "full": "not run; ops serial joint check required"
+  },
+  "scope": "freeze W0 Boss inputs; all golden hashes, resolved actions, production code, budgets and thresholds unchanged"
+}
