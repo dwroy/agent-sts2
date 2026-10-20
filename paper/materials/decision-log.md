@@ -5496,3 +5496,5 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
 - 2026-10-21 06:26:31 CST W4 B缓存：正式源9805c160f（9增量/11累计叶，父eea3519d9，含024612ef7依赖）把B准备接入原大脑/小脑等待、按完整有效开场复用样本并保纯getter指纹门，criteria在24KB内保17组合目录/A及有值B；旧12题238行全insufficient、89 opening/42前提标签重叠，149已准备零样本属调度预算问题。真实F6/F7生产提供方离线回放B数值43/32行、14/17组合且均n2，前台F6 5096.40ms仍超5s；纯格式23882/23871B。tsc0、96定向及38预算专项过、源码/解压扫描0；旧3题是三均值诊断而非五指标含误差严格支配，无文字理由不代推。与0246及精度eea一起交ops唯一实际live联合full，未自开full/改main或live/知识/发新Nova；CARD保持brain等Roy，P2暂停。材料paper/materials/2026-10-21-v6-core-cache/。
 
 - 2026-10-21 06:43:18 CST 原ops实际读两份watcher回执，8所引保存原件字节/SHA核同；新B限制/累计源及旧0620 full1+未复现对照归属分列，不扩静态范围或代Claude/Roy ACK。原检查仍单点沿原事件接续，本轮不查动态/新full/模型/API或改变R408 brain/off、Roy切jev门与P2暂停。原件paper/materials/20261021-watcher-core-cache-0620-ops/receipt.json。
+
+- 2026-10-21 06:45:22 CST 原ops核W4累计11+W0两测试唯一静态启动，runner2657047/tsc0/full2704077，tree0b46b5f0/2393输入6eba5918/498知识及13源后像同；不夹士兵/P4/014301/805。未查动态/改输入/叠full，旧失败保留，非终局绿或质量/性能全过。F6超5s/部分B n2/无新B Nova等限制保持，绿后边界仍brain/off、jev等Roy，P2暂停。原件paper/materials/20261021-0643-ops/receipt.json。

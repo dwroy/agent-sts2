@@ -5141,3 +5141,5 @@ request_id=roy-20261017-human-pace-h0 revision=3 input_sha256=1e1c259a15f1824119
 - 2026-10-21 06:31:26 CST 原ops实读W4 9805累计11叶/70材料/3gz，R408前像与累计后像核同；原11+W0两测试唯一runner2657047提交原锁准入，尚未核full启动，不夹士兵/P4/014301/父/main/805。原96/预算38定向非联合绿，B43/32行n2部分覆盖、F6旧同次5096ms超5s、新B未Nova/不补造理由等限制保留。按Claude05:4x绿后边界集成仍CARDbrain，jev等Roy，REFLEXoff/P2暂停。原件paper/materials/20261021-W4-core-cache-joint-ops/receipt.json。
 
 - 2026-10-21 06:43:18 CST 原ops实际读两份watcher回执，8所引保存原件字节/SHA核同；新B限制/累计源及旧0620 full1+未复现对照归属分列，不扩静态范围或代Claude/Roy ACK。原检查仍单点沿原事件接续，本轮不查动态/新full/模型/API或改变R408 brain/off、Roy切jev门与P2暂停。原件paper/materials/20261021-watcher-core-cache-0620-ops/receipt.json。
+
+- 2026-10-21 06:45:22 CST 原ops核W4累计11+W0两测试唯一静态启动，runner2657047/tsc0/full2704077，tree0b46b5f0/2393输入6eba5918/498知识及13源后像同；不夹士兵/P4/014301/805。未查动态/改输入/叠full，旧失败保留，非终局绿或质量/性能全过。F6超5s/部分B n2/无新B Nova等限制保持，绿后边界仍brain/off、jev等Roy，P2暂停。原件paper/materials/20261021-0643-ops/receipt.json。
