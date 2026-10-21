@@ -1,0 +1,53 @@
+{
+  "at": "2026-10-21T11:45:35.968212+08:00",
+  "source_commit": "4fc80c385c6f685dcd426087100eb08104faa705",
+  "dev_base": "a2eed3cb3",
+  "integration_base": "49d95791812fc35ea1206c510869e9842b740ae2",
+  "main_at_review": "e015024a93abccffcb464700ec37ebbf265ff223",
+  "integration_worktree": ".worktrees/issue-8-watcher-integration-20261021",
+  "agent_src_unchanged_since_dev_base": true,
+  "all_agent_tests_unchanged_between_main_and_dev_base": true,
+  "baseline_failure_test_blobs": [
+    {
+      "path": "agent/tests/v6-direction-provider.test.ts",
+      "dev_base_blob": "145f16b80b4aeb41e18c0d26a103d22f665a4101",
+      "watcher_base_blob": "145f16b80b4aeb41e18c0d26a103d22f665a4101",
+      "source_blob": "145f16b80b4aeb41e18c0d26a103d22f665a4101",
+      "current_main_blob": "145f16b80b4aeb41e18c0d26a103d22f665a4101",
+      "candidate_sha256": "febb8646aa711005c4c461a36dcabff3910c5b748318e89a3eebd4521dcd0a77"
+    },
+    {
+      "path": "agent/tests/v6-projection-entries.test.ts",
+      "dev_base_blob": "3a100c5e080afba4d4ccb953c333bff1563402cd",
+      "watcher_base_blob": "3a100c5e080afba4d4ccb953c333bff1563402cd",
+      "source_blob": "3a100c5e080afba4d4ccb953c333bff1563402cd",
+      "current_main_blob": "3a100c5e080afba4d4ccb953c333bff1563402cd",
+      "candidate_sha256": "c0cbdfc496f897da2b6138f305ab4251788e9d66c403375b2b2d7b6b073be5ad"
+    },
+    {
+      "path": "agent/tests/v6-target-values.test.ts",
+      "dev_base_blob": "139b89db3e548326e8352b5a46d239f23effce5d",
+      "watcher_base_blob": "139b89db3e548326e8352b5a46d239f23effce5d",
+      "source_blob": "139b89db3e548326e8352b5a46d239f23effce5d",
+      "current_main_blob": "139b89db3e548326e8352b5a46d239f23effce5d",
+      "candidate_sha256": "8f2d0e440e7bcdd59008bfdae7d0a7e2d1e78b0deb72c017352985dc8b281339"
+    }
+  ],
+  "independent_tsc_exit": 0,
+  "independent_vitest_exit": 1,
+  "independent_vitest_summary": {
+    "passed_files": 3,
+    "failed_files": 3,
+    "passed_tests": 19,
+    "failed_tests": 4
+  },
+  "new_notice_regressions": "manual 7 Python cases, ordinary notification and paths passed via three green Vitest files",
+  "full_suite": "developer raw sandbox 580 files passed / 6 failed, 5216 tests passed / 7 failed; three environment/timing cases separately resolved; remaining four assertions baseline reproduced by developer and watcher candidate",
+  "original_authentication": "independently passed read-only; six originals SHA verified unchanged",
+  "production_ack": false,
+  "candidate_patch_sha256": "8046fd6d3ba98b93c70182ff1aa50e4e450af1ab45fe6671e0d6e10f27b2bd03",
+  "integration": "decision-log append conflict resolved preserving both; staged candidate left before commit; cherry-pick not continued because required full tests not green",
+  "main_live_changed_by_watcher": false,
+  "blocking_rule": "AGENTS.md: 先在 agent/ 里跑 npx tsc -p tsconfig.json --noEmit 和 npx vitest run，两者都要通过",
+  "scientific_parent_closed": false
+}
