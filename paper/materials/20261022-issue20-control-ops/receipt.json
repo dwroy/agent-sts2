@@ -1,0 +1,185 @@
+{
+  "schema": "ops-issue20-persistent-control-intake-v1",
+  "at": "2026-10-22T04:06:27+08:00",
+  "state": "persistent-control-available-off-host-owner-coordination-and-new-development-pending",
+  "issue": 20,
+  "source": "466e54561dc23e09321826d55af39c5abedd4aef",
+  "actual_main": "d958e876ff699cbc2093c7c440de8bae29be87eb",
+  "source_ancestor": true,
+  "integration_main": "1220b94361bb5c8fb4961dc2e93424270fe13d95",
+  "accepted_comment": "https://github.com/dwroy/agent-sts2/issues/20#issuecomment-6325362410",
+  "new_development_scope_comment": "https://github.com/dwroy/agent-sts2/issues/20#issuecomment-6324894427",
+  "issue_readback": {
+    "path": "paper/materials/20261022-issue20-control-ops/issue-20-readback.json",
+    "bytes": 18456,
+    "sha256": "34ac1f47bbe08027f6e72f51f888374356fa9406453597f6e4cdfa0ad4e2c35c"
+  },
+  "source_inputs_verified": [
+    {
+      "path": ".agents/board.yaml",
+      "bytes": 2653,
+      "sha256": "1cae5205fc40ec04a15df9105396e8af7cfc245304757dbbaa63520e65cddda8"
+    },
+    {
+      "path": "ops/agent_board.py",
+      "bytes": 5176,
+      "sha256": "912befa455577a57018f00a689209fe57cbbcccc85cf2f041b7a0357e71dc1fc"
+    },
+    {
+      "path": "ops/codex-ops.sh",
+      "bytes": 18227,
+      "sha256": "84a5f562e9361c43055b9feed7589600b8566d367da78a7c5a1cf9795d7cfc33"
+    },
+    {
+      "path": "ops/tests/test_issue_session.py",
+      "bytes": 55565,
+      "sha256": "3432116f7ba39f877347ccf3246c3747b310c324a4ad6f8225a75a632283b12e"
+    }
+  ],
+  "technical_check_receipts": [
+    {
+      "path": "paper/materials/20261022-issues31-20-integrator-review/report.md",
+      "bytes": 3754,
+      "sha256": "7e8f0e444886fa93758c3fc6c7722ff7292cbfd9370916970443c60086a48ed7"
+    },
+    {
+      "path": "paper/materials/20261022-issues31-20-integrator-review/20-checks.json",
+      "bytes": 1639,
+      "sha256": "83131d3c74e8704cea5bc0b8cd6fe0eae7db847a4d076147367c22e5d392563d"
+    },
+    {
+      "path": "paper/materials/20261022-issues31-20-integrator-review/20-identity.json",
+      "bytes": 311969,
+      "sha256": "d2cc64c0414a6c658e02f45ddd384b9349351ebfa895de5b17e28db65af2fcd9"
+    },
+    {
+      "path": "paper/materials/20261022-issues31-20-integrator-review/integration.json",
+      "bytes": 1295,
+      "sha256": "194f1202d1a519081374ab9b54458c3d8de905dee0c738b8a4a722f5ac3dc62c"
+    },
+    {
+      "path": "paper/materials/20261022-issues31-20-integrator-review/archive-manifest.json",
+      "bytes": 1813,
+      "sha256": "a4e16590e7dd3c57b7b123abcd4659bafd97dc746d22274299ed492e5acb0b14"
+    }
+  ],
+  "first_failed_integration_receipt": {
+    "path": ".artifacts/integrator-31-live-admission-20261021/20-integration-first-attempt.json",
+    "bytes": 1122,
+    "sha256": "9ae79bc735e59630c103cd7055cba6ecd5b62c378f0155c045a0b6e0300d3551"
+  },
+  "show_enabled": {
+    "command": [
+      "nice",
+      "-n",
+      "19",
+      "python3",
+      "ops/agent_board.py",
+      "--root",
+      "/home/dw/Projects/agent-sts2",
+      "--show-enabled"
+    ],
+    "rc": 0,
+    "effective": "off",
+    "evidence": {
+      "path": "paper/materials/20261022-issue20-control-ops/show-enabled.txt",
+      "bytes": 4,
+      "sha256": "b470b84cf0cd3189e10615bffea7d5cbd9f61134ba1c2cfd513ddd45b776a5f6"
+    }
+  },
+  "production_control_file_absent": true,
+  "formal_host_registry_absent": true,
+  "original_pane_export_gap_resolved": true,
+  "installed_kit_commit": "d15456158f0d7d4ad3b48537b034013fa20cb9f1",
+  "installed_engine_files_verified": [
+    {
+      "path": "ops/codex-ops/agent-board-kit/board.py",
+      "bytes": 24456,
+      "sha256": "2488d33f26c69b1e240340ce26fcad1554d5a2dddf61e59326fbfb866a2c488e"
+    },
+    {
+      "path": "ops/codex-ops/agent-board-kit/test_board.py",
+      "bytes": 15767,
+      "sha256": "abf48d634a4ade1bce836ad644a9b486dd5e69ae56f165f8f19da06d18a9cd24"
+    },
+    {
+      "path": "ops/codex-ops/agent-board-kit/.gitignore",
+      "bytes": 27,
+      "sha256": "e776a3676ba6fdbe9c3a6bb73419225a29ed7c1a0b014d6a1050e2868873e463"
+    }
+  ],
+  "installed_kit_reinstalled": false,
+  "owner_scope_confirmation_pending": true,
+  "unimplemented_requirements": [
+    "done recipients deliverable",
+    "30min idle-with-work stall detector, 2h dedup, 3 attempts escalation needs:roy",
+    "transient error retry after 10min, max3, uncertain journal retained"
+  ],
+  "production_acceptance_pending": [
+    "canonical authorized host registry and unique consumer",
+    "persistent on and original stall first tick",
+    "actual naming/lock-busy retry/reclaim"
+  ],
+  "set_enabled_called": false,
+  "new_dispatch_prompt_reclaim_or_daemon": false,
+  "new_full_dataset_model_or_game_action": false,
+  "issue_closed": false,
+  "live": "0cd3629d3a7f3a3bcacd22fa0a4206acc4d81e78",
+  "technical_log_archives_verified": [
+    {
+      "path": "20-checks.json.gz",
+      "raw_bytes": 1355,
+      "raw_sha256": "49a52a915a5d430f221e98765f9299939430c6358303f98e4b1e7a79a7ce7401",
+      "gzip_sha256": "7cf08448b6afda8d64f9fe7332abcd260bf41a65d9a25e3c2f73b613d3ff7a2a",
+      "gzip_bytes": 549
+    },
+    {
+      "path": "20-tsc.log.gz",
+      "raw_bytes": 0,
+      "raw_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "gzip_sha256": "9ceffb7310338057cfe71a4ae1e2c98d2c485d81cdef906532a801f457a38d64",
+      "gzip_bytes": 20
+    },
+    {
+      "path": "20-vitest.log.gz",
+      "raw_bytes": 79652,
+      "raw_sha256": "02ae3e5329ad13c02c0a7169baeebb4d17004957cfdcec9834c16d1d8f9fc0a5",
+      "gzip_sha256": "04c70b2b6b1b4e5a01bf8df79625d0178dcc727be528b553ce46f16be1dfb832",
+      "gzip_bytes": 23617
+    },
+    {
+      "path": "20-vitest.json.gz",
+      "raw_bytes": 2367535,
+      "raw_sha256": "7d827dcd9ccbfed53da8ab00e215db71044e48a2c186a98f0f36b0559eb8b4e4",
+      "gzip_sha256": "38c5fbccc9ded815430566fae9c8407b041f153a3e1f27f284b94367da5547ba",
+      "gzip_bytes": 337268
+    },
+    {
+      "path": "20-driver.log.gz",
+      "raw_bytes": 78,
+      "raw_sha256": "7f7904253c4fad3b797972f620ed2ed6957b1c6a0a660057074ca231db3aba9d",
+      "gzip_sha256": "9a6d78f0e134a7d4b59defe649b7e5e89dd70250bba384c6e1fe7e6a5ea79fb9",
+      "gzip_bytes": 83
+    },
+    {
+      "path": "20-lifecycle.log.gz",
+      "raw_bytes": 152,
+      "raw_sha256": "4cdd7ae0415f756ff5936f1c40e7fcf1a7df88a0b6f71233a43260f50307a611",
+      "gzip_sha256": "1a380ef3eb13f9036221b0568584802534b7130713c106ab404066ede1bcdb23",
+      "gzip_bytes": 56
+    },
+    {
+      "path": "20-shell.log.gz",
+      "raw_bytes": 0,
+      "raw_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "gzip_sha256": "9ceffb7310338057cfe71a4ae1e2c98d2c485d81cdef906532a801f457a38d64",
+      "gzip_bytes": 20
+    }
+  ],
+  "ops_issue_comment_readback": {
+    "path": "paper/materials/20261022-issue20-control-ops/issue-20-comment-readback.json",
+    "bytes": 2565,
+    "sha256": "d23270a0c786a61a7cafc08db6838cfe3748e20e9177bfa2017f0b077ed6fd3a",
+    "url": "https://github.com/dwroy/agent-sts2/issues/20#issuecomment-6325410542"
+  }
+}
