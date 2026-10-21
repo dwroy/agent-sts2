@@ -1,0 +1,43 @@
+test_external_symlink_and_traversal_sources_are_rejected (test_manual_notice_ack.ManualNoticeAck.test_external_symlink_and_traversal_sources_are_rejected) ... ok
+test_failed_ambiguous_launches_and_changed_frozen_bytes_are_rejected (test_manual_notice_ack.ManualNoticeAck.test_failed_ambiguous_launches_and_changed_frozen_bytes_are_rejected) ... ok
+test_original_manual_launch_accepts_independent_roles_without_scope_or_parent_rewrite (test_manual_notice_ack.ManualNoticeAck.test_original_manual_launch_accepts_independent_roles_without_scope_or_parent_rewrite) ... ok
+test_r4_bootstrap_and_four_questions_keep_original_sha_and_independent_role_chain (test_manual_notice_ack.ManualNoticeAck.test_r4_bootstrap_and_four_questions_keep_original_sha_and_independent_role_chain) ... ERROR
+test_r4_bootstrap_proposal_sha_and_delivery_mismatches_reject_atomically (test_manual_notice_ack.ManualNoticeAck.test_r4_bootstrap_proposal_sha_and_delivery_mismatches_reject_atomically) ... ok
+test_scope_identity_actor_stage_and_delivery_guards_still_reject (test_manual_notice_ack.ManualNoticeAck.test_scope_identity_actor_stage_and_delivery_guards_still_reject) ... ok
+test_wrong_batch_thread_input_character_task_and_original_words_are_rejected (test_manual_notice_ack.ManualNoticeAck.test_wrong_batch_thread_input_character_task_and_original_words_are_rejected) ... ok
+
+======================================================================
+ERROR: test_r4_bootstrap_and_four_questions_keep_original_sha_and_independent_role_chain (test_manual_notice_ack.ManualNoticeAck.test_r4_bootstrap_and_four_questions_keep_original_sha_and_independent_role_chain)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/dw/Projects/agent-sts2/.worktrees/issue-8-r4-notice-ack/ops/learning_requests.py", line 991, in main
+    rec = ack_request(root, state, notice, payload, manual_source)
+  File "/home/dw/Projects/agent-sts2/.worktrees/issue-8-r4-notice-ack/ops/learning_requests.py", line 66, in ack_request
+    return ack_manual_notice(root, notice, payload, manual_source)
+  File "<string>", line 108, in ack_manual_notice
+ValueError: manual notice request, task, character or thread mismatch
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/dw/Projects/agent-sts2/.worktrees/issue-8-r4-notice-ack/ops/tests/test_manual_notice_ack.py", line 161, in test_r4_bootstrap_and_four_questions_keep_original_sha_and_independent_role_chain
+    self.assertEqual(self.ack(stage), 0)
+                     ~~~~~~~~^^^^^^^
+  File "/home/dw/Projects/agent-sts2/.worktrees/issue-8-r4-notice-ack/ops/tests/test_manual_notice_ack.py", line 66, in ack
+    return flow.main()
+           ~~~~~~~~~^^
+  File "/home/dw/Projects/agent-sts2/.worktrees/issue-8-r4-notice-ack/ops/learning_requests.py", line 1010, in main
+    parser.error(str(error))
+    ~~~~~~~~~~~~^^^^^^^^^^^^
+  File "/usr/lib/python3.14/argparse.py", line 2797, in error
+    self.exit(2, _('%(prog)s: error: %(message)s\n') % args)
+    ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.14/argparse.py", line 2784, in exit
+    _sys.exit(status)
+    ~~~~~~~~~^^^^^^^^
+SystemExit: 2
+
+----------------------------------------------------------------------
+Ran 7 tests in 0.127s
+
+FAILED (errors=1)

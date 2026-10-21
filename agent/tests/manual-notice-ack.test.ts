@@ -6,5 +6,5 @@ it("authenticates original manual V6 notice sources and preserves independent ro
     encoding: "utf8", timeout: 15_000,
   });
   expect(result.status, result.stdout + result.stderr).toBe(0);
-  expect(result.stderr).toContain("Ran 5 tests");
+  expect(result.stderr).toContain("Ran 7 tests");
 });

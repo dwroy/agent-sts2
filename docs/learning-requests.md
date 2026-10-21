@@ -40,6 +40,8 @@ python3 ops/learning_requests.py ack --notice <id> --stage roy_notified --receip
 
 不可代填后续角色的ACK；queued不算发送。通知未完成时，原learn tick每30分钟重提ops事件，不新建watcher或另一个调度器。watcher每次接续先查未确认通知；没有可发送的watcher通道时ops必须报告阻塞并保留通知。
 
+历史手动 V6 通知使用同一 `ack` 命令，另传 `--source <原来源绑定JSON>`（schema=`manual-learning-notice-v1`，包含 request_id/task/batch/character/thread_id/worktree 及 original_log/input/original_message 三份 path/SHA 引用）。入口核原启动、正常退出、线程、冻结输入和完整异议原文，不新建学习父要求。支持原 direction-experience、reflex-distill、build-cores 及 `v6-reflex-distill-r4` 任务。R4 按原 `.artifacts/<batch>/inputs.json` 的 `manual-v6-r4-input-bootstrap-v1` 格式验证 request、batch、worktree，并从原 `learning-notice-proposal-v1` 核 task/character 等身份；通知 request_sha256 必须是完整原 proposal 的 SHA，四个 question id 随完整原文绑定。保留原 proposal 的 false flags 和旧拒绝回执；各角色只凭自己的真实回执沿原通知链登记，通知登记完成不代表科学父完成或正式知识发布。
+
 ACK回执为JSON：notice_id、stage、actor（ops_forwarded为ops，其余为watcher）、status=delivered，以及evidence={path,sha256}指向实际发送/接收/用户可见回复原件。不能拿任意说明文件当通知完成。消费者回执同样必须有evidence数组，逐项冻结真实探针输入/输出，只有passed字段不通过验收。
 
 blocked/questioned经ops核查有可行下一步后，保存说明再沿原线程继续：`python3 ops/learning_requests.py retry --request <id> --receipt <恢复理由>`。这不是用户审批；新的范围/输入必须升revision。有异议但证据充分的修正不必等Roy再次批准。

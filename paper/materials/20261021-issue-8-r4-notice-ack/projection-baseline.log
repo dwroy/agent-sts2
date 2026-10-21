@@ -1,0 +1,74 @@
+
+ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/issue-8-r4-notice-ack/.artifacts/issue-8-r4-notice-ack/baseline-source/agent
+
+ ❯ tests/v6-projection-entries.test.ts (2 tests | 1 failed) 71ms
+   × hands actual combination rows to W4 without cloning a direction maximum into each combo 48ms
+ ❯ tests/v6-target-values.test.ts (4 tests | 2 failed) 67ms
+   × counts low probabilities as bounded known values without inventing W or PW 16ms
+   × retains deterministic P bounds after the combat deadline instead of erasing the table 2ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 3 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/v6-projection-entries.test.ts > hands actual combination rows to W4 without cloning a direction maximum into each combo
+AssertionError: expected undefined to be 20 // Object.is equality
+
+- Expected:
+20
+
++ Received:
+undefined
+
+ ❯ tests/v6-projection-entries.test.ts:23:30
+     21|   expect(row.entry.availability).toEqual({ take: .75, skip: .5 });
+     22|   expect(row.completed_win).toEqual({ value: 1, se: 0, n: r.config.sam…
+     23|   expect(row.general_win?.n).toBe(r.config.samples_pick);
+       |                              ^
+     24|   expect(row.general_win?.value).toBeCloseTo(.25, 14);
+     25|   expect(r.weights).toEqual({ D: 1 }); expect(table.targets.map(t => t…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/3]⎯
+
+ FAIL  tests/v6-target-values.test.ts > counts low probabilities as bounded known values without inventing W or PW
+AssertionError: expected 'insufficient_known_options' to be null
+
+- Expected:
+null
+
++ Received:
+"insufficient_known_options"
+
+ ❯ tests/v6-target-values.test.ts:18:64
+     16|     expect(currentBossKnown(table, row.entry.option_id)).toBe(true);
+     17|   }
+     18|   expect(constructionCoverage(["take", "skip"], table).reason).toBeNul…
+       |                                                                ^
+     19|   expect(validateProjectionEntries(table.combinations.map(r => r.entry…
+     20|   expect(targetValueSummaries(table, "take")[0]).toMatchObject({ P: .0…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/3]⎯
+
+ FAIL  tests/v6-target-values.test.ts > retains deterministic P bounds after the combat deadline instead of erasing the table
+AssertionError: expected 'insufficient_known_options' to be null
+
+- Expected:
+null
+
++ Received:
+"insufficient_known_options"
+
+ ❯ tests/v6-target-values.test.ts:58:64
+     56|   const table = await engine.evaluate(r);
+     57|   expect(table.combinations).toHaveLength(2);
+     58|   expect(constructionCoverage(["skip", "take"], table).reason).toBeNul…
+       |                                                                ^
+     59| });
+     60|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/3]⎯
+
+
+ Test Files  2 failed (2)
+      Tests  3 failed | 3 passed (6)
+   Start at  11:22:52
+   Duration  3.26s (transform 1.64s, setup 1.05s, import 1.40s, tests 139ms, environment 0ms)
+
