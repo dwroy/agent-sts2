@@ -1,0 +1,243 @@
+{
+  "generated_at": "2026-10-21T21:03:42.695152+08:00",
+  "status": "passed; original failures preserved separately",
+  "checks": {
+    "python": {
+      "exit_code": 0,
+      "tests": 11,
+      "skipped": 0,
+      "log": "verification/python-final-2.log.gz",
+      "command": "nice -n 19 /home/dw/Projects/agent-sts2/data/logdb-venv/bin/python -m unittest discover -s eval/tests -p \"test_sts2fun*.py\""
+    },
+    "tsc": {
+      "exit_code": 0,
+      "log": "verification/tsc.log.gz",
+      "cwd": "agent",
+      "command": "nice -n 19 env PATH=/home/dw/.local/node/bin:/usr/bin:/bin node node_modules/typescript/bin/tsc -p tsconfig.json --noEmit"
+    },
+    "vitest": {
+      "exit_code": 0,
+      "files": 641,
+      "passed": 6055,
+      "failed": 0,
+      "skipped": 2,
+      "log": "verification/vitest-final.log.gz",
+      "report": "verification/vitest-final.json.gz",
+      "cwd": "agent",
+      "command": "nice -n 19 env PATH=\"/home/dw/.local/node/bin:/home/dw/.local/bin:$PATH\" node node_modules/vitest/vitest.mjs run --config vitest.issue24.local.mts --reporter=default --reporter=json --outputFile.json=../.cache/issue24-combat/verification/vitest-final.json",
+      "config": "Copy verification/vitest-resource-config.mts.txt to agent/vitest.issue24.local.mts; remove the temporary copy after the run.",
+      "exact_file_set_matches_first_full_run": true,
+      "additional_exclusions": [],
+      "resource_policy": "nice 19; maxWorkers=1; fileParallelism=false; 640 files in threads, only paths.test.ts in a separate sequential fork group; at most one test worker"
+    },
+    "aggregate": {
+      "exit_codes": [
+        0,
+        0
+      ],
+      "command": "nice -n 19 /home/dw/Projects/agent-sts2/data/logdb-venv/bin/python eval/sts2fun_combat_diagnostic.py --db /home/dw/Projects/agent-sts2/data/external/sts2fun/sts2_public.db --snapshot .cache/issue24-combat/frozen-logdb --output <new-directory>",
+      "logs": [
+        "verification/aggregate-final.log.gz",
+        "verification/aggregate-repeat-final.log.gz"
+      ],
+      "result": "CSV and summary byte-identical; provenance differs only in generated_at; original acquisition SHA inherited explicitly; frozen shard SHA256 verified"
+    },
+    "readback": {
+      "exit_code": 0,
+      "log": "verification/readback-public.log.gz",
+      "command": "nice -n 19 /home/dw/Projects/agent-sts2/data/logdb-venv/bin/python paper/materials/2026-10-21-sts2fun-combat-diagnostic/verify_aggregates.py --repeat .cache/issue24-combat/reproduce-final",
+      "checks": [
+        "manifest/source hashes",
+        "per-metric unknown and independent denominators",
+        "SL endpoint HP excluded",
+        "strata and version sums",
+        "no public identifier columns",
+        "all original delivery artifact hashes unchanged"
+      ]
+    }
+  },
+  "failure_history": [
+    {
+      "log": "verification/python-initial.log.gz",
+      "exit_code": 1,
+      "reason": "Unmatched closing parenthesis in initial new script; corrected before aggregation; final fixed tests pass."
+    },
+    {
+      "log": "verification/vitest.log.gz",
+      "report": "verification/vitest.json.gz",
+      "exit_code": 1,
+      "files_failed": 4,
+      "tests_failed": 14,
+      "reason": "PATH replaced rather than extended, so gitleaks was unavailable in three existing Python-wrapper tests; paths.test.ts cannot process.chdir in thread workers. Corrected test launch environment and project pools; production and existing tests unchanged."
+    },
+    {
+      "log": "verification/vitest-environment-check.log.gz",
+      "exit_code": 130,
+      "reason": "Temporary project extends merged include arrays, so the fork project could include all tests. Preflight deliberately interrupted before full rerun; explicit project configurations then passed all four affected files (15 tests)."
+    }
+  ],
+  "precommit_secret_scan": {
+    "exit_codes": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "logs": [
+      "verification/gitleaks-script.log.gz",
+      "verification/gitleaks-test.log.gz",
+      "verification/gitleaks-aggregates.log.gz",
+      "verification/gitleaks-validation.log.gz"
+    ],
+    "tool": "gitleaks 8.30.1",
+    "note": "Raw validation logs scanned before archive; final staged diff and issue comment scanned separately before commit/publication."
+  },
+  "original_delivery": {
+    "commit": "d8eea1f7c4b66eeb46312686d7f2036ad3acd9e3",
+    "directory": "paper/materials/2026-10-21-sts2fun-stats",
+    "original_artifact_hashes_unchanged": true
+  },
+  "boundaries": {
+    "installed_dependencies": false,
+    "raw_data_committed": false,
+    "player_table_read": false,
+    "external_player_or_run_identifiers_published": false,
+    "production_behavior_changed": false,
+    "play_run": false,
+    "live_or_stop_changed": false
+  },
+  "archives": {
+    "aggregate-final.log": {
+      "path": "verification/aggregate-final.log.gz",
+      "raw_bytes": 811,
+      "raw_sha256": "e99d06f99653d6bcd35c545e0af02121052869c979ec78885a71e62e69e35814",
+      "gzip_sha256": "07150ac78772f003c3b04d5a9eff3e56bbc2a09e3ba6e6d15fb9eac200fdc9e8"
+    },
+    "aggregate-repeat-final.log": {
+      "path": "verification/aggregate-repeat-final.log.gz",
+      "raw_bytes": 811,
+      "raw_sha256": "e99d06f99653d6bcd35c545e0af02121052869c979ec78885a71e62e69e35814",
+      "gzip_sha256": "07150ac78772f003c3b04d5a9eff3e56bbc2a09e3ba6e6d15fb9eac200fdc9e8"
+    },
+    "aggregate-run-1.log": {
+      "path": "verification/aggregate-run-1.log.gz",
+      "raw_bytes": 597,
+      "raw_sha256": "901273a20a88227d849d58e97925b6054ee33f842d87a3185dbe2e9d84ae7f7d",
+      "gzip_sha256": "46409a7eba43c87b1980bfb8dbbc6359743bf6eec15e28ea1b853ba71ed21375"
+    },
+    "aggregate-run-2.log": {
+      "path": "verification/aggregate-run-2.log.gz",
+      "raw_bytes": 632,
+      "raw_sha256": "21837514027028d62b9d55b52129b956d892393c0ba0808ef4c724e04fe51b5a",
+      "gzip_sha256": "73b7fe4d665ead17b758e2d2cf450a7bc23fc9b09228f6524d6b082286118c6e"
+    },
+    "gitleaks-aggregates.log": {
+      "path": "verification/gitleaks-aggregates.log.gz",
+      "raw_bytes": 0,
+      "raw_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "gzip_sha256": "9ceffb7310338057cfe71a4ae1e2c98d2c485d81cdef906532a801f457a38d64"
+    },
+    "gitleaks-script.log": {
+      "path": "verification/gitleaks-script.log.gz",
+      "raw_bytes": 0,
+      "raw_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "gzip_sha256": "9ceffb7310338057cfe71a4ae1e2c98d2c485d81cdef906532a801f457a38d64"
+    },
+    "gitleaks-test.log": {
+      "path": "verification/gitleaks-test.log.gz",
+      "raw_bytes": 0,
+      "raw_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "gzip_sha256": "9ceffb7310338057cfe71a4ae1e2c98d2c485d81cdef906532a801f457a38d64"
+    },
+    "gitleaks-validation.log": {
+      "path": "verification/gitleaks-validation.log.gz",
+      "raw_bytes": 0,
+      "raw_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "gzip_sha256": "9ceffb7310338057cfe71a4ae1e2c98d2c485d81cdef906532a801f457a38d64"
+    },
+    "python-after-syntax-fix.log": {
+      "path": "verification/python-after-syntax-fix.log.gz",
+      "raw_bytes": 109,
+      "raw_sha256": "6ebfdfd4b3c00fc8d529c9d9843a65a06a2c956847a10a8789c0a9c804012d92",
+      "gzip_sha256": "768e4557adfc2250c1950520aeba403bdb526e25099716067eca952283975819"
+    },
+    "python-final-2.log": {
+      "path": "verification/python-final-2.log.gz",
+      "raw_bytes": 110,
+      "raw_sha256": "c6a7ba4e0017dae53402985f8aa62b237f71d7837eec2206ddea4c3addd4166f",
+      "gzip_sha256": "cd906ccce4eed2fe7df5b4a22d31b5c03f863a48df9df8d775b79dff9855ee5d"
+    },
+    "python-final.log": {
+      "path": "verification/python-final.log.gz",
+      "raw_bytes": 109,
+      "raw_sha256": "f90205cbd4fdd781cd1743acb491bbf8107bba0a826706e16eea68607db679c8",
+      "gzip_sha256": "ee1f107507b2b9876c0436df14122c5a59bdfaca72bf30df9a8be86761fa69d6"
+    },
+    "python-initial.log": {
+      "path": "verification/python-initial.log.gz",
+      "raw_bytes": 1328,
+      "raw_sha256": "0aefd1e88b4e4c97b4ca61c476decc72d16e4bdbd26ab1894f01585cfaf33add",
+      "gzip_sha256": "5f1abcee2416ed19af7e120c0a7a40b1f12973ed173e1f2a6815dbac6aa49c85"
+    },
+    "readback-public.log": {
+      "path": "verification/readback-public.log.gz",
+      "raw_bytes": 1651,
+      "raw_sha256": "fabf648992587a0066c4ba3b066689fd3e39a24afcd1122320207dd13b1899f1",
+      "gzip_sha256": "df4751a7acf9da5b6639a8200cb87fb6ba1c7e34b06c1be2ae228b46532aa8b2"
+    },
+    "readback.log": {
+      "path": "verification/readback.log.gz",
+      "raw_bytes": 1651,
+      "raw_sha256": "fabf648992587a0066c4ba3b066689fd3e39a24afcd1122320207dd13b1899f1",
+      "gzip_sha256": "df4751a7acf9da5b6639a8200cb87fb6ba1c7e34b06c1be2ae228b46532aa8b2"
+    },
+    "tsc.log": {
+      "path": "verification/tsc.log.gz",
+      "raw_bytes": 0,
+      "raw_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "gzip_sha256": "9ceffb7310338057cfe71a4ae1e2c98d2c485d81cdef906532a801f457a38d64"
+    },
+    "vitest-environment-check-2.json": {
+      "path": "verification/vitest-environment-check-2.json.gz",
+      "raw_bytes": 6324,
+      "raw_sha256": "5dfa13529526cc3b8d9ef9691d7f300be750ee3cc4f98f5fefdef2e0f056e3e3",
+      "gzip_sha256": "cf7a46882d80fcf82bf6585d2c58f74eeb0e16e846cf8eddbfe18f3e10240d35"
+    },
+    "vitest-environment-check-2.log": {
+      "path": "verification/vitest-environment-check-2.log.gz",
+      "raw_bytes": 1016,
+      "raw_sha256": "1ec11d2bb1c5a27e9077d15ec1cbcf8ef61cae70944124f7e52cdd1a82eeea93",
+      "gzip_sha256": "e5f5ca66929b39dac2980d9f25327de6cf59b4114c30a8994f20682ee4610678"
+    },
+    "vitest-environment-check.log": {
+      "path": "verification/vitest-environment-check.log.gz",
+      "raw_bytes": 137,
+      "raw_sha256": "bac6086ed83435555d372838894b309d742d359a7b9bc8cc11b25bec3b5e8830",
+      "gzip_sha256": "d8c0642c5e402fdce677d26f22bf229923f91a1f9f21a980ab75e0e4ae8a8780"
+    },
+    "vitest-final.json": {
+      "path": "verification/vitest-final.json.gz",
+      "raw_bytes": 2352358,
+      "raw_sha256": "808040b7acfbbe2bb7dc63c985eb4c4b3de1170b566cf03915941cfcb567a883",
+      "gzip_sha256": "3b842f5fc174360a845a3e96913a88f4c0c66103566a6466c923b7c766bbf0ca"
+    },
+    "vitest-final.log": {
+      "path": "verification/vitest-final.log.gz",
+      "raw_bytes": 89831,
+      "raw_sha256": "040898628d53d9a592826e005ccc531336039c3f5acba41ca1a57eedc2b0e868",
+      "gzip_sha256": "e3d391cfcb2be1a046071174c097ba3529cfc9d605e19155c6840a0092073b6b"
+    },
+    "vitest.json": {
+      "path": "verification/vitest.json.gz",
+      "raw_bytes": 2395502,
+      "raw_sha256": "1417f7ce505e197f5a561f4a2a3f85b86a9022adec616362c0280b24780e7bfc",
+      "gzip_sha256": "e68bc926422c89a22f368757514ba7aa4fc6da3122cae3c8df1c8dad1ad2bade"
+    },
+    "vitest.log": {
+      "path": "verification/vitest.log.gz",
+      "raw_bytes": 111790,
+      "raw_sha256": "ea173c07df1a8f08b95e17fe34cc7dcbc71cfc025181513409c7f3c80ccf8c93",
+      "gzip_sha256": "71a10c1c65a04f8475deb37dac12665cb3256f59c03cb966c78a16bf38ee973d"
+    }
+  }
+}
