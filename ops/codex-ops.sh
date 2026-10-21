@@ -245,7 +245,10 @@ case "$cmd" in
         # Read-only module checks share the existing cadence; no extra daemon or game action.
         nice -n 19 timeout 30s python3 "$OPS/module_health.py" --root "$ROOT" --directory "$DIR" >> "$DIR/module-health.log" 2>&1 || log "module health check failed (see module-health.log)"
         ;;
-      learn) python3 "$OPS/codex-ops-learn.py" tick >> "$DIR/learn.out" 2>&1 || log "learn tick failed (see learn.out)" ;;
+      learn)
+        python3 "$OPS/codex-ops-learn.py" tick >> "$DIR/learn.out" 2>&1 || log "learn tick failed (see learn.out)"
+        nice -n 19 timeout 180s python3 "$OPS/open_book_refresh.py" --root "$ROOT" tick >> "$DIR/open-book.log" 2>&1 || log "open book refresh failed (see open-book.log)"
+        ;;
       snapshot) tick_snapshot ;;
       *) echo "unknown job: $job" >&2; exit 2 ;;
     esac

@@ -15,6 +15,7 @@ import { cardUpgrade } from "../knowledge/card-upgrades.js";
 import { observedApotheosisUpgrade } from "./silent-apotheosis.js";
 import { observedRazorSnakebiteCard } from "./silent-razor-snakebite.js";
 import type { Knowledge } from "../knowledge/index.js";
+import { externalCardReference, type ExternalReference } from "../knowledge/open-book.js";
 import { asArray, asRecord, bool, num, numOrNull, str, stripMarkup } from "../core/util/json.js";
 
 /** Ethereal (「虚无」) by the card's keywords or its rendered text: exhausted at the end of the turn while held. */
@@ -36,6 +37,8 @@ export function heldCardEthereal(card: Record<string, unknown>, knowledge?: Know
 export type TargetMode = "single" | "all" | "random" | "self" | "none";
 
 export interface CardModel {
+  /** Static external numbers for consumers/research; never certifies known or overrides live dynamic values. */
+  externalReference?: ExternalReference;
   index: number;
   key: string;
   cardId: string;
@@ -1433,6 +1436,8 @@ export function modelHandCard(entry: unknown, fallbackIndex: number, knowledge: 
       }
     }
   }
+  const external = externalCardReference(cardId, character);
+  if (external) model.externalReference = external;
   return model;
 }
 

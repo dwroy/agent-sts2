@@ -38,6 +38,7 @@ import { routeAnswerText } from "../sim/route-map.js";
 import type { AnswerSpec, BrainAnswer, BrainEngine, BrainRequest, EngineName } from "./types.js";
 import { KNOWLEDGE_DIR } from "../core/paths.js";
 import { knowledgeFile } from "../knowledge/files.js";
+import { attachOpenBook } from "../knowledge/open-book.js";
 
 /** The project's knowledge directory (core/paths.ts): the data files the knowledge tools read (knowledge/files.ts). */
 export { KNOWLEDGE_DIR };
@@ -275,6 +276,14 @@ export class Brain {
     if (isObject(payload) && DIRECTION_RIDE_KEY in payload) spec = withDirectionRideField(spec, payload);
     const liveRun = (this.context?.state as Record<string, unknown> | undefined)?.["run_id"];
     const runId = typeof liveRun === "string" ? liveRun : "";
+    // Options are often the only place a reward/shop card is named. Include them in reference selection.
+    if (isObject(payload)) {
+      const enriched = attachOpenBook({ ...payload, ...(options ? { open_book_options: options } : {}) }, { directory: this.context?.knowledgeDir });
+      if (isObject(enriched) && enriched["open_book"]) {
+        const { open_book_options: _selectionInput, ...withReferences } = enriched;
+        payload = withReferences;
+      }
+    }
     const req: BrainRequest = {
       ...(runId ? { runId } : {}),
       label,

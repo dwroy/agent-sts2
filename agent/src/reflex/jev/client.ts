@@ -12,6 +12,7 @@ import { novaJevFetch } from "./nova.js";
 
 import { readAnswers, type AnswerSet } from "./answers.js";
 import type { QuestionSet } from "./questions.js";
+import { attachOpenBook } from "../../knowledge/open-book.js";
 
 export type JevFailureKind = "auth" | "permission" | "validation" | "rate_limit" | "server" | "connection" | "unknown";
 
@@ -230,6 +231,10 @@ export class JevClient {
   }
 
   private async askBounded(state: unknown, questions: QuestionSet, timeoutMs?: number, signal?: AbortSignal): Promise<JevAskResult> {
+    const board = state !== null && typeof state === "object" ? state as Record<string, unknown> : {};
+    const brief = board["run_brief"] as Record<string, unknown> | undefined;
+    const enriched = attachOpenBook({ board: state, questions }, { character: typeof brief?.["character"] === "string" ? brief["character"] : undefined });
+    if (enriched && typeof enriched === "object" && "open_book" in enriched) state = { ...board, open_book: enriched.open_book };
     interface RawResult {
       answers?: unknown;
       model?: string;
