@@ -5595,3 +5595,5 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
 - 2026-10-21 13:41:35 CST [watcher] #8 集成核验：4fc80c385 的17份 R4 窄鉴权源码/测试/材料逐字节合入，#19已解除基线阻塞，联合 tsc/完整 Vitest 全通过；原三类及角色/身份/SHA保护不变，生产 CLI ACK待ops，#4/#13/#14研究CLI仍pending。
 
 - 2026-10-21T13:43:55+08:00 ops：ordinary131301唯一dataset已执行/源检查过，五成本表并发更新使受控记录拒交；364原blob/旧五表保全。仅记录恢复前发现main新增源码，校验先停无Git写；记录仍blocked、10waiting/WT净，原attention/失败不改，不重生成器/模型/full/live。1337-ops/receipt.json。
+
+- 2026-10-21T13:47:07+08:00 ops：1344八notice按原文/SHA/真实转达去重，研究CLI仍pending（R4新兼容不含原研究）；131301-s2 WT净/报告同/10waiting，main新源使dataset准入前停止，无本候选attempt/log。保原attention、失败及科学父，不重模型/full/dataset/派批或改live；paper/materials/20261021-1344-ops/receipt.json。
