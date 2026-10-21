@@ -1,0 +1,61 @@
+[
+  {
+    "prior": "Issue #13 列出EXPOSE 208、SPORE_MIND 60等unknown标签，容易被理解为独立实盘覆盖。",
+    "finding": "重算完全复现原标签计数；EXPOSE的208只来自1局13道题的候选/目标槽，SPORE_MIND的60只来自1局3题。其余卡A标签为11/4/4，不是施放分母。",
+    "evidence": [
+      "shadow-unknown-inventory.json",
+      "coverage.csv"
+    ],
+    "affected_ids": [
+      "github-issue-13-silent-learning-20261021"
+    ],
+    "next_step": "保留R409原结果；发布与消费者验收按逐卡独立局/真实施放和分支重新计数，不关闭父要求。"
+  },
+  {
+    "prior": "silent-0066已shipped；普通EXPOSE在当前消费者known=true。",
+    "finding": "这仅覆盖普通Power→易伤。R410升级EXPOSE仍known=false且vulnerable=0；当前CardModel也没有清格挡/全部人工制品的字段。7XS普通清8挡、升级清18挡/1制品/加3易伤均直接兑现。silent-0217修预览消耗，与这些缺口独立。",
+    "evidence": [
+      "r410-consumer-replay.json",
+      "effect-audit.json"
+    ],
+    "affected_ids": [
+      "silent-0066",
+      "silent-0073",
+      "silent-0208",
+      "silent-0217",
+      "silent-proposal-00a6a10b15a62b38"
+    ],
+    "next_step": "复用原机制提案补CardModel/solver/rollout及离手物化、目标语义测试；旧shipped状态不代表本新增范围已发布。"
+  },
+  {
+    "prior": "空rules_text、空dynamic_values且只显示消耗的SPORE_MIND可能可以按零效果known。",
+    "finding": "本批仅10行真实手牌、4个局/层/回合键、1独立局，0施放；另有显示昏眩版本。不能证实零效果，也未绑定其生成来源。索引唯一同名施放是非Silent，已拒绝。",
+    "evidence": [
+      "shadow-card-observations.json",
+      "historical-index-discovery.json"
+    ],
+    "affected_ids": [
+      "github-issue-13-silent-learning-20261021"
+    ],
+    "next_step": "继续unmodelled，等待Silent真实选择/施放与状态后继，不按卡名或其他角色补机制。"
+  },
+  {
+    "prior": "旧钢铁风暴升级手牌边界已implemented，可能被读作完整生成/自动效果已实现。",
+    "finding": "旧71e742提案原文明确只清旧手牌并停线，known仍false；普通0费69776提案也明确尚无完整生成。实际12次施放见N-1刀转换，但32VS净6挡、K643净11挡、其他0挡，不能实现固定格挡或未知奇巧顺序。",
+    "evidence": [
+      "prior-proposal-boundary.md",
+      "prior-proposal-sly.md",
+      "effect-audit.json",
+      "r410-consumer-replay.json"
+    ],
+    "affected_ids": [
+      "silent-0455",
+      "silent-0456",
+      "silent-0458",
+      "silent-proposal-71e742c6453608bf",
+      "silent-proposal-c1dd614cdf7bfc37",
+      "silent-proposal-69776c308a3b298e"
+    ],
+    "next_step": "复用原ID；生成与自动交互分开，先验动态张数和原手牌离手保护，再沿原闭环实现。"
+  }
+]

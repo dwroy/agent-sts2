@@ -1,0 +1,71 @@
+[
+  {
+    "operation": "date_before_records",
+    "stdout": "2026-10-21T11:49:56+08:00",
+    "exit_code": 0
+  },
+  {
+    "operation": "ledger-update",
+    "command": [
+      "python3",
+      "/home/dw/Projects/agent-sts2/learner/ledger.py",
+      "update"
+    ],
+    "cwd": "/home/dw/Projects/agent-sts2",
+    "ledger_runs_input": "/home/dw/Projects/agent-sts2/.artifacts/ops-issues-13-14-dispatch-20261021/shared-inputs/runs.jsonl",
+    "stdin": "/home/dw/Projects/agent-sts2/learner/runs/20261021-111653-8735c888-1393-4256-84d9-821d4e4a14ea-issue-13-card-models-task/ledger-update-input.jsonl",
+    "stdin_sha256": "d5f0b6076783b5e7112d6ff08582c2ae48a950be1310249bce9c710831458879",
+    "stdout": {
+      "path": "/home/dw/Projects/agent-sts2/learner/runs/20261021-111653-8735c888-1393-4256-84d9-821d4e4a14ea-issue-13-card-models-task/ledger-update.stdout",
+      "bytes": 60,
+      "sha256": "85d0a5c6073c7bcd96431090109c308a39480e0b430946d885924ddc759ac1c0"
+    },
+    "stderr": {
+      "path": "/home/dw/Projects/agent-sts2/learner/runs/20261021-111653-8735c888-1393-4256-84d9-821d4e4a14ea-issue-13-card-models-task/ledger-update.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "exit_code": 0
+  },
+  {
+    "operation": "code-proposals-pending",
+    "command": [
+      "python3",
+      "/home/dw/Projects/agent-sts2/learner/code_proposals.py",
+      "pending",
+      "--root",
+      "/home/dw/Projects/agent-sts2",
+      "--character",
+      "silent"
+    ],
+    "cwd": "/home/dw/Projects/agent-sts2",
+    "ledger_runs_input": "/home/dw/Projects/agent-sts2/.artifacts/ops-issues-13-14-dispatch-20261021/shared-inputs/runs.jsonl",
+    "stdin": null,
+    "stdin_sha256": null,
+    "stdout": {
+      "path": "/home/dw/Projects/agent-sts2/learner/runs/20261021-111653-8735c888-1393-4256-84d9-821d4e4a14ea-issue-13-card-models-task/code-proposals-pending.stdout",
+      "bytes": 997840,
+      "sha256": "fc5e26adc5347c3d4bc11d6cc47cda8de1dc18c5746c658dbe5a341df0d17773"
+    },
+    "stderr": {
+      "path": "/home/dw/Projects/agent-sts2/learner/runs/20261021-111653-8735c888-1393-4256-84d9-821d4e4a14ea-issue-13-card-models-task/code-proposals-pending.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "exit_code": 0
+  },
+  {
+    "operation": "ledger-show-readback",
+    "ids": [
+      "silent-0208",
+      "silent-0141",
+      "silent-0035",
+      "silent-0458",
+      "silent-0456"
+    ],
+    "path": "/home/dw/Projects/agent-sts2/learner/runs/20261021-111653-8735c888-1393-4256-84d9-821d4e4a14ea-issue-13-card-models-task/ledger-readback.json",
+    "sha256": "8481c2d1fed4142376d34080173f0b1026ce5667cc0aefbd981e8b3c1d757a38",
+    "status_changed": false,
+    "new_proposal_add": false
+  }
+]
