@@ -1,0 +1,83 @@
+{
+  "at": "2026-10-21T17:57:56+08:00",
+  "pid": 11996,
+  "state": "completed",
+  "run_id": "0CLP16ZR4ZZC",
+  "no_duplicate_report": true,
+  "reuse_completed_extraction": true,
+  "steps": [
+    {
+      "name": "normal-refresh",
+      "command": [
+        "bash",
+        "/home/dw/Projects/agent-sts2/.worktrees/live/knowledge/builders/refresh.sh",
+        "--ops-root",
+        "/home/dw/Projects/agent-sts2",
+        "--character",
+        "silent"
+      ],
+      "started_at": "2026-10-21T17:57:56+08:00",
+      "worker_pid": 12000,
+      "rc": 0,
+      "finished_at": "2026-10-21T18:11:52+08:00"
+    },
+    {
+      "name": "cost-refresh",
+      "command": [
+        "python3",
+        "/home/dw/Projects/agent-sts2/.worktrees/live/ops/refresh-costs.py",
+        "--root",
+        "/home/dw/Projects/agent-sts2",
+        "--code-root",
+        "/home/dw/Projects/agent-sts2/.worktrees/live"
+      ],
+      "started_at": "2026-10-21T18:11:52+08:00",
+      "worker_pid": 32743,
+      "rc": 0,
+      "finished_at": "2026-10-21T18:12:48+08:00"
+    },
+    {
+      "name": "global-build-funnel",
+      "command": [
+        "/home/dw/Projects/agent-sts2/data/logdb-venv/bin/python",
+        "/home/dw/Projects/agent-sts2/ops/global_build_funnel.py",
+        "--root",
+        "/home/dw/Projects/agent-sts2",
+        "--character",
+        "silent"
+      ],
+      "started_at": "2026-10-21T18:12:48+08:00",
+      "worker_pid": 34357,
+      "rc": 0,
+      "finished_at": "2026-10-21T18:12:57+08:00"
+    },
+    {
+      "name": "fight-value-training",
+      "command": [
+        "python3",
+        "/home/dw/Projects/agent-sts2/.worktrees/live/knowledge/builders/build-fight-value.py",
+        "train",
+        "--character",
+        "silent"
+      ],
+      "started_at": "2026-10-21T18:12:57+08:00",
+      "worker_pid": 35246,
+      "rc": 0,
+      "finished_at": "2026-10-21T18:26:25+08:00"
+    },
+    {
+      "name": "catalog-after-training",
+      "command": [
+        "python3",
+        "/home/dw/Projects/agent-sts2/.worktrees/live/knowledge/builders/build-catalog.py",
+        "--knowledge-root",
+        "/home/dw/Projects/agent-sts2/.worktrees/live/knowledge"
+      ],
+      "started_at": "2026-10-21T18:26:25+08:00",
+      "worker_pid": 96199,
+      "rc": 0,
+      "finished_at": "2026-10-21T18:26:25+08:00"
+    }
+  ],
+  "finished_at": "2026-10-21T18:26:25+08:00"
+}

@@ -5635,3 +5635,5 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
 
 - 2026-10-21T18:21:22+08:00 [ops] 181310-fix无新增源/合入，154SHA/53既有main子项/31待办与tsc0/46定向0原件核同；严格无改动结案main/live102路径不等，原failed/rc0及冷却保持，无空合并或新检查发布。paper/materials/20261021-1819-ops/receipt.json。
 - 2026-10-21T18:28:38+08:00 [watcher] 集成核验 #16/#17：9f759cd9d+7a174a0a3、9243f2359 已入 main e595ea533；仅对齐 #23 测试夹具，不放宽生产门；tsc、645文件6065项/2跳过、46生命周期/15回收检查通过，1981代码文件SHA匹配，binding backup/restore/verify及0644不变。#12/#19仅关tab、树仍按可见性门保留；#24缺同遭遇自身战斗诊断、blocked并开#30，未合入；#16/#17交ops自然上线，未改live/STOP。paper/materials/20261021-issues16-17-integrator-review/report.md。
+
+- 2026-10-21T18:35:41+08:00 [ops] WSL统计唯一接续5步/内部11步0，实际生产加载器读取模型/含0CLP历史/catalog，251来源SHA核同；漏斗104/100未到十局，不冒新归档或自然消费。181310策略六局80原窗口/十waiting核同，无源/合入/测试；原无改动回执与后续main快进分列，不重复dataset/检查发布。STOP/Regent暂停保持。paper/materials/20261021-1830-ops/receipt.json。
