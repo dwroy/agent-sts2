@@ -74,7 +74,25 @@ nice -n 19 python3 ops/issue_session.py register 123 example-fix \
 
 确定性程序位于私有仓库 [agent-board-kit](https://github.com/dwroy/agent-board-kit)，不调用模型。`.agents/board.yaml` 的 `dispatcher` 配置指定安装位置、同机项目登记表、事件账本、汇总与收件箱；生命周期命令仍调用本项目 `issue_session.py spawn/reclaim`，沿用原发布、进程、归档与保护门禁。不在开发工作树执行生产派发或回收。
 
-集成后先按 kit README 安装并登记全部同机项目，在主运行根用 `nice -n 19 python3 ops/agent_board.py --root "$PWD" --dry-run` 演练。ops 核登记与 pane 身份后，设置调度器环境 `CODEX_AGENT_BOARD=on`，沿现有五分钟 `stall` tick 执行一份；其他 tick 不重复运行。开关默认 off，未安装不改变旧调度。启用后由 kit 接管已登记 issue 的回收重试，原 retention worker 仍负责实际删除；`CODEX_OPS_RETENTION=off` 只暂停回收，`PAUSE/LLM_DRAIN` 暂停整个 tick。不新增 cron、daemon，不修改 ops prompt。
+集成后先按 kit README 安装并协调同机项目登记，在主运行根用 `nice -n 19 python3 ops/agent_board.py --root "$PWD" --dry-run` 演练。ops 核登记与 pane 身份后，用下面的项目内持久开关启用，沿现有五分钟 `stall` tick 执行一份；其他 tick 不重复运行。开关默认 off，未安装不改变旧调度。启用后由 kit 接管已登记 issue 的回收重试，原 retention worker 仍负责实际删除；`CODEX_OPS_RETENTION=off` 只暂停回收，`PAUSE/LLM_DRAIN` 暂停整个 tick。不新增 cron、daemon，不修改 ops prompt。
+
+持久开关是 `.agents/board.yaml` 的 `dispatcher.control` 指定的忽略文件（默认 `ops/codex-ops/agent-board-control.json`），绑定本仓 repo 和实际运行根，原子写入并串行化设置操作。以下命令只在已核实的主运行根由原 ops 执行，开发会话不对生产调用：
+
+```bash
+nice -n 19 python3 ops/agent_board.py --root "$PWD" --show-enabled
+nice -n 19 python3 ops/agent_board.py --root "$PWD" --dry-run
+nice -n 19 python3 ops/agent_board.py --root "$PWD" --set-enabled on
+nice -n 19 python3 ops/agent_board.py --root "$PWD" --set-enabled off
+```
+
+未设置 `CODEX_AGENT_BOARD` 时，cron 每次从项目控制文件读取，缺文件为 off；设置 on/off 本身不调用 kit，不改登记表、账本、cron、会话或游戏，下一原 stall tick 才消费。on 要求 kit 已安装、本地候选宿主登记表格式正确、包含且仅包含一次本项目根、没有重复根；这些机器检查不代替各项目 owner 授权。显式环境 `CODEX_AGENT_BOARD=on|off` 始终优先，包含明确的 off；空值和其他值无效。设置命令同时返回 persisted/effective/source，避免把持久值与当前环境覆盖混淆。原有 cron 若没有此变量即可直接读项目文件；若已有显式环境覆盖，记录其来源并沿原调度维护流程处理，不在 pane export 后声称 cron 生效。损坏/异根控制、无效环境均保留本轮会话动作并写 inbox；不退到另一套回收器。关闭或回退保留原登记表、事件账本和 uncertain 项。
+
+宿主登记由 Claude 主管沿 #20 协调各项目原 owner，确认本次纳入范围和唯一宿主入口，不由 STS2 ops 扫描认领其他仓库：
+
+1. 每个原 owner 在自己项目的任务记录里确认实际主运行根、`.agents/board.yaml`、授权的派发/提醒/回收范围、角色 pane 与既有会话绑定，并给出本地回执位置及 SHA；未获准的项目保留 pending。公开评论仅引用回执，不贴私有根路径或凭据。
+2. 主管收齐确认并指定本机有相应权限的登记协调者。协调者将已获准的根/config 汇成一份忽略的候选 JSON（格式见 kit README），由各 owner 核对自己的条目。需要跨仓动作的权限沿原 owner 确认，不把“同机”当作已授权。
+3. 各 owner 确认本项目没有另一个 kit 消费入口；选定的唯一原 stall tick 消费这份登记表。其他项目的已有运行/学习调度照原职责保留，只不增加第二份通用派单器。STS2 的 `dispatcher.registry` 指向本仓内这份正式登记文件，其他项目无需越过其路径边界写 STS2 配置。
+4. 主管确认本批范围与唯一入口后，原 ops 依次核实际登记、只读演练、设置持久 on、读回原 stall 首 tick。未完成确认时控制保持 off；不伪造其他项目条目，不自动登记其他 tab。设置返回 on、技术测试通过或 dry-run 排队均不等于首 tick/实际命名/锁忙重试/回收验收完成。
 
 派单按 P0–P3、issue 号和配置上限执行，已有开发会话及未完成启动计入容量；`status:blocked`、`needs:roy` 和状态冲突均暂缓。review 提醒集成员，learner/ready 与 waiting-release 提醒 ops。首次轮询只建立旧 Roy 评论基线，此后新 Roy 评论分别提醒负责人和主管；agent 前缀评论与外部作者不能触发 Roy 指令提醒。发给 Herdr 的消息始终只有 `#N 轮到你`。忙碌或缺席的接收方排队，主管配置为 `board-digest` 时读取本地 `ops/codex-ops/board-digest.md`。
 

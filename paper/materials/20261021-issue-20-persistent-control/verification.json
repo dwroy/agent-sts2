@@ -1,0 +1,67 @@
+{
+  "schema": "issue20-persistent-control-verification-v1",
+  "base": "6a131e5d550a08ccc96c40944bb3c93ff8218e51",
+  "checks": {
+    "tsc": {
+      "exit_code": 0,
+      "command": "node node_modules/typescript/bin/tsc -p tsconfig.json --noEmit"
+    },
+    "python_lifecycle": {
+      "exit_code": 0,
+      "tests": 53
+    },
+    "bash_syntax": {
+      "exit_code": 0
+    },
+    "imports_preflight": {
+      "exit_code": 1,
+      "cause": "sparse baseline material absent",
+      "remedy": "Exact Git material restored before full run; see material-readback.json."
+    },
+    "vitest_full": {
+      "exit_code": 0,
+      "command": "node node_modules/vitest/vitest.mjs run --pool=forks --maxWorkers=1 --no-file-parallelism --reporter=default --reporter=json",
+      "files": 647,
+      "passed": 6090,
+      "failed": 0,
+      "skipped": 2
+    }
+  },
+  "kit": {
+    "engine_compatible_with": "d15456158f0d7d4ad3b48537b034013fa20cb9f1",
+    "readme_remote_commit": "68c1689adc849765499557a53076f17207274e78",
+    "unchanged_engine_blobs": {
+      "board.py": "b883580bccde096377ef0383c084481271fb356b",
+      "test_board.py": "a08ee8f8be104b7a85f961c909551e1fef10ecd1",
+      ".gitignore": "0b3a4c07d392697b8c1ffc73663a0fe2dede7403"
+    }
+  },
+  "logs": {
+    "tsc.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "lifecycle.log": {
+      "bytes": 152,
+      "sha256": "00c68e6c976c678aa38e6e46e84bf4da641c66dd1fd7acfee8c74aba326560bd"
+    },
+    "lifecycle-final.log": {
+      "bytes": 152,
+      "sha256": "828d44e2dfccfe7ba5defbaf3d2ee2d2c5cd1b7913e9e8a57930075e40f6b83c"
+    },
+    "vitest.log": {
+      "bytes": 82604,
+      "sha256": "4b301346944c5b69e5b988b40cb94e5376a3cefcd17ab8cdbb4fc1b55f60d267"
+    },
+    "vitest.json": {
+      "bytes": 2363637,
+      "sha256": "f7f0c7de988fa0f9dc2e9039aa58fe8c352666232e17a9569df11f37f75debbd"
+    }
+  },
+  "source_blobs": {
+    ".agents/board.yaml": "6bdb0a87dcf7c5ffe6354723686e3e8926525de1",
+    "ops/agent_board.py": "d751b3470c301c0f5b03f2c5212692a868a3a3b0",
+    "ops/codex-ops.sh": "e19fe3c9752d3952b1ce7496961dd21cc335fb74",
+    "ops/tests/test_issue_session.py": "d7a091a360f6357c4e34f418909b3faaeeb30ee8"
+  }
+}

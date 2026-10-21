@@ -252,8 +252,15 @@ case "$cmd" in
       snapshot) tick_snapshot ;;
       *) echo "unknown job: $job" >&2; exit 2 ;;
     esac
+    # An explicit environment value wins; cron can otherwise read the project-owned control.
+    board_mode="invalid"
+    if [ "${CODEX_AGENT_BOARD+x}" = x ]; then
+      board_mode="$CODEX_AGENT_BOARD"
+    else
+      board_mode=$(nice -n 19 python3 "$OPS/agent_board.py" --root "$ROOT" --show-enabled) || board_mode="invalid"
+    fi
     # One host dispatcher on the existing five-minute cadence; activation follows integration review.
-    if [ "${CODEX_AGENT_BOARD:-off}" = on ]; then
+    if [ "$board_mode" = on ]; then
       if [ "$job" = stall ]; then
         nice -n 19 timeout 240s python3 "$OPS/agent_board.py" --root "$ROOT" >> "$DIR/agent-board.log" 2>&1 || {
           log "agent board tick failed (see agent-board.log)"
@@ -261,11 +268,14 @@ case "$cmd" in
         }
       fi
     # Compatibility path until the separate kit and host registry are installed.
-    elif [ "${CODEX_OPS_RETENTION:-on}" != off ]; then
+    elif [ "$board_mode" = off ] && [ "${CODEX_OPS_RETENTION:-on}" != off ]; then
       nice -n 19 timeout 180s python3 "$OPS/issue_session.py" --root "$ROOT" --state-dir "$DIR" tick >> "$DIR/issue-sessions.log" 2>&1 || {
         log "issue session reconciliation failed (see issue-sessions.log)"
         printf '%s\n' "- $(date '+%F %T') [issue-session] tick 未完成；原现场保留，见 ops/codex-ops/issue-sessions.log。" >> "$ROOT/ops/inbox-dev.md"
       }
+    elif [ "$board_mode" != off ]; then
+      log "invalid agent board control; session actions retained"
+      printf '%s\n' "- $(date '+%F %T') [board] 项目开关或显式环境无效；本轮会话动作保留，请检查受控开关。" >> "$ROOT/ops/inbox-dev.md"
     fi
     flock -u 7
     drain ;;

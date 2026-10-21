@@ -25,6 +25,7 @@ never_reclaim: [".worktrees/live", "panes: integrator, ops, learner-*"]
 verify: ["npx tsc -p tsconfig.json --noEmit", "npx vitest run"]
 dispatcher:
   install: ops/codex-ops/agent-board-kit
+  control: ops/codex-ops/agent-board-control.json
   registry: ops/codex-ops/agent-board-projects.json
   lifecycle: [python3, ops/issue_session.py, --root, "{root}", --config, "{config}"]
   state: ops/codex-ops/agent-board.json
