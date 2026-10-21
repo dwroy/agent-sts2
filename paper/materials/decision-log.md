@@ -5691,3 +5691,5 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
 - 2026-10-22T01:45:45+08:00 [ops] 0145八条重复学习异议原文/证据及真实转达回执核同；原研究CLI身份兼容阻塞未变，后两角色登记pending，保原范围/科学父；仅记录、不重认证/代ACK/提醒/生成器或改对局。原件：paper/materials/20261022-0145-ops/receipt.json。
 
 - 2026-10-22T02:11:57+08:00 [ops] 核014302-s2唯一dataset后并行记录变化的原attention，84产物/十原提案/351原段核同、十waiting；具体冲突路径未知，保失败/科学父，仅本轮受控记录提交，不重dataset/full/模型/合入。原件：paper/materials/20261022-0210-ops/receipt.json。
+
+- 2026-10-22T02:42:45+08:00 [ops] 核021301-s2唯一dataset后并行记录变化的原attention，60产物/十原提案/320原段核同、十waiting；具体冲突路径未知，保失败/科学父，仅本轮受控记录提交，不重dataset/full/模型/合入。原件：paper/materials/20261022-0241-ops/receipt.json。
