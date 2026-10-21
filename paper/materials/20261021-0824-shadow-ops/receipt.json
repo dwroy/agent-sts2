@@ -1,0 +1,77 @@
+{
+  "at": "2026-10-21T08:28:05+08:00",
+  "state": "material-only-formal-source-verified-for-narrow-main-record-integration",
+  "material_verification": {
+    "source": "9f48fa1e34c97300c2eaebd446e2da9c891fb9c8",
+    "material_subtree": "3fc40c2fb2fbbee935945ef7f221c2beecf9a361",
+    "material_files": 127,
+    "manifest_rows_verified": 126,
+    "git_blob_SHA_and_worktree_all_equal": true,
+    "runtime_source_files_against_original_Git": 297,
+    "archived_data_files": 511,
+    "gzip_payloads_verified": 89,
+    "material_and_decompressed_scan_bytes": 380063250,
+    "gitleaks_rc": 0,
+    "global_gitleaks_modified": false,
+    "allowlist_exact_run_floor_identifiers": 83,
+    "scan_scope": "default rules retained; exact secret-value IDs only, no path/rule exclusions; original319 redacted findings preserved",
+    "production_or_live_or_knowledge_or_configuration_modified": false,
+    "product_tests_or_models_started": false,
+    "initial_reader_schema_error_retained": true
+  },
+  "owner_source": "9f48fa1e34c97300c2eaebd446e2da9c891fb9c8",
+  "report_sha256": "56f4e03ca64714cb5b217837b12396ced462fd014523ad77e73e0ca5c7fc36b9",
+  "material_manifest_sha256": "ebc0b9457e5aad21df7af16361ba53d61b24f366ca8b14cb933b2a3ab8523508",
+  "owner_decision_append_bytes": 621,
+  "cohort": 6,
+  "situations": 83,
+  "nova_requests_by_original_owner": 60,
+  "nova_success": 60,
+  "metric_diagnostic": {
+    "rankable": 42,
+    "jev_best": 17,
+    "brain_best_same_cohort": 16,
+    "jev_mean_dominated": 8,
+    "targetwise_mean_dominated": 4,
+    "conservative_two_SE_screen": 0,
+    "same_choice": 27,
+    "disagreement": {
+      "metric_tradeoff": 16,
+      "brain_mean_better": 3,
+      "unknown": 6,
+      "jev_mean_better": 8
+    },
+    "jev_skip": 7,
+    "brain_skip": 12
+  },
+  "B": {
+    "controlled_numeric_cache": 69,
+    "criteria_numeric": 28,
+    "denominator": 83,
+    "controlled_existing_reward_brain_wait_not_natural_CARDjev_hit_rate": true
+  },
+  "foreground_ms": {
+    "n": 83,
+    "p50": 4855.550888000056,
+    "p90": 5858.776454999985,
+    "max": 24631.04047899996,
+    "over_5000": 34
+  },
+  "wire_max_bytes": 23944,
+  "formatter_mismatches": 0,
+  "limitations": [
+    "controlled reward brain wait does not survive CARDjev switching",
+    "per-file frozen data, neither historical knowledge nor atomic cross-file snapshot",
+    "six runs lack recoverable direction plan, default weights{} retained",
+    "low-n/model bias and means counterexamples remain",
+    "no performance stack/CPU sample for24.631s foreground outlier",
+    "CARDbrain and Roy decision; no source/live/knowledge/config/STOP/actor change"
+  ],
+  "CARD": "brain",
+  "REFLEX": "off",
+  "P2": "paused pending Roy",
+  "source_live_knowledge_switch_STOP_actor_unchanged": true,
+  "product_tests_or_models_or_requests_started_by_ops": false,
+  "version_added": false,
+  "role_ACK_or_scientific_parent_closed": false
+}

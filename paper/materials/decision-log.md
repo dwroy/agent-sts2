@@ -5507,3 +5507,5 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
 - 2026-10-21T07:27:00+08:00 原ops核R409实际livecf4aff4c/行为6242b3a7精确13叶、498知识及双通知一次；CLCR自然终局后发布并恢复原autoplay。CESK配置brain/off、局内真实动作和自然cache审计已读，首5004.2ms/82行69sampled、后176/146，不冒数值消费或质量/全性能绿；切jev等Roy。原件paper/materials/20261021-0725-ops/receipt.json。
 
 - 2026-10-21 07:56:43 CST [Claude，推进] V6-R409（6242b3a73/cf4aff4ce，Jev 题面 criteria 汇总 + B 等待期缓存修复）已上线，CARD 保持 brain。CLCR3DUH66HK F27 死于感染棱柱。派 v6-w4w6 用 R408/R409 大脑拿牌局真实奖励帧做影子评估（真实 Nova 请求不执行）：Jev 与指标最优一致率、与大脑选择一致率及优劣、B 有值比例、拿/跳比例，供 Roy 决定是否切回 jev。
+- 2026-10-21 08:23 CST — v6-w4w6 完成 R409 只读影子评估：六局严格战后奖励83题全回放、Nova60/60成功；Jev诊断最优17/42（脑16/42）、同脑27/60、均值被支配8题（逐目标4、保守2SE筛查0）；B缓存69/83、criteria有值28/83，前台准备34/83超5秒；Jev/脑跳过7/60与12/60。保留模型/低样本/受控B等待限制，CARD仍brain供Roy决定；未改源码/live/知识/开关或执行动作。材料 paper/materials/2026-10-21-r409-card-shadow/；源码及数据SHA/题面格式校验通过，敏感扫描精确局号题ID复核后0，原319条脱敏命中保留。
+- 2026-10-21T08:27:22+08:00 原ops仅接W4 R409影子材料9f48子树及原621B日志，83回放/60影子请求结果按同集分母和未知保留；17/42对脑16/42不代自然收益，8均值反例、B受控等待/34of83超5s保持，CARDbrain等Roy。未新增检查/模型/动作或源码/live/知识/版本运输。原件paper/materials/20261021-0824-shadow-ops/receipt.json。
