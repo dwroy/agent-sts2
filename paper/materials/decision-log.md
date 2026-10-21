@@ -5646,3 +5646,5 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
 - 2026-10-21T19:23:39+08:00 [ops] Roy19:17恢复授权已执行：桌面游戏PID4680/8080/profile1核同，旧绑定备份保留、新PID实际重绑；原入口移STOP，唯一autoplay228609，首局AR523ATD2G4W实际Silent A10（更正旧A11预期），四decider brain/REFLEXoff及动作实际读回。学习照常/Regent暂停，无新行为发布；Claude主管迁xdmac，不发旧wJ:pJT。paper/materials/20261021-game-resume-ops/result.json。
 - 2026-10-21T19:25:57+08:00 [Claude] Roy：DeepSeek 先不接成 GPT 容量不足时的自动兜底；但后续要用 DeepSeek 当对局大脑做实验，现在先准备好（#32：超时、人类节奏预算、流式、新上下文对齐、按局切换，预算方案交 Roy 定，不降推理强度）。#31 的按局开关同时支持引擎和推理强度。
 - 2026-10-21T19:30:21+08:00 [Claude] Roy（#32）：DeepSeek 当对局大脑时推理强度可降一档（各题型降一档、不再往下降；取代 10-02 不降强度，只适用于此场景）；超时与人类节奏预算给 DeepSeek 放长到实际能答完，完成率优先、以便与 GPT 对比；开卷/策略库等新上下文在 DeepSeek 路径必须生效；只走 Nova。
+
+- 2026-10-21T19:46:42+08:00 [ops] 八旧异议完整原文/来源SHA/真实双箱与watcher告Roy回执核同，原research CLI登记pending；保旧拒绝/false/科学范围，不重认证/通知或新检查模型，不触已恢复主对局，Regent暂停。paper/materials/20261021-1945-ops/receipt.json。
