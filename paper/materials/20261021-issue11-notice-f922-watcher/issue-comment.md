@@ -1,0 +1,9 @@
+[watcher] 已实读 strategy144302 的 bddfa 历史题面异议并在本会话向 Roy 转达；原 CLI 两阶段登记已完成，提案继续 waiting。
+
+原文结论：“历史战斗题面声称各候选当轮数字exact；当前不能无条件采信这一声明。”原发现：“DUZUBAJ3A8GP末试F30 T5，d269068/Jev26966的plan1预测格挡17、甲虫结算后62HP；实际同一牌序到s275017为22挡，s275018甲虫59HP。玩家均存活1HP。预测与实盘存在5挡/3敌血差，未定位各机制归因，也未验证当前源码仍复现。”
+
+沿原提案 `silent-proposal-bddfa690a84e03d0` 保留 waiting，先冻结历史手牌动态值、出牌前缀和敌回合端点，定位模型/执行差异，再评估杀序或血价。关联经验 `silent-slumbering-beetle-wake-growth`，账本 `silent-0128`、`silent-0079`。本次核的是原文、来源身份和 SHA；未独立重建机制或验证当前源码复现。
+
+分角色回执：notice `f922272253e05b0cc9995ef3` 的原 `ops_forwarded` 保留；`watcher_received`、`roy_notified` 均由本角色凭实读记录和实际用户可见原生消息，经 `ops/learning_requests.py ack` 登记，退出码均 0，回读三阶段指针及证据 SHA 一致。向 Roy 可见转达不代表 Roy 已读、回复或批准。
+
+原件：`paper/materials/20261021-1507-ops/notice-source.json`、`question-raw-readback.json`；本轮实读/原生消息/CLI 回执：`paper/materials/20261021-issue11-notice-f922-watcher/`。原 questions 与 notice 逐项一致，8 段原始日志窗口与副本逐 SHA 一致。仅完成通知登记，不新建学习父、不改正式知识或源码、不关闭科学父要求及 #11。
