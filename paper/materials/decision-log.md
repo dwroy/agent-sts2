@@ -5663,3 +5663,5 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
 - 2026-10-21T20:07:01+08:00 [ops] 194301/0CLP唯一复盘/三账本/出牌pending提案核同，无新纯bug；原索引1777窗口SHA重核。唯一dataset/记录收尾器PID374041原锁接续，dataset及最终提交pending，不重生成器/模型/full或触当前局。paper/materials/20261021-2002-ops/learning-verification.json。
 
 - 2026-10-21T20:13:11+08:00 [ops] 194314主策略无源/合入/测试，十waiting；66产物/十原文/118状态段SHA核同，13/1819完整审阅分账。保原干净回执与后续快进dirty现场，普通收尾/194301单dataset原链，不叠检查或发布，不关科学父。paper/materials/20261021-2010-ops/receipt.json。
+
+- 2026-10-21T20:17:12+08:00 [ops] 194301/0CLP复盘及三账本/出牌pending提案核同，无新纯bug；唯一dataset --no-raw退出0/复盘标记通过，保存指定lessons/ledger及自有生成物。非源码发布/收益或科学父完成。paper/materials/20261021-2002-ops/receipt.json。
