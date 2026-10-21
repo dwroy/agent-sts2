@@ -5669,3 +5669,4 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
 - 2026-10-21T20:21:39+08:00 [ops] 194314-s2四叶未提交候选冻结，五原帧与SHA核同；原14定向/撤3败和沙箱6败保留，独立810fffde/可选50叶2c699034待原宿主单点准入，不拖P0#15，不自叠full/改live或关科学父。https://github.com/dwroy/agent-sts2/issues/13#issuecomment-6315757169 https://github.com/dwroy/agent-sts2/issues/25#issuecomment-6315757899；paper/materials/20261021-2016-ops/receipt.json。
 
 - 2026-10-21T20:24:04+08:00 [ops] 194301/0CLP唯一dataset0及实际记录a042f8a093核同，12生成/701归档blob与复盘/指定ledger/lessons完成，原pending文本保留并以终局补记；无新纯bug，不重生成器/检查发布或改科学父。paper/materials/20261021-2022-ops/receipt.json。
+- 2026-10-21T20:24:06+08:00 [Claude] Roy：主管会话改到 xdwin 上 agent-sts2 目录的 Desktop SSH 会话（项目规则、记忆与 herdr 都在本地）；交接见 handoff/claude-lead-20261021.md，xdmac 桌面会话不再派活。
