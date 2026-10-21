@@ -5549,3 +5549,4 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
 - 2026-10-21 11:04:20 CST [Claude/Roy，并行] Roy：能并行的都并行、可以多开会话。新建 #12（拿牌 v2 单牌增量可辨识性研究，只读）、#13（补齐未建模常见卡牌，学习者）、#14（第三幕 Boss 与连战模拟迭代，学习者）；按一个 issue 一个新会话开 herdr 会话 issue-8（wJ:p1H2）、issue-12（wJ:p1H3）、issue-6（wJ:p1H4），各自独立工作树，gpt-6.1-sol high；#13/#14 交 ops 按学习闭环派学习者；关闭 #5。
 
 - 2026-10-21 11:17:18 CST [Claude/Roy，#1 决定] Roy 在 GitHub 指示“dwroy/agent-sts2#1 就按照claude建议的来做”：方向 2 → #15（v2 数值作为大脑拿牌题补充事实，决策者仍 brain，新会话 issue-15 wJ:p1H5 已派）；方向 1 → #12（单牌增量可辨识性研究，进行中）；方向 3 → #16（可辨识的题交 Jev、其余交大脑的混合门，依赖 #12/#15）。#1 保留为总入口。
+- 2026-10-21 12:00:32 CST [dev #17] 按 8710b77c7 生命周期标准实现 issue_session 派发/显式登记/演练与回收、原 tick 接入；尾日志→关 tab→原 complete/worker，保留发布、唯一产物与来源分支门禁。固定测试33项与原回收器15项通过、tsc通过；仓库Vitest5219通过/4个基线V6失败，三文件复验同失败，agent源码树与42ba9497f相同，不冒称全绿。交review未上线，现有6/8/12/15仅只读候选未登记，不动live/STOP/ops prompt；原件paper/materials/2026-10-21-issue-17-session-lifecycle/report.md。
