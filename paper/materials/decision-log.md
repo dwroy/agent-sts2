@@ -5601,3 +5601,5 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
 - 2026-10-21 14:22:14 CST [Claude] Roy 授权：可直接用网上公开的 STS2 数据（开源玩家对局数据、公开 agent 轨迹、公开卡牌/怪物库与 wiki）学习、更新知识库。已写入 docs/learning-protocol.md 第 9 节与 AGENTS.md：接入由开发会话做、知识条目仍由学习者沿原流程产出；标 source=external 与版本/样本/SHA/许可，与本系统对局证据分账；原始数据放 data/external 不进 git，不存玩家标识；仍不读 sts2.dll/.pck；论文按 10-21 前后与知识来源分开统计。
 
 - 2026-10-21T14:47:12+08:00 ops：1445八notice按原文/SHA/真实转达原件去重，现行研究task仍不受CLI支持，后两角色登记pending；保旧拒绝/false/科学scope，不重认证/代ACK/通知/评论或派模型检查，无live/现局变化。paper/materials/20261021-1445-ops/receipt.json。
+
+- 2026-10-21T14:56:12+08:00 ops：strategy144302-s2原capacity报错/turn.failed退出1已核原事件；WT净/无正式report，十原文SHA齐全及四部分封存保全，不当提案缺失或完成。原线程、十waiting及冷却retry_at不改，不换模型/权限/重派/回收/检查或改live；paper/materials/20261021-1452-ops/receipt.json。
