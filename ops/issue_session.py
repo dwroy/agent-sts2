@@ -22,7 +22,16 @@ def run(args, **kwargs):
     # Never echo CLI output on failure: tails and API errors may contain private data.
     result = subprocess.run(list(map(str, args)), capture_output=True, timeout=90, **kwargs)
     if result.returncode:
-        raise ValueError(Path(str(args[0])).name + " command failed (exit " + str(result.returncode) + "); original state retained")
+        # Decode only known error categories; arbitrary stderr can contain private paths or tokens.
+        detail = ""
+        if Path(str(args[0])).name == "herdr":
+            output = (result.stdout + result.stderr).decode(errors="replace").lower()
+            for category in ("agent_start_timeout", "agent_not_found", "agent_blocked", "timeout",
+                             "unexpected argument", "permission denied", "connection refused", "not found"):
+                if category in output:
+                    detail = "; Herdr reason: " + category
+                    break
+        raise ValueError(Path(str(args[0])).name + " command failed (exit " + str(result.returncode) + ")" + detail + "; original state retained")
     return result.stdout
 
 
@@ -180,9 +189,39 @@ class Sessions:
         os.setpriority(os.PRIO_PROCESS, info["shell_pid"], self.board.nice)
         row["state"] = "starting"; self.save()
         prompt = self.board.session["prompt"].format_map(self.values(row))
-        herdr("agent", "start", row["label"], "--kind", "codex", "--pane", row["pane"], "--timeout", "60000",
-              "--", "-m", dev["model"], "-c", "model_reasoning_effort=" + dev["effort"], "-s", "danger-full-access",
-              "-a", "never", prompt)
+        # Start without a task. Herdr may detect Codex but fail its automatic name assignment.
+        # Reconcile this exact terminal, then name it explicitly before sending the task once.
+        row["start_phase"] = "start"; self.save()
+        start_error = None
+        try:
+            herdr("agent", "start", row["label"], "--kind", "codex", "--pane", row["pane"], "--timeout", "60000",
+                  "--", "-m", dev["model"], "-c", "model_reasoning_effort=" + dev["effort"], "-s", "danger-full-access",
+                  "-a", "never")
+        except (ValueError, subprocess.SubprocessError) as error:
+            start_error = failure_reason(error)
+            row["start_warning"] = start_error; self.save()
+        try:
+            row["start_phase"] = "identity"; self.save()
+            pane = herdr("pane", "get", row["pane"])["pane"]
+            agent = herdr("agent", "get", row["pane"])["agent"]
+            if (pane.get("terminal_id") != row["terminal"] or pane.get("tab_id") != row["tab"]
+                    or pane.get("cwd") != row["worktree"] or agent.get("agent") != "codex"
+                    or agent.get("foreground_cwd") != row["worktree"]
+                    or agent.get("agent_status") != "idle"
+                    or agent.get("name") not in (None, "", row["label"])):
+                raise ValueError("new Codex terminal identity/readiness mismatch")
+            row["start_phase"] = "name"; self.save()
+            herdr("agent", "rename", row["pane"], row["label"])
+            if herdr("agent", "get", row["pane"])["agent"].get("name") != row["label"]:
+                raise ValueError("Codex name readback mismatch")
+            row["start_phase"] = "prompt"; self.save()
+            herdr("agent", "prompt", row["pane"], prompt)
+        except (OSError, ValueError, KeyError, TypeError, subprocess.SubprocessError) as error:
+            reason = "spawn " + row["start_phase"] + ": " + failure_reason(error)
+            if start_error:
+                reason += "; initial start: " + start_error
+            raise ValueError(reason + "; query this pane and explicitly register before retrying") from None
+        row["start_phase"] = "submitted"
         row["state"] = "active"; self.save()
         self.dispatched(row)
         return {"issue": number, "state": "active", "pane": row["pane"]}
@@ -553,6 +592,7 @@ def main():
     try:
         board = retention.Board(root, args.config)
         directory = retention.safe_path(root, args.state_dir or board.session["state_dir"])
+        stage = "session lock"
         with retention.locks([directory / "issue-sessions.lock"]):
             stage = "session registry"
             sessions = Sessions(root, directory, args.config)
@@ -571,8 +611,13 @@ def main():
             return 1 if isinstance(result, dict) and result.get("state") == "retained" else 0
     except (OSError, ValueError, KeyError, TypeError, subprocess.SubprocessError) as error:
         # Keep malformed registries untouched, including when a tick cannot load them.
-        reason = stage + ": " + failure_reason(error)
-        result = {"state": "retained", "operation": args.command, "stage": stage, "reason": reason}
+        retryable = isinstance(error, BlockingIOError) and stage == "session lock"
+        reason = ("session lock busy; no action started; retry on the next tick" if retryable
+                  else stage + ": " + failure_reason(error))
+        result = {"state": "retry" if retryable else "retained", "operation": args.command,
+                  "stage": stage, "reason": reason}
+        if retryable:
+            result["retryable"] = True
         if board:
             try:
                 with board.inbox.open("a") as handle:
@@ -580,7 +625,7 @@ def main():
             except OSError as inbox_error:
                 result["inbox_error"] = failure_reason(inbox_error)
         print(json.dumps(result, ensure_ascii=False))
-        return 1
+        return 75 if retryable else 1
 
 
 if __name__ == "__main__":

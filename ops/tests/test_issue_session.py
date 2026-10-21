@@ -50,6 +50,7 @@ class IssueSessions(unittest.TestCase):
         self.present = True
         self.screen = '\x1b[1m›\x1b[0m \x1b[2mAsk Codex to do anything\x1b[0m'
         self.events = []
+        self.actual_run = resource.run
         self.pane = dict(pane_id='wF:p1', tab_id='wF:t1', workspace_id='wF', terminal_id='term_fixed',
                          cwd=str(self.tree), foreground_cwd=str(self.tree), agent='codex')
         self.tab = dict(tab_id='wF:t1', workspace_id='wF', label='issue-17', pane_count=1)
@@ -119,7 +120,7 @@ class IssueSessions(unittest.TestCase):
             self.pane.update(cwd=str(self.tree), foreground_cwd=str(self.tree))
             self.info.update(foreground_process_group_id=101, foreground_processes=[])
             return {'workspace': {'workspace_id': 'wF'}, 'tab': self.tab, 'root_pane': self.pane}
-        if args[:2] in (('agent', 'start'), ('tab', 'rename')):
+        if args[:2] in (('agent', 'start'), ('agent', 'rename'), ('agent', 'prompt'), ('tab', 'rename')):
             return {}
         raise AssertionError('unexpected Herdr action: ' + str(args))
 
@@ -432,8 +433,102 @@ class IssueSessions(unittest.TestCase):
         starts = [e for e in self.events if e[:2] == ('agent', 'start')]
         self.assertEqual(len(starts), 1)
         self.assertIn('gpt-6.1-sol', starts[0]); self.assertIn('model_reasoning_effort=high', starts[0])
-        self.assertIn('gh issue view 17', starts[0][-1])
+        self.assertNotIn('gh issue view 17', starts[0][-1])
+        prompts = [e for e in self.events if e[:2] == ('agent', 'prompt')]
+        self.assertEqual(len(prompts), 1)
+        self.assertIn('gh issue view 17', prompts[0][-1])
+        self.assertLess(next(i for i, e in enumerate(self.events) if e[:2] == ('agent', 'rename')),
+                        next(i for i, e in enumerate(self.events) if e[:2] == ('agent', 'prompt')))
         self.assertTrue(any(f'CODEX_HOME={home}' in e for e in self.events))
+
+    def prepare_spawn(self):
+        self.sessions.data['sessions'].clear(); self.sessions.save()
+        self.closed = False
+        home = self.root / 'fixture-home'; home.mkdir(); (home / 'auth.json').touch()
+        (self.directory / 'codex-home').write_text(str(home))
+        (self.root / 'agent/node_modules').mkdir()
+        (self.tree / 'agent/node_modules').symlink_to(self.root / 'agent/node_modules', target_is_directory=True)
+
+    def test_start_error_after_detection_reconciles_name_before_single_prompt(self):
+        self.prepare_spawn()
+        original = self.herdr
+        named = False
+        def detected(*args):
+            nonlocal named
+            if args[:2] == ('agent', 'start'):
+                self.events.append(args)
+                raise ValueError('herdr command failed (exit 1); Herdr reason: agent_start_timeout')
+            if args[:2] == ('agent', 'rename'):
+                named = True
+            reply = original(*args)
+            if args[:2] == ('agent', 'get') and not named:
+                reply['agent']['name'] = None
+            return reply
+        self.herdr_mock.side_effect = detected
+        with patch.object(checkout, 'create'), patch.object(os, 'setpriority'):
+            self.assertEqual(self.sessions.spawn(17, 'fixture')['state'], 'active')
+            self.sessions.spawn(17, 'fixture')
+        self.assertEqual(sum(e[:2] == ('agent', 'start') for e in self.events), 1)
+        self.assertEqual(sum(e[:2] == ('agent', 'prompt') for e in self.events), 1)
+        self.assertIn('agent_start_timeout', self.sessions.data['sessions']['17']['start_warning'])
+
+    def test_name_failure_is_precise_and_never_resends_task(self):
+        self.prepare_spawn()
+        original = self.herdr
+        def failure(*args):
+            if args[:2] == ('agent', 'rename'):
+                raise ValueError('herdr command failed (exit 1); Herdr reason: connection refused')
+            return original(*args)
+        self.herdr_mock.side_effect = failure
+        with patch.object(checkout, 'create'), patch.object(os, 'setpriority'):
+            with self.assertRaisesRegex(ValueError, 'spawn name:.*connection refused'):
+                self.sessions.spawn(17, 'fixture')
+            self.sessions.spawn(17, 'fixture')
+        self.assertEqual(self.sessions.data['sessions']['17']['state'], 'starting')
+        self.assertFalse(any(e[:2] == ('agent', 'prompt') for e in self.events))
+
+    def test_start_cannot_reconcile_a_replaced_terminal_or_busy_agent(self):
+        for target in ('terminal', 'busy'):
+            with self.subTest(target=target):
+                # Each case receives an isolated allocation, without touching real Herdr.
+                self.sessions.data['sessions'].clear(); self.sessions.save()
+                self.closed = False
+                home = self.root / 'fixture-home'; home.mkdir(exist_ok=True); (home / 'auth.json').touch()
+                (self.directory / 'codex-home').write_text(str(home))
+                original = self.herdr
+                def mismatch(*args):
+                    reply = original(*args)
+                    if args[:2] == ('pane', 'get') and target == 'terminal':
+                        reply = {'pane': dict(self.pane, terminal_id='replaced')}
+                    if args[:2] == ('agent', 'get') and target == 'busy':
+                        reply['agent']['agent_status'] = 'working'
+                    return reply
+                self.herdr_mock.side_effect = mismatch
+                with patch.object(self.sessions, 'command'), patch.object(os, 'setpriority'):
+                    with self.assertRaisesRegex(ValueError, 'identity/readiness mismatch'):
+                        self.sessions.spawn(17, 'fixture')
+                self.assertFalse(any(e[:2] == ('agent', 'prompt') for e in self.events))
+
+    def test_herdr_failure_has_known_reason_without_disclosing_stderr(self):
+        reply = subprocess.CompletedProcess([], 1, stdout=b'',
+                                            stderr=b'agent_start_timeout secret-token /private/auth.json')
+        with patch.object(subprocess, 'run', return_value=reply):
+            with self.assertRaisesRegex(ValueError, 'Herdr reason: agent_start_timeout') as caught:
+                self.actual_run(['herdr', 'agent', 'start'])
+        self.assertNotIn('secret-token', str(caught.exception))
+        self.assertNotIn('/private', str(caught.exception))
+
+    def test_cli_lock_contention_returns_retry_before_any_session_action(self):
+        before = self.sessions.path.read_bytes()
+        with patch.object(sys, 'argv', ['issue_session', '--root', str(self.root), 'spawn', '17', 'fixture']), \
+                patch.object(resource.retention, 'locks', side_effect=BlockingIOError()), \
+                patch.object(resource, 'Sessions') as sessions, patch('sys.stdout', new_callable=io.StringIO) as output:
+            self.assertEqual(resource.main(), 75)
+        reply = json.loads(output.getvalue())
+        self.assertEqual(reply['state'], 'retry'); self.assertTrue(reply['retryable'])
+        self.assertEqual(reply['stage'], 'session lock')
+        sessions.assert_not_called()
+        self.assertEqual(self.sessions.path.read_bytes(), before)
 
     def test_uncertain_spawn_never_restarts_and_explicit_register_can_reconcile(self):
         self.row['state'] = 'starting'; self.sessions.save()
@@ -540,7 +635,8 @@ class IssueSessions(unittest.TestCase):
             self.assertIn(('prepare-fixture', str(target)), self.events)
             start = next(e for e in self.events if e[:2] == ('agent', 'start'))
             self.assertIn('fixture-model', start); self.assertIn('model_reasoning_effort=medium', start)
-            self.assertIn('fixture/portable sandboxes/issue-17-fixture', start[-1])
+            prompt = next(e for e in self.events if e[:2] == ('agent', 'prompt'))
+            self.assertIn('fixture/portable sandboxes/issue-17-fixture', prompt[-1])
             self.assertTrue(any(f'CODEX_HOME={home}' in e for e in self.events))
             self.closed = True
             self.info.update(foreground_process_group_id=102, foreground_processes=[dict(pid=102, name='codex')])
@@ -693,7 +789,7 @@ class Scheduler(unittest.TestCase):
             engine.write_text('#!/bin/bash\nexit 0\n'); engine.chmod(0o755)
             env = dict(os.environ, CODEX_OPS_ROOT=str(root), CODEX_OPS_DIR=str(directory),
                        CODEX_OPS_NO_DRAIN='1', CODEX_OPS_TSX=str(engine), CODEX_OPS_STALL_CHECK=str(stall),
-                       CODEX_OPS_RETENTION='on')
+                       CODEX_OPS_RETENTION='on', CODEX_AGENT_BOARD='off')
             def tick(job):
                 result = subprocess.run(['bash', str(ops / 'codex-ops.sh'), 'tick', job],
                                         capture_output=True, text=True, env=env, timeout=15)
@@ -709,6 +805,32 @@ class Scheduler(unittest.TestCase):
             self.assertEqual((root / 'calls').read_text().splitlines()[-1], 'learn')
             env['CODEX_OPS_RETENTION'] = 'on'; (root / 'fail-issues').touch(); tick('learn')
             self.assertIn('tick 未完成', (ops / 'inbox-dev.md').read_text())
+            (ops / 'agent_board.py').write_text(record + 'with p.open("a") as h: h.write("board\\n")\n')
+            env['CODEX_AGENT_BOARD'] = 'on'
+            before = (root / 'calls').read_text()
+            tick('learn'); tick('snapshot'); tick('stall')
+            self.assertEqual((root / 'calls').read_text()[len(before):].splitlines(),
+                             ['learn', 'snapshot', 'stall', 'health', 'board'])
+            (directory / 'PAUSE').touch(); before = (root / 'calls').read_bytes(); tick('stall')
+            self.assertEqual(before, (root / 'calls').read_bytes())
+
+
+class BoardLauncher(unittest.TestCase):
+    def test_launcher_replaces_process_and_passes_retention_disable_and_dry_run(self):
+        import agent_board
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            install = root / 'kit'; install.mkdir(); (install / 'board.py').write_text('')
+            (root / 'registry.json').write_text('{"projects":[]}')
+            from types import SimpleNamespace
+            config = SimpleNamespace(data={'dispatcher': {'install': 'kit', 'registry': 'registry.json'}})
+            with patch.object(agent_board, 'Board', return_value=config), \
+                    patch.object(agent_board.os, 'execv') as execute, \
+                    patch.object(sys, 'argv', ['launcher', '--root', str(root), '--dry-run']), \
+                    patch.dict(os.environ, {'CODEX_OPS_RETENTION': 'off'}):
+                agent_board.main()
+            self.assertEqual(execute.call_args.args[1], [sys.executable, str(install / 'board.py'),
+                             '--registry', str(root / 'registry.json'), '--dry-run', '--no-reclaim'])
 
 
 if __name__ == '__main__':
