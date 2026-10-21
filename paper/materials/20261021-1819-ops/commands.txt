@@ -1,0 +1,6 @@
+开工：git status --short；git merge --no-edit main（Already up to date）
+export TMPDIR=/home/dw/Projects/agent-sts2/learner/runs/20261021-181321-ad4195aa-b8de-47a2-bda1-c515a6589760-fix-batch
+export PATH=$HOME/.local/node/bin:$PATH
+export PYTHONDONTWRITEBYTECODE=1 NODE_DISABLE_COMPILE_CACHE=1 npm_config_offline=true
+在本工作树agent/：nice -n 19 npx tsc -p tsconfig.json --noEmit
+nice -n 19 node node_modules/vitest/vitest.mjs run tests/ops-current-budget.test.ts tests/v6-publication-task-link.test.ts tests/unassigned-proposal-resolution.test.ts tests/learner-report-fixes-shape.test.ts tests/fixture-command.test.ts tests/continuation-retaliation.test.ts tests/manual-notice-ack.test.ts tests/learner-keycheck-retry.test.ts tests/paper-dataset-publication.test.ts tests/learner-entry.test.ts --configLoader runner --cache=false --pool=threads --maxWorkers=1 --reporter=dot
