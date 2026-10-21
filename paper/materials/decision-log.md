@@ -5727,3 +5727,5 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
 - 2026-10-22T07:24:34+08:00 [watcher] #26 c3716ba15 工具层与 #20 dec42bc98/kit95f1efb 技术核验通过并合 main 7b8762a7c；一次独立全检648文件/6124过/2跳过、tsc/重建/147Python通过，2098输入SHA核同，原锁备份/恢复绑定SHA和权限一致。#26待#33挂载/自然首局，#20待ops安装/owner授权/原stall首tick及真实送达；不触生产、不关闭父任务。报告 paper/materials/20261022-issues26-20-integrator-review/。
 
 - 2026-10-22T07:26:35+08:00 [ops] 核063416-s2唯一dataset后#26/#20 main十源码变化触发原attention；60产物/十原文/374原段核同、十waiting，保原失败/科学父；仅核验记录，不重dataset/full/模型/合入。原件：paper/materials/20261022-0725-ops/receipt.json。
+
+- 2026-10-22T07:31:28+08:00 [ops] #20按原核验安装精确kit95f1efb（六SHA/59测试）并保持有效off；正式宿主owner/registry/唯一入口及生产首tick待验。#26工具层核同，待#33精确组合准入后自然边界发布/首局读回，不做前后检查点比较；两issue真实评论读回，未改live/STOP。评论：https://github.com/dwroy/agent-sts2/issues/20#issuecomment-6328888259 、https://github.com/dwroy/agent-sts2/issues/26#issuecomment-6328888942 。原件：paper/materials/20261022-issues26-20-ops/receipt.json。

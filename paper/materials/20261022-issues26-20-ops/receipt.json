@@ -1,0 +1,378 @@
+{
+  "schema": "ops-issues26-20-production-intake-v1",
+  "at": "2026-10-22T07:29:32+08:00",
+  "main": "15f5adbabbe19d9ea4559c71db9f0bbfa297764e",
+  "live": "0cd3629d3a7f3a3bcacd22fa0a4206acc4d81e78",
+  "integrated_sources": {
+    "26": "c3716ba15d94aa36f6eb99d47ff958efac181119",
+    "20": "dec42bc988be9aeb4b177ca1f25943ad8cac96a8"
+  },
+  "integration_commits": {
+    "26": "c905b2d63f8f4cac53eef1144c49e9b56477870f",
+    "20": "5029ba8fde363b1e17551124872d63c3ee651544"
+  },
+  "technical_main_leaves_verified": {
+    "agent/src/brain/tools/external-stats-tools.ts": {
+      "path": "agent/src/brain/tools/external-stats-tools.ts",
+      "bytes": 13527,
+      "sha256": "da2823886a05fc5b38836ae53ee8ce2e0918b8472d36ab56ac92595842bef193"
+    },
+    "agent/tests/external-stats-tools.test.ts": {
+      "path": "agent/tests/external-stats-tools.test.ts",
+      "bytes": 13402,
+      "sha256": "3acde00eeb2d9a869ef6d19df7965ace1d10b080184333ad3d6febe476c74d9d"
+    },
+    "agent/tools/build-external-stats.py": {
+      "path": "agent/tools/build-external-stats.py",
+      "bytes": 4098,
+      "sha256": "da77547167feedd63c66990646045025d209cac3bbbb3bbd1eab3f3597c55760"
+    },
+    "knowledge/external/sts2fun/silent-a10.json": {
+      "path": "knowledge/external/sts2fun/silent-a10.json",
+      "bytes": 1775714,
+      "sha256": "88eef1cd8b875ab27d47c3abc39335f271705672b53bd71a0f4b30286168ac07"
+    },
+    ".agents/board.yaml": {
+      "path": ".agents/board.yaml",
+      "bytes": 2926,
+      "sha256": "883be88b5c08e7cc30616e204508bfd449944190503bc2f44864467f1e29e73b"
+    },
+    "agent/tests/shared-tools.test.ts": {
+      "path": "agent/tests/shared-tools.test.ts",
+      "bytes": 1458,
+      "sha256": "172d0cf22e02350869d37b7c2be8269dfa41f3dbc049af3d7c95ea29f2556aa0"
+    },
+    "docs/github-issues-workflow.md": {
+      "path": "docs/github-issues-workflow.md",
+      "bytes": 24639,
+      "sha256": "09c39e5cc98fb3101b54d0556d1d4da64f07707b365358456a6b55bb237eca30"
+    },
+    "ops/issue_session.py": {
+      "path": "ops/issue_session.py",
+      "bytes": 44243,
+      "sha256": "c583b53ed000c01a9c98c45ce961f2c16d3541b05ed9ae2d68c65ce651ecf2b3"
+    },
+    "ops/issue_session_support.py": {
+      "path": "ops/issue_session_support.py",
+      "bytes": 8885,
+      "sha256": "a499b0b1907097a22687ed4119f7148bd0a27f94d5c4857c6d74f09192f82aa7"
+    },
+    "ops/shared_tools.py": {
+      "path": "ops/shared_tools.py",
+      "bytes": 6327,
+      "sha256": "1e2c66425d1cc09da2e69a95db8f9c30b3a8dc37acd908adbbe95cfd14f0c356"
+    },
+    "ops/tests/test_issue_session.py": {
+      "path": "ops/tests/test_issue_session.py",
+      "bytes": 64185,
+      "sha256": "a4b3695e842854fcccf0677c02e8c5dffe6a73eaca0037ae1e4badde50544b74"
+    },
+    "ops/tests/test_shared_tools.py": {
+      "path": "ops/tests/test_shared_tools.py",
+      "bytes": 9596,
+      "sha256": "c797b8df3d079ca572a3f41b64e82b178b5934899f516007bf7017616a84f7d9"
+    },
+    "ops/worktree_checkout.py": {
+      "path": "ops/worktree_checkout.py",
+      "bytes": 9192,
+      "sha256": "f217d9bcf56ac308e62b04a63caf0d4c6e010e6739ef40513a6e399c61a49357"
+    }
+  },
+  "accepted_input_git_blobs_verified": 2092,
+  "operational_records_preserved": [
+    "eval/versions.json",
+    "ops/autoplay.log",
+    "ops/inbox-dev.md",
+    "ops/refresh.log",
+    "ops/restarts.log",
+    "ops/win-notified"
+  ],
+  "independent_check": {
+    "state": "passed",
+    "python_tests": 147,
+    "vitest": {
+      "files": 648,
+      "passed": 6124,
+      "skipped": 2,
+      "failed": 0
+    },
+    "unchanged_input_files": 2098,
+    "kit_remote_main": "95f1efb3251a27f3f702540773a2b466920821e9",
+    "developer_replays_sha_verified": true,
+    "developer_source_blobs_verified": true,
+    "preceding_independent_full": {
+      "passed": 6123,
+      "failed": 1,
+      "skipped": 2,
+      "observation": "unchanged ordinary-close-isolation child process returned status=null at 16.50s with original 15000ms limit; error/signal were not printed, so timeout attribution is inferred"
+    },
+    "unchanged_target_recheck": {
+      "success": true,
+      "passed": 1,
+      "original_timeout_ms": 15000,
+      "fixture_and_budget_modified": false
+    },
+    "second_independent_full": {
+      "passed": 6123,
+      "failed": 1,
+      "skipped": 2,
+      "failure": "check-imports: baseline issue29-brain-speed/results.jsonl missing from sparse checkout",
+      "source_inputs_unchanged": true,
+      "repair": "sparse-repair.json",
+      "cause_of_disappearance": "unknown"
+    },
+    "complete_passing_attempt": "verified-full"
+  },
+  "archives_verified": [
+    {
+      "path": "paper/materials/20261022-issues26-20-integrator-review/raw/independent-first-full-rebuild.log.gz",
+      "bytes": 103,
+      "sha256": "fad9e7e57a989ef1d279b4d50ee0230ce123d56c38d634487b031252ed59a1aa"
+    },
+    {
+      "path": "paper/materials/20261022-issues26-20-integrator-review/raw/independent-first-full-tsc.log.gz",
+      "bytes": 20,
+      "sha256": "9ceffb7310338057cfe71a4ae1e2c98d2c485d81cdef906532a801f457a38d64"
+    },
+    {
+      "path": "paper/materials/20261022-issues26-20-integrator-review/raw/independent-first-full-vitest.log.gz",
+      "bytes": 24284,
+      "sha256": "7fec9fe79a11c0aeb58b4d3be9c35b73529f65f2ba98ec825e9e5be31c611217"
+    },
+    {
+      "path": "paper/materials/20261022-issues26-20-integrator-review/raw/independent-kit.log.gz",
+      "bytes": 56,
+      "sha256": "c41b5bb48ddb5b9942eaa3508909be4f724508e9e3c5adc14205b6623d5d72b4"
+    },
+    {
+      "path": "paper/materials/20261022-issues26-20-integrator-review/raw/independent-lifecycle.log.gz",
+      "bytes": 57,
+      "sha256": "bfac12218883e24fbc1622f8dd5535a7f74d007fd68df9b976db81caee11d5c5"
+    },
+    {
+      "path": "paper/materials/20261022-issues26-20-integrator-review/raw/independent-shared-tools.log.gz",
+      "bytes": 55,
+      "sha256": "6c2fdc171803aea3a4bb4ee379116954e803ec60a5da258093696e6d38fca612"
+    },
+    {
+      "path": "paper/materials/20261022-issues26-20-integrator-review/raw/independent-retention.log.gz",
+      "bytes": 55,
+      "sha256": "4ebbf98b78cedbffdcc7b62077704a471a445bf5a03328e8c1791d8c8ea47f88"
+    },
+    {
+      "path": "paper/materials/20261022-issues26-20-integrator-review/raw/independent-kit-remote.log.gz",
+      "bytes": 76,
+      "sha256": "2e7b900dfcb7bd272c12d57aeae0276bf11c573291b5b18c74bea2f9d60c75b1"
+    },
+    {
+      "path": "paper/materials/20261022-issues26-20-integrator-review/raw/independent-final-gitleaks.log.gz",
+      "bytes": 93,
+      "sha256": "e6d4256cb77dfc79ad0d8f425d3678d5cb116ae365edb1b840da968ea670cf3e"
+    },
+    {
+      "path": "paper/materials/20261022-issues26-20-integrator-review/raw/independent-26-staged-gitleaks.log.gz",
+      "bytes": 91,
+      "sha256": "ab880eb030dd8acd1c1310d12973f8624a92e97724a292dd075819b807d3df82"
+    },
+    {
+      "path": "paper/materials/20261022-issues26-20-integrator-review/raw/independent-20-staged-gitleaks.log.gz",
+      "bytes": 91,
+      "sha256": "99256b429c1defe475013650f9fad0eb56f713a9b45e0fa20dbd47f73e8f5ad9"
+    },
+    {
+      "path": "paper/materials/20261022-issues26-20-integrator-review/raw/independent-isolation-recheck.log.gz",
+      "bytes": 355,
+      "sha256": "3dd6e8bc313f94583e8deacc7e4f3da0173a07fc9da545e476cb9ac9b96529a9"
+    },
+    {
+      "path": "paper/materials/20261022-issues26-20-integrator-review/raw/independent-first-full-vitest.json.gz",
+      "bytes": 338579,
+      "sha256": "6d2c1613e8069c54609503e104c608d329508d7ce3f5e6e90fca5edd05a87c66"
+    },
+    {
+      "path": "paper/materials/20261022-issues26-20-integrator-review/raw/independent-isolation-recheck.json.gz",
+      "bytes": 471,
+      "sha256": "3e0c49703fda7f71bb4be1a6cb3a5603c1f40586efe0bafb24e34d77660f6c61"
+    },
+    {
+      "path": "paper/materials/20261022-issues26-20-integrator-review/raw/independent-final-full-rebuild.log.gz",
+      "bytes": 103,
+      "sha256": "fad9e7e57a989ef1d279b4d50ee0230ce123d56c38d634487b031252ed59a1aa"
+    },
+    {
+      "path": "paper/materials/20261022-issues26-20-integrator-review/raw/independent-final-full-tsc.log.gz",
+      "bytes": 20,
+      "sha256": "9ceffb7310338057cfe71a4ae1e2c98d2c485d81cdef906532a801f457a38d64"
+    },
+    {
+      "path": "paper/materials/20261022-issues26-20-integrator-review/raw/independent-final-full-vitest.log.gz",
+      "bytes": 23682,
+      "sha256": "71daf252b270e4a04293a0a54fe99f1483a8d6cfa75224b4cdb8b77d7007979b"
+    },
+    {
+      "path": "paper/materials/20261022-issues26-20-integrator-review/raw/independent-final-full-vitest.json.gz",
+      "bytes": 338269,
+      "sha256": "5e18f29c81b5f88fe7b3d4bedd3971f25562790542795be70bdacc674e1e3b79"
+    },
+    {
+      "path": "paper/materials/20261022-issues26-20-integrator-review/raw/independent-second-full-rebuild.log.gz",
+      "bytes": 103,
+      "sha256": "fad9e7e57a989ef1d279b4d50ee0230ce123d56c38d634487b031252ed59a1aa"
+    },
+    {
+      "path": "paper/materials/20261022-issues26-20-integrator-review/raw/independent-second-full-tsc.log.gz",
+      "bytes": 20,
+      "sha256": "9ceffb7310338057cfe71a4ae1e2c98d2c485d81cdef906532a801f457a38d64"
+    },
+    {
+      "path": "paper/materials/20261022-issues26-20-integrator-review/raw/independent-second-full-vitest.log.gz",
+      "bytes": 23298,
+      "sha256": "732e701d09da72d3f93b3bd75d89a1e357bd375c4183f2f93329bc7720cbfab3"
+    },
+    {
+      "path": "paper/materials/20261022-issues26-20-integrator-review/raw/independent-second-full-vitest.json.gz",
+      "bytes": 338205,
+      "sha256": "2ebbe13cd00d0826d1b955f393acb9cee28bff78e5a0fda0a3efed0ae44d99f1"
+    },
+    {
+      "path": "paper/materials/20261022-issues26-20-integrator-review/raw/independent-import-diagnostic.log.gz",
+      "bytes": 110,
+      "sha256": "14aaac2d6d27a6f3e8553f58b9c1c388b092f242ecd8cd61c8a27105b1be8f35"
+    },
+    {
+      "path": "paper/materials/20261022-issues26-20-integrator-review/raw/developer20-kit.log.gz",
+      "bytes": 52,
+      "sha256": "ad759e320b0c16446838ca8adac2691aa5a57d08a8003b67f6e3dcfbf2ba7477"
+    },
+    {
+      "path": "paper/materials/20261022-issues26-20-integrator-review/raw/developer20-lifecycle.log.gz",
+      "bytes": 53,
+      "sha256": "6fc0ead6c1bacc4c14833ad3dbeb53b12547bc06880caad777c947b6e49d81ef"
+    },
+    {
+      "path": "paper/materials/20261022-issues26-20-integrator-review/raw/developer20-retention.log.gz",
+      "bytes": 52,
+      "sha256": "5013d515f366e9524329057935627daf5d1f9a5b11961c2a912cc72b53d82fd3"
+    },
+    {
+      "path": "paper/materials/20261022-issues26-20-integrator-review/raw/developer20-shared-tools.log.gz",
+      "bytes": 50,
+      "sha256": "080c66a8beb2d684f99ddb34767872a45f1802a2ba17cf137d093a7a87b9fadc"
+    },
+    {
+      "path": "paper/materials/20261022-issues26-20-integrator-review/raw/developer20-tsc.log.gz",
+      "bytes": 20,
+      "sha256": "9ceffb7310338057cfe71a4ae1e2c98d2c485d81cdef906532a801f457a38d64"
+    },
+    {
+      "path": "paper/materials/20261022-issues26-20-integrator-review/raw/developer20-vitest-count-failure.json.gz",
+      "bytes": 337227,
+      "sha256": "cc55cd82bb8cba662c397c45d921483da725e23c45e9f4e0a6d78fd149d11138"
+    },
+    {
+      "path": "paper/materials/20261022-issues26-20-integrator-review/raw/developer20-vitest-count-failure.log.gz",
+      "bytes": 24891,
+      "sha256": "b3b448e1edeabdb45bee90e96dd19d75c775ae08b4eee500449610b8c33c04c4"
+    },
+    {
+      "path": "paper/materials/20261022-issues26-20-integrator-review/raw/developer20-vitest-interrupted.log.gz",
+      "bytes": 4971,
+      "sha256": "7332d3b1546ca0d790b53912275efd63e2605e5b0f07ffac8cd0b8a3c59bf741"
+    },
+    {
+      "path": "paper/materials/20261022-issues26-20-integrator-review/raw/developer20-vitest-scope-adjustment.log.gz",
+      "bytes": 956,
+      "sha256": "f1600953df28bab909e28fed660f13cb0aef7308ee5554653d01a373f99dee31"
+    },
+    {
+      "path": "paper/materials/20261022-issues26-20-integrator-review/raw/developer20-vitest-targeted.log.gz",
+      "bytes": 207,
+      "sha256": "d9a31a3a58fa39538e8d2189abb53d897064c3dcdd44bb5dcd706a52a97f3ff5"
+    },
+    {
+      "path": "paper/materials/20261022-issues26-20-integrator-review/raw/developer20-vitest.json.gz",
+      "bytes": 337087,
+      "sha256": "04dd3faa198beed406de2423824d816e13b864b802a0f957290e6a58e189e1cc"
+    },
+    {
+      "path": "paper/materials/20261022-issues26-20-integrator-review/raw/developer20-vitest.log.gz",
+      "bytes": 23901,
+      "sha256": "112977180e707301e3815823f670bdfe3ff0e7599a4316deb9199a03805d07d1"
+    }
+  ],
+  "original_failed_attempts_preserved": true,
+  "identity_empty_fixed_input_original_preserved": true,
+  "identity_correction": {
+    "path": "paper/materials/20261022-issues26-20-integrator-review/identity-correction.json",
+    "bytes": 538,
+    "sha256": "fbb84f16c1453bc755894159ade3d1969bf7c2711fc384b42a9cacbac4bdc6ce"
+  },
+  "integration_receipt": {
+    "path": "paper/materials/20261022-issues26-20-integrator-review/integration.json",
+    "bytes": 2829,
+    "sha256": "1a5bf13212f4ba26d6b7164245ea2890c23ca152a50659ef6ebebd8ec76348a7"
+  },
+  "readbacks": [
+    {
+      "path": "paper/materials/20261022-issues26-20-ops/issue-20-readback.json",
+      "bytes": 28356,
+      "sha256": "c6bfe7babb3e4d073bffaad7f6d5082d1fc4480bc3bd7e07a08c9eb4440fb8f7"
+    },
+    {
+      "path": "paper/materials/20261022-issues26-20-ops/issue-26-readback.json",
+      "bytes": 9185,
+      "sha256": "ddf5226a332a46d157ec799a3945e276b62964cea3284ea16c86361ef3cdbde3"
+    },
+    {
+      "path": "paper/materials/20261022-issues26-20-ops/issue-33-readback.json",
+      "bytes": 10351,
+      "sha256": "e945a5f4f3e9278d82b85860b26b74c19a38c6ba8a974c32388806ad18422ec8"
+    }
+  ],
+  "issue26": {
+    "state": "tool-layer-admitted-waiting-issue33-reviewed-combination",
+    "projection": {
+      "path": "knowledge/external/sts2fun/silent-a10.json",
+      "bytes": 1775714,
+      "sha256": "88eef1cd8b875ab27d47c3abc39335f271705672b53bd71a0f4b30286168ac07"
+    },
+    "issue33_current_status": "review",
+    "publication": "with or after issue33 at original natural run boundary, following exact joint admission",
+    "natural_tool_consumption": false,
+    "first_run_readback_pending": true,
+    "before_after_checkpoint_comparison": false
+  },
+  "issue20": {
+    "state": "exact-kit-installed-off-formal-host-owner-gate-pending",
+    "upgrade": {
+      "path": "paper/materials/20261022-issues26-20-ops/kit-upgrade.json",
+      "bytes": 2119,
+      "sha256": "275b1d3222eed8a7717698c5214f0a109c07002b7a0c0eedcdd777406ae1048c"
+    },
+    "production_on": false,
+    "formal_host_registry": false,
+    "first_tick_done_delivery_recovery_escalation_and_actual_reclaim": "pending; no fabricated acceptance",
+    "dry_run": {
+      "path": "paper/materials/20261022-issues26-20-ops/kit-dry-run.json",
+      "bytes": 2803,
+      "sha256": "30e4be0b5d3cadca221f7356f34d922d5adea48d93132876635f5fe11d981737"
+    },
+    "dry_run_rc": 1,
+    "dry_run_reason": "recipients absent/busy; in-memory queue, reclaim only planned; protected state unchanged"
+  },
+  "new_full_dataset_model_or_game_action": false,
+  "issue_closed": false,
+  "issue_comment_delivery_readbacks": [
+    {
+      "path": "paper/materials/20261022-issues26-20-ops/issue-20-ops-comment-readback.json",
+      "bytes": 2940,
+      "sha256": "2ca9ebaf826c7025e0c7f2d646f4631d1d43739dbb3caec37a47929da5600960"
+    },
+    {
+      "path": "paper/materials/20261022-issues26-20-ops/issue-26-ops-comment-readback.json",
+      "bytes": 2806,
+      "sha256": "58856bc4b06dbfe9177e64ea1fea065ebad5418ae441899e94ac015f09c844ba"
+    }
+  ],
+  "issue20_comment_send_recovery": "GraphQL error outcome was read back; original body absent on complete comments page, then sent by REST and read back once"
+}
