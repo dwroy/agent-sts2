@@ -5523,3 +5523,4 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
 - 2026-10-21T09:29:22+08:00 原watcher Roy09:0x真实实收933531cf已核，四证据/三原生行及四question id绑定原R4通知/明确接受；原文与Markdown单LF分别SHA保留，CLI兼容仍pending，不改flags/代ACK/关科学父。P2原线只投递、暂停；CEN沿已核实际启动不回退queued、不查动态。原件paper/materials/20261021-092x-Roy-watcher-ops/receipt.json。
 
 - 2026-10-21 09:30:42 CST [Claude，推进] CEN1Z8HEU7NM（R409 大脑拿牌）打过 F48，死于 F49 实验体 #C98，为 V6 首次进入连战第二场。v6-w8 修复 boss-sim nonpositive-hp：荆棘反伤击倒最后敌人时旧逻辑覆盖玩家死亡，产生 won=true、HP≤0；f993d9b1d（11 道原题复现、修后判首战失败，tsc、133 测试、gitleaks 0），待 ops 联合检查与局终挂 STOP 发布。v6-w4w6 开始拿牌条目 v2（掉血预测器）。
+- 2026-10-21T09:31:59+08:00 CEN f993三叶精确R409终局tsc0/full1，629文件628过1败/5962过1败2跳，tree377e/2395输入aca3前后同且PID退/原窗释放；唯一inferno-planner:170铁甲动作断言，具体失败报原W8/watcher，未归根因或改断言/阈值，不重未变源full/发布。R409/CARDbrain/REFLEXoff及0332父保持；原件paper/materials/20261021-0930-ops/receipt.json。

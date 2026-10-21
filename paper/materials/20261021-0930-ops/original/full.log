@@ -1,0 +1,39 @@
+
+ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/ops-cen-rollout-r409-joint-20261021/agent
+
+ ❯ tests/inferno-planner.test.ts (5 tests | 1 failed) 560ms
+     × more of the rollout's samples die than at 1 a turn, and its best line moves to Blood Wall+, Uppercut+ 310ms
+{"fixture":"two_signed_card_pick_contrasts","prompt_bytes":7844,"sent_entries":2}
+.....
+----------------------------------------------------------------------
+Ran 5 tests in 0.044s
+
+OK
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/inferno-planner.test.ts > A8ENYFR4ZWKG F33 T6 (34 HP, two Infernos up, won): the rollout's later turns lose 2 a turn > more of the rollout's samples die than at 1 a turn, and its best line moves to Blood Wall+, Uppercut+
+AssertionError: expected '防御, then 上勾拳+ -> 知识恶魔, then 打击 -> 知识恶魔' to match /^血墙\+, then 上勾拳\+/
+
+- Expected:
+/^血墙\+, then 上勾拳\+/
+
++ Received:
+"防御, then 上勾拳+ -> 知识恶魔, then 打击 -> 知识恶魔"
+
+ ❯ tests/inferno-planner.test.ts:170:29
+    168|     const criteria = decision?.kind === "ask" ? ((decision.questions["…
+    169|     const best = Object.values(criteria).map((text) => JSON.parse(text…
+    170|     expect(best?.["plays"]).toMatch(/^血墙\+, then 上勾拳\+/);
+       |                             ^
+    171|   }, 120_000);
+    172| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed | 628 passed (629)
+      Tests  1 failed | 5962 passed | 2 skipped (5965)
+   Start at  09:06:04
+   Duration  1432.32s (transform 16.40s, setup 34.14s, import 118.67s, tests 1199.72s, environment 65ms)
+
