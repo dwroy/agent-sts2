@@ -5568,3 +5568,7 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
 - 2026-10-21T11:51:00+08:00 ops：1144三ordinary attention均有基线、新增恰#4三notice；三树干净/30waiting，前两既有同轮dataset保原件，不重生成/空合并；#4 watcher实读及Roy可见转达已核，角色CLI仍pending；#8候选未main/live、四基线败归#19，不新增检查/派发。回执 paper/materials/20261021-1144-ops/receipt.json。
 
 - 2026-10-21 11:52:05 CST [Claude/Roy，协作架构] Roy 批准通用多 agent 协作架构（docs/agent-board-architecture.md）：看板（GitHub Issues）/ 派单器（确定性代码，读各项目 .agents/board.yaml，派活、提醒、回收、限流）/ 角色三层；Claude 为主管，watcher 改为集成员（核验、合入 main、协调完整检查，只在派单器提醒时动手、每天换会话），开发者一个 issue 一个会话，ops 只管运行与学习派发；通用部分抽到独立私有仓库 dwroy/agent-board-kit，agent-sts2 试点后接入 agent-hearthstone。AGENTS.md 与协作流程文档同步。
+
+- 2026-10-21T11:56:35+08:00 ops：复盘111301四局唯一追加/前缀与勘误、12账本support及四pending提案已核，0559保既有映射；无新纯bug，原CEN/0332链不重复。准备原锁唯一dataset --no-raw/记录提交，未终局不称完成；不改live/现局/开关/STOP。原件 paper/materials/20261021-1152-ops/intake-receipt.json。
+
+- 2026-10-21T12:08:26+08:00 ops：复盘111301四局追加/勘误、12support和四pending提案已核，无新纯bug；唯一dataset --no-raw退出0/四复盘标记齐，保存自有生成表/指定lessons与ledger，不代发布/科学父完成。原件 paper/materials/20261021-1152-ops/receipt.json。

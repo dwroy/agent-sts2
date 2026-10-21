@@ -5267,3 +5267,12 @@ W4拿牌v2正式3ef4/11a80已核：14源Git/SHA、318清单项加manifest共319�
 ### 2026-10-21T11:51:00+08:00 1144六事件及#8原候选核收
 
 核三份ordinary attention原件：基线均存在，新增全局通知恰为#4的D1–D3；三树HEAD同报告base且干净，报告SHA同，30个原提案均waiting，fixes空/merged null/tests null。前两批同一轮既有dataset及attempt1原件保留，第三在前置守卫退出；本轮不重dataset、不空合并、不补测或扩分母。三notice调度器ops_forwarded回执/正文/双收件箱字节已核；watcher实读及向Roy可见转达已有原材料和6307510995评论，不等Roy亲自认可。原研究CLI身份兼容仍pending，保旧拒绝及false flags，不重复认证/转述/代ACK。另核#8候选4fc80隔离暂存及三测试blob，源非main/live祖先；四项基线失败归#19，保留候选和原检查，不放宽门槛、不新派或改live。#18仍零删除。原件paper/materials/20261021-1144-ops/。
+
+### 2026-10-21T11:56:35+08:00 复盘111301原记录收尾
+
+四局复盘均有唯一正式标题，原lessons前缀及四段追加SHA核同，GWE能力建立时点勘误原样保留；21个终战原帧窗口已seek核同，账本当前559条检查0。原批12个support更新与四份postmortem提案绑定核实，0559为已有CEN/36V证据映射、非本批新增或更新。没有新纯bug，历史nonpositive-hp仍原CEN/0332链，不重复修或写新机制/打法；四提案pending由原调度器接续，不标实现或收益。本批单次dataset与记录收尾通过原ordinary-close锁及writer锁串行，nice19/ionice3、线程1；唯一开始标记阻止重复，终局后核四局复盘标记、生成表/原快照SHA，扫描后只提交自有记录和指定lessons/ledger/四提案链接。使用有限子进程等待完成，不sleep/轮询/定时器/模型/full/对局或刷新；未完成前保pending，终局由原队列叫醒核收。原件paper/materials/20261021-1152-ops/及.artifacts/ops-wake-20261021-1152/close-status.json。
+
+### 2026-10-21T12:08:26+08:00 复盘111301唯一dataset与记录核验
+
+四局CEN、36V、GWE、TS0各唯一复盘，原lessons前缀与追加SHA、21终战原帧、12账本support和四pending提案核同，GWE勘误保留；0559是已有证据映射而非本批新增更新。无新纯bug，历史nonpositive-hp沿CEN/0332原链，不改游戏知识、规则或重复派修。本批唯一nice19/ionice3 paper_dataset --no-raw退出0，原writer/ordinary锁串行，源检查与四局复盘标记均通过；生成表、切点、旧快照和日志SHA留存，未重跑。按用户要求只保存自有材料及生成记录、指定lessons/ledger和本批四提案增量；保留其他并行叶，不拿记录、数据或复盘完成冒实现/live采用或科学父验收。未新开模型/full/生产刷新或对局，不改live/actor/STOP/CARDbrain/REFLEXoff/Regent；#4角色CLI与#8/#19原阻塞、#18零删除边界保持。
+原件 paper/materials/20261021-1152-ops/receipt.json。
