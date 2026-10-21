@@ -5707,3 +5707,5 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
 - 2026-10-22T04:07:04+08:00 [ops] #20补交466e54561主根核同且--show-enabled=off；旧持久控制缺口解决，宿主owner登记及新增自动接续开发/首tick等验收仍pending，不启用不关单。来源https://github.com/dwroy/agent-sts2/issues/20#issuecomment-6325362410；新范围https://github.com/dwroy/agent-sts2/issues/20#issuecomment-6324894427。回执paper/materials/20261022-issue20-control-ops/receipt.json。
 
 - 2026-10-22T04:11:17+08:00 [ops] 核034316主策略唯一dataset后#20 main三源码路径变化的原attention，89产物/十原文/558原段核同、十waiting；保报告/失败/科学父，仅本轮记录，不重dataset/full/模型/合入。原件paper/materials/20261022-0409-ops/receipt.json。
+
+- 2026-10-22T04:14:33+08:00 [ops] 核034316-s2在dataset前因#20 main三源码路径变化的原attention，无本批启动标记/日志，不借主批结果补完成；65产物/十原文/363原段核同、十waiting。保失败/科学父，仅核验记录，不启动dataset/full/模型/合入。原件paper/materials/20261022-0413-ops/receipt.json。
