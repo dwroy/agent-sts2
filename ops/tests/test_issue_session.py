@@ -813,9 +813,81 @@ class Scheduler(unittest.TestCase):
                              ['learn', 'snapshot', 'stall', 'health', 'board'])
             (directory / 'PAUSE').touch(); before = (root / 'calls').read_bytes(); tick('stall')
             self.assertEqual(before, (root / 'calls').read_bytes())
+            (directory / 'PAUSE').unlink()
+            # Cron-like calls have no explicit flag; use the real control reader/launcher with a fake kit.
+            for script in ('agent_board.py', 'issue_session_support.py'):
+                (ops / script).write_bytes((Path(resource.__file__).parent / script).read_bytes())
+            (root / '.agents').mkdir()
+            (root / '.agents/board.yaml').write_bytes((Path(resource.__file__).parents[1] / '.agents/board.yaml').read_bytes())
+            kit = directory / 'agent-board-kit'; kit.mkdir()
+            (kit / 'board.py').write_text(record + 'with p.open("a") as h: h.write("board\\n")\n')
+            (directory / 'agent-board-projects.json').write_text(json.dumps({'projects': [{'root': str(root)}]}))
+            control = directory / 'agent-board-control.json'
+            env.pop('CODEX_AGENT_BOARD')
+            before = (root / 'calls').read_text(); tick('stall')
+            self.assertEqual((root / 'calls').read_text()[len(before):].splitlines(), ['stall', 'health', 'issues'])
+            def set_control(mode):
+                result = subprocess.run(['python3', str(ops / 'agent_board.py'), '--root', str(root), '--set-enabled', mode],
+                                        capture_output=True, text=True, env=env, timeout=15)
+                self.assertEqual(result.returncode, 0, result.stderr + result.stdout)
+            before = (root / 'calls').read_text(); set_control('on')
+            self.assertEqual((root / 'calls').read_text(), before)  # Setting on does not dispatch.
+            tick('learn'); tick('snapshot'); tick('stall')
+            self.assertEqual((root / 'calls').read_text()[len(before):].splitlines(), ['learn', 'snapshot', 'stall', 'health', 'board'])
+            env['CODEX_AGENT_BOARD'] = 'off'; before = (root / 'calls').read_text(); tick('stall')
+            self.assertEqual((root / 'calls').read_text()[len(before):].splitlines(), ['stall', 'health', 'issues'])
+            env.pop('CODEX_AGENT_BOARD'); set_control('off')
+            env['CODEX_AGENT_BOARD'] = 'on'; before = (root / 'calls').read_text(); tick('stall')
+            self.assertEqual((root / 'calls').read_text()[len(before):].splitlines(), ['stall', 'health', 'board'])
+            env.pop('CODEX_AGENT_BOARD'); control.write_text('damaged')
+            before = (root / 'calls').read_text(); tick('stall')
+            self.assertEqual((root / 'calls').read_text()[len(before):].splitlines(), ['stall', 'health'])
+            self.assertIn('开关', (ops / 'inbox-dev.md').read_text())
+            env['CODEX_AGENT_BOARD'] = 'off'; before = (root / 'calls').read_text(); tick('stall')
+            self.assertEqual((root / 'calls').read_text()[len(before):].splitlines(), ['stall', 'health', 'issues'])
 
 
 class BoardLauncher(unittest.TestCase):
+    def test_control_default_persistence_identity_and_explicit_environment_priority(self):
+        import agent_board
+        from types import SimpleNamespace
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            config = SimpleNamespace(root=root, repo='fixture/project', data={'dispatcher': {
+                'control': 'state/control.json', 'install': 'kit', 'registry': 'state/projects.json'}})
+            with patch.dict(os.environ, {}, clear=True):
+                self.assertEqual(agent_board.effective_mode(config), 'off')
+                self.assertFalse((root / 'state').exists())
+                with self.assertRaises(ValueError):
+                    agent_board.set_mode(config, 'on')
+                self.assertFalse((root / 'state/control.json').exists())
+                (root / 'kit').mkdir(); (root / 'kit/board.py').write_text('')
+                registry = root / 'state/projects.json'
+                registry.write_text(json.dumps({'projects': [{'root': str(root)}, {'root': str(root)}]}))
+                with self.assertRaises(ValueError):
+                    agent_board.set_mode(config, 'on')
+                registry.write_text(json.dumps({'projects': [{'root': str(root)}, {'root': str(root) + '/'}]}))
+                with self.assertRaises(ValueError):
+                    agent_board.set_mode(config, 'on')
+                registry.write_text(json.dumps({'projects': [{'root': str(root)}]}))
+                self.assertEqual(agent_board.set_mode(config, 'on')['effective'], 'on')
+                with patch.dict(os.environ, {'CODEX_AGENT_BOARD': 'off'}):
+                    self.assertEqual(agent_board.effective_mode(config), 'off')
+                agent_board.set_mode(config, 'off')
+                with patch.dict(os.environ, {'CODEX_AGENT_BOARD': 'on'}):
+                    self.assertEqual(agent_board.effective_mode(config), 'on')
+                path = root / 'state/control.json'
+                data = json.loads(path.read_text()); data['root'] = str(root / 'other'); path.write_text(json.dumps(data))
+                before = path.read_bytes()
+                with self.assertRaises(ValueError):
+                    agent_board.set_mode(config, 'off')
+                self.assertEqual(before, path.read_bytes())
+                with patch.dict(os.environ, {'CODEX_AGENT_BOARD': 'off'}):
+                    self.assertEqual(agent_board.effective_mode(config), 'off')
+                with patch.dict(os.environ, {'CODEX_AGENT_BOARD': ''}):
+                    with self.assertRaises(ValueError):
+                        agent_board.effective_mode(config)
+
     def test_launcher_replaces_process_and_passes_retention_disable_and_dry_run(self):
         import agent_board
         with tempfile.TemporaryDirectory() as tmp:
