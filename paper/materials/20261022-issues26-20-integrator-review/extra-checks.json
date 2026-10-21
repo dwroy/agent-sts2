@@ -1,0 +1,71 @@
+[
+  {
+    "name": "kit",
+    "command": [
+      "python3",
+      "-B",
+      "-m",
+      "unittest",
+      "test_board",
+      "test_watchdog"
+    ],
+    "cwd": "/home/dw/Projects/agent-sts2/.artifacts/integrator-20-26-20261022/kit",
+    "exit_code": 0,
+    "tests": 59,
+    "seconds": 0.6897757053375244
+  },
+  {
+    "name": "lifecycle",
+    "command": [
+      "python3",
+      "-B",
+      "-m",
+      "unittest",
+      "discover",
+      "-s",
+      "ops/tests",
+      "-p",
+      "test_issue_session.py"
+    ],
+    "cwd": "/home/dw/Projects/agent-sts2/.worktrees/integrator-26-20-20261022",
+    "exit_code": 0,
+    "tests": 62,
+    "seconds": 11.88844633102417
+  },
+  {
+    "name": "shared-tools",
+    "command": [
+      "python3",
+      "-B",
+      "-m",
+      "unittest",
+      "discover",
+      "-s",
+      "ops/tests",
+      "-p",
+      "test_shared_tools.py"
+    ],
+    "cwd": "/home/dw/Projects/agent-sts2/.worktrees/integrator-26-20-20261022",
+    "exit_code": 0,
+    "tests": 11,
+    "seconds": 0.501396894454956
+  },
+  {
+    "name": "retention",
+    "command": [
+      "python3",
+      "-B",
+      "-m",
+      "unittest",
+      "discover",
+      "-s",
+      "ops/tests",
+      "-p",
+      "test_worktree_retention.py"
+    ],
+    "cwd": "/home/dw/Projects/agent-sts2/.worktrees/integrator-26-20-20261022",
+    "exit_code": 0,
+    "tests": 15,
+    "seconds": 3.3999574184417725
+  }
+]

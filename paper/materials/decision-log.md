@@ -5724,3 +5724,4 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
 - 2026-10-22T06:15:57+08:00 [ops] 0615八条重复学习异议原文/证据及真实转达回执核同；原研究CLI身份兼容阻塞未变，后两角色登记pending，保原范围/科学父；仅记录、不重认证/代ACK/提醒/生成器或改对局。原件：paper/materials/20261022-0615-ops/receipt.json。
 
 - 2026-10-22T06:43:51+08:00 [ops] 0643八条重复学习异议原文/证据及真实转达回执核同；原研究CLI身份兼容阻塞未变，后两角色登记pending，保原范围/科学父；仅记录、不重认证/代ACK/提醒/生成器或改对局。原件：paper/materials/20261022-0643-ops/receipt.json。
+- 2026-10-22T07:24:34+08:00 [watcher] #26 c3716ba15 工具层与 #20 dec42bc98/kit95f1efb 技术核验通过并合 main 7b8762a7c；一次独立全检648文件/6124过/2跳过、tsc/重建/147Python通过，2098输入SHA核同，原锁备份/恢复绑定SHA和权限一致。#26待#33挂载/自然首局，#20待ops安装/owner授权/原stall首tick及真实送达；不触生产、不关闭父任务。报告 paper/materials/20261022-issues26-20-integrator-review/。

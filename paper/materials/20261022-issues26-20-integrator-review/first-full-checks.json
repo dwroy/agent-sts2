@@ -1,0 +1,43 @@
+[
+  {
+    "name": "rebuild",
+    "command": [
+      "python3",
+      "agent/tools/build-external-stats.py",
+      "--check"
+    ],
+    "cwd": "/home/dw/Projects/agent-sts2/.worktrees/integrator-26-20-20261022",
+    "exit_code": 0,
+    "seconds": 0.40027832984924316
+  },
+  {
+    "name": "tsc",
+    "command": [
+      "node",
+      "node_modules/typescript/bin/tsc",
+      "-p",
+      "tsconfig.json",
+      "--noEmit"
+    ],
+    "cwd": "/home/dw/Projects/agent-sts2/.worktrees/integrator-26-20-20261022/agent",
+    "exit_code": 0,
+    "seconds": 0.9159438610076904
+  },
+  {
+    "name": "vitest",
+    "command": [
+      "node",
+      "node_modules/vitest/vitest.mjs",
+      "run",
+      "--pool=forks",
+      "--maxWorkers=1",
+      "--no-file-parallelism",
+      "--reporter=default",
+      "--reporter=json",
+      "--outputFile.json=/home/dw/Projects/agent-sts2/.artifacts/integrator-20-26-20261022/vitest.json"
+    ],
+    "cwd": "/home/dw/Projects/agent-sts2/.worktrees/integrator-26-20-20261022/agent",
+    "exit_code": 1,
+    "seconds": 1471.894683122635
+  }
+]
