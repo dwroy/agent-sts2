@@ -1,0 +1,163 @@
+## 修 bug 回报
+
+- 合并基线：main → `c371a1f530d7d3f13fd38b1c58d00c6e7d3f5f45`
+- 修复（每条一行）：无新增；未改代码、未提交，撤修复失败验证不适用。
+- 已被别人修掉的：53项既有修复已核对源码及提交祖先关系，逐项提交号见[完整报告](/home/dw/Projects/agent-sts2/learner/runs/20261021-163327-8ed47df5-90a9-49e9-bd03-6367b00bdffe-fix-batch/report.md)。其中新增 glob 竞态记录对应的有界重试已修于 `b475be859500665d7d7b3c099b2a3d6c608c273d`。
+- 没修的：31项策略、独立架构、证据不足或原 owner 接续事项，逐项原因见报告及下方 JSON；保留原失败和未完成状态。
+- 测试：tsc退出码0；Vitest定向8文件／44用例／退出码0，无重跑；gitleaks退出码0。未运行完整套件。
+- 合入：未合入；本批没有源码提交，不执行空合并。
+- 需要 Roy 定的事：无。
+
+```json
+{
+  "task": "fix-batch",
+  "base": "c371a1f530d7d3f13fd38b1c58d00c6e7d3f5f45",
+  "fixes": [],
+  "skipped": [
+    {
+      "item": "silent-0279",
+      "reason": "策略类：SL抽序升级身份沿既有strategy-proposal链核实。"
+    },
+    {
+      "item": "silent-0311",
+      "reason": "策略类：恢复血量与剩余需求模型沿原提案链处理。"
+    },
+    {
+      "item": "silent-0319",
+      "reason": "策略类：升级蛇咬机制沿原提案链处理。"
+    },
+    {
+      "item": "silent-0320",
+      "reason": "策略类：UNMOVABLE机制沿原提案链处理。"
+    },
+    {
+      "item": "silent-0329",
+      "reason": "策略类：饮药临时力量机制沿原提案链处理。"
+    },
+    {
+      "item": "arch-funnel-guard",
+      "reason": "独立架构任务，普通纯bug批次不实现。"
+    },
+    {
+      "item": "arch-learning-priority",
+      "reason": "独立架构任务，普通纯bug批次不实现。"
+    },
+    {
+      "item": "arch-unified-resource-value",
+      "reason": "独立资源估值架构任务，普通纯bug批次不实现。"
+    },
+    {
+      "item": "inv-f33-regression",
+      "reason": "独立归因研究，不能凭观测直接修改策略。"
+    },
+    {
+      "item": "silent-0332",
+      "reason": "证据不足：死亡优先工程子项已修于b1773b2ae；实际资源根缺口及科学父要求仍保留。"
+    },
+    {
+      "item": "silent-0334",
+      "reason": "策略类：升级隐秘匕首模型沿原提案链处理。"
+    },
+    {
+      "item": "silent-0339",
+      "reason": "策略类：蜥蜴尾巴触发识别沿原提案链处理。"
+    },
+    {
+      "item": "silent-0344",
+      "reason": "策略类：延迟格挡机制沿原提案链处理。"
+    },
+    {
+      "item": "silent-0347",
+      "reason": "策略类：攻击召唤机制沿原提案链处理。"
+    },
+    {
+      "item": "silent-0349",
+      "reason": "策略类：虚弱与临时减力模型沿原提案链处理。"
+    },
+    {
+      "item": "core-build-notify-222802-rc2",
+      "reason": "证据不足：缺原stderr及确定送达状态；诊断保存子项已修，不擅自重送。"
+    },
+    {
+      "item": "silent-0362",
+      "reason": "策略类：双蟹减力与背击模型沿原提案链处理。"
+    },
+    {
+      "item": "合后检查包装器总时限与整套重跑",
+      "reason": "证据不足：历史批次执行器及精确分段覆盖待原owner核实。"
+    },
+    {
+      "item": "策略调度公平性归因核查",
+      "reason": "独立归因任务，现有观测不足以证明永久饥饿。"
+    },
+    {
+      "item": "silent-0481",
+      "reason": "策略类：生成牌生命周期事实沿原提案链处理。"
+    },
+    {
+      "item": "silent-0487",
+      "reason": "策略类：三段攻击模型沿原提案链处理。"
+    },
+    {
+      "item": "silent-0339续证",
+      "reason": "策略类：沿原蜥蜴尾巴提案链处理，不重复派发。"
+    },
+    {
+      "item": "H1/G2预算完成及paired-DPR来源宽项",
+      "reason": "证据不足：窄诊断兼容已修，宽根因仍待原owner核实际输入。"
+    },
+    {
+      "item": "silent-0533",
+      "reason": "策略类：普通撕碎条件伤害已有独立提案，不补机制或重复实现。"
+    },
+    {
+      "item": "silent-0535",
+      "reason": "策略类：单动作双蟹朝向已有独立提案，不重复实现。"
+    },
+    {
+      "item": "原v5-dpr-health/H1 module-health V6兼容续项",
+      "reason": "原001302监控六叶候选未提交发布；接续记录SHA未变，队列明确禁止后批重复实现。"
+    },
+    {
+      "item": "infra-chest-claimed-action-conflict-0516",
+      "reason": "策略或结构类：保留原独立提案及领取成功验证缺口。"
+    },
+    {
+      "item": "infra-v6-brain-input-too-large-20261020宽项",
+      "reason": "原专项已窄集成；自然复验与父要求不由本批关闭。"
+    },
+    {
+      "item": "ordinary-close-isolation固定夹具成本续项",
+      "reason": "原014301三叶候选未提交发布；接续记录SHA未变，队列明确禁止后批重复实现。"
+    },
+    {
+      "item": "silent-elite-simulation-pessimism-20261021",
+      "reason": "策略类：队列明确非fix-batch纯bug，沿原学习问题核实。"
+    },
+    {
+      "item": "sandbox-glob-startup-race上游扫描竞态与事件记录续证",
+      "reason": "证据不足：有界重试已存在，实际重试次数和删除者未知；保留原失败及冷却，不重探针或放宽权限。"
+    }
+  ],
+  "merged": null,
+  "tests": {
+    "tsc": 0,
+    "vitest": 0,
+    "cases": 44
+  },
+  "code_proposals": [],
+  "implementation_domains": [],
+  "report": "/home/dw/Projects/agent-sts2/learner/runs/20261021-163327-8ed47df5-90a9-49e9-bd03-6367b00bdffe-fix-batch/report.md"
+}
+```
+
+== 学习者 codex / fix-batch ==
+状态：success；退出码 0
+模型：gpt-6.1-sol；会话：01a15d98-1848-79b3-a894-b94c36033cb9
+轮数：1；工具调用：command_execution×29
+token：输入 133.2k、输出 11.7k（其中推理 3023）、cache 读 1756.3k、cache 写 0（命中 92.9%）
+成本：未提供
+耗时：474.5 s（墙钟）
+时间：首个事件 33.1 s、模型首个输出 39.3 s、首次工具 43.9 s、末次工具结束 419.1 s；工具内共 90.2 s，其余（模型生成、推理、网络）351.2 s
+codex 会话记录：AGENTS.md 已加载（/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261021-163323）；模型的工具调用 exec×23；/home/dw/Projects/agent-sts2/ops/codex-ops/accounts/codex1/learner/sessions/2026/10/21/rollout-2026-10-21T16-33-31-01a15d98-1848-79b3-a894-b94c36033cb9.jsonl
+日志：/home/dw/Projects/agent-sts2/learner/runs/20261021-163327-8ed47df5-90a9-49e9-bd03-6367b00bdffe-fix-batch.jsonl
