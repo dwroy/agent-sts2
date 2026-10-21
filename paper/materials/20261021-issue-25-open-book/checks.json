@@ -1,0 +1,160 @@
+{
+  "schema": "issue-25-checks-v1",
+  "recorded_at": "2026-10-21T11:01:44.941977+00:00",
+  "branch": "issue-25-open-book-kb",
+  "base": "c57f78a49",
+  "checks": [
+    {
+      "name": "production-tsc",
+      "command": "cd agent && nice -n 19 node node_modules/typescript/bin/tsc -p tsconfig.json --noEmit",
+      "exit_code": 0,
+      "log": {
+        "path": "data/external/issue-25-tsc-final-3.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "name": "full-vitest",
+      "command": "cd agent && nice -n 19 node node_modules/vitest/vitest.mjs run --maxWorkers=1 --no-file-parallelism --reporter=default --reporter=../data/external/issue-25-trace-reporter.mjs",
+      "exit_code": 0,
+      "files_passed": 642,
+      "files_total": 642,
+      "tests_passed": 6074,
+      "tests_skipped": 2,
+      "tests_total": 6076,
+      "duration_seconds": 1277.13,
+      "log": {
+        "path": "data/external/issue-25-full-vitest-4.log",
+        "bytes": 1038182,
+        "sha256": "e0fa3c4725bfdbceed9da246c96176e7c08f2d47eeffb0e9a7a5254559196887"
+      }
+    },
+    {
+      "name": "focused-regression",
+      "exit_code": 0,
+      "files_passed": 5,
+      "tests_passed": 70,
+      "log": {
+        "path": "data/external/issue-25-focused-vitest-9.log",
+        "bytes": 258,
+        "sha256": "15d364d2a55e9ceeac5641b8bfe1f29cb675f693017d6f965a8b28a10265c0e0"
+      },
+      "limits": "失败文件的最终复验；完整回归另列。"
+    },
+    {
+      "name": "new-tool-and-test-typecheck",
+      "command": "nice -n 19 node agent/node_modules/typescript/bin/tsc -p data/external/issue-25-new-files-tsconfig.json --noEmit",
+      "exit_code": 0,
+      "log": {
+        "path": "data/external/issue-25-new-files-tsc-final.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "name": "python-refresh",
+      "command": "nice -n 19 python3 -m unittest discover -s ops/tests -p test_open_book_refresh.py",
+      "exit_code": 0,
+      "tests_passed": 6,
+      "log": {
+        "path": "data/external/issue-25-python-tests-final.log",
+        "bytes": 104,
+        "sha256": "13b96ed43ad62b23c6812e318f100b156de88f41891dfeb3b15c976596356e17"
+      }
+    },
+    {
+      "name": "offline-rebuild",
+      "command": "nice -n 19 python3 knowledge/builders/build-open-book.py",
+      "exit_code": 0,
+      "inventory": {
+        "cards": 595,
+        "relics": 298,
+        "monsters": 115,
+        "events": 66
+      },
+      "log": {
+        "path": "data/external/issue-25-offline-build.log",
+        "bytes": 61,
+        "sha256": "156e51265cb25d91e32efb5d7d154d2c0e3991bea7cc2d756781a627c00c5965"
+      }
+    },
+    {
+      "name": "five-brain-question-replay",
+      "command": "cd agent && nice -n 19 node --import tsx tools/open-book-replay.ts ../paper/materials/20261021-issue-25-open-book/replay.json",
+      "exit_code": 0,
+      "report": "replay.json",
+      "log": {
+        "path": "data/external/issue-25-replay-final-2.log",
+        "bytes": 4431,
+        "sha256": "3eff6b2b48f0df83b57690b0287bd1ae00ddac060e11ba36e0506490b0f19ab3"
+      }
+    },
+    {
+      "name": "ops-shell-syntax",
+      "command": "bash -n ops/codex-ops.sh",
+      "exit_code": 0
+    },
+    {
+      "name": "git-diff-check",
+      "command": "git diff --check && git diff --cached --check",
+      "exit_code": 0
+    }
+  ],
+  "previous_runs": [
+    {
+      "name": "wip-shutdown",
+      "exit_code": 143,
+      "log": {
+        "path": "data/external/issue-25-wip-vitest.log",
+        "bytes": 84,
+        "sha256": "8522a6cc6afba5aeefd6f0987d347bbedd9c967a79804c41ee965c60909ed132"
+      },
+      "result": "按停机协调 SIGTERM；不是通过或产品失败。"
+    },
+    {
+      "name": "resume-diagnostic-interrupt",
+      "exit_code": 143,
+      "log": {
+        "path": "data/external/issue-25-full-vitest-2.log",
+        "bytes": 84,
+        "sha256": "8522a6cc6afba5aeefd6f0987d347bbedd9c967a79804c41ee965c60909ed132"
+      },
+      "result": "为取得逐测试进度终止本次检查，另开保留原件的重跑。"
+    },
+    {
+      "name": "first-completed-full-suite",
+      "exit_code": 1,
+      "files_failed": 5,
+      "files_passed": 637,
+      "tests_failed": 21,
+      "tests_passed": 6051,
+      "tests_skipped": 2,
+      "duration_seconds": 1249.17,
+      "log": {
+        "path": "data/external/issue-25-full-vitest-3.log",
+        "bytes": 1146542,
+        "sha256": "d15c6765b7eae29a141d6400a4857212608aabfa261738b2bf17bee402b712b8"
+      },
+      "result": "暴露 Jev 请求超预算、题面增加资料后的旧 evidence/hash 断言、common 文件登记、threads 不支持 process.chdir，以及拿牌补全断言；修正后先聚焦复验，再冻结源码完整重跑。此失败原件未覆盖。"
+    },
+    {
+      "name": "supplementary-all-tools-typecheck",
+      "exit_code": 2,
+      "diagnostics": 50,
+      "log": {
+        "path": "data/external/issue-25-tools-tsc-2.log",
+        "bytes": 9245,
+        "sha256": "3d5ed0e1aa4f28dec019100ef288a8550d2db0f56bc53432c1f213b3f6694216"
+      },
+      "result": "补充 tsconfig.tools 检查仍有诊断，均在本次未修改的既有 tools 文件；未声称该配置通过。生产 tsc 与本次新增工具/测试的独立检查另列。"
+    }
+  ],
+  "limits": [
+    "固定数据、假模型 SDK/引擎，无真实模型/游戏请求；没有实战收益证据。",
+    "完整套件使用默认 fork pool，单 worker/no-file-parallelism，nice 19。",
+    "原始来源与检查日志仅在忽略的 data/external；本文件只提交摘要与哈希。",
+    "未发布 main/live；未修改 live/STOP、未运行 play、未安装依赖。",
+    "最终暂存区 gitleaks 与公开评论扫描在提交/发评前执行，结果见交付评论；不循环修改待扫描内容来记录自身哈希。"
+  ]
+}

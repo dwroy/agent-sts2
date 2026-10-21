@@ -1437,7 +1437,8 @@ export function modelHandCard(entry: unknown, fallbackIndex: number, knowledge: 
     }
   }
   const external = externalCardReference(cardId, character);
-  if (external) model.externalReference = external;
+  // Avoid copying a catalogue into every solver state, fingerprint and decision projection.
+  if (external) Object.defineProperty(model, "externalReference", { value: external, enumerable: false });
   return model;
 }
 

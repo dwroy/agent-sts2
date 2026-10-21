@@ -276,12 +276,13 @@ export class Brain {
     if (isObject(payload) && DIRECTION_RIDE_KEY in payload) spec = withDirectionRideField(spec, payload);
     const liveRun = (this.context?.state as Record<string, unknown> | undefined)?.["run_id"];
     const runId = typeof liveRun === "string" ? liveRun : "";
-    // Options are often the only place a reward/shop card is named. Include them in reference selection.
+    // Options and the question take precedence over background deck references under the byte cap.
     if (isObject(payload)) {
-      const enriched = attachOpenBook({ ...payload, ...(options ? { open_book_options: options } : {}) }, { directory: this.context?.knowledgeDir });
+      const enriched = attachOpenBook({ options, question, payload }, { directory: this.context?.knowledgeDir });
       if (isObject(enriched) && enriched["open_book"]) {
-        const { open_book_options: _selectionInput, ...withReferences } = enriched;
-        payload = withReferences;
+        payload = { ...(enriched["payload"] as Record<string, unknown>), open_book: enriched["open_book"] };
+        options = enriched["options"] as typeof options;
+        question = enriched["question"] as string;
       }
     }
     const req: BrainRequest = {

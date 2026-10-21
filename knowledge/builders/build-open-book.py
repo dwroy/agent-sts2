@@ -16,6 +16,17 @@ VERSION = "v0.111.0"
 KINDS = ("cards", "relics", "monsters", "events")
 LICENSE = "https://polyformproject.org/licenses/noncommercial/1.0.0"
 NOTICE = "Copyright © 2025-present Peter Lord and Spire Codex contributors."
+LICENSE_SHA256 = "2f9aec3426be07b95de11700c1f2e5fda07f25eba974fb29741cbad8a1b6a6a0"
+SOURCE_SHA256 = {
+    "cards:eng": "31383b5965746b3ad59da94ddd542e524fdc79c9147aced178639fff9d445938",
+    "relics:eng": "25a83cd102db871daaeb0c174d0f391d03f90f5eb0e4e4732e07f6d460b55bc7",
+    "monsters:eng": "7c378bbdeb4120e52335e2840f87ce85d3b597370ba4fd531a2fd7a99beeaee1",
+    "events:eng": "1c57c17b1f00b57be4e2da4168d06818fc31b9e938571e58150a7a81a8cfc904",
+    "cards:zhs": "50cb0b33a9c80131d46c9abd16bc983b96b3cd376abb1250265521915d68cebc",
+    "relics:zhs": "d4601a1ebaf5d283cfaf8e492283da451e4778ab9fdc0e806f6f3c1d24821f17",
+    "monsters:zhs": "26ae64c6b60bbbc19c6fa9eb14b11f6156786545674511edd97c6fedbd263c05",
+    "events:zhs": "6f71fdd22127155103802bb19a1f7a48bac517cfb2a0e365324e01dd8d492d0e",
+}
 
 
 def sha(data):
@@ -37,6 +48,14 @@ def cached(cache, relative, url, network):
     if not path.exists():
         if not network:
             raise RuntimeError(f"missing cached source: {relative}")
+        # Recheck immediately before each download, including the standalone --network CLI.
+        for proc in Path("/proc").glob("[0-9]*"):
+            try:
+                argv = (proc / "cmdline").read_bytes().split(b"\0")
+                if proc.stat().st_uid == os.getuid() and b"play" in argv and any(b"src/index.ts" in arg or b"/index.js" in arg for arg in argv):
+                    raise RuntimeError("network refresh deferred while play is running")
+            except OSError:
+                continue
         with urllib.request.urlopen(url, timeout=20) as response:
             raw = response.read(12_000_001)
         if len(raw) > 12_000_000:
@@ -81,7 +100,7 @@ def normalize(kind, en, zh, provenance):
     return row
 
 
-def build(root, network=False):
+def build(root, network=False, output=None):
     cache = root / "data/external/spire-codex"
     cache.mkdir(parents=True, exist_ok=True)
     with (cache / "download.lock").open("a") as lock:
@@ -94,7 +113,7 @@ def build(root, network=False):
         else:
             lic, _ = cached(cache, "license.json", license_url, network)
         body = base64.b64decode(lic["content"])
-        if b"PolyForm Noncommercial License 1.0.0" not in body or NOTICE.encode() not in body:
+        if sha(body) != LICENSE_SHA256:
             raise RuntimeError("license differs from reviewed noncommercial terms")
         sources, common, silent = {}, [], []
         for kind in KINDS:
@@ -104,6 +123,8 @@ def build(root, network=False):
                 url = f"https://raw.githubusercontent.com/ptrlrd/spire-codex/{REV}/data-beta/{VERSION}/{lang}/{kind}.json"
                 rows, meta = cached(cache, relative, url, network)
                 key = f"{kind}:{lang}"
+                if meta["sha256"] != SOURCE_SHA256[key]:
+                    raise RuntimeError(f"source differs from reviewed snapshot: {key}")
                 sources[key] = {**meta, "game_version": VERSION, "samples": len(rows), "license": LICENSE,
                                 "required_notice": NOTICE, "filter": "按 ID 一对一机械整理；移除图片、风味和事件长剧情；不产生策略或实盘样本"}
                 values[lang] = {row["id"]: row for row in rows}
@@ -118,7 +139,7 @@ def build(root, network=False):
                     "license": LICENSE, "license_url": f"https://github.com/ptrlrd/spire-codex/blob/{REV}/LICENSE.md", "license_sha256": sha(body),
                     "license_review": "PolyForm Noncommercial 1.0.0：仅非商业研究/个人爱好用途；分发保留许可 URL 与 Required Notice。未授权商用。", "required_notice": NOTICE, "sources": sources}
         for location, entries in (("common", common), ("characters/silent", silent)):
-            save(root / "knowledge" / location / "open-book.json", {"schema": "open-book-v1", "sources": manifest, "entries": entries})
+            save((output or root / "knowledge") / location / "open-book.json", {"schema": "open-book-v1", "sources": manifest, "entries": entries})
         return common + silent
 
 

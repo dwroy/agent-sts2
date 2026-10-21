@@ -28,3 +28,13 @@
 - 暂存区 `gitleaks git --pre-commit --staged --no-banner --redact`：退出 0，无泄漏。公开评论另扫。
 
 重任务 nice 19、最多 4 进程；未运行 play、未改 live/STOP、未读取 DLL/PCK、未安装依赖。原始缓存不进 git。
+
+## 重启恢复后的交付检查点（2026-10-21 19:01 CST）
+
+以上停机原记录保留。恢复后已补齐四类条目选择、生产拿牌 JSON 摘要补全、静态/动态及升级边界、mod 优先冲突、模拟卡牌与怪物参考接口、Jev 实际请求/日志一致性及预算、补缺 overlay 写回/消费者读回；测试不请求模型或游戏。来源仍是已核许可的同一 pinned 快照，没有重复下载。
+
+比较基准改用只读固定 mod 导出，`mod_version=0.16.2`、`fetched_at=2026-10-19T17:47:55.308Z`、SHA256 `b1f06dd2889e81550e1ed2d0c8759c1c218608e63f563907308fd09f8f072a34`。游戏版本仍未知，不能证明当前 v0.111 现场。Silent 保守范围只缺 DEPRECATED_CARD/DEPRECATED_RELIC。报告、冲突及五类题回放在 `paper/materials/20261021-issue-25-open-book/`，接口/回退在 `docs/open-book.md`。
+
+最终检查：生产 tsc、新增工具/测试独立类型检查通过；完整 Vitest 642 文件通过，6,074 项通过、2 项跳过；聚焦 5 文件/70 项及 Python 6 项通过。此前失败、补充工具配置诊断与中断原件均保留，详见报告 `checks.json`，不将旧失败回执改成通过。正式提交和公开评论前再扫 gitleaks。
+
+下一步由集成员在本分支核验并集成 main，ops 在开局边界发布、分配 release_id、验证首局消费者。#13 只复用 externalReference 静态事实接口，不当作机制已实现或角色实盘验证；新 ID 不在已核快照时仍是 unresolved。开发树和唯一原始资料继续保留，未发布前不回收；本会话不合 main/live、不改 STOP。

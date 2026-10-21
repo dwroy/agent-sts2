@@ -15,7 +15,7 @@ import { appendJsonLine } from "../core/util/jsonl.js";
 import { measureDecisionBudgetStage } from "../core/decision-budget.js";
 
 import type { AnswerSet } from "../reflex/jev/answers.js";
-import { classifyJevError, type JevAskResult } from "../reflex/jev/client.js";
+import { classifyJevError, markJevOpenBookPrepared, prepareJevOpenBook, type JevAskResult } from "../reflex/jev/client.js";
 import type { QuestionSet } from "../reflex/jev/questions.js";
 import { compactJevRequest, isJevContextLimitError, type CompactJevRequest } from "../reflex/jev/compact-request.js";
 import type { DecisionProjection } from "../reflex/jev/decision-projection.js";
@@ -113,6 +113,7 @@ export interface JevAsker {
  */
 export async function askJevLogged(jev: JevAsker, log: JevPromptLog | null, meta: JevPromptMeta, state: unknown, questions: QuestionSet): Promise<JevAskResult> {
   const started = Date.now();
+  state = prepareJevOpenBook(state, questions, meta.label.startsWith("combat/plan"));
   const projection = meta.label.startsWith("combat/plan") ? measureDecisionBudgetStage("combat_jev_projection", () => projectCombatDecision(state, questions)) : null;
   const wireState = projection?.state ?? state, wireQuestions = projection?.questions ?? questions;
   try {
@@ -146,6 +147,7 @@ async function askOnceLogged(jev: JevAsker, log: JevPromptLog | null, meta: JevP
     ...(projection ? { decision_projection: projection.contract, ...(includeEvidence ? { decision_evidence: projection.evidence } : {}) } : {}),
   };
   try {
+    markJevOpenBookPrepared(state, questions);
     const result = await jev.ask(state, questions);
     measureDecisionBudgetStage("jev_prompt_log", () => log?.write({ ...base, request_id: result.requestId, latency_ms: result.latencyMs, input_tokens: result.inputTokens, output_tokens: result.outputTokens, answers: result.answers }));
     return result;
