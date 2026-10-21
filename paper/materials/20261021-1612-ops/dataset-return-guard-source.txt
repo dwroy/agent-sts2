@@ -1,0 +1,6 @@
+            log = directory / "ordinary-close" / (candidates[0][1]["batch"] + ".dataset.log")
+            with log.open("w") as handle:
+                result = subprocess.run(["nice", "-n", "19", "python3", str(root / "ops/paper_dataset.py"), "--no-raw"],
+                                        cwd=root, stdout=handle, stderr=subprocess.STDOUT, timeout=3600)
+            if result.returncode:
+                raise ValueError(f"dataset exit {result.returncode}; original log {log}")

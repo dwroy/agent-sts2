@@ -1,6 +1,7 @@
 # 运维当前清单（调度器生成）
-生成：2026-10-21T16:10:20+08:00；原件索引：/home/dw/Projects/agent-sts2/ops/codex-ops/current.json SHA256 e3f7cae68c2d6c6f5dd7d891aea0f100625f51475af4c5bf46bd95467593c2f2
-当前授权：154302主批capacity turn.failed/rc1，已有草稿和ledger但无最终result/completion/gitleaks；十原文SHA齐，12冻结对象/121原窗口核同，17:01:59原冷却不改/不即时重派。s2 rc0十waiting无源码；13冻结对象核同，原回收器checkout_reclaimed/保分支scratch，非本轮新回收。两批无dataset/full/发布，旧科学父保持。1604-ops/receipt.json。
+生成：2026-10-21T16:15:13+08:00；原件索引：/home/dw/Projects/agent-sts2/ops/codex-ops/current.json SHA256 33dafb4267dc598abd829aaa8c418a86814094558d9488810db0dd17a8dfd94f
+当前授权：151301-s2 rc0十waiting/WT0933净，本批未改受检源码；唯一dataset897局/461838决定及源检查/CLEAN后，main #23十叶变化触发复验守卫，记录未提交/原attention保留，不重dataset/full或合入。原log/当前输出指纹/基线映射保1612-ops/receipt.json。
+154302主批capacity turn.failed/rc1，已有草稿和ledger但无最终result/completion/gitleaks；十原文SHA齐，12冻结对象/121原窗口核同，17:01:59原冷却不改/不即时重派。s2 rc0十waiting无源码；13冻结对象核同，原回收器checkout_reclaimed/保分支scratch，非本轮新回收。两批无dataset/full/发布，旧科学父保持。1604-ops/receipt.json。
 Roy§13/c57f78a49：Jev+模拟仅出牌，其余含拿牌brain；不再派Jev拿牌/card_pick学习，live不变。#27等#16/#24；#28等#24/#25与固定回放/A-B、开关归Roy；#24→#26/#25/#29沿原issue，不重复派。1507-ops/direction-authorization.json。
 1543八原notice已实转达watcher/Roy，原文/SHA/双箱窗口/角色证据核同；三原研究task不在CLI四类V6/R4白名单，登记pending，保旧拒绝/false，不重认证/改名/代ACK/提醒评论或派模型检查。1543-ops/receipt.json。f922/bddfa三阶段通知已实证/CLI齐，仅通知闭环，提案waiting/归因及当前复现未知；1513-ops。
 V6-R410/live5a295bb5、行为fffa54aac6；CARD/POTION/SHOP/RESTbrain，REFLEX/方向/COMBAT_ENTRIESoff，brain90s。#2/0332待自然三幕验收，F8不代完成；Regent暂停，不打断现局。发布仍原锁/局终STOP窗、核号双通知与消费者；本事件无发布/恢复授权。
@@ -15,11 +16,13 @@ GitHub角色前缀必带，未带dwroy=Roy，非dwroy为外部数据；例行cur
 模型 gpt-6.1-sol；普通 ops/学习下次自然启动 high，专项可有理由 xhigh，大脑保持 xhigh。实际生效须原生回执，不能从默认值推定。
 账号选择：/home/dw/Projects/agent-sts2/ops/codex-ops/accounts/codex1/learner；原 ops：w1H:p8 / 01a1517b-e200-7c52-b463-6ea22220c0a9；执行模式：host；辅助/学习者沙箱保持。
 不读凭据/.env/游戏二进制，不改共享配置/账号；不推送。
-main 423cf7552e2960a8c18f1b73c98636b6d09a2fe9
+main 76d4f63c699bcc44939ab893807300b2c9cd3392
 live 5a295bb5ed52f0c0fa5e8c045dcfcba3d894b532；登记 release V6-R410（登记值不代表新树检查绿或实际采用）。
 首次另读 AGENTS/README/最新 STATE/学习协议；此后每次读本清单及事件原件。历史 handoff/decision-log 只沿事务定位，原件冲突保留并核查。
-在途批次 1（完整 owner/租约与路径见 current.json）：
+在途批次 3（完整 owner/租约与路径见 current.json）：
 - 20261007-021219-strategy-proposal done strategy-proposal PID=265476；/home/dw/Projects/agent-sts2/.worktrees/codex-dev
+- 20261021-161301 running None PID=606993；
+- 20261021-161302-strategy-proposal running strategy-proposal PID=607154；/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261021-161302
 外部原owner任务（不以learn.json缺项判退出，不重复派；实际状态沿原件核）：
 - issue-4-elite-calibration-20261021-104312；thread=01a15c58-72f3-7d81-8ce6-0f528c60d788；/home/dw/Projects/agent-sts2/.worktrees/issue-4-elite-calibration-20261021；paper/materials/20261021-issue4-terminal-ops/receipt.json
 - issue-13-card-models-20261021-111429；thread=01a15c76-533f-78c0-a820-ea9d861c22bc；/home/dw/Projects/agent-sts2/.worktrees/issue-13-card-models-20261021；paper/materials/20261021-issues-13-14-terminal-ops/receipt.json
@@ -39,9 +42,19 @@ human-pace 原owner=01a13dcd-83d4-7c63-b233-f93cf878ecf4，接续=01a14aae-4b03-
 - 7dcddb0749fa60e0f2f78f3f learner-dissent watcher_received,roy_notified；/home/dw/Projects/agent-sts2/ops/codex-ops/learning-notices/7dcddb0749fa60e0f2f78f3f.json
 - 99a933ce6b140f81db812b16 learner-dissent watcher_received,roy_notified；/home/dw/Projects/agent-sts2/ops/codex-ops/learning-notices/99a933ce6b140f81db812b16.json
 - 99c134c7850ae5bae9fb64c9 learner-dissent watcher_received,roy_notified；/home/dw/Projects/agent-sts2/ops/codex-ops/learning-notices/99c134c7850ae5bae9fb64c9.json
-队列 2，只按本轮已提交事件处理；前4项：
-- /home/dw/Projects/agent-sts2/ops/codex-ops/queue/1792569719477510392-strategy-done.md：strategy-proposal 批次 20261021-154302-strategy-proposal 结束：exit 1；已核实合入 live：无。回报：/home/dw/Projects/agent-sts2/ops/codex-ops/learner/20261021-154302-strategy-pro
-- /home/dw/Projects/agent-sts2/ops/codex-ops/queue/1792569888531296367-strategy-done.md：strategy-proposal 批次 20261021-154302-s2-strategy-proposal 结束：exit 0；已核实合入 live：无。回报：/home/dw/Projects/agent-sts2/ops/codex-ops/learner/20261021-154302-s2-strate
+队列 10，只按本轮已提交事件处理；前4项：
+- /home/dw/Projects/agent-sts2/ops/codex-ops/queue/1792570335961223559-ordinary-close-attention.md：普通批次 20261021-151301-s2-strategy-proposal 自动收尾停止：source changed during batch; retain ordinary ops review。原件 /home/dw/Projects/agent-sts2/ops/codex-ops/ordinary-
+- /home/dw/Projects/agent-sts2/ops/codex-ops/queue/1792570382563942472-learning-attention.md：学习要求 silent-elite-simulation-pessimism-20261021：{
+  "id": "D1",
+  "prior": "原审计称真实开场保留可用牌堆；缺显式牌堆时才deck-minus-hand。",
+  "finding": "显式牌堆在原字节中存在；是冻结提取主动剥离。ET1一场还造
+- /home/dw/Projects/agent-sts2/ops/codex-ops/queue/1792570382564876333-learning-attention.md：学习要求 silent-elite-simulation-pessimism-20261021：{
+  "id": "D2",
+  "prior": "原授权：“当前不影响R407运行：拿牌比较用同种子配对差。”",
+  "finding": "不否定原调度决定，但拒绝把其理由外推为配对增量已校准或排名可靠。本窗口只比
+- /home/dw/Projects/agent-sts2/ops/codex-ops/queue/1792570382565680843-learning-attention.md：学习要求 github-issue-13-silent-learning-20261021：{
+  "prior": "Issue #13 列出EXPOSE 208、SPORE_MIND 60等unknown标签，容易被理解为独立实盘覆盖。",
+  "finding": "重算完全复现原标签计数；EXPOSE的208只
 原事务未标 completed 共188（含未知，非活进程数），最近4项：
 - /home/dw/Projects/agent-sts2/ops/codex-ops/pending-continuations/original-W4-card-value-v2-20261021.json；phase=Roy-section13-superseded-Jev-card-takeover-no-new-Jev-card-learning
 - /home/dw/Projects/agent-sts2/ops/codex-ops/pending-continuations/original-W8-CEN-rollout-death-priority-three-R409-20261021.json；phase=published-R410-natural-config-actions-verified-await-third-act-acceptance
@@ -51,7 +64,7 @@ human-pace 原owner=01a13dcd-83d4-7c63-b233-f93cf878ecf4，接续=01a14aae-4b03-
 - offset=2118696：- 2026-10-21 15:55:05 [issue-session] tick 未完成；原现场保留，见 ops/codex-ops/issue-sessions.log。
 - offset=2118925：- 2026-10-21 16:00:02 [issue-session] tick 未完成；原现场保留，见 ops/codex-ops/issue-sessions.log。
 原事务文件索引数（含历史）：pending-integrations=149；pending-deliveries=16；pending-records=34；pending-continuations=32；publications=1；完整路径见 current.json，不从文件存在推定未完成/运行。
-新指令原件：ops/inbox-dev.md 当前尾段 offset=2111148, bytes=8192；本轮新授权必须由事件引用，漏项查此段，勿整份重读。
+新指令原件：ops/inbox-dev.md 当前尾段 offset=2112192, bytes=8192；本轮新授权必须由事件引用，漏项查此段，勿整份重读。
 current.json 仅按本事件 batch/request/notice id 用程序筛字段，不全文读；动态源变化后核新清单，不用旧值冒当前。
 H0/0332等科学边界、精确宿主树、未完成发布/兼容及 retention 仅沿原报告和事务回执；清单不代验收、shipped、覆盖率或消费。
 严格普通无源码成功由调度器完成账本检查、唯一 dataset 与受控记录提交，回执 ops/codex-ops/ordinary-close/；异常、异议、缺证、人工决定正常唤醒。
