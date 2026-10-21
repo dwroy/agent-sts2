@@ -1,0 +1,20 @@
+{
+  "command": [
+    "python3",
+    "ops/learning_requests.py",
+    "ack",
+    "--notice",
+    "99a933ce6b140f81db812b16",
+    "--stage",
+    "ops_forwarded",
+    "--receipt",
+    "paper/materials/20261021-issue4-terminal-ops/99a933ce6b140f81db812b16-ops-forwarded.json",
+    "--source",
+    "paper/materials/20261021-issue4-terminal-ops/99a933ce6b140f81db812b16-manual-source.json"
+  ],
+  "rc": 2,
+  "stdout": "",
+  "stderr": "usage: learning_requests.py [-h] [--batch BATCH] [--notice NOTICE]\n                            [--stage {ops_forwarded,watcher_received,roy_notified}]\n                            [--request REQUEST] [--receipt RECEIPT]\n                            [--source SOURCE] [--kind {disagreement,blocked}]\n                            {run,ack,retry,recover-account,register-feature}\nlearning_requests.py: error: manual notice request, task, character or thread mismatch\n",
+  "scope": "one representative new research-task ACK attempt; no retry, no source/task spoof, no other-role ACK",
+  "remaining_two": "same unsupported original task/layout, kept pending without redundant rejection"
+}

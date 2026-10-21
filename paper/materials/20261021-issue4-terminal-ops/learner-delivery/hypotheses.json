@@ -1,0 +1,162 @@
+[
+  {
+    "id": "H1",
+    "hypothesis": "原统计悲观残差存在",
+    "status": "supported_descriptive",
+    "support": [
+      "52首试/33局，死4；合成30.2885%，实战7.6923%，掉血+10.8882"
+    ],
+    "counterevidence": [
+      "四次真实死亡保留；DECIMILLIPEDE模拟33.59%低于实战2/4，不是各组同向"
+    ],
+    "unknown": [
+      "选择进入精英的条件偏差",
+      "泛化及因果收益"
+    ],
+    "evidence": "static-summary.json"
+  },
+  {
+    "id": "H2",
+    "hypothesis": "敌人第一招攻击抬高是全部主因",
+    "status": "not_supported_as_general_explanation",
+    "support": [
+      "冻结共同52开场incoming一致"
+    ],
+    "counterevidence": [
+      "PHROG七场与BYRDONIS三场开场能力存在额外项；相同incoming不代表同模型"
+    ],
+    "unknown": [
+      "后续阶段、意图转移与动作固定后的单项误差"
+    ],
+    "evidence": "fight-inventory.json/opening_differences"
+  },
+  {
+    "id": "H3",
+    "hypothesis": "开场首见能力选择存在条件/来源混用",
+    "status": "supported_representation_gap_effect_unknown",
+    "support": [
+      "PHROG七个A10原帧仅INFESTED4，合成另MANGLE10/STRANGLE2；BYRDONIS三帧仅TERRITORIAL1，合成另MANGLE5",
+      "源码以公共首见记录在出现该能力的进阶筛选后除Silent encounter分母，缺A10观察仍跨阶带入"
+    ],
+    "counterevidence": [
+      "低残差BXU同样有额外能力；STRANGLE文本给玩家逐牌输出，移除可能使模拟更差"
+    ],
+    "unknown": [
+      "单项修正对残差方向/量级",
+      "全条件天生规则"
+    ],
+    "evidence": "component-findings.json; source-excerpts.md"
+  },
+  {
+    "id": "H4",
+    "hypothesis": "蛇戒的开场抽牌覆盖缺口足以解释全部偏差",
+    "status": "count_gap_supported_sufficiency_rejected",
+    "support": [
+      "53场持蛇戒，51场合成抽数与真实T1手牌数相差2；48场5→7、2场7→9、1场6→8，另两场带海螺5→9差4"
+    ],
+    "counterevidence": [
+      "53场无不持戒对照；Eel抽数单改个例更差；棱柱实开场仍高残差"
+    ],
+    "unknown": [
+      "隔离蛇戒后确切规则",
+      "额外张数与其他开场效果归属"
+    ],
+    "evidence": "fight-inventory.json"
+  },
+  {
+    "id": "H5",
+    "hypothesis": "真实开场回放保留了原日志可用牌堆",
+    "status": "refuted_for_frozen_pipeline",
+    "support": [
+      "53/53原帧有agent_view牌堆，冻结输入53/53删除；52成功回放标签都是deck-minus-hand"
+    ],
+    "counterevidence": [
+      "51/52成功场的draw牌ID/升级多重集恰好相等；缺视图不必然改变这些场的牌数"
+    ],
+    "unknown": [
+      "卡面mods/动态值完整等价",
+      "真实抽序"
+    ],
+    "evidence": "fight-inventory.json/pile_comparison"
+  },
+  {
+    "id": "H6",
+    "hypothesis": "回放牌身份在战内升级后仍守恒",
+    "status": "refuted_one_observed_case",
+    "support": [
+      "ET1QAZCV8GUP F31T1原28牌=手7+抽21；冻结手7+抽27=34；按ID与upgraded扣牌只扣LEG_SWEEP+"
+    ],
+    "counterevidence": [
+      "其余51成功场未见ID/升级多重集失配；no-solve场不可检"
+    ],
+    "unknown": [
+      "修正后的结果方向与卡面完整性",
+      "战内升级的机制归属"
+    ],
+    "evidence": "fight-inventory.json/ET1QAZCV8GUP-f31-fight11"
+  },
+  {
+    "id": "H7",
+    "hypothesis": "模拟完全不用药导致全部偏差",
+    "status": "refuted_general_claim",
+    "support": [
+      "合成排除CHOICE/DRAW，实际开场存在随机来源；MPW F11T1实饮POWER后生成/出ABRASIVE，合成无该随机来源"
+    ],
+    "counterevidence": [
+      "共同51合成仍平均饮0.627瓶；无药BXU低残差与无药Eel高残差共存"
+    ],
+    "unknown": [
+      "留药/早饮整战反事实",
+      "随机结果和策略各自归属"
+    ],
+    "evidence": "fight-inventory.json; turn-alignment.jsonl"
+  },
+  {
+    "id": "H8",
+    "hypothesis": "未来代码策略与实战动作不同，改damageScale即可校准",
+    "status": "policy_difference_supported_weight_fix_not_supported",
+    "support": [
+      "25MF F28T1实DEFLECT/FLICK_FLACK/MALAISE，32真实开场样本均额外首轮FOOTWORK；0NMF实际首轮POISONED_STAB/SHIP和样本首轮集合不同"
+    ],
+    "counterevidence": [
+      "Eel七场0.5→1平均死亡仅25%→23.21%；低残差BXU T1集合全匹配但非完整顺序证明"
+    ],
+    "unknown": [
+      "匹配抽序/动作之后的机制误差",
+      "不同策略持续执行整战收益"
+    ],
+    "evidence": "fight-inventory.json/T1_policy_comparison"
+  },
+  {
+    "id": "H9",
+    "hypothesis": "净损血/治疗/删失能单独解释残差",
+    "status": "measurement_limits_supported_not_full_explanation",
+    "support": [
+      "原52场净损27.2308、帧采样累计受伤27.7115、模拟38.1190；两场最后战斗帧到退出还少3/6HP，退出口径27.4038；死亡hpLoss被定义为血量上限"
+    ],
+    "counterevidence": [
+      "按退出口径仍+10.7151；四次SL并非四独立死亡"
+    ],
+    "unknown": [
+      "帧间及最后战斗帧到退出的损伤/治疗归属",
+      "删失首试真实结局"
+    ],
+    "evidence": "static-summary.json; source-excerpts.md"
+  },
+  {
+    "id": "H10",
+    "hypothesis": "同种子配对差自动抵消模型偏差并保证拿牌排名",
+    "status": "unestablished",
+    "support": [
+      "同种子可控制部分模拟随机波动"
+    ],
+    "counterevidence": [
+      "本53战没有候选拿牌/skip的真实反事实；状态相关偏差可不相消"
+    ],
+    "unknown": [
+      "候选增量校准",
+      "自然采用及实战收益"
+    ],
+    "evidence": "原授权限定与本窗口设计；没有额外收益样本"
+  }
+]

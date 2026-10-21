@@ -1,0 +1,9 @@
+{
+  "method": "静态分析脚本自身断言，不是项目测试",
+  "tests": null,
+  "initial_assertion": "原完整state与冻结state不相等；检查发现唯一删除的根字段是agent_view，106帧逐条一致；显式保留发现后核去除此字段相等",
+  "noncombat_check": "非COMBAT原件仍有旧combat对象；compact有意置player字段null，未将其当战斗字段错误；COMBAT字段逐条核同",
+  "repeated_static_runs": "修正分析断言与加入证据投影后重读相同已知偏移，无模拟、无原件修改",
+  "current_run_model_effort_verification": "未读取原生turn_context，不声称档位生效，未修改模型/配置",
+  "no_held_out_history": "53场全已阅，不作为未阅留出"
+}

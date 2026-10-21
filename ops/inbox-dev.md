@@ -5201,3 +5201,65 @@ W4拿牌v2正式3ef4/11a80已核：14源Git/SHA、318清单项加manifest共319�
 ### 2026-10-21T11:33:35+08:00 #18 历史工作树非删除计划
 
 按#18先运行原worktree_retention.py plan（nice19/ionice3、无apply），其结果0可回收；再补Git注册与顶层目录的逐树同门禁清单。当前315条Git登记，.worktrees顶层275目录/141.20GiB：可直接回收0，需保留219/126.87GiB，待补证人工核对56/14.33GiB；60个嵌套登记体积已计入父目录，不重加。保留原未发布、脏文件、活动进程、持久绑定及未完成要求；21个未注册现场不按孤儿删除。体积为不跟随软链接的占用块估算，不承诺净释放；顺序观察非原子快照。未删除工作树/提交/绑定或日志，未动live与对局。具体计划、逐树原因与原CLI回执见paper/materials/20261021-worktree-backlog/；交watcher核对，尚无通过回执或可执行删除批次。后续仅补齐验收后原调度器每轮至多4项并重新核现场。
+
+### 2026-10-21T11:38:46+08:00 #4 精英模拟学习三项科学异议（原文）
+
+原学习批次issue-4-elite-calibration-20261021-104312已退出0；本ops已核99输入、33产物、3895原行/771 Git blob，无差异。以下为学习者原文，不是ops新增游戏知识；四候选仍waiting，无发布/父完成。
+
+[
+  {
+    "id": "D1",
+    "prior": "原审计称真实开场保留可用牌堆；缺显式牌堆时才deck-minus-hand。",
+    "finding": "显式牌堆在原字节中存在；是冻结提取主动剥离。ET1一场还造成六张重复身份和升级失配。保留原结果作原管线诊断，不称完整真实开场控制。",
+    "evidence": [
+      "ET1QAZCV8GUP-f31-fight11（Silent A10/F31/T1可行动），logs/states.jsonl offset=14296044731 bytes=40115 SHA256=385cfbe3b57c560e59604cf56839725c288fe49c4b85e2a0551eea1614416ca2",
+      "source-excerpts.md: parse_state_line / boardOf / findIndex"
+    ],
+    "affected_ids": [
+      "silent-elite-simulation-pessimism-20261021",
+      "issue-4",
+      "silent-proposal-e76e895381da5bfc"
+    ],
+    "next_step": "原ops接收本异议，沿原通知CLI实际写入watcher与Roy收件箱并取得各角色真实回执；先做无MC输入保真回归。"
+  },
+  {
+    "id": "D2",
+    "prior": "原授权：“当前不影响R407运行：拿牌比较用同种子配对差。”",
+    "finding": "不否定原调度决定，但拒绝把其理由外推为配对增量已校准或排名可靠。本窗口只比较绝对结果，无候选反事实，且有状态/牌身份相关偏差。",
+    "evidence": [
+      "issue输入内elite-learning-authorization-original.md，SHA25ae2141a16fa4fc61c48d00943240a0a5fb3340bd6627d663c2d17606a34d25",
+      "ET1QAZCV8GUP-f31-fight11（Silent A10/F31/T1可行动），logs/states.jsonl offset=14296044731 bytes=40115 SHA256=385cfbe3b57c560e59604cf56839725c288fe49c4b85e2a0551eea1614416ca2"
+    ],
+    "affected_ids": [
+      "silent-elite-simulation-pessimism-20261021",
+      "issue-4",
+      "R407论证边界"
+    ],
+    "next_step": "原ops→watcher→Roy实际告知，单独验证候选增量；保持CARDbrain/REFLEXoff，不将CEN或预测器子项完成当本issue完成。"
+  },
+  {
+    "id": "D3",
+    "prior": "原审计将净损描述为入场至终局；实际使用fight.hp_loss，两场胜利只覆盖到最后COMBAT帧。",
+    "finding": "ET1 F9最后战斗42到退出39、2XCG F9最后战斗25到退出19；合9HP未纳原“净损”。保留原统计并并列退出口径均值27.4038、模拟残差+10.7151，原因不补值。",
+    "evidence": [
+      "ET1QAZCV8GUP-f9-fight4（Silent A10/F9/T1可行动），logs/states.jsonl offset=14287839500 bytes=30795 SHA256=b4622465a1aeb30caece92f41cf74f007f199358cb33710f2d933b6c68db6469",
+      "logs/states.jsonl offset=14288657897 bytes=20832 SHA256=e6fc793496976edde0a4815b23ab8d0bebfc30cc0ce946349bc440d93a779a90",
+      "2XCG8LXUZLRE-f9-fight5（Silent A10/F9/T1可行动），logs/states.jsonl offset=14516553453 bytes=30452 SHA256=9de6174c27382f0546c6348a5e2b0a5078caa8374aff1b708d05166ec10d08fd",
+      "logs/states.jsonl offset=14517771530 bytes=20474 SHA256=fbd7cdd050b057e3a47517fb9173ae9c51eac0473cab8015aa52498ce09c7223"
+    ],
+    "affected_ids": [
+      "silent-elite-simulation-pessimism-20261021",
+      "issue-4",
+      "原审计净掉血口径"
+    ],
+    "next_step": "原ops沿通知链实际告知，固定索引补核两段跨界HP事件；不得用无归因9HP拟伤害参数。"
+  }
+]
+
+原文 learner/runs/20261021-104418-def3aea5-81a4-47a6-85d4-5dd8fb129249-issue-4-elite-calibration-task/disagreements.json SHA256 012008f5419fb0411d3682762626ce546478a3bdaf4563aae0041a7e275f61e3；完整报告与三notice对应见 paper/materials/20261021-issue4-terminal-ops/。新研究任务未获原manual ACK白名单支持，CLI角色登记另记结果；实际watcher读取及Roy可见转达仍pending，不代填角色ACK。
+
+### 2026-10-21T11:42:13+08:00 #4 一次学习批次核收与 #18 零删除核验接收
+
+已核#4原一次学习退出0：99输入、33产物、3895原行共83.6MB及771历史Git blob全部核同，WT干净；实际原生gpt-6.1-sol/high另取turn_context确认。40局中33局有53战，删失后52战/实死4，未扩大独立分母。学习者定位冻结提取丢agent_view、ET1升级身份使28牌变34、开场能力与两处3/6HP端点差；保反例、无抽序/历史动态知识及非因果限制。四份候选仍waiting，未造账本/提案ID或自动续派。三科学异议原文已写inbox/for-roy并留三个pending notice；原ACK CLI不支持此研究task，首次认证拒绝原件保留，不改名绕过或代填watcher/Roy ACK。issue交研究review并提醒原watcher转达；未发布、未关父、未跑full/API/MC/dataset或动live。原件paper/materials/20261021-issue4-terminal-ops/。
+
+#18已实读watcher评论6307444515及原核验材料，盘点通过但本轮删除授权0。219保留/56待补证；以后仅精确name/HEAD/owner/材料清单重新复核、逐workspace定点每批≤4，禁止全局sweep。绑定判定建议未授权/未实施，不清绑定。原件 paper/materials/20261021-worktree-backlog/watcher-review-intake.json。

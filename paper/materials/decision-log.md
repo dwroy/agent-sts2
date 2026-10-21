@@ -5555,3 +5555,6 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
 - 2026-10-21T11:28:39+08:00 ops：#13/#14按原学习闭环各独立一次并行派发，实际gpt-6.1-sol/high/原沙箱与新线程核同，单次各4进程nice19/计算单worker；不改正式知识/live，不关闭父。回执 paper/materials/20261021-issues-13-14-ops/receipt.json。
 
 - 2026-10-21T11:33:35+08:00 ops：#18原retention plan与全量逐树/体积计划完成，275顶层/141.20GiB、0可直接回收/219保留/56待补证；315登记含60嵌套不重加。已发[ops] issue短评并review，watcher核对前不执行apply；原件 paper/materials/20261021-worktree-backlog/receipt.json。
+
+- 2026-10-21T11:42:13+08:00 ops：#4原研究exit0核收，99输入/33产物/3895原行/771 Git blob核同；4草稿waiting/3科学异议双收件箱及原watcher issue提醒，CLI研究身份拒绝保pending，不造ID/续批/full/发布或关父。回执 paper/materials/20261021-issue4-terminal-ops/receipt.json。
+- 2026-10-21T11:42:13+08:00 ops：#18 watcher盘点核验通过但本轮删除授权0，blocked/needs:roy；不全局sweep/移绑定，补证后仅精确name/HEAD/owner/材料重提定点≤4清单。回执 paper/materials/20261021-worktree-backlog/watcher-review-intake.json。
