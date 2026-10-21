@@ -5683,3 +5683,5 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
 - 2026-10-21T22:17:19+08:00 2215八原科学异议原文/生产者/证据、双箱原字窗口和watcher向Roy可见转达回执核同；同SHA CLI未支持三research身份，角色登记pending，保拒绝/false，不重认证/代ACK/重复通知，不干预原在途任务或对局。原件paper/materials/20261021-2215-ops/receipt.json。
 
 - 2026-10-21T23:19:19+08:00 [ops] 2315八条重复学习异议原文/证据及真实转达回执核同；原研究CLI身份兼容阻塞未变，后两角色登记pending，保原范围/科学父；仅记录、不重认证/代ACK/提醒/生成器或改对局。原件：paper/materials/20261021-2315-ops/receipt.json。
+
+- 2026-10-22T00:15:47+08:00 [ops] 0015八条重复学习异议原文/证据及真实转达回执核同；原研究CLI身份兼容阻塞未变，后两角色登记pending，保原范围/科学父；仅记录、不重认证/代ACK/提醒/生成器或改对局。原件：paper/materials/20261022-0015-ops/receipt.json。
