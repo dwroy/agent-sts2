@@ -5580,3 +5580,5 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
 - 2026-10-21T12:18:29+08:00 ops：1215五学习notice已核原文/SHA与scheduler双箱回执、watcher两原角色实读/告Roy评论；CLI兼容pending，不重提醒/认证/代ACK。两114302普通均有基线64、新增恰五notice而dataset前止，20waiting/无源码，保持attention与科学父；paper/materials/20261021-1215-ops/receipt.json。
 
 - 2026-10-21T12:22:04+08:00 ops：fix121301原exit0无新增源码/提交受阻，WT净、154源码/13产物SHA、tsc0/6文件35定向过已核；CEN live同blob，001302/014301原owner及0332父保留。原scheduler failed/rc0分列，不空合并/重测/模型/dataset/发布；paper/materials/20261021-1220-ops/receipt.json。
+
+- 2026-10-21T12:47:00+08:00 ops：#4/#13/#14八notice周期重提已按原文/SHA、实际双箱/原watcher实读告Roy回执去重；CLI验证源码未变、研究身份兼容pending，旧rc2/false保留，不重提醒/认证/代ACK或派检查模型。未改live/配置/父要求；paper/materials/20261021-1245-ops/receipt.json。
