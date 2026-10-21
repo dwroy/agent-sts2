@@ -1,0 +1,19 @@
+Traceback (most recent call last):
+  File "/home/dw/Projects/agent-sts2/.worktrees/issue-24-sts2fun-stats/eval/sts2fun_stats.py", line 487, in <module>
+    main()
+    ~~~~^^
+  File "/home/dw/Projects/agent-sts2/.worktrees/issue-24-sts2fun-stats/eval/sts2fun_stats.py", line 408, in main
+    own,own_act,own_audit,own_manifest=own_picks(args.source_root,catalog)
+                                       ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/dw/Projects/agent-sts2/.worktrees/issue-24-sts2fun-stats/eval/sts2fun_stats.py", line 371, in own_picks
+    d=json.loads(line)
+  File "/usr/lib/python3.14/json/__init__.py", line 352, in loads
+    return _default_decoder.decode(s)
+           ~~~~~~~~~~~~~~~~~~~~~~~^^^
+  File "/usr/lib/python3.14/json/decoder.py", line 345, in decode
+    obj, end = self.raw_decode(s, idx=_w(s, 0).end())
+               ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.14/json/decoder.py", line 361, in raw_decode
+    obj, end = self.scan_once(s, idx)
+               ~~~~~~~~~~~~~~^^^^^^^^
+json.decoder.JSONDecodeError: Expecting ',' delimiter: line 1 column 1692 (char 1691)
