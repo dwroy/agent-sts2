@@ -1,0 +1,32 @@
+{
+  "body": "## Goal\n历史工作树积压清理：当前 `.worktrees` 下 274 个、约 138 GB（`git worktree list` 314 条）。\n\n## Acceptance\n- [ ] 用 `ops/worktree_retention.py plan` 出清单：可回收（已发布、空闲、无唯一产物）、需保留（在用、有未合入提交、有唯一产物）、需人工判断，各自数量与体积\n- [ ] 计划写入 `paper/materials/<日期>-worktree-backlog/`，在本 issue 评论摘要\n- [ ] 经 watcher 核对后按原调度器分批 `sweep --apply`（对局在跑时限速、nice），每批在本 issue 评论回收结果\n- [ ] 不删除未合入提交、原日志、经验、账本、学习未完成材料；`.worktrees/live` 与在用会话的工作树不动\n\n## Owner and boundaries\nowner:ops（执行），watcher 核对清单。\n",
+  "comments": [],
+  "labels": [
+    {
+      "id": "LA_kwDOU7DWbs8AAAAC-WvKgw",
+      "name": "owner:ops",
+      "description": "ops session (live publication, scheduling, learner dispatch)",
+      "color": "0e8a16"
+    },
+    {
+      "id": "LA_kwDOU7DWbs8AAAAC-WvNvA",
+      "name": "P2",
+      "description": "normal",
+      "color": "fbca04"
+    },
+    {
+      "id": "LA_kwDOU7DWbs8AAAAC-WvPaA",
+      "name": "type:infra",
+      "description": "tooling, ops, workflow",
+      "color": "0075ca"
+    },
+    {
+      "id": "LA_kwDOU7DWbs8AAAAC-WvQJA",
+      "name": "status:in-progress",
+      "description": "someone is working on it",
+      "color": "1d76db"
+    }
+  ],
+  "number": 18,
+  "title": "历史工作树积压清理（274 个、约 138 GB）"
+}

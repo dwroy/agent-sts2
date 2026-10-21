@@ -1,0 +1,57 @@
+from pathlib import Path
+import subprocess,json,sys,datetime,os,collections,hashlib
+r=Path('/home/dw/Projects/agent-sts2');sys.path.insert(0,str(r/'ops'))
+import worktree_retention as w
+m=r/'paper/materials/20261021-worktree-backlog';a=r/'.artifacts/ops-worktree-backlog-20261021';directory=r/'ops/codex-ops'
+def git(*args):return subprocess.check_output(['git','-C',str(r),*args],stderr=subprocess.PIPE).decode().strip()
+def save(p,d):p.write_text(json.dumps(d,ensure_ascii=False,indent=2)+'\n')
+subprocess.run(['date','-Iseconds'],check=True)
+at=datetime.datetime.now().astimezone().isoformat(timespec='seconds')
+raw=subprocess.check_output(['git','-C',str(r),'worktree','list','--porcelain']);(m/'git-worktrees.porcelain').write_bytes(raw)
+reg=w.registered(r);by={x['worktree']:x for x in reg};paths=set(by)
+for base in (r/'.worktrees',r/'.claude/worktrees'):
+ if base.is_dir():
+  for p in base.iterdir():
+   if p.is_dir() and not p.is_symlink():paths.add(str(p))
+rows=[]
+for name in sorted(paths):
+ p=Path(name);item={'worktree':name,'relative':str(p.relative_to(r)) if p.is_relative_to(r) else None,'registered':name in by,'head':by.get(name,{}).get('HEAD'),'branch':by.get(name,{}).get('branch'),'allocated_bytes':None,'category':'manual-review','gate':'not evaluated'}
+ if not p.is_relative_to(r):item['gate']='outside-repository; metadata only; not read or eligible'
+ elif p==r:item.update(category='retain',gate='main integration checkout protected')
+ elif p.is_symlink():item.update(category='retain',gate='symlink root protected')
+ elif not p.exists():item['gate']='registered path missing; do not prune refs or close owners'
+ elif p.parent!=r/'.worktrees':item['gate']='outside worktree_retention workspace scope; no removal proposed'
+ elif p.name in w.PROTECTED or p.name.startswith('exp-'):item.update(category='retain',gate='protected live/exp/persistent scope')
+ elif (p/'ops/instance-binding.json').exists() or (p/'ops/regent-lane.json').exists():item.update(category='retain',gate='persistent game instance retained')
+ elif not item['registered']:item['gate']='unregistered directory or retained evidence projection; no removal proposed'
+ else:
+  try:
+   proof=w.reclaim(r,directory,p.name,False);item.update(category='eligible',gate='original non-mutating admission passed',original_plan=proof)
+  except (OSError,ValueError,KeyError,TypeError,subprocess.SubprocessError) as e:
+   reason=str(e);item['gate']=reason
+   if any(x in reason for x in ('active ','dirty ','unpublished','locked','running','persistent','request or continuation')):item['category']='retain'
+ rows.append(item)
+# Metadata-only sizes: never follow dependency symlinks, never read file contents.
+sizepaths=[x['worktree'] for x in rows if x['relative'] is not None and x['worktree']!=str(r) and Path(x['worktree']).is_dir() and not Path(x['worktree']).is_symlink()]
+(a/'size-paths.nul').write_bytes(b'\0'.join(os.fsencode(p) for p in sizepaths)+b'\0')
+with (a/'size-paths.nul').open('rb') as inp:
+ du=subprocess.run(['du','--summarize','--block-size=1','--count-links','--null','--files0-from=-'],stdin=inp,stdout=subprocess.PIPE,stderr=subprocess.PIPE)
+(m/'du.stderr').write_bytes(du.stderr);(a/'du.stdout.nul').write_bytes(du.stdout)
+sizes={}
+for row in du.stdout.split(b'\0'):
+ if row:
+  n,p=row.split(b'\t',1);sizes[os.fsdecode(p)]=int(n)
+for x in rows:x['allocated_bytes']=sizes.get(x['worktree'])
+groups={}
+for cat in ('eligible','retain','manual-review'):
+ rr=[x for x in rows if x['category']==cat];groups[cat]={'count':len(rr),'size_measured_count':sum(x['allocated_bytes'] is not None for x in rr),'allocated_bytes':sum(x['allocated_bytes'] or 0 for x in rr)}
+reasons=[]
+for reason in sorted({x['gate'] for x in rows}):
+ rr=[x for x in rows if x['gate']==reason];reasons.append({'reason':reason,'count':len(rr),'allocated_bytes':sum(x['allocated_bytes'] or 0 for x in rr)})
+result={'schema':'issue18-worktree-backlog-plan-v1','at':at,'completed_at':datetime.datetime.now().astimezone().isoformat(timespec='seconds'),'apply':False,'watcher_review':'pending; no sweep authorized before actual review','main_at_start':git('rev-parse','HEAD'),'live_at_end':subprocess.check_output(['git','-C',str(r/'.worktrees/live'),'rev-parse','HEAD']).decode().strip(),'original_cli_plan':'retention-plan.stdout.json','registered_count':len(reg),'inventory_count':len(rows),'worktrees_directories':sum(Path(x['worktree']).parent==r/'.worktrees' and Path(x['worktree']).is_dir() for x in rows),'groups':groups,'reasons':reasons,'du_rc':du.returncode,'size_semantics':'du allocated bytes, -P default no symlink traversal, count-links per checkout gross size; not promised net free space; main excluded, missing/outside paths not measured','category_semantics':'first gate only; retain blocks whole checkout removal, manual requires owner/publication/evidence acceptance; no commits or branches pruned; original ignored artifact archive remains mandatory','rows':rows}
+save(m/'inventory.json',result)
+with (m/'inventory.tsv').open('w') as f:
+ f.write('category\tallocated_bytes\tworktree\tfirst_gate\thead\n')
+ for x in rows:f.write('\t'.join([x['category'],str(x['allocated_bytes'] or ''),x['relative'] or x['worktree'],x['gate'],x['head'] or ''])+'\n')
+for name in ('retention-plan.stdout.json','retention-plan.stderr'):(m/name).write_bytes((a/name).read_bytes())
+print(json.dumps({k:result[k] for k in ('registered_count','inventory_count','worktrees_directories','groups','du_rc')},ensure_ascii=False))

@@ -1,0 +1,33 @@
+{
+  "command": [
+    "nice",
+    "-n",
+    "19",
+    "ionice",
+    "-c",
+    "3",
+    "python3",
+    "ops/worktree_retention.py",
+    "plan",
+    "--root",
+    "/home/dw/Projects/agent-sts2",
+    "--state-dir",
+    "/home/dw/Projects/agent-sts2/ops/codex-ops",
+    "--limit",
+    "32"
+  ],
+  "returncode": 0,
+  "apply": false,
+  "eligible": 0,
+  "retained": {
+    "scratch ownership not bound to original report": 6,
+    "dirty workspace retained": 18,
+    "learner workspace source unpublished": 65,
+    "persistent game instance retained": 59,
+    "no verified ingestion or settled outcome": 6,
+    "allocated ops workspace needs explicit completion acceptance": 3,
+    "original request or continuation reference retained": 1
+  },
+  "stdout_sha256": "69b4296fbe93006f1c193d2cbf60e784f1e50743878f05880e4534410a169f32",
+  "plan_scope": "original CLI examines supported names or accepted records; results limit counts eligible only; zero eligible means no truncation at limit32"
+}
