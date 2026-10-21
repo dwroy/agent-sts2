@@ -1,0 +1,101 @@
+{
+  "schema": "watcher-actual-Roy-confirmation-receipt-v1",
+  "created_at": "2026-10-21T09:23:39.806194+08:00",
+  "role": "watcher",
+  "native_session": "01a14f5d-da55-7831-959e-53727796115e",
+  "request_id": "roy-20261020-v6-reflex-card-pick",
+  "batch": "v6-reflex-distill-r4-20261020-2313",
+  "notice_sha256": "4e6e78ab3504f55fc100f72082bb42b6e17397a50268555c1ad14497bc61cfe4",
+  "question_ids": [
+    "r4-no-supported-pick-advice",
+    "r4-genuine-source-experience-missing",
+    "r4-old-combat-scope-retained",
+    "r4-unavailable-provenance-and-damage"
+  ],
+  "actual_read": true,
+  "roy_explicit_acceptance": {
+    "accepted_question_ids": [
+      "r4-no-supported-pick-advice",
+      "r4-genuine-source-experience-missing",
+      "r4-old-combat-scope-retained",
+      "r4-unavailable-provenance-and-damage"
+    ],
+    "source": "Roy-090x.native.jsonl",
+    "label": "Roy09:0x",
+    "native_timestamp": "2026-10-21T00:57:46.929Z",
+    "meaning": "接受四项原异议；不等于知识发布、科学父完成或收益证明"
+  },
+  "native_sources": [
+    {
+      "label": "Roy-090x",
+      "path": "/home/dw/.codex1/sessions/2026/10/18/rollout-2026-10-18T22-15-13-01a14f5d-da55-7831-959e-53727796115e.jsonl",
+      "line": 31544,
+      "offset": 322186445,
+      "bytes": 891,
+      "sha256": "cdb38ff4b0f8c102a0a7725610a5b4ba9beec6f09c86ebc2533d64e543d0d156",
+      "timestamp": "2026-10-21T00:57:46.929Z",
+      "text_sha256": "c80100c63cded2895f020c6dc8150d7b5b5b3fbf8c871802333b059ed8da779d"
+    },
+    {
+      "label": "W4-builder-owner",
+      "path": "/home/dw/.codex1/sessions/2026/10/18/rollout-2026-10-18T22-15-13-01a14f5d-da55-7831-959e-53727796115e.jsonl",
+      "line": 31573,
+      "offset": 323272750,
+      "bytes": 1160,
+      "sha256": "d6bb24819beee2a678f569fe112d436158c26c8c9f2471dc6653c4d40280d015",
+      "timestamp": "2026-10-21T00:59:49.861Z",
+      "text_sha256": "fc57171172011bbecf53e7f962d5dd1fa427f3143843923540bce23dacff351c"
+    },
+    {
+      "label": "ops-original",
+      "path": "/home/dw/.codex1/sessions/2026/10/18/rollout-2026-10-18T22-15-13-01a14f5d-da55-7831-959e-53727796115e.jsonl",
+      "line": 31677,
+      "offset": 327343450,
+      "bytes": 1777,
+      "sha256": "c43e873928a4cac35d6c9112447eac635e1df916ef6bb3cbcdd4a5139a180e58",
+      "timestamp": "2026-10-21T01:08:39.315Z",
+      "text_sha256": "cddc17642afcda79ae1a5d969074c904e15daef04199f2fc9d9952ac717eec4e"
+    }
+  ],
+  "evidence": [
+    {
+      "path": "paper/materials/20261021-090x-Roy-and-CEN-ops/receipt.json",
+      "bytes": 3089,
+      "sha256": "38741bd1f4b498d6103426aa909930d1b9d7a7c5bfbaf49d2b7ec5e81290182b"
+    },
+    {
+      "path": "paper/materials/20261021-090x-Roy-and-CEN-ops/R4-Roy-explicit-confirmation.json",
+      "bytes": 1761,
+      "sha256": "0d18edb880440fd3e97e6c44fc907cc211474aad7877b8f91e8525bc47757061"
+    },
+    {
+      "path": "paper/materials/20261021-090x-Roy-and-CEN-ops/R4-manual-CLI-compatibility.json",
+      "bytes": 469,
+      "sha256": "51be04830914bb4c85fc452a09bdcc4939e083c86f662a2306bf7c286a5a96fd"
+    },
+    {
+      "path": "paper/materials/20261021-r4-notice-watcher/receipt.json",
+      "bytes": 5602,
+      "sha256": "324cb75c346e5b178fb2187155c778de0654e05c758a8cf577f59f298ba41fc4"
+    }
+  ],
+  "registry": {
+    "compatibility": "pending",
+    "known_error": "manual notice request, task, character or thread mismatch",
+    "mutation": false,
+    "old_false_flags_preserved": true,
+    "no_role_ack_substitution": true,
+    "no_task_relabel_or_new_parent": true
+  },
+  "P2": {
+    "status": "paused",
+    "evidence": "六帧只证明奖励阶段无discard_potion且can_discard=false，不是门原因",
+    "coordination": "沿原W4/Claude-mod线取得公开源码或协议的reward gate原因及合法弃药/potion_id合同",
+    "no_bypass": true,
+    "POTION_decider": "brain"
+  },
+  "builder_owner": "原W4 build-fight-value.py；同叶需原线协调",
+  "CEN": "复用原ops一次准入/检查事件，不新派或查询动态检查",
+  "REFLEX": "off",
+  "coordination_delivery": "pending_original_channel_submission"
+}

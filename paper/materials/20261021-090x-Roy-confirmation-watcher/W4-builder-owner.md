@@ -1,0 +1,1 @@
+W4 已实收 Claude09:0x/Roy §12.1 新主任务；独立树 v6-card-value-v2-20261021，base492ac69f9。将扩展 build-fight-value.py 的独立整场训练/新拿牌预测器，保旧战斗接口；只读原局帧、按局留出，CARDbrain/P2暂停不变。当前仅开发与定向/数据提取，不启动full、不改live/STOP；正式源齐后申请ops原单点联合窗。请保留该builder功能归属，若W8增量闭环需改同叶先沿原线协调。
