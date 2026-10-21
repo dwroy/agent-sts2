@@ -693,7 +693,7 @@ async function runLoopWithBudgets(options: LoopOptions): Promise<LoopStats> {
         const logs = readRunLogs({ states: statesPath, decisions: config.log.decisionLog, runPlans: config.runPlanLog }, runId);
         if (logs.states.length > 0) {
           const replay = replayRun(logs, knowledge, { journal });
-          if (v6Config().mode !== "off" && v6Config().deciders.card === "jev") restoreV6CardReward(screenMemory, logs.states);
+          if (v6Config().mode !== "off") restoreV6CardReward(screenMemory, logs.states);
           if (replay.routePlan && replay.routePlan.runId === runId) screenMemory.routePlan = replay.routePlan;
           if (replay.lastMap && !screenMemory.lastMap) screenMemory.lastMap = replay.lastMap;
           if (replay.lizardTail && replay.lizardTail.runId === runId) screenMemory.lizardTail = replay.lizardTail;
@@ -725,7 +725,7 @@ async function runLoopWithBudgets(options: LoopOptions): Promise<LoopStats> {
         onEvent({ type: "note", message: `could not rebuild run ${runId} from its logs: ${error instanceof Error ? error.message : String(error)}` });
       }
     }
-    if (v6Config().mode !== "off" && v6Config().deciders.card === "jev") observeV6CardReward(screenMemory, state);
+    if (v6Config().mode !== "off") observeV6CardReward(screenMemory, state);
     // The REST screen has no map: keep the last one for its "forced elite next" check.
     if (state.screen === "MAP") rememberMap(screenMemory, state);
     observedTs = new Date().toISOString();

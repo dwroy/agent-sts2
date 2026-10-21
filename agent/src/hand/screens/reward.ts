@@ -21,6 +21,7 @@ import { routeReviewBlock, withRouteReview } from "./route-review.js";
 import { silentRewardAdditionFacts } from "./silent-reward-addition.js";
 import { buildV6CardPick } from "../../v6/card-pick.js";
 import { v6Config } from "../../v6/config.js";
+import { brainCardValueFacts } from "../../v6/brain-card-value.js";
 
 /**
  * Special card rewards that put their card straight into the deck, with no choice to make: the stolen card's return
@@ -142,6 +143,12 @@ export function planReward(env: DecisionEnv): Decision | null {
         : buildPickDecision({ ...params, options: shown });
     // BUILD_DECIDER=deepseek: every offer and the skip go to DeepSeek, with their facts (no code value, no skip bar).
     if (!deepseekDecides(env)) return baseline;
+    const value = env.v6Projection?.evaluateBrainCardValue?.(env);
+    const supplement = value ? brainCardValueFacts(value) : null;
+    if (supplement) for (const option of options) {
+      const facts = supplement.options[option.key];
+      if (facts) option.facts = { ...option.facts, card_value_v2: facts };
+    }
     // The act's route rides on the same question while a fork is left (route-review.ts): keep or change.
     const review = routeReviewBlock(env, "card", CARD_REWARD_ROOMS);
     const note = "in_deck: copies of that card already in your deck.";
@@ -153,7 +160,8 @@ export function planReward(env: DecisionEnv): Decision | null {
         ...params,
         state: review ? { ...deepseekState, route_review: review.state } : deepseekState,
         options,
-        deepseek: { facts: buildFacts(env, silentRewardAdditionFacts(state, options)), baseline, note: review ? `${note} ${review.note}` : note },
+        deepseek: { facts: buildFacts(env, { ...silentRewardAdditionFacts(state, options),
+          ...(supplement ? { card_value_v2: supplement.context } : {}) }), baseline, note: review ? `${note} ${review.note}` : note },
       }),
       review,
     );

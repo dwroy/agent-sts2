@@ -1,0 +1,75 @@
+
+ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/issue-15-v2-brain-facts/agent
+
+ ❯ tests/v6-brain-card-value-loop.test.ts (6 tests | 2 failed) 6063ms
+   × adds bounded facts to the actual combat→reward brain question for T0TP8S9MMU9Q F2 1895ms
+   × keeps the exact original brain question when missing 1080ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/v6-brain-card-value-loop.test.ts > adds bounded facts to the actual combat→reward brain question for T0TP8S9MMU9Q F2
+AssertionError: expected { label: 'reward/card', …(3) } to deeply equal { label: 'reward/card', …(3) }
+
+- Expected
++ Received
+
+@@ -34,11 +34,11 @@
+          "low_confidence": "静默整体校准不足",
+          "low_win_rate": "当前牌组在模拟里多半打不过（原始胜率 0%，校准后的数不会低于 0.0%，0 胜的读数）：胜率的差信息少，各选项另给 boss 平均剩血（赢的样本算 0）和它的配对差；离 boss 还远时现在的牌组和到 boss 时的牌组差得多",
+          "method": "整场模拟（docs/boss-sim.md）：boss 的血量、首招、开场能力和出招按怪物库和出招模型（本进阶），我方按现在的牌组、遗物和药水，每个样本洗牌后由求解器逐回合出牌，打到一方死亡；胜率经日志 boss 战验证集校准；选项的差 = 两个校准胜率之差，± 是配对标准误（差在两个标准误以内，模拟分不出高低）",
+          "quantitative_uncertainty": "模拟分布不是实际结果；p10–p90是样本结果波动，meanSe是均值的蒙特卡洛误差，不含机制/策略偏差。增加样本不能修复模型偏差；零次/全胜样本不证明必死/必胜。超时完成样本可能有选择偏差，capped是未结束，不能当已败；胜率区间仅指模拟终止前获胜。",
+          "relics_not_modelled": "蛇之戒指、钓鱼竿",
+-         "samples": "限时完成：基准n=2，原始胜率MC95%区间0–66%（不含模型偏差）；候选各用实际n/共同前缀，目标2；误差为配对标准误，n<2时unknown；低可信、未完整；用时 0.3 秒",
++         "samples": "限时完成：基准n=2，原始胜率MC95%区间0–66%（不含模型偏差）；候选各用实际n/共同前缀，目标2；误差为配对标准误，n<2时unknown；低可信、未完整；用时 0.7 秒",
+        },
+        "ascension": 10,
+        "deck": [
+          "5x STRIKE_SILENT 打击 (Attack, 1 energy): 造成6点伤害。",
+          "5x DEFEND_SILENT 防御 (Skill, 1 energy): 获得5点格挡。",
+
+ ❯ tests/v6-brain-card-value-loop.test.ts:104:19
+    102|     cleaned.criteria[option.id] = JSON.stringify(view);
+    103|   }
+    104|   expect(cleaned).toEqual(original.call);
+       |                   ^
+    105|   const bytes = Buffer.byteLength(JSON.stringify(actual.call)) - Buffe…
+    106|   expect(bytes).toBeGreaterThan(0); expect(bytes).toBeLessThan(4000);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  tests/v6-brain-card-value-loop.test.ts > keeps the exact original brain question when missing
+AssertionError: expected { label: 'reward/card', …(3) } to deeply equal { label: 'reward/card', …(3) }
+
+- Expected
++ Received
+
+@@ -35,11 +35,11 @@
+          "low_confidence": "静默整体校准不足",
+          "low_win_rate": "当前牌组在模拟里多半打不过（原始胜率 0%，校准后的数不会低于 0.0%，0 胜的读数）：胜率的差信息少，各选项另给 boss 平均剩血（赢的样本算 0）和它的配对差；离 boss 还远时现在的牌组和到 boss 时的牌组差得多",
+          "method": "整场模拟（docs/boss-sim.md）：boss 的血量、首招、开场能力和出招按怪物库和出招模型（本进阶），我方按现在的牌组、遗物和药水，每个样本洗牌后由求解器逐回合出牌，打到一方死亡；胜率经日志 boss 战验证集校准；选项的差 = 两个校准胜率之差，± 是配对标准误（差在两个标准误以内，模拟分不出高低）",
+          "quantitative_uncertainty": "模拟分布不是实际结果；p10–p90是样本结果波动，meanSe是均值的蒙特卡洛误差，不含机制/策略偏差。增加样本不能修复模型偏差；零次/全胜样本不证明必死/必胜。超时完成样本可能有选择偏差，capped是未结束，不能当已败；胜率区间仅指模拟终止前获胜。",
+          "relics_not_modelled": "蛇之戒指",
+-         "samples": "限时完成：基准n=2，原始胜率MC95%区间0–66%（不含模型偏差）；候选各用实际n/共同前缀，目标2；误差为配对标准误，n<2时unknown；低可信、未完整；用时 0.2 秒",
++         "samples": "限时完成：基准n=2，原始胜率MC95%区间0–66%（不含模型偏差）；候选各用实际n/共同前缀，目标2；误差为配对标准误，n<2时unknown；低可信、未完整；用时 0.3 秒",
+        },
+        "ascension": 10,
+        "deck": [
+          "5x STRIKE_SILENT 打击 (Attack, 1 energy): 造成6点伤害。",
+          "5x DEFEND_SILENT 防御 (Skill, 1 energy): 获得5点格挡。",
+
+ ❯ tests/v6-brain-card-value-loop.test.ts:111:23
+    109| it.each(["missing", "corrupt", "timeout", "no-combat"] as const)("keep…
+    110|   const actual = await replay("RBMEQGXPE9Z2", 3, mode), original = awa…
+    111|   expect(actual.call).toEqual(original.call);
+       |                       ^
+    112|   if (mode === "no-combat") expect(actual.evaluated).toBe(0);
+    113| }, 10000);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+
+ Test Files  1 failed | 2 passed (3)
+      Tests  2 failed | 12 passed (14)
+   Start at  11:26:52
+   Duration  12.86s (transform 3.36s, setup 521ms, import 3.94s, tests 7.89s, environment 0ms)
+

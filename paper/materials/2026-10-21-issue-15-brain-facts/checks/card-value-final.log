@@ -1,0 +1,14 @@
+
+ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/issue-15-v2-brain-facts/agent
+
+ ✓ tests/v6-card-value.test.ts > caches only the same deck, offers, resources, HP, floor and selected route; cached results cannot be mutated 1021ms
+ ✓ tests/v6-card-value.test.ts > uses future selected-route counts and the observed enemy distribution; keeps next Boss separate from current-act rank 250ms
+ ✓ tests/v6-card-value.test.ts > leaves novel cards and unobserved visible Bosses unknown and freezes the model for the run 513ms
+ ✓ tests/v6-card-value.test.ts > admits only on/brain rewards with observed combat provenance, keeping other roles and modes unchanged 245ms
+ ✓ tests/v6-card-value.test.ts > abandons an exhausted preparation budget before making predictions 173ms
+
+ Test Files  1 passed (1)
+      Tests  5 passed (5)
+   Start at  11:49:14
+   Duration  5.08s (transform 2.21s, setup 440ms, import 2.24s, tests 2.20s, environment 0ms)
+
