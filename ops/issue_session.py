@@ -10,12 +10,9 @@ import subprocess
 import sys
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
-import learner_retention as retention
-import worktree_checkout as checkout
-import worktree_retention as workspaces
+import issue_session_support as retention
 
-REPO = "dwroy/agent-sts2"
-SCHEMA = "issue-sessions-v1"
+SCHEMA = "issue-sessions-v2"
 SLUG = re.compile(r"[a-z][a-z0-9-]{0,60}")
 STATES = {"allocating", "allocated", "creating-tab", "tab-created", "starting", "active", "tab-closing",
           "waiting-worktree", "reclaimed"}
@@ -37,18 +34,21 @@ def herdr(*args):
 
 
 class Sessions:
-    def __init__(self, root, directory=None):
+    def __init__(self, root, directory=None, config=None):
         self.root = Path(root).resolve()
-        self.directory = retention.safe_path(self.root, directory or self.root / "ops/codex-ops")
+        self.board = retention.Board(self.root, config)
+        self.directory = retention.safe_path(self.root, directory or self.board.session["state_dir"])
+        self.project = self.board.project(self.directory)
         self.path = retention.safe_path(self.root, self.directory / "issue-sessions.json")
-        self.data = {"schema": SCHEMA, "root": str(self.root), "sessions": {}}
+        self.data = {"schema": SCHEMA, "root": str(self.root), "repo": self.board.repo, "sessions": {}}
         if self.path.exists():
             self.data = retention.load(self.path)
         self.validate()
 
     def validate(self):
         if (not isinstance(self.data, dict) or self.data.get("schema") != SCHEMA
-                or self.data.get("root") != str(self.root) or not isinstance(self.data.get("sessions"), dict)):
+                or self.data.get("root") != str(self.root) or self.data.get("repo") != self.board.repo
+                or not isinstance(self.data.get("sessions"), dict)):
             raise ValueError("invalid issue session registry; no actions taken")
         panes, tabs = set(), set()
         for key, row in self.data["sessions"].items():
@@ -59,11 +59,13 @@ class Sessions:
                     or not SLUG.fullmatch(row["slug"]) or row.get("state") not in STATES):
                 raise ValueError("invalid issue session identity or state")
             expected = f"issue-{number}-{row['slug']}"
-            if (row.get("branch") != expected or row.get("worktree") != str(self.root / ".worktrees" / expected)
+            if (row.get("branch") != expected or row.get("worktree") != str(self.board.trees / expected)
                     or row.get("label") != f"issue-{number}" or not retention.SHA.fullmatch(row.get("base", ""))
                     or not isinstance(row.get("started_at"), str)):
                 raise ValueError("unsafe issue session binding")
-            workspaces.checked_tree(self.root, expected)
+            self.board.protect(row)
+            if self.project.checked_tree(expected) != Path(row["worktree"]):
+                raise ValueError("configured worktree adapter binding mismatch")
             if row.get("pane") or row.get("tab"):
                 ws = row.get("workspace", "")
                 if (not re.fullmatch(r"w[A-Za-z0-9]+", ws)
@@ -79,23 +81,23 @@ class Sessions:
         retention.atomic(self.path, self.data)
 
     def issue(self, number):
-        return json.loads(run(["gh", "issue", "view", number, "-R", REPO, "--json", "state,author,comments"]))
+        return json.loads(run(["gh", "issue", "view", number, "-R", self.board.repo, "--json", "state,author,comments"]))
 
     def notice(self, number, event, text):
         # Reconcile an uncertain POST by its stable marker before attempting another POST.
         digest = hashlib.sha256((event + text).encode()).hexdigest()[:20]
         marker = f"<!-- issue-session:{number}:{digest} -->"
         comments = self.issue(number)["comments"]
-        if any(c.get("author", {}).get("login") == "dwroy" and marker in c.get("body", "") for c in comments):
+        if any(c.get("author", {}).get("login") == self.board.owner and marker in c.get("body", "") for c in comments):
             return
         path = retention.safe_path(self.root, self.directory / "issue-session-comments" / f"{number}-{digest}.md")
         path.parent.mkdir(parents=True, exist_ok=True)
-        path.write_text(f"[ops] {text}\n\n{marker}\n")
+        path.write_text(f"{self.board.session['comment_prefix']} {text}\n\n{marker}\n")
         run(["gitleaks", "detect", "--no-git", "--source", path, "--redact"])
-        run(["gh", "issue", "comment", number, "-R", REPO, "--body-file", path])
+        run(["gh", "issue", "comment", number, "-R", self.board.repo, "--body-file", path])
 
     def inbox(self, message):
-        path = retention.safe_path(self.root, self.root / "ops/inbox-dev.md")
+        path = retention.safe_path(self.root, self.board.inbox)
         with path.open("a") as handle:
             handle.write(f"- {retention.stamp()} [issue-session] {message}\n")
 
@@ -112,26 +114,34 @@ class Sessions:
         if not SLUG.fullmatch(slug):
             raise ValueError("invalid workspace slug")
         issue = self.issue(number)
-        if issue["state"] != "OPEN" or issue["author"]["login"] != "dwroy":
+        if issue["state"] != "OPEN" or issue["author"]["login"] != self.board.owner:
             raise ValueError("only open owner-authored issues can spawn sessions")
-        selector = self.directory / "codex-home"
-        home = selector.read_text().strip() if selector.is_file() else os.environ.get("LEARNER_CODEX_HOME")
+        dev = self.board.dev
+        home = dev.get("codex_home")
+        if not home:
+            selector = retention.safe_path(self.root, dev["codex_home_file"]) if dev.get("codex_home_file") else None
+            home = selector.read_text().strip() if selector and selector.is_file() else os.environ.get(dev.get("codex_home_env", ""))
+        home = str(Path(home).expanduser()) if home else None
         if not home or not Path(home).is_absolute() or not (Path(home) / "auth.json").is_file():
             raise ValueError("existing project Codex home selector required; credentials not read")
-        found = [w for w in herdr("workspace", "list")["workspaces"] if w.get("label") == "agent-sts2"]
+        found = [w for w in herdr("workspace", "list")["workspaces"] if w.get("label") == self.board.workspace]
         if len(found) > 1:
-            raise ValueError("ambiguous agent-sts2 workspace")
-        if any(a.get("name") == f"issue-{number}" for a in herdr("agent", "list")["agents"]):
+            raise ValueError("ambiguous configured Herdr workspace")
+        agents = herdr("agent", "list")["agents"]
+        if any(a.get("name") == f"issue-{number}" for a in agents):
             raise ValueError("unregistered existing issue agent; register it explicitly")
+        if sum(a.get("agent") == "codex" and bool(re.fullmatch(r"issue-[1-9][0-9]*", a.get("name", "")))
+               for a in agents) >= dev["max_parallel"]:
+            raise ValueError("configured developer concurrency limit reached")
         branch = f"issue-{number}-{slug}"
-        base = retention.git(self.root, "rev-parse", "refs/heads/main").decode().strip()
+        base = retention.git(self.root, "rev-parse", self.board.worktree["base_ref"]).decode().strip()
         row = {"issue": number, "slug": slug, "branch": branch, "label": f"issue-{number}",
-               "worktree": str(self.root / ".worktrees" / branch), "base": base,
+               "worktree": str(self.board.trees / branch), "base": base,
                "started_at": retention.stamp(), "state": "allocating"}
         self.data["sessions"][key] = row; self.save()
-        checkout.create(self.root, self.directory, Path(row["worktree"]), base)
-        if not (Path(row["worktree"]) / "agent/node_modules").is_dir():
-            raise ValueError("verified shared agent/node_modules link required")
+        self.command(self.board.worktree["allocate"], row)
+        for command in self.board.worktree["prepare"]:
+            self.command(command, row)
         row["state"] = "allocated"; self.save()
         row["state"] = "creating-tab"; self.save()
         if found:
@@ -139,7 +149,7 @@ class Sessions:
             created = herdr("tab", "create", "--workspace", ws, "--cwd", row["worktree"], "--label", row["label"],
                             "--env", f"CODEX_HOME={home}", "--no-focus")
         else:
-            created = herdr("workspace", "create", "--cwd", row["worktree"], "--label", "agent-sts2",
+            created = herdr("workspace", "create", "--cwd", row["worktree"], "--label", self.board.workspace,
                             "--env", f"CODEX_HOME={home}", "--no-focus")
             ws = created["workspace"]["workspace_id"]
         pane = created["root_pane"]
@@ -153,19 +163,19 @@ class Sessions:
         if (not isinstance(info["shell_pid"], int) or info["shell_pid"] <= 1
                 or info["foreground_process_group_id"] != info["shell_pid"]):
             raise ValueError("new pane shell is not idle")
-        os.setpriority(os.PRIO_PROCESS, info["shell_pid"], 19)
+        os.setpriority(os.PRIO_PROCESS, info["shell_pid"], self.board.nice)
         row["state"] = "starting"; self.save()
-        prompt = opening_prompt(number, branch, base)
+        prompt = self.board.session["prompt"].format_map(self.values(row))
         herdr("agent", "start", row["label"], "--kind", "codex", "--pane", row["pane"], "--timeout", "60000",
-              "--", "-m", "gpt-6.1-sol", "-c", "model_reasoning_effort=high", "-s", "danger-full-access",
+              "--", "-m", dev["model"], "-c", "model_reasoning_effort=" + dev["effort"], "-s", "danger-full-access",
               "-a", "never", prompt)
         row["state"] = "active"; self.save()
         self.dispatched(row)
         return {"issue": number, "state": "active", "pane": row["pane"]}
 
     def dispatched(self, row):
-        self.notice(row["issue"], "spawn", f"已派 issue-{row['issue']}：工作树 `.worktrees/{row['branch']}`，"
-                    f"pane `{row['pane']}`、tab `{row['tab']}`，基线 `{row['base']}`；独立 Codex 会话，启动参数 gpt-6.1-sol/high（实际档位由原生回执验收）。")
+        self.notice(row["issue"], "spawn", f"已派 issue-{row['issue']}：工作树 `{Path(row['worktree']).relative_to(self.root)}`，"
+                    f"pane `{row['pane']}`、tab `{row['tab']}`，基线 `{row['base']}`；独立 Codex 会话，启动参数 {self.board.dev['model']}/{self.board.dev['effort']}（实际档位由原生回执验收）。")
 
     def register(self, number, slug, pane_id, base, started_at):
         if not SLUG.fullmatch(slug):
@@ -179,7 +189,7 @@ class Sessions:
         pane = herdr("pane", "get", pane_id)["pane"]
         agent = herdr("agent", "get", pane_id)["agent"]
         branch = f"issue-{number}-{slug}"
-        tree = self.root / ".worktrees" / branch
+        tree = self.board.trees / branch
         if agent.get("name") != f"issue-{number}" or agent.get("agent") != "codex":
             raise ValueError("only named issue Codex agents may be registered")
         if (pane.get("cwd") != str(tree) or agent.get("foreground_cwd") != str(tree)
@@ -189,7 +199,7 @@ class Sessions:
         found = herdr("tab", "get", pane["tab_id"])["tab"]
         ws = herdr("workspace", "list")["workspaces"]
         if found.get("label") != f"issue-{number}" or not any(
-                w.get("workspace_id") == pane["workspace_id"] and w.get("label") == "agent-sts2" for w in ws):
+                w.get("workspace_id") == pane["workspace_id"] and w.get("label") == self.board.workspace for w in ws):
             raise ValueError("existing tab/workspace mismatch")
         row = {"issue": number, "slug": slug, "label": f"issue-{number}", "branch": branch,
                "worktree": str(tree), "base": base, "started_at": started_at, "state": "active",
@@ -252,11 +262,22 @@ class Sessions:
             raise ValueError("source branch reference or allocation baseline changed")
         return source
 
+    def values(self, row, proof=None):
+        values = dict(root=str(self.root), state_dir=str(self.directory), path=row["worktree"],
+                    worktree=str(Path(row["worktree"]).relative_to(self.root)), ref=row["base"],
+                    branch=row["branch"], base=row["base"], issue=row["issue"], repo=self.board.repo,
+                    nice=self.board.nice, max_procs=self.board.data["resource_gate"]["max_procs_per_task"])
+        values.update(proof or {})
+        return values
+
+    def command(self, command, row, proof=None):
+        values = self.values(row, proof)
+        env = dict(os.environ)
+        env.update({key: value.format_map(values) for key, value in self.board.session["command_env"].items()})
+        return run(self.board.argv(command, values), cwd=self.root, env=env)
+
     def publication(self, row):
-        source = self.source(row)
-        main = retention.git(self.root, "rev-parse", "refs/heads/main").decode().strip()
-        live = retention.git(self.root / ".worktrees/live", "rev-parse", "HEAD").decode().strip()
-        return workspaces.acceptance(self.root, Path(row["worktree"]), source, main, live, row["base"])
+        return self.project.publication(dict(row, source=self.source(row)))
 
     def patch(self, row):
         tree = Path(row["worktree"])
@@ -271,7 +292,7 @@ class Sessions:
         for name in paths:
             retention.safe_path(tree, tree / name)
         # Preserve index, working copy and untracked files; never reset originals for cleanup.
-        folder = retention.safe_path(self.root, self.root / "paper/materials/issue-session" / str(row["issue"]))
+        folder = retention.safe_path(self.root, self.board.materials / str(row["issue"]))
         folder.mkdir(parents=True, exist_ok=True)
         for name, args in (("index", ("diff", "--cached", "--binary")), ("worktree", ("diff", "--binary"))):
             data = retention.git(tree, *args)
@@ -304,25 +325,19 @@ class Sessions:
                 self.reclaimed_notice(row)
             return {"issue": number, "state": "reclaimed"}
         try:
-            workspaces.checked_tree(self.root, row["branch"])
+            self.board.protect(row)
+            self.project.checked_tree(row["branch"])
             if self.issue(number)["state"] != "CLOSED":
                 raise ValueError("issue is not closed")
             if not row.get("pane"):
                 raise ValueError("incomplete spawn; explicit registration reconciliation required")
             retention.require_host_process_view()
-            workspaces.owner_guard(self.root, self.directory, Path(row["worktree"]))
+            self.project.guard(row)
             pane, allowed = self.terminal(row)
             if processes(Path(row["worktree"]), allowed):
                 raise ValueError("workspace has active processes beyond its idle terminal")
             if row["state"] == "waiting-worktree" and not pane:
-                manifest = self.directory / "retention/worktree-archives" / (row["branch"] + ".manifest.json")
-                archive = retention.load(manifest) if manifest.is_file() else {}
-                if (archive.get("state") == "reclaimed" and archive.get("root") == str(self.root)
-                        and archive.get("proof", {}).get("worktree") == row["worktree"]
-                        and not any(r["worktree"] == row["worktree"] for r in workspaces.registered(self.root))):
-                    workspaces.verified_archive(self.root, archive)
-                    if retention.git(self.root, "rev-parse", "refs/heads/" + row["branch"]).decode().strip() != archive["proof"]["worktree_head"]:
-                        raise ValueError("retained source reference changed")
+                if self.project.reclaimed(row):
                     if apply:
                         row["state"] = "reclaimed"; self.save(); self.reclaimed_notice(row)
                     return {"issue": number, "state": "reclaimed"}
@@ -339,8 +354,8 @@ class Sessions:
                 tail_path.parent.mkdir(parents=True, exist_ok=True)
                 if not tail_path.exists():
                     tail_path.write_bytes(tail)
-                    if tail_path.read_bytes() != tail:
-                        raise ValueError("tail readback failed")
+                if tail_path.read_bytes() != tail:
+                    raise ValueError("tail readback failed")
                 row.update(state="tab-closing", tail=str(tail_path.relative_to(self.root)))
                 self.save()
                 # Recheck immediately before closing. Only the verified idle TUI and its shell may remain.
@@ -349,16 +364,15 @@ class Sessions:
                     raise ValueError("terminal/process state changed before close")
                 if self.issue(number)["state"] != "CLOSED" or self.source(row) != source:
                     raise ValueError("issue or source changed before close")
-                workspaces.owner_guard(self.root, self.directory, Path(row["worktree"]))
-                workspaces.checked_tree(self.root, row["branch"])
+                self.project.guard(row)
+                self.board.protect(row)
+                self.project.checked_tree(row["branch"])
                 self.patch(row)
                 herdr("tab", "close", row["tab"])
             row["state"] = "waiting-worktree"; self.save()
             # The standard orders tail -> tab close -> complete. Publication and deletion gates stay authoritative.
             proof = self.publication(row)
-            with retention.locks([self.directory / "retention.lock"]):
-                workspaces.complete(self.root, self.directory, row["branch"], proof["source"],
-                                    proof["main_commit"], proof["live_commit"])
+            self.command(self.board.worktree["retire"], row, proof)
             detail = "尾日志已保存" if row.get("tail") and retention.safe_path(self.root, row["tail"]).is_file() else "tab 已由外部关闭，未补造尾日志"
             self.notice(number, "tab-closed", "已回收会话 tab，" + detail + "；工作树已登记原回收器，实际删除待原调度器核验。")
             if dirty:
@@ -444,20 +458,11 @@ def processes(tree, allowed):
     return False
 
 
-def opening_prompt(number, branch, base):
-    return (f"你是 issue #{number} 的开发会话，新会话、独立工作树 .worktrees/{branch}，基于 main {base}。"
-            "先读 AGENTS.md、README.md、最新 paper/materials/STATE-*.md、decision-log 末尾、"
-            "docs/learning-protocol.md、docs/github-issues-workflow.md、docs/learner-retention.md，"
-            f"然后 gh issue view {number} -R {REPO} --comments，按目标、验收与边界完成。"
-            "开工改标签 status:in-progress；交付结果写 issue 评论，"
-            f"首行 [dev #{number}]，发前 gitleaks，改 status:review。"
-            "对局在跑：nice 19、≤2 进程；不运行 play、不改 live/STOP；不关其他会话。")
-
-
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--root", default=os.environ.get("CODEX_OPS_ROOT") or Path(__file__).resolve().parents[1])
-    parser.add_argument("--state-dir", default=os.environ.get("CODEX_OPS_DIR"))
+    parser.add_argument("--root", default=Path(__file__).resolve().parents[1])
+    parser.add_argument("--state-dir")
+    parser.add_argument("--config", help="project board YAML, default .agents/board.yaml")
     sub = parser.add_subparsers(dest="command", required=True)
     spawn = sub.add_parser("spawn"); spawn.add_argument("issue", type=int); spawn.add_argument("slug")
     reclaim = sub.add_parser("reclaim"); reclaim.add_argument("issue", type=int); reclaim.add_argument("--apply", action="store_true")
@@ -467,10 +472,12 @@ def main():
     register.add_argument("--base", required=True); register.add_argument("--started-at", required=True)
     args = parser.parse_args()
     root = Path(args.root).resolve()
-    directory = retention.safe_path(root, args.state_dir or root / "ops/codex-ops")
+    board = None
     try:
+        board = retention.Board(root, args.config)
+        directory = retention.safe_path(root, args.state_dir or board.session["state_dir"])
         with retention.locks([directory / "issue-sessions.lock"]):
-            sessions = Sessions(root, directory)
+            sessions = Sessions(root, directory, args.config)
             if hasattr(args, "issue") and not 1 <= args.issue <= 999999999:
                 raise ValueError("invalid issue number")
             if args.command == "spawn":
@@ -485,9 +492,10 @@ def main():
             return 1 if isinstance(result, dict) and result.get("state") == "retained" else 0
     except (OSError, ValueError, KeyError, TypeError, subprocess.SubprocessError):
         # Keep malformed registries untouched, including when a tick cannot load them.
-        with (root / "ops/inbox-dev.md").open("a") as handle:
-            handle.write(f"- {retention.stamp()} [issue-session] {args.command} 失败；请核登记表和原现场，未强制重试或删除。\n")
-        print(json.dumps({"state": "retained", "reason": "issue session operation failed; see inbox"}))
+        if board:
+            with board.inbox.open("a") as handle:
+                handle.write(f"- {retention.stamp()} [issue-session] {args.command} 失败；请核登记表和原现场，未强制重试或删除。\n")
+        print(json.dumps({"state": "retained", "reason": "issue session operation failed; see configured inbox or board.yaml"}))
         return 1
 
 

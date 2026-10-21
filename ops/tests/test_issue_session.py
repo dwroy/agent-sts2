@@ -1,4 +1,5 @@
 import copy
+import hashlib
 import io
 import json
 import os
@@ -11,6 +12,8 @@ from unittest.mock import patch
 
 sys.path.insert(0, str(Path(__file__).parents[1]))
 import issue_session as resource
+import worktree_checkout as checkout
+import worktree_retention as workspaces
 
 
 class IssueSessions(unittest.TestCase):
@@ -26,6 +29,9 @@ class IssueSessions(unittest.TestCase):
         (self.root / 'agent/src').mkdir(parents=True)
         (self.root / 'agent/src/example.ts').write_text('export const fixed = 1;\n')
         (self.root / 'README.md').write_text('fixed\n')
+        (self.root / '.agents').mkdir()
+        (self.root / '.agents/board.yaml').write_bytes((Path(resource.__file__).parents[1] / '.agents/board.yaml').read_bytes())
+        (self.root / 'ops/issue_session_project.py').write_bytes((Path(resource.__file__).parent / 'issue_session_project.py').read_bytes())
         self.git('add', '.')
         self.git('commit', '-m', 'fixed source')
         self.head = self.git('rev-parse', 'HEAD').strip()
@@ -66,12 +72,24 @@ class IssueSessions(unittest.TestCase):
         return result.stdout
 
     def issue(self, number):
-        return {'state': 'CLOSED' if self.closed else 'OPEN', 'author': {'login': 'dwroy'}, 'comments': []}
+        return {'state': 'CLOSED' if self.closed else 'OPEN',
+                'author': {'login': self.sessions.board.owner}, 'comments': []}
 
     def cli(self, args, **kwargs):
         self.events.append(tuple(map(str, args)))
         if args[:3] == ['herdr', 'pane', 'read']:
             return self.screen.encode() if 'visible' in args else b'fixed tail\n'
+        if args[:2] == ['python3', 'ops/worktree_checkout.py']:
+            return (checkout.create(self.root, self.directory, Path(args[3]), args[4]) and b'') or b''
+        if args[:3] == ['python3', 'ops/issue_session_project.py', 'prepare']:
+            dependency = Path(args[4]) / 'agent/node_modules'
+            if not dependency.is_symlink() or dependency.resolve() != (self.root / 'agent/node_modules').resolve():
+                raise ValueError('dependency verification failed')
+            return b'{"prepared":true}'
+        if args[:3] == ['python3', 'ops/worktree_retention.py', 'complete']:
+            flags = dict(zip(args[3::2], args[4::2]))
+            return json.dumps(workspaces.complete(self.root, self.directory, flags['--workspace'],
+                              flags['--source'], flags['--main-commit'], flags['--live-commit'])).encode()
         raise AssertionError('unexpected external CLI in fixed-data test')
 
     def herdr(self, *args):
@@ -89,7 +107,7 @@ class IssueSessions(unittest.TestCase):
         if args[:2] == ('agent', 'get'):
             return {'agent': dict(self.pane, name='issue-17', agent_status=self.status)}
         if args[:2] == ('workspace', 'list'):
-            return {'workspaces': [dict(workspace_id='wF', label='agent-sts2')]}
+            return {'workspaces': [dict(workspace_id='wF', label=self.sessions.board.workspace)]}
         if args[:2] == ('agent', 'list'):
             return {'agents': []}
         if args[:2] == ('tab', 'close'):
@@ -132,8 +150,8 @@ class IssueSessions(unittest.TestCase):
         self.assertEqual(result['state'], 'waiting-worktree', result)
         self.assertFalse(self.present)
         self.assertTrue((self.tree / '.git').exists())
-        with patch.object(resource.workspaces, 'active', return_value=False):
-            self.assertEqual(resource.workspaces.reclaim(self.root, self.directory, self.tree.name, True)['state'], 'reclaimed')
+        with patch.object(workspaces, 'active', return_value=False):
+            self.assertEqual(workspaces.reclaim(self.root, self.directory, self.tree.name, True)['state'], 'reclaimed')
         self.assertEqual(self.sessions.reclaim(17, True)['state'], 'reclaimed')
         self.assertEqual(self.sessions.reclaim(17, True)['state'], 'reclaimed')
         self.assertFalse((self.tree / '.git').exists())
@@ -195,7 +213,7 @@ class IssueSessions(unittest.TestCase):
         self.assert_retained('original request')
 
     def test_game_instance_binding_is_not_eligible(self):
-        (self.tree / 'ops').mkdir()
+        (self.tree / 'ops').mkdir(exist_ok=True)
         (self.tree / 'ops/instance-binding.json').write_text('{}')
         self.assert_retained('persistent game instance')
 
@@ -216,7 +234,7 @@ class IssueSessions(unittest.TestCase):
         self.assertEqual((self.tree / 'README.md').read_text(), 'unstaged revision\n')
         self.assertEqual((self.tree / 'new.txt').read_text(), 'untracked draft\n')
         with self.assertRaisesRegex(ValueError, 'dirty'):
-            resource.workspaces.reclaim(self.root, self.directory, self.tree.name, True)
+            workspaces.reclaim(self.root, self.directory, self.tree.name, True)
 
     def test_sensitive_filename_and_symlink_patch_are_refused_before_close(self):
         (self.tree / '.env').write_text('opaque fixture')
@@ -340,7 +358,7 @@ class IssueSessions(unittest.TestCase):
         (self.directory / 'codex-home').write_text(str(home))
         (self.root / 'agent/node_modules').mkdir()
         (self.tree / 'agent/node_modules').symlink_to(self.root / 'agent/node_modules', target_is_directory=True)
-        with patch.object(resource.checkout, 'create') as allocate, patch.object(os, 'setpriority') as priority:
+        with patch.object(checkout, 'create') as allocate, patch.object(os, 'setpriority') as priority:
             self.assertEqual(self.sessions.spawn(17, 'fixture')['state'], 'active')
             self.assertTrue(self.sessions.spawn(17, 'fixture')['existing'])
             allocate.assert_called_once_with(self.root, self.directory, self.tree, self.head)
@@ -372,7 +390,7 @@ class IssueSessions(unittest.TestCase):
                 return {'workspaces': []}
             return original(*args)
         self.herdr_mock.side_effect = no_workspace
-        with patch.object(resource.checkout, 'create'), patch.object(os, 'setpriority'):
+        with patch.object(checkout, 'create'), patch.object(os, 'setpriority'):
             self.sessions.spawn(17, 'fixture')
         self.assertEqual(sum(e[:2] == ('workspace', 'create') for e in self.events), 1)
         self.assertFalse(any(e[:2] == ('tab', 'create') for e in self.events))
@@ -410,6 +428,133 @@ class IssueSessions(unittest.TestCase):
             with self.assertRaises(ValueError):
                 resource.Sessions.notice(self.sessions, 17, 'other', '固定数据回执')
             self.assertEqual(cli_mock.call_count, 1)
+
+    def test_board_configuration_drives_another_project_spawn_and_retire(self):
+        # A second project supplies its own adapter and commands, with no STS2 paths.
+        config = copy.deepcopy(self.sessions.board.data)
+        config.update(repo='fixture/portable', herdr_workspace='portable')
+        config['worktree'].update(root='sandboxes', adapter='ops/fixed_adapter.py',
+                                 allocate=['allocate-fixture', '{path}', '{ref}', '{state_dir}'],
+                                 prepare=['prepare-fixture "{path}"'],
+                                 retire=['retire-fixture', '{branch}', '{source}', '{main_commit}', '{live_commit}'])
+        config['session'].update(state_dir='runtime', inbox='messages.md', materials='evidence',
+                                 prompt='#{issue} {repo} {worktree} {base} nice={nice}', comment_prefix='[fixture]',
+                                 command_env={'PORTABLE_STATE': '{state_dir}'})
+        config['resource_gate']['nice'] = 7
+        home = self.root / 'fixture home'; home.mkdir(); (home / 'auth.json').touch()
+        config['roles']['dev'].update(codex_home=str(home), model='fixture-model', effort='medium')
+        (self.root / '.agents/board.yaml').write_text(json.dumps(config))
+        (self.root / 'ops/fixed_adapter.py').write_text(
+            'class Project:\n'
+            ' def __init__(self, root, directory): self.root=root\n'
+            ' def checked_tree(self, branch): return self.root/"sandboxes"/branch\n'
+            ' def guard(self, row): pass\n'
+            ' def reclaimed(self, row): return False\n'
+            ' def publication(self, row): return dict(source=row["source"], main_commit=row["base"], live_commit=row["base"])\n')
+        (self.root / 'sandboxes').mkdir()
+        target = self.root / 'sandboxes' / self.tree.name
+        self.git('worktree', 'move', str(self.tree), str(target)); self.tree = target
+        self.pane.update(cwd=str(target), foreground_cwd=str(target))
+        self.directory = self.root / 'runtime'; self.directory.mkdir()
+        self.sessions = resource.Sessions(self.root)
+        self.closed = False
+        original = self.cli
+        def configured_cli(args, **kwargs):
+            if args[0] in ('allocate-fixture', 'prepare-fixture', 'retire-fixture'):
+                self.events.append(tuple(args))
+                self.assertEqual(kwargs['cwd'], self.root)
+                self.assertEqual(kwargs['env']['PORTABLE_STATE'], str(self.directory))
+                return b'{}'
+            return original(args, **kwargs)
+        with patch.object(self.sessions, 'issue', side_effect=self.issue), patch.object(self.sessions, 'notice'), \
+                patch.object(resource, 'run', side_effect=configured_cli), patch.object(os, 'setpriority') as priority:
+            self.assertEqual(self.sessions.spawn(17, 'fixture')['state'], 'active')
+            priority.assert_called_once_with(os.PRIO_PROCESS, 101, 7)
+            self.assertIn(('allocate-fixture', str(target), self.head, str(self.directory)), self.events)
+            self.assertIn(('prepare-fixture', str(target)), self.events)
+            start = next(e for e in self.events if e[:2] == ('agent', 'start'))
+            self.assertIn('fixture-model', start); self.assertIn('model_reasoning_effort=medium', start)
+            self.assertIn('fixture/portable sandboxes/issue-17-fixture', start[-1])
+            self.assertTrue(any(f'CODEX_HOME={home}' in e for e in self.events))
+            self.closed = True
+            self.info.update(foreground_process_group_id=102, foreground_processes=[dict(pid=102, name='codex')])
+            self.assertEqual(self.sessions.reclaim(17, True)['state'], 'waiting-worktree')
+            self.assertIn(('retire-fixture', self.tree.name, self.head, self.head, self.head), self.events)
+
+    def test_board_repo_change_cannot_rebind_existing_registry(self):
+        data = self.sessions.board.data
+        data['repo'] = 'fixture/different'
+        (self.root / '.agents/board.yaml').write_text(json.dumps(data))
+        before = self.sessions.path.read_bytes()
+        with self.assertRaisesRegex(ValueError, 'invalid issue session registry'):
+            resource.Sessions(self.root)
+        self.assertEqual(before, self.sessions.path.read_bytes())
+
+    def test_existing_tail_is_read_back_before_closing_the_tab(self):
+        folder = self.directory / 'issue-session-tails'; folder.mkdir()
+        digest = hashlib.sha256(b'fixed tail\n').hexdigest()
+        (folder / f'17-{digest}.log').write_bytes(b'corrupted prior tail')
+        self.assert_retained('tail readback failed')
+
+    def test_board_role_pane_and_path_protection_is_applied_before_actions(self):
+        self.sessions.board.data['roles']['ops']['pane'] = self.row['pane']
+        self.assert_retained('protected board role')
+        self.sessions.board.data['roles']['ops'].clear()
+        self.sessions.board.data['never_reclaim'].append('.worktrees/issue-17-*')
+        self.assert_retained('protected board worktree')
+        self.herdr_mock.assert_not_called()
+
+    def test_board_concurrency_limit_includes_unregistered_issue_agents(self):
+        self.sessions.data['sessions'].clear(); self.sessions.save()
+        self.closed = False
+        home = self.root / 'fixture-home'; home.mkdir(); (home / 'auth.json').touch()
+        self.sessions.board.dev['codex_home'] = str(home)
+        self.sessions.board.dev['max_parallel'] = 1
+        original = self.herdr
+        def agents(*args):
+            if args[:2] == ('agent', 'list'):
+                return {'agents': [dict(agent='codex', name='issue-99')]}
+            return original(*args)
+        self.herdr_mock.side_effect = agents
+        with self.assertRaisesRegex(ValueError, 'concurrency limit'):
+            self.sessions.spawn(17, 'fixture')
+        self.assertFalse(self.sessions.data['sessions'])
+        self.assertFalse(any(e[:2] in (('tab', 'create'), ('agent', 'start')) for e in self.events))
+
+    def test_board_invalid_missing_remote_or_unsafe_configuration_has_no_actions(self):
+        path = self.root / '.agents/board.yaml'
+        original = path.read_text()
+        for text in ('worktree: [\n', '[]', '{}', original + '\nmachine: remote\n',
+                     original.replace('root: .worktrees', 'root: ../outside'),
+                     original.replace('max_procs_per_task: 2', 'max_procs_per_task: 0')):
+            with self.subTest(text=text[:30]), self.assertRaises((ValueError, KeyError)):
+                path.write_text(text)
+                resource.Sessions(self.root)
+        path.unlink()
+        with self.assertRaises(OSError):
+            resource.Sessions(self.root)
+        self.herdr_mock.assert_not_called(); self.run_mock.assert_not_called()
+
+    def test_configured_project_prepare_checks_actual_dependency_target(self):
+        script = Path(resource.__file__).parent / 'issue_session_project.py'
+        (self.root / 'agent/node_modules').mkdir()
+        dependency = self.tree / 'agent/node_modules'
+        dependency.symlink_to(self.root / 'agent/node_modules', target_is_directory=True)
+        args = [sys.executable, str(script), 'prepare', str(self.root), str(self.tree)]
+        self.assertEqual(subprocess.run(args, capture_output=True).returncode, 0)
+        dependency.unlink()
+        other = self.root / 'wrong-dependency'; other.mkdir()
+        dependency.symlink_to(other, target_is_directory=True)
+        self.assertNotEqual(subprocess.run(args, capture_output=True).returncode, 0)
+
+    def test_configured_commands_do_not_evaluate_shell_and_unknown_fields_refuse(self):
+        board = self.sessions.board
+        values = {'path': '/tmp/fixed path; $(unsafe)', 'ref': self.head}
+        self.assertEqual(board.argv('tool "{path}" {ref}', values), ['tool', values['path'], self.head])
+        with self.assertRaisesRegex(ValueError, 'placeholder'):
+            board.argv(['tool', '{unknown}'], values)
+        with self.assertRaisesRegex(ValueError, 'nonempty argv'):
+            board.argv([], values)
 
 
 class Composer(unittest.TestCase):

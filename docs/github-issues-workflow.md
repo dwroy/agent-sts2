@@ -35,7 +35,15 @@ nice -n 19 python3 ops/issue_session.py reclaim 123          # 演练：不关 t
 nice -n 19 python3 ops/issue_session.py reclaim 123 --apply  # 实际核验与提交回收
 ```
 
-登记表为 `ops/codex-ops/issue-sessions.json`，记录基线、开始时间和每个外部动作之前的阶段。派发调用现有 `worktree_checkout.py`，沿用空间检查、稀疏工作树和验证过的依赖软链接；账号取现有 `ops/codex-ops/codex-home` 选择文件（或明确的 `LEARNER_CODEX_HOME`），不读取凭据内容。新建 tab 的 shell 先降至 nice 19，Codex 子进程继承，启动参数固定 `gpt-6.1-sol` / `high`。启动参数仅代表请求；是否生效仍须核原生 `turn_context` / 请求回执。不存在工作区时使用新工作区自带的 tab，不遗留额外空 shell。
+工具读取主检出的 `.agents/board.yaml`（可用全局参数 `--config <仓库内路径>` 指定）。默认登记表为 `ops/codex-ops/issue-sessions.json`，绑定仓库和运行根目录，记录基线、开始时间和每个外部动作之前的阶段；损坏或配置切换不能重绑原登记。当前项目配置调用现有 `worktree_checkout.py`，沿用空间检查、稀疏工作树和验证过的依赖软链接；账号取现有 `ops/codex-ops/codex-home` 选择文件（或明确的 `LEARNER_CODEX_HOME`），不读取凭据内容。新建 tab 的 shell 按配置先降至 nice 19，Codex 子进程继承；当前配置请求 `gpt-6.1-sol` / `high`。启动参数仅代表请求；是否生效仍须核原生 `turn_context` / 请求回执。不存在工作区时使用新工作区自带的 tab，不遗留额外空 shell。
+
+配置接口对应 [通用看板架构第 5 节](https://github.com/dwroy/agent-sts2/blob/main/docs/agent-board-architecture.md)，供 #20 派单器直接调用同一 CLI；本工具不另实现轮询派单器。字段约定：
+
+- `repo`、`herdr_workspace`、`worktree.root`、`roles.dev` 的账号选择、模型、effort、`max_parallel`、`resource_gate`、`never_reclaim`、`verify` 均由配置给出。`max_parallel` 保守计入 Herdr 中已有的 issue Codex 会话；`verify` 交开发者/派单器执行，spawn/reclaim 不运行测试或游戏。
+- `worktree.allocate`、`prepare`（命令列表）、`retire` 是 argv 数组或按 shell 引号分词的字符串；**不经过 shell 求值**。占位符 `{root}`、`{path}`、`{ref}`、`{branch}`、`{state_dir}` 在执行前替换；退休还提供 `{source}`、`{main_commit}`、`{live_commit}`。未知占位符拒绝执行。`worktree.base_ref` 指定分配基线分支，当前为 `refs/heads/main`。
+- `worktree.adapter` 指向项目内的 Python 适配器，提供 `Project(root, state_dir)` 的 `checked_tree(branch)`、`guard(row)`、`publication(row)`、`reclaimed(row)`；分别核工作树绑定、项目所有权、真实发布和原归档回执。STS2 实现为 `ops/issue_session_project.py`，复用原门禁；依赖链接检查通过配置的 prepare 命令执行，通用引擎不导入 STS2 分配/回收器。
+- `session` 补充 `state_dir`、`command_env`（命令环境占位符）、`inbox`、`materials`、`comment_prefix` 和 `prompt`。提示可用 `{issue}`、`{repo}`、`{worktree}`、`{base}`、`{nice}`、`{max_procs}`。账号可用明确的 `roles.dev.codex_home`，或项目内 `codex_home_file` / `codex_home_env`；不创建账号或改共用配置。
+- 配置须位于运行根目录内且不经软链接；配置缺失、无效或不受支持时保留现场。当前主机已有 PyYAML，可读普通 YAML；无 PyYAML 的环境须提供 JSON 形式的 YAML，工具不安装依赖。回收必须在 pane 所在主机运行，省略 `machine`；非空远程 `machine` 会拒绝，因为本机 `/proc` 不能证明远端无进程。
 
 已有的手工会话必须逐个只读核对后显式登记，不扫描认领其他 tab：
 

@@ -5550,3 +5550,5 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
 
 - 2026-10-21 11:17:18 CST [Claude/Roy，#1 决定] Roy 在 GitHub 指示“dwroy/agent-sts2#1 就按照claude建议的来做”：方向 2 → #15（v2 数值作为大脑拿牌题补充事实，决策者仍 brain，新会话 issue-15 wJ:p1H5 已派）；方向 1 → #12（单牌增量可辨识性研究，进行中）；方向 3 → #16（可辨识的题交 Jev、其余交大脑的混合门，依赖 #12/#15）。#1 保留为总入口。
 - 2026-10-21 12:00:32 CST [dev #17] 按 8710b77c7 生命周期标准实现 issue_session 派发/显式登记/演练与回收、原 tick 接入；尾日志→关 tab→原 complete/worker，保留发布、唯一产物与来源分支门禁。固定测试33项与原回收器15项通过、tsc通过；仓库Vitest5219通过/4个基线V6失败，三文件复验同失败，agent源码树与42ba9497f相同，不冒称全绿。交review未上线，现有6/8/12/15仅只读候选未登记，不动live/STOP/ops prompt；原件paper/materials/2026-10-21-issue-17-session-lifecycle/report.md。
+- 2026-10-21 12:10:37 CST [dev #17] 按 Roy 批准的通用架构及 issue 范围补充（issuecomment-6307612646，6307615860）继续实现 .agents/board.yaml 驱动 spawn/reclaim，供 #20 调用；分配/依赖检查/退休均配置命令，STS2 门禁隔离为配置适配器，不写入通用引擎。最终固定测试40项通过，另项目配置替换/环境/门禁有证据；保留此前tsc通过、整套Vitest4个基线失败原件，#19跟进；未上线、未接管或关闭既有会话。
+- 2026-10-21 12:12:37 CST [dev #17] 最终复核补强已有尾日志也须读回、内容一致才关 tab；固定测试扩为41项全部通过（unit-attempt-8.txt），此前失败与复跑原件保留。配置接口和安全门禁交review，未改生产运行状态。
