@@ -1,0 +1,145 @@
+{
+  "issue": 26,
+  "baseline": "04340d95fcad838801d11750e1982c960f8b0d16",
+  "source_files": {
+    "agent/src/brain/tools/external-stats-tools.ts": {
+      "bytes": 13527,
+      "sha256": "da2823886a05fc5b38836ae53ee8ce2e0918b8472d36ab56ac92595842bef193"
+    },
+    "agent/tests/external-stats-tools.test.ts": {
+      "bytes": 13402,
+      "sha256": "3acde00eeb2d9a869ef6d19df7965ace1d10b080184333ad3d6febe476c74d9d"
+    },
+    "agent/tools/build-external-stats.py": {
+      "bytes": 4098,
+      "sha256": "da77547167feedd63c66990646045025d209cac3bbbb3bbd1eab3f3597c55760"
+    },
+    "knowledge/external/sts2fun/silent-a10.json": {
+      "bytes": 1775714,
+      "sha256": "88eef1cd8b875ab27d47c3abc39335f271705672b53bd71a0f4b30286168ac07"
+    }
+  },
+  "checks": [
+    {
+      "name": "vitest-full",
+      "exit_code": 1,
+      "files": 648,
+      "passed_files": 646,
+      "passed_tests": 6122,
+      "failed_tests": 2,
+      "skipped_tests": 2
+    },
+    {
+      "name": "vitest-failures-recheck",
+      "exit_code": 0,
+      "files": 2,
+      "passed_files": 2,
+      "passed_tests": 5,
+      "failed_tests": 0,
+      "skipped_tests": 0
+    },
+    {
+      "name": "vitest-final",
+      "exit_code": 0,
+      "files": 648,
+      "passed_files": 648,
+      "passed_tests": 6124,
+      "failed_tests": 0,
+      "skipped_tests": 2
+    }
+  ],
+  "tsc": {
+    "command": "nice -n 19 npx tsc -p tsconfig.json --noEmit",
+    "cwd": "agent",
+    "exit_code": 0,
+    "log": "verification/tsc-final.log"
+  },
+  "regeneration": {
+    "command": "nice -n 19 python3 agent/tools/build-external-stats.py --check",
+    "exit_code": 0,
+    "log": "verification/regeneration.log"
+  },
+  "full_suite": {
+    "command": "nice -n 19 node node_modules/vitest/vitest.mjs run --config ../.cache/issue26-vitest-final.config.mts --reporter=default --reporter=json --outputFile.json=../paper/materials/2026-10-22-issue-26-external-stats-tools/verification/vitest-final.json",
+    "cwd": "agent",
+    "config": "verification/issue26-vitest-final.config.mts.txt",
+    "max_workers": 1,
+    "file_parallelism": false,
+    "excluded_test_files": [],
+    "thread_group": "all test files except the two fork-group files",
+    "fork_group": [
+      "tests/paths.test.ts",
+      "tests/v6-card-option-loop.test.ts"
+    ],
+    "nice": 19,
+    "exit_code": 0
+  },
+  "gitleaks": {
+    "tools": 0,
+    "builder": 0,
+    "tests": 0,
+    "data": 0,
+    "raw_materials": 0,
+    "staged_patch": 0,
+    "staged_patch_basis": "Complete staged code, data and report before adding this non-executable scan receipt; final staged patch scanned again before commit."
+  },
+  "artifacts": {
+    "verification/vitest-full.log.gz": {
+      "bytes": 26058,
+      "sha256": "081387829a0bc1e83c0362eb527a56e5b60e5df3c6338a439ba66db91b4747e5",
+      "uncompressed_bytes": 96359,
+      "uncompressed_sha256": "a40b225440edc6adb824cae606e72ffc5356f82932a6123fcc2dc6a2e0d987c7",
+      "gzip_readback": true
+    },
+    "verification/vitest-full.json.gz": {
+      "bytes": 350495,
+      "sha256": "25f70bc14eb471bcc351b2e9d531b4d01b4995c0b46817a6a3b5865f73fa597a",
+      "uncompressed_bytes": 2385635,
+      "uncompressed_sha256": "b643e68d48032edade2f6d72e004ad3983f941495aeae6f8f970681f898014d1",
+      "gzip_readback": true
+    },
+    "verification/vitest-failures-recheck.log.gz": {
+      "bytes": 500,
+      "sha256": "90c94407e106da138d604e67f1386b6f262c1e4175887155391160831ca054de",
+      "uncompressed_bytes": 921,
+      "uncompressed_sha256": "bb6a3860989dd95d40e05bd41b5394fdc51b87040aeb9bf892f1e7b0ffd5cfa7",
+      "gzip_readback": true
+    },
+    "verification/vitest-failures-recheck.json.gz": {
+      "bytes": 763,
+      "sha256": "bbd1d7247bb7a25b82e713b2f4c7d933f09f528bf0cee8758efd8e8570f3532c",
+      "uncompressed_bytes": 2486,
+      "uncompressed_sha256": "bfa51368fd30bc0735ca46e47cd2e1359d8ba69e566929a0143403f5239a1f84",
+      "gzip_readback": true
+    },
+    "verification/vitest-final.log.gz": {
+      "bytes": 25599,
+      "sha256": "7dd2b51ef5efd7882b50c3390d4eda8063d9917ff6d4671d1bf69763344fa55c",
+      "uncompressed_bytes": 96480,
+      "uncompressed_sha256": "557f08e4468486a3927dd9b39ffc25cfbb7efc68e6c42ebec8e3ae2f525297d5",
+      "gzip_readback": true
+    },
+    "verification/vitest-final.json.gz": {
+      "bytes": 351351,
+      "sha256": "a9628e6cabaaf43551e92888e1acd6061db0ce4533884d021a900445026d2064",
+      "uncompressed_bytes": 2384220,
+      "uncompressed_sha256": "6a80afe7a09d3e543c9bd6b5a52787eade5a3d2135a868038e571e51154506e8",
+      "gzip_readback": true
+    }
+  },
+  "failures_preserved": [
+    "vitest-full: missing sparse issue29 results.jsonl",
+    "vitest-full: existing wall-clock V6 candidate fixture returned partial samples; original source, budget and assertions unchanged"
+  ],
+  "deployment": {
+    "main": false,
+    "live": false,
+    "registry_changed": false,
+    "engines_changed": false,
+    "router_changed": false,
+    "stop_changed": false,
+    "game_launched": false,
+    "dependency_install": false
+  },
+  "registration_confirmation": "https://github.com/dwroy/agent-sts2/issues/33#issuecomment-6326522042"
+}

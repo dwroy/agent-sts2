@@ -1,0 +1,13 @@
+import base from "../agent/vitest.config.ts";
+export default {
+  ...base,
+  test: {
+    ...base.test,
+    maxWorkers: 1,
+    fileParallelism: false,
+    projects: [
+      { envDir: false, test: { ...base.test, name: "serial-threads", pool: "threads", maxWorkers: 1, fileParallelism: false, exclude: [...(base.test?.exclude ?? []), "tests/paths.test.ts", "tests/v6-card-option-loop.test.ts"], sequence: { groupOrder: 0 } } },
+      { envDir: false, test: { ...base.test, name: "cwd-and-v6-fork", pool: "forks", maxWorkers: 1, fileParallelism: false, include: ["tests/paths.test.ts", "tests/v6-card-option-loop.test.ts"], sequence: { groupOrder: 1 } } },
+    ],
+  },
+};

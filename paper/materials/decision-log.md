@@ -5711,3 +5711,5 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
 - 2026-10-22T04:14:33+08:00 [ops] 核034316-s2在dataset前因#20 main三源码路径变化的原attention，无本批启动标记/日志，不借主批结果补完成；65产物/十原文/363原段核同、十waiting。保失败/科学父，仅核验记录，不启动dataset/full/模型/合入。原件paper/materials/20261022-0413-ops/receipt.json。
 
 - 2026-10-22T04:18:56+08:00 [ops] 034302四局复盘/5329原段/九账本与三pending出牌提案核同，无新纯bug；八原通知登记兼容阻塞保留。唯一dataset/记录收尾器PID1882678已沿原锁启动，终局提交pending，不重生成器/full/模型或触当前局。paper/materials/20261022-0415-ops/learning-verification.json。
+
+- 2026-10-22T05:24:36+08:00 [dev #26] #26 完成六个只读 external:sts2fun 查询 ToolDef 与 #24 固定聚合投影；来源/版本/分母/日期/SHA/局限齐备，16000B 上限，流派固定无法区分、不作方向依据，自有分母分账。SNAKEBITE/首幕跳过/DECIMILLIPEDE 读回一致，tsc、648 文件/6124 项完整 Vitest（2 原有跳过）、逐字节重建及 gitleaks 通过；首次两失败及原样重跑保留。#33 已确认注册合同（issuecomment-6326522042），由其挂载及联合验证；待集成员/ops 自然边界发布与首局读回，未改 registry/引擎/路由/题面/live/STOP，不造发布号。报告 paper/materials/2026-10-22-issue-26-external-stats-tools/report.md。
