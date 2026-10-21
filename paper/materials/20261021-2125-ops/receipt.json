@@ -1,0 +1,427 @@
+{
+  "schema": "ops-release-natural-readback-v1",
+  "at": "2026-10-21T21:28:58+08:00",
+  "state": "R411-published-first-natural-config-and-event-readback-other-triggers-pending",
+  "publication_result": {
+    "path": "paper/materials/20261021-issue25-boundary-ops/result.json",
+    "bytes": 675,
+    "sha256": "daeaa74f569b763bbf34270a8d235b679b8b87cbd2c69b972f61e34c4536cc36"
+  },
+  "publication": {
+    "path": "paper/materials/20261021-issue25-boundary-ops/publication.json",
+    "bytes": 3446,
+    "sha256": "5c8c2f64a9877513e03131ef7368d089dcd6dd598a38ea1f5842ddb01146afb4"
+  },
+  "release_id": "V6-R411",
+  "actual_live": "0cd3629d3a7f3a3bcacd22fa0a4206acc4d81e78",
+  "behavior_commit": "305c67555e447f02993753d8931d9e172ba93ef6",
+  "source_tree_exact": "725a2480a532bef1c3b4b344660505cc53b997ce",
+  "source_leaves": [
+    {
+      "path": "agent/src/brain/brain.ts",
+      "committed_sha256": "d628c49ac8cc6a4da2cc9494f71c4f154ee9511d7baae8e321bf3675bb7ca077",
+      "current_working_same": true
+    },
+    {
+      "path": "agent/src/eye/jev-prompt-log.ts",
+      "committed_sha256": "7eea5cd01e708082ca685a19cbe5b585758e3aba927116f06006967002ccc8ab",
+      "current_working_same": true
+    },
+    {
+      "path": "agent/src/hand/loop.ts",
+      "committed_sha256": "486da5b07f3e4f74f0a51d0df72547971c0ac2680302293837ddf1df727bf1be",
+      "current_working_same": true
+    },
+    {
+      "path": "agent/src/hand/screens/reward.ts",
+      "committed_sha256": "ddac015d0bb5a4344b1c6d68e5626b0c8b87ca738f5a78013c6ba691e328c73c",
+      "current_working_same": true
+    },
+    {
+      "path": "agent/src/knowledge/files.ts",
+      "committed_sha256": "3e03286adc87e6fada7fb70d968f8ecf5999ad4892cc477d79886b695edb4a9b",
+      "current_working_same": true
+    },
+    {
+      "path": "agent/src/knowledge/open-book.ts",
+      "committed_sha256": "b043e4bb18b1a72a2349ffab2bb68b778ca9aeb0f114ec28512a023eaa83f93a",
+      "current_working_same": true
+    },
+    {
+      "path": "agent/src/knowledge/strategy-entries.ts",
+      "committed_sha256": "1207d3ee86f2474c5c3526a5508b71c3a31e8407a55b9ca72cf8dcd2b4e4433d",
+      "current_working_same": true
+    },
+    {
+      "path": "agent/src/reflex/card-model.ts",
+      "committed_sha256": "ed66e33bb1b00a75c9029d842c90f41ac3f2b6bb9807af5776ee467933cb28c2",
+      "current_working_same": true
+    },
+    {
+      "path": "agent/src/reflex/combat-plan.ts",
+      "committed_sha256": "425b33c1f926719289baea9b1e80d488fcb9c93740c183e3d6efc2be519fac83",
+      "current_working_same": true
+    },
+    {
+      "path": "agent/src/reflex/jev/client.ts",
+      "committed_sha256": "2d2819422c7ce7aec80d87bf0d9bfd73823f473aa0a7b709a801cefdd68edfab",
+      "current_working_same": true
+    },
+    {
+      "path": "agent/src/reflex/turn-solver.ts",
+      "committed_sha256": "3f9da929f22f64f63ec91621472609cc3238c3bf91a7e3ac93fc3068eae0d25f",
+      "current_working_same": true
+    },
+    {
+      "path": "agent/src/v6/brain-card-value.ts",
+      "committed_sha256": "824bf1998a7ef90f90a9f7a356a51acfdb1c2b27f74c7b450d6ddef6a40b32ec",
+      "current_working_same": true
+    },
+    {
+      "path": "agent/src/v6/card-value.ts",
+      "committed_sha256": "9199cb577ed2910d674879a162ac7c8c2d139063aeb9006bc47dbe2172d5c48a",
+      "current_working_same": true
+    },
+    {
+      "path": "agent/src/v6/opening-value.ts",
+      "committed_sha256": "b0855c40ee1b91e5b849c7f70ccb8b28766fcf1712dcc0a5d576fd3aefc063af",
+      "current_working_same": true
+    },
+    {
+      "path": "agent/src/v6/projection-runtime.ts",
+      "committed_sha256": "4e3cdd9e99e34b0fca6ce629977f8ea3d9dd83c24fc155389cf75fcb961a14ed",
+      "current_working_same": true
+    },
+    {
+      "path": "agent/tests/brain-decision-dataset.test.ts",
+      "committed_sha256": "4e8e1df711ccb5bc8ec5245481ef2cc08734a66f4e599a3fcc95a8ca4cff5921",
+      "current_working_same": true
+    },
+    {
+      "path": "agent/tests/jev-decision-projection.test.ts",
+      "committed_sha256": "664d158d2ba182e244f2a2a180fa2a2ca3159427b807d6bb94b88dda39d271e8",
+      "current_working_same": true
+    },
+    {
+      "path": "agent/tests/manual-notice-ack.test.ts",
+      "committed_sha256": "06aa5fc467c74ce9b284603cba8e33855a34474ddcfccd2c9278c1d7775959fb",
+      "current_working_same": true
+    },
+    {
+      "path": "agent/tests/open-book-data/questions.json",
+      "committed_sha256": "b1307b162336846587fb28a4cb86597ffa77f5b2d8ea91008fd572d7bd7aa100",
+      "current_working_same": true
+    },
+    {
+      "path": "agent/tests/open-book.test.ts",
+      "committed_sha256": "c4e64430282962362571c1e260607ace5e07aef02bc1ffd587bc7a4810edd800",
+      "current_working_same": true
+    },
+    {
+      "path": "agent/tests/opening-value.test.ts",
+      "committed_sha256": "091403ca9406c547431e8fbd98d4d690be5e29524b36ccff8f87db0454ad94c3",
+      "current_working_same": true
+    },
+    {
+      "path": "agent/tests/paths.test.ts",
+      "committed_sha256": "43a1756e428139d99aaf44ea05359c1ffeaacc757cb15720fc4ea138a76c933b",
+      "current_working_same": true
+    },
+    {
+      "path": "agent/tests/strategy-entries.test.ts",
+      "committed_sha256": "9285b6387bf183620d9dd541a89813013d177967726ca50e2efe7ba4b1d023c7",
+      "current_working_same": true
+    },
+    {
+      "path": "agent/tests/v6-brain-card-value-loop.test.ts",
+      "committed_sha256": "788863d1e10250ec51aa536b7591933878043dceaa1ededa4469b939b409e16f",
+      "current_working_same": true
+    },
+    {
+      "path": "agent/tests/v6-card-value.test.ts",
+      "committed_sha256": "28fcd10e08e1b6f27eb031cd525fc9babcab562b3a65782c440e38e692a15d79",
+      "current_working_same": true
+    },
+    {
+      "path": "agent/tests/v6-combat-entries.test.ts",
+      "committed_sha256": "9384a1967cddde5bae2a9d3fa213c448efc2f029504b8f07b30a97a8bde3db19",
+      "current_working_same": true
+    },
+    {
+      "path": "agent/tools/open-book-replay.ts",
+      "committed_sha256": "2257804411bb85c30f8fdda031712a9ff1dcf49610a93a14969ad8e30afeda23",
+      "current_working_same": true
+    },
+    {
+      "path": "agent/tools/replay-brain-strategies.ts",
+      "committed_sha256": "163dda6289a9c6b08e495d502eda288b276c0a9aac6adc02e177138321ff996f",
+      "current_working_same": true
+    },
+    {
+      "path": "docs/brain-strategies.md",
+      "committed_sha256": "23539448090cdb75212f875278b1f3810fbcb788e7fa176db6f84f304faf2948",
+      "current_working_same": true
+    },
+    {
+      "path": "docs/learning-requests.md",
+      "committed_sha256": "98420188724fd5db1995f86a99c2ba6cc2b9decf008af3ba0d730150e59e9949",
+      "current_working_same": true
+    },
+    {
+      "path": "docs/open-book.md",
+      "committed_sha256": "9918258f5c200560df43286dc3a5aa03f53b0129cdda9a097a0aa2aa5919c707",
+      "current_working_same": true
+    },
+    {
+      "path": "knowledge/builders/brain_card_distill.py",
+      "committed_sha256": "863512d651ce24347934acc447c892101ea28d640a472a9db6315d1ee23ae40d",
+      "current_working_same": true
+    },
+    {
+      "path": "knowledge/builders/brain_decision_dataset.py",
+      "committed_sha256": "4f3a8045ab3d85d6454dc31355659d0e69942b23e726a8211843443badd67258",
+      "current_working_same": true
+    },
+    {
+      "path": "knowledge/builders/build-fight-value.py",
+      "committed_sha256": "6403d5f21ca8e32d3f33efdab2ac1cdb295b10f7273e3ead7c17c37bf03a7d41",
+      "current_working_same": true
+    },
+    {
+      "path": "knowledge/builders/build-open-book.py",
+      "committed_sha256": "d8fb0de3ece523ab2d01216b632f90bfc5d121b3e863219cd9157811c7b864b6",
+      "current_working_same": true
+    },
+    {
+      "path": "knowledge/builders/opening_value.py",
+      "committed_sha256": "b8160f73e08b127ade737a0a9c8e25cfaec621963e5220ba55cdfb1a92348169",
+      "current_working_same": true
+    },
+    {
+      "path": "knowledge/builders/report-open-book.py",
+      "committed_sha256": "118b656f8c5779127b42f2d84aa712a7ef11b2fef18dafbcfc4be5a6cfe5d1c6",
+      "current_working_same": true
+    },
+    {
+      "path": "knowledge/builders/test_opening_value.py",
+      "committed_sha256": "48302aab0ae8b61b6b35727187e25a2f18c1e826718cd016d2ba541ce486cee5",
+      "current_working_same": true
+    },
+    {
+      "path": "knowledge/builders/tests/test_brain_card_distill.py",
+      "committed_sha256": "8aad8c2e0aeac7ff25df77d65296c2e9238e322da1a759eab1852edba8bef59e",
+      "current_working_same": true
+    },
+    {
+      "path": "knowledge/builders/tests/test_brain_decision_dataset.py",
+      "committed_sha256": "5fdeb3664b54216c2a963d37d23834560f030a358e8c69121b26609fa49e7f06",
+      "current_working_same": true
+    },
+    {
+      "path": "knowledge/characters/silent/open-book.json",
+      "committed_sha256": "515c8e95dde4688edb7c1607482572af8f11877b0b44775f7be1266573de505b",
+      "current_working_same": true
+    },
+    {
+      "path": "knowledge/characters/silent/opening-value.json",
+      "committed_sha256": "ffdad3f470594916715bdd6859c406afeb20525cd230877cec524423c956483e",
+      "current_working_same": true
+    },
+    {
+      "path": "knowledge/common/open-book.json",
+      "committed_sha256": "f19ab97372975389b0cccd2c7e158e47eba4021d0b3e7af5a47de84bb56d63fa",
+      "current_working_same": true
+    },
+    {
+      "path": "knowledge/schemas/brain-strategies-v1.schema.json",
+      "committed_sha256": "5ec1b8ce1abebdb56607415df2f27f77343c16e1a28769f2be3b0e649586cb04",
+      "current_working_same": true
+    },
+    {
+      "path": "ops/learning_requests.py",
+      "committed_sha256": "3f7afefb2307a420dd35a28e94f6b20c6bdc76ae30ce8f5cffb0dd62633e13e4",
+      "current_working_same": true
+    },
+    {
+      "path": "ops/open_book_refresh.py",
+      "committed_sha256": "1d46f7f1d83b31ce83786329ed95e4479246854327e01212a2c995ddf71b1513",
+      "current_working_same": true
+    },
+    {
+      "path": "ops/tests/test_manual_notice_ack.py",
+      "committed_sha256": "6d49bd95d1ce0605af0d9e44a6cee9ace8ecc3c9571324bf3ef1477c479862ef",
+      "current_working_same": true
+    },
+    {
+      "path": "ops/tests/test_open_book_refresh.py",
+      "committed_sha256": "f2a4c905085b712d900def0626011fa4ad83b078967549467bd5505273a4356e",
+      "current_working_same": true
+    }
+  ],
+  "versions": [
+    {
+      "worktree": ".",
+      "release_id": "V6-R411",
+      "commit": "305c67555e447f02993753d8931d9e172ba93ef6",
+      "aliases": [
+        "V6.open-book-brain-value-strategy-notice"
+      ]
+    },
+    {
+      "worktree": ".worktrees/live",
+      "release_id": "V6-R411",
+      "commit": "305c67555e447f02993753d8931d9e172ba93ef6",
+      "aliases": [
+        "V6.open-book-brain-value-strategy-notice"
+      ]
+    }
+  ],
+  "notification_windows": [
+    {
+      "path": "ops/inbox-dev.md",
+      "offset": 2147185,
+      "bytes": 1082,
+      "sha256": "906d17e07d04cd880fb3f821b15797cb231683acfcc067428594c4d518190a79"
+    },
+    {
+      "path": "notes/for-roy.md",
+      "offset": 1690302,
+      "bytes": 1082,
+      "sha256": "906d17e07d04cd880fb3f821b15797cb231683acfcc067428594c4d518190a79"
+    },
+    {
+      "path": "paper/materials/decision-log.md",
+      "offset": 3849433,
+      "bytes": 342,
+      "sha256": "84afecd124329fc68209048ebba734ab261a843055b0c8ad56fd5b9726782e45"
+    }
+  ],
+  "knowledge_boundary_preservation": {
+    "path": "paper/materials/20261021-issue25-boundary-ops/latest-knowledge-channel.json",
+    "bytes": 12476,
+    "sha256": "acfee2f9275912a1bdcfc96430c6262045838fa9e315574adf9f05cbe2da6948"
+  },
+  "knowledge_boundary_files": 497,
+  "binding_sha256_verified": "5a9e900cd6626febe517591db75008cc8d1962408744fb41f9dbe4570bfd0d55",
+  "binding_mode": "0o644",
+  "absent_live_binding_preserved": true,
+  "original_controller_exited": true,
+  "runtime_processes": [
+    {
+      "kind": "autoplay",
+      "pid": 228609,
+      "uid": 1000,
+      "start": "613852",
+      "state": "S",
+      "argv": [
+        "bash",
+        "/home/dw/Projects/agent-sts2/ops/autoplay.sh",
+        "--tail-console"
+      ],
+      "cwd": "/home/dw/Projects/agent-sts2"
+    },
+    {
+      "kind": "play",
+      "pid": 775629,
+      "uid": 1000,
+      "start": "1368698",
+      "state": "S",
+      "argv": [
+        "/home/dw/.local/node/bin/node",
+        "--require",
+        "/home/dw/Projects/agent-sts2/agent/node_modules/tsx/dist/preflight.cjs",
+        "--import",
+        "file:///home/dw/Projects/agent-sts2/agent/node_modules/tsx/dist/loader.mjs",
+        "src/index.ts",
+        "play",
+        "--max-runs",
+        "1",
+        "--max-minutes",
+        "240"
+      ],
+      "cwd": "/home/dw/Projects/agent-sts2/.worktrees/live/agent"
+    }
+  ],
+  "first_run": {
+    "run_id": "DFYBEW6NA6AJ",
+    "character": "SILENT",
+    "ascension": 10,
+    "actual_play_pid": 775629,
+    "config_original": {
+      "path": "logs/run-config.jsonl",
+      "offset": 2457617,
+      "bytes": 6028,
+      "sha256": "0a31a9fb92ca34f9a05072fd67ad1c663f11998629b10302018910753cf55210"
+    },
+    "config_code_ENOBUFS_preserved": {
+      "commit": null,
+      "code": null,
+      "dirty": null,
+      "dirty_files": [],
+      "branch": null,
+      "worktree": "live",
+      "error": "git status failed: spawnSync git ENOBUFS"
+    },
+    "four_deciders": "brain",
+    "REFLEX": "off",
+    "direction_replan": "off",
+    "brain_budget_ms": 90000,
+    "brain_logged_model": "gpt-6.1-sol",
+    "brain_logged_effort": "xhigh",
+    "native_turn_context_effort_independently_verified": false
+  },
+  "first_natural_event": {
+    "original_brain": {
+      "path": "logs/brain.jsonl",
+      "offset": 1236781545,
+      "bytes": 46450,
+      "sha256": "7cf2282af9da6cab418c2dc6056d2f5cad053fd5fd2f610fe2dbc2c41a1560a6"
+    },
+    "original_decision": {
+      "path": "logs/decisions.jsonl",
+      "offset": 3414623229,
+      "bytes": 47614,
+      "sha256": "71e3332f253f0fa7dd894c4aa978561759a3b487e88de5efe50b6c815fa8e530"
+    },
+    "label": "event/choose",
+    "question_id": "mvi5augt-775629-1",
+    "accepted": true,
+    "fallback": false,
+    "budget_ms": 90000,
+    "actual_ms": 19996,
+    "timed_out": false,
+    "external_envelope_utf8_bytes": 17374,
+    "external_append_limit": 18000,
+    "append_delta_includes_other_enrichment": "not independently reconstructed from original before-enrichment payload",
+    "external_entries": 19,
+    "source_rows": 8,
+    "external_revision": "4f52f5a53597e4fdc6cf130f7ebe2cdd35236101",
+    "conflicts": 0,
+    "missing": 0,
+    "omitted": 32
+  },
+  "strategy_library_exists": false,
+  "first_natural_reward_P0": "pending not triggered in frozen first event window",
+  "first_natural_Jev_24KB_and_sim_reference": {
+    "budget_rows": 8,
+    "within_24000": 6,
+    "over_24000": 2,
+    "max_request_bytes": 27311,
+    "open_book_present_rows": 6,
+    "over_limit_rows_add_open_book": 0,
+    "all_errors_absent": true,
+    "nonenumerable_external_model_reference_natural_use": "not proven from serialized log; pending",
+    "unqualified_total_budget_pass": false
+  },
+  "captured_new_run_Jev_rows": 8,
+  "captured_log_sizes": {
+    "run_config": 2463645,
+    "brain": 1236873054,
+    "decisions": 3414906426,
+    "jev": 2445137453
+  },
+  "CLI_live_sha256": "3f7afefb2307a420dd35a28e94f6b20c6bdc76ae30ce8f5cffb0dd62633e13e4",
+  "role_ACK_and_scientific_parents_closed": false,
+  "no_before_after_checkpoint_comparison": true,
+  "new_model_API_full_dataset_refresh_or_learning_started": false
+}

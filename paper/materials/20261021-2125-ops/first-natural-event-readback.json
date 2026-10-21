@@ -1,0 +1,864 @@
+{
+  "ts": "2026-10-21T13:26:24.681Z",
+  "run_id": "DFYBEW6NA6AJ",
+  "label": "event/choose",
+  "engine": "codex",
+  "model": "gpt-6.1-sol",
+  "effort": "xhigh",
+  "accepted": true,
+  "problems": [],
+  "question_id": "mvi5augt-775629-1",
+  "latency_ms": 14259,
+  "original": {
+    "path": "logs/brain.jsonl",
+    "offset": 1236781545,
+    "bytes": 46450,
+    "sha256": "7cf2282af9da6cab418c2dc6056d2f5cad053fd5fd2f610fe2dbc2c41a1560a6"
+  },
+  "open_book": {
+    "schema": "open-book-context-v1",
+    "source": "external:spire-codex",
+    "game_version": "v0.111.0",
+    "limits": "外部机械资料，与实盘证据分账；当前 mod 优先。升级 facts.upgrade 是增量；进阶阈值未知。资料存在不证明模拟已支持。省略项可按 kind/id 查询本地库。",
+    "sources": [
+      {
+        "key": "relics:eng",
+        "url": "https://raw.githubusercontent.com/ptrlrd/spire-codex/4f52f5a53597e4fdc6cf130f7ebe2cdd35236101/data-beta/v0.111.0/eng/relics.json",
+        "sha256": "25a83cd102db871daaeb0c174d0f391d03f90f5eb0e4e4732e07f6d460b55bc7",
+        "license": "https://polyformproject.org/licenses/noncommercial/1.0.0",
+        "required_notice": "Copyright © 2025-present Peter Lord and Spire Codex contributors."
+      },
+      {
+        "key": "relics:zhs",
+        "url": "https://raw.githubusercontent.com/ptrlrd/spire-codex/4f52f5a53597e4fdc6cf130f7ebe2cdd35236101/data-beta/v0.111.0/zhs/relics.json",
+        "sha256": "d4601a1ebaf5d283cfaf8e492283da451e4778ab9fdc0e806f6f3c1d24821f17",
+        "license": "https://polyformproject.org/licenses/noncommercial/1.0.0",
+        "required_notice": "Copyright © 2025-present Peter Lord and Spire Codex contributors."
+      },
+      {
+        "key": "cards:eng",
+        "url": "https://raw.githubusercontent.com/ptrlrd/spire-codex/4f52f5a53597e4fdc6cf130f7ebe2cdd35236101/data-beta/v0.111.0/eng/cards.json",
+        "sha256": "31383b5965746b3ad59da94ddd542e524fdc79c9147aced178639fff9d445938",
+        "license": "https://polyformproject.org/licenses/noncommercial/1.0.0",
+        "required_notice": "Copyright © 2025-present Peter Lord and Spire Codex contributors."
+      },
+      {
+        "key": "cards:zhs",
+        "url": "https://raw.githubusercontent.com/ptrlrd/spire-codex/4f52f5a53597e4fdc6cf130f7ebe2cdd35236101/data-beta/v0.111.0/zhs/cards.json",
+        "sha256": "50cb0b33a9c80131d46c9abd16bc983b96b3cd376abb1250265521915d68cebc",
+        "license": "https://polyformproject.org/licenses/noncommercial/1.0.0",
+        "required_notice": "Copyright © 2025-present Peter Lord and Spire Codex contributors."
+      },
+      {
+        "key": "events:eng",
+        "url": "https://raw.githubusercontent.com/ptrlrd/spire-codex/4f52f5a53597e4fdc6cf130f7ebe2cdd35236101/data-beta/v0.111.0/eng/events.json",
+        "sha256": "1c57c17b1f00b57be4e2da4168d06818fc31b9e938571e58150a7a81a8cfc904",
+        "license": "https://polyformproject.org/licenses/noncommercial/1.0.0",
+        "required_notice": "Copyright © 2025-present Peter Lord and Spire Codex contributors."
+      },
+      {
+        "key": "events:zhs",
+        "url": "https://raw.githubusercontent.com/ptrlrd/spire-codex/4f52f5a53597e4fdc6cf130f7ebe2cdd35236101/data-beta/v0.111.0/zhs/events.json",
+        "sha256": "6f71fdd22127155103802bb19a1f7a48bac517cfb2a0e365324e01dd8d492d0e",
+        "license": "https://polyformproject.org/licenses/noncommercial/1.0.0",
+        "required_notice": "Copyright © 2025-present Peter Lord and Spire Codex contributors."
+      },
+      {
+        "key": "monsters:eng",
+        "url": "https://raw.githubusercontent.com/ptrlrd/spire-codex/4f52f5a53597e4fdc6cf130f7ebe2cdd35236101/data-beta/v0.111.0/eng/monsters.json",
+        "sha256": "7c378bbdeb4120e52335e2840f87ce85d3b597370ba4fd531a2fd7a99beeaee1",
+        "license": "https://polyformproject.org/licenses/noncommercial/1.0.0",
+        "required_notice": "Copyright © 2025-present Peter Lord and Spire Codex contributors."
+      },
+      {
+        "key": "monsters:zhs",
+        "url": "https://raw.githubusercontent.com/ptrlrd/spire-codex/4f52f5a53597e4fdc6cf130f7ebe2cdd35236101/data-beta/v0.111.0/zhs/monsters.json",
+        "sha256": "26ae64c6b60bbbc19c6fa9eb14b11f6156786545674511edd97c6fedbd263c05",
+        "license": "https://polyformproject.org/licenses/noncommercial/1.0.0",
+        "required_notice": "Copyright © 2025-present Peter Lord and Spire Codex contributors."
+      }
+    ],
+    "entries": [
+      {
+        "kind": "relics",
+        "id": "LEAD_PAPERWEIGHT",
+        "name": "铅制镇纸",
+        "aliases": [
+          "Lead Paperweight"
+        ],
+        "source": "external:spire-codex",
+        "game_version": "v0.111.0",
+        "provenance": [
+          "relics:eng",
+          "relics:zhs"
+        ],
+        "origin_pool": "shared",
+        "evidence_scope": "external-reference; not live validation",
+        "description": "拾起时，从2张无色牌中选择1张加入你的牌组。",
+        "description_en": "Upon pickup, choose 1 of 2 Colorless cards to add to your Deck.",
+        "facts": {
+          "rarity_key": "Ancient",
+          "pool": "shared"
+        }
+      },
+      {
+        "kind": "relics",
+        "id": "PHIAL_HOLSTER",
+        "name": "药瓶皮套",
+        "aliases": [
+          "Phial Holster"
+        ],
+        "source": "external:spire-codex",
+        "game_version": "v0.111.0",
+        "provenance": [
+          "relics:eng",
+          "relics:zhs"
+        ],
+        "origin_pool": "shared",
+        "evidence_scope": "external-reference; not live validation",
+        "description": "拾起时，获得1个药水栏位并获得2瓶随机药水。",
+        "description_en": "Upon pickup, gain 1 potion slot and procure 2 random Potions.",
+        "facts": {
+          "rarity_key": "Ancient",
+          "pool": "shared"
+        }
+      },
+      {
+        "kind": "relics",
+        "id": "SILKEN_TRESS",
+        "name": "华美发束",
+        "aliases": [
+          "Silken Tress"
+        ],
+        "source": "external:spire-codex",
+        "game_version": "v0.111.0",
+        "provenance": [
+          "relics:eng",
+          "relics:zhs"
+        ],
+        "origin_pool": "shared",
+        "evidence_scope": "external-reference; not live validation",
+        "description": "拾起时，失去所有金币。为你的第一次卡牌奖励中的所有牌附魔：华彩。",
+        "description_en": "Upon pickup, lose all Gold. Enchant all cards in your first card reward with Glam.",
+        "facts": {
+          "rarity_key": "Ancient",
+          "pool": "shared"
+        }
+      },
+      {
+        "kind": "cards",
+        "id": "LOOP",
+        "name": "循环",
+        "aliases": [
+          "Loop"
+        ],
+        "source": "external:spire-codex",
+        "game_version": "v0.111.0",
+        "provenance": [
+          "cards:eng",
+          "cards:zhs"
+        ],
+        "origin_pool": "defect",
+        "evidence_scope": "external-reference; not live validation",
+        "facts": {
+          "cost": 1,
+          "target": "Self",
+          "color": "defect",
+          "vars": {
+            "Loop": 1
+          },
+          "upgrade": {
+            "loop": "+1"
+          },
+          "type": "Power",
+          "rarity": "Uncommon",
+          "keywords": []
+        },
+        "description": "在你的回合开始时，触发你最右侧的一个充能球的被动能力。",
+        "description_en": "At the start of your turn, trigger the passive ability of your rightmost Orb.",
+        "upgraded_description": "在你的回合开始时，触发你最右侧的一个充能球的被动能力2次。",
+        "upgraded_description_en": "At the start of your turn, trigger the passive ability of your rightmost Orb 2 times."
+      },
+      {
+        "kind": "relics",
+        "id": "RING_OF_THE_SNAKE",
+        "name": "蛇之戒指",
+        "aliases": [
+          "Ring of the Snake"
+        ],
+        "source": "external:spire-codex",
+        "game_version": "v0.111.0",
+        "provenance": [
+          "relics:eng",
+          "relics:zhs"
+        ],
+        "origin_pool": "silent",
+        "evidence_scope": "external-reference; not live validation",
+        "description": "在每场战斗开始时，额外抽2张牌。",
+        "description_en": "At the start of each combat, draw 2 additional cards.",
+        "facts": {
+          "rarity_key": "Starter",
+          "pool": "silent"
+        }
+      },
+      {
+        "kind": "events",
+        "id": "NEOW",
+        "name": "涅奥",
+        "aliases": [
+          "Neow"
+        ],
+        "source": "external:spire-codex",
+        "game_version": "v0.111.0",
+        "provenance": [
+          "events:eng",
+          "events:zhs"
+        ],
+        "origin_pool": "shared",
+        "evidence_scope": "external-reference; not live validation",
+        "facts": {
+          "act": "Act 1 - Overgrowth / Underdocks",
+          "preconditions": null,
+          "options": [],
+          "pages": []
+        },
+        "limits": "只存机械选项效果；选项可随页面/局面变化，当前游戏选项优先。"
+      },
+      {
+        "kind": "cards",
+        "id": "STRIKE_SILENT",
+        "name": "打击",
+        "aliases": [
+          "Strike"
+        ],
+        "source": "external:spire-codex",
+        "game_version": "v0.111.0",
+        "provenance": [
+          "cards:eng",
+          "cards:zhs"
+        ],
+        "origin_pool": "silent",
+        "evidence_scope": "external-reference; not live validation",
+        "facts": {
+          "cost": 1,
+          "target": "AnyEnemy",
+          "color": "silent",
+          "damage": 6,
+          "vars": {
+            "Damage": 6
+          },
+          "upgrade": {
+            "damage": "+3"
+          },
+          "type": "Attack",
+          "rarity": "Basic",
+          "keywords": []
+        },
+        "description": "造成6点伤害。",
+        "description_en": "Deal 6 damage.",
+        "upgraded_description": "造成9点伤害。",
+        "upgraded_description_en": "Deal 9 damage."
+      },
+      {
+        "kind": "cards",
+        "id": "DEFEND_SILENT",
+        "name": "防御",
+        "aliases": [
+          "Defend"
+        ],
+        "source": "external:spire-codex",
+        "game_version": "v0.111.0",
+        "provenance": [
+          "cards:eng",
+          "cards:zhs"
+        ],
+        "origin_pool": "silent",
+        "evidence_scope": "external-reference; not live validation",
+        "facts": {
+          "cost": 1,
+          "target": "Self",
+          "color": "silent",
+          "block": 5,
+          "vars": {
+            "Block": 5
+          },
+          "upgrade": {
+            "block": "+3"
+          },
+          "type": "Skill",
+          "rarity": "Basic",
+          "keywords": []
+        },
+        "description": "获得5点格挡。",
+        "description_en": "Gain 5 Block.",
+        "upgraded_description": "获得8点格挡。",
+        "upgraded_description_en": "Gain 8 Block."
+      },
+      {
+        "kind": "cards",
+        "id": "NEUTRALIZE",
+        "name": "中和",
+        "aliases": [
+          "Neutralize"
+        ],
+        "source": "external:spire-codex",
+        "game_version": "v0.111.0",
+        "provenance": [
+          "cards:eng",
+          "cards:zhs"
+        ],
+        "origin_pool": "silent",
+        "evidence_scope": "external-reference; not live validation",
+        "facts": {
+          "cost": 0,
+          "target": "AnyEnemy",
+          "color": "silent",
+          "damage": 3,
+          "vars": {
+            "Damage": 3,
+            "WeakPower": 1,
+            "Weak": 1
+          },
+          "upgrade": {
+            "damage": "+1",
+            "weak": "+1"
+          },
+          "powers_applied": [
+            {
+              "power": "Weak",
+              "amount": 1,
+              "power_key": "Weak"
+            }
+          ],
+          "type": "Attack",
+          "rarity": "Basic",
+          "keywords": []
+        },
+        "description": "造成3点伤害。\n给予1层虚弱。",
+        "description_en": "Deal 3 damage.\nApply 1 Weak.",
+        "upgraded_description": "造成4点伤害。\n给予2层虚弱。",
+        "upgraded_description_en": "Deal 4 damage.\nApply 2 Weak."
+      },
+      {
+        "kind": "cards",
+        "id": "SURVIVOR",
+        "name": "生存者",
+        "aliases": [
+          "Survivor"
+        ],
+        "source": "external:spire-codex",
+        "game_version": "v0.111.0",
+        "provenance": [
+          "cards:eng",
+          "cards:zhs"
+        ],
+        "origin_pool": "silent",
+        "evidence_scope": "external-reference; not live validation",
+        "facts": {
+          "cost": 1,
+          "target": "Self",
+          "color": "silent",
+          "block": 8,
+          "vars": {
+            "Block": 8
+          },
+          "upgrade": {
+            "block": "+3"
+          },
+          "type": "Skill",
+          "rarity": "Basic",
+          "keywords": []
+        },
+        "description": "获得8点格挡。\n丢弃1张牌。",
+        "description_en": "Gain 8 Block.\nDiscard 1 card.",
+        "upgraded_description": "获得11点格挡。\n丢弃1张牌。",
+        "upgraded_description_en": "Gain 11 Block.\nDiscard 1 card."
+      },
+      {
+        "kind": "cards",
+        "id": "ASCENDERS_BANE",
+        "name": "进阶之灾",
+        "aliases": [
+          "Ascender's Bane"
+        ],
+        "source": "external:spire-codex",
+        "game_version": "v0.111.0",
+        "provenance": [
+          "cards:eng",
+          "cards:zhs"
+        ],
+        "origin_pool": "curse",
+        "evidence_scope": "external-reference; not live validation",
+        "facts": {
+          "cost": -1,
+          "target": "None",
+          "color": "curse",
+          "type": "Curse",
+          "rarity": "Curse",
+          "keywords": [
+            "Ethereal",
+            "Unplayable",
+            "Eternal"
+          ]
+        },
+        "description": "",
+        "description_en": "",
+        "upgraded_description": "",
+        "upgraded_description_en": ""
+      },
+      {
+        "kind": "monsters",
+        "id": "KIN_FOLLOWER",
+        "name": "同族信徒",
+        "aliases": [
+          "Kin Follower"
+        ],
+        "source": "external:spire-codex",
+        "game_version": "v0.111.0",
+        "provenance": [
+          "monsters:eng",
+          "monsters:zhs"
+        ],
+        "origin_pool": "shared",
+        "evidence_scope": "external-reference; not live validation",
+        "facts": {
+          "type": "Boss",
+          "min_hp": 58,
+          "max_hp": 59,
+          "min_hp_ascension": 62,
+          "max_hp_ascension": 63,
+          "moves": [
+            {
+              "id": "QUICK_SLASH",
+              "name": "快斩",
+              "intent": "Attack",
+              "damage": {
+                "normal": 5,
+                "ascension": 5
+              }
+            },
+            {
+              "id": "BOOMERANG",
+              "name": "回旋镖",
+              "intent": "Attack",
+              "damage": {
+                "normal": 2,
+                "ascension": 2,
+                "hit_count": 2
+              }
+            },
+            {
+              "id": "POWER_DANCE",
+              "name": "力量之舞",
+              "intent": "Buff",
+              "powers": [
+                {
+                  "power_id": "STRENGTH",
+                  "target": "self",
+                  "amount": 2
+                }
+              ]
+            }
+          ],
+          "encounters": [
+            {
+              "encounter_id": "THE_KIN_BOSS",
+              "encounter_name": "同族小队",
+              "room_type": "Boss",
+              "act": "Act 1 - Overgrowth",
+              "is_weak": false
+            }
+          ],
+          "innate_powers": [
+            {
+              "power_id": "MINION",
+              "amount": 1
+            }
+          ],
+          "attack_pattern": {
+            "type": "cycle",
+            "initial_move": "POWER_DANCE",
+            "states": [
+              {
+                "id": "QUICK_SLASH_MOVE",
+                "type": "move",
+                "move_id": "QUICK_SLASH",
+                "next": "BOOMERANG_MOVE"
+              },
+              {
+                "id": "BOOMERANG_MOVE",
+                "type": "move",
+                "move_id": "BOOMERANG",
+                "next": "POWER_DANCE_MOVE"
+              },
+              {
+                "id": "POWER_DANCE_MOVE",
+                "type": "move",
+                "move_id": "POWER_DANCE",
+                "next": "QUICK_SLASH_MOVE"
+              }
+            ],
+            "description": "力量之舞 → 快斩 → 回旋镖 → repeat"
+          }
+        },
+        "limits": "进阶阈值未给出；普通/进阶值并列保留，不推定当前进阶适用值。出招图是外部描述，未证明模拟支持。"
+      },
+      {
+        "kind": "monsters",
+        "id": "KIN_PRIEST",
+        "name": "同族神官",
+        "aliases": [
+          "Kin Priest"
+        ],
+        "source": "external:spire-codex",
+        "game_version": "v0.111.0",
+        "provenance": [
+          "monsters:eng",
+          "monsters:zhs"
+        ],
+        "origin_pool": "shared",
+        "evidence_scope": "external-reference; not live validation",
+        "facts": {
+          "type": "Boss",
+          "min_hp": 190,
+          "max_hp": null,
+          "min_hp_ascension": 199,
+          "max_hp_ascension": null,
+          "moves": [
+            {
+              "id": "ORB_OF_FRAILTY",
+              "name": "脆弱法球",
+              "intent": "Attack + Debuff",
+              "powers": [
+                {
+                  "power_id": "FRAIL",
+                  "target": "player",
+                  "amount": 1
+                }
+              ],
+              "damage": {
+                "normal": 8,
+                "ascension": 9
+              }
+            },
+            {
+              "id": "ORB_OF_WEAKNESS",
+              "name": "虚弱法球",
+              "intent": "Attack + Debuff",
+              "powers": [
+                {
+                  "power_id": "WEAK",
+                  "target": "player",
+                  "amount": 1
+                }
+              ],
+              "damage": {
+                "normal": 8,
+                "ascension": 9
+              }
+            },
+            {
+              "id": "BEAM",
+              "name": "灵魂光束",
+              "intent": "Attack",
+              "damage": {
+                "normal": 3,
+                "ascension": 3,
+                "hit_count": 3
+              }
+            },
+            {
+              "id": "RITUAL",
+              "name": "黑暗仪式",
+              "intent": "Buff",
+              "powers": [
+                {
+                  "power_id": "STRENGTH",
+                  "target": "self",
+                  "amount": 2
+                }
+              ]
+            }
+          ],
+          "encounters": [
+            {
+              "encounter_id": "THE_KIN_BOSS",
+              "encounter_name": "同族小队",
+              "room_type": "Boss",
+              "act": "Act 1 - Overgrowth",
+              "is_weak": false
+            }
+          ],
+          "innate_powers": null,
+          "attack_pattern": {
+            "type": "cycle",
+            "initial_move": "ORB_OF_FRAILTY",
+            "states": [
+              {
+                "id": "ORB_OF_FRAILTY_MOVE",
+                "type": "move",
+                "move_id": "ORB_OF_FRAILTY",
+                "next": "ORB_OF_WEAKNESS_MOVE"
+              },
+              {
+                "id": "ORB_OF_WEAKNESS_MOVE",
+                "type": "move",
+                "move_id": "ORB_OF_WEAKNESS",
+                "next": "BEAM_MOVE"
+              },
+              {
+                "id": "BEAM_MOVE",
+                "type": "move",
+                "move_id": "BEAM",
+                "next": "RITUAL_MOVE"
+              },
+              {
+                "id": "RITUAL_MOVE",
+                "type": "move",
+                "move_id": "RITUAL",
+                "next": "ORB_OF_FRAILTY_MOVE"
+              }
+            ],
+            "description": "脆弱法球 → 虚弱法球 → 灵魂光束 → 黑暗仪式 → repeat"
+          }
+        },
+        "limits": "进阶阈值未给出；普通/进阶值并列保留，不推定当前进阶适用值。出招图是外部描述，未证明模拟支持。"
+      },
+      {
+        "kind": "cards",
+        "id": "ACCELERANT",
+        "name": "触媒",
+        "aliases": [
+          "Accelerant"
+        ],
+        "source": "external:spire-codex",
+        "game_version": "v0.111.0",
+        "provenance": [
+          "cards:eng",
+          "cards:zhs"
+        ],
+        "origin_pool": "silent",
+        "evidence_scope": "external-reference; not live validation",
+        "facts": {
+          "cost": 1,
+          "target": "Self",
+          "color": "silent",
+          "vars": {
+            "Accelerant": 1
+          },
+          "upgrade": {
+            "accelerant": "+1"
+          },
+          "type": "Power",
+          "rarity": "Uncommon",
+          "keywords": []
+        },
+        "description": "中毒会额外触发1次。",
+        "description_en": "Poison is triggered 1 additional time.",
+        "upgraded_description": "中毒会额外触发2次。",
+        "upgraded_description_en": "Poison is triggered 2 additional times."
+      },
+      {
+        "kind": "cards",
+        "id": "BOUNCING_FLASK",
+        "name": "弹跳药瓶",
+        "aliases": [
+          "Bouncing Flask"
+        ],
+        "source": "external:spire-codex",
+        "game_version": "v0.111.0",
+        "provenance": [
+          "cards:eng",
+          "cards:zhs"
+        ],
+        "origin_pool": "silent",
+        "evidence_scope": "external-reference; not live validation",
+        "facts": {
+          "cost": 2,
+          "target": "RandomEnemy",
+          "color": "silent",
+          "vars": {
+            "Repeat": 3,
+            "PoisonPower": 3,
+            "Poison": 3
+          },
+          "upgrade": {
+            "repeat": "+1"
+          },
+          "powers_applied": [
+            {
+              "power": "Poison",
+              "amount": 3,
+              "power_key": "Poison"
+            }
+          ],
+          "type": "Skill",
+          "rarity": "Uncommon",
+          "keywords": []
+        },
+        "description": "随机给予敌人3层中毒3次。",
+        "description_en": "Apply 3 Poison to a random enemy 3 times.",
+        "upgraded_description": "随机给予敌人3层中毒4次。",
+        "upgraded_description_en": "Apply 3 Poison to a random enemy 4 times."
+      },
+      {
+        "kind": "cards",
+        "id": "CORROSIVE_WAVE",
+        "name": "腐蚀波",
+        "aliases": [
+          "Corrosive Wave"
+        ],
+        "source": "external:spire-codex",
+        "game_version": "v0.111.0",
+        "provenance": [
+          "cards:eng",
+          "cards:zhs"
+        ],
+        "origin_pool": "silent",
+        "evidence_scope": "external-reference; not live validation",
+        "facts": {
+          "cost": 1,
+          "target": "Self",
+          "color": "silent",
+          "vars": {
+            "CorrosiveWave": 2
+          },
+          "upgrade": {
+            "corrosivewave": "+1"
+          },
+          "type": "Skill",
+          "rarity": "Rare",
+          "keywords": []
+        },
+        "description": "打出此牌后，你在本回合每抽到一张牌，就给予所有敌人2层中毒。",
+        "description_en": "Whenever you draw a card this turn, apply 2 Poison to ALL enemies.",
+        "upgraded_description": "打出此牌后，你在本回合每抽到一张牌，就给予所有敌人3层中毒。",
+        "upgraded_description_en": "Whenever you draw a card this turn, apply 3 Poison to ALL enemies."
+      },
+      {
+        "kind": "cards",
+        "id": "DEADLY_POISON",
+        "name": "致命毒药",
+        "aliases": [
+          "Deadly Poison"
+        ],
+        "source": "external:spire-codex",
+        "game_version": "v0.111.0",
+        "provenance": [
+          "cards:eng",
+          "cards:zhs"
+        ],
+        "origin_pool": "silent",
+        "evidence_scope": "external-reference; not live validation",
+        "facts": {
+          "cost": 1,
+          "target": "AnyEnemy",
+          "color": "silent",
+          "vars": {
+            "PoisonPower": 5,
+            "Poison": 5
+          },
+          "upgrade": {
+            "poison": "+2"
+          },
+          "powers_applied": [
+            {
+              "power": "Poison",
+              "amount": 5,
+              "power_key": "Poison"
+            }
+          ],
+          "type": "Skill",
+          "rarity": "Common",
+          "keywords": []
+        },
+        "description": "给予5层中毒。",
+        "description_en": "Apply 5 Poison.",
+        "upgraded_description": "给予7层中毒。",
+        "upgraded_description_en": "Apply 7 Poison."
+      },
+      {
+        "kind": "cards",
+        "id": "ENVENOM",
+        "name": "涂毒",
+        "aliases": [
+          "Envenom"
+        ],
+        "source": "external:spire-codex",
+        "game_version": "v0.111.0",
+        "provenance": [
+          "cards:eng",
+          "cards:zhs"
+        ],
+        "origin_pool": "silent",
+        "evidence_scope": "external-reference; not live validation",
+        "facts": {
+          "cost": 2,
+          "target": "Self",
+          "color": "silent",
+          "vars": {
+            "EnvenomPower": 1,
+            "Envenom": 1
+          },
+          "upgrade": {
+            "envenompower": "+1"
+          },
+          "powers_applied": [
+            {
+              "power": "Envenom",
+              "amount": 1,
+              "power_key": "Envenom"
+            }
+          ],
+          "type": "Power",
+          "rarity": "Rare",
+          "keywords": []
+        },
+        "description": "每有一次攻击造成未被格挡的伤害，就给予1层中毒。",
+        "description_en": "Whenever an Attack deals unblocked damage, apply 1 Poison.",
+        "upgraded_description": "每有一次攻击造成未被格挡的伤害，就给予2层中毒。",
+        "upgraded_description_en": "Whenever an Attack deals unblocked damage, apply 2 Poison."
+      },
+      {
+        "kind": "cards",
+        "id": "NOXIOUS_FUMES",
+        "name": "毒雾",
+        "aliases": [
+          "Noxious Fumes"
+        ],
+        "source": "external:spire-codex",
+        "game_version": "v0.111.0",
+        "provenance": [
+          "cards:eng",
+          "cards:zhs"
+        ],
+        "origin_pool": "silent",
+        "evidence_scope": "external-reference; not live validation",
+        "facts": {
+          "cost": 1,
+          "target": "Self",
+          "color": "silent",
+          "vars": {
+            "PoisonPerTurn": 2
+          },
+          "upgrade": {
+            "poisonperturn": "+1"
+          },
+          "type": "Power",
+          "rarity": "Uncommon",
+          "keywords": []
+        },
+        "description": "在你的回合开始时，给予所有敌人2层中毒。",
+        "description_en": "At the start of your turn, apply 2 Poison to ALL enemies.",
+        "upgraded_description": "在你的回合开始时，给予所有敌人3层中毒。",
+        "upgraded_description_en": "At the start of your turn, apply 3 Poison to ALL enemies."
+      }
+    ],
+    "conflicts": [],
+    "missing": [],
+    "omitted": 32
+  },
+  "open_book_envelope_utf8_bytes": 17374,
+  "opening_facts": "not triggered in first event",
+  "strategy_payload_keys": []
+}
