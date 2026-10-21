@@ -1,0 +1,1 @@
+W8原CEN1Z8HEU7NM连战nonpositive-hp已用冻结11题/原种子纯函数准确复现，不需existing-wait/core缓存：solver已dies=true，rollout把最后敌人的反伤死亡allDown当won并抑制玩家死亡，遂won=true/hp负。生产最小修复仅rollout死亡优先于胜利，保接力guard、实际复活资源；11原题+3边界及原连战/诊断共3文件29例已过。正在补states逐字来源/tsc和相关定向，尚未正式冻结/完整绿。请沿Claude08:4x给本纯bug预留既有串行完整窗口，实际源/manifest完成后送；我不自行full/不改live/STOP/当前局。P4旧候选不夹包。
