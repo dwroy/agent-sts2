@@ -1,0 +1,42 @@
+{
+  "at": "2026-10-21T09:51:52+08:00",
+  "request": "original-W8-CEN-four-leaf-Ironclad-contract-repaired-exact-R409-joint-20261021",
+  "original_block_state": "blocked-before-full-or-incomplete-retain-original-CEN-Ironclad-repaired-R409",
+  "root": "NB live-merge.lock acquisition EAGAIN before input freeze or test steps",
+  "first_attempt_started_tests": 0,
+  "first_attempt_runner": 3274050,
+  "first_attempt_runner_exited": true,
+  "first_attempt_files_absent": {
+    "host-inputs-before.json": true,
+    "host-inputs-after.json": true,
+    "tsc.log": true,
+    "full.log": true,
+    "native-start-readback.json": true
+  },
+  "one_actual_lock_snapshot": [],
+  "old_attempt_preserved": ".artifacts/ops-CEN-ironclad-repaired-R409-joint-20261021/setup-attempt1",
+  "continuation": {
+    "at": "2026-10-21T09:50:59+08:00",
+    "request": "original-W8-CEN-four-leaf-Ironclad-contract-repaired-exact-R409-joint-20261021",
+    "attempt": 2,
+    "runner_pid": 3288401,
+    "reason": "first NB live lock admission EAGAIN before any tsc/full/input freeze; old runner exited and scene archived",
+    "first_attempt_tsc_full_count": 0,
+    "unchanged_source_full_reruns": 0,
+    "same_four_source_hashes": true,
+    "prepared_tree": "ddafdc7911be1e595ee307fb0647862bae87ace0",
+    "mechanism": "same original checker and original kernel heavy/live admission locks; no code change, sleep loop, polling or timer",
+    "actual_full_start": "pending original native event",
+    "old_attempt_archive": ".artifacts/ops-CEN-ironclad-repaired-R409-joint-20261021/setup-attempt1",
+    "new_model_or_API": false
+  },
+  "same_four_source_and_checker": true,
+  "product_failure": false,
+  "source_full_rerun_count": 0,
+  "actual_full_started_verified": false,
+  "actual_live": "cf4aff4ceebd958ad70b1512cc886c45bd8092aa",
+  "CARD": "brain",
+  "REFLEX": "off",
+  "P2": "paused",
+  "live_actor_STOP_unchanged": true
+}
