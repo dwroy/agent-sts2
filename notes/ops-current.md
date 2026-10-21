@@ -1,5 +1,5 @@
 # 运维当前清单（调度器生成）
-生成：2026-10-21T08:28:06+08:00；原件索引：/home/dw/Projects/agent-sts2/ops/codex-ops/current.json SHA256 d43f2c1609f137659d4ea3a07dbdd5ec3b79ac6838d4efa68e4b789c5e1799ea
+生成：2026-10-21T08:30:55+08:00；原件索引：/home/dw/Projects/agent-sts2/ops/codex-ops/current.json SHA256 920fd31ea9c581f761286150b6281a59859672ad0171ce5f0fd0c80bd0dda37f
 当前授权：Roy§12授权Claude主导V6、P0优先；最新Claude02:1x允许局终STOP发布窗，取代此前无条件不挂STOP。学习正常，full仍原三锁挡新dataset重任务；旧失败和来源保留，不中断现行对局。
 历史R408仅CARDjev→brain发布/恢复链保原04:2x和0428回执；当前以下R409接续该配置，切jev仍只等Roy，P2暂停。原ENOBUFS Git空字段保留，独立Git事实另列。
 已发布V6-R409：原W4累计11+W0两测试628文件5948过2跳，tree0b46/2393输入6eba及PID退保留。13叶main715a→live行为6242b3a7/登记cf4aff4c，498知识前后同；CLCR自然终局STOP后发布/消费者核号双通知，再清STOP继续原autoplay2283493，controller2776590已退。CESK新局CARD/SHOPRESTPOTIONbrain、REFLEX/方向off及真实event/战斗动作核同；自然B首82/69sampled、5004.2ms，后176/146sampled，缓存数值消费/质量仍待自然后继。F6超5s/部分B n2/无新B Nova及旧失败保持；切jev等Roy，P2暂停。原0705+0725回执，不新full/模型。
@@ -12,11 +12,12 @@ P2材料0f1/0350回执保留，6满槽奖励缺合法弃药接口；最新Claude
 历史监控H1六叶、014301 ordinary三叶及旧fix/strategy链保原结构字段和0007/0246/0315/0355/0050/0213/0119/0549/0436回执；旧沙箱/host失败、负控、waiting、proposed与300门均不清除，不重复实现/生成/测试。
 0713四ordinary注意项已人工核：三个无源策略30waiting、061302四复盘无新bug；offer原源码同，关闭时main715a正式13叶漂移，原attention保留，不重dataset/合入，四新提案沿原链；原20261021-0713-ops回执。
 071302-fix无源/合入，154SHA核同(153沿前批、loop三等待钩子为已验W4)，51映射/46祖先同；tsc0/六文件26过14.90s仅定向，首次EROFS留存。001302六叶/014301三叶及精英策略原链保持，不补full/dataset/空合并；原0720回执。
-W4 R409影子9f48仅127材料核同，83回放/60真实影子请求：Jev诊断17/42、脑16/42，同选27/60；8均值反例/逐目标4、2SE0不消除反例。B受控等待缓存69/83、criteria28/83非自然Jev命中率，34/83前台超5s；无方向计划/逐文件非原子冻结限制保留。CARDbrain仍等Roy，不动live或新请求；原0824-shadow-ops及原报告。；原件 paper/materials/20261020-0249-ops/authorization-original.md
+W4 R409影子9f48仅127材料已窄入main46c3a836/子树3fc40c2f核同，83回放/60真实影子请求：Jev诊断17/42、脑16/42，同选27/60；8均值反例/逐目标4、2SE0不消除反例。B受控等待缓存69/83、criteria28/83非自然Jev命中率，34/83前台超5s；无方向计划/逐文件非原子冻结限制保留。CARDbrain仍等Roy，不动live或新请求；原0824-shadow-ops及原报告。
+074301-s2 ordinary注意项：本批无源/十waiting/0551 proposed、原树净；dataset一次五OK/CLEAN后最终记录HEAD/字节并发守卫拒绝，具体竞争文件未知；保attention/失败，不重复dataset/合入/补测，原0825-ops回执。；原件 paper/materials/20261020-0249-ops/authorization-original.md
 模型 gpt-6.1-sol；普通 ops/学习下次自然启动 high，专项可有理由 xhigh，大脑保持 xhigh。实际生效须原生回执，不能从默认值推定。
 账号选择：/home/dw/Projects/agent-sts2/ops/codex-ops/accounts/codex1/learner；原 ops：w1H:p8 / 01a1517b-e200-7c52-b463-6ea22220c0a9；执行模式：host；辅助/学习者沙箱保持。
 不读凭据/.env/游戏二进制，不改共享配置/账号；不推送。
-main 573e8b052b7e89f1e2018ec8c2ac380be94c3e62
+main 46c3a8366e5c891fd6ae4fa8f2411665a304c229
 live cf4aff4ceebd958ad70b1512cc886c45bd8092aa；登记 release V6-R409（登记值不代表新树检查绿或实际采用）。
 首次另读 AGENTS/README/最新 STATE/学习协议；此后每次读本清单及事件原件。历史 handoff/decision-log 只沿事务定位，原件冲突保留并核查。
 在途批次 3（完整 owner/租约与路径见 current.json）：
@@ -46,7 +47,7 @@ human-pace 原owner=01a13dcd-83d4-7c63-b233-f93cf878ecf4，接续=01a14aae-4b03-
 - offset=2052619：- 2026-10-21 06:43:18 CST 原ops实际读两份watcher回执，8所引保存原件字节/SHA核同；新B限制/累计源及旧0620 full1+未复现对照归属分列，不扩静态范围或代Claude/Roy ACK。原检查仍单点沿原事件接续，本轮不查动态/新full/模型/API或改变R408 brain/off、Roy切jev门与P2暂停。原件paper/materials/20261021-watcher-core-c
 - offset=2053032：- 2026-10-21 06:45:22 CST 原ops核W4累计11+W0两测试唯一静态启动，runner2657047/tsc0/full2704077，tree0b46b5f0/2393输入6eba5918/498知识及13源后像同；不夹士兵/P4/014301/805。未查动态/改输入/叠full，旧失败保留，非终局绿或质量/性能全过。F6超5s/部分B n2/无新B Nova等限制保持，绿后边界仍brain/off、jev
 原事务文件索引数（含历史）：pending-integrations=149；pending-deliveries=16；pending-records=34；pending-continuations=30；publications=1；完整路径见 current.json，不从文件存在推定未完成/运行。
-新指令原件：ops/inbox-dev.md 当前尾段 offset=2051083, bytes=8192；本轮新授权必须由事件引用，漏项查此段，勿整份重读。
+新指令原件：ops/inbox-dev.md 当前尾段 offset=2052090, bytes=8192；本轮新授权必须由事件引用，漏项查此段，勿整份重读。
 current.json 仅按本事件 batch/request/notice id 用程序筛字段，不全文读；动态源变化后核新清单，不用旧值冒当前。
 H0/0332等科学边界、精确宿主树、未完成发布/兼容及 retention 仅沿原报告和事务回执；清单不代验收、shipped、覆盖率或消费。
 严格普通无源码成功由调度器完成账本检查、唯一 dataset 与受控记录提交，回执 ops/codex-ops/ordinary-close/；异常、异议、缺证、人工决定正常唤醒。
