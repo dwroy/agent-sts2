@@ -5582,3 +5582,4 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
 - 2026-10-21T12:22:04+08:00 ops：fix121301原exit0无新增源码/提交受阻，WT净、154源码/13产物SHA、tsc0/6文件35定向过已核；CEN live同blob，001302/014301原owner及0332父保留。原scheduler failed/rc0分列，不空合并/重测/模型/dataset/发布；paper/materials/20261021-1220-ops/receipt.json。
 
 - 2026-10-21T12:47:00+08:00 ops：#4/#13/#14八notice周期重提已按原文/SHA、实际双箱/原watcher实读告Roy回执去重；CLI验证源码未变、研究身份兼容pending，旧rc2/false保留，不重提醒/认证/代ACK或派检查模型。未改live/配置/父要求；paper/materials/20261021-1245-ops/receipt.json。
+- 2026-10-21 13:11:51 CST [watcher] #19 集成核验：精确搬运 42620f653 的三份测试与完整证据至 main；main 现有 P×W 与 weighted coverage 契约未变，独立 tsc/6 文件 45 项通过，原完整检查 638 文件 6041 pass/2 skip/0 fail 的日志 SHA256 已核，解除 #8/#15/#17 的四项基线失败；不改 live。
