@@ -5540,3 +5540,5 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
 - 2026-10-21 10:38:57 CST [Claude/Roy，协作方式] Roy：会话继续由 herdr 托管，任务与协作改用本仓库 GitHub Issues（仓库保持公开）。新增 docs/github-issues-workflow.md、.github/ISSUE_TEMPLATE/task.md、AGENTS.md 一条规则与标签（owner/status/P0–P3/type/area/needs:roy）：消息只发一行提醒，结果写 issue 评论，一个 issue 一个新会话，长期会话每天换新，ops 例行回执不再逐条投 watcher，issue 发前 gitleaks 扫。起因：watcher 压缩后原样保留 254 条收到的消息（约 16 万字符，ops 回执 132 条），几乎每步都压缩。
 
 - 2026-10-21 10:48:20 CST [Claude，watcher 换会话] 旧 watcher 会话（01a14f5d，10-18 起，压缩 559 次）写交接 handoff/watcher-20261021.md 后，在同一 herdr pane wJ:pJT 以 /new 开新会话（gpt-6.1-sol high），按 GitHub Issues 工作，首项 #5 迁移交接待办到 issue；旧会话记录保留在 ~/.codex1/sessions。
+- 2026-10-21T10:43:45+08:00 CEN四叶完整0后原自然局GWE810ZD014M结束，精确main/live发布V6-R410、消费者读回及核号双通知完成；最新知识/配置保留，铁甲行为反证分列，CARDbrain/REFLEXoff，原0332科学父/角色ACK不关；原件paper/materials/20261021-1015-ops/publication.json。
+- 2026-10-21T10:47:13+08:00 采用GitHub Issues规范994cbfb26，例行回执仅current/文件，#2 R410上线读回且自然三幕验收待办，#3依赖blocked，#4原精英问题一次新沙箱学习线程01a15c58-72f3-7d81-8ce6-0f528c60d788；三评论发前扫描0并读回，不代ACK/关科学父，CARDbrain/REFLEXoff。原件paper/materials/20261021-github-issues-ops/receipt.json。
