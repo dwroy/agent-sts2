@@ -1,0 +1,71 @@
+{
+  "recorded_at": "2026-10-21T10:50:23.746220+00:00",
+  "checks": [
+    {
+      "cwd": "agent",
+      "command": "PATH=\"$HOME/.local/node/bin:$PATH\" nice -n 19 node node_modules/typescript/bin/tsc --ignoreConfig --noEmit --strict --target es2022 --module nodenext --moduleResolution nodenext --skipLibCheck --types node tools/issue29-deepseek-stream.ts tools/issue29-deepseek-stream.test.ts",
+      "exit_code": 0
+    },
+    {
+      "cwd": "agent",
+      "command": "PATH=\"$HOME/.local/node/bin:$PATH\" nice -n 19 node --import tsx --test tools/issue29-deepseek-stream.test.ts",
+      "exit_code": 0,
+      "tests_passed": 6
+    },
+    {
+      "cwd": ".",
+      "command": "nice -n 19 /usr/bin/python3 -B agent/tools/issue29-deepseek-report.test.py",
+      "exit_code": 0,
+      "tests_passed": 4
+    },
+    {
+      "cwd": "agent",
+      "command": "PATH=\"$HOME/.local/node/bin:$PATH\" SANDBOX_WORKERS=1 nice -n 19 bash tools/test-sandbox.sh --reporter=dot",
+      "exit_code": 0,
+      "includes_production_tsc": true,
+      "test_files_passed": 590,
+      "tests_passed": 5248,
+      "main_files": 589,
+      "main_tests": 5237,
+      "paths_files": 1,
+      "paths_tests": 11,
+      "durations_s": [
+        1061.41,
+        2.27
+      ],
+      "fixed_exclusions": "agent/tools/test-sandbox.sh",
+      "local_log": "data/issue29-followup/sandbox-check.log",
+      "log_bytes": 11374,
+      "log_sha256": "f85d70b373d3732ebe2df5d4e802bbdc0450e1b81108d47f108c1a962b52a2fb"
+    }
+  ],
+  "full_unfiltered_vitest": "Not rerun in this follow-up; integrator joint full check remains pending. The prescribed sandbox exclusions are not counted as tested. Original interrupted attempt remains in parent verification.json.",
+  "benchmark": {
+    "exit_code": 0,
+    "results": 50,
+    "strict_raw_and_engine_accepted": 50,
+    "complete_streams_normal_stop": 50,
+    "physical_api_calls": 54,
+    "new_codex_calls": 0,
+    "original_codex_calls_preserved": 96,
+    "hashes_verified": 10
+  },
+  "public_only_offline_recompute": {
+    "public_only_recompute": true,
+    "derived_byte_identical": true,
+    "private_local_directory_exists": false,
+    "outputs_sha256": {
+      "summary.json": "b4e2f7a42bd6ade77fa5c6a8fc95b229e1989af859b5cf65b5a84192af9279eb",
+      "per-request.csv": "61c35108a687745323629fa9ddf4c7ab6baf8921f5f9002d2c2127624b126da2",
+      "tables.md": "67bb240985b8e6160700ded40475bc327e7e2ce6d0bbf0fc2359e996dfba9664",
+      "call-counts.json": "127327b002330b315bac900e7a16e7d188747bf41afcf2ee8c3797aed2bd6a90",
+      "costs.json": "c13738c3cf154814b7092ae731b06047def7f4dee1de5668874dbdc24497f8cc"
+    }
+  },
+  "tool_sha256": {
+    "agent/tools/issue29-deepseek-stream.ts": "a3da5e59c155d9f1c1b3f5847581121284624d67356a6006f93f3b4f83230da5",
+    "agent/tools/issue29-deepseek-stream.test.ts": "e0fa01e1fb77688ddf7af04e9a21f13c7bde23fc019e51925a52618848688a0d",
+    "agent/tools/issue29-deepseek-report.py": "e507f7296377cd72aef3f9ea6f4142143c53a67e2b966311d1959cedb59f1402",
+    "agent/tools/issue29-deepseek-report.test.py": "7fde70dd24738bc64e95aab7c9e5df8daf5313ff693323cc0410ca34d87ff915"
+  }
+}

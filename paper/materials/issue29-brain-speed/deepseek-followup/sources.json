@@ -1,0 +1,58 @@
+{
+  "checked_at": "2026-10-21T09:58:49.684908+00:00",
+  "sources": [
+    {
+      "url": "https://api-docs.deepseek.com/quick_start/pricing/",
+      "facts": {
+        "model_id": "deepseek-flash",
+        "documented_version": "DeepSeek-V4.1-Flash-1017",
+        "usd_per_million_peak": {
+          "input_miss": 0.3,
+          "input_hit": 0.006,
+          "output": 1.2
+        },
+        "usd_per_million_off_peak": {
+          "input_miss": 0.15,
+          "input_hit": 0.003,
+          "output": 0.6
+        },
+        "peak_utc_weekdays_excluding_chinese_public_holidays": [
+          "01:00-04:00",
+          "06:00-10:00"
+        ]
+      }
+    },
+    {
+      "url": "https://api-docs.deepseek.com/guides/thinking_mode/",
+      "facts": {
+        "thinking_default": "enabled",
+        "efforts": [
+          "low",
+          "high",
+          "max"
+        ],
+        "reasoning_field": "reasoning_content",
+        "requested_effort_preserved": true
+      }
+    },
+    {
+      "url": "https://api-docs.deepseek.com/api/create-chat-completion/",
+      "facts": {
+        "stream": "SSE with [DONE]",
+        "stream_options": {
+          "include_usage": true
+        },
+        "thinking_default_max_tokens": 65536,
+        "max_effort_default_max_tokens": 131072,
+        "max_tokens_in_experiment": "omitted, matching existing client"
+      }
+    },
+    {
+      "url": "https://api-docs.deepseek.com/api/list-models/",
+      "facts": {
+        "method": "GET /models",
+        "observed_models_file": "models.jsonl"
+      }
+    }
+  ]
+}
