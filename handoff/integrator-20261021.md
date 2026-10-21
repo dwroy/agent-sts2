@@ -1,15 +1,18 @@
 # 集成员交接：2026-10-21
 
-更新：2026-10-21 13:44:21 CST。角色按 #21 与 docs/agent-board-architecture.md 第7节；只核 review、合 main、协调检查/冲突、开问题，不派活、不当中转、不碰生产。评论首行 [watcher]，发前 gitleaks。
+更新：2026-10-21T21:43:14+08:00。角色按 #21 与 docs/agent-board-architecture.md 第7节；只核review、合main、协调检查/冲突、开问题，不派活、不当中转、不碰生产。评论首行[watcher]，发前gitleaks。integrator为wJ:p1HD；原wJ:pJT是Claude rc，不发过去。
 
 仅保留未完成项：
 
-- #17/#15/#8：本地 main 已集成，status:waiting-release。#17 f961de649 的运行接入、专用已关闭任务真实验收待 ops；#15 16237a664 的发布锁/局终窗口、版本、双通知、首个自然奖励题读回待 ops；#8 c4cee83a3 的原 R4 CLI 链本角色生产 ACK 待 ops，未代任何角色确认。评论与精确读回见 paper/materials/20261021-issues-17-15-12-integrator-review/review-receipt.json。
-- #19/#12：技术验收完成，待主管核收关闭。#19 526d34e7b 已解除四项基线断言阻塞；#12 005424ed7 只读报告已完整入 main，30/438符号稳定、1/146唯一首选稳胜全部，不能据此授权 #16。原失败/中断/首次扫描材料保持。
-- #20：通用派单器仍独立处理，等 status:review 交付再核，不主动派发。#21 角色切换确认已留 issue。
-- #4/#13/#14：科学异议原文已实读并在 issue 转达；原研究 task 的角色 CLI 登记仍 pending，不能套用仅兼容 R4 的 #8。#13/#14 核验材料：paper/materials/20261021-issues-13-14-integrator-review/。
-- #18：旧冻结快照0可回收/219保留/56待补证，未执行回收。新工作树出现后须重核，旧清单不构成 apply 授权，原门禁未放宽。
-- 现场保留：.worktrees/issue-8-watcher-integration-20261021 仍保留旧 cherry-pick 暂存现场；本轮实际集成已使用新组合候选 .worktrees/integrator-19-17-15-20261021。没有清理任一工作树，须按原进程/发布/证据门禁回收。失败扫描与补丁在 .artifacts/integration-19-17-15-12/。
-- 完整检查已结束：641文件/6055通过/2既有跳过/0失败，tsc通过；1583代码/测试/关键ops文件与 main SHA一致，原日志已入库。本地 main 未推送，live 未改；共享 ops 未提交记录未夹带。
+- #31：已技术核验并合main（源码d3efa878c，集成1eaa9d96b），waiting-release交ops。预登记20分配high/xhigh各10，只比较实际同进阶；首局原生model/effort确认后才继续第二局，每局终核止损。首局、20局分层结果与批次后隔离开发home固定32题质量回放仍待；本次仅零调用dry，不切生产。结论：issuecomment-6317542464。
+- #20：STS2 30ab2b60c已合main，私有kit精确d15456158f0d7d4ad3b48537b034013fa20cb9f1远端核同。waiting-release交ops安装，核唯一宿主登记表/既有会话/角色，先dry再启用既有stall入口，读回首tick/幂等/实际命名与锁忙恢复。默认off，集成员未安装/启用。结论：issuecomment-6317546413。已向实际ops w1H:p8发一行#31/#20提醒，工具确认accepted，未代其验收。
+- #24（含#30）：研究及工具d8eea1f7c+5c214ea64已合main，均review待主管设计核收。5表重算字节相同、33份自有快照和22份压缩原件SHA核验通过；自有原生遭遇ID缺失→严格原生ID比较0，总损血/净HP不可相减，入场资源未知，不能判配牌/出牌主因。技术合入不代这些字面历史缺口完成，不关闭父要求。#24结论issuecomment-6317545157；#30有回链评论。
+- #25/#16/#15/#8：ops已登记R411实际live发布305c67555；仍waiting-release，各消费者自然读回/局终验收及原R4 CLI本角色生产ACK以各issue最新ops评论为准。不得用源码或研究核验代角色确认。#25精确48文件组合准入见paper/materials/20261021-issue25-live-admission-review/；50文件0268备选未准入。Roy已取消#25/#26前后指标对比，不追加此门槛。
+- #23：main已集成，仍waiting-release；实际运行接入/原发布门及首轮安全回收由ops原链补验，不在集成会话执行回收。
+- #4/#11/#13/#14：科学异议与限定均沿issue留证，#13/#14研究核验后仍blocked，代码/固定回放/反例与收益未补齐；原研究task角色CLI登记仍pending，不能套用只兼容R4的#8。#13/#14核验材料paper/materials/20261021-issues-13-14-integrator-review/。不代填ACK或关闭科学父要求。
+- #18：旧冻结0可回收/219保留/56待补证，未执行回收。现工作树已变化，须重核，旧清单不构成apply授权，未放宽门禁。其他阻塞父任务及#32待派以GitHub看板为准；集成员不派发。
+- 保留旧现场：.worktrees/issue-8-watcher-integration-20261021旧暂存现场及.artifacts/integration-19-17-15-12/原失败材料未清理；所有回收仍走原门禁，不清自身/活跃工作树。
 
-其余运行和科学父待办以 GitHub Issues、notes/ops-current.md 为准；历史入口 handoff/watcher-20261021.md 保留，摘要冲突查原件。
+本轮已无运行中的检查。完整647文件/6090通过/2既有跳过/0失败、tsc与127项Python通过，1965代码输入SHA一致；binding按原锁备份/恢复/核SHA和权限一致。受检补丁、展开原件、私有kit、本轮可读检查日志与公开评论均已gitleaks。报告、16份压缩检查原件与清单：paper/materials/20261021-issues31-24-20-integrator-review/；原件与失败/复测：.artifacts/integrator-31-24-20-20261021/。完整运行是独立一次全量，不拼接开发历史重跑。main本地集成，未推送；生产与共享ops脏记录均未夹带。ops并行R411登记仅两数组各追加1，已保留。
+
+当前看板以GitHub Issues和notes/ops-current.md为准；历史交接handoff/watcher-20261021.md及Git历史保留，摘要冲突查原件。后续任何live候选沿原锁/绑定硬约束和精确组合检查，不用本次main全检替代不同组合。
