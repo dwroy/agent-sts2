@@ -16,6 +16,7 @@ import time
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 import learner_retention as retention
 from learner_checks import SOURCE_PATHS
+from instance_env import binding_env
 
 NAME = re.compile(r"[a-z][a-z0-9-]{1,95}")
 PROTECTED = {"live", "exp", "regent-climb"}
@@ -88,8 +89,75 @@ def owner_guard(root, directory, tree):
 
 
 def executable(path):
-    return path.startswith("knowledge/characters/") or path.startswith("knowledge/common/") or any(
+    return path.startswith(("knowledge/characters/", "knowledge/common/", "ops/tests/")) or any(
         path == pattern or path.startswith(pattern + "/") or fnmatch.fnmatch(path, pattern) for pattern in SOURCE_PATHS)
+
+
+def instance_guard(root, tree):
+    """Exclude a byte-identical inherited primary binding, never infer idle from a PID alone."""
+    marker = "ops/instance-binding.json"
+    path = retention.safe_path(root, tree / marker)
+    if not path.exists():
+        return {"kind": "no-local-binding"}
+    if not path.is_file() or path.stat().st_size > 65536:
+        raise ValueError("unknown instance binding retained")
+    raw = path.read_bytes()
+    value = json.loads(raw)
+    binding_env(value)
+    # A new/changed binding or an explicit local scope is an instance identity, not an inherited copy.
+    if (git(tree, "ls-files", "--", marker).decode().strip() != marker
+            or git(tree, "show", "HEAD:" + marker) != raw or bound(value, tree, root)):
+        raise ValueError("local or conflicting instance binding retained")
+    # Research/cache directories are not runtime identities. Private controller leases are.
+    for relative in ("ops/codex-ops/session-id", "ops/codex-ops/autoplay.pid",
+                     "ops/codex-ops/instance-binding.json", "ops/regent-lane.json"):
+        local = tree / relative
+        if local.exists() or local.is_symlink():
+            raise ValueError("independent runtime identity retained")
+    canonical = [root, root / ".worktrees/live"]
+    registered_paths = {r["worktree"] for r in registered(root)}
+    for runtime in canonical:
+        original = retention.safe_path(root, runtime / marker)
+        if (runtime == tree or str(runtime) not in registered_paths or not original.is_file()
+                or original.stat().st_size > 65536 or original.read_bytes() != raw):
+            continue
+        retention.require_host_process_view()
+        session = retention.safe_path(root, root / "ops/codex-ops/session-id")
+        if (not session.is_file() or not session.read_text().strip()
+                or not (active(root / "ops") or active(runtime / "agent"))):
+            raise ValueError("primary runtime session/process identity unknown; retained")
+        if active(tree):
+            raise ValueError("active workspace process retained")
+        # Keep exact provenance and the independently registered primary runtime in the deletion proof.
+        return {"kind": "inherited-primary-binding", "runtime": str(runtime),
+                "sha256": hashlib.sha256(raw).hexdigest(),
+                "head_blob": git(tree, "rev-parse", "HEAD:" + marker).decode().strip()}
+    raise ValueError("unknown or conflicting instance identity retained")
+
+
+def allocation_base(root, directory, tree):
+    path = directory / "retention/allocations" / (tree.name + ".json")
+    if not path.is_file():
+        return None
+    record = retention.load(retention.safe_path(root, path))
+    if (record.get("schema") != "workspace-allocation-v1" or record.get("root") != str(root)
+            or record.get("worktree") != str(tree) or record.get("branch") != tree.name
+            or record.get("state") != "allocated"):
+        raise ValueError("original allocation receipt mismatch")
+    return record["base"]
+
+
+def source_admission(root, directory, tree, head):
+    """A main-only report may retire; executable task deltas still require real live publication."""
+    if not retention.ancestor(root, head):
+        raise ValueError("workspace source unpublished in main")
+    branch = git(tree, "symbolic-ref", "HEAD").decode().strip()
+    if not branch.startswith("refs/heads/") or git(root, "rev-parse", branch).decode().strip() != head:
+        raise ValueError("source branch reference not preserved")
+    live = retention.safe_path(root, os.environ.get("STS2_LIVE") or root / ".worktrees/live")
+    live_commit = git(live, "rev-parse", "HEAD").decode().strip()
+    return acceptance(root, tree, head, git(root, "rev-parse", "HEAD").decode().strip(),
+                      live_commit, allocation_base(root, directory, tree))
 
 
 def acceptance(root, tree, source, main_commit, live_commit, allocation_base=None):
@@ -100,11 +168,15 @@ def acceptance(root, tree, source, main_commit, live_commit, allocation_base=Non
         raise ValueError("publication is not in this runtime's main/live")
     if git(tree, "rev-parse", "HEAD").decode().strip() != source:
         raise ValueError("source differs from workspace HEAD")
-    base = allocation_base or git(root, "merge-base", source, main_commit).decode().strip()
+    # Without an original allocation, use the live fork rather than treating source==main as an empty delta.
+    base = allocation_base or git(root, "merge-base", source, live_commit).decode().strip()
     if not retention.SHA.fullmatch(base) or subprocess.run(
             ["git", "-C", str(root), "merge-base", "--is-ancestor", base, source], capture_output=True).returncode:
         raise ValueError("allocation baseline is not in the source history")
     changed = git(root, "diff", "--name-only", base, source).decode().splitlines()
+    includes_source = {published: subprocess.run(
+        ["git", "-C", str(root), "merge-base", "--is-ancestor", source, published],
+        capture_output=True).returncode == 0 for published in (main_commit, live_commit)}
     checked = []
     for name in changed:
         if retention.secret_name(name) and not name.endswith(".env.example"):
@@ -112,6 +184,8 @@ def acceptance(root, tree, source, main_commit, live_commit, allocation_base=Non
         if not executable(name):
             continue
         for published in (main_commit, live_commit):
+            if includes_source[published]:
+                continue
             # Compare object IDs, not executable source contents or a caller-provided passed flag.
             expected = git(root, "ls-tree", source, "--", name)
             actual = git(root, "ls-tree", published, "--", name)
@@ -119,7 +193,8 @@ def acceptance(root, tree, source, main_commit, live_commit, allocation_base=Non
                 raise ValueError("source leaf not in recorded publication: " + name)
         checked.append(name)
     return {"source": source, "base": base, "main_commit": main_commit, "live_commit": live_commit,
-            "verified_source_paths": checked, "scope": "workspace-only; no parent request or gameplay claim closed"}
+            "verified_source_paths": checked, "live_required": bool(checked),
+            "scope": "workspace-only; no parent request or gameplay claim closed"}
 
 
 def complete(root, directory, name, source, main_commit, live_commit):
@@ -146,8 +221,9 @@ def checked_tree(root, name):
     if not NAME.fullmatch(name or "") or name in PROTECTED or name.startswith("exp-"):
         raise ValueError("protected or invalid workspace")
     tree = retention.safe_path(root, root / ".worktrees" / name)
-    if (tree / "ops/regent-lane.json").exists() or (tree / "ops/instance-binding.json").exists():
+    if (tree / "ops/regent-lane.json").exists():
         raise ValueError("persistent game instance retained")
+    instance_guard(root, tree)
     return tree
 
 
@@ -199,7 +275,7 @@ def admission(root, directory, tree):
         raise ValueError("dirty workspace retained")
     record_path = directory / "retention/workspaces" / (tree.name + ".json")
     head = rows[0]["HEAD"]
-    live = retention.safe_path(root, os.environ.get("STS2_LIVE") or root / ".worktrees/live")
+    source_proof = None
     if record_path.exists():
         record = retention.load(record_path)
         if record.get("root") != str(root) or record.get("worktree") != str(tree) or record.get("state") != "accepted":
@@ -213,24 +289,23 @@ def admission(root, directory, tree):
                     or retention.load(allocation).get("base") != p["base"]):
                 raise ValueError("accepted allocation receipt changed")
             base = p["base"]
-        acceptance(root, tree, p["source"], p["main_commit"], p["live_commit"], base)
+        source_proof = acceptance(root, tree, p["source"], p["main_commit"], p["live_commit"], base)
     elif (directory / "retention/allocations" / (tree.name + ".json")).exists() and tree.name.startswith("ops-"):
         raise ValueError("allocated ops workspace needs explicit completion acceptance")
     elif tree.name.startswith("ops-"):
         if time.time() - (tree / ".git").stat().st_mtime < 3600:
             raise ValueError("recent unregistered ops allocation retained")
-        if not retention.ancestor(root, head) or not retention.ancestor(live, head):
-            raise ValueError("ops workspace source unpublished")
+        source_proof = source_admission(root, directory, tree, head)
     elif tree.name.startswith(("codex-fix-", "codex-strategy-")):
-        if not retention.ancestor(root, head) or not retention.ancestor(live, head):
-            raise ValueError("learner workspace source unpublished")
+        source_proof = source_admission(root, directory, tree, head)
     else:
         raise ValueError("explicit workspace acceptance required")
     owners, keep_all_originals = owner_guard(root, directory, tree)
     files, links, cache = inventory(root, tree)
     return {"worktree_head": head, "worktree_branch": rows[0]["branch"], "worktree": str(tree),
             "retire_checkout": True, "links": links, "discarded_cache": cache,
-            "learner_owners": [i for i, _ in owners], "preserve_all_originals": keep_all_originals}, files
+            "learner_owners": [i for i, _ in owners], "preserve_all_originals": keep_all_originals,
+            "source_acceptance": source_proof, "instance": instance_guard(root, tree)}, files
 
 
 def project_evidence(root, manifest, staging):
@@ -382,6 +457,7 @@ def finish_interrupted_removal(root, directory, path):
 
 
 def sweep(root, directory, apply=False, limit=4):
+    limit = min(limit, 4)
     out = {"at": retention.stamp(), "results": [], "retained": {}}
     if apply:
         for path in (directory / "retention/worktree-archives").glob("*.manifest.json"):

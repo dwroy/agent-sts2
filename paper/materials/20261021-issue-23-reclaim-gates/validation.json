@@ -1,0 +1,132 @@
+{
+  "schema": "issue-23-validation-v1",
+  "base": "518cca239b93db91649ec6df25b7e19102595eb4",
+  "at": "2026-10-21T15:11:34.405485+08:00",
+  "implementation_sha256": {
+    "ops/worktree_retention.py": "2c657840d56bf036da3f5265a4e557d2e8c8349dda5b666e28fd0053a3c6c0a4",
+    "ops/learner_retention.py": "a4c81a6412ae8fc22859f175d0b6a74dd367628302ec2e69d528f06bd7a21538",
+    "ops/worktree_storage.py": "1e46699eb17f0b3a8462b927144f5afa0d8474d53f258ca4573844c4cc7a5de8",
+    "ops/instance_binding_backup.py": "d6b19de5bc314d6324bd4f8b902f2ec811c77d9fcedcce782ecd1fdc738da381",
+    "ops/tests/test_reclaim_gates.py": "ee29f19c1c34d5778838cdcda4be0ace9ed2cde91c7a22fd76af1d2c402e3438",
+    "agent/tests/reclaim-gates.test.ts": "169436f4e13e7fdc4562982d44d621f4d3ba98552e0091e298e0d337838cf2ca",
+    "ops/tests/test_strategy_concurrency.py": "62dbe0a05d93bd2763ff26281d458e754cd6d0ea59c548a9693b7ec0b32fb1c0",
+    "ops/tests/test_strategy_implementation.py": "e4fdf895976154f63844906046935351bf97fa686fa2ceba473abe20fbc2337c",
+    "ops/tests/test_strategy_implementation_continuation.py": "1d9f347275ad475f5e2c8f9bad4dd1a6bec2446a47138fb3eef79e84733c6bf8",
+    "ops/tests/test_strategy_research_scheduling.py": "82f275023d10823381f8149f99439fc4979274459f2185e59ef908462203e108"
+  },
+  "tsc": {
+    "status": "passed",
+    "command": "nice -n 19 env PATH=\"$HOME/.local/node/bin:$PATH\" bash -c 'cd agent; exec node node_modules/typescript/bin/tsc -p tsconfig.json --noEmit'",
+    "exit_code": 0,
+    "log": {
+      "path": ".cache/issue-23-validation/r5/tsc.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "output": ""
+    }
+  },
+  "fixed_repository_python": {
+    "status": "passed",
+    "tests": 64,
+    "logs": {
+      "worktree-storage": {
+        "path": ".cache/issue-23-validation/r3/worktree-storage.log",
+        "sha256": "d495071219ce086f1e4ea513e97ec12280b68b6314a56bccf2672a26ff2c9fd9",
+        "output": "..................\n----------------------------------------------------------------------\nRan 18 tests in 3.556s\n\nOK\n",
+        "command": "nice -n 19 python3 -B ops/tests/test_worktree_storage.py"
+      },
+      "learner-retention": {
+        "path": ".cache/issue-23-validation/r3/learner-retention.log",
+        "sha256": "549ad94b1382c8c2a95642b20c8f47ab3fd04d011387353de700dd5b6fa82cfb",
+        "output": "...............\n----------------------------------------------------------------------\nRan 15 tests in 6.907s\n\nOK\n",
+        "command": "nice -n 19 python3 -B ops/tests/test_learner_retention.py"
+      },
+      "worktree-retention": {
+        "path": ".cache/issue-23-validation/r3/worktree-retention.log",
+        "sha256": "5dd24023afeae8d2a4f3bbc1edded49ab8da550ca805158de28a01522abba446",
+        "output": "...............\n----------------------------------------------------------------------\nRan 15 tests in 4.821s\n\nOK\n",
+        "command": "nice -n 19 python3 -B ops/tests/test_worktree_retention.py"
+      },
+      "reclaim-gates": {
+        "path": ".cache/issue-23-validation/r3/reclaim-gates.log",
+        "sha256": "dad21951508ee1b4be46aee545b93e8f950e6da30ea77de0404b369f38877341",
+        "output": "................\n----------------------------------------------------------------------\nRan 16 tests in 5.967s\n\nOK\n",
+        "command": "nice -n 19 python3 -B ops/tests/test_reclaim_gates.py"
+      }
+    }
+  },
+  "full_vitest": {
+    "status": "passed",
+    "command": "cd agent && node node_modules/vitest/vitest.mjs run --maxWorkers=1 --pool=forks --reporter=default --reporter=../.cache/issue-23-validation/r4/progress.mjs",
+    "environment": "nice 19; existing dependencies; CHARACTER unset; fixed fixtures; no suite exclusions",
+    "log_path": ".cache/issue-23-validation/r5/vitest.log",
+    "progress_reporter": "export default class Progress {\n  onTestModuleQueued(m) { console.log('[queued]', m.moduleId); }\n  onTestModuleCollected(m) { console.log('[collected]', m.moduleId); }\n  onTestModuleStart(m) { console.log('[start]', m.moduleId); }\n  onTestModuleEnd(m) { console.log('[end]', m.moduleId, m.state()); }\n}\n",
+    "exit_code": 0,
+    "files_passed": 642,
+    "tests_passed": 6056,
+    "tests_skipped": 2,
+    "tests_total": 6058,
+    "log_sha256": "359903f785b70d9911fcaf3a54921eeb64932bfe20f9ac941d62be73c88be961",
+    "summary": "Test Files  642 passed (642)\n      Tests  6056 passed | 2 skipped (6058)\n   Start at  14:47:24\n   Duration  1406.34s (transform 16.40s, setup 33.55s, import 119.38s, tests 1174.20s, environment 64ms)",
+    "completed_verified_at": "2026-10-21T15:11:34.405485+08:00"
+  },
+  "earlier_attempts": [
+    {
+      "log": ".cache/issue-23-validation/r1/reclaim-gates.log",
+      "status": "failed-fixture",
+      "note": "The new fixture renamed its directory without its branch; corrected the fixture to rename both. Failure log preserved."
+    },
+    {
+      "log": ".cache/issue-23-validation/r1/audit-invalid.json",
+      "status": "invalid-audit",
+      "note": "Fixed original inventory field extraction; invalid initial output preserved and not used."
+    },
+    {
+      "log": ".cache/issue-23-validation/r1/vitest.log",
+      "status": "interrupted",
+      "exit_code": 143,
+      "note": "Code changed during the initial run; stopped its exact PID and kept the log."
+    },
+    {
+      "log": ".cache/issue-23-validation/r3/vitest.log",
+      "status": "interrupted",
+      "exit_code": 130,
+      "note": "Only a startup banner after roughly 12 minutes. Interrupted the exact runner; no test success inferred. Repeated with a read-only per-module reporter for visible progress."
+    },
+    {
+      "log": ".cache/issue-23-validation/r4/vitest.log",
+      "status": "failed-fixture-dependency",
+      "exit_code": 1,
+      "sha256": "148b84cb8378efd809f6c04ae7727e182b8f9752bcf916f9166ee9a5785f0e8f",
+      "summary": "4 failed | 638 passed (642 files); 5 failed | 6051 passed | 2 skipped (6058 tests)",
+      "note": "Four host wrapper fixtures copied worktree_retention.py without its new instance_env.py dependency. Added the existing module to the fixture copy lists only; production gate implementation unchanged."
+    }
+  ],
+  "readonly_audit": {
+    "path": "paper/materials/20261021-issue-23-reclaim-gates/readonly-plan.json",
+    "status": "completed",
+    "original_rows": 137,
+    "eligible": 66,
+    "applied": false,
+    "prior_audit": ".cache/issue-23-validation/r2/readonly-plan.json",
+    "prior_eligible": 67,
+    "difference": "One workspace acquired an active process reference and is retained by the final audit."
+  },
+  "production": {
+    "main_merge": false,
+    "live_deploy": false,
+    "production_worktree_deletions": 0,
+    "production_retention_requests": 0,
+    "acceptance_24h": "pending ops deployment and original scheduler evidence"
+  },
+  "fixture_dependency_recheck": {
+    "status": "passed",
+    "exit_code": 0,
+    "files": 4,
+    "tests": 14,
+    "log": {
+      "path": ".cache/issue-23-validation/r5/targeted.log",
+      "sha256": "e7fa04f72b62ad8f54576a85e6ed11a25a0c215da56524c76a3d41edaa68b47b",
+      "output": "\n RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/issue-23-reclaim-gates/agent\n\n\n Test Files  4 passed (4)\n      Tests  14 passed (14)\n   Start at  14:46:47\n   Duration  14.24s (transform 1.49s, setup 761ms, import 1.64s, tests 11.15s, environment 0ms)\n\n"
+    }
+  }
+}

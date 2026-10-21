@@ -5610,3 +5610,6 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
 - 2026-10-21T15:15:41+08:00 ops：f922原三阶段通知实证/CLI登记及1406B原生转达逐SHA核同，15:13重复事件去重；仅通知闭环，bddfa waiting/科学父及未知照存，不代Roy接受；#11短评回读，无重提醒/ACK或新模型检查/live改动。paper/materials/20261021-1513-ops/receipt.json。
 
 - 2026-10-21T15:47:25+08:00 ops：1543八通知原文/SHA/真实转达去重，三原研究task仍不受CLI支持、后两角色登记pending；保旧失败/false/科学scope，不重认证/提醒评论/派模型检查或改live。paper/materials/20261021-1543-ops/receipt.json。
+
+- 2026-10-21T15:11:34+08:00 [dev #23] 完成继承绑定/材料来源回收门修复和共享每轮4项限额；#18原137项只读逐树复核66项新准入，其他保护保留。固定Git删除合并后绑定备份/恢复/同字节读回演练通过；tsc、完整Vitest 642文件/6056项及Python64项通过，首轮夹具缺依赖失败原件保留。交集成员核验合main，ops自然边界保全真实绑定后上live、原调度器实际回收与24h可持续验收仍pending；开发未动main/live或生产回收。见 paper/materials/20261021-issue-23-reclaim-gates/handoff.md。
+- 2026-10-21T16:04:34+08:00 [watcher] #23 P0 回收门技术核验并合 main（源 e69b2fed0）；完整检查原日志 SHA 核实642文件/6056通过/2跳过，2473代码数据配置叶子一致，独立tsc/Python64项/Vitest6文件17项通过。原发布锁内先备份主运行根真实绑定，Git后先恢复校验，SHA与0644模式未变、已不跟踪且ignore；live原缺绑定未捏造，未碰live/STOP或回收。交ops自然边界上线、刷新plan逐树核候选、原调度器每轮最多4项及部署后完整24h可持续验收，#23不关闭；paper/materials/20261021-issue23-integrator-review/review.md。

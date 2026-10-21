@@ -34,9 +34,12 @@ def receipt(directory, tree):
 def checked(root, tree):
     if tree.parent != root / ".worktrees" or not workspaces.NAME.fullmatch(tree.name):
         raise ValueError("workspace outside this instance")
-    if tree.name in ("live", "regent-climb") or any((tree / p).exists() for p in
-            ("ops/instance-binding.json", "ops/regent-lane.json")):
+    if tree.name in ("live", "regent-climb") or (tree / "ops/regent-lane.json").exists():
         raise ValueError("persistent runtime retained")
+    try:
+        workspaces.instance_guard(root, tree)
+    except ValueError as error:
+        raise ValueError("persistent runtime retained: " + str(error)) from error
     rows = [row for row in workspaces.registered(root) if row["worktree"] == str(tree)]
     if len(rows) != 1 or rows[0].get("locked") or not rows[0].get("branch") or not (tree / ".git").is_file():
         raise ValueError("unregistered, locked or detached workspace retained")
@@ -346,6 +349,7 @@ def restore_copies(root, directory, batch_id):
 
 
 def sweep(root, directory, apply=True, limit=4):
+    limit = min(limit, 4)
     result = {"at": retention.stamp(), "results": [], "retained": [], "limit": limit,
               "policy": "idle clean Git history cache evicted; source, unique evidence and task states kept"}
     for row in workspaces.registered(root):
