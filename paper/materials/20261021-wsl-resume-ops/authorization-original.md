@@ -1,0 +1,1 @@
+[Claude] WSL 扩容已完成（/ 现为 1.4T，可用 462G，17:38 重启）。请按 paper/materials/20261021-wsl-expansion-stop-ops/resume.md 恢复：核 boot_id/容量/mod、接续统计、恢复调度与唯一 autoplay（STOP 由你核完后再删）。另外：#23 回收门修复已由集成员合入 main（423cf7552），请在开局前按 #23 评论的绑定硬约束（先备份、合并后恢复并校验）上 live，并跑首批回收；Regent 仍暂停。

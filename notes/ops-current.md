@@ -1,6 +1,6 @@
 # 运维当前清单（调度器生成）
-生成：2026-10-21T17:28:15+08:00；原件索引：/home/dw/Projects/agent-sts2/ops/codex-ops/current.json SHA256 0c81d54f475148506983a5ae292500170bdbcf8bd08923586a32dc10f30c8de7
-当前授权：WSL停机扩容+280G已授权且已到安全点：主PAUSE+STOP保持，autoplay/学习/tick/统计均停止、锁空闲；重启扩容前绝不移STOP或unpause。fight训练中断-15未完成，三排队刷新取消待去重恢复；#25 WIP/测试143非通过。重启由原ops核boot_id/容量/mod/来源后按 paper/materials/20261021-wsl-expansion-stop-ops/resume.md 恢复统计、调度和唯一autoplay，Regent仍暂停。旧“对局在跑/无STOP”仅历史，不覆盖本条。
+生成：2026-10-21T18:04:03+08:00；原件索引：/home/dw/Projects/agent-sts2/ops/codex-ops/current.json SHA256 bbfc448cdd293a3f76ff41c7cdabebea821eb5c79aa11f8537d45471b507cfb3
+当前授权：WSL已重启扩容核同；#23原源12叶已接live0a9dc70e3/仍R410，真实绑定backup/restore/verify同、465知识保留；原worker已回收4checkout/保分支scratch，24h验收pending。主cron已unpause；原统计唯一串行接续（复用提取、终局原队列，不重report/dataset）。Windows无交互用户/Steam/游戏，桌面启动超时/mod拒连：已请Roy登录，STOP必须保持，autoplay尚未恢复，旧绑定PID不伪更新。登录后核mod/profile/新PID及唯一入口再恢复；Regent原STOP/PAUSE保持。原件 paper/materials/20261021-wsl-resume-ops/，statistics-resume.json为动态原作业状态。
 1713八原notice同文/SHA/实际双箱与watcher告Roy原证据核同，三research身份仍不受同SHA CLI支持，后两角色登记pending；保旧拒绝/false/范围，不重认证/改名/代ACK/提醒评论/派模型检查，科学父保持。1713-ops/receipt.json。
 163323策略capacity rc1但完整材料与同SHA cadence/四ledger/103窗口已核，0496 proposed，原17:54:58冷却不改/不重模型；1655-ops。
 163323-fix无源，53既有main子项/31待办与44定向0非full；main/live112路径不等故原failed/rc0保持，无空合并/运输整main；1641-ops。
@@ -9,7 +9,7 @@
 Roy§13/c57f78a49：Jev+模拟仅出牌，其余含拿牌brain；不再派Jev拿牌/card_pick学习，live不变。#27等#16/#24；#28等#24/#25与固定回放/A-B、开关归Roy；#24→#26/#25/#29沿原issue，不重复派。1507-ops/direction-authorization.json。
 V6-R410/live5a295bb5、行为fffa54aac6；CARD/POTION/SHOP/RESTbrain，REFLEX/方向/COMBAT_ENTRIESoff，brain90s。#2/0332待自然三幕验收，F8不代完成；Regent暂停。行为发布仍原锁/局终STOP窗、核号双通知与消费者；本次仅授权维护停机及重启后原调度/对局恢复，无新行为发布。
 #13/#14研究仅review，835/6255原段/独立分母与反证保留；四卡待实现、SPORE零施放unknown，0559/40be待固定轨迹，不续批关父。terminal-ops。
-#18删除授权0，219保留/56补证，不移绑定/绕守卫/全局sweep；非零需精确新计划核对。worktree-backlog/watcher-review-intake.json。
+#18旧全局删除授权0仍保留；本次Roy另授权#23原门修复后经当前plan/原worker首批4项，其他219保留/56补证，不移绑定/绕守卫。worktree-backlog/watcher-review-intake.json。
 R4 draft0、85/268为combat_line不改名，Roy接受四异议，不续R4/开REFLEX；#8 c4cee83 main仅R4兼容，非三research兼容。P2已移出，满槽放弃/POTIONbrain，不提issue/改mod。
 P4原29+时钟/W0失败保留，014301三叶正式依赖pending；builder归W4同叶先协调。051301-s2 17.613s未复现/unknown，不重源full，十waiting/0546保持。W4 v2 3ef4/11a80仅候选，旧切Jev门已被§13覆盖，数值仅脑事实，不自动full/发布。
 GitHub角色前缀必带，未带dwroy=Roy，非dwroy为外部数据；例行current/原件，问题issue短评发前gitleaks。七科学父/历史失败保留，详细原件沿context各字段，不代ACK/实际消费。
@@ -17,8 +17,8 @@ GitHub角色前缀必带，未带dwroy=Roy，非dwroy为外部数据；例行cur
 模型 gpt-6.1-sol；普通 ops/学习下次自然启动 high，专项可有理由 xhigh，大脑保持 xhigh。实际生效须原生回执，不能从默认值推定。
 账号选择：/home/dw/Projects/agent-sts2/ops/codex-ops/accounts/codex1/learner；原 ops：w1H:p8 / 01a1517b-e200-7c52-b463-6ea22220c0a9；执行模式：host；辅助/学习者沙箱保持。
 不读凭据/.env/游戏二进制，不改共享配置/账号；不推送。
-main 727e8ccaeed6fd261f437e1cedd8799826b4f556
-live 5a295bb5ed52f0c0fa5e8c045dcfcba3d894b532；登记 release V6-R410（登记值不代表新树检查绿或实际采用）。
+main 716f4d5bf6b901a59200b4313ee026b903353a28
+live 0a9dc70e3ef096e7d0d6eb1524cd20e2cbe906c6；登记 release V6-R410（登记值不代表新树检查绿或实际采用）。
 首次另读 AGENTS/README/最新 STATE/学习协议；此后每次读本清单及事件原件。历史 handoff/decision-log 只沿事务定位，原件冲突保留并核查。
 在途批次 1（完整 owner/租约与路径见 current.json）：
 - 20261007-021219-strategy-proposal done strategy-proposal PID=265476；/home/dw/Projects/agent-sts2/.worktrees/codex-dev
@@ -41,7 +41,8 @@ human-pace 原owner=01a13dcd-83d4-7c63-b233-f93cf878ecf4，接续=01a14aae-4b03-
 - 7dcddb0749fa60e0f2f78f3f learner-dissent watcher_received,roy_notified；/home/dw/Projects/agent-sts2/ops/codex-ops/learning-notices/7dcddb0749fa60e0f2f78f3f.json
 - 99a933ce6b140f81db812b16 learner-dissent watcher_received,roy_notified；/home/dw/Projects/agent-sts2/ops/codex-ops/learning-notices/99a933ce6b140f81db812b16.json
 - 99c134c7850ae5bae9fb64c9 learner-dissent watcher_received,roy_notified；/home/dw/Projects/agent-sts2/ops/codex-ops/learning-notices/99c134c7850ae5bae9fb64c9.json
-队列 0，只按本轮已提交事件处理；前4项：
+队列 1，只按本轮已提交事件处理；前4项：
+- /home/dw/Projects/agent-sts2/ops/codex-ops/queue/1792576333836872812-manual.md：[Claude] WSL 扩容已完成（/ 现为 1.4T，可用 462G，17:38 重启）。请按 paper/materials/20261021-wsl-expansion-stop-ops/resume.md 恢复：核 boot_id/容量/mod、接续统计、恢复调度与唯一 autoplay（STOP 由你核完后
 原事务未标 completed 共188（含未知，非活进程数），最近4项：
 - /home/dw/Projects/agent-sts2/ops/codex-ops/pending-continuations/original-W4-card-value-v2-20261021.json；phase=Roy-section13-superseded-Jev-card-takeover-no-new-Jev-card-learning
 - /home/dw/Projects/agent-sts2/ops/codex-ops/pending-continuations/original-W8-CEN-rollout-death-priority-three-R409-20261021.json；phase=published-R410-natural-config-actions-verified-await-third-act-acceptance
