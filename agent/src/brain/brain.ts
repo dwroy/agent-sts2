@@ -39,6 +39,7 @@ import type { AnswerSpec, BrainAnswer, BrainEngine, BrainRequest, EngineName } f
 import { KNOWLEDGE_DIR } from "../core/paths.js";
 import { knowledgeFile } from "../knowledge/files.js";
 import { StrategyEntries } from "../knowledge/strategy-entries.js";
+import { attachOpenBook } from "../knowledge/open-book.js";
 
 /** The project's knowledge directory (core/paths.ts): the data files the knowledge tools read (knowledge/files.ts). */
 export { KNOWLEDGE_DIR };
@@ -278,6 +279,15 @@ export class Brain {
     if (isObject(payload) && DIRECTION_RIDE_KEY in payload) spec = withDirectionRideField(spec, payload);
     const liveRun = (this.context?.state as Record<string, unknown> | undefined)?.["run_id"];
     const runId = typeof liveRun === "string" ? liveRun : "";
+    // Options and the question take precedence over background deck references under the byte cap.
+    if (isObject(payload)) {
+      const enriched = attachOpenBook({ options, question, payload }, { directory: this.context?.knowledgeDir });
+      if (isObject(enriched) && enriched["open_book"]) {
+        payload = { ...(enriched["payload"] as Record<string, unknown>), open_book: enriched["open_book"] };
+        options = enriched["options"] as typeof options;
+        question = enriched["question"] as string;
+      }
+    }
     const base: BrainRequest = {
       ...(runId ? { runId } : {}),
       label,

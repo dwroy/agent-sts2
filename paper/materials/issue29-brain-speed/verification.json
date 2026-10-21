@@ -1,0 +1,57 @@
+{
+  "recorded_at": "2026-10-21T08:47:25.222938+00:00",
+  "checks": [
+    {
+      "cwd": "agent",
+      "command": "PATH=\"$HOME/.local/node/bin:$PATH\" nice -n 19 npx tsc -p tsconfig.json --noEmit",
+      "exit_code": 0
+    },
+    {
+      "cwd": "agent",
+      "command": "PATH=\"$HOME/.local/node/bin:$PATH\" nice -n 19 node node_modules/typescript/bin/tsc --ignoreConfig --noEmit --target ES2022 --lib ES2023 --types node --module NodeNext --moduleResolution NodeNext --strict --noUncheckedIndexedAccess --noUnusedLocals --noUnusedParameters --skipLibCheck tools/issue29-brain-speed.ts",
+      "exit_code": 0
+    },
+    {
+      "cwd": ".",
+      "command": "nice -n 19 python3 agent/tools/issue29-brain-speed-test.py",
+      "exit_code": 0,
+      "tests_passed": 6
+    },
+    {
+      "cwd": "agent",
+      "command": "SANDBOX_WORKERS=1 nice -n 19 bash tools/test-sandbox.sh --reporter=verbose",
+      "exit_code": 0,
+      "includes_tsc": true,
+      "test_files_passed": 590,
+      "tests_passed": 5248,
+      "main_files": 589,
+      "main_tests": 5237,
+      "paths_files": 1,
+      "paths_tests": 11,
+      "main_duration_s": 1239.87,
+      "paths_duration_s": 2.34,
+      "fixed_exclusions": "agent/tools/test-sandbox.sh",
+      "local_log": "data/issue29-checks/vitest-sandbox.log",
+      "log_bytes": 806500,
+      "log_sha256": "49f238f1f76b04fbef89424937787c335b31aaa6021d70a69194da1429fc8933"
+    }
+  ],
+  "incomplete_attempts": [
+    {
+      "cwd": "agent",
+      "command": "PATH=\"$HOME/.local/node/bin:$PATH\" nice -n 19 env -u CHARACTER node tools/with-temp.mjs node_modules/vitest/vitest.mjs run --pool=threads --maxWorkers=1 --exclude tests/paths.test.ts",
+      "exit_code": 143,
+      "status": "interrupted_not_passed",
+      "reason": "About six minutes of sustained CPU use with only the RUN banner and no per-file result; terminated only the owned Vitest PID. Cause not established; full suite remains unverified.",
+      "local_log": "data/issue29-checks/vitest-full.log",
+      "log_bytes": 90,
+      "log_sha256": "d5c7ca11812419a67ce53545db2fb2f612aef4f8f2815641387f6f38b69b3f1f"
+    }
+  ],
+  "measurement_integrity": {
+    "results": 160,
+    "complete": true,
+    "evidence_hashes_verified": 13,
+    "codex_native_generations": 96
+  }
+}

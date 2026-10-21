@@ -1,0 +1,117 @@
+{
+  "schema": "open-book-replay-v1",
+  "generated_at": "2026-10-21T10:31:13.097Z",
+  "fixture_sha256": "b1307b162336846587fb28a4cb86597ffa77f5b2d8ea91008fd572d7bd7aa100",
+  "node": "v22.23.3",
+  "rounds_per_mode": 30,
+  "max_added_bytes": 18000,
+  "scope": "五种合成固定题经生产 Brain.choose/askJson -> userMessage；字段来自已署名外部机械资料，价格为结构占位。非实盘、非自然采用、无模型/网络/对局。耗时截至假引擎入口，含路由；第一题首次加载，随后共享缓存。负差值是测量噪声，不代表提速。",
+  "results": [
+    {
+      "kind": "拿牌",
+      "label": "reward/card",
+      "baseline_bytes": 518,
+      "enriched_bytes": 4932,
+      "added_bytes": 4414,
+      "baseline_sha256": "6e69ea921b178146f5163f823f455dc6f3c5da6d184ea9964c224dc7be456ac3",
+      "enriched_sha256": "72bdfdd08add54eb3b155354cfd4c131a78c82c825ecb6e258d6c405af086f38",
+      "selected": [
+        "cards:ABRASIVE",
+        "cards:STRIKE_SILENT",
+        "cards:DEFEND_SILENT",
+        "relics:RING_OF_THE_SNAKE"
+      ],
+      "omitted": 0,
+      "first_enabled_ms": 32.956316999999956,
+      "warm_baseline_median_ms": 0.032567000000028656,
+      "warm_enriched_median_ms": 1.2797539999999685,
+      "warm_added_median_ms": 1.2462859999999978,
+      "warm_added_p95_ms": 3.2573249999999803
+    },
+    {
+      "kind": "事件",
+      "label": "event/choice",
+      "baseline_bytes": 455,
+      "enriched_bytes": 7825,
+      "added_bytes": 7370,
+      "baseline_sha256": "a7244c674d09ed89933fc65e9afd30357c20e17d10e04604924a950e0cb217fb",
+      "enriched_sha256": "96600644ea7677cebb5c6db4a9f7f92008e29ea392bd8f924e7e71be88436453",
+      "selected": [
+        "cards:STRIKE_SILENT",
+        "cards:DEFEND_SILENT",
+        "relics:RING_OF_THE_SNAKE",
+        "events:ABYSSAL_BATHS"
+      ],
+      "omitted": 0,
+      "first_enabled_ms": 2.3558830000000057,
+      "warm_baseline_median_ms": 0.054005999999958476,
+      "warm_enriched_median_ms": 1.3148820000000114,
+      "warm_added_median_ms": 1.2543760000000361,
+      "warm_added_p95_ms": 1.9981699999999591
+    },
+    {
+      "kind": "商店",
+      "label": "shop/plan",
+      "baseline_bytes": 583,
+      "enriched_bytes": 5411,
+      "added_bytes": 4828,
+      "baseline_sha256": "83d2f5416eec543e6b211cc30a3a93fe37a8169a35a4e2e23a0efac9a4230dce",
+      "enriched_sha256": "2cf938c67bbb634339cb094b3c47e3986244213afff441b02bb51eea8c2d975d",
+      "selected": [
+        "relics:AKABEKO",
+        "cards:ABRASIVE",
+        "cards:STRIKE_SILENT",
+        "cards:DEFEND_SILENT",
+        "relics:RING_OF_THE_SNAKE"
+      ],
+      "omitted": 0,
+      "first_enabled_ms": 1.814614000000006,
+      "warm_baseline_median_ms": 0.03158799999999928,
+      "warm_enriched_median_ms": 1.4157639999999674,
+      "warm_added_median_ms": 1.3817859999999769,
+      "warm_added_p95_ms": 2.092533000000003
+    },
+    {
+      "kind": "休息",
+      "label": "rest/plan",
+      "baseline_bytes": 518,
+      "enriched_bytes": 4869,
+      "added_bytes": 4351,
+      "baseline_sha256": "a693a4cdc528c886a15fdccf0e9f2a4168db352926d239e8cfad6fa8a7cb6982",
+      "enriched_sha256": "e3afe5f460c2e409e15c562a605e6c99c79c1865bbe034885f6d6d8e196c19be",
+      "selected": [
+        "cards:ABRASIVE",
+        "cards:STRIKE_SILENT",
+        "cards:DEFEND_SILENT",
+        "relics:RING_OF_THE_SNAKE"
+      ],
+      "omitted": 0,
+      "first_enabled_ms": 1.3684670000000096,
+      "warm_baseline_median_ms": 0.05086600000004182,
+      "warm_enriched_median_ms": 1.323931000000016,
+      "warm_added_median_ms": 1.2755349999999908,
+      "warm_added_p95_ms": 2.082753000000025
+    },
+    {
+      "kind": "幕初",
+      "label": "act/plan",
+      "baseline_bytes": 429,
+      "enriched_bytes": 6166,
+      "added_bytes": 5737,
+      "baseline_sha256": "ad2b5b30a4d2a9bd9dab91dfc2d6ba0f722f05dfdcc776aaf2d727edf7a74f76",
+      "enriched_sha256": "8f066cfb99821952dfbce2a09d2754ffe9b1c8daff81c2d615656defc912c406",
+      "selected": [
+        "monsters:AEONGLASS",
+        "cards:STRIKE_SILENT",
+        "cards:DEFEND_SILENT",
+        "relics:RING_OF_THE_SNAKE"
+      ],
+      "omitted": 0,
+      "first_enabled_ms": 1.9041530000000648,
+      "warm_baseline_median_ms": 0.025509000000056403,
+      "warm_enriched_median_ms": 1.265525000000025,
+      "warm_added_median_ms": 1.239676999999915,
+      "warm_added_p95_ms": 2.0280579999999873
+    }
+  ]
+}
