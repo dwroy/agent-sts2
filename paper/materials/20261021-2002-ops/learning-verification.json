@@ -1,0 +1,156 @@
+{
+  "batch": "20261021-194301",
+  "run": "0CLP16ZR4ZZC",
+  "appended_once": true,
+  "section_sha256": "52772f0f11832ab058f08daa8ebf20bca85fd56684f0b3912d56fd4a48e6250c",
+  "raw_index_original_windows_verified": {
+    "runs": 1,
+    "decisions": 805,
+    "run-plans": 66,
+    "brain": 51,
+    "run-config": 1,
+    "sl-attempts": 4,
+    "states": 849
+  },
+  "raw_artifacts": [
+    {
+      "path": "learner/runs/20261021-194319-b267ad65-f177-4638-a8ad-25da8e71c1e7-postmortem/report.md",
+      "bytes": 61030,
+      "sha256": "7e14ba838d09bbb757969f010f2837a90fbc4749097468270bc3789ccef7dd54"
+    },
+    {
+      "path": "learner/runs/20261021-194319-b267ad65-f177-4638-a8ad-25da8e71c1e7-postmortem/proposal.md",
+      "bytes": 4748,
+      "sha256": "d96b025a8de4e5c9f63c0a0c7bec0a249aaf810a3f429a5e77c06b218c92f954"
+    },
+    {
+      "path": "learner/runs/20261021-194319-b267ad65-f177-4638-a8ad-25da8e71c1e7-postmortem/verification.json",
+      "bytes": 610,
+      "sha256": "1d4c3194456325c47c0f62d058f0f62dae4fc6368580d017bf3a6422a5e63372"
+    },
+    {
+      "path": "learner/runs/20261021-194319-b267ad65-f177-4638-a8ad-25da8e71c1e7-postmortem/section.md",
+      "bytes": 26894,
+      "sha256": "52772f0f11832ab058f08daa8ebf20bca85fd56684f0b3912d56fd4a48e6250c"
+    },
+    {
+      "path": "learner/runs/20261021-194319-b267ad65-f177-4638-a8ad-25da8e71c1e7-postmortem/ledger-check.txt",
+      "bytes": 94,
+      "sha256": "825d7582d963be032f587c5c4e1379cdb37c975f6bd07a33685ad47694061818"
+    },
+    {
+      "path": "learner/runs/20261021-194319-b267ad65-f177-4638-a8ad-25da8e71c1e7-postmortem/0CLP16ZR4ZZC-raw-index.json",
+      "bytes": 614197,
+      "sha256": "e7eb41c6d6c889e6c89a5cb1daac5814b2d0e00a14492a3b7cc60acf6ae1ac29"
+    },
+    {
+      "path": "learner/runs/20261021-194319-b267ad65-f177-4638-a8ad-25da8e71c1e7-postmortem/question-receipts.json",
+      "bytes": 1127640,
+      "sha256": "1b461aed10cb878c08e7ca7107ebd25ac0743235103b7dc939381653544fb118"
+    }
+  ],
+  "ledger_mappings": {
+    "silent-0027": {
+      "status": "shipped",
+      "evidence": [
+        {
+          "run": "0CLP16ZR4ZZC",
+          "floor": 49,
+          "turn": 3,
+          "note": "s479226敌44血16毒/触媒2/毒雾3；s479227换相209/212血仅3毒，玩家能力保留；T6末103血22毒/触媒4后T7新相312/313仅3毒。末T14敌102血，蛇咬16→23毒，战后玩家12血。结算多源并存，缺逐次毒帧，不声称105实伤或固定牌序收益。",
+          "role": "support",
+          "added": "2026-10-21T19:57:33+08:00"
+        }
+      ]
+    },
+    "silent-0418": {
+      "status": "shipped",
+      "evidence": [
+        {
+          "run": "0CLP16ZR4ZZC",
+          "floor": 49,
+          "turn": 10,
+          "note": "Jev原题@2421071658对应decision41810bc2-98e7-4400-a1c4-491d0d8230fe，原答plan1置信0.63；护栏替plan2候选损17→4伤84→49，后继中和/毒药/生存者和弃伤口实存，s479262-479267实损5。短推演每线8/8死而本局T14赢；原线未执行，省13/少35只是候选差。",
+          "role": "support",
+          "added": "2026-10-21T19:57:34+08:00"
+        }
+      ]
+    },
+    "silent-0560": {
+      "status": "observed",
+      "evidence": [
+        {
+          "run": "0CLP16ZR4ZZC",
+          "floor": 44,
+          "note": "d@3366921581/3367703302/3368420960均completed；s479101-479105核新遗物、HP和步法升级。",
+          "role": "support",
+          "added": "2026-10-21T19:57:32+08:00"
+        },
+        {
+          "run": "0CLP16ZR4ZZC",
+          "floor": 47,
+          "note": "d@3369968598/3370579008/3371316099与selection/upgrade completed；s479164-479168核斗篷扣、57/81→86/86和触媒升级。",
+          "role": "support",
+          "added": "2026-10-21T19:57:32+08:00"
+        }
+      ]
+    }
+  },
+  "proposals": [
+    {
+      "op": "add",
+      "id": "silent-proposal-9fa8579f7b4f5b2f",
+      "ts": "2026-10-21T19:58:35+08:00",
+      "character": "silent",
+      "ledger": [
+        "silent-0027",
+        "silent-0418"
+      ],
+      "runs": [
+        "0CLP16ZR4ZZC"
+      ],
+      "source_task": "postmortem",
+      "target_task": "strategy-proposal",
+      "domains": [
+        "combat"
+      ],
+      "summary": "核实A10实验体护栏经弃牌后的真实结算端点及跨相状态；候选省13/少35不记实省，证据不足保留行为并以独立冻结窗口验收。",
+      "proposal": "/home/dw/Projects/agent-sts2/learner/runs/20261021-194319-b267ad65-f177-4638-a8ad-25da8e71c1e7-postmortem/proposal.md",
+      "rule_changes": false,
+      "authorization": "Roy-2026-10-07-learning",
+      "proposal_sha256": "d96b025a8de4e5c9f63c0a0c7bec0a249aaf810a3f429a5e77c06b218c92f954",
+      "state": "pending"
+    }
+  ],
+  "proposal_events": [
+    {
+      "op": "add",
+      "id": "silent-proposal-9fa8579f7b4f5b2f",
+      "ts": "2026-10-21T19:58:35+08:00",
+      "character": "silent",
+      "ledger": [
+        "silent-0027",
+        "silent-0418"
+      ],
+      "runs": [
+        "0CLP16ZR4ZZC"
+      ],
+      "source_task": "postmortem",
+      "target_task": "strategy-proposal",
+      "domains": [
+        "combat"
+      ],
+      "summary": "核实A10实验体护栏经弃牌后的真实结算端点及跨相状态；候选省13/少35不记实省，证据不足保留行为并以独立冻结窗口验收。",
+      "proposal": "/home/dw/Projects/agent-sts2/learner/runs/20261021-194319-b267ad65-f177-4638-a8ad-25da8e71c1e7-postmortem/proposal.md",
+      "rule_changes": false,
+      "authorization": "Roy-2026-10-07-learning",
+      "proposal_sha256": "d96b025a8de4e5c9f63c0a0c7bec0a249aaf810a3f429a5e77c06b218c92f954",
+      "state": "pending"
+    }
+  ],
+  "new_pure_bugs": [],
+  "known_runtime_source_unknown": "run-config gitENOBUFS/current does not prove live SHA at historical time; strict brain source unknown stays excluded from Codex cohort",
+  "scientific_scope": "single run; prediction delta is not observed counterfactual benefit;11 V6 unknown rows not evidence of natural adoption",
+  "mechanics_strategy_left_to_learner": true,
+  "ledger_check": 0
+}
