@@ -23,6 +23,16 @@ roles:
 resource_gate: {when: "game running", max_procs_per_task: 2, nice: 19}
 never_reclaim: [".worktrees/live", "panes: integrator, ops, learner-*"]
 verify: ["npx tsc -p tsconfig.json --noEmit", "npx vitest run"]
+dispatcher:
+  install: ops/codex-ops/agent-board-kit
+  registry: ops/codex-ops/agent-board-projects.json
+  lifecycle: [python3, ops/issue_session.py, --root, "{root}", --config, "{config}"]
+  state: ops/codex-ops/agent-board.json
+  sessions: ops/codex-ops/issue-sessions.json
+  inbox: ops/inbox-dev.md
+  digest: ops/codex-ops/board-digest.md
+  pause_files: [ops/codex-ops/PAUSE, ops/codex-ops/LLM_DRAIN]
+  interval_minutes: 5
 session:
   state_dir: ops/codex-ops
   # Read only inaccessible cwd links; verify the same PID namespace and start time.

@@ -597,6 +597,21 @@ def config_label(row):
     return label + (" · 局中改过配置" if row.get("config_changed") else "")
 
 
+def experimental_brain_runs(logs):
+    """Opt-in experiments never silently join the pre-existing performance baseline."""
+    profiles = {}
+    path = os.path.join(logs, "run-config.jsonl")
+    if not os.path.exists(path):
+        return profiles
+    with open(path) as handle:
+        for line in handle:
+            row = json.loads(line)
+            profile = row.get("brain", {}).get("run_profile")
+            if profile:
+                profiles[row["run_id"]] = {**profile, "trial_id": profile.get("trial_id") or "unregistered-run-profile"}
+    return profiles
+
+
 def group_runs(rows, how, versions=None, characters=None):
     """[(group name, rows)] in group order: versions in versions.json order, the rest by name / first run.
     `characters`: run id -> character id (--group-by character; a run not in it is the Ironclad's)."""
@@ -626,6 +641,9 @@ def group_runs(rows, how, versions=None, characters=None):
             order.setdefault(key, (0, key))
         else:
             raise ValueError(f"unknown --group-by {how}")
+        if row.get("brain_trial"):
+            p = row["brain_trial"]
+            key += f" [trial {p['trial_id']} {p['engine']}/{p['effort']} A{row['ascension']}]"
         if how != "character" and len(set((characters or {}).values())) > 1:
             key = f"{(characters or {}).get(row['run_id'], 'ironclad')} · {key}"
             order.setdefault(key, order.get(key.split(" · ", 1)[1], (0, row["started"])))
@@ -791,6 +809,7 @@ def main(argv=None):
     parser.add_argument("--no-calibration", action="store_true", help="leave out the calibration columns (eval/calibration.py)")
     parser.add_argument("--boss-clocks", help="calibration: JSONL of boss-clock-recompute.ts output instead of recomputing")
     parser.add_argument("--include-non-codex", action="store_true", help="explicit raw performance cohort including DeepSeek/mixed/unknown; costs always retain every run")
+    parser.add_argument("--brain-trial", help="explicit experimental trial id; default excludes trial runs from performance, retains all costs")
     args = parser.parse_args(argv)
 
     import query as logquery  # noqa: E402  (needs duckdb: run with .cache/logdb-venv/bin/python)
@@ -817,18 +836,26 @@ def main(argv=None):
         row["character"] = characters.get(row["run_id"]) or run_character(row)
         characters[row["run_id"]] = row["character"]
     brain_source.annotate(rows, brain_source.load_sources(logs, [r["run_id"] for r in rows]))
+    trials = experimental_brain_runs(logs)
+    for row in rows:
+        if row["run_id"] in trials:
+            row["brain_trial"] = trials[row["run_id"]]
     raw_rows = rows
     raw_characters = {c: [r for r in raw_rows if r["character"] == c] for c in sorted(set(characters.values()))}
-    rows = [r for r in raw_rows if brain_source.eligible(r, args.include_non_codex)]
+    def selected(r):
+        trial = r.get("brain_trial")
+        return brain_source.eligible(r, args.include_non_codex) and (trial.get("trial_id") == args.brain_trial if trial else args.brain_trial is None)
+    rows = [r for r in raw_rows if selected(r)]
     groups = group_runs(rows, args.group_by, versions, characters)
-    if args.total and rows:
+    if args.total and rows and not args.brain_trial:
         totals = {c: [r for r in rows if r["character"] == c] for c in sorted({r["character"] for r in rows})}
         groups.extend((("全部" if len(totals) == 1 else f"全部 · {c}"), rs) for c, rs in totals.items())
     if args.json:
         print(json.dumps({"groups": [{"name": name, "run_ids": [r["run_id"] for r in rs], "summary": plain(summarize(rs))} for name, rs in groups],
                           "runs": plain(raw_rows), "performance_policy": brain_source.POLICY,
                           "include_non_codex": args.include_non_codex, "raw_cohorts": brain_source.cohorts(raw_rows),
-                          "excluded_run_ids": [r["run_id"] for r in raw_rows if not brain_source.eligible(r, args.include_non_codex)],
+                          "excluded_run_ids": [r["run_id"] for r in raw_rows if not selected(r)],
+                          "brain_trial": args.brain_trial, "trial_policy": "explicit trial selection; baseline excludes trials; costs retain all",
                           "all_run_usage_summary": plain(summarize(raw_rows)),
                           "raw_cohorts_by_character": {c: brain_source.cohorts(rs) for c, rs in raw_characters.items()},
                           "raw_usage_by_character": {c: plain(summarize(rs)) for c, rs in raw_characters.items()},
@@ -836,6 +863,7 @@ def main(argv=None):
                          ensure_ascii=False, indent=1))
         return 0
     sys.stdout.write(f"战绩口径：{brain_source.POLICY}；{'显式包含非 Codex 局' if args.include_non_codex else '仅有成功 Codex 脑题且无其他成功引擎的局'}。原始 {len(raw_rows)} 局，纳入 {len(rows)} 局；旧报告保留。\n\n")
+    sys.stdout.write(f"大脑试验口径：{args.brain_trial or '基线排除试验局'}；原始费用/用量保留全部局。\n\n")
     sys.stdout.write(render(groups, args.min_n, args.md))
     sys.stdout.write("\n来源原始成绩（不影响费用、用量或学习证据）：\n")
     for character, rs in raw_characters.items():

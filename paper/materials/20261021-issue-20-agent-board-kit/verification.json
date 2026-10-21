@@ -1,0 +1,96 @@
+{
+  "schema": "issue20-verification-v1",
+  "base": "6a90f0882362752efca1f9ded831ee237cf1e281",
+  "kit_remote_commit": "d15456158f0d7d4ad3b48537b034013fa20cb9f1",
+  "checks": {
+    "tsc": {
+      "exit_code": 0,
+      "initial_command": "npx tsc -p tsconfig.json --noEmit",
+      "final_command": "node node_modules/typescript/bin/tsc -p tsconfig.json --noEmit"
+    },
+    "python_lifecycle": {
+      "tests": 52,
+      "exit_code": 0
+    },
+    "python_kit": {
+      "tests": 26,
+      "exit_code": 0
+    },
+    "vitest_full": {
+      "exit_code": 1,
+      "files_passed": 644,
+      "files_failed": 1,
+      "tests_passed": 6072,
+      "tests_failed": 1,
+      "tests_skipped": 2,
+      "cause": "Exact baseline material absent in sparse checkout; check-imports only."
+    },
+    "vitest_recheck": {
+      "exit_code": 0,
+      "files": [
+        "tests/check-imports.test.ts",
+        "tests/paths.test.ts"
+      ],
+      "tests_passed": 12
+    },
+    "complete_vitest_set": {
+      "files": 646,
+      "tests_passed": 6084,
+      "tests_skipped": 2,
+      "method": "Full collection excluding paths + failing import check and paths in one fork recheck after exact material readback; no TS source change, no broader rerun."
+    },
+    "bash_syntax": {
+      "exit_code": 0
+    },
+    "real_dry_run": {
+      "exit_code": 1,
+      "no_actions": true,
+      "cause": "Recipients absent/busy and developer capacity limit; original outcome preserved."
+    }
+  },
+  "logs": {
+    "tsc.log": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    "tsc-final.log": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    "lifecycle-tests.log": {
+      "sha256": "9f3d01f1953afe3cce79b263de06f0eec59f03c86340e0322b340a4c10135d12",
+      "bytes": 150
+    },
+    "lifecycle-tests-final.log": {
+      "sha256": "3f142d2681c1dd4f8ca9a9d57653b4d0812598fd25fbc35bc4ca43511e1341f8",
+      "bytes": 152
+    },
+    "kit-tests.log": {
+      "sha256": "448c76019b692cc408025d8da1deb207e9d6a488776376dcd99c1d790ddba9bc",
+      "bytes": 118
+    },
+    "kit-tests-final.log": {
+      "sha256": "c63b73793448371268d560f76ffdca1043cfb97ca6f1efa0737a95caadb928f6",
+      "bytes": 125
+    },
+    "vitest-interrupted.log": {
+      "sha256": "aa69698e9d0d07ab524a7566e65570ff47e5acc9d0eb48d49e2ca0be0c2b475f",
+      "bytes": 87
+    },
+    "vitest-full.log": {
+      "sha256": "d69ad542486e37e04acd2acf7ad4f9b61eace9df0b5665fdf2cf52d5d8381ae6",
+      "bytes": 1393
+    },
+    "vitest-recheck.log": {
+      "sha256": "05521fa185986582d5a397d252573ef3e4c3b87295ceaae6824e02483f49a70c",
+      "bytes": 259
+    }
+  },
+  "source_blobs": {
+    ".agents/board.yaml": "96a0124b6c7d17af8488bcafdfe07ab71dc224cc",
+    "ops/agent_board.py": "3a27b737eac7e88432e8e4dc5ab0035d29ee308c",
+    "ops/codex-ops.sh": "a5c46176f4993d8d9703e70371820b863a6ba50f",
+    "ops/issue_session.py": "4086b715e240b34f5488c4316f14fed065f5108b",
+    "ops/tests/test_issue_session.py": "b1ee08675ce496d665b5652ae27552366feba2da"
+  }
+}

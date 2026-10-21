@@ -1,3 +1,4 @@
+import type { BrainRunProfile, BrainNativeReceipt } from "./run-profile.js";
 import { currentDecisionBudget, withinDecisionBudget, withIndependentDecisionBudget, HUMAN_PACE_BUDGETS, DecisionBudgetExpired } from "../core/decision-budget.js";
 /**
  * Production createRouter selects the Codex-only path: outages wait on the same question and faults propagate.
@@ -155,6 +156,9 @@ export interface BrainLogRow {
   model: string;
   /** The reasoning effort asked for (the engine's answer, else its configured one), when the engine has one. */
   effort?: string;
+  run_brain?: BrainRunProfile;
+  native_receipt?: BrainNativeReceipt | null;
+  requested_effort?: string;
   system_sha: string;
   system_chars: number;
   /** KNOWLEDGE_PREFIX=full: the prefix the system carried (or why v3's went out instead). */
@@ -229,6 +233,7 @@ function message(error: unknown): string {
 
 export class BrainRouter {
   readonly wait: BrainWait;
+  readonly nativeReceipts = new Map<string, { question_id: string; receipt: BrainNativeReceipt }>();
   private recover: (() => Promise<void>) | null = null;
   /** Engines resting after a quota / rate-limit / login failure: until when, and why. */
   private readonly resting = new Map<EngineName, { until: number; reason: string; kind: FailureKind }>();
@@ -387,12 +392,14 @@ export class BrainRouter {
    * an answer failure as the engine threw it.
    */
   async decide(request: BrainRequest): Promise<BrainAnswer> {
+    const profile = this.deps.config.runProfile;
+    if (profile) request.effort = profile.effort;
     const pace = currentDecisionBudget();
     if (pace && !request.budgetSignal) {
       pace.promoteBrain();
       return withIndependentDecisionBudget("L2_brain", "brain", HUMAN_PACE_BUDGETS.brain, "L2", () =>
         withinDecisionBudget("L2_brain", (signal) => this.decide({ ...request, budgetSignal: signal,
-          effort: "xhigh", timeoutMs: HUMAN_PACE_BUDGETS.brain }), HUMAN_PACE_BUDGETS.brain));
+          effort: profile?.effort ?? this.deps.config.engines[this.codexOnly ? "codex" : this.engineFor(request.label)].effort ?? undefined, timeoutMs: HUMAN_PACE_BUDGETS.brain }), HUMAN_PACE_BUDGETS.brain));
     }
     if (request.budgetSignal?.aborted) throw new DecisionBudgetExpired(request.label);
     request.questionId ??= this.nextQuestionId();
@@ -690,6 +697,8 @@ export class BrainRouter {
         model = "";
       }
     }
+    const receipt = result?.nativeReceipt ?? null;
+    if (req.runId && req.questionId && receipt) this.nativeReceipts.set(req.runId, { question_id: req.questionId, receipt });
     const row: BrainLogRow = {
       ts: new Date().toISOString(),
       ...(req.runId ? { run_id: req.runId } : {}),
@@ -697,6 +706,9 @@ export class BrainRouter {
       engine,
       model,
       ...(effort ? { effort } : {}),
+      requested_effort: req.effort ?? this.deps.config.engines[engine].effort ?? undefined,
+      ...(this.deps.config.runProfile ? { run_brain: this.deps.config.runProfile } : {}),
+      native_receipt: receipt,
       system_sha: sha(req.system),
       system_chars: req.system.length,
       ...(req.knowledge ? { knowledge: req.knowledge } : {}),

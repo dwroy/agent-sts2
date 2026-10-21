@@ -1,0 +1,22 @@
+test_sts2fun_stats (unittest.loader._FailedTest.test_sts2fun_stats) ... ERROR
+
+======================================================================
+ERROR: test_sts2fun_stats (unittest.loader._FailedTest.test_sts2fun_stats)
+----------------------------------------------------------------------
+ImportError: Failed to import test module: test_sts2fun_stats
+Traceback (most recent call last):
+  File "/usr/lib/python3.14/unittest/loader.py", line 426, in _find_test_path
+    module = self._get_module_from_name(name)
+  File "/usr/lib/python3.14/unittest/loader.py", line 367, in _get_module_from_name
+    __import__(name)
+    ~~~~~~~~~~^^^^^^
+  File "/home/dw/Projects/agent-sts2/.worktrees/issue-24-sts2fun-stats/eval/tests/test_sts2fun_stats.py", line 82
+    replay = M.own_picks(root, dict(collections=dict(cards=[dict(id='A',name='Alpha')]))), manifest['files'])
+                                                                                                            ^
+SyntaxError: unmatched ')'
+
+
+----------------------------------------------------------------------
+Ran 1 test in 0.000s
+
+FAILED (errors=1)

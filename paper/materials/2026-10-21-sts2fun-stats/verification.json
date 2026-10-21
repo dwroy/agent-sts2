@@ -1,0 +1,110 @@
+{
+  "status": "passed",
+  "recorded_at": "2026-10-21T15:10:17+08:00",
+  "base_commit": "2b7ecc6ea08415c32bc2ebb78ea5e04bfa6d5ed2",
+  "checks": [
+    {
+      "name": "TypeScript",
+      "cwd": "agent",
+      "command": "npx tsc -p tsconfig.json --noEmit",
+      "exit_code": 0,
+      "output": "tsc.txt"
+    },
+    {
+      "name": "Full Vitest",
+      "cwd": "agent",
+      "command": "node tools/with-temp.mjs node_modules/vitest/vitest.mjs run --maxWorkers=1",
+      "exit_code": 0,
+      "files_passed": 641,
+      "tests_passed": 6055,
+      "tests_skipped": 2,
+      "tests_total": 6057,
+      "duration_seconds": 1496.87,
+      "output": "vitest-full.txt.gz",
+      "exclusions": "Repository vitest.config.ts defaults only; no additional file exclusions."
+    },
+    {
+      "name": "Offline statistics unit tests",
+      "command": "python3 -B -m unittest discover -s eval/tests -p test_sts2fun_stats.py -v",
+      "exit_code": 0,
+      "tests_passed": 5,
+      "output": "python-tests-4.txt"
+    },
+    {
+      "name": "Read-only full aggregation and frozen own-log replay",
+      "exit_code": 0,
+      "output": "stats-attempt-4.txt",
+      "command_reference": "fields.md reproduction command; output points to this material directory for attempt 4"
+    },
+    {
+      "name": "Aggregate invariants and checksums",
+      "exit_code": 0,
+      "output": "aggregate-checks-2.txt",
+      "checks": [
+        "generated SHA manifest",
+        "script SHA matches provenance",
+        "reward counts",
+        "act/all skip sums",
+        "build cohort sums",
+        "cluster partition sums",
+        "primary mapped-only equality",
+        "aggregate output schema",
+        "report denominators"
+      ]
+    },
+    {
+      "name": "Git whitespace",
+      "command": "git diff --cached --check",
+      "exit_code": 0,
+      "output": "diff-check-2.txt"
+    }
+  ],
+  "execution": {
+    "priority": "nice 19",
+    "vitest_workers": 1,
+    "dependencies_installed": false,
+    "tsc_path_prefix": "$HOME/.local/node/bin",
+    "production_behavior_changed": false
+  },
+  "failures_preserved": [
+    {
+      "path": "stats-attempt-1.txt",
+      "sha256": "6a56383795729dabcf6cd695c18b82a8db37ab73d45200a63961bca0da7043a2",
+      "resolution": "Own log contained malformed JSON; added counted exclusion without exposing its content; attempts 2–4 passed."
+    },
+    {
+      "path": "python-tests-1.txt",
+      "sha256": "ef18e3722fdc9a32933e22dd51d640f04e0964835be533e6f9edcc339d8371ec",
+      "resolution": "Syntax error in newly added fixed fixture; corrected fixture, attempts 2–4 passed."
+    },
+    {
+      "path": "diff-check-1.txt.gz",
+      "sha256": "d4547dee68b2e104673df9eb706c364e6fe6b1b640519a7fb37ed877820f10c5",
+      "resolution": "CSV default CRLF triggered Git trailing-whitespace diagnostics; generator switched to LF and attempt 4 regenerated all aggregates; diff-check-2 passed. Gzip preserves complete diagnostic bytes."
+    },
+    {
+      "paths": [
+        "diff-check-3.txt",
+        "diff-check-4.txt"
+      ],
+      "resolution": "Final Vitest stdout has a trailing blank line. Preserved complete original stdout as vitest-full.txt.gz; no test output edited. Final staged whitespace check rerun after compression."
+    }
+  ],
+  "artifacts": {
+    "report.md": "dbe84a336fc0cf252889baaaf54b8e25299d926fcca5a46b8207431109af8258",
+    "fields.md": "fde7aa590f10cf31b18a01203c89f87f94eff15981fdebc5f17502d164d18195",
+    "tsc.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "python-tests-4.txt": "40fd1c7221be91d20738dd11c8a3f50d17ba55e2e4e9f81d7cb35ff1234798ae",
+    "stats-attempt-4.txt": "8f892d6adf92cb3b44ca76e1847bbdb985d2efaa85305c4c1e6f93553cbe9c4e",
+    "aggregate-checks-2.txt": "556bc0c8c585657152516ce6e17a5a3d4a0d765b9adaa7529281ac45b5786c3d",
+    "diff-check-2.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "vitest-full.txt.gz": "2e3b7a852a5b0afda696be2bb2576f48d5699c239f71834b25eee35df00c792b"
+  },
+  "script_sha256": "84cb9c56095db3f37ea4f7840142791681b1f9dd971015a3bff922648c5b2fcc",
+  "secrets": {
+    "scanner": "gitleaks",
+    "result": "No leaks in pre-commit materials, script, tests and complete decompressed first whitespace diagnostic; final staged diff scanned before commit.",
+    "receipts": "gitleaks-*.txt"
+  },
+  "vitest_stdout_uncompressed_sha256": "267e5317541d9854f1da81f0af94af116472d87678a9dc734fb9b413d0dc888f"
+}

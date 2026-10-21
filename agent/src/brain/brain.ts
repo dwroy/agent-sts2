@@ -93,6 +93,7 @@ export function codexTracePath(config: AppConfig): string | null {
 
 /** A router over lazily created engines, logging to BRAIN_LOG (default: brain.jsonl next to the decision log). */
 export function createRouter(config: AppConfig, deepseek: DeepSeekClient | null, options: { log?: (row: BrainLogRow) => void; claudeToolsModule?: string; fallbackBudget?: FallbackBudget; wait?: BrainWait } = {}): BrainRouter {
+  if (config.brain.runProfile?.engine === "deepseek") throw new Error("DeepSeek run profiles require issue #32; no engine substitution is allowed");
   const engines = new Map<EngineName, BrainEngine>();
   // An engine's own notes (codex: a usage read that failed) go where the router's go (Brain.onNote).
   const note = (message: string): void => router.say(message);

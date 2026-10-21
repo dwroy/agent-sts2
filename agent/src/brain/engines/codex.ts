@@ -1,3 +1,4 @@
+import type { BrainNativeReceipt } from "../run-profile.js";
 /**
  * Codex as a brain engine: headless `codex exec` (codex-cli 0.160, npm @openai/codex) under this machine's ChatGPT
  * login (`codex login` in ~/.codex: the subscription; Roy 2026-10-03), one process per call. Model and effort are
@@ -101,6 +102,7 @@ export interface CodexEngineOptions {
  * turn was cut before its answer (answer_text).
  */
 export interface CodexTraceRow {
+  native_receipt?: BrainNativeReceipt | null;
   ts: string;
   run_id?: string;
   /** The question's id (BrainRequest.questionId: brain.jsonl's question_id). */
@@ -937,6 +939,7 @@ export class CodexEngine implements BrainEngine {
         ...(o.req.runId ? { run_id: o.req.runId } : {}),
         ...(o.req.questionId ? { question_id: o.req.questionId } : {}),
         mode: "exec",
+        native_receipt: null,
         label: o.req.label,
         model: o.model,
         effort: o.effort,
@@ -1102,7 +1105,7 @@ export class CodexEngine implements BrainEngine {
       // A runaway cut whose prefix is already a whole answer (BRAIN_CODEX_ACCEPT_CUT): taken instead of asking again.
       const judged = turn.status === "stalled" && acceptCut && turn.stall?.endsWith("(runaway)") ? this.fromCut(req, c, turn.answerText) : null;
       const cut = judged && "text" in judged ? judged.text : null;
-      this.writeTrace({ ...sessionTrace(req, c, attempt, { outcome: turn.status === "completed" ? (turn.text ? "answered" : "failed") : turn.status === "stalled" ? "stalled" : turn.status === "aborted" ? "aborted" : "failed", turn, callMs: spentMs, stderr: session.stderrTail(), serverRequests: session.serverRequests }), ...(cut ? { accepted_from_cut: true } : judged && "rejected" in judged ? { cut_rejected: judged.rejected } : {}) });
+      this.writeTrace({ native_receipt: turn.nativeReceipt ?? null, ...sessionTrace(req, c, attempt, { outcome: turn.status === "completed" ? (turn.text ? "answered" : "failed") : turn.status === "stalled" ? "stalled" : turn.status === "aborted" ? "aborted" : "failed", turn, callMs: spentMs, stderr: session.stderrTail(), serverRequests: session.serverRequests }), ...(cut ? { accepted_from_cut: true } : judged && "rejected" in judged ? { cut_rejected: judged.rejected } : {}) });
       if (cut) {
         const usage = turn.usage ?? {};
         return this.answer(req, c, {
@@ -1111,7 +1114,7 @@ export class CodexEngine implements BrainEngine {
           usage: { input_tokens: usage["inputTokens"], cached_input_tokens: usage["cachedInputTokens"], cache_write_input_tokens: usage["cacheWriteInputTokens"], output_tokens: usage["outputTokens"], reasoning_output_tokens: usage["reasoningOutputTokens"] },
           reasoning: turn.reasoning,
           toolCalls: [],
-          native: { mode: "session", thread_id: turn.threadId, turn_id: turn.turnId, retries: turn.retries, runs: attempt, reverted: turn.reverted, schema: c.schema ? "strict" : "none", accepted_from_cut: turn.stall ?? "" },
+          native: { native_receipt: turn.nativeReceipt ?? null, mode: "session", thread_id: turn.threadId, turn_id: turn.turnId, retries: turn.retries, runs: attempt, reverted: turn.reverted, schema: c.schema ? "strict" : "none", accepted_from_cut: turn.stall ?? "" },
           notes: [`accepted from a cut answer (${turn.stall ?? "runaway"}): its streamed prefix closed into a whole answer`],
         });
       }
@@ -1124,7 +1127,7 @@ export class CodexEngine implements BrainEngine {
           usage: { input_tokens: usage["inputTokens"], cached_input_tokens: usage["cachedInputTokens"], cache_write_input_tokens: usage["cacheWriteInputTokens"], output_tokens: usage["outputTokens"], reasoning_output_tokens: usage["reasoningOutputTokens"] },
           reasoning: turn.reasoning,
           toolCalls: [],
-          native: { mode: "session", thread_id: turn.threadId, turn_id: turn.turnId, retries: turn.retries, runs: attempt, reverted: turn.reverted, schema: c.schema ? "strict" : "none" },
+          native: { native_receipt: turn.nativeReceipt ?? null, mode: "session", thread_id: turn.threadId, turn_id: turn.turnId, retries: turn.retries, runs: attempt, reverted: turn.reverted, schema: c.schema ? "strict" : "none" },
         });
       }
       if (turn.status === "completed") throw new EngineFailure("codex gave no answer [invalid] (session turn completed without an agent message)", "invalid");
@@ -1253,6 +1256,7 @@ export class CodexEngine implements BrainEngine {
       ...(r.reasoning.length > 0 ? { reasoning: r.reasoning.join("\n\n") } : {}),
       raw: r.text,
       native: r.native,
+      ...(r.native["native_receipt"] ? { nativeReceipt: r.native["native_receipt"] as BrainNativeReceipt } : {}),
       ...(notes.length ? { notes } : {}),
     };
   }

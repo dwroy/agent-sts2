@@ -1,3 +1,4 @@
+import { parseBrainRunProfile, type BrainRunProfile } from "../brain/run-profile.js";
 import { accessSync, constants as fsConstants, readFileSync, statSync } from "node:fs";
 import { delimiter, dirname, isAbsolute, join } from "node:path";
 
@@ -525,6 +526,7 @@ export type KnowledgePrefixMode = "off" | "full";
 
 /** V4 brain (src/brain/router.ts): which engine answers which question, and each engine's settings. */
 export interface BrainConfig {
+  runProfile?: BrainRunProfile;
   /** BRAIN_ENGINE (default deepseek: v3 behaviour). */
   engine: EngineName;
   /** BRAIN_ENGINE_<PREFIX>: per label prefix (router.ts labelPrefix), e.g. { MAP: "claude" }. */
@@ -846,6 +848,10 @@ export function readBrainConfig(env: NodeJS.ProcessEnv, problems: ConfigProblem[
       maxCalls: maxCallsOf(env, name, problems),
     };
   }
+  let runProfile: BrainRunProfile | undefined;
+  try { runProfile = parseBrainRunProfile(env["BRAIN_RUN_CONFIG"]); }
+  catch { problems.push({ field: "BRAIN_RUN_CONFIG", message: "invalid per-run brain configuration" }); }
+  if (runProfile) engines[runProfile.engine].effort = runProfile.effort;
   const budgetRaw = readEnv(env, "BRAIN_CLAUDE_MAX_BUDGET_USD");
   const maxBudgetUsd = budgetRaw === null ? null : Number(budgetRaw);
   if (maxBudgetUsd !== null && !(Number.isFinite(maxBudgetUsd) && maxBudgetUsd > 0)) problems.push({ field: "BRAIN_CLAUDE_MAX_BUDGET_USD", message: `expected a positive number, got "${budgetRaw}"` });
@@ -892,6 +898,7 @@ export function readBrainConfig(env: NodeJS.ProcessEnv, problems: ConfigProblem[
   if (prefixRaw !== "off" && prefixRaw !== "full") problems.push({ field: "KNOWLEDGE_PREFIX", message: `expected off or full, got "${prefixRaw}"` });
   const knowledgePrefix: KnowledgePrefixMode = prefixRaw === "full" ? "full" : "off";
   return {
+    ...(runProfile ? { runProfile } : {}),
     engine,
     byPrefix,
     fallback,

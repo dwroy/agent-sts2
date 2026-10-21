@@ -29,6 +29,25 @@ PRICE_PER_M = 0.042  # $ per million tokens (in + out), handoff estimate
 BRAIN_DECIDER = re.compile(r"^(deepseek|claude|codex|dsh)( \(for (deepseek|claude|codex|dsh)\))?$")
 
 
+def run_brain_profile(run_id):
+    """Keep experimental arms visible to learners; never label an unknown/mixed run as baseline."""
+    profiles = []
+    path = os.path.join(ROOT, "logs/run-config.jsonl")
+    if os.path.exists(path):
+        with open(path) as handle:
+            for line in handle:
+                if run_id not in line:
+                    continue
+                row = json.loads(line)
+                if row.get("run_id") == run_id:
+                    profile = row.get("brain", {}).get("run_profile")
+                    if profile not in profiles:
+                        profiles.append(profile)
+    if not any(profiles):
+        return {}
+    return {"brain_run_profile": profiles[0] if len(profiles) == 1 else {"mixed": profiles}}
+
+
 def is_brain(decider):
     return bool(BRAIN_DECIDER.match(decider or ""))
 
@@ -367,7 +386,10 @@ def main(*, code=None):
 
     out = []
     title = "胜利" if victory else ("阵亡" if ended else "未结束")
+    profile_note = run_brain_profile(run_id)
     out.append(f"## 复盘：run {run_id} — {title}，最高第 {top_floor} 层")
+    if profile_note:
+        out.append("大脑实验分组（与既有基线分账，实际档位须核原生回执）：" + json.dumps(profile_note, ensure_ascii=False))
     out.append("")
     brain_name = "DeepSeek" if set(by_engine) <= {"deepseek"} else "大脑"
     brain_split = "" if brain_name == "DeepSeek" else "（" + "，".join(f"{k} {v}" for k, v in by_engine.most_common()) + "）"
@@ -424,6 +446,7 @@ def main(*, code=None):
                 break
         with open(RUNS, "a", encoding="utf8") as handle:
             handle.write(json.dumps({
+                **profile_note,
                 "run_id": run_id, "ended": recs[-1]["ts"], "victory": victory, "floor": top_floor,
                 "character": character, "ascension": ascension, "code": sha, "decisions": len(recs),
                 "jev_calls": jev_calls, "deepseek_calls": ds_calls, "claude_calls": cl_calls, "tokens": tokens_in + tokens_out, "ds_tokens_in": ds_in, "ds_tokens_out": ds_out, "ds_cache_hit": ds_hit,

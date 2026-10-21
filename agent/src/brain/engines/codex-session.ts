@@ -1,3 +1,5 @@
+import { nativeReceipt } from "./native-receipt.js";
+import type { BrainNativeReceipt } from "../run-profile.js";
 /**
  * Codex session mode (BRAIN_CODEX_MODE=session, Roy 2026-10-03): one long-lived `codex app-server` per play process
  * with one saved thread that holds only our system prompt; every brain question is a turn on it, answered with the
@@ -316,6 +318,7 @@ export interface SessionTraceEvent {
 }
 
 export interface SessionTurn {
+  nativeReceipt?: BrainNativeReceipt;
   status: "completed" | "failed" | "interrupted" | "stalled" | "aborted";
   turnId: string | null;
   threadId: string;
@@ -683,6 +686,9 @@ export class CodexSession {
       if (dropped > 0) turn.events.push({ t: turn.ms, type: `(${dropped} notifications not kept)` });
       this.listener = null;
     }
+    if (!this.thread?.path) await this.refreshPath();
+    const receipt = nativeReceipt(this.thread?.path ?? null, threadId, turn.turnId);
+    if (receipt) turn.nativeReceipt = receipt;
     await this.revert(server, threadId, turn);
     if (turn.status !== "completed") this.renew = true;
     return turn;

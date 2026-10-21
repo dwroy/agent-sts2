@@ -70,6 +70,20 @@ nice -n 19 python3 ops/issue_session.py register 123 example-fix \
 
 现有 `codex-ops.sh tick stall|learn|snapshot` 在主检查之后、唤醒队列之前同步核登记表，登记锁防止并发重复操作；沿用既有调度，不加 daemon/cron。`PAUSE`、`LLM_DRAIN` 或 `CODEX_OPS_RETENTION=off` 时不自动回收。每项失败分别写 inbox，其他登记项继续检查；重复原因与带标记的 issue 评论去重。原工作树回收仍由原 retention worker 在既有调度执行，未注册 tab 不触碰。
 
+### 通用派单器（#20）
+
+确定性程序位于私有仓库 [agent-board-kit](https://github.com/dwroy/agent-board-kit)，不调用模型。`.agents/board.yaml` 的 `dispatcher` 配置指定安装位置、同机项目登记表、事件账本、汇总与收件箱；生命周期命令仍调用本项目 `issue_session.py spawn/reclaim`，沿用原发布、进程、归档与保护门禁。不在开发工作树执行生产派发或回收。
+
+集成后先按 kit README 安装并登记全部同机项目，在主运行根用 `nice -n 19 python3 ops/agent_board.py --root "$PWD" --dry-run` 演练。ops 核登记与 pane 身份后，设置调度器环境 `CODEX_AGENT_BOARD=on`，沿现有五分钟 `stall` tick 执行一份；其他 tick 不重复运行。开关默认 off，未安装不改变旧调度。启用后由 kit 接管已登记 issue 的回收重试，原 retention worker 仍负责实际删除；`CODEX_OPS_RETENTION=off` 只暂停回收，`PAUSE/LLM_DRAIN` 暂停整个 tick。不新增 cron、daemon，不修改 ops prompt。
+
+派单按 P0–P3、issue 号和配置上限执行，已有开发会话及未完成启动计入容量；`status:blocked`、`needs:roy` 和状态冲突均暂缓。review 提醒集成员，learner/ready 与 waiting-release 提醒 ops。首次轮询只建立旧 Roy 评论基线，此后新 Roy 评论分别提醒负责人和主管；agent 前缀评论与外部作者不能触发 Roy 指令提醒。发给 Herdr 的消息始终只有 `#N 轮到你`。忙碌或缺席的接收方排队，主管配置为 `board-digest` 时读取本地 `ops/codex-ops/board-digest.md`。
+
+账本在外部动作前写入阶段。提醒或派发回执不确定时写 inbox 并保留 `uncertain`，不自动重发，也不算已送达。核原 pane/登记表后，才按 kit README 的 `--resolve` 明确登记已发生或有证据未发生的动作。`--dry-run` 不创建锁、账本、汇总、评论、工作树或会话。API 翻页与标签事件 ID 区分同一状态的重新进入。
+
+生命周期登记锁在任何会话动作开始前被占用时，CLI 返回退出码 75 及 `state=retry/retryable=true`，派单器保留 pending，下一轮自动重试；这与动作可能已发生的 uncertain 分开。宿主/项目锁冲突同样不执行该轮动作，沿下一原 tick 重试，不争锁、不删登记。
+
+`spawn` 现在先无任务启动 Codex，核同一 terminal/tab/cwd 与空闲状态，显式命名并读回，然后单独发送一次任务。自动命名报错但同一新终端已就绪时可安全补命名；否则保留 `starting/start_phase`，给出 start/identity/name/prompt 阶段及已识别的 Herdr 错误类别，沿原显式 `register` 恢复。原始 stderr 不外发，避免披露路径或凭据。
+
 ## 谁说的话算数
 
 - 所有 agent 都用同一个 GitHub 账号 `dwroy` 发评论，所以 **agent 的评论第一行必须以角色前缀开头**：`[Claude]`、`[watcher]`、`[ops]`、`[dev #123]`、`[learner]`。

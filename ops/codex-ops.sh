@@ -252,8 +252,16 @@ case "$cmd" in
       snapshot) tick_snapshot ;;
       *) echo "unknown job: $job" >&2; exit 2 ;;
     esac
-    # Use the existing cadence and registry; never discover or retire unregistered tabs.
-    if [ "${CODEX_OPS_RETENTION:-on}" != off ]; then
+    # One host dispatcher on the existing five-minute cadence; activation follows integration review.
+    if [ "${CODEX_AGENT_BOARD:-off}" = on ]; then
+      if [ "$job" = stall ]; then
+        nice -n 19 timeout 240s python3 "$OPS/agent_board.py" --root "$ROOT" >> "$DIR/agent-board.log" 2>&1 || {
+          log "agent board tick failed (see agent-board.log)"
+          printf '%s\n' "- $(date '+%F %T') [board] tick 未完成；原现场保留，见 ops/codex-ops/agent-board.log。" >> "$ROOT/ops/inbox-dev.md"
+        }
+      fi
+    # Compatibility path until the separate kit and host registry are installed.
+    elif [ "${CODEX_OPS_RETENTION:-on}" != off ]; then
       nice -n 19 timeout 180s python3 "$OPS/issue_session.py" --root "$ROOT" --state-dir "$DIR" tick >> "$DIR/issue-sessions.log" 2>&1 || {
         log "issue session reconciliation failed (see issue-sessions.log)"
         printf '%s\n' "- $(date '+%F %T') [issue-session] tick 未完成；原现场保留，见 ops/codex-ops/issue-sessions.log。" >> "$ROOT/ops/inbox-dev.md"

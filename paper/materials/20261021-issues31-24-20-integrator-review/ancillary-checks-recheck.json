@@ -1,0 +1,132 @@
+[
+  {
+    "name": "combat-verify",
+    "command": [
+      "/home/dw/Projects/agent-sts2/data/logdb-venv/bin/python",
+      "paper/materials/2026-10-21-sts2fun-combat-diagnostic/verify_aggregates.py",
+      "--repeat",
+      "/home/dw/Projects/agent-sts2/.artifacts/integrator-31-24-20-20261021/combat-recompute"
+    ],
+    "cwd": "/home/dw/Projects/agent-sts2/.worktrees/issue-24-sts2fun-stats",
+    "exit_code": 0,
+    "log_sha256": "fabf648992587a0066c4ba3b066689fd3e39a24afcd1122320207dd13b1899f1"
+  },
+  {
+    "name": "combat-fixed",
+    "command": [
+      "/home/dw/Projects/agent-sts2/data/logdb-venv/bin/python",
+      "-m",
+      "unittest",
+      "discover",
+      "-s",
+      "eval/tests",
+      "-p",
+      "test_sts2fun*.py"
+    ],
+    "cwd": "/home/dw/Projects/agent-sts2/.worktrees/integrator-31-24-20-20261021",
+    "exit_code": 0,
+    "log_sha256": "c564bf59c7928b778c173b1280303f2b157083587f8a8292a886d79fb6d8bd5e"
+  },
+  {
+    "name": "lifecycle-fixed",
+    "command": [
+      "python3",
+      "-m",
+      "unittest",
+      "discover",
+      "-s",
+      "ops/tests",
+      "-p",
+      "test_issue_session.py"
+    ],
+    "cwd": "/home/dw/Projects/agent-sts2/.worktrees/integrator-31-24-20-20261021",
+    "exit_code": 0,
+    "log_sha256": "fa3a1d3ea42682bb18edd4715a9f2dccd1981bc3eb4821e56ba2cd5604a654e6"
+  },
+  {
+    "name": "kit-fixed",
+    "command": [
+      "python3",
+      "-m",
+      "unittest",
+      "discover",
+      "-s",
+      "/home/dw/Projects/agent-sts2/.worktrees/issue-20-agent-board-kit/ops/codex-ops/agent-board-kit",
+      "-p",
+      "test_*.py"
+    ],
+    "cwd": "/home/dw/Projects/agent-sts2/.worktrees/issue-20-agent-board-kit/ops/codex-ops/agent-board-kit",
+    "exit_code": 0,
+    "log_sha256": "bd7ff1b0b1394287d36fdc2c6ae7fbd5ece611060d7420ae62f420e6013e99ea"
+  },
+  {
+    "name": "trial-fixed",
+    "command": [
+      "/home/dw/Projects/agent-sts2/data/logdb-venv/bin/python",
+      "-m",
+      "unittest",
+      "discover",
+      "-s",
+      "ops/tests",
+      "-p",
+      "test_brain_trial.py"
+    ],
+    "cwd": "/home/dw/Projects/agent-sts2/.worktrees/integrator-31-24-20-20261021",
+    "exit_code": 0,
+    "log_sha256": "65378dcad145da2497120819bebfc3c46534dce9714ce064b3d809a56654aca2"
+  },
+  {
+    "name": "metrics-fixed",
+    "command": [
+      "/home/dw/Projects/agent-sts2/data/logdb-venv/bin/python",
+      "-m",
+      "unittest",
+      "discover",
+      "-s",
+      "eval/tests",
+      "-p",
+      "test_construction.py"
+    ],
+    "cwd": "/home/dw/Projects/agent-sts2/.worktrees/integrator-31-24-20-20261021",
+    "exit_code": 1,
+    "log_sha256": "43d7e094d649cb2557037ec2b4b35c851ad096feb690e5f3d474b3d785f9164e"
+  },
+  {
+    "name": "construction-fixed-recheck",
+    "command": [
+      "/home/dw/Projects/agent-sts2/data/logdb-venv/bin/python",
+      "-m",
+      "unittest",
+      "discover",
+      "-s",
+      "eval/tests",
+      "-p",
+      "test_construction.py"
+    ],
+    "cwd": "/home/dw/Projects/agent-sts2/.worktrees/integrator-31-24-20-20261021",
+    "exit_code": 0,
+    "log_sha256": "9b51edf968e62ae056b4494f820ec2854629469f91e246f590422ad6e1c12fef"
+  },
+  {
+    "name": "eval-metrics-fixed",
+    "command": [
+      "/home/dw/Projects/agent-sts2/data/logdb-venv/bin/python",
+      "tests/eval_metrics_test.py"
+    ],
+    "cwd": "/home/dw/Projects/agent-sts2/.worktrees/integrator-31-24-20-20261021/agent",
+    "exit_code": 0,
+    "log_sha256": "8364135abfa1ba8c9549df7811d8b4fa2456e08231f56a0cd0d8ddcc7c411c5b"
+  },
+  {
+    "name": "bash-syntax",
+    "command": [
+      "bash",
+      "-n",
+      "ops/run.sh",
+      "ops/codex-ops.sh"
+    ],
+    "cwd": "/home/dw/Projects/agent-sts2/.worktrees/integrator-31-24-20-20261021",
+    "exit_code": 0,
+    "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  }
+]

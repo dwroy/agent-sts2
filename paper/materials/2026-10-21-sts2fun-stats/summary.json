@@ -1,0 +1,391 @@
+{
+  "source": "external:sts2fun",
+  "cohorts": [
+    {
+      "version": "v0.100",
+      "n": 533,
+      "wins": 72,
+      "players": 65,
+      "win_rate": 0.1350844277673546,
+      "wilson": [
+        0.10866354875663856,
+        0.16672773556306483
+      ]
+    },
+    {
+      "version": "v0.101",
+      "n": 847,
+      "wins": 196,
+      "players": 142,
+      "win_rate": 0.23140495867768596,
+      "wilson": [
+        0.2042543732698857,
+        0.2609809002549245
+      ]
+    },
+    {
+      "version": "v0.102",
+      "n": 1248,
+      "wins": 321,
+      "players": 207,
+      "win_rate": 0.25721153846153844,
+      "wilson": [
+        0.23373196473891733,
+        0.28218117607454746
+      ]
+    },
+    {
+      "version": "v0.103",
+      "n": 5576,
+      "wins": 1360,
+      "players": 596,
+      "win_rate": 0.24390243902439024,
+      "wilson": [
+        0.2328096999980923,
+        0.25534780033998744
+      ]
+    },
+    {
+      "version": "v0.104",
+      "n": 2006,
+      "wins": 593,
+      "players": 288,
+      "win_rate": 0.29561316051844466,
+      "wilson": [
+        0.2760503627598955,
+        0.3159572573430614
+      ]
+    },
+    {
+      "version": "v0.105",
+      "n": 1836,
+      "wins": 496,
+      "players": 283,
+      "win_rate": 0.2701525054466231,
+      "wilson": [
+        0.25033690406896175,
+        0.29092791744398044
+      ]
+    },
+    {
+      "version": "v0.106",
+      "n": 1304,
+      "wins": 275,
+      "players": 178,
+      "win_rate": 0.21088957055214724,
+      "wilson": [
+        0.18961356577229901,
+        0.2338639552110958
+      ]
+    },
+    {
+      "version": "v0.107",
+      "n": 2932,
+      "wins": 733,
+      "players": 285,
+      "win_rate": 0.25,
+      "wilson": [
+        0.234660432157806,
+        0.26599380256068544
+      ]
+    },
+    {
+      "version": "v0.108",
+      "n": 683,
+      "wins": 202,
+      "players": 92,
+      "win_rate": 0.2957540263543192,
+      "wilson": [
+        0.2627463793405843,
+        0.33104634179328174
+      ]
+    },
+    {
+      "version": "v0.109",
+      "n": 583,
+      "wins": 169,
+      "players": 79,
+      "win_rate": 0.28987993138936535,
+      "wilson": [
+        0.2545214515823673,
+        0.3279892992900276
+      ]
+    },
+    {
+      "version": "v0.110",
+      "n": 411,
+      "wins": 108,
+      "players": 71,
+      "win_rate": 0.26277372262773724,
+      "wilson": [
+        0.22255913889471124,
+        0.3073817677968633
+      ]
+    },
+    {
+      "version": "v0.111",
+      "n": 1739,
+      "wins": 492,
+      "players": 98,
+      "win_rate": 0.28292121909143186,
+      "wilson": [
+        0.2622479311585106,
+        0.30455144914147597
+      ]
+    },
+    {
+      "version": "v0.98",
+      "n": 567,
+      "wins": 125,
+      "players": 88,
+      "win_rate": 0.2204585537918871,
+      "wilson": [
+        0.18828032970219108,
+        0.2563991078164278
+      ]
+    },
+    {
+      "version": "v0.99",
+      "n": 2421,
+      "wins": 613,
+      "players": 361,
+      "win_rate": 0.25320115654688147,
+      "wilson": [
+        0.23627995376679917,
+        0.27090432186778995
+      ]
+    }
+  ],
+  "builds": {
+    "v0.107": {
+      "v0.107.0": 1058,
+      "v0.107.1": 1874
+    },
+    "v0.108": {
+      "v0.108.0": 683
+    },
+    "v0.109": {
+      "v0.109.0": 451,
+      "v0.109.1": 132
+    },
+    "v0.110": {
+      "v0.110.1": 399,
+      "v0.110.0": 12
+    },
+    "v0.111": {
+      "v0.111.0": 1739
+    }
+  },
+  "audit": {
+    "v0.107": {
+      "noncombat_choice_screen_excluded": 8403,
+      "multi_room_fight_excluded": 377,
+      "invalid_or_duplicate_choice_screen": 1753
+    },
+    "v0.108": {
+      "noncombat_choice_screen_excluded": 2130,
+      "invalid_or_duplicate_choice_screen": 300,
+      "multi_room_fight_excluded": 104
+    },
+    "v0.109": {
+      "noncombat_choice_screen_excluded": 1810,
+      "invalid_or_duplicate_choice_screen": 371,
+      "multi_room_fight_excluded": 87
+    },
+    "v0.110": {
+      "noncombat_choice_screen_excluded": 1242,
+      "invalid_or_duplicate_choice_screen": 186,
+      "multi_room_fight_excluded": 51
+    },
+    "v0.111": {
+      "noncombat_choice_screen_excluded": 5412,
+      "multi_room_fight_excluded": 248,
+      "invalid_or_duplicate_choice_screen": 1198
+    }
+  },
+  "id_coverage": {
+    "v0.107": {
+      "unmapped_card_run_counts": {
+        "FOLLOW_THROUGH": 1,
+        "SCARE": 1007
+      },
+      "unmapped_relic_run_counts": {},
+      "all_ids_mapped_runs": 1924,
+      "all_ids_mapped_wins": 382
+    },
+    "v0.108": {
+      "unmapped_card_run_counts": {
+        "SCARE": 227
+      },
+      "unmapped_relic_run_counts": {},
+      "all_ids_mapped_runs": 456,
+      "all_ids_mapped_wins": 114
+    },
+    "v0.109": {
+      "unmapped_card_run_counts": {
+        "ACTSFROMTHEPAST-PARASITE": 1,
+        "SCARE": 207
+      },
+      "unmapped_relic_run_counts": {
+        "ACTSFROMTHEPAST-BLOOD_BANK": 1,
+        "EMERALD_KEY_RELIC": 2,
+        "RUBY_KEY_RELIC": 1,
+        "SAPPHIRE_KEY_RELIC": 3,
+        "SPIRE_HEART_CONTROLLER_RELIC": 3
+      },
+      "all_ids_mapped_runs": 373,
+      "all_ids_mapped_wins": 84
+    },
+    "v0.110": {
+      "unmapped_card_run_counts": {},
+      "unmapped_relic_run_counts": {},
+      "all_ids_mapped_runs": 411,
+      "all_ids_mapped_wins": 108
+    },
+    "v0.111": {
+      "unmapped_card_run_counts": {},
+      "unmapped_relic_run_counts": {},
+      "all_ids_mapped_runs": 1739,
+      "all_ids_mapped_wins": 492
+    }
+  },
+  "cohort_inference": {
+    "v0.107": {
+      "win_rate_cluster_ci": [
+        0.21262703550490442,
+        0.29104300725629795
+      ],
+      "frequent_players": 88,
+      "frequent_player_runs": 2202
+    },
+    "v0.108": {
+      "win_rate_cluster_ci": [
+        0.2137739758841423,
+        0.39087155472237367
+      ],
+      "frequent_players": 21,
+      "frequent_player_runs": 427
+    },
+    "v0.109": {
+      "win_rate_cluster_ci": [
+        0.23904496677197953,
+        0.3479179369918699
+      ],
+      "frequent_players": 18,
+      "frequent_player_runs": 346
+    },
+    "v0.110": {
+      "win_rate_cluster_ci": [
+        0.21204559948979593,
+        0.3221354166666667
+      ],
+      "frequent_players": 12,
+      "frequent_player_runs": 201
+    },
+    "v0.111": {
+      "win_rate_cluster_ci": [
+        0.21215561054366408,
+        0.345058982392657
+      ],
+      "frequent_players": 38,
+      "frequent_player_runs": 1532
+    }
+  },
+  "own_audit": {
+    "screens": 4728,
+    "skipped": 670,
+    "revisit_or_duplicate": 101,
+    "unsuccessful_or_non_codex": 218
+  },
+  "own_manifest": {
+    "files": {
+      "brain.jsonl": {
+        "bytes": 1209166215,
+        "prefix_sha256": "078605b2584ad5880feb48c68e8e97b7598c7c600935375493bf4bdcd4e845fb"
+      },
+      "runs.jsonl": {
+        "bytes": 404144,
+        "prefix_sha256": "3faff768182589f6d1db2a0b918169552fcee97b524fdd1b46b87127cdf10dbe"
+      }
+    },
+    "parse_audit": {
+      "brain.jsonl": {
+        "invalid_json": 2
+      },
+      "runs.jsonl": {}
+    },
+    "eligible_finished_runs": 368,
+    "unique_runs_with_picks": 358
+  },
+  "bootstrap": {
+    "unit": "player",
+    "draws": 1000,
+    "seed": 240111
+  },
+  "mapping": {
+    "unmapped": [
+      {
+        "kind": "cards",
+        "external_id": "CARD.ACTSFROMTHEPAST-PARASITE",
+        "local_id": null,
+        "mapped": false,
+        "occurrences": 1
+      },
+      {
+        "kind": "cards",
+        "external_id": "CARD.FOLLOW_THROUGH",
+        "local_id": null,
+        "mapped": false,
+        "occurrences": 2
+      },
+      {
+        "kind": "cards",
+        "external_id": "CARD.SCARE",
+        "local_id": null,
+        "mapped": false,
+        "occurrences": 2144
+      },
+      {
+        "kind": "relics",
+        "external_id": "RELIC.ACTSFROMTHEPAST-BLOOD_BANK",
+        "local_id": null,
+        "mapped": false,
+        "occurrences": 1
+      },
+      {
+        "kind": "relics",
+        "external_id": "RELIC.EMERALD_KEY_RELIC",
+        "local_id": null,
+        "mapped": false,
+        "occurrences": 2
+      },
+      {
+        "kind": "relics",
+        "external_id": "RELIC.RUBY_KEY_RELIC",
+        "local_id": null,
+        "mapped": false,
+        "occurrences": 1
+      },
+      {
+        "kind": "relics",
+        "external_id": "RELIC.SAPPHIRE_KEY_RELIC",
+        "local_id": null,
+        "mapped": false,
+        "occurrences": 3
+      },
+      {
+        "kind": "relics",
+        "external_id": "RELIC.SPIRE_HEART_CONTROLLER_RELIC",
+        "local_id": null,
+        "mapped": false,
+        "occurrences": 3
+      }
+    ]
+  },
+  "own_unmatched_cards": [
+    "OMNISLICE",
+    "PANACHE",
+    "TAUNT",
+    "ULTIMATE_DEFEND"
+  ]
+}

@@ -1,0 +1,30 @@
+{
+  "schema": "issue20-check-history-v1",
+  "source": "Summary of this development session's tool receipts; original local logs are retained where available.",
+  "checks": [
+    {
+      "command": "python3 -m unittest discover -s ops/tests -p test_issue_session.py",
+      "tests": 50,
+      "exit_code": 1,
+      "failure": "test_board_configuration_drives_another_project_spawn_and_retire",
+      "assertion": "'fixture/portable sandboxes/issue-17-fixture' not found in 'never'",
+      "resolution": "Task submission moved from agent start argv to a separate agent prompt; updated the old assertion to verify that prompt. No production mismatch was suppressed."
+    },
+    {
+      "command": "node tools/with-temp.mjs node_modules/vitest/vitest.mjs run --pool=threads --maxWorkers=1",
+      "exit_code": 143,
+      "log": "vitest-interrupted.log",
+      "resolution": "Stopped only the verified test PID to remove the extra wrapper process; restarted directly with one worker, excluding paths.test.ts for its separate fork run. This interruption is not a passing check."
+    },
+    {
+      "command": "node node_modules/vitest/vitest.mjs run --pool=threads --maxWorkers=1 --exclude tests/paths.test.ts",
+      "exit_code": 1,
+      "files_passed": 644,
+      "tests_passed": 6072,
+      "tests_failed": 1,
+      "tests_skipped": 2,
+      "failure": "tests/check-imports.test.ts: exact baseline issue29 results.jsonl absent in sparse checkout",
+      "resolution": "Materialized the exact baseline Git blob (see material-readback.json), then rechecked check-imports and paths together: 2 files / 12 tests passed. No source change or full rerun."
+    }
+  ]
+}
