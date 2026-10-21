@@ -4145,3 +4145,7 @@ W4拿牌v2正式3ef4/11a80已核：14源Git/SHA、318清单项加manifest共319�
   ],
   "next_step": "原owner固定R410单案例逐步轨迹对照；旧验证已读只作诊断/回归，正式候选验收另用未读新局留出。"
 }
+
+- 2026-10-21T15:11:12+08:00 ops：strategy144302原学习者异议原文（旧提案silent-proposal-bddfa690a84e03d0，notification-only，无新学习父）：[{"claim":"历史战斗题面声称各候选当轮数字exact；当前不能无条件采信这一声明。","delivery":"本批落盘及最终回报；尚无ops_forwarded/watcher_received/roy_notified回执，不能称已送达。","evidence":["question-269068.txt","question-audit.json:decision_line=269068","v6-evidence/jev-prompts.evidence.jsonl:line=26966","evidence/states.evidence.jsonl:line=275013–275018"],"experience":["silent-slumbering-beetle-wake-growth"],"finding":"DUZUBAJ3A8GP末试F30 T5，d269068/Jev26966的plan1预测格挡17、甲虫结算后62HP；实际同一牌序到s275017为22挡，s275018甲虫59HP。玩家均存活1HP。预测与实盘存在5挡/3敌血差，未定位各机制归因，也未验证当前源码仍复现。","ledger":["silent-0128","silent-0079"],"proposal_id":"silent-proposal-bddfa690a84e03d0","recommendation":"沿原提案保留waiting；先冻结历史手牌动态值、出牌前缀与敌回合端点，定位模型/执行差异，再评估杀序或血价。请ops沿既有通知链转达watcher及Roy；不代填ACK。"}] 原件 paper/materials/20261021-1507-ops/notice-source.json；notice=f922272253e05b0cc9995ef3。已写收件箱仅证ops转达，watcher实读/Roy可见转达仍待原角色回执。<!-- learning-notice:f922272253e05b0cc9995ef3 -->
+
+- 2026-10-21T15:12:58+08:00 ops接Roy方向：§13覆盖旧切Jev拿牌门，后续不派card_pick类Jev拿牌学习，#27前置交付后再派；live不变。原新bddfa历史题面异议已沿链提醒，未代填watcher/Roy ACK。paper/materials/20261021-1507-ops/receipt.json。

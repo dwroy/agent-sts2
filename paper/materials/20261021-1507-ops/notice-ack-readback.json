@@ -1,0 +1,32 @@
+{
+  "schema": "ordinary-proposal-notice-v1",
+  "id": "f922272253e05b0cc9995ef3",
+  "kind": "disagreement",
+  "request_id": "silent-proposal-bddfa690a84e03d0",
+  "source_batch": "20261021-144302-strategy-proposal",
+  "character": "silent",
+  "notification_only": true,
+  "registered_learning_request": false,
+  "message": "[{\"claim\":\"历史战斗题面声称各候选当轮数字exact；当前不能无条件采信这一声明。\",\"delivery\":\"本批落盘及最终回报；尚无ops_forwarded/watcher_received/roy_notified回执，不能称已送达。\",\"evidence\":[\"question-269068.txt\",\"question-audit.json:decision_line=269068\",\"v6-evidence/jev-prompts.evidence.jsonl:line=26966\",\"evidence/states.evidence.jsonl:line=275013–275018\"],\"experience\":[\"silent-slumbering-beetle-wake-growth\"],\"finding\":\"DUZUBAJ3A8GP末试F30 T5，d269068/Jev26966的plan1预测格挡17、甲虫结算后62HP；实际同一牌序到s275017为22挡，s275018甲虫59HP。玩家均存活1HP。预测与实盘存在5挡/3敌血差，未定位各机制归因，也未验证当前源码仍复现。\",\"ledger\":[\"silent-0128\",\"silent-0079\"],\"proposal_id\":\"silent-proposal-bddfa690a84e03d0\",\"recommendation\":\"沿原提案保留waiting；先冻结历史手牌动态值、出牌前缀与敌回合端点，定位模型/执行差异，再评估杀序或血价。请ops沿既有通知链转达watcher及Roy；不代填ACK。\"}]",
+  "request_sha256": "b9f90f13d558011142b4bfc459efdfd4680dd297206c182c9c48d86f4c32e780",
+  "created_at": "2026-10-21T15:11:12+08:00",
+  "route": [
+    "learner",
+    "ops",
+    "watcher",
+    "Roy"
+  ],
+  "source_evidence": {
+    "path": "paper/materials/20261021-1507-ops/notice-source.json",
+    "sha256": "6baaf312bd683c15e7a6b9559d1b0f20b1c592d2b70606b6e75b238ebc098f5f",
+    "bytes": 1258
+  },
+  "ops_forwarded": {
+    "path": "/home/dw/Projects/agent-sts2/paper/materials/20261021-1507-ops/ops-forwarded.json",
+    "sha256": "650277c8664a7fc9f491a5c2c32558d8321717adfe977bb4b3edeb2f20611430",
+    "at": 1792566685.7157989
+  },
+  "watcher_received": false,
+  "roy_notified": false,
+  "ack_scope": "actor-owned actual receipts only; no new learning request"
+}
