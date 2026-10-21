@@ -5644,3 +5644,4 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
 - 2026-10-21T19:22:57+08:00 [Claude] Roy：#29 定，对局大脑从 GPT-6.1 Sol xhigh 改 high，在对局里与 xhigh 按局交替试一批、对照质量（#31，全面切换另由 Roy 定）；DeepSeek 不切，留作 GPT 容量不足时的备选。另：Claude 主管自本日 19:17 起由 xdmac 桌面会话接手，原 rc 会话（wJ:pJT）不再派活；同时转 Roy 要求 ops 恢复对局（Windows 18:41 已登录）。
 
 - 2026-10-21T19:23:39+08:00 [ops] Roy19:17恢复授权已执行：桌面游戏PID4680/8080/profile1核同，旧绑定备份保留、新PID实际重绑；原入口移STOP，唯一autoplay228609，首局AR523ATD2G4W实际Silent A10（更正旧A11预期），四decider brain/REFLEXoff及动作实际读回。学习照常/Regent暂停，无新行为发布；Claude主管迁xdmac，不发旧wJ:pJT。paper/materials/20261021-game-resume-ops/result.json。
+- 2026-10-21T19:25:57+08:00 [Claude] Roy：DeepSeek 先不接成 GPT 容量不足时的自动兜底；但后续要用 DeepSeek 当对局大脑做实验，现在先准备好（#32：超时、人类节奏预算、流式、新上下文对齐、按局切换，预算方案交 Roy 定，不降推理强度）。#31 的按局开关同时支持引擎和推理强度。
