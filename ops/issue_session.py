@@ -31,6 +31,12 @@ def run(args, **kwargs):
                 if category in output:
                     detail = "; Herdr reason: " + category
                     break
+        elif len(args) > 1 and Path(str(args[1])).name == 'worktree_checkout.py':
+            output = (result.stdout + result.stderr).decode(errors='replace')
+            for category in ('Node runtime unavailable on PATH', 'shared Node provider missing: agent/node_modules'):
+                if category in output:
+                    detail = '; allocation reason: ' + category
+                    break
         raise ValueError(Path(str(args[0])).name + " command failed (exit " + str(result.returncode) + ")" + detail + "; original state retained")
     return result.stdout
 
@@ -87,6 +93,8 @@ class Sessions:
                     or not isinstance(row.get("started_at"), str)):
                 raise ValueError("unsafe issue session binding")
             self.board.protect(row)
+            if 'new_workspace' in row and type(row['new_workspace']) is not bool:
+                raise ValueError('invalid workspace creation journal')
             if self.project.checked_tree(expected) != Path(row["worktree"]):
                 raise ValueError("configured worktree adapter binding mismatch")
             if row.get("pane") or row.get("tab"):
@@ -124,18 +132,7 @@ class Sessions:
         with path.open("a") as handle:
             handle.write(f"- {retention.stamp()} [issue-session] {message}\n")
 
-    def spawn(self, number, slug):
-        key = str(number)
-        if key in self.data["sessions"]:
-            row = self.data["sessions"][key]
-            if slug != row["slug"]:
-                raise ValueError("issue already bound to another workspace")
-            if row["state"] == "active":
-                self.dispatched(row)
-            # Never replay an uncertain tab creation, startup or prompt automatically.
-            return {"issue": number, "state": row["state"], "existing": True}
-        if not SLUG.fullmatch(slug):
-            raise ValueError("invalid workspace slug")
+    def spawn_context(self, number):
         issue = self.issue(number)
         if issue["state"] != "OPEN" or issue["author"]["login"] != self.board.owner:
             raise ValueError("only open owner-authored issues can spawn sessions")
@@ -156,6 +153,26 @@ class Sessions:
         if sum(a.get("agent") == "codex" and bool(re.fullmatch(r"issue-[1-9][0-9]*", a.get("name", "")))
                for a in agents) >= dev["max_parallel"]:
             raise ValueError("configured developer concurrency limit reached")
+        return home, found
+
+    def spawn(self, number, slug):
+        key = str(number)
+        if key in self.data["sessions"]:
+            row = self.data["sessions"][key]
+            if slug != row["slug"]:
+                raise ValueError("issue already bound to another workspace")
+            if row["state"] == "active":
+                self.dispatched(row)
+            result = {"issue": number, "state": row["state"], "existing": True}
+            if row['state'] in ('allocating', 'allocated', 'creating-tab', 'tab-created'):
+                result['resume'] = ['python3', 'ops/issue_session.py', '--root', str(self.root),
+                                    '--config', str(self.board.path), '--state-dir', str(self.directory),
+                                    'resume', str(number), slug]
+            # Startup/prompt uncertainty always requires explicit registration, never replay.
+            return result
+        if not SLUG.fullmatch(slug):
+            raise ValueError("invalid workspace slug")
+        home, found = self.spawn_context(number)
         branch = f"issue-{number}-{slug}"
         base = retention.git(self.root, "rev-parse", self.board.worktree["base_ref"]).decode().strip()
         row = {"issue": number, "slug": slug, "branch": branch, "label": f"issue-{number}",
@@ -166,21 +183,33 @@ class Sessions:
         for command in self.board.worktree["prepare"]:
             self.command(command, row)
         row["state"] = "allocated"; self.save()
-        row["state"] = "creating-tab"; self.save()
-        if found:
-            ws = found[0]["workspace_id"]
-            created = herdr("tab", "create", "--workspace", ws, "--cwd", row["worktree"], "--label", row["label"],
-                            "--env", f"CODEX_HOME={home}", "--no-focus")
-        else:
-            created = herdr("workspace", "create", "--cwd", row["worktree"], "--label", self.board.workspace,
-                            "--env", f"CODEX_HOME={home}", "--no-focus")
-            ws = created["workspace"]["workspace_id"]
-        pane = created["root_pane"]
-        row.update(workspace=ws, tab=created["tab"]["tab_id"], pane=pane["pane_id"],
-                   terminal=pane["terminal_id"], state="tab-created")
-        self.save()
-        if not found:
+        return self.launch(row, home, found)
+
+    def launch(self, row, home, found):
+        dev = self.board.dev
+        if row['state'] == 'allocated':
+            row.update(state='creating-tab', new_workspace=not bool(found)); self.save()
+            if found:
+                ws = found[0]['workspace_id']
+                created = herdr('tab', 'create', '--workspace', ws, '--cwd', row['worktree'], '--label', row['label'],
+                                '--env', f'CODEX_HOME={home}', '--no-focus')
+            else:
+                created = herdr('workspace', 'create', '--cwd', row['worktree'], '--label', self.board.workspace,
+                                '--env', f'CODEX_HOME={home}', '--no-focus')
+                ws = created['workspace']['workspace_id']
+            pane = created['root_pane']
+            row.update(workspace=ws, tab=created['tab']['tab_id'], pane=pane['pane_id'],
+                       terminal=pane['terminal_id'], state='tab-created')
+            self.save()
+        if row.get('new_workspace'):
             herdr("tab", "rename", row["tab"], row["label"])
+        pane = herdr('pane', 'get', row['pane'])['pane']
+        tab = herdr('tab', 'get', row['tab'])['tab']
+        if (pane.get('pane_id') != row['pane'] or pane.get('terminal_id') != row['terminal']
+                or pane.get('tab_id') != row['tab'] or pane.get('workspace_id') != row['workspace']
+                or pane.get('cwd') != row['worktree'] or tab.get('tab_id') != row['tab']
+                or tab.get('workspace_id') != row['workspace'] or tab.get('label') != row['label'] or tab.get('pane_count') != 1):
+            raise ValueError('new pane identity/readiness mismatch before start; original registration retained')
         # New shells inherit the server's priority; lower only this newly created shell before starting Codex.
         info = herdr("pane", "process-info", "--pane", row["pane"])["process_info"]
         if (not isinstance(info["shell_pid"], int) or info["shell_pid"] <= 1
@@ -224,7 +253,91 @@ class Sessions:
         row["start_phase"] = "submitted"
         row["state"] = "active"; self.save()
         self.dispatched(row)
-        return {"issue": number, "state": "active", "pane": row["pane"]}
+        return {"issue": row['issue'], "state": "active", "pane": row["pane"]}
+
+    def verify_allocation(self, row):
+        tree = self.project.checked_tree(row['branch'])
+        common = retention.git(tree, 'rev-parse', '--git-common-dir').decode().strip()
+        original = retention.git(self.root, 'rev-parse', '--git-common-dir').decode().strip()
+        if ((tree / common).resolve() != (self.root / original).resolve()
+                or retention.git(tree, 'branch', '--show-current').decode().strip() != row['branch']
+                or self.source(row) != row['base']
+                or retention.git(tree, 'status', '--porcelain', '--untracked-files=all')):
+            raise ValueError('resume allocation identity/base/cleanliness mismatch; original state retained')
+
+    def recover_tab(self, row, found):
+        if not found:
+            return False
+        ws = found[0]['workspace_id']
+        tabs = herdr('tab', 'list', '--workspace', ws)['tabs']
+        panes = herdr('pane', 'list', '--workspace', ws)['panes']
+        candidates = [(t, p) for t in tabs for p in panes if p.get('tab_id') == t.get('tab_id')
+                      and p.get('cwd') == row['worktree']
+                      and (t.get('label') == row['label'] or row.get('new_workspace') is True)]
+        collisions = [t for t in tabs if t.get('label') == row['label']]
+        if len(candidates) > 1 or len(collisions) > 1 or collisions and not candidates:
+            raise ValueError('resume tab identity ambiguous; inspect original workspace')
+        if not candidates:
+            return False
+        tab, pane = candidates[0]
+        if (tab.get('pane_count') != 1 or sum(p.get('tab_id') == tab['tab_id'] for p in panes) != 1
+                or pane.get('foreground_cwd') != row['worktree']):
+            raise ValueError('resume tab has extra panes or changed cwd')
+        row.update(workspace=ws, tab=tab['tab_id'], pane=pane['pane_id'], terminal=pane['terminal_id'], state='tab-created')
+        self.save()
+        return True
+
+    def resume(self, number, slug, retry_tab_create=False, reason=None):
+        row = self.data['sessions'].get(str(number))
+        if not row or row['slug'] != slug or row['state'] not in ('allocating', 'allocated', 'creating-tab', 'tab-created'):
+            raise ValueError('resume requires a matching pre-start registration; starting/prompt uncertainty requires register')
+        if retry_tab_create and (row['state'] != 'creating-tab' or not reason or not reason.strip()):
+            raise ValueError('tab creation retry requires creating-tab state and an evidence reference')
+        home, found = self.spawn_context(number)
+        retention.require_host_process_view()
+        if Path(row['worktree']).exists():
+            self.project.guard(row)
+        agents = herdr('agent', 'list')['agents']
+        if any(a.get('foreground_cwd') == row['worktree'] for a in agents):
+            raise ValueError('resume found an existing agent in this workspace; inspect and register explicitly')
+        if row['state'] == 'creating-tab':
+            self.recover_tab(row, found)
+        elif row['state'] == 'allocated' and self.recover_tab(row, found):
+            raise ValueError('unexpected existing tab; identity recorded, rerun explicit resume after inspection')
+        allowed = set()
+        if row['state'] == 'tab-created':
+            if not found or row['workspace'] != found[0]['workspace_id']:
+                raise ValueError('resume workspace identity changed')
+            info = herdr('pane', 'process-info', '--pane', row['pane'])['process_info']
+            if (info['foreground_process_group_id'] != info['shell_pid']
+                    or any(p['pid'] != info['shell_pid'] for p in info['foreground_processes'])):
+                raise ValueError('resume pane shell is not idle')
+            allowed.add(info['shell_pid'])
+        if processes(Path(row['worktree']), allowed, self.process_cwd):
+            raise ValueError('resume workspace has active processes; inspect original state')
+        if row['state'] == 'allocating':
+            if not Path(row['worktree']).exists():
+                command = self.board.worktree.get('resume_allocate')
+                if not command:
+                    raise ValueError('allocation absent; configure a verified project resume_allocate command')
+                self.command(command, row)
+            self.verify_allocation(row)
+            for command in self.board.worktree['prepare']:
+                self.command(command, row)
+            row['state'] = 'allocated'; self.save()
+        else:
+            self.verify_allocation(row)
+            for command in self.board.worktree['prepare']:
+                self.command(command, row)
+        if row['state'] == 'creating-tab':
+            if not self.recover_tab(row, found):
+                if not retry_tab_create:
+                    raise ValueError('tab creation uncertain; inspect absence, then resume --retry-tab-create --reason evidence-reference')
+                row.setdefault('tab_create_retries', []).append(dict(at=retention.stamp(), evidence=reason))
+                row['state'] = 'allocated'; self.save()
+        elif row['state'] == 'allocated' and self.recover_tab(row, found):
+            raise ValueError('unexpected existing tab; identity recorded, rerun explicit resume after inspection')
+        return self.launch(row, home, found)
 
     def dispatched(self, row):
         self.notice(row["issue"], "spawn", f"已派 issue-{row['issue']}：工作树 `{Path(row['worktree']).relative_to(self.root)}`，"
@@ -301,12 +414,12 @@ class Sessions:
                 if proc.get("name") == "codex" or (proc.get("name") == "node" and any(
                         Path(arg).name == "codex" for arg in proc.get("argv", []))):
                     allowed.add(proc["pid"])
-                elif proc["pid"] != info["shell_pid"]:
-                    raise ValueError("unexpected foreground process")
+            allowed.update(idle_codex_helpers(allowed))
+            if any(proc['pid'] not in allowed for proc in info['foreground_processes']):
+                raise ValueError('unexpected foreground process')
             screen = run(["herdr", "pane", "read", row["pane"], "--source", "visible", "--format", "ansi", "--lines", "15"])
             if composer_state(screen.decode()) != "empty":
                 raise ValueError("composer has unsent text or is not visibly ready")
-            allowed.update(idle_codex_helpers(allowed))
         elif info["foreground_process_group_id"] != info["shell_pid"]:
             raise ValueError("pane has an unrecognized running command")
         return pane, allowed
@@ -519,8 +632,19 @@ def process_children(proc):
             for child in (task / "children").read_text().split()}
 
 
+CLIPBOARD_PS = b'/mnt/c/Windows/System32/WindowsPowerShell/v1.0/powershell.exe'
+CLIPBOARD_SCRIPT_SHA256 = 'd6735db7931c303c1e1b5f456eb3e400cf9903dacc7c6986bc8714ca84f63641'
+
+
+def clipboard_helper(exe, argv):
+    # Exact WSL argv and fixed Codex script; never accept arbitrary PowerShell commands.
+    return (exe == Path('/init') and len(argv) == 8 and argv[-1] == b''
+            and argv[:6] == [b'/init', CLIPBOARD_PS, CLIPBOARD_PS, b'-NoProfile', b'-NonInteractive', b'-Command']
+            and hashlib.sha256(argv[6]).hexdigest() == CLIPBOARD_SCRIPT_SHA256)
+
+
 def idle_codex_helpers(allowed, proc_root=Path("/proc")):
-    """Recognize only the idle TUI's bundled code-mode host, never its tool children."""
+    """Recognize exact leaf helpers directly parented by the verified idle Codex executable."""
     helpers = set()
     for pid in allowed:
         proc = proc_root / str(pid)
@@ -532,9 +656,10 @@ def idle_codex_helpers(allowed, proc_root=Path("/proc")):
             for child_id in process_children(proc):
                 child = proc_root / child_id
                 fields = (child / "stat").read_text().rpartition(")")[2].split()
-                if (fields[1] == str(pid) and Path(os.readlink(child / "exe")) == expected
-                        and (child / "cmdline").read_bytes().split(b"\0") == [os.fsencode(expected), b""]
-                        and not process_children(child)):
+                child_exe = Path(os.readlink(child / 'exe'))
+                argv = (child / 'cmdline').read_bytes().split(b'\0')
+                bundled = child_exe == expected and argv == [os.fsencode(expected), b'']
+                if fields[1] == str(pid) and (bundled or clipboard_helper(child_exe, argv)) and not process_children(child):
                     helpers.add(int(child_id))
         except FileNotFoundError:
             continue
@@ -580,6 +705,9 @@ def main():
     parser.add_argument("--config", help="project board YAML, default .agents/board.yaml")
     sub = parser.add_subparsers(dest="command", required=True)
     spawn = sub.add_parser("spawn"); spawn.add_argument("issue", type=int); spawn.add_argument("slug")
+    resume = sub.add_parser('resume'); resume.add_argument('issue', type=int); resume.add_argument('slug')
+    resume.add_argument('--retry-tab-create', action='store_true')
+    resume.add_argument('--reason', help='local evidence reference proving the earlier tab creation did not occur')
     reclaim = sub.add_parser("reclaim"); reclaim.add_argument("issue", type=int); reclaim.add_argument("--apply", action="store_true")
     sub.add_parser("tick")
     register = sub.add_parser("register")
@@ -601,6 +729,8 @@ def main():
                 raise ValueError("invalid issue number")
             if args.command == "spawn":
                 result = sessions.spawn(args.issue, args.slug)
+            elif args.command == 'resume':
+                result = sessions.resume(args.issue, args.slug, args.retry_tab_create, args.reason)
             elif args.command == "reclaim":
                 result = sessions.reclaim(args.issue, args.apply)
             elif args.command == "register":

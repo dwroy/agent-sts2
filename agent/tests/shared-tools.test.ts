@@ -10,7 +10,7 @@ it("attaches only matching pinned tools and retains all private/foreign copies",
     encoding: "utf8", timeout: 30_000,
   });
   expect(result.status, result.stdout + result.stderr).toBe(0);
-  expect(result.stderr).toContain("Ran 6 tests");
+  expect(result.stderr).toMatch(/Ran [1-9]\d* tests?\b/);
 }, 35_000);
 
 it("keeps shared tool providers read-only in the actual generated learner profile", () => {

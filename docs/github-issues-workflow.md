@@ -94,13 +94,27 @@ nice -n 19 python3 ops/agent_board.py --root "$PWD" --set-enabled off
 3. 各 owner 确认本项目没有另一个 kit 消费入口；选定的唯一原 stall tick 消费这份登记表。其他项目的已有运行/学习调度照原职责保留，只不增加第二份通用派单器。STS2 的 `dispatcher.registry` 指向本仓内这份正式登记文件，其他项目无需越过其路径边界写 STS2 配置。
 4. 主管确认本批范围与唯一入口后，原 ops 依次核实际登记、只读演练、设置持久 on、读回原 stall 首 tick。未完成确认时控制保持 off；不伪造其他项目条目，不自动登记其他 tab。设置返回 on、技术测试通过或 dry-run 排队均不等于首 tick/实际命名/锁忙重试/回收验收完成。
 
-派单按 P0–P3、issue 号和配置上限执行，已有开发会话及未完成启动计入容量；`status:blocked`、`needs:roy` 和状态冲突均暂缓。review 提醒集成员，learner/ready 与 waiting-release 提醒 ops。首次轮询只建立旧 Roy 评论基线，此后新 Roy 评论分别提醒负责人和主管；agent 前缀评论与外部作者不能触发 Roy 指令提醒。发给 Herdr 的消息始终只有 `#N 轮到你`。忙碌或缺席的接收方排队，主管配置为 `board-digest` 时读取本地 `ops/codex-ops/board-digest.md`。
+派单按 P0–P3、issue 号和配置上限执行，已有开发会话及未完成启动计入容量；`status:blocked`、`needs:roy` 和状态冲突均暂缓。review 提醒集成员，learner/ready 与 waiting-release 提醒 ops。首次轮询只建立旧 Roy 评论基线，此后新 Roy 评论分别提醒负责人和主管；agent 前缀评论与外部作者不能触发 Roy 指令提醒。普通提醒为 `#N 轮到你`，自动接续在同一行补充下文短原因。接收方 `idle` 或 `done` 均可送达；`working`、`blocked`、`unknown` 或缺席时排队。主管配置为 `board-digest` 时读取本地 `ops/codex-ops/board-digest.md`。
 
-账本在外部动作前写入阶段。提醒或派发回执不确定时写 inbox 并保留 `uncertain`，不自动重发，也不算已送达。核原 pane/登记表后，才按 kit README 的 `--resolve` 明确登记已发生或有证据未发生的动作。`--dry-run` 不创建锁、账本、汇总、评论、工作树或会话。API 翻页与标签事件 ID 区分同一状态的重新进入。
+停滞检测复用上述原 stall tick。集成员有 review、ops 有 waiting-release、已登记开发者有 owner:dev/in-progress，且从首次观察到持续 idle/done 后没有该角色的新评论，才视为有待接续工作。`.agents/board.yaml` 的 `dispatcher.watchdog.idle_minutes` 默认 30；从第一次实际观察计时，不回填此前空闲时长。中途观察到 working/blocked/unknown、缺席或 pane 身份变化重新计时，idle↔done 不打断。阈值到后发 `#N 轮到你：上次停在中途，请接着做`；同一 issue+角色普通接续每两小时最多一次，进展重置也不绕过这个间隔。同一 pane 每 tick 至多尝试一条提醒，第一条回执丢失时也不连发。
+
+有活且 idle/done 时，本地仅读约 40 行末尾，在内存中匹配 `dispatcher.watchdog.error_patterns` 的大小写不敏感正则。默认 `at capacity`、`rate limit`、`stream disconnected`、`Reconnecting`、`error sending request`；空列表禁用快速路径。匹配后从首次观察起退避十分钟，发 `#N 轮到你：上一轮因模型/网络错误中断，请接着做`，此路径采用十分钟间隔；实际观察/发送时刻受原轮询周期约束。读取失败保留接续，仅写程序生成的通用原因。终端原文及错误原文不写 issue、digest、账本或日志。
+
+两条接续路径共用连续三次无进展上限。新角色评论、新提交或标签变化重置连续次数；共享 main/live 只计含 `#N` 的相关提交、GitHub 关联提交和已登记本 issue 分支的提交，不让其他任务提交掩盖停滞。Git 扫描每 ref 最多 64 条，账本保留已见 SHA；pane 更换本身不算进展。该角色在空闲后新增评论会抑制本次空闲段的接续，待实际再次工作或新任务送达再开始观察。第三次提醒后再观察完整的普通空闲阈值（默认三十分钟）或快速退避（十分钟），仍无进展则在 digest 的“卡住”节登记并给 issue 加 `needs:roy`，停止第四次提醒；两小时提醒间隔不再延迟标签升级。实际观察到该标签后，人工移除才重新启用接续。
+
+账本在外部动作前写入阶段；自动接续和 needs:roy 升级也遵循 pending→sending→done/uncertain。提醒或派发回执不确定时写 inbox 并保留 `uncertain`，不自动重发，也不算已送达；同 issue+角色存在任何不确定提醒/升级时，即使进展或 pane 变化也保留自动接续。核原 pane/登记表后，才按 kit README 的 `--resolve` 明确登记已发生或有证据未发生的动作；done 从核实时间开始保守计算下一接续间隔，retry 才明确允许重试原事件。旧账本原地兼容，升级安装须包含 board.py 同目录新增的 watchdog.py，保留原 journal 和 uncertain，不拿旧引擎读取已升级账本。`--dry-run` 只读，连到期接续和升级也不创建锁、账本、汇总、标签、评论、工作树或会话。API 翻页与标签事件 ID 区分同一状态的重新进入。
 
 生命周期登记锁在任何会话动作开始前被占用时，CLI 返回退出码 75 及 `state=retry/retryable=true`，派单器保留 pending，下一轮自动重试；这与动作可能已发生的 uncertain 分开。宿主/项目锁冲突同样不执行该轮动作，沿下一原 tick 重试，不争锁、不删登记。
 
 `spawn` 现在先无任务启动 Codex，核同一 terminal/tab/cwd 与空闲状态，显式命名并读回，然后单独发送一次任务。自动命名报错但同一新终端已就绪时可安全补命名；否则保留 `starting/start_phase`，给出 start/identity/name/prompt 阶段及已识别的 Herdr 错误类别，沿原显式 `register` 恢复。原始 stderr 不外发，避免披露路径或凭据。
+
+派发在 allocate/prepare 或建 tab 时失败，重复 `spawn N slug` 会返回原阶段和精确 `resume` argv；不重发开场任务。显式 `python3 ops/issue_session.py --root "$PWD" resume N slug` 支持 allocating/allocated/creating-tab/tab-created：先核 issue/账号/容量、主机进程可见性、无既有 agent、同仓工作树/分支/原始 base/干净状态，再重做幂等 prepare；复用已核的唯一 tab/terminal，空闲 shell 才能启动。starting 或 prompt 不确定阶段仍只用原 `register`，resume 不重启或重发。自定义 config/state-dir 必须沿返回的 argv 保持相同登记。
+
+creating-tab 先核实际 workspace/tab/pane，匹配唯一的标签、cwd 和单 pane 时补回原回执；没有找到也不自动创建第二个 tab。核实原动作未发生后，操作者才加 `--retry-tab-create --reason '<本地证据引用>'` 明确允许重试，证据留本地账本。allocated 意外发现已有 tab 时先记身份并保留，操作者核后再次 resume；有脏改动、进程、身份冲突、额外 pane 或已有 agent 都保留现场。派单器原 uncertain 不因 CLI resume 自动抹去；实际恢复并核单次送达后，再按 kit `--resolve ... --outcome done` 登记。
+
+`.agents/board.yaml` 的可选 `worktree.resume_allocate` 配置项目自己的分配恢复命令；STS2 为原 `worktree_checkout.py ... --resume --require-node`。只接收本 allocator 绑定 repo 根、工作树、分支和 base 的原 allocation receipt；可恢复失败后保留的分支/稀疏副本，原失败存入 resume_history，未完成源码或外来目录不覆盖。issue 的 allocate/resume_allocate 配置显式加 `--require-node`，必需策略同时保存在原分配回执，恢复不能降低；其他任务仍沿原共享工具可选语义。Node 包没有可核的共享依赖，或非交互 PATH 找不到既有 Node 时，allocate 本身报明确原因并记失败回执，不等 prepare 才发现缺链接、不安装依赖。恢复先由原操作者修正运行环境，再执行 resume。
+
+空闲回收只增加一种精确例外：Codex 直接子进程的 WSL `/init` 剪贴板桥，核真实 exe、PPID、完整 argv（固定 PowerShell 路径/参数及固定循环脚本 SHA），且无 Linux 工具子进程；与原 bundled code-mode-host 一起在前台检查前核准。其他 PowerShell、相似名字、脚本/参数改变、外来父进程或辅助进程带任务子进程仍拒绝。版本变化导致脚本不同则保留现场待更新证据，不按名称放宽。
 
 ## 谁说的话算数
 

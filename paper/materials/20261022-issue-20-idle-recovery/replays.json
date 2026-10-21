@@ -1,0 +1,52 @@
+{
+  "schema": "issue20-fixed-replay-v1",
+  "external_actions": "fixture replacements only",
+  "observed_idle": "2026-10-21T21:58:00+08:00",
+  "final_clock": "2026-10-21T22:08:00+08:00",
+  "elapsed_seconds": 600,
+  "successful_retries": 1,
+  "events": [
+    {
+      "key": "31:watchdog:integrator:1:transient:1",
+      "issue": 31,
+      "action": "notify",
+      "role": "integrator",
+      "phase": "pending",
+      "recovery": {
+        "watch": "31:integrator",
+        "generation": 1,
+        "kind": "transient",
+        "attempt": 1
+      }
+    },
+    {
+      "key": "20:watchdog:integrator:1:transient:1",
+      "issue": 20,
+      "action": "notify",
+      "role": "integrator",
+      "phase": "done",
+      "recovery": {
+        "watch": "20:integrator",
+        "generation": 1,
+        "kind": "transient",
+        "attempt": 1
+      },
+      "pane": "wF:p1",
+      "sent_at": 1792591680.0
+    }
+  ],
+  "clipboard_replay": {
+    "test": "test_issue_session.Composer.test_wsl_clipboard_replay_requires_exact_argv_codex_parent_and_leaf",
+    "passed": true,
+    "raw_clipboard_data_read": false,
+    "script_sha256": "d6735db7931c303c1e1b5f456eb3e400cf9903dacc7c6986bc8714ca84f63641"
+  },
+  "prepare_failure_replay": {
+    "test": "test_issue_session.IssueSessions.test_prepare_failure_replay_then_explicit_resume_without_allocating_or_prompting_twice",
+    "passed": true,
+    "state": "active",
+    "starts": 1,
+    "prompts": 1,
+    "tab_creations": 1
+  }
+}

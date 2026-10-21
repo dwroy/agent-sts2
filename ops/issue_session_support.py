@@ -85,6 +85,7 @@ class Board:
     def __init__(self, root, path=None):
         self.root = root
         path = safe_path(root, path or ".agents/board.yaml")
+        self.path = path
         try:
             import yaml
         except ImportError:
@@ -127,6 +128,8 @@ class Board:
             raise ValueError("remote machine requires a host-local dispatcher and process guard")
         for key in ("allocate", "retire"):
             self.argv(self.worktree[key], {})
+        if 'resume_allocate' in self.worktree:
+            self.argv(self.worktree['resume_allocate'], {})
         if not isinstance(self.worktree["prepare"], list):
             raise ValueError("prepare must be a list of commands")
         for command in self.worktree["prepare"]:
