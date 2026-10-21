@@ -1,0 +1,753 @@
+{
+  "schema": "ops-ordinary-source-drift-review-v1",
+  "at": "2026-10-22T04:11:17+08:00",
+  "batch": "20261022-034316-strategy-proposal",
+  "state": "original-source-drift-attention-retained-record-review-only",
+  "original": {
+    "path": "ops/codex-ops/ordinary-close/20261022-034316-strategy-proposal.json",
+    "bytes": 14985,
+    "sha256": "e137721d3966438e805016735eb3e528b574446251a26a8868b06427cbd3906d"
+  },
+  "report": {
+    "path": ".worktrees/codex-strategy-silent-20261022-034316/learner/runs/20261022-034320-41ae55af-1ec9-4751-8d7f-69d6db6391af-strategy-proposal/report.md",
+    "bytes": 16340,
+    "sha256": "f53ca65ee27f766dd4662359a2f07b7ecc276c62fc2697adb1aa4142275d1ffb"
+  },
+  "dataset_log": {
+    "path": "ops/codex-ops/ordinary-close/20261022-034316-strategy-proposal.dataset.log",
+    "bytes": 959,
+    "sha256": "82c272d7974864086607b20c16595d3b9b7d322fc1d633514f760a33d57fdec4"
+  },
+  "dataset_attempts": 1,
+  "dataset_success_inferred_from_original_log": true,
+  "formal_dataset_and_records_fields_absent": true,
+  "source_change_during_unique_dataset": {
+    "proof_head": "9c4ff2f567132aded3e1fc9a5124e556cac6998c",
+    "main_after": "870ce5620d08fcc67e8581ab5dba2ea8c73b2382",
+    "source_drift_commit": "ada4240438555e33eef872c5d51135eb5c97c38b",
+    "paths": [
+      "ops/agent_board.py",
+      "ops/codex-ops.sh",
+      "ops/tests/test_issue_session.py"
+    ],
+    "scope": "reviewed issue20 persistent control; not learner source modification"
+  },
+  "owner_base": "5330430f30106fdc3c84b2d48046b55240fce3f2",
+  "owner_final": {
+    "at": "2026-10-22T03:59:55+08:00",
+    "base": "5330430f30106fdc3c84b2d48046b55240fce3f2",
+    "worktree_status": "clean",
+    "fixes": [],
+    "merged": null,
+    "tests": {
+      "tsc": null,
+      "vitest": null,
+      "cases": null
+    },
+    "proposal_results": 10,
+    "all_waiting": true,
+    "coverage": {
+      "not_read": 566,
+      "full_raw_question": 8,
+      "partial_raw_fields": 5
+    },
+    "verified_raw_decision_rows": 82,
+    "verified_raw_state_rows": 428,
+    "ledger_updates": 7,
+    "gitleaks_exit": 0,
+    "scope_complete": "十项处置完成；策略实现和科学父保持waiting"
+  },
+  "current_WT_head": "5330430f30106fdc3c84b2d48046b55240fce3f2",
+  "current_WT_source_delta_empty": true,
+  "artifact_manifest": {
+    "path": ".worktrees/codex-strategy-silent-20261022-034316/learner/runs/20261022-034320-41ae55af-1ec9-4751-8d7f-69d6db6391af-strategy-proposal/artifact-manifest.json",
+    "bytes": 14545,
+    "sha256": "951159d2d55d207f5a4e055235cd4b6ca289bd6daa85fb016adaa543b635985f"
+  },
+  "verified_artifacts": [
+    {
+      "path": ".worktrees/codex-strategy-silent-20261022-034316/learner/runs/20261022-034320-41ae55af-1ec9-4751-8d7f-69d6db6391af-strategy-proposal/audit_links.py",
+      "bytes": 3772,
+      "sha256": "545b2cc8a58c6fce15e7e0e6206eb816a465993baccc57c26e0b7747319a2c14"
+    },
+    {
+      "path": ".worktrees/codex-strategy-silent-20261022-034316/learner/runs/20261022-034320-41ae55af-1ec9-4751-8d7f-69d6db6391af-strategy-proposal/audit_raw.py",
+      "bytes": 2405,
+      "sha256": "94021eb8216801542b03b5d1744a3bdb8d519f59e5afa0183019954b894aeef6"
+    },
+    {
+      "path": ".worktrees/codex-strategy-silent-20261022-034316/learner/runs/20261022-034320-41ae55af-1ec9-4751-8d7f-69d6db6391af-strategy-proposal/audit_states.py",
+      "bytes": 3706,
+      "sha256": "bca5b09ffca640bd6221c7c097eaf937ab7c59f09192adf034793a6ebdabb8a8"
+    },
+    {
+      "path": ".worktrees/codex-strategy-silent-20261022-034316/learner/runs/20261022-034320-41ae55af-1ec9-4751-8d7f-69d6db6391af-strategy-proposal/base-diff.patch",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": ".worktrees/codex-strategy-silent-20261022-034316/learner/runs/20261022-034320-41ae55af-1ec9-4751-8d7f-69d6db6391af-strategy-proposal/batch-binding.json",
+      "bytes": 4177,
+      "sha256": "29b0afdf7b7a114fd85b13e36a9cd61cd7ccd19fbb3e1fb04959d13db137bd59"
+    },
+    {
+      "path": ".worktrees/codex-strategy-silent-20261022-034316/learner/runs/20261022-034320-41ae55af-1ec9-4751-8d7f-69d6db6391af-strategy-proposal/completion-verification.json",
+      "bytes": 574,
+      "sha256": "caafbd09fc731c28ada3c190cf54dc0cacb5547f6c2a779073baa1526b32caa0"
+    },
+    {
+      "path": ".worktrees/codex-strategy-silent-20261022-034316/learner/runs/20261022-034320-41ae55af-1ec9-4751-8d7f-69d6db6391af-strategy-proposal/config-facts.json",
+      "bytes": 7358,
+      "sha256": "8631650df1c3639afacdb60fc1891b14203173d4eb88588d92cd1c6080824685"
+    },
+    {
+      "path": ".worktrees/codex-strategy-silent-20261022-034316/learner/runs/20261022-034320-41ae55af-1ec9-4751-8d7f-69d6db6391af-strategy-proposal/decision-audit.log",
+      "bytes": 28521,
+      "sha256": "d31c7ee56ef346a92fd06abab3b642a9cddcfea8bd1177046620bb62c3f78af7"
+    },
+    {
+      "path": ".worktrees/codex-strategy-silent-20261022-034316/learner/runs/20261022-034320-41ae55af-1ec9-4751-8d7f-69d6db6391af-strategy-proposal/decision-window-index.json",
+      "bytes": 38470,
+      "sha256": "2fbfc0dac8d64b786ccdd7d032725a2a8667429acac5ae0dc161ad83e906d0df"
+    },
+    {
+      "path": ".worktrees/codex-strategy-silent-20261022-034316/learner/runs/20261022-034320-41ae55af-1ec9-4751-8d7f-69d6db6391af-strategy-proposal/dispositions.json",
+      "bytes": 2620,
+      "sha256": "ab47de3a4ad8aef3c9c1cb1e7cee15bf151188cea0e6db0c862b6cd64ed401dc"
+    },
+    {
+      "path": ".worktrees/codex-strategy-silent-20261022-034316/learner/runs/20261022-034320-41ae55af-1ec9-4751-8d7f-69d6db6391af-strategy-proposal/evidence/brain.evidence.jsonl",
+      "bytes": 6922217,
+      "sha256": "d477645037747fc9b7e2a90601fbd04ef9d8c4f2dd803e866565aec598400c56"
+    },
+    {
+      "path": ".worktrees/codex-strategy-silent-20261022-034316/learner/runs/20261022-034320-41ae55af-1ec9-4751-8d7f-69d6db6391af-strategy-proposal/evidence/decisions.evidence.jsonl",
+      "bytes": 12817424,
+      "sha256": "21b85faf492d8d85902d6a995a24c9509927f773af587bd2eae15befff679edd"
+    },
+    {
+      "path": ".worktrees/codex-strategy-silent-20261022-034316/learner/runs/20261022-034320-41ae55af-1ec9-4751-8d7f-69d6db6391af-strategy-proposal/evidence/evidence-manifest.json",
+      "bytes": 17996,
+      "sha256": "57843c8b0a30091b5e109eaa67c30ac177cf9175192cbccc21803cc78d5b8881"
+    },
+    {
+      "path": ".worktrees/codex-strategy-silent-20261022-034316/learner/runs/20261022-034320-41ae55af-1ec9-4751-8d7f-69d6db6391af-strategy-proposal/evidence/jev-prompts.evidence.jsonl",
+      "bytes": 7841462,
+      "sha256": "9ee4a469633f87d5b509f29632bf3619180edf1155872c1e6c7bc77dbb191634"
+    },
+    {
+      "path": ".worktrees/codex-strategy-silent-20261022-034316/learner/runs/20261022-034320-41ae55af-1ec9-4751-8d7f-69d6db6391af-strategy-proposal/evidence/run-config.evidence.jsonl",
+      "bytes": 31799,
+      "sha256": "94114f9b6daf6fa9d26404192eeb965c2942cae4e8f9f1470967e943d65cde46"
+    },
+    {
+      "path": ".worktrees/codex-strategy-silent-20261022-034316/learner/runs/20261022-034320-41ae55af-1ec9-4751-8d7f-69d6db6391af-strategy-proposal/evidence/run-plans.evidence.jsonl",
+      "bytes": 75881,
+      "sha256": "8c1dd24c4cf8eaa2cf8046deba5e8fb370362d73249c05268072c0a892531375"
+    },
+    {
+      "path": ".worktrees/codex-strategy-silent-20261022-034316/learner/runs/20261022-034320-41ae55af-1ec9-4751-8d7f-69d6db6391af-strategy-proposal/evidence/sl-attempts.evidence.jsonl",
+      "bytes": 494049,
+      "sha256": "87fdc68f77fe148d1ecb22c49342d47a718d542b08a8fb2b3e63cb6ca5b19607"
+    },
+    {
+      "path": ".worktrees/codex-strategy-silent-20261022-034316/learner/runs/20261022-034320-41ae55af-1ec9-4751-8d7f-69d6db6391af-strategy-proposal/evidence/states.evidence.jsonl",
+      "bytes": 122670545,
+      "sha256": "627119a330e2d1af6e6c70d0984788d8dbfbfa22536ef7e3b123072dff9d25eb"
+    },
+    {
+      "path": ".worktrees/codex-strategy-silent-20261022-034316/learner/runs/20261022-034320-41ae55af-1ec9-4751-8d7f-69d6db6391af-strategy-proposal/evidence/v6-build.evidence.jsonl",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": ".worktrees/codex-strategy-silent-20261022-034316/learner/runs/20261022-034320-41ae55af-1ec9-4751-8d7f-69d6db6391af-strategy-proposal/evidence-summary.json",
+      "bytes": 38752,
+      "sha256": "4446ac3be601d6c33892d32ea25f3b66b1a37e613908eb4daf2630b9559f7aa5"
+    },
+    {
+      "path": ".worktrees/codex-strategy-silent-20261022-034316/learner/runs/20261022-034320-41ae55af-1ec9-4751-8d7f-69d6db6391af-strategy-proposal/extract.log",
+      "bytes": 14610,
+      "sha256": "89136b6388a3ddb43b0f4b6217f69a6e27c332e30b9acf0aceccb9a168a30a84"
+    },
+    {
+      "path": ".worktrees/codex-strategy-silent-20261022-034316/learner/runs/20261022-034320-41ae55af-1ec9-4751-8d7f-69d6db6391af-strategy-proposal/gitleaks-receipt.json",
+      "bytes": 105,
+      "sha256": "e90909cb339a5e101b638113dc2ecdea0f6d2adae7175fadef0cdd8ddcad76d4"
+    },
+    {
+      "path": ".worktrees/codex-strategy-silent-20261022-034316/learner/runs/20261022-034320-41ae55af-1ec9-4751-8d7f-69d6db6391af-strategy-proposal/gitleaks-report.json",
+      "bytes": 3,
+      "sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570"
+    },
+    {
+      "path": ".worktrees/codex-strategy-silent-20261022-034316/learner/runs/20261022-034320-41ae55af-1ec9-4751-8d7f-69d6db6391af-strategy-proposal/gitleaks.log",
+      "bytes": 147,
+      "sha256": "f41d78d469d147db09126bdc485652af9b57ba8442b73de9406690c42ded39e7"
+    },
+    {
+      "path": ".worktrees/codex-strategy-silent-20261022-034316/learner/runs/20261022-034320-41ae55af-1ec9-4751-8d7f-69d6db6391af-strategy-proposal/jev-key-counts.json",
+      "bytes": 105,
+      "sha256": "1275dbfafaa86b08a0d86610276bd6dbd7c16d448de0bfb32bab71af7e037dd0"
+    },
+    {
+      "path": ".worktrees/codex-strategy-silent-20261022-034316/learner/runs/20261022-034320-41ae55af-1ec9-4751-8d7f-69d6db6391af-strategy-proposal/jev-mechanical-counts.json",
+      "bytes": 1029,
+      "sha256": "9306618e17cda1441af0523b55071280bd7cb0180fe610977c0fdab22fca46e8"
+    },
+    {
+      "path": ".worktrees/codex-strategy-silent-20261022-034316/learner/runs/20261022-034320-41ae55af-1ec9-4751-8d7f-69d6db6391af-strategy-proposal/ledger-before.json",
+      "bytes": 1602275,
+      "sha256": "aac36ac605f436b0eb7ec3d3275882d39c63759ea779f1923502b637e79209a6"
+    },
+    {
+      "path": ".worktrees/codex-strategy-silent-20261022-034316/learner/runs/20261022-034320-41ae55af-1ec9-4751-8d7f-69d6db6391af-strategy-proposal/ledger-cli.log",
+      "bytes": 84,
+      "sha256": "e268144e8fb8fce19706a62939b706dd77a01e25ad46c80c71e3e29ad1c84082"
+    },
+    {
+      "path": ".worktrees/codex-strategy-silent-20261022-034316/learner/runs/20261022-034320-41ae55af-1ec9-4751-8d7f-69d6db6391af-strategy-proposal/ledger-context.json",
+      "bytes": 12657123,
+      "sha256": "732887316e804f84734539fc27b2b135f93225b4b6a516836e816d8009092c28"
+    },
+    {
+      "path": ".worktrees/codex-strategy-silent-20261022-034316/learner/runs/20261022-034320-41ae55af-1ec9-4751-8d7f-69d6db6391af-strategy-proposal/ledger-updates.jsonl",
+      "bytes": 5383,
+      "sha256": "f9df0fcdc2aa6bb705c516d4f261f17dd70ae32b4e94c4a1db4fc33517544a9f"
+    },
+    {
+      "path": ".worktrees/codex-strategy-silent-20261022-034316/learner/runs/20261022-034320-41ae55af-1ec9-4751-8d7f-69d6db6391af-strategy-proposal/original-recovery.json",
+      "bytes": 3771,
+      "sha256": "3619c4976c94de280b3af1809a2d6ce9debb545f2b7e3d3adad972a32144b7ac"
+    },
+    {
+      "path": ".worktrees/codex-strategy-silent-20261022-034316/learner/runs/20261022-034320-41ae55af-1ec9-4751-8d7f-69d6db6391af-strategy-proposal/proposal-records.json",
+      "bytes": 9754,
+      "sha256": "a1c6343fb1bf76c7ddcec360828557954ffcda7f72295a0f6e3922efdf3be62f"
+    },
+    {
+      "path": ".worktrees/codex-strategy-silent-20261022-034316/learner/runs/20261022-034320-41ae55af-1ec9-4751-8d7f-69d6db6391af-strategy-proposal/proposal.md",
+      "bytes": 5602,
+      "sha256": "970a49f0e6ab315620833d013dbe5d363ff49e746b59fc89f4313ee308d1e3aa"
+    },
+    {
+      "path": ".worktrees/codex-strategy-silent-20261022-034316/learner/runs/20261022-034320-41ae55af-1ec9-4751-8d7f-69d6db6391af-strategy-proposal/question-coverage.json",
+      "bytes": 526292,
+      "sha256": "341f214a5612f2c37e9b45f04ddc5bc95a0610c5935658daa8d636b069e5fd66"
+    },
+    {
+      "path": ".worktrees/codex-strategy-silent-20261022-034316/learner/runs/20261022-034320-41ae55af-1ec9-4751-8d7f-69d6db6391af-strategy-proposal/raw-windows/decision-267379.json",
+      "bytes": 5539,
+      "sha256": "554b9f7bd6ac2762c7bf7b6aea835d9542ad9b317f2dfac39266c30d17202534"
+    },
+    {
+      "path": ".worktrees/codex-strategy-silent-20261022-034316/learner/runs/20261022-034320-41ae55af-1ec9-4751-8d7f-69d6db6391af-strategy-proposal/raw-windows/decision-267612.json",
+      "bytes": 7874,
+      "sha256": "3fe4f337250c4c9166b60bb42e076f42226bef87a06db3aeb2e0e7c26f1ca9cd"
+    },
+    {
+      "path": ".worktrees/codex-strategy-silent-20261022-034316/learner/runs/20261022-034320-41ae55af-1ec9-4751-8d7f-69d6db6391af-strategy-proposal/raw-windows/decision-267696.json",
+      "bytes": 15293,
+      "sha256": "71de3eb698805fe62603f6152de4891217957eb0540847271c75fb0ba08b8c08"
+    },
+    {
+      "path": ".worktrees/codex-strategy-silent-20261022-034316/learner/runs/20261022-034320-41ae55af-1ec9-4751-8d7f-69d6db6391af-strategy-proposal/raw-windows/decision-268455.json",
+      "bytes": 15134,
+      "sha256": "923863cea64a0ee51b98521063af1fa88ab21cf5d04fc7000067996a29c001e9"
+    },
+    {
+      "path": ".worktrees/codex-strategy-silent-20261022-034316/learner/runs/20261022-034320-41ae55af-1ec9-4751-8d7f-69d6db6391af-strategy-proposal/raw-windows/decision-269068.json",
+      "bytes": 5757,
+      "sha256": "43674f9b4424e6db0663a89c6104f2a168bc49961060f5aa2917d78ed758483e"
+    },
+    {
+      "path": ".worktrees/codex-strategy-silent-20261022-034316/learner/runs/20261022-034320-41ae55af-1ec9-4751-8d7f-69d6db6391af-strategy-proposal/raw-windows/decision-269706.json",
+      "bytes": 21597,
+      "sha256": "9838ff71466dc84384d713dc1796a442ce83cd5c3d5e138bcfd18960bc838f85"
+    },
+    {
+      "path": ".worktrees/codex-strategy-silent-20261022-034316/learner/runs/20261022-034320-41ae55af-1ec9-4751-8d7f-69d6db6391af-strategy-proposal/raw-windows/decision-269707.json",
+      "bytes": 9310,
+      "sha256": "7647c72c7057fb5c4a4c467769fa817f2befb07a9fc583f7f925b612ac8b855a"
+    },
+    {
+      "path": ".worktrees/codex-strategy-silent-20261022-034316/learner/runs/20261022-034320-41ae55af-1ec9-4751-8d7f-69d6db6391af-strategy-proposal/raw-windows/decision-269748.json",
+      "bytes": 18087,
+      "sha256": "1afeb12e4372c954f4767aaa09b48f86f4707dd7bb8a69bda4a8f5abaf7ad1ed"
+    },
+    {
+      "path": ".worktrees/codex-strategy-silent-20261022-034316/learner/runs/20261022-034320-41ae55af-1ec9-4751-8d7f-69d6db6391af-strategy-proposal/raw-windows/decision-269754.json",
+      "bytes": 10307,
+      "sha256": "cc4ffbe6dfa57a182fc9134ceef2a15c3dc898a357e0ea354e965787cf392193"
+    },
+    {
+      "path": ".worktrees/codex-strategy-silent-20261022-034316/learner/runs/20261022-034320-41ae55af-1ec9-4751-8d7f-69d6db6391af-strategy-proposal/raw-windows/decision-269770.json",
+      "bytes": 12015,
+      "sha256": "baedc62762afc25738c4246e55e6f44f22dda7a17e3649d794784bcde3dc26d2"
+    },
+    {
+      "path": ".worktrees/codex-strategy-silent-20261022-034316/learner/runs/20261022-034320-41ae55af-1ec9-4751-8d7f-69d6db6391af-strategy-proposal/raw-windows/decision-270216.json",
+      "bytes": 9787,
+      "sha256": "0082da04fe05a5d3b8bfbb3e590dc2288fe41c8e6f70e4be643b95aa082d582e"
+    },
+    {
+      "path": ".worktrees/codex-strategy-silent-20261022-034316/learner/runs/20261022-034320-41ae55af-1ec9-4751-8d7f-69d6db6391af-strategy-proposal/raw-windows/decision-270264.json",
+      "bytes": 13471,
+      "sha256": "0513fd38df201008cb4e67a6b85dce3fe53563885a49c1720a44f517751f92be"
+    },
+    {
+      "path": ".worktrees/codex-strategy-silent-20261022-034316/learner/runs/20261022-034320-41ae55af-1ec9-4751-8d7f-69d6db6391af-strategy-proposal/raw-windows/decision-270282.json",
+      "bytes": 12686,
+      "sha256": "721f1ef7b80a307741e97b8cf9ab47d6ef03330053a3d1e9051127cc2108f5df"
+    },
+    {
+      "path": ".worktrees/codex-strategy-silent-20261022-034316/learner/runs/20261022-034320-41ae55af-1ec9-4751-8d7f-69d6db6391af-strategy-proposal/raw-windows/decisions.jsonl",
+      "bytes": 292210,
+      "sha256": "bf804f0a5eec9a8986c69f91c26ca82b1f2a3207ce3d34c1e2b1a2db6665d1af"
+    },
+    {
+      "path": ".worktrees/codex-strategy-silent-20261022-034316/learner/runs/20261022-034320-41ae55af-1ec9-4751-8d7f-69d6db6391af-strategy-proposal/raw-windows/jev-267379.json",
+      "bytes": 8869,
+      "sha256": "df5c7ab4a5610d09edf0efd76dc8cb7ebc4827a07c94458533211be8dd1b2014"
+    },
+    {
+      "path": ".worktrees/codex-strategy-silent-20261022-034316/learner/runs/20261022-034320-41ae55af-1ec9-4751-8d7f-69d6db6391af-strategy-proposal/raw-windows/jev-267612.json",
+      "bytes": 11501,
+      "sha256": "b9ff2be68c133443e5547b941dcdf8e9a9a3448a56dcdda63bd58210b0455ae2"
+    },
+    {
+      "path": ".worktrees/codex-strategy-silent-20261022-034316/learner/runs/20261022-034320-41ae55af-1ec9-4751-8d7f-69d6db6391af-strategy-proposal/raw-windows/jev-267696.json",
+      "bytes": 19778,
+      "sha256": "25a6205522e0453bd5e1c93c4b18f3da5ca2ad6226433a00ab0014906587f823"
+    },
+    {
+      "path": ".worktrees/codex-strategy-silent-20261022-034316/learner/runs/20261022-034320-41ae55af-1ec9-4751-8d7f-69d6db6391af-strategy-proposal/raw-windows/jev-268455.json",
+      "bytes": 22461,
+      "sha256": "909c3a15e3c2fddfcbc5e261ac2c004c5d9cb577cb8b4f9d596dec1076fd8c71"
+    },
+    {
+      "path": ".worktrees/codex-strategy-silent-20261022-034316/learner/runs/20261022-034320-41ae55af-1ec9-4751-8d7f-69d6db6391af-strategy-proposal/raw-windows/jev-269068.json",
+      "bytes": 13407,
+      "sha256": "7000a27884c87dcba06d4fcecf1b87ac66ed1786f6eb11f823fd499569987fb3"
+    },
+    {
+      "path": ".worktrees/codex-strategy-silent-20261022-034316/learner/runs/20261022-034320-41ae55af-1ec9-4751-8d7f-69d6db6391af-strategy-proposal/raw-windows/jev-269706.json",
+      "bytes": 25726,
+      "sha256": "1f362c8fa55bfc679529011601e5a315a1c92b63998782692cd72e2a9c593421"
+    },
+    {
+      "path": ".worktrees/codex-strategy-silent-20261022-034316/learner/runs/20261022-034320-41ae55af-1ec9-4751-8d7f-69d6db6391af-strategy-proposal/raw-windows/jev-269707.json",
+      "bytes": 13409,
+      "sha256": "452f8156db235d64762ef92c619eac5ed5350e5b61d67463261658dca6b513a5"
+    },
+    {
+      "path": ".worktrees/codex-strategy-silent-20261022-034316/learner/runs/20261022-034320-41ae55af-1ec9-4751-8d7f-69d6db6391af-strategy-proposal/raw-windows/jev-269748.json",
+      "bytes": 22106,
+      "sha256": "3f0b05a04d3eabc7476a0f94abec7c604cbc4999ab1cda0da7d9df11b853e0bd"
+    },
+    {
+      "path": ".worktrees/codex-strategy-silent-20261022-034316/learner/runs/20261022-034320-41ae55af-1ec9-4751-8d7f-69d6db6391af-strategy-proposal/raw-windows/jev-269754.json",
+      "bytes": 14559,
+      "sha256": "a68e165725cedadb2dd49ecd2ba4327e1041ef59dc2208221753a91db411531b"
+    },
+    {
+      "path": ".worktrees/codex-strategy-silent-20261022-034316/learner/runs/20261022-034320-41ae55af-1ec9-4751-8d7f-69d6db6391af-strategy-proposal/raw-windows/jev-269770.json",
+      "bytes": 16559,
+      "sha256": "b38bfc557589cea24a7a8ee586d8b75b772169879728588dfa18640541bd6d38"
+    },
+    {
+      "path": ".worktrees/codex-strategy-silent-20261022-034316/learner/runs/20261022-034320-41ae55af-1ec9-4751-8d7f-69d6db6391af-strategy-proposal/raw-windows/jev-270216.json",
+      "bytes": 13269,
+      "sha256": "d912a7b169c133b1816513190ca11bc4c110db2efc88e10f99aec2c76ab3ae17"
+    },
+    {
+      "path": ".worktrees/codex-strategy-silent-20261022-034316/learner/runs/20261022-034320-41ae55af-1ec9-4751-8d7f-69d6db6391af-strategy-proposal/raw-windows/jev-270264.json",
+      "bytes": 18888,
+      "sha256": "ffb5ec7923c0cc153bfc271290bdfa9387138dccb5810974087bad8e1ded1902"
+    },
+    {
+      "path": ".worktrees/codex-strategy-silent-20261022-034316/learner/runs/20261022-034320-41ae55af-1ec9-4751-8d7f-69d6db6391af-strategy-proposal/raw-windows/jev-270282.json",
+      "bytes": 18141,
+      "sha256": "94d36ae26dca8adb8f3fcaeb5f9765fdc2e7289dc80175d514df26908ae96c09"
+    },
+    {
+      "path": ".worktrees/codex-strategy-silent-20261022-034316/learner/runs/20261022-034320-41ae55af-1ec9-4751-8d7f-69d6db6391af-strategy-proposal/raw-windows/run-config.jsonl",
+      "bytes": 27585,
+      "sha256": "a74b652e49832dbd261011b3619bf11407f6a32333d60ce99d60b6e1c5198a93"
+    },
+    {
+      "path": ".worktrees/codex-strategy-silent-20261022-034316/learner/runs/20261022-034320-41ae55af-1ec9-4751-8d7f-69d6db6391af-strategy-proposal/raw-windows/sl-attempts.jsonl",
+      "bytes": 461166,
+      "sha256": "78f20d35cc32cfb774241edc57e152dd9ca10a89fc42de6e622a63760d65236f"
+    },
+    {
+      "path": ".worktrees/codex-strategy-silent-20261022-034316/learner/runs/20261022-034320-41ae55af-1ec9-4751-8d7f-69d6db6391af-strategy-proposal/raw-windows/states.jsonl",
+      "bytes": 17336780,
+      "sha256": "e171e5f0568c448e82a6950c97dfa3f62c0e2643728f720ec8a53cb48b8c43d9"
+    },
+    {
+      "path": ".worktrees/codex-strategy-silent-20261022-034316/learner/runs/20261022-034320-41ae55af-1ec9-4751-8d7f-69d6db6391af-strategy-proposal/report.md",
+      "bytes": 16340,
+      "sha256": "f53ca65ee27f766dd4662359a2f07b7ecc276c62fc2697adb1aa4142275d1ffb"
+    },
+    {
+      "path": ".worktrees/codex-strategy-silent-20261022-034316/learner/runs/20261022-034320-41ae55af-1ec9-4751-8d7f-69d6db6391af-strategy-proposal/result.json",
+      "bytes": 6586,
+      "sha256": "414c2e55d53939542a70c1b149aaf4f9acc6e34ad73b3ba506da08c371e14c66"
+    },
+    {
+      "path": ".worktrees/codex-strategy-silent-20261022-034316/learner/runs/20261022-034320-41ae55af-1ec9-4751-8d7f-69d6db6391af-strategy-proposal/runs-identity.json",
+      "bytes": 5083,
+      "sha256": "a0b7b7d3a19b5d4cca5257d64ad0df90db3b3d1ebd195b0510eba80662e3fb8e"
+    },
+    {
+      "path": ".worktrees/codex-strategy-silent-20261022-034316/learner/runs/20261022-034320-41ae55af-1ec9-4751-8d7f-69d6db6391af-strategy-proposal/silent-proposal-283a164780d11e69.original.md",
+      "bytes": 4874,
+      "sha256": "78e23dae4213fa5b07bda1a0799bbbe0c94567c889db235b40560f523608e637"
+    },
+    {
+      "path": ".worktrees/codex-strategy-silent-20261022-034316/learner/runs/20261022-034320-41ae55af-1ec9-4751-8d7f-69d6db6391af-strategy-proposal/silent-proposal-43a76a31ba7bdcfa.original.md",
+      "bytes": 2543,
+      "sha256": "f4a38e2d7ee0b5d205a3168cc58dfec442046d7be3a89701054b3dcb7fdf0a6c"
+    },
+    {
+      "path": ".worktrees/codex-strategy-silent-20261022-034316/learner/runs/20261022-034320-41ae55af-1ec9-4751-8d7f-69d6db6391af-strategy-proposal/silent-proposal-49632bc4878fb597.original.md",
+      "bytes": 2611,
+      "sha256": "aac4fddf0f24862a3fb8e289d000a312358c3bb9ee3d624602bf755d0b5409a2"
+    },
+    {
+      "path": ".worktrees/codex-strategy-silent-20261022-034316/learner/runs/20261022-034320-41ae55af-1ec9-4751-8d7f-69d6db6391af-strategy-proposal/silent-proposal-5264153a4a4b0e5c.original.md",
+      "bytes": 2541,
+      "sha256": "b32fb321d95e941c095993cdde0d011354c689718ffe2a3b2428fe68c444ec02"
+    },
+    {
+      "path": ".worktrees/codex-strategy-silent-20261022-034316/learner/runs/20261022-034320-41ae55af-1ec9-4751-8d7f-69d6db6391af-strategy-proposal/silent-proposal-66532328a585941f.original.md",
+      "bytes": 2501,
+      "sha256": "56a0a04049f43aa425242d11caa305a1bb869fc6b4fc38d0138e9f6edad44831"
+    },
+    {
+      "path": ".worktrees/codex-strategy-silent-20261022-034316/learner/runs/20261022-034320-41ae55af-1ec9-4751-8d7f-69d6db6391af-strategy-proposal/silent-proposal-89354805ee4d7e77.original.md",
+      "bytes": 4462,
+      "sha256": "ab6488e1b2e17415061c372d3efa10dbba468de2574f784088e1a967358df76d"
+    },
+    {
+      "path": ".worktrees/codex-strategy-silent-20261022-034316/learner/runs/20261022-034320-41ae55af-1ec9-4751-8d7f-69d6db6391af-strategy-proposal/silent-proposal-bddfa690a84e03d0.original.md",
+      "bytes": 2582,
+      "sha256": "b9f90f13d558011142b4bfc459efdfd4680dd297206c182c9c48d86f4c32e780"
+    },
+    {
+      "path": ".worktrees/codex-strategy-silent-20261022-034316/learner/runs/20261022-034320-41ae55af-1ec9-4751-8d7f-69d6db6391af-strategy-proposal/silent-proposal-e5b87be50f28f311.original.md",
+      "bytes": 6215,
+      "sha256": "5e713a9a6a50830d4ff7c2aba1c2af90487cc8d03e4881555257b43161632709"
+    },
+    {
+      "path": ".worktrees/codex-strategy-silent-20261022-034316/learner/runs/20261022-034320-41ae55af-1ec9-4751-8d7f-69d6db6391af-strategy-proposal/silent-proposal-ebbfe3b97548756d.original.md",
+      "bytes": 4696,
+      "sha256": "08eaeed02365ece6b99ec54adb8ead6688d7323d6f59f30c1cb5996f41c552e2"
+    },
+    {
+      "path": ".worktrees/codex-strategy-silent-20261022-034316/learner/runs/20261022-034320-41ae55af-1ec9-4751-8d7f-69d6db6391af-strategy-proposal/silent-proposal-f2bfceddb1898dca.original.md",
+      "bytes": 4444,
+      "sha256": "fc9f3dfdb7df5f99a57ff6c1a7e7f08f9e5e6514dde8cd1013e04995d912eb26"
+    },
+    {
+      "path": ".worktrees/codex-strategy-silent-20261022-034316/learner/runs/20261022-034320-41ae55af-1ec9-4751-8d7f-69d6db6391af-strategy-proposal/sl-window-index.json",
+      "bytes": 12264,
+      "sha256": "8d31d0b67ca9573c7203acf2ec25a03500b3643287ccaf8f494d4bba240d4b3d"
+    },
+    {
+      "path": ".worktrees/codex-strategy-silent-20261022-034316/learner/runs/20261022-034320-41ae55af-1ec9-4751-8d7f-69d6db6391af-strategy-proposal/source-verification.json",
+      "bytes": 3624,
+      "sha256": "8a7a87682d51b120d4dbd0bdfa241c93d45eacad8ed9eceeded1a029920c129a"
+    },
+    {
+      "path": ".worktrees/codex-strategy-silent-20261022-034316/learner/runs/20261022-034320-41ae55af-1ec9-4751-8d7f-69d6db6391af-strategy-proposal/state-audit.log",
+      "bytes": 64446,
+      "sha256": "ec769343044991489a09d343d57702f497dfd367f8487890e22af2eece9cadb6"
+    },
+    {
+      "path": ".worktrees/codex-strategy-silent-20261022-034316/learner/runs/20261022-034320-41ae55af-1ec9-4751-8d7f-69d6db6391af-strategy-proposal/state-facts.json",
+      "bytes": 813863,
+      "sha256": "90cffaa383ac96120cd76bce0f93fc2becf5f391ddac12af4d916f62278188b8"
+    },
+    {
+      "path": ".worktrees/codex-strategy-silent-20261022-034316/learner/runs/20261022-034320-41ae55af-1ec9-4751-8d7f-69d6db6391af-strategy-proposal/state-window-index.json",
+      "bytes": 203303,
+      "sha256": "c0b76440b7c8c548aade0e30397d16d8fb1f25edfd91d0a459549e5d8e796409"
+    },
+    {
+      "path": ".worktrees/codex-strategy-silent-20261022-034316/learner/runs/20261022-034320-41ae55af-1ec9-4751-8d7f-69d6db6391af-strategy-proposal/state-windows.json",
+      "bytes": 3486,
+      "sha256": "350094d76f54f44f6690f38fbf0f86899e1b234405ccebfd8bbc716f13b1163d"
+    },
+    {
+      "path": ".worktrees/codex-strategy-silent-20261022-034316/learner/runs/20261022-034320-41ae55af-1ec9-4751-8d7f-69d6db6391af-strategy-proposal/v6-evidence/decisions.evidence.jsonl",
+      "bytes": 12817424,
+      "sha256": "19fe31697a353ff333199928757a3fbad695e74a2aabbe11ec6d487719599f24"
+    },
+    {
+      "path": ".worktrees/codex-strategy-silent-20261022-034316/learner/runs/20261022-034320-41ae55af-1ec9-4751-8d7f-69d6db6391af-strategy-proposal/v6-evidence/evidence-manifest.json",
+      "bytes": 9419,
+      "sha256": "1bc264799b85b258845a927f2b1c994abed9b72efd973879f270d16d8e7638b0"
+    },
+    {
+      "path": ".worktrees/codex-strategy-silent-20261022-034316/learner/runs/20261022-034320-41ae55af-1ec9-4751-8d7f-69d6db6391af-strategy-proposal/v6-evidence/jev-prompts.evidence.jsonl",
+      "bytes": 7841462,
+      "sha256": "6f038709c721654b0d490ced59da07c082376699c89bfacd1b63f315d35f24a5"
+    },
+    {
+      "path": ".worktrees/codex-strategy-silent-20261022-034316/learner/runs/20261022-034320-41ae55af-1ec9-4751-8d7f-69d6db6391af-strategy-proposal/v6-evidence/run-config.evidence.jsonl",
+      "bytes": 31799,
+      "sha256": "94114f9b6daf6fa9d26404192eeb965c2942cae4e8f9f1470967e943d65cde46"
+    },
+    {
+      "path": ".worktrees/codex-strategy-silent-20261022-034316/learner/runs/20261022-034320-41ae55af-1ec9-4751-8d7f-69d6db6391af-strategy-proposal/v6-evidence/v6-build.evidence.jsonl",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": ".worktrees/codex-strategy-silent-20261022-034316/learner/runs/20261022-034320-41ae55af-1ec9-4751-8d7f-69d6db6391af-strategy-proposal/write_report.py",
+      "bytes": 17797,
+      "sha256": "0aa697fe8eb70a9b25e160512902699819acf3fccf16da9f2e359b64038e6e7c"
+    }
+  ],
+  "original_proposals_verified": 10,
+  "raw_ref_files": [
+    {
+      "path": ".worktrees/codex-strategy-silent-20261022-034316/learner/runs/20261022-034320-41ae55af-1ec9-4751-8d7f-69d6db6391af-strategy-proposal/decision-window-index.json",
+      "bytes": 38470,
+      "sha256": "2fbfc0dac8d64b786ccdd7d032725a2a8667429acac5ae0dc161ad83e906d0df"
+    },
+    {
+      "path": ".worktrees/codex-strategy-silent-20261022-034316/learner/runs/20261022-034320-41ae55af-1ec9-4751-8d7f-69d6db6391af-strategy-proposal/state-window-index.json",
+      "bytes": 203303,
+      "sha256": "c0b76440b7c8c548aade0e30397d16d8fb1f25edfd91d0a459549e5d8e796409"
+    },
+    {
+      "path": ".worktrees/codex-strategy-silent-20261022-034316/learner/runs/20261022-034320-41ae55af-1ec9-4751-8d7f-69d6db6391af-strategy-proposal/sl-window-index.json",
+      "bytes": 12264,
+      "sha256": "8d31d0b67ca9573c7203acf2ec25a03500b3643287ccaf8f494d4bba240d4b3d"
+    },
+    {
+      "path": ".worktrees/codex-strategy-silent-20261022-034316/learner/runs/20261022-034320-41ae55af-1ec9-4751-8d7f-69d6db6391af-strategy-proposal/runs-identity.json",
+      "bytes": 5083,
+      "sha256": "a0b7b7d3a19b5d4cca5257d64ad0df90db3b3d1ebd195b0510eba80662e3fb8e"
+    },
+    {
+      "path": ".worktrees/codex-strategy-silent-20261022-034316/learner/runs/20261022-034320-41ae55af-1ec9-4751-8d7f-69d6db6391af-strategy-proposal/raw-windows/jev-269068.json",
+      "bytes": 13407,
+      "sha256": "7000a27884c87dcba06d4fcecf1b87ac66ed1786f6eb11f823fd499569987fb3"
+    },
+    {
+      "path": ".worktrees/codex-strategy-silent-20261022-034316/learner/runs/20261022-034320-41ae55af-1ec9-4751-8d7f-69d6db6391af-strategy-proposal/raw-windows/decision-269068.json",
+      "bytes": 5757,
+      "sha256": "43674f9b4424e6db0663a89c6104f2a168bc49961060f5aa2917d78ed758483e"
+    },
+    {
+      "path": ".worktrees/codex-strategy-silent-20261022-034316/learner/runs/20261022-034320-41ae55af-1ec9-4751-8d7f-69d6db6391af-strategy-proposal/raw-windows/decision-270216.json",
+      "bytes": 9787,
+      "sha256": "0082da04fe05a5d3b8bfbb3e590dc2288fe41c8e6f70e4be643b95aa082d582e"
+    },
+    {
+      "path": ".worktrees/codex-strategy-silent-20261022-034316/learner/runs/20261022-034320-41ae55af-1ec9-4751-8d7f-69d6db6391af-strategy-proposal/raw-windows/decision-270264.json",
+      "bytes": 13471,
+      "sha256": "0513fd38df201008cb4e67a6b85dce3fe53563885a49c1720a44f517751f92be"
+    },
+    {
+      "path": ".worktrees/codex-strategy-silent-20261022-034316/learner/runs/20261022-034320-41ae55af-1ec9-4751-8d7f-69d6db6391af-strategy-proposal/raw-windows/decision-268455.json",
+      "bytes": 15134,
+      "sha256": "923863cea64a0ee51b98521063af1fa88ab21cf5d04fc7000067996a29c001e9"
+    },
+    {
+      "path": ".worktrees/codex-strategy-silent-20261022-034316/learner/runs/20261022-034320-41ae55af-1ec9-4751-8d7f-69d6db6391af-strategy-proposal/raw-windows/jev-267612.json",
+      "bytes": 11501,
+      "sha256": "b9ff2be68c133443e5547b941dcdf8e9a9a3448a56dcdda63bd58210b0455ae2"
+    },
+    {
+      "path": ".worktrees/codex-strategy-silent-20261022-034316/learner/runs/20261022-034320-41ae55af-1ec9-4751-8d7f-69d6db6391af-strategy-proposal/raw-windows/decision-269770.json",
+      "bytes": 12015,
+      "sha256": "baedc62762afc25738c4246e55e6f44f22dda7a17e3649d794784bcde3dc26d2"
+    },
+    {
+      "path": ".worktrees/codex-strategy-silent-20261022-034316/learner/runs/20261022-034320-41ae55af-1ec9-4751-8d7f-69d6db6391af-strategy-proposal/raw-windows/decision-267696.json",
+      "bytes": 15293,
+      "sha256": "71de3eb698805fe62603f6152de4891217957eb0540847271c75fb0ba08b8c08"
+    },
+    {
+      "path": ".worktrees/codex-strategy-silent-20261022-034316/learner/runs/20261022-034320-41ae55af-1ec9-4751-8d7f-69d6db6391af-strategy-proposal/raw-windows/jev-267696.json",
+      "bytes": 19778,
+      "sha256": "25a6205522e0453bd5e1c93c4b18f3da5ca2ad6226433a00ab0014906587f823"
+    },
+    {
+      "path": ".worktrees/codex-strategy-silent-20261022-034316/learner/runs/20261022-034320-41ae55af-1ec9-4751-8d7f-69d6db6391af-strategy-proposal/raw-windows/decision-269754.json",
+      "bytes": 10307,
+      "sha256": "cc4ffbe6dfa57a182fc9134ceef2a15c3dc898a357e0ea354e965787cf392193"
+    },
+    {
+      "path": ".worktrees/codex-strategy-silent-20261022-034316/learner/runs/20261022-034320-41ae55af-1ec9-4751-8d7f-69d6db6391af-strategy-proposal/raw-windows/jev-269706.json",
+      "bytes": 25726,
+      "sha256": "1f362c8fa55bfc679529011601e5a315a1c92b63998782692cd72e2a9c593421"
+    },
+    {
+      "path": ".worktrees/codex-strategy-silent-20261022-034316/learner/runs/20261022-034320-41ae55af-1ec9-4751-8d7f-69d6db6391af-strategy-proposal/raw-windows/decision-267612.json",
+      "bytes": 7874,
+      "sha256": "3fe4f337250c4c9166b60bb42e076f42226bef87a06db3aeb2e0e7c26f1ca9cd"
+    },
+    {
+      "path": ".worktrees/codex-strategy-silent-20261022-034316/learner/runs/20261022-034320-41ae55af-1ec9-4751-8d7f-69d6db6391af-strategy-proposal/raw-windows/jev-270216.json",
+      "bytes": 13269,
+      "sha256": "d912a7b169c133b1816513190ca11bc4c110db2efc88e10f99aec2c76ab3ae17"
+    },
+    {
+      "path": ".worktrees/codex-strategy-silent-20261022-034316/learner/runs/20261022-034320-41ae55af-1ec9-4751-8d7f-69d6db6391af-strategy-proposal/raw-windows/decision-269706.json",
+      "bytes": 21597,
+      "sha256": "9838ff71466dc84384d713dc1796a442ce83cd5c3d5e138bcfd18960bc838f85"
+    },
+    {
+      "path": ".worktrees/codex-strategy-silent-20261022-034316/learner/runs/20261022-034320-41ae55af-1ec9-4751-8d7f-69d6db6391af-strategy-proposal/raw-windows/decision-267379.json",
+      "bytes": 5539,
+      "sha256": "554b9f7bd6ac2762c7bf7b6aea835d9542ad9b317f2dfac39266c30d17202534"
+    },
+    {
+      "path": ".worktrees/codex-strategy-silent-20261022-034316/learner/runs/20261022-034320-41ae55af-1ec9-4751-8d7f-69d6db6391af-strategy-proposal/raw-windows/jev-270264.json",
+      "bytes": 18888,
+      "sha256": "ffb5ec7923c0cc153bfc271290bdfa9387138dccb5810974087bad8e1ded1902"
+    },
+    {
+      "path": ".worktrees/codex-strategy-silent-20261022-034316/learner/runs/20261022-034320-41ae55af-1ec9-4751-8d7f-69d6db6391af-strategy-proposal/raw-windows/decision-270282.json",
+      "bytes": 12686,
+      "sha256": "721f1ef7b80a307741e97b8cf9ab47d6ef03330053a3d1e9051127cc2108f5df"
+    },
+    {
+      "path": ".worktrees/codex-strategy-silent-20261022-034316/learner/runs/20261022-034320-41ae55af-1ec9-4751-8d7f-69d6db6391af-strategy-proposal/raw-windows/jev-268455.json",
+      "bytes": 22461,
+      "sha256": "909c3a15e3c2fddfcbc5e261ac2c004c5d9cb577cb8b4f9d596dec1076fd8c71"
+    },
+    {
+      "path": ".worktrees/codex-strategy-silent-20261022-034316/learner/runs/20261022-034320-41ae55af-1ec9-4751-8d7f-69d6db6391af-strategy-proposal/raw-windows/jev-269754.json",
+      "bytes": 14559,
+      "sha256": "a68e165725cedadb2dd49ecd2ba4327e1041ef59dc2208221753a91db411531b"
+    },
+    {
+      "path": ".worktrees/codex-strategy-silent-20261022-034316/learner/runs/20261022-034320-41ae55af-1ec9-4751-8d7f-69d6db6391af-strategy-proposal/raw-windows/jev-270282.json",
+      "bytes": 18141,
+      "sha256": "94d36ae26dca8adb8f3fcaeb5f9765fdc2e7289dc80175d514df26908ae96c09"
+    },
+    {
+      "path": ".worktrees/codex-strategy-silent-20261022-034316/learner/runs/20261022-034320-41ae55af-1ec9-4751-8d7f-69d6db6391af-strategy-proposal/raw-windows/jev-269770.json",
+      "bytes": 16559,
+      "sha256": "b38bfc557589cea24a7a8ee586d8b75b772169879728588dfa18640541bd6d38"
+    },
+    {
+      "path": ".worktrees/codex-strategy-silent-20261022-034316/learner/runs/20261022-034320-41ae55af-1ec9-4751-8d7f-69d6db6391af-strategy-proposal/raw-windows/jev-267379.json",
+      "bytes": 8869,
+      "sha256": "df5c7ab4a5610d09edf0efd76dc8cb7ebc4827a07c94458533211be8dd1b2014"
+    },
+    {
+      "path": ".worktrees/codex-strategy-silent-20261022-034316/learner/runs/20261022-034320-41ae55af-1ec9-4751-8d7f-69d6db6391af-strategy-proposal/raw-windows/decision-269707.json",
+      "bytes": 9310,
+      "sha256": "7647c72c7057fb5c4a4c467769fa817f2befb07a9fc583f7f925b612ac8b855a"
+    },
+    {
+      "path": ".worktrees/codex-strategy-silent-20261022-034316/learner/runs/20261022-034320-41ae55af-1ec9-4751-8d7f-69d6db6391af-strategy-proposal/raw-windows/jev-269707.json",
+      "bytes": 13409,
+      "sha256": "452f8156db235d64762ef92c619eac5ed5350e5b61d67463261658dca6b513a5"
+    },
+    {
+      "path": ".worktrees/codex-strategy-silent-20261022-034316/learner/runs/20261022-034320-41ae55af-1ec9-4751-8d7f-69d6db6391af-strategy-proposal/raw-windows/jev-269748.json",
+      "bytes": 22106,
+      "sha256": "3f0b05a04d3eabc7476a0f94abec7c604cbc4999ab1cda0da7d9df11b853e0bd"
+    },
+    {
+      "path": ".worktrees/codex-strategy-silent-20261022-034316/learner/runs/20261022-034320-41ae55af-1ec9-4751-8d7f-69d6db6391af-strategy-proposal/raw-windows/decision-269748.json",
+      "bytes": 18087,
+      "sha256": "1afeb12e4372c954f4767aaa09b48f86f4707dd7bb8a69bda4a8f5abaf7ad1ed"
+    },
+    {
+      "path": ".worktrees/codex-strategy-silent-20261022-034316/learner/runs/20261022-034320-41ae55af-1ec9-4751-8d7f-69d6db6391af-strategy-proposal/raw-windows/run-config.jsonl",
+      "bytes": 27585,
+      "sha256": "a74b652e49832dbd261011b3619bf11407f6a32333d60ce99d60b6e1c5198a93"
+    },
+    {
+      "path": ".worktrees/codex-strategy-silent-20261022-034316/learner/runs/20261022-034320-41ae55af-1ec9-4751-8d7f-69d6db6391af-strategy-proposal/raw-windows/states.jsonl",
+      "bytes": 17336780,
+      "sha256": "e171e5f0568c448e82a6950c97dfa3f62c0e2643728f720ec8a53cb48b8c43d9"
+    },
+    {
+      "path": ".worktrees/codex-strategy-silent-20261022-034316/learner/runs/20261022-034320-41ae55af-1ec9-4751-8d7f-69d6db6391af-strategy-proposal/raw-windows/sl-attempts.jsonl",
+      "bytes": 461166,
+      "sha256": "78f20d35cc32cfb774241edc57e152dd9ca10a89fc42de6e622a63760d65236f"
+    },
+    {
+      "path": ".worktrees/codex-strategy-silent-20261022-034316/learner/runs/20261022-034320-41ae55af-1ec9-4751-8d7f-69d6db6391af-strategy-proposal/raw-windows/decisions.jsonl",
+      "bytes": 292210,
+      "sha256": "bf804f0a5eec9a8986c69f91c26ca82b1f2a3207ce3d34c1e2b1a2db6665d1af"
+    }
+  ],
+  "unique_raw_slices_verified": 558,
+  "review_counts": {
+    "not_read": 566,
+    "full_raw_question": 8,
+    "partial_raw_fields": 5
+  },
+  "indexed_questions": 579,
+  "waiting_proposals": 10,
+  "live_source_audit": [
+    {
+      "path": "agent/src/reflex/silent-apotheosis.ts",
+      "source_commit": "a46239a29c3109ff9f69224ad77128d9929d3e9a",
+      "live_ancestor": true
+    },
+    {
+      "path": "agent/src/reflex/silent-apotheosis-reference.ts",
+      "source_commit": "30ec2425012eea75f41226b31d8180b1abb837bc",
+      "live_ancestor": true
+    },
+    {
+      "path": "agent/src/reflex/card-model.ts",
+      "source_commit": "d2fbd4106e49bfa676b0d217a341d69d3b5de3d4",
+      "live_ancestor": false
+    },
+    {
+      "path": "agent/src/reflex/turn-solver.ts",
+      "source_commit": "d2fbd4106e49bfa676b0d217a341d69d3b5de3d4",
+      "live_ancestor": false
+    },
+    {
+      "path": "agent/src/reflex/rollout.ts",
+      "source_commit": "b1773b2ae711b7d178bd09b5d473fc8de46b0889",
+      "live_ancestor": false
+    },
+    {
+      "path": "agent/src/reflex/silent-selection-audit.ts",
+      "source_commit": "9d8278702dbc581b5015ba7ec9a70dc0fb94cccb",
+      "live_ancestor": true
+    },
+    {
+      "path": "agent/src/reflex/silent-selection-dispatch.ts",
+      "source_commit": "fdaf787a372880b0438e73bcac7e6d2168b038ed",
+      "live_ancestor": true
+    },
+    {
+      "path": "learner/lib/selection-execution.ts",
+      "source_commit": "a32050fbce4c2863f640468c2dbf378fc9157074",
+      "live_ancestor": true
+    },
+    {
+      "path": "agent/src/sl/explore.ts",
+      "source_commit": "b01edf46b4b619f217d070a196e161df9fe716a0",
+      "live_ancestor": true
+    }
+  ],
+  "source_tests_or_merge": false,
+  "new_pure_bug": false,
+  "owner_pending_host_seal_preserved": true,
+  "current_storage_finalization": {
+    "path": ".worktrees/codex-strategy-silent-20261022-034316/learner/runs/20261022-034320-41ae55af-1ec9-4751-8d7f-69d6db6391af-strategy-proposal/storage-finalization.json",
+    "bytes": 8447,
+    "sha256": "d90497e83be6b7154229f5aadb9312894f9afa7c94f4e4eca13e12fc5a53b392"
+  },
+  "current_storage_status": "sealed",
+  "science_parents_closed": false,
+  "new_dataset_full_model_refresh_or_game_action": false
+}

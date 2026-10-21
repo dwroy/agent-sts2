@@ -5705,3 +5705,5 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
 - 2026-10-22T04:03:45+08:00 [watcher] #20补交466e54561局部技术核验并入main 1220b9436：独立tsc/完整647文件/6090通过/2跳过、53项生命周期及shell通过，2037份所列输入SHA一致；默认off/原stall/环境优先/损坏保留。新增自动接续需求待开发，#20保持in-progress，宿主owner授权与首tick待原角色；原锁binding备份恢复校验SHA/权限一致。Roy取消并关闭#31，停止R411组合准入，未冻结/未跑组合全检/未上线，原材料保留（issuecomment-6325196850）。报告paper/materials/20261022-issues31-20-integrator-review/report.md；未改live/生产开关/STOP，保留并行记录。
 
 - 2026-10-22T04:07:04+08:00 [ops] #20补交466e54561主根核同且--show-enabled=off；旧持久控制缺口解决，宿主owner登记及新增自动接续开发/首tick等验收仍pending，不启用不关单。来源https://github.com/dwroy/agent-sts2/issues/20#issuecomment-6325362410；新范围https://github.com/dwroy/agent-sts2/issues/20#issuecomment-6324894427。回执paper/materials/20261022-issue20-control-ops/receipt.json。
+
+- 2026-10-22T04:11:17+08:00 [ops] 核034316主策略唯一dataset后#20 main三源码路径变化的原attention，89产物/十原文/558原段核同、十waiting；保报告/失败/科学父，仅本轮记录，不重dataset/full/模型/合入。原件paper/materials/20261022-0409-ops/receipt.json。
