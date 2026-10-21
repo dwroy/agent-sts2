@@ -1,7 +1,7 @@
 {
   "performance_policy": "codex-successful-brain-v1",
   "include_non_codex": false,
-  "previous_snapshot": "/home/dw/Projects/agent-sts2/paper/data/history/20261021T170224126145Z",
+  "previous_snapshot": "/home/dw/Projects/agent-sts2/paper/data/history/20261021T172832105860Z",
   "performance": {
     "runs": 383,
     "finished": 382,
@@ -2806,16 +2806,16 @@
       "run_ids": []
     }
   },
-  "generated_at": "2026-10-21T17:02:23.829Z",
+  "generated_at": "2026-10-21T17:28:31.818Z",
   "source_cut_bytes": {
-    "decisions.jsonl": 3474833526,
+    "decisions.jsonl": 3486606526,
     "deepseek-reasoning.jsonl": 377746518,
     "runs.jsonl": 411255,
-    "states.jsonl": 15426995563,
+    "states.jsonl": 15445741337,
     "fight-plans.jsonl": 2233957,
-    "run-plans.jsonl": 10463196,
-    "brain.jsonl": 1254108862,
-    "sl-attempts.jsonl": 53364079,
+    "run-plans.jsonl": 10473000,
+    "brain.jsonl": 1256729227,
+    "sl-attempts.jsonl": 53396756,
     "run-config.jsonl": 2499819
   },
   "runs_total": 908,
@@ -3137,7 +3137,7 @@
     "29": 5,
     "30": 15,
     "31": 25,
-    "33": 192,
+    "33": 191,
     "35": 4,
     "37": 8,
     "38": 8,
@@ -3148,7 +3148,7 @@
     "44": 4,
     "45": 18,
     "46": 6,
-    "48": 156,
+    "48": 157,
     "49": 40
   },
   "floor_max_distribution": {
@@ -12212,10 +12212,10 @@
   },
   "api": {
     "jev": {
-      "calls": 121329,
-      "in_tokens": 2919758129,
-      "out_tokens": 46743103,
-      "cost_usd": 124.5931,
+      "calls": 121432,
+      "in_tokens": 2921559206,
+      "out_tokens": 46763123,
+      "cost_usd": 124.6696,
       "price_per_m_tokens_usd": 0.042
     },
     "deepseek": {
@@ -12241,19 +12241,19 @@
       "note": "answered by the interactive Claude Code session via file escalation; no per-call token accounting"
     }
   },
-  "api_cost_total_usd": 139.8589,
+  "api_cost_total_usd": 139.9354,
   "decisions": {
-    "play_total": 467090,
-    "attributed_to_runs": 463632,
+    "play_total": 467488,
+    "attributed_to_runs": 464030,
     "unattributed_menu_timeline": 3458,
     "shadow": 20,
     "by_layer": {
-      "code": 234545,
-      "jev": 96294,
+      "code": 234714,
+      "jev": 96381,
       "deepseek": 12400,
       "claude": 186,
-      "code-fallback": 2050,
-      "jev-plan": 98488,
+      "code-fallback": 2052,
+      "jev-plan": 98605,
       "deepseek-plan": 847,
       "claude-plan": 73
     },
@@ -12275,12 +12275,12 @@
       "deepseek-flash": 13468
     }
   },
-  "states_lines_scanned": 483809,
+  "states_lines_scanned": 484218,
   "console_logs": 1378,
   "commits": {
-    "total": 7984,
+    "total": 7985,
     "ref_snapshot": {
-      "HEAD": "cbabe2b07c838634cbf55887a9a3b58bf024e3ba",
+      "HEAD": "0b6e975dc9488ecd12b3241a046246b1f8525922",
       "refs/heads/ascension-audit-regent-a1-1": "4ab5e9f4b13eaa5b96c969ceebe79e2562222ce0",
       "refs/heads/ascension-audit-regent-a1-2": "4ab5e9f4b13eaa5b96c969ceebe79e2562222ce0",
       "refs/heads/ascension-audit-regent-a1-3": "aece9cb8e946404a9bd26552dce4fbbda5b4232a",
@@ -13475,6 +13475,8 @@
       "refs/heads/codex-strategy-silent-20261022-001301-s2": "8e2056ccb26d2f0ce1201f1b0c5e4fcd85665771",
       "refs/heads/codex-strategy-silent-20261022-004316": "6dbdc02135fc68035cf436042d781af78e64bbd1",
       "refs/heads/codex-strategy-silent-20261022-004316-s2": "6dbdc02135fc68035cf436042d781af78e64bbd1",
+      "refs/heads/codex-strategy-silent-20261022-010924": "cbabe2b07c838634cbf55887a9a3b58bf024e3ba",
+      "refs/heads/codex-strategy-silent-20261022-010924-s2": "cbabe2b07c838634cbf55887a9a3b58bf024e3ba",
       "refs/heads/codex-v5s-p1p2-shadow-20261016": "70c61acfb118ab284bb950b32495177458a76b2d",
       "refs/heads/core-decklists-entry-20261012": "d1bcd028d05f022f51c0d3b71cbff62a1d3f51ad",
       "refs/heads/dev-regent-main-sync-20261014": "a5467387402ef61c26d37720c56e72e6e5dbbcfe",
@@ -13554,7 +13556,7 @@
       "refs/heads/lifecycle-cleanup-20261013": "309b3bbc97bd55d08affee4cf8184d9a6794f41e",
       "refs/heads/live": "0cd3629d3a7f3a3bcacd22fa0a4206acc4d81e78",
       "refs/heads/llm-switch-scope-20261017": "e4a07e30f86c6bb639fb4e43cc808e9d599220f3",
-      "refs/heads/main": "cbabe2b07c838634cbf55887a9a3b58bf024e3ba",
+      "refs/heads/main": "0b6e975dc9488ecd12b3241a046246b1f8525922",
       "refs/heads/model-sol61-20261012": "c06d1019b8dee0110c3627a012bdb865bd7e7a80",
       "refs/heads/multi-instance-climb-20261013": "84300293795474c4ea3b13e210d2a1222854d115",
       "refs/heads/ops-0010-experience111": "7954390da3772efc72b159173f6be81f7c89e5cd",
@@ -15268,6 +15270,7 @@
       "all-tip:9e9f34566838a5b1482c962f26e1080e0269b701": "9e9f34566838a5b1482c962f26e1080e0269b701",
       "all-tip:8e2056ccb26d2f0ce1201f1b0c5e4fcd85665771": "8e2056ccb26d2f0ce1201f1b0c5e4fcd85665771",
       "all-tip:6dbdc02135fc68035cf436042d781af78e64bbd1": "6dbdc02135fc68035cf436042d781af78e64bbd1",
+      "all-tip:cbabe2b07c838634cbf55887a9a3b58bf024e3ba": "cbabe2b07c838634cbf55887a9a3b58bf024e3ba",
       "all-tip:70c61acfb118ab284bb950b32495177458a76b2d": "70c61acfb118ab284bb950b32495177458a76b2d",
       "all-tip:d1bcd028d05f022f51c0d3b71cbff62a1d3f51ad": "d1bcd028d05f022f51c0d3b71cbff62a1d3f51ad",
       "all-tip:a5467387402ef61c26d37720c56e72e6e5dbbcfe": "a5467387402ef61c26d37720c56e72e6e5dbbcfe",
@@ -15343,7 +15346,7 @@
       "all-tip:bb25df38fe110eb70268c00aa5414da69aa9afe2": "bb25df38fe110eb70268c00aa5414da69aa9afe2",
       "all-tip:309b3bbc97bd55d08affee4cf8184d9a6794f41e": "309b3bbc97bd55d08affee4cf8184d9a6794f41e",
       "all-tip:e4a07e30f86c6bb639fb4e43cc808e9d599220f3": "e4a07e30f86c6bb639fb4e43cc808e9d599220f3",
-      "all-tip:cbabe2b07c838634cbf55887a9a3b58bf024e3ba": "cbabe2b07c838634cbf55887a9a3b58bf024e3ba",
+      "all-tip:0b6e975dc9488ecd12b3241a046246b1f8525922": "0b6e975dc9488ecd12b3241a046246b1f8525922",
       "all-tip:c06d1019b8dee0110c3627a012bdb865bd7e7a80": "c06d1019b8dee0110c3627a012bdb865bd7e7a80",
       "all-tip:84300293795474c4ea3b13e210d2a1222854d115": "84300293795474c4ea3b13e210d2a1222854d115",
       "all-tip:7954390da3772efc72b159173f6be81f7c89e5cd": "7954390da3772efc72b159173f6be81f7c89e5cd",
@@ -15704,10 +15707,10 @@
       "all-tip:f1f2c083ca84a9b884c0cdbf6363c47248abd0ee": "f1f2c083ca84a9b884c0cdbf6363c47248abd0ee"
     },
     "upstream": 19,
-    "experiment": 7965
+    "experiment": 7966
   },
   "postmortems": {
-    "runs_with_heading": 877,
+    "runs_with_heading": 882,
     "preloop_listed": 13
   },
   "source_checks_passed": true
