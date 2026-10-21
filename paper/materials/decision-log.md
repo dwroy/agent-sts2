@@ -5603,3 +5603,4 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
 - 2026-10-21T14:47:12+08:00 ops：1445八notice按原文/SHA/真实转达原件去重，现行研究task仍不受CLI支持，后两角色登记pending；保旧拒绝/false/科学scope，不重认证/代ACK/通知/评论或派模型检查，无live/现局变化。paper/materials/20261021-1445-ops/receipt.json。
 
 - 2026-10-21T14:56:12+08:00 ops：strategy144302-s2原capacity报错/turn.failed退出1已核原事件；WT净/无正式report，十原文SHA齐全及四部分封存保全，不当提案缺失或完成。原线程、十waiting及冷却retry_at不改，不换模型/权限/重派/回收/检查或改live；paper/materials/20261021-1452-ops/receipt.json。
+- 2026-10-21 15:07:55 CST [Claude] Roy 定方向调整：回到 V5 分工——Jev（加代码模拟）出牌，其余含战后拿牌全由大脑；开卷（本地 v0.111 知识库，大脑查不认识的牌/数值，联网补缺在局外写回）；大脑经验以文字策略库为主（情境→策略，带证据/来源/可信度，按需检索），Jev 出牌小脑经验须回放证明有效再上线。与此不一致的在途任务停止（Jev 拿牌、v6-reflex-distill card_pick 等）。另要求测试 DeepSeek 与 GPT-6.1 Sol 作对局大脑的速度。计划写入 docs/v6-plan.md 第 13 节，issue #25–#29，#16 改为策略库基础设施。
