@@ -5671,3 +5671,4 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
 - 2026-10-21T20:24:04+08:00 [ops] 194301/0CLP唯一dataset0及实际记录a042f8a093核同，12生成/701归档blob与复盘/指定ledger/lessons完成，原pending文本保留并以终局补记；无新纯bug，不重生成器/检查发布或改科学父。paper/materials/20261021-2022-ops/receipt.json。
 - 2026-10-21T20:24:06+08:00 [Claude] Roy：主管会话改到 xdwin 上 agent-sts2 目录的 Desktop SSH 会话（项目规则、记忆与 herdr 都在本地）；交接见 handoff/claude-lead-20261021.md，xdmac 桌面会话不再派活。
 - 2026-10-21T20:27:27+08:00 [Claude] Roy：#25、#26 上线时不做检查点指标的上线前后对比（一幕通过率、中位层数、进二/三幕牌组张数与升级数），按原验收流程走（ops 自然局边界发布 → 首局读回 → 主管验收关闭）。
+- 2026-10-21T20:32:35+08:00 [watcher] #25+#16+#15+#8 精确48叶组合725a2480a5+最新213知识JSON冻结树229355abe2准入；nice19/fork单worker tsc0、完整636文件6005过2跳、25Python过，2370输入SHA不变；原31叶中止原件保留，可选50叶未准入。维持waiting-release交ops原自然边界/绑定备份恢复校验/核号双通知/首局读回；按Roy转达6315888677不加前后检查点对比。paper/materials/20261021-issue25-live-admission-review/。
