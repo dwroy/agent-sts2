@@ -7,7 +7,7 @@ import * as knowledgeLoader from "../src/v6/knowledge.js";
 import { loadCombatEntries, combatEntryAudit } from "../src/reflex/jev/combat-entries.js";
 import { projectCombatDecision } from "../src/reflex/jev/combat-entry-projection.js";
 import { askJevLogged, type JevPromptRecord } from "../src/eye/jev-prompt-log.js";
-import { JevError } from "../src/reflex/jev/client.js";
+import { JevError, prepareJevOpenBook } from "../src/reflex/jev/client.js";
 import type { QuestionSet } from "../src/reflex/jev/questions.js";
 import { annotatedFrozen, fixedBoss, fixedPlan, fixedRollout, fixedState, installFixture } from "./v6-combat-fixtures.js";
 import baselines from "./v6-combat-off-baseline.json";
@@ -34,7 +34,11 @@ for (const character of Object.keys(baselines)) it.each([undefined, "off", "true
     return { model: this.model, answers: {}, inputTokens: 0, outputTokens: 0, latencyMs: 0, requestId: null };
   } };
   await askJevLogged(client, null, meta, fixture.state, fixture.questions);
-  expect(hash(calls[0])).toBe((baselines as Record<string, string>)[character]);
+  // #25 adds references independently of W8; all pre-existing wire fields retain their frozen hash.
+  const wire = calls[0] as { state: Record<string, unknown>; questions: QuestionSet };
+  const { open_book, ...originalState } = wire.state;
+  expect(hash({ state: originalState, questions: wire.questions })).toBe((baselines as Record<string, string>)[character]);
+  expect(open_book).toEqual((prepareJevOpenBook(fixture.state, fixture.questions, true) as Record<string, unknown>).open_book);
 });
 
 it("requires explicit on and both valid role-local files; missing knowledge preserves the old wire without fallback", () => {
@@ -146,7 +150,7 @@ it("sends the W8 projection and keeps joined evidence through a single bounded c
   } };
   await askJevLogged(client, { path: "fixed", write: r => rows.push(r) }, meta, fixture.state, fixture.questions);
   expect(calls).toHaveLength(2); expect(rows).toHaveLength(2);
-  expect(rows[0]!.decision_evidence).toEqual(fixture);
+  expect(rows[0]!.decision_evidence).toEqual({ state: prepareJevOpenBook(fixture.state, fixture.questions, true), questions: fixture.questions });
   expect(rows[1]!.decision_evidence).toBeUndefined();
   expect(rows[1]!.decision_projection).toEqual(rows[0]!.decision_projection);
   expect(criterion(calls[0]!.questions).combat_memory).toHaveLength(2);

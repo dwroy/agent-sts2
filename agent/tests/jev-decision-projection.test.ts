@@ -4,7 +4,7 @@ import { expect, it } from "vitest";
 import { projectSilentCombatDecision } from "../src/reflex/jev/decision-projection.js";
 import { askJevLogged, type JevPromptRecord } from "../src/eye/jev-prompt-log.js";
 import type { QuestionSet } from "../src/reflex/jev/questions.js";
-import { JevError } from "../src/reflex/jev/client.js";
+import { JevError, prepareJevOpenBook } from "../src/reflex/jev/client.js";
 
 const rawFixture = JSON.parse(readFileSync(new URL("./jev-context-recovery-request.json", import.meta.url), "utf8")) as { state: Record<string, unknown>; questions: QuestionSet };
 const fixture = { state: rawFixture.state, questions: rawFixture.questions };
@@ -82,8 +82,9 @@ it("the actual Jev call receives the replacement while the joined prompt log kee
   expect(JSON.parse(q.criteria.plan1!)).toHaveProperty("boss_evaluation");
   expect(JSON.parse(q.criteria.plan1!)).not.toHaveProperty("boss_relative_margin");
   expect(rows[0]!.request).toEqual({ model: client.model, ...calls[0] });
-  expect(rows[0]!.decision_evidence).toEqual(fixture);
-  expect(rows[0]!.decision_projection?.sourceSha256).toBe(createHash("sha256").update(JSON.stringify(fixture)).digest("hex"));
+  const enriched = { state: prepareJevOpenBook(fixture.state, fixture.questions, true), questions: fixture.questions };
+  expect(rows[0]!.decision_evidence).toEqual(enriched);
+  expect(rows[0]!.decision_projection?.sourceSha256).toBe(createHash("sha256").update(JSON.stringify(enriched)).digest("hex"));
   expect(rows[0]!.input_tokens).toBe(4321);
 });
 
@@ -93,7 +94,8 @@ it("a projected rejection cannot retry the discarded full payload or bypass the 
   const client = { model: "same", async ask(_state: unknown, questions: QuestionSet): Promise<never> { calls.push(questions); throw error; } };
   await expect(askJevLogged(client, { path: "fixed", write: (row) => rows.push(row) }, meta, fixture.state, fixture.questions)).rejects.toThrow("max_tokens_exceeded");
   expect(calls.length).toBeLessThanOrEqual(2);
-  expect(rows[0]!.decision_evidence).toEqual(fixture);
+  const enriched = { state: prepareJevOpenBook(fixture.state, fixture.questions, true), questions: fixture.questions };
+  expect(rows[0]!.decision_evidence).toEqual(enriched);
   for (const row of rows) expect(row.decision_projection?.schema).toBe("silent-combat-decision-v1");
   for (const questions of calls) expect(JSON.stringify(questions)).not.toContain("modeled_after_actions");
 });

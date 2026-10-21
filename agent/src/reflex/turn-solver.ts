@@ -137,6 +137,8 @@ export function strippedStun(enemy: EnemySim, start: EnemySim | undefined): { po
 }
 
 export interface EnemySim {
+  /** Static catalogue metadata on initial boards; not a certified move model or a live HP override. */
+  externalReference?: import("../knowledge/open-book.js").ExternalReference;
   index: number;
   name: string;
   hp: number;

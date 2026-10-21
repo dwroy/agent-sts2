@@ -1,4 +1,5 @@
 import { PreparedSolverDone } from "./pace-solver-cache.js";
+import { externalReference } from "../knowledge/open-book.js";
 import { currentDecisionBudget } from "../core/decision-budget.js";
 import { completeAdaptiveLines } from "../sim/boss-lines.js";
 /**
@@ -886,7 +887,11 @@ export function enemySims(combat: Record<string, unknown>, asc?: number, charact
           if (damage === null) return [];
           return [{ damage, hits: Math.max(1, Math.round(numOrNull(intent["hits"]) ?? 1)) }];
         }),
-    }));
+    })).map((model, index) => {
+      const reference = externalReference("monsters", str(living[index]?.["enemy_id"]), character);
+      if (reference) Object.defineProperty(model, "externalReference", { value: reference, enumerable: false });
+      return model;
+    });
 }
 
 /**

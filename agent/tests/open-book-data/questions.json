@@ -1,0 +1,198 @@
+[
+  {
+    "kind": "拿牌",
+    "label": "reward/card",
+    "question": "选择一张牌。",
+    "options": {
+      "card0": "{\"card\": \"磨蚀\", \"type\": \"Power\", \"rarity\": \"Rare\", \"cost\": 3, \"text\": \"获得?(数值未知)点敏捷。\\n获得4点荆棘。\"}",
+      "skip": null
+    },
+    "payload": {
+      "run_brief": {
+        "character": "SILENT",
+        "act": 1,
+        "ascension": 10
+      },
+      "facts": {
+        "deck": [
+          {
+            "card_id": "STRIKE_SILENT",
+            "name": "打击",
+            "description": "造成6点伤害。",
+            "upgraded": false
+          },
+          {
+            "card_id": "DEFEND_SILENT",
+            "name": "防御",
+            "description": "获得5点格挡。",
+            "upgraded": false
+          }
+        ],
+        "relics": [
+          "蛇之戒 (RING_OF_THE_SNAKE)"
+        ]
+      }
+    },
+    "expected": [
+      "cards:ABRASIVE"
+    ]
+  },
+  {
+    "kind": "事件",
+    "label": "event/choice",
+    "question": "选择当前事件选项。",
+    "options": {
+      "o0": "敬而远之",
+      "o1": "投身其中"
+    },
+    "payload": {
+      "run_brief": {
+        "character": "SILENT",
+        "act": 1,
+        "ascension": 10
+      },
+      "facts": {
+        "deck": [
+          {
+            "card_id": "STRIKE_SILENT",
+            "name": "打击",
+            "description": "造成6点伤害。",
+            "upgraded": false
+          },
+          {
+            "card_id": "DEFEND_SILENT",
+            "name": "防御",
+            "description": "获得5点格挡。",
+            "upgraded": false
+          }
+        ],
+        "relics": [
+          "蛇之戒 (RING_OF_THE_SNAKE)"
+        ]
+      },
+      "event": {
+        "event_id": "ABYSSAL_BATHS",
+        "title": "深渊浴场"
+      }
+    },
+    "expected": [
+      "events:ABYSSAL_BATHS"
+    ]
+  },
+  {
+    "kind": "商店",
+    "label": "shop/plan",
+    "question": "选择商店购买计划。",
+    "options": {
+      "r0": "{\"relic_id\": \"AKABEKO\", \"name\": \"赤牛\", \"price\": 200}",
+      "c0": "{\"card_id\": \"ABRASIVE\", \"name\": \"磨蚀\", \"description\": \"获得1点敏捷。\\n获得4点荆棘。\", \"upgraded\": false}",
+      "leave": null
+    },
+    "payload": {
+      "run_brief": {
+        "character": "SILENT",
+        "act": 1,
+        "ascension": 10
+      },
+      "facts": {
+        "deck": [
+          {
+            "card_id": "STRIKE_SILENT",
+            "name": "打击",
+            "description": "造成6点伤害。",
+            "upgraded": false
+          },
+          {
+            "card_id": "DEFEND_SILENT",
+            "name": "防御",
+            "description": "获得5点格挡。",
+            "upgraded": false
+          }
+        ],
+        "relics": [
+          "蛇之戒 (RING_OF_THE_SNAKE)"
+        ]
+      }
+    },
+    "expected": [
+      "relics:AKABEKO",
+      "cards:ABRASIVE"
+    ]
+  },
+  {
+    "kind": "休息",
+    "label": "rest/plan",
+    "question": "选择休息或升级磨蚀。",
+    "options": {
+      "heal": "休息",
+      "smith": "{\"card_id\": \"ABRASIVE\", \"name\": \"磨蚀\", \"description\": \"获得1点敏捷。\\n获得6点荆棘。\", \"upgraded\": true}"
+    },
+    "payload": {
+      "run_brief": {
+        "character": "SILENT",
+        "act": 1,
+        "ascension": 10
+      },
+      "facts": {
+        "deck": [
+          {
+            "card_id": "STRIKE_SILENT",
+            "name": "打击",
+            "description": "造成6点伤害。",
+            "upgraded": false
+          },
+          {
+            "card_id": "DEFEND_SILENT",
+            "name": "防御",
+            "description": "获得5点格挡。",
+            "upgraded": false
+          }
+        ],
+        "relics": [
+          "蛇之戒 (RING_OF_THE_SNAKE)"
+        ]
+      }
+    },
+    "expected": [
+      "cards:ABRASIVE"
+    ]
+  },
+  {
+    "kind": "幕初",
+    "label": "act/plan",
+    "question": "制定本幕计划，Boss 是永世沙漏。",
+    "payload": {
+      "run_brief": {
+        "character": "SILENT",
+        "act": 1,
+        "ascension": 10
+      },
+      "facts": {
+        "deck": [
+          {
+            "card_id": "STRIKE_SILENT",
+            "name": "打击",
+            "description": "造成6点伤害。",
+            "upgraded": false
+          },
+          {
+            "card_id": "DEFEND_SILENT",
+            "name": "防御",
+            "description": "获得5点格挡。",
+            "upgraded": false
+          }
+        ],
+        "relics": [
+          "蛇之戒 (RING_OF_THE_SNAKE)"
+        ]
+      },
+      "act_boss": {
+        "monster_id": "AEONGLASS",
+        "name": "永世沙漏"
+      }
+    },
+    "expected": [
+      "monsters:AEONGLASS"
+    ]
+  }
+]

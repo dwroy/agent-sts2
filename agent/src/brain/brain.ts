@@ -38,6 +38,8 @@ import { routeAnswerText } from "../sim/route-map.js";
 import type { AnswerSpec, BrainAnswer, BrainEngine, BrainRequest, EngineName } from "./types.js";
 import { KNOWLEDGE_DIR } from "../core/paths.js";
 import { knowledgeFile } from "../knowledge/files.js";
+import { StrategyEntries } from "../knowledge/strategy-entries.js";
+import { attachOpenBook } from "../knowledge/open-book.js";
 
 /** The project's knowledge directory (core/paths.ts): the data files the knowledge tools read (knowledge/files.ts). */
 export { KNOWLEDGE_DIR };
@@ -270,12 +272,23 @@ export class Brain {
     return tools.length > 0 ? { tools, toolContext: this.context } : {};
   }
 
+  private readonly strategyEntries = new StrategyEntries();
+
   private request(label: string, question: string, memory: JsonValue | undefined, payload: unknown, spec: AnswerSpec, options?: Record<string, string | null>): BrainRequest {
     // A nested run_plan_task places v6 inside run_plan; ordinary room answers carry it at the root.
     if (isObject(payload) && DIRECTION_RIDE_KEY in payload) spec = withDirectionRideField(spec, payload);
     const liveRun = (this.context?.state as Record<string, unknown> | undefined)?.["run_id"];
     const runId = typeof liveRun === "string" ? liveRun : "";
-    const req: BrainRequest = {
+    // Options and the question take precedence over background deck references under the byte cap.
+    if (isObject(payload)) {
+      const enriched = attachOpenBook({ options, question, payload }, { directory: this.context?.knowledgeDir });
+      if (isObject(enriched) && enriched["open_book"]) {
+        payload = { ...(enriched["payload"] as Record<string, unknown>), open_book: enriched["open_book"] };
+        options = enriched["options"] as typeof options;
+        question = enriched["question"] as string;
+      }
+    }
+    const base: BrainRequest = {
       ...(runId ? { runId } : {}),
       label,
       system: this.deepseek.systemPrompt,
@@ -288,6 +301,7 @@ export class Brain {
       } : spec,
       ...this.toolsFor(label),
     };
+    const req = this.strategyEntries.apply(base, this.context?.knowledgeDir ?? KNOWLEDGE_DIR);
     if (this.router.config.knowledgePrefix !== "full") return req;
     const full = this.knowledge.apply(req, this.context ? { ascension: this.context.ascension, knowledgeDir: this.context.knowledgeDir } : null);
     const error = full.knowledge?.error ?? "";
