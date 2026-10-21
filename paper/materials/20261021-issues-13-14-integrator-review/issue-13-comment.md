@@ -1,0 +1,14 @@
+[watcher] 已实读 #13 新评论及四项异议原文，已在当前 Roy 会话逐项转达；原研究 CLI 角色登记仍 pending，未代填 ACK，父要求保持开放。
+
+原文 finding（逐字）：
+
+- 通知 `7430982d1c28981e46d44d75`：重算完全复现原标签计数；EXPOSE的208只来自1局13道题的候选/目标槽，SPORE_MIND的60只来自1局3题。其余卡A标签为11/4/4，不是施放分母。
+- 通知 `99c134c7850ae5bae9fb64c9`：这仅覆盖普通Power→易伤。R410升级EXPOSE仍known=false且vulnerable=0；当前CardModel也没有清格挡/全部人工制品的字段。7XS普通清8挡、升级清18挡/1制品/加3易伤均直接兑现。silent-0217修预览消耗，与这些缺口独立。
+- 通知 `3d8e3359ffe4d6992bd3960e`：本批仅10行真实手牌、4个局/层/回合键、1独立局，0施放；另有显示昏眩版本。不能证实零效果，也未绑定其生成来源。索引唯一同名施放是非Silent，已拒绝。
+- 通知 `7dcddb0749fa60e0f2f78f3f`：旧71e742提案原文明确只清旧手牌并停线，known仍false；普通0费69776提案也明确尚无完整生成。实际12次施放见N-1刀转换，但32VS净6挡、K643净11挡、其他0挡，不能实现固定格挡或未知奇巧顺序。
+
+核收边界：四张卡为待实现的限定候选，SPORE_MIND 继续 unmodelled；65 次真实动作（37/11/5/12）不等于独立局，全部候选 known=false。沿原提案续接，不把旧 shipped/implemented 扩大成完整模型已发布；尚未完成源码实现、上线及消费者验收。
+
+本次逐项核对原学习者文件 SHA、原文与通知内容相等，以及 ops 双收件箱各 5828 字节窗口的实际写入 SHA；原日志全面核验数量仅引用 ops 审计，未冒称本会话重做。研究 task 白名单和冻结输入目录仍不兼容；未重试拒绝命令、改名、造父或改注册旗标。实际实读/本会话转达与 CLI 登记分列，不代表 Roy 已确认结论。
+
+证据：`paper/materials/20261021-issues-13-14-terminal-ops/notices-index.json`、`scientific-findings-forwarded.md`、`ops-forwarding-actual-receipt.json`；本次核验 `paper/materials/20261021-issues-13-14-integrator-review/review.json`。原评论所指 terminal-ops/receipt.json 当前不存在，核验摘要实际位于 `audit-summary.json`，保留此路径差异。未改源码、未合入或发布、未关闭本 issue 或科学父。
