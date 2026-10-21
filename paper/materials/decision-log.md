@@ -5536,3 +5536,5 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
 - 2026-10-21T10:21:31+08:00 W4拿牌v2 3ef4/11a80正式14源与319材料/241gzip核同，builder仅v2四行机械合不夹P4；质量未过、584增量无已校准辨识/54均值一致非收益，CARDbrain/REFLEXoff、CEN在途不动，候选排原工程队列/发布等Roy。Roy最新P2暂不做并移出docs§12，保满槽放弃、不提issue/改mod、停止接口协调；结论原watcher已投，实收待真实回执。原件paper/materials/20261021-W4-v2-P2-ops/receipt.json。
 - 2026-10-21T10:32:17+08:00 CEN四叶精确联合tsc0/full0，629文件5963过2原跳、2395输入7d864f84前后同/PID退；窄合main b1773b2a，仅原GWE810ZD014M单次局终机制待边界live发布/消费者读回/核号双通知；CARDbrain/REFLEXoff，P2已移出，旧失败/0332父保留。原件paper/materials/20261021-1015-ops/receipt.json。
 - 2026-10-21T10:34:54+08:00 101302两策略批次rc0/原基线干净、无源/提交/合入，二十提案保waiting；首批26账本链接原字节seek核同，原覆盖及缺证分列，不补测/dataset/版本/独立分母，CEN原边界接续不动。原件paper/materials/20261021-1033-ops/receipt.json。
+
+- 2026-10-21 10:38:57 CST [Claude/Roy，协作方式] Roy：会话继续由 herdr 托管，任务与协作改用本仓库 GitHub Issues（仓库保持公开）。新增 docs/github-issues-workflow.md、.github/ISSUE_TEMPLATE/task.md、AGENTS.md 一条规则与标签（owner/status/P0–P3/type/area/needs:roy）：消息只发一行提醒，结果写 issue 评论，一个 issue 一个新会话，长期会话每天换新，ops 例行回执不再逐条投 watcher，issue 发前 gitleaks 扫。起因：watcher 压缩后原样保留 254 条收到的消息（约 16 万字符，ops 回执 132 条），几乎每步都压缩。
