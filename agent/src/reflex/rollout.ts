@@ -2372,7 +2372,10 @@ function applyPlan(
   // Barricade keeps block every turn; Blur N only at the start of the next N turns.
   // Sturdy Clamp (whole fights, B2): up to its amount of the block left is kept.
   player.block = player.keepsBlock || player.blurTurns > turn ? o.blockWasted ?? 0 : fullFight ? Math.min(input.fightRelics?.blockKeep ?? 0, o.blockWasted ?? 0) : 0;
-  const died = !won && (o.dies || player.hp <= 0);
+  // Retaliation can down the last enemy on a lethal incoming hit. It must not override the
+  // solver's resolved death or create a winning continuation with nonpositive resources.
+  const died = o.dies || player.hp <= 0;
+  won = won && !died;
   // A husk whose blast was this turn's (in the outcome's enemy turn): gone, and the fight with it once we live.
   if (!won && !died) {
     for (const e of enemies) if (e.alive && e.explodeAt === turn) e.alive = false;
