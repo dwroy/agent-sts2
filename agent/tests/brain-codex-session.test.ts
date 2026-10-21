@@ -87,16 +87,20 @@ for await (const line of createInterface({ input: process.stdin })) {
     const id = "thr-" + counter("threads");
     const path = S + "/sessions/rollout-x-" + id + ".jsonl";
     (await import("node:fs")).mkdirSync(S + "/sessions", { recursive: true });
-    writeFileSync(path, "{}\\n");
+    writeFileSync(path, JSON.stringify({ type: "session_meta", payload: { id } }) + "\\n");
     threads[id] = path;
     send({ id: msg.id, result: { thread: { id, path, cwd: p.cwd }, instructionSources: script.instructionSources ?? [] } });
   } else if (msg.method === "thread/read") send({ id: msg.id, result: { thread: { id: p.threadId, path: threads[p.threadId] ?? null } } });
   else if (msg.method === "thread/delete") { if (threads[p.threadId]) rmSync(threads[p.threadId], { force: true }); send({ id: msg.id, result: {} }); }
-  else if (msg.method === "thread/revert") send(script.revertFails ? { id: msg.id, error: { code: -32600, message: "revert failed" } } : { id: msg.id, result: { thread: { id: p.threadId } } });
+  else if (msg.method === "thread/revert") {
+    if (!script.revertFails && threads[p.threadId]) writeFileSync(threads[p.threadId], JSON.stringify({ type: "session_meta", payload: { id: p.threadId } }) + "\\n");
+    send(script.revertFails ? { id: msg.id, error: { code: -32600, message: "revert failed" } } : { id: msg.id, result: { thread: { id: p.threadId } } });
+  }
   else if (msg.method === "turn/interrupt") { send({ id: msg.id, result: {} }); send({ method: "turn/completed", params: { threadId: p.threadId, turn: { id: p.turnId, status: "interrupted", error: null } } }); current = null; }
   else if (msg.method === "turn/start") {
     const n = counter("turns");
     const turnId = "turn-" + n;
+    appendFileSync(threads[p.threadId], JSON.stringify({ type: "turn_context", payload: { turn_id: turnId, model: p.model, effort: p.effort } }) + "\\n");
     send({ id: msg.id, result: { turn: { id: turnId, status: "inProgress" } } });
     const events = script.turns[Math.min(n, script.turns.length) - 1] ?? [];
     current = turnId;
@@ -170,6 +174,8 @@ describe("codex session mode", () => {
     const { engine, trace } = sessionEngine(fake);
     const first = await engine.decide(request({ runId: "RUN1" }));
     const second = await engine.decide(request({ question: "Heal or smith, again?" }));
+    expect(first.nativeReceipt).toMatchObject({ source: "turn_context", model: "gpt-6.1-sol", effort: "xhigh", turn_id: "turn-1", thread_id: "thr-1" });
+    expect(trace()[0]?.native_receipt).toEqual(first.nativeReceipt);
     expect(first).toMatchObject({ engine: "codex", model: "gpt-6.1-sol", effort: "xhigh", answer: { choice: "b", reason: "smith" }, usage: { inputTokens: 160_000, cacheHitTokens: 150_000, outputTokens: 300, reasoningTokens: 100 }, reasoning: "**Weighing**", native: { mode: "session", turn_id: "turn-1", reverted: true } });
     expect(first.answer).not.toHaveProperty("route");
     expect(second.answer).toEqual({ choice: "a", reason: "heal" });

@@ -5649,3 +5649,5 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
 
 - 2026-10-21T19:46:42+08:00 [ops] 八旧异议完整原文/来源SHA/真实双箱与watcher告Roy回执核同，原research CLI登记pending；保旧拒绝/false/科学范围，不重认证/通知或新检查模型，不触已恢复主对局，Regent暂停。paper/materials/20261021-1945-ops/receipt.json。
 - 2026-10-21T19:47:28+08:00 [watcher] #25/#29 核验并入 main af55fbd62：9254fa0af（含e45493389）、9fa73151e+5ea0fa415；保留策略库及开卷双消费者，tsc、完整646文件6084项/2跳过、16项Python/6项流式与工具检查通过；1074条离线重建、固定mod覆盖/689差异及研究10派生文件字节一致，1965文件SHA匹配，binding备份/恢复/校验及权限一致。#25交ops开局边界发布/自然读回；#29只入研究工具与报告交Claude核收，不执行#31/#32生产试验。paper/materials/20261021-issues25-29-integrator-review/report.md。
+
+- 2026-10-21T20:30:35+08:00 [dev #31] #31 开发交付：按局 engine/effort 配置、high/xhigh 20局交替（重启保组）、原生turn_context确认、基线隔离/重算与预登记止损及96物理调用上限的固定回放工具；#32复用接口但DeepSeek生产仍拒绝。生产tsc/新工具独立tsc、Python6项、定向7文件118项及paths11项通过；全量645文件6078项过/2跳，唯一check-imports失败为缺稀疏#29已提交输入，恢复原blob后复核通过，原exit1保留。源码待review，未改live/STOP或账号/知识，无模型请求；首局自然回执与两组各10局仍待ops/批次后分析，不自行全面切换。paper/materials/issue31-brain-high-trial/report.md。

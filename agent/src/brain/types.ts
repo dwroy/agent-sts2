@@ -1,3 +1,4 @@
+import type { BrainNativeReceipt } from "./run-profile.js";
 /**
  * V4 brain contract (docs/v4-architecture.md §2).
  *
@@ -126,6 +127,7 @@ export interface ToolCallRecord {
 }
 
 export interface BrainAnswer {
+  nativeReceipt?: BrainNativeReceipt;
   engine: EngineName;
   model: string;
   /** The reasoning effort the engine asked for, when it sets one (codex model_reasoning_effort); logged in brain.jsonl. */

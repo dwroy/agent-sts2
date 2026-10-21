@@ -32,7 +32,13 @@ if [ "$ROOT" = /home/dw/Projects/agent-sts2 ] \
   export BRAIN_CODEX_PAID_CREDITS=main-silent-codex1-20261015
 fi
 # Roy 2026-10-12: production Codex defaults apply even with a legacy scheduler environment.
-export BRAIN_CODEX_MODEL=gpt-6.1-sol BRAIN_CODEX_EFFORT=xhigh
+export BRAIN_CODEX_MODEL=gpt-6.1-sol BRAIN_CODEX_EFFORT="${BRAIN_CODEX_EFFORT:-xhigh}"
+# Opt-in only. Admission and restart recovery use run identities, not process counts.
+# Session mode retains the native turn context long enough to extract its receipt before revert.
+if [ -n "${BRAIN_TRIAL_SCHEDULE:-}" ]; then
+  trial_env=$(nice -n 19 python3 "$OPS/brain_trial.py" --schedule "$BRAIN_TRIAL_SCHEDULE" --logs "$LOGS") || exit 78
+  eval "$trial_env"
+fi
 export PATH="$HOME/.local/node/bin:$PATH"
 sha=$(git rev-parse --short HEAD)$(git diff --quiet HEAD || echo "+dirty")
 ts=$(date +%Y%m%d-%H%M%S)
