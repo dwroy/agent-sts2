@@ -5699,3 +5699,5 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
 - 2026-10-22T03:15:46+08:00 [ops] 0315八条重复学习异议原文/证据及真实转达回执核同；原研究CLI身份兼容阻塞未变，后两角色登记pending，保原范围/科学父；仅记录、不重认证/代ACK/提醒/生成器或改对局。原件：paper/materials/20261022-0315-ops/receipt.json。
 
 - 2026-10-22T03:45:50+08:00 [ops] 0345八条重复学习异议原文/证据及真实转达回执核同；原研究CLI身份兼容阻塞未变，后两角色登记pending，保原范围/科学父；仅记录、不重认证/代ACK/提醒/生成器或改对局。原件：paper/materials/20261022-0345-ops/receipt.json。
+
+- 2026-10-22T05:24:36+08:00 [dev #26] #26 完成六个只读 external:sts2fun 查询 ToolDef 与 #24 固定聚合投影；来源/版本/分母/日期/SHA/局限齐备，16000B 上限，流派固定无法区分、不作方向依据，自有分母分账。SNAKEBITE/首幕跳过/DECIMILLIPEDE 读回一致，tsc、648 文件/6124 项完整 Vitest（2 原有跳过）、逐字节重建及 gitleaks 通过；首次两失败及原样重跑保留。#33 已确认注册合同（issuecomment-6326522042），由其挂载及联合验证；待集成员/ops 自然边界发布与首局读回，未改 registry/引擎/路由/题面/live/STOP，不造发布号。报告 paper/materials/2026-10-22-issue-26-external-stats-tools/report.md。
