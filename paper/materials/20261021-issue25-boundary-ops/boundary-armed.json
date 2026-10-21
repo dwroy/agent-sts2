@@ -1,0 +1,75 @@
+{
+  "at": "2026-10-21T20:43:26+08:00",
+  "state": "accepted-48-await-one-original-natural-child-exit",
+  "controller_pid": 641052,
+  "run_id": "FZT053H9PSC5",
+  "autoplay": {
+    "pid": 228609,
+    "uid": 1000,
+    "start": "613852",
+    "state": "S",
+    "argv": [
+      "bash",
+      "/home/dw/Projects/agent-sts2/ops/autoplay.sh",
+      "--tail-console"
+    ],
+    "cwd": "/home/dw/Projects/agent-sts2"
+  },
+  "play": {
+    "pid": 437246,
+    "uid": 1000,
+    "start": "955299",
+    "state": "R",
+    "argv": [
+      "/home/dw/.local/node/bin/node",
+      "--require",
+      "/home/dw/Projects/agent-sts2/agent/node_modules/tsx/dist/preflight.cjs",
+      "--import",
+      "file:///home/dw/Projects/agent-sts2/agent/node_modules/tsx/dist/loader.mjs",
+      "src/index.ts",
+      "play",
+      "--max-runs",
+      "1",
+      "--max-minutes",
+      "240"
+    ],
+    "cwd": "/home/dw/Projects/agent-sts2/.worktrees/live/agent"
+  },
+  "direct_child": {
+    "pid": 436828,
+    "start": "954813",
+    "ppid": 228609
+  },
+  "ancestry": [
+    {
+      "pid": 437246,
+      "start": "955299",
+      "ppid": 437226
+    },
+    {
+      "pid": 437226,
+      "start": "955294",
+      "ppid": 437225
+    },
+    {
+      "pid": 437225,
+      "start": "955294",
+      "ppid": 436828
+    },
+    {
+      "pid": 436828,
+      "start": "954813",
+      "ppid": 228609
+    }
+  ],
+  "console": "logs/console/20261021-201658-0a9dc70e3+dirty.log",
+  "live_base": "0a9dc70e3ef096e7d0d6eb1524cd20e2cbe906c6",
+  "source_tree": "725a2480a532bef1c3b4b344660505cc53b997ce",
+  "test_tree": "229355abe292bcc1ff588b95f3c2fd63db596f23",
+  "current_play_not_signalled": true,
+  "STOP_not_written": true,
+  "event_wait": "single kernel pidfd readiness; no timer/sleep/polling",
+  "optional_50_admitted": false,
+  "no_before_after_checkpoint_comparison": true,
+  "natural_first_run_readback": "pending"
+}

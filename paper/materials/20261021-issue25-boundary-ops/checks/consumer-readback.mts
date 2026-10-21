@@ -1,0 +1,13 @@
+import { pathToFileURL } from 'node:url';
+import { writeFileSync } from 'node:fs';
+const live=process.argv[2], out=process.argv[3];
+const book=await import(pathToFileURL(live+'/agent/src/knowledge/open-book.ts').href);
+const opening=await import(pathToFileURL(live+'/agent/src/v6/opening-value.ts').href);
+const strategy=await import(pathToFileURL(live+'/agent/src/knowledge/strategy-entries.ts').href);
+const library=book.loadOpenBook();
+if(library.entries.length!==1074) throw Error('external library identity/count changed');
+const model=opening.loadOpeningModel(live+'/knowledge/characters/silent/opening-value.json','silent');
+if(!model) throw Error('opening model unavailable to actual live consumer');
+const req={label:'card_reward',payload:{run_brief:{character:'SILENT'}}};
+const applied=new strategy.StrategyEntries().apply(req,live+'/knowledge','silent');
+writeFileSync(out,JSON.stringify({schema:'ops-live-module-load-readback-v1',source:'actual published live modules',external_entries:library.entries.length,source_versions:library.sources,opening_model_id:model.model_id,strategy_missing_or_empty_keeps_request:JSON.stringify(req)===JSON.stringify(applied),natural_requests:'pending first original natural run',new_MC:false,new_API:false,checkpoint_comparison:false},null,2)+'\n');
