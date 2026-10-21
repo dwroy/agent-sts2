@@ -1,0 +1,9 @@
+初版只用states.ts<=question.ts筛指纹，TS窗口AssertionError。原states.ts为决策完成记时，observed_ts才对应题面观测。修正为同显式run下fingerprint和observed_ts同时精确相等，保留原失败，不把时间邻近当归局。首次成功核73条原行，扩大至四轮有限后果窗后核103条；均为材料校验，不是源码撤修红/恢复绿或生产测试。
+
+原失败回执：
+Traceback (most recent call last):
+  File "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261021-163323/learner/runs/20261021-163328-e34f57ed-0410-4a8c-a006-c3245ab9ba4c-strategy-proposal/audit_evidence.py", line 56, in <module>
+    assert candidates, run
+           ^^^^^^^^^^
+AssertionError: TS0BHDLAH8ME
+退出码：1。
