@@ -1,0 +1,84 @@
+diff --git a/agent/tests/inferno-planner.test.ts b/agent/tests/inferno-planner.test.ts
+index 0416cb825..ea5a3f07b 100644
+--- a/agent/tests/inferno-planner.test.ts
++++ b/agent/tests/inferno-planner.test.ts
+@@ -58,12 +58,15 @@ const { parseGameState } = await import("../src/hand/mod/schema.js");
+ const { buildRunBrief } = await import("../src/memory/run-brief.js");
+ const { createScreenMemory } = await import("../src/memory/types.js");
+ const { planCombatTurn, thiefTrace } = await import("../src/reflex/combat-plan.js");
+-const { rolloutLiveOptions } = await import("../src/reflex/rollout-live.js");
++const { rolloutLiveOptions, rolloutTap } = await import("../src/reflex/rollout-live.js");
+ const { potionMcOptions } = await import("../src/reflex/potion-mc.js");
+ const { bossLinesOptions } = await import("../src/sim/boss-lines.js");
++const { simulateFight } = await import("../src/reflex/rollout.js");
+ const { infernoCopies, startTurnHpLossOf } = await import("../src/reflex/start-loss.js");
+ type DecisionEnv = import("../src/memory/types.js").DecisionEnv;
+ type Plan = import("../src/reflex/turn-solver.js").Plan;
++type RolloutInput = import("../src/reflex/rollout.js").RolloutInput;
++type LineEstimate = import("../src/reflex/rollout.js").LineEstimate;
+ 
+ bossLinesOptions.enabled = false;
+ const knowledge = makeKnowledge(JSON.parse(readFileSync(join(DATA, "game-data.json"), "utf8")), "cache");
+@@ -83,6 +86,7 @@ function envOf(raw: Raw): DecisionEnv {
+ 
+ afterEach(() => {
+   rolloutLiveOptions.now = null;
++  rolloutTap.onRollout = null;
+   potionMcOptions.now = null;
+   thiefTrace.enabled = false;
+   thiefTrace.last = null;
+@@ -94,9 +98,12 @@ function planned(raw: Raw) {
+   potionMcOptions.now = () => 0;
+   thiefTrace.enabled = true;
+   thiefTrace.last = null;
++  let input: RolloutInput | null = null;
++  rolloutTap.onRollout = (captured) => { input = captured; };
+   const decision = planCombatTurn(envOf(raw));
+-  const trace = thiefTrace.last as { plans: Plan[]; rollout: { available: boolean; result?: { lines: { plan: Plan; deaths: number; samples: number }[] } } | null } | null;
+-  return { decision, plans: trace?.plans ?? [], lines: trace?.rollout?.available ? trace.rollout.result!.lines : [] };
++  rolloutTap.onRollout = null;
++  const trace = thiefTrace.last as { plans: Plan[]; rollout: { available: boolean; result?: { lines: LineEstimate[] } } | null } | null;
++  return { input: input as RolloutInput | null, decision, plans: trace?.plans ?? [], lines: trace?.rollout?.available ? trace.rollout.result!.lines : [] };
+ }
+ const playsOf = (plan: Plan) => plan.steps.map((step) => step.cardId).join(",");
+ const setPower = (raw: Raw, id: string, amount: number) => {
+@@ -157,8 +164,8 @@ describe("JGJS7QE62GLD F24 T2 (16 HP, the Spiny Toad): one Inferno up, the secon
+ });
+ 
+ describe("A8ENYFR4ZWKG F33 T6 (34 HP, two Infernos up, won): the rollout's later turns lose 2 a turn", () => {
+-  it("more of the rollout's samples die than at 1 a turn, and its best line moves to Blood Wall+, Uppercut+", () => {
+-    const { decision, lines } = planned(board("a8en-f33-t6"));
++  it("counts self-lethal finishing hits as losses and ranks the surviving Defend, Uppercut+, Strike line first", () => {
++    const { input, decision, lines } = planned(board("a8en-f33-t6"));
+     const raw = board("a8en-f33-t6");
+     setPower(raw, "INFERNO_POWER", 9);
+     const one = planned(raw).lines;
+@@ -167,6 +174,27 @@ describe("A8ENYFR4ZWKG F33 T6 (34 HP, two Infernos up, won): the rollout's later
+     expect(decision?.kind).toBe("ask");
+     const criteria = decision?.kind === "ask" ? ((decision.questions["plan"] as { criteria: Record<string, string> }).criteria) : {};
+     const best = Object.values(criteria).map((text) => JSON.parse(text) as Raw).find((option) => option["rollout_best"] === true);
+-    expect(best?.["plays"]).toMatch(/^血墙\+, then 上勾拳\+/);
++    const blood = lines.find((line) => playsOf(line.plan) === "BLOOD_WALL,UPPERCUT")!;
++    const defend = lines.find((line) => playsOf(line.plan) === "DEFEND_IRONCLAD,UPPERCUT,STRIKE_IRONCLAD")!;
++    expect(blood).toMatchObject({ samples: 8, wins: 5, deaths: 3 });
++    expect(defend).toMatchObject({ samples: 8, wins: 5, deaths: 3 });
++    expect(defend.hpLoss).toBeLessThan(blood.hpLoss);
++    expect(input).not.toBeNull();
++    const captured = input!;
++    const samples = Array.from({ length: blood.samples }, (_, j) => simulateFight(
++      { ...captured, captureResources: true }, blood.plan, blood.horizon,
++      (captured.options?.seed ?? 1) * 7919 + 1 + j, false, blood.order,
++    ).records);
++    // The first two fixed draws reach 1 HP, then Breakthrough costs that HP while finishing the boss.
++    // The old win-first guard counted both HP=0 outcomes as wins (7/8 instead of 5/8).
++    for (const records of samples.slice(0, 2)) {
++      expect(records.at(-2)?.resources?.hp).toBe(1);
++      expect(records.at(-1)).toMatchObject({ loss: 1, won: false, died: true,
++        hpLeft: { 0: 0 }, resources: { hp: 0 } });
++    }
++    expect(samples.filter((records) => records.at(-1)?.won)).toHaveLength(5);
++    expect(samples.filter((records) => records.at(-1)?.died)).toHaveLength(3);
++    expect(samples.filter((records) => records.at(-1)?.won).every((records) => records.at(-1)!.resources!.hp > 0)).toBe(true);
++    expect(best?.["plays"]).toMatch(/^防御, then 上勾拳\+ -> 知识恶魔, then 打击 -> 知识恶魔$/);
+   }, 120_000);
+ });

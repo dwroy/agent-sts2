@@ -1,0 +1,39 @@
+
+ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/v6-boss-continuation-hp-20261021/agent
+
+ ❯ tests/inferno-planner.test.ts (5 tests | 1 failed | 4 skipped) 306ms
+     × counts self-lethal finishing hits as losses and ranks the surviving Defend, Uppercut+, Strike line first 305ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/inferno-planner.test.ts > A8ENYFR4ZWKG F33 T6 (34 HP, two Infernos up, won): the rollout's later turns lose 2 a turn > counts self-lethal finishing hits as losses and ranks the surviving Defend, Uppercut+, Strike line first
+AssertionError: expected { …(25) } to match object { samples: 8, wins: 5, deaths: 3 }
+(38 matching properties omitted from actual)
+
+- Expected
++ Received
+
+  {
+-   "deaths": 3,
++   "deaths": 1,
+    "samples": 8,
+-   "wins": 5,
++   "wins": 7,
+  }
+
+ ❯ tests/inferno-planner.test.ts:179:19
+    177|     const blood = lines.find((line) => playsOf(line.plan) === "BLOOD_W…
+    178|     const defend = lines.find((line) => playsOf(line.plan) === "DEFEND…
+    179|     expect(blood).toMatchObject({ samples: 8, wins: 5, deaths: 3 });
+       |                   ^
+    180|     expect(defend).toMatchObject({ samples: 8, wins: 5, deaths: 3 });
+    181|     expect(defend.hpLoss).toBeLessThan(blood.hpLoss);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 4 skipped (5)
+   Start at  09:36:35
+   Duration  2.22s (transform 1.47s, setup 319ms, import 1.45s, tests 306ms, environment 0ms)
+

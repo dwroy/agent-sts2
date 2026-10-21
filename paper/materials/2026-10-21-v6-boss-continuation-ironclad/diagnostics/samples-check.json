@@ -1,0 +1,42 @@
+[
+  {
+    "name": "original",
+    "exit": 0,
+    "elapsed": 2.9655818939208984,
+    "command": [
+      "nice",
+      "-n",
+      "19",
+      "ionice",
+      "-c",
+      "3",
+      "npx",
+      "vitest",
+      "run",
+      "tests/inferno-planner.test.ts",
+      "--maxWorkers=1",
+      "-t",
+      "more of the rollout's samples die"
+    ]
+  },
+  {
+    "name": "f993",
+    "exit": 1,
+    "elapsed": 2.9578330516815186,
+    "command": [
+      "nice",
+      "-n",
+      "19",
+      "ionice",
+      "-c",
+      "3",
+      "npx",
+      "vitest",
+      "run",
+      "tests/inferno-planner.test.ts",
+      "--maxWorkers=1",
+      "-t",
+      "more of the rollout's samples die"
+    ]
+  }
+]

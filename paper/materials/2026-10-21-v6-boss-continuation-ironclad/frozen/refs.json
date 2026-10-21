@@ -1,0 +1,44 @@
+{
+  "at": "2026-10-21T09:41:28.195459+08:00",
+  "source": "6707f7ac42191becb5bbf18eed7a1f4f3ad4dc2f",
+  "refs": [
+    {
+      "path": "agent/tests/inferno-planner-data/a8en-f33-t6.json",
+      "sha256": "4c7dceb54ecd7573b6abc81c8ac50cdd81ec28c88b986a6cf6b2405ae0123e0a",
+      "bytes": 49761,
+      "blob": "b9d684d0c4a42252da7f80652dfab2be4e4c08f5"
+    },
+    {
+      "path": "agent/tests/inferno-planner-data/pinned-knowledge.json",
+      "sha256": "be2e4983e5b5783925e7370d6d4b2af1a7724aeeb92d9187eea11c03936263fb",
+      "bytes": 242928,
+      "blob": "f969c05ec0ce6112343e73cb24a77cb744e6101c"
+    },
+    {
+      "path": "agent/tests/inferno-planner-data/game-data.json",
+      "sha256": "6adc4a49544fa52087c28636c2459529a12cb0d1804c8092ba26023eac9fc03f",
+      "bytes": 29574,
+      "blob": "49611427723231f762cfa7658938c70b061d3fdd"
+    },
+    {
+      "path": "agent/src/reflex/rollout.ts",
+      "sha256": "4ef15bad2f859038e81f750f114f25997f1937440dc138230d2fe3a0f4cbba36",
+      "bytes": 220024,
+      "blob": "bc5957d7068d24b6d1685f7f3285e06c4faad088"
+    },
+    {
+      "path": "agent/src/reflex/rollout-live.ts",
+      "sha256": "f8ad61514ea9f3919a4359edc3c32f01f326cb24139613933a98dcdfe0f7233e",
+      "bytes": 79880,
+      "blob": "fb3e42be802c9a804a4baba2abfef7f6cbd3e38c"
+    },
+    {
+      "path": "agent/src/reflex/turn-solver.ts",
+      "sha256": "1ecb3544e15ec4ef07f16bc03eb4f963839b90741dc88ec89a65cef74a7cf3eb",
+      "bytes": 266019,
+      "blob": "662578131a0cecfd6cfdd0121d44f2e10c779ec5"
+    }
+  ],
+  "pinning": "inferno-planner.test.ts reads the fixture game-data.json and pinned-knowledge.json; does not read logs/data/shared runtime knowledge",
+  "ops_input_sha256": "aca3e839cd7e2a9982246971fc6fcc4dd4eedf933aee90b765131450ec20a869"
+}

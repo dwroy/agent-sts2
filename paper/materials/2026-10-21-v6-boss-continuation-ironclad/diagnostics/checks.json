@@ -1,0 +1,72 @@
+[
+  {
+    "name": "new-test-old-production-red",
+    "command": [
+      "nice",
+      "-n",
+      "19",
+      "ionice",
+      "-c",
+      "3",
+      "npx",
+      "vitest",
+      "run",
+      "tests/inferno-planner.test.ts",
+      "--maxWorkers=1",
+      "-t",
+      "counts self-lethal finishing hits"
+    ],
+    "start_epoch": 1792546595.1227345,
+    "elapsed_s": 2.8404228687286377,
+    "exit": 1,
+    "log_sha256": "5c183809393375b95854dc3067a9f248f65cefc3649cd93f6629fef50488fca9"
+  },
+  {
+    "name": "tsc",
+    "command": [
+      "nice",
+      "-n",
+      "19",
+      "ionice",
+      "-c",
+      "3",
+      "npx",
+      "tsc",
+      "-p",
+      "tsconfig.json",
+      "--noEmit"
+    ],
+    "start_epoch": 1792546597.9640949,
+    "elapsed_s": 1.1043777465820312,
+    "exit": 0,
+    "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "name": "targeted",
+    "command": [
+      "nice",
+      "-n",
+      "19",
+      "ionice",
+      "-c",
+      "3",
+      "npx",
+      "vitest",
+      "run",
+      "tests/inferno-planner.test.ts",
+      "tests/rollout.test.ts",
+      "tests/boss-sim.test.ts",
+      "tests/silent-lethal-continuation.test.ts",
+      "tests/continuation-retaliation.test.ts",
+      "tests/continuation-diagnostics.test.ts",
+      "tests/continuation-failure.test.ts",
+      "tests/continuation-failure-worker.test.ts",
+      "tests/boss-margin-attribution.test.ts",
+      "--maxWorkers=1"
+    ],
+    "start_epoch": 1792546599.068825,
+    "elapsed_s": 13.97193193435669,
+    "exit": 0,
+    "log_sha256": "802dc220705472cb146feaf04b5fb6f8bd7fcdff4b68e5f6e1796310b9ca4ec7"
+  }
+]
