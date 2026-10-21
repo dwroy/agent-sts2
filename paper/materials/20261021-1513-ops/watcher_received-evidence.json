@@ -1,0 +1,113 @@
+{
+  "notice_id": "f922272253e05b0cc9995ef3",
+  "stage": "watcher_received",
+  "actor": "watcher",
+  "session_id": "01a15c5b-b82e-7c00-8c24-edab5253de8c",
+  "at": "2026-10-21T15:13:13.406906+08:00",
+  "original_questions_read": [
+    {
+      "claim": "历史战斗题面声称各候选当轮数字exact；当前不能无条件采信这一声明。",
+      "finding": "DUZUBAJ3A8GP末试F30 T5，d269068/Jev26966的plan1预测格挡17、甲虫结算后62HP；实际同一牌序到s275017为22挡，s275018甲虫59HP。玩家均存活1HP。预测与实盘存在5挡/3敌血差，未定位各机制归因，也未验证当前源码仍复现。",
+      "evidence": [
+        "question-269068.txt",
+        "question-audit.json:decision_line=269068",
+        "v6-evidence/jev-prompts.evidence.jsonl:line=26966",
+        "evidence/states.evidence.jsonl:line=275013–275018"
+      ],
+      "experience": [
+        "silent-slumbering-beetle-wake-growth"
+      ],
+      "ledger": [
+        "silent-0128",
+        "silent-0079"
+      ],
+      "proposal_id": "silent-proposal-bddfa690a84e03d0",
+      "recommendation": "沿原提案保留waiting；先冻结历史手牌动态值、出牌前缀与敌回合端点，定位模型/执行差异，再评估杀序或血价。请ops沿既有通知链转达watcher及Roy；不代填ACK。",
+      "delivery": "本批落盘及最终回报；尚无ops_forwarded/watcher_received/roy_notified回执，不能称已送达。"
+    }
+  ],
+  "verified_references": [
+    {
+      "path": "paper/materials/20261021-1507-ops/notice-source.json",
+      "sha256": "6baaf312bd683c15e7a6b9559d1b0f20b1c592d2b70606b6e75b238ebc098f5f",
+      "bytes": 1258
+    },
+    {
+      "path": ".worktrees/codex-strategy-silent-20261021-144302/learner/runs/20261021-144321-10ba93cc-0974-41e4-a6d6-ec03316756ce-strategy-proposal/questions.json",
+      "sha256": "67c6ff6d1537f61841602dd9ec5b70c2cae4b5aa521f84151f219ec13dc5f9f2",
+      "bytes": 1193
+    },
+    {
+      "path": ".worktrees/codex-strategy-silent-20261021-144302/learner/runs/20261021-144321-10ba93cc-0974-41e4-a6d6-ec03316756ce-strategy-proposal/report.md",
+      "sha256": "0dcecff9f2af4dca0b5b8a351a2ab97c1298543cf315d1393b1dbc1fe8ea0409",
+      "bytes": 15934
+    },
+    {
+      "path": "ops/codex-ops/learner/20261021-144302-strategy-proposal.out",
+      "sha256": "9a7dd449718899e1629c5d94d42f445d4f3583b2597e803c81268b1a990358dc",
+      "bytes": 4929
+    },
+    {
+      "path": "paper/materials/20261021-1507-ops/question-raw-readback.json",
+      "sha256": "98860b83022892ceb8f589bfe9b717b88782c1a2e1bb9098bf09674ebe94a56d",
+      "bytes": 6059
+    },
+    {
+      "path": "paper/materials/20261021-1507-ops/question-raw-0.jsonl",
+      "sha256": "7000a27884c87dcba06d4fcecf1b87ac66ed1786f6eb11f823fd499569987fb3",
+      "bytes": 13407
+    },
+    {
+      "path": "paper/materials/20261021-1507-ops/question-raw-1.jsonl",
+      "sha256": "43674f9b4424e6db0663a89c6104f2a168bc49961060f5aa2917d78ed758483e",
+      "bytes": 5757
+    },
+    {
+      "path": "paper/materials/20261021-1507-ops/question-raw-2.jsonl",
+      "sha256": "3316a224d317c92e6f98d9d1de957bded9c017ecdc78464e1dd24ca9ec027c14",
+      "bytes": 44523
+    },
+    {
+      "path": "paper/materials/20261021-1507-ops/question-raw-3.jsonl",
+      "sha256": "c1c0cf5f411871bcec75e52eca7c6973f7d22c79f0a0d81937a27e229b691fb6",
+      "bytes": 1582
+    },
+    {
+      "path": "paper/materials/20261021-1507-ops/question-raw-4.jsonl",
+      "sha256": "d8356f948eb254d331ad6b0052ed1d835dc2cddf54c8f12de7ab786fba698e1f",
+      "bytes": 1450
+    },
+    {
+      "path": "paper/materials/20261021-1507-ops/question-raw-5.jsonl",
+      "sha256": "ea9036121fad382ec1138666e29f49d33671414f9b58db0a1c1bb1c93ef93d1a",
+      "bytes": 1408
+    },
+    {
+      "path": "paper/materials/20261021-1507-ops/question-raw-6.jsonl",
+      "sha256": "7dc72380ce9cdb80d27f0e3df3a8d3338368b63391c724bb9ffbc5e4164b7b6f",
+      "bytes": 1260
+    },
+    {
+      "path": "paper/materials/20261021-1507-ops/question-raw-7.jsonl",
+      "sha256": "4a1eff36816929a17d693f9e9afd66ec7c7b9d1542515ec7f0c480cf1f121961",
+      "bytes": 1563
+    },
+    {
+      "path": "/home/dw/Projects/agent-sts2/paper/materials/20261021-1507-ops/ops-forwarded.json",
+      "sha256": "650277c8664a7fc9f491a5c2c32558d8321717adfe977bb4b3edeb2f20611430",
+      "bytes": 317
+    },
+    {
+      "path": "paper/materials/20261021-1507-ops/scientific-inbox-delivery.json",
+      "sha256": "060df562b249cecf564661d51e5de31d21c3209a583c162e85e3e528e668f577",
+      "bytes": 870
+    },
+    {
+      "path": "paper/materials/20261021-1507-ops/scientific-forwarded.append",
+      "sha256": "cd32622fc804065c0f01db3f6d37c24232d4edbb06ef663359de7cbacddec047",
+      "bytes": 1467
+    }
+  ],
+  "original_log_windows_sha_verified": 8,
+  "scope": "Original objection read verbatim; source/hash and raw-window identity verified. No independent mechanism attribution or current-source reproduction; proposal waiting and scientific parent unchanged."
+}
