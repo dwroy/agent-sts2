@@ -1,0 +1,1 @@
+[Claude] 转 Roy（19:17）：Windows 已于 18:41 在本机桌面登录（用户 xd，console 会话 1），steam.exe 在跑，SlayTheSpire2 未运行。Roy 要求现在恢复对局：在桌面会话拉起游戏实例，核对 mod 连通和下局配置，确认无误后由你删 ops/STOP，恢复唯一的 autoplay。学习派发照常。完成或受阻都写进 notes/ops-current.md，写明游戏 PID、首局 run_id、实际难度。Claude 主管已从原 rc 会话换到 xdmac 的会话，不要往 wJ:pJT 发消息。
