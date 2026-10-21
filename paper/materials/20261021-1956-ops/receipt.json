@@ -1,0 +1,127 @@
+{
+  "batch": "20261021-191301-strategy-proposal",
+  "ordinary_receipt": {
+    "path": "ops/codex-ops/ordinary-close/20261021-191301-strategy-proposal.json",
+    "bytes": 15401,
+    "sha256": "43d3a8b980c9b7c1ae4c5b0149f16e51ab0434ef0463b3cb29d7e63d229c8f41"
+  },
+  "state_preserved": "attention",
+  "reason": "source changed during batch; retain ordinary ops review",
+  "started": "2026-10-21T19:43:20+08:00",
+  "finished": "2026-10-21T19:54:41+08:00",
+  "dataset_attempts": 1,
+  "dataset_log": {
+    "path": "ops/codex-ops/ordinary-close/20261021-191301-strategy-proposal.dataset.log",
+    "bytes": 959,
+    "sha256": "cd031f27843f46c101fd25265578e7198f59868e7801925dd9095a8c6da6c31d"
+  },
+  "dataset_log_normal_completion": true,
+  "independent_exit_field_in_receipt": null,
+  "stage_evidence": "Original close_pending runs dataset once then revalidates source; source changed during this interval; no records/dataset success keys written. No new execution in this audit.",
+  "source_base": "4765f0d2121207324e4e42ae1507621dd6524ad0",
+  "pre_dataset_proof_head": "f330f25d71b1b794ebe12fad8bada777a6d5242a",
+  "current_main": "b3f74fb4171d27fdcd5c42b31e46b74fc00e7df1",
+  "pre_dataset_source_diff": [],
+  "post_source_diff_count": 27,
+  "post_source_differences": [
+    "agent/src/brain/brain.ts",
+    "agent/src/eye/jev-prompt-log.ts",
+    "agent/src/knowledge/files.ts",
+    "agent/src/knowledge/open-book.ts",
+    "agent/src/reflex/card-model.ts",
+    "agent/src/reflex/combat-plan.ts",
+    "agent/src/reflex/jev/client.ts",
+    "agent/src/reflex/turn-solver.ts",
+    "agent/tests/jev-decision-projection.test.ts",
+    "agent/tests/open-book-data/questions.json",
+    "agent/tests/open-book.test.ts",
+    "agent/tests/paths.test.ts",
+    "agent/tests/v6-combat-entries.test.ts",
+    "agent/tools/issue29-availability.py",
+    "agent/tools/issue29-brain-speed-report.py",
+    "agent/tools/issue29-brain-speed-test.py",
+    "agent/tools/issue29-brain-speed.ts",
+    "agent/tools/issue29-deepseek-report.py",
+    "agent/tools/issue29-deepseek-report.test.py",
+    "agent/tools/issue29-deepseek-stream.test.ts",
+    "agent/tools/issue29-deepseek-stream.ts",
+    "agent/tools/open-book-replay.ts",
+    "knowledge/builders/build-open-book.py",
+    "knowledge/builders/report-open-book.py",
+    "ops/codex-ops.sh",
+    "ops/open_book_refresh.py",
+    "ops/tests/test_open_book_refresh.py"
+  ],
+  "source_commits": [
+    "d2fbd4106e49bfa676b0d217a341d69d3b5de3d4 Integrate reviewed open-book knowledge and brain engine research (#25 #29)"
+  ],
+  "owner_report_sha256_verified": true,
+  "owner_completion_artifacts_verified": 8,
+  "extracted_evidence_files_sha256_verified": 12,
+  "original_log_byte_windows_replayed_this_wake": false,
+  "owner_worktree_clean_at_base": true,
+  "proposal_results": [
+    {
+      "id": "silent-proposal-47be799a87af03be",
+      "state": "waiting",
+      "reason": "缺四个合法弃牌分支的动态伤害、触发、费用和剩血联合验证。"
+    },
+    {
+      "id": "silent-proposal-3a5274da3c42672a",
+      "state": "waiting",
+      "reason": "F22主怪归零中间帧缺失；全部组件联合回放与跨战保药后继未齐。"
+    },
+    {
+      "id": "silent-proposal-bc4b92d590f2c4ce",
+      "state": "waiting",
+      "reason": "投斧身份子修复已属live祖先；动态弃牌和能力整战兑现仍未联合验证。"
+    },
+    {
+      "id": "silent-proposal-f52fbbab4dccc3b4",
+      "state": "waiting",
+      "reason": "缺另路线、保药或击杀序的受控完整后继；旧112局统计未重算。"
+    },
+    {
+      "id": "silent-proposal-10f37c0edd3d24a6",
+      "state": "waiting",
+      "reason": "局部机制已复核，其他遗物及回复窗口缺当前生产逐样本联合回放。"
+    },
+    {
+      "id": "silent-proposal-3f82387e2e179703",
+      "state": "waiting",
+      "reason": "即时伤害与血价差额已核；请求预算、后续行为未控，缺整战对照及独立留出。"
+    },
+    {
+      "id": "silent-proposal-aee21084c991abd3",
+      "state": "waiting",
+      "reason": "末题已包含一次死亡样本；缺逐样本轨迹与确定模型失配，不能单例重标概率。"
+    },
+    {
+      "id": "silent-proposal-df37594e9b12debf",
+      "state": "waiting",
+      "reason": "唯一余牌弃除子修复已属live祖先；多选动态可达性、朝向及整战SL代价未联合验收。"
+    },
+    {
+      "id": "silent-proposal-42e81c83b2e1e56b",
+      "state": "waiting",
+      "reason": "旧73局统计未重算；缺路线、锻造、保药的受控后继和消费者验证。"
+    },
+    {
+      "id": "silent-proposal-03754e1265894000",
+      "state": "waiting",
+      "reason": "F23逐牌格挡链已核；其他组件窗口、八组件联合回放及药水时点对照未齐。"
+    }
+  ],
+  "proposal_count": 10,
+  "full_question_count": 7,
+  "unread_question_count": 492,
+  "mechanically_verified_states_owner_only": 301,
+  "ledger_check_original": {
+    "problems": 0,
+    "items": 559
+  },
+  "owner_ledger_link_updates": 34,
+  "new_source_or_merge": false,
+  "full_or_dataset_or_model_repeated": false,
+  "scientific_parents_closed": false
+}

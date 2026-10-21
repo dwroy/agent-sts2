@@ -5653,3 +5653,5 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
 - 2026-10-21T19:53:27+08:00 [ops] #25正式main核验实收，31叶live候选99d39c51与受检main仍112叶不同，精确组合准入已沿issue评论请求，未重复main full/热改对局；边界发布/首局验收pending。https://github.com/dwroy/agent-sts2/issues/25#issuecomment-6315238031；paper/materials/20261021-issue25-release-ops/release-plan.json。
 
 - 2026-10-21T19:56:06+08:00 [ops] 194314-fix无新增源/合入，原产物及157SHA(旧154+补3)/53子项48祖先/31待办核同；tsc0/46定向0非full。严格无改动结案113路径不等，原failed/rc0与冷却保留，无空合并/重检查或dataset。paper/materials/20261021-1953-ops/receipt.json。
+
+- 2026-10-21T19:58:30+08:00 [ops] 191301主策略唯一dataset正常日志后，#25/#29 main源变27路径使二次自动收尾attention；原report/8交付/12提取SHA核同，十waiting/科学父保留，不重dataset/合入/模型或改原失败。paper/materials/20261021-1956-ops/receipt.json。
