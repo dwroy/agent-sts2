@@ -1,0 +1,236 @@
+{
+  "at": "2026-10-21T08:43:24+08:00",
+  "run_id": "CEN1Z8HEU7NM",
+  "state": "real-existing0332-computation-failure-deduplicated-and-frozen-original-owner-blocked",
+  "alert": "ops/codex-ops/module-health/CEN1Z8HEU7NM-alert.json",
+  "original_cut_reducer_equal_23_fields": true,
+  "fixed_target_decision_rows": 494,
+  "computation": {
+    "attempts": 59,
+    "failures": 4,
+    "degraded": 1,
+    "evidence": [
+      {
+        "ts": "2026-10-21T00:36:20.950Z",
+        "label": "reward/card",
+        "floor": 35,
+        "source": {
+          "offset": 3201966139,
+          "length": 6849,
+          "sha256": "6dab2c6a362ef16b53c196feed1c0163dc28544d2121174c8bc791e71ba0316e"
+        },
+        "completion": {
+          "required": true,
+          "attempt_id": "f4388b87-1098-4f39-96a5-d6c4385e5278",
+          "status": "pending",
+          "attempts": 1,
+          "reasons": [
+            "simulation_error"
+          ],
+          "samples": 0,
+          "requested": 100,
+          "failure": true,
+          "key": "sim-failure-v1:c97f685e54ae7cdeef5da58ba5a101f2106f5e8ee4eb40e9e3f62df5a0b3ba5a"
+        }
+      },
+      {
+        "ts": "2026-10-21T00:36:26.669Z",
+        "label": "reward/card",
+        "floor": 35,
+        "source": {
+          "offset": 3201972988,
+          "length": 7216,
+          "sha256": "daedc1d21c69a44651bbee42e9a7bc5d1ed18f6947b340d36186484c76c0108e"
+        },
+        "completion": {
+          "required": true,
+          "attempt_id": "8035c771-2bca-4d2f-a529-c8d0c6bc96cc",
+          "status": "pending",
+          "attempts": 2,
+          "reasons": [
+            "simulation_error",
+            "simulation_error"
+          ],
+          "samples": 0,
+          "requested": 100,
+          "failure": true,
+          "key": "sim-failure-v1:c97f685e54ae7cdeef5da58ba5a101f2106f5e8ee4eb40e9e3f62df5a0b3ba5a"
+        }
+      },
+      {
+        "ts": "2026-10-21T00:36:53.513Z",
+        "label": "reward/card",
+        "floor": 35,
+        "source": {
+          "offset": 3201980204,
+          "length": 46636,
+          "sha256": "56ab74b9e75f496cf394b07a9dc3109c36c7850a26946196282b8978177ecd07"
+        },
+        "completion": {
+          "required": true,
+          "attempt_id": "1ce99d96-f0d4-4b25-9cca-b8bca47449aa",
+          "status": "degraded",
+          "attempts": 3,
+          "reasons": [
+            "simulation_error",
+            "simulation_error",
+            "simulation_error"
+          ],
+          "samples": 0,
+          "requested": 100,
+          "failure": true,
+          "key": "sim-failure-v1:c97f685e54ae7cdeef5da58ba5a101f2106f5e8ee4eb40e9e3f62df5a0b3ba5a"
+        }
+      },
+      {
+        "ts": "2026-10-21T00:39:58.553Z",
+        "label": "reward/card",
+        "floor": 39,
+        "source": {
+          "offset": 3202826280,
+          "length": 6847,
+          "sha256": "a92414e51e9d0f6eb94e0506120f9151831e9041c40dc02ea4e87f871278fb1c"
+        },
+        "completion": {
+          "required": true,
+          "attempt_id": "389afa6f-66f3-47b7-95d7-34a2a392cc6c",
+          "status": "pending",
+          "attempts": 1,
+          "reasons": [
+            "simulation_error"
+          ],
+          "samples": 0,
+          "requested": 100,
+          "failure": true,
+          "key": "sim-failure-v1:b8aa61e1455f6e406c322c78051e9bdb0f9be986aa8d2a77b37a54e09516a02e"
+        }
+      }
+    ],
+    "alert": true,
+    "scope": "B2/B3 computation service failures; degradation permits continuation, not fault resolution."
+  },
+  "DPR": {
+    "attempts": 38,
+    "skipped": 2,
+    "produced_dpr": 32,
+    "coverage": 0.8421052631578947,
+    "failures": {
+      "simulation_error": 4
+    },
+    "unsupported": 2,
+    "applicable_attempts": 36,
+    "unsupported_only": 2,
+    "candidates": {
+      "observed": 248,
+      "unsupported": 66,
+      "with_dpr": 166,
+      "missing_dpr": 16
+    },
+    "applicable_coverage": 0.8888888888888888,
+    "longest_failure_streak": 3,
+    "trailing_failure_streak": 1,
+    "paired_samples_min": 50,
+    "ms_max": 9222
+  },
+  "construction_pipeline": {
+    "enabled": true,
+    "evaluation_expected": 40,
+    "evaluation_attached": 40,
+    "evaluation_missing": 0,
+    "brain_evaluation": 40,
+    "accepted_evaluation": 40,
+    "accepted_choice_with_evaluation": 39,
+    "plan_due": 0,
+    "accepted_structured_plan": 0,
+    "missing_structured_plan": 0,
+    "saved_structured_plan": 0,
+    "plan_readback": 0,
+    "checkpoint_review_due": 0,
+    "probability_delivered": 0,
+    "admission": {
+      "missing_or_mismatched_prospective_calibration": 34
+    },
+    "evidence": [],
+    "alert": false,
+    "limits": "Payload delivery, accepted output and saved/read-back plans are distinct observations, not causal win-rate evidence. Missing calibration is pending, not a service failure."
+  },
+  "shadow": {
+    "readiness": {
+      "mode": "shadow",
+      "expected": 34,
+      "produced": 34,
+      "missing": 0,
+      "eligible": 19,
+      "low_trust": 15,
+      "sign_rejected": 15,
+      "brain_delivered": 0,
+      "brain_accepted": 0,
+      "ms_max": 1.4664409999968484,
+      "longest_missing_streak": 0,
+      "alert": false,
+      "limits": "Shadow is not brain delivery. Low trust and failed sign audit suppress facts without changing mandatory computation or old ranking."
+    },
+    "combat_rank": {
+      "mode": "shadow",
+      "expected": 21,
+      "produced": 21,
+      "used": 0,
+      "fallback": 0,
+      "missing": 0,
+      "shadow_produced": 21,
+      "shadow_invalid": 0,
+      "fallback_reasons": {
+        "low_trust": 9
+      },
+      "longest_missing_streak": 0,
+      "alert": false,
+      "limits": "S tie ranking is conditional on paired samples, sign audit and existing model trust; not game calibration or causal benefit."
+    },
+    "build_ranking": {
+      "mode": "shadow",
+      "expected": 34,
+      "produced": 34,
+      "missing": 0,
+      "brain_delivered": 0,
+      "brain_accepted": 0,
+      "choices": 34,
+      "overrides": 9,
+      "reasons_present": 0,
+      "missing_reasons": 9,
+      "target_pending": 0,
+      "longest_missing_streak": 0,
+      "alert": false,
+      "limits": "Shadow choices do not require override reasons. Pending card targets and first shop actions do not certify complete plans or causal benefit."
+    },
+    "adaptive_observed": 53,
+    "adaptive_errors": 0,
+    "adaptive_on_agreement": null
+  },
+  "failures_scope": "F35 one computation key with2pending then1degraded, F39 one different key pending at original cut;4 error rows do not imply4 independent mechanisms or16 missing-DPR candidate faults",
+  "full_envelope_files": 2,
+  "full_envelope_payload_SHA_verified": true,
+  "deduplication_scope": "F35later attempts point to first saved fingerprint envelope; later payload hashes differ and are not asserted fully separately stored",
+  "F35_degraded_action": "completed: Action completed.",
+  "F39_after_original_cut": "pending; not polled",
+  "original_owner": {
+    "request_id": "silent-0332",
+    "linked_proposal": "silent-proposal-5aa2672bd7cd1bf4",
+    "revision": 4,
+    "state": "blocked",
+    "reason": "original worktree missing or outside worktrees",
+    "original_worktree": ".worktrees/codex-fix-silent-20261016-183355",
+    "original_thread": "01a14446-c89c-7223-b9ff-4ad093ccc130",
+    "effective_same_request_batch": "20261018-005345-strategy-proposal",
+    "effective_thread": "01a14ac8-affa-70d0-96e0-e9c6b36a5453",
+    "original_worktree_exists": false,
+    "new_parent_or_batch_created": false
+  },
+  "existing_root_request_mutated": false,
+  "root_mechanism_cause": "unknown; no game rule inferred from nonpositive-hp invariant",
+  "sample_gate_or_budget_changed": false,
+  "game_restarted": false,
+  "code_knowledge_live_actor_STOP_versions_modified": false,
+  "model_simulation_full_dataset_started": false,
+  "watcher_Roy_routine_notification": false,
+  "scientific_parent_or_role_ACK_closed": false
+}
