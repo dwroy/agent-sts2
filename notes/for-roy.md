@@ -4189,3 +4189,5 @@ W4拿牌v2正式3ef4/11a80已核：14源Git/SHA、318清单项加manifest共319�
 2026-10-22T04:07:04+08:00 已沿#20原评论核466e54561及1220集成为实际main祖先，四源码SHA同集成员固定检查输入与原提交，七份检查归档的压缩及原始SHA核同。主运行根--show-enabled真实返回off，生产控制文件及正式宿主registry均缺省；已装d154561引擎三文件未变，无需重装。旧cron不继承pane export的缺口已解决，原检查通过与运行标记断言失败/后续复核分列保留，不重复full。新增done送达、30分钟有活停滞/两小时去重/三次升级、十分钟错误退避接续不在本提交，沿原dev另交核验，#20保持in-progress。主管协调各项目owner授权、实际根/角色绑定和唯一入口后，才由原ops演练、持久on及原stall首tick验收；不越仓认领、不补发uncertain。结论已在#20评论回读，本轮未设on、派活、回收或改live/对局。原件paper/materials/20261022-issue20-control-ops/receipt.json。
 
 - 2026-10-22T04:18:56+08:00 八条旧学习通知真实转达原回执再次核同，CLI仍不支持#4/#13/#14三研究身份，watcher_received/roy_notified登记继续pending；保旧拒绝及原科学范围，不代ACK或重复提醒。原件paper/materials/20261022-0415-ops/notice-readback.json。
+
+2026-10-22T05:16:02+08:00 八条学习通知均为原异议重提。已逐项核完整原文、生产者与来源证据SHA，并回读原ops_forwarded、双收件箱字节窗口、watcher实读及向Roy可见转达的角色回执，全部一致；实际转达证据保留，不把queued当送达，也不推断Roy亲自接受结论。CLI源码SHA未变，仍不支持#4/#13/#14三个研究任务身份，watcher_received和roy_notified正式登记继续pending；保留旧拒绝及false状态，不改任务名、不重认证、不代ACK或重复提醒。牌堆保真与身份、配对增量未校准、跨界9HP无归因、逐卡独立分母、SPORE未知及局部实现范围继续沿原科学父保留。本轮仅补核验回执和阻塞记录，原#31/#20接续不动，不新开学习、模型、full或dataset，不改对局。原件paper/materials/20261022-0515-ops/receipt.json。

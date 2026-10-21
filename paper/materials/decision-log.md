@@ -5716,3 +5716,5 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
 - 2026-10-22T04:37:36+08:00 [ops] 034302四局复盘及九账本/三pending出牌提案核同，无新纯bug；唯一dataset --no-raw退出0/复盘标记通过，保存指定lessons/ledger及自有生成物。非源码发布/收益或科学父完成。paper/materials/20261022-0415-ops/receipt.json。
 
 - 2026-10-22T04:41:30+08:00 [ops] 核034302四局唯一dataset0及实际记录83f3c975完成；12生成/761归档blob和四局复盘消费标记核同，指定lessons/ledger及三提案增量已提交，两个PID退出。保原precommit pending快照、历史未知/科学父，不重生成器或改当前局。原件paper/materials/20261022-0440-ops/receipt.json。
+
+- 2026-10-22T05:16:02+08:00 [ops] 0515八条重复学习异议原文/证据及真实转达回执核同；原研究CLI身份兼容阻塞未变，后两角色登记pending，保原范围/科学父；仅记录、不重认证/代ACK/提醒/生成器或改对局。原件：paper/materials/20261022-0515-ops/receipt.json。
