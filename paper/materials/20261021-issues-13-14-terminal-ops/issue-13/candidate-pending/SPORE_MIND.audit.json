@@ -1,0 +1,199 @@
+{
+  "issue": 13,
+  "batch": "issue-13-card-models-20261021-111429",
+  "character": "silent",
+  "card_id": "SPORE_MIND",
+  "status": "unmodelled_no_effect_candidate",
+  "model_schema": "CardModel interface at runtime 5a295bb5ed52f0c0fa5e8c045dcfcba3d894b532; no new production schema is claimed",
+  "model_file": "/home/dw/Projects/agent-sts2/.worktrees/issue-13-card-models-20261021/knowledge/characters/silent/pending/issue-13-issue-13-card-models-20261021-111429/SPORE_MIND.models.json",
+  "all_drafts_known_false": true,
+  "finding": "拒绝建效果模型：正文空且无真实施放，继续unmodelled。",
+  "original_links": {
+    "ledger": [],
+    "proposals": []
+  },
+  "missing_runtime_representation": [
+    "无施放、无效果后继；来源具体生成动作/实例未绑定。"
+  ],
+  "fixed_test_design": [
+    "空正文+空变量+消耗不是零效果充分证据",
+    "历史索引的唯一同名施放来自其他角色，已拒绝",
+    "未知来源不按时间邻近补归属"
+  ],
+  "shadow": {
+    "A": 60,
+    "A_baseline": 60,
+    "B": 378,
+    "B_baseline": 459,
+    "questions": [
+      "7XS2Y920KA6E-f17",
+      "7XS2Y920KA6E-f19",
+      "7XS2Y920KA6E-f20"
+    ],
+    "runs": [
+      "7XS2Y920KA6E"
+    ],
+    "candidate_questions": []
+  },
+  "audited_actions": [],
+  "audited_action_count": 0,
+  "independent_runs": [],
+  "observed_ascensions": [],
+  "hand_observations_shadow_rows": 10,
+  "hand_observations_shadow_turns": 4,
+  "hand_runs_shadow": [
+    "7XS2Y920KA6E"
+  ],
+  "observed_faces": [],
+  "unknowns": [
+    "无施放、无效果后继；来源具体生成动作/实例未绑定。",
+    "升级未有深核施放"
+  ],
+  "guard": "仅下列精确已核牌面/上下文有研究支持；缺角色、进阶、升级、目标、变量、期限或后继时拒绝升known。正例重放不是通用充分条件。",
+  "evidence_audit": "/home/dw/Projects/agent-sts2/learner/runs/20261021-111653-8735c888-1393-4256-84d9-821d4e4a14ea-issue-13-card-models-task/effect-audit.json",
+  "source_index": "/home/dw/Projects/agent-sts2/learner/runs/20261021-111653-8735c888-1393-4256-84d9-821d4e4a14ea-issue-13-card-models-task/source-index.json",
+  "version_scope": {
+    "7XS2Y920KA6E": {
+      "ended_snapshot": {
+        "row": {
+          "run_id": "7XS2Y920KA6E",
+          "ended": "2026-10-20T21:21:23.436Z",
+          "ascension": 10,
+          "character": "SILENT",
+          "code": "current"
+        },
+        "source": {
+          "path": "/home/dw/Projects/agent-sts2/.artifacts/ops-issues-13-14-dispatch-20261021/shared-inputs/runs.jsonl",
+          "offset": 396442,
+          "bytes": 484,
+          "sha256": "2ac7927d1d3a77c1d70d12c850674f72f25e82a53baf9f106cc1ac3bec0314f2"
+        }
+      },
+      "frozen_run_config": [
+        {
+          "reported": {
+            "ts": "2026-10-20T20:28:43.890Z",
+            "run_id": "7XS2Y920KA6E",
+            "character": "SILENT",
+            "ascension": 10,
+            "floor": 1,
+            "restart": false,
+            "code": {
+              "commit": null,
+              "code": null,
+              "dirty": null,
+              "dirty_files": [],
+              "branch": null,
+              "worktree": "live",
+              "error": "git status failed: spawnSync git ENOBUFS"
+            },
+            "commit": null,
+            "dirty": null,
+            "branch": null,
+            "experience_version": null,
+            "mod_version": null,
+            "game_version": null
+          },
+          "source": {
+            "path": "/home/dw/Projects/agent-sts2/logs/run-config.jsonl",
+            "offset": 2318944,
+            "bytes": 6029,
+            "sha256": "696820260d24ae1b946a30b0f48aaf57bd67843bb8331dea7f8f3e5b9a5268a9",
+            "run": "7XS2Y920KA6E",
+            "floor": 1,
+            "turn": null,
+            "ts": "2026-10-20T20:28:43.890Z"
+          }
+        }
+      ],
+      "scope": "仅日志申报的agent代码/脏标记；不把code=current或dirty解释为精确源码。run-config不代逐动作原生源码封印。游戏构建/补丁版本未封印则unknown。",
+      "game_build_version": "unknown",
+      "replay_runtime_commit": "5a295bb5ed52f0c0fa5e8c045dcfcba3d894b532"
+    }
+  },
+  "counterexamples": [],
+  "published": false,
+  "merged": false,
+  "applicable_runtime": "研究候选只在本树R410做解析读回；历史运行版本按冻结run-config申报分列，不能冒称这些对局都跑R410。",
+  "visible_faces_without_effect_inference": [
+    {
+      "location": "hand",
+      "card": {
+        "index": 1,
+        "card_id": "SPORE_MIND",
+        "name": "孢子心灵",
+        "upgraded": false,
+        "target_type": "None",
+        "requires_target": false,
+        "target_index_space": null,
+        "valid_target_indices": [],
+        "costs_x": false,
+        "star_costs_x": false,
+        "energy_cost": 1,
+        "star_cost": 0,
+        "rules_text": "",
+        "resolved_rules_text": "消耗。",
+        "dynamic_values": [],
+        "playable": true,
+        "can_play_result": true,
+        "unplayable_reason": null,
+        "unplayable_reason_raw": null,
+        "unplayable_preventer_id": null,
+        "unplayable_preventer_type": null
+      },
+      "source": {
+        "path": "/home/dw/Projects/agent-sts2/paper/materials/2026-10-21-r409-card-shadow/frozen/states.jsonl.gz",
+        "offset": 7938072,
+        "bytes": 31700,
+        "sha256": "95ee0a4ffdd81b44c5a12ebfe3a02c1df14548a34f7d9664e37020a8ccb5d6eb",
+        "offset_space": "gzip_uncompressed",
+        "run": "7XS2Y920KA6E",
+        "floor": 20,
+        "turn": 3,
+        "ts": "2026-10-20T20:48:49.010Z",
+        "observed_ts": "2026-10-20T20:48:48.578Z"
+      }
+    },
+    {
+      "location": "hand",
+      "card": {
+        "index": 3,
+        "card_id": "SPORE_MIND",
+        "name": "孢子心灵",
+        "upgraded": false,
+        "target_type": "None",
+        "requires_target": false,
+        "target_index_space": null,
+        "valid_target_indices": [],
+        "costs_x": false,
+        "star_costs_x": false,
+        "energy_cost": 1,
+        "star_cost": 0,
+        "rules_text": "",
+        "resolved_rules_text": "昏眩。 消耗。",
+        "dynamic_values": [],
+        "playable": false,
+        "can_play_result": false,
+        "unplayable_reason": "blocked_by_hook",
+        "unplayable_reason_raw": "BlockedByHook",
+        "unplayable_preventer_id": "RINGING_POWER",
+        "unplayable_preventer_type": "MegaCrit.Sts2.Core.Models.Powers.RingingPower"
+      },
+      "source": {
+        "path": "/home/dw/Projects/agent-sts2/paper/materials/2026-10-21-r409-card-shadow/frozen/states.jsonl.gz",
+        "offset": 6561441,
+        "bytes": 31049,
+        "sha256": "e826548fdf38397659abd64f6185ff240e194cb6b0111d3a260409b9d860042a",
+        "offset_space": "gzip_uncompressed",
+        "run": "7XS2Y920KA6E",
+        "floor": 17,
+        "turn": 9,
+        "ts": "2026-10-20T20:45:28.826Z",
+        "observed_ts": "2026-10-20T20:45:28.822Z"
+      }
+    }
+  ],
+  "visible_shadow_ascensions": [
+    10
+  ]
+}

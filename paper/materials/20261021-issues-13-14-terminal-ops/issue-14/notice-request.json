@@ -1,0 +1,34 @@
+{
+  "kind": "learning-finding-notice-request",
+  "request_only": true,
+  "issue": 14,
+  "character": "silent",
+  "batch": "issue-14-act3-calibration-20261021-111429",
+  "findings": [
+    {
+      "kind": "scope-limitation",
+      "prior": "当前整战源码将给定firstPlan直接交applyPlan；初始候选计划不一定覆盖实盘同回合后续补牌。",
+      "finding": "SVBEFF首试T1原四步后，实盘另打基础防御及精准切割，25→31挡、预计损1而实际净损0；这是局部可核策略路径差异，尚未证明R410固定回放或整体4.40倍误差的机制根因。",
+      "evidence": [
+        "/home/dw/Projects/agent-sts2/learner/runs/20261021-111653-dbbc4dc0-8ef7-4421-8395-2c1621797aec-issue-14-act3-calibration-task/policy-prefix-case.json",
+        "/home/dw/Projects/agent-sts2/learner/runs/20261021-111653-dbbc4dc0-8ef7-4421-8395-2c1621797aec-issue-14-act3-calibration-task/verified-raw-refs.jsonl"
+      ],
+      "affected_ids": [
+        "silent-0559",
+        "silent-proposal-40be025a2ec4528e",
+        "roy-20261017-human-pace-h0",
+        "issue-14"
+      ],
+      "next_step": "原owner固定R410单案例逐步轨迹对照；旧验证已读只作诊断/回归，正式候选验收另用未读新局留出。"
+    }
+  ],
+  "route": [
+    "ops",
+    "watcher",
+    "Roy"
+  ],
+  "delivery_status": "not_created_or_forwarded_by_this_research_task",
+  "ACK": {},
+  "existing_notice_ACKs": "未修改；旧校准完成报告notices=[]，未发现本项现成通知，不补造。",
+  "action": "ops通过原通知链保存并转发本项限定发现；公开issue评论不替代watcher_received或roy_notified。"
+}

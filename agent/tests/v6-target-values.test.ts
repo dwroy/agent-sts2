@@ -15,7 +15,9 @@ it("counts low probabilities as bounded known values without inventing W or PW",
       expected_win_bound: { lower: 0, upper: p, reason: p === 0 ? "formation_impossible" : "low_probability_not_simulated" } });
     expect(currentBossKnown(table, row.entry.option_id)).toBe(true);
   }
-  expect(constructionCoverage(["take", "skip"], table).reason).toBeNull();
+  // A target-local bound is known information, but is not a measured weighted outcome for routing.
+  expect(constructionCoverage(["take", "skip"], table)).toEqual({ total: 2, known: 0, ratio: 0,
+    unknown: ["take", "skip"], reason: "insufficient_known_options" });
   expect(validateProjectionEntries(table.combinations.map(r => r.entry)).every(v => v.ok)).toBe(true);
   expect(targetValueSummaries(table, "take")[0]).toMatchObject({ P: .04, W: null, PW: null, PW_bound: [0, .04] });
   table.combinations[1]!.entry.expected_win_bound!.upper = .5;
@@ -55,5 +57,12 @@ it("retains deterministic P bounds after the combat deadline instead of erasing 
   let clock = 0; const engine = new V6ProjectionEngine(new FixedRunner(), () => { clock += 6000; return clock; });
   const table = await engine.evaluate(r);
   expect(table.combinations).toHaveLength(2);
-  expect(constructionCoverage(["skip", "take"], table).reason).toBeNull();
+  for (const row of table.combinations) {
+    const p = row.entry.availability.take!;
+    expect(currentBossKnown(table, row.entry.option_id)).toBe(true);
+    expect(row.entry).toMatchObject({ win: null, win_complete: null, expected_win: null,
+      expected_win_bound: { lower: 0, upper: p, reason: p === 0 ? "formation_impossible" : "low_probability_not_simulated" } });
+  }
+  expect(constructionCoverage(["skip", "take"], table)).toEqual({ total: 2, known: 0, ratio: 0,
+    unknown: ["skip", "take"], reason: "insufficient_known_options" });
 });

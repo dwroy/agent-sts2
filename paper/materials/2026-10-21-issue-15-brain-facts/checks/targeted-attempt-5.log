@@ -1,0 +1,49 @@
+
+ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/issue-15-v2-brain-facts/agent
+
+ ❯ tests/v6-brain-card-value-loop.test.ts (6 tests | 6 failed) 60097ms
+   × adds bounded facts to the actual combat→reward brain question for T0TP8S9MMU9Q F2 10026ms
+   × adds bounded facts to the actual combat→reward brain question for RBMEQGXPE9Z2 F3 10003ms
+   × keeps the exact original brain question when missing 10010ms
+   × keeps the exact original brain question when corrupt 10021ms
+   × keeps the exact original brain question when timeout 10018ms
+   × keeps the exact original brain question when no-combat 10015ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 6 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/v6-brain-card-value-loop.test.ts > adds bounded facts to the actual combat→reward brain question for T0TP8S9MMU9Q F2
+ FAIL  tests/v6-brain-card-value-loop.test.ts > adds bounded facts to the actual combat→reward brain question for RBMEQGXPE9Z2 F3
+Error: Test timed out in 10000ms.
+If this is a long-running test, pass a timeout value as the last argument or configure it globally with "testTimeout".
+ ❯ tests/v6-brain-card-value-loop.test.ts:75:61
+     73|   } finally { await server.close(); }
+     74| }
+     75| it.each([["T0TP8S9MMU9Q", 2], ["RBMEQGXPE9Z2", 3]] as const)("adds bou…
+       |                                                             ^
+     76|   const actual = await replay(run, floor), original = await replay(run…
+     77|   const table = actual.tables.at(-1)!;
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/6]⎯
+
+ FAIL  tests/v6-brain-card-value-loop.test.ts > keeps the exact original brain question when missing
+ FAIL  tests/v6-brain-card-value-loop.test.ts > keeps the exact original brain question when corrupt
+ FAIL  tests/v6-brain-card-value-loop.test.ts > keeps the exact original brain question when timeout
+ FAIL  tests/v6-brain-card-value-loop.test.ts > keeps the exact original brain question when no-combat
+Error: Test timed out in 10000ms.
+If this is a long-running test, pass a timeout value as the last argument or configure it globally with "testTimeout".
+ ❯ tests/v6-brain-card-value-loop.test.ts:103:65
+    101|   console.info(JSON.stringify({ fixture: `${run}-F${floor}`, predictio…
+    102| }, 10000);
+    103| it.each(["missing", "corrupt", "timeout", "no-combat"] as const)("keep…
+       |                                                                 ^
+    104|   const actual = await replay("RBMEQGXPE9Z2", 3, mode), original = awa…
+    105|   expect(actual.call).toEqual(original.call);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/6]⎯
+
+
+ Test Files  1 failed | 2 passed (3)
+      Tests  6 failed | 8 passed (14)
+   Start at  11:25:18
+   Duration  68.51s (transform 3.47s, setup 632ms, import 4.16s, tests 63.00s, environment 0ms)
+

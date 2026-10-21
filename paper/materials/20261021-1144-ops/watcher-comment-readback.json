@@ -1,0 +1,55 @@
+{
+  "comment": {
+    "id": "IC_kwDOU7DWbs8AAAABd_T60w",
+    "author": {
+      "login": "dwroy"
+    },
+    "authorAssociation": "OWNER",
+    "body": "[watcher] #4 三项科学异议原文已实读，并在本会话向 Roy 可见转达；研究核收继续有效，精英校准及原角色 CLI ACK 仍未完成。\n\n原始 `disagreements.json` 与 ops 归档 SHA256 同为 `012008f5419fb0411d3682762626ce546478a3bdaf4563aae0041a7e275f61e3`；D1–D3 notice 的完整 message 各自与原项完全相等。以下保留学习者原措辞：\n\n- **D1 原观点**：原审计称真实开场保留可用牌堆；缺显式牌堆时才deck-minus-hand。\n\n  **异议原文**：显式牌堆在原字节中存在；是冻结提取主动剥离。ET1一场还造成六张重复身份和升级失配。保留原结果作原管线诊断，不称完整真实开场控制。\n\n- **D2 原观点**：原授权：“当前不影响R407运行：拿牌比较用同种子配对差。”\n\n  **异议原文**：不否定原调度决定，但拒绝把其理由外推为配对增量已校准或排名可靠。本窗口只比较绝对结果，无候选反事实，且有状态/牌身份相关偏差。\n\n- **D3 原观点**：原审计将净损描述为入场至终局；实际使用fight.hp_loss，两场胜利只覆盖到最后COMBAT帧。\n\n  **异议原文**：ET1 F9最后战斗42到退出39、2XCG F9最后战斗25到退出19；合9HP未纳原“净损”。保留原统计并并列退出口径均值27.4038、模拟残差+10.7151，原因不补值。\n\nD1 对应 `ET1QAZCV8GUP-f31-fight11`；D3 对应 `ET1QAZCV8GUP-f9-fight4` 与 `2XCG8LXUZLRE-f9-fight5`。字节索引、完整 SHA、影响范围和建议下一步保留在原文，不把开场能力或策略差异归因为全部模拟偏差，也不用未归因的 9 HP 拟合伤害参数。\n\n核收范围：本 watcher 核对原文/归档/三 notice 绑定及 ops 摘要；99 输入、33 产物、3,895 原日志引用、771 历史 blob 全同是 ops 的核验结论，本次未重读全部原日志。40 局、52 场未删失精英战/33 独立局、实死 4 的口径不扩大；本窗口不能证明候选增量排名可靠。\n\n实际状态分别记录：我已实读且已在本会话明确向 Roy 转达；不代表 Roy 已亲自确认或同意。最新 notice 已有 ops 自动转发回执，原研究 task 的 manual CLI 仍不兼容，`watcher_received`/`roy_notified` 的生产 CLI ACK 继续 pending；未代填、未重命名原任务或改通知范围。#8 仅处理原 R4 task，不能当作本研究 task 已兼容。\n\n四份候选仍 waiting，未登记新提案或账本 ID、未续派、未发布、未关闭本 issue/科学父。建议下一步先评审原提案中的零 MC 输入保真与跨边界 HP 固定索引检查，候选配对增量另行验证；本评论没有启动新研究或模拟。\n\n原文与 ops 核收：`paper/materials/20261021-issue4-terminal-ops/`；本次逐项实读证明：`paper/materials/20261021-issue-4-watcher-review/actual-read.json`。三个 notice：D1 `99a933ce6b140f81db812b16`、D2 `f9a02febd8602a4ab46d685f`、D3 `4d4fd8d8ebbbf1b709b759fc`。\n",
+    "createdAt": "2026-10-21T03:44:43Z",
+    "includesCreatedEdit": false,
+    "isMinimized": false,
+    "minimizedReason": "",
+    "reactionGroups": [],
+    "url": "https://github.com/dwroy/agent-sts2/issues/4#issuecomment-6307510995",
+    "viewerDidAuthor": true
+  },
+  "state": "OPEN",
+  "labels": [
+    {
+      "id": "LA_kwDOU7DWbs8AAAAC-WvLcQ",
+      "name": "owner:learner",
+      "description": "learner batch (game knowledge from runs only)",
+      "color": "fbca04"
+    },
+    {
+      "id": "LA_kwDOU7DWbs8AAAAC-WvNvA",
+      "name": "P2",
+      "description": "normal",
+      "color": "fbca04"
+    },
+    {
+      "id": "LA_kwDOU7DWbs8AAAAC-WvPDw",
+      "name": "type:research",
+      "description": "analysis or experiment, no production change",
+      "color": "7057ff"
+    },
+    {
+      "id": "LA_kwDOU7DWbs8AAAAC-WvQmg",
+      "name": "status:review",
+      "description": "delivered, awaiting acceptance",
+      "color": "fbca04"
+    },
+    {
+      "id": "LA_kwDOU7DWbs8AAAAC-WvR3w",
+      "name": "area:sim",
+      "description": "simulators and predictors",
+      "color": "bfd4f2"
+    }
+  ],
+  "watcher_actual_read_verified": true,
+  "relay_reported_by_original_watcher_and_user": true,
+  "roy_personal_acceptance": false,
+  "watcher_roy_CLI_ACK": "pending; original research identity unsupported",
+  "no_repeat_forward_or_ack": true
+}

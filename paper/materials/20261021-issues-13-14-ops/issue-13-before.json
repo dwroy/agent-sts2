@@ -1,0 +1,40 @@
+{
+  "body": "## Goal\n补齐模拟器里尚未建模的常见卡牌（游戏知识，由学习者依对局证据处理）。\n\n## 背景\nR409 影子评估中 A 条目未知原因：`unmodelled_card:EXPOSE` 208 次、`SPORE_MIND` 60 次、`NIGHTMARE` 11 次、`SHADOW_STEP`、`STORM_OF_STEEL` 各 4 次。这些牌在拿牌、Boss 模拟与出牌推演中都按未知处理。\n\n## Acceptance\n- [ ] 学习者从本角色对局中已观察的牌面与效果出发，提出卡牌模型条目（带证据局号），按原学习闭环发布\n- [ ] 消费者读回：对应牌不再标 unmodelled，回放测试通过\n\n## Evidence\n- `.worktrees/v6-r409-card-shadow-20261021/paper/materials/2026-10-21-r409-card-shadow/analysis-summary.json`\n",
+  "comments": [],
+  "labels": [
+    {
+      "id": "LA_kwDOU7DWbs8AAAAC-WvLcQ",
+      "name": "owner:learner",
+      "description": "learner batch (game knowledge from runs only)",
+      "color": "fbca04"
+    },
+    {
+      "id": "LA_kwDOU7DWbs8AAAAC-WvNvA",
+      "name": "P2",
+      "description": "normal",
+      "color": "fbca04"
+    },
+    {
+      "id": "LA_kwDOU7DWbs8AAAAC-WvPDw",
+      "name": "type:research",
+      "description": "analysis or experiment, no production change",
+      "color": "7057ff"
+    },
+    {
+      "id": "LA_kwDOU7DWbs8AAAAC-WvPuQ",
+      "name": "status:ready",
+      "description": "can start now",
+      "color": "0e8a16"
+    },
+    {
+      "id": "LA_kwDOU7DWbs8AAAAC-WvR3w",
+      "name": "area:sim",
+      "description": "simulators and predictors",
+      "color": "bfd4f2"
+    }
+  ],
+  "number": 13,
+  "state": "OPEN",
+  "title": "补齐未建模常见卡牌（EXPOSE、SPORE_MIND 等）",
+  "url": "https://github.com/dwroy/agent-sts2/issues/13"
+}

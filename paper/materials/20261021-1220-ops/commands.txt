@@ -1,0 +1,7 @@
+export TMPDIR=/home/dw/Projects/agent-sts2/learner/runs/20261021-121307-a4e1dd96-b5e8-4e68-b8cd-cc748776326f-fix-batch
+export PATH=$HOME/.local/node/bin:$PATH
+export PYTHONDONTWRITEBYTECODE=1
+export NODE_DISABLE_COMPILE_CACHE=1
+cd /home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261021-121301/agent
+nice -n 19 npx tsc -p tsconfig.json --noEmit
+nice -n 19 node node_modules/vitest/vitest.mjs run tests/ops-current-budget.test.ts tests/v6-publication-task-link.test.ts tests/unassigned-proposal-resolution.test.ts tests/learner-report-fixes-shape.test.ts tests/fixture-command.test.ts tests/continuation-retaliation.test.ts --configLoader runner --cache=false --pool=threads --maxWorkers=1 --reporter=dot

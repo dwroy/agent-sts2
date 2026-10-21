@@ -1,0 +1,70 @@
+{
+  "at": "2026-10-21T11:18:00+08:00",
+  "issue": 14,
+  "batch": "issue-14-act3-calibration-20261021-111429",
+  "launcher_state": "launcher-running-await-native-first-reply",
+  "event_log": "/home/dw/Projects/agent-sts2/learner/runs/20261021-111653-dbbc4dc0-8ef7-4421-8395-2c1621797aec-issue-14-act3-calibration-task.jsonl",
+  "event_refs": [
+    {
+      "offset": 0,
+      "bytes": 10616,
+      "sha256": "805485b08b28686738e1c45e44ac2d653cb233b0b383a3fe4996021c198ccc4d",
+      "type": "learner_launch"
+    },
+    {
+      "offset": 13912,
+      "bytes": 77,
+      "sha256": "1070f0b1da73d4b7afbc1537ec909e7f20540dcf2ee38318b9745a1edbcea7a9",
+      "type": "thread.started"
+    },
+    {
+      "offset": 14445,
+      "bytes": 24,
+      "sha256": "cf515a4acc6e41e0f111f01c78b13ba4253f611de9374474864f01e69a90c08f",
+      "type": "turn.started"
+    }
+  ],
+  "thread_id": "01a15c76-5069-7ba0-9793-616ad15e03a9",
+  "launch_metadata": [
+    {
+      "type": "learner_launch",
+      "engine": "codex",
+      "model": null,
+      "effort": null,
+      "cwd": "/home/dw/Projects/agent-sts2/.worktrees/issue-14-act3-calibration-20261021",
+      "task": "issue-14-act3-calibration-task",
+      "params": {
+        "batch": "issue-14-act3-calibration-20261021-111429",
+        "worktree": "/home/dw/Projects/agent-sts2/.worktrees/issue-14-act3-calibration-20261021",
+        "evidence": "/home/dw/Projects/agent-sts2/.artifacts/ops-issues-13-14-dispatch-20261021/issue-14-inputs.json",
+        "scratch": "/home/dw/Projects/agent-sts2/learner/runs/20261021-111653-dbbc4dc0-8ef7-4421-8395-2c1621797aec-issue-14-act3-calibration-task"
+      },
+      "permissions": null
+    }
+  ],
+  "owned_process_snapshot": [
+    {
+      "pid": 3560240,
+      "state": "S",
+      "nice": 19,
+      "start_ticks": "144454560",
+      "cwd": "/home/dw/Projects/agent-sts2/.worktrees/issue-14-act3-calibration-20261021"
+    },
+    {
+      "pid": 3560290,
+      "state": "S",
+      "nice": 19,
+      "start_ticks": "144454602",
+      "cwd": "/home/dw/Projects/agent-sts2/agent"
+    }
+  ],
+  "model_requested": "gpt-6.1-sol",
+  "effort_requested": "high",
+  "native_effort_verified": false,
+  "permissions_expanded": false,
+  "compute_workers": 1,
+  "background_process_limit": 4,
+  "compute_command_concurrency": 1,
+  "profile": "existing learner/run.ts original sandbox; no network",
+  "polling_or_second_model": false
+}

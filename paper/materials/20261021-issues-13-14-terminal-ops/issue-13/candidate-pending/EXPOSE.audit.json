@@ -1,0 +1,1082 @@
+{
+  "issue": 13,
+  "batch": "issue-13-card-models-20261021-111429",
+  "character": "silent",
+  "card_id": "EXPOSE",
+  "status": "proposed_research_only",
+  "model_schema": "CardModel interface at runtime 5a295bb5ed52f0c0fa5e8c045dcfcba3d894b532; no new production schema is claimed",
+  "model_file": "/home/dw/Projects/agent-sts2/.worktrees/issue-13-card-models-20261021/knowledge/characters/silent/pending/issue-13-issue-13-card-models-20261021-111429/EXPOSE.models.json",
+  "all_drafts_known_false": true,
+  "finding": "候选：补升级Power=3，并实现单目标清挡/清全部制品后施易伤；普通已known不等于清除已实现。",
+  "original_links": {
+    "ledger": [
+      "silent-0066",
+      "silent-0073",
+      "silent-0208",
+      "silent-0217"
+    ],
+    "proposals": [
+      "silent-proposal-00a6a10b15a62b38"
+    ]
+  },
+  "missing_runtime_representation": [
+    "目标清挡和清全部人工制品在已发布CardModel无字段，须实现solver及rollout消费后再升known。"
+  ],
+  "fixed_test_design": [
+    "升级Power=3不再丢失；普通不回归为未知",
+    "多目标只改选择目标；已有易伤做增量",
+    "重放/附魔/缺目标信息保持unknown"
+  ],
+  "shadow": {
+    "A": 208,
+    "A_baseline": 208,
+    "B": 868,
+    "B_baseline": 1054,
+    "questions": [
+      "7XS2Y920KA6E-f19",
+      "7XS2Y920KA6E-f20",
+      "7XS2Y920KA6E-f27",
+      "7XS2Y920KA6E-f28",
+      "7XS2Y920KA6E-f30",
+      "7XS2Y920KA6E-f31",
+      "7XS2Y920KA6E-f33",
+      "7XS2Y920KA6E-f35",
+      "7XS2Y920KA6E-f36",
+      "7XS2Y920KA6E-f37",
+      "7XS2Y920KA6E-f44",
+      "7XS2Y920KA6E-f45",
+      "7XS2Y920KA6E-f46"
+    ],
+    "runs": [
+      "7XS2Y920KA6E"
+    ],
+    "candidate_questions": [
+      {
+        "question": "7XS2Y920KA6E-f35",
+        "option": {
+          "index": 2,
+          "card_id": "EXPOSE",
+          "name": "暴露",
+          "upgraded": false,
+          "card_type": "Skill",
+          "rarity": "Uncommon",
+          "energy_cost": 0,
+          "rules_text": "去除敌人身上的所有格挡值和人工制品。 并给予{Power:diff()}层易伤。",
+          "resolved_rules_text": "去除敌人身上的所有格挡值和人工制品。 并给予2层易伤。 消耗。",
+          "dynamic_values": [
+            {
+              "name": "Power",
+              "base_value": 2,
+              "current_value": 2,
+              "enchanted_value": 2,
+              "is_modified": false,
+              "was_just_upgraded": false
+            }
+          ]
+        },
+        "brain_choice": "skip"
+      },
+      {
+        "question": "7XS2Y920KA6E-f4",
+        "option": {
+          "index": 2,
+          "card_id": "EXPOSE",
+          "name": "暴露",
+          "upgraded": false,
+          "card_type": "Skill",
+          "rarity": "Uncommon",
+          "energy_cost": 0,
+          "rules_text": "去除敌人身上的所有格挡值和人工制品。 并给予{Power:diff()}层易伤。",
+          "resolved_rules_text": "去除敌人身上的所有格挡值和人工制品。 并给予2层易伤。 消耗。",
+          "dynamic_values": [
+            {
+              "name": "Power",
+              "base_value": 2,
+              "current_value": 2,
+              "enchanted_value": 2,
+              "is_modified": false,
+              "was_just_upgraded": false
+            }
+          ]
+        },
+        "brain_choice": "card2"
+      },
+      {
+        "question": "CLCR3DUH66HK-f23",
+        "option": {
+          "index": 0,
+          "card_id": "EXPOSE",
+          "name": "暴露",
+          "upgraded": false,
+          "card_type": "Skill",
+          "rarity": "Uncommon",
+          "energy_cost": 0,
+          "rules_text": "去除敌人身上的所有格挡值和人工制品。 并给予{Power:diff()}层易伤。",
+          "resolved_rules_text": "去除敌人身上的所有格挡值和人工制品。 并给予2层易伤。 消耗。",
+          "dynamic_values": [
+            {
+              "name": "Power",
+              "base_value": 2,
+              "current_value": 2,
+              "enchanted_value": 2,
+              "is_modified": false,
+              "was_just_upgraded": false
+            }
+          ]
+        },
+        "brain_choice": "card1"
+      },
+      {
+        "question": "MGB1D1T0Y8G0-f5",
+        "option": {
+          "index": 2,
+          "card_id": "EXPOSE",
+          "name": "暴露",
+          "upgraded": false,
+          "card_type": "Skill",
+          "rarity": "Uncommon",
+          "energy_cost": 0,
+          "rules_text": "去除敌人身上的所有格挡值和人工制品。 并给予{Power:diff()}层易伤。",
+          "resolved_rules_text": "去除敌人身上的所有格挡值和人工制品。 并给予2层易伤。 消耗。",
+          "dynamic_values": [
+            {
+              "name": "Power",
+              "base_value": 2,
+              "current_value": 2,
+              "enchanted_value": 2,
+              "is_modified": false,
+              "was_just_upgraded": false
+            }
+          ]
+        },
+        "brain_choice": "card0"
+      }
+    ]
+  },
+  "audited_actions": [
+    {
+      "path": "/home/dw/Projects/agent-sts2/paper/materials/2026-10-21-r409-card-shadow/frozen/decisions.jsonl.gz",
+      "offset": 1761790,
+      "bytes": 2290,
+      "sha256": "8d0bc9ec88776c1ca2f3221eb476f4c192d38ae777033bf08a1023e6b6b320d2",
+      "offset_space": "gzip_uncompressed",
+      "run": "7XS2Y920KA6E",
+      "floor": 6,
+      "turn": 2,
+      "ts": "2026-10-20T20:33:51.192Z"
+    },
+    {
+      "path": "/home/dw/Projects/agent-sts2/paper/materials/2026-10-21-r409-card-shadow/frozen/decisions.jsonl.gz",
+      "offset": 2008682,
+      "bytes": 30218,
+      "sha256": "c9371b14c6114b4370e9fe1300b5a1f47390d2c39021d4c9fd217139ec646ff6",
+      "offset_space": "gzip_uncompressed",
+      "run": "7XS2Y920KA6E",
+      "floor": 7,
+      "turn": 1,
+      "ts": "2026-10-20T20:34:59.756Z"
+    },
+    {
+      "path": "/home/dw/Projects/agent-sts2/paper/materials/2026-10-21-r409-card-shadow/frozen/decisions.jsonl.gz",
+      "offset": 2802256,
+      "bytes": 2161,
+      "sha256": "4f2f2a606f214ed70b5c6069553d7658168d903071a87204a3d601803452115e",
+      "offset_space": "gzip_uncompressed",
+      "run": "7XS2Y920KA6E",
+      "floor": 9,
+      "turn": 2,
+      "ts": "2026-10-20T20:37:04.378Z"
+    },
+    {
+      "path": "/home/dw/Projects/agent-sts2/paper/materials/2026-10-21-r409-card-shadow/frozen/decisions.jsonl.gz",
+      "offset": 3617777,
+      "bytes": 37668,
+      "sha256": "92d11bb7380fda1748bf3a1e652d3143c4c4146ccd6420506c0597ac47ce15cf",
+      "offset_space": "gzip_uncompressed",
+      "run": "7XS2Y920KA6E",
+      "floor": 12,
+      "turn": 1,
+      "ts": "2026-10-20T20:38:59.313Z"
+    },
+    {
+      "path": "/home/dw/Projects/agent-sts2/paper/materials/2026-10-21-r409-card-shadow/frozen/decisions.jsonl.gz",
+      "offset": 4149320,
+      "bytes": 2325,
+      "sha256": "5fcc0047c52ebca382f428d92de3ff1b58c82d4bb0d51d352a214020b1c868ef",
+      "offset_space": "gzip_uncompressed",
+      "run": "7XS2Y920KA6E",
+      "floor": 13,
+      "turn": 1,
+      "ts": "2026-10-20T20:40:49.179Z"
+    },
+    {
+      "path": "/home/dw/Projects/agent-sts2/paper/materials/2026-10-21-r409-card-shadow/frozen/decisions.jsonl.gz",
+      "offset": 4525936,
+      "bytes": 2358,
+      "sha256": "4158ea0d773541af99726953deae6355ef856277e354cc64a74f12c68f413d23",
+      "offset_space": "gzip_uncompressed",
+      "run": "7XS2Y920KA6E",
+      "floor": 14,
+      "turn": 1,
+      "ts": "2026-10-20T20:41:52.435Z"
+    },
+    {
+      "path": "/home/dw/Projects/agent-sts2/paper/materials/2026-10-21-r409-card-shadow/frozen/decisions.jsonl.gz",
+      "offset": 5662427,
+      "bytes": 2219,
+      "sha256": "95406c942be216860520e66e7a3cbaf9ec218c37d842db75a75bf102e68091c0",
+      "offset_space": "gzip_uncompressed",
+      "run": "7XS2Y920KA6E",
+      "floor": 17,
+      "turn": 3,
+      "ts": "2026-10-20T20:44:31.607Z"
+    },
+    {
+      "path": "/home/dw/Projects/agent-sts2/paper/materials/2026-10-21-r409-card-shadow/frozen/decisions.jsonl.gz",
+      "offset": 6115594,
+      "bytes": 57003,
+      "sha256": "c17eaca1b1fa4a096e58b89a75030ba74fc81c47e75b24dce9acd69c7db035fe",
+      "offset_space": "gzip_uncompressed",
+      "run": "7XS2Y920KA6E",
+      "floor": 19,
+      "turn": 3,
+      "ts": "2026-10-20T20:47:44.328Z"
+    },
+    {
+      "path": "/home/dw/Projects/agent-sts2/paper/materials/2026-10-21-r409-card-shadow/frozen/decisions.jsonl.gz",
+      "offset": 6469498,
+      "bytes": 11274,
+      "sha256": "fd78ffe95e392d3c1b79433623fc51557478e1235d08142c819980b0499cc59b",
+      "offset_space": "gzip_uncompressed",
+      "run": "7XS2Y920KA6E",
+      "floor": 20,
+      "turn": 3,
+      "ts": "2026-10-20T20:48:47.760Z"
+    },
+    {
+      "path": "/home/dw/Projects/agent-sts2/paper/materials/2026-10-21-r409-card-shadow/frozen/decisions.jsonl.gz",
+      "offset": 7975342,
+      "bytes": 2304,
+      "sha256": "70a682b15bd17fe3cf52b892f6c7709e053c80a02db28f63aa3f2db3b419980b",
+      "offset_space": "gzip_uncompressed",
+      "run": "7XS2Y920KA6E",
+      "floor": 27,
+      "turn": 3,
+      "ts": "2026-10-20T20:52:25.361Z"
+    },
+    {
+      "path": "/home/dw/Projects/agent-sts2/paper/materials/2026-10-21-r409-card-shadow/frozen/decisions.jsonl.gz",
+      "offset": 8265116,
+      "bytes": 2213,
+      "sha256": "5bf227620574afee27fa9821b26fdfff0a9f0ca9d993c6adfb84f3aff55538d5",
+      "offset_space": "gzip_uncompressed",
+      "run": "7XS2Y920KA6E",
+      "floor": 28,
+      "turn": 2,
+      "ts": "2026-10-20T20:53:22.959Z"
+    },
+    {
+      "path": "/home/dw/Projects/agent-sts2/paper/materials/2026-10-21-r409-card-shadow/frozen/decisions.jsonl.gz",
+      "offset": 8829550,
+      "bytes": 2249,
+      "sha256": "be3967c771b2c8e8c937beab28d2e65a9c762cdd1ca344f95b3b923f32f5847c",
+      "offset_space": "gzip_uncompressed",
+      "run": "7XS2Y920KA6E",
+      "floor": 30,
+      "turn": 1,
+      "ts": "2026-10-20T20:54:43.443Z"
+    },
+    {
+      "path": "/home/dw/Projects/agent-sts2/paper/materials/2026-10-21-r409-card-shadow/frozen/decisions.jsonl.gz",
+      "offset": 9140678,
+      "bytes": 2134,
+      "sha256": "88220d982c8a4bf1582ab165b9427d1dadfb556f78fe2c76b92ddcb172891af4",
+      "offset_space": "gzip_uncompressed",
+      "run": "7XS2Y920KA6E",
+      "floor": 31,
+      "turn": 1,
+      "ts": "2026-10-20T20:55:56.056Z"
+    },
+    {
+      "path": "/home/dw/Projects/agent-sts2/paper/materials/2026-10-21-r409-card-shadow/frozen/decisions.jsonl.gz",
+      "offset": 9848516,
+      "bytes": 2298,
+      "sha256": "1dbb2f495869ac58e12203f740b2c158e1492f84630c3b688771d66debc4176c",
+      "offset_space": "gzip_uncompressed",
+      "run": "7XS2Y920KA6E",
+      "floor": 33,
+      "turn": 1,
+      "ts": "2026-10-20T20:57:27.250Z"
+    },
+    {
+      "path": "/home/dw/Projects/agent-sts2/paper/materials/2026-10-21-r409-card-shadow/frozen/decisions.jsonl.gz",
+      "offset": 10337327,
+      "bytes": 50089,
+      "sha256": "1ba98d22835fe9d65a8acd40981228a5ecaff1dd3370ff5d494bcccd64054db6",
+      "offset_space": "gzip_uncompressed",
+      "run": "7XS2Y920KA6E",
+      "floor": 35,
+      "turn": 2,
+      "ts": "2026-10-20T20:59:58.232Z"
+    },
+    {
+      "path": "/home/dw/Projects/agent-sts2/paper/materials/2026-10-21-r409-card-shadow/frozen/decisions.jsonl.gz",
+      "offset": 10773255,
+      "bytes": 42712,
+      "sha256": "d3d6a3a7d11f08e57e31fcaec2c4e6cf8fadbd1ac657c32fb0c3c367cd99d6e7",
+      "offset_space": "gzip_uncompressed",
+      "run": "7XS2Y920KA6E",
+      "floor": 36,
+      "turn": 3,
+      "ts": "2026-10-20T21:01:24.301Z"
+    },
+    {
+      "path": "/home/dw/Projects/agent-sts2/paper/materials/2026-10-21-r409-card-shadow/frozen/decisions.jsonl.gz",
+      "offset": 11080883,
+      "bytes": 2316,
+      "sha256": "c9ba058945eff115094e8bb7e98c7bd0ec26092214e8e410069f33fcaf702bc4",
+      "offset_space": "gzip_uncompressed",
+      "run": "7XS2Y920KA6E",
+      "floor": 37,
+      "turn": 1,
+      "ts": "2026-10-20T21:02:11.133Z"
+    },
+    {
+      "path": "/home/dw/Projects/agent-sts2/paper/materials/2026-10-21-r409-card-shadow/frozen/decisions.jsonl.gz",
+      "offset": 14923058,
+      "bytes": 39872,
+      "sha256": "8c6b5aa292b2568d27e893306dabfe87638748eb0a3d590c945d34e0ffdc27d8",
+      "offset_space": "gzip_uncompressed",
+      "run": "7XS2Y920KA6E",
+      "floor": 45,
+      "turn": 1,
+      "ts": "2026-10-20T21:08:36.582Z"
+    },
+    {
+      "path": "/home/dw/Projects/agent-sts2/paper/materials/2026-10-21-r409-card-shadow/frozen/decisions.jsonl.gz",
+      "offset": 15591305,
+      "bytes": 2151,
+      "sha256": "16745da40c63012ab99cacc33416d5567f44f194fe0be0528a6ba4000d9d6abc",
+      "offset_space": "gzip_uncompressed",
+      "run": "7XS2Y920KA6E",
+      "floor": 46,
+      "turn": 3,
+      "ts": "2026-10-20T21:10:03.856Z"
+    },
+    {
+      "path": "/home/dw/Projects/agent-sts2/paper/materials/2026-10-21-r409-card-shadow/frozen/decisions.jsonl.gz",
+      "offset": 16597220,
+      "bytes": 2096,
+      "sha256": "7c20dc0eddd5a68818255608eb49c10dc40f5e39763f7e30a2357024d605ab60",
+      "offset_space": "gzip_uncompressed",
+      "run": "7XS2Y920KA6E",
+      "floor": 48,
+      "turn": 2,
+      "ts": "2026-10-20T21:12:14.335Z"
+    },
+    {
+      "path": "/home/dw/Projects/agent-sts2/paper/materials/2026-10-21-r409-card-shadow/frozen/decisions.jsonl.gz",
+      "offset": 18753957,
+      "bytes": 2168,
+      "sha256": "92e09ece0ffbfded029d429e8f9b3772eb134aa5b45da3e4fb76c9ba82d41b82",
+      "offset_space": "gzip_uncompressed",
+      "run": "7XS2Y920KA6E",
+      "floor": 48,
+      "turn": 7,
+      "ts": "2026-10-20T21:15:46.036Z"
+    },
+    {
+      "path": "/home/dw/Projects/agent-sts2/paper/materials/2026-10-21-r409-card-shadow/frozen/decisions.jsonl.gz",
+      "offset": 20458110,
+      "bytes": 2224,
+      "sha256": "677324b42958b911d499a4e88cd7f7847fc67963eaeb3df8a8e52690a861ec11",
+      "offset_space": "gzip_uncompressed",
+      "run": "7XS2Y920KA6E",
+      "floor": 48,
+      "turn": 7,
+      "ts": "2026-10-20T21:18:34.356Z"
+    },
+    {
+      "path": "/home/dw/Projects/agent-sts2/paper/materials/2026-10-21-r409-card-shadow/frozen/decisions.jsonl.gz",
+      "offset": 21944715,
+      "bytes": 2222,
+      "sha256": "ecfa88b7037ff747e01bebe5399766a5ef1a99e3e0cb7b17bffc919d5f0a34a1",
+      "offset_space": "gzip_uncompressed",
+      "run": "7XS2Y920KA6E",
+      "floor": 48,
+      "turn": 7,
+      "ts": "2026-10-20T21:21:06.539Z"
+    },
+    {
+      "path": "/home/dw/Projects/agent-sts2/logs/decisions.jsonl",
+      "offset": 489394643,
+      "bytes": 1663,
+      "sha256": "198dd6c80d87650dffcecab0580362ac46168505e40d9698e8ec31ec92503995",
+      "offset_space": "file",
+      "run": "ZZMYZ5UBCG72",
+      "floor": 48,
+      "turn": 2,
+      "ts": "2026-10-04T23:37:46.237Z"
+    },
+    {
+      "path": "/home/dw/Projects/agent-sts2/logs/decisions.jsonl",
+      "offset": 644946547,
+      "bytes": 1590,
+      "sha256": "f6d36aa704ac4b4dfefcbb80c8da49acd45f8ee070d66682015f58b55d44d27a",
+      "offset_space": "file",
+      "run": "HSX4HYATB4E2",
+      "floor": 48,
+      "turn": 2,
+      "ts": "2026-10-06T21:44:34.313Z"
+    },
+    {
+      "path": "/home/dw/Projects/agent-sts2/logs/decisions.jsonl",
+      "offset": 644948137,
+      "bytes": 1569,
+      "sha256": "2b08f5a5d386c3bb05910fc7e3c4739e2db4d686bd9ea531f0a6d92c7f6feb73",
+      "offset_space": "file",
+      "run": "HSX4HYATB4E2",
+      "floor": 48,
+      "turn": 2,
+      "ts": "2026-10-06T21:44:35.228Z"
+    },
+    {
+      "path": "/home/dw/Projects/agent-sts2/logs/decisions.jsonl",
+      "offset": 645037686,
+      "bytes": 17566,
+      "sha256": "fa680984100f028ddb4176b24f74882915bab219ae7864596a1b341d5b7092e1",
+      "offset_space": "file",
+      "run": "HSX4HYATB4E2",
+      "floor": 48,
+      "turn": 2,
+      "ts": "2026-10-06T21:45:55.168Z"
+    },
+    {
+      "path": "/home/dw/Projects/agent-sts2/logs/decisions.jsonl",
+      "offset": 645055252,
+      "bytes": 1605,
+      "sha256": "88eecf41380fc043360a802d0d76c1fd5a3c422526f63683d62cd4f1ee11c0b2",
+      "offset_space": "file",
+      "run": "HSX4HYATB4E2",
+      "floor": 48,
+      "turn": 2,
+      "ts": "2026-10-06T21:45:56.295Z"
+    },
+    {
+      "path": "/home/dw/Projects/agent-sts2/logs/decisions.jsonl",
+      "offset": 645166597,
+      "bytes": 17451,
+      "sha256": "0e1198c9820671601b555dc975885b730431107c30bdb0c047cbb08049c1a8a6",
+      "offset_space": "file",
+      "run": "HSX4HYATB4E2",
+      "floor": 48,
+      "turn": 2,
+      "ts": "2026-10-06T21:47:24.811Z"
+    },
+    {
+      "path": "/home/dw/Projects/agent-sts2/logs/decisions.jsonl",
+      "offset": 645184048,
+      "bytes": 1605,
+      "sha256": "f48a458596b28ae10bbe05ae62f4e068c3c9b80efbfc92408de6ed49f7d0c2c7",
+      "offset_space": "file",
+      "run": "HSX4HYATB4E2",
+      "floor": 48,
+      "turn": 2,
+      "ts": "2026-10-06T21:47:25.955Z"
+    },
+    {
+      "path": "/home/dw/Projects/agent-sts2/logs/decisions.jsonl",
+      "offset": 645260214,
+      "bytes": 17464,
+      "sha256": "f3ba25835d875930e37f9dabfbb5dc642f88082ca5cc3e2b56474c01c06d6e16",
+      "offset_space": "file",
+      "run": "HSX4HYATB4E2",
+      "floor": 48,
+      "turn": 2,
+      "ts": "2026-10-06T21:48:23.531Z"
+    },
+    {
+      "path": "/home/dw/Projects/agent-sts2/logs/decisions.jsonl",
+      "offset": 645277678,
+      "bytes": 1605,
+      "sha256": "4eebeb3331f9a14f4b484187602763f8bbf70387005863a10b99de93c15bf854",
+      "offset_space": "file",
+      "run": "HSX4HYATB4E2",
+      "floor": 48,
+      "turn": 2,
+      "ts": "2026-10-06T21:48:24.684Z"
+    },
+    {
+      "path": "/home/dw/Projects/agent-sts2/logs/decisions.jsonl",
+      "offset": 645346555,
+      "bytes": 17462,
+      "sha256": "cd490cc04b3e758df9d77da963272497e7eb65d4e0aeed4d524341323920674a",
+      "offset_space": "file",
+      "run": "HSX4HYATB4E2",
+      "floor": 48,
+      "turn": 2,
+      "ts": "2026-10-06T21:49:21.462Z"
+    },
+    {
+      "path": "/home/dw/Projects/agent-sts2/logs/decisions.jsonl",
+      "offset": 645364017,
+      "bytes": 1605,
+      "sha256": "a6a18c03918721ced9663ba5f43cfe3bd2a9193a592983301f90585cbfc8f08c",
+      "offset_space": "file",
+      "run": "HSX4HYATB4E2",
+      "floor": 48,
+      "turn": 2,
+      "ts": "2026-10-06T21:49:22.610Z"
+    },
+    {
+      "path": "/home/dw/Projects/agent-sts2/logs/decisions.jsonl",
+      "offset": 645477954,
+      "bytes": 17462,
+      "sha256": "4b83cf01038c7fc99ef57be615777c2d6007774e8e27b494d474a408ece0e1a1",
+      "offset_space": "file",
+      "run": "HSX4HYATB4E2",
+      "floor": 48,
+      "turn": 2,
+      "ts": "2026-10-06T21:50:40.403Z"
+    },
+    {
+      "path": "/home/dw/Projects/agent-sts2/logs/decisions.jsonl",
+      "offset": 645495416,
+      "bytes": 1605,
+      "sha256": "c2ae8d721e87c255ecd2635e6bf80cd2ee98bb05cf7959a8a75449a4f742b497",
+      "offset_space": "file",
+      "run": "HSX4HYATB4E2",
+      "floor": 48,
+      "turn": 2,
+      "ts": "2026-10-06T21:50:41.554Z"
+    },
+    {
+      "path": "/home/dw/Projects/agent-sts2/logs/decisions.jsonl",
+      "offset": 650320907,
+      "bytes": 1707,
+      "sha256": "a86ad8977f2b15260c3f913dbc41bc823b280bf7d67e5fb080541f9026ba5a35",
+      "offset_space": "file",
+      "run": "P5HT1272P5SB",
+      "floor": 25,
+      "turn": 2,
+      "ts": "2026-10-06T23:22:22.381Z"
+    }
+  ],
+  "audited_action_count": 37,
+  "independent_runs": [
+    "7XS2Y920KA6E",
+    "HSX4HYATB4E2",
+    "P5HT1272P5SB",
+    "ZZMYZ5UBCG72"
+  ],
+  "observed_ascensions": [
+    2,
+    10
+  ],
+  "hand_observations_shadow_rows": 70,
+  "hand_observations_shadow_turns": 21,
+  "hand_runs_shadow": [
+    "7XS2Y920KA6E"
+  ],
+  "observed_faces": [
+    {
+      "card": {
+        "index": 0,
+        "card_id": "EXPOSE",
+        "name": "暴露",
+        "upgraded": false,
+        "target_type": "AnyEnemy",
+        "requires_target": true,
+        "target_index_space": "enemies",
+        "valid_target_indices": [
+          0
+        ],
+        "costs_x": false,
+        "star_costs_x": false,
+        "energy_cost": 0,
+        "star_cost": 0,
+        "rules_text": "去除敌人身上的所有格挡值和人工制品。 并给予{Power:diff()}层易伤。",
+        "resolved_rules_text": "去除敌人身上的所有格挡值和人工制品。 并给予2层易伤。 消耗。",
+        "dynamic_values": [
+          {
+            "name": "Power",
+            "base_value": 2,
+            "current_value": 2,
+            "enchanted_value": 2,
+            "is_modified": false,
+            "was_just_upgraded": false
+          }
+        ],
+        "playable": true,
+        "can_play_result": true,
+        "unplayable_reason": null,
+        "unplayable_reason_raw": null,
+        "unplayable_preventer_id": null,
+        "unplayable_preventer_type": null
+      },
+      "source": {
+        "path": "/home/dw/Projects/agent-sts2/logs/decisions.jsonl",
+        "offset": 645495416,
+        "bytes": 1605,
+        "sha256": "c2ae8d721e87c255ecd2635e6bf80cd2ee98bb05cf7959a8a75449a4f742b497",
+        "offset_space": "file",
+        "run": "HSX4HYATB4E2",
+        "floor": 48,
+        "turn": 2,
+        "ts": "2026-10-06T21:50:41.554Z"
+      },
+      "ascension": 10
+    },
+    {
+      "card": {
+        "index": 5,
+        "card_id": "EXPOSE",
+        "name": "暴露+",
+        "upgraded": true,
+        "target_type": "AnyEnemy",
+        "requires_target": true,
+        "target_index_space": "enemies",
+        "valid_target_indices": [
+          0,
+          1
+        ],
+        "costs_x": false,
+        "star_costs_x": false,
+        "energy_cost": 0,
+        "star_cost": 0,
+        "rules_text": "去除敌人身上的所有格挡值和人工制品。 并给予{Power:diff()}层易伤。",
+        "resolved_rules_text": "去除敌人身上的所有格挡值和人工制品。 并给予3层易伤。 消耗。",
+        "dynamic_values": [
+          {
+            "name": "Power",
+            "base_value": 3,
+            "current_value": 3,
+            "enchanted_value": 3,
+            "is_modified": false,
+            "was_just_upgraded": false
+          }
+        ],
+        "playable": true,
+        "can_play_result": true,
+        "unplayable_reason": null,
+        "unplayable_reason_raw": null,
+        "unplayable_preventer_id": null,
+        "unplayable_preventer_type": null
+      },
+      "source": {
+        "path": "/home/dw/Projects/agent-sts2/logs/decisions.jsonl",
+        "offset": 650320907,
+        "bytes": 1707,
+        "sha256": "a86ad8977f2b15260c3f913dbc41bc823b280bf7d67e5fb080541f9026ba5a35",
+        "offset_space": "file",
+        "run": "P5HT1272P5SB",
+        "floor": 25,
+        "turn": 2,
+        "ts": "2026-10-06T23:22:22.381Z"
+      },
+      "ascension": 10
+    }
+  ],
+  "unknowns": [
+    "目标清挡和清全部人工制品在已发布CardModel无字段，须实现solver及rollout消费后再升known。"
+  ],
+  "guard": "仅下列精确已核牌面/上下文有研究支持；缺角色、进阶、升级、目标、变量、期限或后继时拒绝升known。正例重放不是通用充分条件。",
+  "evidence_audit": "/home/dw/Projects/agent-sts2/learner/runs/20261021-111653-8735c888-1393-4256-84d9-821d4e4a14ea-issue-13-card-models-task/effect-audit.json",
+  "source_index": "/home/dw/Projects/agent-sts2/learner/runs/20261021-111653-8735c888-1393-4256-84d9-821d4e4a14ea-issue-13-card-models-task/source-index.json",
+  "version_scope": {
+    "7XS2Y920KA6E": {
+      "ended_snapshot": {
+        "row": {
+          "run_id": "7XS2Y920KA6E",
+          "ended": "2026-10-20T21:21:23.436Z",
+          "ascension": 10,
+          "character": "SILENT",
+          "code": "current"
+        },
+        "source": {
+          "path": "/home/dw/Projects/agent-sts2/.artifacts/ops-issues-13-14-dispatch-20261021/shared-inputs/runs.jsonl",
+          "offset": 396442,
+          "bytes": 484,
+          "sha256": "2ac7927d1d3a77c1d70d12c850674f72f25e82a53baf9f106cc1ac3bec0314f2"
+        }
+      },
+      "frozen_run_config": [
+        {
+          "reported": {
+            "ts": "2026-10-20T20:28:43.890Z",
+            "run_id": "7XS2Y920KA6E",
+            "character": "SILENT",
+            "ascension": 10,
+            "floor": 1,
+            "restart": false,
+            "code": {
+              "commit": null,
+              "code": null,
+              "dirty": null,
+              "dirty_files": [],
+              "branch": null,
+              "worktree": "live",
+              "error": "git status failed: spawnSync git ENOBUFS"
+            },
+            "commit": null,
+            "dirty": null,
+            "branch": null,
+            "experience_version": null,
+            "mod_version": null,
+            "game_version": null
+          },
+          "source": {
+            "path": "/home/dw/Projects/agent-sts2/logs/run-config.jsonl",
+            "offset": 2318944,
+            "bytes": 6029,
+            "sha256": "696820260d24ae1b946a30b0f48aaf57bd67843bb8331dea7f8f3e5b9a5268a9",
+            "run": "7XS2Y920KA6E",
+            "floor": 1,
+            "turn": null,
+            "ts": "2026-10-20T20:28:43.890Z"
+          }
+        }
+      ],
+      "scope": "仅日志申报的agent代码/脏标记；不把code=current或dirty解释为精确源码。run-config不代逐动作原生源码封印。游戏构建/补丁版本未封印则unknown。",
+      "game_build_version": "unknown",
+      "replay_runtime_commit": "5a295bb5ed52f0c0fa5e8c045dcfcba3d894b532"
+    },
+    "HSX4HYATB4E2": {
+      "ended_snapshot": {
+        "row": {
+          "run_id": "HSX4HYATB4E2",
+          "ended": "2026-10-06T21:51:49.757Z",
+          "ascension": 10,
+          "character": "SILENT",
+          "code": "09ac8004+dirty"
+        },
+        "source": {
+          "path": "/home/dw/Projects/agent-sts2/.artifacts/ops-issues-13-14-dispatch-20261021/shared-inputs/runs.jsonl",
+          "offset": 226244,
+          "bytes": 432,
+          "sha256": "34f654af1444095cb69d96b675b9522c49bf14ea11d0badd37d406bd8749e162"
+        }
+      },
+      "frozen_run_config": [
+        {
+          "reported": {
+            "ts": "2026-10-06T21:07:06.213Z",
+            "run_id": "HSX4HYATB4E2",
+            "character": "SILENT",
+            "ascension": 10,
+            "floor": 1,
+            "restart": false,
+            "code": {
+              "commit": "09ac8004aabfb0957e8fbacaa018dfd9046dafdd",
+              "code": "09ac800+dirty",
+              "dirty": true,
+              "dirty_files": [
+                "knowledge/characters/silent/boss-damage.json",
+                "knowledge/characters/silent/monster-records.json",
+                "knowledge/characters/silent/outcome-stats.json",
+                "knowledge/characters/silent/room-costs.json",
+                "knowledge/common/card-upgrades.json",
+                "knowledge/common/monster-db.json",
+                "knowledge/common/move-model.json",
+                "notes/monster-db-check.md"
+              ],
+              "branch": "live",
+              "worktree": "live"
+            },
+            "commit": null,
+            "dirty": null,
+            "branch": null,
+            "experience_version": null,
+            "mod_version": null,
+            "game_version": null
+          },
+          "source": {
+            "path": "/home/dw/Projects/agent-sts2/logs/run-config.jsonl",
+            "offset": 638483,
+            "bytes": 4663,
+            "sha256": "20165593546e49082b0d3a8f7f86cebd30df1034ea4d71338d06617add32542b",
+            "run": "HSX4HYATB4E2",
+            "floor": 1,
+            "turn": null,
+            "ts": "2026-10-06T21:07:06.213Z"
+          }
+        }
+      ],
+      "scope": "仅日志申报的agent代码/脏标记；不把code=current或dirty解释为精确源码。run-config不代逐动作原生源码封印。游戏构建/补丁版本未封印则unknown。",
+      "game_build_version": "unknown",
+      "replay_runtime_commit": "5a295bb5ed52f0c0fa5e8c045dcfcba3d894b532"
+    },
+    "P5HT1272P5SB": {
+      "ended_snapshot": {
+        "row": {
+          "run_id": "P5HT1272P5SB",
+          "ended": "2026-10-06T23:23:38.170Z",
+          "ascension": 10,
+          "character": "SILENT",
+          "code": "1a89c2d4+dirty"
+        },
+        "source": {
+          "path": "/home/dw/Projects/agent-sts2/.artifacts/ops-issues-13-14-dispatch-20261021/shared-inputs/runs.jsonl",
+          "offset": 228799,
+          "bytes": 442,
+          "sha256": "b0f740a9e8ce3e2fd4990512e61461f8a7571173d91d8edbb974e4c7ddcdd905"
+        }
+      },
+      "frozen_run_config": [
+        {
+          "reported": {
+            "ts": "2026-10-06T23:01:29.243Z",
+            "run_id": "P5HT1272P5SB",
+            "character": "SILENT",
+            "ascension": 10,
+            "floor": 1,
+            "restart": false,
+            "code": {
+              "commit": "1a89c2d481689bf0793c89c53318c247a1ea1997",
+              "code": "1a89c2d+dirty",
+              "dirty": true,
+              "dirty_files": [
+                "knowledge/characters/silent/monster-records.json",
+                "knowledge/characters/silent/outcome-stats.json",
+                "knowledge/characters/silent/room-costs.json",
+                "knowledge/common/card-upgrades.json",
+                "knowledge/common/monster-db.json",
+                "knowledge/common/move-model.json",
+                "notes/monster-db-check.md"
+              ],
+              "branch": "live",
+              "worktree": "live"
+            },
+            "commit": null,
+            "dirty": null,
+            "branch": null,
+            "experience_version": null,
+            "mod_version": null,
+            "game_version": null
+          },
+          "source": {
+            "path": "/home/dw/Projects/agent-sts2/logs/run-config.jsonl",
+            "offset": 666414,
+            "bytes": 4616,
+            "sha256": "ad1f92d0418afd99e92d775af3b4ccefc1dfd7b121bf8cf86bccada32af0fccf",
+            "run": "P5HT1272P5SB",
+            "floor": 1,
+            "turn": null,
+            "ts": "2026-10-06T23:01:29.243Z"
+          }
+        }
+      ],
+      "scope": "仅日志申报的agent代码/脏标记；不把code=current或dirty解释为精确源码。run-config不代逐动作原生源码封印。游戏构建/补丁版本未封印则unknown。",
+      "game_build_version": "unknown",
+      "replay_runtime_commit": "5a295bb5ed52f0c0fa5e8c045dcfcba3d894b532"
+    },
+    "ZZMYZ5UBCG72": {
+      "ended_snapshot": {
+        "row": {
+          "run_id": "ZZMYZ5UBCG72",
+          "ended": "2026-10-04T23:39:21.975Z",
+          "ascension": 2,
+          "character": "SILENT",
+          "code": "b9c46d66+dirty"
+        },
+        "source": {
+          "path": "/home/dw/Projects/agent-sts2/.artifacts/ops-issues-13-14-dispatch-20261021/shared-inputs/runs.jsonl",
+          "offset": 197745,
+          "bytes": 417,
+          "sha256": "1165f12d2589ca8403cf79d075c83ab1e9f70a56f45d28c48997e619e59d82da"
+        }
+      },
+      "frozen_run_config": [
+        {
+          "reported": {
+            "ts": "2026-10-04T22:48:25.400Z",
+            "run_id": "ZZMYZ5UBCG72",
+            "character": "SILENT",
+            "ascension": 2,
+            "floor": 1,
+            "restart": false,
+            "code": {
+              "commit": "b9c46d6686a8d7e05915323c6e5f6acdfc476e1a",
+              "code": "b9c46d6+dirty",
+              "dirty": true,
+              "dirty_files": [
+                "knowledge/characters/silent/boss-damage.json",
+                "knowledge/characters/silent/monster-records.json",
+                "knowledge/characters/silent/outcome-stats.json",
+                "knowledge/characters/silent/room-costs.json",
+                "knowledge/common/card-upgrades.json",
+                "knowledge/common/monster-db.json",
+                "knowledge/common/move-model.json"
+              ],
+              "branch": "live",
+              "worktree": "live"
+            },
+            "commit": null,
+            "dirty": null,
+            "branch": null,
+            "experience_version": null,
+            "mod_version": null,
+            "game_version": null
+          },
+          "source": {
+            "path": "/home/dw/Projects/agent-sts2/logs/run-config.jsonl",
+            "offset": 329319,
+            "bytes": 4634,
+            "sha256": "0ce1cc32d193c64eb4ce1f76e52dd4dfa30a8aa97b4a05b7da1403b98ad3c5b3",
+            "run": "ZZMYZ5UBCG72",
+            "floor": 1,
+            "turn": null,
+            "ts": "2026-10-04T22:48:25.400Z"
+          }
+        }
+      ],
+      "scope": "仅日志申报的agent代码/脏标记；不把code=current或dirty解释为精确源码。run-config不代逐动作原生源码封印。游戏构建/补丁版本未封印则unknown。",
+      "game_build_version": "unknown",
+      "replay_runtime_commit": "5a295bb5ed52f0c0fa5e8c045dcfcba3d894b532"
+    }
+  },
+  "counterexamples": [],
+  "published": false,
+  "merged": false,
+  "applicable_runtime": "研究候选只在本树R410做解析读回；历史运行版本按冻结run-config申报分列，不能冒称这些对局都跑R410。",
+  "visible_faces_without_effect_inference": [
+    {
+      "location": "reward",
+      "card": {
+        "index": 0,
+        "card_id": "EXPOSE",
+        "name": "暴露",
+        "upgraded": false,
+        "card_type": "Skill",
+        "rarity": "Uncommon",
+        "energy_cost": 0,
+        "rules_text": "去除敌人身上的所有格挡值和人工制品。 并给予{Power:diff()}层易伤。",
+        "resolved_rules_text": "去除敌人身上的所有格挡值和人工制品。 并给予2层易伤。 消耗。",
+        "dynamic_values": [
+          {
+            "name": "Power",
+            "base_value": 2,
+            "current_value": 2,
+            "enchanted_value": 2,
+            "is_modified": false,
+            "was_just_upgraded": false
+          }
+        ]
+      },
+      "source": {
+        "path": "/home/dw/Projects/agent-sts2/paper/materials/2026-10-21-r409-card-shadow/frozen/states.jsonl.gz",
+        "offset": 99867270,
+        "bytes": 27284,
+        "sha256": "98b25ee63c67b677d0e3fed06043afd489feaaa36b9a71fc05b717ab89c4d479",
+        "offset_space": "gzip_uncompressed",
+        "run": "CLCR3DUH66HK",
+        "floor": 23,
+        "turn": 4,
+        "ts": "2026-10-20T23:20:16.133Z",
+        "observed_ts": "2026-10-20T23:19:54.297Z"
+      }
+    },
+    {
+      "location": "hand",
+      "card": {
+        "index": 2,
+        "card_id": "EXPOSE",
+        "name": "暴露",
+        "upgraded": false,
+        "target_type": "AnyEnemy",
+        "requires_target": true,
+        "target_index_space": "enemies",
+        "valid_target_indices": [
+          0,
+          1
+        ],
+        "costs_x": false,
+        "star_costs_x": false,
+        "energy_cost": 0,
+        "star_cost": 0,
+        "rules_text": "去除敌人身上的所有格挡值和人工制品。 并给予{Power:diff()}层易伤。",
+        "resolved_rules_text": "去除敌人身上的所有格挡值和人工制品。 并给予2层易伤。 消耗。",
+        "dynamic_values": [
+          {
+            "name": "Power",
+            "base_value": 2,
+            "current_value": 2,
+            "enchanted_value": 2,
+            "is_modified": false,
+            "was_just_upgraded": false
+          }
+        ],
+        "playable": true,
+        "can_play_result": true,
+        "unplayable_reason": null,
+        "unplayable_reason_raw": null,
+        "unplayable_preventer_id": null,
+        "unplayable_preventer_type": null
+      },
+      "source": {
+        "path": "/home/dw/Projects/agent-sts2/paper/materials/2026-10-21-r409-card-shadow/frozen/states.jsonl.gz",
+        "offset": 7156579,
+        "bytes": 32136,
+        "sha256": "18d82651912f781b9402e01444cec9aff27d2573d666e4b0051fe8bf06a6976e",
+        "offset_space": "gzip_uncompressed",
+        "run": "7XS2Y920KA6E",
+        "floor": 19,
+        "turn": 3,
+        "ts": "2026-10-20T20:47:44.328Z",
+        "observed_ts": "2026-10-20T20:47:42.522Z"
+      }
+    },
+    {
+      "location": "hand",
+      "card": {
+        "index": 0,
+        "card_id": "EXPOSE",
+        "name": "暴露+",
+        "upgraded": true,
+        "target_type": "AnyEnemy",
+        "requires_target": true,
+        "target_index_space": "enemies",
+        "valid_target_indices": [
+          0
+        ],
+        "costs_x": false,
+        "star_costs_x": false,
+        "energy_cost": 0,
+        "star_cost": 0,
+        "rules_text": "去除敌人身上的所有格挡值和人工制品。 并给予{Power:diff()}层易伤。",
+        "resolved_rules_text": "去除敌人身上的所有格挡值和人工制品。 并给予3层易伤。 消耗。",
+        "dynamic_values": [
+          {
+            "name": "Power",
+            "base_value": 3,
+            "current_value": 3,
+            "enchanted_value": 3,
+            "is_modified": false,
+            "was_just_upgraded": false
+          }
+        ],
+        "playable": true,
+        "can_play_result": true,
+        "unplayable_reason": null,
+        "unplayable_reason_raw": null,
+        "unplayable_preventer_id": null,
+        "unplayable_preventer_type": null
+      },
+      "source": {
+        "path": "/home/dw/Projects/agent-sts2/paper/materials/2026-10-21-r409-card-shadow/frozen/states.jsonl.gz",
+        "offset": 27472359,
+        "bytes": 40029,
+        "sha256": "f6d12ce236bc5802cf8411734ba97b947ffd3fdcd8e1de07c226f8def3fc1f92",
+        "offset_space": "gzip_uncompressed",
+        "run": "7XS2Y920KA6E",
+        "floor": 48,
+        "turn": 7,
+        "ts": "2026-10-20T21:21:06.539Z",
+        "observed_ts": "2026-10-20T21:21:06.535Z"
+      }
+    }
+  ],
+  "visible_shadow_ascensions": [
+    10
+  ]
+}

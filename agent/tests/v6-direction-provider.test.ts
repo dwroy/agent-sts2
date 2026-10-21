@@ -114,17 +114,20 @@ it("turns official complete pick pairs into one T3 and two independent-evaluatio
   expect(directionEvaluationFromProjection(table, r.config, "skip", plan).comparisons).toEqual([]);
 });
 
-it("carries incomplete-opening provider diagnostics into the brain without treating W0 as a loss or filtering samples", async () => {
+it("uses P times completed W without preparing W0 and copies provider diagnostics independently", async () => {
   const r = request(), prepare = r.prepare;
   r.phase = "act";
-  r.prepare = (target, sample) => sample.cards.some(c => c.id === "G") ? null : prepare(target, sample);
+  r.prepare = vi.fn((target, sample) => sample.cards.some(c => c.id === "G") ? null : prepare(target, sample));
   const table = await new V6ProjectionEngine(new FixedRunner()).evaluate(r);
   const baseline = table.combinations.find(row => row.entry.option_id === "skip")!;
   expect(baseline.entry.availability).toEqual({ take: .5, skip: .5 });
   expect(baseline.completed_win).toEqual({ value: 1, se: 0, n: r.config.samples_act });
   expect(baseline.general_win).toBeNull();
+  expect(baseline.general_source).toBe("not_computed");
+  expect(vi.mocked(r.prepare).mock.calls.length).toBeGreaterThan(0);
+  expect(vi.mocked(r.prepare).mock.calls.every(([, sample]) => sample.cards.every(c => c.id !== "G"))).toBe(true);
   const sampleIds = [...baseline.completion_sample_ids];
-  // Fixed provider diagnostic: current main omits prepare errors; watcher owns their propagation.
+  // Inject a diagnostic to check consumer copying separately from the unused W0 branch.
   baseline.unknown_reasons.push("unknown_opening_entry_hp_or_empirical_sample");
   const evaluation = directionEvaluationFromProjection(table, r.config, "skip");
   const task = directionTask({ summaries: directionSummaries("silent", 10, [], [r.directions[0]!.core], null),
@@ -135,8 +138,10 @@ it("carries incomplete-opening provider diagnostics into the brain without treat
   expect(asRecord(asArray(asRecord(asArray(task.build_cores)[0]).combos)[0])).toMatchObject({
     completed_results: [], unknown_reasons: ["completed_core_cache_miss"],
   });
-  // The retained legacy mixture needs W0 when P<1; P*Wk=.5 would silently substitute W0=0.
-  expect(evaluation.entries[0]).toMatchObject({ win: null, win_complete: baseline.completed_win, win_incomplete: null, expected_win: null });
+  // Lookup projections use P*Wk; W0 stays uncomputed rather than becoming a measured zero.
+  expect(evaluation.entries[0]).toMatchObject({ win: { value: .5, se: 0, n: r.config.samples_act },
+    win_complete: baseline.completed_win, win_incomplete: null, incomplete_source: "unknown",
+    expected_win: .5, formula: "formation_times_completed" });
   expect(JSON.stringify(task)).not.toMatch(/"(?:expected_win|win_incomplete|availability)":/);
   expect(evaluation.projectionReasons![0]!.reasons).toContain("unknown_opening_entry_hp_or_empirical_sample");
   expect(baseline.completion_sample_ids).toEqual(sampleIds);

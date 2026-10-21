@@ -1,0 +1,9 @@
+本批失败与修正记录（原数据不改写）：
+
+1. 初次批次只读命令被沙箱启动器拒绝：error building bubblewrap command: Fatal error: ripgrep unreadable glob scan failed for /home/dw；指向另一不存在的codex-strategy-silent-20261021-124302-s2/.codex路径。原命令未执行；同一只读内容随后重试成功。
+2. 临时Jev长度统计用row['decision_id']索引所有决策，遇历史缺ID行产生KeyError: 'decision_id'。未写原日志；audit.py改为只索引真实非空ID，同时verify.py保存缺ID行号，消费者完整输入拒绝未被掩盖。
+3. scratch/audit.py首次导入路径使用HERE.parents[2]，产生ModuleNotFoundError: No module named 'evidence_identity'；改用HERE.parents[1]后退出0。修改仅在本批scratch。
+4. tsx CLI离线读回退出1：listen EPERM，Unix socket为本批TMPDIR/tsx-1000/4.pipe；完整stderr在consumer-readback.err。改用node --import ./agent/node_modules/tsx/dist/loader.mjs加载相同read-consumer.mjs退出0；不是生产源码修复或tsc/vitest成功证明。
+5. 三局完整消费者输入缺decision_id而拒绝：CA5 267143；61E 267517；DUZ 268789/268818/268864。consumer-readback.json保留full_error，只在existing_decision_ids_only有界范围继续，原缺行不删除、不补ID。
+
+本批未运行对局、LLM、网络、完整测试或合入。没有生产源码测试失败记录可冒报为红灯。

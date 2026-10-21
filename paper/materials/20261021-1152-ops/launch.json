@@ -1,0 +1,22 @@
+{
+  "at": "2026-10-21T11:58:44+08:00",
+  "request": "original-postmortem-20261021-111301-one-dataset-records-only",
+  "pid": 3784570,
+  "command": [
+    "nice",
+    "-n",
+    "19",
+    "ionice",
+    "-c",
+    "3",
+    "python3",
+    "/home/dw/Projects/agent-sts2/.artifacts/ops-wake-20261021-1152/close-once.py"
+  ],
+  "script_sha256": "e12b8f418fb8d32a0baee5ca5952d8cd26e0085225c95c054b9a54a1d17cb7cf",
+  "once_guard": ".artifacts/ops-wake-20261021-1152/dataset-started-once",
+  "state": "finite original one-shot closure submitted; native admission/dataset/record result in close-status.json",
+  "no_sleep_poll_timer_new_model_full_refresh_game": true,
+  "finish_event": "original ops queue manual terminal event",
+  "record_commit_automatic_only_after_dataset0_and_four_markers": true,
+  "status": ".artifacts/ops-wake-20261021-1152/close-status.json"
+}

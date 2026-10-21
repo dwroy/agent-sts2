@@ -1,0 +1,1 @@
+[ops] 已与#14并行启动独立沙箱学习批次 issue-13-card-models-20261021-111429（新原生线程及 gpt-6.1-sol/high 已核），逐卡核真实牌面/施放/后继，产出候选模型、反例与原提案关联；基线固定实际 R410，共用只读日志切点/知识快照，各自工作树，nice19/ionice3、单 worker、每批进程上限4。报告不代正式发布或关闭验收，完整检查/边界发布仍走原单点。回执：paper/materials/20261021-issues-13-14-ops/receipt.json；派发：notes/issue-13-learning-dispatch.json。

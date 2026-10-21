@@ -1,0 +1,1112 @@
+{
+  "queue_sha256": "e40738f3ebb0a761ea700e3b6f0845307b02d067a1217c05202fc7e83e3c3cd2",
+  "scope": "元数据去重，不借其他局机制证据验证本窗口",
+  "search_fields": [
+    "summary",
+    "ledger",
+    "id"
+  ],
+  "terms": [
+    "精英模拟/悲观",
+    "蛇之戒/首轮抽牌",
+    "紧勒/凌虐/首见/开场能力",
+    "棱柱/阶段",
+    "0332/随机药水"
+  ],
+  "selected": [
+    {
+      "id": "silent-proposal-c51468c5e8ba6668",
+      "ledger": [
+        "silent-0019"
+      ],
+      "summary": "核对本局七次实际耗药及75/86空栏boss入口；冻结逐槽位收益验证，缺少未饮用/留药整场对照，保留现行药水规则。",
+      "queue_latest_state": "waiting",
+      "queue_latest_reason": "七次耗药及选牌已核；缺不喝、晚喝、留药完整分支和随机收益完整归属。",
+      "proposal": "/home/dw/Projects/agent-sts2/learner/runs/20261007-204301-postmortem/proposal-resources.md",
+      "source_bytes_available": true,
+      "bytes": 3007,
+      "sha256": "168cc03750525c56cace3915f22ef4dd1cf768f87b17e70f5228964a168c8469",
+      "original_registered_sha256": "168cc03750525c56cace3915f22ef4dd1cf768f87b17e70f5228964a168c8469"
+    },
+    {
+      "id": "silent-proposal-1b9e29122364fa68",
+      "ledger": [
+        "silent-0260",
+        "silent-0261"
+      ],
+      "summary": "修复普通紧勒效果与敌方STRANGLE_POWER输入及逐牌失血，使同方案19→23、27→29",
+      "queue_latest_state": "duplicate",
+      "queue_latest_reason": "普通紧勒限定修复已在live：Q6 F8 T4完整三牌从19到23、Y6 F4 T1从27到29，当前固定测试通过；升级、叠层、重放等未观察分支仍明确未知。原等待合入理由已失效。",
+      "proposal": "/home/dw/Projects/agent-sts2/learner/runs/20261007-224302-postmortem/proposal-strangle-bug.md",
+      "source_bytes_available": true,
+      "bytes": 3751,
+      "sha256": "8641e8c4770e6a744cf13324fb8c879f01f85343cdd6974f79c6dd5a2ce2ef7c",
+      "original_registered_sha256": "8641e8c4770e6a744cf13324fb8c879f01f85343cdd6974f79c6dd5a2ce2ef7c"
+    },
+    {
+      "id": "silent-proposal-04cbbf6b3a547aea",
+      "ledger": [
+        "silent-0260",
+        "silent-0261"
+      ],
+      "summary": "补普通紧勒真实2层与逐牌失血接线；核本局T7预测8实10、T10预测20实24，先合并既有bug提案链，未知边界保留。",
+      "queue_latest_state": "implemented",
+      "queue_latest_reason": "ops verified original exact source as actual live ancestor in V5-R377 narrow publication; source failures and sandbox scope retained; final combined-tree host pending, no wider policy or win-effect claim.",
+      "proposal": "/home/dw/Projects/agent-sts2/learner/runs/20261009-001302-postmortem/proposal-strangle.md",
+      "source_bytes_available": true,
+      "bytes": 3418,
+      "sha256": "1255426571a2f9763b57524a092e5f1538e38dbf413671a67efe63cf7e475f27",
+      "original_registered_sha256": "1255426571a2f9763b57524a092e5f1538e38dbf413671a67efe63cf7e475f27"
+    },
+    {
+      "id": "silent-proposal-ecbd4b68c5fad954",
+      "ledger": [
+        "silent-0332"
+      ],
+      "summary": "silent-0332 的诊断子项：在保留接续契约失败与模拟不可用的同时，保存失败分支、seed、首战资源和卡牌身份；原资源接续根因未修，完整提案仍待核实。",
+      "queue_latest_state": "pending",
+      "queue_latest_reason": null,
+      "proposal": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261009-231302/learner/runs/20261009-231309-fix-batch/proposal-continuation-diagnostics.md",
+      "source_bytes_available": false,
+      "limitation": "原文件缺失；只引用队列身份，不恢复其他工作树，不把 pending 当实现证明。"
+    },
+    {
+      "id": "silent-proposal-e76e895381da5bfc",
+      "ledger": [
+        "silent-0167",
+        "silent-0168",
+        "silent-0005",
+        "silent-0011",
+        "silent-0012",
+        "silent-0178",
+        "silent-0419"
+      ],
+      "summary": "核对感染棱柱阶段技能污染血价、增益实际后继与完整候选淘汰原因；保留已匹配的预测及未执行分支未知",
+      "queue_latest_state": "pending",
+      "queue_latest_reason": null,
+      "proposal": "/home/dw/Projects/agent-sts2/learner/runs/20261012-201302-postmortem/proposal-prism-combat.md",
+      "source_bytes_available": true,
+      "bytes": 3832,
+      "sha256": "1f9b5118aad9a70d27382a414ab1157cf42c2f3aab7fdd95860248c801f5a944",
+      "original_registered_sha256": "1f9b5118aad9a70d27382a414ab1157cf42c2f3aab7fdd95860248c801f5a944"
+    },
+    {
+      "id": "silent-proposal-da9575b27ac37dbb",
+      "ledger": [
+        "silent-0019",
+        "silent-0125",
+        "silent-0276"
+      ],
+      "summary": "34XTHUP4433X：护栏省血与输出取舍及一血精英两药后继验证；缺受控完整后继，保留规则，独立验证。",
+      "queue_latest_state": "pending",
+      "queue_latest_reason": null,
+      "proposal": "/home/dw/Projects/agent-sts2/learner/runs/20261019-131321-b4c5bb44-0c59-4ba9-9cd7-e59a7b25605c-postmortem/proposal-34XTHUP4433X.md",
+      "source_bytes_available": true,
+      "bytes": 3120,
+      "sha256": "2d660f4dbef5e45f15060849de4ba54f64fbea01fbdb25712cfd82b2f3f5ff11",
+      "original_registered_sha256": "2d660f4dbef5e45f15060849de4ba54f64fbea01fbdb25712cfd82b2f3f5ff11"
+    }
+  ],
+  "raw_queue_references": [
+    {
+      "id": "silent-proposal-c51468c5e8ba6668",
+      "path": "/home/dw/Projects/agent-sts2/paper/materials/learning/code-proposals.jsonl",
+      "offset": 51802,
+      "bytes": 657,
+      "sha256": "36c7872c2709327a4c230b248aaed1a20e02fb680b7e1dc9c1a5a30e9d99d671",
+      "op": "add"
+    },
+    {
+      "id": "silent-proposal-1b9e29122364fa68",
+      "path": "/home/dw/Projects/agent-sts2/paper/materials/learning/code-proposals.jsonl",
+      "offset": 81058,
+      "bytes": 640,
+      "sha256": "94e869c29cd5fb6a79dfccbb7d09b33751c076401bfe50ea7b47c9f5649c2a96",
+      "op": "add"
+    },
+    {
+      "id": "silent-proposal-04cbbf6b3a547aea",
+      "path": "/home/dw/Projects/agent-sts2/paper/materials/learning/code-proposals.jsonl",
+      "offset": 360693,
+      "bytes": 708,
+      "sha256": "c18084caba2cb5e1c19935361c0449ec22df50af5d08e256e3ae38bdef125d17",
+      "op": "add"
+    },
+    {
+      "id": "silent-proposal-ecbd4b68c5fad954",
+      "path": "/home/dw/Projects/agent-sts2/paper/materials/learning/code-proposals.jsonl",
+      "offset": 524398,
+      "bytes": 768,
+      "sha256": "6fafd5b72a68f2237ce071544a1caef53599fa289e4ae6a37039560add73a9fe",
+      "op": "add"
+    },
+    {
+      "id": "silent-proposal-c51468c5e8ba6668",
+      "path": "/home/dw/Projects/agent-sts2/paper/materials/learning/code-proposals.jsonl",
+      "offset": 669731,
+      "bytes": 776,
+      "sha256": "f090ddfb038efde8e39dd3e094e7afb82aa23338ebe87dd54529e88772ab4bdb",
+      "op": "update"
+    },
+    {
+      "id": "silent-proposal-c51468c5e8ba6668",
+      "path": "/home/dw/Projects/agent-sts2/paper/materials/learning/code-proposals.jsonl",
+      "offset": 753045,
+      "bytes": 686,
+      "sha256": "e0f93a58a61d59f33da545f65f696df4d63e47ba3808621e87ae492ece86141b",
+      "op": "update"
+    },
+    {
+      "id": "silent-proposal-c51468c5e8ba6668",
+      "path": "/home/dw/Projects/agent-sts2/paper/materials/learning/code-proposals.jsonl",
+      "offset": 796753,
+      "bytes": 708,
+      "sha256": "056fa2e9c3c7579e247487e78e5869b592d1f138c7107ea48c258aa974defba4",
+      "op": "update"
+    },
+    {
+      "id": "silent-proposal-c51468c5e8ba6668",
+      "path": "/home/dw/Projects/agent-sts2/paper/materials/learning/code-proposals.jsonl",
+      "offset": 839867,
+      "bytes": 644,
+      "sha256": "c0c1ba2187f1fde644e08681db20be1937bf09accaf95828f49eb63e74b71c69",
+      "op": "update"
+    },
+    {
+      "id": "silent-proposal-c51468c5e8ba6668",
+      "path": "/home/dw/Projects/agent-sts2/paper/materials/learning/code-proposals.jsonl",
+      "offset": 877929,
+      "bytes": 662,
+      "sha256": "159b1846869ea67e41b4cd7df20490b81e9c29433c2cad09d3a8bfd9487282b9",
+      "op": "update"
+    },
+    {
+      "id": "silent-proposal-c51468c5e8ba6668",
+      "path": "/home/dw/Projects/agent-sts2/paper/materials/learning/code-proposals.jsonl",
+      "offset": 904131,
+      "bytes": 611,
+      "sha256": "17ac392d9417ec47cc2ea501e89f2b8d7388a183329e6cdebed39edccb9a931b",
+      "op": "update"
+    },
+    {
+      "id": "silent-proposal-c51468c5e8ba6668",
+      "path": "/home/dw/Projects/agent-sts2/paper/materials/learning/code-proposals.jsonl",
+      "offset": 935814,
+      "bytes": 629,
+      "sha256": "3b10657c2a11d3cf6045fad0a139b05ea58234487617f047003e5c2498ceddce",
+      "op": "update"
+    },
+    {
+      "id": "silent-proposal-c51468c5e8ba6668",
+      "path": "/home/dw/Projects/agent-sts2/paper/materials/learning/code-proposals.jsonl",
+      "offset": 966374,
+      "bytes": 683,
+      "sha256": "e9947591a5f285de9a6503f22dfd743ede30e823414177eba090e9f9bd2ef707",
+      "op": "update"
+    },
+    {
+      "id": "silent-proposal-1b9e29122364fa68",
+      "path": "/home/dw/Projects/agent-sts2/paper/materials/learning/code-proposals.jsonl",
+      "offset": 978742,
+      "bytes": 684,
+      "sha256": "55bf75c070cd7e0f9a7ced207acba27c181fea31971163fe4078e89a097f809f",
+      "op": "update"
+    },
+    {
+      "id": "silent-proposal-c51468c5e8ba6668",
+      "path": "/home/dw/Projects/agent-sts2/paper/materials/learning/code-proposals.jsonl",
+      "offset": 1008303,
+      "bytes": 647,
+      "sha256": "3718d2512280727620446e18986c6ccd7cfa4871ad3470c52881a7b222938648",
+      "op": "update"
+    },
+    {
+      "id": "silent-proposal-c51468c5e8ba6668",
+      "path": "/home/dw/Projects/agent-sts2/paper/materials/learning/code-proposals.jsonl",
+      "offset": 1044691,
+      "bytes": 641,
+      "sha256": "f813da5799a1998806af7230f96cecc46393ffe45093eded184f852440412989",
+      "op": "update"
+    },
+    {
+      "id": "silent-proposal-1b9e29122364fa68",
+      "path": "/home/dw/Projects/agent-sts2/paper/materials/learning/code-proposals.jsonl",
+      "offset": 1056554,
+      "bytes": 729,
+      "sha256": "6d1c246155ee9a340a354329a85a982357784d508f9a605f626bcf9731c06890",
+      "op": "update"
+    },
+    {
+      "id": "silent-proposal-c51468c5e8ba6668",
+      "path": "/home/dw/Projects/agent-sts2/paper/materials/learning/code-proposals.jsonl",
+      "offset": 1093812,
+      "bytes": 701,
+      "sha256": "fe2479b8104da4379c019cd40d78a676294cffe50b4303763e45350096d0c480",
+      "op": "update"
+    },
+    {
+      "id": "silent-proposal-1b9e29122364fa68",
+      "path": "/home/dw/Projects/agent-sts2/paper/materials/learning/code-proposals.jsonl",
+      "offset": 1103788,
+      "bytes": 738,
+      "sha256": "e84f8089bdf22cfb789292ff327dab4091fa8b558acbb7fa7f55c922c5b15db4",
+      "op": "update"
+    },
+    {
+      "id": "silent-proposal-c51468c5e8ba6668",
+      "path": "/home/dw/Projects/agent-sts2/paper/materials/learning/code-proposals.jsonl",
+      "offset": 1142802,
+      "bytes": 653,
+      "sha256": "b22f82ebacacc77057c12d4f0db56207bec24a775ccb09c7905d0d3b357920cd",
+      "op": "update"
+    },
+    {
+      "id": "silent-proposal-1b9e29122364fa68",
+      "path": "/home/dw/Projects/agent-sts2/paper/materials/learning/code-proposals.jsonl",
+      "offset": 1157214,
+      "bytes": 675,
+      "sha256": "a1f6687234c5fdb10c6de9499a3c5fdcb5e6a7d20abd6ce8c41bcbf3a7d144de",
+      "op": "update"
+    },
+    {
+      "id": "silent-proposal-c51468c5e8ba6668",
+      "path": "/home/dw/Projects/agent-sts2/paper/materials/learning/code-proposals.jsonl",
+      "offset": 1232384,
+      "bytes": 683,
+      "sha256": "4c7d8617263a86517002d23247acf97bbb032f801d36d67fe247b813474f04ca",
+      "op": "update"
+    },
+    {
+      "id": "silent-proposal-1b9e29122364fa68",
+      "path": "/home/dw/Projects/agent-sts2/paper/materials/learning/code-proposals.jsonl",
+      "offset": 1240369,
+      "bytes": 669,
+      "sha256": "4cf034177212774315b15358148e9bab455059d4877cf817e1b54a73981a45f0",
+      "op": "update"
+    },
+    {
+      "id": "silent-proposal-c51468c5e8ba6668",
+      "path": "/home/dw/Projects/agent-sts2/paper/materials/learning/code-proposals.jsonl",
+      "offset": 1277192,
+      "bytes": 653,
+      "sha256": "a716e0968d5683a7feb1e58a090f61ceb09625ca3dcd63b8cf69a677e266b977",
+      "op": "update"
+    },
+    {
+      "id": "silent-proposal-c51468c5e8ba6668",
+      "path": "/home/dw/Projects/agent-sts2/paper/materials/learning/code-proposals.jsonl",
+      "offset": 1304491,
+      "bytes": 650,
+      "sha256": "e52742244a7f641be4e77cd1dab32066f553910e38d5731aed9f96ae6ff89a52",
+      "op": "update"
+    },
+    {
+      "id": "silent-proposal-c51468c5e8ba6668",
+      "path": "/home/dw/Projects/agent-sts2/paper/materials/learning/code-proposals.jsonl",
+      "offset": 1346916,
+      "bytes": 668,
+      "sha256": "316c43a90596cbe6e9e26549109873f19dccf88048acdd5e6d2fe01c344708b1",
+      "op": "update"
+    },
+    {
+      "id": "silent-proposal-1b9e29122364fa68",
+      "path": "/home/dw/Projects/agent-sts2/paper/materials/learning/code-proposals.jsonl",
+      "offset": 1352867,
+      "bytes": 702,
+      "sha256": "bf67404cc59acd01324684143978b5c6a83bbc8dba4347ee8f8392ccfd9048af",
+      "op": "update"
+    },
+    {
+      "id": "silent-proposal-c51468c5e8ba6668",
+      "path": "/home/dw/Projects/agent-sts2/paper/materials/learning/code-proposals.jsonl",
+      "offset": 1415240,
+      "bytes": 720,
+      "sha256": "9cd2a95b4d18c593b21dff9e82bf7995d0f75914f20916e99f902c74dce0273e",
+      "op": "update"
+    },
+    {
+      "id": "silent-proposal-1b9e29122364fa68",
+      "path": "/home/dw/Projects/agent-sts2/paper/materials/learning/code-proposals.jsonl",
+      "offset": 1422127,
+      "bytes": 774,
+      "sha256": "86429c7b9cf4036a634fcce8d9607a0d9648d1c79d44057832495ae7b12016f6",
+      "op": "update"
+    },
+    {
+      "id": "silent-proposal-c51468c5e8ba6668",
+      "path": "/home/dw/Projects/agent-sts2/paper/materials/learning/code-proposals.jsonl",
+      "offset": 1529237,
+      "bytes": 684,
+      "sha256": "d01bebe8402d316404c8c434eda9d3bc298a922421fdf5f3b5816057520c8bd5",
+      "op": "update"
+    },
+    {
+      "id": "silent-proposal-e76e895381da5bfc",
+      "path": "/home/dw/Projects/agent-sts2/paper/materials/learning/code-proposals.jsonl",
+      "offset": 1572700,
+      "bytes": 783,
+      "sha256": "847d109c2de748315ee8d027ef0df710c15bee606e5da3554ee39726b08e2f71",
+      "op": "add"
+    },
+    {
+      "id": "silent-proposal-c51468c5e8ba6668",
+      "path": "/home/dw/Projects/agent-sts2/paper/materials/learning/code-proposals.jsonl",
+      "offset": 1602754,
+      "bytes": 629,
+      "sha256": "207dde100593dc80951b0b2e8896ed60752f4af2ad667052614ed8317a258655",
+      "op": "update"
+    },
+    {
+      "id": "silent-proposal-c51468c5e8ba6668",
+      "path": "/home/dw/Projects/agent-sts2/paper/materials/learning/code-proposals.jsonl",
+      "offset": 1635203,
+      "bytes": 629,
+      "sha256": "73718ab07e4b0526b2d03dd72d35d33fa3030731a4f81b08a338972a60264073",
+      "op": "update"
+    },
+    {
+      "id": "silent-proposal-c51468c5e8ba6668",
+      "path": "/home/dw/Projects/agent-sts2/paper/materials/learning/code-proposals.jsonl",
+      "offset": 1660188,
+      "bytes": 667,
+      "sha256": "a36f04d8f99e1194824c01d07694aa354839dbf854914a28b046bafc6fbbe41e",
+      "op": "update"
+    },
+    {
+      "id": "silent-proposal-c51468c5e8ba6668",
+      "path": "/home/dw/Projects/agent-sts2/paper/materials/learning/code-proposals.jsonl",
+      "offset": 1692154,
+      "bytes": 825,
+      "sha256": "48d571cb45e490e8b624050692882495eac4ae089bc4b26a6f8f40e879ddeecc",
+      "op": "update"
+    },
+    {
+      "id": "silent-proposal-c51468c5e8ba6668",
+      "path": "/home/dw/Projects/agent-sts2/paper/materials/learning/code-proposals.jsonl",
+      "offset": 1711313,
+      "bytes": 632,
+      "sha256": "e36fb2482c37f32e92467a980e224f8c299028105de6528235191465226571ef",
+      "op": "update"
+    },
+    {
+      "id": "silent-proposal-c51468c5e8ba6668",
+      "path": "/home/dw/Projects/agent-sts2/paper/materials/learning/code-proposals.jsonl",
+      "offset": 1753123,
+      "bytes": 662,
+      "sha256": "0caccca47829e7b946d1ca206fa3041cd34a01e30463b7d45198b4dfbeecf806",
+      "op": "update"
+    },
+    {
+      "id": "silent-proposal-c51468c5e8ba6668",
+      "path": "/home/dw/Projects/agent-sts2/paper/materials/learning/code-proposals.jsonl",
+      "offset": 1788045,
+      "bytes": 661,
+      "sha256": "ed5d0b754c026aa7e93e20769199afc58cdda98a50ee975f2db20fec55e1b2dc",
+      "op": "update"
+    },
+    {
+      "id": "silent-proposal-c51468c5e8ba6668",
+      "path": "/home/dw/Projects/agent-sts2/paper/materials/learning/code-proposals.jsonl",
+      "offset": 1810351,
+      "bytes": 659,
+      "sha256": "853a056042cb4bcdc2b19e4f164b24773d953aa919fc080c55a765f4e2f3a471",
+      "op": "update"
+    },
+    {
+      "id": "silent-proposal-c51468c5e8ba6668",
+      "path": "/home/dw/Projects/agent-sts2/paper/materials/learning/code-proposals.jsonl",
+      "offset": 1839457,
+      "bytes": 685,
+      "sha256": "af816bf2da2fda14681d406c9dc116d997bedd4759ca8ec2005c7fbdbe751dbb",
+      "op": "update"
+    },
+    {
+      "id": "silent-proposal-c51468c5e8ba6668",
+      "path": "/home/dw/Projects/agent-sts2/paper/materials/learning/code-proposals.jsonl",
+      "offset": 1871789,
+      "bytes": 694,
+      "sha256": "c4c94b7484cdf6aceb09d957ec2884397ea2dc1ae6f08b8c82a283e498c41cdd",
+      "op": "update"
+    },
+    {
+      "id": "silent-proposal-c51468c5e8ba6668",
+      "path": "/home/dw/Projects/agent-sts2/paper/materials/learning/code-proposals.jsonl",
+      "offset": 1923903,
+      "bytes": 702,
+      "sha256": "9baa66079326ba3c2b32c59b4d344958fb24b8901d746d4c3778f0f7f9218113",
+      "op": "update"
+    },
+    {
+      "id": "silent-proposal-c51468c5e8ba6668",
+      "path": "/home/dw/Projects/agent-sts2/paper/materials/learning/code-proposals.jsonl",
+      "offset": 1954351,
+      "bytes": 647,
+      "sha256": "c6896e9a9d7c32d855cd64051707765d59c763553145e31ac5aaaceb6838f34e",
+      "op": "update"
+    },
+    {
+      "id": "silent-proposal-c51468c5e8ba6668",
+      "path": "/home/dw/Projects/agent-sts2/paper/materials/learning/code-proposals.jsonl",
+      "offset": 1987917,
+      "bytes": 710,
+      "sha256": "f44f3c1995d10f701036d812d929333d0e5cc42a35faccf057861a29e161c0ef",
+      "op": "update"
+    },
+    {
+      "id": "silent-proposal-c51468c5e8ba6668",
+      "path": "/home/dw/Projects/agent-sts2/paper/materials/learning/code-proposals.jsonl",
+      "offset": 2003121,
+      "bytes": 733,
+      "sha256": "1420e4417e7f3180e5c9aff79f3034182f0842339a85894719ffcab6fcb635e1",
+      "op": "update"
+    },
+    {
+      "id": "silent-proposal-c51468c5e8ba6668",
+      "path": "/home/dw/Projects/agent-sts2/paper/materials/learning/code-proposals.jsonl",
+      "offset": 2037957,
+      "bytes": 708,
+      "sha256": "48c30ec28a698b771016eb159054dec06233d554261d6b2d8d785e6c66e3ff62",
+      "op": "update"
+    },
+    {
+      "id": "silent-proposal-c51468c5e8ba6668",
+      "path": "/home/dw/Projects/agent-sts2/paper/materials/learning/code-proposals.jsonl",
+      "offset": 2082259,
+      "bytes": 678,
+      "sha256": "dc735049b2a543a14cd2ac976ded5bd815cb5287f889cec26ce8711a154844fb",
+      "op": "update"
+    },
+    {
+      "id": "silent-proposal-c51468c5e8ba6668",
+      "path": "/home/dw/Projects/agent-sts2/paper/materials/learning/code-proposals.jsonl",
+      "offset": 2132262,
+      "bytes": 662,
+      "sha256": "8d25a7197bfa13904558169f9fffa35b591999bd4ae76d5e50406da205bbf864",
+      "op": "update"
+    },
+    {
+      "id": "silent-proposal-c51468c5e8ba6668",
+      "path": "/home/dw/Projects/agent-sts2/paper/materials/learning/code-proposals.jsonl",
+      "offset": 2207997,
+      "bytes": 684,
+      "sha256": "e8d971c5ab556fc27ed83edd7eac5ab24f66600f19cf597f707f415adfb9b217",
+      "op": "update"
+    },
+    {
+      "id": "silent-proposal-c51468c5e8ba6668",
+      "path": "/home/dw/Projects/agent-sts2/paper/materials/learning/code-proposals.jsonl",
+      "offset": 2249714,
+      "bytes": 677,
+      "sha256": "ec6631f248d95ef5f45a2d78443d80d7f5eaeb18a0950aae00d4443355a2cd1b",
+      "op": "update"
+    },
+    {
+      "id": "silent-proposal-c51468c5e8ba6668",
+      "path": "/home/dw/Projects/agent-sts2/paper/materials/learning/code-proposals.jsonl",
+      "offset": 2337364,
+      "bytes": 710,
+      "sha256": "3810c20eed7d7bb447eb237907eed4739e9927a71c08d26952bcdd875f2dfe7f",
+      "op": "update"
+    },
+    {
+      "id": "silent-proposal-c51468c5e8ba6668",
+      "path": "/home/dw/Projects/agent-sts2/paper/materials/learning/code-proposals.jsonl",
+      "offset": 2398652,
+      "bytes": 669,
+      "sha256": "355e07a305bed01c27287afa0f27024308057c17e75136c39befd31823ae85ef",
+      "op": "update"
+    },
+    {
+      "id": "silent-proposal-c51468c5e8ba6668",
+      "path": "/home/dw/Projects/agent-sts2/paper/materials/learning/code-proposals.jsonl",
+      "offset": 2435205,
+      "bytes": 642,
+      "sha256": "22f0ee922de803a9031e9accc6ee135d9e43ff5cf754a00e1d91891eef36a81f",
+      "op": "update"
+    },
+    {
+      "id": "silent-proposal-c51468c5e8ba6668",
+      "path": "/home/dw/Projects/agent-sts2/paper/materials/learning/code-proposals.jsonl",
+      "offset": 2473423,
+      "bytes": 691,
+      "sha256": "a1b93b1b67618c61eebbc57f4195294e0c2275f953fd973b3d0ebabc0755649e",
+      "op": "update"
+    },
+    {
+      "id": "silent-proposal-c51468c5e8ba6668",
+      "path": "/home/dw/Projects/agent-sts2/paper/materials/learning/code-proposals.jsonl",
+      "offset": 2526281,
+      "bytes": 672,
+      "sha256": "79328e815e43b6d467843024679c65125599331ae0e4c6beec2f50bc12032768",
+      "op": "update"
+    },
+    {
+      "id": "silent-proposal-c51468c5e8ba6668",
+      "path": "/home/dw/Projects/agent-sts2/paper/materials/learning/code-proposals.jsonl",
+      "offset": 2569655,
+      "bytes": 669,
+      "sha256": "7dfaa2cdd6b014ae6b2f05c27b1b98a2900aee4cf2a89498f2be738a6b5f8dda",
+      "op": "update"
+    },
+    {
+      "id": "silent-proposal-c51468c5e8ba6668",
+      "path": "/home/dw/Projects/agent-sts2/paper/materials/learning/code-proposals.jsonl",
+      "offset": 2625489,
+      "bytes": 676,
+      "sha256": "cf0da0f6bb4ab1a5547a0f4faa6cccc1e0dc5a250ae8c9122249d4eb21decd3c",
+      "op": "update"
+    },
+    {
+      "id": "silent-proposal-c51468c5e8ba6668",
+      "path": "/home/dw/Projects/agent-sts2/paper/materials/learning/code-proposals.jsonl",
+      "offset": 2729520,
+      "bytes": 657,
+      "sha256": "4a6010080cf359182c18c37d686caa2e7558ba645cb3cac150531bca5983365c",
+      "op": "update"
+    },
+    {
+      "id": "silent-proposal-c51468c5e8ba6668",
+      "path": "/home/dw/Projects/agent-sts2/paper/materials/learning/code-proposals.jsonl",
+      "offset": 2798673,
+      "bytes": 723,
+      "sha256": "aa765fda878fefb32a3e9905b467c05d911446d8942027a06086bd38ef245f14",
+      "op": "update"
+    },
+    {
+      "id": "silent-proposal-c51468c5e8ba6668",
+      "path": "/home/dw/Projects/agent-sts2/paper/materials/learning/code-proposals.jsonl",
+      "offset": 2872018,
+      "bytes": 671,
+      "sha256": "2bc3d80001176ff9c80d479fb306ef6ac19246ddfc38c931b77cda94c4cf4885",
+      "op": "update"
+    },
+    {
+      "id": "silent-proposal-c51468c5e8ba6668",
+      "path": "/home/dw/Projects/agent-sts2/paper/materials/learning/code-proposals.jsonl",
+      "offset": 2914831,
+      "bytes": 666,
+      "sha256": "674f3231387e438bc80fc59eed23bd51c6f181c11825f181422d36e609f7e33c",
+      "op": "update"
+    },
+    {
+      "id": "silent-proposal-c51468c5e8ba6668",
+      "path": "/home/dw/Projects/agent-sts2/paper/materials/learning/code-proposals.jsonl",
+      "offset": 2943849,
+      "bytes": 651,
+      "sha256": "eb0aaeffe67118f0b4151e9707ed6abc671639274d2ec4c66393df53f9f6d1f2",
+      "op": "update"
+    },
+    {
+      "id": "silent-proposal-c51468c5e8ba6668",
+      "path": "/home/dw/Projects/agent-sts2/paper/materials/learning/code-proposals.jsonl",
+      "offset": 2966337,
+      "bytes": 642,
+      "sha256": "a3e8764c7300d522dffb1a24794bc270bca7c9d7e16bf95810068745a70d88df",
+      "op": "update"
+    },
+    {
+      "id": "silent-proposal-c51468c5e8ba6668",
+      "path": "/home/dw/Projects/agent-sts2/paper/materials/learning/code-proposals.jsonl",
+      "offset": 2988440,
+      "bytes": 744,
+      "sha256": "f4701d77cb23dac5048a42438e2f7c36a2c5f5f73ee4da05e90b5f366910484d",
+      "op": "update"
+    },
+    {
+      "id": "silent-proposal-c51468c5e8ba6668",
+      "path": "/home/dw/Projects/agent-sts2/paper/materials/learning/code-proposals.jsonl",
+      "offset": 3081523,
+      "bytes": 727,
+      "sha256": "12399b8b0de7458002e07fa5d8c7e432316312d41992d33b8e587466fc964d71",
+      "op": "update"
+    },
+    {
+      "id": "silent-proposal-c51468c5e8ba6668",
+      "path": "/home/dw/Projects/agent-sts2/paper/materials/learning/code-proposals.jsonl",
+      "offset": 3102794,
+      "bytes": 650,
+      "sha256": "658fffe0224c32a5f61086f37dedc9262616f093ada564b46ad074f2cabfc351",
+      "op": "update"
+    },
+    {
+      "id": "silent-proposal-c51468c5e8ba6668",
+      "path": "/home/dw/Projects/agent-sts2/paper/materials/learning/code-proposals.jsonl",
+      "offset": 3131697,
+      "bytes": 722,
+      "sha256": "3189620f7c807b014b7d91973179200c6ff719e0afc793fa63b8098e12d62a2f",
+      "op": "update"
+    },
+    {
+      "id": "silent-proposal-c51468c5e8ba6668",
+      "path": "/home/dw/Projects/agent-sts2/paper/materials/learning/code-proposals.jsonl",
+      "offset": 3174347,
+      "bytes": 725,
+      "sha256": "2e75ac51288d93edc75fb5d64fd98de493d22610880db7711576b1204bddd8db",
+      "op": "update"
+    },
+    {
+      "id": "silent-proposal-c51468c5e8ba6668",
+      "path": "/home/dw/Projects/agent-sts2/paper/materials/learning/code-proposals.jsonl",
+      "offset": 3216767,
+      "bytes": 675,
+      "sha256": "31258d3448f12630794a9b7d72dfc4e542470c0619a015847065b9a2c23e2e66",
+      "op": "update"
+    },
+    {
+      "id": "silent-proposal-c51468c5e8ba6668",
+      "path": "/home/dw/Projects/agent-sts2/paper/materials/learning/code-proposals.jsonl",
+      "offset": 3258104,
+      "bytes": 666,
+      "sha256": "1db4ab354d6dd85a193468f1d53f351adee92fd185d99800db78bedf1dee953b",
+      "op": "update"
+    },
+    {
+      "id": "silent-proposal-c51468c5e8ba6668",
+      "path": "/home/dw/Projects/agent-sts2/paper/materials/learning/code-proposals.jsonl",
+      "offset": 3287107,
+      "bytes": 726,
+      "sha256": "e6a0908cdda9b085bb7e1af52f2892dfa71bc1bbb58227335f69316d7c793c3e",
+      "op": "update"
+    },
+    {
+      "id": "silent-proposal-c51468c5e8ba6668",
+      "path": "/home/dw/Projects/agent-sts2/paper/materials/learning/code-proposals.jsonl",
+      "offset": 3364001,
+      "bytes": 656,
+      "sha256": "ccd8875b13c63a67769c105fa177f5e87b36fa1be29f7e0b19b316803201bf23",
+      "op": "update"
+    },
+    {
+      "id": "silent-proposal-c51468c5e8ba6668",
+      "path": "/home/dw/Projects/agent-sts2/paper/materials/learning/code-proposals.jsonl",
+      "offset": 3427002,
+      "bytes": 705,
+      "sha256": "624a67ba3cb816611adc42387bb35e4e906aded3c7180ed17f7401aea318e467",
+      "op": "update"
+    },
+    {
+      "id": "silent-proposal-c51468c5e8ba6668",
+      "path": "/home/dw/Projects/agent-sts2/paper/materials/learning/code-proposals.jsonl",
+      "offset": 3455885,
+      "bytes": 659,
+      "sha256": "fefe8946219bffbd342a9cc3b107ed98b9f0e0168965543dff7a001dbd286146",
+      "op": "update"
+    },
+    {
+      "id": "silent-proposal-c51468c5e8ba6668",
+      "path": "/home/dw/Projects/agent-sts2/paper/materials/learning/code-proposals.jsonl",
+      "offset": 3505365,
+      "bytes": 686,
+      "sha256": "12c7d2ddfe8697ff461903b72c8a3e0f588e9065a56337bafb67eccbb69ae289",
+      "op": "update"
+    },
+    {
+      "id": "silent-proposal-c51468c5e8ba6668",
+      "path": "/home/dw/Projects/agent-sts2/paper/materials/learning/code-proposals.jsonl",
+      "offset": 3583375,
+      "bytes": 656,
+      "sha256": "445cc4faa9aff497047963c42c6f9f34eb6370859c1d2c5790fcde0a6d588fe2",
+      "op": "update"
+    },
+    {
+      "id": "silent-proposal-c51468c5e8ba6668",
+      "path": "/home/dw/Projects/agent-sts2/paper/materials/learning/code-proposals.jsonl",
+      "offset": 3658224,
+      "bytes": 654,
+      "sha256": "41ce212a035e6d21067defd165414bed3c9ef30233e104c0e98fe8e6e8264794",
+      "op": "update"
+    },
+    {
+      "id": "silent-proposal-c51468c5e8ba6668",
+      "path": "/home/dw/Projects/agent-sts2/paper/materials/learning/code-proposals.jsonl",
+      "offset": 3701973,
+      "bytes": 654,
+      "sha256": "47468a3d48a86eafbc026b3d02a0771833e0a8f356c65808146ab9418da9b0c3",
+      "op": "update"
+    },
+    {
+      "id": "silent-proposal-c51468c5e8ba6668",
+      "path": "/home/dw/Projects/agent-sts2/paper/materials/learning/code-proposals.jsonl",
+      "offset": 3731673,
+      "bytes": 645,
+      "sha256": "175b9441f268fa69f6b6c58873d1ffc1e1515e42c7da0471cd6306517191cc67",
+      "op": "update"
+    },
+    {
+      "id": "silent-proposal-c51468c5e8ba6668",
+      "path": "/home/dw/Projects/agent-sts2/paper/materials/learning/code-proposals.jsonl",
+      "offset": 3783977,
+      "bytes": 673,
+      "sha256": "c50678b7e05b1ebb79bd03627ddffaef94a6556f7e3986d365949e8443e4e4e4",
+      "op": "update"
+    },
+    {
+      "id": "silent-proposal-c51468c5e8ba6668",
+      "path": "/home/dw/Projects/agent-sts2/paper/materials/learning/code-proposals.jsonl",
+      "offset": 3813433,
+      "bytes": 672,
+      "sha256": "bc5b8bcdede1d52168b3b191cd583ca351c204a636b4f2fad3d22ad478007c0a",
+      "op": "update"
+    },
+    {
+      "id": "silent-proposal-c51468c5e8ba6668",
+      "path": "/home/dw/Projects/agent-sts2/paper/materials/learning/code-proposals.jsonl",
+      "offset": 3849660,
+      "bytes": 672,
+      "sha256": "9b4a574941897ee25b84e6cc2bf53ee0c0215029513d73027f24159c19c5f552",
+      "op": "update"
+    },
+    {
+      "id": "silent-proposal-c51468c5e8ba6668",
+      "path": "/home/dw/Projects/agent-sts2/paper/materials/learning/code-proposals.jsonl",
+      "offset": 3914792,
+      "bytes": 645,
+      "sha256": "6f4120098a3b16add7ef1d55daa395fe2f811523509c1703f0204cee1b7944a2",
+      "op": "update"
+    },
+    {
+      "id": "silent-proposal-04cbbf6b3a547aea",
+      "path": "/home/dw/Projects/agent-sts2/paper/materials/learning/code-proposals.jsonl",
+      "offset": 4015357,
+      "bytes": 769,
+      "sha256": "8d59082709f17d3edd4172f33c34239bf0c009afbfeb49619e7ae498750728e7",
+      "op": "update"
+    },
+    {
+      "id": "silent-proposal-c51468c5e8ba6668",
+      "path": "/home/dw/Projects/agent-sts2/paper/materials/learning/code-proposals.jsonl",
+      "offset": 4045168,
+      "bytes": 663,
+      "sha256": "187870f476811704d8d4ae7fc6be221f302e83fdd1b7c4d58cce1cec173419e6",
+      "op": "update"
+    },
+    {
+      "id": "silent-proposal-c51468c5e8ba6668",
+      "path": "/home/dw/Projects/agent-sts2/paper/materials/learning/code-proposals.jsonl",
+      "offset": 4116877,
+      "bytes": 723,
+      "sha256": "0fc525062a89750442fd601183a12f312721c31acfbbd7fa314ebd7fba09be85",
+      "op": "update"
+    },
+    {
+      "id": "silent-proposal-c51468c5e8ba6668",
+      "path": "/home/dw/Projects/agent-sts2/paper/materials/learning/code-proposals.jsonl",
+      "offset": 4146997,
+      "bytes": 686,
+      "sha256": "4346d7b223a223e810a4fe765df5876c3813a95e887440e26643a2be707f791d",
+      "op": "update"
+    },
+    {
+      "id": "silent-proposal-c51468c5e8ba6668",
+      "path": "/home/dw/Projects/agent-sts2/paper/materials/learning/code-proposals.jsonl",
+      "offset": 4184395,
+      "bytes": 733,
+      "sha256": "95b0de7827d37b932955dea3acb67cd32f4669aa1fb1d769cfc56f37f174b875",
+      "op": "update"
+    },
+    {
+      "id": "silent-proposal-c51468c5e8ba6668",
+      "path": "/home/dw/Projects/agent-sts2/paper/materials/learning/code-proposals.jsonl",
+      "offset": 4209309,
+      "bytes": 772,
+      "sha256": "4dbb4d9a307dffa090d7a6c9091e1cd2f6f2448a5c463242a7a7af3ce359bd6a",
+      "op": "update"
+    },
+    {
+      "id": "silent-proposal-c51468c5e8ba6668",
+      "path": "/home/dw/Projects/agent-sts2/paper/materials/learning/code-proposals.jsonl",
+      "offset": 4247263,
+      "bytes": 768,
+      "sha256": "ef0390eea8c78f9c6bed1ed398164b43734c981bb35a68ea1aa9c833ef20c7e9",
+      "op": "update"
+    },
+    {
+      "id": "silent-proposal-c51468c5e8ba6668",
+      "path": "/home/dw/Projects/agent-sts2/paper/materials/learning/code-proposals.jsonl",
+      "offset": 4290763,
+      "bytes": 750,
+      "sha256": "002a0f3030e69dea87334ee6448179baec272d1c449207427daa36473e220595",
+      "op": "update"
+    },
+    {
+      "id": "silent-proposal-c51468c5e8ba6668",
+      "path": "/home/dw/Projects/agent-sts2/paper/materials/learning/code-proposals.jsonl",
+      "offset": 4334988,
+      "bytes": 671,
+      "sha256": "c17ed64ddc2e78d558c630f1c11d73c6b7abf49778945e275344fb0722e8bf94",
+      "op": "update"
+    },
+    {
+      "id": "silent-proposal-c51468c5e8ba6668",
+      "path": "/home/dw/Projects/agent-sts2/paper/materials/learning/code-proposals.jsonl",
+      "offset": 4375794,
+      "bytes": 656,
+      "sha256": "75dd3c629f7a7d75c3e1a8b1340b54a45c8b3e613db6be8612941b7686b37222",
+      "op": "update"
+    },
+    {
+      "id": "silent-proposal-c51468c5e8ba6668",
+      "path": "/home/dw/Projects/agent-sts2/paper/materials/learning/code-proposals.jsonl",
+      "offset": 4410595,
+      "bytes": 686,
+      "sha256": "2342b62a1ea3f9a64a72b7b86a063060ab36ea0aeba169cacd7703c97ca57ded",
+      "op": "update"
+    },
+    {
+      "id": "silent-proposal-c51468c5e8ba6668",
+      "path": "/home/dw/Projects/agent-sts2/paper/materials/learning/code-proposals.jsonl",
+      "offset": 4466173,
+      "bytes": 665,
+      "sha256": "f3b5dac7cc8f1d383f5d708c9e7d95f336845045127e1628289f5c26b6657afe",
+      "op": "update"
+    },
+    {
+      "id": "silent-proposal-c51468c5e8ba6668",
+      "path": "/home/dw/Projects/agent-sts2/paper/materials/learning/code-proposals.jsonl",
+      "offset": 4516014,
+      "bytes": 752,
+      "sha256": "ef4b7e960a0a7f1b1cce5825e6c3fceb10cec9421d39bf081aee0ae499694584",
+      "op": "update"
+    },
+    {
+      "id": "silent-proposal-c51468c5e8ba6668",
+      "path": "/home/dw/Projects/agent-sts2/paper/materials/learning/code-proposals.jsonl",
+      "offset": 4546886,
+      "bytes": 671,
+      "sha256": "9eed599daad5ba25e3120101fdb846ec802f94f98120c5adae039b94d1492e87",
+      "op": "update"
+    },
+    {
+      "id": "silent-proposal-c51468c5e8ba6668",
+      "path": "/home/dw/Projects/agent-sts2/paper/materials/learning/code-proposals.jsonl",
+      "offset": 4597427,
+      "bytes": 689,
+      "sha256": "ca5a38a929536bd4df5833eb0fff4dd9f015416053ed5d7e7119a03444916fa4",
+      "op": "update"
+    },
+    {
+      "id": "silent-proposal-c51468c5e8ba6668",
+      "path": "/home/dw/Projects/agent-sts2/paper/materials/learning/code-proposals.jsonl",
+      "offset": 4666259,
+      "bytes": 642,
+      "sha256": "6260f679bfaca7aacdd0dbe904c357524e321dd07fdbd7ffbb2b2d5385639e5e",
+      "op": "update"
+    },
+    {
+      "id": "silent-proposal-c51468c5e8ba6668",
+      "path": "/home/dw/Projects/agent-sts2/paper/materials/learning/code-proposals.jsonl",
+      "offset": 4688026,
+      "bytes": 660,
+      "sha256": "aa5f5b989ad5cf57e1a965c922e06c4d711b6415160068539d2286e145d9dbc8",
+      "op": "update"
+    },
+    {
+      "id": "silent-proposal-c51468c5e8ba6668",
+      "path": "/home/dw/Projects/agent-sts2/paper/materials/learning/code-proposals.jsonl",
+      "offset": 4717776,
+      "bytes": 660,
+      "sha256": "23ff0acd9ff67e8828ccb4b553b7b1972622535fa3378dfe0c262f1e81709831",
+      "op": "update"
+    },
+    {
+      "id": "silent-proposal-c51468c5e8ba6668",
+      "path": "/home/dw/Projects/agent-sts2/paper/materials/learning/code-proposals.jsonl",
+      "offset": 4753910,
+      "bytes": 681,
+      "sha256": "64d3e74cf5c5b533970af0ae58efeb8d4a318f71ecc4e303e3c421c7b94f6166",
+      "op": "update"
+    },
+    {
+      "id": "silent-proposal-c51468c5e8ba6668",
+      "path": "/home/dw/Projects/agent-sts2/paper/materials/learning/code-proposals.jsonl",
+      "offset": 4834363,
+      "bytes": 644,
+      "sha256": "7008472420a1f10f8b4d33ae14c1542d18f9a5f8b5d33569704f03128fd361d3",
+      "op": "update"
+    },
+    {
+      "id": "silent-proposal-c51468c5e8ba6668",
+      "path": "/home/dw/Projects/agent-sts2/paper/materials/learning/code-proposals.jsonl",
+      "offset": 4886814,
+      "bytes": 638,
+      "sha256": "69f808ddb1b9a8b50f6f6bc5e49f61a3a79018ce166a9e67789d6d4aa6bb9496",
+      "op": "update"
+    },
+    {
+      "id": "silent-proposal-c51468c5e8ba6668",
+      "path": "/home/dw/Projects/agent-sts2/paper/materials/learning/code-proposals.jsonl",
+      "offset": 4930766,
+      "bytes": 635,
+      "sha256": "18120faf329d80f29544b3b835d153c11ae3b365f8f066ce71a72a100c78d2ca",
+      "op": "update"
+    },
+    {
+      "id": "silent-proposal-c51468c5e8ba6668",
+      "path": "/home/dw/Projects/agent-sts2/paper/materials/learning/code-proposals.jsonl",
+      "offset": 4958069,
+      "bytes": 637,
+      "sha256": "19953c6e3ad3ae5c3ae9d8a84ff06f0f12349b76902fbcfd119831f140080d9f",
+      "op": "update"
+    },
+    {
+      "id": "silent-proposal-c51468c5e8ba6668",
+      "path": "/home/dw/Projects/agent-sts2/paper/materials/learning/code-proposals.jsonl",
+      "offset": 5016456,
+      "bytes": 643,
+      "sha256": "24254281367182a8779748000b5baa088aa713f60d2283cdb8d54f90d38c1a62",
+      "op": "update"
+    },
+    {
+      "id": "silent-proposal-da9575b27ac37dbb",
+      "path": "/home/dw/Projects/agent-sts2/paper/materials/learning/code-proposals.jsonl",
+      "offset": 5063116,
+      "bytes": 768,
+      "sha256": "598a76df2e7da1e77a315bf6d3c98d9462cf40e4b487427546aae435035f7414",
+      "op": "add"
+    },
+    {
+      "id": "silent-proposal-c51468c5e8ba6668",
+      "path": "/home/dw/Projects/agent-sts2/paper/materials/learning/code-proposals.jsonl",
+      "offset": 5069330,
+      "bytes": 674,
+      "sha256": "0472063be5a513ec45177d9dba12d9fa1397064972d3d9a6f4ceaa164636aa3c",
+      "op": "update"
+    },
+    {
+      "id": "silent-proposal-c51468c5e8ba6668",
+      "path": "/home/dw/Projects/agent-sts2/paper/materials/learning/code-proposals.jsonl",
+      "offset": 5115532,
+      "bytes": 684,
+      "sha256": "fd96d9d8e460ea74a33b0c46206cfd64a6a980a7c7098b72445ba9c67fbfb89c",
+      "op": "update"
+    },
+    {
+      "id": "silent-proposal-c51468c5e8ba6668",
+      "path": "/home/dw/Projects/agent-sts2/paper/materials/learning/code-proposals.jsonl",
+      "offset": 5248576,
+      "bytes": 650,
+      "sha256": "7e6ad28f466c545e92fa4e16ef26f8391cbaa327738e20fe6025c1b705791944",
+      "op": "update"
+    },
+    {
+      "id": "silent-proposal-c51468c5e8ba6668",
+      "path": "/home/dw/Projects/agent-sts2/paper/materials/learning/code-proposals.jsonl",
+      "offset": 5273530,
+      "bytes": 635,
+      "sha256": "c5f42f9ff8a4cf3f042d5644451690b8ae2684974e6620a0bdfc579d70ca23fd",
+      "op": "update"
+    },
+    {
+      "id": "silent-proposal-c51468c5e8ba6668",
+      "path": "/home/dw/Projects/agent-sts2/paper/materials/learning/code-proposals.jsonl",
+      "offset": 5337617,
+      "bytes": 629,
+      "sha256": "1cb3b79268ef1c0c6b970c2650929bef2eadd966473ea66bb873993b90ee28c0",
+      "op": "update"
+    },
+    {
+      "id": "silent-proposal-c51468c5e8ba6668",
+      "path": "/home/dw/Projects/agent-sts2/paper/materials/learning/code-proposals.jsonl",
+      "offset": 5383917,
+      "bytes": 690,
+      "sha256": "6044dacc24164169299d32761a3b32e93afb5693ee16fe6f78a82e209a07b228",
+      "op": "update"
+    },
+    {
+      "id": "silent-proposal-c51468c5e8ba6668",
+      "path": "/home/dw/Projects/agent-sts2/paper/materials/learning/code-proposals.jsonl",
+      "offset": 5428010,
+      "bytes": 622,
+      "sha256": "bff249c53d9ca0b8fd0e128e6daeabc051916d2c0d6dfd94848d271bc56820ba",
+      "op": "update"
+    },
+    {
+      "id": "silent-proposal-c51468c5e8ba6668",
+      "path": "/home/dw/Projects/agent-sts2/paper/materials/learning/code-proposals.jsonl",
+      "offset": 5468062,
+      "bytes": 631,
+      "sha256": "8b1134669ae71d9653ec6db0b84bfd59d68fb0bf5ad8874f2bf9993c3944bd5f",
+      "op": "update"
+    },
+    {
+      "id": "silent-proposal-c51468c5e8ba6668",
+      "path": "/home/dw/Projects/agent-sts2/paper/materials/learning/code-proposals.jsonl",
+      "offset": 5555623,
+      "bytes": 599,
+      "sha256": "df39280a7b52e352f96ad4fa568e9bf64471de2e9633f491491a205a1a11dc46",
+      "op": "update"
+    },
+    {
+      "id": "silent-proposal-c51468c5e8ba6668",
+      "path": "/home/dw/Projects/agent-sts2/paper/materials/learning/code-proposals.jsonl",
+      "offset": 5603452,
+      "bytes": 628,
+      "sha256": "19bae3a789d31da47ae1ef7324a8f0b286f73b3114e717b92d2e1c8c7f539c0b",
+      "op": "update"
+    },
+    {
+      "id": "silent-proposal-c51468c5e8ba6668",
+      "path": "/home/dw/Projects/agent-sts2/paper/materials/learning/code-proposals.jsonl",
+      "offset": 5641251,
+      "bytes": 628,
+      "sha256": "a60febb7865f70eabdc9e80d5819ab6a53f601b7fdc60a7eb69f7f82ca0cc04e",
+      "op": "update"
+    },
+    {
+      "id": "silent-proposal-c51468c5e8ba6668",
+      "path": "/home/dw/Projects/agent-sts2/paper/materials/learning/code-proposals.jsonl",
+      "offset": 5682858,
+      "bytes": 628,
+      "sha256": "42f5ffbfa1a96985ef76a682d05de6053cebd11d8f34bde83fc8533db3e97275",
+      "op": "update"
+    },
+    {
+      "id": "silent-proposal-c51468c5e8ba6668",
+      "path": "/home/dw/Projects/agent-sts2/paper/materials/learning/code-proposals.jsonl",
+      "offset": 5708211,
+      "bytes": 628,
+      "sha256": "f092c234ded1b680ab2042eba00ea8a0471ec897507ee6d280c4580503725804",
+      "op": "update"
+    },
+    {
+      "id": "silent-proposal-c51468c5e8ba6668",
+      "path": "/home/dw/Projects/agent-sts2/paper/materials/learning/code-proposals.jsonl",
+      "offset": 5732139,
+      "bytes": 622,
+      "sha256": "f6315bd220cff96748d62ba4c87305ca9263850ca43012fc513d135790b9f5ec",
+      "op": "update"
+    },
+    {
+      "id": "silent-proposal-c51468c5e8ba6668",
+      "path": "/home/dw/Projects/agent-sts2/paper/materials/learning/code-proposals.jsonl",
+      "offset": 5771973,
+      "bytes": 622,
+      "sha256": "d938e8d606484862f2a1ec43392cb9a7ed9efc0f44528bc78ef3b1852e008cbd",
+      "op": "update"
+    },
+    {
+      "id": "silent-proposal-c51468c5e8ba6668",
+      "path": "/home/dw/Projects/agent-sts2/paper/materials/learning/code-proposals.jsonl",
+      "offset": 5798583,
+      "bytes": 638,
+      "sha256": "818923e92f924c9f28c1f76b190dbb26f0edcc187a923df93634099d8a1fbf43",
+      "op": "update"
+    },
+    {
+      "id": "silent-proposal-c51468c5e8ba6668",
+      "path": "/home/dw/Projects/agent-sts2/paper/materials/learning/code-proposals.jsonl",
+      "offset": 5823680,
+      "bytes": 622,
+      "sha256": "f3df920d9cacb8e79ab4c4cadabd5c3380801b151d7b761982c280c4c114127c",
+      "op": "update"
+    },
+    {
+      "id": "silent-proposal-c51468c5e8ba6668",
+      "path": "/home/dw/Projects/agent-sts2/paper/materials/learning/code-proposals.jsonl",
+      "offset": 5848426,
+      "bytes": 622,
+      "sha256": "2bf11bf83312ec62cfe9ea71fb7acb87fa9642435ae7902c36536cc8a82b5884",
+      "op": "update"
+    }
+  ]
+}

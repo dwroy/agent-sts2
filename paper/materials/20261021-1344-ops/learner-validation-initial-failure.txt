@@ -1,0 +1,1 @@
+本批核验脚本最初将 fc7042d1df0626e9e726f4bc912d9c6f626d908f 视为候选 live 祖先；独立 merge-base 返回1，断言中止。随后保留该反例并核实实际集成祖先 5b56a452bb9be14d620b368ec46974c1b57901ca 及后续源码 ebf8c57ecd811cceeb85fa636d49abbbb4c65dc8，均返回0。15ea09ad75a421d4bd65a820c187c8ee188186c8 同样不是实际 live 祖先。不把原来源SHA冒作 live 祖先，不将此次证据脚本断言当成 tsc/vitest 失败。

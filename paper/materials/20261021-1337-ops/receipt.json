@@ -1,0 +1,149 @@
+{
+  "schema": "ops-ordinary-parallel-record-retention-v1",
+  "at": "2026-10-21T13:43:55+08:00",
+  "batch": "20261021-131301-strategy-proposal",
+  "state": "original-dataset-ran-record-publication-blocked-by-parallel-records-and-later-source-change",
+  "original_failure": {
+    "path": "paper/materials/20261021-1337-ops/original-attention.json",
+    "bytes": 14903,
+    "sha256": "26bce8118faa017907971c63e98027966891725d49d2b8f002acf9c46559c797"
+  },
+  "original_clean_scan": {
+    "path": "paper/materials/20261021-1337-ops/original-clean-scan-manifest.json",
+    "bytes": 110186,
+    "sha256": "c115f8d21ffd1ad8305b2827c3e7edd0688621bd43782999a25f162261934f31"
+  },
+  "exact_scan_blobs_verified": 364,
+  "parallel_cost_outputs": [
+    {
+      "path": "paper/data/cost-curve-silent.csv",
+      "original_scan_sha256": "69d45d1c9062f3922f69df50234c697890bb7a45e2851620bac733c613c28040",
+      "working_sha256": "0b36142a2b83831ec90a42a284746c6098d7978251759837987b36efab144574",
+      "original_git_blob": "14fd0a68f8e2d0e30218120d6eb471c3b8a35be6"
+    },
+    {
+      "path": "paper/data/cost-silent.csv",
+      "original_scan_sha256": "b1dc68b7bb925b8bb469ef7ea9e46aa9210f95d1efd26869c7e30e3cbba106de",
+      "working_sha256": "9ef9e608e6e4a7f6d89ca26807589415e568727bceca17b0925342563786f01f",
+      "original_git_blob": "417b45cccd5dddcca9a344ddbe863c2e59eb1a55"
+    },
+    {
+      "path": "paper/data/cost-sources.json",
+      "original_scan_sha256": "5fef3cab300317ee2bc26cd3e2a0627cd27a00b57254c590e7aba60eb91936a3",
+      "working_sha256": "25c6871fe450ad150c23eaa106bd23d65b9ae72b689a3c355998b3034b19eb52",
+      "original_git_blob": "e0e35cc5e165a10b7cda1d715d9fc174bfd7310f"
+    },
+    {
+      "path": "paper/data/cost-unattributed.csv",
+      "original_scan_sha256": "d34bbdd8af9489152e85f885ace8a712c6596397b4ba6f1031b5dca1ae2919ab",
+      "working_sha256": "920982d7fc87f8032a4f47997c4f3e0797517454180aa50a8a54335c2314521a",
+      "original_git_blob": "103f599c2dc1442ac7c0f05668a893d930d4b772"
+    },
+    {
+      "path": "paper/materials/silent/cost.md",
+      "original_scan_sha256": "e8cc28df58af51bb5cf6b9c0ea4a050cc79caf05d6f24bf73c1d9fcc42cecdbf",
+      "working_sha256": "0279a16cf504778ff400b1ec3aea0f939e254d4af48e4ad53b22329610f47da9",
+      "original_git_blob": "b45023a72f3c3609ad0833d0b49db339337e7313"
+    }
+  ],
+  "five_original_cost_blobs_retained": [
+    {
+      "path": "paper/materials/20261021-1337-ops/original-cost-cut/paper/data/cost-curve-silent.csv",
+      "bytes": 16048,
+      "sha256": "69d45d1c9062f3922f69df50234c697890bb7a45e2851620bac733c613c28040"
+    },
+    {
+      "path": "paper/materials/20261021-1337-ops/original-cost-cut/paper/data/cost-silent.csv",
+      "bytes": 1520320,
+      "sha256": "b1dc68b7bb925b8bb469ef7ea9e46aa9210f95d1efd26869c7e30e3cbba106de"
+    },
+    {
+      "path": "paper/materials/20261021-1337-ops/original-cost-cut/paper/data/cost-sources.json",
+      "bytes": 574043,
+      "sha256": "5fef3cab300317ee2bc26cd3e2a0627cd27a00b57254c590e7aba60eb91936a3"
+    },
+    {
+      "path": "paper/materials/20261021-1337-ops/original-cost-cut/paper/data/cost-unattributed.csv",
+      "bytes": 24724,
+      "sha256": "d34bbdd8af9489152e85f885ace8a712c6596397b4ba6f1031b5dca1ae2919ab"
+    },
+    {
+      "path": "paper/materials/20261021-1337-ops/original-cost-cut/paper/materials/silent/cost.md",
+      "bytes": 4203,
+      "sha256": "e8cc28df58af51bb5cf6b9c0ea4a050cc79caf05d6f24bf73c1d9fcc42cecdbf"
+    }
+  ],
+  "original_learning_record_prefixes": [
+    {
+      "path": "notes/lessons.md",
+      "original_scan_sha256": "d92b5ec731ef8ece251d5ee443ec5f5c4e82e58bc1a72cac2468c3de5b9b22f8",
+      "original_bytes": 10700322,
+      "original_snapshot_is_current_prefix": true,
+      "same_working_bytes": true
+    },
+    {
+      "path": "paper/materials/learning/code-proposals.jsonl",
+      "original_scan_sha256": "6a63848e5d35e3c60fdf794b19667c445b9e69d42f84e7dbec5cec4041b52cf1",
+      "original_bytes": 5924064,
+      "original_snapshot_is_current_prefix": true,
+      "same_working_bytes": true
+    },
+    {
+      "path": "paper/materials/learning/ledger.jsonl",
+      "original_scan_sha256": "5d1c0f257a07b6ea621f085c0a6afbbf2ef3b4bb3f488524efa4815541ec4d90",
+      "original_bytes": 27527190,
+      "original_snapshot_is_current_prefix": true,
+      "same_working_bytes": true
+    }
+  ],
+  "original_private_completion_not_published": true,
+  "original_single_dataset_log": {
+    "path": "paper/materials/20261021-1337-ops/original-dataset.log",
+    "bytes": 959,
+    "sha256": "2dac94aa40c194bb9baa900d1994f76f392404783ae9d20886b0ce8560dfdf7a"
+  },
+  "original_generator_invocations": 1,
+  "original_source_checks_passed": 5,
+  "original_dataset_zero_exit_provenance": "original clean record scan is reachable only after dataset zero-exit guard; no separate exit-code file",
+  "dataset_reruns": 0,
+  "attempted_frozen_records_only_recovery": "stopped before any Git ref/index/worktree write: current main no longer original scan base",
+  "original_scan_base": "81af8d0575ddc309eb4c286ba77da059fc445d2f",
+  "current_main": "9005a9ab2d82e2c681977208d275bfd4c809db07",
+  "later_source_paths": [
+    "agent/src/hand/loop.ts",
+    "agent/src/hand/screens/reward.ts",
+    "agent/src/v6/brain-card-value.ts",
+    "agent/src/v6/card-value.ts",
+    "agent/src/v6/opening-value.ts",
+    "agent/src/v6/projection-runtime.ts",
+    "agent/tests/manual-notice-ack.test.ts",
+    "agent/tests/opening-value.test.ts",
+    "agent/tests/v6-brain-card-value-loop.test.ts",
+    "agent/tests/v6-card-value.test.ts",
+    "knowledge/builders/build-fight-value.py",
+    "knowledge/builders/opening_value.py",
+    "knowledge/builders/test_opening_value.py",
+    "ops/codex-ops.sh",
+    "ops/issue_session.py",
+    "ops/issue_session_project.py",
+    "ops/issue_session_support.py",
+    "ops/learning_requests.py",
+    "ops/tests/test_issue_session.py",
+    "ops/tests/test_manual_notice_ack.py"
+  ],
+  "source_advanced_while_reviewing": true,
+  "frozen_data_republished": false,
+  "current_cost_outputs_not_overwritten": true,
+  "worktree_base": "526d34e7b2fa2a02be03575bb52dde4d98a870e1",
+  "worktree_clean": true,
+  "ten_proposals_waiting": true,
+  "original_tests": {
+    "tsc": null,
+    "vitest": null,
+    "cases": null
+  },
+  "live_head_observed": "5a295bb5ed52f0c0fa5e8c045dcfcba3d894b532",
+  "live_or_actor_changed": false,
+  "new_models_full_tests_learning_or_dataset": false,
+  "scientific_parents_closed": false
+}

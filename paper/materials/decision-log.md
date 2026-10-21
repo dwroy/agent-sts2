@@ -5549,6 +5549,53 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
 - 2026-10-21 11:04:20 CST [Claude/Roy，并行] Roy：能并行的都并行、可以多开会话。新建 #12（拿牌 v2 单牌增量可辨识性研究，只读）、#13（补齐未建模常见卡牌，学习者）、#14（第三幕 Boss 与连战模拟迭代，学习者）；按一个 issue 一个新会话开 herdr 会话 issue-8（wJ:p1H2）、issue-12（wJ:p1H3）、issue-6（wJ:p1H4），各自独立工作树，gpt-6.1-sol high；#13/#14 交 ops 按学习闭环派学习者；关闭 #5。
 
 - 2026-10-21 11:17:18 CST [Claude/Roy，#1 决定] Roy 在 GitHub 指示“dwroy/agent-sts2#1 就按照claude建议的来做”：方向 2 → #15（v2 数值作为大脑拿牌题补充事实，决策者仍 brain，新会话 issue-15 wJ:p1H5 已派）；方向 1 → #12（单牌增量可辨识性研究，进行中）；方向 3 → #16（可辨识的题交 Jev、其余交大脑的混合门，依赖 #12/#15）。#1 保留为总入口。
-- 2026-10-21 12:00:32 CST [dev #17] 按 8710b77c7 生命周期标准实现 issue_session 派发/显式登记/演练与回收、原 tick 接入；尾日志→关 tab→原 complete/worker，保留发布、唯一产物与来源分支门禁。固定测试33项与原回收器15项通过、tsc通过；仓库Vitest5219通过/4个基线V6失败，三文件复验同失败，agent源码树与42ba9497f相同，不冒称全绿。交review未上线，现有6/8/12/15仅只读候选未登记，不动live/STOP/ops prompt；原件paper/materials/2026-10-21-issue-17-session-lifecycle/report.md。
-- 2026-10-21 12:10:37 CST [dev #17] 按 Roy 批准的通用架构及 issue 范围补充（issuecomment-6307612646，6307615860）继续实现 .agents/board.yaml 驱动 spawn/reclaim，供 #20 调用；分配/依赖检查/退休均配置命令，STS2 门禁隔离为配置适配器，不写入通用引擎。最终固定测试40项通过，另项目配置替换/环境/门禁有证据；保留此前tsc通过、整套Vitest4个基线失败原件，#19跟进；未上线、未接管或关闭既有会话。
-- 2026-10-21 12:12:37 CST [dev #17] 最终复核补强已有尾日志也须读回、内容一致才关 tab；固定测试扩为41项全部通过（unit-attempt-8.txt），此前失败与复跑原件保留。配置接口和安全门禁交review，未改生产运行状态。
+
+- 2026-10-21 11:23:33 CST [Claude/Roy，回收机制] Roy 要求完成的 issue、工作树、herdr tab 有干净的回收机制。新建 #17（ops/issue_session.py spawn/reclaim + 登记表 + 调度器 tick 自动回收已关闭 issue，前提不满足只评论不强删，沿用 worktree_retention.py complete 的保护；新会话 issue-17 wJ:p1H6 已派）与 #18（历史工作树积压 274 个、约 138 GB，ops 用 worktree_retention.py plan 出清单，watcher 核对后分批回收）。
+
+- 2026-10-21T11:28:39+08:00 ops：#13/#14按原学习闭环各独立一次并行派发，实际gpt-6.1-sol/high/原沙箱与新线程核同，单次各4进程nice19/计算单worker；不改正式知识/live，不关闭父。回执 paper/materials/20261021-issues-13-14-ops/receipt.json。
+
+- 2026-10-21T11:33:35+08:00 ops：#18原retention plan与全量逐树/体积计划完成，275顶层/141.20GiB、0可直接回收/219保留/56待补证；315登记含60嵌套不重加。已发[ops] issue短评并review，watcher核对前不执行apply；原件 paper/materials/20261021-worktree-backlog/receipt.json。
+
+- 2026-10-21T11:42:13+08:00 ops：#4原研究exit0核收，99输入/33产物/3895原行/771 Git blob核同；4草稿waiting/3科学异议双收件箱及原watcher issue提醒，CLI研究身份拒绝保pending，不造ID/续批/full/发布或关父。回执 paper/materials/20261021-issue4-terminal-ops/receipt.json。
+- 2026-10-21T11:42:13+08:00 ops：#18 watcher盘点核验通过但本轮删除授权0，blocked/needs:roy；不全局sweep/移绑定，补证后仅精确name/HEAD/owner/材料重提定点≤4清单。回执 paper/materials/20261021-worktree-backlog/watcher-review-intake.json。
+
+- 2026-10-21T11:48:13+08:00 [Codex watcher，#18核验] 原275顶层/315登记含60嵌套盘点与原254可判登记树只读准入核同：0可回收/219保留/56补证；219首门为dirty76、binding72、未双发布65、保护2、active3、原要求1。72绑定均原HEAD同字节，门槛改为权威身份/运行核对仅提Roy方案，未实施；本轮删除授权0/未apply，blocked+needs:roy。结论 https://github.com/dwroy/agent-sts2/issues/18#issuecomment-6307444515；paper/materials/20261021-issue-18-watcher-review/receipt.json。
+
+- 2026-10-21T11:48:13+08:00 [Codex watcher，#4实读转达] 实读三科学异议原文并核归档SHA012008f5及三notice完整message，已在本会话向Roy可见转达并评论原措辞；输入牌堆被剥离、绝对比较不证配对排名校准、两胜退出共9HP未纳原净损三限制保留。ops原核收不冒本人重核全部日志；原研究task CLI ACK仍pending，未代填/发布/续派/关父，四候选waiting。结论 https://github.com/dwroy/agent-sts2/issues/4#issuecomment-6307510995；paper/materials/20261021-issue-4-watcher-review/receipt.json。
+
+- 2026-10-21T11:48:13+08:00 [Codex watcher，#8审核阻塞/#19待办] 4fc80c385在隔离集成树只读原件鉴权通过，六SHA不变；独立tsc0、通知/paths通过，V6三文件四基线断言仍败，源码与测试blob关系已核。遵AGENTS双绿提交门槛，候选暂存未continue/提交/main/live；冻结patch及检查保留，拆#19独立修复待派，不调整数值/排除或代生产ACK；#4原task非本R4兼容范围。结论 https://github.com/dwroy/agent-sts2/issues/8#issuecomment-6307540198；paper/materials/20261021-issue-8-watcher-review/receipt.json。
+
+- 2026-10-21T11:51:00+08:00 ops：1144三ordinary attention均有基线、新增恰#4三notice；三树干净/30waiting，前两既有同轮dataset保原件，不重生成/空合并；#4 watcher实读及Roy可见转达已核，角色CLI仍pending；#8候选未main/live、四基线败归#19，不新增检查/派发。回执 paper/materials/20261021-1144-ops/receipt.json。
+
+- 2026-10-21 11:52:05 CST [Claude/Roy，协作架构] Roy 批准通用多 agent 协作架构（docs/agent-board-architecture.md）：看板（GitHub Issues）/ 派单器（确定性代码，读各项目 .agents/board.yaml，派活、提醒、回收、限流）/ 角色三层；Claude 为主管，watcher 改为集成员（核验、合入 main、协调完整检查，只在派单器提醒时动手、每天换会话），开发者一个 issue 一个会话，ops 只管运行与学习派发；通用部分抽到独立私有仓库 dwroy/agent-board-kit，agent-sts2 试点后接入 agent-hearthstone。AGENTS.md 与协作流程文档同步。
+
+- 2026-10-21T11:56:35+08:00 ops：复盘111301四局唯一追加/前缀与勘误、12账本support及四pending提案已核，0559保既有映射；无新纯bug，原CEN/0332链不重复。准备原锁唯一dataset --no-raw/记录提交，未终局不称完成；不改live/现局/开关/STOP。原件 paper/materials/20261021-1152-ops/intake-receipt.json。
+
+- 2026-10-21T12:08:26+08:00 ops：复盘111301四局追加/勘误、12support和四pending提案已核，无新纯bug；唯一dataset --no-raw退出0/四复盘标记齐，保存自有生成表/指定lessons与ledger，不代发布/科学父完成。原件 paper/materials/20261021-1152-ops/receipt.json。
+
+- 2026-10-21T12:10:41+08:00 ops：#13/#14原一次学习exit0已核实际原生high/原沙箱及835/6255段原日志SHA/冻结切点，研究转review；四卡候选/SPORE未知、历史9f与R410零验证分列，复用8提案/新增0559原CLI提案40be，五异议原字双箱/原watcher一行交接，研究CLI角色登记pending。未改live/配置/知识、未续批/full/API/dataset或关科学父；paper/materials/20261021-issues-13-14-terminal-ops/receipt.json。
+
+- 2026-10-21T12:12:52+08:00 ops：原111301四局唯一dataset0及记录1fbd7318终局实核，12输出/669归档SHA、四局复盘标记/main祖先均同；原提交前receipt保持，以终局补记。仅记录/数据完成，不重dataset/full/模型/发布，不关科学父或角色ACK；paper/materials/20261021-1211-ops/receipt.json。
+
+- 2026-10-21T12:18:29+08:00 ops：1215五学习notice已核原文/SHA与scheduler双箱回执、watcher两原角色实读/告Roy评论；CLI兼容pending，不重提醒/认证/代ACK。两114302普通均有基线64、新增恰五notice而dataset前止，20waiting/无源码，保持attention与科学父；paper/materials/20261021-1215-ops/receipt.json。
+
+- 2026-10-21T12:22:04+08:00 ops：fix121301原exit0无新增源码/提交受阻，WT净、154源码/13产物SHA、tsc0/6文件35定向过已核；CEN live同blob，001302/014301原owner及0332父保留。原scheduler failed/rc0分列，不空合并/重测/模型/dataset/发布；paper/materials/20261021-1220-ops/receipt.json。
+
+- 2026-10-21T12:47:00+08:00 ops：#4/#13/#14八notice周期重提已按原文/SHA、实际双箱/原watcher实读告Roy回执去重；CLI验证源码未变、研究身份兼容pending，旧rc2/false保留，不重提醒/认证/代ACK或派检查模型。未改live/配置/父要求；paper/materials/20261021-1245-ops/receipt.json。
+- 2026-10-21 13:11:51 CST [watcher] #19 集成核验：精确搬运 42620f653 的三份测试与完整证据至 main；main 现有 P×W 与 weighted coverage 契约未变，独立 tsc/6 文件 45 项通过，原完整检查 638 文件 6041 pass/2 skip/0 fail 的日志 SHA256 已核，解除 #8/#15/#17 的四项基线失败；不改 live。
+
+- 2026-10-21T13:15:35+08:00 ops：ordinary124302报告/WT净/十waiting核同；offer后main526d合#19三测试导致原源漂移守卫停止，生产源未变，保attention/null检查。另一s2 dataset0/42baee不代本候选，不重生成器/空合并/模型/检查/live；paper/materials/20261021-1313-ops/receipt.json。
+
+- 2026-10-21 13:39:50 CST [watcher] #17 集成核验：dda6c1c27/dbdd15923 派发登记与回收接口精确合入；仅文档保留 main 架构说明，固定测试41+原回收15通过，联合 tsc/完整 Vitest 全通过；实际运行接入与专用关闭任务验收待 ops，不放宽 #18 回收准入，不执行生产动作。
+
+- 2026-10-21 13:41:12 CST [watcher] #15 集成核验：71789eab7 的31文件与冻结 opening 模型逐字节合入；Python3、真实循环回放等14项及联合 tsc/完整 Vitest 全通过；仅 brain 补充事实，原决策权与限定保留，实际发布/版本/首局读回待 ops。
+
+- 2026-10-21 13:41:25 CST [watcher] #12 只读研究核验：de4d7d15f 报告和55份原材料精确合入；166份源字节/SHA、20次按局重抽样及全部区间/两两比较复核一致，30/438符号稳定、1/146唯一首选稳胜全部；保留混杂与区间限定，不改生产/知识。
+
+- 2026-10-21 13:41:35 CST [watcher] #8 集成核验：4fc80c385 的17份 R4 窄鉴权源码/测试/材料逐字节合入，#19已解除基线阻塞，联合 tsc/完整 Vitest 全通过；原三类及角色/身份/SHA保护不变，生产 CLI ACK待ops，#4/#13/#14研究CLI仍pending。
+
+- 2026-10-21T13:43:55+08:00 ops：ordinary131301唯一dataset已执行/源检查过，五成本表并发更新使受控记录拒交；364原blob/旧五表保全。仅记录恢复前发现main新增源码，校验先停无Git写；记录仍blocked、10waiting/WT净，原attention/失败不改，不重生成器/模型/full/live。1337-ops/receipt.json。
+
+- 2026-10-21T13:47:07+08:00 ops：1344八notice按原文/SHA/真实转达去重，研究CLI仍pending（R4新兼容不含原研究）；131301-s2 WT净/报告同/10waiting，main新源使dataset准入前停止，无本候选attempt/log。保原attention、失败及科学父，不重模型/full/dataset/派批或改live；paper/materials/20261021-1344-ops/receipt.json。
+- 2026-10-21 13:48:04 CST [Claude] Roy 同意：(1) #16 改为 Jev 学大脑拿牌——大脑历史战后拿牌（Silent A10 第一幕 2777 题/356 局）整理成拿牌小脑经验（案例条目+牌统计条目）交 Jev，三期：离线回放一致率→在线影子→接管 A/B；原混合门被 #12（0.7% 可辨识）否定。(2) #18 判定修正与回收机制 P0（#23）：已查明 ops/instance-binding.json 被 4d671433d 纳入 git 致 72 项误判在用，发布门要求进 live 致 62 项学习批次永不回收；要求修好并保证可持续（24h 回收≥新建）。
+- 2026-10-21 14:22:14 CST [Claude] Roy 授权：可直接用网上公开的 STS2 数据（开源玩家对局数据、公开 agent 轨迹、公开卡牌/怪物库与 wiki）学习、更新知识库。已写入 docs/learning-protocol.md 第 9 节与 AGENTS.md：接入由开发会话做、知识条目仍由学习者沿原流程产出；标 source=external 与版本/样本/SHA/许可，与本系统对局证据分账；原始数据放 data/external 不进 git，不存玩家标识；仍不读 sts2.dll/.pck；论文按 10-21 前后与知识来源分开统计。

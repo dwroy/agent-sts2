@@ -1884,6 +1884,10 @@ def write_notes(path, report, rows, count_asc, flags, deciders, seconds, imp, ga
 
 
 def main(argv=None):
+    args_in = sys.argv[1:] if argv is None else argv
+    if args_in and args_in[0] in ("opening-extract", "opening-train"):
+        import opening_value
+        return opening_value.main(sys.modules[__name__], args_in)
     logs = bmd._default_logs()
     parser = argparse.ArgumentParser(description=__doc__.split("\n")[0])
     parser.add_argument("stage", choices=["extract", "train", "all", "rollout-report", "folds"])

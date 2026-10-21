@@ -1,0 +1,1005 @@
+{
+  "issue": 13,
+  "batch": "issue-13-card-models-20261021-111429",
+  "character": "silent",
+  "card_id": "NIGHTMARE",
+  "status": "proposed_research_only",
+  "model_schema": "CardModel interface at runtime 5a295bb5ed52f0c0fa5e8c045dcfcba3d894b532; no new production schema is claimed",
+  "model_file": "/home/dw/Projects/agent-sts2/.worktrees/issue-13-card-models-20261021/knowledge/characters/silent/pending/issue-13-issue-13-card-models-20261021-111429/NIGHTMARE.models.json",
+  "all_drafts_known_false": true,
+  "finding": "候选：绑定真实selection对象，在存活的下一回合交付三副本；不即时施放。",
+  "original_links": {
+    "ledger": [
+      "silent-0140",
+      "silent-0141",
+      "silent-0385"
+    ],
+    "proposals": [
+      "silent-proposal-f9dc6814eddac8ba",
+      "silent-proposal-0129c465c6f5bd79",
+      "silent-proposal-9e81dc5f9a4c3bd5"
+    ]
+  },
+  "missing_runtime_representation": [
+    "当前CardModel没有带所选牌快照的延迟复制字段；adds为即时生成不能替代。"
+  ],
+  "fixed_test_design": [
+    "先选择再建立NIGHTMARE_POWER3，次回合到手",
+    "原牌保留时同名4张不计4个复制",
+    "4次同层SL分支未到次轮，不计兑现"
+  ],
+  "shadow": {
+    "A": 11,
+    "A_baseline": 0,
+    "B": 0,
+    "B_baseline": 0,
+    "questions": [
+      "7XS2Y920KA6E-f17",
+      "SVBEFF7YAZMA-f33"
+    ],
+    "runs": [
+      "7XS2Y920KA6E",
+      "SVBEFF7YAZMA"
+    ],
+    "candidate_questions": [
+      {
+        "question": "7XS2Y920KA6E-f17",
+        "option": {
+          "index": 2,
+          "card_id": "NIGHTMARE",
+          "name": "夜魇",
+          "upgraded": false,
+          "card_type": "Skill",
+          "rarity": "Rare",
+          "energy_cost": 3,
+          "rules_text": "选择一张牌。 在下个回合将这张牌的3张复制品加入你的手牌。",
+          "resolved_rules_text": "选择一张牌。 在下个回合将这张牌的3张复制品加入你的手牌。 消耗。",
+          "dynamic_values": []
+        },
+        "brain_choice": "card0"
+      },
+      {
+        "question": "SVBEFF7YAZMA-f33",
+        "option": {
+          "index": 0,
+          "card_id": "NIGHTMARE",
+          "name": "夜魇",
+          "upgraded": false,
+          "card_type": "Skill",
+          "rarity": "Rare",
+          "energy_cost": 3,
+          "rules_text": "选择一张牌。 在下个回合将这张牌的3张复制品加入你的手牌。",
+          "resolved_rules_text": "选择一张牌。 在下个回合将这张牌的3张复制品加入你的手牌。 消耗。",
+          "dynamic_values": []
+        },
+        "brain_choice": "card1"
+      }
+    ]
+  },
+  "audited_actions": [
+    {
+      "path": "/home/dw/Projects/agent-sts2/logs/decisions.jsonl",
+      "offset": 548996787,
+      "bytes": 5780,
+      "sha256": "667042016e2076c6022b0d851e915e71e0e06f5f7fe566c39d74227f0655b78d",
+      "offset_space": "file",
+      "run": "4Y94N8RDPGPM",
+      "floor": 33,
+      "turn": 4,
+      "ts": "2026-10-05T17:41:32.290Z"
+    },
+    {
+      "path": "/home/dw/Projects/agent-sts2/logs/decisions.jsonl",
+      "offset": 549722426,
+      "bytes": 1537,
+      "sha256": "e71f78aa26a8efe66f38ac9efedaad63480ed76bf5dd11167798d9364c7b29f3",
+      "offset_space": "file",
+      "run": "4Y94N8RDPGPM",
+      "floor": 45,
+      "turn": 4,
+      "ts": "2026-10-05T17:52:04.721Z"
+    },
+    {
+      "path": "/home/dw/Projects/agent-sts2/logs/decisions.jsonl",
+      "offset": 550085559,
+      "bytes": 16163,
+      "sha256": "0e140124e808a23c2f53b28b1d6529d013db2a4453f39410fbf4c9182ac969cd",
+      "offset_space": "file",
+      "run": "4Y94N8RDPGPM",
+      "floor": 48,
+      "turn": 10,
+      "ts": "2026-10-05T17:56:28.417Z"
+    },
+    {
+      "path": "/home/dw/Projects/agent-sts2/logs/decisions.jsonl",
+      "offset": 571641387,
+      "bytes": 9542,
+      "sha256": "9ce1a7cde2c364e7f649ad919a11efff3383096b8f62fe4ed92e29610c93c960",
+      "offset_space": "file",
+      "run": "9TG1RP5LFAAK",
+      "floor": 39,
+      "turn": 2,
+      "ts": "2026-10-06T00:29:30.623Z"
+    },
+    {
+      "path": "/home/dw/Projects/agent-sts2/logs/decisions.jsonl",
+      "offset": 571868878,
+      "bytes": 1546,
+      "sha256": "5074a2df01309563106a38b670fdae3d19a1ca5ec7beb0d2175bef366b807dd0",
+      "offset_space": "file",
+      "run": "9TG1RP5LFAAK",
+      "floor": 42,
+      "turn": 3,
+      "ts": "2026-10-06T00:32:03.154Z"
+    },
+    {
+      "path": "/home/dw/Projects/agent-sts2/logs/decisions.jsonl",
+      "offset": 650286626,
+      "bytes": 1587,
+      "sha256": "1b4935dca2b1efb68d1f2eaf6743a630b60cfdc168291751b308504d153327f0",
+      "offset_space": "file",
+      "run": "P5HT1272P5SB",
+      "floor": 25,
+      "turn": 1,
+      "ts": "2026-10-06T23:21:51.160Z"
+    },
+    {
+      "path": "/home/dw/Projects/agent-sts2/logs/decisions.jsonl",
+      "offset": 720258808,
+      "bytes": 1601,
+      "sha256": "57002a8a4025666cc960dff8de6b3e7eaad4800d1374405cf5911a1bd5b337d1",
+      "offset_space": "file",
+      "run": "XTSV1U9JD34T",
+      "floor": 49,
+      "turn": 4,
+      "ts": "2026-10-07T19:00:52.937Z"
+    },
+    {
+      "path": "/home/dw/Projects/agent-sts2/logs/decisions.jsonl",
+      "offset": 720344752,
+      "bytes": 1601,
+      "sha256": "e7322fcee6f6e3ded9230b0bd261cdb22e1e6433e0d0a0c45552e7ff41fbd870",
+      "offset_space": "file",
+      "run": "XTSV1U9JD34T",
+      "floor": 49,
+      "turn": 4,
+      "ts": "2026-10-07T19:02:44.356Z"
+    },
+    {
+      "path": "/home/dw/Projects/agent-sts2/logs/decisions.jsonl",
+      "offset": 720435515,
+      "bytes": 1566,
+      "sha256": "774cecba2ae2b74f5c0db50d021308dd9093203cc369ac41efd7fa4e4d475e0c",
+      "offset_space": "file",
+      "run": "XTSV1U9JD34T",
+      "floor": 49,
+      "turn": 4,
+      "ts": "2026-10-07T19:04:23.752Z"
+    },
+    {
+      "path": "/home/dw/Projects/agent-sts2/logs/decisions.jsonl",
+      "offset": 720476788,
+      "bytes": 1601,
+      "sha256": "20474507b78c19cc8861295853e208795ebeb3cea0f0c71b12813225969bf2e7",
+      "offset_space": "file",
+      "run": "XTSV1U9JD34T",
+      "floor": 49,
+      "turn": 4,
+      "ts": "2026-10-07T19:05:11.155Z"
+    },
+    {
+      "path": "/home/dw/Projects/agent-sts2/logs/decisions.jsonl",
+      "offset": 867386885,
+      "bytes": 1522,
+      "sha256": "bbaa46456fd9de6199f814fca78e16abd0b133c23a8f7c4b03906985d11661ff",
+      "offset_space": "file",
+      "run": "54G5683J0E5S",
+      "floor": 33,
+      "turn": 5,
+      "ts": "2026-10-09T12:04:59.170Z"
+    }
+  ],
+  "audited_action_count": 11,
+  "independent_runs": [
+    "4Y94N8RDPGPM",
+    "54G5683J0E5S",
+    "9TG1RP5LFAAK",
+    "P5HT1272P5SB",
+    "XTSV1U9JD34T"
+  ],
+  "observed_ascensions": [
+    7,
+    10
+  ],
+  "hand_observations_shadow_rows": 0,
+  "hand_observations_shadow_turns": 0,
+  "hand_runs_shadow": [],
+  "observed_faces": [
+    {
+      "card": {
+        "index": 4,
+        "card_id": "NIGHTMARE",
+        "name": "夜魇+",
+        "upgraded": true,
+        "target_type": "Self",
+        "requires_target": false,
+        "target_index_space": null,
+        "valid_target_indices": [],
+        "costs_x": false,
+        "star_costs_x": false,
+        "energy_cost": 2,
+        "star_cost": 0,
+        "rules_text": "选择一张牌。 在下个回合将这张牌的3张复制品加入你的手牌。",
+        "resolved_rules_text": "选择一张牌。 在下个回合将这张牌的3张复制品加入你的手牌。 消耗。",
+        "dynamic_values": [],
+        "playable": true,
+        "can_play_result": true,
+        "unplayable_reason": null,
+        "unplayable_reason_raw": null,
+        "unplayable_preventer_id": null,
+        "unplayable_preventer_type": null
+      },
+      "source": {
+        "path": "/home/dw/Projects/agent-sts2/logs/decisions.jsonl",
+        "offset": 867386885,
+        "bytes": 1522,
+        "sha256": "bbaa46456fd9de6199f814fca78e16abd0b133c23a8f7c4b03906985d11661ff",
+        "offset_space": "file",
+        "run": "54G5683J0E5S",
+        "floor": 33,
+        "turn": 5,
+        "ts": "2026-10-09T12:04:59.170Z"
+      },
+      "ascension": 10
+    },
+    {
+      "card": {
+        "index": 1,
+        "card_id": "NIGHTMARE",
+        "name": "夜魇+",
+        "upgraded": true,
+        "target_type": "Self",
+        "requires_target": false,
+        "target_index_space": null,
+        "valid_target_indices": [],
+        "costs_x": false,
+        "star_costs_x": false,
+        "energy_cost": 2,
+        "star_cost": 0,
+        "rules_text": "选择一张牌。 在下个回合将这张牌的3张复制品加入你的手牌。",
+        "resolved_rules_text": "选择一张牌。 在下个回合将这张牌的3张复制品加入你的手牌。 魂缚 消耗。",
+        "dynamic_values": [],
+        "playable": true,
+        "can_play_result": true,
+        "unplayable_reason": null,
+        "unplayable_reason_raw": null,
+        "unplayable_preventer_id": null,
+        "unplayable_preventer_type": null
+      },
+      "source": {
+        "path": "/home/dw/Projects/agent-sts2/logs/decisions.jsonl",
+        "offset": 550085559,
+        "bytes": 16163,
+        "sha256": "0e140124e808a23c2f53b28b1d6529d013db2a4453f39410fbf4c9182ac969cd",
+        "offset_space": "file",
+        "run": "4Y94N8RDPGPM",
+        "floor": 48,
+        "turn": 10,
+        "ts": "2026-10-05T17:56:28.417Z"
+      },
+      "ascension": 7
+    },
+    {
+      "card": {
+        "index": 2,
+        "card_id": "NIGHTMARE",
+        "name": "夜魇",
+        "upgraded": false,
+        "target_type": "Self",
+        "requires_target": false,
+        "target_index_space": null,
+        "valid_target_indices": [],
+        "costs_x": false,
+        "star_costs_x": false,
+        "energy_cost": 3,
+        "star_cost": 0,
+        "rules_text": "选择一张牌。 在下个回合将这张牌的3张复制品加入你的手牌。",
+        "resolved_rules_text": "选择一张牌。 在下个回合将这张牌的3张复制品加入你的手牌。 消耗。",
+        "dynamic_values": [],
+        "playable": true,
+        "can_play_result": true,
+        "unplayable_reason": null,
+        "unplayable_reason_raw": null,
+        "unplayable_preventer_id": null,
+        "unplayable_preventer_type": null
+      },
+      "source": {
+        "path": "/home/dw/Projects/agent-sts2/logs/decisions.jsonl",
+        "offset": 720476788,
+        "bytes": 1601,
+        "sha256": "20474507b78c19cc8861295853e208795ebeb3cea0f0c71b12813225969bf2e7",
+        "offset_space": "file",
+        "run": "XTSV1U9JD34T",
+        "floor": 49,
+        "turn": 4,
+        "ts": "2026-10-07T19:05:11.155Z"
+      },
+      "ascension": 10
+    }
+  ],
+  "unknowns": [
+    "当前CardModel没有带所选牌快照的延迟复制字段；adds为即时生成不能替代。"
+  ],
+  "guard": "仅下列精确已核牌面/上下文有研究支持；缺角色、进阶、升级、目标、变量、期限或后继时拒绝升known。正例重放不是通用充分条件。",
+  "evidence_audit": "/home/dw/Projects/agent-sts2/learner/runs/20261021-111653-8735c888-1393-4256-84d9-821d4e4a14ea-issue-13-card-models-task/effect-audit.json",
+  "source_index": "/home/dw/Projects/agent-sts2/learner/runs/20261021-111653-8735c888-1393-4256-84d9-821d4e4a14ea-issue-13-card-models-task/source-index.json",
+  "version_scope": {
+    "4Y94N8RDPGPM": {
+      "ended_snapshot": {
+        "row": {
+          "run_id": "4Y94N8RDPGPM",
+          "ended": "2026-10-05T17:57:26.505Z",
+          "ascension": 7,
+          "character": "SILENT",
+          "code": "8b268858+dirty"
+        },
+        "source": {
+          "path": "/home/dw/Projects/agent-sts2/.artifacts/ops-issues-13-14-dispatch-20261021/shared-inputs/runs.jsonl",
+          "offset": 208199,
+          "bytes": 417,
+          "sha256": "f2ca523f5328fdcb7400d6c0b325b6f6940b580880d1b2928b0633459ee83e56"
+        }
+      },
+      "frozen_run_config": [
+        {
+          "reported": {
+            "ts": "2026-10-05T17:19:21.175Z",
+            "run_id": "4Y94N8RDPGPM",
+            "character": "SILENT",
+            "ascension": 7,
+            "floor": 1,
+            "restart": false,
+            "code": {
+              "commit": "8b2688581394344419420a0c341c498d07f03efc",
+              "code": "8b26885+dirty",
+              "dirty": true,
+              "dirty_files": [
+                "knowledge/characters/silent/boss-damage.json",
+                "knowledge/characters/silent/monster-records.json",
+                "knowledge/characters/silent/outcome-stats.json",
+                "knowledge/characters/silent/room-costs.json",
+                "knowledge/common/card-upgrades.json",
+                "knowledge/common/monster-db.json",
+                "knowledge/common/move-model.json",
+                "notes/monster-db-check.md"
+              ],
+              "branch": "live",
+              "worktree": "live"
+            },
+            "commit": null,
+            "dirty": null,
+            "branch": null,
+            "experience_version": null,
+            "mod_version": null,
+            "game_version": null
+          },
+          "source": {
+            "path": "/home/dw/Projects/agent-sts2/logs/run-config.jsonl",
+            "offset": 440619,
+            "bytes": 4659,
+            "sha256": "f3f06543768bc4f2434d4abbe38d84c623de7584f68f2082e98fc77c3f842bd0",
+            "run": "4Y94N8RDPGPM",
+            "floor": 1,
+            "turn": null,
+            "ts": "2026-10-05T17:19:21.175Z"
+          }
+        }
+      ],
+      "scope": "仅日志申报的agent代码/脏标记；不把code=current或dirty解释为精确源码。run-config不代逐动作原生源码封印。游戏构建/补丁版本未封印则unknown。",
+      "game_build_version": "unknown",
+      "replay_runtime_commit": "5a295bb5ed52f0c0fa5e8c045dcfcba3d894b532"
+    },
+    "54G5683J0E5S": {
+      "ended_snapshot": {
+        "row": {
+          "run_id": "54G5683J0E5S",
+          "ended": "2026-10-09T12:16:15.493Z",
+          "ascension": 10,
+          "character": "SILENT",
+          "code": "eaf3ac162+dirty"
+        },
+        "source": {
+          "path": "/home/dw/Projects/agent-sts2/.artifacts/ops-issues-13-14-dispatch-20261021/shared-inputs/runs.jsonl",
+          "offset": 270622,
+          "bytes": 468,
+          "sha256": "3cb4b50bbebf0e23b48ca9851b6594c1a6d8d7727f1f9ffe3c6f46bb20f3146e"
+        }
+      },
+      "frozen_run_config": [
+        {
+          "reported": {
+            "ts": "2026-10-09T11:37:19.827Z",
+            "run_id": "54G5683J0E5S",
+            "character": "SILENT",
+            "ascension": 10,
+            "floor": 1,
+            "restart": false,
+            "code": {
+              "commit": "eaf3ac162afe487705d5b46ab049871308022173",
+              "code": "eaf3ac1+dirty",
+              "dirty": true,
+              "dirty_files": [
+                "knowledge/characters/silent/monster-records.json",
+                "knowledge/characters/silent/outcome-stats.json",
+                "knowledge/characters/silent/room-costs.json",
+                "knowledge/common/card-upgrades.json",
+                "knowledge/common/monster-db.json",
+                "knowledge/common/move-model.json"
+              ],
+              "branch": "live",
+              "worktree": "live"
+            },
+            "commit": null,
+            "dirty": null,
+            "branch": null,
+            "experience_version": null,
+            "mod_version": null,
+            "game_version": null
+          },
+          "source": {
+            "path": "/home/dw/Projects/agent-sts2/logs/run-config.jsonl",
+            "offset": 1097844,
+            "bytes": 4450,
+            "sha256": "29cf5c445d12b874746fa889a753d2b35857423ccf607d4b4a47700253b168e0",
+            "run": "54G5683J0E5S",
+            "floor": 1,
+            "turn": null,
+            "ts": "2026-10-09T11:37:19.827Z"
+          }
+        }
+      ],
+      "scope": "仅日志申报的agent代码/脏标记；不把code=current或dirty解释为精确源码。run-config不代逐动作原生源码封印。游戏构建/补丁版本未封印则unknown。",
+      "game_build_version": "unknown",
+      "replay_runtime_commit": "5a295bb5ed52f0c0fa5e8c045dcfcba3d894b532"
+    },
+    "9TG1RP5LFAAK": {
+      "ended_snapshot": {
+        "row": {
+          "run_id": "9TG1RP5LFAAK",
+          "ended": "2026-10-06T00:47:20.020Z",
+          "ascension": 10,
+          "character": "SILENT",
+          "code": "141df614+dirty"
+        },
+        "source": {
+          "path": "/home/dw/Projects/agent-sts2/.artifacts/ops-issues-13-14-dispatch-20261021/shared-inputs/runs.jsonl",
+          "offset": 212042,
+          "bytes": 448,
+          "sha256": "25eaac2c244084963cee036d990e2410ac675a0bb915adffaf3060053f0b46e7"
+        }
+      },
+      "frozen_run_config": [
+        {
+          "reported": {
+            "ts": "2026-10-05T23:58:15.115Z",
+            "run_id": "9TG1RP5LFAAK",
+            "character": "SILENT",
+            "ascension": 10,
+            "floor": 1,
+            "restart": false,
+            "code": {
+              "commit": "141df6140cada59c3ad4960fd69aebf0a0749eeb",
+              "code": "141df61+dirty",
+              "dirty": true,
+              "dirty_files": [
+                "knowledge/characters/silent/boss-damage.json",
+                "knowledge/characters/silent/monster-records.json",
+                "knowledge/characters/silent/outcome-stats.json",
+                "knowledge/characters/silent/room-costs.json",
+                "knowledge/common/card-upgrades.json",
+                "knowledge/common/monster-db.json",
+                "knowledge/common/move-model.json",
+                "notes/monster-db-check.md"
+              ],
+              "branch": "live",
+              "worktree": "live"
+            },
+            "commit": null,
+            "dirty": null,
+            "branch": null,
+            "experience_version": null,
+            "mod_version": null,
+            "game_version": null
+          },
+          "source": {
+            "path": "/home/dw/Projects/agent-sts2/logs/run-config.jsonl",
+            "offset": 486301,
+            "bytes": 4664,
+            "sha256": "5a800569916c46cdb084408cd0c942510d1a55408fdee3968aef9e8d13d7207b",
+            "run": "9TG1RP5LFAAK",
+            "floor": 1,
+            "turn": null,
+            "ts": "2026-10-05T23:58:15.115Z"
+          }
+        }
+      ],
+      "scope": "仅日志申报的agent代码/脏标记；不把code=current或dirty解释为精确源码。run-config不代逐动作原生源码封印。游戏构建/补丁版本未封印则unknown。",
+      "game_build_version": "unknown",
+      "replay_runtime_commit": "5a295bb5ed52f0c0fa5e8c045dcfcba3d894b532"
+    },
+    "P5HT1272P5SB": {
+      "ended_snapshot": {
+        "row": {
+          "run_id": "P5HT1272P5SB",
+          "ended": "2026-10-06T23:23:38.170Z",
+          "ascension": 10,
+          "character": "SILENT",
+          "code": "1a89c2d4+dirty"
+        },
+        "source": {
+          "path": "/home/dw/Projects/agent-sts2/.artifacts/ops-issues-13-14-dispatch-20261021/shared-inputs/runs.jsonl",
+          "offset": 228799,
+          "bytes": 442,
+          "sha256": "b0f740a9e8ce3e2fd4990512e61461f8a7571173d91d8edbb974e4c7ddcdd905"
+        }
+      },
+      "frozen_run_config": [
+        {
+          "reported": {
+            "ts": "2026-10-06T23:01:29.243Z",
+            "run_id": "P5HT1272P5SB",
+            "character": "SILENT",
+            "ascension": 10,
+            "floor": 1,
+            "restart": false,
+            "code": {
+              "commit": "1a89c2d481689bf0793c89c53318c247a1ea1997",
+              "code": "1a89c2d+dirty",
+              "dirty": true,
+              "dirty_files": [
+                "knowledge/characters/silent/monster-records.json",
+                "knowledge/characters/silent/outcome-stats.json",
+                "knowledge/characters/silent/room-costs.json",
+                "knowledge/common/card-upgrades.json",
+                "knowledge/common/monster-db.json",
+                "knowledge/common/move-model.json",
+                "notes/monster-db-check.md"
+              ],
+              "branch": "live",
+              "worktree": "live"
+            },
+            "commit": null,
+            "dirty": null,
+            "branch": null,
+            "experience_version": null,
+            "mod_version": null,
+            "game_version": null
+          },
+          "source": {
+            "path": "/home/dw/Projects/agent-sts2/logs/run-config.jsonl",
+            "offset": 666414,
+            "bytes": 4616,
+            "sha256": "ad1f92d0418afd99e92d775af3b4ccefc1dfd7b121bf8cf86bccada32af0fccf",
+            "run": "P5HT1272P5SB",
+            "floor": 1,
+            "turn": null,
+            "ts": "2026-10-06T23:01:29.243Z"
+          }
+        }
+      ],
+      "scope": "仅日志申报的agent代码/脏标记；不把code=current或dirty解释为精确源码。run-config不代逐动作原生源码封印。游戏构建/补丁版本未封印则unknown。",
+      "game_build_version": "unknown",
+      "replay_runtime_commit": "5a295bb5ed52f0c0fa5e8c045dcfcba3d894b532"
+    },
+    "XTSV1U9JD34T": {
+      "ended_snapshot": {
+        "row": {
+          "run_id": "XTSV1U9JD34T",
+          "ended": "2026-10-07T19:05:16.706Z",
+          "ascension": 10,
+          "character": "SILENT",
+          "code": "03f4ffe0+dirty"
+        },
+        "source": {
+          "path": "/home/dw/Projects/agent-sts2/.artifacts/ops-issues-13-14-dispatch-20261021/shared-inputs/runs.jsonl",
+          "offset": 242952,
+          "bytes": 449,
+          "sha256": "e90a86d97e1b4e135f3cb68655b245fe9cabee163f4fdafdc22bd4fb28872d1b"
+        }
+      },
+      "frozen_run_config": [
+        {
+          "reported": {
+            "ts": "2026-10-07T18:19:55.977Z",
+            "run_id": "XTSV1U9JD34T",
+            "character": "SILENT",
+            "ascension": 10,
+            "floor": 1,
+            "restart": false,
+            "code": {
+              "commit": "03f4ffe017f886f9ee92be50911a318f5f90f4bd",
+              "code": "03f4ffe+dirty",
+              "dirty": true,
+              "dirty_files": [
+                "knowledge/characters/silent/boss-damage.json",
+                "knowledge/characters/silent/fight-value-gates.json",
+                "knowledge/characters/silent/monster-records.json",
+                "knowledge/characters/silent/outcome-stats.json",
+                "knowledge/characters/silent/room-costs.json",
+                "knowledge/common/card-upgrades.json",
+                "knowledge/common/monster-db.json",
+                "knowledge/common/move-model.json"
+              ],
+              "branch": "live",
+              "worktree": "live"
+            },
+            "commit": null,
+            "dirty": null,
+            "branch": null,
+            "experience_version": null,
+            "mod_version": null,
+            "game_version": null
+          },
+          "source": {
+            "path": "/home/dw/Projects/agent-sts2/logs/run-config.jsonl",
+            "offset": 812494,
+            "bytes": 4549,
+            "sha256": "ab36f0e9f18c9deb2a2ab7324cd2171c578860f044f7d07a883211846647a907",
+            "run": "XTSV1U9JD34T",
+            "floor": 1,
+            "turn": null,
+            "ts": "2026-10-07T18:19:55.977Z"
+          }
+        }
+      ],
+      "scope": "仅日志申报的agent代码/脏标记；不把code=current或dirty解释为精确源码。run-config不代逐动作原生源码封印。游戏构建/补丁版本未封印则unknown。",
+      "game_build_version": "unknown",
+      "replay_runtime_commit": "5a295bb5ed52f0c0fa5e8c045dcfcba3d894b532"
+    }
+  },
+  "counterexamples": [
+    {
+      "card_id": "NIGHTMARE",
+      "source": {
+        "path": "/home/dw/Projects/agent-sts2/logs/decisions.jsonl",
+        "offset": 720258808,
+        "bytes": 1601,
+        "sha256": "57002a8a4025666cc960dff8de6b3e7eaad4800d1374405cf5911a1bd5b337d1",
+        "offset_space": "file",
+        "run": "XTSV1U9JD34T",
+        "floor": 49,
+        "turn": 4,
+        "ts": "2026-10-07T19:00:52.937Z"
+      },
+      "ascension": 10,
+      "upgraded": false,
+      "raw_action_result": "pending (unstable): Action queued but state is still transitioning.",
+      "request_ids": [],
+      "chosen": {
+        "action": "play_card",
+        "card_index": 2
+      },
+      "observed_energy_delta": -3,
+      "before_hand": 4,
+      "after_hand": 3,
+      "limitations": [
+        "原施放pending结果不改为completed；后续选择及power/手牌另作兑现证据。",
+        "同名卡无实例ID；4张包括原牌/抽到牌的情形不算4次复制。",
+        "只核本次选择的目标/版本和所见复制牌属性，不推广所有附魔或升级继承。",
+        "活到次轮/到手不等于支付或收益。"
+      ],
+      "selected_card": {
+        "index": 2,
+        "selected": false,
+        "card_id": "DEFEND_SILENT",
+        "name": "防御",
+        "upgraded": false,
+        "card_type": "Skill",
+        "rarity": "Basic",
+        "costs_x": false,
+        "star_costs_x": false,
+        "energy_cost": 1,
+        "star_cost": 0,
+        "rules_text": "获得{Block:diff()}点格挡。",
+        "resolved_rules_text": "获得6点格挡。",
+        "dynamic_values": [
+          {
+            "name": "Block",
+            "base_value": 5,
+            "current_value": 6,
+            "enchanted_value": 5,
+            "is_modified": true,
+            "was_just_upgraded": false
+          }
+        ]
+      },
+      "selection_chosen": {
+        "action": "select_deck_card",
+        "option_index": 2
+      },
+      "selection_source": {
+        "path": "/home/dw/Projects/agent-sts2/logs/decisions.jsonl",
+        "offset": 720260409,
+        "bytes": 2201,
+        "sha256": "1c61389f248a5276e60c67400a677daaa036da39b350795042502f4e5cef327c",
+        "offset_space": "file",
+        "run": "XTSV1U9JD34T",
+        "floor": 49,
+        "turn": 4,
+        "ts": "2026-10-07T19:00:54.104Z"
+      },
+      "next_turn_seen": false,
+      "next_same_name_count": 0,
+      "next_same_cards": [],
+      "next_player_powers": null,
+      "reset_before_next": true,
+      "last_screen": "COMBAT"
+    },
+    {
+      "card_id": "NIGHTMARE",
+      "source": {
+        "path": "/home/dw/Projects/agent-sts2/logs/decisions.jsonl",
+        "offset": 720344752,
+        "bytes": 1601,
+        "sha256": "e7322fcee6f6e3ded9230b0bd261cdb22e1e6433e0d0a0c45552e7ff41fbd870",
+        "offset_space": "file",
+        "run": "XTSV1U9JD34T",
+        "floor": 49,
+        "turn": 4,
+        "ts": "2026-10-07T19:02:44.356Z"
+      },
+      "ascension": 10,
+      "upgraded": false,
+      "raw_action_result": "pending (unstable): Action queued but state is still transitioning.",
+      "request_ids": [],
+      "chosen": {
+        "action": "play_card",
+        "card_index": 2
+      },
+      "observed_energy_delta": -3,
+      "before_hand": 4,
+      "after_hand": 3,
+      "limitations": [
+        "原施放pending结果不改为completed；后续选择及power/手牌另作兑现证据。",
+        "同名卡无实例ID；4张包括原牌/抽到牌的情形不算4次复制。",
+        "只核本次选择的目标/版本和所见复制牌属性，不推广所有附魔或升级继承。",
+        "活到次轮/到手不等于支付或收益。"
+      ],
+      "selected_card": {
+        "index": 2,
+        "selected": false,
+        "card_id": "DEFEND_SILENT",
+        "name": "防御",
+        "upgraded": false,
+        "card_type": "Skill",
+        "rarity": "Basic",
+        "costs_x": false,
+        "star_costs_x": false,
+        "energy_cost": 1,
+        "star_cost": 0,
+        "rules_text": "获得{Block:diff()}点格挡。",
+        "resolved_rules_text": "获得6点格挡。",
+        "dynamic_values": [
+          {
+            "name": "Block",
+            "base_value": 5,
+            "current_value": 6,
+            "enchanted_value": 5,
+            "is_modified": true,
+            "was_just_upgraded": false
+          }
+        ]
+      },
+      "selection_chosen": {
+        "action": "select_deck_card",
+        "option_index": 2
+      },
+      "selection_source": {
+        "path": "/home/dw/Projects/agent-sts2/logs/decisions.jsonl",
+        "offset": 720346353,
+        "bytes": 2203,
+        "sha256": "728b7ee9370c0b0fc301434816249904299e535709d1381e1b649a365978c732",
+        "offset_space": "file",
+        "run": "XTSV1U9JD34T",
+        "floor": 49,
+        "turn": 4,
+        "ts": "2026-10-07T19:02:45.551Z"
+      },
+      "next_turn_seen": false,
+      "next_same_name_count": 0,
+      "next_same_cards": [],
+      "next_player_powers": null,
+      "reset_before_next": true,
+      "last_screen": "COMBAT"
+    },
+    {
+      "card_id": "NIGHTMARE",
+      "source": {
+        "path": "/home/dw/Projects/agent-sts2/logs/decisions.jsonl",
+        "offset": 720435515,
+        "bytes": 1566,
+        "sha256": "774cecba2ae2b74f5c0db50d021308dd9093203cc369ac41efd7fa4e4d475e0c",
+        "offset_space": "file",
+        "run": "XTSV1U9JD34T",
+        "floor": 49,
+        "turn": 4,
+        "ts": "2026-10-07T19:04:23.752Z"
+      },
+      "ascension": 10,
+      "upgraded": false,
+      "raw_action_result": "pending (unstable): Action queued but state is still transitioning.",
+      "request_ids": [],
+      "chosen": {
+        "action": "play_card",
+        "card_index": 2
+      },
+      "observed_energy_delta": -3,
+      "before_hand": 4,
+      "after_hand": 3,
+      "limitations": [
+        "原施放pending结果不改为completed；后续选择及power/手牌另作兑现证据。",
+        "同名卡无实例ID；4张包括原牌/抽到牌的情形不算4次复制。",
+        "只核本次选择的目标/版本和所见复制牌属性，不推广所有附魔或升级继承。",
+        "活到次轮/到手不等于支付或收益。"
+      ],
+      "selected_card": {
+        "index": 0,
+        "selected": false,
+        "card_id": "UNTOUCHABLE",
+        "name": "触不可及",
+        "upgraded": false,
+        "card_type": "Skill",
+        "rarity": "Common",
+        "costs_x": false,
+        "star_costs_x": false,
+        "energy_cost": 2,
+        "star_cost": 0,
+        "rules_text": "获得{Block:diff()}点格挡。",
+        "resolved_rules_text": "奇巧。 获得4点格挡。 魂缚",
+        "dynamic_values": [
+          {
+            "name": "Block",
+            "base_value": 6,
+            "current_value": 4,
+            "enchanted_value": 6,
+            "is_modified": true,
+            "was_just_upgraded": false
+          }
+        ]
+      },
+      "selection_chosen": {
+        "action": "select_deck_card",
+        "option_index": 0
+      },
+      "selection_source": {
+        "path": "/home/dw/Projects/agent-sts2/logs/decisions.jsonl",
+        "offset": 720437081,
+        "bytes": 2178,
+        "sha256": "f37553c3905eaa512d68a027639b12ee120d8ef5daf442579725ac54ad2a56f1",
+        "offset_space": "file",
+        "run": "XTSV1U9JD34T",
+        "floor": 49,
+        "turn": 4,
+        "ts": "2026-10-07T19:04:24.902Z"
+      },
+      "next_turn_seen": false,
+      "next_same_name_count": 0,
+      "next_same_cards": [],
+      "next_player_powers": null,
+      "reset_before_next": true,
+      "last_screen": "COMBAT"
+    },
+    {
+      "card_id": "NIGHTMARE",
+      "source": {
+        "path": "/home/dw/Projects/agent-sts2/logs/decisions.jsonl",
+        "offset": 720476788,
+        "bytes": 1601,
+        "sha256": "20474507b78c19cc8861295853e208795ebeb3cea0f0c71b12813225969bf2e7",
+        "offset_space": "file",
+        "run": "XTSV1U9JD34T",
+        "floor": 49,
+        "turn": 4,
+        "ts": "2026-10-07T19:05:11.155Z"
+      },
+      "ascension": 10,
+      "upgraded": false,
+      "raw_action_result": "pending (unstable): Action queued but state is still transitioning.",
+      "request_ids": [],
+      "chosen": {
+        "action": "play_card",
+        "card_index": 2
+      },
+      "observed_energy_delta": -3,
+      "before_hand": 4,
+      "after_hand": 3,
+      "limitations": [
+        "原施放pending结果不改为completed；后续选择及power/手牌另作兑现证据。",
+        "同名卡无实例ID；4张包括原牌/抽到牌的情形不算4次复制。",
+        "只核本次选择的目标/版本和所见复制牌属性，不推广所有附魔或升级继承。",
+        "活到次轮/到手不等于支付或收益。"
+      ],
+      "selected_card": {
+        "index": 2,
+        "selected": false,
+        "card_id": "DEFEND_SILENT",
+        "name": "防御",
+        "upgraded": false,
+        "card_type": "Skill",
+        "rarity": "Basic",
+        "costs_x": false,
+        "star_costs_x": false,
+        "energy_cost": 1,
+        "star_cost": 0,
+        "rules_text": "获得{Block:diff()}点格挡。",
+        "resolved_rules_text": "获得6点格挡。",
+        "dynamic_values": [
+          {
+            "name": "Block",
+            "base_value": 5,
+            "current_value": 6,
+            "enchanted_value": 5,
+            "is_modified": true,
+            "was_just_upgraded": false
+          }
+        ]
+      },
+      "selection_chosen": {
+        "action": "select_deck_card",
+        "option_index": 2
+      },
+      "selection_source": {
+        "path": "/home/dw/Projects/agent-sts2/logs/decisions.jsonl",
+        "offset": 720478389,
+        "bytes": 2203,
+        "sha256": "08d9e873a0d30fba76a6dac558121f693d6b621f0568eba09b7b9bd28e948b5c",
+        "offset_space": "file",
+        "run": "XTSV1U9JD34T",
+        "floor": 49,
+        "turn": 4,
+        "ts": "2026-10-07T19:05:12.321Z"
+      },
+      "next_turn_seen": false,
+      "next_same_name_count": 0,
+      "next_same_cards": [],
+      "next_player_powers": null,
+      "reset_before_next": false,
+      "last_screen": "GAME_OVER"
+    }
+  ],
+  "published": false,
+  "merged": false,
+  "applicable_runtime": "研究候选只在本树R410做解析读回；历史运行版本按冻结run-config申报分列，不能冒称这些对局都跑R410。",
+  "visible_faces_without_effect_inference": [
+    {
+      "location": "reward",
+      "card": {
+        "index": 0,
+        "card_id": "NIGHTMARE",
+        "name": "夜魇",
+        "upgraded": false,
+        "card_type": "Skill",
+        "rarity": "Rare",
+        "energy_cost": 3,
+        "rules_text": "选择一张牌。 在下个回合将这张牌的3张复制品加入你的手牌。",
+        "resolved_rules_text": "选择一张牌。 在下个回合将这张牌的3张复制品加入你的手牌。 消耗。",
+        "dynamic_values": []
+      },
+      "source": {
+        "path": "/home/dw/Projects/agent-sts2/paper/materials/2026-10-21-r409-card-shadow/frozen/states.jsonl.gz",
+        "offset": 45580339,
+        "bytes": 31494,
+        "sha256": "d5351299a3b7d4c3a3628a9692f1a1aa457998622b789b7a89bfafcdf2a58248",
+        "offset_space": "gzip_uncompressed",
+        "run": "SVBEFF7YAZMA",
+        "floor": 33,
+        "turn": 7,
+        "ts": "2026-10-20T21:53:54.121Z",
+        "observed_ts": "2026-10-20T21:53:14.505Z"
+      }
+    }
+  ],
+  "visible_shadow_ascensions": [
+    10
+  ]
+}

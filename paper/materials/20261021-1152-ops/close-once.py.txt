@@ -1,0 +1,72 @@
+from pathlib import Path
+import csv,hashlib,json,os,subprocess,time,fcntl
+R=Path('/home/dw/Projects/agent-sts2');A=R/'.artifacts/ops-wake-20261021-1152';M=R/'paper/materials/20261021-1152-ops';D=R/'ops/codex-ops';RUNS=['CEN1Z8HEU7NM','36VNKZKABGB4','GWE810ZD014M','TS0BHDLAH8ME']
+def stamp():return subprocess.check_output(['date','-Iseconds'],text=True).strip()
+def put(p,d):
+ t=p.with_name(p.name+'.tmp');t.write_text(json.dumps(d,ensure_ascii=False,indent=2)+'\n');os.replace(t,p)
+def ref(p):
+ b=p.read_bytes();return {'path':str(p.relative_to(R)),'bytes':len(b),'sha256':hashlib.sha256(b).hexdigest()}
+def git(*args,data=None,env=None):return subprocess.check_output(['git',*args],cwd=R,input=data,env=env,stderr=subprocess.PIPE)
+def outputs():
+ names=git('ls-files','paper/data/*','paper/materials/*/cost.md','paper/materials/cost.md').decode().splitlines()
+ return [R/n for n in names if not n.startswith('paper/data/history/') and (R/n).is_file()]
+def commit_records(additions,files):
+ assert not git('diff','--cached','--name-only').strip(),'main index occupied; preserve dataset, do not retry generator'
+ index=Path(git('rev-parse','--git-path','index').decode().strip());index=index if index.is_absolute() else R/index;lock=Path(str(index)+'.lock');fd=os.open(lock,os.O_CREAT|os.O_EXCL|os.O_WRONLY,0o600)
+ try:
+  parent=git('rev-parse','HEAD').decode().strip();blobs={p:git('show',parent+':'+p)+t.encode() for p,t in additions.items()}
+  for p in files:blobs[str(p.relative_to(R))]=p.read_bytes()
+  # Explicit user exception: save current lessons and learning ledger with this record closure.
+  for name in ('notes/lessons.md','paper/materials/learning/ledger.jsonl'):
+   b=(R/name).read_bytes();old=git('show',parent+':'+name);assert b.startswith(old) and b.endswith(b'\n'),name+' original prefix changed';blobs[name]=b
+  queue='paper/materials/learning/code-proposals.jsonl';old=git('show',parent+':'+queue);known=set(old.splitlines());ids={x['id'] for x in json.loads((A/'intake-state.json').read_text())['proposals']};own=[b for b in (R/queue).read_bytes().splitlines() if b.strip() and json.loads(b).get('id') in ids and b not in known]
+  if own:blobs[queue]=old+b''.join(b+b'\n' for b in own)
+  scan=subprocess.run(['gitleaks','stdin','--redact','--no-banner','--config',str(R/'paper/materials/20261021-W4-v2-P2-ops/record-gitleaks-scoped.toml')],input=b'\n'.join(blobs.values()),stdout=subprocess.PIPE,stderr=subprocess.STDOUT,env={**os.environ,'GOMAXPROCS':'1'});(A/'record-gitleaks.log').write_bytes(scan.stdout);assert scan.returncode==0,'gitleaks failed, inputs/log retained; no automatic retry'
+  private=A/'record-private-index';private.write_bytes(index.read_bytes());env={**os.environ,'GIT_INDEX_FILE':str(private)}
+  for p,b in blobs.items():
+   oid=git('hash-object','-w','--stdin',data=b).decode().strip();git('update-index','--add','--cacheinfo',f'100644,{oid},{p}',env=env)
+  tree=git('write-tree',env=env).decode().strip();paths=git('diff','--name-only',parent,tree).decode().splitlines();assert paths and set(paths)<=set(blobs)
+  msg='ops: close four postmortems with one verified dataset generation\n\nCo-Authored-By: Codex gpt-6.1-sol <noreply@openai.com>\n';commit=git('commit-tree',tree,'-p',parent,data=msg.encode()).decode().strip();git('update-ref','HEAD',commit,parent)
+  remaining=memoryview(private.read_bytes())
+  while remaining:remaining=remaining[os.write(fd,remaining):]
+  os.fsync(fd);os.close(fd);fd=None;os.replace(lock,index);put(A/'record-commit.json',{'commit':commit,'parent':parent,'tree':tree,'paths':paths,'gitleaks_rc':0,'source_change':False});return commit
+ finally:
+  if fd is not None:os.close(fd)
+  lock.unlink(missing_ok=True)
+try:
+ os.close(os.open(A/'dataset-started-once',os.O_CREAT|os.O_EXCL|os.O_WRONLY,0o600))
+except FileExistsError:
+ raise SystemExit(0)
+state={'batch':'20261021-111301','state':'original-one-dataset-close-waiting-kernel-admission','pid':os.getpid(),'at':stamp(),'dataset_invocations':0,'no_sleep_poll_timer_model_full_refresh_or_game':True};held=None
+try:
+ put(A/'close-status.json',state)
+ # Same ordinary admission gate used by full controllers; the child owns paper-dataset.lock itself.
+ held=(D/'ordinary-close.lock').open('a');fcntl.flock(held,fcntl.LOCK_EX)
+ state.update(state='original-one-dataset-running',admitted_at=stamp(),dataset_invocations=1,nice=os.getpriority(os.PRIO_PROCESS,0));put(A/'close-status.json',state)
+ before={str(p.relative_to(R)):ref(p) for p in outputs()};put(A/'dataset-before.json',before);prior={str(p.relative_to(R)) for p in (R/'paper/data/history').iterdir() if p.is_dir()};put(A/'dataset-before-directories.json',sorted(prior))
+ env={**os.environ,'GOMAXPROCS':'1','OMP_NUM_THREADS':'1','OPENBLAS_NUM_THREADS':'1','MKL_NUM_THREADS':'1','UV_THREADPOOL_SIZE':'1'}
+ with (A/'dataset.log').open('xb') as log:
+  child=subprocess.Popen(['python3','ops/paper_dataset.py','--no-raw'],cwd=R,stdout=log,stderr=subprocess.STDOUT,env=env);state['dataset_pid']=child.pid;put(A/'close-status.json',state);rc=child.wait()
+ (A/'dataset.exit').write_text(str(rc)+'\n');state.update(dataset_rc=rc,state='original-dataset-finished-verifying-output');put(A/'close-status.json',state);assert rc==0,'original dataset failed; preserve log, no second invocation'
+ summary=json.loads((R/'paper/data/summary.json').read_text());assert summary['source_checks_passed'] is True
+ with (R/'paper/data/runs.csv').open() as f:rows=[x for x in csv.DictReader(f) if x['run_id'] in RUNS]
+ assert len(rows)==4;field=next(k for k in rows[0] if 'postmortem' in k);assert all(x[field] in ('True','true','1') for x in rows)
+ changed=[p for p in outputs() if before.get(str(p.relative_to(R)))!=ref(p)];archive=Path(summary['previous_snapshot']);archive=archive if archive.is_absolute() else R/archive;assert archive.is_relative_to(R/'paper/data/history') and str(archive.relative_to(R)) not in prior;archives=[p for p in archive.iterdir() if p.is_file()]
+ put(M/'dataset-receipt.json',{'argv':['python3','ops/paper_dataset.py','--no-raw'],'invocations':1,'nice':19,'ionice':'idle','compute_threads':1,'exit_code':0,'source_checks_passed':True,'log':ref(A/'dataset.log'),'generated_at':summary['generated_at'],'source_cut_bytes':summary['source_cut_bytes'],'runs':[{'run_id':x['run_id'],field:x[field]} for x in rows],'outputs':[ref(p) for p in changed],'previous_snapshot':str(archive.relative_to(R)),'archive_files':[ref(p) for p in archives],'raw_snapshot_requested':False})
+ now=stamp();put(M/'receipt.json',{'at':now,'batch':'20261021-111301','state':'one-dataset-passed-four-postmortems-verified-await-record-commit','dataset':ref(M/'dataset-receipt.json'),'learning_verification':ref(M/'learning-verification.json'),'ledger_check':ref(M/'ledger-check-ops.log'),'new_pure_bugs':False,'source_publication':False,'runtime_changed':False,'scientific_parents_closed':False})
+ cp=R/'notes/ops-current-context.json';context=json.loads(cp.read_text());context['latest_postmortem_intake']={'batch':'20261021-111301','runs':RUNS,'receipt':str((M/'receipt.json').relative_to(R)),'state':'one-dataset-passed-four-records-verified-record-commit-pending','new_pure_bugs':False};context['postmortem_20261021_111301_original_once_close']={'phase':'dataset0-four-postmortem-markers-verified-final-record-commit','receipt':str((M/'receipt.json').relative_to(R)),'status':str((A/'close-status.json').relative_to(R)),'dataset_invocations':1};put(cp,context)
+ text='四局CEN、36V、GWE、TS0各唯一复盘，原lessons前缀与追加SHA、21终战原帧、12账本support和四pending提案核同，GWE勘误保留；0559是已有证据映射而非本批新增更新。无新纯bug，历史nonpositive-hp沿CEN/0332原链，不改游戏知识、规则或重复派修。本批唯一nice19/ionice3 paper_dataset --no-raw退出0，原writer/ordinary锁串行，源检查与四局复盘标记均通过；生成表、切点、旧快照和日志SHA留存，未重跑。按用户要求只保存自有材料及生成记录、指定lessons/ledger和本批四提案增量；保留其他并行叶，不拿记录、数据或复盘完成冒实现/live采用或科学父验收。未新开模型/full/生产刷新或对局，不改live/actor/STOP/CARDbrain/REFLEXoff/Regent；#4角色CLI与#8/#19原阻塞、#18零删除边界保持。'
+ assert 300<=len(text)<=500,len(text)
+ (M/'close-report.md').write_text(text+'\n');extra={'ops/inbox-dev.md':f'\n### {now} 复盘111301唯一dataset与记录核验\n\n{text}\n原件 paper/materials/20261021-1152-ops/receipt.json。\n','paper/materials/decision-log.md':f'\n- {now} ops：复盘111301四局追加/勘误、12support和四pending提案已核，无新纯bug；唯一dataset --no-raw退出0/四复盘标记齐，保存自有生成表/指定lessons与ledger，不代发布/科学父完成。原件 paper/materials/20261021-1152-ops/receipt.json。\n'}
+ additions=json.loads((A/'intake-additions.json').read_text())
+ for p,t in extra.items():
+  with (R/p).open('a') as h:h.write(t)
+  additions[p]=additions.get(p,'')+t
+ # Preserve only this invocation's outputs/materials plus the explicit ledger/lesson exception.
+ files=[p for p in M.rglob('*') if p.is_file()]+[cp]+changed+archives;commit=commit_records(additions,files);state.update(state='completed-records-and-dataset-only',record_commit=commit,receipt=str((M/'receipt.json').relative_to(R)),finished_at=stamp());put(A/'close-status.json',state)
+except Exception as error:
+ state.update(state='attention-retain-original-input-log-and-completed-steps',reason=f'{type(error).__name__}: {error}',finished_at=stamp());put(A/'close-status.json',state)
+finally:
+ if held is not None:fcntl.flock(held,fcntl.LOCK_UN);held.close()
+ text=f"原复盘20261021-111301四局唯一dataset/记录收尾终局：state={state['state']}，dataset_rc={state.get('dataset_rc')}，record_commit={state.get('record_commit')}。原件.artifacts/ops-wake-20261021-1152/close-status.json、dataset.log及paper/materials/20261021-1152-ops/。不重复dataset/模型/full/发布；失败沿原件修收尾，不重生成器。无新纯bug；CEN/0332科学父、CARDbrain/REFLEXoff/#4原CLI/#8-19/#18零删除/Regent保持。"
+ q=D/'queue'/f'{time.time_ns()}-manual.md';tmp=q.with_suffix('.tmp');tmp.write_text(text+'\n');os.replace(tmp,q)

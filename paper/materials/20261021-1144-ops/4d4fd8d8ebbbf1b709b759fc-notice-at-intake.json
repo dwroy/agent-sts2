@@ -1,0 +1,26 @@
+{
+  "id": "4d4fd8d8ebbbf1b709b759fc",
+  "kind": "learner-dissent",
+  "request_id": "silent-elite-simulation-pessimism-20261021",
+  "request_sha256": "012008f5419fb0411d3682762626ce546478a3bdaf4563aae0041a7e275f61e3",
+  "message": "{\n  \"id\": \"D3\",\n  \"prior\": \"原审计将净损描述为入场至终局；实际使用fight.hp_loss，两场胜利只覆盖到最后COMBAT帧。\",\n  \"finding\": \"ET1 F9最后战斗42到退出39、2XCG F9最后战斗25到退出19；合9HP未纳原“净损”。保留原统计并并列退出口径均值27.4038、模拟残差+10.7151，原因不补值。\",\n  \"evidence\": [\n    \"ET1QAZCV8GUP-f9-fight4（Silent A10/F9/T1可行动），logs/states.jsonl offset=14287839500 bytes=30795 SHA256=b4622465a1aeb30caece92f41cf74f007f199358cb33710f2d933b6c68db6469\",\n    \"logs/states.jsonl offset=14288657897 bytes=20832 SHA256=e6fc793496976edde0a4815b23ab8d0bebfc30cc0ce946349bc440d93a779a90\",\n    \"2XCG8LXUZLRE-f9-fight5（Silent A10/F9/T1可行动），logs/states.jsonl offset=14516553453 bytes=30452 SHA256=9de6174c27382f0546c6348a5e2b0a5078caa8374aff1b708d05166ec10d08fd\",\n    \"logs/states.jsonl offset=14517771530 bytes=20474 SHA256=fbd7cdd050b057e3a47517fb9173ae9c51eac0473cab8015aa52498ce09c7223\"\n  ],\n  \"affected_ids\": [\n    \"silent-elite-simulation-pessimism-20261021\",\n    \"issue-4\",\n    \"原审计净掉血口径\"\n  ],\n  \"next_step\": \"原ops沿通知链实际告知，固定索引补核两段跨界HP事件；不得用无归因9HP拟伤害参数。\"\n}",
+  "character": "silent",
+  "source_batch": "issue-4-elite-calibration-20261021-104312",
+  "original_message": {
+    "path": "learner/runs/20261021-104418-def3aea5-81a4-47a6-85d4-5dd8fb129249-issue-4-elite-calibration-task/disagreements.json",
+    "sha256": "012008f5419fb0411d3682762626ce546478a3bdaf4563aae0041a7e275f61e3"
+  },
+  "source_evidence": {
+    "path": "paper/materials/20261021-issue4-terminal-ops/audit-readback.json",
+    "sha256": "cb775dcc25cac4cd11380c71c2217fb35d9411db6ae2c08a09df0b4f42054727"
+  },
+  "ops_forwarded": {
+    "path": "/home/dw/Projects/agent-sts2/ops/codex-ops/learning-notices/receipts/4d4fd8d8ebbbf1b709b759fc.ops-forwarded.json",
+    "sha256": "cfb66e2bf97fa680bcb19e2043cb5aa27de06748504d233e509a9db82c1e05a8",
+    "at": 1792554182.9111536
+  },
+  "watcher_received": false,
+  "roy_notified": false,
+  "last_queued_at": 1792554182.9115663,
+  "last_queue": "/home/dw/Projects/agent-sts2/ops/codex-ops/queue/1792554182911498482-learning-attention.md"
+}

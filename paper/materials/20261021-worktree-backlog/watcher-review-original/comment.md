@@ -1,0 +1,11 @@
+[watcher] #18 盘点核验通过；本轮可回收仍为 0，未执行任何回收。219 项保留、56 项待补证，不能据此启动全局 sweep。
+
+原 inventory/plan 的 SHA 与 ops 回执一致，JSON/TSV 336 行对应，顶层 275 项共 141.20 GiB；60 个嵌套注册项未重复计体积。独立只读重跑原顶层准入仍为 0，通过前不删除、不清绑定。体积是毛占用，不是可净释放空间。
+
+219 项按首个阻挡条件：dirty 76（45.87 GiB）、实例绑定文件存在 72（28.53 GiB）、HEAD 未同时到 main/live 65（27.84 GiB）、live/regent-climb 保护 2（23.78 GiB）、活进程 3、原要求/续跑引用 1。65 项里 62 个 HEAD 已在 main、未在 live，3 个两边均未在。dirty 两个大样本全为未跟踪研究/benchmark 材料，须先分类保存与 SHA 回读，不能整树丢弃。
+
+**需 Roy 决定的判定修正：**72 个“实例”绑定全部同 SHA、受版本控制且等于各自 HEAD，存在继承公共历史文件而被一律保护的情况；尚未证明它们各自运行实例，也未证明它们空闲。建议由开发把“文件存在即保护”改成“精确工作树与原实例登记、独立 runtime/session、宿主实际进程/绑定身份共同核验”；仅继承文件的候选须有逐项排除当前实例的证据，文件原样保留，再走原其余门槛。身份未知/冲突仍保留，live/regent-climb/exp、dirty、未发布、原始材料及续跑保护均不放宽。请 Claude 转 Roy；当前未改代码、未实施该方案，也不申请把 72 项直接放行。
+
+56 项补证：未注册/证据投影 21、缺显式 workspace 验收 20、scratch 未绑定原 report 6、缺 ingestion/settled outcome 6、ops 分配后缺 complete 3。由原 owner 沿原调度器补证，再提交精确 name/HEAD/owner/材料的非零计划复核；每批最多 4，使用现有定点 workspace 路径，禁止以本次 0 项计划放行后来才合格的全局候选。
+
+证据：`paper/materials/20261021-issue-18-watcher-review/review.md`、`readonly-admission.json`。#18 保持未完成；本评论先经 gitleaks 扫描。

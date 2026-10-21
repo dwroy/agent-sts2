@@ -1,0 +1,44 @@
+import json,hashlib,subprocess,collections,datetime,os
+from pathlib import Path
+r=Path('/home/dw/Projects/agent-sts2');s=r/'learner/runs/20261021-104418-def3aea5-81a4-47a6-85d4-5dd8fb129249-issue-4-elite-calibration-task';m=r/'paper/materials/20261021-issue4-terminal-ops';errors=[]
+def sha(b):return hashlib.sha256(b).hexdigest()
+def check(ref):
+ p=Path(ref['path']);p=p if p.is_absolute() else r/p
+ assert p.is_relative_to(r) and not p.is_symlink()
+ b=p.read_bytes()
+ if sha(b)!=ref['sha256'] or ('bytes'in ref and len(b)!=ref['bytes']):errors.append({'path':str(p),'error':'bytes or SHA mismatch'})
+ return b
+manifest=r/'.artifacts/ops-github-issues-adoption-20261021/issue-4-inputs.json';assert sha(manifest.read_bytes())=='a51a989ddff82b615e3185c06f7f6d3bb8bc97abddfebe26ed43795b956ee011';mdata=json.loads(manifest.read_bytes());inputs=mdata['files'];[check(x) for x in inputs]
+idx=json.loads((s/'artifact-index.json').read_bytes());[check(x) for x in idx['artifacts']]
+refs=[json.loads(line) for line in (s/'source-index.jsonl').read_text().splitlines() if line.strip()];handles={};total=0;kinds=collections.Counter()
+for ref in refs:
+ p=r/ref['path'];assert ref['path'] in ('logs/states.jsonl','logs/decisions.jsonl','logs/sl-attempts.jsonl')
+ h=handles.setdefault(str(p),p.open('rb')) if str(p) not in handles else handles[str(p)];h.seek(ref['offset']);b=h.read(ref['bytes']);assert len(b)==ref['bytes'] and sha(b)==ref['sha256'],ref
+ total+=len(b);kinds[ref['kind']]+=1
+for h in handles.values():h.close()
+# Resolve and read only the enumerated historical source/data Git blobs, never credentials.
+snapshot=json.loads((s/'source-snapshot-check.json').read_bytes());paths=snapshot['files'];blobids=[x['blob'] for x in paths];proc=subprocess.Popen(['git','-C',str(r),'cat-file','--batch'],stdin=subprocess.PIPE,stdout=subprocess.PIPE);giterrors=[]
+for x in paths:
+ proc.stdin.write((x['blob']+'\n').encode());proc.stdin.flush();header=proc.stdout.readline().decode().strip().split();assert header[1]=='blob';n=int(header[2]);b=proc.stdout.read(n);assert proc.stdout.read(1)==b'\n'
+ if sha(b)!=x['sha256']:giterrors.append(x['path'])
+proc.stdin.close();proc.wait();assert proc.returncode==0
+inv=json.loads((s/'fight-inventory.json').read_bytes());runs=json.loads((s/'run-inventory.json').read_bytes());assert len(inv)==53 and len(runs)==40 and len({x['run_id'] for x in inv})==33
+wt=r/'.worktrees/issue-4-elite-calibration-20261021';status=subprocess.check_output(['git','-C',str(wt),'status','--porcelain','--untracked-files=all']).decode();head=subprocess.check_output(['git','-C',str(wt),'rev-parse','HEAD']).decode().strip();assert not status and head==mdata['base']
+# Freeze only actual native turn metadata, not other native log contents.
+native=r/'ops/codex-ops/accounts/codex1/learner/sessions/2026/10/21/rollout-2026-10-21T10-44-22-01a15c58-72f3-7d81-8ce6-0f528c60d788.jsonl';contexts=[];off=0
+with native.open('rb') as h:
+ for b in h:
+  try:e=json.loads(b)
+  except ValueError:off+=len(b);continue
+  if e.get('type')=='turn_context':
+   p=e['payload'];contexts.append({'offset':off,'bytes':len(b),'sha256':sha(b),'timestamp':e.get('timestamp'),'cwd':p.get('cwd'),'model':p.get('model'),'effort':p.get('effort',p.get('reasoning_effort')),'sandbox_policy':p.get('sandbox_policy'),'approval_policy':p.get('approval_policy')})
+  off+=len(b)
+assert contexts and all(c['model']=='gpt-6.1-sol' and c['effort']=='high' and c['cwd']==str(wt) for c in contexts)
+(m/'native-effort-readback.json').write_text(json.dumps({'path':str(native.relative_to(r)),'thread_id':'01a15c58-72f3-7d81-8ce6-0f528c60d788','contexts':contexts,'verified':True},ensure_ascii=False,indent=2)+'\n')
+# Independent bounded key-window checks; record projected facts only.
+anchors=[('ET1-F31',14296044731,40115,'385cfbe3b57c560e59604cf56839725c288fe49c4b85e2a0551eea1614416ca2'),('ET1-F9-last',14288627952,29945,'1087a8ed75107b2db081ba389ed1a2affa38f79c804dd25eedd1565955e6dff3'),('ET1-F9-close',14288657897,20832,'e6fc793496976edde0a4815b23ab8d0bebfc30cc0ce946349bc440d93a779a90'),('2XCG-F9-last',14517742691,28839,'42d20327e2babe2fc598bef92a600e9f8da40450e26f356da7dd9cdb4016e8ee'),('2XCG-F9-close',14517771530,20474,'fbd7cdd050b057e3a47517fb9173ae9c51eac0473cab8015aa52498ce09c7223')];out=[]
+with (r/'logs/states.jsonl').open('rb') as h:
+ for name,offset,n,digest in anchors:
+  h.seek(offset);b=h.read(n);assert sha(b)==digest;e=json.loads(b);state=e.get('state',e.get('data',e));out.append({'name':name,'offset':offset,'bytes':n,'sha256':digest,'envelope_keys':list(e),'state_keys':list(state) if isinstance(state,dict) else []})
+(m/'key-source-windows.json').write_text(json.dumps(out,ensure_ascii=False,indent=2)+'\n')
+res={'at':datetime.datetime.now().astimezone().isoformat(timespec='seconds'),'input_count':len(inputs),'artifact_count':len(idx['artifacts']),'source_ref_count':len(refs),'source_kind_counts':dict(kinds),'bounded_raw_bytes':total,'git_snapshot_count':len(paths),'git_blob_errors':giterrors,'errors':errors,'worktree_head':head,'worktree_status':status,'native_high_verified':True,'fights':53,'cohort_runs':40,'independent_runs_with_elites':33,'new_MC_API_full':False};assert not errors and not giterrors;(m/'audit-readback.json').write_text(json.dumps(res,ensure_ascii=False,indent=2)+'\n');print(json.dumps(res,ensure_ascii=False))

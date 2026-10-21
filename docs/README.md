@@ -7,6 +7,7 @@
 | 文档 | 内容 |
 |---|---|
 | [V6 全局构筑与小脑记忆计划](v6-plan.md) | **2026-10-19 Roy 批准**（`roy-20261019-v6`，待实现）：大脑给构筑方向概率与药水方向条目，代码按理想补齐对全部 Boss（含 F48→F49 连战）模拟出量化条目，Jev 拿牌与选药；小脑记忆、构筑方向卡；执行计划 W0–W9 |
+| [多 agent 协作架构](agent-board-architecture.md) | **2026-10-21 Roy 批准**：看板 / 派单器 / 角色三层；Claude 主管、集成员（原 watcher）、开发者一 issue 一会话、ops 只管运行；通用部分抽到 agent-board-kit |
 | [GitHub Issues 协作流程](github-issues-workflow.md) | **2026-10-21 Roy 定**：任务以 GitHub Issues 为准，herdr 托管会话；消息只提醒、结果写评论、一个 issue 一个新会话、公开边界 |
 | [V5 架构](v5-architecture.md) | 当前职责、必需 Boss 评估、核心公式、Jev 请求替换及发布/待实现边界 |
 | [V5 构筑模块](v5-construction.md) | 未来成型预测、当前候选战斗评估、结构化方向与校准入场 |

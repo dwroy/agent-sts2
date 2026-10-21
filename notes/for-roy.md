@@ -3995,3 +3995,153 @@ Roy09:0x四项决定已实收：按§12.1由原W4实现掉血预测器，build-f
 W4拿牌v2正式3ef4/11a80已核：14源Git/SHA、318清单项加manifest共319材料、241gzip均核存，扫描0。实际live唯一builder前像不同为未上线P4增量；私有index只取v2四行入口，13后像同且不带P4，工程联合仍排CEN原窗后。质量未过：总5006场/380局，按局留出806/68，整场MAE不等候选增量误差；146题584增量全在显示误差尺度内（非增量CI）、历史增量相关弱，Nova54/60均值一致与36/60跳过不能作通过。原tsc0/93定向/Python3仅来源，未新full/API/模型/学习。结论已交watcher转Claude/Roy，实收待真实回执，CARDbrain/REFLEXoff不变。Roy新增P2决定已收：满槽奖励药水Jev暂不做并移出推进计划，保放弃药水现行为/POTIONbrain，不提issue、不改mod；已停止原接口协调、归档旧行及666帧转述，不重扫。原件：paper/materials/20261021-W4-v2-P2-ops/receipt.json。
 
 - 2026-10-21T10:43:45+08:00 已发布V6-R410：旧rollout在敌全灭时压过solver死亡、造成HP≤0假胜并续接，现按已结算复活后死亡优先判负、不续接。原W8 f993+6707四叶，实际live行为fffa54aac6bd31446caa026e8f90fa2d4aa5e685；完整629文件5963过2跳、dd954/2395输入7d864f84不变，实际live固定原CEN消费读回通过，最新498知识/配置保留。铁甲A8EN原两HP0假胜纠正使血墙分值-37→-47、防御-43.5成为推荐；这是明确行为差异，非收益/质量证明。原full1/反证/133和138定向保留，CARDbrain/REFLEXoff及其余brain/方向出牌off/90s不变；P2已移出计划，不提issue/改mod。预期消除死资源假胜/非法续局；回退只撤四叶至cf4aff4ceebd958ad70b1512cc886c45bd8092aa，保后续知识/日志/配置，首局报错/卡住/兜底增多按§12回退并inbox。新局配置/真实动作及自然故障改善待读回，不关0332科学父或代ACK。原件paper/materials/20261021-1015-ops/publication.json。
+
+### 2026-10-21T11:38:46+08:00 #4 精英模拟学习三项科学异议（原文）
+
+原学习批次issue-4-elite-calibration-20261021-104312已退出0；本ops已核99输入、33产物、3895原行/771 Git blob，无差异。以下为学习者原文，不是ops新增游戏知识；四候选仍waiting，无发布/父完成。
+
+[
+  {
+    "id": "D1",
+    "prior": "原审计称真实开场保留可用牌堆；缺显式牌堆时才deck-minus-hand。",
+    "finding": "显式牌堆在原字节中存在；是冻结提取主动剥离。ET1一场还造成六张重复身份和升级失配。保留原结果作原管线诊断，不称完整真实开场控制。",
+    "evidence": [
+      "ET1QAZCV8GUP-f31-fight11（Silent A10/F31/T1可行动），logs/states.jsonl offset=14296044731 bytes=40115 SHA256=385cfbe3b57c560e59604cf56839725c288fe49c4b85e2a0551eea1614416ca2",
+      "source-excerpts.md: parse_state_line / boardOf / findIndex"
+    ],
+    "affected_ids": [
+      "silent-elite-simulation-pessimism-20261021",
+      "issue-4",
+      "silent-proposal-e76e895381da5bfc"
+    ],
+    "next_step": "原ops接收本异议，沿原通知CLI实际写入watcher与Roy收件箱并取得各角色真实回执；先做无MC输入保真回归。"
+  },
+  {
+    "id": "D2",
+    "prior": "原授权：“当前不影响R407运行：拿牌比较用同种子配对差。”",
+    "finding": "不否定原调度决定，但拒绝把其理由外推为配对增量已校准或排名可靠。本窗口只比较绝对结果，无候选反事实，且有状态/牌身份相关偏差。",
+    "evidence": [
+      "issue输入内elite-learning-authorization-original.md，SHA25ae2141a16fa4fc61c48d00943240a0a5fb3340bd6627d663c2d17606a34d25",
+      "ET1QAZCV8GUP-f31-fight11（Silent A10/F31/T1可行动），logs/states.jsonl offset=14296044731 bytes=40115 SHA256=385cfbe3b57c560e59604cf56839725c288fe49c4b85e2a0551eea1614416ca2"
+    ],
+    "affected_ids": [
+      "silent-elite-simulation-pessimism-20261021",
+      "issue-4",
+      "R407论证边界"
+    ],
+    "next_step": "原ops→watcher→Roy实际告知，单独验证候选增量；保持CARDbrain/REFLEXoff，不将CEN或预测器子项完成当本issue完成。"
+  },
+  {
+    "id": "D3",
+    "prior": "原审计将净损描述为入场至终局；实际使用fight.hp_loss，两场胜利只覆盖到最后COMBAT帧。",
+    "finding": "ET1 F9最后战斗42到退出39、2XCG F9最后战斗25到退出19；合9HP未纳原“净损”。保留原统计并并列退出口径均值27.4038、模拟残差+10.7151，原因不补值。",
+    "evidence": [
+      "ET1QAZCV8GUP-f9-fight4（Silent A10/F9/T1可行动），logs/states.jsonl offset=14287839500 bytes=30795 SHA256=b4622465a1aeb30caece92f41cf74f007f199358cb33710f2d933b6c68db6469",
+      "logs/states.jsonl offset=14288657897 bytes=20832 SHA256=e6fc793496976edde0a4815b23ab8d0bebfc30cc0ce946349bc440d93a779a90",
+      "2XCG8LXUZLRE-f9-fight5（Silent A10/F9/T1可行动），logs/states.jsonl offset=14516553453 bytes=30452 SHA256=9de6174c27382f0546c6348a5e2b0a5078caa8374aff1b708d05166ec10d08fd",
+      "logs/states.jsonl offset=14517771530 bytes=20474 SHA256=fbd7cdd050b057e3a47517fb9173ae9c51eac0473cab8015aa52498ce09c7223"
+    ],
+    "affected_ids": [
+      "silent-elite-simulation-pessimism-20261021",
+      "issue-4",
+      "原审计净掉血口径"
+    ],
+    "next_step": "原ops沿通知链实际告知，固定索引补核两段跨界HP事件；不得用无归因9HP拟伤害参数。"
+  }
+]
+
+原文 learner/runs/20261021-104418-def3aea5-81a4-47a6-85d4-5dd8fb129249-issue-4-elite-calibration-task/disagreements.json SHA256 012008f5419fb0411d3682762626ce546478a3bdaf4563aae0041a7e275f61e3；完整报告与三notice对应见 paper/materials/20261021-issue4-terminal-ops/。新研究任务未获原manual ACK白名单支持，CLI角色登记另记结果；实际watcher读取及Roy可见转达仍pending，不代填角色ACK。
+
+- 2026-10-21T11:51:00+08:00 #4三项原科学异议已由原watcher实际读回并向Roy可见转达，评论6307510995/原材料已核；此为转达状态核收，不等Roy亲自认可或科学父/知识发布完成。三notice已有调度器ops_forwarded实际回执；原research CLI身份兼容与watcher/roy阶段登记仍pending，不重复原文或代ACK。#8只支持原R4的候选仍受#19四项基线断言阻塞，隔离暂存未合main/live，不能当作#4兼容已生效。原件 paper/materials/20261021-1144-ops/receipt.json。
+
+- 2026-10-21T12:08:18+08:00 ops：#13/#14 原学习者五项异议/限定，逐项原文与原始证据引用如下。公开 issue 评论不代 watcher 实读或 Roy 可见通知；原研究身份尚不被现行 ACK CLI 支持，不改名/造父/代理登记，后续两角色回执 pending。原报告和科学父保留。
+
+  Issue #13 / notice 7430982d1c28981e46d44d75；原文 learner/runs/20261021-111653-8735c888-1393-4256-84d9-821d4e4a14ea-issue-13-card-models-task/disagreements.json SHA256 03dffced1675adff2d33b4fcb8b2afa2cd6d1121de30c317bf9c3b395fae15d8；核验 paper/materials/20261021-issues-13-14-terminal-ops/issue-13/ops-audit.json。
+
+{
+  "prior": "Issue #13 列出EXPOSE 208、SPORE_MIND 60等unknown标签，容易被理解为独立实盘覆盖。",
+  "finding": "重算完全复现原标签计数；EXPOSE的208只来自1局13道题的候选/目标槽，SPORE_MIND的60只来自1局3题。其余卡A标签为11/4/4，不是施放分母。",
+  "evidence": [
+    "shadow-unknown-inventory.json",
+    "coverage.csv"
+  ],
+  "affected_ids": [
+    "github-issue-13-silent-learning-20261021"
+  ],
+  "next_step": "保留R409原结果；发布与消费者验收按逐卡独立局/真实施放和分支重新计数，不关闭父要求。"
+}
+
+  Issue #13 / notice 99c134c7850ae5bae9fb64c9；原文 learner/runs/20261021-111653-8735c888-1393-4256-84d9-821d4e4a14ea-issue-13-card-models-task/disagreements.json SHA256 03dffced1675adff2d33b4fcb8b2afa2cd6d1121de30c317bf9c3b395fae15d8；核验 paper/materials/20261021-issues-13-14-terminal-ops/issue-13/ops-audit.json。
+
+{
+  "prior": "silent-0066已shipped；普通EXPOSE在当前消费者known=true。",
+  "finding": "这仅覆盖普通Power→易伤。R410升级EXPOSE仍known=false且vulnerable=0；当前CardModel也没有清格挡/全部人工制品的字段。7XS普通清8挡、升级清18挡/1制品/加3易伤均直接兑现。silent-0217修预览消耗，与这些缺口独立。",
+  "evidence": [
+    "r410-consumer-replay.json",
+    "effect-audit.json"
+  ],
+  "affected_ids": [
+    "silent-0066",
+    "silent-0073",
+    "silent-0208",
+    "silent-0217",
+    "silent-proposal-00a6a10b15a62b38"
+  ],
+  "next_step": "复用原机制提案补CardModel/solver/rollout及离手物化、目标语义测试；旧shipped状态不代表本新增范围已发布。"
+}
+
+  Issue #13 / notice 3d8e3359ffe4d6992bd3960e；原文 learner/runs/20261021-111653-8735c888-1393-4256-84d9-821d4e4a14ea-issue-13-card-models-task/disagreements.json SHA256 03dffced1675adff2d33b4fcb8b2afa2cd6d1121de30c317bf9c3b395fae15d8；核验 paper/materials/20261021-issues-13-14-terminal-ops/issue-13/ops-audit.json。
+
+{
+  "prior": "空rules_text、空dynamic_values且只显示消耗的SPORE_MIND可能可以按零效果known。",
+  "finding": "本批仅10行真实手牌、4个局/层/回合键、1独立局，0施放；另有显示昏眩版本。不能证实零效果，也未绑定其生成来源。索引唯一同名施放是非Silent，已拒绝。",
+  "evidence": [
+    "shadow-card-observations.json",
+    "historical-index-discovery.json"
+  ],
+  "affected_ids": [
+    "github-issue-13-silent-learning-20261021"
+  ],
+  "next_step": "继续unmodelled，等待Silent真实选择/施放与状态后继，不按卡名或其他角色补机制。"
+}
+
+  Issue #13 / notice 7dcddb0749fa60e0f2f78f3f；原文 learner/runs/20261021-111653-8735c888-1393-4256-84d9-821d4e4a14ea-issue-13-card-models-task/disagreements.json SHA256 03dffced1675adff2d33b4fcb8b2afa2cd6d1121de30c317bf9c3b395fae15d8；核验 paper/materials/20261021-issues-13-14-terminal-ops/issue-13/ops-audit.json。
+
+{
+  "prior": "旧钢铁风暴升级手牌边界已implemented，可能被读作完整生成/自动效果已实现。",
+  "finding": "旧71e742提案原文明确只清旧手牌并停线，known仍false；普通0费69776提案也明确尚无完整生成。实际12次施放见N-1刀转换，但32VS净6挡、K643净11挡、其他0挡，不能实现固定格挡或未知奇巧顺序。",
+  "evidence": [
+    "prior-proposal-boundary.md",
+    "prior-proposal-sly.md",
+    "effect-audit.json",
+    "r410-consumer-replay.json"
+  ],
+  "affected_ids": [
+    "silent-0455",
+    "silent-0456",
+    "silent-0458",
+    "silent-proposal-71e742c6453608bf",
+    "silent-proposal-c1dd614cdf7bfc37",
+    "silent-proposal-69776c308a3b298e"
+  ],
+  "next_step": "复用原ID；生成与自动交互分开，先验动态张数和原手牌离手保护，再沿原闭环实现。"
+}
+
+  Issue #14 / notice 751e5b79d972608c69f79626；原文 learner/runs/20261021-111653-dbbc4dc0-8ef7-4421-8395-2c1621797aec-issue-14-act3-calibration-task/notice-request.json SHA256 fcbe8d2191c6e5510e04e4815fd7af3a159fb015b7cba923141a99c24c368663；核验 paper/materials/20261021-issues-13-14-terminal-ops/issue-14/ops-audit.json。
+
+{
+  "kind": "scope-limitation",
+  "prior": "当前整战源码将给定firstPlan直接交applyPlan；初始候选计划不一定覆盖实盘同回合后续补牌。",
+  "finding": "SVBEFF首试T1原四步后，实盘另打基础防御及精准切割，25→31挡、预计损1而实际净损0；这是局部可核策略路径差异，尚未证明R410固定回放或整体4.40倍误差的机制根因。",
+  "evidence": [
+    "/home/dw/Projects/agent-sts2/learner/runs/20261021-111653-dbbc4dc0-8ef7-4421-8395-2c1621797aec-issue-14-act3-calibration-task/policy-prefix-case.json",
+    "/home/dw/Projects/agent-sts2/learner/runs/20261021-111653-dbbc4dc0-8ef7-4421-8395-2c1621797aec-issue-14-act3-calibration-task/verified-raw-refs.jsonl"
+  ],
+  "affected_ids": [
+    "silent-0559",
+    "silent-proposal-40be025a2ec4528e",
+    "roy-20261017-human-pace-h0",
+    "issue-14"
+  ],
+  "next_step": "原owner固定R410单案例逐步轨迹对照；旧验证已读只作诊断/回归，正式候选验收另用未读新局留出。"
+}

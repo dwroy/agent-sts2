@@ -24551,3 +24551,1312 @@ BQXQJQ9GN51L：窗口10的逐轮数组只列有相邻状态转移的T1—T12；�
 
 CLCR3DUH66HK：窗口16末个单帧s470351是T5、玩家9血、活敌需伤100；窗口17末个单帧s470359是T3、玩家7血、活敌需伤140。两帧之后判死SL，没有可作该轮结算的相邻后继；逐轮数组未列的T5／T3伤害均为未记录，不能当0。
 
+
+## CEN1Z8HEU7NM（A10，静默猎手，第49层，死于连续第二Boss实验体 #C98 TEST_SUBJECT：四试24/85血空药进场，前三试T3／T13／T3判死；末试T13仅1血7挡，对36攻击及两张各2伤灼伤，敌第三阶段终态172/313血）
+
+
+
+- [首战胜利的出口资源才是连战入口；打法（DeepSeek路线／构筑／休息职责，实际Codex）] 女王 QUEEN／火炬头聚合体 TORCH_HEAD_AMALGAM 在F48首试7轮76→24血，F49实验体 TEST_SUBJECT立即以24血、空药槽开战；F47休息由51→76，不能把76血复制到后场。F43电球头 GLOBE_HEAD 62→54、F45组装师 FABRICATOR 54→54两场胜战都在资源链内；后场四试均败，不证明前场留药或少掉血就能赢。（之前学过：silent-0228，S1.legacy17-1）
+
+- [技能激怒与常驻能力须按阶段分账；打法（Jev出牌、代码SL续线）] 末试实验体 TEST_SUBJECT 首相激怒 ENRAGE_POWER=3，T1重放防御+ DEFEND_SILENT 令敌力量到6，再一张防御到9；T3触媒+ ACCELERANT、毒雾+ NOXIOUS_FUMES建立时敌力量仍18。后续技能使敌力量到27，但T4新相212血时旧力量与激怒消失，玩家触媒2／毒雾3／敏捷2／荆棘7仍保留。这里支持已学的技能／能力区分，数值3只属本局A10，不改旧首证激怒2的条件，不下禁技能结论。（之前学过：silent-0028，S1.exp189）
+
+- [护栏省血是候选差值，需连SL与重问核实际代价；打法（代码HP护栏、Jev原选出牌）] 知识恶魔 KNOWLEDGE_DEMON F33T4把蛇咬 SNAKEBITE＋致命毒药+ DEADLY_POISON换成扫腿+ LEG_SWEEP＋毒药，预测省13血／少21伤；T6把毒性爆发 OUTBREAK换成防御+与两打击 STRIKE_SILENT，预测省15／少93伤。F49T2另有6条审计，每条预测省3／少23伤；部分随后被SL恢复为爆发线，同轮重问不能重复计收益。全局8条护栏审计不是8个独立回合或实际省血总数；没有原线实打胜负对照，不判新bug或重犯。（之前学过：silent-0125，S1.exp198）
+
+
+
+- [记录] 构筑实际大脑为Codex：早取蛇咬、尖啸 PIERCING_WAIL、致命毒药、毒雾，后买触媒与杂技 ACROBATICS，复制重放防御+，补扫腿、后空翻 BACKFLIP和磨蚀 ABRASIVE；F46事件先付3血重抽移除对象，随后删蛇咬。F34原话“能量支撑毒防；走商店双火避精英，留血药备连战。”；末次休息题理由为连战且中间无恢复而回血。另核到18条nonpositive-hp构筑模拟错误原决策行，分布F35／39／40／42／43／44／46；失败原行保存known-nonpositive-errors.json；它们不等于18次未执行合法动作，不从错误封套自行新增游戏机制或断定终局死因。现行live rollout.ts:2377—2378已有死亡优先逻辑，历史code精确SHA未知，不把现行源码倒认为旧局已修复。F47题面即时hp_after_heal=76/85，F48实到76；F49只实到24。这是即时回复与实到对照，不是已核完整路线预测。 j73790首试F49T1完整题面，Jev以0.36选plan4（当轮预测0损、54伤）而rollout best为plan1；当轮实到下一T2仍24血，敌111→51净扣60，包含3荆棘及出手后结算，不能把54与60差直接判牌伤bug。原5轮四候选都8/8死亡，局内仍有后续SL打到第三相，不是所有实线必败证明。j73829末试T12弃伤口 WOUND，chosen为select_deck_card/6、completed，后继重规划毒药与防御；弃牌题无剩余已选方案，不能沿用抽牌前整线。F48两敌最终统一退场至奖励，精确先后未记录；F49只有同ID换相，不能算三只独立敌人。
+
+
+
+机制：末试磨蚀 ABRASIVE 建立后敏捷1→2、荆棘3→7；T13普通防御实际给7挡（5基础＋2敏捷）。触媒2、毒雾3已建立仍须活到结算，第三相无实体 INTANGIBLE_POWER 下，中和+ NEUTRALIZE、打击各只推进1血，178→177→176；结算后176→172是可见合计4，毒和反伤不逐击强拆，不能把22毒乘3当66实伤。T12损3至1、T13仅剩1血，增益共存不等存活。沿silent-0028／0027补证，无新机制参数。
+
+
+
+实盘资源链（含胜战；HP净变化含自伤/回血，不是敌方总伤；缺退出帧只报已观察前缀）：
+|窗口／层／敌人|HP；max HP；净变化|药槽入→出或截断末|出口／证据行与UTC时间|
+|---|---|---|---|
+|1／F2／噬尸蛞蝓 CORPSE_SLUG|56→56；70→70；+0|空→空|退出 REWARD；s471073→s471095；2026-10-21T00:07:40.812Z→2026-10-21T00:08:28.106Z|
+|2／F3／蟾蜍蝌蚪 TOADPOLE|56→56；70→70；+0|0:力量药水 STRENGTH_POTION→空|退出 REWARD；s471101→s471116；2026-10-21T00:08:56.733Z→2026-10-21T00:09:23.425Z|
+|3／F5／海洋混混 SEAPUNK|56→53；70→70；-3|空→空|退出 REWARD；s471125→s471141；2026-10-21T00:10:13.001Z→2026-10-21T00:10:42.585Z|
+|4／F8／钙化邪教徒 CALCIFIED_CULTIST／潮湿邪教徒 DAMP_CULTIST|62→38；80→80；-24|0:易伤药水 VULNERABLE_POTION→空|退出 REWARD；s471158→s471187；2026-10-21T00:14:10.496Z→2026-10-21T00:15:21.192Z|
+|5／F12／骇鳗 TERROR_EEL|62→48；80→80；-14|0:药水形状的石头 POTION_SHAPED_ROCK→空|退出 REWARD；s471203→s471233；2026-10-21T00:16:52.224Z→2026-10-21T00:17:55.885Z|
+|6／F17／乐加维林族母 LAGAVULIN_MATRIARCH|72→54；80→80；-18|0:能力药水 POWER_POTION、1:药水形状的石头 POTION_SHAPED_ROCK→0:能力药水 POWER_POTION|退出 REWARD；s471256→s471285；2026-10-21T00:20:05.214Z→2026-10-21T00:21:38.116Z|
+|7／F19／盛碗虫（卵） BOWLBUG_EGG／盛碗虫（石） BOWLBUG_ROCK|74→74；80→80；+0|0:能力药水 POWER_POTION、1:药水形状的石头 POTION_SHAPED_ROCK→空|退出 REWARD；s471293→s471310；2026-10-21T00:23:01.496Z→2026-10-21T00:23:34.109Z|
+|8／F22／地道虫 TUNNELER|74→73；80→80；-1|0:技能药水 SKILL_POTION、1:药水形状的石头 POTION_SHAPED_ROCK→0:技能药水 SKILL_POTION|退出 REWARD；s471325→s471337；2026-10-21T00:25:06.518Z→2026-10-21T00:25:33.705Z|
+|9／F24／外骨骼虫 EXOSKELETON|73→80；80→80；+7|0:技能药水 SKILL_POTION、1:再生药水 REGEN_POTION→空|退出 REWARD；s471348→s471364；2026-10-21T00:26:46.001Z→2026-10-21T00:27:15.405Z|
+|10／F28／残杀千足虫 DECIMILLIPEDE_SEGMENT_BACK／残杀千足虫 DECIMILLIPEDE_SEGMENT_FRONT／残杀千足虫 DECIMILLIPEDE_SEGMENT_MIDDLE|80→49；80→80；-31|0:药水形状的石头 POTION_SHAPED_ROCK→空|退出 REWARD；s471381→s471401；2026-10-21T00:28:44.616Z→2026-10-21T00:29:47.704Z|
+|11／F30／感染棱柱 INFESTED_PRISM|82→64；87→87；-18|0:药水形状的石头 POTION_SHAPED_ROCK→空|退出 REWARD；s471410→s471440；2026-10-21T00:30:37.969Z→2026-10-21T00:31:49.650Z|
+|12／F33／知识恶魔 KNOWLEDGE_DEMON|64→50；87→87；-14|0:格挡药水 BLOCK_POTION、1:药水形状的石头 POTION_SHAPED_ROCK→空|退出 REWARD；s471455→s471499；2026-10-21T00:32:41.619Z→2026-10-21T00:34:46.488Z|
+|13／F35／咬人卷轴 SCROLL_OF_BITING|79→69；87→85；-10|0:格挡药水 BLOCK_POTION、1:药水形状的石头 POTION_SHAPED_ROCK→空|退出 REWARD；s471508→s471525；2026-10-21T00:35:36.595Z→2026-10-21T00:36:19.708Z|
+|14／F36／虔诚雕刻师 DEVOTED_SCULPTOR|69→69；85→85；+0|0:力量药水 STRENGTH_POTION、1:药水形状的石头 POTION_SHAPED_ROCK→空|退出 REWARD；s471533→s471549；2026-10-21T00:36:55.782Z→2026-10-21T00:37:31.594Z|
+|15／F39／方柱构装体 CUBEX_CONSTRUCT／拳击构装体 PUNCH_CONSTRUCT|69→62；85→85；-7|空→空|退出 REWARD；s471561→s471581；2026-10-21T00:38:46.892Z→2026-10-21T00:39:53.736Z|
+|16／F43／电球头 GLOBE_HEAD|62→54；85→85；-8|0:力量药水 STRENGTH_POTION、1:技能药水 SKILL_POTION→空|退出 REWARD；s471610→s471634；2026-10-21T00:44:07.935Z→2026-10-21T00:45:01.899Z|
+|17／F45／组装师 FABRICATOR／守护机器人 GUARDBOT／戳刺机器人 STABBOT／电击机器人 ZAPBOT|54→54；85→85；+0|空→空|退出 REWARD；s471648→s471669；2026-10-21T00:46:16.464Z→2026-10-21T00:47:05.267Z|
+|18／F48／女王 QUEEN／火炬头聚合体 TORCH_HEAD_AMALGAM|76→24；85→85；-52|空→空|退出 REWARD；s471685→s471738；2026-10-21T00:49:09.137Z→2026-10-21T00:52:00.327Z|
+|19／F49／实验体 #C100 TEST_SUBJECT|24→11；85→85；-13（前缀）|空→空|SL/重载前截断，退出帧缺失；s471740→s471757；2026-10-21T00:52:01.769Z→2026-10-21T00:52:43.954Z|
+|20／F49／实验体 #C100 TEST_SUBJECT|24→4；85→85；-20（前缀）|空→空|SL/重载前截断，退出帧缺失；s471758→s471827；2026-10-21T00:52:55.349Z→2026-10-21T00:55:44.248Z|
+|21／F49／实验体 #C100 TEST_SUBJECT|24→13；85→85；-11（前缀）|空→空|SL/重载前截断，退出帧缺失；s471828→s471841；2026-10-21T00:55:55.710Z→2026-10-21T00:56:28.443Z|
+|22／F49／实验体 #C100 TEST_SUBJECT|24→0；85→85；-24|空→空|退出 GAME_OVER；s471842→s471913；2026-10-21T00:56:40.176Z→2026-10-21T00:59:29.859Z|
+逐轮需＝轮首活敌HP池；净扣＝到下一轮首/出口/截断末的活敌池减少，含毒/召唤/换相/轮初遗物，负值表示池增加；耗＝同区间玩家HP净减少。不是逐牌毛伤，不把未来阶段算入当前池，不把未执行终轮写成0。
+F2／窗口1：T[1, 2, 3, 4, 5]；需[55, 40, 34, 22, 12]；净扣[15, 6, 12, 10, 12]；耗[0, 0, 0, 0, 0]。
+F3／窗口2：T[1, 2, 3]；需[49, 26, 13]；净扣[23, 13, 13]；耗[0, 0, 0]。
+F5／窗口3：T[1, 2, 3, 4]；需[48, 33, 21, 8]；净扣[15, 12, 13, 8]；耗[0, 3, 0, 0]。
+F8／窗口4：T[1, 2, 3, 4, 5, 6, 7]；需[93, 71, 53, 46, 36, 25, 9]；净扣[22, 18, 7, 10, 11, 16, 9]；耗[0, 0, 3, 1, 11, 9, 0]。
+F12／窗口5：T[1, 2, 3, 4, 5, 6, 7]；需[150, 129, 122, 107, 85, 58, 29]；净扣[21, 7, 15, 22, 27, 29, 29]；耗[2, 0, 8, 4, 0, 0, 0]。
+F17／窗口6：T[1, 2, 3, 4, 5, 6, 7]；需[233, 216, 187, 167, 146, 115, 78]；净扣[17, 29, 20, 21, 31, 37, 78]；耗[0, 5, 4, 0, 0, 9, 0]。
+F19／窗口7：T[1, 2, 3]；需[69, 46, 28]；净扣[23, 18, 28]；耗[0, 0, 0]。
+F22／窗口8：T[1, 2, 3]；需[92, 45, 16]；净扣[47, 29, 16]；耗[1, 0, 0]。
+F24／窗口9：T[1, 2]；需[113, 5]；净扣[108, 5]；耗[-5, -2]。
+F28／窗口10：T[1, 2, 3, 4, 5]；需[150, 107, 68, 69, 4]；净扣[43, 39, -1, 65, 4]；耗[4, 16, 3, 8, 0]。
+F30／窗口11：T[1, 2, 3, 4, 5, 6, 7]；需[171, 146, 146, 146, 119, 92, 44]；净扣[25, 0, 0, 27, 27, 48, 44]；耗[0, 6, 7, 0, 5, 0, 0]。
+F33／窗口12：T[1, 2, 3, 4, 5, 6, 7, 8]；需[399, 374, 346, 322, 313, 240, 174, 110]；净扣[25, 28, 24, 9, 73, 66, 64, 110]；耗[0, 1, 8, 0, 0, 0, 5, 0]。
+F35／窗口13：T[1, 2, 3]；需[109, 99, 48]；净扣[10, 51, 48]；耗[0, 10, 0]。
+F36／窗口14：T[1, 2, 3]；需[172, 114, 79]；净扣[58, 35, 79]；耗[0, 0, 0]。
+F39／窗口15：T[1, 2, 3, 4, 5]；需[200, 154, 102, 66, 20]；净扣[46, 52, 36, 46, 20]；耗[0, 7, 0, 0, 0]。
+F43／窗口16：T[1, 2, 3, 4]；需[158, 120, 95, 44]；净扣[38, 25, 51, 44]；耗[0, 0, 8, 0]。
+F45／窗口17：T[1, 2, 3, 4]；需[155, 141, 130, 114]；净扣[14, 11, 16, 114]；耗[0, 0, 0, 0]。
+F48／窗口18：T[1, 2, 3, 4, 5, 6, 7]；需[630, 583, 576, 541, 473, 387, 277]；净扣[47, 7, 35, 68, 86, 110, 277]；耗[0, 2, 27, 14, 8, 1, 0]。
+F49／窗口19：T[1, 2, 3]；需[111, 51, 47]；净扣[60, 4, 12]；耗[0, 13, 0]。
+F49／窗口20：T[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13]；需[111, 51, 24, 212, 169, 135, 85, 12, 313, 306, 293, 288, 246]；净扣[60, 27, -188, 43, 34, 50, 73, -301, 7, 13, 5, 42, 2]；耗[0, 16, 0, 0, 0, 0, 4, 0, 0, 0, 0, 0, 0]。
+F49／窗口21：T[1, 2, 3]；需[111, 51, 47]；净扣[60, 4, 12]；耗[1, 10, 0]。
+F49／窗口22：T[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13]；需[111, 51, 24, 212, 169, 135, 85, 1, 313, 306, 266, 262, 178]；净扣[60, 27, -188, 43, 34, 50, 84, -312, 7, 40, 4, 84, 6]；耗[0, 16, 0, 0, 0, 0, 4, 0, 0, 0, 0, 3, 1]。
+
+药槽逐次变化（获得/饮用/丢弃以原动作和后继核，SL资源重载不计新获得）：
+F2T5 s471096→s471097（2026-10-21T00:08:28.372Z）槽变动：空→0:力量药水 STRENGTH_POTION；d@3190003448 {'action': 'claim_reward', 'option_index': 0} [completed: Action completed.]；d@3190005497 {'action': 'claim_reward', 'option_index': 0} [completed: Action completed.]。
+F3T1 s471102→s471103（2026-10-21T00:09:02.109Z）槽变动：0:力量药水 STRENGTH_POTION→空；d@3190187007 {'action': 'use_potion', 'option_index': 0} [completed: Action completed.]；d@3190237595 {'action': 'play_card', 'card_index': 0, 'target_index': 1} [completed: Action completed.]。
+F5T4 s471142→s471143（2026-10-21T00:10:42.853Z）槽变动：空→0:易伤药水 VULNERABLE_POTION；d@3190639861 {'action': 'claim_reward', 'option_index': 0} [completed: Action completed.]；d@3190641910 {'action': 'claim_reward', 'option_index': 0} [completed: Action completed.]。
+F8T1 s471159→s471160（2026-10-21T00:14:19.710Z）槽变动：0:易伤药水 VULNERABLE_POTION→空；d@3191714662 {'action': 'use_potion', 'option_index': 0, 'target_index': 0} [completed: Action completed.]；d@3191743273 {'action': 'play_card', 'card_index': 0, 'target_index': 0} [completed: Action completed.]。
+F12T1 s471202→s471203（2026-10-21T00:16:52.224Z）槽变动：空→0:药水形状的石头 POTION_SHAPED_ROCK；。
+F12T1 s471207→s471208（2026-10-21T00:16:59.845Z）槽变动：0:药水形状的石头 POTION_SHAPED_ROCK→空；d@3193140874 {'action': 'use_potion', 'option_index': 0, 'target_index': 0} [completed: Action completed.]。
+F14T未记录 s471245→s471246（2026-10-21T00:19:39.445Z）槽变动：空→0:能力药水 POWER_POTION；d@3194875450 {'action': 'buy_potion', 'option_index': 0} [completed: Action completed.]。
+F17T1 s471255→s471256（2026-10-21T00:20:05.214Z）槽变动：0:能力药水 POWER_POTION→0:能力药水 POWER_POTION、1:药水形状的石头 POTION_SHAPED_ROCK；。
+F17T2 s471262→s471263（2026-10-21T00:20:32.826Z）槽变动：0:能力药水 POWER_POTION、1:药水形状的石头 POTION_SHAPED_ROCK→0:能力药水 POWER_POTION；d@3195497797 {'action': 'use_potion', 'option_index': 1, 'target_index': 0} [completed: Action completed.]。
+F19T1 s471292→s471293（2026-10-21T00:23:01.496Z）槽变动：0:能力药水 POWER_POTION→0:能力药水 POWER_POTION、1:药水形状的石头 POTION_SHAPED_ROCK；。
+F19T1 s471298→s471299（2026-10-21T00:23:11.665Z）槽变动：0:能力药水 POWER_POTION、1:药水形状的石头 POTION_SHAPED_ROCK→0:能力药水 POWER_POTION；d@3195995640 {'action': 'use_potion', 'option_index': 1, 'target_index': 1} [completed: Action completed.]。
+F19T2 s471303→s471304（2026-10-21T00:23:23.617Z）槽变动：0:能力药水 POWER_POTION→空；d@3196062310 {'action': 'use_potion', 'option_index': 0} [pending (unstable): Action queued but state is still transitioning.]。
+F19T3 s471311→s471312（2026-10-21T00:23:34.410Z）槽变动：空→0:技能药水 SKILL_POTION；d@3196095029 {'action': 'claim_reward', 'option_index': 0} [completed: Action completed.]；d@3196097077 {'action': 'claim_reward', 'option_index': 0} [completed: Action completed.]。
+F22T1 s471324→s471325（2026-10-21T00:25:06.518Z）槽变动：0:技能药水 SKILL_POTION→0:技能药水 SKILL_POTION、1:药水形状的石头 POTION_SHAPED_ROCK；。
+F22T1 s471331→s471332（2026-10-21T00:25:17.892Z）槽变动：0:技能药水 SKILL_POTION、1:药水形状的石头 POTION_SHAPED_ROCK→0:技能药水 SKILL_POTION；d@3196843570 {'action': 'use_potion', 'option_index': 1, 'target_index': 0} [completed: Action completed.]。
+F22T3 s471338→s471339（2026-10-21T00:25:33.972Z）槽变动：0:技能药水 SKILL_POTION→0:技能药水 SKILL_POTION、1:再生药水 REGEN_POTION；d@3196905902 {'action': 'claim_reward', 'option_index': 0} [completed: Action completed.]；d@3196907972 {'action': 'claim_reward', 'option_index': 0} [completed: Action completed.]。
+F24T1 s471352→s471353（2026-10-21T00:26:57.015Z）槽变动：0:技能药水 SKILL_POTION、1:再生药水 REGEN_POTION→0:技能药水 SKILL_POTION；d@3197551776 {'action': 'use_potion', 'option_index': 1} [completed: Action completed.]；d@3197553987 {'action': 'use_potion', 'option_index': 0} [pending (unstable): Action queued but state is still transitioning.]。
+F24T1 s471353→s471354（2026-10-21T00:26:58.561Z）槽变动：0:技能药水 SKILL_POTION→空；d@3197553987 {'action': 'use_potion', 'option_index': 0} [pending (unstable): Action queued but state is still transitioning.]。
+F28T1 s471380→s471381（2026-10-21T00:28:44.616Z）槽变动：空→0:药水形状的石头 POTION_SHAPED_ROCK；。
+F28T1 s471386→s471387（2026-10-21T00:28:54.669Z）槽变动：0:药水形状的石头 POTION_SHAPED_ROCK→空；d@3199080114 {'action': 'use_potion', 'option_index': 0, 'target_index': 2} [completed: Action completed.]。
+F30T1 s471409→s471410（2026-10-21T00:30:37.969Z）槽变动：空→0:药水形状的石头 POTION_SHAPED_ROCK；。
+F30T1 s471415→s471416（2026-10-21T00:30:46.905Z）槽变动：0:药水形状的石头 POTION_SHAPED_ROCK→空；d@3200147103 {'action': 'use_potion', 'option_index': 0, 'target_index': 0} [completed: Action completed.]。
+F30T7 s471441→s471442（2026-10-21T00:31:49.934Z）槽变动：空→0:格挡药水 BLOCK_POTION；d@3200317434 {'action': 'claim_reward', 'option_index': 0} [completed: Action completed.]；d@3200319488 {'action': 'claim_reward', 'option_index': 0} [completed: Action completed.]。
+F33T1 s471454→s471455（2026-10-21T00:32:41.619Z）槽变动：0:格挡药水 BLOCK_POTION→0:格挡药水 BLOCK_POTION、1:药水形状的石头 POTION_SHAPED_ROCK；。
+F33T1 s471462→s471463（2026-10-21T00:32:59.876Z）槽变动：0:格挡药水 BLOCK_POTION、1:药水形状的石头 POTION_SHAPED_ROCK→0:格挡药水 BLOCK_POTION；d@3201321210 {'action': 'use_potion', 'option_index': 1, 'target_index': 0} [completed: Action completed.]。
+F33T2 s471470→s471471（2026-10-21T00:33:27.891Z）槽变动：0:格挡药水 BLOCK_POTION→空；d@3201412970 {'action': 'use_potion', 'option_index': 0} [completed: Action completed.]。
+F33T8 s471500→s471501（2026-10-21T00:34:46.776Z）槽变动：空→0:格挡药水 BLOCK_POTION；d@3201748602 {'action': 'claim_reward', 'option_index': 0} [completed: Action completed.]；d@3201750652 {'action': 'claim_reward', 'option_index': 0} [completed: Action completed.]。
+F35T1 s471507→s471508（2026-10-21T00:35:36.595Z）槽变动：0:格挡药水 BLOCK_POTION→0:格挡药水 BLOCK_POTION、1:药水形状的石头 POTION_SHAPED_ROCK；。
+F35T2 s471517→s471518（2026-10-21T00:36:03.757Z）槽变动：0:格挡药水 BLOCK_POTION、1:药水形状的石头 POTION_SHAPED_ROCK→1:药水形状的石头 POTION_SHAPED_ROCK；d@3201944429 {'action': 'use_potion', 'option_index': 0} [completed: Action completed.]；d@3201946627 {'action': 'use_potion', 'option_index': 1, 'target_index': 2} [completed: Action completed.]。
+F35T2 s471518→s471519（2026-10-21T00:36:04.543Z）槽变动：1:药水形状的石头 POTION_SHAPED_ROCK→空；d@3201946627 {'action': 'use_potion', 'option_index': 1, 'target_index': 2} [completed: Action completed.]。
+F35T3 s471526→s471527（2026-10-21T00:36:20.008Z）槽变动：空→0:力量药水 STRENGTH_POTION；d@3201961950 {'action': 'claim_reward', 'option_index': 0} [completed: Action completed.]；d@3201964000 {'action': 'claim_reward', 'option_index': 0} [completed: Action completed.]。
+F36T1 s471532→s471533（2026-10-21T00:36:55.782Z）槽变动：0:力量药水 STRENGTH_POTION→0:力量药水 STRENGTH_POTION、1:药水形状的石头 POTION_SHAPED_ROCK；。
+F36T1 s471538→s471539（2026-10-21T00:37:09.211Z）槽变动：0:力量药水 STRENGTH_POTION、1:药水形状的石头 POTION_SHAPED_ROCK→0:力量药水 STRENGTH_POTION；d@3202103575 {'action': 'use_potion', 'option_index': 1, 'target_index': 0} [completed: Action completed.]。
+F36T2 s471543→s471544（2026-10-21T00:37:21.544Z）槽变动：0:力量药水 STRENGTH_POTION→空；d@3202147895 {'action': 'use_potion', 'option_index': 0} [completed: Action completed.]；d@3202175120 {'action': 'play_card', 'card_index': 2, 'target_index': 0} [completed: Action completed.]。
+F39T5 s471582→s471583（2026-10-21T00:39:54.014Z）槽变动：空→0:力量药水 STRENGTH_POTION；d@3202822090 {'action': 'claim_reward', 'option_index': 0} [completed: Action completed.]；d@3202824140 {'action': 'claim_reward', 'option_index': 0} [completed: Action completed.]。
+F40T未记录 s471596→s471597（2026-10-21T00:43:20.573Z）槽变动：0:力量药水 STRENGTH_POTION→0:力量药水 STRENGTH_POTION、1:技能药水 SKILL_POTION；d@3203314088 {'action': 'buy_potion', 'option_index': 0} [completed: Action completed.]。
+F43T1 s471613→s471614（2026-10-21T00:44:20.307Z）槽变动：0:力量药水 STRENGTH_POTION、1:技能药水 SKILL_POTION→1:技能药水 SKILL_POTION；d@3203764359 {'action': 'use_potion', 'option_index': 0} [completed: Action completed.]；d@3203766623 {'action': 'play_card', 'card_index': 0, 'target_index': 0} [completed: Action completed.]。
+F43T1 s471616→s471617（2026-10-21T00:44:26.010Z）槽变动：1:技能药水 SKILL_POTION→空；d@3203771240 {'action': 'use_potion', 'option_index': 1} [pending (unstable): Action queued but state is still transitioning.]。
+
+药水计数：非SL槽位新增观察19瓶；use_potion动作19次（含SL重复饮用，不能当独立获得）；discard_potion动作0次；buy_potion动作2次。槽位重载不计补充；各动作回执/变化按上表，过渡态不单凭queued判完整效果。
+
+战外HP/max HP变化与SL恢复：
+F6→F6 EVENT s471147→s471148（2026-10-21T00:11:39.400Z）：HP53→52，max70→72；战外/开场资源变化；{'action': 'choose_event_option', 'option_index': 0}；{'action': 'choose_event_option', 'option_index': 0}。
+F6→F6 EVENT s471148→s471149（2026-10-21T00:12:00.440Z）：HP52→50，max72→74；战外/开场资源变化；{'action': 'choose_event_option', 'option_index': 0}；{'action': 'choose_event_option', 'option_index': 0}。
+F6→F6 EVENT s471149→s471150（2026-10-21T00:12:17.968Z）：HP50→47，max74→76；战外/开场资源变化；{'action': 'choose_event_option', 'option_index': 0}；{'action': 'choose_event_option', 'option_index': 0}。
+F6→F6 EVENT s471150→s471151（2026-10-21T00:12:41.642Z）：HP47→43，max76→78；战外/开场资源变化；{'action': 'choose_event_option', 'option_index': 0}；{'action': 'choose_event_option', 'option_index': 0}。
+F6→F6 EVENT s471151→s471152（2026-10-21T00:13:09.842Z）：HP43→38，max78→80；战外/开场资源变化；{'action': 'choose_event_option', 'option_index': 0}；{'action': 'choose_event_option', 'option_index': 1}。
+F7→F7 REST s471155→s471156（2026-10-21T00:14:09.353Z）：HP38→62，max80→80；战外/开场资源变化；{'action': 'choose_rest_option', 'option_index': 0}；{'action': 'proceed'}。
+F11→F11 REST s471200→s471201（2026-10-21T00:16:51.023Z）：HP38→62，max80→80；战外/开场资源变化；{'action': 'choose_rest_option', 'option_index': 0}；{'action': 'proceed'}。
+F16→F16 REST s471253→s471254（2026-10-21T00:20:04.058Z）：HP48→72，max80→80；战外/开场资源变化；{'action': 'choose_rest_option', 'option_index': 0}；{'action': 'proceed'}。
+F17→F18 EVENT s471289→s471290（2026-10-21T00:22:59.619Z）：HP54→74，max80→80；战外/开场资源变化；{'action': 'choose_map_node', 'option_index': 0}；{'action': 'choose_event_option', 'option_index': 2}。
+F28→F28 REWARD s471402→s471403（2026-10-21T00:29:48.035Z）：HP49→56，max80→87；战外/开场资源变化；{'action': 'claim_reward', 'option_index': 0}；{'action': 'claim_reward', 'option_index': 0}。
+F29→F29 REST s471407→s471408（2026-10-21T00:30:36.648Z）：HP56→82，max87→87；战外/开场资源变化；{'action': 'choose_rest_option', 'option_index': 0}；{'action': 'proceed'}。
+F33→F34 EVENT s471504→s471505（2026-10-21T00:35:34.763Z）：HP50→79，max87→87；战外/开场资源变化；{'action': 'choose_map_node', 'option_index': 0}；{'action': 'choose_event_option', 'option_index': 2}。
+F46→F46 EVENT s471676→s471677（2026-10-21T00:48:20.328Z）：HP54→51，max85→85；战外/开场资源变化；{'action': 'choose_event_option', 'option_index': 1}；未记录。
+F47→F47 REST s471682→s471683（2026-10-21T00:49:07.798Z）：HP51→76，max85→85；战外/开场资源变化；{'action': 'choose_rest_option', 'option_index': 0}；{'action': 'proceed'}。
+F49→F49 COMBAT s471757→s471758（2026-10-21T00:52:55.349Z）：HP11→24，max85→85；SL恢复，非回血；{'action': 'end_turn'}；{'action': 'play_card', 'card_index': 1, 'target_index': 0}。
+F49→F49 COMBAT s471827→s471828（2026-10-21T00:55:55.710Z）：HP4→24，max85→85；SL恢复，非回血；{'action': 'end_turn'}；{'action': 'play_card', 'card_index': 1, 'target_index': 0}。
+F49→F49 COMBAT s471841→s471842（2026-10-21T00:56:40.176Z）：HP13→24，max85→85；SL恢复，非回血；{'action': 'end_turn'}；{'action': 'play_card', 'card_index': 1, 'target_index': 0}。
+
+SL原始台账（退出胜负以原行result与实帧分列）：
+{"offset": 51493060, "floor": 17, "attempt": 1, "started_at": "2026-10-21T00:20:05.215Z", "ended_at": "2026-10-21T00:21:38.113Z", "result": "won", "turns": 7, "end_hp": 54}。
+{"offset": 51513717, "floor": 33, "attempt": 1, "started_at": "2026-10-21T00:32:41.620Z", "ended_at": "2026-10-21T00:34:46.485Z", "result": "won", "turns": 8, "end_hp": 50}。
+{"offset": 51532301, "floor": 48, "attempt": 1, "started_at": "2026-10-21T00:49:09.138Z", "ended_at": "2026-10-21T00:52:00.324Z", "result": "won", "turns": 7, "end_hp": 24}。
+{"offset": 51554298, "floor": 49, "attempt": 1, "started_at": "2026-10-21T00:52:01.770Z", "ended_at": "2026-10-21T00:52:53.168Z", "result": "predicted_death", "turns": 3, "end_hp": 11}。
+{"offset": 51562532, "floor": 49, "attempt": 2, "started_at": "2026-10-21T00:52:53.168Z", "ended_at": "2026-10-21T00:55:53.446Z", "result": "predicted_death", "turns": 13, "end_hp": 4}。
+{"offset": 51587348, "floor": 49, "attempt": 3, "started_at": "2026-10-21T00:55:53.447Z", "ended_at": "2026-10-21T00:56:38.368Z", "result": "predicted_death", "turns": 3, "end_hp": 13}。
+{"offset": 51597529, "floor": 49, "attempt": 4, "started_at": "2026-10-21T00:56:38.369Z", "ended_at": "2026-10-21T00:59:29.855Z", "result": "died", "turns": 13, "end_hp": 0}。
+
+
+
+Jev低信心（confidence<0.35）31次。原始request 154条／有answers 153条／有非空error 1条；失败行token缺失不补0测量。只纳入原答plan且simulation_reference.rollout明确best/tied的题，选入集合118/122＝96.72%；它是原回答比例，不是护栏/SL后的实际最优执行率。带focus候选题25，原答选带focus候选13；focus是候选目标标签，不是实杀顺序。按资源窗口/回合首个非continue战斗决定计，代码43轮、Jev76轮；续步和同轮重问不重复计，游戏接管首轮不假称Jev选择。selection_dispatch 125条，gate_reject未见匹配字段（非保证所有动作完整执行）；原回执state_effect_verified=false／whole_plan_executed=null保持。完整实线采用率、全局逐敌精确击杀序未完成逐题验收，写未记录。
+
+
+
+HP护栏按决定审计8条；逐条层/轮/尝试及预测省血、伤害代价见numeric-audit.json（不将同轮重复与SL前候选差值累加为实收益）。真实未执行分支代价未记录。实际采用须连原chosen/result、SL审计和后继状态；替换本身不认定纯bug。
+
+
+
+首末decision 2026-10-21T00:07:15.656Z→2026-10-21T00:59:29.859Z，用时3134.203秒。runs.tokens、ds_tokens_in/out与ds_cache_hit原值另见下列核对；brain原始51条、accepted=true 51条，engine均codex。DeepSeek-reasoning按本局首末决策时间窗无匹配；旧DeepSeek字段名不证明使用DeepSeek。Jev原始入/出token合计1295534/9149；Jev缓存未记录。
+
+
+
+V6配置mode=on，card/potion/shop/rest均brain，reflex=off，direction_replan=off；本批冻结v6-build流本局no_match，entries／jev_answer／fallback／unknown均无本局原行可解释，不以0补含义；Jev request／answers／error按上文单列。完整题面不表示采用、成功或收益。runs.code=current，run-config的commit/code/dirty均null并报spawnSync git ENOBUFS，历史精确源码SHA未记录；引用当前只读live 5a295bb5ed52f0c0fa5e8c045dcfcba3d894b532的行号仅解释现行代码，不能冒充本局历史源码。
+
+
+
+证据：本批scratch=/home/dw/Projects/agent-sts2/learner/runs/20261021-111306-e35f946f-318e-40c4-b79a-93cc27f607e0-postmortem；evidence-summary.json仅作索引，v6-evidence/evidence-manifest.json保留整流冻结字节切点/SHA与历史无效JSON；CEN1Z8HEU7NM-raw-index.json保留本局states/decisions/run-plans/brain/config/SL每条offset/bytes/SHA。原始两流各条身份、精确decision_id、chosen/result/gate_reject/selection_dispatch及后继索引见question-receipts.json；归局仅用显式run_id或核对的精确decision_id，不靠正文、时间邻近或题号相似。
+
+
+
+完整题面阅读全文2/154条：j73790、j73829；其余152条只机械核原字节、身份、回答/错误、派发和后继索引，未全文语义审阅。原因是本次按关键决定有界复盘；覆盖与未读行逐条在coverage.json，不能称末五条或整局所有问题都已验收。
+
+
+
+未记录／限制：完整路线HP预测与逐节点实到的配对验收（这里只核末次即时回血投影）、传统Boss时钟需要/估计与同输入实打/估值比（原act_boss_clock输出/失血/存活/缺口为null，不能据单体HP补造）、未读全题的构筑边际效应、全部实线采用率／精确杀序、逐击敌方毛伤／过量伤害、未执行护栏/留药/早喝/换目标分支的真实胜负、Jev缓存、历史精确源码SHA和原生档位生效回执。退出帧缺失、SL截断与实死已分列；瀑布巨兽壳的999999999标记不作需伤或净扣数字。三条经验均为旧观察的有限支持，不登记新错误/repeat；本批没有新定位纯bug。相关代码提案保存proposal-CEN1Z8HEU7NM.md，交独立strategy-proposal验证，证据不足保持现行行为；不改源码/知识、不提交、不登记implemented/shipped，提证不证明正式发布、下一局消费或自然收益。
+
+原始局表核对：tokens=1304683；ds_tokens_in=2031305，ds_tokens_out=36046，ds_cache_hit=0；零命中仅属该兼容字段。decisions=816，ended=2026-10-21T00:59:29.859Z，victory=False。
+
+
+
+## 36VNKZKABGB4（A10，静默猎手，第48层，死于永世沙漏 AEONGLASS：四试72/75血带肌肉药水与能力药水进场，前三试T11／T10／T11判死；末试T11仅10血12挡对19×2＝38攻击，完整需损26、存活差17血，敌终态213/535血）
+
+
+
+- [凋萎持牌伤必须和攻击一起支付；打法（Jev出牌、代码终线）] 末试永世沙漏 AEONGLASS T10最后手持四张凋萎 WITHER、每张12伤，敌虚弱后29攻击、玩家44挡，完整需损29＋48−44＝33，实血43→10；T11通过必备工具 TOOLS_OF_THE_TRADE 弃掉12伤凋萎，末手无凋萎仍以12挡不足38攻击而死。不能把T10死因模板直接套到T11；本局最终致死窗口不是仍持凋萎。（之前学过：silent-0024，S1.exp202）
+
+- [破制品和建立属性不等于压住敌方成长；打法（Jev出牌）] 沙漏 AEONGLASS 起始人工制品 ARTIFACT_POWER=3，末试T3前仍1层，T4才清掉；非凡技艺+ PROWESS建立2力量／2敏捷，而敌到T10已有13力量。末T11尖啸 PIERCING_WAIL使敌13→7力量、双击50→38，防御+实际10挡加两次余像 AFTERIMAGE_POWER 合12，仍不足；只补现场属性与威胁，不把2敏或减6力当作已挡住当前回合。（之前学过：silent-0025，S1.exp203）
+
+- [同轮两次护栏重问不能相加成两份保血；打法（代码HP护栏、Jev原选出牌）] 第三试T7，Jev先选蛇咬 SNAKEBITE＋两防御+ DEFEND_SILENT，护栏换成两防御+＋后空翻+ BACKFLIP；续问再将蛇咬改为后空翻+。两条审计各写预测省10血／少7伤，属同一尝试同一回合，抽牌与后续SL使真实反事实未记录。该试后到T11判死，不能把两条相加成20实回血，也不证明取消护栏可赢。（之前学过：silent-0125，S1.exp198）
+
+
+
+- [记录] Codex先规划“三精英、五营火”，后选黄金印 SEAL_OF_GOLD，第三幕原话“灵体保护启动；三火双店避精英，备战连王。”；构筑含蛇咬、致命毒药、毒雾、暴露 EXPOSE、非凡技艺 PROWESS、连续反弹 RICOCHET、钢铁风暴 STORM_OF_STEEL和三张灵体 APPARITION。F43选择升级钢铁风暴以配微型大炮 MINIATURE_CANNON；这是当时理由，不是本复盘证明该选择有收益。F45青蛙骑士 FROG_KNIGHT胜战60→45，F46事件进房资源变化后50血，F47丢虚弱药水 WEAK_POTION再休息，小邮箱 TINY_MAILBOX实补两瓶；题面回血后72/75，F48实到72/75。 j73973首试T2完整两候选：喝肌肉药水再小刀+ SHIV为当轮损18／扣4，不喝为损18／扣0，后一线仍在8/8后续样本喝药；Jev0.52选不喝plan2，chosen小刀、completed。随后仍可重规划，实际T2净损15（72→57），不是把“后续会喝”当本轮已经喝或拿当轮3血差证明留药收益。j74099末试T11完整弃牌题以0.76弃凋萎，后继手牌核无凋萎，终线实际由代码防御+、尖啸。单体沙漏未被击杀；四次尝试分别分账。
+
+
+
+机制：非凡技艺+ PROWESS实建2力量／2敏捷；余像 AFTERIMAGE建立1层，末T11防御+基础8＋2敏给10再由余像加1到11，尖啸又加1到12；尖啸使敌力量13→7、意图25×2→19×2，少12来袭，完整仍需损26。末试T7喝肌肉药水 FLEX_POTION力量2→7、下轮回2；不能把临时5力量计入后续每轮。T10四张各12伤凋萎与格挡共用预算；T11已经弃掉唯一凋萎。沿0024／0025／0023补已有条件，非新胜负规则。
+
+
+
+实盘资源链（含胜战；HP净变化含自伤/回血，不是敌方总伤；缺退出帧只报已观察前缀）：
+|窗口／层／敌人|HP；max HP；净变化|药槽入→出或截断末|出口／证据行与UTC时间|
+|---|---|---|---|
+|1／F2／噬尸蛞蝓 CORPSE_SLUG|56→53；70→70；-3|空→空|退出 REWARD；s471920→s471942；2026-10-21T01:02:36.118Z→2026-10-21T01:03:27.569Z|
+|2／F3／淤泥旋螺 SLUDGE_SPINNER|53→41；70→70；-12|空→空|退出 REWARD；s471947→s471960；2026-10-21T01:03:53.499Z→2026-10-21T01:04:15.093Z|
+|3／F6／海洋混混 SEAPUNK|41→41；70→70；+0|0:爆炸安瓿 EXPLOSIVE_AMPOULE→空|退出 REWARD；s471975→s471990；2026-10-21T01:05:43.493Z→2026-10-21T01:06:14.043Z|
+|4／F8／骇鳗 TERROR_EEL|62→45；70→70；-17|空→空|退出 REWARD；s471998→s472024；2026-10-21T01:07:11.479Z→2026-10-21T01:08:17.580Z|
+|5／F12／鬼祟珊瑚群 SKULKING_COLONY|66→65；70→70；-1|0:敏捷药水 DEXTERITY_POTION→空|退出 REWARD；s472042→s472070；2026-10-21T01:10:00.886Z→2026-10-21T01:10:55.630Z|
+|6／F17／瀑布巨兽 WATERFALL_GIANT|70→42；70→71；-28|空→空|退出 COMBAT；s472091→s472137；2026-10-21T01:13:51.317Z→2026-10-21T01:16:04.501Z|
+|7／F19／外骨骼虫 EXOSKELETON|65→65；71→72；+0|空→空|退出 COMBAT；s472146→s472174；2026-10-21T01:17:03.182Z→2026-10-21T01:18:01.893Z|
+|8／F22／盛碗虫（蜜） BOWLBUG_NECTAR／盛碗虫（石） BOWLBUG_ROCK|59→60；72→73；+1|0:能力药水 POWER_POTION→0:能力药水 POWER_POTION|退出 COMBAT；s472191→s472206；2026-10-21T01:20:13.374Z→2026-10-21T01:20:52.289Z|
+|9／F24／直飞产卵虫 OVICOPTER／结实的卵 TOUGH_EGG|50→38；73→74；-12|0:能力药水 POWER_POTION→0:能力药水 POWER_POTION|退出 COMBAT；s472216→s472245；2026-10-21T01:21:53.879Z→2026-10-21T01:23:31.688Z|
+|10／F28／寄生惧魔 PARAFRIGHT／胧光怪 THE_OBSCURA|60→61；74→75；+1|0:能力药水 POWER_POTION、1:敏捷药水 DEXTERITY_POTION→0:能力药水 POWER_POTION、1:敏捷药水 DEXTERITY_POTION|退出 COMBAT；s472264→s472275；2026-10-21T01:25:49.024Z→2026-10-21T01:26:13.216Z|
+|11／F30／感染棱柱 INFESTED_PRISM|61→53；75→76；-8|0:能力药水 POWER_POTION、1:敏捷药水 DEXTERITY_POTION→空|退出 COMBAT；s472285→s472321；2026-10-21T01:27:48.795Z→2026-10-21T01:29:01.677Z|
+|12／F33／无厌沙虫 THE_INSATIABLE|75→25；76→77；-50|0:速度药水 SPEED_POTION、1:火焰药水 FIRE_POTION→空|退出 COMBAT；s472339→s472387；2026-10-21T01:31:17.426Z→2026-10-21T01:33:43.773Z|
+|13／F35／咬人卷轴 SCROLL_OF_BITING|66→54；77→72；-12|空→空|退出 COMBAT；s472396→s472417；2026-10-21T01:35:16.183Z→2026-10-21T01:36:10.733Z|
+|14／F37／虔诚雕刻师 DEVOTED_SCULPTOR|54→55；72→73；+1|0:复制药水 DUPLICATOR→空|退出 COMBAT；s472428→s472454；2026-10-21T01:37:20.294Z→2026-10-21T01:38:17.737Z|
+|15／F39／猫头鹰法官 OWL_MAGISTRATE|44→33；73→74；-11|空→空|退出 COMBAT；s472464→s472509；2026-10-21T01:39:45.126Z→2026-10-21T01:41:28.874Z|
+|16／F45／青蛙骑士 FROG_KNIGHT|60→45；74→75；-15|0:液态记忆 LIQUID_MEMORIES、1:迅捷药水 SWIFT_POTION→空|退出 COMBAT；s472536→s472577；2026-10-21T01:44:59.056Z→2026-10-21T01:46:46.179Z|
+|17／F48／永世沙漏 AEONGLASS|72→4；75→75；-68（前缀）|0:肌肉药水 FLEX_POTION、1:能力药水 POWER_POTION→空|SL/重载前截断，退出帧缺失；s472593→s472673；2026-10-21T01:48:08.876Z→2026-10-21T01:51:40.052Z|
+|18／F48／永世沙漏 AEONGLASS|72→44；75→75；-28（前缀）|0:肌肉药水 FLEX_POTION、1:能力药水 POWER_POTION→空|SL/重载前截断，退出帧缺失；s472674→s472750；2026-10-21T01:51:46.358Z→2026-10-21T01:55:25.815Z|
+|19／F48／永世沙漏 AEONGLASS|72→4；75→75；-68（前缀）|0:肌肉药水 FLEX_POTION、1:能力药水 POWER_POTION→空|SL/重载前截断，退出帧缺失；s472751→s472838；2026-10-21T01:55:31.941Z→2026-10-21T01:59:51.614Z|
+|20／F48／永世沙漏 AEONGLASS|72→0；75→75；-72|0:肌肉药水 FLEX_POTION、1:能力药水 POWER_POTION→空|退出 GAME_OVER；s472839→s472918；2026-10-21T01:59:57.874Z→2026-10-21T02:03:33.338Z|
+逐轮需＝轮首活敌HP池；净扣＝到下一轮首/出口/截断末的活敌池减少，含毒/召唤/换相/轮初遗物，负值表示池增加；耗＝同区间玩家HP净减少。不是逐牌毛伤，不把未来阶段算入当前池，不把未执行终轮写成0。
+F2／窗口1：T[1, 2, 3, 4, 5]；需[55, 40, 28, 25, 7]；净扣[15, 12, 3, 18, 7]；耗[0, 3, 0, 0, 0]。
+F3／窗口2：T[1, 2, 3]；需[41, 33, 21]；净扣[8, 12, 21]；耗[0, 12, 0]。
+F6／窗口3：T[1, 2, 3, 4]；需[49, 27, 16, 4]；净扣[22, 11, 12, 4]；耗[0, 0, 0, 0]。
+F8／窗口4：T[1, 2, 3, 4, 5, 6, 7]；需[150, 135, 121, 103, 86, 50, 18]；净扣[15, 14, 18, 17, 36, 32, 18]；耗[3, 2, 8, 4, 0, 0, 0]。
+F12／窗口5：T[1, 2, 3, 4, 5, 6]；需[80, 67, 50, 45, 29, 20]；净扣[13, 17, 5, 16, 9, 20]；耗[0, 0, 0, 1, 0, 0]。
+F17／窗口6：T[1, 2, 3, 4, 5, 6, 7, 8, 9, 10]；需[250, 244, 220, 204, 186, 149, 105, 64, 20, 未记录]；净扣[6, 24, 16, 18, 37, 44, 41, 44, 未记录, 未记录]；耗[0, 7, 3, 0, 7, 0, 0, 0, 0, 11]。
+F19／窗口7：T[1, 2, 3, 4, 5]；需[83, 69, 48, 42, 12]；净扣[14, 21, 6, 30, 12]；耗[0, 1, 0, 0, -1]。
+F22／窗口8：T[1, 2, 3]；需[85, 78, 12]；净扣[7, 66, 12]；耗[0, 0, -1]。
+F24／窗口9：T[1, 2, 3, 4, 5]；需[130, 165, 149, 71, 70]；净扣[-35, 16, 78, 1, 70]；耗[0, 0, 13, 0, -1]。
+F28／窗口10：T[1, 2]；需[129, 52]；净扣[77, 52]；耗[0, -1]。
+F30／窗口11：T[1, 2, 3, 4, 5]；需[171, 154, 77, 69, 15]；净扣[17, 77, 8, 54, 15]；耗[2, 7, 0, 0, -1]。
+F33／窗口12：T[1, 2, 3, 4, 5, 6, 7, 8]；需[341, 326, 193, 175, 146, 100, 67, 33]；净扣[15, 133, 18, 29, 46, 33, 34, 33]；耗[0, 12, 13, 0, 13, 13, 0, -1]。
+F35／窗口13：T[1, 2, 3, 4, 5]；需[104, 48, 48, 18, 3]；净扣[56, 0, 30, 15, 3]；耗[13, 0, 0, 0, -1]。
+F37／窗口14：T[1, 2, 3, 4]；需[172, 161, 131, 123]；净扣[11, 30, 8, 123]；耗[0, 0, 0, -1]。
+F39／窗口15：T[1, 2, 3, 4, 5, 6, 7, 8, 9]；需[247, 181, 156, 145, 130, 120, 100, 72, 33]；净扣[66, 25, 11, 15, 10, 20, 28, 39, 33]；耗[2, 2, 0, 0, 0, 8, 0, 0, -1]。
+F45／窗口16：T[1, 2, 3, 4, 5, 6]；需[199, 73, 63, 57, 50, 35]；净扣[126, 10, 6, 7, 15, 35]；耗[0, 0, 0, 16, 0, -1]。
+F48／窗口17：T[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]；需[535, 519, 519, 511, 510, 501, 474, 299, 280, 260, 215]；净扣[16, 0, 8, 1, 9, 27, 175, 19, 20, 45, 0]；耗[0, 15, 0, 4, 0, 0, 0, 10, 0, 39, 0]。
+F48／窗口18：T[1, 2, 3, 4, 5, 6, 7, 8, 9, 10]；需[535, 514, 514, 506, 505, 496, 473, 448, 436, 363]；净扣[21, 0, 8, 1, 9, 23, 25, 12, 73, 15]；耗[0, 12, 0, 8, 0, 0, 0, 8, 0, 0]。
+F48／窗口19：T[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]；需[535, 519, 519, 511, 510, 501, 466, 455, 443, 339, 309]；净扣[16, 0, 8, 1, 9, 35, 11, 12, 104, 30, 3]；耗[0, 15, 0, 4, 0, 0, 0, 10, 0, 39, 0]。
+F48／窗口20：T[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]；需[535, 519, 519, 511, 510, 501, 474, 299, 280, 260, 235]；净扣[16, 0, 8, 1, 9, 27, 175, 19, 20, 25, 22]；耗[0, 15, 0, 4, 0, 0, 0, 10, 0, 33, 10]。
+
+药槽逐次变化（获得/饮用/丢弃以原动作和后继核，SL资源重载不计新获得）：
+F3T3 s471961→s471962（2026-10-21T01:04:15.392Z）槽变动：空→0:爆炸安瓿 EXPLOSIVE_AMPOULE；d@3208138075 {'action': 'claim_reward', 'option_index': 0} [completed: Action completed.]；d@3208140124 {'action': 'claim_reward', 'option_index': 0} [completed: Action completed.]。
+F6T1 s471979→s471980（2026-10-21T01:05:51.292Z）槽变动：0:爆炸安瓿 EXPLOSIVE_AMPOULE→空；d@3208996627 {'action': 'use_potion', 'option_index': 0} [completed: Action completed.]。
+F8T7 s472025→s472026（2026-10-21T01:08:17.862Z）槽变动：空→0:敏捷药水 DEXTERITY_POTION；d@3209900083 {'action': 'claim_reward', 'option_index': 0} [completed: Action completed.]；d@3209902133 {'action': 'claim_reward', 'option_index': 0} [completed: Action completed.]。
+F12T1 s472044→s472045（2026-10-21T01:10:07.638Z）槽变动：0:敏捷药水 DEXTERITY_POTION→空；d@3211033763 {'action': 'use_potion', 'option_index': 0} [completed: Action completed.]；d@3211036030 {'action': 'play_card', 'card_index': 0} [completed: Action completed.]。
+F19T5 s472176→s472177（2026-10-21T01:18:03.552Z）槽变动：空→0:能力药水 POWER_POTION；d@3213916713 {'action': 'claim_reward', 'option_index': 0} [completed: Action completed.]；d@3213918763 {'action': 'claim_reward', 'option_index': 0} [completed: Action completed.]。
+F27T未记录 s472260→s472261（2026-10-21T01:25:47.679Z）槽变动：0:能力药水 POWER_POTION→0:能力药水 POWER_POTION、1:敏捷药水 DEXTERITY_POTION；d@3218135896 {'action': 'claim_reward', 'option_index': 0} [completed: Action completed.]。
+F30T1 s472286→s472287（2026-10-21T01:27:55.764Z）槽变动：0:能力药水 POWER_POTION、1:敏捷药水 DEXTERITY_POTION→1:敏捷药水 DEXTERITY_POTION；d@3219289978 {'action': 'use_potion', 'option_index': 0} [pending (unstable): Action queued but state is still transitioning.]。
+F30T1 s472294→s472295（2026-10-21T01:28:07.432Z）槽变动：1:敏捷药水 DEXTERITY_POTION→空；d@3219431489 {'action': 'use_potion', 'option_index': 1} [completed: Action completed.]；d@3219433786 {'action': 'play_card', 'card_index': 0} [completed: Action completed.]。
+F32T未记录 s472335→s472336（2026-10-21T01:31:15.894Z）槽变动：空→0:速度药水 SPEED_POTION；d@3221952739 {'action': 'claim_reward', 'option_index': 0} [completed: Action completed.]；d@3221954796 {'action': 'claim_reward', 'option_index': 0} [completed: Action completed.]。
+F32T未记录 s472336→s472337（2026-10-21T01:31:16.046Z）槽变动：0:速度药水 SPEED_POTION→0:速度药水 SPEED_POTION、1:火焰药水 FIRE_POTION；d@3221954796 {'action': 'claim_reward', 'option_index': 0} [completed: Action completed.]。
+F33T2 s472352→s472353（2026-10-21T01:32:12.794Z）槽变动：0:速度药水 SPEED_POTION、1:火焰药水 FIRE_POTION→1:火焰药水 FIRE_POTION；d@3222222316 {'action': 'use_potion', 'option_index': 0} [completed: Action completed.]；d@3222224349 {'action': 'use_potion', 'option_index': 1, 'target_index': 0} [completed: Action completed.]。
+F33T2 s472353→s472354（2026-10-21T01:32:13.578Z）槽变动：1:火焰药水 FIRE_POTION→空；d@3222224349 {'action': 'use_potion', 'option_index': 1, 'target_index': 0} [completed: Action completed.]。
+F35T5 s472419→s472420（2026-10-21T01:36:12.185Z）槽变动：空→0:复制药水 DUPLICATOR；d@3222851593 {'action': 'claim_reward', 'option_index': 0} [completed: Action completed.]；d@3222853641 {'action': 'claim_reward', 'option_index': 0} [completed: Action completed.]。
+F37T4 s472452→s472453（2026-10-21T01:38:15.392Z）槽变动：0:复制药水 DUPLICATOR→空；d@3223609140 {'action': 'use_potion', 'option_index': 0} [completed: Action completed.]；d@3223611451 {'action': 'play_card', 'card_index': 1} [completed: Action completed.]。
+F39T9 s472511→s472512（2026-10-21T01:41:30.555Z）槽变动：空→0:液态记忆 LIQUID_MEMORIES；d@3224227810 {'action': 'claim_reward', 'option_index': 0} [completed: Action completed.]；d@3224229858 {'action': 'claim_reward', 'option_index': 0} [completed: Action completed.]。
+F40T未记录 s472517→s472518（2026-10-21T01:43:07.415Z）槽变动：0:液态记忆 LIQUID_MEMORIES→0:液态记忆 LIQUID_MEMORIES、1:迅捷药水 SWIFT_POTION；d@3224853359 {'action': 'claim_reward', 'option_index': 0} [completed: Action completed.]。
+F45T1 s472545→s472546（2026-10-21T01:45:26.147Z）槽变动：0:液态记忆 LIQUID_MEMORIES、1:迅捷药水 SWIFT_POTION→1:迅捷药水 SWIFT_POTION；d@3225748567 {'action': 'use_potion', 'option_index': 0} [pending (unstable): Action queued but state is still transitioning.]。
+F45T2 s472551→s472552（2026-10-21T01:45:45.924Z）槽变动：1:迅捷药水 SWIFT_POTION→空；d@3225803672 {'action': 'use_potion', 'option_index': 1} [completed: Action completed.]。
+F45T6 s472579→s472580（2026-10-21T01:46:48.111Z）槽变动：空→0:虚弱药水 WEAK_POTION；d@3226017735 {'action': 'claim_reward', 'option_index': 0} [completed: Action completed.]；d@3226019783 {'action': 'claim_reward', 'option_index': 0} [completed: Action completed.]。
+F47T未记录 s472587→s472588（2026-10-21T01:47:56.980Z）槽变动：0:虚弱药水 WEAK_POTION→空；d@3226285112 {'action': 'discard_potion', 'option_index': 0} [completed: Action completed.]；d@3226780924 {'action': 'choose_rest_option', 'option_index': 0} [failed (wait): cannot reach the STS2-Agent mod at http://127.0.0.1:8080/action: the request timed out]。
+F47T未记录 s472589→s472590（2026-10-21T01:48:07.352Z）槽变动：空→0:肌肉药水 FLEX_POTION；d@3226783029 {'action': 'claim_reward', 'option_index': 0} [completed: Action completed.]；d@3226785086 {'action': 'claim_reward', 'option_index': 0} [completed: Action completed.]。
+F47T未记录 s472590→s472591（2026-10-21T01:48:07.504Z）槽变动：0:肌肉药水 FLEX_POTION→0:肌肉药水 FLEX_POTION、1:能力药水 POWER_POTION；d@3226785086 {'action': 'claim_reward', 'option_index': 0} [completed: Action completed.]。
+F48T1 s472596→s472597（2026-10-21T01:48:28.873Z）槽变动：0:肌肉药水 FLEX_POTION、1:能力药水 POWER_POTION→0:肌肉药水 FLEX_POTION；d@3226791729 {'action': 'use_potion', 'option_index': 1} [pending (unstable): Action queued but state is still transitioning.]。
+F48T7 s472647→s472648（2026-10-21T01:50:45.691Z）槽变动：0:肌肉药水 FLEX_POTION→空；d@3228241192 {'action': 'use_potion', 'option_index': 0} [completed: Action completed.]；d@3228272630 {'action': 'play_card', 'card_index': 6} [completed: Action completed.]。
+F48T1 s472673→s472674（2026-10-21T01:51:46.358Z）SL资源重载（不是新药/回血）：空→0:肌肉药水 FLEX_POTION、1:能力药水 POWER_POTION；。
+F48T1 s472677→s472678（2026-10-21T01:52:17.841Z）槽变动：0:肌肉药水 FLEX_POTION、1:能力药水 POWER_POTION→1:能力药水 POWER_POTION；d@3228640632 {'action': 'use_potion', 'option_index': 0} [completed: Action completed.]；d@3228718203 {'action': 'play_card', 'card_index': 3, 'target_index': 0} [completed: Action completed.]。
+F48T1 s472679→s472680（2026-10-21T01:52:27.846Z）槽变动：1:能力药水 POWER_POTION→空；d@3228720514 {'action': 'use_potion', 'option_index': 1} [pending (unstable): Action queued but state is still transitioning.]。
+F48T1 s472750→s472751（2026-10-21T01:55:31.941Z）SL资源重载（不是新药/回血）：空→0:肌肉药水 FLEX_POTION、1:能力药水 POWER_POTION；。
+F48T1 s472752→s472753（2026-10-21T01:55:49.692Z）槽变动：0:肌肉药水 FLEX_POTION、1:能力药水 POWER_POTION→0:肌肉药水 FLEX_POTION；d@3230320657 {'action': 'use_potion', 'option_index': 1} [pending (unstable): Action queued but state is still transitioning.]。
+F48T9 s472816→s472817（2026-10-21T01:59:11.012Z）槽变动：0:肌肉药水 FLEX_POTION→空；d@3232397988 {'action': 'use_potion', 'option_index': 0} [completed: Action completed.]；d@3232551507 {'action': 'play_card', 'card_index': 2} [completed: Action completed.]。
+F48T1 s472838→s472839（2026-10-21T01:59:57.874Z）SL资源重载（不是新药/回血）：空→0:肌肉药水 FLEX_POTION、1:能力药水 POWER_POTION；。
+F48T1 s472840→s472841（2026-10-21T02:00:15.311Z）槽变动：0:肌肉药水 FLEX_POTION、1:能力药水 POWER_POTION→0:肌肉药水 FLEX_POTION；d@3232769955 {'action': 'use_potion', 'option_index': 1} [pending (unstable): Action queued but state is still transitioning.]。
+F48T7 s472891→s472892（2026-10-21T02:02:34.518Z）槽变动：0:肌肉药水 FLEX_POTION→空；d@3234603993 {'action': 'use_potion', 'option_index': 0} [completed: Action completed.]；d@3234642908 {'action': 'play_card', 'card_index': 6} [completed: Action completed.]。
+
+药水计数：非SL槽位新增观察12瓶；use_potion动作17次（含SL重复饮用，不能当独立获得）；discard_potion动作1次；buy_potion动作0次。槽位重载不计补充；各动作回执/变化按上表，过渡态不单凭queued判完整效果。
+
+战外HP/max HP变化与SL恢复：
+F7→F7 REST s471995→s471996（2026-10-21T01:07:10.282Z）：HP41→62，max70→70；战外/开场资源变化；{'action': 'choose_rest_option', 'option_index': 0}；{'action': 'proceed'}。
+F11→F11 REST s472039→s472040（2026-10-21T01:09:59.727Z）：HP45→66，max70→70；战外/开场资源变化；{'action': 'choose_rest_option', 'option_index': 0}；{'action': 'proceed'}。
+F14→F14 EVENT s472080→s472081（2026-10-21T01:12:50.974Z）：HP65→51，max70→70；战外/开场资源变化；{'action': 'choose_event_option', 'option_index': 1}；未记录；{'action': 'choose_event_option', 'option_index': 0}。
+F16→F16 REST s472088→s472089（2026-10-21T01:13:48.981Z）：HP51→70，max70→70；战外/开场资源变化；{'action': 'choose_rest_option', 'option_index': 0}；{'action': 'proceed'}。
+F17→F18 EVENT s472142→s472143（2026-10-21T01:17:01.008Z）：HP42→65，max71→71；战外/开场资源变化；{'action': 'choose_map_node', 'option_index': 0}；{'action': 'choose_event_option', 'option_index': 2}。
+F21→F21 CARD_SELECTION s472187→s472188（2026-10-21T01:20:11.635Z）：HP65→59，max72→72；战外/开场资源变化；{'action': 'choose_event_option', 'option_index': 1}；{'action': 'select_deck_card', 'option_index': 6}。
+F23→F23 EVENT s472213→s472214（2026-10-21T01:21:52.384Z）：HP60→50，max73→73；战外/开场资源变化；{'action': 'select_deck_card', 'option_index': 16}；{'action': 'choose_event_option', 'option_index': 0}。
+F27→F27 REWARD s472259→s472260（2026-10-21T01:25:47.528Z）：HP38→60，max74→74；战外/开场资源变化；{'action': 'choose_rest_option', 'option_index': 0}；{'action': 'claim_reward', 'option_index': 0}。
+F32→F32 REWARD s472334→s472335（2026-10-21T01:31:15.718Z）：HP53→75，max76→76；战外/开场资源变化；{'action': 'choose_rest_option', 'option_index': 0}；{'action': 'claim_reward', 'option_index': 0}。
+F33→F34 EVENT s472392→s472393（2026-10-21T01:34:52.164Z）：HP25→66，max77→77；战外/开场资源变化；{'action': 'choose_map_node', 'option_index': 0}；{'action': 'choose_event_option', 'option_index': 1}。
+F38→F38 EVENT s472461→s472462（2026-10-21T01:39:43.637Z）：HP55→44，max73→73；战外/开场资源变化；{'action': 'choose_event_option', 'option_index': 0}；{'action': 'choose_event_option', 'option_index': 0}。
+F40→F40 REWARD s472516→s472517（2026-10-21T01:43:07.278Z）：HP33→55，max74→74；战外/开场资源变化；{'action': 'choose_rest_option', 'option_index': 0}；{'action': 'claim_reward', 'option_index': 0}。
+F41→F42 EVENT s472524→s472525（2026-10-21T01:43:29.562Z）：HP55→60，max74→74；战外/开场资源变化；{'action': 'choose_map_node', 'option_index': 0}；{'action': 'choose_event_option', 'option_index': 0}。
+F45→F46 EVENT s472583→s472584（2026-10-21T01:47:30.423Z）：HP45→50，max75→75；战外/开场资源变化；{'action': 'choose_map_node', 'option_index': 1}；{'action': 'choose_event_option', 'option_index': 1}。
+F47→F47 REWARD s472588→s472589（2026-10-21T01:48:07.219Z）：HP50→72，max75→75；战外/开场资源变化；{'action': 'choose_rest_option', 'option_index': 0}；{'action': 'claim_reward', 'option_index': 0}。
+F48→F48 COMBAT s472673→s472674（2026-10-21T01:51:46.358Z）：HP4→72，max75→75；SL恢复，非回血；{'action': 'end_turn'}。
+F48→F48 COMBAT s472750→s472751（2026-10-21T01:55:31.941Z）：HP44→72，max75→75；SL恢复，非回血；{'action': 'end_turn'}。
+F48→F48 COMBAT s472838→s472839（2026-10-21T01:59:57.874Z）：HP4→72，max75→75；SL恢复，非回血；{'action': 'end_turn'}。
+
+SL原始台账（退出胜负以原行result与实帧分列）：
+{"offset": 51626442, "floor": 17, "attempt": 1, "started_at": "2026-10-21T01:13:51.317Z", "ended_at": "2026-10-21T01:16:06.233Z", "result": "won", "turns": 10, "end_hp": 42}。
+{"offset": 51656527, "floor": 33, "attempt": 1, "started_at": "2026-10-21T01:31:17.427Z", "ended_at": "2026-10-21T01:33:45.344Z", "result": "won", "turns": 8, "end_hp": 25}。
+{"offset": 51680428, "floor": 48, "attempt": 1, "started_at": "2026-10-21T01:48:08.877Z", "ended_at": "2026-10-21T01:51:46.325Z", "result": "predicted_death", "turns": 11, "end_hp": 4}。
+{"offset": 51720944, "floor": 48, "attempt": 2, "started_at": "2026-10-21T01:51:46.326Z", "ended_at": "2026-10-21T01:55:31.906Z", "result": "predicted_death", "turns": 10, "end_hp": 44}。
+{"offset": 51754691, "floor": 48, "attempt": 3, "started_at": "2026-10-21T01:55:31.907Z", "ended_at": "2026-10-21T01:59:57.836Z", "result": "predicted_death", "turns": 11, "end_hp": 4}。
+{"offset": 51804304, "floor": 48, "attempt": 4, "started_at": "2026-10-21T01:59:57.838Z", "ended_at": "2026-10-21T02:03:33.334Z", "result": "died", "turns": 11, "end_hp": 0}。
+
+
+
+Jev低信心（confidence<0.35）55次。原始request 269条／有answers 265条／有非空error 4条；失败行token缺失不补0测量。只纳入原答plan且simulation_reference.rollout明确best/tied的题，选入集合178/185＝96.22%；它是原回答比例，不是护栏/SL后的实际最优执行率。带focus候选题9，原答选带focus候选4；focus是候选目标标签，不是实杀顺序。按资源窗口/回合首个非continue战斗决定计，代码31轮、Jev99轮；续步和同轮重问不重复计，游戏接管首轮不假称Jev选择。selection_dispatch 191条，gate_reject未见匹配字段（非保证所有动作完整执行）；原回执state_effect_verified=false／whole_plan_executed=null保持。完整实线采用率、全局逐敌精确击杀序未完成逐题验收，写未记录。
+
+
+
+HP护栏按决定审计2条；逐条层/轮/尝试及预测省血、伤害代价见numeric-audit.json（不将同轮重复与SL前候选差值累加为实收益）。真实未执行分支代价未记录。实际采用须连原chosen/result、SL审计和后继状态；替换本身不认定纯bug。
+
+
+
+首末decision 2026-10-21T01:02:10.248Z→2026-10-21T02:03:33.338Z，用时3683.09秒。runs.tokens、ds_tokens_in/out与ds_cache_hit原值另见下列核对；brain原始46条、accepted=true 45条，engine均codex。DeepSeek-reasoning按本局首末决策时间窗无匹配；旧DeepSeek字段名不证明使用DeepSeek。Jev原始入/出token合计2304765/16716；Jev缓存未记录。
+
+
+
+V6配置mode=on，card/potion/shop/rest均brain，reflex=off，direction_replan=off；本批冻结v6-build流本局no_match，entries／jev_answer／fallback／unknown均无本局原行可解释，不以0补含义；Jev request／answers／error按上文单列。完整题面不表示采用、成功或收益。runs.code=current，run-config的commit/code/dirty均null并报spawnSync git ENOBUFS，历史精确源码SHA未记录；引用当前只读live 5a295bb5ed52f0c0fa5e8c045dcfcba3d894b532的行号仅解释现行代码，不能冒充本局历史源码。
+
+
+
+证据：本批scratch=/home/dw/Projects/agent-sts2/learner/runs/20261021-111306-e35f946f-318e-40c4-b79a-93cc27f607e0-postmortem；evidence-summary.json仅作索引，v6-evidence/evidence-manifest.json保留整流冻结字节切点/SHA与历史无效JSON；36VNKZKABGB4-raw-index.json保留本局states/decisions/run-plans/brain/config/SL每条offset/bytes/SHA。原始两流各条身份、精确decision_id、chosen/result/gate_reject/selection_dispatch及后继索引见question-receipts.json；归局仅用显式run_id或核对的精确decision_id，不靠正文、时间邻近或题号相似。
+
+
+
+完整题面阅读全文2/269条：j73973、j74099；其余267条只机械核原字节、身份、回答/错误、派发和后继索引，未全文语义审阅。原因是本次按关键决定有界复盘；覆盖与未读行逐条在coverage.json，不能称末五条或整局所有问题都已验收。
+
+
+
+未记录／限制：完整路线HP预测与逐节点实到的配对验收（这里只核末次即时回血投影）、传统Boss时钟需要/估计与同输入实打/估值比（原act_boss_clock输出/失血/存活/缺口为null，不能据单体HP补造）、未读全题的构筑边际效应、全部实线采用率／精确杀序、逐击敌方毛伤／过量伤害、未执行护栏/留药/早喝/换目标分支的真实胜负、Jev缓存、历史精确源码SHA和原生档位生效回执。退出帧缺失、SL截断与实死已分列；瀑布巨兽壳的999999999标记不作需伤或净扣数字。三条经验均为旧观察的有限支持，不登记新错误/repeat；本批没有新定位纯bug。相关代码提案保存proposal-36VNKZKABGB4.md，交独立strategy-proposal验证，证据不足保持现行行为；不改源码/知识、不提交、不登记implemented/shipped，提证不证明正式发布、下一局消费或自然收益。
+
+原始局表核对：tokens=2321481；ds_tokens_in=2338127，ds_tokens_out=34745，ds_cache_hit=0；零命中仅属该兼容字段。decisions=913，ended=2026-10-21T02:03:33.338Z，victory=False。
+
+
+
+## GWE810ZD014M（A10，静默猎手，第39层，死于组装师 FABRICATOR／噪音机器人 NOISEBOT／守护机器人 GUARDBOT／戳刺机器人 STABBOT／电击机器人 ZAPBOT：39/76血带毒药水进场，T7仅3血5挡对12＋13＝25攻击，完整需损20、存活差18血，本体终态32/155血）
+
+
+
+- [清掉旧机器人以后仍需核新召唤；打法（Jev出牌）] 组装师 FABRICATOR活着时继续补体；T5已只剩本体56血，原题明确提示FABRICATE_MOVE后新增个体未纳入rollout，随后T6又见20血噪音机器人 NOISEBOT与18血戳刺机器人 STABBOT，T7再有守护 GUARDBOT和电击 ZAPBOT。不能把T5旧体清空或3/8模拟胜当作整战已覆盖；新增数量、固定概率和唯一杀序仍未知。（之前学过：silent-0348，S1.exp-backlog1）
+
+- [后建余像的逐牌挡只能支付后续当前威胁；打法（Jev出牌）] T6以4血建立余像 AFTERIMAGE／触媒 ACCELERANT／毒雾+ NOXIOUS_FUMES，最终11挡仍损1。T7余像五次手动出牌带来可见1点一档的累计挡，末5挡、3血；Jev先集中电击机器人 ZAPBOT使其退场，仍有戳刺12与本体13攻击。不能把已建三能力当作额外血量或整场可存活证明。（之前学过：silent-0023，S1.exp199）
+
+- [空药栏新增敏捷不会追补已经取得的挡；打法（代码兜底用药、Jev此前出牌）] 末回合Jev预算耗尽（原错误human-pace budget exhausted: Jev），代码兜底先打击 STRIKE_SILENT噪音机器人 NOISEBOT，再向该体饮毒药水 POISON_POTION。药槽由最后一瓶到空时腰带扣 BELT_BUCKLE令敏捷0→2，但格挡仍5，不能把空槽2敏加到先前已出的牌上。该药确实饮用，不是丢弃；噪音体当时4血／旧3毒，结束后退场而两攻击者仍在，不从未执行换目标分支声称可赢。（之前见过：silent-0119）
+
+
+
+- [记录] 大脑实际Codex：早取毒雾、紧勒 STRANGLE、弹跳药瓶 BOUNCING_FLASK、余像、触媒，后补后空翻、毒雾升级；F31买腰带扣 BELT_BUCKLE及技能药水 SKILL_POTION，以空药栏敏捷支持毒防是当时理由。F33知识恶魔 KNOWLEDGE_DEMON虽胜却78→2，进入F34事件时已62血；F35咬人卷轴 SCROLL_OF_BITING胜62→46且max78→76，F36战斗好伙伴 BATTLE_FRIEND_V1胜46→46，F38虔诚雕刻师 DEVOTED_SCULPTOR胜46→39并耗槽1格挡药水 BLOCK_POTION，F39才39血携槽0毒药开战。F34原话“接受首轮接管换持续能量，走零精英双火线保血备战连王。”，未到未来营火；低语耳环 WHISPERING_EARRING接管T1，不把该段自动动作算作Jev选线。最后一次休息题F32即时hp_after_heal=78/78，F33实到78，后续伤害逐段见资源表。 j74190 F39T5完整题给结束回合与未建模毒药直饮两候选；Jev0.64选plan1，chosen=end_turn且completed，但题面已明确召唤未覆盖。后继实见新增机器人，不能把3/8短窗胜当自然胜。j74198 F39T7完整单步题无answers而有预算耗尽error；精确decision_id=187d91d6-5ab0-44ba-8d25-a3a91a6efdda回执是代码打击噪音、completed；下一decision才代码喝毒药，原流没有第二个相同请求不能补一条Jev错误。T7局部实序是电击先退、噪音后毒退，戳刺／本体／守护存活；全局同类新体不能靠index强认持续身份。
+
+
+
+机制：触媒 ACCELERANT在T5建1，余像 AFTERIMAGE及毒雾+ NOXIOUS_FUMES在T6建1／3。T7翻越撑击 FLICK_FLACK后挡1，中和+ NEUTRALIZE后2、两打击后3／4、兜底打击后5；腰带扣空槽后敏捷2而挡仍5。终态戳刺8→3、本体37→32、守护8→3，均与3＋2两次毒结算合5相符；噪音被药追加后退场。中毒加层、实际已扣与召唤新增分账，不预支未执行替药目标的胜负。
+
+
+
+实盘资源链（含胜战；HP净变化含自伤/回血，不是敌方总伤；缺退出帧只报已观察前缀）：
+|窗口／层／敌人|HP；max HP；净变化|药槽入→出或截断末|出口／证据行与UTC时间|
+|---|---|---|---|
+|1／F2／噬尸蛞蝓 CORPSE_SLUG|56→53；70→70；-3|空→空|退出 REWARD；s472926→s472954；2026-10-21T02:06:00.448Z→2026-10-21T02:07:13.019Z|
+|2／F3／蟾蜍蝌蚪 TOADPOLE|53→52；70→70；-1|空→空|退出 REWARD；s472959→s472979；2026-10-21T02:07:55.839Z→2026-10-21T02:08:39.765Z|
+|3／F6／淤泥旋螺 SLUDGE_SPINNER|42→35；78→78；-7|空→空|退出 REWARD；s472996→s473012；2026-10-21T02:12:05.665Z→2026-10-21T02:12:35.475Z|
+|4／F11／胖地精 FAT_GREMLIN／地精佣兵 GREMLIN_MERC／卑鄙地精 SNEAKY_GREMLIN|58→58；78→78；+0|0:火焰药水 FIRE_POTION、1:发光水 GLOWWATER_POTION→空|退出 REWARD；s473033→s473052；2026-10-21T02:15:30.078Z→2026-10-21T02:16:08.960Z|
+|5／F14／钙化邪教徒 CALCIFIED_CULTIST／潮湿邪教徒 DAMP_CULTIST|78→78；78→78；+0|0:速度药水 SPEED_POTION→0:速度药水 SPEED_POTION|退出 REWARD；s473065→s473081；2026-10-21T02:17:53.172Z→2026-10-21T02:18:26.108Z|
+|6／F15／鬼祟珊瑚群 SKULKING_COLONY|78→59；78→78；-19|0:速度药水 SPEED_POTION→空|退出 REWARD；s473086→s473114；2026-10-21T02:19:15.062Z→2026-10-21T02:20:09.878Z|
+|7／F17／乐加维林族母 LAGAVULIN_MATRIARCH|78→31；78→78；-47|0:异鱼之油 FYSH_OIL→空|退出 REWARD；s473124→s473164；2026-10-21T02:20:55.364Z→2026-10-21T02:22:39.838Z|
+|8／F19／偷窃草蜢 THIEVING_HOPPER|68→55；78→78；-13|空→空|退出 REWARD；s473172→s473197；2026-10-21T02:23:24.962Z→2026-10-21T02:24:21.425Z|
+|9／F22／地道虫 TUNNELER|55→48；78→78；-7|0:迅捷药水 SWIFT_POTION、1:肌肉药水 FLEX_POTION→空|退出 REWARD；s473213→s473235；2026-10-21T02:25:39.578Z→2026-10-21T02:26:22.489Z|
+|10／F23／寄生惧魔 PARAFRIGHT／胧光怪 THE_OBSCURA|48→23；78→78；-25|0:无色药水 COLORLESS_POTION→空|退出 REWARD；s473241→s473264；2026-10-21T02:27:00.478Z→2026-10-21T02:28:01.279Z|
+|11／F25／外骨骼虫 EXOSKELETON|46→33；78→78；-13|空→空|退出 REWARD；s473272→s473288；2026-10-21T02:29:12.931Z→2026-10-21T02:29:54.131Z|
+|12／F33／知识恶魔 KNOWLEDGE_DEMON|78→2；78→78；-76|0:技能药水 SKILL_POTION→空|退出 REWARD；s473320→s473374；2026-10-21T02:33:28.845Z→2026-10-21T02:36:01.684Z|
+|13／F35／咬人卷轴 SCROLL_OF_BITING|62→46；78→76；-16|空→空|退出 REWARD；s473382→s473392；2026-10-21T02:37:11.275Z→2026-10-21T02:37:39.967Z|
+|14／F36／战斗好伙伴V1.0 BATTLE_FRIEND_V1|46→46；76→76；+0|0:复制药水 DUPLICATOR→空|退出 REWARD；s473400→s473406；2026-10-21T02:39:25.889Z→2026-10-21T02:39:46.140Z|
+|15／F38／虔诚雕刻师 DEVOTED_SCULPTOR|46→39；76→76；-7|0:毒药水 POISON_POTION、1:格挡药水 BLOCK_POTION→0:毒药水 POISON_POTION|退出 REWARD；s473414→s473429；2026-10-21T02:40:33.289Z→2026-10-21T02:41:20.594Z|
+|16／F39／组装师 FABRICATOR／守护机器人 GUARDBOT／噪音机器人 NOISEBOT／戳刺机器人 STABBOT／电击机器人 ZAPBOT|39→0；76→76；-39|0:毒药水 POISON_POTION→空|退出 GAME_OVER；s473434→s473473；2026-10-21T02:41:47.097Z→2026-10-21T02:43:35.913Z|
+逐轮需＝轮首活敌HP池；净扣＝到下一轮首/出口/截断末的活敌池减少，含毒/召唤/换相/轮初遗物，负值表示池增加；耗＝同区间玩家HP净减少。不是逐牌毛伤，不把未来阶段算入当前池，不把未执行终轮写成0。
+F2／窗口1：T[1, 2, 3, 4, 5, 6, 7]；需[57, 48, 41, 34, 34, 13, 7]；净扣[9, 7, 7, 0, 21, 6, 7]；耗[0, 0, 0, 3, 0, 0, 0]。
+F3／窗口2：T[1, 2, 3, 4, 5]；需[49, 34, 22, 22, 6]；净扣[15, 12, 0, 16, 6]；耗[1, 0, 0, 0, 0]。
+F6／窗口3：T[1, 2, 3, 4]；需[41, 34, 21, 12]；净扣[7, 13, 9, 12]；耗[0, 7, 0, 0]。
+F11／窗口4：T[1, 2, 3, 4]；需[51, 22, 25, 10]；净扣[29, -3, 15, 10]；耗[0, 0, 0, 0]。
+F14／窗口5：T[1, 2, 3, 4]；需[94, 42, 21, 9]；净扣[52, 21, 12, 9]；耗[0, 0, 0, 0]。
+F15／窗口6：T[1, 2, 3, 4, 5, 6]；需[80, 64, 58, 55, 32, 21]；净扣[16, 6, 3, 23, 11, 21]；耗[0, 0, 0, 19, 0, 0]。
+F17／窗口7：T[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]；需[233, 233, 233, 226, 211, 194, 166, 142, 102, 66, 33]；净扣[0, 0, 7, 15, 17, 28, 24, 40, 36, 33, 33]；耗[0, 0, 0, 12, 2, 0, 0, 10, 15, 8, 0]。
+F19／窗口8：T[1, 2, 3, 4, 5]；需[84, 78, 49, 41, 35]；净扣[6, 29, 8, 6, 35]；耗[3, 0, 10, 0, 0]。
+F22／窗口9：T[1, 2, 3, 4]；需[92, 76, 43, 32]；净扣[16, 33, 11, 32]；耗[7, 0, 0, 0]。
+F23／窗口10：T[1, 2, 3, 4, 5]；需[129, 126, 79, 51, 19]；净扣[3, 47, 28, 32, 19]；耗[0, 0, 25, 0, 0]。
+F25／窗口11：T[1, 2, 3]；需[113, 86, 64]；净扣[27, 22, 64]；耗[0, 13, 0]。
+F33／窗口12：T[1, 2, 3, 4, 5, 6, 7, 8, 9, 10]；需[399, 352, 349, 333, 333, 305, 250, 182, 120, 23]；净扣[47, 3, 16, 0, 28, 55, 68, 62, 97, 23]；耗[0, 4, 11, 2, 0, 21, 29, 9, 0, 0]。
+F35／窗口13：T[1, 2, 3]；需[108, 42, 10]；净扣[66, 32, 10]；耗[16, 0, 0]。
+F36／窗口14：T[1, 2, 3]；需[66, 63, 19]；净扣[3, 44, 19]；耗[0, 0, 0]。
+F38／窗口15：T[1, 2, 3, 4]；需[172, 150, 128, 56]；净扣[22, 22, 72, 56]；耗[0, 7, 0, 0]。
+F39／窗口16：T[1, 2, 3, 4, 5, 6, 7]；需[155, 171, 163, 103, 110, 91, 110]；净扣[-16, 8, 60, -7, 19, -19, 72]；耗[0, 22, 13, 0, 0, 1, 3]。
+
+药槽逐次变化（获得/饮用/丢弃以原动作和后继核，SL资源重载不计新获得）：
+F6T4 s473013→s473014（2026-10-21T02:12:35.790Z）槽变动：空→0:火焰药水 FIRE_POTION；d@3236919573 {'action': 'claim_reward', 'option_index': 0} [completed: Action completed.]；d@3236921621 {'action': 'claim_reward', 'option_index': 0} [completed: Action completed.]。
+F8T未记录 s473023→s473024（2026-10-21T02:14:52.609Z）槽变动：0:火焰药水 FIRE_POTION→0:火焰药水 FIRE_POTION、1:发光水 GLOWWATER_POTION；d@3237637450 {'action': 'claim_reward', 'option_index': 0} [completed: Action completed.]；d@3237639513 {'action': 'choose_event_option', 'option_index': 0} [completed: Event proceeded.]。
+F11T1 s473034→s473035（2026-10-21T02:15:36.573Z）槽变动：0:火焰药水 FIRE_POTION、1:发光水 GLOWWATER_POTION→0:火焰药水 FIRE_POTION；d@3238105854 {'action': 'use_potion', 'option_index': 1} [completed: Action completed.]。
+F11T1 s473039→s473040（2026-10-21T02:15:43.145Z）槽变动：0:火焰药水 FIRE_POTION→空；d@3238204122 {'action': 'use_potion', 'option_index': 0, 'target_index': 0} [completed: Action completed.]；d@3238206451 {'action': 'play_card', 'card_index': 1} [pending (unstable): Action queued but state is still transitioning.]。
+F11T4 s473054→s473055（2026-10-21T02:16:09.397Z）槽变动：空→0:速度药水 SPEED_POTION；d@3238261491 {'action': 'claim_reward', 'option_index': 0} [completed: Action completed.]；d@3238263539 {'action': 'claim_reward', 'option_index': 0} [completed: Action completed.]。
+F15T1 s473088→s473089（2026-10-21T02:19:21.705Z）槽变动：0:速度药水 SPEED_POTION→空；d@3239487765 {'action': 'use_potion', 'option_index': 0} [completed: Action completed.]；d@3239489974 {'action': 'play_card', 'card_index': 1} [completed: Action completed.]。
+F15T6 s473115→s473116（2026-10-21T02:20:10.177Z）槽变动：空→0:异鱼之油 FYSH_OIL；d@3239618539 {'action': 'claim_reward', 'option_index': 0} [completed: Action completed.]；d@3239620593 {'action': 'claim_reward', 'option_index': 0} [completed: Action completed.]。
+F17T1 s473125→s473126（2026-10-21T02:21:01.399Z）槽变动：0:异鱼之油 FYSH_OIL→空；d@3240304806 {'action': 'use_potion', 'option_index': 0} [completed: Action completed.]。
+F19T5 s473197→s473198（2026-10-21T02:24:21.570Z）槽变动：空→0:迅捷药水 SWIFT_POTION；d@3241016377 {'action': 'claim_reward', 'option_index': 0} [completed: Action completed.]；d@3241018431 {'action': 'claim_reward', 'option_index': 0} [completed: Action completed.]。
+F20T未记录 s473206→s473207（2026-10-21T02:25:11.604Z）槽变动：0:迅捷药水 SWIFT_POTION→0:迅捷药水 SWIFT_POTION、1:肌肉药水 FLEX_POTION；d@3241335305 {'action': 'claim_reward', 'option_index': 0} [completed: Action completed.]。
+F22T1 s473218→s473219（2026-10-21T02:25:51.842Z）槽变动：0:迅捷药水 SWIFT_POTION、1:肌肉药水 FLEX_POTION→1:肌肉药水 FLEX_POTION；d@3241482728 {'action': 'use_potion', 'option_index': 0} [completed: Action completed.]。
+F22T3 s473226→s473227（2026-10-21T02:26:10.308Z）槽变动：1:肌肉药水 FLEX_POTION→空；d@3241533274 {'action': 'use_potion', 'option_index': 1} [completed: Action completed.]；d@3241559471 {'action': 'play_card', 'card_index': 0, 'target_index': 0} [completed: Action completed.]。
+F22T4 s473236→s473237（2026-10-21T02:26:22.767Z）槽变动：空→0:无色药水 COLORLESS_POTION；d@3241578420 {'action': 'claim_reward', 'option_index': 0} [completed: Action completed.]；d@3241580471 {'action': 'claim_reward', 'option_index': 0} [completed: Action completed.]。
+F23T2 s473246→s473247（2026-10-21T02:27:21.385Z）槽变动：0:无色药水 COLORLESS_POTION→空；d@3241849948 {'action': 'use_potion', 'option_index': 0} [pending (unstable): Action queued but state is still transitioning.]。
+F31T未记录 s473313→s473314（2026-10-21T02:32:55.749Z）槽变动：空→0:技能药水 SKILL_POTION；d@3245382155 {'action': 'buy_potion', 'option_index': 2} [completed: Action completed.]。
+F33T1 s473326→s473327（2026-10-21T02:33:47.124Z）槽变动：0:技能药水 SKILL_POTION→空；d@3246218978 {'action': 'use_potion', 'option_index': 0} [pending (unstable): Action queued but state is still transitioning.]。
+F35T3 s473393→s473394（2026-10-21T02:37:40.234Z）槽变动：空→0:复制药水 DUPLICATOR；d@3246786619 {'action': 'claim_reward', 'option_index': 0} [completed: Action completed.]；d@3246788667 {'action': 'claim_reward', 'option_index': 0} [completed: Action completed.]。
+F36T2 s473402→s473403（2026-10-21T02:39:33.475Z）槽变动：0:复制药水 DUPLICATOR→空；d@3247104355 {'action': 'use_potion', 'option_index': 0} [completed: Action completed.]；d@3247106557 {'action': 'play_card', 'card_index': 0} [completed: Action completed.]。
+F36T未记录 s473406→s473407（2026-10-21T02:39:46.295Z）槽变动：空→0:毒药水 POISON_POTION；d@3247112797 {'action': 'claim_reward', 'option_index': 0} [completed: Action completed.]；d@3247114841 {'action': 'choose_event_option', 'option_index': 0} [completed: Event proceeded.]。
+F37T未记录 s473410→s473411（2026-10-21T02:40:31.467Z）槽变动：0:毒药水 POISON_POTION→0:毒药水 POISON_POTION、1:格挡药水 BLOCK_POTION；d@3247121657 {'action': 'buy_potion', 'option_index': 2} [completed: Action completed.]。
+F38T3 s473426→s473427（2026-10-21T02:41:12.538Z）槽变动：0:毒药水 POISON_POTION、1:格挡药水 BLOCK_POTION→0:毒药水 POISON_POTION；d@3247742035 {'action': 'use_potion', 'option_index': 1} [completed: Action completed.]。
+F39T7 s473471→s473472（2026-10-21T02:43:31.914Z）槽变动：0:毒药水 POISON_POTION→空；d@3248449415 {'action': 'use_potion', 'option_index': 0, 'target_index': 0} [completed: Action completed.]。
+
+药水计数：非SL槽位新增观察11瓶；use_potion动作11次（含SL重复饮用，不能当独立获得）；discard_potion动作0次；buy_potion动作2次。槽位重载不计补充；各动作回执/变化按上表，过渡态不单凭queued判完整效果。
+
+战外HP/max HP变化与SL恢复：
+F5→F5 EVENT s472989→s472990（2026-10-21T02:10:52.492Z）：HP52→51，max70→72；战外/开场资源变化；{'action': 'choose_event_option', 'option_index': 0}；{'action': 'choose_event_option', 'option_index': 0}。
+F5→F5 EVENT s472990→s472991（2026-10-21T02:11:11.978Z）：HP51→49，max72→74；战外/开场资源变化；{'action': 'choose_event_option', 'option_index': 0}；{'action': 'choose_event_option', 'option_index': 0}。
+F5→F5 EVENT s472991→s472992（2026-10-21T02:11:40.090Z）：HP49→46，max74→76；战外/开场资源变化；{'action': 'choose_event_option', 'option_index': 0}；{'action': 'choose_event_option', 'option_index': 0}。
+F5→F5 EVENT s472992→s472993（2026-10-21T02:12:04.028Z）：HP46→42，max76→78；战外/开场资源变化；{'action': 'choose_event_option', 'option_index': 0}；{'action': 'choose_event_option', 'option_index': 1}。
+F9→F9 REST s473026→s473027（2026-10-21T02:15:27.457Z）：HP35→58，max78→78；战外/开场资源变化；{'action': 'choose_rest_option', 'option_index': 0}；{'action': 'proceed'}。
+F12→F12 REST s473059→s473060（2026-10-21T02:17:20.517Z）：HP58→78，max78→78；战外/开场资源变化；{'action': 'choose_rest_option', 'option_index': 0}；{'action': 'proceed'}。
+F16→F16 REST s473121→s473122（2026-10-21T02:20:54.104Z）：HP59→78，max78→78；战外/开场资源变化；{'action': 'choose_rest_option', 'option_index': 0}；{'action': 'proceed'}。
+F17→F18 EVENT s473168→s473169（2026-10-21T02:23:23.027Z）：HP31→68，max78→78；战外/开场资源变化；{'action': 'choose_map_node', 'option_index': 0}；{'action': 'choose_event_option', 'option_index': 2}。
+F24→F24 REST s473269→s473270（2026-10-21T02:29:11.612Z）：HP23→46，max78→78；战外/开场资源变化；{'action': 'choose_rest_option', 'option_index': 0}；{'action': 'proceed'}。
+F27→F27 REST s473297→s473298（2026-10-21T02:30:52.810Z）：HP33→56，max78→78；战外/开场资源变化；{'action': 'choose_rest_option', 'option_index': 0}；{'action': 'proceed'}。
+F32→F32 REST s473317→s473318（2026-10-21T02:33:27.175Z）：HP56→78，max78→78；战外/开场资源变化；{'action': 'choose_rest_option', 'option_index': 0}；{'action': 'proceed'}。
+F33→F34 EVENT s473378→s473379（2026-10-21T02:37:09.202Z）：HP2→62，max78→78；战外/开场资源变化；{'action': 'choose_map_node', 'option_index': 0}；{'action': 'choose_event_option', 'option_index': 0}。
+
+SL原始台账（退出胜负以原行result与实帧分列）：
+{"offset": 51848089, "floor": 17, "attempt": 1, "started_at": "2026-10-21T02:20:55.364Z", "ended_at": "2026-10-21T02:22:39.836Z", "result": "won", "turns": 11, "end_hp": 31}。
+{"offset": 51867717, "floor": 33, "attempt": 1, "started_at": "2026-10-21T02:33:28.846Z", "ended_at": "2026-10-21T02:36:01.681Z", "result": "won", "turns": 10, "end_hp": 2}。
+
+
+
+Jev低信心（confidence<0.35）18次。原始request 99条／有answers 98条／有非空error 1条；失败行token缺失不补0测量。只纳入原答plan且simulation_reference.rollout明确best/tied的题，选入集合81/81＝100.00%；它是原回答比例，不是护栏/SL后的实际最优执行率。带focus候选题15，原答选带focus候选10；focus是候选目标标签，不是实杀顺序。按资源窗口/回合首个非continue战斗决定计，代码24轮、Jev61轮；续步和同轮重问不重复计，游戏接管首轮不假称Jev选择。selection_dispatch 81条，gate_reject未见匹配字段（非保证所有动作完整执行）；原回执state_effect_verified=false／whole_plan_executed=null保持。完整实线采用率、全局逐敌精确击杀序未完成逐题验收，写未记录。
+
+
+
+HP护栏按决定审计1条；逐条层/轮/尝试及预测省血、伤害代价见numeric-audit.json（不将同轮重复与SL前候选差值累加为实收益）。真实未执行分支代价未记录。实际采用须连原chosen/result、SL审计和后继状态；替换本身不认定纯bug。
+
+
+
+首末decision 2026-10-21T02:05:09.068Z→2026-10-21T02:43:35.913Z，用时2306.845秒。runs.tokens、ds_tokens_in/out与ds_cache_hit原值另见下列核对；brain原始41条、accepted=true 41条，engine均codex。DeepSeek-reasoning按本局首末决策时间窗无匹配；旧DeepSeek字段名不证明使用DeepSeek。Jev原始入/出token合计674541/6716；Jev缓存未记录。
+
+
+
+V6配置mode=on，card/potion/shop/rest均brain，reflex=off，direction_replan=off；本批冻结v6-build流本局no_match，entries／jev_answer／fallback／unknown均无本局原行可解释，不以0补含义；Jev request／answers／error按上文单列。完整题面不表示采用、成功或收益。runs.code=current，run-config的commit/code/dirty均null并报spawnSync git ENOBUFS，历史精确源码SHA未记录；引用当前只读live 5a295bb5ed52f0c0fa5e8c045dcfcba3d894b532的行号仅解释现行代码，不能冒充本局历史源码。
+
+
+
+证据：本批scratch=/home/dw/Projects/agent-sts2/learner/runs/20261021-111306-e35f946f-318e-40c4-b79a-93cc27f607e0-postmortem；evidence-summary.json仅作索引，v6-evidence/evidence-manifest.json保留整流冻结字节切点/SHA与历史无效JSON；GWE810ZD014M-raw-index.json保留本局states/decisions/run-plans/brain/config/SL每条offset/bytes/SHA。原始两流各条身份、精确decision_id、chosen/result/gate_reject/selection_dispatch及后继索引见question-receipts.json；归局仅用显式run_id或核对的精确decision_id，不靠正文、时间邻近或题号相似。
+
+
+
+完整题面阅读全文2/99条：j74190、j74198；其余97条只机械核原字节、身份、回答/错误、派发和后继索引，未全文语义审阅。原因是本次按关键决定有界复盘；覆盖与未读行逐条在coverage.json，不能称末五条或整局所有问题都已验收。
+
+
+
+未记录／限制：完整路线HP预测与逐节点实到的配对验收（这里只核末次即时回血投影）、传统Boss时钟需要/估计与同输入实打/估值比（原act_boss_clock输出/失血/存活/缺口为null，不能据单体HP补造）、未读全题的构筑边际效应、全部实线采用率／精确杀序、逐击敌方毛伤／过量伤害、未执行护栏/留药/早喝/换目标分支的真实胜负、Jev缓存、历史精确源码SHA和原生档位生效回执。退出帧缺失、SL截断与实死已分列；瀑布巨兽壳的999999999标记不作需伤或净扣数字。三条经验均为旧观察的有限支持，不登记新错误/repeat；本批没有新定位纯bug。相关代码提案保存proposal-GWE810ZD014M.md，交独立strategy-proposal验证，证据不足保持现行行为；不改源码/知识、不提交、不登记implemented/shipped，提证不证明正式发布、下一局消费或自然收益。
+
+原始局表核对：tokens=681257；ds_tokens_in=1618937，ds_tokens_out=31500，ds_cache_hit=0；零命中仅属该兼容字段。decisions=517，ended=2026-10-21T02:43:35.913Z，victory=False。
+
+
+
+## TS0BHDLAH8ME（A10，静默猎手，第17层，死于墨影幻灵 VANTOM：四试62/70血空药进场，前三试T10判死；末试T10仅14血5挡对11×2＝22攻击，完整需损17、存活差4血，结毒后敌20/183血）
+
+
+
+- [滑溜耗层和敌方成长必须按真实扣血分开；打法（Jev出牌、代码终线）] 墨影幻灵 VANTOM末试T1有滑溜 SLIPPERY_POWER=9，四次攻击使183→179、层数9→5；T2继续三次攻击至176／2层，T3两击到174并清层。敌T5已有2力量、T9已有4力量；末T10威胁11×2，不能沿用开场8攻击或把牌文6／10直接当耗层期间实伤。仅补本局实例，不设固定耗层牌序。（之前学过：silent-0224，S1.exp203）
+
+- [回复提供真实缓冲，不能把到王血量当作通关保证；打法（DeepSeek路线／构筑／休息职责，实际Codex）] F8异蛙寄生虫 PHROG_PARASITE与扭动虫 WRIGGLER胜战70→30，随后F9休息30→51；Codex改走安全路线并升级突然一拳+ SUCKER_PUNCH，F13史莱姆战51→51、F14毛绒伏地虫 FUZZY_WURM_CRAWLER／缩小甲虫 SHRINKER_BEETLE 51→42、F15飞蝇菌子 FLYCONID／树枝史莱姆 TWIG_SLIME_M 42→41。F16休息41→62、空药进王，四试仍败；无回血与锻造的受控胜负对照，不把已经赢的精英40净耗略掉，也不写“多留一瓶便能赢”。（之前学过：silent-0020，S1.exp203）
+
+- [带抽牌后继的整线预测不能替代后续实帧；打法（Jev出牌、代码重规划／SL）] 第二试T8原题j74248，Jev0.98选打击 STRIKE_SILENT→涅奥之怒 NEOWS_FURY→切割 SLICE→打击，5轮样本13/24胜、整场原始区间24—50%与校准86%分列。题面明确取回牌后重规划；当轮实际14血不变、敌78→45净扣33，随后T10仍以14血判死。单步completed和当轮兑现不证明86%已变实胜；末试T10代码文案“keeps the most HP (-3)”指预计剩血−3而非仅掉3血（当前live combat-plan.ts:3432），与14−17＝−3相符，不报模型少算14伤的新bug。（之前学过：silent-0418，S1.exp182）
+
+
+
+- [记录] 实际Codex构筑：取致命毒药 DEADLY_POISON、切割 SLICE、翻越撑击 FLICK_FLACK、两张突然一拳 SUCKER_PUNCH、尖啸 PIERCING_WAIL，最终21张牌；整场无常驻能力牌，不能把他局敏捷／余像套来补挡。最初路线理由“四火分隔三精英，兼顾血量恢复、升级与遗物成长。”，精英耗血后改线，F12升级突然一拳、F16选择回血；末次题面hp_after_heal=62/70，F17实到62/70。四试T10截断前三次与末次真正死亡分开，SL回到62不是三次回血。 j74248第二试T8完整题与后继：首步打击completed，涅奥之怒进入选择、确认后回战，后续代码重新规划；T8净扣33且14血不变，与当轮总量相符，不能因此追认未执行后继都属于原方案。j74256末试T1完整生存者弃牌题：0能量、8挡、两张均不可付费防御，Jev0.56选card0，chosen=select_deck_card/0 completed，后继手牌保留一张防御；当轮62血不变。这里只有单体Boss，无多目标击杀顺序；四试均未击杀。
+
+
+
+机制：本局决定胜负的Boss里未建立玩家力量／敏捷／常驻能力；敌力量在末试T5为2、T9为4。T9中和 NEUTRALIZE使12攻击降到9，防御+ DEFEND_SILENT与生存者 SURVIVOR共16挡全挡；T10虚弱已无，22攻击对5挡需损17而仅14血。滑溜首轮四击仅推进4，毒先施加与之后结算分开，末轮敌38经翻越撑击9与打击6至23、3毒结算后20仍活。上述支持0224及既有兑现边界，无新机制参数。
+
+
+
+实盘资源链（含胜战；HP净变化含自伤/回血，不是敌方总伤；缺退出帧只报已观察前缀）：
+|窗口／层／敌人|HP；max HP；净变化|药槽入→出或截断末|出口／证据行与UTC时间|
+|---|---|---|---|
+|1／F2／缩小甲虫 SHRINKER_BEETLE|56→52；70→70；-4|空→空|退出 REWARD；s473480→s473506；2026-10-21T02:46:06.480Z→2026-10-21T02:46:54.893Z|
+|2／F3／小啃兽 NIBBIT|52→52；70→70；+0|0:明耀酊剂 RADIANT_TINCTURE→空|退出 REWARD；s473512→s473530；2026-10-21T02:47:19.734Z→2026-10-21T02:47:51.704Z|
+|3／F5／毛绒伏地虫 FUZZY_WURM_CRAWLER|52→51；70→70；-1|空→空|退出 REWARD；s473538→s473556；2026-10-21T02:49:00.539Z→2026-10-21T02:49:36.470Z|
+|4／F8／异蛙寄生虫 PHROG_PARASITE／扭动虫 WRIGGLER|70→30；70→70；-40|0:缚魂药水 POTION_OF_BINDING→空|退出 REWARD；s473569→s473612；2026-10-21T02:51:49.092Z→2026-10-21T02:53:30.184Z|
+|5／F13／树叶史莱姆（中） LEAF_SLIME_M／树叶史莱姆（小） LEAF_SLIME_S／树枝史莱姆（中） TWIG_SLIME_M／树枝史莱姆（小） TWIG_SLIME_S|51→51；70→70；+0|0:固化药水 FORTIFIER、1:能力药水 POWER_POTION→1:能力药水 POWER_POTION|退出 REWARD；s473634→s473648；2026-10-21T02:56:46.339Z→2026-10-21T02:57:19.712Z|
+|6／F14／毛绒伏地虫 FUZZY_WURM_CRAWLER／缩小甲虫 SHRINKER_BEETLE|51→42；70→70；-9|1:能力药水 POWER_POTION→1:能力药水 POWER_POTION|退出 REWARD；s473653→s473677；2026-10-21T02:57:54.437Z→2026-10-21T02:58:55.941Z|
+|7／F15／飞蝇菌子 FLYCONID／树枝史莱姆（中） TWIG_SLIME_M|42→41；70→70；-1|1:能力药水 POWER_POTION→空|退出 REWARD；s473682→s473700；2026-10-21T02:59:30.010Z→2026-10-21T03:00:06.428Z|
+|8／F17／墨影幻灵 VANTOM|62→7；70→70；-55（前缀）|空→空|SL/重载前截断，退出帧缺失；s473708→s473750；2026-10-21T03:00:43.276Z→2026-10-21T03:02:19.293Z|
+|9／F17／墨影幻灵 VANTOM|62→14；70→70；-48（前缀）|空→空|SL/重载前截断，退出帧缺失；s473751→s473796；2026-10-21T03:02:31.532Z→2026-10-21T03:04:10.778Z|
+|10／F17／墨影幻灵 VANTOM|62→8；70→70；-54（前缀）|空→空|SL/重载前截断，退出帧缺失；s473797→s473839；2026-10-21T03:04:20.797Z→2026-10-21T03:05:51.324Z|
+|11／F17／墨影幻灵 VANTOM|62→0；70→70；-62|空→空|退出 GAME_OVER；s473840→s473889；2026-10-21T03:06:02.314Z→2026-10-21T03:07:52.591Z|
+逐轮需＝轮首活敌HP池；净扣＝到下一轮首/出口/截断末的活敌池减少，含毒/召唤/换相/轮初遗物，负值表示池增加；耗＝同区间玩家HP净减少。不是逐牌毛伤，不把未来阶段算入当前池，不把未执行终轮写成0。
+F2／窗口1：T[1, 2, 3, 4, 5, 6]；需[42, 23, 19, 15, 11, 5]；净扣[19, 4, 4, 4, 6, 5]；耗[0, 0, 4, 0, 0, 0]。
+F3／窗口2：T[1, 2, 3]；需[46, 30, 9]；净扣[16, 21, 9]；耗[0, 0, 0]。
+F5／窗口3：T[1, 2, 3, 4]；需[59, 43, 26, 7]；净扣[16, 17, 19, 7]；耗[1, 0, 0, 0]。
+F8／窗口4：T[1, 2, 3, 4, 5, 6, 7, 8, 9, 10]；需[67, 37, 31, 25, 9, 9, 81, 67, 20, 9]；净扣[30, 6, 6, 16, 0, -72, 14, 47, 11, 9]；耗[0, 2, 0, 15, 0, 0, 10, 12, 1, 0]。
+F13／窗口5：T[1, 2, 3]；需[85, 36, 14]；净扣[49, 22, 14]；耗[0, 0, 0]。
+F14／窗口6：T[1, 2, 3, 4, 5]；需[99, 80, 57, 42, 21]；净扣[19, 23, 15, 21, 21]；耗[1, 0, 4, 4, 0]。
+F15／窗口7：T[1, 2, 3]；需[81, 57, 21]；净扣[24, 36, 21]；耗[1, 0, 0]。
+F17／窗口8：T[1, 2, 3, 4, 5, 6, 7, 8, 9]；需[183, 179, 176, 169, 150, 128, 105, 81, 67]；净扣[4, 3, 7, 19, 22, 23, 24, 14, 25]；耗[1, 0, 22, 0, 2, 7, 19, 0, 4]。
+末个单帧T10：HP7、当前活敌池42；该轮后续伤害未记录/未执行。
+F17／窗口9：T[1, 2, 3, 4, 5, 6, 7, 8, 9]；需[183, 179, 176, 169, 142, 122, 93, 78, 45]；净扣[4, 3, 7, 27, 20, 29, 15, 33, 13]；耗[0, 0, 22, 0, 0, 7, 19, 0, 0]。
+末个单帧T10：HP14、当前活敌池32；该轮后续伤害未记录/未执行。
+F17／窗口10：T[1, 2, 3, 4, 5, 6, 7, 8, 9]；需[183, 179, 176, 169, 150, 128, 105, 81, 67]；净扣[4, 3, 7, 19, 22, 23, 24, 14, 25]；耗[0, 0, 22, 0, 2, 7, 19, 0, 4]。
+末个单帧T10：HP8、当前活敌池42；该轮后续伤害未记录/未执行。
+F17／窗口11：T[1, 2, 3, 4, 5, 6, 7, 8, 9, 10]；需[183, 179, 176, 169, 142, 128, 99, 84, 51, 38]；净扣[4, 3, 7, 27, 14, 29, 15, 33, 13, 18]；耗[0, 0, 22, 0, 0, 7, 19, 0, 0, 14]。
+
+药槽逐次变化（获得/饮用/丢弃以原动作和后继核，SL资源重载不计新获得）：
+F2T6 s473507→s473508（2026-10-21T02:46:55.211Z）槽变动：空→0:明耀酊剂 RADIANT_TINCTURE；d@3248827747 {'action': 'claim_reward', 'option_index': 0} [completed: Action completed.]；d@3248829795 {'action': 'claim_reward', 'option_index': 0} [completed: Action completed.]。
+F3T1 s473516→s473517（2026-10-21T02:47:29.668Z）槽变动：0:明耀酊剂 RADIANT_TINCTURE→空；d@3249122204 {'action': 'use_potion', 'option_index': 0} [completed: Action completed.]。
+F5T4 s473557→s473558（2026-10-21T02:49:36.753Z）槽变动：空→0:缚魂药水 POTION_OF_BINDING；d@3249500569 {'action': 'claim_reward', 'option_index': 0} [completed: Action completed.]；d@3249502618 {'action': 'claim_reward', 'option_index': 0} [completed: Action completed.]。
+F8T1 s473575→s473576（2026-10-21T02:52:01.620Z）槽变动：0:缚魂药水 POTION_OF_BINDING→空；d@3250188856 {'action': 'use_potion', 'option_index': 0} [completed: Action completed.]。
+F11T未记录 s473626→s473627（2026-10-21T02:55:51.478Z）槽变动：空→0:固化药水 FORTIFIER；d@3251399981 {'action': 'claim_reward', 'option_index': 0} [completed: Action completed.]；d@3251402040 {'action': 'claim_reward', 'option_index': 0} [completed: Action completed.]。
+F11T未记录 s473627→s473628（2026-10-21T02:55:51.627Z）槽变动：0:固化药水 FORTIFIER→0:固化药水 FORTIFIER、1:能力药水 POWER_POTION；d@3251402040 {'action': 'claim_reward', 'option_index': 0} [completed: Action completed.]；d@3251404111 {'action': 'choose_event_option', 'option_index': 0} [completed: Event proceeded.]。
+F13T2 s473644→s473645（2026-10-21T02:57:13.749Z）槽变动：0:固化药水 FORTIFIER、1:能力药水 POWER_POTION→1:能力药水 POWER_POTION；d@3251998123 {'action': 'use_potion', 'option_index': 0} [completed: Action completed.]。
+F15T1 s473683→s473684（2026-10-21T02:59:36.862Z）槽变动：1:能力药水 POWER_POTION→空；d@3252708803 {'action': 'use_potion', 'option_index': 1} [pending (unstable): Action queued but state is still transitioning.]。
+
+药水计数：非SL槽位新增观察4瓶；use_potion动作4次（含SL重复饮用，不能当独立获得）；discard_potion动作0次；buy_potion动作0次。槽位重载不计补充；各动作回执/变化按上表，过渡态不单凭queued判完整效果。
+
+战外HP/max HP变化与SL恢复：
+F7→F7 REST s473566→s473567（2026-10-21T02:51:47.749Z）：HP51→70，max70→70；战外/开场资源变化；{'action': 'choose_rest_option', 'option_index': 0}；{'action': 'proceed'}。
+F9→F9 REST s473618→s473619（2026-10-21T02:55:23.754Z）：HP30→51，max70→70；战外/开场资源变化；{'action': 'choose_rest_option', 'option_index': 0}；未记录；{'action': 'proceed'}。
+F16→F16 REST s473705→s473706（2026-10-21T03:00:41.625Z）：HP41→62，max70→70；战外/开场资源变化；{'action': 'choose_rest_option', 'option_index': 0}；{'action': 'proceed'}。
+F17→F17 COMBAT s473750→s473751（2026-10-21T03:02:31.532Z）：HP7→62，max70→70；SL恢复，非回血；{'action': 'play_card', 'card_index': 0, 'target_index': 0}；{'action': 'play_card', 'card_index': 1, 'target_index': 0}。
+F17→F17 COMBAT s473796→s473797（2026-10-21T03:04:20.797Z）：HP14→62，max70→70；SL恢复，非回血；{'action': 'play_card', 'card_index': 0}；{'action': 'play_card', 'card_index': 1, 'target_index': 0}。
+F17→F17 COMBAT s473839→s473840（2026-10-21T03:06:02.314Z）：HP8→62，max70→70；SL恢复，非回血；{'action': 'play_card', 'card_index': 0, 'target_index': 0}；{'action': 'play_card', 'card_index': 1, 'target_index': 0}。
+
+SL原始台账（退出胜负以原行result与实帧分列）：
+{"offset": 51884266, "floor": 17, "attempt": 1, "started_at": "2026-10-21T03:00:43.276Z", "ended_at": "2026-10-21T03:02:26.630Z", "result": "predicted_death", "turns": 10, "end_hp": 7}。
+{"offset": 51899700, "floor": 17, "attempt": 2, "started_at": "2026-10-21T03:02:26.631Z", "ended_at": "2026-10-21T03:04:17.298Z", "result": "predicted_death", "turns": 10, "end_hp": 14}。
+{"offset": 51915475, "floor": 17, "attempt": 3, "started_at": "2026-10-21T03:04:17.298Z", "ended_at": "2026-10-21T03:05:58.047Z", "result": "predicted_death", "turns": 10, "end_hp": 8}。
+{"offset": 51931964, "floor": 17, "attempt": 4, "started_at": "2026-10-21T03:05:58.048Z", "ended_at": "2026-10-21T03:07:52.588Z", "result": "died", "turns": 10, "end_hp": 0}。
+
+
+
+Jev低信心（confidence<0.35）7次。原始request 64条／有answers 64条／有非空error 0条；失败行token缺失不补0测量。只纳入原答plan且simulation_reference.rollout明确best/tied的题，选入集合49/54＝90.74%；它是原回答比例，不是护栏/SL后的实际最优执行率。带focus候选题12，原答选带focus候选3；focus是候选目标标签，不是实杀顺序。按资源窗口/回合首个非continue战斗决定计，代码34轮、Jev40轮；续步和同轮重问不重复计，游戏接管首轮不假称Jev选择。selection_dispatch 55条，gate_reject未见匹配字段（非保证所有动作完整执行）；原回执state_effect_verified=false／whole_plan_executed=null保持。完整实线采用率、全局逐敌精确击杀序未完成逐题验收，写未记录。
+
+
+
+HP护栏按决定审计0条；逐条层/轮/尝试及预测省血、伤害代价见numeric-audit.json（不将同轮重复与SL前候选差值累加为实收益）。真实未执行分支代价未记录。本局没有HP护栏替换；不另填反事实损益。
+
+
+
+首末decision 2026-10-21T02:45:28.640Z→2026-10-21T03:07:52.591Z，用时1343.951秒。runs.tokens、ds_tokens_in/out与ds_cache_hit原值另见下列核对；brain原始16条、accepted=true 16条，engine均codex。DeepSeek-reasoning按本局首末决策时间窗无匹配；旧DeepSeek字段名不证明使用DeepSeek。Jev原始入/出token合计450708/3251；Jev缓存未记录。
+
+
+
+V6配置mode=on，card/potion/shop/rest均brain，reflex=off，direction_replan=off；本批冻结v6-build流本局no_match，entries／jev_answer／fallback／unknown均无本局原行可解释，不以0补含义；Jev request／answers／error按上文单列。完整题面不表示采用、成功或收益。runs.code=current，run-config的commit/code/dirty均null并报spawnSync git ENOBUFS，历史精确源码SHA未记录；引用当前只读live 5a295bb5ed52f0c0fa5e8c045dcfcba3d894b532的行号仅解释现行代码，不能冒充本局历史源码。
+
+
+
+证据：本批scratch=/home/dw/Projects/agent-sts2/learner/runs/20261021-111306-e35f946f-318e-40c4-b79a-93cc27f607e0-postmortem；evidence-summary.json仅作索引，v6-evidence/evidence-manifest.json保留整流冻结字节切点/SHA与历史无效JSON；TS0BHDLAH8ME-raw-index.json保留本局states/decisions/run-plans/brain/config/SL每条offset/bytes/SHA。原始两流各条身份、精确decision_id、chosen/result/gate_reject/selection_dispatch及后继索引见question-receipts.json；归局仅用显式run_id或核对的精确decision_id，不靠正文、时间邻近或题号相似。
+
+
+
+完整题面阅读全文2/64条：j74248、j74256；其余62条只机械核原字节、身份、回答/错误、派发和后继索引，未全文语义审阅。原因是本次按关键决定有界复盘；覆盖与未读行逐条在coverage.json，不能称末五条或整局所有问题都已验收。
+
+
+
+未记录／限制：完整路线HP预测与逐节点实到的配对验收（这里只核末次即时回血投影）、传统Boss时钟需要/估计与同输入实打/估值比（原act_boss_clock输出/失血/存活/缺口为null，不能据单体HP补造）、未读全题的构筑边际效应、全部实线采用率／精确杀序、逐击敌方毛伤／过量伤害、未执行护栏/留药/早喝/换目标分支的真实胜负、Jev缓存、历史精确源码SHA和原生档位生效回执。退出帧缺失、SL截断与实死已分列；瀑布巨兽壳的999999999标记不作需伤或净扣数字。三条经验均为旧观察的有限支持，不登记新错误/repeat；本批没有新定位纯bug。相关代码提案保存proposal-TS0BHDLAH8ME.md，交独立strategy-proposal验证，证据不足保持现行行为；不改源码/知识、不提交、不登记implemented/shipped，提证不证明正式发布、下一局消费或自然收益。
+
+原始局表核对：tokens=453959；ds_tokens_in=531637，ds_tokens_out=13368，ds_cache_hit=0；零命中仅属该兼容字段。decisions=406，ended=2026-10-21T03:07:52.591Z，victory=False。
+
+
+
+### 勘误（Wed Oct 21 11:44:12 CST 2026，learner；GWE810ZD014M）
+
+GWE810ZD014M经验第2条中“ T6以4血建立余像／触媒／毒雾 ”的建立时点应分别为：触媒 ACCELERANT在T5、4血时建立1层（states offset=15119944754）；余像 AFTERIMAGE在T6、4血时建立1层（offset=15120018133），毒雾+ NOXIOUS_FUMES在同轮建立3层（offset=15120132118）。T6是三者已共存，不是三者都在该轮建立；后文“机制：”所列分开时点正确。原提案快照保留，本更正不增加独立证据或改变策略结论。
+
+
+## 5E5JFKE9BVSU（A10，静默猎手，第17层，死于墨影幻灵 VANTOM：四试均36/70血空药进场，前三试T7／T6／T7判死；末试T6仅5血5挡对6×2＝12攻击，完整需损7、存活差3血，结毒后敌83/183血）
+
+
+- [回血确实到手，胜战消耗仍决定入王缓冲；打法（DeepSeek路线／休息职责，实际Codex）] F9蛮兽 MAWLER胜后21血，F11休息到42；F12藤蔓蹒跚者 VINE_SHAMBLER耗23、F13墨宝 INKLET再耗4，F16只能15→36。两瓶药先在F3／F7用掉，四试墨影幻灵 VANTOM均空药。没有另一条路线或锻造的受控胜负，不把已兑现的回血判成错误。 本条是旧观察的本局支持，未证实新的可避免失误。（之前学过：silent-0020，S1.exp203）
+
+
+- [滑溜期间攻击次数不等于牌面伤害；打法（Jev出牌）] 末试F17T1墨影幻灵 VANTOM滑溜 SLIPPERY_POWER为9，首个实攻只将183→182；T2首帧181／滑溜7，T3首帧177／滑溜3。末T6敌力量 STRENGTH_POWER为2，突然一拳 SUCKER_PUNCH与中和+ NEUTRALIZE施弱后仍有6×2威胁；不得把开场8攻击沿用到后段，也不设固定耗层牌序。 本条是旧观察的本局支持，未证实新的可避免失误。（之前学过：silent-0224，S1.exp203）
+
+
+- [已施毒不等于已结足毒伤；打法（Jev出牌／代码预测核对）] 末试F17T1迷雾 HAZE施毒后，敌182→181只扣1、滑溜8→7；T3尖啸 PIERCING_WAIL→打击 STRIKE_SILENT→万向斩 OMNISLICE→防御 DEFEND_SILENT的完整题预测损19／伤3，实31→12、177→174相符。末T6结4毒只把87→83，敌仍活；单轮相符不证明长程胜率或整局获益。 本条是旧观察的本局支持，未证实新的可避免失误。（之前学过：silent-0227，S1.exp199）
+
+
+- [记录] 路线原话“商店补强后休息，三处营火支撑两精英收益。”（decisions offset=3255080575），后来两次改路避精英；F6买突然一拳 SUCKER_PUNCH及致命毒药 DEADLY_POISON，F8买万向斩 OMNISLICE，F7拿匕首雨 DAGGER_SPRAY。F16休息题明确补到36，F17实到36；F5改线曾投影F11约39/70，实际F11休息前21/70，后续F7又改线，故不能把18差直接算同路线预测误差。完整节点配对误差未记录。终战单敌四试均未击杀；前三次SL只恢复36，不是回血。
+
+
+机制：本局终战没有玩家永久力量／敏捷／能力牌建立；末试开场滑溜把攻击与毒的单次实际失血限制到1并消层，按前后原帧核，不从层数预支伤害。T4末到T5敌建立2力量；T6两次施弱后意图18→12，5牌挡仅抵其中5，5血仍付不起7净损。末轮毒4实际结算87→83，不能用残存毒层补成击杀。为既有0224／0227的本局支持，无新机制参数。
+
+
+已核runs的角色SILENT、A10、ended非空、victory=false，且追加前无同局标题；本局全部匹配notes/run文件已读。runs.code=current；run-config的commit/code/dirty均null，原错误为spawnSync git ENOBUFS，精确历史源码SHA未记录。仅以当前只读live 5a295bb5ed52f0c0fa5e8c045dcfcba3d894b532解释源码，不能倒认历史版本；least-loss的负数是预计剩血（agent/src/reflex/combat-plan.ts:3432），不是只掉该数值的血。本批没有新定位纯bug。
+
+
+终局原帧遗物：蛇之戒指 RING_OF_THE_SNAKE；橙型香盒 POMANDER；灯笼 LANTERN。
+
+
+实盘资源链（全部胜战和SL窗口；净Δ＝已观察末HP−入口HP，包含回血／自伤，不是敌人总伤害。每个入口首帧均T1，但重试可能已自动重放前缀／结算开场遗物，不保证是出手前原盘。无退出帧只报截断前缀，不当实际死亡）：
+
+|窗口／层／敌人中文名＋ID|HP入→末；max入→末；净Δ|药槽入→末|出口／状态行与UTC时间|
+|---|---|---|---|
+|1／F2／小啃兽 NIBBIT|56→54；70→70；-2|空→空|胜／REWARD原帧；s473897→s473923；2026-10-21T03:10:29.870Z→2026-10-21T03:11:18.855Z|
+|2／F3／毛绒伏地虫 FUZZY_WURM_CRAWLER|54→54；70→70；+0|0:缚魂药水 POTION_OF_BINDING→空|胜／REWARD原帧；s473929→s473943；2026-10-21T03:12:03.829Z→2026-10-21T03:12:28.801Z|
+|3／F4／树叶史莱姆（中） LEAF_SLIME_M／树叶史莱姆（小） LEAF_SLIME_S／树枝史莱姆（小） TWIG_SLIME_S|54→54；70→70；+0|空→空|胜／REWARD原帧；s473948→s473964；2026-10-21T03:12:51.991Z→2026-10-21T03:13:29.394Z|
+|4／F5／利齿之眼 EYE_WITH_TEETH／雾菇 FOGMOG|54→45；70→70；-9|空→空|胜／REWARD原帧；s473969→s473995；2026-10-21T03:14:18.022Z→2026-10-21T03:15:13.799Z|
+|5／F7／飞蝇菌子 FLYCONID／闪光贾克斯果 SNAPPING_JAXFRUIT|45→29；70→70；-16|0:能量药水 ENERGY_POTION→空|胜／REWARD原帧；s474007→s474034；2026-10-21T03:17:38.635Z→2026-10-21T03:18:46.725Z|
+|6／F9／蛮兽 MAWLER|29→21；70→70；-8|空→空|胜／REWARD原帧；s474044→s474067；2026-10-21T03:20:26.352Z→2026-10-21T03:21:08.543Z|
+|7／F12／藤蔓蹒跚者 VINE_SHAMBLER|42→19；70→70；-23|空→空|胜／REWARD原帧；s474079→s474101；2026-10-21T03:21:58.752Z→2026-10-21T03:22:45.099Z|
+|8／F13／墨宝 INKLET|19→15；70→70；-4|空→空|胜／REWARD原帧；s474106→s474122；2026-10-21T03:23:09.743Z→2026-10-21T03:23:57.150Z|
+|9／F17／墨影幻灵 VANTOM|36→1；70→70；-35（前缀）|空→空|SL重载前截断，退出帧缺失；s474140→s474172；2026-10-21T03:26:36.051Z→2026-10-21T03:27:58.292Z|
+|10／F17／墨影幻灵 VANTOM|36→3；70→70；-33（前缀）|空→空|SL重载前截断，退出帧缺失；s474173→s474199；2026-10-21T03:28:10.045Z→2026-10-21T03:29:15.413Z|
+|11／F17／墨影幻灵 VANTOM|36→1；70→70；-35（前缀）|空→空|SL重载前截断，退出帧缺失；s474200→s474230；2026-10-21T03:29:27.454Z→2026-10-21T03:30:44.965Z|
+|12／F17／墨影幻灵 VANTOM|36→0；70→70；-36|空→空|亡／GAME_OVER原帧；s474231→s474260；2026-10-21T03:30:55.695Z→2026-10-21T03:32:14.574Z|
+
+
+逐回合资源／需伤（每窗口独立；“需”仅为该回合首帧活敌血池，不含未来重接／召唤，“净扣”是到下一轮首帧或已观察出口的血池净变化，包含毒及轮初被动；不是敌人毛承伤。瞬时缺帧、过量伤害与分源未记录。R是瀑布巨兽自爆占位体，排除其近十亿HP，不计作需伤；该轮净扣写未记录。最后无后继的判死回合不补伤害）：
+
+
+F2／窗口1：T[1, 2, 3, 4, 5, 6, 7]；需[48, 48, 32, 22, 16, 16, 4]；净扣[0, 16, 10, 6, 0, 12, 4]；净耗HP[0, 0, 0, 2, 0, 0, 0]。
+
+F3／窗口2：T[1, 2, 3]；需[58, 30, 18]；净扣[28, 12, 18]；净耗HP[0, 0, 0]。
+
+F4／窗口3：T[1, 2, 3, 4]；需[59, 45, 35, 14]；净扣[14, 10, 21, 14]；净耗HP[0, 0, 0, 0]。
+
+F5／窗口4：T[1, 2, 3, 4, 5, 6]；需[78, 66, 60, 36, 21, 21]；净扣[12, 6, 24, 15, 0, 21]；净耗HP[0, 0, 2, 7, 0, 0]。
+
+F7／窗口5：T[1, 2, 3, 4, 5, 6]；需[89, 80, 64, 31, 8, 2]；净扣[9, 16, 33, 23, 6, 2]；净耗HP[3, 0, 0, 13, 0, 0]。
+
+F9／窗口6：T[1, 2, 3, 4, 5]；需[76, 58, 42, 27, 19]；净扣[18, 16, 15, 8, 19]；净耗HP[1, 7, 0, 0, 0]。
+
+F12／窗口7：T[1, 2, 3, 4, 5]；需[64, 54, 34, 25, 16]；净扣[10, 20, 9, 9, 16]；净耗HP[0, 6, 13, 4, 0]。
+
+F13／窗口8：T[1, 2, 3]；需[46, 31, 18]；净扣[15, 13, 18]；净耗HP[0, 4, 0]。
+
+F17／窗口9：T[1, 2, 3, 4, 5, 6, 7]；需[183, 178, 176, 169, 140, 115, 87]；净扣[5, 2, 7, 29, 25, 28, '未记录']；净耗HP[3, 0, 25, 0, 0, 7, '未记录']。
+
+F17／窗口10：T[1, 2, 3, 4, 5, 6]；需[183, 178, 176, 161, 132, 107]；净扣[5, 2, 15, 29, 25, '未记录']；净耗HP[3, 0, 30, 0, 0, '未记录']。
+
+F17／窗口11：T[1, 2, 3, 4, 5, 6, 7]；需[183, 178, 177, 174, 145, 120, 92]；净扣[5, 1, 3, 29, 25, 28, '未记录']；净耗HP[3, 0, 25, 0, 0, 7, '未记录']。
+
+F17／窗口12：T[1, 2, 3, 4, 5, 6]；需[183, 181, 177, 174, 149, 113]；净扣[2, 4, 3, 25, 36, 30]；净耗HP[0, 5, 19, 0, 7, 5]。
+
+
+药水槽位变化（SL重载另列，非获得；饮用／丢弃／购买由下列原动作核，不从空槽单独判喝药）：
+
+
+F2T7 s473924→s473925（2026-10-21T03:11:19.153Z）：空→0:缚魂药水 POTION_OF_BINDING。
+
+F3T1 s473931→s473932（2026-10-21T03:12:09.968Z）：0:缚魂药水 POTION_OF_BINDING→空。
+
+F5T6 s473996→s473997（2026-10-21T03:15:14.133Z）：空→0:能量药水 ENERGY_POTION。
+
+F7T3 s474021→s474022（2026-10-21T03:18:16.618Z）：0:能量药水 ENERGY_POTION→空。
+
+F3T1 d@3255431205：use_potion 槽／选项0，缚魂药水 POTION_OF_BINDING；completed: Action completed.。
+
+F7T3 d@3257212147：use_potion 槽／选项0，能量药水 ENERGY_POTION；completed: Action completed.。
+
+非SL槽位新增加观察2瓶；主动饮用动作2次（含SL恢复后重复饮用），主动丢弃0次，购买0次。新增观察是槽位实变，不假定所有补给来源；queued须结合后继槽位／手牌核，不代完整效果。
+
+
+战外HP／max HP及SL恢复（来源动作附列；不把SL算治疗）：
+
+
+F11→F11，s474076→s474077（2026-10-21T03:21:57.563Z）：HP21→42，max70→70；战外／开场变化；窗口内动作[{"action": "choose_rest_option", "option_index": 0}, {"action": "proceed"}]。
+
+F16→F16，s474137→s474138（2026-10-21T03:26:34.613Z）：HP15→36，max70→70；战外／开场变化；窗口内动作[{"action": "choose_rest_option", "option_index": 0}, {"action": "proceed"}]。
+
+F17→F17，s474172→s474173（2026-10-21T03:28:10.045Z）：HP1→36，max70→70；SL资源恢复，非回血；窗口内动作[{"action": "play_card", "card_index": 1, "target_index": 0}, {"action": "play_card", "card_index": 0, "target_index": 0}]。
+
+F17→F17，s474199→s474200（2026-10-21T03:29:27.454Z）：HP3→36，max70→70；SL资源恢复，非回血；窗口内动作[{"action": "play_card", "card_index": 0, "target_index": 0}, {"action": "play_card", "card_index": 0, "target_index": 0}]。
+
+F17→F17，s474230→s474231（2026-10-21T03:30:55.695Z）：HP1→36，max70→70；SL资源恢复，非回血；窗口内动作[{"action": "play_card", "card_index": 1, "target_index": 0}, {"action": "play_card", "card_index": 0, "target_index": 0}]。
+
+
+SL原始行结果（工具不自动判胜负，按sl-attempts和实帧分列）：
+
+
+{"offset": 51950574, "floor": 17, "attempt": 1, "started_at": "2026-10-21T03:26:36.052Z", "ended_at": "2026-10-21T03:28:05.318Z", "result": "predicted_death", "turns": 7, "end_hp": 1}。
+
+{"offset": 51966442, "floor": 17, "attempt": 2, "started_at": "2026-10-21T03:28:05.319Z", "ended_at": "2026-10-21T03:29:22.293Z", "result": "predicted_death", "turns": 6, "end_hp": 3}。
+
+{"offset": 51980087, "floor": 17, "attempt": 3, "started_at": "2026-10-21T03:29:22.294Z", "ended_at": "2026-10-21T03:30:51.128Z", "result": "predicted_death", "turns": 7, "end_hp": 1}。
+
+{"offset": 51996905, "floor": 17, "attempt": 4, "started_at": "2026-10-21T03:30:51.129Z", "ended_at": "2026-10-21T03:32:14.571Z", "result": "died", "turns": 6, "end_hp": 0}。
+
+
+Jev完整题面核读：末试F17T3，Jev以0.88选择plan1；chosen为尖啸，completed；后续打击、万向斩、防御分别有实帧和续步，31→12、敌177→174。两候选五轮均24/24死亡，整场各50样本无赢样本，却另显示校准49%；这些数值分别保留，49%不是本局胜利率。 原始j字节偏移=2360590427，完整定位见question-receipts.json，所引原题各字段已分段完整读到。
+
+Jev低信心（confidence<0.35）9次；原始请求74／有答案72／非空error2。只纳原答plan且rollout显式best/tied的题，原答选入集合53/53＝100.00%；这是原回答比例，不是护栏／SL后的真实最优执行率。含focus候选题7，原答选有focus候选3；focus不是实际击杀顺序。以每窗口／回合第一条非continue战斗决定计，代码24轮、Jev41轮（重试分开、续步不重复）；同轮后续代码重算不在此口径重复计。
+
+selection_dispatch共54条，未见gate_reject字段匹配（不等于已证所有闸均未拒）；原回执state_effect_verified=false、whole_plan_executed=null保留。完整实线采用率、未全文题的逐敌精确击杀序均未记录。原始error逐条保留于question-receipts.json，不把请求存在当回答成功。
+
+
+HP护栏候选审计0条；以下是SL之前的候选差，不能累计作实际省血：
+
+真实未执行分支的代价未记录；不拟新护栏权重、药价或SL门槛。
+
+
+首末decision 2026-10-21T03:09:27.305Z→2026-10-21T03:32:14.574Z，用时1367.269秒（不含首决策前启动）；runs.tokens=440154，ds_tokens_in/out=629063/15774、ds_cache_hit=0。Jev原始入／出token合计436477/3677（缺token字段2条另列，不补作0测量）；错误行未提供token的仍缺失，缓存命中未记录。大脑原行18条、engine计数{'codex': 18}；DeepSeek-reasoning首末决策时间窗无匹配，兼容ds字段和任务职责名不证明使用DeepSeek。原生turn_context／请求档位生效回执未记录，不从配置effort推定生效。
+
+
+V6原始配置mode=on，card/potion/shop/rest均brain、reflex=off、direction_replan=off；本局冻结v6-build流no_match，entries／jev_answer／fallback／unknown没有本局原行可解释，缺失不是零，也不证明V6 off。Jev request／answers／error按上文独立核，不与v6-build混算。整流历史无效JSON和未知身份保留于manifest；不是本局零错误证明。
+
+本局完整题面实读1/74，仅偏移2360590427；其余73条只机械核原字节／身份／回答或错误／chosen、result、gate_reject、selection_dispatch及后继索引，未作完整语义审阅。原因：按关键决定有界复盘；逐条覆盖和未读原因在coverage.json，不把最后五条当完整覆盖。
+
+证据：scratch=/home/dw/Projects/agent-sts2/learner/runs/20261021-134306-df2bd06d-ce82-40d4-a101-b122ee689219-postmortem；evidence-summary.json只是有限事实索引。v6-evidence/evidence-manifest.json给四流冻结切点／整流SHA／缺行；各局raw-index.json及raw-sources.json给states、decisions、run-plans、brain、run-config、SL原行offset／bytes／SHA及各自切点。Jev归属仅认显式run_id或decisions精确decision_id，identity关联出处见question-receipts.json，不靠正文、时间邻近或题号相似。
+
+未记录／限制：完整路线投影与实到逐节点配对、传统Boss时钟需要／估计及同输入实打／估值比、未读题的构筑边际效应、完整实线采用率、逐击毛伤和过量伤害、留药／早喝／换目标／护栏未执行分支的整场反事实、Jev缓存、精确历史源码SHA、原生档位生效回执。只对实际匹配题和实帧下有限结论；未发现新纯bug，不借其他角色证据补经验；不称正式发布、下一局消费或自然收益。三条均support，不登记repeat；独立strategy-proposal保留行为、补证后再决定修改。
+
+
+## 862JGUUWUQZX（A10，静默猎手，第33层，死于碾碎爪 CRUSHER／火箭 ROCKET：四试均41/83血、槽0熔炉的祝福进场，前三试T4／T6／T6判死；末试T8仅7血4挡对爪14攻击，完整需损10、存活差4血，结毒后两敌74／60血）
+
+
+- [连续胜战和补给应逐段记到终战；打法（DeepSeek路线／休息职责，实际Codex）] F23熟睡甲虫 SLUMBERING_BEETLE／盛碗虫 BOWLBUG_ROCK、BOWLBUG_SILK第三试胜仅2血；F24休息到26、F25餐券 MEAL_TICKET到店回到41，F27千足虫胜到9；F28休息到33、F29餐券回48，F30啃咬机 CHOMPER耗17、F31猎人杀手 HUNTER_KILLER耗14，F32只能17→41。熔炉的祝福 BLESSING_OF_THE_FORGE是F31新得，SL重载不算新获得；不从省略的胜战推留药可赢。 本条是旧观察的本局支持，未证实新的可避免失误。（之前学过：silent-0020，S1.exp203）
+
+
+- [目标朝向与当轮血价必须同记；打法（Jev出牌）] 末试F33T5完整题在13血16挡时，小刀 SHIV指碾碎爪 CRUSHER预测损1／伤3，指火箭 ROCKET预测损9／伤3；Jev0.88选前者，实162→159、下一轮13→12。两条五轮推演均24/24死，不把省当轮8血的候选差写成整场胜因；末T8转向后爪14攻仍杀7血4挡，终场两部件都存活。 本条是旧观察的本局支持，未证实新的可避免失误。（之前学过：silent-0062，S1.exp188）
+
+
+- [能力已持有仍要核建立时点及存活窗口；打法（DeepSeek构筑职责／Jev出牌，实际Codex）] F25购买灵动步法 FOOTWORK与炼制药水 ALCHEMIZE。末试F33T3才建立2敏捷，T5才建立毒雾 NOXIOUS_FUMES的2层；到T8已只剩7血，输出和防御都不能按从T1完整运作计算。前三试也都失败，没有单独提早建立能力的受控胜线，不认定买牌或某一出牌为已定位错误。 本条是旧观察的本局支持，未证实新的可避免失误。（之前学过：silent-0385，S1.exp203）
+
+
+- [记录] 起始路线原话“前期四战补强，四火衔接三精英，兼顾发育与续航。”（decisions offset=3262325699）。F8拿毒雾 NOXIOUS_FUMES，F11拿咕嘟冒泡 BUBBLE_BUBBLE，F17拿爆发 BURST，F25补灵动步法 FOOTWORK／炼制药水 ALCHEMIZE与无色药水 COLORLESS_POTION，F31拿扫腿 LEG_SWEEP。F14改线预测F15精英入68、F16约46，实际精英入68、F16休息前55；同一路段投影少估9，F16再休息到79，不能拿79直接对46。F32题补到41、F33实到41。F17瀑布巨兽 WATERFALL_GIANT首试79→25胜，跨幕F18到71是先古回复，与营火／餐券／SL分账。
+
+
+机制：末试灵动步法 FOOTWORK建立2敏捷后，F33T5三张技能结束已有16挡；脆弱 FRAIL_POWER与敏捷共同影响牌挡，不能用无脆弱基值直加。末试T5毒雾建立2层，T6两敌各3毒、T7各5毒；异蛇头骨 SNECKO_SKULL同在，不能把递增完全归为毒雾本身。T8最后爪81／火箭80分别结7／20毒至74／60，爪仍14攻击、牌挡仅4；毒进度不抵玩家净需损10。敌力量3和遭到包围 SURROUNDED_POWER／朝向也须使用当前帧，不据提示中的历史目标偏好制定固定先杀规则。
+
+
+已核runs的角色SILENT、A10、ended非空、victory=false，且追加前无同局标题；本局全部匹配notes/run文件已读。runs.code=current；run-config的commit/code/dirty均null，原错误为spawnSync git ENOBUFS，精确历史源码SHA未记录。仅以当前只读live 5a295bb5ed52f0c0fa5e8c045dcfcba3d894b532解释源码，不能倒认历史版本；least-loss的负数是预计剩血（agent/src/reflex/combat-plan.ts:3432），不是只掉该数值的血。本批没有新定位纯bug。
+
+
+终局原帧遗物：蛇之戒指 RING_OF_THE_SNAKE；巨大扭蛋 LARGE_CAPSULE；草莓 STRAWBERRY；开信刀 LETTER_OPENER；黑石护符 DARKSTONE_PERIAPT；水银沙漏 MERCURY_HOURGLASS；微型大炮 MINIATURE_CANNON；异蛇头骨 SNECKO_SKULL；餐券 MEAL_TICKET；节日拉炮 FESTIVE_POPPER；佩尔之肉 PAELS_FLESH；磨刀石 WHETSTONE；精致折扇 ORNAMENTAL_FAN。
+
+
+实盘资源链（全部胜战和SL窗口；净Δ＝已观察末HP−入口HP，包含回血／自伤，不是敌人总伤害。每个入口首帧均T1，但重试可能已自动重放前缀／结算开场遗物，不保证是出手前原盘。无退出帧只报截断前缀，不当实际死亡）：
+
+|窗口／层／敌人中文名＋ID|HP入→末；max入→末；净Δ|药槽入→末|出口／状态行与UTC时间|
+|---|---|---|---|
+|1／F2／淤泥旋螺 SLUDGE_SPINNER|63→56；77→77；-7|空→空|胜／REWARD原帧；s474267→s474288；2026-10-21T03:34:22.418Z→2026-10-21T03:35:02.091Z|
+|2／F3／蟾蜍蝌蚪 TOADPOLE|56→50；77→77；-6|空→空|胜／REWARD原帧；s474293→s474314；2026-10-21T03:35:42.368Z→2026-10-21T03:36:24.316Z|
+|3／F4／海洋混混 SEAPUNK|50→46；77→77；-4|空→空|胜／REWARD原帧；s474319→s474338；2026-10-21T03:36:55.233Z→2026-10-21T03:37:26.940Z|
+|4／F5／气态炸弹 GAS_BOMB／活雾 LIVING_FOG|46→37；77→77；-9|空→空|胜／REWARD原帧；s474343→s474389；2026-10-21T03:38:06.156Z→2026-10-21T03:39:35.959Z|
+|5／F8／鬼祟珊瑚群 SKULKING_COLONY|52→35；77→77；-17|0:瓶装潜能 BOTTLED_POTENTIAL→空|胜／REWARD原帧；s474401→s474437；2026-10-21T03:41:19.019Z→2026-10-21T03:42:30.204Z|
+|6／F11／花园幽灵鳗 PHANTASMAL_GARDENER|58→39；77→77；-19|0:赌徒特酿 GAMBLERS_BREW→空|胜／REWARD原帧；s474451→s474486；2026-10-21T03:43:49.764Z→2026-10-21T03:44:51.984Z|
+|7／F14／噬尸蛞蝓 CORPSE_SLUG|68→68；83→83；+0|0:明耀酊剂 RADIANT_TINCTURE→空|胜／REWARD原帧；s474500→s474518；2026-10-21T03:46:30.752Z→2026-10-21T03:47:07.625Z|
+|8／F15／骇鳗 TERROR_EEL|68→55；83→83；-13|0:敏捷药水 DEXTERITY_POTION→空|胜／REWARD原帧；s474524→s474552；2026-10-21T03:48:15.154Z→2026-10-21T03:49:03.660Z|
+|9／F17／瀑布巨兽 WATERFALL_GIANT|79→25；83→83；-54|0:异鱼之油 FYSH_OIL→空|胜／REWARD原帧；s474562→s474622；2026-10-21T03:49:57.565Z→2026-10-21T03:52:15.532Z|
+|10／F19／地道虫 TUNNELER|71→56；83→83；-15|空→空|胜／REWARD原帧；s474630→s474647；2026-10-21T03:53:04.938Z→2026-10-21T03:53:34.039Z|
+|11／F21／偷窃草蜢 THIEVING_HOPPER|56→35；83→83；-21|空→空|胜／REWARD原帧；s474656→s474678；2026-10-21T03:54:44.078Z→2026-10-21T03:55:38.168Z|
+|12／F22／外骨骼虫 EXOSKELETON|35→32；83→83；-3|空→空|胜／REWARD原帧；s474684→s474699；2026-10-21T03:56:15.545Z→2026-10-21T03:56:45.130Z|
+|13／F23／盛碗虫（石） BOWLBUG_ROCK／盛碗虫（丝） BOWLBUG_SILK／熟睡甲虫 SLUMBERING_BEETLE|32→1；83→83；-31（前缀）|空→空|SL重载前截断，退出帧缺失；s474704→s474738；2026-10-21T03:57:21.749Z→2026-10-21T03:58:27.252Z|
+|14／F23／盛碗虫（石） BOWLBUG_ROCK／盛碗虫（丝） BOWLBUG_SILK／熟睡甲虫 SLUMBERING_BEETLE|32→1；83→83；-31（前缀）|空→空|SL重载前截断，退出帧缺失；s474739→s474772；2026-10-21T03:58:44.551Z→2026-10-21T03:59:50.129Z|
+|15／F23／盛碗虫（石） BOWLBUG_ROCK／盛碗虫（丝） BOWLBUG_SILK／熟睡甲虫 SLUMBERING_BEETLE|32→2；83→83；-30|空→空|胜／REWARD原帧；s474773→s474803；2026-10-21T04:00:04.692Z→2026-10-21T04:01:07.399Z|
+|16／F27／残杀千足虫 DECIMILLIPEDE_SEGMENT_BACK／残杀千足虫 DECIMILLIPEDE_SEGMENT_FRONT／残杀千足虫 DECIMILLIPEDE_SEGMENT_MIDDLE|41→9；83→83；-32|0:固化药水 FORTIFIER、1:无色药水 COLORLESS_POTION→空|胜／REWARD原帧；s474823→s474843；2026-10-21T04:03:11.791Z→2026-10-21T04:04:30.521Z|
+|17／F30／啃咬机 CHOMPER|48→31；83→83；-17|0:虚弱药水 WEAK_POTION→0:虚弱药水 WEAK_POTION|胜／REWARD原帧；s474857→s474874；2026-10-21T04:05:53.300Z→2026-10-21T04:06:43.386Z|
+|18／F31／猎人杀手 HUNTER_KILLER|31→17；83→83；-14|0:虚弱药水 WEAK_POTION→空|胜／REWARD原帧；s474879→s474901；2026-10-21T04:07:13.098Z→2026-10-21T04:08:04.915Z|
+|19／F33／碾碎爪 CRUSHER／火箭 ROCKET|41→15；83→83；-26（前缀）|0:熔炉的祝福 BLESSING_OF_THE_FORGE→空|SL重载前截断，退出帧缺失；s474910→s474934；2026-10-21T04:08:54.849Z→2026-10-21T04:10:13.745Z|
+|20／F33／碾碎爪 CRUSHER／火箭 ROCKET|41→3；83→83；-38（前缀）|0:熔炉的祝福 BLESSING_OF_THE_FORGE→空|SL重载前截断，退出帧缺失；s474935→s474971；2026-10-21T04:10:45.697Z→2026-10-21T04:12:53.807Z|
+|21／F33／碾碎爪 CRUSHER／火箭 ROCKET|41→1；83→83；-40（前缀）|0:熔炉的祝福 BLESSING_OF_THE_FORGE→空|SL重载前截断，退出帧缺失；s474972→s475008；2026-10-21T04:13:49.582Z→2026-10-21T04:16:04.537Z|
+|22／F33／碾碎爪 CRUSHER／火箭 ROCKET|41→0；83→83；-41|0:熔炉的祝福 BLESSING_OF_THE_FORGE→空|亡／GAME_OVER原帧；s475009→s475054；2026-10-21T04:16:14.355Z→2026-10-21T04:18:40.694Z|
+
+
+逐回合资源／需伤（每窗口独立；“需”仅为该回合首帧活敌血池，不含未来重接／召唤，“净扣”是到下一轮首帧或已观察出口的血池净变化，包含毒及轮初被动；不是敌人毛承伤。瞬时缺帧、过量伤害与分源未记录。R是瀑布巨兽自爆占位体，排除其近十亿HP，不计作需伤；该轮净扣写未记录。最后无后继的判死回合不补伤害）：
+
+
+F2／窗口1：T[1, 2, 3, 4, 5]；需[41, 35, 27, 19, 7]；净扣[6, 8, 8, 12, 7]；净耗HP[0, 0, 0, 7, 0]。
+
+F3／窗口2：T[1, 2, 3, 4, 5]；需[49, 37, 27, 16, 10]；净扣[12, 10, 11, 6, 10]；净耗HP[0, 0, 6, 0, 0]。
+
+F4／窗口3：T[1, 2, 3, 4]；需[47, 32, 22, 10]；净扣[15, 10, 12, 10]；净耗HP[4, 0, 0, 0]。
+
+F5／窗口4：T[1, 2, 3, 4, 5, 6, 7, 8, 9]；需[82, 61, 53, 45, 38, 30, 26, 15, 11]；净扣[21, 8, 8, 7, 8, 4, 11, 4, 11]；净耗HP[0, 0, 4, 0, 3, 0, 1, 1, 0]。
+
+F8／窗口5：T[1, 2, 3, 4, 5, 6]；需[80, 75, 55, 35, 26, 17]；净扣[5, 20, 20, 9, 9, 17]；净耗HP[1, 7, 0, 5, 4, 0]。
+
+F11／窗口6：T[1, 2, 3, 4]；需[120, 60, 39, 4]；净扣[60, 21, 35, 4]；净耗HP[4, 15, 0, 0]。
+
+F14／窗口7：T[1, 2, 3]；需[84, 39, 0]；净扣[45, 39, 0]；净耗HP[0, 0, 0]。
+
+F15／窗口8：T[1, 2, 3, 4, 5]；需[150, 123, 84, 45, 17]；净扣[27, 39, 39, 28, 17]；净耗HP[11, 2, 0, 0, 0]。
+
+F17／窗口9：T[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]；需[250, 217, 207, 195, 174, 151, 123, 100, 70, 51, 12, 'R']；净扣[33, 10, 12, 21, 23, 28, 23, 30, 19, 39, '未记录', '未记录']；净耗HP[0, 1, 5, 0, 0, 0, 0, 5, 0, 9, 0, 34]。
+
+F19／窗口10：T[1, 2, 3]；需[92, 44, 2]；净扣[48, 42, 2]；净耗HP[15, 0, 0]。
+
+F21／窗口11：T[1, 2, 3, 4]；需[84, 64, 49, 32]；净扣[20, 15, 17, 32]；净耗HP[3, 0, 18, 0]。
+
+F22／窗口12：T[1, 2, 3]；需[111, 29, 9]；净扣[82, 20, 9]；净耗HP[3, 0, 0]。
+
+F23／窗口13：T[1, 2, 3, 4, 5, 6]；需[179, 127, 104, 89, 72, 47]；净扣[52, 23, 15, 17, 25, '未记录']；净耗HP[6, 10, 0, 5, 10, '未记录']。
+
+F23／窗口14：T[1, 2, 3, 4, 5, 6]；需[155, 127, 104, 89, 66, 41]；净扣[28, 23, 15, 23, 25, '未记录']；净耗HP[6, 10, 0, 5, 10, '未记录']。
+
+F23／窗口15：T[1, 2, 3, 4, 5]；需[155, 137, 106, 78, 35]；净扣[18, 31, 28, 43, 35]；净耗HP[11, 10, 2, 7, 0]。
+
+F27／窗口16：T[1, 2, 3, 4]；需[150, 90, 45, 18]；净扣[60, 45, 27, 18]；净耗HP[17, 2, 13, 0]。
+
+F30／窗口17：T[1, 2, 3, 4]；需[131, 94, 30, 0]；净扣[37, 64, 30, 0]；净耗HP[3, 14, 0, 0]。
+
+F31／窗口18：T[1, 2, 3, 4]；需[126, 75, 54, 37]；净扣[51, 21, 17, 37]；净耗HP[0, 10, 4, 0]。
+
+F33／窗口19：T[1, 2, 3, 4]；需[428, 398, 362, 315]；净扣[30, 36, 47, '未记录']；净耗HP[0, 20, 6, '未记录']。
+
+F33／窗口20：T[1, 2, 3, 4, 5, 6]；需[404, 398, 364, 323, 305, 283]；净扣[6, 34, 41, 18, 22, '未记录']；净耗HP[0, 14, 0, 16, 8, '未记录']。
+
+F33／窗口21：T[1, 2, 3, 4, 5, 6]；需[404, 398, 364, 323, 277, 255]；净扣[6, 34, 41, 46, 22, '未记录']；净耗HP[0, 14, 0, 18, 8, '未记录']。
+
+F33／窗口22：T[1, 2, 3, 4, 5, 6, 7, 8]；需[404, 398, 364, 323, 305, 289, 241, 202]；净扣[6, 34, 41, 18, 16, 48, 39, 68]；净耗HP[0, 14, 6, 8, 1, 1, 4, 7]。
+
+
+药水槽位变化（SL重载另列，非获得；饮用／丢弃／购买由下列原动作核，不从空槽单独判喝药）：
+
+
+F5T9 s474390→s474391（2026-10-21T03:39:36.260Z）：空→0:瓶装潜能 BOTTLED_POTENTIAL。
+
+F8T4 s474422→s474423（2026-10-21T03:42:05.457Z）：0:瓶装潜能 BOTTLED_POTENTIAL→空。
+
+F8T6 s474438→s474439（2026-10-21T03:42:30.505Z）：空→0:赌徒特酿 GAMBLERS_BREW。
+
+F11T1 s474460→s474461（2026-10-21T03:44:10.759Z）：0:赌徒特酿 GAMBLERS_BREW→空。
+
+F11T4 s474487→s474488（2026-10-21T03:44:52.312Z）：空→0:明耀酊剂 RADIANT_TINCTURE。
+
+F14T1 s474507→s474508（2026-10-21T03:46:44.340Z）：0:明耀酊剂 RADIANT_TINCTURE→空。
+
+F14T3 s474519→s474520（2026-10-21T03:47:07.963Z）：空→0:敏捷药水 DEXTERITY_POTION。
+
+F15T1 s474527→s474528（2026-10-21T03:48:22.795Z）：0:敏捷药水 DEXTERITY_POTION→空。
+
+F15T5 s474553→s474554（2026-10-21T03:49:03.961Z）：空→0:异鱼之油 FYSH_OIL。
+
+F17T1 s474565→s474566（2026-10-21T03:50:10.870Z）：0:异鱼之油 FYSH_OIL→空。
+
+F23T5 s474804→s474805（2026-10-21T04:01:07.680Z）：空→0:固化药水 FORTIFIER。
+
+F25T未记录 s474815→s474816（2026-10-21T04:03:08.953Z）：0:固化药水 FORTIFIER→0:固化药水 FORTIFIER、1:无色药水 COLORLESS_POTION。
+
+F27T2 s474831→s474832（2026-10-21T04:03:57.784Z）：0:固化药水 FORTIFIER、1:无色药水 COLORLESS_POTION→1:无色药水 COLORLESS_POTION。
+
+F27T2 s474832→s474833（2026-10-21T04:04:00.677Z）：1:无色药水 COLORLESS_POTION→空。
+
+F29T未记录 s474853→s474854（2026-10-21T04:05:51.774Z）：空→0:虚弱药水 WEAK_POTION。
+
+F31T1 s474886→s474887（2026-10-21T04:07:30.323Z）：0:虚弱药水 WEAK_POTION→空。
+
+F31T4 s474902→s474903（2026-10-21T04:08:05.199Z）：空→0:熔炉的祝福 BLESSING_OF_THE_FORGE。
+
+F33T1 s474912→s474913（2026-10-21T04:09:16.954Z）：0:熔炉的祝福 BLESSING_OF_THE_FORGE→空。
+
+F33T1 s474936→s474937（2026-10-21T04:10:47.141Z）：0:熔炉的祝福 BLESSING_OF_THE_FORGE→空。
+
+F33T1 s474973→s474974（2026-10-21T04:13:51.113Z）：0:熔炉的祝福 BLESSING_OF_THE_FORGE→空。
+
+F33T1 s475010→s475011（2026-10-21T04:16:15.845Z）：0:熔炉的祝福 BLESSING_OF_THE_FORGE→空。
+
+F8T4 d@3264274596：use_potion 槽／选项0，瓶装潜能 BOTTLED_POTENTIAL；completed: Action completed.。
+
+F11T1 d@3265081171：use_potion 槽／选项0，赌徒特酿 GAMBLERS_BREW；pending (unstable): Action queued but state is still transitioning.。
+
+F14T1 d@3266109000：use_potion 槽／选项0，明耀酊剂 RADIANT_TINCTURE；completed: Action completed.。
+
+F15T1 d@3266448328：use_potion 槽／选项0，敏捷药水 DEXTERITY_POTION；completed: Action completed.。
+
+F17T1 d@3267265763：use_potion 槽／选项0，异鱼之油 FYSH_OIL；completed: Action completed.。
+
+F25T未记录 d@3271419205：buy_potion 槽／选项1，无色药水 COLORLESS_POTION；completed: Action completed.。
+
+F27T2 d@3271559047：use_potion 槽／选项0，固化药水 FORTIFIER；completed: Action completed.。
+
+F27T2 d@3271561207：use_potion 槽／选项1，无色药水 COLORLESS_POTION；pending (unstable): Action queued but state is still transitioning.。
+
+F29T未记录 d@3272412528：buy_potion 槽／选项0，虚弱药水 WEAK_POTION；completed: Action completed.。
+
+F31T1 d@3273100113：use_potion 槽／选项0，虚弱药水 WEAK_POTION；completed: Action completed.。
+
+F33T1 d@3274053877：use_potion 槽／选项0，熔炉的祝福 BLESSING_OF_THE_FORGE；completed: Action completed.。
+
+F33T1 d@3274373801：use_potion 槽／选项0，熔炉的祝福 BLESSING_OF_THE_FORGE；completed: Action completed.。
+
+F33T1 d@3274960652：use_potion 槽／选项0，熔炉的祝福 BLESSING_OF_THE_FORGE；completed: Action completed.。
+
+F33T1 d@3275557367：use_potion 槽／选项0，熔炉的祝福 BLESSING_OF_THE_FORGE；completed: Action completed.。
+
+非SL槽位新增加观察9瓶；主动饮用动作12次（含SL恢复后重复饮用），主动丢弃0次，购买2次。新增观察是槽位实变，不假定所有补给来源；queued须结合后继槽位／手牌核，不代完整效果。
+
+
+战外HP／max HP及SL恢复（来源动作附列；不把SL算治疗）：
+
+
+F1→F1，s474264→s474265（2026-10-21T03:33:47.060Z）：HP56→63，max70→77；战外／开场变化；窗口内动作[{"action": "choose_event_option", "option_index": 2}, {"action": "choose_event_option", "option_index": 0}]。
+
+F6→F6，s474395→s474396（2026-10-21T03:40:38.855Z）：HP37→29，max77→77；战外／开场变化；窗口内动作[{"action": "choose_event_option", "option_index": 0}, {"action": "choose_event_option", "option_index": 0}]。
+
+F7→F7，s474398→s474399（2026-10-21T03:41:17.776Z）：HP29→52，max77→77；战外／开场变化；窗口内动作[{"action": "choose_rest_option", "option_index": 0}, {"action": "proceed"}]。
+
+F9→F9，s474444→s474445（2026-10-21T03:43:46.873Z）：HP35→58，max77→77；战外／开场变化；窗口内动作[{"action": "choose_rest_option", "option_index": 0}, {"action": "proceed"}]。
+
+F12→F12，s474493→s474494（2026-10-21T03:45:54.224Z）：HP39→62，max77→77；战外／开场变化；窗口内动作[{"action": "choose_rest_option", "option_index": 0}, {"action": "proceed"}]。
+
+F13→F13，s474496→s474497（2026-10-21T03:46:29.026Z）：HP62→68，max77→83；战外／开场变化；窗口内动作[{"action": "choose_event_option", "option_index": 0}, {"action": "claim_reward", "option_index": 0}]。
+
+F16→F16，s474559→s474560（2026-10-21T03:49:55.407Z）：HP55→79，max83→83；战外／开场变化；窗口内动作[{"action": "choose_rest_option", "option_index": 0}, {"action": "proceed"}]。
+
+F17→F18，s474626→s474627（2026-10-21T03:53:03.255Z）：HP25→71，max83→83；战外／开场变化；窗口内动作[{"action": "choose_map_node", "option_index": 0}, {"action": "choose_event_option", "option_index": 0}]。
+
+F23→F23，s474738→s474739（2026-10-21T03:58:44.551Z）：HP1→32，max83→83；SL资源恢复，非回血；窗口内动作[{"action": "end_turn"}, {"action": "play_card", "card_index": 0}]。
+
+F23→F23，s474772→s474773（2026-10-21T04:00:04.692Z）：HP1→32，max83→83；SL资源恢复，非回血；窗口内动作[{"action": "end_turn"}, {"action": "play_card", "card_index": 0}]。
+
+F24→F24，s474809→s474810（2026-10-21T04:02:04.787Z）：HP2→26，max83→83；战外／开场变化；窗口内动作[{"action": "choose_rest_option", "option_index": 0}, {"action": "proceed"}]。
+
+F24→F25，s474811→s474812（2026-10-21T04:02:05.955Z）：HP26→41，max83→83；战外／开场变化；窗口内动作[{"action": "choose_map_node", "option_index": 1}, {"action": "open_shop_inventory"}]。
+
+F28→F28，s474849→s474850（2026-10-21T04:05:22.827Z）：HP9→33，max83→83；战外／开场变化；窗口内动作[{"action": "choose_rest_option", "option_index": 0}, {"action": "proceed"}]。
+
+F28→F29，s474851→s474852（2026-10-21T04:05:23.958Z）：HP33→48，max83→83；战外／开场变化；窗口内动作[{"action": "choose_map_node", "option_index": 0}, {"action": "open_shop_inventory"}]。
+
+F32→F32，s474907→s474908（2026-10-21T04:08:53.495Z）：HP17→41，max83→83；战外／开场变化；窗口内动作[{"action": "choose_rest_option", "option_index": 0}, {"action": "proceed"}]。
+
+F33→F33，s474934→s474935（2026-10-21T04:10:45.697Z）：HP15→41，max83→83；SL资源恢复，非回血；窗口内动作[{"action": "end_turn"}, {"action": "play_card", "card_index": 4}]。
+
+F33→F33，s474971→s474972（2026-10-21T04:13:49.582Z）：HP3→41，max83→83；SL资源恢复，非回血；窗口内动作[{"action": "end_turn"}, {"action": "play_card", "card_index": 4}]。
+
+F33→F33，s475008→s475009（2026-10-21T04:16:14.355Z）：HP1→41，max83→83；SL资源恢复，非回血；窗口内动作[{"action": "end_turn"}, {"action": "play_card", "card_index": 4}]。
+
+
+SL原始行结果（工具不自动判胜负，按sl-attempts和实帧分列）：
+
+
+{"offset": 52012080, "floor": 17, "attempt": 1, "started_at": "2026-10-21T03:49:57.566Z", "ended_at": "2026-10-21T03:52:15.527Z", "result": "won", "turns": 12, "end_hp": 25}。
+
+{"offset": 52040543, "floor": 22, "attempt": 1, "started_at": "2026-10-21T03:56:15.546Z", "ended_at": "2026-10-21T03:56:45.127Z", "result": "won", "turns": 3, "end_hp": 32}。
+
+{"offset": 52049880, "floor": 23, "attempt": 1, "started_at": "2026-10-21T03:57:21.750Z", "ended_at": "2026-10-21T03:58:33.646Z", "result": "predicted_death", "turns": 6, "end_hp": 1}。
+
+{"offset": 52062527, "floor": 23, "attempt": 2, "started_at": "2026-10-21T03:58:33.647Z", "ended_at": "2026-10-21T03:59:56.215Z", "result": "predicted_death", "turns": 6, "end_hp": 1}。
+
+{"offset": 52075069, "floor": 23, "attempt": 3, "started_at": "2026-10-21T03:59:56.216Z", "ended_at": "2026-10-21T04:01:07.396Z", "result": "won", "turns": 5, "end_hp": 2}。
+
+{"offset": 52089296, "floor": 27, "attempt": 1, "started_at": "2026-10-21T04:03:11.791Z", "ended_at": "2026-10-21T04:04:30.519Z", "result": "won", "turns": 4, "end_hp": 9}。
+
+{"offset": 52102643, "floor": 31, "attempt": 1, "started_at": "2026-10-21T04:07:13.098Z", "ended_at": "2026-10-21T04:08:04.913Z", "result": "won", "turns": 4, "end_hp": 17}。
+
+{"offset": 52112058, "floor": 33, "attempt": 1, "started_at": "2026-10-21T04:08:54.850Z", "ended_at": "2026-10-21T04:10:19.873Z", "result": "predicted_death", "turns": 4, "end_hp": 15}。
+
+{"offset": 52126011, "floor": 33, "attempt": 2, "started_at": "2026-10-21T04:10:19.874Z", "ended_at": "2026-10-21T04:12:59.967Z", "result": "predicted_death", "turns": 6, "end_hp": 3}。
+
+{"offset": 52148517, "floor": 33, "attempt": 3, "started_at": "2026-10-21T04:12:59.968Z", "ended_at": "2026-10-21T04:16:11.736Z", "result": "predicted_death", "turns": 6, "end_hp": 1}。
+
+{"offset": 52171036, "floor": 33, "attempt": 4, "started_at": "2026-10-21T04:16:11.737Z", "ended_at": "2026-10-21T04:18:40.689Z", "result": "died", "turns": 8, "end_hp": 0}。
+
+
+Jev完整题面核读：末试F33T5，小刀指碾碎爪的plan1，Jev0.88；chosen目标0且completed，本题前爪162，后159；后继T6玩家12血。两候选boss_evaluation.rankingEligible=false，整场低可信、50/100样本，原始无赢样本与文字校准49%分列。 原始j字节偏移=2369727081，完整定位见question-receipts.json，所引原题各字段已分段完整读到。
+
+Jev低信心（confidence<0.35）18次；原始请求125／有答案121／非空error4。只纳原答plan且rollout显式best/tied的题，原答选入集合95/102＝93.14%；这是原回答比例，不是护栏／SL后的真实最优执行率。含focus候选题47，原答选有focus候选19；focus不是实际击杀顺序。以每窗口／回合第一条非continue战斗决定计，代码39轮、Jev75轮（重试分开、续步不重复）；同轮后续代码重算不在此口径重复计。
+
+selection_dispatch共113条，未见gate_reject字段匹配（不等于已证所有闸均未拒）；原回执state_effect_verified=false、whole_plan_executed=null保留。完整实线采用率、未全文题的逐敌精确击杀序均未记录。原始error逐条保留于question-receipts.json，不把请求存在当回答成功。
+
+
+HP护栏候选审计3条；以下是SL之前的候选差，不能累计作实际省血：
+
+F23T1／attempt=1 d@3269233527：预测损血11→6（省5），预测伤害12→22（变化+10）；替换前牌ID['DEFEND_SILENT', 'BLADE_DANCE', 'NOXIOUS_FUMES', 'SHIV', 'SHIV', 'SHIV']，后['DEFEND_SILENT', 'DEFEND_SILENT', 'BLADE_DANCE', 'SHIV', 'SHIV', 'SHIV']。含抽牌／弃牌者后续需重规划，不据候选整线追认全程。
+
+F23T1／attempt=2 d@3269411502：预测损血11→6（省5），预测伤害12→22（变化+10）；替换前牌ID['DEFEND_SILENT', 'BLADE_DANCE', 'NOXIOUS_FUMES', 'SHIV', 'SHIV', 'SHIV']，后['DEFEND_SILENT', 'DEFEND_SILENT', 'BLADE_DANCE', 'SHIV', 'SHIV', 'SHIV']。含抽牌／弃牌者后续需重规划，不据候选整线追认全程。
+
+F23T1／attempt=3 d@3269581402：预测损血11→6（省5），预测伤害12→22（变化+10）；替换前牌ID['DEFEND_SILENT', 'BLADE_DANCE', 'NOXIOUS_FUMES', 'SHIV', 'SHIV', 'SHIV']，后['DEFEND_SILENT', 'DEFEND_SILENT', 'BLADE_DANCE', 'SHIV', 'SHIV', 'SHIV']。此后同一决定SL explore又改回原线；不是最终执行了护栏线。
+
+真实未执行分支的代价未记录；不拟新护栏权重、药价或SL门槛。
+
+
+首末decision 2026-10-21T03:33:46.715Z→2026-10-21T04:18:40.694Z，用时2693.979秒（不含首决策前启动）；runs.tokens=1033650，ds_tokens_in/out=1136415/20614、ds_cache_hit=0。Jev原始入／出token合计1027130/6520（缺token字段4条另列，不补作0测量）；错误行未提供token的仍缺失，缓存命中未记录。大脑原行31条、engine计数{'codex': 31}；DeepSeek-reasoning首末决策时间窗无匹配，兼容ds字段和任务职责名不证明使用DeepSeek。原生turn_context／请求档位生效回执未记录，不从配置effort推定生效。
+
+
+V6原始配置mode=on，card/potion/shop/rest均brain、reflex=off、direction_replan=off；本局冻结v6-build流no_match，entries／jev_answer／fallback／unknown没有本局原行可解释，缺失不是零，也不证明V6 off。Jev request／answers／error按上文独立核，不与v6-build混算。整流历史无效JSON和未知身份保留于manifest；不是本局零错误证明。
+
+本局完整题面实读1/125，仅偏移2369727081；其余124条只机械核原字节／身份／回答或错误／chosen、result、gate_reject、selection_dispatch及后继索引，未作完整语义审阅。原因：按关键决定有界复盘；逐条覆盖和未读原因在coverage.json，不把最后五条当完整覆盖。
+
+证据：scratch=/home/dw/Projects/agent-sts2/learner/runs/20261021-134306-df2bd06d-ce82-40d4-a101-b122ee689219-postmortem；evidence-summary.json只是有限事实索引。v6-evidence/evidence-manifest.json给四流冻结切点／整流SHA／缺行；各局raw-index.json及raw-sources.json给states、decisions、run-plans、brain、run-config、SL原行offset／bytes／SHA及各自切点。Jev归属仅认显式run_id或decisions精确decision_id，identity关联出处见question-receipts.json，不靠正文、时间邻近或题号相似。
+
+未记录／限制：完整路线投影与实到逐节点配对、传统Boss时钟需要／估计及同输入实打／估值比、未读题的构筑边际效应、完整实线采用率、逐击毛伤和过量伤害、留药／早喝／换目标／护栏未执行分支的整场反事实、Jev缓存、精确历史源码SHA、原生档位生效回执。只对实际匹配题和实帧下有限结论；未发现新纯bug，不借其他角色证据补经验；不称正式发布、下一局消费或自然收益。三条均support，不登记repeat；独立strategy-proposal保留行为、补证后再决定修改。
+
+
+## JLCZ36YLDEBE（A10，静默猎手，第17层，死于同族信徒 KIN_FOLLOWER／同族神官 KIN_PRIEST：四试均70/70血空药进场，前三试T11／T10／T9判死；末试T10仅4血10挡对神官15攻击，完整需损5、存活差2血，结毒后神官75/199血）
+
+
+- [满血入王只证明回复兑现；打法（DeepSeek路线／休息职责，实际Codex）] F8飞蝇菌子 FLYCONID／树叶史莱姆 LEAF_SLIME_M胜后25血，F9补到46；F12旧日雕像 BYGONE_EFFIGY耗16，F13补到51、F16再到70，四试同族仍败。臂甲 VAMBRACE与永冻冰晶 PERMAFROST虽在，也不能把一次性挡当每轮都有；没有锻造或另一条路线的受控胜局。 本条是旧观察的本局支持，未证实新的可避免失误。（之前学过：silent-0020，S1.exp203）
+
+
+- [毒雾的持有、建立和结算必须分开；打法（DeepSeek构筑职责／Jev出牌，实际Codex）] F4买毒雾 NOXIOUS_FUMES、F7升级，F14买蜃景 MIRAGE与回响斩击 ECHOING_SLASH，末试F17到T4才建立毒雾3层。末T9神官117→101是本轮实际净扣16，末T10打匕首雨 DAGGER_SPRAY至93后结18毒到75，不能把75残血或未来增毒补成已打伤害。更早启毒能否获胜未实打，不强行归因。 本条是旧观察的本局支持，未证实新的可避免失误。（之前学过：silent-0011，S1.exp202）
+
+
+- [敌方成长仍能超过已经建立的毒防；打法（Jev出牌）] 末试神官 KIN_PRIEST在T5已有3力量、T9已有6力量；T10当前意图15，预判 ANTICIPATE当轮增益与两张防御 DEFEND_SILENT共兑现10挡，4血仍不足净损5。信徒 KIN_FOLLOWER依次退场不等于Boss安全；末试T7末已只见神官、T10仍死，不从早轮9攻击沿用后段。 本条是旧观察的本局支持，未证实新的可避免失误。（之前学过：silent-0012，S1.exp201）
+
+
+- [记录] 路线原话“牌组尚弱且无药，选四火两店，休整后再打精英。”（decisions offset=3276455649）；F4买毒雾 NOXIOUS_FUMES，F7锻造升级；F9／F13／F16回血。F14买回响斩击 ECHOING_SLASH及蜃景 MIRAGE，组合模拟和抽牌时点当时仍未知。F16题面目标70、F17实到70；完整路线逐节点预测配对未记录。F17四次均没有新药，前三次从3／6／1血恢复到70是SL，不能当三次营火。末试信徒退场窗口为T5、T7；同ID信徒缺物理UID，不按重排槽位硬认个体；神官始终存活。
+
+
+机制：毒雾+ NOXIOUS_FUMES末试T4建立NOXIOUS_FUMES_POWER3，永冻冰晶 PERMAFROST的一次性挡与后续毒不能混记为恒定防御。神官力量从开场0到T5的3、T9的6，T1三连击合9与末T10单击15不是同一招的受控增力比较，只记录当前意图。末T10预判建立2临时敏捷，当轮脆弱下两张普通防御各实际加5、合10；匕首雨实扣8、18毒实扣18，神官101→75仍活。支持既有毒结算／增力观察，不提出新倍率或新机制。
+
+
+已核runs的角色SILENT、A10、ended非空、victory=false，且追加前无同局标题；本局全部匹配notes/run文件已读。runs.code=current；run-config的commit/code/dirty均null，原错误为spawnSync git ENOBUFS，精确历史源码SHA未记录。仅以当前只读live 5a295bb5ed52f0c0fa5e8c045dcfcba3d894b532解释源码，不能倒认历史版本；least-loss的负数是预计剩血（agent/src/reflex/combat-plan.ts:3432），不是只掉该数值的血。本批没有新定位纯bug。
+
+
+终局原帧遗物：蛇之戒指 RING_OF_THE_SNAKE；卷轴箱 SCROLL_BOXES；臂甲 VAMBRACE；永冻冰晶 PERMAFROST。
+
+
+实盘资源链（全部胜战和SL窗口；净Δ＝已观察末HP−入口HP，包含回血／自伤，不是敌人总伤害。每个入口首帧均T1，但重试可能已自动重放前缀／结算开场遗物，不保证是出手前原盘。无退出帧只报截断前缀，不当实际死亡）：
+
+|窗口／层／敌人中文名＋ID|HP入→末；max入→末；净Δ|药槽入→末|出口／状态行与UTC时间|
+|---|---|---|---|
+|1／F2／毛绒伏地虫 FUZZY_WURM_CRAWLER|56→56；70→70；+0|空→空|胜／REWARD原帧；s475063→s475076；2026-10-21T04:21:15.538Z→2026-10-21T04:21:38.020Z|
+|2／F3／小啃兽 NIBBIT|56→55；70→70；-1|空→空|胜／REWARD原帧；s475081→s475095；2026-10-21T04:22:20.175Z→2026-10-21T04:22:42.747Z|
+|3／F5／树叶史莱姆（中） LEAF_SLIME_M／树叶史莱姆（小） LEAF_SLIME_S／树枝史莱姆（小） TWIG_SLIME_S|55→55；70→70；+0|空→空|胜／REWARD原帧；s475105→s475117；2026-10-21T04:25:12.832Z→2026-10-21T04:25:42.010Z|
+|4／F6／藤蔓蹒跚者 VINE_SHAMBLER|55→43；70→70；-12|0:爆炸安瓿 EXPLOSIVE_AMPOULE→空|胜／REWARD原帧；s475123→s475142；2026-10-21T04:26:23.423Z→2026-10-21T04:26:57.982Z|
+|5／F8／飞蝇菌子 FLYCONID／树叶史莱姆（中） LEAF_SLIME_M|43→25；70→70；-18|空→空|胜／REWARD原帧；s475151→s475168；2026-10-21T04:28:15.369Z→2026-10-21T04:28:57.614Z|
+|6／F12／旧日雕像 BYGONE_EFFIGY|46→30；70→70；-16|0:幸运补剂 LUCKY_TONIC→空|胜／REWARD原帧；s475184→s475215；2026-10-21T04:31:11.249Z→2026-10-21T04:32:17.088Z|
+|7／F17／同族信徒 KIN_FOLLOWER／同族神官 KIN_PRIEST|70→3；70→70；-67（前缀）|空→空|SL重载前截断，退出帧缺失；s475237→s475311；2026-10-21T04:35:07.992Z→2026-10-21T04:39:03.533Z|
+|8／F17／同族信徒 KIN_FOLLOWER／同族神官 KIN_PRIEST|70→6；70→70；-64（前缀）|空→空|SL重载前截断，退出帧缺失；s475312→s475373；2026-10-21T04:39:09.557Z→2026-10-21T04:43:58.979Z|
+|9／F17／同族信徒 KIN_FOLLOWER／同族神官 KIN_PRIEST|70→1；70→70；-69（前缀）|空→空|SL重载前截断，退出帧缺失；s475374→s475431；2026-10-21T04:44:05.010Z→2026-10-21T04:49:24.548Z|
+|10／F17／同族信徒 KIN_FOLLOWER／同族神官 KIN_PRIEST|70→0；70→70；-70|空→空|亡／GAME_OVER原帧；s475432→s475497；2026-10-21T04:49:31.470Z→2026-10-21T04:55:00.658Z|
+
+
+逐回合资源／需伤（每窗口独立；“需”仅为该回合首帧活敌血池，不含未来重接／召唤，“净扣”是到下一轮首帧或已观察出口的血池净变化，包含毒及轮初被动；不是敌人毛承伤。瞬时缺帧、过量伤害与分源未记录。R是瀑布巨兽自爆占位体，排除其近十亿HP，不计作需伤；该轮净扣写未记录。最后无后继的判死回合不补伤害）：
+
+
+F2／窗口1：T[1, 2, 3]；需[59, 44, 14]；净扣[15, 30, 14]；净耗HP[0, 0, 0]。
+
+F3／窗口2：T[1, 2, 3]；需[46, 35, 19]；净扣[11, 16, 19]；净耗HP[0, 1, 0]。
+
+F5／窗口3：T[1, 2, 3]；需[53, 44, 2]；净扣[9, 42, 2]；净耗HP[0, 0, 0]。
+
+F6／窗口4：T[1, 2, 3, 4]；需[64, 46, 27, 22]；净扣[18, 19, 5, 22]；净耗HP[4, 0, 8, 0]。
+
+F8／窗口5：T[1, 2, 3, 4]；需[89, 75, 51, 15]；净扣[14, 24, 36, 15]；净耗HP[0, 18, 0, 0]。
+
+F12／窗口6：T[1, 2, 3, 4, 5, 6]；需[132, 113, 74, 51, 31, 22]；净扣[19, 39, 23, 20, 9, 22]；净耗HP[0, 0, 7, 0, 9, 0]。
+
+F17／窗口7：T[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]；需[324, 305, 287, 271, 255, 205, 179, 159, 126, 93, 57]；净扣[19, 18, 16, 16, 50, 26, 20, 33, 33, 36, '未记录']；净耗HP[1, 15, 9, 1, 11, 3, 22, 0, 0, 5, '未记录']。
+
+F17／窗口8：T[1, 2, 3, 4, 5, 6, 7, 8, 9, 10]；需[324, 305, 287, 271, 255, 205, 169, 149, 117, 98]；净扣[19, 18, 16, 16, 50, 36, 20, 32, 19, '未记录']；净耗HP[1, 15, 9, 1, 11, 5, 22, 0, 0, '未记录']。
+
+F17／窗口9：T[1, 2, 3, 4, 5, 6, 7, 8, 9]；需[324, 305, 287, 271, 255, 205, 179, 147, 114]；净扣[19, 18, 16, 16, 50, 26, 32, 33, '未记录']；净耗HP[1, 15, 9, 1, 11, 3, 29, 0, '未记录']。
+
+F17／窗口10：T[1, 2, 3, 4, 5, 6, 7, 8, 9, 10]；需[324, 305, 287, 271, 255, 201, 165, 141, 117, 101]；净扣[19, 18, 16, 16, 54, 36, 24, 24, 16, 26]；净耗HP[1, 14, 9, 1, 16, 5, 18, 0, 2, 4]。
+
+
+药水槽位变化（SL重载另列，非获得；饮用／丢弃／购买由下列原动作核，不从空槽单独判喝药）：
+
+
+F5T3 s475118→s475119（2026-10-21T04:25:42.276Z）：空→0:爆炸安瓿 EXPLOSIVE_AMPOULE。
+
+F6T1 s475127→s475128（2026-10-21T04:26:31.514Z）：0:爆炸安瓿 EXPLOSIVE_AMPOULE→空。
+
+F11T未记录 s475181→s475182（2026-10-21T04:31:09.924Z）：空→0:幸运补剂 LUCKY_TONIC。
+
+F12T4 s475207→s475208（2026-10-21T04:31:59.617Z）：0:幸运补剂 LUCKY_TONIC→空。
+
+F6T1 d@3277999261：use_potion 槽／选项0，爆炸安瓿 EXPLOSIVE_AMPOULE；completed: Action completed.。
+
+F12T4 d@3280315259：use_potion 槽／选项0，幸运补剂 LUCKY_TONIC；completed: Action completed.。
+
+非SL槽位新增加观察2瓶；主动饮用动作2次（含SL恢复后重复饮用），主动丢弃0次，购买0次。新增观察是槽位实变，不假定所有补给来源；queued须结合后继槽位／手牌核，不代完整效果。
+
+
+战外HP／max HP及SL恢复（来源动作附列；不把SL算治疗）：
+
+
+F9→F9，s475173→s475174（2026-10-21T04:30:44.935Z）：HP25→46，max70→70；战外／开场变化；窗口内动作[{"action": "choose_rest_option", "option_index": 0}, {"action": "proceed"}]。
+
+F13→F13，s475221→s475222（2026-10-21T04:33:16.529Z）：HP30→51，max70→70；战外／开场变化；窗口内动作[{"action": "choose_rest_option", "option_index": 0}, {"action": "proceed"}]。
+
+F16→F16，s475234→s475235（2026-10-21T04:35:06.835Z）：HP51→70，max70→70；战外／开场变化；窗口内动作[{"action": "choose_rest_option", "option_index": 0}, {"action": "proceed"}]。
+
+F17→F17，s475311→s475312（2026-10-21T04:39:09.557Z）：HP3→70，max70→70；SL资源恢复，非回血；窗口内动作[{"action": "end_turn"}]。
+
+F17→F17，s475373→s475374（2026-10-21T04:44:05.010Z）：HP6→70，max70→70；SL资源恢复，非回血；窗口内动作[{"action": "end_turn"}]。
+
+F17→F17，s475431→s475432（2026-10-21T04:49:31.470Z）：HP1→70，max70→70；SL资源恢复，非回血；窗口内动作[{"action": "end_turn"}]。
+
+
+SL原始行结果（工具不自动判胜负，按sl-attempts和实帧分列）：
+
+
+{"offset": 52199762, "floor": 17, "attempt": 1, "started_at": "2026-10-21T04:35:07.993Z", "ended_at": "2026-10-21T04:39:09.542Z", "result": "predicted_death", "turns": 11, "end_hp": 3}。
+
+{"offset": 52230578, "floor": 17, "attempt": 2, "started_at": "2026-10-21T04:39:09.542Z", "ended_at": "2026-10-21T04:44:04.976Z", "result": "predicted_death", "turns": 10, "end_hp": 6}。
+
+{"offset": 52258697, "floor": 17, "attempt": 3, "started_at": "2026-10-21T04:44:04.977Z", "ended_at": "2026-10-21T04:49:31.438Z", "result": "predicted_death", "turns": 9, "end_hp": 1}。
+
+{"offset": 52286540, "floor": 17, "attempt": 4, "started_at": "2026-10-21T04:49:31.439Z", "ended_at": "2026-10-21T04:55:00.653Z", "result": "died", "turns": 10, "end_hp": 0}。
+
+
+Jev完整题面核读：末试F17T9完整生存者弃牌题，6血13挡0能，候选打击和串刺 SKEWER均不删除计划后继；Jev0.60弃打击，chosen=select_deck_card/0且completed，后继保留串刺，轮末6→4，神官117→101。原整线损2／伤16在该轮相符，不能把CARD_SELECTION后继完结冒作整场胜利。 原始j字节偏移=2375864891，完整定位见question-receipts.json，所引原题各字段已分段完整读到。
+
+Jev低信心（confidence<0.35）6次；原始请求71／有答案70／非空error1。只纳原答plan且rollout显式best/tied的题，原答选入集合56/59＝94.92%；这是原回答比例，不是护栏／SL后的真实最优执行率。含focus候选题47，原答选有focus候选20；focus不是实际击杀顺序。以每窗口／回合第一条非continue战斗决定计，代码15轮、Jev48轮（重试分开、续步不重复）；同轮后续代码重算不在此口径重复计。
+
+selection_dispatch共61条，未见gate_reject字段匹配（不等于已证所有闸均未拒）；原回执state_effect_verified=false、whole_plan_executed=null保留。完整实线采用率、未全文题的逐敌精确击杀序均未记录。原始error逐条保留于question-receipts.json，不把请求存在当回答成功。
+
+
+HP护栏候选审计0条；以下是SL之前的候选差，不能累计作实际省血：
+
+真实未执行分支的代价未记录；不拟新护栏权重、药价或SL门槛。
+
+
+首末decision 2026-10-21T04:20:17.039Z→2026-10-21T04:55:00.658Z，用时2083.619秒（不含首决策前启动）；runs.tokens=649546，ds_tokens_in/out=687927/11697、ds_cache_hit=0。Jev原始入／出token合计645957/3589（缺token字段1条另列，不补作0测量）；错误行未提供token的仍缺失，缓存命中未记录。大脑原行17条、engine计数{'codex': 17}；DeepSeek-reasoning首末决策时间窗无匹配，兼容ds字段和任务职责名不证明使用DeepSeek。原生turn_context／请求档位生效回执未记录，不从配置effort推定生效。
+
+
+V6原始配置mode=on，card/potion/shop/rest均brain、reflex=off、direction_replan=off；本局冻结v6-build流no_match，entries／jev_answer／fallback／unknown没有本局原行可解释，缺失不是零，也不证明V6 off。Jev request／answers／error按上文独立核，不与v6-build混算。整流历史无效JSON和未知身份保留于manifest；不是本局零错误证明。
+
+本局完整题面实读1/71，仅偏移2375864891；其余70条只机械核原字节／身份／回答或错误／chosen、result、gate_reject、selection_dispatch及后继索引，未作完整语义审阅。原因：按关键决定有界复盘；逐条覆盖和未读原因在coverage.json，不把最后五条当完整覆盖。
+
+证据：scratch=/home/dw/Projects/agent-sts2/learner/runs/20261021-134306-df2bd06d-ce82-40d4-a101-b122ee689219-postmortem；evidence-summary.json只是有限事实索引。v6-evidence/evidence-manifest.json给四流冻结切点／整流SHA／缺行；各局raw-index.json及raw-sources.json给states、decisions、run-plans、brain、run-config、SL原行offset／bytes／SHA及各自切点。Jev归属仅认显式run_id或decisions精确decision_id，identity关联出处见question-receipts.json，不靠正文、时间邻近或题号相似。
+
+未记录／限制：完整路线投影与实到逐节点配对、传统Boss时钟需要／估计及同输入实打／估值比、未读题的构筑边际效应、完整实线采用率、逐击毛伤和过量伤害、留药／早喝／换目标／护栏未执行分支的整场反事实、Jev缓存、精确历史源码SHA、原生档位生效回执。只对实际匹配题和实帧下有限结论；未发现新纯bug，不借其他角色证据补经验；不称正式发布、下一局消费或自然收益。三条均support，不登记repeat；独立strategy-proposal保留行为、补证后再决定修改。
+
+
+## JS5UV1DUB1K1（A10，静默猎手，第31层，死于残杀千足虫前／中／后段 DECIMILLIPEDE_SEGMENT_FRONT／DECIMILLIPEDE_SEGMENT_MIDDLE／DECIMILLIPEDE_SEGMENT_BACK：45/70血带槽0力量药水进场，T4仅11血8挡，前段结毒退场后中后段仍16＋9＝25攻击，完整需损17、存活差7血，中后段44／25血）
+
+
+- [精英前的赢战消耗与休息不能省略；打法（DeepSeek路线／休息职责，实际Codex）] F23外骨骼虫 EXOSKELETON胜后46血，F24升级灵动步法 FOOTWORK而未回血；F25猎人杀手 HUNTER_KILLER胜后25，F27休息补到46，F29盛碗虫 BOWLBUG_SILK／BOWLBUG_EGG／BOWLBUG_ROCK胜后45并得力量药水 STRENGTH_POTION，F31就以此资源进入千足虫。没有F25少耗血或F24改休息的受控整战，不写“多留血必胜”。 本条是旧观察的本局支持，未证实新的可避免失误。（之前学过：silent-0020，S1.exp203）
+
+
+- [同一毒防构筑在不同敌人上须核真实启动窗口；打法（DeepSeek构筑职责／Jev出牌，实际Codex）] 本局弹跳药瓶 BOUNCING_FLASK、触媒 ACCELERANT、灵动步法 FOOTWORK齐备；F17乐加维林族母 LAGAVULIN_MATRIARCH首试53→35、T7实胜，不能据此推千足虫也能活到毒成型。F31T2实建触媒2层，T3零挡承受30净损，T4才建立3敏捷、打防御得8挡；即使前段实退场，余两段25攻仍杀11血。无提前建步法的实胜对照。 本条是旧观察的本局支持，未证实新的可避免失误。（之前学过：silent-0385，S1.exp203）
+
+
+- [本轮不喝和整场不用药不是同一个反事实；打法（Jev出牌／代码药水参考）] F31T2完整题中力量药水 STRENGTH_POTION持有价为null、计费0；plan1当轮饮、plan2本轮不饮但5/5后续样本饮，二者预计损39.2、0/5实赢、1/5抽样死亡，plan3才是整场无药参考。Jev0.19选plan2，实T3喝下建2力量；最终仍败，不把0计费当留药价值为零，也不由22%时钟估计写成抽样胜率或要求一律早喝。 本条是旧观察的本局支持，未证实新的可避免失误。（之前学过：silent-0431，S1.potion-reference1）
+
+
+- [记录] 路线原话“白星争取两精英收益，商店补强，营火分段保命。”（decisions offset=3286099752）。F2拿弹跳药瓶 BOUNCING_FLASK，F4拿灵动步法 FOOTWORK，F5拿触媒 ACCELERANT，F6买致命毒药 DEADLY_POISON及复制药水 DUPLICATOR；F7升级药瓶并改路，F12再拿药瓶和夜魇 NIGHTMARE，F16升级触媒，F24升级步法。F7改线预测F12精英入63、F13休息前约41，实际F12入56、F13休息前48；同节点分别差−7／+7，途中奖励／实际出牌不同，不外推总体校准。F27休息题46、实到46，F29胜净耗1才到F31的45。F17赢后F18从35→63为跨幕回复。F31没有本场SL记录，不能凭配置开启SL补造重试；只见F17一条won尝试。
+
+
+机制：F31T2尖啸 PIERCING_WAIL临时令前／中段力量−6、后段−4，13实挡覆盖当轮攻击、HP41不变；T3负力量已恢复，不能把上轮减力当永久挡。T3力量药水实建STRENGTH_POWER2，当步无敌HP变化；后续匕首雨 DAGGER_SPRAY与中和 NEUTRALIZE另核。触媒2层已建立，T4前段9血4毒连续结算到0、暂死；不能把接续 REATTACH_POWER25图标算成本场已经复活回血，本场未见重接。灵动步法+末T4建立3敏捷、普通防御实加8挡；中后段仍16＋9攻击，11血不足17净损。
+
+
+已核runs的角色SILENT、A10、ended非空、victory=false，且追加前无同局标题；本局全部匹配notes/run文件已读。runs.code=current；run-config的commit/code/dirty均null，原错误为spawnSync git ENOBUFS，精确历史源码SHA未记录。仅以当前只读live 5a295bb5ed52f0c0fa5e8c045dcfcba3d894b532解释源码，不能倒认历史版本；least-loss的负数是预计剩血（agent/src/reflex/combat-plan.ts:3432），不是只掉该数值的血。本批没有新定位纯bug。
+
+
+终局原帧遗物：蛇之戒指 RING_OF_THE_SNAKE；小型扭蛋 SMALL_CAPSULE；白星 WHITE_STAR；磨刀石 WHETSTONE；剃刀牙 RAZOR_TOOTH；五轮书 BOOK_OF_FIVE_RINGS；佩尔之血 PAELS_BLOOD；骨茶 BONE_TEA；风箱 BELLOWS；赤牛 AKABEKO；药水腰带 POTION_BELT。
+
+
+实盘资源链（全部胜战和SL窗口；净Δ＝已观察末HP−入口HP，包含回血／自伤，不是敌人总伤害。每个入口首帧均T1，但重试可能已自动重放前缀／结算开场遗物，不保证是出手前原盘。无退出帧只报截断前缀，不当实际死亡）：
+
+|窗口／层／敌人中文名＋ID|HP入→末；max入→末；净Δ|药槽入→末|出口／状态行与UTC时间|
+|---|---|---|---|
+|1／F2／噬尸蛞蝓 CORPSE_SLUG|56→51；70→70；-5|空→空|胜／REWARD原帧；s475505→s475529；2026-10-21T04:57:31.008Z→2026-10-21T04:58:26.992Z|
+|2／F4／淤泥旋螺 SLUDGE_SPINNER|51→51；70→70；+0|0:发光水 GLOWWATER_POTION→0:发光水 GLOWWATER_POTION|胜／REWARD原帧；s475538→s475551；2026-10-21T04:59:23.337Z→2026-10-21T04:59:51.440Z|
+|3／F5／蟾蜍蝌蚪 TOADPOLE|51→45；70→70；-6|0:发光水 GLOWWATER_POTION→空|胜／REWARD原帧；s475556→s475577；2026-10-21T05:00:35.234Z→2026-10-21T05:01:14.201Z|
+|4／F8／噬尸蛞蝓 CORPSE_SLUG|45→41；70→70；-4|0:复制药水 DUPLICATOR→空|胜／REWARD原帧；s475592→s475606；2026-10-21T05:03:31.483Z→2026-10-21T05:04:09.269Z|
+|5／F11／幽灵船 HAUNTED_SHIP|62→56；70→70；-6|0:赌徒特酿 GAMBLERS_BREW→0:赌徒特酿 GAMBLERS_BREW|胜／REWARD原帧；s475619→s475634；2026-10-21T05:05:26.998Z→2026-10-21T05:06:08.436Z|
+|6／F12／鬼祟珊瑚群 SKULKING_COLONY|56→48；70→70；-8|0:赌徒特酿 GAMBLERS_BREW、1:技能药水 SKILL_POTION→空|胜／REWARD原帧；s475640→s475673；2026-10-21T05:06:39.520Z→2026-10-21T05:08:09.726Z|
+|7／F15／骇鳗 TERROR_EEL|69→53；70→70；-16|0:技能药水 SKILL_POTION→空|胜／REWARD原帧；s475689→s475723；2026-10-21T05:10:54.807Z→2026-10-21T05:12:40.492Z|
+|8／F17／乐加维林族母 LAGAVULIN_MATRIARCH|53→35；70→70；-18|空→空|胜／REWARD原帧；s475735→s475761；2026-10-21T05:14:20.360Z→2026-10-21T05:15:49.842Z|
+|9／F19／盛碗虫（蜜） BOWLBUG_NECTAR／盛碗虫（石） BOWLBUG_ROCK|63→48；70→70；-15|0:明晰提取物 CLARITY→空|胜／REWARD原帧；s475770→s475782；2026-10-21T05:16:54.054Z→2026-10-21T05:17:35.281Z|
+|10／F20／偷窃草蜢 THIEVING_HOPPER|48→42；70→70；-6|0:明晰提取物 CLARITY→空|胜／REWARD原帧；s475788→s475812；2026-10-21T05:18:06.898Z→2026-10-21T05:19:19.677Z|
+|11／F23／外骨骼虫 EXOSKELETON|62→46；70→70；-16|空→空|胜／REWARD原帧；s475823→s475841；2026-10-21T05:21:15.133Z→2026-10-21T05:22:11.408Z|
+|12／F25／猎人杀手 HUNTER_KILLER|46→25；70→70；-21|0:幸运补剂 LUCKY_TONIC→空|胜／REWARD原帧；s475851→s475869；2026-10-21T05:23:17.303Z→2026-10-21T05:24:29.007Z|
+|13／F29／盛碗虫（卵） BOWLBUG_EGG／盛碗虫（石） BOWLBUG_ROCK／盛碗虫（丝） BOWLBUG_SILK|46→45；70→70；-1|空→空|胜／REWARD原帧；s475885→s475908；2026-10-21T05:25:53.803Z→2026-10-21T05:27:09.930Z|
+|14／F31／残杀千足虫 DECIMILLIPEDE_SEGMENT_BACK／残杀千足虫 DECIMILLIPEDE_SEGMENT_FRONT／残杀千足虫 DECIMILLIPEDE_SEGMENT_MIDDLE|45→0；70→70；-45|0:力量药水 STRENGTH_POTION→空|亡／GAME_OVER原帧；s475917→s475936；2026-10-21T05:28:48.886Z→2026-10-21T05:30:01.496Z|
+
+
+逐回合资源／需伤（每窗口独立；“需”仅为该回合首帧活敌血池，不含未来重接／召唤，“净扣”是到下一轮首帧或已观察出口的血池净变化，包含毒及轮初被动；不是敌人毛承伤。瞬时缺帧、过量伤害与分源未记录。R是瀑布巨兽自爆占位体，排除其近十亿HP，不计作需伤；该轮净扣写未记录。最后无后继的判死回合不补伤害）：
+
+
+F2／窗口1：T[1, 2, 3, 4, 5, 6]；需[56, 44, 41, 23, 14, 11]；净扣[12, 3, 18, 9, 3, 11]；净耗HP[1, 4, 0, 0, 0, 0]。
+
+F4／窗口2：T[1, 2, 3]；需[42, 30, 18]；净扣[12, 12, 18]；净耗HP[0, 0, 0]。
+
+F5／窗口3：T[1, 2, 3, 4]；需[48, 36, 19, 7]；净扣[12, 17, 12, 7]；净耗HP[0, 6, 0, 0]。
+
+F8／窗口4：T[1, 2, 3]；需[84, 57, 25]；净扣[27, 32, 25]；净耗HP[4, 0, 0]。
+
+F11／窗口5：T[1, 2, 3, 4]；需[67, 46, 34, 11]；净扣[21, 12, 23, 11]；净耗HP[0, 6, 0, 0]。
+
+F12／窗口6：T[1, 2, 3, 4, 5, 6]；需[80, 77, 77, 57, 38, 5]；净扣[3, 0, 20, 19, 33, 5]；净耗HP[2, 2, 4, 0, 0, 0]。
+
+F15／窗口7：T[1, 2, 3, 4, 5, 6, 7]；需[150, 130, 125, 121, 106, 86, 46]；净扣[20, 5, 4, 15, 20, 40, 46]；净耗HP[0, 0, 7, 2, 7, 0, 0]。
+
+F17／窗口8：T[1, 2, 3, 4, 5, 6, 7]；需[233, 224, 216, 198, 165, 108, 50]；净扣[9, 8, 18, 33, 57, 58, 50]；净耗HP[0, 0, 4, 5, 0, 9, 0]。
+
+F19／窗口9：T[1, 2, 3]；需[86, 62, 20]；净扣[24, 42, 20]；净耗HP[15, 0, 0]。
+
+F20／窗口10：T[1, 2, 3, 4, 5]；需[84, 84, 66, 62, 55]；净扣[0, 18, 4, 7, 55]；净耗HP[0, 0, 6, 0, 0]。
+
+F23／窗口11：T[1, 2, 3, 4]；需[111, 102, 58, 40]；净扣[9, 44, 18, 40]；净耗HP[6, 10, 0, 0]。
+
+F25／窗口12：T[1, 2, 3, 4, 5]；需[126, 120, 108, 105, 54]；净扣[6, 12, 3, 51, 54]；净耗HP[0, 9, 12, 0, 0]。
+
+F29／窗口13：T[1, 2, 3, 4, 5, 6]；需[115, 87, 75, 66, 48, 4]；净扣[28, 12, 9, 18, 44, 4]；净耗HP[0, 1, 0, 0, 0, 0]。
+
+F31／窗口14：T[1, 2, 3, 4]；需[148, 131, 131, 86]；净扣[17, 0, 45, 17]；净耗HP[4, 0, 30, 11]。
+
+
+药水槽位变化（SL重载另列，非获得；饮用／丢弃／购买由下列原动作核，不从空槽单独判喝药）：
+
+
+F3T未记录 s475535→s475536（2026-10-21T04:59:22.077Z）：空→0:发光水 GLOWWATER_POTION。
+
+F5T2 s475566→s475567（2026-10-21T05:00:56.953Z）：0:发光水 GLOWWATER_POTION→空。
+
+F6T未记录 s475584→s475585（2026-10-21T05:02:33.449Z）：空→0:复制药水 DUPLICATOR。
+
+F8T1 s475594→s475595（2026-10-21T05:03:37.892Z）：0:复制药水 DUPLICATOR→空。
+
+F8T3 s475607→s475608（2026-10-21T05:04:09.554Z）：空→0:赌徒特酿 GAMBLERS_BREW。
+
+F11T4 s475635→s475636（2026-10-21T05:06:08.717Z）：0:赌徒特酿 GAMBLERS_BREW→0:赌徒特酿 GAMBLERS_BREW、1:技能药水 SKILL_POTION。
+
+F12T1 s475645→s475646（2026-10-21T05:06:51.777Z）：0:赌徒特酿 GAMBLERS_BREW、1:技能药水 SKILL_POTION→1:技能药水 SKILL_POTION。
+
+F12T5 s475663→s475664（2026-10-21T05:07:43.549Z）：1:技能药水 SKILL_POTION→空。
+
+F12T6 s475674→s475675（2026-10-21T05:08:10.022Z）：空→0:技能药水 SKILL_POTION。
+
+F15T2 s475695→s475696（2026-10-21T05:11:24.693Z）：0:技能药水 SKILL_POTION→空。
+
+F17T7 s475762→s475763（2026-10-21T05:15:50.158Z）：空→0:明晰提取物 CLARITY。
+
+F19T1 s475771→s475772（2026-10-21T05:17:03.148Z）：0:明晰提取物 CLARITY→空。
+
+F19T3 s475783→s475784（2026-10-21T05:17:35.581Z）：空→0:明晰提取物 CLARITY。
+
+F20T1 s475789→s475790（2026-10-21T05:18:14.549Z）：0:明晰提取物 CLARITY→空。
+
+F23T4 s475842→s475843（2026-10-21T05:22:11.709Z）：空→0:幸运补剂 LUCKY_TONIC。
+
+F25T4 s475865→s475866（2026-10-21T05:24:18.121Z）：0:幸运补剂 LUCKY_TONIC→空。
+
+F29T6 s475909→s475910（2026-10-21T05:27:10.230Z）：空→0:力量药水 STRENGTH_POTION。
+
+F31T3 s475928→s475929（2026-10-21T05:29:43.752Z）：0:力量药水 STRENGTH_POTION→空。
+
+F5T2 d@3286864442：use_potion 槽／选项0，发光水 GLOWWATER_POTION；completed: Action completed.。
+
+F6T未记录 d@3287712042：buy_potion 槽／选项2，复制药水 DUPLICATOR；completed: Action completed.。
+
+F8T1 d@3288177775：use_potion 槽／选项0，复制药水 DUPLICATOR；completed: Action completed.。
+
+F12T1 d@3289264129：use_potion 槽／选项0，赌徒特酿 GAMBLERS_BREW；pending (unstable): Action queued but state is still transitioning.。
+
+F12T5 d@3289469377：use_potion 槽／选项1，技能药水 SKILL_POTION；pending (unstable): Action queued but state is still transitioning.。
+
+F15T2 d@3290687656：use_potion 槽／选项0，技能药水 SKILL_POTION；pending (unstable): Action queued but state is still transitioning.。
+
+F19T1 d@3292283690：use_potion 槽／选项0，明晰提取物 CLARITY；completed: Action completed.。
+
+F20T1 d@3292649690：use_potion 槽／选项0，明晰提取物 CLARITY；completed: Action completed.。
+
+F25T4 d@3294423926：use_potion 槽／选项0，幸运补剂 LUCKY_TONIC；completed: Action completed.。
+
+F31T3 d@3296309091：use_potion 槽／选项0，力量药水 STRENGTH_POTION；completed: Action completed.。
+
+非SL槽位新增加观察9瓶；主动饮用动作9次（含SL恢复后重复饮用），主动丢弃0次，购买1次。新增观察是槽位实变，不假定所有补给来源；queued须结合后继槽位／手牌核，不代完整效果。
+
+
+战外HP／max HP及SL恢复（来源动作附列；不把SL算治疗）：
+
+
+F9→F9，s475612→s475613（2026-10-21T05:05:24.292Z）：HP41→62，max70→70；战外／开场变化；窗口内动作[{"action": "choose_rest_option", "option_index": 0}, {"action": "proceed"}]。
+
+F13→F13，s475682→s475683（2026-10-21T05:10:28.133Z）：HP48→69，max70→70；战外／开场变化；窗口内动作[{"action": "choose_rest_option", "option_index": 0}, {"action": "proceed"}]。
+
+F17→F18，s475766→s475767（2026-10-21T05:16:52.096Z）：HP35→63，max70→70；战外／开场变化；窗口内动作[{"action": "choose_map_node", "option_index": 0}, {"action": "choose_event_option", "option_index": 2}]。
+
+F22→F22，s475820→s475821（2026-10-21T05:21:13.502Z）：HP42→62，max70→70；战外／开场变化；窗口内动作[{"action": "choose_event_option", "option_index": 1}, {"action": "choose_event_option", "option_index": 0}]。
+
+F27→F27，s475878→s475879（2026-10-21T05:25:11.830Z）：HP25→46，max70→70；战外／开场变化；窗口内动作[{"action": "choose_rest_option", "option_index": 0}, {"action": "proceed"}]。
+
+
+SL原始行结果（工具不自动判胜负，按sl-attempts和实帧分列）：
+
+
+{"offset": 52316568, "floor": 17, "attempt": 1, "started_at": "2026-10-21T05:14:20.361Z", "ended_at": "2026-10-21T05:15:49.840Z", "result": "won", "turns": 7, "end_hp": 35}。
+
+
+Jev完整题面核读：F31T2完整题，Jev0.19选plan2结束；chosen=end_turn且completed，后继T3仍41血、力量药水仍在，之后T3实饮。五轮仅5样本且标clock削减，0/5已赢与约22%终点估计分列，不能从T2零损外推后段安全。 原始j字节偏移=2380866096，完整定位见question-receipts.json，所引原题各字段已分段完整读到。
+
+Jev低信心（confidence<0.35）10次；原始请求83／有答案81／非空error2。只纳原答plan且rollout显式best/tied的题，原答选入集合68/70＝97.14%；这是原回答比例，不是护栏／SL后的真实最优执行率。含focus候选题12，原答选有focus候选2；focus不是实际击杀顺序。以每窗口／回合第一条非continue战斗决定计，代码15轮、Jev52轮（重试分开、续步不重复）；同轮后续代码重算不在此口径重复计。
+
+selection_dispatch共72条，未见gate_reject字段匹配（不等于已证所有闸均未拒）；原回执state_effect_verified=false、whole_plan_executed=null保留。完整实线采用率、未全文题的逐敌精确击杀序均未记录。原始error逐条保留于question-receipts.json，不把请求存在当回答成功。
+
+
+HP护栏候选审计2条；以下是SL之前的候选差，不能累计作实际省血：
+
+F17T3／attempt=1 d@3291994264：预测损血20→4（省16），预测伤害54→18（变化-36）；替换前牌ID['BOUNCING_FLASK', 'ACCELERANT']，后['SHADOWMELD', 'ACCELERANT', 'SURVIVOR']。含抽牌／弃牌者后续需重规划，不据候选整线追认全程。
+
+F31T1／attempt=None d@3296000946：预测损血19→4（省15），预测伤害25→19（变化-6）；替换前牌ID['HAZE', 'DEADLY_POISON', 'POTION:STRENGTH_POTION:0']，后['ANTICIPATE', 'DEFEND_SILENT', 'BACKFLIP', 'POTION:STRENGTH_POTION:0', 'STRIKE_SILENT']。含抽牌／弃牌者后续需重规划，不据候选整线追认全程。
+
+真实未执行分支的代价未记录；不拟新护栏权重、药价或SL门槛。
+
+
+首末decision 2026-10-21T04:56:44.488Z→2026-10-21T05:30:01.496Z，用时1997.008秒（不含首决策前启动）；runs.tokens=618213，ds_tokens_in/out=1129432/27682、ds_cache_hit=0。Jev原始入／出token合计613440/4773（缺token字段2条另列，不补作0测量）；错误行未提供token的仍缺失，缓存命中未记录。大脑原行32条、engine计数{'codex': 32}；DeepSeek-reasoning首末决策时间窗无匹配，兼容ds字段和任务职责名不证明使用DeepSeek。原生turn_context／请求档位生效回执未记录，不从配置effort推定生效。
+
+
+V6原始配置mode=on，card/potion/shop/rest均brain、reflex=off、direction_replan=off；本局冻结v6-build流no_match，entries／jev_answer／fallback／unknown没有本局原行可解释，缺失不是零，也不证明V6 off。Jev request／answers／error按上文独立核，不与v6-build混算。整流历史无效JSON和未知身份保留于manifest；不是本局零错误证明。
+
+本局完整题面实读1/83，仅偏移2380866096；其余82条只机械核原字节／身份／回答或错误／chosen、result、gate_reject、selection_dispatch及后继索引，未作完整语义审阅。原因：按关键决定有界复盘；逐条覆盖和未读原因在coverage.json，不把最后五条当完整覆盖。
+
+证据：scratch=/home/dw/Projects/agent-sts2/learner/runs/20261021-134306-df2bd06d-ce82-40d4-a101-b122ee689219-postmortem；evidence-summary.json只是有限事实索引。v6-evidence/evidence-manifest.json给四流冻结切点／整流SHA／缺行；各局raw-index.json及raw-sources.json给states、decisions、run-plans、brain、run-config、SL原行offset／bytes／SHA及各自切点。Jev归属仅认显式run_id或decisions精确decision_id，identity关联出处见question-receipts.json，不靠正文、时间邻近或题号相似。
+
+未记录／限制：完整路线投影与实到逐节点配对、传统Boss时钟需要／估计及同输入实打／估值比、未读题的构筑边际效应、完整实线采用率、逐击毛伤和过量伤害、留药／早喝／换目标／护栏未执行分支的整场反事实、Jev缓存、精确历史源码SHA、原生档位生效回执。只对实际匹配题和实帧下有限结论；未发现新纯bug，不借其他角色证据补经验；不称正式发布、下一局消费或自然收益。三条均support，不登记repeat；独立strategy-proposal保留行为、补证后再决定修改。
+

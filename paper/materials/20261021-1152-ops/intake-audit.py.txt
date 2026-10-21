@@ -1,0 +1,30 @@
+from pathlib import Path
+import json,hashlib,subprocess,importlib.util,shutil,re
+r=Path('/home/dw/Projects/agent-sts2');s=r/'learner/runs/20261021-111306-e35f946f-318e-40c4-b79a-93cc27f607e0-postmortem';m=r/'paper/materials/20261021-1152-ops';a=r/'.artifacts/ops-wake-20261021-1152';sha=lambda b:hashlib.sha256(b).hexdigest();lessons=(r/'notes/lessons.md').read_bytes();app=json.loads((s/'append-receipts.json').read_bytes());checks=[]
+for x in app:
+ off=x['old_bytes'];n=x['appended_bytes'];assert sha(lessons[:off])==x['old_sha256'] and sha(lessons[off:off+n])==x['appended_sha256'];run=x['run'];heads=[b for b in lessons.splitlines() if b.startswith(('## '+run+'（').encode())];assert len(heads)==1;checks.append({'run':run,'prefix_sha_verified':True,'append_sha_verified':True,'unique_title':heads[0].decode(),'offset':off,'bytes':n})
+assert (s/'correction-GWE810ZD014M.md').read_bytes().strip() in lessons;numeric=[json.loads(b) for b in (s/'final-numeric-evidence.jsonl').read_bytes().splitlines() if b.strip()];refs=[]
+with (r/'logs/states.jsonl').open('rb') as h:
+ for x in numeric:
+  q=x['ref'];assert Path(q['source'])==r/'logs/states.jsonl';h.seek(q['offset']);raw=h.read(q['bytes']);assert sha(raw)==q['sha256'];st=json.loads(raw)['state'];assert st['run_id']==x['run'];refs.append({'run':x['run'],'offset':q['offset'],'bytes':q['bytes'],'sha256':q['sha256']})
+spec=importlib.util.spec_from_file_location('ld',r/'learner/ledger.py');ld=importlib.util.module_from_spec(spec);spec.loader.exec_module(ld);entries=ld.fold(ld.read_rows(str(r/'paper/materials/learning/ledger.jsonl')));result=json.loads((s/'result.json').read_bytes());wanted=set(result['ledger']['updated'])|{'silent-0559'};record={}
+for ident in sorted(wanted):
+ v=entries[ident];record[ident]={'character':v.get('character'),'status':v.get('status'),'kind':v.get('kind'),'claim':v.get('claim'),'evidence_runs':sorted({e['run'] for e in v.get('evidence',[]) if e.get('run')}),'source_task':v.get('source_task')}
+assert all(entries[i].get('character')=='silent' for i in result['ledger']['updated']);assert {'CEN1Z8HEU7NM','36VNKZKABGB4'}<=set(record['silent-0559']['evidence_runs'])
+ids=set(result['code_proposals']);qrows=[]
+for b in (r/'paper/materials/learning/code-proposals.jsonl').read_bytes().splitlines():
+ if not b.strip():continue
+ x=json.loads(b)
+ if x.get('id') in ids:qrows.append(x)
+adds={x['id']:x for x in qrows if x.get('op')=='add'};assert set(adds)==ids
+for ident,x in adds.items():
+ p=Path(x['proposal']);assert sha(p.read_bytes())==x['proposal_sha256'];assert x['character']=='silent' and x['source_task']=='postmortem';assert x['state']=='pending' and not x.get('implemented_commit')
+ for run in x['runs']:assert any(run in {e.get('run') for e in entries[i].get('evidence',[])} for i in x['ledger'])
+proof={'batch':'20261021-111301','result_sha256':sha((s/'result.json').read_bytes()),'report_sha256':sha((s/'report.md').read_bytes()),'lessons_appends':checks,'GWE_correction_preserved':True,'final_numeric_original_windows':refs,'ledger_updated_by_original_report':result['ledger']['updated'],'ledger0559':'existing evidence includes CEN/36V, not in this batch updated list; preserve distinction','ledger_mappings':record,'proposals':list(adds.values()),'all_proposals_pending_not_implemented':True,'new_pure_bugs':result['bugs'],'known_nonpositive_hp':'original CEN/0332 chain already recorded; no new bug or fix queue entry','no_mechanism_or_strategy_changes_by_ops':True}
+(m/'learning-verification.json').write_text(json.dumps(proof,ensure_ascii=False,indent=2)+'\n');(a/'intake-state.json').write_text(json.dumps(proof,ensure_ascii=False,indent=2)+'\n')
+for n in ('report.md','result.json','append-receipts.json','correction-GWE810ZD014M.md','ledger-check-final.txt','final-validation.json','proposal-ids.json','final-numeric-evidence.jsonl'):shutil.copy2(s/n,m/('learner-'+n))
+for run in result['appended']:
+ for suffix in ('.md','.json'):
+  p=s/f'proposal-{run}{suffix}';shutil.copy2(p,m/p.name)
+(m/'intake-audit-initial-note.json').write_text(json.dumps({'initial_local_assertion':'counted every heading containing run id and misclassified GWE correction heading as a second formal postmortem','correction':'count only exact ## RUN（ postmortem titles; preserve correction as its own subsection','original_lesson_prefix_and_append_hashes':'all unchanged; no product or evidence edits'},ensure_ascii=False,indent=2)+'\n')
+print(json.dumps({'unique_postmortems':len(checks),'ledger_support_updates':len(result['ledger']['updated']),'additional_existing0559_map':True,'proposal_count':len(adds),'final_state_windows':len(refs),'pure_bugs':result['bugs']},ensure_ascii=False))

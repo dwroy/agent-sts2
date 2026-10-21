@@ -5193,3 +5193,192 @@ W4拿牌v2正式3ef4/11a80已核：14源Git/SHA、318清单项加manifest共319�
 - 2026-10-21T10:54:06+08:00 原R410终局后续消费已核：TS0BHDLAH8ME配置/实际事件与出牌completed、CARD/SHOP/REST/POTIONbrain、REFLEX/方向off、脑90s；原双通知在HEAD与工作区各一份，未重复通知/发布/full。原生Git字段ENOBUFS为空保留，独立live5a295bb5及四源另核同；有界F8不代第三幕验收，#2仍开放。新bac831a0e角色规则已入短清单，本ops旧三评仅补[ops]，外部作者不作指令，新#2评论发前扫描0/读回。不投例行watcher、不关0332父或代ACK。原件paper/materials/20261021-R410-natural-readback-ops/receipt.json。
 
 - 2026-10-21T11:00:18+08:00 104302-fix原回报已核无源/提交/合入，154路径仅原CEN发布变化、四叶live核同；52映射/46历史祖先已核，工作树净。原tsc0/7文件52定向18.65秒不代完整绿，001302/014301仍原候选，#4精英学习不重复派。registry rc0但statefailed/mergednull原样保留；无提交受阻需兜底，不空合并/补full或dataset/改live。例行回执只短清单和本文件，无新issue结论不刷评论、不投watcher或代ACK。原件paper/materials/20261021-1057-ops/receipt.json。
+
+### 2026-10-21T11:28:39+08:00 #13/#14原学习者并行派发
+
+按Claude交付的#13/#14各用独立工作树和原学习启动器并行派发一次，分别核常见未建模牌与第三幕Boss/连战校准；只产证据、候选和提案，原科学父及未知保留。两线程实际turn_context已核gpt-6.1-sol/high、原workspace-write沙箱与各自cwd，未扩大权限或改账号。运行输入固定R410源码、444份最新知识与403终局索引；大流仅冻结完整行边界，使用时逐行取证，不虚称全前缀SHA。11:19单次进程快照各4个、nice19，任务计算限单worker；不是连续监控。两issue已带[ops]短评、扫描0并回读正文与in-progress标签。当前未修改正式知识、live或对局配置，退出不代表入库/验收；后续沿原学习闭环，完整检查及发布走单点串行，不重复派发。原件见本目录receipt.json、native与输入回执。
+
+### 2026-10-21T11:33:35+08:00 #18 历史工作树非删除计划
+
+按#18先运行原worktree_retention.py plan（nice19/ionice3、无apply），其结果0可回收；再补Git注册与顶层目录的逐树同门禁清单。当前315条Git登记，.worktrees顶层275目录/141.20GiB：可直接回收0，需保留219/126.87GiB，待补证人工核对56/14.33GiB；60个嵌套登记体积已计入父目录，不重加。保留原未发布、脏文件、活动进程、持久绑定及未完成要求；21个未注册现场不按孤儿删除。体积为不跟随软链接的占用块估算，不承诺净释放；顺序观察非原子快照。未删除工作树/提交/绑定或日志，未动live与对局。具体计划、逐树原因与原CLI回执见paper/materials/20261021-worktree-backlog/；交watcher核对，尚无通过回执或可执行删除批次。后续仅补齐验收后原调度器每轮至多4项并重新核现场。
+
+### 2026-10-21T11:38:46+08:00 #4 精英模拟学习三项科学异议（原文）
+
+原学习批次issue-4-elite-calibration-20261021-104312已退出0；本ops已核99输入、33产物、3895原行/771 Git blob，无差异。以下为学习者原文，不是ops新增游戏知识；四候选仍waiting，无发布/父完成。
+
+[
+  {
+    "id": "D1",
+    "prior": "原审计称真实开场保留可用牌堆；缺显式牌堆时才deck-minus-hand。",
+    "finding": "显式牌堆在原字节中存在；是冻结提取主动剥离。ET1一场还造成六张重复身份和升级失配。保留原结果作原管线诊断，不称完整真实开场控制。",
+    "evidence": [
+      "ET1QAZCV8GUP-f31-fight11（Silent A10/F31/T1可行动），logs/states.jsonl offset=14296044731 bytes=40115 SHA256=385cfbe3b57c560e59604cf56839725c288fe49c4b85e2a0551eea1614416ca2",
+      "source-excerpts.md: parse_state_line / boardOf / findIndex"
+    ],
+    "affected_ids": [
+      "silent-elite-simulation-pessimism-20261021",
+      "issue-4",
+      "silent-proposal-e76e895381da5bfc"
+    ],
+    "next_step": "原ops接收本异议，沿原通知CLI实际写入watcher与Roy收件箱并取得各角色真实回执；先做无MC输入保真回归。"
+  },
+  {
+    "id": "D2",
+    "prior": "原授权：“当前不影响R407运行：拿牌比较用同种子配对差。”",
+    "finding": "不否定原调度决定，但拒绝把其理由外推为配对增量已校准或排名可靠。本窗口只比较绝对结果，无候选反事实，且有状态/牌身份相关偏差。",
+    "evidence": [
+      "issue输入内elite-learning-authorization-original.md，SHA25ae2141a16fa4fc61c48d00943240a0a5fb3340bd6627d663c2d17606a34d25",
+      "ET1QAZCV8GUP-f31-fight11（Silent A10/F31/T1可行动），logs/states.jsonl offset=14296044731 bytes=40115 SHA256=385cfbe3b57c560e59604cf56839725c288fe49c4b85e2a0551eea1614416ca2"
+    ],
+    "affected_ids": [
+      "silent-elite-simulation-pessimism-20261021",
+      "issue-4",
+      "R407论证边界"
+    ],
+    "next_step": "原ops→watcher→Roy实际告知，单独验证候选增量；保持CARDbrain/REFLEXoff，不将CEN或预测器子项完成当本issue完成。"
+  },
+  {
+    "id": "D3",
+    "prior": "原审计将净损描述为入场至终局；实际使用fight.hp_loss，两场胜利只覆盖到最后COMBAT帧。",
+    "finding": "ET1 F9最后战斗42到退出39、2XCG F9最后战斗25到退出19；合9HP未纳原“净损”。保留原统计并并列退出口径均值27.4038、模拟残差+10.7151，原因不补值。",
+    "evidence": [
+      "ET1QAZCV8GUP-f9-fight4（Silent A10/F9/T1可行动），logs/states.jsonl offset=14287839500 bytes=30795 SHA256=b4622465a1aeb30caece92f41cf74f007f199358cb33710f2d933b6c68db6469",
+      "logs/states.jsonl offset=14288657897 bytes=20832 SHA256=e6fc793496976edde0a4815b23ab8d0bebfc30cc0ce946349bc440d93a779a90",
+      "2XCG8LXUZLRE-f9-fight5（Silent A10/F9/T1可行动），logs/states.jsonl offset=14516553453 bytes=30452 SHA256=9de6174c27382f0546c6348a5e2b0a5078caa8374aff1b708d05166ec10d08fd",
+      "logs/states.jsonl offset=14517771530 bytes=20474 SHA256=fbd7cdd050b057e3a47517fb9173ae9c51eac0473cab8015aa52498ce09c7223"
+    ],
+    "affected_ids": [
+      "silent-elite-simulation-pessimism-20261021",
+      "issue-4",
+      "原审计净掉血口径"
+    ],
+    "next_step": "原ops沿通知链实际告知，固定索引补核两段跨界HP事件；不得用无归因9HP拟伤害参数。"
+  }
+]
+
+原文 learner/runs/20261021-104418-def3aea5-81a4-47a6-85d4-5dd8fb129249-issue-4-elite-calibration-task/disagreements.json SHA256 012008f5419fb0411d3682762626ce546478a3bdaf4563aae0041a7e275f61e3；完整报告与三notice对应见 paper/materials/20261021-issue4-terminal-ops/。新研究任务未获原manual ACK白名单支持，CLI角色登记另记结果；实际watcher读取及Roy可见转达仍pending，不代填角色ACK。
+
+### 2026-10-21T11:42:13+08:00 #4 一次学习批次核收与 #18 零删除核验接收
+
+已核#4原一次学习退出0：99输入、33产物、3895原行共83.6MB及771历史Git blob全部核同，WT干净；实际原生gpt-6.1-sol/high另取turn_context确认。40局中33局有53战，删失后52战/实死4，未扩大独立分母。学习者定位冻结提取丢agent_view、ET1升级身份使28牌变34、开场能力与两处3/6HP端点差；保反例、无抽序/历史动态知识及非因果限制。四份候选仍waiting，未造账本/提案ID或自动续派。三科学异议原文已写inbox/for-roy并留三个pending notice；原ACK CLI不支持此研究task，首次认证拒绝原件保留，不改名绕过或代填watcher/Roy ACK。issue交研究review并提醒原watcher转达；未发布、未关父、未跑full/API/MC/dataset或动live。原件paper/materials/20261021-issue4-terminal-ops/。
+
+#18已实读watcher评论6307444515及原核验材料，盘点通过但本轮删除授权0。219保留/56待补证；以后仅精确name/HEAD/owner/材料清单重新复核、逐workspace定点每批≤4，禁止全局sweep。绑定判定建议未授权/未实施，不清绑定。原件 paper/materials/20261021-worktree-backlog/watcher-review-intake.json。
+
+### 2026-10-21T11:51:00+08:00 1144六事件及#8原候选核收
+
+核三份ordinary attention原件：基线均存在，新增全局通知恰为#4的D1–D3；三树HEAD同报告base且干净，报告SHA同，30个原提案均waiting，fixes空/merged null/tests null。前两批同一轮既有dataset及attempt1原件保留，第三在前置守卫退出；本轮不重dataset、不空合并、不补测或扩分母。三notice调度器ops_forwarded回执/正文/双收件箱字节已核；watcher实读及向Roy可见转达已有原材料和6307510995评论，不等Roy亲自认可。原研究CLI身份兼容仍pending，保旧拒绝及false flags，不重复认证/转述/代ACK。另核#8候选4fc80隔离暂存及三测试blob，源非main/live祖先；四项基线失败归#19，保留候选和原检查，不放宽门槛、不新派或改live。#18仍零删除。原件paper/materials/20261021-1144-ops/。
+
+### 2026-10-21T11:56:35+08:00 复盘111301原记录收尾
+
+四局复盘均有唯一正式标题，原lessons前缀及四段追加SHA核同，GWE能力建立时点勘误原样保留；21个终战原帧窗口已seek核同，账本当前559条检查0。原批12个support更新与四份postmortem提案绑定核实，0559为已有CEN/36V证据映射、非本批新增或更新。没有新纯bug，历史nonpositive-hp仍原CEN/0332链，不重复修或写新机制/打法；四提案pending由原调度器接续，不标实现或收益。本批单次dataset与记录收尾通过原ordinary-close锁及writer锁串行，nice19/ionice3、线程1；唯一开始标记阻止重复，终局后核四局复盘标记、生成表/原快照SHA，扫描后只提交自有记录和指定lessons/ledger/四提案链接。使用有限子进程等待完成，不sleep/轮询/定时器/模型/full/对局或刷新；未完成前保pending，终局由原队列叫醒核收。原件paper/materials/20261021-1152-ops/及.artifacts/ops-wake-20261021-1152/close-status.json。
+
+### 2026-10-21T12:08:26+08:00 复盘111301唯一dataset与记录核验
+
+四局CEN、36V、GWE、TS0各唯一复盘，原lessons前缀与追加SHA、21终战原帧、12账本support和四pending提案核同，GWE勘误保留；0559是已有证据映射而非本批新增更新。无新纯bug，历史nonpositive-hp沿CEN/0332原链，不改游戏知识、规则或重复派修。本批唯一nice19/ionice3 paper_dataset --no-raw退出0，原writer/ordinary锁串行，源检查与四局复盘标记均通过；生成表、切点、旧快照和日志SHA留存，未重跑。按用户要求只保存自有材料及生成记录、指定lessons/ledger和本批四提案增量；保留其他并行叶，不拿记录、数据或复盘完成冒实现/live采用或科学父验收。未新开模型/full/生产刷新或对局，不改live/actor/STOP/CARDbrain/REFLEXoff/Regent；#4角色CLI与#8/#19原阻塞、#18零删除边界保持。
+原件 paper/materials/20261021-1152-ops/receipt.json。
+
+- 2026-10-21T12:08:18+08:00 ops：#13/#14 原学习者五项异议/限定，逐项原文与原始证据引用如下。公开 issue 评论不代 watcher 实读或 Roy 可见通知；原研究身份尚不被现行 ACK CLI 支持，不改名/造父/代理登记，后续两角色回执 pending。原报告和科学父保留。
+
+  Issue #13 / notice 7430982d1c28981e46d44d75；原文 learner/runs/20261021-111653-8735c888-1393-4256-84d9-821d4e4a14ea-issue-13-card-models-task/disagreements.json SHA256 03dffced1675adff2d33b4fcb8b2afa2cd6d1121de30c317bf9c3b395fae15d8；核验 paper/materials/20261021-issues-13-14-terminal-ops/issue-13/ops-audit.json。
+
+{
+  "prior": "Issue #13 列出EXPOSE 208、SPORE_MIND 60等unknown标签，容易被理解为独立实盘覆盖。",
+  "finding": "重算完全复现原标签计数；EXPOSE的208只来自1局13道题的候选/目标槽，SPORE_MIND的60只来自1局3题。其余卡A标签为11/4/4，不是施放分母。",
+  "evidence": [
+    "shadow-unknown-inventory.json",
+    "coverage.csv"
+  ],
+  "affected_ids": [
+    "github-issue-13-silent-learning-20261021"
+  ],
+  "next_step": "保留R409原结果；发布与消费者验收按逐卡独立局/真实施放和分支重新计数，不关闭父要求。"
+}
+
+  Issue #13 / notice 99c134c7850ae5bae9fb64c9；原文 learner/runs/20261021-111653-8735c888-1393-4256-84d9-821d4e4a14ea-issue-13-card-models-task/disagreements.json SHA256 03dffced1675adff2d33b4fcb8b2afa2cd6d1121de30c317bf9c3b395fae15d8；核验 paper/materials/20261021-issues-13-14-terminal-ops/issue-13/ops-audit.json。
+
+{
+  "prior": "silent-0066已shipped；普通EXPOSE在当前消费者known=true。",
+  "finding": "这仅覆盖普通Power→易伤。R410升级EXPOSE仍known=false且vulnerable=0；当前CardModel也没有清格挡/全部人工制品的字段。7XS普通清8挡、升级清18挡/1制品/加3易伤均直接兑现。silent-0217修预览消耗，与这些缺口独立。",
+  "evidence": [
+    "r410-consumer-replay.json",
+    "effect-audit.json"
+  ],
+  "affected_ids": [
+    "silent-0066",
+    "silent-0073",
+    "silent-0208",
+    "silent-0217",
+    "silent-proposal-00a6a10b15a62b38"
+  ],
+  "next_step": "复用原机制提案补CardModel/solver/rollout及离手物化、目标语义测试；旧shipped状态不代表本新增范围已发布。"
+}
+
+  Issue #13 / notice 3d8e3359ffe4d6992bd3960e；原文 learner/runs/20261021-111653-8735c888-1393-4256-84d9-821d4e4a14ea-issue-13-card-models-task/disagreements.json SHA256 03dffced1675adff2d33b4fcb8b2afa2cd6d1121de30c317bf9c3b395fae15d8；核验 paper/materials/20261021-issues-13-14-terminal-ops/issue-13/ops-audit.json。
+
+{
+  "prior": "空rules_text、空dynamic_values且只显示消耗的SPORE_MIND可能可以按零效果known。",
+  "finding": "本批仅10行真实手牌、4个局/层/回合键、1独立局，0施放；另有显示昏眩版本。不能证实零效果，也未绑定其生成来源。索引唯一同名施放是非Silent，已拒绝。",
+  "evidence": [
+    "shadow-card-observations.json",
+    "historical-index-discovery.json"
+  ],
+  "affected_ids": [
+    "github-issue-13-silent-learning-20261021"
+  ],
+  "next_step": "继续unmodelled，等待Silent真实选择/施放与状态后继，不按卡名或其他角色补机制。"
+}
+
+  Issue #13 / notice 7dcddb0749fa60e0f2f78f3f；原文 learner/runs/20261021-111653-8735c888-1393-4256-84d9-821d4e4a14ea-issue-13-card-models-task/disagreements.json SHA256 03dffced1675adff2d33b4fcb8b2afa2cd6d1121de30c317bf9c3b395fae15d8；核验 paper/materials/20261021-issues-13-14-terminal-ops/issue-13/ops-audit.json。
+
+{
+  "prior": "旧钢铁风暴升级手牌边界已implemented，可能被读作完整生成/自动效果已实现。",
+  "finding": "旧71e742提案原文明确只清旧手牌并停线，known仍false；普通0费69776提案也明确尚无完整生成。实际12次施放见N-1刀转换，但32VS净6挡、K643净11挡、其他0挡，不能实现固定格挡或未知奇巧顺序。",
+  "evidence": [
+    "prior-proposal-boundary.md",
+    "prior-proposal-sly.md",
+    "effect-audit.json",
+    "r410-consumer-replay.json"
+  ],
+  "affected_ids": [
+    "silent-0455",
+    "silent-0456",
+    "silent-0458",
+    "silent-proposal-71e742c6453608bf",
+    "silent-proposal-c1dd614cdf7bfc37",
+    "silent-proposal-69776c308a3b298e"
+  ],
+  "next_step": "复用原ID；生成与自动交互分开，先验动态张数和原手牌离手保护，再沿原闭环实现。"
+}
+
+  Issue #14 / notice 751e5b79d972608c69f79626；原文 learner/runs/20261021-111653-dbbc4dc0-8ef7-4421-8395-2c1621797aec-issue-14-act3-calibration-task/notice-request.json SHA256 fcbe8d2191c6e5510e04e4815fd7af3a159fb015b7cba923141a99c24c368663；核验 paper/materials/20261021-issues-13-14-terminal-ops/issue-14/ops-audit.json。
+
+{
+  "kind": "scope-limitation",
+  "prior": "当前整战源码将给定firstPlan直接交applyPlan；初始候选计划不一定覆盖实盘同回合后续补牌。",
+  "finding": "SVBEFF首试T1原四步后，实盘另打基础防御及精准切割，25→31挡、预计损1而实际净损0；这是局部可核策略路径差异，尚未证明R410固定回放或整体4.40倍误差的机制根因。",
+  "evidence": [
+    "/home/dw/Projects/agent-sts2/learner/runs/20261021-111653-dbbc4dc0-8ef7-4421-8395-2c1621797aec-issue-14-act3-calibration-task/policy-prefix-case.json",
+    "/home/dw/Projects/agent-sts2/learner/runs/20261021-111653-dbbc4dc0-8ef7-4421-8395-2c1621797aec-issue-14-act3-calibration-task/verified-raw-refs.jsonl"
+  ],
+  "affected_ids": [
+    "silent-0559",
+    "silent-proposal-40be025a2ec4528e",
+    "roy-20261017-human-pace-h0",
+    "issue-14"
+  ],
+  "next_step": "原owner固定R410单案例逐步轨迹对照；旧验证已读只作诊断/回归，正式候选验收另用未读新局留出。"
+}
+
+- 2026-10-21T12:12:52+08:00 ops：已实读复盘20261021-111301原有限收尾终局：唯一paper_dataset --no-raw退出0，记录提交1fbd7318确为当前main祖先，变更只在记录和论文数据范围。逐SHA核同12项生成输出、669项旧快照归档及原dataset日志，提交中的四局复盘标记均为1，lessons与ledger均含四局。原材料receipt仍是提交前检查点，保留其await-record-commit原文，以随后终局与Git对象分列证明已提交，不改写历史。无新纯bug，旧CEN/0332继续原链；原十二support、四pending提案及0559既有证据映射不冒实现或父验收。本轮仅更新短清单和终局回执，不重dataset、模型、full、刷新或发布，不改当前对局、CARDbrain/REFLEXoff、Regent及#4原CLI/#8-19阻塞、#18零删除边界。原件.artifacts/ops-wake-20261021-1152/close-status.json、paper/materials/20261021-1152-ops/；本次核验见paper/materials/20261021-1211-ops/receipt.json。
+
+- 2026-10-21T12:18:29+08:00 ops：本轮七件按原件去重核收。五项学习通知均与上一轮原文及SHA一致，调度器ops_forwarded真实回执和双收件箱逐字窗口核同；watcher两条原角色评论已确认实读并向Roy转达，不等于Roy亲自认可。研究任务及输入目录仍不被原CLI接受，登记pending；未重复认证、改任务名、代ACK或再次提醒。此前review称receipt缺失的观察保留，本时点该文件及237403提交均存在。两普通批次均有64项通知基线，新增恰这五项，故在dataset前停止；报告SHA、干净WT/HEAD核同，二十提案全waiting、源码与合入为空。原attention和失败保留，不补跑dataset或空提交源码。本轮只补记录/短清单，CARDbrain、REFLEXoff、Regent、科学父及#18零删除不变。原件paper/materials/20261021-1215-ops/receipt.json及ops/codex-ops/ordinary-close/20261021-114302*.json。
+
+- 2026-10-21T12:22:04+08:00 ops：已核修复批次20261021-121301原回报：exit0、fixes空、无源码提交或合入受阻，实际工作树干净且HEAD与原基线一致，无需空合并或另设审核。13项产物SHA及154源码/测试SHA核同，原队列1548行/67项未改；52项既有修复仅保各自限定范围，30项策略、架构或缺证仍留原链。原tsc0、定向6文件35项通过及扫描0均核日志，只是来源检查，不冒完整套件绿。CEN死亡优先rollout与当前live同blob，0332科学父及自然三幕验收不关闭；001302监控六叶/014301夹具三叶接续SHA未变，禁止重复实现。调度器state=failed而rc=0两字段原样存证，不凭状态称源码失败或改写调度。未重跑测试、模型、dataset、发布或对局，CARDbrain/REFLEXoff及Regent保持。原件paper/materials/20261021-1220-ops/receipt.json、learner/runs/20261021-121307-a4e1dd96-b5e8-4e68-b8cd-cc748776326f-fix-batch/report.md。
+
+- 2026-10-21T12:47:00+08:00 ops：本轮八条学习提醒均为原通知的周期重提，逐项原文、生产者SHA及证据身份与既有核收一致，无新异议或额外学习批次。已重核调度器ops_forwarded真实回执及双收件箱唯一字节窗口；#4三项和#13四项/#14一项均有原watcher角色实读、向Roy可见转达的评论与材料，实际转达不等于Roy亲自认可。现行learning_requests验证源码SHA未变，原研究task白名单及输入目录仍不兼容；首次rc2原件保留，不重复被拒认证，不改名、造父或代填后两角色ACK。因此注册仍pending，不能仅归档便称CLI已完成。原计数、牌面未知、配对增量边界、净损口径及策略前缀限定继续原链，旧shipped/implemented不扩范围。沿既有issue回执去重，不重复评论/提醒、模拟/full/dataset/模型或派批；CARDbrain/REFLEXoff、live与科学父不动。原件paper/materials/20261021-1245-ops/receipt.json；既有1144-ops、1215-ops回执不改。
+
+- 2026-10-21T13:15:35+08:00 ops：已核普通124302策略批原报告SHA、WT干净且HEAD仍为原基线，十提案全waiting、fixes空/merged空/测试null，无本批源码或正式知识修改。冻结报告及offer时与派发基线没有可执行源差异；其后main526d34e7合入#19三项合同测试，恰provider、projection-entries、target-values三叶改变，生产源码未变，因此13:13原守卫停止成立。原报告不会被重标为基于新测试，定向消费者及沙箱EPERM/缺ID失败保留原口径，未重做其科学结论或把子项等价当整项完成。本候选无dataset准入或日志；另124302-s2的唯一dataset0/记录42baee已核存在，不能借来称本候选已完成，也不再运行生成器。保原attention和十waiting，不空合并、补测、重模型/派批或改当前live。#19三测已main仅为本次漂移事实，不冒#8兼容本体验收、ACK或live发布。原件paper/materials/20261021-1313-ops/receipt.json。
+
+- 2026-10-21T13:43:55+08:00 ops：本批唯一dataset已执行并完成五项源检查，随后原受控提交扫描为clean，但五个成本表在扫描后被并行更新，故记录守卫拒绝提交；普通完成行只存在私有Git blob，尚未发布。已逐SHA核364个原扫描blob并保留五表旧切片及原报告/失败，当前较新字节未覆盖。原WT仍干净、十提案waiting、源码与合入为空，测试null不改。拟仅补交冻结记录时，前置校验发现main已并行接入新源码，已在任何ref/index/工作树写入前停止，不借新源认证旧切点。原parallel-record attention保留，登记“dataset已执行、记录仍受阻”，不重生成器、不补测或派模型。#8兼容代码现仅main对象事实，研究task仍未受支持，不代角色ACK或live发布。CARDbrain/REFLEXoff、现局、Regent及科学父保持。原件paper/materials/20261021-1337-ops/receipt.json、original-clean-scan-manifest.json及original-cost-cut/。
+
+- 2026-10-21T13:47:07+08:00 ops：九事件已沿原件核收。八项学习异议为同一通知的周期重提，生产者SHA/原文与实际ops_forwarded双箱窗口核同，原watcher实读及向Roy可见转达回执保持；不是Roy亲自认可。#8的R4兼容已main，但现行task集合仍无三项原研究身份，CLI后两角色登记继续pending，不重复被拒认证、改名、代ACK或提醒评论。s2原WT干净、HEAD/报告SHA核同，十提案全waiting，fixes及合入为空、测试null；冻结offer时无源差异，其后main新源码令原守卫在dataset准入前停止，本候选无attempt/log，不借主批已执行的dataset冒完成。原科学证据、脚本初始失败及祖先更正照存，不扩历史分母、已实现子项范围或验收。保持原attention及主批记录受阻，未重生成器/模型/full/派批、发布或改现局。CARDbrain/REFLEXoff、Regent、科学父及#18零删除不变。原件paper/materials/20261021-1344-ops/receipt.json。

@@ -1,0 +1,676 @@
+{
+  "base_commit": "646d5ced12c91b57b971e98fa96badf2973b7a37",
+  "source_head": "11a80b1e255788430b9a2b84eb99264d52400dec",
+  "source_code_commit": "3ef4f16acd1a307eab41e47e54393644d81810ab",
+  "source_material_commit": "11a80b1e255788430b9a2b84eb99264d52400dec",
+  "source_files": {
+    "knowledge/builders/opening_value.py": {
+      "bytes": 17150,
+      "sha256": "b8160f73e08b127ade737a0a9c8e25cfaec621963e5220ba55cdfb1a92348169"
+    },
+    "knowledge/builders/build-fight-value.py": {
+      "bytes": 100966,
+      "sha256": "4476e9e93cdb7ee7a2cae173c16d0b7d63cf879f094e9f9fc15162f881295be2"
+    },
+    "knowledge/characters/silent/opening-value.json": {
+      "bytes": 328668,
+      "sha256": "ffdad3f470594916715bdd6859c406afeb20525cd230877cec524423c956483e"
+    },
+    "agent/src/v6/card-value.ts": {
+      "bytes": 14546,
+      "sha256": "ba910d7f5a09dc07d9529df37da9c459c481c33a52609525cd1560c780aee218"
+    },
+    "agent/src/hand/screens/silent-reward-addition.ts": {
+      "bytes": 4280,
+      "sha256": "bc3f8d2f9de05bd0392b062821e39ffeb08af973e3d3b10bb7d4fcdfad471b50"
+    },
+    "agent/src/memory/run-constraints.ts": {
+      "bytes": 10226,
+      "sha256": "a3016ef6dbe835a9528e96a958cc028418093cc0a83c231191e26f5f5ff54350"
+    },
+    "paper/materials/2026-10-21-v6-card-value-v2/frozen/build-cores.json.gz": {
+      "bytes": 495126,
+      "sha256": "c5e69e4ddff5e8234cb74a1845bb080e8fd4864192599187099898eb6bb18e39"
+    },
+    "paper/materials/2026-10-21-v6-card-value-v2/frozen/chronological-opening-rows.json.gz": {
+      "bytes": 42113,
+      "sha256": "48ad1c556e09d6bec486490282a0a35e8bf923176a05b7cbe6cb1c3620e9f816"
+    },
+    "paper/materials/2026-10-21-v6-card-value-v2/frozen/decisions.jsonl.gz": {
+      "bytes": 10877109,
+      "sha256": "91252f5f337aa0581eef1332b756211ce342b8107dbd7793893921bcd148f1b0"
+    },
+    "paper/materials/2026-10-21-v6-card-value-v2/frozen/game-data.json.gz": {
+      "bytes": 89285,
+      "sha256": "4a2bbb5861e530c4d7286cbff0f78abcc2c3ac81361caef521563471557bf473"
+    },
+    "paper/materials/2026-10-21-v6-card-value-v2/frozen/questions.json.gz": {
+      "bytes": 5570152,
+      "sha256": "e3bb4f089ec39e2da9cce574241fdebb4b30c38008a314465294cc66b4ee264c"
+    },
+    "paper/materials/2026-10-21-v6-card-value-v2/frozen/run-plans.jsonl.gz": {
+      "bytes": 3425,
+      "sha256": "30a2ac86db9b948344851819aeb142fa0fd29f72a8500f1ef27b59b3de0b6cb9"
+    },
+    "paper/materials/2026-10-21-v6-card-value-v2/frozen/states.jsonl.gz": {
+      "bytes": 6006623,
+      "sha256": "5ba2a585c7bfa3fd5b27ece6a554fd22c588e4b3875884c7be1b146fe3510ed4"
+    },
+    "paper/materials/2026-10-21-v6-card-value-v2/frozen/training-opening-rows.jsonl.gz": {
+      "bytes": 3152176,
+      "sha256": "be70c9b40fe7520798f3266d10d7b37d57a1050facd1eded00c7a8ce3fd1bfb4"
+    },
+    "paper/materials/2026-10-21-v6-card-value-v2/frozen-extra/decisions.jsonl.gz": {
+      "bytes": 8874668,
+      "sha256": "a5e19e57d3c8c72c5712c9fbd3da9e0efefae1fa5bc1d59157091250c1a596ee"
+    },
+    "paper/materials/2026-10-21-v6-card-value-v2/frozen-extra/questions.json.gz": {
+      "bytes": 2255481,
+      "sha256": "2617565319e62858a813133f6f79095d24e755d67a5cabb408c31cf8f552e98d"
+    },
+    "paper/materials/2026-10-21-v6-card-value-v2/frozen-extra/run-plans.jsonl.gz": {
+      "bytes": 2872,
+      "sha256": "18582c31713f1a970c7bb92d2568368488ebab985702e81ce5017c38dfae94fc"
+    },
+    "paper/materials/2026-10-21-v6-card-value-v2/frozen-extra/states.jsonl.gz": {
+      "bytes": 5221394,
+      "sha256": "6e006b192ba414dda0583ada0c8f58ca94e824a80860f9525cc01505ae73b1a7"
+    },
+    "paper/materials/2026-10-21-v6-card-value-v2/results/7XS2Y920KA6E-f12.json.gz": {
+      "bytes": 6227,
+      "sha256": "290265cd9ec2c42cee58b25eb7db068d19410d4f64a6a1e2686ab5607e3b084d"
+    },
+    "paper/materials/2026-10-21-v6-card-value-v2/results/7XS2Y920KA6E-f13.json.gz": {
+      "bytes": 6000,
+      "sha256": "7880f8fa75846639fb4480305705449511c913dec8871ee975443cd1bc44fbec"
+    },
+    "paper/materials/2026-10-21-v6-card-value-v2/results/7XS2Y920KA6E-f14.json.gz": {
+      "bytes": 6018,
+      "sha256": "cb6f7a3a061ee7ebad999e17c29a74c3a717fff9bae70a58aa77a5a2dc3e825b"
+    },
+    "paper/materials/2026-10-21-v6-card-value-v2/results/7XS2Y920KA6E-f17.json.gz": {
+      "bytes": 5427,
+      "sha256": "3680f0ad1a9628001802f486d23ec04b73a72144f14e37a039b05dcbcdaf3592"
+    },
+    "paper/materials/2026-10-21-v6-card-value-v2/results/7XS2Y920KA6E-f19.json.gz": {
+      "bytes": 4698,
+      "sha256": "a574be066631e4108b5e2837fcd9e80618dbcde17aca949b93b16a8f9457968c"
+    },
+    "paper/materials/2026-10-21-v6-card-value-v2/results/7XS2Y920KA6E-f2.json.gz": {
+      "bytes": 6615,
+      "sha256": "87df4f3cc09bafc06f77bdd14b5d14c6486f80042b0558ebbbb0525686ae6fe3"
+    },
+    "paper/materials/2026-10-21-v6-card-value-v2/results/7XS2Y920KA6E-f20.json.gz": {
+      "bytes": 4411,
+      "sha256": "2e12a558125360ac39536275bf7965f3b40e549d5fc86a85d370eb9d0a6c02a1"
+    },
+    "paper/materials/2026-10-21-v6-card-value-v2/results/7XS2Y920KA6E-f27.json.gz": {
+      "bytes": 4405,
+      "sha256": "148a7a4ddbd2174e5cb6ff1383843b5fd5223b47b38da0080670aee1464ff791"
+    },
+    "paper/materials/2026-10-21-v6-card-value-v2/results/7XS2Y920KA6E-f28.json.gz": {
+      "bytes": 4098,
+      "sha256": "67bced22aef5f7d64c027902abc5f62a997caaf3847b47cb6b62b09e03af384d"
+    },
+    "paper/materials/2026-10-21-v6-card-value-v2/results/7XS2Y920KA6E-f3.json.gz": {
+      "bytes": 6517,
+      "sha256": "97f10f00450091369c45e721b915200bed562e388d4c0dd7d81d11d90cfb58fd"
+    },
+    "paper/materials/2026-10-21-v6-card-value-v2/results/7XS2Y920KA6E-f30.json.gz": {
+      "bytes": 4252,
+      "sha256": "f49968d070ac5e0a8e21423d90d81c2532f05af14129cacb69d86f8aee7e69a0"
+    },
+    "paper/materials/2026-10-21-v6-card-value-v2/results/7XS2Y920KA6E-f31.json.gz": {
+      "bytes": 4211,
+      "sha256": "de185b2f2c23015230a99b039efb3d5ec71ffa3c94f1e1a3530c0a81caf67d0a"
+    },
+    "paper/materials/2026-10-21-v6-card-value-v2/results/7XS2Y920KA6E-f33.json.gz": {
+      "bytes": 4300,
+      "sha256": "3dc81882d28e0ab47dac9153e5ba1acaf1ddd261e6b5ceb62416ead53035404b"
+    },
+    "paper/materials/2026-10-21-v6-card-value-v2/results/7XS2Y920KA6E-f35.json.gz": {
+      "bytes": 3963,
+      "sha256": "f0705e13815cf0c1846b062c6046b6b73c8649459d2b8c356bd83fb9d2c5d463"
+    },
+    "paper/materials/2026-10-21-v6-card-value-v2/results/7XS2Y920KA6E-f36.json.gz": {
+      "bytes": 4214,
+      "sha256": "5b4b651487154b55f5fa859bfcfbde60119eafa3589303cebadb74ed461a0521"
+    },
+    "paper/materials/2026-10-21-v6-card-value-v2/results/7XS2Y920KA6E-f37.json.gz": {
+      "bytes": 4069,
+      "sha256": "173e6cb392598697fc3e54966ef55cb59ae4ce57daeb872853090374a8ae1b83"
+    },
+    "paper/materials/2026-10-21-v6-card-value-v2/results/7XS2Y920KA6E-f4.json.gz": {
+      "bytes": 6440,
+      "sha256": "4ab41de2c5b87902550cc0c6e918a80f1f62ab84bd335e3313135ca45db641d6"
+    },
+    "paper/materials/2026-10-21-v6-card-value-v2/results/7XS2Y920KA6E-f44.json.gz": {
+      "bytes": 3804,
+      "sha256": "6e9c0cab482504462196439281656be0e620074b288332a566bb0fa8019f8fe8"
+    },
+    "paper/materials/2026-10-21-v6-card-value-v2/results/7XS2Y920KA6E-f45.json.gz": {
+      "bytes": 3791,
+      "sha256": "4a735f7e23bab4e8e80b008de2f9db037dd3ecb43c017153bfef8ecd171f1d3b"
+    },
+    "paper/materials/2026-10-21-v6-card-value-v2/results/7XS2Y920KA6E-f46.json.gz": {
+      "bytes": 3758,
+      "sha256": "4e27ac76526fb74129fb87ae8058aadea8e63e4f91daef7e02b972245117bca3"
+    },
+    "paper/materials/2026-10-21-v6-card-value-v2/results/7XS2Y920KA6E-f6.json.gz": {
+      "bytes": 6526,
+      "sha256": "58421c9c304ecae0aaf9952a7cbabe750214cf3435fecbd7dcd7198e92583a03"
+    },
+    "paper/materials/2026-10-21-v6-card-value-v2/results/7XS2Y920KA6E-f7.json.gz": {
+      "bytes": 6407,
+      "sha256": "b9e574a37a2fd20b16f365e7c6055f466e23a9c8b4bd3dbd15343adc53e8152a"
+    },
+    "paper/materials/2026-10-21-v6-card-value-v2/results/7XS2Y920KA6E-f9.json.gz": {
+      "bytes": 6205,
+      "sha256": "526ee48827deac5ad91e8781d67825b96e596f9dfb1d78f1be2e30852cbc2b6a"
+    },
+    "paper/materials/2026-10-21-v6-card-value-v2/results/BQXQJQ9GN51L-f12.json.gz": {
+      "bytes": 6024,
+      "sha256": "04612bcc4c101f793ee585a7eb8b99f55a9ecc3575a31ad092be56a4b93b9d58"
+    },
+    "paper/materials/2026-10-21-v6-card-value-v2/results/BQXQJQ9GN51L-f15.json.gz": {
+      "bytes": 5372,
+      "sha256": "ba52ba280a8fd249c193c1f569629987ab3bc0e3972a0121ecb2c91c6e37cccc"
+    },
+    "paper/materials/2026-10-21-v6-card-value-v2/results/BQXQJQ9GN51L-f2.json.gz": {
+      "bytes": 6760,
+      "sha256": "d99d903c29a4b0860b61f543d3291899ba8364f1faacc0c198ddf23d068e30ac"
+    },
+    "paper/materials/2026-10-21-v6-card-value-v2/results/BQXQJQ9GN51L-f3.json.gz": {
+      "bytes": 6606,
+      "sha256": "06172b3e6048b35a1d84a59ade54c607dfe0b981da3ca1eaf39141ce4516a251"
+    },
+    "paper/materials/2026-10-21-v6-card-value-v2/results/BQXQJQ9GN51L-f5.json.gz": {
+      "bytes": 6237,
+      "sha256": "f9f7459793a2390315661c2d071211eede7a06d7cf6a7fe36350c63d63702034"
+    },
+    "paper/materials/2026-10-21-v6-card-value-v2/results/BQXQJQ9GN51L-f6.json.gz": {
+      "bytes": 6193,
+      "sha256": "29220c801b91ff64284e02bdae45a592cc826359c79a88adc9cfc3618a0fb59b"
+    },
+    "paper/materials/2026-10-21-v6-card-value-v2/results/BQXQJQ9GN51L-f7.json.gz": {
+      "bytes": 6167,
+      "sha256": "da4cccdcfe015af68fc96c95949d2defab943b10de94ee32d96133e49737f733"
+    },
+    "paper/materials/2026-10-21-v6-card-value-v2/results/BQXQJQ9GN51L-f8.json.gz": {
+      "bytes": 5503,
+      "sha256": "22580804a7b8a35971ebc9bad230fe27df8faa1d79c460ad3a11679ff3556f9c"
+    },
+    "paper/materials/2026-10-21-v6-card-value-v2/results/CESK0EFSJ2C4-f12.json.gz": {
+      "bytes": 5235,
+      "sha256": "5f6fd72ed4f01eda687e08e27e1105deb61c8b804fa2b38b3c72aa7931b5b613"
+    },
+    "paper/materials/2026-10-21-v6-card-value-v2/results/CESK0EFSJ2C4-f14.json.gz": {
+      "bytes": 5608,
+      "sha256": "e48893ec3cab39c0420ccf2fdd622b39cdbe033dbe5014d19692ebf5c01a8b1e"
+    },
+    "paper/materials/2026-10-21-v6-card-value-v2/results/CESK0EFSJ2C4-f17.json.gz": {
+      "bytes": 5167,
+      "sha256": "cf5f3dbde866a0547ecc23fa2df7420b265d272ff93dcf8d199a0c92351270a2"
+    },
+    "paper/materials/2026-10-21-v6-card-value-v2/results/CESK0EFSJ2C4-f19.json.gz": {
+      "bytes": 4603,
+      "sha256": "c5df19e27f3c15d67b80e91d88b25eaab5a7515d01a50d72f640cc3eb8664772"
+    },
+    "paper/materials/2026-10-21-v6-card-value-v2/results/CESK0EFSJ2C4-f2.json.gz": {
+      "bytes": 6382,
+      "sha256": "221ecb90f8382382ba4460754036be9eb80c257aa89b49758b288cd24390c5d3"
+    },
+    "paper/materials/2026-10-21-v6-card-value-v2/results/CESK0EFSJ2C4-f22.json.gz": {
+      "bytes": 4081,
+      "sha256": "1f885853debf10dccdc2f9e6aa3e1510ae4526e3f2ec9b904f4006fd67b588de"
+    },
+    "paper/materials/2026-10-21-v6-card-value-v2/results/CESK0EFSJ2C4-f24.json.gz": {
+      "bytes": 4021,
+      "sha256": "97d3d4d2edfbe0659a58f1d1129e301018f2ad4b41e63d9549c6d02c649a3f6e"
+    },
+    "paper/materials/2026-10-21-v6-card-value-v2/results/CESK0EFSJ2C4-f29.json.gz": {
+      "bytes": 3694,
+      "sha256": "a1334f1c838779e4ac293de3d82a9e14b4b59874e5ce0ee08e18b4d20bbe202a"
+    },
+    "paper/materials/2026-10-21-v6-card-value-v2/results/CESK0EFSJ2C4-f30.json.gz": {
+      "bytes": 3737,
+      "sha256": "09146d5498df65fb6ad2f7bfce76e270e40351a2645c0039ee597129b793d198"
+    },
+    "paper/materials/2026-10-21-v6-card-value-v2/results/CESK0EFSJ2C4-f4.json.gz": {
+      "bytes": 6215,
+      "sha256": "b053c34c219f242978e8d233a9db65c49d90a3ef8ab5d297dd2c26f74d3989e9"
+    },
+    "paper/materials/2026-10-21-v6-card-value-v2/results/CESK0EFSJ2C4-f5.json.gz": {
+      "bytes": 5995,
+      "sha256": "3b3f8306d5e7899eab1851f0547c49569d8fde7cd7ec66ac04227ee4c5a87e84"
+    },
+    "paper/materials/2026-10-21-v6-card-value-v2/results/CESK0EFSJ2C4-f6.json.gz": {
+      "bytes": 5837,
+      "sha256": "22477d593c705c062141d1d1a6dab26ac7a6eeeb524d7fb2e3343e3e1d038424"
+    },
+    "paper/materials/2026-10-21-v6-card-value-v2/results/CESK0EFSJ2C4-f8.json.gz": {
+      "bytes": 5671,
+      "sha256": "2c47681086c452324c0906c492857da982d27054b93aa6672e3342cf3d012d48"
+    },
+    "paper/materials/2026-10-21-v6-card-value-v2/results/CLCR3DUH66HK-f13.json.gz": {
+      "bytes": 5968,
+      "sha256": "62998e04e0542b60a529030015276f6e4293451750e788065c326dc822c1bf95"
+    },
+    "paper/materials/2026-10-21-v6-card-value-v2/results/CLCR3DUH66HK-f14.json.gz": {
+      "bytes": 6071,
+      "sha256": "50380d2c0ffc36a7b7fc8c0721b57e16e396e4de6538c1b5bb8752acce9e88e5"
+    },
+    "paper/materials/2026-10-21-v6-card-value-v2/results/CLCR3DUH66HK-f15.json.gz": {
+      "bytes": 5572,
+      "sha256": "a940f95e0efdcb37a97dc9b70cf6bfeafa661a201353a79432910151f17d397e"
+    },
+    "paper/materials/2026-10-21-v6-card-value-v2/results/CLCR3DUH66HK-f17.json.gz": {
+      "bytes": 5279,
+      "sha256": "04dae3055ef7bd86d6a82d9c91cb01f5bb6cb3b295d4d30f09ce855e8e0dc802"
+    },
+    "paper/materials/2026-10-21-v6-card-value-v2/results/CLCR3DUH66HK-f19.json.gz": {
+      "bytes": 4501,
+      "sha256": "df83dabbf8b2059dc69a8afe59e50e81050ba084e46c93effb4f0de42f79168f"
+    },
+    "paper/materials/2026-10-21-v6-card-value-v2/results/CLCR3DUH66HK-f2.json.gz": {
+      "bytes": 6399,
+      "sha256": "b8698e664f49ccec329e4b9cfa0e009b1b4c8d1b259d51d123f775c14fe31ee4"
+    },
+    "paper/materials/2026-10-21-v6-card-value-v2/results/CLCR3DUH66HK-f21.json.gz": {
+      "bytes": 4492,
+      "sha256": "5e8502a49f6254792700ee94a99210569826cf4a1b3aedcfa08a2f7946d7082d"
+    },
+    "paper/materials/2026-10-21-v6-card-value-v2/results/CLCR3DUH66HK-f22.json.gz": {
+      "bytes": 3981,
+      "sha256": "32ed104e41884bfd2b2acf62f1730a9674a017304e07aacca9ce3070d37fa899"
+    },
+    "paper/materials/2026-10-21-v6-card-value-v2/results/CLCR3DUH66HK-f23.json.gz": {
+      "bytes": 4030,
+      "sha256": "35b4fe1a2878c9bf70bee844e14cda92410f24e8e6d571c964d1f9000db248a7"
+    },
+    "paper/materials/2026-10-21-v6-card-value-v2/results/CLCR3DUH66HK-f3.json.gz": {
+      "bytes": 6293,
+      "sha256": "e60ecfe2c1eff2e23638874bc225f57a58e0ee67495b188f54e362fa12fe6c3c"
+    },
+    "paper/materials/2026-10-21-v6-card-value-v2/results/CLCR3DUH66HK-f5.json.gz": {
+      "bytes": 6431,
+      "sha256": "72604e8dfd384943f993ff37b097edd58cd955e9aabbc22e37e206b7fbd85957"
+    },
+    "paper/materials/2026-10-21-v6-card-value-v2/results/CLCR3DUH66HK-f6.json.gz": {
+      "bytes": 6137,
+      "sha256": "852b0d43cf9c87f7ba36c04ddb99b891b197a0cdf772c0ac422d70893de7d12b"
+    },
+    "paper/materials/2026-10-21-v6-card-value-v2/results/CLCR3DUH66HK-f9.json.gz": {
+      "bytes": 6339,
+      "sha256": "86f15ad05a30aafb63a29a6bbd6ed6392ba20ae5a59e646fdd6788599ef2d8f7"
+    },
+    "paper/materials/2026-10-21-v6-card-value-v2/results/MGB1D1T0Y8G0-f12.json.gz": {
+      "bytes": 6050,
+      "sha256": "53cb087f80ec269a1e67a611db2384f5d765d32dca8c0bc128d6c9905d3bf109"
+    },
+    "paper/materials/2026-10-21-v6-card-value-v2/results/MGB1D1T0Y8G0-f2.json.gz": {
+      "bytes": 6360,
+      "sha256": "a035cf43fa30e872070fa3dd7da674773962d74d64385ecbe14da4d1cc31ec90"
+    },
+    "paper/materials/2026-10-21-v6-card-value-v2/results/MGB1D1T0Y8G0-f5.json.gz": {
+      "bytes": 6281,
+      "sha256": "19d14ffac9bb932e5c085b6c6f8939311f73c043af559717bb32d01e0e7cdc98"
+    },
+    "paper/materials/2026-10-21-v6-card-value-v2/results/MGB1D1T0Y8G0-f6.json.gz": {
+      "bytes": 6275,
+      "sha256": "d4111a0d9962938cf72f84b3cab18a3b4600313285a4c9f50c518456f1a8d2f1"
+    },
+    "paper/materials/2026-10-21-v6-card-value-v2/results/MGB1D1T0Y8G0-f7.json.gz": {
+      "bytes": 6209,
+      "sha256": "c703233cfd12d480fd75bceb7499cea3552c976ff46049113198df73bc3b6171"
+    },
+    "paper/materials/2026-10-21-v6-card-value-v2/results/SVBEFF7YAZMA-f13.json.gz": {
+      "bytes": 6037,
+      "sha256": "812ddf12972bd62cd65ca8e2560946b53fe8df84f998060dce078b18d222f24f"
+    },
+    "paper/materials/2026-10-21-v6-card-value-v2/results/SVBEFF7YAZMA-f14.json.gz": {
+      "bytes": 5446,
+      "sha256": "b2a7ee4d23d88f3ff40a48fdda6c7588297ae2921b548f6d184c6c4738f1a1d0"
+    },
+    "paper/materials/2026-10-21-v6-card-value-v2/results/SVBEFF7YAZMA-f17.json.gz": {
+      "bytes": 5298,
+      "sha256": "e32dbfaf22f6027cc20c541061174ea26159edef35355efc67f9399fdd3dd705"
+    },
+    "paper/materials/2026-10-21-v6-card-value-v2/results/SVBEFF7YAZMA-f19.json.gz": {
+      "bytes": 4473,
+      "sha256": "1045b8ebe9a53bc3bdae82240326f13cd8ed02a9b437ae34de8b136fb5bbf4ef"
+    },
+    "paper/materials/2026-10-21-v6-card-value-v2/results/SVBEFF7YAZMA-f2.json.gz": {
+      "bytes": 6674,
+      "sha256": "b34c1d1694b12f2d39f662b9347582b7ae7f147020549d48153c8ae5ed8926fd"
+    },
+    "paper/materials/2026-10-21-v6-card-value-v2/results/SVBEFF7YAZMA-f21.json.gz": {
+      "bytes": 4376,
+      "sha256": "19baf2a19426408d8a1411880b18226aaa4049f721e0ccf2decd0bc9934458a8"
+    },
+    "paper/materials/2026-10-21-v6-card-value-v2/results/SVBEFF7YAZMA-f24.json.gz": {
+      "bytes": 4387,
+      "sha256": "2687151163d95d6b5f043bc6d1f483ae5eaac17e85b3d6a7396315b5f788baf7"
+    },
+    "paper/materials/2026-10-21-v6-card-value-v2/results/SVBEFF7YAZMA-f27.json.gz": {
+      "bytes": 4115,
+      "sha256": "ae59b56a07ec9e14cd50d516f9c5712380573ac79f0233df69d87bda1b63bc86"
+    },
+    "paper/materials/2026-10-21-v6-card-value-v2/results/SVBEFF7YAZMA-f29.json.gz": {
+      "bytes": 3835,
+      "sha256": "73b25ca1bdc2b80b7aa170d4aef92af9151589833dd65d264e46e8e49f8e139b"
+    },
+    "paper/materials/2026-10-21-v6-card-value-v2/results/SVBEFF7YAZMA-f33.json.gz": {
+      "bytes": 4031,
+      "sha256": "fc87060c8bde653405f26ba202def1d2ba0ae61466b120f853c8098ef47498fd"
+    },
+    "paper/materials/2026-10-21-v6-card-value-v2/results/SVBEFF7YAZMA-f35.json.gz": {
+      "bytes": 3938,
+      "sha256": "004794083390761c89855640a688adf05bf9d6b7dd266b0a1933bfd533babb18"
+    },
+    "paper/materials/2026-10-21-v6-card-value-v2/results/SVBEFF7YAZMA-f38.json.gz": {
+      "bytes": 4003,
+      "sha256": "f4987515bc48c2623d5806f6ac9e1494f3a43fc75a28057c9aabae33a73df9b7"
+    },
+    "paper/materials/2026-10-21-v6-card-value-v2/results/SVBEFF7YAZMA-f4.json.gz": {
+      "bytes": 6360,
+      "sha256": "a38bc64273db620cf68c338c8b93697464435e037f124f55a9592605cbace9f9"
+    },
+    "paper/materials/2026-10-21-v6-card-value-v2/results/SVBEFF7YAZMA-f42.json.gz": {
+      "bytes": 3813,
+      "sha256": "66eecef490dfe3777b1b287bb00cd0561ec2274b07a7234a15a88e223fb32fd9"
+    },
+    "paper/materials/2026-10-21-v6-card-value-v2/results/SVBEFF7YAZMA-f44.json.gz": {
+      "bytes": 3738,
+      "sha256": "74d0acaa11af011b0caa2f592e2c2d67fdf161fa8efbc75a8e4e7527c966ba35"
+    },
+    "paper/materials/2026-10-21-v6-card-value-v2/results/SVBEFF7YAZMA-f45.json.gz": {
+      "bytes": 3836,
+      "sha256": "9f2fc7eb4e5f1e50b1bf2bbbcb0166cf8a5ae48e19e8ce39ad135c341d8e0cbe"
+    },
+    "paper/materials/2026-10-21-v6-card-value-v2/results/SVBEFF7YAZMA-f46.json.gz": {
+      "bytes": 3749,
+      "sha256": "8875b427c6f7ffd752cbc8f56293577ad13bee7a315d37cb08e1adb788d1e577"
+    },
+    "paper/materials/2026-10-21-v6-card-value-v2/results/SVBEFF7YAZMA-f5.json.gz": {
+      "bytes": 6189,
+      "sha256": "28c0ff4aa5abc75fe8394f8fd232675c719411d8a3b63c5681544ff9b83bc6d4"
+    },
+    "paper/materials/2026-10-21-v6-card-value-v2/results/SVBEFF7YAZMA-f6.json.gz": {
+      "bytes": 5819,
+      "sha256": "16b38f5f874ad73446d61f08b1eb398e1436510e206848f939e0a44a199c14dd"
+    },
+    "paper/materials/2026-10-21-v6-card-value-v2/results/SVBEFF7YAZMA-f7.json.gz": {
+      "bytes": 5932,
+      "sha256": "037bc2bd5d69c4b13131c262b604d174add5dd8f23a0ddc72b6a3073e9187551"
+    },
+    "paper/materials/2026-10-21-v6-card-value-v2/results/SVBEFF7YAZMA-f9.json.gz": {
+      "bytes": 5600,
+      "sha256": "98c85acdab40a3deeb536c22be5272847b03bdf93d566e2d7c5bbf40720bbc12"
+    },
+    "paper/materials/2026-10-21-v6-card-value-v2/results-extra/1ZZHM2MV19YB-f11.json.gz": {
+      "bytes": 6133,
+      "sha256": "1897ac25e095666eb53b7a6d308389e1a1bc8c2739c942da4cd6d1fc06ed70a2"
+    },
+    "paper/materials/2026-10-21-v6-card-value-v2/results-extra/1ZZHM2MV19YB-f13.json.gz": {
+      "bytes": 5800,
+      "sha256": "9a35341f46c3e4cd8284a2bf4a3e49c671573895e75b68d71d28fd3a9679c980"
+    },
+    "paper/materials/2026-10-21-v6-card-value-v2/results-extra/1ZZHM2MV19YB-f15.json.gz": {
+      "bytes": 5725,
+      "sha256": "3dff91090322990a1bacbd77413d59c43acc4d0dc9602b17c4ac10734aba6b74"
+    },
+    "paper/materials/2026-10-21-v6-card-value-v2/results-extra/1ZZHM2MV19YB-f17.json.gz": {
+      "bytes": 5266,
+      "sha256": "22eef373926b3b2310252fd3fa7f6d2fef2924533590cc6457396fa74df2c72f"
+    },
+    "paper/materials/2026-10-21-v6-card-value-v2/results-extra/1ZZHM2MV19YB-f19.json.gz": {
+      "bytes": 4158,
+      "sha256": "35b8c23f5486c9b2a67f9948b81ae9d43a607b610add0fa65a5313a9c58b4bd2"
+    },
+    "paper/materials/2026-10-21-v6-card-value-v2/results-extra/1ZZHM2MV19YB-f2.json.gz": {
+      "bytes": 6300,
+      "sha256": "a43a28c0e2c8d618c0e7cd353402e79a80118ae338180c78c901ea3bda28fa38"
+    },
+    "paper/materials/2026-10-21-v6-card-value-v2/results-extra/1ZZHM2MV19YB-f21.json.gz": {
+      "bytes": 4212,
+      "sha256": "e40e268a62823533c6a7344042218384f6b597527f063326a714ac5451c2b913"
+    },
+    "paper/materials/2026-10-21-v6-card-value-v2/results-extra/1ZZHM2MV19YB-f23.json.gz": {
+      "bytes": 3995,
+      "sha256": "102e8fa4653ca0059ae79a132ca9ebe91b9f11dd275172655a298faf5a451811"
+    },
+    "paper/materials/2026-10-21-v6-card-value-v2/results-extra/1ZZHM2MV19YB-f24.json.gz": {
+      "bytes": 4193,
+      "sha256": "ed42dbeb1d11d7fed690fdba14a20cb34af554ca3715f3533981a5f786bbac76"
+    },
+    "paper/materials/2026-10-21-v6-card-value-v2/results-extra/1ZZHM2MV19YB-f28.json.gz": {
+      "bytes": 3736,
+      "sha256": "f586bf7e37e7828724bb1085ee514c37775466c3445cca75d81d55d52c28611d"
+    },
+    "paper/materials/2026-10-21-v6-card-value-v2/results-extra/1ZZHM2MV19YB-f30.json.gz": {
+      "bytes": 3944,
+      "sha256": "1f99eddc146f39a30730b3a2646e6f6efa191790796c6fc307a1d8eb38ef3a2a"
+    },
+    "paper/materials/2026-10-21-v6-card-value-v2/results-extra/1ZZHM2MV19YB-f31.json.gz": {
+      "bytes": 3829,
+      "sha256": "e2e582004066c9a83dc5705ca6eaffa0e121d95bb94c4cee50bed74dc654b8a7"
+    },
+    "paper/materials/2026-10-21-v6-card-value-v2/results-extra/1ZZHM2MV19YB-f5.json.gz": {
+      "bytes": 6122,
+      "sha256": "c534002060cc8074ca686e7e0da8b1ef151a5229d423cd5f5c65cd1fed5a6dae"
+    },
+    "paper/materials/2026-10-21-v6-card-value-v2/results-extra/1ZZHM2MV19YB-f6.json.gz": {
+      "bytes": 6277,
+      "sha256": "912db611185cfd6dd8a5ade1c0d4db119c0ed854beebe0b9d12269f8e4a48a01"
+    },
+    "paper/materials/2026-10-21-v6-card-value-v2/results-extra/1ZZHM2MV19YB-f7.json.gz": {
+      "bytes": 6345,
+      "sha256": "e41ea5b3fe5809c2cc3c7570a4242d65638c392597f102141db5507d39efdb40"
+    },
+    "paper/materials/2026-10-21-v6-card-value-v2/results-extra/1ZZHM2MV19YB-f8.json.gz": {
+      "bytes": 6093,
+      "sha256": "462d7b8772fe4df74fdada8b52e70c8261dccc14bb0cacec3a64adffc01e3545"
+    },
+    "paper/materials/2026-10-21-v6-card-value-v2/results-extra/CSBNU2H9LXKD-f12.json.gz": {
+      "bytes": 5987,
+      "sha256": "52f3b03c078d12ef72d5cd3c3b87bfad154f5f4ef5195e6b8cbf92213cbc1b25"
+    },
+    "paper/materials/2026-10-21-v6-card-value-v2/results-extra/CSBNU2H9LXKD-f14.json.gz": {
+      "bytes": 5979,
+      "sha256": "9b639ba2c8fa12d44cab7a82d105eafb7aed46f9a185317d7327bf40f71a04f2"
+    },
+    "paper/materials/2026-10-21-v6-card-value-v2/results-extra/CSBNU2H9LXKD-f17.json.gz": {
+      "bytes": 5300,
+      "sha256": "e118df6954a66499d817334029dca654cb3b0a459602915fe208840be4356ee6"
+    },
+    "paper/materials/2026-10-21-v6-card-value-v2/results-extra/CSBNU2H9LXKD-f19.json.gz": {
+      "bytes": 4328,
+      "sha256": "72e48acce86055ba145ea5d0a551d6b5806ee097976b5c3cc682ad6164db505e"
+    },
+    "paper/materials/2026-10-21-v6-card-value-v2/results-extra/CSBNU2H9LXKD-f2.json.gz": {
+      "bytes": 6285,
+      "sha256": "b806e870e55c2c6988031111d1603e74a14b6d04806657c47df1e17559f3f488"
+    },
+    "paper/materials/2026-10-21-v6-card-value-v2/results-extra/CSBNU2H9LXKD-f21.json.gz": {
+      "bytes": 4015,
+      "sha256": "1ed3350610c07e99dd79fe13f8a47af273368ef10ef10f0ddffb81efc371af33"
+    },
+    "paper/materials/2026-10-21-v6-card-value-v2/results-extra/CSBNU2H9LXKD-f23.json.gz": {
+      "bytes": 3856,
+      "sha256": "02f7be260dbbfe3e557d897688cd184129834b0e46a060554c4e3203256f6f0b"
+    },
+    "paper/materials/2026-10-21-v6-card-value-v2/results-extra/CSBNU2H9LXKD-f24.json.gz": {
+      "bytes": 3816,
+      "sha256": "f2243fe043203c9442160a49a3a34fa8eab3be3fb444a8aafefcdfcb719fc62e"
+    },
+    "paper/materials/2026-10-21-v6-card-value-v2/results-extra/CSBNU2H9LXKD-f28.json.gz": {
+      "bytes": 3878,
+      "sha256": "49d4d89154f3e82c50def94bbd793075db405bb51d8093fd38093f88ef50513e"
+    },
+    "paper/materials/2026-10-21-v6-card-value-v2/results-extra/CSBNU2H9LXKD-f3.json.gz": {
+      "bytes": 6500,
+      "sha256": "cc50112a8d2e53a994f9c0365ae448e2faa371ecf59803f1fa76b8b271ae8bb8"
+    },
+    "paper/materials/2026-10-21-v6-card-value-v2/results-extra/CSBNU2H9LXKD-f4.json.gz": {
+      "bytes": 6195,
+      "sha256": "41a25631b0b67d095992a30208f64e0aa0f3cc6ac3930d333b7736eae50fda56"
+    },
+    "paper/materials/2026-10-21-v6-card-value-v2/results-extra/CSBNU2H9LXKD-f5.json.gz": {
+      "bytes": 5673,
+      "sha256": "a2eda4ac3324f7df1dfedbcf8cebd2f017b388dbee85cdc74b6369a762c8e5fc"
+    },
+    "paper/materials/2026-10-21-v6-card-value-v2/results-extra/CSBNU2H9LXKD-f8.json.gz": {
+      "bytes": 6373,
+      "sha256": "d1042a25899055a74b1abb6eedfc207cb584a4a95916204bf3163b60ab24142c"
+    },
+    "paper/materials/2026-10-21-v6-card-value-v2/results-extra/T15WXHPTM0ET-f13.json.gz": {
+      "bytes": 5846,
+      "sha256": "804a0a9a4a5683e768c038ba7788e68cc7a1c97a13780808e4487a98a84dd558"
+    },
+    "paper/materials/2026-10-21-v6-card-value-v2/results-extra/T15WXHPTM0ET-f15.json.gz": {
+      "bytes": 5758,
+      "sha256": "0efcd834beafcce5a216acc76aab88f7fbeb4d1ee248c96e915cdfe0f70e6c8e"
+    },
+    "paper/materials/2026-10-21-v6-card-value-v2/results-extra/T15WXHPTM0ET-f17.json.gz": {
+      "bytes": 5911,
+      "sha256": "daea1d7c7af9d3724562a8ca5db8035a471eaaa8f1effd5dd4bf584185363472"
+    },
+    "paper/materials/2026-10-21-v6-card-value-v2/results-extra/T15WXHPTM0ET-f19.json.gz": {
+      "bytes": 4497,
+      "sha256": "7c92a43840b357f0082eb6a8d59416faaf561f675596518b4aedc3dc9a3caa98"
+    },
+    "paper/materials/2026-10-21-v6-card-value-v2/results-extra/T15WXHPTM0ET-f2.json.gz": {
+      "bytes": 6271,
+      "sha256": "4018e1677450102fafcea0c976bc493fcf997fc4fad4d432c8d420ed155d0fb7"
+    },
+    "paper/materials/2026-10-21-v6-card-value-v2/results-extra/T15WXHPTM0ET-f21.json.gz": {
+      "bytes": 4082,
+      "sha256": "67e5740f95580a77928b0f12c3425fc70b2c0f7e2a71d6544cd9442539f5c5a4"
+    },
+    "paper/materials/2026-10-21-v6-card-value-v2/results-extra/T15WXHPTM0ET-f24.json.gz": {
+      "bytes": 4089,
+      "sha256": "6255675f51d59eb25c0b84512a6b83ff451fd1d469fbb3305e4bd7995f34655e"
+    },
+    "paper/materials/2026-10-21-v6-card-value-v2/results-extra/T15WXHPTM0ET-f3.json.gz": {
+      "bytes": 6449,
+      "sha256": "98afafbe617987f28483116476bf4b856fac4017898754fa6c9c347733d22567"
+    },
+    "paper/materials/2026-10-21-v6-card-value-v2/results-extra/T15WXHPTM0ET-f30.json.gz": {
+      "bytes": 4030,
+      "sha256": "cf6fb30a84755a2eff8d558063f6f436522afc784eadff857b35fc581af069d7"
+    },
+    "paper/materials/2026-10-21-v6-card-value-v2/results-extra/T15WXHPTM0ET-f33.json.gz": {
+      "bytes": 3817,
+      "sha256": "08a4dec3fe24ab6b1902956e2bd25d14c4fafce9914fda478a43f0d0b24f28b7"
+    },
+    "paper/materials/2026-10-21-v6-card-value-v2/results-extra/T15WXHPTM0ET-f35.json.gz": {
+      "bytes": 3947,
+      "sha256": "9011c8289c64c0601823311af85abfdbbbbb5534dd85cf19531637372554782e"
+    },
+    "paper/materials/2026-10-21-v6-card-value-v2/results-extra/T15WXHPTM0ET-f39.json.gz": {
+      "bytes": 3831,
+      "sha256": "f732ca29fc12bfff7db403d42d78d6845169f82717a6d652105b79863802e20c"
+    },
+    "paper/materials/2026-10-21-v6-card-value-v2/results-extra/T15WXHPTM0ET-f4.json.gz": {
+      "bytes": 6253,
+      "sha256": "cdf58df6067d7c94d4612307242f6810764505cd1535d7a2645e3aa5cf8941b6"
+    },
+    "paper/materials/2026-10-21-v6-card-value-v2/results-extra/T15WXHPTM0ET-f40.json.gz": {
+      "bytes": 3937,
+      "sha256": "1dd7e1daffd5d5ffa0a1f65072a8e3d66669a99aae40f540ca0c598753adce15"
+    },
+    "paper/materials/2026-10-21-v6-card-value-v2/results-extra/T15WXHPTM0ET-f43.json.gz": {
+      "bytes": 3643,
+      "sha256": "412b9be8aa2b5f544331d917195c2a3d7a1b1be3e64c1df36f83887ac0201c54"
+    },
+    "paper/materials/2026-10-21-v6-card-value-v2/results-extra/T15WXHPTM0ET-f46.json.gz": {
+      "bytes": 3849,
+      "sha256": "bc67935a7f0570d8ea261207acb5996698a28677a00caa0b82efc02cba885c96"
+    },
+    "paper/materials/2026-10-21-v6-card-value-v2/results-extra/T15WXHPTM0ET-f6.json.gz": {
+      "bytes": 5710,
+      "sha256": "def6881b2f92318658ff7402a5165d733d2cb4605214352d04174b386fa73d58"
+    },
+    "paper/materials/2026-10-21-v6-card-value-v2/results-extra/T15WXHPTM0ET-f9.json.gz": {
+      "bytes": 6261,
+      "sha256": "5c5e8a6490155a0bce40c3916bd1ff7f8b19c720abbfd1699fb17db5d7c4829b"
+    },
+    "paper/materials/2026-10-21-v6-card-value-v2/results-extra/Y427BMQH8AU6-f12.json.gz": {
+      "bytes": 6167,
+      "sha256": "773fd0aa5a3560b10ea66e028ccdad8b940ef05a3314113532118244442f9f1a"
+    },
+    "paper/materials/2026-10-21-v6-card-value-v2/results-extra/Y427BMQH8AU6-f14.json.gz": {
+      "bytes": 5959,
+      "sha256": "53e90a11852845b109750eb00191675f6859ff2bc4edc36bcf62523e7d4ee42c"
+    },
+    "paper/materials/2026-10-21-v6-card-value-v2/results-extra/Y427BMQH8AU6-f15.json.gz": {
+      "bytes": 5669,
+      "sha256": "2409a4ebde17dd2c89bc9b1d52cc2156178093dcc6fb1d9b6d648dd9d8b8df0f"
+    },
+    "paper/materials/2026-10-21-v6-card-value-v2/results-extra/Y427BMQH8AU6-f17.json.gz": {
+      "bytes": 5777,
+      "sha256": "efb38b179505f74bbf28ff5060ce95cb97259916f0926b91900475b48456d6f9"
+    },
+    "paper/materials/2026-10-21-v6-card-value-v2/results-extra/Y427BMQH8AU6-f19.json.gz": {
+      "bytes": 4478,
+      "sha256": "167b22bb9017be599488d9409a9dfb7054d4b3f96d3773dad482f4ef6e433986"
+    },
+    "paper/materials/2026-10-21-v6-card-value-v2/results-extra/Y427BMQH8AU6-f2.json.gz": {
+      "bytes": 6488,
+      "sha256": "90e10c227263b704aeb67a65e8d8244749319efcbc71bbb07ef4fb928bcbe93d"
+    },
+    "paper/materials/2026-10-21-v6-card-value-v2/results-extra/Y427BMQH8AU6-f20.json.gz": {
+      "bytes": 4301,
+      "sha256": "c03bbf9a1a821e0c2fff7debd1d1c8da800a399b54f852339ffd1d834d473471"
+    },
+    "paper/materials/2026-10-21-v6-card-value-v2/results-extra/Y427BMQH8AU6-f21.json.gz": {
+      "bytes": 4093,
+      "sha256": "4ddd5b23dbbe84a5b594017b6d9a1a3107615d98863c32da8840060f38bf675b"
+    },
+    "paper/materials/2026-10-21-v6-card-value-v2/results-extra/Y427BMQH8AU6-f28.json.gz": {
+      "bytes": 4159,
+      "sha256": "cda5d48d79d3cde0a3cf5edd75a944b085ee663610ea8762679bcc8898da99a8"
+    },
+    "paper/materials/2026-10-21-v6-card-value-v2/results-extra/Y427BMQH8AU6-f29.json.gz": {
+      "bytes": 4075,
+      "sha256": "eda8c8ff1ca55a81b4a82476363f9e4390681270996e1e2ac83b7d4909f9698c"
+    },
+    "paper/materials/2026-10-21-v6-card-value-v2/results-extra/Y427BMQH8AU6-f3.json.gz": {
+      "bytes": 6365,
+      "sha256": "c14da66d7962c1d093afab6a03c6964738e481c736159f341bbf4d563fb9fdb1"
+    },
+    "paper/materials/2026-10-21-v6-card-value-v2/results-extra/Y427BMQH8AU6-f30.json.gz": {
+      "bytes": 4048,
+      "sha256": "6047a67150461a8e6b831597601048dc1866ec41a2c75eb7f4a3c095351fd2ce"
+    },
+    "paper/materials/2026-10-21-v6-card-value-v2/results-extra/Y427BMQH8AU6-f31.json.gz": {
+      "bytes": 3787,
+      "sha256": "378738db0403b4a63d99b827fd7cbdf54c7964ac0b6fd8631b04d0f60dd382be"
+    },
+    "paper/materials/2026-10-21-v6-card-value-v2/results-extra/Y427BMQH8AU6-f5.json.gz": {
+      "bytes": 6144,
+      "sha256": "2db9903aaf57ccec4a721afce94dfaf5a9f0f918156fe3e5ad2f51d7af22e965"
+    },
+    "paper/materials/2026-10-21-v6-card-value-v2/results-extra/Y427BMQH8AU6-f6.json.gz": {
+      "bytes": 6120,
+      "sha256": "cf76d37872035ea369da2195796b69ba5b80ce98a01bd1310ef0f97a06e260ae"
+    },
+    "paper/materials/2026-10-21-v6-card-value-v2/results-extra/Y427BMQH8AU6-f8.json.gz": {
+      "bytes": 6092,
+      "sha256": "a67d588ec014bf1b665dc77754839afffa5457b05f096a0e1401de8f93bff0bd"
+    },
+    "knowledge/builders/build-monster-db.py": {
+      "bytes": 126146,
+      "sha256": "562a05f11265dea98989ce3fe17b93fbb9a598d33a66421927ba36e1f4f2ff91"
+    },
+    "knowledge/builders/characters.py": {
+      "bytes": 2697,
+      "sha256": "b3b99b9bf00c4562b77e922b2894b1c8faf4c3e545ec3cb0c742083b7dc0eec9"
+    }
+  },
+  "external_calls": 0,
+  "production_changes": false,
+  "parallel_compute_limit": 2,
+  "nice": 19
+}

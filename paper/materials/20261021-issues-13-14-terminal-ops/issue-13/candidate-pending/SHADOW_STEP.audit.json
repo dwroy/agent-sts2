@@ -1,0 +1,400 @@
+{
+  "issue": 13,
+  "batch": "issue-13-card-models-20261021-111429",
+  "character": "silent",
+  "card_id": "SHADOW_STEP",
+  "status": "proposed_research_only",
+  "model_schema": "CardModel interface at runtime 5a295bb5ed52f0c0fa5e8c045dcfcba3d894b532; no new production schema is claimed",
+  "model_file": "/home/dw/Projects/agent-sts2/.worktrees/issue-13-card-models-20261021/knowledge/characters/silent/pending/issue-13-issue-13-card-models-20261021-111429/SHADOW_STEP.models.json",
+  "all_drafts_known_false": true,
+  "finding": "候选：普通模板全弃、无即时抽3、下一回合双倍；现有字段已存在但known仍false。",
+  "original_links": {
+    "ledger": [
+      "silent-0033",
+      "silent-0035",
+      "silent-0436"
+    ],
+    "proposals": [
+      "silent-proposal-a770c8a2cb863eff"
+    ]
+  },
+  "missing_runtime_representation": [
+    "需为已核普通模板补known资格和弃牌副作用/下一回合消费的联合验证。"
+  ],
+  "fixed_test_design": [
+    "普通Cards=3不当draw3",
+    "当轮不立刻双倍；弃掉旧后继",
+    "升级、未知副作用、其他角色保持unknown"
+  ],
+  "shadow": {
+    "A": 4,
+    "A_baseline": 0,
+    "B": 0,
+    "B_baseline": 0,
+    "questions": [
+      "7XS2Y920KA6E-f33"
+    ],
+    "runs": [
+      "7XS2Y920KA6E"
+    ],
+    "candidate_questions": [
+      {
+        "question": "7XS2Y920KA6E-f33",
+        "option": {
+          "index": 0,
+          "card_id": "SHADOW_STEP",
+          "name": "暗影步",
+          "upgraded": false,
+          "card_type": "Skill",
+          "rarity": "Rare",
+          "energy_cost": 1,
+          "rules_text": "丢弃所有手牌。 在下个回合，你所有的攻击伤害翻倍。",
+          "resolved_rules_text": "丢弃所有手牌。 在下个回合，你所有的攻击伤害翻倍。",
+          "dynamic_values": [
+            {
+              "name": "Cards",
+              "base_value": 3,
+              "current_value": 3,
+              "enchanted_value": 3,
+              "is_modified": false,
+              "was_just_upgraded": false
+            }
+          ]
+        },
+        "brain_choice": "card2"
+      }
+    ]
+  },
+  "audited_actions": [
+    {
+      "path": "/home/dw/Projects/agent-sts2/logs/decisions.jsonl",
+      "offset": 474571272,
+      "bytes": 1495,
+      "sha256": "f403beaea89b98381a80f8dffb081609ca15929ce299a87379316173abbf483c",
+      "offset_space": "file",
+      "run": "R0HEV5E3QT6G",
+      "floor": 48,
+      "turn": 4,
+      "ts": "2026-10-04T18:44:52.869Z"
+    },
+    {
+      "path": "/home/dw/Projects/agent-sts2/logs/decisions.jsonl",
+      "offset": 1039335293,
+      "bytes": 27696,
+      "sha256": "315e4f931f85c1d33ffec2d5a71eec764fa27bbdea8200bb0e8d4a723e23e670",
+      "offset_space": "file",
+      "run": "K643VJCTQT0J",
+      "floor": 33,
+      "turn": 1,
+      "ts": "2026-10-12T06:07:34.753Z"
+    },
+    {
+      "path": "/home/dw/Projects/agent-sts2/logs/decisions.jsonl",
+      "offset": 1039781304,
+      "bytes": 1442,
+      "sha256": "5716524383bfc788e49c78ae24333e5f55d932e2970cf20953922c1828690f93",
+      "offset_space": "file",
+      "run": "K643VJCTQT0J",
+      "floor": 33,
+      "turn": 7,
+      "ts": "2026-10-12T06:11:44.280Z"
+    },
+    {
+      "path": "/home/dw/Projects/agent-sts2/logs/decisions.jsonl",
+      "offset": 1040005349,
+      "bytes": 1563,
+      "sha256": "9e580881d47d61e36b79539c76d25ae1d5432a89383d208b5f6ce8422e84179c",
+      "offset_space": "file",
+      "run": "K643VJCTQT0J",
+      "floor": 33,
+      "turn": 1,
+      "ts": "2026-10-12T06:13:29.574Z"
+    },
+    {
+      "path": "/home/dw/Projects/agent-sts2/logs/decisions.jsonl",
+      "offset": 1040821567,
+      "bytes": 1518,
+      "sha256": "0b003211cecdd3943ed6045e7724ce8d9908acc9f8976d3f10cfcc580b6ecdd0",
+      "offset_space": "file",
+      "run": "K643VJCTQT0J",
+      "floor": 33,
+      "turn": 8,
+      "ts": "2026-10-12T06:19:48.540Z"
+    }
+  ],
+  "audited_action_count": 5,
+  "independent_runs": [
+    "K643VJCTQT0J",
+    "R0HEV5E3QT6G"
+  ],
+  "observed_ascensions": [
+    0,
+    10
+  ],
+  "hand_observations_shadow_rows": 0,
+  "hand_observations_shadow_turns": 0,
+  "hand_runs_shadow": [],
+  "observed_faces": [
+    {
+      "card": {
+        "index": 1,
+        "card_id": "SHADOW_STEP",
+        "name": "暗影步",
+        "upgraded": false,
+        "target_type": "Self",
+        "requires_target": false,
+        "target_index_space": null,
+        "valid_target_indices": [],
+        "costs_x": false,
+        "star_costs_x": false,
+        "energy_cost": 1,
+        "star_cost": 0,
+        "rules_text": "丢弃所有手牌。 在下个回合，你所有的攻击伤害翻倍。",
+        "resolved_rules_text": "丢弃所有手牌。 在下个回合，你所有的攻击伤害翻倍。",
+        "dynamic_values": [
+          {
+            "name": "Cards",
+            "base_value": 3,
+            "current_value": 3,
+            "enchanted_value": 3,
+            "is_modified": false,
+            "was_just_upgraded": false
+          }
+        ],
+        "playable": true,
+        "can_play_result": true,
+        "unplayable_reason": null,
+        "unplayable_reason_raw": null,
+        "unplayable_preventer_id": null,
+        "unplayable_preventer_type": null
+      },
+      "source": {
+        "path": "/home/dw/Projects/agent-sts2/logs/decisions.jsonl",
+        "offset": 1040821567,
+        "bytes": 1518,
+        "sha256": "0b003211cecdd3943ed6045e7724ce8d9908acc9f8976d3f10cfcc580b6ecdd0",
+        "offset_space": "file",
+        "run": "K643VJCTQT0J",
+        "floor": 33,
+        "turn": 8,
+        "ts": "2026-10-12T06:19:48.540Z"
+      },
+      "ascension": 10
+    }
+  ],
+  "unknowns": [
+    "需为已核普通模板补known资格和弃牌副作用/下一回合消费的联合验证。",
+    "升级未有深核施放"
+  ],
+  "guard": "仅下列精确已核牌面/上下文有研究支持；缺角色、进阶、升级、目标、变量、期限或后继时拒绝升known。正例重放不是通用充分条件。",
+  "evidence_audit": "/home/dw/Projects/agent-sts2/learner/runs/20261021-111653-8735c888-1393-4256-84d9-821d4e4a14ea-issue-13-card-models-task/effect-audit.json",
+  "source_index": "/home/dw/Projects/agent-sts2/learner/runs/20261021-111653-8735c888-1393-4256-84d9-821d4e4a14ea-issue-13-card-models-task/source-index.json",
+  "version_scope": {
+    "K643VJCTQT0J": {
+      "ended_snapshot": {
+        "row": {
+          "run_id": "K643VJCTQT0J",
+          "ended": "2026-10-12T06:34:15.859Z",
+          "ascension": 10,
+          "character": "SILENT",
+          "code": "current"
+        },
+        "source": {
+          "path": "/home/dw/Projects/agent-sts2/.artifacts/ops-issues-13-14-dispatch-20261021/shared-inputs/runs.jsonl",
+          "offset": 302980,
+          "bytes": 493,
+          "sha256": "ecc009be91de34b62f34396b0267348007f859e230f2ae2822170c1f5dc4a766"
+        }
+      },
+      "frozen_run_config": [
+        {
+          "reported": {
+            "ts": "2026-10-12T05:32:54.941Z",
+            "run_id": "K643VJCTQT0J",
+            "character": "SILENT",
+            "ascension": 10,
+            "floor": 1,
+            "restart": false,
+            "code": {
+              "commit": "eecdb847ff858a7026765eb5f15edd147cf7e7a1",
+              "code": "eecdb84+dirty",
+              "dirty": true,
+              "dirty_files": [
+                "knowledge/characters/silent/boss-damage.json",
+                "knowledge/characters/silent/fight-value-gates.json",
+                "knowledge/characters/silent/fight-value.json",
+                "knowledge/characters/silent/monster-records.json",
+                "knowledge/characters/silent/outcome-stats.json",
+                "knowledge/characters/silent/room-costs.json",
+                "knowledge/common/card-upgrades.json",
+                "knowledge/common/monster-db.json",
+                "knowledge/common/move-model.json",
+                "notes/fight-value-backtest-silent.md",
+                "notes/monster-db-check.md"
+              ],
+              "branch": "live",
+              "worktree": "live"
+            },
+            "commit": null,
+            "dirty": null,
+            "branch": null,
+            "experience_version": null,
+            "mod_version": null,
+            "game_version": null
+          },
+          "source": {
+            "path": "/home/dw/Projects/agent-sts2/logs/run-config.jsonl",
+            "offset": 1419586,
+            "bytes": 4739,
+            "sha256": "d416f31de3b1883744c75ec73222d195219697b0209e2de6871791b509e22767",
+            "run": "K643VJCTQT0J",
+            "floor": 1,
+            "turn": null,
+            "ts": "2026-10-12T05:32:54.941Z"
+          }
+        },
+        {
+          "reported": {
+            "ts": "2026-10-12T06:15:14.192Z",
+            "run_id": "K643VJCTQT0J",
+            "character": "SILENT",
+            "ascension": 10,
+            "floor": 33,
+            "restart": true,
+            "code": {
+              "commit": "3a20d222afff91ddacef24a94b24b3395bcd5451",
+              "code": "3a20d22+dirty",
+              "dirty": true,
+              "dirty_files": [
+                "notes/fight-value-backtest-silent.md",
+                "notes/monster-db-check.md"
+              ],
+              "branch": "live",
+              "worktree": "live"
+            },
+            "commit": null,
+            "dirty": null,
+            "branch": null,
+            "experience_version": null,
+            "mod_version": null,
+            "game_version": null
+          },
+          "source": {
+            "path": "/home/dw/Projects/agent-sts2/logs/run-config.jsonl",
+            "offset": 1424325,
+            "bytes": 4338,
+            "sha256": "13905a39d7f7b1e7d7dc4f346a6841597ddbd7a074f170addef08befc1c7dab5",
+            "run": "K643VJCTQT0J",
+            "floor": 33,
+            "turn": null,
+            "ts": "2026-10-12T06:15:14.192Z"
+          }
+        }
+      ],
+      "scope": "仅日志申报的agent代码/脏标记；不把code=current或dirty解释为精确源码。run-config不代逐动作原生源码封印。游戏构建/补丁版本未封印则unknown。",
+      "game_build_version": "unknown",
+      "replay_runtime_commit": "5a295bb5ed52f0c0fa5e8c045dcfcba3d894b532"
+    },
+    "R0HEV5E3QT6G": {
+      "ended_snapshot": {
+        "row": {
+          "run_id": "R0HEV5E3QT6G",
+          "ended": "2026-10-04T18:47:53.142Z",
+          "ascension": 0,
+          "character": "SILENT",
+          "code": "5de5d518"
+        },
+        "source": {
+          "path": "/home/dw/Projects/agent-sts2/.artifacts/ops-issues-13-14-dispatch-20261021/shared-inputs/runs.jsonl",
+          "offset": 195183,
+          "bytes": 426,
+          "sha256": "9a96a0996dd521a10107e7d30a7839a1b604e70fdd56963e59a6eb685407640e"
+        }
+      },
+      "frozen_run_config": [
+        {
+          "reported": {
+            "ts": "2026-10-04T17:51:26.063Z",
+            "run_id": "R0HEV5E3QT6G",
+            "character": "SILENT",
+            "ascension": 0,
+            "floor": 1,
+            "restart": false,
+            "code": {
+              "commit": "5de5d5182c050e41500e97465348a008172fe445",
+              "code": "5de5d51",
+              "dirty": false,
+              "dirty_files": [],
+              "branch": "live",
+              "worktree": "live"
+            },
+            "commit": null,
+            "dirty": null,
+            "branch": null,
+            "experience_version": null,
+            "mod_version": null,
+            "game_version": null
+          },
+          "source": {
+            "path": "/home/dw/Projects/agent-sts2/logs/run-config.jsonl",
+            "offset": 301979,
+            "bytes": 4329,
+            "sha256": "c112bd5287666a11bfbcf81cad435b4097cbe8fc85cfdd68368495467a2ad0db",
+            "run": "R0HEV5E3QT6G",
+            "floor": 1,
+            "turn": null,
+            "ts": "2026-10-04T17:51:26.063Z"
+          }
+        }
+      ],
+      "scope": "仅日志申报的agent代码/脏标记；不把code=current或dirty解释为精确源码。run-config不代逐动作原生源码封印。游戏构建/补丁版本未封印则unknown。",
+      "game_build_version": "unknown",
+      "replay_runtime_commit": "5a295bb5ed52f0c0fa5e8c045dcfcba3d894b532"
+    }
+  },
+  "counterexamples": [],
+  "published": false,
+  "merged": false,
+  "applicable_runtime": "研究候选只在本树R410做解析读回；历史运行版本按冻结run-config申报分列，不能冒称这些对局都跑R410。",
+  "visible_faces_without_effect_inference": [
+    {
+      "location": "reward",
+      "card": {
+        "index": 0,
+        "card_id": "SHADOW_STEP",
+        "name": "暗影步",
+        "upgraded": false,
+        "card_type": "Skill",
+        "rarity": "Rare",
+        "energy_cost": 1,
+        "rules_text": "丢弃所有手牌。 在下个回合，你所有的攻击伤害翻倍。",
+        "resolved_rules_text": "丢弃所有手牌。 在下个回合，你所有的攻击伤害翻倍。",
+        "dynamic_values": [
+          {
+            "name": "Cards",
+            "base_value": 3,
+            "current_value": 3,
+            "enchanted_value": 3,
+            "is_modified": false,
+            "was_just_upgraded": false
+          }
+        ]
+      },
+      "source": {
+        "path": "/home/dw/Projects/agent-sts2/paper/materials/2026-10-21-r409-card-shadow/frozen/states.jsonl.gz",
+        "offset": 13588609,
+        "bytes": 26706,
+        "sha256": "1c7b63a57ce2ebc6782d188987d870e0bac37095f3470d6f5664e5425b658c25",
+        "offset_space": "gzip_uncompressed",
+        "run": "7XS2Y920KA6E",
+        "floor": 33,
+        "turn": 8,
+        "ts": "2026-10-20T20:59:20.404Z",
+        "observed_ts": "2026-10-20T20:59:07.124Z"
+      }
+    }
+  ],
+  "visible_shadow_ascensions": [
+    10
+  ]
+}

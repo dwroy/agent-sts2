@@ -1,0 +1,103 @@
+{
+  "baseline_commit": "60cf1f34c127da8ffc14b3974a3cc7d38b707b8a",
+  "branch": "issue-19-main-baseline-tests",
+  "production_trees": {
+    "agent/src": "3fae2ca5db864f9abe3a609ae4f8fb88da9ce915",
+    "knowledge": "010ccdbf15610697dfb459e19d5280a4a307771c",
+    "learner": "b4e88645cb59516065feb2c98e58e0a20ab5e7e5",
+    "ops": "f7532ca4e7976bae17d8e664fcd3dd25b186761e"
+  },
+  "files": {
+    "agent/tests/v6-direction-provider.test.ts": {
+      "baseline_blob": "145f16b80b4aeb41e18c0d26a103d22f665a4101",
+      "tested_sha256": "2d1ff271add66e280db52593a67bfe28b593c5d7de93c9b6b80ffb02f93a856b"
+    },
+    "agent/tests/v6-projection-entries.test.ts": {
+      "baseline_blob": "3a100c5e080afba4d4ccb953c333bff1563402cd",
+      "tested_sha256": "8d3b5b030444111a143b4e8b42198fbea5a328a4a7b0e1b11618c38411d81bfb"
+    },
+    "agent/tests/v6-target-values.test.ts": {
+      "baseline_blob": "139b89db3e548326e8352b5a46d239f23effce5d",
+      "tested_sha256": "2c7e05fb7d81bb392efaf96f520284368907ab0850254ebde9d7e51dbcd2607f"
+    }
+  },
+  "historical_test_sync": {
+    "agent/tests/v6-direction-provider.test.ts": {
+      "source_blob": "145f16b80b4aeb41e18c0d26a103d22f665a4101",
+      "main_blob": "145f16b80b4aeb41e18c0d26a103d22f665a4101"
+    },
+    "agent/tests/v6-projection-entries.test.ts": {
+      "source_blob": "3a100c5e080afba4d4ccb953c333bff1563402cd",
+      "main_blob": "3a100c5e080afba4d4ccb953c333bff1563402cd"
+    }
+  },
+  "commands": {
+    "baseline": "node node_modules/vitest/vitest.mjs run tests/v6-direction-provider.test.ts tests/v6-projection-entries.test.ts tests/v6-target-values.test.ts --pool=threads --maxWorkers=1",
+    "targeted": "node node_modules/vitest/vitest.mjs run tests/v6-direction-provider.test.ts tests/v6-projection-entries.test.ts tests/v6-target-values.test.ts tests/v6-construction-safety.test.ts tests/v6-card-results.test.ts tests/v6-card-results-input.test.ts --pool=threads --maxWorkers=1",
+    "tsc": "node node_modules/typescript/bin/tsc -p tsconfig.json --noEmit",
+    "full_threads": "node node_modules/vitest/vitest.mjs run --pool=threads --maxWorkers=1 --exclude tests/paths.test.ts",
+    "full_paths": "node node_modules/vitest/vitest.mjs run tests/paths.test.ts --pool=forks --maxWorkers=1"
+  },
+  "environment": {
+    "nice": 19,
+    "workers": 1,
+    "CHARACTER": "unset for full suite",
+    "vitest": "4.1.11"
+  },
+  "baseline_result": {
+    "exit_code": 1,
+    "files_failed": 3,
+    "tests_failed": 4,
+    "tests_passed": 6
+  },
+  "targeted_final_result": {
+    "exit_code": 0,
+    "files_passed": 6,
+    "tests_passed": 45
+  },
+  "tsc_exit_code": 0,
+  "gitleaks": {
+    "materials_exit_code": 0,
+    "broad_tests_exit_code": 1,
+    "broad_tests_findings": 11,
+    "broad_tests_scope": "Entire existing agent/tests tree; changed files scanned separately with exit 0. No files removed or allowlisted.",
+    "changed_tests_exit_code": 0,
+    "materials_final_exit_code": 0,
+    "staged_exit_code": 0,
+    "staged_scope": "Three changed tests, decision-log append, report, evidence and raw logs; no allowlist added."
+  },
+  "full_threads_result": {
+    "exit_code": 0,
+    "files_passed": 637,
+    "tests_passed": 6030,
+    "tests_skipped": 2,
+    "duration_seconds": 1498.97
+  },
+  "full_paths_result": {
+    "exit_code": 0,
+    "files_passed": 1,
+    "tests_passed": 11,
+    "duration_seconds": 5.97
+  },
+  "full_total_result": {
+    "files_passed": 638,
+    "tests_passed": 6041,
+    "tests_skipped": 2,
+    "tests_failed": 0,
+    "new_exclusions": 0
+  },
+  "historical_source_commit": "31a24bb2bf02fa26bac9fd284b9834e4e3f97bf9",
+  "raw_log_sha256": {
+    "baseline.log": "0da3133d79a22ef8d672c370d34f478028ad735444906dc501c72df88e42b49e",
+    "full-paths.log": "0f45b734773e435fbab72a8ba4bae030463221fb5b6ec720c0b3ae8bcdd974d2",
+    "full-threads.log": "c6f99e2ca2bd830be7549ff605c8889b480144afa35088f32591090b5ecf84e5",
+    "gitleaks-changed-tests.log": "c11dbbe2a16509ed21491654d45e49825e0311a6c5b7526021912b1624feb4bb",
+    "gitleaks-materials-final.log": "a0ef033e0e6b191a99c17c24246ecb0fa76007db25f5ff12ce9f98945a68e353",
+    "gitleaks-materials.log": "7f1d77636dafa4a223991092856d1a49e1bdf479b9ab4814863b6822432bb155",
+    "gitleaks-staged.log": "c21dfc758818c2b40536f9c98d75f436e01b4d4a2d61962843f66ddbd8269016",
+    "gitleaks-tests.log": "68b5de2d138178a5ba2f98ca6e0da7ba6441266436690d64f98f3a963c577f15",
+    "targeted-final.log": "8bf37a8eefe003dd78b68f04021dae44d901d82816890559abedbbdfdd4a4a05",
+    "targeted.log": "c5cac09613879798fcdc157cac24c8f162c8476d0af060169469d676fbeaa7f8",
+    "tsc.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  }
+}
