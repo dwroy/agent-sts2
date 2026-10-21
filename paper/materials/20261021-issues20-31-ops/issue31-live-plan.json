@@ -1,0 +1,167 @@
+{
+  "schema": "ops-issue31-live-combination-v1",
+  "state": "exact-live-source-prepared-await-original-integrator-admission",
+  "source_commit": "d3efa878c56898a400480a6bd7ffeca4f9489c27",
+  "reviewed_main": "1eaa9d96bdaf2f1ba2022dc77daadf51e041eb55",
+  "actual_live_base": "0cd3629d3a7f3a3bcacd22fa0a4206acc4d81e78",
+  "source_tree": "2a9066887329d9da527a046de5f62941c2e925ec",
+  "leaves": [
+    {
+      "path": "agent/src/brain/brain.ts",
+      "blob": "609de6b1fecb9be8d65f2452b1befd31702ff114",
+      "sha256": "b87fff448f4012d0265a9da7f0cb48196cbc88ae7daecb7896d683255d81f42f",
+      "bytes": 28934
+    },
+    {
+      "path": "agent/src/brain/engines/codex-session.ts",
+      "blob": "d406b082aa3f4d03ea423fb85b8cc4deae694229",
+      "sha256": "bce07ad057a87374ba853b7da0689a0fbe4b6c414abd287a3f7278bb9309ec84",
+      "bytes": 34012
+    },
+    {
+      "path": "agent/src/brain/engines/codex.ts",
+      "blob": "8130c3b849af2c584d071bf1de8e5e0ee78ec1d6",
+      "sha256": "cee423e857c7a3984b97f4534f3ede50e71b022c05076dff529bc321b59c0f39",
+      "bytes": 70015
+    },
+    {
+      "path": "agent/src/brain/engines/native-receipt.ts",
+      "blob": "8e7d409461b0fcf7672205a0a6f9d36366b6e0e3",
+      "sha256": "5802b378c3c41c8ef6d7aef8936739a4f02a9cf48c7d2161e15c79036246b4d7",
+      "bytes": 1490
+    },
+    {
+      "path": "agent/src/brain/router.ts",
+      "blob": "a7c9ceaed36287a89eb8e8a21c17e253489c4636",
+      "sha256": "9987a0b584866b24d81cbde54121c4dd11a2ea4944b7cb31ec9ccd6391655dd7",
+      "bytes": 40858
+    },
+    {
+      "path": "agent/src/brain/run-profile.ts",
+      "blob": "e10ff0c72be327a0dc73e0b633699820763f941a",
+      "sha256": "a3509ab4aa121ca164ff3a30ac6b5e133e327857fcf06ed5318fc6d70ca40957",
+      "bytes": 1339
+    },
+    {
+      "path": "agent/src/brain/types.ts",
+      "blob": "cfc6f4783b5789e2ea7ffa3f0c9a93c178708458",
+      "sha256": "a23c8a48a010645fda7b4f8bd2630fed11829d90b55e8202d9a52762b4f9999a",
+      "bytes": 7842
+    },
+    {
+      "path": "agent/src/core/config.ts",
+      "blob": "76608187e87cb6f0b5f47d957ed2ccde42014c87",
+      "sha256": "4d5ca05652d59346f244576911ef0be78a6cf0334e99c199030205817dabaaa0",
+      "bytes": 87152
+    },
+    {
+      "path": "agent/src/eye/run-config.ts",
+      "blob": "e30c1998424f5929b7c8680948bb97596592ca9c",
+      "sha256": "9e5677ffd660f80d9f3c41a73102788a9b1bbc180fa9903da3f724faa098b700",
+      "bytes": 34211
+    },
+    {
+      "path": "agent/tests/brain-codex-session.test.ts",
+      "blob": "cd301eb606911a9239d83da1459899492bac0d50",
+      "sha256": "488da2eed3c438541b58f2840949d033e6b71b209274d6346d1a285583afd56c",
+      "bytes": 42727
+    },
+    {
+      "path": "agent/tests/brain-run-profile.test.ts",
+      "blob": "35eec1056f3c9fa211a40bcf8be778deef4cc4a0",
+      "sha256": "9630d01a61f374b69d222c2626f6e235f50197f555cf4bd079af957845b6fba5",
+      "bytes": 5751
+    },
+    {
+      "path": "agent/tools/issue31-quality-replay.ts",
+      "blob": "fe0717f2b796b9d35298909bbe0d2cb6ad5389a9",
+      "sha256": "eab7f4e5fb802a3420ded2555a88dc51f73b15cfb30d03ee7ea639a5be16e8a0",
+      "bytes": 5424
+    },
+    {
+      "path": "eval/brain_trial.py",
+      "blob": "090a3280f6ab82f1a01663027c194873d30c0617",
+      "sha256": "f20e4411ea971580e9cd62573e29e0ab6ed1879ce3500a4a85d3a31aa584e975",
+      "bytes": 18355
+    },
+    {
+      "path": "eval/metrics.py",
+      "blob": "4ca286744b0f0a1f56f2e3a993d607212a1d64e2",
+      "sha256": "7ae5d61eec2c049d5b5f38d61b06059b6b9d0f65ca6fb959151e4c43b0822cc7",
+      "bytes": 50001
+    },
+    {
+      "path": "ops/brain_trial.py",
+      "blob": "54741ecc058b2be7d532a891d5a1c7dbc4779d82",
+      "sha256": "b337c7cb24e8fff81f87615ef086f9906c68d5a184142434d9085f39b77102b9",
+      "bytes": 3392
+    },
+    {
+      "path": "ops/report.py",
+      "blob": "30ea3dd39452778f5e82032ecfbc18c3de22c422",
+      "sha256": "f842b5d545e712e7eaf7345cfa3811714753519e402b617718a3db87f61fc7c4",
+      "bytes": 33071
+    },
+    {
+      "path": "ops/run.sh",
+      "blob": "663a7cbe89ea534697b1fa5ee48eb1609e5f768a",
+      "sha256": "f3b491fd6bdc800a54cd8ba0fb232bfd718b970bcd45497d649328725bf5b5c7",
+      "bytes": 4560
+    },
+    {
+      "path": "ops/tests/test_brain_trial.py",
+      "blob": "fc1e2e457c6aa5312db2ce7db5d15450061ce640",
+      "sha256": "b5b8e236c8230fcbed7a8865c632093951e705385c3c915febda49ad43a6aa70",
+      "bytes": 5355
+    },
+    {
+      "path": "paper/materials/issue31-brain-high-trial/preregistration.md",
+      "blob": "ca26af677ff7dd5e26a6a406ac3a84d0087eda5b",
+      "sha256": "52f80caff83db4840353ba066e926ffeee14aec2ad094a38bf37ca591bd974d8",
+      "bytes": 9312
+    },
+    {
+      "path": "paper/materials/issue31-brain-high-trial/quality-manifest.json",
+      "blob": "00d7487725c7f3ab5d39afcdd8adad80e50e9224",
+      "sha256": "dc4588a1b5795f2296fad25cb689b862c623bd34699a5d6f08824fa94f85839e",
+      "bytes": 414
+    },
+    {
+      "path": "paper/materials/issue31-brain-high-trial/report.md",
+      "blob": "37a6f0678f19aa02208bba6e8a24bae8986ea3a8",
+      "sha256": "d8802e0b3d9fe57fbe4ff3fd3dbcdf250ff8352dbe3f4dcf6e0ae48497d6aec4",
+      "bytes": 5093
+    },
+    {
+      "path": "paper/materials/issue31-brain-high-trial/schedule.json",
+      "blob": "0c7d679174965bee6553b419a4227f30539d480b",
+      "sha256": "80a270676c317a4f3a50e250d661a3e547ad46ef49bb6cb884a2f6bac78c4544",
+      "bytes": 164
+    },
+    {
+      "path": "paper/materials/issue31-brain-high-trial/validation.json",
+      "blob": "e0c3c9e89f73082153f205442473e6f5ba80255b",
+      "sha256": "af07ed80ab916cd11b817940239dd495666b2d55ff66fcb16f68549866841cf0",
+      "bytes": 1460
+    }
+  ],
+  "source_leaves": 23,
+  "patch_sha256": "f871d0a332ee0aeb029bcf099e2a8e6b44de7c53a436430d3a8263c0671d8862",
+  "private_index_three_way_rc": 0,
+  "scope": "only #31 source/tests/metrics/entry plus own fixed preregistration materials; preserve R411 code and current working knowledge; no whole-main/#24/#20 transport",
+  "new_code_applied_to_root_or_live": false,
+  "different_live_combination_full_admitted": false,
+  "trial_enabled": false,
+  "natural_boundary_and_first_native_receipt_required": true,
+  "first_native_receipt_before_second_run": true,
+  "each_run_terminal_loss_stop_check_required": true,
+  "batch_quality_replay_after_20_only": true,
+  "card_reflex_regent_unchanged": true,
+  "postimages_match_reviewed_main_count": 22,
+  "postimages_differ_from_reviewed_main": [
+    "ops/report.py"
+  ],
+  "required_gate": "original integrator exact live combination; current main 1965-input full is not substituted",
+  "trial_operational_hold": "before activation bind first trial native-receipt verification before second allocation; every natural terminal stop-loss gate, original loop only, no new polling observer",
+  "latest_working_knowledge": "freeze at actual full start through original knowledge gate, preserve all R411 newer refresh JSON; no old HEAD snapshot overlay"
+}

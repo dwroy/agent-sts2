@@ -1,0 +1,1395 @@
+diff --git a/agent/src/brain/brain.ts b/agent/src/brain/brain.ts
+index 93d7a4dbe..609de6b1f 100644
+--- a/agent/src/brain/brain.ts
++++ b/agent/src/brain/brain.ts
+@@ -93,6 +93,7 @@ export function codexTracePath(config: AppConfig): string | null {
+ 
+ /** A router over lazily created engines, logging to BRAIN_LOG (default: brain.jsonl next to the decision log). */
+ export function createRouter(config: AppConfig, deepseek: DeepSeekClient | null, options: { log?: (row: BrainLogRow) => void; claudeToolsModule?: string; fallbackBudget?: FallbackBudget; wait?: BrainWait } = {}): BrainRouter {
++  if (config.brain.runProfile?.engine === "deepseek") throw new Error("DeepSeek run profiles require issue #32; no engine substitution is allowed");
+   const engines = new Map<EngineName, BrainEngine>();
+   // An engine's own notes (codex: a usage read that failed) go where the router's go (Brain.onNote).
+   const note = (message: string): void => router.say(message);
+diff --git a/agent/src/brain/engines/codex-session.ts b/agent/src/brain/engines/codex-session.ts
+index 494a3945f..d406b082a 100644
+--- a/agent/src/brain/engines/codex-session.ts
++++ b/agent/src/brain/engines/codex-session.ts
+@@ -1,3 +1,5 @@
++import { nativeReceipt } from "./native-receipt.js";
++import type { BrainNativeReceipt } from "../run-profile.js";
+ /**
+  * Codex session mode (BRAIN_CODEX_MODE=session, Roy 2026-10-03): one long-lived `codex app-server` per play process
+  * with one saved thread that holds only our system prompt; every brain question is a turn on it, answered with the
+@@ -316,6 +318,7 @@ export interface SessionTraceEvent {
+ }
+ 
+ export interface SessionTurn {
++  nativeReceipt?: BrainNativeReceipt;
+   status: "completed" | "failed" | "interrupted" | "stalled" | "aborted";
+   turnId: string | null;
+   threadId: string;
+@@ -683,6 +686,9 @@ export class CodexSession {
+       if (dropped > 0) turn.events.push({ t: turn.ms, type: `(${dropped} notifications not kept)` });
+       this.listener = null;
+     }
++    if (!this.thread?.path) await this.refreshPath();
++    const receipt = nativeReceipt(this.thread?.path ?? null, threadId, turn.turnId);
++    if (receipt) turn.nativeReceipt = receipt;
+     await this.revert(server, threadId, turn);
+     if (turn.status !== "completed") this.renew = true;
+     return turn;
+diff --git a/agent/src/brain/engines/codex.ts b/agent/src/brain/engines/codex.ts
+index 08a62ef91..8130c3b84 100644
+--- a/agent/src/brain/engines/codex.ts
++++ b/agent/src/brain/engines/codex.ts
+@@ -1,3 +1,4 @@
++import type { BrainNativeReceipt } from "../run-profile.js";
+ /**
+  * Codex as a brain engine: headless `codex exec` (codex-cli 0.160, npm @openai/codex) under this machine's ChatGPT
+  * login (`codex login` in ~/.codex: the subscription; Roy 2026-10-03), one process per call. Model and effort are
+@@ -101,6 +102,7 @@ export interface CodexEngineOptions {
+  * turn was cut before its answer (answer_text).
+  */
+ export interface CodexTraceRow {
++  native_receipt?: BrainNativeReceipt | null;
+   ts: string;
+   run_id?: string;
+   /** The question's id (BrainRequest.questionId: brain.jsonl's question_id). */
+@@ -937,6 +939,7 @@ export class CodexEngine implements BrainEngine {
+         ...(o.req.runId ? { run_id: o.req.runId } : {}),
+         ...(o.req.questionId ? { question_id: o.req.questionId } : {}),
+         mode: "exec",
++        native_receipt: null,
+         label: o.req.label,
+         model: o.model,
+         effort: o.effort,
+@@ -1102,7 +1105,7 @@ export class CodexEngine implements BrainEngine {
+       // A runaway cut whose prefix is already a whole answer (BRAIN_CODEX_ACCEPT_CUT): taken instead of asking again.
+       const judged = turn.status === "stalled" && acceptCut && turn.stall?.endsWith("(runaway)") ? this.fromCut(req, c, turn.answerText) : null;
+       const cut = judged && "text" in judged ? judged.text : null;
+-      this.writeTrace({ ...sessionTrace(req, c, attempt, { outcome: turn.status === "completed" ? (turn.text ? "answered" : "failed") : turn.status === "stalled" ? "stalled" : turn.status === "aborted" ? "aborted" : "failed", turn, callMs: spentMs, stderr: session.stderrTail(), serverRequests: session.serverRequests }), ...(cut ? { accepted_from_cut: true } : judged && "rejected" in judged ? { cut_rejected: judged.rejected } : {}) });
++      this.writeTrace({ native_receipt: turn.nativeReceipt ?? null, ...sessionTrace(req, c, attempt, { outcome: turn.status === "completed" ? (turn.text ? "answered" : "failed") : turn.status === "stalled" ? "stalled" : turn.status === "aborted" ? "aborted" : "failed", turn, callMs: spentMs, stderr: session.stderrTail(), serverRequests: session.serverRequests }), ...(cut ? { accepted_from_cut: true } : judged && "rejected" in judged ? { cut_rejected: judged.rejected } : {}) });
+       if (cut) {
+         const usage = turn.usage ?? {};
+         return this.answer(req, c, {
+@@ -1111,7 +1114,7 @@ export class CodexEngine implements BrainEngine {
+           usage: { input_tokens: usage["inputTokens"], cached_input_tokens: usage["cachedInputTokens"], cache_write_input_tokens: usage["cacheWriteInputTokens"], output_tokens: usage["outputTokens"], reasoning_output_tokens: usage["reasoningOutputTokens"] },
+           reasoning: turn.reasoning,
+           toolCalls: [],
+-          native: { mode: "session", thread_id: turn.threadId, turn_id: turn.turnId, retries: turn.retries, runs: attempt, reverted: turn.reverted, schema: c.schema ? "strict" : "none", accepted_from_cut: turn.stall ?? "" },
++          native: { native_receipt: turn.nativeReceipt ?? null, mode: "session", thread_id: turn.threadId, turn_id: turn.turnId, retries: turn.retries, runs: attempt, reverted: turn.reverted, schema: c.schema ? "strict" : "none", accepted_from_cut: turn.stall ?? "" },
+           notes: [`accepted from a cut answer (${turn.stall ?? "runaway"}): its streamed prefix closed into a whole answer`],
+         });
+       }
+@@ -1124,7 +1127,7 @@ export class CodexEngine implements BrainEngine {
+           usage: { input_tokens: usage["inputTokens"], cached_input_tokens: usage["cachedInputTokens"], cache_write_input_tokens: usage["cacheWriteInputTokens"], output_tokens: usage["outputTokens"], reasoning_output_tokens: usage["reasoningOutputTokens"] },
+           reasoning: turn.reasoning,
+           toolCalls: [],
+-          native: { mode: "session", thread_id: turn.threadId, turn_id: turn.turnId, retries: turn.retries, runs: attempt, reverted: turn.reverted, schema: c.schema ? "strict" : "none" },
++          native: { native_receipt: turn.nativeReceipt ?? null, mode: "session", thread_id: turn.threadId, turn_id: turn.turnId, retries: turn.retries, runs: attempt, reverted: turn.reverted, schema: c.schema ? "strict" : "none" },
+         });
+       }
+       if (turn.status === "completed") throw new EngineFailure("codex gave no answer [invalid] (session turn completed without an agent message)", "invalid");
+@@ -1253,6 +1256,7 @@ export class CodexEngine implements BrainEngine {
+       ...(r.reasoning.length > 0 ? { reasoning: r.reasoning.join("\n\n") } : {}),
+       raw: r.text,
+       native: r.native,
++      ...(r.native["native_receipt"] ? { nativeReceipt: r.native["native_receipt"] as BrainNativeReceipt } : {}),
+       ...(notes.length ? { notes } : {}),
+     };
+   }
+diff --git a/agent/src/brain/engines/native-receipt.ts b/agent/src/brain/engines/native-receipt.ts
+new file mode 100644
+index 000000000..8e7d40946
+--- /dev/null
++++ b/agent/src/brain/engines/native-receipt.ts
+@@ -0,0 +1,31 @@
++/** Read only this engine-owned thread, before revert removes the turn context. */
++import { createHash } from "node:crypto";
++import { readFileSync, statSync } from "node:fs";
++import type { BrainNativeReceipt } from "../run-profile.js";
++
++export function nativeReceipt(path: string | null, threadId: string, turnId: string | null): BrainNativeReceipt | undefined {
++  if (!path || !turnId) return undefined;
++  try {
++    if (statSync(path).size > 16 * 1024 * 1024) return undefined;
++    return receiptFromRollout(readFileSync(path, "utf8"), threadId, turnId);
++  } catch { return undefined; }
++}
++
++export function receiptFromRollout(text: string, threadId: string, turnId: string): BrainNativeReceipt | undefined {
++  let owned = false;
++  let receipt: BrainNativeReceipt | undefined;
++  for (const line of text.split("\n")) {
++    if (!line.trim()) continue;
++    try {
++      const row = JSON.parse(line);
++      const p = row.payload;
++      if (row.type === "session_meta") owned = p?.id === threadId;
++      if (row.type !== "turn_context" || p?.turn_id !== turnId) continue;
++      const effort = p.effort ?? p.reasoning_effort;
++      if (typeof p.model !== "string" || typeof effort !== "string") continue;
++      receipt = { engine: "codex", model: p.model, effort, source: "turn_context", thread_id: threadId,
++        turn_id: turnId, sha256: createHash("sha256").update(line).digest("hex") };
++    } catch { /* A partial final line is not a receipt. */ }
++  }
++  return owned ? receipt : undefined;
++}
+diff --git a/agent/src/brain/router.ts b/agent/src/brain/router.ts
+index fd0ef006e..a7c9ceaed 100644
+--- a/agent/src/brain/router.ts
++++ b/agent/src/brain/router.ts
+@@ -1,3 +1,4 @@
++import type { BrainRunProfile, BrainNativeReceipt } from "./run-profile.js";
+ import { currentDecisionBudget, withinDecisionBudget, withIndependentDecisionBudget, HUMAN_PACE_BUDGETS, DecisionBudgetExpired } from "../core/decision-budget.js";
+ /**
+  * Production createRouter selects the Codex-only path: outages wait on the same question and faults propagate.
+@@ -155,6 +156,9 @@ export interface BrainLogRow {
+   model: string;
+   /** The reasoning effort asked for (the engine's answer, else its configured one), when the engine has one. */
+   effort?: string;
++  run_brain?: BrainRunProfile;
++  native_receipt?: BrainNativeReceipt | null;
++  requested_effort?: string;
+   system_sha: string;
+   system_chars: number;
+   /** KNOWLEDGE_PREFIX=full: the prefix the system carried (or why v3's went out instead). */
+@@ -229,6 +233,7 @@ function message(error: unknown): string {
+ 
+ export class BrainRouter {
+   readonly wait: BrainWait;
++  readonly nativeReceipts = new Map<string, { question_id: string; receipt: BrainNativeReceipt }>();
+   private recover: (() => Promise<void>) | null = null;
+   /** Engines resting after a quota / rate-limit / login failure: until when, and why. */
+   private readonly resting = new Map<EngineName, { until: number; reason: string; kind: FailureKind }>();
+@@ -387,12 +392,14 @@ export class BrainRouter {
+    * an answer failure as the engine threw it.
+    */
+   async decide(request: BrainRequest): Promise<BrainAnswer> {
++    const profile = this.deps.config.runProfile;
++    if (profile) request.effort = profile.effort;
+     const pace = currentDecisionBudget();
+     if (pace && !request.budgetSignal) {
+       pace.promoteBrain();
+       return withIndependentDecisionBudget("L2_brain", "brain", HUMAN_PACE_BUDGETS.brain, "L2", () =>
+         withinDecisionBudget("L2_brain", (signal) => this.decide({ ...request, budgetSignal: signal,
+-          effort: "xhigh", timeoutMs: HUMAN_PACE_BUDGETS.brain }), HUMAN_PACE_BUDGETS.brain));
++          effort: profile?.effort ?? this.deps.config.engines[this.codexOnly ? "codex" : this.engineFor(request.label)].effort ?? undefined, timeoutMs: HUMAN_PACE_BUDGETS.brain }), HUMAN_PACE_BUDGETS.brain));
+     }
+     if (request.budgetSignal?.aborted) throw new DecisionBudgetExpired(request.label);
+     request.questionId ??= this.nextQuestionId();
+@@ -690,6 +697,8 @@ export class BrainRouter {
+         model = "";
+       }
+     }
++    const receipt = result?.nativeReceipt ?? null;
++    if (req.runId && req.questionId && receipt) this.nativeReceipts.set(req.runId, { question_id: req.questionId, receipt });
+     const row: BrainLogRow = {
+       ts: new Date().toISOString(),
+       ...(req.runId ? { run_id: req.runId } : {}),
+@@ -697,6 +706,9 @@ export class BrainRouter {
+       engine,
+       model,
+       ...(effort ? { effort } : {}),
++      requested_effort: req.effort ?? this.deps.config.engines[engine].effort ?? undefined,
++      ...(this.deps.config.runProfile ? { run_brain: this.deps.config.runProfile } : {}),
++      native_receipt: receipt,
+       system_sha: sha(req.system),
+       system_chars: req.system.length,
+       ...(req.knowledge ? { knowledge: req.knowledge } : {}),
+diff --git a/agent/src/brain/run-profile.ts b/agent/src/brain/run-profile.ts
+new file mode 100644
+index 000000000..e10ff0c72
+--- /dev/null
++++ b/agent/src/brain/run-profile.ts
+@@ -0,0 +1,32 @@
++/** A process freezes this per-run request; only the next run may select another arm. */
++export interface BrainRunProfile {
++  engine: "codex" | "deepseek";
++  effort: "low" | "medium" | "high" | "xhigh";
++  trial_id?: string;
++  sequence?: number;
++}
++
++export interface BrainNativeReceipt {
++  engine: "codex";
++  model: string;
++  effort: string;
++  source: "turn_context";
++  thread_id: string;
++  turn_id: string;
++  sha256: string;
++}
++
++export function parseBrainRunProfile(raw: string | undefined): BrainRunProfile | undefined {
++  if (!raw) return undefined;
++  const value: unknown = JSON.parse(raw);
++  if (!value || typeof value !== "object" || Array.isArray(value)) throw new Error("expected an object");
++  const v = value as Record<string, unknown>;
++  if (Object.keys(v).some((k) => !["engine", "effort", "trial_id", "sequence"].includes(k))
++    || !["codex", "deepseek"].includes(String(v["engine"]))
++    || !["low", "medium", "high", "xhigh"].includes(String(v["effort"]))
++    || (v["trial_id"] !== undefined && (typeof v["trial_id"] !== "string" || !/^[a-zA-Z0-9_-]{1,80}$/.test(v["trial_id"])))
++    || (v["sequence"] !== undefined && (!Number.isSafeInteger(v["sequence"]) || Number(v["sequence"]) < 0))) {
++    throw new Error("invalid engine, effort or trial identity");
++  }
++  return Object.freeze({ ...v }) as unknown as BrainRunProfile;
++}
+diff --git a/agent/src/brain/types.ts b/agent/src/brain/types.ts
+index a86df5606..cfc6f4783 100644
+--- a/agent/src/brain/types.ts
++++ b/agent/src/brain/types.ts
+@@ -1,3 +1,4 @@
++import type { BrainNativeReceipt } from "./run-profile.js";
+ /**
+  * V4 brain contract (docs/v4-architecture.md §2).
+  *
+@@ -126,6 +127,7 @@ export interface ToolCallRecord {
+ }
+ 
+ export interface BrainAnswer {
++  nativeReceipt?: BrainNativeReceipt;
+   engine: EngineName;
+   model: string;
+   /** The reasoning effort the engine asked for, when it sets one (codex model_reasoning_effort); logged in brain.jsonl. */
+diff --git a/agent/src/core/config.ts b/agent/src/core/config.ts
+index 8b2737798..76608187e 100644
+--- a/agent/src/core/config.ts
++++ b/agent/src/core/config.ts
+@@ -1,3 +1,4 @@
++import { parseBrainRunProfile, type BrainRunProfile } from "../brain/run-profile.js";
+ import { accessSync, constants as fsConstants, readFileSync, statSync } from "node:fs";
+ import { delimiter, dirname, isAbsolute, join } from "node:path";
+ 
+@@ -525,6 +526,7 @@ export type KnowledgePrefixMode = "off" | "full";
+ 
+ /** V4 brain (src/brain/router.ts): which engine answers which question, and each engine's settings. */
+ export interface BrainConfig {
++  runProfile?: BrainRunProfile;
+   /** BRAIN_ENGINE (default deepseek: v3 behaviour). */
+   engine: EngineName;
+   /** BRAIN_ENGINE_<PREFIX>: per label prefix (router.ts labelPrefix), e.g. { MAP: "claude" }. */
+@@ -846,6 +848,10 @@ export function readBrainConfig(env: NodeJS.ProcessEnv, problems: ConfigProblem[
+       maxCalls: maxCallsOf(env, name, problems),
+     };
+   }
++  let runProfile: BrainRunProfile | undefined;
++  try { runProfile = parseBrainRunProfile(env["BRAIN_RUN_CONFIG"]); }
++  catch { problems.push({ field: "BRAIN_RUN_CONFIG", message: "invalid per-run brain configuration" }); }
++  if (runProfile) engines[runProfile.engine].effort = runProfile.effort;
+   const budgetRaw = readEnv(env, "BRAIN_CLAUDE_MAX_BUDGET_USD");
+   const maxBudgetUsd = budgetRaw === null ? null : Number(budgetRaw);
+   if (maxBudgetUsd !== null && !(Number.isFinite(maxBudgetUsd) && maxBudgetUsd > 0)) problems.push({ field: "BRAIN_CLAUDE_MAX_BUDGET_USD", message: `expected a positive number, got "${budgetRaw}"` });
+@@ -892,6 +898,7 @@ export function readBrainConfig(env: NodeJS.ProcessEnv, problems: ConfigProblem[
+   if (prefixRaw !== "off" && prefixRaw !== "full") problems.push({ field: "KNOWLEDGE_PREFIX", message: `expected off or full, got "${prefixRaw}"` });
+   const knowledgePrefix: KnowledgePrefixMode = prefixRaw === "full" ? "full" : "off";
+   return {
++    ...(runProfile ? { runProfile } : {}),
+     engine,
+     byPrefix,
+     fallback,
+diff --git a/agent/src/eye/run-config.ts b/agent/src/eye/run-config.ts
+index f9446b0e9..e30c19984 100644
+--- a/agent/src/eye/run-config.ts
++++ b/agent/src/eye/run-config.ts
+@@ -1,3 +1,4 @@
++import type { BrainRunProfile, BrainNativeReceipt } from "../brain/run-profile.js";
+ import { HUMAN_PACE_BUDGETS } from "../core/decision-budget.js";
+ import { humanPaceH2Policy } from "../core/human-pace-shadow-config.js";
+ /**
+@@ -111,6 +112,7 @@ export interface RunConfigRow {
+   process: { pid: number; started: string };
+   code: CodeInfo;
+   brain: {
++    run_profile?: BrainRunProfile;
+     /** False when there is no DeepSeek client (no key): then no brain question is asked at all. */
+     active: boolean;
+     engine: EngineName;
+@@ -142,6 +144,7 @@ export interface RunConfigRow {
+       max_answer_blanks: number | null;
+     };
+   };
++  brain_native_receipt?: { question_id: string; receipt: BrainNativeReceipt };
+   human_pace?: { schema: string; budgets: typeof HUMAN_PACE_BUDGETS; model_effort: string; required_full_replaced: boolean };
+   v6?: V6Config;
+   human_pace_h2?: { schema: string; mode: string; requested: string; delivered: false;
+@@ -470,6 +473,7 @@ export function runConfigRow(
+   const setup = {
+     ...(v6.mode !== "off" ? { v6 } : {}),
+     brain: {
++      ...(config.brain.runProfile ? { run_profile: config.brain.runProfile } : {}),
+       active: brain !== null,
+       engine: actualBrain.engine,
+       by_prefix: Object.fromEntries(Object.keys(actualBrain.byPrefix).sort().map((prefix) => [prefix, actualBrain.byPrefix[prefix]!])) as Record<string, EngineName>,
+@@ -490,7 +494,7 @@ export function runConfigRow(
+       strict: config.strictJev,
+       prompt_log: resolveJevPromptLog(config.log),
+     },
+-    ...(characterKey(run.character) === "silent" ? { human_pace: { schema: "human-pace-h1-v1", budgets: HUMAN_PACE_BUDGETS, model_effort: "xhigh", required_full_replaced: true } } : {}),
++    ...(characterKey(run.character) === "silent" ? { human_pace: { schema: "human-pace-h1-v1", budgets: HUMAN_PACE_BUDGETS, model_effort: config.brain.runProfile?.effort ?? config.brain.engines.codex.effort ?? "xhigh", required_full_replaced: true } } : {}),
+     ...(humanPaceH2Policy(characterKey(run.character), env).mode !== "off" ? { human_pace_h2: {
+       schema: "human-pace-h2-shadow-v1", mode: "shadow", requested: humanPaceH2Policy(characterKey(run.character), env).requested,
+       delivered: false as const, direction_budget_ms: 60000, card_budget_ms: 5000, jev_budget_ms: 1000,
+@@ -573,6 +577,7 @@ export function runConfigRow(
+ 
+ export class RunConfigLog {
+   private readonly seen = new Set<string>();
++  private readonly receipts = new Map<string, string>();
+   private readonly env: NodeJS.ProcessEnv;
+   private readonly code: CodeInfo;
+   private readonly started: string;
+@@ -593,7 +598,10 @@ export class RunConfigLog {
+    */
+   observe(state: { run: { ascension: number | null; floor: number | null; character_name?: string | null } | null; raw: Record<string, unknown> }): RunConfigRow | null {
+     const runId = str(state.raw["run_id"]);
+-    if (!state.run || isMenuRunId(runId) || this.seen.has(runId)) return null;
++    const native = this.opts.brain?.router.nativeReceipts?.get(runId);
++    const receiptKey = native ? `${native.receipt.model}/${native.receipt.effort}` : "";
++    const newReceipt = native && this.receipts.get(runId) !== receiptKey;
++    if (!state.run || isMenuRunId(runId) || (this.seen.has(runId) && !newReceipt)) return null;
+     this.seen.add(runId);
+     try {
+       const rawRun = state.raw["run"];
+@@ -604,8 +612,9 @@ export class RunConfigLog {
+         this.opts.now?.() ?? new Date(),
+       );
+       const earlier = this.earlierRows(runId);
+-      if (earlier.includes(row.config_sha)) return null;
+-      row.restart = earlier.length > 0;
++      if (earlier.includes(row.config_sha) && !newReceipt) return null;
++      row.restart = earlier.length > 0 && !earlier.includes(row.config_sha);
++      if (native) row.brain_native_receipt = native;
+       const text = JSON.stringify(row);
+       const leak = secretIn(text, this.opts.config, this.env);
+       if (leak) {
+@@ -617,6 +626,7 @@ export class RunConfigLog {
+         this.ready = true;
+       }
+       appendJsonLine(this.path, row);
++      if (native) this.receipts.set(runId, receiptKey);
+       return row;
+     } catch (error) {
+       this.opts.note?.(`run ${runId}: run configuration not written: ${error instanceof Error ? error.message : String(error)}`.slice(0, 300));
+diff --git a/agent/tests/brain-codex-session.test.ts b/agent/tests/brain-codex-session.test.ts
+index f3112eafd..cd301eb60 100644
+--- a/agent/tests/brain-codex-session.test.ts
++++ b/agent/tests/brain-codex-session.test.ts
+@@ -87,16 +87,20 @@ for await (const line of createInterface({ input: process.stdin })) {
+     const id = "thr-" + counter("threads");
+     const path = S + "/sessions/rollout-x-" + id + ".jsonl";
+     (await import("node:fs")).mkdirSync(S + "/sessions", { recursive: true });
+-    writeFileSync(path, "{}\\n");
++    writeFileSync(path, JSON.stringify({ type: "session_meta", payload: { id } }) + "\\n");
+     threads[id] = path;
+     send({ id: msg.id, result: { thread: { id, path, cwd: p.cwd }, instructionSources: script.instructionSources ?? [] } });
+   } else if (msg.method === "thread/read") send({ id: msg.id, result: { thread: { id: p.threadId, path: threads[p.threadId] ?? null } } });
+   else if (msg.method === "thread/delete") { if (threads[p.threadId]) rmSync(threads[p.threadId], { force: true }); send({ id: msg.id, result: {} }); }
+-  else if (msg.method === "thread/revert") send(script.revertFails ? { id: msg.id, error: { code: -32600, message: "revert failed" } } : { id: msg.id, result: { thread: { id: p.threadId } } });
++  else if (msg.method === "thread/revert") {
++    if (!script.revertFails && threads[p.threadId]) writeFileSync(threads[p.threadId], JSON.stringify({ type: "session_meta", payload: { id: p.threadId } }) + "\\n");
++    send(script.revertFails ? { id: msg.id, error: { code: -32600, message: "revert failed" } } : { id: msg.id, result: { thread: { id: p.threadId } } });
++  }
+   else if (msg.method === "turn/interrupt") { send({ id: msg.id, result: {} }); send({ method: "turn/completed", params: { threadId: p.threadId, turn: { id: p.turnId, status: "interrupted", error: null } } }); current = null; }
+   else if (msg.method === "turn/start") {
+     const n = counter("turns");
+     const turnId = "turn-" + n;
++    appendFileSync(threads[p.threadId], JSON.stringify({ type: "turn_context", payload: { turn_id: turnId, model: p.model, effort: p.effort } }) + "\\n");
+     send({ id: msg.id, result: { turn: { id: turnId, status: "inProgress" } } });
+     const events = script.turns[Math.min(n, script.turns.length) - 1] ?? [];
+     current = turnId;
+@@ -170,6 +174,8 @@ describe("codex session mode", () => {
+     const { engine, trace } = sessionEngine(fake);
+     const first = await engine.decide(request({ runId: "RUN1" }));
+     const second = await engine.decide(request({ question: "Heal or smith, again?" }));
++    expect(first.nativeReceipt).toMatchObject({ source: "turn_context", model: "gpt-6.1-sol", effort: "xhigh", turn_id: "turn-1", thread_id: "thr-1" });
++    expect(trace()[0]?.native_receipt).toEqual(first.nativeReceipt);
+     expect(first).toMatchObject({ engine: "codex", model: "gpt-6.1-sol", effort: "xhigh", answer: { choice: "b", reason: "smith" }, usage: { inputTokens: 160_000, cacheHitTokens: 150_000, outputTokens: 300, reasoningTokens: 100 }, reasoning: "**Weighing**", native: { mode: "session", turn_id: "turn-1", reverted: true } });
+     expect(first.answer).not.toHaveProperty("route");
+     expect(second.answer).toEqual({ choice: "a", reason: "heal" });
+diff --git a/agent/tests/brain-run-profile.test.ts b/agent/tests/brain-run-profile.test.ts
+new file mode 100644
+index 000000000..35eec1056
+--- /dev/null
++++ b/agent/tests/brain-run-profile.test.ts
+@@ -0,0 +1,87 @@
++/** Fixed requests verify run effort through both routing paths; no model or game. */
++import { expect, it } from "vitest";
++import { mkdtempSync, rmSync, readFileSync } from "node:fs";
++import { tmpdir } from "node:os";
++import { join } from "node:path";
++import { loadConfig } from "../src/core/config.js";
++import { createRouter } from "../src/brain/brain.js";
++import { BrainRouter, type BrainLogRow } from "../src/brain/router.js";
++import type { BrainAnswer, BrainRequest } from "../src/brain/types.js";
++import { DecisionBudget, withDecisionBudget } from "../src/core/decision-budget.js";
++import { receiptFromRollout } from "../src/brain/engines/native-receipt.js";
++import { parseBrainRunProfile } from "../src/brain/run-profile.js";
++import { RunConfigLog } from "../src/eye/run-config.js";
++import type { Brain } from "../src/brain/brain.js";
++
++const receipt = { engine: "codex" as const, model: "gpt-6.1-sol", effort: "high", source: "turn_context" as const,
++  thread_id: "own", turn_id: "turn", sha256: "f".repeat(64) };
++const request = (): BrainRequest => ({ label: "shop/plan", runId: "TRIAL-RUN", system: "fixed", question: "fixed", payload: {},
++  effort: "xhigh", spec: { schema: { type: "object" }, validate: () => [] } });
++const answer: BrainAnswer = { engine: "codex", model: "gpt-6.1-sol", effort: "high", answer: {}, problems: [],
++  attempts: 1, latencyMs: 1, usage: { inputTokens: 1, outputTokens: 1 }, toolCalls: [], nativeReceipt: receipt };
++
++it.each(["high", "xhigh"] as const)("freezes %s across ordinary and human pace paths, overriding per-question effort", async (effort) => {
++  const config = loadConfig({ BRAIN_LOG: "off", BRAIN_CODEX_EFFORT: "xhigh",
++    BRAIN_RUN_CONFIG: JSON.stringify({ engine: "codex", effort, trial_id: "issue-31", sequence: 0 }) });
++  const rows: BrainLogRow[] = [];
++  const router = new BrainRouter({ config: config.brain, codexOnly: true, log: (r) => rows.push(r),
++    engine: () => ({ name: "codex", model: "gpt-6.1-sol", decide: async (req) => {
++      expect(req.effort).toBe(effort);
++      return { ...answer, effort, nativeReceipt: { ...receipt, effort } };
++    } }) });
++  await router.decide(request());
++  await withDecisionBudget(new DecisionBudget("test", "routine"), () => router.decide(request()));
++  expect(rows).toHaveLength(2);
++  expect(rows.every(r => r.requested_effort === effort && r.native_receipt?.effort === effort && r.run_brain?.effort === effort)).toBe(true);
++});
++
++it("honors the existing BRAIN_CODEX_EFFORT entrance in human pace without a trial profile", async () => {
++  const config = loadConfig({ BRAIN_LOG: "off", BRAIN_CODEX_EFFORT: "high" });
++  const router = new BrainRouter({ config: config.brain, codexOnly: true, log: () => {},
++    engine: () => ({ name: "codex", model: "gpt-6.1-sol", decide: async req => {
++      expect(req.effort).toBe("high"); return answer;
++    } }) });
++  await withDecisionBudget(new DecisionBudget("test", "routine"), () => router.decide(request()));
++});
++
++it("does not invent native evidence from an argument, another thread or another turn", () => {
++  const text = [JSON.stringify({ type: "session_meta", payload: { id: "own" } }),
++    JSON.stringify({ type: "turn_context", payload: { turn_id: "old", model: "gpt-6.1-sol", effort: "xhigh" } }),
++    JSON.stringify({ type: "turn_context", payload: { turn_id: "turn", model: "gpt-6.1-sol", effort: "high" } })].join("\n");
++  expect(receiptFromRollout(text, "own", "turn")).toMatchObject({ effort: "high", source: "turn_context" });
++  expect(receiptFromRollout(text, "foreign", "turn")).toBeUndefined();
++  expect(receiptFromRollout(text, "own", "missing")).toBeUndefined();
++  expect(receiptFromRollout("{}", "own", "turn")).toBeUndefined();
++});
++
++it("rejects invalid profiles and reserves DeepSeek without silently substituting Codex", () => {
++  for (const raw of ['{}', '{"engine":"codex","effort":"bad"}', '{"engine":"codex","effort":"high","extra":"x"}']) {
++    expect(() => parseBrainRunProfile(raw)).toThrow();
++  }
++  const config = loadConfig({ BRAIN_RUN_CONFIG: '{"engine":"deepseek","effort":"high"}' });
++  expect(config.brain.runProfile?.engine).toBe("deepseek");
++  expect(() => createRouter(config, null)).toThrow("#32");
++});
++
++it("appends native confirmation to run-config without changing configuration identity or restart status", () => {
++  const dir = mkdtempSync(join(tmpdir(), "brain-profile-"));
++  try {
++    const config = loadConfig({ BRAIN_LOG: "off", CHARACTER: "SILENT", BRAIN_ENGINE: "codex",
++      BRAIN_RUN_CONFIG: '{"engine":"codex","effort":"high","trial_id":"issue-31","sequence":0}' });
++    const router = createRouter(config, null);
++    const brain = { router, deepseek: { systemPrompt: "fixed" } } as Brain;
++    const log = new RunConfigLog({ config, brain, jevEnabled: false, mode: "play", env: {}, knowledgeDir: join(dir, "empty"),
++      code: () => ({ commit: "a".repeat(40), code: "aaaaaaa", dirty: false, dirty_files: [], branch: "test", worktree: "test" }) }, join(dir, "run-config.jsonl"));
++    const state = { run: { ascension: 10, floor: 1, character_name: "Silent" }, raw: { run_id: "TRIAL-RUN", run: { character_id: "SILENT" } } };
++    const first = log.observe(state)!;
++    expect(first.brain.run_profile?.effort).toBe("high");
++    expect(first.human_pace?.model_effort).toBe("high");
++    router.nativeReceipts.set("TRIAL-RUN", { question_id: "q", receipt });
++    const confirmed = log.observe(state)!;
++    expect(confirmed.brain_native_receipt?.receipt).toEqual(receipt);
++    expect(confirmed.config_sha).toBe(first.config_sha);
++    expect(confirmed.restart).toBe(false);
++    expect(log.observe(state)).toBeNull();
++    expect(readFileSync(log.path, "utf8").trim().split("\n")).toHaveLength(2);
++  } finally { rmSync(dir, { recursive: true, force: true }); }
++});
+diff --git a/agent/tools/issue31-quality-replay.ts b/agent/tools/issue31-quality-replay.ts
+new file mode 100644
+index 000000000..fe0717f2b
+--- /dev/null
++++ b/agent/tools/issue31-quality-replay.ts
+@@ -0,0 +1,77 @@
++/** Optional post-trial fixed replay: explicit home, sequential requests, durable <=96 physical calls. */
++import { mkdirSync, readFileSync, writeFileSync, appendFileSync, existsSync, readdirSync } from "node:fs";
++import { resolve, join, relative, isAbsolute } from "node:path";
++import { createHash } from "node:crypto";
++import { parseArgs } from "node:util";
++import { loadConfig } from "../src/core/config.js";
++import { CodexEngine } from "../src/brain/engines/codex.js";
++import { freeSpec, pickSpec, shopPlanSpec, routePlanSpec, carriesRunPlan, withRunPlanField, withDirectionRideField } from "../src/brain/specs.js";
++import type { BrainRequest } from "../src/brain/types.js";
++import { setKnowledgeCharacter } from "../src/knowledge/files.js";
++
++const { values: args } = parseArgs({ options: {
++  fixtures: { type: "string" }, out: { type: "string" }, home: { type: "string" }, run: { type: "boolean" },
++} });
++if (!args.fixtures || !args.out) throw Error("--fixtures and --out required; --run --home explicitly enables model calls");
++const raw = readFileSync(resolve(args.fixtures), "utf8");
++const fixturesSha = createHash("sha256").update(raw).digest("hex");
++if (fixturesSha !== "534de164f2b8c33c10fbc3ad222d3e5b2c4ed6009b734ace4be7fbbdb8396236") throw Error("Expected the preregistered #29 fixture bytes");
++const fixtures = raw.trim().split("\n").map(line => JSON.parse(line));
++if (fixtures.length !== 32 || new Set(fixtures.map(f => f.id)).size !== 32) throw Error("Expected #29 frozen 32 unique fixtures");
++setKnowledgeCharacter("silent");
++const out = resolve(args.out);
++const repo = resolve(import.meta.dirname, "../..");
++const outRel = relative(repo, out);
++if (!outRel || outRel.startsWith("..") || isAbsolute(outRel)) throw Error("--out must be a dedicated directory inside this repository");
++mkdirSync(out, { recursive: true });
++const identity = JSON.stringify({ schema: "issue31-quality-v1", fixtures_sha256: fixturesSha,
++  arms: ["high", "xhigh"], model: "gpt-6.1-sol", mode: "session", timeout_ms: 90000, physical_cap: 96 });
++const manifest = join(out, "manifest.json");
++if (existsSync(manifest) && readFileSync(manifest, "utf8") !== identity) throw Error("Frozen replay identity changed");
++writeFileSync(manifest, identity);
++if (!args.run) { console.log(identity); process.exit(0); }
++if (!args.home) throw Error("Explicit isolated developer --home required");
++const home = resolve(args.home);
++if (home === process.env["BRAIN_CODEX_HOME"] || /\/brain\/?$/.test(home)) throw Error("Production brain home is forbidden for offline replay");
++const engineConfig = loadConfig({ BRAIN_CODEX_HOME: home, BRAIN_CODEX_MODEL: "gpt-6.1-sol", BRAIN_CODEX_MODE: "session",
++  BRAIN_CODEX_USAGE_REQUIRED: "on", BRAIN_CODEX_USAGE_STOP_PCT: "80", BRAIN_CODEX_STALL_RETRIES: "0", BRAIN_LOG: "off" });
++const claims = join(out, "claims");
++mkdirSync(claims, { recursive: true });
++const resultsPath = join(out, "results.jsonl");
++const completed = new Set(existsSync(resultsPath) ? readFileSync(resultsPath, "utf8").trim().split("\n").filter(Boolean)
++  .map(line => { const r = JSON.parse(line); return `${r.id}/${r.effort}`; }) : []);
++// A claim is written before dispatch, including crashes and engine-mode retries. No account/config copying.
++const engine = new CodexEngine({ settings: engineConfig.brain.engines.codex, codex: engineConfig.brain.codex,
++  physicalCallLimit: 96, stateDir: join(out, "state"), traceFile: join(out, "codex-calls.jsonl"), beforePhysicalCall: call => {
++    const count = readdirSync(claims).length;
++    if (count >= 96) throw Error("96 physical calls exhausted");
++    writeFileSync(join(claims, `${count + 1}.json`), JSON.stringify(call), { flag: "wx", flush: true });
++  } });
++try {
++  for (const [index, f] of fixtures.entries()) {
++    // Counterbalance which arm sees the earlier server load for each paired question.
++    for (const effort of index % 2 ? ["xhigh", "high"] as const : ["high", "xhigh"] as const) {
++      if (completed.has(`${f.id}/${effort}`)) continue;
++      const r = f.request;
++      let spec = r.options ? r.label.startsWith("shop/") ? shopPlanSpec(r.label, r.options, r.payload)
++        : r.label.startsWith("map/route-") ? routePlanSpec(r.label, r.payload)
++        : r.label === "event/plan" ? freeSpec(r.label, { type: "object" }) : pickSpec(r.label, r.options, r.payload)
++        : freeSpec(r.label, { type: "object" });
++      if (carriesRunPlan(r.payload)) spec = withRunPlanField(spec, r.payload);
++      spec = withDirectionRideField(spec, r.payload);
++      const req: BrainRequest = { ...r, spec, effort, questionId: `issue31-${f.id}-${effort}` };
++      const started = Date.now();
++      const abort = new AbortController();
++      const timer = setTimeout(() => abort.abort(), 90000);
++      let result: object;
++      try {
++        const a = await engine.decide(req, abort.signal);
++        const problems = a.answer === null ? ["no_answer"] : spec.validate(a.answer);
++        result = { answer: a.answer, accepted: problems.length === 0, problems, usage: a.usage,
++          native_receipt: a.nativeReceipt ?? null, attempts: a.attempts };
++      } catch { result = { accepted: false, answer: null, error: "call_failed_or_budget_expired", native_receipt: null }; }
++      finally { clearTimeout(timer); }
++      appendFileSync(resultsPath, JSON.stringify({ id: f.id, label: r.label, effort, ms: Date.now() - started, ...result }) + "\n");
++    }
++  }
++} finally { await engine.close(); }
+diff --git a/eval/brain_trial.py b/eval/brain_trial.py
+new file mode 100644
+index 000000000..090a3280f
+--- /dev/null
++++ b/eval/brain_trial.py
+@@ -0,0 +1,301 @@
++#!/usr/bin/env python3
++"""Read-only #31 analysis. No game action, model call, configuration or journal write."""
++import argparse
++from collections import Counter, defaultdict
++from datetime import datetime
++import hashlib
++import json
++import math
++from pathlib import Path
++
++
++def records(logs, name, ids=None):
++    path = logs / (name + ".jsonl")
++    if not path.exists():
++        return
++    with path.open("rb") as handle:
++        for line_no, raw in enumerate(handle, 1):
++            if ids is not None and not any(rid.encode() in raw for rid in ids):
++                continue
++            row = json.loads(raw)
++            rid = row.get("run_id") or row.get("state", {}).get("run_id")
++            if not rid and row.get("fingerprint"):
++                rid = json.loads(row["fingerprint"]).get("run")
++            if ids is not None and rid not in ids:
++                continue
++            yield rid, row, {"file": path.name, "line": line_no, "sha256": hashlib.sha256(raw).hexdigest()}
++
++
++def percentile(values, p):
++    return sorted(values)[max(0, math.ceil(len(values) * p) - 1)] if values else None
++
++
++def millis(start, end):
++    if not start or not end:
++        return None
++    return (datetime.fromisoformat(end.replace("Z", "+00:00")) - datetime.fromisoformat(start.replace("Z", "+00:00"))).total_seconds() * 1000
++
++
++def action(answer):
++    if not isinstance(answer, dict):
++        return None
++    result = {k: v for k, v in answer.items() if k in {"choice", "cards", "route", "plan", "discard", "drink"}}
++    route = result.get("route")
++    if isinstance(route, str) and route != "keep":
++        result["route"] = [s.strip() for s in route.split(",") if s.strip()]
++    return result
++
++
++def primary(answer):
++    fields = action(answer)
++    if fields is not None:
++        for key in ("choice", "plan", "route"):
++            if key in fields:
++                return {key: fields[key]}
++    return None
++
++
++def fixed_quality(rows):
++    pairs = defaultdict(dict)
++    for row in rows:
++        if row["effort"] in pairs[row["id"]]:
++            raise ValueError("duplicate replay arm")
++        pairs[row["id"]][row["effort"]] = row
++    results = []
++    for ident, pair in pairs.items():
++        high, xhigh = pair.get("high"), pair.get("xhigh")
++        valid = bool(high and xhigh and all(r.get("accepted") and primary(r.get("answer")) is not None
++                     and (r.get("native_receipt") or {}).get("effort") == e
++                     for e, r in pair.items()))
++        results.append({"id": ident, "label": (high or xhigh)["label"], "valid_pair": valid,
++                        "same_action": primary(high["answer"]) == primary(xhigh["answer"]) if valid else None,
++                        "all_action_fields_same": action(high["answer"]) == action(xhigh["answer"]) if valid else None,
++                        "high_action": action(high.get("answer")) if high else None,
++                        "xhigh_action": action(xhigh.get("answer")) if xhigh else None})
++    valid = [r for r in results if r["valid_pair"]]
++    return {"pairs": len(results), "valid_pairs": len(valid), "same_action": sum(r["same_action"] for r in valid),
++            "agreement": sum(r["same_action"] for r in valid) / len(valid) if valid else None,
++            "rows": results}
++
++
++def analyse(logs, trial_id, reanswers=()):
++    configs = defaultdict(list)
++    refs = defaultdict(list)
++    for rid, row, ref in records(logs, "run-config"):
++        if row.get("brain", {}).get("run_profile", {}).get("trial_id") == trial_id:
++            configs[rid].append(row)
++            refs[rid].append(ref)
++    ids = set(configs)
++    # All rows of an enrolled run are checked, including foreign restart configurations.
++    all_configs = defaultdict(list)
++    for rid, row, ref in records(logs, "run-config", ids):
++        all_configs[rid].append(row)
++    data = {name: defaultdict(list) for name in ["runs", "brain", "codex-calls", "brain-wait", "decisions", "states", "sl-attempts"]}
++    for name, runs in data.items():
++        for rid, row, ref in records(logs, name, ids):
++            if name == "states":
++                st = row.get("state") or {}
++                row = {"ts": row.get("ts"), "state": {"run": {k: (st.get("run") or {}).get(k) for k in
++                       ("act_id", "floor", "boss_id", "current_hp")}, "in_combat": st.get("in_combat"),
++                       "combat": {"enemies": [{"enemy_id": e.get("enemy_id") or e.get("id")} for e in
++                                   (st.get("combat") or {}).get("enemies") or []]}}}
++            elif name == "decisions":
++                row = {"time_budget": row.get("time_budget")}
++            elif name == "brain":
++                row = {k: v for k, v in row.items() if k not in {"question", "payload", "memory", "options", "raw", "tool_calls"}}
++            elif name == "sl-attempts":
++                row = {k: row.get(k) for k in ("ts", "act", "floor", "encounter", "fight_kind", "attempt", "result", "end_hp", "reload")}
++            runs[rid].append(row)
++            refs[rid].append(ref)
++    results = []
++    quality = []
++    replays = {(r["run_id"], r["question_id"]): r for r in reanswers}
++    for rid, cfgs in configs.items():
++        c = cfgs[0]
++        profile = c["brain"]["run_profile"]
++        outcome_rows = data["runs"][rid]
++        outcome = outcome_rows[-1] if outcome_rows else {}
++        brain = data["brain"][rid]
++        trace = data["codex-calls"][rid]
++        wait = data["brain-wait"][rid]
++        issues = []
++        if any(x.get("brain", {}).get("run_profile") != profile for x in all_configs[rid]):
++            issues.append("mixed_run_profile")
++        if len({x.get("ascension") for x in all_configs[rid]}) != 1:
++            issues.append("mixed_ascension")
++        if type(c.get("ascension")) is not int:
++            issues.append("unknown_ascension")
++        if outcome.get("ascension") is not None and outcome["ascension"] != c.get("ascension"):
++            issues.append("outcome_ascension_mismatch")
++        if not brain:
++            issues.append("no_brain_rows")
++        unknown = sum(not b.get("native_receipt") for b in brain)
++        mismatch = sum(bool(b.get("native_receipt")) and
++                       (b["native_receipt"].get("effort") != profile["effort"]
++                        or b["native_receipt"].get("model") != "gpt-6.1-sol") for b in brain)
++        if unknown:
++            issues.append("missing_native_receipt")
++        if mismatch:
++            issues.append("native_mismatch")
++        if any(b.get("engine") != profile["engine"] or b.get("requested_effort") != profile["effort"]
++               or b.get("run_brain") != profile for b in brain):
++            issues.append("request_profile_mismatch")
++        if not isinstance(outcome.get("victory"), bool):
++            issues.append("unfinished")
++        if any(t.get("native_receipt") and t["native_receipt"].get("effort") != profile["effort"] for t in trace):
++            issues.append("physical_call_effort_mismatch")
++        by_question = defaultdict(list)
++        for b in brain:
++            by_question[b.get("question_id", "missing:" + str(len(by_question)))].append(b)
++        latency = defaultdict(list)
++        questions = []
++        for qid, bs in by_question.items():
++            ms = sum(b.get("latency_ms", 0) + b.get("primary_ms", 0) for b in bs)
++            latency[bs[0]["label"]].append(ms)
++            questions.append({"question_id": qid, "label": bs[0]["label"], "ms": ms,
++                              "accepted": any(b.get("accepted") is True for b in bs)})
++            replay = replays.get((rid, qid))
++            if replay:
++                original = next((b for b in reversed(bs) if b.get("accepted")), None)
++                quality.append({"run_id": rid, "question_id": qid, "label": bs[0]["label"],
++                                "valid_pair": bool(original and replay.get("accepted") and (replay.get("native_receipt") or {}).get("effort") == "xhigh"),
++                                "same_action": action(original["answer"]) == action(replay.get("answer")) if original else None,
++                                "original_action": action(original["answer"]) if original else None,
++                                "replay_action": action(replay.get("answer"))})
++        bosses = []
++        for entry in data["states"][rid]:
++            state = entry.get("state") or {}
++            run = state.get("run") or {}
++            combat = state.get("combat") or {}
++            enemy_ids = {e.get("enemy_id") or e.get("id") for e in combat.get("enemies") or []}
++            for boss in bosses:
++                try:
++                    if int(run["act_id"]) > int(boss["act_id"]):
++                        boss["passed"] = True
++                except (ValueError, TypeError, KeyError):
++                    pass
++            if state.get("in_combat") and run.get("boss_id") and run["boss_id"] in enemy_ids:
++                key = (run.get("act_id"), run.get("floor"), run["boss_id"])
++                if not any((b["act_id"], b["floor"], b["boss_id"]) == key for b in bosses):
++                    bosses.append({"act_id": key[0], "floor": key[1], "boss_id": key[2],
++                                   "entry_hp": run.get("current_hp"), "passed": None, "entry_ts": entry.get("ts")})
++        if outcome.get("victory") is True:
++            for boss in bosses:
++                boss["passed"] = True
++        elif outcome.get("victory") is False:
++            for boss in bosses:
++                if outcome.get("death_fight_floor") == boss["floor"] and boss["boss_id"] in (outcome.get("death_enemy_ids") or []):
++                    boss["passed"] = False
++        budgets = [d["time_budget"] for d in data["decisions"][rid] if d.get("time_budget")]
++        usage = Counter()
++        for b in brain:
++            for u in (b.get("usage") or {}, b.get("primary_usage") or {}):
++                for k, v in u.items():
++                    if isinstance(v, (int, float)):
++                        usage[k] += v
++        duration = millis(c.get("ts"), outcome.get("ended"))
++        sl_attempts = data["sl-attempts"][rid]
++        reloads = sum((a.get("reload") or {}).get("ok") is True for a in sl_attempts)
++        result = {"run_id": rid, "profile": profile, "ascension": c.get("ascension"), "character": c.get("character"),
++                  "eligible": not issues, "issues": issues, "victory": outcome.get("victory"), "floor": outcome.get("floor"),
++                  "death_fight": outcome.get("death_fight"), "bosses": bosses,
++                  "sl_attempts": sl_attempts, "observed_successful_reloads": reloads,
++                  "boss_first_attempt_results": [a for a in sl_attempts if a.get("fight_kind") == "boss" and a.get("attempt") == 1],
++                  "sl_coverage": "observed_attempts_only; absence_does_not_prove_no_reload",
++                  "duration_ms": duration, "brain_ms": sum(q["ms"] for q in questions),
++                  "questions": questions, "latency_by_label": {label: {"n": len(v), "p50_ms": percentile(v, .5), "p90_ms": percentile(v, .9)} for label, v in latency.items()},
++                  "reasks": sum(b.get("reasks", 0) for b in brain),
++                  "fallbacks": sum(bool(b.get("fell_back_from")) for b in brain),
++                  "timeouts": sum(b.get("error_kind") == "timeout" for b in brain),
++                  "physical_stalls": sum(t.get("outcome") == "stalled" for t in trace),
++                  "physical_retries": sum(len(t.get("retries") or []) for t in trace),
++                  "capacity_events": sum(b.get("error_kind") in {"quota", "overloaded", "rate_limit", "budget"} for b in brain),
++                  "wait_events": dict(Counter(w.get("state") for w in wait)),
++                  "brain_budget_overruns": sum(q["ms"] > 90000 for q in questions),
++                  "decision_budget_timeouts": sum(b.get("timed_out") is True for b in budgets),
++                  "decision_fallbacks": dict(Counter(b.get("fallback") for b in budgets if b.get("fallback"))),
++                  "usage": dict(usage), "native_unknown": unknown, "native_mismatch": mismatch,
++                  "unknown_usage_rows": sum(not b.get("usage") or
++                                            (bool(b.get("error")) and not any((b.get("usage") or {}).values())) for b in brain),
++                  "code": sorted({x.get("code", {}).get("commit", "unknown") for x in cfgs}),
++                  "config_shas": sorted({x.get("config_sha", "unknown") for x in all_configs[rid]}),
++                  "knowledge_prefix_shas": sorted({b.get("knowledge", {}).get("prefix_sha") for b in brain
++                                                   if b.get("knowledge", {}).get("prefix_sha")}),
++                  "knowledge": c.get("knowledge"), "sources": refs[rid]}
++        results.append(result)
++    groups = []
++    grouped = defaultdict(list)
++    for r in results:
++        grouped[(r["character"], r["ascension"], r["profile"]["engine"], r["profile"]["effort"])].append(r)
++    for (character, ascension, engine, effort), runs in grouped.items():
++        valid = [r for r in runs if r["eligible"]]
++        qs = defaultdict(list)
++        for r in valid:
++            for q in r["questions"]:
++                qs[q["label"]].append(q["ms"])
++        completed = [r for r in runs if isinstance(r["victory"], bool)]
++        boss_groups = defaultdict(list)
++        for r in valid:
++            for boss in r["bosses"]:
++                boss_groups[str(boss["act_id"])].append(boss)
++        counts = {k: sum(r[k] for r in valid) for k in ("reasks", "fallbacks", "timeouts", "physical_stalls", "physical_retries",
++                                                       "capacity_events", "brain_budget_overruns", "decision_budget_timeouts", "unknown_usage_rows")}
++        token_totals = Counter()
++        for r in valid:
++            token_totals.update(r["usage"])
++        groups.append({"character": character, "ascension": ascension, "engine": engine, "effort": effort, "allocated": len(runs),
++                       "eligible": len(valid), "wins": sum(r["victory"] is True for r in valid),
++                       "intention_to_treat": {"completed": len(completed), "wins": sum(r["victory"] is True for r in completed),
++                                              "floor_p50": percentile([r["floor"] for r in completed if r["floor"] is not None], .5)},
++                       "floor_p50": percentile([r["floor"] for r in valid if r["floor"] is not None], .5),
++                       "brain_ms_p50": percentile([r["brain_ms"] for r in valid], .5),
++                       "duration_ms_p50": percentile([r["duration_ms"] for r in valid if r["duration_ms"] is not None], .5),
++                       "unaccepted_questions": sum(not q["accepted"] for r in valid for q in r["questions"]),
++                       "questions": sum(len(r["questions"]) for r in valid), "counts": counts, "usage": dict(token_totals),
++                       "bosses_by_observed_act_id": {act: {"observed": len(bs), "passed": sum(b["passed"] is True for b in bs),
++                                                           "unknown": sum(b["passed"] is None for b in bs),
++                                                           "entry_hp_p50": percentile([b["entry_hp"] for b in bs if b["entry_hp"] is not None], .5)}
++                                                     for act, bs in boss_groups.items()},
++                       "latency_by_label": {k: {"n": len(v), "p50_ms": percentile(v, .5), "p90_ms": percentile(v, .9)} for k, v in qs.items()}})
++    # Operational stop signals use allocated completed outcomes (intention-to-treat), including receipt failures.
++    stops = []
++    ascensions = {(r["character"], r["ascension"]) for r in results}
++    for character, ascension in ascensions:
++        arms = {e: [r for r in results if r["character"] == character and r["ascension"] == ascension
++                    and r["profile"]["effort"] == e and isinstance(r["victory"], bool)] for e in ("high", "xhigh")}
++        n = min(len(arms["high"]), len(arms["xhigh"]))
++        if n >= 4:
++            early = {e: sum(r["victory"] is False and r["floor"] is not None and r["floor"] <= 17
++                            for r in sorted(rs, key=lambda r: r["profile"]["sequence"])[:n]) for e, rs in arms.items()}
++            if early["high"] - early["xhigh"] >= 3:
++                stops.append({"reason": "early_death_gap", "character": character, "ascension": ascension, "n_per_arm": n, "early_deaths": early})
++    if any("native_mismatch" in r["issues"] or "request_profile_mismatch" in r["issues"] or "mixed_run_profile" in r["issues"] for r in results):
++        stops.append({"reason": "configuration_integrity"})
++    for r in results:
++        if r["profile"]["effort"] == "high" and r["questions"] and sum(not q["accepted"] for q in r["questions"]) / len(r["questions"]) >= .2:
++            stops.append({"reason": "high_unaccepted_at_least_20pct", "run_id": r["run_id"]})
++    counts = {(g["character"], g["ascension"], g["effort"]): g["eligible"] for g in groups if g["engine"] == "codex"}
++    sample_ready = any(counts.get((character, ascension, "high"), 0) >= 10 and
++                       counts.get((character, ascension, "xhigh"), 0) >= 10 for character, ascension in ascensions)
++    return {"schema": "brain-trial-report-v1", "trial_id": trial_id,
++            "status": "samples_ready_for_review" if sample_ready else "pending_ops_and_samples",
++            "groups": groups, "runs": sorted(results, key=lambda r: r["profile"]["sequence"]), "quality": quality,
++            "stop_signals": stops, "recommendation": "Roy decision required; no automatic full switch"}
++
++
++def main():
++    p = argparse.ArgumentParser(description=__doc__)
++    p.add_argument("--logs", type=Path, required=True)
++    p.add_argument("--trial-id", required=True)
++    p.add_argument("--reanswers", type=Path)
++    p.add_argument("--fixed-replay", type=Path, help="issue31-quality-replay.ts results.jsonl")
++    args = p.parse_args()
++    reanswers = [json.loads(line) for line in args.reanswers.read_text().splitlines() if line.strip()] if args.reanswers else []
++    result = analyse(args.logs, args.trial_id, reanswers)
++    if args.fixed_replay:
++        result["fixed_replay"] = fixed_quality([json.loads(line) for line in args.fixed_replay.read_text().splitlines() if line.strip()])
++    print(json.dumps(result, ensure_ascii=False, indent=2))
++
++
++if __name__ == "__main__":
++    main()
+diff --git a/eval/metrics.py b/eval/metrics.py
+index c1d518997..4ca286744 100644
+--- a/eval/metrics.py
++++ b/eval/metrics.py
+@@ -597,6 +597,21 @@ def config_label(row):
+     return label + (" · 局中改过配置" if row.get("config_changed") else "")
+ 
+ 
++def experimental_brain_runs(logs):
++    """Opt-in experiments never silently join the pre-existing performance baseline."""
++    profiles = {}
++    path = os.path.join(logs, "run-config.jsonl")
++    if not os.path.exists(path):
++        return profiles
++    with open(path) as handle:
++        for line in handle:
++            row = json.loads(line)
++            profile = row.get("brain", {}).get("run_profile")
++            if profile:
++                profiles[row["run_id"]] = {**profile, "trial_id": profile.get("trial_id") or "unregistered-run-profile"}
++    return profiles
++
++
+ def group_runs(rows, how, versions=None, characters=None):
+     """[(group name, rows)] in group order: versions in versions.json order, the rest by name / first run.
+     `characters`: run id -> character id (--group-by character; a run not in it is the Ironclad's)."""
+@@ -626,6 +641,9 @@ def group_runs(rows, how, versions=None, characters=None):
+             order.setdefault(key, (0, key))
+         else:
+             raise ValueError(f"unknown --group-by {how}")
++        if row.get("brain_trial"):
++            p = row["brain_trial"]
++            key += f" [trial {p['trial_id']} {p['engine']}/{p['effort']} A{row['ascension']}]"
+         if how != "character" and len(set((characters or {}).values())) > 1:
+             key = f"{(characters or {}).get(row['run_id'], 'ironclad')} · {key}"
+             order.setdefault(key, order.get(key.split(" · ", 1)[1], (0, row["started"])))
+@@ -791,6 +809,7 @@ def main(argv=None):
+     parser.add_argument("--no-calibration", action="store_true", help="leave out the calibration columns (eval/calibration.py)")
+     parser.add_argument("--boss-clocks", help="calibration: JSONL of boss-clock-recompute.ts output instead of recomputing")
+     parser.add_argument("--include-non-codex", action="store_true", help="explicit raw performance cohort including DeepSeek/mixed/unknown; costs always retain every run")
++    parser.add_argument("--brain-trial", help="explicit experimental trial id; default excludes trial runs from performance, retains all costs")
+     args = parser.parse_args(argv)
+ 
+     import query as logquery  # noqa: E402  (needs duckdb: run with .cache/logdb-venv/bin/python)
+@@ -817,18 +836,26 @@ def main(argv=None):
+         row["character"] = characters.get(row["run_id"]) or run_character(row)
+         characters[row["run_id"]] = row["character"]
+     brain_source.annotate(rows, brain_source.load_sources(logs, [r["run_id"] for r in rows]))
++    trials = experimental_brain_runs(logs)
++    for row in rows:
++        if row["run_id"] in trials:
++            row["brain_trial"] = trials[row["run_id"]]
+     raw_rows = rows
+     raw_characters = {c: [r for r in raw_rows if r["character"] == c] for c in sorted(set(characters.values()))}
+-    rows = [r for r in raw_rows if brain_source.eligible(r, args.include_non_codex)]
++    def selected(r):
++        trial = r.get("brain_trial")
++        return brain_source.eligible(r, args.include_non_codex) and (trial.get("trial_id") == args.brain_trial if trial else args.brain_trial is None)
++    rows = [r for r in raw_rows if selected(r)]
+     groups = group_runs(rows, args.group_by, versions, characters)
+-    if args.total and rows:
++    if args.total and rows and not args.brain_trial:
+         totals = {c: [r for r in rows if r["character"] == c] for c in sorted({r["character"] for r in rows})}
+         groups.extend((("全部" if len(totals) == 1 else f"全部 · {c}"), rs) for c, rs in totals.items())
+     if args.json:
+         print(json.dumps({"groups": [{"name": name, "run_ids": [r["run_id"] for r in rs], "summary": plain(summarize(rs))} for name, rs in groups],
+                           "runs": plain(raw_rows), "performance_policy": brain_source.POLICY,
+                           "include_non_codex": args.include_non_codex, "raw_cohorts": brain_source.cohorts(raw_rows),
+-                          "excluded_run_ids": [r["run_id"] for r in raw_rows if not brain_source.eligible(r, args.include_non_codex)],
++                          "excluded_run_ids": [r["run_id"] for r in raw_rows if not selected(r)],
++                          "brain_trial": args.brain_trial, "trial_policy": "explicit trial selection; baseline excludes trials; costs retain all",
+                           "all_run_usage_summary": plain(summarize(raw_rows)),
+                           "raw_cohorts_by_character": {c: brain_source.cohorts(rs) for c, rs in raw_characters.items()},
+                           "raw_usage_by_character": {c: plain(summarize(rs)) for c, rs in raw_characters.items()},
+@@ -836,6 +863,7 @@ def main(argv=None):
+                          ensure_ascii=False, indent=1))
+         return 0
+     sys.stdout.write(f"战绩口径：{brain_source.POLICY}；{'显式包含非 Codex 局' if args.include_non_codex else '仅有成功 Codex 脑题且无其他成功引擎的局'}。原始 {len(raw_rows)} 局，纳入 {len(rows)} 局；旧报告保留。\n\n")
++    sys.stdout.write(f"大脑试验口径：{args.brain_trial or '基线排除试验局'}；原始费用/用量保留全部局。\n\n")
+     sys.stdout.write(render(groups, args.min_n, args.md))
+     sys.stdout.write("\n来源原始成绩（不影响费用、用量或学习证据）：\n")
+     for character, rs in raw_characters.items():
+diff --git a/ops/brain_trial.py b/ops/brain_trial.py
+new file mode 100644
+index 000000000..54741ecc0
+--- /dev/null
++++ b/ops/brain_trial.py
+@@ -0,0 +1,72 @@
++#!/usr/bin/env python3
++"""Select an opt-in run profile from completed runs, never from controller starts."""
++import argparse
++import json
++from pathlib import Path
++import re
++import shlex
++
++
++def rows(path):
++    if not path.exists():
++        return
++    with path.open() as handle:
++        for line in handle:
++            if line.strip():
++                yield json.loads(line)  # Corrupt journals must hold admission, not skip an arm.
++
++
++def select(schedule, configs, outcomes):
++    if (set(schedule) != {"trial_id", "arms", "total"}
++            or not re.fullmatch(r"[A-Za-z0-9_-]{1,80}", str(schedule["trial_id"]))
++            or schedule["arms"] != [{"engine": "codex", "effort": "high"}, {"engine": "codex", "effort": "xhigh"}]
++            or type(schedule["total"]) is not int or schedule["total"] != 20):
++        raise ValueError("#31 requires 20 alternating Codex high/xhigh runs; DeepSeek awaits #32")
++    done = {r["run_id"] for r in outcomes if isinstance(r.get("victory"), bool) and r.get("ended")}
++    profiles = {}
++    latest = None
++    for c in configs:
++        latest = c
++        p = c.get("brain", {}).get("run_profile")
++        if p and p.get("trial_id") == schedule["trial_id"]:
++            rid = c["run_id"]
++            if rid in profiles and profiles[rid] != p:
++                raise ValueError("mixed run profile; admission held")
++            profiles[rid] = p
++    ordered = sorted(profiles.items(), key=lambda item: item[1].get("sequence", -1))
++    for i, (rid, p) in enumerate(ordered):
++        expected = dict(schedule["arms"][i % 2], trial_id=schedule["trial_id"], sequence=i)
++        if p != expected or i >= schedule["total"]:
++            raise ValueError("non-contiguous/duplicate trial allocation")
++        if rid not in done and i != len(ordered) - 1:
++            raise ValueError("unfinished earlier trial run")
++    if latest and latest["run_id"] not in done:
++        p = latest.get("brain", {}).get("run_profile")
++        if not ordered or ordered[-1][0] != latest["run_id"] or p != ordered[-1][1]:
++            raise ValueError("active run predates this trial; enroll only at a new-run boundary")
++        return p
++    if ordered and ordered[-1][0] not in done:
++        raise ValueError("latest config does not own unfinished trial run")
++    i = len(ordered)
++    if i >= schedule["total"]:
++        raise ValueError("trial complete; ops must select the next policy explicitly")
++    return dict(schedule["arms"][i % 2], trial_id=schedule["trial_id"], sequence=i)
++
++
++def main():
++    parser = argparse.ArgumentParser(description=__doc__)
++    parser.add_argument("--schedule", type=Path, required=True)
++    parser.add_argument("--logs", type=Path, required=True)
++    args = parser.parse_args()
++    try:
++        profile = select(json.loads(args.schedule.read_text()), rows(args.logs / "run-config.jsonl"), rows(args.logs / "runs.jsonl"))
++    except (OSError, ValueError, KeyError, TypeError):
++        parser.exit(78, "brain trial admission held: invalid journal, active foreign run, or finished allocation; inspect before retry\n")
++    # Only this validated JSON is evaluated by run.sh; no arbitrary schedule fields reach the shell.
++    print("export BRAIN_RUN_CONFIG=" + shlex.quote(json.dumps(profile, separators=(",", ":"))))
++    print("export BRAIN_CODEX_EFFORT=" + profile["effort"])
++    print("export BRAIN_CODEX_MODE=session")
++
++
++if __name__ == "__main__":
++    main()
+diff --git a/ops/report.py b/ops/report.py
+index 5f1a558d7..30ea3dd39 100644
+--- a/ops/report.py
++++ b/ops/report.py
+@@ -28,6 +28,25 @@ PRICE_PER_M = 0.042  # $ per million tokens (in + out), handoff estimate
+ BRAIN_DECIDER = re.compile(r"^(deepseek|claude|codex|dsh)( \(for (deepseek|claude|codex|dsh)\))?$")
+ 
+ 
++def run_brain_profile(run_id):
++    """Keep experimental arms visible to learners; never label an unknown/mixed run as baseline."""
++    profiles = []
++    path = os.path.join(ROOT, "logs/run-config.jsonl")
++    if os.path.exists(path):
++        with open(path) as handle:
++            for line in handle:
++                if run_id not in line:
++                    continue
++                row = json.loads(line)
++                if row.get("run_id") == run_id:
++                    profile = row.get("brain", {}).get("run_profile")
++                    if profile not in profiles:
++                        profiles.append(profile)
++    if not any(profiles):
++        return {}
++    return {"brain_run_profile": profiles[0] if len(profiles) == 1 else {"mixed": profiles}}
++
++
+ def is_brain(decider):
+     return bool(BRAIN_DECIDER.match(decider or ""))
+ 
+@@ -389,7 +408,10 @@ def main(*, code=None):
+ 
+     out = []
+     title = "胜利" if victory else ("阵亡" if ended else "未结束")
++    profile_note = run_brain_profile(run_id)
+     out.append(f"## 复盘：run {run_id} — {title}，最高第 {top_floor} 层")
++    if profile_note:
++        out.append("大脑实验分组（与既有基线分账，实际档位须核原生回执）：" + json.dumps(profile_note, ensure_ascii=False))
+     out.append("")
+     brain_name = "DeepSeek" if set(by_engine) <= {"deepseek"} else "大脑"
+     brain_split = "" if brain_name == "DeepSeek" else "（" + "，".join(f"{k} {v}" for k, v in by_engine.most_common()) + "）"
+@@ -446,6 +468,7 @@ def main(*, code=None):
+                 break
+         with open(RUNS, "a", encoding="utf8") as handle:
+             handle.write(json.dumps({
++                **profile_note,
+                 "run_id": run_id, "ended": recs[-1]["ts"], "victory": victory, "floor": top_floor,
+                 "character": character, "ascension": ascension, "code": sha, "decisions": len(recs),
+                 "jev_calls": jev_calls, "deepseek_calls": ds_calls, "claude_calls": cl_calls, "tokens": tokens_in + tokens_out, "ds_tokens_in": ds_in, "ds_tokens_out": ds_out, "ds_cache_hit": ds_hit,
+diff --git a/ops/run.sh b/ops/run.sh
+index 3dc10804d..663a7cbe8 100755
+--- a/ops/run.sh
++++ b/ops/run.sh
+@@ -32,7 +32,13 @@ if [ "$ROOT" = /home/dw/Projects/agent-sts2 ] \
+   export BRAIN_CODEX_PAID_CREDITS=main-silent-codex1-20261015
+ fi
+ # Roy 2026-10-12: production Codex defaults apply even with a legacy scheduler environment.
+-export BRAIN_CODEX_MODEL=gpt-6.1-sol BRAIN_CODEX_EFFORT=xhigh
++export BRAIN_CODEX_MODEL=gpt-6.1-sol BRAIN_CODEX_EFFORT="${BRAIN_CODEX_EFFORT:-xhigh}"
++# Opt-in only. Admission and restart recovery use run identities, not process counts.
++# Session mode retains the native turn context long enough to extract its receipt before revert.
++if [ -n "${BRAIN_TRIAL_SCHEDULE:-}" ]; then
++  trial_env=$(nice -n 19 python3 "$OPS/brain_trial.py" --schedule "$BRAIN_TRIAL_SCHEDULE" --logs "$LOGS") || exit 78
++  eval "$trial_env"
++fi
+ export PATH="$HOME/.local/node/bin:$PATH"
+ sha=$(git rev-parse --short HEAD)$(git diff --quiet HEAD || echo "+dirty")
+ ts=$(date +%Y%m%d-%H%M%S)
+diff --git a/ops/tests/test_brain_trial.py b/ops/tests/test_brain_trial.py
+new file mode 100644
+index 000000000..fc1e2e457
+--- /dev/null
++++ b/ops/tests/test_brain_trial.py
+@@ -0,0 +1,95 @@
++"""Fixed journals only: no production files, model calls or game actions."""
++import importlib.util
++import json
++from pathlib import Path
++import tempfile
++import unittest
++
++ROOT = Path(__file__).resolve().parents[2]
++
++def module(path):
++    spec = importlib.util.spec_from_file_location(path.stem, path)
++    m = importlib.util.module_from_spec(spec)
++    spec.loader.exec_module(m)
++    return m
++
++scheduler = module(ROOT / "ops/brain_trial.py")
++metrics = module(ROOT / "eval/brain_trial.py")
++baseline = module(ROOT / "eval/metrics.py")
++SCHEDULE = {"trial_id": "issue-31", "arms": [{"engine": "codex", "effort": "high"}, {"engine": "codex", "effort": "xhigh"}], "total": 20}
++
++def config(i, rid=None, ascension=10):
++    return {"run_id": rid or f"r{i}", "ts": "2026-10-21T12:00:00Z", "ascension": ascension, "character": "SILENT",
++            "brain": {"run_profile": dict(SCHEDULE["arms"][i % 2], sequence=i, trial_id="issue-31")}}
++
++def outcome(i):
++    return {"run_id": f"r{i}", "victory": False, "ended": "2026-10-21T12:01:00Z", "floor": 10}
++
++class Trial(unittest.TestCase):
++    def test_restart_does_not_rotate_and_terminal_rotates_once(self):
++        first = scheduler.select(SCHEDULE, [], [])
++        self.assertEqual(first["effort"], "high")
++        self.assertEqual(scheduler.select(SCHEDULE, [config(0), config(0)], []), first)
++        self.assertEqual(scheduler.select(SCHEDULE, [config(0)], [outcome(0)])["effort"], "xhigh")
++        cs = [config(i) for i in range(20)]
++        self.assertEqual(scheduler.select(SCHEDULE, cs, [outcome(i) for i in range(19)])["sequence"], 19)
++        with self.assertRaises(ValueError):
++            scheduler.select(SCHEDULE, cs, [outcome(i) for i in range(20)])
++
++    def test_foreign_mixed_duplicate_and_invalid_hold(self):
++        for cs in [[{"run_id": "foreign", "brain": {}}], [config(0), config(1, "r0")], [config(0), config(0, "other")]]:
++            with self.assertRaises(ValueError):
++                scheduler.select(SCHEDULE, cs, [])
++        with self.assertRaises(ValueError):
++            scheduler.select(dict(SCHEDULE, arms=[{"engine": "deepseek", "effort": "high"}]), [], [])
++
++    def test_metrics_separate_ascension_and_quarantine_missing_native(self):
++        with tempfile.TemporaryDirectory() as tmp:
++            logs = Path(tmp)
++            configs = [config(0), config(1, ascension=11), config(2)]
++            brains = []
++            for i, c in enumerate(configs):
++                profile = c["brain"]["run_profile"]
++                brains.append({"run_id": c["run_id"], "question_id": f"q{i}", "label": "shop/plan", "engine": "codex",
++                               "requested_effort": profile["effort"], "run_brain": profile, "latency_ms": 20,
++                               "native_receipt": {"effort": profile["effort"], "model": "gpt-6.1-sol"} if i < 2 else None,
++                               "accepted": True, "usage": {"inputTokens": 10, "outputTokens": 3}})
++            for name, rs in {"run-config": configs, "runs": [outcome(i) for i in range(3)], "brain": brains}.items():
++                (logs / (name + ".jsonl")).write_text("".join(json.dumps(r) + "\n" for r in rs))
++            result = metrics.analyse(logs, "issue-31")
++            self.assertEqual(len(result["groups"]), 2)
++            self.assertTrue(result["runs"][0]["eligible"])
++            self.assertEqual(result["runs"][0]["duration_ms"], 60000)
++            self.assertFalse(result["runs"][2]["eligible"])
++            self.assertEqual(result["runs"][2]["issues"], ["missing_native_receipt"])
++            self.assertEqual(result["runs"][0]["usage"]["inputTokens"], 10)
++            self.assertEqual(result["runs"][0]["sources"][0]["line"], 1)
++
++    def test_quality_compares_actions_not_reasons_and_retains_invalid_pairs(self):
++        rows = [{"id": "q", "label": "shop/plan", "effort": effort, "accepted": True,
++                 "native_receipt": {"effort": effort}, "answer": {"choice": "a", "reason": effort}}
++                for effort in ("high", "xhigh")]
++        self.assertEqual(metrics.fixed_quality(rows)["agreement"], 1)
++        rows[0]["native_receipt"] = None
++        self.assertEqual(metrics.fixed_quality(rows)["valid_pairs"], 0)
++
++    def test_baseline_identifies_experimental_runs_even_after_foreign_restart(self):
++        with tempfile.TemporaryDirectory() as tmp:
++            logs = Path(tmp)
++            rows = [config(0), {"run_id": "r0", "brain": {}}, {"run_id": "baseline", "brain": {}}]
++            (logs / "run-config.jsonl").write_text("".join(json.dumps(r) + "\n" for r in rows))
++            self.assertEqual(set(baseline.experimental_brain_runs(logs)), {"r0"})
++
++    def test_early_death_stop_uses_equal_completed_arms(self):
++        with tempfile.TemporaryDirectory() as tmp:
++            logs = Path(tmp)
++            configs = [config(i) for i in range(8)]
++            outcomes = [dict(outcome(i), floor=10 if i % 2 == 0 or i == 1 else 30) for i in range(8)]
++            for name, rows in {"run-config": configs, "runs": outcomes}.items():
++                (logs / (name + ".jsonl")).write_text("".join(json.dumps(r) + "\n" for r in rows))
++            result = metrics.analyse(logs, "issue-31")
++            self.assertEqual(result["stop_signals"][0]["reason"], "early_death_gap")
++            self.assertEqual(result["stop_signals"][0]["n_per_arm"], 4)
++
++if __name__ == "__main__":
++    unittest.main()
+diff --git a/paper/materials/issue31-brain-high-trial/preregistration.md b/paper/materials/issue31-brain-high-trial/preregistration.md
+new file mode 100644
+index 000000000..ca26af677
+--- /dev/null
++++ b/paper/materials/issue31-brain-high-trial/preregistration.md
+@@ -0,0 +1,59 @@
++# #31 预登记：GPT high / xhigh 实盘对照
++
++2026-10-21，开发基线 ee36abb93077c6d79d70b301a773519b97b4ec89。登记于源码交付前，尚未启用排程、未运行试验局或额外模型请求。授权：[issue #31](https://github.com/dwroy/agent-sts2/issues/31)、[按局引擎配置补充](https://github.com/dwroy/agent-sts2/issues/31#issuecomment-6314752420)。这里的阈值是实验操作规则，不是游戏知识。
++
++## 样本与分账
++
++- 计划 20 个新局，按 high、xhigh 逐局交替，各分配 10 局；模型固定 gpt-6.1-sol，normal tier。整局冻结 engine / effort / trial_id / sequence；重启、SL、额度等待不算新局。保留已结束局和所有中断/错误/缺回执，不能删掉坏局重新抽样。
++- 只在相同角色、**实际 ascension** 内比较。climb 规则保持；升级后另建进阶分层，不把目标进阶当实际进阶。若 20 局后某一层不足各 10 局，报告缺口，请 Roy 决定是否追加；本排程不自动超过 20 局，也不自行降阶凑样本。
++- 默认既有战绩基线排除带 trial_id 的局，原始成本/用量保留。`eval/metrics.py --brain-trial <id>` 可显式查询；正式同进阶对照用本目录所述 `eval/brain_trial.py`。`runs.jsonl` 及每局复盘增加实验身份，学习者保留原对局证据并识别实验组，不把它当既有 xhigh 基线。
++- 同时保存代码提交、配置 SHA、知识摘要、时间、首局原生回执。知识刷新和上线仍可发生，逐局披露；按相邻 high/xhigh 配对展示，版本或知识变化的跨界对另列，不称因果控制已完成。
++
++## 指标和判定
++
++结果：最高层数、胜负、死亡遭遇、各幕/Boss 进场 HP 与通过证据。Boss 仅用原状态里 boss_id 与实际敌人 ID 匹配，后幕出现/最终获胜确认通过；缺帧、未识别、多 Boss 未完整覆盖都写 unknown，不按层数猜 Boss 已过。进场 HP 是首个已记录战斗帧的 HP，可能迟于实际进场；SL 后另列首次观察限制。
++
++大脑：每局调用总耗时（失败行与 primary_ms 纳入）、配置首次记录至结束的整局时长；每题型单题 p50/p90（nearest-rank）、重问、路由超时、物理 stall/流式重连、容量错误、等待事件、fallback、90 秒脑预算超限和实际 decision time_budget 超限/兜底次数；token 分 input/output/cache/reasoning，未知成本不记 0 美元。物理调用的已知用量与脑行的聚合用量不相加以免重算；失联前无法计量的 token 明确未知。统计原件可以按文件、行号、SHA 重算。
++
++所有配置局都进意向分组结果表；严格质量/速度汇总只纳入配置一致、已结束、每条脑记录有匹配原生模型和档位的局；缺回执、实际不匹配、混档、未结束单列。严格排除不使坏结果消失，必须同时看全部分配局的结果/故障率。原生 receipt 不等于服务端内部算力证明，只证明 Codex 原生 turn_context 的实际上下文。
++
++满足以下全部条件才给“可考虑扩大 high 试验”的建议：同一进阶每组至少 10 个有效结束局；high 每局脑耗时中位数至少降低 25%；high 层数中位数不低于 xhigh 超过 3 层；通过首幕 Boss 的比例不低超过 20 个百分点；high 未接受脑题比例不高超过 5 个百分点；下面固定回放有效配对至少 24/32、动作一致率至少 80%，无未解释的重大合法性/资源约束分歧。任一不满足或分层样本不足，建议保留 xhigh / 追加受控样本，不全面切换。这是小样本筛查，无统计显著性或非劣效证明；胜负与因果收益不能由一致率替代。最终全面切换由 Roy 定。
++
++## 决策质量：固定回放（批次后才运行）
++
++使用 #29 已冻结的 32 题，每题 high / xhigh 都答一次，逐题交替先后顺序。输入固定到本基线 Git blob `paper/materials/issue29-brain-speed/fixtures.jsonl`，禁止重新从新知识库构题。题型分布沿原清单：奖励8，事件/营火/商店/路线/幕初计划/选择各4。该回放不代表未来实盘题覆盖，只作为合法性、完成率与动作一致率的辅助指标；沿 #29 的主动作定义，依次取 choice / plan / route，缺少这些字段则主动作未知；另比 choice/cards/route/plan/discard/drink 全动作字段（route 逗号串归一为列表）。reason/confidence 与可选 V6 建议不参与机械一致率，重大分歧逐题列动作、由人审证据，不自动把 xhigh 当正确答案。
++
++成本预算：64 次计划请求、每题 90 秒，无路由重问、无 stall 重试；引擎自动 session 修复/exec 回退也计物理请求，**持久上限 96 次**。顺序执行、nice19、最多2个进程；使用专门的开发隔离 home，禁止使用生产 brain home，不复制凭据或改共用配置。理论计划最坏约96分钟，额外重启/额度等待可增加墙钟，物理总数不得超过96。本开发交付不实际调用模型。工具支持 dry preparation，`--run --home` 才发送；若没有合规的既有开发 home，则保留待执行，不借用对局账号。
++
++## 止损与停止
++
++ops 每个结束局后、下一局前运行分析；第一局先核原生回执，再继续第二局。以下任一发生时由 ops 在自然边界停本排程并回到 xhigh，在 issue 评论原因，不热改正在玩的局：
++
++1. 请求/原生模型或档位不一致、同局混档；首局缺原生回执也先停排查。此项是实验完整性门。
++2. 同进阶两臂各至少4个结束局后，只比较各臂最早相同数量局：high 在 F≤17 且未获胜的早死数比 xhigh 多至少3局。F≤17 是预定操作分界，不声称所有版本首幕恰好17层。
++3. 任意 high 局未接受脑题比例达到20%，或连续两局 high 因脑配置/接口故障无法继续。脚本输出前者，后者由 ops 核原故障/控制器退出记录；额度等待与游戏自然阵亡分别记录。
++
++脚本只输出止损信号，不修改配置、live、STOP 或进程。20局分配满额后 admission 返回78，原 autoplay 保留存档并退出等原 ops 定下一政策，不默默续跑 high。取消排程只在自然局间清除其启用变量；回滚仍保留原试验、失败与统计材料。
++
++## 上线与接续（ops 执行）
++
++开发交 review → 集成员完整检查合 main → ops 原发布锁及局间流程上线、登记实际 release_id / decision-log / 双通知。此开发树不发布 live，不预占 release_id。
++
++启用变量仅作用于原对局启动入口：`BRAIN_TRIAL_SCHEDULE=<运行根内预登记 schedule.json 的绝对路径>`。ops 可沿原局间发布流程在运行根的 `ops/production-runtime.sh` 设置，供下一次 run.sh 读取；只在本会话 export 不会改变既有 autoplay 的环境。不得在正在运行的控制器上改档。原 `run.sh` 读取排程及 run-config/runs 日志，resume 同局保留 profile；遇到尚未结束的非本试验局拒绝纳入，等它自然结束再启用。不要运行开发树的 play，不改 STOP。
++
++止损/回退时由 ops 在同一自然边界入口明确 `unset BRAIN_TRIAL_SCHEDULE BRAIN_RUN_CONFIG` 并设置 `BRAIN_CODEX_EFFORT=xhigh`，再按原流程恢复；不要把仍设置的手动 profile 留给下一局。本提交不修改该生产设置文件。
++
++手动单局合同：`BRAIN_RUN_CONFIG={"engine":"codex","effort":"high"}`；未来 #32 复用 `engine:"deepseek"` 加强度，但本提交生产入口明确拒绝 DeepSeek，避免静默换成 Codex。试验排程只接受本20局Codex方案。模型、超时、开卷/策略库接入由 #32 保持独立。
++
++首局需核 `run-config.brain.run_profile`、`human_pace.model_effort`、每条脑行 `requested_effort`/`run_brain`，以及 `native_receipt` 的原生 thread_id、turn_id、model、effort 和来源 SHA。session 在 revert 前读取自己的 turn_context，正常情况下下一次 state observe 将原生确认追加到 run-config 的 `brain_native_receipt`；它不改变 config_sha，不冒称配置变化。每个原生模型/档位变更再记一条；详细每题确认始终在 brain/codex-calls。exec 或丢失回执为 null，不能从请求推定成功。
++
++重算命令（只读生产日志；输出另存材料，发公开评论前扫描）：
++
++```bash
++nice -n 19 python3 eval/brain_trial.py --logs <运行根>/logs \
++  --trial-id issue31-gpt-high-xhigh-v1 > <本批结果路径>/report.json
++```
++
++固定回放准备时用 `git show ee36abb93077c6d79d70b301a773519b97b4ec89:paper/materials/issue29-brain-speed/fixtures.jsonl` 恢复到仓库内 `data/issue31-quality/fixtures.jsonl`；工具启动即冻结 SHA，已有输出身份不符拒绝继续。`node --import tsx tools/issue31-quality-replay.ts --fixtures <文件> --out <仓库内专用输出目录>` 只准备清单；批次结束后以同参数加 `--run --home <既有隔离开发home>` 实际重答。报告命令加 `--fixed-replay <输出目录>/results.jsonl` 输出有效配对/分歧动作。原始题面和输出留本地，公开只发脱敏汇总。
++
++本 issue 的“首局实际档位、每臂至少10局、对照报告与建议”仍由 ops 自然数据和批次后开发接续完成，源码/固定夹具通过不关闭这些验收。
+diff --git a/paper/materials/issue31-brain-high-trial/quality-manifest.json b/paper/materials/issue31-brain-high-trial/quality-manifest.json
+new file mode 100644
+index 000000000..00d748772
+--- /dev/null
++++ b/paper/materials/issue31-brain-high-trial/quality-manifest.json
+@@ -0,0 +1,12 @@
++{
++  "schema": "issue31-quality-v1",
++  "fixtures_commit": "ee36abb93077c6d79d70b301a773519b97b4ec89",
++  "fixtures_path": "paper/materials/issue29-brain-speed/fixtures.jsonl",
++  "fixtures_sha256": "534de164f2b8c33c10fbc3ad222d3e5b2c4ed6009b734ace4be7fbbdb8396236",
++  "arms": ["high", "xhigh"],
++  "model": "gpt-6.1-sol",
++  "mode": "session",
++  "timeout_ms": 90000,
++  "physical_cap": 96,
++  "executed_model_calls": 0
++}
+diff --git a/paper/materials/issue31-brain-high-trial/report.md b/paper/materials/issue31-brain-high-trial/report.md
+new file mode 100644
+index 000000000..37a6f0678
+--- /dev/null
++++ b/paper/materials/issue31-brain-high-trial/report.md
+@@ -0,0 +1,32 @@
++# #31 开发交付
++
++基线 `ee36abb93077c6d79d70b301a773519b97b4ec89`，独立工作树 `issue-31-brain-high-trial`。开发内容为按局配置、交替排程、原生回执、重算工具及[预登记方案](preregistration.md)。本树未运行游戏、未修改 live/STOP、生产账号、共用设置、其他角色知识或会话；没有实际模型请求。
++
++## 行为与接口
++
++- `BRAIN_RUN_CONFIG` 严格 JSON：engine（codex/deepseek）、effort、可选 trial_id/sequence；本次只启用 Codex，DeepSeek 生产请求明确拒绝并指向 #32，不会静默替代。`ops/run.sh` 的旧 `BRAIN_CODEX_EFFORT` 可显式覆盖默认 xhigh；router 的人类节奏入口读取本局配置，90秒预算和原有恢复/兜底机制保持。
++- `BRAIN_TRIAL_SCHEDULE` 显式启用 [schedule.json](schedule.json)，默认不启用。`ops/brain_trial.py` 从已记录局身份分配 high/xhigh，不按控制器启动数推进；重启同局、SL、额度等待留在原组。非试验在途局、损坏/重复/混合分配或20局满额返回78，由原 ops 处理。不开新循环、不更改当前局。
++- run-config 保存 `brain.run_profile`、真实请求档位；每条脑行保存 `run_brain`、`requested_effort` 和 `native_receipt`。session 的当前线程/turn_id 对应 `turn_context` 在 revert 前提取 model/effort 和原行 SHA；首次及档位/模型变化在后续 state observe 追加 `brain_native_receipt`，config_sha 不变。exec 及缺回执记未知；不能从配置推定实际档位。每个物理 session 调用的确认也在 codex-calls。
++- `eval/brain_trial.py` 只读原始 JSONL，按角色/实际进阶/引擎/档位分组，保留逐局、逐题、Boss首帧HP、SL尝试、耗时、预算、失败/容量、用量及文件/行号/SHA；严格有效组与全部意向分配结果同时保存，输出止损信号，不操作游戏。Boss/SL覆盖不足写未知。
++- `ops/report.py` 给复盘及 runs.jsonl 带实验身份，学习者可读。`eval/metrics.py` 默认从旧战绩基线隔离试验局，原始成本不丢；显式 `--brain-trial <id>` 才查询试验，并按档位/进阶分列，不加混合 total。
++- `agent/tools/issue31-quality-replay.ts` 固定 #29 32题（[SHA清单](quality-manifest.json)）、64次计划请求，持久96物理调用上限。只准备/dry-run已验证；实际重答须在批次后显式启用，专用开发 home，禁止生产 brain home。补充报表支持 `--fixed-replay`，列主动作一致率、全动作字段及分歧，不把 xhigh 当正确答案。
++
++## 验证记录
++
++完成回执见 [validation.json](validation.json)。原始 Vitest 输出在本树本目录 `vitest.log`、`targeted-final.log`、`paths-final.log`（忽略文件，留本地）；固定数据测试，无模型或游戏调用。所有命令 nice19，Vitest单worker。
++
++- 生产 `tsconfig.json --noEmit` 通过；新回放工具与生产/learner源码的独立 tsc 通过。
++- 全量线程套件仅排除需fork的paths：646文件中645通过，6078项通过/2跳过/1失败，24分52秒。唯一失败是稀疏工作树未展开已提交的 #29 `results.jsonl`，导致check-imports引用不存在。随后从基线 Git blob精确恢复此文件，工作树无该文件差异；未修改导入门禁或测试断言。
++- 修复输入后定向检查：check-imports、run-profile、codex-session、router、人类节奏、run-config、codex-only，共7文件118项通过；paths另以单fork运行，11项通过。原全量失败日志保留；全量未再重复跑25分钟，不把初跑exit1写成exit0。
++- Python 新测试6项通过；既有评估算法测试20通过/8项因当前Python缺DuckDB跳过；`bash -n ops/run.sh`通过；冻结32题回放dry-run通过、模型调用0。
++
++额外执行的全量 `tsconfig.tools.json` 未通过：错误来自未改动的 boss-loss-backtest、boss-sim/pairs、combat-latency-replay 等旧工具文件；不以它代替生产检查或宣称工具全量通过。新回放脚本单独与生产/learner源码一起检查通过。原失败转录保留在本开发会话，未伪装为生产故障。
++
++## 集成与实际验收待办
++
++1. 集成员核源码、完整检查并合 main。按原 ops 发布锁把执行代码接入 live；由 ops 核分配行为发布号并写实际上线 decision-log 与双通知，本开发不预占编号。
++2. ops 等自然局间启用排程，首局核原生请求与实际 model/effort，再继续交替。每局后检查报告止损信号，必要时沿预登记步骤恢复 xhigh。现有未结束非试验局不会被纳入。
++3. 两组各10局以及同进阶有效样本尚未产生，首局原生自然回执也未验收。满额仍不足时向 Roy 报缺口；固定回放在批次后运行，开发再出结论/建议，全面切换由 Roy 定。
++4. #32 复用 `brain.runProfile`/`BRAIN_RUN_CONFIG` 合同，后续实现 DeepSeek 路由、预算和实际回执；本提交不让它接管生产。
++
++本树尚未实际进入 main/live，不登记 retention complete，不清理活动工作树，不关闭 issue 或科学验收父项。
+diff --git a/paper/materials/issue31-brain-high-trial/schedule.json b/paper/materials/issue31-brain-high-trial/schedule.json
+new file mode 100644
+index 000000000..0c7d67917
+--- /dev/null
++++ b/paper/materials/issue31-brain-high-trial/schedule.json
+@@ -0,0 +1,8 @@
++{
++  "trial_id": "issue31-gpt-high-xhigh-v1",
++  "arms": [
++    {"engine": "codex", "effort": "high"},
++    {"engine": "codex", "effort": "xhigh"}
++  ],
++  "total": 20
++}
+diff --git a/paper/materials/issue31-brain-high-trial/validation.json b/paper/materials/issue31-brain-high-trial/validation.json
+new file mode 100644
+index 000000000..e0c3c9e89
+--- /dev/null
++++ b/paper/materials/issue31-brain-high-trial/validation.json
+@@ -0,0 +1,34 @@
++{
++  "schema": "issue31-development-validation-v1",
++  "base": "ee36abb93077c6d79d70b301a773519b97b4ec89",
++  "nice": 19,
++  "vitest_workers": 1,
++  "production_tsc_exit": 0,
++  "new_tool_isolated_tsc_exit": 0,
++  "optional_all_tools_tsc_exit": 1,
++  "optional_all_tools_note": "Errors in unchanged pre-existing tools; new tool isolated check passes",
++  "full_vitest_initial": {
++    "exit": 1,
++    "files_passed": 645,
++    "files_failed": 1,
++    "tests_passed": 6078,
++    "tests_failed": 1,
++    "tests_skipped": 2,
++    "excluded": ["tests/paths.test.ts"],
++    "failed_test": "tests/check-imports.test.ts: relative imports / all resolve",
++    "cause": "Sparse checkout omitted tracked paper/materials/issue29-brain-speed/results.jsonl",
++    "resolution": "Materialized exact base blob; no source or assertion change; targeted rerun passes",
++    "local_log": "vitest.log"
++  },
++  "final_targeted_vitest": {"exit": 0, "files_passed": 7, "tests_passed": 118, "local_log": "targeted-final.log"},
++  "paths_single_fork": {"exit": 0, "files_passed": 1, "tests_passed": 11, "local_log": "paths-final.log"},
++  "python_new_tests": {"exit": 0, "passed": 6},
++  "python_existing_metrics": {"exit": 0, "passed": 20, "skipped_missing_duckdb": 8},
++  "run_sh_syntax_exit": 0,
++  "quality_dry_run_exit": 0,
++  "model_calls": 0,
++  "game_runs_started": 0,
++  "live_changed": false,
++  "real_first_run_receipt": "pending_ops",
++  "real_20_run_comparison": "pending_ops_and_post_batch_analysis"
++}
