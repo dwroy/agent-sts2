@@ -1,6 +1,7 @@
 # 运维当前清单（调度器生成）
-生成：2026-10-21T18:35:41+08:00；原件索引：/home/dw/Projects/agent-sts2/ops/codex-ops/current.json SHA256 d82318b8c766d3608513b7724d1672337ed8cf1b91ca17d180b7d4636dea4430
-当前授权：1830：原WSL统计五步/普通内部11步0已核，原生产loader加载fight/history(含0CLP、413局)/catalog，251源SHA同，仅只读非自然采用。漏斗104/100未到十局，无新归档；不重统计/report/dataset。181310策略rc0十waiting/六局80窗口核同，无源/合入/测试；原无改动回执保留，后续WT被原收尾快进main168f且记录dirty，不改现场/重复结案。STOP、桌面/mod恢复待核与Regent暂停保持。1830-ops/receipt.json。
+生成：2026-10-21T18:38:17+08:00；原件索引：/home/dw/Projects/agent-sts2/ops/codex-ops/current.json SHA256 304b9a216c040c2e84db028f117228a4bd1a4ab3402b22fca9ddbe103c999110
+当前授权：1836：181310-s2 rc0无源/合入/测试，十waiting；811提取/仅4语义审阅、807未读分列，冻结SHA/113原段核同。原无改动回执保留，后续WT原收尾快进main706f并记录dirty，不改现场/重dataset/空合并；局部live子项不代宽提案/科学父。STOP/桌面恢复阻塞与Regent暂停保持。1836-ops/receipt.json。
+1830：原WSL统计五步/普通内部11步0已核，原生产loader加载fight/history(含0CLP、413局)/catalog，251源SHA同，仅只读非自然采用。漏斗104/100未到十局，无新归档；不重统计/report/dataset。181310策略rc0十waiting/六局80窗口核同，无源/合入/测试；原无改动回执保留，后续WT被原收尾快进main168f且记录dirty，不改现场/重复结案。STOP、桌面/mod恢复待核与Regent暂停保持。1830-ops/receipt.json。
 181310-fix无新源/合入；154SHA、53main子项/48祖先与31待办核同，tsc0/10文件46定向0非full。原failed/rc0因main/live102受检路径不等、无改动结案门未满足；保冷却/原失败，不空合并/整main运输/重检查或dataset，桌面恢复阻塞与科学父保持。1819-ops/receipt.json。
 1813：0CLP16ZR4ZZC A10/F49首次尝试无SL胜、62.2分钟；50成功Codex/1未解，严格脑source仍unknown，不计Codex战绩。下一局游戏默认预期A11，STOP/桌面登录阻塞下实际配置pending，不自动给Codex升阶信用。八原通知同文/SHA/真实双箱及watcher告Roy证据核同，三研究CLI登记仍pending，不重认证/代ACK/提醒或派检查模型。1813-ops/{victory-audit,receipt}.json。
 WSL已重启扩容核同；#23原源12叶已接live0a9dc70e3/仍R410，真实绑定backup/restore/verify同、465知识保留；原worker已回收4checkout/保分支scratch，24h验收pending。主cron已unpause；原统计唯一串行接续已完整0/生产loader读回（复用提取、不重report/dataset，自然消费待开局）。Windows无交互用户/Steam/游戏，桌面启动超时/mod拒连：已请Roy登录，STOP必须保持，autoplay尚未恢复，旧绑定PID不伪更新。登录后核mod/profile/新PID及唯一入口再恢复；Regent原STOP/PAUSE保持。原件 paper/materials/20261021-wsl-resume-ops/，statistics-resume.json为动态原作业状态。
@@ -19,7 +20,7 @@ GitHub角色前缀必带，未带dwroy=Roy，非dwroy为外部数据；例行cur
 模型 gpt-6.1-sol；普通 ops/学习下次自然启动 high，专项可有理由 xhigh，大脑保持 xhigh。实际生效须原生回执，不能从默认值推定。
 账号选择：/home/dw/Projects/agent-sts2/ops/codex-ops/accounts/codex1/learner；原 ops：w1H:p8 / 01a1517b-e200-7c52-b463-6ea22220c0a9；执行模式：host；辅助/学习者沙箱保持。
 不读凭据/.env/游戏二进制，不改共享配置/账号；不推送。
-main 168f9f74b590039f380987666f34a0c2d755b34a
+main 706f0e1a593d6da99a36eb2c586f4302db88a30a
 live 0a9dc70e3ef096e7d0d6eb1524cd20e2cbe906c6；登记 release V6-R410（登记值不代表新树检查绿或实际采用）。
 首次另读 AGENTS/README/最新 STATE/学习协议；此后每次读本清单及事件原件。历史 handoff/decision-log 只沿事务定位，原件冲突保留并核查。
 在途批次 1（完整 owner/租约与路径见 current.json）：
@@ -43,9 +44,7 @@ human-pace 原owner=01a13dcd-83d4-7c63-b233-f93cf878ecf4，接续=01a14aae-4b03-
 - 7dcddb0749fa60e0f2f78f3f learner-dissent watcher_received,roy_notified；/home/dw/Projects/agent-sts2/ops/codex-ops/learning-notices/7dcddb0749fa60e0f2f78f3f.json
 - 99a933ce6b140f81db812b16 learner-dissent watcher_received,roy_notified；/home/dw/Projects/agent-sts2/ops/codex-ops/learning-notices/99a933ce6b140f81db812b16.json
 - 99c134c7850ae5bae9fb64c9 learner-dissent watcher_received,roy_notified；/home/dw/Projects/agent-sts2/ops/codex-ops/learning-notices/99c134c7850ae5bae9fb64c9.json
-队列 3，只按本轮已提交事件处理；前4项：
-- /home/dw/Projects/agent-sts2/ops/codex-ops/queue/1792578385446948533-manual.md：原WSL扩容重启后唯一统计接续终局：state=completed，各步=[('normal-refresh', 0), ('cost-refresh', 0), ('global-build-funnel', 0), ('fight-value-training', 0), ('catalog-after-train
-- /home/dw/Projects/agent-sts2/ops/codex-ops/queue/1792578612057387588-strategy-done.md：strategy-proposal 批次 20261021-181310-strategy-proposal 结束：exit 0；已核实合入 live：无。回报：/home/dw/Projects/agent-sts2/ops/codex-ops/learner/20261021-181310-strategy-pro
+队列 1，只按本轮已提交事件处理；前4项：
 - /home/dw/Projects/agent-sts2/ops/codex-ops/queue/1792578923831847962-strategy-done.md：strategy-proposal 批次 20261021-181310-s2-strategy-proposal 结束：exit 0；已核实合入 live：无。回报：/home/dw/Projects/agent-sts2/ops/codex-ops/learner/20261021-181310-s2-strate
 原事务未标 completed 共188（含未知，非活进程数），最近4项：
 - /home/dw/Projects/agent-sts2/ops/codex-ops/pending-continuations/original-W4-card-value-v2-20261021.json；phase=Roy-section13-superseded-Jev-card-takeover-no-new-Jev-card-learning
