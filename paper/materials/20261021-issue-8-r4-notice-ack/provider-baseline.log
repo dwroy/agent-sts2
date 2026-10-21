@@ -1,0 +1,47 @@
+
+ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/issue-8-r4-notice-ack/.artifacts/issue-8-r4-notice-ack/baseline-source/agent
+
+ ❯ tests/v6-direction-provider.test.ts (4 tests | 1 failed) 148ms
+   × carries incomplete-opening provider diagnostics into the brain without treating W0 as a loss or filtering samples 29ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/v6-direction-provider.test.ts > carries incomplete-opening provider diagnostics into the brain without treating W0 as a loss or filtering samples
+AssertionError: expected { Object (schema, option_id, ...) } to match object { win: null, …(3) }
+(40 matching properties omitted from actual)
+
+- Expected
++ Received
+
+@@ -1,8 +1,12 @@
+  {
+-   "expected_win": null,
+-   "win": null,
++   "expected_win": 0.5,
++   "win": {
++     "n": 100,
++     "se": 0,
++     "value": 0.5,
++   },
+    "win_complete": {
+      "n": 100,
+      "se": 0,
+      "value": 1,
+    },
+
+ ❯ tests/v6-direction-provider.test.ts:139:33
+    137|   });
+    138|   // The retained legacy mixture needs W0 when P<1; P*Wk=.5 would sile…
+    139|   expect(evaluation.entries[0]).toMatchObject({ win: null, win_complet…
+       |                                 ^
+    140|   expect(JSON.stringify(task)).not.toMatch(/"(?:expected_win|win_incom…
+    141|   expect(evaluation.projectionReasons![0]!.reasons).toContain("unknown…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 3 passed (4)
+   Start at  11:18:11
+   Duration  3.18s (transform 2.14s, setup 1.35s, import 1.18s, tests 148ms, environment 0ms)
+

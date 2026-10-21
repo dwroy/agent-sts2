@@ -1,0 +1,180 @@
+
+ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/issue-8-r4-notice-ack/agent
+
+ ❯ tests/v6-direction-provider.test.ts (4 tests | 1 failed) 76ms
+   × carries incomplete-opening provider diagnostics into the brain without treating W0 as a loss or filtering samples 18ms
+{"fixture":"two_signed_card_pick_contrasts","prompt_bytes":7844,"sent_entries":2}
+ ❯ tests/v6-projection-entries.test.ts (2 tests | 1 failed) 42ms
+   × hands actual combination rows to W4 without cloning a direction maximum into each combo 28ms
+ ❯ tests/v6-target-values.test.ts (4 tests | 2 failed) 44ms
+   × counts low probabilities as bounded known values without inventing W or PW 13ms
+   × retains deterministic P bounds after the combat deadline instead of erasing the table 1ms
+ ❯ tests/legacy-refresh-incremental.test.ts (4 tests | 1 failed) 1668ms
+   × keeps cached statistics equivalent to full fixed evidence: python3 knowledge/builders/test_potion_incremental.py 170ms
+ ❯ tests/ordinary-close-isolation.test.ts (1 test | 1 failed) 15108ms
+   × isolates failed candidates and revalidates preserved preflight failures before one dataset commit 15106ms
+ ❯ tests/component-usage.test.ts (1 test | 1 failed) 72ms
+   × syncs component logs, derives counter deltas and refreshes paper costs on fixed fixtures 70ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 7 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/component-usage.test.ts > syncs component logs, derives counter deltas and refreshes paper costs on fixed fixtures
+AssertionError: nice: ../data/logdb-venv/bin/python: No such file or directory (os error 2)
+: expected 127 to be +0 // Object.is equality
+
+- Expected
++ Received
+
+- 0
++ 127
+
+ ❯ tests/component-usage.test.ts:14:38
+     12|     child.on("close", (code) => resolve({ code, output }));
+     13|   });
+     14|   expect(result.code, result.output).toBe(0);
+       |                                      ^
+     15|   expect(result.output).toContain("Ran 9 tests");
+     16| }, 20_000);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/7]⎯
+
+ FAIL  tests/legacy-refresh-incremental.test.ts > keeps cached statistics equivalent to full fixed evidence: python3 knowledge/builders/test_potion_incremental.py
+AssertionError: Traceback (most recent call last):
+  File "/home/dw/Projects/agent-sts2/.worktrees/issue-8-r4-notice-ack/knowledge/builders/test_potion_incremental.py", line 14, in <module>
+    import duckdb
+ModuleNotFoundError: No module named 'duckdb'
+: expected 1 to be +0 // Object.is equality
+
+- Expected
++ Received
+
+- 0
++ 1
+
+ ❯ tests/legacy-refresh-incremental.test.ts:26:38
+     24|     child.on("close", (code) => resolve({ code, output }));
+     25|   });
+     26|   expect(result.code, result.output).toBe(0);
+       |                                      ^
+     27|   expect(result.output).toContain(`Ran ${count} test`);
+     28| }, 45_000);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/7]⎯
+
+ FAIL  tests/ordinary-close-isolation.test.ts > isolates failed candidates and revalidates preserved preflight failures before one dataset commit
+AssertionError: fatal: bad object 0000000000000000000000000000000000000000
+fatal: bad object 0000000000000000000000000000000000000000
+...: expected null to be +0 // Object.is equality
+
+- Expected:
+0
+
++ Received:
+null
+
+ ❯ tests/ordinary-close-isolation.test.ts:14:56
+     12|     encoding: "utf8", timeout: 15_000,
+     13|   });
+     14|   expect(result.status, result.stdout + result.stderr).toBe(0);
+       |                                                        ^
+     15|   expect(result.stderr).toContain("Ran 6 tests");
+     16|   expect(result.stderr).toContain("OK");
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/7]⎯
+
+ FAIL  tests/v6-direction-provider.test.ts > carries incomplete-opening provider diagnostics into the brain without treating W0 as a loss or filtering samples
+AssertionError: expected { Object (schema, option_id, ...) } to match object { win: null, …(3) }
+(40 matching properties omitted from actual)
+
+- Expected
++ Received
+
+@@ -1,8 +1,12 @@
+  {
+-   "expected_win": null,
+-   "win": null,
++   "expected_win": 0.5,
++   "win": {
++     "n": 100,
++     "se": 0,
++     "value": 0.5,
++   },
+    "win_complete": {
+      "n": 100,
+      "se": 0,
+      "value": 1,
+    },
+
+ ❯ tests/v6-direction-provider.test.ts:139:33
+    137|   });
+    138|   // The retained legacy mixture needs W0 when P<1; P*Wk=.5 would sile…
+    139|   expect(evaluation.entries[0]).toMatchObject({ win: null, win_complet…
+       |                                 ^
+    140|   expect(JSON.stringify(task)).not.toMatch(/"(?:expected_win|win_incom…
+    141|   expect(evaluation.projectionReasons![0]!.reasons).toContain("unknown…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/7]⎯
+
+ FAIL  tests/v6-projection-entries.test.ts > hands actual combination rows to W4 without cloning a direction maximum into each combo
+AssertionError: expected undefined to be 20 // Object.is equality
+
+- Expected:
+20
+
++ Received:
+undefined
+
+ ❯ tests/v6-projection-entries.test.ts:23:30
+     21|   expect(row.entry.availability).toEqual({ take: .75, skip: .5 });
+     22|   expect(row.completed_win).toEqual({ value: 1, se: 0, n: r.config.sam…
+     23|   expect(row.general_win?.n).toBe(r.config.samples_pick);
+       |                              ^
+     24|   expect(row.general_win?.value).toBeCloseTo(.25, 14);
+     25|   expect(r.weights).toEqual({ D: 1 }); expect(table.targets.map(t => t…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/7]⎯
+
+ FAIL  tests/v6-target-values.test.ts > counts low probabilities as bounded known values without inventing W or PW
+AssertionError: expected 'insufficient_known_options' to be null
+
+- Expected:
+null
+
++ Received:
+"insufficient_known_options"
+
+ ❯ tests/v6-target-values.test.ts:18:64
+     16|     expect(currentBossKnown(table, row.entry.option_id)).toBe(true);
+     17|   }
+     18|   expect(constructionCoverage(["take", "skip"], table).reason).toBeNul…
+       |                                                                ^
+     19|   expect(validateProjectionEntries(table.combinations.map(r => r.entry…
+     20|   expect(targetValueSummaries(table, "take")[0]).toMatchObject({ P: .0…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/7]⎯
+
+ FAIL  tests/v6-target-values.test.ts > retains deterministic P bounds after the combat deadline instead of erasing the table
+AssertionError: expected 'insufficient_known_options' to be null
+
+- Expected:
+null
+
++ Received:
+"insufficient_known_options"
+
+ ❯ tests/v6-target-values.test.ts:58:64
+     56|   const table = await engine.evaluate(r);
+     57|   expect(table.combinations).toHaveLength(2);
+     58|   expect(constructionCoverage(["skip", "take"], table).reason).toBeNul…
+       |                                                                ^
+     59| });
+     60|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[7/7]⎯
+
+
+ Test Files  6 failed | 580 passed (586)
+      Tests  7 failed | 5216 passed (5223)
+   Start at  11:02:17
+   Duration  1441.19s (transform 19.94s, setup 42.42s, import 134.87s, tests 1158.08s, environment 83ms)
+

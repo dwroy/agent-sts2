@@ -98,7 +98,7 @@ def ack_request(root, state, notice, payload, manual_source=None):
 
 def ack_manual_notice(root, notice, payload, source):
     """Authenticate old manual V6 notices without inventing a parent or editing their scope."""
-    tasks = {"v6-direction-experience", "v6-reflex-distill", "v6-build-cores"}
+    tasks = {"v6-direction-experience", "v6-reflex-distill", "v6-build-cores", "v6-reflex-distill-r4"}
     if (not isinstance(source, dict) or source.get("schema") != "manual-learning-notice-v1"
             or source.get("request_id") != notice.get("request_id")
             or source.get("task") not in tasks or source.get("character") != "silent"
@@ -140,14 +140,33 @@ def ack_manual_notice(root, notice, payload, source):
     inputs = source["input"]
     if root / inputs["path"] != Path(params.get("evidence", "")):
         raise ValueError("manual notice input is not the original launch input")
-    frozen = json.loads(read(inputs, root / "ops/codex-ops/learner", ".json"))
-    if any(frozen.get(key) != source.get(key) for key in ("request_id", "batch", "task", "character")):
-        raise ValueError("manual notice frozen input identity mismatch")
+    r4 = source["task"] == "v6-reflex-distill-r4"
+    if r4:
+        # R4 consumed a bootstrap with request (not request_id) and no task/character fields.
+        # Bind its original layout and producer identity instead of rewriting historical input.
+        input_dir = root / ".artifacts" / source["batch"]
+        frozen = json.loads(read(inputs, input_dir, ".json"))
+        if (root / inputs["path"] != input_dir / "inputs.json"
+                or frozen.get("schema") != "manual-v6-r4-input-bootstrap-v1"
+                or frozen.get("request") != source["request_id"]
+                or frozen.get("batch") != source["batch"] or frozen.get("worktree") != str(tree)
+                or any(key in frozen and frozen[key] != source[key] for key in ("request_id", "task", "character"))):
+            raise ValueError("manual notice R4 bootstrap identity mismatch")
+    else:
+        frozen = json.loads(read(inputs, root / "ops/codex-ops/learner", ".json"))
+        if any(frozen.get(key) != source.get(key) for key in ("request_id", "batch", "task", "character")):
+            raise ValueError("manual notice frozen input identity mismatch")
     original = read(source["original_message"], scratch, ".json")
     if ((root / source["original_message"]["path"]).parent != scratch
             or notice.get("request_sha256") not in (digest(original), inputs["sha256"])
             or not contains_original(original, notice.get("message", "").encode("utf8"), inline=True)):
         raise ValueError("manual notice producer words or SHA mismatch")
+    if r4:
+        proposal = json.loads(original)
+        if (not isinstance(proposal, dict) or proposal.get("schema") != "learning-notice-proposal-v1"
+                or any(proposal.get(key) != source[key] for key in ("request_id", "batch", "task", "character"))
+                or notice.get("request_sha256") != digest(original)):
+            raise ValueError("manual notice R4 proposal identity or SHA mismatch")
     return None
 
 

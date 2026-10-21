@@ -123,6 +123,84 @@ class ManualNoticeAck(unittest.TestCase):
         flow.atomic(self.f.state_path, self.f.state)
         self.reject()
 
+    def r4_fixture(self):
+        self.source.update(task='v6-reflex-distill-r4', request_id='roy-20261020-v6-reflex-card-pick',
+                           batch='v6-reflex-distill-r4-20261020-2313')
+        self.original = {'schema': 'learning-notice-proposal-v1',
+                         **{key: self.source[key] for key in ('request_id', 'task', 'batch', 'character')},
+                         'questions': [{'id': ident, 'conclusion': '固定缺证异议'} for ident in (
+                             'r4-no-supported-pick-advice', 'r4-genuine-source-experience-missing',
+                             'r4-old-combat-scope-retained', 'r4-unavailable-provenance-and-damage')],
+                         'ops_forwarded': False, 'watcher_received': False, 'roy_notified': False}
+        self.source['original_message'] = self.f.artifact(
+            'learner/runs/fixed-manual/learning-notice-proposal.json', self.original)
+        self.bootstrap = {'schema': 'manual-v6-r4-input-bootstrap-v1',
+                          'request': self.source['request_id'], 'batch': self.source['batch'],
+                          'worktree': str(self.tree)}
+        self.source['input'] = self.f.artifact(
+            '.artifacts/' + self.source['batch'] + '/inputs.json', self.bootstrap)
+        launch = self.events[0]
+        launch.update(task=self.source['task'], prompt='Roy授权 ' + self.source['request_id'])
+        launch['params'].update(batch=self.source['batch'], evidence=str(self.f.root / self.source['input']['path']))
+        self.write_events()
+        self.f.notice.update(request_id=self.source['request_id'],
+                             request_sha256=self.source['original_message']['sha256'],
+                             message='固定原通知\n' + json.dumps(self.original, ensure_ascii=False))
+        self.identify()
+
+    def test_r4_bootstrap_and_four_questions_keep_original_sha_and_independent_role_chain(self):
+        self.r4_fixture()
+        f = self.f
+        flow.atomic(f.notice_path, f.notice)
+        original_notice = copy.deepcopy(f.notice)
+        originals = {ref['path']: (f.root / ref['path']).read_bytes()
+                     for ref in (self.source['input'], self.source['original_log'], self.source['original_message'])}
+        state_before = f.state_path.read_bytes()
+        self.reject(stage='watcher_received')
+        for stage in ('ops_forwarded', 'watcher_received', 'roy_notified'):
+            self.assertEqual(self.ack(stage), 0)
+            saved = json.loads(f.notice_path.read_bytes())
+            original_notice[stage] = saved[stage]
+            self.assertEqual(saved, original_notice)
+            self.assertEqual(f.state_path.read_bytes(), state_before)
+            for path, raw in originals.items():
+                self.assertEqual((f.root / path).read_bytes(), raw)
+        self.assertEqual(json.loads((f.root / self.source['original_message']['path']).read_bytes()), self.original)
+
+    def test_r4_bootstrap_proposal_sha_and_delivery_mismatches_reject_atomically(self):
+        self.r4_fixture()
+        for changes in ({'actor': 'watcher'}, {'status': 'queued'}, {'character': 'ironclad'}):
+            self.reject(changes=changes)
+        source = copy.deepcopy(self.source)
+        for key, value in (('schema', 'other'), ('request', 'other-request'), ('batch', 'other-batch'),
+                           ('worktree', str(self.f.root / 'other')), ('task', 'v6-reflex-distill'),
+                           ('character', 'ironclad')):
+            self.source['input'] = self.f.artifact(source['input']['path'], {**self.bootstrap, key: value})
+            self.reject()
+        self.source['input'] = self.f.artifact(source['input']['path'], self.bootstrap)
+        self.f.notice['request_sha256'] = self.source['input']['sha256']
+        self.identify()
+        self.reject()
+        self.f.notice['request_sha256'] = source['original_message']['sha256']
+        for change in ('question-id', 'missing-question'):
+            altered = copy.deepcopy(self.original)
+            if change == 'question-id':
+                altered['questions'][0]['id'] = 'replacement-question'
+            else:
+                altered['questions'].pop()
+            self.f.notice['message'] = json.dumps(altered, ensure_ascii=False)
+            self.identify()
+            self.reject()
+        self.f.notice['message'] = json.dumps(self.original, ensure_ascii=False)
+        self.identify()
+        for key, value in (('schema', 'other'), ('task', 'v6-reflex-distill'), ('character', 'ironclad')):
+            altered = {**self.original, key: value}
+            self.source['original_message'] = self.f.artifact(source['original_message']['path'], altered)
+            self.f.notice.update(request_sha256=self.source['original_message']['sha256'],
+                                 message=json.dumps(altered, ensure_ascii=False))
+            self.identify()
+            self.reject()
+
     def test_wrong_batch_thread_input_character_task_and_original_words_are_rejected(self):
         original = copy.deepcopy(self.source)
         for key, value in (('request_id', 'other-request'), ('batch', 'other-batch'),
