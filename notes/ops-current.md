@@ -1,5 +1,5 @@
 # 运维当前清单（调度器生成）
-生成：2026-10-21T10:32:56+08:00；原件索引：/home/dw/Projects/agent-sts2/ops/codex-ops/current.json SHA256 d7763f1e71e368f774c648d228453fde3128ba7eacc6efddaef5890d5b5d40a8
+生成：2026-10-21T10:34:54+08:00；原件索引：/home/dw/Projects/agent-sts2/ops/codex-ops/current.json SHA256 516b15ae060a1bf960f7112e4db65a6ae6bf7045e4a123f3f151fc5194aa48ea
 当前授权：Roy09:0x/§12.1：原W4 v6-card-value-v2开发掉血预测器，build-fight-value.py归其原owner，W8 P4同叶先协调。验收前CARDbrain；Roy明确接受R4四异议，REFLEXoff且不续R4。P2最新Roy决定移出计划，保满槽放弃/POTIONbrain、不提issue/改mod、停止接口协调；预测器实际live读回后才派特征/误差学习审计，当前仅条件队列。原090x-Roy-and-CEN-ops授权及notes/learning-questions。
 Roy§12授权Claude主导V6，局终先STOP留发布窗、发布/读回/核号双通知后恢复；不打断现局。full沿原三锁与live锁隔离新dataset重任务，保原阈值/nice19/ionice3/单worker，不夹整main/805/无关候选，Regent暂停。
 当前已发布V6-R409：live cf4aff4c、行为6242b3a7，13叶main715a，498知识保留；628文件5948过2跳/tree0b46/2393输入6eba及PID退保原0705/0725回执。CARD/SHOP/REST/POTIONbrain，COMBAT_ENTRIES/DIRECTION_REPLAN/REFLEXoff，90s不变。CLCR边界发布后原autoplay2283493继续，CESK新配置及实际event/战斗/缓存核同；自然B数值消费和质量限制仍在，软件绿不代收益。ENOBUFS Git空字段原样保留，独立Git事实另列。
@@ -12,11 +12,12 @@ P4旧29+时钟单测/固定W0两测、原full失败保持；ordinary014301三叶
 074301-s2 dataset一次五OK后并发记录守卫拒绝，具体竞争文件未知，不重生成器；其余ordinary source/record漂移保原attention/报告/父。R409影子9f48材料已main46c3，83回放/60请求的均值反例、B受控等待和34/83超5s限制保原0824报告。精英材料main67fc、retention rc1持久绑定保留，低优先精英偏差学习问题未派。P2最新已移出计划，666帧口径保原转达不重扫；旧六帧/原因材料保留，原接口协调已通知停止，不提上游issue/改mod。
 0332等7科学父保持；CEN工程修复与窗口不关闭原WT缺失blocked父。旧H0/SL/通知、纯记录并发与失效工作树沿原字段/原件，不据文件或旧PID推定活任务。模型gpt-6.1-sol，普通ops下一自然启动high/大脑xhigh，生效须原生回执；不读凭据/游戏二进制，不改账号、共用配置或运维prompt，不推送。
 W4拿牌v2正式3ef4/11a80：14源/318清单项+manifest共319材料、241gzip核同/扫描0；实际live builder旧P4前像不同，私有index仅v2四行入口、13后像同，静态59a254不含P4。质量未过：总5006/380、留出806/68，整场MAE非增量误差；584增量皆在显示尺度内（非CI），Nova54/60均值一致/36skip对脑12不可当通过。原93定向/Python3仅来源，候选排CEN后原工程窗，发布/切jev仍等Roy；CARDbrain/REFLEXoff、原条件学习审计未派。P2已移出docs§12，质量与决定已投watcher转Claude/Roy，实收待回执。原paper/materials/20261021-W4-v2-P2-ops/receipt.json。
+101302两策略批次无源码、两树基线ae8355fd干净，二十原提案waiting；首批26根账本链接seek/SHA核同，不补测/dataset/合入或扩独立分母。原1033-ops回执；CEN原边界接续不变。
 ；原件 paper/materials/20261020-0249-ops/authorization-original.md
 模型 gpt-6.1-sol；普通 ops/学习下次自然启动 high，专项可有理由 xhigh，大脑保持 xhigh。实际生效须原生回执，不能从默认值推定。
 账号选择：/home/dw/Projects/agent-sts2/ops/codex-ops/accounts/codex1/learner；原 ops：w1H:p8 / 01a1517b-e200-7c52-b463-6ea22220c0a9；执行模式：host；辅助/学习者沙箱保持。
 不读凭据/.env/游戏二进制，不改共享配置/账号；不推送。
-main b1773b2ae711b7d178bd09b5d473fc8de46b0889
+main 1ab33441a86e226ff59d7f9a804753c23ca62987
 live cf4aff4ceebd958ad70b1512cc886c45bd8092aa；登记 release V6-R409（登记值不代表新树检查绿或实际采用）。
 首次另读 AGENTS/README/最新 STATE/学习协议；此后每次读本清单及事件原件。历史 handoff/decision-log 只沿事务定位，原件冲突保留并核查。
 在途批次 1（完整 owner/租约与路径见 current.json）：
@@ -33,8 +34,7 @@ live cf4aff4ceebd958ad70b1512cc886c45bd8092aa；登记 release V6-R409（登记�
 human-pace 原owner=01a13dcd-83d4-7c63-b233-f93cf878ecf4，接续=01a14aae-4b03-7cf1-9185-34dc3bed786f；原件 /home/dw/Projects/agent-sts2/paper/materials/20261017-human-pace-control/checkpoint.json。不据阶段状态关闭宽父。
 未确认通知 1；不得代其他角色 ACK。前8项：
 - 733e3a9e9380d9155431980e disagreement watcher_received,roy_notified；/home/dw/Projects/agent-sts2/ops/codex-ops/learning-notices/733e3a9e9380d9155431980e.json
-队列 3，只按本轮已提交事件处理；前4项：
-- /home/dw/Projects/agent-sts2/ops/codex-ops/queue/1792548701473040856-manual.md：原W8 CEN/0332 rollout死亡优先纯bug四叶精确R409联合终局：request=original-W8-CEN-four-leaf-Ironclad-contract-repaired-exact-R409-joint-20261021，state=passed-await-original-ops-
+队列 2，只按本轮已提交事件处理；前4项：
 - /home/dw/Projects/agent-sts2/ops/codex-ops/queue/1792549753962913618-strategy-done.md：strategy-proposal 批次 20261021-101302-strategy-proposal 结束：exit 0；已核实合入 live：无。回报：/home/dw/Projects/agent-sts2/ops/codex-ops/learner/20261021-101302-strategy-pro
 - /home/dw/Projects/agent-sts2/ops/codex-ops/queue/1792549950037457103-strategy-done.md：strategy-proposal 批次 20261021-101302-s2-strategy-proposal 结束：exit 0；已核实合入 live：无。回报：/home/dw/Projects/agent-sts2/ops/codex-ops/learner/20261021-101302-s2-strate
 原事务未标 completed 共188（含未知，非活进程数），最近4项：
@@ -44,7 +44,7 @@ human-pace 原owner=01a13dcd-83d4-7c63-b233-f93cf878ecf4，接续=01a14aae-4b03-
 - /home/dw/Projects/agent-sts2/ops/codex-ops/pending-continuations/original-20261021-051301-s2-legion-forge-three-leaf.json；phase=full1-performance-spike-not-reproduced-original-input-retained-await-existing-channel-decision
 最新指令短引用（完整行按offset核）：
 原事务文件索引数（含历史）：pending-integrations=149；pending-deliveries=16；pending-records=34；pending-continuations=32；publications=1；完整路径见 current.json，不从文件存在推定未完成/运行。
-新指令原件：ops/inbox-dev.md 当前尾段 offset=2064088, bytes=8192；本轮新授权必须由事件引用，漏项查此段，勿整份重读。
+新指令原件：ops/inbox-dev.md 当前尾段 offset=2064671, bytes=8192；本轮新授权必须由事件引用，漏项查此段，勿整份重读。
 current.json 仅按本事件 batch/request/notice id 用程序筛字段，不全文读；动态源变化后核新清单，不用旧值冒当前。
 H0/0332等科学边界、精确宿主树、未完成发布/兼容及 retention 仅沿原报告和事务回执；清单不代验收、shipped、覆盖率或消费。
 严格普通无源码成功由调度器完成账本检查、唯一 dataset 与受控记录提交，回执 ops/codex-ops/ordinary-close/；异常、异议、缺证、人工决定正常唤醒。
