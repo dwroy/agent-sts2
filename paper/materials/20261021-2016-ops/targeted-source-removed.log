@@ -1,0 +1,96 @@
+
+ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261021-194314-s2/agent
+
+ ❯ tests/silent-survivor-wither.test.ts (9 tests | 3 failed) 116ms
+   × accounts for the newly generated Wither, one discard, Afterimage and the later enemy attack 79ms
+   × matches the real choice screen and selected hand without claiming a particular Wither instance 9ms
+   × keeps other roles, ascensions, upgrades and other discard cards outside the new scope 2ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 3 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/silent-survivor-wither.test.ts > accounts for the newly generated Wither, one discard, Afterimage and the later enemy attack
+AssertionError: expected { winsFight: false, hpLoss: 4, …(25) } to match object { withersAdded: 1, …(6) }
+(20 matching properties omitted from actual)
+
+- Expected
++ Received
+
+  {
+    "blockGained": 24,
+-   "damageDealt": 12,
++   "damageDealt": 6,
+    "dies": true,
+-   "heldDamage": 24,
+-   "hpAfter": -12,
+-   "hpLoss": 15,
++   "heldDamage": 36,
++   "hpAfter": -1,
++   "hpLoss": 4,
+    "withersAdded": 1,
+  }
+
+ ❯ tests/silent-survivor-wither.test.ts:61:24
+     59|   expect(input.wither).toEqual({ every: 6, played: 35, damage: 12 });
+     60|   const plan = replaySteps(input, [step("DEFEND_SILENT"), step("STRIKE…
+     61|   expect(plan.outcome).toMatchObject({ withersAdded: 1, heldDamage: 24…
+       |                        ^
+     62|     hpLoss: 15, hpAfter: -12, damageDealt: 12, dies: true });
+     63|   expect(plan.outcome.diesOwnTurn).not.toBe(true);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/3]⎯
+
+ FAIL  tests/silent-survivor-wither.test.ts > matches the real choice screen and selected hand without claiming a particular Wither instance
+AssertionError: expected { winsFight: false, hpLoss: 4, …(24) } to match object { heldDamage: 24, …(5) }
+(20 matching properties omitted from actual)
+
+- Expected
++ Received
+
+  {
+    "blockGained": 13,
+-   "damageDealt": 6,
++   "damageDealt": 0,
+    "dies": true,
+-   "heldDamage": 24,
+-   "hpAfter": -12,
+-   "hpLoss": 15,
++   "heldDamage": 36,
++   "hpAfter": -1,
++   "hpLoss": 4,
+  }
+
+ ❯ tests/silent-survivor-wither.test.ts:76:24
+     74|   expect(after.combat.player.block).toBe(32);
+     75|   const plan = replaySteps(input, [step("SURVIVOR")])!;
+     76|   expect(plan.outcome).toMatchObject({ heldDamage: 24, blockGained: 13…
+       |                        ^
+     77|     damageDealt: 6, dies: true });
+     78|   expect(plan.outcome.enemyHpAfter[0]?.hp).toBe(frame(291342).combat.e…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/3]⎯
+
+ FAIL  tests/silent-survivor-wither.test.ts > keeps other roles, ascensions, upgrades and other discard cards outside the new scope
+AssertionError: expected undefined to be true // Object.is equality
+
+- Expected:
+true
+
++ Received:
+undefined
+
+ ❯ tests/silent-survivor-wither.test.ts:108:80
+    106| it("keeps other roles, ascensions, upgrades and other discard cards ou…
+    107|   const raw = frame(291339).combat.hand.find((card: Raw) => card.card_…
+    108|   expect(modelHandCard(raw, 0, knowledge, "silent", 10).survivorWither…
+       |                                                                                ^
+    109|   for (const [character, ascension] of [["ironclad", 10], ["regent", 1…
+    110|     expect(modelHandCard(raw, 0, knowledge, character, ascension).surv…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/3]⎯
+
+
+ Test Files  1 failed | 1 passed (2)
+      Tests  3 failed | 11 passed (14)
+   Start at  20:03:40
+   Duration  2.03s (transform 2.89s, setup 692ms, import 2.84s, tests 238ms, environment 0ms)
+

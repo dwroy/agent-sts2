@@ -1,0 +1,125 @@
+
+ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261021-194314-s2/agent
+
+ ❯ tests/temp-lifecycle.test.ts (5 tests | 3 failed) 226ms
+     × defaults to the common repository disk before a child starts and cleans on failure 85ms
+     × keeps caller-owned child scratch on a successful smoke command 79ms
+     × reports a missing offline executable as a failure 51ms
+ ❯ tests/brain-card-distill.test.ts (1 test | 1 failed) 177ms
+   × checks offline dataset dispatch, censoring, run splits and entry leakage boundaries 176ms
+ ❯ tests/brain-decision-dataset.test.ts (1 test | 1 failed) 140ms
+   × checks five-type dataset projection, version timing and first-trajectory outcome censoring 139ms
+ ❯ tests/content-store.test.ts (3 tests | 1 failed) 850ms
+   × the original host finalizes only after its fake model closes; storage failure=false never reruns it 274ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 6 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/brain-card-distill.test.ts > checks offline dataset dispatch, censoring, run splits and entry leakage boundaries
+AssertionError: expected [Function] to not throw an error but 'Error: spawnSync python3 EPERM' was thrown
+
+- Expected:
+undefined
+
++ Received:
+"Error: spawnSync python3 EPERM"
+
+ ❯ tests/brain-card-distill.test.ts:7:115
+      5| it("checks offline dataset dispatch, censoring, run splits and entry l…
+      6|   const script = fileURLToPath(new URL("../../knowledge/builders/tests…
+      7|   expect(() => execFileSync("python3", ["-B", script], { encoding: "ut…
+       |                                                                                                                   ^
+      8| });
+      9|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/6]⎯
+
+ FAIL  tests/brain-decision-dataset.test.ts > checks five-type dataset projection, version timing and first-trajectory outcome censoring
+AssertionError: expected [Function] to not throw an error but 'Error: spawnSync python3 EPERM' was thrown
+
+- Expected:
+undefined
+
++ Received:
+"Error: spawnSync python3 EPERM"
+
+ ❯ tests/brain-decision-dataset.test.ts:6:115
+      4| it("checks five-type dataset projection, version timing and first-traj…
+      5|   const script = fileURLToPath(new URL("../../knowledge/builders/tests…
+      6|   expect(() => execFileSync("python3", ["-B", script], { encoding: "ut…
+       |                                                                                                                   ^
+      7| });
+      8|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/6]⎯
+
+ FAIL  tests/content-store.test.ts > the original host finalizes only after its fake model closes; storage failure=false never reruns it
+AssertionError: expected 'retained' to be 'sealed' // Object.is equality
+
+Expected: "sealed"
+Received: "retained"
+
+ ❯ tests/content-store.test.ts:59:30
+     57|       expect(readdirSync(join(root, "ops/codex-ops/queue"))).toHaveLen…
+     58|     } else {
+     59|       expect(receipt.status).toBe("sealed");
+       |                              ^
+     60|       expect(statSync(join(receipt.files[0].content.store, receipt.fil…
+     61|         .toBe(statSync(join(scratch, "states.evidence.jsonl")).ino);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/6]⎯
+
+ FAIL  tests/temp-lifecycle.test.ts > owned temporary files > defaults to the common repository disk before a child starts and cleans on failure
+AssertionError: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ tests/temp-lifecycle.test.ts:46:63
+     44|     expect(result.status).toBe(7);
+     45|     const directory = result.stdout.trim();
+     46|     expect(directory.startsWith(defaultTempParent() + "/s-")).toBe(tru…
+       |                                                               ^
+     47|     expect(existsSync(directory)).toBe(false);
+     48|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/6]⎯
+
+ FAIL  tests/temp-lifecycle.test.ts > owned temporary files > keeps caller-owned child scratch on a successful smoke command
+Error: spawnSync /home/dw/.local/node/bin/node EPERM
+ ❯ tests/temp-lifecycle.test.ts:52:5
+     50|   it("keeps caller-owned child scratch on a successful smoke command",…
+     51|     const directory = mkdtempSync(join(tmpdir(), "temp-smoke-"));
+     52|     execFileSync(process.execPath, ["tools/with-temp.mjs", process.exe…
+       |     ^
+     53|       "require('fs').writeFileSync(process.env.TMPDIR+'/evidence','fix…
+     54|     { env: { ...process.env, TMPDIR: directory }, timeout: 5000 });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/6]⎯
+
+ FAIL  tests/temp-lifecycle.test.ts > owned temporary files > reports a missing offline executable as a failure
+AssertionError: expected '' to contain 'ENOENT'
+
+- Expected
++ Received
+
+- ENOENT
+
+ ❯ tests/temp-lifecycle.test.ts:62:27
+     60|       { encoding: "utf8", timeout: 5000 });
+     61|     expect(result.status).toBe(1);
+     62|     expect(result.stderr).toContain("ENOENT");
+       |                           ^
+     63|   });
+     64| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/6]⎯
+
+
+ Test Files  4 failed (4)
+      Tests  6 failed | 4 passed (10)
+   Start at  20:12:02
+   Duration  2.31s (transform 1.38s, setup 884ms, import 1.03s, tests 1.39s, environment 0ms)
+

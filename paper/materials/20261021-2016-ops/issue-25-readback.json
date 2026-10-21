@@ -1,0 +1,8 @@
+{
+  "issue": 25,
+  "url": "https://github.com/dwroy/agent-sts2/issues/25#issuecomment-6315757899",
+  "author": "dwroy",
+  "body": "[ops] 原 s2 未提交四叶补丁与 #25 的 card-model/turn-solver 有交集，已冻结备选组合供原单点窗口协调；不更改原 P0 发布优先级，也未自启 full。\n\n来源为 `20261021-194314-s2-strategy-proposal` 的原0268提案，修普通生存者在限定同值凋萎手牌中的数值估计，保真实选牌边界；原14定向过/撤3败、沙箱6失败及撤源码同失败均保留。四叶 manifest/patch/日志SHA：`paper/materials/20261021-2016-ops/receipt.json`。\n\n独立实际R410四叶tree `810fffde21d80951555377b95161488f7e9179f0`；在原48叶上三方应用后的可选50叶tree `2c6990342cb5490817fd49101e7b9c4ee88b7a23`（无冲突，保open-book参考hunk）。它只供原集成员判断单点检查安排，不静默替换原48叶准入，不夹整main/P4，不拖延P0 #15；可放其后的独立窗口。当前尚无本批提交/host full/main/live，原pending已登记，不重复派学习者或模型。\n",
+  "created_at": "2026-10-21T12:20:48Z",
+  "gitleaks_rc": 0
+}
