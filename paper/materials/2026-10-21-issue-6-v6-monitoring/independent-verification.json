@@ -1,0 +1,60 @@
+{
+  "passed": true,
+  "checks": [
+    {
+      "name": "nearest-rank handles empty, singleton, even sample and p90",
+      "passed": true
+    },
+    {
+      "name": "step includes action, does not double-count nested LLM/plan timings",
+      "passed": true
+    },
+    {
+      "name": "budget timeout alone is not counted as actual fallback",
+      "passed": true
+    },
+    {
+      "name": "three explicit fallback signals form a union",
+      "passed": true
+    },
+    {
+      "name": "first/middle/last projected records match raw source offsets",
+      "passed": true
+    },
+    {
+      "name": "V5 sample size and independently totaled floors",
+      "passed": true
+    },
+    {
+      "name": "V5 timing and card totals reconcile across run/group levels",
+      "passed": true
+    },
+    {
+      "name": "V6-brain sample size and independently totaled floors",
+      "passed": true
+    },
+    {
+      "name": "V6-brain timing and card totals reconcile across run/group levels",
+      "passed": true
+    },
+    {
+      "name": "V6-Jev sample size and independently totaled floors",
+      "passed": true
+    },
+    {
+      "name": "V6-Jev timing and card totals reconcile across run/group levels",
+      "passed": true
+    },
+    {
+      "name": "CSV preserves all 43 unique run IDs",
+      "passed": true
+    },
+    {
+      "name": "all console evidence line hashes match bounded source",
+      "passed": true
+    }
+  ],
+  "raw_offset_samples": 523,
+  "console_location_records_verified": 265,
+  "typescript_tests": "not required: analysis artifacts and decision record only"
+}
