@@ -1,0 +1,179 @@
+{
+  "schema": "ops-ordinary-source-drift-review-v1",
+  "at": "2026-10-21T13:15:35+08:00",
+  "batch": "20261021-124302-strategy-proposal",
+  "state": "original-attention-reviewed-no-source-or-dataset-retry",
+  "original_receipt": {
+    "path": "ops/codex-ops/ordinary-close/20261021-124302-strategy-proposal.json",
+    "bytes": 15633,
+    "sha256": "86fba367e479b4b9f12bde0e3bb5015592a999493c9184948a66a185a1e67f4d"
+  },
+  "original_report": {
+    "path": ".worktrees/codex-strategy-silent-20261021-124302/learner/runs/20261021-124320-e6a2720c-26d1-4523-82e0-1cb90cac7c07-strategy-proposal/report.md",
+    "bytes": 7866,
+    "sha256": "96ce88a5b801bf42667525055cc4b652b97ddb517301c4addb3cb9a35887fb26"
+  },
+  "worktree_head": "e909704e19e29a4a60d5f3cd0c354188f536715a",
+  "worktree_clean": true,
+  "dispatch_baseline": "e909704e19e29a4a60d5f3cd0c354188f536715a",
+  "offer_proof_head": "570fc8bfbbf84408ce2a96296a87f5c2a42087d0",
+  "offer_had_no_source_drift": true,
+  "review_head": "526d34e7b2fa2a02be03575bb52dde4d98a870e1",
+  "actual_source_drift": [
+    {
+      "path": "agent/tests/v6-direction-provider.test.ts",
+      "before_blob": "145f16b80b4aeb41e18c0d26a103d22f665a4101",
+      "after_blob": "f06bfba3e7a8f310fdb97a8fc7d7bd35abd879e5"
+    },
+    {
+      "path": "agent/tests/v6-projection-entries.test.ts",
+      "before_blob": "3a100c5e080afba4d4ccb953c333bff1563402cd",
+      "after_blob": "6cb8f33ac5388373a877c723155dc65e793ba6f4"
+    },
+    {
+      "path": "agent/tests/v6-target-values.test.ts",
+      "before_blob": "139b89db3e548326e8352b5a46d239f23effce5d",
+      "after_blob": "12f78a3b742307f0bd6a06741a3cb6377d4d7bfc"
+    }
+  ],
+  "drift_commit": "526d34e7b2fa2a02be03575bb52dde4d98a870e1",
+  "drift_scope": "reviewed issue19 tests only, after original report/offer; no production source delta",
+  "production_files_matching_original_live": [
+    {
+      "path": "agent/src/reflex/silent-apotheosis.ts",
+      "sha256": "cd7f4956fcda62c63c585ae252b9033a0ff9622390f227fe4c256a8fffb33f0f",
+      "matches_original_live_snapshot": true,
+      "actual_live_source_commit_ancestor": true,
+      "original_source_commit_may_differ": false
+    },
+    {
+      "path": "agent/src/reflex/silent-apotheosis-reference.ts",
+      "sha256": "96fdadf221286c9e21a11d78e7200b320da6c8db7717e9edf1915e4a5b739803",
+      "matches_original_live_snapshot": true,
+      "actual_live_source_commit_ancestor": true,
+      "original_source_commit_may_differ": false
+    },
+    {
+      "path": "agent/src/reflex/silent-selection-dispatch.ts",
+      "sha256": "9301b47f0f6a2589ce210d7f3b9fd232854575154e1f77e471d164070003e6d6",
+      "matches_original_live_snapshot": true,
+      "actual_live_source_commit_ancestor": true,
+      "original_source_commit_may_differ": false
+    },
+    {
+      "path": "agent/src/reflex/silent-sl-comparison.ts",
+      "sha256": "2fbb427662af78dd5428c70e0af9bb82dfe312d4ccffb33201da3c26dfdfc760",
+      "matches_original_live_snapshot": true,
+      "actual_live_source_commit_ancestor": true,
+      "original_source_commit_may_differ": false
+    },
+    {
+      "path": "agent/src/reflex/card-model.ts",
+      "sha256": "46206367e6b61cbefd5759598db543c346bc1e7b1ded09f0a49607e2faf71031",
+      "matches_original_live_snapshot": true,
+      "actual_live_source_commit_ancestor": true,
+      "original_source_commit_may_differ": true
+    },
+    {
+      "path": "agent/src/reflex/turn-solver.ts",
+      "sha256": "1ecb3544e15ec4ef07f16bc03eb4f963839b90741dc88ec89a65cef74a7cf3eb",
+      "matches_original_live_snapshot": true,
+      "actual_live_source_commit_ancestor": true,
+      "original_source_commit_may_differ": false
+    },
+    {
+      "path": "agent/src/reflex/rollout.ts",
+      "sha256": "4ef15bad2f859038e81f750f114f25997f1937440dc138230d2fe3a0f4cbba36",
+      "matches_original_live_snapshot": true,
+      "actual_live_source_commit_ancestor": true,
+      "original_source_commit_may_differ": true
+    },
+    {
+      "path": "learner/lib/selection-execution.ts",
+      "sha256": "4ef06b464b5e645aea8eec3be78ef7bb3d0030b38de590cc11d84f8e76d80c5a",
+      "matches_original_live_snapshot": true,
+      "actual_live_source_commit_ancestor": true,
+      "original_source_commit_may_differ": false
+    },
+    {
+      "path": "learner/lib/selection-turn.ts",
+      "sha256": "038f6ec416103ef5ce75136a7d8a09f40b1a1ac341356d7cfa9b5b6e4300b703",
+      "matches_original_live_snapshot": true,
+      "actual_live_source_commit_ancestor": true,
+      "original_source_commit_may_differ": false
+    }
+  ],
+  "tests": {
+    "tsc": null,
+    "vitest": null,
+    "cases": null
+  },
+  "proposal_results": [
+    {
+      "id": "silent-proposal-89354805ee4d7e77",
+      "state": "waiting",
+      "reason": "已有有限升级转换；缺跨抽牌、选择、药水、SL和换战的实际施放持续身份及未知属性组合校准。"
+    },
+    {
+      "id": "silent-proposal-f2bfceddb1898dca",
+      "state": "waiting",
+      "reason": "缺完整模型下同起点、同随机池、同总预算的MC分配配对及成熟度曲线。"
+    },
+    {
+      "id": "silent-proposal-283a164780d11e69",
+      "state": "waiting",
+      "reason": "同源神化整项仍缺实际施放身份与未知交互校准，没有完整live实现commit可登记duplicate。"
+    },
+    {
+      "id": "silent-proposal-ebbfe3b97548756d",
+      "state": "waiting",
+      "reason": "十五机制及路线、休息子项仍缺逐源期限、升级联动和生产消费者的完整联合校准。"
+    },
+    {
+      "id": "silent-proposal-e5b87be50f28f311",
+      "state": "waiting",
+      "reason": "已核SL替换多损12血、多扣7敌血；缺重规划后的完整候选归属及生产联合验证。"
+    },
+    {
+      "id": "silent-proposal-49632bc4878fb597",
+      "state": "waiting",
+      "reason": "本局没有正敏捷施放证据；缺属性、虚弱与独立成长路径的冻结生产调用联合校准。"
+    },
+    {
+      "id": "silent-proposal-66532328a585941f",
+      "state": "waiting",
+      "reason": "已核无毒冒泡耗1能且目标血、毒不变；缺同起点与完整抽序下另一启动顺序的整战配对。"
+    },
+    {
+      "id": "silent-proposal-43a76a31ba7bdcfa",
+      "state": "waiting",
+      "reason": "已核负敏捷、临时减力和毒端点；缺同起始HP、构筑及完整抽序的另一完整SL线路。"
+    },
+    {
+      "id": "silent-proposal-5264153a4a4b0e5c",
+      "state": "waiting",
+      "reason": "原状态支持净扣47、损15，但消费者因turn_opening_unverified保留unknown；缺召唤成长全链及另一目标序后继。"
+    },
+    {
+      "id": "silent-proposal-bddfa690a84e03d0",
+      "state": "waiting",
+      "reason": "已核临时减力恢复并继续成长；缺睡眠、失血唤醒、眩晕接续全链校准与同抽换序完整后继。"
+    }
+  ],
+  "all_ten_still_waiting": true,
+  "own_candidate_dataset_not_admitted": true,
+  "other_candidate_dataset": {
+    "batch": "20261021-124302-s2-strategy-proposal",
+    "receipt": {
+      "path": "ops/codex-ops/ordinary-close/20261021-124302-s2-strategy-proposal.json",
+      "bytes": 68034,
+      "sha256": "7cfec3cf0103c5d78203637bb62dc8ae7bdce41112d7865afa800a6364276aa6"
+    },
+    "record_commit": "42baee0b17c136cd8292bf19dbc1c2fdc55ce281",
+    "rc": 0,
+    "not_attributed_to_this_candidate": true
+  },
+  "new_ops_dataset_full_model_learning_or_live_publication": false,
+  "scientific_parents_closed": false,
+  "old_guard_failure_retained": true
+}
