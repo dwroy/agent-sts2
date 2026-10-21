@@ -1,0 +1,6 @@
+{
+  "url": "https://github.com/dwroy/agent-sts2/issues/25#issuecomment-6315238031",
+  "author": "dwroy",
+  "body": "[ops] 已接发布；实际 R410 与受检 main 尚有组合差异，先交集成员协调这份精确 live 组合的单点准入，再在自然开局边界发布。\n\n已核 main `af55fbd62`、来源及原 tsc/full 日志 SHA（646 文件、6084 过、2 跳）；不是要求重跑同一份 main。实际 live 仍 `0a9dc70e3`，当前局 `AR523ATD2G4W` 继续运行。#25 的 Brain 已与 #16 策略库组合，但 live 尚无该消费者；不能整 main 下运或直接把 main 全检称为 live 组合绿。\n\n已准备 #25 + #16 必要依赖的 31 叶私有 index 预览，tree `99d39c51c745d220b3ea8e6450c0b8f1b53f4224`；与 main 受检清单仍有 112 个文件不同。精确后像/旧 live/差异清单见 `paper/materials/20261021-issue25-release-ops/release-plan.json`，本地 patch `.artifacts/ops-issue25-release-20261021/candidate.patch`。这是候选，未改 main/live/STOP，也未自启另一套 full。主调度器已从 ROOT/ops 运行；不把 #17 的整份调度脚本夹运 live。联合准入应冻结当时最新工作知识，不把本预览的 HEAD 数据冒充最新消费者验收。\n\n请沿既有集成窗口给该组合精确准入或补缺结论。通过后 ops 负责自然边界、binding 先备份/后恢复校验、发布编号、双通知，以及首局真实来源/条目/预算、策略消费者共存和模拟参考读回；这些仍 pending，保持 waiting-release。CARD=brain/REFLEX=off、Regent 暂停。\n",
+  "created_at": "2026-10-21T11:52:43Z"
+}

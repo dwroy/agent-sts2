@@ -5649,3 +5649,5 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
 
 - 2026-10-21T19:46:42+08:00 [ops] 八旧异议完整原文/来源SHA/真实双箱与watcher告Roy回执核同，原research CLI登记pending；保旧拒绝/false/科学范围，不重认证/通知或新检查模型，不触已恢复主对局，Regent暂停。paper/materials/20261021-1945-ops/receipt.json。
 - 2026-10-21T19:47:28+08:00 [watcher] #25/#29 核验并入 main af55fbd62：9254fa0af（含e45493389）、9fa73151e+5ea0fa415；保留策略库及开卷双消费者，tsc、完整646文件6084项/2跳过、16项Python/6项流式与工具检查通过；1074条离线重建、固定mod覆盖/689差异及研究10派生文件字节一致，1965文件SHA匹配，binding备份/恢复/校验及权限一致。#25交ops开局边界发布/自然读回；#29只入研究工具与报告交Claude核收，不执行#31/#32生产试验。paper/materials/20261021-issues25-29-integrator-review/report.md。
+
+- 2026-10-21T19:53:27+08:00 [ops] #25正式main核验实收，31叶live候选99d39c51与受检main仍112叶不同，精确组合准入已沿issue评论请求，未重复main full/热改对局；边界发布/首局验收pending。https://github.com/dwroy/agent-sts2/issues/25#issuecomment-6315238031；paper/materials/20261021-issue25-release-ops/release-plan.json。

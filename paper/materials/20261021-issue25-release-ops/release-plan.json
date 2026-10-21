@@ -1,0 +1,499 @@
+{
+  "main": "ee36abb93077c6d79d70b301a773519b97b4ec89",
+  "accepted_main": "af55fbd62ea8a6774478df941bc7a8c254a16bcd",
+  "live": "0a9dc70e3ef096e7d0d6eb1524cd20e2cbe906c6",
+  "source25base": "c57f78a49e3ad047bde212b0011fccd35d498d0e",
+  "rows": [
+    {
+      "path": "agent/src/brain/brain.ts",
+      "new": false,
+      "main_blob": "93d7a4dbe5cb39a21bafcdd7c0d6e84a17583551",
+      "same_live": false
+    },
+    {
+      "path": "agent/src/eye/jev-prompt-log.ts",
+      "new": false,
+      "main_blob": "3550007227aee4722ea7c0b19a38db01b69f79ca",
+      "same_live": false
+    },
+    {
+      "path": "agent/src/knowledge/files.ts",
+      "new": false,
+      "main_blob": "8b4d8dcdce0785642a8bd54791633977155248a7",
+      "same_live": false
+    },
+    {
+      "path": "agent/src/knowledge/open-book.ts",
+      "new": true,
+      "main_blob": "913c656ad19af5fa57921bbdd6c6e36e3c4bdb10",
+      "same_live": false
+    },
+    {
+      "path": "agent/src/knowledge/strategy-entries.ts",
+      "new": true,
+      "main_blob": "2ae81636444da0b9bc8d041644e4a7600e2cef3f",
+      "same_live": false
+    },
+    {
+      "path": "agent/src/reflex/card-model.ts",
+      "new": false,
+      "main_blob": "d87750b4b3ec814cc165064abe36fa0fabccfe2c",
+      "same_live": false
+    },
+    {
+      "path": "agent/src/reflex/combat-plan.ts",
+      "new": false,
+      "main_blob": "88b6e9afda53fb35fbf997e293671e684a04fedf",
+      "same_live": false
+    },
+    {
+      "path": "agent/src/reflex/jev/client.ts",
+      "new": false,
+      "main_blob": "b5c23f192def8dd0c214b36065ed9662ec673241",
+      "same_live": false
+    },
+    {
+      "path": "agent/src/reflex/turn-solver.ts",
+      "new": false,
+      "main_blob": "f13e8884fee3e1ed6d6c79d72181d77ce5f9a833",
+      "same_live": false
+    },
+    {
+      "path": "agent/tests/brain-decision-dataset.test.ts",
+      "new": true,
+      "main_blob": "f1c753d8f0cb6653984a0dc6078417a1a753b775",
+      "same_live": false
+    },
+    {
+      "path": "agent/tests/jev-decision-projection.test.ts",
+      "new": false,
+      "main_blob": "6785606cd43f69aae3b528370f67b43f775cb7e8",
+      "same_live": false
+    },
+    {
+      "path": "agent/tests/open-book-data/questions.json",
+      "new": true,
+      "main_blob": "22b518d81c3e51971dd577c6ea1276755d4b3527",
+      "same_live": false
+    },
+    {
+      "path": "agent/tests/open-book.test.ts",
+      "new": true,
+      "main_blob": "a4c867932de51f7fb34514a99dc91370e9d27a4c",
+      "same_live": false
+    },
+    {
+      "path": "agent/tests/paths.test.ts",
+      "new": false,
+      "main_blob": "7787ce46fe28cf1450923243be03e33e03c21ac5",
+      "same_live": false
+    },
+    {
+      "path": "agent/tests/strategy-entries.test.ts",
+      "new": true,
+      "main_blob": "23ca4305bd92bb3350e3efaaaeaa43c8c4a28899",
+      "same_live": false
+    },
+    {
+      "path": "agent/tests/v6-combat-entries.test.ts",
+      "new": false,
+      "main_blob": "d01eef99cbf3bfdfe7a1821d32c24ec4770c0073",
+      "same_live": false
+    },
+    {
+      "path": "agent/tools/open-book-replay.ts",
+      "new": true,
+      "main_blob": "9dd42e7ad5369e39121c7caf216243c5c2c49958",
+      "same_live": false
+    },
+    {
+      "path": "agent/tools/replay-brain-strategies.ts",
+      "new": true,
+      "main_blob": "6eb5863fa186b6cfe3e8f52661c9b226f8c6b82d",
+      "same_live": false
+    },
+    {
+      "path": "docs/brain-strategies.md",
+      "new": true,
+      "main_blob": "b7db8d5ea419665ab32d27da5f6ad5b1ecadc7d0",
+      "same_live": false
+    },
+    {
+      "path": "docs/open-book.md",
+      "new": true,
+      "main_blob": "4e2d4efb1f92477fd59171876acb78ed9faf4e31",
+      "same_live": false
+    },
+    {
+      "path": "knowledge/builders/brain_decision_dataset.py",
+      "new": true,
+      "main_blob": "4a2135e22162551d7241fe728a433ed467dd5fe2",
+      "same_live": false
+    },
+    {
+      "path": "knowledge/builders/build-open-book.py",
+      "new": true,
+      "main_blob": "2ebbb97411afbcb925e060d755b73d6813b024ce",
+      "same_live": false
+    },
+    {
+      "path": "knowledge/builders/report-open-book.py",
+      "new": true,
+      "main_blob": "f1759e69c7d583efbe643fee356095fafc6d542d",
+      "same_live": false
+    },
+    {
+      "path": "knowledge/builders/tests/test_brain_decision_dataset.py",
+      "new": true,
+      "main_blob": "b76e0ae7ddb62e1f2dee31f873ac70456895a67b",
+      "same_live": false
+    },
+    {
+      "path": "knowledge/characters/silent/open-book.json",
+      "new": true,
+      "main_blob": "cc23fdb851d204617f999ea5fd796949ce99a356",
+      "same_live": false
+    },
+    {
+      "path": "knowledge/common/open-book.json",
+      "new": true,
+      "main_blob": "14b194aae4f470a836a8c4faff6e23b4dacb9bb5",
+      "same_live": false
+    },
+    {
+      "path": "knowledge/schemas/brain-strategies-v1.schema.json",
+      "new": true,
+      "main_blob": "fe5cba8e0d7da31e4ea5f34284e150cd2485b40d",
+      "same_live": false
+    },
+    {
+      "path": "ops/codex-ops.sh",
+      "new": false,
+      "main_blob": "e95029f49fcf70dde462b4b40a0a195ce9658e05",
+      "same_live": false
+    },
+    {
+      "path": "ops/open_book_refresh.py",
+      "new": true,
+      "main_blob": "b1101cf0a5eb879064e95baae6ee8638498ea40b",
+      "same_live": false
+    },
+    {
+      "path": "ops/tests/test_open_book_refresh.py",
+      "new": true,
+      "main_blob": "6f2e8819fc9dc1f090b7e91ef0ca51650e0c63ea",
+      "same_live": false
+    }
+  ],
+  "proposed_paths": [
+    {
+      "path": "agent/src/brain/brain.ts",
+      "blob": "93d7a4dbe5cb39a21bafcdd7c0d6e84a17583551",
+      "sha256": "d628c49ac8cc6a4da2cc9494f71c4f154ee9511d7baae8e321bf3675bb7ca077",
+      "bytes": 28785
+    },
+    {
+      "path": "agent/src/eye/jev-prompt-log.ts",
+      "blob": "3550007227aee4722ea7c0b19a38db01b69f79ca",
+      "sha256": "7eea5cd01e708082ca685a19cbe5b585758e3aba927116f06006967002ccc8ab",
+      "bytes": 7573
+    },
+    {
+      "path": "agent/src/knowledge/files.ts",
+      "blob": "8b4d8dcdce0785642a8bd54791633977155248a7",
+      "sha256": "3e03286adc87e6fada7fb70d968f8ecf5999ad4892cc477d79886b695edb4a9b",
+      "bytes": 5490
+    },
+    {
+      "path": "agent/src/knowledge/open-book.ts",
+      "blob": "913c656ad19af5fa57921bbdd6c6e36e3c4bdb10",
+      "sha256": "b043e4bb18b1a72a2349ffab2bb68b778ca9aeb0f114ec28512a023eaa83f93a",
+      "bytes": 13405
+    },
+    {
+      "path": "agent/src/knowledge/strategy-entries.ts",
+      "blob": "2ae81636444da0b9bc8d041644e4a7600e2cef3f",
+      "sha256": "1207d3ee86f2474c5c3526a5508b71c3a31e8407a55b9ca72cf8dcd2b4e4433d",
+      "bytes": 9866
+    },
+    {
+      "path": "agent/src/reflex/card-model.ts",
+      "blob": "d87750b4b3ec814cc165064abe36fa0fabccfe2c",
+      "sha256": "ed66e33bb1b00a75c9029d842c90f41ac3f2b6bb9807af5776ee467933cb28c2",
+      "bytes": 131658
+    },
+    {
+      "path": "agent/src/reflex/combat-plan.ts",
+      "blob": "88b6e9afda53fb35fbf997e293671e684a04fedf",
+      "sha256": "425b33c1f926719289baea9b1e80d488fcb9c93740c183e3d6efc2be519fac83",
+      "bytes": 370750
+    },
+    {
+      "path": "agent/src/reflex/jev/client.ts",
+      "blob": "b5c23f192def8dd0c214b36065ed9662ec673241",
+      "sha256": "2d2819422c7ce7aec80d87bf0d9bfd73823f473aa0a7b709a801cefdd68edfab",
+      "bytes": 12495
+    },
+    {
+      "path": "agent/src/reflex/turn-solver.ts",
+      "blob": "f13e8884fee3e1ed6d6c79d72181d77ce5f9a833",
+      "sha256": "3f9da929f22f64f63ec91621472609cc3238c3bf91a7e3ac93fc3068eae0d25f",
+      "bytes": 266200
+    },
+    {
+      "path": "agent/tests/brain-decision-dataset.test.ts",
+      "blob": "f1c753d8f0cb6653984a0dc6078417a1a753b775",
+      "sha256": "4e8e1df711ccb5bc8ec5245481ef2cc08734a66f4e599a3fcc95a8ca4cff5921",
+      "bytes": 487
+    },
+    {
+      "path": "agent/tests/jev-decision-projection.test.ts",
+      "blob": "6785606cd43f69aae3b528370f67b43f775cb7e8",
+      "sha256": "664d158d2ba182e244f2a2a180fa2a2ca3159427b807d6bb94b88dda39d271e8",
+      "bytes": 8208
+    },
+    {
+      "path": "agent/tests/open-book-data/questions.json",
+      "blob": "22b518d81c3e51971dd577c6ea1276755d4b3527",
+      "sha256": "b1307b162336846587fb28a4cb86597ffa77f5b2d8ea91008fd572d7bd7aa100",
+      "bytes": 4771
+    },
+    {
+      "path": "agent/tests/open-book.test.ts",
+      "blob": "a4c867932de51f7fb34514a99dc91370e9d27a4c",
+      "sha256": "c4e64430282962362571c1e260607ace5e07aef02bc1ffd587bc7a4810edd800",
+      "bytes": 15309
+    },
+    {
+      "path": "agent/tests/paths.test.ts",
+      "blob": "7787ce46fe28cf1450923243be03e33e03c21ac5",
+      "sha256": "43a1756e428139d99aaf44ea05359c1ffeaacc757cb15720fc4ea138a76c933b",
+      "bytes": 9441
+    },
+    {
+      "path": "agent/tests/strategy-entries.test.ts",
+      "blob": "23ca4305bd92bb3350e3efaaaeaa43c8c4a28899",
+      "sha256": "9285b6387bf183620d9dd541a89813013d177967726ca50e2efe7ba4b1d023c7",
+      "bytes": 7933
+    },
+    {
+      "path": "agent/tests/v6-combat-entries.test.ts",
+      "blob": "d01eef99cbf3bfdfe7a1821d32c24ec4770c0073",
+      "sha256": "9384a1967cddde5bae2a9d3fa213c448efc2f029504b8f07b30a97a8bde3db19",
+      "bytes": 13068
+    },
+    {
+      "path": "agent/tools/open-book-replay.ts",
+      "blob": "9dd42e7ad5369e39121c7caf216243c5c2c49958",
+      "sha256": "2257804411bb85c30f8fdda031712a9ff1dcf49610a93a14969ad8e30afeda23",
+      "bytes": 5260
+    },
+    {
+      "path": "agent/tools/replay-brain-strategies.ts",
+      "blob": "6eb5863fa186b6cfe3e8f52661c9b226f8c6b82d",
+      "sha256": "163dda6289a9c6b08e495d502eda288b276c0a9aac6adc02e177138321ff996f",
+      "bytes": 3607
+    },
+    {
+      "path": "docs/brain-strategies.md",
+      "blob": "b7db8d5ea419665ab32d27da5f6ad5b1ecadc7d0",
+      "sha256": "23539448090cdb75212f875278b1f3810fbcb788e7fa176db6f84f304faf2948",
+      "bytes": 7433
+    },
+    {
+      "path": "docs/open-book.md",
+      "blob": "4e2d4efb1f92477fd59171876acb78ed9faf4e31",
+      "sha256": "9918258f5c200560df43286dc3a5aa03f53b0129cdda9a097a0aa2aa5919c707",
+      "bytes": 7762
+    },
+    {
+      "path": "knowledge/builders/brain_card_distill.py",
+      "blob": "208e0f87af4e0529be843ad5347b5661fbe456a3",
+      "sha256": "863512d651ce24347934acc447c892101ea28d640a472a9db6315d1ee23ae40d",
+      "bytes": 30176
+    },
+    {
+      "path": "knowledge/builders/brain_decision_dataset.py",
+      "blob": "4a2135e22162551d7241fe728a433ed467dd5fe2",
+      "sha256": "4f3a8045ab3d85d6454dc31355659d0e69942b23e726a8211843443badd67258",
+      "bytes": 11381
+    },
+    {
+      "path": "knowledge/builders/build-open-book.py",
+      "blob": "2ebbb97411afbcb925e060d755b73d6813b024ce",
+      "sha256": "d8fb0de3ece523ab2d01216b632f90bfc5d121b3e863219cd9157811c7b864b6",
+      "bytes": 8887
+    },
+    {
+      "path": "knowledge/builders/report-open-book.py",
+      "blob": "f1759e69c7d583efbe643fee356095fafc6d542d",
+      "sha256": "118b656f8c5779127b42f2d84aa712a7ef11b2fef18dafbcfc4be5a6cfe5d1c6",
+      "bytes": 5482
+    },
+    {
+      "path": "knowledge/builders/tests/test_brain_card_distill.py",
+      "blob": "11ea09247eba1cd50002d074654c8a1f9826d5eb",
+      "sha256": "8aad8c2e0aeac7ff25df77d65296c2e9238e322da1a759eab1852edba8bef59e",
+      "bytes": 10813
+    },
+    {
+      "path": "knowledge/builders/tests/test_brain_decision_dataset.py",
+      "blob": "b76e0ae7ddb62e1f2dee31f873ac70456895a67b",
+      "sha256": "5fdeb3664b54216c2a963d37d23834560f030a358e8c69121b26609fa49e7f06",
+      "bytes": 4285
+    },
+    {
+      "path": "knowledge/characters/silent/open-book.json",
+      "blob": "cc23fdb851d204617f999ea5fd796949ce99a356",
+      "sha256": "515c8e95dde4688edb7c1607482572af8f11877b0b44775f7be1266573de505b",
+      "bytes": 109289
+    },
+    {
+      "path": "knowledge/common/open-book.json",
+      "blob": "14b194aae4f470a836a8c4faff6e23b4dacb9bb5",
+      "sha256": "f19ab97372975389b0cccd2c7e158e47eba4021d0b3e7af5a47de84bb56d63fa",
+      "bytes": 1166973
+    },
+    {
+      "path": "knowledge/schemas/brain-strategies-v1.schema.json",
+      "blob": "fe5cba8e0d7da31e4ea5f34284e150cd2485b40d",
+      "sha256": "5ec1b8ce1abebdb56607415df2f27f77343c16e1a28769f2be3b0e649586cb04",
+      "bytes": 6631
+    },
+    {
+      "path": "ops/open_book_refresh.py",
+      "blob": "b1101cf0a5eb879064e95baae6ee8638498ea40b",
+      "sha256": "1d46f7f1d83b31ce83786329ed95e4479246854327e01212a2c995ddf71b1513",
+      "bytes": 4004
+    },
+    {
+      "path": "ops/tests/test_open_book_refresh.py",
+      "blob": "6f2e8819fc9dc1f090b7e91ef0ca51650e0c63ea",
+      "sha256": "f2a4c905085b712d900def0626011fa4ad83b078967549467bd5505273a4356e",
+      "bytes": 5913
+    }
+  ],
+  "preview_tree": "99d39c51c745d220b3ea8e6450c0b8f1b53f4224",
+  "root_scheduler": "already main-integrated, production reads ROOT/ops; do not transport whole #17 scheduler into live",
+  "tested_main_remaining_different_paths": [
+    "agent/src/hand/loop.ts",
+    "agent/src/hand/screens/reward.ts",
+    "agent/src/hand/screens/v6-room-projection.ts",
+    "agent/src/hand/screens/v6-room.ts",
+    "agent/src/sim/continuous-boss-result.ts",
+    "agent/src/sim/v6-completion.ts",
+    "agent/src/sim/v6-formation-table.ts",
+    "agent/src/sim/v6-precompute.ts",
+    "agent/src/sim/v6-projection-entries.ts",
+    "agent/src/sim/v6-projection.ts",
+    "agent/src/sim/v6-request-factory.ts",
+    "agent/src/sim/v6-supply.ts",
+    "agent/src/sim/v6-table-copy.ts",
+    "agent/src/sim/v6-targets.ts",
+    "agent/src/v6/brain-card-value.ts",
+    "agent/src/v6/card-value.ts",
+    "agent/src/v6/formats.ts",
+    "agent/src/v6/log.ts",
+    "agent/src/v6/opening-value.ts",
+    "agent/src/v6/projection-runtime.ts",
+    "agent/src/v6/target-values.ts",
+    "agent/tests/brain-card-distill.test.ts",
+    "agent/tests/build-decider.test.ts",
+    "agent/tests/component_usage_test.py",
+    "agent/tests/cost_incremental_test.py",
+    "agent/tests/fixture-command.py",
+    "agent/tests/fixture-command.test.ts",
+    "agent/tests/fixture-command.ts",
+    "agent/tests/global-build-fixed-inputs.test.ts",
+    "agent/tests/global-build-integration.test.ts",
+    "agent/tests/herdr-workspace-fixture.ts",
+    "agent/tests/journal-replay.test.ts",
+    "agent/tests/knowledge-catalog.test.ts",
+    "agent/tests/learner-retention-fixture.test.ts",
+    "agent/tests/learner-retention.test.ts",
+    "agent/tests/legacy-refresh-incremental.test.ts",
+    "agent/tests/loop-consumer-fixed-transport.test.ts",
+    "agent/tests/manual-notice-ack.test.ts",
+    "agent/tests/oneshot-support.ts",
+    "agent/tests/opening-value.test.ts",
+    "agent/tests/ops-herdr.test.ts",
+    "agent/tests/paper-dataset-publication.test.ts",
+    "agent/tests/report_incremental_test.py",
+    "agent/tests/run-plan-merge.test.ts",
+    "agent/tests/sandbox-entry.test.ts",
+    "agent/tests/silent-double-boss.test.ts",
+    "agent/tests/synthetic-board-fixture.ts",
+    "agent/tests/v6-appearance.test.ts",
+    "agent/tests/v6-brain-card-value-loop.test.ts",
+    "agent/tests/v6-card-value.test.ts",
+    "agent/tests/v6-chain-log.test.ts",
+    "agent/tests/v6-combo-metrics.test.ts",
+    "agent/tests/v6-combo-simulation.test.ts",
+    "agent/tests/v6-direction-pairs.test.ts",
+    "agent/tests/v6-direction-provider.test.ts",
+    "agent/tests/v6-draft.test.ts",
+    "agent/tests/v6-formation-table.test.ts",
+    "agent/tests/v6-history-pack.test.ts",
+    "agent/tests/v6-history-targets.test.ts",
+    "agent/tests/v6-precompute.test.ts",
+    "agent/tests/v6-projection-entries.test.ts",
+    "agent/tests/v6-projection-fixture.ts",
+    "agent/tests/v6-projection-input.test.ts",
+    "agent/tests/v6-projection-progress.test.ts",
+    "agent/tests/v6-projection.test.ts",
+    "agent/tests/v6-request-factory.test.ts",
+    "agent/tests/v6-room-prompt-budget.test.ts",
+    "agent/tests/v6-room.test.ts",
+    "agent/tests/v6-supply.test.ts",
+    "agent/tests/v6-target-values.test.ts",
+    "agent/tools/issue29-availability.py",
+    "agent/tools/issue29-brain-speed-report.py",
+    "agent/tools/issue29-brain-speed-test.py",
+    "agent/tools/issue29-brain-speed.ts",
+    "agent/tools/issue29-deepseek-report.py",
+    "agent/tools/issue29-deepseek-report.test.py",
+    "agent/tools/issue29-deepseek-stream.test.ts",
+    "agent/tools/issue29-deepseek-stream.ts",
+    "ops/autoplay.sh",
+    "ops/codex-ops.sh",
+    "ops/global_build_funnel.py",
+    "ops/issue_process_cwd.py",
+    "ops/issue_session.py",
+    "ops/issue_session_project.py",
+    "ops/issue_session_support.py",
+    "ops/learning_requests.py",
+    "ops/paper_dataset.py",
+    "ops/report.py",
+    "ops/report_log_cache.py",
+    "ops/tests/test_disk_admission.py",
+    "ops/tests/test_issue_session.py",
+    "ops/tests/test_llm_handoff.py",
+    "ops/tests/test_manual_notice_ack.py",
+    "ops/tests/test_paper_dataset_publication.py",
+    "eval/brain_source.py",
+    "eval/cost.py",
+    "eval/jsonl_cache.py",
+    "knowledge/builders/build-boss-damage.py",
+    "knowledge/builders/build-card-upgrades.py",
+    "knowledge/builders/build-construction-opportunities.py",
+    "knowledge/builders/build-fight-value.py",
+    "knowledge/builders/build-monster-db.py",
+    "knowledge/builders/build-outcome-stats.py",
+    "knowledge/builders/build-potion-equivalents.py",
+    "knowledge/builders/build-room-costs.py",
+    "knowledge/builders/legacy_incremental.py",
+    "knowledge/builders/opening_value.py",
+    "knowledge/builders/refresh-step.py",
+    "knowledge/builders/refresh.sh",
+    "knowledge/builders/test_legacy_incremental.py",
+    "knowledge/builders/test_opening_value.py",
+    "knowledge/builders/test_potion_incremental.py"
+  ],
+  "preview_only": true,
+  "actual_live_unchanged": true,
+  "state": "waiting-exact-live-composition-admission-from-integrator",
+  "same_main_full_repeated": false,
+  "current_run": "AR523ATD2G4W",
+  "boundary_publication": "pending accepted exact live composition; current play not modified",
+  "latest_working_knowledge": "must refreeze/protect at joint admission and publication; preview uses live HEAD, not a claim of working-data acceptance"
+}
