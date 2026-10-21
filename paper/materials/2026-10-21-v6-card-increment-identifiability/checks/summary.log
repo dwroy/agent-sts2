@@ -1,0 +1,11 @@
+Traceback (most recent call last):
+  File "/home/dw/Projects/agent-sts2/.worktrees/issue-12-card-increment/paper/materials/2026-10-21-v6-card-increment-identifiability/analyze.py", line 342, in <module>
+    structural() if args.phase=='structure' else summarize()
+                                                 ~~~~~~~~~^^
+  File "/home/dw/Projects/agent-sts2/.worktrees/issue-12-card-increment/paper/materials/2026-10-21-v6-card-increment-identifiability/analyze.py", line 299, in summarize
+    subset = [c for c in structure['candidates'] if pred(c)]
+                                                    ~~~~^^^
+  File "/home/dw/Projects/agent-sts2/.worktrees/issue-12-card-increment/paper/materials/2026-10-21-v6-card-increment-identifiability/analyze.py", line 298, in <lambda>
+    for label,pred in [('all',lambda c:True),('negative',lambda c:c['original_delta'] < -s.EPS),('positive',lambda c:c['original_delta']>s.EPS)]:
+                                                                  ~^^^^^^^^^^^^^^^^^^
+KeyError: 'original_delta'
