@@ -4187,3 +4187,5 @@ W4拿牌v2正式3ef4/11a80已核：14源Git/SHA、318清单项加manifest共319�
 2026-10-22T04:01:46+08:00 已核dwroy名下Claude转Roy原评论：#31关闭、取消high/xhigh交替试验，#32关闭并入已派的#33。原R411+#31精确23叶组合准入已撤销，新增invalidated标记；issue31-live-plan.json、补丁、预登记与统计材料原字节保留，main已合入的按局开关供#33复用，不撤并行源码。当前live实核仍0cd3629d3/R411，生产入口未设试验排程，无新试验、回放或full，不热切当前对局。Codex high、DeepSeek max及agent模式随#33原开发交付与集成核验后，在自然开局边界落实；不另派#33或恢复旧试验。撤销结论已在#31评论并回读。原自动流程已关#31 tab、工作树因发布证明门保留，本轮不强删或重复回收；#20待办和其他科学父保持。原件paper/materials/20261022-0359-ops/receipt.json。
 
 2026-10-22T04:07:04+08:00 已沿#20原评论核466e54561及1220集成为实际main祖先，四源码SHA同集成员固定检查输入与原提交，七份检查归档的压缩及原始SHA核同。主运行根--show-enabled真实返回off，生产控制文件及正式宿主registry均缺省；已装d154561引擎三文件未变，无需重装。旧cron不继承pane export的缺口已解决，原检查通过与运行标记断言失败/后续复核分列保留，不重复full。新增done送达、30分钟有活停滞/两小时去重/三次升级、十分钟错误退避接续不在本提交，沿原dev另交核验，#20保持in-progress。主管协调各项目owner授权、实际根/角色绑定和唯一入口后，才由原ops演练、持久on及原stall首tick验收；不越仓认领、不补发uncertain。结论已在#20评论回读，本轮未设on、派活、回收或改live/对局。原件paper/materials/20261022-issue20-control-ops/receipt.json。
+
+- 2026-10-22T04:18:56+08:00 八条旧学习通知真实转达原回执再次核同，CLI仍不支持#4/#13/#14三研究身份，watcher_received/roy_notified登记继续pending；保旧拒绝及原科学范围，不代ACK或重复提醒。原件paper/materials/20261022-0415-ops/notice-readback.json。
