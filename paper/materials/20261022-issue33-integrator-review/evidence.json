@@ -1,0 +1,86 @@
+{
+  "source": "276f3089c413b129e67362e3c84eae23baae993f",
+  "base": "5373a858aad0e30689f064247dbcde6978cb9de8",
+  "outcome": "return-for-fix; no feature integration or live changes",
+  "audit": {
+    "source-freeze.json": 37,
+    "dependency.json": 4,
+    "logs_verified": 23,
+    "developer_security_logs_verified": 5,
+    "unchanged_inputs": 2111,
+    "expanded_log_scan_exit": 0
+  },
+  "independent_checks": [
+    {
+      "name": "rebuild",
+      "command": [
+        "python3",
+        "agent/tools/build-external-stats.py",
+        "--check"
+      ],
+      "cwd": "isolated review workspace",
+      "exit_code": 0,
+      "seconds": 0.373258113861084
+    },
+    {
+      "name": "tsc",
+      "command": [
+        "node",
+        "node_modules/typescript/bin/tsc",
+        "-p",
+        "tsconfig.json",
+        "--noEmit"
+      ],
+      "cwd": "isolated review workspace/agent",
+      "exit_code": 0,
+      "seconds": 0.8865211009979248
+    },
+    {
+      "name": "vitest",
+      "command": [
+        "node",
+        "node_modules/vitest/vitest.mjs",
+        "run",
+        "--pool=forks",
+        "--maxWorkers=1",
+        "--no-file-parallelism",
+        "--reporter=default",
+        "--reporter=json",
+        "--outputFile.json=.artifacts/integrator-33-20261022/full/vitest.json"
+      ],
+      "cwd": "isolated review workspace/agent",
+      "exit_code": 143,
+      "seconds": 259.8193702697754
+    }
+  ],
+  "full_run_note": "Stopped own verified Vitest PID 2641455 after the provenance blocker was reproduced; exit 143 is not a pass. No remaining process in review agent cwd.",
+  "targeted": {
+    "files_passed": 4,
+    "tests_passed": 23,
+    "exit": 0
+  },
+  "inference_calls": 0,
+  "games_started": 0,
+  "logs": {
+    "tsc.log.gz": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "archive_sha256": "9ceffb7310338057cfe71a4ae1e2c98d2c485d81cdef906532a801f457a38d64"
+    },
+    "vitest.log.gz": {
+      "bytes": 15034,
+      "sha256": "150dbcf9a2ade6d55cea231db3f99cb51e0348999fac04f2d75b075ab35dcc66",
+      "archive_sha256": "40250609fbc2b20595b0cd244075dac27808b3d619a7ae5a2a051a90525a6f07"
+    },
+    "rebuild.log.gz": {
+      "bytes": 97,
+      "sha256": "17cc3bd30b86b93d38264127769e26137517a315d7c0aac6a3f5ec392c0f7227",
+      "archive_sha256": "fad9e7e57a989ef1d279b4d50ee0230ce123d56c38d634487b031252ed59a1aa"
+    },
+    "targeted.log.gz": {
+      "bytes": 257,
+      "sha256": "42e4210a5d201ffb2bf6e1e4b5022a9ae317acafd951af49e10b9480ab4408ce",
+      "archive_sha256": "e6a20dcd5bc565e4b13df4c46b4dec6684aade291ab2da293c1cfa18ce29b23f"
+    }
+  }
+}

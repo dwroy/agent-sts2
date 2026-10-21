@@ -5731,3 +5731,4 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
 - 2026-10-22T07:31:28+08:00 [ops] #20按原核验安装精确kit95f1efb（六SHA/59测试）并保持有效off；正式宿主owner/registry/唯一入口及生产首tick待验。#26工具层核同，待#33精确组合准入后自然边界发布/首局读回，不做前后检查点比较；两issue真实评论读回，未改live/STOP。评论：https://github.com/dwroy/agent-sts2/issues/20#issuecomment-6328888259 、https://github.com/dwroy/agent-sts2/issues/26#issuecomment-6328888942 。原件：paper/materials/20261022-issues26-20-ops/receipt.json。
 
 - 2026-10-22T07:35:02+08:00 [ops] 核071302主/s2各十waiting，无源/测试/合入；67/55产物与291/184原段核同，6/1026及6/499完整审阅。期间main十源变化使自动准入拒绝，无ordinary-close/dataset日志；仅本轮记录，保原失败/科学父，不叠生成器或改当前局。原件：paper/materials/20261022-0731-ops/receipt.json。
+- 2026-10-22T07:35:43+08:00 [watcher] #33 276f3089c 技术核验退回补缺：提示/战绩工具实际内容变化但来源SHA不变，两项固定复制数据探针已复现；不合功能、不进发布、不触生产。tsc/重建及4文件23项专项通过，2111输入未变；发现阻断后主动停自身全检143，原件保留不计通过。补来源清单/回归及完整检查再review。报告 paper/materials/20261022-issue33-integrator-review/。
