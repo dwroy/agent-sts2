@@ -5626,3 +5626,5 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
 - 2026-10-21 17:11:45 CST [Claude] Roy：WSL 盘可再扩 280G（当前 1007G，需全 WSL 停机执行 wsl --manage --resize，时机待定）；运行数据先保留，不删不搬（含 sts2.fun 解压库与对局日志；#23 只回收已归档唯一产物后的工作树副本）。炉石按新方式重启：dwroy/agent-hearthstone 已建看板标签，开 #1 重启评估（只读）并派 hs-issue-1（codex3）；sts2 #22 转 in-progress。
 
 - 2026-10-21T17:15:18+08:00 ops：1713八通知按原文/SHA/真实转达证据去重，三原research task仍不受CLI支持、后两角色登记pending；旧拒绝/false/科学范围保持，不重认证/提醒评论或新模型检查，不改live。paper/materials/20261021-1713-ops/receipt.json。
+
+- 2026-10-21T17:27:41+08:00 [ops] Roy 已授权现在 WSL 停机扩容+280G：STOP/PAUSE保留，无在跑学习/对局/tick/统计，相关锁已空闲；fight训练在纯计算安全点中断-15、三排队刷新取消待恢复，#25 WIP/测试143非通过。已记录就绪，停止本轮；重启后原ops核容量/boot_id与mod，再去重续统计、恢复主调度及唯一autoplay，Regent仍暂停。原件 paper/materials/20261021-wsl-expansion-stop-ops/readiness.json、resume.md。

@@ -1,0 +1,127 @@
+{
+  "at": "2026-10-21T17:26:29+08:00",
+  "boot_id": "72bed121-aca8-4d1c-8b76-cf33745fee28",
+  "filesystem_df_bytes": "Filesystem         1B-blocks         Used    Available Use% Mounted on\n/dev/sdd       1081101176832 908780044288 117328777216  89% /\n",
+  "main": "8885dd6d81248c3c3206316a51414a25ca586034",
+  "live": "5a295bb5ed52f0c0fa5e8c045dcfcba3d894b532",
+  "release": "V6-R410",
+  "CARD": "brain",
+  "REFLEX": "off",
+  "Regent": "paused",
+  "flags": {
+    "ops/STOP": {
+      "exists": true,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "mtime_ns": 1792574155933296786
+    },
+    "ops/codex-ops/PAUSE": {
+      "exists": true,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "mtime_ns": 1792574200877293131
+    },
+    ".worktrees/regent-climb/ops/STOP": {
+      "exists": true,
+      "sha256": "1df3fcbc93e77d5d1ee203b161e9f4b151cf533b375c38eae4d7e71b9302f08c",
+      "mtime_ns": 1792155277505696353
+    },
+    ".worktrees/regent-climb/ops/codex-ops/PAUSE": {
+      "exists": true,
+      "sha256": "1df3fcbc93e77d5d1ee203b161e9f4b151cf533b375c38eae4d7e71b9302f08c",
+      "mtime_ns": 1792155277730871764
+    }
+  },
+  "locks": {
+    "ops/knowledge-refresh.lock": "free",
+    "ops/live-merge.lock": "free",
+    "ops/codex-ops/tick-learn.lock": "free",
+    "ops/codex-ops/tick-stall.lock": "free",
+    "ops/codex-ops/tick-snapshot.lock": "free",
+    "ops/codex-ops/learn.lock": "free",
+    "ops/codex-ops/ordinary-close.lock": "free",
+    "ops/codex-ops/retention.lock": "free"
+  },
+  "run": {
+    "record": {
+      "run_id": "0CLP16ZR4ZZC",
+      "ended": "2026-10-21T09:15:04.472Z",
+      "victory": true,
+      "floor": 49,
+      "character": "SILENT",
+      "ascension": 10,
+      "code": "current",
+      "decisions": 805,
+      "jev_calls": 193,
+      "deepseek_calls": 50,
+      "claude_calls": 0,
+      "tokens": 1462289,
+      "ds_tokens_in": 2658775,
+      "ds_tokens_out": 38333,
+      "ds_cache_hit": 0,
+      "deciders": {
+        "codex": 73,
+        "code": 342,
+        "jev": 193,
+        "jev-plan": 197
+      },
+      "death_fight": null,
+      "death_fight_floor": null,
+      "death_enemy_ids": null
+    },
+    "offset": 406156,
+    "bytes": 459,
+    "sha256": "963fabfec51922b297dedf66c10044185000f73282f432f2b8b0d35c61d8f19a"
+  },
+  "learner_state_running": [],
+  "active_known_workers": [],
+  "original_refresh_processes": [
+    {
+      "pid": 710248,
+      "exited": true
+    },
+    {
+      "pid": 710250,
+      "exited": true
+    },
+    {
+      "pid": 710262,
+      "exited": true
+    },
+    {
+      "pid": 710263,
+      "exited": true
+    }
+  ],
+  "cancelled_waiter_processes": [
+    {
+      "pid": 710249,
+      "exited": true
+    },
+    {
+      "pid": 710258,
+      "exited": true
+    },
+    {
+      "pid": 710264,
+      "exited": true
+    },
+    {
+      "pid": 710271,
+      "exited": true
+    }
+  ],
+  "issue25_test_process": {
+    "pid": 711396,
+    "exited": true
+  },
+  "idle_historical_helper": {
+    "pid": 1321327,
+    "comm": "tools.mjs",
+    "state": "S",
+    "ppid": 1,
+    "start_ticks": "135041698",
+    "cwd": "/home/dw/Projects/agent-sts2/.worktrees/v6-projection-target-progress-20261020/.artifacts/v6-target-progress/isolated-tmp-full-20261020-0908/jev-brain-claude-1321281",
+    "wchan": "do_epoll_wait"
+  },
+  "planned_shutdown_not_performed_by_ops": true,
+  "ready": true
+}

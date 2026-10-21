@@ -4151,3 +4151,5 @@ W4拿牌v2正式3ef4/11a80已核：14源Git/SHA、318清单项加manifest共319�
 - 2026-10-21T15:12:58+08:00 ops接Roy方向：§13覆盖旧切Jev拿牌门，后续不派card_pick类Jev拿牌学习，#27前置交付后再派；live不变。原新bddfa历史题面异议已沿链提醒，未代填watcher/Roy ACK。paper/materials/20261021-1507-ops/receipt.json。
 
 - 2026-10-21T15:15:41+08:00 ops：f922/bddfa重复事件已核原三阶段实际回执，watcher实读及Roy可见原生转达/CLI登记完成，1406B原会话窗口SHA同；仅通知闭环，原提案waiting/归因与当前复现未知，不代Roy本人接受或关科学父。#11评论6310326440，无新提醒/ACK/模型/检查或live改动。paper/materials/20261021-1513-ops/verification.json。
+
+- 2026-10-21T17:27:41+08:00 [ops] Roy 已授权现在 WSL 停机扩容+280G：STOP/PAUSE保留，无在跑学习/对局/tick/统计，相关锁已空闲；fight训练在纯计算安全点中断-15、三排队刷新取消待恢复，#25 WIP/测试143非通过。已记录就绪，停止本轮；重启后原ops核容量/boot_id与mod，再去重续统计、恢复主调度及唯一autoplay，Regent仍暂停。原件 paper/materials/20261021-wsl-expansion-stop-ops/readiness.json、resume.md。
