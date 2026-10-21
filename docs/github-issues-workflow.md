@@ -1,5 +1,7 @@
 # GitHub Issues 协作流程
 
+> 角色与通用架构见 [多 agent 协作架构](agent-board-architecture.md)（Roy 2026-10-21 批准）：Claude 为主管，原 watcher 改为集成员，开发者一个 issue 一个会话，ops 只管运行，派单器（代码）负责派活、提醒与回收。
+
 Roy 2026-10-21 定：会话仍由 herdr 托管，任务与协作改用本仓库 `dwroy/agent-sts2` 的 GitHub Issues。仓库公开，issue 也公开（见下文“公开边界”）。原因：watcher 被当作消息中转站，Codex 压缩时原样保留所有收到的消息（最近一次保留 254 条、约 16 万字符，其中 ops 回执 132 条），导致几乎每步都要压缩；任务、负责人、验收和进度散落在对话与回执里，Roy 看全局要靠转述。
 
 ## 规则
