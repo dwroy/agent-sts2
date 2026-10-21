@@ -5585,3 +5585,5 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
 - 2026-10-21 13:11:51 CST [watcher] #19 集成核验：精确搬运 42620f653 的三份测试与完整证据至 main；main 现有 P×W 与 weighted coverage 契约未变，独立 tsc/6 文件 45 项通过，原完整检查 638 文件 6041 pass/2 skip/0 fail 的日志 SHA256 已核，解除 #8/#15/#17 的四项基线失败；不改 live。
 
 - 2026-10-21T13:15:35+08:00 ops：ordinary124302报告/WT净/十waiting核同；offer后main526d合#19三测试导致原源漂移守卫停止，生产源未变，保attention/null检查。另一s2 dataset0/42baee不代本候选，不重生成器/空合并/模型/检查/live；paper/materials/20261021-1313-ops/receipt.json。
+
+- 2026-10-21 13:39:50 CST [watcher] #17 集成核验：dda6c1c27/dbdd15923 派发登记与回收接口精确合入；仅文档保留 main 架构说明，固定测试41+原回收15通过，联合 tsc/完整 Vitest 全通过；实际运行接入与专用关闭任务验收待 ops，不放宽 #18 回收准入，不执行生产动作。

@@ -1,0 +1,117 @@
+
+ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/issue-17-session-lifecycle/agent
+
+ ✓ tests/v6-direction-provider.test.ts > keeps actual W3 target identities but never substitutes P=1 rows for completed-combo outcomes 24ms
+ ✓ tests/v6-direction-provider.test.ts > reads W3 act and pick paired chain comparisons without marginal-error substitution 16ms
+ ✓ tests/v6-direction-provider.test.ts > turns official complete pick pairs into one T3 and two independent-evaluation T2 observations 8ms
+ × tests/v6-direction-provider.test.ts > carries incomplete-opening provider diagnostics into the brain without treating W0 as a loss or filtering samples 12ms
+   → expected { Object (schema, option_id, ...) } to match object { win: null, …(3) }
+(40 matching properties omitted from actual)
+ × tests/v6-target-values.test.ts > counts low probabilities as bounded known values without inventing W or PW 11ms
+   → expected 'insufficient_known_options' to be null
+ ✓ tests/v6-target-values.test.ts > retains current Boss W with failed model trust while later unknown targets stay separate 14ms
+ ✓ tests/v6-target-values.test.ts > foreground prepares current targets and reuses cached optional fights without new work 10ms
+ × tests/v6-target-values.test.ts > retains deterministic P bounds after the combat deadline instead of erasing the table 2ms
+   → expected 'insufficient_known_options' to be null
+ × tests/v6-projection-entries.test.ts > hands actual combination rows to W4 without cloning a direction maximum into each combo 24ms
+   → expected undefined to be 20 // Object.is equality
+ ✓ tests/v6-projection-entries.test.ts > precomputes baseline simulations for reuse and preserves the P=1 boundary in strict rows 10ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 4 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/v6-direction-provider.test.ts > carries incomplete-opening provider diagnostics into the brain without treating W0 as a loss or filtering samples
+AssertionError: expected { Object (schema, option_id, ...) } to match object { win: null, …(3) }
+(40 matching properties omitted from actual)
+
+- Expected
++ Received
+
+@@ -1,8 +1,12 @@
+  {
+-   "expected_win": null,
+-   "win": null,
++   "expected_win": 0.5,
++   "win": {
++     "n": 100,
++     "se": 0,
++     "value": 0.5,
++   },
+    "win_complete": {
+      "n": 100,
+      "se": 0,
+      "value": 1,
+    },
+
+ ❯ tests/v6-direction-provider.test.ts:139:33
+    137|   });
+    138|   // The retained legacy mixture needs W0 when P<1; P*Wk=.5 would sile…
+    139|   expect(evaluation.entries[0]).toMatchObject({ win: null, win_complet…
+       |                                 ^
+    140|   expect(JSON.stringify(task)).not.toMatch(/"(?:expected_win|win_incom…
+    141|   expect(evaluation.projectionReasons![0]!.reasons).toContain("unknown…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/4]⎯
+
+ FAIL  tests/v6-projection-entries.test.ts > hands actual combination rows to W4 without cloning a direction maximum into each combo
+AssertionError: expected undefined to be 20 // Object.is equality
+
+- Expected:
+20
+
++ Received:
+undefined
+
+ ❯ tests/v6-projection-entries.test.ts:23:30
+     21|   expect(row.entry.availability).toEqual({ take: .75, skip: .5 });
+     22|   expect(row.completed_win).toEqual({ value: 1, se: 0, n: r.config.sam…
+     23|   expect(row.general_win?.n).toBe(r.config.samples_pick);
+       |                              ^
+     24|   expect(row.general_win?.value).toBeCloseTo(.25, 14);
+     25|   expect(r.weights).toEqual({ D: 1 }); expect(table.targets.map(t => t…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/4]⎯
+
+ FAIL  tests/v6-target-values.test.ts > counts low probabilities as bounded known values without inventing W or PW
+AssertionError: expected 'insufficient_known_options' to be null
+
+- Expected:
+null
+
++ Received:
+"insufficient_known_options"
+
+ ❯ tests/v6-target-values.test.ts:18:64
+     16|     expect(currentBossKnown(table, row.entry.option_id)).toBe(true);
+     17|   }
+     18|   expect(constructionCoverage(["take", "skip"], table).reason).toBeNul…
+       |                                                                ^
+     19|   expect(validateProjectionEntries(table.combinations.map(r => r.entry…
+     20|   expect(targetValueSummaries(table, "take")[0]).toMatchObject({ P: .0…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/4]⎯
+
+ FAIL  tests/v6-target-values.test.ts > retains deterministic P bounds after the combat deadline instead of erasing the table
+AssertionError: expected 'insufficient_known_options' to be null
+
+- Expected:
+null
+
++ Received:
+"insufficient_known_options"
+
+ ❯ tests/v6-target-values.test.ts:58:64
+     56|   const table = await engine.evaluate(r);
+     57|   expect(table.combinations).toHaveLength(2);
+     58|   expect(constructionCoverage(["skip", "take"], table).reason).toBeNul…
+       |                                                                ^
+     59| });
+     60|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/4]⎯
+
+
+ Test Files  3 failed (3)
+      Tests  4 failed | 6 passed (10)
+   Start at  12:00:26
+   Duration  2.16s (transform 1.13s, setup 637ms, import 979ms, tests 134ms, environment 0ms)
+

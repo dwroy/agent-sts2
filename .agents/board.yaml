@@ -1,0 +1,38 @@
+repo: dwroy/agent-sts2
+herdr_workspace: agent-sts2
+# Run this dispatcher on the pane host; omit machine for local /proc verification.
+worktree:
+  root: .worktrees
+  base_ref: refs/heads/main
+  allocate: [python3, ops/worktree_checkout.py, "{root}", "{path}", "{ref}"]
+  prepare:
+    - [python3, ops/issue_session_project.py, prepare, "{root}", "{path}"]
+  retire: [python3, ops/worktree_retention.py, complete, --root, "{root}", --state-dir, "{state_dir}", --workspace, "{branch}", --source, "{source}", --main-commit, "{main_commit}", --live-commit, "{live_commit}"]
+  adapter: ops/issue_session_project.py
+roles:
+  dev:
+    kind: codex
+    codex_home_file: ops/codex-ops/codex-home
+    codex_home_env: LEARNER_CODEX_HOME
+    model: gpt-6.1-sol
+    effort: high
+    max_parallel: 4
+  integrator: {pane: "wJ:pJT"}
+  ops: {pane: "w1H:p8"}
+  lead: {kind: claude, notify: board-digest}
+resource_gate: {when: "game running", max_procs_per_task: 2, nice: 19}
+never_reclaim: [".worktrees/live", "panes: integrator, ops, learner-*"]
+verify: ["npx tsc -p tsconfig.json --noEmit", "npx vitest run"]
+session:
+  state_dir: ops/codex-ops
+  command_env: {CODEX_OPS_DIR: "{state_dir}"}
+  inbox: ops/inbox-dev.md
+  materials: paper/materials/issue-session
+  comment_prefix: "[ops]"
+  prompt: >-
+    你是 issue #{issue} 的开发会话，新会话、独立工作树 {worktree}，基于 main {base}。
+    先读 AGENTS.md、README.md、最新 paper/materials/STATE-*.md、decision-log 末尾、
+    docs/learning-protocol.md、docs/github-issues-workflow.md、docs/learner-retention.md，
+    然后 gh issue view {issue} -R {repo} --comments，按目标、验收与边界完成。
+    开工改标签 status:in-progress；交付结果写 issue 评论，首行 [dev #{issue}]，发前 gitleaks，改 status:review。
+    对局在跑：nice {nice}、≤{max_procs} 进程；不运行 play、不改 live/STOP；不关其他会话。
