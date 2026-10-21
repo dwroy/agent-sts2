@@ -5392,3 +5392,5 @@ W4拿牌v2正式3ef4/11a80已核：14源Git/SHA、318清单项加manifest共319�
 - 2026-10-21T15:12:58+08:00 ops：已接Roy§13/c57f78a49，停止新Jev拿牌学习、CARDbrain/live不变，#27等#16/#24、#28等#24/#25后派；#27评论已回读。strategy144302无源码/十waiting，bddfa新异议原文双箱及ops CLI转达已实记，watcher/Roy后两阶段pending；不跑dataset/full或新模型。paper/materials/20261021-1507-ops/receipt.json。
 
 - 2026-10-21T15:15:41+08:00 ops：f922/bddfa重复事件已核原三阶段实际回执，watcher实读及Roy可见原生转达/CLI登记完成，1406B原会话窗口SHA同；仅通知闭环，原提案waiting/归因与当前复现未知，不代Roy本人接受或关科学父。#11评论6310326440，无新提醒/ACK/模型/检查或live改动。paper/materials/20261021-1513-ops/verification.json。
+
+- 2026-10-21T15:47:25+08:00 ops：本轮八项均为原通知的周期重提，已核current快照SHA及索引模式恢复字段、原身份/授权、八份完整队列字节和对应原文。每项生产者SHA、证据绑定、原ops实际双箱写入窗口及原watcher实读/向Roy可见转达的角色证据再次核同；这与Roy本人接受分开。当前CLI源码SHA未变，仅支持四类旧V6/R4任务，不含三类原研究任务，后两角色登记仍pending；保旧拒绝和false旗标，不改任务名、造父或代理ACK，也不重试同一认证。八条科学限制照旧：牌堆与身份缺口、增量未校准、退出净损口径、候选槽非施放分母，以及未知卡/局部实现范围均不扩充。本轮只登记去重及兼容阻塞并恢复短清单可读摘要，不重复通知或issue评论，不派新学习、模型、dataset、full或发布/回收。Roy§13拿牌brain、REFLEXoff、R410/live及现局/Regent与科学父不变。原件：paper/materials/20261021-1543-ops/receipt.json。
