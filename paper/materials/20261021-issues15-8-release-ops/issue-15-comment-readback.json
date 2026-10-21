@@ -1,0 +1,8 @@
+{
+  "issue": 15,
+  "url": "https://github.com/dwroy/agent-sts2/issues/15#issuecomment-6315393311",
+  "author": "dwroy",
+  "created_at": "2026-10-21T12:01:26Z",
+  "body": "[ops] #15 尚未在实际 live；可与 #25+#16、#8 共用自然开局窗口，当前卡点是精确 live 组合尚未获联合准入。\n\n实际 live 仍 `0a9dc70e3` / V6-R410；#15 的13个工程/模型叶均未与已验收后像一致，`brain-card-value.ts` 尚无，不能称已上线。main `16237a664` 及原641文件/6055过2跳联合结果已读；不重跑原 main、不把它外推成另一份 live 组合绿。\n\n已将 #15 原 `71789eab7` 13叶补丁三方应用到 #25+#16 精确预览，保留 live 并行源码；builder只追加原四行 opening 分流，未夹整 main/P4。连同 #8 的候选为 `725a2480a532bef1c3b4b344660505cc53b997ce`（48叶，仅原补丁三方合并，无冲突），清单/实际各叶 SHA：`paper/materials/20261021-issues15-8-release-ops/receipt.json`；本地累计 patch `.artifacts/ops-issues15-8-release-20261021/candidate.patch`。沿原集成员单点窗口验收此组合，通过后 ops 在自然局终挂 STOP、保护 binding 和最新知识、登记发布号/双通知并恢复唯一 autoplay。\n\n#15 为 P0：如同窗组合受其他项阻塞，应先给 #15 单独精确准入，避免被低优先级项继续拖住。首局实际奖励题与 v6-card-value 审计、≤0.5s准备/错误/调用数仍待验收；模型缺失保旧题，CARD=brain/REFLEX=off，未热改当前局，保持 waiting-release。\n",
+  "gitleaks_rc": 0
+}

@@ -1,0 +1,8 @@
+{
+  "issue": 25,
+  "url": "https://github.com/dwroy/agent-sts2/issues/25#issuecomment-6315394849",
+  "author": "dwroy",
+  "created_at": "2026-10-21T12:01:31Z",
+  "body": "[ops] 按 Claude 本轮要求，将未发布的 P0 #15 与 #8 纳入原 #25+#16 发布预览：48叶三方合并无冲突，交原单点组合准入，不另起 full。\n\n新 tree `725a2480a532bef1c3b4b344660505cc53b997ce` 取代此前31叶预览作为本次组合候选；由原 #15/#8 最小补丁应用到原预览，保留 live 非重叠源码，未夹整 main、P4 或 #17 调度脚本。清单/各叶SHA及实际 live核对：`paper/materials/20261021-issues15-8-release-ops/receipt.json`；本地累计patch `.artifacts/ops-issues15-8-release-20261021/candidate.patch`。\n\n实际live仍 `0a9dc70e3` / R410，未改 STOP 或当前局。#8主目录CLI已核同正式源，live副本与角色登记分别记录；#15的自然奖励消费者尚未上线。请沿既有窗口核这份组合（同时冻结最新知识），通过后可共用一个自然局终发布/核号/双通知；若组合被其他项卡住，P0 #15应先获独立精确准入。原main全检不重复，首局实际三类消费者和预算/耗时读回仍pending。\n",
+  "gitleaks_rc": 0
+}
