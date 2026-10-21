@@ -5681,3 +5681,5 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
 - 2026-10-21T21:55:38+08:00 #31 R411+23叶2a906688/f871d0a3私有组合交原单点准入；#20精确kit d154561已装、候选只读dry-run1无动作，统一宿主登记及项目内持久开关缺口沿原dev接续，未启flag/试验/改live或加timer，原提醒CLI实投非角色ACK。原件paper/materials/20261021-issues20-31-ops/receipt.json。
 - 2026-10-21T22:04:36+08:00 2156十事件：FZT A10首试无SL胜/66.4分钟/47成功Codex/下局实际A10已核；211301主策略十waiting、66产物246原段核同，后续WT快进/24共享记录dirty保留；八原异议实际送达同、CLI角色登记仍pending，不重dataset/模型/full或代ACK。原件paper/materials/20261021-2156-ops/receipt.json。
 - 2026-10-21T22:17:19+08:00 2215八原科学异议原文/生产者/证据、双箱原字窗口和watcher向Roy可见转达回执核同；同SHA CLI未支持三research身份，角色登记pending，保拒绝/false，不重认证/代ACK/重复通知，不干预原在途任务或对局。原件paper/materials/20261021-2215-ops/receipt.json。
+
+- 2026-10-21T23:19:19+08:00 [ops] 2315八条重复学习异议原文/证据及真实转达回执核同；原研究CLI身份兼容阻塞未变，后两角色登记pending，保原范围/科学父；仅记录、不重认证/代ACK/提醒/生成器或改对局。原件：paper/materials/20261021-2315-ops/receipt.json。
