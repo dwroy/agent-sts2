@@ -59,7 +59,7 @@ worktree:
   retire: python3 ops/worktree_retention.py complete --workspace {path}
 roles:
   dev:        {kind: codex, codex_home: ~/.codex1, model: gpt-6.1-sol, effort: high, max_parallel: 4}
-  integrator: {pane: wJ:pJT}
+  integrator: {pane: wJ:p1HD}
   ops:        {pane: w1H:p8}
   lead:       {kind: claude, notify: board-digest}
 resource_gate: {when: "game running", max_procs_per_task: 4, nice: 19}
