@@ -1,7 +1,8 @@
 import type { BrainRunProfile, BrainNativeReceipt } from "./run-profile.js";
 import { currentDecisionBudget, withinDecisionBudget, withIndependentDecisionBudget, HUMAN_PACE_BUDGETS, DecisionBudgetExpired } from "../core/decision-budget.js";
 /**
- * Production createRouter selects the Codex-only path: outages wait on the same question and faults propagate.
+ * Production selects one knowledge-agent engine per run without cross-engine fallback.
+ * The Codex path retains its same-question outage wait and fault reporting.
  * The configurable fallback path below remains for historical engine adapters and fixed regression fixtures.
  *
  * The brain router (docs/v4-architecture.md §2): picks the engine for a question from the environment, validates
@@ -169,6 +170,7 @@ export interface BrainLogRow {
   payload: unknown;
   tools: string[];
   tool_calls: BrainAnswer["toolCalls"];
+  agent?: BrainAnswer["agent"];
   answer: unknown;
   problems: string[];
   reasks: number;
@@ -215,6 +217,7 @@ export interface RouterDeps {
   fallbackBudget?: FallbackBudget;
   /** Production policy (Roy 2026-10-07); omitted by historical router fixtures. */
   codexOnly?: boolean;
+  knowledgeAgent?: boolean;
   wait?: BrainWait;
 }
 
@@ -292,7 +295,10 @@ export class BrainRouter {
    * KNOWLEDGE_PREFIX=full every engine off (the whole knowledge base is in the system prompt; set on explicitly to
    * add them); otherwise the others on.
    */
+  get knowledgeAgent(): boolean { return this.deps.knowledgeAgent === true; }
+
   toolsFor(engine: EngineName): boolean {
+    if (this.knowledgeAgent) return true;
     const set = this.deps.config.engines[engine].tools ?? this.deps.config.tools;
     if (set !== null && set !== undefined) return set;
     // Codex runs with no tool at all (engines/codex.ts isolation): it ignores a tool list.
@@ -393,13 +399,15 @@ export class BrainRouter {
    */
   async decide(request: BrainRequest): Promise<BrainAnswer> {
     const profile = this.deps.config.runProfile;
+    const budgetMs = this.knowledgeAgent ? this.deps.config.agent[this.engineFor(request.label) === "deepseek" ? "deepseekTotalMs" : "codexTotalMs"] : HUMAN_PACE_BUDGETS.brain;
+    if (this.knowledgeAgent) request.timeoutMs ??= budgetMs;
     if (profile) request.effort = profile.effort;
     const pace = currentDecisionBudget();
     if (pace && !request.budgetSignal) {
       pace.promoteBrain();
-      return withIndependentDecisionBudget("L2_brain", "brain", HUMAN_PACE_BUDGETS.brain, "L2", () =>
+      return withIndependentDecisionBudget("L2_brain", "brain", budgetMs, "L2", () =>
         withinDecisionBudget("L2_brain", (signal) => this.decide({ ...request, budgetSignal: signal,
-          effort: profile?.effort ?? this.deps.config.engines[this.codexOnly ? "codex" : this.engineFor(request.label)].effort ?? undefined, timeoutMs: HUMAN_PACE_BUDGETS.brain }), HUMAN_PACE_BUDGETS.brain));
+          effort: profile?.effort ?? this.deps.config.engines[this.codexOnly ? "codex" : this.engineFor(request.label)].effort ?? undefined, timeoutMs: budgetMs }), budgetMs));
     }
     if (request.budgetSignal?.aborted) throw new DecisionBudgetExpired(request.label);
     request.questionId ??= this.nextQuestionId();
@@ -563,6 +571,7 @@ export class BrainRouter {
   private async attempt(name: EngineName, request: BrainRequest, asFallback = false): Promise<Attempt> {
     const engine = this.engine(name);
     const req: BrainRequest = this.toolsFor(name) ? request : { ...request, tools: [] };
+    const began = this.now();
     const first = await this.call(engine, req, asFallback);
     const firstCheck = BrainRouter.check(req, first);
     const firstProblems = [...firstCheck.hard, ...firstCheck.soft];
@@ -572,7 +581,10 @@ export class BrainRouter {
     const previous = first.raw ?? (first.answer === null ? "" : JSON.stringify(first.answer));
     let second: BrainAnswer;
     try {
-      second = await this.call(engine, { ...req, reask: { answer: previous || "(no answer)", problems: firstProblems } }, asFallback);
+      second = await this.call(engine, { ...req, ...(this.knowledgeAgent ? {
+        tools: [], timeoutMs: Math.max(1, (req.timeoutMs ?? 300_000) - (this.now() - began)),
+        question: `${req.question}\n\n已查询的知识（不再调用工具）：${JSON.stringify(first.toolCalls)}`,
+      } : {}), reask: { answer: previous || "(no answer)", problems: firstProblems } }, asFallback);
     } catch (error) {
       if (this.codexOnly) {
         const secondUsage = errorUsage(error);
@@ -601,6 +613,13 @@ export class BrainRouter {
       latencyMs: first.latencyMs + second.latencyMs,
       usage,
       toolCalls: [...first.toolCalls, ...second.toolCalls],
+      ...(first.agent || second.agent ? { agent: {
+        fallback: second.agent?.fallback ?? first.agent?.fallback ?? null,
+        toolPhaseMs: (first.agent?.toolPhaseMs ?? 0) + (second.agent?.toolPhaseMs ?? 0), totalMs: first.latencyMs + second.latencyMs,
+        noToolCalls: first.toolCalls.length + second.toolCalls.length === 0,
+        thinkingWithoutTools: first.agent?.thinkingWithoutTools === true || second.agent?.thinkingWithoutTools === true,
+        jsonTextWithoutTools: first.agent?.jsonTextWithoutTools === true || second.agent?.jsonTextWithoutTools === true,
+      } } : {}),
       answer: secondCheck.hard.length === 0 ? second.answer : keepFirst ? first.answer : null,
       problems: keepFirst ? [...firstProblems, ...secondProblems.map((problem) => `re-ask: ${problem}`)] : secondProblems,
       first: { answer: first.answer, problems: firstProblems },
@@ -717,7 +736,8 @@ export class BrainRouter {
       ...(req.options ? { options: req.options } : {}),
       payload: req.payload,
       tools: (this.toolsFor(engine) ? req.tools ?? [] : []).map((tool) => tool.name),
-      tool_calls: result?.toolCalls ?? [],
+      tool_calls: result?.toolCalls ?? (error && typeof error === "object" && "brainToolCalls" in error ? error.brainToolCalls as BrainAnswer["toolCalls"] : []),
+      ...(result?.agent ? { agent: result.agent } : error && typeof error === "object" && "brainAgent" in error ? { agent: error.brainAgent as BrainAnswer["agent"] } : {}),
       answer: result?.answer ?? null,
       accepted: result !== null && !BrainRouter.unusable(req, result),
       problems: result?.problems ?? [],

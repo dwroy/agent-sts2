@@ -1,4 +1,5 @@
 /**
+ * Historical V4 tool list (production uses the knowledge-only agent-knowledge.ts list).
  * The V4 tool list (docs/v4-architecture.md §3). Owned by the v4-gkb work: knowledge-base, log and simulator
  * tools are added here. Engines and the MCP server only ever read this list.
  */

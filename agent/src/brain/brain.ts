@@ -1,5 +1,6 @@
 /**
- * Production createRouter always uses Codex. Legacy engine adapters remain for historical fixed-data tests.
+ * Production uses a knowledge agent: isolated Codex app-server or Nova dsh, selected once per run.
+ * Legacy generic adapters remain for historical fixed-data tests.
  *
  * The brain as the game loop calls it: the v3 DeepSeek call signatures (choose, choosePlan, askJson), now
  * answered through the router by whichever engine the environment names (docs/v4-architecture.md §2).
@@ -20,7 +21,7 @@
 import { dirname, join } from "node:path";
 
 import { brainLogPath, DEFAULT_CODEX_EFFORT, DEFAULT_CODEX_MODEL, type AppConfig } from "../core/config.js";
-import { brainSystemPrompt, DeepSeekAnswerError, type DeepSeekAnswer, type DeepSeekClient } from "./llm/deepseek.js";
+import { DeepSeekAnswerError, type DeepSeekAnswer, type DeepSeekClient } from "./llm/deepseek.js";
 import { buildTools } from "./tools/registry.js";
 import type { ToolContext, ToolDef } from "./tools/types.js";
 import type { JsonValue } from "../core/util/json.js";
@@ -29,7 +30,6 @@ import { checkCodex, CodexEngine, type CodexCheck } from "./engines/codex.js";
 import type { CodexUsageGuard } from "./engines/codex-usage.js";
 import { DeepSeekEngine } from "./engines/deepseek.js";
 import { isContextOverflow, KnowledgePrompt, prefixSizeWarning } from "./knowledge.js";
-import { frozenFacts } from "../knowledge/render/facts.js";
 import { BrainRouter, EngineFailure, type BrainLogRow, type FallbackBudget } from "./router.js";
 import type { BrainWait } from "./wait.js";
 import { carriesRunPlan, fightPlanFromSchema, fightPlanSpec, freeSpec, pickSpec, routePlanSpec, runPlanSpec, shopPlanSpec, withRunPlanField, withDirectionRideField } from "./specs.js";
@@ -37,9 +37,18 @@ import { DIRECTION_RIDE_KEY } from "../v6/direction-rides.js";
 import { routeAnswerText } from "../sim/route-map.js";
 import type { AnswerSpec, BrainAnswer, BrainEngine, BrainRequest, EngineName } from "./types.js";
 import { KNOWLEDGE_DIR } from "../core/paths.js";
-import { knowledgeFile } from "../knowledge/files.js";
 import { StrategyEntries } from "../knowledge/strategy-entries.js";
+import { KnowledgeAgent } from "./engines/knowledge-agent.js";
+import { DshEngine } from "./engines/dsh.js";
+import { buildKnowledgeTools } from "./tools/agent-knowledge.js";
+import { systemRules } from "./llm/deepseek.js";
+import { memoryWithoutLessons } from "./knowledge.js";
 import { attachOpenBook } from "../knowledge/open-book.js";
+
+/** Rules are stable; all knowledge content is obtained through the process-owned MCP. */
+export function agentSystemPrompt(): string {
+  return `${systemRules()}\n\n知识只从所给知识工具按需查询。工具返回标明自有/外部来源与版本；外部资料不计本角色实盘验证。当前 mod 状态和题内代码投影优先。工具出错或预算用完后使用已有信息，未知保持未知，直接输出规定 JSON。`;
+}
 
 /** The project's knowledge directory (core/paths.ts): the data files the knowledge tools read (knowledge/files.ts). */
 export { KNOWLEDGE_DIR };
@@ -92,19 +101,28 @@ export function codexTracePath(config: AppConfig): string | null {
 }
 
 /** A router over lazily created engines, logging to BRAIN_LOG (default: brain.jsonl next to the decision log). */
-export function createRouter(config: AppConfig, deepseek: DeepSeekClient | null, options: { log?: (row: BrainLogRow) => void; claudeToolsModule?: string; fallbackBudget?: FallbackBudget; wait?: BrainWait } = {}): BrainRouter {
-  if (config.brain.runProfile?.engine === "deepseek") throw new Error("DeepSeek run profiles require issue #32; no engine substitution is allowed");
+export function createRouter(config: AppConfig, _deepseek: DeepSeekClient | null, options: { log?: (row: BrainLogRow) => void; claudeToolsModule?: string; fallbackBudget?: FallbackBudget; wait?: BrainWait } = {}): BrainRouter {
+  const selected = config.brain.runProfile?.engine ?? config.brain.productionEngine ?? "codex";
   const engines = new Map<EngineName, BrainEngine>();
   // An engine's own notes (codex: a usage read that failed) go where the router's go (Brain.onNote).
   const note = (message: string): void => router.say(message);
   const router: BrainRouter = new BrainRouter({
-    config: { ...config.brain, engine: "codex", byPrefix: {}, fallback: null, log: brainLogPath(config) },
-    codexOnly: true,
+    config: { ...config.brain, engine: selected, byPrefix: {}, fallback: null, log: brainLogPath(config) },
+    codexOnly: selected === "codex",
+    knowledgeAgent: true,
     ...(options.wait ? { wait: options.wait } : {}),
     engine: (name) => {
       let engine = engines.get(name);
       if (!engine) {
-        engine = createEngine(name, config, deepseek, { ...(options.claudeToolsModule ? { claudeToolsModule: options.claudeToolsModule } : {}), note });
+        if (name !== "codex" && name !== "deepseek") throw new Error("production brain engine must be codex or deepseek");
+        let usageGuard: CodexUsageGuard | undefined;
+        engine = new KnowledgeAgent(name, config.brain.engines[name].model ?? "deepseek/deepseek-flash", config.brain, (url) => {
+          if (name === "deepseek") return new DshEngine(config.brain, url);
+          const codex = new CodexEngine({ settings: config.brain.engines.codex, codex: { ...config.brain.codex, mode: "session" }, traceFile: codexTracePath(config), note, knowledgeAgent: true,
+            ...(usageGuard ? { usageGuard } : {}), ...(url ? { knowledgeMcpUrl: url } : {}) });
+          usageGuard ??= codex.usage;
+          return codex;
+        });
         engines.set(name, engine);
       }
       return engine;
@@ -122,15 +140,8 @@ export function brainUses(brain: AppConfig["brain"], engine: EngineName): boolea
 
 /** The loop's brain; `fallbackBudget` is the loop's DEEPSEEK_MAX_CALLS for DeepSeek asked as the fallback. */
 export function createBrain(config: AppConfig, deepseek: DeepSeekClient | null, options: { fallbackBudget?: FallbackBudget; wait?: BrainWait } = {}): Brain {
-  // KNOWLEDGE_PREFIX=full: the prefix's data facts frozen for the day in the directory v3 keeps its guide snapshots in.
-  // MECH_RULES=off: the prefix's monster blocks without the observed mechanics (as before them); MECH_MOVE_RULES=off: without
-  // the learned move changes (as with MECH_RULES alone).
-  const prompt = deepseek ?? brainSystemPrompt({
-    guideFile: knowledgeFile(KNOWLEDGE_DIR, `${config.run.characterId}-guide.md`, config.run.characterId),
-    handbookFile: knowledgeFile(KNOWLEDGE_DIR, "ds-handbook.md", config.run.characterId),
-    factsSnapshotDir: config.deepseek?.factsSnapshotDir,
-  });
-  return new Brain(createRouter(config, deepseek, options), prompt, buildTools, new KnowledgePrompt({ facts: frozenFacts(config.deepseek?.factsSnapshotDir), mechanics: config.mechRules, moveRules: config.mechMoveRules }));
+  // Production never renders/falls back to the full knowledge prefix or legacy handwritten guide.
+  return new Brain(createRouter(config, deepseek, options), { systemPrompt: agentSystemPrompt() }, buildKnowledgeTools);
 }
 
 /** The spec of a free-form task by its label (run plan, fight plan), with the caller's own format check. */
@@ -213,7 +224,8 @@ export class Brain {
       const result = await codexCheck(config.codex, settings.model ?? DEFAULT_CODEX_MODEL, settings.effort ?? DEFAULT_CODEX_EFFORT);
       this.codexCheck = { bin: config.codex.bin, ...result };
       if (!result.ok) throw new EngineFailure(`Codex preflight: ${result.error}`, "unavailable");
-      const engine = this.router.engineOf("codex");
+      const adapter = this.router.engineOf("codex");
+      const engine = adapter instanceof KnowledgeAgent ? await adapter.initialise() : adapter;
       if (engine instanceof CodexEngine) await engine.usage.recover();
     });
     if (!this.router.codexOnly && brainUses(config, "claude")) {
@@ -243,7 +255,8 @@ export class Brain {
       } else {
         // The plan's usage before the first call (engines/codex-usage.ts): a window at the stop or credits in use keep
         // codex off for the process; a read that fails is said once by the guard (or stops codex when required).
-        const engine = this.router.engineOf("codex");
+        const adapter = this.router.engineOf("codex");
+        const engine = adapter instanceof KnowledgeAgent ? await adapter.initialise() : adapter;
         if (engine instanceof CodexEngine) {
           this.codexUsage = engine.usage;
           const stop = await engine.usage.start();
@@ -280,8 +293,10 @@ export class Brain {
     if (isObject(payload) && DIRECTION_RIDE_KEY in payload) spec = withDirectionRideField(spec, payload);
     const liveRun = (this.context?.state as Record<string, unknown> | undefined)?.["run_id"];
     const runId = typeof liveRun === "string" ? liveRun : "";
+    // Legacy fixed-data adapters retain their historical prompt layout.
+    const agentMode = this.router.knowledgeAgent;
     // Options and the question take precedence over background deck references under the byte cap.
-    if (isObject(payload)) {
+    if (!agentMode && isObject(payload)) {
       const enriched = attachOpenBook({ options, question, payload }, { directory: this.context?.knowledgeDir });
       if (isObject(enriched) && enriched["open_book"]) {
         payload = { ...(enriched["payload"] as Record<string, unknown>), open_book: enriched["open_book"] };
@@ -297,11 +312,22 @@ export class Brain {
       question,
       ...(options ? { options } : {}),
       payload,
-      spec: this.router.codexOnly && isObject(payload) && carriesRunPlan(payload) ? {
+      spec: (this.router.codexOnly || agentMode) && isObject(payload) && carriesRunPlan(payload) ? {
         ...spec, validate: (answer) => [...spec.validate(answer), ...runPlanSpec("run-plan", payload).validate(isObject(answer) ? answer["run_plan"] : null).map((p) => `run_plan: ${p}`)],
       } : spec,
       ...this.toolsFor(label),
     };
+    if (agentMode) {
+      const strip = (v: unknown): unknown => {
+        if (Array.isArray(v)) return v.map(strip);
+        if (!isObject(v)) return v;
+        return Object.fromEntries(Object.entries(v).filter(([k]) => !["open_book", "strategy_entries"].includes(k)).map(([k, value]) => [k, strip(value)]));
+      };
+      return { ...base, system: agentSystemPrompt(),
+        memory: memoryWithoutLessons(base.memory), payload: strip(base.payload),
+        ...(base.toolContext ? { toolContext: { ...base.toolContext, label, payload: base.payload } } : {}),
+        knowledge: { mode: "tools", ...(this.context ? { ascension: this.context.ascension } : {}) } };
+    }
     const req = this.strategyEntries.apply(base, this.context?.knowledgeDir ?? KNOWLEDGE_DIR);
     if (this.router.config.knowledgePrefix !== "full") return req;
     const full = this.knowledge.apply(req, this.context ? { ascension: this.context.ascension, knowledgeDir: this.context.knowledgeDir } : null);

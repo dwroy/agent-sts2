@@ -1,0 +1,31 @@
+{
+  "scanner": "gitleaks detect --no-git --redact",
+  "scope": "own staged patch, full delivery diff from allocated base including #26 dependency, and all public compressed logs scanned in cleartext before compression",
+  "scans": [
+    {
+      "log": "data/issue33-gitleaks-final-staged.log",
+      "sha256": "2a39bc4793acacdf5d14f8bd0382ff437deea2a38adaf9d5f58407bccc038c96",
+      "exit": 0
+    },
+    {
+      "log": "data/issue33-gitleaks-final-dependency.log",
+      "sha256": "fbf7b33535ec076ae54f37b80b9e88ed930a4c885f990e76c5419e57306d9d40",
+      "exit": 0
+    },
+    {
+      "log": "data/issue33-gitleaks-final-logs.log",
+      "sha256": "09d01e4ce3feb685c6ca3a04492d2ca3f29362a162841bebdddfae19d6c0f6f3",
+      "exit": 0
+    },
+    {
+      "log": "data/issue33-gitleaks-history.log",
+      "sha256": "c765dd64a2d9456bcb21487dc80d228540952058643aca2043b7d8c739c57a8a",
+      "exit": 0
+    },
+    {
+      "log": "data/issue33-gitleaks-history-extra.log",
+      "sha256": "bc5174a47006a945f93f865871a50d6ca4c65759a21ff497bee38f46f447ea0a",
+      "exit": 0
+    }
+  ]
+}

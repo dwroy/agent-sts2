@@ -1,0 +1,98 @@
+{
+  "schema": "issue33-verification-v1",
+  "verified_at": "2026-10-21T22:12:49.500190+00:00",
+  "base": "8bdb952c92130b75c83824ac9000c70255fb3aa7",
+  "dependency_commit": "92db688809eca415acb24242d9297c21b7ae04bd",
+  "frozen_executable_files_verified": 37,
+  "dependency_leaves_verified": 4,
+  "development_native_context": {
+    "model": "gpt-6.1-sol",
+    "effort": "high",
+    "source": "own native turn_context",
+    "line_sha256": "2d72851ac269fdf2b856bffd5033fc59d28af265b47f328381bf15200853efc6"
+  },
+  "commands": {
+    "tsc": "cd agent; nice -n 19 node node_modules/typescript/bin/tsc -p tsconfig.json --noEmit",
+    "complete_vitest": "cd agent; nice -n 19 node node_modules/vitest/vitest.mjs run --pool=threads --maxWorkers=1 --no-file-parallelism --exclude tests/paths.test.ts --reporter=verbose",
+    "paths": "cd agent; nice -n 19 node node_modules/vitest/vitest.mjs run tests/paths.test.ts --pool=forks --maxWorkers=1 --no-file-parallelism --reporter=verbose",
+    "checkout_recheck": "cd agent; nice -n 19 node node_modules/vitest/vitest.mjs run tests/check-imports.test.ts --pool=threads --maxWorkers=1 --no-file-parallelism --reporter=verbose"
+  },
+  "command_note": "Direct local binaries avoid npx process overhead while honoring the running-game process limit. paths uses process.chdir and requires a fork.",
+  "tsc": {
+    "exit": 0
+  },
+  "complete_run": {
+    "exit": 1,
+    "files": 651,
+    "files_passed": 650,
+    "files_failed": 1,
+    "cases_passed": 6137,
+    "cases_failed": 1,
+    "cases_skipped": 2,
+    "duration_seconds": 1261.56,
+    "only_failure": "check-imports: exact HEAD historical material absent from sparse checkout"
+  },
+  "checkout_recheck": {
+    "exit": 0,
+    "files": 1,
+    "cases_passed": 1,
+    "source_changed": false,
+    "materialization": "materialization.json"
+  },
+  "paths": {
+    "exit": 0,
+    "files": 1,
+    "cases_passed": 11
+  },
+  "final_coverage": {
+    "files": 652,
+    "cases_passed": 6149,
+    "cases_skipped": 2,
+    "unresolved_failures": 0,
+    "method": "Full run plus same-source recheck after restoring an exact HEAD historical input; paths separately in a single fork. This is not a claim that the initial full command exited zero."
+  },
+  "offline_receipts": [
+    "codex-preflight.json",
+    "codex-answer-preflight.json",
+    "dsh-preflight.json"
+  ],
+  "real_inference_calls": 0,
+  "games_started": 0,
+  "publication": {
+    "main": false,
+    "live": false,
+    "release_id_assigned": false,
+    "natural_run_acceptance": "pending ops at natural boundary"
+  },
+  "logs": [
+    {
+      "source": "data/issue33-tsc-final.log",
+      "archive": "verification/issue33-tsc-final.log.gz",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "archive_sha256": "9ceffb7310338057cfe71a4ae1e2c98d2c485d81cdef906532a801f457a38d64"
+    },
+    {
+      "source": "data/issue33-full-vitest-controller.log",
+      "archive": "verification/issue33-full-vitest-controller.log.gz",
+      "bytes": 976198,
+      "sha256": "67d037f5bf98be6f3417df724f4022b7689ea29db69d27f465b159c8eefac05e",
+      "archive_sha256": "e9a9347ded4c41a8ee05c1518d5f70cfd1148b5d3ed91507e3c031ebb4e53a6b"
+    },
+    {
+      "source": "data/issue33-paths-final.log",
+      "archive": "verification/issue33-paths-final.log.gz",
+      "bytes": 1737,
+      "sha256": "2aab136e80722f5fb1461b2eb10499fa69d551d27ec0d21168030ba3fcd0d744",
+      "archive_sha256": "1e4979d1b00ed610bb5a3bcfd7647d1069c80b3219b08c0ee2ad2a4d6a34c7a7"
+    },
+    {
+      "source": "data/issue33-imports-final.log",
+      "archive": "verification/issue33-imports-final.log.gz",
+      "bytes": 329,
+      "sha256": "0c82de6c3e2619762b6fa8b3e4e18c7534296c1e718c66eadb01d2cb66d8b94b",
+      "archive_sha256": "6353ce0fe93cb8fec1a026a76f8890ae204a4b9ef4c20d1801c056077dad6186"
+    }
+  ],
+  "historical_attempts": "historical-checks.json"
+}

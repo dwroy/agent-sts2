@@ -48,7 +48,10 @@ for (const character of ["ironclad", "silent", "regent"]) {
     }
     const code = { commit: "0".repeat(40), code: "fixed", dirty: false, dirty_files: [], branch: "fixture", worktree: "fixture" };
     const fixedEnv = Object.fromEntries(Object.entries(process.env).filter(([key]) => key.startsWith("V6_")));
-    const r = runConfigRow({ env: fixedEnv, code, config: loadConfig({ DECISION_LOG: "/__v6_off_fixed__/decisions.jsonl" }), brain: null, jevEnabled: false, mode: "play", knowledgeDir: "/__v6_fixed_missing__", processStarted: "2026-10-19T00:00:00.000Z" },
+    // Pin the original W0 engine settings; #33 changes production defaults, not this historical replay.
+    const historical = loadConfig({ BRAIN_CODEX_EFFORT: "xhigh", DECISION_LOG: "/__v6_off_fixed__/decisions.jsonl" });
+    historical.brain.engines.deepseek.effort = null;
+    const r = runConfigRow({ env: fixedEnv, code, config: historical, brain: null, jevEnabled: false, mode: "play", knowledgeDir: "/__v6_fixed_missing__", processStarted: "2026-10-19T00:00:00.000Z" },
       { runId: "FIXTURE_RUN", ascension: 0, character: character.toUpperCase(), floor: 1 }, new Date("2026-10-19T00:00:00.000Z"));
     r.process.pid = 0;
     expect(hash(r), "run-config including config_sha").toBe(expected[`${character}:run-config`]);

@@ -82,6 +82,9 @@ export interface CodexEngineOptions {
   traceFile?: string | null;
   /** Session mode's request timeouts (tests). */
   sessionTimeouts?: SessionOptions["timeouts"];
+  /** Only the process-owned knowledge MCP server; agent calls never fall back to exec. */
+  knowledgeMcpUrl?: string;
+  knowledgeAgent?: boolean;
   /** Where the engine says what the console should see (a usage read that failed); the router's note. */
   note?: (message: string) => void;
   /**
@@ -90,6 +93,8 @@ export interface CodexEngineOptions {
    */
   refreshAuth?: () => Promise<void>;
   readUsage?: () => Promise<CodexUsage>;
+  /** Keep one plan/account guard across the querying and final-answer harnesses. */
+  usageGuard?: CodexUsageGuard;
   now?: () => number;
   /** Physical turn/exec cap for an isolated, authorized probe; never set by production config. */
   physicalCallLimit?: number;
@@ -825,7 +830,7 @@ export class CodexEngine implements BrainEngine {
     const timeoutMs = usageReadTimeout(opts.codex.usage);
     const read = opts.readUsage ?? (() => readCodexUsage({ bin, home, env: codexEnv(bin, home), stateDir: join(this.stateDir, "usage"), timeoutMs }));
     const refreshAuth = opts.refreshAuth ?? (() => refreshCodexAuth({ bin, home, env: codexEnv(bin, home), stateDir: join(this.stateDir, "usage"), timeoutMs }));
-    this.usage = new CodexUsageGuard(opts.codex.usage, read, { note: (message) => this.opts.note?.(message), refreshAuth, ...(opts.now ? { now: opts.now } : {}) });
+    this.usage = opts.usageGuard ?? new CodexUsageGuard(opts.codex.usage, read, { note: (message) => this.opts.note?.(message), refreshAuth, ...(opts.now ? { now: opts.now } : {}) });
   }
 
   /** The latest usage reading, for brain.jsonl (router.ts: rows about codex). */
@@ -1004,7 +1009,7 @@ export class CodexEngine implements BrainEngine {
 
   /** The mode the next question goes out in. */
   get mode(): "exec" | "session" {
-    return this.opts.codex.mode === "session" && !this.sessionOff ? "session" : "exec";
+    return this.opts.knowledgeMcpUrl || this.opts.codex.mode === "session" && !this.sessionOff ? "session" : "exec";
   }
 
   async decide(req: BrainRequest, signal?: AbortSignal): Promise<BrainAnswer> {
@@ -1032,9 +1037,16 @@ export class CodexEngine implements BrainEngine {
     }
   }
 
-  /** Session mode off for the rest of the process (said once); exec mode answers from now on. */
+  /** Knowledge mode waits on an unavailable session; historical adapters may switch to exec. */
   private turnSessionOff(why: string): void {
     if (this.sessionOff) return;
+    if (this.opts.knowledgeAgent) {
+      const failed = this.session;
+      this.session = null;
+      this.sessionRestarts = 0;
+      void failed?.close();
+      throw new EngineFailure(`knowledge agent requires isolated app-server: ${why}`, "unavailable", CODEX_REST_MS.unavailable);
+    }
     this.sessionOff = why.slice(0, 300);
     this.opts.note?.(`WARNING: codex session mode is off for the rest of this process (${this.sessionOff}); codex answers in exec mode`);
     const session = this.session;
@@ -1054,6 +1066,7 @@ export class CodexEngine implements BrainEngine {
       bin,
       home,
       args: sessionArgs({ catalogFile, stateDir: this.stateDir, effort: c.effort, summary, serviceTier }),
+      ...(this.opts.knowledgeMcpUrl ? { knowledgeMcpUrl: this.opts.knowledgeMcpUrl } : {}),
       env: c.env,
       stateDir: this.stateDir,
       model: c.model,
