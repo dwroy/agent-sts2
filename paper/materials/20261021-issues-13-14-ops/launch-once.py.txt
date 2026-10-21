@@ -1,0 +1,112 @@
+from pathlib import Path
+import fcntl
+import hashlib
+import json
+import os
+import re
+import subprocess
+import sys
+import time
+
+r = Path('/home/dw/Projects/agent-sts2')
+a = Path(__file__).resolve().parent
+issue = int(sys.argv[1])
+assert issue in (13, 14)
+state_path = r / f'notes/issue-{issue}-learning-dispatch.json'
+state = json.loads(state_path.read_text())
+sha = lambda b: hashlib.sha256(b).hexdigest()
+
+
+def now():
+    return subprocess.check_output(['date', '-Iseconds'], text=True).strip()
+
+
+def save():
+    # Preserve independently verified native metadata when the finite launcher exits.
+    latest = json.loads(state_path.read_text())
+    for key in ['native_start_receipt', 'native_effort_receipt', 'issue_comment_url']:
+        if key in latest:
+            state[key] = latest[key]
+    raw = json.dumps(state, ensure_ascii=False, indent=2) + '\n'
+    for path in [state_path, a / f'issue-{issue}-dispatch.json']:
+        temporary = path.with_name(path.name + '.tmp')
+        temporary.write_text(raw)
+        os.replace(temporary, path)
+
+
+def check_file(entry):
+    raw = Path(entry['path']).read_bytes()
+    assert len(raw) == entry['bytes'] and sha(raw) == entry['sha256'], entry['path']
+
+
+try:
+    with (r / f'ops/codex-ops/learner/issue-{issue}-learning.lock').open('a') as lease:
+        fcntl.flock(lease, fcntl.LOCK_EX | fcntl.LOCK_NB)
+        (a / f'issue-{issue}-started-once').mkdir()
+        assert state['state'] == 'prepared-not-dispatched'
+        manifest = Path(state['manifest'])
+        assert sha(manifest.read_bytes()) == state['manifest_sha256']
+        inputs = json.loads(manifest.read_text())
+        assert inputs['issue'] == issue and inputs['batch'] == state['batch']
+        for entry in inputs['files']:
+            check_file(entry)
+        shared = json.loads(Path(inputs['shared_manifest']).read_text())
+        for entry in shared['knowledge_files']:
+            check_file(entry)
+        check_file(shared['runs_snapshot'])
+        tree = Path(state['worktree'])
+        assert subprocess.check_output(['git', '-C', str(tree), 'rev-parse', 'HEAD'], text=True).strip() == state['base']
+        assert not subprocess.check_output(['git', '-C', str(tree), 'status', '--porcelain'])
+        assert sha(Path(state['taskfile']).read_bytes()) == state['task_sha256']
+        directory = r / 'ops/codex-ops'
+        selected_home = (directory / 'codex-home').read_text().strip()
+        assert selected_home == state['selected_learner_home']
+        out_path = directory / 'learner' / (state['batch'] + '.out')
+        err_path = directory / 'learner' / (state['batch'] + '.err')
+        # Load the existing TypeScript launcher directly instead of keeping a second tsx CLI process.
+        command = ['nice', '-n', '19', 'ionice', '-c', '3', str(Path.home() / '.local/node/bin/node'),
+                   '--import', str(r / 'agent/node_modules/tsx/dist/loader.mjs'),
+                   str(r / 'learner/run.ts'), '--engine', 'codex', '--task', state['taskfile'],
+                   '--cwd', str(tree), '--character', 'silent', '--model', 'gpt-6.1-sol',
+                   '--effort', 'high', '--timeout-min', '240', '--set', 'batch=' + state['batch'],
+                   '--set', 'evidence=' + str(manifest)]
+        env = {**os.environ, 'LEARNER_CODEX_HOME': selected_home,
+               'LEARNER_CODEX_BIN': str(r / 'ops/codex-learner.sh'), 'STS2_WORKSPACE': str(r),
+               'PATH': str(Path.home() / '.local/node/bin') + ':' + os.environ['PATH'],
+               'OMP_NUM_THREADS': '1', 'OPENBLAS_NUM_THREADS': '1', 'MKL_NUM_THREADS': '1',
+               'NUMEXPR_NUM_THREADS': '1', 'SANDBOX_WORKERS': '1'}
+        state.update(state='launching-original-sandbox', at=now(), supervisor_pid=os.getpid(),
+                     stdout=str(out_path), stderr=str(err_path), command=command,
+                     source_of_launch='existing learner/run.ts; fresh native session, no resume',
+                     native_consumption='pending actual native thread/turn receipt',
+                     herdr_pane=os.environ.get('HERDR_PANE_ID'), account_changed=False)
+        save()
+        with out_path.open('xb') as out, err_path.open('xb') as err:
+            child = subprocess.Popen(command, cwd=r / 'agent', env=env, stdout=out, stderr=err)
+            state.update(state='launcher-running-await-native-first-reply', launcher_pid=child.pid)
+            save()
+            print(f'Issue #{issue}: {state["batch"]}; original sandbox launcher PID {child.pid}', flush=True)
+            code = child.wait()
+        state.update(state='launcher-exited-awaiting-original-ops-learning-audit', rc=code, finished_at=now())
+        match = re.search(r'(?:日志[:：]?\s+)(\S+\.jsonl)', err_path.read_text())
+        if match:
+            event_path = Path(match[1]); state['event_log'] = str(event_path)
+            if event_path.is_file():
+                with event_path.open() as fp:
+                    for line in fp:
+                        event = json.loads(line)
+                        if event.get('type') == 'learner_launch':
+                            state['scratch'] = event.get('params', {}).get('scratch')
+                        elif event.get('type') == 'thread.started':
+                            state['thread_id'] = event.get('thread_id')
+        save()
+except BaseException as error:
+    state.update(state='blocked-original-issue-learning-launch-no-auto-retry', at=now(),
+                 error=type(error).__name__, reason=str(error))
+    save()
+finally:
+    event = r / 'ops/codex-ops/queue' / f'{time.time_ns()}-manual.md'
+    event.write_text(f'Issue #{issue} 原一次性学习批次终局：' + json.dumps(state, ensure_ascii=False)
+                     + '。原ops核实际输入/证据/模型候选/提案CLI/反证与误差，按学习闭环继续；'
+                       'issue评论首行[ops]、发前gitleaks，不向watcher逐条投例行回执；'
+                       '不据退出关issue/原科学父/代ACK，不自动续批或重复full/模型，当前live/对局不动。\n')

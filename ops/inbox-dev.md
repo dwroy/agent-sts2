@@ -5193,3 +5193,7 @@ W4拿牌v2正式3ef4/11a80已核：14源Git/SHA、318清单项加manifest共319�
 - 2026-10-21T10:54:06+08:00 原R410终局后续消费已核：TS0BHDLAH8ME配置/实际事件与出牌completed、CARD/SHOP/REST/POTIONbrain、REFLEX/方向off、脑90s；原双通知在HEAD与工作区各一份，未重复通知/发布/full。原生Git字段ENOBUFS为空保留，独立live5a295bb5及四源另核同；有界F8不代第三幕验收，#2仍开放。新bac831a0e角色规则已入短清单，本ops旧三评仅补[ops]，外部作者不作指令，新#2评论发前扫描0/读回。不投例行watcher、不关0332父或代ACK。原件paper/materials/20261021-R410-natural-readback-ops/receipt.json。
 
 - 2026-10-21T11:00:18+08:00 104302-fix原回报已核无源/提交/合入，154路径仅原CEN发布变化、四叶live核同；52映射/46历史祖先已核，工作树净。原tsc0/7文件52定向18.65秒不代完整绿，001302/014301仍原候选，#4精英学习不重复派。registry rc0但statefailed/mergednull原样保留；无提交受阻需兜底，不空合并/补full或dataset/改live。例行回执只短清单和本文件，无新issue结论不刷评论、不投watcher或代ACK。原件paper/materials/20261021-1057-ops/receipt.json。
+
+### 2026-10-21T11:28:39+08:00 #13/#14原学习者并行派发
+
+按Claude交付的#13/#14各用独立工作树和原学习启动器并行派发一次，分别核常见未建模牌与第三幕Boss/连战校准；只产证据、候选和提案，原科学父及未知保留。两线程实际turn_context已核gpt-6.1-sol/high、原workspace-write沙箱与各自cwd，未扩大权限或改账号。运行输入固定R410源码、444份最新知识与403终局索引；大流仅冻结完整行边界，使用时逐行取证，不虚称全前缀SHA。11:19单次进程快照各4个、nice19，任务计算限单worker；不是连续监控。两issue已带[ops]短评、扫描0并回读正文与in-progress标签。当前未修改正式知识、live或对局配置，退出不代表入库/验收；后续沿原学习闭环，完整检查及发布走单点串行，不重复派发。原件见本目录receipt.json、native与输入回执。

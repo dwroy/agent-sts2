@@ -5551,3 +5551,5 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
 - 2026-10-21 11:17:18 CST [Claude/Roy，#1 决定] Roy 在 GitHub 指示“dwroy/agent-sts2#1 就按照claude建议的来做”：方向 2 → #15（v2 数值作为大脑拿牌题补充事实，决策者仍 brain，新会话 issue-15 wJ:p1H5 已派）；方向 1 → #12（单牌增量可辨识性研究，进行中）；方向 3 → #16（可辨识的题交 Jev、其余交大脑的混合门，依赖 #12/#15）。#1 保留为总入口。
 
 - 2026-10-21 11:23:33 CST [Claude/Roy，回收机制] Roy 要求完成的 issue、工作树、herdr tab 有干净的回收机制。新建 #17（ops/issue_session.py spawn/reclaim + 登记表 + 调度器 tick 自动回收已关闭 issue，前提不满足只评论不强删，沿用 worktree_retention.py complete 的保护；新会话 issue-17 wJ:p1H6 已派）与 #18（历史工作树积压 274 个、约 138 GB，ops 用 worktree_retention.py plan 出清单，watcher 核对后分批回收）。
+
+- 2026-10-21T11:28:39+08:00 ops：#13/#14按原学习闭环各独立一次并行派发，实际gpt-6.1-sol/high/原沙箱与新线程核同，单次各4进程nice19/计算单worker；不改正式知识/live，不关闭父。回执 paper/materials/20261021-issues-13-14-ops/receipt.json。
