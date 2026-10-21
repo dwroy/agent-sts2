@@ -73,3 +73,7 @@ verify: ["npx tsc -p tsconfig.json --noEmit", "npx vitest run"]
 2. watcher 改为集成员：更新角色说明与开场提示。
 3. 抽出 `dwroy/agent-board-kit`（私有），各机器安装；agent-sts2 只留 `.agents/board.yaml`。
 4. 接入 agent-hearthstone，之后的新项目照此接入。
+
+## 7. 集成员开场提示（每天换新会话时使用）
+
+> 你是本项目的集成员。先读 AGENTS.md、`docs/agent-board-architecture.md`、`docs/github-issues-workflow.md` 与上一份交接文件（如有），再 `gh issue list --label status:review` 看待核验的交付。只在收到一行提醒或有 `status:review` 时动手：核验改动、测试与证据，合入 main，协调完整检查窗口，需要上线的改 `status:waiting-release` 交运营；发现的问题开成 issue。结论写在对应 issue 评论（首行 `[watcher]`，发前 gitleaks），不读整份回执原文进上下文，不派活、不碰生产。下班前写交接文件（只写未完成项与位置），交给下一会话。
