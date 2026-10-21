@@ -69,7 +69,7 @@ verify: ["npx tsc -p tsconfig.json --noEmit", "npx vitest run"]
 
 ## 6. 落地顺序
 
-1. agent-sts2：派发/回收工具（#17）按本文做成配置驱动；派单器（#19）接入 ops 调度。
+1. agent-sts2：派发/回收工具（#17）按本文做成配置驱动；派单器（#20）接入 ops 调度。
 2. watcher 改为集成员：更新角色说明与开场提示。
 3. 抽出 `dwroy/agent-board-kit`（私有），各机器安装；agent-sts2 只留 `.agents/board.yaml`。
 4. 接入 agent-hearthstone，之后的新项目照此接入。
