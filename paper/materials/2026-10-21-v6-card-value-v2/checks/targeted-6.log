@@ -1,0 +1,43 @@
+
+ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/v6-card-value-v2-20261021/agent
+
+{"fixture":"two_signed_card_pick_contrasts","prompt_bytes":7910,"sent_entries":2}
+ ❯ tests/v6-card-value.test.ts (3 tests | 1 failed) 1140ms
+   × leaves novel cards and unobserved visible Bosses unknown and freezes the model for the run 233ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/v6-card-value.test.ts > leaves novel cards and unobserved visible Bosses unknown and freezes the model for the run
+AssertionError: expected { id: 'skip', card: null, …(10) } to match object { known: false, saved_hp: null, …(1) }
+(9 matching properties omitted from actual)
+
+- Expected
++ Received
+
+  {
+-   "known": false,
+-   "saved_hp": null,
+-   "unknown": [
+-     "unobserved_current_boss",
+-   ],
++   "known": true,
++   "saved_hp": 0,
++   "unknown": [],
+  }
+
+ ❯ tests/v6-card-value.test.ts:67:69
+     65|   expect(changed.options.find(o => o.id === "card0")).toMatchObject({ …
+     66|   raw.run.boss_id = "UNOBSERVED_FIXED_BOSS";
+     67|   expect(runtime.evaluate(env)!.options.find(o => o.id === "skip")).to…
+       |                                                                     ^
+     68|   raw.run_id = "NEXT_FIXED_RUN";
+     69|   expect(runtime.evaluate(env)!.options.every(o => !o.known && o.unkno…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed | 8 passed (9)
+      Tests  1 failed | 92 passed (93)
+   Start at  09:40:09
+   Duration  12.84s (transform 2.51s, setup 726ms, import 4.97s, tests 6.11s, environment 1ms)
+

@@ -1,0 +1,91 @@
+{
+  "schema": "v2-card-value-source-receipt-v1",
+  "at": "2026-10-21T02:07:08.719425+00:00",
+  "owner": {
+    "account": "codex1",
+    "session": "v6-w4w6",
+    "native_thread": "01a15382-68eb-7093-b677-040c9b45767f"
+  },
+  "authorization": "Claude 09:0x / Roy; docs/v6-plan.md section 12.1 at 492ac69f998801d0b42e6982ef972ed9992051bf",
+  "source": "3ef4f16acd1a307eab41e47e54393644d81810ab",
+  "tree": "71fbaa45c7bc51418028cef1306e7143f9264e9f",
+  "base": "492ac69f998801d0b42e6982ef972ed9992051bf",
+  "files": 14,
+  "manifest": "source-manifest.json",
+  "manifest_sha256": "73ce18f83cf36ae077b5a05d643874fb04e0aee1bac54a23350e02d952dda37f",
+  "patch": "minimal-source.patch",
+  "patch_sha256": "741585a8170239ddc017a13830acb1ad996e465a3ba12a5b9a4a6393fce10cc1",
+  "checks": [
+    {
+      "name": "tsc-3",
+      "rc": 0,
+      "seconds": 1.1845035888254642,
+      "argv": [
+        "npx",
+        "tsc",
+        "-p",
+        "tsconfig.json",
+        "--noEmit"
+      ],
+      "receipt_sha256": "eb2955ec80480c21a178510bee432cfee648c700003ffadecda4ba498710b5ed",
+      "log": "tsc-3.log",
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "targeted-7",
+      "rc": 0,
+      "seconds": 13.485854557016864,
+      "argv": [
+        "npx",
+        "vitest",
+        "run",
+        "--maxWorkers=1",
+        "tests/opening-value.test.ts",
+        "tests/v6-card-value.test.ts",
+        "tests/v6-card-value-loop.test.ts",
+        "tests/v6-card-pick.test.ts",
+        "tests/v6-card-route-scope.test.ts",
+        "tests/v6-card-reward-scope.test.ts",
+        "tests/v6-construction-safety.test.ts",
+        "tests/v6-projection-runtime.test.ts",
+        "tests/v6-card-pick-reflex.test.ts"
+      ],
+      "receipt_sha256": "002a5f96d0debbfd33f439d9fc0f7e0823d6bf11eaecb93f5540be4e25303b9f",
+      "log": "targeted-7.log",
+      "log_sha256": "07bd944c9d4560d3c34d2b96ca2eb12054d05d8cd124a8680f9d50ae2f398338"
+    },
+    {
+      "name": "python-3",
+      "rc": 0,
+      "seconds": 0.06425505294464529,
+      "argv": [
+        "python3",
+        "-B",
+        "knowledge/builders/test_opening_value.py"
+      ],
+      "receipt_sha256": "7a456078601b81a2d17944798ecb6963c930d0cb5c2fb213b69270373cc4f10c",
+      "log": "python-3.log",
+      "log_sha256": "0e75048ac262139defd117349b4d2a2b2aa7e1ebd72cbf0bd617e278abfb74d7"
+    }
+  ],
+  "source_scan": {
+    "rc": 0,
+    "report": "gitleaks-source.json",
+    "report_sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
+    "log_sha256": "d35c8cda38b4f19889e3d52fb486a653ed1b1920825fcb4678844c616b92f1b9"
+  },
+  "material_scans": "gitleaks-status-r2.json",
+  "scan_false_positive_audit": "gitleaks-false-positive-audit.json",
+  "full_vitest": "pending ops singleton exact-live joint check; not run by this owner",
+  "quality_pass": false,
+  "quality_reasons": [
+    "All 584 option increments lie within the displayed fight-prediction error scale, which is not a calibrated treatment-effect interval.",
+    "Observed chosen increment vs next-fight loss correlation is weak and confounded.",
+    "Nova skips 36/60 versus brain 12/60; high mean-rank agreement is not evidence of card-effect quality."
+  ],
+  "runtime": "KEEP V6_CARD_DECIDER=brain; REFLEX off; P2 paused; no live/STOP/config/actor actions",
+  "nova_calls": 60,
+  "requests_repeated_after_final_guard_changes": false,
+  "post_nova_changes": "post-nova-source.json",
+  "ops_transport": "Only the exact 14 manifest files; preserve live non-overlapping changes and W8 reflex hunk. Do not ship parent/main/805. No quality approval or request to switch jev."
+}

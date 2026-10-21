@@ -1,0 +1,39 @@
+// Read-only observed-model replay. No ModClient, action dispatch, live mutation or simulation.
+import { readFileSync,writeFileSync,appendFileSync,existsSync,mkdirSync } from 'node:fs';
+import { dirname,resolve } from 'node:path';
+import { fileURLToPath } from 'node:url';
+import { gunzipSync,gzipSync } from 'node:zlib';
+import { CardValueRuntime } from '../../../agent/src/v6/card-value.js';
+import { buildV6CardPick } from '../../../agent/src/v6/card-pick.js';
+import { constructionQuestion } from '../../../agent/src/v6/construction-safety.js';
+import { restoreV6CardReward } from '../../../agent/src/v6/card-reward-scope.js';
+import { replayRun } from '../../../agent/src/memory/journal-replay.js';
+import { loggedEnv } from '../../../agent/tests/logged.js';
+import { makeKnowledge } from '../../../agent/src/knowledge/index.js';
+import { setKnowledgeCharacter } from '../../../agent/src/knowledge/files.js';
+const dir=dirname(fileURLToPath(import.meta.url)),root=resolve(dir,'../../..'),out=resolve(dir,'results-extra');mkdirSync(out,{recursive:true});
+const json=(f:string)=>JSON.parse(gunzipSync(readFileSync(resolve(dir,'frozen',f))).toString());
+const lines=(n:string)=>gunzipSync(readFileSync(resolve(dir,'frozen',n+'.jsonl.gz'))).toString().trim().split('\n').map(x=>JSON.parse(x));
+const extra=resolve(dir,'frozen-extra');
+const xlines=(n:string)=>gunzipSync(readFileSync(resolve(extra,n+'.jsonl.gz'))).toString().trim().split('\n').map(x=>JSON.parse(x));
+const qs=JSON.parse(gunzipSync(readFileSync(resolve(extra,'questions.json.gz'))).toString()),states=xlines('states'),decisions=xlines('decisions'),plans=xlines('run-plans');
+const data=json('game-data.json.gz'),knowledge=makeKnowledge(data.collections,'cache',{modVersion:data.mod_version} as any);
+Object.assign(process.env,{CHARACTER:'silent',V6_BUILD:'on',V6_CARD_DECIDER:'jev',V6_POTION_DECIDER:'brain',V6_SHOP_DECIDER:'brain',V6_REST_DECIDER:'brain',V6_REFLEX:'off',V6_DIRECTION_REPLAN:'off',V6_COMBAT_ENTRIES:'off'});setKnowledgeCharacter('silent');
+// This additional cohort is permanently offline; the shared 60-call budget was exhausted by shadow.mts.
+const count=0;
+const runtime=new CardValueRuntime(resolve(root,'knowledge'));
+for(const q of qs){
+ const target=resolve(out,q.key+'.json.gz');let saved:any;
+ if(existsSync(target))saved=JSON.parse(gunzipSync(readFileSync(target)).toString());else{
+  const start=performance.now();
+  const replay=replayRun({runId:q.run,states:states.filter(s=>s.state.run_id===q.run),decisions:decisions.filter(s=>s.run_id===q.run),runPlans:plans.filter(s=>s.run===q.run)},knowledge,{before:q.frame.observed_ts??q.frame.ts});
+  const env=loggedEnv({source:q.key,state:q.frame.state,decision:{label:'reward/card',decider:'brain',chosen:null,rationale:''}},{knowledge});
+  env.screenMemory.lastMap=replay.lastMap??undefined;env.screenMemory.routePlan=replay.routePlan??undefined;restoreV6CardReward(env.screenMemory,[q.combat,q.frame]);
+  const setup=performance.now()-start,a=performance.now();env.v6CardValue=runtime.evaluate(env);const value_ms=performance.now()-a;
+  const p=performance.now(),pick=buildV6CardPick(env,undefined,resolve(root,'knowledge')),packing_ms=performance.now()-p;
+  saved={key:q.key,run:q.run,floor:q.floor,brain_choice:q.brain_choice,nova_selected:q.nova_selected,setup_ms:setup,value_ms,packing_ms,foreground_ms:value_ms+packing_ms,table:env.v6CardValue,coverage:pick?constructionQuestion(env,pick.decision):null,prompt:pick?{state:pick.decision.state,questions:pick.decision.questions}:null};
+  saved.bytes=Buffer.byteLength(JSON.stringify({model:'typesafe/jev-1.14',...saved.prompt}));writeFileSync(target,gzipSync(JSON.stringify(saved)));
+ }
+ process.stdout.write(JSON.stringify({key:q.key,known:saved.coverage?.coverage.known,foreground_ms:saved.foreground_ms,bytes:saved.bytes,B:saved.table?.cores.filter((c:any)=>c.bosses.length>0).length,choice:saved.jev?.validated?.choice??saved.jev?.error??null})+'\n');
+}
+writeFileSync(resolve(out,'run-state.json'),JSON.stringify({requests:count,at:new Date().toISOString(),protocol:'whole-fight observed model; replay only; no actions or combat simulation'},null,2));

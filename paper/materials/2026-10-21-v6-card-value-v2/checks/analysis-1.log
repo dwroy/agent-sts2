@@ -1,0 +1,259 @@
+{
+  "schema": "card-value-v2-audit-v1",
+  "cohorts": {
+    "R408_R409": {
+      "n": 83,
+      "runs": 6,
+      "known_options": 332,
+      "total_options": 332,
+      "brain_matches_mean_best": 37,
+      "brain_skip": 17,
+      "mean_best_includes_skip": 42,
+      "all_four_mean_tie": 14,
+      "tiers": {
+        "indistinguishable": 332
+      },
+      "B_nonempty_questions": 71,
+      "B_core_rows": {
+        "known": 994,
+        "core_prerequisite_or_required_resource_unavailable": 249,
+        "no_observed_later_boss": 168
+      },
+      "prepare_ms": {
+        "n": 83,
+        "p50": 196.66431900000316,
+        "p90": 283.37165499999537,
+        "max": 340.2148060000036
+      },
+      "value_ms": {
+        "n": 83,
+        "p50": 68.16070299999956,
+        "p90": 131.50920399999814,
+        "max": 290.6654950000011
+      },
+      "packing_ms": {
+        "n": 83,
+        "p50": 129.00111900000047,
+        "p90": 181.2448179999992,
+        "max": 275.6258260000013
+      },
+      "replay_setup_ms_separate": {
+        "n": 83,
+        "p50": 13.679364999999962,
+        "p90": 34.81238899999971,
+        "max": 50.08977899999991
+      },
+      "request_bytes": {
+        "n": 83,
+        "p50": 3390,
+        "p90": 3852,
+        "max": 3906
+      }
+    },
+    "R404_R406": {
+      "n": 63,
+      "runs": 4,
+      "known_options": 252,
+      "total_options": 252,
+      "brain_matches_mean_best": 27,
+      "brain_skip": 10,
+      "mean_best_includes_skip": 29,
+      "all_four_mean_tie": 9,
+      "tiers": {
+        "indistinguishable": 252
+      },
+      "B_nonempty_questions": 58,
+      "B_core_rows": {
+        "known": 812,
+        "core_prerequisite_or_required_resource_unavailable": 189,
+        "no_observed_later_boss": 70
+      },
+      "prepare_ms": {
+        "n": 63,
+        "p50": 176.26832599999943,
+        "p90": 221.6995790000019,
+        "max": 391.99415000000045
+      },
+      "value_ms": {
+        "n": 63,
+        "p50": 64.58257299999968,
+        "p90": 107.45413899999949,
+        "max": 276.7405799999997
+      },
+      "packing_ms": {
+        "n": 63,
+        "p50": 110.93556499999977,
+        "p90": 126.65588300000036,
+        "max": 252.53801700000076
+      },
+      "replay_setup_ms_separate": {
+        "n": 63,
+        "p50": 11.614423999999417,
+        "p90": 29.925349999999526,
+        "max": 42.762902999998914
+      },
+      "request_bytes": {
+        "n": 63,
+        "p50": 3380,
+        "p90": 3849,
+        "max": 3873
+      }
+    }
+  },
+  "combined": {
+    "n": 146,
+    "runs": 10,
+    "known_options": 584,
+    "total_options": 584,
+    "brain_matches_mean_best": 64,
+    "brain_skip": 27,
+    "mean_best_includes_skip": 71,
+    "all_four_mean_tie": 23,
+    "tiers": {
+      "indistinguishable": 584
+    },
+    "B_nonempty_questions": 129,
+    "B_core_rows": {
+      "known": 1806,
+      "core_prerequisite_or_required_resource_unavailable": 438,
+      "no_observed_later_boss": 238
+    },
+    "prepare_ms": {
+      "n": 146,
+      "p50": 183.8997219999983,
+      "p90": 274.24978799999735,
+      "max": 391.99415000000045
+    },
+    "value_ms": {
+      "n": 146,
+      "p50": 67.15553699999873,
+      "p90": 130.6961420000007,
+      "max": 290.6654950000011
+    },
+    "packing_ms": {
+      "n": 146,
+      "p50": 116.60904000000028,
+      "p90": 166.64797499999986,
+      "max": 275.6258260000013
+    },
+    "replay_setup_ms_separate": {
+      "n": 146,
+      "p50": 12.10357699999986,
+      "p90": 31.638788999998724,
+      "max": 50.08977899999991
+    },
+    "request_bytes": {
+      "n": 146,
+      "p50": 3383,
+      "p90": 3852,
+      "max": 3906
+    }
+  },
+  "chronological_actual_opening_validation": {
+    "metrics": {
+      "all": {
+        "n": 144,
+        "runs": 10,
+        "hp_mae": 7.626145263888889,
+        "hp_rmse": 10.411947303352962,
+        "hp_bias": 1.484434597222223,
+        "win_brier": 0.04468350912526224,
+        "turns_mae": 1.2335423888888888
+      },
+      "hallway": {
+        "n": 104,
+        "runs": 10,
+        "hp_mae": 5.972572615384616,
+        "hp_rmse": 7.754429241887702,
+        "hp_bias": 0.8185817692307698,
+        "win_brier": 0.015454457143538596,
+        "turns_mae": 1.0439453846153846
+      },
+      "elite": {
+        "n": 21,
+        "runs": 9,
+        "hp_mae": 13.207962666666665,
+        "hp_rmse": 17.079662329485714,
+        "hp_bias": 4.312736380952382,
+        "win_brier": 0.07087994679776395,
+        "turns_mae": 1.940935619047619
+      },
+      "boss": {
+        "n": 19,
+        "runs": 9,
+        "hp_mae": 10.507902631578947,
+        "hp_rmse": 13.04080835401068,
+        "hp_bias": 2.0030849473684227,
+        "win_brier": 0.175720152018774,
+        "turns_mae": 1.489480842105263
+      }
+    },
+    "HP_prediction_vs_actual": {
+      "n": 144,
+      "pearson": 0.7732312017770728,
+      "spearman": 0.6808787997912656
+    },
+    "description": "Actual opening deck/HP/enemy, NOT the reward counterfactual or a candidate-ranking test."
+  },
+  "nova": {
+    "attempts": 60,
+    "valid": 60,
+    "errors": [],
+    "mean_best_agreement": 54,
+    "below_mean_best": 6,
+    "error_separated_inversions": 0,
+    "brain_agreement": 21,
+    "jev_skip": 36,
+    "brain_skip": 12,
+    "disagreements": {
+      "n": 39,
+      "jev_higher_predicted_mean": 31,
+      "brain_higher_predicted_mean": 1,
+      "tied": 7
+    },
+    "confidence": {
+      "n": 60,
+      "p50": 0.69,
+      "p90": 0.88,
+      "max": 0.95
+    },
+    "prepare_ms": {
+      "n": 60,
+      "p50": 190.14795099999992,
+      "p90": 285.26854999999705,
+      "max": 314.6347600000008
+    },
+    "jev_wall_ms": {
+      "n": 60,
+      "p50": 360.4776759999986,
+      "p90": 507.21027799999865,
+      "max": 1017.8740399999988
+    },
+    "bytes": {
+      "n": 60,
+      "p50": 3388,
+      "p90": 3852,
+      "max": 3906
+    }
+  },
+  "observational_reward_signal": {
+    "linked_questions": 135,
+    "unique_next_fights": 125,
+    "chosen_saved_HP_vs_next_actual_loss": {
+      "n": 135,
+      "pearson": -0.10101726754047816,
+      "spearman": -0.0719598820723722
+    },
+    "chosen_mean_rank_vs_next_actual_loss": {
+      "n": 135,
+      "pearson": 0.18081971794013899,
+      "spearman": 0.17214719768124426
+    },
+    "reward_predicted_target_loss_vs_next_actual_loss": {
+      "n": 135,
+      "pearson": 0.6396980810051004,
+      "spearman": 0.6596081694474109
+    },
+    "limitation": "Descriptive only. Only the taken option has an outcome; the same fight can follow several rewards. No causal card-effect or counterfactual ranking validation."
+  }
+}

@@ -1,0 +1,89 @@
+{
+  "schema": "card-value-v2-provenance-v1",
+  "at": "2026-10-21T01:53:43.317348+00:00",
+  "training": {
+    "schema": "opening-extraction-v1",
+    "source": "/home/dw/Projects/agent-sts2/logs/states.jsonl",
+    "bytes": 15065822275,
+    "sha256": "297a9431e82b30a9c473272b91738bc6cec6e18b77900e1034a36aeac2cc96a4",
+    "lines": 471935,
+    "fights": 5250,
+    "runs": 400,
+    "rejected": {
+      "opening_missing": 58,
+      "censored_end": 463,
+      "bad_json": 2
+    },
+    "character": "silent",
+    "first_attempt_only": true,
+    "rows_sha256": "4882082729cd9d27c6a58d275c64fe9df8b18e11ce9336b027095bf97c34aa4c",
+    "act_normalization": "raw act_id is a numeric string; normalized from retained key"
+  },
+  "training_rows_gzip": {
+    "path": "paper/materials/2026-10-21-v6-card-value-v2/frozen/training-opening-rows.jsonl.gz",
+    "sha256": "be70c9b40fe7520798f3266d10d7b37d57a1050facd1eded00c7a8ce3fd1bfb4",
+    "decompressed_sha256": "4882082729cd9d27c6a58d275c64fe9df8b18e11ce9336b027095bf97c34aa4c"
+  },
+  "original_R408_R409": {
+    "states": {
+      "source": "/home/dw/Projects/agent-sts2/logs/states.jsonl",
+      "source_bytes_at_end": 15034328455,
+      "rows": 3779,
+      "per_run": {
+        "7XS2Y920KA6E": 875,
+        "SVBEFF7YAZMA": 1034,
+        "BQXQJQ9GN51L": 532,
+        "MGB1D1T0Y8G0": 203,
+        "CLCR3DUH66HK": 538,
+        "CESK0EFSJ2C4": 597
+      },
+      "sha256": "5ba2a585c7bfa3fd5b27ece6a554fd22c588e4b3875884c7be1b146fe3510ed4",
+      "retained_file": "paper/materials/2026-10-21-v6-card-value-v2/frozen/states.jsonl.gz",
+      "sha256_scope": "retained gzip bytes, not raw source prefix"
+    },
+    "decisions": {
+      "source": "/home/dw/Projects/agent-sts2/logs/decisions.jsonl",
+      "source_bytes_at_end": 3187834070,
+      "rows": 3565,
+      "per_run": {
+        "7XS2Y920KA6E": 831,
+        "SVBEFF7YAZMA": 926,
+        "BQXQJQ9GN51L": 523,
+        "MGB1D1T0Y8G0": 196,
+        "CLCR3DUH66HK": 508,
+        "CESK0EFSJ2C4": 581
+      },
+      "sha256": "91252f5f337aa0581eef1332b756211ce342b8107dbd7793893921bcd148f1b0",
+      "retained_file": "paper/materials/2026-10-21-v6-card-value-v2/frozen/decisions.jsonl.gz",
+      "sha256_scope": "retained gzip bytes, not raw source prefix"
+    },
+    "run-plans": {
+      "source": "/home/dw/Projects/agent-sts2/logs/run-plans.jsonl",
+      "source_bytes_at_end": 10280008,
+      "rows": 238,
+      "per_run": {
+        "7XS2Y920KA6E": 53,
+        "SVBEFF7YAZMA": 67,
+        "BQXQJQ9GN51L": 23,
+        "MGB1D1T0Y8G0": 14,
+        "CLCR3DUH66HK": 34,
+        "CESK0EFSJ2C4": 47
+      },
+      "sha256": "30a2ac86db9b948344851819aeb142fa0fd29f72a8500f1ef27b59b3de0b6cb9",
+      "retained_file": "paper/materials/2026-10-21-v6-card-value-v2/frozen/run-plans.jsonl.gz",
+      "sha256_scope": "retained gzip bytes, not raw source prefix"
+    }
+  },
+  "additional_R404_R406": "frozen-extra/sources.json (raw bounded prefix hashes retained there)",
+  "build_cores": {
+    "source": "knowledge/characters/silent/build-cores.json",
+    "sha256": "51c757a11ded9db2619466104f284a7d8a2490e10a621e0b367640e82a81df36",
+    "gzip_sha256": "c5e69e4ddff5e8234cb74a1845bb080e8fd4864192599187099898eb6bb18e39"
+  },
+  "limitations": [
+    "Training monster-kind database hash was not captured at extraction; resolved encounter/kind values are retained in every extracted row. Do not backfill an extraction-time source hash.",
+    "Historical prefix byte limits and frozen timestamps are independent. Retained gzip hashes are not raw log-prefix hashes.",
+    "The failed packaging attempt used sources instead of logs in the prior receipt; it did not alter training, requests, or product source.",
+    "shadow-extra.mts was invoked with --no-nova; its optional network branch has now been removed. All 60 real requests are in results/requests.jsonl only."
+  ]
+}
