@@ -1,0 +1,30 @@
+{
+  "brain_prefix_bytes": 1212476201,
+  "labels": {
+    "event/choose": 2285,
+    "run-plan": 672,
+    "map/route-plan": 538,
+    "reward/card": 7687,
+    "shop/plan": 1440,
+    "rest/plan": 3295,
+    "event/plan": 922,
+    "event/act-plan": 625,
+    "selection/choose": 17,
+    "selection/add": 260,
+    "bundle/choose": 53,
+    "selection/enchant": 9,
+    "selection/upgrade": 15,
+    "shop/buy": 10,
+    "selection/remove": 40,
+    "map/statue-potion": 53,
+    "map/route-review": 4,
+    "selection/transform": 1
+  },
+  "bad_json": 1,
+  "final_prefilter": {
+    "bytes": 861626178,
+    "sha256": "41394f976a2b2bdd8ec4e0d13a993b9af43a7b14717a61733a98f847730b160e"
+  },
+  "prefilter_method": "grep -F label prefixes event/rest/shop, label run-plan, or key run_plan_task, from the already frozen broad grep-F prefix",
+  "broader_prefix_bad_json_excluded_by_final_filter": 1
+}

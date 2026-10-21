@@ -1,0 +1,1329 @@
+{
+  "fixture_only": true,
+  "library": {
+    "schema": "brain-strategies-v1",
+    "character": "silent",
+    "entries": [
+      {
+        "id": "fixture-card_reward",
+        "version": "fixture-v1",
+        "trigger": {
+          "question_types": [
+            "card_reward"
+          ]
+        },
+        "strategy": "仅用于验证检索和传输的占位文字，不包含游戏建议。",
+        "evidence": [
+          {
+            "run": "FIXTURE_ONLY",
+            "floor": 0,
+            "ref": "synthetic; not a learned strategy"
+          }
+        ],
+        "source": "own",
+        "confidence": 0
+      },
+      {
+        "id": "fixture-event",
+        "version": "fixture-v1",
+        "trigger": {
+          "question_types": [
+            "event"
+          ]
+        },
+        "strategy": "仅用于验证检索和传输的占位文字，不包含游戏建议。",
+        "evidence": [
+          {
+            "run": "FIXTURE_ONLY",
+            "floor": 0,
+            "ref": "synthetic; not a learned strategy"
+          }
+        ],
+        "source": "own",
+        "confidence": 0
+      },
+      {
+        "id": "fixture-rest",
+        "version": "fixture-v1",
+        "trigger": {
+          "question_types": [
+            "rest"
+          ]
+        },
+        "strategy": "仅用于验证检索和传输的占位文字，不包含游戏建议。",
+        "evidence": [
+          {
+            "run": "FIXTURE_ONLY",
+            "floor": 0,
+            "ref": "synthetic; not a learned strategy"
+          }
+        ],
+        "source": "own",
+        "confidence": 0
+      },
+      {
+        "id": "fixture-shop",
+        "version": "fixture-v1",
+        "trigger": {
+          "question_types": [
+            "shop"
+          ]
+        },
+        "strategy": "仅用于验证检索和传输的占位文字，不包含游戏建议。",
+        "evidence": [
+          {
+            "run": "FIXTURE_ONLY",
+            "floor": 0,
+            "ref": "synthetic; not a learned strategy"
+          }
+        ],
+        "source": "own",
+        "confidence": 0
+      },
+      {
+        "id": "fixture-act_plan",
+        "version": "fixture-v1",
+        "trigger": {
+          "question_types": [
+            "act_plan"
+          ]
+        },
+        "strategy": "仅用于验证检索和传输的占位文字，不包含游戏建议。",
+        "evidence": [
+          {
+            "run": "FIXTURE_ONLY",
+            "floor": 0,
+            "ref": "synthetic; not a learned strategy"
+          }
+        ],
+        "source": "own",
+        "confidence": 0
+      }
+    ]
+  },
+  "questions": [
+    {
+      "type": "card_reward",
+      "dataset_id": "C48LLXBGKXQ9/1/2",
+      "source_sha256": "bd01cd76900e06b75dc6da8081e82103ab0e5bbe8dbc2cd386129a3e02e6fe72",
+      "label": "reward/card",
+      "question": "Which of these card rewards should I take, if any? You decide this yourself; no other model is asked first. Code does not score or rank the options: each lists its own facts (the game's text, cost, price, the HP it leaves, what an upgrade changes) and, for a card, relic, event option or rest action, outcome_stats: how our logged runs did after that choice, with n (basis and baseline in facts.outcome_stats_basis; observational, not a verdict). facts are exact: the deck, relics, potions, HP, gold, the act boss clock (damage a turn needed vs this deck's estimate) and your own run plan. Every option is listed, skipping or leaving included. Weigh them for the whole run. in_deck: copies of that card already in your deck. state.route_review 是本幕路线：完整地图（map，节点 id 规则见 map_legend）、你的位置和下一步可走的节点（next_nodes）、你的路线计划（plan，代码按它逐个节点走）和按现在 HP 算的计划事实（plan_facts）。先定路线，再定本题：在同一个 JSON 里加 \"route\"：\"keep\"（默认，照计划走）或新的节点序列（从 next_nodes 之一出发，沿连线或用飞行靴，一直到 boss，节点 id 用空格分隔），以及 \"route_reason\"（15 字以内）。next_rest 是保留（keep，你的计划）和换线（switch，经每个下一步节点）各自到下一个休息点的战斗数和到达 HP、下一只精英的进场 HP：改线前比一比。",
+      "options": {
+        "card0": "{\"card\":\"先制打击\",\"type\":\"Attack\",\"rarity\":\"Common\",\"cost\":1,\"text\":\"造成3点伤害。 将2张小刀加入你的手牌。\",\"in_deck\":0,\"outcome_stats\":\"无数据\"}",
+        "card1": "{\"card\":\"猎杀者\",\"type\":\"Attack\",\"rarity\":\"Common\",\"cost\":2,\"text\":\"造成15点伤害。 在下个回合抽2张牌。\",\"in_deck\":0,\"outcome_stats\":\"无数据\"}",
+        "card2": "{\"card\":\"扫腿\",\"type\":\"Skill\",\"rarity\":\"Uncommon\",\"cost\":2,\"text\":\"给予2层虚弱。 获得11点格挡。\",\"in_deck\":0,\"outcome_stats\":\"无数据\"}",
+        "skip": "{\"card\":\"skip\",\"note\":\"take no card\"}"
+      },
+      "payload": {
+        "run_brief": {
+          "character": "静默猎手",
+          "act": "1",
+          "floor": 2,
+          "hp": "67/70 (96%)",
+          "gold": 119,
+          "ascension": 0,
+          "deck": "13 cards | 6 attacks / 7 skills / 0 powers | avg cost 0.92",
+          "relics": [
+            "蛇之戒指",
+            "失物盒"
+          ],
+          "relic_effects": [
+            "蛇之戒指: 在每场战斗开始时，额外抽?(数值未知)张牌。",
+            "失物盒: 拾起时，获得1次卡牌奖励和1瓶随机药水。"
+          ],
+          "potions": [],
+          "notes": [
+            "picked a character",
+            "started a new run",
+            "event choice (涅奥)",
+            "took a card reward",
+            "floor 1: moved to Monster"
+          ],
+          "run_plan": "Efficient attacks into supported shiv scaling — Close the 10 damage/turn gap with efficient attacks and supported scaling. Add shivs before Accuracy, replace basics before removing them, take favorable elites, and prioritize smithing while healthy. | want BLADE_DANCE, DASH, ACCURACY, DAGGER_SPRAY, FOOTWORK | avoid GRAND_FINALE",
+          "relic_effects_note": "?(数值未知) marks a value the mod does not expose; the effect text around it is accurate"
+        },
+        "deck_stats": "13 cards | 6 attacks / 7 skills / 0 powers | avg cost 0.92",
+        "deck": "打击 (Attack, 1E): 造成6点伤害。\n打击 (Attack, 1E): 造成6点伤害。\n打击 (Attack, 1E): 造成6点伤害。\n打击 (Attack, 1E): 造成6点伤害。\n打击 (Attack, 1E): 造成6点伤害。\n防御 (Skill, 1E): 获得5点格挡。\n防御 (Skill, 1E): 获得5点格挡。\n防御 (Skill, 1E): 获得5点格挡。\n防御 (Skill, 1E): 获得5点格挡。\n防御 (Skill, 1E): 获得5点格挡。\n中和 (Attack, 0E): 造成3点伤害。 给予1层虚弱。\n生存者 (Skill, 1E): 获得8点格挡。 丢弃1张牌。\n刀刃之舞 (Skill, 1E): 添加3张小刀到你的手牌。 消耗。",
+        "route_review": {
+          "map_legend": "节点 id = r<行>c<列>，行 r 是本幕第 r+1 层（F 是全局层号）。每行「F层 id 类型 → 下一层与它有连线的节点」；类型：普通战（走廊战斗）、精英、休息（休息点）、商店、问号（事件，可能是战斗）、宝箱、远古、Boss。（当前）是你所在的节点，（已走）是本幕走过的节点。路线只能沿连线每次走到下一层；有飞行靴时，每用 1 次可以从一个节点跳到下一层的任意节点（不沿连线）。",
+          "map": [
+            "F1 r0c3 远古（已走） → r1c1 r1c6",
+            "F2 r1c1 普通战 → r2c0 r2c1",
+            "F2 r1c6 普通战（当前） → r2c6",
+            "F3 r2c0 普通战 → r3c0",
+            "F3 r2c1 问号 → r3c0 r3c1",
+            "F3 r2c6 普通战 → r3c6",
+            "F4 r3c0 普通战 → r4c1",
+            "F4 r3c1 商店 → r4c1",
+            "F4 r3c6 普通战 → r4c5 r4c6",
+            "F5 r4c1 普通战 → r5c0 r5c2",
+            "F5 r4c5 问号 → r5c4",
+            "F5 r4c6 普通战 → r5c6",
+            "F6 r5c0 普通战 → r6c0",
+            "F6 r5c2 普通战 → r6c1 r6c3",
+            "F6 r5c4 普通战 → r6c4",
+            "F6 r5c6 普通战 → r6c6",
+            "F7 r6c0 普通战 → r7c0",
+            "F7 r6c1 精英 → r7c0 r7c2",
+            "F7 r6c3 问号 → r7c3",
+            "F7 r6c4 普通战 → r7c5",
+            "F7 r6c6 问号 → r7c5",
+            "F8 r7c0 普通战 → r8c0 r8c1",
+            "F8 r7c2 休息 → r8c2",
+            "F8 r7c3 问号 → r8c3",
+            "F8 r7c5 休息 → r8c5",
+            "F9 r8c0 普通战 → r9c0",
+            "F9 r8c1 休息 → r9c1",
+            "F9 r8c2 精英 → r9c2",
+            "F9 r8c3 问号 → r9c3",
+            "F9 r8c5 精英 → r9c5 r9c6",
+            "F10 r9c0 宝箱 → r10c0",
+            "F10 r9c1 宝箱 → r10c0",
+            "F10 r9c2 宝箱 → r10c2",
+            "F10 r9c3 宝箱 → r10c3",
+            "F10 r9c5 宝箱 → r10c5",
+            "F10 r9c6 宝箱 → r10c6",
+            "F11 r10c0 问号 → r11c1",
+            "F11 r10c2 问号 → r11c1",
+            "F11 r10c3 休息 → r11c3",
+            "F11 r10c5 普通战 → r11c6",
+            "F11 r10c6 休息 → r11c6",
+            "F12 r11c1 问号 → r12c0",
+            "F12 r11c3 问号 → r12c3",
+            "F12 r11c6 普通战 → r12c5 r12c6",
+            "F13 r12c0 普通战 → r13c0 r13c1",
+            "F13 r12c3 休息 → r13c3",
+            "F13 r12c5 休息 → r13c6",
+            "F13 r12c6 问号 → r13c6",
+            "F14 r13c0 商店 → r14c0 r14c1",
+            "F14 r13c1 精英 → r14c1",
+            "F14 r13c3 精英 → r14c3",
+            "F14 r13c6 商店 → r14c6",
+            "F15 r14c0 普通战 → r15c0",
+            "F15 r14c1 问号 → r15c0",
+            "F15 r14c3 普通战 → r15c3",
+            "F15 r14c6 普通战 → r15c5",
+            "F16 r15c0 休息 → r16c3",
+            "F16 r15c3 休息 → r16c3",
+            "F16 r15c5 休息 → r16c3",
+            "F17 r16c3 Boss（本幕 boss）"
+          ],
+          "position": "你在 r1c6（F2 普通战）；下一步可走：r2c6",
+          "next_nodes": [
+            "r2c6"
+          ],
+          "winged_boots_left": 0,
+          "boss": "r16c3（F17 Boss）",
+          "walked": "r0c3 → r1c6",
+          "plan": "r2c6 普通战 → r3c6 普通战 → r4c5 问号 → r5c4 普通战 → r6c4 普通战 → r7c5 休息 → r8c5 精英 → r9c6 宝箱 → r10c6 休息 → r11c6 普通战 → r12c5 休息 → r13c6 商店 → r14c6 普通战 → r15c5 休息 → r16c3 Boss",
+          "plan_facts": {
+            "arrival": [
+              "F3 r2c6 普通战：67/70（p75 67）",
+              "F4 r3c6 普通战：60/70（p75 60）",
+              "F5 r4c5 问号：53/70（p75 53）",
+              "F6 r5c4 普通战：50/70（p75 50）",
+              "F7 r6c4 普通战：43/70（p75 43）",
+              "F8 r7c5 休息：36/70（p75 36）",
+              "F9 r8c5 精英：57/70（p75 57）",
+              "F10 r9c6 宝箱：40/70（p75 40）",
+              "F11 r10c6 休息：40/70（p75 40）",
+              "F12 r11c6 普通战：61/70（p75 61）",
+              "F13 r12c5 休息：54/70（p75 54）",
+              "F14 r13c6 商店：70/70（p75 70）",
+              "F15 r14c6 普通战：70/70（p75 70）",
+              "F16 r15c5 休息：63/70（p75 63）",
+              "F17 r16c3 Boss：70/70（p75 70）"
+            ],
+            "rest_sites": [
+              "F8 r7c5 休息：到达 36/70（p75 36）；回血 → 57/70（p75 57）；锻造（不回血）→ 36/70（p75 36）",
+              "F11 r10c6 休息：到达 40/70（p75 40）；回血 → 61/70（p75 61）；锻造（不回血）→ 40/70（p75 40）",
+              "F13 r12c5 休息：到达 54/70（p75 54）；回血 → 70/70（p75 70）；锻造（不回血）→ 54/70（p75 54）",
+              "F16 r15c5 休息：到达 63/70（p75 63）；回血 → 70/70（p75 70）；锻造（不回血）→ 63/70（p75 63）"
+            ],
+            "fights_before_rest": "到下一个休息点 F8 r7c5 前：战斗 4 场（普通战 4、精英 0），问号 1 个，商店 0 个；到当前节点为止已连续战斗 1 场",
+            "next_elite": "F9 r8c5：到达 57/70（p75 57）",
+            "boss": "F17 r16c3：到达 70/70（p75 70）",
+            "about": "从现在的 HP 67/70 起按实测房间掉血投影（route-projection，算法未改）：中位数 = 每个房间按中位数代价；p75 = 每个战斗和问号房都按 p75 代价连续累计（偏悲观）；之后的休息点按回血算（锻造的情况单独列出）；死亡不会被后面的休息点救回。"
+          },
+          "next_rest": {
+            "about": "从下一步到下一个休息点（之前没有就到 boss）的战斗、问号、商店和到达 HP，及 boss 前下一只精英的进场 HP（从现在的 HP 67/70 起，中位数和 p75，同 plan_facts）。keep = 你的计划；switch = 从每个下一步节点到最近两层休息点各 HP 最高的一条（精英按之后沿计划，不在计划上就沿每段 HP 最高的线）；和保留路线比：两条的下一个休息点中较晚的那层的 HP（这条的精英不比保留路线这一段多时），两条都有精英时比各自的精英进场 HP，明显低（中位数低 ≥10% 最大生命、p75 低 ≥15% 或耗尽）的写明。",
+            "keep": "r2c6 普通战 → r3c6 普通战 → r4c5 问号 → r5c4 普通战 → r6c4 普通战 → F8 r7c5 休息：普通战 4、精英 0、问号 1，没有商店；到达 36/70（p75 36）；下一只精英 F9 r8c5 进场 57/70（p75 57）",
+            "switch": [
+              "没有别的路线：从下一步到下一个休息点只有计划这一段"
+            ]
+          },
+          "room_costs": "第 1 幕每个房间掉血（中位数/p75，最大生命 70）：普通战 7/7（nothing logged: old fixed model）；精英 17.5/17.5（nothing logged: old fixed model）；问号 2.8/2.8（nothing logged: 40% of a hallway fight）。掉血 = 进房 HP 减下一层 HP（已含燃烧之血、药水、事件），死在房间里记为全部进房 HP；休息回血 = 最大生命 30%（向下取整），锻造不回血。",
+          "vs_plan": "计划在 F1 定（当时 HP 100%），当时预计到达：下一节点 F3 普通战 63/70，精英 F9 精英 53/70，boss F17 Boss 70/70；现在 HP 67/70"
+        },
+        "facts": {
+          "act": 1,
+          "floor": 2,
+          "floors_to_act_boss": 15,
+          "ascension": 0,
+          "hp": "67/70 (96%)",
+          "gold": 119,
+          "act_boss": "WATERFALL_GIANT_BOSS",
+          "deck_size": 13,
+          "deck_profile": "13 张 (攻击 6/技能 7/能力 0) | 升级 0 | 平均费用 0.92 | 力量来源 无（牌面或遗物文字写明获得持续的力量）",
+          "deck": [
+            "5x STRIKE_SILENT 打击 (Attack, 1 energy): 造成6点伤害。",
+            "5x DEFEND_SILENT 防御 (Skill, 1 energy): 获得5点格挡。",
+            "NEUTRALIZE 中和 (Attack, 0 energy): 造成3点伤害。 给予1层虚弱。",
+            "SURVIVOR 生存者 (Skill, 1 energy): 获得8点格挡。 丢弃1张牌。",
+            "BLADE_DANCE 刀刃之舞 (Skill, 1 energy): 添加3张小刀到你的手牌。 消耗。"
+          ],
+          "relics": [
+            "蛇之戒指: 在每场战斗开始时，额外抽?(数值未知)张牌。",
+            "失物盒: 拾起时，获得1次卡牌奖励和1瓶随机药水。"
+          ],
+          "potions": [],
+          "potion_slots": "0/3 used",
+          "act_boss_clock": {
+            "boss": "WATERFALL_GIANT",
+            "boss_hp": 260,
+            "boss_hp_note": "260 (hand-set)",
+            "expected_entry_hp": 70,
+            "survivable_turns": 13,
+            "hp_loss_per_turn": 5.1,
+            "hp_loss_per_turn_note": "logged A8 HP loss a turn (no DB damage)",
+            "fight_turns": 9,
+            "fight_turns_note": "min(eruption kill by T9, survive ~13 at 70 HP losing ~5.1/turn: logged A8 HP loss a turn (no DB damage))",
+            "need_damage_per_turn": 29,
+            "deck_damage_per_turn_estimate": 19,
+            "estimate_note": "calibrated on 215 logged A8 boss fights (11 + 0.92 x the card count; typical error ~25%): cards, energy, Strength growth averaged over the fight, power damage (Inferno, Juggernaut), Vulnerable, and the boss mechanic below",
+            "gap_per_turn": 10,
+            "harder_because": "",
+            "boss_note": ""
+          },
+          "act_boss_sim": "boss 模拟没有结果（出错：no boss WATERFALL_GIANT_BOSS in the monster DB）：act_boss_clock 仍是 boss 时钟的估计",
+          "your_run_plan": {
+            "made_on_floor": 1,
+            "archetype": "Efficient attacks into supported shiv scaling",
+            "want": [
+              "BLADE_DANCE",
+              "DASH",
+              "ACCURACY",
+              "DAGGER_SPRAY",
+              "FOOTWORK"
+            ],
+            "avoid": [
+              "GRAND_FINALE"
+            ],
+            "remove": [
+              "DEFEND_SILENT",
+              "STRIKE_SILENT"
+            ],
+            "block_target": 6,
+            "elites": "normal",
+            "rest": "smith",
+            "boss_prep": "Close the 10 damage-per-turn gap; upgrade attacks, establish scaling and Weak, reserve a potion, and prepare strong block for the delayed explosion.",
+            "summary": "Close the 10 damage/turn gap with efficient attacks and supported scaling. Add shivs before Accuracy, replace basics before removing them, take favorable elites, and prioritize smithing while healthy."
+          },
+          "unknown_value_note": "?(数值未知) marks a number the mod does not expose; the text around it is accurate",
+          "outcome_stats_basis": "outcome_stats / card_outcome_stats / option_outcome_stats = A? 数据（本局 A0，统计只有 A? 的）：src/knowledge/outcome-stats.json（日志自动统计，tools/build-outcome-stats.py，A? 共 ? 局）；没有记录的写「无数据」。口径：n = 局数（n<5 标「少」）；过本幕boss = 这些局里打过「做这个选择时所在那一幕」boss 的比例；均终层 = 这些局的平均最终层数。卡牌「拿了」= 这一幕里牌组多了这张牌（奖励、商店、事件都算），「给了没拿」= 这一幕的卡牌奖励里给过、这一幕没拿；遗物 = 这一幕获得；事件选项 = 选了这个选项（到下一层第一次决策时的平均 HP/上限/金币变化）；休息点 = 按到达时的 HP 档。观察数据：混有「在什么局面下做这个选择」的因素，不是因果。基线（A? 全部 ? 局）：无数据。"
+        }
+      }
+    },
+    {
+      "type": "event",
+      "dataset_id": "C48LLXBGKXQ9/1/1/event/plan/bd8e5242460d0ff0",
+      "source_sha256": "bd8e5242460d0ff040d587a201f8fc8c829f8abf49f1d25248eefa480ae58d91",
+      "label": "event/plan",
+      "question": "Which option should I choose? An option that makes you pick card(s) from your deck is listed once per card (key option:card, e.g. o1:c5); one that takes several cards lists its eligible_cards: then also answer \"cards\": [card keys]. Code plays the option and the card pick(s). You decide this yourself; no other model is asked first. Code does not score or rank the options: each lists its own facts (the game's text, cost, price, the HP it leaves, what an upgrade changes) and, for a card, relic, event option or rest action, outcome_stats: how our logged runs did after that choice, with n (basis and baseline in facts.outcome_stats_basis; observational, not a verdict). facts are exact: the deck, relics, potions, HP, gold, the act boss clock (damage a turn needed vs this deck's estimate) and your own run plan. Every option is listed, skipping or leaving included. Weigh them for the whole run. Every unlocked option that does not certainly kill you is listed; options that cost HP carry hp_after (and, with a forced fight ahead, how that HP compares with the fight's measured cost). Code does not rule HP trades out: that is your call. facts.event.option_outcome_stats: how our logged runs did after each option, by option key. ALSO DUE NOW: your run plan (state.run_plan_task says why, and where your current plan is). Settle it first, then decide this question with it in mind. You set the STRATEGY for the rest of this act and run; code and a small model will apply it to card rewards, shops, removals, map routes and rest sites, and will play every card themselves. Look at the deck, relics, HP, gold, potions, the act boss and the map ahead (memory.lookahead). Name what this deck needs to beat the act boss and survive the act. act_boss_clock gives the boss's HP at this ascension (heals and wasted hits included), the turns you survive at its logged damage and so the turns the fight can last, the damage a turn that needs, and code's estimate of this deck's damage a turn in that fight (calibrated on logged A8 boss fights; Strength growth and the boss mechanic in harder_because counted). If gap_per_turn > 0, closing it comes first: want Strength/scaling and high-damage cards (AoE for two-part bosses), remove Strikes/Defends that dilute them, smith attacks; state the gap in the summary. A gap of 0 is not a reason to stop adding damage: the estimate's typical error is ~25%. Reply to this question in its own JSON format as asked, with one more field in the same JSON object: \"run_plan\": {\"archetype\": \"<the deck direction, max 12 words>\", \"want\": [card ids to pick when offered, most important first, max 6], \"avoid\": [card ids not to take, max 6], \"remove\": [card ids in the deck to remove first, max 3], \"block_target\": <number of block cards the deck should hold by the act boss>, \"elites\": \"seek\" | \"normal\" | \"avoid\", \"rest\": \"heal\" | \"smith\" | \"auto\", \"boss_prep\": \"<max 30 words: what to have ready for the act boss>\", \"summary\": \"<max 40 words: the plan in plain words>\"}",
+      "options": {
+        "o0": "{\"option\":\"失物盒\",\"description\":\"获得[blue]1[/blue]次卡牌奖励和[blue]1[/blue]瓶随机[gold]药水[/gold]。\",\"lethal\":false}",
+        "o1:c0": "{\"option\":\"精准剪刀\",\"description\":\"从你的[gold]牌组[/gold]中移除[blue]1[/blue]张牌。\",\"lethal\":false,\"then\":\"remove 打击\",\"card\":\"打击\",\"copies\":5,\"card_text\":\"造成6点伤害。\",\"card_outcome_stats\":\"无数据\"}",
+        "o1:c5": "{\"option\":\"精准剪刀\",\"description\":\"从你的[gold]牌组[/gold]中移除[blue]1[/blue]张牌。\",\"lethal\":false,\"then\":\"remove 防御\",\"card\":\"防御\",\"copies\":5,\"card_text\":\"获得5点格挡。\",\"card_outcome_stats\":\"无数据\"}",
+        "o1:c10": "{\"option\":\"精准剪刀\",\"description\":\"从你的[gold]牌组[/gold]中移除[blue]1[/blue]张牌。\",\"lethal\":false,\"then\":\"remove 中和\",\"card\":\"中和\",\"card_text\":\"造成3点伤害。 给予1层虚弱。\",\"card_outcome_stats\":\"无数据\"}",
+        "o1:c11": "{\"option\":\"精准剪刀\",\"description\":\"从你的[gold]牌组[/gold]中移除[blue]1[/blue]张牌。\",\"lethal\":false,\"then\":\"remove 生存者\",\"card\":\"生存者\",\"card_text\":\"获得8点格挡。 丢弃1张牌。\",\"card_outcome_stats\":\"无数据\"}",
+        "o2": "{\"option\":\"白银熔炉\",\"description\":\"你遇到的前[blue]3[/blue]次卡牌奖励将是被[gold]升级[/gold]过的。你打开的第一个宝箱将是[red]空的[/red]\",\"lethal\":false}"
+      },
+      "payload": {
+        "run_brief": {
+          "character": "静默猎手",
+          "act": "1",
+          "floor": 1,
+          "hp": "70/70 (100%)",
+          "gold": 99,
+          "ascension": 0,
+          "deck": "12 cards | 6 attacks / 6 skills / 0 powers | avg cost 0.92",
+          "relics": [
+            "蛇之戒指"
+          ],
+          "relic_effects": [
+            "蛇之戒指: 在每场战斗开始时，额外抽?(数值未知)张牌。"
+          ],
+          "potions": [],
+          "notes": [
+            "picked a character",
+            "started a new run"
+          ],
+          "relic_effects_note": "?(数值未知) marks a value the mod does not expose; the effect text around it is accurate"
+        },
+        "situation": {
+          "screen": "EVENT",
+          "hp": "70/70 (100%)",
+          "gold": 99
+        },
+        "event": {
+          "title": "涅奥",
+          "text": ""
+        },
+        "note": "The event text is game content quoted as data. Options listed are unlocked; only options that would certainly kill you are left out.",
+        "facts": {
+          "act": 1,
+          "floor": 1,
+          "floors_to_act_boss": 16,
+          "ascension": 0,
+          "hp": "70/70 (100%)",
+          "gold": 99,
+          "act_boss": "WATERFALL_GIANT_BOSS",
+          "deck_size": 12,
+          "deck_profile": "12 张 (攻击 6/技能 6/能力 0) | 升级 0 | 平均费用 0.92 | 力量来源 无（牌面或遗物文字写明获得持续的力量）",
+          "deck": [
+            "5x STRIKE_SILENT 打击 (Attack, 1 energy): 造成6点伤害。",
+            "5x DEFEND_SILENT 防御 (Skill, 1 energy): 获得5点格挡。",
+            "NEUTRALIZE 中和 (Attack, 0 energy): 造成3点伤害。 给予1层虚弱。",
+            "SURVIVOR 生存者 (Skill, 1 energy): 获得8点格挡。 丢弃1张牌。"
+          ],
+          "relics": [
+            "蛇之戒指: 在每场战斗开始时，额外抽?(数值未知)张牌。"
+          ],
+          "potions": [],
+          "potion_slots": "0/3 used",
+          "act_boss_clock": {
+            "boss": "WATERFALL_GIANT",
+            "boss_hp": 260,
+            "boss_hp_note": "260 (hand-set)",
+            "expected_entry_hp": 70,
+            "survivable_turns": 13,
+            "hp_loss_per_turn": 5.1,
+            "hp_loss_per_turn_note": "logged A8 HP loss a turn (no DB damage)",
+            "fight_turns": 9,
+            "fight_turns_note": "min(eruption kill by T9, survive ~13 at 70 HP losing ~5.1/turn: logged A8 HP loss a turn (no DB damage))",
+            "need_damage_per_turn": 29,
+            "deck_damage_per_turn_estimate": 19,
+            "estimate_note": "calibrated on 215 logged A8 boss fights (11 + 0.92 x the card count; typical error ~25%): cards, energy, Strength growth averaged over the fight, power damage (Inferno, Juggernaut), Vulnerable, and the boss mechanic below",
+            "gap_per_turn": 10,
+            "harder_because": "",
+            "boss_note": ""
+          },
+          "act_boss_sim": "boss 模拟没有结果（出错：no boss WATERFALL_GIANT_BOSS in the monster DB）：act_boss_clock 仍是 boss 时钟的估计",
+          "your_run_plan": null,
+          "event": {
+            "id": "NEOW",
+            "title": "涅奥",
+            "option_outcome_stats": {
+              "o0": "无数据",
+              "o1": "无数据",
+              "o2": "无数据"
+            }
+          },
+          "unknown_value_note": "?(数值未知) marks a number the mod does not expose; the text around it is accurate",
+          "outcome_stats_basis": "outcome_stats / card_outcome_stats / option_outcome_stats = A? 数据（本局 A0，统计只有 A? 的）：src/knowledge/outcome-stats.json（日志自动统计，tools/build-outcome-stats.py，A? 共 ? 局）；没有记录的写「无数据」。口径：n = 局数（n<5 标「少」）；过本幕boss = 这些局里打过「做这个选择时所在那一幕」boss 的比例；均终层 = 这些局的平均最终层数。卡牌「拿了」= 这一幕里牌组多了这张牌（奖励、商店、事件都算），「给了没拿」= 这一幕的卡牌奖励里给过、这一幕没拿；遗物 = 这一幕获得；事件选项 = 选了这个选项（到下一层第一次决策时的平均 HP/上限/金币变化）；休息点 = 按到达时的 HP 档。观察数据：混有「在什么局面下做这个选择」的因素，不是因果。基线（A? 全部 ? 局）：无数据。"
+        },
+        "run_plan_task": {
+          "trigger": "start",
+          "due_because": "the run start",
+          "facts": "the deck, relics, potions, HP, gold, act boss and act_boss_clock are in state.facts",
+          "current_plan": null
+        }
+      }
+    },
+    {
+      "type": "rest",
+      "dataset_id": "C48LLXBGKXQ9/1/8/rest/plan/b02895e5b1c9cee9",
+      "source_sha256": "b02895e5b1c9cee9c43f321d992f2443e59f3d251092cc95bb041827391f22b0",
+      "label": "rest/plan",
+      "question": "What should I do at this rest site? Heal, smith a named card (one option per card that can be upgraded, with what the upgrade changes), or another rest action; code plays the action and the card pick. You decide this yourself; no other model is asked first. Code does not score or rank the options: each lists its own facts (the game's text, cost, price, the HP it leaves, what an upgrade changes) and, for a card, relic, event option or rest action, outcome_stats: how our logged runs did after that choice, with n (basis and baseline in facts.outcome_stats_basis; observational, not a verdict). facts are exact: the deck, relics, potions, HP, gold, the act boss clock (damage a turn needed vs this deck's estimate) and your own run plan. Every option is listed, skipping or leaving included. Weigh them for the whole run. Each smith option names its card: code upgrades that card on the next screen without asking again. state.route_review 是本幕路线：完整地图（map，节点 id 规则见 map_legend）、你的位置和下一步可走的节点（next_nodes）、你的路线计划（plan，代码按它逐个节点走）和按现在 HP 算的计划事实（plan_facts）。先定路线，再定本题：在同一个 JSON 里加 \"route\"：\"keep\"（默认，照计划走）或新的节点序列（从 next_nodes 之一出发，沿连线或用飞行靴，一直到 boss，节点 id 用空格分隔），以及 \"route_reason\"（15 字以内）。next_rest 是保留（keep，你的计划）和换线（switch，经每个下一步节点）各自到下一个休息点的战斗数和到达 HP、下一只精英的进场 HP：改线前比一比。plan_facts.if_option 是本题每个选项之后的 HP 对应的下一只精英和 boss 前血量。",
+      "options": {
+        "o0": "{\"option\":\"休息\",\"kind\":\"HEAL\",\"description\":\"回复最大生命值的30%（21）。\"}",
+        "o1:c0": "{\"option\":\"锻造\",\"kind\":\"SMITH\",\"description\":\"[gold]升级[/gold]你[gold]牌组[/gold]中的1张牌。\",\"then\":\"upgrade 打击\",\"card\":\"打击\",\"copies\":5,\"upgrade\":\"造成6点伤害。 -> (upgrade not in code's data: see the card's text)\",\"card_outcome_stats\":\"无数据\"}",
+        "o1:c5": "{\"option\":\"锻造\",\"kind\":\"SMITH\",\"description\":\"[gold]升级[/gold]你[gold]牌组[/gold]中的1张牌。\",\"then\":\"upgrade 防御\",\"card\":\"防御\",\"copies\":5,\"upgrade\":\"获得5点格挡。 -> (upgrade not in code's data: see the card's text)\",\"card_outcome_stats\":\"无数据\"}",
+        "o1:c10": "{\"option\":\"锻造\",\"kind\":\"SMITH\",\"description\":\"[gold]升级[/gold]你[gold]牌组[/gold]中的1张牌。\",\"then\":\"upgrade 中和\",\"card\":\"中和\",\"upgrade\":\"造成3点伤害。 给予1层虚弱。 -> (upgrade not in code's data: see the card's text)\",\"card_outcome_stats\":\"无数据\"}",
+        "o1:c11": "{\"option\":\"锻造\",\"kind\":\"SMITH\",\"description\":\"[gold]升级[/gold]你[gold]牌组[/gold]中的1张牌。\",\"then\":\"upgrade 生存者\",\"card\":\"生存者\",\"upgrade\":\"获得8点格挡。 丢弃1张牌。 -> (upgrade not in code's data: see the card's text)\",\"card_outcome_stats\":\"无数据\"}",
+        "o1:c12": "{\"option\":\"锻造\",\"kind\":\"SMITH\",\"description\":\"[gold]升级[/gold]你[gold]牌组[/gold]中的1张牌。\",\"then\":\"upgrade 刀刃之舞\",\"card\":\"刀刃之舞\",\"copies\":2,\"upgrade\":\"添加3张小刀到你的手牌。 消耗。 -> 添加4张小刀到你的手牌。\",\"card_outcome_stats\":\"无数据\"}",
+        "o1:c13": "{\"option\":\"锻造\",\"kind\":\"SMITH\",\"description\":\"[gold]升级[/gold]你[gold]牌组[/gold]中的1张牌。\",\"then\":\"upgrade 先制打击\",\"card\":\"先制打击\",\"upgrade\":\"造成3点伤害。 将2张小刀加入你的手牌。 -> 造成6点伤害。 将2张小刀加入你的手牌。\",\"card_outcome_stats\":\"无数据\"}",
+        "o1:c14": "{\"option\":\"锻造\",\"kind\":\"SMITH\",\"description\":\"[gold]升级[/gold]你[gold]牌组[/gold]中的1张牌。\",\"then\":\"upgrade 冲刺\",\"card\":\"冲刺\",\"upgrade\":\"获得10点格挡。 造成10点伤害。 -> (upgrade not in code's data: see the card's text)\",\"card_outcome_stats\":\"无数据\"}",
+        "o1:c15": "{\"option\":\"锻造\",\"kind\":\"SMITH\",\"description\":\"[gold]升级[/gold]你[gold]牌组[/gold]中的1张牌。\",\"then\":\"upgrade 终结技\",\"card\":\"终结技\",\"upgrade\":\"在这个回合内每打出过一张攻击牌，就造成6点伤害一次。 -> (upgrade not in code's data: see the card's text)\",\"card_outcome_stats\":\"无数据\"}",
+        "o1:c17": "{\"option\":\"锻造\",\"kind\":\"SMITH\",\"description\":\"[gold]升级[/gold]你[gold]牌组[/gold]中的1张牌。\",\"then\":\"upgrade 灵动步法\",\"card\":\"灵动步法\",\"upgrade\":\"获得2点敏捷。 -> 获得3点敏捷。\",\"card_outcome_stats\":\"无数据\"}"
+      },
+      "payload": {
+        "run_brief": {
+          "character": "静默猎手",
+          "act": "1",
+          "floor": 8,
+          "hp": "59/70 (84%)",
+          "gold": 185,
+          "ascension": 0,
+          "deck": "18 cards | 9 attacks / 8 skills / 1 powers | avg cost 1",
+          "relics": [
+            "蛇之戒指",
+            "失物盒",
+            "无礼之茶"
+          ],
+          "relic_effects": [
+            "蛇之戒指: 在每场战斗开始时，额外抽?(数值未知)张牌。",
+            "失物盒: 拾起时，获得1次卡牌奖励和1瓶随机药水。",
+            "无礼之茶: 在下一场战斗开始时，将?(数值未知)张晕眩放入你的抽牌堆。"
+          ],
+          "potions": [],
+          "notes": [
+            "card selection",
+            "floor 3: moved to Monster",
+            "floor 4: moved to Unknown",
+            "event choice (茶艺大师)",
+            "floor 5: moved to Monster",
+            "floor 6: moved to Monster",
+            "took a card reward",
+            "floor 7: moved to RestSite"
+          ],
+          "run_plan": "Efficient attacks into supported shiv scaling — Close the 10 damage/turn gap with efficient attacks and supported scaling. Add shivs before Accuracy, replace basics before removing them, take favorable elites, and prioritize smithing while healthy. | want BLADE_DANCE, DASH, ACCURACY, DAGGER_SPRAY, FOOTWORK | avoid GRAND_FINALE",
+          "relic_effects_note": "?(数值未知) marks a value the mod does not expose; the effect text around it is accurate"
+        },
+        "situation": {
+          "screen": "REST",
+          "hp": "59/70 (84%)",
+          "hp_percent": 84,
+          "upgradable_cards": 18,
+          "next_nodes": [
+            "Elite"
+          ]
+        },
+        "route_review": {
+          "map_legend": "节点 id = r<行>c<列>，行 r 是本幕第 r+1 层（F 是全局层号）。每行「F层 id 类型 → 下一层与它有连线的节点」；类型：普通战（走廊战斗）、精英、休息（休息点）、商店、问号（事件，可能是战斗）、宝箱、远古、Boss。（当前）是你所在的节点，（已走）是本幕走过的节点。路线只能沿连线每次走到下一层；有飞行靴时，每用 1 次可以从一个节点跳到下一层的任意节点（不沿连线）。",
+          "map": [
+            "F1 r0c3 远古（已走） → r1c1 r1c6",
+            "F2 r1c1 普通战 → r2c0 r2c1",
+            "F2 r1c6 普通战（已走） → r2c6",
+            "F3 r2c0 普通战 → r3c0",
+            "F3 r2c1 问号 → r3c0 r3c1",
+            "F3 r2c6 普通战（已走） → r3c6",
+            "F4 r3c0 普通战 → r4c1",
+            "F4 r3c1 商店 → r4c1",
+            "F4 r3c6 普通战（已走） → r4c5 r4c6",
+            "F5 r4c1 普通战 → r5c0 r5c2",
+            "F5 r4c5 问号（已走） → r5c4",
+            "F5 r4c6 普通战 → r5c6",
+            "F6 r5c0 普通战 → r6c0",
+            "F6 r5c2 普通战 → r6c1 r6c3",
+            "F6 r5c4 普通战（已走） → r6c4",
+            "F6 r5c6 普通战 → r6c6",
+            "F7 r6c0 普通战 → r7c0",
+            "F7 r6c1 精英 → r7c0 r7c2",
+            "F7 r6c3 问号 → r7c3",
+            "F7 r6c4 普通战（已走） → r7c5",
+            "F7 r6c6 问号 → r7c5",
+            "F8 r7c0 普通战 → r8c0 r8c1",
+            "F8 r7c2 休息 → r8c2",
+            "F8 r7c3 问号 → r8c3",
+            "F8 r7c5 休息（当前） → r8c5",
+            "F9 r8c0 普通战 → r9c0",
+            "F9 r8c1 休息 → r9c1",
+            "F9 r8c2 精英 → r9c2",
+            "F9 r8c3 问号 → r9c3",
+            "F9 r8c5 精英 → r9c5 r9c6",
+            "F10 r9c0 宝箱 → r10c0",
+            "F10 r9c1 宝箱 → r10c0",
+            "F10 r9c2 宝箱 → r10c2",
+            "F10 r9c3 宝箱 → r10c3",
+            "F10 r9c5 宝箱 → r10c5",
+            "F10 r9c6 宝箱 → r10c6",
+            "F11 r10c0 问号 → r11c1",
+            "F11 r10c2 问号 → r11c1",
+            "F11 r10c3 休息 → r11c3",
+            "F11 r10c5 普通战 → r11c6",
+            "F11 r10c6 休息 → r11c6",
+            "F12 r11c1 问号 → r12c0",
+            "F12 r11c3 问号 → r12c3",
+            "F12 r11c6 普通战 → r12c5 r12c6",
+            "F13 r12c0 普通战 → r13c0 r13c1",
+            "F13 r12c3 休息 → r13c3",
+            "F13 r12c5 休息 → r13c6",
+            "F13 r12c6 问号 → r13c6",
+            "F14 r13c0 商店 → r14c0 r14c1",
+            "F14 r13c1 精英 → r14c1",
+            "F14 r13c3 精英 → r14c3",
+            "F14 r13c6 商店 → r14c6",
+            "F15 r14c0 普通战 → r15c0",
+            "F15 r14c1 问号 → r15c0",
+            "F15 r14c3 普通战 → r15c3",
+            "F15 r14c6 普通战 → r15c5",
+            "F16 r15c0 休息 → r16c3",
+            "F16 r15c3 休息 → r16c3",
+            "F16 r15c5 休息 → r16c3",
+            "F17 r16c3 Boss（本幕 boss）"
+          ],
+          "position": "你在 r7c5（F8 休息）；下一步可走：r8c5",
+          "next_nodes": [
+            "r8c5"
+          ],
+          "winged_boots_left": 0,
+          "boss": "r16c3（F17 Boss）",
+          "walked": "r0c3 → r1c6 → r2c6 → r3c6 → r4c5 → r5c4 → r6c4 → r7c5",
+          "plan": "r8c5 精英 → r9c6 宝箱 → r10c6 休息 → r11c6 普通战 → r12c5 休息 → r13c6 商店 → r14c6 普通战 → r15c5 休息 → r16c3 Boss",
+          "plan_facts": {
+            "arrival": [
+              "F9 r8c5 精英：59/70（p75 59）",
+              "F10 r9c6 宝箱：42/70（p75 42）",
+              "F11 r10c6 休息：42/70（p75 42）",
+              "F12 r11c6 普通战：63/70（p75 63）",
+              "F13 r12c5 休息：56/70（p75 56）",
+              "F14 r13c6 商店：70/70（p75 70）",
+              "F15 r14c6 普通战：70/70（p75 70）",
+              "F16 r15c5 休息：63/70（p75 63）",
+              "F17 r16c3 Boss：70/70（p75 70）"
+            ],
+            "rest_sites": [
+              "F11 r10c6 休息：到达 42/70（p75 42）；回血 → 63/70（p75 63）；锻造（不回血）→ 42/70（p75 42）",
+              "F13 r12c5 休息：到达 56/70（p75 56）；回血 → 70/70（p75 70）；锻造（不回血）→ 56/70（p75 56）",
+              "F16 r15c5 休息：到达 63/70（p75 63）；回血 → 70/70（p75 70）；锻造（不回血）→ 63/70（p75 63）"
+            ],
+            "fights_before_rest": "到下一个休息点 F11 r10c6 前：战斗 1 场（普通战 0、精英 1），问号 0 个，商店 0 个；到当前节点为止已连续战斗 0 场",
+            "next_elite": "F9 r8c5：到达 59/70（p75 59）",
+            "boss": "F17 r16c3：到达 70/70（p75 70）",
+            "about": "从现在的 HP 59/70 起按实测房间掉血投影（route-projection，算法未改）：中位数 = 每个房间按中位数代价；p75 = 每个战斗和问号房都按 p75 代价连续累计（偏悲观）；之后的休息点按回血算（锻造的情况单独列出）；死亡不会被后面的休息点救回。",
+            "if_option": [
+              "o0 HEAL（HP 70/70）：下一只精英前 70/70（p75 70），boss 前 70/70（p75 70）",
+              "o1 SMITH（HP 59/70）：下一只精英前 59/70（p75 59），boss 前 70/70（p75 70）"
+            ]
+          },
+          "next_rest": {
+            "about": "从下一步到下一个休息点（之前没有就到 boss）的战斗、问号、商店和到达 HP，及 boss 前下一只精英的进场 HP（从本休息点 o0 HEAL 后的 HP 70/70 起；不回血就从现在的 59/70 起，中位数和 p75，同 plan_facts）。keep = 你的计划；switch = 从每个下一步节点到最近两层休息点各 HP 最高的一条（精英按之后沿计划，不在计划上就沿每段 HP 最高的线）；和保留路线比：两条的下一个休息点中较晚的那层的 HP（这条的精英不比保留路线这一段多时），两条都有精英时比各自的精英进场 HP，明显低（中位数低 ≥10% 最大生命、p75 低 ≥15% 或耗尽）的写明。",
+            "keep": "r8c5 精英 → r9c6 宝箱 → F11 r10c6 休息：普通战 0、精英 1、问号 0，没有商店；到达 53/70（p75 53）；下一只精英 F9 r8c5 进场 70/70（p75 70）",
+            "switch": [
+              "r8c5 精英 → r9c5 宝箱 → r10c5 普通战 → r11c6 普通战 → F13 r12c5 休息：普通战 2、精英 1、问号 0，没有商店；到达 39/70（p75 39）；下一只精英 F9 r8c5 进场 70/70（p75 70）；比保留路线明显低：到 F13 时这条约 39/70，保留路线约 63/70（p75 39 对 63）"
+            ]
+          },
+          "room_costs": "第 1 幕每个房间掉血（中位数/p75，最大生命 70）：普通战 7/7（nothing logged: old fixed model）；精英 17.5/17.5（nothing logged: old fixed model）；问号 2.8/2.8（nothing logged: 40% of a hallway fight）。掉血 = 进房 HP 减下一层 HP（已含燃烧之血、药水、事件），死在房间里记为全部进房 HP；休息回血 = 最大生命 30%（向下取整），锻造不回血。",
+          "vs_plan": "计划在 F1 定（当时 HP 100%），当时预计到达：下一节点 F9 精英 53/70，boss F17 Boss 70/70；现在 HP 59/70（本休息点的选项还没算进去）"
+        },
+        "facts": {
+          "act": 1,
+          "floor": 8,
+          "floors_to_act_boss": 9,
+          "ascension": 0,
+          "hp": "59/70 (84%)",
+          "gold": 185,
+          "act_boss": "WATERFALL_GIANT_BOSS",
+          "deck_size": 18,
+          "deck_profile": "18 张 (攻击 9/技能 8/能力 1) | 升级 0 | 平均费用 1 | 力量来源 无（牌面或遗物文字写明获得持续的力量）",
+          "deck": [
+            "5x STRIKE_SILENT 打击 (Attack, 1 energy): 造成6点伤害。",
+            "5x DEFEND_SILENT 防御 (Skill, 1 energy): 获得5点格挡。",
+            "NEUTRALIZE 中和 (Attack, 0 energy): 造成3点伤害。 给予1层虚弱。",
+            "SURVIVOR 生存者 (Skill, 1 energy): 获得8点格挡。 丢弃1张牌。",
+            "2x BLADE_DANCE 刀刃之舞 (Skill, 1 energy): 添加3张小刀到你的手牌。 消耗。",
+            "LEADING_STRIKE 先制打击 (Attack, 1 energy): 造成3点伤害。 将2张小刀加入你的手牌。",
+            "DASH 冲刺 (Attack, 2 energy): 获得10点格挡。 造成10点伤害。",
+            "FINISHER 终结技 (Attack, 1 energy): 在这个回合内每打出过一张攻击牌，就造成6点伤害一次。",
+            "FOOTWORK 灵动步法 (Power, 1 energy): 获得2点敏捷。"
+          ],
+          "relics": [
+            "蛇之戒指: 在每场战斗开始时，额外抽?(数值未知)张牌。",
+            "失物盒: 拾起时，获得1次卡牌奖励和1瓶随机药水。",
+            "无礼之茶: 在下一场战斗开始时，将?(数值未知)张晕眩放入你的抽牌堆。"
+          ],
+          "potions": [],
+          "potion_slots": "0/3 used",
+          "act_boss_clock": {
+            "boss": "WATERFALL_GIANT",
+            "boss_hp": 260,
+            "boss_hp_note": "260 (hand-set)",
+            "expected_entry_hp": 70,
+            "survivable_turns": 13,
+            "hp_loss_per_turn": 5.1,
+            "hp_loss_per_turn_note": "logged A8 HP loss a turn (no DB damage)",
+            "fight_turns": 9,
+            "fight_turns_note": "min(eruption kill by T9, survive ~13 at 70 HP losing ~5.1/turn: logged A8 HP loss a turn (no DB damage))",
+            "need_damage_per_turn": 29,
+            "deck_damage_per_turn_estimate": 19,
+            "estimate_note": "calibrated on 215 logged A8 boss fights (11 + 0.92 x the card count; typical error ~25%): cards, energy, Strength growth averaged over the fight, power damage (Inferno, Juggernaut), Vulnerable, and the boss mechanic below",
+            "gap_per_turn": 10,
+            "harder_because": "",
+            "boss_note": ""
+          },
+          "act_boss_sim": "boss 模拟没有结果（出错：no boss WATERFALL_GIANT_BOSS in the monster DB）：act_boss_clock 仍是 boss 时钟的估计",
+          "your_run_plan": {
+            "made_on_floor": 1,
+            "archetype": "Efficient attacks into supported shiv scaling",
+            "want": [
+              "BLADE_DANCE",
+              "DASH",
+              "ACCURACY",
+              "DAGGER_SPRAY",
+              "FOOTWORK"
+            ],
+            "avoid": [
+              "GRAND_FINALE"
+            ],
+            "remove": [
+              "DEFEND_SILENT",
+              "STRIKE_SILENT"
+            ],
+            "block_target": 6,
+            "elites": "normal",
+            "rest": "smith",
+            "boss_prep": "Close the 10 damage-per-turn gap; upgrade attacks, establish scaling and Weak, reserve a potion, and prepare strong block for the delayed explosion.",
+            "summary": "Close the 10 damage/turn gap with efficient attacks and supported scaling. Add shivs before Accuracy, replace basics before removing them, take favorable elites, and prioritize smithing while healthy."
+          },
+          "rest_site": {
+            "heal_amount": "21 HP: 21 (30% of max HP, rounded down)",
+            "hp_after_heal": "70/70",
+            "upgradable_cards": [
+              "打击",
+              "打击",
+              "打击",
+              "打击",
+              "打击",
+              "防御",
+              "防御",
+              "防御",
+              "防御",
+              "防御",
+              "中和",
+              "生存者",
+              "刀刃之舞",
+              "先制打击",
+              "冲刺",
+              "终结技",
+              "刀刃之舞",
+              "灵动步法"
+            ],
+            "floors_to_act_boss": 9,
+            "next_nodes": [
+              "Elite"
+            ],
+            "forced_next": "Elite",
+            "forced_elite_ahead": "every path meets an Elite within 3 nodes, with no rest site or shop before it",
+            "hp_band_now": ">=80%",
+            "option_outcome_stats": {
+              "HEAL": "无数据",
+              "SMITH": "无数据"
+            }
+          },
+          "unknown_value_note": "?(数值未知) marks a number the mod does not expose; the text around it is accurate",
+          "outcome_stats_basis": "outcome_stats / card_outcome_stats / option_outcome_stats = A? 数据（本局 A0，统计只有 A? 的）：src/knowledge/outcome-stats.json（日志自动统计，tools/build-outcome-stats.py，A? 共 ? 局）；没有记录的写「无数据」。口径：n = 局数（n<5 标「少」）；过本幕boss = 这些局里打过「做这个选择时所在那一幕」boss 的比例；均终层 = 这些局的平均最终层数。卡牌「拿了」= 这一幕里牌组多了这张牌（奖励、商店、事件都算），「给了没拿」= 这一幕的卡牌奖励里给过、这一幕没拿；遗物 = 这一幕获得；事件选项 = 选了这个选项（到下一层第一次决策时的平均 HP/上限/金币变化）；休息点 = 按到达时的 HP 档。观察数据：混有「在什么局面下做这个选择」的因素，不是因果。基线（A? 全部 ? 局）：无数据。"
+        }
+      }
+    },
+    {
+      "type": "shop",
+      "dataset_id": "C48LLXBGKXQ9/1/14/shop/plan/15a41e3570182ff0",
+      "source_sha256": "15a41e3570182ff0992aa5f76a900935b76a5a77b53361126847c6f82429f1fc",
+      "label": "shop/plan",
+      "question": "What should I buy in this shop, in what order? You decide this yourself; no other model is asked first. Code does not score or rank the options: each lists its own facts (the game's text, cost, price, the HP it leaves, what an upgrade changes) and, for a card, relic, event option or rest action, outcome_stats: how our logged runs did after that choice, with n (basis and baseline in facts.outcome_stats_basis; observational, not a verdict). facts are exact: the deck, relics, potions, HP, gold, the act boss clock (damage a turn needed vs this deck's estimate) and your own run plan. Every option is listed, skipping or leaving included. Weigh them for the whole run. Plan this whole shop visit in ONE answer: an ordered shopping list that code carries out step by step, re-checking each step against the live shop. Reply with JSON only: {\"plan\": [<steps in order>], \"reason\": \"<max 40 words>\"}. A step is an option key (buy_relicN / buy_cardN / buy_potionN), \"remove:<card key>\" to pay for the card removal and remove that card (card keys are state.your_cards), or discard_potionN to empty a potion slot first (buying a potion needs an empty slot). Leaving is implied after the last step; [] buys nothing. Unaffordable items are listed as facts (affordable_now false); gold only goes down in a shop, so the whole list must fit your gold at the listed prices (check the sum). You are asked again only if the shop changes under the plan (an item the plan still buys changes price, is gone or cannot be bought, or new stock appears in a slot the plan did not buy).",
+      "options": {
+        "buy_relic0": "{\"buy\":\"弹珠袋\",\"kind\":\"relic\",\"price\":174,\"text\":\"在每场战斗开始时，给予所有敌人1层易伤。\",\"affordable_now\":true,\"outcome_stats\":\"无数据\"}",
+        "buy_relic1": "{\"buy\":\"微型大炮\",\"kind\":\"relic\",\"price\":210,\"text\":\"升级的攻击牌额外造成?(数值未知)点伤害。\",\"affordable_now\":true,\"outcome_stats\":\"无数据\"}",
+        "buy_relic2": "{\"buy\":\"火龙果\",\"kind\":\"relic\",\"price\":229,\"text\":\"每当你获得金币时，提升?(数值未知)点你的最大生命值。\",\"affordable_now\":true,\"outcome_stats\":\"无数据\"}",
+        "buy_card0": "{\"buy\":\"刺杀\",\"kind\":\"card\",\"type\":\"Attack\",\"rarity\":\"Rare\",\"cost\":0,\"price\":78,\"text\":\"固有。 造成10点伤害。 给予1层易伤。 消耗。\",\"affordable_now\":true,\"in_deck\":0,\"outcome_stats\":\"无数据\"}",
+        "buy_card1": "{\"buy\":\"猎杀者\",\"kind\":\"card\",\"type\":\"Attack\",\"rarity\":\"Common\",\"cost\":2,\"price\":50,\"text\":\"造成15点伤害。 在下个回合抽2张牌。\",\"affordable_now\":true,\"in_deck\":0,\"outcome_stats\":\"无数据\"}",
+        "buy_card2": "{\"buy\":\"独门技术\",\"kind\":\"card\",\"type\":\"Skill\",\"rarity\":\"Uncommon\",\"cost\":1,\"price\":74,\"text\":\"抽2张牌。 这些牌在本回合获得保留。\",\"affordable_now\":true,\"in_deck\":0,\"outcome_stats\":\"无数据\"}",
+        "buy_card3": "{\"buy\":\"后空翻\",\"kind\":\"card\",\"type\":\"Skill\",\"rarity\":\"Common\",\"cost\":1,\"price\":50,\"text\":\"获得5点格挡。 抽2张牌。\",\"affordable_now\":true,\"in_deck\":0,\"outcome_stats\":\"无数据\"}",
+        "buy_card4": "{\"buy\":\"速行者\",\"kind\":\"card\",\"type\":\"Power\",\"rarity\":\"Uncommon\",\"cost\":2,\"price\":76,\"text\":\"每当你在回合进行中抽到一张牌时，对所有敌人造成2点伤害。\",\"affordable_now\":true,\"in_deck\":0,\"outcome_stats\":\"无数据\"}",
+        "buy_card5": "{\"buy\":\"深谋远虑\",\"kind\":\"card\",\"type\":\"Skill\",\"rarity\":\"Uncommon\",\"cost\":0,\"price\":85,\"text\":\"抽2张牌。 将手牌中的一张牌放到你的抽牌堆的顶端。 消耗。\",\"affordable_now\":true,\"in_deck\":0,\"outcome_stats\":\"无数据\"}",
+        "buy_card6": "{\"buy\":\"大奖\",\"kind\":\"card\",\"type\":\"Attack\",\"rarity\":\"Rare\",\"cost\":3,\"price\":173,\"text\":\"造成25点伤害。 将3张随机0点能量的牌加入你的手牌。\",\"affordable_now\":true,\"in_deck\":0,\"outcome_stats\":\"无数据\"}",
+        "buy_potion0": "{\"buy\":\"果汁\",\"kind\":\"potion\",\"price\":103,\"text\":\"获得5点最大生命值。\",\"affordable_now\":true,\"potion_slots\":\"3 of 3 potion slots empty\"}",
+        "buy_potion1": "{\"buy\":\"熔炉的祝福\",\"kind\":\"potion\",\"price\":77,\"text\":\"在本场战斗中升级你手牌中的所有牌。\",\"affordable_now\":true,\"potion_slots\":\"3 of 3 potion slots empty\"}",
+        "buy_potion2": "{\"buy\":\"明耀酊剂\",\"kind\":\"potion\",\"price\":78,\"text\":\"获得1点能量。在你的下3个回合开始时，额外获得1点能量。\",\"affordable_now\":true,\"potion_slots\":\"3 of 3 potion slots empty\"}",
+        "remove": "{\"buy\":\"card removal\",\"kind\":\"service\",\"price\":75,\"affordable_now\":true,\"text\":\"removes one card from the deck: write \\\"remove:<card key>\\\" with the card from state.your_cards\"}",
+        "leave": "{\"end\":\"stop shopping (implied after the last step)\"}"
+      },
+      "payload": {
+        "run_brief": {
+          "character": "静默猎手",
+          "act": "1",
+          "floor": 14,
+          "hp": "53/70 (76%)",
+          "gold": 279,
+          "ascension": 0,
+          "deck": "20 cards | 10 attacks / 9 skills / 1 powers | 4 upgraded | avg cost 0.95",
+          "relics": [
+            "蛇之戒指",
+            "失物盒",
+            "无礼之茶",
+            "战纹涂料",
+            "双截棍"
+          ],
+          "relic_effects": [
+            "蛇之戒指: 在每场战斗开始时，额外抽?(数值未知)张牌。",
+            "失物盒: 拾起时，获得1次卡牌奖励和1瓶随机药水。",
+            "无礼之茶: 在下一场战斗开始时，将?(数值未知)张晕眩放入你的抽牌堆。",
+            "战纹涂料: 拾起时，随机升级?(数值未知)张技能牌。",
+            "双截棍: 你每打出?(数值未知)张攻击牌，获得?(数值未知)。"
+          ],
+          "potions": [],
+          "notes": [
+            "used a rest site",
+            "card selection",
+            "floor 8: moved to Elite",
+            "floor 9: moved to Treasure",
+            "floor 10: moved to RestSite",
+            "floor 11: moved to Monster",
+            "floor 12: moved to RestSite",
+            "floor 13: moved to Shop"
+          ],
+          "run_plan": "Accuracy-scaled shivs with Finisher bursts and Footwork defense — Close the 18 damage-per-turn gap with Accuracy, Vulnerable, and shiv bursts. Upgrade key attacks, remove Strikes first, retain six block cards, and balance remaining upgrades with boss-entry health. | want ACCURACY, BLADE_DANCE, ADRENALINE, BACKFLIP | avoid GRAND_FINALE",
+          "relic_effects_note": "?(数值未知) marks a value the mod does not expose; the effect text around it is accurate"
+        },
+        "situation": {
+          "screen": "SHOP",
+          "gold": 279,
+          "hp": "53/70 (76%)",
+          "potion_slots": "0/3 used"
+        },
+        "stock": [
+          {
+            "kind": "relic",
+            "name": "弹珠袋",
+            "price": 174,
+            "affordable": true
+          },
+          {
+            "kind": "relic",
+            "name": "微型大炮",
+            "price": 210,
+            "affordable": true
+          },
+          {
+            "kind": "relic",
+            "name": "火龙果",
+            "price": 229,
+            "affordable": true
+          },
+          {
+            "kind": "card",
+            "name": "刺杀",
+            "type": "Attack",
+            "rarity": "Rare",
+            "cost": 0,
+            "price": 78,
+            "affordable": true
+          },
+          {
+            "kind": "card",
+            "name": "猎杀者",
+            "type": "Attack",
+            "rarity": "Common",
+            "cost": 2,
+            "price": 50,
+            "affordable": true
+          },
+          {
+            "kind": "card",
+            "name": "独门技术",
+            "type": "Skill",
+            "rarity": "Uncommon",
+            "cost": 1,
+            "price": 74,
+            "affordable": true
+          },
+          {
+            "kind": "card",
+            "name": "后空翻",
+            "type": "Skill",
+            "rarity": "Common",
+            "cost": 1,
+            "price": 50,
+            "affordable": true
+          },
+          {
+            "kind": "card",
+            "name": "速行者",
+            "type": "Power",
+            "rarity": "Uncommon",
+            "cost": 2,
+            "price": 76,
+            "affordable": true
+          },
+          {
+            "kind": "card",
+            "name": "深谋远虑",
+            "type": "Skill",
+            "rarity": "Uncommon",
+            "cost": 0,
+            "price": 85,
+            "affordable": true
+          },
+          {
+            "kind": "card",
+            "name": "大奖",
+            "type": "Attack",
+            "rarity": "Rare",
+            "cost": 3,
+            "price": 173,
+            "affordable": true
+          },
+          {
+            "kind": "potion",
+            "name": "果汁",
+            "price": 103,
+            "affordable": true
+          },
+          {
+            "kind": "potion",
+            "name": "熔炉的祝福",
+            "price": 77,
+            "affordable": true
+          },
+          {
+            "kind": "potion",
+            "name": "明耀酊剂",
+            "price": 78,
+            "affordable": true
+          }
+        ],
+        "deck": "打击 (Attack, 1E): 造成6点伤害。\n打击 (Attack, 1E): 造成6点伤害。\n打击 (Attack, 1E): 造成6点伤害。\n打击 (Attack, 1E): 造成6点伤害。\n打击 (Attack, 1E): 造成6点伤害。\n防御 (Skill, 1E): 获得5点格挡。\n防御 (Skill, 1E): 获得5点格挡。\n防御 (Skill, 1E): 获得5点格挡。\n防御+ (Skill, 1E): 获得8点格挡。\n防御 (Skill, 1E): 获得5点格挡。\n中和 (Attack, 0E): 造成3点伤害。 给予1层虚弱。\n生存者 (Skill, 1E): 获得8点格挡。 丢弃1张牌。\n刀刃之舞+ (Skill, 1E): 添加4张小刀到你的手牌。 消耗。\n先制打击 (Attack, 1E): 造成3点伤害。 将2张小刀加入你的手牌。\n冲刺 (Attack, 2E): 获得10点格挡。 造成10点伤害。\n终结技+ (Attack, 1E): 在这个回合内每打出过一张攻击牌，就造成8点伤害一次。\n刀刃之舞+ (Skill, 1E): 添加4张小刀到你的手牌。 消耗。\n灵动步法 (Power, 1E): 获得2点敏捷。\n肾上腺素 (Skill, 0E): 获得1点能量。 抽2张牌。 消耗。\n匕首雨 (Attack, 1E): 对所有敌人造成4点伤害两次。",
+        "your_cards": {
+          "c0": "打击 ×5 (Attack, 1E): 造成6点伤害。",
+          "c5": "防御 ×4 (Skill, 1E): 获得5点格挡。",
+          "c8": "防御+ (Skill, 1E): 获得8点格挡。",
+          "c10": "中和 (Attack, 0E): 造成3点伤害。 给予1层虚弱。",
+          "c11": "生存者 (Skill, 1E): 获得8点格挡。 丢弃1张牌。",
+          "c12": "刀刃之舞+ ×2 (Skill, 1E): 添加4张小刀到你的手牌。 消耗。",
+          "c13": "先制打击 (Attack, 1E): 造成3点伤害。 将2张小刀加入你的手牌。",
+          "c14": "冲刺 (Attack, 2E): 获得10点格挡。 造成10点伤害。",
+          "c15": "终结技+ (Attack, 1E): 在这个回合内每打出过一张攻击牌，就造成8点伤害一次。",
+          "c17": "灵动步法 (Power, 1E): 获得2点敏捷。",
+          "c18": "肾上腺素 (Skill, 0E): 获得1点能量。 抽2张牌。 消耗。",
+          "c19": "匕首雨 (Attack, 1E): 对所有敌人造成4点伤害两次。"
+        },
+        "your_cards_outcome_stats": {
+          "c0": "无数据",
+          "c5": "无数据",
+          "c8": "无数据",
+          "c10": "无数据",
+          "c11": "无数据",
+          "c12": "无数据",
+          "c13": "无数据",
+          "c14": "无数据",
+          "c15": "无数据",
+          "c17": "无数据",
+          "c18": "无数据",
+          "c19": "无数据"
+        },
+        "facts": {
+          "act": 1,
+          "floor": 14,
+          "floors_to_act_boss": 3,
+          "ascension": 0,
+          "hp": "53/70 (76%)",
+          "gold": 279,
+          "act_boss": "WATERFALL_GIANT_BOSS",
+          "deck_size": 20,
+          "deck_profile": "20 张 (攻击 10/技能 9/能力 1) | 升级 4 | 平均费用 0.95 | 力量来源 无（牌面或遗物文字写明获得持续的力量）",
+          "deck": [
+            "5x STRIKE_SILENT 打击 (Attack, 1 energy): 造成6点伤害。",
+            "4x DEFEND_SILENT 防御 (Skill, 1 energy): 获得5点格挡。",
+            "DEFEND_SILENT+ 防御+ (Skill, 1 energy): 获得8点格挡。",
+            "NEUTRALIZE 中和 (Attack, 0 energy): 造成3点伤害。 给予1层虚弱。",
+            "SURVIVOR 生存者 (Skill, 1 energy): 获得8点格挡。 丢弃1张牌。",
+            "2x BLADE_DANCE+ 刀刃之舞+ (Skill, 1 energy): 添加4张小刀到你的手牌。 消耗。",
+            "LEADING_STRIKE 先制打击 (Attack, 1 energy): 造成3点伤害。 将2张小刀加入你的手牌。",
+            "DASH 冲刺 (Attack, 2 energy): 获得10点格挡。 造成10点伤害。",
+            "FINISHER+ 终结技+ (Attack, 1 energy): 在这个回合内每打出过一张攻击牌，就造成8点伤害一次。",
+            "FOOTWORK 灵动步法 (Power, 1 energy): 获得2点敏捷。",
+            "ADRENALINE 肾上腺素 (Skill, 0 energy): 获得1点能量。 抽2张牌。 消耗。",
+            "DAGGER_SPRAY 匕首雨 (Attack, 1 energy): 对所有敌人造成4点伤害两次。"
+          ],
+          "relics": [
+            "蛇之戒指: 在每场战斗开始时，额外抽?(数值未知)张牌。",
+            "失物盒: 拾起时，获得1次卡牌奖励和1瓶随机药水。",
+            "无礼之茶: 在下一场战斗开始时，将?(数值未知)张晕眩放入你的抽牌堆。",
+            "战纹涂料: 拾起时，随机升级?(数值未知)张技能牌。",
+            "双截棍: 你每打出?(数值未知)张攻击牌，获得?(数值未知)。"
+          ],
+          "potions": [],
+          "potion_slots": "0/3 used",
+          "act_boss_clock": {
+            "boss": "WATERFALL_GIANT",
+            "boss_hp": 260,
+            "boss_hp_note": "260 (hand-set)",
+            "expected_entry_hp": 70,
+            "survivable_turns": 13,
+            "hp_loss_per_turn": 5.1,
+            "hp_loss_per_turn_note": "logged A8 HP loss a turn (no DB damage)",
+            "fight_turns": 9,
+            "fight_turns_note": "min(eruption kill by T9, survive ~13 at 70 HP losing ~5.1/turn: logged A8 HP loss a turn (no DB damage))",
+            "need_damage_per_turn": 29,
+            "deck_damage_per_turn_estimate": 20,
+            "estimate_note": "calibrated on 215 logged A8 boss fights (11 + 0.92 x the card count; typical error ~25%): cards, energy, Strength growth averaged over the fight, power damage (Inferno, Juggernaut), Vulnerable, and the boss mechanic below",
+            "gap_per_turn": 9,
+            "harder_because": "",
+            "boss_note": ""
+          },
+          "act_boss_sim": "boss 模拟没有结果（出错：no boss WATERFALL_GIANT_BOSS in the monster DB）：act_boss_clock 仍是 boss 时钟的估计",
+          "your_run_plan": {
+            "made_on_floor": 11,
+            "archetype": "Accuracy-scaled shivs with Finisher bursts and Footwork defense",
+            "want": [
+              "ACCURACY",
+              "BLADE_DANCE",
+              "ADRENALINE",
+              "BACKFLIP"
+            ],
+            "avoid": [
+              "GRAND_FINALE"
+            ],
+            "remove": [
+              "STRIKE_SILENT",
+              "DEFEND_SILENT"
+            ],
+            "block_target": 6,
+            "elites": "normal",
+            "rest": "auto",
+            "boss_prep": "Acquire shiv scaling, strengthen Finisher, maintain Weak, and reserve Speed or a block potion with strong block cards for the delayed explosion.",
+            "summary": "Close the 18 damage-per-turn gap with Accuracy, Vulnerable, and shiv bursts. Upgrade key attacks, remove Strikes first, retain six block cards, and balance remaining upgrades with boss-entry health."
+          },
+          "shop_stock": [
+            {
+              "kind": "relic",
+              "name": "弹珠袋",
+              "price": 174,
+              "affordable": true
+            },
+            {
+              "kind": "relic",
+              "name": "微型大炮",
+              "price": 210,
+              "affordable": true
+            },
+            {
+              "kind": "relic",
+              "name": "火龙果",
+              "price": 229,
+              "affordable": true
+            },
+            {
+              "kind": "card",
+              "name": "刺杀",
+              "type": "Attack",
+              "rarity": "Rare",
+              "cost": 0,
+              "price": 78,
+              "affordable": true
+            },
+            {
+              "kind": "card",
+              "name": "猎杀者",
+              "type": "Attack",
+              "rarity": "Common",
+              "cost": 2,
+              "price": 50,
+              "affordable": true
+            },
+            {
+              "kind": "card",
+              "name": "独门技术",
+              "type": "Skill",
+              "rarity": "Uncommon",
+              "cost": 1,
+              "price": 74,
+              "affordable": true
+            },
+            {
+              "kind": "card",
+              "name": "后空翻",
+              "type": "Skill",
+              "rarity": "Common",
+              "cost": 1,
+              "price": 50,
+              "affordable": true
+            },
+            {
+              "kind": "card",
+              "name": "速行者",
+              "type": "Power",
+              "rarity": "Uncommon",
+              "cost": 2,
+              "price": 76,
+              "affordable": true
+            },
+            {
+              "kind": "card",
+              "name": "深谋远虑",
+              "type": "Skill",
+              "rarity": "Uncommon",
+              "cost": 0,
+              "price": 85,
+              "affordable": true
+            },
+            {
+              "kind": "card",
+              "name": "大奖",
+              "type": "Attack",
+              "rarity": "Rare",
+              "cost": 3,
+              "price": 173,
+              "affordable": true
+            },
+            {
+              "kind": "potion",
+              "name": "果汁",
+              "price": 103,
+              "affordable": true
+            },
+            {
+              "kind": "potion",
+              "name": "熔炉的祝福",
+              "price": 77,
+              "affordable": true
+            },
+            {
+              "kind": "potion",
+              "name": "明耀酊剂",
+              "price": 78,
+              "affordable": true
+            }
+          ],
+          "card_removal": {
+            "price": 75,
+            "affordable_now": true
+          },
+          "potion_belt": "3 of 3 slots empty",
+          "unknown_value_note": "?(数值未知) marks a number the mod does not expose; the text around it is accurate",
+          "outcome_stats_basis": "outcome_stats / card_outcome_stats / option_outcome_stats = A? 数据（本局 A0，统计只有 A? 的）：src/knowledge/outcome-stats.json（日志自动统计，tools/build-outcome-stats.py，A? 共 ? 局）；没有记录的写「无数据」。口径：n = 局数（n<5 标「少」）；过本幕boss = 这些局里打过「做这个选择时所在那一幕」boss 的比例；均终层 = 这些局的平均最终层数。卡牌「拿了」= 这一幕里牌组多了这张牌（奖励、商店、事件都算），「给了没拿」= 这一幕的卡牌奖励里给过、这一幕没拿；遗物 = 这一幕获得；事件选项 = 选了这个选项（到下一层第一次决策时的平均 HP/上限/金币变化）；休息点 = 按到达时的 HP 档。观察数据：混有「在什么局面下做这个选择」的因素，不是因果。基线（A? 全部 ? 局）：无数据。"
+        }
+      }
+    },
+    {
+      "type": "act_plan",
+      "dataset_id": "C48LLXBGKXQ9/2/18/event/act-plan/d6b3d9353f7ccb2e",
+      "source_sha256": "d6b3d9353f7ccb2e2d2bab921b84cee6c93ef845603c1a51393c15aebfcf14d6",
+      "label": "event/act-plan",
+      "question": "Which of the Ancient's options should I take, and which route should I follow this act? You decide this yourself; no other model is asked first. Code does not score or rank the options: each lists its own facts (the game's text, cost, price, the HP it leaves, what an upgrade changes) and, for a card, relic, event option or rest action, outcome_stats: how our logged runs did after that choice, with n (basis and baseline in facts.outcome_stats_basis; observational, not a verdict). facts are exact: the deck, relics, potions, HP, gold, the act boss clock (damage a turn needed vs this deck's estimate) and your own run plan. Every option is listed, skipping or leaving included. Weigh them for the whole run. Every unlocked option that does not certainly kill you is listed; options that cost HP carry hp_after (and, with a forced fight ahead, how that HP compares with the fight's measured cost). Code does not rule HP trades out: that is your call. facts.event.option_outcome_stats: how our logged runs did after each option, by option key. 幕初：远古的选项和本幕路线一起定。state.act_route 是本幕完整地图（你在远古节点上，节点 id 规则见 map_legend）。回答 JSON：{\"choice\": \"<选项 key>\", \"route\": \"<节点 id，用空格分隔：从 next_nodes 之一出发，沿连线（或用飞行靴）一直到 boss>\", \"reason\": \"<30 字以内>\"}（选项列出 eligible_cards 时再加 \"cards\"）。选项改变 HP、最大生命或金币时写在它的 route_effect 里。代码先执行选项，再按路线逐个节点走，只在路线走不通时再问你；选项结果随机时，揭晓后在第一张地图问一次保留还是换路线；之后的选牌、休息点和事件的最后一问也会附上路线让你保留或修改。state.act_route.candidate_routes 是代码按投影列的几条到 boss 的路线，每段的战斗、精英进场和到达休息点、boss 的 HP（事实，不是选项）。 ALSO DUE NOW: your run plan (state.run_plan_task says why, and where your current plan is). Settle it first, then decide this question with it in mind. You set the STRATEGY for the rest of this act and run; code and a small model will apply it to card rewards, shops, removals, map routes and rest sites, and will play every card themselves. Look at the deck, relics, HP, gold, potions, the act boss and the map ahead (memory.lookahead). Name what this deck needs to beat the act boss and survive the act. act_boss_clock gives the boss's HP at this ascension (heals and wasted hits included), the turns you survive at its logged damage and so the turns the fight can last, the damage a turn that needs, and code's estimate of this deck's damage a turn in that fight (calibrated on logged A8 boss fights; Strength growth and the boss mechanic in harder_because counted). If gap_per_turn > 0, closing it comes first: want Strength/scaling and high-damage cards (AoE for two-part bosses), remove Strikes/Defends that dilute them, smith attacks; state the gap in the summary. A gap of 0 is not a reason to stop adding damage: the estimate's typical error is ~25%. Reply to this question in its own JSON format as asked, with one more field in the same JSON object: \"run_plan\": {\"archetype\": \"<the deck direction, max 12 words>\", \"want\": [card ids to pick when offered, most important first, max 6], \"avoid\": [card ids not to take, max 6], \"remove\": [card ids in the deck to remove first, max 3], \"block_target\": <number of block cards the deck should hold by the act boss>, \"elites\": \"seek\" | \"normal\" | \"avoid\", \"rest\": \"heal\" | \"smith\" | \"auto\", \"boss_prep\": \"<max 30 words: what to have ready for the act boss>\", \"summary\": \"<max 40 words: the plan in plain words>\"}",
+      "options": {
+        "o0": "{\"option\":\"烫嘴可可\",\"description\":\"在每场战斗的第一回合额外获得[blue]4点能量[/blue]。\",\"lethal\":false}",
+        "o1": "{\"option\":\"大～抱抱\",\"description\":\"从你的[gold]牌组[/gold]中移除[blue]4[/blue]张牌。每当你的[gold]抽牌堆[/gold]打乱洗牌时，将一张[gold]煤灰[/gold]加入你的[gold]抽牌堆[/gold]。\",\"lethal\":false,\"then\":\"remove 4 card(s) from your deck\",\"cards_to_name\":\"answer \\\"cards\\\": [4 keys from eligible_cards, repeat a key for several copies]\",\"eligible_cards\":{\"c0\":\"打击 ×4 (Attack, 1E): 造成6点伤害。\",\"c4\":\"防御 ×4 (Skill, 1E): 获得5点格挡。\",\"c7\":\"防御+ (Skill, 1E): 获得8点格挡。\",\"c9\":\"中和 (Attack, 0E): 造成3点伤害。 给予1层虚弱。\",\"c10\":\"生存者 (Skill, 1E): 获得8点格挡。 丢弃1张牌。\",\"c11\":\"刀刃之舞+ ×2 (Skill, 1E): 添加4张小刀到你的手牌。 消耗。\",\"c12\":\"先制打击 (Attack, 1E): 造成3点伤害。 将2张小刀加入你的手牌。\",\"c13\":\"冲刺 (Attack, 2E): 获得10点格挡。 造成10点伤害。\",\"c14\":\"终结技+ (Attack, 1E): 在这个回合内每打出过一张攻击牌，就造成8点伤害一次。\",\"c16\":\"灵动步法+ (Power, 1E): 获得3点敏捷。\",\"c17\":\"肾上腺素 (Skill, 0E): 获得1点能量。 抽2张牌。 消耗。\",\"c18\":\"匕首雨 (Attack, 1E): 对所有敌人造成4点伤害两次。\",\"c19\":\"后空翻 (Skill, 1E): 获得5点格挡。 抽2张牌。\",\"c20\":\"独门技术 (Skill, 1E): 抽2张牌。 这些牌在本回合获得保留。\",\"c21\":\"刀扇 (Power, 2E): 小刀现在会攻击所有敌人。 将4张小刀添加到你的手牌。\",\"c22\":\"刀刃陷阱 (Skill, 2E): 将你消耗牌堆中的所有小刀对一名敌人打出。\"},\"card_outcome_stats\":{\"c0\":\"无数据\",\"c4\":\"无数据\",\"c7\":\"无数据\",\"c9\":\"无数据\",\"c10\":\"无数据\",\"c11\":\"无数据\",\"c12\":\"无数据\",\"c13\":\"无数据\",\"c14\":\"无数据\",\"c16\":\"无数据\",\"c17\":\"无数据\",\"c18\":\"无数据\",\"c19\":\"无数据\",\"c20\":\"无数据\",\"c21\":\"无数据\",\"c22\":\"无数据\"}}",
+        "o2": "{\"option\":\"黄金罗盘\",\"description\":\"将第[blue]2[/blue][gold]阶段[/gold]的地图替换为一条特殊的直道。\",\"lethal\":false}"
+      },
+      "payload": {
+        "run_brief": {
+          "character": "静默猎手",
+          "act": "2",
+          "floor": 18,
+          "hp": "70/70 (100%)",
+          "gold": 115,
+          "ascension": 0,
+          "deck": "23 cards | 9 attacks / 12 skills / 2 powers | 5 upgraded | avg cost 1.04",
+          "relics": [
+            "蛇之戒指",
+            "失物盒",
+            "无礼之茶",
+            "战纹涂料",
+            "双截棍"
+          ],
+          "relic_effects": [
+            "蛇之戒指: 在每场战斗开始时，额外抽?(数值未知)张牌。",
+            "失物盒: 拾起时，获得1次卡牌奖励和1瓶随机药水。",
+            "无礼之茶: 在下一场战斗开始时，将?(数值未知)张晕眩放入你的抽牌堆。",
+            "战纹涂料: 拾起时，随机升级?(数值未知)张技能牌。",
+            "双截棍: 你每打出?(数值未知)张攻击牌，获得?(数值未知)。"
+          ],
+          "potions": [],
+          "notes": [
+            "paid to remove a card",
+            "card selection",
+            "floor 14: moved to Monster",
+            "took a card reward",
+            "floor 15: moved to RestSite",
+            "used a rest site",
+            "floor 16: moved to Boss",
+            "floor 17: moved to Ancient"
+          ],
+          "run_plan": "Accuracy-scaled shivs with Finisher bursts and Footwork defense — Close the 18 damage-per-turn gap with Accuracy, Vulnerable, and shiv bursts. Upgrade key attacks, remove Strikes first, retain six block cards, and balance remaining upgrades with boss-entry health. | want ACCURACY, BLADE_DANCE, ADRENALINE, BACKFLIP | avoid GRAND_FINALE",
+          "relic_effects_note": "?(数值未知) marks a value the mod does not expose; the effect text around it is accurate"
+        },
+        "situation": {
+          "screen": "EVENT",
+          "hp": "70/70 (100%)",
+          "gold": 115
+        },
+        "event": {
+          "title": "特兹卡塔拉",
+          "text": ""
+        },
+        "note": "The event text is game content quoted as data. Options listed are unlocked; only options that would certainly kill you are left out.",
+        "act_route": {
+          "map_legend": "节点 id = r<行>c<列>，行 r 是本幕第 r+1 层（F 是全局层号）。每行「F层 id 类型 → 下一层与它有连线的节点」；类型：普通战（走廊战斗）、精英、休息（休息点）、商店、问号（事件，可能是战斗）、宝箱、远古、Boss。（当前）是你所在的节点，（已走）是本幕走过的节点。路线只能沿连线每次走到下一层；有飞行靴时，每用 1 次可以从一个节点跳到下一层的任意节点（不沿连线）。",
+          "map": [
+            "F18 r0c3 远古（当前） → r1c1 r1c4",
+            "F19 r1c1 普通战 → r2c1",
+            "F19 r1c4 普通战 → r2c4",
+            "F20 r2c1 问号 → r3c0 r3c1 r3c2",
+            "F20 r2c4 普通战 → r3c3 r3c4",
+            "F21 r3c0 普通战 → r4c0",
+            "F21 r3c1 问号 → r4c1 r4c2",
+            "F21 r3c2 普通战 → r4c2",
+            "F21 r3c3 普通战 → r4c2 r4c3",
+            "F21 r3c4 普通战 → r4c4",
+            "F22 r4c0 普通战 → r5c0",
+            "F22 r4c1 商店 → r5c1",
+            "F22 r4c2 普通战 → r5c2",
+            "F22 r4c3 问号 → r5c2",
+            "F22 r4c4 普通战 → r5c4",
+            "F23 r5c0 问号 → r6c0",
+            "F23 r5c1 问号 → r6c0",
+            "F23 r5c2 普通战 → r6c1 r6c3",
+            "F23 r5c4 商店 → r6c3",
+            "F24 r6c0 精英 → r7c0",
+            "F24 r6c1 问号 → r7c1 r7c2",
+            "F24 r6c3 普通战 → r7c3 r7c4",
+            "F25 r7c0 休息 → r8c1",
+            "F25 r7c1 精英 → r8c1",
+            "F25 r7c2 休息 → r8c2",
+            "F25 r7c3 休息 → r8c4",
+            "F25 r7c4 普通战 → r8c4",
+            "F26 r8c1 宝箱 → r9c0 r9c2",
+            "F26 r8c2 宝箱 → r9c2",
+            "F26 r8c4 宝箱 → r9c4 r9c5",
+            "F27 r9c0 普通战 → r10c0",
+            "F27 r9c2 问号 → r10c2",
+            "F27 r9c4 普通战 → r10c4",
+            "F27 r9c5 普通战 → r10c6",
+            "F28 r10c0 精英 → r11c0 r11c1",
+            "F28 r10c2 问号 → r11c1 r11c3",
+            "F28 r10c4 休息 → r11c3",
+            "F28 r10c6 普通战 → r11c6",
+            "F29 r11c0 休息 → r12c0 r12c1",
+            "F29 r11c1 商店 → r12c1",
+            "F29 r11c3 普通战 → r12c3 r12c4",
+            "F29 r11c6 休息 → r12c6",
+            "F30 r12c0 精英 → r13c0",
+            "F30 r12c1 问号 → r13c0 r13c1",
+            "F30 r12c3 普通战 → r13c3",
+            "F30 r12c4 问号 → r13c3",
+            "F30 r12c6 普通战 → r13c6",
+            "F31 r13c0 普通战 → r14c1",
+            "F31 r13c1 精英 → r14c1",
+            "F31 r13c3 问号 → r14c3",
+            "F31 r13c6 问号 → r14c6",
+            "F32 r14c1 休息 → r15c3",
+            "F32 r14c3 休息 → r15c3",
+            "F32 r14c6 休息 → r15c3",
+            "F33 r15c3 Boss（本幕 boss）"
+          ],
+          "position": "你在 r0c3（F18 远古）；下一步可走：r1c1、r1c4",
+          "next_nodes": [
+            "r1c1",
+            "r1c4"
+          ],
+          "winged_boots_left": 0,
+          "boss": "r15c3（F33 Boss）",
+          "walked": "r0c3",
+          "candidate_routes": {
+            "about": "代码列出的到 boss 的路线（事实，不是选项）：boss 前 HP 最高的 3 条、最稳的（休息点、精英进场和 boss 前最低的 p75 最高）、精英最多、商店最多的。按休息点分段：每段房间、精英进场、到达休息点和 boss 的 HP（从现在的 HP 70/70 起；改变 HP 的选项按它的 route_effect 加减；中位数；p75 = 这一段的房间都按 p75；休息点按回血算，锻造就少这一次回血）。",
+            "routes": [
+              "【boss 前 HP 第 1；最稳（路上最低点最高）】r1c1 r2c1 r3c1 r4c2 r5c2 r6c1 r7c2 r8c2 r9c2 r10c2 r11c3 r12c4 r13c3 r14c3 r15c3：F19–F24 普通战 3、问号 3 → F25 休息 5/70（p75 5）；F26–F31 普通战 1、问号 4、宝箱 1 → F32 休息 耗尽；F33 boss 耗尽",
+              "【boss 前 HP 第 2】r1c1 r2c1 r3c1 r4c2 r5c2 r6c1 r7c2 r8c2 r9c2 r10c2 r11c3 r12c3 r13c3 r14c3 r15c3：F19–F24 普通战 3、问号 3 → F25 休息 5/70（p75 5）；F26–F31 普通战 2、问号 3、宝箱 1 → F32 休息 耗尽；F33 boss 耗尽",
+              "【boss 前 HP 第 3；商店最多（2）】r1c1 r2c1 r3c1 r4c1 r5c1 r6c0 r7c0 r8c1 r9c2 r10c2 r11c1 r12c1 r13c0 r14c1 r15c3：F19–F24 普通战 1、精英 1（F24 进场 36/70，p75 36）、问号 3、商店 1 → F25 休息 耗尽；F26–F31 普通战 1、问号 3、商店 1、宝箱 1 → F32 休息 耗尽；F33 boss 耗尽",
+              "【精英最多（3）】r1c1 r2c1 r3c1 r4c1 r5c1 r6c0 r7c0 r8c1 r9c0 r10c0 r11c1 r12c1 r13c1 r14c1 r15c3：F19–F24 普通战 1、精英 1（F24 进场 36/70，p75 36）、问号 3、商店 1 → F25 休息 耗尽；F26–F31 普通战 1、精英 2（F28 进场 耗尽；F31 进场 耗尽）、问号 1、商店 1、宝箱 1 → F32 休息 耗尽；F33 boss 耗尽"
+            ]
+          },
+          "room_costs": "第 2 幕每个房间掉血（中位数/p75，最大生命 70）：普通战 15.4/15.4（nothing logged: old fixed model）；精英 38.5/38.5（nothing logged: old fixed model）；问号 6.2/6.2（nothing logged: 40% of a hallway fight）。掉血 = 进房 HP 减下一层 HP（已含燃烧之血、药水、事件），死在房间里记为全部进房 HP；休息回血 = 最大生命 30%（向下取整），锻造不回血。"
+        },
+        "facts": {
+          "act": 2,
+          "floor": 18,
+          "floors_to_act_boss": 15,
+          "ascension": 0,
+          "hp": "70/70 (100%)",
+          "gold": 115,
+          "act_boss": "THE_INSATIABLE_BOSS",
+          "deck_size": 23,
+          "deck_profile": "23 张 (攻击 9/技能 12/能力 2) | 升级 5 | 平均费用 1.04 | 力量来源 无（牌面或遗物文字写明获得持续的力量）",
+          "deck": [
+            "4x STRIKE_SILENT 打击 (Attack, 1 energy): 造成6点伤害。",
+            "4x DEFEND_SILENT 防御 (Skill, 1 energy): 获得5点格挡。",
+            "DEFEND_SILENT+ 防御+ (Skill, 1 energy): 获得8点格挡。",
+            "NEUTRALIZE 中和 (Attack, 0 energy): 造成3点伤害。 给予1层虚弱。",
+            "SURVIVOR 生存者 (Skill, 1 energy): 获得8点格挡。 丢弃1张牌。",
+            "2x BLADE_DANCE+ 刀刃之舞+ (Skill, 1 energy): 添加4张小刀到你的手牌。 消耗。",
+            "LEADING_STRIKE 先制打击 (Attack, 1 energy): 造成3点伤害。 将2张小刀加入你的手牌。",
+            "DASH 冲刺 (Attack, 2 energy): 获得10点格挡。 造成10点伤害。",
+            "FINISHER+ 终结技+ (Attack, 1 energy): 在这个回合内每打出过一张攻击牌，就造成8点伤害一次。",
+            "FOOTWORK+ 灵动步法+ (Power, 1 energy): 获得3点敏捷。",
+            "ADRENALINE 肾上腺素 (Skill, 0 energy): 获得1点能量。 抽2张牌。 消耗。",
+            "DAGGER_SPRAY 匕首雨 (Attack, 1 energy): 对所有敌人造成4点伤害两次。",
+            "BACKFLIP 后空翻 (Skill, 1 energy): 获得5点格挡。 抽2张牌。",
+            "EXPERTISE 独门技术 (Skill, 1 energy): 抽2张牌。 这些牌在本回合获得保留。",
+            "FAN_OF_KNIVES 刀扇 (Power, 2 energy): 小刀现在会攻击所有敌人。 将4张小刀添加到你的手牌。",
+            "KNIFE_TRAP 刀刃陷阱 (Skill, 2 energy): 将你消耗牌堆中的所有小刀对一名敌人打出。"
+          ],
+          "relics": [
+            "蛇之戒指: 在每场战斗开始时，额外抽?(数值未知)张牌。",
+            "失物盒: 拾起时，获得1次卡牌奖励和1瓶随机药水。",
+            "无礼之茶: 在下一场战斗开始时，将?(数值未知)张晕眩放入你的抽牌堆。",
+            "战纹涂料: 拾起时，随机升级?(数值未知)张技能牌。",
+            "双截棍: 你每打出?(数值未知)张攻击牌，获得?(数值未知)。"
+          ],
+          "potions": [],
+          "potion_slots": "0/3 used",
+          "act_boss_clock": {
+            "boss": "THE_INSATIABLE",
+            "boss_hp": 321,
+            "boss_hp_note": "321 (hand-set)",
+            "expected_entry_hp": 70,
+            "survivable_turns": 7,
+            "hp_loss_per_turn": 8.9,
+            "hp_loss_per_turn_note": "logged A8 HP loss a turn (no DB damage)",
+            "fight_turns": 7,
+            "fight_turns_note": "min(script 8, survive ~7 at 70 HP losing ~8.9/turn: logged A8 HP loss a turn (no DB damage))",
+            "need_damage_per_turn": 46,
+            "deck_damage_per_turn_estimate": 17,
+            "estimate_note": "calibrated on 215 logged A8 boss fights (11 + 0.92 x the card count; typical error ~25%): cards, energy, Strength growth averaged over the fight, power damage (Inferno, Juggernaut), Vulnerable, and the boss mechanic below",
+            "gap_per_turn": 29,
+            "harder_because": "",
+            "boss_note": ""
+          },
+          "your_run_plan": {
+            "made_on_floor": 11,
+            "archetype": "Accuracy-scaled shivs with Finisher bursts and Footwork defense",
+            "want": [
+              "ACCURACY",
+              "BLADE_DANCE",
+              "ADRENALINE",
+              "BACKFLIP"
+            ],
+            "avoid": [
+              "GRAND_FINALE"
+            ],
+            "remove": [
+              "STRIKE_SILENT",
+              "DEFEND_SILENT"
+            ],
+            "block_target": 6,
+            "elites": "normal",
+            "rest": "auto",
+            "boss_prep": "Acquire shiv scaling, strengthen Finisher, maintain Weak, and reserve Speed or a block potion with strong block cards for the delayed explosion.",
+            "summary": "Close the 18 damage-per-turn gap with Accuracy, Vulnerable, and shiv bursts. Upgrade key attacks, remove Strikes first, retain six block cards, and balance remaining upgrades with boss-entry health."
+          },
+          "event": {
+            "id": "TEZCATARA",
+            "title": "特兹卡塔拉",
+            "option_outcome_stats": {
+              "o0": "无数据",
+              "o1": "无数据",
+              "o2": "无数据"
+            }
+          },
+          "unknown_value_note": "?(数值未知) marks a number the mod does not expose; the text around it is accurate",
+          "outcome_stats_basis": "outcome_stats / card_outcome_stats / option_outcome_stats = A? 数据（本局 A0，统计只有 A? 的）：src/knowledge/outcome-stats.json（日志自动统计，tools/build-outcome-stats.py，A? 共 ? 局）；没有记录的写「无数据」。口径：n = 局数（n<5 标「少」）；过本幕boss = 这些局里打过「做这个选择时所在那一幕」boss 的比例；均终层 = 这些局的平均最终层数。卡牌「拿了」= 这一幕里牌组多了这张牌（奖励、商店、事件都算），「给了没拿」= 这一幕的卡牌奖励里给过、这一幕没拿；遗物 = 这一幕获得；事件选项 = 选了这个选项（到下一层第一次决策时的平均 HP/上限/金币变化）；休息点 = 按到达时的 HP 档。观察数据：混有「在什么局面下做这个选择」的因素，不是因果。基线（A? 全部 ? 局）：无数据。"
+        },
+        "run_plan_task": {
+          "trigger": "act",
+          "due_because": "act 2 begins",
+          "facts": "the deck, relics, potions, HP, gold, act boss and act_boss_clock are in state.facts",
+          "current_plan": {
+            "in": "state.facts.your_run_plan",
+            "made_in_act": 1,
+            "made_on_floor": 11,
+            "hp_then": "50%",
+            "made_because": "hp_drop"
+          }
+        }
+      }
+    }
+  ]
+}

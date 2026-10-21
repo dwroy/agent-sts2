@@ -1,0 +1,101 @@
+{
+  "fixture_only": true,
+  "model_calls": 0,
+  "measurement": "one nice-19 Node process; user prompt only, no system prefix, file I/O or API latency; cold includes fixture JSON parsing and schema validation; warm includes retrieval plus user serialization",
+  "limits": {
+    "entries": 3,
+    "bytes": 4096,
+    "textBytes": 1200,
+    "fileBytes": 1048576,
+    "libraryEntries": 500
+  },
+  "results": [
+    {
+      "type": "card_reward",
+      "label": "reward/card",
+      "dataset_id": "C48LLXBGKXQ9/1/2",
+      "matched": [
+        "fixture-card_reward"
+      ],
+      "base_user_bytes": 11879,
+      "augmented_user_bytes": 12244,
+      "delta_bytes": 365,
+      "block_bytes": 345,
+      "cold_parse_retrieve_serialize_ms": 0.8547160000000531,
+      "warm_retrieve_serialize_median_ms": 0.03996699999993325,
+      "warm_retrieve_serialize_p95_ms": 0.07232399999998051,
+      "warm_iterations": 1000,
+      "no_hit_byte_identical": true
+    },
+    {
+      "type": "event",
+      "label": "event/plan",
+      "dataset_id": "C48LLXBGKXQ9/1/1/event/plan/bd8e5242460d0ff0",
+      "matched": [
+        "fixture-act_plan",
+        "fixture-event"
+      ],
+      "base_user_bytes": 7768,
+      "augmented_user_bytes": 8416,
+      "delta_bytes": 648,
+      "block_bytes": 628,
+      "cold_parse_retrieve_serialize_ms": 6.9015679999999975,
+      "warm_retrieve_serialize_median_ms": 0.034337000000050466,
+      "warm_retrieve_serialize_p95_ms": 0.07237400000008165,
+      "warm_iterations": 1000,
+      "no_hit_byte_identical": true
+    },
+    {
+      "type": "rest",
+      "label": "rest/plan",
+      "dataset_id": "C48LLXBGKXQ9/1/8/rest/plan/b02895e5b1c9cee9",
+      "matched": [
+        "fixture-rest"
+      ],
+      "base_user_bytes": 15899,
+      "augmented_user_bytes": 16250,
+      "delta_bytes": 351,
+      "block_bytes": 331,
+      "cold_parse_retrieve_serialize_ms": 0.385550999999964,
+      "warm_retrieve_serialize_median_ms": 0.03621699999996508,
+      "warm_retrieve_serialize_p95_ms": 0.08280299999989893,
+      "warm_iterations": 1000,
+      "no_hit_byte_identical": true
+    },
+    {
+      "type": "shop",
+      "label": "shop/plan",
+      "dataset_id": "C48LLXBGKXQ9/1/14/shop/plan/15a41e3570182ff0",
+      "matched": [
+        "fixture-shop"
+      ],
+      "base_user_bytes": 11954,
+      "augmented_user_bytes": 12305,
+      "delta_bytes": 351,
+      "block_bytes": 331,
+      "cold_parse_retrieve_serialize_ms": 0.31553599999995185,
+      "warm_retrieve_serialize_median_ms": 0.05637500000000273,
+      "warm_retrieve_serialize_p95_ms": 0.0911830000000009,
+      "warm_iterations": 1000,
+      "no_hit_byte_identical": true
+    },
+    {
+      "type": "act_plan",
+      "label": "event/act-plan",
+      "dataset_id": "C48LLXBGKXQ9/2/18/event/act-plan/d6b3d9353f7ccb2e",
+      "matched": [
+        "fixture-act_plan",
+        "fixture-event"
+      ],
+      "base_user_bytes": 16180,
+      "augmented_user_bytes": 16828,
+      "delta_bytes": 648,
+      "block_bytes": 628,
+      "cold_parse_retrieve_serialize_ms": 0.45538299999998344,
+      "warm_retrieve_serialize_median_ms": 0.043537000000014814,
+      "warm_retrieve_serialize_p95_ms": 0.08402399999999943,
+      "warm_iterations": 1000,
+      "no_hit_byte_identical": true
+    }
+  ]
+}
