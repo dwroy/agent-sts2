@@ -19,3 +19,7 @@ Roy 新增的 done 送达、停滞检测/升级与暂时性错误快速重试，
 依 [主管转 Roy 决定](https://github.com/dwroy/agent-sts2/issues/31#issuecomment-6325196850)，#31 已关闭，不发布 R411+#31、不启用交替试验。此前 main 已有的通用开关保留，供 #33 复用，不在本次回退。
 
 本会话只终止自身等待中的 #31 知识准备与串行排队进程，未强解锁或停止其他角色进程。停止时尚未冻结最新知识，未运行该组合完整检查，未给组合准入，未修改 live；没有将已做的逐叶核对写成组合全检通过。原计划作废原件保留，本地候选、等待/失败日志与停止回执保留在 `.artifacts/integrator-31-live-admission-20261021/`，概要见 `31-cancellation.json`。回收仍由原流程判断，不清理本会话材料。
+
+## 合入后核验
+
+main 源码集成 `1220b94361bb5c8fb4961dc2e93424270fe13d95`；原 binding 备份、恢复、核 SHA/权限一致。隔离检查前后 2037 份所列输入相同；main 合后 2034 份非运维记录输入一致，排除 `ops/inbox-dev.md`、`eval/versions.json` 和 `ops/win-notified`。首轮合后断言因正在运行的 ops 更新 win-notified 标记而失败，原回执/日志保留；复核该标记 Git 源 blob 未变，保留运行值，不提交该脏记录，没有源码差异或测试失败。细节见 integration.json。

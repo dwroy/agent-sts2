@@ -1,0 +1,26 @@
+{
+  "recorded_at": "2026-10-22T04:03:45+08:00",
+  "main_integrated": "1220b94361bb5c8fb4961dc2e93424270fe13d95",
+  "source": "466e54561dc23e09321826d55af39c5abedd4aef",
+  "source_ancestor": true,
+  "binding_sha256": "5a9e900cd6626febe517591db75008cc8d1962408744fb41f9dbe4570bfd0d55",
+  "binding_mode_before": "0o644",
+  "binding_mode_after": "0o644",
+  "binding_restored_and_verified": true,
+  "matching_test_inputs_excluding_refreshed_operational_records": 2034,
+  "refreshed_operational_records_excluded_from_postmerge_comparison": [
+    "eval/versions.json",
+    "ops/inbox-dev.md",
+    "ops/win-notified"
+  ],
+  "production_mutation": false,
+  "postmerge_validation_correction": {
+    "initial_assertion": "ops/win-notified runtime marker changed in running ops checkout; first assertion failed after main merge",
+    "source_blob_unchanged": true,
+    "preserved_original_receipt": "20-integration-first-attempt.json",
+    "preserved_original_log": "20-integration-attempt2.log",
+    "original_log_sha256": "5c39067bac2930b3aa5d5274f55add13e9c921b3d18f1ccf96bd2cf817f50bb2",
+    "repeat_tests_required": false,
+    "reason": "all 2037 isolated test inputs matched before/after complete tests; postmerge 2034 non-operational inputs match; running ops marker was preserved, not staged"
+  }
+}
