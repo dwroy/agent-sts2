@@ -5648,3 +5648,4 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
 - 2026-10-21T19:30:21+08:00 [Claude] Roy（#32）：DeepSeek 当对局大脑时推理强度可降一档（各题型降一档、不再往下降；取代 10-02 不降强度，只适用于此场景）；超时与人类节奏预算给 DeepSeek 放长到实际能答完，完成率优先、以便与 GPT 对比；开卷/策略库等新上下文在 DeepSeek 路径必须生效；只走 Nova。
 
 - 2026-10-21T19:46:42+08:00 [ops] 八旧异议完整原文/来源SHA/真实双箱与watcher告Roy回执核同，原research CLI登记pending；保旧拒绝/false/科学范围，不重认证/通知或新检查模型，不触已恢复主对局，Regent暂停。paper/materials/20261021-1945-ops/receipt.json。
+- 2026-10-21T19:47:28+08:00 [watcher] #25/#29 核验并入 main af55fbd62：9254fa0af（含e45493389）、9fa73151e+5ea0fa415；保留策略库及开卷双消费者，tsc、完整646文件6084项/2跳过、16项Python/6项流式与工具检查通过；1074条离线重建、固定mod覆盖/689差异及研究10派生文件字节一致，1965文件SHA匹配，binding备份/恢复/校验及权限一致。#25交ops开局边界发布/自然读回；#29只入研究工具与报告交Claude核收，不执行#31/#32生产试验。paper/materials/20261021-issues25-29-integrator-review/report.md。
