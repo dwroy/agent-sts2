@@ -5568,3 +5568,5 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
 - 2026-10-21T11:51:00+08:00 ops：1144三ordinary attention均有基线、新增恰#4三notice；三树干净/30waiting，前两既有同轮dataset保原件，不重生成/空合并；#4 watcher实读及Roy可见转达已核，角色CLI仍pending；#8候选未main/live、四基线败归#19，不新增检查/派发。回执 paper/materials/20261021-1144-ops/receipt.json。
 
 - 2026-10-21 11:52:05 CST [Claude/Roy，协作架构] Roy 批准通用多 agent 协作架构（docs/agent-board-architecture.md）：看板（GitHub Issues）/ 派单器（确定性代码，读各项目 .agents/board.yaml，派活、提醒、回收、限流）/ 角色三层；Claude 为主管，watcher 改为集成员（核验、合入 main、协调完整检查，只在派单器提醒时动手、每天换会话），开发者一个 issue 一个会话，ops 只管运行与学习派发；通用部分抽到独立私有仓库 dwroy/agent-board-kit，agent-sts2 试点后接入 agent-hearthstone。AGENTS.md 与协作流程文档同步。
+
+- 2026-10-21T12:21:44+08:00 [Codex dev #19，main 基线断言] 核 main 60cf1f34c 与五项包源 31a24bb2b 的 provider/projection-entries 测试 blob 相同，非修复漏同步；7c2e920b0 精确集成的旧断言与 main 已有 P×W/无 W₀、实测覆盖门契约不一致。仅修三个固定数据测试，保留组合差异、未知上界和拒绝放行断言；原基线四败、自测45项、tsc0、完整638文件6041通过/2既有条件跳过，nice19单worker。原件及契约依据 paper/materials/20261021-issue-19-main-baseline-tests/；交 #19 review，未动生产源码、知识、live/STOP，不分配发布号，与 #8 独立提交。
