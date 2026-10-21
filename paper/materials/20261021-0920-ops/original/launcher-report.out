@@ -1,0 +1,85 @@
+## 修 bug 回报
+
+- 合并基线：main → `e02c4bc8b1ff3ed4947074964e59d2817e357590`
+- 修复（每条一行）：无新增修复。67 个未勾选项已核对；154 个相关源码及测试文件与前批 SHA 一致。
+- 已被别人修掉的：51 条历史映射、46 个提交均已核实为当前基线祖先；逐项条目及完整提交号见[报告](/home/dw/Projects/agent-sts2/learner/runs/20261021-091323-464ccd53-4991-46d6-b0dc-0100d57d9009-fix-batch/report.md)。
+- 没修的：silent-0332/CEN — 原 W8 已提交 `f993d9b1d`，正走独立联合验收，不重复实现。
+- 没修的：V6 监控兼容、ordinary-close 固定夹具续项 — 原候选尚未发布，队列明确禁止后批重复实现。
+- 没修的：其余机制、策略、架构及根因调查项 — 保留原提案链；逐项原因已写入报告。
+- 测试：tsc 退出码 0；Vitest 定向 6 文件／23 用例／退出码 0，无重跑；gitleaks 退出码 0。未运行完整套件。
+- 合入：未合入；本批无源码提交，未执行空合并，工作区干净。
+- 需要 Roy 定的事：无。
+
+```json
+{
+  "task": "fix-batch",
+  "base": "e02c4bc8b1ff3ed4947074964e59d2817e357590",
+  "fixes": [],
+  "skipped": [
+    {
+      "item": "silent-0279、0311、0319、0320、0329、0334、0339及续证、0344、0347、0349、0362、0481、0487、0533、0535",
+      "reason": "机制或策略类，保留已有独立strategy-proposal链，不补游戏知识。"
+    },
+    {
+      "item": "silent-0332/CEN",
+      "reason": "原W8已有源码f993d9b1dd88c2b36534d16c3560358e23a89a95，联合full已启动，本基线尚无终局回执；不重复实现。"
+    },
+    {
+      "item": "arch-funnel-guard、arch-learning-priority、arch-unified-resource-value、inv-f33-regression、策略调度公平性归因",
+      "reason": "独立架构或归因任务，普通纯bug批次不实现。"
+    },
+    {
+      "item": "core-build-notify-222802-rc2",
+      "reason": "证据不足：缺原stderr及确定送达状态；诊断保存子项已修，不擅自重送。"
+    },
+    {
+      "item": "合后检查包装器总时限与整套重跑",
+      "reason": "证据不足：历史执行器的原owner及精确分段覆盖待接续。"
+    },
+    {
+      "item": "H1/G2预算完成及paired-DPR来源宽项",
+      "reason": "宽根因尚未核实，窄诊断兼容已修不关闭父项。"
+    },
+    {
+      "item": "原v5-dpr-health/H1 module-health V6兼容续项",
+      "reason": "原001302候选及依赖未提交发布，接续JSON SHA未变，队列禁止后批重复实现。"
+    },
+    {
+      "item": "infra-ordinary-close-candidate-failure-isolation-20261020固定夹具续项",
+      "reason": "原014301候选未提交发布，接续JSON SHA未变，队列禁止后批重复实现。"
+    },
+    {
+      "item": "infra-chest-claimed-action-conflict-0516",
+      "reason": "策略及结构类，保留原独立提案链。"
+    },
+    {
+      "item": "infra-v6-brain-input-too-large-20261020宽项",
+      "reason": "专项修复已窄运输，原故障自然复验及父要求不由本批关闭。"
+    },
+    {
+      "item": "silent-elite-simulation-pessimism-20261021",
+      "reason": "队列明确为策略学习问题，非fix-batch纯bug。"
+    }
+  ],
+  "merged": null,
+  "tests": {
+    "tsc": 0,
+    "vitest": 0,
+    "cases": 23
+  },
+  "code_proposals": [],
+  "implementation_domains": [],
+  "report": "/home/dw/Projects/agent-sts2/learner/runs/20261021-091323-464ccd53-4991-46d6-b0dc-0100d57d9009-fix-batch/report.md"
+}
+```
+
+== 学习者 codex / fix-batch ==
+状态：success；退出码 0
+模型：gpt-6.1-sol；会话：01a15c05-5be3-76d1-9abe-5f7672aa93bc
+轮数：1；工具调用：command_execution×27
+token：输入 132.4k、输出 9951（其中推理 2866）、cache 读 1495.9k、cache 写 0（命中 91.9%）
+成本：未提供
+耗时：400.0 s（墙钟）
+时间：首个事件 35.6 s、模型首个输出 40.7 s、首次工具 45.1 s、末次工具结束 361.8 s；工具内共 82.1 s，其余（模型生成、推理、网络）282.3 s
+codex 会话记录：AGENTS.md 已加载（/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261021-091302）；模型的工具调用 exec×19；/home/dw/Projects/agent-sts2/ops/codex-ops/accounts/codex1/learner/sessions/2026/10/21/rollout-2026-10-21T09-13-37-01a15c05-5be3-76d1-9abe-5f7672aa93bc.jsonl
+日志：/home/dw/Projects/agent-sts2/learner/runs/20261021-091323-464ccd53-4991-46d6-b0dc-0100d57d9009-fix-batch.jsonl
