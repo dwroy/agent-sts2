@@ -5564,3 +5564,5 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
 - 2026-10-21T11:48:13+08:00 [Codex watcher，#4实读转达] 实读三科学异议原文并核归档SHA012008f5及三notice完整message，已在本会话向Roy可见转达并评论原措辞；输入牌堆被剥离、绝对比较不证配对排名校准、两胜退出共9HP未纳原净损三限制保留。ops原核收不冒本人重核全部日志；原研究task CLI ACK仍pending，未代填/发布/续派/关父，四候选waiting。结论 https://github.com/dwroy/agent-sts2/issues/4#issuecomment-6307510995；paper/materials/20261021-issue-4-watcher-review/receipt.json。
 
 - 2026-10-21T11:48:13+08:00 [Codex watcher，#8审核阻塞/#19待办] 4fc80c385在隔离集成树只读原件鉴权通过，六SHA不变；独立tsc0、通知/paths通过，V6三文件四基线断言仍败，源码与测试blob关系已核。遵AGENTS双绿提交门槛，候选暂存未continue/提交/main/live；冻结patch及检查保留，拆#19独立修复待派，不调整数值/排除或代生产ACK；#4原task非本R4兼容范围。结论 https://github.com/dwroy/agent-sts2/issues/8#issuecomment-6307540198；paper/materials/20261021-issue-8-watcher-review/receipt.json。
+
+- 2026-10-21T11:51:00+08:00 ops：1144三ordinary attention均有基线、新增恰#4三notice；三树干净/30waiting，前两既有同轮dataset保原件，不重生成/空合并；#4 watcher实读及Roy可见转达已核，角色CLI仍pending；#8候选未main/live、四基线败归#19，不新增检查/派发。回执 paper/materials/20261021-1144-ops/receipt.json。

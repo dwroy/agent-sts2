@@ -1,0 +1,1081 @@
+diff --git a/agent/tests/manual-notice-ack.test.ts b/agent/tests/manual-notice-ack.test.ts
+index b2b57700e..a3b55b3eb 100644
+--- a/agent/tests/manual-notice-ack.test.ts
++++ b/agent/tests/manual-notice-ack.test.ts
+@@ -6,5 +6,5 @@ it("authenticates original manual V6 notice sources and preserves independent ro
+     encoding: "utf8", timeout: 15_000,
+   });
+   expect(result.status, result.stdout + result.stderr).toBe(0);
+-  expect(result.stderr).toContain("Ran 5 tests");
++  expect(result.stderr).toContain("Ran 7 tests");
+ });
+diff --git a/docs/learning-requests.md b/docs/learning-requests.md
+index 5b61614b3..3d275723e 100644
+--- a/docs/learning-requests.md
++++ b/docs/learning-requests.md
+@@ -40,6 +40,8 @@ python3 ops/learning_requests.py ack --notice <id> --stage roy_notified --receip
+ 
+ 不可代填后续角色的ACK；queued不算发送。通知未完成时，原learn tick每30分钟重提ops事件，不新建watcher或另一个调度器。watcher每次接续先查未确认通知；没有可发送的watcher通道时ops必须报告阻塞并保留通知。
+ 
++历史手动 V6 通知使用同一 `ack` 命令，另传 `--source <原来源绑定JSON>`（schema=`manual-learning-notice-v1`，包含 request_id/task/batch/character/thread_id/worktree 及 original_log/input/original_message 三份 path/SHA 引用）。入口核原启动、正常退出、线程、冻结输入和完整异议原文，不新建学习父要求。支持原 direction-experience、reflex-distill、build-cores 及 `v6-reflex-distill-r4` 任务。R4 按原 `.artifacts/<batch>/inputs.json` 的 `manual-v6-r4-input-bootstrap-v1` 格式验证 request、batch、worktree，并从原 `learning-notice-proposal-v1` 核 task/character 等身份；通知 request_sha256 必须是完整原 proposal 的 SHA，四个 question id 随完整原文绑定。保留原 proposal 的 false flags 和旧拒绝回执；各角色只凭自己的真实回执沿原通知链登记，通知登记完成不代表科学父完成或正式知识发布。
++
+ ACK回执为JSON：notice_id、stage、actor（ops_forwarded为ops，其余为watcher）、status=delivered，以及evidence={path,sha256}指向实际发送/接收/用户可见回复原件。不能拿任意说明文件当通知完成。消费者回执同样必须有evidence数组，逐项冻结真实探针输入/输出，只有passed字段不通过验收。
+ 
+ blocked/questioned经ops核查有可行下一步后，保存说明再沿原线程继续：`python3 ops/learning_requests.py retry --request <id> --receipt <恢复理由>`。这不是用户审批；新的范围/输入必须升revision。有异议但证据充分的修正不必等Roy再次批准。
+diff --git a/ops/learning_requests.py b/ops/learning_requests.py
+index 2125c6b83..9f867d9a6 100644
+--- a/ops/learning_requests.py
++++ b/ops/learning_requests.py
+@@ -98,7 +98,7 @@ def ack_request(root, state, notice, payload, manual_source=None):
+ 
+ def ack_manual_notice(root, notice, payload, source):
+     """Authenticate old manual V6 notices without inventing a parent or editing their scope."""
+-    tasks = {"v6-direction-experience", "v6-reflex-distill", "v6-build-cores"}
++    tasks = {"v6-direction-experience", "v6-reflex-distill", "v6-build-cores", "v6-reflex-distill-r4"}
+     if (not isinstance(source, dict) or source.get("schema") != "manual-learning-notice-v1"
+             or source.get("request_id") != notice.get("request_id")
+             or source.get("task") not in tasks or source.get("character") != "silent"
+@@ -140,14 +140,33 @@ def ack_manual_notice(root, notice, payload, source):
+     inputs = source["input"]
+     if root / inputs["path"] != Path(params.get("evidence", "")):
+         raise ValueError("manual notice input is not the original launch input")
+-    frozen = json.loads(read(inputs, root / "ops/codex-ops/learner", ".json"))
+-    if any(frozen.get(key) != source.get(key) for key in ("request_id", "batch", "task", "character")):
+-        raise ValueError("manual notice frozen input identity mismatch")
++    r4 = source["task"] == "v6-reflex-distill-r4"
++    if r4:
++        # R4 consumed a bootstrap with request (not request_id) and no task/character fields.
++        # Bind its original layout and producer identity instead of rewriting historical input.
++        input_dir = root / ".artifacts" / source["batch"]
++        frozen = json.loads(read(inputs, input_dir, ".json"))
++        if (root / inputs["path"] != input_dir / "inputs.json"
++                or frozen.get("schema") != "manual-v6-r4-input-bootstrap-v1"
++                or frozen.get("request") != source["request_id"]
++                or frozen.get("batch") != source["batch"] or frozen.get("worktree") != str(tree)
++                or any(key in frozen and frozen[key] != source[key] for key in ("request_id", "task", "character"))):
++            raise ValueError("manual notice R4 bootstrap identity mismatch")
++    else:
++        frozen = json.loads(read(inputs, root / "ops/codex-ops/learner", ".json"))
++        if any(frozen.get(key) != source.get(key) for key in ("request_id", "batch", "task", "character")):
++            raise ValueError("manual notice frozen input identity mismatch")
+     original = read(source["original_message"], scratch, ".json")
+     if ((root / source["original_message"]["path"]).parent != scratch
+             or notice.get("request_sha256") not in (digest(original), inputs["sha256"])
+             or not contains_original(original, notice.get("message", "").encode("utf8"), inline=True)):
+         raise ValueError("manual notice producer words or SHA mismatch")
++    if r4:
++        proposal = json.loads(original)
++        if (not isinstance(proposal, dict) or proposal.get("schema") != "learning-notice-proposal-v1"
++                or any(proposal.get(key) != source[key] for key in ("request_id", "batch", "task", "character"))
++                or notice.get("request_sha256") != digest(original)):
++            raise ValueError("manual notice R4 proposal identity or SHA mismatch")
+     return None
+ 
+ 
+diff --git a/ops/tests/test_manual_notice_ack.py b/ops/tests/test_manual_notice_ack.py
+index 3f39c0e99..625424838 100644
+--- a/ops/tests/test_manual_notice_ack.py
++++ b/ops/tests/test_manual_notice_ack.py
+@@ -123,6 +123,84 @@ class ManualNoticeAck(unittest.TestCase):
+         flow.atomic(self.f.state_path, self.f.state)
+         self.reject()
+ 
++    def r4_fixture(self):
++        self.source.update(task='v6-reflex-distill-r4', request_id='roy-20261020-v6-reflex-card-pick',
++                           batch='v6-reflex-distill-r4-20261020-2313')
++        self.original = {'schema': 'learning-notice-proposal-v1',
++                         **{key: self.source[key] for key in ('request_id', 'task', 'batch', 'character')},
++                         'questions': [{'id': ident, 'conclusion': '固定缺证异议'} for ident in (
++                             'r4-no-supported-pick-advice', 'r4-genuine-source-experience-missing',
++                             'r4-old-combat-scope-retained', 'r4-unavailable-provenance-and-damage')],
++                         'ops_forwarded': False, 'watcher_received': False, 'roy_notified': False}
++        self.source['original_message'] = self.f.artifact(
++            'learner/runs/fixed-manual/learning-notice-proposal.json', self.original)
++        self.bootstrap = {'schema': 'manual-v6-r4-input-bootstrap-v1',
++                          'request': self.source['request_id'], 'batch': self.source['batch'],
++                          'worktree': str(self.tree)}
++        self.source['input'] = self.f.artifact(
++            '.artifacts/' + self.source['batch'] + '/inputs.json', self.bootstrap)
++        launch = self.events[0]
++        launch.update(task=self.source['task'], prompt='Roy授权 ' + self.source['request_id'])
++        launch['params'].update(batch=self.source['batch'], evidence=str(self.f.root / self.source['input']['path']))
++        self.write_events()
++        self.f.notice.update(request_id=self.source['request_id'],
++                             request_sha256=self.source['original_message']['sha256'],
++                             message='固定原通知\n' + json.dumps(self.original, ensure_ascii=False))
++        self.identify()
++
++    def test_r4_bootstrap_and_four_questions_keep_original_sha_and_independent_role_chain(self):
++        self.r4_fixture()
++        f = self.f
++        flow.atomic(f.notice_path, f.notice)
++        original_notice = copy.deepcopy(f.notice)
++        originals = {ref['path']: (f.root / ref['path']).read_bytes()
++                     for ref in (self.source['input'], self.source['original_log'], self.source['original_message'])}
++        state_before = f.state_path.read_bytes()
++        self.reject(stage='watcher_received')
++        for stage in ('ops_forwarded', 'watcher_received', 'roy_notified'):
++            self.assertEqual(self.ack(stage), 0)
++            saved = json.loads(f.notice_path.read_bytes())
++            original_notice[stage] = saved[stage]
++            self.assertEqual(saved, original_notice)
++            self.assertEqual(f.state_path.read_bytes(), state_before)
++            for path, raw in originals.items():
++                self.assertEqual((f.root / path).read_bytes(), raw)
++        self.assertEqual(json.loads((f.root / self.source['original_message']['path']).read_bytes()), self.original)
++
++    def test_r4_bootstrap_proposal_sha_and_delivery_mismatches_reject_atomically(self):
++        self.r4_fixture()
++        for changes in ({'actor': 'watcher'}, {'status': 'queued'}, {'character': 'ironclad'}):
++            self.reject(changes=changes)
++        source = copy.deepcopy(self.source)
++        for key, value in (('schema', 'other'), ('request', 'other-request'), ('batch', 'other-batch'),
++                           ('worktree', str(self.f.root / 'other')), ('task', 'v6-reflex-distill'),
++                           ('character', 'ironclad')):
++            self.source['input'] = self.f.artifact(source['input']['path'], {**self.bootstrap, key: value})
++            self.reject()
++        self.source['input'] = self.f.artifact(source['input']['path'], self.bootstrap)
++        self.f.notice['request_sha256'] = self.source['input']['sha256']
++        self.identify()
++        self.reject()
++        self.f.notice['request_sha256'] = source['original_message']['sha256']
++        for change in ('question-id', 'missing-question'):
++            altered = copy.deepcopy(self.original)
++            if change == 'question-id':
++                altered['questions'][0]['id'] = 'replacement-question'
++            else:
++                altered['questions'].pop()
++            self.f.notice['message'] = json.dumps(altered, ensure_ascii=False)
++            self.identify()
++            self.reject()
++        self.f.notice['message'] = json.dumps(self.original, ensure_ascii=False)
++        self.identify()
++        for key, value in (('schema', 'other'), ('task', 'v6-reflex-distill'), ('character', 'ironclad')):
++            altered = {**self.original, key: value}
++            self.source['original_message'] = self.f.artifact(source['original_message']['path'], altered)
++            self.f.notice.update(request_sha256=self.source['original_message']['sha256'],
++                                 message=json.dumps(altered, ensure_ascii=False))
++            self.identify()
++            self.reject()
++
+     def test_wrong_batch_thread_input_character_task_and_original_words_are_rejected(self):
+         original = copy.deepcopy(self.source)
+         for key, value in (('request_id', 'other-request'), ('batch', 'other-batch'),
+diff --git a/paper/materials/20261021-issue-8-r4-notice-ack/baseline-r4-red.log b/paper/materials/20261021-issue-8-r4-notice-ack/baseline-r4-red.log
+new file mode 100644
+index 000000000..af6d5c7c7
+--- /dev/null
++++ b/paper/materials/20261021-issue-8-r4-notice-ack/baseline-r4-red.log
+@@ -0,0 +1,43 @@
++test_external_symlink_and_traversal_sources_are_rejected (test_manual_notice_ack.ManualNoticeAck.test_external_symlink_and_traversal_sources_are_rejected) ... ok
++test_failed_ambiguous_launches_and_changed_frozen_bytes_are_rejected (test_manual_notice_ack.ManualNoticeAck.test_failed_ambiguous_launches_and_changed_frozen_bytes_are_rejected) ... ok
++test_original_manual_launch_accepts_independent_roles_without_scope_or_parent_rewrite (test_manual_notice_ack.ManualNoticeAck.test_original_manual_launch_accepts_independent_roles_without_scope_or_parent_rewrite) ... ok
++test_r4_bootstrap_and_four_questions_keep_original_sha_and_independent_role_chain (test_manual_notice_ack.ManualNoticeAck.test_r4_bootstrap_and_four_questions_keep_original_sha_and_independent_role_chain) ... ERROR
++test_r4_bootstrap_proposal_sha_and_delivery_mismatches_reject_atomically (test_manual_notice_ack.ManualNoticeAck.test_r4_bootstrap_proposal_sha_and_delivery_mismatches_reject_atomically) ... ok
++test_scope_identity_actor_stage_and_delivery_guards_still_reject (test_manual_notice_ack.ManualNoticeAck.test_scope_identity_actor_stage_and_delivery_guards_still_reject) ... ok
++test_wrong_batch_thread_input_character_task_and_original_words_are_rejected (test_manual_notice_ack.ManualNoticeAck.test_wrong_batch_thread_input_character_task_and_original_words_are_rejected) ... ok
++
++======================================================================
++ERROR: test_r4_bootstrap_and_four_questions_keep_original_sha_and_independent_role_chain (test_manual_notice_ack.ManualNoticeAck.test_r4_bootstrap_and_four_questions_keep_original_sha_and_independent_role_chain)
++----------------------------------------------------------------------
++Traceback (most recent call last):
++  File "/home/dw/Projects/agent-sts2/.worktrees/issue-8-r4-notice-ack/ops/learning_requests.py", line 991, in main
++    rec = ack_request(root, state, notice, payload, manual_source)
++  File "/home/dw/Projects/agent-sts2/.worktrees/issue-8-r4-notice-ack/ops/learning_requests.py", line 66, in ack_request
++    return ack_manual_notice(root, notice, payload, manual_source)
++  File "<string>", line 108, in ack_manual_notice
++ValueError: manual notice request, task, character or thread mismatch
++
++During handling of the above exception, another exception occurred:
++
++Traceback (most recent call last):
++  File "/home/dw/Projects/agent-sts2/.worktrees/issue-8-r4-notice-ack/ops/tests/test_manual_notice_ack.py", line 161, in test_r4_bootstrap_and_four_questions_keep_original_sha_and_independent_role_chain
++    self.assertEqual(self.ack(stage), 0)
++                     ~~~~~~~~^^^^^^^
++  File "/home/dw/Projects/agent-sts2/.worktrees/issue-8-r4-notice-ack/ops/tests/test_manual_notice_ack.py", line 66, in ack
++    return flow.main()
++           ~~~~~~~~~^^
++  File "/home/dw/Projects/agent-sts2/.worktrees/issue-8-r4-notice-ack/ops/learning_requests.py", line 1010, in main
++    parser.error(str(error))
++    ~~~~~~~~~~~~^^^^^^^^^^^^
++  File "/usr/lib/python3.14/argparse.py", line 2797, in error
++    self.exit(2, _('%(prog)s: error: %(message)s\n') % args)
++    ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
++  File "/usr/lib/python3.14/argparse.py", line 2784, in exit
++    _sys.exit(status)
++    ~~~~~~~~~^^^^^^^^
++SystemExit: 2
++
++----------------------------------------------------------------------
++Ran 7 tests in 0.127s
++
++FAILED (errors=1)
+diff --git a/paper/materials/20261021-issue-8-r4-notice-ack/component-legacy-restored-venv.log b/paper/materials/20261021-issue-8-r4-notice-ack/component-legacy-restored-venv.log
+new file mode 100644
+index 000000000..63dde4cd2
+--- /dev/null
++++ b/paper/materials/20261021-issue-8-r4-notice-ack/component-legacy-restored-venv.log
+@@ -0,0 +1,9 @@
++
++ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/issue-8-r4-notice-ack/agent
++
++
++ Test Files  2 passed (2)
++      Tests  5 passed (5)
++   Start at  11:26:38
++   Duration  7.28s (transform 478ms, setup 626ms, import 30ms, tests 6.18s, environment 0ms)
++
+diff --git a/paper/materials/20261021-issue-8-r4-notice-ack/manual-python-final.log b/paper/materials/20261021-issue-8-r4-notice-ack/manual-python-final.log
+new file mode 100644
+index 000000000..455878c10
+--- /dev/null
++++ b/paper/materials/20261021-issue-8-r4-notice-ack/manual-python-final.log
+@@ -0,0 +1,281 @@
++usage: flow [-h] [--batch BATCH] [--notice NOTICE]
++            [--stage {ops_forwarded,watcher_received,roy_notified}]
++            [--request REQUEST] [--receipt RECEIPT] [--source SOURCE]
++            [--kind {disagreement,blocked}]
++            {run,ack,retry,recover-account,register-feature}
++flow: error: manual notice source outside original layout
++usage: flow [-h] [--batch BATCH] [--notice NOTICE]
++            [--stage {ops_forwarded,watcher_received,roy_notified}]
++            [--request REQUEST] [--receipt RECEIPT] [--source SOURCE]
++            [--kind {disagreement,blocked}]
++            {run,ack,retry,recover-account,register-feature}
++flow: error: manual notice source outside original layout
++usage: flow [-h] [--batch BATCH] [--notice NOTICE]
++            [--stage {ops_forwarded,watcher_received,roy_notified}]
++            [--request REQUEST] [--receipt RECEIPT] [--source SOURCE]
++            [--kind {disagreement,blocked}]
++            {run,ack,retry,recover-account,register-feature}
++flow: error: manual notice event log outside learner runs
++.usage: flow [-h] [--batch BATCH] [--notice NOTICE]
++            [--stage {ops_forwarded,watcher_received,roy_notified}]
++            [--request REQUEST] [--receipt RECEIPT] [--source SOURCE]
++            [--kind {disagreement,blocked}]
++            {run,ack,retry,recover-account,register-feature}
++flow: error: manual notice launch, completion or thread is missing or ambiguous
++usage: flow [-h] [--batch BATCH] [--notice NOTICE]
++            [--stage {ops_forwarded,watcher_received,roy_notified}]
++            [--request REQUEST] [--receipt RECEIPT] [--source SOURCE]
++            [--kind {disagreement,blocked}]
++            {run,ack,retry,recover-account,register-feature}
++flow: error: manual notice launch, completion or thread is missing or ambiguous
++usage: flow [-h] [--batch BATCH] [--notice NOTICE]
++            [--stage {ops_forwarded,watcher_received,roy_notified}]
++            [--request REQUEST] [--receipt RECEIPT] [--source SOURCE]
++            [--kind {disagreement,blocked}]
++            {run,ack,retry,recover-account,register-feature}
++flow: error: manual notice original batch or completed launch mismatch
++usage: flow [-h] [--batch BATCH] [--notice NOTICE]
++            [--stage {ops_forwarded,watcher_received,roy_notified}]
++            [--request REQUEST] [--receipt RECEIPT] [--source SOURCE]
++            [--kind {disagreement,blocked}]
++            {run,ack,retry,recover-account,register-feature}
++flow: error: manual notice launch, completion or thread is missing or ambiguous
++usage: flow [-h] [--batch BATCH] [--notice NOTICE]
++            [--stage {ops_forwarded,watcher_received,roy_notified}]
++            [--request REQUEST] [--receipt RECEIPT] [--source SOURCE]
++            [--kind {disagreement,blocked}]
++            {run,ack,retry,recover-account,register-feature}
++flow: error: frozen artifact SHA mismatch: /tmp/tmpk0yvu2hy/learner/runs/fixed-manual.jsonl
++..usage: flow [-h] [--batch BATCH] [--notice NOTICE]
++            [--stage {ops_forwarded,watcher_received,roy_notified}]
++            [--request REQUEST] [--receipt RECEIPT] [--source SOURCE]
++            [--kind {disagreement,blocked}]
++            {run,ack,retry,recover-account,register-feature}
++flow: error: previous delivery stage has no receipt
++.usage: flow [-h] [--batch BATCH] [--notice NOTICE]
++            [--stage {ops_forwarded,watcher_received,roy_notified}]
++            [--request REQUEST] [--receipt RECEIPT] [--source SOURCE]
++            [--kind {disagreement,blocked}]
++            {run,ack,retry,recover-account,register-feature}
++flow: error: receipt must identify the notice, delivery stage, responsible actor and delivered status
++usage: flow [-h] [--batch BATCH] [--notice NOTICE]
++            [--stage {ops_forwarded,watcher_received,roy_notified}]
++            [--request REQUEST] [--receipt RECEIPT] [--source SOURCE]
++            [--kind {disagreement,blocked}]
++            {run,ack,retry,recover-account,register-feature}
++flow: error: receipt must identify the notice, delivery stage, responsible actor and delivered status
++usage: flow [-h] [--batch BATCH] [--notice NOTICE]
++            [--stage {ops_forwarded,watcher_received,roy_notified}]
++            [--request REQUEST] [--receipt RECEIPT] [--source SOURCE]
++            [--kind {disagreement,blocked}]
++            {run,ack,retry,recover-account,register-feature}
++flow: error: manual notice request, task, character or thread mismatch
++usage: flow [-h] [--batch BATCH] [--notice NOTICE]
++            [--stage {ops_forwarded,watcher_received,roy_notified}]
++            [--request REQUEST] [--receipt RECEIPT] [--source SOURCE]
++            [--kind {disagreement,blocked}]
++            {run,ack,retry,recover-account,register-feature}
++flow: error: manual notice R4 bootstrap identity mismatch
++usage: flow [-h] [--batch BATCH] [--notice NOTICE]
++            [--stage {ops_forwarded,watcher_received,roy_notified}]
++            [--request REQUEST] [--receipt RECEIPT] [--source SOURCE]
++            [--kind {disagreement,blocked}]
++            {run,ack,retry,recover-account,register-feature}
++flow: error: manual notice R4 bootstrap identity mismatch
++usage: flow [-h] [--batch BATCH] [--notice NOTICE]
++            [--stage {ops_forwarded,watcher_received,roy_notified}]
++            [--request REQUEST] [--receipt RECEIPT] [--source SOURCE]
++            [--kind {disagreement,blocked}]
++            {run,ack,retry,recover-account,register-feature}
++flow: error: manual notice R4 bootstrap identity mismatch
++usage: flow [-h] [--batch BATCH] [--notice NOTICE]
++            [--stage {ops_forwarded,watcher_received,roy_notified}]
++            [--request REQUEST] [--receipt RECEIPT] [--source SOURCE]
++            [--kind {disagreement,blocked}]
++            {run,ack,retry,recover-account,register-feature}
++flow: error: manual notice R4 bootstrap identity mismatch
++usage: flow [-h] [--batch BATCH] [--notice NOTICE]
++            [--stage {ops_forwarded,watcher_received,roy_notified}]
++            [--request REQUEST] [--receipt RECEIPT] [--source SOURCE]
++            [--kind {disagreement,blocked}]
++            {run,ack,retry,recover-account,register-feature}
++flow: error: manual notice R4 bootstrap identity mismatch
++usage: flow [-h] [--batch BATCH] [--notice NOTICE]
++            [--stage {ops_forwarded,watcher_received,roy_notified}]
++            [--request REQUEST] [--receipt RECEIPT] [--source SOURCE]
++            [--kind {disagreement,blocked}]
++            {run,ack,retry,recover-account,register-feature}
++flow: error: manual notice R4 bootstrap identity mismatch
++usage: flow [-h] [--batch BATCH] [--notice NOTICE]
++            [--stage {ops_forwarded,watcher_received,roy_notified}]
++            [--request REQUEST] [--receipt RECEIPT] [--source SOURCE]
++            [--kind {disagreement,blocked}]
++            {run,ack,retry,recover-account,register-feature}
++flow: error: manual notice R4 proposal identity or SHA mismatch
++usage: flow [-h] [--batch BATCH] [--notice NOTICE]
++            [--stage {ops_forwarded,watcher_received,roy_notified}]
++            [--request REQUEST] [--receipt RECEIPT] [--source SOURCE]
++            [--kind {disagreement,blocked}]
++            {run,ack,retry,recover-account,register-feature}
++flow: error: manual notice producer words or SHA mismatch
++usage: flow [-h] [--batch BATCH] [--notice NOTICE]
++            [--stage {ops_forwarded,watcher_received,roy_notified}]
++            [--request REQUEST] [--receipt RECEIPT] [--source SOURCE]
++            [--kind {disagreement,blocked}]
++            {run,ack,retry,recover-account,register-feature}
++flow: error: manual notice producer words or SHA mismatch
++usage: flow [-h] [--batch BATCH] [--notice NOTICE]
++            [--stage {ops_forwarded,watcher_received,roy_notified}]
++            [--request REQUEST] [--receipt RECEIPT] [--source SOURCE]
++            [--kind {disagreement,blocked}]
++            {run,ack,retry,recover-account,register-feature}
++flow: error: manual notice R4 proposal identity or SHA mismatch
++usage: flow [-h] [--batch BATCH] [--notice NOTICE]
++            [--stage {ops_forwarded,watcher_received,roy_notified}]
++            [--request REQUEST] [--receipt RECEIPT] [--source SOURCE]
++            [--kind {disagreement,blocked}]
++            {run,ack,retry,recover-account,register-feature}
++flow: error: manual notice R4 proposal identity or SHA mismatch
++usage: flow [-h] [--batch BATCH] [--notice NOTICE]
++            [--stage {ops_forwarded,watcher_received,roy_notified}]
++            [--request REQUEST] [--receipt RECEIPT] [--source SOURCE]
++            [--kind {disagreement,blocked}]
++            {run,ack,retry,recover-account,register-feature}
++flow: error: manual notice R4 proposal identity or SHA mismatch
++.usage: flow [-h] [--batch BATCH] [--notice NOTICE]
++            [--stage {ops_forwarded,watcher_received,roy_notified}]
++            [--request REQUEST] [--receipt RECEIPT] [--source SOURCE]
++            [--kind {disagreement,blocked}]
++            {run,ack,retry,recover-account,register-feature}
++flow: error: unknown learning request; ordinary notification scope must be explicit
++usage: flow [-h] [--batch BATCH] [--notice NOTICE]
++            [--stage {ops_forwarded,watcher_received,roy_notified}]
++            [--request REQUEST] [--receipt RECEIPT] [--source SOURCE]
++            [--kind {disagreement,blocked}]
++            {run,ack,retry,recover-account,register-feature}
++flow: error: previous delivery stage has no receipt
++usage: flow [-h] [--batch BATCH] [--notice NOTICE]
++            [--stage {ops_forwarded,watcher_received,roy_notified}]
++            [--request REQUEST] [--receipt RECEIPT] [--source SOURCE]
++            [--kind {disagreement,blocked}]
++            {run,ack,retry,recover-account,register-feature}
++flow: error: manual notice request, task, character or thread mismatch
++usage: flow [-h] [--batch BATCH] [--notice NOTICE]
++            [--stage {ops_forwarded,watcher_received,roy_notified}]
++            [--request REQUEST] [--receipt RECEIPT] [--source SOURCE]
++            [--kind {disagreement,blocked}]
++            {run,ack,retry,recover-account,register-feature}
++flow: error: unknown learning request; ordinary notification scope must be explicit
++usage: flow [-h] [--batch BATCH] [--notice NOTICE]
++            [--stage {ops_forwarded,watcher_received,roy_notified}]
++            [--request REQUEST] [--receipt RECEIPT] [--source SOURCE]
++            [--kind {disagreement,blocked}]
++            {run,ack,retry,recover-account,register-feature}
++flow: error: manual notice request, task, character or thread mismatch
++usage: flow [-h] [--batch BATCH] [--notice NOTICE]
++            [--stage {ops_forwarded,watcher_received,roy_notified}]
++            [--request REQUEST] [--receipt RECEIPT] [--source SOURCE]
++            [--kind {disagreement,blocked}]
++            {run,ack,retry,recover-account,register-feature}
++flow: error: receipt must identify the notice, delivery stage, responsible actor and delivered status
++usage: flow [-h] [--batch BATCH] [--notice NOTICE]
++            [--stage {ops_forwarded,watcher_received,roy_notified}]
++            [--request REQUEST] [--receipt RECEIPT] [--source SOURCE]
++            [--kind {disagreement,blocked}]
++            {run,ack,retry,recover-account,register-feature}
++flow: error: receipt must identify the notice, delivery stage, responsible actor and delivered status
++usage: flow [-h] [--batch BATCH] [--notice NOTICE]
++            [--stage {ops_forwarded,watcher_received,roy_notified}]
++            [--request REQUEST] [--receipt RECEIPT] [--source SOURCE]
++            [--kind {disagreement,blocked}]
++            {run,ack,retry,recover-account,register-feature}
++flow: error: manual notice request, task, character or thread mismatch
++usage: flow [-h] [--batch BATCH] [--notice NOTICE]
++            [--stage {ops_forwarded,watcher_received,roy_notified}]
++            [--request REQUEST] [--receipt RECEIPT] [--source SOURCE]
++            [--kind {disagreement,blocked}]
++            {run,ack,retry,recover-account,register-feature}
++flow: error: receipt must identify the notice, delivery stage, responsible actor and delivered status
++usage: flow [-h] [--batch BATCH] [--notice NOTICE]
++            [--stage {ops_forwarded,watcher_received,roy_notified}]
++            [--request REQUEST] [--receipt RECEIPT] [--source SOURCE]
++            [--kind {disagreement,blocked}]
++            {run,ack,retry,recover-account,register-feature}
++flow: error: manual provenance cannot override an existing notification scope
++usage: flow [-h] [--batch BATCH] [--notice NOTICE]
++            [--stage {ops_forwarded,watcher_received,roy_notified}]
++            [--request REQUEST] [--receipt RECEIPT] [--source SOURCE]
++            [--kind {disagreement,blocked}]
++            {run,ack,retry,recover-account,register-feature}
++flow: error: manual provenance cannot override an existing notification scope
++usage: flow [-h] [--batch BATCH] [--notice NOTICE]
++            [--stage {ops_forwarded,watcher_received,roy_notified}]
++            [--request REQUEST] [--receipt RECEIPT] [--source SOURCE]
++            [--kind {disagreement,blocked}]
++            {run,ack,retry,recover-account,register-feature}
++flow: error: manual provenance cannot override an existing notification scope
++usage: flow [-h] [--batch BATCH] [--notice NOTICE]
++            [--stage {ops_forwarded,watcher_received,roy_notified}]
++            [--request REQUEST] [--receipt RECEIPT] [--source SOURCE]
++            [--kind {disagreement,blocked}]
++            {run,ack,retry,recover-account,register-feature}
++flow: error: manual provenance cannot override an existing notification scope
++.usage: flow [-h] [--batch BATCH] [--notice NOTICE]
++            [--stage {ops_forwarded,watcher_received,roy_notified}]
++            [--request REQUEST] [--receipt RECEIPT] [--source SOURCE]
++            [--kind {disagreement,blocked}]
++            {run,ack,retry,recover-account,register-feature}
++flow: error: manual notice request, task, character or thread mismatch
++usage: flow [-h] [--batch BATCH] [--notice NOTICE]
++            [--stage {ops_forwarded,watcher_received,roy_notified}]
++            [--request REQUEST] [--receipt RECEIPT] [--source SOURCE]
++            [--kind {disagreement,blocked}]
++            {run,ack,retry,recover-account,register-feature}
++flow: error: manual notice original batch or completed launch mismatch
++usage: flow [-h] [--batch BATCH] [--notice NOTICE]
++            [--stage {ops_forwarded,watcher_received,roy_notified}]
++            [--request REQUEST] [--receipt RECEIPT] [--source SOURCE]
++            [--kind {disagreement,blocked}]
++            {run,ack,retry,recover-account,register-feature}
++flow: error: manual notice launch, completion or thread is missing or ambiguous
++usage: flow [-h] [--batch BATCH] [--notice NOTICE]
++            [--stage {ops_forwarded,watcher_received,roy_notified}]
++            [--request REQUEST] [--receipt RECEIPT] [--source SOURCE]
++            [--kind {disagreement,blocked}]
++            {run,ack,retry,recover-account,register-feature}
++flow: error: manual notice request, task, character or thread mismatch
++usage: flow [-h] [--batch BATCH] [--notice NOTICE]
++            [--stage {ops_forwarded,watcher_received,roy_notified}]
++            [--request REQUEST] [--receipt RECEIPT] [--source SOURCE]
++            [--kind {disagreement,blocked}]
++            {run,ack,retry,recover-account,register-feature}
++flow: error: manual notice request, task, character or thread mismatch
++usage: flow [-h] [--batch BATCH] [--notice NOTICE]
++            [--stage {ops_forwarded,watcher_received,roy_notified}]
++            [--request REQUEST] [--receipt RECEIPT] [--source SOURCE]
++            [--kind {disagreement,blocked}]
++            {run,ack,retry,recover-account,register-feature}
++flow: error: manual notice worktree outside project
++usage: flow [-h] [--batch BATCH] [--notice NOTICE]
++            [--stage {ops_forwarded,watcher_received,roy_notified}]
++            [--request REQUEST] [--receipt RECEIPT] [--source SOURCE]
++            [--kind {disagreement,blocked}]
++            {run,ack,retry,recover-account,register-feature}
++flow: error: manual notice input is not the original launch input
++usage: flow [-h] [--batch BATCH] [--notice NOTICE]
++            [--stage {ops_forwarded,watcher_received,roy_notified}]
++            [--request REQUEST] [--receipt RECEIPT] [--source SOURCE]
++            [--kind {disagreement,blocked}]
++            {run,ack,retry,recover-account,register-feature}
++flow: error: manual notice producer words or SHA mismatch
++usage: flow [-h] [--batch BATCH] [--notice NOTICE]
++            [--stage {ops_forwarded,watcher_received,roy_notified}]
++            [--request REQUEST] [--receipt RECEIPT] [--source SOURCE]
++            [--kind {disagreement,blocked}]
++            {run,ack,retry,recover-account,register-feature}
++flow: error: manual notice producer words or SHA mismatch
++.
++----------------------------------------------------------------------
++Ran 7 tests in 0.124s
++
++OK
+diff --git a/paper/materials/20261021-issue-8-r4-notice-ack/ordinary-isolated.log b/paper/materials/20261021-issue-8-r4-notice-ack/ordinary-isolated.log
+new file mode 100644
+index 000000000..91cfe8a70
+--- /dev/null
++++ b/paper/materials/20261021-issue-8-r4-notice-ack/ordinary-isolated.log
+@@ -0,0 +1,9 @@
++
++ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/issue-8-r4-notice-ack/agent
++
++
++ Test Files  1 passed (1)
++      Tests  1 passed (1)
++   Start at  11:25:47
++   Duration  14.98s (transform 262ms, setup 313ms, import 8ms, tests 14.51s, environment 0ms)
++
+diff --git a/paper/materials/20261021-issue-8-r4-notice-ack/original-authentication-preflight.json b/paper/materials/20261021-issue-8-r4-notice-ack/original-authentication-preflight.json
+new file mode 100644
+index 000000000..b55ef6b1f
+--- /dev/null
++++ b/paper/materials/20261021-issue-8-r4-notice-ack/original-authentication-preflight.json
+@@ -0,0 +1,69 @@
++{
++  "at": "2026-10-21T11:02:51.012023+08:00",
++  "operation": "read-only original R4 authentication; no CLI ACK or registry write",
++  "baseline_error": "manual notice request, task, character or thread mismatch",
++  "patched_authentication": "passed",
++  "source": {
++    "schema": "manual-learning-notice-v1",
++    "request_id": "roy-20261020-v6-reflex-card-pick",
++    "task": "v6-reflex-distill-r4",
++    "batch": "v6-reflex-distill-r4-20261020-2313",
++    "character": "silent",
++    "thread_id": "01a159e0-b0ee-76f3-87e7-30049edd441c",
++    "worktree": "/home/dw/Projects/agent-sts2/.worktrees/v6-reflex-distill-r4-20261020-2313",
++    "original_log": {
++      "path": "learner/runs/20261020-231417-9397e12f-7784-4fc4-b61f-becc95226a5b-v6-reflex-distill-r4.jsonl",
++      "sha256": "29ba477ceb189e846b5c8892db4dd3abf72c9fd71ad3b893e1522c66a441a666"
++    },
++    "input": {
++      "path": ".artifacts/v6-reflex-distill-r4-20261020-2313/inputs.json",
++      "sha256": "21d1394e21b566b5e92ccd9d07e51b30e9bb7a5183135e190c176c47c36749c6"
++    },
++    "original_message": {
++      "path": "learner/runs/20261020-231417-9397e12f-7784-4fc4-b61f-becc95226a5b-v6-reflex-distill-r4/learning-notice-proposal.json",
++      "sha256": "4e6e78ab3504f55fc100f72082bb42b6e17397a50268555c1ad14497bc61cfe4"
++    }
++  },
++  "question_ids": [
++    "r4-no-supported-pick-advice",
++    "r4-genuine-source-experience-missing",
++    "r4-old-combat-scope-retained",
++    "r4-unavailable-provenance-and-damage"
++  ],
++  "original_notice_sha256": "4e6e78ab3504f55fc100f72082bb42b6e17397a50268555c1ad14497bc61cfe4",
++  "evidence": [
++    {
++      "path": "learner/runs/20261020-231417-9397e12f-7784-4fc4-b61f-becc95226a5b-v6-reflex-distill-r4.jsonl",
++      "sha256": "29ba477ceb189e846b5c8892db4dd3abf72c9fd71ad3b893e1522c66a441a666"
++    },
++    {
++      "path": ".artifacts/v6-reflex-distill-r4-20261020-2313/inputs.json",
++      "sha256": "21d1394e21b566b5e92ccd9d07e51b30e9bb7a5183135e190c176c47c36749c6"
++    },
++    {
++      "path": "learner/runs/20261020-231417-9397e12f-7784-4fc4-b61f-becc95226a5b-v6-reflex-distill-r4/learning-notice-proposal.json",
++      "sha256": "4e6e78ab3504f55fc100f72082bb42b6e17397a50268555c1ad14497bc61cfe4"
++    },
++    {
++      "path": "paper/materials/20261020-2358-ops/R4-learning-notice-proposal.json",
++      "sha256": "4e6e78ab3504f55fc100f72082bb42b6e17397a50268555c1ad14497bc61cfe4"
++    },
++    {
++      "path": "paper/materials/20261021-090x-Roy-and-CEN-ops/R4-manual-CLI-compatibility.json",
++      "sha256": "51be04830914bb4c85fc452a09bdcc4939e083c86f662a2306bf7c286a5a96fd"
++    },
++    {
++      "path": "paper/materials/20261021-090x-Roy-and-CEN-ops/R4-Roy-explicit-confirmation.json",
++      "sha256": "0d18edb880440fd3e97e6c44fc907cc211474aad7877b8f91e8525bc47757061"
++    }
++  ],
++  "original_artifacts_unchanged": true,
++  "original_false_flags": {
++    "ops_forwarded": false,
++    "watcher_received": false,
++    "roy_notified": false
++  },
++  "role_ACKs_performed": false,
++  "scientific_parent_complete": false,
++  "formal_publication": false
++}
+diff --git a/paper/materials/20261021-issue-8-r4-notice-ack/paths.log b/paper/materials/20261021-issue-8-r4-notice-ack/paths.log
+new file mode 100644
+index 000000000..4903af590
+--- /dev/null
++++ b/paper/materials/20261021-issue-8-r4-notice-ack/paths.log
+@@ -0,0 +1,9 @@
++
++ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/issue-8-r4-notice-ack/agent
++
++
++ Test Files  1 passed (1)
++      Tests  11 passed (11)
++   Start at  11:20:24
++   Duration  4.15s (transform 3.28s, setup 525ms, import 3.34s, tests 90ms, environment 0ms)
++
+diff --git a/paper/materials/20261021-issue-8-r4-notice-ack/potion-venv.log b/paper/materials/20261021-issue-8-r4-notice-ack/potion-venv.log
+new file mode 100644
+index 000000000..25bb0b63f
+--- /dev/null
++++ b/paper/materials/20261021-issue-8-r4-notice-ack/potion-venv.log
+@@ -0,0 +1,5 @@
++.
++----------------------------------------------------------------------
++Ran 1 test in 0.275s
++
++OK
+diff --git a/paper/materials/20261021-issue-8-r4-notice-ack/projection-baseline.log b/paper/materials/20261021-issue-8-r4-notice-ack/projection-baseline.log
+new file mode 100644
+index 000000000..28ee6dc82
+--- /dev/null
++++ b/paper/materials/20261021-issue-8-r4-notice-ack/projection-baseline.log
+@@ -0,0 +1,74 @@
++
++ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/issue-8-r4-notice-ack/.artifacts/issue-8-r4-notice-ack/baseline-source/agent
++
++ ❯ tests/v6-projection-entries.test.ts (2 tests | 1 failed) 71ms
++   × hands actual combination rows to W4 without cloning a direction maximum into each combo 48ms
++ ❯ tests/v6-target-values.test.ts (4 tests | 2 failed) 67ms
++   × counts low probabilities as bounded known values without inventing W or PW 16ms
++   × retains deterministic P bounds after the combat deadline instead of erasing the table 2ms
++
++⎯⎯⎯⎯⎯⎯⎯ Failed Tests 3 ⎯⎯⎯⎯⎯⎯⎯
++
++ FAIL  tests/v6-projection-entries.test.ts > hands actual combination rows to W4 without cloning a direction maximum into each combo
++AssertionError: expected undefined to be 20 // Object.is equality
++
++- Expected:
++20
++
+++ Received:
++undefined
++
++ ❯ tests/v6-projection-entries.test.ts:23:30
++     21|   expect(row.entry.availability).toEqual({ take: .75, skip: .5 });
++     22|   expect(row.completed_win).toEqual({ value: 1, se: 0, n: r.config.sam…
++     23|   expect(row.general_win?.n).toBe(r.config.samples_pick);
++       |                              ^
++     24|   expect(row.general_win?.value).toBeCloseTo(.25, 14);
++     25|   expect(r.weights).toEqual({ D: 1 }); expect(table.targets.map(t => t…
++
++⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/3]⎯
++
++ FAIL  tests/v6-target-values.test.ts > counts low probabilities as bounded known values without inventing W or PW
++AssertionError: expected 'insufficient_known_options' to be null
++
++- Expected:
++null
++
+++ Received:
++"insufficient_known_options"
++
++ ❯ tests/v6-target-values.test.ts:18:64
++     16|     expect(currentBossKnown(table, row.entry.option_id)).toBe(true);
++     17|   }
++     18|   expect(constructionCoverage(["take", "skip"], table).reason).toBeNul…
++       |                                                                ^
++     19|   expect(validateProjectionEntries(table.combinations.map(r => r.entry…
++     20|   expect(targetValueSummaries(table, "take")[0]).toMatchObject({ P: .0…
++
++⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/3]⎯
++
++ FAIL  tests/v6-target-values.test.ts > retains deterministic P bounds after the combat deadline instead of erasing the table
++AssertionError: expected 'insufficient_known_options' to be null
++
++- Expected:
++null
++
+++ Received:
++"insufficient_known_options"
++
++ ❯ tests/v6-target-values.test.ts:58:64
++     56|   const table = await engine.evaluate(r);
++     57|   expect(table.combinations).toHaveLength(2);
++     58|   expect(constructionCoverage(["skip", "take"], table).reason).toBeNul…
++       |                                                                ^
++     59| });
++     60|
++
++⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/3]⎯
++
++
++ Test Files  2 failed (2)
++      Tests  3 failed | 3 passed (6)
++   Start at  11:22:52
++   Duration  3.26s (transform 1.64s, setup 1.05s, import 1.40s, tests 139ms, environment 0ms)
++
+diff --git a/paper/materials/20261021-issue-8-r4-notice-ack/provider-baseline.log b/paper/materials/20261021-issue-8-r4-notice-ack/provider-baseline.log
+new file mode 100644
+index 000000000..3d394873e
+--- /dev/null
++++ b/paper/materials/20261021-issue-8-r4-notice-ack/provider-baseline.log
+@@ -0,0 +1,47 @@
++
++ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/issue-8-r4-notice-ack/.artifacts/issue-8-r4-notice-ack/baseline-source/agent
++
++ ❯ tests/v6-direction-provider.test.ts (4 tests | 1 failed) 148ms
++   × carries incomplete-opening provider diagnostics into the brain without treating W0 as a loss or filtering samples 29ms
++
++⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
++
++ FAIL  tests/v6-direction-provider.test.ts > carries incomplete-opening provider diagnostics into the brain without treating W0 as a loss or filtering samples
++AssertionError: expected { Object (schema, option_id, ...) } to match object { win: null, …(3) }
++(40 matching properties omitted from actual)
++
++- Expected
+++ Received
++
++@@ -1,8 +1,12 @@
++  {
++-   "expected_win": null,
++-   "win": null,
+++   "expected_win": 0.5,
+++   "win": {
+++     "n": 100,
+++     "se": 0,
+++     "value": 0.5,
+++   },
++    "win_complete": {
++      "n": 100,
++      "se": 0,
++      "value": 1,
++    },
++
++ ❯ tests/v6-direction-provider.test.ts:139:33
++    137|   });
++    138|   // The retained legacy mixture needs W0 when P<1; P*Wk=.5 would sile…
++    139|   expect(evaluation.entries[0]).toMatchObject({ win: null, win_complet…
++       |                                 ^
++    140|   expect(JSON.stringify(task)).not.toMatch(/"(?:expected_win|win_incom…
++    141|   expect(evaluation.projectionReasons![0]!.reasons).toContain("unknown…
++
++⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
++
++
++ Test Files  1 failed (1)
++      Tests  1 failed | 3 passed (4)
++   Start at  11:18:11
++   Duration  3.18s (transform 2.14s, setup 1.35s, import 1.18s, tests 148ms, environment 0ms)
++
+diff --git a/paper/materials/20261021-issue-8-r4-notice-ack/provider-current.log b/paper/materials/20261021-issue-8-r4-notice-ack/provider-current.log
+new file mode 100644
+index 000000000..b3ae1d9c8
+--- /dev/null
++++ b/paper/materials/20261021-issue-8-r4-notice-ack/provider-current.log
+@@ -0,0 +1,47 @@
++
++ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/issue-8-r4-notice-ack/agent
++
++ ❯ tests/v6-direction-provider.test.ts (4 tests | 1 failed) 110ms
++   × carries incomplete-opening provider diagnostics into the brain without treating W0 as a loss or filtering samples 22ms
++
++⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
++
++ FAIL  tests/v6-direction-provider.test.ts > carries incomplete-opening provider diagnostics into the brain without treating W0 as a loss or filtering samples
++AssertionError: expected { Object (schema, option_id, ...) } to match object { win: null, …(3) }
++(40 matching properties omitted from actual)
++
++- Expected
+++ Received
++
++@@ -1,8 +1,12 @@
++  {
++-   "expected_win": null,
++-   "win": null,
+++   "expected_win": 0.5,
+++   "win": {
+++     "n": 100,
+++     "se": 0,
+++     "value": 0.5,
+++   },
++    "win_complete": {
++      "n": 100,
++      "se": 0,
++      "value": 1,
++    },
++
++ ❯ tests/v6-direction-provider.test.ts:139:33
++    137|   });
++    138|   // The retained legacy mixture needs W0 when P<1; P*Wk=.5 would sile…
++    139|   expect(evaluation.entries[0]).toMatchObject({ win: null, win_complet…
++       |                                 ^
++    140|   expect(JSON.stringify(task)).not.toMatch(/"(?:expected_win|win_incom…
++    141|   expect(evaluation.projectionReasons![0]!.reasons).toContain("unknown…
++
++⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
++
++
++ Test Files  1 failed (1)
++      Tests  1 failed | 3 passed (4)
++   Start at  11:17:46
++   Duration  1.56s (transform 1.04s, setup 431ms, import 820ms, tests 110ms, environment 0ms)
++
+diff --git a/paper/materials/20261021-issue-8-r4-notice-ack/report.md b/paper/materials/20261021-issue-8-r4-notice-ack/report.md
+new file mode 100644
+index 000000000..6c8d58ea9
+--- /dev/null
++++ b/paper/materials/20261021-issue-8-r4-notice-ack/report.md
+@@ -0,0 +1,48 @@
++# #8 R4 manual notice 兼容交付
++
++2026-10-21，开发工作树 `issue-8-r4-notice-ack`，基线 `a2eed3cb3`。
++
++`ack_manual_notice` 原任务白名单缺少 `v6-reflex-distill-r4`。继续核原启动输入发现，R4 使用 `.artifacts/<batch>/inputs.json` 的 `manual-v6-r4-input-bootstrap-v1`，以 `request` 记录原要求，未显式记录 task/character；旧入口要求 `ops/codex-ops/learner` 布局和 request_id/task/character，单加白名单仍会拒绝真实原件。
++
++本补丁增加 R4 专用输入校验：冻结原路径、schema、request、batch、worktree，若输入包含 request_id/task/character 则也必须一致。原启动必须是同 task、batch、工作树、正常退出和唯一线程；完整原 proposal 必须是 `learning-notice-proposal-v1` 且 request_id/batch/task/character 一致。R4 通知的 request_sha256 必须绑定完整 proposal，不能换成 bootstrap SHA。旧三个手动任务沿原规则处理。角色、送达状态、前序阶段和证据原件的校验继续由现有 ACK 入口负责。
++
++四原 question id：
++
++- `r4-no-supported-pick-advice`
++- `r4-genuine-source-experience-missing`
++- `r4-old-combat-scope-retained`
++- `r4-unavailable-provenance-and-damage`
++
++原 proposal SHA256：`4e6e78ab3504f55fc100f72082bb42b6e17397a50268555c1ad14497bc61cfe4`。通知包含完整原文，因此四个 id 也随原文受绑定；删改 id 的固定数据用例拒绝且无写入。
++
++## 原件预检与接续
++
++`original-authentication-preflight.json` 保存实际原件的路径/SHA、原来源绑定 source 和只读鉴权结果。以原主检出的启动日志、冻结输入和 scratch proposal 调用鉴权函数，旧基线拒绝，补丁接受；scratch proposal 与 ops 归档逐字节相同，四个 id 与 Roy 原确认文件一致。前后核对原输入、日志、proposal、旧拒绝回执和 Roy 确认的 SHA 均未变。
++
++这是鉴权预检，不是生产 ACK；没有创建生产通知、写入中央登记或学习父要求。原 proposal 中 ops_forwarded/watcher_received/roy_notified 仍全为 false；旧拒绝回执保留。watcher/ops 集成后沿原通知链使用原来源绑定，各角色凭自己的实际回执执行原 `ack --source` 流程，不能将本报告或固定数据测试当送达凭证。本开发会话没有代任何角色登记。
++
++原批次退出、draft0，三个区间全跨 0、缺真实 source_experience 的结论保持原状；科学父未关闭，未正式知识发布，未续批、模拟或运行 play，未改 live/STOP、REFLEX 配置或对局规则，无行为发布编号变更。
++
++## 验证
++
++- 固定数据 Python 回归：7 项通过，含旧 5 项及 R4 独立角色链、错误身份/原文/SHA 拒绝。最终源码输出见 `manual-python-final.log`。
++- 基线反证：相同 7 项测试运行旧鉴权函数，旧 5 项保持通过，R4 正向链在原白名单处失败；见 `baseline-r4-red.log`。
++- 本次改动的 Vitest 入口 `tests/manual-notice-ack.test.ts`：1 文件、1 测试通过（内部运行上述 7 项 Python 回归），771 ms；见 `targeted-vitest.log`。
++- 沙箱脚本中的 `npx tsc -p tsconfig.json --noEmit` 已通过。
++- 脚本末尾的 `paths.test.ts` 单独以单 fork 补跑（前段失败将触发脚本 set -e），1 文件、11 测试通过；见 `paths.log`。
++- `SANDBOX_WORKERS=1 bash agent/tools/test-sandbox.sh`：tsc 通过，Vitest 原始结果 580 文件通过、6 文件失败；5216 项通过、7 项失败，退出 1，用时 1441.19 s。脚本既定排除不变，完整输出见 `sandbox.log`，不能报告全绿。
++
++完整检查发现与本补丁无关的 `v6-direction-provider.test.ts:139` 失败：缺少 W0 时预期 win/expected_win 为 null，现值为 0.5。该用例及 agent/src 均未改动。另用 `git archive a2eed3cb3 agent` 在 `.artifacts/issue-8-r4-notice-ack/baseline-source` 导出完整基线源码（共享未改动的 knowledge 与 node_modules），在基线副本单跑同文件，复现完全相同的断言差异，3 项通过、1 项失败；当前树单跑也是同样结果。分别保留 `provider-baseline.log` 与 `provider-current.log`。该方向数值问题超出 #8 运维通知兼容范围，没有改相关测试、新增排除或调整对局数值来掩盖；整套检查不能报告全绿。交 watcher/ops 评估原基线问题，本交付不集成 main/live。
++
++随后完整检查输出 `v6-projection-entries.test.ts:23` 的 1 项失败（general_win?.n 预期 20，实际 undefined），及 `v6-target-values.test.ts:18/58` 的 2 项失败（constructionCoverage.reason 预期 null，实际 insufficient_known_options）。同一份基线副本单跑这两个文件，6 项中同样 3 失败、3 通过，断言差异一致；见 `projection-baseline.log`。至此三文件四失败均已在未修改基线上复现。
++
++另外三项复核：
++
++- `component-usage.test.ts` 缺少工作树 `data/logdb-venv/bin/python`，`legacy-refresh-incremental.test.ts` 的系统 Python 缺 duckdb。仅在忽略的 data 目录链接本仓库已有 LogDB venv，没有安装依赖或修改其内容，再运行两个原测试文件：2 文件、5 项通过，见 `component-legacy-restored-venv.log`；药水 Python 用例单独使用该 venv 也通过，见 `potion-venv.log`。
++- `ordinary-close-isolation.test.ts` 原运行在 15 秒子进程限时被终止（status=null）；未改代码或限时，单文件重跑 1 项通过，测试耗时 14.51 s，见 `ordinary-isolated.log`。原失败仍留在 `sandbox.log`。
++
++定向复核后剩余阻塞是上述四项基线方向/projection 断言，不是本次通知代码引入；未重新跑整套并宣称全绿。原检查与重跑分文件保留。交付暂存区完整补丁（含报告和原始输出）经 gitleaks 扫描退出 0，无泄漏。原始测试日志保留工具输出的末尾空行。
++
++## 回退
++
++对交付提交执行 `git revert <交付提交>`，恢复旧入口对 R4 的拒绝行为。保留所有历史 proposal、false flags、拒绝回执和未来各角色真实 ACK 的审计原件；代码回退不能用于回写或撤销已发生的送达事实。由 watcher/ops 沿 #8 原链集成，本工作树不合 main/live。
+diff --git a/paper/materials/20261021-issue-8-r4-notice-ack/sandbox.log b/paper/materials/20261021-issue-8-r4-notice-ack/sandbox.log
+new file mode 100644
+index 000000000..b59585e29
+--- /dev/null
++++ b/paper/materials/20261021-issue-8-r4-notice-ack/sandbox.log
+@@ -0,0 +1,180 @@
++
++ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/issue-8-r4-notice-ack/agent
++
++ ❯ tests/v6-direction-provider.test.ts (4 tests | 1 failed) 76ms
++   × carries incomplete-opening provider diagnostics into the brain without treating W0 as a loss or filtering samples 18ms
++{"fixture":"two_signed_card_pick_contrasts","prompt_bytes":7844,"sent_entries":2}
++ ❯ tests/v6-projection-entries.test.ts (2 tests | 1 failed) 42ms
++   × hands actual combination rows to W4 without cloning a direction maximum into each combo 28ms
++ ❯ tests/v6-target-values.test.ts (4 tests | 2 failed) 44ms
++   × counts low probabilities as bounded known values without inventing W or PW 13ms
++   × retains deterministic P bounds after the combat deadline instead of erasing the table 1ms
++ ❯ tests/legacy-refresh-incremental.test.ts (4 tests | 1 failed) 1668ms
++   × keeps cached statistics equivalent to full fixed evidence: python3 knowledge/builders/test_potion_incremental.py 170ms
++ ❯ tests/ordinary-close-isolation.test.ts (1 test | 1 failed) 15108ms
++   × isolates failed candidates and revalidates preserved preflight failures before one dataset commit 15106ms
++ ❯ tests/component-usage.test.ts (1 test | 1 failed) 72ms
++   × syncs component logs, derives counter deltas and refreshes paper costs on fixed fixtures 70ms
++
++⎯⎯⎯⎯⎯⎯⎯ Failed Tests 7 ⎯⎯⎯⎯⎯⎯⎯
++
++ FAIL  tests/component-usage.test.ts > syncs component logs, derives counter deltas and refreshes paper costs on fixed fixtures
++AssertionError: nice: ../data/logdb-venv/bin/python: No such file or directory (os error 2)
++: expected 127 to be +0 // Object.is equality
++
++- Expected
+++ Received
++
++- 0
+++ 127
++
++ ❯ tests/component-usage.test.ts:14:38
++     12|     child.on("close", (code) => resolve({ code, output }));
++     13|   });
++     14|   expect(result.code, result.output).toBe(0);
++       |                                      ^
++     15|   expect(result.output).toContain("Ran 9 tests");
++     16| }, 20_000);
++
++⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/7]⎯
++
++ FAIL  tests/legacy-refresh-incremental.test.ts > keeps cached statistics equivalent to full fixed evidence: python3 knowledge/builders/test_potion_incremental.py
++AssertionError: Traceback (most recent call last):
++  File "/home/dw/Projects/agent-sts2/.worktrees/issue-8-r4-notice-ack/knowledge/builders/test_potion_incremental.py", line 14, in <module>
++    import duckdb
++ModuleNotFoundError: No module named 'duckdb'
++: expected 1 to be +0 // Object.is equality
++
++- Expected
+++ Received
++
++- 0
+++ 1
++
++ ❯ tests/legacy-refresh-incremental.test.ts:26:38
++     24|     child.on("close", (code) => resolve({ code, output }));
++     25|   });
++     26|   expect(result.code, result.output).toBe(0);
++       |                                      ^
++     27|   expect(result.output).toContain(`Ran ${count} test`);
++     28| }, 45_000);
++
++⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/7]⎯
++
++ FAIL  tests/ordinary-close-isolation.test.ts > isolates failed candidates and revalidates preserved preflight failures before one dataset commit
++AssertionError: fatal: bad object 0000000000000000000000000000000000000000
++fatal: bad object 0000000000000000000000000000000000000000
++...: expected null to be +0 // Object.is equality
++
++- Expected:
++0
++
+++ Received:
++null
++
++ ❯ tests/ordinary-close-isolation.test.ts:14:56
++     12|     encoding: "utf8", timeout: 15_000,
++     13|   });
++     14|   expect(result.status, result.stdout + result.stderr).toBe(0);
++       |                                                        ^
++     15|   expect(result.stderr).toContain("Ran 6 tests");
++     16|   expect(result.stderr).toContain("OK");
++
++⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/7]⎯
++
++ FAIL  tests/v6-direction-provider.test.ts > carries incomplete-opening provider diagnostics into the brain without treating W0 as a loss or filtering samples
++AssertionError: expected { Object (schema, option_id, ...) } to match object { win: null, …(3) }
++(40 matching properties omitted from actual)
++
++- Expected
+++ Received
++
++@@ -1,8 +1,12 @@
++  {
++-   "expected_win": null,
++-   "win": null,
+++   "expected_win": 0.5,
+++   "win": {
+++     "n": 100,
+++     "se": 0,
+++     "value": 0.5,
+++   },
++    "win_complete": {
++      "n": 100,
++      "se": 0,
++      "value": 1,
++    },
++
++ ❯ tests/v6-direction-provider.test.ts:139:33
++    137|   });
++    138|   // The retained legacy mixture needs W0 when P<1; P*Wk=.5 would sile…
++    139|   expect(evaluation.entries[0]).toMatchObject({ win: null, win_complet…
++       |                                 ^
++    140|   expect(JSON.stringify(task)).not.toMatch(/"(?:expected_win|win_incom…
++    141|   expect(evaluation.projectionReasons![0]!.reasons).toContain("unknown…
++
++⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/7]⎯
++
++ FAIL  tests/v6-projection-entries.test.ts > hands actual combination rows to W4 without cloning a direction maximum into each combo
++AssertionError: expected undefined to be 20 // Object.is equality
++
++- Expected:
++20
++
+++ Received:
++undefined
++
++ ❯ tests/v6-projection-entries.test.ts:23:30
++     21|   expect(row.entry.availability).toEqual({ take: .75, skip: .5 });
++     22|   expect(row.completed_win).toEqual({ value: 1, se: 0, n: r.config.sam…
++     23|   expect(row.general_win?.n).toBe(r.config.samples_pick);
++       |                              ^
++     24|   expect(row.general_win?.value).toBeCloseTo(.25, 14);
++     25|   expect(r.weights).toEqual({ D: 1 }); expect(table.targets.map(t => t…
++
++⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/7]⎯
++
++ FAIL  tests/v6-target-values.test.ts > counts low probabilities as bounded known values without inventing W or PW
++AssertionError: expected 'insufficient_known_options' to be null
++
++- Expected:
++null
++
+++ Received:
++"insufficient_known_options"
++
++ ❯ tests/v6-target-values.test.ts:18:64
++     16|     expect(currentBossKnown(table, row.entry.option_id)).toBe(true);
++     17|   }
++     18|   expect(constructionCoverage(["take", "skip"], table).reason).toBeNul…
++       |                                                                ^
++     19|   expect(validateProjectionEntries(table.combinations.map(r => r.entry…
++     20|   expect(targetValueSummaries(table, "take")[0]).toMatchObject({ P: .0…
++
++⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/7]⎯
++
++ FAIL  tests/v6-target-values.test.ts > retains deterministic P bounds after the combat deadline instead of erasing the table
++AssertionError: expected 'insufficient_known_options' to be null
++
++- Expected:
++null
++
+++ Received:
++"insufficient_known_options"
++
++ ❯ tests/v6-target-values.test.ts:58:64
++     56|   const table = await engine.evaluate(r);
++     57|   expect(table.combinations).toHaveLength(2);
++     58|   expect(constructionCoverage(["skip", "take"], table).reason).toBeNul…
++       |                                                                ^
++     59| });
++     60|
++
++⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[7/7]⎯
++
++
++ Test Files  6 failed | 580 passed (586)
++      Tests  7 failed | 5216 passed (5223)
++   Start at  11:02:17
++   Duration  1441.19s (transform 19.94s, setup 42.42s, import 134.87s, tests 1158.08s, environment 83ms)
++
+diff --git a/paper/materials/20261021-issue-8-r4-notice-ack/targeted-vitest.log b/paper/materials/20261021-issue-8-r4-notice-ack/targeted-vitest.log
+new file mode 100644
+index 000000000..2384351c9
+--- /dev/null
++++ b/paper/materials/20261021-issue-8-r4-notice-ack/targeted-vitest.log
+@@ -0,0 +1,9 @@
++
++ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/issue-8-r4-notice-ack/agent
++
++
++ Test Files  1 passed (1)
++      Tests  1 passed (1)
++   Start at  11:10:25
++   Duration  771ms (transform 263ms, setup 320ms, import 8ms, tests 289ms, environment 0ms)
++
+diff --git a/paper/materials/decision-log.md b/paper/materials/decision-log.md
+index c41c84a76..6c703e19e 100644
+--- a/paper/materials/decision-log.md
++++ b/paper/materials/decision-log.md
+@@ -5555,3 +5555,5 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
+ - 2026-10-21T11:28:39+08:00 ops：#13/#14按原学习闭环各独立一次并行派发，实际gpt-6.1-sol/high/原沙箱与新线程核同，单次各4进程nice19/计算单worker；不改正式知识/live，不关闭父。回执 paper/materials/20261021-issues-13-14-ops/receipt.json。
+ 
+ - 2026-10-21T11:33:35+08:00 ops：#18原retention plan与全量逐树/体积计划完成，275顶层/141.20GiB、0可直接回收/219保留/56待补证；315登记含60嵌套不重加。已发[ops] issue短评并review，watcher核对前不执行apply；原件 paper/materials/20261021-worktree-backlog/receipt.json。
++
++- 2026-10-21T11:27:31+08:00 [dev #8] 原 R4 manual notice 兼容：补 task 白名单及原 bootstrap 路径/身份校验，完整 proposal SHA 绑定四 question id；实际原件只读鉴权通过，旧 false flags/拒绝回执不改、无生产角色 ACK/新科学父。tsc、Python7、相关 Vitest 与 paths 通过；原沙箱 580 文件/5216 项通过、6 文件/7 项失败，其中四方向断言在 a2eed3cb3 基线复现，另三项 venv/超时定向复核通过，未称全绿。交 watcher/ops 沿 #8 review/原链集成，未合 main/live、未动 STOP/REFLEX、未 play。原件 paper/materials/20261021-issue-8-r4-notice-ack/。

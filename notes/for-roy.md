@@ -4051,3 +4051,5 @@ W4拿牌v2正式3ef4/11a80已核：14源Git/SHA、318清单项加manifest共319�
 ]
 
 原文 learner/runs/20261021-104418-def3aea5-81a4-47a6-85d4-5dd8fb129249-issue-4-elite-calibration-task/disagreements.json SHA256 012008f5419fb0411d3682762626ce546478a3bdaf4563aae0041a7e275f61e3；完整报告与三notice对应见 paper/materials/20261021-issue4-terminal-ops/。新研究任务未获原manual ACK白名单支持，CLI角色登记另记结果；实际watcher读取及Roy可见转达仍pending，不代填角色ACK。
+
+- 2026-10-21T11:51:00+08:00 #4三项原科学异议已由原watcher实际读回并向Roy可见转达，评论6307510995/原材料已核；此为转达状态核收，不等Roy亲自认可或科学父/知识发布完成。三notice已有调度器ops_forwarded实际回执；原research CLI身份兼容与watcher/roy阶段登记仍pending，不重复原文或代ACK。#8只支持原R4的候选仍受#19四项基线断言阻塞，隔离暂存未合main/live，不能当作#4兼容已生效。原件 paper/materials/20261021-1144-ops/receipt.json。

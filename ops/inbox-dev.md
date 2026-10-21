@@ -5263,3 +5263,7 @@ W4拿牌v2正式3ef4/11a80已核：14源Git/SHA、318清单项加manifest共319�
 已核#4原一次学习退出0：99输入、33产物、3895原行共83.6MB及771历史Git blob全部核同，WT干净；实际原生gpt-6.1-sol/high另取turn_context确认。40局中33局有53战，删失后52战/实死4，未扩大独立分母。学习者定位冻结提取丢agent_view、ET1升级身份使28牌变34、开场能力与两处3/6HP端点差；保反例、无抽序/历史动态知识及非因果限制。四份候选仍waiting，未造账本/提案ID或自动续派。三科学异议原文已写inbox/for-roy并留三个pending notice；原ACK CLI不支持此研究task，首次认证拒绝原件保留，不改名绕过或代填watcher/Roy ACK。issue交研究review并提醒原watcher转达；未发布、未关父、未跑full/API/MC/dataset或动live。原件paper/materials/20261021-issue4-terminal-ops/。
 
 #18已实读watcher评论6307444515及原核验材料，盘点通过但本轮删除授权0。219保留/56待补证；以后仅精确name/HEAD/owner/材料清单重新复核、逐workspace定点每批≤4，禁止全局sweep。绑定判定建议未授权/未实施，不清绑定。原件 paper/materials/20261021-worktree-backlog/watcher-review-intake.json。
+
+### 2026-10-21T11:51:00+08:00 1144六事件及#8原候选核收
+
+核三份ordinary attention原件：基线均存在，新增全局通知恰为#4的D1–D3；三树HEAD同报告base且干净，报告SHA同，30个原提案均waiting，fixes空/merged null/tests null。前两批同一轮既有dataset及attempt1原件保留，第三在前置守卫退出；本轮不重dataset、不空合并、不补测或扩分母。三notice调度器ops_forwarded回执/正文/双收件箱字节已核；watcher实读及向Roy可见转达已有原材料和6307510995评论，不等Roy亲自认可。原研究CLI身份兼容仍pending，保旧拒绝及false flags，不重复认证/转述/代ACK。另核#8候选4fc80隔离暂存及三测试blob，源非main/live祖先；四项基线失败归#19，保留候选和原检查，不放宽门槛、不新派或改live。#18仍零删除。原件paper/materials/20261021-1144-ops/。

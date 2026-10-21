@@ -1,0 +1,93 @@
+{
+  "at": "2026-10-21T11:48:55+08:00",
+  "source": "4fc80c385c6f685dcd426087100eb08104faa705",
+  "changed_paths": [
+    "agent/tests/manual-notice-ack.test.ts",
+    "docs/learning-requests.md",
+    "ops/learning_requests.py",
+    "ops/tests/test_manual_notice_ack.py",
+    "paper/materials/20261021-issue-8-r4-notice-ack/baseline-r4-red.log",
+    "paper/materials/20261021-issue-8-r4-notice-ack/component-legacy-restored-venv.log",
+    "paper/materials/20261021-issue-8-r4-notice-ack/manual-python-final.log",
+    "paper/materials/20261021-issue-8-r4-notice-ack/ordinary-isolated.log",
+    "paper/materials/20261021-issue-8-r4-notice-ack/original-authentication-preflight.json",
+    "paper/materials/20261021-issue-8-r4-notice-ack/paths.log",
+    "paper/materials/20261021-issue-8-r4-notice-ack/potion-venv.log",
+    "paper/materials/20261021-issue-8-r4-notice-ack/projection-baseline.log",
+    "paper/materials/20261021-issue-8-r4-notice-ack/provider-baseline.log",
+    "paper/materials/20261021-issue-8-r4-notice-ack/provider-current.log",
+    "paper/materials/20261021-issue-8-r4-notice-ack/report.md",
+    "paper/materials/20261021-issue-8-r4-notice-ack/sandbox.log",
+    "paper/materials/20261021-issue-8-r4-notice-ack/targeted-vitest.log",
+    "paper/materials/decision-log.md"
+  ],
+  "source_main_live_ancestry_exit": {
+    "main": 1,
+    "live": 1
+  },
+  "test_blobs_independently_matched": [
+    {
+      "path": "agent/tests/v6-direction-provider.test.ts",
+      "blobs": {
+        "dev": "145f16b80b4aeb41e18c0d26a103d22f665a4101",
+        "source": "145f16b80b4aeb41e18c0d26a103d22f665a4101",
+        "integration": "145f16b80b4aeb41e18c0d26a103d22f665a4101",
+        "main": "145f16b80b4aeb41e18c0d26a103d22f665a4101"
+      }
+    },
+    {
+      "path": "agent/tests/v6-projection-entries.test.ts",
+      "blobs": {
+        "dev": "3a100c5e080afba4d4ccb953c333bff1563402cd",
+        "source": "3a100c5e080afba4d4ccb953c333bff1563402cd",
+        "integration": "3a100c5e080afba4d4ccb953c333bff1563402cd",
+        "main": "3a100c5e080afba4d4ccb953c333bff1563402cd"
+      }
+    },
+    {
+      "path": "agent/tests/v6-target-values.test.ts",
+      "blobs": {
+        "dev": "139b89db3e548326e8352b5a46d239f23effce5d",
+        "source": "139b89db3e548326e8352b5a46d239f23effce5d",
+        "integration": "139b89db3e548326e8352b5a46d239f23effce5d",
+        "main": "139b89db3e548326e8352b5a46d239f23effce5d"
+      }
+    }
+  ],
+  "candidate_patch_sha256": "8046fd6d3ba98b93c70182ff1aa50e4e450af1ab45fe6671e0d6e10f27b2bd03",
+  "integration_worktree": "/home/dw/Projects/agent-sts2/.worktrees/issue-8-watcher-integration-20261021",
+  "actual_integration_HEAD": "49d95791812fc35ea1206c510869e9842b740ae2",
+  "CHERRY_PICK_HEAD": "4fc80c385c6f685dcd426087100eb08104faa705",
+  "staged_paths": [
+    "agent/tests/manual-notice-ack.test.ts",
+    "docs/learning-requests.md",
+    "ops/learning_requests.py",
+    "ops/tests/test_manual_notice_ack.py",
+    "paper/materials/20261021-issue-8-r4-notice-ack/baseline-r4-red.log",
+    "paper/materials/20261021-issue-8-r4-notice-ack/component-legacy-restored-venv.log",
+    "paper/materials/20261021-issue-8-r4-notice-ack/manual-python-final.log",
+    "paper/materials/20261021-issue-8-r4-notice-ack/ordinary-isolated.log",
+    "paper/materials/20261021-issue-8-r4-notice-ack/original-authentication-preflight.json",
+    "paper/materials/20261021-issue-8-r4-notice-ack/paths.log",
+    "paper/materials/20261021-issue-8-r4-notice-ack/potion-venv.log",
+    "paper/materials/20261021-issue-8-r4-notice-ack/projection-baseline.log",
+    "paper/materials/20261021-issue-8-r4-notice-ack/provider-baseline.log",
+    "paper/materials/20261021-issue-8-r4-notice-ack/provider-current.log",
+    "paper/materials/20261021-issue-8-r4-notice-ack/report.md",
+    "paper/materials/20261021-issue-8-r4-notice-ack/sandbox.log",
+    "paper/materials/20261021-issue-8-r4-notice-ack/targeted-vitest.log",
+    "paper/materials/decision-log.md"
+  ],
+  "new_ops_test_runs": false,
+  "production_ack": false,
+  "watcher_result_attributed": {
+    "tsc": 0,
+    "vitest": 1,
+    "passed": 19,
+    "failed": 4,
+    "blocker_issue": 19
+  },
+  "gate": "hold candidate; no main/live merge until required checks pass; four baseline failures separate in #19",
+  "issue4_research_task_supported_by_candidate": false,
+  "candidate_changed_by_ops": false
+}
