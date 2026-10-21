@@ -1,0 +1,1 @@
+通关：0CLP16ZR4ZZC（静默猎手，A10，第 49 层，结束于 2026-10-21T09:15:04.472Z）。实际脑来源=unknown；Codex战绩纳入=False；排除原因=unresolved_brain_questions（codex-successful-brain-v1，全部原始成绩/复盘/成本保留）。调度器已把 run id 写进 ops/win-notified。按「汇报规则 1」查清第一次尝试赢还是 SL 后赢、用时、下一局打第几级，写进 ops/inbox-dev.md。

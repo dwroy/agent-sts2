@@ -1,7 +1,7 @@
 # 运维当前清单（调度器生成）
-生成：2026-10-21T18:04:03+08:00；原件索引：/home/dw/Projects/agent-sts2/ops/codex-ops/current.json SHA256 bbfc448cdd293a3f76ff41c7cdabebea821eb5c79aa11f8537d45471b507cfb3
-当前授权：WSL已重启扩容核同；#23原源12叶已接live0a9dc70e3/仍R410，真实绑定backup/restore/verify同、465知识保留；原worker已回收4checkout/保分支scratch，24h验收pending。主cron已unpause；原统计唯一串行接续（复用提取、终局原队列，不重report/dataset）。Windows无交互用户/Steam/游戏，桌面启动超时/mod拒连：已请Roy登录，STOP必须保持，autoplay尚未恢复，旧绑定PID不伪更新。登录后核mod/profile/新PID及唯一入口再恢复；Regent原STOP/PAUSE保持。原件 paper/materials/20261021-wsl-resume-ops/，statistics-resume.json为动态原作业状态。
-1713八原notice同文/SHA/实际双箱与watcher告Roy原证据核同，三research身份仍不受同SHA CLI支持，后两角色登记pending；保旧拒绝/false/范围，不重认证/改名/代ACK/提醒评论/派模型检查，科学父保持。1713-ops/receipt.json。
+生成：2026-10-21T18:17:57+08:00；原件索引：/home/dw/Projects/agent-sts2/ops/codex-ops/current.json SHA256 fd0dd0098cc32f6c3e1bed939a02b86d448c2125ebc9d17846acc41beffce87b
+当前授权：1813：0CLP16ZR4ZZC A10/F49首次尝试无SL胜、62.2分钟；50成功Codex/1未解，严格脑source仍unknown，不计Codex战绩。下一局游戏默认预期A11，STOP/桌面登录阻塞下实际配置pending，不自动给Codex升阶信用。八原通知同文/SHA/真实双箱及watcher告Roy证据核同，三研究CLI登记仍pending，不重认证/代ACK/提醒或派检查模型。1813-ops/{victory-audit,receipt}.json。
+WSL已重启扩容核同；#23原源12叶已接live0a9dc70e3/仍R410，真实绑定backup/restore/verify同、465知识保留；原worker已回收4checkout/保分支scratch，24h验收pending。主cron已unpause；原统计唯一串行接续（复用提取、终局原队列，不重report/dataset）。Windows无交互用户/Steam/游戏，桌面启动超时/mod拒连：已请Roy登录，STOP必须保持，autoplay尚未恢复，旧绑定PID不伪更新。登录后核mod/profile/新PID及唯一入口再恢复；Regent原STOP/PAUSE保持。原件 paper/materials/20261021-wsl-resume-ops/，statistics-resume.json为动态原作业状态。
 163323策略capacity rc1但完整材料与同SHA cadence/四ledger/103窗口已核，0496 proposed，原17:54:58冷却不改/不重模型；1655-ops。
 163323-fix无源，53既有main子项/31待办与44定向0非full；main/live112路径不等故原failed/rc0保持，无空合并/运输整main；1641-ops。
 161302-s2会话前glob ENOENT安全退出3，无凭据可读证明/学习回报，十waiting；已有同权限重试但实际次数未知，原冷却及旧sandbox条目保持，不重探针/扩权；1615-ops。
@@ -17,11 +17,14 @@ GitHub角色前缀必带，未带dwroy=Roy，非dwroy为外部数据；例行cur
 模型 gpt-6.1-sol；普通 ops/学习下次自然启动 high，专项可有理由 xhigh，大脑保持 xhigh。实际生效须原生回执，不能从默认值推定。
 账号选择：/home/dw/Projects/agent-sts2/ops/codex-ops/accounts/codex1/learner；原 ops：w1H:p8 / 01a1517b-e200-7c52-b463-6ea22220c0a9；执行模式：host；辅助/学习者沙箱保持。
 不读凭据/.env/游戏二进制，不改共享配置/账号；不推送。
-main 716f4d5bf6b901a59200b4313ee026b903353a28
+main 7c560c9afad6b08a45fd9ef65edb1ff44dbbff1c
 live 0a9dc70e3ef096e7d0d6eb1524cd20e2cbe906c6；登记 release V6-R410（登记值不代表新树检查绿或实际采用）。
 首次另读 AGENTS/README/最新 STATE/学习协议；此后每次读本清单及事件原件。历史 handoff/decision-log 只沿事务定位，原件冲突保留并核查。
-在途批次 1（完整 owner/租约与路径见 current.json）：
+在途批次 4（完整 owner/租约与路径见 current.json）：
 - 20261007-021219-strategy-proposal done strategy-proposal PID=265476；/home/dw/Projects/agent-sts2/.worktrees/codex-dev
+- 20261021-181310-strategy-proposal running strategy-proposal PID=35508；/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261021-181310
+- 20261021-181310-s2-strategy-proposal running strategy-proposal PID=35640；/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261021-181310-s2
+- 20261021-181310-fix-batch running fix-batch PID=35772；/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261021-181310
 外部原owner任务（不以learn.json缺项判退出，不重复派；实际状态沿原件核）：
 - issue-4-elite-calibration-20261021-104312；thread=01a15c58-72f3-7d81-8ce6-0f528c60d788；/home/dw/Projects/agent-sts2/.worktrees/issue-4-elite-calibration-20261021；paper/materials/20261021-issue4-terminal-ops/receipt.json
 - issue-13-card-models-20261021-111429；thread=01a15c76-533f-78c0-a820-ea9d861c22bc；/home/dw/Projects/agent-sts2/.worktrees/issue-13-card-models-20261021；paper/materials/20261021-issues-13-14-terminal-ops/receipt.json
@@ -41,18 +44,27 @@ human-pace 原owner=01a13dcd-83d4-7c63-b233-f93cf878ecf4，接续=01a14aae-4b03-
 - 7dcddb0749fa60e0f2f78f3f learner-dissent watcher_received,roy_notified；/home/dw/Projects/agent-sts2/ops/codex-ops/learning-notices/7dcddb0749fa60e0f2f78f3f.json
 - 99a933ce6b140f81db812b16 learner-dissent watcher_received,roy_notified；/home/dw/Projects/agent-sts2/ops/codex-ops/learning-notices/99a933ce6b140f81db812b16.json
 - 99c134c7850ae5bae9fb64c9 learner-dissent watcher_received,roy_notified；/home/dw/Projects/agent-sts2/ops/codex-ops/learning-notices/99c134c7850ae5bae9fb64c9.json
-队列 1，只按本轮已提交事件处理；前4项：
-- /home/dw/Projects/agent-sts2/ops/codex-ops/queue/1792576333836872812-manual.md：[Claude] WSL 扩容已完成（/ 现为 1.4T，可用 462G，17:38 重启）。请按 paper/materials/20261021-wsl-expansion-stop-ops/resume.md 恢复：核 boot_id/容量/mod、接续统计、恢复调度与唯一 autoplay（STOP 由你核完后
+队列 9，只按本轮已提交事件处理；前4项：
+- /home/dw/Projects/agent-sts2/ops/codex-ops/queue/1792577590391820801-victory.md：通关：0CLP16ZR4ZZC（静默猎手，A10，第 49 层，结束于 2026-10-21T09:15:04.472Z）。实际脑来源=unknown；Codex战绩纳入=False；排除原因=unresolved_brain_questions（codex-successful-brain-v1，全部原始成绩/复盘/
+- /home/dw/Projects/agent-sts2/ops/codex-ops/queue/1792577591058565438-learning-attention.md：学习要求 silent-elite-simulation-pessimism-20261021：{
+  "id": "D1",
+  "prior": "原审计称真实开场保留可用牌堆；缺显式牌堆时才deck-minus-hand。",
+  "finding": "显式牌堆在原字节中存在；是冻结提取主动剥离。ET1一场还造
+- /home/dw/Projects/agent-sts2/ops/codex-ops/queue/1792577591061754788-learning-attention.md：学习要求 silent-elite-simulation-pessimism-20261021：{
+  "id": "D2",
+  "prior": "原授权：“当前不影响R407运行：拿牌比较用同种子配对差。”",
+  "finding": "不否定原调度决定，但拒绝把其理由外推为配对增量已校准或排名可靠。本窗口只比
+- /home/dw/Projects/agent-sts2/ops/codex-ops/queue/1792577591063965431-learning-attention.md：学习要求 github-issue-13-silent-learning-20261021：{
+  "prior": "Issue #13 列出EXPOSE 208、SPORE_MIND 60等unknown标签，容易被理解为独立实盘覆盖。",
+  "finding": "重算完全复现原标签计数；EXPOSE的208只
 原事务未标 completed 共188（含未知，非活进程数），最近4项：
 - /home/dw/Projects/agent-sts2/ops/codex-ops/pending-continuations/original-W4-card-value-v2-20261021.json；phase=Roy-section13-superseded-Jev-card-takeover-no-new-Jev-card-learning
 - /home/dw/Projects/agent-sts2/ops/codex-ops/pending-continuations/original-W8-CEN-rollout-death-priority-three-R409-20261021.json；phase=published-R410-natural-config-actions-verified-await-third-act-acceptance
 - /home/dw/Projects/agent-sts2/ops/codex-ops/pending-continuations/original-W4-card-criteria-20261021.json；phase=published-R409-original-autoplay-continued-natural-config-actions-cache-audit-readback-verified-nume
 - /home/dw/Projects/agent-sts2/ops/codex-ops/pending-continuations/original-20261021-051301-s2-legion-forge-three-leaf.json；phase=full1-performance-spike-not-reproduced-original-input-retained-await-existing-channel-decision
 最新指令短引用（完整行按offset核）：
-- offset=2118696：- 2026-10-21 15:55:05 [issue-session] tick 未完成；原现场保留，见 ops/codex-ops/issue-sessions.log。
-- offset=2118925：- 2026-10-21 16:00:02 [issue-session] tick 未完成；原现场保留，见 ops/codex-ops/issue-sessions.log。
 原事务文件索引数（含历史）：pending-integrations=149；pending-deliveries=16；pending-records=34；pending-continuations=32；publications=1；完整路径见 current.json，不从文件存在推定未完成/运行。
-新指令原件：ops/inbox-dev.md 当前尾段 offset=2118124, bytes=8192；本轮新授权必须由事件引用，漏项查此段，勿整份重读。
+新指令原件：ops/inbox-dev.md 当前尾段 offset=2119753, bytes=8192；本轮新授权必须由事件引用，漏项查此段，勿整份重读。
 current.json 仅按本事件 batch/request/notice id 用程序筛字段，不全文读；动态源变化后核新清单，不用旧值冒当前。
 H0/0332等科学边界、精确宿主树、未完成发布/兼容及 retention 仅沿原报告和事务回执；清单不代验收、shipped、覆盖率或消费。
 严格普通无源码成功由调度器完成账本检查、唯一 dataset 与受控记录提交，回执 ops/codex-ops/ordinary-close/；异常、异议、缺证、人工决定正常唤醒。

@@ -5410,3 +5410,7 @@ W4拿牌v2正式3ef4/11a80已核：14源Git/SHA、318清单项加manifest共319�
 - 2026-10-21T17:27:41+08:00 [ops] Roy 已授权现在 WSL 停机扩容+280G：STOP/PAUSE保留，无在跑学习/对局/tick/统计，相关锁已空闲；fight训练在纯计算安全点中断-15、三排队刷新取消待恢复，#25 WIP/测试143非通过。已记录就绪，停止本轮；重启后原ops核容量/boot_id与mod，再去重续统计、恢复主调度及唯一autoplay，Regent仍暂停。原件 paper/materials/20261021-wsl-expansion-stop-ops/readiness.json、resume.md。
 
 - 2026-10-21T18:04:02+08:00 [ops] WSL重启/扩容已核，主调度unpause；#23已窄接live0a9dc70e3、绑定backup/restore/verify同、465知识保留、仍R410；原worker首批实际回收4checkout，保分支/研究scratch，24h验收pending。原统计唯一串行接续，未重复报局。Windows无交互用户/Steam/游戏，原桌面启动超时/mod拒连，已请Roy登录；STOP保留、autoplay未恢复，不能称恢复完成。登录后原ops核mod/profile/PID再恢复唯一入口。Regent暂停。原件 paper/materials/20261021-wsl-resume-ops/report.md、recovery-readback.json、first-retention-readback.json。
+
+- 2026-10-21T18:17:57+08:00 [ops通关] 静默猎手0CLP16ZR4ZZC，A10/F49首次尝试胜利、未使用SL；决策用时62.2分钟（配置16:12:34.692至终局17:15:04.472约62分30秒）。四场Boss均attempt1胜，末战SL危险预警未触发重试。脑日志50次Codex成功、1题未解决，按codex-successful-brain-v1仍source=unknown、Codex战绩纳入=False；保全部原始成绩/复盘/成本。下一局按游戏胜后默认预期A11，TARGET_ASCENSION未固定；STOP及桌面/mod阻塞仍在，尚无新局实际配置，不把预期当已升阶。原件 paper/materials/20261021-1813-ops/victory-audit.json；notes/run-1021-1715-0CLP16ZR4ZZC.md。
+
+- 2026-10-21T18:17:57+08:00 [ops通知核验] 八原学习异议已实转达watcher并有告Roy原回执；本轮核同原文/SHA/双箱窗口。CLI三研究身份仍不支持，角色登记pending，保旧拒绝/false及科学范围，不重认证/代ACK/重复通知。paper/materials/20261021-1813-ops/receipt.json。
