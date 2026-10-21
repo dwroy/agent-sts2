@@ -5639,3 +5639,5 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
 - 2026-10-21T18:35:41+08:00 [ops] WSL统计唯一接续5步/内部11步0，实际生产加载器读取模型/含0CLP历史/catalog，251来源SHA核同；漏斗104/100未到十局，不冒新归档或自然消费。181310策略六局80原窗口/十waiting核同，无源/合入/测试；原无改动回执与后续main快进分列，不重复dataset/检查发布。STOP/Regent暂停保持。paper/materials/20261021-1830-ops/receipt.json。
 
 - 2026-10-21T18:38:12+08:00 [ops] 181310-s2无源/合入，十waiting；811提取仅4完整审阅/807未读、113原段与冻结SHA核同，原无改动回执及收尾快进后的现场分列，不重复dataset/检查/发布或关科学父。paper/materials/20261021-1836-ops/receipt.json。
+
+- 2026-10-21T19:16:53+08:00 [ops] 八旧异议原文/来源SHA/实际双箱及watcher告Roy回执核同，三research CLI身份仍不支持、登记pending；保旧拒绝/false/科学范围，不重认证/提醒评论或新检查模型。完整旧摘要保context，短清单恢复显示。paper/materials/20261021-1915-ops/receipt.json。
