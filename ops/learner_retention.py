@@ -290,7 +290,21 @@ def admission(root, state_dir, state, batch_id, check_ignored=True):
         raise ValueError("legacy/malformed fixes report retained")
     sources = [report["commit"]] if report.get("commit") else []
     sources += [fix.get("commit") for fix in fixes]
-    if sources:
+    document_source = None
+    if (len(sources) == 1 and task in ("strategy-proposal", "fix-batch") and batch.get("state") == "done"
+            and not fixes and not report.get("merged") and ancestor(root, sources[0])):
+        import worktree_retention as workspaces
+        head = git(tree, "rev-parse", "HEAD").decode().strip()
+        parents = git(root, "rev-list", "--parents", "-n", "1", sources[0]).decode().split()
+        # A declared code publication must not be disguised as a report by an empty allocation delta.
+        if sources[0] == head and len(parents) == 2 and not any(workspaces.executable(name) for name in
+                git(root, "diff", "--name-only", parents[1], head).decode().splitlines()):
+            candidate = workspaces.source_admission(root, state_dir, tree, head)
+            if not candidate["live_required"]:
+                document_source = candidate
+    if document_source:
+        proof.update(kind="settled-report-only", no_experience_claim=True, document_source=document_source)
+    elif sources:
         check = successful_checks(batch)
         if not check or not ancestor(live, check.get("merged")) or not all(ancestor(live, s) and ancestor(root, s) for s in sources):
             raise ValueError("source not published in main/live with passing full checks")
@@ -343,11 +357,15 @@ def admission(root, state_dir, state, batch_id, check_ignored=True):
     if tree != root and not retired and tree.name not in ("exp", "exp-" + character):
         raise ValueError("unregistered or other-character worktree retained")
     if retired:
+        import worktree_retention as workspaces
+        workspaces.checked_tree(root, tree.name)
+        if workspaces.active(tree):
+            raise ValueError("active process cwd or program reference retained")
         if git(tree, "status", "--porcelain", "--untracked-files=all"):
             raise ValueError("dirty/uncommitted worktree retained")
         head = git(tree, "rev-parse", "HEAD").decode().strip()
-        if not ancestor(root, head) or not ancestor(live, head):
-            raise ValueError("unpublished worktree HEAD retained")
+        proof["source_acceptance"] = workspaces.source_admission(root, state_dir, tree, head)
+        proof["instance"] = workspaces.instance_guard(root, tree)
         caches = []
         # Other ignored files are not part of this batch's scratch. Never delete them accidentally.
         for name in (git(tree, "ls-files", "--others", "--ignored", "--exclude-standard", "-z") if check_ignored else b"").split(b"\0"):
@@ -572,6 +590,7 @@ def reclaim(root, state_dir, batch_id, apply=False, state=None):
 
 
 def sweep(root, state_dir, apply, limit):
+    limit = min(limit, 4)
     state = load(state_dir / "learn.json")
     result = {"at": stamp(), "apply": apply, "results": [], "retained": {}, "limit": limit}
     batches = sorted(state.get("batches", {}), reverse=True)

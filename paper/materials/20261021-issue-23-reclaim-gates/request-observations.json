@@ -1,0 +1,25 @@
+{
+  "schema": "issue23-request-observation-v1",
+  "at": "2026-10-21T14:14:22+08:00",
+  "apply": false,
+  "scheduler_excerpt": [
+    "2026-10-21 09:58:34 learner batch 20261021-094302-s2-strategy-proposal (TXZ6RVMQA09D,WQZVENQ7DTRP,02HB4L0C3C67,4D4J8USKCPAV,F4QKG4J1AJJZ,JLN5SK17W4FQ,LS8035TB32P3,NB8KCF6HRGVF,S9UZAK0JP0C0,SADL3CGYTGSR) exit 0",
+    "{\"state\": \"retained\", \"reason\": \"[Errno 11] Resource temporarily unavailable\"}",
+    "learner cleanup request deferred for 20261021-094302-s2-strategy-proposal; normal tick will retry"
+  ],
+  "missing_at_runtime_snapshot": [
+    "20261021-094302-s2-strategy-proposal",
+    "20261021-134302-s2-strategy-proposal"
+  ],
+  "still_missing": {
+    "20261021-094302-s2-strategy-proposal": true,
+    "20261021-134302-s2-strategy-proposal": true
+  },
+  "finish_observed": {
+    "pid": 44708,
+    "parent_pid": 4149676,
+    "batch": "20261021-134302-s2-strategy-proposal",
+    "command": "codex-ops-learn.py finish"
+  },
+  "scope": "observation only; no request synthesized or scheduler state changed"
+}
