@@ -5617,3 +5617,5 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
 - 2026-10-21T16:10:19+08:00 ops：154302主批capacity原turn.failed/草稿与十原文、冷却保留，s2 rc0十waiting无源码；25冻结对象/主批121原窗口核同，原s2 checkout回收保scratch只核回执，无新回收/模型/测试/dataset/发布或科学闭环。paper/materials/20261021-1604-ops/receipt.json。
 
 - 2026-10-21T16:15:12+08:00 ops：151301-s2无源码/十waiting，唯一dataset源检查过后遇main #23十叶漂移，原attention/未提交收尾保持；原日志、报告和输出指纹保全，不重生成器/full/合入或关科学父。paper/materials/20261021-1612-ops/receipt.json。
+
+- 2026-10-21T16:18:53+08:00 ops：1615八原通知按原文/实转达去重，三research CLI登记仍pending；161302-s2 rc3为会话前glob ENOENT预检退出，无凭据可读证明/新学习回报，旧sandbox-glob补证且冷却/权限保持，不重模型检查或改live。paper/materials/20261021-1615-ops/receipt.json。

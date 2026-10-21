@@ -1,0 +1,1 @@
+strategy-proposal 批次 20261021-161302-s2-strategy-proposal 结束：exit 3；已核实合入 live：无。回报：/home/dw/Projects/agent-sts2/ops/codex-ops/learner/20261021-161302-s2-strategy-proposal.out。未取得可验收完成回报，先查原 stderr：/home/dw/Projects/agent-sts2/ops/codex-ops/learner/20261021-161302-s2-strategy-proposal.err；保留失败原件，不把启动或中断失败当作提案缺失。
