@@ -1,0 +1,52 @@
+{
+  "request": "original-W8-CEN-four-leaf-Ironclad-contract-repaired-exact-R409-joint-20261021",
+  "state": "running",
+  "started_at": "2026-10-21T09:51:01.224672+08:00",
+  "runner_pid": 3288401,
+  "runner_start_ticks": "143939276",
+  "nice": 19,
+  "worktree": "/home/dw/Projects/agent-sts2/.worktrees/ops-cen-rollout-r409-joint-20261021",
+  "actual_live_base": "cf4aff4ceebd958ad70b1512cc886c45bd8092aa",
+  "allocation_base": "cf4aff4ceebd958ad70b1512cc886c45bd8092aa",
+  "staged_tree": "dd954fc7ef9f9a0a84b379a2d1808895441d3b83",
+  "source_count": 4,
+  "knowledge_count": 498,
+  "input_count": 2395,
+  "input_sha256": "7d864f84659b632d34a7bebd2eb02deb21cfc5a848ff3a974da5c62cad5e1ae5",
+  "steps": [
+    {
+      "name": "tsc",
+      "command": [
+        "npx",
+        "tsc",
+        "-p",
+        "tsconfig.json",
+        "--noEmit"
+      ],
+      "started_at": "2026-10-21T09:51:01.225608+08:00",
+      "log": "/home/dw/Projects/agent-sts2/.artifacts/ops-CEN-ironclad-repaired-R409-joint-20261021/tsc.log",
+      "pid": 3288511,
+      "exit_code": 0,
+      "ended_at": "2026-10-21T09:51:03.214846+08:00",
+      "seconds": 1.9892514389939606,
+      "log_bytes": 0,
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "full",
+      "command": [
+        "node",
+        "tools/with-temp.mjs",
+        "node_modules/vitest/vitest.mjs",
+        "run",
+        "--maxWorkers=1"
+      ],
+      "started_at": "2026-10-21T09:51:03.215323+08:00",
+      "log": "/home/dw/Projects/agent-sts2/.artifacts/ops-CEN-ironclad-repaired-R409-joint-20261021/full.log",
+      "pid": 3288752
+    }
+  ],
+  "held_original_lock": "ops/live-merge.lock",
+  "window_preflight_other_vitest_PIDs": [],
+  "no_actual_live_or_active_actor_change": true
+}
