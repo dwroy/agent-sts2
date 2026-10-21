@@ -1,0 +1,1 @@
+[ops] 已沿原精英偏差问题派发一次独立沙箱学习批次 issue-4-elite-calibration-20261021-104312，原生新线程已核；研究仅核冻结对局证据与提出校准/修正方案，保留反例、未知和按局分母，不改源码/知识/live，不新增模拟或模型请求。完成后按原学习闭环登记提案、发布和消费者读回；本次派发不代表研究或收益验收完成。回执：notes/issue-4-elite-calibration-dispatch.json；输入与授权：paper/materials/20261021-github-issues-ops/。

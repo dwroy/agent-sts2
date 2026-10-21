@@ -1,0 +1,1 @@
+[ops] 当前仍未达到发布条件：旧联合检查失败保留，P4 正式 29 生产叶及测试隔离候选已收，但原 014301 依赖尚未齐备，且 builder 与拿牌 v2 同叶须协调；原八局刷新记录不能证明 P4 已上线或没有等待锁。按实际状态标记 blocked，依赖齐后再沿单点窗口冻结最新 live/知识联合验收。回执索引：paper/materials/20261021-github-issues-ops/receipt.json（原 P4 回执见 notes/ops-current.md）。

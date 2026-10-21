@@ -1,0 +1,157 @@
+{
+  "at": "2026-10-21T10:51:58+08:00",
+  "config_ref": {
+    "path": "logs/run-config.jsonl",
+    "offset": 2373205,
+    "bytes": 6031,
+    "sha256": "1022c4fa74770828b4f5aae9daf59bb33a3134408f9e5111ff5fc9e44ee971ed"
+  },
+  "config": {
+    "ts": "2026-10-21T02:45:08.816Z",
+    "process": {
+      "pid": 3439280,
+      "started": "2026-10-21T02:45:05.673Z"
+    },
+    "character": "SILENT",
+    "ascension": 10,
+    "v6": {
+      "schema": "v6-config-v1",
+      "mode": "on",
+      "deciders": {
+        "card": "brain",
+        "potion": "brain",
+        "shop": "brain",
+        "rest": "brain"
+      },
+      "reflex": "off",
+      "direction_replan": "off",
+      "admission": "interfaces_only",
+      "delivered": false,
+      "samples_pick": 20,
+      "samples_act": 100,
+      "min_known_option_ratio": 0.5,
+      "direction_min_weight": 0.1,
+      "win": {
+        "certain_win": 0.95,
+        "favored": 0.7,
+        "even": 0.3,
+        "unfavored": 0.05
+      },
+      "delta": {
+        "much_se": 2,
+        "better_se": 1,
+        "much_min": 0.05
+      },
+      "triggers": {
+        "t1_core_min": 0,
+        "t2_se": 2,
+        "t2_min_delta": 1,
+        "t2_consecutive": 2,
+        "t3_weight_max": 0,
+        "t5_hazard": "existing_route_projection",
+        "t6_unknown_max": 1,
+        "t6_fallbacks": 100,
+        "t7_checkpoint": "validated_brain_answer"
+      },
+      "budgets": {
+        "brain_soft_cap": 15,
+        "brain_ms": 90000,
+        "act_ms": 60000,
+        "pick_ms": 5000,
+        "jev_ms": 5000
+      },
+      "invalid": []
+    },
+    "human_pace": {
+      "schema": "human-pace-h1-v1",
+      "budgets": {
+        "ordinary": 10000,
+        "elite": 15000,
+        "boss": 60000,
+        "retry": 10000,
+        "routine": 5000,
+        "brain": 90000,
+        "direction": 60000
+      },
+      "model_effort": "xhigh",
+      "required_full_replaced": true
+    },
+    "code": {
+      "commit": null,
+      "code": null,
+      "dirty": null,
+      "dirty_files": [],
+      "branch": null,
+      "worktree": "live",
+      "error": "git status failed: spawnSync git ENOBUFS"
+    }
+  },
+  "actions": [
+    {
+      "ref": {
+        "path": "logs/decisions.jsonl",
+        "offset": 3248459202,
+        "bytes": 203584,
+        "sha256": "1823c43300cf5e24caa596d1e5527a944429000f5771226ae7fe9d60fb8bb969"
+      },
+      "run_id": "TS0BHDLAH8ME",
+      "decision_id": "f8ee512b-4050-4121-a12e-5fbe25bdc587",
+      "ts": "2026-10-21T02:45:28.640Z",
+      "floor": 1,
+      "turn": null,
+      "mode": "play",
+      "screen": "EVENT",
+      "chosen": {
+        "action": "choose_event_option",
+        "option_index": 0
+      },
+      "result": "completed: Action completed.",
+      "decider": "codex",
+      "fallback": false
+    },
+    {
+      "ref": {
+        "path": "logs/decisions.jsonl",
+        "offset": 3248662786,
+        "bytes": 2038,
+        "sha256": "250499d8932a68bc3ce040e9eed7250e8d49dc5c724f9366e114d11a6385e7d7"
+      },
+      "run_id": "TS0BHDLAH8ME",
+      "decision_id": "94b6bd69-12a0-49d7-af95-3987ca8b3727",
+      "ts": "2026-10-21T02:45:29.053Z",
+      "floor": 1,
+      "turn": null,
+      "mode": "play",
+      "screen": "EVENT",
+      "chosen": {
+        "action": "choose_event_option",
+        "option_index": 0
+      },
+      "result": "completed: Event proceeded.",
+      "decider": "code",
+      "fallback": false
+    },
+    {
+      "ref": {
+        "path": "logs/decisions.jsonl",
+        "offset": 3248678766,
+        "bytes": 31779,
+        "sha256": "0090631e2781d838fff0c5c701ee6edcec43668553ec82f58a8c59002459f2f1"
+      },
+      "run_id": "TS0BHDLAH8ME",
+      "decision_id": "7057ace6-f30b-416c-85b3-818349770aa6",
+      "ts": "2026-10-21T02:46:11.281Z",
+      "floor": 2,
+      "turn": 1,
+      "mode": "play",
+      "screen": "COMBAT",
+      "chosen": {
+        "action": "play_card",
+        "card_index": 0
+      },
+      "result": "completed: Action completed.",
+      "decider": "jev",
+      "fallback": false
+    }
+  ]
+}

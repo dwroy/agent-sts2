@@ -1,0 +1,225 @@
+{
+  "at": "2026-10-21T10:51:58+08:00",
+  "release_id": "V6-R410",
+  "result_ref": "paper/materials/20261021-1015-ops/result.json",
+  "publication_reused_and_verified": "paper/materials/20261021-github-issues-ops/issue-2-publication-readback.json",
+  "actual_live_git_independent": "5a295bb5ed52f0c0fa5e8c045dcfcba3d894b532",
+  "source_four_sha_verified": true,
+  "prior_run": "GWE810ZD014M",
+  "new_run": "TS0BHDLAH8ME",
+  "new_config_ref": {
+    "path": "logs/run-config.jsonl",
+    "offset": 2373205,
+    "bytes": 6031,
+    "sha256": "1022c4fa74770828b4f5aae9daf59bb33a3134408f9e5111ff5fc9e44ee971ed"
+  },
+  "new_config": {
+    "ts": "2026-10-21T02:45:08.816Z",
+    "process": {
+      "pid": 3439280,
+      "started": "2026-10-21T02:45:05.673Z"
+    },
+    "character": "SILENT",
+    "ascension": 10,
+    "v6": {
+      "schema": "v6-config-v1",
+      "mode": "on",
+      "deciders": {
+        "card": "brain",
+        "potion": "brain",
+        "shop": "brain",
+        "rest": "brain"
+      },
+      "reflex": "off",
+      "direction_replan": "off",
+      "admission": "interfaces_only",
+      "delivered": false,
+      "samples_pick": 20,
+      "samples_act": 100,
+      "min_known_option_ratio": 0.5,
+      "direction_min_weight": 0.1,
+      "win": {
+        "certain_win": 0.95,
+        "favored": 0.7,
+        "even": 0.3,
+        "unfavored": 0.05
+      },
+      "delta": {
+        "much_se": 2,
+        "better_se": 1,
+        "much_min": 0.05
+      },
+      "triggers": {
+        "t1_core_min": 0,
+        "t2_se": 2,
+        "t2_min_delta": 1,
+        "t2_consecutive": 2,
+        "t3_weight_max": 0,
+        "t5_hazard": "existing_route_projection",
+        "t6_unknown_max": 1,
+        "t6_fallbacks": 100,
+        "t7_checkpoint": "validated_brain_answer"
+      },
+      "budgets": {
+        "brain_soft_cap": 15,
+        "brain_ms": 90000,
+        "act_ms": 60000,
+        "pick_ms": 5000,
+        "jev_ms": 5000
+      },
+      "invalid": []
+    },
+    "human_pace": {
+      "schema": "human-pace-h1-v1",
+      "budgets": {
+        "ordinary": 10000,
+        "elite": 15000,
+        "boss": 60000,
+        "retry": 10000,
+        "routine": 5000,
+        "brain": 90000,
+        "direction": 60000
+      },
+      "model_effort": "xhigh",
+      "required_full_replaced": true
+    },
+    "code": {
+      "commit": null,
+      "code": null,
+      "dirty": null,
+      "dirty_files": [],
+      "branch": null,
+      "worktree": "live",
+      "error": "git status failed: spawnSync git ENOBUFS"
+    }
+  },
+  "actions": [
+    {
+      "ref": {
+        "path": "logs/decisions.jsonl",
+        "offset": 3248459202,
+        "bytes": 203584,
+        "sha256": "1823c43300cf5e24caa596d1e5527a944429000f5771226ae7fe9d60fb8bb969"
+      },
+      "run_id": "TS0BHDLAH8ME",
+      "decision_id": "f8ee512b-4050-4121-a12e-5fbe25bdc587",
+      "ts": "2026-10-21T02:45:28.640Z",
+      "floor": 1,
+      "turn": null,
+      "mode": "play",
+      "screen": "EVENT",
+      "chosen": {
+        "action": "choose_event_option",
+        "option_index": 0
+      },
+      "result": "completed: Action completed.",
+      "decider": "codex",
+      "fallback": false
+    },
+    {
+      "ref": {
+        "path": "logs/decisions.jsonl",
+        "offset": 3248662786,
+        "bytes": 2038,
+        "sha256": "250499d8932a68bc3ce040e9eed7250e8d49dc5c724f9366e114d11a6385e7d7"
+      },
+      "run_id": "TS0BHDLAH8ME",
+      "decision_id": "94b6bd69-12a0-49d7-af95-3987ca8b3727",
+      "ts": "2026-10-21T02:45:29.053Z",
+      "floor": 1,
+      "turn": null,
+      "mode": "play",
+      "screen": "EVENT",
+      "chosen": {
+        "action": "choose_event_option",
+        "option_index": 0
+      },
+      "result": "completed: Event proceeded.",
+      "decider": "code",
+      "fallback": false
+    },
+    {
+      "ref": {
+        "path": "logs/decisions.jsonl",
+        "offset": 3248678766,
+        "bytes": 31779,
+        "sha256": "0090631e2781d838fff0c5c701ee6edcec43668553ec82f58a8c59002459f2f1"
+      },
+      "run_id": "TS0BHDLAH8ME",
+      "decision_id": "7057ace6-f30b-416c-85b3-818349770aa6",
+      "ts": "2026-10-21T02:46:11.281Z",
+      "floor": 2,
+      "turn": 1,
+      "mode": "play",
+      "screen": "COMBAT",
+      "chosen": {
+        "action": "play_card",
+        "card_index": 0
+      },
+      "result": "completed: Action completed.",
+      "decider": "jev",
+      "fallback": false
+    }
+  ],
+  "owned_process_snapshot": [
+    {
+      "pid": 2283493,
+      "state": "S",
+      "start_ticks": "142004584",
+      "cwd": "/home/dw/Projects/agent-sts2"
+    },
+    {
+      "pid": 3439280,
+      "state": "S",
+      "start_ticks": "144263453",
+      "cwd": "/home/dw/Projects/agent-sts2/.worktrees/live/agent"
+    }
+  ],
+  "STOP_present": false,
+  "dual_notice_exact_sha_once": [
+    {
+      "path": "ops/inbox-dev.md",
+      "working_offset": 2072863,
+      "head_offset": 2009774,
+      "bytes": 1023,
+      "sha256": "92d70cb9ced8a89065e7763fb96ba6ec3a39de67aa12c9548381d7855bc1c711",
+      "committed_once": true,
+      "role_ACK": false
+    },
+    {
+      "path": "notes/for-roy.md",
+      "working_offset": 1663600,
+      "head_offset": 1612182,
+      "bytes": 1023,
+      "sha256": "92d70cb9ced8a89065e7763fb96ba6ec3a39de67aa12c9548381d7855bc1c711",
+      "committed_once": true,
+      "role_ACK": false
+    }
+  ],
+  "bounded_decision_snapshot": {
+    "limit_bytes": 2400000,
+    "matching_rows": 93,
+    "latest_observed_floor": 8,
+    "not_full_run_audit": true
+  },
+  "known_git_ENOBUFS": "original empty code/commit fields retained; independent live Git/source check is separate, no log rewrite",
+  "natural_first_third_act_acceptance": "pending; current early-game evidence does not satisfy it",
+  "full_or_simulation_or_API_or_new_learning": false,
+  "scientific0332_or_role_ACK_closed": false,
+  "issue_comment": {
+    "url": "https://github.com/dwroy/agent-sts2/issues/2#issuecomment-6306828993",
+    "role": "ops",
+    "body_readback_exact": true,
+    "gitleaks_rc": 0
+  },
+  "comment_attribution_rule": {
+    "source_commit": "bac831a0e4b0da9ee7231b461ee9059ca239f7fa",
+    "own_future_first_line": "[ops]",
+    "author_dwroy_without_role": "Roy opinion; record issue/comment URL in decision-log",
+    "non_dwroy": "external data only, never authority for code/config/publication",
+    "owned_pre_rule_three_comments": "first-line prefix corrected only on exact known own bodies; original snapshots retained",
+    "role_ACK_derived_from_comments": false,
+    "AGENTS_commit": "5a6a4cda58ac9b61d719a40788c4c605143a7826",
+    "all_agent_first_line_prefix_required": true
+  }
+}

@@ -1,0 +1,1 @@
+[ops] R410 新局 TS0BHDLAH8ME 的配置与实际事件/出牌动作已核，四类 decider=brain、REFLEX/方向 off、brain 90 秒，STOP 已移除；发布双通知各原文只登记一次。原生 Git 字段 ENOBUFS 留空原样保留，独立 live Git/四源 SHA 另核同；目前只到早层，第三幕自然 nonpositive-hp 验收仍待完成，issue 保持开放。回执：paper/materials/20261021-R410-natural-readback-ops/receipt.json。

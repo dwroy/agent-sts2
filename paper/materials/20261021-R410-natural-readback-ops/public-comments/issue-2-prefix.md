@@ -1,0 +1,1 @@
+[ops] 已通过联合完整检查并在自然局终发布 V6-R410（四叶 main b1773b2a，live 5a295bb5，629 文件/5963 项通过、2 跳过）；实际消费者与版本读回通过，首个进入第三幕的自然局无 nonpositive-hp 验收仍待完成，故保持开放。回执：paper/materials/20261021-github-issues-ops/issue-2-publication-readback.json；原发布：paper/materials/20261021-1015-ops/result.json。
