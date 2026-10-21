@@ -1,0 +1,216 @@
+{
+  "baseline": {
+    "n": 996,
+    "runs": 80,
+    "correct": 142,
+    "agreement": 0.142570281124498,
+    "wilson_95": [
+      0.12222821922960844,
+      0.16565888155155048
+    ],
+    "run_cluster_95": [
+      0.12004530011325028,
+      0.1660377358490566
+    ],
+    "brain_skip": 142,
+    "skip_correct": 142,
+    "skip_recall": 1.0,
+    "skip_recall_wilson_95": [
+      0.9736600356869919,
+      0.9999999999999999
+    ],
+    "predicted_skip": 996,
+    "skip_recall_run_cluster_95": [
+      1,
+      1
+    ],
+    "skip_decision_agreement": 0.142570281124498,
+    "skip_decision_run_cluster_95": [
+      0.12004530011325028,
+      0.1660377358490566
+    ],
+    "skip_precision": 0.142570281124498,
+    "errors": 0,
+    "confusion": {
+      "take→skip": 854,
+      "skip→skip": 142
+    },
+    "by_act_correct_total": {
+      "1": [
+        53,
+        621
+      ],
+      "2": [
+        59,
+        275
+      ],
+      "3": [
+        30,
+        100
+      ]
+    }
+  },
+  "bare": {
+    "n": 996,
+    "runs": 80,
+    "correct": 352,
+    "agreement": 0.3534136546184739,
+    "wilson_95": [
+      0.3243411019459055,
+      0.3836125966890642
+    ],
+    "run_cluster_95": [
+      0.32443125618199803,
+      0.3827618164967563
+    ],
+    "brain_skip": 142,
+    "skip_correct": 11,
+    "skip_recall": 0.07746478873239436,
+    "skip_recall_wilson_95": [
+      0.04380343414653389,
+      0.13338526808981097
+    ],
+    "predicted_skip": 59,
+    "skip_recall_run_cluster_95": [
+      0.03225806451612903,
+      0.12337662337662338
+    ],
+    "skip_decision_agreement": 0.820281124497992,
+    "skip_decision_run_cluster_95": [
+      0.7962085308056872,
+      0.8437146092865232
+    ],
+    "skip_precision": 0.1864406779661017,
+    "errors": 0,
+    "confusion": {
+      "take→take": 806,
+      "take→skip": 48,
+      "skip→take": 131,
+      "skip→skip": 11
+    },
+    "by_act_correct_total": {
+      "1": [
+        232,
+        621
+      ],
+      "2": [
+        95,
+        275
+      ],
+      "3": [
+        25,
+        100
+      ]
+    },
+    "payload_bytes": {
+      "mean": 2707.6867469879517,
+      "p50": 2597.5,
+      "p95": 4175
+    },
+    "latency_ms": {
+      "mean": 485.1932530120482,
+      "p50": 411.02,
+      "p95": 898.21
+    },
+    "prep_ms": {
+      "mean": 0.09189759036144578,
+      "p50": 0.08,
+      "p95": 0.12
+    },
+    "usage_examples": [
+      {
+        "input_tokens": 1036,
+        "output_tokens": 49
+      },
+      {
+        "input_tokens": 1819,
+        "output_tokens": 48
+      }
+    ]
+  },
+  "entries": {
+    "n": 996,
+    "runs": 80,
+    "correct": 465,
+    "agreement": 0.46686746987951805,
+    "wilson_95": [
+      0.4360704159794602,
+      0.4979191186435123
+    ],
+    "run_cluster_95": [
+      0.43457497612225404,
+      0.5015576323987538
+    ],
+    "brain_skip": 142,
+    "skip_correct": 53,
+    "skip_recall": 0.3732394366197183,
+    "skip_recall_wilson_95": [
+      0.29801048594930757,
+      0.4551461247215959
+    ],
+    "predicted_skip": 202,
+    "skip_recall_run_cluster_95": [
+      0.2909090909090909,
+      0.45038167938931295
+    ],
+    "skip_decision_agreement": 0.7610441767068273,
+    "skip_decision_run_cluster_95": [
+      0.7324516785350966,
+      0.7896907216494845
+    ],
+    "skip_precision": 0.2623762376237624,
+    "errors": 0,
+    "confusion": {
+      "take→take": 705,
+      "skip→take": 89,
+      "take→skip": 149,
+      "skip→skip": 53
+    },
+    "by_act_correct_total": {
+      "1": [
+        327,
+        621
+      ],
+      "2": [
+        108,
+        275
+      ],
+      "3": [
+        30,
+        100
+      ]
+    },
+    "payload_bytes": {
+      "mean": 15418.925702811244,
+      "p50": 14264.5,
+      "p95": 21617
+    },
+    "latency_ms": {
+      "mean": 627.2164257028112,
+      "p50": 568.35,
+      "p95": 1150.74
+    },
+    "prep_ms": {
+      "mean": 72.50546184738955,
+      "p50": 57.235,
+      "p95": 103.8
+    },
+    "usage_examples": [
+      {
+        "input_tokens": 5854,
+        "output_tokens": 49
+      },
+      {
+        "input_tokens": 8422,
+        "output_tokens": 49
+      }
+    ]
+  },
+  "paired_entries_minus_bare": {
+    "mean": 0.11345381526104417,
+    "run_cluster_95": [
+      0.07649253731343283,
+      0.15309126594700687
+    ]
+  }
+}

@@ -22,8 +22,22 @@ def run(args, **kwargs):
     # Never echo CLI output on failure: tails and API errors may contain private data.
     result = subprocess.run(list(map(str, args)), capture_output=True, timeout=90, **kwargs)
     if result.returncode:
-        raise ValueError(str(args[0]) + " command failed; original state retained")
+        raise ValueError(Path(str(args[0])).name + " command failed (exit " + str(result.returncode) + "); original state retained")
     return result.stdout
+
+
+def failure_reason(error):
+    # Do not disclose subprocess output, argv, credential paths or OS filenames.
+    if isinstance(error, subprocess.TimeoutExpired):
+        return "external command timed out; query actual state before retry"
+    if isinstance(error, KeyError):
+        key = str(error.args[0])
+        return "missing response/configuration field: " + (key if re.fullmatch(r"[A-Za-z_][A-Za-z0-9_]*", key) else "unknown")
+    if isinstance(error, OSError):
+        return "system operation failed: " + (error.strerror or type(error).__name__)
+    if isinstance(error, ValueError):
+        return str(error)
+    return type(error).__name__ + ": invalid response/configuration shape"
 
 
 def herdr(*args):
@@ -192,15 +206,20 @@ class Sessions:
         tree = self.board.trees / branch
         if agent.get("name") != f"issue-{number}" or agent.get("agent") != "codex":
             raise ValueError("only named issue Codex agents may be registered")
-        if (pane.get("cwd") != str(tree) or agent.get("foreground_cwd") != str(tree)
-                or retention.git(tree, "branch", "--show-current").decode().strip() != branch
-                or not retention.ancestor(tree, base)):
-            raise ValueError("existing workspace binding or baseline mismatch")
+        if pane.get("cwd") != str(tree):
+            raise ValueError("register: pane cwd mismatch for " + branch)
+        if agent.get("foreground_cwd") != str(tree):
+            raise ValueError("register: agent foreground_cwd mismatch for " + branch)
+        if retention.git(tree, "branch", "--show-current").decode().strip() != branch:
+            raise ValueError("register: worktree branch mismatch for " + branch)
+        if not retention.ancestor(tree, base):
+            raise ValueError("register: allocation base ancestor mismatch for " + branch)
         found = herdr("tab", "get", pane["tab_id"])["tab"]
         ws = herdr("workspace", "list")["workspaces"]
-        if found.get("label") != f"issue-{number}" or not any(
-                w.get("workspace_id") == pane["workspace_id"] and w.get("label") == self.board.workspace for w in ws):
-            raise ValueError("existing tab/workspace mismatch")
+        if found.get("label") != f"issue-{number}":
+            raise ValueError("register: tab label mismatch for issue-" + str(number))
+        if not any(w.get("workspace_id") == pane["workspace_id"] and w.get("label") == self.board.workspace for w in ws):
+            raise ValueError("register: workspace identity/label mismatch")
         row = {"issue": number, "slug": slug, "label": f"issue-{number}", "branch": branch,
                "worktree": str(tree), "base": base, "started_at": started_at, "state": "active",
                "workspace": pane["workspace_id"], "tab": pane["tab_id"], "pane": pane_id,
@@ -248,6 +267,7 @@ class Sessions:
             screen = run(["herdr", "pane", "read", row["pane"], "--source", "visible", "--format", "ansi", "--lines", "15"])
             if composer_state(screen.decode()) != "empty":
                 raise ValueError("composer has unsent text or is not visibly ready")
+            allowed.update(idle_codex_helpers(allowed))
         elif info["foreground_process_group_id"] != info["shell_pid"]:
             raise ValueError("pane has an unrecognized running command")
         return pane, allowed
@@ -275,6 +295,23 @@ class Sessions:
         env = dict(os.environ)
         env.update({key: value.format_map(values) for key, value in self.board.session["command_env"].items()})
         return run(self.board.argv(command, values), cwd=self.root, env=env)
+
+    def process_cwd(self, proc):
+        command = self.board.session.get("process_cwd_probe")
+        if not command:
+            raise ValueError("incomplete host process visibility for PID " + proc.name + "; configure session.process_cwd_probe")
+        namespace = os.readlink("/proc/self/ns/pid")
+        started = retention_process_start(proc)
+        values = dict(root=str(self.root), pid=proc.name, pid_namespace=namespace, start_time=started)
+        try:
+            reply = json.loads(run(self.board.argv(command, values), cwd=self.root))
+        except (OSError, ValueError, subprocess.SubprocessError) as error:
+            raise ValueError("process cwd probe for PID " + proc.name + ": " + failure_reason(error)) from None
+        if (not isinstance(reply, dict) or reply.get("pid") != int(proc.name) or reply.get("pid_namespace") != namespace
+                or reply.get("start_time") != started or retention_process_start(proc) != started
+                or not isinstance(reply.get("cwd"), str) or not reply["cwd"].startswith("/")):
+            raise ValueError("process cwd probe identity mismatch; original state retained")
+        return reply["cwd"]
 
     def publication(self, row):
         return self.project.publication(dict(row, source=self.source(row)))
@@ -334,7 +371,7 @@ class Sessions:
             retention.require_host_process_view()
             self.project.guard(row)
             pane, allowed = self.terminal(row)
-            if processes(Path(row["worktree"]), allowed):
+            if processes(Path(row["worktree"]), allowed, self.process_cwd):
                 raise ValueError("workspace has active processes beyond its idle terminal")
             if row["state"] == "waiting-worktree" and not pane:
                 if self.project.reclaimed(row):
@@ -360,7 +397,7 @@ class Sessions:
                 self.save()
                 # Recheck immediately before closing. Only the verified idle TUI and its shell may remain.
                 current, allowed = self.terminal(row)
-                if not current or processes(Path(row["worktree"]), allowed):
+                if not current or processes(Path(row["worktree"]), allowed, self.process_cwd):
                     raise ValueError("terminal/process state changed before close")
                 if self.issue(number)["state"] != "CLOSED" or self.source(row) != source:
                     raise ValueError("issue or source changed before close")
@@ -379,7 +416,7 @@ class Sessions:
                 raise ValueError("dirty changes patched; original retention keeps workspace until clean")
             return {"issue": number, "state": "waiting-worktree"}
         except (OSError, ValueError, KeyError, TypeError, subprocess.SubprocessError) as error:
-            reason = str(error) if isinstance(error, ValueError) else "verification failed; original state retained"
+            reason = failure_reason(error)
             if apply:
                 prefix = "会话 tab 已关闭；工作树暂缓回收：" if row["state"] == "waiting-worktree" else "暂缓回收："
                 self.notice(number, "retained", prefix + reason + "。")
@@ -398,8 +435,8 @@ class Sessions:
                 if self.issue(int(key))["state"] != "CLOSED":
                     continue
                 result = self.reclaim(int(key), True)
-            except (OSError, ValueError, KeyError, TypeError, subprocess.SubprocessError):
-                result = {"issue": int(key), "state": "retained", "reason": "verification or notification failed; original state retained"}
+            except (OSError, ValueError, KeyError, TypeError, subprocess.SubprocessError) as error:
+                result = {"issue": int(key), "state": "retained", "reason": failure_reason(error)}
             results.append(result)
             if result["state"] == "retained" and row.get("last_reason") != result["reason"]:
                 self.inbox(f"#{key} 回收暂缓：{result['reason']}。登记表 issue-sessions.json；原现场保留。")
@@ -437,14 +474,53 @@ def composer_state(ansi):
     return "none"
 
 
-def processes(tree, allowed):
+def process_children(proc):
+    # Linux reports children per thread; the TUI spawns helpers from worker threads.
+    return {child for task in (proc / "task").iterdir()
+            for child in (task / "children").read_text().split()}
+
+
+def idle_codex_helpers(allowed, proc_root=Path("/proc")):
+    """Recognize only the idle TUI's bundled code-mode host, never its tool children."""
+    helpers = set()
+    for pid in allowed:
+        proc = proc_root / str(pid)
+        try:
+            exe = Path(os.readlink(proc / "exe"))
+            if exe.name != "codex":
+                continue
+            expected = exe.with_name("codex-code-mode-host")
+            for child_id in process_children(proc):
+                child = proc_root / child_id
+                fields = (child / "stat").read_text().rpartition(")")[2].split()
+                if (fields[1] == str(pid) and Path(os.readlink(child / "exe")) == expected
+                        and (child / "cmdline").read_bytes().split(b"\0") == [os.fsencode(expected), b""]
+                        and not process_children(child)):
+                    helpers.add(int(child_id))
+        except FileNotFoundError:
+            continue
+    return helpers
+
+
+def retention_process_start(proc):
+    return (proc / "stat").read_text().rpartition(")")[2].split()[19]
+
+
+def processes(tree, allowed, cwd_probe=None):
     """Check host cwd and argv references; do not read credentials, environments or print commands."""
     prefix = os.fsencode(tree)
     for proc in Path("/proc").iterdir():
         if not proc.name.isdigit() or int(proc.name) in allowed:
             continue
         try:
-            cwd = os.fsencode(os.readlink(proc / "cwd"))
+            try:
+                cwd = os.fsencode(os.readlink(proc / "cwd"))
+            except PermissionError:
+                if proc.stat().st_uid != os.getuid():
+                    continue
+                if not cwd_probe:
+                    raise ValueError("incomplete host process visibility")
+                cwd = os.fsencode(cwd_probe(proc))
             args = (proc / "cmdline").read_bytes().split(b"\0")
             if cwd == prefix or cwd.startswith(prefix + b"/") or any(
                     arg == prefix or arg.startswith(prefix + b"/") for arg in args):
@@ -473,11 +549,14 @@ def main():
     args = parser.parse_args()
     root = Path(args.root).resolve()
     board = None
+    stage = "board configuration"
     try:
         board = retention.Board(root, args.config)
         directory = retention.safe_path(root, args.state_dir or board.session["state_dir"])
         with retention.locks([directory / "issue-sessions.lock"]):
+            stage = "session registry"
             sessions = Sessions(root, directory, args.config)
+            stage = args.command
             if hasattr(args, "issue") and not 1 <= args.issue <= 999999999:
                 raise ValueError("invalid issue number")
             if args.command == "spawn":
@@ -490,12 +569,17 @@ def main():
                 result = sessions.tick()
             print(json.dumps(result, ensure_ascii=False))
             return 1 if isinstance(result, dict) and result.get("state") == "retained" else 0
-    except (OSError, ValueError, KeyError, TypeError, subprocess.SubprocessError):
+    except (OSError, ValueError, KeyError, TypeError, subprocess.SubprocessError) as error:
         # Keep malformed registries untouched, including when a tick cannot load them.
+        reason = stage + ": " + failure_reason(error)
+        result = {"state": "retained", "operation": args.command, "stage": stage, "reason": reason}
         if board:
-            with board.inbox.open("a") as handle:
-                handle.write(f"- {retention.stamp()} [issue-session] {args.command} 失败；请核登记表和原现场，未强制重试或删除。\n")
-        print(json.dumps({"state": "retained", "reason": "issue session operation failed; see configured inbox or board.yaml"}))
+            try:
+                with board.inbox.open("a") as handle:
+                    handle.write(f"- {retention.stamp()} [issue-session] {args.command} 失败：{reason}；原现场保留。\n")
+            except OSError as inbox_error:
+                result["inbox_error"] = failure_reason(inbox_error)
+        print(json.dumps(result, ensure_ascii=False))
         return 1
 
 

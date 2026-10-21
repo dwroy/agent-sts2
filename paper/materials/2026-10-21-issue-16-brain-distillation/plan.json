@@ -1,0 +1,21 @@
+{
+  "dataset_sha256": "dccfb3ae6905fee980cb84eaa6e5f45457294595fb421fbe6b4341ba1d77a1fa",
+  "cutoff": "2026-10-16T06:02:43.307Z",
+  "scope": "Silent A10; all held-out runs; act1 primary, act2/3 secondary",
+  "train_fraction": 0.8,
+  "test_questions": 996,
+  "test_runs": 80,
+  "arms": [
+    "most-often-chosen offered card (skip included)",
+    "Jev compact facts only",
+    "Jev same facts + 5 cases + per-option observational statistics"
+  ],
+  "k": 5,
+  "case_ranking": "same act/ascension; 2*deck multiset Jaccard + option Jaccard + same Boss + same HP quartile; latest tie-break; distinct runs",
+  "pilot": "6 evenly spaced test questions, both arms; no tuning from accuracy",
+  "full_calls": 1992,
+  "network": "Nova only; key file; no redirect, no retry, 20s timeout, 2 worker threads",
+  "inference": "Wilson intervals and 2000 run-cluster bootstrap, seed16; paired delta; errors count as disagreement",
+  "restriction": "offline phase1 only; no live/shadow integration",
+  "postcombat_evidence": "same run and floor COMBAT decision timestamp strictly before reward question; no reward/card-only inference"
+}

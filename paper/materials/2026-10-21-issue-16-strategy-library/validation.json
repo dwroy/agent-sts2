@@ -1,0 +1,134 @@
+{
+  "schema": "issue-16-strategy-validation-v1",
+  "model_calls": 0,
+  "resource_policy": "nice 19; one Vitest worker; no concurrent dataset builds during final complete recheck",
+  "checks": [
+    {
+      "name": "production TypeScript",
+      "cwd": "agent",
+      "command": "nice -n 19 node node_modules/typescript/bin/tsc -p tsconfig.json --noEmit",
+      "exit_code": 0,
+      "log": "tsc-verified.log.gz"
+    },
+    {
+      "name": "new replay tool isolated TypeScript",
+      "cwd": "repository root",
+      "command": "nice -n 19 node agent/node_modules/typescript/bin/tsc -p data/issue-16/strategy/tsconfig.replay.json --noEmit",
+      "exit_code": 0,
+      "log": "tsc-replay-isolated.log.gz",
+      "config": {
+        "extends": "../../../agent/tsconfig.json",
+        "compilerOptions": {
+          "noEmit": true,
+          "typeRoots": [
+            "../../../agent/node_modules/@types"
+          ]
+        },
+        "include": [
+          "../../../agent/tools/replay-brain-strategies.ts"
+        ],
+        "exclude": []
+      }
+    },
+    {
+      "name": "fixed Python dataset tests",
+      "cwd": "repository root",
+      "command": "nice -n 19 python3 -B knowledge/builders/tests/test_brain_decision_dataset.py",
+      "exit_code": 0,
+      "tests": 2,
+      "log": "python-tests-censoring.log.gz"
+    },
+    {
+      "name": "initial new strategy tests",
+      "cwd": "agent",
+      "command": "nice -n 19 node node_modules/vitest/vitest.mjs run tests/strategy-entries.test.ts --maxWorkers=1",
+      "exit_code": 0,
+      "passed": 7,
+      "log": "focused.log.gz"
+    },
+    {
+      "name": "first complete Vitest run",
+      "cwd": "agent",
+      "command": "nice -n 19 node node_modules/vitest/vitest.mjs run --maxWorkers=1",
+      "exit_code": 1,
+      "files": {
+        "passed": 643,
+        "failed": 1
+      },
+      "tests": {
+        "passed": 6063,
+        "failed": 1,
+        "skipped": 2
+      },
+      "duration_seconds": 1399.98,
+      "log": "vitest-full.log.gz",
+      "note": "Unmodified ordinary-close-isolation Python subprocess exceeded its 15000 ms timeout; result.status was null. Original failure preserved."
+    },
+    {
+      "name": "isolated timeout and new tests recheck",
+      "cwd": "agent",
+      "command": "nice -n 19 node node_modules/vitest/vitest.mjs run tests/ordinary-close-isolation.test.ts tests/strategy-entries.test.ts tests/brain-decision-dataset.test.ts --maxWorkers=1",
+      "exit_code": 0,
+      "files": 3,
+      "passed": 9,
+      "duration_seconds": 12.91,
+      "log": "vitest-targeted-final.log.gz"
+    },
+    {
+      "name": "optional all-tools TypeScript",
+      "cwd": "agent",
+      "command": "nice -n 19 node node_modules/typescript/bin/tsc -p tsconfig.tools.json --noEmit",
+      "exit_code": 1,
+      "log": "tsc-tools-final.log.gz",
+      "note": "Errors point to unmodified tools/eval files; no baseline check was performed, so this optional check is not claimed as passed or historically proven."
+    },
+    {
+      "name": "first isolated tool configuration",
+      "log": "tsc-replay-final.log.gz",
+      "note": "Could not find node type declarations from the ignored data directory; explicit typeRoots fixed the check. Original configuration failure preserved.",
+      "result": "failed"
+    },
+    {
+      "name": "five-type prompt replay",
+      "cwd": "agent",
+      "command": "nice -n 19 node --import tsx tools/replay-brain-strategies.ts ../paper/materials/2026-10-21-issue-16-strategy-library/replay-input.json NEW_OUTPUT_DIRECTORY",
+      "exit_code": 0,
+      "questions": 5,
+      "no_hit_byte_identical": 5,
+      "log": "replay.log.gz",
+      "metrics": "replay/metrics.json"
+    },
+    {
+      "name": "final complete Vitest recheck",
+      "cwd": "agent",
+      "command": "nice -n 19 node node_modules/vitest/vitest.mjs run --maxWorkers=1 --retry=1",
+      "exit_code": 0,
+      "files": {
+        "passed": 644,
+        "failed": 0
+      },
+      "tests": {
+        "passed": 6064,
+        "failed": 0,
+        "skipped": 2
+      },
+      "duration_seconds": 1528.57,
+      "log": "vitest-full-recheck.log.gz",
+      "note": "All test files included; one retry permitted. No exclusions or unrelated source/test changes."
+    }
+  ],
+  "command_note": "Commands are reproducible invocations; the local absolute Node binary path is normalized to node. Add ~/.local/node/bin to PATH.",
+  "dataset_audit": "dataset-audit.json",
+  "security": {
+    "artifact_decompression_scan": {
+      "exit_code": 0,
+      "bytes": 74363113,
+      "log": "gitleaks-artifacts-final.log.gz"
+    },
+    "staged_scan": {
+      "exit_code": 0,
+      "log": "gitleaks-staged-final.log.gz"
+    },
+    "note": "Archive includes scan receipts; staged scan repeated after these receipts and metadata are staged. Public comment is scanned separately before sending."
+  }
+}

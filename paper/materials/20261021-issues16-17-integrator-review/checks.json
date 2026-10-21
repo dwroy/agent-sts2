@@ -1,0 +1,26 @@
+[
+  {
+    "check": "tsc",
+    "argv": [
+      "npx",
+      "tsc",
+      "-p",
+      "tsconfig.json",
+      "--noEmit"
+    ],
+    "exit_code": 0,
+    "seconds": 1.29
+  },
+  {
+    "check": "vitest-full",
+    "argv": [
+      "npx",
+      "vitest",
+      "run",
+      "--maxWorkers=1",
+      "--minWorkers=1"
+    ],
+    "exit_code": 1,
+    "seconds": 0.26
+  }
+]

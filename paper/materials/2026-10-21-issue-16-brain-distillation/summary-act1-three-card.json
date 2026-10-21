@@ -1,0 +1,192 @@
+{
+  "baseline": {
+    "n": 615,
+    "runs": 79,
+    "correct": 53,
+    "agreement": 0.08617886178861789,
+    "wilson_95": [
+      0.06648890091781381,
+      0.11100641271229655
+    ],
+    "run_cluster_95": [
+      0.06721311475409836,
+      0.10613598673300166
+    ],
+    "brain_skip": 53,
+    "skip_correct": 53,
+    "skip_recall": 1.0,
+    "skip_recall_wilson_95": [
+      0.932418011423458,
+      0.9999999999999999
+    ],
+    "predicted_skip": 615,
+    "skip_recall_run_cluster_95": [
+      1,
+      1
+    ],
+    "skip_decision_agreement": 0.08617886178861789,
+    "skip_decision_run_cluster_95": [
+      0.06721311475409836,
+      0.10613598673300166
+    ],
+    "skip_precision": 0.08617886178861789,
+    "errors": 0,
+    "confusion": {
+      "take→skip": 562,
+      "skip→skip": 53
+    },
+    "by_act_correct_total": {
+      "1": [
+        53,
+        615
+      ]
+    }
+  },
+  "bare": {
+    "n": 615,
+    "runs": 79,
+    "correct": 229,
+    "agreement": 0.3723577235772358,
+    "wilson_95": [
+      0.3350532526220725,
+      0.41124687358603623
+    ],
+    "run_cluster_95": [
+      0.3370253164556962,
+      0.4096774193548387
+    ],
+    "brain_skip": 53,
+    "skip_correct": 3,
+    "skip_recall": 0.05660377358490566,
+    "skip_recall_wilson_95": [
+      0.019436661484935766,
+      0.15370208310180888
+    ],
+    "predicted_skip": 31,
+    "skip_recall_run_cluster_95": [
+      0,
+      0.12244897959183673
+    ],
+    "skip_decision_agreement": 0.8731707317073171,
+    "skip_decision_run_cluster_95": [
+      0.8492706645056726,
+      0.8967136150234741
+    ],
+    "skip_precision": 0.0967741935483871,
+    "errors": 0,
+    "confusion": {
+      "take→take": 534,
+      "skip→take": 50,
+      "take→skip": 28,
+      "skip→skip": 3
+    },
+    "by_act_correct_total": {
+      "1": [
+        229,
+        615
+      ]
+    },
+    "payload_bytes": {
+      "mean": 2246.4325203252033,
+      "p50": 2219,
+      "p95": 2853
+    },
+    "latency_ms": {
+      "mean": 478.8198048780488,
+      "p50": 409.23,
+      "p95": 865.44
+    },
+    "prep_ms": {
+      "mean": 0.09339837398373983,
+      "p50": 0.08,
+      "p95": 0.11
+    },
+    "usage_examples": [
+      {
+        "input_tokens": 1036,
+        "output_tokens": 49
+      },
+      {
+        "input_tokens": 1009,
+        "output_tokens": 49
+      }
+    ]
+  },
+  "entries": {
+    "n": 615,
+    "runs": 79,
+    "correct": 323,
+    "agreement": 0.5252032520325203,
+    "wilson_95": [
+      0.4857027227704502,
+      0.5643908828827258
+    ],
+    "run_cluster_95": [
+      0.4830917874396135,
+      0.5671406003159558
+    ],
+    "brain_skip": 53,
+    "skip_correct": 12,
+    "skip_recall": 0.22641509433962265,
+    "skip_recall_wilson_95": [
+      0.13454631010274268,
+      0.35526270251461034
+    ],
+    "predicted_skip": 67,
+    "skip_recall_run_cluster_95": [
+      0.1111111111111111,
+      0.35714285714285715
+    ],
+    "skip_decision_agreement": 0.8439024390243902,
+    "skip_decision_run_cluster_95": [
+      0.8118971061093248,
+      0.8741830065359477
+    ],
+    "skip_precision": 0.1791044776119403,
+    "errors": 0,
+    "confusion": {
+      "take→take": 507,
+      "take→skip": 55,
+      "skip→take": 41,
+      "skip→skip": 12
+    },
+    "by_act_correct_total": {
+      "1": [
+        323,
+        615
+      ]
+    },
+    "payload_bytes": {
+      "mean": 13176.247154471544,
+      "p50": 13005,
+      "p95": 15356
+    },
+    "latency_ms": {
+      "mean": 581.2364552845528,
+      "p50": 536.23,
+      "p95": 921.87
+    },
+    "prep_ms": {
+      "mean": 84.76268292682927,
+      "p50": 63.69,
+      "p95": 110.94
+    },
+    "usage_examples": [
+      {
+        "input_tokens": 5854,
+        "output_tokens": 49
+      },
+      {
+        "input_tokens": 5777,
+        "output_tokens": 49
+      }
+    ]
+  },
+  "paired_entries_minus_bare": {
+    "mean": 0.15284552845528454,
+    "run_cluster_95": [
+      0.10756302521008404,
+      0.20064724919093851
+    ]
+  }
+}

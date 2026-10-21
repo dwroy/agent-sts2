@@ -13,12 +13,31 @@ class Project:
         self.root, self.directory = root, directory
 
     def checked_tree(self, branch):
-        return workspaces.checked_tree(self.root, branch)
+        # Session identity is independent of deletion admission. Inherited instance
+        # metadata must still reach the original retention gate after tab closure.
+        if (not workspaces.NAME.fullmatch(branch or "") or branch in workspaces.PROTECTED
+                or branch.startswith("exp-")):
+            raise ValueError("protected or invalid workspace")
+        return retention.safe_path(self.root, self.root / ".worktrees" / branch)
 
     def guard(self, row):
+        tree = Path(row["worktree"])
+        for name in ("ops/instance-binding.json", "ops/regent-lane.json"):
+            path = retention.safe_path(tree, tree / name)
+            if path.exists():
+                # Only unchanged, tracked metadata inherited at allocation may be
+                # ignored for closing a development tab. New bindings stay protected.
+                try:
+                    original = retention.git(tree, "show", row["base"] + ":" + name)
+                    current = retention.git(tree, "show", "HEAD:" + name)
+                except ValueError:
+                    raise ValueError("persistent game instance binding not inherited; session retained") from None
+                if path.read_bytes() != original or current != original:
+                    raise ValueError("persistent game instance binding changed; session retained")
         workspaces.owner_guard(self.root, self.directory, Path(row["worktree"]))
 
     def publication(self, row):
+        workspaces.checked_tree(self.root, row["branch"])
         main = retention.git(self.root, "rev-parse", "refs/heads/main").decode().strip()
         live = retention.git(self.root / ".worktrees/live", "rev-parse", "HEAD").decode().strip()
         return workspaces.acceptance(self.root, Path(row["worktree"]), row["source"], main, live, row["base"])

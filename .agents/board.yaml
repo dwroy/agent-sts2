@@ -25,6 +25,8 @@ never_reclaim: [".worktrees/live", "panes: integrator, ops, learner-*"]
 verify: ["npx tsc -p tsconfig.json --noEmit", "npx vitest run"]
 session:
   state_dir: ops/codex-ops
+  # Read only inaccessible cwd links; verify the same PID namespace and start time.
+  process_cwd_probe: [/mnt/c/Windows/System32/wsl.exe, --user, root, --exec, /usr/bin/python3, "{root}/ops/issue_process_cwd.py", "{pid}", "{pid_namespace}", "{start_time}"]
   command_env: {CODEX_OPS_DIR: "{state_dir}"}
   inbox: ops/inbox-dev.md
   materials: paper/materials/issue-session

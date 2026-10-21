@@ -1,0 +1,216 @@
+{
+  "baseline": {
+    "n": 974,
+    "runs": 79,
+    "correct": 140,
+    "agreement": 0.1437371663244353,
+    "wilson_95": [
+      0.12310343005939106,
+      0.16717006597647482
+    ],
+    "run_cluster_95": [
+      0.12096774193548387,
+      0.1668460710441335
+    ],
+    "brain_skip": 140,
+    "skip_correct": 140,
+    "skip_recall": 1.0,
+    "skip_recall_wilson_95": [
+      0.9732937996305869,
+      0.9999999999999999
+    ],
+    "predicted_skip": 974,
+    "skip_recall_run_cluster_95": [
+      1,
+      1
+    ],
+    "skip_decision_agreement": 0.1437371663244353,
+    "skip_decision_run_cluster_95": [
+      0.12096774193548387,
+      0.1668460710441335
+    ],
+    "skip_precision": 0.1437371663244353,
+    "errors": 0,
+    "confusion": {
+      "take→skip": 834,
+      "skip→skip": 140
+    },
+    "by_act_correct_total": {
+      "1": [
+        53,
+        615
+      ],
+      "2": [
+        59,
+        268
+      ],
+      "3": [
+        28,
+        91
+      ]
+    }
+  },
+  "bare": {
+    "n": 974,
+    "runs": 79,
+    "correct": 343,
+    "agreement": 0.3521560574948665,
+    "wilson_95": [
+      0.3227936530885491,
+      0.38268007437302054
+    ],
+    "run_cluster_95": [
+      0.3220675944333996,
+      0.3809034907597536
+    ],
+    "brain_skip": 140,
+    "skip_correct": 11,
+    "skip_recall": 0.07857142857142857,
+    "skip_recall_wilson_95": [
+      0.04443737597511909,
+      0.13521499290767183
+    ],
+    "predicted_skip": 58,
+    "skip_recall_run_cluster_95": [
+      0.03508771929824561,
+      0.125
+    ],
+    "skip_decision_agreement": 0.8193018480492813,
+    "skip_decision_run_cluster_95": [
+      0.7951807228915663,
+      0.8425925925925926
+    ],
+    "skip_precision": 0.1896551724137931,
+    "errors": 0,
+    "confusion": {
+      "take→take": 787,
+      "take→skip": 47,
+      "skip→take": 129,
+      "skip→skip": 11
+    },
+    "by_act_correct_total": {
+      "1": [
+        229,
+        615
+      ],
+      "2": [
+        91,
+        268
+      ],
+      "3": [
+        23,
+        91
+      ]
+    },
+    "payload_bytes": {
+      "mean": 2688.335728952772,
+      "p50": 2584.5,
+      "p95": 4112
+    },
+    "latency_ms": {
+      "mean": 484.19258726899386,
+      "p50": 411.02,
+      "p95": 894.39
+    },
+    "prep_ms": {
+      "mean": 0.09203285420944558,
+      "p50": 0.08,
+      "p95": 0.12
+    },
+    "usage_examples": [
+      {
+        "input_tokens": 1036,
+        "output_tokens": 49
+      },
+      {
+        "input_tokens": 1819,
+        "output_tokens": 48
+      }
+    ]
+  },
+  "entries": {
+    "n": 974,
+    "runs": 79,
+    "correct": 459,
+    "agreement": 0.47125256673511295,
+    "wilson_95": [
+      0.4400782293110264,
+      0.5026527732509455
+    ],
+    "run_cluster_95": [
+      0.4389233954451346,
+      0.50625
+    ],
+    "brain_skip": 140,
+    "skip_correct": 52,
+    "skip_recall": 0.37142857142857144,
+    "skip_recall_wilson_95": [
+      0.2958250811297044,
+      0.45389937039385897
+    ],
+    "predicted_skip": 197,
+    "skip_recall_run_cluster_95": [
+      0.29411764705882354,
+      0.44642857142857145
+    ],
+    "skip_decision_agreement": 0.7607802874743327,
+    "skip_decision_run_cluster_95": [
+      0.7335271317829457,
+      0.7885010266940452
+    ],
+    "skip_precision": 0.2639593908629442,
+    "errors": 0,
+    "confusion": {
+      "take→take": 689,
+      "skip→take": 88,
+      "take→skip": 145,
+      "skip→skip": 52
+    },
+    "by_act_correct_total": {
+      "1": [
+        323,
+        615
+      ],
+      "2": [
+        107,
+        268
+      ],
+      "3": [
+        29,
+        91
+      ]
+    },
+    "payload_bytes": {
+      "mean": 15334.287474332648,
+      "p50": 14236.0,
+      "p95": 21408
+    },
+    "latency_ms": {
+      "mean": 626.082340862423,
+      "p50": 567.03,
+      "p95": 1150.74
+    },
+    "prep_ms": {
+      "mean": 73.32651950718686,
+      "p50": 57.400000000000006,
+      "p95": 104.6
+    },
+    "usage_examples": [
+      {
+        "input_tokens": 5854,
+        "output_tokens": 49
+      },
+      {
+        "input_tokens": 8422,
+        "output_tokens": 49
+      }
+    ]
+  },
+  "paired_entries_minus_bare": {
+    "mean": 0.11909650924024641,
+    "run_cluster_95": [
+      0.08446298227320125,
+      0.15703275529865124
+    ]
+  }
+}

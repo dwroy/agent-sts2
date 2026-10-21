@@ -1,0 +1,21 @@
+...........................F.................
+======================================================================
+FAIL: test_only_verified_idle_ui_processes_are_exempted (test_issue_session.IssueSessions.test_only_verified_idle_ui_processes_are_exempted)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/dw/Projects/agent-sts2/.worktrees/issue-17-session-lifecycle/ops/tests/test_issue_session.py", line 187, in test_only_verified_idle_ui_processes_are_exempted
+    self.processes_mock.assert_called_once_with(self.tree, {101, 102, 103})
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.14/unittest/mock.py", line 998, in assert_called_once_with
+    return self.assert_called_with(*args, **kwargs)
+           ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.14/unittest/mock.py", line 986, in assert_called_with
+    raise AssertionError(_error_message()) from cause
+AssertionError: expected call not found.
+Expected: processes(PosixPath('/tmp/tmp8_5i_9k6/.worktrees/issue-17-fixture'), {101, 102, 103})
+  Actual: processes(PosixPath('/tmp/tmp8_5i_9k6/.worktrees/issue-17-fixture'), {101, 102, 103}, <bound method Sessions.process_cwd of <issue_session.Sessions object at 0x762493f2f770>>)
+
+----------------------------------------------------------------------
+Ran 45 tests in 7.058s
+
+FAILED (failures=1)
