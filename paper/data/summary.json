@@ -1,7 +1,7 @@
 {
   "performance_policy": "codex-successful-brain-v1",
   "include_non_codex": false,
-  "previous_snapshot": "/home/dw/Projects/agent-sts2/paper/data/history/20261021T043122036848Z",
+  "previous_snapshot": "/home/dw/Projects/agent-sts2/paper/data/history/20261021T044321791186Z",
   "performance": {
     "runs": 370,
     "finished": 368,
@@ -2755,16 +2755,16 @@
       "run_ids": []
     }
   },
-  "generated_at": "2026-10-21T04:31:21.795Z",
+  "generated_at": "2026-10-21T04:43:21.458Z",
   "source_cut_bytes": {
-    "decisions.jsonl": 3280174677,
+    "decisions.jsonl": 3284553827,
     "deepseek-reasoning.jsonl": 377746518,
     "runs.jsonl": 402493,
-    "states.jsonl": 15169228650,
+    "states.jsonl": 15174649632,
     "fight-plans.jsonl": 2233957,
-    "run-plans.jsonl": 10340790,
-    "brain.jsonl": 1198603355,
-    "sl-attempts.jsonl": 52199762,
+    "run-plans.jsonl": 10342599,
+    "brain.jsonl": 1199441686,
+    "sl-attempts.jsonl": 52230578,
     "run-config.jsonl": 2397325
   },
   "runs_total": 891,
@@ -3060,11 +3060,11 @@
     "8": 14,
     "9": 11,
     "11": 7,
-    "12": 6,
+    "12": 5,
     "13": 5,
     "14": 6,
     "15": 7,
-    "17": 157,
+    "17": 158,
     "20": 2,
     "21": 10,
     "22": 21,
@@ -3104,11 +3104,11 @@
       "8": 8,
       "9": 7,
       "11": 3,
-      "12": 6,
+      "12": 5,
       "13": 2,
       "14": 6,
       "15": 5,
-      "17": 50,
+      "17": 51,
       "20": 1,
       "21": 5,
       "22": 6,
@@ -12015,10 +12015,10 @@
   },
   "api": {
     "jev": {
-      "calls": 119006,
-      "in_tokens": 2886181731,
-      "out_tokens": 46296666,
-      "cost_usd": 123.1641,
+      "calls": 119039,
+      "in_tokens": 2886736950,
+      "out_tokens": 46300506,
+      "cost_usd": 123.1876,
       "price_per_m_tokens_usd": 0.042
     },
     "deepseek": {
@@ -12044,19 +12044,19 @@
       "note": "answered by the interactive Claude Code session via file escalation; no per-call token accounting"
     }
   },
-  "api_cost_total_usd": 138.4299,
+  "api_cost_total_usd": 138.4534,
   "decisions": {
-    "play_total": 458958,
-    "attributed_to_runs": 455551,
+    "play_total": 459086,
+    "attributed_to_runs": 455679,
     "unattributed_menu_timeline": 3407,
     "shadow": 20,
     "by_layer": {
-      "code": 231190,
-      "jev": 94408,
+      "code": 231240,
+      "jev": 94436,
       "deepseek": 12400,
       "claude": 186,
       "code-fallback": 2003,
-      "jev-plan": 96289,
+      "jev-plan": 96331,
       "deepseek-plan": 847,
       "claude-plan": 73
     },
@@ -12078,12 +12078,12 @@
       "deepseek-flash": 13468
     }
   },
-  "states_lines_scanned": 475189,
+  "states_lines_scanned": 475354,
   "console_logs": 1361,
   "commits": {
-    "total": 7863,
+    "total": 7865,
     "ref_snapshot": {
-      "HEAD": "d196c9329db4d11cdeb52c41335146e9efdb4ae5",
+      "HEAD": "c0b7288b02626e25b6b6ce62ae60eaca4d5ed55f",
       "refs/heads/ascension-audit-regent-a1-1": "4ab5e9f4b13eaa5b96c969ceebe79e2562222ce0",
       "refs/heads/ascension-audit-regent-a1-2": "4ab5e9f4b13eaa5b96c969ceebe79e2562222ce0",
       "refs/heads/ascension-audit-regent-a1-3": "aece9cb8e946404a9bd26552dce4fbbda5b4232a",
@@ -13231,6 +13231,8 @@
       "refs/heads/codex-strategy-silent-20261021-114302-s2": "e015024a93abccffcb464700ec37ebbf265ff223",
       "refs/heads/codex-strategy-silent-20261021-121301": "6b2783432dba3f0f5c5832cb9c147b80a3171776",
       "refs/heads/codex-strategy-silent-20261021-121301-s2": "6b2783432dba3f0f5c5832cb9c147b80a3171776",
+      "refs/heads/codex-strategy-silent-20261021-124302": "e909704e19e29a4a60d5f3cd0c354188f536715a",
+      "refs/heads/codex-strategy-silent-20261021-124302-s2": "e909704e19e29a4a60d5f3cd0c354188f536715a",
       "refs/heads/codex-v5s-p1p2-shadow-20261016": "70c61acfb118ab284bb950b32495177458a76b2d",
       "refs/heads/core-decklists-entry-20261012": "d1bcd028d05f022f51c0d3b71cbff62a1d3f51ad",
       "refs/heads/dev-regent-main-sync-20261014": "a5467387402ef61c26d37720c56e72e6e5dbbcfe",
@@ -13296,7 +13298,7 @@
       "refs/heads/lifecycle-cleanup-20261013": "309b3bbc97bd55d08affee4cf8184d9a6794f41e",
       "refs/heads/live": "5a295bb5ed52f0c0fa5e8c045dcfcba3d894b532",
       "refs/heads/llm-switch-scope-20261017": "e4a07e30f86c6bb639fb4e43cc808e9d599220f3",
-      "refs/heads/main": "d196c9329db4d11cdeb52c41335146e9efdb4ae5",
+      "refs/heads/main": "c0b7288b02626e25b6b6ce62ae60eaca4d5ed55f",
       "refs/heads/model-sol61-20261012": "c06d1019b8dee0110c3627a012bdb865bd7e7a80",
       "refs/heads/multi-instance-climb-20261013": "84300293795474c4ea3b13e210d2a1222854d115",
       "refs/heads/ops-0010-experience111": "7954390da3772efc72b159173f6be81f7c89e5cd",
@@ -14982,6 +14984,7 @@
       "all-tip:ae8355fdc563007cac6a729b6a137c4d1ea80ed6": "ae8355fdc563007cac6a729b6a137c4d1ea80ed6",
       "all-tip:fc18ef37d6f1b4887e5007a81a0ca0d278e795fd": "fc18ef37d6f1b4887e5007a81a0ca0d278e795fd",
       "all-tip:e015024a93abccffcb464700ec37ebbf265ff223": "e015024a93abccffcb464700ec37ebbf265ff223",
+      "all-tip:e909704e19e29a4a60d5f3cd0c354188f536715a": "e909704e19e29a4a60d5f3cd0c354188f536715a",
       "all-tip:70c61acfb118ab284bb950b32495177458a76b2d": "70c61acfb118ab284bb950b32495177458a76b2d",
       "all-tip:d1bcd028d05f022f51c0d3b71cbff62a1d3f51ad": "d1bcd028d05f022f51c0d3b71cbff62a1d3f51ad",
       "all-tip:a5467387402ef61c26d37720c56e72e6e5dbbcfe": "a5467387402ef61c26d37720c56e72e6e5dbbcfe",
@@ -15044,7 +15047,7 @@
       "all-tip:309b3bbc97bd55d08affee4cf8184d9a6794f41e": "309b3bbc97bd55d08affee4cf8184d9a6794f41e",
       "all-tip:5a295bb5ed52f0c0fa5e8c045dcfcba3d894b532": "5a295bb5ed52f0c0fa5e8c045dcfcba3d894b532",
       "all-tip:e4a07e30f86c6bb639fb4e43cc808e9d599220f3": "e4a07e30f86c6bb639fb4e43cc808e9d599220f3",
-      "all-tip:d196c9329db4d11cdeb52c41335146e9efdb4ae5": "d196c9329db4d11cdeb52c41335146e9efdb4ae5",
+      "all-tip:c0b7288b02626e25b6b6ce62ae60eaca4d5ed55f": "c0b7288b02626e25b6b6ce62ae60eaca4d5ed55f",
       "all-tip:c06d1019b8dee0110c3627a012bdb865bd7e7a80": "c06d1019b8dee0110c3627a012bdb865bd7e7a80",
       "all-tip:84300293795474c4ea3b13e210d2a1222854d115": "84300293795474c4ea3b13e210d2a1222854d115",
       "all-tip:7954390da3772efc72b159173f6be81f7c89e5cd": "7954390da3772efc72b159173f6be81f7c89e5cd",
@@ -15405,7 +15408,7 @@
       "all-tip:f1f2c083ca84a9b884c0cdbf6363c47248abd0ee": "f1f2c083ca84a9b884c0cdbf6363c47248abd0ee"
     },
     "upstream": 19,
-    "experiment": 7844
+    "experiment": 7846
   },
   "postmortems": {
     "runs_with_heading": 863,
