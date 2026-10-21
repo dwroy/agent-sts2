@@ -1,0 +1,464 @@
+{
+  "state": "verified-first-attempt-no-SL-victory",
+  "run_id": "FZT053H9PSC5",
+  "outcome": {
+    "run_id": "FZT053H9PSC5",
+    "ended": "2026-10-21T13:24:48.441Z",
+    "victory": true,
+    "floor": 49,
+    "character": "SILENT",
+    "ascension": 10,
+    "code": "current",
+    "decisions": 900,
+    "jev_calls": 276,
+    "deepseek_calls": 47,
+    "claude_calls": 0,
+    "tokens": 1820287,
+    "ds_tokens_in": 2279849,
+    "ds_tokens_out": 38885,
+    "ds_cache_hit": 0,
+    "deciders": {
+      "codex": 70,
+      "code": 293,
+      "jev": 276,
+      "jev-plan": 254,
+      "code-fallback": 7
+    },
+    "death_fight": null,
+    "death_fight_floor": null,
+    "death_enemy_ids": null
+  },
+  "outcome_ref": {
+    "path": "logs/runs.jsonl",
+    "offset": 407644,
+    "bytes": 479,
+    "sha256": "a9a5713cf975d281bfa1c87eb6ffeff0845723fa4eab388f3f46ec90dac91c7c"
+  },
+  "config_ref": {
+    "path": "logs/run-config.jsonl",
+    "offset": 2451589,
+    "bytes": 6028,
+    "sha256": "e49b15376e46eca44e3883739d710ee244e5ebe330a37fbe4f24350349152196"
+  },
+  "first_decision": {
+    "ref": {
+      "offset": 3392782524,
+      "bytes": 143708,
+      "line": 463628,
+      "sha256": "084660ff56804020cab26bba4c8cc74bf59118859ac5ae48ff48c0e7d150b956"
+    },
+    "run": "FZT053H9PSC5",
+    "mode": "play",
+    "ts": "2026-10-21T12:18:22.411Z",
+    "screen": "EVENT"
+  },
+  "last_decision": {
+    "ref": {
+      "offset": 3414617621,
+      "bytes": 1957,
+      "line": 464527,
+      "sha256": "c5711664338e3af73d9f517d7e617599556314ee264948494c7f5b4a6930fb08"
+    },
+    "run": "FZT053H9PSC5",
+    "mode": "play",
+    "ts": "2026-10-21T13:24:48.441Z",
+    "screen": "GAME_OVER"
+  },
+  "original_decisions_all_SHA_verified": 900,
+  "boss_attempts": [
+    {
+      "ref": {
+        "path": "logs/sl-attempts.jsonl",
+        "offset": 52906582,
+        "bytes": 34333,
+        "sha256": "04b413e96e94a551c39e50c115efbba3ca4b8e6782f1142d871c12d7bbbe4882"
+      },
+      "floor": 17,
+      "attempt": 1,
+      "result": "won",
+      "reload": null
+    },
+    {
+      "ref": {
+        "path": "logs/sl-attempts.jsonl",
+        "offset": 52940915,
+        "bytes": 21932,
+        "sha256": "e28a76a7c780e1e5c869badd52016d7f402c6f1ade90168090f62790e3c7007d"
+      },
+      "floor": 33,
+      "attempt": 1,
+      "result": "won",
+      "reload": null
+    },
+    {
+      "ref": {
+        "path": "logs/sl-attempts.jsonl",
+        "offset": 52962847,
+        "bytes": 19599,
+        "sha256": "05842c44d5086d151d2d55cf13054e0988251eaeef14e79f9317244640aaf330"
+      },
+      "floor": 48,
+      "attempt": 1,
+      "result": "won",
+      "reload": null
+    },
+    {
+      "ref": {
+        "path": "logs/sl-attempts.jsonl",
+        "offset": 52982446,
+        "bytes": 22323,
+        "sha256": "ee8d06cf4153cc4ed536fe1589cacf06d1d20f218251aa93a7a259fe314dca78"
+      },
+      "floor": 49,
+      "attempt": 1,
+      "result": "won",
+      "reload": null
+    }
+  ],
+  "max_decision_sl_attempt": 1,
+  "max_decision_sl_reloads": 0,
+  "report_duration_seconds": 3986.03,
+  "report_duration_minutes_rounded": 66.4,
+  "config_to_terminal_seconds": 4058.436,
+  "brain_source": {
+    "policy": "codex-successful-brain-v1",
+    "source": "codex",
+    "eligible": true,
+    "exclusion_reason": null,
+    "successful_answers": {
+      "codex": 47
+    },
+    "successful_by_label": {
+      "event/act-plan": {
+        "codex": 2
+      },
+      "event/choose": {
+        "codex": 4
+      },
+      "event/plan": {
+        "codex": 1
+      },
+      "map/route-plan": {
+        "codex": 1
+      },
+      "rest/plan": {
+        "codex": 11
+      },
+      "reward/card": {
+        "codex": 23
+      },
+      "selection/add": {
+        "codex": 1
+      },
+      "shop/plan": {
+        "codex": 4
+      }
+    },
+    "embedded_answers": {
+      "map/route": 25
+    },
+    "brain_rows": 47,
+    "failed_or_unaccepted_rows": 0,
+    "unknown_successes": 0,
+    "first_success": "2026-10-21T12:18:22.408Z",
+    "last_success": "2026-10-21T13:20:27.511Z",
+    "unresolved_questions": 0,
+    "coverage": "all_logged_questions_resolved",
+    "basis": "brain.jsonl accepted verdict; legacy answer != null, no error/problems; unique question_id+engine"
+  },
+  "brain_refs": [
+    {
+      "path": "logs/brain.jsonl",
+      "offset": 1230332230,
+      "bytes": 72941,
+      "sha256": "fb3c1c60910f1c2a91892170e3f96305d72c4086b820f696a34548aa911efc4c"
+    },
+    {
+      "path": "logs/brain.jsonl",
+      "offset": 1230405171,
+      "bytes": 27199,
+      "sha256": "bc234d91974d065f33a6fd67e3918c29fb45db6042aead2559c4129e57cec2e5"
+    },
+    {
+      "path": "logs/brain.jsonl",
+      "offset": 1230432370,
+      "bytes": 81344,
+      "sha256": "5191c04313af397837476bd73abbc8bffa591fdeccd66750dfd6fc241bc44145"
+    },
+    {
+      "path": "logs/brain.jsonl",
+      "offset": 1230513714,
+      "bytes": 81570,
+      "sha256": "8bbb31de0d4dcc8dfea19c33f1f2f24b892515fdba6206fdddaf57916a569687"
+    },
+    {
+      "path": "logs/brain.jsonl",
+      "offset": 1230595284,
+      "bytes": 81066,
+      "sha256": "ec3ddfd178a657154db2ab898396d1bcba0f5258b73f7754902a69c20de4427f"
+    },
+    {
+      "path": "logs/brain.jsonl",
+      "offset": 1230676350,
+      "bytes": 82200,
+      "sha256": "19af57ba9bbd0fff7c1b4b6bea45cfac8e962d1f342f7e73d3876c77f214a895"
+    },
+    {
+      "path": "logs/brain.jsonl",
+      "offset": 1230758550,
+      "bytes": 217366,
+      "sha256": "5dc35b282dc2905fb1fdebbc2ea5343b45475ef70416d37a665bd9d34305e7e0"
+    },
+    {
+      "path": "logs/brain.jsonl",
+      "offset": 1230975916,
+      "bytes": 118930,
+      "sha256": "d2299db2ddca22ea6d36773a2eec2287449233588349ae61e6ea9050b28c18b7"
+    },
+    {
+      "path": "logs/brain.jsonl",
+      "offset": 1231094846,
+      "bytes": 116996,
+      "sha256": "a357802865c220ca2dd364668d46ce240d597675c722974404a2f106d94c80b4"
+    },
+    {
+      "path": "logs/brain.jsonl",
+      "offset": 1231211842,
+      "bytes": 174346,
+      "sha256": "8164ff303405f07a88543531ad56c9fb7fd0796fb3416a2afc4b2006106629f4"
+    },
+    {
+      "path": "logs/brain.jsonl",
+      "offset": 1231386188,
+      "bytes": 229174,
+      "sha256": "fb6f4b82129341a7e22304e084768ae4eae9bd17d5e5925f9726dcb5ba91f8a0"
+    },
+    {
+      "path": "logs/brain.jsonl",
+      "offset": 1231615362,
+      "bytes": 79003,
+      "sha256": "5395c5c2fff60c974de4513204e5e597d9734ddd5ece31e20b12c42134ed8835"
+    },
+    {
+      "path": "logs/brain.jsonl",
+      "offset": 1231694365,
+      "bytes": 213085,
+      "sha256": "14af4e92767dbec748f9522ac88a88708c8d2fc13e23e0bc03d0a983d2096368"
+    },
+    {
+      "path": "logs/brain.jsonl",
+      "offset": 1231907450,
+      "bytes": 81777,
+      "sha256": "02dcb73a7266f5ae60ec09f471aa6f1c963e3bed894727b8e60c735602e23163"
+    },
+    {
+      "path": "logs/brain.jsonl",
+      "offset": 1231989227,
+      "bytes": 134028,
+      "sha256": "515a4e98259bd16107374b956cccf35a0840b3c8513f2f3a00bcdcca419bc640"
+    },
+    {
+      "path": "logs/brain.jsonl",
+      "offset": 1232123255,
+      "bytes": 223184,
+      "sha256": "ba613c01acea3e51bc2986a1e58aa7fdb4f1ae8dc1d30bdadd6c42cf5fd3d565"
+    },
+    {
+      "path": "logs/brain.jsonl",
+      "offset": 1232346439,
+      "bytes": 46999,
+      "sha256": "cba8b9f53f8233a02ee392257f706ad5ff676d9689c8d7387edc09afa978c0b3"
+    },
+    {
+      "path": "logs/brain.jsonl",
+      "offset": 1232393438,
+      "bytes": 60784,
+      "sha256": "268916d303e684defdfbb1e8a06877f6bf122631362715d6b0bc3f122acbb265"
+    },
+    {
+      "path": "logs/brain.jsonl",
+      "offset": 1232454222,
+      "bytes": 157889,
+      "sha256": "0c1b244b56cbeee284e44660b0a7e8baf1ca65a592d247f14a1b5ebf8fc060cf"
+    },
+    {
+      "path": "logs/brain.jsonl",
+      "offset": 1232612111,
+      "bytes": 60903,
+      "sha256": "b13b9cbf09ac90a0e2480a76071e42e23c34ca2867862125e50e9d7d653a661b"
+    },
+    {
+      "path": "logs/brain.jsonl",
+      "offset": 1232673014,
+      "bytes": 56203,
+      "sha256": "4bacc6ca1545bcb19019f2ad6687600a9d41bdf10d0ea9d11f242111d690a29d"
+    },
+    {
+      "path": "logs/brain.jsonl",
+      "offset": 1232729217,
+      "bytes": 159808,
+      "sha256": "70d4458dcda811596953b3bf5c1f953b5617290c975d505468f759e730828f62"
+    },
+    {
+      "path": "logs/brain.jsonl",
+      "offset": 1232889025,
+      "bytes": 146641,
+      "sha256": "49d28f01672a5a35195a575b035893c4e35884b316957aef6a19d822206ffa6b"
+    },
+    {
+      "path": "logs/brain.jsonl",
+      "offset": 1233035666,
+      "bytes": 151253,
+      "sha256": "b26aca5065f7266a3d6452c227cb08ace265836b7098000cec81f123716d60c2"
+    },
+    {
+      "path": "logs/brain.jsonl",
+      "offset": 1233186919,
+      "bytes": 572890,
+      "sha256": "617c7d660381d35b324aabf0bc3a2b992359a03e735934518e7dffe8805f3a8e"
+    },
+    {
+      "path": "logs/brain.jsonl",
+      "offset": 1233759809,
+      "bytes": 254242,
+      "sha256": "942474321201045fe8c975bc75dcd3c617d28790f55c5f6ec8100b07f06b9531"
+    },
+    {
+      "path": "logs/brain.jsonl",
+      "offset": 1234014051,
+      "bytes": 231685,
+      "sha256": "31bce72905ad9869bf48e70b0e159a706681a43c213eee0ef11dcb5ade5773c9"
+    },
+    {
+      "path": "logs/brain.jsonl",
+      "offset": 1234245736,
+      "bytes": 160841,
+      "sha256": "3979de95dd045681737a87ae04f8cf1e864cbe92f0daa6776ea9547d4cc3769d"
+    },
+    {
+      "path": "logs/brain.jsonl",
+      "offset": 1234406577,
+      "bytes": 211645,
+      "sha256": "664ee7cf53835b0f6e9d57fef0e7c18ad00076e7f28f73f05c44e6e372a1fafe"
+    },
+    {
+      "path": "logs/brain.jsonl",
+      "offset": 1234618222,
+      "bytes": 162503,
+      "sha256": "3017546ffdb64fb132784e7ebcb67d4e1668fa5815693cc1ac6b83efdd31cd1c"
+    },
+    {
+      "path": "logs/brain.jsonl",
+      "offset": 1234780725,
+      "bytes": 157093,
+      "sha256": "0045ca8cdc5b0bae7d77e55216a71343855e5da5c60d8cdc0d8a295dce64e28d"
+    },
+    {
+      "path": "logs/brain.jsonl",
+      "offset": 1234937818,
+      "bytes": 181561,
+      "sha256": "c2f395471f529d5f0f651b8cd520734da13e6566dc48ac1b69cee9426ce54d3c"
+    },
+    {
+      "path": "logs/brain.jsonl",
+      "offset": 1235119379,
+      "bytes": 59992,
+      "sha256": "063bf9f2c850d14b8e716983994f1dd368a02c8566049bb662f31eac1c5decf0"
+    },
+    {
+      "path": "logs/brain.jsonl",
+      "offset": 1235179371,
+      "bytes": 68737,
+      "sha256": "f606cf05ef2a4a3a7724a2d3d31ed0f3a509e122060fbb840c1c898c6e0af9d1"
+    },
+    {
+      "path": "logs/brain.jsonl",
+      "offset": 1235248108,
+      "bytes": 105673,
+      "sha256": "a18031b0fa775d9b426e881f150703e53f63bf4a4ef50b90ec087f7bdb5e8c76"
+    },
+    {
+      "path": "logs/brain.jsonl",
+      "offset": 1235353781,
+      "bytes": 347965,
+      "sha256": "e8ba487c8b1ef3c82a9c17199faa92df0d4f2f5de432dd75b223b87269014605"
+    },
+    {
+      "path": "logs/brain.jsonl",
+      "offset": 1235701746,
+      "bytes": 105756,
+      "sha256": "ff08b7f0332c72ec9eefd1c0cc6a554728cc2b3cdc017afab2754651b97e7672"
+    },
+    {
+      "path": "logs/brain.jsonl",
+      "offset": 1235807502,
+      "bytes": 106134,
+      "sha256": "7df7a43d3820c446380846d853f5dc90293fb76874bcb6de2e2e1b699f3e25c4"
+    },
+    {
+      "path": "logs/brain.jsonl",
+      "offset": 1235913636,
+      "bytes": 68213,
+      "sha256": "593e699f01324c3554e80fb42baa96a96b35d388dd88e184017b7146d39ec592"
+    },
+    {
+      "path": "logs/brain.jsonl",
+      "offset": 1235981849,
+      "bytes": 107226,
+      "sha256": "c08f8776264cdac99435fa4c879284c84c412d1c07a8a64c1097a054bf0ff27a"
+    },
+    {
+      "path": "logs/brain.jsonl",
+      "offset": 1236089075,
+      "bytes": 109320,
+      "sha256": "f95033920dde776d24868bac156a4c12d33be0a04a53940db0e58e9f28e91bc7"
+    },
+    {
+      "path": "logs/brain.jsonl",
+      "offset": 1236198395,
+      "bytes": 102096,
+      "sha256": "8ea277b54deb367dd1370058e08cd9a7c47cc6ccfd38a142a334fdb209aca711"
+    },
+    {
+      "path": "logs/brain.jsonl",
+      "offset": 1236300491,
+      "bytes": 94276,
+      "sha256": "6674211b8cee845225b0fd68c2f85e3018d3a247743555fc839200b7903e6813"
+    },
+    {
+      "path": "logs/brain.jsonl",
+      "offset": 1236394767,
+      "bytes": 70021,
+      "sha256": "c02fdb501336717c1cf200b26f4685c5d4c3cba29c52c61be17b0a1b40c25ce8"
+    },
+    {
+      "path": "logs/brain.jsonl",
+      "offset": 1236464788,
+      "bytes": 104264,
+      "sha256": "1fadd32b587aa1247c3b4b3b9e01a65bf71d808a45ca3270e49960572166ab74"
+    },
+    {
+      "path": "logs/brain.jsonl",
+      "offset": 1236569052,
+      "bytes": 104722,
+      "sha256": "906489c6a97e71a00dfe2039aa5dff03fbb55b25f91e5e14f79a842379438da6"
+    },
+    {
+      "path": "logs/brain.jsonl",
+      "offset": 1236673774,
+      "bytes": 107771,
+      "sha256": "465212eaa4843041443a31285e39c3d858566f046d97ae6f2988cbc844e3c16d"
+    }
+  ],
+  "captured_brain_log_size": 1238898481,
+  "next_actual_run_id": "DFYBEW6NA6AJ",
+  "next_actual_ascension": 10,
+  "next_actual_character": "SILENT",
+  "next_actual_config_ref": {
+    "path": "logs/run-config.jsonl",
+    "offset": 2457617,
+    "bytes": 6028,
+    "sha256": "0a31a9fb92ca34f9a05072fd67ad1c663f11998629b10302018910753cf55210"
+  },
+  "new_report_or_refresh_or_game_action": false
+}
