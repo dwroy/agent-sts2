@@ -1,0 +1,79 @@
+{
+  "recorded_at": "2026-10-21T14:24:33+08:00",
+  "base_commit": "518cca239",
+  "checks": [
+    {
+      "check": "tsc",
+      "command": "PATH=\"$HOME/.local/node/bin:$PATH\" nice -n 19 npx tsc -p tsconfig.json --noEmit",
+      "cwd": "agent",
+      "exit_code": 0,
+      "log": "validation/tsc.log.gz"
+    },
+    {
+      "check": "full_vitest",
+      "command": "nice -n 19 node node_modules/vitest/vitest.mjs run --maxWorkers=1",
+      "cwd": "agent",
+      "exit_code": 0,
+      "files_passed": 642,
+      "tests_passed": 6056,
+      "tests_skipped": 2,
+      "duration_seconds": 1468.93,
+      "log": "validation/vitest-direct.log.gz",
+      "resource_observation": "parent plus one worker; nice 19; no suite exclusions"
+    },
+    {
+      "check": "python_fixed_fixtures",
+      "command": "nice -n 19 python3 -B knowledge/builders/tests/test_brain_card_distill.py",
+      "exit_code": 0,
+      "tests_passed": 7,
+      "log": "validation/python-tests-final4.log.gz"
+    },
+    {
+      "check": "focused_vitest",
+      "exit_code": 0,
+      "files_passed": 1,
+      "log": "validation/vitest-focused-final.log.gz"
+    },
+    {
+      "check": "payload_audit",
+      "complete_pairs": 996,
+      "payloads_verified": 1992,
+      "errors": 0,
+      "log": "audit.json"
+    }
+  ],
+  "history": [
+    {
+      "log": "validation/vitest.log.gz",
+      "result": "CLI rejected unsupported --minWorkers; no test result"
+    },
+    {
+      "log": "validation/vitest-full.log.gz",
+      "result": "npm-wrapped run interrupted to enforce process budget; exit status not retained; not a pass"
+    },
+    {
+      "logs": "validation/python-tests*.log.gz",
+      "result": "Original fixture failures and subsequent corrected runs retained; final4 is the final seven-test pass"
+    }
+  ],
+  "log_sha256": {
+    "validation/gitleaks-public.log.gz": "96a09a37fc2407acd89255247d40cf1652fa97a080c6d24ecfaecdf8f4dcf808",
+    "validation/python-tests-final.log.gz": "39d21f9f2c38fdf588ef6c5ad914f1e32e52e860e10e2d419bd13a06989d64ff",
+    "validation/python-tests-final2.log.gz": "ab82f0a076515cc0b199a659e8d765bf21f105785a0dabe9e253289d90d64b9c",
+    "validation/python-tests-final3.log.gz": "f982b8d6833d06c0b39ff436cfbe31e08b919366a14df21ee27efe4a7e0eccbf",
+    "validation/python-tests-final4.log.gz": "6a3ee9449f6873e34b5e4a420384cd49ca8ad9bb37ff38d58780d4e40d858b20",
+    "validation/python-tests-post-context.log.gz": "b1e3c7d2c4108ac77fae799465311ca2e0722b3b36eb49de0b234b64ba91a86d",
+    "validation/python-tests.log.gz": "8fc96e05bf511805c72a563f6449a7aabec76cca050c484234d7b43a53b4c9f4",
+    "validation/tsc.log.gz": "9ceffb7310338057cfe71a4ae1e2c98d2c485d81cdef906532a801f457a38d64",
+    "validation/vitest-direct.log.gz": "45e530114b559f80d6f6dee6591472922ec094b129bc2bcbaeb1afb4e5b82666",
+    "validation/vitest-focused-final.log.gz": "c4838c9f25d2cdb1bcd510af8528750038aa4618a5375064edcdeb8c5a3a27fd",
+    "validation/vitest-full.log.gz": "318a9381175403ce31c047124391f26244722b3c9a14275b840b5bd56631822d",
+    "validation/vitest.log.gz": "9f00724130d68e63fd137f513d81db835987ea4625dfe5a7367a445fd0f165ac"
+  },
+  "scan": {
+    "decompressed_data_receipts_code_and_validation": "gitleaks 8.30.1 passed; 36.20 MB; log validation/gitleaks-public.log.gz",
+    "staged_and_issue_body": "scanned separately at delivery, not covered by this receipt"
+  },
+  "limits": "Offline phase1 only; no live/play/shadow integration; no new game-knowledge conclusions",
+  "log_storage": "gzip preserves original bytes including terminal blank lines; decompressed log bytes were included in public gitleaks scan"
+}

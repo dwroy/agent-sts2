@@ -1,0 +1,20 @@
+{
+  "dataset_sha256": "ae9cb38e64a76f6266f1d356eb48e3a893594031270cffd81fb3551e3b76a748",
+  "cutoff": "2026-10-16T06:50:52.189Z",
+  "scope": "Silent A10; all held-out runs; act1 primary, act2/3 secondary",
+  "train_fraction": 0.8,
+  "test_questions": 1018,
+  "test_runs": 80,
+  "arms": [
+    "most-often-chosen offered card (skip included)",
+    "Jev compact facts only",
+    "Jev same facts + 5 cases + per-option observational statistics"
+  ],
+  "k": 5,
+  "case_ranking": "same act/ascension; 2*deck multiset Jaccard + option Jaccard + same Boss + same HP quartile; latest tie-break; distinct runs",
+  "pilot": "6 evenly spaced test questions, both arms; no tuning from accuracy",
+  "full_calls": 2036,
+  "network": "Nova only; key file; no redirect, no retry, 20s timeout, 2 worker threads",
+  "inference": "Wilson intervals and 2000 run-cluster bootstrap, seed16; paired delta; errors count as disagreement",
+  "restriction": "offline phase1 only; no live/shadow integration"
+}
