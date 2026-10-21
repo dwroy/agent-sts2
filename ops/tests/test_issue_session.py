@@ -187,6 +187,14 @@ class IssueSessions(unittest.TestCase):
         self.assertEqual(self.sessions.reclaim(17)['state'], 'eligible')
         self.processes_mock.assert_called_once_with(self.tree, {101, 102, 103}, self.sessions.process_cwd)
 
+    def test_verified_clipboard_foreground_helper_passes_but_other_processes_still_refuse(self):
+        self.info['foreground_processes'].append(dict(pid=103, name='init', argv=['fixed helper']))
+        with patch.object(resource, 'idle_codex_helpers', return_value={103}):
+            self.assertEqual(self.sessions.reclaim(17)['state'], 'eligible')
+            self.processes_mock.assert_called_with(self.tree, {101, 102, 103}, self.sessions.process_cwd)
+            self.info['foreground_processes'].append(dict(pid=104, name='powershell.exe'))
+            self.assert_retained('unexpected foreground')
+
     def test_unsent_draft_or_missing_composer_blocks_reclaim(self):
         for screen in ('› do not lose this draft', 'menu, not a prompt'):
             with self.subTest(screen=screen):
@@ -449,6 +457,95 @@ class IssueSessions(unittest.TestCase):
         (self.root / 'agent/node_modules').mkdir()
         (self.tree / 'agent/node_modules').symlink_to(self.root / 'agent/node_modules', target_is_directory=True)
 
+    def prepare_resume(self, state, present=False):
+        self.prepare_spawn()
+        row = copy.deepcopy(self.row)
+        row['state'] = state
+        if state != 'tab-created':
+            for key in ('workspace', 'tab', 'pane', 'terminal'):
+                row.pop(key, None)
+        self.sessions.data['sessions']['17'] = row; self.sessions.save()
+        self.present = present
+        self.info.update(foreground_process_group_id=101, foreground_processes=[])
+        return row
+
+    def test_prepare_failure_replay_then_explicit_resume_without_allocating_or_prompting_twice(self):
+        self.prepare_spawn()
+        original = self.cli
+        def failed(args, **kwargs):
+            if args[:3] == ['python3', 'ops/issue_session_project.py', 'prepare']:
+                raise ValueError('verified shared agent/node_modules link required')
+            return original(args, **kwargs)
+        self.run_mock.side_effect = failed
+        with patch.object(checkout, 'create') as allocate, patch.object(os, 'setpriority'):
+            with self.assertRaisesRegex(ValueError, 'verified shared'):
+                self.sessions.spawn(17, 'fixture')
+            self.assertEqual(self.sessions.data['sessions']['17']['state'], 'allocating')
+            self.assertIn('resume', self.sessions.spawn(17, 'fixture'))
+            self.assertFalse(any(e[:2] == ('agent', 'start') for e in self.events))
+            self.run_mock.side_effect = self.cli; self.present = False
+            self.assertEqual(self.sessions.resume(17, 'fixture')['state'], 'active')
+            self.sessions.spawn(17, 'fixture')
+            allocate.assert_called_once()
+        self.assertEqual(sum(e[:2] == ('agent', 'start') for e in self.events), 1)
+        self.assertEqual(sum(e[:2] == ('agent', 'prompt') for e in self.events), 1)
+
+    def test_resume_allocated_and_tab_created_reuse_exact_phase(self):
+        for state in ('allocated', 'tab-created'):
+            with self.subTest(state=state):
+                if not hasattr(self, 'resume_prepared'):
+                    self.prepare_resume(state, present=state == 'tab-created'); self.resume_prepared = True
+                else:
+                    row = copy.deepcopy(self.row); row['state'] = state
+                    self.sessions.data['sessions']['17'] = row; self.sessions.save()
+                    self.present = True
+                    self.info.update(foreground_process_group_id=101, foreground_processes=[])
+                self.events.clear()
+                with patch.object(os, 'setpriority'):
+                    self.assertEqual(self.sessions.resume(17, 'fixture')['state'], 'active')
+                self.assertEqual(sum(e[:2] == ('tab', 'create') for e in self.events), int(state == 'allocated'))
+                self.assertEqual(sum(e[:2] == ('agent', 'prompt') for e in self.events), 1)
+
+    def test_resume_creating_tab_reconciles_lost_receipt_without_new_tab(self):
+        self.prepare_resume('creating-tab', present=True)
+        with patch.object(os, 'setpriority'):
+            self.assertEqual(self.sessions.resume(17, 'fixture')['state'], 'active')
+        self.assertFalse(any(e[:2] == ('tab', 'create') for e in self.events))
+        self.assertEqual(sum(e[:2] == ('agent', 'prompt') for e in self.events), 1)
+
+    def test_allocated_unexpected_tab_is_recorded_without_launch_or_second_tab(self):
+        row = self.prepare_resume('allocated', present=True)
+        with self.assertRaisesRegex(ValueError, 'unexpected existing tab; identity recorded'):
+            self.sessions.resume(17, 'fixture')
+        self.assertEqual(row['state'], 'tab-created')
+        self.assertFalse(any(e[:2] in (('tab', 'create'), ('agent', 'start')) for e in self.events))
+
+    def test_absent_uncertain_tab_needs_explicit_retry_evidence(self):
+        row = self.prepare_resume('creating-tab')
+        with self.assertRaisesRegex(ValueError, 'tab creation uncertain'):
+            self.sessions.resume(17, 'fixture')
+        self.assertEqual(row['state'], 'creating-tab')
+        self.assertFalse(any(e[:2] == ('tab', 'create') for e in self.events))
+        with self.assertRaisesRegex(ValueError, 'evidence reference'):
+            self.sessions.resume(17, 'fixture', True)
+        with patch.object(os, 'setpriority'):
+            self.assertEqual(self.sessions.resume(17, 'fixture', True, 'fixed absence readback')['state'], 'active')
+        self.assertEqual(sum(e[:2] == ('tab', 'create') for e in self.events), 1)
+
+    def test_resume_refuses_changed_source_dirty_work_busy_pane_and_start_uncertainty(self):
+        row = self.prepare_resume('tab-created', present=True)
+        (self.tree / 'README.md').write_text('unfinished work\n')
+        with self.assertRaisesRegex(ValueError, 'cleanliness mismatch'):
+            self.sessions.resume(17, 'fixture')
+        self.git('checkout', '--', 'README.md', tree=self.tree)
+        self.info['foreground_process_group_id'] = 102
+        with self.assertRaisesRegex(ValueError, 'shell is not idle'):
+            self.sessions.resume(17, 'fixture')
+        row['state'] = 'starting'; self.sessions.save()
+        with self.assertRaisesRegex(ValueError, 'requires register'):
+            self.sessions.resume(17, 'fixture')
+        self.assertFalse(any(e[:2] == ('agent', 'start') for e in self.events))
+
     def test_start_error_after_detection_reconciles_name_before_single_prompt(self):
         self.prepare_spawn()
         original = self.herdr
@@ -515,6 +612,14 @@ class IssueSessions(unittest.TestCase):
         with patch.object(subprocess, 'run', return_value=reply):
             with self.assertRaisesRegex(ValueError, 'Herdr reason: agent_start_timeout') as caught:
                 self.actual_run(['herdr', 'agent', 'start'])
+        self.assertNotIn('secret-token', str(caught.exception))
+        self.assertNotIn('/private', str(caught.exception))
+
+    def test_allocator_runtime_reason_is_preserved_without_raw_stderr(self):
+        reply = subprocess.CompletedProcess([], 1, stdout=b'', stderr=b'Node runtime unavailable on PATH secret-token /private/auth.json')
+        with patch.object(subprocess, 'run', return_value=reply):
+            with self.assertRaisesRegex(ValueError, 'allocation reason: Node runtime unavailable on PATH') as caught:
+                self.actual_run(['python3', 'ops/worktree_checkout.py', 'fixed-root'])
         self.assertNotIn('secret-token', str(caught.exception))
         self.assertNotIn('/private', str(caught.exception))
 
@@ -720,6 +825,43 @@ class IssueSessions(unittest.TestCase):
 
 
 class Composer(unittest.TestCase):
+    def test_wsl_clipboard_replay_requires_exact_argv_codex_parent_and_leaf(self):
+        script = b"""
+$ErrorActionPreference = 'Stop'
+$out = [Console]::OpenStandardOutput()
+$utf8 = [System.Text.UTF8Encoding]::new($false)
+while ($null -ne [Console]::ReadLine()) {
+    $bytes = $utf8.GetBytes([string](Get-Clipboard -Raw))
+    $header = [BitConverter]::GetBytes([uint32]$bytes.Length)
+    $out.Write($header, 0, $header.Length)
+    $out.Write($bytes, 0, $bytes.Length)
+    $out.Flush()
+}
+"""
+        argv = [b'/init', resource.CLIPBOARD_PS, resource.CLIPBOARD_PS, b'-NoProfile', b'-NonInteractive', b'-Command', script, b'']
+        self.assertTrue(resource.clipboard_helper(Path('/init'), argv))
+        for index, value in ((0, b'init'), (1, b'/other/powershell.exe'), (3, b'-Profile'),
+                              (6, script + b'Write-Output extra'), (7, b'extra')):
+            changed = list(argv); changed[index] = value
+            self.assertFalse(resource.clipboard_helper(Path('/init'), changed))
+        self.assertFalse(resource.clipboard_helper(Path('/bin/powershell.exe'), argv))
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp); parent = root/'101'; child = root/'102'
+            for proc in (parent, child):
+                (proc/'task'/proc.name).mkdir(parents=True)
+                (proc/'task'/proc.name/'children').write_text('')
+            (parent/'task/101/children').write_text('102')
+            (parent/'exe').symlink_to('/fixed/bin/codex')
+            (child/'exe').symlink_to('/init')
+            (child/'stat').write_text('102 (init) S 101 1 1')
+            (child/'cmdline').write_bytes(b'\0'.join(argv))
+            self.assertEqual(resource.idle_codex_helpers({101}, root), {102})
+            (child/'stat').write_text('102 (init) S 999 1 1')
+            self.assertEqual(resource.idle_codex_helpers({101}, root), set())
+            (child/'stat').write_text('102 (init) S 101 1 1')
+            (child/'task/102/children').write_text('103')
+            self.assertEqual(resource.idle_codex_helpers({101}, root), set())
+
     def test_fixed_ansi_states(self):
         for ansi, expected in [('› ', 'empty'), ('› typed', 'text'), ('menu', 'none'),
                                ('› \x1b[38;2;1;2;3mtyped', 'text'), ('› \x1b[2mplaceholder', 'empty'),

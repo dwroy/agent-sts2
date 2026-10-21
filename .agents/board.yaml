@@ -4,7 +4,8 @@ herdr_workspace: agent-sts2
 worktree:
   root: .worktrees
   base_ref: refs/heads/main
-  allocate: [python3, ops/worktree_checkout.py, "{root}", "{path}", "{ref}"]
+  allocate: [python3, ops/worktree_checkout.py, "{root}", "{path}", "{ref}", --require-node]
+  resume_allocate: [python3, ops/worktree_checkout.py, "{root}", "{path}", "{ref}", --resume, --require-node]
   prepare:
     - [python3, ops/issue_session_project.py, prepare, "{root}", "{path}"]
   retire: [python3, ops/worktree_retention.py, complete, --root, "{root}", --state-dir, "{state_dir}", --workspace, "{branch}", --source, "{source}", --main-commit, "{main_commit}", --live-commit, "{live_commit}"]
@@ -34,6 +35,9 @@ dispatcher:
   digest: ops/codex-ops/board-digest.md
   pause_files: [ops/codex-ops/PAUSE, ops/codex-ops/LLM_DRAIN]
   interval_minutes: 5
+  watchdog:
+    idle_minutes: 30
+    error_patterns: ["at capacity", "rate limit", "stream disconnected", "Reconnecting", "error sending request"]
 session:
   state_dir: ops/codex-ops
   # Read only inaccessible cwd links; verify the same PID namespace and start time.

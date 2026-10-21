@@ -35,7 +35,7 @@ def link(root, tree, name):
     return "linked"
 
 
-def attach(root, tree, apply=True):
+def attach(root, tree, apply=True, require_node=False):
     root, tree = Path(root).resolve(), Path(tree).resolve()
     if tree.parent != root / ".worktrees":
         raise ValueError("shared tools need an isolated workspace in this instance")
@@ -43,6 +43,8 @@ def attach(root, tree, apply=True):
     result = {"schema": "shared-readonly-tools-v1", "root": str(root), "worktree": str(tree),
               "source_permissions_unchanged": True, "install_or_dependency_copy": False, "tools": {}}
     modules = root / "agent/node_modules"
+    if require_node and (root / 'agent/package.json').is_file() and not modules.is_dir():
+        raise ValueError('shared Node provider missing: agent/node_modules; allocation cannot prepare this package')
     if modules.is_dir():
         manifests = ("agent/package.json", "agent/package-lock.json")
         if not any((root / name).exists() or (tree / name).exists() for name in manifests):
@@ -65,7 +67,10 @@ def attach(root, tree, apply=True):
                 wanted = expected.get(name)
                 if wanted is None or any(value.get(k) != wanted.get(k) for k in ("version", "integrity")):
                     raise ValueError("installed dependency differs from the pinned lock: " + name)
-            runtime = json.loads(subprocess.check_output(["node", "-p", "JSON.stringify({node:process.version,abi:process.versions.modules,platform:process.platform,arch:process.arch})"], text=True))
+            try:
+                runtime = json.loads(subprocess.check_output(["node", "-p", "JSON.stringify({node:process.version,abi:process.versions.modules,platform:process.platform,arch:process.arch})"], text=True))
+            except FileNotFoundError:
+                raise ValueError('Node runtime unavailable on PATH; configure the existing runtime before allocation') from None
             result["tools"]["node"] = {"state": "verified",
                 "source": str(modules.resolve()), "manifests": hashes, "installed_lock_sha256": sha(installed_file),
                 "runtime": runtime, "consumer_cache": str(tree / ".cache/vitest"), "usage": "read-only"}

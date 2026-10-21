@@ -1,0 +1,164 @@
+{
+  "schema": "issue20-idle-lifecycle-verification-v1",
+  "parent": "466e54561dc23e09321826d55af39c5abedd4aef",
+  "state": "complete",
+  "kit": {
+    "commit": "95f1efb3251a27f3f702540773a2b466920821e9",
+    "remote_main_verified": "95f1efb3251a27f3f702540773a2b466920821e9",
+    "files": {
+      ".gitignore": {
+        "bytes": 27,
+        "sha256": "e776a3676ba6fdbe9c3a6bb73419225a29ed7c1a0b014d6a1050e2868873e463"
+      },
+      "README.md": {
+        "bytes": 14719,
+        "sha256": "ed4e754829e53a8cebe2a4fb492868935a18ffc9922f329a90fc8fcd9860c41d"
+      },
+      "board.py": {
+        "bytes": 27404,
+        "sha256": "81efff980ff4ac6d6b2f0e73ee206b16f64ac2607c73c64a7c990557950fad69"
+      },
+      "test_board.py": {
+        "bytes": 16734,
+        "sha256": "464d0bb82c322e0f53d155b4a2bb145c2435a2920b1759d58bfa31cef9f97b7a"
+      },
+      "test_watchdog.py": {
+        "bytes": 21309,
+        "sha256": "1b7c53cf073a95e1c4d739ec118ab6c28a8b3aaeb40fc95e1ad4bc11dc9fa041"
+      },
+      "watchdog.py": {
+        "bytes": 15573,
+        "sha256": "6d1b6d998b42090e5e6973178a5a26c17f0a50753d900f2aa23721550e246808"
+      }
+    }
+  },
+  "checks": {
+    "tsc": {
+      "exit_code": 0,
+      "command": "node node_modules/typescript/bin/tsc -p tsconfig.json --noEmit"
+    },
+    "python": {
+      "kit": 59,
+      "lifecycle": 62,
+      "shared_tools": 11,
+      "retention": 15,
+      "total": 147,
+      "exit_code": 0
+    },
+    "vitest": {
+      "state": "complete",
+      "command": "node node_modules/vitest/vitest.mjs run --pool=forks --maxWorkers=1 --no-file-parallelism --reporter=default --reporter=json",
+      "exit_code": 0,
+      "files": 647,
+      "passed": 6090,
+      "failed": 0,
+      "skipped": 2
+    },
+    "preceding_full": {
+      "exit_code": 1,
+      "files": 647,
+      "passed": 6089,
+      "failed": 1,
+      "skipped": 2,
+      "cause": "Old wrapper asserted Ran 6 tests after the fixed Python suite grew to 11; changed to require a nonzero unittest count.",
+      "old_count_assertion_confirmed": true
+    },
+    "shared_tools_targeted": {
+      "exit_code": 0,
+      "files": 1,
+      "tests": 2
+    }
+  },
+  "source_blobs": {
+    ".agents/board.yaml": "a1f249bc605ed0af9d2dd1e933a29c02ab0f2def",
+    "ops/issue_session.py": "b6669820bd5988272dfc114a461f11120537cba3",
+    "ops/issue_session_support.py": "17be591a868068d032bef74e36fb64da4de7be20",
+    "ops/shared_tools.py": "bc1633b5480c38397dea2dcefb09ea4457592f9e",
+    "ops/worktree_checkout.py": "95fbd62fc0119bf121d5285b1edf2484396af386",
+    "ops/tests/test_issue_session.py": "9b10e36ad0ec74740c1b6ab2d3b36257c0636094",
+    "ops/tests/test_shared_tools.py": "70528c8629c31f9dc92c63892c20228779f2b382",
+    "docs/github-issues-workflow.md": "5b5a0dda84cd43466348efdf83e50e2eaa43a017",
+    "agent/tests/shared-tools.test.ts": "81d4b62545c2f8ab15a0b668361f5d03c0dab974"
+  },
+  "logs": {
+    "kit.log": {
+      "bytes": 98,
+      "sha256": "1743fbdfe18d3da3ba7a45aef2ff93ceb01598f236ca82360c335a4a390592f0"
+    },
+    "lifecycle.log": {
+      "bytes": 99,
+      "sha256": "8eda4dd13d28bd4ac9257dc4884834b15c1a26465d71e6252a84edd65eb08126"
+    },
+    "shared-tools.log": {
+      "bytes": 98,
+      "sha256": "88dfc80dafdceac0796b00ddcbd72223cc3e545e4e5ea70c23fdc4cb460a106d"
+    },
+    "retention.log": {
+      "bytes": 98,
+      "sha256": "cf4bb5c6e85546eee56b678b7403861162931b6c4bf51cc2f46709a4bc3e16ec"
+    },
+    "tsc.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "vitest-interrupted.log": {
+      "bytes": 14899,
+      "sha256": "2837e597a7b4e61fa76302fd8cbda26d98e6b88a770e02cf530c84b74754dc6c"
+    },
+    "vitest-scope-adjustment.log": {
+      "bytes": 1906,
+      "sha256": "50e3ddab659b1334572eee53bed6e9da254fa66fe2c6ec9dafbbe2251aa5232d"
+    },
+    "vitest-count-failure.log": {
+      "bytes": 84459,
+      "sha256": "29c8f914157e9d6e19477c14002edc7769fa3143bf6f7c10e858dcc50b410df5"
+    },
+    "vitest-count-failure.json": {
+      "bytes": 2364597,
+      "sha256": "4a0bd69a88884d742a6da00d9f02b4e08f5e023d747df3932eadd50840c8d69f"
+    },
+    "vitest-targeted.log": {
+      "bytes": 257,
+      "sha256": "99194d1f0e49f215d536b4e1d15626fcdf1cdbd6f8784d33450c3a33b23bacc8"
+    },
+    "vitest.log": {
+      "bytes": 80754,
+      "sha256": "9d8df5cf09e8b77f507462cd15b2e170a790e45c3a8123863dc903f2710b3a9b"
+    },
+    "vitest.json": {
+      "bytes": 2363702,
+      "sha256": "e6c3d3cb861809f4461dd6cb30f645e7116eacc44189e0ab88fc4f2f0b267520"
+    }
+  },
+  "replays": {
+    "bytes": 1470,
+    "sha256": "c4d1c20d2dfae1fc32a193d3b31ca7ebdce7be20261de100da0daae3ebc916ee"
+  },
+  "interrupted": {
+    "attempts": [
+      {
+        "command": "Vitest full single-fork",
+        "exit_code": 130,
+        "reason": "User expanded #20 with lifecycle fixes while the earlier check was running; stopped only our verified test PID before editing ops source.",
+        "request": "https://github.com/dwroy/agent-sts2/issues/20#issuecomment-6325415161",
+        "validation": "interrupted, not a successful final check"
+      },
+      {
+        "command": "Vitest full single-fork",
+        "exit_code": 130,
+        "reason": "Narrow required Node provider verification to issue allocation; preserve optional shared tools for other tasks.",
+        "validation": "interrupted, not a successful final check"
+      }
+    ]
+  },
+  "production": {
+    "enabled_by_developer": false,
+    "actual_prompts_or_reclaims_by_developer": false,
+    "real_clipboard_content_read": false
+  },
+  "requirements": [
+    "https://github.com/dwroy/agent-sts2/issues/20#issuecomment-6324894427",
+    "https://github.com/dwroy/agent-sts2/issues/20#issuecomment-6325415161"
+  ],
+  "source_blobs_unchanged_at_completion": true
+}
