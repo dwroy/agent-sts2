@@ -5547,3 +5547,4 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
 - 2026-10-21T11:00:18+08:00 104302-fix无新源/提交/合入，154路径仅已发布CEN差异，52映射/46历史祖先及两候选续接SHA核同，原tsc0/52定向仅来源；rc0/statefailed/mergednull保原，不空合并/重复测试或dataset/关闭宽父。原件paper/materials/20261021-1057-ops/receipt.json。
 
 - 2026-10-21 11:04:20 CST [Claude/Roy，并行] Roy：能并行的都并行、可以多开会话。新建 #12（拿牌 v2 单牌增量可辨识性研究，只读）、#13（补齐未建模常见卡牌，学习者）、#14（第三幕 Boss 与连战模拟迭代，学习者）；按一个 issue 一个新会话开 herdr 会话 issue-8（wJ:p1H2）、issue-12（wJ:p1H3）、issue-6（wJ:p1H4），各自独立工作树，gpt-6.1-sol high；#13/#14 交 ops 按学习闭环派学习者；关闭 #5。
+- 2026-10-21 11:50:16 CST [Codex，#15] 按 #1 Roy 方向2移植冻结拿牌v2，仅为原大脑战后奖励三牌/skip补充事实；CARD=brain、REFLEX=off，不改出牌/live/STOP。#3已协调builder仅四行分流。tsc、14项定向vitest、Python3项通过；两局真实runLoop回放准备216.66/185.34ms、增量1594/1591字节；广域回归因esbuild子进程超≤2限制主动中断，不记full通过。源码提交验收，完整回归/实际合入/发布号/自然首局读回交ops；报告与旧失败/中断原件paper/materials/2026-10-21-issue-15-brain-facts/。

@@ -1,0 +1,451 @@
+
+ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/issue-15-v2-brain-facts/agent
+
+ ❯ tests/v6-brain-card-value-loop.test.ts (6 tests | 6 failed) 3829ms
+   × adds bounded facts to the actual combat→reward brain question for T0TP8S9MMU9Q F2 973ms
+   × adds bounded facts to the actual combat→reward brain question for RBMEQGXPE9Z2 F3 718ms
+   × keeps the exact original brain question when missing 564ms
+   × keeps the exact original brain question when corrupt 518ms
+   × keeps the exact original brain question when timeout 538ms
+   × keeps the exact original brain question when no-combat 515ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 6 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/v6-brain-card-value-loop.test.ts > adds bounded facts to the actual combat→reward brain question for T0TP8S9MMU9Q F2
+AssertionError: expected "ask" to not be called at all, but actually been called 1 times
+
+Received:
+
+  1st ask call:
+
+    Array [
+      Object {
+        "direction": "uncommitted",
+        "facts": Array [
+          Object {
+            "card": "DODGE_AND_ROLL",
+            "core": null,
+            "dilution": Object {
+              "added_slot_fraction": 0.07142857142857142,
+              "deck_after": 14,
+              "deck_before": 13,
+              "functional_draw_or_damage_effect": "unknown",
+            },
+            "key": "card0",
+            "next_boss_trust": "low_trust",
+            "next_boss_win_delta": Object {
+              "mean": 0,
+              "se": 0,
+            },
+            "support": null,
+            "support_observations": Array [],
+            "support_reason": "no_committed_core",
+            "target_S_delta_record_only": null,
+            "target_win_delta": null,
+            "template_membership": Array [],
+          },
+          Object {
+            "card": "ESCAPE_PLAN",
+            "core": null,
+            "dilution": Object {
+              "added_slot_fraction": 0.07142857142857142,
+              "deck_after": 14,
+              "deck_before": 13,
+              "functional_draw_or_damage_effect": "unknown",
+            },
+            "key": "card1",
+            "next_boss_trust": "low_trust",
+            "next_boss_win_delta": Object {
+              "mean": 0,
+              "se": 0,
+            },
+            "support": null,
+            "support_observations": Array [],
+            "support_reason": "no_committed_core",
+            "target_S_delta_record_only": null,
+            "target_win_delta": null,
+            "template_membership": Array [],
+          },
+          Object {
+            "card": "ANTICIPATE",
+            "core": null,
+            "dilution": Object {
+              "added_slot_fraction": 0.07142857142857142,
+              "deck_after": 14,
+              "deck_before": 13,
+              "functional_draw_or_damage_effect": "unknown",
+            },
+            "key": "card2",
+            "next_boss_trust": "low_trust",
+            "next_boss_win_delta": Object {
+              "mean": 0,
+              "se": 0,
+            },
+            "support": null,
+            "support_observations": Array [],
+            "support_reason": "no_committed_core",
+            "target_S_delta_record_only": null,
+            "target_win_delta": null,
+            "template_membership": Array [],
+          },
+          Object {
+            "card": null,
+            "core": false,
+            "dilution": Object {
+              "added_slot_fraction": 0,
+              "deck_after": 13,
+              "deck_before": 13,
+              "functional_draw_or_damage_effect": "unknown",
+            },
+            "key": "skip",
+            "next_boss_trust": "low_trust",
+            "next_boss_win_delta": Object {
+              "mean": 0,
+              "se": 0,
+            },
+            "support": false,
+            "support_observations": Array [],
+            "support_reason": "skip_adds_no_card",
+            "target_S_delta_record_only": null,
+            "target_win_delta": null,
+            "template_membership": Array [],
+          },
+        ],
+        "limits": "Raw simulation and MC errors exclude model error. S is diagnostic only; do not rank by S.",
+        "missing": Array [],
+        "plan_status": "missing",
+        "prior_plan_preferences": Object {
+          "avoid": Array [],
+          "take": Array [],
+        },
+        "ranking": Object {
+          "basis": "defer_to_brain",
+          "confidence": "unknown",
+          "first": null,
+        },
+        "unknown": "Unknown is missing evidence, never zero. A null card ID is the skip option. A null module first means defer to the brain, not skip. An uncommitted direction is not a preference for skipping.",
+      },
+      Object {
+        "card": Object {
+          "criteria": Object {
+            "card0": "DODGE_AND_ROLL",
+            "card1": "ESCAPE_PLAN",
+            "card2": "ANTICIPATE",
+            "skip": "Skip: add no card.",
+          },
+          "instructions": "Choose one offered card or skip for the stated direction. Use only supplied facts; do not calculate or infer missing scores. This is shadow: the brain still makes the real choice.",
+          "type": "choice",
+        },
+      },
+      1000,
+    ]
+
+
+Number of calls: 1
+
+ ❯ replay tests/v6-brain-card-value-loop.test.ts:70:21
+     68|     });
+     69|     expect(stats, notes.join("\n")).toMatchObject({ decisions: 1, jevC…
+     70|     expect(ask).not.toHaveBeenCalled();
+       |                     ^
+     71|     expect(brain.calls).toHaveLength(1);
+     72|     expect(actions).toEqual([{ action: "skip_reward_cards" }]);
+ ❯ tests/v6-brain-card-value-loop.test.ts:77:18
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/6]⎯
+
+ FAIL  tests/v6-brain-card-value-loop.test.ts > adds bounded facts to the actual combat→reward brain question for RBMEQGXPE9Z2 F3
+AssertionError: expected "ask" to not be called at all, but actually been called 1 times
+
+Received:
+
+  1st ask call:
+
+    Array [
+      Object {
+        "direction": "uncommitted",
+        "facts": Array [
+          Object {
+            "card": "PREPARED",
+            "core": null,
+            "dilution": Object {
+              "added_slot_fraction": 0.06666666666666667,
+              "deck_after": 15,
+              "deck_before": 14,
+              "functional_draw_or_damage_effect": "unknown",
+            },
+            "key": "card0",
+            "next_boss_trust": "low_trust",
+            "next_boss_win_delta": Object {
+              "mean": 0,
+              "se": 0,
+            },
+            "support": null,
+            "support_observations": Array [],
+            "support_reason": "no_committed_core",
+            "target_S_delta_record_only": null,
+            "target_win_delta": null,
+            "template_membership": Array [],
+          },
+          Object {
+            "card": "POISONED_STAB",
+            "core": null,
+            "dilution": Object {
+              "added_slot_fraction": 0.06666666666666667,
+              "deck_after": 15,
+              "deck_before": 14,
+              "functional_draw_or_damage_effect": "unknown",
+            },
+            "key": "card1",
+            "next_boss_trust": "low_trust",
+            "next_boss_win_delta": Object {
+              "mean": 0,
+              "se": 0,
+            },
+            "support": null,
+            "support_observations": Array [],
+            "support_reason": "no_committed_core",
+            "target_S_delta_record_only": null,
+            "target_win_delta": null,
+            "template_membership": Array [],
+          },
+          Object {
+            "card": "SUCKER_PUNCH",
+            "core": null,
+            "dilution": Object {
+              "added_slot_fraction": 0.06666666666666667,
+              "deck_after": 15,
+              "deck_before": 14,
+              "functional_draw_or_damage_effect": "unknown",
+            },
+            "key": "card2",
+            "next_boss_trust": "low_trust",
+            "next_boss_win_delta": Object {
+              "mean": 0,
+              "se": 0,
+            },
+            "support": null,
+            "support_observations": Array [],
+            "support_reason": "no_committed_core",
+            "target_S_delta_record_only": null,
+            "target_win_delta": null,
+            "template_membership": Array [],
+          },
+          Object {
+            "card": null,
+            "core": false,
+            "dilution": Object {
+              "added_slot_fraction": 0,
+              "deck_after": 14,
+              "deck_before": 14,
+              "functional_draw_or_damage_effect": "unknown",
+            },
+            "key": "skip",
+            "next_boss_trust": "low_trust",
+            "next_boss_win_delta": Object {
+              "mean": 0,
+              "se": 0,
+            },
+            "support": false,
+            "support_observations": Array [],
+            "support_reason": "skip_adds_no_card",
+            "target_S_delta_record_only": null,
+            "target_win_delta": null,
+            "template_membership": Array [],
+          },
+        ],
+        "limits": "Raw simulation and MC errors exclude model error. S is diagnostic only; do not rank by S.",
+        "missing": Array [],
+        "plan_status": "missing",
+        "prior_plan_preferences": Object {
+          "avoid": Array [],
+          "take": Array [],
+        },
+        "ranking": Object {
+          "basis": "defer_to_brain",
+          "confidence": "unknown",
+          "first": null,
+        },
+        "unknown": "Unknown is missing evidence, never zero. A null card ID is the skip option. A null module first means defer to the brain, not skip. An uncommitted direction is not a preference for skipping.",
+      },
+      Object {
+        "card": Object {
+          "criteria": Object {
+            "card0": "PREPARED",
+            "card1": "POISONED_STAB",
+            "card2": "SUCKER_PUNCH",
+            "skip": "Skip: add no card.",
+          },
+          "instructions": "Choose one offered card or skip for the stated direction. Use only supplied facts; do not calculate or infer missing scores. This is shadow: the brain still makes the real choice.",
+          "type": "choice",
+        },
+      },
+      1000,
+    ]
+
+
+Number of calls: 1
+
+ ❯ replay tests/v6-brain-card-value-loop.test.ts:70:21
+     68|     });
+     69|     expect(stats, notes.join("\n")).toMatchObject({ decisions: 1, jevC…
+     70|     expect(ask).not.toHaveBeenCalled();
+       |                     ^
+     71|     expect(brain.calls).toHaveLength(1);
+     72|     expect(actions).toEqual([{ action: "skip_reward_cards" }]);
+ ❯ tests/v6-brain-card-value-loop.test.ts:77:18
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/6]⎯
+
+ FAIL  tests/v6-brain-card-value-loop.test.ts > keeps the exact original brain question when missing
+ FAIL  tests/v6-brain-card-value-loop.test.ts > keeps the exact original brain question when corrupt
+ FAIL  tests/v6-brain-card-value-loop.test.ts > keeps the exact original brain question when timeout
+ FAIL  tests/v6-brain-card-value-loop.test.ts > keeps the exact original brain question when no-combat
+AssertionError: expected "ask" to not be called at all, but actually been called 1 times
+
+Received:
+
+  1st ask call:
+
+    Array [
+      Object {
+        "direction": "uncommitted",
+        "facts": Array [
+          Object {
+            "card": "PREPARED",
+            "core": null,
+            "dilution": Object {
+              "added_slot_fraction": 0.06666666666666667,
+              "deck_after": 15,
+              "deck_before": 14,
+              "functional_draw_or_damage_effect": "unknown",
+            },
+            "key": "card0",
+            "next_boss_trust": "low_trust",
+            "next_boss_win_delta": Object {
+              "mean": 0,
+              "se": 0,
+            },
+            "support": null,
+            "support_observations": Array [],
+            "support_reason": "no_committed_core",
+            "target_S_delta_record_only": null,
+            "target_win_delta": null,
+            "template_membership": Array [],
+          },
+          Object {
+            "card": "POISONED_STAB",
+            "core": null,
+            "dilution": Object {
+              "added_slot_fraction": 0.06666666666666667,
+              "deck_after": 15,
+              "deck_before": 14,
+              "functional_draw_or_damage_effect": "unknown",
+            },
+            "key": "card1",
+            "next_boss_trust": "low_trust",
+            "next_boss_win_delta": Object {
+              "mean": 0,
+              "se": 0,
+            },
+            "support": null,
+            "support_observations": Array [],
+            "support_reason": "no_committed_core",
+            "target_S_delta_record_only": null,
+            "target_win_delta": null,
+            "template_membership": Array [],
+          },
+          Object {
+            "card": "SUCKER_PUNCH",
+            "core": null,
+            "dilution": Object {
+              "added_slot_fraction": 0.06666666666666667,
+              "deck_after": 15,
+              "deck_before": 14,
+              "functional_draw_or_damage_effect": "unknown",
+            },
+            "key": "card2",
+            "next_boss_trust": "low_trust",
+            "next_boss_win_delta": Object {
+              "mean": 0,
+              "se": 0,
+            },
+            "support": null,
+            "support_observations": Array [],
+            "support_reason": "no_committed_core",
+            "target_S_delta_record_only": null,
+            "target_win_delta": null,
+            "template_membership": Array [],
+          },
+          Object {
+            "card": null,
+            "core": false,
+            "dilution": Object {
+              "added_slot_fraction": 0,
+              "deck_after": 14,
+              "deck_before": 14,
+              "functional_draw_or_damage_effect": "unknown",
+            },
+            "key": "skip",
+            "next_boss_trust": "low_trust",
+            "next_boss_win_delta": Object {
+              "mean": 0,
+              "se": 0,
+            },
+            "support": false,
+            "support_observations": Array [],
+            "support_reason": "skip_adds_no_card",
+            "target_S_delta_record_only": null,
+            "target_win_delta": null,
+            "template_membership": Array [],
+          },
+        ],
+        "limits": "Raw simulation and MC errors exclude model error. S is diagnostic only; do not rank by S.",
+        "missing": Array [],
+        "plan_status": "missing",
+        "prior_plan_preferences": Object {
+          "avoid": Array [],
+          "take": Array [],
+        },
+        "ranking": Object {
+          "basis": "defer_to_brain",
+          "confidence": "unknown",
+          "first": null,
+        },
+        "unknown": "Unknown is missing evidence, never zero. A null card ID is the skip option. A null module first means defer to the brain, not skip. An uncommitted direction is not a preference for skipping.",
+      },
+      Object {
+        "card": Object {
+          "criteria": Object {
+            "card0": "PREPARED",
+            "card1": "POISONED_STAB",
+            "card2": "SUCKER_PUNCH",
+            "skip": "Skip: add no card.",
+          },
+          "instructions": "Choose one offered card or skip for the stated direction. Use only supplied facts; do not calculate or infer missing scores. This is shadow: the brain still makes the real choice.",
+          "type": "choice",
+        },
+      },
+      1000,
+    ]
+
+
+Number of calls: 1
+
+ ❯ replay tests/v6-brain-card-value-loop.test.ts:70:21
+     68|     });
+     69|     expect(stats, notes.join("\n")).toMatchObject({ decisions: 1, jevC…
+     70|     expect(ask).not.toHaveBeenCalled();
+       |                     ^
+     71|     expect(brain.calls).toHaveLength(1);
+     72|     expect(actions).toEqual([{ action: "skip_reward_cards" }]);
+ ❯ tests/v6-brain-card-value-loop.test.ts:105:18
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/6]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  6 failed (6)
+   Start at  11:24:01
+   Duration  7.98s (transform 3.11s, setup 597ms, import 3.19s, tests 3.83s, environment 0ms)
+

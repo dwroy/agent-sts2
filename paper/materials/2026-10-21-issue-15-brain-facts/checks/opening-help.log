@@ -1,0 +1,24 @@
+usage: build-fight-value.py [-h] [--states STATES] [--game-data GAME_DATA]
+                            --character CHARACTER --rows ROWS [--out OUT]
+                            [--notes NOTES] [--trees TREES] [--cutoff CUTOFF]
+                            {opening-extract,opening-train}
+
+Whole-fight opening-state predictor; separate labels/features from the turn
+model. All card descriptors and encounter frequencies are observations, not
+card values. The exported trees have the same strict-less-than evaluator in
+Python and TS.
+
+positional arguments:
+  {opening-extract,opening-train}
+
+options:
+  -h, --help            show this help message and exit
+  --states STATES
+  --game-data GAME_DATA
+  --character CHARACTER
+  --rows ROWS
+  --out OUT
+  --notes NOTES
+  --trees TREES
+  --cutoff CUTOFF       Exclude this timestamp and later from
+                        fitting/calibration/test

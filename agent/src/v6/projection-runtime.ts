@@ -19,6 +19,8 @@ import { V6CardResultsEngine, coreProgress, type V6CardResults, type CardResults
   type CoreCombatRow, type CoreProgress, type CardCombatTarget } from "../sim/v6-card-results.js";
 import { cardResultsContext } from "./card-results-input.js";
 import { postCombatCardReward } from "./card-reward-scope.js";
+import { CardValueRuntime, type CardValueTable } from "./card-value.js";
+import { KNOWLEDGE_DIR } from "../knowledge/files.js";
 
 export interface V6ProjectionEvaluationContext { budget_ms: number; signal: AbortSignal }
 export interface V6CompletedCoreSnapshot {
@@ -51,7 +53,18 @@ export class V6ProjectionRuntime {
     private input?: (env: DecisionEnv, phase: "act" | "pick", idleCombat?: boolean) => Promise<V6ProjectionInput | null>,
     private card?: { engine: V6CardResultsEngine; context: typeof cardResultsContext;
       record: (env: DecisionEnv, table: V6CardResults) => void;
-      recordBackground?: (env: DecisionEnv, event: V6CoreCacheEvent) => void }) { this.idle = new V6IdlePrecomputer(engine); }
+      recordBackground?: (env: DecisionEnv, event: V6CoreCacheEvent) => void },
+    private value?: CardValueRuntime) { this.idle = new V6IdlePrecomputer(engine); }
+  /** Optional facts for the existing brain question; no simulation, request, ranking or alternate decider. */
+  evaluateBrainCardValue(env: DecisionEnv): CardValueTable | undefined {
+    const config = v6Config();
+    if (config.mode !== "on" || config.deciders.card !== "brain" || !this.value
+      || !postCombatCardReward(env.screenMemory, env.state)) return undefined;
+    try {
+      const table = this.value.evaluate(env, 450);
+      return table?.model_id ? table : undefined;
+    } catch { return undefined; }
+  }
   private async cardRequest(env: DecisionEnv, idleCombat = false): Promise<{ request: V6ProjectionRequest; context: CardResultsContext } | null> {
     const guard = coreEnvironmentFingerprint(env), knowledge = env.knowledge;
     this.coreSnapshot = null;
@@ -228,5 +241,10 @@ export function productionV6Projection(runner?: DeckSimRunner, runPlanLog?: stri
       mkdirSync(directory, { recursive: true });
       appendJsonLine(join(directory, "v6-card-results.jsonl"), { ts: new Date().toISOString(), run_id: str(env.state.raw.run_id),
         floor: env.state.run?.floor, table });
-    } });
+    } }, new CardValueRuntime(KNOWLEDGE_DIR, (env, table) => {
+      const directory = runPlanLog ? dirname(runPlanLog) : join(PROJECT_ROOT, "logs");
+      mkdirSync(directory, { recursive: true });
+      appendJsonLine(join(directory, "v6-card-value.jsonl"), { ts: new Date().toISOString(), run_id: str(env.state.raw.run_id),
+        floor: env.state.run?.floor, table });
+    }));
 }
