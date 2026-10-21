@@ -1,0 +1,41 @@
+[
+  {
+    "name": "tsc-final",
+    "command": [
+      "npx",
+      "tsc",
+      "-p",
+      "tsconfig.json",
+      "--noEmit"
+    ],
+    "cwd": "agent",
+    "nice": 19,
+    "ionice_class": 3,
+    "start_epoch": 1792544057.877579,
+    "elapsed_seconds": 1.4434213638305664,
+    "exit_code": 0
+  },
+  {
+    "name": "related-final",
+    "command": [
+      "npx",
+      "vitest",
+      "run",
+      "tests/rollout.test.ts",
+      "tests/boss-sim.test.ts",
+      "tests/silent-lethal-continuation.test.ts",
+      "tests/continuation-retaliation.test.ts",
+      "tests/continuation-diagnostics.test.ts",
+      "tests/continuation-failure.test.ts",
+      "tests/continuation-failure-worker.test.ts",
+      "tests/boss-margin-attribution.test.ts",
+      "--maxWorkers=1"
+    ],
+    "cwd": "agent",
+    "nice": 19,
+    "ionice_class": 3,
+    "start_epoch": 1792544059.321111,
+    "elapsed_seconds": 17.14982271194458,
+    "exit_code": 0
+  }
+]

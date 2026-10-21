@@ -1,0 +1,154 @@
+
+ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/v6-boss-continuation-hp-20261021/agent
+
+ ❯ tests/continuation-retaliation.test.ts (14 tests | 12 failed) 1358ms
+     × CEN1Z8HEU7NM F40 'selection/remove' returns a first-fight loss instead of attempting a dead continuation 261ms
+     × CEN1Z8HEU7NM F44 'shop/plan' returns a first-fight loss instead of attempting a dead continuation 66ms
+     × CEN1Z8HEU7NM F48 'combat/plan' returns a first-fight loss instead of attempting a dead continuation 60ms
+     × CEN1Z8HEU7NM F40 'shop/plan' returns a first-fight loss instead of attempting a dead continuation 210ms
+     × CEN1Z8HEU7NM F48 'combat/plan' returns a first-fight loss instead of attempting a dead continuation 48ms
+     × CEN1Z8HEU7NM F39 'reward/card' returns a first-fight loss instead of attempting a dead continuation 187ms
+     × CEN1Z8HEU7NM F43 'reward/card' returns a first-fight loss instead of attempting a dead continuation 48ms
+     × CEN1Z8HEU7NM F46 'event/choose' returns a first-fight loss instead of attempting a dead continuation 70ms
+     × CEN1Z8HEU7NM F46 'event/choose' returns a first-fight loss instead of attempting a dead continuation 75ms
+     × CEN1Z8HEU7NM F42 'rest/plan' returns a first-fight loss instead of attempting a dead continuation 153ms
+     × CEN1Z8HEU7NM F35 'reward/card' returns a first-fight loss instead of attempting a dead continuation 166ms
+     × records a lethal hit that also kills the last attacker by retaliation as a loss 8ms
+
+⎯⎯⎯⎯⎯⎯ Failed Tests 12 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/continuation-retaliation.test.ts > retaliation cannot override resolved player death > CEN1Z8HEU7NM F40 'selection/remove' returns a first-fight loss instead of attempting a dead continuation
+ FAIL  tests/continuation-retaliation.test.ts > retaliation cannot override resolved player death > CEN1Z8HEU7NM F40 'shop/plan' returns a first-fight loss instead of attempting a dead continuation
+ FAIL  tests/continuation-retaliation.test.ts > retaliation cannot override resolved player death > CEN1Z8HEU7NM F39 'reward/card' returns a first-fight loss instead of attempting a dead continuation
+Error: missing successful first-fight resources: nonpositive-hp; seed=46797397; {"won":true,"died":false,"turns":12,"captureResources":true,"continuation":true,"resources":{"hp":-25,"revives":[],"drunkKeys":["POTION:STRENGTH_POTION:0"]},"steps":null}
+ ❯ continuationInput src/sim/boss-sim.ts:344:11
+    342|       steps: sample?.plan?.steps.map((step) => ({ cardId: step.cardId,…
+    343|     };
+    344|     throw new ContinuationSampleError(`missing successful first-fight …
+       |           ^
+    345|       captureContinuationFailure(reason, sample?.seed ?? null, { input…
+    346|   }
+ ❯ fightSample src/sim/boss-sim.ts:378:23
+ ❯ tests/continuation-retaliation.test.ts:40:20
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/12]⎯
+
+ FAIL  tests/continuation-retaliation.test.ts > retaliation cannot override resolved player death > CEN1Z8HEU7NM F44 'shop/plan' returns a first-fight loss instead of attempting a dead continuation
+Error: missing successful first-fight resources: nonpositive-hp; seed=2950019043; {"won":true,"died":false,"turns":9,"captureResources":true,"continuation":true,"resources":{"hp":-32,"revives":[],"drunkKeys":[]},"steps":null}
+ ❯ continuationInput src/sim/boss-sim.ts:344:11
+    342|       steps: sample?.plan?.steps.map((step) => ({ cardId: step.cardId,…
+    343|     };
+    344|     throw new ContinuationSampleError(`missing successful first-fight …
+       |           ^
+    345|       captureContinuationFailure(reason, sample?.seed ?? null, { input…
+    346|   }
+ ❯ fightSample src/sim/boss-sim.ts:378:23
+ ❯ tests/continuation-retaliation.test.ts:40:20
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/12]⎯
+
+ FAIL  tests/continuation-retaliation.test.ts > retaliation cannot override resolved player death > CEN1Z8HEU7NM F48 'combat/plan' returns a first-fight loss instead of attempting a dead continuation
+ FAIL  tests/continuation-retaliation.test.ts > retaliation cannot override resolved player death > CEN1Z8HEU7NM F48 'combat/plan' returns a first-fight loss instead of attempting a dead continuation
+Error: missing successful first-fight resources: nonpositive-hp; seed=1580782644; {"won":true,"died":false,"turns":11,"captureResources":false,"continuation":true,"resources":{"hp":-12,"revives":[],"drunkKeys":[]},"steps":[{"cardId":"ASSASSINATE","cardIndex":0,"target":1},{"cardId":"BACKSTAB","cardIndex":1,"target":1},{"cardId":"DEFEND_SILENT","cardIndex":2,"target":null},{"cardId":"STRIKE_SILENT","cardIndex":5,"target":1},{"cardId":"BACKFLIP","cardIndex":6,"target":null}]}
+ ❯ continuationInput src/sim/boss-sim.ts:344:11
+    342|       steps: sample?.plan?.steps.map((step) => ({ cardId: step.cardId,…
+    343|     };
+    344|     throw new ContinuationSampleError(`missing successful first-fight …
+       |           ^
+    345|       captureContinuationFailure(reason, sample?.seed ?? null, { input…
+    346|   }
+ ❯ fightSample src/sim/boss-sim.ts:378:23
+ ❯ tests/continuation-retaliation.test.ts:40:20
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/12]⎯
+
+ FAIL  tests/continuation-retaliation.test.ts > retaliation cannot override resolved player death > CEN1Z8HEU7NM F43 'reward/card' returns a first-fight loss instead of attempting a dead continuation
+Error: missing successful first-fight resources: nonpositive-hp; seed=2156925123; {"won":true,"died":false,"turns":8,"captureResources":true,"continuation":true,"resources":{"hp":-16,"revives":[],"drunkKeys":[]},"steps":null}
+ ❯ continuationInput src/sim/boss-sim.ts:344:11
+    342|       steps: sample?.plan?.steps.map((step) => ({ cardId: step.cardId,…
+    343|     };
+    344|     throw new ContinuationSampleError(`missing successful first-fight …
+       |           ^
+    345|       captureContinuationFailure(reason, sample?.seed ?? null, { input…
+    346|   }
+ ❯ fightSample src/sim/boss-sim.ts:378:23
+ ❯ tests/continuation-retaliation.test.ts:40:20
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/12]⎯
+
+ FAIL  tests/continuation-retaliation.test.ts > retaliation cannot override resolved player death > CEN1Z8HEU7NM F46 'event/choose' returns a first-fight loss instead of attempting a dead continuation
+ FAIL  tests/continuation-retaliation.test.ts > retaliation cannot override resolved player death > CEN1Z8HEU7NM F46 'event/choose' returns a first-fight loss instead of attempting a dead continuation
+Error: missing successful first-fight resources: nonpositive-hp; seed=2373876564; {"won":true,"died":false,"turns":12,"captureResources":true,"continuation":true,"resources":{"hp":-11,"revives":[],"drunkKeys":[]},"steps":null}
+ ❯ continuationInput src/sim/boss-sim.ts:344:11
+    342|       steps: sample?.plan?.steps.map((step) => ({ cardId: step.cardId,…
+    343|     };
+    344|     throw new ContinuationSampleError(`missing successful first-fight …
+       |           ^
+    345|       captureContinuationFailure(reason, sample?.seed ?? null, { input…
+    346|   }
+ ❯ fightSample src/sim/boss-sim.ts:378:23
+ ❯ tests/continuation-retaliation.test.ts:40:20
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/12]⎯
+
+ FAIL  tests/continuation-retaliation.test.ts > retaliation cannot override resolved player death > CEN1Z8HEU7NM F42 'rest/plan' returns a first-fight loss instead of attempting a dead continuation
+Error: missing successful first-fight resources: nonpositive-hp; seed=2373876564; {"won":true,"died":false,"turns":10,"captureResources":true,"continuation":true,"resources":{"hp":-3,"revives":[],"drunkKeys":["POTION:STRENGTH_POTION:0"]},"steps":null}
+ ❯ continuationInput src/sim/boss-sim.ts:344:11
+    342|       steps: sample?.plan?.steps.map((step) => ({ cardId: step.cardId,…
+    343|     };
+    344|     throw new ContinuationSampleError(`missing successful first-fight …
+       |           ^
+    345|       captureContinuationFailure(reason, sample?.seed ?? null, { input…
+    346|   }
+ ❯ fightSample src/sim/boss-sim.ts:378:23
+ ❯ tests/continuation-retaliation.test.ts:40:20
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/12]⎯
+
+ FAIL  tests/continuation-retaliation.test.ts > retaliation cannot override resolved player death > CEN1Z8HEU7NM F35 'reward/card' returns a first-fight loss instead of attempting a dead continuation
+Error: missing successful first-fight resources: nonpositive-hp; seed=1797734085; {"won":true,"died":false,"turns":12,"captureResources":true,"continuation":true,"resources":{"hp":-27,"revives":[],"drunkKeys":["POTION:STRENGTH_POTION:0"]},"steps":null}
+ ❯ continuationInput src/sim/boss-sim.ts:344:11
+    342|       steps: sample?.plan?.steps.map((step) => ({ cardId: step.cardId,…
+    343|     };
+    344|     throw new ContinuationSampleError(`missing successful first-fight …
+       |           ^
+    345|       captureContinuationFailure(reason, sample?.seed ?? null, { input…
+    346|   }
+ ❯ fightSample src/sim/boss-sim.ts:378:23
+ ❯ tests/continuation-retaliation.test.ts:40:20
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[7/12]⎯
+
+ FAIL  tests/continuation-retaliation.test.ts > retaliation cannot override resolved player death > records a lethal hit that also kills the last attacker by retaliation as a loss
+AssertionError: expected { loss: 10, …(10) } to match object { won: false, died: true, …(1) }
+(22 matching properties omitted from actual)
+
+- Expected
++ Received
+
+  {
+-   "died": true,
++   "died": false,
+    "resources": {
+      "hp": -9,
+    },
+-   "won": false,
++   "won": true,
+  }
+
+ ❯ tests/continuation-retaliation.test.ts:51:18
+     49|     const last = simulateFight(input, null, 1, 7).records.at(-1)!;
+     50|     expect(last.hpLeft).toEqual({ 0: 0 });
+     51|     expect(last).toMatchObject({ won: false, died: true, resources: { …
+       |                  ^
+     52|     expect(fightSample(input, null, 7, 1)).toMatchObject({ won: false,…
+     53|       sequence: { firstWon: false, secondBoss: null, secondEntry: null…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[8/12]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  12 failed | 2 passed (14)
+   Start at  08:49:26
+   Duration  2.27s (transform 588ms, setup 367ms, import 340ms, tests 1.36s, environment 0ms)
+

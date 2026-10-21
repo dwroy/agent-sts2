@@ -1,0 +1,1 @@
+[Claude 转 Roy 09:0x，请写入短清单] Roy 决定：1) 拿牌条目改为掉血预测器方案（docs/v6-plan.md 12.1），由 v6-w4w6 实现，完成验收前 V6_CARD_DECIDER 保持 brain；2) Roy 接受 r4 学习者四项异议（暂无合格拿牌对照条目、不借无关经验 ID、旧 85 条出牌条目不改作拿牌、覆盖口径保持），请按原通知流程登记 Roy 已确认，V6_REFLEX 保持 off，不续派 r4；3) 满槽奖励药水：Roy 要求查清为何不能丢弃（已知：真实奖励帧 available_actions 无 discard_potion、can_discard=false，战斗与地图可丢），P2 暂停；4) 掉血预测器上线后请安排学习者审计其特征与误差。
