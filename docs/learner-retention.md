@@ -11,8 +11,8 @@ Roy 2026-10-13 要求：学习入库后回收过程遗留数据。原调度器�
 独立且干净的已完成普通修复/策略工作树同时回收整个 checkout，分支保留。报告型批次没有入库结论时，只回收可由 Git 重建的 checkout，所有待证 scratch 原字节保留；不关闭提案或量化父项。共享 exp 和主检出不移除，只按已绑定的已入库 scratch 回收。原 request/thread 工作树保持，包含已完成但以后可增加 revision 的请求。租约、进程 cwd、实例根、路径与软链接边界在删除前复核；不读取凭据文件或跟随依赖软链接。
 
 ```bash
-nice -n 19 python3 ops/learner_retention.py plan --limit 8
-nice -n 19 python3 ops/learner_retention.py sweep --apply --limit 8
+nice -n 19 python3 ops/learner_retention.py plan --limit 4
+nice -n 19 python3 ops/learner_retention.py sweep --apply --limit 4
 nice -n 19 python3 ops/learner_retention.py restore --batch <准确批次号>
 ```
 
@@ -24,9 +24,9 @@ nice -n 19 python3 ops/learner_retention.py restore --batch <准确批次号>
 
 ## 运维、开发工作树和可重建缓存
 
-同一回收进程会使用每轮剩余名额回收已发布且无活动进程的独立运维和开发工作树，总上限仍为四个。旧 `ops-*` 工作树须干净、至少闲置一小时、整个 HEAD 已进入本实例 main/live，且没有原请求或学习 owner 占用。新分配的运维工作树不能以初始 HEAD 已存在于 main 为由删除，必须取得下面的完成回执。live、exp、角色常驻实例、运行中、未提交、未发布、被锁定或有未完成要求的工作树始终保留。
+同一回收进程会使用每轮剩余名额回收已发布且无活动进程的独立运维和开发工作树，总上限仍为四个（即使传入更大的 limit 也截到四个）。旧 `ops-*` 工作树须干净、至少闲置一小时、HEAD 已进入本实例 main 且来源分支引用仍在，没有原请求或学习 owner 占用。任务相对原分配基线的可执行代码和知识改动仍须实际进入 live；纯报告、研究、文档不要求整个 HEAD 进入 live。无原分配回执时保守使用 source 与 live 的共同祖先，不能因 source 已在 main 就把待发源码当成空改动。新分配的运维工作树不能以初始 HEAD 已存在于 main 为由删除，必须取得下面的完成回执。live、exp、角色常驻实例、运行中、未提交、未发布、被锁定或有未完成要求的工作树始终保留。
 
-开发或运维完成一个功能时，先跑项目要求的检查并实际合入 main/live，然后登记原源码和两个发布提交。程序逐项比对原源码与发布树的执行代码、校验文件和知识叶子的 Git 对象，允许保留来源分支的精确叶子集成；原请求的未完成范围不能被这个工作树回执关闭。登记后原调度 tick 自动清理，手动 sweep 也经过同一门禁：
+开发或运维完成一个功能时，先跑项目要求的检查并实际合入 main；要部署的源码还须合入 live，然后登记原源码和实际 main/live 提交。live SHA 对纯材料也记录为运行上下文，但不要求包含该材料提交。程序逐项比对原源码与发布树的执行代码、校验文件和知识叶子的 Git 对象，允许保留来源分支的精确叶子集成；发布提交是原源码的后代时，允许后续发布继续演进。原请求的未完成范围不能被这个工作树回执关闭。登记后原调度 tick 自动清理，手动 sweep 也经过同一门禁：
 
 ```bash
 nice -n 19 python3 ops/worktree_retention.py complete --workspace <工作树名> \
@@ -36,6 +36,8 @@ nice -n 19 python3 ops/worktree_retention.py restore --workspace <工作树名>
 ```
 
 唯一的忽略文件先归档、逐文件 SHA 校验并读回，原路径保留报告及原始 jsonl/out/err/log，体积大的过程副本可以恢复。只丢弃可重建的 Python 字节码、TypeScript 构建缓存及 checkout 副本；保留源分支。依赖、logs/data 只接受指向本实例原目录的已知软链接，绝不跟随删除共享目标。凭据名、陌生链接和未知文件暂缓。中断在删除前可重用原校验归档，删除后可重新投影原证据；修改过或新增的证据不会被恢复覆盖。结果在 `retention/last-worktree-sweep.json` 和 `retention/worktree-archives/` 持久记录。
+
+`ops/instance-binding.json` 是忽略的运行身份，不随 Git 分配新树。历史受跟踪副本仅在与 HEAD、独立登记的主运行根绑定逐字节相同、主控制会话和宿主进程已核实、候选无本地范围/控制租约或活动进程时排除。未跟踪、改动、冲突、未知身份及常驻实例继续保留。实际绑定停止跟踪时，集成员和 ops 必须先备份各自运行根的绑定，合并后恢复并核对；不得把删除提交直接合到运行根后留下缺失文件。见 [#23 绑定保护及部署步骤](../paper/materials/20261021-issue-23-reclaim-gates/handoff.md)。
 
 ## 新工作树的分配
 

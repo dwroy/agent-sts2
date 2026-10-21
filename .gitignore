@@ -34,6 +34,8 @@ ops/.auto-relaunch-fails*
 ops/STOP
 # The codex ops session's runtime state: queue, broker, wake logs, session id (docs/codex-ops.md).
 ops/codex-ops/
+# Per-runtime game identity; integration must preserve the existing file (issue #23).
+/ops/instance-binding.json
 *.pyc
 __pycache__/
 
