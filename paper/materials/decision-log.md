@@ -5547,3 +5547,5 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
 - 2026-10-21T11:00:18+08:00 104302-fix无新源/提交/合入，154路径仅已发布CEN差异，52映射/46历史祖先及两候选续接SHA核同，原tsc0/52定向仅来源；rc0/statefailed/mergednull保原，不空合并/重复测试或dataset/关闭宽父。原件paper/materials/20261021-1057-ops/receipt.json。
 
 - 2026-10-21 11:04:20 CST [Claude/Roy，并行] Roy：能并行的都并行、可以多开会话。新建 #12（拿牌 v2 单牌增量可辨识性研究，只读）、#13（补齐未建模常见卡牌，学习者）、#14（第三幕 Boss 与连战模拟迭代，学习者）；按一个 issue 一个新会话开 herdr 会话 issue-8（wJ:p1H2）、issue-12（wJ:p1H3）、issue-6（wJ:p1H4），各自独立工作树，gpt-6.1-sol high；#13/#14 交 ops 按学习闭环派学习者；关闭 #5。
+
+- 2026-10-21 11:17:18 CST [Claude/Roy，#1 决定] Roy 在 GitHub 指示“dwroy/agent-sts2#1 就按照claude建议的来做”：方向 2 → #15（v2 数值作为大脑拿牌题补充事实，决策者仍 brain，新会话 issue-15 wJ:p1H5 已派）；方向 1 → #12（单牌增量可辨识性研究，进行中）；方向 3 → #16（可辨识的题交 Jev、其余交大脑的混合门，依赖 #12/#15）。#1 保留为总入口。
