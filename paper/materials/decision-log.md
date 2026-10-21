@@ -5613,3 +5613,5 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
 
 - 2026-10-21T15:11:34+08:00 [dev #23] 完成继承绑定/材料来源回收门修复和共享每轮4项限额；#18原137项只读逐树复核66项新准入，其他保护保留。固定Git删除合并后绑定备份/恢复/同字节读回演练通过；tsc、完整Vitest 642文件/6056项及Python64项通过，首轮夹具缺依赖失败原件保留。交集成员核验合main，ops自然边界保全真实绑定后上live、原调度器实际回收与24h可持续验收仍pending；开发未动main/live或生产回收。见 paper/materials/20261021-issue-23-reclaim-gates/handoff.md。
 - 2026-10-21T16:04:34+08:00 [watcher] #23 P0 回收门技术核验并合 main（源 e69b2fed0）；完整检查原日志 SHA 核实642文件/6056通过/2跳过，2473代码数据配置叶子一致，独立tsc/Python64项/Vitest6文件17项通过。原发布锁内先备份主运行根真实绑定，Git后先恢复校验，SHA与0644模式未变、已不跟踪且ignore；live原缺绑定未捏造，未碰live/STOP或回收。交ops自然边界上线、刷新plan逐树核候选、原调度器每轮最多4项及部署后完整24h可持续验收，#23不关闭；paper/materials/20261021-issue23-integrator-review/review.md。
+
+- 2026-10-21T16:10:19+08:00 ops：154302主批capacity原turn.failed/草稿与十原文、冷却保留，s2 rc0十waiting无源码；25冻结对象/主批121原窗口核同，原s2 checkout回收保scratch只核回执，无新回收/模型/测试/dataset/发布或科学闭环。paper/materials/20261021-1604-ops/receipt.json。

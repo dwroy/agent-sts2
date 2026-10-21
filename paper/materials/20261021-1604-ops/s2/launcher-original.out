@@ -1,0 +1,109 @@
+十项提案均保留 `waiting`：部分公式已有 live 实现，但剩余联合验证和完整后继证据不足。本批未改源码、未合入、未新增版本；未运行代码测试，工作树干净。
+
+[核证报告](/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261021-154302-s2/learner/runs/20261021-154306-5d8bdc95-44e6-4cf8-86a7-976bc37c0427-strategy-proposal/report.md) · [提案处置](/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261021-154302-s2/learner/runs/20261021-154306-5d8bdc95-44e6-4cf8-86a7-976bc37c0427-strategy-proposal/proposal.md)
+
+```json
+{
+  "task": "strategy-proposal",
+  "character": "silent",
+  "batch": "20261021-154302-s2-strategy-proposal",
+  "base": "757b23b2ab3d7e6fdd087e4722df31bd87eeb73f",
+  "runs": [
+    "TXZ6RVMQA09D",
+    "WQZVENQ7DTRP",
+    "02HB4L0C3C67",
+    "4D4J8USKCPAV",
+    "F4QKG4J1AJJZ",
+    "JLN5SK17W4FQ",
+    "LS8035TB32P3",
+    "NB8KCF6HRGVF",
+    "S9UZAK0JP0C0",
+    "SADL3CGYTGSR"
+  ],
+  "fixes": [],
+  "skipped": [],
+  "merged": null,
+  "tests": {
+    "tsc": null,
+    "vitest": null,
+    "cases": null
+  },
+  "code_proposals": [
+    "silent-proposal-92920295a648b540",
+    "silent-proposal-a327449c331efbc1",
+    "silent-proposal-a099e89437e942bb",
+    "silent-proposal-47910f82a1fdd98f",
+    "silent-proposal-f1374df72d8e6a25",
+    "silent-proposal-38a49e6c97f31eea",
+    "silent-proposal-ef0e38a5dbd3bc07",
+    "silent-proposal-7f820c02d39bfaea",
+    "silent-proposal-04b6b430759815ed",
+    "silent-proposal-9952ee8e8df9a0fe"
+  ],
+  "implementation_domains": [],
+  "proposal_results": [
+    {
+      "id": "silent-proposal-92920295a648b540",
+      "state": "waiting",
+      "reason": "已核T6少损3且少伤9、首胜4血后开场死亡；缺固定后继及完整两战配对校准。"
+    },
+    {
+      "id": "silent-proposal-a327449c331efbc1",
+      "state": "waiting",
+      "reason": "已核多15伤付9血及付4血延长沙坑反例；缺完整受控后继和独立胜负验证。"
+    },
+    {
+      "id": "silent-proposal-a099e89437e942bb",
+      "state": "waiting",
+      "reason": "42次容量与既有live子实现已核；保留、跨弃牌、穿插用药及SL恢复的联合消费者验收未齐。"
+    },
+    {
+      "id": "silent-proposal-47910f82a1fdd98f",
+      "state": "waiting",
+      "reason": "开场四血损失已有live实现；其他组合、药栏和SL血价的完整两战联合校准仍缺。"
+    },
+    {
+      "id": "silent-proposal-f1374df72d8e6a25",
+      "state": "waiting",
+      "reason": "已核1913与Q6连续资源链；缺提前用药或留药候选的完整后继及终局价值验证。"
+    },
+    {
+      "id": "silent-proposal-38a49e6c97f31eea",
+      "state": "waiting",
+      "reason": "已核紧勒19预测与23实伤及现有子实现；原109局全部指定机制夹具与联合消费者验证未覆盖。"
+    },
+    {
+      "id": "silent-proposal-ef0e38a5dbd3bc07",
+      "state": "waiting",
+      "reason": "已核实际休息、锻造和连续资源链；缺历史独立分母复核及可支持改权重的完整路线对照。"
+    },
+    {
+      "id": "silent-proposal-7f820c02d39bfaea",
+      "state": "waiting",
+      "reason": "已核NHA换线多16伤且多损6血；缺可赢完整后继、存活推进对照和独立验证。"
+    },
+    {
+      "id": "silent-proposal-04b6b430759815ed",
+      "state": "waiting",
+      "reason": "已核首毒翻倍和X1萎靡现场；朝向取整、全部手数、脆弱、能量及消费者联合验证未齐。"
+    },
+    {
+      "id": "silent-proposal-9952ee8e8df9a0fe",
+      "state": "waiting",
+      "reason": "已核饱和换线血价；原110局资源分母及完整候选后继未重验，不能拟新参数。"
+    }
+  ],
+  "report": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261021-154302-s2/learner/runs/20261021-154306-5d8bdc95-44e6-4cf8-86a7-976bc37c0427-strategy-proposal/report.md"
+}
+```
+
+== 学习者 codex / strategy-proposal ==
+状态：success；退出码 0
+模型：gpt-6.1-sol；会话：01a15d6a-04e7-7543-afa7-6534101148b0
+轮数：1；工具调用：command_execution×58 file_change×2
+token：输入 241.2k、输出 33.9k（其中推理 6916）、cache 读 7235.8k、cache 写 0（命中 96.8%）
+成本：未提供
+耗时：1296.6 s（墙钟）
+时间：首个事件 34.6 s、模型首个输出 40.5 s、首次工具 48.1 s、末次工具结束 1258.7 s；工具内共 1003.3 s，其余（模型生成、推理、网络）258.6 s
+codex 会话记录：AGENTS.md 已加载（/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261021-154302-s2）；模型的工具调用 exec×50；/home/dw/Projects/agent-sts2/ops/codex-ops/accounts/codex1/learner/sessions/2026/10/21/rollout-2026-10-21T15-43-11-01a15d6a-04e7-7543-afa7-6534101148b0.jsonl
+日志：/home/dw/Projects/agent-sts2/learner/runs/20261021-154306-5d8bdc95-44e6-4cf8-86a7-976bc37c0427-strategy-proposal.jsonl

@@ -1,0 +1,61 @@
+{
+  "at": "2026-10-21T16:09:25+08:00",
+  "state": "primary-capacity-failed-partial-report-preserved-s2-no-source-ten-waiting",
+  "batches": [
+    {
+      "batch": "20261021-154302-strategy-proposal",
+      "state": "failed",
+      "rc": 1,
+      "thread": "01a15d69-fb58-7a42-86c3-b032cb30cd31",
+      "worktree_head": "757b23b2ab3d7e6fdd087e4722df31bd87eeb73f",
+      "tracked_clean_observed_initially": true,
+      "current_checkout": "present-clean",
+      "actual_live_merge": null,
+      "proposals": 10,
+      "proposal_sources_sha_verified": true,
+      "proposal_states_waiting": true,
+      "frozen_objects_verified": 12,
+      "partial_report": true,
+      "formal_result_exists": false,
+      "ordinary_close_exists": false,
+      "new_source_or_tests": false,
+      "failure": "Selected model is at capacity; turn.failed, not code/test failure or missing proposals",
+      "report_references_not_finalized": [
+        "result.json",
+        "completion-check.json",
+        "gitleaks-check.txt"
+      ],
+      "retry_at": 1792573319.4776392,
+      "retry_at_local": "2026-10-21T17:01:59.477639+08:00",
+      "cooldown_unchanged": true,
+      "immediate_redispatch": false
+    },
+    {
+      "batch": "20261021-154302-s2-strategy-proposal",
+      "state": "done",
+      "rc": 0,
+      "thread": "01a15d6a-04e7-7543-afa7-6534101148b0",
+      "worktree_head": "757b23b2ab3d7e6fdd087e4722df31bd87eeb73f",
+      "tracked_clean_observed_initially": true,
+      "current_checkout": "original-retention-checkout-reclaimed-branch-and-scratch-preserved",
+      "actual_live_merge": null,
+      "proposals": 10,
+      "proposal_sources_sha_verified": true,
+      "proposal_states_waiting": true,
+      "frozen_objects_verified": 13,
+      "partial_report": false,
+      "formal_result_exists": true,
+      "ordinary_close_exists": false,
+      "new_source_or_tests": false
+    }
+  ],
+  "primary_selected_raw_windows_ops_verified": 121,
+  "s2_owner_validation_scope": "source/result/proposal hashes and frozen store verified; scientific findings remain owner evidence",
+  "s2_owner_gitleaks_scope": "4.80MB small documents, max1MB skips preserved; not all evidence scanned by owner",
+  "actual_live": "5a295bb5ed52f0c0fa5e8c045dcfcba3d894b532",
+  "new_dataset_full_model_learning_or_release": false,
+  "scientific_parents_closed": false,
+  "s2_scratch_result_skipped_count": 10,
+  "s2_launcher_report_skipped_count": 0,
+  "s2_both_results_ten_same_waiting_ids": true
+}
