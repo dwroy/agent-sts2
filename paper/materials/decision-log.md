@@ -5700,3 +5700,5 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
 
 - 2026-10-22T03:45:50+08:00 [ops] 0345八条重复学习异议原文/证据及真实转达回执核同；原研究CLI身份兼容阻塞未变，后两角色登记pending，保原范围/科学父；仅记录、不重认证/代ACK/提醒/生成器或改对局。原件：paper/materials/20261022-0345-ops/receipt.json。
 - 2026-10-22T03:59:50+08:00 [Claude] Roy 10-22：对局大脑直接改 agent 模式（推理中用工具查知识库，外部知识可查、标来源），不做对照实验（#33）；默认推理强度 Codex high、DeepSeek max，均可调；DeepSeek 经 dsh（Nova）运行。#31 关闭（不上线交替试验，按局开关留给 #33），#32 并入 #33。#20 补充：done 可送达、停滞检测、暂时性错误快速重试。
+
+- 2026-10-22T04:01:46+08:00 [ops] 执行Roy取消#31：撤销R411+#31组合准入、保原plan/patch并加invalidated标记；#32并入#33，high/max随#33自然边界发布、当前live/对局不动。授权：https://github.com/dwroy/agent-sts2/issues/31#issuecomment-6325196850；接续：https://github.com/dwroy/agent-sts2/issues/33#issuecomment-6325199832。回执paper/materials/20261022-0359-ops/receipt.json。

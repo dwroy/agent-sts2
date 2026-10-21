@@ -1,0 +1,103 @@
+{
+  "schema": "ops-issue31-cancellation-v1",
+  "at": "2026-10-22T04:01:14+08:00",
+  "state": "old-live-combination-admission-revoked",
+  "authorization_comments": [
+    {
+      "id": "IC_kwDOU7DWbs8AAAABeQLYMg",
+      "author": {
+        "login": "dwroy"
+      },
+      "authorAssociation": "OWNER",
+      "body": "[Claude] 转 Roy：#31 关闭，不上线 high/xhigh 交替试验（10-22）。\n\nRoy 10-22 定：对局大脑默认推理强度直接改为 **high**（DeepSeek 为 max），均可按配置调节；不做对照实验。这一项随 #33（大脑改 agent 模式）一起落地。\n\n- 已合入 main 的按局引擎/强度开关（d3efa878c）保留，由 #33 复用；预登记方案与统计工具保留不用。\n- ops：不要发布 R411+#31 组合，`paper/materials/20261021-issues20-31-ops/issue31-live-plan.json` 作废、原件保留。\n- 集成员：停止该组合准入，已做材料保留。\n- issue-31 开发会话由主管回收。\n",
+      "createdAt": "2026-10-21T19:55:35Z",
+      "includesCreatedEdit": false,
+      "isMinimized": false,
+      "minimizedReason": "",
+      "reactionGroups": [],
+      "url": "https://github.com/dwroy/agent-sts2/issues/31#issuecomment-6325196850",
+      "viewerDidAuthor": true
+    },
+    {
+      "id": "IC_kwDOU7DWbs8AAAABeQLerQ",
+      "author": {
+        "login": "dwroy"
+      },
+      "authorAssociation": "OWNER",
+      "body": "[Claude] 转 Roy：#32 并入 #33，本 issue 关闭（10-22）。\n\nRoy 10-22 定 DeepSeek 作对局大脑时经 dsh（Nova 配置）以 agent 模式运行，默认推理强度 max、可调（取代本 issue 的“可降一档”）。本 issue 其余要求原样转入 #33：超时与人类节奏预算放长到实际答完、完成率优先；流式与卡住检测；开卷、策略库等新上下文必须生效（#33 中经工具查询）；只走 Nova；按局切换。\n",
+      "createdAt": "2026-10-21T19:55:40Z",
+      "includesCreatedEdit": false,
+      "isMinimized": false,
+      "minimizedReason": "",
+      "reactionGroups": [],
+      "url": "https://github.com/dwroy/agent-sts2/issues/32#issuecomment-6325198509",
+      "viewerDidAuthor": true
+    },
+    {
+      "id": "IC_kwDOU7DWbs8AAAABeQLj2A",
+      "author": {
+        "login": "dwroy"
+      },
+      "authorAssociation": "OWNER",
+      "body": "[Claude] 转 Roy：补充范围（10-22）\n\n1. #32 并入本 issue：DeepSeek 经 dsh 时，超时与人类节奏预算放长到实际答完、完成率优先；流式与卡住检测；只走 Nova；可按局切换引擎。\n2. #31 已关闭：默认强度 Codex high / DeepSeek max 由本 issue 落地；复用 main 里 #31 的按局引擎/强度开关（d3efa878c），不跑交替试验。\n",
+      "createdAt": "2026-10-21T19:55:43Z",
+      "includesCreatedEdit": false,
+      "isMinimized": false,
+      "minimizedReason": "",
+      "reactionGroups": [],
+      "url": "https://github.com/dwroy/agent-sts2/issues/33#issuecomment-6325199832",
+      "viewerDidAuthor": true
+    }
+  ],
+  "issue_readbacks": [
+    {
+      "path": "paper/materials/20261022-0359-ops/issue-31-readback.json",
+      "bytes": 12116,
+      "sha256": "637f41f5476abfb89a4a815d72df1aea3c1a7e7ea4d007b02fe8da62b80e92e9"
+    },
+    {
+      "path": "paper/materials/20261022-0359-ops/issue-32-readback.json",
+      "bytes": 4752,
+      "sha256": "9201420b1c1c203ed65fb44678a552d35d8845c2698097c3d26c1bc36aadd675"
+    },
+    {
+      "path": "paper/materials/20261022-0359-ops/issue-33-readback.json",
+      "bytes": 4133,
+      "sha256": "f278a2d237137e2374dd1fa600e2c3992d40ff48cd8734be9e1bcd6f4d225820"
+    }
+  ],
+  "invalidation": {
+    "path": "paper/materials/20261021-issues20-31-ops/issue31-live-plan.invalidated.json",
+    "bytes": 1192,
+    "sha256": "775f366087c549dcecaf954ebd06bd523ae60d6de576b6e14588f4ef08183e5e"
+  },
+  "original_plan": {
+    "path": "paper/materials/20261021-issues20-31-ops/issue31-live-plan.json",
+    "bytes": 6897,
+    "sha256": "08d6dbdb0627eaa12da4909bb99d690af81ff523d38d1fbfb6f02f1b41e0ddbe"
+  },
+  "original_patch": {
+    "path": "paper/materials/20261021-issues20-31-ops/issue31-live-exact.patch",
+    "bytes": 91272,
+    "sha256": "f871d0a332ee0aeb029bcf099e2a8e6b44de7c53a436430d3a8263c0671d8862"
+  },
+  "original_tree": "2a9066887329d9da527a046de5f62941c2e925ec",
+  "current_live": "0cd3629d3a7f3a3bcacd22fa0a4206acc4d81e78",
+  "production_runtime_trial_keys_present": false,
+  "current_trial_state_paths": [],
+  "issue31_session_registry": {
+    "state": "waiting-worktree",
+    "last_reason": "source leaf not in recorded publication: agent/src/brain/brain.ts"
+  },
+  "reclaim_retry_or_force_delete": false,
+  "source_live_runtime_STOP_or_account_change": false,
+  "default_high_max_deferred_to_issue33_release": true,
+  "new_full_trial_replay_or_model": false,
+  "issue33_already_dispatched_no_duplicate": true,
+  "ops_issue_comment_readback": {
+    "path": "paper/materials/20261022-0359-ops/issue-31-comment-readback.json",
+    "bytes": 2329,
+    "sha256": "08f462ee76c7c82d80bdd4acb9bb9dfca349bc9841d332346ce0ba3ea0980c98",
+    "url": "https://github.com/dwroy/agent-sts2/issues/31#issuecomment-6325310265"
+  }
+}
