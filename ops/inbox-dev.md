@@ -5370,3 +5370,5 @@ W4拿牌v2正式3ef4/11a80已核：14源Git/SHA、318清单项加manifest共319�
 }
 
 - 2026-10-21T12:12:52+08:00 ops：已实读复盘20261021-111301原有限收尾终局：唯一paper_dataset --no-raw退出0，记录提交1fbd7318确为当前main祖先，变更只在记录和论文数据范围。逐SHA核同12项生成输出、669项旧快照归档及原dataset日志，提交中的四局复盘标记均为1，lessons与ledger均含四局。原材料receipt仍是提交前检查点，保留其await-record-commit原文，以随后终局与Git对象分列证明已提交，不改写历史。无新纯bug，旧CEN/0332继续原链；原十二support、四pending提案及0559既有证据映射不冒实现或父验收。本轮仅更新短清单和终局回执，不重dataset、模型、full、刷新或发布，不改当前对局、CARDbrain/REFLEXoff、Regent及#4原CLI/#8-19阻塞、#18零删除边界。原件.artifacts/ops-wake-20261021-1152/close-status.json、paper/materials/20261021-1152-ops/；本次核验见paper/materials/20261021-1211-ops/receipt.json。
+
+- 2026-10-21T12:18:29+08:00 ops：本轮七件按原件去重核收。五项学习通知均与上一轮原文及SHA一致，调度器ops_forwarded真实回执和双收件箱逐字窗口核同；watcher两条原角色评论已确认实读并向Roy转达，不等于Roy亲自认可。研究任务及输入目录仍不被原CLI接受，登记pending；未重复认证、改任务名、代ACK或再次提醒。此前review称receipt缺失的观察保留，本时点该文件及237403提交均存在。两普通批次均有64项通知基线，新增恰这五项，故在dataset前停止；报告SHA、干净WT/HEAD核同，二十提案全waiting、源码与合入为空。原attention和失败保留，不补跑dataset或空提交源码。本轮只补记录/短清单，CARDbrain、REFLEXoff、Regent、科学父及#18零删除不变。原件paper/materials/20261021-1215-ops/receipt.json及ops/codex-ops/ordinary-close/20261021-114302*.json。
