@@ -60,6 +60,12 @@ nice -n 19 python3 ops/issue_session.py register 123 example-fix \
 
 脏改动分别保存 index、工作副本和未跟踪文件的 Git binary patch，按内容哈希命名并读回，放在主检出的 `paper/materials/issue-session/<N>/`；凭据命名路径或不安全软链接直接保留，不读取复制。原文件不 reset、不清除，来源分支始终保留。尾日志存本地忽略目录 `ops/codex-ops/issue-session-tails/`，外发评论前自动 gitleaks；不把原始尾日志贴到公开 issue。
 
+登记和关闭开发 tab 只核会话身份；实例绑定文件的删除门禁仍由原回收器执行。只有工作副本、HEAD 与原分配基线中完全相同的已跟踪绑定元数据可视为继承副本；新增或改写的绑定仍阻止关闭 tab，保护工作树、学习者引用和进程检查继续生效。因此复制了绑定文件的开发树可以登记并保存尾日志、关闭 tab，随后明确报告 `persistent game instance retained`，工作树保留，等待 #23 修正原回收判定。
+
+本机少量同用户 systemd/SSH 服务的 `/proc/<pid>/cwd` 不允许普通用户读取。`session.process_cwd_probe` 可配置只读命令，变量为 `{root}`、`{pid}`、`{pid_namespace}`、`{start_time}`，返回含同名身份字段及绝对 `cwd` 的 JSON。当前 WSL 配置用 `wsl.exe --user root --exec /usr/bin/python3 ops/issue_process_cwd.py ...`，只读取一个进程的身份和 cwd，不写文件、不改变权限或进程。探针和调用方两端核 PID namespace、开始时间；主机/PID 不符、不可读、命令失败或缺少配置均保留现场。空闲 Codex 的内置 `codex-code-mode-host` 只有父进程属于已核终端、可执行文件与 Codex 同目录、argv 完全匹配且所有线程均无任务子进程时才算终端组成部分；其他后台任务仍阻止关闭。
+
+失败回执带操作、核验阶段和具体不符项，register 的相同原因也写入 inbox；不输出子命令 stdout/stderr、命令参数或系统错误中的私人文件路径。登记失败不改原登记表，inbox 写入失败也会在 JSON 中明确报告。
+
 状态 `waiting-worktree` 只表示 tab 已关、等待原回收器，不能当作工作树已删除。`complete` 仍核实际 main/live 发布证明；尚未发布或脏现场会保留工作树并评论原因，等待发布或人工处理原文件后由后续 tick 重试。唯一产物、原日志、经验和账本仍由原回收器归档及读回，只有核到它的真实 `reclaimed` 清单和归档才报告完整回收。工具不直接删除工作树、分支或会话原始转录。
 
 现有 `codex-ops.sh tick stall|learn|snapshot` 在主检查之后、唤醒队列之前同步核登记表，登记锁防止并发重复操作；沿用既有调度，不加 daemon/cron。`PAUSE`、`LLM_DRAIN` 或 `CODEX_OPS_RETENTION=off` 时不自动回收。每项失败分别写 inbox，其他登记项继续检查；重复原因与带标记的 issue 评论去重。原工作树回收仍由原 retention worker 在既有调度执行，未注册 tab 不触碰。

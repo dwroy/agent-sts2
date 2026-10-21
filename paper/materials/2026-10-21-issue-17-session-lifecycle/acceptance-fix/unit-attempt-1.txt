@@ -1,0 +1,14 @@
+..................F.........................
+======================================================================
+FAIL: test_failed_notification_is_reported_to_inbox (test_issue_session.IssueSessions.test_failed_notification_is_reported_to_inbox)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/dw/Projects/agent-sts2/.worktrees/issue-17-session-lifecycle/ops/tests/test_issue_session.py", line 385, in test_failed_notification_is_reported_to_inbox
+    self.assertIn('notification failed', (self.root / 'ops/inbox-dev.md').read_text())
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 'notification failed' not found in '- 2026-10-21T14:29:40+08:00 [issue-session] #17 回收暂缓：injected notification error。登记表 issue-sessions.json；原现场保留。\n'
+
+----------------------------------------------------------------------
+Ran 44 tests in 6.252s
+
+FAILED (failures=1)

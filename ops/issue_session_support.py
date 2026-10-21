@@ -135,6 +135,8 @@ class Board:
                 or not self.worktree["base_ref"].startswith("refs/heads/")):
             raise ValueError("explicit base branch reference required")
         safe_path(root, self.session["state_dir"])
+        if "process_cwd_probe" in self.session:
+            self.argv(self.session["process_cwd_probe"], {})
         if not isinstance(self.session.get("command_env"), dict) or not all(
                 isinstance(key, str) and re.fullmatch(r"[A-Za-z_][A-Za-z0-9_]*", key) and isinstance(value, str)
                 for key, value in self.session["command_env"].items()):

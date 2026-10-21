@@ -184,7 +184,7 @@ class IssueSessions(unittest.TestCase):
     def test_only_verified_idle_ui_processes_are_exempted(self):
         self.info['foreground_processes'].append(dict(pid=103, name='node', argv=['node', '/fixed/bin/codex']))
         self.assertEqual(self.sessions.reclaim(17)['state'], 'eligible')
-        self.processes_mock.assert_called_once_with(self.tree, {101, 102, 103})
+        self.processes_mock.assert_called_once_with(self.tree, {101, 102, 103}, self.sessions.process_cwd)
 
     def test_unsent_draft_or_missing_composer_blocks_reclaim(self):
         for screen in ('› do not lose this draft', 'menu, not a prompt'):
@@ -216,6 +216,71 @@ class IssueSessions(unittest.TestCase):
         (self.tree / 'ops').mkdir(exist_ok=True)
         (self.tree / 'ops/instance-binding.json').write_text('{}')
         self.assert_retained('persistent game instance')
+
+    def test_inherited_binding_allows_registration_and_tab_close_but_not_deletion(self):
+        marker = self.tree / 'ops/instance-binding.json'
+        marker.parent.mkdir(exist_ok=True)
+        marker.write_text('{"process_id": 12345}\n')
+        self.git('add', 'ops/instance-binding.json', tree=self.tree)
+        self.git('commit', '-m', 'fixed allocation metadata', tree=self.tree)
+        base = self.git('rev-parse', 'HEAD', tree=self.tree).strip()
+        self.sessions.data['sessions'].clear()
+        self.assertEqual(self.sessions.register(17, 'fixture', 'wF:p1', base,
+                         self.row['started_at'])['state'], 'registered')
+        self.assertEqual(self.sessions.reclaim(17)['state'], 'eligible')
+        self.assertTrue(self.present)
+        result = self.sessions.reclaim(17, True)
+        self.assertEqual(result['state'], 'retained', result)
+        self.assertIn('persistent game instance', result['reason'])
+        self.assertFalse(self.present)
+        self.assertEqual(self.sessions.data['sessions']['17']['state'], 'waiting-worktree')
+        self.assertTrue(marker.is_file())
+        self.assertTrue(list((self.directory / 'issue-session-tails').glob('17-*.log')))
+        self.assertFalse((self.directory / 'retention/workspaces' / (self.tree.name + '.json')).exists())
+        # A new/changed game binding is still a session gate, before any close.
+        self.present = True
+        marker.write_text('{"process_id": 99999}\n')
+        self.assert_retained('binding changed')
+
+    def test_register_cli_reports_specific_mismatch_to_stdout_and_inbox(self):
+        self.sessions.data['sessions'].clear()
+        self.sessions.save()
+        self.pane['cwd'] = str(self.live)
+        args = ['issue_session.py', '--root', str(self.root), 'register', '17', 'fixture',
+                '--pane', 'wF:p1', '--base', self.head, '--started-at', self.row['started_at']]
+        with patch.object(sys, 'argv', args), patch.object(sys, 'stdout', io.StringIO()) as output:
+            self.assertEqual(resource.main(), 1)
+        result = json.loads(output.getvalue())
+        self.assertEqual(result['stage'], 'register')
+        self.assertIn('pane cwd mismatch', result['reason'])
+        self.assertIn(result['reason'], (self.root / 'ops/inbox-dev.md').read_text())
+        self.assertEqual(resource.retention.load(self.sessions.path)['sessions'], {})
+
+    def test_failure_diagnostics_do_not_disclose_subprocess_output_or_os_filename(self):
+        error = subprocess.TimeoutExpired(['tool', 'private-token'], 90, output=b'private-output')
+        self.assertNotIn('private', resource.failure_reason(error))
+        error = PermissionError(13, 'Permission denied', '/private-key')
+        self.assertEqual(resource.failure_reason(error), 'system operation failed: Permission denied')
+        self.assertIn('field: pane', resource.failure_reason(KeyError('pane')))
+
+    def test_process_probe_checks_namespace_and_pid_start_time(self):
+        proc = Path('/proc') / str(os.getpid())
+        namespace = os.readlink('/proc/self/ns/pid')
+        started = resource.retention_process_start(proc)
+        reply = dict(pid=os.getpid(), pid_namespace=namespace, start_time=started, cwd='/')
+        with patch.object(resource, 'run', return_value=json.dumps(reply).encode()):
+            self.assertEqual(self.sessions.process_cwd(proc), '/')
+            for field, value in [('pid', 1), ('pid_namespace', 'other'), ('start_time', '0'), ('cwd', None)]:
+                changed = dict(reply, **{field: value})
+                with patch.object(resource, 'run', return_value=json.dumps(changed).encode()):
+                    with self.assertRaisesRegex(ValueError, 'identity mismatch'):
+                        self.sessions.process_cwd(proc)
+        helper = Path(resource.__file__).parent / 'issue_process_cwd.py'
+        result = subprocess.run([sys.executable, str(helper), str(os.getpid()), namespace, started], capture_output=True)
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertEqual(json.loads(result.stdout)['cwd'], os.getcwd())
+        result = subprocess.run([sys.executable, str(helper), str(os.getpid()), 'wrong-host', started], capture_output=True)
+        self.assertNotEqual(result.returncode, 0)
 
     def test_dirty_index_worktree_and_untracked_are_patched_without_reset(self):
         (self.tree / 'README.md').write_text('staged draft\n')
@@ -336,7 +401,7 @@ class IssueSessions(unittest.TestCase):
         self.notice_mock.side_effect = ValueError('injected notification error')
         self.status = 'working'
         self.assertEqual(self.sessions.tick()[0]['state'], 'retained')
-        self.assertIn('notification failed', (self.root / 'ops/inbox-dev.md').read_text())
+        self.assertIn('injected notification error', (self.root / 'ops/inbox-dev.md').read_text())
 
     def test_one_failed_issue_does_not_skip_other_registered_issues(self):
         second = copy.deepcopy(self.row)
@@ -565,6 +630,26 @@ class Composer(unittest.TestCase):
             with self.subTest(ansi=repr(ansi)):
                 self.assertEqual(resource.composer_state(ansi), expected)
 
+    def test_idle_helper_requires_bundled_executable_parent_and_no_tool_children(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            parent = root/'101'; child = root/'102'
+            for proc in (parent, child):
+                (proc/'task'/proc.name).mkdir(parents=True)
+                (proc/'task'/proc.name/'children').write_text('')
+            (parent/'exe').symlink_to('/fixed/bin/codex')
+            (parent/'task/201').mkdir()
+            (parent/'task/201/children').write_text('102')
+            (child/'exe').symlink_to('/fixed/bin/codex-code-mode-host')
+            (child/'stat').write_text('102 (codex-code-mode) S 101 1 1')
+            (child/'cmdline').write_bytes(b'/fixed/bin/codex-code-mode-host\0')
+            self.assertEqual(resource.idle_codex_helpers({101}, root), {102})
+            (child/'task/102/children').write_text('103')
+            self.assertEqual(resource.idle_codex_helpers({101}, root), set())
+            (child/'task/102/children').write_text('')
+            (child/'exe').unlink(); (child/'exe').symlink_to('/other/bin/codex-code-mode-host')
+            self.assertEqual(resource.idle_codex_helpers({101}, root), set())
+
     def test_process_cwd_argv_boundaries_and_allowlist_with_fixed_proc_files(self):
         with tempfile.TemporaryDirectory() as tmp:
             root = Path(tmp)
@@ -583,6 +668,8 @@ class Composer(unittest.TestCase):
                 with patch.object(resource.os, 'readlink', side_effect=PermissionError()):
                     with self.assertRaisesRegex(ValueError, 'visibility'):
                         resource.processes(tree, set())
+                    self.assertTrue(resource.processes(tree, set(), lambda p: str(tree)))
+                    self.assertFalse(resource.processes(tree, set(), lambda p: str(root)))
 
 
 class Scheduler(unittest.TestCase):
