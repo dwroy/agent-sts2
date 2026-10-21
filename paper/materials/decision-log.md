@@ -5597,3 +5597,4 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
 - 2026-10-21T13:43:55+08:00 ops：ordinary131301唯一dataset已执行/源检查过，五成本表并发更新使受控记录拒交；364原blob/旧五表保全。仅记录恢复前发现main新增源码，校验先停无Git写；记录仍blocked、10waiting/WT净，原attention/失败不改，不重生成器/模型/full/live。1337-ops/receipt.json。
 
 - 2026-10-21T13:47:07+08:00 ops：1344八notice按原文/SHA/真实转达去重，研究CLI仍pending（R4新兼容不含原研究）；131301-s2 WT净/报告同/10waiting，main新源使dataset准入前停止，无本候选attempt/log。保原attention、失败及科学父，不重模型/full/dataset/派批或改live；paper/materials/20261021-1344-ops/receipt.json。
+- 2026-10-21 13:48:04 CST [Claude] Roy 同意：(1) #16 改为 Jev 学大脑拿牌——大脑历史战后拿牌（Silent A10 第一幕 2777 题/356 局）整理成拿牌小脑经验（案例条目+牌统计条目）交 Jev，三期：离线回放一致率→在线影子→接管 A/B；原混合门被 #12（0.7% 可辨识）否定。(2) #18 判定修正与回收机制 P0（#23）：已查明 ops/instance-binding.json 被 4d671433d 纳入 git 致 72 项误判在用，发布门要求进 live 致 62 项学习批次永不回收；要求修好并保证可持续（24h 回收≥新建）。
