@@ -5641,3 +5641,4 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
 - 2026-10-21T18:38:12+08:00 [ops] 181310-s2无源/合入，十waiting；811提取仅4完整审阅/807未读、113原段与冻结SHA核同，原无改动回执及收尾快进后的现场分列，不重复dataset/检查/发布或关科学父。paper/materials/20261021-1836-ops/receipt.json。
 
 - 2026-10-21T19:16:53+08:00 [ops] 八旧异议原文/来源SHA/实际双箱及watcher告Roy回执核同，三research CLI身份仍不支持、登记pending；保旧拒绝/false/科学范围，不重认证/提醒评论或新检查模型。完整旧摘要保context，短清单恢复显示。paper/materials/20261021-1915-ops/receipt.json。
+- 2026-10-21T19:22:57+08:00 [Claude] Roy：#29 定，对局大脑从 GPT-6.1 Sol xhigh 改 high，在对局里与 xhigh 按局交替试一批、对照质量（#31，全面切换另由 Roy 定）；DeepSeek 不切，留作 GPT 容量不足时的备选。另：Claude 主管自本日 19:17 起由 xdmac 桌面会话接手，原 rc 会话（wJ:pJT）不再派活；同时转 Roy 要求 ops 恢复对局（Windows 18:41 已登录）。
