@@ -5530,3 +5530,5 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
 - 2026-10-21T09:53:36+08:00 原watcher实读CEN铁甲6707/b27c：两HP0假胜被f993纠正，血墙7/8→5/8/失血32/-47，防御上勾拳打击5/8/28.5/-43.5，铁甲ask真实改变且非收益验收；仅测试修正、保f993三叶/旧full1/0332，09:45原controller联合启动与终局待事件，不叠检查或动live/配置/STOP。原件paper/materials/20261021-094x-CEN-ironclad-watcher/receipt.json。
 - 2026-10-21T09:56:32+08:00 原watcher CEN实读及W8入ops转达回执2/5绑定核同，原413B append保旧时原字；血墙分值-37→-47与失血/公式不变分列，最新同请求runner3288401准入待原生事件。无本项目Claude入口，未投其他仓库，原inbox/for-roy与watcher用户可见链接续，Claude实际实收仍pending，不代ACK；短清单压缩历史保全结构原件。原件paper/materials/20261021-095x-CEN-watcher-ops/receipt.json。
 - 2026-10-21T09:58:18+08:00 CEN同请求四叶已实核静态启动，runner3288401/full3288752、tsc0；最终dd954/2395输入7d864f84与固定manifest同，498知识/formal463，准备ddaf仅44最新知识数据变、四源/builder不变。首EAGAIN零测试/旧失败保留，非完整绿或发布，不查动态/改输入/叠full；原件paper/materials/20261021-0956-ops/receipt.json。
+
+- 2026-10-21 10:15:53 CST [Claude/Roy，P2 不做] Roy：满槽战后奖励药水交 Jev 暂时不做。原因：STS2-Agent mod 在奖励界面不提供 discard_potion（近 6,800 帧扫描中战斗/地图/宝箱/事件/休息/商店/选牌均可丢，奖励 666/666 帧不可丢）。满槽时保持放弃该药水；不提上游 issue、不改 mod。
