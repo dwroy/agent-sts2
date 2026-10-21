@@ -1,0 +1,215 @@
+{
+  "at": "2026-10-21T10:32:17+08:00",
+  "request": "original-W8-CEN-four-leaf-Ironclad-contract-repaired-exact-R409-joint-20261021",
+  "phase": "full0-main-four-integrated-one-natural-exit-publication-armed",
+  "terminal": {
+    "at": "2026-10-21T10:23:51+08:00",
+    "PID_exits": [
+      {
+        "pid": 3288401,
+        "proc_present": false
+      },
+      {
+        "pid": 3288511,
+        "proc_present": false
+      },
+      {
+        "pid": 3288752,
+        "proc_present": false
+      }
+    ],
+    "input_count": 2395,
+    "input_sha256": "7d864f84659b632d34a7bebd2eb02deb21cfc5a848ff3a974da5c62cad5e1ae5",
+    "input_before_after_equal": true,
+    "full_logs_SHA_verified": true,
+    "tsc_rc": 0,
+    "full_rc": 0,
+    "full_files_passed": 629,
+    "full_tests_passed": 5963,
+    "skipped": 2,
+    "vitest_seconds": 1237.12,
+    "wrapper_seconds": 1238.0882520428859,
+    "processes": [
+      {
+        "kind": "autoplay",
+        "pid": 2283493,
+        "start": "142004584",
+        "state": "S",
+        "cwd": "/home/dw/Projects/agent-sts2"
+      },
+      {
+        "kind": "play",
+        "pid": 3316557,
+        "start": "144020748",
+        "state": "S",
+        "cwd": "/home/dw/Projects/agent-sts2/.worktrees/live/agent"
+      }
+    ],
+    "STOP_present": false,
+    "source_preimage": [
+      {
+        "path": "agent/src/reflex/rollout.ts",
+        "root_working_exists": true,
+        "main_base_equal": true,
+        "main_already_after": false,
+        "root_working_clean_for_path": true
+      },
+      {
+        "path": "agent/tests/continuation-retaliation.test.ts",
+        "root_working_exists": false,
+        "main_base_equal": true,
+        "main_already_after": false,
+        "root_working_clean_for_path": true
+      },
+      {
+        "path": "agent/tests/fixtures/continuation-retaliation-cen1.json.gz",
+        "root_working_exists": false,
+        "main_base_equal": true,
+        "main_already_after": false,
+        "root_working_clean_for_path": true
+      },
+      {
+        "path": "agent/tests/inferno-planner.test.ts",
+        "root_working_exists": true,
+        "main_base_equal": true,
+        "main_already_after": false,
+        "root_working_clean_for_path": true
+      }
+    ]
+  },
+  "main_source_integration": {
+    "parent": "d4defc594db29938f220147c53d62490cbe390b8",
+    "commit": "b1773b2ae711b7d178bd09b5d473fc8de46b0889",
+    "tree": "a6fa159069d48eafd7e6d71e06377d7026b8909d",
+    "paths": [
+      "agent/src/reflex/rollout.ts",
+      "agent/tests/continuation-retaliation.test.ts",
+      "agent/tests/fixtures/continuation-retaliation-cen1.json.gz",
+      "agent/tests/inferno-planner.test.ts"
+    ],
+    "at": "2026-10-21T10:26:01+08:00",
+    "source_count": 4,
+    "actual_live_unchanged": "cf4aff4ceebd958ad70b1512cc886c45bd8092aa",
+    "accepted_full_tree": "dd954fc7ef9f9a0a84b379a2d1808895441d3b83",
+    "accepted_input_sha256": "7d864f84659b632d34a7bebd2eb02deb21cfc5a848ff3a974da5c62cad5e1ae5",
+    "tsc_rc": 0,
+    "full_rc": 0,
+    "gitleaks_rc": 0,
+    "knowledge_or_config_staged": false
+  },
+  "boundary_armed": {
+    "at": "2026-10-21T10:31:14+08:00",
+    "state": "main-four-integrated-await-one-native-child-exit-event",
+    "controller_pid": 3402187,
+    "run_id": "GWE810ZD014M",
+    "console": "logs/console/20261021-100430-cf4aff4ce+dirty.log",
+    "autoplay": {
+      "pid": 2283493,
+      "uid": 1000,
+      "start": "142004584",
+      "state": "S",
+      "argv": [
+        "bash",
+        "/home/dw/Projects/agent-sts2/ops/autoplay.sh",
+        "--tail-console"
+      ],
+      "cwd": "/home/dw/Projects/agent-sts2"
+    },
+    "play": {
+      "pid": 3316557,
+      "uid": 1000,
+      "start": "144020748",
+      "state": "S",
+      "argv": [
+        "/home/dw/.local/node/bin/node",
+        "--require",
+        "/home/dw/Projects/agent-sts2/agent/node_modules/tsx/dist/preflight.cjs",
+        "--import",
+        "file:///home/dw/Projects/agent-sts2/agent/node_modules/tsx/dist/loader.mjs",
+        "src/index.ts",
+        "play",
+        "--max-runs",
+        "1",
+        "--max-minutes",
+        "240"
+      ],
+      "cwd": "/home/dw/Projects/agent-sts2/.worktrees/live/agent"
+    },
+    "direct_child": {
+      "pid": 3315194,
+      "start": "144020266",
+      "ppid": 2283493
+    },
+    "ancestry": [
+      {
+        "pid": 3316557,
+        "start": "144020748",
+        "ppid": 3316546
+      },
+      {
+        "pid": 3316546,
+        "start": "144020743",
+        "ppid": 3316545
+      },
+      {
+        "pid": 3316545,
+        "start": "144020743",
+        "ppid": 3315194
+      },
+      {
+        "pid": 3315194,
+        "start": "144020266",
+        "ppid": 2283493
+      }
+    ],
+    "main_source_commit": "b1773b2ae711b7d178bd09b5d473fc8de46b0889",
+    "live_unchanged": "cf4aff4ceebd958ad70b1512cc886c45bd8092aa",
+    "current_play_not_signalled": true,
+    "STOP_not_written": true,
+    "event_wait": "single kernel pidfd readiness; no timer/sleep/progress polling",
+    "CARD": "brain",
+    "REFLEX": "off"
+  },
+  "original_evidence": [
+    {
+      "path": "paper/materials/20261021-1015-ops/original/host-status.json",
+      "bytes": 2403,
+      "sha256": "ec218e9ac3d4a5b4e87bd73b07917ed832364329715557ccd8303e252b59e81d"
+    },
+    {
+      "path": "paper/materials/20261021-1015-ops/original/host-inputs-before.json",
+      "bytes": 399115,
+      "sha256": "7d864f84659b632d34a7bebd2eb02deb21cfc5a848ff3a974da5c62cad5e1ae5"
+    },
+    {
+      "path": "paper/materials/20261021-1015-ops/original/host-inputs-after.json",
+      "bytes": 399115,
+      "sha256": "7d864f84659b632d34a7bebd2eb02deb21cfc5a848ff3a974da5c62cad5e1ae5"
+    },
+    {
+      "path": "paper/materials/20261021-1015-ops/original/tsc.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "paper/materials/20261021-1015-ops/original/full.log",
+      "bytes": 486,
+      "sha256": "f1da26b30bd918ed189cc639f3a0845ded36ce063bdcd59e7e975b1df0fdb7d1"
+    },
+    {
+      "path": "paper/materials/20261021-1015-ops/original/native-start-readback.json",
+      "bytes": 1786,
+      "sha256": "4118c11a08939c80a9241e6c74bcb82d8e0e8c8f284ff15d9f3bb9afb0e89eb8"
+    }
+  ],
+  "actual_live_publication": "pending single original native exit event; no release assigned yet",
+  "consumer_readback": "pending actual live at natural boundary",
+  "CARD": "brain",
+  "REFLEX": "off",
+  "P2": "removed from active plan by later Roy decision; full potion reward retains skip; no mod or issue",
+  "knowledge": "latest working knowledge preserved at publication lock, no knowledge transport",
+  "old_failures_preserved": true,
+  "new_full_or_MC_API_or_learning": false,
+  "scientific0332_or_role_ACK_complete": false,
+  "next_engineering_candidate": "original W4 v2 after CEN boundary and actual latest live/knowledge freeze; quality publication and jev held for Roy"
+}
