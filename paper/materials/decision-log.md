@@ -5657,3 +5657,5 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
 - 2026-10-21T19:58:30+08:00 [ops] 191301主策略唯一dataset正常日志后，#25/#29 main源变27路径使二次自动收尾attention；原report/8交付/12提取SHA核同，十waiting/科学父保留，不重dataset/合入/模型或改原失败。paper/materials/20261021-1956-ops/receipt.json。
 
 - 2026-10-21T20:02:24+08:00 [ops] #15/#8实际live均未发布，#8主目录R4 CLI已核同源；两原补丁与#25+#16无冲突48叶725a2480候选待原单点准入，P0#15优先。各issue结论发前gitleaks及回读0，当前局不动，三个空shell关闭保线程/科学父。https://github.com/dwroy/agent-sts2/issues/15#issuecomment-6315393311 https://github.com/dwroy/agent-sts2/issues/8#issuecomment-6315393994 https://github.com/dwroy/agent-sts2/issues/25#issuecomment-6315394849；paper/materials/20261021-issues15-8-release-ops/receipt.json。
+
+- 2026-10-21T20:05:25+08:00 [watcher] #13/#14 研究交付核收：77/59份产物大小SHA匹配，报告已在main 237403ce8e；卡牌实现/消费者与R410独立配对验证/发布仍缺，转blocked保科学父。14候选零验证unknown，旧校准及SL删失不补当前分母，原研究CLI登记pending不代ACK。paper/materials/20261021-issues13-14-acceptance-review/report.md。
