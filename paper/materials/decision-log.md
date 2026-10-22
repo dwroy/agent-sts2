@@ -5820,3 +5820,5 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
 - 2026-10-22 15:13 [ops] 144301无源限定报告核61产物/十A10/两主题待证；baseline已核存在且零源差，报告完成JSON缺失，原failed/rc0/16:03冷却保持。0101旧first_run快照与Oct5更正分列；不改历史/补测试/空合入/重dataset。paper/materials/20261022-1506-ops/。
 
 - 2026-10-22 15:15 [ops] 八重复notice原文/双箱/ops ACK及watcher转达证明与14:43一致；原CLI三研究ACK支持阻塞与正式pending保留，不重发/代填/重试或关父。paper/materials/20261022-1515-ops/notices-readback.json。
+
+- 2026-10-22T15:52:01+08:00 ops：#38仅取消未执行检查的自有7161，原90c候选统一K→O→D→T→L/测试前释K，4固定回归0；唯一523632仍等K/fullfalse、待真实入口。#40源/候选21双SHA/8原件核同，review保#20/#41门及原33→35→28→37→36顺序，未发布/新full/模型/实验；见 paper/materials/20261022-issue38-window-ops/receipt.json。
