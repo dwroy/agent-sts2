@@ -105,6 +105,8 @@ kit 的 `CAPABILITIES` 同时声明 project-consumer、agent-prefix、area-mutex
 
 生命周期登记锁在任何会话动作开始前被占用时，CLI 返回退出码 75 及 `state=retry/retryable=true`，派单器保留 pending，下一轮自动重试；这与动作可能已发生的 uncertain 分开。宿主/项目锁冲突同样不执行该轮动作，沿下一原 tick 重试，不争锁、不删登记。
 
+派单器tick的预期等待与异常分账（#20，6344092778第1点）：回收器明确返回retained/waiting-worktree记`retained`，接收方忙碌/缺席/不可输入及动作前可重试锁忙记`queued`；这些保留pending、下次原tick再判，退出0，不写故障或主管收件箱。宿主/项目派单锁在动作前冲突也queued/0。API/配置/账本损坏、超时、未知回执或动作不确定仍为`failed`、退出非零，原事件保持uncertain，不自动重发；具备有效项目配置时按原notice去重写主管收件箱。项目级异常用独立`<原state文件stem>-failures.json`保存通知回执，避免改坏的主journal；配置尚不可读取时仍写原registry收件箱。旧errors历史不清除，主管收件箱写入失败保留不确定并写原ops收件箱，不能伪装为普通等待。正常排队本身不等于送达或回收完成；真实长期停滞仍按原watchdog阈值升级。
+
 `spawn` 现在先无任务启动 Codex，核同一 terminal/tab/cwd 与空闲状态，显式命名并读回，然后单独发送一次任务。自动命名报错但同一新终端已就绪时可安全补命名；否则保留 `starting/start_phase`，给出 start/identity/name/prompt 阶段及已识别的 Herdr 错误类别，沿原显式 `register` 恢复。原始 stderr 不外发，避免披露路径或凭据。
 
 派发在 allocate/prepare 或建 tab 时失败，重复 `spawn N slug` 会返回原阶段和精确 `resume` argv；不重发开场任务。显式 `python3 ops/issue_session.py --root "$PWD" resume N slug` 支持 allocating/allocated/creating-tab/tab-created：先核 issue/账号/容量、主机进程可见性、无既有 agent、同仓工作树/分支/原始 base/干净状态，再重做幂等 prepare；复用已核的唯一 tab/terminal，空闲 shell 才能启动。starting 或 prompt 不确定阶段仍只用原 `register`，resume 不重启或重发。自定义 config/state-dir 必须沿返回的 argv 保持相同登记。

@@ -1,0 +1,28 @@
+{
+  "kit_commit": "7e5a408f641f30a442eef06f81e933adda194daf",
+  "production_tsc": {
+    "exit_code": 0,
+    "log": "tsc.log"
+  },
+  "targeted": {
+    "command": "python3 -m unittest test_outcomes test_board test_watchdog test_claude_inbox test_project_contract test_release_order",
+    "tests": 102,
+    "exit_code": 0,
+    "log": "kit-final.log"
+  },
+  "initial_failure": {
+    "tests": 100,
+    "passed": 99,
+    "failed": 1,
+    "cause": "test_project_contract expected legacy error result; assertion updated to failed",
+    "evidence": "session tool output only; no saved raw log"
+  },
+  "full_suite_run": false,
+  "production_changed": false,
+  "logs_sha256": {
+    "kit-final.log": "14f551479c43c5426b2179919d5182cce72ebd8b9664425105097489b95c10f4",
+    "kit-scan.log": "42bfe725b0023fcb0e98f2a30fdaf0f7771538df6f57b5074e70c716b1257965",
+    "kit-targeted.log": "b3501797b7996a51d23e792080df4934ccfecae509be2b4f2bab3bad557239a0",
+    "tsc.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  }
+}
