@@ -1,0 +1,133 @@
+{
+  "passed": true,
+  "root": "/home/dw/Projects/agent-sts2/.worktrees/ops-issue33-r416-live-20261023",
+  "tool_names": [
+    "external_stats_card",
+    "external_stats_clusters",
+    "external_stats_cooccurrence",
+    "external_stats_deck_size",
+    "external_stats_encounter",
+    "external_stats_skip",
+    "kb_encounter",
+    "kb_experience",
+    "kb_monster",
+    "kb_old_knowledge",
+    "kb_open_book",
+    "kb_potion",
+    "kb_stats",
+    "kb_strategies"
+  ],
+  "calls": [
+    {
+      "name": "external_stats_card",
+      "input": {
+        "id": "BLADE_DANCE",
+        "act": 1
+      },
+      "isError": false,
+      "output_bytes": 4563,
+      "output_sha256": "36498ee22142d1f6e29ab14b93c66e244f1d36f4dd413879dca616fc030b9353",
+      "source": "external:sts2fun",
+      "sources": null,
+      "version": "v0.111",
+      "rows": 1
+    },
+    {
+      "name": "external_stats_skip",
+      "input": {
+        "act": 2
+      },
+      "isError": false,
+      "output_bytes": 3130,
+      "output_sha256": "01d40d527f2d0b2ea501e2775483dbd67d16dde6cc420d5c7552cce003c237db",
+      "source": "external:sts2fun",
+      "sources": null,
+      "version": "v0.111",
+      "rows": 1
+    },
+    {
+      "name": "kb_old_knowledge",
+      "input": {
+        "source": "jev_hints",
+        "keyword": "*"
+      },
+      "isError": true,
+      "output_bytes": 442,
+      "output_sha256": "7d07f88b0ee10c67f4bfea57c05796939b6cbb0ec5b055161638157a6b3ecdc6",
+      "source": null,
+      "sources": [
+        {
+          "source": "own",
+          "character": "silent",
+          "file": "jev-hints.json",
+          "path": "characters/silent/jev-hints.json",
+          "status": "missing",
+          "version": "missing",
+          "sha256": null
+        }
+      ],
+      "version": null,
+      "rows": 63
+    },
+    {
+      "name": "kb_stats",
+      "input": {
+        "table": "fights",
+        "act": 1
+      },
+      "isError": false,
+      "output_bytes": 8004,
+      "output_sha256": "5913e8741ef233b19e3c139e74209abf6977e656c60374f4fb8b88ed0d0718e4",
+      "source": null,
+      "sources": [
+        {
+          "source": "own",
+          "character": "silent",
+          "file": "monster-db.json",
+          "path": "common/monster-db.json",
+          "sha256": "fdd7b6c1e66ed02389f0c7c71e04ed5844b39751c1cfbbf61ce833f534105b9f",
+          "version": "sha256:fdd7b6c1e66ed02389f0c7c71e04ed5844b39751c1cfbbf61ce833f534105b9f"
+        },
+        {
+          "source": "own",
+          "character": "silent",
+          "file": "monster-records.json",
+          "path": "characters/silent/monster-records.json",
+          "sha256": "1dcff63231e33409403cc3c2b345a5b8ec8be00e9af2bf0eb334a5f918d3c583",
+          "version": "sha256:1dcff63231e33409403cc3c2b345a5b8ec8be00e9af2bf0eb334a5f918d3c583"
+        }
+      ],
+      "version": null,
+      "rows": 4511
+    },
+    {
+      "name": "kb_strategies",
+      "input": {
+        "query": "*"
+      },
+      "isError": false,
+      "output_bytes": 160,
+      "output_sha256": "4d060a39701c71493110c89f9957b1bf97e8dd4889735d7898c5bda136232819",
+      "source": null,
+      "sources": [],
+      "version": null,
+      "rows": 0
+    }
+  ],
+  "external_other_character_rejected": true,
+  "router_knowledge_agent": true,
+  "default_codex_high": true,
+  "deepseek_max": true,
+  "model_sha256": "23d4310e460f66bb28be33109ff747034470b346ea497e33163c694b25a888b4",
+  "strategy_sha256": "9df3740b4254daade365a4c3cf48b25b2d840e9f656bcda50e64735a79b3d95e",
+  "strategy_ids": [
+    "silent-brain-kin-priest-exit-window",
+    "silent-brain-vantom-two-stage-preparation",
+    "silent-brain-crab-surviving-part-budget"
+  ],
+  "catalog_sha256": "9c00ec066c1b9c1f67ca6a289b9e38bfa3d05a8f125d62e92aa5f3a9eff5245e",
+  "external_dataset_sha256": "88eef1cd8b875ab27d47c3abc39335f271705672b53bd71a0f4b30286168ac07",
+  "credentials_read": false,
+  "model_API_or_game_calls": 0,
+  "natural_adoption": false
+}
