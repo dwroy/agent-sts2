@@ -4588,3 +4588,8 @@ W4拿牌v2正式3ef4/11a80已核：14源Git/SHA、318清单项加manifest共319�
 ### 2026-10-22T09:59:45+08:00 [ops] 09:55无源修复批次
 
 094302-fix无新增源或提交受阻，不做空合并。157文件SHA、53既有main子项/48祖先与原候选接续核同；tsc0、12定向文件44例0，非full。首次配置加载在收集前EROFS及原误报保留、精确SHA已重算。基线9a894427对live严格SOURCE_PATHS差162、宽代码/数据差369，verify_empty_fix仍拒绝，原failed/rc0/mergednull与冷却保留。原#25的26请求/回答逐SHA核同；现有投影及压缩固定诊断后11条仍超24000B、最大37383B，最大原56272B/plan40771B。两诊断模块与live字节同，但探针强制COMBAT_ENTRIES=on，仅固定诊断不代生产配置或预算修复。补回原#25及队列，保全部候选/unknown/审计，不删事实、抬预算或重复模型/MC/full；其他原候选和科学父保留。只落记录，当前局/live/REFLEXoff不动。原件paper/materials/20261022-0955-ops/receipt.json、budget-probe-readback.json。
+
+
+### 2026-10-22T10:15:44+08:00 [ops] #27首批任务准备与原槽待派
+
+#27首批任务已备妥并进入原ops待派清单，尚未启动学习者。前置#16/#24关闭状态已核实；冻结52份输入、434个已结束Silent局及日志字节上限，#16数据集与#24来源表SHA逐项核同，纳入#25开卷。新任务明确允许协议第9节外部证据，与自有证据分账，保留版本、样本、反例和观察性边界；优先第一/二幕Boss、拿牌及幕初方向，要求真实条目、自测、原合入发布和首自然脑题命中。独立工作树已由原分配器创建，任务渲染与gitleaks通过。派发门前10:13主/s2策略两槽已占用，原断言保留，未调用herdr或模型；沿原批次完成事件接续同一待派任务，不重复建批。初始化局清单字段误用已在启动前纠正，初稿留档。high仅请求档位，无原生消费回执；live仍R411，发布及自然命中两项验收待完成。原件paper/materials/20261022-issue27-dispatch-ops/receipt.json、capacity-gate.json；任务notes/learning-questions/issue-27-brain-strategies-task.md。
