@@ -5882,3 +5882,8 @@ W4拿牌v2正式3ef4/11a80已核：14源Git/SHA、318清单项加manifest共319�
 ### 2026-10-22T09:42:53+08:00 [ops] 09:37三事件核收
 
 09:37三事件核收：R4正式notice f9d1cd08原文/四question/SHA及双箱核同，ops ACK已0，#8已转review等watcher本人两角色登记，不重复发送/代ACK或续批。090940-s2十提案waiting、无源/合入/新纯bug；80产物冻结、十原文及12封存核同、18246原段回源核SHA，完整审阅8/811、803未读。唯一dataset日志正常终尾，随后新增R4通知触发原收尾守卫；不是本学习者新异议，原attention/正式成功字段缺保留，不重生成器。#33原PID3113069在取得锁后检出#35/#36并行Vitest，未冻结知识或启动重建/tsc/full即退出；55叶与预备树未变、实际live仍R411。首轮实际组合检查保pending，交原发布队列协调独占窗口；不杀其他任务、叠full/模型或派守候，不发布/热切。科学父、CARDbrain/REFLEXoff及Regent暂停保持。原件paper/materials/20261022-0937-ops/receipt.json。
+
+
+### 2026-10-22T09:45:57+08:00 [ops] 09:44主策略收尾注意
+
+090940主策略批次已核：十项均waiting，owner无源码/知识改动、提交、合入或补测，新纯bug为无。76份产物清单、十份恢复的原提案、封存文件及483段原日志字节SHA核同；完整逐题审阅13/579，566未读分列，不把机器提取当完整研究。原ordinary基线存在，唯一新增notice为ops按#8建立的原R4正式通知；主批报告没有新增异议。原初次准入因此在dataset前停止，未有started/dataset_attempts/ledger或dataset日志，不能借同前缀s2的唯一dataset证明补完成。保持attention、原报告和科学父，未启动/重启生成器，不手改基线通知列表、收尾成功字段或重合入。工作树.git及真实顶层核实，避免回收后Git向上读主根；原结束clean与当前现场分时保留。V6历史no_match/开关未知不补off；live仍R411，CARDbrain/REFLEXoff及Regent暂停不动。原件paper/materials/20261022-0944-ops/receipt.json。
