@@ -5788,3 +5788,5 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
 - 2026-10-22T11:28:59+08:00 [ops] #33+#26首轮full失败留原件；漏带两canonical helper补齐后定向17过，另两status-null原工程链pending，不重full/模型或发布。#36旧main窗口依原集成员取消，交互TUI待补交、视图off，见paper/materials/20261022-issue33-full-terminal-ops/receipt.json。
 
 - 2026-10-22T11:38:42+08:00 [ops] 101301主策略源码漂移在dataset前attention，61产物/十waiting保留；0268旧注8与原帧14异议入双箱沿原watcher转Roy pending，不改知识/参数或重dataset/full/模型/合入。paper/materials/20261022-1136-ops/receipt.json。
+
+- 2026-10-22T11:45:38+08:00 [ops] 八原notice送达证据核同、CLI三research角色登记仍pending；#28候选21源叶/1测试修补与原日志核回，完整/main门沿#33/#35之后原队列，学习/改善/开关/A-B未验。不重full/模型或改live。paper/materials/20261022-1143-ops/receipt.json。

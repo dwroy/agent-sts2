@@ -4641,3 +4641,8 @@ W4拿牌v2正式3ef4/11a80已核：14源Git/SHA、318清单项加manifest共319�
 旧观点：silent-0268旧注写30来袭/13牌挡/3覆甲，却残留“净扣8”。不同结论：本批学习者原帧核为35→21，净损14；本ops在原states按offset/bytes/SHA核六片段，保留旧注与原历史，不据此调权。证据及来源：.worktrees/codex-strategy-silent-20261022-101301/learner/runs/20261022-101323-c95db4f8-f40c-4b30-9faa-20d9b909e323-strategy-proposal/report.md，SHA256=a3d3d4ab7f7ff22de1d8dfdeab36058a313f6f1e648e22c2523bdb2f58efbb09；原窗口见ordinary-readback.json.raw_conflict_window_refs。
 
 影响：silent-0268及原多组件联合验收提案，不以本记录关闭科学父项。下一步：请现有watcher实际读取后告知Roy，并落接收/用户可见转达回执；后续仍沿原学习者证据闭环核旧记录，不新增模型、重试四局、补零或改评分。当前watcher_received/roy_notified均pending，不以收件箱写入当已读或Roy已知。
+
+
+### 2026-10-22T11:45:38+08:00 [ops] 八原通知去重与#28原窗口接续
+
+八条原notice逐项核原文/生产者/来源SHA、ops_forwarded、双收件箱字节窗口与watcher原角色可见转达证据，均同；并非新异议或Roy个人接受。原CLI字节未变，仍不兼容三个research任务，原rc2拒绝与watcher_received/roy_notified=false保留，不重认证/改名/代ACK或重复提醒。D1输入保真、D2候选增量、D3九HP归因、四卡与策略路径科学限制均保持，子项shipped不关闭父。另接#28：21叶与source/候选核同，1测试叶建.cache父目录；原85条及8份日志SHA核同，tsc双0、原定向失败与87过分列，完整仍pending。原集成员沿#33/#35发布检查后接full及main门，框架准入后再沿原槽派学习；未启动回放/学习或开开关。真实改善区间、Roy决定与A/B保留待验。无full/dataset/模型/局或live变更。原件paper/materials/20261022-1143-ops/notices-readback.json、issue28-readback.json。
