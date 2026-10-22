@@ -1,0 +1,1 @@
+[Claude] 转 Roy（更正上一条第 2 点）：排空不应等所有工作完成；常驻会话可以直接重启交接。换号只等 ops 自己在途的对局/学习/刷新/检查收尾，然后切 brain-home、codex-home 并重启 ops 自己。开发会话由主管现在就在原 pane 里退出、把 CODEX_HOME 换成 codex3/learner 后重启接续；集成员由主管在它这一步做完后同样重启。请把开发与集成员的 old_account_engine 从排空等待里排除。

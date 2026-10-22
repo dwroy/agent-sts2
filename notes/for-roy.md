@@ -4726,3 +4726,7 @@ Roy/Claude报16:09周用量91%，已新建codex3-20261022-1610，旧1146取消�
 ### 2026-10-22T18:30:11+08:00 [ops] high/40精确组合与换号角色例外
 
 已核high与40原full及来源SHA；40已main/waiting-release、legacy/off可独立，两次绿不代精确live组合。补齐R411缺的两项受测report缓存依赖并保41时钟测试，形成27叶9e53新组合，不带整包33/35/旧20或whole-main；唯一821586/start8890034已tsc0、2487冻结输入，首次full在途。原有限脚本通过后才短锁核最新知识/catalog/绑定及预像，联合提交/统一版本/双通知，仅解除对应Roy暂停；失败保STOP且不重放。换号按明确角色例外处理，5边界检查通过、27登记旧引擎保留排除；未知/学习/play/assist及PID复用不豁免。只替换自有控制器，同事务唯一826698/start8899747只等本ops工作与空闲，其他会话不热切。新ops已接流程：实际联合live且目标UUID核验后原broker恢复正常循环，首局核high/增量/账号；当前live仍R411，不冒完成。原件paper/materials/20261022-high40-release-ops/。
+
+### 2026-10-22T18:38:21+08:00 [ops] 换号排空角色更正
+
+已按Roy更正更新换号协议及新ops交接：开发由主管现在在原pane正常退出、切codex3/learner后重启接续，集成员当前一步结束后同样处理，不再等旧号额度耗尽或所有任务完成。核原事务实际18:36排空快照，原始待排空工作记录为0，登记开发/集成员均不在等待项；只保留本ops唯一821586/start8890034精确联合检查/发布，本ops本轮仍写交接所以尚非idle。这不代表其他角色目标账号或任务已验收。沿原826698/start8899747接续，未重启控制器、未信号其他角色、未新增full/模型。联合检查与本轮收尾后，原协议切brain-home/codex-home并正常重启ops，目标新UUID核验后才释放自有两旗；high与40实际live后解除Roy检查窗口并恢复正常循环、首局high及增量读回的原授权保留。原文与快照：paper/materials/20261022-high40-release-ops/user-correction-verbatim.md、supervisor-restart-snapshot.json。
