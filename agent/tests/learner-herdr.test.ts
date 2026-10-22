@@ -276,7 +276,15 @@ describe("native batch authority", () => {
 describe("interactive batch lifecycle", () => {
   it("persists bootstrap proof without interrupting the original native task or weakening retirement", async () => {
     const f = fixture("bootstrap");
+    const log = f.opts.log; let running: Record<string, unknown> | undefined;
+    f.opts.log = (event) => {
+      log(event);
+      if (event.type === "token_usage_record") running = JSON.parse(readFileSync(f.opts.receipt, "utf8"));
+    };
     expect(await runLearnerTui(f.opts)).toMatchObject({ code: 0, stopped: true, turn: "turn-1" });
+    expect(running).toMatchObject({ state: "native-accepted", session: "019a1000-1234-7123-8123-123456789abc",
+      turn: "turn-1", submitted: true, retirement_authorized: false });
+    expect(running?.bindings).toHaveLength(1); expect(running?.native_preludes).toHaveLength(1);
     expect(f.prompts()).toBe(1);
     const receipt = JSON.parse(readFileSync(f.opts.receipt, "utf8"));
     expect(receipt).toMatchObject({ native_context_version: 1, retirement_authorized: true, submitted: true });

@@ -325,6 +325,7 @@ export async function runLearnerTui(o: TuiOptions): Promise<TuiResult> {
   let ownershipLost = false;
   let continuation = 0;
   let retirementAuthorized = false;
+  let persistedBindings = 0;
   let alerted = false;
   let retries = 0;
   let progress = 0;
@@ -370,6 +371,10 @@ export async function runLearnerTui(o: TuiOptions): Promise<TuiResult> {
         if (file === rollout) {
           o.log(row as Record<string, unknown>);
           if (o.request.resumeThread && native.accepted && !native.session) native.session = o.request.resumeThread;
+          if (native.accepted && !native.foreignActivity && native.bindings.length > persistedBindings) {
+            persistedBindings = native.bindings.length;
+            save("native-accepted"); // Persist consumption while the original task is still running, not only at retirement.
+          }
         }
       }
     }

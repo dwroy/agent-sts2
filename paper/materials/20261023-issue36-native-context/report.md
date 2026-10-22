@@ -23,3 +23,5 @@
 同一四份真实前缀：原HEAD 4/4复现 accepted=false/foreign=true，修后4/4 accepted=true/foreign=false；原失败与同字节输入SHA保留。最终 tsc0，定向9文件/112项通过；Python23有独立日志，已被Vitest一个包装入口包含，不重复加算。全部nice19、单线程worker、文件/检查串行。20输入SHA、命令/原件SHA、初轮与最终绿见 `checks.json`；本地首次复放 harness 的cwd路径错误发生在复放前，修正后完成原红/新绿，原件保留。未跑full，完整组合与兼容由原集成员沿原队列核验。
 
 运行差量为 `learner/lib/herdr.ts`、`ops/learner_tui.py` 及两份只读审计入口文件；测试改动四份，另有文档和本材料/decision-log。未修改 main/live/STOP/hosting/账号/普通服务档/权限，未改变游戏知识或决策规则、未分号、未运行 play、新模型/提示、重排原批或关闭其他会话。自然直播/TUI与四批最终完成、学习/科学父继续开放。
+
+交付末次自查补充：原 `6a5d049f0` 后另补原生接受时的即时回执检查点；初次/明确续接的绑定被原生确认后立即 fsync `native-accepted`、session/turn/bindings/前缀，模型尚在工作时也可读到证明，不等结束或重试。完整mock回归在 native task_complete 之前读回该状态及 retirement_authorized=false，最终9文件/112项和tsc仍通过；此前受测日志另名保留。交集成时须同时取协议提交及此检查点后续提交，不能只取最后一枚。

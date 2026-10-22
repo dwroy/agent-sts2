@@ -1,13 +1,13 @@
 {
   "base": "6ec71c313fe113b107b44867c0aca2352a1a59ea",
   "inputs": {
-    "learner/lib/herdr.ts": "14d162cad315b4f1f2a3ee0ebcbbc691ba10f0c63a45e5c4703be22204e158c0",
+    "learner/lib/herdr.ts": "9b820620b6f5c4eeac36d0dd58465da32635714f9fdab09a2453798e1dbbfe99",
     "ops/learner_tui.py": "ceb943eb718ee5f6357ba2a6308ecf9b1d1a58f8d656da77b10823da5c28cbc7",
     "learner/lib/tui-reconciliation.ts": "0534b272ac6177389f3558af41a802a8b5a7f4a33327124e549ea795f35d2ee8",
     "learner/reconcile-tui.ts": "78633bd5bd1686a76f0338c4169067479f31c84be58b4dd3fac95483f0cf5b53",
     "agent/tests/learner-native-prelude.test.ts": "fd2bbcbdf7b64a599e39bc1cc3b9a890da6979b1db0278927b8faa503893149c",
     "agent/tests/learner-tui-reconciliation.test.ts": "6d0d93ea9bc7d4ffea3f07ca84fc0164b246be0a2bdfe4c9b397b4dd73283ff8",
-    "agent/tests/learner-herdr.test.ts": "b1a12c8a995fcdad732fee8b1f3d7d063a541eea9bb7a2346a4f65fa03cd9a89",
+    "agent/tests/learner-herdr.test.ts": "e0ce43646b43c37c8d81ad0f8730ff66dba6cf70c563ed16c4209bc71f139854",
     "agent/tests/learner-herdr-ownership.test.ts": "af57612bd0b6413b2cac926641e3d30820074e43391d4dc260ca7ddf783add6b",
     "agent/tests/learner-herdr-launcher.test.ts": "38eb7cc58e79c8fe368269c69ebd795fc960dfb2a4bfbe0b32c6287670bf9607",
     "agent/tests/learner-herdr-receipts.test.ts": "d3b234d079a94abfe8aa964c2a8250bea65bd7e7983006712ec395fa179902fc",
@@ -20,7 +20,7 @@
     "ops/codex-ops-learner.sh": "37da3379b5c18bc5b754fad7fb1722d2e89752db351fc4f3e8b211572e1c5a22",
     "learner/lib/launcher.ts": "1f2260b7224a2ed5d59cce118ceb857acc0f65fa49b0bf7b3d079a285c4ce789",
     "learner/lib/startup-recovery.ts": "b42dfc3d7f2f5ea9dd11a3aa7b5eca2ee30d62a68fbd6bdc52bb95e710e11262",
-    "docs/codex-ops.md": "19cd3a7a16c773bdc8fe55071851739820341c8be05a62f925960cc07e15ed7e"
+    "docs/codex-ops.md": "aa55d4a2be5fb875953797e2a421989ccc33fcb16a0329e2930892d9706e6d76"
   },
   "original_four_prefixes": {
     "path": ".artifacts/ops-issue36-recovery-20261023/native-prefix-replay.json",
@@ -66,8 +66,8 @@
     {
       "command": "node node_modules/vitest/vitest.mjs run tests/learner-native-prelude.test.ts tests/learner-tui-reconciliation.test.ts tests/learner-herdr.test.ts tests/learner-herdr-ownership.test.ts tests/learner-herdr-launcher.test.ts tests/learner-herdr-receipts.test.ts tests/boss-sim-home.test.ts tests/learner-entry.test.ts tests/learner-startup-recovery.test.ts --pool=threads --maxWorkers=1 --no-file-parallelism (cwd: agent)",
       "exit_code": 0,
-      "result": "9 files/112 passed; includes Python23 via receipt wrapper, not additive",
-      "log": ".artifacts/issue36-native-prelude/checks/targeted-final.log",
+      "result": "9 files/112 passed; includes Python23 via receipt wrapper, not additive; before the immediate acceptance checkpoint follow-up",
+      "log": ".artifacts/issue36-native-prelude/checks/targeted-before-acceptance-save.log",
       "sha256": "3c538e6edb9df91bb17c6ecc65a7a4f9b706c9dce12e75a3c4d78b1bcdd5e5ad"
     },
     {
@@ -88,6 +88,20 @@
       "command": "node node_modules/typescript/bin/tsc -p tsconfig.json --noEmit (cwd: agent)",
       "exit_code": 0,
       "result": "final production typecheck passed",
+      "log": ".artifacts/issue36-native-prelude/checks/tsc-before-acceptance-save.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "command": "node node_modules/vitest/vitest.mjs run tests/learner-native-prelude.test.ts tests/learner-tui-reconciliation.test.ts tests/learner-herdr.test.ts tests/learner-herdr-ownership.test.ts tests/learner-herdr-launcher.test.ts tests/learner-herdr-receipts.test.ts tests/boss-sim-home.test.ts tests/learner-entry.test.ts tests/learner-startup-recovery.test.ts --pool=threads --maxWorkers=1 --no-file-parallelism (cwd: agent)",
+      "exit_code": 0,
+      "result": "9 files/112 passed, including persisted session/turn/proofs before native task completion",
+      "log": ".artifacts/issue36-native-prelude/checks/targeted-final.log",
+      "sha256": "5cd9f52c35ba1cd155fd26ed13068805a62e636458b24b2d3ff43c975a731e06"
+    },
+    {
+      "command": "node node_modules/typescript/bin/tsc -p tsconfig.json --noEmit (cwd: agent)",
+      "exit_code": 0,
+      "result": "final production typecheck passed after the acceptance checkpoint follow-up",
       "log": ".artifacts/issue36-native-prelude/checks/tsc-final.log",
       "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
     }
@@ -117,5 +131,6 @@
       "audit": ".artifacts/issue36-native-prelude/reconciliation/20261023-032433.audit.json",
       "sha256": "9a56220d2416232fe9fc27ae02a88232b711209cf84bf434fd129655e520bc61"
     }
-  ]
+  ],
+  "protocol_commit": "6a5d049f043d7c530a13850a0fde915ccddea25b"
 }
