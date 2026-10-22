@@ -46,6 +46,27 @@ class CompletionGate(unittest.TestCase):
         self.assertEqual(value["output"]["sha256"], tui.digest(self.output))
         self.assertFalse(value["artifacts"]["out_pending_wrapper_flush"])
 
+    def test_bounded_agent_name_stays_bound_to_full_label_pane_and_cwd(self):
+        self.value.update(label="learner-20261023-021302-s2-strategy-proposal", pane="w1:p2", agent_name_version=1)
+        binding = json.dumps([self.value["label"], self.value["pane"], str(self.root)], ensure_ascii=False, separators=(",", ":"))
+        self.value["agent_name"] = "learner-" + hashlib.sha256(binding.encode()).hexdigest()[:24]
+        self.save()
+        self.assertEqual(tui.verify(self.receipt, self.output)["agent_name"], self.value["agent_name"])
+        for key, changed in (("label", "learner-other"), ("pane", "w1:p3"), ("cwd", "/foreign"),
+                             ("agent_name", "learner-foreign"), ("agent_name_version", 2)):
+            with self.subTest(key=key):
+                bad = dict(self.value, **{key: changed})
+                self.receipt.write_text(json.dumps(bad))
+                with self.assertRaisesRegex(ValueError, "native agent name"):
+                    tui.verify(self.receipt, self.output)
+
+    def test_name_contract_matches_typescript_with_non_ascii_cwd(self):
+        self.value.update(label="learner-20261023-021302-strategy-proposal", pane="w1:p2", cwd="/fixture/中文",
+                          agent_name="learner-8f55a5ad47c4b2bb40b86574", agent_name_version=1,
+                          state="not-started", models_started=0, result={"code": 3})
+        self.save()
+        self.assertEqual(tui.verify(self.receipt, self.output)["agent_name"], self.value["agent_name"])
+
     def test_zero_exit_alone_never_suffices(self):
         self.native.write_text("".join(json.dumps(r) + "\n" for r in self.rows[:-1]))
         with self.assertRaises(ValueError):

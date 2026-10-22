@@ -105,6 +105,12 @@ def verify_native(receipt):
 
 def verify(path, output):
     receipt = json.loads(Path(path).read_text())
+    if "agent_name" in receipt or "agent_name_version" in receipt:
+        binding = json.dumps([receipt["label"], receipt["pane"], os.path.abspath(receipt["cwd"])],
+                             ensure_ascii=False, separators=(",", ":"))
+        expected = "learner-" + hashlib.sha256(binding.encode()).hexdigest()[:24]
+        if receipt.get("agent_name_version") != 1 or receipt.get("agent_name") != expected:
+            raise ValueError("native agent name is not bound to the original pane/label/cwd")
     result = receipt.get("result", {})
     if receipt.get("state") == "not-started" and result.get("code") == 3 and receipt.get("models_started") == 0:
         digest(output)
