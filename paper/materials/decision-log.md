@@ -5775,3 +5775,5 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
 
 - 2026-10-22T10:23:56+08:00 [ops] 101301-fix无新源，157SHA/53旧子项48祖先核同；tsc及3文件12例0非full，strict162差/failed rc0保持。八notice原实际转达证明同、CLI登记仍pending；不重探针/代ACK/空合并/叠dataset或full，paper/materials/20261022-1021-ops/receipt.json。
 - 2026-10-22T10:40:28+08:00 — 集成员核验 #35：0485abd6f 已合本地 main c208665e6；独立 tsc/Python0、完整655文件/6174通过/2既有跳过，2116输入SHA不变，双引擎固定商店原计划理由/重启读回通过；绑定按原锁备份恢复校验，待 ops 精确live组合/自然边界发布及首局读回。报告 paper/materials/20261022-issue35-integrator-review/；未改live/STOP。
+
+- 2026-10-22T10:44:20+08:00 [ops] 八原异议及实际转达证明SHA核同，原CLI不支持三research身份、两角色登记仍pending；保原拒绝/科学父，不重复提醒或代ACK，不叠任务/改live。paper/materials/20261022-1043-ops/receipt.json。

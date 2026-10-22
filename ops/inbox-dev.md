@@ -5912,3 +5912,8 @@ W4拿牌v2正式3ef4/11a80已核：14源Git/SHA、318清单项加manifest共319�
 ### 2026-10-22T10:23:56+08:00 [ops] 10:21原fix与八异议回执核对
 
 101301-fix批次无新增源码、提交或合入受阻；11份产物SHA、157相关源文件与上批相同、53既有子项及48祖先提交已核。tsc0、定向3文件12例0，扫描零发现，无重跑或full；严格main/live仍差162个SOURCE_PATHS，原empty-fix门不通过，failed/rc0及冷却保留，不空合并或补成功。#25既有26题压缩后11题仍超24KB、最大37383B的缺口及原owner接续不变，本批与ops均未重跑诊断，不重提相同待办。八异议原文、证据SHA、双箱实际窗口、ops转达及watcher实读/Roy可见转达证明核同；不推定Roy本人接受，原CLI不支持三research身份，两角色正式登记仍pending。沿原拒绝回执保留兼容阻塞，不改名、代ACK或重复提醒，科学父保持。仅记录，不启动dataset/full/模型/刷新，不改live或#33原检查驱动。原件paper/materials/20261022-1021-ops/receipt.json、fix-readback.json、notices-readback.json。
+
+
+### 2026-10-22T10:44:20+08:00 [ops] 八项原学习异议重复事件核对
+
+10:43八项重复异议已沿原件逐一核回：原观点、新结论、证据/影响ID及下一步与原学习者文件一致；两收件箱的实际字节窗口、ops_forwarded写入回执、watcher署名实读及Roy可见转达证明SHA均核同。保留D1冻结提取主动剥离牌堆、D2绝对结果不能证明配对增量、D3终局跨界9HP未归因的限制；#13候选槽不作独立施放分母、钢铁风暴及EXPOSE缺口和SPORE零施放unknown保持；#14局部策略差异不外推整体误差根因。当前通知CLI源码SHA未变，仍不支持三原research任务身份，watcher_received/roy_notified正式登记继续pending；既有转达证明不代Roy本人接受或登记成功。原rc2拒绝保留，不改名、重试未变拒绝、代角色ACK或重复提醒。父要求、失败与待办保持，未启动源码修改、模型/full/dataset/刷新或游戏动作，live不动。原件paper/materials/20261022-1043-ops/receipt.json；前证20261022-1021-ops/notices-readback.json。
