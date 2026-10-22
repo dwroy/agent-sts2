@@ -10,6 +10,9 @@ import shutil
 import subprocess
 import tempfile
 import time
+import sys
+sys.path.insert(0,str(Path(__file__).resolve().parent))
+from launch_runtime import selection, known_scripts
 
 
 class ReloadError(Exception):
@@ -34,7 +37,8 @@ def process(pid):
 class Runtime:
     def __init__(self, root, live, directory):
         self.root, self.live, self.directory = Path(root).resolve(), Path(live).resolve(), Path(directory).resolve()
-        self.script = self.root / "ops/autoplay.sh"
+        self.script,self.launch_env,self.launch_publication=selection(self.root,self.live)
+        self.allowed_scripts=known_scripts(self.root,self.launch_publication)
         self.uid = os.getuid()
         self.child = None
         self.scratch = None
@@ -48,7 +52,7 @@ class Runtime:
         def path(arg):
             return (Path(row["cwd"]) / arg).resolve()
         if Path(argv[0]).name == "bash" and (len(argv) == 2 or (
-                len(argv) == 3 and argv[2] == "--tail-console")) and path(argv[1]) == self.script:
+                len(argv) == 3 and argv[2] == "--tail-console")) and path(argv[1]) in getattr(self,'allowed_scripts',{self.script}):
             return "autoplay"
         if Path(argv[0]).name == "node":
             # npx and tsx launchers also carry "src/index.ts play" in argv; only the Node entry script owns play.
@@ -73,9 +77,10 @@ class Runtime:
                 break
         for arg in argv[1:]:
             candidate = path(arg)
-            if candidate == self.root / "ops/report.py":
+            controller_dirs = {script.parent for script in getattr(self, 'allowed_scripts', {self.script})}
+            if candidate.parent in controller_dirs and candidate.name == "report.py":
                 return "report"
-            if candidate.parent == self.root / "ops" and candidate.name.startswith("stop-after") and candidate.suffix == ".sh":
+            if candidate.parent in controller_dirs and candidate.name.startswith("stop-after") and candidate.suffix == ".sh":
                 return "stop-after"
         return None
 
@@ -105,7 +110,7 @@ class Runtime:
             if len(value) != 40 or any(c not in "0123456789abcdef" for c in value):
                 raise ReloadError("无法确认脚本版本")
             return value
-        return {"ops_commit": head(self.root), "live_commit": head(self.live),
+        return {"ops_commit": self.launch_publication['source'] if self.launch_publication else head(self.root), "live_commit": head(self.live),
                 "autoplay_sha256": hashlib.sha256(self.script.read_bytes()).hexdigest()}
 
     def preflight(self, old_pid):
@@ -167,7 +172,7 @@ class Runtime:
         self.active = self.scratch / "active"
         command = ["bash", str(self.script)] + (["--tail-console"] if self.console_enabled else [])
         self.child = subprocess.Popen(command, cwd=self.root,
-            env={**os.environ, "WAIT_PID": str(play_pid), "AUTOPLAY_READY": str(ready),
+            env={**getattr(self,'launch_env',os.environ), "WAIT_PID": str(play_pid), "AUTOPLAY_READY": str(ready),
                  "AUTOPLAY_RELEASE": str(self.release), "AUTOPLAY_ACTIVE": str(self.active),
                  "AUTOPLAY_RELOAD_PARENT": str(os.getpid()), "AUTOPLAY_RELOAD_OLD": str(old["pid"]),
                  "AUTOPLAY_RELOAD_OLD_START": old["start"]},

@@ -10,6 +10,10 @@
 # WAIT_PID=<pid of a play process left running by a killed autoplay>: wait for it as the first run
 # instead of starting one, so the loop can be restarted mid-run.
 set -u
+launch_ops="$(cd "$(dirname "$0")" && pwd)"
+if [ -z "${STS2_LAUNCH_BUNDLE:-}" ] && [ -f "$launch_ops/codex-ops/launch-runtime.json" ]; then
+  exec python3 "$launch_ops/launch_runtime.py" exec --root "$(dirname "$launch_ops")" --kind autoplay -- "$@"
+fi
 . "$(dirname "$0")/paths.sh"
 if [ "${1:-}" = --tail-console ]; then
   shift
@@ -61,7 +65,11 @@ while [ ! -f "$OPS/STOP" ]; do
       sleep 5
       continue
     fi
-    "$OPS/run.sh" "$@"
+    if [ -n "${STS2_LAUNCH_BUNDLE:-}" ]; then
+      python3 "$OPS/launch_runtime.py" exec --root "$ROOT" --kind run -- "$@"
+    else
+      "$OPS/run.sh" "$@"
+    fi
     play_exit=$?
     [ "$play_exit" -eq 76 ] && break
     if [ "$play_exit" -eq 75 ] || [ "$play_exit" -eq 78 ]; then

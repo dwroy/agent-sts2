@@ -30,7 +30,7 @@ describe("learner self-check completion", () => {
     expect(result.batch.checks.rc).toBe(0);
     expect(result.calls[1].slice(0, 3)).toEqual(["flock", "/fixture/ops/live-merge.lock", "bash"]);
     expect(result.calls[1].at(-1)).toContain("npx tsc -p tsconfig.json --noEmit");
-    expect(result.calls[1].at(-1)).toMatch(/node\s+['"]?[^;\n]*\/agent\/tools\/with-temp\.mjs['"]?\s+node_modules\/vitest\/vitest\.mjs run --maxWorkers=2/);
+    expect(result.calls[1].at(-1)).toMatch(/node\s+['"]?[^;\n]*\/agent\/tools\/with-temp\.mjs['"]?\s+node_modules\/vitest\/vitest\.mjs run --pool=forks --maxWorkers=1 --no-file-parallelism/);
     expect(result.calls[1].at(-1)).not.toContain("--exclude");
   });
 

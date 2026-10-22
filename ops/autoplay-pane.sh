@@ -16,8 +16,12 @@ if [ "${1:-}" = --read ]; then
   read_screen "$pane"
   exit $?
 fi
-out=$(bash "$OPS/herdr-host.sh" run autoplay-log --pidfile "$DIR/autoplay.pid" -- \
-  bash "$ROOT/ops/autoplay.sh" --tail-console) || exit $?
+if [ -f "$ROOT/ops/codex-ops/launch-runtime.json" ]; then
+  launch=(python3 "$OPS/launch_runtime.py" exec --root "$ROOT" --live "$LIVE" --kind autoplay -- --tail-console)
+else
+  launch=(bash "$ROOT/ops/autoplay.sh" --tail-console)
+fi
+out=$(bash "$OPS/herdr-host.sh" run autoplay-log --pidfile "$DIR/autoplay.pid" -- "${launch[@]}") || exit $?
 [[ "$out" =~ ^([a-zA-Z0-9]+:p[a-zA-Z0-9]+)\ ([0-9]+)$ ]] || {
   echo "Unexpected herdr launch receipt; inspect processes before retrying: $out" >&2
   exit 1

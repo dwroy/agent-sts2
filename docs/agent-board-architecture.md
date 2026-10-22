@@ -77,3 +77,19 @@ verify: ["npx tsc -p tsconfig.json --noEmit", "npx vitest run"]
 ## 7. 集成员开场提示（每天换新会话时使用）
 
 > 你是本项目的集成员。先读 AGENTS.md、`docs/agent-board-architecture.md`、`docs/github-issues-workflow.md` 与上一份交接文件（如有），再 `gh issue list --label status:review` 看待核验的交付。只在收到一行提醒或有 `status:review` 时动手：核验改动、测试与证据，合入 main，协调完整检查窗口，需要上线的改 `status:waiting-release` 交运营；发现的问题开成 issue。结论写在对应 issue 评论（首行 `[watcher]`，发前 gitleaks），不读整份回执原文进上下文，不派活、不碰生产。下班前写交接文件（只写未完成项与位置），交给下一会话。
+
+
+## 8. 资源与冲突（Roy 2026-10-22，#20 补充 3）
+
+完整流程见 [Issues 协作流程的资源与冲突](github-issues-workflow.md#资源与冲突20-补充-3roy-2026-10-22)。该整套流程取代当天早先仅发窗口提醒的方案；默认关闭，由 ops 安装后在自然边界启用，启用前各角色照旧。
+
+- 派单器读 area 标签，同区域已有 in-progress/review 或 ready 启动预约时等待，在汇总注明等待哪个 issue；无 area 照旧。同 tick 也预留区域，不制造并行编辑。
+- 重任务共用 kernel flock 队列。对局中1位、停局2位；ops 发布 > 集成员 > 学习/实验 > 其他，同档 FIFO。只决定下一空位，不打断在跑任务；等待用 inotify/pidfd，无轮询或额外守候模型。
+- 开发交付只做 tsc 与定向测试并列改动文件；集成员合入前对一批 review 做一次完整测试；ops 同受测树 SHA 复用完整结果，不同组合重跑。完整 Vitest、知识重建和批量模拟统一经重任务入口；原发布锁在资源准入之后取得。
+- 集成员发现同文件交付先定顺序，后者变基再交，组合检查证明最终结果。
+- 原 stall digest 列在跑、等待、等待时长与超60分钟标记。队列不依赖 tick/模型释放位置，不杀进程、不发信号；原 ops 守卫改为等位，旧失败保留。
+
+
+## 9. 启动也是发布输入（Roy 2026-10-22，#20）
+
+开发/集成结论独列“影响 live 启动：是/否”。main 改 run/autoplay、环境和读取的行为配置，只有进入受检 live 发布并由原 ops 在自然边界固定 launch 版本后才可采用。固定 bundle 来自实际 live 提交并核 SHA/模式，主目录仅保留运维状态；入口拒绝版本混用，当前 play 参数不热切。详细 pin、环境、旧会话安全重载及首局 source/run-config 读回见 [发布时固定启动入口](github-issues-workflow.md#发布时固定启动入口20roy-2026-10-22)。

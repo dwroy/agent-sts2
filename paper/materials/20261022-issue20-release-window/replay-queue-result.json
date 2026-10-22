@@ -1,0 +1,40 @@
+{
+  "sources": [
+    {
+      "path": "paper/materials/20261022-issue33-live-ops/checks-resource-gate-0937.json",
+      "bytes": 464,
+      "sha256": "1fe8e86097a14777c8f44c05608eaea173179feca8596f1d1ced9a9f0f43eb23"
+    },
+    {
+      "path": "paper/materials/20261022-0937-ops/receipt.json",
+      "bytes": 30534,
+      "sha256": "90828dc2a5c7ec7bfa0a5062d4b198a414f39c96cf33dde675fdb6a6b6d70cae"
+    },
+    {
+      "path": "paper/materials/20261022-issue33-window-ops/check-driver.py",
+      "bytes": 7221,
+      "sha256": "fe576c69113aa4d0d217be5b60c300a7a259f7ebd0f02aa7e6e90c17e93505d4"
+    }
+  ],
+  "historical_terminal": {
+    "state": "blocked-or-failed-retain-live",
+    "queued_at": "2026-10-22T09:29:55+08:00",
+    "runner_pid": 3113069,
+    "runner_start": "5712502",
+    "tsc_or_full_started": false,
+    "ended_at": "2026-10-22T09:37:37+08:00",
+    "error": "AssertionError",
+    "message": "[3117964, 3148714, 3148787, 3148866]"
+  },
+  "new_workflow": true,
+  "task": "#33 ops",
+  "existing_test": "#36 dev (last remaining after #35)",
+  "waited_for_kernel_pidfd": true,
+  "queued_before_legacy_exit": true,
+  "executed_after_legacy_exit": true,
+  "no_resource_guard_refusal": true,
+  "historical_full_started": false,
+  "signals_sent": 0,
+  "actual_sessions_modified": 0,
+  "simulation": "own fixed local child only"
+}

@@ -1,0 +1,71 @@
+{
+  "schema": "issue20-r3-integrator-review-v1",
+  "reviewed_at": "2026-10-22T15:11:08+08:00",
+  "public_source": "bfcb85bd0c30287aaee4e7fc4be4fb53bd4b6e2f",
+  "base": "50df9b70d04db388bd33b7731f7ed32af526b530",
+  "kit_source": "ba7a9c39d9786e4c31256d63ea5b57d03b7db58f",
+  "pre_report_tree": "b533c52163db50f3b4fbab1476db4ff2520bcf49",
+  "new_increment_affects_live_launch": false,
+  "parent_issue39_affects_live_launch": true,
+  "independent_checks": {
+    "private_kit": {
+      "exit": 0,
+      "tests": 87,
+      "original": 69,
+      "new_contract": 18
+    },
+    "extra_contract": {
+      "exit": 0,
+      "tests": 3
+    },
+    "public_lifecycle": {
+      "exit": 0,
+      "tests": 62
+    },
+    "original_launch_regressions": {
+      "exit": 0,
+      "tests": 21
+    },
+    "production_tsc": {
+      "exit": 0
+    },
+    "vitest": {
+      "combination-targeted": {
+        "files": 14,
+        "tests": 162,
+        "passed": 161,
+        "failed": 1,
+        "source_unchanged": true,
+        "diagnostic_only": false
+      },
+      "diagnostic-v6": {
+        "files": 1,
+        "tests": 4,
+        "passed": 4,
+        "failed": 0,
+        "source_unchanged": false,
+        "diagnostic_only": true
+      },
+      "diagnostic-combination": {
+        "files": 14,
+        "tests": 162,
+        "passed": 162,
+        "failed": 0,
+        "source_unchanged": false,
+        "diagnostic_only": true
+      }
+    }
+  },
+  "contract_verdict": "pass-supplement4-only",
+  "overall_admission": "pending-failed-original-targeted-and-final-combination-full",
+  "test_defect": "https://github.com/dwroy/agent-sts2/issues/41",
+  "full_started": false,
+  "main_merged": false,
+  "live_changed": false,
+  "installed_kit_changed": false,
+  "hearthstone_read_or_changed": false,
+  "production_area_and_heavy_enabled": false,
+  "reviewer_instrumentation_restored": true,
+  "decision_log_resolution": "preserved exact base log then appended reviewer line; source delta archived in source-decision-log.patch",
+  "command_note": "One archive/ledger command initially used agent/ as cwd and raised FileNotFoundError before writes; subsequent tsc succeeded. Archive and conflict resolution were then rerun successfully with absolute paths. Two git-show materials reads initially used sparse filesystem paths and failed; git object reads succeeded. These are command/path errors, not passing tests."
+}

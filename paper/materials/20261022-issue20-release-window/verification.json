@@ -1,0 +1,84 @@
+{
+  "schema": "issue20-dev-verification-v1",
+  "base": "2bb0a9cffafa568858a3b7a62311235b6bc61adc",
+  "branch": "issue-20-agent-board-kit",
+  "kit_commit": "f1cc7285de2f14aeea33cebb8e6eba4ce618af01",
+  "production_enabled": false,
+  "production_pin_created": false,
+  "live_or_STOP_modified": false,
+  "checks": {
+    "production_tsc": {
+      "rc": 0,
+      "log": "post-failure-tsc.log.gz"
+    },
+    "imports": {
+      "rc": 0,
+      "log": "final-imports.log.gz"
+    },
+    "public_python": {
+      "rc": 0,
+      "tests": 53,
+      "log": "post-failure-python.log.gz"
+    },
+    "kit": {
+      "rc": 0,
+      "tests": 69,
+      "log": "final-kit.log.gz"
+    },
+    "targeted": {
+      "rc": 0,
+      "files": 13,
+      "tests": 101,
+      "log": "final-targeted.log.gz"
+    },
+    "reload_guard": {
+      "rc": 0,
+      "files": 2,
+      "tests": 19,
+      "log": "final-reload-guard.log.gz"
+    },
+    "failed_files_recheck": {
+      "rc": 0,
+      "files": 7,
+      "tests": 28,
+      "log": "full-failure-targeted.log.gz"
+    },
+    "full": {
+      "exit_code": 0,
+      "files": 656,
+      "passed": 6177,
+      "skipped": 2,
+      "failed": 0,
+      "source_unchanged": true,
+      "frozen_files": 33,
+      "lease_released": true,
+      "queue_job": "6d655b55735a4412a026cbc398fbe281",
+      "runner_pid": 4120205,
+      "checked_at": 1792647248.7224846
+    },
+    "post_full_docs": {
+      "rc": 0,
+      "files": 1,
+      "tests": 4,
+      "log": "final-doc-roles.log.gz",
+      "changed": [
+        "AGENTS.md",
+        "docs/github-issues-workflow.md"
+      ]
+    }
+  },
+  "source_freeze": "final-source-freeze.json",
+  "delivery_inputs": "final-delivery-inputs.json",
+  "failed_history": "failure-ledger.json",
+  "logs": "archived-logs.json",
+  "publication_receipt": false,
+  "publication_note": "Developer check only; integrator checks final merge batch, ops enables at natural boundary. This is not an exact-tree ops reuse receipt.",
+  "gitleaks": {
+    "kit_patch": 0,
+    "public_source_patch": 0,
+    "historical_plaintext_logs": 0,
+    "final_plaintext_logs": 0,
+    "final_staged_patch": 0,
+    "comment": "scan final body separately after commit identifiers exist"
+  }
+}

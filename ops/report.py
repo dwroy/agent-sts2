@@ -16,6 +16,7 @@ import sys
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from paths import LIVE, ROOT  # noqa: E402
 import report_log_cache  # noqa: E402
+from board_heavy import queued_argv  # noqa: E402
 sys.path.insert(0, os.path.join(ROOT, "knowledge", "builders"))
 from characters import run_character  # noqa: E402
 DEC = os.path.join(ROOT, "logs/decisions.jsonl")
@@ -480,6 +481,8 @@ def ablation_arm():
     ops = os.path.join(ROOT, "ops")
     cur_path = os.path.join(ops, "ablation-current.json")
     sched_path = os.path.join(ops, "ablation.json")
+    if os.environ.get('STS2_LAUNCH_BUNDLE'):
+        sched_path = os.path.join(ops, "ablation-progress.json")
     try:
         cur = json.load(open(cur_path))
     except (OSError, json.JSONDecodeError):
@@ -506,6 +509,9 @@ def refresh_knowledge(character=None) -> None:
     refresh = "bash " + shlex.quote(f"{LIVE}/knowledge/builders/refresh.sh") + " --ops-root " + shlex.quote(ROOT)
     if character and re.fullmatch(r"[a-z0-9_]+", character):
         refresh += f" --character {character}"
+    queued = queued_argv(ROOT, 'learner', shlex.split(refresh))
+    if queued != shlex.split(refresh):
+        refresh = shlex.join(queued)
     cmd = refresh
     log = open(os.path.join(ROOT, "ops", "refresh.log"), "a")
     # fight-value (~5 min) is only a reference for Jev's history estimate and is written whole (tmp + rename, ede54d1),
@@ -541,8 +547,8 @@ def background_statistics(command, log):
     """Share the knowledge worker's CPU slot; admission never acquires this lock."""
     env = {**os.environ, **dict.fromkeys(("OMP_NUM_THREADS", "OPENBLAS_NUM_THREADS",
                                         "MKL_NUM_THREADS", "NUMEXPR_NUM_THREADS"), "1")}
-    return subprocess.Popen(["nice", "-n", "19", "ionice", "-c", "3", "flock",
-                             os.path.join(ROOT, "ops/knowledge-refresh.lock"), *command],
+    queued = queued_argv(ROOT, 'learner', ["flock", os.path.join(ROOT, "ops/knowledge-refresh.lock"), *command])
+    return subprocess.Popen(["nice", "-n", "19", "ionice", "-c", "3", *queued],
                             env=env, stdout=log, stderr=log, start_new_session=True)
 
 

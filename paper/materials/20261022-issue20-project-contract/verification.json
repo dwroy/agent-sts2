@@ -1,0 +1,63 @@
+{
+  "schema": "issue20-project-contract-dev-v1",
+  "inputs": "inputs.json",
+  "kit_commit": "ba7a9c39d9786e4c31256d63ea5b57d03b7db58f",
+  "source_hashes_unchanged": true,
+  "checks": {
+    "private_kit": {
+      "rc": 0,
+      "tests": 87,
+      "existing": 69,
+      "new_contract": 18,
+      "log": "final.log.gz"
+    },
+    "public_lifecycle_adapter": {
+      "rc": 0,
+      "tests": 62,
+      "log": "public-python.log.gz"
+    },
+    "production_tsc": {
+      "rc": 0,
+      "log": "tsc.log.gz"
+    },
+    "targeted_vitest": {
+      "rc": 0,
+      "files": 2,
+      "tests": 10,
+      "log": "selected.log.gz"
+    },
+    "full": {
+      "state": "pending-integrator",
+      "order": "#37 -> #20",
+      "new_run": false,
+      "reason": "Preserve original final-combination window; prior full is historical evidence only."
+    }
+  },
+  "production": {
+    "installation_changed": false,
+    "registry_changed": false,
+    "enabled": false,
+    "launch_pin_changed": false,
+    "main_live_stop_changed": false,
+    "other_sessions_changed": false
+  },
+  "issue39": {
+    "source": "459366bac49b7a959d3fd59b92bffcb12360aebe",
+    "state": "review",
+    "comment": "https://github.com/dwroy/agent-sts2/issues/39#issuecomment-6334577384",
+    "independent_acceptance": "pending"
+  },
+  "command_note": "One attempted kit edit/check ran from agent/ and failed to find relative paths before any edit or test. Corrected at the repository root; final run87 passed. The independently started public targeted run passed10. No test failure was suppressed.",
+  "preliminary_runs": [
+    {
+      "tests": 83,
+      "rc": 0,
+      "log": "first.log.gz"
+    },
+    {
+      "tests": 86,
+      "rc": 0,
+      "log": "second.log.gz"
+    }
+  ]
+}

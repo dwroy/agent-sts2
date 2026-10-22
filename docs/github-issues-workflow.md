@@ -87,12 +87,14 @@ nice -n 19 python3 ops/agent_board.py --root "$PWD" --set-enabled off
 
 未设置 `CODEX_AGENT_BOARD` 时，cron 每次从项目控制文件读取，缺文件为 off；设置 on/off 本身不调用 kit，不改登记表、账本、cron、会话或游戏，下一原 stall tick 才消费。on 要求 kit 已安装、本地候选宿主登记表格式正确、包含且仅包含一次本项目根、没有重复根；这些机器检查不代替各项目 owner 授权。显式环境 `CODEX_AGENT_BOARD=on|off` 始终优先，包含明确的 off；空值和其他值无效。设置命令同时返回 persisted/effective/source，避免把持久值与当前环境覆盖混淆。原有 cron 若没有此变量即可直接读项目文件；若已有显式环境覆盖，记录其来源并沿原调度维护流程处理，不在 pane export 后声称 cron 生效。损坏/异根控制、无效环境均保留本轮会话动作并写 inbox；不退到另一套回收器。关闭或回退保留原登记表、事件账本和 uncertain 项。
 
-宿主登记由 Claude 主管沿 #20 协调各项目原 owner，确认本次纳入范围和唯一宿主入口，不由 STS2 ops 扫描认领其他仓库：
+宿主登记由 Claude 主管沿 #20 协调各项目原 owner，确认本次纳入范围、一份宿主登记表及各项目唯一消费入口，不由 STS2 ops 扫描认领其他仓库：
 
 1. 每个原 owner 在自己项目的任务记录里确认实际主运行根、`.agents/board.yaml`、授权的派发/提醒/回收范围、角色 pane 与既有会话绑定，并给出本地回执位置及 SHA；未获准的项目保留 pending。公开评论仅引用回执，不贴私有根路径或凭据。
 2. 主管收齐确认并指定本机有相应权限的登记协调者。协调者将已获准的根/config 汇成一份忽略的候选 JSON（格式见 kit README），由各 owner 核对自己的条目。需要跨仓动作的权限沿原 owner 确认，不把“同机”当作已授权。
-3. 各 owner 确认本项目没有另一个 kit 消费入口；选定的唯一原 stall tick 消费这份登记表。其他项目的已有运行/学习调度照原职责保留，只不增加第二份通用派单器。STS2 的 `dispatcher.registry` 指向本仓内这份正式登记文件，其他项目无需越过其路径边界写 STS2 配置。
-4. 主管确认本批范围与唯一入口后，原 ops 依次核实际登记、只读演练、设置持久 on、读回原 stall 首 tick。未完成确认时控制保持 off；不伪造其他项目条目，不自动登记其他 tab。设置返回 on、技术测试通过或 dry-run 排队均不等于首 tick/实际命名/锁忙重试/回收验收完成。
+3. 各 owner 确认本项目恰有一个 kit 消费入口。默认 `dispatcher.consumer: host` 由选定的原 STS2 stall tick 消费；声明 `consumer: maintenance` 的项目由自己的原维护入口核本项目开关、持有原维护锁后，以 `--project <已登记主根>` 只选自己。宿主 tick 在读该项目账本、取项目锁或调用 API 前返回 delegated，不能绕过其 off 或维护锁；选择参数本身不代权限或开关。仍共用一份登记表及宿主串行锁，不新增 timer。STS2 的 `dispatcher.registry` 指向本仓内正式登记文件，其他 owner 经协调登记，不修改 STS2 配置或安装。
+4. 主管确认本批范围与各项目唯一入口后，原 ops 依次核实际登记、只读演练、设置持久 on、读回原 stall 首 tick。未完成确认时控制保持 off；不伪造其他项目条目，不自动登记其他 tab。设置返回 on、技术测试通过或 dry-run 排队均不等于首 tick/实际命名/锁忙重试/回收验收完成。
+
+kit 的 `CAPABILITIES` 同时声明 project-consumer、agent-prefix、area-mutex、branch-prefix；新项目接入器先检查能力再登记/启用。`roles.dev.agent_prefix` 默认 issue-，炉石使用 hs-issue-，开发者身份及容量按本项目前缀计算；其他角色可用唯一 agent 名称加 kind 解析，或指定 pane，同时指定时两者都须匹配。重名/错名不投递。`worktree.branch_prefix` 如 codex/ 只加在本项目登记的逻辑 issue-N-slug 前，公共 main/live 仍须关联 #N 才算该任务进展。采用 kit SHA 后仍由各 owner 核实际默认 off、登记、dry-run、启用和原 tick 回执，不把能力声明当生产验收。
 
 派单按 P0–P3、issue 号和配置上限执行，已有开发会话及未完成启动计入容量；`status:blocked`、`needs:roy` 和状态冲突均暂缓。review 提醒集成员，learner/ready 与 waiting-release 提醒 ops。首次轮询只建立旧 Roy 评论基线，此后新 Roy 评论分别提醒负责人和主管；agent 前缀评论与外部作者不能触发 Roy 指令提醒。普通提醒为 `#N 轮到你`，自动接续在同一行补充下文短原因。接收方 `idle` 或 `done` 均可送达；`working`、`blocked`、`unknown` 或缺席时排队。主管配置为 `board-digest` 时读取本地 `ops/codex-ops/board-digest.md`。
 
@@ -139,3 +141,77 @@ gh issue view 123 -R dwroy/agent-sts2 --comments
 gh issue edit 123 -R dwroy/agent-sts2 --add-label status:in-progress --remove-label status:ready
 gh issue close 123 -R dwroy/agent-sts2 --comment "<一句结论 + 证据>"
 ```
+
+
+## 资源与冲突（#20 补充 3，Roy 2026-10-22）
+
+本节取代同日早先“暂缓完整 Vitest / 窗口已释放”提醒方案。新流程随代码交付，默认 `dispatcher.heavy.enabled: false` 与 `dispatcher.area_mutex: false`；原 ops 安装精确 kit、核唯一原 stall 入口并在自然边界将本项目这两项配置切为 true 后才生效。启用前各角色沿原完整检查流程，不据新文档提前跳过。启用记录写原 decision-log 和 issue；不热切在途会话或重启对局。
+
+**完整测试分工。** 启用后开发交付前跑生产 tsc 和与改动相关的定向固定测试，交付评论列出改了哪些文件及实际结果。集成员在合 main 前做一次完整 tsc + Vitest，可把同在 review 的交付组成一批；记录实际受测树 SHA、全部结果与输入未变。ops 实际组合树 SHA 相同且有完整通过回执就复用；不同、缺完整证明或只有定向检查则重跑。源码自测不替代不同 live 组合的检查。不能把旧失败/中断写成通过。
+
+完整 Vitest、知识重建和大批模拟都经同一重任务队列，命令保持前台，不把模型会话整轮包进重任务位置，不后台脱离队列。保留 nice19、对局中单 worker；排队本身不消费测试 worker。开发工作树中的便捷入口自动定位本 Git 主运行根，保留当前 cwd 和 argv：
+
+```bash
+python3 ops/board_heavy.py dev -- npx vitest run --pool=forks --maxWorkers=1 --no-file-parallelism
+python3 ops/board_heavy.py experiment -- python3 path/to/fixed-simulation.py
+python3 ops/board_heavy.py learner -- bash knowledge/builders/refresh.sh --character silent
+# Kit 原生入口同义；--root 指定已登记主根，选项须在角色前。
+python3 /path/to/agent-board-kit/board.py heavy --root /project/root integrator -- <命令>
+```
+
+容量配置在 `.agents/board.yaml`：有本项目 play 进程为 1 个位置，停止为 2 个；停止后剩余位置可放下一个任务，开始对局时不驱逐已跑任务，只等运行数降到新上限后再准入。优先级为 ops 上线检查 > 集成员核验 > 学习批次/离线实验 > 开发/其他；同档按登记顺序。高优先级只插到待执行任务之前，不打断在跑任务。位置由内核 flock 租约持有，命令结束或异常退出即释放；CLI 用 exec 保留租约，不增加常驻队列包装进程。等待用 inotify 与现有进程 pidfd，阻塞到锁关闭/进程退出事件，不加轮询、timer、daemon，不杀进程或发信号。
+
+原 ops 完整检查/定向续验在取得原 live 锁前取得资源准入；局后知识刷新、fight-value 和统计重建在知识锁前排队。原发布锁、知识锁和输入核验不删、不反序持锁等资源。迁移期原来的完整 Vitest 由只读进程探针识别并以 pidfd 等待；不会再因“看见并行 Vitest”直接退出。手工组合准入改走 `ops/release_checks.py`，不得把旧的并行检查 assert 继续包在新入口内部；旧 09:37 驱动和失败回执作为历史原件保留。
+
+```bash
+python3 ops/release_checks.py --root /project/root --worktree /project/root/.worktrees/integration \
+  --role integrator --receipt /project/root/paper/materials/BATCH/full-checks.json
+python3 ops/release_checks.py --root /project/root --worktree /project/root/.worktrees/live-combination \
+  --role ops --reuse /project/root/paper/materials/BATCH/full-checks.json \
+  --receipt /project/root/paper/materials/RELEASE/full-checks.json
+```
+
+标准回执绑定 repo/root、完整受测树 SHA、角色、完整 tsc/Vitest 结果和前后输入不变。仅同树完整通过可复用，引用原回执 SHA；否则在队列中重跑，原结果不覆盖。检查后仍走原发布/绑定保护/自然局边界/首局验收，不因工具返回 0 自动发布。
+
+**区域与文件冲突。** 派单前读 issue 的 `area:*` 标签：同区域已有 in-progress/review，或 ready 项已有登记/正在启动的预约，后者保留 ready，在 digest 写明等待的 issue；无 area 标签照旧。同 tick 首次派发也占住该区域，回执不确定继续保留其登记，不同时派下一张。转入 waiting-release 后不再占开发区域；区域释放后沿原 stall 再判，不靠模型守候。同一个 issue 有多个 area 时任一区域有冲突都等待。统一的区域门独立于重任务队列；通用 kit 默认开启，STS2 显式 area_mutex:false 保留原上线边界，原 ops 同轮启用。require_area 默认 false，炉石可明确为 true，让缺 area 的 ready 继续排队；不自动给历史 issue 猜标签。派发前将原 areas 写入账本，uncertain 即使标签/状态改变仍保留；旧不确定分配若区域不可知，暂停新派发，沿原证据核验再 resolve；重新贴 ready 不能绕过旧不确定派发。
+
+集成员发现两个交付改同一文件时先定合入顺序，在相应 issue 留一行提醒及评论说明；后者沿该顺序变基、补必要的定向测试后重新交付，再进入合批完整检查。不要并行抢同一文件或用“两个分支都绿”代替组合检查。
+
+`board-digest.md` 的 Heavy queue 列当前任务/角色、running/queued、等待秒数；超过 `warn_minutes`（默认60）标 overdue。原未托管的完整 Vitest 也只读列出；退出/失去租约的历史记录不冒为仍运行或已通过。Area waits 列后者等谁。所有摘要沿既有 stall tick 刷新；关闭派单器只停摘要刷新，队列等待者仍由内核事件接续，不依赖 tick 才释放位置。回退先停止新增重任务、让在途任务自然结束，再由 ops 关闭资源配置，保留队列记录、原检查回执和 issue 待办。
+
+
+## 发布时固定启动入口（#20，Roy 2026-10-22）
+
+**main 上改启动脚本不能直接影响 live。** 启动代码、行为环境和控制器源码同属发布输入。开发交付、集成员核验结论必须单独写 `影响 live 启动：是/否`；为是时列出入口、配置、旧/新版本与回退办法。至少检查 `ops/run.sh`、`ops/autoplay.sh`、`ops/production-runtime.sh`、`ops/paths.sh/.py`、启动选择器及 Herdr/重载入口、它们读取的行为配置。ops 对实际组合树一并核对并纳入原完整检查/同树复用，不能因代码只在 ops/ 就视为不影响对局。
+
+本项目用 `ops/launch_runtime.py` 把**实际 live 发布提交**的启动代码固定到忽略的、按 source SHA 编址的 launch bundle；不是从 main 复制候选。代码、`ablation.json`、可选 `launch-settings.json` 等行为配置留在固定副本，记录每个文件 SHA/模式和关键输入的缺席。pin 要求主运行根/实际 live 同 Git、精确发布 HEAD、相关 live 输入无未提交更改；不读取或复制凭据。若 live 的关键启动输入已变但尚未 pin，下一次启动拒绝混用，保留存档。
+
+原 ops 在自然边界暂缓下一局，完成受检组合的原发布后继续保持开局闸，再执行：
+
+```bash
+# SOURCE 是实际 live 发布提交的40位 SHA；pin 自己取得原 live-merge.lock，不在已持有它的子 shell 再嵌套加锁。
+python3 ops/launch_runtime.py pin --root /project/root --live /project/root/.worktrees/live --source SOURCE
+python3 ops/launch_runtime.py show --root /project/root --live /project/root/.worktrees/live
+```
+
+首次启用前无 pin 时保留旧入口，不能宣称已隔离。首次必须在自然边界安装完整协议及 pin 后，经原 autoplay 启动/重载流程切到固定入口，再放行；不热改当前 play、不重启大脑或额外开局。已有 pin 时，setsid、Herdr、main 的兼容 run/autoplay 入口都选择固定代码。旧固定 autoplay 每次新 run 重新读当前 pin；autoplay 本体改变则仍由 ops 沿原 PID/身份守卫重载，已在跑的 play 保持原参数。旧 main/已验证的历史 bundle 身份仅供迁移重载，不认领其他进程。
+
+关键启动版本与 live 对不上、bundle 被改、元数据损坏或 live 私有 `.env` 链到主目录时拒绝新启动，不退回 main。main 的行为环境覆盖不进入固定启动；非秘密覆盖应在受检 live 的 `ops/launch-settings.json` 中用字符串映射明确登记（例如 BRAIN_ENGINE、BRAIN_CODEX_EFFORT、BRAIN_RUN_CONFIG、V6/SL 开关），与启动源码一起发布。固定启动不接受额外行为 CLI 参数；`--tail-console` 只控制日志显示。原源码默认值仍适用，但首次 pin 前 ops 必须与当前实际 run-config 逐项核对引擎/模型/强度、角色/进阶、V6/SL、预算等；有差异就纳入正式发布配置再检查，不能把隐含默认值当已验收。旧的临时试验 schedule 不继承进新启动，重新使用须按原 Roy 授权发布。
+
+STOP、LLM_DRAIN、日志、运行进度、账号 home 选择器及实例 PID/profile/endpoint 绑定仍是主运行根的运维状态；它们不作为 main Git 行为配置，也不把 key 复制到 bundle/提交。凭据仍由原 provider/账号体系读取，开发不读 `.env` 内容。ablation 的已发布 arms/total 与运行游标分开，游标记 `ops/ablation-progress.json` 并绑定 schedule SHA；main 改旧 schedule 不穿透固定版本。当前工具只激活主运行根的 live 通道，其他 lane 保持原状。
+
+启动 console 记录 `launch source: SHA`。ops 发布回执须核固定 source、文件清单及模式、实际 autoplay 路径、首局 console source 和真实 run-config；源码 pin/show 成功不代自然采用。只改 main 未进入 live 的启动变更继续 waiting-release。回退也走发布：恢复上次 live 关键输入并 pin 对应实际发布提交、沿原安全重载核回，保留所有旧 bundle/失败记录；不删除 pin 后悄悄退到可热变的 main 脚本。
+
+### 启动环境消费者盘点（#39 补缺）
+
+环境隔离按实际消费者登记，不能只列 BRAIN/V6 或某次反例。`python3 ops/launch_environment_audit.py --root /project/checkout` 只扫描本检出源码，输出键名、消费者位置、源码 SHA 和分类；不读父环境值、`.env`、账号或 provider 文件。启动固定回归由 `agent/tests/board-resources.test.ts` 接入；新静态键未分类、新动态读取点未经盘点时测试失败。当前覆盖所有 `agent/src/**/*.ts`、启动/重载入口及其路径、实例、trial、控制台和局后 report helper；V6 解析 helper、BRAIN 引擎模板/分题映射、CLI host 转发单列审计。新增读取方式须同步审计，不以工具扫描替代代码审阅。
+
+| 类别 | 处理 |
+|---|---|
+| 发布行为 | SIM/S、BRAIN/V6/SL、构筑/战斗规划、机制、样本/预算、模型/非秘密 provider endpoint、知识/数据/日志路径等实际消费者：父覆盖清除，只接受 live 发布版本的非秘密 `launch-settings.json`；未登记仍用已发布代码原默认值。 |
+| 凭据与账号引用 | API key/key-file、token/password、BRAIN_CODEX_HOME/CODEX_HOME/CLAUDE_CONFIG_DIR/LEARNER_CODEX_HOME、JEV_SHARED_ENV_FILE 沿原安全边界保留；不读取或复制文件内容，不允许在发布配置中改写。 |
+| 实例与宿主 | STS2 endpoint/PID/profile/超时、PATH/locale/proxy/CA、Herdr/WAIT_PID/重载握手等沿原运维边界保留，不允许当行为覆盖发布。共享 provider 引用及实际模型仍由 ops 按原安全流程核对，必要的非秘密模型/endpoint 选择显式随版本发布。 |
+| 单独授权或生成 | BRAIN_TRIAL_SCHEDULE 不继承、不作为普通发布覆盖；BRAIN_CODEX_PAID_CREDITS 不继承，仍由固定 run.sh 按实际账号/实例生成，不接受配置冒充授权。 |
+| 脚本内部派生 | ROOT/OPS/LOGS 等由固定脚本重新计算，不当成可发布父环境政策。 |
+
+凭据判断按实际字段/后缀，不按单词包含关系：`BRAIN_CODEX_FIRST_TOKEN_MS`、`MAX_TOKENS` 是行为预算，必须清除未发布覆盖并支持显式发布。`SIM_ADAPTIVE`、`SIM_FAILURE_EXIT/RETRIES`、`S_BUILD_RANK`、`S_COMBAT_RANK`、`S_READINESS` 同样处理；这只隔离来源，不改开关含义、原默认值、角色适用范围或游戏知识。首次 pin 及首局 source/run-config 核回仍按上节，生产未启用前不据源码验证冒称已隔离。

@@ -1,0 +1,81 @@
+{
+  "schema": "issue20-sim-startup-dev-v1",
+  "inputs": "inputs.json",
+  "inventory": {
+    "source_files": 327,
+    "variables": 285,
+    "categories": {
+      "published-policy": 205,
+      "runtime-binding-or-host": 50,
+      "script-derived-path": 18,
+      "credential-or-account-reference": 10,
+      "generated-or-separately-authorized": 2
+    },
+    "unclassified": 0,
+    "source_hashes_unchanged": true
+  },
+  "checks": {
+    "tsc": {
+      "rc": 0,
+      "log": "final-tsc.log.gz"
+    },
+    "targeted": {
+      "rc": 0,
+      "files": 14,
+      "tests": 117,
+      "log": "final-targeted.log.gz"
+    },
+    "review_regression": {
+      "rc": 0,
+      "tests": 21,
+      "log": "final-review-regression.log.gz"
+    },
+    "launch_and_audit_python": {
+      "tests": 23,
+      "via": "board-resources.test.ts (18 launch + 5 inventory)",
+      "rc": 0
+    }
+  },
+  "failures": [
+    {
+      "scope": "reviewer regression before repair",
+      "tests": 13,
+      "failed": 1,
+      "errors": 2,
+      "rc": 1,
+      "log": "before-review-regression.log.gz"
+    },
+    {
+      "scope": "targeted before timeout alignment",
+      "files": 14,
+      "failed_files": 1,
+      "passed_tests": 116,
+      "failed_tests": 1,
+      "rc": 1,
+      "cause": "Vitest15s outer deadline shorter than child30s; aligned35s, assertions retained",
+      "log": "targeted-before-timeout-alignment.log.gz"
+    },
+    {
+      "scope": "initial rebase target",
+      "cause": "remote main lagged/diverged; aborted, replayed only issue20 onto local main, retained upstream ledger"
+    }
+  ],
+  "full": {
+    "run_this_round": false,
+    "state": "pending-original-integrator-window",
+    "order": "#33 -> #35 -> #28 -> #37 -> #20",
+    "authority": "https://github.com/dwroy/agent-sts2/issues/20#issuecomment-6333797029",
+    "note": "No new full/window process. Prior developer full is historical, not proof for changed/rebased tree."
+  },
+  "production": {
+    "heavy_enabled": false,
+    "pin_created": false,
+    "main_live_STOP_modified": false,
+    "launch_impact": true
+  },
+  "gitleaks": {
+    "source_and_evidence": 0,
+    "logs": 0,
+    "comments": "scan separately before posting"
+  }
+}

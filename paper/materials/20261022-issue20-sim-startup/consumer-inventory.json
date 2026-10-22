@@ -1,0 +1,2308 @@
+{
+  "schema": "launch-environment-consumers-v1",
+  "sources": {
+    "agent/src/brain/brain.ts": "d83eceeb2b9d8d570a74df55f32a6c99cbfd5fd988b5f78d37fafa54040de727",
+    "agent/src/brain/build-facts.ts": "9bb4d79e1117057e5bc1597bde1fbfb1d1bc1c9a5d9efadfc479f47ea2bb42da",
+    "agent/src/brain/engines/claude.ts": "2498e39adae1cbf1091749131599356db4d385199047a91708861e3955889b37",
+    "agent/src/brain/engines/codex-cache.ts": "128e173d99884bd1b301199b5944b4aa1ad9916d740903d83bcd0e858bd6ceda",
+    "agent/src/brain/engines/codex-credit-policy.ts": "c5e29058d35567e72cf7500b2d50d3e294e200c2d05800a9bb3f8ed76214d13e",
+    "agent/src/brain/engines/codex-session.ts": "e9995f70161602bf91e5c39239a8e44a5ce72662d38964cfa2e2746ec193aaf7",
+    "agent/src/brain/engines/codex-usage.ts": "f1c59ca0c8c85e7ba5c934a84a6ee9bb27a26cd8724452a8b954186925df95d6",
+    "agent/src/brain/engines/codex.ts": "9c29f396ba8658eb168d7688b30b036d553e959d6457cf7fb752846540ea45a9",
+    "agent/src/brain/engines/deepseek.ts": "448c6518aaa5fa1dea4f3893726883198dc0ef1751c959496ea16dd5788f37c4",
+    "agent/src/brain/engines/dsh.ts": "593c483f3b456d0df01c275f0db9329b7c274f44e921efff1bc272705701d395",
+    "agent/src/brain/engines/knowledge-agent.ts": "26339f1d7f58ddcd6ff78196a715a06d81499aa55722bc58b73fa1f5e1b46e12",
+    "agent/src/brain/engines/native-receipt.ts": "5802b378c3c41c8ef6d7aef8936739a4f02a9cf48c7d2161e15c79036246b4d7",
+    "agent/src/brain/engines/process.ts": "5ec8fb3437222f9f9e6ac5e39487526ed133dd611520f4aaf33f6ba167f0e226",
+    "agent/src/brain/knowledge.ts": "8558c0c4f0124ba8fc61385fa1cf9587307b25ca85a64ce07ed74f4918ef6c8a",
+    "agent/src/brain/labels.ts": "29c47f5e90f6ed35531e9f6ca219f14671046a85a03b669e78878c44593b4e2a",
+    "agent/src/brain/llm/consistency.ts": "812d3250cdc73fcda1c51bbcf081ea5d098a40f01bec18639d71e151a3c39d1b",
+    "agent/src/brain/llm/deepseek-message.ts": "f181f17865669cbe306e1fd1b918bd60bc822c3130643dde5646be3a2a4b9338",
+    "agent/src/brain/llm/deepseek.ts": "5383f58035d06faedfc26beb1ad217c675eebaaa86bb55ab869d1c0b6b51cef9",
+    "agent/src/brain/llm/file-escalation.ts": "70bacd5862bf0fe015988d050829b4a0e78faa0efc8a0806aea4def31dff68c7",
+    "agent/src/brain/message.ts": "29cf55dfa160388092de51e20bf802ea75e11fba993df57eaab515c391f37ebc",
+    "agent/src/brain/router.ts": "b3da86b7edb38853a37e10063185527836da0677225a2918fa859937ec122082",
+    "agent/src/brain/run-profile.ts": "130473571aa90d9e2b3f30842c2dc4c3e3ba4979f642ef08a23db3a8bf43757e",
+    "agent/src/brain/source.ts": "ac540139eb027150ec2fe25f454c78f1a66242f4bd97046d9d61451faac98926",
+    "agent/src/brain/specs.ts": "2f40f08aa52d9f98f3133c0a39159da02f75a96e14437a03a86dd0f1dfbb66a9",
+    "agent/src/brain/tools/agent-knowledge.ts": "56483865251a94922d542f5bd5ee3a20cd411227ce4e379096686864c4be4f17",
+    "agent/src/brain/tools/external-stats-tools.ts": "da2823886a05fc5b38836ae53ee8ce2e0918b8472d36ab56ac92595842bef193",
+    "agent/src/brain/tools/kb-tools.ts": "2b80d224253353c5b369acfeb4e72106e2adf4e3c360444060620532ca600af8",
+    "agent/src/brain/tools/knowledge-mcp.ts": "ff5735f31f9045296e8b6913edf34c63f36dbd7ed3fd3644028d42d60f371ba9",
+    "agent/src/brain/tools/logs-query.ts": "8d8adc3c5e1ec0d9deccd6bd816f06804c9114466b32876d7bf9a5a2909c6357",
+    "agent/src/brain/tools/mcp-launch.ts": "7a2138d7f941cc8caa114f30df0bb3eb9347e50d860d003dbad204f8bb577e09",
+    "agent/src/brain/tools/mcp-server.ts": "7460bbcefd2ce0b5aa8aa30a625496aa2236f5dadac7edff81292615a4733e30",
+    "agent/src/brain/tools/registry.ts": "f109e58f23e6431d2b700e781da8fba328b5c421b5515a63792cd3694789ffd4",
+    "agent/src/brain/tools/types.ts": "88987d87b6c41f8c09f2797986e8aa94ac4a43f522d3418af5b5e55eb8816e27",
+    "agent/src/brain/tools/validate.ts": "0ad8ceec84a7ae1749f6f38eeb4d8e4c8a3f7871bd1f99c9638893bbd74d11c5",
+    "agent/src/brain/types.ts": "383c0090b8d23db76af19b719b9fb94621c2bec074d488601ceecd0fd79dbeb7",
+    "agent/src/brain/wait.ts": "e5df1824e2000463ddfe6c78eebda8a5959148a275629fc6dc793c20490ff737",
+    "agent/src/construction/adapter.ts": "14e7243741514aaa9d16009ceb583923ea4a9773e33310c2d7073ef4147fe70d",
+    "agent/src/construction/admission.ts": "94781b2c2f12e470fbd3849a680d24ecd8679b72d67d6a7fd4d1e6c6549b4398",
+    "agent/src/construction/combat.ts": "bb4148837ca8aad0d0c7206107ba6b3aeacb1e8f580c4ce35d31b4a9d77f1762",
+    "agent/src/construction/consumer.ts": "9d20739e6595a82d1ce137e42ec880e0b1558ea540ee3f21956c9fc73d16cecf",
+    "agent/src/construction/data.ts": "2010e856531dc5e0cb99119db6d80392523c10d41cd7d15df2e4a68e3f177c04",
+    "agent/src/construction/evaluation.ts": "8127bdb09d243d149e75b428dd2669e307a63083b2a2820ead71987df6fb58f2",
+    "agent/src/construction/planner.ts": "b6d053333612a79797550deb68e84a4b68cb660e75d7aba73555d7fa9714f2f5",
+    "agent/src/construction/support.ts": "6dd9b59f9147eb14a90919d5032939c4156a03fc729a9239acd5d626eac1e307",
+    "agent/src/construction/types.ts": "554781cfaf37c62dd2384e6d076de141f4199a9fb995e154af16efb4fcbc0291",
+    "agent/src/core/cli/doctor.ts": "bdb514d064ac2ec06ddf91c3b4b7b7afb023d93ac521292937742a31abd2e61d",
+    "agent/src/core/cli/reporter.ts": "81d5c4b0253361c6d83106dcf141d3e314352c64bd9852fb56de043a465b196b",
+    "agent/src/core/cli/runtime.ts": "8b255cbd6abff7f40488c71aad923ff3d616b4a276b55e69b4bc57d40da5a38f",
+    "agent/src/core/config.ts": "cd98eb4d83c8b5bfc07f6e03342caa07f40e7521d260253d1932cb90197e6e8a",
+    "agent/src/core/decision-budget.ts": "a6e7e627467274731ab704c42ff4b52cc0f122ccb41e4360215dc0fcb2c1fd12",
+    "agent/src/core/global-build-config.ts": "89c0a8bfe54d7ed867a5210e265b482b1117d0edb959e02eeb27ce7c43252b3c",
+    "agent/src/core/human-pace-shadow-config.ts": "947cb3a9f58ad3381ba886db8c7fc68895f0d7d2f4a5e25c10b7d3bdcaa16f65",
+    "agent/src/core/index.ts": "83201abc83ce849b3f542c370b8ecba30e73ee0d083e8ab4c80b047839574b43",
+    "agent/src/core/jev-settings.ts": "e9286977ac8a2ad446b01f2da5519414e4caf7a4e29cb80610616e791b20a5d9",
+    "agent/src/core/paths.ts": "9f60add837acf13966ef8e5ecdf667e28dcc6ee7612ff76f141ddd0455f27b62",
+    "agent/src/core/util/data-version.ts": "8ad004938a95b2b6b43353cb73372151e03f94d02343a0416140b812ed7800f4",
+    "agent/src/core/util/format.ts": "77751bafc25435a45278b4c4dd2b301ff22a4a8bb126aa9b2fe6bf7b723e9f75",
+    "agent/src/core/util/json.ts": "da294432a452d1d300715f7942a871704de28080f5cf4c167236c47982ebf452",
+    "agent/src/core/util/jsonl.ts": "06c006cf08cbe6dd74c210464e39b261b1b629d4dc879b144e88af341a7e22b7",
+    "agent/src/core/util/lock.ts": "5d42d6cbefd3e1a8c79d91395d39418bb5579a7ff107f6ab7219cacb95bc95ed",
+    "agent/src/eye/decision-log.ts": "ae3bdb6a71c4371b12e96d990106240b8e4e7589cc1e9faf3973a2336370a887",
+    "agent/src/eye/jev-prompt-log.ts": "7eea5cd01e708082ca685a19cbe5b585758e3aba927116f06006967002ccc8ab",
+    "agent/src/eye/replay/record.ts": "f8896c8602b79271bca7968faf654fe5534813abb0f26202ee9ea6c20611f76a",
+    "agent/src/eye/replay/replay.ts": "836a303b635752ad2adcbc1838c6fe883d490b1cfed1c739126e14e70846cb67",
+    "agent/src/eye/run-config.ts": "894d63480845dd73b874808c0318dc72d11766b16e5254b76367b9250e624b05",
+    "agent/src/hand/act/dispatch.ts": "968c7e64cc4c5a47a3bb6189e2bf2d7e8fd15ee4842d922d4dee7d97236817b5",
+    "agent/src/hand/act/gate.ts": "a402e7735ed0e29f06bed8d13f162157eb3d5d07280307f853eedbc03455c855",
+    "agent/src/hand/act/identity.ts": "03c74667f80bce553b7e00a9777f3c580ef5297c4af2fc6001bdaccc43bc14ab",
+    "agent/src/hand/act/turn-start.ts": "c0b307dd5542ab6d4289daf3a12ff3938c770c205cefe0371a3f8f6e4a7c96e5",
+    "agent/src/hand/loop.ts": "dbdad92f656b59f6f3d365a4f8666497c6fc1065b50a5c77d97a2384b330101d",
+    "agent/src/hand/mod/client.ts": "4f1888bff879968fb20024b9eded95efd1b5ca88889d16b724011ab6394dbd2d",
+    "agent/src/hand/mod/discovery.ts": "ad6a603f05d029491d9672375af008ce123c57f81a10b5651a52e988728c3cad",
+    "agent/src/hand/mod/instance.ts": "ddc73df0b53572173c7d0f75391847bf3ae102e7cb984b39729fb86018fb2ed8",
+    "agent/src/hand/mod/schema.ts": "72dc4dfeefaa27ee701b49b1318b50380599980234f7623431b20ff479a0b01f",
+    "agent/src/hand/pace-precompute.ts": "f8e4a70dd6ad2531264a3407af77543713a10a99c68bd2cd9002b02aac8e7a3a",
+    "agent/src/hand/screens/act-start.ts": "baa7e82973fb29a687036ae24f39fc301e0627f3d4fda01b7d27ffb9282ffff7",
+    "agent/src/hand/screens/card-value.ts": "3d4a4413e05d549a774a2e6dbaf09474a398c03617b527932d4392860e202339",
+    "agent/src/hand/screens/chest.ts": "94e5666d4c8b6881bfad3b969106c16192cccfc6e3502c19d8e5ffeffaa3b671",
+    "agent/src/hand/screens/event.ts": "6d54caab062f8dc7fdb25c53ddc18b3dbf7be3816766079d68ee90d9a2b7bddc",
+    "agent/src/hand/screens/index.ts": "68778889d3cddcc7079b5d2389e0ab9d50509237b6dd472c8452e211387cd2cc",
+    "agent/src/hand/screens/map.ts": "83a76a9d4a1ab27e3bfcf74d8fe255fdbbc62cbcb5372352f77274d3388e3f9c",
+    "agent/src/hand/screens/misc.ts": "6f99b70fb712bd587ce2870379ecd8e6f203715f2e57b580b004aaf0b446161c",
+    "agent/src/hand/screens/oneshot.ts": "ded1688e33600aec4189ae1012aec5c3539e3e2ef0823be201089c9540f67313",
+    "agent/src/hand/screens/pick.ts": "46db42ad5730b2be2392eb1a04212720ddc11c85bd03f71ee16ccb9272895390",
+    "agent/src/hand/screens/potion-discard.ts": "46f9de60d5f7b68c14989418215d79c4366a5e7f5557c169c374e00f0e6959d6",
+    "agent/src/hand/screens/rest.ts": "0f8ad04a5e9682d8bbe2331352a314511ee5c1984994a1dc427581adc113ed52",
+    "agent/src/hand/screens/reward.ts": "ddac015d0bb5a4344b1c6d68e5626b0c8b87ca738f5a78013c6ba691e328c73c",
+    "agent/src/hand/screens/route-plan.ts": "bc9bed805c617c3a2caa1b93d3d5f86913429a8be2e0ec3d7df3e5a0c64ef3e5",
+    "agent/src/hand/screens/route-review.ts": "6fab3006552c8cd3507d7bcf509ba7fbe10f906aceae4939db3714b5966dc2ba",
+    "agent/src/hand/screens/selection.ts": "c4432b5fdf8c352ad4d834a87340a3ee69d69606ea705420e4b113db4228c647",
+    "agent/src/hand/screens/shop.ts": "0dd2d50752caf48484ab83843b508ba471e473ef5272ee907cb608a8a831b532",
+    "agent/src/hand/screens/silent-discard-facts.ts": "97a130560b461fa2831617b9b6bfb30fbe592f6270a48dd0d350b6d6d2cddbea",
+    "agent/src/hand/screens/silent-hand-trick-facts.ts": "ebce034d086e32fe10cd6a2e3b849accabd30bc7bcd3d7241ab7ded43f8f5395",
+    "agent/src/hand/screens/silent-reward-addition.ts": "bc3f8d2f9de05bd0392b062821e39ffeb08af973e3d3b10bb7d4fcdfad471b50",
+    "agent/src/hand/screens/silent-sandpit-discard.ts": "3ac774e66b894374d5681e2c1dd98a5dcc1fdc6e274ee7d614ed39373e3ba5c6",
+    "agent/src/hand/screens/silent-smoggy-selection.ts": "853d98f599226231593be2ba1efaa4df3486954b8c02fc54d3109e93abba783e",
+    "agent/src/hand/screens/silent-snakebite-discard.ts": "bfc831f94fd5dc0aa8ad117717fcf3bde337df84fb839689233ca81d57bbeb03",
+    "agent/src/hand/screens/v6-room-options.ts": "a7690a0cc3c7d602820162c53083dddff3f9a0b96579b4aefa5c3ae7106ad7bd",
+    "agent/src/hand/screens/v6-room-projection.ts": "1d335becc8e17a1e9407377cb212d6b35386621e5c06d643e07acc4d149d699e",
+    "agent/src/hand/screens/v6-room.ts": "a4d88ee2463323da9e4fb32242d3fd45bf06a89a8a3fcebacfe7b2de2e2a67f1",
+    "agent/src/index.ts": "9aee86b0b3c0169d8eee0c16193d271d09aeb1f07f6bd2090b32c0624fa13a3b",
+    "agent/src/knowledge/boss-phase.ts": "4e84d7b11e1d37e04df9375c0a0ddf1285689776d8728353b61135466b32e73b",
+    "agent/src/knowledge/card-references.ts": "255afc71c93d950a306500d715edd786f97d330026a2da2600dc83afd16481f0",
+    "agent/src/knowledge/card-upgrades.ts": "e8ab32ef01d3909afae1e0497e8790b832214a6c92d2599d4fb3ac3fa3079240",
+    "agent/src/knowledge/catalog.ts": "77bf62c35ec39d6a872b56720558ec6e04780bd65ecbff6ce6e4b6456749430b",
+    "agent/src/knowledge/double-boss.ts": "46e497cb169d6a7266f55434b9ab90e311894174100fe4b70c9992a4aa418fed",
+    "agent/src/knowledge/enchant-text.ts": "7a034321b9ba6a8d89e841b537d1eb02a8de5aa0915828d57b5120047ab0168b",
+    "agent/src/knowledge/event-pages.ts": "e121bbd24923a4e1af6e94527264b2dabe639a4be40f13fa08e4b9db619416f1",
+    "agent/src/knowledge/experience.ts": "c4809f226e476d66e71ccb66a26155306c31f34af49b3da1ff1bb3f0e072ae5f",
+    "agent/src/knowledge/files.ts": "3e03286adc87e6fada7fb70d968f8ecf5999ad4892cc477d79886b695edb4a9b",
+    "agent/src/knowledge/index.ts": "4f79e78beb3d40fd992683ee02be2f3c20649dc0e366e7a7ec2fd4a43aca0712",
+    "agent/src/knowledge/jev-hints.ts": "a5287ef451cd0f91e2a2ec75ab745a7a7cb154867c6b5edeaa0e3f2d6d141d29",
+    "agent/src/knowledge/mechanics.ts": "d42a3d9af46240dc51cfa1ce12d87e8442aadc30ee8d9897c72e27c69ba178ad",
+    "agent/src/knowledge/monster-db.ts": "877f3e244afd8587631bfd641fcb3338a7988778b353b22d79a3f77631abcf91",
+    "agent/src/knowledge/move-model.ts": "ee92ca65f90de41dd63b0334af34be80ea582d08ed93229b7c83e9edb4a0ae36",
+    "agent/src/knowledge/open-book.ts": "b043e4bb18b1a72a2349ffab2bb68b778ca9aeb0f114ec28512a023eaa83f93a",
+    "agent/src/knowledge/outcome-facts.ts": "36bf89741e60c253f0d85bbb54a403eb22dc15a40b8c50587fcb63ea23c72480",
+    "agent/src/knowledge/outcome-tables.ts": "8937c21bc6fb878812a372a6c40d2491c23f5918d0726510ea1127d03bcf6a72",
+    "agent/src/knowledge/potion-equivalents.ts": "d60415892d7558faf8b6102a855183f0c9ed782ebc6b33f3d75f0d3b360951a7",
+    "agent/src/knowledge/potion-values.ts": "31708aef8b4e8b731a80c072c38848753171eb3b6ab18d7ed15b301f2b218740",
+    "agent/src/knowledge/query-sources.ts": "3db8f893dda103db52c2602ca84a037177bee5bf1ad829849482f576917f7cd7",
+    "agent/src/knowledge/relic-values.ts": "f994ac46e6148ee39dfe6708cdbfab11820d8ae19803fc7308df2857e01aa858",
+    "agent/src/knowledge/render/data.ts": "028fcfec4c78bebb9f991f47c6d045734e3f6d6c42e49aaebd2eccafbbff1b27",
+    "agent/src/knowledge/render/experience-text.ts": "10a074dba702f77edc563c7405b815777583ed630826c10993de130368586a56",
+    "agent/src/knowledge/render/facts.ts": "b9f62fc1ff5a244950fd7eb7d730a1ef354f7ad8e8f0180a14ae73a1b27e352f",
+    "agent/src/knowledge/render/format.ts": "e5dafb0fa0c581ff76c33e32847d590a57c16a057c9a37c18c843bdec7ffbc36",
+    "agent/src/knowledge/render/knowledge-prefix.ts": "f0822bf3987a2908eeb8aee2fc1c5a6ecd4e650620abcad1e72dd351fd1dd163",
+    "agent/src/knowledge/render/monster-text.ts": "c4231f7489bab518f496117e9982cc2d4e2cc2b75614f6800689e6d027332aac",
+    "agent/src/knowledge/render/old-knowledge.ts": "baae261eb37d2225e79a6fa981236e12d17b7c466b80580f202a0dd54f66ebc1",
+    "agent/src/knowledge/render/potion-text.ts": "d12274f3dea30eff947404e0b6da980bec5dea2608b69338a92cde1d15403846",
+    "agent/src/knowledge/render/stats-text.ts": "91354ae54f8723be09ca95ac58a93a650affe8e4aef70dd34c4382ede24d208a",
+    "agent/src/knowledge/room-costs.ts": "85bd03530df6a58d0f5d9cd1b2f8c6bcc98b2c73b35e508468764a25c8148643",
+    "agent/src/knowledge/shared-experience.ts": "364a79910b0789f4ead2a75aba449cb6d9663987159ab759757d60e70fc8941b",
+    "agent/src/knowledge/strategy-entries.ts": "1207d3ee86f2474c5c3526a5508b71c3a31e8407a55b9ca72cf8dcd2b4e4433d",
+    "agent/src/memory/ascension-target.ts": "a799f4a050fe2911f3b8378e6bdc6860be6e676b340a9e402c045de041bbe589",
+    "agent/src/memory/construction-log.ts": "af8c4b7c31692336d79400d2c0a1dec585b7c4c3472f880e69d08fd46f254fb8",
+    "agent/src/memory/deck-profile.ts": "d6640509715174ac2c3affc2ea16423d91cda757a3f73640e685d17385a4a0e1",
+    "agent/src/memory/deck.ts": "a38484995c36609229459a0b3bac901d698f81f964def923340f0d356d53fdcf",
+    "agent/src/memory/fight-plan.ts": "fc0bfb1dca63c5496ffd667a71422e0709427549d34aa23c6b91f418ef7cba59",
+    "agent/src/memory/journal-replay.ts": "96f83b8baa9b866601e917f870a722f8f95758193adaab8390b85c2993f02327",
+    "agent/src/memory/narrow.ts": "aef22caeb263bab54acb8c78f7620fb82c53174485c931c96edc542ce75eb5a7",
+    "agent/src/memory/relic-resources.ts": "b52ba3c484769c96ae8a33d736cecc817428ace6b80f5207469d78b4a66c2108",
+    "agent/src/memory/run-brief.ts": "3eb7cda092b67ea178b2ffb4b5ff38478ae9d7d90d4a785b4f910ed3ae99d24a",
+    "agent/src/memory/run-constraints.ts": "a3016ef6dbe835a9528e96a958cc028418093cc0a83c231191e26f5f5ff54350",
+    "agent/src/memory/run-journal.ts": "3150ea6c912cb22a88ac303bc471845026f53d207a5ee4372281414bf3927c2b",
+    "agent/src/memory/run-plan-merge.ts": "1afb0e5424e9d7d2d98309252b85231c91fa977de9ac79c30eb5531541ed4606",
+    "agent/src/memory/run-plan.ts": "506daee2d40cfc24eb5a12ac6b10f8355191e2feecf097a91d07e0ed8cbeaea1",
+    "agent/src/memory/types.ts": "ac5a1f30d81f8bc0943fa96c49b48270641c2be0fb3f4ab2e1c461560b700d7a",
+    "agent/src/reflex/card-model.ts": "ed66e33bb1b00a75c9029d842c90f41ac3f2b6bb9807af5776ee467933cb28c2",
+    "agent/src/reflex/combat-plan.ts": "425b33c1f926719289baea9b1e80d488fcb9c93740c183e3d6efc2be519fac83",
+    "agent/src/reflex/combat.ts": "f2f6aaceda51b61b0a67b1919d5ccb649c25a8a10111f1a4cdd4e360677973c4",
+    "agent/src/reflex/continuation-value.ts": "002277b50728ab8fd405799c0a3345e5dcb788ba8f37d5489b5fbcd9623029bb",
+    "agent/src/reflex/damage.ts": "7fd7092922f9e692ead821eac958e9d2b6d013f62f5a131691157d22dc361786",
+    "agent/src/reflex/fight-plays.ts": "608c10043f73918bf9117d90cf770668511bbc7757ee6485f4c943173064231f",
+    "agent/src/reflex/fight-value.ts": "e630a01778f0758e2fcec26b0219532cd7cb74a3b2d307b1f6e7395808c148ef",
+    "agent/src/reflex/jev/answers.ts": "5f73eb0e7d267bb04754ac92578b44b7e9eba4cff1d85ff49ff91c05a754b729",
+    "agent/src/reflex/jev/client.ts": "2d2819422c7ce7aec80d87bf0d9bfd73823f473aa0a7b709a801cefdd68edfab",
+    "agent/src/reflex/jev/combat-entries.ts": "388d671400b7805ae9b0b52493f91f2e277782bc7c73d42ae8e8af5fd99b1b9b",
+    "agent/src/reflex/jev/combat-entry-projection.ts": "585b2ef9ff9e992798c90be4cdc298ab2bf5ea528afe48a758e61e6f02dc909c",
+    "agent/src/reflex/jev/compact-request.ts": "e684f600a44f02ff7994f6567a195ac91990fbbd0f91b72e98fba03aa051f26a",
+    "agent/src/reflex/jev/decision-projection.ts": "96d5ed96f31f6c08380dad47c77c5fdb7169088e5e340d80f13561bd64d8d0e6",
+    "agent/src/reflex/jev/nova.ts": "f864c40d14bd2d5a83b8baa0bb7a1fb37a0001f58a2348c928899f84b4772743",
+    "agent/src/reflex/jev/predicate-context.ts": "d2af9e9b9f6101fe6f990530166fe707fbd211c2167bd0dadaa6f5163b99d823",
+    "agent/src/reflex/jev/pricing.ts": "c538ad5027da7398fe9a1a9dc065e1fe8612e5baaac5a345b7a374282cb1fb4c",
+    "agent/src/reflex/jev/questions.ts": "50f7e648d6392c6201625abe2c17969d0453b8fdd6e156a0e0e9435df1c2d3a6",
+    "agent/src/reflex/jev-experience.ts": "629a3ad6240568962b3b1d4aea1db7088fae947229e0d7caf1aa804a5e92c103",
+    "agent/src/reflex/pace-solver-cache.ts": "18fe4804334637a81bd5a5da4e11e52c06b7b51002d106ccb3c203beb33c558e",
+    "agent/src/reflex/passive-pieces.ts": "545c917baa6193678160f8f37ef93d5676d68af75e72fef061c235625a31b90e",
+    "agent/src/reflex/permafrost.ts": "d6b5707427b7acea5f59edb7a51799efe7ab1d2cb64168510161d755d17760bb",
+    "agent/src/reflex/potion-cost.ts": "b0a952df65e6af5ddd99742b9894367dff086052ef810865e85fe73c0c06c0b2",
+    "agent/src/reflex/potion-mc.ts": "01679317c4d7203c1577700bda51bdd107844464652cefe8696423291a3224fe",
+    "agent/src/reflex/potion-value.ts": "dea5f46fd58c10ed57c2d8f4788e73b0fbb7decc2c38d4e5469802ad517e8c0a",
+    "agent/src/reflex/rollout-live.ts": "f8ad61514ea9f3919a4359edc3c32f01f326cb24139613933a98dcdfe0f7233e",
+    "agent/src/reflex/rollout.ts": "4ef15bad2f859038e81f750f114f25997f1937440dc138230d2fe3a0f4cbba36",
+    "agent/src/reflex/silent-apotheosis-reference.ts": "96fdadf221286c9e21a11d78e7200b320da6c8db7717e9edf1915e4a5b739803",
+    "agent/src/reflex/silent-apotheosis.ts": "cd7f4956fcda62c63c585ae252b9033a0ff9622390f227fe4c256a8fffb33f0f",
+    "agent/src/reflex/silent-crab-potion.ts": "88e4d0b8a41249559dd838640093f10438fb9809b9067a8d4f8a01b955f239c6",
+    "agent/src/reflex/silent-crusher-facing.ts": "78a90e120c688a8bae4ed80077ef12a862efa29b1d423160cca4cf72a13eed8e",
+    "agent/src/reflex/silent-demon-potion.ts": "30d0ac0808b3dae09b5835577f62efd3fa9691a00cf59860779c2c9a81708fbc",
+    "agent/src/reflex/silent-giant-potion.ts": "4f032ab6458326668c37361d33b7882e7f922bf07ad3f995abb6b5085de5a5d6",
+    "agent/src/reflex/silent-held-loss.ts": "c60884d37a5386e21ea357cb6b0942bcc3c098366167dcde4506ae79541e9022",
+    "agent/src/reflex/silent-helical-dart.ts": "f85311d1a78dbb100b1e82b1d817264a87bd40aa6b9ec81d238c4d9bec70965e",
+    "agent/src/reflex/silent-hp-guard-audit.ts": "183a1c996ce965e05dc5735dc0f3b4f2e2ff65442c7e6779290716b0cd4bf858",
+    "agent/src/reflex/silent-kin-progress.ts": "a73c8cd3f1d5953e12f1167f328962fc1a738467411ac27cb5a5bbaaac33edc4",
+    "agent/src/reflex/silent-kunai.ts": "6907c47af72698926543ffdd134313d0c1097a4b01908f2f3fea7f36930ea1e1",
+    "agent/src/reflex/silent-loss-reference.ts": "713d94462279914dea649b2337e1495a3cc42fd986650099f49f88409bf49c25",
+    "agent/src/reflex/silent-phase-current.ts": "cd4499e87f7b660bcc549330164391b9252388a55124ac202dfbae3715b1f74f",
+    "agent/src/reflex/silent-phase-reference.ts": "529b07f58c1934e1e36e99d4c5888183f01109f60684513d7446b49c06e769e1",
+    "agent/src/reflex/silent-potion-reference.ts": "94399dd7279d6eaed91d139507baf6936a161cd61a792644a4ab7c5d9102a360",
+    "agent/src/reflex/silent-razor-snakebite.ts": "c081ceb1e7a52b2cc74b88de3cd422b60c43fa9cbb1cc216b29154db05498ff7",
+    "agent/src/reflex/silent-selection-audit.ts": "2de2533b477546682ef601d0613bd1adb805e03b894f64347475bfa4e222e4db",
+    "agent/src/reflex/silent-selection-dispatch.ts": "9301b47f0f6a2589ce210d7f3b9fd232854575154e1f77e471d164070003e6d6",
+    "agent/src/reflex/silent-simulation-reference.ts": "7b017994d9594d9bed3c124f0e62bad686692ea9ea517da559a1f7303042c195",
+    "agent/src/reflex/silent-skittish.ts": "dbfa23ec61b30dff80b5f8158cf2f8c9da6ad8cb5e70334f9ab402689b491820",
+    "agent/src/reflex/silent-sl-comparison.ts": "2fbb427662af78dd5428c70e0af9bb82dfe312d4ccffb33201da3c26dfdfc760",
+    "agent/src/reflex/silent-sl-resource-comparison.ts": "75e3ca7380dab1f0c811b91df908eba08a46ae2810b1b983dd699eafef269ab0",
+    "agent/src/reflex/silent-stock-note.ts": "142c8821ec0650bd387a8162afb55d30c1493a5a2cf9f4fb43ef1b82276b1eb1",
+    "agent/src/reflex/silent-summon-coverage.ts": "41e8a32a168747dc44aef573aac1363b193b48c3df206365840c350727b46e22",
+    "agent/src/reflex/start-loss.ts": "bda105bf162ea693ac35679a4dcf4fabe6a844b6b83eba9bf3ea5ac6c853bc55",
+    "agent/src/reflex/thief.ts": "b114a8937a3580e27a4c8f45600720d7a6d808ecf4ec2e0a05737163fd301c94",
+    "agent/src/reflex/turn-solver.ts": "3f9da929f22f64f63ec91621472609cc3238c3bf91a7e3ac93fc3068eae0d25f",
+    "agent/src/sim/adaptive-decks.ts": "6b1cc4fe7fbaf8298c30b4deb9eeb93e6a80c3eb533504b2c1b2612b5fbd34c8",
+    "agent/src/sim/adaptive-sampler.ts": "ed75873222ef5bd212dff7ea885036ce985e3e7e4ddf95b1c5d17f56888b5f84",
+    "agent/src/sim/adaptive-shadow.ts": "e0e19ef375ddf8334c9c20d4d1cd892a0f21b76e4e0e77bd4810f6e08d64572e",
+    "agent/src/sim/boss-clock.ts": "fcb358e2c0a3be43f372fd884b2f9d6eaf14cd781bf8d76e83244442776f9969",
+    "agent/src/sim/boss-lines-worker.ts": "87dc9451302b7c9ef98b2db60e312c5164ef52c42922635594ed26fe01192ed9",
+    "agent/src/sim/boss-lines.ts": "ee25326b2f01c82cea39b4b09a78340080784b4c30527fa2b17c3e2a971e0837",
+    "agent/src/sim/boss-margin.ts": "141f5b292ad2beb460143c598edc75b2e4a6b2e2b1754f94d8c0eb0c37073f1c",
+    "agent/src/sim/boss-readiness.ts": "d773d0640aabf9429da7bc4fbd8d34b20acb8551db8bde60d60a285f1ffe26b4",
+    "agent/src/sim/boss-sim-worker.ts": "2a1c494fb6b5811e3708070aecb2bb0c3bb30277b989ee24e0d2cb68e6f4f49a",
+    "agent/src/sim/boss-sim.ts": "f30a0c5bdd66d63b7ccd962947735ca2dfded2eaec76dd364f5e90fec0aafac6",
+    "agent/src/sim/boss-start.ts": "01ef66ce210a3d022f1e28e34188b7005c7a88aa2b020e6f242f4030a95aee02",
+    "agent/src/sim/boss-trust.ts": "51343d95717c09e57451fb58975d94a1130291b9b2a3a6a1c92a15b5fef872c2",
+    "agent/src/sim/build-rank.ts": "7438f3d9433eb8357dea8cc9c82d8719fcdf35dc3bfee0e552388666d37fe84d",
+    "agent/src/sim/build-ranking-choice.ts": "3a1342764fc7af9cf42e3ac29e260172fc45972b9bcb593d6df578823a7f0dbb",
+    "agent/src/sim/build-sim-facts.ts": "c86879476796b8f49dde0078923e6ba5e46e725210d23acf14a0195b6bcb652e",
+    "agent/src/sim/build-sim-pool.ts": "174141ecd95a3f4c6113b6f599b4d0f8d62a29476de8e305110002042d9ce500",
+    "agent/src/sim/build-sim-worker.ts": "96da42adc6e9d2e230d5b36cbe6dc30e55ba4c87dbb93a55bfa1bb7aaaa1e087",
+    "agent/src/sim/build-sim.ts": "e1384889748cf42f31aaab5be173e9dde4227c3a0b34a919026068ef34c9a115",
+    "agent/src/sim/computation-failure.ts": "59b2cd9d3a55e84e2519433e00e420762a178735e6a5de1f779c7db15b35b39b",
+    "agent/src/sim/computation-wait.ts": "15498e8c482d43486d748a0eaf20b4dd40df68775f6b40a3cf51a8cc905ba2b2",
+    "agent/src/sim/compute-memo.ts": "36f0e72ea67c9ddcc34d4ce9234ce2b9397be16d8edab0da07da8d9abb802761",
+    "agent/src/sim/construction-combat.ts": "9deb118347b60753c7e40fb4e0e588e91107e3960e3fc40089af940d85a0e36b",
+    "agent/src/sim/continuation-failure.ts": "4d8bb38c69aba5d7870be5c1f6547d92fe0558d1b252792079e81cd68fa7d519",
+    "agent/src/sim/continuous-boss-result.ts": "f10c43b0fc9a403c0ca7ff9cf3478b5910b00d27f7d47d8dbae8156551aae358",
+    "agent/src/sim/core-realization.ts": "51523124a4b1cb3948fef2d6f334cfa76f6f2fb35968e50ef5868651497718cd",
+    "agent/src/sim/core-window.ts": "87a061c6ace294483e2482498b33ed3d76934c1cc92c129b34f1fa1517934ca2",
+    "agent/src/sim/double-boss-start.ts": "3241dedb92ff1ff9803df3786f15e65e669e7371756cca8668fb8c57771e97eb",
+    "agent/src/sim/f48-joint-shadow.ts": "beda5aed35121a8ea4e97276b999fa2b2177af99ea05debd597ca66706459ec1",
+    "agent/src/sim/global-build-b3.ts": "126c5cb42ffec4710ea36b82e9b62703f249d5727b47ef6f5be9ecc8d7abfcbe",
+    "agent/src/sim/global-build-observer.ts": "ecce02a61eebb79e46e95e6f5ea818227afb72072bd585e72fcb784aef85fbc4",
+    "agent/src/sim/global-build-pool.ts": "3dd2396d59189bb246de8073c6a09091c3b5405495da8dc0c71d822caa48b349",
+    "agent/src/sim/global-build.ts": "4daa2d07465bef20e759a28281194131a06cce43e9be606a43b1186bc7c0019b",
+    "agent/src/sim/human-pace-card-policy.ts": "7ba68e79e684a1bca6566e909d457ff007a5d9c55268692612313e24d0a3eb23",
+    "agent/src/sim/human-pace-card-shadow.ts": "3c8cb58e7aaa3068da24f4b2439fd6addfc0b0ba834580a0303b7d3c7500ad1c",
+    "agent/src/sim/human-pace-comparison.ts": "94c7f21f3300251a3ac537d0c1a7440987c321f59565cc16fad7a124bbefd9a5",
+    "agent/src/sim/human-pace-direction.ts": "2629511d96013e5411a8c0f8c084664d1c3fd4823416d7f640aeb80eeceffc69",
+    "agent/src/sim/human-pace-observer.ts": "9e5164e3b8bcb87fbcd52533b6481b1bcda1cfa6c60d29e104ec6dd3356e30c0",
+    "agent/src/sim/human-pace-plan-shadow.ts": "591ee6a4d33bec7ca7aa0214a3f7bd35d2b1a5ca4491bb2e3ff2b6e640d6fab4",
+    "agent/src/sim/quantitative-calibration.ts": "7edb1b8fa86b49f60ec2e1e4ddee1c6e065432d18ad8cf81461e97fc8242527f",
+    "agent/src/sim/quantitative-facts.ts": "12b495e8c9922b9c4412ee0a86c5226383833896306c4a283bc6e00aa19845ba",
+    "agent/src/sim/quantitative-log-extract.ts": "e679232a6cc36efeef49493f3bb3874ee58c977444dfa057af4830c530f22c15",
+    "agent/src/sim/quantitative-stats.ts": "e33124df786f4060919d6713e494f9ce447b20c75113a573f7e549adf4e8a377",
+    "agent/src/sim/route-map.ts": "d1276a6f965311333f2500f1ee3a1777bbca31a54ead40da265292f2c23186f6",
+    "agent/src/sim/route-projection.ts": "ad0e4c94d1e4212cc6732d737a861ae08d6134877186ff97d2623f4b15fd5f8c",
+    "agent/src/sim/s-combat-rank.ts": "6b6a5f33764f253e6f8fd606b772dd641953b118029e9df32d97c56e691893f8",
+    "agent/src/sim/s-sign.ts": "910ea2404703619c7cf719c4909e26772a0b6e22480f7eeab92546b04f0ef702",
+    "agent/src/sim/sample-range.ts": "409d07fa4dfdfdc40eeb01bb66f3b8f36f0b9d64f32537106f648ad25c60d614",
+    "agent/src/sim/silent-build-win-ties.ts": "7a232f09e25f9c8fd56cdadea7495ce58b74ab4f8460a68a7ee5af15d01652e3",
+    "agent/src/sim/silent-opening.ts": "f3baa27bfac07d9f60995e37b7bbe31f7fa5baa63f18dd4fda3bc8d2c09bf502",
+    "agent/src/sim/sim-pools.ts": "f852fee8b01efdc07bed9d92d32b95c005b1d18447c86d789f1e465f1c158e7c",
+    "agent/src/sim/thief-card-hp.ts": "d488669fe6428d077594d2a8ca5dcffbcdce990a14a8280e4d85feedab7f593f",
+    "agent/src/sim/thief-card-value.ts": "c0588618ea2e6ae8c6ebb73e23c7b0d1f8ddfaf6c9d56b76a3bbc98fd8f50aeb",
+    "agent/src/sim/v6-card-results.ts": "aebc3772ae943f5a6e842cdf6558e423bc5848684eb809d1249fe23baa200316",
+    "agent/src/sim/v6-completion.ts": "cec96b95d31ebffdbf550d42f2cfddbc7e96ca423cac4ecf9726c1c920566bfb",
+    "agent/src/sim/v6-formation-table.ts": "8a880235f2a2f584a8f09411f7fa96fbbcdc3c2ca20cef28913918776f5bda84",
+    "agent/src/sim/v6-history-pack.ts": "e312641f3a3090a32ca271ffad702f610c49224226540a5faf0826df4587808a",
+    "agent/src/sim/v6-history.ts": "8bf98caf99c6263300bb166e75daf8e07ec345164a38d2365d90f7e3383b9518",
+    "agent/src/sim/v6-precompute.ts": "875d4a7f6efeca2a7b42113af4719f9e4fd8fb7c0c3a400eec0eab663a177614",
+    "agent/src/sim/v6-projection-entries.ts": "0d6d98744d1736dc786a75efee75cc5c85d696bab9a72bc5c9e4fc3cc3a9a34d",
+    "agent/src/sim/v6-projection-log.ts": "b9aa7c525accc8daf44555b5a15d2821a0744ba89f5af7066463bd9316f964f4",
+    "agent/src/sim/v6-projection.ts": "3eeb605aee83be4df37ed7c54f73e1f686fcf06dbb5377a6d8232315ba6d0deb",
+    "agent/src/sim/v6-request-factory.ts": "bd8cc37862b3327f376071c0817d31e0eacbb80b2b797d3392c72c26381c4539",
+    "agent/src/sim/v6-route-entry.ts": "d5a14da59a0e082ed4789c8f1685c5fd6aab33e5ea8c147359e328e16da1ca28",
+    "agent/src/sim/v6-start.ts": "a1ea4be5d73ea44627335e9b48ee8f73f23510786acf3fc12f561bc6a93cab1d",
+    "agent/src/sim/v6-supply.ts": "69d0f5a24b84d64b7b98862c404b91ce62a2b6713c1c6d18863649d8054b9316",
+    "agent/src/sim/v6-table-copy.ts": "0a728c999a9cb852b389627da06416515f5de4b8a3dccdd22065ce5db68319ad",
+    "agent/src/sim/v6-targets.ts": "24b328b31d046324b2ed4fab511b0b692f3dfe6966e41a549e3805d43eb51de2",
+    "agent/src/sl/attempts.ts": "f3f785f18c77ccc482a58b236d168780c8e010fb0bec12ec3e14ab61a8aca415",
+    "agent/src/sl/controller.ts": "675b4408fa8c6d7074c8db98f949bd14a422fd57c6bbb28a0ed438c85070b4fc",
+    "agent/src/sl/draws.ts": "7a739333ce420fd61200b08491810c5287b09a699ba23bc3c3bc69daaf0b56e7",
+    "agent/src/sl/elites.ts": "d2e285246431860f966a0e1b0841006122041d2acbc1d32ddb72f19e70e9850e",
+    "agent/src/sl/explore.ts": "2f37e85cc1c1c31e96a0d1b90db850893ec75b6cf5b4b84bf07bbb8de4e3ec43",
+    "agent/src/sl/judge.ts": "a3c2770ed23cb2d6e28eba8472558955e2e84ded8e966dc9d7f9c19eb63d3f2b",
+    "agent/src/sl/random-target.ts": "7bae6d0830a8fef4d2fb1dfa1d659a2ee8603bf3847e13f4b3e23cccf310d757",
+    "agent/src/sl/reload.ts": "02da7188eb3b446b458998dd54a6d2bf3c38e98eab14040e25d7ddb567323517",
+    "agent/src/v6/appearance.ts": "59abdfb12e169245143ed9be8dd405a4d4edf5d7624dfce37ce61e7c23fb814b",
+    "agent/src/v6/brain-card-value.ts": "824bf1998a7ef90f90a9f7a356a51acfdb1c2b27f74c7b450d6ddef6a40b32ec",
+    "agent/src/v6/build-core-conditions.ts": "12ef25396e9facb05d95da0dbf482c67a73fb4e594e2bced257bca12842c2ef5",
+    "agent/src/v6/build-core-draft.ts": "7bb8ae2bcee1c78ea0df26191197a7e85ef0406829be43cd4ca00c3555f51b25",
+    "agent/src/v6/build-core.ts": "e1512f526c066ff4b48450325e12ebb25c6c86d7760680c9c21c0887056f889d",
+    "agent/src/v6/card-criteria.ts": "c10e0affaf9e285d1249d5bc46f0b8ed133ca9e063f29268181599b32e64921b",
+    "agent/src/v6/card-pick-reflex.ts": "b0eb07e83e1d6387ffb6afe179895c75ce1ce93d26d60f76eb0b48fdae80ee23",
+    "agent/src/v6/card-pick.ts": "496ce31c3449f3ce5f14b60964b6fa098191c1477df9d4e1f3a3b37bed4629ed",
+    "agent/src/v6/card-results-input.ts": "e97693610a7a0f71eb21df7d2f7d624576ce47f2d4cd66ab9fd45e98f4165de4",
+    "agent/src/v6/card-reward-scope.ts": "b41c67173a18e71326f0dbb908328e932fdf786daf2216f17f98d85628b5c00e",
+    "agent/src/v6/card-routing.ts": "094d0f76b1da539fa7224ab648298a91cd89d8e4797aa08feba23458abffe574",
+    "agent/src/v6/card-value.ts": "9199cb577ed2910d674879a162ac7c8c2d139063aeb9006bc47dbe2172d5c48a",
+    "agent/src/v6/config.ts": "67d9d25366836faf482759a5f6b73ce3dc8fdb9200be4f7235771b9dccbf6083",
+    "agent/src/v6/construction-safety.ts": "087c4a549db4dd01fc5ce1bc3dbab46662052ad2bbe0773ee1b18d1b78172236",
+    "agent/src/v6/contrast-statistics.ts": "a58856278552b62f2875e55eca6a3c7d226034adeb2b302d6aa00cadd191e538",
+    "agent/src/v6/direction-decision.ts": "81871af3f95a7ab994e105876062dc0e11d9d0cd5eb663c638d76aa39e530904",
+    "agent/src/v6/direction-plan.ts": "2ffb659a08b684cfe1e2674920c886d1f5b2bcb928bab7cb27a75ebd20c6b569",
+    "agent/src/v6/direction-prompt.ts": "734ecac278a617adfad47ada8c121400f60c920c1ac956fab7d6368648880367",
+    "agent/src/v6/direction-rides.ts": "2dac39d5c8dbd76b20a195f31067b0640be02ebb3856f989e4c27459e0919711",
+    "agent/src/v6/direction-runtime.ts": "bfec4d1d50811027ea9a06670b4f4bd5c3251f8e72429f68f48a12d8ba525496",
+    "agent/src/v6/draft.ts": "155e2883f5d7b8262e66c58a646c62a401b5b8384c25f91946eb44add1e09512",
+    "agent/src/v6/formats.ts": "75e1b2747e5d742ab47f2495ec1734e5104ff9b6154812f42f6892f5ab0de3db",
+    "agent/src/v6/knowledge.ts": "37c4c452f2c617dfc93c13ce8e6c61d4b574debd8d8e8c4f29e58d64dcb8d8c6",
+    "agent/src/v6/log.ts": "488c96cd351e82f8303314b30e1f270d218a587032ecf1205a31fa1fe295c85a",
+    "agent/src/v6/opening-value.ts": "b0855c40ee1b91e5b849c7f70ccb8b28766fcf1712dcc0a5d576fd3aefc063af",
+    "agent/src/v6/potion-entries.ts": "e82033ff4d777a170902d28887b39e90d73ab0d279f4449d2efa2cde877d59c7",
+    "agent/src/v6/predicate.ts": "bc228081102b90afc653df245db7e3e5a67b6f7283e5a68a6dcbee2240b23afe",
+    "agent/src/v6/projection-consumer.ts": "6a7f6e56e070d1a5154e84b9e3a707a1fc5c9ff01d9b4102aa7444e7ef5c80ac",
+    "agent/src/v6/projection-input.ts": "2336c83542b1ef1c1c064a60a9cb1947870d1898e7b6e777455a45b936de5745",
+    "agent/src/v6/projection-runtime.ts": "4e3cdd9e99e34b0fca6ce629977f8ea3d9dd83c24fc155389cf75fcb961a14ed",
+    "agent/src/v6/prompt-projection.ts": "40d51a53b5449797dc74cf315c49490e174067c2add925efc4dc003ded6b1894",
+    "agent/src/v6/prompt-summary.ts": "97d3b431bf66195dce219cf0871a65d1e8837cc6a544efa414c838dfc622e73b",
+    "agent/src/v6/replan-triggers.ts": "4492316f4d482b779e58b6554713278912c5d1475880944b8e0aa4623a738cc0",
+    "agent/src/v6/schema.ts": "279e059f7141780ab6079b06fff344ea7af1e4d5287d2a2f378cf30f879ddbe0",
+    "agent/src/v6/target-values.ts": "d4a2d9f845879bc925b63bbee6f7d611a24d2388c88e4aeaf241edf537a1e48b",
+    "ops/run.sh": "c4db33836b7dd6f1a79c146c53f28ba68f2c5cf03c28e9f33ac75e5b45542594",
+    "ops/autoplay.sh": "d205e1074e9b174cc2354b9a324c45530e450423fbeb0793db226ce1f16dd990",
+    "ops/production-runtime.sh": "8610b19737f79fdeb306e4d04dc0c1c0469a31c21d6eb8734ffd40de6cbb2458",
+    "ops/paths.sh": "9e0f1b4e988f6bbab0188208e48b7aab70e02ec64ce62517e5b48c68e5452d52",
+    "ops/paths.py": "673542903a8652afc623c898bc2a68af2b34278b13abda39b4a74a86b99ecc73",
+    "ops/brain_trial.py": "b337c7cb24e8fff81f87615ef086f9906c68d5a184142434d9085f39b77102b9",
+    "ops/brain_wait.py": "35cb03280d8d156f3ae2d158053abf2d592138f672f5e1e5461948e6d4e06725",
+    "ops/instance_env.py": "9d237034c86617f8d332e54a54702e171bfbc281d0809a35c67fb4a09584c3ba",
+    "ops/instance_gate.py": "db419591f1d2795c56ab2592fa8ebc35c67b5412424930a7ccd2c66f78b46662",
+    "ops/regent_lane_env.py": "980b0c7ffe0d31278440f4a0feaf2e6ef75a16ad1cd335efe69c1153daba8499",
+    "ops/autoplay-console.sh": "9b83a08bd667d1d2dbb7ec210fb3050a060b93f022951d0ecb315bf5a834f36a",
+    "ops/autoplay-pane.sh": "d117d178b8878b8e346c36bc568c20c561cd57f3d3740262ee815447489097f4",
+    "ops/autoplay-reload.py": "958ecf8e4139f86545af0d8d8aaf56f6ac89a77d4e34db3be453d2a9f742dbf3",
+    "ops/launch_runtime.py": "b8bc92c66b587e13bde675f226c4cadb380cc17e7ddf07d19adac6e7627aa687",
+    "ops/codex-ops-actions.sh": "f65dced9fdb9a795bef4fe5217c5beeb19433f103d96e18f4669b604c07f6319",
+    "ops/report.py": "45f6fb31205492c3a964b8a299aac68a054407db0909a3b813104505be6ce7dc"
+  },
+  "variables": {
+    "ALLOW_FTUE_MODALS": {
+      "category": "published-policy",
+      "readers": [
+        "agent/src/core/config.ts:1170"
+      ]
+    },
+    "ALL_PROXY": {
+      "category": "runtime-binding-or-host",
+      "readers": [
+        "agent/src/brain/engines/process.ts:host-forwarding"
+      ]
+    },
+    "ARM": {
+      "category": "published-policy",
+      "readers": [
+        "agent/src/eye/run-config.ts:547"
+      ]
+    },
+    "ASC_AMOUNTS": {
+      "category": "published-policy",
+      "readers": [
+        "agent/src/knowledge/monster-db.ts:389"
+      ]
+    },
+    "AUTOPLAY_ACTIVE": {
+      "category": "runtime-binding-or-host",
+      "readers": [
+        "ops/autoplay.sh:26",
+        "ops/autoplay.sh:46"
+      ]
+    },
+    "AUTOPLAY_READY": {
+      "category": "runtime-binding-or-host",
+      "readers": [
+        "ops/autoplay.sh:24",
+        "ops/autoplay.sh:36"
+      ]
+    },
+    "AUTOPLAY_RELEASE": {
+      "category": "runtime-binding-or-host",
+      "readers": [
+        "ops/autoplay.sh:26",
+        "ops/autoplay.sh:38",
+        "ops/autoplay.sh:39"
+      ]
+    },
+    "AUTOPLAY_RELOAD_OLD": {
+      "category": "runtime-binding-or-host",
+      "readers": [
+        "ops/autoplay.sh:27",
+        "ops/autoplay.sh:31",
+        "ops/autoplay.sh:32",
+        "ops/autoplay.sh:41"
+      ]
+    },
+    "AUTOPLAY_RELOAD_OLD_START": {
+      "category": "runtime-binding-or-host",
+      "readers": [
+        "ops/autoplay.sh:28",
+        "ops/autoplay.sh:34"
+      ]
+    },
+    "AUTOPLAY_RELOAD_PARENT": {
+      "category": "runtime-binding-or-host",
+      "readers": [
+        "ops/autoplay.sh:27",
+        "ops/autoplay.sh:39"
+      ]
+    },
+    "BASH_REMATCH": {
+      "category": "script-derived-path",
+      "readers": [
+        "ops/autoplay-pane.sh:29",
+        "ops/codex-ops-actions.sh:143"
+      ]
+    },
+    "BASH_SOURCE": {
+      "category": "script-derived-path",
+      "readers": [
+        "ops/paths.sh:3"
+      ]
+    },
+    "BOSS_SIM_BUILD": {
+      "category": "published-policy",
+      "readers": [
+        "agent/src/core/config.ts:1259"
+      ]
+    },
+    "BOSS_SIM_LINES": {
+      "category": "published-policy",
+      "readers": [
+        "agent/src/sim/boss-lines.ts:136"
+      ]
+    },
+    "BOSS_SIM_LOW_TRUST": {
+      "category": "published-policy",
+      "readers": [
+        "agent/src/sim/boss-lines.ts:137"
+      ]
+    },
+    "BOSS_SIM_WORKERS": {
+      "category": "published-policy",
+      "readers": [
+        "agent/src/sim/boss-lines.ts:109"
+      ]
+    },
+    "BRAIN_AGENT_CODEX_ANSWER_MS": {
+      "category": "published-policy",
+      "readers": [
+        "agent/src/core/config.ts:911"
+      ]
+    },
+    "BRAIN_AGENT_CODEX_TOTAL_MS": {
+      "category": "published-policy",
+      "readers": [
+        "agent/src/core/config.ts:909"
+      ]
+    },
+    "BRAIN_AGENT_DEEPSEEK_ANSWER_MS": {
+      "category": "published-policy",
+      "readers": [
+        "agent/src/core/config.ts:912"
+      ]
+    },
+    "BRAIN_AGENT_DEEPSEEK_TOTAL_MS": {
+      "category": "published-policy",
+      "readers": [
+        "agent/src/core/config.ts:910"
+      ]
+    },
+    "BRAIN_CLAUDE_BIN": {
+      "category": "published-policy",
+      "readers": [
+        "agent/src/core/config.ts:763"
+      ]
+    },
+    "BRAIN_CLAUDE_EFFORT": {
+      "category": "published-policy",
+      "readers": [
+        "agent/src/core/config.ts:dynamic-engine-template"
+      ]
+    },
+    "BRAIN_CLAUDE_MAX_BUDGET_USD": {
+      "category": "published-policy",
+      "readers": [
+        "agent/src/core/config.ts:861"
+      ]
+    },
+    "BRAIN_CLAUDE_MODEL": {
+      "category": "published-policy",
+      "readers": [
+        "agent/src/core/config.ts:dynamic-engine-template"
+      ]
+    },
+    "BRAIN_CLAUDE_REASK": {
+      "category": "published-policy",
+      "readers": [
+        "agent/src/core/config.ts:dynamic-engine-template"
+      ]
+    },
+    "BRAIN_CLAUDE_SCHEMA": {
+      "category": "published-policy",
+      "readers": [
+        "agent/src/core/config.ts:865"
+      ]
+    },
+    "BRAIN_CLAUDE_TIMEOUT_MS": {
+      "category": "published-policy",
+      "readers": [
+        "agent/src/core/config.ts:dynamic-engine-template"
+      ]
+    },
+    "BRAIN_CLAUDE_TOOLS": {
+      "category": "published-policy",
+      "readers": [
+        "agent/src/core/config.ts:dynamic-engine-template"
+      ]
+    },
+    "BRAIN_CODEX_ACCEPT_CUT": {
+      "category": "published-policy",
+      "readers": [
+        "agent/src/core/config.ts:879"
+      ]
+    },
+    "BRAIN_CODEX_BIN": {
+      "category": "published-policy",
+      "readers": [
+        "agent/src/core/config.ts:784"
+      ]
+    },
+    "BRAIN_CODEX_EFFORT": {
+      "category": "published-policy",
+      "readers": [
+        "agent/src/core/config.ts:dynamic-engine-template",
+        "ops/run.sh:39"
+      ]
+    },
+    "BRAIN_CODEX_FIRST_TOKEN_MS": {
+      "category": "published-policy",
+      "readers": [
+        "agent/src/core/config.ts:887"
+      ]
+    },
+    "BRAIN_CODEX_HOME": {
+      "category": "credential-or-account-reference",
+      "readers": [
+        "agent/src/brain/engines/codex-credit-policy.ts:15",
+        "agent/src/core/config.ts:801",
+        "ops/run.sh:35"
+      ]
+    },
+    "BRAIN_CODEX_MAX_ANSWER_BLANKS": {
+      "category": "published-policy",
+      "readers": [
+        "agent/src/core/config.ts:874"
+      ]
+    },
+    "BRAIN_CODEX_MAX_ANSWER_CHARS": {
+      "category": "published-policy",
+      "readers": [
+        "agent/src/core/config.ts:872"
+      ]
+    },
+    "BRAIN_CODEX_MAX_FIELD_CHARS": {
+      "category": "published-policy",
+      "readers": [
+        "agent/src/core/config.ts:883"
+      ]
+    },
+    "BRAIN_CODEX_MODE": {
+      "category": "published-policy",
+      "readers": [
+        "agent/src/core/config.ts:885"
+      ]
+    },
+    "BRAIN_CODEX_MODEL": {
+      "category": "published-policy",
+      "readers": [
+        "agent/src/core/config.ts:dynamic-engine-template"
+      ]
+    },
+    "BRAIN_CODEX_PAID_CREDITS": {
+      "category": "generated-or-separately-authorized",
+      "readers": [
+        "agent/src/brain/engines/codex-credit-policy.ts:11"
+      ]
+    },
+    "BRAIN_CODEX_REASK": {
+      "category": "published-policy",
+      "readers": [
+        "agent/src/core/config.ts:dynamic-engine-template"
+      ]
+    },
+    "BRAIN_CODEX_REASON_LAST": {
+      "category": "published-policy",
+      "readers": [
+        "agent/src/core/config.ts:878"
+      ]
+    },
+    "BRAIN_CODEX_ROUTE_PATTERN": {
+      "category": "published-policy",
+      "readers": [
+        "agent/src/core/config.ts:880"
+      ]
+    },
+    "BRAIN_CODEX_ROUTE_REASON": {
+      "category": "published-policy",
+      "readers": [
+        "agent/src/core/config.ts:881"
+      ]
+    },
+    "BRAIN_CODEX_SCHEMA_FIELDS": {
+      "category": "published-policy",
+      "readers": [
+        "agent/src/core/config.ts:876"
+      ]
+    },
+    "BRAIN_CODEX_STALL_MS": {
+      "category": "published-policy",
+      "readers": [
+        "agent/src/core/config.ts:870"
+      ]
+    },
+    "BRAIN_CODEX_STALL_RETRIES": {
+      "category": "published-policy",
+      "readers": [
+        "agent/src/core/config.ts:889"
+      ]
+    },
+    "BRAIN_CODEX_SUMMARY": {
+      "category": "published-policy",
+      "readers": [
+        "agent/src/core/config.ts:868"
+      ]
+    },
+    "BRAIN_CODEX_TIMEOUT_MS": {
+      "category": "published-policy",
+      "readers": [
+        "agent/src/core/config.ts:dynamic-engine-template"
+      ]
+    },
+    "BRAIN_CODEX_TOOLS": {
+      "category": "published-policy",
+      "readers": [
+        "agent/src/core/config.ts:dynamic-engine-template"
+      ]
+    },
+    "BRAIN_CODEX_USAGE_EVERY_CALLS": {
+      "category": "published-policy",
+      "readers": [
+        "agent/src/core/config.ts:897"
+      ]
+    },
+    "BRAIN_CODEX_USAGE_EVERY_MIN": {
+      "category": "published-policy",
+      "readers": [
+        "agent/src/core/config.ts:898"
+      ]
+    },
+    "BRAIN_CODEX_USAGE_REQUIRED": {
+      "category": "published-policy",
+      "readers": [
+        "agent/src/core/config.ts:899"
+      ]
+    },
+    "BRAIN_CODEX_USAGE_STOP_PCT": {
+      "category": "published-policy",
+      "readers": [
+        "agent/src/core/config.ts:896"
+      ]
+    },
+    "BRAIN_DEEPSEEK_EFFORT": {
+      "category": "published-policy",
+      "readers": [
+        "agent/src/core/config.ts:dynamic-engine-template",
+        "ops/run.sh:40"
+      ]
+    },
+    "BRAIN_DEEPSEEK_MODEL": {
+      "category": "published-policy",
+      "readers": [
+        "agent/src/core/config.ts:dynamic-engine-template"
+      ]
+    },
+    "BRAIN_DEEPSEEK_REASK": {
+      "category": "published-policy",
+      "readers": [
+        "agent/src/core/config.ts:dynamic-engine-template"
+      ]
+    },
+    "BRAIN_DEEPSEEK_TIMEOUT_MS": {
+      "category": "published-policy",
+      "readers": [
+        "agent/src/core/config.ts:dynamic-engine-template"
+      ]
+    },
+    "BRAIN_DEEPSEEK_TOOLS": {
+      "category": "published-policy",
+      "readers": [
+        "agent/src/core/config.ts:dynamic-engine-template"
+      ]
+    },
+    "BRAIN_DSH_BIN": {
+      "category": "published-policy",
+      "readers": [
+        "agent/src/core/config.ts:918"
+      ]
+    },
+    "BRAIN_DSH_EFFORT": {
+      "category": "published-policy",
+      "readers": [
+        "agent/src/core/config.ts:dynamic-engine-template"
+      ]
+    },
+    "BRAIN_DSH_MODEL": {
+      "category": "published-policy",
+      "readers": [
+        "agent/src/core/config.ts:dynamic-engine-template"
+      ]
+    },
+    "BRAIN_DSH_REASK": {
+      "category": "published-policy",
+      "readers": [
+        "agent/src/core/config.ts:dynamic-engine-template"
+      ]
+    },
+    "BRAIN_DSH_STALL_MS": {
+      "category": "published-policy",
+      "readers": [
+        "agent/src/core/config.ts:918"
+      ]
+    },
+    "BRAIN_DSH_TIMEOUT_MS": {
+      "category": "published-policy",
+      "readers": [
+        "agent/src/core/config.ts:dynamic-engine-template"
+      ]
+    },
+    "BRAIN_DSH_TOOLS": {
+      "category": "published-policy",
+      "readers": [
+        "agent/src/core/config.ts:dynamic-engine-template"
+      ]
+    },
+    "BRAIN_ENGINE": {
+      "category": "published-policy",
+      "readers": [
+        "agent/src/core/config.ts:817",
+        "agent/src/core/config.ts:917",
+        "ops/run.sh:40"
+      ]
+    },
+    "BRAIN_FALLBACK": {
+      "category": "published-policy",
+      "readers": [
+        "agent/src/core/config.ts:826"
+      ]
+    },
+    "BRAIN_LOG": {
+      "category": "published-policy",
+      "readers": [
+        "agent/src/core/config.ts:864"
+      ]
+    },
+    "BRAIN_MAX_TOOL_CALLS": {
+      "category": "published-policy",
+      "readers": [
+        "agent/src/core/config.ts:908"
+      ]
+    },
+    "BRAIN_REASK": {
+      "category": "published-policy",
+      "readers": [
+        "agent/src/core/config.ts:923"
+      ]
+    },
+    "BRAIN_RUN_CONFIG": {
+      "category": "published-policy",
+      "readers": [
+        "agent/src/core/config.ts:858"
+      ]
+    },
+    "BRAIN_TOOLS": {
+      "category": "published-policy",
+      "readers": [
+        "agent/src/core/config.ts:924"
+      ]
+    },
+    "BRAIN_TRIAL_SCHEDULE": {
+      "category": "generated-or-separately-authorized",
+      "readers": [
+        "ops/run.sh:43",
+        "ops/run.sh:44"
+      ]
+    },
+    "BUILD_DECIDER": {
+      "category": "published-policy",
+      "readers": [
+        "agent/src/core/config.ts:1249"
+      ]
+    },
+    "BUILD_ONESHOT": {
+      "category": "published-policy",
+      "readers": [
+        "agent/src/core/config.ts:1254"
+      ]
+    },
+    "CACHE_AGENT_TREE": {
+      "category": "script-derived-path",
+      "readers": [
+        "ops/codex-ops-actions.sh:104"
+      ]
+    },
+    "CACHE_RUNNER": {
+      "category": "script-derived-path",
+      "readers": [
+        "ops/codex-ops-actions.sh:103",
+        "ops/codex-ops-actions.sh:107"
+      ]
+    },
+    "CACHE_RUNNER_SHA": {
+      "category": "script-derived-path",
+      "readers": [
+        "ops/codex-ops-actions.sh:103"
+      ]
+    },
+    "CACHE_WORKTREE": {
+      "category": "script-derived-path",
+      "readers": [
+        "ops/codex-ops-actions.sh:100",
+        "ops/codex-ops-actions.sh:104",
+        "ops/codex-ops-actions.sh:105",
+        "ops/codex-ops-actions.sh:106",
+        "ops/codex-ops-actions.sh:107",
+        "ops/codex-ops-actions.sh:99"
+      ]
+    },
+    "CARD_CONDITIONS": {
+      "category": "published-policy",
+      "readers": [
+        "agent/src/core/config.ts:1300",
+        "agent/src/reflex/card-model.ts:368"
+      ]
+    },
+    "CHARACTER": {
+      "category": "published-policy",
+      "readers": [
+        "agent/src/core/config.ts:1158",
+        "agent/src/core/config.ts:900",
+        "agent/src/knowledge/files.ts:57"
+      ]
+    },
+    "CLAUDE_CONFIG_DIR": {
+      "category": "credential-or-account-reference",
+      "readers": [
+        "agent/src/brain/engines/process.ts:host-forwarding"
+      ]
+    },
+    "CLAUDE_ESCALATION_DIR": {
+      "category": "published-policy",
+      "readers": [
+        "agent/src/core/config.ts:1216"
+      ]
+    },
+    "CLAUDE_ESCALATION_TIMEOUT_MS": {
+      "category": "published-policy",
+      "readers": [
+        "agent/src/core/config.ts:1217"
+      ]
+    },
+    "CLAUDE_MAX_CALLS": {
+      "category": "published-policy",
+      "readers": [
+        "agent/src/core/config.ts:1218"
+      ]
+    },
+    "CODEX_HOME": {
+      "category": "credential-or-account-reference",
+      "readers": [
+        "agent/src/brain/engines/process.ts:host-forwarding",
+        "agent/src/core/config.ts:801"
+      ]
+    },
+    "CODEX_OPS_DIR": {
+      "category": "runtime-binding-or-host",
+      "readers": [
+        "ops/autoplay-pane.sh:6",
+        "ops/codex-ops-actions.sh:30",
+        "ops/report.py:466"
+      ]
+    },
+    "CODEX_OPS_MOD_URL": {
+      "category": "runtime-binding-or-host",
+      "readers": [
+        "ops/codex-ops-actions.sh:32"
+      ]
+    },
+    "CODEX_OPS_ROOT": {
+      "category": "runtime-binding-or-host",
+      "readers": [
+        "ops/autoplay-pane.sh:5",
+        "ops/codex-ops-actions.sh:29"
+      ]
+    },
+    "COMBAT_DEEPSEEK": {
+      "category": "published-policy",
+      "readers": [
+        "agent/src/core/config.ts:1264"
+      ]
+    },
+    "COMBAT_PLANNER": {
+      "category": "published-policy",
+      "readers": [
+        "agent/src/core/config.ts:1221"
+      ]
+    },
+    "CONFIDENCE_ACT": {
+      "category": "published-policy",
+      "readers": [
+        "agent/src/core/config.ts:1356"
+      ]
+    },
+    "CONFIDENCE_STRONG": {
+      "category": "published-policy",
+      "readers": [
+        "agent/src/core/config.ts:1358"
+      ]
+    },
+    "CONSOLE": {
+      "category": "script-derived-path",
+      "readers": [
+        "ops/autoplay.sh:88"
+      ]
+    },
+    "CONSTRUCTION_EVALUATION": {
+      "category": "published-policy",
+      "readers": [
+        "agent/src/construction/consumer.ts:9"
+      ]
+    },
+    "CONSTRUCTION_MODE": {
+      "category": "published-policy",
+      "readers": [
+        "agent/src/construction/adapter.ts:19",
+        "agent/src/construction/consumer.ts:9"
+      ]
+    },
+    "DECISION_LOG": {
+      "category": "published-policy",
+      "readers": [
+        "agent/src/core/config.ts:1302"
+      ]
+    },
+    "DEEPSEEK_API_KEY": {
+      "category": "credential-or-account-reference",
+      "readers": [
+        "agent/src/core/config.ts:1179"
+      ]
+    },
+    "DEEPSEEK_API_KEY_FILE": {
+      "category": "credential-or-account-reference",
+      "readers": [
+        "agent/src/core/config.ts:1180"
+      ]
+    },
+    "DEEPSEEK_BASE_URL": {
+      "category": "published-policy",
+      "readers": [
+        "agent/src/core/config.ts:1191"
+      ]
+    },
+    "DEEPSEEK_COMBAT_REASONING_EFFORT": {
+      "category": "published-policy",
+      "readers": [
+        "agent/src/core/config.ts:1201"
+      ]
+    },
+    "DEEPSEEK_EFFORT_BY_LABEL": {
+      "category": "published-policy",
+      "readers": [
+        "agent/src/core/config.ts:1203"
+      ]
+    },
+    "DEEPSEEK_FACTS_SNAPSHOT_DIR": {
+      "category": "published-policy",
+      "readers": [
+        "agent/src/core/config.ts:1206"
+      ]
+    },
+    "DEEPSEEK_GUIDE_FILE": {
+      "category": "published-policy",
+      "readers": [
+        "agent/src/core/config.ts:1198"
+      ]
+    },
+    "DEEPSEEK_HANDBOOK_FILE": {
+      "category": "published-policy",
+      "readers": [
+        "agent/src/core/config.ts:1199"
+      ]
+    },
+    "DEEPSEEK_MAX_CALLS": {
+      "category": "published-policy",
+      "readers": [
+        "agent/src/core/config.ts:1195"
+      ]
+    },
+    "DEEPSEEK_MODEL": {
+      "category": "published-policy",
+      "readers": [
+        "agent/src/core/config.ts:1192"
+      ]
+    },
+    "DEEPSEEK_REASONING_EFFORT": {
+      "category": "published-policy",
+      "readers": [
+        "agent/src/core/config.ts:1200"
+      ]
+    },
+    "DEEPSEEK_REASONING_LOG": {
+      "category": "published-policy",
+      "readers": [
+        "agent/src/core/config.ts:1204"
+      ]
+    },
+    "DEEPSEEK_TIMEOUT_MS": {
+      "category": "published-policy",
+      "readers": [
+        "agent/src/core/config.ts:1196"
+      ]
+    },
+    "DIR": {
+      "category": "script-derived-path",
+      "readers": [
+        "ops/autoplay-pane.sh:11",
+        "ops/autoplay-pane.sh:14",
+        "ops/autoplay-pane.sh:24",
+        "ops/autoplay-pane.sh:9",
+        "ops/codex-ops-actions.sh:110",
+        "ops/codex-ops-actions.sh:112",
+        "ops/codex-ops-actions.sh:113",
+        "ops/codex-ops-actions.sh:128",
+        "ops/codex-ops-actions.sh:129",
+        "ops/codex-ops-actions.sh:138",
+        "ops/codex-ops-actions.sh:153",
+        "ops/codex-ops-actions.sh:167",
+        "ops/codex-ops-actions.sh:170",
+        "ops/codex-ops-actions.sh:176",
+        "ops/codex-ops-actions.sh:40",
+        "ops/codex-ops-actions.sh:45",
+        "ops/codex-ops-actions.sh:61",
+        "ops/codex-ops-actions.sh:64"
+      ]
+    },
+    "ENRICHER_API_KEY": {
+      "category": "credential-or-account-reference",
+      "readers": [
+        "agent/src/core/config.ts:1385"
+      ]
+    },
+    "ENRICHER_BASE_URL": {
+      "category": "published-policy",
+      "readers": [
+        "agent/src/core/config.ts:1381"
+      ]
+    },
+    "ENRICHER_ENABLED": {
+      "category": "published-policy",
+      "readers": [
+        "agent/src/core/config.ts:1377"
+      ]
+    },
+    "ENRICHER_MODEL": {
+      "category": "published-policy",
+      "readers": [
+        "agent/src/core/config.ts:1386"
+      ]
+    },
+    "ENRICHER_TASKS": {
+      "category": "published-policy",
+      "readers": [
+        "agent/src/core/config.ts:1387"
+      ]
+    },
+    "ESCALATION_CHAIN": {
+      "category": "published-policy",
+      "readers": [
+        "agent/src/core/config.ts:1210"
+      ]
+    },
+    "FIGHT_PLAN": {
+      "category": "published-policy",
+      "readers": [
+        "agent/src/core/config.ts:1233"
+      ]
+    },
+    "FIGHT_PLAN_LOG": {
+      "category": "published-policy",
+      "readers": [
+        "agent/src/core/config.ts:1238"
+      ]
+    },
+    "FORCE_COLOR": {
+      "category": "runtime-binding-or-host",
+      "readers": [
+        "agent/src/core/util/format.ts:5"
+      ]
+    },
+    "GAME_DATA_DIR": {
+      "category": "published-policy",
+      "readers": [
+        "agent/src/knowledge/index.ts:264"
+      ]
+    },
+    "GLOBAL_BUILD_EVAL": {
+      "category": "published-policy",
+      "readers": [
+        "agent/src/core/global-build-config.ts:8"
+      ]
+    },
+    "HERDR_BIN": {
+      "category": "runtime-binding-or-host",
+      "readers": [
+        "ops/autoplay-pane.sh:7"
+      ]
+    },
+    "HOME": {
+      "category": "runtime-binding-or-host",
+      "readers": [
+        "agent/src/brain/engines/dsh.ts:host-forwarding",
+        "agent/src/brain/engines/process.ts:host-forwarding",
+        "agent/src/brain/tools/logs-query.ts:98",
+        "agent/src/core/config.ts:1136",
+        "agent/src/core/config.ts:1183",
+        "agent/src/core/config.ts:770",
+        "agent/src/core/config.ts:791",
+        "agent/src/core/config.ts:801",
+        "agent/src/eye/run-config.ts:304",
+        "ops/autoplay-pane.sh:7",
+        "ops/codex-ops-actions.sh:31",
+        "ops/run.sh:47"
+      ]
+    },
+    "HTTPS_PROXY": {
+      "category": "runtime-binding-or-host",
+      "readers": [
+        "agent/src/brain/engines/process.ts:host-forwarding"
+      ]
+    },
+    "HTTP_PROXY": {
+      "category": "runtime-binding-or-host",
+      "readers": [
+        "agent/src/brain/engines/process.ts:host-forwarding"
+      ]
+    },
+    "HUMAN_PACE_H2": {
+      "category": "published-policy",
+      "readers": [
+        "agent/src/core/human-pace-shadow-config.ts:3"
+      ]
+    },
+    "JEV_CONTEXT": {
+      "category": "published-policy",
+      "readers": [
+        "agent/src/core/config.ts:1227"
+      ]
+    },
+    "JEV_MODEL": {
+      "category": "published-policy",
+      "readers": [
+        "agent/src/core/config.ts:1145"
+      ]
+    },
+    "JEV_PROMPT_LOG": {
+      "category": "published-policy",
+      "readers": [
+        "agent/src/core/config.ts:1448"
+      ]
+    },
+    "JEV_SHARED_ENV_FILE": {
+      "category": "credential-or-account-reference",
+      "readers": [
+        "agent/src/core/config.ts:1105",
+        "agent/src/core/config.ts:1107"
+      ]
+    },
+    "KNOWLEDGE_LESSONS_FILE": {
+      "category": "published-policy",
+      "readers": [
+        "agent/src/knowledge/render/data.ts:268"
+      ]
+    },
+    "KNOWLEDGE_PREFIX": {
+      "category": "published-policy",
+      "readers": [
+        "agent/src/core/config.ts:903"
+      ]
+    },
+    "LANG": {
+      "category": "runtime-binding-or-host",
+      "readers": [
+        "agent/src/brain/engines/dsh.ts:host-forwarding",
+        "agent/src/brain/engines/process.ts:host-forwarding"
+      ]
+    },
+    "LANGUAGE": {
+      "category": "runtime-binding-or-host",
+      "readers": [
+        "agent/src/brain/engines/process.ts:host-forwarding"
+      ]
+    },
+    "LC_ALL": {
+      "category": "runtime-binding-or-host",
+      "readers": [
+        "agent/src/brain/engines/dsh.ts:host-forwarding"
+      ]
+    },
+    "LEARNER_CODEX_HOME": {
+      "category": "credential-or-account-reference",
+      "readers": [
+        "ops/report.py:569"
+      ]
+    },
+    "LIVE": {
+      "category": "script-derived-path",
+      "readers": [
+        "ops/autoplay-pane.sh:20",
+        "ops/codex-ops-actions.sh:131",
+        "ops/codex-ops-actions.sh:148",
+        "ops/codex-ops-actions.sh:157",
+        "ops/codex-ops-actions.sh:167",
+        "ops/codex-ops-actions.sh:171",
+        "ops/codex-ops-actions.sh:173",
+        "ops/codex-ops-actions.sh:185",
+        "ops/codex-ops-actions.sh:54",
+        "ops/codex-ops-actions.sh:57",
+        "ops/paths.sh:10",
+        "ops/paths.sh:16",
+        "ops/run.sh:2",
+        "ops/run.sh:20",
+        "ops/run.sh:34"
+      ]
+    },
+    "LOGDB_DIR": {
+      "category": "published-policy",
+      "readers": [
+        "agent/src/brain/tools/logs-query.ts:62"
+      ]
+    },
+    "LOGDB_PYTHON": {
+      "category": "published-policy",
+      "readers": [
+        "agent/src/brain/tools/logs-query.ts:60"
+      ]
+    },
+    "LOGNAME": {
+      "category": "runtime-binding-or-host",
+      "readers": [
+        "agent/src/brain/engines/process.ts:host-forwarding"
+      ]
+    },
+    "LOGS": {
+      "category": "script-derived-path",
+      "readers": [
+        "ops/autoplay-console.sh:4",
+        "ops/autoplay-console.sh:7",
+        "ops/autoplay.sh:50",
+        "ops/autoplay.sh:51",
+        "ops/autoplay.sh:64",
+        "ops/autoplay.sh:80",
+        "ops/autoplay.sh:87",
+        "ops/run.sh:44",
+        "ops/run.sh:50",
+        "ops/run.sh:51",
+        "ops/run.sh:58",
+        "ops/run.sh:60"
+      ]
+    },
+    "LOG_LEVEL": {
+      "category": "published-policy",
+      "readers": [
+        "agent/src/core/config.ts:1350"
+      ]
+    },
+    "MAX_MIN": {
+      "category": "published-policy",
+      "readers": [
+        "ops/run.sh:110"
+      ]
+    },
+    "MAX_REQUESTS": {
+      "category": "published-policy",
+      "readers": [
+        "agent/src/core/config.ts:1369"
+      ]
+    },
+    "MAX_TOKENS": {
+      "category": "published-policy",
+      "readers": [
+        "agent/src/core/config.ts:1374"
+      ]
+    },
+    "MECH_DEATH_MOVE": {
+      "category": "published-policy",
+      "readers": [
+        "agent/src/core/config.ts:1288",
+        "agent/src/sim/boss-start.ts:451"
+      ]
+    },
+    "MECH_MOVE_RULES": {
+      "category": "published-policy",
+      "readers": [
+        "agent/src/core/config.ts:1284",
+        "agent/src/sim/boss-start.ts:445"
+      ]
+    },
+    "MECH_RULES": {
+      "category": "published-policy",
+      "readers": [
+        "agent/src/core/config.ts:1280",
+        "agent/src/sim/boss-start.ts:445",
+        "agent/src/sim/boss-start.ts:451"
+      ]
+    },
+    "MOD": {
+      "category": "script-derived-path",
+      "readers": [
+        "ops/codex-ops-actions.sh:119",
+        "ops/codex-ops-actions.sh:121",
+        "ops/codex-ops-actions.sh:205"
+      ]
+    },
+    "MODE": {
+      "category": "published-policy",
+      "readers": [
+        "agent/src/core/config.ts:1147"
+      ]
+    },
+    "NODE_EXTRA_CA_CERTS": {
+      "category": "runtime-binding-or-host",
+      "readers": [
+        "agent/src/brain/engines/process.ts:host-forwarding"
+      ]
+    },
+    "NOTES": {
+      "category": "script-derived-path",
+      "readers": [
+        "ops/autoplay.sh:53",
+        "ops/autoplay.sh:91"
+      ]
+    },
+    "NO_COLOR": {
+      "category": "runtime-binding-or-host",
+      "readers": [
+        "agent/src/core/util/format.ts:4"
+      ]
+    },
+    "NO_PROXY": {
+      "category": "runtime-binding-or-host",
+      "readers": [
+        "agent/src/brain/engines/process.ts:host-forwarding"
+      ]
+    },
+    "OPS": {
+      "category": "script-derived-path",
+      "readers": [
+        "ops/autoplay-console.sh:5",
+        "ops/autoplay-console.sh:7",
+        "ops/autoplay-pane.sh:20",
+        "ops/autoplay-pane.sh:24",
+        "ops/autoplay-pane.sh:30",
+        "ops/autoplay-pane.sh:38",
+        "ops/autoplay.sh:107",
+        "ops/autoplay.sh:113",
+        "ops/autoplay.sh:20",
+        "ops/autoplay.sh:55",
+        "ops/autoplay.sh:57",
+        "ops/autoplay.sh:64",
+        "ops/autoplay.sh:69",
+        "ops/autoplay.sh:71",
+        "ops/autoplay.sh:78",
+        "ops/autoplay.sh:80",
+        "ops/autoplay.sh:87",
+        "ops/autoplay.sh:91",
+        "ops/autoplay.sh:94",
+        "ops/autoplay.sh:97",
+        "ops/autoplay.sh:98",
+        "ops/autoplay.sh:99",
+        "ops/codex-ops-actions.sh:112",
+        "ops/codex-ops-actions.sh:113",
+        "ops/codex-ops-actions.sh:119",
+        "ops/codex-ops-actions.sh:125",
+        "ops/codex-ops-actions.sh:131",
+        "ops/codex-ops-actions.sh:142",
+        "ops/codex-ops-actions.sh:148",
+        "ops/codex-ops-actions.sh:167",
+        "ops/codex-ops-actions.sh:171",
+        "ops/codex-ops-actions.sh:173",
+        "ops/codex-ops-actions.sh:185",
+        "ops/codex-ops-actions.sh:207",
+        "ops/codex-ops-actions.sh:238",
+        "ops/codex-ops-actions.sh:240",
+        "ops/codex-ops-actions.sh:242",
+        "ops/codex-ops-actions.sh:245",
+        "ops/codex-ops-actions.sh:250",
+        "ops/codex-ops-actions.sh:253",
+        "ops/codex-ops-actions.sh:255",
+        "ops/codex-ops-actions.sh:258",
+        "ops/codex-ops-actions.sh:283",
+        "ops/codex-ops-actions.sh:285",
+        "ops/codex-ops-actions.sh:39",
+        "ops/codex-ops-actions.sh:40",
+        "ops/codex-ops-actions.sh:54",
+        "ops/codex-ops-actions.sh:57",
+        "ops/codex-ops-actions.sh:71",
+        "ops/codex-ops-actions.sh:74",
+        "ops/codex-ops-actions.sh:77",
+        "ops/codex-ops-actions.sh:80",
+        "ops/codex-ops-actions.sh:83",
+        "ops/codex-ops-actions.sh:86",
+        "ops/codex-ops-actions.sh:89",
+        "ops/codex-ops-actions.sh:92",
+        "ops/paths.sh:11",
+        "ops/paths.sh:14",
+        "ops/paths.sh:21",
+        "ops/paths.sh:4",
+        "ops/run.sh:12",
+        "ops/run.sh:13",
+        "ops/run.sh:44",
+        "ops/run.sh:54",
+        "ops/run.sh:74"
+      ]
+    },
+    "PASSIVE_PIECES": {
+      "category": "published-policy",
+      "readers": [
+        "agent/src/core/config.ts:1292",
+        "agent/src/reflex/passive-pieces.ts:88"
+      ]
+    },
+    "PATH": {
+      "category": "runtime-binding-or-host",
+      "readers": [
+        "agent/src/brain/engines/dsh.ts:host-forwarding",
+        "agent/src/brain/engines/process.ts:host-forwarding",
+        "agent/src/brain/tools/logs-query.ts:97",
+        "agent/src/core/config.ts:765",
+        "agent/src/core/config.ts:786",
+        "agent/src/eye/run-config.ts:304",
+        "ops/codex-ops-actions.sh:31",
+        "ops/run.sh:47"
+      ]
+    },
+    "POTION_COST": {
+      "category": "published-policy",
+      "readers": [
+        "agent/src/reflex/potion-cost.ts:25"
+      ]
+    },
+    "ROLLOUT_FACTS": {
+      "category": "published-policy",
+      "readers": [
+        "agent/src/reflex/rollout-live.ts:90"
+      ]
+    },
+    "ROOT": {
+      "category": "script-derived-path",
+      "readers": [
+        "ops/autoplay-pane.sh:19",
+        "ops/autoplay-pane.sh:20",
+        "ops/autoplay-pane.sh:22",
+        "ops/autoplay-pane.sh:5",
+        "ops/autoplay-pane.sh:6",
+        "ops/autoplay.sh:69",
+        "ops/autoplay.sh:97",
+        "ops/autoplay.sh:98",
+        "ops/codex-ops-actions.sh:111",
+        "ops/codex-ops-actions.sh:116",
+        "ops/codex-ops-actions.sh:131",
+        "ops/codex-ops-actions.sh:137",
+        "ops/codex-ops-actions.sh:147",
+        "ops/codex-ops-actions.sh:148",
+        "ops/codex-ops-actions.sh:150",
+        "ops/codex-ops-actions.sh:167",
+        "ops/codex-ops-actions.sh:171",
+        "ops/codex-ops-actions.sh:173",
+        "ops/codex-ops-actions.sh:179",
+        "ops/codex-ops-actions.sh:185",
+        "ops/codex-ops-actions.sh:247",
+        "ops/codex-ops-actions.sh:264",
+        "ops/codex-ops-actions.sh:266",
+        "ops/codex-ops-actions.sh:272",
+        "ops/codex-ops-actions.sh:29",
+        "ops/codex-ops-actions.sh:30",
+        "ops/codex-ops-actions.sh:39",
+        "ops/codex-ops-actions.sh:40",
+        "ops/codex-ops-actions.sh:54",
+        "ops/codex-ops-actions.sh:57",
+        "ops/codex-ops-actions.sh:95",
+        "ops/codex-ops-actions.sh:98",
+        "ops/paths.sh:12",
+        "ops/paths.sh:20",
+        "ops/paths.sh:21",
+        "ops/paths.sh:5",
+        "ops/paths.sh:6",
+        "ops/paths.sh:7",
+        "ops/paths.sh:8",
+        "ops/paths.sh:9",
+        "ops/production-runtime.sh:8",
+        "ops/run.sh:16",
+        "ops/run.sh:21",
+        "ops/run.sh:23",
+        "ops/run.sh:24",
+        "ops/run.sh:3",
+        "ops/run.sh:33",
+        "ops/run.sh:34",
+        "ops/run.sh:35",
+        "ops/run.sh:4",
+        "ops/run.sh:74"
+      ]
+    },
+    "RUNS": {
+      "category": "script-derived-path",
+      "readers": [
+        "ops/autoplay.sh:93"
+      ]
+    },
+    "RUN_CONFIG_LOG": {
+      "category": "published-policy",
+      "readers": [
+        "agent/src/core/config.ts:1448"
+      ]
+    },
+    "RUN_PLAN": {
+      "category": "published-policy",
+      "readers": [
+        "agent/src/core/config.ts:1239"
+      ]
+    },
+    "RUN_PLAN_LOG": {
+      "category": "published-policy",
+      "readers": [
+        "agent/src/core/config.ts:1244"
+      ]
+    },
+    "RUN_PLAN_MERGE": {
+      "category": "published-policy",
+      "readers": [
+        "agent/src/core/config.ts:1247"
+      ]
+    },
+    "RUN_START": {
+      "category": "published-policy",
+      "readers": [
+        "agent/src/core/config.ts:1153"
+      ]
+    },
+    "SANDPIT_START": {
+      "category": "published-policy",
+      "readers": [
+        "agent/src/core/config.ts:1296",
+        "agent/src/reflex/rollout-live.ts:95"
+      ]
+    },
+    "SHELL": {
+      "category": "runtime-binding-or-host",
+      "readers": [
+        "agent/src/brain/engines/process.ts:host-forwarding"
+      ]
+    },
+    "SHOP_DISCARD_POTIONS": {
+      "category": "published-policy",
+      "readers": [
+        "agent/src/core/config.ts:1165"
+      ]
+    },
+    "SIM_ADAPTIVE": {
+      "category": "published-policy",
+      "readers": [
+        "agent/src/core/config.ts:56"
+      ]
+    },
+    "SIM_FAILURE_EXIT": {
+      "category": "published-policy",
+      "readers": [
+        "agent/src/core/config.ts:47"
+      ]
+    },
+    "SIM_FAILURE_RETRIES": {
+      "category": "published-policy",
+      "readers": [
+        "agent/src/core/config.ts:46"
+      ]
+    },
+    "SL_ACT2_LOW_HP": {
+      "category": "published-policy",
+      "readers": [
+        "agent/src/core/config.ts:1310"
+      ]
+    },
+    "SL_ACT2_LOW_HP_PCT": {
+      "category": "published-policy",
+      "readers": [
+        "agent/src/core/config.ts:1311"
+      ]
+    },
+    "SL_ACT3_LOW_HP": {
+      "category": "published-policy",
+      "readers": [
+        "agent/src/core/config.ts:1308"
+      ]
+    },
+    "SL_ACT3_LOW_HP_PCT": {
+      "category": "published-policy",
+      "readers": [
+        "agent/src/core/config.ts:1309"
+      ]
+    },
+    "SL_BOSS_RETRIES": {
+      "category": "published-policy",
+      "readers": [
+        "agent/src/core/config.ts:1306"
+      ]
+    },
+    "SL_ELITE_RETRIES": {
+      "category": "published-policy",
+      "readers": [
+        "agent/src/core/config.ts:1307"
+      ]
+    },
+    "SL_ENABLED": {
+      "category": "published-policy",
+      "readers": [
+        "agent/src/core/config.ts:1305"
+      ]
+    },
+    "SL_JUDGE_ANY_DRAW": {
+      "category": "published-policy",
+      "readers": [
+        "agent/src/core/config.ts:1317"
+      ]
+    },
+    "SL_JUDGE_KNOWN_DRAWS": {
+      "category": "published-policy",
+      "readers": [
+        "agent/src/core/config.ts:1316"
+      ]
+    },
+    "SL_LOG": {
+      "category": "published-policy",
+      "readers": [
+        "agent/src/core/config.ts:1303"
+      ]
+    },
+    "SL_RELOAD_EARLY": {
+      "category": "published-policy",
+      "readers": [
+        "agent/src/core/config.ts:1318"
+      ]
+    },
+    "SL_RELOAD_ON_REVIVE": {
+      "category": "published-policy",
+      "readers": [
+        "agent/src/core/config.ts:1319"
+      ]
+    },
+    "SL_RETRY_COMPUTE": {
+      "category": "published-policy",
+      "readers": [
+        "agent/src/core/config.ts:1315"
+      ]
+    },
+    "SL_RETRY_EXPLORE": {
+      "category": "published-policy",
+      "readers": [
+        "agent/src/core/config.ts:1322"
+      ]
+    },
+    "SL_RETRY_EXPLORE_ANCHOR": {
+      "category": "published-policy",
+      "readers": [
+        "agent/src/core/config.ts:1336"
+      ]
+    },
+    "SL_RETRY_EXPLORE_B2": {
+      "category": "published-policy",
+      "readers": [
+        "agent/src/core/config.ts:1323"
+      ]
+    },
+    "SL_RETRY_EXPLORE_BOSS_POTIONS": {
+      "category": "published-policy",
+      "readers": [
+        "agent/src/core/config.ts:1324"
+      ]
+    },
+    "SL_RETRY_EXPLORE_CANON": {
+      "category": "published-policy",
+      "readers": [
+        "agent/src/core/config.ts:1337"
+      ]
+    },
+    "SL_RETRY_EXPLORE_KEY_COUNTERS": {
+      "category": "published-policy",
+      "readers": [
+        "agent/src/core/config.ts:1329"
+      ]
+    },
+    "SL_RETRY_EXPLORE_ORDER": {
+      "category": "published-policy",
+      "readers": [
+        "agent/src/core/config.ts:1325"
+      ]
+    },
+    "SL_RETRY_EXPLORE_POTION": {
+      "category": "published-policy",
+      "readers": [
+        "agent/src/core/config.ts:1341"
+      ]
+    },
+    "SL_RETRY_EXPLORE_REARM": {
+      "category": "published-policy",
+      "readers": [
+        "agent/src/core/config.ts:1334"
+      ]
+    },
+    "SL_RETRY_EXPLORE_REPLAY": {
+      "category": "published-policy",
+      "readers": [
+        "agent/src/core/config.ts:1326"
+      ]
+    },
+    "SL_RETRY_EXPLORE_REPLAY_CODE": {
+      "category": "published-policy",
+      "readers": [
+        "agent/src/core/config.ts:1332"
+      ]
+    },
+    "SL_RETRY_EXPLORE_REPLAY_DEVIATE": {
+      "category": "published-policy",
+      "readers": [
+        "agent/src/core/config.ts:1328"
+      ]
+    },
+    "SL_RETRY_EXPLORE_REPLAY_ORDER": {
+      "category": "published-policy",
+      "readers": [
+        "agent/src/core/config.ts:1331"
+      ]
+    },
+    "SL_RETRY_EXPLORE_REPLAY_PLAYS": {
+      "category": "published-policy",
+      "readers": [
+        "agent/src/core/config.ts:1327"
+      ]
+    },
+    "SL_RETRY_EXPLORE_SECOND": {
+      "category": "published-policy",
+      "readers": [
+        "agent/src/core/config.ts:1330"
+      ]
+    },
+    "SL_RETRY_EXPLORE_TARGET_TURN": {
+      "category": "published-policy",
+      "readers": [
+        "agent/src/core/config.ts:1333"
+      ]
+    },
+    "SL_RETRY_EXPLORE_TURN": {
+      "category": "published-policy",
+      "readers": [
+        "agent/src/core/config.ts:1338"
+      ]
+    },
+    "SL_RETRY_EXPLORE_WASTED": {
+      "category": "published-policy",
+      "readers": [
+        "agent/src/core/config.ts:1335"
+      ]
+    },
+    "SL_RETRY_EXPLORE_WHERE": {
+      "category": "published-policy",
+      "readers": [
+        "agent/src/core/config.ts:1340"
+      ]
+    },
+    "SL_RETRY_EXPLORE_WHOLE": {
+      "category": "published-policy",
+      "readers": [
+        "agent/src/core/config.ts:1339"
+      ]
+    },
+    "SL_RETRY_KNOWN_DRAWS": {
+      "category": "published-policy",
+      "readers": [
+        "agent/src/core/config.ts:1314"
+      ]
+    },
+    "SL_RETRY_KNOWN_HAND_ORDER": {
+      "category": "published-policy",
+      "readers": [
+        "agent/src/core/config.ts:1344"
+      ]
+    },
+    "SL_RETRY_KNOWN_INSERTS": {
+      "category": "published-policy",
+      "readers": [
+        "agent/src/core/config.ts:1320"
+      ]
+    },
+    "SL_RETRY_KNOWN_OFF_TOP": {
+      "category": "published-policy",
+      "readers": [
+        "agent/src/core/config.ts:1343"
+      ]
+    },
+    "SL_RETRY_KNOWN_PICKS": {
+      "category": "published-policy",
+      "readers": [
+        "agent/src/core/config.ts:1342"
+      ]
+    },
+    "SL_RETRY_KNOWN_TOP": {
+      "category": "published-policy",
+      "readers": [
+        "agent/src/core/config.ts:1321"
+      ]
+    },
+    "SL_RETRY_MEMO": {
+      "category": "published-policy",
+      "readers": [
+        "agent/src/core/config.ts:1313",
+        "agent/src/sim/compute-memo.ts:48"
+      ]
+    },
+    "SL_RETRY_SHOW_SIM": {
+      "category": "published-policy",
+      "readers": [
+        "agent/src/core/config.ts:1312"
+      ]
+    },
+    "SL_STEP_TIMEOUT_MS": {
+      "category": "published-policy",
+      "readers": [
+        "agent/src/core/config.ts:1346"
+      ]
+    },
+    "SSL_CERT_DIR": {
+      "category": "runtime-binding-or-host",
+      "readers": [
+        "agent/src/brain/engines/process.ts:host-forwarding"
+      ]
+    },
+    "SSL_CERT_FILE": {
+      "category": "runtime-binding-or-host",
+      "readers": [
+        "agent/src/brain/engines/process.ts:host-forwarding"
+      ]
+    },
+    "STEAM_URI": {
+      "category": "script-derived-path",
+      "readers": [
+        "ops/codex-ops-actions.sh:199"
+      ]
+    },
+    "STRICT_JEV": {
+      "category": "published-policy",
+      "readers": [
+        "agent/src/core/config.ts:1177"
+      ]
+    },
+    "STS2_BASE_URL": {
+      "category": "runtime-binding-or-host",
+      "readers": [
+        "agent/src/core/config.ts:1114",
+        "ops/codex-ops-actions.sh:32",
+        "ops/instance_gate.py:40",
+        "ops/run.sh:52"
+      ]
+    },
+    "STS2_EXPECTED_NATIVE_PROFILE_ID": {
+      "category": "runtime-binding-or-host",
+      "readers": [
+        "agent/src/core/config.ts:1121",
+        "ops/codex-ops-actions.sh:118",
+        "ops/instance_gate.py:32",
+        "ops/run.sh:53"
+      ]
+    },
+    "STS2_EXPECTED_PROCESS_ID": {
+      "category": "runtime-binding-or-host",
+      "readers": [
+        "agent/src/core/config.ts:1119",
+        "ops/codex-ops-actions.sh:118",
+        "ops/instance_gate.py:31",
+        "ops/run.sh:53"
+      ]
+    },
+    "STS2_LAUNCH_BUNDLE": {
+      "category": "runtime-binding-or-host",
+      "readers": [
+        "ops/autoplay.sh:14",
+        "ops/autoplay.sh:68",
+        "ops/paths.sh:11",
+        "ops/report.py:484",
+        "ops/run.sh:7",
+        "ops/run.sh:83"
+      ]
+    },
+    "STS2_LAUNCH_LIVE": {
+      "category": "runtime-binding-or-host",
+      "readers": [
+        "ops/paths.py:14",
+        "ops/paths.sh:10"
+      ]
+    },
+    "STS2_LAUNCH_ROOT": {
+      "category": "runtime-binding-or-host",
+      "readers": [
+        "ops/paths.py:9",
+        "ops/paths.sh:5"
+      ]
+    },
+    "STS2_LAUNCH_SOURCE": {
+      "category": "runtime-binding-or-host",
+      "readers": [
+        "ops/run.sh:62",
+        "ops/run.sh:63"
+      ]
+    },
+    "STS2_LIVE": {
+      "category": "runtime-binding-or-host",
+      "readers": [
+        "ops/paths.py:13",
+        "ops/paths.sh:16",
+        "ops/paths.sh:9"
+      ]
+    },
+    "STS2_PORT_SCAN": {
+      "category": "runtime-binding-or-host",
+      "readers": [
+        "agent/src/core/config.ts:1118"
+      ]
+    },
+    "STS2_TIMEOUT_MS": {
+      "category": "runtime-binding-or-host",
+      "readers": [
+        "agent/src/core/config.ts:1126"
+      ]
+    },
+    "STS2_WORKSPACE": {
+      "category": "runtime-binding-or-host",
+      "readers": [
+        "agent/src/brain/engines/codex-credit-policy.ts:14",
+        "agent/src/core/paths.ts:37"
+      ]
+    },
+    "SYSTEMROOT": {
+      "category": "runtime-binding-or-host",
+      "readers": [
+        "agent/src/brain/engines/dsh.ts:host-forwarding"
+      ]
+    },
+    "S_BUILD_RANK": {
+      "category": "published-policy",
+      "readers": [
+        "agent/src/core/config.ts:40"
+      ]
+    },
+    "S_COMBAT_RANK": {
+      "category": "published-policy",
+      "readers": [
+        "agent/src/core/config.ts:27"
+      ]
+    },
+    "S_READINESS": {
+      "category": "published-policy",
+      "readers": [
+        "agent/src/core/config.ts:64"
+      ]
+    },
+    "TARGET_ASCENSION": {
+      "category": "published-policy",
+      "readers": [
+        "agent/src/eye/run-config.ts:546",
+        "agent/src/hand/screens/misc.ts:152"
+      ]
+    },
+    "TASK": {
+      "category": "script-derived-path",
+      "readers": [
+        "ops/codex-ops-actions.sh:199",
+        "ops/codex-ops-actions.sh:200",
+        "ops/codex-ops-actions.sh:202"
+      ]
+    },
+    "TERM": {
+      "category": "runtime-binding-or-host",
+      "readers": [
+        "agent/src/brain/engines/process.ts:host-forwarding"
+      ]
+    },
+    "THIEF_COST": {
+      "category": "published-policy",
+      "readers": [
+        "agent/src/core/config.ts:1276"
+      ]
+    },
+    "THIEF_FACTS": {
+      "category": "published-policy",
+      "readers": [
+        "agent/src/core/config.ts:1271"
+      ]
+    },
+    "TMPDIR": {
+      "category": "runtime-binding-or-host",
+      "readers": [
+        "agent/src/brain/engines/dsh.ts:host-forwarding",
+        "agent/src/brain/engines/process.ts:host-forwarding"
+      ]
+    },
+    "TYPESAFE_API_KEY": {
+      "category": "credential-or-account-reference",
+      "readers": [
+        "agent/src/core/config.ts:1132"
+      ]
+    },
+    "TYPESAFE_API_KEY_FILE": {
+      "category": "credential-or-account-reference",
+      "readers": [
+        "agent/src/core/config.ts:1133"
+      ]
+    },
+    "TYPESAFE_BASE_URL": {
+      "category": "published-policy",
+      "readers": [
+        "agent/src/core/config.ts:1143"
+      ]
+    },
+    "TZ": {
+      "category": "runtime-binding-or-host",
+      "readers": [
+        "agent/src/brain/engines/process.ts:host-forwarding"
+      ]
+    },
+    "USER": {
+      "category": "runtime-binding-or-host",
+      "readers": [
+        "agent/src/brain/engines/process.ts:host-forwarding"
+      ]
+    },
+    "V6_ACT_MS": {
+      "category": "published-policy",
+      "readers": [
+        "agent/src/v6/config.ts:v6-parser-helper"
+      ]
+    },
+    "V6_BRAIN_MS": {
+      "category": "published-policy",
+      "readers": [
+        "agent/src/v6/config.ts:v6-parser-helper"
+      ]
+    },
+    "V6_BRAIN_SOFT_CAP": {
+      "category": "published-policy",
+      "readers": [
+        "agent/src/v6/config.ts:v6-parser-helper"
+      ]
+    },
+    "V6_BUILD": {
+      "category": "published-policy",
+      "readers": [
+        "agent/src/v6/config.ts:v6-parser-helper",
+        "ops/production-runtime.sh:15"
+      ]
+    },
+    "V6_CARD_DECIDER": {
+      "category": "published-policy",
+      "readers": [
+        "agent/src/v6/config.ts:dynamic-room-template",
+        "ops/production-runtime.sh:16"
+      ]
+    },
+    "V6_COMBAT_ENTRIES": {
+      "category": "published-policy",
+      "readers": [
+        "agent/src/reflex/jev/combat-entries.ts:83",
+        "agent/src/reflex/jev/combat-entry-projection.ts:12"
+      ]
+    },
+    "V6_DELTA_BETTER_SE": {
+      "category": "published-policy",
+      "readers": [
+        "agent/src/v6/config.ts:v6-parser-helper"
+      ]
+    },
+    "V6_DELTA_MUCH_MIN": {
+      "category": "published-policy",
+      "readers": [
+        "agent/src/v6/config.ts:v6-parser-helper"
+      ]
+    },
+    "V6_DELTA_MUCH_SE": {
+      "category": "published-policy",
+      "readers": [
+        "agent/src/v6/config.ts:v6-parser-helper"
+      ]
+    },
+    "V6_DIRECTION_MIN_WEIGHT": {
+      "category": "published-policy",
+      "readers": [
+        "agent/src/v6/config.ts:v6-parser-helper"
+      ]
+    },
+    "V6_DIRECTION_REPLAN": {
+      "category": "published-policy",
+      "readers": [
+        "agent/src/v6/config.ts:v6-parser-helper"
+      ]
+    },
+    "V6_JEV_MS": {
+      "category": "published-policy",
+      "readers": [
+        "agent/src/v6/config.ts:v6-parser-helper"
+      ]
+    },
+    "V6_MIN_KNOWN_OPTION_RATIO": {
+      "category": "published-policy",
+      "readers": [
+        "agent/src/v6/config.ts:v6-parser-helper"
+      ]
+    },
+    "V6_PICK_MS": {
+      "category": "published-policy",
+      "readers": [
+        "agent/src/v6/config.ts:v6-parser-helper"
+      ]
+    },
+    "V6_POTION_DECIDER": {
+      "category": "published-policy",
+      "readers": [
+        "agent/src/v6/config.ts:dynamic-room-template",
+        "ops/production-runtime.sh:16"
+      ]
+    },
+    "V6_REFLEX": {
+      "category": "published-policy",
+      "readers": [
+        "agent/src/v6/config.ts:v6-parser-helper",
+        "ops/production-runtime.sh:15"
+      ]
+    },
+    "V6_REST_DECIDER": {
+      "category": "published-policy",
+      "readers": [
+        "agent/src/v6/config.ts:dynamic-room-template",
+        "ops/production-runtime.sh:17"
+      ]
+    },
+    "V6_SAMPLES_ACT": {
+      "category": "published-policy",
+      "readers": [
+        "agent/src/v6/config.ts:v6-parser-helper"
+      ]
+    },
+    "V6_SAMPLES_PICK": {
+      "category": "published-policy",
+      "readers": [
+        "agent/src/v6/config.ts:v6-parser-helper"
+      ]
+    },
+    "V6_SHOP_DECIDER": {
+      "category": "published-policy",
+      "readers": [
+        "agent/src/v6/config.ts:dynamic-room-template",
+        "ops/production-runtime.sh:17"
+      ]
+    },
+    "V6_T1_CORE_MIN": {
+      "category": "published-policy",
+      "readers": [
+        "agent/src/v6/config.ts:v6-parser-helper"
+      ]
+    },
+    "V6_T2_CONSECUTIVE": {
+      "category": "published-policy",
+      "readers": [
+        "agent/src/v6/config.ts:v6-parser-helper"
+      ]
+    },
+    "V6_T2_MIN_DELTA": {
+      "category": "published-policy",
+      "readers": [
+        "agent/src/v6/config.ts:v6-parser-helper"
+      ]
+    },
+    "V6_T2_SE": {
+      "category": "published-policy",
+      "readers": [
+        "agent/src/v6/config.ts:v6-parser-helper"
+      ]
+    },
+    "V6_T3_WEIGHT_MAX": {
+      "category": "published-policy",
+      "readers": [
+        "agent/src/v6/config.ts:v6-parser-helper"
+      ]
+    },
+    "V6_T6_FALLBACKS": {
+      "category": "published-policy",
+      "readers": [
+        "agent/src/v6/config.ts:v6-parser-helper"
+      ]
+    },
+    "V6_T6_UNKNOWN_MAX": {
+      "category": "published-policy",
+      "readers": [
+        "agent/src/v6/config.ts:v6-parser-helper"
+      ]
+    },
+    "V6_WIN_CERTAIN_WIN": {
+      "category": "published-policy",
+      "readers": [
+        "agent/src/v6/config.ts:v6-parser-helper"
+      ]
+    },
+    "V6_WIN_EVEN": {
+      "category": "published-policy",
+      "readers": [
+        "agent/src/v6/config.ts:v6-parser-helper"
+      ]
+    },
+    "V6_WIN_FAVORED": {
+      "category": "published-policy",
+      "readers": [
+        "agent/src/v6/config.ts:v6-parser-helper"
+      ]
+    },
+    "V6_WIN_UNFAVORED": {
+      "category": "published-policy",
+      "readers": [
+        "agent/src/v6/config.ts:v6-parser-helper"
+      ]
+    },
+    "WAIT_PID": {
+      "category": "runtime-binding-or-host",
+      "readers": [
+        "ops/autoplay.sh:25",
+        "ops/autoplay.sh:57",
+        "ops/autoplay.sh:58",
+        "ops/autoplay.sh:59"
+      ]
+    },
+    "WIN": {
+      "category": "script-derived-path",
+      "readers": [
+        "ops/codex-ops-actions.sh:199",
+        "ops/codex-ops-actions.sh:200",
+        "ops/codex-ops-actions.sh:202",
+        "ops/codex-ops-actions.sh:235",
+        "ops/codex-ops-actions.sh:60"
+      ]
+    },
+    "WSL_DISTRO_NAME": {
+      "category": "runtime-binding-or-host",
+      "readers": [
+        "agent/src/brain/engines/dsh.ts:host-forwarding"
+      ]
+    },
+    "WSL_INTEROP": {
+      "category": "runtime-binding-or-host",
+      "readers": [
+        "agent/src/brain/engines/dsh.ts:host-forwarding"
+      ]
+    },
+    "XDG_CACHE_HOME": {
+      "category": "runtime-binding-or-host",
+      "readers": [
+        "agent/src/brain/engines/process.ts:host-forwarding"
+      ]
+    },
+    "XDG_CONFIG_HOME": {
+      "category": "runtime-binding-or-host",
+      "readers": [
+        "agent/src/brain/engines/process.ts:host-forwarding"
+      ]
+    },
+    "XDG_DATA_HOME": {
+      "category": "runtime-binding-or-host",
+      "readers": [
+        "agent/src/brain/engines/process.ts:host-forwarding"
+      ]
+    },
+    "XDG_RUNTIME_DIR": {
+      "category": "runtime-binding-or-host",
+      "readers": [
+        "agent/src/brain/engines/process.ts:host-forwarding"
+      ]
+    },
+    "XDG_STATE_HOME": {
+      "category": "runtime-binding-or-host",
+      "readers": [
+        "agent/src/brain/engines/process.ts:host-forwarding"
+      ]
+    }
+  },
+  "dynamic_families": [
+    "BRAIN_ENGINE_*",
+    "BRAIN_{CLAUDE,CODEX,DEEPSEEK,DSH}_MODEL_*",
+    "BRAIN_{CLAUDE,CODEX,DSH}_MAX_CALLS",
+    "V6_{CARD,POTION,SHOP,REST}_DECIDER",
+    "host forwarding: LC_* and lowercase proxy aliases"
+  ],
+  "external_boundary": "Provider/account files stay external; names and source only, no environment or credential contents read.",
+  "unclassified": []
+}
