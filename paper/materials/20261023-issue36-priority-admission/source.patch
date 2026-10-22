@@ -1,0 +1,773 @@
+diff --git a/agent/tests/learner-herdr.test.ts b/agent/tests/learner-herdr.test.ts
+index e61c0b9d038b08e5b36d3d40f831f154807ff494..a945089bd490ab1af1008d20104ab10587146ee6 100644
+--- a/agent/tests/learner-herdr.test.ts
++++ b/agent/tests/learner-herdr.test.ts
+@@ -77,7 +77,13 @@ function fixture(kind = "success", label = "learner-20261022-120000-postmortem")
+         prompts++;
+         const text = args[3]!;
+         const turn = `turn-${prompts}`;
+-        write(row("event_msg", { type: "task_started", turn_id: turn }), row("event_msg", { type: "user_message", message: text }));
++        write(row("event_msg", { type: "task_started", turn_id: turn }));
++        if (kind === "bootstrap") write(row("response_item", { type: "message", role: "user", content: [
++          { type: "input_text", text: `# AGENTS.md instructions for ${root}\n\n<INSTRUCTIONS>\nFixed instructions.\n</INSTRUCTIONS>` },
++          { type: "input_text", text: `<environment_context>\n  <cwd>${root}</cwd>\n  <shell>bash</shell>\n</environment_context>` },
++        ] }), row("turn_context", { turn_id: turn, cwd: root }));
++        write(kind === "bootstrap" ? row("response_item", { type: "message", role: "user", content: [{ type: "input_text", text }] })
++          : row("event_msg", { type: "user_message", message: text }));
+         if (kind === "capacity" || (kind === "retry-success" || kind === "stale-open-error") && prompts === 1) {
+           write(row("event_msg", { type: "error", turn_id: turn, message: "at capacity" }));
+           if (kind !== "stale-open-error") write(row("event_msg", { type: "task_complete", turn_id: turn }));
+@@ -268,6 +274,41 @@ describe("native batch authority", () => {
+ });
+ 
+ describe("interactive batch lifecycle", () => {
++  it("keeps pre-dispatch resume history outside the active parser window", async () => {
++    const f = fixture("bootstrap");
++    const session = "019a1000-1234-7123-8123-123456789abc";
++    f.opts.request.resumeThread = session;
++    writeFileSync(f.file, [row("session_meta", { id: session, cwd: f.root }),
++      row("event_msg", { type: "task_started", turn_id: "historical" }),
++      row("response_item", { type: "function_call", name: "historical-tool" }),
++      row("response_item", { type: "local_shell_call", call_id: "historical-shell" }),
++      row("response_item", { type: "message", role: "assistant", content: [{ type: "output_text", text: "Historical answer" }] }),
++      row("event_msg", { type: "task_complete", turn_id: "historical", last_agent_message: "Historical answer" }),
++    ].map((r) => JSON.stringify(r) + "\n").join(""));
++    expect(await runLearnerTui(f.opts)).toMatchObject({ code: 0, stopped: true, session, turn: "turn-1" });
++    expect(f.prompts()).toBe(1);
++    expect(f.events.some((event) => (event.payload as Record<string, unknown>)?.name === "historical-tool")).toBe(false);
++    const receipt = JSON.parse(readFileSync(f.opts.receipt, "utf8"));
++    expect(receipt.bindings).toHaveLength(1); expect(receipt.bindings[0].turn_id).toBe("turn-1");
++  });
++  it("persists bootstrap proof without interrupting the original native task or weakening retirement", async () => {
++    const f = fixture("bootstrap");
++    const log = f.opts.log; let running: Record<string, unknown> | undefined;
++    f.opts.log = (event) => {
++      log(event);
++      if (event.type === "token_usage_record") running = JSON.parse(readFileSync(f.opts.receipt, "utf8"));
++    };
++    expect(await runLearnerTui(f.opts)).toMatchObject({ code: 0, stopped: true, turn: "turn-1" });
++    expect(running).toMatchObject({ state: "native-accepted", session: "019a1000-1234-7123-8123-123456789abc",
++      turn: "turn-1", submitted: true, retirement_authorized: false });
++    expect(running?.bindings).toHaveLength(1); expect(running?.native_preludes).toHaveLength(1);
++    expect(f.prompts()).toBe(1);
++    const receipt = JSON.parse(readFileSync(f.opts.receipt, "utf8"));
++    expect(receipt).toMatchObject({ native_context_version: 1, retirement_authorized: true, submitted: true });
++    expect(receipt.native_preludes).toHaveLength(1); expect(receipt.bindings).toHaveLength(1);
++    expect(receipt.native_preludes[0]).toMatchObject({ turn_id: "turn-1", cwd: f.root });
++    expect(f.calls.filter((c) => c[1] === "run")).toHaveLength(1);
++  });
+   it("refuses inherited MCP/config context before launching the TUI, without changing the account", async () => {
+     const f = fixture();
+     const path = join(f.opts.codexHome, "config.toml");
+diff --git a/agent/tests/learner-native-prelude.test.ts b/agent/tests/learner-native-prelude.test.ts
+new file mode 100644
+index 0000000000000000000000000000000000000000..c6a108114a6db673503515e369f2d56f80f0664f
+--- /dev/null
++++ b/agent/tests/learner-native-prelude.test.ts
+@@ -0,0 +1,111 @@
++/** Fixed Codex 0.163 event order; no real credentials, panes, sessions or models. */
++import { createHash } from "node:crypto";
++import { describe, expect, it } from "vitest";
++import { NativeBatch } from "../../learner/lib/herdr.js";
++
++const cwd = "/fixture/learner";
++const marker = "[learner-batch:fixture]";
++const prompt = `${marker}\n原始完整任务`;
++const row = (type: string, payload: Record<string, unknown>) => ({ type, payload });
++const context = (turn = "turn-1", dir = cwd) => row("turn_context", { turn_id: turn, cwd: dir, model: "gpt-6.1-sol", effort: "high" });
++function prelude(dir = cwd) {
++  return row("response_item", { type: "message", role: "user", content: [
++    { type: "input_text", text: `# AGENTS.md instructions for ${dir}\n\n<INSTRUCTIONS>\n固定仓库说明。\n</INSTRUCTIONS>` },
++    { type: "input_text", text: `<environment_context>\n  <cwd>${dir}</cwd>\n  <shell>bash</shell>\n</environment_context>` },
++  ] });
++}
++function fixture() {
++  const b = new NativeBatch(marker); b.expectPrompt(marker, prompt);
++  const start = [row("session_meta", { id: "session", cwd }), row("event_msg", { type: "task_started", turn_id: "turn-1" })];
++  return { b, start };
++}
++const user = (text = prompt) => row("response_item", { type: "message", role: "user", content: [{ type: "input_text", text }] });
++const complete = row("event_msg", { type: "task_complete", turn_id: "turn-1", last_agent_message: "报告已保存" });
++const activities = [
++  { kind: "function_call", item: row("response_item", { type: "function_call", name: "foreign" }) },
++  { kind: "custom_tool_call", item: row("response_item", { type: "custom_tool_call", name: "foreign" }) },
++  { kind: "local_shell_call", item: row("response_item", { type: "local_shell_call", call_id: "foreign" }) },
++  { kind: "function_call_output", item: row("response_item", { type: "function_call_output", output: "Earlier result" }) },
++  { kind: "custom_tool_call_output", item: row("response_item", { type: "custom_tool_call_output", output: "Earlier result" }) },
++  { kind: "reasoning", item: row("response_item", { type: "reasoning", summary: [] }) },
++  { kind: "assistant", item: row("response_item", { type: "message", role: "assistant", content: [{ type: "output_text", text: "Earlier answer" }] }) },
++];
++
++describe("native bootstrap before the dispatched prompt", () => {
++  it("stages only the bootstrap, binds its context, then accepts the exact dispatched body", () => {
++    const { b, start } = fixture(); start.forEach((r) => b.feed(r));
++    const p = prelude(); b.feed(p);
++    expect(b.accepted).toBe(false); expect(b.foreignActivity).toBe(false); expect(b.preludes).toEqual([]);
++    b.feed(row("world_state", { full: true, state: {} })); b.feed(context());
++    expect(b.accepted).toBe(false);
++    const text = (p.payload.content as { text: string }[]).map((part) => part.text).join("\n");
++    expect(b.preludes).toEqual([{ turn_id: "turn-1", cwd, sha256: createHash("sha256").update(text).digest("hex") }]);
++    b.feed(user()); b.feed(complete);
++    expect(b.successful()).toBe(true); expect(b.bindings).toHaveLength(1);
++  });
++  it.each(["unknown", "event-user", "wrong-cwd", "extra-part", "trailing-text", "duplicate", "after-context", "no-context", "wrong-turn", "changed-context-cwd", "tool-before-prompt"])(
++    "rejects %s without clearing foreign activity on the later real marker", (kind) => {
++      const { b, start } = fixture(); start.forEach((r) => b.feed(r));
++      let p = prelude();
++      if (kind === "unknown") p = user("Human request");
++      if (kind === "event-user") p = row("event_msg", { type: "user_message", message: (p.payload.content as { text: string }[]).map((part) => part.text).join("\n") });
++      if (kind === "wrong-cwd") p = prelude("/foreign");
++      if (kind === "extra-part") (p.payload.content as unknown[]).push({ type: "input_text", text: "Human request" });
++      if (kind === "trailing-text") (p.payload.content as { text: string }[])[1]!.text += "\nHuman request";
++      if (kind === "after-context") b.feed(context());
++      b.feed(p);
++      if (kind === "tool-before-prompt") b.feed(row("response_item", { type: "function_call", name: "unexpected" }));
++      if (kind === "duplicate") b.feed(prelude());
++      if (kind !== "no-context") b.feed(context(kind === "wrong-turn" ? "human-turn" : "turn-1", kind === "changed-context-cwd" ? "/foreign" : cwd));
++      b.feed(user()); b.feed(complete);
++      expect(b.foreignActivity).toBe(true); expect(b.successful()).toBe(false);
++    });
++  it.each(["same-turn", "new-turn", "continuation"])("does not ignore prelude-shaped human input in %s", (kind) => {
++    const { b, start } = fixture(); [...start, prelude(), context(), user(), complete].forEach((r) => b.feed(r));
++    if (kind === "continuation") b.expectPrompt("retry", "retry\ncontinue");
++    if (kind !== "same-turn") b.feed(row("event_msg", { type: "task_started", turn_id: "turn-2" }));
++    b.feed(prelude());
++    expect(b.foreignActivity).toBe(true); expect(b.successful()).toBe(false);
++  });
++  it("requires session metadata and a started turn before accepting bootstrap framing", () => {
++    for (const include of ["session", "turn", "neither"]) {
++      const { b, start } = fixture();
++      if (include === "session") b.feed(start[0]!);
++      if (include === "turn") b.feed(start[1]!);
++      b.feed(prelude()); b.feed(user()); b.feed(complete);
++      expect(b.foreignActivity).toBe(true); expect(b.successful()).toBe(false);
++    }
++  });
++});
++
++describe("activity in the entire unbound dispatch window", () => {
++  const positions = ["before-prelude", "after-prelude", "after-context", "no-prelude", "continuation-before-context", "continuation-after-context"];
++  it.each(activities.flatMap((activity) => positions.map((position) => ({ ...activity, position }))))(
++    "retains $kind at $position despite a later correct marker", ({ item, position }) => {
++      const { b, start } = fixture(); start.forEach((r) => b.feed(r));
++      if (position.startsWith("continuation")) {
++        [prelude(), context(), user(), complete].forEach((r) => b.feed(r));
++        b.expectPrompt("retry", "retry\ncontinue");
++        b.feed(row("event_msg", { type: "task_started", turn_id: "turn-2" }));
++        if (position === "continuation-after-context") b.feed(context("turn-2"));
++        b.feed(item);
++        if (position === "continuation-before-context") b.feed(context("turn-2"));
++        b.feed(user("retry\ncontinue"));
++        b.feed(row("event_msg", { type: "task_complete", turn_id: "turn-2", last_agent_message: "later report" }));
++      } else {
++        const tail = position === "no-prelude" ? [context(), user(), complete] : [prelude(), context(), user(), complete];
++        const at = position === "before-prelude" ? 0 : position === "after-context" ? 2 : 1;
++        tail.splice(at, 0, item); tail.forEach((r) => b.feed(r));
++      }
++      expect(b.foreignActivity).toBe(true); expect(b.accepted).toBe(false); expect(b.successful()).toBe(false);
++    });
++  it.each(activities)("allows bound $kind work in the original and explicitly continued turns", ({ item }) => {
++    const { b, start } = fixture(); [...start, prelude(), context(), user(), item, complete].forEach((r) => b.feed(r));
++    expect(b.successful()).toBe(true);
++    b.expectPrompt("retry", "retry\ncontinue");
++    b.feed(row("event_msg", { type: "task_started", turn_id: "turn-2" })); b.feed(context("turn-2"));
++    b.feed(user("retry\ncontinue")); b.feed(item);
++    b.feed(row("event_msg", { type: "task_complete", turn_id: "turn-2", last_agent_message: "continued report" }));
++    expect(b.successful()).toBe(true); expect(b.bindings).toHaveLength(2);
++  });
++});
+diff --git a/agent/tests/learner-tui-reconciliation.test.ts b/agent/tests/learner-tui-reconciliation.test.ts
+new file mode 100644
+index 0000000000000000000000000000000000000000..add6f57d69a32c80325edec9de7137687c65f7f7
+--- /dev/null
++++ b/agent/tests/learner-tui-reconciliation.test.ts
+@@ -0,0 +1,114 @@
++import { createHash } from "node:crypto";
++import { mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
++import { tmpdir } from "node:os";
++import { join } from "node:path";
++import { afterEach, describe, expect, it } from "vitest";
++import { learnerAgentName } from "../../learner/lib/herdr.js";
++import { reconcileTuiReceipt, reconciliationMain } from "../../learner/lib/tui-reconciliation.js";
++
++const roots: string[] = [];
++afterEach(() => { for (const root of roots.splice(0)) rmSync(root, { recursive: true, force: true }); });
++const hash = (text: string) => createHash("sha256").update(text).digest("hex");
++function fixture() {
++  const cwd = "/fixture/learner", label = "learner-20261023-032433-strategy-proposal", pane = "w1:p2";
++  const marker = "[learner-batch:fixture]", prompt = `${marker}\nOriginal task`;
++  const receipt = { state: "needs-attention", submitted: true, cwd, label, pane, agent_name: learnerAgentName(label, pane, cwd), agent_name_version: 1,
++    submissions: [{ marker, prompt_sha256: hash(prompt) }], bindings: [], result: { code: 75 } };
++  const rows = [
++    { type: "session_meta", payload: { id: "session", cwd } },
++    { type: "event_msg", payload: { type: "task_started", turn_id: "turn" } },
++    { type: "response_item", payload: { type: "message", role: "user", content: [
++      { type: "input_text", text: `# AGENTS.md instructions for ${cwd}\n\n<INSTRUCTIONS>\nFixed instructions.\n</INSTRUCTIONS>` },
++      { type: "input_text", text: `<environment_context>\n  <cwd>${cwd}</cwd>\n  <shell>bash</shell>\n</environment_context>` },
++    ] } },
++    { type: "turn_context", payload: { turn_id: "turn", cwd } },
++    { type: "response_item", payload: { type: "message", role: "user", content: [{ type: "input_text", text: prompt }] } },
++  ];
++  return { receipt, rows };
++}
++
++describe("read-only reconciliation of an already submitted TUI", () => {
++  const activities = [
++    { kind: "function_call", payload: { type: "function_call", name: "foreign" } },
++    { kind: "custom_tool_call", payload: { type: "custom_tool_call", name: "foreign" } },
++    { kind: "local_shell_call", payload: { type: "local_shell_call", call_id: "foreign" } },
++    { kind: "function_call_output", payload: { type: "function_call_output", output: "Earlier result" } },
++    { kind: "custom_tool_call_output", payload: { type: "custom_tool_call_output", output: "Earlier result" } },
++    { kind: "reasoning", payload: { type: "reasoning", summary: [] } },
++    { kind: "assistant", payload: { type: "message", role: "assistant", content: [{ type: "output_text", text: "Earlier answer" }] } },
++  ];
++  const positions = ["before-prelude", "after-prelude", "after-context", "no-prelude", "continuation-before-context", "continuation-after-context"];
++  it.each(activities.flatMap((activity) => positions.map((position) => ({ ...activity, position }))))(
++    "rejects $kind at $position in the original receipt audit", ({ payload, position }) => {
++      const { receipt, rows } = fixture();
++      const item = { type: "response_item", payload };
++      if (position.startsWith("continuation")) {
++        rows.push({ type: "event_msg", payload: { type: "task_complete", turn_id: "turn", last_agent_message: "first report" } });
++        receipt.submissions.push({ marker: "retry", prompt_sha256: hash("retry\ncontinue") });
++        rows.push({ type: "event_msg", payload: { type: "task_started", turn_id: "turn-2" } });
++        if (position === "continuation-after-context") rows.push({ type: "turn_context", payload: { turn_id: "turn-2", cwd: receipt.cwd } });
++        rows.push(item);
++        if (position === "continuation-before-context") rows.push({ type: "turn_context", payload: { turn_id: "turn-2", cwd: receipt.cwd } });
++        rows.push({ type: "response_item", payload: { type: "message", role: "user", content: [{ type: "input_text", text: "retry\ncontinue" }] } });
++      } else {
++        if (position === "no-prelude") rows.splice(2, 1);
++        rows.splice(position === "before-prelude" ? 2 : position === "after-context" ? 4 : 3, 0, item);
++      }
++      const original = JSON.stringify(receipt), audit = reconcileTuiReceipt(receipt, rows);
++      expect(audit.observed).toMatchObject({ accepted: false, foreign_activity: true });
++      expect(audit.finish_authorized).toBe(false); expect(JSON.stringify(receipt)).toBe(original);
++    });
++  it("reconstructs native acceptance without rewriting old 75/bindings or authorizing lifecycle actions", () => {
++    const { receipt, rows } = fixture(); const before = JSON.stringify(receipt);
++    const audit = reconcileTuiReceipt(receipt, rows);
++    expect(audit.observed).toMatchObject({ session: "session", cwd: receipt.cwd, turn: "turn", accepted: true, foreign_activity: false, open: true, complete: false });
++    expect(audit.observed.bindings).toHaveLength(1); expect(audit.observed.native_preludes).toHaveLength(1);
++    expect(audit).toMatchObject({ original_result_code: 75, original_receipt_modified: false, prompt_send_authorized: false,
++      retirement_authorized: false, finish_authorized: false, pane_pid_lease_revalidated: false });
++    expect(JSON.stringify(receipt)).toBe(before);
++  });
++  it.each(["unsubmitted", "wrong-name", "wrong-cwd", "wrong-hash", "wrong-session", "missing-proof"])("does not reconcile %s", (kind) => {
++    const { receipt, rows } = fixture();
++    if (kind === "unsubmitted") receipt.submitted = false;
++    if (kind === "wrong-name") receipt.agent_name = "foreign";
++    if (kind === "wrong-cwd") receipt.cwd = "/foreign";
++    if (kind === "wrong-hash") receipt.submissions[0]!.prompt_sha256 = "0".repeat(64);
++    if (kind === "wrong-session") Object.assign(receipt, { session: "foreign" });
++    if (kind === "missing-proof") receipt.submissions = [];
++    let accepted = false;
++    try { const audit = reconcileTuiReceipt(receipt, rows); accepted = audit.observed.accepted && !audit.observed.foreign_activity; } catch { /* deferred */ }
++    expect(accepted).toBe(false);
++  });
++  it("retains a subsequent human turn even when the initial dispatch was proved", () => {
++    const { receipt, rows } = fixture();
++    rows.push({ type: "event_msg", payload: { type: "task_started", turn_id: "human" } });
++    const audit = reconcileTuiReceipt(receipt, rows);
++    expect(audit.observed.foreign_activity).toBe(true); expect(audit.observed.accepted).toBe(false);
++  });
++  it("audits a bounded durable snapshot without writing either source file or treating partial rows as acceptance", () => {
++    const { receipt, rows } = fixture();
++    const root = mkdtempSync(join(tmpdir(), "tui-reconcile-")); roots.push(root);
++    const receiptFile = join(root, "original.json"), nativeFile = join(root, "native.jsonl");
++    const original = JSON.stringify(receipt), native = rows.map((r) => JSON.stringify(r) + "\n").join("") + '{"type":';
++    writeFileSync(receiptFile, original); writeFileSync(nativeFile, native);
++    const output: string[] = [], errors: string[] = [];
++    expect(reconciliationMain(["--receipt", receiptFile, "--native", nativeFile], (s) => output.push(s), (s) => errors.push(s))).toBe(0);
++    const audit = JSON.parse(output[0]!);
++    expect(audit.original_receipt_sha256).toBe(hash(original)); expect(audit.trailing_partial_bytes).toBe(8);
++    expect(audit.finish_authorized).toBe(false); expect(errors).toEqual([]);
++    expect(readFileSync(receiptFile, "utf8")).toBe(original); expect(readFileSync(nativeFile, "utf8")).toBe(native);
++  });
++  it("returns 75 for pre-prelude activity without changing the source receipt or native snapshot", () => {
++    const { receipt, rows } = fixture();
++    rows.splice(2, 0, { type: "response_item", payload: { type: "function_call", name: "foreign" } });
++    const root = mkdtempSync(join(tmpdir(), "tui-reconcile-foreign-")); roots.push(root);
++    const receiptFile = join(root, "original.json"), nativeFile = join(root, "native.jsonl");
++    const original = JSON.stringify(receipt), native = rows.map((r) => JSON.stringify(r) + "\n").join("");
++    writeFileSync(receiptFile, original); writeFileSync(nativeFile, native);
++    const output: string[] = [];
++    expect(reconciliationMain(["--receipt", receiptFile, "--native", nativeFile], (s) => output.push(s))).toBe(75);
++    expect(JSON.parse(output[0]!)).toMatchObject({ observed: { accepted: false, foreign_activity: true },
++      original_receipt_modified: false, finish_authorized: false });
++    expect(readFileSync(receiptFile, "utf8")).toBe(original); expect(readFileSync(nativeFile, "utf8")).toBe(native);
++  });
++});
+diff --git a/docs/codex-ops.md b/docs/codex-ops.md
+index 6f953fd64bfcd267a0d02784473bb8ad2a3d0e3c..aa9da8c6bc1cb01b5b1aa3e2c9ea645958e6df90 100644
+--- a/docs/codex-ops.md
++++ b/docs/codex-ops.md
+@@ -140,6 +140,10 @@ nice -n 19 python3 ops/brain_view.py --logs <日志目录> sample  # 一次性
+ 
+ 屏幕 idle 或进程退出都不能证明批次完成：须有匹配原提示的原生 `task_complete`、实际 TUI idle 且输入框空、无新原生回合；初次发送与每次接续都先持久化独立的一次性 marker 和提示词 SHA，原生 user_message/response_item 必须按完整正文核成对应 turn；旧 marker、后续人类回合不继承本批权限。Python 完成核验会独立从原生记录重建这一绑定，失败/超时也不能跳过。退出前复核本批 PID birth、pane、前台进程组、agent/cwd、原租约和空输入框。原 `.out` 已刷新后，`ops/learner_tui.py` 核原日志 SHA/summary、原生完成记录、实际进程结束，再执行原 `finish` 产物审计。终态事务已登记且原件持久化才关闭本批闲置 pane；分类失败/超时也保留原输出与错误。会话退出不确定、新的人类输入、pane 身份变化、回执缺失等保留 tab/原监管租约，排队给原 ops，不标 done、不另开模型、不申请回收。key/模型预检失败仍为退出码 3、零模型启动，空 tab 保留待 ops 核验。运行中切换开关不热切已有批次。
+ 
++Codex 0.163 的首题在派发提示前，会先写一个 `response_item/message/user`，恰含两段 `input_text`：本 cwd 的 AGENTS 包装和本 cwd 的 environment_context。解析器仅在首个待绑定回合、已核 session/cwd、尚未见 turn_context/派发提示时暂存这一已观察结构；随后的 turn_context 必须匹配原 cwd/turn，再凭原 marker 与完整提示 SHA 接受任务。上下文本身不接受或完成任务；回执以 `native_context_version=1/native_preludes` 留该前缀 SHA/turn/cwd，Python 从原生文件独立重建。原提示及每次明确续接被原生接受时即 fsync 保存 `native-accepted` 和 session/turn/bindings/前缀证明，不等任务结束；该状态不授权 finish 或退场。额外段落、未知 user/event_user、错 cwd/turn、缺上下文确认、重复或出现在提示之后/续轮的同形消息仍按外来输入保留，不能靠后续 marker 清除。活动派发 turn 从 task_started 到原提示接受之间，调用、返回、推理和助手输出一律保留拒绝，不依赖是否已经见到前缀；明确续轮同样检查，已绑定回合的正常模型工作不受影响。resume 的历史 EOF 前缀和 Python 首个绑定 turn 之前的历史仍隔离。首题前缀不豁免任何人工输入、处置权或退出门。
++
++对已经投递、却被旧解析器误判而保留 75 的会话，可先用只读入口对账（在 `agent/` 目录）：`nice -n 19 node --import tsx ../learner/reconcile-tui.ts --receipt <原回执> --native <原生JSONL>`。它仅核完整原 label/pane/cwd/短名与原提交 marker/SHA，从最多 64 MiB 原生快照的完整行重建实际 session/turn/前缀和接受状态，报告来源 SHA 与半行字节数；不会连接 herdr、发提示、改原回执/状态或授权退场/finish。退出 0 仅表示该快照的原任务已被原生接受，不代表完成或已核当前 pane/PID/lease。原回执的 75、空 bindings 与原件照留；原 ops 仍须按原实例/产物/监督/退场门处理，不能将对账报告写回为完成回执或重派已消费的任务。
++
+ 容量/限流/断流等报错空闲沿 #20 的方式接续：只在原生接受的同一批、同一原会话、实际 idle/done 且输入框空、原租约仍有效时，十分钟退避后发送“沿原任务接着做”；不重启、不换账号/线程，不重送原完整任务。即使失败回合缺少结束行，也不会把它算完成；明确报错空闲可接续。连续三次无原生工具进展后再观察完整退避，通知原 ops/Roy 并停自动提醒，保留原任务期限；人工接续有进展可恢复。发送回执不确定时只等匹配的原生用户消息核实，未核实不重发。注意通知排队不代表已送达 Roy。原超时和失败分类继续，所有退出原因都走同一处置权检查，每次 Esc/Ctrl-C 前重读；草稿、未知屏幕、前台变化、租约丢失或启动回执不确定即停止自动退出，返回 75，保留原监管租约与现场。退出按键回执不确定时同样保留，不升级为强杀；已核本批进程退出后只读等待 shell 复位。不能核退场时监管进程保留租约等原 ops 核验。
+ 
+ **命名失败后尚未提交的旧 TUI**：若原 launcher 已返回 `75/stopped=false`，原 supervisor 只在等待原 `learner_tui.py verify`，不会因更新源码或手工补名字自动恢复。当前没有接管该在途进程的受控发送入口；`learner/run.ts` 正常入口会创建新的 scratch/TUI，`--resume-thread` 也会启动 TUI，`learner_entry.py` 的重试仅限零输出的特定 import 失败，均不能用来恢复这个旧 pane。必须保留原监督/租约、输出、回执、一次性提示和原生记录，交原 ops 登记恢复待办；不可修改 submitted/bindings、代填完成、重派或仅手工改名后发提示。需要在原进程恢复的工作，应另行实现基于原回执/原 lease/PID birth/提示 SHA 的明确接管入口，连同原输出/summary 与 supervisor 的退出码交接一起验证后才执行；本次短名称修复只适用于后续自然启动，不声称旧批已恢复或完成。
+diff --git a/learner/lib/herdr.ts b/learner/lib/herdr.ts
+index c18c7646d20beb08c41c510afb835b4eeb39fc0f..3fb81e518f81916952894dac6432ee765b57a0b0 100644
+--- a/learner/lib/herdr.ts
++++ b/learner/lib/herdr.ts
+@@ -46,6 +46,7 @@ export class NativeRows {
+ 
+ export interface PromptProof { marker: string; prompt_sha256?: string }
+ export interface TurnBinding { turn_id: string; marker: string; prompt_sha256: string }
++export interface NativePreludeProof { turn_id: string; cwd: string; sha256: string }
+ const promptHash = (text: string): string => createHash("sha256").update(text.replace(/\r\n/g, "\n").trimEnd()).digest("hex");
+ 
+ /** Herdr names are limited to 32 ASCII characters; labels and scheduler keys remain complete. */
+@@ -53,6 +54,19 @@ export function learnerAgentName(label: string, pane: string, cwd: string): stri
+   return `learner-${createHash("sha256").update(JSON.stringify([label, pane, resolve(cwd)])).digest("hex").slice(0, 24)}`;
+ }
+ 
++/** Codex 0.163 bootstrap is one two-part user item before turn_context, never an event user message. */
++function bootstrapContext(row: Row, cwd: string): boolean {
++  const p = row.payload;
++  if (row.type !== "response_item" || p?.type !== "message" || p.role !== "user" || !Array.isArray(p.content) || p.content.length !== 2) return false;
++  if (!p.content.every((part) => part?.type === "input_text" && typeof part.text === "string")) return false;
++  const [instructions, environment] = p.content.map((part) => (part.text as string).replace(/\r\n/g, "\n"));
++  return instructions!.startsWith(`# AGENTS.md instructions for ${cwd}\n\n<INSTRUCTIONS>\n`) &&
++    instructions!.endsWith("\n</INSTRUCTIONS>") && instructions!.split("</INSTRUCTIONS>").length === 2 &&
++    environment!.startsWith("<environment_context>\n") && environment!.endsWith("\n</environment_context>") &&
++    environment!.split("<environment_context>").length === 2 && environment!.split("<cwd>").length === 2 &&
++    /^<environment_context>\n[ \t]*<cwd>([^<\n]+)<\/cwd>\n/.exec(environment!)?.[1] === cwd;
++}
++
+ /** Each turn needs its own one-use, explicitly sent prompt proof; authorization never carries across turns. */
+ export class NativeBatch {
+   session?: string;
+@@ -70,14 +84,22 @@ export class NativeBatch {
+   usage?: Record<string, unknown>;
+   readonly submissions: PromptProof[] = [];
+   readonly bindings: TurnBinding[] = [];
++  readonly preludes: NativePreludeProof[] = [];
++  private pendingPrelude?: NativePreludeProof;
++  private contextSeen = false;
+   private pending = new Map<string, PromptProof>();
+   private seenTurns = new Set<string>();
+   hasPending(): boolean { return this.pending.size > 0; }
+   private usageByTurn = new Map<string, Record<string, unknown>>();
+   constructor(readonly marker: string) { this.expectPrompt(marker); }
+   expectPrompt(marker: string, text?: string): void {
++    this.expectProof({ marker, ...(text === undefined ? {} : { prompt_sha256: promptHash(text) }) });
++  }
++  expectProof(value: PromptProof): void {
++    const { marker } = value;
++    if (value.prompt_sha256 !== undefined && !/^[a-f0-9]{64}$/.test(value.prompt_sha256)) throw new Error("invalid learner prompt hash");
+     if (this.bindings.some((binding) => binding.marker === marker)) throw new Error("cannot resend a consumed learner marker");
+-    const proof = { marker, ...(text === undefined ? {} : { prompt_sha256: promptHash(text) }) };
++    const proof = { ...value };
+     const old = this.submissions.findIndex((item) => item.marker === marker);
+     if (old >= 0) this.submissions[old] = proof; else this.submissions.push(proof);
+     this.pending.set(marker, proof);
+@@ -101,22 +123,42 @@ export class NativeBatch {
+       if (!this.currentTurn || this.seenTurns.has(this.currentTurn) || !this.hasPending()) this.foreignActivity = true;
+       this.seenTurns.add(this.currentTurn);
+       this.open = true; this.accepted = false;
++      if (this.pendingPrelude) this.foreignActivity = true;
++      this.contextSeen = false;
+       this.complete = false; this.aborted = false; this.message = ""; this.error = ""; this.usage = undefined;
+     }
++    if (row.type === "turn_context") {
++      if (!this.currentTurn || p.turn_id !== this.currentTurn || !this.cwd || p.cwd !== this.cwd) this.foreignActivity = true;
++      this.contextSeen = true;
++      if (this.pendingPrelude) {
++        if (!this.foreignActivity) this.preludes.push(this.pendingPrelude);
++        this.pendingPrelude = undefined;
++      }
++    }
+     const user = textOf(row);
+     if ((row.type === "event_msg" && p.type === "user_message") ||
+         (row.type === "response_item" && p.type === "message" && p.role === "user")) {
++      if (!this.foreignActivity && this.session && this.cwd && this.currentTurn && this.seenTurns.size === 1 &&
++          !this.bindings.length && !this.preludes.length && !this.pendingPrelude && !this.contextSeen && bootstrapContext(row, this.cwd)) {
++        this.pendingPrelude = { turn_id: this.currentTurn, cwd: this.cwd, sha256: promptHash(user) };
++        return; // Staged context alone never accepts a task; the matching turn_context must precede the exact prompt.
++      }
+       const marker = user.replace(/\r\n/g, "\n").split("\n")[0]!;
+       const hash = promptHash(user);
+       const existing = this.bindings.find((binding) => binding.turn_id === this.currentTurn);
+       const expected = this.pending.get(marker);
+-      if (existing?.marker === marker && existing.prompt_sha256 === hash) {
++      if (this.pendingPrelude) { this.accepted = false; this.foreignActivity = true; }
++      else if (existing?.marker === marker && existing.prompt_sha256 === hash) {
+         this.accepted = !this.foreignActivity; // duplicate event_msg / response_item for the same native message
+       } else if (!existing && this.currentTurn && expected && (!expected.prompt_sha256 || expected.prompt_sha256 === hash)) {
+         this.turn = this.currentTurn; this.accepted = !this.foreignActivity;
+         this.bindings.push({ turn_id: this.turn, marker, prompt_sha256: hash }); this.pending.delete(marker);
+       } else { this.accepted = false; this.foreignActivity = true; }
+     }
++    // Cover the entire active turn before its dispatched prompt, including before any bootstrap item.
++    if (this.currentTurn && !this.accepted &&
++        row.type === "response_item" && (/_call(?:_output)?$/.test(String(p.type)) || p.type === "reasoning" ||
++          (p.type === "message" && p.role === "assistant"))) this.foreignActivity = true;
+     if (!this.accepted || this.currentTurn !== this.turn || this.foreignActivity) {
+       if (row.type === "event_msg" && ["task_complete", "turn_aborted"].includes(String(p.type)) && p.turn_id === this.currentTurn) {
+         this.open = false; this.foreignActivity = true;
+@@ -253,6 +295,7 @@ export async function runLearnerTui(o: TuiOptions): Promise<TuiResult> {
+   const started = now();
+   const marker = `[learner-batch:${randomUUID()}]`;
+   const native = new NativeBatch(marker);
++  if (o.request.resumeThread) { native.session = o.request.resumeThread; native.cwd = o.request.cwd; }
+   const before = new Set(candidates(o.codexHome, started - 2000));
+   const readers = new Map<string, { reader: NativeRows; batch: NativeBatch }>();
+   let rollout = o.request.resumeThread ? findRollout(o.codexHome, o.request.resumeThread) : undefined;
+@@ -283,6 +326,7 @@ export async function runLearnerTui(o: TuiOptions): Promise<TuiResult> {
+   let ownershipLost = false;
+   let continuation = 0;
+   let retirementAuthorized = false;
++  let persistedBindings = 0;
+   let alerted = false;
+   let retries = 0;
+   let progress = 0;
+@@ -300,6 +344,7 @@ export async function runLearnerTui(o: TuiOptions): Promise<TuiResult> {
+   const save = (state: string, extra: Record<string, unknown> = {}): void => {
+     writeFileSync(o.receipt, JSON.stringify({ state, pane: o.pane, label: o.label, identity, pid, birth: ownerBirth,
+       agent_name: agentName, agent_name_version: 1,
++      native_context_version: 1, native_preludes: native.preludes,
+       session: native.session, cwd: o.request.cwd, rollout, turn: native.turn, submitted, retries,
+       submissions: native.submissions, bindings: native.bindings, retirement_authorized: retirementAuthorized, ...extra }) + "\n", { mode: 0o600 });
+     const fd = openSync(o.receipt, "r"); try { fsyncSync(fd); } finally { closeSync(fd); }
+@@ -327,6 +372,10 @@ export async function runLearnerTui(o: TuiOptions): Promise<TuiResult> {
+         if (file === rollout) {
+           o.log(row as Record<string, unknown>);
+           if (o.request.resumeThread && native.accepted && !native.session) native.session = o.request.resumeThread;
++          if (native.accepted && !native.foreignActivity && native.bindings.length > persistedBindings) {
++            persistedBindings = native.bindings.length;
++            save("native-accepted"); // Persist consumption while the original task is still running, not only at retirement.
++          }
+         }
+       }
+     }
+diff --git a/learner/lib/tui-reconciliation.ts b/learner/lib/tui-reconciliation.ts
+new file mode 100644
+index 0000000000000000000000000000000000000000..7a2a34584a731d23795ff448487b0e9489f84b4b
+--- /dev/null
++++ b/learner/lib/tui-reconciliation.ts
+@@ -0,0 +1,87 @@
++/** Read-only native acceptance audit. This cannot authorize sending, retirement, finish or receipt repair. */
++import { createHash } from "node:crypto";
++import { closeSync, fstatSync, openSync, readSync } from "node:fs";
++import { NativeBatch, learnerAgentName, type PromptProof, type TurnBinding } from "./herdr.js";
++
++type Row = Parameters<NativeBatch["feed"]>[0];
++interface Receipt {
++  submitted?: boolean;
++  cwd?: string;
++  label?: string;
++  pane?: string;
++  agent_name?: string;
++  agent_name_version?: number;
++  submissions?: PromptProof[];
++  bindings?: TurnBinding[];
++  session?: string;
++  turn?: string;
++  state?: string;
++  result?: { code?: number; session?: string; turn?: string };
++}
++const sha256 = (bytes: string | Buffer): string => createHash("sha256").update(bytes).digest("hex");
++
++function snapshot(file: string, limit: number): Buffer {
++  const fd = openSync(file, "r");
++  try {
++    const size = fstatSync(fd).size;
++    if (size > limit) throw new Error("audit snapshot too large");
++    const bytes = Buffer.alloc(size);
++    let offset = 0;
++    while (offset < size) {
++      const count = readSync(fd, bytes, offset, size - offset, offset);
++      if (!count) break;
++      offset += count;
++    }
++    return bytes.subarray(0, offset);
++  } finally { closeSync(fd); }
++}
++
++export function reconcileTuiReceipt(receipt: Receipt, rows: Row[]) {
++  const proofs = receipt.submissions;
++  if (receipt.submitted !== true || !receipt.cwd || !receipt.label || !receipt.pane || !Array.isArray(proofs) || !proofs.length ||
++      proofs.some((p) => !p || typeof p.marker !== "string" || !p.marker || !/^[a-f0-9]{64}$/.test(p.prompt_sha256 ?? "")) ||
++      new Set(proofs.map((p) => p.marker)).size !== proofs.length) throw new Error("missing original submitted prompt proof");
++  if (receipt.agent_name_version !== 1 || receipt.agent_name !== learnerAgentName(receipt.label, receipt.pane, receipt.cwd)) {
++    throw new Error("original native name binding is unverified");
++  }
++  const native = new NativeBatch(proofs[0]!.marker);
++  // Reuse the journaled hashes; plaintext prompts never need to be copied or resent by an audit.
++  for (const proof of proofs) native.expectProof(proof);
++  for (const row of rows) native.feed(row);
++  if (native.cwd !== receipt.cwd || !native.session ||
++      [receipt.session, receipt.result?.session].some((value) => value !== undefined && value !== native.session) ||
++      [receipt.turn, receipt.result?.turn].some((value) => value !== undefined && value !== native.turn) ||
++      (receipt.bindings ?? []).some((binding, i) => binding.turn_id !== native.bindings[i]?.turn_id ||
++        binding.marker !== native.bindings[i]?.marker || binding.prompt_sha256 !== native.bindings[i]?.prompt_sha256)) {
++    throw new Error("native session/cwd/turn differs from the original receipt");
++  }
++  return {
++    schema: "learner-tui-native-reconciliation-v1",
++    original_state: receipt.state, original_result_code: receipt.result?.code,
++    observed: { session: native.session, cwd: native.cwd, turn: native.turn, accepted: native.accepted,
++      foreign_activity: native.foreignActivity, complete: native.complete, open: native.open,
++      bindings: native.bindings, native_context_version: 1, native_preludes: native.preludes },
++    // An accepted native task is evidence of consumption, not authority to mutate any live control state.
++    original_receipt_modified: false, prompt_send_authorized: false, retirement_authorized: false,
++    finish_authorized: false, pane_pid_lease_revalidated: false,
++  };
++}
++
++export function reconciliationMain(argv: string[], out: (text: string) => void = console.log, err: (text: string) => void = console.error): number {
++  if (argv.length !== 4 || argv[0] !== "--receipt" || argv[2] !== "--native") {
++    err("usage: reconcile-tui.ts --receipt <original-receipt.json> --native <original-rollout.jsonl>"); return 2;
++  }
++  try {
++    const receiptBytes = snapshot(argv[1]!, 1024 * 1024);
++    const nativeBytes = snapshot(argv[3]!, 64 * 1024 * 1024);
++    const end = nativeBytes.lastIndexOf(10) + 1;
++    const durable = nativeBytes.subarray(0, end);
++    const rows = durable.toString("utf8").split("\n").filter(Boolean).map((line) => JSON.parse(line) as Row);
++    const audit = reconcileTuiReceipt(JSON.parse(receiptBytes.toString("utf8")) as Receipt, rows);
++    out(JSON.stringify({ ...audit, original_receipt_sha256: sha256(receiptBytes),
++      native_snapshot_sha256: sha256(durable), native_snapshot_bytes: end, trailing_partial_bytes: nativeBytes.length - end }));
++    return audit.observed.accepted && !audit.observed.foreign_activity ? 0 : 75;
++  } catch {
++    err("native acceptance audit deferred; retain the original receipt, pane, supervisor and lease"); return 75;
++  }
++}
+diff --git a/learner/reconcile-tui.ts b/learner/reconcile-tui.ts
+new file mode 100644
+index 0000000000000000000000000000000000000000..5cad8c2b895c525b11a73eb7c1be4914b3fea2f4
+--- /dev/null
++++ b/learner/reconcile-tui.ts
+@@ -0,0 +1,4 @@
++/** Local read-only audit; never starts a learner or writes its original receipt. */
++import { reconciliationMain } from "./lib/tui-reconciliation.js";
++
++process.exitCode = reconciliationMain(process.argv.slice(2));
+diff --git a/ops/learner_tui.py b/ops/learner_tui.py
+index 70b3ccf4b5765c5ac1bfa428494366f885a93b5f..1f8457ee0631885a8abc086b4266533cb0f02a60 100644
+--- a/ops/learner_tui.py
++++ b/ops/learner_tui.py
+@@ -3,6 +3,7 @@ import hashlib
+ import json
+ import os
+ from pathlib import Path
++import re
+ import subprocess
+ import sys
+ 
+@@ -33,6 +34,24 @@ def prompt_hash(text):
+     return hashlib.sha256(text.replace("\r\n", "\n").rstrip().encode()).hexdigest()
+ 
+ 
++def bootstrap_context(row, cwd):
++    """Only the observed two-part Codex bootstrap item; task/user events are never context."""
++    p = row.get("payload", {})
++    parts = p.get("content")
++    if (row.get("type") != "response_item" or p.get("type") != "message" or p.get("role") != "user"
++            or not isinstance(parts, list) or len(parts) != 2
++            or any(not isinstance(part, dict) or part.get("type") != "input_text"
++                   or not isinstance(part.get("text"), str) for part in parts)):
++        return False
++    instructions, environment = (part["text"].replace("\r\n", "\n") for part in parts)
++    match = re.match(r"^<environment_context>\n[ \t]*<cwd>([^<\n]+)</cwd>\n", environment)
++    return (instructions.startswith(f"# AGENTS.md instructions for {cwd}\n\n<INSTRUCTIONS>\n")
++            and instructions.endswith("\n</INSTRUCTIONS>") and instructions.count("</INSTRUCTIONS>") == 1
++            and environment.startswith("<environment_context>\n") and environment.endswith("\n</environment_context>")
++            and environment.count("<environment_context>") == 1 and environment.count("<cwd>") == 1
++            and match is not None and match[1] == cwd)
++
++
+ def verify_native(receipt):
+     """Reconstruct one-use native turn bindings from the journaled prompts, never a later human answer."""
+     result = receipt["result"]
+@@ -57,6 +76,9 @@ def verify_native(receipt):
+     accepted = False
+     seen = []
+     used = set()
++    preludes = []
++    pending_prelude = None
++    context_seen = False
+     with open(result["rollout"]) as source:
+         for line in source:
+             if not line.endswith("\n"):
+@@ -68,6 +90,9 @@ def verify_native(receipt):
+                 if meta != result.get("session") or cwd != receipt.get("cwd"):
+                     raise ValueError("native session identity changed")
+             if row.get("type") == "event_msg" and payload.get("type") == "task_started":
++                if pending_prelude:
++                    raise ValueError("bootstrap context never received its matching turn_context")
++                context_seen = False
+                 current = payload.get("turn_id")
+                 # An explicitly resumed session can have earlier history before this dispatch.
+                 active = active or current == bindings[0]["turn_id"]
+@@ -78,12 +103,31 @@ def verify_native(receipt):
+                 complete, accepted = None, False
+             if not active:
+                 continue
++            # The active dispatch boundary was established above; older resume history stays outside it.
++            if (not accepted
++                    and row.get("type") == "response_item"
++                    and (re.search(r"_call(?:_output)?$", str(payload.get("type"))) or payload.get("type") == "reasoning"
++                         or (payload.get("type") == "message" and payload.get("role") == "assistant"))):
++                raise ValueError("native activity precedes the dispatched prompt")
++            if row.get("type") == "turn_context":
++                if payload.get("turn_id") != current or payload.get("cwd") != cwd:
++                    raise ValueError("native turn context identity changed")
++                context_seen = True
++                if pending_prelude:
++                    preludes.append(pending_prelude)
++                    pending_prelude = None
+             user = None
+             if row.get("type") == "event_msg" and payload.get("type") == "user_message":
+                 user = payload.get("message", "")
+             if row.get("type") == "response_item" and payload.get("type") == "message" and payload.get("role") == "user":
+                 user = "\n".join(str(part.get("text", "")) for part in payload.get("content", []))
+             if user is not None:
++                if (meta and cwd and len(seen) == 1 and not accepted and not used and not preludes
++                        and not pending_prelude and not context_seen and bootstrap_context(row, cwd)):
++                    pending_prelude = {"turn_id": current, "cwd": cwd, "sha256": prompt_hash(user)}
++                    continue
++                if pending_prelude:
++                    raise ValueError("dispatched prompt precedes bootstrap turn_context")
+                 binding = turns.get(current, {})
+                 marker = user.replace("\r\n", "\n").split("\n")[0]
+                 if marker != binding.get("marker") or prompt_hash(user) != binding.get("prompt_sha256"):
+@@ -99,6 +143,8 @@ def verify_native(receipt):
+             or current != result.get("turn") or seen != [item["turn_id"] for item in bindings]
+             or len(used) != len(submissions)):
+         raise ValueError("final native turn is not bound to this dispatch")
++    if pending_prelude or (preludes and receipt.get("native_context_version") != 1) or receipt.get("native_preludes", []) != preludes:
++        raise ValueError("native bootstrap proof differs from the original dispatch")
+     if result.get("code") == 0 and (not complete or complete != result.get("message")):
+         raise ValueError("matching native task completion is missing")
+ 
+diff --git a/ops/tests/test_learner_tui.py b/ops/tests/test_learner_tui.py
+index 0bb5b0fe41203d8cfda32f33dcddd49ea642600f..c3a76fa189a1e2a3021511aee831704c4331e798 100644
+--- a/ops/tests/test_learner_tui.py
++++ b/ops/tests/test_learner_tui.py
+@@ -67,6 +67,119 @@ class CompletionGate(unittest.TestCase):
+         self.save()
+         self.assertEqual(tui.verify(self.receipt, self.output)["agent_name"], self.value["agent_name"])
+ 
++    def bootstrap_rows(self):
++        cwd = str(self.root)
++        content = [{"type": "input_text", "text": f"# AGENTS.md instructions for {cwd}\n\n<INSTRUCTIONS>\nFixed project instructions.\n</INSTRUCTIONS>"},
++                   {"type": "input_text", "text": f"<environment_context>\n  <cwd>{cwd}</cwd>\n  <shell>bash</shell>\n</environment_context>"}]
++        prelude = {"type": "response_item", "payload": {"type": "message", "role": "user", "content": content}}
++        context = {"type": "turn_context", "payload": {"turn_id": "turn", "cwd": cwd}}
++        self.value.update(native_context_version=1, native_preludes=[{
++            "turn_id": "turn", "cwd": cwd, "sha256": tui.prompt_hash("\n".join(part["text"] for part in content))}])
++        return self.rows[:2] + [prelude, context] + self.rows[2:]
++
++    def test_real_bootstrap_order_requires_context_before_the_exact_prompt(self):
++        rows = self.bootstrap_rows()
++        self.native.write_text("".join(json.dumps(r) + "\n" for r in rows))
++        self.save()
++        self.assertEqual(tui.verify(self.receipt, self.output)["native_preludes"], self.value["native_preludes"])
++
++    def test_bootstrap_proof_is_independently_reconstructed(self):
++        rows = self.bootstrap_rows()
++        self.native.write_text("".join(json.dumps(r) + "\n" for r in rows))
++        for changes in ({"native_context_version": 2}, {"native_preludes": []},
++                        {"native_preludes": [{"turn_id": "turn", "cwd": str(self.root), "sha256": "0" * 64}]}):
++            with self.subTest(changes=changes):
++                self.receipt.write_text(json.dumps(dict(self.value, **changes)))
++                with self.assertRaisesRegex(ValueError, "bootstrap proof"):
++                    tui.verify(self.receipt, self.output)
++
++    def test_unknown_or_misordered_bootstrap_cannot_hide_human_input(self):
++        for kind in ("unknown", "wrong-cwd", "wrong-context-turn", "wrong-context-cwd", "no-context",
++                     "event-user", "duplicate", "extra-part", "after-context", "after-prompt", "tool-before-prompt"):
++            with self.subTest(kind=kind):
++                rows = self.bootstrap_rows()
++                if kind == "unknown": rows[2]["payload"]["content"] = [{"type": "input_text", "text": "Human task"}]
++                if kind == "wrong-cwd": rows[2]["payload"]["content"][1]["text"] = "<environment_context>\n  <cwd>/foreign</cwd>\n</environment_context>"
++                if kind == "wrong-context-turn": rows[3]["payload"]["turn_id"] = "foreign"
++                if kind == "wrong-context-cwd": rows[3]["payload"]["cwd"] = "/foreign"
++                if kind == "no-context": rows.pop(3)
++                if kind == "event-user": rows[2] = {"type": "event_msg", "payload": {"type": "user_message", "message": "\n".join(p["text"] for p in rows[2]["payload"]["content"])}}
++                if kind == "duplicate": rows.insert(3, rows[2])
++                if kind == "extra-part": rows[2]["payload"]["content"].append({"type": "input_text", "text": "Human task"})
++                if kind == "after-context": rows[2], rows[3] = rows[3], rows[2]
++                if kind == "after-prompt": rows.insert(-1, rows[2])
++                if kind == "tool-before-prompt": rows.insert(3, {"type": "response_item", "payload": {"type": "function_call", "name": "unexpected"}})
++                self.native.write_text("".join(json.dumps(r) + "\n" for r in rows))
++                self.save()
++                with self.assertRaises(ValueError):
++                    tui.verify(self.receipt, self.output)
++
++    def unbound_activities(self):
++        return [{"type": "response_item", "payload": payload} for payload in (
++            {"type": "function_call", "name": "foreign"}, {"type": "custom_tool_call", "name": "foreign"},
++            {"type": "local_shell_call", "call_id": "foreign"},
++            {"type": "function_call_output", "output": "Earlier result"},
++            {"type": "custom_tool_call_output", "output": "Earlier result"}, {"type": "reasoning", "summary": []},
++            {"type": "message", "role": "assistant", "content": [{"type": "output_text", "text": "Earlier answer"}]})]
++
++    def test_entire_unbound_window_rejects_activity_even_before_any_prelude(self):
++        original = json.dumps(self.value)
++        for activity in self.unbound_activities():
++            for position in ("before-prelude", "after-prelude", "after-context", "no-prelude",
++                             "continuation-before-context", "continuation-after-context"):
++                with self.subTest(activity=activity["payload"]["type"], position=position):
++                    self.value = json.loads(original)
++                    rows = self.bootstrap_rows()
++                    if position.startswith("continuation"):
++                        proof = {"marker": "retry", "prompt_sha256": tui.prompt_hash("retry\ncontinue")}
++                        self.value["submissions"].append(proof)
++                        self.value["bindings"].append(dict(proof, turn_id="two"))
++                        self.value["result"]["turn"] = "two"
++                        rows.append({"type": "event_msg", "payload": {"type": "task_started", "turn_id": "two"}})
++                        context = {"type": "turn_context", "payload": {"turn_id": "two", "cwd": str(self.root)}}
++                        if position == "continuation-after-context": rows.append(context)
++                        rows.append(activity)
++                        if position == "continuation-before-context": rows.append(context)
++                        rows.extend([{"type": "event_msg", "payload": {"type": "user_message", "message": "retry\ncontinue"}},
++                                     {"type": "event_msg", "payload": {"type": "task_complete", "turn_id": "two", "last_agent_message": "report"}}])
++                    else:
++                        if position == "no-prelude":
++                            rows.pop(2)
++                            self.value["native_preludes"] = []
++                        rows.insert(2 if position == "before-prelude" else 4 if position == "after-context" else 3, activity)
++                    self.native.write_text("".join(json.dumps(r) + "\n" for r in rows))
++                    with self.assertRaisesRegex(ValueError, "native activity precedes"):
++                        tui.verify_native(self.value)
++
++    def test_bound_model_activity_is_valid_in_first_and_continued_turns(self):
++        original = json.dumps(self.value)
++        for activity in self.unbound_activities():
++            with self.subTest(activity=activity["payload"]["type"]):
++                self.value = json.loads(original)
++                rows = self.bootstrap_rows()
++                rows.insert(-1, activity)
++                self.native.write_text("".join(json.dumps(r) + "\n" for r in rows))
++                tui.verify_native(self.value)
++                proof = {"marker": "retry", "prompt_sha256": tui.prompt_hash("retry\ncontinue")}
++                self.value["submissions"].append(proof)
++                self.value["bindings"].append(dict(proof, turn_id="two"))
++                self.value["result"]["turn"] = "two"
++                rows.extend([{"type": "event_msg", "payload": {"type": "task_started", "turn_id": "two"}},
++                             {"type": "turn_context", "payload": {"turn_id": "two", "cwd": str(self.root)}},
++                             {"type": "event_msg", "payload": {"type": "user_message", "message": "retry\ncontinue"}}, activity,
++                             {"type": "event_msg", "payload": {"type": "task_complete", "turn_id": "two", "last_agent_message": "report"}}])
++                self.native.write_text("".join(json.dumps(r) + "\n" for r in rows))
++                tui.verify_native(self.value)
++
++    def test_resume_history_is_outside_the_active_dispatch_window(self):
++        rows = self.bootstrap_rows()
++        history = [{"type": "event_msg", "payload": {"type": "task_started", "turn_id": "historical"}},
++                   *self.unbound_activities(),
++                   {"type": "event_msg", "payload": {"type": "task_complete", "turn_id": "historical", "last_agent_message": "old"}}]
++        rows[1:1] = history
++        self.native.write_text("".join(json.dumps(r) + "\n" for r in rows))
++        tui.verify_native(self.value)
++
+     def test_zero_exit_alone_never_suffices(self):
+         self.native.write_text("".join(json.dumps(r) + "\n" for r in self.rows[:-1]))
+         with self.assertRaises(ValueError):
