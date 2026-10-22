@@ -1,0 +1,11 @@
+--- a/agent/tests/v6-brain-card-value-loop.test.ts
++++ b/agent/tests/v6-brain-card-value-loop.test.ts
+@@ -109,7 +109,7 @@
+   } finally { await server.close(); loading.mockRestore(); clock.mockRestore(); }
+ }
+ it.each([["T0TP8S9MMU9Q", 2], ["RBMEQGXPE9Z2", 3]] as const)("adds bounded facts to the actual combat→reward brain question for %s F%i", async (run, floor) => {
+-  const actual = await replay(run, floor), original = await replay(run, floor, "off");
++  const actual = await replay(run, floor, "present", 450), original = await replay(run, floor, "off");
+   const table = actual.tables.at(-1)!;
+   expect(table, JSON.stringify(actual.errors)).toBeDefined();
+   expect(table.options.map(o => o.known)).toEqual([true, true, true, true]);

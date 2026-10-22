@@ -1,11 +1,13 @@
-import { afterEach, expect, it, vi } from "vitest";
+import { afterEach, beforeEach, expect, it, vi } from "vitest";
 import { V6ProjectionEngine } from "../src/sim/v6-projection.js";
 import { observeV6CardReward } from "../src/v6/card-reward-scope.js";
 import { V6ProjectionRuntime } from "../src/v6/projection-runtime.js";
 import { DecisionBudget, currentDecisionBudget, withDecisionBudget } from "../src/core/decision-budget.js";
 import { board, env, setupOneshotTests } from "./oneshot-support.js";
 import { request } from "./v6-projection-fixture.js";
-setupOneshotTests(); afterEach(() => vi.unstubAllEnvs());
+setupOneshotTests();
+beforeEach(() => { vi.spyOn(performance, "now").mockReturnValue(0); });
+afterEach(() => { vi.restoreAllMocks(); vi.unstubAllEnvs(); });
 it("does not load frozen inputs or simulate while off or in combat", async () => {
   const load = vi.fn(), engine = { evaluate: vi.fn(), precompute: vi.fn() }, runtime = new V6ProjectionRuntime(engine, load);
   const e = env(board("xljq-f5-reward", "reward"));

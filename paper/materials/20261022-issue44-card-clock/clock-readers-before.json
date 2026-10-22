@@ -1,0 +1,238 @@
+[
+  {
+    "path": "agent/tests/human-pace-animation-reserve.test.ts",
+    "sha256": "80b8e0b8738c7e261926a803f5ed9571a9798c4e3a636983fb89498b0fd9aa31",
+    "hits": [
+      {
+        "line": 6,
+        "text": "import { currentDecisionBudget, withinDecisionBudget } from \"../src/core/decision-budget.js\";"
+      },
+      {
+        "line": 20,
+        "text": "if (fixture.plans === 1) currentDecisionBudget()!.charge(currentDecisionBudget()!.remaining());"
+      },
+      {
+        "line": 48,
+        "text": "expect(currentDecisionBudget()!.remaining()).toBeGreaterThanOrEqual(2500);"
+      }
+    ]
+  },
+  {
+    "path": "agent/tests/human-pace-budget.test.ts",
+    "sha256": "6e086eceb07faec72a3cc7cc552376bee3c1cbbc69f321d53fdc3336f2e45076",
+    "hits": [
+      {
+        "line": 4,
+        "text": "shadowBudgetAvailable, withinDecisionBudget, withDecisionBudget, currentDecisionBudget,"
+      },
+      {
+        "line": 97,
+        "text": "expect(currentDecisionBudget()).not.toBe(budget); time += 70000;"
+      },
+      {
+        "line": 103,
+        "text": "expect(currentDecisionBudget()).toBe(budget); expect(budget.remaining()).toBe(79000);"
+      },
+      {
+        "line": 140,
+        "text": "expect(currentDecisionBudget()).toBe(budget); expect(budget.running).toBe(true); expect(budget.remaining()).toBe(8000);"
+      }
+    ]
+  },
+  {
+    "path": "agent/tests/human-pace-card-shadow.test.ts",
+    "sha256": "9b9b8947286c5a904c7777e35adabdaff56ff9b7d70507eb86d6109b7ed542b6",
+    "hits": [
+      {
+        "line": 8,
+        "text": "import { DecisionBudget, currentDecisionBudget, withDecisionBudget } from \"../src/core/decision-budget.js\";"
+      },
+      {
+        "line": 140,
+        "text": "expect(parent.elapsed()).toBe(0); expect(currentDecisionBudget()).toBeUndefined();"
+      }
+    ]
+  },
+  {
+    "path": "agent/tests/human-pace-direction.test.ts",
+    "sha256": "d7cde4f5c0a3d5ba760a2e3c617a74768cde397c1358a9748d2681f8d56f783c",
+    "hits": [
+      {
+        "line": 6,
+        "text": "import { DecisionBudget, currentDecisionBudget, withDecisionBudget } from \"../src/core/decision-budget.js\";"
+      },
+      {
+        "line": 47,
+        "text": "evaluate: async () => { expect(currentDecisionBudget()?.kind).toBe(\"direction\"); time += 60001;"
+      },
+      {
+        "line": 51,
+        "text": "expect(currentDecisionBudget()).toBe(parent);"
+      }
+    ]
+  },
+  {
+    "path": "agent/tests/human-pace-sl-budget.test.ts",
+    "sha256": "dcedda5e6063127e8c2ef8822fc7564b9661044dba3208db31036c04e8fd0d93",
+    "hits": [
+      {
+        "line": 3,
+        "text": "import { DecisionBudget, DecisionBudgetExpired, DecisionBudgetLedger, combatBudgetKind, currentDecisionBudget,"
+      },
+      {
+        "line": 48,
+        "text": "expect(currentDecisionBudget()).not.toBe(budget);"
+      },
+      {
+        "line": 49,
+        "text": "expect(currentDecisionBudget()!.remaining()).toBe(57000);"
+      },
+      {
+        "line": 58,
+        "text": "expect(withCombatComputation(() => currentDecisionBudget())).toBeUndefined();"
+      }
+    ]
+  },
+  {
+    "path": "agent/tests/human-pace-sl-loop.test.ts",
+    "sha256": "4ab329485f850a426ed1c1c05046159c0b73a33db9a43063d52c69d951b9aba2",
+    "hits": [
+      {
+        "line": 7,
+        "text": "import { currentDecisionBudget } from \"../src/core/decision-budget.js\";"
+      },
+      {
+        "line": 27,
+        "text": "const budget = currentDecisionBudget();"
+      },
+      {
+        "line": 46,
+        "text": "if (character === \"silent\") expect(currentDecisionBudget()?.remaining()).toBe(3000);"
+      },
+      {
+        "line": 47,
+        "text": "else expect(currentDecisionBudget()).toBeUndefined();"
+      }
+    ]
+  },
+  {
+    "path": "agent/tests/v6-brain-card-value-loop.test.ts",
+    "sha256": "788863d1e10250ec51aa536b7591933878043dceaa1ededa4469b939b409e16f",
+    "hits": [
+      {
+        "line": 52,
+        "text": "const started = performance.now(), table = prepare(env);"
+      },
+      {
+        "line": 55,
+        "text": "preparationMs += performance.now() - started;"
+      }
+    ]
+  },
+  {
+    "path": "agent/tests/v6-card-option-loop.test.ts",
+    "sha256": "6e01763d4a244551d6372c2a5a03cfedd046898793a455e3ab721da2c5eb6ad3",
+    "hits": [
+      {
+        "line": 6,
+        "text": "import { currentDecisionBudget } from \"../src/core/decision-budget.js\";"
+      },
+      {
+        "line": 108,
+        "text": "const budget = currentDecisionBudget()!;"
+      },
+      {
+        "line": 114,
+        "text": "solves.push({ timedOut: result.timedOut === true, remaining: currentDecisionBudget()?.remaining() });"
+      },
+      {
+        "line": 212,
+        "text": "const engine = new V6CardResultsEngine(runner, () => performance.now(), 2), foreground = vi.spyOn(engine, \"evaluate\");"
+      }
+    ]
+  },
+  {
+    "path": "agent/tests/v6-potions.test.ts",
+    "sha256": "6fc78600a972c10aba55e6bc312be5b692b071525f24e8f6150572755b43621f",
+    "hits": [
+      {
+        "line": 15,
+        "text": "import { currentDecisionBudget, DecisionBudget, withDecisionBudget } from \"../src/core/decision-budget.js\";"
+      },
+      {
+        "line": 54,
+        "text": "await withPotionJevBudget(async () => { expect(currentDecisionBudget()?.remaining()).toBeGreaterThan(4900); });"
+      },
+      {
+        "line": 59,
+        "text": "expect(currentDecisionBudget()?.remaining()).toBe(5000);"
+      }
+    ]
+  },
+  {
+    "path": "agent/tests/v6-projection-runtime.test.ts",
+    "sha256": "3ee2001dd7566c219a7c7c85bc4d10fc7ebf35f8686f75f172388b843e1a9953",
+    "hits": [
+      {
+        "line": 5,
+        "text": "import { DecisionBudget, currentDecisionBudget, withDecisionBudget } from \"../src/core/decision-budget.js\";"
+      },
+      {
+        "line": 24,
+        "text": "expect(currentDecisionBudget()?.remaining()).toBe(r.phase === \"act\" ? 60000 : 5000); now += 10; return null as never;"
+      },
+      {
+        "line": 47,
+        "text": "const engine = { evaluate: vi.fn(async () => { expect(currentDecisionBudget()!.remaining()).toBeGreaterThan(4900); return null as never; }),"
+      },
+      {
+        "line": 65,
+        "text": "expect(candidate).toBe(r); expect(currentDecisionBudget()!.remaining()).toBeGreaterThan(4900); return { phase: \"pick\" } as never;"
+      },
+      {
+        "line": 83,
+        "text": "expect(currentDecisionBudget()).toBe(budget); now += 200; return { phase: \"pick\" } as never;"
+      },
+      {
+        "line": 139,
+        "text": "expect(currentDecisionBudget()).toBe(parent); expect(parent.remaining()).toBeLessThanOrEqual(remaining);"
+      }
+    ]
+  },
+  {
+    "path": "agent/tests/v6-prompt-summary-perf.test.ts",
+    "sha256": "b2b95c9e784ef8f78dd0bb99c8584e444694ce03af08388681af0fbcebcf54ea",
+    "hits": [
+      {
+        "line": 27,
+        "text": "const start = performance.now();"
+      },
+      {
+        "line": 28,
+        "text": "try { return original(...args); } finally { stages[key] = (stages[key] ?? 0) + performance.now() - start; }"
+      },
+      {
+        "line": 36,
+        "text": "const start = performance.now();"
+      },
+      {
+        "line": 39,
+        "text": "const elapsed_ms = performance.now() - start;"
+      }
+    ]
+  },
+  {
+    "path": "agent/tests/v6-prompt-summary.test.ts",
+    "sha256": "e3da912776f34ba7e97a7f314e1b63121b6c5a0b3e2ceb63d6bf65049ed97ee2",
+    "hits": [
+      {
+        "line": 267,
+        "text": "const before = JSON.stringify(e.v6CardResults), start = performance.now(), d = buildV6CardPick(e, undefined, knowledge)!.decision;"
+      },
+      {
+        "line": 268,
+        "text": "expect(performance.now() - start).toBeLessThan(1500);"
+      }
+    ]
+  }
+]
