@@ -1,0 +1,62 @@
+{
+  "at": "2026-10-22T10:51:21+08:00",
+  "issue": 36,
+  "state": "production-view-disabled-before-main-integration",
+  "runtime_root": "/home/dw/Projects/agent-sts2",
+  "hosting": "/home/dw/Projects/agent-sts2/ops/codex-ops/hosting",
+  "before_sha256": "869a81b6d8290af44d85c501341ffdb1ffcb99343e84468a1dee551518742b38",
+  "after_sha256": "79e470a6256a43bdbe29178686b350b19f98f1642185c27834ca34f21dbf488b",
+  "brain_view": "off",
+  "other_hosting_controls_unchanged": true,
+  "mode_preserved": true,
+  "process_overrides": [
+    {
+      "pid": 228609,
+      "start": "613852",
+      "comm": "bash",
+      "role_paths": [
+        "/home/dw/Projects/agent-sts2/ops/autoplay.sh"
+      ],
+      "brain_view_override": null,
+      "override_cannot_enable": true
+    },
+    {
+      "pid": 3490952,
+      "start": "6151177",
+      "comm": "bash",
+      "role_paths": [
+        "/home/dw/Projects/agent-sts2/ops/codex-ops.sh"
+      ],
+      "brain_view_override": null,
+      "override_cannot_enable": true
+    },
+    {
+      "pid": 3516507,
+      "start": "6162717",
+      "comm": "node",
+      "role_paths": [
+        "/home/dw/Projects/agent-sts2/ops/codex/main.ts"
+      ],
+      "brain_view_override": null,
+      "override_cannot_enable": true
+    },
+    {
+      "pid": 3516523,
+      "start": "6162726",
+      "comm": "node",
+      "role_paths": [
+        "/home/dw/Projects/agent-sts2/ops/codex/main.ts"
+      ],
+      "brain_view_override": null,
+      "override_cannot_enable": true
+    }
+  ],
+  "owned_cron_entries": 3,
+  "cron_explicit_brain_view_settings": [],
+  "selected_environment_values_only": true,
+  "original_hosting_resolver": "off",
+  "account_or_shared_environment_changed": false,
+  "live_or_game_changed": false,
+  "view_process_started": false,
+  "natural_enable_and_acceptance_pending": true
+}
