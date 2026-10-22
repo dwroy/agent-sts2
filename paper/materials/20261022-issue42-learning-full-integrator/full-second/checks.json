@@ -1,0 +1,58 @@
+{
+  "state": "failed-or-blocked",
+  "started_at": "2026-10-22T21:11:08+08:00",
+  "runner_pid": 1479678,
+  "runner_start": "9919797",
+  "nice": 19,
+  "base_main": "59cc1bb75eb77e347768139af31e4bac19f99acf",
+  "source": "2c2d9f1aa8027f59afc1969514a697559419a069",
+  "tree": "0323cdbda6bd3dbf1f2bbcaab4d9462164416701",
+  "scope_url": "https://github.com/dwroy/agent-sts2/issues/42#issuecomment-6341048002",
+  "full_started": true,
+  "steps": [
+    {
+      "name": "tsc",
+      "argv": [
+        "nice",
+        "-n",
+        "19",
+        "node",
+        "node_modules/typescript/bin/tsc",
+        "-p",
+        "tsconfig.json",
+        "--noEmit"
+      ],
+      "cwd": "agent",
+      "started_at": "2026-10-22T21:11:08+08:00",
+      "pid": 1479754,
+      "exit_code": 0,
+      "seconds": 0.916
+    },
+    {
+      "name": "full",
+      "argv": [
+        "nice",
+        "-n",
+        "19",
+        "node",
+        "node_modules/vitest/vitest.mjs",
+        "run",
+        "--pool=forks",
+        "--maxWorkers=1",
+        "--no-file-parallelism",
+        "--reporter=default",
+        "--reporter=json",
+        "--outputFile.json=/home/dw/Projects/agent-sts2/.worktrees/integrator42-20261022/.artifacts/issue42-full-20261022/full-second/vitest.json"
+      ],
+      "cwd": "agent",
+      "started_at": "2026-10-22T21:11:09+08:00",
+      "pid": 1479848,
+      "exit_code": 143,
+      "seconds": 416.389
+    }
+  ],
+  "input_count": 2594,
+  "error": "RuntimeError",
+  "message": "full failed; preserve original outputs",
+  "ended_at": "2026-10-22T21:18:05+08:00"
+}

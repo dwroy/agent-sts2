@@ -6,6 +6,26 @@ import type { BrainRequest } from "../brain/types.js";
 export const QUESTION_TYPES = ["card_reward", "event", "rest", "shop", "act_plan"] as const;
 export type QuestionType = typeof QUESTION_TYPES[number];
 type Range = { min?: number; max?: number };
+export interface OwnStrategyEvidence { type?: "own"; run: string; floor: number; ref?: string; role?: "support" | "contradict" | "repeat" }
+export interface ExternalAggregateEvidence {
+  type: "external_aggregate";
+  source: `external:${string}`;
+  url: string;
+  version: string;
+  dataset_sha256: string;
+  downloaded_at: string;
+  filters: { character: "silent"; ascension: number; criteria: string };
+  statistic: { name: string; value: number; unit: string };
+  denominator: { unit: "runs" | "players" | "offers" | "fights" | "rooms" | "rewards" | "cards"; n: number };
+  interval?: { low: number; high: number; method: string };
+  design: "observational";
+  limitations: string[];
+  license: string;
+  ref?: string;
+  role?: "support" | "contradict";
+}
+export type StrategyEvidence = OwnStrategyEvidence | ExternalAggregateEvidence;
+export const EXTERNAL_ONLY_CONFIDENCE_MAX = 0.49;
 export interface StrategyEntry {
   id: string;
   version: string;
@@ -19,10 +39,13 @@ export interface StrategyEntry {
     deck_cards?: { name: string; count: Range }[];
   };
   strategy: string;
-  evidence: { run: string; floor: number; ref?: string }[];
-  source: "own" | `external:${string}`;
+  evidence: StrategyEvidence[];
+  source: "own" | "mixed" | `external:${string}`;
   provenance?: { url: string; version: string; sha256: string; license: string };
   confidence: number;
+  evidence_status?: "aligned" | "conflict" | "unassessed";
+  evidence_summary?: ReturnType<typeof strategyEvidenceSummary>;
+  limitation_notice?: string;
 }
 export interface StrategyLibrary { schema: "brain-strategies-v1"; character: "silent"; entries: StrategyEntry[] }
 export const STRATEGY_LIMITS = { entries: 3, bytes: 4096, textBytes: 1200, fileBytes: 1_048_576, libraryEntries: 500 } as const;
@@ -36,6 +59,82 @@ function range(v: unknown, low = 0, high = Infinity): boolean {
     && [v["min"], v["max"]].every((n) => n === undefined || finite(n) && n >= low && n <= high)
     && (v["min"] === undefined || v["max"] === undefined || (v["min"] as number) <= (v["max"] as number));
 }
+/** Aggregate evidence never accepts synthetic run/floor fields. Keep in sync with learner/external_evidence.py. */
+export function validateStrategyEvidence(ev: unknown): void {
+  if (!object(ev)) throw new Error("invalid strategy evidence");
+  if (ev["type"] !== "external_aggregate") {
+    if (!only(ev, ["type", "run", "floor", "ref", "role"])
+      || ev["type"] !== undefined && ev["type"] !== "own"
+      || !text(ev["run"])
+      || !/^[0-9A-Z]{12}$/.test(ev["run"])
+      || !Number.isInteger(ev["floor"])
+      || (ev["floor"] as number) < 1
+      || ev["ref"] !== undefined && !text(ev["ref"])
+      || ev["role"] !== undefined && (typeof ev["role"] !== "string" || !["support", "contradict", "repeat"].includes(ev["role"])))
+      throw new Error("invalid own strategy evidence");
+    return;
+  }
+  if (!only(ev, ["type", "source", "url", "version", "dataset_sha256", "downloaded_at", "filters", "statistic", "denominator", "interval", "design", "limitations", "license", "ref", "role"])
+      || !text(ev["source"])
+      || !/^external:\S+$/.test(ev["source"])
+      || !text(ev["url"])
+      || !/^https?:\/\/[^\s/]+/.test(ev["url"])
+      || !text(ev["version"])
+      || !text(ev["license"])
+      || !text(ev["dataset_sha256"])
+      || !/^[a-f0-9]{64}$/.test(ev["dataset_sha256"])
+      || !text(ev["downloaded_at"])
+      || !/^\d{4}-\d{2}-\d{2}$/.test(ev["downloaded_at"])
+      || !Number.isFinite(Date.parse(ev["downloaded_at"]))
+      || new Date(ev["downloaded_at"]).toISOString().slice(0, 10) !== ev["downloaded_at"]
+      || ev["design"] !== "observational"
+      || !Array.isArray(ev["limitations"])
+      || !ev["limitations"].length
+      || !ev["limitations"].every(text))
+      throw new Error("invalid external aggregate provenance");
+  const f = ev["filters"], s = ev["statistic"], d = ev["denominator"], ci = ev["interval"];
+  if (!object(f)
+      || !only(f, ["character", "ascension", "criteria"])
+      || f["character"] !== "silent"
+      || !Number.isInteger(f["ascension"])
+      || (f["ascension"] as number) < 0
+      || (f["ascension"] as number) > 20
+      || !text(f["criteria"])
+      || !object(s)
+      || !only(s, ["name", "value", "unit"])
+      || !text(s["name"])
+      || !finite(s["value"])
+      || !text(s["unit"])
+      || !object(d)
+      || !only(d, ["unit", "n"])
+      || typeof d["unit"] !== "string"
+      || !["runs", "players", "offers", "fights", "rooms", "rewards", "cards"].includes(d["unit"])
+      || !Number.isSafeInteger(d["n"])
+      || (d["n"] as number) <= 0)
+      throw new Error("invalid external aggregate statistic/denominator");
+  if (ci !== undefined && (!object(ci)
+      || !only(ci, ["low", "high", "method"])
+      || !finite(ci["low"])
+      || !finite(ci["high"])
+      || ci["low"] > ci["high"]
+      || !text(ci["method"])))
+      throw new Error("invalid external aggregate interval");
+  if (ev["ref"] !== undefined && !text(ev["ref"])
+      || ev["role"] !== undefined && (typeof ev["role"] !== "string" || !["support", "contradict"].includes(ev["role"])))
+      throw new Error("invalid external aggregate role/ref");
+}
+
+/** Do not add overlapping external denominators or count them as local validation. */
+export function strategyEvidenceSummary(entry: StrategyEntry) {
+  const own = entry.evidence.filter((e): e is OwnStrategyEvidence => e.type !== "external_aggregate");
+  return { own_runs: new Set(own.map(e => e.run)).size, own_support_runs: new Set(own.filter(e => e.role !== "contradict").map(e => e.run)).size,
+    external: entry.evidence.filter((e): e is ExternalAggregateEvidence => e.type === "external_aggregate").map(e => ({ source: e.source, version: e.version, dataset_sha256: e.dataset_sha256, statistic: e.statistic.name, denominator: e.denominator })) };
+}
+function presentStrategy(entry: StrategyEntry): StrategyEntry {
+  if (!entry.evidence.some(e => e.type === "external_aggregate")) return entry;
+  return { ...entry, evidence_summary: strategyEvidenceSummary(entry), limitation_notice: "外部聚合为观察性统计、非因果，外部分母不计本系统验证；样本选择、版本与口径局限见 evidence.limitations。" };
+}
+
 /** Reject unknown trigger keys: a typo must never silently broaden an entry. */
 export function parseStrategyLibrary(raw: unknown): StrategyLibrary {
   if (!object(raw) || raw["schema"] !== "brain-strategies-v1" || raw["character"] !== "silent" || !Array.isArray(raw["entries"]) || raw["entries"].length > STRATEGY_LIMITS.libraryEntries) throw new Error("invalid strategy library header");
@@ -49,13 +148,17 @@ export function parseStrategyLibrary(raw: unknown): StrategyLibrary {
     if (t["bosses"] !== undefined && (!Array.isArray(t["bosses"]) || !t["bosses"].length || !t["bosses"].every(text))) throw new Error("invalid strategy bosses");
     for (const k of ["floor", "deck_size", "hp_ratio"]) if (t[k] !== undefined && !range(t[k], 0, k === "hp_ratio" ? 1 : Infinity)) throw new Error("invalid strategy range");
     if (t["deck_cards"] !== undefined && (!Array.isArray(t["deck_cards"]) || !t["deck_cards"].length || !t["deck_cards"].every((c) => object(c) && only(c, ["name", "count"]) && text(c["name"]) && range(c["count"])))) throw new Error("invalid strategy deck cards");
-    if (!Array.isArray(entry["evidence"]) || !entry["evidence"].length || entry["evidence"].length > 20 || !entry["evidence"].every((e) => object(e) && text(e["run"]) && Number.isInteger(e["floor"]) && (e["floor"] as number) >= 0 && (e["ref"] === undefined || text(e["ref"])))) throw new Error("invalid strategy evidence");
-    const source = entry["source"];
-    if (source !== "own" && !(text(source) && /^external:.+/.test(source))) throw new Error("invalid strategy source");
-    if (source !== "own") {
-      const p = entry["provenance"];
-      if (!object(p) || !["url", "version", "sha256", "license"].every((k) => text(p[k])) || !/^https?:\/\//.test(p["url"] as string) || !/^[a-f0-9]{64}$/.test(p["sha256"] as string)) throw new Error("external strategy needs provenance");
-    }
+    if (!Array.isArray(entry["evidence"]) || !entry["evidence"].length || entry["evidence"].length > 20) throw new Error("invalid strategy evidence");
+    for (const ev of entry["evidence"]) validateStrategyEvidence(ev);
+    const evidence = entry["evidence"] as StrategyEvidence[];
+    const external = evidence.filter((e): e is ExternalAggregateEvidence => e.type === "external_aggregate");
+    const own = evidence.filter((e): e is OwnStrategyEvidence => e.type !== "external_aggregate");
+    const sources = new Set([...own.map(() => "own"), ...external.map(e => e.source)]);
+    if (entry["source"] !== (sources.size > 1 ? "mixed" : [...sources][0])) throw new Error("strategy source must match evidence");
+    const status = entry["evidence_status"];
+    if (status !== undefined && (typeof status !== "string" || !["aligned", "conflict", "unassessed"].includes(status)) || sources.size > 1 && status === undefined) throw new Error("mixed strategy needs evidence_status");
+    if (external.length && evidence.some(e => e.role === "contradict") && status !== "conflict") throw new Error("contradictory evidence needs conflict status");
+    if (external.length && !own.some(e => e.role !== "contradict") && entry["confidence"] > EXTERNAL_ONLY_CONFIDENCE_MAX) throw new Error("external-only strategy confidence exceeds 0.49");
   }
   return raw as unknown as StrategyLibrary;
 }
@@ -104,7 +207,7 @@ export function retrieveStrategies(library: StrategyLibrary, label: string, payl
       && (!t.bosses || t.bosses.includes(String(get("act_boss") ?? get("boss") ?? "")))
       && within(number("floor"), t.floor) && within(ratio, t.hp_ratio) && within(size, t.deck_size)
       && (!t.deck_cards || !!deck && t.deck_cards.every((c) => within(deck.get(c.name) ?? 0, c.count)));
-  }).sort((a, b) => specificity(b) - specificity(a) || b.confidence - a.confidence || a.id.localeCompare(b.id));
+  }).sort((a, b) => specificity(b) - specificity(a) || b.confidence - a.confidence || a.id.localeCompare(b.id)).map(presentStrategy);
 }
 
 /** Total serialized UTF-8 bytes, including metadata/envelope, are bounded; never truncate evidence. */

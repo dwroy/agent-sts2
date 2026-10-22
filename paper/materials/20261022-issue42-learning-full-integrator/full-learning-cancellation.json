@@ -1,0 +1,18 @@
+{
+  "time": "2026-10-22T21:22:09+08:00",
+  "reason": "Dependency preflight found fixed #24 aggregate absent from live. Preserve the exact existing frozen row as a local test fixture, then full-test final learning tree. This cancellation is not a product failure or pass.",
+  "targets": [
+    {
+      "ppid": 1512932,
+      "start": "9981083",
+      "cmd": "/home/dw/.local/node/bin/node --experimental-import-meta-resolve --require /home/dw/Projects/agent-sts2/agent/node_modules/vitest/suppress-warnings.cjs --conditions node --conditions development /home/dw/Projects/agent-sts2/agent/node_modules/vitest/dist/workers/forks.js ",
+      "pid": 1533127
+    },
+    {
+      "ppid": 1512832,
+      "start": "9969086",
+      "cmd": "node node_modules/vitest/vitest.mjs run --pool=forks --maxWorkers=1 --no-file-parallelism --reporter=default --reporter=json --outputFile.json=/home/dw/Projects/agent-sts2/.worktrees/integrator42-20261022/.artifacts/issue42-full-20261022/full-learning/vitest.json ",
+      "pid": 1512932
+    }
+  ]
+}

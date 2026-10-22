@@ -1,0 +1,11 @@
+{
+  "first_receipt": "full-first/checks.json",
+  "first_full_exit": 1,
+  "failures": {
+    "check-imports": "tracked issue29 fixed data omitted by sparse checkout; materialized exact index blob",
+    "ops-current-events/ordinary-close-isolation/cadence-no-change": "temporary ledger fixture missing newly required learner/external_evidence.py; copy module alongside ledger.py without changing assertions"
+  },
+  "fixed_data_sha256": "8d83deb7c85a8b7ceb92da9ffb195f13edf4fa2876f9be5692ec8d2ded1c23ef",
+  "fixture_patch": "diff --git a/ops/tests/test_ordinary_close.py b/ops/tests/test_ordinary_close.py\nindex 824d8356a..51298ce22 100644\n--- a/ops/tests/test_ordinary_close.py\n+++ b/ops/tests/test_ordinary_close.py\n@@ -28,6 +28,7 @@ class OrdinaryClose(unittest.TestCase):\n         for name in (\"learner\", \"notes\", \"paper/materials/learning\", \"paper/data\", \"agent/src\", \"knowledge/builders\", \"eval\"):\n             (self.root / name).mkdir(parents=True, exist_ok=True)\n         shutil.copy(REPO / \"learner/ledger.py\", self.root / \"learner/ledger.py\")\n+        shutil.copy(REPO / \"learner/external_evidence.py\", self.root / \"learner/external_evidence.py\")\n         shutil.copy(REPO / \"knowledge/builders/characters.py\", self.root / \"knowledge/builders/characters.py\")\n         (self.root / \".gitignore\").write_text(\"ops/codex-ops/\\nlearner/runs/\\n__pycache__/\\n*.counter\\n\")\n         (self.root / \"agent/src/fixed.ts\").write_text(\"export const fixed = 1;\\n\")\n",
+  "original_outputs_unchanged": true
+}

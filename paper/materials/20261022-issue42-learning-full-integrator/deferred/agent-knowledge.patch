@@ -1,0 +1,15 @@
+diff --git a/agent/src/brain/tools/agent-knowledge.ts b/agent/src/brain/tools/agent-knowledge.ts
+index 6e65bd891..41fec279c 100644
+--- a/agent/src/brain/tools/agent-knowledge.ts
++++ b/agent/src/brain/tools/agent-knowledge.ts
+@@ -101,7 +101,9 @@ export function buildKnowledgeTools(_ctx: ToolContext): ToolDef[] {
+       try { data = read(knowledgeFile(ctx.knowledgeDir, "strategy-entries.json")); } catch { return envelope([], [], { status: "missing" }); }
+       const library = parseStrategyLibrary(data.value);
+       const rows = retrieveStrategies(library, ctx.label ?? "", ctx.payload).filter(e => query === "*" || `${e.id} ${e.strategy}`.includes(query));
+-      return bounded(rows, rows.map(e => ({ source: e.source, version: e.version, evidence: e.evidence, provenance: e.provenance ?? null })), { library_sha256: data.sha256 });
++      return bounded(rows, rows.flatMap(e => e.evidence.map(ev => ev.type === "external_aggregate"
++        ? { source: ev.source, version: ev.version, dataset_sha256: ev.dataset_sha256, denominator: ev.denominator }
++        : { source: "own", version: e.version })), { library_sha256: data.sha256 });
+     }),
+     ...externalStatsTools(),
+   ];

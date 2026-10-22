@@ -28,6 +28,7 @@ class OrdinaryClose(unittest.TestCase):
         for name in ("learner", "notes", "paper/materials/learning", "paper/data", "agent/src", "knowledge/builders", "eval"):
             (self.root / name).mkdir(parents=True, exist_ok=True)
         shutil.copy(REPO / "learner/ledger.py", self.root / "learner/ledger.py")
+        shutil.copy(REPO / "learner/external_evidence.py", self.root / "learner/external_evidence.py")
         shutil.copy(REPO / "knowledge/builders/characters.py", self.root / "knowledge/builders/characters.py")
         (self.root / ".gitignore").write_text("ops/codex-ops/\nlearner/runs/\n__pycache__/\n*.counter\n")
         (self.root / "agent/src/fixed.ts").write_text("export const fixed = 1;\n")

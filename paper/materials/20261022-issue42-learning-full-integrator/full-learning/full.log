@@ -1,0 +1,11 @@
+
+ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/integrator42-20261022/agent
+
+ ✓ tests/boss-lines-planner.test.ts (8 tests) 116883ms
+     ✓ BOSS_SIM_LINES=off: every logged boss board's decision is the pre-B2 one, byte for byte  16584ms
+     ✓ P3 leaves every frozen Ironclad question and every answer resolution byte-equivalent  17561ms
+     ✓ a boss it is trusted on (The Kin, turn 5): every line's whole-fight numbers, rollout_best by the simulated win rate, the log  5440ms
+     ✓ BOSS_SIM_LOW_TRUST=retry (default): a low-trust boss's first attempt is not simulated at all; the question and every answer as with B2 off, the log says why  6977ms
+     ✓ BOSS_SIM_LOW_TRUST=always: a low-trust boss (the Queen, V4.2): no whole-fight number or plan in Jev's question, the question and ranking as with B2 off; the log keeps the numbers  32722ms
+     ✓ an SL retry of a low-trust boss (SL_RETRY_SHOW_SIM on): the numbers shown and labelled 低可信, the ranking unchanged; the previous attempts in the question  34416ms
+     ✓ turn 1: the fight plan from the best line's samples  3009ms

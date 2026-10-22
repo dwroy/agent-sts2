@@ -32,6 +32,9 @@ import re
 import subprocess
 import sys
 
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from external_evidence import external, check_external, check_accounting, summary  # noqa: E402
+
 REPO = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, os.path.join(REPO, "knowledge", "builders"))
 from characters import character_key, run_character  # noqa: E402
@@ -49,9 +52,9 @@ RUN_ID = re.compile(r"^[0-9A-Z]{12}$")
 ITEM_ID = re.compile(r"^[a-z]+-\d{4}$")
 CLAIM_MAX = 800
 
-ADD_REQUIRED = ["character", "kind", "claim", "evidence", "first_run", "prior", "status", "by"]
-ADD_FIELDS = set(ADD_REQUIRED) | {"op", "id", "ts", "asc", "prior_note", "prior_runs", "where", "version", "note"}
-UPDATE_FIELDS = {"op", "id", "ts", "by", "status", "evidence", "where", "version", "effect", "note", "claim", "first_run", "asc", "prior_note"}
+ADD_REQUIRED = ["character", "kind", "claim", "evidence", "prior", "status", "by"]
+ADD_FIELDS = set(ADD_REQUIRED) | {"first_run", "confidence", "evidence_status", "op", "id", "ts", "asc", "prior_note", "prior_runs", "where", "version", "note"}
+UPDATE_FIELDS = {"confidence", "evidence_status", "op", "id", "ts", "by", "status", "evidence", "where", "version", "effect", "note", "claim", "first_run", "asc", "prior_note"}
 EFFECT_FIELDS = {"runs_after", "applied", "outcome", "repeats_after", "audited", "by"}
 
 
@@ -120,7 +123,12 @@ def check_evidence(evidence, character, runs, problems, where="evidence"):
         if not isinstance(ev, dict):
             problems.append(f"{where}[{i}]: an object")
             continue
-        unknown = set(ev) - {"run", "floor", "turn", "note", "role"}
+        if external(ev):
+            problems.extend(f"{where}[{i}]: {p}" for p in check_external(ev, character))
+            continue
+        unknown = set(ev) - {"type", "run", "floor", "turn", "note", "role", "ref"}
+        if "type" in ev and ev["type"] != "own":
+            problems.append(f"{where}[{i}].type: own or external_aggregate")
         if unknown:
             problems.append(f"{where}[{i}]: unknown fields {sorted(unknown)}")
         run = ev.get("run")
@@ -173,6 +181,13 @@ def validate_add(row, runs, versions, known_ids):
         problems.append("asc: an integer 0-20")
     if row.get("evidence") is not None:
         check_evidence(row.get("evidence"), character, runs, problems)
+    evidence = row.get("evidence") if isinstance(row.get("evidence"), list) else []
+    own = [e for e in evidence if isinstance(e, dict) and not external(e)]
+    if own and not row.get("first_run"):
+        problems.append("first_run: required for own evidence")
+    if not own and ("first_run" in row or "asc" in row or "prior_runs" in row):
+        problems.append("external-only item: no first_run, asc or prior_runs; use filters")
+    problems.extend(check_accounting(evidence, row.get("confidence"), row.get("evidence_status")))
     first = row.get("first_run")
     if first is not None:
         if not isinstance(first, str) or not RUN_ID.match(first):
@@ -213,6 +228,13 @@ def validate_update(row, runs, versions, items):
         problems.append(f"status: one of {STATUSES}")
     if "evidence" in row:
         check_evidence(row["evidence"], item["character"] if item else None, runs, problems)
+    evidence = (item or {}).get("evidence", []) + (row["evidence"] if isinstance(row.get("evidence"), list) else [])
+    problems.extend(check_accounting(evidence, row.get("confidence", (item or {}).get("confidence")),
+                                     row.get("evidence_status", (item or {}).get("evidence_status"))))
+    if any(isinstance(e, dict) and not external(e) for e in evidence) and not row.get("first_run", (item or {}).get("first_run")):
+        problems.append("first_run: required when adding own evidence")
+    if evidence and all(external(e) for e in evidence) and ("first_run" in row or "asc" in row):
+        problems.append("external-only item: no first_run or asc; use filters")
     check_where(row.get("where"), problems)
     if row.get("status") == "shipped" and not (row.get("version") or (item or {}).get("version")):
         problems.append("status shipped: needs version (eval/versions.json name)")
@@ -274,7 +296,7 @@ def apply(items, row):
     for key, values in (row.get("where") or {}).items():
         have = item["where"].setdefault(key, [])
         have.extend(v for v in values if v not in have)
-    for key in ("version", "claim", "first_run", "asc", "prior_note"):
+    for key in ("version", "claim", "first_run", "asc", "prior_note", "confidence", "evidence_status"):
         if key in row:
             item[key] = row[key]
     if "effect" in row:
@@ -293,6 +315,9 @@ def fold(rows=None):
     for _, row in rows if rows is not None else read_rows():
         if row and row.get("op") in ("add", "update") and (row["op"] == "add" or row.get("id") in items):
             apply(items, row)
+    for item in items.values():
+        if any(external(e) for e in item.get("evidence", [])):
+            item["evidence_summary"] = summary(item["evidence"])
     return items
 
 
@@ -353,7 +378,7 @@ def repeats(item, after_ship=False, starts=None):
 
     The row's "added" timestamp remains intact for provenance but never determines when gameplay happened.
     """
-    reps = [e for e in item.get("evidence", []) if e.get("role") == "repeat"]
+    reps = [e for e in item.get("evidence", []) if not external(e) and e.get("role") == "repeat"]
     if after_ship:
         starts = load_run_starts() if starts is None else starts
         reps = [e for e in reps if evidence_after_ship(item, e, starts)]
@@ -475,7 +500,7 @@ def append(op, rows, path=None):
                         row["asc"] = asc
                 row.setdefault("where", {})
                 found = validate_add(row, runs, versions, set(items))
-                if "asc" not in row:
+                if "asc" not in row and isinstance(row.get("evidence"), list) and any(isinstance(e, dict) and not external(e) for e in row["evidence"]):
                     found.append("asc: required (first_run is not in runs.jsonl)")
             else:
                 if "status" in row and row.get("id") in drifted:
@@ -526,12 +551,14 @@ def matches(item, args):
 
 
 def one_line(item, starts=None):
-    runs = sorted({e.get("run") for e in item.get("evidence", [])})
+    runs = sorted({e["run"] for e in item.get("evidence", []) if isinstance(e.get("run"), str) and not external(e)})
     reps = len(repeats(item))
     late = len(repeats(item, after_ship=True, starts=starts))
     version = f" {item['version']}" if item.get("version") else ""
+    ext = summary(item.get("evidence", []))["external"]
+    external_note = f" external={json.dumps(ext, ensure_ascii=False)} evidence_status={item.get('evidence_status', 'unassessed')}" if ext else ""
     return (f"{item['id']} [{item.get('status')}{version}] A{item.get('asc')} {item.get('kind')} prior={item.get('prior')}"
-            f" runs={len(runs)}{f' repeats={reps}' if reps else ''}{f' (after shipping {late})' if late else ''}: {item.get('claim')}")
+            f" runs={len(runs)}{external_note}{f' repeats={reps}' if reps else ''}{f' (after shipping {late})' if late else ''}: {item.get('claim')}")
 
 
 def main():
