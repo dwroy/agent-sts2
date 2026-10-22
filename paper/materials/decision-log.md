@@ -5816,3 +5816,5 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
 - 2026-10-22 14:40 [ops] 141301-s2模型capacity中断1：原线程/high核回，保两源码草稿/证据夹具/45过程材料及原failed/冷却；包装器仍finish/dataset未退，不重领/切号/合入。仅登记原源码接续待办，非自动resume，保父与失败。paper/materials/20261022-1436-ops/。
 
 - 2026-10-22 14:44 [ops] 八重复notice原文/双箱/ops ACK及watcher转达证明与14:14一致；CLI三研究支持阻塞及正式角色ACK pending保留，不重发/代填/重试或关科学父。paper/materials/20261022-1443-ops/notices-readback.json。
+
+- 2026-10-22T15:33:08+08:00 [dev #41] 固定F2输入/虚拟时间复现仅固定engine时钟仍有2/8终局：继承L2求解预算耗尽时8采样/6capped/2终局；仅修测试固定ledger/runtime/求解时钟，保原两组8终局与精度断言，另验采样截止2样本/6missing。tsc0、定向9文件76过；历史当刻归因限制及原失败保留，最终组合full沿#37→#20原窗口待验，不改生产/main/live/STOP。材料 paper/materials/20261022-issue41-card-clock/。
