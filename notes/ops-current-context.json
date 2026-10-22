@@ -17808,5 +17808,18 @@
     "refresh_native_pause_guard": false,
     "last_refresh_ended_at": "2026-10-22T17:16:29.025133+08:00",
     "integrator_reminded_once": true
+  },
+  "claude_escalation_inbox_rule": {
+    "permanent": true,
+    "triggers": [
+      "需要主管裁决或拍板",
+      "P0阻断超过20分钟且无人能推进",
+      "对局停了且按常备授权无法恢复"
+    ],
+    "inbox": "ops/codex-ops/inbox-claude.md",
+    "line_format": "HH:MM [ops] #N 一句话",
+    "details": "GitHub issue",
+    "authority": "paper/materials/20261022-claude-escalation-rule-ops/authorization-original.md",
+    "applies_to": "all subsequent ops sessions"
   }
 }

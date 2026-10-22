@@ -1,6 +1,6 @@
 # 运维当前清单（调度器生成；索引模式）
-生成：2026-10-22T17:47:01+08:00；原件索引：/home/dw/Projects/agent-sts2/ops/codex-ops/current.json SHA256 9d0a659936f07c1e80e40ccd58395552792ad03dcc7167eb08e2f0b8a2b25e15
-main a23a9b30d139c4f9579fc33ea7ecfc8ca8e99079
+生成：2026-10-22T18:09:50+08:00；原件索引：/home/dw/Projects/agent-sts2/ops/codex-ops/current.json SHA256 64747090b34d16acbd42fd677ba50725e6d0335bdfe5823850864b8bf3e22a81
+main cbbcfd7c4e98f3a12c6cd429781b38f831e320a0
 live 0cd3629d3a7f3a3bcacd22fa0a4206acc4d81e78；登记 release 见 current.json.release（不代表检查绿或实际采用）。
 动态事实超出短清单预算，已完整保存在上述 SHA 的 current.json；没有截断授权、失败、任务或事件。
 处理前必须核 SHA 并逐项读取以下字段及其原件；本清单不代表已经读过授权，不可沿用旧清单：
@@ -19,3 +19,4 @@ live 0cd3629d3a7f3a3bcacd22fa0a4206acc4d81e78；登记 release 见 current.json.
 H0/0332 等科学边界、精确宿主树、发布/兼容与 retention 沿原报告核实；索引不代验收、shipped、覆盖率或消费。
 严格普通无源码成功仍须原调度器账本检查、唯一 dataset、受控记录提交及 ordinary-close 回执；异常/异议/缺证/人工决定正常唤醒。
 普通记录300–500字并附原件路径；不复制报告，通关/升级照旧。
+主管唤醒：需主管裁决/拍板、P0阻断超过20分钟无人能推进，或对局已停且按常备授权无法恢复时，向主检出 ops/codex-ops/inbox-claude.md 追加一行“HH:MM [ops] #N 一句话”；细节写 issue，后续ops会话照做。

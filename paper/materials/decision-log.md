@@ -5834,3 +5834,5 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
 - 2026-10-22T17:38:31+08:00 [Claude] Roy 10-22：对局与知识刷新先暂停，让机器给检查；完整检查顺序 #33 high → #40 → #35 → #28 → #37 → #36；codex3 换号完成后不恢复开局，等 #33 high 与 #40 上线后在自然边界恢复。
 
 - 2026-10-22T17:47:01+08:00 ops：Roy17:2x独立STOP/roy-check-window-pause保换号后不开局；生产刷新已17:16:29自然完成，暂停新调度/人工刷新。high首次tsc/full0/6007+2skip、输入同，未发布；新完整序33high→40→35→28→37→36，无局2重位/33与40可并行，原集成员提醒已送。codex3继续draining、两项live及自然边界才解除Roy暂停并首局合核high/增量，见paper/materials/20261022-roy-check-window-ops/receipt.json。
+
+- 2026-10-22T18:09:49+08:00 ops：主管裁决/P0阻断>20分钟无人推进/停局且常备授权无法恢复，向主inbox-claude追加HH:MM [ops] #N一句话，细节issue；ops-current两模板及context已常驻，原4格式检查/实际及回退输出核同，仅静态文案。已实际追加一条#40停局提醒，接收裁决未冒确认；见paper/materials/20261022-claude-escalation-rule-ops/actual-inbox-append.json。

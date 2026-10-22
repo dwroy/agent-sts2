@@ -54,7 +54,7 @@ def bounded_checklist(text, current, receipt, receipt_sha):
              "不读凭据/.env/游戏二进制，不改共享配置/账号/ops prompt，不推送。",
              "H0/0332 等科学边界、精确宿主树、发布/兼容与 retention 沿原报告核实；索引不代验收、shipped、覆盖率或消费。",
              "严格普通无源码成功仍须原调度器账本检查、唯一 dataset、受控记录提交及 ordinary-close 回执；异常/异议/缺证/人工决定正常唤醒。",
-             "普通记录300–500字并附原件路径；不复制报告，通关/升级照旧。"]
+             "普通记录300–500字并附原件路径；不复制报告，通关/升级照旧。\n主管唤醒：需主管裁决/拍板、P0阻断超过20分钟无人能推进，或对局已停且按常备授权无法恢复时，向主检出 ops/codex-ops/inbox-claude.md 追加一行“HH:MM [ops] #N 一句话”；细节写 issue，后续ops会话照做。"]
     return "\n".join(lines) + "\n"
 
 
@@ -205,7 +205,7 @@ def generate(root, directory):
                       "current.json 仅按本事件 batch/request/notice id 用程序筛字段，不全文读；动态源变化后核新清单，不用旧值冒当前。",
                       "H0/0332等科学边界、精确宿主树、未完成发布/兼容及 retention 仅沿原报告和事务回执；清单不代验收、shipped、覆盖率或消费。",
                       "严格普通无源码成功由调度器完成账本检查、唯一 dataset 与受控记录提交，回执 ops/codex-ops/ordinary-close/；异常、异议、缺证、人工决定正常唤醒。",
-                      "普通记录300–500字内并附原件路径；不复制报告，通关/升级照旧。"])
+                      "普通记录300–500字内并附原件路径；不复制报告，通关/升级照旧。\n主管唤醒：需主管裁决/拍板、P0阻断超过20分钟无人能推进，或对局已停且按常备授权无法恢复时，向主检出 ops/codex-ops/inbox-claude.md 追加一行“HH:MM [ops] #N 一句话”；细节写 issue，后续ops会话照做。"])
         text = bounded_checklist("\n".join(lines) + "\n", current, receipt, receipt_sha)
         if len(text.encode()) > 12288:
             raise ValueError("ops-current exceeds 12KB; retain previous checklist and inspect current.json")
