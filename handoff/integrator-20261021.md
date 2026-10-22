@@ -1,13 +1,14 @@
 # 集成员交接：2026-10-21
 
-更新：2026-10-22T08:44:23+08:00。角色按 #21 与 docs/agent-board-architecture.md 第7节；只核review、合main、协调检查/冲突、开问题，不派活、不碰生产。评论首行[watcher]，发前gitleaks。integrator为wJ:p1HD；原wJ:pJT是Claude rc，不发过去。
+更新：2026-10-22T09:45:06+08:00。角色按 #21 与 docs/agent-board-architecture.md 第7节；只核review、合main、协调检查/冲突、开问题，不派活、不碰生产。评论首行[watcher]，发前gitleaks。integrator为wJ:p1HD；原wJ:pJT是Claude rc，不发过去。
 
 仅保留未完成项：
 
 - #33：276f3089c + ad5f37ae6 修复补交独立核验通过并合 main d3751e979，转 waiting-release。两项原阻断已真实 ToolHost 固定变更复验；完整 653 文件/6165通过/2跳过，tsc/重建0，2113输入SHA前后一致。ops仍须核实际live精确组合、#26真实挂载与自然首局读回；不追加取消的对比或额外对局。报告 paper/materials/20261022-issue33-integrator-admission/；原失败/中断和旧候选全部保留，不回收开发现场。
 - #26：c3716ba15 六类只读统计工具已独立核验并合 main，工具层不等 #33，转 waiting-release。#33 main联合检查已通过，ops仍须按精确live组合确认查询/角色隔离/实际挂载，ops 自然局边界发布及首局读回待验；不增加已取消的前后指标对比。报告同 #20 本轮目录。
 - #20：dec42bc98 自动接续/生命周期补交与私有 kit 95f1efb 技术核验通过并合 main，转 waiting-release。ops 安装须把 watchdog.py 与 board.py 一并升级，保持有效 off/无在途 tick、保留锁和 journal；owner授权、正式宿主登记/唯一入口、首 tick/实际送达及原命名/锁忙/回收仍待验，uncertain 不自动重发，不能以技术通过关整个issue。报告 paper/materials/20261022-issues26-20-integrator-review/。
-- #25/#16/#15/#8：ops已登记R411实际live发布305c67555；仍waiting-release，各消费者自然读回/局终验收及原R4 CLI本角色生产ACK以各issue最新ops评论为准。不得用源码或研究核验代角色确认。#25精确48文件组合准入见paper/materials/20261021-issue25-live-admission-review/；50文件0268备选未准入。Roy已取消#25/#26前后指标对比，不追加此门槛。
+- #8：R4兼容已合main并随R411上线；正式通知f9d1cd080ff9e555700887e2已本人实读、四异议原文在本会话告Roy，watcher_received与roy_notified均沿原CLI退出0并独立SHA读回；ops原ACK、六份历史原件与提案falseflags保留。本角色链完成，保持review交主管验收关闭。报告paper/materials/20261022-issue8-role-integrator/；不代表科学父完成/经验发布，其他研究task CLI仍pending。
+- #25/#16/#15：ops已登记R411实际live发布305c67555；仍waiting-release，各消费者自然读回/局终验收以各issue最新ops评论为准。不得用源码或研究核验代角色确认。#25精确48文件组合准入见paper/materials/20261021-issue25-live-admission-review/；50文件0268备选未准入。Roy已取消#25/#26前后指标对比，不追加此门槛。
 - #23：main已集成，仍waiting-release；实际运行接入/原发布门及首轮安全回收由ops原链补验，不在集成会话执行回收。
 - #4/#11/#13/#14：科学异议与限定均沿issue留证，#13/#14研究核验后仍blocked，代码/固定回放/反例与收益未补齐；原研究task角色CLI登记仍pending，不能套用只兼容R4的#8。#13/#14核验材料paper/materials/20261021-issues-13-14-integrator-review/。不代填ACK或关闭科学父要求。
 - #18：旧冻结0可回收/219保留/56待补证，未执行回收。现工作树已变化，须重核，旧清单不构成apply授权，未放宽门禁。其他阻塞父任务及#32待派以GitHub看板为准；集成员不派发。
