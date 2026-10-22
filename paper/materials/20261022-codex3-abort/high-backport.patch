@@ -1,0 +1,56 @@
+diff --git a/agent/src/brain/router.ts b/agent/src/brain/router.ts
+index fd0ef006e..7eca16bcb 100644
+--- a/agent/src/brain/router.ts
++++ b/agent/src/brain/router.ts
+@@ -392,7 +392,7 @@ export class BrainRouter {
+       pace.promoteBrain();
+       return withIndependentDecisionBudget("L2_brain", "brain", HUMAN_PACE_BUDGETS.brain, "L2", () =>
+         withinDecisionBudget("L2_brain", (signal) => this.decide({ ...request, budgetSignal: signal,
+-          effort: "xhigh", timeoutMs: HUMAN_PACE_BUDGETS.brain }), HUMAN_PACE_BUDGETS.brain));
++          effort: this.codexOnly || this.engineFor(request.label) === "codex" ? this.deps.config.engines.codex.effort ?? "xhigh" : "xhigh", timeoutMs: HUMAN_PACE_BUDGETS.brain }), HUMAN_PACE_BUDGETS.brain));
+     }
+     if (request.budgetSignal?.aborted) throw new DecisionBudgetExpired(request.label);
+     request.questionId ??= this.nextQuestionId();
+diff --git a/agent/src/eye/run-config.ts b/agent/src/eye/run-config.ts
+index f9446b0e9..9f4e4cd57 100644
+--- a/agent/src/eye/run-config.ts
++++ b/agent/src/eye/run-config.ts
+@@ -490,7 +490,7 @@ export function runConfigRow(
+       strict: config.strictJev,
+       prompt_log: resolveJevPromptLog(config.log),
+     },
+-    ...(characterKey(run.character) === "silent" ? { human_pace: { schema: "human-pace-h1-v1", budgets: HUMAN_PACE_BUDGETS, model_effort: "xhigh", required_full_replaced: true } } : {}),
++    ...(characterKey(run.character) === "silent" ? { human_pace: { schema: "human-pace-h1-v1", budgets: HUMAN_PACE_BUDGETS, model_effort: actualBrain.engine === "codex" ? config.brain.engines.codex.effort ?? "xhigh" : "xhigh", required_full_replaced: true } } : {}),
+     ...(humanPaceH2Policy(characterKey(run.character), env).mode !== "off" ? { human_pace_h2: {
+       schema: "human-pace-h2-shadow-v1", mode: "shadow", requested: humanPaceH2Policy(characterKey(run.character), env).requested,
+       delivered: false as const, direction_budget_ms: 60000, card_budget_ms: 5000, jev_budget_ms: 1000,
+diff --git a/agent/tests/human-pace-budget.test.ts b/agent/tests/human-pace-budget.test.ts
+index 1adbde511..776105db7 100644
+--- a/agent/tests/human-pace-budget.test.ts
++++ b/agent/tests/human-pace-budget.test.ts
+@@ -142,3 +142,25 @@ it("restores the parent after synchronous and asynchronous observer failures and
+   });
+   expect(budget.record()).toMatchObject({ shared_actual_ms: 10000, independent_actual_ms: 4000, actual_ms: 14000 });
+ });
++
++
++it.each(["high", "xhigh"])("honors configured Codex effort %s while preserving the independent 90-second deadline", async (effort) => {
++  vi.useFakeTimers();
++  const seen: (string | undefined)[] = [];
++  let aborted = 0;
++  const engine: BrainEngine = { name: "codex", model: "fixture-only", decide: async (req, signal) => {
++    seen.push(req.effort);
++    return new Promise((_, reject) => signal?.addEventListener("abort", () => {
++      aborted++; reject(new Error("fixed aborted"));
++    }));
++  } };
++  const router = new BrainRouter({ config: loadConfig({ BRAIN_CODEX_EFFORT: effort, BRAIN_LOG: "off" }).brain,
++    codexOnly: true, engine: () => engine, log: () => {} });
++  const budget = new DecisionBudget("configured-effort-L2", "routine", () => Date.now());
++  const rejection = expect(withDecisionBudget(budget, () => router.decide(request())))
++    .rejects.toBeInstanceOf(DecisionBudgetExpired);
++  await vi.advanceTimersByTimeAsync(90000); await rejection;
++  await vi.advanceTimersByTimeAsync(2000);
++  expect(seen).toEqual([effort]);
++  expect(aborted).toBe(1);
++});

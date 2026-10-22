@@ -4651,3 +4651,8 @@ W4拿牌v2正式3ef4/11a80已核：14源Git/SHA、318清单项加manifest共319�
 ### 2026-10-22T11:49:53+08:00 [ops] codex1→codex3原事务draining
 
 Roy/Claude11:46换号授权已核，沿原协议创建唯一codex3-20261022-1146事务。目标仍原codex3/profile，两隔离home新checkCodex及key隔离均通过；仅目录/本地预检，无模型问答。首次begin遇learn锁忙原样保留，原一次性控制器3783940随后取得锁，已draining并自有LLM_DRAIN/PAUSE，未用STOP或发信号。现场48个worker条目含学习、对局/循环、旧账号引擎，非独立任务数，不冒排空。codex/brain选择器仍旧号，实际新UUID及新brain/learner消费待验；原在途开发/集成员不热切，待自然完成或额度后由主管重开。ops当前任务/失败/七科学父及#33/#35/#28顺序已写接管文件，旧20261017交接原字节备份保留。本轮提交后空闲，由原控制器正常quit、目标shell回执及bootstrap验证后才释放自己的闸；不重派旧活或额外开局。原件paper/materials/20261022-codex3-switch/receipt.json。
+
+
+### 2026-10-22T12:19:30+08:00 [ops] 取消换号及session/high两manual处置
+
+已按Roy新指令中止codex3-20261022-1146：绑定PID/start后仅SIGTERM实际控制器3783941，外层3783940自然退出；事务cancelled保历史，锁内核两owned标记后只撤本事务LLM_DRAIN/PAUSE，其他STOP/PAUSE、codex1双选择器及原session未变。周用量84%/90%条件按Roy报告存档，不另探额度/加轮询。原autoplay继续，恢复正常准入，无热切或重复启动。12:04/12:05原文与早先session核查均处理留证；wake锁忙保原队列，并记已处理避免重复中止。session自08:55已核五局142调用记录，按Roy保留补登记运行观察，非#33全包发布。env虽high，原生context仍xhigh，定位旧H1硬编码；独立三叶窄修撤源1败、修后两文件12过/tsc0，唯一完整检查排原锁，不冒已降档；待绿后原准入/自然边界/原生读回。原件paper/materials/20261022-codex3-abort/receipt.json。
