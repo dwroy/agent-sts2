@@ -112,6 +112,7 @@ export interface RunConfigRow {
   process: { pid: number; started: string };
   code: CodeInfo;
   brain: {
+    agent?: AppConfig["brain"]["agent"] & { mode: "knowledge-tools"; transport: "app-server" | "dsh-Nova" };
     run_profile?: BrainRunProfile;
     /** False when there is no DeepSeek client (no key): then no brain question is asked at all. */
     active: boolean;
@@ -145,7 +146,7 @@ export interface RunConfigRow {
     };
   };
   brain_native_receipt?: { question_id: string; receipt: BrainNativeReceipt };
-  human_pace?: { schema: string; budgets: typeof HUMAN_PACE_BUDGETS; model_effort: string; required_full_replaced: boolean };
+  human_pace?: { schema: string; budgets: Record<keyof typeof HUMAN_PACE_BUDGETS, number>; model_effort: string; required_full_replaced: boolean };
   v6?: V6Config;
   human_pace_h2?: { schema: string; mode: string; requested: string; delivered: false;
     direction_budget_ms: number; card_budget_ms: number; jev_budget_ms: number; actual_selector: string };
@@ -352,7 +353,7 @@ export function enginesInUse(brain: AppConfig["brain"]): EngineName[] {
 function engineSnapshot(name: EngineName, config: AppConfig, brain: Brain | null): EngineSnapshot {
   const settings = config.brain.engines[name];
   const claude = name === "claude";
-  const model = name === "deepseek" ? (config.deepseek?.model ?? null) : claude ? claudeModelId(settings.model ?? DEFAULT_CLAUDE_MODEL) : settings.model;
+  const model = name === "deepseek" ? (brain?.router.knowledgeAgent ? settings.model : config.deepseek?.model ?? null) : claude ? claudeModelId(settings.model ?? DEFAULT_CLAUDE_MODEL) : settings.model;
   const byPrefix: Record<string, string> = {};
   for (const prefix of Object.keys(settings.modelByPrefix).sort()) byPrefix[prefix] = claude ? claudeModelId(settings.modelByPrefix[prefix]!) : settings.modelByPrefix[prefix]!;
   return {
@@ -363,7 +364,7 @@ function engineSnapshot(name: EngineName, config: AppConfig, brain: Brain | null
     reask: settings.reask,
     // The router's rule when there is a router; the same rule (router.ts toolsFor) otherwise.
     tools: brain ? brain.router.toolsFor(name) : (settings.tools ?? config.brain.tools ?? name !== "deepseek"),
-    max_calls: name === "deepseek" ? (config.deepseek?.maxCalls ?? null) : settings.maxCalls,
+    max_calls: name === "deepseek" && !brain?.router.knowledgeAgent ? (config.deepseek?.maxCalls ?? null) : settings.maxCalls,
   };
 }
 
@@ -392,7 +393,7 @@ export const PREFIX_NOTE =
 
 /** The knowledge part: the prompt the brain sends for this ascension, its hashes and sizes. */
 function knowledgeSnapshot(config: AppConfig, brain: Brain | null, ascension: number | null, knowledgeDir: string): RunConfigRow["knowledge"] {
-  const prefix = config.brain.knowledgePrefix;
+  const prefix = brain?.router.knowledgeAgent ? "off" : config.brain.knowledgePrefix;
   const out: RunConfigRow["knowledge"] = {
     prefix,
     ascension,
@@ -473,6 +474,7 @@ export function runConfigRow(
   const setup = {
     ...(v6.mode !== "off" ? { v6 } : {}),
     brain: {
+      ...(brain?.router.knowledgeAgent ? { agent: { ...config.brain.agent, mode: "knowledge-tools" as const, transport: actualBrain.engine === "deepseek" ? "dsh-Nova" as const : "app-server" as const } } : {}),
       ...(config.brain.runProfile ? { run_profile: config.brain.runProfile } : {}),
       active: brain !== null,
       engine: actualBrain.engine,
@@ -494,7 +496,7 @@ export function runConfigRow(
       strict: config.strictJev,
       prompt_log: resolveJevPromptLog(config.log),
     },
-    ...(characterKey(run.character) === "silent" ? { human_pace: { schema: "human-pace-h1-v1", budgets: HUMAN_PACE_BUDGETS, model_effort: config.brain.runProfile?.effort ?? config.brain.engines.codex.effort ?? "xhigh", required_full_replaced: true } } : {}),
+    ...(characterKey(run.character) === "silent" ? { human_pace: { schema: "human-pace-h1-v1", budgets: { ...HUMAN_PACE_BUDGETS, ...(brain?.router.knowledgeAgent ? { brain: config.brain.agent[actualBrain.engine === "deepseek" ? "deepseekTotalMs" : "codexTotalMs"] } : {}) }, model_effort: config.brain.runProfile?.effort ?? config.brain.engines[brain?.router.knowledgeAgent ? actualBrain.engine : "codex"].effort ?? "high", required_full_replaced: true } } : {}),
     ...(humanPaceH2Policy(characterKey(run.character), env).mode !== "off" ? { human_pace_h2: {
       schema: "human-pace-h2-shadow-v1", mode: "shadow", requested: humanPaceH2Policy(characterKey(run.character), env).requested,
       delivered: false as const, direction_budget_ms: 60000, card_budget_ms: 5000, jev_budget_ms: 1000,

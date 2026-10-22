@@ -12,6 +12,7 @@ import { join } from "node:path";
 import { describe, expect, it } from "vitest";
 
 import { createRouter } from "../src/brain/brain.js";
+import { KnowledgeAgent } from "../src/brain/engines/knowledge-agent.js";
 import { createBrain } from "./legacy-brain.js";
 import { brainCatalogEntry, checkCodex, closeCutAnswer, CODEX_DISABLED_FEATURES, CODEX_RUST_LOG, codexFailure, CodexEngine, codexKindSchema, codexSchema, dropNulls, parseCodexStream, redact, ROUTE_PATTERN, strictSchema } from "../src/brain/engines/codex.js";
 import { isContextOverflow } from "../src/brain/knowledge.js";
@@ -133,7 +134,7 @@ function codexHome(name: string, files: Record<string, string> = { "auth.json": 
 }
 
 function config(bin: string, home: string, env: Record<string, string> = {}): ReturnType<typeof loadConfig> {
-  return loadConfig({ BRAIN_CODEX_MODEL: "gpt-6.1-sol", BRAIN_CODEX_BIN: bin, BRAIN_CODEX_HOME: home, BRAIN_LOG: "off", ...env } as unknown as NodeJS.ProcessEnv);
+  return loadConfig({ BRAIN_CODEX_MODEL: "gpt-6.1-sol", BRAIN_CODEX_EFFORT: "xhigh", BRAIN_CODEX_BIN: bin, BRAIN_CODEX_HOME: home, BRAIN_LOG: "off", ...env } as unknown as NodeJS.ProcessEnv);
 }
 
 function engine(bin: string, home: string, env: Record<string, string> = {}): CodexEngine {
@@ -597,9 +598,9 @@ describe("the codex start-up check", () => {
     expect(brain({ CODEX_HOME: "/c" }).codex.home).toBe("/c");
     expect(brain({ CODEX_HOME: "/c", BRAIN_CODEX_HOME: "/b" }).codex.home).toBe("/b");
     expect(brain({ BRAIN_CODEX_SERVICE_TIER: "default" }).codex.serviceTier).toBe("default");
-    // Defaults: gpt-6.1-sol at xhigh, 10 minutes, no call limit, no tools; BRAIN_ENGINE stays deepseek.
+    // Defaults: gpt-6.1-sol at high, 10 minutes, no call limit, no tools; BRAIN_ENGINE stays deepseek.
     expect(brain({}).engine).toBe("deepseek");
-    expect(brain({}).engines.codex).toMatchObject({ model: "gpt-6.1-sol", effort: "xhigh", timeoutMs: 600_000, maxCalls: null });
+    expect(brain({}).engines.codex).toMatchObject({ model: "gpt-6.1-sol", effort: "high", timeoutMs: 600_000, maxCalls: null });
     expect(brain({ BRAIN_CODEX_EFFORT: "high" }).engines.codex.effort).toBe("high");
     // xhigh is an effort for every engine now; the old values still parse.
     expect(brain({ BRAIN_CLAUDE_EFFORT: "xhigh" }).engines.claude.effort).toBe("xhigh");
@@ -682,9 +683,14 @@ describe("the loop's brain with BRAIN_ENGINE=codex, BRAIN_FALLBACK=deepseek", ()
     expect(deepseek.calls).toBe(1);
   });
 
-  it("is no longer refused by the router as not implemented", async () => {
+  it("production creates the knowledge session adapter without calling the legacy exec fixture", async () => {
     const fake = fakeCodex("router", [answered({ choice: "a", reason: "heal" })]);
     const cfg = config(fake.bin, codexHome("router"), { BRAIN_ENGINE: "codex" });
-    await expect(createRouter(cfg, null).decide(request())).resolves.toMatchObject({ engine: "codex", answer: { choice: "a" } });
+    const router = createRouter(cfg, null);
+    const adapter = router.engineOf("codex");
+    expect(adapter).toBeInstanceOf(KnowledgeAgent);
+    expect(router.toolsFor("codex")).toBe(true);
+    expect(fake.calls()).toBe(0);
+    await (adapter as KnowledgeAgent).close();
   });
 });

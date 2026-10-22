@@ -32,7 +32,8 @@ if [ "$ROOT" = /home/dw/Projects/agent-sts2 ] \
   export BRAIN_CODEX_PAID_CREDITS=main-silent-codex1-20261015
 fi
 # Roy 2026-10-12: production Codex defaults apply even with a legacy scheduler environment.
-export BRAIN_CODEX_MODEL=gpt-6.1-sol BRAIN_CODEX_EFFORT="${BRAIN_CODEX_EFFORT:-xhigh}"
+export BRAIN_CODEX_MODEL=gpt-6.1-sol BRAIN_CODEX_EFFORT="${BRAIN_CODEX_EFFORT:-high}"
+export BRAIN_ENGINE="${BRAIN_ENGINE:-codex}" BRAIN_DEEPSEEK_EFFORT="${BRAIN_DEEPSEEK_EFFORT:-max}" BRAIN_CODEX_MODE=session
 # Opt-in only. Admission and restart recovery use run identities, not process counts.
 # Session mode retains the native turn context long enough to extract its receipt before revert.
 if [ -n "${BRAIN_TRIAL_SCHEDULE:-}" ]; then
