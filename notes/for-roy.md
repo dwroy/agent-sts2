@@ -4229,3 +4229,10 @@ W4拿牌v2正式3ef4/11a80已核：14源Git/SHA、318清单项加manifest共319�
 #16基础设施验收完成并实际关单：R411九相关叶与原48叶准入相同，原636文件6005过2跳及独立645/6065+2跳的日志SHA复核；11,735题/410局、原5,275奖励所有字段一致，690版本未知及掉血/Boss/终层缺失4,868/536/47保留。五类固定回放命中、无命中逐字节等价，增量351—648B，原热中位0.031—0.060ms仅检索加序列化；29份归档核同。首自然DFY局16脑题均accepted、原事实保留且无strategy_entries，实际库仍缺；幕初仅固定验收，正式策略命中及收益归#27。#24已由主管关闭，故#27解除前置阻塞转ready，实际评论/状态读回完成，原ops待派，尚未启动学习批次。示例不进生产，旧Jev模仿计划保持停止，科学父及当前对局不动。本轮仅核原件和记录，原失败/未知保留，未重生成器/full/回放或模型。原件paper/materials/20261022-issue16-acceptance-ops/receipt.json。
 
 实际回执：https://github.com/dwroy/agent-sts2/issues/16#issuecomment-6330017012；https://github.com/dwroy/agent-sts2/issues/27#issuecomment-6330028673
+
+
+### 2026-10-22T09:06:56+08:00 — #20 后续原 tick 生产读回
+
+原09:04运行切点核实#20保持项目持久/有效on，STS2单项目登记、原stall入口1个，无独立kit定时项及显式环境覆盖；精确95f1efb六文件仍同，未重装。账本19事件中8done分为6条实际提醒与2条superseded，11pending；六提醒各有sent_at、目标pane及原日志唯一done记录，未重复发送。#35/#36现有生命周期active且名称/pane/cwd核同，但kit派发事件已被取代，不借作自动派发成功。6回收保留门未过，当前sending/uncertain为0；watchdog尝试均0，digest正常更新。接收前idle/done状态原回执未留，特定done场景仍待证；普通/错误接续与升级、真实锁忙重试和最终回收仍等自然触发。保有效on让原tick继续，不造故障/任务/守候；回退off保账本。Roy/Claude既有266672619将开发上限改10仅观察，原#33/#26发布链及游戏不动。已回写issue，#20保持开放。原件paper/materials/20261022-issue20-runtime-ops/receipt.json。
+
+实际issue回执：https://github.com/dwroy/agent-sts2/issues/20#issuecomment-6330154431

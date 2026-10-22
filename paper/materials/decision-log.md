@@ -5749,3 +5749,5 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
 - 2026-10-22T08:53:58+08:00 [Claude] Roy 10-22：开发会话并发上限 5 → 10（每个项目；.agents/board.yaml roles.dev.max_parallel，全局记忆 agent-issue-workflow 已改）。
 
 - 2026-10-22 08:56 CST：[ops] #16数据/格式/检索/固定五类及R411自然空库验收核同，按基础设施范围关单；11735/410、原5275字段与缺失口径/原失败保留。#24主管已关闭，#27依赖解除转ready并实际读回，原ops待派未启动；真实条目/自然命中/科学父仍待，不重full/回放/模型或改对局。原件 paper/materials/20261022-issue16-acceptance-ops/receipt.json；issuecomment-6330017012、6330028673。
+
+- 2026-10-22T09:06:56+08:00 [ops] #20有效on/STS2-only/唯一stall核同；原tick累计6真实notify且原日志各唯一done，2superseded不作派发成功、11pending/6保留门，零sending或uncertain；原命名active核同，特定done状态/接续升级/锁忙/最终回收仍自然待验，保持开放。不新tick/full/模型/任务/游戏操作，原件 paper/materials/20261022-issue20-runtime-ops/receipt.json；issuecomment-6330154431。
