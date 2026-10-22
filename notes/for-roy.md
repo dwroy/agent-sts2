@@ -4714,3 +4714,7 @@ Roy/Claude11:46换号授权已核，沿原协议创建唯一codex3-20261022-1146
 ### 2026-10-22T16:15:43+08:00 [ops] codex1→codex3新事务开始
 
 Roy/Claude报16:09周用量91%，已新建codex3-20261022-1610，旧1146取消事务及旧交接原字节保留。codex3两隔离home新checkCodex/key隔离通过，无模型问答；唯一控制器609806/start8127174/nice19已draining，自有主LLM_DRAIN/PAUSE，未用STOP或发信号。盘点34条在途进程记录非独立任务，未冒排空；两home选择器仍codex1，开发派发同读codex-home，须自然排空后正常quit旧ops、目标shell回执、新UUID/rollout通过才释放自有闸。原开发/集成员不热切，Regent原暂停保留；本轮ready_to_drain后空闲，不另起等待者。原#33窄589590现tsc0/首次full在途，后续发布顺序/#40依赖、154302-s2源码冷却、通知与科学父均随交接保留，不重模型/局/检查。控制面complete及真实brain/learner消费仍待验。原件paper/materials/20261022-codex3-switch-1610/。
+
+### 2026-10-22T17:47:01+08:00 [ops] Roy检查窗口暂停与顺序更新
+
+已按Roy17:2x设独立暂停与主STOP，和换号自有LLM_DRAIN/PAUSE分开，换号完成后仍不开局。当前无对局/autoplay/报告/刷新；原fight-value/catalog17:16:29自然完成rc0，无需中止，原件保留。暂停生产刷新调度及人工report-run；旧脚本无原生REFRESH_PAUSE，不冒flag即源码闸。#33 high首次宿主tsc/full均0，6007过/2跳过/0败，1639是嵌套suite非文件数，冻结输入前后同；窄修待实际发布/原生high，整包旧失败保留。完整新序33high→40→35→28→37→36，无对局最多2重位、33/40可并行；原集成员已收到一次#40提醒及issue原文，不冒生产heavy队列已启用。换号609806仍draining/27旧账号进程记录，在途开发集成员不热切。交接明确须33high与40都live及自然边界才释放Roy暂停，首局合核high/增量刷新；未重full/模型/刷新或开局。原件paper/materials/20261022-roy-check-window-ops/。

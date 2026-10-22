@@ -1,3 +1,17 @@
+# Roy 17:2x 新指令优先：换号后仍不恢复开局/生产刷新（2026-10-22T17:46:04+08:00记录）
+
+授权原文paper/materials/20261022-roy-check-window-ops/authorization-original.md，#40主管评论6337610752。此段覆盖下方旧交接中“根STOP原不存在/不创建STOP”“验证后恢复下一局”的运行安排；原取消事务与失败历史不改。
+
+已新增独立Roy暂停id=roy-check-window-20261022-172x：根ops/STOP的实际内容归Roy，另有ops/codex-ops/roy-check-window-pause.json。与codex3-20261022-1610的LLM_DRAIN/PAUSE分开，控制器只能删除自己仍拥有的两旗，不可删除Roy STOP/独立暂停。即使换号complete也禁止autoplay-start/launch-game/play/人工report-run及生产refresh；禁止为了验收新账号或#40额外开局/刷新。当前没有对局/报告/刷新；最后生产fight-value/catalog均正常结束17:16:29，无信号/半成品补发。旧源码没有REFRESH_PAUSE检查，此为原ops调度暂停+真实STOP阻断正常局末触发，不冒单写JSON就有脚本级闸。固定检查仅用独立fixture，不能重启生产刷新。
+
+完整检查新顺序#33 high→#40→#35→#28→#37→#36，替代旧#40排末尾的各段；无对局最多2个重任务位，允许#33/#40并行。#33 high唯一589590已16:34结束tsc0/full0，6007pass/2skip/0fail，1639suite含嵌套非文件数，inputs-before/after一致。仍待原发布锁/实际最新知识及绑定备份恢复等门/源码提交/版本登记；不重full，不代原#33整包完成或自然high读回。原件paper/materials/20261022-roy-check-window-ops/high-passed-original.json；live目前仍R411。#40原候选c255682f/8f09b842仍review，原集成员已经收到一次#40提醒及新窗口评论，沿其原owner处理精确依赖/full/集成，不另派模型或等待者。#20heavy实际off，不把本次2位授权冒作生产队列已启用；#41及将来#37→#20共享文件兼容仍保留。
+
+恢复条件是#33 high窄修与#40都实际live、codex3控制面已验证且自然边界；由原ops核真实提交/版本、双方准入及Roy暂停所有权后释放本暂停，不因测试绿/切换完成自动恢复。首个正常恢复局保存原生high、新号配置、增量刷新冷/热/训练口径与模型消费者SHA；未知/未触发保留，不增实验局、A/B或模拟。
+
+换号标准控制器609806/start8127174继续自然draining，当前盘点27旧账号引擎进程记录，不当作27独立任务或排空。原开发与集成员不热切，不擅停他们；旧ops本轮记录后仍ready_to_drain，当前源session01a1517b-e200-7c52-b463-6ea22220c0a9保留供controller验证正常quit。最新暂停与窗口结论同时写双箱/decision-log，并在#33/#38/#40评论实际送达。
+
+--- 以下为此前交接，冲突处以上述Roy新指令为准 ---
+
 # codex1 → codex3：codex3-20261022-1610
 
 记录时间：2026-10-22T16:14:58+08:00。Roy/Claude 16:10授权原文与91%触发报告：paper/materials/20261022-codex3-switch-1610/authorization-original.md。91%为16:09 codex-quota的用户转达，本ops不重复探额度。旧codex3-20261022-1146已cancelled，不再run；其state及本文件先前取消内容已原字节备份到本轮目录，历史不覆盖。

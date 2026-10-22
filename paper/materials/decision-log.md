@@ -5832,3 +5832,5 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
 
 - 2026-10-22T16:15:43+08:00 ops：Roy91%触发原换号约定，新codex3-20261022-1610两home本地预检/key隔离0，唯一609806 draining/自有LLM_DRAIN+PAUSE；旧1146取消及其他STOP/PAUSE保留，34进程条目尚在途/选择器codex1不冒complete；本ops ready_to_drain后空闲，原开发集成员不热切、原high首次full保留，见paper/materials/20261022-codex3-switch-1610/receipt.json。
 - 2026-10-22T17:38:31+08:00 [Claude] Roy 10-22：对局与知识刷新先暂停，让机器给检查；完整检查顺序 #33 high → #40 → #35 → #28 → #37 → #36；codex3 换号完成后不恢复开局，等 #33 high 与 #40 上线后在自然边界恢复。
+
+- 2026-10-22T17:47:01+08:00 ops：Roy17:2x独立STOP/roy-check-window-pause保换号后不开局；生产刷新已17:16:29自然完成，暂停新调度/人工刷新。high首次tsc/full0/6007+2skip、输入同，未发布；新完整序33high→40→35→28→37→36，无局2重位/33与40可并行，原集成员提醒已送。codex3继续draining、两项live及自然边界才解除Roy暂停并首局合核high/增量，见paper/materials/20261022-roy-check-window-ops/receipt.json。
