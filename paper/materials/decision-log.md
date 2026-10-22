@@ -5892,3 +5892,5 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
 - 2026-10-23T01:49:18+08:00 [ops] 014302双策略模型前隔离拒绝原件保留；先备份codex3 learner本地配置仅删冗余service_tier，原CLI已同值覆盖、其他字段/权限不变，四cwd原预检通过。更正先前过度审批hold，未启模型/重派/发布或热切局，36真实TUI/自然消费仍待；原件 paper/materials/20261023-0143-ops/receipt.json。
 
 - 2026-10-23T01:52:10+08:00 [ops] 014302-fix系01:43配置修复前TUI隔离拒绝，零模型无完成报告；当前修复/备份SHA与既有预检证明保持，原retry/pB5保留，不重派/dataset/full或合入关父。原件 paper/materials/20261023-0150-ops/receipt.json；36评论6347464029。
+
+- 2026-10-23T02:22:05+08:00 [ops] 021302主策略TUI命名41字符超过herdr32上限，真实invalid_agent_name已核；任务未投递，原监督/会话及75/stopped=false保持，交原dev36修独立短名合同，不改退场/租约、不重放模型/full或发布。原件 paper/materials/20261023-0215-ops/receipt.json；评论6348039423。

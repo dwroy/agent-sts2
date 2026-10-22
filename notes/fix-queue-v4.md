@@ -1557,3 +1557,5 @@ Roy：「上线后进 F48 反而降低一半，这才是关键，要找问题。
   - 2026-10-23T01:27:16+08:00 [ops/#36接续] 同分钟第四批011302-fix亦在TUI配置隔离门code3/零模型退出，原retry_at保留；无报告/源码/自测/合入，不重做001301四叶账本候选。补交36评论6346951782，原件 paper/materials/20261023-0124-ops/receipt.json。
 
   - 2026-10-23T01:49:18+08:00 [ops/#36接续] 014302主/s2同一隔离拒绝models0原件保留；仅清理已由原CLI显式覆盖的本地learner service_tier，修改前备份learner-config-backups/20261023-0143/config-before.toml，其他配置/实际服务档/权限不变；四cwd原隔离预检现通过。配置阻塞已修，不据此称自然TUI/36发布完成，原批不即时重派/回收。原件 paper/materials/20261023-0143-ops/receipt.json；36评论6347387540。
+
+- [ ] 2026-10-23T02:22:05+08:00 [ops/#36] 原生agent名长度适配：021302主策略TUI已起但完整稳定label41字符被herdr rename以invalid_agent_name(1–32)拒绝，任务未投递，75/stopped=false且原监督/pB7保留。已交原dev36旧会话，独立短agent名与稳定pane label/批次/租约持久绑定，保一次性marker/native接受/人工草稿/退场保护，补真实长度负例和主s2/fix/复盘标签测试。原43叶full不代新修复full；不另起模型/重放/回收原TUI，受控接续另核。原件 paper/materials/20261023-0215-ops/receipt.json；评论6348039423。
