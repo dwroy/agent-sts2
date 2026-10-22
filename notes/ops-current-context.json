@@ -684,6 +684,17 @@
       "worktree": "/home/dw/Projects/agent-sts2/.worktrees/ops-issue35-after33-20261022",
       "receipt": "paper/materials/20261022-issue35-release-prep-ops/receipt.json",
       "publication_armed": false
+    },
+    {
+      "task": "codex1-to-codex3-drain-20261022-1146",
+      "state": "draining",
+      "pid": 3783940,
+      "start": "6540410",
+      "receipt": "paper/materials/20261022-codex3-switch/receipt.json",
+      "state_path": "ops/codex-ops/llm-switches/codex3-20261022-1146/state.json",
+      "handoff": "notes/codex3-drain-ops-handoff.md",
+      "new_model": false,
+      "do_not_duplicate": true
     }
   ],
   "event_receipts": {
@@ -1534,7 +1545,8 @@
     "Roy-205x-low-load-once": "paper/materials/20261020-low-load-once-ops/receipt.json",
     "issue33_full_failed_and_issue36_scope_20261022": "paper/materials/20261022-issue33-full-terminal-ops/receipt.json",
     "ordinary_20261022_101301_main_1136": "paper/materials/20261022-1136-ops/receipt.json",
-    "legacy_notices_and_issue28_20261022_1143": "paper/materials/20261022-1143-ops/receipt.json"
+    "legacy_notices_and_issue28_20261022_1143": "paper/materials/20261022-1143-ops/receipt.json",
+    "llm_switch_codex3_20261022_1146": "paper/materials/20261022-codex3-switch/receipt.json"
   },
   "frozen_brain_request": {
     "receipt": "paper/materials/20261020-0249-ops/frozen-request-location.json",
@@ -17288,5 +17300,25 @@
     "learner_dispatch": "after framework admission, original two strategy slots; reverify current template/inputs",
     "switch_change": false,
     "science_pending": true
+  },
+  "llm_codex3_switch_20261022_1146": {
+    "at": "2026-10-22T11:49:53+08:00",
+    "transaction": "codex3-20261022-1146",
+    "phase": "draining",
+    "state": "ops/codex-ops/llm-switches/codex3-20261022-1146/state.json",
+    "receipt": "paper/materials/20261022-codex3-switch/receipt.json",
+    "controller_pid": 3783940,
+    "controller_start": "6540410",
+    "controller_pane": "w1H:p9B",
+    "source_session": "01a1517b-e200-7c52-b463-6ea22220c0a9",
+    "target_account": "codex3",
+    "target_profile": "ops/codex-ops/accounts/codex3/profile.json",
+    "handoff": "notes/codex3-drain-ops-handoff.md",
+    "source_ops_ready_to_drain_after_this_turn": true,
+    "new_ops_UUID_verified": false,
+    "runtime_consumer_account_verified": false,
+    "do_not_duplicate_controller": true,
+    "do_not_hot_switch_inflight_dev_integrator": true,
+    "no_STOP_or_signal": true
   }
 }

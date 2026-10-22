@@ -1,3 +1,27 @@
+# 当前接管：codex3-20261022-1146（2026-10-22；下方20261017仅历史）
+
+ready_to_drain: true
+
+原 ops session：01a1517b-e200-7c52-b463-6ea22220c0a9，pane w1H:p8；本轮落盘结束后空闲。该声明不代表其他工作已排空或换号完成。
+
+本次 Roy/Claude11:46授权 codex1→codex3，唯一事务 ops/codex-ops/llm-switches/codex3-20261022-1146/state.json；原控制器3783940，herdr w1H:p9B。新ops必须用codex3新UUID，禁止跨号resume或搬加密session。先读本段、notes/ops-current.md和notes/ops-current-context.json的当前字段；不要沿下方20261017旧任务列表重派。当前回执 paper/materials/20261022-codex3-switch/receipt.json，授权/两home新预检及原draining现场在同目录。控制器未complete时不能删除它拥有的LLM_DRAIN/PAUSE。不得创建STOP、杀进程、热切开发或集成员，Regent原暂停保留。
+
+切换目标使用原codex3/profile.json；profile预检xhigh是既有适配器冻结校验，未改生产档位。新ops/学习/开发仍沿当前launcher gpt-6.1-sol/high/default，当前大脑R411保xhigh；#33真正发布后的默认策略另沿原发布验收。须新原生turn_context/请求证明实际档位；控制面complete也不代新brain/learner自然消费。正常派发前核上述选择器、项目cron、目标shell回执和新UUID。旧学习线程不得跨号resume；需要续接的科学父沿原learning_requests recover-account契约做显式身份恢复，保原任务/WT/输入/失败，不抢租约或凭新账号重复派批。
+
+当前边界：live0cd3629d3 / V6-R411；四非出牌decider brain，REFLEX/COMBAT_ENTRIES/DIRECTION off，Regent暂停，#31取消。#20派单器原on；换号闸释放后沿原tick，不增定时器。#33+#26首次实际组合full失败：643文件639过4败，6067过3败2跳；d768原失败树/日志保留。已从ad5源码补两canonical helper至原隔离WT，新57叶暂存树ea3248d598da567732dc292fe6dd5f135c6aece7，定向两文件17过，不是full绿；learner-jobs/ordinary-close-isolation两status-null根因未知，原工程链pending，不重未变full或发布。详20261022-issue33-full-terminal-ops/。#35原67叶候选仅准备，必须在实际#33新live后重核，不能发布旧树；#26不单发。
+
+#36旧窗口已由原集成员撤销，旧60e/07325不合main，等原dev交互TUI补交；brain_view=off。#28原候选7087/source83ea仍review未main，原集成员在#33/#35发布检查之后接full；21源叶+1测试修补/原日志核回，不能把框架当科学改善或开开关，模板正式main后沿原槽学习。#27仅prepared未dispatch，原once-launch未启动，必须核原槽和当前输入，不重复建模型。#23可持续性仍原自然窗口；其余任务逐项沿当前context原件。
+
+11:36普通101301主策略：dataset前source漂移attention，61产物十waiting，无源/测试/合入；旧0268净扣8与BTS原帧14异议已入双箱并提醒原watcher，接收/转Roy回执pending。11:43八notice原文/双箱/实际watcher转达证据已核，CLI不兼容三research仍正式pending；原rc2及false保留，不代ACK或重发。七科学父不因报告/换号/子项发布而关闭。原件20261022-1136-ops、20261022-1143-ops及context。
+
+在途批次和旧账号引擎以原state.snapshot/learn.json真实PID+start核对，不能用本段静态清单判完成。原11:47盘点包含旧learner、play/autoplay和多个old_account_engine；在途开发/集成员按Roy保持，待自然结束/额度后由主管在codex3重开，ops不热切或发信号。盘点不能因PID不可见跳过；若这些会话阻塞drain，明确交原主管/集成员核其原身份，不改闸或猜排空。当前ops只结束本轮，不手动/quit；原控制器在真实idle、无workers、锁/身份验证后正常quit和bootstrap。
+
+本段时间：2026-10-22T11:49:06+08:00。旧交接原字节备份 paper/materials/20261022-codex3-switch/historical-20261017-handoff.md；SHA256=9f856eec72b6ecd52ea6af355e1096f56dc44cca6c059e1f46e209fff188ed21
+
+---
+
+以下保留20261017历史原件，非本次当前授权、待办或生效配置：
+
 # codex3-20261017 主 ops 接续
 
 2026-10-17 23:43:10 CST 原 ops 本轮复盘、唯一论文刷新和记录审计已完成。

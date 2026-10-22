@@ -5955,3 +5955,8 @@ W4拿牌v2正式3ef4/11a80已核：14源Git/SHA、318清单项加manifest共319�
 ### 2026-10-22T11:45:38+08:00 [ops] 八原通知去重与#28原窗口接续
 
 八条原notice逐项核原文/生产者/来源SHA、ops_forwarded、双收件箱字节窗口与watcher原角色可见转达证据，均同；并非新异议或Roy个人接受。原CLI字节未变，仍不兼容三个research任务，原rc2拒绝与watcher_received/roy_notified=false保留，不重认证/改名/代ACK或重复提醒。D1输入保真、D2候选增量、D3九HP归因、四卡与策略路径科学限制均保持，子项shipped不关闭父。另接#28：21叶与source/候选核同，1测试叶建.cache父目录；原85条及8份日志SHA核同，tsc双0、原定向失败与87过分列，完整仍pending。原集成员沿#33/#35发布检查后接full及main门，框架准入后再沿原槽派学习；未启动回放/学习或开开关。真实改善区间、Roy决定与A/B保留待验。无full/dataset/模型/局或live变更。原件paper/materials/20261022-1143-ops/notices-readback.json、issue28-readback.json。
+
+
+### 2026-10-22T11:49:53+08:00 [ops] codex1→codex3原事务draining
+
+Roy/Claude11:46换号授权已核，沿原协议创建唯一codex3-20261022-1146事务。目标仍原codex3/profile，两隔离home新checkCodex及key隔离均通过；仅目录/本地预检，无模型问答。首次begin遇learn锁忙原样保留，原一次性控制器3783940随后取得锁，已draining并自有LLM_DRAIN/PAUSE，未用STOP或发信号。现场48个worker条目含学习、对局/循环、旧账号引擎，非独立任务数，不冒排空。codex/brain选择器仍旧号，实际新UUID及新brain/learner消费待验；原在途开发/集成员不热切，待自然完成或额度后由主管重开。ops当前任务/失败/七科学父及#33/#35/#28顺序已写接管文件，旧20261017交接原字节备份保留。本轮提交后空闲，由原控制器正常quit、目标shell回执及bootstrap验证后才释放自己的闸；不重派旧活或额外开局。原件paper/materials/20261022-codex3-switch/receipt.json。

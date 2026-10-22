@@ -5790,3 +5790,5 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
 - 2026-10-22T11:38:42+08:00 [ops] 101301主策略源码漂移在dataset前attention，61产物/十waiting保留；0268旧注8与原帧14异议入双箱沿原watcher转Roy pending，不改知识/参数或重dataset/full/模型/合入。paper/materials/20261022-1136-ops/receipt.json。
 
 - 2026-10-22T11:45:38+08:00 [ops] 八原notice送达证据核同、CLI三research角色登记仍pending；#28候选21源叶/1测试修补与原日志核回，完整/main门沿#33/#35之后原队列，学习/改善/开关/A-B未验。不重full/模型或改live。paper/materials/20261022-1143-ops/receipt.json。
+
+- 2026-10-22T11:49:53+08:00 [ops] codex3两home新目录/key预检通过，唯一事务codex3-20261022-1146/控制器3783940已draining并持自有闸；旧workers/在途开发与集成员不热切，选择器/新UUID/消费者未完成。本ops交接就绪后空闲，沿原控制器验证/释放，不造切换成功。paper/materials/20261022-codex3-switch/receipt.json。
