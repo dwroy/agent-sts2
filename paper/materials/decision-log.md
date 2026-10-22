@@ -5840,3 +5840,4 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
 - 2026-10-22T18:30:11+08:00 ops：Roy18:09回复授权联合high/40发布及开发集成员排空例外；原绿核同，27叶9e53精确live新组合唯一821586首tsc0/full在途，通过后原短锁/绑定/版本/双通知及Roy暂停释放。5角色边界回归0，27登记旧引擎保留排除，唯一同事务826698只等ops工作/空闲，不热切别人；新ops核实际发布及目标UUID后原broker恢复，首局high/增量待。原件paper/materials/20261022-high40-release-ops/receipt.json。
 
 - 2026-10-22T18:38:21+08:00 ops：按Roy更正，开发由主管现在原pane换codex3重启，集成员当前一步后同样处理；不等其全部任务/旧号耗尽。原事务实读无开发集成员等待项，仅ops821586检查和本轮收尾；原826698不重启。两home/新ops验证及联合发布后恢复授权保留。原文/回执paper/materials/20261022-high40-release-ops/drain-correction-receipt.json。
+- 2026-10-22T18:40:25+08:00 [Claude] Roy 10-22：换号排空不等所有工作完成，常驻会话直接重启交接。codex1→codex3：9 个开发会话与集成员已在原 pane 以 codex3 重启并按 issue/交接文件接续（集成员交接 9bef1ea75），ops 由换号事务自行重启。
