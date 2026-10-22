@@ -1,0 +1,54 @@
+
+ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/issue-36-visible-brain-tabs/agent
+
+ ✓ tests/learner-herdr.test.ts > learner interactive command policy > does not persist arbitrary inherited environment or proxy credentials in the pane launch script 4ms
+ ✓ tests/learner-herdr.test.ts > learner interactive command policy > preserves profile, model, effort, disabled features and explicit thread without exec-only options 8ms
+ ✓ tests/learner-herdr.test.ts > native batch authority > ignores idle screens and unrelated/old completions, and requires a matching accepted native turn 1ms
+ ✓ tests/learner-herdr.test.ts > native batch authority > counts each native turn's last usage snapshot once across continuations 1ms
+ ✓ tests/learner-herdr.test.ts > native batch authority > rejects replay instead of carrying native authorization forward 0ms
+ ✓ tests/learner-herdr.test.ts > native batch authority > rejects wrong-body instead of carrying native authorization forward 0ms
+ ✓ tests/learner-herdr.test.ts > native batch authority > rejects prefix instead of carrying native authorization forward 0ms
+ ✓ tests/learner-herdr.test.ts > native batch authority > accepts duplicate native representations only within their explicitly bound turn 1ms
+ ✓ tests/learner-herdr.test.ts > native batch authority > keeps partial native UTF-8 rows intact and fails closed on truncation 5ms
+ ✓ tests/learner-herdr.test.ts > interactive batch lifecycle > refuses inherited MCP/config context before launching the TUI, without changing the account 5ms
+ ✓ tests/learner-herdr.test.ts > interactive batch lifecycle > classifies unsafe persisted environment before any model/terminal start 3ms
+ ✓ tests/learner-herdr.test.ts > interactive batch lifecycle > runs one interactive TUI, sends the original task, persists native completion and retires only its own PID 24ms
+ ✓ tests/learner-herdr.test.ts > interactive batch lifecycle > waits for the native task_complete even when the screen is idle 24ms
+ ✓ tests/learner-herdr.test.ts > interactive batch lifecycle > does not declare timeout complete 141ms
+ ✓ tests/learner-herdr.test.ts > interactive batch lifecycle > retains lease-lost rather than interrupting an unverified foreground 18ms
+ ✓ tests/learner-herdr.test.ts > interactive batch lifecycle > retains working-after-complete rather than interrupting an unverified foreground 136ms
+ ✓ tests/learner-herdr.test.ts > interactive batch lifecycle > retains a timed-out batch after draft appears 17ms
+ ✓ tests/learner-herdr.test.ts > interactive batch lifecycle > retains a timed-out batch after unknown appears 139ms
+ ✓ tests/learner-herdr.test.ts > interactive batch lifecycle > retains a timed-out batch after foreign-cwd appears 147ms
+ ✓ tests/learner-herdr.test.ts > interactive batch lifecycle > retains a timed-out batch after foreign-foreground appears 155ms
+ ✓ tests/learner-herdr.test.ts > interactive batch lifecycle > retains a timed-out batch after foreign-turn appears 24ms
+ ✓ tests/learner-herdr.test.ts > interactive batch lifecycle > stops retirement if draft changes after Esc 148ms
+ ✓ tests/learner-herdr.test.ts > interactive batch lifecycle > stops retirement if lease changes after Esc 140ms
+ ✓ tests/learner-herdr.test.ts > interactive batch lifecycle > stops retirement if uncertain-key changes after Esc 135ms
+ ✓ tests/learner-herdr.test.ts > interactive batch lifecycle > preserves human input on the cancelled exit path 17ms
+ ✓ tests/learner-herdr.test.ts > interactive batch lifecycle > preserves human input on the native-error exit path 17ms
+ ✓ tests/learner-herdr.test.ts > interactive batch lifecycle > preserves human input on the transport-error exit path 14ms
+ ✓ tests/learner-herdr.test.ts > interactive batch lifecycle > retains an owned TUI that does not exit after verified keys, without force killing it 653ms
+ ✓ tests/learner-herdr.test.ts > interactive batch lifecycle > waits read-only when the exact PID has exited but foreground metadata still names it 164ms
+ ✓ tests/learner-herdr.test.ts > interactive batch lifecycle > waits for a split native acceptance row without treating task_started alone as a human turn 38ms
+ ✓ tests/learner-herdr.test.ts > interactive batch lifecycle > accepts a matching native user message as evidence when the submission receipt is uncertain 30ms
+ ✓ tests/learner-herdr.test.ts > interactive batch lifecycle > retries a capacity error by continuing the same native session 35ms
+ ✓ tests/learner-herdr.test.ts > interactive batch lifecycle > continues a known error-idle TUI even when the failed native task_started has no end record 38ms
+ ✓ tests/learner-herdr.test.ts > interactive batch lifecycle > uses ten-minute backoff and caps three error continuations without progress 173ms
+ ✓ tests/learner-herdr.test.ts > interactive batch lifecycle > preserves an uncertain start without submitting or starting another model 145ms
+ ✓ tests/learner-herdr.test.ts > interactive batch lifecycle > keeps a changed pane and forbids finish/reclamation when retirement cannot be verified 22ms
+ ✓ tests/learner-herdr-receipts.test.ts > gates interactive learner retirement and launch identity on fixed persisted receipts 212ms
+ ✓ tests/learner-herdr-ownership.test.ts > integrator #36 ownership regressions > does not accept a different human turn as the batch completion 4ms
+ ✓ tests/learner-herdr-ownership.test.ts > integrator #36 ownership regressions > retains the TUI and supervision when ownership is lease-lost 26ms
+ ✓ tests/learner-herdr-ownership.test.ts > integrator #36 ownership regressions > retains the TUI and supervision when ownership is start-uncertain 149ms
+ ✓ tests/learner-herdr-ownership.test.ts > integrator #36 ownership regressions > does not retire a TUI with unsent human text on timeout 17ms
+ ✓ tests/learner-herdr-launcher.test.ts > hosted learner launcher > preserves rendered task, key prechecks, original account/lease and persisted summary 61ms
+ ✓ tests/learner-herdr-launcher.test.ts > hosted learner launcher > rejects a failed key check before starting any TUI 40ms
+ ✓ tests/learner-herdr-launcher.test.ts > hosted learner launcher > refuses a missing original batch lease without starting a TUI 42ms
+ ✓ tests/learner-herdr-launcher.test.ts > hosted learner launcher > does not turn an unverified retirement into success 51ms
+
+ Test Files  4 passed (4)
+      Tests  45 passed (45)
+   Start at  13:49:46
+   Duration  6.38s (transform 1.68s, setup 818ms, import 1.74s, tests 3.23s, environment 0ms)
+

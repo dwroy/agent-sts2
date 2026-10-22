@@ -1,3 +1,4 @@
+import type { BrainObserver } from "../live-view.js";
 /** In-process, stateless Streamable HTTP MCP endpoint. One unguessable URL per engine instance. */
 import { randomBytes } from "node:crypto";
 import { createServer, type Server } from "node:http";
@@ -15,7 +16,7 @@ export class KnowledgeMcp {
   private limited: ((reason: "calls" | "time") => void) | null = null;
   url = "";
 
-  begin(tools: ToolDef[], context: ToolContext, maximum: number, cutoff: number, limited: (reason: "calls" | "time") => void): ToolHost {
+  begin(tools: ToolDef[], context: ToolContext, maximum: number, cutoff: number, limited: (reason: "calls" | "time") => void, observe?: BrainObserver): ToolHost {
     this.maximum = maximum; this.cutoff = cutoff; this.used = 0; this.limited = limited;
     const wrapped = tools.map((tool): ToolDef => ({ ...tool, run: async (input, ctx) => {
       if (this.used >= this.maximum || Date.now() >= this.cutoff) {
@@ -31,7 +32,7 @@ export class KnowledgeMcp {
       try { return await tool.run(input, ctx); }
       finally { if (this.used >= this.maximum) { const limited = this.limited; setTimeout(() => limited?.("calls"), 20).unref(); } }
     } }));
-    return this.host = new ToolHost(wrapped, context, undefined, true);
+    return this.host = new ToolHost(wrapped, context, undefined, true, observe);
   }
   end(): void { this.host = null; this.limited = null; }
 

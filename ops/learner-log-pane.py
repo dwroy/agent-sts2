@@ -48,6 +48,22 @@ def main(batch):
     ops = info(ops_pane)
     if ops.get("label") != "ops" or not ops.get("workspace_id"):
         raise ValueError("registered ops pane identity does not match")
+    # New hosted batches already have their one interactive tab. Return its verified identity rather than opening
+    # a second log mirror. Historical headless batches retain the read-only mirror path below.
+    tui_path = state / "learner" / (learner_label + ".tui.json")
+    if record.get("pane") and tui_path.is_file():
+        tui = json.loads(tui_path.read_text())
+        if tui.get("pane") != record["pane"] or tui.get("label") != learner_label:
+            raise ValueError("interactive learner receipt does not match its original batch")
+        pane = info(record["pane"])
+        identity = tui.get("identity", {})
+        if (pane.get("workspace_id") != ops["workspace_id"]
+                or any(pane.get(key) != identity.get(key) for key in ("pane_id", "tab_id", "terminal_id", "label"))):
+            raise ValueError("interactive learner pane identity changed; retain it")
+        print(json.dumps({"batch": batch, "pane": record["pane"], "tab": pane.get("tab_id"),
+                          "workspace": pane["workspace_id"], "ops_pane": ops_pane, "label": learner_label,
+                          "interactive": True, "learner_restarted": False}, ensure_ascii=False))
+        return
     logs = [state / "learner" / (batch + suffix) for suffix in (".out", ".err")]
     for log in logs:
         if not log.is_file() or log.is_symlink():

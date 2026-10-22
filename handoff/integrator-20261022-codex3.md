@@ -69,3 +69,7 @@ main集成/材料提交须保并行脏记录，在原L锁内备份绑定、final
 ## #40 生产导入热修（2026-10-22T23:35:57+08:00）
 
 源3ae67358只交8f09b8426之后差量。main基线520c12590c59f467333c33d44f554b26ece3d4d0、受测树01b4bec2076c70f1d08fe3e9e2c58db0b73dc0f8；tsc0、无过滤完整656文件6219过2跳0败、独立新进程Python2项通过，2596输入同。材料paper/materials/20261022-issue40-hotfix-full-integrator/及delivery.json三叶；合main后交ops按实际R414最新知识/原门精确热修，不重放旧40/broad33；未实际发布/关闭40。首轮20–40分钟约10GiB仅规划，下一自然刷新exit0/耗时RSS/rows-checkpoint/训练模型消费者及后续增量暖验收待ops；原生产/开发失败保留。主管6344172214更新为40热修→36 R3→完整33+26含启动→42工具→35→28→37，37→20；40检查结束即R414上重建36精确组合并唯一full，44交付后按窗口排入；CLI/ACK、科学父、service_tier隔离反证保留。已实读ops6343667379，R414新463知识及实际消费者各54过；#27批issue-27-brain-strategies-batch2-20261022-224403冻结65文件/446局后被原两策略槽挡回，原任务pending等完成事件，不开新任务。
+
+## #36 唯一full失败停点（2026-10-23T00:09:10+08:00）
+
+实际R414 fdae435795f41d771da6df3457eb890e50d8ffeb / R3 1b0aeb68f / 冻结树dbf16fff0546aece14b637acb809d641f0023570，644文件642过2败、6103项过2败2跳，2509输入前后同。两败：Boss-home旧mock不适配新open-pane/Popen协议；#44 F2 table undefined同症状。原日志paper/materials/20261022-issue36-r414-integrator/full-failed/和failure-audit.json，原未修、未重跑、未合main/发布，main定向未执行；full窗口已释放。待主管裁决修复归属/是否等44/下次full，勿执行finalize.py或integrate-main.py（仍有full非绿硬门）。R414原31叶+40前件及main37叶候选保留，各patch禁止发布。main候选已保1be00b7e/27第二批新策略及131并行记录；不覆盖live知识。自然session/high/直播及学习TUI、40资源训练消费者/44稳定性/CLI/父要求继续开放，原队列不自行改序。

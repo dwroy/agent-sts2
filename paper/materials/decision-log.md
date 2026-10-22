@@ -5868,3 +5868,5 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
 - 2026-10-22T23:35:57+08:00 [watcher] #40生产导入热修源3ae67358仅8f09b8426后差量：未修入口独立复现ModuleNotFoundError、修后新进程冷/追加/暖与缺模块反例2过；树01b4bec2076c70f1d08fe3e9e2c58db0b73dc0f8首次full1败原件保留/旧测试空表已开#44交原issue41，按主管6344141656同树绿即发裁决、原树一次完整复验tsc/full0（656文件6219过2跳0败）及Python2过，2596枚举输入前后同。合main交原ops在42学习V6-R414后精确热修，保最新知识；首轮20–40分钟/约10GiB仅规划，生产失败原件与自然刷新/训练/消费者验收开放，未碰生产。证据paper/materials/20261022-issue40-hotfix-full-integrator/。
 
 - 2026-10-23T00:02:34+08:00 [ops] 231301四局复盘/12支持11旧ID/四pending提案核同；5802原段校验。两主策略attention保留，共享原dataset五检查成功产物复用且不重跑；记录限已审前缀，排除#27在途5条，24状态勘误和11通知角色ACK仍pending，不关科学父。原件 paper/materials/20261022-2350-ops/receipt.json。
+
+- 2026-10-23T00:09:10+08:00 [watcher] #36实际R414精确R3唯一full失败：tsc0，644文件642过2败/6103项过2败2跳；2509枚举输入及受测树dbf16fff0546aece14b637acb809d641f0023570前后同。Boss-home旧pane123 mock不适配R3 open-pane/Popen；另#44同症状F2 table undefined复现，根因未定。保留完整原件paper/materials/20261022-issue36-r414-integrator/full-failed/，未重跑/合main/交发布，main兼容定向未执行；释放full窗口，请主管裁决修复归属及下次full，不自行改序，保新知识/CLI/自然验收。
