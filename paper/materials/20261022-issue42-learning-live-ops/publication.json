@@ -1,0 +1,226 @@
+{
+  "at": "2026-10-22T22:40:25+08:00",
+  "release_id": "V6-R414",
+  "source": "00b0fcf5b792cb6b805f4d43c08e2c8daf24a659",
+  "behavior": {
+    "parent": "0073e0eddf052d2fe21dfca914b2440d8491ce9b",
+    "commit": "507b00eda13efe65fc14da5cab00ed25cc2ad1e7",
+    "tree": "d9aff6d0565e09b59b2f224b58c5bf1090d04c6f",
+    "paths": [
+      "agent/src/knowledge/strategy-entries.ts",
+      "agent/tests/external-strategy-data/contract-cases.json",
+      "agent/tests/external-strategy-data/external-strategy.json",
+      "agent/tests/external-strategy-data/frozen-skip-aggregate.json",
+      "agent/tests/external-strategy-evidence.test.ts",
+      "agent/tests/external_strategy_ledger_test.py",
+      "agent/tests/strategy-entries.test.ts",
+      "docs/brain-strategies.md",
+      "docs/learning-protocol.md",
+      "knowledge/schemas/brain-strategies-v1.schema.json",
+      "learner/external_evidence.py",
+      "learner/ledger.py",
+      "notes/learning-questions/issue-27-brain-strategies-task.md",
+      "ops/tests/test_ordinary_close.py",
+      "paper/materials/learning/README.md"
+    ],
+    "scan": {
+      "manifest": "/home/dw/Projects/agent-sts2/ops/codex-ops/record-scans/runs/30a6ea4a10d8415aa7cfeb096f96f35d/manifest.json",
+      "manifest_sha256": "95f2875adcce5c68cd212a6dcfd4d7a6abde394d42576d75c3e5be85e3ea534e",
+      "scanned_leaves": 0,
+      "reused_clean_leaves": 15,
+      "full_copy_bytes": 0
+    }
+  },
+  "registrations": {
+    "live": {
+      "parent": "507b00eda13efe65fc14da5cab00ed25cc2ad1e7",
+      "commit": "fdae435795f41d771da6df3457eb890e50d8ffeb",
+      "tree": "fe60142a952d728dabd34eb02811e21b152b9e67",
+      "paths": [
+        "eval/versions.json"
+      ],
+      "scan": {
+        "manifest": "/home/dw/Projects/agent-sts2/ops/codex-ops/record-scans/runs/c9c9fd019da2480bb5256679e7c183d9/manifest.json",
+        "manifest_sha256": "6e8d8dd02472ad89f10a285fc6ce1dc5c4ccecd5f15184575ba9c11123764e28",
+        "scanned_leaves": 1,
+        "reused_clean_leaves": 0,
+        "full_copy_bytes": 0
+      }
+    },
+    "main": {
+      "parent": "520c12590c59f467333c33d44f554b26ece3d4d0",
+      "commit": "3094a78988ba513cfa4d286ef5be28b746fa4ee8",
+      "tree": "5d101b656769d22ef3034cef0e8bc97f48ebbc19",
+      "paths": [
+        "eval/versions.json"
+      ],
+      "scan": {
+        "manifest": "/home/dw/Projects/agent-sts2/ops/codex-ops/record-scans/runs/d323e40f84b24f3ab17f21b0b073a834/manifest.json",
+        "manifest_sha256": "bdaf88b1bf13dac153e657933fb502892fc9e357b6d16c01fd189aae6238bbc5",
+        "scanned_leaves": 1,
+        "reused_clean_leaves": 0,
+        "full_copy_bytes": 0
+      }
+    }
+  },
+  "source_paths": [
+    "agent/src/knowledge/strategy-entries.ts",
+    "agent/tests/external-strategy-data/contract-cases.json",
+    "agent/tests/external-strategy-data/external-strategy.json",
+    "agent/tests/external-strategy-data/frozen-skip-aggregate.json",
+    "agent/tests/external-strategy-evidence.test.ts",
+    "agent/tests/external_strategy_ledger_test.py",
+    "agent/tests/strategy-entries.test.ts",
+    "docs/brain-strategies.md",
+    "docs/learning-protocol.md",
+    "knowledge/schemas/brain-strategies-v1.schema.json",
+    "learner/external_evidence.py",
+    "learner/ledger.py",
+    "notes/learning-questions/issue-27-brain-strategies-task.md",
+    "ops/tests/test_ordinary_close.py",
+    "paper/materials/learning/README.md"
+  ],
+  "fixed_tree": "d9aff6d0565e09b59b2f224b58c5bf1090d04c6f",
+  "checks": {
+    "schema": "ops-exact-live-learning-check-v1",
+    "state": "passed-await-original-publication-and-issue27-batch2",
+    "started_at": "2026-10-22T22:05:04+08:00",
+    "runner_pid": 1697483,
+    "runner_start": "10243378",
+    "nice": 19,
+    "base": "0073e0eddf052d2fe21dfca914b2440d8491ce9b",
+    "tree": "d9aff6d0565e09b59b2f224b58c5bf1090d04c6f",
+    "worktree": "/home/dw/Projects/agent-sts2/.worktrees/ops-issue42-learning-live-20261022",
+    "source_count": 15,
+    "knowledge_count": 463,
+    "main_full_repeated": false,
+    "full_started": true,
+    "steps": [
+      {
+        "name": "tsc",
+        "argv": [
+          "nice",
+          "-n",
+          "19",
+          "node",
+          "node_modules/typescript/bin/tsc",
+          "-p",
+          "tsconfig.json",
+          "--noEmit"
+        ],
+        "started_at": "2026-10-22T22:05:04+08:00",
+        "pid": 1697499,
+        "exit_code": 0,
+        "seconds": 0.8091082150058355
+      },
+      {
+        "name": "full",
+        "argv": [
+          "nice",
+          "-n",
+          "19",
+          "node",
+          "node_modules/vitest/vitest.mjs",
+          "run",
+          "--pool=forks",
+          "--maxWorkers=1",
+          "--no-file-parallelism",
+          "--reporter=default",
+          "--reporter=json",
+          "--outputFile.json=/home/dw/Projects/agent-sts2/paper/materials/20261022-issue42-learning-live-ops/vitest.json"
+        ],
+        "started_at": "2026-10-22T22:05:05+08:00",
+        "pid": 1697592,
+        "exit_code": 0,
+        "seconds": 1550.538011754994
+      },
+      {
+        "name": "external-python",
+        "argv": [
+          "nice",
+          "-n",
+          "19",
+          "python3",
+          "-B",
+          "agent/tests/external_strategy_ledger_test.py"
+        ],
+        "started_at": "2026-10-22T22:30:55+08:00",
+        "pid": 1821723,
+        "exit_code": 0,
+        "seconds": 3.3664426600007573
+      }
+    ],
+    "new_model_API_MC_game_actions": 0,
+    "published": false,
+    "input_count": 2498,
+    "inputs_unchanged": true,
+    "vitest": {
+      "success": true,
+      "numPassedTests": 6051,
+      "numFailedTests": 0,
+      "numPendingTests": 2
+    },
+    "ended_at": "2026-10-22T22:30:59+08:00"
+  },
+  "latest_data_compatibility": {
+    "success": true,
+    "numPassedTests": 54,
+    "numFailedTests": 0
+  },
+  "latest_knowledge_count": 463,
+  "data_delta_since_full": [
+    "knowledge/catalog.json",
+    "knowledge/characters/silent/boss-damage.json",
+    "knowledge/characters/silent/construction-opportunities.json",
+    "knowledge/characters/silent/monster-records.json",
+    "knowledge/characters/silent/outcome-stats.json",
+    "knowledge/characters/silent/room-costs.json",
+    "knowledge/characters/silent/v6-history.json",
+    "knowledge/common/card-upgrades.json",
+    "knowledge/common/enemies/ASSASSIN_RUBY_RAIDER/mechanics-observed.json",
+    "knowledge/common/enemies/BRUTE_RUBY_RAIDER/mechanics-observed.json",
+    "knowledge/common/enemies/BRUTE_RUBY_RAIDER/model-observed.json",
+    "knowledge/common/enemies/CROSSBOW_RUBY_RAIDER/mechanics-observed.json",
+    "knowledge/common/enemies/CROSSBOW_RUBY_RAIDER/model-observed.json",
+    "knowledge/common/enemies/EYE_WITH_TEETH/mechanics-observed.json",
+    "knowledge/common/enemies/EYE_WITH_TEETH/model-observed.json",
+    "knowledge/common/enemies/FAT_GREMLIN/mechanics-observed.json",
+    "knowledge/common/enemies/FOGMOG/mechanics-observed.json",
+    "knowledge/common/enemies/FOGMOG/model-observed.json",
+    "knowledge/common/enemies/FUZZY_WURM_CRAWLER/mechanics-observed.json",
+    "knowledge/common/enemies/FUZZY_WURM_CRAWLER/model-observed.json",
+    "knowledge/common/enemies/INKLET/mechanics-observed.json",
+    "knowledge/common/enemies/INKLET/model-observed.json",
+    "knowledge/common/enemies/KIN_FOLLOWER/mechanics-observed.json",
+    "knowledge/common/enemies/KIN_FOLLOWER/model-observed.json",
+    "knowledge/common/enemies/KIN_PRIEST/mechanics-observed.json",
+    "knowledge/common/enemies/KIN_PRIEST/model-observed.json",
+    "knowledge/common/enemies/LEAF_SLIME_M/mechanics-observed.json",
+    "knowledge/common/enemies/LEAF_SLIME_M/model-observed.json",
+    "knowledge/common/enemies/LEAF_SLIME_S/mechanics-observed.json",
+    "knowledge/common/enemies/LEAF_SLIME_S/model-observed.json",
+    "knowledge/common/enemies/MYSTERIOUS_KNIGHT/mechanics-observed.json",
+    "knowledge/common/enemies/NIBBIT/mechanics-observed.json",
+    "knowledge/common/enemies/NIBBIT/model-observed.json",
+    "knowledge/common/enemies/PHROG_PARASITE/mechanics-observed.json",
+    "knowledge/common/enemies/PHROG_PARASITE/model-observed.json",
+    "knowledge/common/enemies/THIEVING_HOPPER/mechanics-observed.json",
+    "knowledge/common/enemies/TWIG_SLIME_S/mechanics-observed.json",
+    "knowledge/common/enemies/VINE_SHAMBLER/mechanics-observed.json",
+    "knowledge/common/enemies/VINE_SHAMBLER/model-observed.json",
+    "knowledge/common/enemies/WRIGGLER/mechanics-observed.json",
+    "knowledge/common/enemies/WRIGGLER/model-observed.json",
+    "knowledge/common/enemies/_legacy-meta.json",
+    "knowledge/common/monster-db.json",
+    "knowledge/common/move-model.json"
+  ],
+  "all_knowledge_preserved_except_delivered_schema": true,
+  "binding_sha256": "5a9e900cd6626febe517591db75008cc8d1962408744fb41f9dbe4570bfd0d55",
+  "current_process_hot_switched": false,
+  "tools_remainder_published": false,
+  "full33_plus26_published": false,
+  "actual_live_consumers": "paper/materials/20261022-issue42-learning-live-ops/actual-live-consumer-readback.json",
+  "issue27_batch2_started": false,
+  "whole_issue42_complete": false,
+  "issue27_batch2_gate_satisfied_at": "2026-10-22T22:42:20+08:00"
+}

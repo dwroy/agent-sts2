@@ -1,0 +1,1801 @@
+diff --git a/agent/src/knowledge/strategy-entries.ts b/agent/src/knowledge/strategy-entries.ts
+index 2ae816364..ef48c2716 100644
+--- a/agent/src/knowledge/strategy-entries.ts
++++ b/agent/src/knowledge/strategy-entries.ts
+@@ -6,6 +6,26 @@ import type { BrainRequest } from "../brain/types.js";
+ export const QUESTION_TYPES = ["card_reward", "event", "rest", "shop", "act_plan"] as const;
+ export type QuestionType = typeof QUESTION_TYPES[number];
+ type Range = { min?: number; max?: number };
++export interface OwnStrategyEvidence { type?: "own"; run: string; floor: number; ref?: string; role?: "support" | "contradict" | "repeat" }
++export interface ExternalAggregateEvidence {
++  type: "external_aggregate";
++  source: `external:${string}`;
++  url: string;
++  version: string;
++  dataset_sha256: string;
++  downloaded_at: string;
++  filters: { character: "silent"; ascension: number; criteria: string };
++  statistic: { name: string; value: number; unit: string };
++  denominator: { unit: "runs" | "players" | "offers" | "fights" | "rooms" | "rewards" | "cards"; n: number };
++  interval?: { low: number; high: number; method: string };
++  design: "observational";
++  limitations: string[];
++  license: string;
++  ref?: string;
++  role?: "support" | "contradict";
++}
++export type StrategyEvidence = OwnStrategyEvidence | ExternalAggregateEvidence;
++export const EXTERNAL_ONLY_CONFIDENCE_MAX = 0.49;
+ export interface StrategyEntry {
+   id: string;
+   version: string;
+@@ -19,10 +39,13 @@ export interface StrategyEntry {
+     deck_cards?: { name: string; count: Range }[];
+   };
+   strategy: string;
+-  evidence: { run: string; floor: number; ref?: string }[];
+-  source: "own" | `external:${string}`;
++  evidence: StrategyEvidence[];
++  source: "own" | "mixed" | `external:${string}`;
+   provenance?: { url: string; version: string; sha256: string; license: string };
+   confidence: number;
++  evidence_status?: "aligned" | "conflict" | "unassessed";
++  evidence_summary?: ReturnType<typeof strategyEvidenceSummary>;
++  limitation_notice?: string;
+ }
+ export interface StrategyLibrary { schema: "brain-strategies-v1"; character: "silent"; entries: StrategyEntry[] }
+ export const STRATEGY_LIMITS = { entries: 3, bytes: 4096, textBytes: 1200, fileBytes: 1_048_576, libraryEntries: 500 } as const;
+@@ -36,6 +59,82 @@ function range(v: unknown, low = 0, high = Infinity): boolean {
+     && [v["min"], v["max"]].every((n) => n === undefined || finite(n) && n >= low && n <= high)
+     && (v["min"] === undefined || v["max"] === undefined || (v["min"] as number) <= (v["max"] as number));
+ }
++/** Aggregate evidence never accepts synthetic run/floor fields. Keep in sync with learner/external_evidence.py. */
++export function validateStrategyEvidence(ev: unknown): void {
++  if (!object(ev)) throw new Error("invalid strategy evidence");
++  if (ev["type"] !== "external_aggregate") {
++    if (!only(ev, ["type", "run", "floor", "ref", "role"])
++      || ev["type"] !== undefined && ev["type"] !== "own"
++      || !text(ev["run"])
++      || !/^[0-9A-Z]{12}$/.test(ev["run"])
++      || !Number.isInteger(ev["floor"])
++      || (ev["floor"] as number) < 1
++      || ev["ref"] !== undefined && !text(ev["ref"])
++      || ev["role"] !== undefined && (typeof ev["role"] !== "string" || !["support", "contradict", "repeat"].includes(ev["role"])))
++      throw new Error("invalid own strategy evidence");
++    return;
++  }
++  if (!only(ev, ["type", "source", "url", "version", "dataset_sha256", "downloaded_at", "filters", "statistic", "denominator", "interval", "design", "limitations", "license", "ref", "role"])
++      || !text(ev["source"])
++      || !/^external:\S+$/.test(ev["source"])
++      || !text(ev["url"])
++      || !/^https?:\/\/[^\s/]+/.test(ev["url"])
++      || !text(ev["version"])
++      || !text(ev["license"])
++      || !text(ev["dataset_sha256"])
++      || !/^[a-f0-9]{64}$/.test(ev["dataset_sha256"])
++      || !text(ev["downloaded_at"])
++      || !/^\d{4}-\d{2}-\d{2}$/.test(ev["downloaded_at"])
++      || !Number.isFinite(Date.parse(ev["downloaded_at"]))
++      || new Date(ev["downloaded_at"]).toISOString().slice(0, 10) !== ev["downloaded_at"]
++      || ev["design"] !== "observational"
++      || !Array.isArray(ev["limitations"])
++      || !ev["limitations"].length
++      || !ev["limitations"].every(text))
++      throw new Error("invalid external aggregate provenance");
++  const f = ev["filters"], s = ev["statistic"], d = ev["denominator"], ci = ev["interval"];
++  if (!object(f)
++      || !only(f, ["character", "ascension", "criteria"])
++      || f["character"] !== "silent"
++      || !Number.isInteger(f["ascension"])
++      || (f["ascension"] as number) < 0
++      || (f["ascension"] as number) > 20
++      || !text(f["criteria"])
++      || !object(s)
++      || !only(s, ["name", "value", "unit"])
++      || !text(s["name"])
++      || !finite(s["value"])
++      || !text(s["unit"])
++      || !object(d)
++      || !only(d, ["unit", "n"])
++      || typeof d["unit"] !== "string"
++      || !["runs", "players", "offers", "fights", "rooms", "rewards", "cards"].includes(d["unit"])
++      || !Number.isSafeInteger(d["n"])
++      || (d["n"] as number) <= 0)
++      throw new Error("invalid external aggregate statistic/denominator");
++  if (ci !== undefined && (!object(ci)
++      || !only(ci, ["low", "high", "method"])
++      || !finite(ci["low"])
++      || !finite(ci["high"])
++      || ci["low"] > ci["high"]
++      || !text(ci["method"])))
++      throw new Error("invalid external aggregate interval");
++  if (ev["ref"] !== undefined && !text(ev["ref"])
++      || ev["role"] !== undefined && (typeof ev["role"] !== "string" || !["support", "contradict"].includes(ev["role"])))
++      throw new Error("invalid external aggregate role/ref");
++}
++
++/** Do not add overlapping external denominators or count them as local validation. */
++export function strategyEvidenceSummary(entry: StrategyEntry) {
++  const own = entry.evidence.filter((e): e is OwnStrategyEvidence => e.type !== "external_aggregate");
++  return { own_runs: new Set(own.map(e => e.run)).size, own_support_runs: new Set(own.filter(e => e.role !== "contradict").map(e => e.run)).size,
++    external: entry.evidence.filter((e): e is ExternalAggregateEvidence => e.type === "external_aggregate").map(e => ({ source: e.source, version: e.version, dataset_sha256: e.dataset_sha256, statistic: e.statistic.name, denominator: e.denominator })) };
++}
++function presentStrategy(entry: StrategyEntry): StrategyEntry {
++  if (!entry.evidence.some(e => e.type === "external_aggregate")) return entry;
++  return { ...entry, evidence_summary: strategyEvidenceSummary(entry), limitation_notice: "外部聚合为观察性统计、非因果，外部分母不计本系统验证；样本选择、版本与口径局限见 evidence.limitations。" };
++}
++
+ /** Reject unknown trigger keys: a typo must never silently broaden an entry. */
+ export function parseStrategyLibrary(raw: unknown): StrategyLibrary {
+   if (!object(raw) || raw["schema"] !== "brain-strategies-v1" || raw["character"] !== "silent" || !Array.isArray(raw["entries"]) || raw["entries"].length > STRATEGY_LIMITS.libraryEntries) throw new Error("invalid strategy library header");
+@@ -49,13 +148,17 @@ export function parseStrategyLibrary(raw: unknown): StrategyLibrary {
+     if (t["bosses"] !== undefined && (!Array.isArray(t["bosses"]) || !t["bosses"].length || !t["bosses"].every(text))) throw new Error("invalid strategy bosses");
+     for (const k of ["floor", "deck_size", "hp_ratio"]) if (t[k] !== undefined && !range(t[k], 0, k === "hp_ratio" ? 1 : Infinity)) throw new Error("invalid strategy range");
+     if (t["deck_cards"] !== undefined && (!Array.isArray(t["deck_cards"]) || !t["deck_cards"].length || !t["deck_cards"].every((c) => object(c) && only(c, ["name", "count"]) && text(c["name"]) && range(c["count"])))) throw new Error("invalid strategy deck cards");
+-    if (!Array.isArray(entry["evidence"]) || !entry["evidence"].length || entry["evidence"].length > 20 || !entry["evidence"].every((e) => object(e) && text(e["run"]) && Number.isInteger(e["floor"]) && (e["floor"] as number) >= 0 && (e["ref"] === undefined || text(e["ref"])))) throw new Error("invalid strategy evidence");
+-    const source = entry["source"];
+-    if (source !== "own" && !(text(source) && /^external:.+/.test(source))) throw new Error("invalid strategy source");
+-    if (source !== "own") {
+-      const p = entry["provenance"];
+-      if (!object(p) || !["url", "version", "sha256", "license"].every((k) => text(p[k])) || !/^https?:\/\//.test(p["url"] as string) || !/^[a-f0-9]{64}$/.test(p["sha256"] as string)) throw new Error("external strategy needs provenance");
+-    }
++    if (!Array.isArray(entry["evidence"]) || !entry["evidence"].length || entry["evidence"].length > 20) throw new Error("invalid strategy evidence");
++    for (const ev of entry["evidence"]) validateStrategyEvidence(ev);
++    const evidence = entry["evidence"] as StrategyEvidence[];
++    const external = evidence.filter((e): e is ExternalAggregateEvidence => e.type === "external_aggregate");
++    const own = evidence.filter((e): e is OwnStrategyEvidence => e.type !== "external_aggregate");
++    const sources = new Set([...own.map(() => "own"), ...external.map(e => e.source)]);
++    if (entry["source"] !== (sources.size > 1 ? "mixed" : [...sources][0])) throw new Error("strategy source must match evidence");
++    const status = entry["evidence_status"];
++    if (status !== undefined && (typeof status !== "string" || !["aligned", "conflict", "unassessed"].includes(status)) || sources.size > 1 && status === undefined) throw new Error("mixed strategy needs evidence_status");
++    if (external.length && evidence.some(e => e.role === "contradict") && status !== "conflict") throw new Error("contradictory evidence needs conflict status");
++    if (external.length && !own.some(e => e.role !== "contradict") && entry["confidence"] > EXTERNAL_ONLY_CONFIDENCE_MAX) throw new Error("external-only strategy confidence exceeds 0.49");
+   }
+   return raw as unknown as StrategyLibrary;
+ }
+@@ -104,7 +207,7 @@ export function retrieveStrategies(library: StrategyLibrary, label: string, payl
+       && (!t.bosses || t.bosses.includes(String(get("act_boss") ?? get("boss") ?? "")))
+       && within(number("floor"), t.floor) && within(ratio, t.hp_ratio) && within(size, t.deck_size)
+       && (!t.deck_cards || !!deck && t.deck_cards.every((c) => within(deck.get(c.name) ?? 0, c.count)));
+-  }).sort((a, b) => specificity(b) - specificity(a) || b.confidence - a.confidence || a.id.localeCompare(b.id));
++  }).sort((a, b) => specificity(b) - specificity(a) || b.confidence - a.confidence || a.id.localeCompare(b.id)).map(presentStrategy);
+ }
+ 
+ /** Total serialized UTF-8 bytes, including metadata/envelope, are bounded; never truncate evidence. */
+diff --git a/agent/tests/external-strategy-data/contract-cases.json b/agent/tests/external-strategy-data/contract-cases.json
+new file mode 100644
+index 000000000..d2df1a848
+--- /dev/null
++++ b/agent/tests/external-strategy-data/contract-cases.json
+@@ -0,0 +1,544 @@
++[
++  {
++    "name": "external without invented run/floor",
++    "valid": true,
++    "set": {},
++    "delete": []
++  },
++  {
++    "name": "missing type",
++    "valid": false,
++    "set": {},
++    "delete": [
++      "evidence.0.type"
++    ]
++  },
++  {
++    "name": "missing source",
++    "valid": false,
++    "set": {},
++    "delete": [
++      "evidence.0.source"
++    ]
++  },
++  {
++    "name": "missing url",
++    "valid": false,
++    "set": {},
++    "delete": [
++      "evidence.0.url"
++    ]
++  },
++  {
++    "name": "missing version",
++    "valid": false,
++    "set": {},
++    "delete": [
++      "evidence.0.version"
++    ]
++  },
++  {
++    "name": "missing dataset_sha256",
++    "valid": false,
++    "set": {},
++    "delete": [
++      "evidence.0.dataset_sha256"
++    ]
++  },
++  {
++    "name": "missing downloaded_at",
++    "valid": false,
++    "set": {},
++    "delete": [
++      "evidence.0.downloaded_at"
++    ]
++  },
++  {
++    "name": "missing filters",
++    "valid": false,
++    "set": {},
++    "delete": [
++      "evidence.0.filters"
++    ]
++  },
++  {
++    "name": "missing statistic",
++    "valid": false,
++    "set": {},
++    "delete": [
++      "evidence.0.statistic"
++    ]
++  },
++  {
++    "name": "missing denominator",
++    "valid": false,
++    "set": {},
++    "delete": [
++      "evidence.0.denominator"
++    ]
++  },
++  {
++    "name": "missing design",
++    "valid": false,
++    "set": {},
++    "delete": [
++      "evidence.0.design"
++    ]
++  },
++  {
++    "name": "missing limitations",
++    "valid": false,
++    "set": {},
++    "delete": [
++      "evidence.0.limitations"
++    ]
++  },
++  {
++    "name": "missing license",
++    "valid": false,
++    "set": {},
++    "delete": [
++      "evidence.0.license"
++    ]
++  },
++  {
++    "name": "aggregate forbids run",
++    "valid": false,
++    "set": {
++      "evidence.0.run": "SILENT000001"
++    },
++    "delete": []
++  },
++  {
++    "name": "aggregate forbids floor",
++    "valid": false,
++    "set": {
++      "evidence.0.floor": 0
++    },
++    "delete": []
++  },
++  {
++    "name": "zero denominator",
++    "valid": false,
++    "set": {
++      "evidence.0.denominator.n": 0
++    },
++    "delete": []
++  },
++  {
++    "name": "boolean denominator",
++    "valid": false,
++    "set": {
++      "evidence.0.denominator.n": true
++    },
++    "delete": []
++  },
++  {
++    "name": "invalid denominator unit",
++    "valid": false,
++    "set": {
++      "evidence.0.denominator.unit": "unknown",
++      "evidence.0.denominator.n": 1
++    },
++    "delete": []
++  },
++  {
++    "name": "unknown nested field",
++    "valid": false,
++    "set": {
++      "evidence.0.statistic.name": "rate",
++      "evidence.0.statistic.value": 0.2,
++      "evidence.0.statistic.unit": "fraction",
++      "evidence.0.statistic.floor": 0
++    },
++    "delete": []
++  },
++  {
++    "name": "reversed interval",
++    "valid": false,
++    "set": {
++      "evidence.0.interval.low": 1,
++      "evidence.0.interval.high": 0,
++      "evidence.0.interval.method": "fixture"
++    },
++    "delete": []
++  },
++  {
++    "name": "bad date",
++    "valid": false,
++    "set": {
++      "evidence.0.downloaded_at": "2026-02-30"
++    },
++    "delete": []
++  },
++  {
++    "name": "bad SHA",
++    "valid": false,
++    "set": {
++      "evidence.0.dataset_sha256": "bad"
++    },
++    "delete": []
++  },
++  {
++    "name": "wrong character",
++    "valid": false,
++    "set": {
++      "evidence.0.filters.character": "ironclad",
++      "evidence.0.filters.criteria": "fixture"
++    },
++    "delete": []
++  },
++  {
++    "name": "causal design",
++    "valid": false,
++    "set": {
++      "evidence.0.design": "causal"
++    },
++    "delete": []
++  },
++  {
++    "name": "external cannot be own repeat",
++    "valid": false,
++    "set": {
++      "evidence.0.role": "repeat"
++    },
++    "delete": []
++  },
++  {
++    "name": "empty limits",
++    "valid": false,
++    "set": {
++      "evidence.0.limitations": []
++    },
++    "delete": []
++  },
++  {
++    "name": "external confidence over cap",
++    "valid": false,
++    "set": {
++      "confidence": 0.5
++    },
++    "delete": []
++  },
++  {
++    "name": "external mislabeled own",
++    "valid": false,
++    "set": {
++      "source": "own"
++    },
++    "delete": []
++  },
++  {
++    "name": "mixed separate denominators",
++    "valid": true,
++    "set": {
++      "source": "mixed",
++      "confidence": 0.75,
++      "evidence": [
++        {
++          "run": "SILENT000001",
++          "floor": 4
++        },
++        {
++          "type": "external_aggregate",
++          "source": "external:sts2fun",
++          "url": "https://sts2.fun/static/sts2_public.db.zst",
++          "version": "v0.111",
++          "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
++          "downloaded_at": "2026-10-21",
++          "filters": {
++            "character": "silent",
++            "ascension": 10,
++            "criteria": "character='SILENT' AND ascension=10 AND n_players=1 AND is_valid=1 AND was_abandoned=0 AND has_modifiers=0; version=v0.111; act=1; table=skip"
++          },
++          "statistic": {
++            "name": "skip.rate",
++            "value": 0.10941609679116254,
++            "unit": "fraction of reward screens"
++          },
++          "denominator": {
++            "unit": "rewards",
++            "n": 13307
++          },
++          "interval": {
++            "low": 0.0595123436377582,
++            "high": 0.16450124705081484,
++            "method": "player-cluster bootstrap (source cluster_ci)"
++          },
++          "design": "observational",
++          "limitations": [
++            "自选上传样本，非随机抽样。",
++            "观察性统计，不能推断跳过或拿牌的因果收益。",
++            "奖励屏幕分母不是独立局数或玩家数，版本与本系统口径不同。"
++          ],
++          "license": "No explicit dataset redistribution license found on public FAQ; aggregate statistics with attribution only; no raw redistribution.",
++          "ref": "knowledge/external/sts2fun/silent-a10.json#/tables/skip; version=v0.111,act=1"
++        }
++      ],
++      "evidence_status": "aligned"
++    },
++    "delete": []
++  },
++  {
++    "name": "mixed missing comparison",
++    "valid": false,
++    "set": {
++      "source": "mixed",
++      "confidence": 0.75,
++      "evidence": [
++        {
++          "run": "SILENT000001",
++          "floor": 4
++        },
++        {
++          "type": "external_aggregate",
++          "source": "external:sts2fun",
++          "url": "https://sts2.fun/static/sts2_public.db.zst",
++          "version": "v0.111",
++          "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
++          "downloaded_at": "2026-10-21",
++          "filters": {
++            "character": "silent",
++            "ascension": 10,
++            "criteria": "character='SILENT' AND ascension=10 AND n_players=1 AND is_valid=1 AND was_abandoned=0 AND has_modifiers=0; version=v0.111; act=1; table=skip"
++          },
++          "statistic": {
++            "name": "skip.rate",
++            "value": 0.10941609679116254,
++            "unit": "fraction of reward screens"
++          },
++          "denominator": {
++            "unit": "rewards",
++            "n": 13307
++          },
++          "interval": {
++            "low": 0.0595123436377582,
++            "high": 0.16450124705081484,
++            "method": "player-cluster bootstrap (source cluster_ci)"
++          },
++          "design": "observational",
++          "limitations": [
++            "自选上传样本，非随机抽样。",
++            "观察性统计，不能推断跳过或拿牌的因果收益。",
++            "奖励屏幕分母不是独立局数或玩家数，版本与本系统口径不同。"
++          ],
++          "license": "No explicit dataset redistribution license found on public FAQ; aggregate statistics with attribution only; no raw redistribution.",
++          "ref": "knowledge/external/sts2fun/silent-a10.json#/tables/skip; version=v0.111,act=1"
++        }
++      ]
++    },
++    "delete": []
++  },
++  {
++    "name": "conflict preserved",
++    "valid": true,
++    "set": {
++      "source": "mixed",
++      "evidence": [
++        {
++          "run": "SILENT000001",
++          "floor": 4,
++          "role": "contradict"
++        },
++        {
++          "type": "external_aggregate",
++          "source": "external:sts2fun",
++          "url": "https://sts2.fun/static/sts2_public.db.zst",
++          "version": "v0.111",
++          "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
++          "downloaded_at": "2026-10-21",
++          "filters": {
++            "character": "silent",
++            "ascension": 10,
++            "criteria": "character='SILENT' AND ascension=10 AND n_players=1 AND is_valid=1 AND was_abandoned=0 AND has_modifiers=0; version=v0.111; act=1; table=skip"
++          },
++          "statistic": {
++            "name": "skip.rate",
++            "value": 0.10941609679116254,
++            "unit": "fraction of reward screens"
++          },
++          "denominator": {
++            "unit": "rewards",
++            "n": 13307
++          },
++          "interval": {
++            "low": 0.0595123436377582,
++            "high": 0.16450124705081484,
++            "method": "player-cluster bootstrap (source cluster_ci)"
++          },
++          "design": "observational",
++          "limitations": [
++            "自选上传样本，非随机抽样。",
++            "观察性统计，不能推断跳过或拿牌的因果收益。",
++            "奖励屏幕分母不是独立局数或玩家数，版本与本系统口径不同。"
++          ],
++          "license": "No explicit dataset redistribution license found on public FAQ; aggregate statistics with attribution only; no raw redistribution.",
++          "ref": "knowledge/external/sts2fun/silent-a10.json#/tables/skip; version=v0.111,act=1"
++        }
++      ],
++      "evidence_status": "conflict"
++    },
++    "delete": []
++  },
++  {
++    "name": "contradiction cannot unlock confidence",
++    "valid": false,
++    "set": {
++      "source": "mixed",
++      "confidence": 0.75,
++      "evidence": [
++        {
++          "run": "SILENT000001",
++          "floor": 4,
++          "role": "contradict"
++        },
++        {
++          "type": "external_aggregate",
++          "source": "external:sts2fun",
++          "url": "https://sts2.fun/static/sts2_public.db.zst",
++          "version": "v0.111",
++          "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
++          "downloaded_at": "2026-10-21",
++          "filters": {
++            "character": "silent",
++            "ascension": 10,
++            "criteria": "character='SILENT' AND ascension=10 AND n_players=1 AND is_valid=1 AND was_abandoned=0 AND has_modifiers=0; version=v0.111; act=1; table=skip"
++          },
++          "statistic": {
++            "name": "skip.rate",
++            "value": 0.10941609679116254,
++            "unit": "fraction of reward screens"
++          },
++          "denominator": {
++            "unit": "rewards",
++            "n": 13307
++          },
++          "interval": {
++            "low": 0.0595123436377582,
++            "high": 0.16450124705081484,
++            "method": "player-cluster bootstrap (source cluster_ci)"
++          },
++          "design": "observational",
++          "limitations": [
++            "自选上传样本，非随机抽样。",
++            "观察性统计，不能推断跳过或拿牌的因果收益。",
++            "奖励屏幕分母不是独立局数或玩家数，版本与本系统口径不同。"
++          ],
++          "license": "No explicit dataset redistribution license found on public FAQ; aggregate statistics with attribution only; no raw redistribution.",
++          "ref": "knowledge/external/sts2fun/silent-a10.json#/tables/skip; version=v0.111,act=1"
++        }
++      ],
++      "evidence_status": "conflict"
++    },
++    "delete": []
++  },
++  {
++    "name": "contradiction cannot claim alignment",
++    "valid": false,
++    "set": {
++      "source": "mixed",
++      "evidence": [
++        {
++          "run": "SILENT000001",
++          "floor": 4,
++          "role": "contradict"
++        },
++        {
++          "type": "external_aggregate",
++          "source": "external:sts2fun",
++          "url": "https://sts2.fun/static/sts2_public.db.zst",
++          "version": "v0.111",
++          "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
++          "downloaded_at": "2026-10-21",
++          "filters": {
++            "character": "silent",
++            "ascension": 10,
++            "criteria": "character='SILENT' AND ascension=10 AND n_players=1 AND is_valid=1 AND was_abandoned=0 AND has_modifiers=0; version=v0.111; act=1; table=skip"
++          },
++          "statistic": {
++            "name": "skip.rate",
++            "value": 0.10941609679116254,
++            "unit": "fraction of reward screens"
++          },
++          "denominator": {
++            "unit": "rewards",
++            "n": 13307
++          },
++          "interval": {
++            "low": 0.0595123436377582,
++            "high": 0.16450124705081484,
++            "method": "player-cluster bootstrap (source cluster_ci)"
++          },
++          "design": "observational",
++          "limitations": [
++            "自选上传样本，非随机抽样。",
++            "观察性统计，不能推断跳过或拿牌的因果收益。",
++            "奖励屏幕分母不是独立局数或玩家数，版本与本系统口径不同。"
++          ],
++          "license": "No explicit dataset redistribution license found on public FAQ; aggregate statistics with attribution only; no raw redistribution.",
++          "ref": "knowledge/external/sts2fun/silent-a10.json#/tables/skip; version=v0.111,act=1"
++        }
++      ],
++      "evidence_status": "aligned"
++    },
++    "delete": []
++  },
++  {
++    "name": "synthetic aggregate run disguised as own",
++    "valid": false,
++    "set": {
++      "source": "own",
++      "evidence": [
++        {
++          "run": "aggregate:sts2fun",
++          "floor": 1
++        }
++      ]
++    },
++    "delete": []
++  },
++  {
++    "name": "own zero floor rejected",
++    "valid": false,
++    "set": {
++      "source": "own",
++      "evidence": [
++        {
++          "run": "SILENT000001",
++          "floor": 0
++        }
++      ]
++    },
++    "delete": []
++  },
++  {
++    "name": "array role not a string",
++    "valid": false,
++    "set": {
++      "evidence.0.role": [
++        "support"
++      ]
++    },
++    "delete": []
++  },
++  {
++    "name": "array denominator unit not a string",
++    "valid": false,
++    "set": {
++      "evidence.0.denominator.unit": [
++        "rewards"
++      ]
++    },
++    "delete": []
++  },
++  {
++    "name": "array comparison not a string",
++    "valid": false,
++    "set": {
++      "evidence_status": [
++        "aligned"
++      ]
++    },
++    "delete": []
++  }
++]
+diff --git a/agent/tests/external-strategy-data/external-strategy.json b/agent/tests/external-strategy-data/external-strategy.json
+new file mode 100644
+index 000000000..898aa40c9
+--- /dev/null
++++ b/agent/tests/external-strategy-data/external-strategy.json
+@@ -0,0 +1,58 @@
++{
++  "schema": "brain-strategies-v1",
++  "character": "silent",
++  "entries": [
++    {
++      "id": "fixture-issue42-external-skip",
++      "version": "fixture-1",
++      "trigger": {
++        "question_types": [
++          "card_reward"
++        ],
++        "acts": [
++          1
++        ]
++      },
++      "strategy": "仅格式验收示例：来源表的第一幕跳过率为1456/13307；仅描述公开样本，不据此规定拿牌或跳过。",
++      "source": "external:sts2fun",
++      "confidence": 0.49,
++      "evidence": [
++        {
++          "type": "external_aggregate",
++          "source": "external:sts2fun",
++          "url": "https://sts2.fun/static/sts2_public.db.zst",
++          "version": "v0.111",
++          "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
++          "downloaded_at": "2026-10-21",
++          "filters": {
++            "character": "silent",
++            "ascension": 10,
++            "criteria": "character='SILENT' AND ascension=10 AND n_players=1 AND is_valid=1 AND was_abandoned=0 AND has_modifiers=0; version=v0.111; act=1; table=skip"
++          },
++          "statistic": {
++            "name": "skip.rate",
++            "value": 0.10941609679116254,
++            "unit": "fraction of reward screens"
++          },
++          "denominator": {
++            "unit": "rewards",
++            "n": 13307
++          },
++          "interval": {
++            "low": 0.0595123436377582,
++            "high": 0.16450124705081484,
++            "method": "player-cluster bootstrap (source cluster_ci)"
++          },
++          "design": "observational",
++          "limitations": [
++            "自选上传样本，非随机抽样。",
++            "观察性统计，不能推断跳过或拿牌的因果收益。",
++            "奖励屏幕分母不是独立局数或玩家数，版本与本系统口径不同。"
++          ],
++          "license": "No explicit dataset redistribution license found on public FAQ; aggregate statistics with attribution only; no raw redistribution.",
++          "ref": "knowledge/external/sts2fun/silent-a10.json#/tables/skip; version=v0.111,act=1"
++        }
++      ]
++    }
++  ]
++}
+diff --git a/agent/tests/external-strategy-data/frozen-skip-aggregate.json b/agent/tests/external-strategy-data/frozen-skip-aggregate.json
+new file mode 100644
+index 000000000..349790e60
+--- /dev/null
++++ b/agent/tests/external-strategy-data/frozen-skip-aggregate.json
+@@ -0,0 +1,37 @@
++{
++  "provenance": {
++    "url": "https://sts2.fun/static/sts2_public.db.zst",
++    "faq": "https://sts2.fun/faq",
++    "downloaded_at": "2026-10-21",
++    "compressed_sha256": "0f3e1660cdd41665c5e29695232137252187713a5fde87fb888ab3e228c69ac7",
++    "database_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
++    "compressed_hash_basis": "issue #24 acquisition receipt; compressed file not re-downloaded",
++    "license": "No explicit dataset redistribution license found on public FAQ; aggregate statistics with attribution only; no raw redistribution.",
++    "filter": "character='SILENT' AND ascension=10 AND n_players=1 AND is_valid=1 AND was_abandoned=0 AND has_modifiers=0"
++  },
++  "tables": {
++    "skip": {
++      "columns": [
++        "version",
++        "act",
++        "screens",
++        "skipped",
++        "rate",
++        "cluster_ci"
++      ],
++      "rows": [
++        [
++          "v0.111",
++          1,
++          13307,
++          1456,
++          0.10941609679116254,
++          [
++            0.0595123436377582,
++            0.16450124705081484
++          ]
++        ]
++      ]
++    }
++  }
++}
+diff --git a/agent/tests/external-strategy-evidence.test.ts b/agent/tests/external-strategy-evidence.test.ts
+new file mode 100644
+index 000000000..9ea7e1ee8
+--- /dev/null
++++ b/agent/tests/external-strategy-evidence.test.ts
+@@ -0,0 +1,97 @@
++/** #42 learning-side aggregate contract and actual ledger → retrieval → prompt path. No API/game calls. */
++import { spawnSync } from "node:child_process";
++import { createHash } from "node:crypto";
++import { mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
++import { join } from "node:path";
++import { tmpdir } from "node:os";
++import { afterEach, expect, it } from "vitest";
++import { parseStrategyLibrary, applyStrategyEntries, retrieveStrategies, strategyEvidenceSummary, STRATEGY_LIMITS, type StrategyEntry } from "../src/knowledge/strategy-entries.js";
++import { setKnowledgeCharacter } from "../src/knowledge/files.js";
++import { userMessage } from "../src/brain/message.js";
++import { pickSpec } from "../src/brain/specs.js";
++import type { BrainRequest } from "../src/brain/types.js";
++import fixture from "./external-strategy-data/external-strategy.json";
++import cases from "./external-strategy-data/contract-cases.json";
++
++const dirs: string[] = [];
++afterEach(() => { for (const dir of dirs.splice(0)) rmSync(dir, { recursive: true, force: true }); setKnowledgeCharacter(null); });
++function mutate(c: typeof cases[number]) {
++  const entry: any = structuredClone(fixture.entries[0]);
++  for (const [path, value] of Object.entries(c.set)) {
++    const parts = path.split("."), key = parts.pop()!;
++    parts.reduce((v, k) => v[k], entry)[key] = structuredClone(value);
++  }
++  for (const path of c.delete) {
++    const parts = path.split("."), key = parts.pop()!;
++    delete parts.reduce((v, k) => v[k], entry)[key];
++  }
++  return entry;
++}
++it.each(cases)("validates aggregate contract: $name", c => {
++  const call = () => parseStrategyLibrary({ ...fixture, entries: [mutate(c)] });
++  if (c.valid) expect(call).not.toThrow(); else expect(call).toThrow();
++});
++it("keeps absent intervals unknown and counts repeated local frames once", () => {
++  const external = structuredClone(fixture);
++  delete (external.entries[0]!.evidence[0] as any).interval;
++  expect(() => parseStrategyLibrary(external)).not.toThrow();
++  const e = mutate(cases.find(c => c.name === "mixed separate denominators")!);
++  e.evidence.push({ run: "SILENT000001", floor: 5 });
++  const lib = parseStrategyLibrary({ ...fixture, entries: [e] });
++  expect(strategyEvidenceSummary(lib.entries[0]!)).toMatchObject({ own_runs: 1, own_support_runs: 1, external: [{ denominator: { n: 13307, unit: "rewards" } }] });
++  const conflict = mutate(cases.find(c => c.name === "conflict preserved")!);
++  const result = retrieveStrategies(parseStrategyLibrary({ ...fixture, entries: [conflict] }), "reward/card", { act: 1 })[0]!;
++  expect(result.evidence_status).toBe("conflict");
++  expect(result.evidence).toHaveLength(2);
++});
++it("registers a precise #24 aggregate then retrieves it in the actual prompt", () => {
++  const dir = mkdtempSync(join(tmpdir(), "issue42-")); dirs.push(dir);
++  const original = parseStrategyLibrary(fixture).entries[0]!;
++  const ev = original.evidence[0]!;
++  if (ev.type !== "external_aggregate") throw new Error("invalid fixed fixture");
++  // Check the copied statistic/denominator against the existing #24 frozen aggregate.
++  const dataPath = "./tests/external-strategy-data/frozen-skip-aggregate.json";
++  const raw = readFileSync(dataPath, "utf8"), data = JSON.parse(raw);
++  const table = data.tables.skip, row = table.rows.find((r: unknown[]) => r[0] === "v0.111" && r[1] === 1);
++  expect(ev.dataset_sha256).toBe(data.provenance.database_sha256);
++  expect(ev.denominator.n).toBe(row[table.columns.indexOf("screens")]);
++  expect(ev.statistic.value).toBe(row[table.columns.indexOf("rate")]);
++  expect([ev.interval!.low, ev.interval!.high]).toEqual(row[table.columns.indexOf("cluster_ci")]);
++  const env = { ...process.env, LEDGER_FILE: join(dir, "ledger.jsonl"), LEDGER_RUNS: "none" };
++  const runLedger = (args: string[], input?: unknown) => {
++    const out = spawnSync("python3", ["../learner/ledger.py", ...args], { env, encoding: "utf8", input: input ? JSON.stringify(input) : undefined });
++    expect(out.status, out.stderr).toBe(0); return out.stdout;
++  };
++  const key = runLedger(["add"], { character: "silent", kind: "other", claim: original.strategy, evidence: original.evidence, confidence: original.confidence, prior: "unknown", status: "observed", by: "fixture:issue42" }).trim();
++  const shown = JSON.parse(runLedger(["show", key]));
++  const entry: StrategyEntry = { ...original, evidence: shown.evidence.map(({ added: _added, ...e }: any) => e) };
++  const lib = parseStrategyLibrary({ ...fixture, entries: [entry] });
++  mkdirSync(join(dir, "characters/silent"), { recursive: true });
++  writeFileSync(join(dir, "characters/silent/strategy-entries.json"), JSON.stringify(lib));
++  const request: BrainRequest = { label: "reward/card", system: "fixed", question: "格式验收", payload: { act: 1, run_brief: { character: "静默猎手" } }, options: { yes: null }, spec: pickSpec("reward/card", { yes: null }) };
++  const applied = applyStrategyEntries(request, lib), message = userMessage(applied);
++  expect(message).toContain("external:sts2fun");
++  expect(JSON.parse(message).state.strategy_entries.entries[0].evidence_summary.own_runs).toBe(0);
++  expect(message).toContain("13307");
++  expect(message).toContain("非因果");
++  const block = (applied.payload as any).strategy_entries;
++  expect(Buffer.byteLength(JSON.stringify(block))).toBeLessThanOrEqual(STRATEGY_LIMITS.bytes);
++  expect(retrieveStrategies(lib, "reward/card", { act: 2 })).toEqual([]);
++  runLedger(["check"]);
++  // Optional explicit local artifact sink used once for the review receipt.
++  if (process.env["ISSUE42_RECEIPT_DIR"]) {
++    const out = process.env["ISSUE42_RECEIPT_DIR"]!;
++    mkdirSync(out, { recursive: true });
++    writeFileSync(join(out, "e2e.json"), JSON.stringify({ fixture_only: true, input: dataPath, input_sha256: createHash("sha256").update(raw).digest("hex"), ledger: shown, retrieved: block, payload_bytes: Buffer.byteLength(JSON.stringify(block)) }, null, 2));
++    writeFileSync(join(out, "prompt.txt"), message);
++  }
++});
++
++it("keeps the existing published own library and its retrieved bytes unchanged", () => {
++  const raw = JSON.parse(readFileSync("../knowledge/characters/silent/strategy-entries.json", "utf8"));
++  const lib = parseStrategyLibrary(raw);
++  expect(lib).toEqual(raw);
++  const result = retrieveStrategies(lib, "rest/plan", { act: 1, floor: 4, act_boss: "THE_KIN_BOSS" });
++  expect(result.length).toBeGreaterThan(0);
++  for (const e of result) expect(JSON.stringify(e)).toBe(JSON.stringify(raw.entries.find((r: StrategyEntry) => r.id === e.id)));
++});
+diff --git a/agent/tests/external_strategy_ledger_test.py b/agent/tests/external_strategy_ledger_test.py
+new file mode 100644
+index 000000000..ce1190506
+--- /dev/null
++++ b/agent/tests/external_strategy_ledger_test.py
+@@ -0,0 +1,108 @@
++"""Fixed #42 CLI contract: register/read/update without touching the research ledger."""
++import copy
++import json
++import os
++from pathlib import Path
++import subprocess
++import sys
++import tempfile
++import unittest
++
++ROOT = Path(__file__).resolve().parents[2]
++BASE = Path(__file__).with_name("external-strategy-data")
++ENTRY = json.loads((BASE / "external-strategy.json").read_text())["entries"][0]
++CASES = json.loads((BASE / "contract-cases.json").read_text())
++
++
++def mutate(case):
++    entry = copy.deepcopy(ENTRY)
++    for path, value in case["set"].items():
++        parts = path.split(".")
++        target = entry
++        for part in parts[:-1]:
++            target = target[int(part)] if isinstance(target, list) else target[part]
++        target[parts[-1]] = copy.deepcopy(value)
++    for path in case["delete"]:
++        parts = path.split(".")
++        target = entry
++        for part in parts[:-1]:
++            target = target[int(part)] if isinstance(target, list) else target[part]
++        del target[parts[-1]]
++    return entry
++
++
++def item(entry):
++    row = {"character": "silent", "kind": "other", "claim": entry["strategy"],
++           "evidence": entry["evidence"], "prior": "unknown", "status": "observed",
++           "confidence": entry["confidence"], "by": "fixture:issue42"}
++    if "evidence_status" in entry:
++        row["evidence_status"] = entry["evidence_status"]
++    if any(e.get("type") != "external_aggregate" for e in entry["evidence"]):
++        row.update(first_run="SILENT000001", asc=10)
++    return row
++
++
++class ExternalLedgerTest(unittest.TestCase):
++    def setUp(self):
++        self.tmp = tempfile.TemporaryDirectory()
++        self.path = Path(self.tmp.name) / "ledger.jsonl"
++        self.env = {**os.environ, "LEDGER_FILE": str(self.path), "LEDGER_RUNS": "none"}
++
++    def tearDown(self):
++        self.tmp.cleanup()
++
++    def cli(self, *args, row=None):
++        return subprocess.run([sys.executable, str(ROOT / "learner/ledger.py"), *args],
++                              input=json.dumps(row) if row else None, env=self.env,
++                              capture_output=True, text=True)
++
++    def add(self, row):
++        result = self.cli("add", row=row)
++        self.assertEqual(result.returncode, 0, result.stderr)
++        return result.stdout.strip()
++
++    def test_all_required_fields_and_types(self):
++        for case in CASES:
++            with self.subTest(case=case["name"]):
++                # Source agreement and mandatory positive floors belong to strategies; legacy ledger floors stay compatible.
++                if case["name"] in ("external mislabeled own", "own zero floor rejected"):
++                    continue
++                before = self.path.read_bytes() if self.path.exists() else b""
++                result = self.cli("add", row=item(mutate(case)))
++                self.assertEqual(result.returncode, 0 if case["valid"] else 2, result.stderr)
++                if not case["valid"]:
++                    self.assertEqual(self.path.read_bytes(), before)
++
++    def test_external_readback_and_no_pseudo_first_run(self):
++        row = item(ENTRY)
++        key = self.add(row)
++        shown = json.loads(self.cli("show", key).stdout)
++        self.assertNotIn("first_run", shown)
++        self.assertNotIn("asc", shown)
++        self.assertEqual(shown["evidence_summary"]["own_runs"], 0)
++        self.assertEqual(shown["evidence_summary"]["external"][0]["denominator"]["n"], 13307)
++        self.assertIn("runs=0 external=", self.cli("find").stdout)
++        self.assertEqual(json.loads(self.cli("find", "--run", "SILENT000001", "--json").stdout), [])
++        for extra in ({"first_run": "SILENT000001"}, {"asc": 10}, {"prior_runs": ["SILENT000001"]}):
++            self.assertEqual(self.cli("add", row={**row, **extra}).returncode, 2)
++        self.assertEqual(self.cli("check").returncode, 0)
++
++    def test_updates_keep_conflicts_and_denominators(self):
++        key = self.add(item(ENTRY))
++        change = {"id": key, "by": "fixture", "evidence": [{"run": "SILENT000001", "floor": 4, "role": "contradict"}],
++                  "first_run": "SILENT000001", "asc": 10}
++        self.assertEqual(self.cli("update", row=change).returncode, 2)
++        self.assertEqual(self.cli("update", row={**change, "evidence_status": "aligned"}).returncode, 2)
++        self.assertEqual(self.cli("update", row={**change, "evidence_status": "conflict", "confidence": .8}).returncode, 2)
++        self.assertEqual(self.cli("update", row={**change, "evidence_status": "conflict"}).returncode, 0)
++        shown = json.loads(self.cli("show", key).stdout)
++        self.assertEqual(shown["evidence_status"], "conflict")
++        self.assertEqual(len(shown["evidence"]), 2)
++        self.assertEqual(shown["evidence_summary"]["own_runs"], 1)
++        self.assertEqual(shown["evidence_summary"]["own_support_runs"], 0)
++        self.assertEqual(self.cli("update", row={"id": key, "by": "fixture", "evidence_status": "aligned"}).returncode, 2)
++        self.assertEqual(self.cli("check").returncode, 0)
++
++
++if __name__ == "__main__":
++    unittest.main()
+diff --git a/agent/tests/strategy-entries.test.ts b/agent/tests/strategy-entries.test.ts
+index 23ca4305b..172639c2d 100644
+--- a/agent/tests/strategy-entries.test.ts
++++ b/agent/tests/strategy-entries.test.ts
+@@ -8,7 +8,7 @@ import type { BrainRequest } from "../src/brain/types.js";
+ import { pickSpec } from "../src/brain/specs.js";
+ import { userMessage } from "../src/brain/message.js";
+ import { applyStrategyEntries, parseStrategyLibrary, questionTypes, retrieveStrategies, StrategyEntries, STRATEGY_LIMITS, type StrategyEntry, type StrategyLibrary } from "../src/knowledge/strategy-entries.js";
+-const entry = (id = "fixture"): StrategyEntry => ({ id, version: "test-v1", trigger: { question_types: ["card_reward"] }, strategy: "仅测试占位文字，不是游戏建议。", source: "own", evidence: [{ run: "FIXTURE", floor: 4 }], confidence: .5 });
++const entry = (id = "fixture"): StrategyEntry => ({ id, version: "test-v1", trigger: { question_types: ["card_reward"] }, strategy: "仅测试占位文字，不是游戏建议。", source: "own", evidence: [{ run: "SILENT000001", floor: 4 }], confidence: .5 });
+ const library = (...entries: StrategyEntry[]): StrategyLibrary => ({ schema: "brain-strategies-v1", character: "silent", entries });
+ const payload = { run_brief: { character: "静默猎手", act: "1", floor: 4 }, facts: { act: 1, floor: 4, hp: "35/70 (50%)", act_boss: "FIXTURE_BOSS", deck_size: 3, deck: ["2x FIXTURE_A (Skill, 1 energy): 测试", "FIXTURE_B (Attack, 0 energy): 测试"] } };
+ const request = (label = "reward/card", p: unknown = payload): BrainRequest => ({ label, system: "fixed", question: "测试问题", payload: p, options: { yes: null }, spec: pickSpec(label, { yes: null }) });
+@@ -23,7 +23,7 @@ it("validates metadata and refuses malformed or misspelled triggers", () => {
+   expect(parseStrategyLibrary(library(entry()))).toEqual(library(entry()));
+   for (const change of [{ evidence: [] }, { version: "" }, { confidence: 1.1 }, { strategy: "中".repeat(500) }, { trigger: { question_types: ["event"], typo: 1 } }, { trigger: { question_types: [] } }, { trigger: { question_types: ["event"], hp_ratio: { min: .9, max: .1 } } }, { source: "external:fixture" }]) expect(() => parseStrategyLibrary(library({ ...entry(), ...change } as StrategyEntry))).toThrow();
+   expect(() => parseStrategyLibrary(library(entry(), entry()))).toThrow();
+-  expect(() => parseStrategyLibrary(library({ ...entry(), source: "external:fixture", provenance: { url: "https://example.org/fixture", version: "fixture-v1", sha256: "a".repeat(64), license: "fixture" } }))).not.toThrow();
++  expect(() => parseStrategyLibrary(library({ ...entry(), source: "external:fixture", provenance: { url: "https://example.org/fixture", version: "fixture-v1", sha256: "a".repeat(64), license: "fixture" } }))).toThrow("source must match evidence");
+ });
+ it("matches every trigger inclusively and rejects missing facts", () => {
+   const exact: StrategyEntry = { ...entry(), trigger: { question_types: ["card_reward"], acts: [1], floor: { min: 4, max: 4 }, bosses: ["FIXTURE_BOSS"], hp_ratio: { min: .5, max: .5 }, deck_size: { min: 3, max: 3 }, deck_cards: [{ name: "FIXTURE_A", count: { min: 2, max: 2 } }, { name: "ABSENT", count: { max: 0 } }] } };
+diff --git a/docs/brain-strategies.md b/docs/brain-strategies.md
+index b7db8d5ea..2e7467e3f 100644
+--- a/docs/brain-strategies.md
++++ b/docs/brain-strategies.md
+@@ -21,10 +21,28 @@
+ | trigger.deck_size | 当前牌组张数闭区间 |
+ | trigger.deck_cards | 每个 `{name,count:{min,max}}` 都要满足；精确匹配展示行中括号/冒号前的牌名，保留 ID、中文名及升级号；前缀 `Nx ` 按张数展开，不推断构筑标签 |
+ | strategy | 情境成立时给大脑的策略文字，最多 1200 UTF-8 字节 |
+-| evidence | 1–20 个 `{run,floor,ref?}`，自有证据必须可追溯到局号/全局楼层；ref 可指向账本/窗口 |
+-| source | own 或 external:来源名；不同来源不混算独立分母 |
+-| confidence | 学习者给出的 0–1 可信度；检索不根据结果自行推断可信度 |
+-| provenance | 外部来源必填 `{url,version,sha256,license}`；外部局号属于外部命名空间 |
++| evidence | 1–20 个自有证据或 external_aggregate（下文）；自有 `{type?:"own",run,floor,ref?,role?}` 保持兼容，floor≥1 |
++| source | 单来源 own / external:来源名；多来源 mixed，必须与 evidence 实际来源一致 |
++| confidence | 0–1；只有外部支持（自有仅反证也算）最高 0.49，不自动因样本量提升 |
++| evidence_status | 多来源必填 aligned（一致）/conflict（冲突）/unassessed（未评估）；任一外部相关反证 role=contradict 时强制 conflict |
++
++### 外部聚合证据（#42）
++
++`evidence` 用判别字段 `type:"external_aggregate"` 与自有记录分开。外部记录禁止出现 `run/floor`（包括 null、虚构局号和 floor=0）；不能把原外部来源加一个 provenance 再贴到自有局号上。旧自有条目无须迁移。每条外部记录必填：
++
++- `source: external:<名称>`、公开 `url`、游戏 `version`、`dataset_sha256`（64位小写十六进制）、`downloaded_at`（YYYY-MM-DD）、`license`（许可/Required Notice 或明确未知限制）。
++- `filters:{character:"silent",ascension:0..20,criteria:"完整筛选口径"}`；版本内小版本、单/多人、是否弃局、模组等写 criteria。外部证据范围不等于已验证可外推范围。
++- `statistic:{name,value,unit}`（有限数值）与 `denominator:{unit,n}`（正安全整数）；unit 为 runs/players/offers/fights/rooms/rewards/cards。多种统计量、分母或版本分别列证据，不把奖励屏幕当作局数。
++- `design:"observational"`、非空 `limitations` 字符串数组，明确自选上传、非因果、与本系统的口径差异。
++- 可选 `interval:{low,high,method}`，有限且 low≤high；没有区间就省略，不补零。可选 `ref` 定位精确表/行；`role` 为 support（默认）或 contradict。外部不能登记成本系统 repeat。
++
++证据可放在同一个数组，但每项类型/来源独立；检索与题面为含外部条目派生 `evidence_summary:{own_runs,own_support_runs,external:[{source,version,dataset_sha256,statistic,denominator}]}` 和一句 `limitation_notice`。自有局号去重；外部分母逐条列，不加总（表、版本、玩家可能重叠）。字段由消费者计算，不能靠手写 summary 提升验证数。自有原条目题面保持原字节。
++
++可信度分级：0–0.49 为“外部观察/低可信”；大于 0.49 且不超过 1 为“有本系统支持才可赋值”，仍由学习者说明可信度，n=1 并不自动高可信。自有仅反证不能解锁更高档；冲突保留双方原证据，不用新来源覆盖旧结论。`unassessed` 不能冒称一致；机械校验不能发现未明确记录的语义冲突，学习者须核查并标注。
++
++账本沿 `learner/ledger.py add/update/show/find/check` 使用同一个 external_aggregate 对象。纯外部 add 省略 `first_run/asc/prior_runs`（进阶在 filters），仍填 character/kind/claim/evidence/prior/status/by，新增 confidence；混合证据须填 evidence_status，有自有证据仍要求真实 first_run/asc。update 只追加证据，按折叠后的所有反证、来源与可信度校验；后来补自有局时同次更新 first_run/asc。show/find --json 派生独立分账；find 文本显示 runs=0 与外部分母，外部数据不进入 repeat/本系统发布后验证计数。现有自有账本规则不变。
++
++可复制的纯格式示例：`agent/tests/external-strategy-data/external-strategy.json` 引用 #24 的 v0.111/第一幕 skip 行，只描述 1456/13307，不是正式游戏知识。固定测试贯通独立临时账本登记→show→真实检索→兼容题面及生产 kb_strategies 工具；不写正式库或真实学习账本、不代 live 采用。
+ 
+ 区间可只给一端，不允许空区间、反向区间、未知 trigger 字段。trigger 需要的事实缺失就不匹配。其他扩展元数据可以保留；最多 500 条、整个文件最多 1 MiB，重复 ID 或任一无效条目会使整库本次不注入。JSON Schema 用于编辑器；运行时还检查空白文字、ID 唯一、min≤max 和字节限制。
+ 
+@@ -40,7 +58,7 @@
+ - 只读取静默角色文件。其他角色及无规划任务的战斗题不会读取它。
+ - 上下文取 facts → payload 根 → run_state → run_plan_task → run_brief，数值幕号兼容旧字符串。HP 允许尾随百分比。
+ - 排序：触发字段数＋指定牌条件数更多优先，再按 confidence 降序、id 升序。同一条即使匹配多个题型也只注入一次。
+-- 最多 3 条；`{schema,entries}` 整块序列化后最多 4096 UTF-8 字节，包含策略、触发器、证据和来源。装不下的条目跳过，不截断证据。
++- 最多 3 条；`{schema,entries}` 整块序列化后最多 4096 UTF-8 字节，包含策略、触发器、证据和来源、派生分账及局限。装不下的条目跳过，不截断证据。
+ - 注入位置为 payload.strategy_entries；不改问题指令和原选项。无命中、空库、文件缺失、损坏或超限时返回原请求，原 prompt 字节不变。
+ - 每次提问先 stat，按路径＋mtime＋size 缓存解析结果；文件变化后重校验，不等待进程重启。库内容来自学习者，开发者不把大脑旧理由直接提升成策略。
+ 
+diff --git a/docs/learning-protocol.md b/docs/learning-protocol.md
+index ec235932c..c8e4d5c8c 100644
+--- a/docs/learning-protocol.md
++++ b/docs/learning-protocol.md
+@@ -78,3 +78,23 @@ Roy 2026-10-13 要求：能通用的经验必须由所有角色共享，不限
+ ## 8. 混杂因素（写进论文）
+ 
+ 大模型（GPT、DeepSeek）在预训练时见过一代《杀戮尖塔》的静默猎手，这部分知识无法屏蔽。能做到的只有两点：不在提示和知识库里额外提供；在分析时把「第一次就做对的」和「输过之后学会的」分开统计。
++
++## 9. 外部公开数据（Roy 2026-10-21）
++
++Roy 2026-10-21 授权：可以直接用网上公开的 STS2 数据（开源玩家对局数据、公开的 agent 对局轨迹、公开的卡牌/怪物数据库与 wiki）来学习、更新知识库。本条优先于前文“游戏知识只能来自本系统对局”的表述；第 1 节的问题自此变为“自己的对局 + 公开数据，能把 agent 带到多强”。
++
++- **谁来做**：数据接入（下载、解析、按角色/进阶/版本筛选）是基础设施，由开发会话做；从中提炼知识条目仍由学习者做，沿第 3 节的提案、自测、上线、账本流程。Roy 仍不直接提供游戏知识。
++- **来源必须写清**：每条外部来源的知识都标 `source: external:<名称>`，并写原始地址、下载日期与文件 SHA、游戏版本、样本（局数/玩家数）、筛选条件（角色、进阶、版本）和许可条款。与本系统对局证据分账：外部数据不算本角色实盘验证，两者冲突时都保留并记录，由学习者用本系统对局复核。
++- **版本对齐**：本系统跑 v0.111.0。优先用同版本数据；其他版本的数据要标明版本，改动过的牌和怪不能直接套用。
++- **公开仓库边界**：本仓库公开。原始外部数据放 `data/external/`（不进 git），只提交汇总后的统计与出处说明；不保存、不发布玩家标识；遵守来源的许可（例如 CC-BY 要署名）；同一份数据只下载一次，不反复抓取对方服务器。
++- **仍然不许**：读游戏的 `sts2.dll` 与 `.pck`；用非公开数据。
++- **论文**：2026-10-21 前后分开统计；知识按来源（本系统对局 / 外部数据 / 预训练）区分，第 8 节的混杂因素同时更新为“外部数据可以提供，但要标来源”。
++
++
++### 9.1 策略库的外部聚合合同（#42，2026-10-22）
++
++策略库允许 `type:"external_aggregate"`，不要求本系统局号/层数，禁止伪造 `run/floor`（含 floor=0）。必填来源 external:名称、公开URL、游戏版本、数据集SHA256、下载日期、角色/进阶/完整筛选条件、统计量/数值/单位、分母/单位、design=observational、已知局限与许可说明；有区间就给 low/high/method，没有就省略。精确字段和示例见 [大脑策略合同](brain-strategies.md#外部聚合证据42)。
++
++同一策略可混合两类证据：每项自有/外部分开列，自有按独立局号计数，外部按来源/版本/统计量分别保留原分母，不求和、不视为本系统验证。可信度 0–0.49 为外部观察/低可信档；大于 0.49 且不超过 1 只有本系统支持才可赋值，不自动因样本数提升；自有只有反证仍受 0.49 上限。自有原条目不迁移或重新定级。多来源条目须标 aligned/conflict/unassessed；明确反证 role=contradict 必须 conflict，双方原证据都保留。学习者负责识别语义冲突，不能靠省略反证绕过标注。
++
++账本 CLI 同样登记该证据，纯外部项目不填 first_run/asc/prior_runs；混合条目保留真实自有局元数据。登记、校验和读回不等于正式知识/源码已发布或 live 自然采用；内容提炼、账本、通知、发布和学习父要求仍沿原流程。大脑检索与题面须显示来源标签、独立分母及观察性局限；开发者的格式验收示例不能成为正式策略。
+diff --git a/knowledge/schemas/brain-strategies-v1.schema.json b/knowledge/schemas/brain-strategies-v1.schema.json
+index fe5cba8e0..a8fa4e5f4 100644
+--- a/knowledge/schemas/brain-strategies-v1.schema.json
++++ b/knowledge/schemas/brain-strategies-v1.schema.json
+@@ -2,7 +2,7 @@
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "$id": "brain-strategies-v1.schema.json",
+   "title": "Brain text strategies v1",
+-  "description": "Runtime additionally validates unique ids, min<=max, whitespace-only text, UTF-8 byte caps and file size.",
++  "description": "Runtime additionally validates unique ids, min<=max, whitespace-only text, UTF-8 byte caps and file size. Runtime also checks source/evidence agreement, conflict roles and external-only confidence <=0.49; old own evidence without type stays valid.",
+   "type": "object",
+   "required": [
+     "schema",
+@@ -168,30 +168,19 @@
+             "minItems": 1,
+             "maxItems": 20,
+             "items": {
+-              "type": "object",
+-              "required": [
+-                "run",
+-                "floor"
+-              ],
+-              "properties": {
+-                "run": {
+-                  "type": "string",
+-                  "minLength": 1
+-                },
+-                "floor": {
+-                  "type": "integer",
+-                  "minimum": 0
++              "oneOf": [
++                {
++                  "$ref": "#/$defs/ownEvidence"
+                 },
+-                "ref": {
+-                  "type": "string",
+-                  "minLength": 1
++                {
++                  "$ref": "#/$defs/externalAggregate"
+                 }
+-              }
++              ]
+             }
+           },
+           "source": {
+             "type": "string",
+-            "pattern": "^(own|external:.+)$"
++            "pattern": "^(own|mixed|external:\\S+)$"
+           },
+           "confidence": {
+             "type": "number",
+@@ -224,6 +213,13 @@
+                 "minLength": 1
+               }
+             }
++          },
++          "evidence_status": {
++            "enum": [
++              "aligned",
++              "conflict",
++              "unassessed"
++            ]
+           }
+         },
+         "allOf": [
+@@ -231,18 +227,289 @@
+             "if": {
+               "properties": {
+                 "source": {
+-                  "pattern": "^external:"
++                  "const": "mixed"
+                 }
+               }
+             },
+             "then": {
+               "required": [
+-                "provenance"
++                "evidence_status"
+               ]
+             }
++          },
++          {
++            "if": {
++              "properties": {
++                "evidence": {
++                  "not": {
++                    "contains": {
++                      "allOf": [
++                        {
++                          "$ref": "#/$defs/ownEvidence"
++                        },
++                        {
++                          "properties": {
++                            "role": {
++                              "not": {
++                                "const": "contradict"
++                              }
++                            }
++                          }
++                        }
++                      ]
++                    }
++                  }
++                }
++              }
++            },
++            "then": {
++              "properties": {
++                "confidence": {
++                  "maximum": 0.49
++                }
++              }
++            }
++          },
++          {
++            "if": {
++              "allOf": [
++                {
++                  "properties": {
++                    "evidence": {
++                      "contains": {
++                        "type": "object",
++                        "required": [
++                          "role"
++                        ],
++                        "properties": {
++                          "role": {
++                            "const": "contradict"
++                          }
++                        }
++                      }
++                    }
++                  }
++                },
++                {
++                  "properties": {
++                    "evidence": {
++                      "contains": {
++                        "$ref": "#/$defs/externalAggregate"
++                      }
++                    }
++                  }
++                }
++              ]
++            },
++            "then": {
++              "required": [
++                "evidence_status"
++              ],
++              "properties": {
++                "evidence_status": {
++                  "const": "conflict"
++                }
++              }
++            }
+           }
+         ]
+       }
+     }
++  },
++  "$defs": {
++    "ownEvidence": {
++      "type": "object",
++      "required": [
++        "run",
++        "floor"
++      ],
++      "properties": {
++        "run": {
++          "type": "string",
++          "minLength": 1,
++          "pattern": "^[0-9A-Z]{12}$"
++        },
++        "floor": {
++          "type": "integer",
++          "minimum": 1
++        },
++        "ref": {
++          "type": "string",
++          "minLength": 1
++        },
++        "type": {
++          "const": "own"
++        },
++        "role": {
++          "enum": [
++            "support",
++            "contradict",
++            "repeat"
++          ]
++        }
++      },
++      "additionalProperties": false
++    },
++    "externalAggregate": {
++      "type": "object",
++      "additionalProperties": false,
++      "required": [
++        "type",
++        "source",
++        "url",
++        "version",
++        "dataset_sha256",
++        "downloaded_at",
++        "filters",
++        "statistic",
++        "denominator",
++        "design",
++        "limitations",
++        "license"
++      ],
++      "properties": {
++        "type": {
++          "const": "external_aggregate"
++        },
++        "source": {
++          "type": "string",
++          "pattern": "^external:\\S+$"
++        },
++        "url": {
++          "type": "string",
++          "pattern": "^https?://[^\\s/]+"
++        },
++        "version": {
++          "type": "string",
++          "minLength": 1
++        },
++        "dataset_sha256": {
++          "type": "string",
++          "pattern": "^[a-f0-9]{64}$"
++        },
++        "downloaded_at": {
++          "type": "string",
++          "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
++          "format": "date"
++        },
++        "filters": {
++          "type": "object",
++          "additionalProperties": false,
++          "required": [
++            "character",
++            "ascension",
++            "criteria"
++          ],
++          "properties": {
++            "character": {
++              "const": "silent"
++            },
++            "ascension": {
++              "type": "integer",
++              "minimum": 0,
++              "maximum": 20
++            },
++            "criteria": {
++              "type": "string",
++              "minLength": 1
++            }
++          }
++        },
++        "statistic": {
++          "type": "object",
++          "additionalProperties": false,
++          "required": [
++            "name",
++            "value",
++            "unit"
++          ],
++          "properties": {
++            "name": {
++              "type": "string",
++              "minLength": 1
++            },
++            "value": {
++              "type": "number"
++            },
++            "unit": {
++              "type": "string",
++              "minLength": 1
++            }
++          }
++        },
++        "denominator": {
++          "type": "object",
++          "additionalProperties": false,
++          "required": [
++            "unit",
++            "n"
++          ],
++          "properties": {
++            "unit": {
++              "enum": [
++                "runs",
++                "players",
++                "offers",
++                "fights",
++                "rooms",
++                "rewards",
++                "cards"
++              ]
++            },
++            "n": {
++              "type": "integer",
++              "minimum": 1,
++              "maximum": 9007199254740991
++            }
++          }
++        },
++        "interval": {
++          "type": "object",
++          "additionalProperties": false,
++          "required": [
++            "low",
++            "high",
++            "method"
++          ],
++          "properties": {
++            "low": {
++              "type": "number"
++            },
++            "high": {
++              "type": "number"
++            },
++            "method": {
++              "type": "string",
++              "minLength": 1
++            }
++          }
++        },
++        "design": {
++          "const": "observational"
++        },
++        "limitations": {
++          "type": "array",
++          "minItems": 1,
++          "items": {
++            "type": "string",
++            "minLength": 1
++          }
++        },
++        "license": {
++          "type": "string",
++          "minLength": 1
++        },
++        "ref": {
++          "type": "string",
++          "minLength": 1
++        },
++        "role": {
++          "enum": [
++            "support",
++            "contradict"
++          ]
++        }
++      }
++    }
+   }
+ }
+diff --git a/learner/external_evidence.py b/learner/external_evidence.py
+new file mode 100644
+index 000000000..395e99405
+--- /dev/null
++++ b/learner/external_evidence.py
+@@ -0,0 +1,107 @@
++"""External aggregate contract shared by ledger validation and fixed contract fixtures.
++
++Keep fields aligned with agent/src/knowledge/strategy-entries.ts. No game knowledge.
++"""
++import datetime as dt
++import math
++import re
++
++EXTERNAL_ONLY_CONFIDENCE_MAX = 0.49
++FIELDS = {"type", "source", "url", "version", "dataset_sha256", "downloaded_at", "filters",
++          "statistic", "denominator", "interval", "design", "limitations", "license", "ref", "role"}
++UNITS = {"runs", "players", "offers", "fights", "rooms", "rewards", "cards"}
++
++
++def text(value):
++    return isinstance(value, str) and bool(value.strip())
++
++
++def number(value):
++    return type(value) in (int, float) and math.isfinite(value)
++
++
++def external(ev):
++    return isinstance(ev, dict) and ev.get("type") == "external_aggregate"
++
++
++def check_external(ev, character):
++    problems = []
++    required = FIELDS - {"interval", "ref", "role"}
++    if set(ev) - FIELDS or required - set(ev):
++        problems.append("external_aggregate: missing or unknown fields (run/floor forbidden)")
++    if not text(ev.get("source")) or not re.fullmatch(r"external:\S+", ev["source"]):
++        problems.append("external_aggregate.source: external:<name>")
++    if not text(ev.get("url")) or not re.match(r"https?://[^\s/]+", ev["url"]):
++        problems.append("external_aggregate.url: public HTTP(S) URL")
++    for key in ("version", "license"):
++        if not text(ev.get(key)):
++            problems.append(f"external_aggregate.{key}: required text")
++    if not isinstance(ev.get("dataset_sha256"), str) or not re.fullmatch(r"[a-f0-9]{64}", ev["dataset_sha256"]):
++        problems.append("external_aggregate.dataset_sha256: lowercase SHA256")
++    try:
++        date = ev.get("downloaded_at")
++        if not isinstance(date, str) or not re.fullmatch(r"\d{4}-\d{2}-\d{2}", date):
++            raise ValueError()
++        dt.date.fromisoformat(date)
++    except ValueError:
++        problems.append("external_aggregate.downloaded_at: YYYY-MM-DD")
++    f = ev.get("filters")
++    if (not isinstance(f, dict) or set(f) != {"character", "ascension", "criteria"}
++            or f.get("character") != character or type(f.get("ascension")) is not int
++            or not 0 <= f["ascension"] <= 20 or not text(f.get("criteria"))):
++        problems.append("external_aggregate.filters: character, ascension 0-20, criteria required")
++    s = ev.get("statistic")
++    if (not isinstance(s, dict) or set(s) != {"name", "value", "unit"}
++            or not text(s.get("name")) or not number(s.get("value")) or not text(s.get("unit"))):
++        problems.append("external_aggregate.statistic: name, finite value, unit required")
++    d = ev.get("denominator")
++    if (not isinstance(d, dict) or set(d) != {"unit", "n"} or not isinstance(d.get("unit"), str) or d["unit"] not in UNITS
++            or type(d.get("n")) is not int or not 0 < d["n"] <= 9007199254740991):
++        problems.append("external_aggregate.denominator: positive safe integer n and unit required")
++    ci = ev.get("interval")
++    if "interval" in ev and (not isinstance(ci, dict) or set(ci) != {"low", "high", "method"}
++                            or not number(ci.get("low")) or not number(ci.get("high"))
++                            or ci["low"] > ci["high"] or not text(ci.get("method"))):
++        problems.append("external_aggregate.interval: ordered finite low/high, method required")
++    if ev.get("design") != "observational":
++        problems.append("external_aggregate.design: observational")
++    limits = ev.get("limitations")
++    if not isinstance(limits, list) or not limits or not all(text(v) for v in limits):
++        problems.append("external_aggregate.limitations: non-empty text list")
++    if "ref" in ev and not text(ev["ref"]):
++        problems.append("external_aggregate.ref: non-empty text")
++    if "role" in ev and ev["role"] not in ("support", "contradict"):
++        problems.append("external_aggregate.role: support or contradict (never own repeat)")
++    return problems
++
++
++def check_accounting(evidence, confidence, status):
++    """Validate the folded evidence, including previously appended contradictions."""
++    if not isinstance(evidence, list):
++        return []
++    ext = [e for e in evidence if external(e)]
++    own = [e for e in evidence if isinstance(e, dict) and not external(e)]
++    sources = {e.get("source") for e in ext if isinstance(e.get("source"), str)} | ({"own"} if own else set())
++    problems = []
++    if status is not None and status not in ("aligned", "conflict", "unassessed"):
++        problems.append("evidence_status: aligned, conflict or unassessed")
++    if len(sources) > 1 and status is None:
++        problems.append("mixed evidence needs evidence_status")
++    if confidence is not None and (not number(confidence) or not 0 <= confidence <= 1):
++        problems.append("confidence: finite number 0-1")
++    if ext:
++        if not number(confidence) or not 0 <= confidence <= 1:
++            problems.append("external evidence needs confidence 0-1")
++        elif not any(e.get("role") != "contradict" for e in own) and confidence > EXTERNAL_ONLY_CONFIDENCE_MAX:
++            problems.append("external-only confidence exceeds 0.49")
++        if any(e.get("role") == "contradict" for e in evidence if isinstance(e, dict)) and status != "conflict":
++            problems.append("contradictory evidence needs conflict status")
++    return problems
++
++
++def summary(evidence):
++    own = [e for e in evidence if not external(e) and isinstance(e.get("run"), str)]
++    return {"own_runs": len({e["run"] for e in own}),
++            "own_support_runs": len({e["run"] for e in own if e.get("role") != "contradict"}),
++            "external": [{k: e[k] for k in ("source", "version", "dataset_sha256", "denominator")}
++                         for e in evidence if external(e)]}
+diff --git a/learner/ledger.py b/learner/ledger.py
+index 4c5e6dc0f..034e04a26 100755
+--- a/learner/ledger.py
++++ b/learner/ledger.py
+@@ -32,6 +32,9 @@ import re
+ import subprocess
+ import sys
+ 
++sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
++from external_evidence import external, check_external, check_accounting, summary  # noqa: E402
++
+ REPO = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+ sys.path.insert(0, os.path.join(REPO, "knowledge", "builders"))
+ from characters import character_key, run_character  # noqa: E402
+@@ -49,9 +52,9 @@ RUN_ID = re.compile(r"^[0-9A-Z]{12}$")
+ ITEM_ID = re.compile(r"^[a-z]+-\d{4}$")
+ CLAIM_MAX = 800
+ 
+-ADD_REQUIRED = ["character", "kind", "claim", "evidence", "first_run", "prior", "status", "by"]
+-ADD_FIELDS = set(ADD_REQUIRED) | {"op", "id", "ts", "asc", "prior_note", "prior_runs", "where", "version", "note"}
+-UPDATE_FIELDS = {"op", "id", "ts", "by", "status", "evidence", "where", "version", "effect", "note", "claim", "first_run", "asc", "prior_note"}
++ADD_REQUIRED = ["character", "kind", "claim", "evidence", "prior", "status", "by"]
++ADD_FIELDS = set(ADD_REQUIRED) | {"first_run", "confidence", "evidence_status", "op", "id", "ts", "asc", "prior_note", "prior_runs", "where", "version", "note"}
++UPDATE_FIELDS = {"confidence", "evidence_status", "op", "id", "ts", "by", "status", "evidence", "where", "version", "effect", "note", "claim", "first_run", "asc", "prior_note"}
+ EFFECT_FIELDS = {"runs_after", "applied", "outcome", "repeats_after", "audited", "by"}
+ 
+ 
+@@ -120,7 +123,12 @@ def check_evidence(evidence, character, runs, problems, where="evidence"):
+         if not isinstance(ev, dict):
+             problems.append(f"{where}[{i}]: an object")
+             continue
+-        unknown = set(ev) - {"run", "floor", "turn", "note", "role"}
++        if external(ev):
++            problems.extend(f"{where}[{i}]: {p}" for p in check_external(ev, character))
++            continue
++        unknown = set(ev) - {"type", "run", "floor", "turn", "note", "role", "ref"}
++        if "type" in ev and ev["type"] != "own":
++            problems.append(f"{where}[{i}].type: own or external_aggregate")
+         if unknown:
+             problems.append(f"{where}[{i}]: unknown fields {sorted(unknown)}")
+         run = ev.get("run")
+@@ -173,6 +181,13 @@ def validate_add(row, runs, versions, known_ids):
+         problems.append("asc: an integer 0-20")
+     if row.get("evidence") is not None:
+         check_evidence(row.get("evidence"), character, runs, problems)
++    evidence = row.get("evidence") if isinstance(row.get("evidence"), list) else []
++    own = [e for e in evidence if isinstance(e, dict) and not external(e)]
++    if own and not row.get("first_run"):
++        problems.append("first_run: required for own evidence")
++    if not own and ("first_run" in row or "asc" in row or "prior_runs" in row):
++        problems.append("external-only item: no first_run, asc or prior_runs; use filters")
++    problems.extend(check_accounting(evidence, row.get("confidence"), row.get("evidence_status")))
+     first = row.get("first_run")
+     if first is not None:
+         if not isinstance(first, str) or not RUN_ID.match(first):
+@@ -213,6 +228,13 @@ def validate_update(row, runs, versions, items):
+         problems.append(f"status: one of {STATUSES}")
+     if "evidence" in row:
+         check_evidence(row["evidence"], item["character"] if item else None, runs, problems)
++    evidence = (item or {}).get("evidence", []) + (row["evidence"] if isinstance(row.get("evidence"), list) else [])
++    problems.extend(check_accounting(evidence, row.get("confidence", (item or {}).get("confidence")),
++                                     row.get("evidence_status", (item or {}).get("evidence_status"))))
++    if any(isinstance(e, dict) and not external(e) for e in evidence) and not row.get("first_run", (item or {}).get("first_run")):
++        problems.append("first_run: required when adding own evidence")
++    if evidence and all(external(e) for e in evidence) and ("first_run" in row or "asc" in row):
++        problems.append("external-only item: no first_run or asc; use filters")
+     check_where(row.get("where"), problems)
+     if row.get("status") == "shipped" and not (row.get("version") or (item or {}).get("version")):
+         problems.append("status shipped: needs version (eval/versions.json name)")
+@@ -274,7 +296,7 @@ def apply(items, row):
+     for key, values in (row.get("where") or {}).items():
+         have = item["where"].setdefault(key, [])
+         have.extend(v for v in values if v not in have)
+-    for key in ("version", "claim", "first_run", "asc", "prior_note"):
++    for key in ("version", "claim", "first_run", "asc", "prior_note", "confidence", "evidence_status"):
+         if key in row:
+             item[key] = row[key]
+     if "effect" in row:
+@@ -293,6 +315,9 @@ def fold(rows=None):
+     for _, row in rows if rows is not None else read_rows():
+         if row and row.get("op") in ("add", "update") and (row["op"] == "add" or row.get("id") in items):
+             apply(items, row)
++    for item in items.values():
++        if any(external(e) for e in item.get("evidence", [])):
++            item["evidence_summary"] = summary(item["evidence"])
+     return items
+ 
+ 
+@@ -353,7 +378,7 @@ def repeats(item, after_ship=False, starts=None):
+ 
+     The row's "added" timestamp remains intact for provenance but never determines when gameplay happened.
+     """
+-    reps = [e for e in item.get("evidence", []) if e.get("role") == "repeat"]
++    reps = [e for e in item.get("evidence", []) if not external(e) and e.get("role") == "repeat"]
+     if after_ship:
+         starts = load_run_starts() if starts is None else starts
+         reps = [e for e in reps if evidence_after_ship(item, e, starts)]
+@@ -475,7 +500,7 @@ def append(op, rows, path=None):
+                         row["asc"] = asc
+                 row.setdefault("where", {})
+                 found = validate_add(row, runs, versions, set(items))
+-                if "asc" not in row:
++                if "asc" not in row and isinstance(row.get("evidence"), list) and any(isinstance(e, dict) and not external(e) for e in row["evidence"]):
+                     found.append("asc: required (first_run is not in runs.jsonl)")
+             else:
+                 if "status" in row and row.get("id") in drifted:
+@@ -526,12 +551,14 @@ def matches(item, args):
+ 
+ 
+ def one_line(item, starts=None):
+-    runs = sorted({e.get("run") for e in item.get("evidence", [])})
++    runs = sorted({e["run"] for e in item.get("evidence", []) if isinstance(e.get("run"), str) and not external(e)})
+     reps = len(repeats(item))
+     late = len(repeats(item, after_ship=True, starts=starts))
+     version = f" {item['version']}" if item.get("version") else ""
++    ext = summary(item.get("evidence", []))["external"]
++    external_note = f" external={json.dumps(ext, ensure_ascii=False)} evidence_status={item.get('evidence_status', 'unassessed')}" if ext else ""
+     return (f"{item['id']} [{item.get('status')}{version}] A{item.get('asc')} {item.get('kind')} prior={item.get('prior')}"
+-            f" runs={len(runs)}{f' repeats={reps}' if reps else ''}{f' (after shipping {late})' if late else ''}: {item.get('claim')}")
++            f" runs={len(runs)}{external_note}{f' repeats={reps}' if reps else ''}{f' (after shipping {late})' if late else ''}: {item.get('claim')}")
+ 
+ 
+ def main():
+diff --git a/notes/learning-questions/issue-27-brain-strategies-task.md b/notes/learning-questions/issue-27-brain-strategies-task.md
+new file mode 100644
+index 000000000..b7020e6d5
+--- /dev/null
++++ b/notes/learning-questions/issue-27-brain-strategies-task.md
+@@ -0,0 +1,43 @@
++---
++title: Issue27 Silent 大脑首批情境策略
++model.codex: gpt-6.1-sol
++effort.codex: high
++tools: Read, Grep, Glob, Bash, Edit, Write
++timeout_min: 240
++max_turns: 800
++characters: silent
++---
++
++# 原请求 #27：学习者编写首批大脑文字策略
++
++请求 github-issue-27-brain-strategies-20261022；任务 issue-27-brain-strategies-task；批次 {{batch}}；角色 {{character}}；工作树 {{worktree}}；只读原日志 {{logs_dir}}；输入 {{evidence}}；结果 {{scratch}}。本轮由原 ops 根据 #27 明确指令派发，自己完成、不派下级模型。模型 gpt-6.1-sol/high，保持原学习者沙箱和账号。此任务不恢复旧 Jev 拿牌学习，不启动模拟/MC、模型 API、对局或新实验。
++
++先读 README、最新 STATE、docs/learning-protocol.md 第3/9节、docs/learning-requests.md、docs/learning-code-proposals.md、docs/brain-strategies.md 和 docs/v6-plan.md §13。目标是 #16 提供的 brain-strategies-v1 首批真实条目，不是重复写基础设施。#16、#24 已验收交付，#25 冻结知识亦可用；#26/#33 的生产上线与本任务内容形成分开记录。
++
++## 冻结输入与知识边界
++
++读取 manifest，核 request/issue/task/batch/character、文件 SHA 与字节数。files.path 是不可改的冻结副本，original_path 指原来源。不得以随后更新的主目录文件替代快照。全部已结束 Silent 局清单及日志各文件冻结上限在 manifest；原始 logs 只按索引/精确局号、offset/bytes/SHA 定位，禁止越过上限混入新局。整流未哈希照实标明，引用具体片段逐段哈希。缺失输入明确保留；历史材料稀疏检出缺失时按原存储恢复接口取精确 Git blob，不能声称原证据不存在。不要整库/原始 states 灌进模型。
++
++**依据允许两类分账证据**：本系统已结束 Silent 对局；以及 Roy 已授权的协议第9节公开 STS2 数据（本批冻结 #24 sts2fun 聚合、#25 spire-codex 开卷）。不再使用“只能依据本系统对局”的旧限制。每条外部事实保留 URL、版本、样本口径、SHA、许可/Required Notice，external:来源名；不得把外部局当本系统局，也不能借其他角色验证 Silent。聚合数据无逐局编号时用 #42 external_aggregate 合同（docs/brain-strategies.md），不填 run/floor；保留 source/URL/version/dataset_sha256/downloaded_at/filters/statistic/denominator/design/limitations/license，有区间才填 interval，ref 追到精确表/行/快照。不能忠实表达则保留候选及说明，不伪造局号或 floor=0。
++
++游戏知识由你核实证据得出，开发者/ops/计划举例/预训练知识不能供给机制或策略。既有经验/复盘需要追溯原局号与窗口。#16 数据集是观察性：接受答案不等实际执行，后续掉血不等选择因果效果；未知版本/缺帧/null 不补零、不回填最终牌组。首试按首次死亡/SL截断，与含SL分开，同局重试不增加独立分母。外部普通/升级/进阶/版本、玩家/局/候选槽分母分开；同名不能强行绑定，样本不足不提升可信度。既有争议与科学父保持，不用报告结束关闭它们。
++
++## 内容、查重与交付
++
++先做证据覆盖/缺口表：自有独立局、实际观察窗口、外部版本及独立分母、未读/排除项分别列。按 #27 优先核第一幕 Boss（issue 举例同族、墨影幻灵只作优先级、不是已知机制）、第二幕 Boss、拿牌与幕初方向。由你选择适量有证据条目；允许某主题缺证，没有固定非零数量门槛。
++
++正式文件只创建/更新 knowledge/characters/silent/strategy-entries.json，遵守当前运行时 parseStrategyLibrary 与 schema；不迁移/改写 experience.json。每条稳定ID/version、trigger、具体策略、可追溯evidence、source/confidence；标 design=observational，保留反例、适用边界、独立分母及未知值（可用 schema 允许的额外元数据/可追溯 sidecar）。同一结论可在 evidence 中混合两类记录，但 source=mixed，evidence_status 明确 aligned/conflict/unassessed；各来源、版本和分母分账，不加总。只有外部支持（自有仅反证也算）confidence≤0.49；有真实自有支持才可赋更高值，不能由样本数自动提级。发现冲突须保留双方原证据、role=contradict 并标 conflict，按原通知流程转达。无支持的不发布；不能照抄旧大脑理由、把 combat_line 改名 card_pick 或以单卡胜率证明拿牌收益。
++
++查重已有正式库、经验/账本和本批候选。仅经 learner/ledger.py CLI 登记 observed/proposed 或关联已有ID，不手改账本/不标 shipped；纯外部 ledger add 不填 first_run/asc/prior_runs（筛选进阶放 filters），填 confidence 并使用同一 external_aggregate 对象；混合证据须 evidence_status 和真实自有元数据。用 show/find --json/check 读回核自有独立局、外部分母与冲突，update 只追加不覆盖。CLI不能表示就明确报告，不伪造局号/层数。若需要改消费者/格式/规则，先沿原 code_proposals.py CLI 记录证据和阻塞，不把架构修复扩进本内容批次。
++
++固定自测至少包括真实新库 parseStrategyLibrary、每条正例/不匹配/事实未知/其他角色不读取、原最多3条/4096B序列化预算；使用已有五题回放或调用实际消费者核命中ID/version/source/evidence与输出字节，不伪造游戏后果。以本树当前 main 中 #33 工具查询与兼容检索路径分别说明实际覆盖；既有测试样例不是本批自然消费。只改数据/记录按现行规则无须重跑全部代码测试；如确改代码则 tools/test-sandbox.sh 并保留其固定排除/失败证据，宿主 full 由原 ops 补，不在沙箱绕开限制。不安装依赖、不新增在线请求。所有计算 nice，优先单进程，每任务最多4进程，不启动多worker full。
++
++## 提交、发布与反馈
++
++你可依证据完成内容、自测、gitleaks后提交本工作树（全局 Git 身份；Co-Authored-By: Codex gpt-6.1-sol <noreply@openai.com>）。按原学习流程可自行合入 main，持原锁、检查并保留并行知识刷新、只集成本任务精确文件；冲突/权限受阻保留提交、diff与错误由ops兜底。主目录仅集成，不在其中开发；不要推送。正式内容产物和必要审计 sidecar 可写本工作树 paper/materials/20261022-issue27-brain-strategies/；共享根只允许 ledger/code_proposals 既有CLI追加，其他根记录由ops完成。只读所有其他角色与共享配置/ops prompt，不读凭据/.env/游戏二进制。
++
++**live 发布由原 ops 接续**：提供 main/source commit、逐文件SHA、自测原件、消费者固定回放、回退点。不要自行修改 .worktrees/live、开局/移除STOP/切换decider/启用REFLEX或方向；Regent暂停保持。#27 第一项需实际 live，第二项需发布后首个自然大脑问题真实命中相关ID/version；固定回放/空库/文件可加载不替代自然命中，也不证明收益。不为验收多开局、不做A/B或前后检查点比较。
++
++有不同意见/反证/旧知识冲突，逐项记录原观点、证据、结论差异、影响ID、下一步，供原 ops→watcher→Roy 实际转达；不得代其他角色ACK。保留初稿/失败/被拒条目及理由，不强行完成。只此一批，不自行续批或新增学习调度。任务结束由原启动器给ops事件，不能据退出关闭#27。
++
++报告 report.md、result.json、coverage.json、evidence-refs.jsonl、entry-dispositions.json、自测/消费者原始输出及SHA写 {{scratch}}。最终JSON至少有：task/request_id/issue/batch/character/input_sha256、source_commit/main_commit/live_commit（未知null）、entries（ID/version/source/evidence/limits）、ledger_ids、changed_files与SHA、tests原命令/退出码、consumer_readback、questions（prior/finding/evidence/affected_ids/next_step）、report、continuation。分开 main_merged/live_published/natural_brain_readback，禁止把候选/提交/排队记作完成。
+diff --git a/ops/tests/test_ordinary_close.py b/ops/tests/test_ordinary_close.py
+index 824d8356a..51298ce22 100644
+--- a/ops/tests/test_ordinary_close.py
++++ b/ops/tests/test_ordinary_close.py
+@@ -28,6 +28,7 @@ class OrdinaryClose(unittest.TestCase):
+         for name in ("learner", "notes", "paper/materials/learning", "paper/data", "agent/src", "knowledge/builders", "eval"):
+             (self.root / name).mkdir(parents=True, exist_ok=True)
+         shutil.copy(REPO / "learner/ledger.py", self.root / "learner/ledger.py")
++        shutil.copy(REPO / "learner/external_evidence.py", self.root / "learner/external_evidence.py")
+         shutil.copy(REPO / "knowledge/builders/characters.py", self.root / "knowledge/builders/characters.py")
+         (self.root / ".gitignore").write_text("ops/codex-ops/\nlearner/runs/\n__pycache__/\n*.counter\n")
+         (self.root / "agent/src/fixed.ts").write_text("export const fixed = 1;\n")
+diff --git a/paper/materials/learning/README.md b/paper/materials/learning/README.md
+index e01106f4f..71a5090ff 100644
+--- a/paper/materials/learning/README.md
++++ b/paper/materials/learning/README.md
+@@ -62,3 +62,8 @@
+ - **学出来的 vs 预训练的**：`prior` 是 `yes` 的条目算预训练带来的；`no` / `partly` 而后 `shipped` 的算学出来的。
+ - **证据链**：每个 `shipped` 条目都能从 `evidence` 的局号 → 复盘小节（`where.lessons`）→ 经验条目或提案（`where.experience` / `proposal`）→ 提交（`commits`）→ eval 版本（`version`）→ 之后的局（`effect`）。
+ - **学习曲线**：`paper/data/learning-curve-<角色>.csv`，每个进阶一行：局数、第一次尝试赢、SL 后赢、平均层数、这一级里发现的条目、这一级里上线的条目、老错重犯次数（eval/learning-curve.py 的说明）。
++
++
++## 外部聚合证据（#42）
++
++`learner/ledger.py` 支持协议第9节的 `external_aggregate`，精确对象与字段见 [策略合同](../../../docs/brain-strategies.md#外部聚合证据42)。纯外部条目的 first_run/asc/prior_runs 省略，不能虚构局号/层数；外部进阶写 filters，confidence≤0.49。自有条目沿原要求。混合条目 evidence_status=aligned/conflict/unassessed；明确反证强制 conflict。update 只追加 evidence，已有反证仍参与校验；新增自有局同时登记真实 first_run/asc。show/find --json 显示 evidence_summary，自有独立局与每份外部分母分账，外部不计本系统 repeat 或验证。
