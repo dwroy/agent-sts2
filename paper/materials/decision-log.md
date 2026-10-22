@@ -5803,3 +5803,5 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
 - 2026-10-22T13:14:14+08:00 [ops] 八原notice原文/双箱/角色转达证据核同，三research原CLI不兼容及角色登记pending保留；不重发/代ACK或关科学父，无新full/dataset/模型/局/live改动。paper/materials/20261022-1313-ops/notices-readback.json。
 
 - 2026-10-22 13:29 [ops] #38仅取消未检查的本方锁等待；知识刷新自然完成，4项锁回归通过，原#33唯一接续无持锁经pidfd待#20后入场，保留#33→#35→#28→#37与R411/待验；131302 fix无源码核验后保留failed/rc0/retry，不重复full/model/dataset。证据paper/materials/20261022-issue38-ops/及20261022-1319-ops/。
+
+- 2026-10-22 13:39 [ops] 五批普通收尾parallel-record attention核验：341产物/50 waiting/五proof源码差0，共享dataset已执行不重跑；原扫描后六记录不同，现有输出副本保留，不收编并行记录，不改原失败/父项或冒closed。paper/materials/20261022-1336-ops/。
