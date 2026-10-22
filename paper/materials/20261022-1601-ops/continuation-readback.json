@@ -1,0 +1,59 @@
+{
+  "at": "2026-10-22T16:03:21.190179+08:00",
+  "checks": {
+    "state": "waiting-ordered-kernel-lock",
+    "started_at": "2026-10-22T16:03:02+08:00",
+    "runner_pid": 589590,
+    "runner_start": "8071265",
+    "worktree": "/home/dw/Projects/agent-sts2/.worktrees/ops-issue33-high-20261022-1215",
+    "source_tree": "90c6d041640b1bec7082635f6344fc69dd260751",
+    "base": "0cd3629d3a7f3a3bcacd22fa0a4206acc4d81e78",
+    "nice": 19,
+    "steps": [],
+    "full_started": false,
+    "new_model_API_MC_game_actions": 0,
+    "continuation_of": "same high narrow candidate first tsc/full; prior harness rc2 missing inapplicable external builder preserved; no full has started",
+    "issue38_receipt": "paper/materials/20261022-issue38-window-ops/waiter-cancellation.json",
+    "lock_admission_sha256": "8aee45d278bbafe4dce358564a0eccc4e017e8094e53db9bf2c2a8c4464e94a0",
+    "held_locks": [
+      "/home/dw/Projects/agent-sts2/ops/knowledge-refresh.lock"
+    ],
+    "harness_correction": "paper/materials/20261022-1601-ops/harness-correction.json",
+    "prior_issue20_test_exited_at": "2026-10-22T13:33:35+08:00",
+    "lock_order": [
+      "knowledge-refresh",
+      "ordinary-close",
+      "paper-dataset",
+      "tick-snapshot",
+      "live-merge"
+    ],
+    "waiting_lock": "/home/dw/Projects/agent-sts2/ops/codex-ops/ordinary-close.lock"
+  },
+  "native": {
+    "pid": 589590,
+    "start": "8071265",
+    "wchan": "locks_lock_inode_wait",
+    "nice": "19",
+    "children": ""
+  },
+  "wrapper_pid": "589589",
+  "live": "0cd3629d3a7f3a3bcacd22fa0a4206acc4d81e78",
+  "old_guards": [
+    {
+      "path": ".artifacts/ops-issue33-high-20261022/high-narrow-preflight-continuation.guard",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": ".artifacts/ops-issue33-high-20261022/issue38-continuation.guard",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": ".artifacts/ops-issue33-high-20261022/issue38-ordered-window.guard",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": ".artifacts/ops-issue33-high-20261022/once.guard",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  ]
+}

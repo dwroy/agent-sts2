@@ -4700,3 +4700,9 @@ Roy/Claude11:46换号授权已核，沿原协议创建唯一codex3-20261022-1146
 ### 2026-10-22T15:54:06+08:00 [ops] 15:43八条重复学习通知核验
 
 八条15:43学习通知已逐项核原生产者完整原文、证据SHA、ops回执与双箱原字节窗口，均与15:15一致；既有watcher署名实读及Roy可见转达证明亦核同，不能据此推定Roy本人确认。CLI仍为3f7afefb…e13e4，不支持原三研究task，原rc2拒绝保留；watcher_received/roy_notified正式登记仍false/pending。本轮不重复发信、另建watcher、代ACK、改任务名/来源合同/flags或重试拒绝命令。D1开场保真、D2候选配对增量、D3跨界HP归因，及#13逐卡独立分母/钢铁风暴生成边界/SPORE未知/EXPOSE新增范围、#14首计划前缀限制，均留原owner/ID及下一步；批次或子项完成不关科学父。本轮仅保留核验与阻塞记录，不触动原#33检查、#40窗口、当前局或开关，无新模型/MC/full/dataset。原件ops/codex-ops/learning-notices/；核验paper/materials/20261022-1543-ops/notices-readback.json。
+
+### 2026-10-22T16:04:58+08:00 [ops] #33窄入口终局与#38实际窗口
+
+原#33 high窄入口15:56:04实际取得全锁、完成知识快照并在检查前释知识锁，#38已有进入证据。随后rebuild rc2源于ops沿用整包#33+#26命令：R411及90c三叶候选均无外部聚合生成器/数据，非产品测试或稀疏缺文件；原日志/错误/2475输入/失败封存，tsc/full未开始。已修原入口，精确base/候选Git树及WT/live四处均证缺失才记聚合检查不适用，不引入#26。三叶SHA/暂存树不变，唯一接续589590/start8071265于16:03持知识锁等收尾锁，原首次tsc/full仍待；旧guard保留，无重复full。#38/#33实际评论及API读回已完成，入口恢复交主管核收不代关单。live仍R411，发布/自然新局原生high及整包旧失败分账待验，原后续顺序和#40依赖不动；未停其他任务/删锁/模型/MC/实验局或热切当前局。原件paper/materials/20261022-1601-ops/。
+
+#38 https://github.com/dwroy/agent-sts2/issues/38#issuecomment-6335867378；#33 https://github.com/dwroy/agent-sts2/issues/33#issuecomment-6335868152
