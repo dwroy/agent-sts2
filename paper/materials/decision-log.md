@@ -5904,3 +5904,8 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
 - 2026-10-23T03:02:58+08:00 [watcher] #36短名修复6ec71c313已合main cd53a8956e092cb4ed2b470705f26d061df6e653并WindowsSSH核同；实际R415唯一full644文件6123过2跳0败/2509输入同；main仅5叶差量、定向12文件161过，无第二full。36回执6348915803已waiting-release，交ops精确43叶并保最新知识/策略/编号；6348723657通用恢复归ops实际发布后各冻结输入重排一次同类未投递/零模型/75学习批，实际重排后才记未启动已重排，不补接管；可暂停学习准入不动对局。唯一full已释放，后续33+26→42余项→35→28→37（37→20）待提醒；36自然验收、40训练/消费者、27 CLI与科学父开放，原失败/旧绿保留。
 
 - 2026-10-23T03:42:46+08:00 [watcher] #20新tick分类补交e1204dcf/kit7e5a408f已独立tsc0、六模块102项及4项适配器/故障边界全过，kit15源核同；原“尚无补交”据此更新，生产真实tick尚待。当前main9a6f34525预检仍冲突report.py/run.sh/decision-log，37未合，故保37→20及最终唯一full，不组装/合源码/抢窗口；README旧排队inbox句仅说明一致性待同步。材料paper/materials/20261023-issue20-tick-integrator/；42原uncertain已结清不重派、43随20核收、默认关闭/自然采用及27 CLI/科学父保留；最新R416知识与数据后续保留，无生产变更/新裁决。
+
+
+2026-10-23T03:23:35+08:00 [ops上线/V6-R416] V6-R416已核实际live 3849fcb8a35940315422f64b16fbc104a6cb8b8b，行为4363590a9；#36精确43叶含短名修复，统一main/live编号核同。旧学习者把完整标签作原生名、超32字符会未投递返回75；新规则以完整label/pane/cwd的SHA绑定32字符原生名，保留原标识、租约、空输入/回合/产物及退场守卫；并发布交互学习TUI与只读脱敏大脑视图。证据为原唯一full6123通过/2跳/零失败、2509固定输入及真实live模型/三策略/catalog读取；468份最新知识和实例绑定保留，未夹带完整33/26或27第二批数据。预期恢复长标签正常投递并提供可观察视图，不宣称自然采用或收益；当前局未热切，session/high/直播及四批恢复分别读回。回退仅43源码叶至c5b4a8a，保后续知识、账号和日志。原件：paper/materials/20261023-issue36-name-publication-ops/publication.json、actual-live-consumers.json。
+
+- 2026-10-23T03:39:58+08:00 [ops] #36/R416已核实际发布和双通知，brain-view启用；四原批冻结输入等价、各正常重排一次并解除自有学习hold。ops子进程TERM=dumb误传已在同新批内保负面原件/修终端元数据；四原生线程gpt-6.1-sol/high实收，自动parser因AGENTS/user前缀foreignActivity可复现，保75与在途模型，不重送/回收，交原dev36修与对账；paper/materials/20261023-issue36-recovery-ops/receipt.json。
