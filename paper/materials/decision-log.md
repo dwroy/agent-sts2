@@ -5812,3 +5812,5 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
 - 2026-10-22T13:34:24+08:00 [dev #20] 交付资源与冲突流程及实际live启动版本固定；kit f1cc7285d，队列/area/同树全检复用与派发规则齐备；tsc0、完整656文件6177过/2跳过、kit69，首完整10败修后7文件28过且原件保留。生产默认关闭、未pin/改live/STOP，影响live启动：是；集成员须先协调ops自然边界首次发布/固定/安全接续，后核真实首局，材料 paper/materials/20261022-issue20-release-window/。
 
 - 2026-10-22T14:22:34+08:00 [dev #20] 按#39补SIM/S及205行为环境来源隔离，TOKEN预算不再误作凭据；327源码/285键盘点0漏项，固定Bash与真实TS消费者回归、14文件117项及原审查21项0、tsc0；原失败保留，变基main0eeb33ae7，#37→#20原组合full待集成员、不另占窗口。影响live启动：是；未pin/启用/改main/live/STOP，材料paper/materials/20261022-issue20-sim-startup/。
+
+- 2026-10-22T14:50:59+08:00 [dev #20] 按补充4只读核炉石4aa2e250补丁后改写并入统一kit ba7a9c39d（已推上游核回）：项目前缀/角色名、codex分支、maintenance/--project隔离、统一area与uncertain持久预约；kit87/公共Python62/tsc0/定向2文件10过。STS2候选area/heavy显式false保原上线边界，未改生产安装/登记/开关/live/STOP；#39开发来源459366bac转review，最终组合full及原真实验收仍待集成员/ops。材料paper/materials/20261022-issue20-project-contract/。

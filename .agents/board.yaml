@@ -35,6 +35,7 @@ dispatcher:
   digest: ops/codex-ops/board-digest.md
   pause_files: [ops/codex-ops/PAUSE, ops/codex-ops/LLM_DRAIN]
   interval_minutes: 5
+  area_mutex: false # Enable with the resource/conflict rollout at its natural boundary.
   heavy:
     enabled: false # Original ops enables once at the natural deployment boundary.
     state: ops/codex-ops/heavy

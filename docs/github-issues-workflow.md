@@ -87,12 +87,14 @@ nice -n 19 python3 ops/agent_board.py --root "$PWD" --set-enabled off
 
 未设置 `CODEX_AGENT_BOARD` 时，cron 每次从项目控制文件读取，缺文件为 off；设置 on/off 本身不调用 kit，不改登记表、账本、cron、会话或游戏，下一原 stall tick 才消费。on 要求 kit 已安装、本地候选宿主登记表格式正确、包含且仅包含一次本项目根、没有重复根；这些机器检查不代替各项目 owner 授权。显式环境 `CODEX_AGENT_BOARD=on|off` 始终优先，包含明确的 off；空值和其他值无效。设置命令同时返回 persisted/effective/source，避免把持久值与当前环境覆盖混淆。原有 cron 若没有此变量即可直接读项目文件；若已有显式环境覆盖，记录其来源并沿原调度维护流程处理，不在 pane export 后声称 cron 生效。损坏/异根控制、无效环境均保留本轮会话动作并写 inbox；不退到另一套回收器。关闭或回退保留原登记表、事件账本和 uncertain 项。
 
-宿主登记由 Claude 主管沿 #20 协调各项目原 owner，确认本次纳入范围和唯一宿主入口，不由 STS2 ops 扫描认领其他仓库：
+宿主登记由 Claude 主管沿 #20 协调各项目原 owner，确认本次纳入范围、一份宿主登记表及各项目唯一消费入口，不由 STS2 ops 扫描认领其他仓库：
 
 1. 每个原 owner 在自己项目的任务记录里确认实际主运行根、`.agents/board.yaml`、授权的派发/提醒/回收范围、角色 pane 与既有会话绑定，并给出本地回执位置及 SHA；未获准的项目保留 pending。公开评论仅引用回执，不贴私有根路径或凭据。
 2. 主管收齐确认并指定本机有相应权限的登记协调者。协调者将已获准的根/config 汇成一份忽略的候选 JSON（格式见 kit README），由各 owner 核对自己的条目。需要跨仓动作的权限沿原 owner 确认，不把“同机”当作已授权。
-3. 各 owner 确认本项目没有另一个 kit 消费入口；选定的唯一原 stall tick 消费这份登记表。其他项目的已有运行/学习调度照原职责保留，只不增加第二份通用派单器。STS2 的 `dispatcher.registry` 指向本仓内这份正式登记文件，其他项目无需越过其路径边界写 STS2 配置。
-4. 主管确认本批范围与唯一入口后，原 ops 依次核实际登记、只读演练、设置持久 on、读回原 stall 首 tick。未完成确认时控制保持 off；不伪造其他项目条目，不自动登记其他 tab。设置返回 on、技术测试通过或 dry-run 排队均不等于首 tick/实际命名/锁忙重试/回收验收完成。
+3. 各 owner 确认本项目恰有一个 kit 消费入口。默认 `dispatcher.consumer: host` 由选定的原 STS2 stall tick 消费；声明 `consumer: maintenance` 的项目由自己的原维护入口核本项目开关、持有原维护锁后，以 `--project <已登记主根>` 只选自己。宿主 tick 在读该项目账本、取项目锁或调用 API 前返回 delegated，不能绕过其 off 或维护锁；选择参数本身不代权限或开关。仍共用一份登记表及宿主串行锁，不新增 timer。STS2 的 `dispatcher.registry` 指向本仓内正式登记文件，其他 owner 经协调登记，不修改 STS2 配置或安装。
+4. 主管确认本批范围与各项目唯一入口后，原 ops 依次核实际登记、只读演练、设置持久 on、读回原 stall 首 tick。未完成确认时控制保持 off；不伪造其他项目条目，不自动登记其他 tab。设置返回 on、技术测试通过或 dry-run 排队均不等于首 tick/实际命名/锁忙重试/回收验收完成。
+
+kit 的 `CAPABILITIES` 同时声明 project-consumer、agent-prefix、area-mutex、branch-prefix；新项目接入器先检查能力再登记/启用。`roles.dev.agent_prefix` 默认 issue-，炉石使用 hs-issue-，开发者身份及容量按本项目前缀计算；其他角色可用唯一 agent 名称加 kind 解析，或指定 pane，同时指定时两者都须匹配。重名/错名不投递。`worktree.branch_prefix` 如 codex/ 只加在本项目登记的逻辑 issue-N-slug 前，公共 main/live 仍须关联 #N 才算该任务进展。采用 kit SHA 后仍由各 owner 核实际默认 off、登记、dry-run、启用和原 tick 回执，不把能力声明当生产验收。
 
 派单按 P0–P3、issue 号和配置上限执行，已有开发会话及未完成启动计入容量；`status:blocked`、`needs:roy` 和状态冲突均暂缓。review 提醒集成员，learner/ready 与 waiting-release 提醒 ops。首次轮询只建立旧 Roy 评论基线，此后新 Roy 评论分别提醒负责人和主管；agent 前缀评论与外部作者不能触发 Roy 指令提醒。普通提醒为 `#N 轮到你`，自动接续在同一行补充下文短原因。接收方 `idle` 或 `done` 均可送达；`working`、`blocked`、`unknown` 或缺席时排队。主管配置为 `board-digest` 时读取本地 `ops/codex-ops/board-digest.md`。
 
@@ -143,7 +145,7 @@ gh issue close 123 -R dwroy/agent-sts2 --comment "<一句结论 + 证据>"
 
 ## 资源与冲突（#20 补充 3，Roy 2026-10-22）
 
-本节取代同日早先“暂缓完整 Vitest / 窗口已释放”提醒方案。新流程随代码交付，默认 `dispatcher.heavy.enabled: false`；原 ops 安装精确 kit、核唯一原 stall 入口并在自然边界把本项目配置切为 true 后才生效。启用前各角色沿原完整检查流程，不据新文档提前跳过。启用记录写原 decision-log 和 issue；不热切在途会话或重启对局。
+本节取代同日早先“暂缓完整 Vitest / 窗口已释放”提醒方案。新流程随代码交付，默认 `dispatcher.heavy.enabled: false` 与 `dispatcher.area_mutex: false`；原 ops 安装精确 kit、核唯一原 stall 入口并在自然边界将本项目这两项配置切为 true 后才生效。启用前各角色沿原完整检查流程，不据新文档提前跳过。启用记录写原 decision-log 和 issue；不热切在途会话或重启对局。
 
 **完整测试分工。** 启用后开发交付前跑生产 tsc 和与改动相关的定向固定测试，交付评论列出改了哪些文件及实际结果。集成员在合 main 前做一次完整 tsc + Vitest，可把同在 review 的交付组成一批；记录实际受测树 SHA、全部结果与输入未变。ops 实际组合树 SHA 相同且有完整通过回执就复用；不同、缺完整证明或只有定向检查则重跑。源码自测不替代不同 live 组合的检查。不能把旧失败/中断写成通过。
 
@@ -171,7 +173,7 @@ python3 ops/release_checks.py --root /project/root --worktree /project/root/.wor
 
 标准回执绑定 repo/root、完整受测树 SHA、角色、完整 tsc/Vitest 结果和前后输入不变。仅同树完整通过可复用，引用原回执 SHA；否则在队列中重跑，原结果不覆盖。检查后仍走原发布/绑定保护/自然局边界/首局验收，不因工具返回 0 自动发布。
 
-**区域与文件冲突。** 派单前读 issue 的 `area:*` 标签：同区域已有 in-progress/review，或 ready 项已有登记/正在启动的预约，后者保留 ready，在 digest 写明等待的 issue；无 area 标签照旧。同 tick 首次派发也占住该区域，回执不确定继续保留其登记，不同时派下一张。转入 waiting-release 后不再占开发区域；区域释放后沿原 stall 再判，不靠模型守候。同一个 issue 有多个 area 时任一区域有冲突都等待。此门在新流程启用后生效，不自动给历史 issue 猜标签。
+**区域与文件冲突。** 派单前读 issue 的 `area:*` 标签：同区域已有 in-progress/review，或 ready 项已有登记/正在启动的预约，后者保留 ready，在 digest 写明等待的 issue；无 area 标签照旧。同 tick 首次派发也占住该区域，回执不确定继续保留其登记，不同时派下一张。转入 waiting-release 后不再占开发区域；区域释放后沿原 stall 再判，不靠模型守候。同一个 issue 有多个 area 时任一区域有冲突都等待。统一的区域门独立于重任务队列；通用 kit 默认开启，STS2 显式 area_mutex:false 保留原上线边界，原 ops 同轮启用。require_area 默认 false，炉石可明确为 true，让缺 area 的 ready 继续排队；不自动给历史 issue 猜标签。派发前将原 areas 写入账本，uncertain 即使标签/状态改变仍保留；旧不确定分配若区域不可知，暂停新派发，沿原证据核验再 resolve；重新贴 ready 不能绕过旧不确定派发。
 
 集成员发现两个交付改同一文件时先定合入顺序，在相应 issue 留一行提醒及评论说明；后者沿该顺序变基、补必要的定向测试后重新交付，再进入合批完整检查。不要并行抢同一文件或用“两个分支都绿”代替组合检查。
 
