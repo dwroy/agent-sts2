@@ -17357,7 +17357,9 @@
     "publication": "pending full and original gate, natural boundary, native high readback",
     "no_hot_switch": true,
     "whole_issue33_published": false,
-    "final_source_tsc_rc": 0
+    "final_source_tsc_rc": 0,
+    "lock_cycle_recovery": "paper/materials/20261022-issue38-ops/report.md",
+    "full_state_at_20261022_1329": "waiting-original-issue20-test-kernel-pidfd; held_locks=[]; full_started=false"
   },
   "manual_events_20261022_1204_1205": {
     "state": "processed-queue-retained-wake-lock-busy",
@@ -17409,5 +17411,25 @@
     "CLI_sha256": "3f7afefb2307a420dd35a28e94f6b20c6bdc76ae30ce8f5cffb0dd62633e13e4",
     "new_send_or_proxy_ACK": false,
     "no_science_parent_closed": true
+  },
+  "issue38_original_lock_cycle_recovery_20261022": {
+    "state": "original-cycle-cancelled-refresh-completed-continuation-waiting-issue20",
+    "issue": 38,
+    "source_tree": "90c6d041640b1bec7082635f6344fc69dd260751",
+    "runner_pid": 7161,
+    "runner_start": "7136824",
+    "full_started_at_readback": false,
+    "once_guard_retained": true,
+    "continuation_guard": ".artifacts/ops-issue33-high-20261022/issue38-continuation.guard",
+    "proof": "paper/materials/20261022-issue38-ops/window-readback.json",
+    "checks": "paper/materials/20261022-issue33-high-ops/checks.json",
+    "next": "original controller kernel-waits #20 then all-or-release admission and first check; no polling/repeated full; preserve #33→#35→#28→#37; #38 in-progress until actual entry evidence",
+    "issue_comment": "https://github.com/dwroy/agent-sts2/issues/38#issuecomment-6333489252"
+  },
+  "fix_20261022_131302_no_source_intake": {
+    "state": "audited-no-source-original-failed-rc0-retry-preserved",
+    "proof": "paper/materials/20261022-1319-ops/fix-readback.json",
+    "report": "paper/materials/20261022-1319-ops/report.md",
+    "new_tests_dataset_merge": false
   }
 }
