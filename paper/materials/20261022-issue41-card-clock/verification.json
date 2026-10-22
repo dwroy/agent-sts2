@@ -1,0 +1,113 @@
+{
+  "issue": 41,
+  "base": "50df9b70d04db388bd33b7731f7ed32af526b530",
+  "branch": "issue-41-task",
+  "production_change": false,
+  "unchanged_production_trees": {
+    "agent/src": "6d3b3ac86d106a387cace8a0f515ff172772526a",
+    "knowledge": "ffb3eb8bce2da4e09e68153fcb97f901964e5d25",
+    "learner": "ad3051d7c526046728251af40f943cfe00306d77",
+    "ops": "5490f039bbed5cf8bc195f95621c063677dd6ec8"
+  },
+  "inputs": {
+    "agent/tests/v6-fixtures/v6-r405-card-options.json": "03a745a46dce636f3e264f6c6d3beec713da619744173defe92a496c7b27585d",
+    "agent/tests/v6-card-option-loop.test.ts": "6e01763d4a244551d6372c2a5a03cfedd046898793a455e3ab721da2c5eb6ad3"
+  },
+  "original_evidence": {
+    "commit": "5c235855809dc0178bb69eb458afd8d37357a2be",
+    "path": "paper/materials/20261022-issue20-r3-integrator-review/",
+    "sha256": {
+      "combination-targeted.json": "bc9e35aa68ad6daff9a012a301258ac25efa3b47dba5ff01e21af11672f47cf2",
+      "diagnostic-only.patch": "24a58f1e7c62c2fe69e98cbcceabf33aa6528f38a23de2889cc6ad717d7bb656",
+      "report.md": "543de372b4639eb4f94a21922575ac6d9d6e8179304f03ac4f96101da590ddd0"
+    }
+  },
+  "artifacts": {
+    "contract-final.json": {
+      "sha256": "49292d632d1f3957fb4679f23678306f8c91687c312882daed919b6d7c7411c7",
+      "bytes": 2913
+    },
+    "contract-final.log": {
+      "sha256": "3ec7a81a2cf16569b09e6f24b71ce573941056c78aa89f57e9d07fcfb958c75a",
+      "bytes": 141
+    },
+    "contract-green.json": {
+      "sha256": "89692bd6346573c50067fd6cbec65b1a15889ded39c4148f7455a1d7f7ecae67",
+      "bytes": 4010
+    },
+    "contract-green.log": {
+      "sha256": "929f25a99b9dc0414ac563b83c2b67a57ea7533347d23ef5bffc16f179d9faeb",
+      "bytes": 141
+    },
+    "report.md": {
+      "sha256": "8e08e8675ea7b40fcd69d4a14cfd74a5dc601404e882f9dcef76f5472f64d011",
+      "bytes": 5148
+    },
+    "reproduction-red.json": {
+      "sha256": "d3defb0d6665c21126446b775e4726b52b4f3a11b64d5d080332ae2201272dda",
+      "bytes": 3068
+    },
+    "reproduction-red.log": {
+      "sha256": "7776d0354611ee80aafc9d277152160238228b2ce7bcacfc5fcfc535999ab500",
+      "bytes": 143
+    },
+    "reproduction-red.patch": {
+      "sha256": "ec4ff16e071d03d0e8a0397447c91433ac66d6b1122257aa690cf553287deda2",
+      "bytes": 4144
+    },
+    "targeted.json": {
+      "sha256": "2a6e033b629e67015530ed4821466c9a45ceb5d68e625ddb9e52934ad2a35cd0",
+      "bytes": 26626
+    },
+    "targeted.log": {
+      "sha256": "220e47642562fafb2c5ec9f8eddd10b48f033b7580c74a71e7542669849db94c",
+      "bytes": 135
+    },
+    "tsc.log": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    }
+  },
+  "checks": {
+    "tsc": {
+      "rc": 0,
+      "command": "node node_modules/typescript/bin/tsc -p tsconfig.json --noEmit"
+    },
+    "red": {
+      "rc": 1,
+      "json": "reproduction-red.json",
+      "passed": 0,
+      "failed": 1,
+      "skipped": 5
+    },
+    "initial_probe_failed": {
+      "rc": 1,
+      "json": "contract-green.json",
+      "passed": 2,
+      "failed": 4
+    },
+    "contract": {
+      "rc": 0,
+      "json": "contract-final.json",
+      "passed": 6,
+      "failed": 0
+    },
+    "targeted": {
+      "rc": 0,
+      "json": "targeted.json",
+      "files": 9,
+      "passed": 76,
+      "failed": 0,
+      "pool": "threads",
+      "maxWorkers": 1
+    },
+    "full": {
+      "started": false,
+      "reason": "Original integration/release window retains priority; no duplicate full or waiter."
+    }
+  },
+  "limitations": [
+    "Historical failure has no contemporaneous budget trace; reproduced sufficient cause is not unique retrospective attribution.",
+    "Production semantics unchanged. No main/live integration or natural game acceptance claimed."
+  ]
+}
