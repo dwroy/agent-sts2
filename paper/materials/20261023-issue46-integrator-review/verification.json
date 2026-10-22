@@ -1,0 +1,169 @@
+{
+  "at": "2026-10-23T07:49:05+08:00",
+  "source": "a213612c65d6262bf4e90ab968b22cb305bed156",
+  "main": "fdcda7cc3d28615d24e8c09b839cdc9afcda7aff",
+  "live": "e925357ad984e4d88509ab0d791388be047f3428",
+  "source_inputs": [
+    {
+      "path": "ops/proposal_dispatch.py",
+      "bytes": 30903,
+      "sha256": "181764c3d54af9e6e6b41bddede98bc8494849486f205100c2da7214fe3f4d3f"
+    },
+    {
+      "path": "ops/worktree_allocation_report.py",
+      "bytes": 3786,
+      "sha256": "78bf1f602d1bd87581e84e697046f7e818652b955a6d7077cfdd312db159661a"
+    },
+    {
+      "path": "ops/tests/test_proposal_recheck.py",
+      "bytes": 8441,
+      "sha256": "a511da0b04c98c8271416f803411e2c5534fb1515b39b3a26387ad3572b0d416"
+    },
+    {
+      "path": "agent/tests/proposal-recheck.test.ts",
+      "bytes": 446,
+      "sha256": "b7f8d414bf5b36dcd525c801cd431315555e540b9d0a3113256548aa1baa830a"
+    }
+  ],
+  "checks": {
+    "tsc": {
+      "command": [
+        "node_modules/.bin/tsc",
+        "-p",
+        "tsconfig.json",
+        "--noEmit"
+      ],
+      "exit": 0,
+      "log": "raw/tsc.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "proposal_recheck": {
+      "command": [
+        "python3",
+        "-B",
+        "ops/tests/test_proposal_recheck.py"
+      ],
+      "exit": 0,
+      "log": "raw/proposal_recheck.txt",
+      "bytes": 109,
+      "sha256": "f21cf8f81dbfe5d72a7e0bee6069a3c3fc0e651e4938e2d690e9e9ff41748af0"
+    },
+    "strategy_concurrency": {
+      "command": [
+        "python3",
+        "-B",
+        "ops/tests/test_strategy_concurrency.py"
+      ],
+      "exit": 0,
+      "log": "raw/strategy_concurrency.txt",
+      "bytes": 104,
+      "sha256": "63fae94ebda308ca88c373b47f361d0a74f201cfad14766ccc34293adfa70cf4"
+    },
+    "cadence_no_change": {
+      "command": [
+        "python3",
+        "-B",
+        "ops/tests/test_cadence_no_change.py"
+      ],
+      "exit": 0,
+      "log": "raw/cadence_no_change.txt",
+      "bytes": 102,
+      "sha256": "c0588f14a5a1cf748463820fb385c93d2c2ad12e6c9f51dca05384d56959ffae"
+    },
+    "strategy_research_scheduling": {
+      "command": [
+        "python3",
+        "-B",
+        "ops/tests/test_strategy_research_scheduling.py"
+      ],
+      "exit": 0,
+      "log": "raw/strategy_research_scheduling.txt",
+      "bytes": 308,
+      "sha256": "3fd7e945169376e04e9c7a58928f618e557e44baf4678fb8f0da1ee37aab67c8"
+    },
+    "strategy_implementation": {
+      "command": [
+        "python3",
+        "-B",
+        "ops/tests/test_strategy_implementation.py"
+      ],
+      "exit": 0,
+      "log": "raw/strategy_implementation.txt",
+      "bytes": 370,
+      "sha256": "f12ed79dfde6298d3cb7a825dd4daa4bf1d193076e64e510a4928f01f33f9737"
+    },
+    "vitest-proxy": {
+      "command": [
+        "node_modules/.bin/vitest",
+        "run",
+        "tests/proposal-recheck.test.ts",
+        "--pool=forks",
+        "--maxWorkers=1"
+      ],
+      "exit": 0,
+      "log": "raw/vitest-proxy.txt",
+      "bytes": 252,
+      "sha256": "17d6fe455ab311373bf148beefdd6d6b8e7705c2b9a6ff73b285969797f02545"
+    }
+  },
+  "original_allocation_report_reproduced": true,
+  "replay": {
+    "kept": 8,
+    "deferred": 51,
+    "estimated": 68,
+    "scaled128": 73.14285714285714
+  },
+  "frozen_input_provenance": {
+    "ops/codex-ops/learn.json": {
+      "recorded": {
+        "sha256": "e4988f9b766e11572b87ef9148e95da67a7584851550515914868f390b8e001e",
+        "bytes": 11875529
+      },
+      "current_prefix_matches": false
+    },
+    "paper/materials/learning/code-proposals.jsonl": {
+      "recorded": {
+        "sha256": "653fd3c721e1d09ae06f3f1d734d52cb2bda73cfcfef2784ba9423b592ee76d0",
+        "bytes": 6668474
+      },
+      "current_prefix_matches": true
+    },
+    "logs/runs.jsonl": {
+      "recorded": {
+        "sha256": "8fc47ef9f8b56590222b06e75a2a158085ba3e2db548bdf2c79ea5c6e175839b",
+        "bytes": 431618
+      },
+      "current_prefix_matches": true
+    }
+  },
+  "merge_tree_exit": 1,
+  "conflicts": [
+    "CONFLICT (content): Merge conflict in paper/materials/decision-log.md"
+  ],
+  "full_started": false,
+  "full_waiter_started": false,
+  "source_merged": false,
+  "production_changed": false,
+  "developer_log_readback": [
+    {
+      "log": "raw/sandbox-first.txt",
+      "bytes": 1407,
+      "sha256": "a0a2651b4f0c0d29363214938247116d22f37e07cf3570727a6588841c2038fa"
+    },
+    {
+      "log": "raw/recheck.txt",
+      "bytes": 492,
+      "sha256": "bc084a9360c0d99b9fc8224982c82fbaa559017ba90555db1c5d2d67991d938e"
+    }
+  ],
+  "historical_provenance": {
+    "strategy_batches_reconstructed": 63,
+    "all_batch_counts_reconstructed": 80,
+    "exact_queue_and_runs_prefixes": true,
+    "current_learn_snapshot_not_original": true,
+    "scope": "Reconstruct historical counts and queue states from exact recorded append-only prefixes plus unchanged batch identities; not a byte verification of the mutable historical learn.json snapshot."
+  },
+  "pending_order": "42 tools -> 35 -> 28 -> 37; 37 -> 20; issue46 placement requires supervisor decision",
+  "verdict": "Targeted review passes; await assigned final-combination unique full and main/ops publication; 24h actual acceptance remains open"
+}

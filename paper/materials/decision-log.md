@@ -5936,3 +5936,5 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
 - 2026-10-23T07:14:33+08:00 [Claude] Roy 10-23：codex3 learner 配置删 service_tier 保持现状；ops 做可回退的账号配置小改动时可自行处理，但做完要通知 Roy；磁盘水位线 hold_new_jobs 由 100 GiB 改为 80 GiB（next_run 60 不变）。#23 后续开 #45（保留门积压结算，ops）、#46（降低学习批次工作树分配，dev）。
 
 - 2026-10-23T07:29:07+08:00 [watcher] #39接续实读无新补交/改序；远端e1204dcf六启动叶同已独立r4，原23项绿保留未重跑；重新计算329源/285环境键未分类0及完整交付清单/SHA同。main2c23c7197/实际R417，旧41/44待修已closed且main保修复；预检仍report.py/run.sh/decision-log冲突，39/20/37未合，继续37→20及唯一最终组合full/ops发布pin自然首局读回，不单独合39/关闭/动生产。新数据/默认门/27 CLI及科学父保留，无新裁决；材料paper/materials/20261023-issue39-r417-preflight/。
+
+- 2026-10-23T07:53:17+08:00 [watcher] #46来源a213612c独立tsc0、Python61项及Vitest代理1项过，四源SHA不变；原119分配回执全对象核同，80批局数/63策略历史状态重建同，59 waiting机会保8延51、条件估68/天或原128同构约73，非实际上线。原沙箱rc1/稀疏输入缺失及分段复验保留，不称整套绿。mainfdcda7cc/实际R417只读预检仅账本冲突，未合源码/起full/碰生产；原42工具→35→28→37及37→20不变，46位置请主管裁决，24h实际读回与科学父/27 CLI保留；材料paper/materials/20261023-issue46-integrator-review/。
