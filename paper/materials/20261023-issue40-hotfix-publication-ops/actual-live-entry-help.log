@@ -1,0 +1,38 @@
+usage: build-fight-value.py [-h] [--fold-dir FOLD_DIR] [--work WORK]
+                            [--rollout-notes ROLLOUT_NOTES] [--states STATES]
+                            [--runs RUNS] [--decisions DECISIONS]
+                            [--game-data GAME_DATA] [--character CHARACTER]
+                            [--rows ROWS] [--out OUT] [--notes NOTES]
+                            [--gates GATES] [--trees TREES]
+                            [--train-every TRAIN_EVERY] [--idle]
+                            {extract,train,all,rollout-report,folds}
+
+Fight value model from our own logs (live only as facts for Jev:
+agent/src/reflex/rollout-live.ts).
+
+positional arguments:
+  {extract,train,all,rollout-report,folds}
+
+options:
+  -h, --help            show this help message and exit
+  --fold-dir FOLD_DIR   folds: where the out-of-fold models and gates go
+  --work WORK           rollout-report: the work dir of tools/rollout-
+                        backtest.ts
+  --rollout-notes ROLLOUT_NOTES
+  --states STATES
+  --runs RUNS
+  --decisions DECISIONS
+  --game-data GAME_DATA
+  --character CHARACTER
+                        the character's knowledge id (default ironclad)
+  --rows ROWS           default data/fight-value-rows.jsonl (another
+                        character: -<id> before .jsonl)
+  --out OUT             default knowledge/characters/<character>/fight-
+                        value.json
+  --notes NOTES         default notes/fight-value-backtest.md (another
+                        character: -<id> before .md)
+  --gates GATES         default knowledge/characters/<character>/fight-value-
+                        gates.json
+  --trees TREES
+  --train-every TRAIN_EVERY
+  --idle                train pending rows at an ops-verified idle boundary

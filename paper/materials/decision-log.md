@@ -5870,3 +5870,5 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
 - 2026-10-23T00:02:34+08:00 [ops] 231301四局复盘/12支持11旧ID/四pending提案核同；5802原段校验。两主策略attention保留，共享原dataset五检查成功产物复用且不重跑；记录限已审前缀，排除#27在途5条，24状态勘误和11通知角色ACK仍pending，不关科学父。原件 paper/materials/20261022-2350-ops/receipt.json。
 
 - 2026-10-23T00:11:56+08:00 [ops] #27第二批五外部观察策略已核源f96a13606/main3f6421432、65输入/93叶/23表段及原自测；live R414旧三条保持，按不插队门排40/36之后。当前账本575/0与学习者冻结清单rc1分列，四新增问题双箱待角色ACK，父/自然命中/发布未完。原件 paper/materials/20261023-issue27-batch2-terminal-ops/receipt.json。
+
+- 2026-10-23T00:37:24+08:00 [ops上线/V6-R415] #40导入热修三叶实际livec5b4a8a588dadccb59b218d97993de5a55371979，行为aba355a162e189847d214f049db92d3dc49c1a27；旧入口新进程无法导入evidence_identity，新入口显式加入learner路径。原main full6219过2跳且首败保留，本live精确组合只称tsc0/Python2过/包装器2过（含12+2 Python项），不重full。保持463最新知识、catalog/三策略、旧完整模型、绑定/账号/启动配置，未夹带36/44/33/26/27第二批，当前局未热切。实际live新进程--help及模型/策略/catalog读取通过；预期恢复下一自然fight刷新，实耗时/RSS/rows与训练、实际新模型SHA及追加/暖缓存仍pending，不手动刷新或启局。回退仅三叶到R414并保后续数据/日志，入口回退将恢复已知导入失败。原件paper/materials/20261023-issue40-hotfix-publication-ops/publication.json、actual-live-consumers.json。

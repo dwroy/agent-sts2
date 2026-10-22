@@ -1,0 +1,51 @@
+{
+  "state": "passed",
+  "scope": "exact live three-leaf import hotfix targeted host acceptance; original main full retained/reused separately",
+  "tree": "305ef6c44641afe933d880bcc29875de8274624a",
+  "steps": [
+    {
+      "name": "tsc",
+      "command": [
+        "node",
+        "node_modules/typescript/bin/tsc",
+        "-p",
+        "tsconfig.json",
+        "--noEmit"
+      ],
+      "cwd": "/home/dw/Projects/agent-sts2/.worktrees/ops-issue40-hotfix-live-20261023/agent",
+      "exit_code": 0,
+      "seconds": 0.9189367539947852
+    },
+    {
+      "name": "production-entry",
+      "command": [
+        "python3",
+        "-B",
+        "knowledge/builders/test_refresh_entrypoints.py",
+        "-v"
+      ],
+      "cwd": "/home/dw/Projects/agent-sts2/.worktrees/ops-issue40-hotfix-live-20261023",
+      "exit_code": 0,
+      "seconds": 3.235667614004342
+    },
+    {
+      "name": "live-wrapper",
+      "command": [
+        "node",
+        "node_modules/vitest/vitest.mjs",
+        "run",
+        "tests/legacy-refresh-incremental.test.ts",
+        "--pool=forks",
+        "--maxWorkers=1",
+        "--no-file-parallelism",
+        "--reporter=default",
+        "--reporter=json",
+        "--outputFile.json=/home/dw/Projects/agent-sts2/paper/materials/20261023-issue40-hotfix-publication-ops/targeted-vitest.json"
+      ],
+      "cwd": "/home/dw/Projects/agent-sts2/.worktrees/ops-issue40-hotfix-live-20261023/agent",
+      "exit_code": 0,
+      "seconds": 7.201905509995413
+    }
+  ],
+  "new_full_started": false
+}

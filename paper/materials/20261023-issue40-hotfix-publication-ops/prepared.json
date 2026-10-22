@@ -1,0 +1,93 @@
+{
+  "state": "prepared-exact-R414-hotfix-only",
+  "base": "fdae435795f41d771da6df3457eb890e50d8ffeb",
+  "tree": "305ef6c44641afe933d880bcc29875de8274624a",
+  "worktree": "/home/dw/Projects/agent-sts2/.worktrees/ops-issue40-hotfix-live-20261023",
+  "source": "3ae67358d0eeab18f329f57368b7d377d20ea1e3",
+  "delivery": [
+    {
+      "path": "knowledge/builders/build-fight-value.py",
+      "bytes": 103825,
+      "sha256": "27ef8c41b739b5db226909d786c741a0e28048e331f441d8de0a05aedbbcaf5d",
+      "blob": "f5289b77291ac6bb36676d52cbc731f9dd362373"
+    },
+    {
+      "path": "knowledge/builders/test_refresh_entrypoints.py",
+      "bytes": 8279,
+      "sha256": "548cb2345ba41624d56f8f810233b391500589457b0861782487ef31f0384f33",
+      "blob": "39ba3c20815d30f123af6cd957aff094f316b119"
+    },
+    {
+      "path": "agent/tests/legacy-refresh-incremental.test.ts",
+      "bytes": 1155,
+      "sha256": "5a7ee279b38a20ff0dab442ddb12c5be17db8ae5f7bcd745c25dc7f15ef92479",
+      "blob": "2cfb28aec13289979ac27dd69fcba06ec3857a03"
+    }
+  ],
+  "preimages": {
+    "knowledge/builders/build-fight-value.py": {
+      "sha256": "aa71d57f5451f34cf8faef1c1d16aa2ec57639359957ebe7805936bd275bd2dd",
+      "bytes": 103698
+    },
+    "knowledge/builders/test_refresh_entrypoints.py": {
+      "sha256": null,
+      "bytes": null
+    },
+    "agent/tests/legacy-refresh-incremental.test.ts": {
+      "sha256": "08a0982a5f1a9e82059f551d82d46f94c42c10e1a46bc6f7c58574f17c2a6dfb",
+      "bytes": 1087
+    }
+  },
+  "dependencies": [
+    {
+      "path": "learner/evidence_identity.py",
+      "main_and_live_identical": true,
+      "main_sha256": "e1f6da7ca1a44b7de61454ee057c2f11ab0cfab758c0b878274f6fd6cda760dc",
+      "live_sha256": "e1f6da7ca1a44b7de61454ee057c2f11ab0cfab758c0b878274f6fd6cda760dc"
+    },
+    {
+      "path": "knowledge/builders/incremental_evidence.py",
+      "main_and_live_identical": true,
+      "main_sha256": "601b32f27e2876e47fd822aa3e1cbe9777a10007f549cdaa6865350fc2f0d992",
+      "live_sha256": "601b32f27e2876e47fd822aa3e1cbe9777a10007f549cdaa6865350fc2f0d992"
+    },
+    {
+      "path": "knowledge/builders/fight_value_incremental.py",
+      "main_and_live_identical": true,
+      "main_sha256": "d6fd9eaeabe264bd3552a7ed41e605ba1cba3dd38e5e583e9e4ffffe7c122e78",
+      "live_sha256": "d6fd9eaeabe264bd3552a7ed41e605ba1cba3dd38e5e583e9e4ffffe7c122e78"
+    },
+    {
+      "path": "knowledge/builders/legacy_incremental.py",
+      "main_and_live_identical": true,
+      "main_sha256": "2be0196785eab1f62559c05abc3c2b005de54b9e2299d050dc74d3909e5ea4bf",
+      "live_sha256": "2be0196785eab1f62559c05abc3c2b005de54b9e2299d050dc74d3909e5ea4bf"
+    },
+    {
+      "path": "knowledge/builders/refresh.sh",
+      "main_and_live_identical": true,
+      "main_sha256": "d38234de87853a33a27bbecef78993f55f714992f914b59dd5f3bc69841c847d",
+      "live_sha256": "d38234de87853a33a27bbecef78993f55f714992f914b59dd5f3bc69841c847d"
+    },
+    {
+      "path": "knowledge/builders/refresh_driver.py",
+      "main_and_live_identical": true,
+      "main_sha256": "4fbb5393a41c439ac59221a960e152fab521e9a20021994bda868f5dc3f2d947",
+      "live_sha256": "4fbb5393a41c439ac59221a960e152fab521e9a20021994bda868f5dc3f2d947"
+    },
+    {
+      "path": "knowledge/builders/build-monster-db.py",
+      "main_and_live_identical": true,
+      "main_sha256": "d95487af0b8965daa75277ecd89a2f03482ce26ca0e4c6f31392abc9f5e54aff",
+      "live_sha256": "d95487af0b8965daa75277ecd89a2f03482ce26ca0e4c6f31392abc9f5e54aff"
+    }
+  ],
+  "source_full_reused": {
+    "checks": "paper/materials/20261022-issue40-hotfix-full-integrator/full/checks.json",
+    "tree": "01b4bec2076c70f1d08fe3e9e2c58db0b73dc0f8",
+    "scope": "main source full6219 pass2skip; not a full of this different live combination"
+  },
+  "wrapper_scope": "actual live original wrapper plus one new entry; never whole-main overlay",
+  "new_full_started": false,
+  "no_production_data_refreshed": true
+}
