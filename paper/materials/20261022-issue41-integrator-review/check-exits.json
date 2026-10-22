@@ -1,0 +1,53 @@
+{
+  "tsc": {
+    "rc": 0,
+    "seconds": 1.167,
+    "cmd": [
+      "nice",
+      "-n",
+      "19",
+      "node",
+      "node_modules/typescript/bin/tsc",
+      "-p",
+      "tsconfig.json",
+      "--noEmit"
+    ]
+  },
+  "combination-targeted": {
+    "rc": 0,
+    "seconds": 71.677,
+    "cmd": [
+      "nice",
+      "-n",
+      "19",
+      "node",
+      "node_modules/vitest/vitest.mjs",
+      "run",
+      "tests/board-resources.test.ts",
+      "tests/brain-codex.test.ts",
+      "tests/brain-router.test.ts",
+      "tests/build-rank-integration.test.ts",
+      "tests/build-sim-cancellation.test.ts",
+      "tests/config.test.ts",
+      "tests/human-pace-budget.test.ts",
+      "tests/human-pace-reuse.test.ts",
+      "tests/human-pace-sl-budget.test.ts",
+      "tests/launch-environment.test.ts",
+      "tests/learner-self-check.test.ts",
+      "tests/learning-roles.test.ts",
+      "tests/run-config.test.ts",
+      "tests/s-combat-rank.test.ts",
+      "tests/s-readiness-integration.test.ts",
+      "tests/v6-card-face.test.ts",
+      "tests/v6-card-input-bridge.test.ts",
+      "tests/v6-card-option-loop.test.ts",
+      "tests/v6-card-results-input.test.ts",
+      "tests/v6-card-results.test.ts",
+      "--pool=threads",
+      "--maxWorkers=1",
+      "--no-file-parallelism",
+      "--reporter=json",
+      "--outputFile=/home/dw/Projects/agent-sts2/.worktrees/integrator-41-20261022/.artifacts/integrator-41-20261022/combination-targeted.json"
+    ]
+  }
+}

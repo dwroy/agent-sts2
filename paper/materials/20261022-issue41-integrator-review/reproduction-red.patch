@@ -1,0 +1,64 @@
+diff --git a/agent/tests/v6-card-option-loop.test.ts b/agent/tests/v6-card-option-loop.test.ts
+index 993662c5e..65805ea1b 100644
+--- a/agent/tests/v6-card-option-loop.test.ts
++++ b/agent/tests/v6-card-option-loop.test.ts
+@@ -3,6 +3,8 @@ import { mkdtempSync, mkdirSync, readFileSync, rmSync, writeFileSync } from "nod
+ import { join } from "node:path";
+ import { tmpdir } from "node:os";
+ import { loadConfig } from "../src/core/config.js";
++import { currentDecisionBudget } from "../src/core/decision-budget.js";
++import { solveTap } from "../src/reflex/turn-solver.js";
+ import { makeKnowledge } from "../src/knowledge/index.js";
+ import { setKnowledgeCharacter } from "../src/knowledge/files.js";
+ import { setCardUpgradesForTests } from "../src/knowledge/card-upgrades.js";
+@@ -28,7 +30,10 @@ vi.mock("../src/knowledge/files.js", async original => ({
+ }));
+ setupOneshotTests();
+ const roots: string[] = [];
+-afterEach(() => { roots.splice(0).forEach(p => rmSync(p, { recursive: true, force: true })); vi.unstubAllEnvs(); setKnowledgeCharacter(null); });
++afterEach(() => {
++  roots.splice(0).forEach(p => rmSync(p, { recursive: true, force: true }));
++  vi.unstubAllEnvs(); vi.restoreAllMocks(); solveTap.onSolve = null; setKnowledgeCharacter(null);
++});
+ const frozen = JSON.parse(readFileSync(new URL("./v6-fixtures/v6-r405-card-options.json", import.meta.url), "utf8"));
+ // Match the documented wire representation exactly, including half-way rounding and nulls.
+ function expectDisplayCell(cell: unknown, estimate: CombatEstimate | null) {
+@@ -83,15 +88,35 @@ function fixture(warmCore = false) {
+   return root;
+ }
+ 
+-it.each([["T0TP8S9MMU9Q", 2], ["RBMEQGXPE9Z2", 3]] as const)(
+-  "keeps observed candidate faces distinct through the real %s F%i combat-to-reward loop and simulator", async (run, floor) => {
++it.each([
++  ["T0TP8S9MMU9Q", 2, "fixed clocks"], ["RBMEQGXPE9Z2", 3, "fixed clocks"],
++  ["T0TP8S9MMU9Q", 2, "solver budget exhausted"], ["T0TP8S9MMU9Q", 2, "sampling budget exhausted"],
++] as const)(
++  "keeps observed candidate faces distinct through the real %s F%i combat-to-reward loop and simulator (%s)", async (run, floor, timing) => {
++    // Fix the ledger, runtime preparation and inherited L2 solver clock as well as sample scheduling.
++    // Real timers and HTTP remain active; virtual elapsed time advances only at an explicit sample boundary.
++    let hostNow = 0, samplingNow = 0;
++    vi.spyOn(performance, "now").mockImplementation(() => hostNow);
+     const root = fixture(), knowledge = makeKnowledge(frozen.knowledge_fixture, "cache");
+     const combat: Raw = frozen.states[`${run}-f${floor}-COMBAT`], reward: Raw = frozen.states[`${run}-f${floor}-REWARD`];
+     const tables: V6CardResults[] = [], notes: string[] = [], actions: Raw[] = [];
+     const runner = new SerialDeckRunner(), runSamples = vi.spyOn(runner, "run");
++    const budgets: { key: string; remaining: number; now: number }[] = [];
++    const solves: { timedOut: boolean; remaining: number | undefined }[] = [];
++    solveTap.onSolve = (_input, result) => {
++      solves.push({ timedOut: result.timedOut === true, remaining: currentDecisionBudget()?.remaining() });
++    };
++    runSamples.mockImplementation(async request => {
++      const budget = currentDecisionBudget()!;
++      if (request.range!.from === 2 && timing === "solver budget exhausted") hostNow += budget.remaining();
++      budgets.push({ key: budget.key, remaining: budget.remaining(), now: budget.now() });
++      const result = await SerialDeckRunner.prototype.run.call(runner, request);
++      if (timing === "sampling budget exhausted") samplingNow = 5_000;
++      return result;
++    });
+     const runtime = new V6ProjectionRuntime(new V6ProjectionEngine(runner), async () => null, () => {},
+       v6ProjectionInputs(root, () => "2026-10-20T16:20:00.000Z"), {
+-        engine: new V6CardResultsEngine(runner, () => performance.now(), 8), context: cardResultsContext,
++        engine: new V6CardResultsEngine(runner, () => samplingNow, 8), context: cardResultsContext,
+         record(_env, table) { tables.push(table); },
+       });
+     let polls = 0;

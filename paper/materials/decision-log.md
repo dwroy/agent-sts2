@@ -5817,6 +5817,12 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
 
 - 2026-10-22 14:44 [ops] 八重复notice原文/双箱/ops ACK及watcher转达证明与14:14一致；CLI三研究支持阻塞及正式角色ACK pending保留，不重发/代填/重试或关科学父。paper/materials/20261022-1443-ops/notices-readback.json。
 
+- 2026-10-22 15:13 [ops] 144301无源限定报告核61产物/十A10/两主题待证；baseline已核存在且零源差，报告完成JSON缺失，原failed/rc0/16:03冷却保持。0101旧first_run快照与Oct5更正分列；不改历史/补测试/空合入/重dataset。paper/materials/20261022-1506-ops/。
+
+- 2026-10-22 15:15 [ops] 八重复notice原文/双箱/ops ACK及watcher转达证明与14:43一致；原CLI三研究ACK支持阻塞与正式pending保留，不重发/代填/重试或关父。paper/materials/20261022-1515-ops/notices-readback.json。
+
 - 2026-10-22 15:11 [watcher] #20 补充4 bfcb85bd0/kit ba7a9c39d 独立87+62+21+3与tsc通过；原组合161/162，诊断4与162通过仍保留失败，开#41（https://github.com/dwroy/agent-sts2/issues/41）；未main/live、未安装kit，原#33等知识锁/#37→#20最终full待，材料paper/materials/20261022-issue20-r3-integrator-review/。
 
 - 2026-10-22T15:33:08+08:00 [dev #41] 固定F2输入/虚拟时间复现仅固定engine时钟仍有2/8终局：继承L2求解预算耗尽时8采样/6capped/2终局；仅修测试固定ledger/runtime/求解时钟，保原两组8终局与精度断言，另验采样截止2样本/6missing。tsc0、定向9文件76过；历史当刻归因限制及原失败保留，最终组合full沿#37→#20原窗口待验，不改生产/main/live/STOP。材料 paper/materials/20261022-issue41-card-clock/。
+
+- 2026-10-22T15:47:34.001761+08:00 [watcher] #41 c6428609c测试时钟隔离独立红测1失败复现2/8，保留原8断言；#20候选5c2358558及main23a精确隔离组合tsc0、20文件211过。共享测试冲突保留#41字节；原161/162与开发tap探针失败不覆盖。完整窗口仍原#33 PID7161/start7136824等K锁/full未开始，#37→#20最终组合待，未main/live。材料paper/materials/20261022-issue41-integrator-review/。

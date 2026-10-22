@@ -1,0 +1,176 @@
+{
+  "issue": 41,
+  "at": "2026-10-22T15:47:34.001761+08:00",
+  "conclusion": "targeted-verified-full-window-pending",
+  "source": "c6428609c0f0a2e40ad0660532393c244df5a766",
+  "issue20_candidate": "5c235855809dc0178bb69eb458afd8d37357a2be",
+  "source_merge_commit": "69d46076e6e2f012e5b939a659d7b57be5948c9b",
+  "main": "23a6a0e20f75c295e370290516f94a3a60a44fb7",
+  "trial_merge": "#41 + frozen #20 candidate + current main, isolated only; excludes pending #37 integration",
+  "resolved_conflicts": {
+    "agent/tests/v6-card-option-loop.test.ts": "exact #41 source bytes retained over old engine-only clock fix",
+    "paper/materials/decision-log.md": "latest main bytes plus preserved source increments; original source patch retained"
+  },
+  "independent_red": {
+    "rc": 1,
+    "failed": 1,
+    "skipped": 5,
+    "actual": [
+      2,
+      2,
+      2,
+      2
+    ],
+    "expected": [
+      8,
+      8,
+      8,
+      8
+    ],
+    "interpretation": "fixed inherited solver budget exhaustion is a sufficient reproducer, not a unique historical attribution"
+  },
+  "checks": {
+    "tsc": {
+      "rc": 0,
+      "seconds": 1.167,
+      "cmd": [
+        "nice",
+        "-n",
+        "19",
+        "node",
+        "node_modules/typescript/bin/tsc",
+        "-p",
+        "tsconfig.json",
+        "--noEmit"
+      ]
+    },
+    "combination-targeted": {
+      "rc": 0,
+      "seconds": 71.677,
+      "cmd": [
+        "nice",
+        "-n",
+        "19",
+        "node",
+        "node_modules/vitest/vitest.mjs",
+        "run",
+        "tests/board-resources.test.ts",
+        "tests/brain-codex.test.ts",
+        "tests/brain-router.test.ts",
+        "tests/build-rank-integration.test.ts",
+        "tests/build-sim-cancellation.test.ts",
+        "tests/config.test.ts",
+        "tests/human-pace-budget.test.ts",
+        "tests/human-pace-reuse.test.ts",
+        "tests/human-pace-sl-budget.test.ts",
+        "tests/launch-environment.test.ts",
+        "tests/learner-self-check.test.ts",
+        "tests/learning-roles.test.ts",
+        "tests/run-config.test.ts",
+        "tests/s-combat-rank.test.ts",
+        "tests/s-readiness-integration.test.ts",
+        "tests/v6-card-face.test.ts",
+        "tests/v6-card-input-bridge.test.ts",
+        "tests/v6-card-option-loop.test.ts",
+        "tests/v6-card-results-input.test.ts",
+        "tests/v6-card-results.test.ts",
+        "--pool=threads",
+        "--maxWorkers=1",
+        "--no-file-parallelism",
+        "--reporter=json",
+        "--outputFile=/home/dw/Projects/agent-sts2/.worktrees/integrator-41-20261022/.artifacts/integrator-41-20261022/combination-targeted.json"
+      ]
+    }
+  },
+  "targeted": {
+    "files": 20,
+    "passed": 211,
+    "failed": 0,
+    "pending": 0,
+    "original14_scope_included": true,
+    "contract6_included": true
+  },
+  "test_blob": "ecabd4a4f050b5e82db13743383d48f185833c6d",
+  "production_change_in_source": false,
+  "production_delta_vs20": "only ops/inbox-dev.md four main record lines; no algorithm changes",
+  "full_window": {
+    "state": "waiting-ordered-kernel-lock",
+    "full_started": false,
+    "steps": [],
+    "held_locks": [],
+    "runner_pid": 523632,
+    "receipt_start": "7961993",
+    "actual_start": "7961993",
+    "wchan": "locks_lock_inode_wait",
+    "holder": "unknown",
+    "new_full_or_waiter": false
+  },
+  "preserved_failures": [
+    "original #20 161/162 evidence unchanged at 5c2358558",
+    "developer initial tap probe: 2 passed/4 failed retained in c6428609c",
+    "independent expected red: one failure preserved"
+  ],
+  "reviewer_tool_errors": [
+    "initial preparation used duplicated cwd/worktree path before modifying test; corrected absolute paths",
+    "first red-summary reader assumed wrong assertion index; stopped before merge; corrected by selecting status=failed"
+  ],
+  "limitations": [
+    "#37 -> #20 integration order remains; do not overwrite #41 test with old engine-only patch",
+    "Final exact main combination full not run; no main/live merge, release, kit installation, heavy enable, play, STOP or cleanup action",
+    "No behavior release number; test-only source does not prove historical game numeric error"
+  ],
+  "artifacts": {
+    "source-audit.json": {
+      "bytes": 3167,
+      "sha256": "92060f8ecfcf282d699901fc129bbed9cd4b5662a282a4ff2fb189bb38b9a179"
+    },
+    "red.json": {
+      "bytes": 3092,
+      "sha256": "e2da2a90a912ccaa59d711069fc40e541b53161c8b9c628b553e853711b89b94"
+    },
+    "red.log": {
+      "bytes": 129,
+      "sha256": "41f88281ead704043ad1d5be190c588cb016ca4a2864fd11478de9044ca5e111"
+    },
+    "red-exit.json": {
+      "bytes": 360,
+      "sha256": "48fa464ba15ba1053933500e0cd5da77ee58f591a3b18424c0b4f13948e30c07"
+    },
+    "reproduction-red.patch": {
+      "bytes": 4144,
+      "sha256": "ec4ff16e071d03d0e8a0397447c91433ac66d6b1122257aa690cf553287deda2"
+    },
+    "tsc.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "combination-targeted.json": {
+      "bytes": 77830,
+      "sha256": "06a09f7b5bd9f910864bfaa98b393dd6735f8432dc539220dce8f85af0b1828a"
+    },
+    "combination-targeted.log": {
+      "bytes": 146,
+      "sha256": "dee3a2db02e013c580174d88ba834ccc2d2477704d3c1a87234e5efeb568948d"
+    },
+    "check-exits.json": {
+      "bytes": 1463,
+      "sha256": "6d752d3d10d3b126c1b6049790d892d8bb6a9bf7223098fa252c16b46b457d8e"
+    },
+    "tested-inputs.json": {
+      "bytes": 2204,
+      "sha256": "ad937cffe9f8af0a54a3cb10dd39324bb0c030a58cf4f5ff20418bcabdf51d76"
+    },
+    "source-decision-log.patch": {
+      "bytes": 1366,
+      "sha256": "0baea5a27affcb1624d39c6579ccef3ddc29332da6b49dfe22fc99c5deaa5a50"
+    },
+    "gitleaks-merge.log": {
+      "bytes": 79,
+      "sha256": "b98e1dc69b91d1d0107aeca2e86748e3bf8f5890fca475df12f36f7c70cf138d"
+    },
+    "gitleaks-main-merge.log": {
+      "bytes": 79,
+      "sha256": "9347f2cda816ed4f3f7909da2e06bb7581dea70f36d33f77d81c18f17438836f"
+    }
+  }
+}
