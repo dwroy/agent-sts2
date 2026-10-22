@@ -1,0 +1,87 @@
+{
+  "base": "de9d926cd9fb8b9e3b3daa66756058cf2d2cb133",
+  "full_suite_run": false,
+  "checks": [
+    {
+      "cwd": "repo",
+      "argv": [
+        "nice",
+        "-n",
+        "19",
+        "node",
+        "agent/node_modules/typescript/bin/tsc",
+        "-p",
+        "agent/tsconfig.json",
+        "--noEmit"
+      ],
+      "exit_code": 0,
+      "output": "tsc.out"
+    },
+    {
+      "cwd": "agent",
+      "argv": [
+        "nice",
+        "-n",
+        "19",
+        "node",
+        "node_modules/vitest/vitest.mjs",
+        "run",
+        "tests/strategy-entries.test.ts",
+        "tests/external-strategy-evidence.test.ts",
+        "--pool=threads",
+        "--maxWorkers=1",
+        "--no-file-parallelism"
+      ],
+      "exit_code": 0,
+      "passed": 48,
+      "output": "vitest-final.out"
+    },
+    {
+      "cwd": "agent",
+      "argv": [
+        "nice",
+        "-n",
+        "19",
+        "node",
+        "node_modules/vitest/vitest.mjs",
+        "run",
+        "tests/learning-ledger-metadata.test.ts",
+        "tests/brain-agent-mode.test.ts",
+        "--testNamePattern=corrects first run|exposes only fixed knowledge selectors",
+        "--pool=threads",
+        "--maxWorkers=1",
+        "--no-file-parallelism"
+      ],
+      "exit_code": 0,
+      "passed": 2,
+      "filtered": 14,
+      "output": "metadata-tools.out"
+    },
+    {
+      "cwd": "repo",
+      "argv": [
+        "nice",
+        "-n",
+        "19",
+        "python3",
+        "agent/tests/external_strategy_ledger_test.py"
+      ],
+      "exit_code": 0,
+      "passed": 3,
+      "output": "python-external.out"
+    },
+    {
+      "cwd": "repo",
+      "argv": [
+        "nice",
+        "-n",
+        "19",
+        "python3",
+        "agent/tests/learning_ledger_test.py"
+      ],
+      "exit_code": 0,
+      "passed": 4,
+      "output": "python-ledger-regression.out"
+    }
+  ]
+}

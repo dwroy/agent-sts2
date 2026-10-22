@@ -5842,3 +5842,5 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
 - 2026-10-22T18:38:21+08:00 ops：按Roy更正，开发由主管现在原pane换codex3重启，集成员当前一步后同样处理；不等其全部任务/旧号耗尽。原事务实读无开发集成员等待项，仅ops821586检查和本轮收尾；原826698不重启。两home/新ops验证及联合发布后恢复授权保留。原文/回执paper/materials/20261022-high40-release-ops/drain-correction-receipt.json。
 - 2026-10-22T18:40:25+08:00 [Claude] Roy 10-22：换号排空不等所有工作完成，常驻会话直接重启交接。codex1→codex3：9 个开发会话与集成员已在原 pane 以 codex3 重启并按 issue/交接文件接续（集成员交接 9bef1ea75），ops 由换号事务自行重启。
 - 2026-10-22T19:21:35+08:00 [Claude] 主管定范围（依 Roy 已定的外部数据方向）：策略库新增“外部聚合”证据类型，不要求局号层数、与自有证据分账、只有外部证据的条目可信度设上限（#42）；#27 首批三条照原流程，第二批等 #42 合入后派。
+
+- 2026-10-22T20:25:10+08:00 [dev #42] 策略新增external_aggregate严格合同/账本CLI与分账题面，纯外部confidence≤0.49、反证保留conflict；#24固定临时登记→检索→题面/工具贯通，tsc0/定向48+2/Python3+4绿，候选交review与集成员full，未改live/STOP或正式知识。报告paper/materials/20261022-issue42-external-evidence/report.md。
