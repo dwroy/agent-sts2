@@ -1,0 +1,201 @@
+{
+  "schema": "ops-issue15-first-natural-reward-readback-v1",
+  "at": "2026-10-22T08:19:13+08:00",
+  "release_id": "V6-R411",
+  "actual_live": "0cd3629d3a7f3a3bcacd22fa0a4206acc4d81e78",
+  "run_id": "DFYBEW6NA6AJ",
+  "character": "SILENT",
+  "ascension": 10,
+  "floor": 2,
+  "first_natural_reward_brain": {
+    "path": "logs/brain.jsonl",
+    "offset": 1236873054,
+    "bytes": 94430,
+    "sha256": "601e21dfe17cfde577b2650e19a05238f248f09aa41841c87c238f971bb0d427"
+  },
+  "first_reward_decision": {
+    "path": "logs/decisions.jsonl",
+    "offset": 3414906426,
+    "bytes": 156812,
+    "sha256": "7ae85d6223eb5108893e0d143b6ebcfae63cb8afb0afe10ca15b82a09e15c29c"
+  },
+  "predictor_audit": {
+    "path": "logs/v6-card-value.jsonl",
+    "offset": 0,
+    "bytes": 74101,
+    "sha256": "8ba15bfec564da97132f65ac5b93ffe75aa3283a405cac6e784836162dc60383"
+  },
+  "run_config": {
+    "path": "logs/run-config.jsonl",
+    "offset": 2457617,
+    "bytes": 6028,
+    "sha256": "0a31a9fb92ca34f9a05072fd67ad1c663f11998629b10302018910753cf55210"
+  },
+  "reward_claims": [
+    {
+      "ts": "2026-10-21T13:28:08.814Z",
+      "floor": 2,
+      "label": "reward/claim",
+      "chosen": {
+        "action": "claim_reward",
+        "option_index": 0
+      },
+      "result": "completed: Action completed.",
+      "original": {
+        "path": "logs/decisions.jsonl",
+        "offset": 3414902235,
+        "bytes": 2052,
+        "sha256": "6d4ef379d3724df952d96b9422c99952751bc42f21fa8cccae73e2bfafd3e639"
+      }
+    },
+    {
+      "ts": "2026-10-21T13:28:09.013Z",
+      "floor": 2,
+      "label": "reward/claim",
+      "chosen": {
+        "action": "claim_reward",
+        "option_index": 0
+      },
+      "result": "completed: Action completed.",
+      "original": {
+        "path": "logs/decisions.jsonl",
+        "offset": 3414904287,
+        "bytes": 2139,
+        "sha256": "32728b048003f78156a8282cb19fbabc135583d60b190ce8e9d9a85e1b548e6f"
+      }
+    }
+  ],
+  "model_file": {
+    "path": "knowledge/characters/silent/opening-value.json",
+    "bytes": 328668,
+    "sha256": "ffdad3f470594916715bdd6859c406afeb20525cd230877cec524423c956483e",
+    "model_id": "41a8ec79809b23d50f7d914c531566643603b060b3b7b5799cf191b8b47b83ec",
+    "same_live_blob_sha": true
+  },
+  "model_context": {
+    "model": "41a8ec79809b23d50f7d914c531566643603b060b3b7b5799cf191b8b47b83ec",
+    "remaining": {
+      "hallway": 5,
+      "elite": 2,
+      "boss": 1
+    },
+    "route_source": "selected_route",
+    "note": "增量多在误差范围内，仅供参考。act_hp_saved为本幕剩余战斗相对跳过预计少掉的血（正值少掉血）；error_scale为整场留出误差累计尺度，不是增量置信区间。boss为本幕Boss预计掉血、相对跳过少掉血、胜率及胜率变化（0–1概率单位），按当前HP/资源条件预测，不预测沿路存活。cores列最多两个推进组合的补牌数及还差几张；unknown条件未核实，不代表成型或收益。观察数据有历史选择混杂；null为未知；不据此强制排序。"
+  },
+  "offer_order": [
+    "card0",
+    "card1",
+    "card2",
+    "skip"
+  ],
+  "offer_cards": [
+    "RICOCHET",
+    "UP_MY_SLEEVE",
+    "UNTOUCHABLE",
+    null
+  ],
+  "options_facts": {
+    "card0": {
+      "act_hp_saved": -8.42,
+      "error_scale": 189.73,
+      "boss": {
+        "hp_loss": 41.08,
+        "hp_saved": -0.93,
+        "win": 0.843,
+        "win_change": -0.0583
+      },
+      "cores": [],
+      "more_cores": 0,
+      "unknown": []
+    },
+    "card1": {
+      "act_hp_saved": -14.97,
+      "error_scale": 189.73,
+      "boss": {
+        "hp_loss": 42.57,
+        "hp_saved": -2.42,
+        "win": 0.8954,
+        "win_change": -0.0059
+      },
+      "cores": [],
+      "more_cores": 0,
+      "unknown": []
+    },
+    "card2": {
+      "act_hp_saved": -5.41,
+      "error_scale": 189.73,
+      "boss": {
+        "hp_loss": 40.43,
+        "hp_saved": -0.28,
+        "win": 0.8948,
+        "win_change": -0.0065
+      },
+      "cores": [],
+      "more_cores": 0,
+      "unknown": []
+    },
+    "skip": {
+      "act_hp_saved": 0,
+      "error_scale": 0,
+      "boss": {
+        "hp_loss": 40.15,
+        "hp_saved": 0,
+        "win": 0.9013,
+        "win_change": 0
+      },
+      "cores": [],
+      "more_cores": 0,
+      "unknown": []
+    }
+  },
+  "no_rank_or_tier_in_v2_facts": true,
+  "natural_predictor_elapsed_ms": 79.65999099999317,
+  "natural_complete_prepare_timing": "not independently instrumented; existing fixed runLoop preparation250.137/193.497ms remains separate evidence",
+  "logged_payload_serialization_increment_bytes": 1505,
+  "increment_scope": "compact JSON representation of original logged payload/options after removal of only #15 fields; not HTTP total or checkpoint before/after test",
+  "brain": {
+    "ts": "2026-10-21T13:29:13.572Z",
+    "question_id": "mvi5augt-775629-3",
+    "engine": "codex",
+    "model": "gpt-6.1-sol",
+    "effort": "xhigh",
+    "accepted": true,
+    "problems": [],
+    "reasks": 0,
+    "attempts": 1,
+    "latency_ms": 59043,
+    "answer": {
+      "choice": "card0",
+      "reason": "Ricochet adds immediate damage and Survivor synergy. Sleeve starts slowly; Untouchable is inefficient. Core coverage and dilution effects remain unknown.",
+      "route": "keep"
+    }
+  },
+  "action": {
+    "decider": "codex",
+    "no_jev": false,
+    "fallback": false,
+    "chosen": {
+      "action": "choose_reward_card",
+      "option_index": 0
+    },
+    "result": "completed: Action completed."
+  },
+  "natural_model_missing_or_timeout_fallback": "not induced; original fixed four-condition replay retained, no production error at this case",
+  "functional_first_natural_consumption_confirmed": true,
+  "scientific_calibration_causal_benefit_or_parent_completion": false,
+  "new_publication": false,
+  "new_model_API_MC_learning_full_dataset_or_game_action": false,
+  "issue_closed": false,
+  "issue_comment_readback": {
+    "path": "paper/materials/20261022-issue15-natural-ops/issue15-comment-readback.json",
+    "bytes": 3372,
+    "sha256": "8ea7fd40a933cda8305ea5c56174f63274a780ff0de3f14989f47eb3d188726f"
+  },
+  "legacy_fields_preserved": {
+    "no_jev": false,
+    "generic_deepseek_by": "deepseek",
+    "actual_explicit_brain_engine": "codex",
+    "empty_jev_request_ids": true
+  },
+  "ops_probe_correction": "Initial diagnostic expected no_jev=true; retained actual false and verified explicit Codex brain/native request and request_ids instead; not a production error."
+}

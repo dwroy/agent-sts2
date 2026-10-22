@@ -5736,3 +5736,5 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
 - 2026-10-22T07:44:01+08:00 [ops] 0743八条重复学习异议原文/证据及真实转达回执核同；原研究CLI身份兼容阻塞未变，后两角色登记pending，保原范围/科学父；仅记录、不重认证/代ACK/提醒/生成器或改对局。原件：paper/materials/20261022-0743-ops/receipt.json。
 
 - 2026-10-22T08:14:15+08:00 [ops] 按08:08 Claude主管指令启用#20 STS2-only正式登记/持久on，原唯一stall首tick已核：外层0/kit1，8忙通知/6保留门pending，无uncertain；剩余生产分项沿原tick自然验收，回退off保账本。#26等#33不单发，游戏live/STOP不动。实际评论：https://github.com/dwroy/agent-sts2/issues/20#issuecomment-6329461565 。原件：paper/materials/20261022-issue20-enable-ops/receipt.json。
+
+- 2026-10-22T08:20:55+08:00 [ops] #15 R411首局DFY/F2自然奖励四选项v2事实/模型SHA、Codex单次接受及选牌completed已核；v2 79.66ms，完整自然准备未独立计时与原固定回放分列。保旧字段/科学父，交主管核收，无新发布/调用/实验。实际评论：https://github.com/dwroy/agent-sts2/issues/15#issuecomment-6329555704 。原件：paper/materials/20261022-issue15-natural-ops/receipt.json。
