@@ -4598,3 +4598,8 @@ W4拿牌v2正式3ef4/11a80已核：14源Git/SHA、318清单项加manifest共319�
 ### 2026-10-22T10:20:00+08:00 [ops] #33+#26原完整检查窗口接续
 
 #33+#26原组合检查已按10:08主管指示接续，同一55叶与预备树d768564f逐项核同，live仍R411。10:05结束的是#35开发者检查；实核集成员另于10:15启动完整Vitest，PID3369154、nice19、单worker仍运行。原09:29锁忙及09:37并行检查阻断均保留，重建/tsc/full此前未执行。唯一原检查驱动PID3387945已实际启动，nice19，以该既有PID/start的内核退出信号等待，不轮询、不发信号；退出后沿原收尾/数据/快照/live锁及无并行Vitest门执行首次重建、tsc、full，冻结知识/输入SHA，终局写原事件。当前tsc/full尚未开始，不冒检查绿或发布；后续准入、自然边界及首局工具/来源/预算验收仍待。无模型/额外局，#31仍取消。原件paper/materials/20261022-issue33-window-ops/receipt.json；终局沿20261022-issue33-live-ops/checks.json。
+
+
+### 2026-10-22T10:23:56+08:00 [ops] 10:21原fix与八异议回执核对
+
+101301-fix批次无新增源码、提交或合入受阻；11份产物SHA、157相关源文件与上批相同、53既有子项及48祖先提交已核。tsc0、定向3文件12例0，扫描零发现，无重跑或full；严格main/live仍差162个SOURCE_PATHS，原empty-fix门不通过，failed/rc0及冷却保留，不空合并或补成功。#25既有26题压缩后11题仍超24KB、最大37383B的缺口及原owner接续不变，本批与ops均未重跑诊断，不重提相同待办。八异议原文、证据SHA、双箱实际窗口、ops转达及watcher实读/Roy可见转达证明核同；不推定Roy本人接受，原CLI不支持三research身份，两角色正式登记仍pending。沿原拒绝回执保留兼容阻塞，不改名、代ACK或重复提醒，科学父保持。仅记录，不启动dataset/full/模型/刷新，不改live或#33原检查驱动。原件paper/materials/20261022-1021-ops/receipt.json、fix-readback.json、notices-readback.json。
