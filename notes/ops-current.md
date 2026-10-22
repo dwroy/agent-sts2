@@ -1,6 +1,6 @@
 # 运维当前清单（调度器生成；索引模式）
-生成：2026-10-22T09:32:30+08:00；原件索引：/home/dw/Projects/agent-sts2/ops/codex-ops/current.json SHA256 68c4d38fbe16414f8edf585071489e3e27ff84da0c5c06f30afe71fb5fc2755b
-main a95950488196ab07f847ac7590d75a5b8672f94a
+生成：2026-10-22T09:33:12+08:00；原件索引：/home/dw/Projects/agent-sts2/ops/codex-ops/current.json SHA256 3ef42ad8edebae7efc557a5e6277223a132cb348c1b4d141d158b8c9cb74f8a9
+main 83ae0162059b3ad80c127ba55e24352d3191b74e
 live 0cd3629d3a7f3a3bcacd22fa0a4206acc4d81e78；登记 release 见 current.json.release（不代表检查绿或实际采用）。
 动态事实超出短清单预算，已完整保存在上述 SHA 的 current.json；没有截断授权、失败、任务或事件。
 处理前必须核 SHA 并逐项读取以下字段及其原件；本清单不代表已经读过授权，不可沿用旧清单：
