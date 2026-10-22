@@ -5808,3 +5808,5 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
 - 2026-10-22T13:58:24+08:00 [Claude] Roy 10-22：每局后的知识刷新改为增量、训练降频、缩短持锁并纳入重任务排队（#40；fight-value 每局整读 15.8 GB states.jsonl，刷新中位约 33 分钟）。codex1→codex3 切换改为 codex1 周用量到 90% 再开始。
 
 - 2026-10-22T14:23:04+08:00 [dev #40] 基于main d3b2a7474完成局间刷新增量/短锁开发：fight-value续接原reducer稳定rows与EOF尾段，card-upgrades持续聚合，共享索引代号跨步骤失效；每角色默认10新结束局训练、失败留旧完整模型，统一driver在锁前对接#20 other队列、发布候选后短持live锁并分别记耗时。冻结72行原训练器2trees的rows/model/gates逐字节同全量；铁甲计算/公式等价但统一训练时点也降频（#40授权），严格前缀SHA/怪物回放仍有线性成本。交review，#20 report同文件与避免嵌套入队交集成员，完整检查/精确发布/自然耗时与读回待原角色；未改main/live/STOP或游戏知识、不编号/关父项。材料paper/materials/20261022-issue40-incremental-refresh/。
+
+- 2026-10-22T22:14:44+08:00 [dev #40] 接主管退回的R413生产导入回归：fight-value入口显式加learner路径，算法/训练周期/其他角色计算不改；先以真实refresh.sh→driver→all独立进程复现ModuleNotFoundError，再验冷/追加/暖缓存、缺模块非零与全量rows字节等价，2项新回归及原12项管线/tsc0。七构建器实际新进程及四入口启动核验通过；首轮生产无fight检查点/训练回执，预留20–40分钟及约10GiB资源预算（旧整轮累计RSS非fight归因），交集成员/ops按在途发布后热修；未改main/live/STOP、不额外开局/刷新、不关科学父。材料paper/materials/20261022-issue40-import-hotfix/。

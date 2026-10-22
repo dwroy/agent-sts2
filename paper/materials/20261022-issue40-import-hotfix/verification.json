@@ -1,0 +1,115 @@
+{
+  "issue": 40,
+  "base_commit": "8f09b842628ce84e167b1f8917d2c8f807512f74",
+  "runtime_change": "entrypoint learner import path only",
+  "source_files": {
+    "knowledge/builders/build-fight-value.py": {
+      "bytes": 103825,
+      "sha256": "27ef8c41b739b5db226909d786c741a0e28048e331f441d8de0a05aedbbcaf5d"
+    },
+    "knowledge/builders/test_refresh_entrypoints.py": {
+      "bytes": 8279,
+      "sha256": "548cb2345ba41624d56f8f810233b391500589457b0861782487ef31f0384f33"
+    },
+    "agent/tests/legacy-refresh-incremental.test.ts": {
+      "bytes": 1540,
+      "sha256": "c09896566b00c8c9b0d9235f81f974854620768d7781e3479f5529c2b3b22b01"
+    }
+  },
+  "checks": [
+    {
+      "name": "tsc production",
+      "command": "nice -n 19 node node_modules/typescript/bin/tsc -p tsconfig.json --noEmit",
+      "cwd": "agent",
+      "exit_code": 0
+    },
+    {
+      "name": "new subprocess regression before fix",
+      "exit_code": 1,
+      "failure": "ModuleNotFoundError: No module named evidence_identity",
+      "log": "red.log"
+    },
+    {
+      "name": "first subprocess suite after fix",
+      "exit_code": 1,
+      "failure": "test catalog argv omitted required --knowledge-root",
+      "log": "green.log"
+    },
+    {
+      "name": "new subprocess suite final",
+      "command": "nice -n 19 python3 -B knowledge/builders/test_refresh_entrypoints.py -v",
+      "exit_code": 0,
+      "tests_passed": 2,
+      "log": "green-final.log"
+    },
+    {
+      "name": "existing pipeline",
+      "command": "nice -n 19 python3 -B knowledge/builders/test_refresh_pipeline.py -v",
+      "exit_code": 0,
+      "tests_passed": 12,
+      "log": "pipeline.log"
+    },
+    {
+      "name": "Vitest wrapper selected case",
+      "command": "nice -n 19 node node_modules/vitest/vitest.mjs run tests/legacy-refresh-incremental.test.ts --pool=threads --maxWorkers=1 --no-file-parallelism -t test_refresh_entrypoints",
+      "cwd": "agent",
+      "exit_code": 0,
+      "tests_passed": 1,
+      "tests_filtered": 5,
+      "log": "vitest-entrypoint.log"
+    }
+  ],
+  "local_raw_logs": {
+    "green-final.log": {
+      "path": ".artifacts/issue40-import-hotfix/green-final.log",
+      "bytes": 439,
+      "sha256": "389f9ee0d0ec962ba7471b8dc7be57e9aa7b681c7e36484a0cc4f90a1ab6e721"
+    },
+    "green.log": {
+      "path": ".artifacts/issue40-import-hotfix/green.log",
+      "bytes": 2018,
+      "sha256": "166feee4d6c16c821402c3639a8e56eb8305845a3ee561b1843184dd93493039"
+    },
+    "pipeline.log": {
+      "path": ".artifacts/issue40-import-hotfix/pipeline.log",
+      "bytes": 10273,
+      "sha256": "bb55719be46d2f515a38dc06594217240390375a6c221440e19aeba6f47ed30b"
+    },
+    "red.log": {
+      "path": ".artifacts/issue40-import-hotfix/red.log",
+      "bytes": 2370,
+      "sha256": "0707bf26b272b203b71752e9cae4b1d83efe0796d0121aaef663aff6b0c02502"
+    },
+    "vitest-entrypoint.log": {
+      "path": ".artifacts/issue40-import-hotfix/vitest-entrypoint.log",
+      "bytes": 260,
+      "sha256": "3a3cf8ac1e39fded08e2f309405bfe8c0b6ab6fdb3c429bf3720e4a1b232fccc"
+    }
+  },
+  "full_vitest_run": false,
+  "production_execution": false,
+  "production_read_only_observation": {
+    "states_bytes": 15929789895,
+    "previous_rows_bytes": 29169253,
+    "fight_checkpoint_found": false,
+    "training_receipt_found": false,
+    "last_failed_cycle": "6fd1d6048c0045d79c93139578f1fbc6",
+    "cycle_seconds": 504.4065963920002,
+    "fight_failure_seconds": 0.1661272839992307,
+    "cumulative_child_high_water_kib": 10562132,
+    "rss_attribution": "already observed in previous v6 step, not fight-specific"
+  },
+  "first_successful_production_cycle_budget": {
+    "minutes": [
+      20,
+      40
+    ],
+    "memory_gib_approx": 10,
+    "kind": "planning estimate from historical refresh, not measured or hard upper bound"
+  },
+  "pending": [
+    "integrator exact combination review/checks",
+    "ops release after current in-flight release",
+    "natural successful refresh and subsequent incremental/model consumer readback"
+  ]
+}
