@@ -11,7 +11,11 @@ import os
 from pathlib import Path
 import re
 import subprocess
+import sys
 import time
+
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+from board_heavy import admission
 
 BATCH = re.compile(r"[0-9]{8}-[0-9]{6}-(?:experience-update|fix-batch|strategy-proposal|s2-strategy-proposal)")
 SHA = re.compile(r"[0-9a-f]{40}")
@@ -180,7 +184,7 @@ def run(batch_id, batch, root, out_dir, manifest_sha, enqueue, inbox):
     try:
         require(isinstance(batch_id, str) and BATCH.fullmatch(batch_id)
                 and isinstance(manifest_sha, str) and DIGEST.fullmatch(manifest_sha), "invalid continuation request")
-        with open(Path(root, "ops/live-merge.lock"), "a", encoding="utf8") as lock:
+        with admission(root, 'ops', batch_id), open(Path(root, "ops/live-merge.lock"), "a", encoding="utf8") as lock:
             fcntl.flock(lock, fcntl.LOCK_EX)
             manifest, original_log = validate(batch_id, batch, root, out_dir, manifest_sha)
             stem = Path(out_dir, f"{batch_id}.supplement-{manifest_sha}")

@@ -10,6 +10,12 @@ import sys
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
 
+def admission(root, role, task):
+    # Pure report readers also bootstrap minimal retention/checkout environments.
+    from board_heavy import admission as acquire
+    return acquire(root, role, task)
+
+
 def proposal_tools():
     spec = importlib.util.spec_from_file_location("check_proposals", os.path.join(os.path.dirname(__file__),"proposal_dispatch.py"))
     module = importlib.util.module_from_spec(spec)
@@ -20,7 +26,7 @@ def proposal_tools():
 _TEMP_WRAPPER = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "agent", "tools", "with-temp.mjs")
 FULL_CHECK_COMMAND = ('export PATH="$HOME/.local/node/bin:$PATH"; nice -n 19 npx tsc -p tsconfig.json --noEmit; a=$?; '
                       'nice -n 19 node ' + shlex.quote(_TEMP_WRAPPER) +
-                      ' node_modules/vitest/vitest.mjs run --maxWorkers=2; b=$?; [ "$a" = 0 ] && [ "$b" = 0 ]')
+                      ' node_modules/vitest/vitest.mjs run --pool=forks --maxWorkers=1 --no-file-parallelism; b=$?; [ "$a" = 0 ] && [ "$b" = 0 ]')
 
 # Compare executable sources and their validation inputs, not refreshed knowledge or ops records.
 SOURCE_PATHS = ["agent/src", "agent/tools", "agent/tests", "agent/package*.json", "agent/tsconfig*.json",
@@ -149,7 +155,7 @@ def finish_write_batch(batch_id, batch, rc, root, out_dir, enqueue, inbox, *, ru
     # No rollback here: ops decides whether to roll back or dispatch a fix on failure.
     log = os.path.join(out_dir, batch_id + ".checks.log")
     command = FULL_CHECK_COMMAND
-    with open(log, "w", encoding="utf8") as handle:
+    with admission(root, 'ops', batch_id), open(log, "w", encoding="utf8") as handle:
         try:
             checks = subprocess.run(["flock", os.path.join(root, "ops", "live-merge.lock"), "bash", "-c", command],
                                     cwd=os.path.join(live, "agent"), stdout=handle, stderr=subprocess.STDOUT, timeout=3600)
@@ -319,7 +325,7 @@ def recheck_write_batch(batch_id, batch, root, out_dir, enqueue, inbox, *, conti
     if report_proof:
         commits.append(report["published_commit"])
     live = live_dir(root)
-    with open(os.path.join(root, "ops", "live-merge.lock"), "a", encoding="utf8") as lock:
+    with admission(root, 'ops', batch_id), open(os.path.join(root, "ops", "live-merge.lock"), "a", encoding="utf8") as lock:
         fcntl.flock(lock, fcntl.LOCK_EX)
         publication_proof = None
         if descriptive_fixes:

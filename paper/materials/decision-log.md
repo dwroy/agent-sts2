@@ -5808,3 +5808,5 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
 - 2026-10-22T13:58:24+08:00 [Claude] Roy 10-22：每局后的知识刷新改为增量、训练降频、缩短持锁并纳入重任务排队（#40；fight-value 每局整读 15.8 GB states.jsonl，刷新中位约 33 分钟）。codex1→codex3 切换改为 codex1 周用量到 90% 再开始。
 
 - 2026-10-22 14:08 [ops] #36 R3隔离候选1b0aeb68f接收核46输入/10原日志；review及最终full/自然验收pending，原顺序#33→#35→#28→#37→#36，brain_view off/旧准入停用，不另建等待或重full/model。paper/materials/20261022-issue36-r3-ops/。
+
+- 2026-10-22T13:34:24+08:00 [dev #20] 交付资源与冲突流程及实际live启动版本固定；kit f1cc7285d，队列/area/同树全检复用与派发规则齐备；tsc0、完整656文件6177过/2跳过、kit69，首完整10败修后7文件28过且原件保留。生产默认关闭、未pin/改live/STOP，影响live启动：是；集成员须先协调ops自然边界首次发布/固定/安全接续，后核真实首局，材料 paper/materials/20261022-issue20-release-window/。
