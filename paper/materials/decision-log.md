@@ -5814,3 +5814,5 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
 - 2026-10-22 14:15 [ops] 八重复notice原文/双箱/ops ACK及watcher实际转达证明核同；原CLI SHA不变仍不支持三research，正式角色ACK pending，保rc2拒绝和科学父，不重发/代ACK/重试。paper/materials/20261022-1414-ops/notices-readback.json。
 
 - 2026-10-22 14:40 [ops] 141301-s2模型capacity中断1：原线程/high核回，保两源码草稿/证据夹具/45过程材料及原failed/冷却；包装器仍finish/dataset未退，不重领/切号/合入。仅登记原源码接续待办，非自动resume，保父与失败。paper/materials/20261022-1436-ops/。
+
+- 2026-10-22 14:44 [ops] 八重复notice原文/双箱/ops ACK及watcher转达证明与14:14一致；CLI三研究支持阻塞及正式角色ACK pending保留，不重发/代填/重试或关科学父。paper/materials/20261022-1443-ops/notices-readback.json。
