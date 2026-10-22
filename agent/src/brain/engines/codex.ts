@@ -1078,7 +1078,7 @@ export class CodexEngine implements BrainEngine {
       try {
         await session.ensureThread(req.system, () => [...configProblems(home).map((problem) => `config.toml: ${problem}`), ...instructionFiles(home)]);
         this.notePhysicalCall("session", req);
-        turn = await session.ask({ prompt, schema: c.schema, effort: c.effort, summary, model: c.model, ...(signal ? { signal } : {}), stallMs, firstTokenMs, maxAnswerChars, maxAnswerBlanks });
+        turn = await session.ask({ observe: req.observe, prompt, schema: c.schema, effort: c.effort, summary, model: c.model, ...(signal ? { signal } : {}), stallMs, firstTokenMs, maxAnswerChars, maxAnswerBlanks });
       } catch (error) {
         if (!(error instanceof SessionError || error instanceof RpcError)) throw error;
         const ms = Date.now() - began;

@@ -136,20 +136,12 @@ if [ "$audit_ready" = 1 ] && [ -n "$implementation_request" ]; then
   fi
   exec 8>&-
 fi
-# In a herdr pane (ops/herdr-host.sh run, hosting learners=herdr): show the batch's output files live in the pane. The
-# files stay what they were (token accounting reads learner/runs/*.jsonl, the finish step reads $out).
-tailer=""
-if [ -n "${HERDR_HOST_LABEL:-}" ]; then
-  : >> "$out"; : >> "$err"
-  tail -n +1 -F "$out" "$err" 2>/dev/null &
-  tailer=$!
-fi
 # Scheduled ordinary work uses high; frozen specialist requests retain xhigh. No shared config edits.
 # LEARNER_CMD overrides the command for fixed tests only.
 if [ "$audit_ready" != 1 ]; then
   rc=1
 elif [ -n "${LEARNER_CMD:-}" ]; then
-  nice -n 10 bash -c "$LEARNER_CMD" learner "$runs" "$character" > "$out" 2> "$err"
+  nice -n 19 bash -c "$LEARNER_CMD" learner "$runs" "$character" > "$out" 2> "$err"
   rc=$?
 else
   # Preserve old task/launcher source while applying the current learner-only CLI policy.
@@ -193,7 +185,7 @@ else
   # before either entry point captures the lease; release the lock before running a learner.
   if (flock -w 120 8) 8> "$DIR/learn.lock"; then
     # Use current instance policy for persistent old workspaces; task source and native cwd stay bound below.
-    nice -n 10 python3 "$OPS/learner_entry.py" "$ROOT" "$worktree" "$batch" "$DIR/learn.json" "$out" "$err" \
+    nice -n 19 python3 "$OPS/learner_entry.py" "$ROOT" "$worktree" "$batch" "$DIR/learn.json" "$out" "$err" \
       -- "$ROOT/agent/node_modules/.bin/tsx" "$ROOT/learner/run.ts" "${args[@]}"
     rc=$?
   else
@@ -201,12 +193,22 @@ else
     rc=75
   fi
 fi
-[ -n "$tailer" ] && { sleep 1; kill "$tailer" 2>/dev/null; }
+# A failed transport receipt never releases the scheduler lease or marks the batch complete.
+# Preserve this supervisor until ops verifies the original session/artifacts; never start a second model.
+if [ -n "${LEARNER_HERDR_PANE:-}" ] && [ "$audit_ready" = 1 ]; then
+  while ! nice -n 19 python3 "$OPS/learner_tui.py" verify "$LEARNER_TUI_RECEIPT" "$out" 2>> "$err"; do
+    sleep 30
+  done
+fi
 echo "$(date '+%F %T') learner batch $batch ($runs) exit $rc" >> "$DIR/scheduler.log"
 if { [ -z "$research_request" ] || python3 "$OPS/strategy_research_jobs.py" registered "$ROOT" "$DIR" "$batch" "$character" "$worktree" "$research_request" 2>> "$err"; } \
     && { [ -z "$implementation_request" ] || python3 "$OPS/strategy_implementation_jobs.py" registered "$ROOT" "$DIR" "$batch" "$character" "$worktree" "$implementation_request" 2>> "$err"; }; then
   finish_rc=0
   python3 "$OPS/codex-ops-learn.py" finish --batch "$batch" --rc "$rc" --character "$character" > /dev/null || finish_rc=$?
+  if [ "$finish_rc" = 0 ] && [ -n "${LEARNER_HERDR_PANE:-}" ] && [ "$audit_ready" = 1 ]; then
+    nice -n 19 python3 "$OPS/learner_tui.py" close "$ROOT" "$DIR/learn.json" "$batch" "$LEARNER_TUI_RECEIPT" "$out" \
+      >> "$DIR/scheduler.log" 2>&1 || echo "learner TUI pane retained for $batch; finish audit or pane identity is not ready" >> "$DIR/scheduler.log"
+  fi
   if [ "$rc" = 0 ] && [ "$finish_rc" = 0 ] \
       && [ -z "${LEARNER_CMD:-}" ] && [ -f "$OPS/learner_retention.py" ]; then
     # The model and launcher have exited; release this checkout lease before requesting guarded reclamation.
@@ -217,8 +219,8 @@ if { [ -z "$research_request" ] || python3 "$OPS/strategy_research_jobs.py" regi
   fi
 fi
 if [ "${CODEX_OPS_NO_DRAIN:-0}" != 1 ]; then
-  # A hosted batch's pane closes when this script ends: the wake (up to 2 h) must not live in it.
-  if [ -n "${HERDR_HOST_LABEL:-}" ]; then setsid nohup bash "$OPS/codex-ops.sh" drain > /dev/null 2>&1 < /dev/null &
+  # Keep the wake outside either the legacy command pane or the new supervised TUI lifecycle.
+  if [ -n "${HERDR_HOST_LABEL:-}${LEARNER_HERDR_PANE:-}" ]; then setsid nohup bash "$OPS/codex-ops.sh" drain > /dev/null 2>&1 < /dev/null &
   else bash "$OPS/codex-ops.sh" drain; fi
 fi
 exit $rc

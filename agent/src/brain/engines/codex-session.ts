@@ -1,3 +1,4 @@
+import { observeBrain, type BrainObserver } from "../live-view.js";
 /**
  * Codex session mode (BRAIN_CODEX_MODE=session, Roy 2026-10-03): one long-lived `codex app-server` per play process
  * with one saved thread that holds only our system prompt; every brain question is a turn on it, answered with the
@@ -563,7 +564,7 @@ export class CodexSession {
    * One question as a turn on the base thread, watched for stalls, then reverted to the base. The turn's outcome is
    * returned whatever it was; a transport failure (the server gone, a request unanswered) throws SessionError.
    */
-  async ask(q: { prompt: string; schema: unknown; effort: string; summary: string; model: string; signal?: AbortSignal; stallMs: number | null; firstTokenMs: number | null; maxAnswerChars?: number | null; maxAnswerBlanks?: number | null }): Promise<SessionTurn> {
+  async ask(q: { observe?: BrainObserver; prompt: string; schema: unknown; effort: string; summary: string; model: string; signal?: AbortSignal; stallMs: number | null; firstTokenMs: number | null; maxAnswerChars?: number | null; maxAnswerBlanks?: number | null }): Promise<SessionTurn> {
     const server = await this.ensureServer();
     const threadId = this.thread?.id;
     if (!threadId) throw new SessionError("no thread to ask on", "transport");
@@ -597,6 +598,10 @@ export class CodexSession {
     this.listener = (method, params) => {
       if (typeof params["threadId"] === "string" && params["threadId"] !== threadId) return;
       if (turn.turnId && typeof params["turnId"] === "string" && params["turnId"] !== turn.turnId) return;
+      if ((method === "item/agentMessage/delta" || method === "item/reasoning/summaryTextDelta") && typeof params["delta"] === "string") {
+        observeBrain(q.observe, { kind: method === "item/agentMessage/delta" ? "text" : "reasoning", text: params["delta"] });
+      }
+      if (method === "error") observeBrain(q.observe, { kind: "error", text: isObject(params["error"]) ? String(params["error"]["message"] ?? "error") : "native error" });
       const now = Date.now();
       turn.maxGapMs = Math.max(turn.maxGapMs, now - last);
       last = now;

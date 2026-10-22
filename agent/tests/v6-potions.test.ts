@@ -1,7 +1,7 @@
 import { mkdtempSync, mkdirSync, writeFileSync, rmSync, symlinkSync, readFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
-import { afterEach, expect, it, vi } from "vitest";
+import { afterEach, beforeEach, expect, it, vi } from "vitest";
 import { potionEntries, rankPotions, rankPotionDiscards, v6PotionActive, withPotionJevBudget, potionAnswersComplete, notePotionFallback, validPotionAnswers } from "../src/v6/potion-entries.js";
 import { planRest } from "../src/hand/screens/rest.js";
 import { planEvent } from "../src/hand/screens/event.js";
@@ -17,7 +17,8 @@ import { logged, loggedEnv } from "./logged.js";
 import { board, env, FakeDeepSeek, play, setupOneshotTests, type Raw } from "./oneshot-support.js";
 setupOneshotTests();
 const dirs: string[] = [];
-afterEach(() => { vi.unstubAllEnvs(); for (const dir of dirs.splice(0)) rmSync(dir, { recursive: true, force: true }); });
+beforeEach(() => { vi.spyOn(performance, "now").mockReturnValue(0); });
+afterEach(() => { vi.restoreAllMocks(); vi.unstubAllEnvs(); for (const dir of dirs.splice(0)) rmSync(dir, { recursive: true, force: true }); });
 function active() { vi.stubEnv("V6_BUILD", "on"); vi.stubEnv("V6_POTION_DECIDER", "jev"); }
 function temp() { const dir = mkdtempSync(join(tmpdir(), "v6-potions-")); dirs.push(dir); return dir; }
 function fixture() {

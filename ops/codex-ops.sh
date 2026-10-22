@@ -241,6 +241,8 @@ case "$cmd" in
     fi
     case "$job" in
       stall)
+        # Repair only the read-only log viewer at the existing cadence; never signal the controller.
+        nice -n 19 python3 "$OPS/brain_view.py" --root "$ROOT" --logs "${CODEX_OPS_LOGS:-$LOGS}" --state-dir "$DIR" ensure > /dev/null 2>&1 &
         tick_stall
         # Read-only module checks share the existing cadence; no extra daemon or game action.
         nice -n 19 timeout 30s python3 "$OPS/module_health.py" --root "$ROOT" --directory "$DIR" >> "$DIR/module-health.log" 2>&1 || log "module health check failed (see module-health.log)"

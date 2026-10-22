@@ -19,7 +19,7 @@
  */
 import { spawn, spawnSync, type ChildProcess } from "node:child_process";
 import { createHash, randomUUID } from "node:crypto";
-import { appendFileSync, closeSync, existsSync, mkdirSync, mkdtempSync, openSync, readdirSync, readFileSync, readSync, realpathSync, renameSync, rmSync, statSync, writeFileSync, writeSync } from "node:fs";
+import { appendFileSync, closeSync, existsSync, fsyncSync, mkdirSync, mkdtempSync, openSync, readdirSync, readFileSync, readSync, realpathSync, renameSync, rmSync, statSync, writeFileSync, writeSync } from "node:fs";
 import { homedir, tmpdir } from "node:os";
 import { join, relative, resolve, sep } from "node:path";
 import { createInterface } from "node:readline";
@@ -30,11 +30,12 @@ import { DEFAULT_CHARACTER, characterKey } from "../../agent/src/knowledge/files
 import { mcpLaunchSpec, type McpLaunchSpec } from "../../agent/src/brain/tools/mcp-launch.js";
 import { checkCodex, type CodexCheck } from "../../agent/src/brain/engines/codex.js";
 import { AUTH_ERROR, refreshCodexAuth } from "../../agent/src/brain/engines/codex-usage.js";
-import { ENGINES, EngineUnavailableError, childEnv, codexChildEnv, codexKeyCheck, withCodexKeys, type KeyCheck, engineBinary, engineCommand, engineDefaults, learnerCodexHome, mainCheckout, shellQuote, strippedEnvNames, unavailableMessage, type EngineName, type EngineRequest } from "./engines.js";
+import { ENGINES, EngineUnavailableError, childEnv, codexChildEnv, codexKeyCheck, learnerInteractiveArgs, withCodexKeys, type KeyCheck, engineBinary, engineCommand, engineDefaults, learnerCodexHome, mainCheckout, shellQuote, strippedEnvNames, unavailableMessage, type EngineName, type EngineRequest } from "./engines.js";
 import { SummaryTracker, findRollout, formatSummary, progressLine, rolloutStats } from "./summary.js";
 import { highestAscension, runCharacters } from "./runs.js";
 import { LearnerUsageError, characterBuiltins, loadTask, parseSets, renderTask } from "./task.js";
 import { captureStartupLease, StartupEvidence } from "./startup-recovery.js";
+import { runLearnerTui, type TuiResult } from "./herdr.js";
 
 /** This checkout (the launcher's own repository: core/paths.ts PROJECT_ROOT). */
 export const REPO = REPO_ROOT;
@@ -435,6 +436,14 @@ export async function main(argv: string[], overrides: Partial<LauncherDeps> = {}
   const binary = engineBinary(request.engine, deps.env);
   const command = engineCommand(request, prompt, binary ?? request.engine);
   const stripped = strippedEnvNames(deps.env, request.engine);
+  const unavailable = (message: string): number => {
+    if (request.engine === "codex" && deps.env.LEARNER_HERDR_PANE && deps.env.LEARNER_TUI_RECEIPT) {
+      writeFileSync(deps.env.LEARNER_TUI_RECEIPT, JSON.stringify({ state: "not-started", models_started: 0,
+        result: { code: 3, reason: "engine-preflight-unavailable" } }) + "\n", { mode: 0o600 });
+    }
+    deps.err(message);
+    return 3;
+  };
 
   if (options.dryRun) {
     deps.out(`===== 最终提示（${prepared.taskName}，${prompt.length} 字）=====\n${prompt}\n`);
@@ -445,21 +454,18 @@ export async function main(argv: string[], overrides: Partial<LauncherDeps> = {}
     return 0;
   }
   if (!binary) {
-    deps.err(`${unavailableMessage(request.engine)}\n`);
-    return 3;
+    return unavailable(`${unavailableMessage(request.engine)}\n`);
   }
   if (request.engine === "codex" && deps.checkCodex) {
     const check = await deps.checkCodex(binary, learnerCodexHome(deps.env), request.model!, request.effort!);
     if (!check.ok) {
-      deps.err(`codex 用不了：${check.error}\n`);
-      return 3;
+      return unavailable(`codex 用不了：${check.error}\n`);
     }
   }
   if (request.engine === "codex" && deps.checkKeys) {
     const keys = await deps.checkKeys(binary, request, codexChildEnv(deps.env, binary));
     if (!keys.ok) {
-      deps.err(`codex 的权限配置没能挡住 key 文件，不运行：${keys.readable.length > 0 ? `读得到 ${keys.readable.join("、")}` : ""}${keys.error ? `（检查失败：${keys.error}）` : ""}\n`);
-      return 3;
+      return unavailable(`codex 的权限配置没能挡住 key 文件，不运行：${keys.readable.length > 0 ? `读得到 ${keys.readable.join("、")}` : ""}${keys.error ? `（检查失败：${keys.error}）` : ""}\n`);
     }
   }
 
@@ -474,7 +480,8 @@ export async function main(argv: string[], overrides: Partial<LauncherDeps> = {}
     task: prepared.taskName,
     params: prepared.values,
     cwd: request.cwd,
-    command: [command.command, ...command.args],
+    command: [command.command, ...(deps.env.LEARNER_HERDR_PANE && request.engine === "codex" ? learnerInteractiveArgs(request) : command.args)],
+    transport: deps.env.LEARNER_HERDR_PANE && request.engine === "codex" ? "herdr-interactive" : "stdio",
     timeout_min: prepared.timeoutMin ?? null,
     stripped_env: stripped,
     prompt,
@@ -502,100 +509,129 @@ export async function main(argv: string[], overrides: Partial<LauncherDeps> = {}
   };
   let timedOut = false;
   let cancelled = false;
-  let killTimer: NodeJS.Timeout | undefined;
-  const timer = prepared.timeoutMin
-    ? setTimeout(() => {
-        timedOut = true;
-        deps.err(`[${elapsed()}] 超过 ${prepared.timeoutMin} 分钟，终止 PID ${child?.pid ?? "?"}\n`);
-        stop("SIGTERM");
-        killTimer = setTimeout(() => stop("SIGKILL"), 10_000);
-      }, prepared.timeoutMin * 60_000)
-    : undefined;
-  const onSignal = (): void => {
-    cancelled = true;
-    stop("SIGTERM");
-    killTimer ??= setTimeout(() => stop("SIGKILL"), 10_000);
-  };
-  process.once("SIGINT", onSignal);
-  process.once("SIGTERM", onSignal);
-
   let exitCode: number | null = null;
   let signal: NodeJS.Signals | null = null;
-  for (let attempt = 1; attempt <= 3; attempt += 1) {
-    // Keep the same command, prompt, environment and outer deadline; never replay a started session.
-    const evidence = new StartupEvidence();
-    tracker = new SummaryTracker(request.engine, request.model);
-    child = spawn(command.command, command.args, { cwd: request.cwd, env, stdio: ["pipe", "pipe", "pipe"], detached: true });
-    const attemptChild = child;
-    const attemptStart = deps.now().toISOString();
-    const identity = { attempt, batch: lease?.batch ?? null, lease: lease?.identity ?? null, input_sha256: inputSha, command_sha256: commandSha };
-    log({ type: "learner_startup_attempt", ts: attemptStart, pid: child.pid ?? null, ...identity });
-    deps.err(`学习者 ${request.engine} / ${prepared.taskName} 已启动（尝试 ${attempt}，PID ${child.pid ?? "?"}），日志 ${logPath}\n`);
-    const stdoutDone = new Promise<void>((done) => {
-      const lines = createInterface({ input: attemptChild.stdout! });
-      let resumedThread = false;
-      let resumeAcknowledged = false;
-      lines.on("line", (line) => {
-        evidence.stdout();
-        appendFileSync(logPath, `${line}\n`);
-        if (request.resumeThread && !resumeAcknowledged) {
-          try {
-            const item = JSON.parse(line);
-            if (item.type === "thread.started" && item.thread_id === request.resumeThread) resumedThread = true;
-            if (resumedThread && item.type === "item.completed" && item.item?.type === "agent_message") {
-              log({ type: "learner_resume_ack", ts: deps.now().toISOString(), thread_id: request.resumeThread,
-                input_sha256: inputSha, command_sha256: commandSha, batch: lease?.batch ?? null,
-                first_message_sha256: createHash("sha256").update(String(item.item.text)).digest("hex") });
-              resumeAcknowledged = true;
-            }
-          } catch { /* Preserve the original stream; non-JSON lines cannot acknowledge a resume. */ }
-        }
-        const event = tracker.feed(line, ms());
-        const progress = event && progressLine(request.engine, event);
-        if (progress) deps.err(`${progress.split("\n").map((text) => `[${elapsed()}] ${text}`).join("\n")}\n`);
-      });
-      lines.on("close", () => done());
+  let tui: TuiResult | undefined;
+  const interactive = request.engine === "codex" && !!deps.env.LEARNER_HERDR_PANE;
+  if (interactive) {
+    const receipt = deps.env.LEARNER_TUI_RECEIPT;
+    const label = deps.env.LEARNER_HERDR_LABEL;
+    if (!lease || !receipt || !label) {
+      return unavailable("交互学习批次缺少原租约或完成回执路径，不启动模型\n");
+    }
+    const queue = join(resolve(deps.projectRoot, deps.env.CODEX_OPS_DIR ?? "ops/codex-ops"), "queue");
+    tui = await runLearnerTui({ request, command: binary, prompt: command.stdin, env: env as Record<string, string>,
+      pane: deps.env.LEARNER_HERDR_PANE!, label, receipt, scratch, codexHome: learnerCodexHome(deps.env), lease,
+      ...(prepared.timeoutMin ? { timeoutMs: prepared.timeoutMin * 60_000 } : {}), log,
+      attention: (reason) => {
+        mkdirSync(queue, { recursive: true });
+        const name = `${Date.now()}-${randomUUID()}-learner-tui-attention.md`;
+        writeFileSync(join(queue, name), `学习批次 ${lease.batch} 需要原 ops 核验：${reason}。原 pane ${deps.env.LEARNER_HERDR_PANE}；回执 ${receipt}。保留批次和会话，不另开模型、不回收。\n`);
+      },
     });
-    const stderrDone = new Promise<void>((done) => {
-      const lines = createInterface({ input: attemptChild.stderr! });
-      lines.on("line", (line) => {
-        evidence.stderr(line);
-        log({ type: "learner_stderr", attempt, t_ms: ms(), text: line });
-      });
-      lines.on("close", () => done());
-    });
-    attemptChild.stdin!.on("error", () => undefined); // the agent may exit before reading everything
-    attemptChild.stdin!.end(command.stdin);
+    exitCode = tui.code;
+    timedOut = tui.code === 124;
+    cancelled = tui.reason === "cancelled";
+    const feed = (event: Record<string, unknown>): void => { tracker.feed(JSON.stringify(event), ms()); };
+    if (tui.session) feed({ type: "thread.started", thread_id: tui.session });
+    if (tui.message) feed({ type: "item.completed", item: { type: "agent_message", text: tui.message } });
+    if (tui.code === 0) feed({ type: "turn.completed", usage: tui.usage ?? {} });
+    else feed({ type: "turn.failed", error: { message: [tui.reason, tui.error].filter(Boolean).join(": ") } });
+    log({ type: "learner_tui_result", ...tui });
+  } else {
+    let killTimer: NodeJS.Timeout | undefined;
+    const timer = prepared.timeoutMin
+      ? setTimeout(() => {
+          timedOut = true;
+          deps.err(`[${elapsed()}] 超过 ${prepared.timeoutMin} 分钟，终止 PID ${child?.pid ?? "?"}\n`);
+          stop("SIGTERM");
+          killTimer = setTimeout(() => stop("SIGKILL"), 10_000);
+        }, prepared.timeoutMin * 60_000)
+      : undefined;
+    const onSignal = (): void => {
+      cancelled = true;
+      stop("SIGTERM");
+      killTimer ??= setTimeout(() => stop("SIGKILL"), 10_000);
+    };
+    process.once("SIGINT", onSignal);
+    process.once("SIGTERM", onSignal);
 
-    [exitCode, signal] = await new Promise<[number | null, NodeJS.Signals | null]>((done) => {
-      attemptChild.on("error", (error) => {
-        log({ type: "learner_error", message: error.message });
-        evidence.stdout(); // A spawn error is not the observed session-creation failure.
+    for (let attempt = 1; attempt <= 3; attempt += 1) {
+      // Keep the same command, prompt, environment and outer deadline; never replay a started session.
+      const evidence = new StartupEvidence();
+      tracker = new SummaryTracker(request.engine, request.model);
+      child = spawn(command.command, command.args, { cwd: request.cwd, env, stdio: ["pipe", "pipe", "pipe"], detached: true });
+      const attemptChild = child;
+      const attemptStart = deps.now().toISOString();
+      const identity = { attempt, batch: lease?.batch ?? null, lease: lease?.identity ?? null, input_sha256: inputSha, command_sha256: commandSha };
+      log({ type: "learner_startup_attempt", ts: attemptStart, pid: child.pid ?? null, ...identity });
+      deps.err(`学习者 ${request.engine} / ${prepared.taskName} 已启动（尝试 ${attempt}，PID ${child.pid ?? "?"}），日志 ${logPath}\n`);
+      const stdoutDone = new Promise<void>((done) => {
+        const lines = createInterface({ input: attemptChild.stdout! });
+        let resumedThread = false;
+        let resumeAcknowledged = false;
+        lines.on("line", (line) => {
+          evidence.stdout();
+          appendFileSync(logPath, `${line}\n`);
+          if (request.resumeThread && !resumeAcknowledged) {
+            try {
+              const item = JSON.parse(line);
+              if (item.type === "thread.started" && item.thread_id === request.resumeThread) resumedThread = true;
+              if (resumedThread && item.type === "item.completed" && item.item?.type === "agent_message") {
+                log({ type: "learner_resume_ack", ts: deps.now().toISOString(), thread_id: request.resumeThread,
+                  input_sha256: inputSha, command_sha256: commandSha, batch: lease?.batch ?? null,
+                  first_message_sha256: createHash("sha256").update(String(item.item.text)).digest("hex") });
+                resumeAcknowledged = true;
+              }
+            } catch { /* Preserve the original stream; non-JSON lines cannot acknowledge a resume. */ }
+          }
+          const event = tracker.feed(line, ms());
+          const progress = event && progressLine(request.engine, event);
+          if (progress) deps.err(`${progress.split("\n").map((text) => `[${elapsed()}] ${text}`).join("\n")}\n`);
+        });
+        lines.on("close", () => done());
       });
-      // 'close', unlike 'exit', also waits for the old child's stdio to close.
-      attemptChild.on("close", (code, sig) => done([code, sig]));
-    });
-    await Promise.all([stdoutDone, stderrDone]);
-    child = undefined;
-    const retryable = request.engine === "codex" && exitCode === 1 && signal === null && evidence.transientBeforeSession();
-    log({ type: "learner_startup_exit", ts: deps.now().toISOString(), pid: attemptChild.pid ?? null,
-      ...identity, exit_code: exitCode, signal, timed_out: timedOut, cancelled, retryable });
-    if (!retryable || attempt === 3 || timedOut || cancelled || !lease?.current()) break;
-    await new Promise<void>((done) => setTimeout(done, 250));
-    if (timedOut || cancelled || !lease.current()) break;
-    log({ type: "learner_startup_retry", ts: deps.now().toISOString(), ...identity, next_attempt: attempt + 1 });
-    deps.err(`[${elapsed()}] 会话创建前沙箱目录短暂消失；原进程已退出，批次有效，重试启动 ${attempt + 1}/3\n`);
+      const stderrDone = new Promise<void>((done) => {
+        const lines = createInterface({ input: attemptChild.stderr! });
+        lines.on("line", (line) => {
+          evidence.stderr(line);
+          log({ type: "learner_stderr", attempt, t_ms: ms(), text: line });
+        });
+        lines.on("close", () => done());
+      });
+      attemptChild.stdin!.on("error", () => undefined); // the agent may exit before reading everything
+      attemptChild.stdin!.end(command.stdin);
+
+      [exitCode, signal] = await new Promise<[number | null, NodeJS.Signals | null]>((done) => {
+        attemptChild.on("error", (error) => {
+          log({ type: "learner_error", message: error.message });
+          evidence.stdout(); // A spawn error is not the observed session-creation failure.
+        });
+        // 'close', unlike 'exit', also waits for the old child's stdio to close.
+        attemptChild.on("close", (code, sig) => done([code, sig]));
+      });
+      await Promise.all([stdoutDone, stderrDone]);
+      child = undefined;
+      const retryable = request.engine === "codex" && exitCode === 1 && signal === null && evidence.transientBeforeSession();
+      log({ type: "learner_startup_exit", ts: deps.now().toISOString(), pid: attemptChild.pid ?? null,
+        ...identity, exit_code: exitCode, signal, timed_out: timedOut, cancelled, retryable });
+      if (!retryable || attempt === 3 || timedOut || cancelled || !lease?.current()) break;
+      await new Promise<void>((done) => setTimeout(done, 250));
+      if (timedOut || cancelled || !lease.current()) break;
+      log({ type: "learner_startup_retry", ts: deps.now().toISOString(), ...identity, next_attempt: attempt + 1 });
+      deps.err(`[${elapsed()}] 会话创建前沙箱目录短暂消失；原进程已退出，批次有效，重试启动 ${attempt + 1}/3\n`);
+    }
+    if (timer) clearTimeout(timer);
+    if (killTimer) clearTimeout(killTimer);
+    process.removeListener("SIGINT", onSignal);
+    process.removeListener("SIGTERM", onSignal);
   }
-  if (timer) clearTimeout(timer);
-  if (killTimer) clearTimeout(killTimer);
-  process.removeListener("SIGINT", onSignal);
-  process.removeListener("SIGTERM", onSignal);
 
   // This launcher is outside the model's sandbox and the child has fully closed.
   // Bind mounts can forbid sandbox hardlinks; finalize declared immutable files
   // here without widening the model's permissions or changing its result/retry.
   const storageHelper = join(deps.projectRoot, "ops/content_store.py");
-  if (existsSync(storageHelper)) {
+  if ((!interactive || tui?.stopped) && existsSync(storageHelper)) {
     const receipt = join(scratch, "storage-finalization.json");
     const queue = join(resolve(deps.projectRoot, deps.env["CODEX_OPS_DIR"] ?? "ops/codex-ops"), "queue");
     const store = join(realpathSync(mainCheckout(deps.projectRoot)), "ops/codex-ops/objects/v1");
@@ -621,6 +657,7 @@ export async function main(argv: string[], overrides: Partial<LauncherDeps> = {}
   const rollout = request.engine === "codex" && summary.sessionId ? findRollout(learnerCodexHome(deps.env), summary.sessionId) : undefined;
   if (rollout) summary.rollout = rolloutStats(rollout);
   log({ type: "learner_summary", ts: deps.now().toISOString(), exit_code: exitCode, signal, timed_out: timedOut, cancelled, wall_ms: wallMs, summary });
+  const logFd = openSync(logPath, "r"); try { fsyncSync(logFd); } finally { closeSync(logFd); }
   const redacted = redactSecrets(logPath, collectSecrets(deps.secretFiles, deps.env, stripped));
   deps.out(`${summary.result ? `${summary.result}\n\n` : ""}${formatSummary(summary, { task: prepared.taskName, exitCode, signal, timedOut, wallMs, logPath, redacted })}\n`);
   if (request.engine === "codex" && summary.isError && deps.refreshCodexAuth && AUTH_ERROR.test(summary.errors.join(" "))) {
@@ -631,6 +668,16 @@ export async function main(argv: string[], overrides: Partial<LauncherDeps> = {}
     } catch (error) {
       deps.err(`codex 登录被拒，刷新令牌也失败（${error instanceof Error ? error.message.slice(0, 200) : String(error)}）：需要 Roy 重新 \`codex login\`\n`);
     }
+  }
+  if (interactive) {
+    // The tab stays open until the wrapper also verifies task artifacts and the original finish transaction.
+    const receipt = deps.env.LEARNER_TUI_RECEIPT!;
+    const value = JSON.parse(readFileSync(receipt, "utf8"));
+    value.artifacts = { log: logPath, sha256: createHash("sha256").update(readFileSync(logPath)).digest("hex"),
+      summary: true, out_pending_wrapper_flush: true };
+    writeFileSync(receipt, JSON.stringify(value) + "\n", { mode: 0o600 });
+    const fd = openSync(receipt, "r"); try { fsyncSync(fd); } finally { closeSync(fd); }
+    if (tui?.code === 75) return 75;
   }
   if (timedOut) return 124;
   if (cancelled) return 1;

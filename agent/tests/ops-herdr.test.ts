@@ -204,6 +204,7 @@ describe("ops/herdr-host.sh (fake herdr)", () => {
     mkdirSync(join(viewerHome, ".local", "bin"), { recursive: true });
     symlinkSync(FAKE, join(viewerHome, ".local", "bin", "herdr"));
     copyFileSync(HOST, join(root, "ops", "herdr-host.sh"));
+    copyFileSync(join(REPO, "ops", "herdr_titles.py"), join(root, "ops", "herdr_titles.py"));
     copyFileSync(join(REPO, "ops", "herdr-exec.sh"), join(root, "ops", "herdr-exec.sh"));
     const learnerLabel = `learner-${batch}${/^\d{8}-\d{6}$/.test(batch) ? "-postmortem" : ""}`;
     mkdirSync(join(stateDir, "learner"));
@@ -220,6 +221,12 @@ describe("ops/herdr-host.sh (fake herdr)", () => {
     const receipt = JSON.parse(result.stdout);
     expect(receipt).toMatchObject({ batch, workspace: "w1", ops_pane: opsPane, learner_restarted: false });
     expect(receipt.screen).toContain("learner evidence processing");
+    const expectedTitle = `学习大脑 · ${batch.slice(0, 15)} · ${batch.endsWith("strategy-proposal") ? "策略提案" : "复盘"}`;
+    expect(w.state().panes[receipt.pane].title).toBe(expectedTitle);
+    const learnerPane = learner.stdout.trim().split(" ")[0]!;
+    expect(w.state().panes[learnerPane].title).toBe(expectedTitle);
+    expect(w.state().panes[learnerPane].label).toBe(learnerLabel);
+    expect(JSON.parse(w.host("status", "--json").stdout).find((row: { label: string }) => row.label === learnerLabel)).toMatchObject({ alive: true, busy: true, title: expectedTitle });
     const paneCount = Object.keys(w.state().panes).length;
     expect(runner(batch).status).toBe(0);
     expect(Object.keys(w.state().panes)).toHaveLength(paneCount);
@@ -287,6 +294,57 @@ describe("ops/herdr-host.sh (fake herdr)", () => {
     expect(tail).toContain("exited 3");
     expect(JSON.parse(readFileSync(join(w.dir, "proj", "ops", "codex-ops", "herdr.json"), "utf8")).panes).toEqual({});
   }, 30_000);
+
+  it("brain viewer follows fixed logs across runs, reuses its tab and restarts independently", () => {
+    const w = world("brain-view");
+    const root = join(w.dir, "proj");
+    const logs = join(root, "logs");
+    const stateDir = join(root, "ops", "codex-ops");
+    mkdirSync(logs);
+    for (const file of ["herdr-host.sh", "herdr-exec.sh", "herdr_titles.py", "brain_view.py", "learner_jobs.py"]) {
+      copyFileSync(join(REPO, "ops", file), join(root, "ops", file));
+    }
+    const runFile = join(logs, "run-config.jsonl");
+    writeFileSync(runFile, JSON.stringify({ run_id: "RUN000000001" }) + "\n");
+    const brainFile = join(logs, "brain.jsonl");
+    const fixture = JSON.stringify({ run_id: "RUN000000001", label: "reward/card", question_id: "q1", engine: "codex", model: "gpt-6.1-sol", effort: "high", payload: { floor: 12 }, answer: { choice: "A", reason: "补充防御" }, tool_calls: [{ name: "kb_stats", input: { character: "silent" }, outputBytes: 10, ms: 2 }], latency_ms: 20 }) + "\n";
+    writeFileSync(brainFile, fixture);
+    const env = { ...w.env, CODEX_OPS_BRAIN_VIEW: "" };
+    writeFileSync(join(stateDir, "hosting"), "brain_view=herdr\n");
+    const ensure = () => spawnSync("python3", [join(root, "ops", "brain_view.py"), "--root", root, "ensure"], { env, encoding: "utf8", timeout: 30_000 });
+    const getPane = () => JSON.parse(readFileSync(join(stateDir, "herdr.json"), "utf8")).panes["brain-view"]?.pane_id;
+    try {
+      expect(ensure().status).toBe(0);
+      const pane = getPane();
+      waitFor(() => w.state().panes[pane]?.title === "对局大脑 · RUN000000001");
+      expect(ensure().status).toBe(0);
+      expect(getPane()).toBe(pane);
+      const screen = w.host("status", "--json");
+      expect(JSON.parse(screen.stdout).find((row: { label: string }) => row.label === "brain-view")).toMatchObject({ alive: true, busy: true, title: "对局大脑 · RUN000000001" });
+      expect(readFileSync(brainFile, "utf8")).toBe(fixture);
+      const rendered = spawnSync(FAKE, ["pane", "read", pane], { env: w.env, encoding: "utf8" });
+      expect(rendered.stdout).toContain("补充防御");
+      expect(rendered.stdout).toContain("kb_stats");
+      writeFileSync(runFile, JSON.stringify({ run_id: "RUN000000002" }) + "\n");
+      waitFor(() => w.state().panes[pane]?.title === "对局大脑 · RUN000000002");
+      // Simulate the viewer dying; the independent input producer and logs are untouched.
+      process.kill(w.state().panes[pane].pid, "SIGTERM");
+      waitFor(() => JSON.parse(w.host("status", "--json").stdout).find((row: { label: string }) => row.label === "brain-view")?.busy === false);
+      expect(readFileSync(brainFile, "utf8")).toBe(fixture);
+      expect(ensure().status).toBe(0);
+      expect(getPane()).toBe(pane);
+      waitFor(() => JSON.parse(w.host("status", "--json").stdout).find((row: { label: string }) => row.label === "brain-view")?.busy === true);
+      // A file switch stops only the viewer, without touching its tab or log producer.
+      writeFileSync(join(stateDir, "hosting"), "brain_view=off\n");
+      waitFor(() => JSON.parse(w.host("status", "--json").stdout).find((row: { label: string }) => row.label === "brain-view")?.busy === false);
+      const off = spawnSync("python3", [join(root, "ops", "brain_view.py"), "--root", root, "ensure"], { env: { ...env, CODEX_OPS_BRAIN_VIEW: "" }, encoding: "utf8" });
+      expect(off.status).toBe(0);
+      expect(w.state().panes[pane]).toBeDefined();
+      expect(readFileSync(brainFile, "utf8")).toBe(fixture);
+    } finally {
+      if (getPane()) w.host("stop", "brain-view");
+    }
+  }, 60_000);
 
   it("refuses bad labels and reports an unavailable herdr", () => {
     const w = world("bad");
