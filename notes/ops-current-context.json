@@ -17283,7 +17283,8 @@
     "old_candidate_not_admitted": true,
     "brain_view": "off",
     "action": "No old candidate merge; await revised interactive TUI delivery and status:review; original release queue continues",
-    "do_not_start_another_full_or_observer": true
+    "do_not_start_another_full_or_observer": true,
+    "r3_redelivery_index": "issue36_r3_original_window_order_and_natural_acceptance"
   },
   "ordinary_20261022_101301_main_source_drift": {
     "at": "2026-10-22T11:38:42+08:00",
@@ -17424,7 +17425,16 @@
     "proof": "paper/materials/20261022-issue38-ops/window-readback.json",
     "checks": "paper/materials/20261022-issue33-high-ops/checks.json",
     "next": "original controller kernel-waits #20 then all-or-release admission and first check; no polling/repeated full; preserve #33→#35→#28→#37; #38 in-progress until actual entry evidence",
-    "issue_comment": "https://github.com/dwroy/agent-sts2/issues/38#issuecomment-6333489252"
+    "issue_comment": "https://github.com/dwroy/agent-sts2/issues/38#issuecomment-6333489252",
+    "latest_original_window_from_issue36_intake": {
+      "state": "waiting-one-kernel-lock-no-other-held",
+      "waiting_lock": "ops/knowledge-refresh.lock",
+      "prior_issue20_exited_at": "2026-10-22T13:33:35+08:00",
+      "full_started": false,
+      "held_locks": [],
+      "proof": "paper/materials/20261022-issue36-r3-ops/readback.json",
+      "no_new_waiter": true
+    }
   },
   "fix_20261022_131302_no_source_intake": {
     "state": "audited-no-source-original-failed-rc0-retry-preserved",
@@ -17456,5 +17466,28 @@
     "snapshot": ".artifacts/ops-wake-20261022-1336/dataset-retained/",
     "next": "preserve original attention/no auto reentry and all parents; only records ownership/finalization can be continued against original outputs, never repeat generator/full/model/merge; do not claim closed",
     "prior_dissent": "BTS HP wording retained along 20261022-1136-ops original delivery; no duplicate forwarding"
+  },
+  "issue36_r3_original_window_order_and_natural_acceptance": {
+    "state": "review-targeted-verified-final-full-and-natural-pending",
+    "source": "386c8b224ba476f2319cc258fcdffb18b120f085",
+    "candidate": "1b0aeb68f70876809e761ea563f2b1195318a32a",
+    "candidate_main_parent": "d3b2a747453bba3ac6b2488dd518731651f54e98",
+    "inputs_verified": 46,
+    "original_logs_verified": 10,
+    "planned_order": [
+      33,
+      35,
+      28,
+      37,
+      36
+    ],
+    "machine_queue_or_waiter_created": false,
+    "full_owner": "original integrator, latest main and predecessor combination recheck required before entry",
+    "brain_view": "off",
+    "old_07325_admission": "retired",
+    "receipt": "paper/materials/20261022-issue36-r3-ops/readback.json",
+    "natural_acceptance": "paper/materials/20261022-issue36-r3-ops/natural-acceptance.json",
+    "issue_comment": "https://github.com/dwroy/agent-sts2/issues/36#issuecomment-6334018837",
+    "new_model_test_publication": false
   }
 }

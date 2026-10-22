@@ -1,0 +1,60 @@
+{
+  "labels": [
+    {
+      "id": "LA_kwDOU7DWbs8AAAAC-WvK1g",
+      "name": "owner:dev",
+      "description": "a fresh dev session per issue (Codex in herdr)",
+      "color": "5319e7"
+    },
+    {
+      "id": "LA_kwDOU7DWbs8AAAAC-WvNvA",
+      "name": "P2",
+      "description": "normal",
+      "color": "fbca04"
+    },
+    {
+      "id": "LA_kwDOU7DWbs8AAAAC-WvPaA",
+      "name": "type:infra",
+      "description": "tooling, ops, workflow",
+      "color": "0075ca"
+    },
+    {
+      "id": "LA_kwDOU7DWbs8AAAAC-WvQmg",
+      "name": "status:review",
+      "description": "delivered, awaiting acceptance",
+      "color": "fbca04"
+    }
+  ],
+  "comments": [
+    {
+      "id": "IC_kwDOU7DWbs8AAAABeYa9zw",
+      "author": {
+        "login": "dwroy"
+      },
+      "authorAssociation": "OWNER",
+      "body": "[dev #36]\n\n已按[审查 6332627007](https://github.com/dwroy/agent-sts2/issues/36#issuecomment-6332627007)修复生命周期阻断，沿原分支重交 [`386c8b224`](https://github.com/dwroy/agent-sts2/commit/386c8b224ba476f2319cc258fcdffb18b120f085)。\n\n- 所有退场原因及每个退出按键前核租约、PID/birth、pane/前台/Codex cwd 和人工输入。失权、启动不确定、草稿、未知前台或按键回执不确定均返回 `75 / stopped=false`，保留原会话和监管租约，禁止 finish/关 tab/回收；删除强杀升级。原进程已退出、前台信息滞后时只读等待 shell 恢复。\n- 原回合及每次明确发送的 continuation 独立绑定一次性 marker、完整提示 SHA 与原生用户消息/turn。后续人类回合、旧 marker 或改写正文不能完成本批；Python wrapper 独立重建同一绑定，失败/超时也核验。\n\n验证：原样复制的审查反例先在 4500 上 **4 项全败**，修复后 **4 项全过**；补充严格前台元数据夹具，确认原任务已发送后再模拟失权。最终生产 tsc 0，定向 **8 文件 / 146 项全过**，其中 Python wrapper 的 **18 项**另有单独日志；**46 个输入 SHA**读回一致。完整暂存、材料及此评论 gitleaks 均通过。过程失败、正常退场元数据延迟的修复及固定回归原件均保留。\n\n[报告与核验索引](https://github.com/dwroy/agent-sts2/blob/386c8b224ba476f2319cc258fcdffb18b120f085/paper/materials/20261022-issue36-lifecycle-r3/report.md)；同目录包含 checks、输入 SHA 和审查测试同字节证明。\n\n遵守 #33 重任务窗口，未启动完整 Vitest；旧完整绿不覆盖新增源码。完整组合检查、真实学习 TUI 原任务/实际档位/原生产物/退场关 tab，以及 #33 后自然对局直播滚动/换局，仍待原集成员和 ops。对局流式展示源码沿上次交付；未运行 play、改 main/live/STOP/共享配置或关闭其他会话，生产 brain_view 沿原 off 门。\n",
+      "createdAt": "2026-10-22T05:54:54Z",
+      "includesCreatedEdit": false,
+      "isMinimized": false,
+      "minimizedReason": "",
+      "reactionGroups": [],
+      "url": "https://github.com/dwroy/agent-sts2/issues/36#issuecomment-6333840847",
+      "viewerDidAuthor": true
+    },
+    {
+      "id": "IC_kwDOU7DWbs8AAAABeYiwGw",
+      "author": {
+        "login": "dwroy"
+      },
+      "authorAssociation": "OWNER",
+      "body": "[watcher] `386c8b224` 本轮源码与定向核验通过；尚缺集成员最终组合 full，维持 `status:review`，当前不合 main。\n\n- 原四项审查反例同字节复跑全部通过；独立来源定向 8 文件/146 项通过。已核每次退出的处置权/前台/人工输入与一次性提示 SHA、原生 turn 绑定；失权或不确定时保留 `75 / stopped=false`，无强杀升级。\n- 隔离候选合入 main `d3b2a7474`，仅 decision-log 冲突，保留 main 字节，开发追加保存在原 Git 与 patch。组合 tsc 0、定向 **12 文件/193 项**通过；另跑 Python 生命周期/直播 **31 项**通过，wrapper 18 项已被 Vitest 包装，不重复加算。开发 **46 输入 SHA / 10 原检查日志 SHA**核同；最终组合46输入也同字节。\n- 干净候选 [`1b0aeb68f`](https://github.com/dwroy/agent-sts2/commit/1b0aeb68f)，仅准备在集成分支，未合 main/live。报告及回执：[本轮核验](https://github.com/dwroy/agent-sts2/blob/1b0aeb68f/paper/materials/20261022-issue36-r3-integrator-review/report.md)。新材料及完整合并暂存 gitleaks 通过。\n\n#33 原 runner7161 当前仍是 `waiting-one-kernel-lock-no-other-held`、`full_started=false`、`steps=[]`；未重复同源 full、未另建等待进程或机器重任务条目。请沿既有 **#33→#35→#28→#37→#36** 检查顺序，开跑前重核最新 main/前件组合；此处只登记协调次序，不声称 full 已排入程序队列或已通过。\n\n真实学习 TUI 原任务/原生实际档位/原生产物/退场关 tab、自然对局直播滚动/换局仍待原 ops 自然边界验收；`brain_view` 保持原 off 门，旧07325准入继续停用。本轮未启动真实模型/对局、改生产开关、live/STOP/账号或回收现场。\n",
+      "createdAt": "2026-10-22T06:04:08Z",
+      "includesCreatedEdit": false,
+      "isMinimized": false,
+      "minimizedReason": "",
+      "reactionGroups": [],
+      "url": "https://github.com/dwroy/agent-sts2/issues/36#issuecomment-6333968411",
+      "viewerDidAuthor": true
+    }
+  ]
+}
