@@ -51,6 +51,7 @@ from pathlib import Path
 ROOT = str(Path(__file__).resolve().parents[2])  # the project root (docs/layout.md)
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from characters import LEGACY, NAMES_ZH, character_dir, character_key  # noqa: E402
+from refresh_publish import replace as publish_replace
 GAME_DATA = os.path.join(ROOT, "data", "game-data.json")
 POTION_VALUES_TS = os.path.join(ROOT, "agent", "src", "knowledge", "potion-values.ts")
 CARD_MODEL_TS = os.path.join(ROOT, "agent", "src", "reflex", "card-model.ts")
@@ -1081,7 +1082,7 @@ def main(argv=None):
     tmp = args.out + ".tmp"
     with open(tmp, "w", encoding="utf8") as handle:
         handle.write(text)
-    os.replace(tmp, args.out)
+    publish_replace(tmp, args.out)
     n_checks = sum(len(deltas) for deltas in checks.values())
     print(f"wrote {args.out}: {len(entry)} potions, rates for {len(out['rates'])} ascensions, {len(logs['fights'])} boss fights, {n_checks} boss drinks with rollout numbers ({len(logs['boss_drink_rows'])} boss drinks)")
     if gold:

@@ -41,6 +41,7 @@ from pathlib import Path
 ROOT = str(Path(__file__).resolve().parents[2])  # the project root (docs/layout.md)
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from characters import character_dir, character_key, run_character  # noqa: E402
+from refresh_publish import replace as publish_replace
 LOW_N = 5
 # From this ascension up each ascension gets a table of its own (--ascension band, the default): A8, A9, and each
 # higher one once it has a finished run. Below it nothing is counted (the file was A8 only before 2026-10-04).
@@ -607,7 +608,7 @@ def main(argv=None):
     with open(tmp, "w", encoding="utf8") as handle:
         json.dump(stats, handle, ensure_ascii=False, indent=1)
         handle.write("\n")
-    os.replace(tmp, args.out)
+    publish_replace(tmp, args.out)
     if not args.quiet:
         for key, table in stats["by_ascension"].items():
             print(

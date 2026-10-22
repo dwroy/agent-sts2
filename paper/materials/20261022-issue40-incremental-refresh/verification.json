@@ -1,0 +1,261 @@
+{
+  "schema": "issue40-fixed-verification-v1",
+  "base": "d3b2a747453bba3ac6b2488dd518731651f54e98",
+  "branch": "issue-40-task",
+  "source_files": [
+    {
+      "path": "agent/tests/legacy-refresh-incremental.test.ts",
+      "bytes": 1472,
+      "sha256": "3439854a9ec14775d009a1243ceed2dcfd77388adf1e160b6e02133d58b1b6de"
+    },
+    {
+      "path": "agent/tests/v6_learning_loop_test.py",
+      "bytes": 37751,
+      "sha256": "f5b5e9907238dde56cfbfe042d83d222006b38e6fda082a9bc19f13d69d8a554"
+    },
+    {
+      "path": "knowledge/builders/build-boss-damage.py",
+      "bytes": 20296,
+      "sha256": "677d775428e9260bfa3796315aeb62d3735b888bf09db88e10f86e6f13636898"
+    },
+    {
+      "path": "knowledge/builders/build-card-upgrades.py",
+      "bytes": 9377,
+      "sha256": "d07d74427809e7f2072d3125e30dc98b56f760c9c06839774ce2ddd9394ad589"
+    },
+    {
+      "path": "knowledge/builders/build-catalog.py",
+      "bytes": 9247,
+      "sha256": "a70e65f94f6f22f3e235b1d102342c98eaba8ff87bf8b3326dd2dea337ea9f1b"
+    },
+    {
+      "path": "knowledge/builders/build-construction-opportunities.py",
+      "bytes": 9092,
+      "sha256": "c40a0a913ff9dbc3f0f179b6bbf1d03c3c567aa2d846d9ee784eebfaf577d353"
+    },
+    {
+      "path": "knowledge/builders/build-fight-value.py",
+      "bytes": 103698,
+      "sha256": "aa71d57f5451f34cf8faef1c1d16aa2ec57639359957ebe7805936bd275bd2dd"
+    },
+    {
+      "path": "knowledge/builders/build-monster-db.py",
+      "bytes": 126211,
+      "sha256": "d95487af0b8965daa75277ecd89a2f03482ce26ca0e4c6f31392abc9f5e54aff"
+    },
+    {
+      "path": "knowledge/builders/build-outcome-stats.py",
+      "bytes": 33051,
+      "sha256": "dd633842fc34effe0c797920387aa1fd707237cb124dbbed35230604e81aa1dc"
+    },
+    {
+      "path": "knowledge/builders/build-potion-equivalents.py",
+      "bytes": 66749,
+      "sha256": "93f5646a5725bd90d3bda4bdd9365cbe90d807805210789f7d436403cda4b181"
+    },
+    {
+      "path": "knowledge/builders/build-room-costs.py",
+      "bytes": 11782,
+      "sha256": "fcca5e05b6cd07ab5e3992f51148329b711bf18c111a93e24a2d810860a6d2c2"
+    },
+    {
+      "path": "knowledge/builders/fight_value_incremental.py",
+      "bytes": 6602,
+      "sha256": "d6fd9eaeabe264bd3552a7ed41e605ba1cba3dd38e5e583e9e4ffffe7c122e78"
+    },
+    {
+      "path": "knowledge/builders/incremental_evidence.py",
+      "bytes": 9742,
+      "sha256": "601b32f27e2876e47fd822aa3e1cbe9777a10007f549cdaa6865350fc2f0d992"
+    },
+    {
+      "path": "knowledge/builders/legacy_incremental.py",
+      "bytes": 31583,
+      "sha256": "2be0196785eab1f62559c05abc3c2b005de54b9e2299d050dc74d3909e5ea4bf"
+    },
+    {
+      "path": "knowledge/builders/monster-db-check.py",
+      "bytes": 24633,
+      "sha256": "e4987b9213e0e558af0d81482f4389493111ebf3f7a09b8312418975815eeee2"
+    },
+    {
+      "path": "knowledge/builders/refresh-v6-history.py",
+      "bytes": 24424,
+      "sha256": "c343022c56e0a06969d6db73a6c9407d82f604e51c4b76b4a6dafbda53d13955"
+    },
+    {
+      "path": "knowledge/builders/refresh.sh",
+      "bytes": 348,
+      "sha256": "d38234de87853a33a27bbecef78993f55f714992f914b59dd5f3bc69841c847d"
+    },
+    {
+      "path": "knowledge/builders/refresh_driver.py",
+      "bytes": 7084,
+      "sha256": "4fbb5393a41c439ac59221a960e152fab521e9a20021994bda868f5dc3f2d947"
+    },
+    {
+      "path": "knowledge/builders/refresh_publish.py",
+      "bytes": 1889,
+      "sha256": "9e185db8274ec063476d1341f80bd50e4fa93f33fb05a11b54878d4fb8056cc7"
+    },
+    {
+      "path": "knowledge/builders/test_refresh_pipeline.py",
+      "bytes": 16198,
+      "sha256": "576d971664a024cc59c8f1e7819a6ea9f992d6c754a0bab66bbe4fe927e38d8a"
+    },
+    {
+      "path": "ops/report.py",
+      "bytes": 32685,
+      "sha256": "c3fbcb2a72a2ef3cabbb1f4314d5e6f1462374f1ad42bc3e6e2e191aff6ce265"
+    }
+  ],
+  "checks": [
+    {
+      "name": "production-tsc",
+      "exit_code": 0,
+      "command": "node agent/node_modules/typescript/bin/tsc -p agent/tsconfig.json --noEmit",
+      "log": "tsc-final.log"
+    },
+    {
+      "name": "targeted-vitest",
+      "exit_code": 0,
+      "files": 11,
+      "tests": 55,
+      "command": "node node_modules/vitest/vitest.mjs run tests/legacy-refresh-incremental.test.ts tests/fight-value-observe.test.ts tests/fight-value.test.ts tests/monster-db.test.ts tests/monster-db-context.test.ts tests/card-upgrade-text.test.ts tests/v6-history-refresh-exclusions.test.ts tests/knowledge-catalog.test.ts tests/outcome-stats-refresh.test.ts tests/potion-refresh-climb.test.ts tests/learner-report-resources.test.ts --pool=threads --maxWorkers=1 --no-file-parallelism",
+      "log": "vitest-post-generation.log",
+      "test_files": [
+        "tests/legacy-refresh-incremental.test.ts",
+        "tests/fight-value-observe.test.ts",
+        "tests/fight-value.test.ts",
+        "tests/monster-db.test.ts",
+        "tests/monster-db-context.test.ts",
+        "tests/card-upgrade-text.test.ts",
+        "tests/v6-history-refresh-exclusions.test.ts",
+        "tests/knowledge-catalog.test.ts",
+        "tests/outcome-stats-refresh.test.ts",
+        "tests/potion-refresh-climb.test.ts",
+        "tests/learner-report-resources.test.ts"
+      ]
+    },
+    {
+      "name": "new-refresh-python",
+      "exit_code": 0,
+      "tests": 12,
+      "command": "python3 -m unittest discover -s knowledge/builders -p test_refresh_pipeline.py",
+      "log": "python-pipeline-final.log"
+    },
+    {
+      "name": "related-python",
+      "exit_code": 0,
+      "tests": 54,
+      "command": "PYTHONPATH=knowledge/builders python3 -m unittest test_combo_metrics test_opening_value test_card_upgrades test_catalog",
+      "log": "python-related.log"
+    },
+    {
+      "name": "final-cycle-trace-targeted",
+      "exit_code": 0,
+      "files": 2,
+      "tests": 6,
+      "log": "vitest-cycle-trace.log",
+      "test_files": [
+        "tests/legacy-refresh-incremental.test.ts",
+        "tests/v6-history-refresh-exclusions.test.ts"
+      ]
+    }
+  ],
+  "fixed_fit": {
+    "rows": 72,
+    "trees": 2,
+    "rows_byte_equal": true,
+    "model_byte_equal": true,
+    "gates_byte_equal": true,
+    "notes_ignored_fields": [
+      "Runtime of this training stage"
+    ],
+    "natural_or_production_claim": false
+  },
+  "log_files": [
+    {
+      "path": "paper/materials/20261022-issue40-incremental-refresh/gitleaks-staged.log",
+      "bytes": 108,
+      "sha256": "5b550a19b84c3fa3bde1df882d0972454c81d35a409e6e5916b0ab71e20fbd1c"
+    },
+    {
+      "path": "paper/materials/20261022-issue40-incremental-refresh/python-pipeline-final.log",
+      "bytes": 1371,
+      "sha256": "1f0fe317673c9a4776c9b4e39c6d0284073a47b846d315b86cd45dd4d0144233"
+    },
+    {
+      "path": "paper/materials/20261022-issue40-incremental-refresh/python-pipeline.log",
+      "bytes": 1369,
+      "sha256": "84cf9084223150f88340e5dc54c89dc18b12f59fa3f389f1aaf818a5944c7266"
+    },
+    {
+      "path": "paper/materials/20261022-issue40-incremental-refresh/python-related.log",
+      "bytes": 522,
+      "sha256": "534699d1a23fa0ba1e6a015f52e7e558ac8c20bde355dfabf0c860e387e6b0a7"
+    },
+    {
+      "path": "paper/materials/20261022-issue40-incremental-refresh/tsc-final.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "paper/materials/20261022-issue40-incremental-refresh/tsc.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "paper/materials/20261022-issue40-incremental-refresh/vitest-cli-failed.txt",
+      "bytes": 444,
+      "sha256": "1d38f45f9b18f3cf7314e9e11a5b211775573df2c674cea7f3704a6a0e904848"
+    },
+    {
+      "path": "paper/materials/20261022-issue40-incremental-refresh/vitest-cycle-trace.log",
+      "bytes": 245,
+      "sha256": "d78d47fdca875d2de932827a293268e25b9d44cc52b78f05b4bd4c88c0a220cd"
+    },
+    {
+      "path": "paper/materials/20261022-issue40-incremental-refresh/vitest-final.log",
+      "bytes": 252,
+      "sha256": "ac65342ddd762f0f5167364ed692f9132f6f676ecbe73dc4434272f025254190"
+    },
+    {
+      "path": "paper/materials/20261022-issue40-incremental-refresh/vitest-post-generation.log",
+      "bytes": 252,
+      "sha256": "8c69361776c944de4af95031682c215051934403514d5428f833d9ea77981e30"
+    },
+    {
+      "path": "paper/materials/20261022-issue40-incremental-refresh/vitest-refresh-chain.log",
+      "bytes": 247,
+      "sha256": "970ed79a490015df4fe62d02111916cd70a7dddba7805fe34b5265722382f93a"
+    },
+    {
+      "path": "paper/materials/20261022-issue40-incremental-refresh/vitest-targeted.log",
+      "bytes": 248,
+      "sha256": "a623ef23ff158a611b6e901f384cf5aac908b8f83fe923961d4bb08317258644"
+    },
+    {
+      "path": "paper/materials/20261022-issue40-incremental-refresh/gitleaks-final.log",
+      "bytes": 108,
+      "sha256": "4c955048afe6bc0782242fcbc957a11ddedacf79e728c8b74296a42571776370"
+    }
+  ],
+  "full_vitest": "not run by developer; integrator final combination required",
+  "main_merged": false,
+  "live_published": false,
+  "heavy_enabled": "not claimed; depends on issue20 host adapter/config deployment",
+  "natural_readback": "pending original ops",
+  "boundaries": {
+    "play_run": false,
+    "live_or_stop_changed": false,
+    "other_sessions_closed": false,
+    "model_configuration_changed": false
+  },
+  "gitleaks": {
+    "initial_staged_exit_code": 0,
+    "final_staged_exit_code": 0,
+    "log": "gitleaks-final.log"
+  },
+  "whitespace_check": "source and metadata clean; raw Vitest logs retain their original final blank lines"
+}

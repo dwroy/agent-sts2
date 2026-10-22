@@ -44,6 +44,7 @@ from pathlib import Path
 ROOT = str(Path(__file__).resolve().parents[2])  # the project root (docs/layout.md)
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from characters import LEGACY, character_key, run_character  # noqa: E402
+from refresh_publish import replace as publish_replace
 
 
 def _default_logs():
@@ -1682,7 +1683,7 @@ def write_json(path, data):
     with open(tmp, "w", encoding="utf8") as handle:
         json.dump(data, handle, ensure_ascii=False, indent=1, sort_keys=False)
         handle.write("\n")
-    os.replace(tmp, path)
+    publish_replace(tmp, path)
 
 
 def main(argv=None):
@@ -1714,7 +1715,7 @@ def main(argv=None):
         tmp = f"{args.move_model_out}.{os.getpid()}.tmp"
         with open(tmp, "w", encoding="utf8") as handle:
             json.dump(move_model_view(db), handle, ensure_ascii=False, indent=1, sort_keys=True)
-        os.replace(tmp, args.move_model_out)
+        publish_replace(tmp, args.move_model_out)
     if not args.quiet:
         meta = db["meta"]["generated_from"]
         print(f"{len(db['monsters'])} monsters, {meta['fights']} fights (by ascension {meta['fights_by_asc']}) in "
