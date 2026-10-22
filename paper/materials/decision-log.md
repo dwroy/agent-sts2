@@ -5740,3 +5740,5 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
 - 2026-10-22T08:20:55+08:00 [ops] #15 R411首局DFY/F2自然奖励四选项v2事实/模型SHA、Codex单次接受及选牌completed已核；v2 79.66ms，完整自然准备未独立计时与原固定回放分列。保旧字段/科学父，交主管核收，无新发布/调用/实验。实际评论：https://github.com/dwroy/agent-sts2/issues/15#issuecomment-6329555704 。原件：paper/materials/20261022-issue15-natural-ops/receipt.json。
 
 - 2026-10-22 08:34 CST：#23既有上线核心源码/绑定与103去重回收核同，71分配成功+1失败（现#33已注册）分列；原磁盘约14h净减33.34GiB，24h至17:57仍pending，不重发布/扩删/另派循环；更正071302 Git向上寻址误称WT快进，保旧证据与科学父。原件 paper/materials/20261022-issue23-followup-ops/receipt.json；issuecomment-6329752765。
+
+- 2026-10-22 08:41 CST：#2原R410四叶及联合629/5963+2skip核同；首自然第三幕4AA19CXDKQK6四题complete_budget/单次，无nonpositive-hp，按原首局验收流程关闭issue并实际读回；第一战全败/第二战0 unknown及0332/H0科学父保持，不新模拟/full/模型或改当前局。原件 paper/materials/20261022-issue2-natural-ops/receipt.json；issuecomment-6329830549。

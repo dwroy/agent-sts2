@@ -1,0 +1,4811 @@
+{
+  "original_decision_scan": {
+    "start": 3296332718,
+    "end": 3311394771,
+    "target_rows": 606,
+    "nonpositive_hp_mentions": 0
+  },
+  "continuous_evaluations": [
+    {
+      "ref": {
+        "path": "logs/decisions.jsonl",
+        "offset": 3309549841,
+        "bytes": 171034,
+        "sha256": "726c1e948fe9f0094b96ffb6be1bbfe6661d7569b14de74649de719bea891a7e"
+      },
+      "ts": "2026-10-21T06:08:47.277Z",
+      "floor": 35,
+      "label": "reward/card",
+      "chosen": {
+        "action": "choose_reward_card",
+        "option_index": 1
+      },
+      "result": "completed: Action completed.",
+      "decider": "codex",
+      "fallback": false,
+      "boss": "AEONGLASS",
+      "objective": "F48_F49_continuous",
+      "completion": {
+        "required": true,
+        "uniqueDecks": 4,
+        "originalDecks": 4,
+        "memoHit": false,
+        "budgeted": true,
+        "status": "complete_budget",
+        "failure": false,
+        "samples": 50,
+        "requested": 100,
+        "attempt_id": "bdff5eaf-c13a-42f6-8be6-9c6d36f68b24",
+        "attempts": 1,
+        "reasons": [],
+        "key": "sim-failure-v1:c52767e5e5bf0b4da9b0235d8ac22c2a529365ee802e8c4aa314bb8f262322ef",
+        "latencyTargetMs": 11000,
+        "latencyTargetExceeded": false
+      },
+      "samples": 50,
+      "requested": 100,
+      "ms": 144,
+      "calibration": "none",
+      "continuous": [
+        {
+          "key": "@current",
+          "samples": 50,
+          "expectedSamples": 50,
+          "missingSamples": 0,
+          "first": {
+            "value": 0,
+            "wins": 0,
+            "samples": 50,
+            "unknown": 0,
+            "reason": null
+          },
+          "secondGivenFirstWin": {
+            "value": null,
+            "wins": 0,
+            "samples": 0,
+            "unknown": 0,
+            "reason": "no_first_win_samples"
+          },
+          "joint": {
+            "value": null,
+            "wins": 0,
+            "samples": 50,
+            "unknown": 0,
+            "reason": "no_first_win_samples"
+          },
+          "logged_traces": [
+            {
+              "seed": 1580782644,
+              "firstWon": false,
+              "firstDied": true,
+              "firstCapped": false,
+              "firstTimeUp": false,
+              "firstHp": -7,
+              "firstPotions": [],
+              "secondBoss": null,
+              "firstTurns": 1,
+              "secondWon": null,
+              "secondDied": null,
+              "firstResources": null,
+              "secondEntry": null,
+              "openingHpLoss": null
+            },
+            {
+              "seed": 2276655469,
+              "firstWon": false,
+              "firstDied": true,
+              "firstCapped": false,
+              "firstTimeUp": false,
+              "firstHp": -7,
+              "firstPotions": [],
+              "secondBoss": null,
+              "firstTurns": 1,
+              "secondWon": null,
+              "secondDied": null,
+              "firstResources": null,
+              "secondEntry": null,
+              "openingHpLoss": null
+            },
+            {
+              "seed": 2972528294,
+              "firstWon": false,
+              "firstDied": true,
+              "firstCapped": false,
+              "firstTimeUp": false,
+              "firstHp": -15,
+              "firstPotions": [],
+              "secondBoss": null,
+              "firstTurns": 1,
+              "secondWon": null,
+              "secondDied": null,
+              "firstResources": null,
+              "secondEntry": null,
+              "openingHpLoss": null
+            }
+          ],
+          "nonpositive_won_trace_count": 0
+        },
+        {
+          "key": "card0",
+          "samples": 50,
+          "expectedSamples": 50,
+          "missingSamples": 0,
+          "first": {
+            "value": 0,
+            "wins": 0,
+            "samples": 50,
+            "unknown": 0,
+            "reason": null
+          },
+          "secondGivenFirstWin": {
+            "value": null,
+            "wins": 0,
+            "samples": 0,
+            "unknown": 0,
+            "reason": "no_first_win_samples"
+          },
+          "joint": {
+            "value": null,
+            "wins": 0,
+            "samples": 50,
+            "unknown": 0,
+            "reason": "no_first_win_samples"
+          },
+          "logged_traces": [
+            {
+              "seed": 1580782644,
+              "firstWon": false,
+              "firstDied": true,
+              "firstCapped": false,
+              "firstTimeUp": false,
+              "firstHp": -7,
+              "firstPotions": [],
+              "secondBoss": null,
+              "firstTurns": 1,
+              "secondWon": null,
+              "secondDied": null,
+              "firstResources": null,
+              "secondEntry": null,
+              "openingHpLoss": null
+            },
+            {
+              "seed": 2276655469,
+              "firstWon": false,
+              "firstDied": true,
+              "firstCapped": false,
+              "firstTimeUp": false,
+              "firstHp": -14,
+              "firstPotions": [],
+              "secondBoss": null,
+              "firstTurns": 1,
+              "secondWon": null,
+              "secondDied": null,
+              "firstResources": null,
+              "secondEntry": null,
+              "openingHpLoss": null
+            },
+            {
+              "seed": 2972528294,
+              "firstWon": false,
+              "firstDied": true,
+              "firstCapped": false,
+              "firstTimeUp": false,
+              "firstHp": -19,
+              "firstPotions": [],
+              "secondBoss": null,
+              "firstTurns": 1,
+              "secondWon": null,
+              "secondDied": null,
+              "firstResources": null,
+              "secondEntry": null,
+              "openingHpLoss": null
+            }
+          ],
+          "nonpositive_won_trace_count": 0
+        },
+        {
+          "key": "card1",
+          "samples": 50,
+          "expectedSamples": 50,
+          "missingSamples": 0,
+          "first": {
+            "value": 0,
+            "wins": 0,
+            "samples": 50,
+            "unknown": 0,
+            "reason": null
+          },
+          "secondGivenFirstWin": {
+            "value": null,
+            "wins": 0,
+            "samples": 0,
+            "unknown": 0,
+            "reason": "no_first_win_samples"
+          },
+          "joint": {
+            "value": null,
+            "wins": 0,
+            "samples": 50,
+            "unknown": 0,
+            "reason": "no_first_win_samples"
+          },
+          "logged_traces": [
+            {
+              "seed": 1580782644,
+              "firstWon": false,
+              "firstDied": true,
+              "firstCapped": false,
+              "firstTimeUp": false,
+              "firstHp": -7,
+              "firstPotions": [],
+              "secondBoss": null,
+              "firstTurns": 1,
+              "secondWon": null,
+              "secondDied": null,
+              "firstResources": null,
+              "secondEntry": null,
+              "openingHpLoss": null
+            },
+            {
+              "seed": 2276655469,
+              "firstWon": false,
+              "firstDied": true,
+              "firstCapped": false,
+              "firstTimeUp": false,
+              "firstHp": -14,
+              "firstPotions": [],
+              "secondBoss": null,
+              "firstTurns": 1,
+              "secondWon": null,
+              "secondDied": null,
+              "firstResources": null,
+              "secondEntry": null,
+              "openingHpLoss": null
+            },
+            {
+              "seed": 2972528294,
+              "firstWon": false,
+              "firstDied": true,
+              "firstCapped": false,
+              "firstTimeUp": false,
+              "firstHp": -19,
+              "firstPotions": [],
+              "secondBoss": null,
+              "firstTurns": 1,
+              "secondWon": null,
+              "secondDied": null,
+              "firstResources": null,
+              "secondEntry": null,
+              "openingHpLoss": null
+            }
+          ],
+          "nonpositive_won_trace_count": 0
+        },
+        {
+          "key": "card2",
+          "samples": 50,
+          "expectedSamples": 50,
+          "missingSamples": 0,
+          "first": {
+            "value": 0,
+            "wins": 0,
+            "samples": 50,
+            "unknown": 0,
+            "reason": null
+          },
+          "secondGivenFirstWin": {
+            "value": null,
+            "wins": 0,
+            "samples": 0,
+            "unknown": 0,
+            "reason": "no_first_win_samples"
+          },
+          "joint": {
+            "value": null,
+            "wins": 0,
+            "samples": 50,
+            "unknown": 0,
+            "reason": "no_first_win_samples"
+          },
+          "logged_traces": [
+            {
+              "seed": 1580782644,
+              "firstWon": false,
+              "firstDied": true,
+              "firstCapped": false,
+              "firstTimeUp": false,
+              "firstHp": -7,
+              "firstPotions": [],
+              "secondBoss": null,
+              "firstTurns": 1,
+              "secondWon": null,
+              "secondDied": null,
+              "firstResources": null,
+              "secondEntry": null,
+              "openingHpLoss": null
+            },
+            {
+              "seed": 2276655469,
+              "firstWon": false,
+              "firstDied": true,
+              "firstCapped": false,
+              "firstTimeUp": false,
+              "firstHp": -14,
+              "firstPotions": [],
+              "secondBoss": null,
+              "firstTurns": 1,
+              "secondWon": null,
+              "secondDied": null,
+              "firstResources": null,
+              "secondEntry": null,
+              "openingHpLoss": null
+            },
+            {
+              "seed": 2972528294,
+              "firstWon": false,
+              "firstDied": true,
+              "firstCapped": false,
+              "firstTimeUp": false,
+              "firstHp": -19,
+              "firstPotions": [],
+              "secondBoss": null,
+              "firstTurns": 1,
+              "secondWon": null,
+              "secondDied": null,
+              "firstResources": null,
+              "secondEntry": null,
+              "openingHpLoss": null
+            }
+          ],
+          "nonpositive_won_trace_count": 0
+        },
+        {
+          "key": "skip",
+          "samples": 50,
+          "expectedSamples": 50,
+          "missingSamples": 0,
+          "first": {
+            "value": 0,
+            "wins": 0,
+            "samples": 50,
+            "unknown": 0,
+            "reason": null
+          },
+          "secondGivenFirstWin": {
+            "value": null,
+            "wins": 0,
+            "samples": 0,
+            "unknown": 0,
+            "reason": "no_first_win_samples"
+          },
+          "joint": {
+            "value": null,
+            "wins": 0,
+            "samples": 50,
+            "unknown": 0,
+            "reason": "no_first_win_samples"
+          },
+          "logged_traces": [
+            {
+              "seed": 1580782644,
+              "firstWon": false,
+              "firstDied": true,
+              "firstCapped": false,
+              "firstTimeUp": false,
+              "firstHp": -7,
+              "firstPotions": [],
+              "secondBoss": null,
+              "firstTurns": 1,
+              "secondWon": null,
+              "secondDied": null,
+              "firstResources": null,
+              "secondEntry": null,
+              "openingHpLoss": null
+            },
+            {
+              "seed": 2276655469,
+              "firstWon": false,
+              "firstDied": true,
+              "firstCapped": false,
+              "firstTimeUp": false,
+              "firstHp": -7,
+              "firstPotions": [],
+              "secondBoss": null,
+              "firstTurns": 1,
+              "secondWon": null,
+              "secondDied": null,
+              "firstResources": null,
+              "secondEntry": null,
+              "openingHpLoss": null
+            },
+            {
+              "seed": 2972528294,
+              "firstWon": false,
+              "firstDied": true,
+              "firstCapped": false,
+              "firstTimeUp": false,
+              "firstHp": -15,
+              "firstPotions": [],
+              "secondBoss": null,
+              "firstTurns": 1,
+              "secondWon": null,
+              "secondDied": null,
+              "firstResources": null,
+              "secondEntry": null,
+              "openingHpLoss": null
+            }
+          ],
+          "nonpositive_won_trace_count": 0
+        }
+      ],
+      "global_build_status": "unknown",
+      "readiness_valid": 0,
+      "nonpositive_hp_mentions": 0
+    },
+    {
+      "ref": {
+        "path": "logs/decisions.jsonl",
+        "offset": 3309953170,
+        "bytes": 176077,
+        "sha256": "cb5dc0f749554efb4378c6723b5c300da1b48a98633c3c0ccb21b0a35d04598a"
+      },
+      "ts": "2026-10-21T06:11:14.508Z",
+      "floor": 36,
+      "label": "reward/card",
+      "chosen": {
+        "action": "choose_reward_card",
+        "option_index": 2
+      },
+      "result": "completed: Action completed.",
+      "decider": "codex",
+      "fallback": false,
+      "boss": "AEONGLASS",
+      "objective": "F48_F49_continuous",
+      "completion": {
+        "required": true,
+        "uniqueDecks": 4,
+        "originalDecks": 4,
+        "memoHit": false,
+        "budgeted": true,
+        "status": "complete_budget",
+        "failure": false,
+        "samples": 50,
+        "requested": 100,
+        "attempt_id": "42bcc7d7-1ec5-4542-9502-7f9503d23176",
+        "attempts": 1,
+        "reasons": [],
+        "key": "sim-failure-v1:5594dd3108fd38fbce8c199f160bd1d1d5aa8a1c199c6c9e3cd242effcb74fea",
+        "latencyTargetMs": 11000,
+        "latencyTargetExceeded": false
+      },
+      "samples": 50,
+      "requested": 100,
+      "ms": 295,
+      "calibration": "none",
+      "continuous": [
+        {
+          "key": "@current",
+          "samples": 50,
+          "expectedSamples": 50,
+          "missingSamples": 0,
+          "first": {
+            "value": 0,
+            "wins": 0,
+            "samples": 50,
+            "unknown": 0,
+            "reason": null
+          },
+          "secondGivenFirstWin": {
+            "value": null,
+            "wins": 0,
+            "samples": 0,
+            "unknown": 0,
+            "reason": "no_first_win_samples"
+          },
+          "joint": {
+            "value": null,
+            "wins": 0,
+            "samples": 50,
+            "unknown": 0,
+            "reason": "no_first_win_samples"
+          },
+          "logged_traces": [
+            {
+              "seed": 1580782644,
+              "firstWon": false,
+              "firstDied": true,
+              "firstCapped": false,
+              "firstTimeUp": false,
+              "firstHp": -7,
+              "firstPotions": [],
+              "secondBoss": null,
+              "firstTurns": 1,
+              "secondWon": null,
+              "secondDied": null,
+              "firstResources": null,
+              "secondEntry": null,
+              "openingHpLoss": null
+            },
+            {
+              "seed": 2276655469,
+              "firstWon": false,
+              "firstDied": true,
+              "firstCapped": false,
+              "firstTimeUp": false,
+              "firstHp": -14,
+              "firstPotions": [],
+              "secondBoss": null,
+              "firstTurns": 1,
+              "secondWon": null,
+              "secondDied": null,
+              "firstResources": null,
+              "secondEntry": null,
+              "openingHpLoss": null
+            },
+            {
+              "seed": 2972528294,
+              "firstWon": false,
+              "firstDied": true,
+              "firstCapped": false,
+              "firstTimeUp": false,
+              "firstHp": -19,
+              "firstPotions": [],
+              "secondBoss": null,
+              "firstTurns": 1,
+              "secondWon": null,
+              "secondDied": null,
+              "firstResources": null,
+              "secondEntry": null,
+              "openingHpLoss": null
+            }
+          ],
+          "nonpositive_won_trace_count": 0
+        },
+        {
+          "key": "card0",
+          "samples": 50,
+          "expectedSamples": 50,
+          "missingSamples": 0,
+          "first": {
+            "value": 0,
+            "wins": 0,
+            "samples": 50,
+            "unknown": 0,
+            "reason": null
+          },
+          "secondGivenFirstWin": {
+            "value": null,
+            "wins": 0,
+            "samples": 0,
+            "unknown": 0,
+            "reason": "no_first_win_samples"
+          },
+          "joint": {
+            "value": null,
+            "wins": 0,
+            "samples": 50,
+            "unknown": 0,
+            "reason": "no_first_win_samples"
+          },
+          "logged_traces": [
+            {
+              "seed": 1580782644,
+              "firstWon": false,
+              "firstDied": true,
+              "firstCapped": false,
+              "firstTimeUp": false,
+              "firstHp": -15,
+              "firstPotions": [],
+              "secondBoss": null,
+              "firstTurns": 1,
+              "secondWon": null,
+              "secondDied": null,
+              "firstResources": null,
+              "secondEntry": null,
+              "openingHpLoss": null
+            },
+            {
+              "seed": 2276655469,
+              "firstWon": false,
+              "firstDied": true,
+              "firstCapped": false,
+              "firstTimeUp": false,
+              "firstHp": -14,
+              "firstPotions": [],
+              "secondBoss": null,
+              "firstTurns": 1,
+              "secondWon": null,
+              "secondDied": null,
+              "firstResources": null,
+              "secondEntry": null,
+              "openingHpLoss": null
+            },
+            {
+              "seed": 2972528294,
+              "firstWon": false,
+              "firstDied": true,
+              "firstCapped": false,
+              "firstTimeUp": false,
+              "firstHp": -19,
+              "firstPotions": [],
+              "secondBoss": null,
+              "firstTurns": 1,
+              "secondWon": null,
+              "secondDied": null,
+              "firstResources": null,
+              "secondEntry": null,
+              "openingHpLoss": null
+            }
+          ],
+          "nonpositive_won_trace_count": 0
+        },
+        {
+          "key": "card1",
+          "samples": 50,
+          "expectedSamples": 50,
+          "missingSamples": 0,
+          "first": {
+            "value": 0,
+            "wins": 0,
+            "samples": 50,
+            "unknown": 0,
+            "reason": null
+          },
+          "secondGivenFirstWin": {
+            "value": null,
+            "wins": 0,
+            "samples": 0,
+            "unknown": 0,
+            "reason": "no_first_win_samples"
+          },
+          "joint": {
+            "value": null,
+            "wins": 0,
+            "samples": 50,
+            "unknown": 0,
+            "reason": "no_first_win_samples"
+          },
+          "logged_traces": [
+            {
+              "seed": 1580782644,
+              "firstWon": false,
+              "firstDied": true,
+              "firstCapped": false,
+              "firstTimeUp": false,
+              "firstHp": -15,
+              "firstPotions": [],
+              "secondBoss": null,
+              "firstTurns": 1,
+              "secondWon": null,
+              "secondDied": null,
+              "firstResources": null,
+              "secondEntry": null,
+              "openingHpLoss": null
+            },
+            {
+              "seed": 2276655469,
+              "firstWon": false,
+              "firstDied": true,
+              "firstCapped": false,
+              "firstTimeUp": false,
+              "firstHp": -14,
+              "firstPotions": [],
+              "secondBoss": null,
+              "firstTurns": 1,
+              "secondWon": null,
+              "secondDied": null,
+              "firstResources": null,
+              "secondEntry": null,
+              "openingHpLoss": null
+            },
+            {
+              "seed": 2972528294,
+              "firstWon": false,
+              "firstDied": true,
+              "firstCapped": false,
+              "firstTimeUp": false,
+              "firstHp": -19,
+              "firstPotions": [],
+              "secondBoss": null,
+              "firstTurns": 1,
+              "secondWon": null,
+              "secondDied": null,
+              "firstResources": null,
+              "secondEntry": null,
+              "openingHpLoss": null
+            }
+          ],
+          "nonpositive_won_trace_count": 0
+        },
+        {
+          "key": "card2",
+          "samples": 50,
+          "expectedSamples": 50,
+          "missingSamples": 0,
+          "first": {
+            "value": 0,
+            "wins": 0,
+            "samples": 50,
+            "unknown": 0,
+            "reason": null
+          },
+          "secondGivenFirstWin": {
+            "value": null,
+            "wins": 0,
+            "samples": 0,
+            "unknown": 0,
+            "reason": "no_first_win_samples"
+          },
+          "joint": {
+            "value": null,
+            "wins": 0,
+            "samples": 50,
+            "unknown": 0,
+            "reason": "no_first_win_samples"
+          },
+          "logged_traces": [
+            {
+              "seed": 1580782644,
+              "firstWon": false,
+              "firstDied": true,
+              "firstCapped": false,
+              "firstTimeUp": false,
+              "firstHp": -15,
+              "firstPotions": [],
+              "secondBoss": null,
+              "firstTurns": 1,
+              "secondWon": null,
+              "secondDied": null,
+              "firstResources": null,
+              "secondEntry": null,
+              "openingHpLoss": null
+            },
+            {
+              "seed": 2276655469,
+              "firstWon": false,
+              "firstDied": true,
+              "firstCapped": false,
+              "firstTimeUp": false,
+              "firstHp": -14,
+              "firstPotions": [],
+              "secondBoss": null,
+              "firstTurns": 1,
+              "secondWon": null,
+              "secondDied": null,
+              "firstResources": null,
+              "secondEntry": null,
+              "openingHpLoss": null
+            },
+            {
+              "seed": 2972528294,
+              "firstWon": false,
+              "firstDied": true,
+              "firstCapped": false,
+              "firstTimeUp": false,
+              "firstHp": -19,
+              "firstPotions": [],
+              "secondBoss": null,
+              "firstTurns": 1,
+              "secondWon": null,
+              "secondDied": null,
+              "firstResources": null,
+              "secondEntry": null,
+              "openingHpLoss": null
+            }
+          ],
+          "nonpositive_won_trace_count": 0
+        },
+        {
+          "key": "skip",
+          "samples": 50,
+          "expectedSamples": 50,
+          "missingSamples": 0,
+          "first": {
+            "value": 0,
+            "wins": 0,
+            "samples": 50,
+            "unknown": 0,
+            "reason": null
+          },
+          "secondGivenFirstWin": {
+            "value": null,
+            "wins": 0,
+            "samples": 0,
+            "unknown": 0,
+            "reason": "no_first_win_samples"
+          },
+          "joint": {
+            "value": null,
+            "wins": 0,
+            "samples": 50,
+            "unknown": 0,
+            "reason": "no_first_win_samples"
+          },
+          "logged_traces": [
+            {
+              "seed": 1580782644,
+              "firstWon": false,
+              "firstDied": true,
+              "firstCapped": false,
+              "firstTimeUp": false,
+              "firstHp": -7,
+              "firstPotions": [],
+              "secondBoss": null,
+              "firstTurns": 1,
+              "secondWon": null,
+              "secondDied": null,
+              "firstResources": null,
+              "secondEntry": null,
+              "openingHpLoss": null
+            },
+            {
+              "seed": 2276655469,
+              "firstWon": false,
+              "firstDied": true,
+              "firstCapped": false,
+              "firstTimeUp": false,
+              "firstHp": -14,
+              "firstPotions": [],
+              "secondBoss": null,
+              "firstTurns": 1,
+              "secondWon": null,
+              "secondDied": null,
+              "firstResources": null,
+              "secondEntry": null,
+              "openingHpLoss": null
+            },
+            {
+              "seed": 2972528294,
+              "firstWon": false,
+              "firstDied": true,
+              "firstCapped": false,
+              "firstTimeUp": false,
+              "firstHp": -19,
+              "firstPotions": [],
+              "secondBoss": null,
+              "firstTurns": 1,
+              "secondWon": null,
+              "secondDied": null,
+              "firstResources": null,
+              "secondEntry": null,
+              "openingHpLoss": null
+            }
+          ],
+          "nonpositive_won_trace_count": 0
+        }
+      ],
+      "global_build_status": "unknown",
+      "readiness_valid": 0,
+      "nonpositive_hp_mentions": 0
+    },
+    {
+      "ref": {
+        "path": "logs/decisions.jsonl",
+        "offset": 3310135784,
+        "bytes": 980220,
+        "sha256": "a96e346473450ec6b34a9372e0931a988747021b614cbaf0b83ad0307789fe40"
+      },
+      "ts": "2026-10-21T06:12:34.355Z",
+      "floor": 37,
+      "label": "shop/plan",
+      "chosen": {
+        "action": "buy_card",
+        "option_index": 5
+      },
+      "result": "completed: Action completed.",
+      "decider": "codex",
+      "fallback": false,
+      "boss": "AEONGLASS",
+      "objective": "F48_F49_continuous",
+      "completion": {
+        "required": true,
+        "uniqueDecks": 30,
+        "originalDecks": 30,
+        "memoHit": false,
+        "budgeted": true,
+        "status": "complete_budget",
+        "failure": false,
+        "samples": 50,
+        "requested": 100,
+        "attempt_id": "7ee23ba4-3970-4ab8-8161-c3a45d2cc7ce",
+        "attempts": 1,
+        "reasons": [],
+        "key": "sim-failure-v1:8afa7a20230aed7088043f01fcde05a4210a553fadc59dd8304294c5e4b5fac7",
+        "latencyTargetMs": 11000,
+        "latencyTargetExceeded": false
+      },
+      "samples": 50,
+      "requested": 100,
+      "ms": 1029,
+      "calibration": "none",
+      "continuous": [
+        {
+          "key": "@current",
+          "samples": 50,
+          "expectedSamples": 50,
+          "missingSamples": 0,
+          "first": {
+            "value": 0,
+            "wins": 0,
+            "samples": 50,
+            "unknown": 0,
+            "reason": null
+          },
+          "secondGivenFirstWin": {
+            "value": null,
+            "wins": 0,
+            "samples": 0,
+            "unknown": 0,
+            "reason": "no_first_win_samples"
+          },
+          "joint": {
+            "value": null,
+            "wins": 0,
+            "samples": 50,
+            "unknown": 0,
+            "reason": "no_first_win_samples"
+          },
+          "logged_traces": [
+            {
+              "seed": 1580782644,
+              "firstWon": false,
+              "firstDied": true,
+              "firstCapped": false,
+              "firstTimeUp": false,
+              "firstHp": -15,
+              "firstPotions": [],
+              "secondBoss": null,
+              "firstTurns": 1,
+              "secondWon": null,
+              "secondDied": null,
+              "firstResources": null,
+              "secondEntry": null,
+              "openingHpLoss": null
+            },
+            {
+              "seed": 2276655469,
+              "firstWon": false,
+              "firstDied": true,
+              "firstCapped": false,
+              "firstTimeUp": false,
+              "firstHp": -14,
+              "firstPotions": [],
+              "secondBoss": null,
+              "firstTurns": 1,
+              "secondWon": null,
+              "secondDied": null,
+              "firstResources": null,
+              "secondEntry": null,
+              "openingHpLoss": null
+            },
+            {
+              "seed": 2972528294,
+              "firstWon": false,
+              "firstDied": true,
+              "firstCapped": false,
+              "firstTimeUp": false,
+              "firstHp": -19,
+              "firstPotions": [],
+              "secondBoss": null,
+              "firstTurns": 1,
+              "secondWon": null,
+              "secondDied": null,
+              "firstResources": null,
+              "secondEntry": null,
+              "openingHpLoss": null
+            }
+          ],
+          "nonpositive_won_trace_count": 0
+        },
+        {
+          "key": "buy_card0",
+          "samples": 50,
+          "expectedSamples": 50,
+          "missingSamples": 0,
+          "first": {
+            "value": 0,
+            "wins": 0,
+            "samples": 50,
+            "unknown": 0,
+            "reason": null
+          },
+          "secondGivenFirstWin": {
+            "value": null,
+            "wins": 0,
+            "samples": 0,
+            "unknown": 0,
+            "reason": "no_first_win_samples"
+          },
+          "joint": {
+            "value": null,
+            "wins": 0,
+            "samples": 50,
+            "unknown": 0,
+            "reason": "no_first_win_samples"
+          },
+          "logged_traces": [
+            {
+              "seed": 1580782644,
+              "firstWon": false,
+              "firstDied": true,
+              "firstCapped": false,
+              "firstTimeUp": false,
+              "firstHp": -11,
+              "firstPotions": [],
+              "secondBoss": null,
+              "firstTurns": 1,
+              "secondWon": null,
+              "secondDied": null,
+              "firstResources": null,
+              "secondEntry": null,
+              "openingHpLoss": null
+            },
+            {
+              "seed": 2276655469,
+              "firstWon": false,
+              "firstDied": true,
+              "firstCapped": false,
+              "firstTimeUp": false,
+              "firstHp": -14,
+              "firstPotions": [],
+              "secondBoss": null,
+              "firstTurns": 1,
+              "secondWon": null,
+              "secondDied": null,
+              "firstResources": null,
+              "secondEntry": null,
+              "openingHpLoss": null
+            },
+            {
+              "seed": 2972528294,
+              "firstWon": false,
+              "firstDied": true,
+              "firstCapped": false,
+              "firstTimeUp": false,
+              "firstHp": -19,
+              "firstPotions": [],
+              "secondBoss": null,
+              "firstTurns": 1,
+              "secondWon": null,
+              "secondDied": null,
+              "firstResources": null,
+              "secondEntry": null,
+              "openingHpLoss": null
+            }
+          ],
+          "nonpositive_won_trace_count": 0
+        },
+        {
+          "key": "buy_card1",
+          "samples": 50,
+          "expectedSamples": 50,
+          "missingSamples": 0,
+          "first": {
+            "value": 0,
+            "wins": 0,
+            "samples": 50,
+            "unknown": 0,
+            "reason": null
+          },
+          "secondGivenFirstWin": {
+            "value": null,
+            "wins": 0,
+            "samples": 0,
+            "unknown": 0,
+            "reason": "no_first_win_samples"
+          },
+          "joint": {
+            "value": null,
+            "wins": 0,
+            "samples": 50,
+            "unknown": 0,
+            "reason": "no_first_win_samples"
+          },
+          "logged_traces": [
+            {
+              "seed": 1580782644,
+              "firstWon": false,
+              "firstDied": true,
+              "firstCapped": false,
+              "firstTimeUp": false,
+              "firstHp": -11,
+              "firstPotions": [],
+              "secondBoss": null,
+              "firstTurns": 1,
+              "secondWon": null,
+              "secondDied": null,
+              "firstResources": null,
+              "secondEntry": null,
+              "openingHpLoss": null
+            },
+            {
+              "seed": 2276655469,
+              "firstWon": false,
+              "firstDied": true,
+              "firstCapped": false,
+              "firstTimeUp": false,
+              "firstHp": -14,
+              "firstPotions": [],
+              "secondBoss": null,
+              "firstTurns": 1,
+              "secondWon": null,
+              "secondDied": null,
+              "firstResources": null,
+              "secondEntry": null,
+              "openingHpLoss": null
+            },
+            {
+              "seed": 2972528294,
+              "firstWon": false,
+              "firstDied": true,
+              "firstCapped": false,
+              "firstTimeUp": false,
+              "firstHp": -19,
+              "firstPotions": [],
+              "secondBoss": null,
+              "firstTurns": 1,
+              "secondWon": null,
+              "secondDied": null,
+              "firstResources": null,
+              "secondEntry": null,
+              "openingHpLoss": null
+            }
+          ],
+          "nonpositive_won_trace_count": 0
+        },
+        {
+          "key": "buy_card2",
+          "samples": 50,
+          "expectedSamples": 50,
+          "missingSamples": 0,
+          "first": {
+            "value": 0,
+            "wins": 0,
+            "samples": 50,
+            "unknown": 0,
+            "reason": null
+          },
+          "secondGivenFirstWin": {
+            "value": null,
+            "wins": 0,
+            "samples": 0,
+            "unknown": 0,
+            "reason": "no_first_win_samples"
+          },
+          "joint": {
+            "value": null,
+            "wins": 0,
+            "samples": 50,
+            "unknown": 0,
+            "reason": "no_first_win_samples"
+          },
+          "logged_traces": [
+            {
+              "seed": 1580782644,
+              "firstWon": false,
+              "firstDied": true,
+              "firstCapped": false,
+              "firstTimeUp": false,
+              "firstHp": -11,
+              "firstPotions": [],
+              "secondBoss": null,
+              "firstTurns": 1,
+              "secondWon": null,
+              "secondDied": null,
+              "firstResources": null,
+              "secondEntry": null,
+              "openingHpLoss": null
+            },
+            {
+              "seed": 2276655469,
+              "firstWon": false,
+              "firstDied": true,
+              "firstCapped": false,
+              "firstTimeUp": false,
+              "firstHp": -14,
+              "firstPotions": [],
+              "secondBoss": null,
+              "firstTurns": 1,
+              "secondWon": null,
+              "secondDied": null,
+              "firstResources": null,
+              "secondEntry": null,
+              "openingHpLoss": null
+            },
+            {
+              "seed": 2972528294,
+              "firstWon": false,
+              "firstDied": true,
+              "firstCapped": false,
+              "firstTimeUp": false,
+              "firstHp": -19,
+              "firstPotions": [],
+              "secondBoss": null,
+              "firstTurns": 1,
+              "secondWon": null,
+              "secondDied": null,
+              "firstResources": null,
+              "secondEntry": null,
+              "openingHpLoss": null
+            }
+          ],
+          "nonpositive_won_trace_count": 0
+        },
+        {
+          "key": "buy_card4",
+          "samples": 50,
+          "expectedSamples": 50,
+          "missingSamples": 0,
+          "first": {
+            "value": 0,
+            "wins": 0,
+            "samples": 50,
+            "unknown": 0,
+            "reason": null
+          },
+          "secondGivenFirstWin": {
+            "value": null,
+            "wins": 0,
+            "samples": 0,
+            "unknown": 0,
+            "reason": "no_first_win_samples"
+          },
+          "joint": {
+            "value": null,
+            "wins": 0,
+            "samples": 50,
+            "unknown": 0,
+            "reason": "no_first_win_samples"
+          },
+          "logged_traces": [
+            {
+              "seed": 1580782644,
+              "firstWon": false,
+              "firstDied": true,
+              "firstCapped": false,
+              "firstTimeUp": false,
+              "firstHp": -11,
+              "firstPotions": [],
+              "secondBoss": null,
+              "firstTurns": 1,
+              "secondWon": null,
+              "secondDied": null,
+              "firstResources": null,
+              "secondEntry": null,
+              "openingHpLoss": null
+            },
+            {
+              "seed": 2276655469,
+              "firstWon": false,
+              "firstDied": true,
+              "firstCapped": false,
+              "firstTimeUp": false,
+              "firstHp": -14,
+              "firstPotions": [],
+              "secondBoss": null,
+              "firstTurns": 1,
+              "secondWon": null,
+              "secondDied": null,
+              "firstResources": null,
+              "secondEntry": null,
+              "openingHpLoss": null
+            },
+            {
+              "seed": 2972528294,
+              "firstWon": false,
+              "firstDied": true,
+              "firstCapped": false,
+              "firstTimeUp": false,
+              "firstHp": -19,
+              "firstPotions": [],
+              "secondBoss": null,
+              "firstTurns": 1,
+              "secondWon": null,
+              "secondDied": null,
+              "firstResources": null,
+              "secondEntry": null,
+              "openingHpLoss": null
+            }
+          ],
+          "nonpositive_won_trace_count": 0
+        },
+        {
+          "key": "buy_card5",
+          "samples": 50,
+          "expectedSamples": 50,
+          "missingSamples": 0,
+          "first": {
+            "value": 0,
+            "wins": 0,
+            "samples": 50,
+            "unknown": 0,
+            "reason": null
+          },
+          "secondGivenFirstWin": {
+            "value": null,
+            "wins": 0,
+            "samples": 0,
+            "unknown": 0,
+            "reason": "no_first_win_samples"
+          },
+          "joint": {
+            "value": null,
+            "wins": 0,
+            "samples": 50,
+            "unknown": 0,
+            "reason": "no_first_win_samples"
+          },
+          "logged_traces": [
+            {
+              "seed": 1580782644,
+              "firstWon": false,
+              "firstDied": true,
+              "firstCapped": false,
+              "firstTimeUp": false,
+              "firstHp": -11,
+              "firstPotions": [],
+              "secondBoss": null,
+              "firstTurns": 1,
+              "secondWon": null,
+              "secondDied": null,
+              "firstResources": null,
+              "secondEntry": null,
+              "openingHpLoss": null
+            },
+            {
+              "seed": 2276655469,
+              "firstWon": false,
+              "firstDied": true,
+              "firstCapped": false,
+              "firstTimeUp": false,
+              "firstHp": -14,
+              "firstPotions": [],
+              "secondBoss": null,
+              "firstTurns": 1,
+              "secondWon": null,
+              "secondDied": null,
+              "firstResources": null,
+              "secondEntry": null,
+              "openingHpLoss": null
+            },
+            {
+              "seed": 2972528294,
+              "firstWon": false,
+              "firstDied": true,
+              "firstCapped": false,
+              "firstTimeUp": false,
+              "firstHp": -19,
+              "firstPotions": [],
+              "secondBoss": null,
+              "firstTurns": 1,
+              "secondWon": null,
+              "secondDied": null,
+              "firstResources": null,
+              "secondEntry": null,
+              "openingHpLoss": null
+            }
+          ],
+          "nonpositive_won_trace_count": 0
+        },
+        {
+          "key": "buy_potion0",
+          "samples": 50,
+          "expectedSamples": 50,
+          "missingSamples": 0,
+          "first": {
+            "value": 0,
+            "wins": 0,
+            "samples": 50,
+            "unknown": 0,
+            "reason": null
+          },
+          "secondGivenFirstWin": {
+            "value": null,
+            "wins": 0,
+            "samples": 0,
+            "unknown": 0,
+            "reason": "no_first_win_samples"
+          },
+          "joint": {
+            "value": null,
+            "wins": 0,
+            "samples": 50,
+            "unknown": 0,
+            "reason": "no_first_win_samples"
+          },
+          "logged_traces": [
+            {
+              "seed": 1580782644,
+              "firstWon": false,
+              "firstDied": true,
+              "firstCapped": false,
+              "firstTimeUp": false,
+              "firstHp": -15,
+              "firstPotions": [],
+              "secondBoss": null,
+              "firstTurns": 1,
+              "secondWon": null,
+              "secondDied": null,
+              "firstResources": null,
+              "secondEntry": null,
+              "openingHpLoss": null
+            },
+            {
+              "seed": 2276655469,
+              "firstWon": false,
+              "firstDied": true,
+              "firstCapped": false,
+              "firstTimeUp": false,
+              "firstHp": -14,
+              "firstPotions": [],
+              "secondBoss": null,
+              "firstTurns": 1,
+              "secondWon": null,
+              "secondDied": null,
+              "firstResources": null,
+              "secondEntry": null,
+              "openingHpLoss": null
+            },
+            {
+              "seed": 2972528294,
+              "firstWon": false,
+              "firstDied": true,
+              "firstCapped": false,
+              "firstTimeUp": false,
+              "firstHp": -19,
+              "firstPotions": [],
+              "secondBoss": null,
+              "firstTurns": 1,
+              "secondWon": null,
+              "secondDied": null,
+              "firstResources": null,
+              "secondEntry": null,
+              "openingHpLoss": null
+            }
+          ],
+          "nonpositive_won_trace_count": 0
+        },
+        {
+          "key": "buy_potion1",
+          "samples": 50,
+          "expectedSamples": 50,
+          "missingSamples": 0,
+          "first": {
+            "value": 0,
+            "wins": 0,
+            "samples": 50,
+            "unknown": 0,
+            "reason": null
+          },
+          "secondGivenFirstWin": {
+            "value": null,
+            "wins": 0,
+            "samples": 0,
+            "unknown": 0,
+            "reason": "no_first_win_samples"
+          },
+          "joint": {
+            "value": null,
+            "wins": 0,
+            "samples": 50,
+            "unknown": 0,
+            "reason": "no_first_win_samples"
+          },
+          "logged_traces": [
+            {
+              "seed": 1580782644,
+              "firstWon": false,
+              "firstDied": true,
+              "firstCapped": false,
+              "firstTimeUp": false,
+              "firstHp": -15,
+              "firstPotions": [],
+              "secondBoss": null,
+              "firstTurns": 1,
+              "secondWon": null,
+              "secondDied": null,
+              "firstResources": null,
+              "secondEntry": null,
+              "openingHpLoss": null
+            },
+            {
+              "seed": 2276655469,
+              "firstWon": false,
+              "firstDied": true,
+              "firstCapped": false,
+              "firstTimeUp": false,
+              "firstHp": -14,
+              "firstPotions": [],
+              "secondBoss": null,
+              "firstTurns": 1,
+              "secondWon": null,
+              "secondDied": null,
+              "firstResources": null,
+              "secondEntry": null,
+              "openingHpLoss": null
+            },
+            {
+              "seed": 2972528294,
+              "firstWon": false,
+              "firstDied": true,
+              "firstCapped": false,
+              "firstTimeUp": false,
+              "firstHp": -19,
+              "firstPotions": [],
+              "secondBoss": null,
+              "firstTurns": 1,
+              "secondWon": null,
+              "secondDied": null,
+              "firstResources": null,
+              "secondEntry": null,
+              "openingHpLoss": null
+            }
+          ],
+          "nonpositive_won_trace_count": 0
+        },
+        {
+          "key": "buy_potion2",
+          "samples": 50,
+          "expectedSamples": 50,
+          "missingSamples": 0,
+          "first": {
+            "value": 0,
+            "wins": 0,
+            "samples": 50,
+            "unknown": 0,
+            "reason": null
+          },
+          "secondGivenFirstWin": {
+            "value": null,
+            "wins": 0,
+            "samples": 0,
+            "unknown": 0,
+            "reason": "no_first_win_samples"
+          },
+          "joint": {
+            "value": null,
+            "wins": 0,
+            "samples": 50,
+            "unknown": 0,
+            "reason": "no_first_win_samples"
+          },
+          "logged_traces": [
+            {
+              "seed": 1580782644,
+              "firstWon": false,
+              "firstDied": true,
+              "firstCapped": false,
+              "firstTimeUp": false,
+              "firstHp": -15,
+              "firstPotions": [],
+              "secondBoss": null,
+              "firstTurns": 1,
+              "secondWon": null,
+              "secondDied": null,
+              "firstResources": null,
+              "secondEntry": null,
+              "openingHpLoss": null
+            },
+            {
+              "seed": 2276655469,
+              "firstWon": false,
+              "firstDied": true,
+              "firstCapped": false,
+              "firstTimeUp": false,
+              "firstHp": -14,
+              "firstPotions": [],
+              "secondBoss": null,
+              "firstTurns": 1,
+              "secondWon": null,
+              "secondDied": null,
+              "firstResources": null,
+              "secondEntry": null,
+              "openingHpLoss": null
+            },
+            {
+              "seed": 2972528294,
+              "firstWon": false,
+              "firstDied": true,
+              "firstCapped": false,
+              "firstTimeUp": false,
+              "firstHp": -19,
+              "firstPotions": [],
+              "secondBoss": null,
+              "firstTurns": 1,
+              "secondWon": null,
+              "secondDied": null,
+              "firstResources": null,
+              "secondEntry": null,
+              "openingHpLoss": null
+            }
+          ],
+          "nonpositive_won_trace_count": 0
+        },
+        {
+          "key": "remove|c0",
+          "samples": 50,
+          "expectedSamples": 50,
+          "missingSamples": 0,
+          "first": {
+            "value": 0,
+            "wins": 0,
+            "samples": 50,
+            "unknown": 0,
+            "reason": null
+          },
+          "secondGivenFirstWin": {
+            "value": null,
+            "wins": 0,
+            "samples": 0,
+            "unknown": 0,
+            "reason": "no_first_win_samples"
+          },
+          "joint": {
+            "value": null,
+            "wins": 0,
+            "samples": 50,
+            "unknown": 0,
+            "reason": "no_first_win_samples"
+          },
+          "logged_traces": [
+            {
+              "seed": 1580782644,
+              "firstWon": false,
+              "firstDied": true,
+              "firstCapped": false,
+              "firstTimeUp": false,
+              "firstHp": -15,
+              "firstPotions": [],
+              "secondBoss": null,
+              "firstTurns": 1,
+              "secondWon": null,
+              "secondDied": null,
+              "firstResources": null,
+              "secondEntry": null,
+              "openingHpLoss": null
+            },
+            {
+              "seed": 2276655469,
+              "firstWon": false,
+              "firstDied": true,
+              "firstCapped": false,
+              "firstTimeUp": false,
+              "firstHp": -14,
+              "firstPotions": [],
+              "secondBoss": null,
+              "firstTurns": 1,
+              "secondWon": null,
+              "secondDied": null,
+              "firstResources": null,
+              "secondEntry": null,
+              "openingHpLoss": null
+            },
+            {
+              "seed": 2972528294,
+              "firstWon": false,
+              "firstDied": true,
+              "firstCapped": false,
+              "firstTimeUp": false,
+              "firstHp": -18,
+              "firstPotions": [],
+              "secondBoss": null,
+              "firstTurns": 1,
+              "secondWon": null,
+              "secondDied": null,
+              "firstResources": null,
+              "secondEntry": null,
+              "openingHpLoss": null
+            }
+          ],
+          "nonpositive_won_trace_count": 0
+        },
+        {
+          "key": "remove|c4",
+          "samples": 50,
+          "expectedSamples": 50,
+          "missingSamples": 0,
+          "first": {
+            "value": 0,
+            "wins": 0,
+            "samples": 50,
+            "unknown": 0,
+            "reason": null
+          },
+          "secondGivenFirstWin": {
+            "value": null,
+            "wins": 0,
+            "samples": 0,
+            "unknown": 0,
+            "reason": "no_first_win_samples"
+          },
+          "joint": {
+            "value": null,
+            "wins": 0,
+            "samples": 50,
+            "unknown": 0,
+            "reason": "no_first_win_samples"
+          },
+          "logged_traces": [
+            {
+              "seed": 1580782644,
+              "firstWon": false,
+              "firstDied": true,
+              "firstCapped": false,
+              "firstTimeUp": false,
+              "firstHp": -15,
+              "firstPotions": [],
+              "secondBoss": null,
+              "firstTurns": 1,
+              "secondWon": null,
+              "secondDied": null,
+              "firstResources": null,
+              "secondEntry": null,
+              "openingHpLoss": null
+            },
+            {
+              "seed": 2276655469,
+              "firstWon": false,
+              "firstDied": true,
+              "firstCapped": false,
+              "firstTimeUp": false,
+              "firstHp": -14,
+              "firstPotions": [],
+              "secondBoss": null,
+              "firstTurns": 1,
+              "secondWon": null,
+              "secondDied": null,
+              "firstResources": null,
+              "secondEntry": null,
+              "openingHpLoss": null
+            },
+            {
+              "seed": 2972528294,
+              "firstWon": false,
+              "firstDied": true,
+              "firstCapped": false,
+              "firstTimeUp": false,
+              "firstHp": -19,
+              "firstPotions": [],
+              "secondBoss": null,
+              "firstTurns": 1,
+              "secondWon": null,
+              "secondDied": null,
+              "firstResources": null,
+              "secondEntry": null,
+              "openingHpLoss": null
+            }
+          ],
+          "nonpositive_won_trace_count": 0
+        },
+        {
+          "key": "remove|c9",
+          "samples": 50,
+          "expectedSamples": 50,
+          "missingSamples": 0,
+          "first": {
+            "value": 0,
+            "wins": 0,
+            "samples": 50,
+            "unknown": 0,
+            "reason": null
+          },
+          "secondGivenFirstWin": {
+            "value": null,
+            "wins": 0,
+            "samples": 0,
+            "unknown": 0,
+            "reason": "no_first_win_samples"
+          },
+          "joint": {
+            "value": null,
+            "wins": 0,
+            "samples": 50,
+            "unknown": 0,
+            "reason": "no_first_win_samples"
+          },
+          "logged_traces": [
+            {
+              "seed": 1580782644,
+              "firstWon": false,
+              "firstDied": true,
+              "firstCapped": false,
+              "firstTimeUp": false,
+              "firstHp": -15,
+              "firstPotions": [],
+              "secondBoss": null,
+              "firstTurns": 1,
+              "secondWon": null,
+              "secondDied": null,
+              "firstResources": null,
+              "secondEntry": null,
+              "openingHpLoss": null
+            },
+            {
+              "seed": 2276655469,
+              "firstWon": false,
+              "firstDied": true,
+              "firstCapped": false,
+              "firstTimeUp": false,
+              "firstHp": -14,
+              "firstPotions": [],
+              "secondBoss": null,
+              "firstTurns": 1,
+              "secondWon": null,
+              "secondDied": null,
+              "firstResources": null,
+              "secondEntry": null,
+              "openingHpLoss": null
+            },
+            {
+              "seed": 2972528294,
+              "firstWon": false,
+              "firstDied": true,
+              "firstCapped": false,
+              "firstTimeUp": false,
+              "firstHp": -19,
+              "firstPotions": [],
+              "secondBoss": null,
+              "firstTurns": 1,
+              "secondWon": null,
+              "secondDied": null,
+              "firstResources": null,
+              "secondEntry": null,
+              "openingHpLoss": null
+            }
+          ],
+          "nonpositive_won_trace_count": 0
+        },
+        {
+          "key": "remove|c10",
+          "samples": 50,
+          "expectedSamples": 50,
+          "missingSamples": 0,
+          "first": {
+            "value": 0,
+            "wins": 0,
+            "samples": 50,
+            "unknown": 0,
+            "reason": null
+          },
+          "secondGivenFirstWin": {
+            "value": null,
+            "wins": 0,
+            "samples": 0,
+            "unknown": 0,
+            "reason": "no_first_win_samples"
+          },
+          "joint": {
+            "value": null,
+            "wins": 0,
+            "samples": 50,
+            "unknown": 0,
+            "reason": "no_first_win_samples"
+          },
+          "logged_traces": [
+            {
+              "seed": 1580782644,
+              "firstWon": false,
+              "firstDied": true,
+              "firstCapped": false,
+              "firstTimeUp": false,
+              "firstHp": -15,
+              "firstPotions": [],
+              "secondBoss": null,
+              "firstTurns": 1,
+              "secondWon": null,
+              "secondDied": null,
+              "firstResources": null,
+              "secondEntry": null,
+              "openingHpLoss": null
+            },
+            {
+              "seed": 2276655469,
+              "firstWon": false,
+              "firstDied": true,
+              "firstCapped": false,
+              "firstTimeUp": false,
+              "firstHp": -14,
+              "firstPotions": [],
+              "secondBoss": null,
+              "firstTurns": 1,
+              "secondWon": null,
+              "secondDied": null,
+              "firstResources": null,
+              "secondEntry": null,
+              "openingHpLoss": null
+            },
+            {
+              "seed": 2972528294,
+              "firstWon": false,
+              "firstDied": true,
+              "firstCapped": false,
+              "firstTimeUp": false,
+              "firstHp": -19,
+              "firstPotions": [],
+              "secondBoss": null,
+              "firstTurns": 1,
+              "secondWon": null,
+              "secondDied": null,
+              "firstResources": null,
+              "secondEntry": null,
+              "openingHpLoss": null
+            }
+          ],
+          "nonpositive_won_trace_count": 0
+        },
+        {
+          "key": "remove|c12",
+          "samples": 50,
+          "expectedSamples": 50,
+          "missingSamples": 0,
+          "first": {
+            "value": 0,
+            "wins": 0,
+            "samples": 50,
+            "unknown": 0,
+            "reason": null
+          },
+          "secondGivenFirstWin": {
+            "value": null,
+            "wins": 0,
+            "samples": 0,
+            "unknown": 0,
+            "reason": "no_first_win_samples"
+          },
+          "joint": {
+            "value": null,
+            "wins": 0,
+            "samples": 50,
+            "unknown": 0,
+            "reason": "no_first_win_samples"
+          },
+          "logged_traces": [
+            {
+              "seed": 1580782644,
+              "firstWon": false,
+              "firstDied": true,
+              "firstCapped": false,
+              "firstTimeUp": false,
+              "firstHp": -7,
+              "firstPotions": [],
+              "secondBoss": null,
+              "firstTurns": 1,
+              "secondWon": null,
+              "secondDied": null,
+              "firstResources": null,
+              "secondEntry": null,
+              "openingHpLoss": null
+            },
+            {
+              "seed": 2276655469,
+              "firstWon": false,
+              "firstDied": true,
+              "firstCapped": false,
+              "firstTimeUp": false,
+              "firstHp": -14,
+              "firstPotions": [],
+              "secondBoss": null,
+              "firstTurns": 1,
+              "secondWon": null,
+              "secondDied": null,
+              "firstResources": null,
+              "secondEntry": null,
+              "openingHpLoss": null
+            },
+            {
+              "seed": 2972528294,
+              "firstWon": false,
+              "firstDied": true,
+              "firstCapped": false,
+              "firstTimeUp": false,
+              "firstHp": -19,
+              "firstPotions": [],
+              "secondBoss": null,
+              "firstTurns": 1,
+              "secondWon": null,
+              "secondDied": null,
+              "firstResources": null,
+              "secondEntry": null,
+              "openingHpLoss": null
+            }
+          ],
+          "nonpositive_won_trace_count": 0
+        },
+        {
+          "key": "remove|c13",
+          "samples": 50,
+          "expectedSamples": 50,
+          "missingSamples": 0,
+          "first": {
+            "value": 0,
+            "wins": 0,
+            "samples": 50,
+            "unknown": 0,
+            "reason": null
+          },
+          "secondGivenFirstWin": {
+            "value": null,
+            "wins": 0,
+            "samples": 0,
+            "unknown": 0,
+            "reason": "no_first_win_samples"
+          },
+          "joint": {
+            "value": null,
+            "wins": 0,
+            "samples": 50,
+            "unknown": 0,
+            "reason": "no_first_win_samples"
+          },
+          "logged_traces": [
+            {
+              "seed": 1580782644,
+              "firstWon": false,
+              "firstDied": true,
+              "firstCapped": false,
+              "firstTimeUp": false,
+              "firstHp": -7,
+              "firstPotions": [],
+              "secondBoss": null,
+              "firstTurns": 1,
+              "secondWon": null,
+              "secondDied": null,
+              "firstResources": null,
+              "secondEntry": null,
+              "openingHpLoss": null
+            },
+            {
+              "seed": 2276655469,
+              "firstWon": false,
+              "firstDied": true,
+              "firstCapped": false,
+              "firstTimeUp": false,
+              "firstHp": -14,
+              "firstPotions": [],
+              "secondBoss": null,
+              "firstTurns": 1,
+              "secondWon": null,
+              "secondDied": null,
+              "firstResources": null,
+              "secondEntry": null,
+              "openingHpLoss": null
+            },
+            {
+              "seed": 2972528294,
+              "firstWon": false,
+              "firstDied": true,
+              "firstCapped": false,
+              "firstTimeUp": false,
+              "firstHp": -19,
+              "firstPotions": [],
+              "secondBoss": null,
+              "firstTurns": 1,
+              "secondWon": null,
+              "secondDied": null,
+              "firstResources": null,
+              "secondEntry": null,
+              "openingHpLoss": null
+            }
+          ],
+          "nonpositive_won_trace_count": 0
+        },
+        {
+          "key": "remove|c14",
+          "samples": 50,
+          "expectedSamples": 50,
+          "missingSamples": 0,
+          "first": {
+            "value": 0,
+            "wins": 0,
+            "samples": 50,
+            "unknown": 0,
+            "reason": null
+          },
+          "secondGivenFirstWin": {
+            "value": null,
+            "wins": 0,
+            "samples": 0,
+            "unknown": 0,
+            "reason": "no_first_win_samples"
+          },
+          "joint": {
+            "value": null,
+            "wins": 0,
+            "samples": 50,
+            "unknown": 0,
+            "reason": "no_first_win_samples"
+          },
+          "logged_traces": [
+            {
+              "seed": 1580782644,
+              "firstWon": false,
+              "firstDied": true,
+              "firstCapped": false,
+              "firstTimeUp": false,
+              "firstHp": -7,
+              "firstPotions": [],
+              "secondBoss": null,
+              "firstTurns": 1,
+              "secondWon": null,
+              "secondDied": null,
+              "firstResources": null,
+              "secondEntry": null,
+              "openingHpLoss": null
+            },
+            {
+              "seed": 2276655469,
+              "firstWon": false,
+              "firstDied": true,
+              "firstCapped": false,
+              "firstTimeUp": false,
+              "firstHp": -14,
+              "firstPotions": [],
+              "secondBoss": null,
+              "firstTurns": 1,
+              "secondWon": null,
+              "secondDied": null,
+              "firstResources": null,
+              "secondEntry": null,
+              "openingHpLoss": null
+            },
+            {
+              "seed": 2972528294,
+              "firstWon": false,
+              "firstDied": true,
+              "firstCapped": false,
+              "firstTimeUp": false,
+              "firstHp": -19,
+              "firstPotions": [],
+              "secondBoss": null,
+              "firstTurns": 1,
+              "secondWon": null,
+              "secondDied": null,
+              "firstResources": null,
+              "secondEntry": null,
+              "openingHpLoss": null
+            }
+          ],
+          "nonpositive_won_trace_count": 0
+        },
+        {
+          "key": "remove|c15",
+          "samples": 50,
+          "expectedSamples": 50,
+          "missingSamples": 0,
+          "first": {
+            "value": 0,
+            "wins": 0,
+            "samples": 50,
+            "unknown": 0,
+            "reason": null
+          },
+          "secondGivenFirstWin": {
+            "value": null,
+            "wins": 0,
+            "samples": 0,
+            "unknown": 0,
+            "reason": "no_first_win_samples"
+          },
+          "joint": {
+            "value": null,
+            "wins": 0,
+            "samples": 50,
+            "unknown": 0,
+            "reason": "no_first_win_samples"
+          },
+          "logged_traces": [
+            {
+              "seed": 1580782644,
+              "firstWon": false,
+              "firstDied": true,
+              "firstCapped": false,
+              "firstTimeUp": false,
+              "firstHp": -7,
+              "firstPotions": [],
+              "secondBoss": null,
+              "firstTurns": 1,
+              "secondWon": null,
+              "secondDied": null,
+              "firstResources": null,
+              "secondEntry": null,
+              "openingHpLoss": null
+            },
+            {
+              "seed": 2276655469,
+              "firstWon": false,
+              "firstDied": true,
+              "firstCapped": false,
+              "firstTimeUp": false,
+              "firstHp": -14,
+              "firstPotions": [],
+              "secondBoss": null,
+              "firstTurns": 1,
+              "secondWon": null,
+              "secondDied": null,
+              "firstResources": null,
+              "secondEntry": null,
+              "openingHpLoss": null
+            },
+            {
+              "seed": 2972528294,
+              "firstWon": false,
+              "firstDied": true,
+              "firstCapped": false,
+              "firstTimeUp": false,
+              "firstHp": -19,
+              "firstPotions": [],
+              "secondBoss": null,
+              "firstTurns": 1,
+              "secondWon": null,
+              "secondDied": null,
+              "firstResources": null,
+              "secondEntry": null,
+              "openingHpLoss": null
+            }
+          ],
+          "nonpositive_won_trace_count": 0
+        },
+        {
+          "key": "remove|c16",
+          "samples": 50,
+          "expectedSamples": 50,
+          "missingSamples": 0,
+          "first": {
+            "value": 0,
+            "wins": 0,
+            "samples": 50,
+            "unknown": 0,
+            "reason": null
+          },
+          "secondGivenFirstWin": {
+            "value": null,
+            "wins": 0,
+            "samples": 0,
+            "unknown": 0,
+            "reason": "no_first_win_samples"
+          },
+          "joint": {
+            "value": null,
+            "wins": 0,
+            "samples": 50,
+            "unknown": 0,
+            "reason": "no_first_win_samples"
+          },
+          "logged_traces": [
+            {
+              "seed": 1580782644,
+              "firstWon": false,
+              "firstDied": true,
+              "firstCapped": false,
+              "firstTimeUp": false,
+              "firstHp": -7,
+              "firstPotions": [],
+              "secondBoss": null,
+              "firstTurns": 1,
+              "secondWon": null,
+              "secondDied": null,
+              "firstResources": null,
+              "secondEntry": null,
+              "openingHpLoss": null
+            },
+            {
+              "seed": 2276655469,
+              "firstWon": false,
+              "firstDied": true,
+              "firstCapped": false,
+              "firstTimeUp": false,
+              "firstHp": -14,
+              "firstPotions": [],
+              "secondBoss": null,
+              "firstTurns": 1,
+              "secondWon": null,
+              "secondDied": null,
+              "firstResources": null,
+              "secondEntry": null,
+              "openingHpLoss": null
+            },
+            {
+              "seed": 2972528294,
+              "firstWon": false,
+              "firstDied": true,
+              "firstCapped": false,
+              "firstTimeUp": false,
+              "firstHp": -19,
+              "firstPotions": [],
+              "secondBoss": null,
+              "firstTurns": 1,
+              "secondWon": null,
+              "secondDied": null,
+              "firstResources": null,
+              "secondEntry": null,
+              "openingHpLoss": null
+            }
+          ],
+          "nonpositive_won_trace_count": 0
+        },
+        {
+          "key": "remove|c17",
+          "samples": 50,
+          "expectedSamples": 50,
+          "missingSamples": 0,
+          "first": {
+            "value": 0,
+            "wins": 0,
+            "samples": 50,
+            "unknown": 0,
+            "reason": null
+          },
+          "secondGivenFirstWin": {
+            "value": null,
+            "wins": 0,
+            "samples": 0,
+            "unknown": 0,
+            "reason": "no_first_win_samples"
+          },
+          "joint": {
+            "value": null,
+            "wins": 0,
+            "samples": 50,
+            "unknown": 0,
+            "reason": "no_first_win_samples"
+          },
+          "logged_traces": [
+            {
+              "seed": 1580782644,
+              "firstWon": false,
+              "firstDied": true,
+              "firstCapped": false,
+              "firstTimeUp": false,
+              "firstHp": -7,
+              "firstPotions": [],
+              "secondBoss": null,
+              "firstTurns": 1,
+              "secondWon": null,
+              "secondDied": null,
+              "firstResources": null,
+              "secondEntry": null,
+              "openingHpLoss": null
+            },
+            {
+              "seed": 2276655469,
+              "firstWon": false,
+              "firstDied": true,
+              "firstCapped": false,
+              "firstTimeUp": false,
+              "firstHp": -14,
+              "firstPotions": [],
+              "secondBoss": null,
+              "firstTurns": 1,
+              "secondWon": null,
+              "secondDied": null,
+              "firstResources": null,
+              "secondEntry": null,
+              "openingHpLoss": null
+            },
+            {
+              "seed": 2972528294,
+              "firstWon": false,
+              "firstDied": true,
+              "firstCapped": false,
+              "firstTimeUp": false,
+              "firstHp": -19,
+              "firstPotions": [],
+              "secondBoss": null,
+              "firstTurns": 1,
+              "secondWon": null,
+              "secondDied": null,
+              "firstResources": null,
+              "secondEntry": null,
+              "openingHpLoss": null
+            }
+          ],
+          "nonpositive_won_trace_count": 0
+        },
+        {
+          "key": "remove|c18",
+          "samples": 50,
+          "expectedSamples": 50,
+          "missingSamples": 0,
+          "first": {
+            "value": 0,
+            "wins": 0,
+            "samples": 50,
+            "unknown": 0,
+            "reason": null
+          },
+          "secondGivenFirstWin": {
+            "value": null,
+            "wins": 0,
+            "samples": 0,
+            "unknown": 0,
+            "reason": "no_first_win_samples"
+          },
+          "joint": {
+            "value": null,
+            "wins": 0,
+            "samples": 50,
+            "unknown": 0,
+            "reason": "no_first_win_samples"
+          },
+          "logged_traces": [
+            {
+              "seed": 1580782644,
+              "firstWon": false,
+              "firstDied": true,
+              "firstCapped": false,
+              "firstTimeUp": false,
+              "firstHp": -7,
+              "firstPotions": [],
+              "secondBoss": null,
+              "firstTurns": 1,
+              "secondWon": null,
+              "secondDied": null,
+              "firstResources": null,
+              "secondEntry": null,
+              "openingHpLoss": null
+            },
+            {
+              "seed": 2276655469,
+              "firstWon": false,
+              "firstDied": true,
+              "firstCapped": false,
+              "firstTimeUp": false,
+              "firstHp": -14,
+              "firstPotions": [],
+              "secondBoss": null,
+              "firstTurns": 1,
+              "secondWon": null,
+              "secondDied": null,
+              "firstResources": null,
+              "secondEntry": null,
+              "openingHpLoss": null
+            },
+            {
+              "seed": 2972528294,
+              "firstWon": false,
+              "firstDied": true,
+              "firstCapped": false,
+              "firstTimeUp": false,
+              "firstHp": -19,
+              "firstPotions": [],
+              "secondBoss": null,
+              "firstTurns": 1,
+              "secondWon": null,
+              "secondDied": null,
+              "firstResources": null,
+              "secondEntry": null,
+              "openingHpLoss": null
+            }
+          ],
+          "nonpositive_won_trace_count": 0
+        },
+        {
+          "key": "remove|c19",
+          "samples": 50,
+          "expectedSamples": 50,
+          "missingSamples": 0,
+          "first": {
+            "value": 0,
+            "wins": 0,
+            "samples": 50,
+            "unknown": 0,
+            "reason": null
+          },
+          "secondGivenFirstWin": {
+            "value": null,
+            "wins": 0,
+            "samples": 0,
+            "unknown": 0,
+            "reason": "no_first_win_samples"
+          },
+          "joint": {
+            "value": null,
+            "wins": 0,
+            "samples": 50,
+            "unknown": 0,
+            "reason": "no_first_win_samples"
+          },
+          "logged_traces": [
+            {
+              "seed": 1580782644,
+              "firstWon": false,
+              "firstDied": true,
+              "firstCapped": false,
+              "firstTimeUp": false,
+              "firstHp": -7,
+              "firstPotions": [],
+              "secondBoss": null,
+              "firstTurns": 1,
+              "secondWon": null,
+              "secondDied": null,
+              "firstResources": null,
+              "secondEntry": null,
+              "openingHpLoss": null
+            },
+            {
+              "seed": 2276655469,
+              "firstWon": false,
+              "firstDied": true,
+              "firstCapped": false,
+              "firstTimeUp": false,
+              "firstHp": -14,
+              "firstPotions": [],
+              "secondBoss": null,
+              "firstTurns": 1,
+              "secondWon": null,
+              "secondDied": null,
+              "firstResources": null,
+              "secondEntry": null,
+              "openingHpLoss": null
+            },
+            {
+              "seed": 2972528294,
+              "firstWon": false,
+              "firstDied": true,
+              "firstCapped": false,
+              "firstTimeUp": false,
+              "firstHp": -19,
+              "firstPotions": [],
+              "secondBoss": null,
+              "firstTurns": 1,
+              "secondWon": null,
+              "secondDied": null,
+              "firstResources": null,
+              "secondEntry": null,
+              "openingHpLoss": null
+            }
+          ],
+          "nonpositive_won_trace_count": 0
+        },
+        {
+          "key": "remove|c20",
+          "samples": 50,
+          "expectedSamples": 50,
+          "missingSamples": 0,
+          "first": {
+            "value": 0,
+            "wins": 0,
+            "samples": 50,
+            "unknown": 0,
+            "reason": null
+          },
+          "secondGivenFirstWin": {
+            "value": null,
+            "wins": 0,
+            "samples": 0,
+            "unknown": 0,
+            "reason": "no_first_win_samples"
+          },
+          "joint": {
+            "value": null,
+            "wins": 0,
+            "samples": 50,
+            "unknown": 0,
+            "reason": "no_first_win_samples"
+          },
+          "logged_traces": [
+            {
+              "seed": 1580782644,
+              "firstWon": false,
+              "firstDied": true,
+              "firstCapped": false,
+              "firstTimeUp": false,
+              "firstHp": -7,
+              "firstPotions": [],
+              "secondBoss": null,
+              "firstTurns": 1,
+              "secondWon": null,
+              "secondDied": null,
+              "firstResources": null,
+              "secondEntry": null,
+              "openingHpLoss": null
+            },
+            {
+              "seed": 2276655469,
+              "firstWon": false,
+              "firstDied": true,
+              "firstCapped": false,
+              "firstTimeUp": false,
+              "firstHp": -14,
+              "firstPotions": [],
+              "secondBoss": null,
+              "firstTurns": 1,
+              "secondWon": null,
+              "secondDied": null,
+              "firstResources": null,
+              "secondEntry": null,
+              "openingHpLoss": null
+            },
+            {
+              "seed": 2972528294,
+              "firstWon": false,
+              "firstDied": true,
+              "firstCapped": false,
+              "firstTimeUp": false,
+              "firstHp": -19,
+              "firstPotions": [],
+              "secondBoss": null,
+              "firstTurns": 1,
+              "secondWon": null,
+              "secondDied": null,
+              "firstResources": null,
+              "secondEntry": null,
+              "openingHpLoss": null
+            }
+          ],
+          "nonpositive_won_trace_count": 0
+        },
+        {
+          "key": "remove|c21",
+          "samples": 50,
+          "expectedSamples": 50,
+          "missingSamples": 0,
+          "first": {
+            "value": 0,
+            "wins": 0,
+            "samples": 50,
+            "unknown": 0,
+            "reason": null
+          },
+          "secondGivenFirstWin": {
+            "value": null,
+            "wins": 0,
+            "samples": 0,
+            "unknown": 0,
+            "reason": "no_first_win_samples"
+          },
+          "joint": {
+            "value": null,
+            "wins": 0,
+            "samples": 50,
+            "unknown": 0,
+            "reason": "no_first_win_samples"
+          },
+          "logged_traces": [
+            {
+              "seed": 1580782644,
+              "firstWon": false,
+              "firstDied": true,
+              "firstCapped": false,
+              "firstTimeUp": false,
+              "firstHp": -7,
+              "firstPotions": [],
+              "secondBoss": null,
+              "firstTurns": 1,
+              "secondWon": null,
+              "secondDied": null,
+              "firstResources": null,
+              "secondEntry": null,
+              "openingHpLoss": null
+            },
+            {
+              "seed": 2276655469,
+              "firstWon": false,
+              "firstDied": true,
+              "firstCapped": false,
+              "firstTimeUp": false,
+              "firstHp": -14,
+              "firstPotions": [],
+              "secondBoss": null,
+              "firstTurns": 1,
+              "secondWon": null,
+              "secondDied": null,
+              "firstResources": null,
+              "secondEntry": null,
+              "openingHpLoss": null
+            },
+            {
+              "seed": 2972528294,
+              "firstWon": false,
+              "firstDied": true,
+              "firstCapped": false,
+              "firstTimeUp": false,
+              "firstHp": -19,
+              "firstPotions": [],
+              "secondBoss": null,
+              "firstTurns": 1,
+              "secondWon": null,
+              "secondDied": null,
+              "firstResources": null,
+              "secondEntry": null,
+              "openingHpLoss": null
+            }
+          ],
+          "nonpositive_won_trace_count": 0
+        },
+        {
+          "key": "remove|c22",
+          "samples": 50,
+          "expectedSamples": 50,
+          "missingSamples": 0,
+          "first": {
+            "value": 0,
+            "wins": 0,
+            "samples": 50,
+            "unknown": 0,
+            "reason": null
+          },
+          "secondGivenFirstWin": {
+            "value": null,
+            "wins": 0,
+            "samples": 0,
+            "unknown": 0,
+            "reason": "no_first_win_samples"
+          },
+          "joint": {
+            "value": null,
+            "wins": 0,
+            "samples": 50,
+            "unknown": 0,
+            "reason": "no_first_win_samples"
+          },
+          "logged_traces": [
+            {
+              "seed": 1580782644,
+              "firstWon": false,
+              "firstDied": true,
+              "firstCapped": false,
+              "firstTimeUp": false,
+              "firstHp": -7,
+              "firstPotions": [],
+              "secondBoss": null,
+              "firstTurns": 1,
+              "secondWon": null,
+              "secondDied": null,
+              "firstResources": null,
+              "secondEntry": null,
+              "openingHpLoss": null
+            },
+            {
+              "seed": 2276655469,
+              "firstWon": false,
+              "firstDied": true,
+              "firstCapped": false,
+              "firstTimeUp": false,
+              "firstHp": -14,
+              "firstPotions": [],
+              "secondBoss": null,
+              "firstTurns": 1,
+              "secondWon": null,
+              "secondDied": null,
+              "firstResources": null,
+              "secondEntry": null,
+              "openingHpLoss": null
+            },
+            {
+              "seed": 2972528294,
+              "firstWon": false,
+              "firstDied": true,
+              "firstCapped": false,
+              "firstTimeUp": false,
+              "firstHp": -19,
+              "firstPotions": [],
+              "secondBoss": null,
+              "firstTurns": 1,
+              "secondWon": null,
+              "secondDied": null,
+              "firstResources": null,
+              "secondEntry": null,
+              "openingHpLoss": null
+            }
+          ],
+          "nonpositive_won_trace_count": 0
+        },
+        {
+          "key": "remove|c23",
+          "samples": 50,
+          "expectedSamples": 50,
+          "missingSamples": 0,
+          "first": {
+            "value": 0,
+            "wins": 0,
+            "samples": 50,
+            "unknown": 0,
+            "reason": null
+          },
+          "secondGivenFirstWin": {
+            "value": null,
+            "wins": 0,
+            "samples": 0,
+            "unknown": 0,
+            "reason": "no_first_win_samples"
+          },
+          "joint": {
+            "value": null,
+            "wins": 0,
+            "samples": 50,
+            "unknown": 0,
+            "reason": "no_first_win_samples"
+          },
+          "logged_traces": [
+            {
+              "seed": 1580782644,
+              "firstWon": false,
+              "firstDied": true,
+              "firstCapped": false,
+              "firstTimeUp": false,
+              "firstHp": -7,
+              "firstPotions": [],
+              "secondBoss": null,
+              "firstTurns": 1,
+              "secondWon": null,
+              "secondDied": null,
+              "firstResources": null,
+              "secondEntry": null,
+              "openingHpLoss": null
+            },
+            {
+              "seed": 2276655469,
+              "firstWon": false,
+              "firstDied": true,
+              "firstCapped": false,
+              "firstTimeUp": false,
+              "firstHp": -14,
+              "firstPotions": [],
+              "secondBoss": null,
+              "firstTurns": 1,
+              "secondWon": null,
+              "secondDied": null,
+              "firstResources": null,
+              "secondEntry": null,
+              "openingHpLoss": null
+            },
+            {
+              "seed": 2972528294,
+              "firstWon": false,
+              "firstDied": true,
+              "firstCapped": false,
+              "firstTimeUp": false,
+              "firstHp": -19,
+              "firstPotions": [],
+              "secondBoss": null,
+              "firstTurns": 1,
+              "secondWon": null,
+              "secondDied": null,
+              "firstResources": null,
+              "secondEntry": null,
+              "openingHpLoss": null
+            }
+          ],
+          "nonpositive_won_trace_count": 0
+        },
+        {
+          "key": "remove|c24",
+          "samples": 50,
+          "expectedSamples": 50,
+          "missingSamples": 0,
+          "first": {
+            "value": 0,
+            "wins": 0,
+            "samples": 50,
+            "unknown": 0,
+            "reason": null
+          },
+          "secondGivenFirstWin": {
+            "value": null,
+            "wins": 0,
+            "samples": 0,
+            "unknown": 0,
+            "reason": "no_first_win_samples"
+          },
+          "joint": {
+            "value": null,
+            "wins": 0,
+            "samples": 50,
+            "unknown": 0,
+            "reason": "no_first_win_samples"
+          },
+          "logged_traces": [
+            {
+              "seed": 1580782644,
+              "firstWon": false,
+              "firstDied": true,
+              "firstCapped": false,
+              "firstTimeUp": false,
+              "firstHp": -7,
+              "firstPotions": [],
+              "secondBoss": null,
+              "firstTurns": 1,
+              "secondWon": null,
+              "secondDied": null,
+              "firstResources": null,
+              "secondEntry": null,
+              "openingHpLoss": null
+            },
+            {
+              "seed": 2276655469,
+              "firstWon": false,
+              "firstDied": true,
+              "firstCapped": false,
+              "firstTimeUp": false,
+              "firstHp": -14,
+              "firstPotions": [],
+              "secondBoss": null,
+              "firstTurns": 1,
+              "secondWon": null,
+              "secondDied": null,
+              "firstResources": null,
+              "secondEntry": null,
+              "openingHpLoss": null
+            },
+            {
+              "seed": 2972528294,
+              "firstWon": false,
+              "firstDied": true,
+              "firstCapped": false,
+              "firstTimeUp": false,
+              "firstHp": -19,
+              "firstPotions": [],
+              "secondBoss": null,
+              "firstTurns": 1,
+              "secondWon": null,
+              "secondDied": null,
+              "firstResources": null,
+              "secondEntry": null,
+              "openingHpLoss": null
+            }
+          ],
+          "nonpositive_won_trace_count": 0
+        },
+        {
+          "key": "remove|c25",
+          "samples": 50,
+          "expectedSamples": 50,
+          "missingSamples": 0,
+          "first": {
+            "value": 0,
+            "wins": 0,
+            "samples": 50,
+            "unknown": 0,
+            "reason": null
+          },
+          "secondGivenFirstWin": {
+            "value": null,
+            "wins": 0,
+            "samples": 0,
+            "unknown": 0,
+            "reason": "no_first_win_samples"
+          },
+          "joint": {
+            "value": null,
+            "wins": 0,
+            "samples": 50,
+            "unknown": 0,
+            "reason": "no_first_win_samples"
+          },
+          "logged_traces": [
+            {
+              "seed": 1580782644,
+              "firstWon": false,
+              "firstDied": true,
+              "firstCapped": false,
+              "firstTimeUp": false,
+              "firstHp": -7,
+              "firstPotions": [],
+              "secondBoss": null,
+              "firstTurns": 1,
+              "secondWon": null,
+              "secondDied": null,
+              "firstResources": null,
+              "secondEntry": null,
+              "openingHpLoss": null
+            },
+            {
+              "seed": 2276655469,
+              "firstWon": false,
+              "firstDied": true,
+              "firstCapped": false,
+              "firstTimeUp": false,
+              "firstHp": -14,
+              "firstPotions": [],
+              "secondBoss": null,
+              "firstTurns": 1,
+              "secondWon": null,
+              "secondDied": null,
+              "firstResources": null,
+              "secondEntry": null,
+              "openingHpLoss": null
+            },
+            {
+              "seed": 2972528294,
+              "firstWon": false,
+              "firstDied": true,
+              "firstCapped": false,
+              "firstTimeUp": false,
+              "firstHp": -19,
+              "firstPotions": [],
+              "secondBoss": null,
+              "firstTurns": 1,
+              "secondWon": null,
+              "secondDied": null,
+              "firstResources": null,
+              "secondEntry": null,
+              "openingHpLoss": null
+            }
+          ],
+          "nonpositive_won_trace_count": 0
+        },
+        {
+          "key": "remove|c26",
+          "samples": 50,
+          "expectedSamples": 50,
+          "missingSamples": 0,
+          "first": {
+            "value": 0,
+            "wins": 0,
+            "samples": 50,
+            "unknown": 0,
+            "reason": null
+          },
+          "secondGivenFirstWin": {
+            "value": null,
+            "wins": 0,
+            "samples": 0,
+            "unknown": 0,
+            "reason": "no_first_win_samples"
+          },
+          "joint": {
+            "value": null,
+            "wins": 0,
+            "samples": 50,
+            "unknown": 0,
+            "reason": "no_first_win_samples"
+          },
+          "logged_traces": [
+            {
+              "seed": 1580782644,
+              "firstWon": false,
+              "firstDied": true,
+              "firstCapped": false,
+              "firstTimeUp": false,
+              "firstHp": -7,
+              "firstPotions": [],
+              "secondBoss": null,
+              "firstTurns": 1,
+              "secondWon": null,
+              "secondDied": null,
+              "firstResources": null,
+              "secondEntry": null,
+              "openingHpLoss": null
+            },
+            {
+              "seed": 2276655469,
+              "firstWon": false,
+              "firstDied": true,
+              "firstCapped": false,
+              "firstTimeUp": false,
+              "firstHp": -14,
+              "firstPotions": [],
+              "secondBoss": null,
+              "firstTurns": 1,
+              "secondWon": null,
+              "secondDied": null,
+              "firstResources": null,
+              "secondEntry": null,
+              "openingHpLoss": null
+            },
+            {
+              "seed": 2972528294,
+              "firstWon": false,
+              "firstDied": true,
+              "firstCapped": false,
+              "firstTimeUp": false,
+              "firstHp": -19,
+              "firstPotions": [],
+              "secondBoss": null,
+              "firstTurns": 1,
+              "secondWon": null,
+              "secondDied": null,
+              "firstResources": null,
+              "secondEntry": null,
+              "openingHpLoss": null
+            }
+          ],
+          "nonpositive_won_trace_count": 0
+        },
+        {
+          "key": "remove|c27",
+          "samples": 50,
+          "expectedSamples": 50,
+          "missingSamples": 0,
+          "first": {
+            "value": 0,
+            "wins": 0,
+            "samples": 50,
+            "unknown": 0,
+            "reason": null
+          },
+          "secondGivenFirstWin": {
+            "value": null,
+            "wins": 0,
+            "samples": 0,
+            "unknown": 0,
+            "reason": "no_first_win_samples"
+          },
+          "joint": {
+            "value": null,
+            "wins": 0,
+            "samples": 50,
+            "unknown": 0,
+            "reason": "no_first_win_samples"
+          },
+          "logged_traces": [
+            {
+              "seed": 1580782644,
+              "firstWon": false,
+              "firstDied": true,
+              "firstCapped": false,
+              "firstTimeUp": false,
+              "firstHp": -7,
+              "firstPotions": [],
+              "secondBoss": null,
+              "firstTurns": 1,
+              "secondWon": null,
+              "secondDied": null,
+              "firstResources": null,
+              "secondEntry": null,
+              "openingHpLoss": null
+            },
+            {
+              "seed": 2276655469,
+              "firstWon": false,
+              "firstDied": true,
+              "firstCapped": false,
+              "firstTimeUp": false,
+              "firstHp": -14,
+              "firstPotions": [],
+              "secondBoss": null,
+              "firstTurns": 1,
+              "secondWon": null,
+              "secondDied": null,
+              "firstResources": null,
+              "secondEntry": null,
+              "openingHpLoss": null
+            },
+            {
+              "seed": 2972528294,
+              "firstWon": false,
+              "firstDied": true,
+              "firstCapped": false,
+              "firstTimeUp": false,
+              "firstHp": -19,
+              "firstPotions": [],
+              "secondBoss": null,
+              "firstTurns": 1,
+              "secondWon": null,
+              "secondDied": null,
+              "firstResources": null,
+              "secondEntry": null,
+              "openingHpLoss": null
+            }
+          ],
+          "nonpositive_won_trace_count": 0
+        },
+        {
+          "key": "remove|c28",
+          "samples": 50,
+          "expectedSamples": 50,
+          "missingSamples": 0,
+          "first": {
+            "value": 0,
+            "wins": 0,
+            "samples": 50,
+            "unknown": 0,
+            "reason": null
+          },
+          "secondGivenFirstWin": {
+            "value": null,
+            "wins": 0,
+            "samples": 0,
+            "unknown": 0,
+            "reason": "no_first_win_samples"
+          },
+          "joint": {
+            "value": null,
+            "wins": 0,
+            "samples": 50,
+            "unknown": 0,
+            "reason": "no_first_win_samples"
+          },
+          "logged_traces": [
+            {
+              "seed": 1580782644,
+              "firstWon": false,
+              "firstDied": true,
+              "firstCapped": false,
+              "firstTimeUp": false,
+              "firstHp": -7,
+              "firstPotions": [],
+              "secondBoss": null,
+              "firstTurns": 1,
+              "secondWon": null,
+              "secondDied": null,
+              "firstResources": null,
+              "secondEntry": null,
+              "openingHpLoss": null
+            },
+            {
+              "seed": 2276655469,
+              "firstWon": false,
+              "firstDied": true,
+              "firstCapped": false,
+              "firstTimeUp": false,
+              "firstHp": -14,
+              "firstPotions": [],
+              "secondBoss": null,
+              "firstTurns": 1,
+              "secondWon": null,
+              "secondDied": null,
+              "firstResources": null,
+              "secondEntry": null,
+              "openingHpLoss": null
+            },
+            {
+              "seed": 2972528294,
+              "firstWon": false,
+              "firstDied": true,
+              "firstCapped": false,
+              "firstTimeUp": false,
+              "firstHp": -19,
+              "firstPotions": [],
+              "secondBoss": null,
+              "firstTurns": 1,
+              "secondWon": null,
+              "secondDied": null,
+              "firstResources": null,
+              "secondEntry": null,
+              "openingHpLoss": null
+            }
+          ],
+          "nonpositive_won_trace_count": 0
+        },
+        {
+          "key": "leave",
+          "samples": 50,
+          "expectedSamples": 50,
+          "missingSamples": 0,
+          "first": {
+            "value": 0,
+            "wins": 0,
+            "samples": 50,
+            "unknown": 0,
+            "reason": null
+          },
+          "secondGivenFirstWin": {
+            "value": null,
+            "wins": 0,
+            "samples": 0,
+            "unknown": 0,
+            "reason": "no_first_win_samples"
+          },
+          "joint": {
+            "value": null,
+            "wins": 0,
+            "samples": 50,
+            "unknown": 0,
+            "reason": "no_first_win_samples"
+          },
+          "logged_traces": [
+            {
+              "seed": 1580782644,
+              "firstWon": false,
+              "firstDied": true,
+              "firstCapped": false,
+              "firstTimeUp": false,
+              "firstHp": -15,
+              "firstPotions": [],
+              "secondBoss": null,
+              "firstTurns": 1,
+              "secondWon": null,
+              "secondDied": null,
+              "firstResources": null,
+              "secondEntry": null,
+              "openingHpLoss": null
+            },
+            {
+              "seed": 2276655469,
+              "firstWon": false,
+              "firstDied": true,
+              "firstCapped": false,
+              "firstTimeUp": false,
+              "firstHp": -14,
+              "firstPotions": [],
+              "secondBoss": null,
+              "firstTurns": 1,
+              "secondWon": null,
+              "secondDied": null,
+              "firstResources": null,
+              "secondEntry": null,
+              "openingHpLoss": null
+            },
+            {
+              "seed": 2972528294,
+              "firstWon": false,
+              "firstDied": true,
+              "firstCapped": false,
+              "firstTimeUp": false,
+              "firstHp": -19,
+              "firstPotions": [],
+              "secondBoss": null,
+              "firstTurns": 1,
+              "secondWon": null,
+              "secondDied": null,
+              "firstResources": null,
+              "secondEntry": null,
+              "openingHpLoss": null
+            }
+          ],
+          "nonpositive_won_trace_count": 0
+        }
+      ],
+      "global_build_status": "unknown",
+      "readiness_valid": 0,
+      "nonpositive_hp_mentions": 0
+    },
+    {
+      "ref": {
+        "path": "logs/decisions.jsonl",
+        "offset": 3311124935,
+        "bytes": 121286,
+        "sha256": "30acde76f9fbadc9abe999a2f603665ef24ed07bb034dde47ebb8d2ba72659fc"
+      },
+      "ts": "2026-10-21T06:13:01.081Z",
+      "floor": 38,
+      "label": "event/plan",
+      "chosen": {
+        "action": "choose_event_option",
+        "option_index": 1
+      },
+      "result": "completed: Action completed.",
+      "decider": "codex",
+      "fallback": false,
+      "boss": "AEONGLASS",
+      "objective": "F48_F49_continuous",
+      "completion": {
+        "required": true,
+        "uniqueDecks": 1,
+        "originalDecks": 1,
+        "memoHit": false,
+        "budgeted": true,
+        "status": "complete_budget",
+        "failure": false,
+        "samples": 100,
+        "requested": 100,
+        "attempt_id": "ea3590e5-a36d-4bc1-a2fb-7b4d591baa08",
+        "attempts": 1,
+        "reasons": [],
+        "key": "sim-failure-v1:08b05e9446cecdb7b1a417b7fbf4ac80aeed1f202ed66fb66dc4589c7468df13",
+        "latencyTargetMs": 11000,
+        "latencyTargetExceeded": false
+      },
+      "samples": 100,
+      "requested": 100,
+      "ms": 381,
+      "calibration": "none",
+      "continuous": [
+        {
+          "key": "@current",
+          "samples": 100,
+          "expectedSamples": 100,
+          "missingSamples": 0,
+          "first": {
+            "value": 0,
+            "wins": 0,
+            "samples": 100,
+            "unknown": 0,
+            "reason": null
+          },
+          "secondGivenFirstWin": {
+            "value": null,
+            "wins": 0,
+            "samples": 0,
+            "unknown": 0,
+            "reason": "no_first_win_samples"
+          },
+          "joint": {
+            "value": null,
+            "wins": 0,
+            "samples": 100,
+            "unknown": 0,
+            "reason": "no_first_win_samples"
+          },
+          "logged_traces": [
+            {
+              "seed": 1580782644,
+              "firstWon": false,
+              "firstDied": true,
+              "firstCapped": false,
+              "firstTimeUp": false,
+              "firstHp": -19,
+              "firstPotions": [],
+              "secondBoss": null,
+              "firstTurns": 5,
+              "secondWon": null,
+              "secondDied": null,
+              "firstResources": null,
+              "secondEntry": null,
+              "openingHpLoss": null
+            },
+            {
+              "seed": 2276655469,
+              "firstWon": false,
+              "firstDied": true,
+              "firstCapped": false,
+              "firstTimeUp": false,
+              "firstHp": 0,
+              "firstPotions": [],
+              "secondBoss": null,
+              "firstTurns": 5,
+              "secondWon": null,
+              "secondDied": null,
+              "firstResources": null,
+              "secondEntry": null,
+              "openingHpLoss": null
+            },
+            {
+              "seed": 2972528294,
+              "firstWon": false,
+              "firstDied": true,
+              "firstCapped": false,
+              "firstTimeUp": false,
+              "firstHp": -7,
+              "firstPotions": [],
+              "secondBoss": null,
+              "firstTurns": 4,
+              "secondWon": null,
+              "secondDied": null,
+              "firstResources": null,
+              "secondEntry": null,
+              "openingHpLoss": null
+            }
+          ],
+          "nonpositive_won_trace_count": 0
+        }
+      ],
+      "global_build_status": "unknown",
+      "readiness_valid": 0,
+      "nonpositive_hp_mentions": 0
+    }
+  ],
+  "brain_rows": [
+    {
+      "ref": {
+        "path": "logs/brain.jsonl",
+        "offset": 1202732151,
+        "bytes": 33656,
+        "sha256": "4f6101026603bd6a05d85f3f700a3bef2ffc3c3252b4e35cf7c8cef7418cb4df"
+      },
+      "ts": "2026-10-21T05:31:24.428Z",
+      "label": "event/choose",
+      "act": "1",
+      "floor": 1,
+      "engine": "codex",
+      "attempts": 1,
+      "problems": [],
+      "nonpositive_hp_mentions": 0,
+      "act_boss_sim": null
+    },
+    {
+      "ref": {
+        "path": "logs/brain.jsonl",
+        "offset": 1202765807,
+        "bytes": 26577,
+        "sha256": "f1f3c8a0c74e9a69c97cd8129ba64c83bc8c6bc87bf53d4b2b35ce73c5387b9e"
+      },
+      "ts": "2026-10-21T05:32:20.464Z",
+      "label": "map/route-plan",
+      "act": null,
+      "floor": null,
+      "engine": "codex",
+      "attempts": 1,
+      "problems": [],
+      "nonpositive_hp_mentions": 0,
+      "act_boss_sim": null
+    },
+    {
+      "ref": {
+        "path": "logs/brain.jsonl",
+        "offset": 1202792384,
+        "bytes": 76539,
+        "sha256": "b8d5b66de52be3c3c6380fca9cffcbcc7ff838a6c47a48003cf298317604e6fb"
+      },
+      "ts": "2026-10-21T05:33:37.514Z",
+      "label": "reward/card",
+      "act": "1",
+      "floor": 2,
+      "engine": "codex",
+      "attempts": 1,
+      "problems": [],
+      "nonpositive_hp_mentions": 0,
+      "act_boss_sim": null
+    },
+    {
+      "ref": {
+        "path": "logs/brain.jsonl",
+        "offset": 1202868923,
+        "bytes": 145926,
+        "sha256": "1fd5a2fc6613d1852a946b11516bd057d4d7eddaeb49f56daeea3f1b4b1b1894"
+      },
+      "ts": "2026-10-21T05:34:19.116Z",
+      "label": "shop/plan",
+      "act": "1",
+      "floor": 3,
+      "engine": "codex",
+      "attempts": 1,
+      "problems": [],
+      "nonpositive_hp_mentions": 0,
+      "act_boss_sim": null
+    },
+    {
+      "ref": {
+        "path": "logs/brain.jsonl",
+        "offset": 1203014849,
+        "bytes": 49503,
+        "sha256": "e9b99e9d82204a30fb72c699614acb17e4e85b9aac305aad3c7a6e895f68e1ed"
+      },
+      "ts": "2026-10-21T05:34:52.579Z",
+      "label": "event/choose",
+      "act": "1",
+      "floor": 4,
+      "engine": "codex",
+      "attempts": 1,
+      "problems": [],
+      "nonpositive_hp_mentions": 0,
+      "act_boss_sim": null
+    },
+    {
+      "ref": {
+        "path": "logs/brain.jsonl",
+        "offset": 1203064352,
+        "bytes": 78751,
+        "sha256": "0b3052c64ecd42ea0ddf2e29e5780a3616fdb81e237008f2def97a45ffdee029"
+      },
+      "ts": "2026-10-21T05:36:37.128Z",
+      "label": "reward/card",
+      "act": "1",
+      "floor": 5,
+      "engine": "codex",
+      "attempts": 1,
+      "problems": [],
+      "nonpositive_hp_mentions": 0,
+      "act_boss_sim": null
+    },
+    {
+      "ref": {
+        "path": "logs/brain.jsonl",
+        "offset": 1203143103,
+        "bytes": 58748,
+        "sha256": "39d1ed48a4fafae9ee76be85d519b11c685078744adf8b10ea89ae83e5ce7813"
+      },
+      "ts": "2026-10-21T05:37:06.797Z",
+      "label": "event/plan",
+      "act": "1",
+      "floor": 6,
+      "engine": "codex",
+      "attempts": 1,
+      "problems": [],
+      "nonpositive_hp_mentions": 0,
+      "act_boss_sim": null
+    },
+    {
+      "ref": {
+        "path": "logs/brain.jsonl",
+        "offset": 1203201851,
+        "bytes": 124441,
+        "sha256": "a24a173f4c80ad720199e7f5faa95ba84e3a811bff926353a0dc5a74cad3885f"
+      },
+      "ts": "2026-10-21T05:38:09.247Z",
+      "label": "rest/plan",
+      "act": "1",
+      "floor": 7,
+      "engine": "codex",
+      "attempts": 1,
+      "problems": [],
+      "nonpositive_hp_mentions": 0,
+      "act_boss_sim": null
+    },
+    {
+      "ref": {
+        "path": "logs/brain.jsonl",
+        "offset": 1203326292,
+        "bytes": 81025,
+        "sha256": "26c81605f4014f33b54001e7f934b5037e8bfc43df58212d9978b377032deedf"
+      },
+      "ts": "2026-10-21T05:39:28.517Z",
+      "label": "reward/card",
+      "act": "1",
+      "floor": 8,
+      "engine": "codex",
+      "attempts": 1,
+      "problems": [],
+      "nonpositive_hp_mentions": 0,
+      "act_boss_sim": null
+    },
+    {
+      "ref": {
+        "path": "logs/brain.jsonl",
+        "offset": 1203407317,
+        "bytes": 80190,
+        "sha256": "e2321ada31d1d9287793855722c03f35b7b0656c793581897a4296affd63ca10"
+      },
+      "ts": "2026-10-21T05:40:37.696Z",
+      "label": "reward/card",
+      "act": "1",
+      "floor": 9,
+      "engine": "codex",
+      "attempts": 1,
+      "problems": [],
+      "nonpositive_hp_mentions": 0,
+      "act_boss_sim": null
+    },
+    {
+      "ref": {
+        "path": "logs/brain.jsonl",
+        "offset": 1203487507,
+        "bytes": 141259,
+        "sha256": "9959d29d868e26304d238e2c4f70469b8076d1df773306f692fb8f113ed56f12"
+      },
+      "ts": "2026-10-21T05:41:13.084Z",
+      "label": "rest/plan",
+      "act": "1",
+      "floor": 11,
+      "engine": "codex",
+      "attempts": 1,
+      "problems": [],
+      "nonpositive_hp_mentions": 0,
+      "act_boss_sim": null
+    },
+    {
+      "ref": {
+        "path": "logs/brain.jsonl",
+        "offset": 1203628766,
+        "bytes": 80789,
+        "sha256": "3b744d723acd4c3aa1359a60ab7c3306cd315712d2bce7e99776449596e4610d"
+      },
+      "ts": "2026-10-21T05:42:30.223Z",
+      "label": "reward/card",
+      "act": "1",
+      "floor": 12,
+      "engine": "codex",
+      "attempts": 1,
+      "problems": [],
+      "nonpositive_hp_mentions": 0,
+      "act_boss_sim": null
+    },
+    {
+      "ref": {
+        "path": "logs/brain.jsonl",
+        "offset": 1203709555,
+        "bytes": 219482,
+        "sha256": "ec44dcedb4b6e7daa27eab7f193da928438ab46e2a500b70668c5af480a08795"
+      },
+      "ts": "2026-10-21T05:43:38.949Z",
+      "label": "shop/plan",
+      "act": "1",
+      "floor": 13,
+      "engine": "codex",
+      "attempts": 1,
+      "problems": [],
+      "nonpositive_hp_mentions": 0,
+      "act_boss_sim": null
+    },
+    {
+      "ref": {
+        "path": "logs/brain.jsonl",
+        "offset": 1203929037,
+        "bytes": 81495,
+        "sha256": "3ed5246c2e9bee502eb05d7acf656ee86f3c38001c75beeddbc126672dbd9b9c"
+      },
+      "ts": "2026-10-21T05:45:01.076Z",
+      "label": "reward/card",
+      "act": "1",
+      "floor": 14,
+      "engine": "codex",
+      "attempts": 1,
+      "problems": [],
+      "nonpositive_hp_mentions": 0,
+      "act_boss_sim": null
+    },
+    {
+      "ref": {
+        "path": "logs/brain.jsonl",
+        "offset": 1204010532,
+        "bytes": 40631,
+        "sha256": "a621fc404edd905e0cd09d2696388890804d3bafaa86055abf4efe1088d06142"
+      },
+      "ts": "2026-10-21T05:45:22.504Z",
+      "label": "event/choose",
+      "act": "1",
+      "floor": 15,
+      "engine": "codex",
+      "attempts": 1,
+      "problems": [],
+      "nonpositive_hp_mentions": 0,
+      "act_boss_sim": null
+    },
+    {
+      "ref": {
+        "path": "logs/brain.jsonl",
+        "offset": 1204051163,
+        "bytes": 40339,
+        "sha256": "a61e42f59f5f6dd191a15c5476447f4d1fc283afa236aacb9a5e74cac844615c"
+      },
+      "ts": "2026-10-21T05:45:45.849Z",
+      "label": "event/choose",
+      "act": "1",
+      "floor": 15,
+      "engine": "codex",
+      "attempts": 1,
+      "problems": [],
+      "nonpositive_hp_mentions": 0,
+      "act_boss_sim": null
+    },
+    {
+      "ref": {
+        "path": "logs/brain.jsonl",
+        "offset": 1204091502,
+        "bytes": 148181,
+        "sha256": "744dbb999bb75f0b30149626459219884710225a7e40f6218e21bbad698d1c42"
+      },
+      "ts": "2026-10-21T05:46:17.872Z",
+      "label": "rest/plan",
+      "act": "1",
+      "floor": 16,
+      "engine": "codex",
+      "attempts": 1,
+      "problems": [],
+      "nonpositive_hp_mentions": 0,
+      "act_boss_sim": null
+    },
+    {
+      "ref": {
+        "path": "logs/brain.jsonl",
+        "offset": 1204239683,
+        "bytes": 46139,
+        "sha256": "8f0e2bf1635ec8967876f9d6138eff974f2ee1df1808185e3250589ddd50f9ff"
+      },
+      "ts": "2026-10-21T05:49:29.912Z",
+      "label": "reward/card",
+      "act": "1",
+      "floor": 17,
+      "engine": "codex",
+      "attempts": 1,
+      "problems": [],
+      "nonpositive_hp_mentions": 0,
+      "act_boss_sim": null
+    },
+    {
+      "ref": {
+        "path": "logs/brain.jsonl",
+        "offset": 1204285822,
+        "bytes": 57601,
+        "sha256": "32692262cbc91cbde8cbc9f4e557833f4467ec0283f2080b8c4c5a14dd27308f"
+      },
+      "ts": "2026-10-21T05:50:08.687Z",
+      "label": "event/act-plan",
+      "act": "2",
+      "floor": 18,
+      "engine": "codex",
+      "attempts": 1,
+      "problems": [],
+      "nonpositive_hp_mentions": 0,
+      "act_boss_sim": null
+    },
+    {
+      "ref": {
+        "path": "logs/brain.jsonl",
+        "offset": 1204343423,
+        "bytes": 132407,
+        "sha256": "bd8596cac976ffe0206f952ab3754dac8689b9cf3e0f90c15f4031c1f28b46ae"
+      },
+      "ts": "2026-10-21T05:51:34.503Z",
+      "label": "reward/card",
+      "act": "2",
+      "floor": 19,
+      "engine": "codex",
+      "attempts": 1,
+      "problems": [],
+      "nonpositive_hp_mentions": 0,
+      "act_boss_sim": null
+    },
+    {
+      "ref": {
+        "path": "logs/brain.jsonl",
+        "offset": 1204475830,
+        "bytes": 132003,
+        "sha256": "077d6a3d5132d5559cc83c5889086bc48dfe268c0e61811f91774f9ab7323165"
+      },
+      "ts": "2026-10-21T05:52:50.950Z",
+      "label": "reward/card",
+      "act": "2",
+      "floor": 20,
+      "engine": "codex",
+      "attempts": 1,
+      "problems": [],
+      "nonpositive_hp_mentions": 0,
+      "act_boss_sim": null
+    },
+    {
+      "ref": {
+        "path": "logs/brain.jsonl",
+        "offset": 1204607833,
+        "bytes": 134710,
+        "sha256": "2808362f60f783a2f1410435a67f56568d02ea31a98fc3ecde65a0d35b6235ca"
+      },
+      "ts": "2026-10-21T05:54:14.759Z",
+      "label": "reward/card",
+      "act": "2",
+      "floor": 21,
+      "engine": "codex",
+      "attempts": 1,
+      "problems": [],
+      "nonpositive_hp_mentions": 0,
+      "act_boss_sim": null
+    },
+    {
+      "ref": {
+        "path": "logs/brain.jsonl",
+        "offset": 1204742543,
+        "bytes": 136851,
+        "sha256": "02623b0a294ff9d0a876de2d19e5dfea691aafae878a642784ef4e604ea79751"
+      },
+      "ts": "2026-10-21T05:55:58.149Z",
+      "label": "reward/card",
+      "act": "2",
+      "floor": 22,
+      "engine": "codex",
+      "attempts": 1,
+      "problems": [],
+      "nonpositive_hp_mentions": 0,
+      "act_boss_sim": null
+    },
+    {
+      "ref": {
+        "path": "logs/brain.jsonl",
+        "offset": 1204879394,
+        "bytes": 56378,
+        "sha256": "89227726aa52dcc3e86fe2607521e36a70a14bdd0afc8011e99a11a4c430ccb6"
+      },
+      "ts": "2026-10-21T05:56:23.412Z",
+      "label": "event/choose",
+      "act": "2",
+      "floor": 23,
+      "engine": "codex",
+      "attempts": 1,
+      "problems": [],
+      "nonpositive_hp_mentions": 0,
+      "act_boss_sim": null
+    },
+    {
+      "ref": {
+        "path": "logs/brain.jsonl",
+        "offset": 1204935772,
+        "bytes": 308124,
+        "sha256": "25314575bdc702376a79d98d708ede8f758f732f59a2625cbae27a5eee8258f2"
+      },
+      "ts": "2026-10-21T05:56:50.314Z",
+      "label": "rest/plan",
+      "act": "2",
+      "floor": 25,
+      "engine": "codex",
+      "attempts": 1,
+      "problems": [],
+      "nonpositive_hp_mentions": 0,
+      "act_boss_sim": null
+    },
+    {
+      "ref": {
+        "path": "logs/brain.jsonl",
+        "offset": 1205243896,
+        "bytes": 141827,
+        "sha256": "1f1eb981abf86403e468e54aab100adb28a5828d20ab678d5d10d29ea5054197"
+      },
+      "ts": "2026-10-21T05:58:51.368Z",
+      "label": "reward/card",
+      "act": "2",
+      "floor": 27,
+      "engine": "codex",
+      "attempts": 1,
+      "problems": [],
+      "nonpositive_hp_mentions": 0,
+      "act_boss_sim": null
+    },
+    {
+      "ref": {
+        "path": "logs/brain.jsonl",
+        "offset": 1205385723,
+        "bytes": 142821,
+        "sha256": "b1bfbdcbc4e2c32286a1c62b32022f011b36b492d774bc9773cb08acc7516fff"
+      },
+      "ts": "2026-10-21T06:00:25.909Z",
+      "label": "reward/card",
+      "act": "2",
+      "floor": 28,
+      "engine": "codex",
+      "attempts": 1,
+      "problems": [],
+      "nonpositive_hp_mentions": 0,
+      "act_boss_sim": null
+    },
+    {
+      "ref": {
+        "path": "logs/brain.jsonl",
+        "offset": 1205528544,
+        "bytes": 210863,
+        "sha256": "a82b75cec4a5a2ebd585c21f93577d9b9b5df02c970b515564261ea28bad3343"
+      },
+      "ts": "2026-10-21T06:00:48.153Z",
+      "label": "rest/plan",
+      "act": "2",
+      "floor": 29,
+      "engine": "codex",
+      "attempts": 1,
+      "problems": [],
+      "nonpositive_hp_mentions": 0,
+      "act_boss_sim": null
+    },
+    {
+      "ref": {
+        "path": "logs/brain.jsonl",
+        "offset": 1205739407,
+        "bytes": 89953,
+        "sha256": "dec72ee7c19f154156b48168f67f79df8ed71c21765750e30fd3c54532a8bd5e"
+      },
+      "ts": "2026-10-21T06:02:15.293Z",
+      "label": "reward/card",
+      "act": "2",
+      "floor": 30,
+      "engine": "codex",
+      "attempts": 1,
+      "problems": [],
+      "nonpositive_hp_mentions": 0,
+      "act_boss_sim": null
+    },
+    {
+      "ref": {
+        "path": "logs/brain.jsonl",
+        "offset": 1205829360,
+        "bytes": 583084,
+        "sha256": "78fde285896da7320007d25531032591757b3d9d792d1c3f92f5c10e2a3f9e35"
+      },
+      "ts": "2026-10-21T06:03:25.291Z",
+      "label": "shop/plan",
+      "act": "2",
+      "floor": 31,
+      "engine": "codex",
+      "attempts": 1,
+      "problems": [],
+      "nonpositive_hp_mentions": 0,
+      "act_boss_sim": null
+    },
+    {
+      "ref": {
+        "path": "logs/brain.jsonl",
+        "offset": 1206412444,
+        "bytes": 358962,
+        "sha256": "444b3b96b58bb566b09b58128a261d467b328605fed370ebed4ec108b7485a30"
+      },
+      "ts": "2026-10-21T06:03:43.144Z",
+      "label": "rest/plan",
+      "act": "2",
+      "floor": 32,
+      "engine": "codex",
+      "attempts": 1,
+      "problems": [],
+      "nonpositive_hp_mentions": 0,
+      "act_boss_sim": null
+    },
+    {
+      "ref": {
+        "path": "logs/brain.jsonl",
+        "offset": 1206771406,
+        "bytes": 59276,
+        "sha256": "e43f2c27afad363d8378c330cabd5f80ad8f248b413f672f46126a996052ffb4"
+      },
+      "ts": "2026-10-21T06:06:08.536Z",
+      "label": "reward/card",
+      "act": "2",
+      "floor": 33,
+      "engine": "codex",
+      "attempts": 1,
+      "problems": [],
+      "nonpositive_hp_mentions": 0,
+      "act_boss_sim": null
+    },
+    {
+      "ref": {
+        "path": "logs/brain.jsonl",
+        "offset": 1206830682,
+        "bytes": 67346,
+        "sha256": "931600318f3aff0e97138e946a2043b84133f8328fd3e2acda08fc2cc90ea647"
+      },
+      "ts": "2026-10-21T06:06:57.334Z",
+      "label": "event/act-plan",
+      "act": "3",
+      "floor": 34,
+      "engine": "codex",
+      "attempts": 1,
+      "problems": [],
+      "nonpositive_hp_mentions": 0,
+      "act_boss_sim": null
+    },
+    {
+      "ref": {
+        "path": "logs/brain.jsonl",
+        "offset": 1206898028,
+        "bytes": 94889,
+        "sha256": "2d958e626966385dbe2506224c197609b18042a20c1cff53f597d1f1e157d1e6"
+      },
+      "ts": "2026-10-21T06:08:47.275Z",
+      "label": "reward/card",
+      "act": "3",
+      "floor": 35,
+      "engine": "codex",
+      "attempts": 1,
+      "problems": [],
+      "nonpositive_hp_mentions": 0,
+      "act_boss_sim": {
+        "quantitative_uncertainty": "模拟分布不是实际结果；p10–p90是样本结果波动，meanSe是均值的蒙特卡洛误差，不含机制/策略偏差。增加样本不能修复模型偏差；零次/全胜样本不证明必死/必胜。超时完成样本可能有选择偏差，capped是未结束，不能当已败；胜率区间仅指模拟终止前获胜。",
+        "boss_margin_objective": "Boss基准目标为S=my_dpr/boss_hp−enemy_dpr/my_hp。只在boss_relative_margin或bossMargin明确rankingEligible=true、同Boss/同窗口且原信任闸允许时比较S及配对差，较大为目标；先满足实际存活/资源约束，不能用高均值覆盖启动前死亡。unknown、缺失归属或截断不得当0分或自行心算补齐。",
+        "boss": "永世沙漏，A10：永世沙漏 535 血",
+        "entry_hp": "1/70：本幕路线计划到 boss（F48）的中位投影，和 route_review.plan_facts.boss 同一个算法（中位投影在 boss 前血量耗尽，按 1 血算）",
+        "current_deck": "两战原始通关率 0%，50配对样本；未经两战校准，不是必死或SL判据。",
+        "samples": "限时完成：基准n=50，原始胜率MC95%区间0–7%（不含模型偏差）；候选各用实际n/共同前缀，目标100；误差为配对标准误，n<2时unknown；低可信、未完整；用时 0.1 秒",
+        "method": "第一战获胜的同一条样本继续第二战，没有独立胜率相乘，没有补满HP或补回喝掉的药水；差及标准误均来自两战原始配对结果。",
+        "limits": "仅4局F49、实际胜0；时间验证2局均败，连续模拟未校准，只作备战和出牌参考，不能判必死或触发SL。HP>60夹在样本边界；其他药水/遗物未建模影响不确定。",
+        "relics_at_start": "开场生效：金刚杵",
+        "relics_not_modelled": "蛇之戒指、轰鸣海螺、打击木偶、异蛇头骨、铁棒",
+        "low_confidence": "仅4局F49、实际胜0；时间验证2局均败，连续模拟未校准，只作备战和出牌参考，不能判必死或触发SL。HP>60夹在样本边界；其他药水/遗物未建模影响不确定。",
+        "low_win_rate": "连续两战原始通关率低；未使用单场胜率校准下限，不能据此证明必死。",
+        "objective": "F48→F49连续通关；第一战每条实际模拟剩余HP/药水/复活资源传入第二战，第二boss按本角色已观察分布抽样，不透露本局未来身份。",
+        "evidence": "silent-double-boss:4runs/8192samples; JMH5C51RLN4E,9TG1RP5LFAAK,ZVYUL2YP3518,TDLBRNA0R05B"
+      }
+    },
+    {
+      "ref": {
+        "path": "logs/brain.jsonl",
+        "offset": 1206992917,
+        "bytes": 96736,
+        "sha256": "b9bcb36ba214d7e46665c31a87eef1ced103998def509bcf7f798045a0476a24"
+      },
+      "ts": "2026-10-21T06:11:14.507Z",
+      "label": "reward/card",
+      "act": "3",
+      "floor": 36,
+      "engine": "codex",
+      "attempts": 1,
+      "problems": [],
+      "nonpositive_hp_mentions": 0,
+      "act_boss_sim": {
+        "quantitative_uncertainty": "模拟分布不是实际结果；p10–p90是样本结果波动，meanSe是均值的蒙特卡洛误差，不含机制/策略偏差。增加样本不能修复模型偏差；零次/全胜样本不证明必死/必胜。超时完成样本可能有选择偏差，capped是未结束，不能当已败；胜率区间仅指模拟终止前获胜。",
+        "boss_margin_objective": "Boss基准目标为S=my_dpr/boss_hp−enemy_dpr/my_hp。只在boss_relative_margin或bossMargin明确rankingEligible=true、同Boss/同窗口且原信任闸允许时比较S及配对差，较大为目标；先满足实际存活/资源约束，不能用高均值覆盖启动前死亡。unknown、缺失归属或截断不得当0分或自行心算补齐。",
+        "boss": "永世沙漏，A10：永世沙漏 535 血",
+        "entry_hp": "1/70：本幕路线计划到 boss（F48）的中位投影，和 route_review.plan_facts.boss 同一个算法（中位投影在 boss 前血量耗尽，按 1 血算）",
+        "current_deck": "两战原始通关率 0%，50配对样本；未经两战校准，不是必死或SL判据。",
+        "samples": "限时完成：基准n=50，原始胜率MC95%区间0–7%（不含模型偏差）；候选各用实际n/共同前缀，目标100；误差为配对标准误，n<2时unknown；低可信、未完整；用时 0.3 秒",
+        "method": "第一战获胜的同一条样本继续第二战，没有独立胜率相乘，没有补满HP或补回喝掉的药水；差及标准误均来自两战原始配对结果。",
+        "limits": "仅4局F49、实际胜0；时间验证2局均败，连续模拟未校准，只作备战和出牌参考，不能判必死或触发SL。HP>60夹在样本边界；其他药水/遗物未建模影响不确定。",
+        "relics_at_start": "开场生效：金刚杵",
+        "relics_not_modelled": "蛇之戒指、轰鸣海螺、打击木偶、异蛇头骨、铁棒",
+        "low_confidence": "仅4局F49、实际胜0；时间验证2局均败，连续模拟未校准，只作备战和出牌参考，不能判必死或触发SL。HP>60夹在样本边界；其他药水/遗物未建模影响不确定。",
+        "low_win_rate": "连续两战原始通关率低；未使用单场胜率校准下限，不能据此证明必死。",
+        "objective": "F48→F49连续通关；第一战每条实际模拟剩余HP/药水/复活资源传入第二战，第二boss按本角色已观察分布抽样，不透露本局未来身份。",
+        "evidence": "silent-double-boss:4runs/8192samples; JMH5C51RLN4E,9TG1RP5LFAAK,ZVYUL2YP3518,TDLBRNA0R05B"
+      }
+    },
+    {
+      "ref": {
+        "path": "logs/brain.jsonl",
+        "offset": 1207089653,
+        "bytes": 259171,
+        "sha256": "b64fbb7e1bb3a18837f3f9f4f885bc473a41bbbea86f081e3111a884999f4b19"
+      },
+      "ts": "2026-10-21T06:12:34.350Z",
+      "label": "shop/plan",
+      "act": "3",
+      "floor": 37,
+      "engine": "codex",
+      "attempts": 1,
+      "problems": [],
+      "nonpositive_hp_mentions": 0,
+      "act_boss_sim": {
+        "quantitative_uncertainty": "模拟分布不是实际结果；p10–p90是样本结果波动，meanSe是均值的蒙特卡洛误差，不含机制/策略偏差。增加样本不能修复模型偏差；零次/全胜样本不证明必死/必胜。超时完成样本可能有选择偏差，capped是未结束，不能当已败；胜率区间仅指模拟终止前获胜。",
+        "boss_margin_objective": "Boss基准目标为S=my_dpr/boss_hp−enemy_dpr/my_hp。只在boss_relative_margin或bossMargin明确rankingEligible=true、同Boss/同窗口且原信任闸允许时比较S及配对差，较大为目标；先满足实际存活/资源约束，不能用高均值覆盖启动前死亡。unknown、缺失归属或截断不得当0分或自行心算补齐。",
+        "boss": "永世沙漏，A10：永世沙漏 535 血",
+        "entry_hp": "1/70：本幕路线计划到 boss（F48）的中位投影，和 route_review.plan_facts.boss 同一个算法（中位投影在 boss 前血量耗尽，按 1 血算）",
+        "current_deck": "两战原始通关率 0%，50配对样本；未经两战校准，不是必死或SL判据。",
+        "samples": "限时完成：基准n=50，原始胜率MC95%区间0–7%（不含模型偏差）；候选各用实际n/共同前缀，目标100；误差为配对标准误，n<2时unknown；低可信、未完整；用时 1.0 秒",
+        "method": "第一战获胜的同一条样本继续第二战，没有独立胜率相乘，没有补满HP或补回喝掉的药水；差及标准误均来自两战原始配对结果。",
+        "limits": "仅4局F49、实际胜0；时间验证2局均败，连续模拟未校准，只作备战和出牌参考，不能判必死或触发SL。HP>60夹在样本边界；其他药水/遗物未建模影响不确定。",
+        "relics_at_start": "开场生效：金刚杵",
+        "relics_not_modelled": "蛇之戒指、轰鸣海螺、打击木偶、异蛇头骨、铁棒",
+        "low_confidence": "仅4局F49、实际胜0；时间验证2局均败，连续模拟未校准，只作备战和出牌参考，不能判必死或触发SL。HP>60夹在样本边界；其他药水/遗物未建模影响不确定。",
+        "low_win_rate": "连续两战原始通关率低；未使用单场胜率校准下限，不能据此证明必死。",
+        "objective": "F48→F49连续通关；第一战每条实际模拟剩余HP/药水/复活资源传入第二战，第二boss按本角色已观察分布抽样，不透露本局未来身份。",
+        "evidence": "silent-double-boss:4runs/8192samples; JMH5C51RLN4E,9TG1RP5LFAAK,ZVYUL2YP3518,TDLBRNA0R05B"
+      }
+    },
+    {
+      "ref": {
+        "path": "logs/brain.jsonl",
+        "offset": 1207348824,
+        "bytes": 130050,
+        "sha256": "595bf1f65c7c7f1ffe8263eb84aff9188b9f5b1d1ad14c915ae0409b9544708f"
+      },
+      "ts": "2026-10-21T06:13:01.079Z",
+      "label": "event/plan",
+      "act": "3",
+      "floor": 38,
+      "engine": "codex",
+      "attempts": 1,
+      "problems": [],
+      "nonpositive_hp_mentions": 0,
+      "act_boss_sim": {
+        "quantitative_uncertainty": "模拟分布不是实际结果；p10–p90是样本结果波动，meanSe是均值的蒙特卡洛误差，不含机制/策略偏差。增加样本不能修复模型偏差；零次/全胜样本不证明必死/必胜。超时完成样本可能有选择偏差，capped是未结束，不能当已败；胜率区间仅指模拟终止前获胜。",
+        "boss_margin_objective": "Boss基准目标为S=my_dpr/boss_hp−enemy_dpr/my_hp。只在boss_relative_margin或bossMargin明确rankingEligible=true、同Boss/同窗口且原信任闸允许时比较S及配对差，较大为目标；先满足实际存活/资源约束，不能用高均值覆盖启动前死亡。unknown、缺失归属或截断不得当0分或自行心算补齐。",
+        "boss": "永世沙漏，A10：永世沙漏 535 血",
+        "entry_hp": "55/70：本幕路线计划到 boss（F48）的中位投影，和 route_review.plan_facts.boss 同一个算法",
+        "current_deck": "两战原始通关率 0%，100配对样本；未经两战校准，不是必死或SL判据。",
+        "samples": "限时完成：基准n=100，原始胜率MC95%区间0–4%（不含模型偏差）；候选各用实际n/共同前缀，目标100；误差为配对标准误，n<2时unknown；低可信、未完整；用时 0.4 秒",
+        "method": "第一战获胜的同一条样本继续第二战，没有独立胜率相乘，没有补满HP或补回喝掉的药水；差及标准误均来自两战原始配对结果。",
+        "limits": "仅4局F49、实际胜0；时间验证2局均败，连续模拟未校准，只作备战和出牌参考，不能判必死或触发SL。HP>60夹在样本边界；其他药水/遗物未建模影响不确定。",
+        "relics_at_start": "开场生效：金刚杵",
+        "relics_not_modelled": "蛇之戒指、轰鸣海螺、打击木偶、异蛇头骨、铁棒",
+        "low_confidence": "仅4局F49、实际胜0；时间验证2局均败，连续模拟未校准，只作备战和出牌参考，不能判必死或触发SL。HP>60夹在样本边界；其他药水/遗物未建模影响不确定。",
+        "low_win_rate": "连续两战原始通关率低；未使用单场胜率校准下限，不能据此证明必死。",
+        "objective": "F48→F49连续通关；第一战每条实际模拟剩余HP/药水/复活资源传入第二战，第二boss按本角色已观察分布抽样，不透露本局未来身份。",
+        "evidence": "silent-double-boss:4runs/8192samples; JMH5C51RLN4E,9TG1RP5LFAAK,ZVYUL2YP3518,TDLBRNA0R05B"
+      }
+    }
+  ],
+  "console": {
+    "file": {
+      "path": "logs/console/20261021-133058-5a295bb5e+dirty.log",
+      "bytes": 355172,
+      "sha256": "e20b131cb91d15393ce272e1eeb11ca1900b37694ae8e4f42bc59d967783e4d0"
+    },
+    "nonpositive_hp_count": 0,
+    "missing_successful_first_fight_resources_count": 0,
+    "terminal": true,
+    "boss_sim_notes": [
+      {
+        "ref": {
+          "path": "logs/console/20261021-133058-5a295bb5e+dirty.log",
+          "offset": 705,
+          "bytes": 72,
+          "sha256": "252c44f33b389591f823cf717e5a94dea842295587c2c68f3f31658a74f77e14"
+        },
+        "text": "13:31:11 note boss sim on event/choose: 100 samples per option, 2968 ms"
+      },
+      {
+        "ref": {
+          "path": "logs/console/20261021-133058-5a295bb5e+dirty.log",
+          "offset": 17198,
+          "bytes": 71,
+          "sha256": "cbf28f3077b089acfc536ed75dfcfbcf19eadc7f3bf33995ae6aff1f2977caa7"
+        },
+        "text": "13:33:16 note boss sim on reward/card: 100 samples per option, 4091 ms"
+      },
+      {
+        "ref": {
+          "path": "logs/console/20261021-133058-5a295bb5e+dirty.log",
+          "offset": 18776,
+          "bytes": 69,
+          "sha256": "c50777bc7b8db8e4615f197caa234b6a3bfb47c894cb39855f520184a93342aa"
+        },
+        "text": "13:33:50 note boss sim on shop/plan: 68 samples per option, 11054 ms"
+      },
+      {
+        "ref": {
+          "path": "logs/console/20261021-133058-5a295bb5e+dirty.log",
+          "offset": 20569,
+          "bytes": 72,
+          "sha256": "a32bea46285232850c4b4e670deb48de86f33ae60084906625d8c4e8ffb81764"
+        },
+        "text": "13:34:26 note boss sim on event/choose: 100 samples per option, 6075 ms"
+      },
+      {
+        "ref": {
+          "path": "logs/console/20261021-133058-5a295bb5e+dirty.log",
+          "offset": 38560,
+          "bytes": 72,
+          "sha256": "63241faa1e956633b8a800e928c360cabd9c6cab8de833acfb7213727aa2f9ed"
+        },
+        "text": "13:35:59 note boss sim on reward/card: 201 samples per option, 11048 ms"
+      },
+      {
+        "ref": {
+          "path": "logs/console/20261021-133058-5a295bb5e+dirty.log",
+          "offset": 39998,
+          "bytes": 70,
+          "sha256": "3ca2078f16fdedbf584eec10d80901c3508c5686346c81af302c542d3fe6b5fb"
+        },
+        "text": "13:36:46 note boss sim on event/plan: 300 samples per option, 6823 ms"
+      },
+      {
+        "ref": {
+          "path": "logs/console/20261021-133058-5a295bb5e+dirty.log",
+          "offset": 41752,
+          "bytes": 69,
+          "sha256": "30569c0c0d774cfc40c6906c208e325a06c19b95fb9e7a91edb13fc9df39e05a"
+        },
+        "text": "13:37:19 note boss sim on rest/plan: 86 samples per option, 11043 ms"
+      },
+      {
+        "ref": {
+          "path": "logs/console/20261021-133058-5a295bb5e+dirty.log",
+          "offset": 54566,
+          "bytes": 72,
+          "sha256": "c697173954044ac5fe28a05b9ab61e76bd4b06325b7f7425d6c283c0cad875ec"
+        },
+        "text": "13:38:58 note boss sim on reward/card: 204 samples per option, 11070 ms"
+      },
+      {
+        "ref": {
+          "path": "logs/console/20261021-133058-5a295bb5e+dirty.log",
+          "offset": 69567,
+          "bytes": 71,
+          "sha256": "d586af16adb34956fe06670315a0c9076c409e98f7d34fd94f59a285cad4dffe"
+        },
+        "text": "13:40:19 note boss sim on reward/card: 100 samples per option, 6875 ms"
+      },
+      {
+        "ref": {
+          "path": "logs/console/20261021-133058-5a295bb5e+dirty.log",
+          "offset": 71785,
+          "bytes": 70,
+          "sha256": "47a5bb8c86872228f74b6d1ae96c331d500b2a90caffe46b508b5b3b284b31d5"
+        },
+        "text": "13:40:52 note boss sim on rest/plan: 123 samples per option, 11073 ms"
+      },
+      {
+        "ref": {
+          "path": "logs/console/20261021-133058-5a295bb5e+dirty.log",
+          "offset": 82412,
+          "bytes": 72,
+          "sha256": "e01f73eff1ed1d53ed59ac9230f81a234a72e5b6781f74051be495c3d2cba809"
+        },
+        "text": "13:41:53 note boss sim on reward/card: 155 samples per option, 11064 ms"
+      },
+      {
+        "ref": {
+          "path": "logs/console/20261021-133058-5a295bb5e+dirty.log",
+          "offset": 83962,
+          "bytes": 69,
+          "sha256": "22abfb967072cd03e952aa801a391ea27ca5a299ea168fb13573b8cd77e16f87"
+        },
+        "text": "13:42:43 note boss sim on shop/plan: 35 samples per option, 11091 ms"
+      },
+      {
+        "ref": {
+          "path": "logs/console/20261021-133058-5a295bb5e+dirty.log",
+          "offset": 101130,
+          "bytes": 72,
+          "sha256": "074367604f5687093d62625915389dd4f2d882c4c4882603a278752e150e7668"
+        },
+        "text": "13:44:41 note boss sim on reward/card: 101 samples per option, 11070 ms"
+      },
+      {
+        "ref": {
+          "path": "logs/console/20261021-133058-5a295bb5e+dirty.log",
+          "offset": 102537,
+          "bytes": 72,
+          "sha256": "ba8f75ded95b7e4e121c46ca48475b9a9d33fc896a606a48ad0c6e3ebbe878f6"
+        },
+        "text": "13:45:09 note boss sim on event/choose: 100 samples per option, 6804 ms"
+      },
+      {
+        "ref": {
+          "path": "logs/console/20261021-133058-5a295bb5e+dirty.log",
+          "offset": 103382,
+          "bytes": 72,
+          "sha256": "4742b7156924607c44358e89555bd6efd78b48b58ab3e25282e0c469d989d6b5"
+        },
+        "text": "13:45:29 note boss sim on event/choose: 100 samples per option, 6499 ms"
+      },
+      {
+        "ref": {
+          "path": "logs/console/20261021-133058-5a295bb5e+dirty.log",
+          "offset": 104901,
+          "bytes": 69,
+          "sha256": "e431f9328bbf41cdc0505d64bbbaa89eb91f573b7420e87a4a53dff196445a23"
+        },
+        "text": "13:45:59 note boss sim on rest/plan: 55 samples per option, 11122 ms"
+      },
+      {
+        "ref": {
+          "path": "logs/console/20261021-133058-5a295bb5e+dirty.log",
+          "offset": 135816,
+          "bytes": 105,
+          "sha256": "da3651243f9401beceadf37c3d8a0f790a5dfc19b419a2388705c4e0ff519505"
+        },
+        "text": "13:49:09 note boss sim on reward/card: not run (act boss defeated; the next act's boss is not known yet)"
+      },
+      {
+        "ref": {
+          "path": "logs/console/20261021-133058-5a295bb5e+dirty.log",
+          "offset": 152753,
+          "bytes": 70,
+          "sha256": "9949902d68e6709330b562c348f2effa24df5ef550fa7d54c217c89e83c173f6"
+        },
+        "text": "13:51:09 note boss sim on reward/card: 100 samples per option, 674 ms"
+      },
+      {
+        "ref": {
+          "path": "logs/console/20261021-133058-5a295bb5e+dirty.log",
+          "offset": 165213,
+          "bytes": 70,
+          "sha256": "4313fca055429f72a4822e45dd368802abdd5607cc03501fc73858b075c28a0c"
+        },
+        "text": "13:52:18 note boss sim on reward/card: 100 samples per option, 791 ms"
+      },
+      {
+        "ref": {
+          "path": "logs/console/20261021-133058-5a295bb5e+dirty.log",
+          "offset": 183155,
+          "bytes": 70,
+          "sha256": "3f9341083f0211f77266ca5b26b74a214771310b3f9881129074d61a58036dbf"
+        },
+        "text": "13:53:55 note boss sim on reward/card: 100 samples per option, 895 ms"
+      },
+      {
+        "ref": {
+          "path": "logs/console/20261021-133058-5a295bb5e+dirty.log",
+          "offset": 203193,
+          "bytes": 70,
+          "sha256": "05034c943190b22bc1690e29d7ac04e45f81a022e720274d768b08625eed987a"
+        },
+        "text": "13:55:25 note boss sim on reward/card: 100 samples per option, 700 ms"
+      },
+      {
+        "ref": {
+          "path": "logs/console/20261021-133058-5a295bb5e+dirty.log",
+          "offset": 204818,
+          "bytes": 71,
+          "sha256": "aeb517a48e047ebfd6a6c8b34d262349187343d2c9d9dfbb8af830bce75f831d"
+        },
+        "text": "13:56:00 note boss sim on event/choose: 100 samples per option, 630 ms"
+      },
+      {
+        "ref": {
+          "path": "logs/console/20261021-133058-5a295bb5e+dirty.log",
+          "offset": 207384,
+          "bytes": 69,
+          "sha256": "a7d71416a39bead9c1b536002b368418458b7112c549acf38655e24c0fea889c"
+        },
+        "text": "13:56:29 note boss sim on rest/plan: 100 samples per option, 1351 ms"
+      },
+      {
+        "ref": {
+          "path": "logs/console/20261021-133058-5a295bb5e+dirty.log",
+          "offset": 223277,
+          "bytes": 70,
+          "sha256": "f0a892eeb9b55d957af5be7438fa738c8068e5ff89bd1f39598e2f09dba25245"
+        },
+        "text": "13:57:44 note boss sim on reward/card: 100 samples per option, 712 ms"
+      },
+      {
+        "ref": {
+          "path": "logs/console/20261021-133058-5a295bb5e+dirty.log",
+          "offset": 243880,
+          "bytes": 70,
+          "sha256": "a405ef4665be6c03162d2ad2e856caafb0826dbf89f904e7a67d828bff28ae97"
+        },
+        "text": "14:00:05 note boss sim on reward/card: 100 samples per option, 741 ms"
+      },
+      {
+        "ref": {
+          "path": "logs/console/20261021-133058-5a295bb5e+dirty.log",
+          "offset": 245299,
+          "bytes": 68,
+          "sha256": "68f7613d18c5a4abe37951573e3a366a724a67da54f463fe7af7bfa9ad61f4a7"
+        },
+        "text": "14:00:29 note boss sim on rest/plan: 50 samples per option, 1371 ms"
+      },
+      {
+        "ref": {
+          "path": "logs/console/20261021-133058-5a295bb5e+dirty.log",
+          "offset": 263945,
+          "bytes": 69,
+          "sha256": "1ea654d800f75e2c8476f24cff8bd3a9e6ef87e51dceca6dad69c187d56340ad"
+        },
+        "text": "14:01:51 note boss sim on reward/card: 50 samples per option, 330 ms"
+      },
+      {
+        "ref": {
+          "path": "logs/console/20261021-133058-5a295bb5e+dirty.log",
+          "offset": 265578,
+          "bytes": 69,
+          "sha256": "1b0ac9dfad67ff87ced7cdc767325aa9abd228009918cd86ef6472f062e154be"
+        },
+        "text": "14:02:21 note boss sim on shop/plan: 100 samples per option, 4124 ms"
+      },
+      {
+        "ref": {
+          "path": "logs/console/20261021-133058-5a295bb5e+dirty.log",
+          "offset": 267610,
+          "bytes": 69,
+          "sha256": "661aa201ce2cab545c926ba7253cbb70ad5e31510a6cbe7470a503d1a9c1e131"
+        },
+        "text": "14:03:29 note boss sim on rest/plan: 100 samples per option, 1837 ms"
+      },
+      {
+        "ref": {
+          "path": "logs/console/20261021-133058-5a295bb5e+dirty.log",
+          "offset": 295816,
+          "bytes": 105,
+          "sha256": "e6d16ef538fed431158080385577193b6382c361f127f3ca65c234390056e0dd"
+        },
+        "text": "14:05:51 note boss sim on reward/card: not run (act boss defeated; the next act's boss is not known yet)"
+      },
+      {
+        "ref": {
+          "path": "logs/console/20261021-133058-5a295bb5e+dirty.log",
+          "offset": 314937,
+          "bytes": 69,
+          "sha256": "93e083537c569ac40fec6bfcd586c44bbaade45fcb3d04aebde2d9bff0a030ab"
+        },
+        "text": "14:07:56 note boss sim on reward/card: 50 samples per option, 144 ms"
+      },
+      {
+        "ref": {
+          "path": "logs/console/20261021-133058-5a295bb5e+dirty.log",
+          "offset": 336148,
+          "bytes": 69,
+          "sha256": "d903db55a813e06f681c8fde895f639bc5e21cc375853ccdbd96f30d91ba51cd"
+        },
+        "text": "14:10:00 note boss sim on reward/card: 50 samples per option, 295 ms"
+      },
+      {
+        "ref": {
+          "path": "logs/console/20261021-133058-5a295bb5e+dirty.log",
+          "offset": 337907,
+          "bytes": 68,
+          "sha256": "7e218d28668e4eff41659a36aa3af32c754195258ede7c19ac7fd41847c9122f"
+        },
+        "text": "14:11:17 note boss sim on shop/plan: 50 samples per option, 1029 ms"
+      },
+      {
+        "ref": {
+          "path": "logs/console/20261021-133058-5a295bb5e+dirty.log",
+          "offset": 339693,
+          "bytes": 69,
+          "sha256": "adc6f9161cf4a62f621939571b64fd3721412b462bef450586f5433da29c86bd"
+        },
+        "text": "14:12:36 note boss sim on event/plan: 100 samples per option, 381 ms"
+      }
+    ]
+  },
+  "config": [
+    {
+      "ref": {
+        "path": "logs/run-config.jsonl",
+        "offset": 2403354,
+        "bytes": 6029,
+        "sha256": "4b83ecb255a34cf3e2fb42176eddff0b576a0697f22cf02d429ae7c427ee1e90"
+      },
+      "ts": "2026-10-21T05:31:08.191Z",
+      "run_id": "4AA19CXDKQK6",
+      "character": "SILENT",
+      "ascension": 10,
+      "process": {
+        "pid": 4098831,
+        "started": "2026-10-21T05:31:05.079Z"
+      },
+      "code": {
+        "commit": null,
+        "code": null,
+        "dirty": null,
+        "dirty_files": [],
+        "branch": null,
+        "worktree": "live",
+        "error": "git status failed: spawnSync git ENOBUFS"
+      },
+      "v6": {
+        "schema": "v6-config-v1",
+        "mode": "on",
+        "deciders": {
+          "card": "brain",
+          "potion": "brain",
+          "shop": "brain",
+          "rest": "brain"
+        },
+        "reflex": "off",
+        "direction_replan": "off",
+        "admission": "interfaces_only",
+        "delivered": false,
+        "samples_pick": 20,
+        "samples_act": 100,
+        "min_known_option_ratio": 0.5,
+        "direction_min_weight": 0.1,
+        "win": {
+          "certain_win": 0.95,
+          "favored": 0.7,
+          "even": 0.3,
+          "unfavored": 0.05
+        },
+        "delta": {
+          "much_se": 2,
+          "better_se": 1,
+          "much_min": 0.05
+        },
+        "triggers": {
+          "t1_core_min": 0,
+          "t2_se": 2,
+          "t2_min_delta": 1,
+          "t2_consecutive": 2,
+          "t3_weight_max": 0,
+          "t5_hazard": "existing_route_projection",
+          "t6_unknown_max": 1,
+          "t6_fallbacks": 100,
+          "t7_checkpoint": "validated_brain_answer"
+        },
+        "budgets": {
+          "brain_soft_cap": 15,
+          "brain_ms": 90000,
+          "act_ms": 60000,
+          "pick_ms": 5000,
+          "jev_ms": 5000
+        },
+        "invalid": []
+      },
+      "human_pace": {
+        "schema": "human-pace-h1-v1",
+        "budgets": {
+          "ordinary": 10000,
+          "elite": 15000,
+          "boss": 60000,
+          "retry": 10000,
+          "routine": 5000,
+          "brain": 90000,
+          "direction": 60000
+        },
+        "model_effort": "xhigh",
+        "required_full_replaced": true
+      }
+    }
+  ],
+  "run_terminals": [
+    {
+      "ref": {
+        "path": "logs/runs.jsonl",
+        "offset": 401017,
+        "bytes": 471,
+        "sha256": "c895b823f021a7a04fe4471b12d9e912efb16e8617d11a63e3c42409cadf525b"
+      },
+      "result": {
+        "run_id": "TS0BHDLAH8ME",
+        "ended": "2026-10-21T03:07:52.591Z",
+        "victory": false,
+        "floor": 17,
+        "character": "SILENT",
+        "ascension": 10,
+        "code": "current",
+        "decisions": 406,
+        "jev_calls": 64,
+        "deepseek_calls": 16,
+        "claude_calls": 0,
+        "tokens": 453959,
+        "ds_tokens_in": 531637,
+        "ds_tokens_out": 13368,
+        "ds_cache_hit": 0,
+        "deciders": {
+          "codex": 21,
+          "code": 229,
+          "jev": 64,
+          "jev-plan": 92
+        },
+        "death_fight": [
+          "墨影幻灵"
+        ],
+        "death_fight_floor": 17,
+        "death_enemy_ids": [
+          "VANTOM"
+        ]
+      }
+    },
+    {
+      "ref": {
+        "path": "logs/runs.jsonl",
+        "offset": 401488,
+        "bytes": 491,
+        "sha256": "46ec52e3b29d722a7ea2265ae61ccf260ca39d36599401c0492e278acf3e9642"
+      },
+      "result": {
+        "run_id": "5E5JFKE9BVSU",
+        "ended": "2026-10-21T03:32:14.574Z",
+        "victory": false,
+        "floor": 17,
+        "character": "SILENT",
+        "ascension": 10,
+        "code": "current",
+        "decisions": 358,
+        "jev_calls": 72,
+        "deepseek_calls": 18,
+        "claude_calls": 0,
+        "tokens": 440154,
+        "ds_tokens_in": 629063,
+        "ds_tokens_out": 15774,
+        "ds_cache_hit": 0,
+        "deciders": {
+          "codex": 25,
+          "code": 178,
+          "jev": 72,
+          "jev-plan": 81,
+          "code-fallback": 2
+        },
+        "death_fight": [
+          "墨影幻灵"
+        ],
+        "death_fight_floor": 17,
+        "death_enemy_ids": [
+          "VANTOM"
+        ]
+      }
+    },
+    {
+      "ref": {
+        "path": "logs/runs.jsonl",
+        "offset": 401979,
+        "bytes": 514,
+        "sha256": "038ca69de928df5eee31812c12a12394dd9165dcfe4c64c3e0348373dc1c4cc9"
+      },
+      "result": {
+        "run_id": "862JGUUWUQZX",
+        "ended": "2026-10-21T04:18:40.694Z",
+        "victory": false,
+        "floor": 33,
+        "character": "SILENT",
+        "ascension": 10,
+        "code": "current",
+        "decisions": 765,
+        "jev_calls": 121,
+        "deepseek_calls": 31,
+        "claude_calls": 0,
+        "tokens": 1033650,
+        "ds_tokens_in": 1136415,
+        "ds_tokens_out": 20614,
+        "ds_cache_hit": 0,
+        "deciders": {
+          "codex": 39,
+          "code": 405,
+          "jev": 121,
+          "jev-plan": 196,
+          "code-fallback": 4
+        },
+        "death_fight": [
+          "火箭",
+          "碾碎爪"
+        ],
+        "death_fight_floor": 33,
+        "death_enemy_ids": [
+          "CRUSHER",
+          "ROCKET"
+        ]
+      }
+    },
+    {
+      "ref": {
+        "path": "logs/runs.jsonl",
+        "offset": 402493,
+        "bytes": 528,
+        "sha256": "e9d766d7cf857faf396345b79d6db334feaccd3a0cca4f3c1e848bf64f63e081"
+      },
+      "result": {
+        "run_id": "JLCZ36YLDEBE",
+        "ended": "2026-10-21T04:55:00.658Z",
+        "victory": false,
+        "floor": 17,
+        "character": "SILENT",
+        "ascension": 10,
+        "code": "current",
+        "decisions": 356,
+        "jev_calls": 70,
+        "deepseek_calls": 17,
+        "claude_calls": 0,
+        "tokens": 649546,
+        "ds_tokens_in": 687927,
+        "ds_tokens_out": 11697,
+        "ds_cache_hit": 0,
+        "deciders": {
+          "codex": 22,
+          "code": 160,
+          "jev": 70,
+          "jev-plan": 103,
+          "code-fallback": 1
+        },
+        "death_fight": [
+          "同族信徒",
+          "同族神官"
+        ],
+        "death_fight_floor": 17,
+        "death_enemy_ids": [
+          "KIN_FOLLOWER",
+          "KIN_PRIEST"
+        ]
+      }
+    },
+    {
+      "ref": {
+        "path": "logs/runs.jsonl",
+        "offset": 403021,
+        "bytes": 578,
+        "sha256": "9df0cb0a5f9f993f285b6edc55be5a1f4dfa21f90f9aad6b749a65af73b4c1fe"
+      },
+      "result": {
+        "run_id": "JS5UV1DUB1K1",
+        "ended": "2026-10-21T05:30:01.496Z",
+        "victory": false,
+        "floor": 31,
+        "character": "SILENT",
+        "ascension": 10,
+        "code": "current",
+        "decisions": 418,
+        "jev_calls": 81,
+        "deepseek_calls": 32,
+        "claude_calls": 0,
+        "tokens": 618213,
+        "ds_tokens_in": 1129432,
+        "ds_tokens_out": 27682,
+        "ds_cache_hit": 0,
+        "deciders": {
+          "codex": 40,
+          "code": 196,
+          "jev": 81,
+          "jev-plan": 99,
+          "code-fallback": 2
+        },
+        "death_fight": [
+          "残杀千足虫"
+        ],
+        "death_fight_floor": 31,
+        "death_enemy_ids": [
+          "DECIMILLIPEDE_SEGMENT_BACK",
+          "DECIMILLIPEDE_SEGMENT_FRONT",
+          "DECIMILLIPEDE_SEGMENT_MIDDLE"
+        ]
+      }
+    },
+    {
+      "ref": {
+        "path": "logs/runs.jsonl",
+        "offset": 403599,
+        "bytes": 545,
+        "sha256": "0b0d56439a4db72fe3d03e5610a28f2d231223305e66bc5856792004e0fe745d"
+      },
+      "result": {
+        "run_id": "4AA19CXDKQK6",
+        "ended": "2026-10-21T06:13:58.144Z",
+        "victory": false,
+        "floor": 39,
+        "character": "SILENT",
+        "ascension": 10,
+        "code": "current",
+        "decisions": 606,
+        "jev_calls": 132,
+        "deepseek_calls": 37,
+        "claude_calls": 0,
+        "tokens": 809165,
+        "ds_tokens_in": 1614869,
+        "ds_tokens_out": 28491,
+        "ds_cache_hit": 0,
+        "deciders": {
+          "codex": 49,
+          "code": 270,
+          "jev": 132,
+          "jev-plan": 154,
+          "code-fallback": 1
+        },
+        "death_fight": [
+          "拳击构装体",
+          "方柱构装体"
+        ],
+        "death_fight_floor": 39,
+        "death_enemy_ids": [
+          "CUBEX_CONSTRUCT",
+          "PUNCH_CONSTRUCT"
+        ]
+      }
+    }
+  ]
+}

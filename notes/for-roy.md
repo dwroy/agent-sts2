@@ -4210,3 +4210,10 @@ W4拿牌v2正式3ef4/11a80已核：14源Git/SHA、318清单项加manifest共319�
 核原发布回执：#23已于10月21日17:57窄接live，当前R411仍保留四个核心源码，真实绑定verify通过，live原缺绑定仍缺，无需再发布。部署后已核103份去重checkout回收，注册/.git均已移除、保留分支HEAD全部相符、归档SHA通过；71份成功分配及1份失败回执分列，后者#33现为真实注册工作树，不改写失败。原worker最新08:32实际又回收1项、共享限4，缺证/dirty/研究/身份等门继续保留。磁盘原采样21日18:13至22日08:13可用空间净减33.34GiB，约-2.38GiB/小时，不能归因全由回收，也不能称可持续通过。完整24h到22日17:57，保持pending，不增循环或扩大删除。更正0731旧记录：071302两目录当时已回收checkout，Git向上寻址读到主根HEAD，原“工作树快进”诊断无效；旧回执不改，科学父及原失败保留。证据：paper/materials/20261022-issue23-followup-ops/receipt.json。
 
 实际 issue 回执：https://github.com/dwroy/agent-sts2/issues/23#issuecomment-6329752765
+
+
+### 2026-10-22 08:41 CST — #2 首个第三幕自然验收完成
+
+#2的原联合检查、R410开局边界发布及四叶SHA已复核，当前R411仍逐字保留修复。首个发布后第三幕自然局是4AA19CXDKQK6，前五局原状态均未进入第三幕；本局21日14:06进入第三幕，14:13在F39结束。全局原console及决策无nonpositive-hp；F35至F38四道双Boss模拟均complete_budget、failure=false、单次尝试，基准50/50/50/100样本，用时144/295/1029/381ms。日志死亡样本保持won=false，未以非正HP假胜续接。验收只覆盖本issue报错修复：这些题第一战全败，第二战样本为0/unknown；低可信、归属缺失、50/100预算及未校准口径原样保留，不称成功自然资源传递、性能因果或实战收益，0332/H0父要求不关闭。配置Git字段原ENOBUFS仍空，不改日志。依原首局验收流程关#2；原派单器负责后续生命周期，不新模型/回放/full/生成器或改当前局。证据：paper/materials/20261022-issue2-natural-ops/receipt.json。
+
+实际关单/评论读回：https://github.com/dwroy/agent-sts2/issues/2#issuecomment-6329830549
