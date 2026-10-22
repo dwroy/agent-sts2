@@ -1,0 +1,49 @@
+{
+  "schema": "ops-account-handoff-start-v1",
+  "at": "2026-10-22T16:15:43+08:00",
+  "transaction": "codex3-20261022-1610",
+  "authorization": "paper/materials/20261022-codex3-switch-1610/authorization-original.md",
+  "quota_trigger": "91% reported by user/Claude from 16:09 codex-quota; not re-probed",
+  "phase_at_record": "draining",
+  "controller": {
+    "at": "2026-10-22T16:12:58.666150+08:00",
+    "pane": "w1H:pA1",
+    "processes": [
+      {
+        "pid": 609805,
+        "start": "8127174",
+        "comm": "bash",
+        "nice": "0"
+      },
+      {
+        "pid": 609806,
+        "start": "8127174",
+        "comm": "python3",
+        "nice": "19"
+      }
+    ]
+  },
+  "target_profile": "ops/codex-ops/accounts/codex3/profile.json",
+  "fresh_preflight": "paper/materials/20261022-codex3-switch-1610/codex3-precheck.json",
+  "preflight_model_turns": 0,
+  "selectors_at_record": {
+    "codex-home": "/home/dw/Projects/agent-sts2/ops/codex-ops/accounts/codex1/learner",
+    "brain-home": "/home/dw/Projects/agent-sts2/ops/codex-ops/accounts/codex1/brain"
+  },
+  "owned_flags": [
+    "ops/codex-ops/LLM_DRAIN",
+    "ops/codex-ops/PAUSE"
+  ],
+  "original_stop_and_regent_pause_preserved": true,
+  "active_process_records_at_snapshot": 34,
+  "not_independent_task_count": true,
+  "old_session": "01a1517b-e200-7c52-b463-6ea22220c0a9",
+  "target_new_UUID_verified": false,
+  "control_plane_complete": false,
+  "runtime_consumers": "awaiting normal dispatch after verified activation",
+  "handoff": "notes/codex3-drain-ops-handoff.md",
+  "old_cancelled_transaction_preserved": true,
+  "new_ad_hoc_observer_or_scheduler": false,
+  "inflight_dev_integrator_not_hot_switched": true,
+  "original_high_full_running": "paper/materials/20261022-codex3-switch-1610/original-high-check-at-handoff.json"
+}

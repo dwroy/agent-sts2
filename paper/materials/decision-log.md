@@ -5829,3 +5829,5 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
 - 2026-10-22T16:04:58+08:00 ops：#33 high窄15:56真实锁准入后rebuild rc2（ops错用窄树不存在的整包#26生成器），封存原失败/2475输入、full未始；四处缺失核验后不适用聚合预检，同90c唯一589590/start8071265接续首次tsc/full，16:03持K等O；#38进入证据交核收，liveR411/自然high/整包旧失败与后续顺序不变。原件paper/materials/20261022-1601-ops/receipt.json。
 
 - 2026-10-22T16:09:52+08:00 ops：154302-s2 capacity/rc1未完成，保3源+2测试/22scratch/9封存对象及十提案原SHA；两EROFS启动失败、后续定向2/11通过、sandbox无终局/审计decision_id缺失分列，原17:05:24冷却及同ID141301未完成保持。原线程/WT续接检查点非自动resume，未新模型/测试/换号/合入，见paper/materials/20261022-1605-ops/readback.json。
+
+- 2026-10-22T16:15:43+08:00 ops：Roy91%触发原换号约定，新codex3-20261022-1610两home本地预检/key隔离0，唯一609806 draining/自有LLM_DRAIN+PAUSE；旧1146取消及其他STOP/PAUSE保留，34进程条目尚在途/选择器codex1不冒complete；本ops ready_to_drain后空闲，原开发集成员不热切、原high首次full保留，见paper/materials/20261022-codex3-switch-1610/receipt.json。

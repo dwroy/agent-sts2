@@ -4710,3 +4710,7 @@ Roy/Claude11:46换号授权已核，沿原协议创建唯一codex3-20261022-1146
 ### 2026-10-22T16:09:52+08:00 [ops] 154302-s2容量中断保现场
 
 154302-s2原生gpt-6.1-sol/high在codex1沙箱中因capacity中断，turn.failed/rc1，无完成报告/结果/提案文件，未提交或合入。原十提案原文SHA全核同（六旧路径已找回），不将启动失败或旧waiting当本批处置。现场3源码+2未跟踪测试文件、差异补丁、22件scratch及9份已封存内容对象已保留核SHA，原WT不删。两次定向启动因EROFS未跑用例，后续runner真实2文件11例/rc0；sandbox完整检查仅起始无终局，tsc/red前置证明未核成。证据审计另因decision_id缺失rc1，非全部失败归因容量。原failed与17:05:24冷却保持，无活原wrapper；同十ID的141301旧中断仍开放，不以新批覆盖或重复实现。本轮只记原任务/线程/home/源码续接检查点，非自动resume；由原owner核租约与SHA后补审计及必要验证，不能把草稿机制当正式知识。未新模型/测试/dataset/换号/合入或扩大沙箱，live仍R411。原件paper/materials/20261022-1605-ops/。
+
+### 2026-10-22T16:15:43+08:00 [ops] codex1→codex3新事务开始
+
+Roy/Claude报16:09周用量91%，已新建codex3-20261022-1610，旧1146取消事务及旧交接原字节保留。codex3两隔离home新checkCodex/key隔离通过，无模型问答；唯一控制器609806/start8127174/nice19已draining，自有主LLM_DRAIN/PAUSE，未用STOP或发信号。盘点34条在途进程记录非独立任务，未冒排空；两home选择器仍codex1，开发派发同读codex-home，须自然排空后正常quit旧ops、目标shell回执、新UUID/rollout通过才释放自有闸。原开发/集成员不热切，Regent原暂停保留；本轮ready_to_drain后空闲，不另起等待者。原#33窄589590现tsc0/首次full在途，后续发布顺序/#40依赖、154302-s2源码冷却、通知与科学父均随交接保留，不重模型/局/检查。控制面complete及真实brain/learner消费仍待验。原件paper/materials/20261022-codex3-switch-1610/。
