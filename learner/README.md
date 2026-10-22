@@ -117,3 +117,6 @@ Codex 使用登录态；程序由 LEARNER_CODEX_BIN 覆盖，登录目录由 LEA
 所有学习批次成功结束后，启动器会自动申请本批回收并释放 checkout 租约；回收结果或暂缓原因写入 `ops/codex-ops/retention/requests/<batch>.json`。学习者无需在仍运行时删除自己的工作树，入库和完整检查门禁始终生效。新独立 checkout 使用标准稀疏分配器，运维/开发功能发布后另登记完成回执；原请求接续、进阶审计和未完成研究不会被普通完成回执关闭。
 
 早期 Claude/Codex 冒烟和 v3 迁移过程保留在 Git 历史及 paper 材料中，只证明当时测试场景；当前生产流程见 [codex-ops.md](../docs/codex-ops.md)。
+
+
+运维通过 `learners=herdr` 新派的 Codex 批次现在直接打开交互 TUI（#36），原任务、权限/key 预检和日志/完成审计继续。原生回合结束、实际 TUI 空闲且无未发文本、输出持久化并执行原完成事务后才关闭本批 tab；容量/限流按原会话十分钟退避接续，三次无工具进展后交原 ops。发送/退场不确定时不重开、不标完成或回收；旧在途 headless 批次保持原样。传输、落盘回执和操作边界详见 [herdr 托管](../docs/codex-ops.md#herdr-托管)。

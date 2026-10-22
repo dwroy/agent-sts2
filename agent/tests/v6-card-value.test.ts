@@ -1,4 +1,4 @@
-import { afterEach, expect, it, vi } from "vitest";
+import { afterEach, beforeEach, expect, it, vi } from "vitest";
 import { copyFileSync, mkdirSync, mkdtempSync, readFileSync, rmSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
@@ -12,7 +12,8 @@ import { loggedEnv } from "./logged.js";
 
 const frozen = JSON.parse(readFileSync(new URL("./v6-fixtures/v6-r405-card-options.json", import.meta.url), "utf8"));
 const roots: string[] = [];
-afterEach(() => { vi.unstubAllEnvs(); roots.splice(0).forEach(path => rmSync(path, { recursive: true, force: true })); });
+beforeEach(() => { vi.spyOn(performance, "now").mockReturnValue(0); });
+afterEach(() => { vi.restoreAllMocks(); vi.unstubAllEnvs(); roots.splice(0).forEach(path => rmSync(path, { recursive: true, force: true })); });
 function fixture() {
   const root = mkdtempSync(join(tmpdir(), "card-value-")); roots.push(root);
   mkdirSync(join(root, "characters/silent"), { recursive: true });

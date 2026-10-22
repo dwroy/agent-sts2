@@ -205,6 +205,8 @@ it.each([
   }, 15_000);
 
 it("warms numeric B through the real brain reward loop without a separate request or foreground B fill", async () => {
+  // Fix both the background runtime's allowance and the inherited solver budget, as in the foreground contracts.
+  vi.spyOn(performance, "now").mockReturnValue(0);
   const root = fixture(true); vi.stubEnv("V6_CARD_DECIDER", "brain");
   const knowledge = makeKnowledge(frozen.knowledge_fixture, "cache");
   const combat: Raw = frozen.states["T0TP8S9MMU9Q-f2-COMBAT"], reward: Raw = frozen.states["T0TP8S9MMU9Q-f2-REWARD"];
@@ -220,8 +222,8 @@ it("warms numeric B through the real brain reward loop without a separate reques
   const wait = vi.spyOn(runtime, "duringModelWait"), brain = new FakeDeepSeek(criteria => Object.keys(criteria)[0]!);
   const original = brain.choose.bind(brain);
   vi.spyOn(brain, "choose").mockImplementation(async (...args) => {
-    // Fixed model latency, no API call. Existing network wait is the only scheduling opportunity.
-    const answer = original(...args); await new Promise(resolve => setTimeout(resolve, 600)); return answer;
+    // Hold the already-issued model response until the real background work finishes; no host-speed race.
+    const answer = original(...args); await completed; return answer;
   });
   let polls = 0;
   const server = await startFixtureServer((req, res) => {

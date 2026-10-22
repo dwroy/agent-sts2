@@ -1,10 +1,12 @@
-import { afterEach, expect, it, vi } from "vitest";
+import { afterEach, beforeEach, expect, it, vi } from "vitest";
 import { V6ProjectionRuntime } from "../src/v6/projection-runtime.js";
 import { V6CardResultsEngine } from "../src/sim/v6-card-results.js";
 import { v6Digest } from "../src/sim/v6-completion.js";
 import { board, env, setupOneshotTests } from "./oneshot-support.js";
 import { request, FixedRunner } from "./v6-projection-fixture.js";
-setupOneshotTests(); afterEach(() => vi.unstubAllEnvs());
+setupOneshotTests();
+beforeEach(() => { vi.spyOn(performance, "now").mockReturnValue(0); });
+afterEach(() => { vi.restoreAllMocks(); vi.unstubAllEnvs(); });
 
 function fixture() {
   vi.stubEnv("V6_BUILD", "on"); vi.stubEnv("V6_CARD_DECIDER", "jev");

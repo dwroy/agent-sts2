@@ -12,6 +12,7 @@ import { V6ProjectionRuntime } from "../src/v6/projection-runtime.js";
 import { V6ProjectionEngine } from "../src/sim/v6-projection.js";
 import { SerialDeckRunner } from "../src/sim/build-sim-pool.js";
 import { CardValueRuntime, type CardValueTable } from "../src/v6/card-value.js";
+import * as openingValue from "../src/v6/opening-value.js";
 import { brainCardValueFacts } from "../src/v6/brain-card-value.js";
 import { setupOneshotTests, FakeDeepSeek, type Raw } from "./oneshot-support.js";
 import { startFixtureServer } from "./fixture-http.js";
@@ -23,7 +24,9 @@ vi.mock("../src/knowledge/files.js", async original => ({
 }));
 setupOneshotTests();
 const roots: string[] = [];
-afterEach(() => { roots.splice(0).forEach(p => rmSync(p, { recursive: true, force: true })); vi.unstubAllEnvs(); setKnowledgeCharacter(null); });
+afterEach(() => { roots.splice(0).forEach(p => rmSync(p, { recursive: true, force: true })); vi.restoreAllMocks(); vi.unstubAllEnvs(); setKnowledgeCharacter(null); });
+// Keep host measurements separate from the computation clock; HTTP and async timers remain real.
+const wallNow = performance.now.bind(performance);
 const frozen = JSON.parse(readFileSync(new URL("./v6-fixtures/v6-r405-card-options.json", import.meta.url), "utf8"));
 function fixture() {
   const root = mkdtempSync(join(tmpdir(), "v2-loop-")); roots.push(root); location.root = root;
@@ -33,7 +36,13 @@ function fixture() {
   setKnowledgeCharacter("silent"); setCardUpgradesForTests({}); return root;
 }
 
-async function replay(run: string, floor: number, mode: "present" | "missing" | "corrupt" | "off" | "timeout" | "no-combat" = "present") {
+async function replay(run: string, floor: number, mode: "present" | "missing" | "corrupt" | "off" | "timeout" | "no-combat" = "present", loadMs = 0) {
+  let computationNow = 0;
+  const clock = vi.spyOn(performance, "now").mockImplementation(() => computationNow);
+  const load = openingValue.loadOpeningModel;
+  const loading = vi.spyOn(openingValue, "loadOpeningModel").mockImplementation((...args) => {
+    const model = load(...args); computationNow += mode === "timeout" ? 450 : loadMs; return model;
+  });
   const root = fixture(), combat: Raw = frozen.states[`${run}-f${floor}-COMBAT`], reward: Raw = frozen.states[`${run}-f${floor}-REWARD`];
   if (mode === "missing") rmSync(join(root, "characters/silent/opening-value.json"));
   if (mode === "corrupt") writeFileSync(join(root, "characters/silent/opening-value.json"), "{}");
@@ -43,16 +52,23 @@ async function replay(run: string, floor: number, mode: "present" | "missing" | 
     appendFileSync(join(root, "v6-card-value.jsonl"), JSON.stringify({ ts: new Date().toISOString(), run_id: run, floor, table }) + "\n");
     tables.push(table);
   });
-  if (mode === "timeout") vi.spyOn(value, "evaluate").mockImplementation(() => { throw new Error("card_value_preparation_budget"); });
-  const evaluate = vi.spyOn(value, "evaluate");
+  const errors: { message: string; budgetMs: number | undefined; elapsedMs: number }[] = [];
+  const evaluate = vi.spyOn(value, "evaluate").mockImplementation((env, budgetMs) => {
+    const started = computationNow;
+    try { return CardValueRuntime.prototype.evaluate.call(value, env, budgetMs); }
+    catch (error) {
+      errors.push({ message: (error as Error).message, budgetMs, elapsedMs: computationNow - started }); throw error;
+    }
+  });
   const runtime = new V6ProjectionRuntime(new V6ProjectionEngine(runner), async () => null, undefined, undefined, undefined, value);
   const prepare = runtime.evaluateBrainCardValue.bind(runtime);
-  let preparationMs = 0;
+  let preparationMs = 0, wallPreparationMs = 0;
   vi.spyOn(runtime, "evaluateBrainCardValue").mockImplementation(env => {
-    const started = performance.now(), table = prepare(env);
+    const started = performance.now(), wallStarted = wallNow(), table = prepare(env);
     // Include cold loading, full audit append and compact JSON packing in the preparation measurement.
     if (table) JSON.stringify(brainCardValueFacts(table));
     preparationMs += performance.now() - started;
+    wallPreparationMs += wallNow() - wallStarted;
     return table;
   });
   let polls = 0;
@@ -88,15 +104,19 @@ async function replay(run: string, floor: number, mode: "present" | "missing" | 
     const facts = call.state.facts as Raw;
     const sim = facts.act_boss_sim as Raw | undefined;
     if (sim && typeof sim.samples === "string") sim.samples = sim.samples.replace(/用时 [0-9.]+ 秒/, "用时 <elapsed> 秒");
-    return { call, tables, preparationMs, evaluated: evaluate.mock.calls.length, simulations: simulate.mock.calls.length };
-  } finally { await server.close(); }
+    return { call, tables, preparationMs, wallPreparationMs, errors, evaluations: evaluate.mock.calls,
+      evaluated: evaluate.mock.calls.length, simulations: simulate.mock.calls.length };
+  } finally { await server.close(); loading.mockRestore(); clock.mockRestore(); }
 }
 it.each([["T0TP8S9MMU9Q", 2], ["RBMEQGXPE9Z2", 3]] as const)("adds bounded facts to the actual combat→reward brain question for %s F%i", async (run, floor) => {
   const actual = await replay(run, floor), original = await replay(run, floor, "off");
   const table = actual.tables.at(-1)!;
+  expect(table, JSON.stringify(actual.errors)).toBeDefined();
   expect(table.options.map(o => o.known)).toEqual([true, true, true, true]);
   expect(table.telemetry.elapsed_ms).toBeLessThan(500);
   expect(actual.preparationMs).toBeLessThan(500);
+  expect(actual.errors).toEqual([]);
+  expect(actual.evaluations.every(([, budgetMs]) => budgetMs === 450)).toBe(true);
   expect(actual.simulations).toBe(original.simulations);
   expect(Object.keys(actual.call.criteria)).toEqual(Object.keys(original.call.criteria));
   const cleaned = structuredClone(actual.call);
@@ -119,10 +139,37 @@ it.each([["T0TP8S9MMU9Q", 2], ["RBMEQGXPE9Z2", 3]] as const)("adds bounded facts
   const bytes = Buffer.byteLength(JSON.stringify(actual.call)) - Buffer.byteLength(JSON.stringify(original.call));
   expect(bytes).toBeGreaterThan(0); expect(bytes).toBeLessThan(4000);
   process.stdout.write(JSON.stringify({ fixture: `${run}-F${floor}`, prediction_ms: table.telemetry.elapsed_ms,
-    preparation_ms: actual.preparationMs, added_prompt_bytes: bytes }) + "\n");
+    computation_preparation_ms: actual.preparationMs, wall_preparation_ms: actual.wallPreparationMs,
+    added_prompt_bytes: bytes }) + "\n");
 }, 10000);
 it.each(["missing", "corrupt", "timeout", "no-combat"] as const)("keeps the original brain question when %s", async mode => {
   const actual = await replay("RBMEQGXPE9Z2", 3, mode), original = await replay("RBMEQGXPE9Z2", 3, "off");
   expect(actual.call).toEqual(original.call);
+  if (mode === "timeout") {
+    expect(actual.tables).toEqual([]);
+    expect(actual.errors).toEqual([{ message: "card_value_preparation_budget", budgetMs: 450, elapsedMs: 450 }]);
+  } else expect(actual.errors).toEqual([]);
+  if (mode === "missing" || mode === "corrupt") {
+    expect(actual.evaluated).toBe(1);
+    expect(actual.tables).toHaveLength(1);
+    expect(actual.tables[0]!.model_id).toBeNull();
+    expect(actual.tables[0]!.options.every(o => !o.known && o.unknown.includes("opening_model_unavailable"))).toBe(true);
+  }
   if (mode === "no-combat") expect(actual.evaluated).toBe(0);
+}, 10000);
+
+it.each([449, 450, 451])("checks the real 450ms preparation boundary after %ims of loading", async loadMs => {
+  const actual = await replay("T0TP8S9MMU9Q", 2, "present", loadMs);
+  if (loadMs < 450) {
+    expect(actual.errors).toEqual([]);
+    expect(actual.tables).toHaveLength(1);
+    expect(actual.tables[0]!.telemetry.elapsed_ms).toBe(loadMs);
+    expect(actual.preparationMs).toBe(loadMs);
+    expect(actual.tables[0]!.options.map(o => o.known)).toEqual([true, true, true, true]);
+    expect(actual.call.state.facts).toHaveProperty("card_value_v2");
+  } else {
+    expect(actual.tables).toEqual([]);
+    expect(actual.errors).toEqual([{ message: "card_value_preparation_budget", budgetMs: 450, elapsedMs: loadMs }]);
+    expect(actual.call).toEqual((await replay("T0TP8S9MMU9Q", 2, "off")).call);
+  }
 }, 10000);

@@ -1,0 +1,35 @@
+{
+  "at": "2026-10-23T00:07:55+08:00",
+  "state": "failed",
+  "base_live": "fdae435795f41d771da6df3457eb890e50d8ffeb",
+  "tree": "dbf16fff0546aece14b637acb809d641f0023570",
+  "inputs_unchanged": true,
+  "input_count": 2509,
+  "files": 644,
+  "passed_files": 642,
+  "passed": 6103,
+  "pending": 2,
+  "failed": 2,
+  "failures": [
+    {
+      "file": "agent/tests/boss-sim-home.test.ts",
+      "title": "passes the project Codex home from the report hook through learner dispatch without weakening preflight",
+      "messages": [
+        "AssertionError: ....herdr-host open fixed failed (exit 0); starting with setsid\n/usr/lib/python3.14/subprocess.py:1139: ResourceWarning: subprocess 2234066 is still running\n  _warn(\"subprocess %s is still running\" % self.pid,\nResourceWarning: Enable tracemalloc to get the object allocation traceback\nF\n======================================================================\nFAIL: test_selected_project_home_overrides_inherited_global_home_and_reaches_herdr (test_boss_sim_home.BossSimHome.test_selected_project_home_overrides_inherited_global_home_and_reaches_herdr)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/home/dw/Projects/agent-sts2/.worktrees/integrator36-r414-20261022/ops/tests/test_boss_sim_home.py\", line 48, in test_selected_project_home_overrides_inherited_global_home_and_reaches_herdr\n    self.assertEqual(learner_jobs.start_learner([\"bash\", \"/fixture/wrapper\"], str(self.root), \"/fixture/scripts\", str(self.state), \"fixed\"), (123, \"pane\"))\n    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError: Tuples differ: (2234066, None) != (123, 'pane')\n\nFirst differing element 0:\n2234066\n123\n\n- (2234066, None)\n+ (123, 'pane')\n\n----------------------------------------------------------------------\nRan 5 tests in 0.025s\n\nFAILED (failures=1)\n: expected 1 to be +0 // Object.is equality\n    at /home/dw/Projects/agent-sts2/.worktrees/integrator36-r414-20261022/agent/tests/boss-sim-home.test.ts:10:40\n    at file:///home/dw/Projects/agent-sts2/agent/node_modules/@vitest/runner/dist/chunk-artifact.js:302:11\n    at file:///home/dw/Projects/agent-sts2/agent/node_modules/@vitest/runner/dist/chunk-artifact.js:1903:26\n    at file:///home/dw/Projects/agent-sts2/agent/node_modules/@vitest/runner/dist/chunk-artifact.js:2326:20\n    at new Promise (<anonymous>)\n    at runWithCancel (file:///home/dw/Projects/agent-sts2/agent/node_modules/@vitest/runner/dist/chunk-artifact.js:2323:10)\n    at file:///home/dw/Projects/agent-sts2/agent/node_modules/@vitest/runner/dist/chunk-artifact.js:2305:20\n    at new Promise (<anonymous>)\n    at runWithTimeout (file:///home/dw/Projects/agent-sts2/agent/node_modules/@vitest/runner/dist/chunk-artifact.js:2272:10)\n    at file:///home/dw/Projects/agent-sts2/agent/node_modules/@vitest/runner/dist/chunk-artifact.js:2956:64"
+      ]
+    },
+    {
+      "file": "agent/tests/v6-brain-card-value-loop.test.ts",
+      "title": "adds bounded facts to the actual combat→reward brain question for T0TP8S9MMU9Q F2",
+      "messages": [
+        "TypeError: Cannot read properties of undefined (reading 'options')\n    at /home/dw/Projects/agent-sts2/.worktrees/integrator36-r414-20261022/agent/tests/v6-brain-card-value-loop.test.ts:97:16\n    at file:///home/dw/Projects/agent-sts2/agent/node_modules/@vitest/runner/dist/chunk-artifact.js:1903:20"
+      ]
+    }
+  ],
+  "subsequent_main_checks_run": false,
+  "main_merged": false,
+  "full_rerun": false,
+  "full_window_released": true,
+  "production_written": false,
+  "all_failed_test_sources_unchanged_from_R414": true
+}

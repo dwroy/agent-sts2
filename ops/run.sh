@@ -55,6 +55,10 @@ console_link="$LOGS/console/.current-$$"
 ln -s "$(basename "$out")" "$console_link"
 mv -Tf "$console_link" "$LOGS/console/current"
 echo "$out"
+# The log viewer is independent and best effort; no result or pipe is shared with play.
+if [ -f "$OPS/brain_view.py" ]; then
+  nice -n 19 python3 "$OPS/brain_view.py" --root "$ROOT" --logs "$LOGS" ensure > /dev/null 2>&1 < /dev/null &
+fi
 # A finished run leaves the game on its summary screen, which the loop reads as "run already ended".
 screen=$(curl -s -m 5 "$mod_url/state" | python3 -c 'import json,sys; print(json.load(sys.stdin)["data"]["screen"])' 2>/dev/null)
 if [ "$screen" = "GAME_OVER" ]; then

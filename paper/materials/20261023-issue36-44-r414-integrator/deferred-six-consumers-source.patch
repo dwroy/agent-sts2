@@ -1,0 +1,155 @@
+diff --git a/.agents/board.yaml b/.agents/board.yaml
+index 8eb45239a..e9d9fb57f 100644
+--- a/.agents/board.yaml
++++ b/.agents/board.yaml
+@@ -22,7 +22,8 @@ roles:
+   ops: {pane: "w1H:p8"}
+   lead: {kind: claude, notify: board-digest}
+ resource_gate: {when: "game running", max_procs_per_task: 2, nice: 19}
+-never_reclaim: [".worktrees/live", "panes: integrator, ops, learner-*"]
++# Protection uses stable pane labels; readable tab titles never enter lifecycle matching.
++never_reclaim: [".worktrees/live", "panes: integrator, ops, learner-*, brain-view"]
+ verify: ["npx tsc -p tsconfig.json --noEmit", "npx vitest run"]
+ dispatcher:
+   install: ops/codex-ops/agent-board-kit
+diff --git a/agent/src/brain/engines/dsh-stream.mjs b/agent/src/brain/engines/dsh-stream.mjs
+index 94db71d89..22edff6bd 100644
+--- a/agent/src/brain/engines/dsh-stream.mjs
++++ b/agent/src/brain/engines/dsh-stream.mjs
+@@ -5,7 +5,7 @@ export function apply(ctx) {
+     if (frame.chunk) {
+       const chunk = frame.chunk;
+       if (["reasoning-delta", "text-delta", "tool-call-delta"].includes(chunk?.type)) {
+-        process.stdout.write(`${JSON.stringify({ type: "sts2_stream", kind: chunk.type, chars: String(chunk.text ?? "").length })}\n`);
++        process.stdout.write(`${JSON.stringify({ type: "sts2_stream", kind: chunk.type, chars: String(chunk.text ?? "").length, ...(chunk.type === "tool-call-delta" ? {} : { text: String(chunk.text ?? "") }) })}\n`);
+       }
+     }
+   });
+diff --git a/agent/src/brain/engines/dsh.ts b/agent/src/brain/engines/dsh.ts
+index b501843e9..39f9696e2 100644
+--- a/agent/src/brain/engines/dsh.ts
++++ b/agent/src/brain/engines/dsh.ts
+@@ -1,3 +1,4 @@
++import { observeBrain, type BrainObserver } from "../live-view.js";
+ /** DeepSeek Harness through the installed Nova launcher, with an allowlisted per-call composition. */
+ import { spawn } from "node:child_process";
+ import { mkdtempSync, mkdirSync, writeFileSync, rmSync } from "node:fs";
+@@ -83,7 +84,7 @@ export class DshEngine implements BrainEngine {
+       const sessions = join(root, "sessions");
+       writeFileSync(patch, JSON.stringify(dshPatch(ids, req.system, this.model, effort, sessions, req.tools?.length ? this.mcpUrl : undefined)));
+       const result = await this.run(["headless", "--patch", patch, "--json", "-"], cwd,
+-        `${promptWithReask(req)}\n\nAnswer schema: ${JSON.stringify(req.spec.schema)}`, signal);
++        `${promptWithReask(req)}\n\nAnswer schema: ${JSON.stringify(req.spec.schema)}`, signal, req.observe);
+       const parsed = parseAnswerText(result.text);
+       return { engine: this.name, model: this.model, effort, answer: parsed ? normalisePick(req, parsed) : null,
+         problems: parsed ? [] : ["dsh returned no JSON answer"], attempts: 1, latencyMs: Date.now() - started,
+@@ -93,7 +94,7 @@ export class DshEngine implements BrainEngine {
+     } finally { rmSync(dir, { recursive: true, force: true }); }
+   }
+ 
+-  private run(args: string[], cwd: string, input: string, signal?: AbortSignal): Promise<{ text: string; reasoning: string; usage: BrainUsage; sessionId: string; events: number }> {
++  private run(args: string[], cwd: string, input: string, signal?: AbortSignal, observe?: BrainObserver): Promise<{ text: string; reasoning: string; usage: BrainUsage; sessionId: string; events: number }> {
+     return new Promise((resolve, reject) => {
+       const child = spawn(this.config.dsh.bin, args, { cwd, env: dshEnv(), stdio: ["pipe", "pipe", "pipe"] });
+       let buffer = "", text = "", reasoning = "", sessionId = "", events = 0, stalled = false;
+@@ -114,6 +115,9 @@ export class DshEngine implements BrainEngine {
+           let e: unknown; try { e = JSON.parse(line); } catch { continue; }
+           if (!object(e)) continue;
+           events += 1;
++          if (e["type"] === "sts2_stream" && typeof e["text"] === "string") {
++            observeBrain(observe, { kind: e["kind"] === "reasoning-delta" ? "reasoning" : "text", text: e["text"] });
++          }
+           if (e["type"] === "session") sessionId = String(e["sessionId"] ?? "");
+           if (e["type"] === "final") text = String(e["text"] ?? "");
+           if (e["type"] === "thinking") reasoning = (reasoning + String(e["text"] ?? "")).slice(-64_000);
+diff --git a/agent/src/brain/engines/knowledge-agent.ts b/agent/src/brain/engines/knowledge-agent.ts
+index 1391789a7..10550e0b0 100644
+--- a/agent/src/brain/engines/knowledge-agent.ts
++++ b/agent/src/brain/engines/knowledge-agent.ts
+@@ -1,3 +1,4 @@
++import { observeBrain } from "../live-view.js";
+ /** Knowledge-agent lifecycle shared by Codex app-server and dsh. No alternate engine makes the final decision. */
+ import type { BrainAnswer, BrainEngine, BrainRequest, ToolCallRecord } from "../types.js";
+ import type { BrainConfig } from "../../core/config.js";
+@@ -41,7 +42,7 @@ export class KnowledgeAgent implements BrainEngine {
+     const abort = () => phase.abort();
+     signal?.addEventListener("abort", abort, { once: true });
+     if (signal?.aborted) phase.abort();
+-    const host = this.mcp.begin(req.tools ?? [], req.toolContext ?? { ascension: 0, knowledgeDir: "", logsDir: "" }, Math.max(0, this.config.agent.maxToolCalls - previousCalls.length), started + toolMs, limit);
++    const host = this.mcp.begin(req.tools ?? [], req.toolContext ?? { ascension: 0, knowledgeDir: "", logsDir: "" }, Math.max(0, this.config.agent.maxToolCalls - previousCalls.length), started + toolMs, limit, req.observe);
+     const timer = setTimeout(() => limit("time"), toolMs);
+     let calls: ToolCallRecord[] = [];
+     let first: BrainAnswer | null = null;
+@@ -63,6 +64,7 @@ export class KnowledgeAgent implements BrainEngine {
+       if (first?.answer && first.problems.length === 0) fallback = null;
+       let answer = first;
+       if (fallback) {
++        observeBrain(req.observe, { kind: "status", text: `!!! 查询阶段兜底 ${fallback}，用已有资料作答` });
+         this.mcp.end();
+         // Release the querying harness before starting the final one; only one child harness is alive.
+         if (this.querying && "close" in this.querying) await (this.querying as BrainEngine & { close(): Promise<void> }).close();
+diff --git a/agent/src/brain/tools/knowledge-mcp.ts b/agent/src/brain/tools/knowledge-mcp.ts
+index 7064bd545..14d7c1554 100644
+--- a/agent/src/brain/tools/knowledge-mcp.ts
++++ b/agent/src/brain/tools/knowledge-mcp.ts
+@@ -1,3 +1,4 @@
++import type { BrainObserver } from "../live-view.js";
+ /** In-process, stateless Streamable HTTP MCP endpoint. One unguessable URL per engine instance. */
+ import { randomBytes } from "node:crypto";
+ import { createServer, type Server } from "node:http";
+@@ -15,7 +16,7 @@ export class KnowledgeMcp {
+   private limited: ((reason: "calls" | "time") => void) | null = null;
+   url = "";
+ 
+-  begin(tools: ToolDef[], context: ToolContext, maximum: number, cutoff: number, limited: (reason: "calls" | "time") => void): ToolHost {
++  begin(tools: ToolDef[], context: ToolContext, maximum: number, cutoff: number, limited: (reason: "calls" | "time") => void, observe?: BrainObserver): ToolHost {
+     this.maximum = maximum; this.cutoff = cutoff; this.used = 0; this.limited = limited;
+     const wrapped = tools.map((tool): ToolDef => ({ ...tool, run: async (input, ctx) => {
+       if (this.used >= this.maximum || Date.now() >= this.cutoff) {
+@@ -31,7 +32,7 @@ export class KnowledgeMcp {
+       try { return await tool.run(input, ctx); }
+       finally { if (this.used >= this.maximum) { const limited = this.limited; setTimeout(() => limited?.("calls"), 20).unref(); } }
+     } }));
+-    return this.host = new ToolHost(wrapped, context, undefined, true);
++    return this.host = new ToolHost(wrapped, context, undefined, true, observe);
+   }
+   end(): void { this.host = null; this.limited = null; }
+ 
+diff --git a/agent/tests/brain-agent-mode.test.ts b/agent/tests/brain-agent-mode.test.ts
+index 6994c453e..37493c8ef 100644
+--- a/agent/tests/brain-agent-mode.test.ts
++++ b/agent/tests/brain-agent-mode.test.ts
+@@ -147,9 +147,11 @@ it("dsh patches disable every inherited plugin, select Nova credentials/max and
+ 
+ it("runs dsh with a fresh isolated cwd, streams NDJSON and needs no direct API key", async () => {
+   const dir = temp(), bin = join(dir, "dsh.mjs"), observed = join(dir, "observed.json");
+-  writeFileSync(bin, `#!${process.execPath}\nimport {writeFileSync,readFileSync} from 'node:fs';\nconst args=process.argv.slice(2);if(args.includes('--dump-config')){console.log('- id: inherited_shell\\n  name: shell');process.exit(0);}\nconst patch=JSON.parse(readFileSync(args[args.indexOf('--patch')+1],'utf8'));writeFileSync(${JSON.stringify(observed)},JSON.stringify({cwd:process.cwd(),patch,hasDirectKey:!!process.env.DEEPSEEK_API_KEY}));\nfor await(const _ of process.stdin){}\nconsole.log(JSON.stringify({type:'session',sessionId:'fixed-session'}));console.log(JSON.stringify({type:'status',phase:'step_end',usage:{inputTokens:4,outputTokens:2}}));console.log(JSON.stringify({type:'final',text:'{"choice":"a","reason":"fixed"}'}));\n`); chmodSync(bin, 0o755);
++  writeFileSync(bin, `#!${process.execPath}\nimport {writeFileSync,readFileSync} from 'node:fs';\nconst args=process.argv.slice(2);if(args.includes('--dump-config')){console.log('- id: inherited_shell\\n  name: shell');process.exit(0);}\nconst patch=JSON.parse(readFileSync(args[args.indexOf('--patch')+1],'utf8'));writeFileSync(${JSON.stringify(observed)},JSON.stringify({cwd:process.cwd(),patch,hasDirectKey:!!process.env.DEEPSEEK_API_KEY}));\nfor await(const _ of process.stdin){}\nconsole.log(JSON.stringify({type:'session',sessionId:'fixed-session'}));console.log(JSON.stringify({type:'sts2_stream',kind:'reasoning-delta',text:'固定流式摘要。'}));console.log(JSON.stringify({type:'status',phase:'step_end',usage:{inputTokens:4,outputTokens:2}}));console.log(JSON.stringify({type:'final',text:'{"choice":"a","reason":"fixed"}'}));\n`); chmodSync(bin, 0o755);
+   const cfg = settings(); cfg.dsh.bin = bin;
+-  const result = await new DshEngine(cfg).decide(request());
++  const live: unknown[] = [];
++  const result = await new DshEngine(cfg).decide({ ...request(), observe: (event) => live.push(event) });
++  expect(live).toContainEqual({ kind: "reasoning", text: "固定流式摘要。" });
+   expect(result).toMatchObject({ engine: "deepseek", effort: "max", answer: { choice: "a" }, usage: { inputTokens: 4, outputTokens: 2 } });
+   const trace = JSON.parse(readFileSync(observed, "utf8"));
+   expect(trace.cwd).toMatch(/question-.+\/cwd$/); expect(trace.hasDirectKey).toBe(false);
+@@ -186,7 +188,7 @@ it("a previous question's delayed limit callback cannot cancel the next question
+   expect((await engine.decide({ ...req, questionId: "second" })).agent?.fallback).toBeNull();
+ });
+ 
+-it("observes live dsh reasoning progress without printing the reasoning contents", async () => {
++it("forwards live dsh text only to the existing parent stream observer", async () => {
+   const { apply } = await import("../src/brain/engines/dsh-stream.mjs");
+   let listener: (e: unknown) => void = () => {};
+   const writes: string[] = [];
+@@ -194,8 +196,8 @@ it("observes live dsh reasoning progress without printing the reasoning contents
+   try {
+     apply({ on: (_name: string, fn: typeof listener) => { listener = fn; } });
+     listener({ frame: { chunk: { type: "reasoning-delta", text: "private reasoning fixture" } } });
+-    expect(writes.map(s => JSON.parse(s))).toEqual([{ type: "sts2_stream", kind: "reasoning-delta", chars: 25 }]);
+-    expect(writes.join("")).not.toContain("private reasoning fixture");
++    expect(writes.map(s => JSON.parse(s))).toEqual([{ type: "sts2_stream", kind: "reasoning-delta", chars: 25, text: "private reasoning fixture" }]);
++    expect(writes.join("")).not.toContain("tool-call-delta");
+   } finally { spy.mockRestore(); }
+ });
+ 

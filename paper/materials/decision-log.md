@@ -5870,3 +5870,13 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
 - 2026-10-23T00:02:34+08:00 [ops] 231301四局复盘/12支持11旧ID/四pending提案核同；5802原段校验。两主策略attention保留，共享原dataset五检查成功产物复用且不重跑；记录限已审前缀，排除#27在途5条，24状态勘误和11通知角色ACK仍pending，不关科学父。原件 paper/materials/20261022-2350-ops/receipt.json。
 
 - 2026-10-23T00:11:56+08:00 [ops] #27第二批五外部观察策略已核源f96a13606/main3f6421432、65输入/93叶/23表段及原自测；live R414旧三条保持，按不插队门排40/36之后。当前账本575/0与学习者冻结清单rc1分列，四新增问题双箱待角色ACK，父/自然命中/发布未完。原件 paper/materials/20261023-issue27-batch2-terminal-ops/receipt.json。
+
+- 2026-10-23T00:09:10+08:00 [watcher] #36实际R414精确R3唯一full失败：tsc0，644文件642过2败/6103项过2败2跳；2509枚举输入及受测树dbf16fff0546aece14b637acb809d641f0023570前后同。Boss-home旧pane123 mock不适配R3 open-pane/Popen；另#44同症状F2 table undefined复现，根因未定。保留完整原件paper/materials/20261022-issue36-r414-integrator/full-failed/，未重跑/合main/交发布，main兼容定向未执行；释放full窗口，请主管裁决修复归属及下次full，不自行改序，保新知识/CLI/自然验收。
+
+- 2026-10-23T00:16:13+08:00 [watcher] #27第二批四份通知本人实读并向Roy逐项转达：external_aggregate固定验证进展、拿牌频率非因果、gross_damage非安全线、冻结/当前清单分账；原生可见回执paper/materials/20261023-issue27-batch2-watcher/read-and-relay.json，issue6345569158。五条已main但未live，排原在途发布之后；正式ACK原CLI不兼容保留，未重试/代填、未关父或续批。
+
+- 2026-10-23T00:24:49+08:00 [watcher] #36按主管6345466773将原dev仅测试夹具f0a967266与#44仅测试110cbd8e接实际R414，树6b8d15d12d6acf96cfbe9b4359878e142c5685f3；12测试前像/交付SHA核同，原R3运行代码不变，468最新知识冻结、相对失败树56知识数据刷新。tsc/19文件214定向/Python boss6、view15+1skip、TUI18及shell4过；00:21:46唯一full单fork/nice19已起，未终局不交发布。原失败35be70748与原件保留，main只准备兼容候选、无第二full。公开窗口评论6345696220；材料paper/materials/20261023-issue36-44-r414-integrator/。
+
+- 2026-10-23T00:47:29+08:00 [watcher] #40实发V6-R415 c5b4a8a588dadccb59b218d97993de5a55371979已独立锁内读回，三叶与#36+#44在途full树6b8d15d12d6acf96cfbe9b4359878e142c5685f3同；468知识9份自然变化另记r415-readback.json，原full不重启/不改输入。后续保新live与数据/编号，40自然刷新训练/模型消费者、27实际发布及CLI兼容仍待；issue回执6346182481。
+
+- 2026-10-23T00:53:21+08:00 [watcher] #36按主管6345466773合测试夹具f0a967266及#44测试110cbd8e，实际R414树6b8d15d12d6acf96cfbe9b4359878e142c5685f3唯一tsc/full0（644文件/6109过2跳0败），2509输入同；main仅兼容定向23文件/308项及Python/shell过。旧失败35be70748/原件不变，精确补丁/前像/延期消费者见paper/materials/20261023-issue36-44-r414-integrator/delivery.json；合main交原ops保最新live知识按原序发布，未动生产/分号，36自然TUI及session/40刷新训练/27实际发布与CLI/科学父待验。

@@ -109,7 +109,16 @@ if group == "tab" and cmd == "create":
     if ws not in s["workspaces"]:
         err("workspace_not_found")
     pane = new_pane(ws, opt(rest, "--cwd", "/"), None)
+    s["panes"][pane]["title"] = opt(rest, "--label", "")
     out("tab_created", tab={"tab_id": s["panes"][pane]["tab"], "label": opt(rest, "--label")}, root_pane=pane_info(pane))
+if group == "tab" and cmd in ("get", "rename"):
+    matches = [p for p in s["panes"].values() if p["tab"] == rest[0]]
+    if not matches:
+        err("tab_not_found")
+    p = matches[0]
+    if cmd == "rename":
+        p["title"] = " ".join(rest[1:])
+    out("tab_info", tab={"tab_id": p["tab"], "label": p.get("title", "")})
 if group == "pane" and cmd in ("get", "rename", "close", "run", "read", "send-keys"):
     pane = rest[0]
     if pane not in s["panes"]:

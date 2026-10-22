@@ -473,6 +473,16 @@ export function codexCommand(request: EngineRequest, prompt: string, binary = "c
   return { command: binary, args, stdin: codexPreamble(request.tools, writes) + prompt };
 }
 
+/** TUI options share the task profile, model and feature policy with exec; exec-only switches are omitted. */
+export function learnerInteractiveArgs(request: EngineRequest): string[] {
+  const args = codexCommand({ ...request, resumeThread: undefined }, "").args;
+  if (args.slice(0, 5).join(" ") !== "exec --json --ignore-user-config --ignore-rules --cd") {
+    throw new Error("learner Codex command shape changed");
+  }
+  const options = [...args.slice(4, -1), "--no-daemon"];
+  return request.resumeThread ? ["resume", ...options, request.resumeThread] : options;
+}
+
 /** A codex request with the home, codex home and key files its permission profile denies (from the launcher's env). */
 export function withCodexKeys(request: EngineRequest, env: NodeJS.ProcessEnv): EngineRequest {
   if (request.engine !== "codex") return request;

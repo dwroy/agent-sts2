@@ -69,3 +69,15 @@ main集成/材料提交须保并行脏记录，在原L锁内备份绑定、final
 ## #40 生产导入热修（2026-10-22T23:35:57+08:00）
 
 源3ae67358只交8f09b8426之后差量。main基线520c12590c59f467333c33d44f554b26ece3d4d0、受测树01b4bec2076c70f1d08fe3e9e2c58db0b73dc0f8；tsc0、无过滤完整656文件6219过2跳0败、独立新进程Python2项通过，2596输入同。材料paper/materials/20261022-issue40-hotfix-full-integrator/及delivery.json三叶；合main后交ops按实际R414最新知识/原门精确热修，不重放旧40/broad33；未实际发布/关闭40。首轮20–40分钟约10GiB仅规划，下一自然刷新exit0/耗时RSS/rows-checkpoint/训练模型消费者及后续增量暖验收待ops；原生产/开发失败保留。主管6344172214更新为40热修→36 R3→完整33+26含启动→42工具→35→28→37，37→20；40检查结束即R414上重建36精确组合并唯一full，44交付后按窗口排入；CLI/ACK、科学父、service_tier隔离反证保留。已实读ops6343667379，R414新463知识及实际消费者各54过；#27批issue-27-brain-strategies-batch2-20261022-224403冻结65文件/446局后被原两策略槽挡回，原任务pending等完成事件，不开新任务。
+
+## #36 唯一full失败停点（2026-10-23T00:09:10+08:00）
+
+实际R414 fdae435795f41d771da6df3457eb890e50d8ffeb / R3 1b0aeb68f / 冻结树dbf16fff0546aece14b637acb809d641f0023570，644文件642过2败、6103项过2败2跳，2509输入前后同。两败：Boss-home旧mock不适配新open-pane/Popen协议；#44 F2 table undefined同症状。原日志paper/materials/20261022-issue36-r414-integrator/full-failed/和failure-audit.json，原未修、未重跑、未合main/发布，main定向未执行；full窗口已释放。待主管裁决修复归属/是否等44/下次full，勿执行finalize.py或integrate-main.py（仍有full非绿硬门）。R414原31叶+40前件及main37叶候选保留，各patch禁止发布。main候选已保1be00b7e/27第二批新策略及131并行记录；不覆盖live知识。自然session/high/直播及学习TUI、40资源训练消费者/44稳定性/CLI/父要求继续开放，原队列不自行改序。
+
+- 2026-10-23T00:16:13+08:00 #27第二批已main3f6421432/当前c320fe6，live仍R414原三条；四新notice已本人读/原生向Roy逐项告知，证据paper/materials/20261023-issue27-batch2-watcher/，issue6345569158，正式ACK CLI阻塞保留。#36主管6345466773裁决原dev仅修夹具，交回f0a967266（6345549699）后与#44修复110cbd8e在实际R414组合只跑一次唯一full；失败35be70748和原件不改。正在核补丁/准备新组合，未启动full、未改main/live；#27数据不插队。
+
+- 2026-10-23T00:24:49+08:00 [watcher] #36按主管6345466773将原dev仅测试夹具f0a967266与#44仅测试110cbd8e接实际R414，树6b8d15d12d6acf96cfbe9b4359878e142c5685f3；12测试前像/交付SHA核同，原R3运行代码不变，468最新知识冻结、相对失败树56知识数据刷新。tsc/19文件214定向/Python boss6、view15+1skip、TUI18及shell4过；00:21:46唯一full单fork/nice19已起，未终局不交发布。原失败35be70748与原件保留，main只准备兼容候选、无第二full。公开窗口评论6345696220；材料paper/materials/20261023-issue36-44-r414-integrator/。
+
+- 2026-10-23T00:47:29+08:00 [watcher] #40实发V6-R415 c5b4a8a588dadccb59b218d97993de5a55371979已独立锁内读回，三叶与#36+#44在途full树6b8d15d12d6acf96cfbe9b4359878e142c5685f3同；468知识9份自然变化另记r415-readback.json，原full不重启/不改输入。后续保新live与数据/编号，40自然刷新训练/模型消费者、27实际发布及CLI兼容仍待；issue回执6346182481。
+
+- 2026-10-23T00:53:21+08:00 [watcher] #36按主管6345466773合测试夹具f0a967266及#44测试110cbd8e，实际R414树6b8d15d12d6acf96cfbe9b4359878e142c5685f3唯一tsc/full0（644文件/6109过2跳0败），2509输入同；main仅兼容定向23文件/308项及Python/shell过。旧失败35be70748/原件不变，精确补丁/前像/延期消费者见paper/materials/20261023-issue36-44-r414-integrator/delivery.json；合main交原ops保最新live知识按原序发布，未动生产/分号，36自然TUI及session/40刷新训练/27实际发布与CLI/科学父待验。
