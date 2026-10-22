@@ -8,6 +8,6 @@ it("passes the project Codex home from the report hook through learner dispatch 
     env: { PATH: process.env.PATH ?? "/usr/bin:/bin", TMPDIR: process.env.TMPDIR ?? "/tmp", PYTHONDONTWRITEBYTECODE: "1" },
   });
   expect(result.status, result.stderr).toBe(0);
-  expect(result.stderr).toContain("Ran 5 tests");
+  expect(result.stderr).toContain("Ran 6 tests");
   expect(result.stderr).toContain("OK");
 });

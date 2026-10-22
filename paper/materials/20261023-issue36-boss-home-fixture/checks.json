@@ -1,0 +1,55 @@
+{
+  "source_base": "386c8b224ba476f2319cc258fcdffb18b120f085",
+  "inputs": {
+    "ops/tests/test_boss_sim_home.py": "45055661b272b74d02b92e4bc81e4111dfb3abfad3481489734b4e8d74305218",
+    "agent/tests/boss-sim-home.test.ts": "2eb7b4aa15a5d5b095bc2c57b7b656923ec71ce71636ff536f552a26b8a9ed03",
+    "ops/learner_jobs.py": "9732eddeae4427182ac0cd957b54c7e1e163fafd291ee2086bcf1c67dbe4cffe",
+    "ops/report.py": "dc99e62dce3d0cf4b948c26f7c1a4780d142b39e63a81bcdce8402cd460e77a9",
+    "ops/tests/test_learner_tui.py": "60a4403a5311a362ebe3f0f24193bea2c1bab291cd90306811b0ad05c826e2a6",
+    "ops/learner_tui.py": "8b5d0fe0c4ebce8366b3c6c0fae560c27ed9937181b4d139cf7ea579db9be066"
+  },
+  "checks": [
+    {
+      "command": "Original five Boss-home tests, with outer Popen mock to prevent a real fallback process",
+      "exit_code": 1,
+      "result": "5 tests: 4 passed, 1 failed; old pane output takes fallback",
+      "log": ".artifacts/issue36-boss-home/checks/before.log",
+      "sha256": "7ef27f1495e83db326ebc5679d478fdd519ae77423b9dd24d333af96595ebc6c"
+    },
+    {
+      "command": "python3 -B -m unittest discover -s ops/tests -p test_boss_sim_home.py -v",
+      "exit_code": 0,
+      "result": "6 passed",
+      "log": ".artifacts/issue36-boss-home/checks/python.log",
+      "sha256": "cf02f721085e43d048e0d6adf4693470dda4db5c28f49728934314621d8ce616"
+    },
+    {
+      "command": "node node_modules/typescript/bin/tsc -p tsconfig.json --noEmit (cwd: agent)",
+      "exit_code": 0,
+      "result": "production typecheck passed",
+      "log": ".artifacts/issue36-boss-home/checks/tsc.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "command": "node node_modules/vitest/vitest.mjs run tests/boss-sim-home.test.ts --pool=threads --maxWorkers=1 --minWorkers=1 --no-file-parallelism (cwd: agent)",
+      "exit_code": 1,
+      "result": "CLI rejected unsupported minWorkers before running tests",
+      "log": ".artifacts/issue36-boss-home/checks/vitest-option-failed.log",
+      "sha256": "6df40bb2c1bbf0c0c172d2d8a10279384462e81c3cca52d8aeff54c0745669cb"
+    },
+    {
+      "command": "node node_modules/vitest/vitest.mjs run tests/boss-sim-home.test.ts --pool=threads --maxWorkers=1 --no-file-parallelism (cwd: agent)",
+      "exit_code": 0,
+      "result": "1 file / 1 wrapper passed; includes the same 6 Python tests, not additive",
+      "log": ".artifacts/issue36-boss-home/checks/vitest.log",
+      "sha256": "12486f2ce2f783bff0550b674a267f61c97439f1eda6bc4b692ad6d97e574d0a"
+    },
+    {
+      "command": "python3 -B -m unittest discover -s ops/tests -p test_learner_tui.py -v",
+      "exit_code": 0,
+      "result": "18 passed",
+      "log": ".artifacts/issue36-boss-home/checks/learner-tui.log",
+      "sha256": "6079fe52dc7daaf93c40156e5c4572e9b6cd230e5e4b68a1fadcb7fbd777c4d1"
+    }
+  ]
+}
