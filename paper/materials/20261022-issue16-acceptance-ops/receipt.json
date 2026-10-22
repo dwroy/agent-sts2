@@ -1,0 +1,837 @@
+{
+  "at": "2026-10-22T08:54:12+08:00",
+  "state": "issue16-infrastructure-acceptance-complete",
+  "scope": "Dataset/schema/retrieval/fixed five-type replay and natural empty-library path; strategy content/natural hits belong to issue27.",
+  "release_id": "V6-R411",
+  "live": "0cd3629d3a7f3a3bcacd22fa0a4206acc4d81e78",
+  "source_readback": [
+    {
+      "path": "agent/src/brain/brain.ts",
+      "sha256": "d628c49ac8cc6a4da2cc9494f71c4f154ee9511d7baae8e321bf3675bb7ca077",
+      "reviewed_48_leaf_transport_equal": true
+    },
+    {
+      "path": "agent/src/knowledge/strategy-entries.ts",
+      "sha256": "1207d3ee86f2474c5c3526a5508b71c3a31e8407a55b9ca72cf8dcd2b4e4433d",
+      "reviewed_48_leaf_transport_equal": true
+    },
+    {
+      "path": "agent/tests/strategy-entries.test.ts",
+      "sha256": "9285b6387bf183620d9dd541a89813013d177967726ca50e2efe7ba4b1d023c7",
+      "reviewed_48_leaf_transport_equal": true
+    },
+    {
+      "path": "agent/tests/brain-decision-dataset.test.ts",
+      "sha256": "4e8e1df711ccb5bc8ec5245481ef2cc08734a66f4e599a3fcc95a8ca4cff5921",
+      "reviewed_48_leaf_transport_equal": true
+    },
+    {
+      "path": "agent/tools/replay-brain-strategies.ts",
+      "sha256": "163dda6289a9c6b08e495d502eda288b276c0a9aac6adc02e177138321ff996f",
+      "reviewed_48_leaf_transport_equal": true
+    },
+    {
+      "path": "knowledge/builders/brain_decision_dataset.py",
+      "sha256": "4f3a8045ab3d85d6454dc31355659d0e69942b23e726a8211843443badd67258",
+      "reviewed_48_leaf_transport_equal": true
+    },
+    {
+      "path": "knowledge/builders/tests/test_brain_decision_dataset.py",
+      "sha256": "5fdeb3664b54216c2a963d37d23834560f030a358e8c69121b26609fa49e7f06",
+      "reviewed_48_leaf_transport_equal": true
+    },
+    {
+      "path": "knowledge/schemas/brain-strategies-v1.schema.json",
+      "sha256": "5ec1b8ce1abebdb56607415df2f27f77343c16e1a28769f2be3b0e649586cb04",
+      "reviewed_48_leaf_transport_equal": true
+    },
+    {
+      "path": "docs/brain-strategies.md",
+      "sha256": "23539448090cdb75212f875278b1f3810fbcb788e7fa176db6f84f304faf2948",
+      "reviewed_48_leaf_transport_equal": true
+    }
+  ],
+  "dataset": {
+    "manifest": {
+      "path": "paper/materials/2026-10-21-issue-16-strategy-library/manifest.json",
+      "bytes": 99231,
+      "sha256": "a5a4b40295a50358e1f6a70b1ac499f2f63de9149cf5cec00429d0215e275b16"
+    },
+    "file": {
+      "path": "paper/materials/2026-10-21-issue-16-strategy-library/dataset.jsonl.gz",
+      "bytes": 8706750,
+      "sha256": "e7e9f0fec2da361b4f41615bce2d9555831ffae8fc3ca3fa39b41e90d99e0aee"
+    },
+    "uncompressed_sha256": "bcfda01a4beffb8645e7f38eb9e2842e824d77d0cb840065edc6f8e36ad88446",
+    "rows": 11735,
+    "runs": 410,
+    "primary_types": {
+      "event": 2471,
+      "card_reward": 5275,
+      "rest": 2461,
+      "shop": 1066,
+      "act_plan": 462
+    },
+    "unknown_versions": 690,
+    "known_versions": 304,
+    "missing": {
+      "remaining_hp_loss": 4868,
+      "boss_pass": 536,
+      "final_floor": 47
+    },
+    "original_reward_rows_preserved": 5275,
+    "original_reward_archive": {
+      "commit": "9f759cd9d952002551a19784330327f004f2a919",
+      "path": "paper/materials/2026-10-21-issue-16-brain-distillation/frozen/dataset.jsonl.gz",
+      "compressed_sha256": "dccfb3ae6905fee980cb84eaa6e5f45457294595fb421fbe6b4341ba1d77a1fa"
+    },
+    "expanded_observation": "6460 new rows brain accepted only; dispatch unverified; observational outcomes/null missing retained"
+  },
+  "fixed_replay": {
+    "fixture_only": true,
+    "model_calls": 0,
+    "measurement": "one nice-19 Node process; user prompt only, no system prefix, file I/O or API latency; cold includes fixture JSON parsing and schema validation; warm includes retrieval plus user serialization",
+    "limits": {
+      "entries": 3,
+      "bytes": 4096,
+      "textBytes": 1200,
+      "fileBytes": 1048576,
+      "libraryEntries": 500
+    },
+    "results": [
+      {
+        "type": "card_reward",
+        "label": "reward/card",
+        "dataset_id": "C48LLXBGKXQ9/1/2",
+        "matched": [
+          "fixture-card_reward"
+        ],
+        "base_user_bytes": 11879,
+        "augmented_user_bytes": 12244,
+        "delta_bytes": 365,
+        "block_bytes": 345,
+        "cold_parse_retrieve_serialize_ms": 0.7376340000000141,
+        "warm_retrieve_serialize_median_ms": 0.0388070000000198,
+        "warm_retrieve_serialize_p95_ms": 0.07766400000002704,
+        "warm_iterations": 1000,
+        "no_hit_byte_identical": true,
+        "prompt_receipt": {
+          "path": "paper/materials/20261021-issues16-17-integrator-review/replay-card_reward.prompt.txt",
+          "bytes": 12245,
+          "sha256": "447bfaacd61f7f0387b56c088a619936c76b10a296a64734d39713d833b40453"
+        }
+      },
+      {
+        "type": "event",
+        "label": "event/plan",
+        "dataset_id": "C48LLXBGKXQ9/1/1/event/plan/bd8e5242460d0ff0",
+        "matched": [
+          "fixture-act_plan",
+          "fixture-event"
+        ],
+        "base_user_bytes": 7768,
+        "augmented_user_bytes": 8416,
+        "delta_bytes": 648,
+        "block_bytes": 628,
+        "cold_parse_retrieve_serialize_ms": 5.478167999999982,
+        "warm_retrieve_serialize_median_ms": 0.03107799999997951,
+        "warm_retrieve_serialize_p95_ms": 0.06390499999997701,
+        "warm_iterations": 1000,
+        "no_hit_byte_identical": true,
+        "prompt_receipt": {
+          "path": "paper/materials/20261021-issues16-17-integrator-review/replay-event.prompt.txt",
+          "bytes": 8417,
+          "sha256": "64b13a5fe1b8e14fa052f0643aa7e4156404699a181653eda9f22566508bf918"
+        }
+      },
+      {
+        "type": "rest",
+        "label": "rest/plan",
+        "dataset_id": "C48LLXBGKXQ9/1/8/rest/plan/b02895e5b1c9cee9",
+        "matched": [
+          "fixture-rest"
+        ],
+        "base_user_bytes": 15899,
+        "augmented_user_bytes": 16250,
+        "delta_bytes": 351,
+        "block_bytes": 331,
+        "cold_parse_retrieve_serialize_ms": 0.30012699999997494,
+        "warm_retrieve_serialize_median_ms": 0.03586700000005294,
+        "warm_retrieve_serialize_p95_ms": 0.07622400000002472,
+        "warm_iterations": 1000,
+        "no_hit_byte_identical": true,
+        "prompt_receipt": {
+          "path": "paper/materials/20261021-issues16-17-integrator-review/replay-rest.prompt.txt",
+          "bytes": 16251,
+          "sha256": "9108bf1301c93d475f9fdf9e1c6ab9d6c7bd97c98c0845e8670d9c762407bd5f"
+        }
+      },
+      {
+        "type": "shop",
+        "label": "shop/plan",
+        "dataset_id": "C48LLXBGKXQ9/1/14/shop/plan/15a41e3570182ff0",
+        "matched": [
+          "fixture-shop"
+        ],
+        "base_user_bytes": 11954,
+        "augmented_user_bytes": 12305,
+        "delta_bytes": 351,
+        "block_bytes": 331,
+        "cold_parse_retrieve_serialize_ms": 0.38669099999992795,
+        "warm_retrieve_serialize_median_ms": 0.03899699999999484,
+        "warm_retrieve_serialize_p95_ms": 0.08008399999994253,
+        "warm_iterations": 1000,
+        "no_hit_byte_identical": true,
+        "prompt_receipt": {
+          "path": "paper/materials/20261021-issues16-17-integrator-review/replay-shop.prompt.txt",
+          "bytes": 12306,
+          "sha256": "e10638ba86dc426152ea1de66cf9697e446ca88096af7629205310ca1307cb93"
+        }
+      },
+      {
+        "type": "act_plan",
+        "label": "event/act-plan",
+        "dataset_id": "C48LLXBGKXQ9/2/18/event/act-plan/d6b3d9353f7ccb2e",
+        "matched": [
+          "fixture-act_plan",
+          "fixture-event"
+        ],
+        "base_user_bytes": 16180,
+        "augmented_user_bytes": 16828,
+        "delta_bytes": 648,
+        "block_bytes": 628,
+        "cold_parse_retrieve_serialize_ms": 0.4493570000000773,
+        "warm_retrieve_serialize_median_ms": 0.06003499999997075,
+        "warm_retrieve_serialize_p95_ms": 0.09843200000000252,
+        "warm_iterations": 1000,
+        "no_hit_byte_identical": true,
+        "prompt_receipt": {
+          "path": "paper/materials/20261021-issues16-17-integrator-review/replay-act_plan.prompt.txt",
+          "bytes": 16829,
+          "sha256": "3a1fd96eca3a6c9cb60923a73326b9de89f2060a09c619912bf0d5f0ca09b407"
+        }
+      }
+    ]
+  },
+  "validation_archive_readbacks": [
+    {
+      "file": {
+        "path": "paper/materials/2026-10-21-issue-16-strategy-library/validation/dataset-build.log.gz",
+        "bytes": 229,
+        "sha256": "b6085e4b061aec1f632a291f8a675fc3d118baa9bc5a1f7d42ef3e718ac1cbc9"
+      },
+      "raw_bytes": 301,
+      "raw_sha256": "0879e6ad1103bac6df0f321682f88f84f46fc0a623e5632bab46032bf9a33b67"
+    },
+    {
+      "file": {
+        "path": "paper/materials/2026-10-21-issue-16-strategy-library/validation/dataset-build-final.log.gz",
+        "bytes": 223,
+        "sha256": "e296ea2344a6a241816a796ec652197f831c292ee8d432c77554f2a5b6186f50"
+      },
+      "raw_bytes": 288,
+      "raw_sha256": "d7d78da6d4dd19a403be375644d7463b835b06e5eae6c68168419035e5c525fb"
+    },
+    {
+      "file": {
+        "path": "paper/materials/2026-10-21-issue-16-strategy-library/validation/dataset-build-complete.log.gz",
+        "bytes": 222,
+        "sha256": "84714fb89f4b78468f3d82586dcc8ac10a5986400230732c5582c94a701c743c"
+      },
+      "raw_bytes": 288,
+      "raw_sha256": "4edc02798c42e51ff78430518ec67ffe702d6827b196347304593c988d1cd9da"
+    },
+    {
+      "file": {
+        "path": "paper/materials/2026-10-21-issue-16-strategy-library/validation/dataset-build-censoring.log.gz",
+        "bytes": 222,
+        "sha256": "93355e46172afedb79599724b09a23272c6aabc8d9355e2b8d39be662534546d"
+      },
+      "raw_bytes": 288,
+      "raw_sha256": "e0b3bb700b0e48243a243a7387a7a6001f1ae0f555be274b527dcd4a51386fb1"
+    },
+    {
+      "file": {
+        "path": "paper/materials/2026-10-21-issue-16-strategy-library/validation/python-tests.log.gz",
+        "bytes": 53,
+        "sha256": "7882309bfba60b157153f9525485ff51d80b565b7d9dc78d2f95d42fd2afe997"
+      },
+      "raw_bytes": 100,
+      "raw_sha256": "fe008aab760eb03ccac7578e2b84665b1b50b0d7f855b17a0c7a8d039435b658"
+    },
+    {
+      "file": {
+        "path": "paper/materials/2026-10-21-issue-16-strategy-library/validation/python-tests-final.log.gz",
+        "bytes": 53,
+        "sha256": "7882309bfba60b157153f9525485ff51d80b565b7d9dc78d2f95d42fd2afe997"
+      },
+      "raw_bytes": 100,
+      "raw_sha256": "fe008aab760eb03ccac7578e2b84665b1b50b0d7f855b17a0c7a8d039435b658"
+    },
+    {
+      "file": {
+        "path": "paper/materials/2026-10-21-issue-16-strategy-library/validation/python-tests-verified.log.gz",
+        "bytes": 53,
+        "sha256": "7882309bfba60b157153f9525485ff51d80b565b7d9dc78d2f95d42fd2afe997"
+      },
+      "raw_bytes": 100,
+      "raw_sha256": "fe008aab760eb03ccac7578e2b84665b1b50b0d7f855b17a0c7a8d039435b658"
+    },
+    {
+      "file": {
+        "path": "paper/materials/2026-10-21-issue-16-strategy-library/validation/python-tests-censoring.log.gz",
+        "bytes": 53,
+        "sha256": "41164fef7a7c96487e731f61180ea068950f983f9ae8ab2fb052f5c5cc2eb9c9"
+      },
+      "raw_bytes": 100,
+      "raw_sha256": "6f283ee6225d2cef4c0127d95456a6f954c45141c92b97dd89016cb1c630e8f4"
+    },
+    {
+      "file": {
+        "path": "paper/materials/2026-10-21-issue-16-strategy-library/validation/focused.log.gz",
+        "bytes": 210,
+        "sha256": "c6cb5546687de51469d7b18a46a3731b36041b043979f7440f13e245ddc24048"
+      },
+      "raw_bytes": 257,
+      "raw_sha256": "562e1b22e8f9770226f87897796cdc049ea91253f78616474dbef3545f972eab"
+    },
+    {
+      "file": {
+        "path": "paper/materials/2026-10-21-issue-16-strategy-library/validation/replay.log.gz",
+        "bytes": 586,
+        "sha256": "7f2f93092489839e9e1b1d5904a5306896d0944fff364adc85b2d986c7e25c51"
+      },
+      "raw_bytes": 2180,
+      "raw_sha256": "357f690d1a7039084a8187ab110c14ca3af53782351b9e16d678ca145ca74d15"
+    },
+    {
+      "file": {
+        "path": "paper/materials/2026-10-21-issue-16-strategy-library/validation/tsc.log.gz",
+        "bytes": 20,
+        "sha256": "9ceffb7310338057cfe71a4ae1e2c98d2c485d81cdef906532a801f457a38d64"
+      },
+      "raw_bytes": 0,
+      "raw_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "file": {
+        "path": "paper/materials/2026-10-21-issue-16-strategy-library/validation/tsc-final.log.gz",
+        "bytes": 20,
+        "sha256": "9ceffb7310338057cfe71a4ae1e2c98d2c485d81cdef906532a801f457a38d64"
+      },
+      "raw_bytes": 0,
+      "raw_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "file": {
+        "path": "paper/materials/2026-10-21-issue-16-strategy-library/validation/tsc-verified.log.gz",
+        "bytes": 20,
+        "sha256": "9ceffb7310338057cfe71a4ae1e2c98d2c485d81cdef906532a801f457a38d64"
+      },
+      "raw_bytes": 0,
+      "raw_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "file": {
+        "path": "paper/materials/2026-10-21-issue-16-strategy-library/validation/tsc-tools-final.log.gz",
+        "bytes": 1379,
+        "sha256": "d38b53d51bbc05c87e1a46e244ca844b5420d47f0184849861a7d21571f695d6"
+      },
+      "raw_bytes": 9245,
+      "raw_sha256": "3d5ed0e1aa4f28dec019100ef288a8550d2db0f56bc53432c1f213b3f6694216"
+    },
+    {
+      "file": {
+        "path": "paper/materials/2026-10-21-issue-16-strategy-library/validation/tsc-replay-final.log.gz",
+        "bytes": 144,
+        "sha256": "63c49ec6d86cfa6ccad3a34b2d66cd164ff7d91a2b0469e19e56566d5370f4a2"
+      },
+      "raw_bytes": 165,
+      "raw_sha256": "22d754e33e5e414d820e237c9e477c81ec8db495c45ab51f7665351a89a3c783"
+    },
+    {
+      "file": {
+        "path": "paper/materials/2026-10-21-issue-16-strategy-library/validation/tsc-replay-isolated.log.gz",
+        "bytes": 20,
+        "sha256": "9ceffb7310338057cfe71a4ae1e2c98d2c485d81cdef906532a801f457a38d64"
+      },
+      "raw_bytes": 0,
+      "raw_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "file": {
+        "path": "paper/materials/2026-10-21-issue-16-strategy-library/validation/vitest-full.log.gz",
+        "bytes": 776,
+        "sha256": "a0e720cc6ee481c4f830be9525c17b59311100b578fe7052e94b51feb5e9b713"
+      },
+      "raw_bytes": 1695,
+      "raw_sha256": "655b76a35ba8c67060d66e7ac8dbb17879b6ddd9525c29c8712752fe224a9e58"
+    },
+    {
+      "file": {
+        "path": "paper/materials/2026-10-21-issue-16-strategy-library/validation/vitest-targeted-final.log.gz",
+        "bytes": 212,
+        "sha256": "fd7fa5a5f21c9376b3b430fa1768561fcc423a2a251c37aa2f1cde5e68b72bbf"
+      },
+      "raw_bytes": 260,
+      "raw_sha256": "f2da69c958ad26c565dff5a2fa2d7a16bffbcec858b2fef518a8a692cf1c16ff"
+    },
+    {
+      "file": {
+        "path": "paper/materials/2026-10-21-issue-16-strategy-library/validation/vitest-full-recheck.log.gz",
+        "bytes": 404,
+        "sha256": "44dfc050ef067328bf9140d8f4ecf6f9d585319d057da44a6bc478c09d86c4f1"
+      },
+      "raw_bytes": 618,
+      "raw_sha256": "1d1f5135fb85c025f3456a6d0a37ad09e0666422dd27cf4c81827f685d87df35"
+    },
+    {
+      "file": {
+        "path": "paper/materials/2026-10-21-issue-16-strategy-library/validation/gitleaks-artifacts-final.log.gz",
+        "bytes": 93,
+        "sha256": "0fc0cb417c8cea6e1ce336a6d61b4ea01241be47707123066b18494bda1b234f"
+      },
+      "raw_bytes": 81,
+      "raw_sha256": "51bf82fb063d60030f30d24a8a9052cf588faadcfcdf8d412a47b6d16fdd2880"
+    },
+    {
+      "file": {
+        "path": "paper/materials/2026-10-21-issue-16-strategy-library/validation/gitleaks-staged-final.log.gz",
+        "bytes": 105,
+        "sha256": "1319def0543bbdfcf5def1225418fbec0e058774f5ac76d8bf56bfe000b02db9"
+      },
+      "raw_bytes": 110,
+      "raw_sha256": "6b5628edf9a89e8fe1da3ebe9d20b448ff0cd5fca84c676eb7c0ed1fce229b71"
+    },
+    {
+      "file": {
+        "path": "paper/materials/20261021-issues16-17-integrator-review/tsc.log.gz",
+        "bytes": 20,
+        "sha256": "9ceffb7310338057cfe71a4ae1e2c98d2c485d81cdef906532a801f457a38d64"
+      },
+      "raw_bytes": 0,
+      "raw_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "file": {
+        "path": "paper/materials/20261021-issues16-17-integrator-review/vitest-full.log.gz",
+        "bytes": 404,
+        "sha256": "9f00724130d68e63fd137f513d81db835987ea4625dfe5a7367a445fd0f165ac"
+      },
+      "raw_bytes": 972,
+      "raw_sha256": "6df40bb2c1bbf0c0c172d2d8a10279384462e81c3cca52d8aeff54c0745669cb"
+    },
+    {
+      "file": {
+        "path": "paper/materials/20261021-issues16-17-integrator-review/vitest-full-v2.log.gz",
+        "bytes": 404,
+        "sha256": "3a8bc392d1be5ae26347e3f995b15b9f4c292e5c0a5d0eaa8192e1dc111757be"
+      },
+      "raw_bytes": 619,
+      "raw_sha256": "4858cd7f153b906abcb2fdfd837e3a2439e698b5cfba1e9b4b92b1283237d4ab"
+    },
+    {
+      "file": {
+        "path": "paper/materials/20261021-issues16-17-integrator-review/test_issue_session.log.gz",
+        "bytes": 392,
+        "sha256": "cdcab14d93f4754133f65a5ec00b2986b1450ba07dea08adde3f8c00bcdf6732"
+      },
+      "raw_bytes": 958,
+      "raw_sha256": "c5cc61ea673a6b34c7f143cc6f9837cfa78ddfbb4c857b9217795779dd0531e4"
+    },
+    {
+      "file": {
+        "path": "paper/materials/20261021-issues16-17-integrator-review/test_issue_session-v2.log.gz",
+        "bytes": 56,
+        "sha256": "ade82338fa77370bc476722d7bf85e1ef8a50f3cdd6f0a5a08a53a0991ffac41"
+      },
+      "raw_bytes": 145,
+      "raw_sha256": "66b2cad2c99fbab99ef4c614be6644e3c9446950ff7082ec6314a006e3e2c08d"
+    },
+    {
+      "file": {
+        "path": "paper/materials/20261021-issues16-17-integrator-review/test_worktree_retention.log.gz",
+        "bytes": 55,
+        "sha256": "731dec19ae37497a084a26b5868fd7c2a2c588bd1ab13ae9a0662e6981a6b96e"
+      },
+      "raw_bytes": 114,
+      "raw_sha256": "18ecd86ccc7998716c42b1418b7d2fd270133358175faa839897b0f3254e296e"
+    },
+    {
+      "file": {
+        "path": "paper/materials/20261021-issues16-17-integrator-review/tsc-replay.log.gz",
+        "bytes": 20,
+        "sha256": "9ceffb7310338057cfe71a4ae1e2c98d2c485d81cdef906532a801f457a38d64"
+      },
+      "raw_bytes": 0,
+      "raw_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "file": {
+        "path": "paper/materials/20261021-issues16-17-integrator-review/gitleaks-candidate.log.gz",
+        "bytes": 91,
+        "sha256": "12e85c7a9bce9436250772c787c543ad54cc7231cd0c715f49b7436b5eefc4b4"
+      },
+      "raw_bytes": 80,
+      "raw_sha256": "3f432f8f77c0ee19908f4874ac31c8a079773be2ee01cd679f709060fb67adb5"
+    }
+  ],
+  "original_integrator_full": {
+    "checks": {
+      "path": "paper/materials/20261021-issues16-17-integrator-review/checks-v2.json",
+      "bytes": 261,
+      "sha256": "09757f921f05ea233c4296c660c49e12e0f75909d8af011e871c8db297d6110a"
+    },
+    "files": 645,
+    "passed": 6065,
+    "skipped": 2,
+    "retry": false,
+    "prior_cli_failure_preserved": true
+  },
+  "original_exact_release_joint": {
+    "review": {
+      "path": "paper/materials/20261021-issue25-live-admission-review/review.json",
+      "bytes": 61129,
+      "sha256": "48f72b97716914c0b8f55f174d88a96664e96de39856d859eeeb794bb980430b"
+    },
+    "summary": {
+      "files_passed": 636,
+      "tests_passed": 6005,
+      "tests_skipped": 2,
+      "tests_total": 6007,
+      "duration_s": 1496.02
+    },
+    "input_files": 2370,
+    "changed_inputs": []
+  },
+  "publication_and_dual_notice_receipts": {
+    "original": {
+      "path": "paper/materials/20261021-2125-ops/receipt.json",
+      "bytes": 15308,
+      "sha256": "0b5cde61c37d5a2e18da2bcebdce1049409a8fb2f38780797840aa1d1a58e9bb"
+    },
+    "publication": {
+      "path": "paper/materials/20261021-issue25-boundary-ops/publication.json",
+      "bytes": 3446,
+      "sha256": "5c8c2f64a9877513e03131ef7368d089dcd6dd598a38ea1f5842ddb01146afb4"
+    },
+    "notification_windows": [
+      {
+        "path": "ops/inbox-dev.md",
+        "offset": 2147185,
+        "bytes": 1082,
+        "sha256": "906d17e07d04cd880fb3f821b15797cb231683acfcc067428594c4d518190a79"
+      },
+      {
+        "path": "notes/for-roy.md",
+        "offset": 1690302,
+        "bytes": 1082,
+        "sha256": "906d17e07d04cd880fb3f821b15797cb231683acfcc067428594c4d518190a79"
+      },
+      {
+        "path": "paper/materials/decision-log.md",
+        "offset": 3849433,
+        "bytes": 342,
+        "sha256": "84afecd124329fc68209048ebba734ab261a843055b0c8ad56fd5b9726782e45"
+      }
+    ]
+  },
+  "natural_first_run": {
+    "run": "DFYBEW6NA6AJ",
+    "rows": [
+      {
+        "ref": {
+          "path": "logs/brain.jsonl",
+          "offset": 1236781545,
+          "bytes": 46450,
+          "sha256": "7cf2282af9da6cab418c2dc6056d2f5cad053fd5fd2f610fe2dbc2c41a1560a6"
+        },
+        "ts": "2026-10-21T13:26:24.681Z",
+        "label": "event/choose",
+        "type": "event",
+        "accepted": true,
+        "problems": [],
+        "strategy_entries_present": false,
+        "open_book_present": true,
+        "options_count": 3
+      },
+      {
+        "ref": {
+          "path": "logs/brain.jsonl",
+          "offset": 1236827995,
+          "bytes": 45059,
+          "sha256": "9d9ff3dc4f6b0bdfd3a01f4775beda50502decd0b1e5169aec9e59be2bfd0a0e"
+        },
+        "ts": "2026-10-21T13:27:19.082Z",
+        "label": "map/route-plan",
+        "type": "map",
+        "accepted": true,
+        "problems": [],
+        "strategy_entries_present": false,
+        "open_book_present": true,
+        "options_count": 2
+      },
+      {
+        "ref": {
+          "path": "logs/brain.jsonl",
+          "offset": 1236873054,
+          "bytes": 94430,
+          "sha256": "601e21dfe17cfde577b2650e19a05238f248f09aa41841c87c238f971bb0d427"
+        },
+        "ts": "2026-10-21T13:29:13.572Z",
+        "label": "reward/card",
+        "type": "card_reward",
+        "accepted": true,
+        "problems": [],
+        "strategy_entries_present": false,
+        "open_book_present": true,
+        "options_count": 4
+      },
+      {
+        "ref": {
+          "path": "logs/brain.jsonl",
+          "offset": 1236967484,
+          "bytes": 93442,
+          "sha256": "953e3fbabf888f0a064047b4284dc881911d6b65279644cd0635f00174d595d0"
+        },
+        "ts": "2026-10-21T13:31:11.771Z",
+        "label": "reward/card",
+        "type": "card_reward",
+        "accepted": true,
+        "problems": [],
+        "strategy_entries_present": false,
+        "open_book_present": true,
+        "options_count": 4
+      },
+      {
+        "ref": {
+          "path": "logs/brain.jsonl",
+          "offset": 1237060926,
+          "bytes": 95209,
+          "sha256": "31637e0a99fa6d36717c3f7c3f6fc754f7c72dc49342f22ed484e85fc25ca2d6"
+        },
+        "ts": "2026-10-21T13:32:31.734Z",
+        "label": "reward/card",
+        "type": "card_reward",
+        "accepted": true,
+        "problems": [],
+        "strategy_entries_present": false,
+        "open_book_present": true,
+        "options_count": 4
+      },
+      {
+        "ref": {
+          "path": "logs/brain.jsonl",
+          "offset": 1237156135,
+          "bytes": 199656,
+          "sha256": "e4be65f81824dbc5ce67e97a8172183fc3f4b513828f903f11fe91a11ca673a4"
+        },
+        "ts": "2026-10-21T13:33:28.110Z",
+        "label": "shop/plan",
+        "type": "shop",
+        "accepted": true,
+        "problems": [],
+        "strategy_entries_present": false,
+        "open_book_present": true,
+        "options_count": 16
+      },
+      {
+        "ref": {
+          "path": "logs/brain.jsonl",
+          "offset": 1237355791,
+          "bytes": 95885,
+          "sha256": "33cc39185cf7671fdb9da86a3d8387c2f56a21ce2881b041caee2921146b5684"
+        },
+        "ts": "2026-10-21T13:35:45.246Z",
+        "label": "reward/card",
+        "type": "card_reward",
+        "accepted": true,
+        "problems": [],
+        "strategy_entries_present": false,
+        "open_book_present": true,
+        "options_count": 4
+      },
+      {
+        "ref": {
+          "path": "logs/brain.jsonl",
+          "offset": 1237451676,
+          "bytes": 153837,
+          "sha256": "df5228ae6aaf6832fefac731548ff8bfe9bab938db49918d2be3818d07761f55"
+        },
+        "ts": "2026-10-21T13:36:42.990Z",
+        "label": "rest/plan",
+        "type": "rest",
+        "accepted": true,
+        "problems": [],
+        "strategy_entries_present": false,
+        "open_book_present": true,
+        "options_count": 10
+      },
+      {
+        "ref": {
+          "path": "logs/brain.jsonl",
+          "offset": 1237605513,
+          "bytes": 159584,
+          "sha256": "cf473a7f364b9a769c3a10024f7bbc1ef7e868921b648bde803c87e38b5464c4"
+        },
+        "ts": "2026-10-21T13:37:24.785Z",
+        "label": "event/plan",
+        "type": "event",
+        "accepted": true,
+        "problems": [],
+        "strategy_entries_present": false,
+        "open_book_present": true,
+        "options_count": 11
+      },
+      {
+        "ref": {
+          "path": "logs/brain.jsonl",
+          "offset": 1237765097,
+          "bytes": 152659,
+          "sha256": "53ec66299a1af454f1ffaaa5f6ac4e6a7856bdd92bf29b110974ff4f5f39cf5f"
+        },
+        "ts": "2026-10-21T13:38:51.873Z",
+        "label": "rest/plan",
+        "type": "rest",
+        "accepted": true,
+        "problems": [],
+        "strategy_entries_present": false,
+        "open_book_present": true,
+        "options_count": 10
+      },
+      {
+        "ref": {
+          "path": "logs/brain.jsonl",
+          "offset": 1237917756,
+          "bytes": 156577,
+          "sha256": "5ab8e157c7b37c61bba29c79f4e09a1e9e1b8bfbb1952ab1da8cafdb02050019"
+        },
+        "ts": "2026-10-21T13:39:53.489Z",
+        "label": "rest/plan",
+        "type": "rest",
+        "accepted": true,
+        "problems": [],
+        "strategy_entries_present": false,
+        "open_book_present": true,
+        "options_count": 10
+      },
+      {
+        "ref": {
+          "path": "logs/brain.jsonl",
+          "offset": 1238074333,
+          "bytes": 101359,
+          "sha256": "45efcc4809e898c7bd7d59f8addfc1dddd5b32fe585d11b74c085e2eecb97e96"
+        },
+        "ts": "2026-10-21T13:42:04.047Z",
+        "label": "reward/card",
+        "type": "card_reward",
+        "accepted": true,
+        "problems": [],
+        "strategy_entries_present": false,
+        "open_book_present": true,
+        "options_count": 4
+      },
+      {
+        "ref": {
+          "path": "logs/brain.jsonl",
+          "offset": 1238175692,
+          "bytes": 154173,
+          "sha256": "d6d05382d27910a67b5ae9e22519fcdba0dedfa9b26e540607fd52d5d7d01958"
+        },
+        "ts": "2026-10-21T13:42:42.922Z",
+        "label": "event/plan",
+        "type": "event",
+        "accepted": true,
+        "problems": [],
+        "strategy_entries_present": false,
+        "open_book_present": true,
+        "options_count": 17
+      },
+      {
+        "ref": {
+          "path": "logs/brain.jsonl",
+          "offset": 1238329865,
+          "bytes": 152951,
+          "sha256": "7883979f5e8414a54cc702b614be50718084483e1dc6888ee7eaf19657144b94"
+        },
+        "ts": "2026-10-21T13:43:20.406Z",
+        "label": "shop/plan",
+        "type": "shop",
+        "accepted": true,
+        "problems": [],
+        "strategy_entries_present": false,
+        "open_book_present": true,
+        "options_count": 17
+      },
+      {
+        "ref": {
+          "path": "logs/brain.jsonl",
+          "offset": 1238482816,
+          "bytes": 93613,
+          "sha256": "e17b26fe1ed9e3f49740cc574307b3a6b8511ea6a3e9ee8a7344b756a5674543"
+        },
+        "ts": "2026-10-21T13:44:39.902Z",
+        "label": "reward/card",
+        "type": "card_reward",
+        "accepted": true,
+        "problems": [],
+        "strategy_entries_present": false,
+        "open_book_present": true,
+        "options_count": 4
+      },
+      {
+        "ref": {
+          "path": "logs/brain.jsonl",
+          "offset": 1238576429,
+          "bytes": 131196,
+          "sha256": "3d7d682ffc1cee26ccad7efa0c7a70ee421d8355f5188eda855626c3c4ba0e6c"
+        },
+        "ts": "2026-10-21T13:45:08.670Z",
+        "label": "rest/plan",
+        "type": "rest",
+        "accepted": true,
+        "problems": [],
+        "strategy_entries_present": false,
+        "open_book_present": true,
+        "options_count": 8
+      }
+    ],
+    "scan_end": 1238707625,
+    "type_counts": {
+      "event": 3,
+      "map": 1,
+      "card_reward": 6,
+      "shop": 2,
+      "rest": 4
+    },
+    "strategy_library_exists": false,
+    "first_event_accepted": true,
+    "first_event_fallback": false,
+    "native_git_ENOBUFS_preserved": true,
+    "scope": "Actual empty-library behavior; natural byte equivalence cannot be reconstructed from the enriched logged payload. Fixed no-hit byte equivalence is separate."
+  },
+  "issue27": {
+    "state_at_readback": "OPEN",
+    "issue24_closed": true,
+    "content_not_delivered": true,
+    "natural_strategy_hit_pending": true,
+    "original_dispatch_chain_only": true,
+    "state_at_final_readback": "OPEN",
+    "status": "ready",
+    "dependency_block_removed": true,
+    "learner_started": false,
+    "actual_api_readback": true,
+    "comment_url": "https://github.com/dwroy/agent-sts2/issues/27#issuecomment-6330028673"
+  },
+  "scientific_parents_closed": false,
+  "new_dataset_replay_full_model_learning_game_action": false,
+  "operator_scratch_correction": "Own GitHub readback was initially redirected to /tmp; copied into repo artifacts and only that own temporary file removed. No outside file remains.",
+  "local_verifier_correction": "Manifest dataset_sha256 identifies the compressed output; the initial local verifier compared expanded bytes and stopped. Corrected comparison passes; expanded SHA recorded separately, original files unchanged.",
+  "issue16_closed": {
+    "state": "closed",
+    "closed_at": "2026-10-22T00:55:22Z",
+    "acceptance_boxes_checked": 3,
+    "actual_api_readback": true,
+    "comment_url": "https://github.com/dwroy/agent-sts2/issues/16#issuecomment-6330017012"
+  }
+}

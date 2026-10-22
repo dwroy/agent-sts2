@@ -5748,4 +5748,29 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
 - 2026-10-22T08:50:02+08:00 [Claude] Roy 10-22：对局大脑不保留每题推理，但每局保留构筑记录（每个改牌组动作 + 不超过 20 字理由，随构筑题附上，#35）；游戏时对局大脑与学习大脑都开在 herdr tab 里可见，标题写“对局大脑 · <run_id>”“学习大脑 · <批次> · <类型>”（#36）。
 - 2026-10-22T08:53:58+08:00 [Claude] Roy 10-22：开发会话并发上限 5 → 10（每个项目；.agents/board.yaml roles.dev.max_parallel，全局记忆 agent-issue-workflow 已改）。
 
-- 2026-10-22T10:03:12+08:00 [dev #35] 完成每局构筑记录候选：实际牌组差分/跳过选项与≤20字原答案理由、开头4+最近36条、构筑题随题状态、SL/重启回滚及复盘快照原行索引；全角色含铁甲按Roy #35新增历史输入，知识/牌值未改。最终tsc0、完整fork单worker655文件6174过/2原有跳过；保原正文兼容失败/中断、线程池不兼容、旧传输超时与稀疏材料缺失原件，恢复原Git叶后全检通过。待review/集成员与ops自然边界发布，未改live/STOP或分配版本号。报告paper/materials/20261022-issue35-build-log/report.md。
+- 2026-10-22 08:56 CST：[ops] #16数据/格式/检索/固定五类及R411自然空库验收核同，按基础设施范围关单；11735/410、原5275字段与缺失口径/原失败保留。#24主管已关闭，#27依赖解除转ready并实际读回，原ops待派未启动；真实条目/自然命中/科学父仍待，不重full/回放/模型或改对局。原件 paper/materials/20261022-issue16-acceptance-ops/receipt.json；issuecomment-6330017012、6330028673。
+
+- 2026-10-22T09:06:56+08:00 [ops] #20有效on/STS2-only/唯一stall核同；原tick累计6真实notify且原日志各唯一done，2superseded不作派发成功、11pending/6保留门，零sending或uncertain；原命名active核同，特定done状态/接续升级/锁忙/最终回收仍自然待验，保持开放。不新tick/full/模型/任务/游戏操作，原件 paper/materials/20261022-issue20-runtime-ops/receipt.json；issuecomment-6330154431。
+
+- 2026-10-22T09:19:40+08:00 [ops] #25 R411首DFY完整读回：16脑题/76开卷Jev预算范围核同，26无开卷基础包超24KB保缺口并入原工程队列；固定7牌/1敌人参考不代历史在途采用。交主管验收不关单、不重发布/full/API或前后指标对比；paper/materials/20261022-issue25-readback-ops/receipt.json。
+
+- 2026-10-22T09:31:12+08:00 [ops] 接#33 main准入，以R411组合#33+#26及所需回执/按局配置55叶；原锁占用首准入未跑检查，唯一PID3113069排原kernel锁后重建/tsc/full，完成回原队列。未发布/热切/恢复#31试验，首局验收待；paper/materials/20261022-issue33-live-ops/receipt.json。
+
+- 2026-10-22T09:22:05+08:00 [ops] 09:13八原notice原文/证据/双箱与watcher实际转达证明核同；原CLI不兼容三research、两角色登记pending，保旧rc2/false与科学父，不重试/代ACK/重复提醒或重模型/full/dataset。paper/materials/20261022-0913-ops/receipt.json。
+
+- 2026-10-22T09:38:53+08:00 [ops] #8 R411四叶核同；原R4完整proposal/四question/SHA保留，唯一notice f9d1cd080ff9e555700887e2真实双箱转发及ops本人CLI ack0，watcher两角色待本人回执，交review、不代ACK/关科学父/续批/重发布。paper/materials/20261022-issue8-role-ops/receipt.json。
+
+- 2026-10-22T09:42:53+08:00 [ops] 090940-s2唯一dataset正常日志后因新增原R4通知触发收尾attention，保十waiting/失败、不重生成器；R4已ops ACK等本人角色。#33并行Vitest守卫使原检查在tsc/full前退出，55叶保留、首检查待独占窗口，不叠full/守候/发布。paper/materials/20261022-0937-ops/receipt.json。
+- 2026-10-22T09:45:06+08:00 watcher/集成员 #8：沿正式R4通知f9d1cd080ff9e555700887e2实读四异议并逐字在本会话告Roy，本人watcher_received/roy_notified原CLI均0且回执/证据SHA独立读回；ops原ACK、六份原件和提案falseflags保持，R411既有发布不重复full/上线。材料 paper/materials/20261022-issue8-role-integrator/，交主管验收关闭；REFLEX off、草稿0，不关闭科学父，其他研究task CLI仍pending。
+
+- 2026-10-22T09:45:57+08:00 [ops] 090940主策略十waiting/无新源或纯bug，76产物/十原文/483原段核同、13/579完整；原R4新增notice使首次准入在dataset前停止，无本批生成器日志，不借s2补完成。保attention/科学父，不重dataset/full/合入，live不动；paper/materials/20261022-0944-ops/receipt.json。
+
+- 2026-10-22T09:54:46+08:00 [ops] #26四叶/55候选核同，本机MCP14工具/六查询与四负控、来源和关键统计读回通过；探针解析初错保留。仅固定候选消费，R411未含数据、#33组合full待原窗口，不单发/叠full或关科学父；paper/materials/20261022-issue26-consumer-ops/receipt.json。
+
+- 2026-10-22T09:59:45+08:00 [ops] 094302-fix无新源；157SHA/53旧子项48main祖先核同，tsc0/12定向44过非full，strict162源差导致failed/rc0保留。#25固定26请求压缩后11仍超24KB(max37383)，补原issue/队列，不空合并/重full或改live；paper/materials/20261022-0955-ops/receipt.json。
+
+- 2026-10-22T10:15:44+08:00 [ops] #27冻结52输入/434结束Silent局、独立树与协议9任务准备完成，渲染/扫描0；原10:13两策略槽占用，未启动模型，保原完成事件接续，不据准备关单或冒live/自然命中；paper/materials/20261022-issue27-dispatch-ops/receipt.json。
+
+- 2026-10-22T10:20:00+08:00 [ops] #33+#26原55叶/tree核同；此前未跑full。唯一驱动3387945内核等集成员#35新Vitest3369154退出，再沿原锁首次组合检查，旧失败保留；未模型/轮询/发布/额外局，首局读回待。paper/materials/20261022-issue33-window-ops/receipt.json。
+
+- 2026-10-22T10:23:56+08:00 [ops] 101301-fix无新源，157SHA/53旧子项48祖先核同；tsc及3文件12例0非full，strict162差/failed rc0保持。八notice原实际转达证明同、CLI登记仍pending；不重探针/代ACK/空合并/叠dataset或full，paper/materials/20261022-1021-ops/receipt.json。
