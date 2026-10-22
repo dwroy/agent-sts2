@@ -1,0 +1,115 @@
+[
+  {
+    "id": "q27-card-causal-gap",
+    "prior": "#27期望首批包含拿牌与幕初方向；公开数据可以用。",
+    "finding": "本批没有足够证据发布单卡收益排名，三条仅为备战计划。公开数据允许使用，但不把相关性/最终牌组聚类变成决策时可用的因果收益。",
+    "evidence": [
+      "external-review.json",
+      "coverage.json",
+      "entry-dispositions.json"
+    ],
+    "affected_ids": [
+      "candidate-external-sts2fun-card-ranking"
+    ],
+    "next_step": "原ops→watcher→Roy转达保留的拿牌缺口；不为本批自行开实验或续派。",
+    "origin": "frozen prior-batch questions.json; original wording retained, no ACK/closure inferred"
+  },
+  {
+    "id": "q27-external-schema-floor",
+    "prior": "外部聚合或机械参考可进入同一策略schema。",
+    "finding": "所选外部资料无真实逐局ID及精确全局楼层；当前evidence要求run与非空整数floor。可用aggregate命名空间保留候选，但本批不伪造floor=0或本系统局号。未改schema/消费者。",
+    "evidence": [
+      "external-review.json",
+      "docs/brain-strategies.md"
+    ],
+    "affected_ids": [
+      "candidate-external-sts2fun-card-ranking",
+      "candidate-external-spire-codex-boss-plans"
+    ],
+    "next_step": "原owner若要正式表达这些资料，先明确非对局证据合同；本批不扩大架构。ledger CLI也只接受12位真实局号，外部候选未登记伪造账本。",
+    "origin": "frozen prior-batch questions.json; original wording retained, no ACK/closure inferred"
+  },
+  {
+    "id": "q27-one-fight-boundaries",
+    "prior": "既有boss经验含更多历史支持与高confidence。",
+    "finding": "本批只独立核回3局4个窗口，三条各n=1；不继承旧条目20/22等支持分母，不以观察成功/SL次数证明策略收益。没有推翻既有机制，只限制本批应用与收益声明。",
+    "evidence": [
+      "evidence-refs.jsonl",
+      "observed-frames.json",
+      "coverage.json"
+    ],
+    "affected_ids": [
+      "silent-brain-kin-priest-exit-window",
+      "silent-brain-vantom-two-stage-preparation",
+      "silent-brain-crab-surviving-part-budget"
+    ],
+    "next_step": "保留既有科学父；原ops发布后等首个自然问题真实查询/命中，不代其他角色ACK。",
+    "origin": "frozen prior-batch questions.json; original wording retained, no ACK/closure inferred"
+  },
+  {
+    "id": "q27-b2-external-contract-progress",
+    "prior": "首批外部聚合因run/floor必填无法正式表达。",
+    "finding": "#42学习合同已提供external_aggregate；本批5条及CLI读回通过，旧格式障碍已被实际固定验证覆盖。机械参考仍不等于策略；这不代通知ACK、live或自然消费，也不关闭原科学父。",
+    "evidence": [
+      "content-verification.json",
+      "consumer-output/summary.json",
+      "ledger-ids.json"
+    ],
+    "affected_ids": [
+      "silent-brain-act2-reward-skip-comparison",
+      "silent-brain-act3-reward-skip-comparison",
+      "silent-brain-act1-blade-dance-choice-context",
+      "silent-brain-knowledge-demon-external-tail-budget",
+      "silent-brain-test-subject-external-tail-budget"
+    ],
+    "next_step": "原ops按原通知链转达进展；原问题原件保留，后续完成状态由owner核真实回执。"
+  },
+  {
+    "id": "q27-b2-card-disagreement-causal-gap",
+    "prior": "#24拿取率分歧可能提供固定拿牌优先级。",
+    "finding": "精确Git旧表确认刀刃之舞本系统22/189=11.64%，外部411/1054=38.99%；此为不同局面的频率分歧。外部原始胜率差+5.20pp，经玩家/幕重叠调整约+0.27pp且区间跨零。只发布情境比较提醒，不指示照外部比例补拿；旧自有汇总未逐局核回，不作为mixed支持或提高confidence。致命毒药、步法及报告最大分歧牌亦无因果优先级。",
+    "evidence": [
+      "supplemental-git-context.json",
+      "external-review.json#card_choices:2902",
+      "entry-dispositions.json"
+    ],
+    "affected_ids": [
+      "silent-brain-act1-blade-dance-choice-context",
+      "candidate-external-sts2fun-card-ranking"
+    ],
+    "next_step": "原ops→watcher→Roy保留因果缺口及分歧；不在本批启动实验/模拟或续派。"
+  },
+  {
+    "id": "q27-b2-hard-fight-metric-boundary",
+    "prior": "外部硬仗受伤可直接用为本系统安全HP门槛或证明模拟错误。",
+    "finding": "知识恶魔p90=51和实验体p90=62是外部总受伤分位，非净损、置信界或安全线。上传SL未知、死亡截断，第三幕后场未知；不能与自有净损/预测判死直接比值推因果。已有机制与H0/G1a质量限制保留，没有发现足以推翻其原证据的新反证。",
+    "evidence": [
+      "evidence-refs.jsonl#combat_distribution:45",
+      "evidence-refs.jsonl#combat_distribution:66",
+      "dedup-review.json"
+    ],
+    "affected_ids": [
+      "silent-brain-knowledge-demon-external-tail-budget",
+      "silent-brain-test-subject-external-tail-budget"
+    ],
+    "next_step": "只作为低可信备战参照；自然发布/命中与收益分别跟踪，原校准/机制父不关闭。"
+  },
+  {
+    "id": "q27-b2-ledger-frozen-inventory-boundary",
+    "prior": "共享账本全量check应全通过。",
+    "finding": "新增五条show/find均0自有局、外部分母正确。使用本批冻结runs检查共享575项时，有3条其他并行记录引用0VBCQS9V0N87，超出本批冻结清单；原check rc1保留。LEDGER_RUNS=none结构检查575项0问题，并非这些新局的来源验证。",
+    "evidence": [
+      "ledger-check.stdout.txt",
+      "ledger-shape-check.stdout.txt",
+      "ledger-commands.json"
+    ],
+    "affected_ids": [
+      "silent-0571",
+      "silent-0572",
+      "silent-0573",
+      "silent-0574",
+      "silent-0575"
+    ],
+    "next_step": "原ops用其授权当前局清单核三条并行记录；本批不越冻结上限读取新局、不修改他人记录，不代全量来源验证通过。"
+  }
+]

@@ -5868,3 +5868,5 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
 - 2026-10-22T23:35:57+08:00 [watcher] #40生产导入热修源3ae67358仅8f09b8426后差量：未修入口独立复现ModuleNotFoundError、修后新进程冷/追加/暖与缺模块反例2过；树01b4bec2076c70f1d08fe3e9e2c58db0b73dc0f8首次full1败原件保留/旧测试空表已开#44交原issue41，按主管6344141656同树绿即发裁决、原树一次完整复验tsc/full0（656文件6219过2跳0败）及Python2过，2596枚举输入前后同。合main交原ops在42学习V6-R414后精确热修，保最新知识；首轮20–40分钟/约10GiB仅规划，生产失败原件与自然刷新/训练/消费者验收开放，未碰生产。证据paper/materials/20261022-issue40-hotfix-full-integrator/。
 
 - 2026-10-23T00:02:34+08:00 [ops] 231301四局复盘/12支持11旧ID/四pending提案核同；5802原段校验。两主策略attention保留，共享原dataset五检查成功产物复用且不重跑；记录限已审前缀，排除#27在途5条，24状态勘误和11通知角色ACK仍pending，不关科学父。原件 paper/materials/20261022-2350-ops/receipt.json。
+
+- 2026-10-23T00:11:56+08:00 [ops] #27第二批五外部观察策略已核源f96a13606/main3f6421432、65输入/93叶/23表段及原自测；live R414旧三条保持，按不插队门排40/36之后。当前账本575/0与学习者冻结清单rc1分列，四新增问题双箱待角色ACK，父/自然命中/发布未完。原件 paper/materials/20261023-issue27-batch2-terminal-ops/receipt.json。
