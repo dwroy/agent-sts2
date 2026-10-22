@@ -6065,3 +6065,9 @@ Roy/Claude报16:09周用量91%，已新建codex3-20261022-1610，旧1146取消�
 核实#33完整包+#26已在自然终局发布V6-R417，live e925357ad、行为c60de438/tree880785ea精确58叶；统一号、绑定、双箱通知和真实消费者均对上，沿用原6205过2跳/2534冻结输入，不重full。发布前后468份旧知识相同；现有9份运行数据已变化，另列SHA，不覆盖。自有LLM_DRAIN已释，原autoplay1248445自然续出Silent A10局Y3824FJLSUXY，无须重启。固定06:16—06:24窗口10题全完成，2题各调用一次工具（机械开卷命中、经验查询空结果），均值13.46秒/P95 27.38秒，兜底0、前缀预算漏书0；10个原生turn_context独立核gpt-6.1-sol/high，日志9个空receipt保留。cap8/Codex300秒+最终120秒配置已读，未触发耗尽分支；dsh仅原离线证据。run-config原git ENOBUFS缺提交号保留，并用实际live/进程cwd/控制台补核；#26统计工具尚无自然命中，不推收益或关闭科学父，队列42余项→35→28→37保留。
 
 原件：paper/materials/20261023-issue33-publication-ops/publication.json、actual-publication-dual-notice.json；本轮：paper/materials/20261023-0621-ops/publication-verification.json、natural-report.json、native-turn-contexts.jsonl、post-publication-knowledge-drift.json。
+
+### 2026-10-23T06:45:25+08:00 [ops] 十五通知复核及账本清单对账
+
+本轮十五重复学习通知的原文、67份原始证据窗口、既有watcher实读和Roy可见转达核同，无新增科学异议；原CLI SHA未变，手动任务白名单兼容仍阻塞正式watcher_received/roy_notified，保留原拒绝及pending，不代ACK或认定Roy亲读/同意。对账本冻结清单异议补做ops侧当前清单核验：0VBCQS9V0N87确在真实Silent A10局清单，三条并行记录为silent-0019/0039/0490；冻结当前ledger/runs/versions后原check为575项0问题。学习者原冻结清单rc1和LEDGER_RUNS=none结构检查原件均保留；本次只验证结构及局号引用，不代表逐帧科学内容、五条新策略上线或自然采用。新增对账写#27，向现有集成员单行提醒，发送与接收分开记录；其余原异议不重复提醒、不启研究/模型/full/dataset/对局。现有V6-R417及42余项→35→28→37队列保留，科学父继续开放。
+
+原件：paper/materials/20261023-0643-ops/notices-audit.json、ledger-inventory-reconciliation.json、receipt.json；原实际转达paper/materials/20261023-issue27-batch2-watcher/read-and-relay.json。

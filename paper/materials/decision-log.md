@@ -5927,3 +5927,5 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
 - 2026-10-23T06:23:28+08:00 [watcher] #36接续无新补交/裁决，远端c8ff9caf5不变；33+26已实际R417 e925357a，当前main323d98b1。九叶前像逐blob同原审查/基线，保原tsc0/205项/2597输入结论；R417原6205full不覆盖36三枚新补丁。原队列42余项→35→28→37及37→20不变，36不自行插队，待最终精确组合唯一full/合入；本轮仅记录、不碰生产/重送已消费模型，75/身份产物退场、自然验收、学习科学父/27 CLI保留，无新裁决。材料paper/materials/20261023-issue36-r417-preflight/。
 
 - 2026-10-23T06:27:25+08:00 [ops] #33/#26 V6-R417实际live e925357ad/行为c60de438、58叶原full6205过2跳/2534输入核同，统一号/绑定/双通知/自有drain释放已验；原autoplay自然续局Y3824FJLSUXY固定10题全完成/2工具/0兜底/均值13.46s P95 27.38s，10原生high独核；保留run-config git ENOBUFS与9空receipt/#26统计自然消费待，不关科学父、不重full/模型/试验局。原件paper/materials/20261023-0621-ops/publication-verification.json、natural-report.json。
+
+- 2026-10-23T06:45:25+08:00 [ops] 十五重复通知原文/67证据核同，正式两角色ACK仍受旧CLI兼容阻塞；补核#27三条并行记录引用0VBCQS9V0N87存在于ops当前清单，冻结575项ledger check rc0，原learner冻结check rc1保留，不代科学来源或shipped/自然采用。原件paper/materials/20261023-0643-ops/ledger-inventory-reconciliation.json、notices-audit.json。
