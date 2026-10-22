@@ -178,7 +178,7 @@ python3 ops/release_checks.py --root /project/root --worktree /project/root/.wor
   --receipt /project/root/paper/materials/RELEASE/full-checks.json
 ```
 
-标准回执绑定 repo/root、完整受测树 SHA、角色、完整 tsc/Vitest 结果和前后输入不变。仅同树完整通过可复用，引用原回执 SHA；否则在队列中重跑，原结果不覆盖。检查后仍走原发布/绑定保护/自然局边界/首局验收，不因工具返回 0 自动发布。
+标准回执绑定 repo/root、完整受测树 SHA、角色、完整 tsc/Vitest 结果和前后输入不变。同树完整通过可复用，引用原回执 SHA；下节规定的纯数据基线变化可在新组合补定向后复用完整绿。其他源码组合在队列中重跑，原结果不覆盖。检查后仍走原发布/绑定保护/自然局边界/首局验收，不因工具返回 0 自动发布。
 
 **区域与文件冲突。** 派单前读 issue 的 `area:*` 标签：同区域已有 in-progress/review，或 ready 项已有登记/正在启动的预约，后者保留 ready，在 digest 写明等待的 issue；无 area 标签照旧。同 tick 首次派发也占住该区域，回执不确定继续保留其登记，不同时派下一张。转入 waiting-release 后不再占开发区域；区域释放后沿原 stall 再判，不靠模型守候。同一个 issue 有多个 area 时任一区域有冲突都等待。统一的区域门独立于重任务队列；通用 kit 默认开启，STS2 显式 area_mutex:false 保留原上线边界，原 ops 同轮启用。require_area 默认 false，炉石可明确为 true，让缺 area 的 ready 继续排队；不自动给历史 issue 猜标签。派发前将原 areas 写入账本，uncertain 即使标签/状态改变仍保留；旧不确定分配若区域不可知，暂停新派发，沿原证据核验再 resolve；重新贴 ready 不能绕过旧不确定派发。
 
@@ -188,6 +188,20 @@ python3 ops/release_checks.py --root /project/root --worktree /project/root/.wor
 
 
 ## 发布时固定启动入口（#20，Roy 2026-10-22）
+
+### 发布不插队与组装清单
+
+同项目同一时间只保留一个发布在途：从组合检查开始，直到实际发布完成或原角色有证据明确放弃。检查通过后冻结等待发布也占预约；仅数据发布同样排队。重任务CPU位、知识锁、live短事务锁和发布预约各有职责，不能用测试退出/进程消失/CPU空位当作预约已释放。
+
+本项目用 `ops/release_queue.py` 持久登记，`ops/release_checks.py` 在资源申领前预约，派单器读同项目只读probe，把其他waiting-release记入Publication queue，暂缓它们的发布提醒及停滞重试；Roy新评论仍可送达。ops实际发布必须经同一预约的publish入口，不能绕回直接执行旧发布脚本。失败/中断保留failed/checking/publishing现场，核原件后显式retry或abandon；complete核真实live提交、运行源码与知识，再释放给下一项，不自动重放命令。
+
+组装必过并写入回执：运行源码与交付叶逐项SHA/模式核同及交付路径预像；被调测试脚本齐全、断言前置issue有实际叶证据（按原规则剔除的测试列理由）；ops最新冻结知识快照逐项SHA核同；固定超时在当前负载下的余量；输入前后SHA一致。动态依赖/超时仍须原角色代码审阅，机械扫描不代人工盘点。偶发超时按#41类问题保留失败、修夹具或预算后再验，不靠重跑挑绿。
+
+排队期间紧急变更基线时，保留授权与原预约处置，不能悄悄插队。新旧基线差异仅为数据/指定发布记录、运行源码和交付预像不变、原完整检查及日志SHA均可核且通过，才复用。新组合仍跑生产tsc、逐个变化知识文件映射的消费者定向及ops最新冻结快照核同；v2回执分别记录原full引用与本次真实执行，绝不把定向写成新full。运行源码/测试/依赖/发布配置有变、预像改变或缺完整绿则重新完整检查；原失败不复用。
+
+`dispatcher.release.enabled`默认false，原ops先核实际在途检查/冻结，迁移为唯一预约、核无原发布脚本绕行后启用。未启用仍沿原入口及原检查，不能宣称已阻挡在途#27等历史动作。具体命令、manifest格式、纯数据路径、集成员/ops职责与18:39–19:36复盘见[发布组装与顺序](release-assembly.md)。本增量不改ops prompt，也不由开发启用生产。
+
+### 固定启动版本
 
 **main 上改启动脚本不能直接影响 live。** 启动代码、行为环境和控制器源码同属发布输入。开发交付、集成员核验结论必须单独写 `影响 live 启动：是/否`；为是时列出入口、配置、旧/新版本与回退办法。至少检查 `ops/run.sh`、`ops/autoplay.sh`、`ops/production-runtime.sh`、`ops/paths.sh/.py`、启动选择器及 Herdr/重载入口、它们读取的行为配置。ops 对实际组合树一并核对并纳入原完整检查/同树复用，不能因代码只在 ops/ 就视为不影响对局。
 

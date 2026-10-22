@@ -1,0 +1,11 @@
+{
+  "initial_tool_only_failures": [
+    {"scope": "public new fixtures", "exit": 1, "reason": "Repeated callback initially reused a queue receipt; subsequent fixture expected ValueError but the valid execution flock refused with BlockingIOError."},
+    {"scope": "kit 90 targeted fixtures", "exit": 1, "reason": "One new assertion incorrectly suppressed recovery for the active release's own ops; only the queued second release should be held."}
+  ],
+  "preserved_file_failures": [
+    "public-first-failure.log",
+    "public-input-guard-failure.log"
+  ],
+  "interpretation": "Fixture failures and the untracked-input classification defect were corrected; none is a gameplay result. Original file logs and final results remain separate. No raw log is invented for the initial tool-only output."
+}

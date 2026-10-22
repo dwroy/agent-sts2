@@ -37,6 +37,10 @@ dispatcher:
   pause_files: [ops/codex-ops/PAUSE, ops/codex-ops/LLM_DRAIN]
   interval_minutes: 5
   area_mutex: false # Enable with the resource/conflict rollout at its natural boundary.
+  release:
+    enabled: false # Ops migrates the active release before enabling this persistent gate.
+    state: ops/codex-ops/release-queue.json
+    probe: [python3, "{root}/ops/release_queue.py", --root, "{root}", status]
   heavy:
     enabled: false # Original ops enables once at the natural deployment boundary.
     # Omit machine_state to use the shared ~/.local/state/agent-board protocol root.

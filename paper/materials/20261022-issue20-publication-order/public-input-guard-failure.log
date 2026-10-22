@@ -1,0 +1,112 @@
+FFFE.F.F.FFFF.F.......
+======================================================================
+ERROR: test_data_publication_uses_same_slot_without_claiming_a_full_test (test_release_order.ReleaseOrder.test_data_publication_uses_same_slot_without_claiming_a_full_test)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/dw/Projects/agent-sts2/.worktrees/issue-20-agent-board-kit/ops/tests/test_release_order.py", line 211, in test_data_publication_uses_same_slot_without_claiming_a_full_test
+    self.assertEqual(publish(self.queue, 'data27', output, self.root, ['fixed-data-publish'], self.runner,
+                     ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                             data_plan=self.manifest, evidence='.state/review.md'), 0)
+                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/dw/Projects/agent-sts2/.worktrees/issue-20-agent-board-kit/ops/release_queue.py", line 104, in publish
+    checklist = validate(queue.root, worktree, data_plan, live=queue.root / '.worktrees/live')
+  File "/home/dw/Projects/agent-sts2/.worktrees/issue-20-agent-board-kit/ops/release_plan.py", line 109, in validate
+    files = inventory(worktree)
+  File "/home/dw/Projects/agent-sts2/.worktrees/issue-20-agent-board-kit/ops/release_plan.py", line 32, in inventory
+    raise ValueError('untracked runtime or test input outside the checked tree')
+ValueError: untracked runtime or test input outside the checked tree
+
+======================================================================
+FAIL: test_changed_delivery_preimage_disallows_reuse (test_release_order.ReleaseOrder.test_changed_delivery_preimage_disallows_reuse)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/dw/Projects/agent-sts2/.worktrees/issue-20-agent-board-kit/ops/tests/test_release_order.py", line 118, in test_changed_delivery_preimage_disallows_reuse
+    self.assertEqual(self.check(), 0)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+AssertionError: 1 != 0
+
+======================================================================
+FAIL: test_completion_requires_actual_checked_runtime_and_evidence_before_next_release (test_release_order.ReleaseOrder.test_completion_requires_actual_checked_runtime_and_evidence_before_next_release)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/dw/Projects/agent-sts2/.worktrees/issue-20-agent-board-kit/ops/tests/test_release_order.py", line 180, in test_completion_requires_actual_checked_runtime_and_evidence_before_next_release
+    self.assertEqual(self.check(), 0)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+AssertionError: 1 != 0
+
+======================================================================
+FAIL: test_data_only_rebase_reuses_full_and_runs_only_tsc_and_consumers (test_release_order.ReleaseOrder.test_data_only_rebase_reuses_full_and_runs_only_tsc_and_consumers)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/dw/Projects/agent-sts2/.worktrees/issue-20-agent-board-kit/ops/tests/test_release_order.py", line 97, in test_data_only_rebase_reuses_full_and_runs_only_tsc_and_consumers
+    self.assertEqual(self.check(), 0); before = self.first.read_bytes()
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+AssertionError: 1 != 0
+
+======================================================================
+FAIL: test_failed_data_consumers_preserve_full_origin_and_hold_publication (test_release_order.ReleaseOrder.test_failed_data_consumers_preserve_full_origin_and_hold_publication)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/dw/Projects/agent-sts2/.worktrees/issue-20-agent-board-kit/ops/tests/test_release_order.py", line 218, in test_failed_data_consumers_preserve_full_origin_and_hold_publication
+    self.assertEqual(self.check(), 0); before = self.first.read_bytes(); self.rebase_data()
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+AssertionError: 1 != 0
+
+======================================================================
+FAIL: test_failed_or_modified_original_full_is_never_reused (test_release_order.ReleaseOrder.test_failed_or_modified_original_full_is_never_reused)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/dw/Projects/agent-sts2/.worktrees/issue-20-agent-board-kit/ops/tests/test_release_order.py", line 156, in test_failed_or_modified_original_full_is_never_reused
+    self.assertEqual(self.check(), 0); self.rebase_data()
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+AssertionError: 1 != 0
+
+======================================================================
+FAIL: test_missing_runtime_baseline_input_cannot_be_disguised_as_data_only_rebase (test_release_order.ReleaseOrder.test_missing_runtime_baseline_input_cannot_be_disguised_as_data_only_rebase)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/dw/Projects/agent-sts2/.worktrees/issue-20-agent-board-kit/ops/tests/test_release_order.py", line 196, in test_missing_runtime_baseline_input_cannot_be_disguised_as_data_only_rebase
+    self.assertEqual(self.check(), 0)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+AssertionError: 1 != 0
+
+======================================================================
+FAIL: test_publish_guard_keeps_slot_until_explicit_completion_and_rechecks_latest_inputs (test_release_order.ReleaseOrder.test_publish_guard_keeps_slot_until_explicit_completion_and_rechecks_latest_inputs)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/dw/Projects/agent-sts2/.worktrees/issue-20-agent-board-kit/ops/tests/test_release_order.py", line 162, in test_publish_guard_keeps_slot_until_explicit_completion_and_rechecks_latest_inputs
+    self.assertEqual(self.check(), 0)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+AssertionError: 1 != 0
+
+======================================================================
+FAIL: test_runtime_change_requires_full_even_on_data_rebase (test_release_order.ReleaseOrder.test_runtime_change_requires_full_even_on_data_rebase)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/dw/Projects/agent-sts2/.worktrees/issue-20-agent-board-kit/ops/tests/test_release_order.py", line 108, in test_runtime_change_requires_full_even_on_data_rebase
+    self.assertEqual(self.check(), 0); self.rebase_data()
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+AssertionError: 1 != 0
+
+======================================================================
+FAIL: test_second_release_is_queued_while_checks_execute_and_after_frozen (test_release_order.ReleaseOrder.test_second_release_is_queued_while_checks_execute_and_after_frozen)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/dw/Projects/agent-sts2/.worktrees/issue-20-agent-board-kit/ops/tests/test_release_order.py", line 82, in test_second_release_is_queued_while_checks_execute_and_after_frozen
+    self.assertEqual(self.check(runner=during), 0)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 1 != 0
+
+======================================================================
+FAIL: test_untracked_frozen_knowledge_change_still_requires_consumer_checks (test_release_order.ReleaseOrder.test_untracked_frozen_knowledge_change_still_requires_consumer_checks)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/dw/Projects/agent-sts2/.worktrees/issue-20-agent-board-kit/ops/tests/test_release_order.py", line 229, in test_untracked_frozen_knowledge_change_still_requires_consumer_checks
+    self.assertEqual(self.check(), 0)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+AssertionError: 1 != 0
+
+----------------------------------------------------------------------
+Ran 22 tests in 2.630s
+
+FAILED (failures=10, errors=1)
