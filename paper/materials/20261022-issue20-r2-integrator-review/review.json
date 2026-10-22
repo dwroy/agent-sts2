@@ -1,0 +1,96 @@
+{
+  "schema": "issue20-r2-integrator-review-v1",
+  "at": "2026-10-22T14:44:24.890605+08:00",
+  "source": "459366bac49b7a959d3fd59b92bffcb12360aebe",
+  "prior_review": "6d512e54f5de342c5faf4bf7e2603cbd5d4e8726",
+  "base_main": "9d253b57ace416d06c737e3b5fe5daf99f5fb084",
+  "private_kit": "f1cc7285de2f14aeea33cebb8e6eba4ce618af01",
+  "private_kit_this_round": "unchanged by delivery; no new independent kit full run; local installed checkout does not contain this object",
+  "launch_impact": true,
+  "original_regressions": {
+    "passed": 21,
+    "exit": 0,
+    "original_reviewer_bytes_unchanged": true
+  },
+  "source_targeted": {
+    "files": 6,
+    "tests": 46,
+    "exit": 0
+  },
+  "combination_targeted": {
+    "files": 14,
+    "tests": 162,
+    "exit": 0
+  },
+  "source_tsc": 0,
+  "combination_tsc": 0,
+  "source_leaf_count": 29,
+  "source_leaves_unchanged": true,
+  "inventory": {
+    "source": "459366bac49b7a959d3fd59b92bffcb12360aebe",
+    "input_checks": {
+      "ops/launch_runtime.py": true,
+      "ops/launch_environment_audit.py": true,
+      "ops/tests/test_launch_runtime.py": true,
+      "ops/tests/test_launch_environment.py": true,
+      "agent/tests/board-resources.test.ts": true,
+      "agent/tests/launch-environment.test.ts": true,
+      "docs/github-issues-workflow.md": true
+    },
+    "inventory_file_hash": true,
+    "inventory_equal": true,
+    "sources": 327,
+    "variables": 285,
+    "categories": {
+      "published-policy": 205,
+      "runtime-binding-or-host": 50,
+      "script-derived-path": 18,
+      "credential-or-account-reference": 10,
+      "generated-or-separately-authorized": 2
+    },
+    "unclassified": []
+  },
+  "full": {
+    "started": false,
+    "new_waiter": false,
+    "state": "pending-original-ops-window-and-37-first",
+    "coordination_order": [
+      33,
+      35,
+      28,
+      37,
+      36,
+      20
+    ],
+    "machine_queue_entry_created": false
+  },
+  "issue39": {
+    "fixed_counterexamples": true,
+    "closed": false,
+    "main_live_acceptance_pending": true
+  },
+  "main_merged": false,
+  "live_merged": false,
+  "pin_created": false,
+  "production_heavy_enabled": false,
+  "notes": [
+    "First source targeted command included five unmatched filters; actual six files/46 tests are recorded, not eleven. Expanded combination uses fourteen existing files/162 tests.",
+    "Only decision-log conflicted with latest main. Main ledger bytes retained in candidate; source delta archived.",
+    "Inventory is lexical plus manually enumerated known dynamic reader sites, not a proof for future arbitrary aliases or helper readers.",
+    "No process signals, production locks, gameplay, actual credential or environment inspection."
+  ],
+  "artifacts_sha256": {
+    "original-review-regression.py": "d750c7b7dcfc63b66281279ac777cff4591cddc767b33693e3240dbdb41dcd03",
+    "combination-tsc.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "window.json": "ea1b3e2afc2507e6a3a5d64716e965bf61126fe9a636dd7327b543387a14c56f",
+    "targeted.json": "5fd6103941fe2f984dad6c8ec014e6382fd5d7d56e944d00339a654abef5227e",
+    "tsc.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "combination-targeted.log": "ef5829e111189d3339a0c41aa68f9280a3fa7858512e412c94d05ad8643c1c06",
+    "original-regressions.log": "5fb5286fd9233f55921dc2ebadc46e92e51c2a929b88520c7004b10f91d7c56d",
+    "combination-source-audit.json": "053b1ac54f713cb31948c23a61bf133fb6f8e16fce3756268b6155c81b07466e",
+    "source-decision-log.patch": "76f431a3e21c26c9c2b72f4f910c3fdfd5c64be3b54594e4214f2a12834d3f56",
+    "targeted.log": "03f6b7b3fe21431d8b29a767ec058795a0d3c8f60fed17d093bc1a727b4f5b58",
+    "combination-targeted.json": "b8c06ddaafae922429846343d3caf1a86989befae90d6741000e941dc754f053",
+    "source-audit.json": "877514af2bc6f7c017b482792e7feb5073d51486b5fb7085226cc002bdecd0a2"
+  }
+}
