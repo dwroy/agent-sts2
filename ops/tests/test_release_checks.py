@@ -87,5 +87,23 @@ class FullChecks(unittest.TestCase):
         queued=board_heavy.queued_argv(self.root,'ops',argv)
         self.assertEqual(queued[-5:],['ops','--',*argv])
 
+    def test_untracked_module_also_blocks_legacy_entry_exact_reuse(self):
+        self.assertEqual(checks.check(self.root,self.root,self.first,'integrator',runner=self.runner),0)
+        before=self.first.read_bytes(); count=len(self.calls)
+        (self.root/'agent/runtime-helper.mts').write_text('export const fixed = 2;\n')
+        output=self.root/'receipts/module.json'
+        self.assertEqual(checks.check(self.root,self.root,output,'ops',self.first,self.runner),1)
+        self.assertEqual(json.loads(output.read_text())['state'],'failed-retain-original')
+        self.assertEqual(len(self.calls),count);self.assertEqual(self.first.read_bytes(),before)
+
+    def test_legacy_exact_reuse_binds_untracked_knowledge_and_input_policy(self):
+        self.assertEqual(checks.check(self.root,self.root,self.first,'integrator',runner=self.runner),0)
+        knowledge=self.root/'knowledge/common';knowledge.mkdir(parents=True)
+        (knowledge/'new.json').write_text('{"fixed":true}\n')
+        output=self.root/'receipts/data.json'
+        self.assertEqual(checks.check(self.root,self.root,output,'ops',self.first,self.runner),0)
+        self.assertEqual(json.loads(output.read_text())['state'],'passed')
+        self.assertEqual(len(self.calls),4)
+
 
 if __name__=='__main__':unittest.main()

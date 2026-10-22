@@ -20,7 +20,17 @@ def tree(worktree):
     return subprocess.check_output(['git', 'write-tree'], cwd=worktree, text=True).strip()
 
 
-def reusable(path, root, repo, expected):
+def generated_outputs(worktree, *receipts):
+    paths = set()
+    for name in filter(None, receipts):
+        path = Path(name).resolve()
+        if path.suffix != '.json': raise ValueError('JSON receipt required')
+        for item in (path, *[path.with_suffix('.' + part + '.log') for part in ('tsc', 'vitest', 'consumers')]):
+            if item.is_relative_to(worktree): paths.add(item.relative_to(worktree).as_posix())
+    return sorted(paths)
+
+
+def reusable(path, root, repo, expected, inputs=None):
     path = safe_path(root, path)
     if not path.exists():
         return None
@@ -37,6 +47,8 @@ def reusable(path, root, repo, expected):
             or any(type(value.get('results', {}).get(k)) is not int for k in ('tsc','vitest'))
             or value.get('results') != {'tsc': 0, 'vitest': 0}):
         return None
+    if (inputs is None or value.get('input_policy') != release_plan.INPUT_POLICY
+            or value.get('input_files') != inputs): return None
     return dict(path=str(Path(path)), sha256=hashlib.sha256(raw).hexdigest(), tree=expected)
 
 
@@ -62,7 +74,12 @@ def legacy_check(root, worktree, receipt, role='ops', reuse=None, runner=subproc
             with (root / 'ops/live-merge.lock').open('a') as lock:
                 fcntl.flock(lock, fcntl.LOCK_EX)
                 expected = tree(worktree); value['tree'] = expected
-                proof = reusable(reuse, root, board.repo, expected) if reuse else None
+                outputs = generated_outputs(worktree, receipt, safe_path(root, reuse) if reuse else None)
+                def current_inputs():
+                    return dict(files=release_plan.inventory(worktree, proven_metadata=outputs), knowledge=release_plan.knowledge(worktree))
+                inputs = current_inputs()
+                value.update(input_policy=release_plan.INPUT_POLICY, input_files=inputs)
+                proof = reusable(reuse, root, board.repo, expected, inputs) if reuse else None
                 if proof:
                     value.update(state='reused', results=dict(tsc=0, vitest=0), input_unchanged=True, reused_from=proof)
                 else:
@@ -77,10 +94,11 @@ def legacy_check(root, worktree, receipt, role='ops', reuse=None, runner=subproc
                         value['results'][name] = result.returncode; atomic(receipt, value)
                         if result.returncode:
                             raise ValueError('full check failed; original output retained')
-                    value['input_unchanged'] = tree(worktree) == expected
+                    value['input_unchanged'] = tree(worktree) == expected and current_inputs() == inputs
                     if not value['input_unchanged']:
                         raise ValueError('checked tree changed')
                     value['state'] = 'passed'
+                if current_inputs() != inputs: raise ValueError('checked inputs changed')
                 value['ended_at'] = stamp(); atomic(receipt, value)
         return 0
     except (OSError, ValueError, KeyError, subprocess.SubprocessError) as error:
@@ -97,6 +115,7 @@ def full_proof(path, root, repo, depth=0):
             or value.get('repo') != repo or value.get('state') not in ('passed', 'reused')
             or value.get('full_suite') is not True or value.get('input_unchanged') is not True
             or value.get('checklist', {}).get('passed') is not True
+            or value.get('checklist', {}).get('input_policy') != release_plan.INPUT_POLICY
             or value.get('role') not in ('ops', 'integrator') or not isinstance(value.get('results'), dict)
             or any(type(v) is not int for v in value['results'].values())):
         return None
@@ -158,7 +177,8 @@ def check(root, worktree, receipt, role='ops', reuse=None, runner=subprocess.run
             def preflight():
                 # Knowledge and live locks cover snapshots only, never queue waits or full tests.
                 with release_plan.locks([root / 'ops/knowledge-refresh.lock', root / 'ops/live-merge.lock']):
-                    return release_plan.validate(root, worktree, plan, live=live)
+                    return release_plan.validate(root, worktree, plan, live=live,
+                        generated_outputs=generated_outputs(worktree, receipt, safe_path(root, reuse) if reuse else None))
             checklist = preflight(); expected = tree(worktree)
             value.update(checklist=checklist, tree=expected, state='queued-resources')
             original = full_proof(reuse, root, queue.board.repo) if reuse else None
@@ -213,7 +233,8 @@ def publication_proof(root, receipt):
     value = json.loads(safe_path(root, receipt).read_text())
     if (value.get('schema') == 'board-data-publication-v1' and value.get('root') == str(root)
             and value.get('repo') == Board(root).repo and value.get('input_unchanged') is True
-            and value.get('checklist', {}).get('passed') is True):
+            and value.get('checklist', {}).get('passed') is True
+            and value.get('checklist', {}).get('input_policy') == release_plan.INPUT_POLICY):
         if release_plan.file_value(root, value['evidence']['path']) == value['evidence']['value']:
             return value
     return None
@@ -225,7 +246,8 @@ def publication_ready(root, worktree, receipt, identity):
         raise ValueError('publication lacks passing exact candidate checks')
     original = proof['checklist']; plan = safe_path(root, original['plan']['path'])
     with release_plan.locks([root / 'ops/knowledge-refresh.lock', root / 'ops/live-merge.lock']):
-        current = release_plan.validate(root, worktree, plan, live=root / '.worktrees/live')
+        current = release_plan.validate(root, worktree, plan, live=root / '.worktrees/live',
+                                        generated_outputs=original.get('generated_outputs', ()))
     current['input_unchanged'] = True
     if current != original: raise ValueError('publication inputs changed since check')
 

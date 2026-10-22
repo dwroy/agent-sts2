@@ -97,11 +97,12 @@ def publish(queue, identity, receipt, worktree, command, runner=subprocess.run, 
     with queue.execution(identity):
         if data_plan is not None:
             from release_plan import validate, baseline_inventory, data_only, file_value
-            from release_checks import tree
+            from release_checks import tree, generated_outputs
             receipt = safe_path(queue.root, receipt)
             if receipt.exists(): raise ValueError('new data publication receipt required')
             with locks([queue.root / 'ops/knowledge-refresh.lock', queue.root / 'ops/live-merge.lock']):
-                checklist = validate(queue.root, worktree, data_plan, live=queue.root / '.worktrees/live')
+                checklist = validate(queue.root, worktree, data_plan, live=queue.root / '.worktrees/live',
+                                      generated_outputs=generated_outputs(worktree, receipt))
             baseline = baseline_inventory(worktree, checklist['baseline'])
             files = checklist['inventory']
             if any(not data_only(p) and baseline.get(p) != files.get(p) for p in baseline.keys() | files.keys()):

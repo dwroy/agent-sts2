@@ -18,13 +18,17 @@ import release_queue
 class ReleaseOrder(unittest.TestCase):
     def setUp(self):
         temp = tempfile.TemporaryDirectory(); self.addCleanup(temp.cleanup); self.root = Path(temp.name)
+        self.prepare_root(self.root)
+
+    def prepare_root(self, root):
+        self.root = Path(root)
         for directory in ('.agents', '.state', 'ops', 'agent/src', 'agent/tests', 'knowledge/common'):
             (self.root / directory).mkdir(parents=True)
         import yaml
         config = yaml.safe_load((Path(__file__).parents[2] / '.agents/board.yaml').read_text())
         config['dispatcher']['release']['enabled'] = True
         (self.root / '.agents/board.yaml').write_text(json.dumps(config))
-        (self.root / '.gitignore').write_text('.state/\n.worktrees/\nreceipts/\nops/codex-ops/\n')
+        (self.root / '.gitignore').write_text('.state/\n.worktrees/\nreceipts/\nops/codex-ops/\nnode_modules\nnode_modules/\n')
         self.source = self.root / 'agent/src/fixed.ts'; self.source.write_text('old source\n')
         self.consumer = 'agent/tests/catalog-consumer.test.ts'
         (self.root / self.consumer).write_text('fixed catalog consumer\n')
@@ -237,6 +241,72 @@ class ReleaseOrder(unittest.TestCase):
     def test_untracked_runtime_cannot_hide_outside_tree_fingerprint(self):
         (self.root / 'agent/src/untracked.ts').write_text('untracked executable input\n')
         self.assertEqual(self.check(), 1); self.assertEqual(self.calls, [])
+
+    def test_untracked_modules_are_rejected_without_extension_or_directory_guessing(self):
+        names = ['agent/tests/helper' + suffix for suffix in
+                 ('.ts', '.mts', '.cts', '.jsx', '.tsx', '.js', '.mjs', '.cjs', '.wasm', '.node')]
+        names += ['runtime-helper.mts', 'agent/shared/helper.cts', 'eval/helper.jsx',
+                  'knowledge/common/helper.mts', '.agents/hooks/helper.jsx', 'custom/plugin', 'fixtures/payload.data']
+        for name in names:
+            with self.subTest(name=name):
+                path = self.root / name; path.parent.mkdir(parents=True, exist_ok=True)
+                path.write_text('export const fixed = 1;\n'); path.chmod(0o644)
+                try:
+                    with self.assertRaisesRegex(ValueError, 'untracked'):
+                        plan.inventory(self.root)
+                finally:
+                    path.unlink()
+
+    def test_ops_locks_logs_are_inert_but_executable_or_linked_state_is_not_exempt(self):
+        before = plan.inventory(self.root)
+        for name in ('ops/live-merge.lock', 'ops/knowledge-refresh.lock', 'ops/fixture.log'):
+            (self.root / name).write_text('fixed operational state\n')
+        self.assertEqual(plan.inventory(self.root), before)
+        (self.root / 'ops/fixture.log').chmod(0o755)
+        with self.assertRaisesRegex(ValueError, 'untracked'): plan.inventory(self.root)
+        (self.root / 'ops/fixture.log').unlink()
+        (self.root / 'ops/linked.lock').symlink_to(self.source)
+        with self.assertRaisesRegex(ValueError, 'symlink'): plan.inventory(self.root)
+
+    def test_untracked_module_blocks_exact_reuse_of_existing_mocked_full(self):
+        self.assertEqual(self.check(), 0); before = self.first.read_bytes(); count = len(self.calls)
+        path = self.root / 'agent/tests/runtime-helper.mts'; path.write_text('export const fixed = 2;\n')
+        output = self.root / '.state/module-exact.json'
+        self.assertEqual(self.check(output, reuse=self.first), 1)
+        value = json.loads(output.read_text())
+        self.assertEqual(value['state'], 'failed-retain-original'); self.assertNotIn('mode', value)
+        self.assertEqual(len(self.calls), count); self.assertEqual(self.first.read_bytes(), before)
+
+    def test_untracked_module_blocks_data_rebase_reuse(self):
+        self.assertEqual(self.check(), 0); before = self.first.read_bytes(); count = len(self.calls)
+        self.rebase_data()
+        (self.root / 'runtime-helper.cts').write_text('export const fixed = 2;\n')
+        output = self.root / '.state/module-data.json'
+        self.assertEqual(self.check(output, reuse=self.first), 1)
+        self.assertNotIn('mode', json.loads(output.read_text()))
+        self.assertEqual(len(self.calls), count); self.assertEqual(self.first.read_bytes(), before)
+
+    def test_module_appearing_during_checks_cannot_get_input_unchanged_proof(self):
+        def appear(argv, **kwargs):
+            (self.root / 'agent/tests/runtime-helper.jsx').write_text('export const fixed = 2;\n')
+            return self.runner(argv, **kwargs)
+        self.assertEqual(self.check(runner=appear), 1)
+        value = json.loads(self.first.read_text())
+        self.assertNotEqual(value.get('input_unchanged'), True)
+        self.assertIsNone(checks.full_proof(self.first, self.root, self.queue.board.repo))
+
+    def test_receipts_without_current_input_policy_cannot_prove_full_or_data_publication(self):
+        self.assertEqual(self.check(), 0)
+        value = json.loads(self.first.read_text()); del value['checklist']['input_policy']
+        self.first.write_text(json.dumps(value))
+        self.assertIsNone(checks.full_proof(self.first, self.root, self.queue.board.repo))
+        data = dict(value, schema='board-data-publication-v1', evidence=dict(path='.state/review.md',
+                    value=plan.file_value(self.root, '.state/review.md')))
+        data_path = self.root / '.state/old-data-policy.json'; data_path.write_text(json.dumps(data))
+        self.assertIsNone(checks.publication_proof(self.root, data_path))
+        self.assertEqual(self.check(self.root / '.state/old-policy.json', reuse=self.first), 0)
+        self.assertEqual(len(self.calls), 4)
+        self.assertEqual(json.loads((self.root / '.state/old-policy.json').read_text())['mode'], 'full')
 
 
 if __name__ == '__main__': unittest.main()

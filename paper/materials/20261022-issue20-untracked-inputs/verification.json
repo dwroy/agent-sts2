@@ -1,0 +1,88 @@
+{
+  "parent": "d9c4849b1fa69b6fae5510a82f20cf95abf796a8",
+  "kit_unchanged": "26130354b86fbdbb4a1baddda07a770b0b9d6fd5",
+  "input_policy": "tracked-inputs-and-frozen-knowledge-v2",
+  "affects_live_launch_increment": false,
+  "affects_live_launch_parent": true,
+  "checks": {
+    "production_tsc": {
+      "exit": 0,
+      "log": "tsc.log"
+    },
+    "targeted_python": {
+      "exit": 0,
+      "passed": 30,
+      "log": "targeted-final.log"
+    },
+    "actual_single_consumer_before": {
+      "exit": 0,
+      "log": "consumer-before.log.gz"
+    },
+    "actual_single_consumer_after": {
+      "exit": 1,
+      "expected_failure": true,
+      "log": "consumer-after.log.gz"
+    }
+  },
+  "full_vitest": "not run; all full executors in gate fixtures are explicitly mocked",
+  "logs": {
+    "consumer-after.log": {
+      "sha256": "454c2be68515b34cdb4dd1f07871396087e184d3035c068c453e4094e39f8f0b",
+      "bytes": 970
+    },
+    "consumer-before.log": {
+      "sha256": "c12c1c0ba6aba7a2b270f6fff75d987accc58f0e692098d9e8bc7c5251273caa",
+      "bytes": 315
+    },
+    "replay-first-failure.log": {
+      "sha256": "6993f40e319c63a91cbfec437b274b28f5c3a9643621f19aca3c779bd3815df6",
+      "bytes": 264
+    },
+    "replay.log": {
+      "sha256": "4c2c3a0a7287eaf2f090b0ab9603d4029de479c78ec260fa1633d73d46ca8de5",
+      "bytes": 605
+    },
+    "targeted-final.log": {
+      "sha256": "c22d04ce7c45754118b590776c7ac5bfc15e686eccc92fab22914ff891202aaa",
+      "bytes": 129
+    },
+    "targeted.log": {
+      "sha256": "f97cd342ade2b291ed3071761045251453229ff1c61d141769c60ade882d04ab",
+      "bytes": 128
+    },
+    "tsc.log": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    "consumer-before.log.gz": {
+      "sha256": "3f0d237213e653fa2955be22454043f8e690de37ad7b4c48e2c37e3914aa2ce7",
+      "bytes": 254
+    },
+    "consumer-after.log.gz": {
+      "sha256": "01135eff0447487fb837f85cd62458ab3abc14ee25ae87d22b921c9ff1fd0203",
+      "bytes": 522
+    },
+    "patch-scan.log": {
+      "sha256": "88bf0b6e7a7d95d13e17058f87c17964da89cac149faaba339521d7b73455494",
+      "bytes": 80
+    },
+    "material-scan.log": {
+      "sha256": "3cf068022b4169aba479907dbfe211aafcb582f06d83417e8a1c522d98254062",
+      "bytes": 78
+    }
+  },
+  "artifacts": {
+    "inputs.json": "8d3015a219a69959c3d4adf25ac51c1e3256fa0af168ffbaf20e52f7cbb09ca5",
+    "mocked-origin.json": "ab988825a4a5d52c53b87efcd969dffb38ac3d01908d1d5e6b3d5072c068becb",
+    "mocked-rejected-data.json": "7e96a14c4753ae84e0fcad8df17a816268ef81d12072d5733b7194ecae49e95d",
+    "mocked-rejected-exact.json": "7e96a14c4753ae84e0fcad8df17a816268ef81d12072d5733b7194ecae49e95d",
+    "mocked-rejected-mutated.json": "adc2c948478a8c2c9775a4fbcc5d786c8ba008e8ebfcc0714b06b4d1f72a9d44",
+    "replay-first.py": "4344cda6cfcd7bdf8853570aa7abd5a209d767272b9700d578d6cf2f170a1f9e",
+    "replay.py": "fff0455681cd84967601258314920e03574f0f748f0ad3be9abf6be176a01823",
+    "result.json": "c0f640952e1878d931790cafc504fa2295ee6796da881bf3c3d1b8624ff107c8"
+  },
+  "scans": {
+    "staged_patch": 0,
+    "plain_materials_including_uncompressed_consumers": 0
+  }
+}

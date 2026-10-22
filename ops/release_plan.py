@@ -11,6 +11,8 @@ import sys
 
 from issue_session_support import Board, atomic, locks, safe_path, secret_name, stamp
 
+INPUT_POLICY = 'tracked-inputs-and-frozen-knowledge-v2'
+
 
 def digest(value):
     return hashlib.sha256(json.dumps(value, sort_keys=True, separators=(',', ':')).encode()).hexdigest()
@@ -24,14 +26,18 @@ def file_value(root, name):
                 mode='100755' if path.stat().st_mode & stat.S_IXUSR else '100644')
 
 
-def inventory(worktree):
+def inventory(worktree, *, proven_metadata=()):
     subprocess.run(['git', 'diff', '--quiet'], cwd=worktree, check=True)
     untracked = subprocess.check_output(['git', 'ls-files', '--others', '--exclude-standard', '-z'], cwd=worktree).decode().split('\0')
-    if any(p.startswith(('agent/src/', 'agent/tests/', 'agent/tools/', 'ops/', 'learner/', 'knowledge/builders/'))
-           and (p.endswith(('.ts', '.tsx', '.js', '.mjs', '.cjs', '.py', '.sh', '.json', '.yaml', '.yml'))
-                or safe_path(worktree, p).stat().st_mode & 0o111)
-           for p in filter(None, untracked)):
-        raise ValueError('untracked runtime or test input outside the checked tree')
+    for name in filter(None, untracked):
+        path = safe_path(worktree, name)
+        mode = path.stat().st_mode
+        # Frozen knowledge is separately hashed before/after; only inert ops state is exempt.
+        frozen_data = name.startswith('knowledge/') and not name.startswith('knowledge/builders/') and name.endswith('.json')
+        ops_state = name.startswith('ops/') and path.suffix in ('.lock', '.log')
+        metadata = name in proven_metadata and path.suffix in ('.json', '.md', '.log')
+        if (not stat.S_ISREG(mode) or mode & 0o111 or not (frozen_data or ops_state or metadata)):
+            raise ValueError('untracked runtime or test input outside the checked tree')
     rows = subprocess.check_output(['git', 'ls-files', '-s', '-z'], cwd=worktree).decode().split('\0')
     result = {}
     for row in filter(None, rows):
@@ -103,12 +109,16 @@ def script_dependencies(worktree, files):
     return result
 
 
-def validate(root, worktree, plan_path, *, live=None):
+def validate(root, worktree, plan_path, *, live=None, generated_outputs=()):
     board = Board(root); path = safe_path(root, plan_path); raw = path.read_bytes(); plan = json.loads(raw)
     if (plan.get('schema') != 'release-assembly-v1' or plan.get('root') != str(root)
             or plan.get('repo') != board.repo or not re.fullmatch('[0-9a-f]{40}', plan.get('baseline', ''))):
         raise ValueError('assembly plan identity mismatch')
-    files = inventory(worktree)
+    metadata = []
+    for name in (plan_path, plan['knowledge_snapshot'], plan['review']['path']):
+        item = safe_path(root, name)
+        if item.is_relative_to(worktree): metadata.append(item.relative_to(worktree).as_posix())
+    files = inventory(worktree, proven_metadata=(*metadata, *generated_outputs))
     deliveries = plan.get('deliveries')
     if not isinstance(deliveries, dict) or not deliveries: raise ValueError('explicit delivery leaves required')
     preimages = {}
@@ -167,7 +177,8 @@ def validate(root, worktree, plan_path, *, live=None):
                 or type(row.get('observed_max_ms')) is not int or not row.get('load_evidence')
                 or not 0 <= row['observed_max_ms'] < row['timeout_ms']):
             raise ValueError('timeout margin insufficient; retain failure for issue41-style repair')
-    return dict(passed=True, plan=dict(path=str(path.relative_to(root)), sha256=hashlib.sha256(raw).hexdigest()),
+    return dict(passed=True, input_policy=INPUT_POLICY, generated_outputs=list(generated_outputs),
+                plan=dict(path=str(path.relative_to(root)), sha256=hashlib.sha256(raw).hexdigest()),
                 baseline=plan['baseline'], delivery_preimages=preimages, deliveries=deliveries,
                 runtime_source_sha256=source_fingerprint(files), inventory=files,
                 test_dependencies=dependencies, prerequisites=prerequisites, excluded_tests=exclusions,
