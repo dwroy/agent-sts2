@@ -5545,3 +5545,8 @@ W4拿牌v2正式3ef4/11a80已核：14源Git/SHA、318清单项加manifest共319�
 原09:04运行切点核实#20保持项目持久/有效on，STS2单项目登记、原stall入口1个，无独立kit定时项及显式环境覆盖；精确95f1efb六文件仍同，未重装。账本19事件中8done分为6条实际提醒与2条superseded，11pending；六提醒各有sent_at、目标pane及原日志唯一done记录，未重复发送。#35/#36现有生命周期active且名称/pane/cwd核同，但kit派发事件已被取代，不借作自动派发成功。6回收保留门未过，当前sending/uncertain为0；watchdog尝试均0，digest正常更新。接收前idle/done状态原回执未留，特定done场景仍待证；普通/错误接续与升级、真实锁忙重试和最终回收仍等自然触发。保有效on让原tick继续，不造故障/任务/守候；回退off保账本。Roy/Claude既有266672619将开发上限改10仅观察，原#33/#26发布链及游戏不动。已回写issue，#20保持开放。原件paper/materials/20261022-issue20-runtime-ops/receipt.json。
 
 实际issue回执：https://github.com/dwroy/agent-sts2/issues/20#issuecomment-6330154431
+
+
+### 2026-10-22T09:19:40+08:00 [ops] #25首局完整读回
+
+#25首自然局DFYBEW6NA6AJ读回：R411/live0cd3629d3十项相关源码/知识叶仍同原48叶准入，原发布、497知识保护及双通知不重做。16脑题均accepted并带v0.111.0开卷，封套17260–17834B；封套不代完整增量或端到端延迟。103条Jev原日志中76带开卷，最大23021B；另26条无开卷基础请求已超24000B，最大56272B，均有回答、无记载调用错误，不能报总预算通过，已补原工程队列。固定首局原帧以实际live消费者读回7牌/1敌人非枚举参考；不代历史在途采用、机制known扩大或收益。原8条窗口保留；缺失资料联网补全及主管验收仍待。只读原件及固定无API探针，不重full/模型/MC/数据集，不做前后检查点对比。证据：paper/materials/20261022-issue25-readback-ops/receipt.json、first-run-Jev-readback.json、first-run-brain-readback.json、fixed-natural-input-reference-readback.json。
