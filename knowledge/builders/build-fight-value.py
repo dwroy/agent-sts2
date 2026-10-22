@@ -54,6 +54,8 @@ import shutil
 from pathlib import Path
 
 ROOT = str(Path(__file__).resolve().parents[2])  # the project root (docs/layout.md)
+# Incremental evidence imports must also work in a fresh production process.
+sys.path.insert(0, os.path.join(ROOT, "learner"))
 _spec = importlib.util.spec_from_file_location("bmd", os.path.join(ROOT, "knowledge", "builders", "build-monster-db.py"))
 bmd = importlib.util.module_from_spec(_spec)
 _spec.loader.exec_module(bmd)

@@ -6,6 +6,7 @@ const root = fileURLToPath(new URL("../../", import.meta.url));
 
 it.each([
   ["python3", "knowledge/builders/test_refresh_pipeline.py", 12],
+  ["python3", "knowledge/builders/test_refresh_entrypoints.py", 2],
 ] as const)("keeps cached statistics equivalent to full fixed evidence: %s %s", async (python, file, count) => {
   const result = await new Promise<{ code: number | null; output: string }>((resolve, reject) => {
     const child = spawn("nice", ["-n", "19", python, "-B", `${root}${file}`], {
