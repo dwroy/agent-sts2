@@ -5512,3 +5512,10 @@ W4拿牌v2正式3ef4/11a80已核：14源Git/SHA、318清单项加manifest共319�
 2026-10-22T08:14:15+08:00 按08:08主管授权，#20仅STS2试点正式登记并持久on，其他项目仍未登记；原cron仅一个stall、无独立kit定时项，角色/pane/cwd核同，kit95f1efb六SHA保持。首次锁忙在写入前保留；后续原tick于08:11:30–08:12:18实际运行，外层rc0但kit rc1：8通知因ops工作而pending，6回收因原保留门pending，原journal/锁保留，无uncertain，不强发/强删。实际账本和日志窗口已冻结，未称全部验收通过；done送达、接续/升级、真实命名/锁忙重试与最终回收沿原tick待自然验收，不制造任务/故障或另开守候。旧off现on支持确定性派单及保守接续，回退用原持久入口off，保新账本/uncertain不降旧引擎。已在#20评论实际读回；#26按指令等#33，不单独发布，本轮游戏live/STOP未改。原件paper/materials/20261022-issue20-enable-ops/receipt.json。
 
 2026-10-22T08:20:55+08:00 #15已随R411上线，今核首局DFYBEW6NA6AJ/Silent A10/F2自然战后奖励：原brain、预测审计和选牌动作的offset/bytes/SHA均同。三牌/skip顺序不变、四项均含v2事实，题面模型与live冻结SHA一致，无v2 rank/tier，误差非增量CI及不强制排序说明保留。v2计算79.66ms、日志表示补充1505B；Codex一次accepted、0重问、无problems，card0动作completed/fallback=false。旧日志字段原字保留。自然完整准备无独立计时，不借原250.137/193.497ms固定回放冒验；缺模型等回退仍用原四项回放，不制造实盘故障。已评论#15并真实读回，交主管核收、未代关issue/科学父；保旧21:32 pending切点，未新增发布、模型/API/MC、学习/full/dataset或改当前局。原件paper/materials/20261022-issue15-natural-ops/receipt.json。
+
+
+### 2026-10-22 08:34 CST — #23 发布及可持续验收读回
+
+核原发布回执：#23已于10月21日17:57窄接live，当前R411仍保留四个核心源码，真实绑定verify通过，live原缺绑定仍缺，无需再发布。部署后已核103份去重checkout回收，注册/.git均已移除、保留分支HEAD全部相符、归档SHA通过；71份成功分配及1份失败回执分列，后者#33现为真实注册工作树，不改写失败。原worker最新08:32实际又回收1项、共享限4，缺证/dirty/研究/身份等门继续保留。磁盘原采样21日18:13至22日08:13可用空间净减33.34GiB，约-2.38GiB/小时，不能归因全由回收，也不能称可持续通过。完整24h到22日17:57，保持pending，不增循环或扩大删除。更正0731旧记录：071302两目录当时已回收checkout，Git向上寻址读到主根HEAD，原“工作树快进”诊断无效；旧回执不改，科学父及原失败保留。证据：paper/materials/20261022-issue23-followup-ops/receipt.json。
+
+实际 issue 回执：https://github.com/dwroy/agent-sts2/issues/23#issuecomment-6329752765

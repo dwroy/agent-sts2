@@ -1,12 +1,12 @@
 # 运维当前清单（调度器生成；索引模式）
-生成：2026-10-22T08:20:55+08:00；原件索引：/home/dw/Projects/agent-sts2/ops/codex-ops/current.json SHA256 8c11bef16d9d859ab6e515240ab8b7496d183baa72cc6fba45837bedc5ecab30
-main bba8f71923a47f3164ce7a4474ad81f7e6dfbfd0
+生成：2026-10-22T08:35:06+08:00；原件索引：/home/dw/Projects/agent-sts2/ops/codex-ops/current.json SHA256 4c6502976467fe41cb0e4f44f5f543c6570639da92d7576420bc70c9d3a83588
+main cafe088bb0b4f3f8c7407abfd78ab138e691f3f4
 live 0cd3629d3a7f3a3bcacd22fa0a4206acc4d81e78；登记 release 见 current.json.release（不代表检查绿或实际采用）。
 动态事实超出短清单预算，已完整保存在上述 SHA 的 current.json；没有截断授权、失败、任务或事件。
 处理前必须核 SHA 并逐项读取以下字段及其原件；本清单不代表已经读过授权，不可沿用旧清单：
 - restoration_context：完整 summary、authorization 路径/SHA、takeover_receipt、external_tasks；先核授权原文与失败回执，缺失或冲突时停止并保留待办。
 - identity、home_selector、execution：原账号、pane/session、执行模式；不以默认配置推定实际生效。
-- active_batches：在途 3；完整 owner/线程/PID/租约/路径，不重复派发或按旧 PID 操作。
+- active_batches：在途 1；完整 owner/线程/PID/租约/路径，不重复派发或按旧 PID 操作。
 - open_requests：开放父要求 7；不因本轮结束关闭。
 - pending_notices：未确认 9；按本事件 notice id 核原件，不代其他角色 ACK，不把排队当送达。
 - queued_events：队列 0；只处理本轮已提交事件，按路径及 sources 的字节数/SHA 核全文，不以 preview 代完整事件。
