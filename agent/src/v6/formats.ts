@@ -178,12 +178,35 @@ const signal = custom<Infer<typeof numericSignal> | Infer<typeof tagSignal> | Co
     if (s.kind === "hp" ? s.unit !== "hp" : s.unit !== "probability" || Math.abs(s.value) > 1 || (s.se ?? 0) > 1) e.push(`${p}: signal unit/range mismatch`);
   }
 });
+/** Source denominators stay separate: external samples never count as local run evidence. */
+export const reflexSourceSchema = refine(object({
+  source: text(120), path: text(1000),
+  sha256: refine(text(64, 64), (v, e) => { if (!/^[a-f0-9]{64}$/.test(v)) e.push("source.sha256: lowercase SHA256 required"); }),
+  game_version: text(100), retrieved_at: text(10, 10),
+  sample: object({ runs: count, players: nullable(count), selection: text(2000) }),
+  url: optional(text(2000)), license: optional(text(1000)),
+}), (v, e) => {
+  if (v.source !== "own" && !/^external:[A-Za-z0-9_.-]+$/.test(v.source)) e.push("source: own or external:<name> required");
+  if (v.path.startsWith("/") || v.path.includes("\\") || v.path.split("/").some(p => !p || p === ".." || p === ".")) e.push("source.path: repository-relative frozen evidence required");
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(v.retrieved_at) || !Number.isFinite(Date.parse(v.retrieved_at))
+    || new Date(v.retrieved_at).toISOString().slice(0, 10) !== v.retrieved_at) e.push("source.retrieved_at: valid YYYY-MM-DD required");
+  if (v.source !== "own") {
+    try { const url = new URL(v.url ?? ""); if (!["http:", "https:"].includes(url.protocol) || url.username || url.password) throw Error(); }
+    catch { e.push("external source: public HTTP URL required"); }
+  } else if (v.sample.runs < 1) e.push("own source: at least one local run required");
+});
+export type ReflexSource = Infer<typeof reflexSourceSchema>;
 export const reflexEntrySchema = refine(object({
   schema: literal("reflex-entry-v1"), id, version: positiveCount, applies_to: enumeration("combat_line", "card_pick", "potion", "rest", "shop"),
   predicate: predicateSchema, signal, label_en: label,
-  evidence: object({ observations, n_support: count, n_contradict: count }), confidence: probability, scope,
-  directions: optional(ids), cores: optional(ids), combos: optional(ids), source_experience: array(id, 1),
+  evidence: object({ observations: array(observationSchema), n_support: count, n_contradict: count }), confidence: probability, scope,
+  directions: optional(ids), cores: optional(ids), combos: optional(ids), source_experience: array(id),
+  sources: optional(array(reflexSourceSchema, 1, 30)),
 }), (v, e) => {
+  const external = v.sources?.some(s => s.source.startsWith("external:")) === true;
+  if (!v.evidence.observations.length && !external) e.push("evidence: local observations or attributed external evidence required");
+  if (!v.source_experience.length && !external) e.push("source_experience: local experience or attributed external evidence required");
+  if (v.sources?.some(s => s.source === "own") && !v.evidence.observations.length) e.push("own source: local observations required");
   if (v.evidence.n_support + v.evidence.n_contradict < 1) e.push("evidence: at least one supporting or contradicting observation");
   unique(v.scope.ascensions.map(String), "scope.ascensions", e);
   unique(v.source_experience, "source_experience", e);

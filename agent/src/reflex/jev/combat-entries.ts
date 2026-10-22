@@ -161,6 +161,16 @@ export function combatEntryAudit(session: CombatEntries, plan: Plan | null, roll
   const rolloutFacts = rolloutAudit(plan, rollout), wholeFightFacts = wholeFightAudit(plan, sim);
   const option = combatOptionFacts(plan, { rollout: rolloutFacts, whole_fight: wholeFightFacts });
   const context = { ...session.context, ...option.context };
+  const { evaluated, memory } = combatMemory(session, context);
+  return toJsonValue({ schema: "v6-combat-entry-audit-v1", basis, context, evaluated, memory,
+    predicate_facts: { sources: { ...session.predicateFacts.sources, ...option.sources },
+      unavailable: { ...session.predicateFacts.unavailable, ...option.unavailable } },
+    ...(selection ? { selection } : {}), rollout: rolloutFacts, whole_fight: wholeFightFacts });
+  });
+}
+
+/** Shared with offline ablation: exactly the production predicate and memory projection. */
+export function combatMemory(session: Pick<CombatEntries, "entries" | "ascension" | "vocab" | "provenance">, context: Row) {
   const evaluated = session.entries.filter(e => e.applies_to === "combat_line" && e.scope.ascensions.includes(session.ascension))
     .map(entry => ({ id: entry.id, result: evaluatePredicate(entry.predicate, context) }));
   const matched = new Set(evaluated.filter(e => e.result === true).map(e => e.id));
@@ -172,13 +182,10 @@ export function combatEntryAudit(session: CombatEntries, plan: Plan | null, roll
       ...(entry.cores ? { cores: entry.cores } : {}), ...(entry.combos ? { combos: entry.combos } : {}),
       confidence: entry.confidence, n_support: entry.evidence.n_support, n_contradict: entry.evidence.n_contradict,
       source: { path: provenance.path, sha256: provenance.sha256, encoding: provenance.encoding, entry_id: entry.id },
+      ...(entry.sources ? { evidence_sources: entry.sources } : {}),
       ...(tag.length > 0 ? { vocabulary: tag } : {}) };
   });
-  return toJsonValue({ schema: "v6-combat-entry-audit-v1", basis, context, evaluated, memory,
-    predicate_facts: { sources: { ...session.predicateFacts.sources, ...option.sources },
-      unavailable: { ...session.predicateFacts.unavailable, ...option.unavailable } },
-    ...(selection ? { selection } : {}), rollout: rolloutFacts, whole_fight: wholeFightFacts });
-  });
+  return { evaluated, memory };
 }
 
 export function combatEntriesState(session: CombatEntries, hasRunPlan: boolean): JsonValue {

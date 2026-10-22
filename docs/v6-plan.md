@@ -208,6 +208,7 @@ skip: weighted E[F48→F49] 14.1%
 | `confidence`、`scope` | 可信度；适用角色与进阶 |
 | `directions` | 可选：关联的构筑方向 |
 | `source_experience` | 来源经验条目 ID（原条目保留） |
+| `sources` | 可选的冻结来源数组：本系统/署名外部、路径/SHA、版本/日期、独立样本与筛选；本轮 #28 新条目必填，纯外部证据不伪造本系统局号，详见 [来源与回放合同](jev-encounter-reflex.md) |
 
 代码对每个选项求值适用条目，以“标签 + 数值 + 可信度”挂到选项上；Jev 不读原始经验文字。
 

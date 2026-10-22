@@ -12,7 +12,7 @@ try {
     return readFileSync(path, "utf8");
   };
   const draft = read(draftPath), context = read(contextPath);
-  const parsed = validate(object({ character: characterSchema, experienceIds: array(id), directionIds: array(id), runIds: array(id, 1) }), JSON.parse(context));
+  const parsed = validate(object({ character: characterSchema, experienceIds: array(id), directionIds: array(id), runIds: array(id) }), JSON.parse(context));
   if (!parsed.ok) throw new Error(parsed.issues.join("; "));
   for (const key of ["experienceIds", "directionIds", "runIds"] as const) if (new Set(parsed.value[key]).size !== parsed.value[key].length) throw new Error(`duplicate context ${key}`);
   const result = validateV6Draft(kind, JSON.parse(draft), parsed.value as DraftContext);

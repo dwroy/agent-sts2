@@ -5782,3 +5782,5 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
 
 - 2026-10-22T11:00:24+08:00 [ops] #35原14叶/main、12核验原件及655文件6174+2绿已核；隔离后续67路径f01856a4准备无冲突，尚未测试/发布，排#33实际live之后；原55叶检查不变，无新增full/模型/局。paper/materials/20261022-issue35-release-prep-ops/receipt.json。
 - 2026-10-22T11:10:12+08:00 [Claude] Roy 10-22：上线检查优先占用重任务窗口，有上线检查排队时开发会话暂缓新的完整 Vitest（#20 补充 3）。开卷只给大脑；Jev 出牌不附开卷、保持 V5 逻辑，后续优化走 Jev 条目（如更多 reflex 经验条目，#28）；#25 按大脑路径关闭，Jev 去开卷另开 #37。
+
+- 2026-10-22T11:25:37+08:00 [dev #28] #28交付来源兼容/外部独立分母、离线原计划capture与仅记忆两臂回放、独立局95%区间和学习模板；production/tools tsc0、7文件117定向通过，旧85条字节同。按#20 Roy上线窗口优先暂缓full；未派学习/调用Jev/改live或开关，真实改善、Roy决定和A/B均pending，交工程review不关闭父要求。报告paper/materials/20261022-issue28-combat-entries/。
