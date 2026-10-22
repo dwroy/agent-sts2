@@ -1,0 +1,251 @@
+{
+  "at": "2026-10-22T08:12:18+08:00",
+  "state": "enabled-first-original-tick-complete-with-pending-gates",
+  "kit": "95f1efb3251a27f3f702540773a2b466920821e9",
+  "scope": "STS2-only; other projects unregistered/pending",
+  "authorization": {
+    "path": "paper/materials/20261022-issue20-enable-ops/authorization-original.md",
+    "bytes": 648,
+    "sha256": "dc62f082037c2b3b0a7df510c3b17c1b5ca958f7c54c88a07aed905119f29194"
+  },
+  "cron_stall_entries": 1,
+  "direct_kit_cron_entries": 0,
+  "role_bindings": {
+    "path": "paper/materials/20261022-issue20-enable-ops/role-bindings.json",
+    "bytes": 516,
+    "sha256": "ad57eeb0edaa71305fd3eccd89937e9f31ed27fea89759546a84e7692d730fef"
+  },
+  "journal_before": null,
+  "registry_before": null,
+  "registry": {
+    "path": "ops/codex-ops/agent-board-projects.json",
+    "bytes": 119,
+    "sha256": "c394b863675c2bdfb5fcc583b386de3fa8556a5474a045c5afc32060b8154d2e"
+  },
+  "control": {
+    "persisted": "on",
+    "effective": "on",
+    "source": "project-control"
+  },
+  "board_log_offset": 0,
+  "only_existing_stall_consumer": true,
+  "new_timer_or_shared_environment": false,
+  "tick_started": "2026-10-22T08:11:30+08:00",
+  "tick_ended": "2026-10-22T08:12:18+08:00",
+  "original_tick_rc": 0,
+  "board_log_window_bytes": 1607,
+  "board_log_window_sha256": "8080c763183ec9aab249562eabc1145e8bee275af744d048847739d283324498",
+  "journal_after": {
+    "path": "ops/codex-ops/agent-board.json",
+    "bytes": 9058,
+    "sha256": "199123876a3aac7199d9f5fc8f4f001b6ae18d5d1373325ef9cd13986d05acfc"
+  },
+  "events": {
+    "31:closed": {
+      "issue": 31,
+      "action": "reclaim",
+      "role": null,
+      "phase": "pending"
+    },
+    "29:closed": {
+      "issue": 29,
+      "action": "reclaim",
+      "role": null,
+      "phase": "pending"
+    },
+    "26:status:waiting-release:33898208271": {
+      "issue": 26,
+      "action": "notify",
+      "role": "ops",
+      "phase": "pending"
+    },
+    "25:status:waiting-release:33841237231": {
+      "issue": 25,
+      "action": "notify",
+      "role": "ops",
+      "phase": "pending"
+    },
+    "24:closed": {
+      "issue": 24,
+      "action": "reclaim",
+      "role": null,
+      "phase": "pending"
+    },
+    "23:status:waiting-release:33833365972": {
+      "issue": 23,
+      "action": "notify",
+      "role": "ops",
+      "phase": "pending"
+    },
+    "20:status:waiting-release:33898215405": {
+      "issue": 20,
+      "action": "notify",
+      "role": "ops",
+      "phase": "pending"
+    },
+    "19:closed": {
+      "issue": 19,
+      "action": "reclaim",
+      "role": null,
+      "phase": "pending"
+    },
+    "17:closed": {
+      "issue": 17,
+      "action": "reclaim",
+      "role": null,
+      "phase": "pending"
+    },
+    "16:status:waiting-release:33835333117": {
+      "issue": 16,
+      "action": "notify",
+      "role": "ops",
+      "phase": "pending"
+    },
+    "15:status:waiting-release:33814671242": {
+      "issue": 15,
+      "action": "notify",
+      "role": "ops",
+      "phase": "pending"
+    },
+    "12:closed": {
+      "issue": 12,
+      "action": "reclaim",
+      "role": null,
+      "phase": "pending"
+    },
+    "8:status:waiting-release:33814681500": {
+      "issue": 8,
+      "action": "notify",
+      "role": "ops",
+      "phase": "pending"
+    },
+    "2:status:waiting-release:33805245630": {
+      "issue": 2,
+      "action": "notify",
+      "role": "ops",
+      "phase": "pending"
+    }
+  },
+  "dispatch_log": "local ignored first-board-log-window.txt; original board log retained",
+  "first_tick_all_green": false,
+  "production_recovery_escalation_and_reclaim_not_inferred": true,
+  "live_or_STOP_changed": false,
+  "actual_board_result": [
+    {
+      "repo": "dwroy/agent-sts2",
+      "events": [
+        {
+          "event": "15:status:waiting-release:33814671242",
+          "state": "error",
+          "reason": "recipient absent or busy; notification queued"
+        },
+        {
+          "event": "23:status:waiting-release:33833365972",
+          "state": "error",
+          "reason": "recipient absent or busy; notification queued"
+        },
+        {
+          "event": "2:status:waiting-release:33805245630",
+          "state": "error",
+          "reason": "recipient absent or busy; notification queued"
+        },
+        {
+          "event": "16:status:waiting-release:33835333117",
+          "state": "error",
+          "reason": "recipient absent or busy; notification queued"
+        },
+        {
+          "event": "20:status:waiting-release:33898215405",
+          "state": "error",
+          "reason": "recipient absent or busy; notification queued"
+        },
+        {
+          "event": "25:status:waiting-release:33841237231",
+          "state": "error",
+          "reason": "recipient absent or busy; notification queued"
+        },
+        {
+          "event": "8:status:waiting-release:33814681500",
+          "state": "error",
+          "reason": "recipient absent or busy; notification queued"
+        },
+        {
+          "event": "26:status:waiting-release:33898208271",
+          "state": "error",
+          "reason": "recipient absent or busy; notification queued"
+        },
+        {
+          "event": "12:closed",
+          "state": "error",
+          "reason": "lifecycle retention gates pending"
+        },
+        {
+          "event": "17:closed",
+          "state": "error",
+          "reason": "lifecycle retention gates pending"
+        },
+        {
+          "event": "19:closed",
+          "state": "error",
+          "reason": "lifecycle retention gates pending"
+        },
+        {
+          "event": "24:closed",
+          "state": "error",
+          "reason": "lifecycle retention gates pending"
+        },
+        {
+          "event": "29:closed",
+          "state": "error",
+          "reason": "lifecycle retention gates pending"
+        },
+        {
+          "event": "31:closed",
+          "state": "error",
+          "reason": "lifecycle retention gates pending"
+        }
+      ]
+    }
+  ],
+  "kit_tick_rc": 1,
+  "kit_tick_rc_basis": "original entry reports board tick failure and kit exit rule returns 1 for these retained/error rows",
+  "busy_notifications": 8,
+  "retention_gates_pending": 6,
+  "no_uncertain_events": true,
+  "watchdog_initialized": [
+    "33:dev",
+    "26:ops",
+    "25:ops",
+    "23:ops",
+    "20:ops",
+    "16:ops",
+    "15:ops",
+    "8:ops",
+    "2:ops"
+  ],
+  "operator_serialization_correction": {
+    "at": "2026-10-22T08:11:47+08:00",
+    "observation": "numeric-fd flock with command selected a numeric filename; corrected helper and removed only its empty file",
+    "removed": [
+      {
+        "path": "3",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    ],
+    "actual_dispatch_serialization": "unchanged original tick-stall.lock plus kit host/project locks; first real tick uses original entry",
+    "no_lock_deleted": true
+  },
+  "scope_authorization": "08:08 manual directive interpreted for current STS2 pilot only; other projects remain unregistered/pending",
+  "frozen_journal_readback": {
+    "path": ".artifacts/ops-issue20-enable-20261022-0808/journal-readback.json",
+    "bytes": 9058,
+    "sha256": "199123876a3aac7199d9f5fc8f4f001b6ae18d5d1373325ef9cd13986d05acfc"
+  },
+  "frozen_journal_matches_first_cut": true,
+  "issue_comment_actual_readback": {
+    "path": "paper/materials/20261022-issue20-enable-ops/issue20-comment-readback.json",
+    "bytes": 3222,
+    "sha256": "a93c25a721b543cfff3095d210a812c385e44e206f48b527def0560379ce2f1c"
+  }
+}

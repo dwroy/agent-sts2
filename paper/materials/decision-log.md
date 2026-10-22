@@ -5734,3 +5734,5 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
 - 2026-10-22T07:35:43+08:00 [watcher] #33 276f3089c 技术核验退回补缺：提示/战绩工具实际内容变化但来源SHA不变，两项固定复制数据探针已复现；不合功能、不进发布、不触生产。tsc/重建及4文件23项专项通过，2111输入未变；发现阻断后主动停自身全检143，原件保留不计通过。补来源清单/回归及完整检查再review。报告 paper/materials/20261022-issue33-integrator-review/。
 
 - 2026-10-22T07:44:01+08:00 [ops] 0743八条重复学习异议原文/证据及真实转达回执核同；原研究CLI身份兼容阻塞未变，后两角色登记pending，保原范围/科学父；仅记录、不重认证/代ACK/提醒/生成器或改对局。原件：paper/materials/20261022-0743-ops/receipt.json。
+
+- 2026-10-22T08:14:15+08:00 [ops] 按08:08 Claude主管指令启用#20 STS2-only正式登记/持久on，原唯一stall首tick已核：外层0/kit1，8忙通知/6保留门pending，无uncertain；剩余生产分项沿原tick自然验收，回退off保账本。#26等#33不单发，游戏live/STOP不动。实际评论：https://github.com/dwroy/agent-sts2/issues/20#issuecomment-6329461565 。原件：paper/materials/20261022-issue20-enable-ops/receipt.json。
