@@ -16,6 +16,7 @@ import { isV6RoomDecision, prepareV6RoomDecision, recordV6Room, type V6RoomProje
 import { notePotionFallback, potionAnswersComplete, recordPotionJev, validPotionAnswers, v6PotionActive, withPotionJevBudget } from "../v6/potion-entries.js";
 import { fileSimWait } from "../sim/computation-wait.js";
 import { randomUUID } from "node:crypto";
+import { mkdirSync } from "node:fs";
 import { dirname, join } from "node:path";
 
 import { classifyFailure, dispatch } from "./act/dispatch.js";
@@ -60,6 +61,7 @@ import { createRunConfigLog } from "../eye/run-config.js";
 import { SlController } from "../sl/controller.js";
 import { LEAST_LOSS_LABEL } from "../sl/judge.js";
 import { asArray, asRecord, bool, num, str, toJsonValue, type JsonValue } from "../core/util/json.js";
+import { appendJsonLine } from "../core/util/jsonl.js";
 import { OUTCOME_BASIS_KEY } from "../knowledge/outcome-facts.js";
 import { BUILD_SIM_MIN_SHOWN, bossEvaluationPending, withBossSim, type BuildSimSetup } from "../sim/build-sim-facts.js";
 import { buildRankingSelection, rankingOverrideProblems } from "../sim/build-ranking-choice.js";
@@ -407,7 +409,20 @@ async function runLoopWithBudgets(options: LoopOptions): Promise<LoopStats> {
   /** Reset whenever the screen changes; the shop uses it to tell "just arrived" from "chose to leave". */
   const screenMemory: ScreenMemory = createScreenMemory();
   /** Run memory for DeepSeek (choices, this fight's turns, the road to the boss); resets per run id. */
-  const journal = new RunJournal();
+  let lastConstructionLog = "";
+  let replayingConstruction = false;
+  const journal = new RunJournal((runId, view) => {
+    if (replayingConstruction) return;
+    const signature = JSON.stringify({ runId, ...view });
+    if (signature === lastConstructionLog) return;
+    try {
+      mkdirSync(dirname(config.log.decisionLog), { recursive: true });
+      appendJsonLine(join(dirname(config.log.decisionLog), "construction-log.jsonl"), { ts: new Date().toISOString(), run_id: runId, ...view });
+      lastConstructionLog = signature;
+    } catch {
+      onEvent({ type: "note", message: "construction log write failed; run journal remains reconstructible from states/decisions" });
+    }
+  });
   /** The run whose logs were replayed into the journal (once per run id and process). */
   let restoredRun = "";
   /** THIEF_COST: a stolen card's value computed since the last logged decision (logged with the next one: thief_card_value). */
@@ -692,7 +707,12 @@ async function runLoopWithBudgets(options: LoopOptions): Promise<LoopStats> {
       try {
         const logs = readRunLogs({ states: statesPath, decisions: config.log.decisionLog, runPlans: config.runPlanLog }, runId);
         if (logs.states.length > 0) {
-          const replay = replayRun(logs, knowledge, { journal });
+          replayingConstruction = true;
+          const replay = (() => {
+            try { return replayRun(logs, knowledge, { journal }); }
+            finally { replayingConstruction = false; }
+          })();
+          journal.publishConstruction();
           if (v6Config().mode !== "off") restoreV6CardReward(screenMemory, logs.states);
           if (replay.routePlan && replay.routePlan.runId === runId) screenMemory.routePlan = replay.routePlan;
           if (replay.lastMap && !screenMemory.lastMap) screenMemory.lastMap = replay.lastMap;
@@ -1931,7 +1951,9 @@ async function runLoopWithBudgets(options: LoopOptions): Promise<LoopStats> {
     const baseRecord = recordBase();
     // The stolen card's value rides on this row (thief_card_value): logged once.
     thiefValueToLog = null;
+    const constructionPlanRef = str(asRecord(deepseekRecord)["plan_id"] ?? asRecord(deepseekRecord)["plan_ref"]);
     const journalEntry = {
+      ...(constructionPlanRef ? { planRef: constructionPlanRef } : {}),
       label: decision.label,
       by: baseRecord.decider,
       choice: resolved.journal ? compact(resolved.journal) : describeChoice(decision, resolved, rawAnswers, deepseekRecord ?? escalation),
@@ -1940,7 +1962,7 @@ async function runLoopWithBudgets(options: LoopOptions): Promise<LoopStats> {
       intent: resolved.intent,
     };
     // What a restart needs to replay this decision into the journal (journal-replay.ts).
-    const replayFields = { ...(runId ? { run_id: runId } : {}), observed_ts: observedTs, journal: { choice: journalEntry.choice, reason: journalEntry.reason } };
+    const replayFields = { ...(runId ? { run_id: runId } : {}), observed_ts: observedTs, journal: { choice: journalEntry.choice, reason: journalEntry.reason, ...(journalEntry.planRef ? { planRef: journalEntry.planRef } : {}) } };
     /** Applies the resolution's memory effects; returns the route plan it made, for the log. */
     const applyResolved = (): { route_plan?: JsonValue } => {
       const before = screenMemory.routePlan;
@@ -2007,7 +2029,7 @@ async function runLoopWithBudgets(options: LoopOptions): Promise<LoopStats> {
       gateRejectedFp = null;
       clearStall();
       const routePlan = applyResolved();
-      journal.record(state, journalEntry);
+      journal.record(state, { ...journalEntry, executed: false });
       stats.decisions += 1;
       const record: DecisionRecord = { ...baseRecord, ...replayFields, ...routePlan,
         ...selectionReceipt({ status: "not_dispatched", reason: "shadow" }), result: "shadow (not dispatched)" };
@@ -2081,6 +2103,7 @@ async function runLoopWithBudgets(options: LoopOptions): Promise<LoopStats> {
           ...baseRecord,
           ...replayFields,
           ...selectionReceipt({ status: "not_dispatched", reason: "sl_reload" }),
+          ...(reload.ok ? { construction_restore: toJsonValue(journal.constructionSnapshot()) } : {}),
           result: (reload.ok
             ? `not dispatched: SL reloaded the fight (certain death foreseen${intent.action === "end_turn" ? "" : " at the least-loss verdict, before its line"}; back on T${reload.resumedTurn ?? "?"} after ${Math.round(reload.ms / 1000)} s)`
             : `not dispatched: SL reload failed at ${reload.step}: ${reload.reason}`).slice(0, 300),
