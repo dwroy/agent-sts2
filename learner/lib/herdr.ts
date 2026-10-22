@@ -48,6 +48,11 @@ export interface PromptProof { marker: string; prompt_sha256?: string }
 export interface TurnBinding { turn_id: string; marker: string; prompt_sha256: string }
 const promptHash = (text: string): string => createHash("sha256").update(text.replace(/\r\n/g, "\n").trimEnd()).digest("hex");
 
+/** Herdr names are limited to 32 ASCII characters; labels and scheduler keys remain complete. */
+export function learnerAgentName(label: string, pane: string, cwd: string): string {
+  return `learner-${createHash("sha256").update(JSON.stringify([label, pane, resolve(cwd)])).digest("hex").slice(0, 24)}`;
+}
+
 /** Each turn needs its own one-use, explicitly sent prompt proof; authorization never carries across turns. */
 export class NativeBatch {
   session?: string;
@@ -241,6 +246,7 @@ export async function runLearnerTui(o: TuiOptions): Promise<TuiResult> {
   let tuiEnv: Record<string, string>;
   try { tuiEnv = learnerTuiEnv(o.env); } catch { return unstarted("unsafe-tui-environment"); }
   if (!/^[A-Za-z0-9]+:p[A-Za-z0-9]+$/.test(o.pane) || !/^learner-[a-z0-9-]+$/.test(o.label)) return unstarted("invalid-pane-identity");
+  const agentName = learnerAgentName(o.label, o.pane, o.request.cwd);
   const h = o.h ?? ((args: string[]) => runCommand(o.env.HERDR_BIN || "herdr", args, 20_000, o.env));
   const now = o.now ?? Date.now;
   const pause = o.pause ?? sleep;
@@ -293,6 +299,7 @@ export async function runLearnerTui(o: TuiOptions): Promise<TuiResult> {
   };
   const save = (state: string, extra: Record<string, unknown> = {}): void => {
     writeFileSync(o.receipt, JSON.stringify({ state, pane: o.pane, label: o.label, identity, pid, birth: ownerBirth,
+      agent_name: agentName, agent_name_version: 1,
       session: native.session, cwd: o.request.cwd, rollout, turn: native.turn, submitted, retries,
       submissions: native.submissions, bindings: native.bindings, retirement_authorized: retirementAuthorized, ...extra }) + "\n", { mode: 0o600 });
     const fd = openSync(o.receipt, "r"); try { fsyncSync(fd); } finally { closeSync(fd); }
@@ -324,7 +331,7 @@ export async function runLearnerTui(o: TuiOptions): Promise<TuiResult> {
       }
     }
   };
-  const promptAllowed = async (bound: boolean): Promise<boolean> => {
+  const promptAllowed = async (bound: boolean, allowUnnamed = false): Promise<boolean> => {
     if (!startConfirmed || uncertain || ownershipLost || !o.lease?.current() || !pid || !ownerBirth || !(await samePane())) return false;
     const info = await h(["pane", "process-info", "--pane", o.pane]);
     const p = info.result?.process_info as Record<string, unknown> | undefined;
@@ -334,7 +341,8 @@ export async function runLearnerTui(o: TuiOptions): Promise<TuiResult> {
     readNative();
     return info.ok && p?.foreground_process_group_id === pid && birth(pid) === ownerBirth &&
       agentInfo.ok && agent?.agent === "codex" && agent.pane_id === o.pane && agent.foreground_cwd === o.request.cwd &&
-      [undefined, "", o.label].includes(agent.name as string | undefined) && ["idle", "done"].includes(String(agent.agent_status)) &&
+      (agent.name === agentName || (allowUnnamed && [undefined, ""].includes(agent.name as string | undefined))) &&
+      ["idle", "done"].includes(String(agent.agent_status)) &&
       screen.ok && composerState(screen.stdout) === "empty" && !native.foreignActivity &&
       (!bound || (native.accepted && !native.hasPending() && native.currentTurn === native.turn)) &&
       (!rollout || readers.get(rollout)!.reader.settled(rollout)) && !!o.lease?.current();
@@ -361,9 +369,11 @@ export async function runLearnerTui(o: TuiOptions): Promise<TuiResult> {
       const screen = await h(["pane", "read", o.pane, "--format", "ansi"]);
       const idle = agent?.agent === "codex" && ["idle", "done"].includes(status) && screen.ok && composerState(screen.stdout) === "empty";
       if (!submitted && !uncertain && idle && pid && ownerBirth && birth(pid) === ownerBirth &&
-          [undefined, "", o.label].includes(agent?.name as string | undefined) &&
+          [undefined, "", agentName].includes(agent?.name as string | undefined) &&
           (agent?.foreground_cwd === undefined || agent.foreground_cwd === o.request.cwd)) {
-        const named = await h(["agent", "rename", o.pane, o.label]);
+        if (!(await promptAllowed(false, true))) { ownershipLost = true; attention("learner naming authority changed; keep original session"); break; }
+        save("naming"); // persist the complete label -> bounded native name binding before mutation
+        const named = await h(["agent", "rename", o.pane, agentName]);
         if (!named.ok) { uncertain = true; attention("learner TUI name receipt uncertain; no task replay"); }
         else {
           if (!(await promptAllowed(false))) { ownershipLost = true; attention("learner prompt authority changed; keep original session"); break; }
@@ -447,7 +457,7 @@ export async function runLearnerTui(o: TuiOptions): Promise<TuiResult> {
         const agent = agentInfo.result?.agent as Record<string, unknown> | undefined;
         if (!agentInfo.ok && birth(pid) === undefined) return "exited";
         if (!agentInfo.ok || agent?.agent !== "codex" || agent.pane_id !== o.pane || agent.foreground_cwd !== o.request.cwd ||
-            (submitted ? agent.name !== o.label : ![undefined, "", o.label].includes(agent.name as string | undefined)) ||
+            (submitted ? agent.name !== agentName : ![undefined, "", agentName].includes(agent.name as string | undefined)) ||
             !["idle", "done", ...(submitted && native.open ? ["working"] : [])].includes(String(agent.agent_status))) return "denied";
         const screen = await h(["pane", "read", o.pane, "--format", "ansi"]);
         readNative();

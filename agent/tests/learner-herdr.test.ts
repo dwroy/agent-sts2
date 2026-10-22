@@ -6,7 +6,7 @@ import { join } from "node:path";
 
 import { afterEach, describe, expect, it } from "vitest";
 import { learnerInteractiveArgs } from "../../learner/lib/engines.js";
-import { NativeBatch, NativeRows, learnerTuiEnv, runLearnerTui, type TuiOptions } from "../../learner/lib/herdr.js";
+import { NativeBatch, NativeRows, learnerAgentName, learnerTuiEnv, runLearnerTui, type TuiOptions } from "../../learner/lib/herdr.js";
 import type { HerdrResult } from "../../ops/codex/herdr.js";
 
 const roots: string[] = [];
@@ -19,7 +19,7 @@ const row = (type: string, payload: Record<string, unknown>) => ({ type, payload
 const ok = (result: Record<string, unknown> = {}, stdout = ""): HerdrResult => ({ ok: true, code: 0, result, stdout, stderr: "" });
 const fail = (): HerdrResult => ({ ok: false, code: 1, error: "transport_uncertain", stdout: "", stderr: "" });
 
-function fixture(kind = "success") {
+function fixture(kind = "success", label = "learner-20261022-120000-postmortem") {
   const root = mkdtempSync(join(tmpdir(), "learner-tui-")); roots.push(root);
   const home = join(root, "home");
   const date = new Date();
@@ -27,12 +27,13 @@ function fixture(kind = "success") {
   mkdirSync(sessionDir, { recursive: true });
   const file = join(sessionDir, "rollout-019a1000-1234-7123-8123-123456789abc.jsonl");
   const session = "019a1000-1234-7123-8123-123456789abc";
-  const pane = { pane_id: "w1:p2", label: "learner-20261022-120000-postmortem", tab_id: "w1:t2", terminal_id: "terminal-2", cwd: root };
+  const pane = { pane_id: "w1:p2", label, tab_id: "w1:t2", terminal_id: "terminal-2", cwd: root };
   let clock = Date.now();
   let child: ChildProcess | undefined;
   let live = false;
   let prompts = 0;
   let status = "idle";
+  let name: string | undefined;
   let afterPoll = 0;
   let changed = false;
   let leaseCurrent = true;
@@ -67,8 +68,11 @@ function fixture(kind = "success") {
         return kind === "start-uncertain" ? fail() : ok();
       }
       if (group === "pane" && action === "read") return ok({}, `header\n› \u001b[2mAsk Codex to do anything\u001b[0m\n${kind === "capacity" ? "at capacity" : ""}`);
-      if (group === "agent" && action === "get") return live ? ok({ agent: { agent: "codex", name: pane.label, pane_id: pane.pane_id, agent_status: status, foreground_cwd: root } }) : fail();
-      if (group === "agent" && action === "rename") return ok();
+      if (group === "agent" && action === "get") return live ? ok({ agent: { agent: "codex", name, pane_id: pane.pane_id, agent_status: status, foreground_cwd: root } }) : fail();
+      if (group === "agent" && action === "rename") {
+        if (!/^[a-z][a-z0-9_-]{0,31}$/.test(args[3]!)) return { ...fail(), error: "invalid_agent_name" };
+        name = args[3]; return ok();
+      }
       if (group === "agent" && action === "prompt") {
         prompts++;
         const text = args[3]!;
@@ -113,6 +117,93 @@ describe("learner interactive command policy", () => {
     expect(args).toContain('default_permissions="learner"'); expect(args.some((arg) => arg.startsWith("permissions.learner.filesystem"))).toBe(true);
     const thread = "019a1000-1234-7123-8123-123456789abc";
     expect(learnerInteractiveArgs({ ...f.opts.request, resumeThread: thread })).toEqual(["resume", ...args, thread]);
+  });
+});
+
+describe("bounded native learner names", () => {
+  const labels = [
+    "learner-20261023-021302-strategy-proposal",
+    "learner-20261023-021302-s2-strategy-proposal",
+    "learner-20261023-021302-fix-batch",
+    "learner-20261023-021301-postmortem",
+  ];
+  it("reproduces the observed CLI name limit without touching the original pane", async () => {
+    const f = fixture();
+    expect(labels[0]).toHaveLength(41);
+    expect(await f.opts.h!(["agent", "rename", f.pane.pane_id, labels[0]!])).toMatchObject({ ok: false, error: "invalid_agent_name" });
+    expect(f.calls.some((c) => c[1] === "run" || c[1] === "prompt")).toBe(false);
+  });
+  it("is deterministic and distinguishes the full label, pane and cwd without truncating their suffixes", () => {
+    const names = labels.map((label) => learnerAgentName(label, "w1:p2", "/fixture/中文"));
+    expect(new Set(names).size).toBe(labels.length);
+    for (const name of names) expect(name).toMatch(/^learner-[a-f0-9]{24}$/);
+    expect(names[0]).toBe("learner-8f55a5ad47c4b2bb40b86574"); // shared Python/TypeScript UTF-8 contract
+    expect(names[0]).toBe(learnerAgentName(labels[0]!, "w1:p2", "/fixture/中文"));
+    expect(learnerAgentName(labels[0]!, "w1:p3", "/fixture/中文")).not.toBe(names[0]);
+    expect(learnerAgentName(labels[0]!, "w1:p2", "/fixture/other")).not.toBe(names[0]);
+  });
+  it.each(labels)("persists and reads back a bounded name for %s through completion and retirement", async (label) => {
+    const f = fixture("success", label); const h = f.opts.h!;
+    const expected = learnerAgentName(label, f.pane.pane_id, f.root);
+    f.opts.h = async (args) => {
+      if (args[1] === "rename") {
+        expect(args[3]).toBe(expected);
+        expect(JSON.parse(readFileSync(f.opts.receipt, "utf8"))).toMatchObject({
+          state: "naming", agent_name: expected, agent_name_version: 1, label, pane: f.pane.pane_id, submitted: false,
+        });
+      }
+      return h(args);
+    };
+    expect(await runLearnerTui(f.opts)).toMatchObject({ code: 0, stopped: true });
+    expect(f.prompts()).toBe(1);
+    expect(f.calls.filter((c) => c[1] === "rename")).toHaveLength(1);
+    const receipt = JSON.parse(readFileSync(f.opts.receipt, "utf8"));
+    expect(receipt).toMatchObject({ agent_name: expected, label, identity: { label }, submitted: true, retirement_authorized: true });
+    expect(receipt.bindings).toHaveLength(1);
+  });
+  it.each(["not-applied", "uncertain", "foreign"])("retains the unsubmitted TUI when naming is %s", async (kind) => {
+    const f = fixture(); const h = f.opts.h!;
+    f.opts.h = async (args) => {
+      if (args[0] === "agent" && args[1] === "rename") return kind === "uncertain" ? fail() : ok();
+      const response = await h(args);
+      if (kind === "foreign" && args[0] === "agent" && args[1] === "get" && response.ok) {
+        return ok({ agent: { ...response.result?.agent as object, name: "human-agent" } });
+      }
+      return response;
+    };
+    expect(await runLearnerTui(f.opts)).toMatchObject({ code: 75, stopped: false });
+    expect(f.prompts()).toBe(0);
+    expect(f.calls.filter((c) => c[1] === "send-keys")).toHaveLength(0);
+    const receipt = JSON.parse(readFileSync(f.opts.receipt, "utf8"));
+    expect(receipt).toMatchObject({ submitted: false, bindings: [], retirement_authorized: false });
+  });
+  it.each(["lease", "draft", "foreground", "cwd"])("does not rename or submit after pre-naming %s changes", async (kind) => {
+    const f = fixture(); const h = f.opts.h!; let started = false;
+    if (kind === "lease") f.opts.lease = { batch: "fixed", identity: "fixed", current: () => !started };
+    f.opts.h = async (args) => {
+      const response = await h(args);
+      if (args[0] === "pane" && args[1] === "run") started = true;
+      if (started && kind === "draft" && args[1] === "read") return ok({}, "header\n› Human draft not sent");
+      if (started && kind === "foreground" && args[1] === "process-info") return ok({ process_info: { shell_pid: 1000, foreground_process_group_id: 99999 } });
+      if (started && kind === "cwd" && args[0] === "agent" && args[1] === "get") return ok({ agent: { ...response.result?.agent as object, foreground_cwd: "/foreign" } });
+      return response;
+    };
+    expect(await runLearnerTui(f.opts)).toMatchObject({ code: 75, stopped: false });
+    expect(f.prompts()).toBe(0);
+    expect(f.calls.filter((c) => c[1] === "rename" || c[1] === "send-keys")).toHaveLength(0);
+  });
+  it("checks the same bound name before continuation and every retirement key", async () => {
+    const f = fixture("retry-success"); const h = f.opts.h!;
+    f.opts.h = async (args) => {
+      const response = await h(args);
+      if (f.prompts() && args[0] === "agent" && args[1] === "get" && response.ok) {
+        return ok({ agent: { ...response.result?.agent as object, name: "foreign" } });
+      }
+      return response;
+    };
+    expect(await runLearnerTui(f.opts)).toMatchObject({ code: 75, stopped: false });
+    expect(f.prompts()).toBe(1);
+    expect(f.calls.filter((c) => c[1] === "send-keys")).toHaveLength(0);
   });
 });
 

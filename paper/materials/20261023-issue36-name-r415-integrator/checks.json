@@ -1,0 +1,130 @@
+{
+  "state": "passed",
+  "started_at": "2026-10-23T02:36:19+08:00",
+  "runner_pid": 2678066,
+  "runner_birth": "11870893",
+  "nice": 19,
+  "base_live": "c5b4a8a588dadccb59b218d97993de5a55371979",
+  "source": "6ec71c313fe113b107b44867c0aca2352a1a59ea",
+  "tree": "5de70841f44d1e75c265014aa23a65442c86a7c9",
+  "full_started": true,
+  "steps": [
+    {
+      "name": "tsc",
+      "argv": [
+        "nice",
+        "-n",
+        "19",
+        "node",
+        "node_modules/typescript/bin/tsc",
+        "-p",
+        "tsconfig.json",
+        "--noEmit"
+      ],
+      "cwd": "agent",
+      "started_at": "2026-10-23T02:36:19+08:00",
+      "pid": 2678100,
+      "exit_code": 0,
+      "seconds": 1.104
+    },
+    {
+      "name": "targeted",
+      "argv": [
+        "nice",
+        "-n",
+        "19",
+        "node",
+        "node_modules/vitest/vitest.mjs",
+        "run",
+        "--pool=forks",
+        "--maxWorkers=1",
+        "--no-file-parallelism",
+        "--reporter=default",
+        "--reporter=json",
+        "--outputFile.json=/home/dw/Projects/agent-sts2/.artifacts/issue36-name-r415-integrator-20261023/checks/targeted.json",
+        "tests/learner-herdr.test.ts",
+        "tests/learner-herdr-ownership.test.ts",
+        "tests/learner-herdr-launcher.test.ts",
+        "tests/learner-herdr-receipts.test.ts",
+        "tests/boss-sim-home.test.ts",
+        "tests/learner-entry.test.ts",
+        "tests/learner-startup-recovery.test.ts"
+      ],
+      "cwd": "agent",
+      "started_at": "2026-10-23T02:36:20+08:00",
+      "pid": 2678243,
+      "exit_code": 0,
+      "seconds": 13.653
+    },
+    {
+      "name": "full",
+      "argv": [
+        "nice",
+        "-n",
+        "19",
+        "node",
+        "node_modules/vitest/vitest.mjs",
+        "run",
+        "--pool=forks",
+        "--maxWorkers=1",
+        "--no-file-parallelism",
+        "--reporter=default",
+        "--reporter=json",
+        "--outputFile.json=/home/dw/Projects/agent-sts2/.artifacts/issue36-name-r415-integrator-20261023/checks/full.json"
+      ],
+      "cwd": "agent",
+      "started_at": "2026-10-23T02:36:34+08:00",
+      "pid": 2678523,
+      "exit_code": 0,
+      "seconds": 1430.508
+    },
+    {
+      "name": "python-view",
+      "argv": [
+        "nice",
+        "-n",
+        "19",
+        "python3",
+        "-B",
+        "ops/tests/test_brain_view.py",
+        "-v"
+      ],
+      "cwd": ".",
+      "started_at": "2026-10-23T03:00:24+08:00",
+      "pid": 2768321,
+      "exit_code": 0,
+      "seconds": 0.353
+    },
+    {
+      "name": "shell",
+      "argv": [
+        "nice",
+        "-n",
+        "19",
+        "bash",
+        "-n",
+        "ops/codex-ops-learner.sh",
+        "ops/codex-ops.sh",
+        "ops/herdr-host.sh",
+        "ops/run.sh"
+      ],
+      "cwd": ".",
+      "started_at": "2026-10-23T03:00:25+08:00",
+      "pid": 2768340,
+      "exit_code": 0,
+      "seconds": 0.005
+    }
+  ],
+  "old_full_not_repeated": true,
+  "reason_new_full": "runtime native-name fix on exact actual R415 composition",
+  "production_locks_held": false,
+  "input_count": 2509,
+  "inputs_unchanged": true,
+  "full": {
+    "files": 644,
+    "passed": 6123,
+    "failed": 0,
+    "pending": 2
+  },
+  "ended_at": "2026-10-23T03:00:25+08:00"
+}
