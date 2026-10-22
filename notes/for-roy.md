@@ -4750,3 +4750,9 @@ Roy/Claude报16:09周用量91%，已新建codex3-20261022-1610，旧1146取消�
 ### 2026-10-23T06:02:21+08:00 [ops] #33完整检查与原生离线工具面通过，原自然终局发布已登记
 
 原#33/#26/R413启动补登精确R416组合已核首次full6205过2跳0败、2534输入前后及当前同SHA、58叶880785ea。真实Codex离线14工具/最终0工具、dsh离线14工具Nova/max通过，无推理；候选实际查询/来源全文审计、角色拒绝及模型/旧3策略/catalog读回通过，缺可选hints按无数据保留，不补他角色知识。当前局仍运行，未发布；3313811/birth13099456实际nice19一次控制器以内核pidfd等3212785/birth12924752自然终局，等待无锁。已建本事务独有LLM_DRAIN仅挡新准入，不动STOP、当前局或账号权限；终局后K→L核最新知识/预像/绑定、统一号和双通知及消费者，成功仅移除自有挡板。原autoplay若自然退出沿终局broker恢复正常循环，不加试验局。旧失败、自然验收和科学父保留，不重full。原件paper/materials/20261023-issue33-publication-ops/receipt.json。
+
+### 2026-10-23T06:27:25+08:00 [ops] R417发布终局及首自然窗口核验
+
+核实#33完整包+#26已在自然终局发布V6-R417，live e925357ad、行为c60de438/tree880785ea精确58叶；统一号、绑定、双箱通知和真实消费者均对上，沿用原6205过2跳/2534冻结输入，不重full。发布前后468份旧知识相同；现有9份运行数据已变化，另列SHA，不覆盖。自有LLM_DRAIN已释，原autoplay1248445自然续出Silent A10局Y3824FJLSUXY，无须重启。固定06:16—06:24窗口10题全完成，2题各调用一次工具（机械开卷命中、经验查询空结果），均值13.46秒/P95 27.38秒，兜底0、前缀预算漏书0；10个原生turn_context独立核gpt-6.1-sol/high，日志9个空receipt保留。cap8/Codex300秒+最终120秒配置已读，未触发耗尽分支；dsh仅原离线证据。run-config原git ENOBUFS缺提交号保留，并用实际live/进程cwd/控制台补核；#26统计工具尚无自然命中，不推收益或关闭科学父，队列42余项→35→28→37保留。
+
+原件：paper/materials/20261023-issue33-publication-ops/publication.json、actual-publication-dual-notice.json；本轮：paper/materials/20261023-0621-ops/publication-verification.json、natural-report.json、native-turn-contexts.jsonl、post-publication-knowledge-drift.json。

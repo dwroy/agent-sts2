@@ -1,0 +1,127 @@
+{
+  "at": "2026-10-23T06:15:37+08:00",
+  "release_id": "V6-R417",
+  "behavior": {
+    "parent": "3849fcb8a35940315422f64b16fbc104a6cb8b8b",
+    "commit": "c60de438383f8973ae34159f8be2bec0087d55f5",
+    "tree": "880785ea311db4ef5226500e5c4f39c086b71b92",
+    "paths": [
+      "README.md",
+      "agent/src/brain/brain.ts",
+      "agent/src/brain/engines/codex-session.ts",
+      "agent/src/brain/engines/codex.ts",
+      "agent/src/brain/engines/dsh-stream.mjs",
+      "agent/src/brain/engines/dsh.ts",
+      "agent/src/brain/engines/knowledge-agent.ts",
+      "agent/src/brain/engines/native-receipt.ts",
+      "agent/src/brain/router.ts",
+      "agent/src/brain/run-profile.ts",
+      "agent/src/brain/tools/agent-knowledge.ts",
+      "agent/src/brain/tools/external-stats-tools.ts",
+      "agent/src/brain/tools/knowledge-mcp.ts",
+      "agent/src/brain/tools/mcp-server.ts",
+      "agent/src/brain/tools/registry.ts",
+      "agent/src/brain/tools/types.ts",
+      "agent/src/brain/types.ts",
+      "agent/src/core/config.ts",
+      "agent/src/eye/run-config.ts",
+      "agent/src/hand/loop.ts",
+      "agent/src/knowledge/experience.ts",
+      "agent/src/knowledge/monster-db.ts",
+      "agent/src/knowledge/potion-equivalents.ts",
+      "agent/src/knowledge/query-sources.ts",
+      "agent/src/knowledge/render/data.ts",
+      "agent/src/knowledge/room-costs.ts",
+      "agent/src/knowledge/shared-experience.ts",
+      "agent/src/sim/boss-clock.ts",
+      "agent/tests/brain-agent-codex.test.ts",
+      "agent/tests/brain-agent-loop.test.ts",
+      "agent/tests/brain-agent-mode.test.ts",
+      "agent/tests/brain-agent-provenance.test.ts",
+      "agent/tests/brain-agent-report.test.ts",
+      "agent/tests/brain-codex-session.test.ts",
+      "agent/tests/brain-codex-usage.test.ts",
+      "agent/tests/brain-codex-watchdog.test.ts",
+      "agent/tests/brain-codex.test.ts",
+      "agent/tests/brain-live.test.ts",
+      "agent/tests/brain-run-profile.test.ts",
+      "agent/tests/codex-fast.test.ts",
+      "agent/tests/codex-only-brain.test.ts",
+      "agent/tests/external-stats-tools.test.ts",
+      "agent/tests/fixture-command.py",
+      "agent/tests/fixture-command.ts",
+      "agent/tests/human-pace-budget.test.ts",
+      "agent/tests/human-pace-l2-preparation.test.ts",
+      "agent/tests/human-pace-loop.test.ts",
+      "agent/tests/v6-off-equivalence.test.ts",
+      "agent/tools/brain-agent-report.ts",
+      "agent/tools/build-external-stats.py",
+      "agent/tools/codex-knowledge-preflight.ts",
+      "agent/tools/dsh-knowledge-inspect.mjs",
+      "agent/tools/dsh-knowledge-preflight.ts",
+      "docs/README.md",
+      "docs/brain-agent-mode.md",
+      "docs/codex-only-brain.md",
+      "knowledge/external/sts2fun/silent-a10.json",
+      "ops/run.sh"
+    ],
+    "scan": {
+      "manifest": "/home/dw/Projects/agent-sts2/ops/codex-ops/record-scans/runs/573bb17c081f4f1699f93720e5e0ea78/manifest.json",
+      "manifest_sha256": "20f122a77e669e9d670b547738603ae406e5e8c6b257c9077de6bd2137aa2af1",
+      "scanned_leaves": 0,
+      "reused_clean_leaves": 58,
+      "full_copy_bytes": 0
+    }
+  },
+  "registrations": {
+    "live": {
+      "parent": "c60de438383f8973ae34159f8be2bec0087d55f5",
+      "commit": "e925357ad984e4d88509ab0d791388be047f3428",
+      "tree": "ac5168511a602220ee8cc1e8efbedbceab15ef36",
+      "paths": [
+        "eval/versions.json"
+      ],
+      "scan": {
+        "manifest": "/home/dw/Projects/agent-sts2/ops/codex-ops/record-scans/runs/5242264e62704aefb2b9031c505ca542/manifest.json",
+        "manifest_sha256": "26c579b2ea8d6da9a5d9266dee4691f3bf2673ccb69c83f347544c94371f436a",
+        "scanned_leaves": 1,
+        "reused_clean_leaves": 0,
+        "full_copy_bytes": 0
+      }
+    },
+    "main": {
+      "parent": "8c12c9ee91dd1aa0695ad0c03b1ade91aeee2585",
+      "commit": "323d98b1c551635db58d94f3ca05f9957bd08163",
+      "tree": "15b04f39d19da5d760b2773319d9945c2bf81be1",
+      "paths": [
+        "eval/versions.json"
+      ],
+      "scan": {
+        "manifest": "/home/dw/Projects/agent-sts2/ops/codex-ops/record-scans/runs/d5b4282423a44e2e92c6f50bddfe5dd2/manifest.json",
+        "manifest_sha256": "bd827456dfd203eef80aeb8c7e76f4902c5681a3e77c6e8c027dfbc0a5ecad07",
+        "scanned_leaves": 1,
+        "reused_clean_leaves": 0,
+        "full_copy_bytes": 0
+      }
+    }
+  },
+  "live_before": "3849fcb8a35940315422f64b16fbc104a6cb8b8b",
+  "tested_tree": "880785ea311db4ef5226500e5c4f39c086b71b92",
+  "source_count": 58,
+  "first_full": {
+    "passed": 6205,
+    "failed": 0,
+    "pending": 2,
+    "success": true
+  },
+  "input_count": 2534,
+  "latest_existing_knowledge_preserved": 468,
+  "added_external_knowledge_files": 1,
+  "actual_live_consumers": "actual-live-consumers.json",
+  "binding_sha256": "5a9e900cd6626febe517591db75008cc8d1962408744fb41f9dbe4570bfd0d55",
+  "temporary_next_admission_only": true,
+  "current_game_hot_switched": false,
+  "no_extra_model_full_or_game": true,
+  "scientific_parents_closed": false,
+  "natural_consumption": "pending next original normal run"
+}

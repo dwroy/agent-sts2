@@ -1,0 +1,41 @@
+{
+  "schema": "brain-agent-acceptance-v1",
+  "questions": 10,
+  "run_ids": [
+    "Y3824FJLSUXY"
+  ],
+  "prefix_budget_open_book_omissions": 0,
+  "inline_knowledge_rows": 0,
+  "groups": [
+    {
+      "engine": "codex",
+      "questions": 10,
+      "completed": 10,
+      "completion_rate": 1,
+      "tool_call_rate": 0.2,
+      "calls_total": 2,
+      "calls_mean": 0.2,
+      "calls_p95": 1,
+      "tool_execution_ms_mean": 0.7,
+      "tool_execution_ms_p95": 5,
+      "latency_ms_mean": 13464.6,
+      "latency_ms_p95": 27380,
+      "tool_phase_ms_mean": 13464.6,
+      "final_phase_fallbacks": 0,
+      "fallback_rate": 0,
+      "fallback_reasons": {
+        "calls": 0,
+        "time": 0,
+        "stall": 0
+      },
+      "thinking_without_native_tool_calls": 1,
+      "textual_tool_call_without_native_call": 0,
+      "missing_agent_telemetry": 0,
+      "source_tags": [
+        "external:spire-codex",
+        "own"
+      ]
+    }
+  ],
+  "limitation": "仅自然工具模式题；工具执行耗时与查询阶段总耗时分列。无工具调用是观测，不自动判错；无对照局，不推断因果增加耗时或收益。零题不构成验收。"
+}
