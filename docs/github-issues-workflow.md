@@ -199,3 +199,17 @@ python3 ops/launch_runtime.py show --root /project/root --live /project/root/.wo
 STOP、LLM_DRAIN、日志、运行进度、账号 home 选择器及实例 PID/profile/endpoint 绑定仍是主运行根的运维状态；它们不作为 main Git 行为配置，也不把 key 复制到 bundle/提交。凭据仍由原 provider/账号体系读取，开发不读 `.env` 内容。ablation 的已发布 arms/total 与运行游标分开，游标记 `ops/ablation-progress.json` 并绑定 schedule SHA；main 改旧 schedule 不穿透固定版本。当前工具只激活主运行根的 live 通道，其他 lane 保持原状。
 
 启动 console 记录 `launch source: SHA`。ops 发布回执须核固定 source、文件清单及模式、实际 autoplay 路径、首局 console source 和真实 run-config；源码 pin/show 成功不代自然采用。只改 main 未进入 live 的启动变更继续 waiting-release。回退也走发布：恢复上次 live 关键输入并 pin 对应实际发布提交、沿原安全重载核回，保留所有旧 bundle/失败记录；不删除 pin 后悄悄退到可热变的 main 脚本。
+
+### 启动环境消费者盘点（#39 补缺）
+
+环境隔离按实际消费者登记，不能只列 BRAIN/V6 或某次反例。`python3 ops/launch_environment_audit.py --root /project/checkout` 只扫描本检出源码，输出键名、消费者位置、源码 SHA 和分类；不读父环境值、`.env`、账号或 provider 文件。启动固定回归由 `agent/tests/board-resources.test.ts` 接入；新静态键未分类、新动态读取点未经盘点时测试失败。当前覆盖所有 `agent/src/**/*.ts`、启动/重载入口及其路径、实例、trial、控制台和局后 report helper；V6 解析 helper、BRAIN 引擎模板/分题映射、CLI host 转发单列审计。新增读取方式须同步审计，不以工具扫描替代代码审阅。
+
+| 类别 | 处理 |
+|---|---|
+| 发布行为 | SIM/S、BRAIN/V6/SL、构筑/战斗规划、机制、样本/预算、模型/非秘密 provider endpoint、知识/数据/日志路径等实际消费者：父覆盖清除，只接受 live 发布版本的非秘密 `launch-settings.json`；未登记仍用已发布代码原默认值。 |
+| 凭据与账号引用 | API key/key-file、token/password、BRAIN_CODEX_HOME/CODEX_HOME/CLAUDE_CONFIG_DIR/LEARNER_CODEX_HOME、JEV_SHARED_ENV_FILE 沿原安全边界保留；不读取或复制文件内容，不允许在发布配置中改写。 |
+| 实例与宿主 | STS2 endpoint/PID/profile/超时、PATH/locale/proxy/CA、Herdr/WAIT_PID/重载握手等沿原运维边界保留，不允许当行为覆盖发布。共享 provider 引用及实际模型仍由 ops 按原安全流程核对，必要的非秘密模型/endpoint 选择显式随版本发布。 |
+| 单独授权或生成 | BRAIN_TRIAL_SCHEDULE 不继承、不作为普通发布覆盖；BRAIN_CODEX_PAID_CREDITS 不继承，仍由固定 run.sh 按实际账号/实例生成，不接受配置冒充授权。 |
+| 脚本内部派生 | ROOT/OPS/LOGS 等由固定脚本重新计算，不当成可发布父环境政策。 |
+
+凭据判断按实际字段/后缀，不按单词包含关系：`BRAIN_CODEX_FIRST_TOKEN_MS`、`MAX_TOKENS` 是行为预算，必须清除未发布覆盖并支持显式发布。`SIM_ADAPTIVE`、`SIM_FAILURE_EXIT/RETRIES`、`S_BUILD_RANK`、`S_COMBAT_RANK`、`S_READINESS` 同样处理；这只隔离来源，不改开关含义、原默认值、角色适用范围或游戏知识。首次 pin 及首局 source/run-config 核回仍按上节，生产未启用前不据源码验证冒称已隔离。

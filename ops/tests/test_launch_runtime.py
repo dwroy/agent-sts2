@@ -7,6 +7,7 @@ import subprocess
 import sys
 import tempfile
 import unittest
+from unittest.mock import patch
 
 sys.path.insert(0,str(Path(__file__).parents[1]))
 import launch_runtime as launch
@@ -97,6 +98,87 @@ if [ "${FIXTURE_HOLD:-}" = 1 ]; then read -r _; printf '%s\\n' "$BRAIN_CODEX_MOD
             _,env,_=launch.selection(self.root,self.live,'run')
         self.assertEqual(env['BRAIN_CODEX_EFFORT'],'high');self.assertNotIn('V6_BUILD',env)
         self.assertEqual(env['BRAIN_CODEX_HOME'],'fixture-account')
+
+    def test_parent_sim_and_ranking_policy_cannot_enter_pinned_launch(self):
+        self.pin()
+        injected={'SIM_ADAPTIVE':'off','SIM_FAILURE_EXIT':'off','SIM_FAILURE_RETRIES':'7',
+            'S_BUILD_RANK':'on','S_READINESS':'on','S_COMBAT_RANK':'off'}
+        with patch.dict(os.environ,injected,clear=True):
+            _,env,_=launch.selection(self.root,self.live,'run')
+        self.assertEqual({k:env[k] for k in injected if k in env},{})
+
+    def test_sim_policy_can_be_published_explicitly(self):
+        value={'SIM_ADAPTIVE':'shadow','SIM_FAILURE_EXIT':'on','SIM_FAILURE_RETRIES':'7'}
+        self.assertEqual(launch.launch_settings({'ops/launch-settings.json':json.dumps(value).encode()}),value)
+
+    def test_ranking_policy_can_be_published_explicitly(self):
+        value={'S_BUILD_RANK':'shadow','S_READINESS':'on','S_COMBAT_RANK':'off'}
+        self.assertEqual(launch.launch_settings({'ops/launch-settings.json':json.dumps(value).encode()}),value)
+
+    def test_all_audited_parent_policy_is_removed(self):
+        import launch_environment_audit as audit
+        self.pin();rows=audit.inventory(Path(launch.__file__).parents[1])['variables']
+        keys=[k for k,row in rows.items() if row['category'] in ('published-policy','generated-or-separately-authorized')]
+        keys+=['BRAIN_ENGINE_CHOOSE_CARD','BRAIN_CODEX_MODEL_CHOOSE_CARD','BRAIN_DSH_MAX_CALLS']
+        self.assertGreater(len(keys),150)
+        injected=dict.fromkeys(keys,'unpublished-fixture-value')
+        with patch.dict(os.environ,injected,clear=True):
+            _,env,_=launch.selection(self.root,self.live,'run')
+        self.assertEqual({k:env[k] for k in injected if k in env},{'BRAIN_CODEX_EFFORT':'high'})
+
+    def test_token_budgets_and_timeout_are_nonsecret_publishable_policy(self):
+        value={'BRAIN_CODEX_FIRST_TOKEN_MS':'3000','MAX_TOKENS':'600'}
+        self.assertTrue(all(launch.behavior_key(k) and not launch.credential_key(k) for k in value))
+        self.assertEqual(launch.launch_settings({'ops/launch-settings.json':json.dumps(value).encode()}),value)
+
+    def test_fixed_bash_startup_sees_sim_policy_only_after_publication(self):
+        path=self.root/'ops/run.sh'
+        path.write_text(path.read_text()+'''printf 'SIM:%s|S:%s\\n' "${SIM_ADAPTIVE-unset}" "${S_BUILD_RANK-unset}"
+''')
+        source=self.commit();self.git(self.live,'merge','--ff-only',source);self.pin()
+        parent={'HOME':str(self.root/'fixed-home'),'PATH':os.defpath,'SIM_ADAPTIVE':'off','S_BUILD_RANK':'on'}
+        def invoke():
+            with patch.dict(os.environ,parent,clear=True):script,env,_=launch.selection(self.root,self.live,'run')
+            result=subprocess.run(['bash',str(script)],env=env,capture_output=True,text=True,timeout=10)
+            self.assertEqual(result.returncode,0,result.stderr)
+            return result.stdout.splitlines()[-1]
+        self.assertEqual(invoke(),'SIM:unset|S:unset')
+        (self.root/'ops/launch-settings.json').write_text(json.dumps({'SIM_ADAPTIVE':'shadow','S_BUILD_RANK':'shadow'}))
+        source=self.commit();self.assertEqual(invoke(),'SIM:unset|S:unset')
+        self.git(self.live,'merge','--ff-only',source);self.pin()
+        self.assertEqual(invoke(),'SIM:shadow|S:shadow')
+
+    def test_sim_and_other_policy_wait_for_live_publication(self):
+        self.pin()
+        policy={'SIM_ADAPTIVE':'shadow','SIM_FAILURE_EXIT':'off','SIM_FAILURE_RETRIES':'7',
+            'S_BUILD_RANK':'on','S_READINESS':'on','S_COMBAT_RANK':'off',
+            'GLOBAL_BUILD_EVAL':'off','COMBAT_PLANNER':'turn','MAX_TOKENS':'600',
+            'BRAIN_CODEX_FIRST_TOKEN_MS':'3000','MECH_RULES':'off','GAME_DATA_DIR':'fixed-live-data'}
+        (self.root/'ops/launch-settings.json').write_text(json.dumps(policy));source=self.commit()
+        with patch.dict(os.environ,dict.fromkeys(policy,'unpublished-parent'),clear=True):
+            _,env,_=launch.selection(self.root,self.live,'run')
+        self.assertEqual({k:env[k] for k in policy if k in env},{})
+        self.git(self.live,'merge','--ff-only',source)
+        with self.assertRaises(ValueError):launch.selection(self.root,self.live,'run')
+        self.pin()
+        with patch.dict(os.environ,dict.fromkeys(policy,'unpublished-parent'),clear=True):
+            _,env,_=launch.selection(self.root,self.live,'run')
+        self.assertEqual({k:env[k] for k in policy},policy)
+
+    def test_credentials_accounts_and_runtime_binding_keep_the_original_boundary(self):
+        self.pin()
+        preserved={'BRAIN_CODEX_HOME':'fixed-account','CODEX_HOME':'fixed-account',
+            'CLAUDE_CONFIG_DIR':'fixed-account','JEV_SHARED_ENV_FILE':'fixed-provider-reference',
+            'TYPESAFE_API_KEY_FILE':'fixed-key-reference','DEEPSEEK_API_KEY_FILE':'fixed-key-reference',
+            'STS2_BASE_URL':'http://127.0.0.1:41000','STS2_EXPECTED_PROCESS_ID':'42',
+            'STS2_EXPECTED_NATIVE_PROFILE_ID':'1','AUTOPLAY_READY':'fixed-ready','WAIT_PID':'123',
+            'HOME':'fixed-home','PATH':os.defpath}
+        with patch.dict(os.environ,preserved,clear=True):
+            _,env,_=launch.selection(self.root,self.live,'run')
+        self.assertEqual({k:env[k] for k in preserved},preserved)
+        for key in (*preserved,*launch.UNPUBLISHABLE):
+            with self.subTest(key=key),self.assertRaises(ValueError):
+                launch.launch_settings({'ops/launch-settings.json':json.dumps({key:'fixed-value'}).encode()})
 
     def test_reload_selects_published_script_and_retains_previous_known_identity(self):
         first=self.pin()

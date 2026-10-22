@@ -20,8 +20,31 @@ CRITICAL = ('ops/run.sh','ops/autoplay.sh','ops/paths.sh','ops/paths.py','ops/pr
     'ops/instance_env.py','ops/instance_gate.py','ops/regent_lane_env.py','ops/brain_trial.py',
     'ops/brain_wait.py','ops/autoplay-console.sh','ops/launch_runtime.py')
 POLICY = ('ops/ablation.json','ops/regent-lane.json','ops/launch-settings.json')
-PREFIXES = ('BRAIN_','V6_','SL_','REFLEX_','BOSS_','CONSTRUCTION_','KNOWLEDGE_')
-EXACT = {'CHARACTER','TARGET_ASCENSION','MAX_MIN','ARM','ESCALATION_CHAIN','DEEPSEEK_MAX_CALLS'}
+PREFIXES = ('BRAIN_','V6_','SL_','REFLEX_','BOSS_','CONSTRUCTION_','KNOWLEDGE_',
+    'SIM_','S_','DEEPSEEK_','CLAUDE_','JEV_','ENRICHER_')
+EXACT = {'CHARACTER','TARGET_ASCENSION','MAX_MIN','ARM','ESCALATION_CHAIN',
+    'ASC_AMOUNTS','CARD_CONDITIONS','GLOBAL_BUILD_EVAL','HUMAN_PACE_H2','GAME_DATA_DIR',
+    'LOGDB_DIR','LOGDB_PYTHON','MECH_DEATH_MOVE','MECH_MOVE_RULES','MECH_RULES',
+    'PASSIVE_PIECES','POTION_COST','ROLLOUT_FACTS','SANDPIT_START','RUN_START',
+    'SHOP_DISCARD_POTIONS','ALLOW_FTUE_MODALS','STRICT_JEV','COMBAT_PLANNER',
+    'FIGHT_PLAN','FIGHT_PLAN_LOG','RUN_PLAN','RUN_PLAN_LOG','RUN_PLAN_MERGE',
+    'BUILD_DECIDER','BUILD_ONESHOT','COMBAT_DEEPSEEK','THIEF_FACTS','THIEF_COST',
+    'DECISION_LOG','LOG_LEVEL','CONFIDENCE_ACT','CONFIDENCE_STRONG',
+    'MAX_REQUESTS','MAX_TOKENS','RUN_CONFIG_LOG','MODE','TYPESAFE_BASE_URL'}
+# These retain the existing provider/account and instance/host boundaries.
+# They cannot be supplied by a launch-settings publication.
+ACCOUNTS = {'BRAIN_CODEX_HOME','CODEX_HOME','CLAUDE_CONFIG_DIR','LEARNER_CODEX_HOME','JEV_SHARED_ENV_FILE'}
+RUNTIME = {'HOME','PATH','LANG','LC_ALL','TMPDIR','SYSTEMROOT','WSL_INTEROP','WSL_DISTRO_NAME',
+    'USER','LOGNAME','SHELL','LANGUAGE','TZ','TERM','HERDR_BIN',
+    'XDG_CONFIG_HOME','XDG_DATA_HOME','XDG_CACHE_HOME','XDG_STATE_HOME','XDG_RUNTIME_DIR',
+    'HTTP_PROXY','HTTPS_PROXY','NO_PROXY','ALL_PROXY','NODE_EXTRA_CA_CERTS','SSL_CERT_FILE','SSL_CERT_DIR',
+    'NO_COLOR','FORCE_COLOR',
+    'STS2_BASE_URL','STS2_PORT_SCAN','STS2_TIMEOUT_MS','STS2_EXPECTED_PROCESS_ID',
+    'STS2_EXPECTED_NATIVE_PROFILE_ID','STS2_WORKSPACE','STS2_LIVE',
+    'STS2_LAUNCH_ROOT','STS2_LAUNCH_LIVE','STS2_LAUNCH_BUNDLE','STS2_LAUNCH_SOURCE',
+    'CODEX_OPS_MOD_URL','AUTOPLAY_READY','AUTOPLAY_RELEASE','AUTOPLAY_ACTIVE',
+    'AUTOPLAY_RELOAD_PARENT','AUTOPLAY_RELOAD_OLD','AUTOPLAY_RELOAD_OLD_START','WAIT_PID'}
+UNPUBLISHABLE = {'BRAIN_TRIAL_SCHEDULE','BRAIN_CODEX_PAID_CREDITS'}
 
 
 def digest(value):return hashlib.sha256(value).hexdigest()
@@ -49,17 +72,18 @@ def source_files(live,source,paths,modes=None):
 
 
 def behavior_key(key):
-    return key.startswith(PREFIXES) or key in EXACT
+    return (key.startswith(PREFIXES) or key in EXACT) and key not in RUNTIME and key not in ACCOUNTS
 
 
 def credential_key(key):
-    return any(s in key for s in ('API_KEY','TOKEN','SECRET','PASSWORD')) or key.endswith(('_HOME','_KEY_FILE'))
+    # Match credential fields, not policy such as FIRST_TOKEN_MS or MAX_TOKENS.
+    return key in ACCOUNTS or key.endswith(('_API_KEY','_API_KEY_FILE','_TOKEN','_SECRET','_PASSWORD'))
 
 
 def launch_settings(files):
     value=json.loads(files.get('ops/launch-settings.json',b'{}'))
     if (not isinstance(value,dict) or any(not isinstance(k,str) or not behavior_key(k) or credential_key(k)
-            or k=='BRAIN_TRIAL_SCHEDULE' or not isinstance(v,str) or len(v)>4096 for k,v in value.items())):
+            or k in UNPUBLISHABLE or not isinstance(v,str) or len(v)>4096 for k,v in value.items())):
         raise ValueError('launch settings must contain only nonsecret game policy')
     return value
 
