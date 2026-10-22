@@ -1,0 +1,69 @@
+{
+  "batch": "20261023-011302-fix-batch",
+  "original_log": {
+    "path": "learner/runs/20261023-011309-9bda180b-1693-476d-b358-13a384178369-fix-batch.jsonl",
+    "bytes": 16014,
+    "sha256": "5b32d555cb0e6f2535a694b84309aed2e5648fe583146fe5499e65e54d12b8c8"
+  },
+  "original_batch": {
+    "path": "paper/materials/20261023-0124-ops/original-batch.json",
+    "bytes": 4003,
+    "sha256": "9a9923258f1741a004eb752439917020d63715d85ee67b973062423dc4c216cb",
+    "scope": "Selected original batch fields; scheduler key renamed dispatch_fingerprint to avoid classifying its opaque deduplication hash as API key."
+  },
+  "launch": {
+    "transport": "herdr-interactive",
+    "cwd": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261023-011302",
+    "engine": "codex"
+  },
+  "rejection": [
+    {
+      "path": "learner/runs/20261023-011309-9bda180b-1693-476d-b358-13a384178369-fix-batch.jsonl",
+      "offset": 15052,
+      "bytes": 112,
+      "sha256": "a1eacbfa61bb489648d99b2aec9319ca902c72bce1047351a451ea641e60beca",
+      "row": {
+        "type": "learner_tui_result",
+        "code": 3,
+        "reason": "inherited-tui-config-not-isolated",
+        "message": "",
+        "stopped": true
+      }
+    }
+  ],
+  "queue_event": {
+    "path": "ops/codex-ops/queue/1792689195641855929-fix-done.md",
+    "bytes": 387,
+    "sha256": "c652eee11e2c348c550c54a4c195ca342f040ea7e86ffac5bd98632f9c08d8f3"
+  },
+  "scheduler_rc": 1,
+  "preflight_rc": 3,
+  "native_thread": null,
+  "native_effort_verified": false,
+  "model_calls": 0,
+  "quota_or_login_error_supported": false,
+  "completion_report": null,
+  "source_changes_or_tests_started_by_learner": false,
+  "merged": null,
+  "original_retry_at": 1792692795.6420164,
+  "retry_state_modified": false,
+  "ordinary_receipt_or_dataset_log_exists": false,
+  "new_dataset_jobs": 0,
+  "worktree_git_metadata_present": true,
+  "parent_Git_not_queried": true,
+  "prior_same_minute_three_failures": {
+    "path": "paper/materials/20261023-0113-ops/failures-audit.json",
+    "bytes": 6665,
+    "sha256": "abee9581c0051a998ab84094cd046d2c0185bca7ae7c04f939670b9fcf99c4d7"
+  },
+  "existing_issue36_block": {
+    "path": "paper/materials/20261023-issue36-publication-ops/receipt.json",
+    "bytes": 3585,
+    "sha256": "699e4be8270349517803fdcfdd9a0565e98da8ea977561c0d32c5e3cfb27b8ca"
+  },
+  "original_unmodified_batch_copy": {
+    "path": ".artifacts/ops-0124-audit-input/original-batch.json",
+    "bytes": 3986,
+    "sha256": "8ecde07721986d4380c158722f15a21945fbec0e844cf95230c8b2922050fd58"
+  }
+}
