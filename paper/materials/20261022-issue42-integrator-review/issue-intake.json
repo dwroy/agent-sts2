@@ -1,0 +1,55 @@
+{
+  "body": "[Claude] 策略库的外部证据合同：让文字策略能引用外部聚合统计（解除 #27 的阻断）\n\n## 背景\n\n#27 首批只写出 3 条策略，均为本系统对局证据、各 n=1。外部数据（#24 的 sts2.fun 统计、#25 的开卷资料）一条都没能进来：策略条目 schema 和证据账本 CLI 要求每条证据有本系统局号与精确层数，而外部聚合统计没有这两项（见 #27 的 ops/集成员评论与 `paper/materials/20261022-issue27-brain-strategies/questions.json` 第 ② 项）。学习者没有伪造 floor 或局号，这是对的；缺的是合同。\n\n方向已由 Roy 定过：外部数据可以用，标明来源、与自有证据分开（学习协议第 9 节、silent-learning-boundary、#33 “外部知识标记就好”）。本 issue 只定表达方式，不改这个方向。\n\n## 要做\n\n1. **证据类型**：策略条目的证据新增“外部聚合”一类，与“本系统对局”并列。必填：来源（如 `external:sts2fun`）、版本（如 v0.111）、数据集 SHA 与下载日期、筛选条件（角色、进阶等）、统计量与数值、分母（场次 / 局 / 玩家）、区间（有就给）、`design=observational`、已知局限（自选上传、非因果、口径差异）。不要求本系统局号和层数。\n2. **分账**：一条策略可以同时引用两类证据，但分开列、分开计数；外部分母不计入本系统分母，也不能把外部样本数当成本系统验证。\n3. **可信度**：只有外部证据的条目，可信度上限低于有本系统证据支持的条目（具体分级写进协议）；与本系统证据冲突时两边都保留，标“冲突”。\n4. **账本 CLI 与校验器**：支持登记、读回这类证据；缺必填项拒绝；不得出现伪造的局号或 floor=0。\n5. **检索与题面**：大脑读到的条目显示证据来源标签与分母，外部条目附一句局限说明。\n6. **协议文档**：更新 `docs/learning-protocol.md` 第 9 节和学习者任务模板，写明外部聚合证据的格式与边界。\n\n## 验收\n\n- [ ] 固定测试：外部证据条目登记、读回、校验（缺字段、伪造局号被拒）；混合证据分开计数；冲突标注\n- [ ] 用 #24 已有聚合表写一条示例外部证据条目，端到端走通（登记 → 检索 → 题面）\n- [ ] tsc 与定向测试通过（完整测试由集成员做）；提交前 gitleaks\n\n## 之后\n\n合入后由 ops 给 #27 派第二批学习：覆盖 #24 报告里最该先看的地方（刀刃类与淬毒刺击的拿取分歧、各幕跳过率、第二三幕硬仗的外部量级），条目引用外部聚合证据，并标明与本系统证据的一致或冲突。\n\n## 负责人与边界\n\nowner:dev，P1，area:learning。不改大脑决策逻辑和 live；上线交集成员和 ops。\n",
+  "comments": [
+    {
+      "id": "IC_kwDOU7DWbs8AAAABee-XLQ",
+      "author": {
+        "login": "dwroy"
+      },
+      "authorAssociation": "OWNER",
+      "body": "[dev #42] 外部聚合证据合同已完成，候选交集成员完整检查与合入。\n\n本地提交：`2c2d9f1aa8027f59afc1969514a697559419a069`（分支 `issue-42-task`，基线 `de9d926cd9fb8b9e3b3daa66756058cf2d2cb133`）。\n\n- 策略 TS/JSON Schema 与账本 CLI 支持 `external_aggregate`：必填出处、版本、SHA、日期、筛选、统计量、分母、observational、局限及许可；拒绝伪造 run/floor。纯外部登记不再要求 first_run/asc。\n- 混合来源分账，自有局去重，外部分母逐项保留、不求和；仅外部支持 confidence≤0.49，自有仅反证不能解锁上限；明确反证强制 conflict，追加更新保留双方。\n- 兼容题面与生产 `kb_strategies` 显示来源、分母、局限；协议第9节、策略/账本说明和 #27 实际任务模板同步。\n- #24 固定示例使用 v0.111 第一幕 skip 表的 1456/13307，完成临时账本登记→读回→实际检索→题面/工具；自有验证0局，策略块1966B≤4096B。示例只在测试目录，正式知识未改。\n\n验证：tsc exit 0；Vitest 定向48+2通过（另14项按名称过滤）；新外部账本3例、原账本/学习曲线4例通过。旧正式自有库检索 JSON 字节一致，铁甲隔离通过；nice 19、单worker串行执行。提交前 gitleaks staged 扫描无泄漏。完整测试未跑，由集成员接续；请另运行 `python3 agent/tests/external_strategy_ledger_test.py`。\n\n报告：`paper/materials/20261022-issue42-external-evidence/report.md`，同目录有精确命令、输出、端到端回执、SHA及开发期失败原件。未合 main/live，未改 STOP；后续发布、release_id、#27 第二批派发及自然读回沿集成员/ops 原流程，未登记回收或关闭学习父要求。\n",
+      "createdAt": "2026-10-22T12:26:57Z",
+      "includesCreatedEdit": false,
+      "isMinimized": false,
+      "minimizedReason": "",
+      "reactionGroups": [],
+      "url": "https://github.com/dwroy/agent-sts2/issues/42#issuecomment-6340712237",
+      "viewerDidAuthor": true
+    }
+  ],
+  "labels": [
+    {
+      "id": "LA_kwDOU7DWbs8AAAAC-WvK1g",
+      "name": "owner:dev",
+      "description": "a fresh dev session per issue (Codex in herdr)",
+      "color": "5319e7"
+    },
+    {
+      "id": "LA_kwDOU7DWbs8AAAAC-WvNTA",
+      "name": "P1",
+      "description": "high",
+      "color": "d93f0b"
+    },
+    {
+      "id": "LA_kwDOU7DWbs8AAAAC-WvPaA",
+      "name": "type:infra",
+      "description": "tooling, ops, workflow",
+      "color": "0075ca"
+    },
+    {
+      "id": "LA_kwDOU7DWbs8AAAAC-WvQmg",
+      "name": "status:review",
+      "description": "delivered, awaiting acceptance",
+      "color": "fbca04"
+    },
+    {
+      "id": "LA_kwDOU7DWbs8AAAAC-WvSCw",
+      "name": "area:learning",
+      "description": "learning loop and refresh",
+      "color": "bfd4f2"
+    }
+  ],
+  "number": 42,
+  "state": "OPEN",
+  "title": "策略库外部证据合同：文字策略引用外部聚合统计（解除 #27 阻断）"
+}

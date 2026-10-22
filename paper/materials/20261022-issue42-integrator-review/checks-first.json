@@ -1,0 +1,63 @@
+[
+  {
+    "name": "tsc-first",
+    "cwd": "agent",
+    "argv": [
+      "nice",
+      "-n",
+      "19",
+      "node",
+      "node_modules/typescript/bin/tsc",
+      "-p",
+      "tsconfig.json",
+      "--noEmit"
+    ],
+    "started_at": "2026-10-22T20:40:34+08:00",
+    "duration_seconds": 2.391,
+    "exit_code": 0,
+    "log": "raw/tsc-first.log"
+  },
+  {
+    "name": "vitest-targeted-first",
+    "cwd": "agent",
+    "argv": [
+      "nice",
+      "-n",
+      "19",
+      "node",
+      "node_modules/vitest/vitest.mjs",
+      "run",
+      "tests/external-strategy-evidence.test.ts",
+      "tests/strategy-entries.test.ts",
+      "tests/learning-ledger-metadata.test.ts",
+      "tests/brain-agent-mode.test.ts",
+      "tests/learning-ledger.test.ts",
+      "tests/ledger-repeats.test.ts",
+      "tests/ledger-rerelease.test.ts",
+      "tests/ledger-publication-baseline.test.ts",
+      "--pool=threads",
+      "--maxWorkers=1",
+      "--no-file-parallelism"
+    ],
+    "started_at": "2026-10-22T20:40:37+08:00",
+    "duration_seconds": 14.973,
+    "exit_code": 0,
+    "log": "raw/vitest-targeted-first.log"
+  },
+  {
+    "name": "python-external-first",
+    "cwd": ".",
+    "argv": [
+      "nice",
+      "-n",
+      "19",
+      "python3",
+      "-B",
+      "agent/tests/external_strategy_ledger_test.py"
+    ],
+    "started_at": "2026-10-22T20:40:52+08:00",
+    "duration_seconds": 3.077,
+    "exit_code": 0,
+    "log": "raw/python-external-first.log"
+  }
+]

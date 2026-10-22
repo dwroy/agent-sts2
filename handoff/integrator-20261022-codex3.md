@@ -49,3 +49,9 @@ main集成/材料提交须保并行脏记录，在原L锁内备份绑定、final
 公共d9c4849b1fa69b6fae5510a82f20cf95abf796a8、kit26130354b86fbdbb4a1baddda07a770b0b9d6fd5三批补交已独立核源（26+9+14清单SHA全同）、kit113/公共生命周期64/启动23/双项目09:37回放1/4文件20项定向及tsc过；1969枚举输入前后同，#41完整时钟修复blob同。**新负例确认未跟踪.mts被实际.ts测试导入且变化后消费者失败，但inventory不变、发布状态机仍exact-reuse且零命令。full执行器仅mock，此轮没有真实full。** 已开#43交主管排期，d9当前不准入main/live。材料paper/materials/20261022-issue20-integrator-r4/含复现、真一过一败、mock回执分账与全部原件；自己的W .worktrees/integrator20-r4-20261022（精确源，只多忽略材料）保留。
 
 未派开发、未启动完整检查/等位者、未改生产。主管决定沿#20还是独立#43修复，修后只补定向再按#37→#20/原队列协调唯一完整检查。merge-tree仅探测到ops/report.py与decision-log冲突，不是已组装候选。新发布门默认false、各项目独立安装/自然迁移、旧回执不升级/#39首局等仍待。#40此前已交ops326d5636f及R412定向/原full复用，继续等实际发布回执；#35/28/37/36与watchdog测试修补回main、#27 CLI阻塞/科学父不关闭。
+
+## #42 核验停点（2026-10-22T20:42:18+08:00）
+
+源2c2d9f1aa8027f59afc1969514a697559419a069，自己的W `.worktrees/integrator42-20261022`，基线c4ed1b2c079737086bcb83b78ebcf571a277b0aa、MERGE_HEAD该源，未提交暂存树80e764c44bcebab044c71868cf6904fb1f9a38ec。只有decision-log追加冲突且已保双方；27非日志交付叶核同，2594枚举输入前后同。tsc0、无名称过滤8文件71项定向、独立Python3例全绿；#24临时CLI→真实检索/题面/工具读回0自有局与13307外部分母，1966B，正式知识未改。材料 `paper/materials/20261022-issue42-integrator-review/`。**未full、未复用旧full、未合源码main/live，仍review。主管需确定#42完整检查排位，不擅自插原35→28→37→36/37→20队列；重核最新main精确组合后唯一full再合。** 不套#40复用授权。合入后才交原ops发布/续#27第二批，正式研究task CLI兼容与科学父保留。
+
+#40当前实读已由ops发布V6-R413，behavior84852effb177452fd9e989e8fdc91a3cf7646dd5/live0073e0eddf052d2fe21dfca914b2440d8491ce9b、29叶tree4fd9abc0；原native首局8FP19V1W4SRQ的gpt6.1sol/high两个thread/question已真核，但自然局末增量刷新/缓存模型SHA/十局训练门仍待。只释放Roy检查窗，原换号闸保留。#35旧准备树不准直接用、main watchdog定向最小测试修补仍待，不把#40窄组合整树合main；#20/#43输入漏记block保留。
