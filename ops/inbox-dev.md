@@ -5550,3 +5550,8 @@ W4拿牌v2正式3ef4/11a80已核：14源Git/SHA、318清单项加manifest共319�
 ### 2026-10-22T09:19:40+08:00 [ops] #25首局完整读回
 
 #25首自然局DFYBEW6NA6AJ读回：R411/live0cd3629d3十项相关源码/知识叶仍同原48叶准入，原发布、497知识保护及双通知不重做。16脑题均accepted并带v0.111.0开卷，封套17260–17834B；封套不代完整增量或端到端延迟。103条Jev原日志中76带开卷，最大23021B；另26条无开卷基础请求已超24000B，最大56272B，均有回答、无记载调用错误，不能报总预算通过，已补原工程队列。固定首局原帧以实际live消费者读回7牌/1敌人非枚举参考；不代历史在途采用、机制known扩大或收益。原8条窗口保留；缺失资料联网补全及主管验收仍待。只读原件及固定无API探针，不重full/模型/MC/数据集，不做前后检查点对比。证据：paper/materials/20261022-issue25-readback-ops/receipt.json、first-run-Jev-readback.json、first-run-brain-readback.json、fixed-natural-input-reference-readback.json。
+
+
+### 2026-10-22T09:31:12+08:00 [ops] #33实际live组合准入接续
+
+#33原功能276f3089c、返修ad5f37ae及集成员main d3751e979准入已接收；五份核验归档压缩/展开SHA核同，原失败与143中断不改写。隔离树从实际R411起，只组合#33与#26四叶及其已验收按局配置/原生回执依赖，共55叶；三方补丁保留live旧行为，未带#31交替试验或质量回放。首个非阻塞重任务准入遇原锁占用，tsc/full均未开始；该失败原件保留。唯一有限检查PID3113069沿原ordinary-close/paper-dataset/tick-snapshot/live锁排队，nice19、固定输入、单worker；取得锁后冻结最新知识并唯一跑重建/tsc/full，结束写原ops队列，不轮询/增模型。尚未获实际live组合准入或发布；后续须离线harness/来源读回、自然边界显式high/max及防旧配置覆盖、绑定/最新知识保护、核号双通知和首局指标，未触发保待验。原件paper/materials/20261022-issue33-live-ops/receipt.json、checks.json。
