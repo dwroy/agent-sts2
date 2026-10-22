@@ -4217,3 +4217,8 @@ W4拿牌v2正式3ef4/11a80已核：14源Git/SHA、318清单项加manifest共319�
 #2的原联合检查、R410开局边界发布及四叶SHA已复核，当前R411仍逐字保留修复。首个发布后第三幕自然局是4AA19CXDKQK6，前五局原状态均未进入第三幕；本局21日14:06进入第三幕，14:13在F39结束。全局原console及决策无nonpositive-hp；F35至F38四道双Boss模拟均complete_budget、failure=false、单次尝试，基准50/50/50/100样本，用时144/295/1029/381ms。日志死亡样本保持won=false，未以非正HP假胜续接。验收只覆盖本issue报错修复：这些题第一战全败，第二战样本为0/unknown；低可信、归属缺失、50/100预算及未校准口径原样保留，不称成功自然资源传递、性能因果或实战收益，0332/H0父要求不关闭。配置Git字段原ENOBUFS仍空，不改日志。依原首局验收流程关#2；原派单器负责后续生命周期，不新模型/回放/full/生成器或改当前局。证据：paper/materials/20261022-issue2-natural-ops/receipt.json。
 
 实际关单/评论读回：https://github.com/dwroy/agent-sts2/issues/2#issuecomment-6329830549
+
+
+### 2026-10-22 08:45 CST — 0843 九事件核验
+
+081301主策略原报告/失败已核：自动收尾在dataset前因main于08:41合入#33两提交、46源码路径变化停止；本批81产物、十份原文、440原始段SHA一致，7/1838题完整阅读、1831未完整审阅，十提案waiting、无新源码/测试/合入/纯bug。实际WT仍bba8原基线且源差空；无started/dataset_attempts或生成器日志，不补closed、不重复dataset。旧宿主封存pending与现sealed分时保留。八条异议原文、证据、双收件箱及watcher实际转达回执再核相同，原CLI SHA未变，仍不支持三research任务，后两角色正式登记pending；保旧拒绝/false，不改名、不代ACK、不重复提醒。保牌堆身份、配对增量、跨界HP、逐卡分母与未知机制限制及科学父。本轮仅记核验与阻塞，#33合main不代组合发布准入，#26继续等原链；#2已关的窄验收不扩成0332完成，当前R411与对局不动。原件paper/materials/20261022-0843-ops/receipt.json。
