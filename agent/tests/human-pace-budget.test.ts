@@ -56,7 +56,7 @@ it.each(["hang", "quota"])("hard-stops a %s L2 call at 90 seconds with xhigh, ab
     return new Promise((_, reject) => signal?.addEventListener("abort", () => { aborted++; reject(new Error("fixed aborted")); }));
   } };
   const wait = new BrainWait({ event: (e) => events.push(e) });
-  const router = new BrainRouter({ config: loadConfig({ BRAIN_LOG: "off" }).brain, codexOnly: true,
+  const router = new BrainRouter({ config: loadConfig({ BRAIN_CODEX_EFFORT: "xhigh", BRAIN_LOG: "off" }).brain, codexOnly: true,
     engine: () => engine, wait, log: (row) => rows.push(row) });
   const budget = new DecisionBudget("fixed-L2", "routine", () => Date.now());
   const rejection = expect(withDecisionBudget(budget, () => router.decide(request()))).rejects.toBeInstanceOf(DecisionBudgetExpired);
@@ -88,7 +88,7 @@ it("gives each L2 question its own 90 seconds after real computation and observe
     return { engine: "codex", model: "fixed", answer: { choice: "a", reason: "fixed" }, problems: [],
       attempts: 1, latencyMs: 80000, usage: { inputTokens: 0, outputTokens: 0 }, toolCalls: [] };
   } };
-  const router = new BrainRouter({ config: loadConfig({ BRAIN_LOG: "off" }).brain, codexOnly: true,
+  const router = new BrainRouter({ config: loadConfig({ BRAIN_CODEX_EFFORT: "xhigh", BRAIN_LOG: "off" }).brain, codexOnly: true,
     engine: () => engine, log: () => {} });
   await withDecisionBudget(budget, async () => {
     await measureDecisionBudgetStage("B3_current", async () => {
@@ -118,7 +118,7 @@ it("keeps the L2 deadline and abort after the shared real budget is already exha
   const budget = new DecisionBudget("fixed-exhausted-real", "brain", () => Date.now());
   budget.charge(95000);
   let aborts = 0;
-  const router = new BrainRouter({ config: loadConfig({ BRAIN_LOG: "off" }).brain, codexOnly: true, log: () => {},
+  const router = new BrainRouter({ config: loadConfig({ BRAIN_CODEX_EFFORT: "xhigh", BRAIN_LOG: "off" }).brain, codexOnly: true, log: () => {},
     engine: () => ({ name: "codex", model: "fixed", decide: async (req, signal) => {
       expect(req.timeoutMs).toBe(90000);
       return new Promise((_, reject) => signal?.addEventListener("abort", () => { aborts++; reject(new Error("fixed abort")); }));

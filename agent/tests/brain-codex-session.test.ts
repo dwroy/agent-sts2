@@ -148,17 +148,17 @@ afterEach(async () => {
   for (const e of engines.splice(0)) await e.close();
 });
 
-function sessionEngine(fake: { bin: string; state: string }, opts: { env?: Record<string, string>; config?: string | null; agents?: string } = {}): { engine: CodexEngine; trace: () => Array<Record<string, any>>; notes: string[]; stateDir: string } {
+function sessionEngine(fake: { bin: string; state: string }, opts: { env?: Record<string, string>; config?: string | null; agents?: string; knowledgeAgent?: boolean } = {}): { engine: CodexEngine; trace: () => Array<Record<string, any>>; notes: string[]; stateDir: string } {
   const home = join(fake.state, "home");
   mkdirSync(home, { recursive: true });
   writeFileSync(join(home, "auth.json"), "{}");
   if (opts.config !== null) writeFileSync(join(home, "config.toml"), opts.config ?? 'model = "gpt-6.1-sol"\nmodel_reasoning_effort = "xhigh"\n[tui]\nscreen_reader_detection_done = true\n');
   if (opts.agents) writeFileSync(join(home, "AGENTS.md"), opts.agents);
-  const cfg = loadConfig({ BRAIN_CODEX_MODEL: "gpt-6.1-sol", BRAIN_CODEX_BIN: fake.bin, BRAIN_CODEX_HOME: home, BRAIN_LOG: "off", BRAIN_CODEX_MODE: "session", ...(opts.env ?? {}) } as unknown as NodeJS.ProcessEnv);
+  const cfg = loadConfig({ BRAIN_CODEX_EFFORT: "xhigh", BRAIN_CODEX_MODEL: "gpt-6.1-sol", BRAIN_CODEX_BIN: fake.bin, BRAIN_CODEX_HOME: home, BRAIN_LOG: "off", BRAIN_CODEX_MODE: "session", ...(opts.env ?? {}) } as unknown as NodeJS.ProcessEnv);
   const traceFile = join(fake.state, "codex-calls.jsonl");
   const notes: string[] = [];
   const stateDir = join(fake.state, "codex-state");
-  const engine = new CodexEngine({ settings: cfg.brain.engines.codex, codex: cfg.brain.codex, stateDir, traceFile, note: (m) => notes.push(m), sessionTimeouts: { control: 3_000, turn: 5_000, thread: 5_000, start: 10_000 } });
+  const engine = new CodexEngine({ knowledgeAgent: opts.knowledgeAgent, settings: cfg.brain.engines.codex, codex: cfg.brain.codex, stateDir, traceFile, note: (m) => notes.push(m), sessionTimeouts: { control: 3_000, turn: 5_000, thread: 5_000, start: 10_000 } });
   engines.push(engine);
   const trace = (): Array<Record<string, any>> => (existsSync(traceFile) ? readFileSync(traceFile, "utf8").split("\n").filter(Boolean).map((line) => JSON.parse(line)) : []);
   return { engine, trace, notes, stateDir };
@@ -571,4 +571,12 @@ describe("the config.toml guard", () => {
     expect(configTomlProblems('[tui.theme]\nname = "dark"\n')).toEqual([]);
     expect(JSON.stringify(configTomlProblems('instructions = "SECRET VALUE"\n'))).not.toContain("SECRET");
   });
+});
+
+// Knowledge mode keeps service/isolation failures recoverable without opening the historical exec path.
+it("knowledge session isolation failures stay unavailable and never dispatch exec", async () => {
+  const fake = fakeSession("knowledge-isolation", { instructionSources: ["unexpected source"], turns: [answering({ choice: "a", reason: "unused" })] });
+  const { engine } = sessionEngine(fake, { knowledgeAgent: true });
+  await expect(engine.decide(request())).rejects.toMatchObject({ kind: "unavailable" });
+  expect(fake.execs()).toBe(0);
 });

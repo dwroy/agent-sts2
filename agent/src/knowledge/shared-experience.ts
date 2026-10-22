@@ -1,5 +1,6 @@
 /** Evidence-backed lessons explicitly promoted for use by every character. */
 import { existsSync, readFileSync, statSync } from "node:fs";
+import { queryKnowledgeText } from "./query-sources.js";
 import type { ExperienceEntry } from "./experience.js";
 import { CHARACTER_NAMES, KNOWLEDGE_DIR, knowledgeFile } from "./files.js";
 
@@ -68,6 +69,8 @@ const cache = new Map<string, { stamp: string; value: SharedExperienceFile }>();
 export function loadSharedExperience(dir: string = KNOWLEDGE_DIR): SharedExperienceFile {
   const path = knowledgeFile(dir, SHARED_EXPERIENCE_FILE);
   if (!existsSync(path)) return { version: "无", entries: [] };
+  const query = queryKnowledgeText(dir, SHARED_EXPERIENCE_FILE);
+  if (query !== undefined) return parseSharedExperience(JSON.parse(query), path);
   const info = statSync(path);
   const stamp = `${info.mtimeMs}:${info.size}`;
   const hit = cache.get(path);

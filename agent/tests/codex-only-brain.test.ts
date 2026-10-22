@@ -37,11 +37,11 @@ function harness(steps: (unknown | Error)[], label = "rest/plan") {
 }
 
 describe("Roy's production Codex-only brain", () => {
-  it("overrides all engine selectors and fallback without a DeepSeek client", () => {
+  it("selects the per-run engine and overrides per-question selectors/fallback without a direct API client", () => {
     const cfg = loadConfig({ BRAIN_ENGINE: "deepseek", BRAIN_ENGINE_MAP: "claude", BRAIN_FALLBACK: "deepseek" } as NodeJS.ProcessEnv);
     const r = createRouter(cfg, null);
-    for (const label of ["map/route-plan", "reward/card", "event/plan", "shop/plan", "rest/plan", "run-plan", "fight-plan"]) expect(r.engineFor(label)).toBe("codex");
-    expect(r.config).toMatchObject({ engine: "codex", fallback: null, byPrefix: {} });
+    for (const label of ["map/route-plan", "reward/card", "event/plan", "shop/plan", "rest/plan", "run-plan", "fight-plan"]) expect(r.engineFor(label)).toBe("deepseek");
+    expect(r.config).toMatchObject({ engine: "deepseek", fallback: null, byPrefix: {} });
   });
 
   it.each(["map/route-plan", "reward/card", "event/plan", "shop/plan", "rest/plan", "run-plan", "fight-plan"])("%s quota waits and recovers on the same question without any substitute", async (label) => {

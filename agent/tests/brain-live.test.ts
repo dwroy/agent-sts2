@@ -6,6 +6,7 @@ import { afterEach, expect, it } from "vitest";
 import { BrainLiveWriter, observeBrain, safeLiveText, type BrainLiveEvent } from "../src/brain/live-view.js";
 import { BrainRouter } from "../src/brain/router.js";
 import { ToolHost } from "../src/brain/tools/mcp-server.js";
+import { KnowledgeMcp } from "../src/brain/tools/knowledge-mcp.js";
 import { loadConfig } from "../src/core/config.js";
 import { pickSpec } from "../src/brain/specs.js";
 import type { BrainAnswer, BrainRequest } from "../src/brain/types.js";
@@ -70,13 +71,27 @@ it("keeps disk and observer failures out of answers, tool results, signals and t
     log: () => {}, engine: () => ({ name: "deepseek", model: "fixed", decide: async (req) => { got = req; observeBrain(req.observe, { kind: "text", text: "固定输出。" }); return answer; } }) });
   const result = await router.decide({ ...f.req, timeoutMs: 1000, observe: () => { throw new Error("viewer failed"); } });
   expect(result.answer).toEqual(answer.answer); expect(got!.timeoutMs).toBe(1000);
-  const host = new ToolHost([{ name: "kb_fixed", description: "fixed", inputSchema: {}, run: () => ({ text: "fixed tool result" }) }], { ascension: 0, knowledgeDir: "", logsDir: "" }, undefined, () => { throw new Error("viewer failed"); });
+  const host = new ToolHost([{ name: "kb_fixed", description: "fixed", inputSchema: {}, run: () => ({ text: "fixed tool result" }) }], { ascension: 0, knowledgeDir: "", logsDir: "" }, undefined, true, () => { throw new Error("viewer failed"); });
   expect((await host.call("kb_fixed", {})).text).toBe("fixed tool result");
   expect(host.calls).toHaveLength(1);
   // Drain the router's asynchronous best-effort writer before the fixture directory is reclaimed.
   await new Promise((done) => setTimeout(done, 30));
 });
 
+it("observes MCP tool start before its return and includes errors without altering the original record", async () => {
+  const seen: BrainLiveEvent[] = [];
+  const mcp = new KnowledgeMcp();
+  try {
+    let release!: () => void; const ready = new Promise<void>((done) => { release = done; });
+    const host = mcp.begin([{ name: "kb_fixed", description: "fixed", inputSchema: {}, run: async () => { await ready; throw new Error("fixed failure"); } }],
+      { ascension: 0, knowledgeDir: "", logsDir: "" }, 3, Infinity, () => {}, (e) => seen.push(e));
+    const running = host.call("kb_fixed", { query: "fixture" });
+    expect(seen.map(e => e.kind)).toEqual(["tool-start"]);
+    release(); expect((await running).isError).toBe(true);
+    expect(seen.map(e => e.kind)).toEqual(["tool-start", "tool-end"]);
+    expect(host.calls[0]!.output).toContain("fixed failure");
+  } finally { await mcp.close(); }
+});
 
 it("never uses a run ID as a path and hides credential fragments before visible truncation", async () => {
   const f = fixture(); f.writer.begin({ ...f.req, runId: "../foreign" }, "codex", "fixed", "high", false).finish({ choice: "a" });

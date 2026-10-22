@@ -46,6 +46,7 @@ export class ToolHost {
     private readonly context: ToolContext | (() => ToolContext),
     /** Called with each record as it is made (the --record-file writer). */
     private readonly onRecord?: (record: ToolCallRecord) => void,
+    private readonly knowledgeAudit = false,
     private readonly observe?: BrainObserver,
   ) {}
 
@@ -75,6 +76,15 @@ export class ToolHost {
       }
     }
     const record: ToolCallRecord = { name, input: input ?? {}, output: result.text, ...(result.isError ? { isError: true } : {}), ms: Date.now() - started };
+    try {
+      const envelope = JSON.parse(result.text);
+      if (Array.isArray(envelope.sources)) record.sources = envelope.sources;
+      else if (this.knowledgeAudit && typeof envelope.source === "string") {
+        const fields = ["source", "version", "provenance", "downloaded_at", "database_sha256", "dataset_sha256", "aggregate_sha256"];
+        record.sources = [Object.fromEntries(fields.filter(key => key in envelope).map(key => [key, envelope[key]]))];
+      }
+    } catch { /* Legacy prose tools have no envelope. */ }
+    if (this.knowledgeAudit || record.sources) { record.outputBytes = Buffer.byteLength(result.text, "utf8"); record.sources ??= []; }
     this.records.push(record);
     observeBrain(this.observe, { kind: "tool-end", name, output: result.text, ms: record.ms, isError: result.isError });
     this.onRecord?.(record);

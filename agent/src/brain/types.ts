@@ -1,4 +1,5 @@
 import type { BrainObserver } from "./live-view.js";
+import type { BrainNativeReceipt } from "./run-profile.js";
 /**
  * V4 brain contract (docs/v4-architecture.md §2).
  *
@@ -93,7 +94,7 @@ export interface BrainRequest {
 
 /** The knowledge a request carries (KNOWLEDGE_PREFIX=full), or why it fell back to v3's prompt. */
 export interface KnowledgeNote {
-  mode: "off" | "full";
+  mode: "off" | "full" | "tools";
   /** The ascension the prefix was rendered for. */
   ascension?: number;
   /** Hash and size of the rendered prefix (the same on every question while the data holds). */
@@ -126,9 +127,13 @@ export interface ToolCallRecord {
   output: string;
   isError?: boolean;
   ms: number;
+  outputBytes?: number;
+  sources?: unknown[];
 }
 
 export interface BrainAnswer {
+  agent?: { fallback: "calls" | "time" | "stall" | null; toolPhaseMs: number; totalMs: number; noToolCalls: boolean; thinkingWithoutTools?: boolean; jsonTextWithoutTools: boolean };
+  nativeReceipt?: BrainNativeReceipt;
   engine: EngineName;
   model: string;
   /** The reasoning effort the engine asked for, when it sets one (codex model_reasoning_effort); logged in brain.jsonl. */

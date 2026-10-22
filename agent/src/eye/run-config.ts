@@ -1,3 +1,4 @@
+import type { BrainRunProfile, BrainNativeReceipt } from "../brain/run-profile.js";
 import { HUMAN_PACE_BUDGETS } from "../core/decision-budget.js";
 import { humanPaceH2Policy } from "../core/human-pace-shadow-config.js";
 /**
@@ -111,6 +112,8 @@ export interface RunConfigRow {
   process: { pid: number; started: string };
   code: CodeInfo;
   brain: {
+    agent?: AppConfig["brain"]["agent"] & { mode: "knowledge-tools"; transport: "app-server" | "dsh-Nova" };
+    run_profile?: BrainRunProfile;
     /** False when there is no DeepSeek client (no key): then no brain question is asked at all. */
     active: boolean;
     engine: EngineName;
@@ -142,7 +145,8 @@ export interface RunConfigRow {
       max_answer_blanks: number | null;
     };
   };
-  human_pace?: { schema: string; budgets: typeof HUMAN_PACE_BUDGETS; model_effort: string; required_full_replaced: boolean };
+  brain_native_receipt?: { question_id: string; receipt: BrainNativeReceipt };
+  human_pace?: { schema: string; budgets: Record<keyof typeof HUMAN_PACE_BUDGETS, number>; model_effort: string; required_full_replaced: boolean };
   v6?: V6Config;
   human_pace_h2?: { schema: string; mode: string; requested: string; delivered: false;
     direction_budget_ms: number; card_budget_ms: number; jev_budget_ms: number; actual_selector: string };
@@ -349,7 +353,7 @@ export function enginesInUse(brain: AppConfig["brain"]): EngineName[] {
 function engineSnapshot(name: EngineName, config: AppConfig, brain: Brain | null): EngineSnapshot {
   const settings = config.brain.engines[name];
   const claude = name === "claude";
-  const model = name === "deepseek" ? (config.deepseek?.model ?? null) : claude ? claudeModelId(settings.model ?? DEFAULT_CLAUDE_MODEL) : settings.model;
+  const model = name === "deepseek" ? (brain?.router.knowledgeAgent ? settings.model : config.deepseek?.model ?? null) : claude ? claudeModelId(settings.model ?? DEFAULT_CLAUDE_MODEL) : settings.model;
   const byPrefix: Record<string, string> = {};
   for (const prefix of Object.keys(settings.modelByPrefix).sort()) byPrefix[prefix] = claude ? claudeModelId(settings.modelByPrefix[prefix]!) : settings.modelByPrefix[prefix]!;
   return {
@@ -360,7 +364,7 @@ function engineSnapshot(name: EngineName, config: AppConfig, brain: Brain | null
     reask: settings.reask,
     // The router's rule when there is a router; the same rule (router.ts toolsFor) otherwise.
     tools: brain ? brain.router.toolsFor(name) : (settings.tools ?? config.brain.tools ?? name !== "deepseek"),
-    max_calls: name === "deepseek" ? (config.deepseek?.maxCalls ?? null) : settings.maxCalls,
+    max_calls: name === "deepseek" && !brain?.router.knowledgeAgent ? (config.deepseek?.maxCalls ?? null) : settings.maxCalls,
   };
 }
 
@@ -389,7 +393,7 @@ export const PREFIX_NOTE =
 
 /** The knowledge part: the prompt the brain sends for this ascension, its hashes and sizes. */
 function knowledgeSnapshot(config: AppConfig, brain: Brain | null, ascension: number | null, knowledgeDir: string): RunConfigRow["knowledge"] {
-  const prefix = config.brain.knowledgePrefix;
+  const prefix = brain?.router.knowledgeAgent ? "off" : config.brain.knowledgePrefix;
   const out: RunConfigRow["knowledge"] = {
     prefix,
     ascension,
@@ -470,6 +474,8 @@ export function runConfigRow(
   const setup = {
     ...(v6.mode !== "off" ? { v6 } : {}),
     brain: {
+      ...(brain?.router.knowledgeAgent ? { agent: { ...config.brain.agent, mode: "knowledge-tools" as const, transport: actualBrain.engine === "deepseek" ? "dsh-Nova" as const : "app-server" as const } } : {}),
+      ...(config.brain.runProfile ? { run_profile: config.brain.runProfile } : {}),
       active: brain !== null,
       engine: actualBrain.engine,
       by_prefix: Object.fromEntries(Object.keys(actualBrain.byPrefix).sort().map((prefix) => [prefix, actualBrain.byPrefix[prefix]!])) as Record<string, EngineName>,
@@ -490,7 +496,7 @@ export function runConfigRow(
       strict: config.strictJev,
       prompt_log: resolveJevPromptLog(config.log),
     },
-    ...(characterKey(run.character) === "silent" ? { human_pace: { schema: "human-pace-h1-v1", budgets: HUMAN_PACE_BUDGETS, model_effort: actualBrain.engine === "codex" ? config.brain.engines.codex.effort ?? "xhigh" : "xhigh", required_full_replaced: true } } : {}),
+    ...(characterKey(run.character) === "silent" ? { human_pace: { schema: "human-pace-h1-v1", budgets: { ...HUMAN_PACE_BUDGETS, ...(brain?.router.knowledgeAgent ? { brain: config.brain.agent[actualBrain.engine === "deepseek" ? "deepseekTotalMs" : "codexTotalMs"] } : {}) }, model_effort: config.brain.runProfile?.effort ?? config.brain.engines[brain?.router.knowledgeAgent ? actualBrain.engine : "codex"].effort ?? "high", required_full_replaced: true } } : {}),
     ...(humanPaceH2Policy(characterKey(run.character), env).mode !== "off" ? { human_pace_h2: {
       schema: "human-pace-h2-shadow-v1", mode: "shadow", requested: humanPaceH2Policy(characterKey(run.character), env).requested,
       delivered: false as const, direction_budget_ms: 60000, card_budget_ms: 5000, jev_budget_ms: 1000,
@@ -573,6 +579,7 @@ export function runConfigRow(
 
 export class RunConfigLog {
   private readonly seen = new Set<string>();
+  private readonly receipts = new Map<string, string>();
   private readonly env: NodeJS.ProcessEnv;
   private readonly code: CodeInfo;
   private readonly started: string;
@@ -593,7 +600,10 @@ export class RunConfigLog {
    */
   observe(state: { run: { ascension: number | null; floor: number | null; character_name?: string | null } | null; raw: Record<string, unknown> }): RunConfigRow | null {
     const runId = str(state.raw["run_id"]);
-    if (!state.run || isMenuRunId(runId) || this.seen.has(runId)) return null;
+    const native = this.opts.brain?.router.nativeReceipts?.get(runId);
+    const receiptKey = native ? `${native.receipt.model}/${native.receipt.effort}` : "";
+    const newReceipt = native && this.receipts.get(runId) !== receiptKey;
+    if (!state.run || isMenuRunId(runId) || (this.seen.has(runId) && !newReceipt)) return null;
     this.seen.add(runId);
     try {
       const rawRun = state.raw["run"];
@@ -604,8 +614,9 @@ export class RunConfigLog {
         this.opts.now?.() ?? new Date(),
       );
       const earlier = this.earlierRows(runId);
-      if (earlier.includes(row.config_sha)) return null;
-      row.restart = earlier.length > 0;
+      if (earlier.includes(row.config_sha) && !newReceipt) return null;
+      row.restart = earlier.length > 0 && !earlier.includes(row.config_sha);
+      if (native) row.brain_native_receipt = native;
       const text = JSON.stringify(row);
       const leak = secretIn(text, this.opts.config, this.env);
       if (leak) {
@@ -617,6 +628,7 @@ export class RunConfigLog {
         this.ready = true;
       }
       appendJsonLine(this.path, row);
+      if (native) this.receipts.set(runId, receiptKey);
       return row;
     } catch (error) {
       this.opts.note?.(`run ${runId}: run configuration not written: ${error instanceof Error ? error.message : String(error)}`.slice(0, 300));

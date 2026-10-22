@@ -1,5 +1,7 @@
+import { parseBrainRunProfile, type BrainRunProfile } from "../brain/run-profile.js";
 import { accessSync, constants as fsConstants, readFileSync, statSync } from "node:fs";
 import { delimiter, dirname, isAbsolute, join } from "node:path";
+import { homedir } from "node:os";
 
 import type { Effort, EngineName } from "../brain/types.js";
 import { fromRoot, PROJECT_ROOT } from "./paths.js";
@@ -525,6 +527,12 @@ export type KnowledgePrefixMode = "off" | "full";
 
 /** V4 brain (src/brain/router.ts): which engine answers which question, and each engine's settings. */
 export interface BrainConfig {
+  /** Production knowledge agent limits, frozen with the process/run configuration. */
+  agent: { maxToolCalls: number; codexTotalMs: number; deepseekTotalMs: number; codexAnswerMs: number; deepseekAnswerMs: number };
+  dsh: { bin: string; stallMs: number };
+  runProfile?: BrainRunProfile;
+  /** Effective production default; legacy generic adapters retain their historical default selector. */
+  productionEngine?: "codex" | "deepseek";
   /** BRAIN_ENGINE (default deepseek: v3 behaviour). */
   engine: EngineName;
   /** BRAIN_ENGINE_<PREFIX>: per label prefix (router.ts labelPrefix), e.g. { MAP: "claude" }. */
@@ -665,7 +673,7 @@ export const DEFAULT_CLAUDE_MAX_CALLS = 150;
  * Always sent explicitly: isolated launchers ignore ~/.codex/config.toml.
  */
 export const DEFAULT_CODEX_MODEL = "gpt-6.1-sol";
-export const DEFAULT_CODEX_EFFORT: Effort = "xhigh";
+export const DEFAULT_CODEX_EFFORT: Effort = "high";
 /** Explicit normal tier also clears priority inherited from an older session. */
 export const CODEX_SERVICE_TIER = "default";
 export const CODEX_CONTEXT_WINDOW = 512_000;
@@ -822,7 +830,7 @@ export function readBrainConfig(env: NodeJS.ProcessEnv, problems: ConfigProblem[
     const upper = name.toUpperCase();
     const timeoutRaw = readEnv(env, `BRAIN_${upper}_TIMEOUT_MS`);
     const effortRaw = readEnv(env, `BRAIN_${upper}_EFFORT`);
-    let effort: Effort | null = name === "codex" ? DEFAULT_CODEX_EFFORT : null;
+    let effort: Effort | null = name === "codex" ? DEFAULT_CODEX_EFFORT : name === "deepseek" ? "max" : null;
     if (effortRaw !== null) {
       if ((EFFORTS as readonly string[]).includes(effortRaw.toLowerCase())) effort = effortRaw.toLowerCase() as Effort;
       else problems.push({ field: `BRAIN_${upper}_EFFORT`, message: `expected one of ${EFFORTS.join(", ")}, got "${effortRaw}"` });
@@ -837,7 +845,7 @@ export function readBrainConfig(env: NodeJS.ProcessEnv, problems: ConfigProblem[
       if (m && raw !== null) modelByPrefix[m[1]!] = raw;
     }
     engines[name] = {
-      model: readEnv(env, `BRAIN_${upper}_MODEL`) ?? (name === "claude" ? DEFAULT_CLAUDE_MODEL : name === "codex" ? DEFAULT_CODEX_MODEL : null),
+      model: readEnv(env, `BRAIN_${upper}_MODEL`) ?? (name === "deepseek" ? "deepseek/deepseek-flash" : name === "claude" ? DEFAULT_CLAUDE_MODEL : name === "codex" ? DEFAULT_CODEX_MODEL : null),
       modelByPrefix,
       timeoutMs: timeoutRaw === null ? defaultTimeout : parseInteger(timeoutRaw, `BRAIN_${upper}_TIMEOUT_MS`, problems, { min: 1_000, max: 3_600_000 }),
       effort,
@@ -846,6 +854,10 @@ export function readBrainConfig(env: NodeJS.ProcessEnv, problems: ConfigProblem[
       maxCalls: maxCallsOf(env, name, problems),
     };
   }
+  let runProfile: BrainRunProfile | undefined;
+  try { runProfile = parseBrainRunProfile(env["BRAIN_RUN_CONFIG"]); }
+  catch { problems.push({ field: "BRAIN_RUN_CONFIG", message: "invalid per-run brain configuration" }); }
+  if (runProfile) engines[runProfile.engine].effort = runProfile.effort;
   const budgetRaw = readEnv(env, "BRAIN_CLAUDE_MAX_BUDGET_USD");
   const maxBudgetUsd = budgetRaw === null ? null : Number(budgetRaw);
   if (maxBudgetUsd !== null && !(Number.isFinite(maxBudgetUsd) && maxBudgetUsd > 0)) problems.push({ field: "BRAIN_CLAUDE_MAX_BUDGET_USD", message: `expected a positive number, got "${budgetRaw}"` });
@@ -891,7 +903,20 @@ export function readBrainConfig(env: NodeJS.ProcessEnv, problems: ConfigProblem[
   const prefixRaw = (readEnv(env, "KNOWLEDGE_PREFIX") ?? "off").toLowerCase();
   if (prefixRaw !== "off" && prefixRaw !== "full") problems.push({ field: "KNOWLEDGE_PREFIX", message: `expected off or full, got "${prefixRaw}"` });
   const knowledgePrefix: KnowledgePrefixMode = prefixRaw === "full" ? "full" : "off";
+  const agentInt = (key: string, fallback: number, min: number, max: number) => readEnv(env, key) === null ? fallback : parseInteger(readEnv(env, key)!, key, problems, { min, max });
+  const agent = {
+    maxToolCalls: agentInt("BRAIN_MAX_TOOL_CALLS", 8, 1, 64),
+    codexTotalMs: agentInt("BRAIN_AGENT_CODEX_TOTAL_MS", 300_000, 3_000, 3_600_000),
+    deepseekTotalMs: agentInt("BRAIN_AGENT_DEEPSEEK_TOTAL_MS", 900_000, 3_000, 3_600_000),
+    codexAnswerMs: agentInt("BRAIN_AGENT_CODEX_ANSWER_MS", 120_000, 1_000, 3_600_000),
+    deepseekAnswerMs: agentInt("BRAIN_AGENT_DEEPSEEK_ANSWER_MS", 300_000, 1_000, 3_600_000),
+  };
+  for (const name of ["codex", "deepseek"] as const) if (agent[`${name}AnswerMs`] >= agent[`${name}TotalMs`]) problems.push({ field: `BRAIN_AGENT_${name.toUpperCase()}_ANSWER_MS`, message: "answer reserve must be smaller than total budget" });
   return {
+    agent,
+    productionEngine: readEnv(env, "BRAIN_ENGINE") === null ? "codex" : engine === "deepseek" ? "deepseek" : "codex",
+    dsh: { bin: readEnv(env, "BRAIN_DSH_BIN") ?? join(homedir(), ".local/bin/dsh"), stallMs: agentInt("BRAIN_DSH_STALL_MS", 180_000, 1_000, 3_600_000) },
+    ...(runProfile ? { runProfile } : {}),
     engine,
     byPrefix,
     fallback,

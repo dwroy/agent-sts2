@@ -18,6 +18,7 @@
 | [代码提案闭环](learning-code-proposals.md) | 经验与源码提案、CLI 登记、等待/失败和上线追溯 |
 | [学习者](../learner/README.md) | 任务、参数、权限、产物、正常派发和默认合 live |
 | [控制器包](../agent/README.md) | CLI、测试入口、有效配置和模块入口 |
+| [大脑知识工具模式](brain-agent-mode.md) | #33：Codex app-server / dsh Nova、按局配置、只读知识工具、预算与自然局验收 |
 | [Codex 大脑等待与战绩](codex-only-brain.md) | 原题等待、心跳/取消、成功脑局归类与统计限制 |
 | [Codex Fast](codex-fast.md) | priority 档位与配置生效边界 |
 | [Codex 运维](codex-ops.md) | 调度、持久事件、宿主动作、工作树租约与外部检查 |

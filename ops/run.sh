@@ -32,7 +32,8 @@ if [ "$ROOT" = /home/dw/Projects/agent-sts2 ] \
   export BRAIN_CODEX_PAID_CREDITS=main-silent-codex1-20261015
 fi
 # Roy 2026-10-12: production Codex defaults apply even with a legacy scheduler environment.
-export BRAIN_CODEX_MODEL=gpt-6.1-sol BRAIN_CODEX_EFFORT=xhigh
+export BRAIN_CODEX_MODEL=gpt-6.1-sol BRAIN_CODEX_EFFORT="${BRAIN_CODEX_EFFORT:-high}"
+export BRAIN_ENGINE="${BRAIN_ENGINE:-codex}" BRAIN_DEEPSEEK_EFFORT="${BRAIN_DEEPSEEK_EFFORT:-max}" BRAIN_CODEX_MODE=session
 export PATH="$HOME/.local/node/bin:$PATH"
 sha=$(git rev-parse --short HEAD)$(git diff --quiet HEAD || echo "+dirty")
 ts=$(date +%Y%m%d-%H%M%S)

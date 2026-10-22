@@ -13,12 +13,12 @@ const request: EngineRequest = {
 };
 
 describe("Shared Codex defaults across session entry points", () => {
-  it.each(["IRONCLAD", "SILENT"])("uses GPT-6.1 Sol/xhigh/normal for %s", (character) => {
+  it.each(["IRONCLAD", "SILENT"])("uses GPT-6.1 Sol/high/normal for %s", (character) => {
     for (const legacyTier of [undefined, "default", "priority"]) {
       const config = loadConfig({ CHARACTER: character, BRAIN_CODEX_SERVICE_TIER: legacyTier });
       expect(config.brain.codex.serviceTier).toBe("default");
       expect(config.brain.engines.codex.model).toBe("gpt-6.1-sol");
-      expect(config.brain.engines.codex.effort).toBe("xhigh");
+      expect(config.brain.engines.codex.effort).toBe("high");
     }
   });
 
@@ -64,7 +64,7 @@ describe("Shared Codex defaults across session entry points", () => {
       expect(args).toContain("model_context_window=512000");
       expect(args).toContain("model_auto_compact_token_limit=460800");
       expect(args).toContain('service_tier="default"');
-      expect(args).toContain('model_reasoning_effort="xhigh"');
+      expect(args).toContain('model_reasoning_effort="high"');
       expect(args).toContain("project_doc_max_bytes=0");
       expect(args).toContain("hooks");
     }

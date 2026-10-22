@@ -26,7 +26,7 @@ it.each(["silent", "ironclad"])("activates H1 only for %s and dispatches exactly
   vi.useFakeTimers(); setKnowledgeCharacter(character); setMonsterDbForTests(FIXTURE_DB);
   const sample = fightSample(slimInput(fightBoard({ bossHp: 12 })), null, 7);
   vi.stubEnv("CONSTRUCTION_MODE", "off");
-  const cfg = loadConfig({ CHARACTER: character, BRAIN_LOG: "off", RUN_PLAN: "off", FIGHT_PLAN: "off", BUILD_ONESHOT: "off" });
+  const cfg = loadConfig({ BRAIN_CODEX_EFFORT: "xhigh", CHARACTER: character, BRAIN_LOG: "off", RUN_PLAN: "off", FIGHT_PLAN: "off", BUILD_ONESHOT: "off" });
   cfg.log.decisionLog = join(dir, "decisions.jsonl"); cfg.runPlanLog = join(dir, "run-plans.jsonl"); cfg.fightPlanLog = join(dir, "fight-plans.jsonl");
   const router = new BrainRouter({ config: cfg.brain, codexOnly: true, engine: () => ({ name: "codex", model: "fixed", decide: async (req, signal) => {
     asks++;

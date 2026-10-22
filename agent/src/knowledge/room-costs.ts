@@ -4,6 +4,7 @@
  */
 
 import { readFileSync } from "node:fs";
+import { queryKnowledgeJson } from "./query-sources.js";
 import { bumpDataVersion } from "../core/util/data-version.js";
 import { KNOWLEDGE_DIR, knowledgeFile } from "./files.js";
 
@@ -27,6 +28,8 @@ type RoomCosts = Record<string, Record<string, Record<string, MeasuredRoom>>>;
 let cached: RoomCosts | null = null;
 
 function load(): RoomCosts {
+  const query = queryKnowledgeJson("room-costs.json");
+  if (query !== undefined) return (query?.["by_asc"] as RoomCosts | undefined) ?? {};
   if (cached) return cached;
   try {
     const path = knowledgeFile(KNOWLEDGE_DIR, "room-costs.json");
