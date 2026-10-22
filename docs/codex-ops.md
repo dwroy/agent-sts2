@@ -103,7 +103,7 @@ Roy 授权的静默 boss 校准使用独立模板 `learner/tasks/silent-boss-cal
 目的：长跑的进程在 herdr 里看得见、管得了（Mac 上 `herdr --machine xdwin …`）。托管层是通用的（`ops/herdr-host.sh` + pane 侧的 `ops/herdr-exec.sh`），不含项目逻辑：新 tab 优先跟随实际 ops pane 所在的 workspace；尚无 ops pane 时使用 `sts2-run`（cwd 主检出）。每个 label 一个 tab；label → pane 记在 `ops/codex-ops/herdr.json`。不碰 `agent-sts2`（wD，Claude rc 会话）、geo-crash、codex-gc1。
 
 ```bash
-bash ops/herdr-host.sh status            # label、pane、在不在、忙不忙、前台 PID
+bash ops/herdr-host.sh status            # 稳定 label、可读 title、pane、存活/忙碌、前台 PID
 bash ops/herdr-host.sh run <label> [--pidfile F] [--close-on-exit] [--env K=V]... -- <命令>
 bash ops/herdr-host.sh stop <label>      # ctrl+c、关 pane；只停自己登记的 label
 bash ops/herdr-host.sh attach-hint       # 从 Mac 怎么看
@@ -116,8 +116,22 @@ Roy 2026-10-10 要求学习 tab 与 ops 放在同一 workspace。同名 workspac
 | 键 | 值（默认在前） | 环境变量 | 管什么 |
 |---|---|---|---|
 | ops | exec / herdr | CODEX_OPS_MODE | 叫醒走 `codex exec resume`（无头），还是走 herdr 里的交互 TUI |
-| learners | setsid / herdr | CODEX_OPS_LEARNER_HOST | 学习者批次在 pane `learner-<批次 id>[-postmortem]` 里跑，结束关 pane，最后 30 行留在 `ops/codex-ops/herdr-panes.log` |
+| learners | setsid / herdr | CODEX_OPS_LEARNER_HOST | tab 标题 `学习大脑 · <批次> · <类型>`（复盘、经验更新、策略提案、修复等）；pane label 仍是 `learner-<批次 id>[-postmortem]`，结束照旧关 pane，最后 30 行留在 `ops/codex-ops/herdr-panes.log` |
+| brain_view | herdr / off | CODEX_OPS_BRAIN_VIEW | 只读常驻 tab `对局大脑 · <run_id>`；pane label 固定 `brain-view`。独立关闭视图，不影响对局、学习或 autoplay |
 | autoplay | setsid / herdr | CODEX_OPS_AUTOPLAY_HOST | 动作 autoplay-start 把 `ops/autoplay.sh` 放进 pane `autoplay`；PID 仍写 `autoplay.pid`，autoplay-stop / kill / 卡死检查不变 |
+
+**大脑视图（#36）**：`ops/brain_view.py` 每秒增量读取本实例的 `logs/brain.jsonl`、`brain-wait.jsonl` 和 `run-config.jsonl`。每道已落盘的尝试显示时间、层数、题型、引擎/模型、请求强度、原生日志提供的实际强度、最终选择、理由、耗时；#33 的 `tool_calls` 显示工具名、参数摘要、返回字节数和耗时。等待、恢复、错误、超时和兜底用 `!!!` 标出。题面只显示前 160 字，理由最多 360 字；完整 payload、推理、工具返回正文、SQL/查询内容和外部玩家字段不输出，凭据、地址、邮箱与终端控制符隐藏。日志缺字段显示 `?`，不补推断。工具调用随该尝试完成后落盘显示，尚未落盘的推理与工具进度不可见；单条耗时不冒充跨重试整题总耗时。
+
+视图与对局没有共享控制通道。`run.sh` 在自然进程边界异步尝试启动，原 `stall` tick 可恢复退出的视图；均为 nice 19，不阻塞对局，也不启动新模型、游戏动作或额外调度器。换局按 `run-config.jsonl` 更新同一 tab 的标题；日志轮转、缺失、半行和无效 JSON 可继续读取。视图挂掉只留下闲置 tab，重启复用它。环境可用时也可由 ops 在主运行根执行：
+
+```bash
+nice -n 19 python3 ops/brain_view.py ensure              # 只启动/复用本实例只读视图
+nice -n 19 python3 ops/brain_view.py --logs <日志目录> sample  # 一次性输出已落盘样例，不操作 herdr
+```
+
+写 `brain_view=off` 到 hosting 可单独停视图（通常一秒，标题更新中的 herdr 故障最多延迟一次命令超时），tab 保留；写回 `brain_view=herdr` 后在下个自然启动边界或原 stall tick 恢复。显式 `CODEX_OPS_BRAIN_VIEW` 优先。herdr 不可用时跳过视图，对局照常。
+
+**标题与身份**：只调用 `herdr tab rename` 改显示标题，pane label、批次 id、PID/argv、agent 名称与登记键保持原值。派单器、看门狗、回收及 `herdr-host.sh status/close` 继续按稳定 label 识别；`never_reclaim` 保留 `learner-*` 并保护 `brain-view`。学习日志镜像 tab 也显示 `学习大脑 · …`，结束仍沿原 wrapper/PID 检查关闭。既有学习批次不迁移、不重启；新批次或原日志镜像首次创建/闲置复用时应用标题。
 
 herdr 不可用时（`herdr-host.sh available` 失败）学习者和 autoplay 退回 setsid，ops 叫醒退回 exec（日志里各有一行）。学习者的命令行、权限配置、key 预检、退出码、`learner/runs/*.jsonl`、批次登记都不变；pane 里 `tail -F` 显示 `.out/.err`，批次结束后 drain 放到 setsid 里（不随 pane 关掉）。
 

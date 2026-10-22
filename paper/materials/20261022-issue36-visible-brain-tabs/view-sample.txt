@@ -1,0 +1,34 @@
+固定合成样例；不是自然对局证据。
+对局大脑 · RUN000000001
+
+2026-10-22T01:00:00Z · F12 · reward/card · 题 fixture-q1
+  codex / gpt-6.1-sol · 请求强度 high
+  原生回执强度 high
+  题面（截断）：固定样例：请选择一项。
+  工具 kb_stats (character=silent, ascension=10, query=文本/13字) → 24 B · 20 ms
+  选择：choice=A
+  理由：固定测试理由；[敏感字段已隐藏]；[敏感字段已隐藏]
+  总耗时 1200 ms（本条尝试及已记录首选失败；重问见各条）
+
+2026-10-22T01:00:00Z · F12 · reward/card · 题 fixture-q2
+  codex / gpt-6.1-sol · 请求强度 high
+  原生回执强度 high
+!!! 错误/未接受 timeout
+!!! 超时
+!!! 兜底 time
+  题面（截断）：固定样例：请选择一项。
+  工具 kb_stats (character=silent, ascension=10, query=文本/13字) → 24 B · 20 ms
+  选择：无有效答案
+  总耗时 1200 ms（本条尝试及已记录首选失败；重问见各条）
+
+2026-10-22T01:00:10Z · F12 · run-plan · 题 fixture-plan
+  codex / gpt-6.1-sol · 请求强度 high
+  选择：archetype=固定合成构筑方向, want=["CARD_A"]
+  理由：固定合成计划摘要
+  总耗时 1000 ms（本条尝试及已记录首选失败；重问见各条）
+
+2026-10-22T01:00:11Z · F13 · map/route-plan · 题 fixture-route
+  deepseek / fixture-model · 请求强度 max
+  选择：route=["n1", "n3", "n7"]
+  理由：固定合成路线理由
+  总耗时 900 ms（本条尝试及已记录首选失败；重问见各条）

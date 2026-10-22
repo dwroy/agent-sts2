@@ -16,6 +16,7 @@
 #                                                    --close-on-exit the command replaces the wrapper (pid = the command);
 #                                                    with it the wrapper waits, then closes the pane, keeping its last
 #                                                    lines in the tail log (pid = the wrapper, the command's parent)
+#   bash ops/herdr-host.sh title <label> <title>       rename only the recorded tab; keep its pane label
 #   bash ops/herdr-host.sh list | status [--json]    recorded labels: pane, alive (pane exists), busy, foreground pids
 #   bash ops/herdr-host.sh stop <label> [--keep-pane]  ctrl+c, wait up to 10 s, close the pane (recorded labels only)
 #   bash ops/herdr-host.sh close <label> [--pane ID] [--tail-log F] [--delay S]
@@ -58,16 +59,19 @@ state_set() {  # state_set <label> <pane id> [<workspace id>]
 import time
 d = d if isinstance(d, dict) else {}
 label, pane, ws = sys.argv[1], sys.argv[2], sys.argv[3]
+title = sys.argv[5] or (d.get("panes", {}).get(label) or {}).get("title")
 panes = d.setdefault("panes", {})
 if pane:
     panes[label] = {"pane_id": pane, "since": time.strftime("%Y-%m-%d %H:%M:%S")}
+    if title:
+        panes[label]["title"] = title
 else:
     panes.pop(label, None)
 if ws:
     d["workspace_id"] = ws
 d["workspace_label"] = sys.argv[4]
 json.dump(d, sys.stdout, indent=1, sort_keys=True)
-print()' "$1" "$2" "${3:-}" "$WS_LABEL" > "$tmp" && mv "$tmp" "$STATE"
+print()' "$1" "$2" "${3:-}" "$WS_LABEL" "${4:-}" > "$tmp" && mv "$tmp" "$STATE"
 }
 # Serialise state changes and pane creation between concurrent callers.
 lock() { mkdir -p "$(dirname "$STATE")"; exec 9> "$STATE.lock"; flock -w 30 9 || die "state lock busy"; }
@@ -128,6 +132,22 @@ for p in ((d or {}).get("result") or {}).get("panes", []):
         print(p["pane_id"]); break' "$2"
 }
 
+# Titles are presentation only. All ownership, watchdog and retirement checks use pane labels.
+set_title() {
+  local label="$1" pane="$2" title="$3" tab
+  [ "$(pane_label "$pane")" = "$label" ] || return 1
+  tab=$(pane_json "$pane" | py 'print((((d or {}).get("result") or {}).get("pane") or {}).get("tab_id", ""))')
+  [ -n "$tab" ] || return 1
+  h tab rename "$tab" "$title" > /dev/null || return 1
+  state_set "$label" "$pane" "" "$title"
+}
+learner_title() {
+  local title
+  [ -f "$OPS_DIR/herdr_titles.py" ] || return 0
+  title=$(python3 "$OPS_DIR/herdr_titles.py" "$1")
+  [ -z "$title" ] || set_title "$1" "$2" "$title" || echo 'herdr-host: learner title update failed; pane label retained' >&2
+}
+
 open_pane() {
   local label="$1"; shift
   [[ "$label" =~ $LABEL_RE ]] || die "bad label: $label" 2
@@ -152,13 +172,14 @@ open_pane() {
   [ -n "$pane" ] || pane=$(find_labelled "$ws" "$label")
   if [ -n "$pane" ]; then
     pane_busy "$pane"; busy=$?
-    if [ $busy -eq 1 ]; then state_set "$label" "$pane" "$ws"; echo "$pane"; return 0; fi
+    if [ $busy -eq 1 ]; then state_set "$label" "$pane" "$ws"; learner_title "$label" "$pane"; echo "$pane"; return 0; fi
     [ $busy -eq 0 ] && die "pane $pane ($label) is busy: $(pane_fg "$pane")" 4
   fi
   pane=$(h tab create --workspace "$ws" --cwd "$WS_CWD" --label "$label" --no-focus "${envs[@]}" | py 'print(d["result"]["root_pane"]["pane_id"])') \
     || die "tab create failed"
   h pane rename "$pane" "$label" > /dev/null || die "pane rename failed"
   state_set "$label" "$pane" "$ws"
+  learner_title "$label" "$pane"
   # The new shell needs a moment before it takes input (pane run on a pane still starting loses the line).
   for _ in $(seq 1 50); do pane_busy "$pane"; [ $? -eq 1 ] && break; sleep 0.2; done
   echo "$pane"
@@ -236,26 +257,28 @@ stop() {
 }
 
 status() {
-  local json="${1:-}" label pane alive busy fg rows=""
+  local json="${1:-}" label pane alive busy fg title rows=""
   for label in $(state_labels); do
     pane=$(state_get "$label"); alive=no; busy=no; fg=""
     if [ -n "$pane" ] && [ "$(pane_label "$pane")" = "$label" ]; then
       alive=yes; pane_busy "$pane" && { busy=yes; fg=$(pane_fg "$pane"); }
     fi
-    rows+="$label	$pane	$alive	$busy	$fg"$'\n'
+    title=$(py 'print(((d or {}).get("panes", {}).get(sys.argv[1]) or {}).get("title", ""))' "$label" < "$STATE")
+    rows+="$label	$pane	$alive	$busy	$fg	$title"$'\n'
   done
   if [ "$json" = --json ]; then
     printf '%s' "$rows" | python3 -c '
 import json, sys
 out = []
 for line in sys.stdin.read().splitlines():
-    label, pane, alive, busy, fg = (line.split("\t") + [""] * 5)[:5]
+    label, pane, alive, busy, fg, title = (line.split("\t") + [""] * 6)[:6]
     out.append({"label": label, "pane_id": pane, "alive": alive == "yes", "busy": busy == "yes",
-                "pids": [int(x.split(":")[0]) for x in fg.split() if x.split(":")[0].isdigit()]})
+                "pids": [int(x.split(":")[0]) for x in fg.split() if x.split(":")[0].isdigit()],
+                **({"title": title} if title else {})})
 print(json.dumps(out))'
   else
     echo "workspace $WS_LABEL ($(workspace_id || true)); state $STATE"
-    [ -n "$rows" ] && printf 'label\tpane\talive\tbusy\tforeground\n%s' "$rows" | column -t -s $'\t' || echo "(no panes recorded)"
+    [ -n "$rows" ] && printf 'label\tpane\talive\tbusy\tforeground\ttitle\n%s' "$rows" | column -t -s $'\t' || echo "(no panes recorded)"
   fi
 }
 
@@ -265,6 +288,12 @@ case "$cmd" in
   ensure-workspace) available || die "herdr unavailable"; ensure_workspace ;;
   open-pane) [ $# -ge 1 ] || die "usage: open-pane <label>" 2; available || die "herdr unavailable"; lock; open_pane "$@" ;;
   run) [ $# -ge 1 ] || die "usage: run <label> [options] -- <cmd>" 2; [[ "$1" =~ $LABEL_RE ]] || die "bad label: $1" 2; available || die "herdr unavailable"; run "$@" ;;
+  title)
+    [ $# -eq 2 ] || die "usage: title <label> <title>" 2
+    [[ "$1" =~ $LABEL_RE ]] || die "bad label" 2
+    [[ -n "$2" && ${#2} -le 180 && "$2" != *[$'\001'-$'\037'$'\177']* ]] || die "bad title" 2
+    lock; pane=$(state_get "$1"); [ -n "$pane" ] || die "label is not recorded"
+    set_title "$1" "$pane" "$2" || die "title update failed" ;;
   close) [ $# -ge 1 ] || die "usage: close <label>" 2; close_pane "$@" ;;
   stop) [ $# -ge 1 ] || die "usage: stop <label> [--keep-pane]" 2; available || die "herdr unavailable"; stop "$@" ;;
   list|status) status "${1:-}" ;;
