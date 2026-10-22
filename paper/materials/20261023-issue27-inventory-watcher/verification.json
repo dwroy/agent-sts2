@@ -1,0 +1,167 @@
+{
+  "at": "2026-10-23T06:47:30+08:00",
+  "ops_comment": 6352969673,
+  "ops_reconciliation": "paper/materials/20261023-0643-ops/ledger-inventory-reconciliation.json",
+  "ops_reconciliation_sha256": "25b3caa07a0d6e022efb02c70f599cf35fb7e7d51347b4da3e4c7da830cea642",
+  "ops_notices_audit_sha256": "fa5eb709db05be856768401c11446d671d053768525201e0261ad9f866659ec1",
+  "snapshots": [
+    {
+      "path": ".artifacts/ops-notices-20261023-0643/runs.jsonl",
+      "sha256": "2907671ad4670476abfc13192433212c1a57f5315a92afdf14a2f3c2602da2d6",
+      "bytes": 431100,
+      "verified": true
+    },
+    {
+      "path": ".artifacts/ops-notices-20261023-0643/ledger.jsonl",
+      "sha256": "2a5c3b989c06aa20c3f62192a481f898d9d1076e3e293d0db7097470e037f9df",
+      "bytes": 28908141,
+      "verified": true
+    },
+    {
+      "path": ".artifacts/ops-notices-20261023-0643/versions.json",
+      "sha256": "53a8ab5a768825789851d58f0ae781f5b950eae4c56b627fcbc88838d9922028",
+      "bytes": 439201,
+      "verified": true
+    }
+  ],
+  "run_id": "0VBCQS9V0N87",
+  "character": "SILENT",
+  "ascension": 10,
+  "three_ledger_ids": [
+    "silent-0019",
+    "silent-0039",
+    "silent-0490"
+  ],
+  "independent_frozen_snapshot_check": {
+    "command": [
+      "python3",
+      "-B",
+      "learner/ledger.py",
+      "check"
+    ],
+    "env": {
+      "LEDGER_FILE": "/home/dw/Projects/agent-sts2/.artifacts/ops-notices-20261023-0643/ledger.jsonl",
+      "LEDGER_RUNS": "/home/dw/Projects/agent-sts2/.artifacts/ops-notices-20261023-0643/runs.jsonl",
+      "LEDGER_VERSIONS": "/home/dw/Projects/agent-sts2/.artifacts/ops-notices-20261023-0643/versions.json"
+    },
+    "rc": 0,
+    "stdout": "/home/dw/Projects/agent-sts2/.artifacts/ops-notices-20261023-0643/ledger.jsonl: 575 item(s), 0 problem(s)\n",
+    "code_sha256": {
+      "learner/ledger.py": "9393e1964f4805b66c3768a38343e10bb8b44875349263d69898b9c905e622a4",
+      "learner/external_evidence.py": "2c85ee937cba6984d7d12b3ba1715c9f3e538789285f7de11af118e82390b90c"
+    },
+    "snapshots_unchanged": true
+  },
+  "original_learner_stdout": {
+    "path": "learner/runs/20261022-233748-9db2ee6e-f26f-402e-8413-6f87a6864ebe-issue-27-brain-strategies-task/audit/ledger-check.stdout.txt",
+    "sha256": "bf13375c4e7d22a31ebaff72f1abbd5b3344403b13e00d7be7edd057efd8d2f3",
+    "unchanged": true,
+    "problems": 3,
+    "original_rc": 1
+  },
+  "notice_refs_verified": 15,
+  "evidence_windows_verified": 67,
+  "queue_refs": [
+    {
+      "path": "ops/codex-ops/queue/1792708982367412201-learning-attention.md",
+      "verified": false,
+      "state": "absent-at-current-check-original-ops-audit-preserved"
+    },
+    {
+      "path": "ops/codex-ops/queue/1792708982367909274-learning-attention.md",
+      "verified": false,
+      "state": "absent-at-current-check-original-ops-audit-preserved"
+    },
+    {
+      "path": "ops/codex-ops/queue/1792708982368383898-learning-attention.md",
+      "verified": false,
+      "state": "absent-at-current-check-original-ops-audit-preserved"
+    },
+    {
+      "path": "ops/codex-ops/queue/1792708982368892340-learning-attention.md",
+      "verified": false,
+      "state": "absent-at-current-check-original-ops-audit-preserved"
+    },
+    {
+      "path": "ops/codex-ops/queue/1792708982369364004-learning-attention.md",
+      "verified": false,
+      "state": "absent-at-current-check-original-ops-audit-preserved"
+    },
+    {
+      "path": "ops/codex-ops/queue/1792708982369754925-learning-attention.md",
+      "verified": false,
+      "state": "absent-at-current-check-original-ops-audit-preserved"
+    },
+    {
+      "path": "ops/codex-ops/queue/1792708982370304893-learning-attention.md",
+      "verified": false,
+      "state": "absent-at-current-check-original-ops-audit-preserved"
+    },
+    {
+      "path": "ops/codex-ops/queue/1792708982370747820-learning-attention.md",
+      "verified": false,
+      "state": "absent-at-current-check-original-ops-audit-preserved"
+    },
+    {
+      "path": "ops/codex-ops/queue/1792708982371204406-learning-attention.md",
+      "verified": false,
+      "state": "absent-at-current-check-original-ops-audit-preserved"
+    },
+    {
+      "path": "ops/codex-ops/queue/1792708982371668201-learning-attention.md",
+      "verified": false,
+      "state": "absent-at-current-check-original-ops-audit-preserved"
+    },
+    {
+      "path": "ops/codex-ops/queue/1792708982372701233-learning-attention.md",
+      "verified": false,
+      "state": "absent-at-current-check-original-ops-audit-preserved"
+    },
+    {
+      "path": "ops/codex-ops/queue/1792708982373075415-learning-attention.md",
+      "verified": false,
+      "state": "absent-at-current-check-original-ops-audit-preserved"
+    },
+    {
+      "path": "ops/codex-ops/queue/1792708982373522681-learning-attention.md",
+      "verified": false,
+      "state": "absent-at-current-check-original-ops-audit-preserved"
+    },
+    {
+      "path": "ops/codex-ops/queue/1792708982373922431-learning-attention.md",
+      "verified": false,
+      "state": "absent-at-current-check-original-ops-audit-preserved"
+    },
+    {
+      "path": "ops/codex-ops/queue/1792708982374549254-learning-attention.md",
+      "verified": false,
+      "state": "absent-at-current-check-original-ops-audit-preserved"
+    }
+  ],
+  "CLI": {
+    "path": "ops/learning_requests.py",
+    "sha256": "3f7afefb2307a420dd35a28e94f6b20c6bdc76ae30ce8f5cffb0dd62633e13e4",
+    "bytes": 64953,
+    "verified": true
+  },
+  "formal_watcher_received": false,
+  "formal_roy_notified": false,
+  "CLI_retried": false,
+  "registry_modified": false,
+  "original_relay_preserved": true,
+  "strategies": [
+    {
+      "path": "knowledge/characters/silent/strategy-entries.json",
+      "sha256": "75ada83263bc907c20d691f4a31d424184dcf0b7efd290748f3385eae5bc8808",
+      "count": 8
+    },
+    {
+      "path": ".worktrees/live/knowledge/characters/silent/strategy-entries.json",
+      "sha256": "9df3740b4254daade365a4c3cf48b25b2d840e9f656bcda50e64735a79b3d95e",
+      "count": 3
+    }
+  ],
+  "actual_live": "e925357ad984e4d88509ab0d791388be047f3428",
+  "full_or_model_or_dataset_or_game_started": false,
+  "parent_closed": false
+}

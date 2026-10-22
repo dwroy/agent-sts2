@@ -5929,3 +5929,5 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
 - 2026-10-23T06:27:25+08:00 [ops] #33/#26 V6-R417实际live e925357ad/行为c60de438、58叶原full6205过2跳/2534输入核同，统一号/绑定/双通知/自有drain释放已验；原autoplay自然续局Y3824FJLSUXY固定10题全完成/2工具/0兜底/均值13.46s P95 27.38s，10原生high独核；保留run-config git ENOBUFS与9空receipt/#26统计自然消费待，不关科学父、不重full/模型/试验局。原件paper/materials/20261023-0621-ops/publication-verification.json、natural-report.json。
 
 - 2026-10-23T06:45:25+08:00 [ops] 十五重复通知原文/67证据核同，正式两角色ACK仍受旧CLI兼容阻塞；补核#27三条并行记录引用0VBCQS9V0N87存在于ops当前清单，冻结575项ledger check rc0，原learner冻结check rc1保留，不代科学来源或shipped/自然采用。原件paper/materials/20261023-0643-ops/ledger-inventory-reconciliation.json、notices-audit.json。
+
+- 2026-10-23T06:47:48+08:00 [watcher] #27实读ops6352969673，三条0019/0039/0490并行账本及Silent A10局0VBCQS9V0N87原窗口SHA核同；独立用ops冻结ledger/runs/versions复放check为575项0问题、输入未变，原学习者冻结rc1/三问题保留，不扩大冻结/代逐帧科学核证或修另案24条状态。15通知/67证据窗核同，15临时队列引用当前已不在原路径、不重送/不推交付；正式ACK CLI仍3f7afefb阻塞/pending、不重试或代填。R417仍首三条、main八条，后五条原发布队列/自然命中与科学父保留；无full/模型/dataset/生产变更，无新裁决。材料paper/materials/20261023-issue27-inventory-watcher/。
