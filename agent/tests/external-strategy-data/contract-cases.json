@@ -1,0 +1,544 @@
+[
+  {
+    "name": "external without invented run/floor",
+    "valid": true,
+    "set": {},
+    "delete": []
+  },
+  {
+    "name": "missing type",
+    "valid": false,
+    "set": {},
+    "delete": [
+      "evidence.0.type"
+    ]
+  },
+  {
+    "name": "missing source",
+    "valid": false,
+    "set": {},
+    "delete": [
+      "evidence.0.source"
+    ]
+  },
+  {
+    "name": "missing url",
+    "valid": false,
+    "set": {},
+    "delete": [
+      "evidence.0.url"
+    ]
+  },
+  {
+    "name": "missing version",
+    "valid": false,
+    "set": {},
+    "delete": [
+      "evidence.0.version"
+    ]
+  },
+  {
+    "name": "missing dataset_sha256",
+    "valid": false,
+    "set": {},
+    "delete": [
+      "evidence.0.dataset_sha256"
+    ]
+  },
+  {
+    "name": "missing downloaded_at",
+    "valid": false,
+    "set": {},
+    "delete": [
+      "evidence.0.downloaded_at"
+    ]
+  },
+  {
+    "name": "missing filters",
+    "valid": false,
+    "set": {},
+    "delete": [
+      "evidence.0.filters"
+    ]
+  },
+  {
+    "name": "missing statistic",
+    "valid": false,
+    "set": {},
+    "delete": [
+      "evidence.0.statistic"
+    ]
+  },
+  {
+    "name": "missing denominator",
+    "valid": false,
+    "set": {},
+    "delete": [
+      "evidence.0.denominator"
+    ]
+  },
+  {
+    "name": "missing design",
+    "valid": false,
+    "set": {},
+    "delete": [
+      "evidence.0.design"
+    ]
+  },
+  {
+    "name": "missing limitations",
+    "valid": false,
+    "set": {},
+    "delete": [
+      "evidence.0.limitations"
+    ]
+  },
+  {
+    "name": "missing license",
+    "valid": false,
+    "set": {},
+    "delete": [
+      "evidence.0.license"
+    ]
+  },
+  {
+    "name": "aggregate forbids run",
+    "valid": false,
+    "set": {
+      "evidence.0.run": "SILENT000001"
+    },
+    "delete": []
+  },
+  {
+    "name": "aggregate forbids floor",
+    "valid": false,
+    "set": {
+      "evidence.0.floor": 0
+    },
+    "delete": []
+  },
+  {
+    "name": "zero denominator",
+    "valid": false,
+    "set": {
+      "evidence.0.denominator.n": 0
+    },
+    "delete": []
+  },
+  {
+    "name": "boolean denominator",
+    "valid": false,
+    "set": {
+      "evidence.0.denominator.n": true
+    },
+    "delete": []
+  },
+  {
+    "name": "invalid denominator unit",
+    "valid": false,
+    "set": {
+      "evidence.0.denominator.unit": "unknown",
+      "evidence.0.denominator.n": 1
+    },
+    "delete": []
+  },
+  {
+    "name": "unknown nested field",
+    "valid": false,
+    "set": {
+      "evidence.0.statistic.name": "rate",
+      "evidence.0.statistic.value": 0.2,
+      "evidence.0.statistic.unit": "fraction",
+      "evidence.0.statistic.floor": 0
+    },
+    "delete": []
+  },
+  {
+    "name": "reversed interval",
+    "valid": false,
+    "set": {
+      "evidence.0.interval.low": 1,
+      "evidence.0.interval.high": 0,
+      "evidence.0.interval.method": "fixture"
+    },
+    "delete": []
+  },
+  {
+    "name": "bad date",
+    "valid": false,
+    "set": {
+      "evidence.0.downloaded_at": "2026-02-30"
+    },
+    "delete": []
+  },
+  {
+    "name": "bad SHA",
+    "valid": false,
+    "set": {
+      "evidence.0.dataset_sha256": "bad"
+    },
+    "delete": []
+  },
+  {
+    "name": "wrong character",
+    "valid": false,
+    "set": {
+      "evidence.0.filters.character": "ironclad",
+      "evidence.0.filters.criteria": "fixture"
+    },
+    "delete": []
+  },
+  {
+    "name": "causal design",
+    "valid": false,
+    "set": {
+      "evidence.0.design": "causal"
+    },
+    "delete": []
+  },
+  {
+    "name": "external cannot be own repeat",
+    "valid": false,
+    "set": {
+      "evidence.0.role": "repeat"
+    },
+    "delete": []
+  },
+  {
+    "name": "empty limits",
+    "valid": false,
+    "set": {
+      "evidence.0.limitations": []
+    },
+    "delete": []
+  },
+  {
+    "name": "external confidence over cap",
+    "valid": false,
+    "set": {
+      "confidence": 0.5
+    },
+    "delete": []
+  },
+  {
+    "name": "external mislabeled own",
+    "valid": false,
+    "set": {
+      "source": "own"
+    },
+    "delete": []
+  },
+  {
+    "name": "mixed separate denominators",
+    "valid": true,
+    "set": {
+      "source": "mixed",
+      "confidence": 0.75,
+      "evidence": [
+        {
+          "run": "SILENT000001",
+          "floor": 4
+        },
+        {
+          "type": "external_aggregate",
+          "source": "external:sts2fun",
+          "url": "https://sts2.fun/static/sts2_public.db.zst",
+          "version": "v0.111",
+          "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+          "downloaded_at": "2026-10-21",
+          "filters": {
+            "character": "silent",
+            "ascension": 10,
+            "criteria": "character='SILENT' AND ascension=10 AND n_players=1 AND is_valid=1 AND was_abandoned=0 AND has_modifiers=0; version=v0.111; act=1; table=skip"
+          },
+          "statistic": {
+            "name": "skip.rate",
+            "value": 0.10941609679116254,
+            "unit": "fraction of reward screens"
+          },
+          "denominator": {
+            "unit": "rewards",
+            "n": 13307
+          },
+          "interval": {
+            "low": 0.0595123436377582,
+            "high": 0.16450124705081484,
+            "method": "player-cluster bootstrap (source cluster_ci)"
+          },
+          "design": "observational",
+          "limitations": [
+            "自选上传样本，非随机抽样。",
+            "观察性统计，不能推断跳过或拿牌的因果收益。",
+            "奖励屏幕分母不是独立局数或玩家数，版本与本系统口径不同。"
+          ],
+          "license": "No explicit dataset redistribution license found on public FAQ; aggregate statistics with attribution only; no raw redistribution.",
+          "ref": "knowledge/external/sts2fun/silent-a10.json#/tables/skip; version=v0.111,act=1"
+        }
+      ],
+      "evidence_status": "aligned"
+    },
+    "delete": []
+  },
+  {
+    "name": "mixed missing comparison",
+    "valid": false,
+    "set": {
+      "source": "mixed",
+      "confidence": 0.75,
+      "evidence": [
+        {
+          "run": "SILENT000001",
+          "floor": 4
+        },
+        {
+          "type": "external_aggregate",
+          "source": "external:sts2fun",
+          "url": "https://sts2.fun/static/sts2_public.db.zst",
+          "version": "v0.111",
+          "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+          "downloaded_at": "2026-10-21",
+          "filters": {
+            "character": "silent",
+            "ascension": 10,
+            "criteria": "character='SILENT' AND ascension=10 AND n_players=1 AND is_valid=1 AND was_abandoned=0 AND has_modifiers=0; version=v0.111; act=1; table=skip"
+          },
+          "statistic": {
+            "name": "skip.rate",
+            "value": 0.10941609679116254,
+            "unit": "fraction of reward screens"
+          },
+          "denominator": {
+            "unit": "rewards",
+            "n": 13307
+          },
+          "interval": {
+            "low": 0.0595123436377582,
+            "high": 0.16450124705081484,
+            "method": "player-cluster bootstrap (source cluster_ci)"
+          },
+          "design": "observational",
+          "limitations": [
+            "自选上传样本，非随机抽样。",
+            "观察性统计，不能推断跳过或拿牌的因果收益。",
+            "奖励屏幕分母不是独立局数或玩家数，版本与本系统口径不同。"
+          ],
+          "license": "No explicit dataset redistribution license found on public FAQ; aggregate statistics with attribution only; no raw redistribution.",
+          "ref": "knowledge/external/sts2fun/silent-a10.json#/tables/skip; version=v0.111,act=1"
+        }
+      ]
+    },
+    "delete": []
+  },
+  {
+    "name": "conflict preserved",
+    "valid": true,
+    "set": {
+      "source": "mixed",
+      "evidence": [
+        {
+          "run": "SILENT000001",
+          "floor": 4,
+          "role": "contradict"
+        },
+        {
+          "type": "external_aggregate",
+          "source": "external:sts2fun",
+          "url": "https://sts2.fun/static/sts2_public.db.zst",
+          "version": "v0.111",
+          "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+          "downloaded_at": "2026-10-21",
+          "filters": {
+            "character": "silent",
+            "ascension": 10,
+            "criteria": "character='SILENT' AND ascension=10 AND n_players=1 AND is_valid=1 AND was_abandoned=0 AND has_modifiers=0; version=v0.111; act=1; table=skip"
+          },
+          "statistic": {
+            "name": "skip.rate",
+            "value": 0.10941609679116254,
+            "unit": "fraction of reward screens"
+          },
+          "denominator": {
+            "unit": "rewards",
+            "n": 13307
+          },
+          "interval": {
+            "low": 0.0595123436377582,
+            "high": 0.16450124705081484,
+            "method": "player-cluster bootstrap (source cluster_ci)"
+          },
+          "design": "observational",
+          "limitations": [
+            "自选上传样本，非随机抽样。",
+            "观察性统计，不能推断跳过或拿牌的因果收益。",
+            "奖励屏幕分母不是独立局数或玩家数，版本与本系统口径不同。"
+          ],
+          "license": "No explicit dataset redistribution license found on public FAQ; aggregate statistics with attribution only; no raw redistribution.",
+          "ref": "knowledge/external/sts2fun/silent-a10.json#/tables/skip; version=v0.111,act=1"
+        }
+      ],
+      "evidence_status": "conflict"
+    },
+    "delete": []
+  },
+  {
+    "name": "contradiction cannot unlock confidence",
+    "valid": false,
+    "set": {
+      "source": "mixed",
+      "confidence": 0.75,
+      "evidence": [
+        {
+          "run": "SILENT000001",
+          "floor": 4,
+          "role": "contradict"
+        },
+        {
+          "type": "external_aggregate",
+          "source": "external:sts2fun",
+          "url": "https://sts2.fun/static/sts2_public.db.zst",
+          "version": "v0.111",
+          "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+          "downloaded_at": "2026-10-21",
+          "filters": {
+            "character": "silent",
+            "ascension": 10,
+            "criteria": "character='SILENT' AND ascension=10 AND n_players=1 AND is_valid=1 AND was_abandoned=0 AND has_modifiers=0; version=v0.111; act=1; table=skip"
+          },
+          "statistic": {
+            "name": "skip.rate",
+            "value": 0.10941609679116254,
+            "unit": "fraction of reward screens"
+          },
+          "denominator": {
+            "unit": "rewards",
+            "n": 13307
+          },
+          "interval": {
+            "low": 0.0595123436377582,
+            "high": 0.16450124705081484,
+            "method": "player-cluster bootstrap (source cluster_ci)"
+          },
+          "design": "observational",
+          "limitations": [
+            "自选上传样本，非随机抽样。",
+            "观察性统计，不能推断跳过或拿牌的因果收益。",
+            "奖励屏幕分母不是独立局数或玩家数，版本与本系统口径不同。"
+          ],
+          "license": "No explicit dataset redistribution license found on public FAQ; aggregate statistics with attribution only; no raw redistribution.",
+          "ref": "knowledge/external/sts2fun/silent-a10.json#/tables/skip; version=v0.111,act=1"
+        }
+      ],
+      "evidence_status": "conflict"
+    },
+    "delete": []
+  },
+  {
+    "name": "contradiction cannot claim alignment",
+    "valid": false,
+    "set": {
+      "source": "mixed",
+      "evidence": [
+        {
+          "run": "SILENT000001",
+          "floor": 4,
+          "role": "contradict"
+        },
+        {
+          "type": "external_aggregate",
+          "source": "external:sts2fun",
+          "url": "https://sts2.fun/static/sts2_public.db.zst",
+          "version": "v0.111",
+          "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+          "downloaded_at": "2026-10-21",
+          "filters": {
+            "character": "silent",
+            "ascension": 10,
+            "criteria": "character='SILENT' AND ascension=10 AND n_players=1 AND is_valid=1 AND was_abandoned=0 AND has_modifiers=0; version=v0.111; act=1; table=skip"
+          },
+          "statistic": {
+            "name": "skip.rate",
+            "value": 0.10941609679116254,
+            "unit": "fraction of reward screens"
+          },
+          "denominator": {
+            "unit": "rewards",
+            "n": 13307
+          },
+          "interval": {
+            "low": 0.0595123436377582,
+            "high": 0.16450124705081484,
+            "method": "player-cluster bootstrap (source cluster_ci)"
+          },
+          "design": "observational",
+          "limitations": [
+            "自选上传样本，非随机抽样。",
+            "观察性统计，不能推断跳过或拿牌的因果收益。",
+            "奖励屏幕分母不是独立局数或玩家数，版本与本系统口径不同。"
+          ],
+          "license": "No explicit dataset redistribution license found on public FAQ; aggregate statistics with attribution only; no raw redistribution.",
+          "ref": "knowledge/external/sts2fun/silent-a10.json#/tables/skip; version=v0.111,act=1"
+        }
+      ],
+      "evidence_status": "aligned"
+    },
+    "delete": []
+  },
+  {
+    "name": "synthetic aggregate run disguised as own",
+    "valid": false,
+    "set": {
+      "source": "own",
+      "evidence": [
+        {
+          "run": "aggregate:sts2fun",
+          "floor": 1
+        }
+      ]
+    },
+    "delete": []
+  },
+  {
+    "name": "own zero floor rejected",
+    "valid": false,
+    "set": {
+      "source": "own",
+      "evidence": [
+        {
+          "run": "SILENT000001",
+          "floor": 0
+        }
+      ]
+    },
+    "delete": []
+  },
+  {
+    "name": "array role not a string",
+    "valid": false,
+    "set": {
+      "evidence.0.role": [
+        "support"
+      ]
+    },
+    "delete": []
+  },
+  {
+    "name": "array denominator unit not a string",
+    "valid": false,
+    "set": {
+      "evidence.0.denominator.unit": [
+        "rewards"
+      ]
+    },
+    "delete": []
+  },
+  {
+    "name": "array comparison not a string",
+    "valid": false,
+    "set": {
+      "evidence_status": [
+        "aligned"
+      ]
+    },
+    "delete": []
+  }
+]
