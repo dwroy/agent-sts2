@@ -32,6 +32,7 @@ dispatcher:
   state: ops/codex-ops/agent-board.json
   sessions: ops/codex-ops/issue-sessions.json
   inbox: ops/inbox-dev.md
+  claude_inbox: ops/codex-ops/inbox-claude.md
   digest: ops/codex-ops/board-digest.md
   pause_files: [ops/codex-ops/PAUSE, ops/codex-ops/LLM_DRAIN]
   interval_minutes: 5
@@ -64,4 +65,5 @@ session:
     完整 Vitest、知识重建和大批量模拟经 python3 ops/board_heavy.py dev -- <命令> 排队；集成员 integrator、ops 上线 ops、学习 learner、离线 experiment。
     同区域冲突与同文件合入顺序见 docs/github-issues-workflow.md；启用前各角色沿用原流程。
     改动启动入口、行为环境或其配置时，交付单列“影响 live 启动：是/否”，集成员与 ops 按发布流程核对固定版本。
+    需要主管裁决、P0 阻断超过20分钟无人能推进、或对局停止且常备授权无法恢复时，向主运行根 {root}/ops/codex-ops/inbox-claude.md 只追加一行“HH:MM [dev #{issue}] #{issue} 一句话”，细节写 issue。
     对局在跑：nice {nice}、≤{max_procs} 进程；不运行 play、不改 live/STOP；不关其他会话。

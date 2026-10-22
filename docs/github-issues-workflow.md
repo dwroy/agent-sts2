@@ -115,6 +115,14 @@ creating-tab 先核实际 workspace/tab/pane，匹配唯一的标签、cwd 和�
 
 空闲回收只增加一种精确例外：Codex 直接子进程的 WSL `/init` 剪贴板桥，核真实 exe、PPID、完整 argv（固定 PowerShell 路径/参数及固定循环脚本 SHA），且无 Linux 工具子进程；与原 bundled code-mode-host 一起在前台检查前核准。其他 PowerShell、相似名字、脚本/参数改变、外来父进程或辅助进程带任务子进程仍拒绝。版本变化导致脚本不同则保留现场待更新证据，不按名称放宽。
 
+## 主管收件箱（#20 补充 5）
+
+主管的 Monitor 读取主运行根的忽略文件 `ops/codex-ops/inbox-claude.md`。只追加，一行一件，格式 `HH:MM [角色] #N 一句话`；细节写 issue。需要主管裁决、P0 阻断超过20分钟无人能推进、或对局停止且常备授权无法恢复时，负责角色向该文件追加。开发工作树不能另写一份冒充已送达；新会话的 `session.prompt` 用 `{root}` 指向主运行根。
+
+`dispatcher.claude_inbox` 配置本项目路径；各实例各用自己的文件。kit 在原 tick 内为当前开放且由本仓 owner 创建的 issue 上的 `owner:claude`、`needs:roy` 标签写一行，并按 GitHub labeled event ID 区分移除后重贴；首次接入时已有的这两类标签各补一条。看门狗观测失败、连续三次接续无进展且回应窗口结束、本项目重任务排队达到 `heavy.warn_minutes` 时也写一条。没有 issue 号的项目级重任务用 `#0`，不复制命令、终端原文或其他项目任务。重试耗尽和随后新增 needs:roy 是两个独立事件，各通知一次。
+
+沿原 journal 的 `claude_notices` 分账去重，先持久保存 sending 再追加，完成记 done；写入中断或回执不明保留 sending/uncertain，不自动重复追加。原 `--resolve 'claude:<事件摘要>' --outcome done|retry --reason '<本地核验引用>'` 可明确登记实际已写入或确认未写；resolve 本身不追加，retry 待原事件下次观察时执行。路径不得越出本项目、经过软链接或复用配置/journal/digest/原 inbox。旧项目未配置时保持兼容；dry-run 不写文件、不消费事件。安装新 kit 并核原 tick 的真实追加/Monitor 唤醒仍由原角色验收，固定测试不代送达。
+
 ## 谁说的话算数
 
 - 所有 agent 都用同一个 GitHub 账号 `dwroy` 发评论，所以 **agent 的评论第一行必须以角色前缀开头**：`[Claude]`、`[watcher]`、`[ops]`、`[dev #123]`、`[learner]`。

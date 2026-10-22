@@ -17,6 +17,13 @@ import worktree_retention as workspaces
 
 
 class IssueSessions(unittest.TestCase):
+    def test_opening_prompt_routes_urgent_reports_to_primary_root_inbox(self):
+        prompt = self.sessions.board.session['prompt'].format_map(self.sessions.values(self.row))
+        self.assertIn(f'{self.root}/ops/codex-ops/inbox-claude.md', prompt)
+        self.assertNotIn(f'{self.tree}/ops/codex-ops/inbox-claude.md', prompt)
+        for expected in ('主管裁决', 'P0 阻断超过20分钟', '常备授权无法恢复', 'HH:MM [dev #17] #17', '细节写 issue'):
+            self.assertIn(expected, prompt)
+
     def setUp(self):
         self.tmp = tempfile.TemporaryDirectory()
         self.addCleanup(self.tmp.cleanup)
