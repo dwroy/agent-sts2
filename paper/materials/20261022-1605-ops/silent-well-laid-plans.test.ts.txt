@@ -1,0 +1,124 @@
+/** WQZVENQ7DTRP A10 F33 attempt 5 T8-T11, silent-0257/0258: fixed hand transitions. */
+import { expect, it, vi } from "vitest";
+import { resolve } from "node:path";
+import evidence from "./silent-well-laid-plans-evidence.json";
+import { makeKnowledge } from "../src/knowledge/index.js";
+import { parseGameState } from "../src/hand/mod/schema.js";
+import { modelHandCard } from "../src/reflex/card-model.js";
+import { boardRolloutInput } from "../src/reflex/rollout-live.js";
+import { simulateFight, type RolloutInput } from "../src/reflex/rollout.js";
+import { replaySteps, solveTap, type Plan, type SolverInput } from "../src/reflex/turn-solver.js";
+import { board, card } from "./boss-sim-fixture.js";
+
+vi.mock("node:fs", async (original) => {
+  const fs = await original<typeof import("node:fs")>();
+  const { KNOWLEDGE_DIR } = await import("../src/knowledge/files.js");
+  const readFileSync = ((path: Parameters<typeof fs.readFileSync>[0], ...args: unknown[]) => {
+    if (typeof path === "string" && resolve(path).startsWith(resolve(KNOWLEDGE_DIR) + "/")) {
+      throw Object.assign(new Error("ENOENT: fixed retention test has no generated reference data"), { code: "ENOENT" });
+    }
+    return (fs.readFileSync as (...args: unknown[]) => unknown)(path, ...args);
+  }) as typeof fs.readFileSync;
+  return { ...fs, readFileSync, default: { ...fs, readFileSync } };
+});
+
+const knowledge = makeKnowledge({ cards: [{ id: "WELL_LAID_PLANS", name: "计划妥当", type: "Power" }] }, "cache");
+const rawPower = evidence.frames["282279"].hand[0]!;
+const power = () => modelHandCard(rawPower, 0, knowledge, "SILENT", 10);
+const ids = (input: SolverInput) => input.hand.filter(c => c.type !== "Potion").map(c => c.cardId);
+const held = (id: string, index: number) => card(index, id, { playable: false });
+function inputFor(frame: "282280" | "282284" | "282289"): RolloutInput {
+  const f = evidence.frames[frame];
+  const input = board({ bossHp: 500 });
+  input.meta = { ...input.meta, asc: 10, t: f.turn };
+  input.solver = { ...input.solver, turn: f.turn, hand: f.hand.map(c => held(c.card_id, c.index)),
+    player: { ...input.solver.player, hp: f.player.current_hp, energy: 3 } };
+  input.solver.enemies[0]!.attacks = [];
+  input.tables = { TEST_BOSS: { moves: { HIT: { damage: 0, hits: 1, strength: 0, block: 0 } }, next: { HIT: { HIT: 1 } } } };
+  input.observedSilentWellLaidPlans = true;
+  input.playerPowers = { WELL_LAID_PLANS_POWER: 1 };
+  input.piles = { draw: [], discard: [], handBase: input.solver.hand };
+  input.options = { handSize: 6 };
+  return input;
+}
+function later(input: RolloutInput, plan: Plan, turns = 2): SolverInput[] {
+  const seen: SolverInput[] = [];
+  solveTap.onSolve = value => { seen.push(structuredClone(value)); };
+  try { simulateFight(input, plan, turns, 1, false); } finally { solveTap.onSolve = null; }
+  return seen;
+}
+
+it("models only the observed plain two-energy Silent A10 card", () => {
+  expect(power()).toMatchObject({ wellLaidPlans: true, cost: 2, type: "Power" });
+  for (const [character, ascension] of [["IRONCLAD", 10], ["SILENT", 9], ["SILENT", 11], ["", null]] as const) {
+    expect(modelHandCard(rawPower, 0, knowledge, character, ascension).wellLaidPlans).toBeUndefined();
+  }
+  for (const edit of [{ upgraded: true }, { energy_cost: 1 }, { enchantment: {} }, { rules_text: "unknown" }]) {
+    expect(modelHandCard({ ...rawPower, ...edit }, 0, knowledge, "SILENT", 10).wellLaidPlans).toBeUndefined();
+  }
+});
+
+it("pays two energy before retaining the observed four-card T8 hand and fills only to ten", () => {
+  const input = inputFor("282280");
+  input.playerPowers = {};
+  input.solver.hand = [power(), ...input.solver.hand.map((c, i) => ({ ...c, index: i + 1 }))];
+  input.solver.player.energy = 2;
+  input.piles.handBase = input.solver.hand;
+  const suffix = evidence.frames["282281"].hand.slice(4).map((c, i) => held(c.card_id, i + 20));
+  input.piles.draw = [...suffix, held("EXTRA_DRAW_MUST_WAIT", 40)];
+  input.piles.drawTop = input.piles.draw.map((_c, i) => i);
+  const plan = replaySteps(input.solver, [{ cardIndex: 0, cardId: "WELL_LAID_PLANS", name: "计划妥当", upgraded: false }])!;
+  expect(plan.outcome.energyLeft).toBe(0);
+  const seen = later(input, plan);
+  expect(ids(seen[0]!)).toEqual(evidence.frames["282281"].hand.map(c => c.card_id));
+});
+
+it("restores an already-established Power and retains the hand for more than one turn", () => {
+  const input = inputFor("282280");
+  const plan = replaySteps(input.solver, [])!;
+  const seen = later(input, plan, 3);
+  expect(seen).toHaveLength(2);
+  for (const next of seen) expect(ids(next)).toEqual(evidence.frames["282280"].hand.map(c => c.card_id));
+  expect(input.playerPowers).toEqual({ WELL_LAID_PLANS_POWER: 1 });
+});
+
+it("matches the eight-to-ten and seven-to-ten observed next-turn hand capacities", () => {
+  for (const [before, after] of [["282284", "282285"], ["282289", "282290"]] as const) {
+    const input = inputFor(before);
+    const count = input.solver.hand.length;
+    const draws = evidence.frames[after].hand.slice(count).map((c, i) => held(c.card_id, i + 30));
+    input.piles.draw = [...draws, held("DRAW_BEYOND_CAP", 50)];
+    input.piles.drawTop = input.piles.draw.map((_c, i) => i);
+    expect(ids(later(input, replaySteps(input.solver, [])!)[0]!)).toEqual(evidence.frames[after].hand.map(c => c.card_id));
+  }
+});
+
+it("does not retain a card explicitly discarded during the line", () => {
+  const input = inputFor("282289");
+  input.solver.hand.push(held("STRIKE_SILENT", 40));
+  input.piles.handBase = input.solver.hand;
+  const plan = replaySteps(input.solver, [])!;
+  // The actual selection was Strike at T10 (282288 -> 282289); isolate end-of-turn pile routing.
+  plan.steps = [{ cardIndex: 99, cardId: "SURVIVOR", name: "生存者", upgraded: false, discards: ["STRIKE_SILENT"] }];
+  const seen = later(input, plan)[0]!;
+  expect(ids(seen).slice(0, 7)).toEqual(evidence.frames["282289"].hand.map(c => c.card_id));
+  // It can be redrawn from discard once the draw pile empties, rather than remaining in the retained prefix.
+  expect(ids(seen).indexOf("STRIKE_SILENT")).toBe(7);
+});
+
+it("the real board adapter gates active-power restoration by character, level and observed deck text", () => {
+  for (const [character, asc, supported] of [["SILENT", 10, true], ["IRONCLAD", 10, false], ["SILENT", 9, false]] as const) {
+    const raw = structuredClone(evidence.active_state);
+    raw.run.character_id = character;
+    raw.run.ascension = asc;
+    const input = inputFor("282280");
+    const built = boardRolloutInput(parseGameState(raw), knowledge, input.solver, asc, {}, {});
+    expect(built.observedSilentWellLaidPlans === true).toBe(supported);
+    const scoped = { ...input, ...built, piles: input.piles };
+    expect(ids(later(scoped, replaySteps(scoped.solver, [])!)[0]!)).toHaveLength(4);
+    if (!supported) {
+      // Legacy discard can draw the same cards, but the opt-in field must remain absent.
+      expect(built).not.toHaveProperty("observedSilentWellLaidPlans");
+    }
+  }
+});

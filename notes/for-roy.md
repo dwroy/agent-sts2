@@ -4706,3 +4706,7 @@ Roy/Claude11:46换号授权已核，沿原协议创建唯一codex3-20261022-1146
 原#33 high窄入口15:56:04实际取得全锁、完成知识快照并在检查前释知识锁，#38已有进入证据。随后rebuild rc2源于ops沿用整包#33+#26命令：R411及90c三叶候选均无外部聚合生成器/数据，非产品测试或稀疏缺文件；原日志/错误/2475输入/失败封存，tsc/full未开始。已修原入口，精确base/候选Git树及WT/live四处均证缺失才记聚合检查不适用，不引入#26。三叶SHA/暂存树不变，唯一接续589590/start8071265于16:03持知识锁等收尾锁，原首次tsc/full仍待；旧guard保留，无重复full。#38/#33实际评论及API读回已完成，入口恢复交主管核收不代关单。live仍R411，发布/自然新局原生high及整包旧失败分账待验，原后续顺序和#40依赖不动；未停其他任务/删锁/模型/MC/实验局或热切当前局。原件paper/materials/20261022-1601-ops/。
 
 #38 https://github.com/dwroy/agent-sts2/issues/38#issuecomment-6335867378；#33 https://github.com/dwroy/agent-sts2/issues/33#issuecomment-6335868152
+
+### 2026-10-22T16:09:52+08:00 [ops] 154302-s2容量中断保现场
+
+154302-s2原生gpt-6.1-sol/high在codex1沙箱中因capacity中断，turn.failed/rc1，无完成报告/结果/提案文件，未提交或合入。原十提案原文SHA全核同（六旧路径已找回），不将启动失败或旧waiting当本批处置。现场3源码+2未跟踪测试文件、差异补丁、22件scratch及9份已封存内容对象已保留核SHA，原WT不删。两次定向启动因EROFS未跑用例，后续runner真实2文件11例/rc0；sandbox完整检查仅起始无终局，tsc/red前置证明未核成。证据审计另因decision_id缺失rc1，非全部失败归因容量。原failed与17:05:24冷却保持，无活原wrapper；同十ID的141301旧中断仍开放，不以新批覆盖或重复实现。本轮只记原任务/线程/home/源码续接检查点，非自动resume；由原owner核租约与SHA后补审计及必要验证，不能把草稿机制当正式知识。未新模型/测试/dataset/换号/合入或扩大沙箱，live仍R411。原件paper/materials/20261022-1605-ops/。
