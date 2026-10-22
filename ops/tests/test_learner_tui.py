@@ -22,15 +22,18 @@ class CompletionGate(unittest.TestCase):
         self.output.write_text('{"status":"done"}\n')
         self.native = self.root / "native.jsonl"
         self.rows = [
-            {"type": "session_meta", "payload": {"id": "thread"}},
+            {"type": "session_meta", "payload": {"id": "thread", "cwd": str(self.root)}},
             {"type": "event_msg", "payload": {"type": "task_started", "turn_id": "turn"}},
+            {"type": "event_msg", "payload": {"type": "user_message", "message": "marker\noriginal task"}},
             {"type": "event_msg", "payload": {"type": "task_complete", "turn_id": "turn", "last_agent_message": "report"}},
         ]
         self.native.write_text("".join(json.dumps(r) + "\n" for r in self.rows))
         self.log = self.root / "launch.jsonl"
         self.log.write_text(json.dumps({"type": "learner_summary", "exit_code": 0, "summary": {"sessionId": "thread"}}) + "\n")
         self.receipt = self.root / "receipt.json"
-        self.value = {"state": "session-ended", "pid": os.getpid(), "birth": "older-process-birth",
+        self.value = {"state": "session-ended", "retirement_authorized": True, "submitted": True, "cwd": str(self.root),
+                      "submissions": [{"marker": "marker", "prompt_sha256": tui.prompt_hash("marker\noriginal task")}],
+                      "bindings": [{"turn_id": "turn", "marker": "marker", "prompt_sha256": tui.prompt_hash("marker\noriginal task")}], "pid": os.getpid(), "birth": "older-process-birth",
                       "result": {"code": 0, "stopped": True, "session": "thread", "turn": "turn", "message": "report", "rollout": str(self.native)},
                       "artifacts": {"log": str(self.log), "sha256": hashlib.sha256(self.log.read_bytes()).hexdigest(), "summary": True}}
         self.save()
@@ -51,6 +54,63 @@ class CompletionGate(unittest.TestCase):
     def test_another_native_turn_after_completion_is_not_done(self):
         with self.native.open("a") as out:
             out.write(json.dumps({"type": "event_msg", "payload": {"type": "task_started", "turn_id": "other"}}) + "\n")
+        with self.assertRaises(ValueError):
+            tui.verify(self.receipt, self.output)
+
+    def test_a_completed_human_turn_cannot_replace_batch_turn(self):
+        rows = self.rows + [
+            {"type": "event_msg", "payload": {"type": "task_started", "turn_id": "human"}},
+            {"type": "event_msg", "payload": {"type": "user_message", "message": "human request"}},
+            {"type": "event_msg", "payload": {"type": "task_complete", "turn_id": "human", "last_agent_message": "human answer"}},
+        ]
+        self.native.write_text("".join(json.dumps(r) + "\n" for r in rows))
+        self.value["result"].update(turn="human", message="human answer")
+        self.save()
+        with self.assertRaises(ValueError):
+            tui.verify(self.receipt, self.output)
+
+    def test_disposal_authorization_is_required_for_every_exit_code(self):
+        for code in (0, 1, 124, 75):
+            self.value.update(retirement_authorized=False)
+            self.value["result"]["code"] = code
+            self.save()
+            with self.assertRaises(ValueError):
+                tui.verify(self.receipt, self.output)
+
+    def test_native_acceptance_requires_the_exact_sent_prompt(self):
+        for message in ("marker\nhuman task", "marker-extra\noriginal task", "human request", ""):
+            rows = json.loads(json.dumps(self.rows))
+            rows[2]["payload"]["message"] = message
+            self.native.write_text("".join(json.dumps(r) + "\n" for r in rows))
+            with self.assertRaises(ValueError):
+                tui.verify(self.receipt, self.output)
+
+    def test_a_real_continuation_needs_its_own_prompt_and_native_turn(self):
+        proof = {"marker": "retry", "prompt_sha256": tui.prompt_hash("retry\ncontinue")}
+        self.value["submissions"].append(proof)
+        self.value["bindings"].append(dict(proof, turn_id="two"))
+        self.value["result"].update(turn="two")
+        self.save()
+        rows = self.rows + [
+            {"type": "event_msg", "payload": {"type": "task_started", "turn_id": "two"}},
+            {"type": "event_msg", "payload": {"type": "user_message", "message": "retry\ncontinue"}},
+            {"type": "event_msg", "payload": {"type": "task_complete", "turn_id": "two", "last_agent_message": "report"}},
+        ]
+        self.native.write_text("".join(json.dumps(r) + "\n" for r in rows))
+        self.assertEqual(tui.verify(self.receipt, self.output)["result"]["turn"], "two")
+        rows[-2]["payload"]["message"] = "marker\noriginal task"
+        self.native.write_text("".join(json.dumps(r) + "\n" for r in rows))
+        with self.assertRaises(ValueError):
+            tui.verify(self.receipt, self.output)
+
+    def test_failed_batch_still_rejects_foreign_native_activity(self):
+        self.value["result"]["code"] = 124
+        self.log.write_text(json.dumps({"type": "learner_summary", "exit_code": 124, "summary": {"sessionId": "thread"}}) + "\n")
+        self.value["artifacts"]["sha256"] = tui.digest(self.log)
+        self.save()
+        self.assertEqual(tui.verify(self.receipt, self.output)["result"]["code"], 124)
+        with self.native.open("a") as out:
+            out.write(json.dumps({"type": "event_msg", "payload": {"type": "task_started", "turn_id": "human"}}) + "\n")
         with self.assertRaises(ValueError):
             tui.verify(self.receipt, self.output)
 

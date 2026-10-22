@@ -29,6 +29,80 @@ def stopped(receipt):
         return False
 
 
+def prompt_hash(text):
+    return hashlib.sha256(text.replace("\r\n", "\n").rstrip().encode()).hexdigest()
+
+
+def verify_native(receipt):
+    """Reconstruct one-use native turn bindings from the journaled prompts, never a later human answer."""
+    result = receipt["result"]
+    bindings = receipt.get("bindings", [])
+    submissions = receipt.get("submissions", [])
+    if not receipt.get("submitted"):
+        if result.get("code") == 0 or bindings:
+            raise ValueError("unsubmitted batch cannot complete")
+        return
+    if not bindings or len(submissions) != len(bindings):
+        raise ValueError("not every journaled prompt has native acceptance")
+    expected = {item["marker"]: item["prompt_sha256"] for item in submissions}
+    turns = {item["turn_id"]: item for item in bindings}
+    if len(expected) != len(submissions) or len(turns) != len(bindings):
+        raise ValueError("reused prompt marker or native turn")
+    if any(expected.get(item["marker"]) != item["prompt_sha256"] for item in bindings):
+        raise ValueError("native binding lacks a matching sent prompt")
+    if [item["marker"] for item in bindings] != [item["marker"] for item in submissions]:
+        raise ValueError("native continuation order differs from dispatch")
+    meta, cwd, current, complete = None, None, None, None
+    active = False
+    accepted = False
+    seen = []
+    used = set()
+    with open(result["rollout"]) as source:
+        for line in source:
+            if not line.endswith("\n"):
+                raise ValueError("native record is not durably complete")
+            row = json.loads(line)
+            payload = row.get("payload", {})
+            if row.get("type") == "session_meta":
+                meta, cwd = payload.get("id"), payload.get("cwd")
+                if meta != result.get("session") or cwd != receipt.get("cwd"):
+                    raise ValueError("native session identity changed")
+            if row.get("type") == "event_msg" and payload.get("type") == "task_started":
+                current = payload.get("turn_id")
+                # An explicitly resumed session can have earlier history before this dispatch.
+                active = active or current == bindings[0]["turn_id"]
+                if active:
+                    if current not in turns or current in seen:
+                        raise ValueError("unbound or replayed native turn")
+                    seen.append(current)
+                complete, accepted = None, False
+            if not active:
+                continue
+            user = None
+            if row.get("type") == "event_msg" and payload.get("type") == "user_message":
+                user = payload.get("message", "")
+            if row.get("type") == "response_item" and payload.get("type") == "message" and payload.get("role") == "user":
+                user = "\n".join(str(part.get("text", "")) for part in payload.get("content", []))
+            if user is not None:
+                binding = turns.get(current, {})
+                marker = user.replace("\r\n", "\n").split("\n")[0]
+                if marker != binding.get("marker") or prompt_hash(user) != binding.get("prompt_sha256"):
+                    raise ValueError("native user input is not the dispatched prompt")
+                if not accepted and marker in used:
+                    raise ValueError("prompt marker was consumed by another turn")
+                used.add(marker)
+                accepted = True
+            if row.get("type") == "event_msg" and payload.get("type") in ("task_complete", "turn_aborted"):
+                if payload.get("turn_id") == current:
+                    complete = payload.get("last_agent_message") if payload.get("type") == "task_complete" and accepted else None
+    if (meta != result.get("session") or cwd != receipt.get("cwd") or not accepted
+            or current != result.get("turn") or seen != [item["turn_id"] for item in bindings]
+            or len(used) != len(submissions)):
+        raise ValueError("final native turn is not bound to this dispatch")
+    if result.get("code") == 0 and (not complete or complete != result.get("message")):
+        raise ValueError("matching native task completion is missing")
+
+
 def verify(path, output):
     receipt = json.loads(Path(path).read_text())
     result = receipt.get("result", {})
@@ -36,7 +110,8 @@ def verify(path, output):
         digest(output)
         return receipt
     artifacts = receipt.get("artifacts", {})
-    if (receipt.get("state") != "session-ended" or not result.get("stopped") or not stopped(receipt)
+    if (receipt.get("state") != "session-ended" or receipt.get("retirement_authorized") is not True
+            or not result.get("stopped") or not stopped(receipt)
             or not artifacts.get("summary") or digest(artifacts["log"]) != artifacts.get("sha256")):
         raise ValueError("native session retirement or original learner log is unverified")
     last = None
@@ -48,27 +123,7 @@ def verify(path, output):
     if (not last or last.get("exit_code") != result.get("code")
             or last.get("summary", {}).get("sessionId") != result.get("session")):
         raise ValueError("matching learner summary is missing")
-    if result.get("code") == 0:
-        # Native completion remains the authority even if a supervisor returns zero.
-        meta = None
-        complete = None
-        current = None
-        with open(result["rollout"]) as source:
-            for line in source:
-                row = json.loads(line)
-                payload = row.get("payload", {})
-                if row.get("type") == "session_meta":
-                    meta = payload.get("id")
-                if row.get("type") == "event_msg" and payload.get("type") == "task_started":
-                    current = payload.get("turn_id")
-                    complete = None
-                if (row.get("type") == "event_msg" and payload.get("type") == "task_complete"
-                        and payload.get("turn_id") == result.get("turn") == current):
-                    complete = payload.get("last_agent_message")
-                if row.get("type") == "event_msg" and payload.get("type") == "turn_aborted":
-                    complete = None
-        if meta != result.get("session") or not complete or complete != result.get("message"):
-            raise ValueError("matching native task completion is missing")
+    verify_native(receipt)
     if not Path(output).is_file() or Path(output).stat().st_size == 0:
         raise ValueError("original batch output is missing")
     receipt["output"] = {"path": str(output), "sha256": digest(output)}
@@ -88,7 +143,7 @@ def close(root, state, batch, path, output):
     herdr = os.environ.get("HERDR_BIN", "herdr")
     pane = receipt["pane"]
     info = json.loads(subprocess.check_output([herdr, "pane", "get", pane]))["result"]["pane"]
-    if any(info.get(k) != receipt["identity"].get(k) for k in ("pane_id", "label", "tab_id", "terminal_id")):
+    if any(info.get(k) != receipt["identity"].get(k) for k in ("pane_id", "label", "tab_id", "terminal_id", "workspace_id")):
         raise ValueError("pane identity changed; retain it")
     process = json.loads(subprocess.check_output([herdr, "pane", "process-info", "--pane", pane]))["result"]["process_info"]
     if process["shell_pid"] != process["foreground_process_group_id"]:

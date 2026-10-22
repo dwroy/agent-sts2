@@ -67,7 +67,7 @@ function fixture(kind = "success") {
         return kind === "start-uncertain" ? fail() : ok();
       }
       if (group === "pane" && action === "read") return ok({}, `header\n› \u001b[2mAsk Codex to do anything\u001b[0m\n${kind === "capacity" ? "at capacity" : ""}`);
-      if (group === "agent" && action === "get") return live ? ok({ agent: { agent: "codex", name: pane.label, pane_id: pane.pane_id, agent_status: status } }) : fail();
+      if (group === "agent" && action === "get") return live ? ok({ agent: { agent: "codex", name: pane.label, pane_id: pane.pane_id, agent_status: status, foreground_cwd: root } }) : fail();
       if (group === "agent" && action === "rename") return ok();
       if (group === "agent" && action === "prompt") {
         prompts++;
@@ -118,10 +118,11 @@ describe("learner interactive command policy", () => {
 
 describe("native batch authority", () => {
   it("ignores idle screens and unrelated/old completions, and requires a matching accepted native turn", () => {
+    const old = new NativeBatch("our-marker");
+    old.feed(row("event_msg", { type: "task_started", turn_id: "old" }));
+    old.feed(row("event_msg", { type: "task_complete", turn_id: "old", last_agent_message: "old answer" }));
+    expect(old.successful()).toBe(false);
     const b = new NativeBatch("our-marker");
-    b.feed(row("event_msg", { type: "task_started", turn_id: "old" }));
-    b.feed(row("event_msg", { type: "task_complete", turn_id: "old", last_agent_message: "old answer" }));
-    expect(b.successful()).toBe(false);
     b.feed(row("event_msg", { type: "task_started", turn_id: "ours" }));
     b.feed(row("event_msg", { type: "user_message", message: "our-marker" }));
     b.feed(row("event_msg", { type: "task_complete", turn_id: "old", last_agent_message: "old answer" }));
@@ -134,12 +135,35 @@ describe("native batch authority", () => {
   it("counts each native turn's last usage snapshot once across continuations", () => {
     const b = new NativeBatch("our-marker");
     for (const [turn, input] of [["one", 100], ["two", 200]] as const) {
+      const marker = turn === "one" ? "our-marker" : "retry-marker";
+      if (turn === "two") b.expectPrompt(marker, marker);
       b.feed(row("event_msg", { type: "task_started", turn_id: turn }));
-      b.feed(row("event_msg", { type: "user_message", message: "our-marker" }));
+      b.feed(row("event_msg", { type: "user_message", message: marker }));
       b.feed(row("token_usage_record", { turn_id: turn, turn_token_usage: { input_tokens: input / 2 } }));
       b.feed(row("token_usage_record", { turn_id: turn, turn_token_usage: { input_tokens: input } }));
     }
     expect(b.totalUsage()).toEqual({ input_tokens: 300 });
+  });
+  it.each(["replay", "wrong-body", "prefix"])("rejects %s instead of carrying native authorization forward", (kind) => {
+    const b = new NativeBatch("our-marker"); b.expectPrompt("our-marker", "our-marker\noriginal");
+    b.feed(row("event_msg", { type: "task_started", turn_id: "one" }));
+    b.feed(row("event_msg", { type: "user_message", message: "our-marker\noriginal" }));
+    b.feed(row("event_msg", { type: "task_complete", turn_id: "one", last_agent_message: "report" }));
+    b.expectPrompt("retry-marker", "retry-marker\ncontinue");
+    b.feed(row("event_msg", { type: "task_started", turn_id: "two" }));
+    const message = kind === "replay" ? "our-marker\noriginal" : kind === "prefix" ? "retry-marker-extra\ncontinue" : "retry-marker\nhuman task";
+    b.feed(row("event_msg", { type: "user_message", message }));
+    b.feed(row("event_msg", { type: "task_complete", turn_id: "two", last_agent_message: "human answer" }));
+    expect(b.successful()).toBe(false); expect(b.foreignActivity).toBe(true); expect(b.turn).toBe("one");
+  });
+  it("accepts duplicate native representations only within their explicitly bound turn", () => {
+    const b = new NativeBatch("marker"); b.expectPrompt("marker", "marker\noriginal");
+    b.feed(row("event_msg", { type: "task_started", turn_id: "one" }));
+    b.feed(row("event_msg", { type: "user_message", message: "marker\noriginal" }));
+    b.feed(row("response_item", { type: "message", role: "user", content: [{ text: "marker\noriginal" }] }));
+    b.feed(row("event_msg", { type: "task_complete", turn_id: "one", last_agent_message: "report" }));
+    expect(b.successful()).toBe(true); expect(b.bindings).toHaveLength(1);
+    b.expectPrompt("retry", "retry"); expect(b.successful()).toBe(false);
   });
   it("keeps partial native UTF-8 rows intact and fails closed on truncation", () => {
     const f = fixture();
@@ -183,9 +207,98 @@ describe("interactive batch lifecycle", () => {
     const f = fixture("late-complete"); expect((await runLearnerTui(f.opts)).code).toBe(0);
     expect(f.calls.filter((c) => c[1] === "get" && c[0] === "agent").length).toBeGreaterThan(2);
   });
-  it.each(["timeout", "working-after-complete", "lease-lost"])("does not declare %s complete", async (kind) => {
+  it.each(["timeout"])("does not declare %s complete", async (kind) => {
     const f = fixture(kind); const result = await runLearnerTui(f.opts);
     expect(result.code).toBe(124); expect(result.stopped).toBe(true);
+  });
+  it.each(["lease-lost", "working-after-complete"])("retains %s rather than interrupting an unverified foreground", async (kind) => {
+    const f = fixture(kind); const result = await runLearnerTui(f.opts);
+    expect(result).toMatchObject({ code: 75, stopped: false });
+    expect(f.prompts()).toBe(1);
+    expect(f.calls.filter((c) => c[1] === "send-keys")).toHaveLength(0);
+  });
+  it.each(["draft", "unknown", "foreign-cwd", "foreign-foreground", "foreign-turn"])("retains a timed-out batch after %s appears", async (kind) => {
+    const f = fixture("timeout"); const h = f.opts.h!;
+    f.opts.h = async (args) => {
+      const response = await h(args);
+      if (!f.prompts()) return response;
+      if (kind === "draft" && args[0] === "pane" && args[1] === "read") return ok({}, "header\n› Human draft not sent");
+      if (kind === "unknown" && args[0] === "pane" && args[1] === "read") return ok({}, "ambiguous terminal");
+      if (kind === "foreign-cwd" && args[0] === "agent" && args[1] === "get") return ok({ agent: { ...response.result?.agent as object, foreground_cwd: "/foreign" } });
+      if (kind === "foreign-foreground" && args[1] === "process-info") return ok({ process_info: { shell_pid: 1000, foreground_process_group_id: 99999 } });
+      if (kind === "foreign-turn" && args[0] === "agent" && args[1] === "prompt") appendFileSync(f.file, JSON.stringify(row("event_msg", { type: "task_started", turn_id: "human" })) + "\n" + JSON.stringify(row("event_msg", { type: "user_message", message: "human request" })) + "\n");
+      return response;
+    };
+    expect(await runLearnerTui(f.opts)).toMatchObject({ code: 75, stopped: false });
+    expect(f.calls.filter((c) => c[1] === "send-keys")).toHaveLength(0);
+  });
+  it.each(["draft", "lease", "uncertain-key"])("stops retirement if %s changes after Esc", async (kind) => {
+    const f = fixture("timeout"); const h = f.opts.h!; let escaped = false;
+    if (kind === "lease") f.opts.lease = { batch: "fixed", identity: "fixed", current: () => !escaped };
+    f.opts.h = async (args) => {
+      const response = await h(args);
+      if (args[1] === "send-keys" && args[3] === "esc") { escaped = true; if (kind === "uncertain-key") return fail(); }
+      if (kind === "draft" && escaped && args[1] === "read") return ok({}, "header\n› Human draft not sent");
+      return response;
+    };
+    expect(await runLearnerTui(f.opts)).toMatchObject({ code: 75, stopped: false });
+    expect(f.calls.filter((c) => c[1] === "send-keys").map((c) => c[3])).toEqual(["esc"]);
+  });
+  it.each(["cancelled", "native-error", "transport-error"])("preserves human input on the %s exit path", async (kind) => {
+    const f = fixture("timeout"); const h = f.opts.h!;
+    f.opts.h = async (args) => {
+      const response = await h(args);
+      if (args[1] === "prompt") {
+        if (kind === "cancelled") process.emit("SIGTERM");
+        if (kind === "transport-error") throw new Error("fixed transport failure");
+        if (kind === "native-error") appendFileSync(f.file, JSON.stringify(row("event_msg", { type: "error", message: "fixed permanent error" })) + "\n");
+      }
+      if (f.prompts() && args[1] === "read") return ok({}, "header\n› Human draft not sent");
+      return response;
+    };
+    expect(await runLearnerTui(f.opts)).toMatchObject({ code: 75, stopped: false });
+    expect(f.prompts()).toBe(1);
+    expect(f.calls.filter((c) => c[1] === "send-keys")).toHaveLength(0);
+  });
+  it("retains an owned TUI that does not exit after verified keys, without force killing it", async () => {
+    const f = fixture("timeout"); const h = f.opts.h!;
+    f.opts.h = async (args) => args[1] === "send-keys" ? ok() : h(args);
+    expect(await runLearnerTui(f.opts)).toMatchObject({ code: 75, stopped: false });
+    const receipt = JSON.parse(readFileSync(f.opts.receipt, "utf8"));
+    expect(existsSync(`/proc/${receipt.pid}`)).toBe(true);
+    expect(receipt.retirement_authorized).toBe(false);
+  });
+  it("waits read-only when the exact PID has exited but foreground metadata still names it", async () => {
+    const f = fixture("timeout"); const h = f.opts.h!; let lag = 0;
+    f.opts.h = async (args) => {
+      const response = await h(args);
+      if (args[1] === "send-keys" && args[3] === "ctrl+c") {
+        const child = children.at(-1)!;
+        if (child.exitCode === null && child.signalCode === null) await new Promise<void>((done) => child.once("close", () => done()));
+        lag = 3;
+      }
+      if (args[1] === "process-info" && lag-- > 0) {
+        const receipt = JSON.parse(readFileSync(f.opts.receipt, "utf8"));
+        return ok({ process_info: { shell_pid: 1000, foreground_process_group_id: receipt.pid } });
+      }
+      return response;
+    };
+    expect(await runLearnerTui(f.opts)).toMatchObject({ code: 124, stopped: true });
+    expect(f.calls.filter((c) => c[1] === "send-keys").map((c) => c[3])).toEqual(["esc", "ctrl+c"]);
+  });
+  it("waits for a split native acceptance row without treating task_started alone as a human turn", async () => {
+    const f = fixture("late-complete"); const h = f.opts.h!; let delayed = "";
+    f.opts.h = async (args) => {
+      const response = await h(args);
+      if (args[1] === "prompt") {
+        const lines = readFileSync(f.file, "utf8").trimEnd().split("\n");
+        delayed = lines.pop()! + "\n"; writeFileSync(f.file, lines.join("\n") + "\n");
+      }
+      return response;
+    };
+    const pause = f.opts.pause!;
+    f.opts.pause = async (ms) => { if (delayed) { appendFileSync(f.file, delayed); delayed = ""; } await pause(ms); };
+    expect(await runLearnerTui(f.opts)).toMatchObject({ code: 0, stopped: true });
   });
   it("accepts a matching native user message as evidence when the submission receipt is uncertain", async () => {
     const f = fixture("prompt-uncertain"); expect((await runLearnerTui(f.opts)).code).toBe(0); expect(f.prompts()).toBe(1);
@@ -209,7 +322,8 @@ describe("interactive batch lifecycle", () => {
   });
   it("preserves an uncertain start without submitting or starting another model", async () => {
     const f = fixture("start-uncertain"); const result = await runLearnerTui(f.opts);
-    expect(result.code).toBe(124); expect(f.prompts()).toBe(0);
+    expect(result).toMatchObject({ code: 75, stopped: false }); expect(f.prompts()).toBe(0);
+    expect(f.calls.filter((c) => c[1] === "send-keys")).toHaveLength(0);
     expect(f.calls.filter((c) => c[1] === "run")).toHaveLength(1);
   });
   it("keeps a changed pane and forbids finish/reclamation when retirement cannot be verified", async () => {

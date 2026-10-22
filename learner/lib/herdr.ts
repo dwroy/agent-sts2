@@ -25,6 +25,7 @@ const textOf = (row: Row): string => {
 export class NativeRows {
   private offset = 0;
   atEnd(file: string): boolean { return this.offset >= statSync(file).size; }
+  settled(file: string): boolean { return this.atEnd(file) && !this.partial; }
   private partial = "";
   read(file: string): Row[] {
     const fd = openSync(file, "r");
@@ -43,12 +44,18 @@ export class NativeRows {
   }
 }
 
-/** Only the marker accepted by this native session binds a completion to this dispatch. */
+export interface PromptProof { marker: string; prompt_sha256?: string }
+export interface TurnBinding { turn_id: string; marker: string; prompt_sha256: string }
+const promptHash = (text: string): string => createHash("sha256").update(text.replace(/\r\n/g, "\n").trimEnd()).digest("hex");
+
+/** Each turn needs its own one-use, explicitly sent prompt proof; authorization never carries across turns. */
 export class NativeBatch {
   session?: string;
   cwd?: string;
   accepted = false;
   turn?: string;
+  currentTurn?: string;
+  foreignActivity = false;
   open = false;
   complete = false;
   aborted = false;
@@ -56,7 +63,20 @@ export class NativeBatch {
   error = "";
   progress = 0;
   usage?: Record<string, unknown>;
+  readonly submissions: PromptProof[] = [];
+  readonly bindings: TurnBinding[] = [];
+  private pending = new Map<string, PromptProof>();
+  private seenTurns = new Set<string>();
+  hasPending(): boolean { return this.pending.size > 0; }
   private usageByTurn = new Map<string, Record<string, unknown>>();
+  constructor(readonly marker: string) { this.expectPrompt(marker); }
+  expectPrompt(marker: string, text?: string): void {
+    if (this.bindings.some((binding) => binding.marker === marker)) throw new Error("cannot resend a consumed learner marker");
+    const proof = { marker, ...(text === undefined ? {} : { prompt_sha256: promptHash(text) }) };
+    const old = this.submissions.findIndex((item) => item.marker === marker);
+    if (old >= 0) this.submissions[old] = proof; else this.submissions.push(proof);
+    this.pending.set(marker, proof);
+  }
   totalUsage(): Record<string, number> | undefined {
     if (!this.usageByTurn.size) return undefined;
     const total: Record<string, number> = {};
@@ -65,21 +85,44 @@ export class NativeBatch {
     }
     return total;
   }
-  constructor(readonly marker: string) {}
   feed(row: Row): void {
     const p = row.payload ?? {};
-    if (row.type === "session_meta") { this.session = String(p.id ?? ""); this.cwd = String(p.cwd ?? ""); }
-    if (row.type === "event_msg" && p.type === "task_started") {
-      this.turn = String(p.turn_id ?? ""); this.open = true; this.complete = false;
-      this.aborted = false; this.message = ""; this.error = ""; this.usage = undefined;
+    if (row.type === "session_meta") {
+      if (this.session && (this.session !== p.id || this.cwd !== p.cwd)) this.foreignActivity = true;
+      this.session = String(p.id ?? ""); this.cwd = String(p.cwd ?? "");
     }
-    if (textOf(row).includes(this.marker)) this.accepted = true;
-    if (!this.accepted) return;
+    if (row.type === "event_msg" && p.type === "task_started") {
+      this.currentTurn = String(p.turn_id ?? "");
+      if (!this.currentTurn || this.seenTurns.has(this.currentTurn) || !this.hasPending()) this.foreignActivity = true;
+      this.seenTurns.add(this.currentTurn);
+      this.open = true; this.accepted = false;
+      this.complete = false; this.aborted = false; this.message = ""; this.error = ""; this.usage = undefined;
+    }
+    const user = textOf(row);
+    if ((row.type === "event_msg" && p.type === "user_message") ||
+        (row.type === "response_item" && p.type === "message" && p.role === "user")) {
+      const marker = user.replace(/\r\n/g, "\n").split("\n")[0]!;
+      const hash = promptHash(user);
+      const existing = this.bindings.find((binding) => binding.turn_id === this.currentTurn);
+      const expected = this.pending.get(marker);
+      if (existing?.marker === marker && existing.prompt_sha256 === hash) {
+        this.accepted = !this.foreignActivity; // duplicate event_msg / response_item for the same native message
+      } else if (!existing && this.currentTurn && expected && (!expected.prompt_sha256 || expected.prompt_sha256 === hash)) {
+        this.turn = this.currentTurn; this.accepted = !this.foreignActivity;
+        this.bindings.push({ turn_id: this.turn, marker, prompt_sha256: hash }); this.pending.delete(marker);
+      } else { this.accepted = false; this.foreignActivity = true; }
+    }
+    if (!this.accepted || this.currentTurn !== this.turn || this.foreignActivity) {
+      if (row.type === "event_msg" && ["task_complete", "turn_aborted"].includes(String(p.type)) && p.turn_id === this.currentTurn) {
+        this.open = false; this.foreignActivity = true;
+      }
+      return;
+    }
     if (row.type === "response_item" && /^(function_call|custom_tool_call|local_shell_call)$/.test(String(p.type))) this.progress++;
     if (row.type === "event_msg" && p.type === "error") this.error = String(p.message ?? p.error ?? "native error");
     if (row.type === "token_usage_record" && p.turn_id === this.turn) {
       this.usage = (p.turn_token_usage ?? p.usage) as Record<string, unknown> | undefined;
-      if (this.turn && this.usage) this.usageByTurn.set(this.turn, this.usage);
+      if (this.usage) this.usageByTurn.set(this.turn!, this.usage);
     }
     if (row.type !== "event_msg" || p.turn_id !== this.turn) return;
     if (p.type === "turn_aborted") { this.open = false; this.aborted = true; }
@@ -88,7 +131,10 @@ export class NativeBatch {
       this.message = typeof p.last_agent_message === "string" ? p.last_agent_message : "";
     }
   }
-  successful(): boolean { return this.accepted && this.complete && !this.open && !this.aborted && !!this.message.trim() && !this.error && !TRANSIENT.test(this.message); }
+  successful(): boolean {
+    return this.accepted && !this.hasPending() && !this.foreignActivity && this.currentTurn === this.turn && this.complete && !this.open &&
+      !this.aborted && !!this.message.trim() && !this.error && !TRANSIENT.test(this.message);
+  }
 }
 
 /** Persist only the role's explicit path/locale settings, never arbitrary inherited environment values. */
@@ -217,6 +263,7 @@ export async function runLearnerTui(o: TuiOptions): Promise<TuiResult> {
   writeFileSync(promptFile, prompt, { mode: 0o600 });
   const sentPrompt = Buffer.byteLength(prompt) <= 96 * 1024 ? prompt
     : `${marker}\n请先完整读取 ${JSON.stringify(promptFile)} 中的原始任务提示词，再按其执行本批任务；不要省略其中的验收和产物要求。`;
+  native.expectPrompt(marker, sentPrompt);
   const argv = [o.command, ...learnerInteractiveArgs(o.request)];
   // env -i prevents the pane server's credentials/config environment from leaking into the learner.
   writeFileSync(script, `#!/bin/bash\numask 077\nprintf '%s\\n' "$$" > ${shellQuote([pidfile])}\ncd ${shellQuote([o.request.cwd])} || exit 2\nexec ${shellQuote(["env", "-i", ...Object.entries(tuiEnv).map(([k, v]) => `${k}=${v}`), "nice", "-n", "19", ...argv])}\n`, { mode: 0o700 });
@@ -226,6 +273,10 @@ export async function runLearnerTui(o: TuiOptions): Promise<TuiResult> {
   let pendingMarker = marker;
   let cancelled = false;
   let uncertain = false;
+  let startConfirmed = false;
+  let ownershipLost = false;
+  let continuation = 0;
+  let retirementAuthorized = false;
   let alerted = false;
   let retries = 0;
   let progress = 0;
@@ -237,14 +288,57 @@ export async function runLearnerTui(o: TuiOptions): Promise<TuiResult> {
   const samePane = async (): Promise<boolean> => {
     const info = await h(["pane", "get", o.pane]);
     const pane = info.result?.pane as Record<string, unknown> | undefined;
-    return !!pane && pane.label === o.label && pane.tab_id === identity.tab_id && pane.terminal_id === identity.terminal_id;
+    return info.ok && !!pane && pane.pane_id === o.pane && pane.label === o.label && pane.tab_id === identity.tab_id &&
+      pane.terminal_id === identity.terminal_id && pane.workspace_id === identity.workspace_id;
   };
   const save = (state: string, extra: Record<string, unknown> = {}): void => {
     writeFileSync(o.receipt, JSON.stringify({ state, pane: o.pane, label: o.label, identity, pid, birth: ownerBirth,
-      session: native.session, rollout, turn: native.turn, submitted, retries, ...extra }) + "\n", { mode: 0o600 });
+      session: native.session, cwd: o.request.cwd, rollout, turn: native.turn, submitted, retries,
+      submissions: native.submissions, bindings: native.bindings, retirement_authorized: retirementAuthorized, ...extra }) + "\n", { mode: 0o600 });
     const fd = openSync(o.receipt, "r"); try { fsyncSync(fd); } finally { closeSync(fd); }
   };
   const attention = (reason: string): void => { if (!alerted) { alerted = true; o.attention(reason); } };
+  const readNative = (): void => {
+    for (const file of rollout ? [rollout] : candidates(o.codexHome, started - 2000).filter((f) => !before.has(f))) {
+      let entry = readers.get(file);
+      if (!entry) {
+        const batch = new NativeBatch(marker); batch.expectPrompt(marker, sentPrompt);
+        entry = { reader: new NativeRows(), batch }; readers.set(file, entry);
+      }
+      for (const row of entry.reader.read(file)) {
+        entry.batch.feed(row);
+        if (file === rollout && native.accepted && native.bindings.at(-1)?.marker === pendingMarker && startConfirmed && !ownershipLost) uncertain = false;
+        if (!rollout && entry.batch.accepted && entry.batch.cwd === o.request.cwd && entry.batch.session) {
+          rollout = file;
+          Object.assign(native, entry.batch);
+          entry.batch = native;
+          o.log({ type: "thread.started", thread_id: native.session });
+          o.log({ type: "learner_tui_session", pane: o.pane, rollout, marker, session: native.session });
+          // A native matching user message resolves an uncertain submission receipt.
+          if (startConfirmed && !ownershipLost) uncertain = false;
+        }
+        if (file === rollout) {
+          o.log(row as Record<string, unknown>);
+          if (o.request.resumeThread && native.accepted && !native.session) native.session = o.request.resumeThread;
+        }
+      }
+    }
+  };
+  const promptAllowed = async (bound: boolean): Promise<boolean> => {
+    if (!startConfirmed || uncertain || ownershipLost || !o.lease?.current() || !pid || !ownerBirth || !(await samePane())) return false;
+    const info = await h(["pane", "process-info", "--pane", o.pane]);
+    const p = info.result?.process_info as Record<string, unknown> | undefined;
+    const agentInfo = await h(["agent", "get", o.pane]);
+    const agent = agentInfo.result?.agent as Record<string, unknown> | undefined;
+    const screen = await h(["pane", "read", o.pane, "--format", "ansi"]);
+    readNative();
+    return info.ok && p?.foreground_process_group_id === pid && birth(pid) === ownerBirth &&
+      agentInfo.ok && agent?.agent === "codex" && agent.pane_id === o.pane && agent.foreground_cwd === o.request.cwd &&
+      [undefined, "", o.label].includes(agent.name as string | undefined) && ["idle", "done"].includes(String(agent.agent_status)) &&
+      screen.ok && composerState(screen.stdout) === "empty" && !native.foreignActivity &&
+      (!bound || (native.accepted && !native.hasPending() && native.currentTurn === native.turn)) &&
+      (!rollout || readers.get(rollout)!.reader.settled(rollout)) && !!o.lease?.current();
+  };
   const onSignal = (): void => { cancelled = true; };
   process.once("SIGINT", onSignal); process.once("SIGTERM", onSignal);
   try {
@@ -253,6 +347,7 @@ export async function runLearnerTui(o: TuiOptions): Promise<TuiResult> {
     if (!p || p.shell_pid !== p.foreground_process_group_id) throw new Error("learner pane is not an idle shell");
     save("starting"); // journal before the external action
     const start = await h(["pane", "run", o.pane, shellQuote(["bash", script])]);
+    startConfirmed = start.ok;
     if (!start.ok) { uncertain = true; attention("TUI start receipt uncertain; inspect the original pane; never start another session"); }
     for (;;) {
       if (!pid && existsSync(pidfile)) {
@@ -271,6 +366,7 @@ export async function runLearnerTui(o: TuiOptions): Promise<TuiResult> {
         const named = await h(["agent", "rename", o.pane, o.label]);
         if (!named.ok) { uncertain = true; attention("learner TUI name receipt uncertain; no task replay"); }
         else {
+          if (!(await promptAllowed(false))) { ownershipLost = true; attention("learner prompt authority changed; keep original session"); break; }
           save("submitting", { prompt_sha256: createHash("sha256").update(prompt).digest("hex") });
           submitted = true;
           const sent = await h(["agent", "prompt", o.pane, sentPrompt]);
@@ -278,36 +374,22 @@ export async function runLearnerTui(o: TuiOptions): Promise<TuiResult> {
           save(sent.ok ? "submitted" : "uncertain");
         }
       }
-      for (const file of rollout ? [rollout] : candidates(o.codexHome, started - 2000).filter((f) => !before.has(f))) {
-        let entry = readers.get(file);
-        if (!entry) { entry = { reader: new NativeRows(), batch: new NativeBatch(marker) }; readers.set(file, entry); }
-        for (const row of entry.reader.read(file)) {
-          entry.batch.feed(row);
-          if (file === rollout && textOf(row).includes(pendingMarker)) uncertain = false;
-          if (!rollout && entry.batch.accepted && entry.batch.cwd === o.request.cwd && entry.batch.session) {
-            rollout = file;
-            Object.assign(native, entry.batch);
-            entry.batch = native;
-            o.log({ type: "thread.started", thread_id: native.session });
-            o.log({ type: "learner_tui_session", pane: o.pane, rollout, marker, session: native.session });
-            // A native matching user message resolves an uncertain submission receipt.
-            uncertain = false;
-          }
-          if (file === rollout) {
-            o.log(row as Record<string, unknown>);
-            if (o.request.resumeThread && native.accepted && !native.session) native.session = o.request.resumeThread;
-          }
-        }
-      }
+      readNative();
       // Submission and native polling can change the TUI within this iteration. Re-read readiness before any decision.
       const currentAgent = await h(["agent", "get", o.pane]);
       const current = currentAgent.result?.agent as Record<string, unknown> | undefined;
       const currentScreen = await h(["pane", "read", o.pane, "--format", "ansi"]);
       const finalIdle = current?.agent === "codex" && ["idle", "done"].includes(String(current.agent_status)) &&
         currentScreen.ok && composerState(currentScreen.stdout) === "empty";
-      const caughtUp = !!rollout && readers.get(rollout)!.reader.atEnd(rollout);
+      const caughtUp = !!rollout && readers.get(rollout)!.reader.settled(rollout);
       if (native.accepted && native.progress !== progress) { retries = 0; progress = native.progress; retryAt = undefined; alerted = false; }
-      if (o.lease && !o.lease.current()) { uncertain = true; attention("learner lease changed; completion and automatic continuation disabled"); }
+      if (!o.lease?.current()) { ownershipLost = true; uncertain = true; attention("learner lease changed; completion and automatic continuation disabled"); break; }
+      if (native.foreignActivity) {
+        ownershipLost = true; attention("unbound native/human turn; keep original session and supervision"); break;
+      }
+      if (currentScreen.ok && composerState(currentScreen.stdout) === "text") {
+        ownershipLost = true; attention("unsent human draft; keep original session and supervision"); break;
+      }
       if (native.successful() && finalIdle && caughtUp && !uncertain) { result = { ...result, code: 0, reason: "native-task-complete" }; break; }
       const transient = native.accepted && finalIdle && caughtUp &&
         (TRANSIENT.test(native.error) || TRANSIENT.test(native.message) || (!native.successful() && TRANSIENT.test(currentScreen.stdout.split("\n").slice(-40).join("\n"))));
@@ -319,9 +401,12 @@ export async function runLearnerTui(o: TuiOptions): Promise<TuiResult> {
           else if (o.lease?.current()) {
             // The actual TUI is idle with a matching error and an empty composer; continue this same session.
             // An error can leave a stale native task_started without task_complete; it is never treated as success.
+            if (!(await promptAllowed(true))) { ownershipLost = true; attention("learner continuation authority changed; keep original session"); break; }
+            pendingMarker = `${marker}:retry:${++continuation}`;
+            const prompt = `${pendingMarker}\n上一轮因模型/网络错误中断，请沿原任务、原批次和已有产物接着做；不要重启或另开会话。`;
+            native.expectPrompt(pendingMarker, prompt);
             save("retry-sending", { next_retry: retries + 1 });
-            pendingMarker = `${marker}:retry:${retries + 1}`;
-            const sent = await h(["agent", "prompt", o.pane, `${pendingMarker}\n上一轮因模型/网络错误中断，请沿原任务、原批次和已有产物接着做；不要重启或另开会话。`]);
+            const sent = await h(["agent", "prompt", o.pane, prompt]);
             retries++; retryAt = undefined;
             uncertain = !sent.ok;
             o.log({ type: "learner_tui_retry", attempt: retries, session: native.session, receipt: sent.ok ? "accepted" : "uncertain" });
@@ -340,38 +425,74 @@ export async function runLearnerTui(o: TuiOptions): Promise<TuiResult> {
       await pause(o.pollMs ?? 1000);
     }
   } catch {
+    uncertain = true;
     result.reason = "transport-or-native-record-error";
     attention("learner TUI transport/native record failed; inspect original local receipt");
   } finally {
-    // Retire only our exact PID. A changed pane, foreign foreground command or typed composer is never closed.
-    let retire = true;
-    if (result.code === 0) {
-      const screen = await h(["pane", "read", o.pane, "--format", "ansi"]);
-      if (!screen.ok || composerState(screen.stdout) !== "empty" ||
-          (rollout && !readers.get(rollout)!.reader.atEnd(rollout))) {
-        retire = false;
-        attention("new native activity or unsent human text after completion; keep the interactive session");
-      }
-    }
-    if (retire && pid && ownerBirth && await samePane()) {
-      if (birth(pid) === ownerBirth) await h(["agent", "send-keys", o.pane, "esc"]);
-      const until = now() + 10_000;
-      while (birth(pid) === ownerBirth && now() < until) {
-        const screen = await h(["pane", "read", o.pane, "--format", "ansi"]);
-        if (screen.ok && composerState(screen.stdout) === "empty") await h(["agent", "send-keys", o.pane, "ctrl+c"]);
-        await pause(o.pollMs ?? 1000);
-      }
-      for (const signal of ["SIGTERM", "SIGKILL"] as const) {
-        if (birth(pid) === ownerBirth) { try { process.kill(pid, signal); } catch { /* raced with native exit */ } await pause(o.pollMs ?? 1000); }
-      }
-      const shellBy = now() + 10_000;
-      do {
+    // Every exit reason and every destructive step uses the same fresh authority/foreground/composer proof.
+    const inspectDisposal = async (): Promise<"owned" | "exited" | "denied"> => {
+      try {
+        if (!startConfirmed || uncertain || ownershipLost || !o.lease?.current() || !pid || !ownerBirth || !(await samePane())) return "denied";
+        readNative();
+        if (native.foreignActivity || (submitted && (!native.accepted || native.hasPending() || native.currentTurn !== native.turn)) ||
+            (rollout && !readers.get(rollout)!.reader.settled(rollout))) return "denied";
         const info = await h(["pane", "process-info", "--pane", o.pane]);
         const p = info.result?.process_info as Record<string, unknown> | undefined;
-        result.stopped = birth(pid) !== ownerBirth && !!p && p.shell_pid === p.foreground_process_group_id;
-        if (result.stopped) break;
+        if (!info.ok || !p) return "denied";
+        const currentBirth = birth(pid);
+        if (currentBirth !== ownerBirth) return currentBirth === undefined &&
+          [p.shell_pid, pid].includes(p.foreground_process_group_id) ? "exited" : "denied";
+        if (p.foreground_process_group_id !== pid) return "denied";
+        const agentInfo = await h(["agent", "get", o.pane]);
+        const agent = agentInfo.result?.agent as Record<string, unknown> | undefined;
+        if (!agentInfo.ok && birth(pid) === undefined) return "exited";
+        if (!agentInfo.ok || agent?.agent !== "codex" || agent.pane_id !== o.pane || agent.foreground_cwd !== o.request.cwd ||
+            (submitted ? agent.name !== o.label : ![undefined, "", o.label].includes(agent.name as string | undefined)) ||
+            !["idle", "done", ...(submitted && native.open ? ["working"] : [])].includes(String(agent.agent_status))) return "denied";
+        const screen = await h(["pane", "read", o.pane, "--format", "ansi"]);
+        readNative();
+        if (native.foreignActivity || (submitted && (!native.accepted || native.hasPending() || native.currentTurn !== native.turn)) ||
+            (rollout && !readers.get(rollout)!.reader.settled(rollout)) || ownershipLost || uncertain || !o.lease?.current()) return "denied";
+        if (!screen.ok && birth(pid) === undefined) return "exited";
+        if (!screen.ok || composerState(screen.stdout) !== "empty") return "denied";
+        const finalBirth = birth(pid);
+        return finalBirth === ownerBirth ? "owned" : finalBirth === undefined ? "exited" : "denied";
+      } catch { return "denied"; }
+    };
+    try {
+      let disposition = await inspectDisposal();
+      // Only a live owned process authorizes keys. An exited process authorizes read-only waiting.
+      if (disposition === "owned" && birth(pid!) === ownerBirth && native.open) {
+        if (!(await h(["agent", "send-keys", o.pane, "esc"])).ok) uncertain = true;
+        disposition = await inspectDisposal();
+      }
+      const until = now() + 10_000;
+      while (disposition === "owned" && birth(pid!) === ownerBirth && now() < until) {
+        disposition = await inspectDisposal();
+        if (disposition !== "owned" || birth(pid!) !== ownerBirth) break;
+        if (!(await h(["agent", "send-keys", o.pane, "ctrl+c"])).ok) uncertain = true;
         await pause(o.pollMs ?? 1000);
-      } while (now() < shellBy);
+        disposition = await inspectDisposal();
+      }
+      if (disposition !== "denied") {
+        const shellBy = now() + 10_000;
+        do {
+          if (!o.lease?.current() || uncertain || ownershipLost || !(await samePane())) break;
+          readNative();
+          if (native.foreignActivity || (submitted && (!native.accepted || native.hasPending() || native.currentTurn !== native.turn)) ||
+              (rollout && !readers.get(rollout)!.reader.settled(rollout))) break;
+          const info = await h(["pane", "process-info", "--pane", o.pane]);
+          const p = info.result?.process_info as Record<string, unknown> | undefined;
+          if (!info.ok || !p) break;
+          if (birth(pid!) === undefined && p.shell_pid === p.foreground_process_group_id && o.lease?.current()) {
+            result.stopped = true; retirementAuthorized = true; break;
+          }
+          if (p.foreground_process_group_id !== pid || (birth(pid!) !== undefined && birth(pid!) !== ownerBirth)) break;
+          await pause(o.pollMs ?? 1000);
+        } while (now() < shellBy);
+      }
+    } catch {
+      uncertain = true; attention("learner retirement observation failed; keep original session and supervision");
     }
     process.removeListener("SIGINT", onSignal); process.removeListener("SIGTERM", onSignal);
   }

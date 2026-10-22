@@ -1,0 +1,99 @@
+{
+  "parent": "4500cdb50f55db695ab9afb12604c78270abec88",
+  "limits": {
+    "nice": 19,
+    "pool": "forks",
+    "max_workers": 1,
+    "file_parallelism": false
+  },
+  "final_targeted_command": "cd agent && PATH=\"$HOME/.local/node/bin:$PATH\" nice -n 19 node node_modules/vitest/vitest.mjs run tests/learner-herdr.test.ts tests/learner-herdr-ownership.test.ts tests/learner-herdr-launcher.test.ts tests/learner-herdr-receipts.test.ts tests/learner-startup-recovery.test.ts tests/learner.test.ts tests/learner-entry.test.ts tests/ops-herdr.test.ts --pool=forks --maxWorkers=1 --no-file-parallelism --reporter=verbose",
+  "final_typecheck_command": "PATH=\"$HOME/.local/node/bin:$PATH\" nice -n 19 node agent/node_modules/typescript/bin/tsc -p agent/tsconfig.json --noEmit",
+  "python_command": "nice -n 19 python3 -B -m unittest -v ops.tests.test_learner_tui",
+  "reviewer_counterexamples": {
+    "test": "agent/tests/learner-herdr-ownership.test.ts",
+    "sha256": "af57612bd0b6413b2cac926641e3d30820074e43391d4dc260ca7ddf783add6b",
+    "before_failed": 4,
+    "final_passed": 4
+  },
+  "checks": [
+    {
+      "log": "checks/reviewer-before.log",
+      "exit_code": 1,
+      "files": 1,
+      "tests": 4,
+      "sha256": "c3fbf83aa0d8d9efb43f3ba647b53e92e9558040b586fe86177b9e9076eefa21",
+      "result": "4 failed on parent 4500cdb50, unchanged reviewer test"
+    },
+    {
+      "log": "checks/targeted-first.log",
+      "exit_code": 1,
+      "files": 3,
+      "tests": 36,
+      "sha256": "62f41f8232f2e1ea64ae3b87974a741d794f377b7cceedca60e0d2380bed1c93",
+      "result": "Python legacy receipt fixture missing newly required fields; updated fixture and regressions"
+    },
+    {
+      "log": "checks/python-first.log",
+      "exit_code": 0,
+      "files": null,
+      "tests": 18,
+      "sha256": "3a1fa8d01acb6052e49782e9340deff6cde989f09b0a66bfc57f3aa2095fab5b"
+    },
+    {
+      "log": "checks/targeted.log",
+      "exit_code": 0,
+      "files": 8,
+      "tests": 141,
+      "sha256": "03e79a59f85cc99cffda4676b0b6a16ded69f31d536b1fe70ec1a3d214825ebb"
+    },
+    {
+      "log": "checks/targeted-final.log",
+      "exit_code": 1,
+      "files": 8,
+      "tests": 145,
+      "sha256": "00d634851e5b6289722da6a5c97286c66ff8a4b0bde5f676a872479bd71956f0",
+      "result": "2 normal retirement failures; fixed PID-exit/foreground-update race and added deterministic lag case"
+    },
+    {
+      "log": "checks/lifecycle-final.log",
+      "exit_code": 0,
+      "files": 4,
+      "tests": 45,
+      "sha256": "59cf7ac57de8435e8d364718bd844d8314ee2022469f6266062fbb05ff6b3044"
+    },
+    {
+      "log": "checks/targeted-race-fixed.log",
+      "exit_code": 0,
+      "files": 8,
+      "tests": 146,
+      "sha256": "354e276ba84ecc36c943b090c6919dcb9aa1f241d8919ac680c7b0b5dc3796eb"
+    },
+    {
+      "log": "checks/tsc.log",
+      "exit_code": 0,
+      "files": null,
+      "tests": null,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "log": "checks/tsc-final.log",
+      "exit_code": 0,
+      "files": null,
+      "tests": null,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "log": "checks/python-final.log",
+      "exit_code": 0,
+      "files": null,
+      "tests": 18,
+      "sha256": "f4889410e2cd44bdd38ad2f1ffc27bfb283a7d913ec53ad512f7dd466d13109a"
+    }
+  ],
+  "pending": [
+    "full Vitest after original #33 window",
+    "natural learner TUI task/model receipt/output/retirement/close",
+    "natural gameplay live stream and run transition after #33"
+  ],
+  "production_actions": false
+}
