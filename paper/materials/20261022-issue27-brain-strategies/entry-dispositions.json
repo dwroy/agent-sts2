@@ -1,0 +1,84 @@
+{
+  "published_content": [
+    {
+      "id": "silent-brain-kin-priest-exit-window",
+      "version": "1.0.0",
+      "source": "own",
+      "ledger_id": "silent-0568",
+      "status": "proposed; content ready for main integration, live pending",
+      "parent_observations": [
+        "silent-0012",
+        "silent-0009",
+        "silent-kin-poison-sl-observation"
+      ],
+      "independent_runs": 1,
+      "effect": null
+    },
+    {
+      "id": "silent-brain-vantom-two-stage-preparation",
+      "version": "1.0.0",
+      "source": "own",
+      "ledger_id": "silent-0569",
+      "status": "proposed; content ready for main integration, live pending",
+      "parent_observations": [
+        "silent-0224",
+        "silent-0227",
+        "silent-vantom-slippery-growth"
+      ],
+      "independent_runs": 1,
+      "effect": null
+    },
+    {
+      "id": "silent-brain-crab-surviving-part-budget",
+      "version": "1.0.0",
+      "source": "own",
+      "ledger_id": "silent-0570",
+      "status": "proposed; content ready for main integration, live pending",
+      "parent_observations": [
+        "silent-0161",
+        "silent-0021",
+        "silent-kaiser-crab-facing-sl"
+      ],
+      "independent_runs": 1,
+      "effect": null
+    }
+  ],
+  "retained_not_published": [
+    {
+      "id": "candidate-external-sts2fun-card-ranking",
+      "source": "external:sts2fun",
+      "finding": "v0.111/A10/Silent拿/不拿结果、玩家簇区间及调整差仍为观察关联，不能以单卡胜率证明拿牌收益；未给单卡排名。",
+      "evidence": "external-review.json#reviewed_aggregates",
+      "reason": "无牌组条件下的受控收益；无逐局号/精确全局楼层。保留aggregate命名空间，不填虚假floor=0以绕过必填整数。"
+    },
+    {
+      "id": "candidate-external-spire-codex-boss-plans",
+      "source": "external:spire-codex",
+      "finding": "已读同族信徒/神官、墨影、知识恶魔v0.111.0参考事实与Required Notice；可查询事实不等于本角色已验证策略。",
+      "evidence": "external-review.json#reviewed_reference_entries",
+      "reason": "机械参考无对局/楼层分母；知识恶魔没有本批逐帧核回Silent窗口，不因描述有出招图就给固定打法。"
+    },
+    {
+      "id": "candidate-fixed-kin-kill-order",
+      "source": "own",
+      "reason": "神官退场伴随信徒退场不证明固定先杀顺序最优；单局胜且净损50，无对照。"
+    },
+    {
+      "id": "candidate-fixed-vantom-card-priority",
+      "source": "own",
+      "reason": "单局后段推进和胜利不足以给毒牌/多段卡因果优先级；不把出牌机制改名card_pick。"
+    },
+    {
+      "id": "candidate-crab-rest-was-error",
+      "source": "own",
+      "reason": "满血仍败不证明回血选择错误；缺少另一选择受控结局。"
+    }
+  ],
+  "dedup": {
+    "formal_before": "file absent both source tree and main before integration",
+    "experience": "244 frozen entries; targeted boss/claim scan only, not all evidence revalidated",
+    "ledger": "frozen claim scan plus live CLI find silent-brain- returned []; 3 new proposed planning records, no shipped update",
+    "within_batch": "3 distinct boss triggers; each same-run references count once",
+    "legacy_rules": "experience.json unchanged; no new combat_line, potion/SL execution or terminal rules"
+  }
+}

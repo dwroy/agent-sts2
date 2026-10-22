@@ -1,0 +1,114 @@
+{
+  "design": "observational",
+  "ended_own_independent_runs": 434,
+  "dataset": {
+    "rows": 11735,
+    "eligible_rows": 11735,
+    "independent_runs": 410,
+    "primary_types": {
+      "event": 2471,
+      "card_reward": 5275,
+      "rest": 2461,
+      "shop": 1066,
+      "act_plan": 462
+    },
+    "unknown_outcomes": {
+      "boss_pass": 536,
+      "remaining_hp_loss": 4868,
+      "final_floor": 47
+    },
+    "not_covered_ended_runs": [
+      "0CLP16ZR4ZZC",
+      "0SXAXVPXV8EC",
+      "1RUG121U962B",
+      "28T664BN1NCA",
+      "4WTPX6M9G5G6",
+      "5YKZ3TXFACN9",
+      "72RFEYV6WNPA",
+      "AR523ATD2G4W",
+      "DFYBEW6NA6AJ",
+      "DGBH7X5QS9KG",
+      "FWHKRV6JFA4H",
+      "FZT053H9PSC5",
+      "GVCL0CRJ78AX",
+      "H7F4VUMTS7Z7",
+      "JLZCE665J9LD",
+      "KHECCYUJ7K48",
+      "MWQ1RY3E14ZT",
+      "PZRSP3EL4K6B",
+      "R3MFUZ3732VF",
+      "S0JWSFR8JAKF",
+      "SXBR2JL68B3W",
+      "T1XWKCUQW4T3",
+      "TJ7F1HKL33BX",
+      "VVFH7BULZZR6"
+    ],
+    "reading_scope": "Mechanical metadata/count pass; selected five questions read; answers/reasons not strategy evidence."
+  },
+  "own_raw": {
+    "independent_runs": 3,
+    "fight_windows": [
+      [
+        "FETDVL1P59B9",
+        17,
+        "first",
+        "2026-10-12T22:06:32.977Z",
+        "2026-10-12T22:10:20.999Z"
+      ],
+      [
+        "VGNDNGPFYRE3",
+        17,
+        "first",
+        "2026-10-12T23:45:22.896Z",
+        "2026-10-12T23:46:36.999Z"
+      ],
+      [
+        "YZQEEDWQ6AY6",
+        33,
+        "first",
+        "2026-10-13T00:48:26.929Z",
+        "2026-10-13T00:51:47.102Z"
+      ],
+      [
+        "YZQEEDWQ6AY6",
+        33,
+        "sl6",
+        "2026-10-13T01:05:02.462Z",
+        "2026-10-13T01:09:40.999Z"
+      ]
+    ],
+    "observed_frames": 196,
+    "indexed_frames": 530,
+    "sl_index_rows": 14,
+    "independent_boss_fights": 3,
+    "retry_denominator_added": 0,
+    "unhashed_whole_streams": [
+      "logs/states.jsonl",
+      "logs/sl-attempts.jsonl"
+    ],
+    "limits": [
+      "Only these boss windows support published entries; not all 434 runs read.",
+      "YZ first predicted-death SL cutoff is not executed death; SL6 kept separately.",
+      "No counterfactual choice, causal gain, or historical complete dirty code tree."
+    ]
+  },
+  "external": {
+    "sources_reviewed": [
+      "external:sts2fun",
+      "external:spire-codex"
+    ],
+    "v0.111.0_silent_a10_cohort_runs": 1739,
+    "v0.111.0_silent_a10_cohort_players": 98,
+    "not_a_common_denominator": "Card slots, screens, deck cohorts and player counts remain per table/row; not additive.",
+    "other_versions": "v0.107–v0.110 inspected as cohort metadata only; excluded from strategy."
+  },
+  "unread_or_excluded": [
+    "Other raw fights/characters; runs outside frozen inventory; bytes beyond manifest limits",
+    "Most of frozen experience/ledger text (dedup scoped to selected claims); v6-history/build-cores not used as evidence",
+    "Original model reasons/plan examples, simulation/MC estimates and accepted-only answers as action/cause evidence"
+  ],
+  "missing": [
+    "agent/src/brain/tools/knowledge-tools.ts"
+  ],
+  "missing_note": "knowledge-tools.ts absent in manifest; actual #33 path is agent-knowledge.ts, present frozen and current."
+}

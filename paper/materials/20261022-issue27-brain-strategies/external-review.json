@@ -1,0 +1,1242 @@
+{
+  "separate_from_own": true,
+  "sts2fun_provenance": {
+    "source": "external:sts2fun",
+    "url": "https://sts2.fun/static/sts2_public.db.zst",
+    "faq": "https://sts2.fun/faq",
+    "downloaded_at": "2026-10-21",
+    "analyzed_at": "2026-10-21",
+    "compressed_bytes": 759783329,
+    "compressed_sha256": "0f3e1660cdd41665c5e29695232137252187713a5fde87fb888ab3e228c69ac7",
+    "compressed_hash_basis": "issue #24 acquisition receipt; compressed file not re-downloaded",
+    "database_bytes": 13224845312,
+    "database_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+    "license": "No explicit dataset redistribution license found on public FAQ; aggregate statistics with attribution only; no raw redistribution.",
+    "filter": "character='SILENT' AND ascension=10 AND n_players=1 AND is_valid=1 AND was_abandoned=0 AND has_modifiers=0",
+    "primary_version": "v0.111",
+    "adjacent_versions": [
+      "v0.107",
+      "v0.108",
+      "v0.109",
+      "v0.110"
+    ],
+    "catalog_sha256": "8973610b44d41683ecc414299006df99decaf82e9017b9bf4ebb89c216268a69",
+    "script_sha256": "84cb9c56095db3f37ea4f7840142791681b1f9dd971015a3bff922648c5b2fcc",
+    "own_logs": {
+      "files": {
+        "brain.jsonl": {
+          "bytes": 1209166215,
+          "prefix_sha256": "078605b2584ad5880feb48c68e8e97b7598c7c600935375493bf4bdcd4e845fb"
+        },
+        "runs.jsonl": {
+          "bytes": 404144,
+          "prefix_sha256": "3faff768182589f6d1db2a0b918169552fcee97b524fdd1b46b87127cdf10dbe"
+        }
+      },
+      "parse_audit": {
+        "brain.jsonl": {
+          "invalid_json": 2
+        },
+        "runs.jsonl": {}
+      },
+      "eligible_finished_runs": 368,
+      "unique_runs_with_picks": 358
+    },
+    "privacy": "No players-table reads; integers only in memory; no external player/run identifiers in outputs."
+  },
+  "cohorts": {
+    "v0.107": {
+      "runs": 2932,
+      "players": 285,
+      "wins": 733,
+      "builds": {
+        "v0.107.0": 1058,
+        "v0.107.1": 1874
+      }
+    },
+    "v0.108": {
+      "runs": 683,
+      "players": 92,
+      "wins": 202,
+      "builds": {
+        "v0.108.0": 683
+      }
+    },
+    "v0.109": {
+      "runs": 583,
+      "players": 79,
+      "wins": 169,
+      "builds": {
+        "v0.109.0": 451,
+        "v0.109.1": 132
+      }
+    },
+    "v0.110": {
+      "runs": 411,
+      "players": 71,
+      "wins": 108,
+      "builds": {
+        "v0.110.1": 399,
+        "v0.110.0": 12
+      }
+    },
+    "v0.111": {
+      "runs": 1739,
+      "players": 98,
+      "wins": 492,
+      "builds": {
+        "v0.111.0": 1739
+      }
+    }
+  },
+  "reviewed_aggregates": [
+    {
+      "source": "external:sts2fun",
+      "namespace": "aggregate:sts2fun:v0.111:Silent:A10",
+      "table": "paper/materials/2026-10-21-sts2fun-stats/card_choices.csv",
+      "line": 2902,
+      "offset": 891486,
+      "bytes": 514,
+      "sha256": "71fa31cb77972a4457cf8a773e3772c13d00d5d93aafd10c800a09fca87b2f32",
+      "snapshot_sha256": "33f118c45a08b470d406ab7329d468878aefd713824c87e93926e967e13c6610",
+      "row": {
+        "version": "v0.111",
+        "card": "BLADE_DANCE",
+        "act": "1",
+        "offered": "1054",
+        "picked": "411",
+        "not_picked": "643",
+        "players": "83",
+        "pick_rate": "0.3899430740037951",
+        "pick_rate_cluster_ci": "[0.311654348182265, 0.4448367290654585]",
+        "picked_wins": "139",
+        "not_picked_wins": "184",
+        "picked_win_rate": "0.3381995133819951",
+        "picked_win_wilson": "[0.29414740504374515, 0.38524818772538]",
+        "not_picked_win_rate": "0.28615863141524106",
+        "not_picked_win_wilson": "[0.252575448808982, 0.3222817341220977]",
+        "picked_win_cluster_ci": "[0.22345328282828283, 0.4079000711237553]",
+        "not_picked_win_cluster_ci": "[0.20224213286713286, 0.36579452665498685]",
+        "win_difference": "0.05204088196675405",
+        "win_difference_cluster_ci": "[-0.03615654583529024, 0.10221408635664815]",
+        "valid_bootstrap_draws": "1000",
+        "player_act_adjusted_difference": "0.0026505734406033804",
+        "adjusted_cluster_ci": "[-0.07934429860626409, 0.058595189483940914]",
+        "matched_players": "49",
+        "matched_strata": "49",
+        "matched_offers": "983",
+        "frequent_player_offers": "948",
+        "frequent_players": "38",
+        "frequent_player_pick_rate": "0.3860759493670886",
+        "frequent_player_win_difference": "0.04092727170300264"
+      }
+    },
+    {
+      "source": "external:sts2fun",
+      "namespace": "aggregate:sts2fun:v0.111:Silent:A10",
+      "table": "paper/materials/2026-10-21-sts2fun-stats/card_choices.csv",
+      "line": 3056,
+      "offset": 936218,
+      "bytes": 509,
+      "sha256": "96837b71a0a283d6d73e50058ff35ad14a145fdd02e76298013f9f76376f9b00",
+      "snapshot_sha256": "33f118c45a08b470d406ab7329d468878aefd713824c87e93926e967e13c6610",
+      "row": {
+        "version": "v0.111",
+        "card": "DEADLY_POISON",
+        "act": "1",
+        "offered": "1060",
+        "picked": "265",
+        "not_picked": "795",
+        "players": "83",
+        "pick_rate": "0.25",
+        "pick_rate_cluster_ci": "[0.19077300483304419, 0.34762557890986817]",
+        "picked_wins": "70",
+        "not_picked_wins": "259",
+        "picked_win_rate": "0.2641509433962264",
+        "picked_win_wilson": "[0.2147121457305878, 0.32032980595228233]",
+        "not_picked_win_rate": "0.32578616352201256",
+        "not_picked_win_wilson": "[0.29411315653978753, 0.3591346851421816]",
+        "picked_win_cluster_ci": "[0.2037539184952978, 0.3317930489731437]",
+        "not_picked_win_cluster_ci": "[0.24716121273498323, 0.38818032324750984]",
+        "win_difference": "-0.06163522012578615",
+        "win_difference_cluster_ci": "[-0.12138664803060145, 0.009363719075537671]",
+        "valid_bootstrap_draws": "1000",
+        "player_act_adjusted_difference": "-0.04367773206829335",
+        "adjusted_cluster_ci": "[-0.08747674623205297, 0.004142938180430478]",
+        "matched_players": "44",
+        "matched_strata": "44",
+        "matched_offers": "950",
+        "frequent_player_offers": "937",
+        "frequent_players": "38",
+        "frequent_player_pick_rate": "0.2508004268943437",
+        "frequent_player_win_difference": "-0.07942050069709644"
+      }
+    },
+    {
+      "source": "external:sts2fun",
+      "namespace": "aggregate:sts2fun:v0.111:Silent:A10",
+      "table": "paper/materials/2026-10-21-sts2fun-stats/card_choices.csv",
+      "line": 3173,
+      "offset": 972670,
+      "bytes": 493,
+      "sha256": "0309329d54756dfaa7836621e487604641322636fef3492108a59688a5c52101",
+      "snapshot_sha256": "33f118c45a08b470d406ab7329d468878aefd713824c87e93926e967e13c6610",
+      "row": {
+        "version": "v0.111",
+        "card": "FOOTWORK",
+        "act": "1",
+        "offered": "389",
+        "picked": "346",
+        "not_picked": "43",
+        "players": "56",
+        "pick_rate": "0.8894601542416453",
+        "pick_rate_cluster_ci": "[0.8392245999186903, 0.9279323441088146]",
+        "picked_wins": "135",
+        "not_picked_wins": "12",
+        "picked_win_rate": "0.3901734104046243",
+        "picked_win_wilson": "[0.3402506036105718, 0.44250813442981407]",
+        "not_picked_win_rate": "0.27906976744186046",
+        "not_picked_win_wilson": "[0.16746613786237488, 0.4269102868187887]",
+        "picked_win_cluster_ci": "[0.27710379981464317, 0.4769811602870813]",
+        "not_picked_win_cluster_ci": "[0.14924579231502064, 0.5]",
+        "win_difference": "0.11110364296276382",
+        "win_difference_cluster_ci": "[-0.08720422790146004, 0.22163845854555742]",
+        "valid_bootstrap_draws": "1000",
+        "player_act_adjusted_difference": "0.07309348125790467",
+        "adjusted_cluster_ci": "[-0.09385780001961722, 0.20686254341645868]",
+        "matched_players": "15",
+        "matched_strata": "15",
+        "matched_offers": "262",
+        "frequent_player_offers": "362",
+        "frequent_players": "37",
+        "frequent_player_pick_rate": "0.8922651933701657",
+        "frequent_player_win_difference": "0.1367785980789077"
+      }
+    },
+    {
+      "source": "external:sts2fun",
+      "namespace": "aggregate:sts2fun:v0.111:Silent:A10",
+      "table": "paper/materials/2026-10-21-sts2fun-stats/skip_rates.csv",
+      "line": 18,
+      "offset": 1373,
+      "bytes": 84,
+      "sha256": "0e039eb2eff60ccefd67798d2a66f4714441474b4abb392fbb3cf06e912054c1",
+      "snapshot_sha256": "aa5c5e8ce6afaccf733e428576586b94bb007245242fbdc502f079ca5535c94b",
+      "row": {
+        "version": "v0.111",
+        "act": "1",
+        "screens": "13307",
+        "skipped": "1456",
+        "rate": "0.10941609679116254",
+        "cluster_ci": "[0.0595123436377582, 0.16450124705081484]"
+      }
+    },
+    {
+      "source": "external:sts2fun",
+      "namespace": "aggregate:sts2fun:v0.111:Silent:A10",
+      "table": "paper/materials/2026-10-21-sts2fun-stats/skip_rates.csv",
+      "line": 19,
+      "offset": 1457,
+      "bytes": 82,
+      "sha256": "bb8924f83100bd35b945fa5826d8fe4e1e373f305139e9cd2382a9f64d6a7b19",
+      "snapshot_sha256": "aa5c5e8ce6afaccf733e428576586b94bb007245242fbdc502f079ca5535c94b",
+      "row": {
+        "version": "v0.111",
+        "act": "2",
+        "screens": "7821",
+        "skipped": "2198",
+        "rate": "0.281038230405319",
+        "cluster_ci": "[0.20745451951842533, 0.37107431798918306]"
+      }
+    },
+    {
+      "source": "external:sts2fun",
+      "namespace": "aggregate:sts2fun:v0.111:Silent:A10",
+      "table": "paper/materials/2026-10-21-sts2fun-stats/skip_rates.csv",
+      "line": 20,
+      "offset": 1539,
+      "bytes": 82,
+      "sha256": "a2e0a5864a4d649e5767f9ed73df5ea8f9604ebab45592f224dae43e3d26a6e9",
+      "snapshot_sha256": "aa5c5e8ce6afaccf733e428576586b94bb007245242fbdc502f079ca5535c94b",
+      "row": {
+        "version": "v0.111",
+        "act": "3",
+        "screens": "4411",
+        "skipped": "1704",
+        "rate": "0.38630695987304464",
+        "cluster_ci": "[0.3134360059449658, 0.4957741888332287]"
+      }
+    },
+    {
+      "source": "external:sts2fun",
+      "namespace": "aggregate:sts2fun:v0.111:Silent:A10",
+      "table": "paper/materials/2026-10-21-sts2fun-stats/skip_rates.csv",
+      "line": 21,
+      "offset": 1621,
+      "bytes": 86,
+      "sha256": "3f774e3cf9225582dbbef3d107922f6ad8f8dddf9583f86db12d91e45343cef4",
+      "snapshot_sha256": "aa5c5e8ce6afaccf733e428576586b94bb007245242fbdc502f079ca5535c94b",
+      "row": {
+        "version": "v0.111",
+        "act": "all",
+        "screens": "25539",
+        "skipped": "5358",
+        "rate": "0.2097967813931634",
+        "cluster_ci": "[0.15405305896263893, 0.27591894565794023]"
+      }
+    },
+    {
+      "source": "external:sts2fun",
+      "namespace": "aggregate:sts2fun:v0.111:Silent:A10",
+      "table": "paper/materials/2026-10-21-sts2fun-stats/deck_sizes.csv",
+      "line": 132,
+      "offset": 13268,
+      "bytes": 87,
+      "sha256": "f5ed0c6faaf35f443b5276c64bc22430a44f33892b004820dee847d07d7ce3fe",
+      "snapshot_sha256": "2df79d03bb33da8fad1d0205ac2f7c756be92991323eba6a74fe622057d4ce2b",
+      "row": {
+        "version": "v0.111",
+        "scope": "all",
+        "size": "10-14",
+        "n": "3",
+        "wins": "0",
+        "players": "3",
+        "win_rate": "0.0",
+        "wilson": "[4.8683609171202235e-17, 0.5614970317550455]",
+        "cluster_ci": "[0.0, 0.0]"
+      }
+    },
+    {
+      "source": "external:sts2fun",
+      "namespace": "aggregate:sts2fun:v0.111:Silent:A10",
+      "table": "paper/materials/2026-10-21-sts2fun-stats/deck_sizes.csv",
+      "line": 133,
+      "offset": 13355,
+      "bytes": 70,
+      "sha256": "24ea9f96fb9cc3330e7f5c2f83fa063c2a2b0b90c2ec183eee67abb67ffd5dfc",
+      "snapshot_sha256": "2df79d03bb33da8fad1d0205ac2f7c756be92991323eba6a74fe622057d4ce2b",
+      "row": {
+        "version": "v0.111",
+        "scope": "all",
+        "size": "105-109",
+        "n": "2",
+        "wins": "2",
+        "players": "1",
+        "win_rate": "1.0",
+        "wilson": "[0.3423802275066531, 1.0]",
+        "cluster_ci": "[1.0, 1.0]"
+      }
+    },
+    {
+      "source": "external:sts2fun",
+      "namespace": "aggregate:sts2fun:v0.111:Silent:A10",
+      "table": "paper/materials/2026-10-21-sts2fun-stats/deck_sizes.csv",
+      "line": 134,
+      "offset": 13425,
+      "bytes": 122,
+      "sha256": "abf3efe88ffb184ece4f12b898304d697c83038c2e1a0ac933335fe0942c3f76",
+      "snapshot_sha256": "2df79d03bb33da8fad1d0205ac2f7c756be92991323eba6a74fe622057d4ce2b",
+      "row": {
+        "version": "v0.111",
+        "scope": "all",
+        "size": "15-19",
+        "n": "219",
+        "wins": "1",
+        "players": "53",
+        "win_rate": "0.0045662100456621",
+        "wilson": "[0.0008065034670904193, 0.025407015559431315]",
+        "cluster_ci": "[0.0, 0.01680672268907563]"
+      }
+    },
+    {
+      "source": "external:sts2fun",
+      "namespace": "aggregate:sts2fun:v0.111:Silent:A10",
+      "table": "paper/materials/2026-10-21-sts2fun-stats/deck_sizes.csv",
+      "line": 135,
+      "offset": 13547,
+      "bytes": 71,
+      "sha256": "92638414498789180c9c1adf42d1e3535ea385b52aecd1fb55ab6efdcdb2aa3b",
+      "snapshot_sha256": "2df79d03bb33da8fad1d0205ac2f7c756be92991323eba6a74fe622057d4ce2b",
+      "row": {
+        "version": "v0.111",
+        "scope": "all",
+        "size": "155-159",
+        "n": "1",
+        "wins": "1",
+        "players": "1",
+        "win_rate": "1.0",
+        "wilson": "[0.20654931437723742, 1.0]",
+        "cluster_ci": "[1.0, 1.0]"
+      }
+    },
+    {
+      "source": "external:sts2fun",
+      "namespace": "aggregate:sts2fun:v0.111:Silent:A10",
+      "table": "paper/materials/2026-10-21-sts2fun-stats/deck_sizes.csv",
+      "line": 136,
+      "offset": 13618,
+      "bytes": 123,
+      "sha256": "0b943b28b81b6fe2509678bf233f0896eda7819aa98a248af142475536198036",
+      "snapshot_sha256": "2df79d03bb33da8fad1d0205ac2f7c756be92991323eba6a74fe622057d4ce2b",
+      "row": {
+        "version": "v0.111",
+        "scope": "all",
+        "size": "20-24",
+        "n": "315",
+        "wins": "2",
+        "players": "59",
+        "win_rate": "0.006349206349206349",
+        "wilson": "[0.0017429117309909878, 0.02285068676055243]",
+        "cluster_ci": "[0.0, 0.02001546391752576]"
+      }
+    },
+    {
+      "source": "external:sts2fun",
+      "namespace": "aggregate:sts2fun:v0.111:Silent:A10",
+      "table": "paper/materials/2026-10-21-sts2fun-stats/deck_sizes.csv",
+      "line": 137,
+      "offset": 13741,
+      "bytes": 132,
+      "sha256": "f09236d46467ea9e4fec46979f036e73797d155709e5e1214e51e669d8df812d",
+      "snapshot_sha256": "2df79d03bb33da8fad1d0205ac2f7c756be92991323eba6a74fe622057d4ce2b",
+      "row": {
+        "version": "v0.111",
+        "scope": "all",
+        "size": "25-29",
+        "n": "317",
+        "wins": "44",
+        "players": "66",
+        "win_rate": "0.138801261829653",
+        "wilson": "[0.105048239787193, 0.18120360297113566]",
+        "cluster_ci": "[0.09904799983804358, 0.1832770956988373]"
+      }
+    },
+    {
+      "source": "external:sts2fun",
+      "namespace": "aggregate:sts2fun:v0.111:Silent:A10",
+      "table": "paper/materials/2026-10-21-sts2fun-stats/deck_sizes.csv",
+      "line": 138,
+      "offset": 13873,
+      "bytes": 135,
+      "sha256": "fd8ccd5aac6b895acdce124c809ef27dddff08a91f39253f91a3b7c4cac10c61",
+      "snapshot_sha256": "2df79d03bb33da8fad1d0205ac2f7c756be92991323eba6a74fe622057d4ce2b",
+      "row": {
+        "version": "v0.111",
+        "scope": "all",
+        "size": "30-34",
+        "n": "387",
+        "wins": "144",
+        "players": "70",
+        "win_rate": "0.37209302325581395",
+        "wilson": "[0.3254132095617221, 0.4212871525269934]",
+        "cluster_ci": "[0.29937478366216685, 0.4538957361959494]"
+      }
+    },
+    {
+      "source": "external:sts2fun",
+      "namespace": "aggregate:sts2fun:v0.111:Silent:A10",
+      "table": "paper/materials/2026-10-21-sts2fun-stats/deck_sizes.csv",
+      "line": 139,
+      "offset": 14008,
+      "bytes": 133,
+      "sha256": "ed5cad75202aadc0a5b09709b2af6a53ee7395d99170c54bd9cdc0080b7165b9",
+      "snapshot_sha256": "2df79d03bb33da8fad1d0205ac2f7c756be92991323eba6a74fe622057d4ce2b",
+      "row": {
+        "version": "v0.111",
+        "scope": "all",
+        "size": "35-39",
+        "n": "258",
+        "wins": "142",
+        "players": "47",
+        "win_rate": "0.5503875968992248",
+        "wilson": "[0.4893903199816666, 0.6099064075766857]",
+        "cluster_ci": "[0.48466836620600207, 0.673480479148181]"
+      }
+    },
+    {
+      "source": "external:sts2fun",
+      "namespace": "aggregate:sts2fun:v0.111:Silent:A10",
+      "table": "paper/materials/2026-10-21-sts2fun-stats/deck_sizes.csv",
+      "line": 140,
+      "offset": 14141,
+      "bytes": 131,
+      "sha256": "31d28286f0be2adac8f458ff97b1fac5f8a52cc4dc409f09b0d2eb0bc1884731",
+      "snapshot_sha256": "2df79d03bb33da8fad1d0205ac2f7c756be92991323eba6a74fe622057d4ce2b",
+      "row": {
+        "version": "v0.111",
+        "scope": "all",
+        "size": "40-44",
+        "n": "135",
+        "wins": "88",
+        "players": "24",
+        "win_rate": "0.6518518518518519",
+        "wilson": "[0.5682990192889539, 0.7270018249131313]",
+        "cluster_ci": "[0.552525466893039, 0.8281361607142858]"
+      }
+    },
+    {
+      "source": "external:sts2fun",
+      "namespace": "aggregate:sts2fun:v0.111:Silent:A10",
+      "table": "paper/materials/2026-10-21-sts2fun-stats/deck_sizes.csv",
+      "line": 141,
+      "offset": 14272,
+      "bytes": 100,
+      "sha256": "12896f7fb61b2caa7ad9db85f83671193447d37828dd13fc78cb9c96ee29eb66",
+      "snapshot_sha256": "2df79d03bb33da8fad1d0205ac2f7c756be92991323eba6a74fe622057d4ce2b",
+      "row": {
+        "version": "v0.111",
+        "scope": "all",
+        "size": "45-49",
+        "n": "43",
+        "wins": "29",
+        "players": "8",
+        "win_rate": "0.6744186046511628",
+        "wilson": "[0.5251621096752948, 0.7950670287343129]",
+        "cluster_ci": "[0.5, 1.0]"
+      }
+    },
+    {
+      "source": "external:sts2fun",
+      "namespace": "aggregate:sts2fun:v0.111:Silent:A10",
+      "table": "paper/materials/2026-10-21-sts2fun-stats/deck_sizes.csv",
+      "line": 142,
+      "offset": 14372,
+      "bytes": 115,
+      "sha256": "5889721b61eba41a0732b30e71b84f0f5fc9ab7b99925af70e6cef149ed45168",
+      "snapshot_sha256": "2df79d03bb33da8fad1d0205ac2f7c756be92991323eba6a74fe622057d4ce2b",
+      "row": {
+        "version": "v0.111",
+        "scope": "all",
+        "size": "50-54",
+        "n": "19",
+        "wins": "14",
+        "players": "5",
+        "win_rate": "0.7368421052631579",
+        "wilson": "[0.5120844910218489, 0.8819358765321749]",
+        "cluster_ci": "[0.3333333333333333, 1.0]"
+      }
+    },
+    {
+      "source": "external:sts2fun",
+      "namespace": "aggregate:sts2fun:v0.111:Silent:A10",
+      "table": "paper/materials/2026-10-21-sts2fun-stats/deck_sizes.csv",
+      "line": 143,
+      "offset": 14487,
+      "bytes": 99,
+      "sha256": "178cb91456f2e7a9eb93cf961e974d076e08e2440a8755dc28fa2a527c0a1c60",
+      "snapshot_sha256": "2df79d03bb33da8fad1d0205ac2f7c756be92991323eba6a74fe622057d4ce2b",
+      "row": {
+        "version": "v0.111",
+        "scope": "all",
+        "size": "55-59",
+        "n": "8",
+        "wins": "6",
+        "players": "2",
+        "win_rate": "0.75",
+        "wilson": "[0.40927543031016894, 0.928520787247891]",
+        "cluster_ci": "[0.5, 0.8333333333333334]"
+      }
+    },
+    {
+      "source": "external:sts2fun",
+      "namespace": "aggregate:sts2fun:v0.111:Silent:A10",
+      "table": "paper/materials/2026-10-21-sts2fun-stats/deck_sizes.csv",
+      "line": 144,
+      "offset": 14586,
+      "bytes": 99,
+      "sha256": "4c8c9499a1a234cf35d609b1a02215b7993183a13f1c1dc744156c1398092ed8",
+      "snapshot_sha256": "2df79d03bb33da8fad1d0205ac2f7c756be92991323eba6a74fe622057d4ce2b",
+      "row": {
+        "version": "v0.111",
+        "scope": "all",
+        "size": "60-64",
+        "n": "3",
+        "wins": "2",
+        "players": "3",
+        "win_rate": "0.6666666666666666",
+        "wilson": "[0.20765960080204768, 0.9385080552796037]",
+        "cluster_ci": "[0.0, 1.0]"
+      }
+    },
+    {
+      "source": "external:sts2fun",
+      "namespace": "aggregate:sts2fun:v0.111:Silent:A10",
+      "table": "paper/materials/2026-10-21-sts2fun-stats/deck_sizes.csv",
+      "line": 145,
+      "offset": 14685,
+      "bytes": 83,
+      "sha256": "021cd7cdefb05b527947a045ed631fdb24d890185145a24e4d4d4eedd35e9c84",
+      "snapshot_sha256": "2df79d03bb33da8fad1d0205ac2f7c756be92991323eba6a74fe622057d4ce2b",
+      "row": {
+        "version": "v0.111",
+        "scope": "all",
+        "size": "65-69",
+        "n": "5",
+        "wins": "2",
+        "players": "5",
+        "win_rate": "0.4",
+        "wilson": "[0.11762077423264786, 0.769275718723987]",
+        "cluster_ci": "[0.0, 1.0]"
+      }
+    },
+    {
+      "source": "external:sts2fun",
+      "namespace": "aggregate:sts2fun:v0.111:Silent:A10",
+      "table": "paper/materials/2026-10-21-sts2fun-stats/deck_sizes.csv",
+      "line": 146,
+      "offset": 14768,
+      "bytes": 99,
+      "sha256": "6fe456ba4f9b25c2b4a43245ed03a075a7e22ed657e856f1640a4ccc6cbd298c",
+      "snapshot_sha256": "2df79d03bb33da8fad1d0205ac2f7c756be92991323eba6a74fe622057d4ce2b",
+      "row": {
+        "version": "v0.111",
+        "scope": "all",
+        "size": "70-74",
+        "n": "9",
+        "wins": "6",
+        "players": "5",
+        "win_rate": "0.6666666666666666",
+        "wilson": "[0.35420213558039626, 0.8794161816130891]",
+        "cluster_ci": "[0.4, 1.0]"
+      }
+    },
+    {
+      "source": "external:sts2fun",
+      "namespace": "aggregate:sts2fun:v0.111:Silent:A10",
+      "table": "paper/materials/2026-10-21-sts2fun-stats/deck_sizes.csv",
+      "line": 147,
+      "offset": 14867,
+      "bytes": 100,
+      "sha256": "8663273d926ac98d68c4625e385e0d7f7bb593975ae19a402ab38e6953af973c",
+      "snapshot_sha256": "2df79d03bb33da8fad1d0205ac2f7c756be92991323eba6a74fe622057d4ce2b",
+      "row": {
+        "version": "v0.111",
+        "scope": "all",
+        "size": "75-79",
+        "n": "7",
+        "wins": "3",
+        "players": "3",
+        "win_rate": "0.42857142857142855",
+        "wilson": "[0.15821985525146973, 0.7495416354723429]",
+        "cluster_ci": "[0.0, 1.0]"
+      }
+    },
+    {
+      "source": "external:sts2fun",
+      "namespace": "aggregate:sts2fun:v0.111:Silent:A10",
+      "table": "paper/materials/2026-10-21-sts2fun-stats/deck_sizes.csv",
+      "line": 148,
+      "offset": 14967,
+      "bytes": 100,
+      "sha256": "9ada3aa5ebc05d660532c241cb7917aa9fa52a2499083e837284d494c098e6c7",
+      "snapshot_sha256": "2df79d03bb33da8fad1d0205ac2f7c756be92991323eba6a74fe622057d4ce2b",
+      "row": {
+        "version": "v0.111",
+        "scope": "all",
+        "size": "80-84",
+        "n": "3",
+        "wins": "1",
+        "players": "2",
+        "win_rate": "0.3333333333333333",
+        "wilson": "[0.061491944720396215, 0.7923403991979523]",
+        "cluster_ci": "[0.0, 0.5]"
+      }
+    },
+    {
+      "source": "external:sts2fun",
+      "namespace": "aggregate:sts2fun:v0.111:Silent:A10",
+      "table": "paper/materials/2026-10-21-sts2fun-stats/deck_sizes.csv",
+      "line": 149,
+      "offset": 15067,
+      "bytes": 69,
+      "sha256": "46044769e4f26e4eb4b9067b5a0d67e509de3d0613916514336eb76cfb455d8d",
+      "snapshot_sha256": "2df79d03bb33da8fad1d0205ac2f7c756be92991323eba6a74fe622057d4ce2b",
+      "row": {
+        "version": "v0.111",
+        "scope": "all",
+        "size": "85-89",
+        "n": "1",
+        "wins": "1",
+        "players": "1",
+        "win_rate": "1.0",
+        "wilson": "[0.20654931437723742, 1.0]",
+        "cluster_ci": "[1.0, 1.0]"
+      }
+    },
+    {
+      "source": "external:sts2fun",
+      "namespace": "aggregate:sts2fun:v0.111:Silent:A10",
+      "table": "paper/materials/2026-10-21-sts2fun-stats/deck_sizes.csv",
+      "line": 150,
+      "offset": 15136,
+      "bytes": 68,
+      "sha256": "86f8740a6c489f64ee4e214c48e6282f297980432ff3dba8b7bdf6496d53ddb5",
+      "snapshot_sha256": "2df79d03bb33da8fad1d0205ac2f7c756be92991323eba6a74fe622057d4ce2b",
+      "row": {
+        "version": "v0.111",
+        "scope": "all",
+        "size": "95-99",
+        "n": "4",
+        "wins": "4",
+        "players": "3",
+        "win_rate": "1.0",
+        "wilson": "[0.5101091635454027, 1.0]",
+        "cluster_ci": "[1.0, 1.0]"
+      }
+    }
+  ],
+  "open_book_sources": {
+    "schema": "open-book-sources-v1",
+    "source": "external:spire-codex",
+    "revision": "4f52f5a53597e4fdc6cf130f7ebe2cdd35236101",
+    "game_version": "v0.111.0",
+    "license": "https://polyformproject.org/licenses/noncommercial/1.0.0",
+    "license_url": "https://github.com/ptrlrd/spire-codex/blob/4f52f5a53597e4fdc6cf130f7ebe2cdd35236101/LICENSE.md",
+    "license_sha256": "2f9aec3426be07b95de11700c1f2e5fda07f25eba974fb29741cbad8a1b6a6a0",
+    "license_review": "PolyForm Noncommercial 1.0.0：仅非商业研究/个人爱好用途；分发保留许可 URL 与 Required Notice。未授权商用。",
+    "required_notice": "Copyright © 2025-present Peter Lord and Spire Codex contributors.",
+    "sources": {
+      "cards:eng": {
+        "url": "https://raw.githubusercontent.com/ptrlrd/spire-codex/4f52f5a53597e4fdc6cf130f7ebe2cdd35236101/data-beta/v0.111.0/eng/cards.json",
+        "downloaded_at": "2026-10-21T07:11:28.130016+00:00",
+        "sha256": "31383b5965746b3ad59da94ddd542e524fdc79c9147aced178639fff9d445938",
+        "game_version": "v0.111.0",
+        "samples": 595,
+        "license": "https://polyformproject.org/licenses/noncommercial/1.0.0",
+        "required_notice": "Copyright © 2025-present Peter Lord and Spire Codex contributors.",
+        "filter": "按 ID 一对一机械整理；移除图片、风味和事件长剧情；不产生策略或实盘样本"
+      },
+      "cards:zhs": {
+        "url": "https://raw.githubusercontent.com/ptrlrd/spire-codex/4f52f5a53597e4fdc6cf130f7ebe2cdd35236101/data-beta/v0.111.0/zhs/cards.json",
+        "downloaded_at": "2026-10-21T07:11:33.128310+00:00",
+        "sha256": "50cb0b33a9c80131d46c9abd16bc983b96b3cd376abb1250265521915d68cebc",
+        "game_version": "v0.111.0",
+        "samples": 595,
+        "license": "https://polyformproject.org/licenses/noncommercial/1.0.0",
+        "required_notice": "Copyright © 2025-present Peter Lord and Spire Codex contributors.",
+        "filter": "按 ID 一对一机械整理；移除图片、风味和事件长剧情；不产生策略或实盘样本"
+      },
+      "relics:eng": {
+        "url": "https://raw.githubusercontent.com/ptrlrd/spire-codex/4f52f5a53597e4fdc6cf130f7ebe2cdd35236101/data-beta/v0.111.0/eng/relics.json",
+        "downloaded_at": "2026-10-21T07:11:29.067532+00:00",
+        "sha256": "25a83cd102db871daaeb0c174d0f391d03f90f5eb0e4e4732e07f6d460b55bc7",
+        "game_version": "v0.111.0",
+        "samples": 298,
+        "license": "https://polyformproject.org/licenses/noncommercial/1.0.0",
+        "required_notice": "Copyright © 2025-present Peter Lord and Spire Codex contributors.",
+        "filter": "按 ID 一对一机械整理；移除图片、风味和事件长剧情；不产生策略或实盘样本"
+      },
+      "relics:zhs": {
+        "url": "https://raw.githubusercontent.com/ptrlrd/spire-codex/4f52f5a53597e4fdc6cf130f7ebe2cdd35236101/data-beta/v0.111.0/zhs/relics.json",
+        "downloaded_at": "2026-10-21T07:11:34.096389+00:00",
+        "sha256": "d4601a1ebaf5d283cfaf8e492283da451e4778ab9fdc0e806f6f3c1d24821f17",
+        "game_version": "v0.111.0",
+        "samples": 298,
+        "license": "https://polyformproject.org/licenses/noncommercial/1.0.0",
+        "required_notice": "Copyright © 2025-present Peter Lord and Spire Codex contributors.",
+        "filter": "按 ID 一对一机械整理；移除图片、风味和事件长剧情；不产生策略或实盘样本"
+      },
+      "monsters:eng": {
+        "url": "https://raw.githubusercontent.com/ptrlrd/spire-codex/4f52f5a53597e4fdc6cf130f7ebe2cdd35236101/data-beta/v0.111.0/eng/monsters.json",
+        "downloaded_at": "2026-10-21T07:11:30.022113+00:00",
+        "sha256": "7c378bbdeb4120e52335e2840f87ce85d3b597370ba4fd531a2fd7a99beeaee1",
+        "game_version": "v0.111.0",
+        "samples": 115,
+        "license": "https://polyformproject.org/licenses/noncommercial/1.0.0",
+        "required_notice": "Copyright © 2025-present Peter Lord and Spire Codex contributors.",
+        "filter": "按 ID 一对一机械整理；移除图片、风味和事件长剧情；不产生策略或实盘样本"
+      },
+      "monsters:zhs": {
+        "url": "https://raw.githubusercontent.com/ptrlrd/spire-codex/4f52f5a53597e4fdc6cf130f7ebe2cdd35236101/data-beta/v0.111.0/zhs/monsters.json",
+        "downloaded_at": "2026-10-21T07:11:35.045981+00:00",
+        "sha256": "26ae64c6b60bbbc19c6fa9eb14b11f6156786545674511edd97c6fedbd263c05",
+        "game_version": "v0.111.0",
+        "samples": 115,
+        "license": "https://polyformproject.org/licenses/noncommercial/1.0.0",
+        "required_notice": "Copyright © 2025-present Peter Lord and Spire Codex contributors.",
+        "filter": "按 ID 一对一机械整理；移除图片、风味和事件长剧情；不产生策略或实盘样本"
+      },
+      "events:eng": {
+        "url": "https://raw.githubusercontent.com/ptrlrd/spire-codex/4f52f5a53597e4fdc6cf130f7ebe2cdd35236101/data-beta/v0.111.0/eng/events.json",
+        "downloaded_at": "2026-10-21T07:11:30.943441+00:00",
+        "sha256": "1c57c17b1f00b57be4e2da4168d06818fc31b9e938571e58150a7a81a8cfc904",
+        "game_version": "v0.111.0",
+        "samples": 66,
+        "license": "https://polyformproject.org/licenses/noncommercial/1.0.0",
+        "required_notice": "Copyright © 2025-present Peter Lord and Spire Codex contributors.",
+        "filter": "按 ID 一对一机械整理；移除图片、风味和事件长剧情；不产生策略或实盘样本"
+      },
+      "events:zhs": {
+        "url": "https://raw.githubusercontent.com/ptrlrd/spire-codex/4f52f5a53597e4fdc6cf130f7ebe2cdd35236101/data-beta/v0.111.0/zhs/events.json",
+        "downloaded_at": "2026-10-21T07:11:36.001862+00:00",
+        "sha256": "6f71fdd22127155103802bb19a1f7a48bac517cfb2a0e365324e01dd8d492d0e",
+        "game_version": "v0.111.0",
+        "samples": 66,
+        "license": "https://polyformproject.org/licenses/noncommercial/1.0.0",
+        "required_notice": "Copyright © 2025-present Peter Lord and Spire Codex contributors.",
+        "filter": "按 ID 一对一机械整理；移除图片、风味和事件长剧情；不产生策略或实盘样本"
+      }
+    }
+  },
+  "reviewed_reference_entries": [
+    {
+      "kind": "monsters",
+      "id": "KIN_FOLLOWER",
+      "name": "同族信徒",
+      "aliases": [
+        "Kin Follower"
+      ],
+      "source": "external:spire-codex",
+      "game_version": "v0.111.0",
+      "provenance": [
+        "monsters:eng",
+        "monsters:zhs"
+      ],
+      "origin_pool": "shared",
+      "evidence_scope": "external-reference; not live validation",
+      "facts": {
+        "type": "Boss",
+        "min_hp": 58,
+        "max_hp": 59,
+        "min_hp_ascension": 62,
+        "max_hp_ascension": 63,
+        "moves": [
+          {
+            "id": "QUICK_SLASH",
+            "name": "快斩",
+            "intent": "Attack",
+            "damage": {
+              "normal": 5,
+              "ascension": 5
+            }
+          },
+          {
+            "id": "BOOMERANG",
+            "name": "回旋镖",
+            "intent": "Attack",
+            "damage": {
+              "normal": 2,
+              "ascension": 2,
+              "hit_count": 2
+            }
+          },
+          {
+            "id": "POWER_DANCE",
+            "name": "力量之舞",
+            "intent": "Buff",
+            "powers": [
+              {
+                "power_id": "STRENGTH",
+                "target": "self",
+                "amount": 2
+              }
+            ]
+          }
+        ],
+        "encounters": [
+          {
+            "encounter_id": "THE_KIN_BOSS",
+            "encounter_name": "同族小队",
+            "room_type": "Boss",
+            "act": "Act 1 - Overgrowth",
+            "is_weak": false
+          }
+        ],
+        "innate_powers": [
+          {
+            "power_id": "MINION",
+            "amount": 1
+          }
+        ],
+        "attack_pattern": {
+          "type": "cycle",
+          "initial_move": "POWER_DANCE",
+          "states": [
+            {
+              "id": "QUICK_SLASH_MOVE",
+              "type": "move",
+              "move_id": "QUICK_SLASH",
+              "next": "BOOMERANG_MOVE"
+            },
+            {
+              "id": "BOOMERANG_MOVE",
+              "type": "move",
+              "move_id": "BOOMERANG",
+              "next": "POWER_DANCE_MOVE"
+            },
+            {
+              "id": "POWER_DANCE_MOVE",
+              "type": "move",
+              "move_id": "POWER_DANCE",
+              "next": "QUICK_SLASH_MOVE"
+            }
+          ],
+          "description": "力量之舞 → 快斩 → 回旋镖 → repeat"
+        }
+      },
+      "limits": "进阶阈值未给出；普通/进阶值并列保留，不推定当前进阶适用值。出招图是外部描述，未证明模拟支持。"
+    },
+    {
+      "kind": "monsters",
+      "id": "KIN_PRIEST",
+      "name": "同族神官",
+      "aliases": [
+        "Kin Priest"
+      ],
+      "source": "external:spire-codex",
+      "game_version": "v0.111.0",
+      "provenance": [
+        "monsters:eng",
+        "monsters:zhs"
+      ],
+      "origin_pool": "shared",
+      "evidence_scope": "external-reference; not live validation",
+      "facts": {
+        "type": "Boss",
+        "min_hp": 190,
+        "max_hp": null,
+        "min_hp_ascension": 199,
+        "max_hp_ascension": null,
+        "moves": [
+          {
+            "id": "ORB_OF_FRAILTY",
+            "name": "脆弱法球",
+            "intent": "Attack + Debuff",
+            "powers": [
+              {
+                "power_id": "FRAIL",
+                "target": "player",
+                "amount": 1
+              }
+            ],
+            "damage": {
+              "normal": 8,
+              "ascension": 9
+            }
+          },
+          {
+            "id": "ORB_OF_WEAKNESS",
+            "name": "虚弱法球",
+            "intent": "Attack + Debuff",
+            "powers": [
+              {
+                "power_id": "WEAK",
+                "target": "player",
+                "amount": 1
+              }
+            ],
+            "damage": {
+              "normal": 8,
+              "ascension": 9
+            }
+          },
+          {
+            "id": "BEAM",
+            "name": "灵魂光束",
+            "intent": "Attack",
+            "damage": {
+              "normal": 3,
+              "ascension": 3,
+              "hit_count": 3
+            }
+          },
+          {
+            "id": "RITUAL",
+            "name": "黑暗仪式",
+            "intent": "Buff",
+            "powers": [
+              {
+                "power_id": "STRENGTH",
+                "target": "self",
+                "amount": 2
+              }
+            ]
+          }
+        ],
+        "encounters": [
+          {
+            "encounter_id": "THE_KIN_BOSS",
+            "encounter_name": "同族小队",
+            "room_type": "Boss",
+            "act": "Act 1 - Overgrowth",
+            "is_weak": false
+          }
+        ],
+        "innate_powers": null,
+        "attack_pattern": {
+          "type": "cycle",
+          "initial_move": "ORB_OF_FRAILTY",
+          "states": [
+            {
+              "id": "ORB_OF_FRAILTY_MOVE",
+              "type": "move",
+              "move_id": "ORB_OF_FRAILTY",
+              "next": "ORB_OF_WEAKNESS_MOVE"
+            },
+            {
+              "id": "ORB_OF_WEAKNESS_MOVE",
+              "type": "move",
+              "move_id": "ORB_OF_WEAKNESS",
+              "next": "BEAM_MOVE"
+            },
+            {
+              "id": "BEAM_MOVE",
+              "type": "move",
+              "move_id": "BEAM",
+              "next": "RITUAL_MOVE"
+            },
+            {
+              "id": "RITUAL_MOVE",
+              "type": "move",
+              "move_id": "RITUAL",
+              "next": "ORB_OF_FRAILTY_MOVE"
+            }
+          ],
+          "description": "脆弱法球 → 虚弱法球 → 灵魂光束 → 黑暗仪式 → repeat"
+        }
+      },
+      "limits": "进阶阈值未给出；普通/进阶值并列保留，不推定当前进阶适用值。出招图是外部描述，未证明模拟支持。"
+    },
+    {
+      "kind": "monsters",
+      "id": "KNOWLEDGE_DEMON",
+      "name": "知识恶魔",
+      "aliases": [
+        "Knowledge Demon"
+      ],
+      "source": "external:spire-codex",
+      "game_version": "v0.111.0",
+      "provenance": [
+        "monsters:eng",
+        "monsters:zhs"
+      ],
+      "origin_pool": "shared",
+      "evidence_scope": "external-reference; not live validation",
+      "facts": {
+        "type": "Boss",
+        "min_hp": 379,
+        "max_hp": null,
+        "min_hp_ascension": 399,
+        "max_hp_ascension": null,
+        "moves": [
+          {
+            "id": "CURSE_OF_KNOWLEDGE",
+            "name": "知识的诅咒",
+            "intent": "Debuff"
+          },
+          {
+            "id": "SLAP",
+            "name": "抽打",
+            "intent": "Attack",
+            "damage": {
+              "normal": 17,
+              "ascension": 18
+            }
+          },
+          {
+            "id": "KNOWLEDGE_OVERWHELMING",
+            "name": "知识过载",
+            "intent": "Attack",
+            "damage": {
+              "normal": 8,
+              "ascension": 9,
+              "hit_count": 3
+            }
+          },
+          {
+            "id": "PONDER",
+            "name": "思考",
+            "intent": "Attack + Heal + Buff",
+            "powers": [
+              {
+                "power_id": "STRENGTH",
+                "target": "self",
+                "amount": 2
+              }
+            ],
+            "heal": 30,
+            "damage": {
+              "normal": 11,
+              "ascension": 13
+            }
+          }
+        ],
+        "encounters": [
+          {
+            "encounter_id": "KNOWLEDGE_DEMON_BOSS",
+            "encounter_name": "知识恶魔",
+            "room_type": "Boss",
+            "act": "Act 2 - Hive",
+            "is_weak": false
+          }
+        ],
+        "innate_powers": null,
+        "attack_pattern": {
+          "type": "conditional",
+          "initial_move": "CURSE_OF_KNOWLEDGE",
+          "states": [
+            {
+              "id": "CURSE_OF_KNOWLEDGE_MOVE",
+              "type": "move",
+              "move_id": "CURSE_OF_KNOWLEDGE",
+              "next": "SLAP_MOVE"
+            },
+            {
+              "id": "SLAP_MOVE",
+              "type": "move",
+              "move_id": "SLAP",
+              "next": "KNOWLEDGE_OVERWHELMING_MOVE"
+            },
+            {
+              "id": "KNOWLEDGE_OVERWHELMING_MOVE",
+              "type": "move",
+              "move_id": "KNOWLEDGE_OVERWHELMING",
+              "next": "PONDER_MOVE"
+            },
+            {
+              "id": "PONDER_MOVE",
+              "type": "move",
+              "move_id": "PONDER",
+              "next": "CurseOfKnowledgeBranch"
+            },
+            {
+              "id": "CurseOfKnowledgeBranch",
+              "type": "conditional",
+              "branches": [
+                {
+                  "move_id": "CURSE_OF_KNOWLEDGE",
+                  "condition": "_curseOfKnowledgeCounter < 3"
+                },
+                {
+                  "move_id": "SLAP",
+                  "condition": "_curseOfKnowledgeCounter >= 3"
+                }
+              ]
+            }
+          ],
+          "description": "Starts: 知识的诅咒 → 抽打 → 知识过载 → 思考; then conditional: 知识的诅咒 (if curse of knowledge counter < 3) / 抽打 (if curse of knowledge counter >= 3)"
+        }
+      },
+      "limits": "进阶阈值未给出；普通/进阶值并列保留，不推定当前进阶适用值。出招图是外部描述，未证明模拟支持。"
+    },
+    {
+      "kind": "monsters",
+      "id": "VANTOM",
+      "name": "墨影幻灵",
+      "aliases": [
+        "Vantom"
+      ],
+      "source": "external:spire-codex",
+      "game_version": "v0.111.0",
+      "provenance": [
+        "monsters:eng",
+        "monsters:zhs"
+      ],
+      "origin_pool": "shared",
+      "evidence_scope": "external-reference; not live validation",
+      "facts": {
+        "type": "Boss",
+        "min_hp": 173,
+        "max_hp": null,
+        "min_hp_ascension": 183,
+        "max_hp_ascension": null,
+        "moves": [
+          {
+            "id": "INK_BLOT",
+            "name": "墨迹",
+            "intent": "Attack",
+            "damage": {
+              "normal": 7,
+              "ascension": 8
+            }
+          },
+          {
+            "id": "INKY_LANCE",
+            "name": "墨水长枪",
+            "intent": "Attack",
+            "damage": {
+              "normal": 6,
+              "ascension": 7,
+              "hit_count": 2
+            }
+          },
+          {
+            "id": "DISMEMBER",
+            "name": "肢解",
+            "intent": "Attack + Status",
+            "damage": {
+              "normal": 26,
+              "ascension": 30
+            }
+          },
+          {
+            "id": "PREPARE",
+            "name": "准备",
+            "intent": "Buff",
+            "powers": [
+              {
+                "power_id": "STRENGTH",
+                "target": "self",
+                "amount": 2
+              }
+            ]
+          }
+        ],
+        "encounters": [
+          {
+            "encounter_id": "VANTOM_BOSS",
+            "encounter_name": "墨影幻灵",
+            "room_type": "Boss",
+            "act": "Act 1 - Overgrowth",
+            "is_weak": false
+          }
+        ],
+        "innate_powers": [
+          {
+            "power_id": "SLIPPERY",
+            "amount": 8,
+            "amount_ascension": 9
+          }
+        ],
+        "attack_pattern": {
+          "type": "cycle",
+          "initial_move": "INK_BLOT",
+          "states": [
+            {
+              "id": "INK_BLOT_MOVE",
+              "type": "move",
+              "move_id": "INK_BLOT",
+              "next": "INKY_LANCE_MOVE"
+            },
+            {
+              "id": "INKY_LANCE_MOVE",
+              "type": "move",
+              "move_id": "INKY_LANCE",
+              "next": "DISMEMBER_MOVE"
+            },
+            {
+              "id": "DISMEMBER_MOVE",
+              "type": "move",
+              "move_id": "DISMEMBER",
+              "next": "PREPARE_MOVE"
+            },
+            {
+              "id": "PREPARE_MOVE",
+              "type": "move",
+              "move_id": "PREPARE",
+              "next": "INK_BLOT_MOVE"
+            }
+          ],
+          "description": "墨迹 → 墨水长枪 → 肢解 → 准备 → repeat"
+        }
+      },
+      "limits": "进阶阈值未给出；普通/进阶值并列保留，不推定当前进阶适用值。出招图是外部描述，未证明模拟支持。"
+    }
+  ],
+  "reference_independent_runs": 0,
+  "reference_independent_players": 0,
+  "limits": [
+    "No external run ids or exact global floors in these selected aggregates/reference facts.",
+    "No new causal card-pick recommendation derived from observational associations."
+  ]
+}

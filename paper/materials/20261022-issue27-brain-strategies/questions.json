@@ -1,0 +1,46 @@
+[
+  {
+    "id": "q27-card-causal-gap",
+    "prior": "#27期望首批包含拿牌与幕初方向；公开数据可以用。",
+    "finding": "本批没有足够证据发布单卡收益排名，三条仅为备战计划。公开数据允许使用，但不把相关性/最终牌组聚类变成决策时可用的因果收益。",
+    "evidence": [
+      "external-review.json",
+      "coverage.json",
+      "entry-dispositions.json"
+    ],
+    "affected_ids": [
+      "candidate-external-sts2fun-card-ranking"
+    ],
+    "next_step": "原ops→watcher→Roy转达保留的拿牌缺口；不为本批自行开实验或续派。"
+  },
+  {
+    "id": "q27-external-schema-floor",
+    "prior": "外部聚合或机械参考可进入同一策略schema。",
+    "finding": "所选外部资料无真实逐局ID及精确全局楼层；当前evidence要求run与非空整数floor。可用aggregate命名空间保留候选，但本批不伪造floor=0或本系统局号。未改schema/消费者。",
+    "evidence": [
+      "external-review.json",
+      "docs/brain-strategies.md"
+    ],
+    "affected_ids": [
+      "candidate-external-sts2fun-card-ranking",
+      "candidate-external-spire-codex-boss-plans"
+    ],
+    "next_step": "原owner若要正式表达这些资料，先明确非对局证据合同；本批不扩大架构。ledger CLI也只接受12位真实局号，外部候选未登记伪造账本。"
+  },
+  {
+    "id": "q27-one-fight-boundaries",
+    "prior": "既有boss经验含更多历史支持与高confidence。",
+    "finding": "本批只独立核回3局4个窗口，三条各n=1；不继承旧条目20/22等支持分母，不以观察成功/SL次数证明策略收益。没有推翻既有机制，只限制本批应用与收益声明。",
+    "evidence": [
+      "evidence-refs.jsonl",
+      "observed-frames.json",
+      "coverage.json"
+    ],
+    "affected_ids": [
+      "silent-brain-kin-priest-exit-window",
+      "silent-brain-vantom-two-stage-preparation",
+      "silent-brain-crab-surviving-part-budget"
+    ],
+    "next_step": "保留既有科学父；原ops发布后等首个自然问题真实查询/命中，不代其他角色ACK。"
+  }
+]
